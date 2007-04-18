@@ -1,0 +1,2 @@
+Deduction.v LNN.v LNN2LNT.v LNT.v Languages.v ListExt.v NN.v NN2PA.v NNtheory.v PA.v PAconsistent.v PAtheory.v PRrepresentable.v cPair.v chRem.v checkPrf.v code.v codeFreeVar.v codeList.v codeNatToTerm.v codePA.v codeSubFormula.v codeSubTerm.v codeSysPrf.v expressible.v extEqualNat.v fixPoint.v fol.v folLogic.v folLogic2.v folLogic3.v folProof.v folProp.v folReplace.v godel1.v misc.v model.v prLogic.v primRec.v rosser.v rosserPA.v subAll.v subProp.v vector.v wConsistent.v wellFormed.v 
+-I ../../Eindhoven/POCKLINGTON 
