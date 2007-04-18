@@ -59,7 +59,7 @@ Fixpoint freeVarFormula (A : fol.Formula L) : list nat :=
 
 Definition ClosedSystem (T : fol.System L) :=
   forall (v : nat) (f : fol.Formula L),
-  Ensembles.In _ T f -> ~ In v (freeVarFormula f).
+  mem _ T f -> ~ In v (freeVarFormula f).
 
 Definition closeList (l : list nat) (x : fol.Formula L) : 
   fol.Formula L :=
@@ -179,7 +179,7 @@ simpl in |- *; tauto.
 Qed.
 
 Definition In_freeVarSys (v : nat) (T : fol.System L) :=
-  exists f : fol.Formula L, In v (freeVarFormula f) /\ Ensembles.In _ T f.
+  exists f : fol.Formula L, In v (freeVarFormula f) /\ mem _ T f.
 
 Lemma notInFreeVarSys :
  forall x, ~ In_freeVarSys x (Ensembles.Empty_set (fol.Formula L)).
@@ -1008,4 +1008,6 @@ End Substitution_Properties.
 
 End Substitution.
  
+Definition Sentence (f:Formula) := (forall v : nat, ~ In v (freeVarFormula f)).
+
 End Fol_Properties.

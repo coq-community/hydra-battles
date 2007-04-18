@@ -14,8 +14,6 @@ Require Import misc.
 Section Equality_Logic_Rules.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-
 Notation Formula := (Formula L) (only parsing).
 Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
@@ -82,8 +80,8 @@ auto.
 induction (le_lt_dec 2 1).
 elim (le_not_lt _ _ a0).
 auto.
-apply (impRefl L lang_dec).
-apply (subAllCloseFrom L lang_dec).
+apply (impRefl L).
+apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
@@ -137,8 +135,8 @@ auto.
 induction (le_lt_dec 3 2).
 elim (le_not_lt _ _ a0).
 auto.
-apply (impRefl L lang_dec).
-apply (subAllCloseFrom L lang_dec).
+apply (impRefl L).
+apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
@@ -295,56 +293,38 @@ induction x as (a1, b0).
 simpl in |- *.
 simpl in H.
 induction (nVars L a).
-simpl in |- *.
-simpl in Hreca.
-induction (match a + a as n return ({S (a + a) = n} + {S (a + a) <> n}) with
-         | 0 => right (S (a + a) = 0) (sym_not_eq (O_S (a + a)))
-         | S m =>
-             sumbool_rec
-               (fun _ : {a + a = m} + {a + a <> m} =>
-                {S (a + a) = S m} + {S (a + a) <> S m})
-               (fun a3 : a + a = m => left (S (a + a) <> S m) (f_equal S a3))
-               (fun b2 : a + a <> m =>
-                right (S (a + a) = S m) (not_eq_S (a + a) m b2))
-               (eq_nat_dec (a + a) m)
-         end).
-elim (lt_not_le (a + a) (S (a + a))).
-apply lt_n_Sn.
-rewrite a3.
+Opaque eq_nat_dec.
+simpl.
+Transparent eq_nat_dec.
+destruct (eq_nat_dec (S (a+a)) (a + a)).
+elim (n_Sn (a+a)).
 auto.
-induction
- (sumbool_rec
-    (fun _ : {a + a = a + a} + {a + a <> a + a} =>
-     {S (a + a) = S (a + a)} + {S (a + a) <> S (a + a)})
-    (fun a3 : a + a = a + a => left (S (a + a) <> S (a + a)) (f_equal S a3))
-    (fun b3 : a + a <> a + a =>
-     right (S (a + a) = S (a + a)) (not_eq_S (a + a) (a + a) b3))
-    (eq_nat_dec (a + a) (a + a))).
-simpl in p0.
-rewrite <- p0.
+destruct (eq_nat_dec (S (a + a)) (S (a+a))).
 replace
  (subAllTerms L a b1
-   (fun n : nat =>
-     if eq_nat_dec n (a + a)
-       then a0
-       else if eq_nat_dec n (S (a + a)) 
-         then a1
-         else termsMap a b b0 n
-     )) with (subAllTerms L a b1 (termsMap a b b0)).
+    (fun n : nat =>
+     match eq_nat_dec n (a + a) with
+     | left _ => a0
+     | right _ =>
+         match eq_nat_dec n (S (a + a)) with
+         | left _ => a1
+         | right _ => termsMap a b b0 n
+         end
+     end)) with (subAllTerms L a b1 (termsMap a b b0)).
 rewrite <- Hreca.
-reflexivity.
+auto.
 apply subAllTerms_ext.
 intros.
 induction (eq_nat_dec m (a + a)).
 elim (lt_not_le m (a + a)).
 apply H; auto.
-rewrite a4; auto.
+rewrite a3; auto.
 induction (eq_nat_dec m (S (a + a))).
 elim (lt_not_le m (a + a)).
 apply H; auto.
-rewrite a4; apply le_n_Sn.
+rewrite a3; apply le_n_Sn.
 auto.
-elim b3; auto.
+elim n0; auto.
 Qed.
 
 Remark addPairwiseEquals :
@@ -459,7 +439,7 @@ replace (subAllFormula L (AxmEq4 L r) m) with
      | left _ => fol.var L x
      | right _ => m x
      end)).
-apply (subAllCloseFrom L lang_dec).
+apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
@@ -553,7 +533,7 @@ replace (subAllFormula L (AxmEq5 L f) m) with
      | left _ => fol.var L x
      | right _ => m x
      end)).
-apply (subAllCloseFrom L lang_dec).
+apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
@@ -683,7 +663,7 @@ clear termsMap.
 intro.
 elim f using Formula_depth_ind2; intros.
 repeat rewrite subFormulaEqual.
-apply (impI L lang_dec).
+apply (impI L).
 apply eqTrans with (substituteTerm L t v a).
 apply subWithEqualsTerm.
 apply (sysWeaken L).
@@ -694,13 +674,13 @@ apply (Axm L); right; constructor.
 apply subWithEqualsTerm.
 apply (sysWeaken L).
 auto.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 repeat rewrite subFormulaRelation.
 apply equalRelation.
 apply subWithEqualsTerms.
 auto.
 repeat rewrite subFormulaImp.
-repeat apply (impI L lang_dec).
+repeat apply (impI L).
 apply impE with (substituteFormula L f1 v a).
 apply H0.
 repeat apply (sysWeaken L).
@@ -714,7 +694,7 @@ apply eqSym.
 auto.
 apply (Axm L); right; constructor.
 repeat rewrite subFormulaNot.
-apply (cp2 L lang_dec).
+apply (cp2 L).
 apply H.
 apply eqSym.
 auto.
@@ -723,14 +703,14 @@ rewrite H5; clear H5.
 decompose record (subFormulaForall2 L a v v0 b).
 rewrite H8; clear H8.
 induction (eq_nat_dec v v0).
-apply (impRefl L lang_dec).
+apply (impRefl L).
 set
  (nv :=
   v0
   :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
      freeVarTerm L a0 ++ freeVarTerm L b) in *.
 apply
- (impTrans L lang_dec)
+ (impTrans L)
   with
     (fol.forallH L (newVar nv)
        (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
@@ -739,14 +719,14 @@ apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *; intros.
 induction H7.
 apply
- (impTrans L lang_dec)
+ (impTrans L)
   with
     (fol.forallH L (newVar nv)
        (substituteFormula L
           (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)
           x (var (newVar nv)))).
-apply (iffE1 L lang_dec).
-apply (rebindForall L lang_dec).
+apply (iffE1 L).
+apply (rebindForall L).
 unfold not in |- *; intros.
 elim (newVar1 nv).
 unfold nv at 2 in |- *.
@@ -771,16 +751,16 @@ auto.
 contradiction.
 right.
 auto with datatypes.
-apply (iffE1 L lang_dec).
-apply (reduceForall L lang_dec).
+apply (iffE1 L).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (substituteFormula L
        (substituteFormula L (substituteFormula L a v (fol.var L x)) x
           (var (newVar nv))) v0 a0).
-apply (subFormulaExch L lang_dec); auto.
+apply (subFormulaExch L); auto.
 unfold not in |- *; intros.
 elim (newVar1 nv).
 unfold nv at 2 in |- *.
@@ -789,12 +769,12 @@ left.
 induction H7 as [H7| H7].
 auto.
 contradiction.
-apply (reduceSub L lang_dec).
+apply (reduceSub L).
 apply (notInFreeVarSys L).
-apply (subFormulaTrans L lang_dec).
+apply (subFormulaTrans L).
 auto.
 apply
- (impTrans L lang_dec)
+ (impTrans L)
   with
     (fol.forallH L (newVar nv)
        (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
@@ -803,7 +783,7 @@ apply impE with (equal a0 b).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *; intros.
 induction H7.
-repeat apply (impI L lang_dec).
+repeat apply (impI L).
 apply forallI.
 unfold not in |- *; intros.
 induction H7 as (x1, H7); induction H7 as (H7, H8).
@@ -835,15 +815,15 @@ apply H0.
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *; intros.
 induction H7.
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L (newVar nv)
        (substituteFormula L
           (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)
           x0 (var (newVar nv)))).
-apply (rebindForall L lang_dec).
+apply (rebindForall L).
 unfold not in |- *; intros.
 elim (newVar1 nv).
 unfold nv at 2 in |- *.
@@ -868,15 +848,15 @@ auto.
 contradiction.
 right.
 auto with datatypes.
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (substituteFormula L
        (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
           (var (newVar nv))) v0 b).
-apply (subFormulaExch L lang_dec); auto.
+apply (subFormulaExch L); auto.
 unfold not in |- *; intros.
 elim (newVar1 nv).
 unfold nv at 2 in |- *.
@@ -885,9 +865,9 @@ left.
 induction H7 as [H7| H7].
 auto.
 contradiction.
-apply (reduceSub L lang_dec).
+apply (reduceSub L).
 apply (notInFreeVarSys L).
-apply (subFormulaTrans L lang_dec).
+apply (subFormulaTrans L).
 auto.
 Qed.
 

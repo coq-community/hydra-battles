@@ -11,12 +11,17 @@ Require Import primRec.
 Require Import chRem.
 Require Import expressible.
 Require Import List.
-Require Import vector.
+Require Import Bvector.
 Require Import ListExt.
 Require Import cPair.
 Require Import Decidable.
 
 Section Primative_Recursive_Representable.
+
+Let Representable := Representable NN.
+Let RepresentableAlternate := RepresentableAlternate NN closedNN1.
+Let RepresentableHelp := RepresentableHelp NN.
+Let Representable_ext := Representable_ext NN.
 
 Definition beta (a z : nat) : nat :=
   snd
@@ -353,7 +358,7 @@ apply
                             (Succ (Times (var 3) (Succ (natToTerm a0))))))
                       (var 4)))) (equal (var 0) (natToTerm (beta a a0))))) 3
        (natToTerm (cPairPi1 a))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 eapply andE1.
 apply Axm; right; constructor.
@@ -385,7 +390,7 @@ apply
                                (Succ (Times (var 3) (Succ (natToTerm a0))))))
                          (var 4)))) (equal (var 0) (natToTerm (beta a a0)))))
           3 (natToTerm (cPairPi1 a))) 4 (natToTerm (cPairPi2 a))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 eapply andE2.
 apply Axm; right; constructor.
@@ -418,7 +423,7 @@ apply
   with
     (substituteFormula LNN (LT (var 0) (var 1)) 1
        (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0))))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply sysWeaken.
 simpl in |- *.
 apply eqSucc.
@@ -705,7 +710,7 @@ apply
              (LT (var 0) (Succ (Times (var 3) (Succ (natToTerm a0))))) 3
              (natToTerm (cPairPi1 a))) 4 (natToTerm (cPairPi2 a))) 0
        (natToTerm b)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -732,7 +737,7 @@ apply
   with
     (substituteFormula LNN (LT (natToTerm b) (var 0)) 0
        (natToTerm (S (cPairPi1 a * S a0)))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 simpl in |- *.
 apply eqSucc.
 replace (Succ (natToTerm a0)) with (natToTerm (S a0)).
@@ -775,7 +780,7 @@ apply
                       (var 4))) 3 (natToTerm (cPairPi1 a))) 4
              (natToTerm (cPairPi2 a))) 5 (natToTerm a1)) 0 
        (natToTerm b)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -935,7 +940,7 @@ induction n as [| n Hrecn].
 simpl in |- *.
 auto.
 simpl in |- *.
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
 auto.
 Qed.
@@ -1034,7 +1039,7 @@ induction n as [| n Hrecn].
 simpl in |- *.
 auto.
 simpl in |- *.
-apply (reduceForall LNN LNN_dec).
+apply (reduceForall LNN).
 apply closedNN.
 auto.
 Qed.
@@ -1080,7 +1085,7 @@ auto.
 Qed.
 
 Fixpoint FormulasToFormula (n w m : nat)
- (vs : Vector (Formula * naryFunc n) m) {struct vs} : Formula :=
+ (vs : vector (Formula * naryFunc n) m) {struct vs} : Formula :=
   match vs with
   | Vnil => equal (var 0) (var 0)
   | Vcons v m' vs' =>
@@ -1088,15 +1093,15 @@ Fixpoint FormulasToFormula (n w m : nat)
         (FormulasToFormula n w m' vs')
   end.
 
-Fixpoint FormulasToFuncs (n m : nat) (vs : Vector (Formula * naryFunc n) m)
- {struct vs} : Vector (naryFunc n) m :=
-  match vs in (Vector _ m) return (Vector (naryFunc n) m) with
+Fixpoint FormulasToFuncs (n m : nat) (vs : vector (Formula * naryFunc n) m)
+ {struct vs} : vector (naryFunc n) m :=
+  match vs in (vector _ m) return (vector (naryFunc n) m) with
   | Vnil => Vnil _
   | Vcons v m' vs' => Vcons _ (snd v) m' (FormulasToFuncs n m' vs')
   end.
 
 Fixpoint RepresentablesHelp (n m : nat)
- (vs : Vector (Formula * naryFunc n) m) {struct vs} : Prop :=
+ (vs : vector (Formula * naryFunc n) m) {struct vs} : Prop :=
   match vs with
   | Vnil => True
   | Vcons a m' vs' =>
@@ -1215,7 +1220,7 @@ generalize
 intros.
 apply RepresentableAlternate with (equal (var 0) (var (S m))).
 apply iffSym.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 simpl in |- *.
 unfold not in |- *; intros.
 decompose sum H.
@@ -1227,7 +1232,7 @@ auto.
 auto.
 Qed.
 
-Let composeSigmaFormula (n w m : nat) (A : Vector (Formula * naryFunc n) m)
+Let composeSigmaFormula (n w m : nat) (A : vector (Formula * naryFunc n) m)
   (B : Formula) : Formula :=
   addExists (S w) m
     (andH (FormulasToFormula n w m A)
@@ -1241,10 +1246,10 @@ Let composeSigmaFormula (n w m : nat) (A : Vector (Formula * naryFunc n) m)
 Remark composeSigmaRepresentable :
  forall n w m : nat,
  n <= w ->
- forall (A : Vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
+ forall (A : vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
  RepresentablesHelp n m A ->
- Vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
-   (fun (pair : Formula * naryFunc n) (m : nat) (v : Vector _ m) (rec : Prop) =>
+ vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+   (fun (pair : Formula * naryFunc n) (m : nat) (v : vector _ m) (rec : Prop) =>
     (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\ rec)
    m A ->
  Representable m g B ->
@@ -1254,10 +1259,10 @@ Proof.
 assert
  (forall n w m : nat,
   n <= w ->
-  forall (A : Vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
+  forall (A : vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
   RepresentablesHelp n m A ->
-  Vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
-    (fun (pair : Formula * naryFunc n) (m : nat) (v : Vector _ m)
+  vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+    (fun (pair : Formula * naryFunc n) (m : nat) (v : vector _ m)
        (rec : Prop) =>
      (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\ rec)
     m A ->
@@ -1284,7 +1289,7 @@ apply Axm; right; constructor.
 apply andI.
 apply eqRefl.
 apply Axm; right; constructor.
-apply (subAllFormulaId LNN LNN_dec).
+apply (subAllFormulaId LNN).
 induction H2 as (H2, H3).
 auto.
 apply subAllFormula_ext.
@@ -1354,11 +1359,11 @@ apply
                  | O => var 0
                  | S x' => var (S (x' + w))
                  end))))).
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
 apply reduceAddExists.
-repeat apply (reduceAnd LNN LNN_dec); try apply iffRefl.
-apply (reduceSub LNN LNN_dec).
+repeat apply (reduceAnd LNN); try apply iffRefl.
+apply (reduceSub LNN).
 apply closedNN.
 auto.
 rewrite (subFormulaEqual LNN).
@@ -1377,7 +1382,7 @@ apply
                     | O => var 0
                     | S x' => var (S (x' + w))
                     end)))))).
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
 apply iffI.
 apply impI.
@@ -1584,7 +1589,7 @@ apply
                  | O => var 0
                  | S x' => var (S (x' + w))
                  end)))) (S n + w) (var (S n + w))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 eapply andE1.
 apply Axm; right; constructor.
 rewrite (subFormulaId LNN).
@@ -1604,8 +1609,8 @@ apply Axm; right; constructor.
 rewrite subAddExistsNice.
 apply reduceAddExists.
 rewrite (subFormulaAnd LNN).
-apply (reduceAnd LNN LNN_dec).
-apply (subFormulaNil LNN LNN_dec).
+apply (reduceAnd LNN).
+apply (subFormulaNil LNN).
 cut (n + w < S n + w).
 generalize (S n + w).
 clear H5 H3 g H2.
@@ -1642,10 +1647,10 @@ auto.
 simpl in |- *.
 apply lt_n_Sn.
 eapply iffTrans.
-apply (subSubAllFormula LNN LNN_dec).
+apply (subSubAllFormula LNN).
 apply iffSym.
 eapply iffTrans.
-apply (subAllSubFormula LNN LNN_dec).
+apply (subAllSubFormula LNN).
 replace
  (subAllFormula LNN B
     (fun n1 : nat =>
@@ -1702,11 +1707,11 @@ apply closedNatToTerm.
 intros.
 set
  (v' :=
-  Vector_rec (Formula * (nat -> naryFunc n))
-    (fun (m : nat) (v : Vector _ m) => Vector (Formula * naryFunc n) m)
+  vector_rec (Formula * (nat -> naryFunc n))
+    (fun (m : nat) (v : vector _ m) => vector (Formula * naryFunc n) m)
     (Vnil _)
     (fun (pair : Formula * (nat -> naryFunc n)) (m : nat) 
-       (v : Vector _ m) (rec : Vector (Formula * naryFunc n) m) =>
+       (v : vector _ m) (rec : vector (Formula * naryFunc n) m) =>
      Vcons _
        (substituteFormula LNN (fst pair) (S n) (natToTerm a), snd pair a) m
        rec) _ A) in *.
@@ -1780,12 +1785,12 @@ apply
 rewrite subAddExistsNice.
 apply reduceAddExists.
 rewrite (subFormulaAnd LNN).
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 clear H3 H2 H1 H0 g B.
 induction A as [| a0 n0 A HrecA].
 simpl in |- *.
 apply iffSym.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 simpl in |- *.
 unfold not in |- *; intros.
 decompose sum H0.
@@ -1793,8 +1798,8 @@ discriminate H1.
 discriminate H2.
 simpl in |- *.
 rewrite (subFormulaAnd LNN).
-apply (reduceAnd LNN LNN_dec); [ idtac | apply HrecA ].
-apply (subFormulaExch LNN LNN_dec).
+apply (reduceAnd LNN); [ idtac | apply HrecA ].
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 unfold not in |- *; intros.
@@ -1805,7 +1810,7 @@ apply le_lt_n_Sm.
 apply le_plus_r.
 apply H0.
 apply iffSym.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 decompose record (freeVarSubAllFormula1 _ _ _ _ H4).
 destruct x as [| n0].
@@ -1925,29 +1930,29 @@ apply H; auto.
 Qed.
 
 (*
-Local composePiFormula [n,w,m:nat][A:(Vector Formula*(naryFunc n) m)][B:Formula] : Formula :=
+Local composePiFormula [n,w,m:nat][A:(vector Formula*(naryFunc n) m)][B:Formula] : Formula :=
 (addForalls (S w) m (impH (FormulasToFormula n w m A)
 (subAllFormula LNN B [x:nat]
      (Cases x of O => (var O) | (S x')=>(var (plus (S x') w))end)))).
 
-Remark composePiRepresentable : (n,w,m:nat)(le n w)->(A:(Vector Formula*(naryFunc n) m))
+Remark composePiRepresentable : (n,w,m:nat)(le n w)->(A:(vector Formula*(naryFunc n) m))
 (B:Formula)(g:(naryFunc m))
 (RepresentablesHelp n m A)->
-(Vector_rect Formula*(naryFunc n) [_][_]Prop
+(vector_rect Formula*(naryFunc n) [_][_]Prop
  True
- [pair:(Formula*(naryFunc n))][m:nat][v:(Vector ? m)][rec:Prop]
+ [pair:(Formula*(naryFunc n))][m:nat][v:(vector ? m)][rec:Prop]
  ((v:nat)(In v (freeVarFormula LNN (Fst pair)))->(le v n))/\rec
   m A)->
 (Representable m g B)->
 (Representable n (evalComposeFunc n m (FormulasToFuncs n m A) g)
  (composePiFormula n w m A B)).
 Proof.
-Assert (n,w,m:nat)(le n w)->(A:(Vector Formula*(naryFunc n) m))
+Assert (n,w,m:nat)(le n w)->(A:(vector Formula*(naryFunc n) m))
 (B:Formula)(g:(naryFunc m))
 (RepresentablesHelp n m A)->
-(Vector_rect Formula*(naryFunc n) [_][_]Prop
+(vector_rect Formula*(naryFunc n) [_][_]Prop
  True
- [pair:(Formula*(naryFunc n))][m:nat][v:(Vector ? m)][rec:Prop]
+ [pair:(Formula*(naryFunc n))][m:nat][v:(vector ? m)][rec:Prop]
  ((v:nat)(In v (freeVarFormula LNN (Fst pair)))->(le v n))/\rec
   m A)->
 (Representable m g B)->
@@ -1975,7 +1980,7 @@ Apply Axm; Right; Constructor.
 Apply eqRefl.
 Apply impI.
 Apply Axm; Left; Right; Constructor.
-Apply (subAllFormulaId LNN LNN_dec).
+Apply (subAllFormulaId LNN).
 Induction H2.
 Auto.
 Apply subAllFormula_ext.
@@ -2038,12 +2043,12 @@ Apply iffTrans with (forallH (plus n (S w))
                   0 => (var (0))
                 | (S x') => (var (S (plus x' w)))
                 end)))).
-Apply (reduceForall LNN LNN_dec).
+Apply (reduceForall LNN).
 Apply closedNN.
 Apply reduceAddForalls.
-Apply (reduceImp LNN LNN_dec); Try Apply iffRefl.
-Apply (reduceAnd LNN LNN_dec); Try Apply iffRefl.
-Apply (reduceSub LNN LNN_dec).
+Apply (reduceImp LNN); Try Apply iffRefl.
+Apply (reduceAnd LNN); Try Apply iffRefl.
+Apply (reduceSub LNN).
 Apply closedNN.
 Auto.
 Rewrite (subFormulaEqual LNN).
@@ -2060,7 +2065,7 @@ Apply iffTrans with (forallH (plus n (S w))
                   0 => (var (0))
                 | (S x') => (var (S (plus x' w)))
                 end))))).
-Apply (reduceForall LNN LNN_dec).
+Apply (reduceForall LNN).
 Apply closedNN.
 Apply iffI.
 Repeat Apply impI.
@@ -2282,7 +2287,7 @@ Apply impE with (substituteFormula LNN
                 0 => (var (0))
               | (S x') => (var (S (plus x' w)))
               end))) (S (plus n w)) (natToTerm (Snd a))).
-Apply (subWithEquals LNN LNN_dec).
+Apply (subWithEquals LNN).
 Apply eqSym.
 Apply Axm; Right; Constructor.
 Rewrite subFormulaId.
@@ -2290,8 +2295,8 @@ Apply Axm; Left; Right; Constructor.
 Rewrite subAddForallsNice.
 Apply reduceAddForalls.
 Rewrite (subFormulaImp LNN).
-Apply (reduceImp LNN LNN_dec).
-Apply (subFormulaNil LNN LNN_dec).
+Apply (reduceImp LNN).
+Apply (subFormulaNil LNN).
 Cut (lt (plus n w) (plus (S n) w)).
 Generalize (plus (S n) w).
 Clear H5 H3 g H2.
@@ -2328,10 +2333,10 @@ Auto.
 Simpl.
 Apply lt_n_Sn.
 EApply iffTrans.
-Apply (subSubAllFormula LNN LNN_dec).
+Apply (subSubAllFormula LNN).
 Apply iffSym.
 EApply iffTrans.
-Apply (subAllSubFormula LNN LNN_dec).
+Apply (subAllSubFormula LNN).
 Replace (subAllFormula LNN B
          [n1:nat]
           (substituteTerm LNN
@@ -2385,9 +2390,9 @@ Intros.
 Elim (closedNatToTerm ? ? H6).
 Apply closedNatToTerm.
 Intros.
-LetTac v' := (Vector_rec Formula*(nat->(naryFunc n)) [m:nat][v:(Vector ? m)](Vector Formula*(naryFunc n) m)
+LetTac v' := (vector_rec Formula*(nat->(naryFunc n)) [m:nat][v:(vector ? m)](vector Formula*(naryFunc n) m)
 (Vnil ?)
-[pair:Formula*(nat->(naryFunc n))][m:nat][v:(Vector ? m)][rec:(Vector Formula*(naryFunc n) m)]
+[pair:Formula*(nat->(naryFunc n))][m:nat][v:(vector ? m)][rec:(vector Formula*(naryFunc n) m)]
 (Vcons ? ((substituteFormula LNN (Fst pair) (S n) (natToTerm a)),
           (Snd pair a)) m rec)
 ? A).
@@ -2460,12 +2465,12 @@ Apply RepresentableAlternate with (addForalls (S w) m
 Rewrite subAddForallsNice.
 Apply reduceAddForalls.
 Rewrite (subFormulaImp LNN).
-Apply (reduceImp LNN LNN_dec).
+Apply (reduceImp LNN).
 Clear H3 H2 H1 H0 g B.
 Induction A.
 Simpl.
 Apply iffSym.
-Apply (subFormulaNil LNN LNN_dec).
+Apply (subFormulaNil LNN).
 Simpl.
 Unfold not; Intros.
 Decompose Sum H0.
@@ -2473,8 +2478,8 @@ Discriminate H1.
 Discriminate H2.
 Simpl.
 Rewrite (subFormulaAnd LNN).
-Apply (reduceAnd LNN LNN_dec); [Idtac | Apply HrecA].
-Apply (subFormulaExch LNN LNN_dec).
+Apply (reduceAnd LNN); [Idtac | Apply HrecA].
+Apply (subFormulaExch LNN).
 Discriminate.
 Apply closedNatToTerm.
 Unfold not; Intros.
@@ -2485,7 +2490,7 @@ Apply le_lt_n_Sm.
 Apply le_plus_r.
 Apply H0.
 Apply iffSym.
-Apply (subFormulaNil LNN LNN_dec).
+Apply (subFormulaNil LNN).
 Unfold not; Intros.
 Decompose Record (freeVarSubAllFormula1 ? ? ? ? H4).
 NewDestruct x.
@@ -2705,7 +2710,7 @@ apply
     (impH (LT (natToTerm a) (var v))
        (notH (substituteFormula LNN B v (natToTerm a)))).
 apply iffE1.
-apply (reduceImp LNN LNN_dec).
+apply (reduceImp LNN).
 unfold LT at 2 in |- *.
 rewrite (subFormulaRelation LNN).
 simpl in |- *.
@@ -2716,8 +2721,8 @@ auto.
 apply iffRefl.
 elim b.
 auto.
-apply (reduceNot LNN LNN_dec).
-apply (subFormulaTrans LNN LNN_dec).
+apply (reduceNot LNN).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim H0.
 eapply In_list_remove1.
@@ -2779,7 +2784,7 @@ apply
              (impH (LT (var x) (var v))
                 (notH (substituteFormula LNN B v (var x)))))) v 
        (natToTerm a)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -2826,7 +2831,7 @@ rewrite (subFormulaNot LNN).
 apply impE with (notH (substituteFormula LNN B v (natToTerm n))).
 apply cp2.
 apply iffE1.
-apply (subFormulaTrans LNN LNN_dec).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim H0.
 eapply In_list_remove1.
@@ -2867,11 +2872,11 @@ elim H2; auto.
 rewrite (subFormulaNot LNN).
 repeat first
  [ apply iffRefl
- | apply (reduceAnd LNN LNN_dec)
- | apply (reduceImp LNN LNN_dec)
- | apply (reduceNot LNN LNN_dec)
- | apply (reduceForall LNN LNN_dec); [ apply closedNN | idtac ] ].
-apply (subFormulaExch LNN LNN_dec).
+ | apply (reduceAnd LNN)
+ | apply (reduceImp LNN)
+ | apply (reduceNot LNN)
+ | apply (reduceForall LNN); [ apply closedNN | idtac ] ].
+apply (subFormulaExch LNN).
 auto.
 simpl in |- *.
 unfold not in |- *; intros.
@@ -3221,6 +3226,107 @@ elim H2.
 tauto.
 Qed.
 
+Ltac PRsolveFV A B n :=
+  unfold existH, forallH, not in |- *; intros;
+   repeat
+    match goal with
+    | H:(_ = _) |- _ => discriminate H
+    | H:(?X1 <> ?X1) |- _ => elim H; reflexivity
+    | H:(?X1 = S ?X1) |- _ => elim (n_Sn _ H)
+    | H:(S ?X1 = ?X1) |- _ =>
+        elim (n_Sn X1); symmetry  in |- *; apply H
+    | H:(?X1 = S (S ?X1)) |- _ => elim (n_SSn _ H)
+    | H:(S (S ?X1) = ?X1) |- _ =>
+        elim (n_SSn X1); symmetry  in |- *; apply H
+    | H:(?X1 = S (S (S ?X1))) |- _ =>
+        elim (n_SSSn _ H)
+    | H:(S (S (S ?X1)) = ?X1) |- _ =>
+        elim (n_SSSn X1); symmetry  in |- *; apply H
+    | H:(In ?X3
+           (freeVarFormula LNN
+              (substituteFormula LNN
+                 (substituteFormula LNN
+                    (substituteFormula LNN betaFormula 1 _) 2 _) 0 _))) |- _
+    =>
+        decompose sum (In_betaFormula_subst_1_2_0 _ _ _ _ H); clear H
+    | H:(In ?X3
+           (freeVarFormula LNN
+              (substituteFormula LNN (substituteFormula LNN betaFormula 1 _)
+                 2 _))) |- _ =>
+        decompose sum (In_betaFormula_subst_1_2 _ _ _ H); clear H
+    | H:(In ?X3 (freeVarFormula LNN (substituteFormula LNN betaFormula 1 _)))
+    |- _ =>
+        decompose sum (In_betaFormula_subst_1 _ _ H); clear H
+    | H:(In ?X3 (freeVarFormula LNN betaFormula)) |- _ =>
+        decompose sum (In_betaFormula _ H); clear H
+    | H:(In ?X3
+           (freeVarFormula LNN
+              (substituteFormula LNN (substituteFormula LNN betaFormula 2 _)
+                 1 _))) |- _ =>
+        decompose sum (In_betaFormula_subst_2_1 _ _ _ H); clear H
+    | H:(In ?X3 (freeVarFormula LNN (substituteFormula LNN betaFormula 2 _)))
+    |- _ =>
+        decompose sum (In_betaFormula_subst_2 _ _ H);
+         clear H
+          (*
+          Match Context With
+          *)
+    | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
+        assert
+         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+         [ apply H | clear H ]
+    | H:(In ?X3 (freeVarFormula LNN (fol.forallH LNN ?X1 ?X2))) |- _ =>
+        assert
+         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+         [ apply H | clear H ]
+    | 
+    (*
+    .
+    *)
+    H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+    =>
+        assert (In X3 (freeVarFormula LNN X2));
+         [ eapply In_list_remove1; apply H
+         | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
+    | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+        assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
+         [ apply H | clear H ]
+    | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
+        assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
+         [ apply H | clear H ]
+    | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
+        assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
+    | H:(In _ (freeVarFormula LNN (primRecPiFormulaHelp _ _ _))) |- _ =>
+        decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H); clear H
+    | J:(In ?X3 (freeVarFormula LNN A)),H:(forall v : nat,
+                                           In v (freeVarFormula LNN A) ->
+                                           v <= S n) |- _ =>
+        elim (le_not_lt X3 (S n));
+         [ apply H; apply J | clear J; repeat apply lt_n_Sn || apply lt_S ]
+    | H:(In ?X3 (freeVarFormula LNN B)),H0:(forall v : nat,
+                                            In v (freeVarFormula LNN B) ->
+                                            v <= S (S (S n))) |- _ =>
+        elim (le_not_lt X3 (S (S (S n))));
+         [ apply H0; apply H | clear H; repeat apply lt_n_Sn || apply lt_S ]
+    | H:(In _ (_ ++ _)) |- _ =>
+        induction (in_app_or _ _ _ H); clear H
+    | H:(In _ (freeVarFormula LNN (substituteFormula LNN ?X1 ?X2 ?X3))) |- _
+    =>
+        induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
+    | H:(In _ (freeVarFormula LNN (LT ?X1 ?X2))) |- _ =>
+        rewrite freeVarLT in H
+    | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
+        elim (closedNatToTerm _ _ H)
+    | H:(In _ (freeVarTerm LNN Zero)) |- _ =>
+        elim H
+    | H:(In _ (freeVarTerm LNN (Succ _))) |- _ =>
+        rewrite freeVarSucc in H
+    | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
+        simpl in H; decompose sum H; clear H
+    | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
+        simpl in H; decompose sum H; clear H
+    end.
+
 Remark primRecSigmaRepresentable :
  forall (n : nat) (A : Formula) (g : naryFunc n),
  Representable n g A ->
@@ -3258,9 +3364,9 @@ apply
              (substituteFormula LNN (primRecPiFormulaHelp 0 A B) 1
                 (natToTerm a)) 2 4)
           (substituteFormula LNN betaFormula 1 (natToTerm a)))).
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 apply subFormulaMinimize; first [ discriminate | apply closedNatToTerm ].
 apply iffRefl.
 set (f := evalPrimRecFunc 0 g h) in *.
@@ -3299,9 +3405,9 @@ apply
     (fol.existH LNN 2
        (fol.andH LNN (equal (var 2) (natToTerm x))
           (substituteFormula LNN betaFormula 1 (natToTerm a)))).
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 assert
  (subExistSpecial :
   forall (F : Formula) (a b c : nat),
@@ -3373,17 +3479,17 @@ induction H as (H, H1).
 simpl in H1.
 apply impE with (substituteFormula LNN A 0 (natToTerm g)).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply iffTrans with (substituteFormula LNN A 2 (natToTerm x)).
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 1 0).
 apply H; auto.
 auto.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 2 0).
 apply H; auto.
@@ -3392,7 +3498,7 @@ apply
  impE
   with (substituteFormula LNN (equal (var 0) (natToTerm g)) 0 (natToTerm g)).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 auto.
 rewrite (subFormulaEqual LNN).
@@ -3410,11 +3516,11 @@ apply
        (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
           (natToTerm x)) 0 (natToTerm (f 0))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H5).
 elim (In_list_remove2 _ _ _ _ _ H6).
@@ -3426,7 +3532,7 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (beta x 0))) 0
        (natToTerm (f 0))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply
  iffTrans
@@ -3434,7 +3540,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm x)) 1 
        (natToTerm 0)).
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -3490,8 +3596,8 @@ apply
                    (natToTerm x)) 0 (var 1)) 3 (natToTerm n)) 0
           (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 unfold not in |- *; intros.
@@ -3510,8 +3616,8 @@ apply
                    (natToTerm x)) 3 (natToTerm n)) 0 
              (var 1)) 0 (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 unfold not in |- *; intros.
@@ -3529,8 +3635,8 @@ apply
                 (natToTerm x)) 3 (natToTerm n)) 0 (var 1)) 1
        (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H6).
 elim (In_list_remove2 _ _ _ _ _ H7).
@@ -3549,8 +3655,8 @@ apply
                 (var 3)) 3 (natToTerm n)) 0 (var 1)) 1 
        (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H6 as [H6| H6].
@@ -3566,8 +3672,8 @@ apply
              (substituteFormula LNN betaFormula 2 (natToTerm x)) 1
              (natToTerm n)) 0 (var 1)) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert
  (In 3
@@ -3588,7 +3694,7 @@ apply
        (substituteFormula LNN (equal (var 0) (natToTerm (beta x n))) 0
           (var 1)) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H5.
 repeat rewrite (subFormulaEqual LNN).
 simpl in |- *.
@@ -3611,8 +3717,8 @@ apply
              (natToTerm n)) 0 (natToTerm (f (S n)))) 1 
        (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H5).
 elim (In_list_remove2 _ _ _ _ _ H6).
@@ -3627,8 +3733,8 @@ apply
        (substituteFormula LNN (substituteFormula LNN B 2 (natToTerm n)) 0
           (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 3 2).
 apply H0.
@@ -3642,8 +3748,8 @@ apply
        (substituteFormula LNN (substituteFormula LNN B 2 (natToTerm n)) 1
           (natToTerm (f n))) 0 (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -3653,7 +3759,7 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (h n (f n)))) 0
        (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H4.
 rewrite (subFormulaEqual LNN).
 simpl in |- *.
@@ -3673,8 +3779,8 @@ apply
                 (Succ (var 3))) 3 (natToTerm n)) 0 
           (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 simpl in |- *; unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -3692,10 +3798,10 @@ apply
                 (natToTerm n)) 1 (natToTerm (S n))) 0 
           (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 replace (natToTerm (S n)) with
  (substituteTerm LNN (Succ (var 3)) 3 (natToTerm n)).
-apply (subSubFormula LNN LNN_dec).
+apply (subSubFormula LNN).
 discriminate.
 apply closedNatToTerm.
 simpl in |- *.
@@ -3711,8 +3817,8 @@ apply
              (natToTerm (S n))) 0 (natToTerm (f (S n)))) 1 
        (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H6).
 elim (le_not_lt 3 2).
@@ -3729,7 +3835,7 @@ apply
        (substituteFormula LNN (equal (var 0) (natToTerm (beta x (S n)))) 0
           (natToTerm (f (S n)))) 1 (natToTerm (f n))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H5.
 repeat rewrite (subFormulaEqual LNN).
 simpl in |- *.
@@ -3767,9 +3873,9 @@ apply
        (substituteFormula LNN (equal (var 0) (natToTerm g)) 1 (natToTerm a))
        2 (natToTerm x)).
 apply iffE1.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply H1.
 repeat rewrite (subFormulaEqual LNN).
@@ -3794,7 +3900,7 @@ apply
                 (substituteFormula LNN betaFormula 1 Zero) 2 
                 (var 2)) 1 (natToTerm a)) 2 (natToTerm x)) 0 
        (natToTerm g)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -3809,11 +3915,11 @@ apply
        (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
           (natToTerm x)) 0 (natToTerm (f 0))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H5).
 elim (In_list_remove2 _ _ _ _ _ H6).
@@ -3825,7 +3931,7 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (beta x 0))) 0
        (natToTerm (f 0))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply
  iffTrans
@@ -3833,7 +3939,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm x)) 1 
        (natToTerm 0)).
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -3878,8 +3984,8 @@ apply
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm x)) 0 (var 1)) 3 (natToTerm n)).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H6 as [H6| H6].
@@ -3895,8 +4001,8 @@ apply
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm x)) 3 (natToTerm n)) 0 (var 1)).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H6 as [H6| H6].
@@ -3912,8 +4018,8 @@ apply
              (substituteFormula LNN betaFormula 2 (natToTerm x)) 1 
              (var 3)) 3 (natToTerm n)) 0 (var 1)).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 unfold not in |- *; intros.
@@ -3928,8 +4034,8 @@ apply
           (substituteFormula LNN betaFormula 2 (natToTerm x)) 1 
           (natToTerm n)) 0 (var 1)).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert
  (In 3
@@ -3948,7 +4054,7 @@ apply
   with
     (substituteFormula LNN (equal (var 0) (natToTerm (beta x n))) 0 (var 1)).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H5.
 repeat rewrite (subFormulaEqual LNN).
 simpl in |- *.
@@ -3982,7 +4088,7 @@ apply
                 (substituteFormula LNN betaFormula 1 (Succ (var 3))) 2
                 (natToTerm x)) 3 (natToTerm n))) 1 
        (natToTerm (f n))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -3997,8 +4103,8 @@ apply
        (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 3
           (natToTerm n)) 1 (natToTerm (f n))).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H5).
 elim (In_list_remove2 _ _ _ _ _ H6).
@@ -4012,8 +4118,8 @@ apply
     (substituteFormula LNN (substituteFormula LNN B 2 (natToTerm n)) 1
        (natToTerm (f n))).
 apply iffE1.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 3 2).
 apply H0.
@@ -4043,7 +4149,7 @@ apply
                 (substituteFormula LNN betaFormula 1 (Succ (var 3))) 2
                 (natToTerm x)) 3 (natToTerm n)) 1 (natToTerm (f n))) 0
        (natToTerm (f (S n)))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -4058,8 +4164,8 @@ apply
                 (Succ (var 3))) 3 (natToTerm n)) 1 
           (natToTerm (f n))) 0 (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 simpl in |- *; unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -4077,10 +4183,10 @@ apply
                 (natToTerm n)) 1 (natToTerm (S n))) 1 
           (natToTerm (f n))) 0 (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 replace (natToTerm (S n)) with
  (substituteTerm LNN (Succ (var 3)) 3 (natToTerm n)).
-apply (subSubFormula LNN LNN_dec).
+apply (subSubFormula LNN).
 discriminate.
 apply closedNatToTerm.
 simpl in |- *.
@@ -4096,8 +4202,8 @@ apply
              (natToTerm (S n))) 1 (natToTerm (f n))) 0 
        (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H6).
 elim (le_not_lt 3 2).
@@ -4114,7 +4220,7 @@ apply
        (substituteFormula LNN (equal (var 0) (natToTerm (beta x (S n)))) 1
           (natToTerm (f n))) 0 (natToTerm (f (S n)))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H5.
 repeat rewrite (subFormulaEqual LNN).
 simpl in |- *.
@@ -4188,11 +4294,11 @@ apply
 apply sysWeaken.
 apply iffE1.
 apply iffTrans with (substituteFormula LNN A 2 (natToTerm b)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 1 0); auto.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 2 0); auto.
 eapply andE1.
@@ -4220,13 +4326,13 @@ apply
   with
     (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
        (natToTerm b)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H3).
 elim (In_list_remove2 _ _ _ _ _ H4); reflexivity.
 apply H4.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -4401,8 +4507,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 2 (natToTerm b)) 1
           (Succ (var 3))) 3 (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; simpl in |- *; intros.
 induction H4 as [H4| H4].
@@ -4417,7 +4523,7 @@ apply
           (substituteFormula LNN betaFormula 2 (natToTerm b)) 3
           (natToTerm x0)) 1
        (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))).
-apply (subSubFormula LNN LNN_dec).
+apply (subSubFormula LNN).
 discriminate.
 apply closedNatToTerm.
 simpl in |- *.
@@ -4427,8 +4533,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm b)) 1
        (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H4).
 elim (le_not_lt 3 2).
@@ -4464,8 +4570,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 3
           (natToTerm x0)) 1 (natToTerm (beta b x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H3).
 elim (In_list_remove2 _ _ _ _ _ H4).
@@ -4473,8 +4579,8 @@ reflexivity.
 induction H4 as [H4| H4].
 discriminate H4.
 apply H4.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 3 2).
 apply H0.
@@ -4489,7 +4595,7 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
              (natToTerm b)) 3 (natToTerm x0)) 1 (var 1)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply Axm; right; constructor.
 repeat rewrite (subFormulaId LNN).
 eapply andE1.
@@ -4522,8 +4628,8 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm b)) 0 (var 1)) 3 (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -4538,15 +4644,15 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm b)) 3 (natToTerm x0)) 0 (var 1)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
 discriminate H4.
 apply H4.
 apply closedNatToTerm.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply
  iffTrans
@@ -4555,8 +4661,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 2 (natToTerm b)) 1 
           (var 3)) 3 (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -4569,8 +4675,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm b)) 1 
        (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert
  (In 3
@@ -4671,7 +4777,7 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (beta b 0))) 0
        (natToTerm (f 0))).
 apply iffE1.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 rewrite (subFormulaId LNN).
 induction repBeta as (H1, H2).
@@ -4687,13 +4793,13 @@ apply
   with
     (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
        (natToTerm b)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H3).
 elim (In_list_remove2 _ _ _ _ _ H4); reflexivity.
 apply H4.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -4717,17 +4823,17 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (f 0))) 0
        (natToTerm (f 0))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ].
+apply (reduceSub LNN); [ apply closedNN | idtac ].
 induction H as (H, H1).
 simpl in H1.
 unfold f in |- *; simpl in |- *.
 apply iffTrans with A; [ idtac | assumption ].
 apply iffTrans with (substituteFormula LNN A 2 (natToTerm b)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 1 0); auto.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 2 0); auto.
 rewrite (subFormulaEqual LNN).
@@ -4943,12 +5049,12 @@ apply
                    (substituteFormula LNN betaFormula 1 (Succ (var 3))) 2
                    (var 2)) 2 (natToTerm b)) 3 (natToTerm x0)) 1
           (natToTerm (beta b x0))) 0 (natToTerm (f (S x0)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 induction H0 as (H0, H1).
 induction repBeta as (H2, H3).
@@ -4968,8 +5074,8 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 2 (natToTerm b)) 1
              (Succ (var 3))) 3 (natToTerm x0)) 1 (natToTerm (beta b x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; simpl in |- *; intros.
 induction H4 as [H4| H4].
@@ -4986,8 +5092,8 @@ apply
              (natToTerm x0)) 1
           (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))) 1
        (natToTerm (beta b x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subSubFormula LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subSubFormula LNN).
 discriminate.
 apply closedNatToTerm.
 simpl in |- *.
@@ -4999,8 +5105,8 @@ apply
           (substituteFormula LNN betaFormula 2 (natToTerm b)) 1
           (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))) 1
        (natToTerm (beta b x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H4).
 elim (le_not_lt 3 2).
@@ -5009,7 +5115,7 @@ eapply In_list_remove1.
 apply H5.
 repeat constructor.
 elim (closedNatToTerm _ _ H5).
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H4).
 elim (In_list_remove2 _ _ _ _ _ H5). reflexivity.
@@ -5027,7 +5133,7 @@ apply
        (substituteFormula LNN (equal (var 1) (natToTerm (beta b x0))) 0
           (natToTerm (f (S x0)))) 1 (natToTerm (beta b x0))).
 apply iffE2.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 induction H0 as (H0, H1).
 induction repBeta as (H2, H3).
 simpl in H3.
@@ -5044,8 +5150,8 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm b)) 0 (var 1)) 3 (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -5060,15 +5166,15 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 1 (var 3)) 2 
              (natToTerm b)) 3 (natToTerm x0)) 0 (var 1)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
 discriminate H4.
 apply H4.
 apply closedNatToTerm.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 apply
  iffTrans
@@ -5077,8 +5183,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 2 (natToTerm b)) 1 
           (var 3)) 3 (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -5091,8 +5197,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm b)) 1 
        (natToTerm x0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert
  (In 3
@@ -5126,7 +5232,7 @@ apply
              (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
                 (natToTerm b)) 3 (natToTerm x0)) 0 
           (natToTerm (f (S x0)))) 1 (natToTerm (f x0))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply Axm; right; constructor.
 repeat apply sysWeaken.
 apply
@@ -5139,7 +5245,7 @@ apply
                 (natToTerm b)) 3 (natToTerm x0)) 1 
           (natToTerm (f x0))) 0 (natToTerm (f (S x0)))).
 apply iffE1.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -5149,7 +5255,7 @@ apply
     (substituteFormula LNN (equal (var 0) (natToTerm (f (S x0)))) 0
        (natToTerm (f (S x0)))).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 induction H0 as (H0, H1).
 simpl in H1.
@@ -5164,8 +5270,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 3
           (natToTerm x0)) 1 (natToTerm (f x0))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H2).
 elim (In_list_remove2 _ _ _ _ _ H3).
@@ -5173,8 +5279,8 @@ reflexivity.
 induction H3 as [H3| H3].
 discriminate H3.
 apply H3.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 elim (le_not_lt 3 2).
 apply H0.
@@ -5216,7 +5322,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 1 (natToTerm a)) 2 
        (var 2)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 eapply andE1.
 apply Axm; right; constructor.
 rewrite (subFormulaId LNN).
@@ -5238,7 +5344,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 2 (natToTerm x)) 1 
        (natToTerm a)).
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
 apply closedNatToTerm.
@@ -5340,8 +5446,8 @@ apply
              (substituteFormula LNN B (S n) (natToTerm a0)) 
              (S (S n)) (var (S n))) (S (S (S n))) (natToTerm a1)) 
        (S n) (natToTerm a2)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 repeat
  match goal with
@@ -5372,8 +5478,8 @@ apply
              (substituteFormula LNN B (S n) (natToTerm a0)) 
              (S (S (S n))) (natToTerm a1)) (S (S n)) 
           (var (S n))) (S n) (natToTerm a2)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 unfold not in |- *; intros.
 elim (le_not_lt (S (S (S n))) (S (S n))).
 rewrite <- H3.
@@ -5394,8 +5500,8 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B (S n) (natToTerm a0))
           (S (S (S n))) (natToTerm a1)) (S (S n)) (natToTerm a2)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 repeat
  match goal with
@@ -5422,8 +5528,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN B (S (S (S n))) (natToTerm a1)) 
           (S n) (natToTerm a0)) (S (S n)) (natToTerm a2)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 unfold not in |- *; intros.
 elim (le_not_lt (S (S (S n))) (S n)).
 rewrite <- H3.
@@ -5432,7 +5538,7 @@ apply lt_S.
 apply lt_n_Sn.
 apply closedNatToTerm.
 apply closedNatToTerm.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 unfold not in |- *; intros.
 elim (le_not_lt (S (S n)) (S n)).
 rewrite <- H3.
@@ -5459,7 +5565,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (primRecSigmaFormula (S n) A B) 
           (S n) (natToTerm a0)) (S (S n)) (natToTerm a)).
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 unfold not in |- *; intros.
 elim (le_not_lt (S (S n)) (S n)).
 rewrite H3.
@@ -5476,7 +5582,7 @@ apply
              (S n) (natToTerm a0)) (S (S n)) (var (S n))) 
        (S n) (natToTerm a)).
 apply iffSym.
-apply (subFormulaTrans LNN LNN_dec).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert
  (In (S n)
@@ -5489,7 +5595,7 @@ induction (freeVarSubFormula3 _ _ _ _ _ H4).
 elim (In_list_remove2 _ _ _ _ _ H5).
 reflexivity.
 elim (closedNatToTerm _ _ H5).
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 unfold primRecSigmaFormula in |- *.
 assert (H3 := I). (* For hyps numbering compatibility *)
@@ -5593,117 +5699,17 @@ assert (H16 := I). (* For hyps numbering compatibility *)
 
 Opaque substituteFormula.
 
-Ltac PRsolveFV A B n :=
-  unfold existH, forallH, not in |- *; intros;
-   repeat
-    match goal with
-    | H:(_ = _) |- _ => discriminate H
-    | H:(?X1 <> ?X1) |- _ => elim H; reflexivity
-    | H:(?X1 = S ?X1) |- _ => elim (n_Sn _ H)
-    | H:(S ?X1 = ?X1) |- _ =>
-        elim (n_Sn X1); symmetry  in |- *; apply H
-    | H:(?X1 = S (S ?X1)) |- _ => elim (n_SSn _ H)
-    | H:(S (S ?X1) = ?X1) |- _ =>
-        elim (n_SSn X1); symmetry  in |- *; apply H
-    | H:(?X1 = S (S (S ?X1))) |- _ =>
-        elim (n_SSSn _ H)
-    | H:(S (S (S ?X1)) = ?X1) |- _ =>
-        elim (n_SSSn X1); symmetry  in |- *; apply H
-    | H:(In ?X3
-           (freeVarFormula LNN
-              (substituteFormula LNN
-                 (substituteFormula LNN
-                    (substituteFormula LNN betaFormula 1 _) 2 _) 0 _))) |- _
-    =>
-        decompose sum (In_betaFormula_subst_1_2_0 _ _ _ _ H); clear H
-    | H:(In ?X3
-           (freeVarFormula LNN
-              (substituteFormula LNN (substituteFormula LNN betaFormula 1 _)
-                 2 _))) |- _ =>
-        decompose sum (In_betaFormula_subst_1_2 _ _ _ H); clear H
-    | H:(In ?X3 (freeVarFormula LNN (substituteFormula LNN betaFormula 1 _)))
-    |- _ =>
-        decompose sum (In_betaFormula_subst_1 _ _ H); clear H
-    | H:(In ?X3 (freeVarFormula LNN betaFormula)) |- _ =>
-        decompose sum (In_betaFormula _ H); clear H
-    | H:(In ?X3
-           (freeVarFormula LNN
-              (substituteFormula LNN (substituteFormula LNN betaFormula 2 _)
-                 1 _))) |- _ =>
-        decompose sum (In_betaFormula_subst_2_1 _ _ _ H); clear H
-    | H:(In ?X3 (freeVarFormula LNN (substituteFormula LNN betaFormula 2 _)))
-    |- _ =>
-        decompose sum (In_betaFormula_subst_2 _ _ H);
-         clear H
-          (*
-          Match Context With
-          *)
-    | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
-        assert
-         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
-         [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.forallH LNN ?X1 ?X2))) |- _ =>
-        assert
-         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
-         [ apply H | clear H ]
-    | 
-    (*
-    .
-    *)
-    H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
-    =>
-        assert (In X3 (freeVarFormula LNN X2));
-         [ eapply In_list_remove1; apply H
-         | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
-        assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
-         [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
-        assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
-         [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
-        assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
-    | H:(In _ (freeVarFormula LNN (primRecPiFormulaHelp _ _ _))) |- _ =>
-        decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H); clear H
-    | J:(In ?X3 (freeVarFormula LNN A)),H:(forall v : nat,
-                                           In v (freeVarFormula LNN A) ->
-                                           v <= S n) |- _ =>
-        elim (le_not_lt X3 (S n));
-         [ apply H; apply J | clear J; repeat apply lt_n_Sn || apply lt_S ]
-    | H:(In ?X3 (freeVarFormula LNN B)),H0:(forall v : nat,
-                                            In v (freeVarFormula LNN B) ->
-                                            v <= S (S (S n))) |- _ =>
-        elim (le_not_lt X3 (S (S (S n))));
-         [ apply H0; apply H | clear H; repeat apply lt_n_Sn || apply lt_S ]
-    | H:(In _ (_ ++ _)) |- _ =>
-        induction (in_app_or _ _ _ H); clear H
-    | H:(In _ (freeVarFormula LNN (substituteFormula LNN ?X1 ?X2 ?X3))) |- _
-    =>
-        induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
-    | H:(In _ (freeVarFormula LNN (LT ?X1 ?X2))) |- _ =>
-        rewrite freeVarLT in H
-    | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
-        elim (closedNatToTerm _ _ H)
-    | H:(In _ (freeVarTerm LNN Zero)) |- _ =>
-        elim H
-    | H:(In _ (freeVarTerm LNN (Succ _))) |- _ =>
-        rewrite freeVarSucc in H
-    | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
-        simpl in H; decompose sum H; clear H
-    | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
-        simpl in H; decompose sum H; clear H
-    end.
 
 unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
  notH in |- *;
  repeat first
   [ discriminate
   | apply iffRefl
-  | apply (reduceExist LNN LNN_dec); [ apply closedNN | idtac ]
-  | apply (reduceForall LNN LNN_dec); [ apply closedNN | idtac ]
-  | apply (reduceAnd LNN LNN_dec)
-  | apply (reduceImp LNN LNN_dec)
-  | apply (reduceNot LNN LNN_dec)
+  | apply (reduceExist LNN); [ apply closedNN | idtac ]
+  | apply (reduceForall LNN); [ apply closedNN | idtac ]
+  | apply (reduceAnd LNN)
+  | apply (reduceImp LNN)
+  | apply (reduceNot LNN)
   | match goal with
     |  |-
     (folProof.SysPrf LNN NN
@@ -5719,8 +5725,8 @@ unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
                   (existH (S n)
                      (substituteFormula LNN X1 (S (S n)) (var (S n)))) X2
                   (var (S (S n)))) X3 X4);
-         [ repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]);
-            apply (rebindExist LNN LNN_dec)
+         [ repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]);
+            apply (rebindExist LNN)
          | idtac ]
     |  |-
     (folProof.SysPrf LNN NN
@@ -5738,8 +5744,8 @@ unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
                      (forallH (S n)
                         (substituteFormula LNN X1 (S (S n)) (var (S n)))) X2
                      (var (S (S n)))) X3 X4) X5 X6);
-         [ repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]);
-            apply (rebindForall LNN LNN_dec)
+         [ repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]);
+            apply (rebindForall LNN)
          | idtac ]
     |  |-
     (folProof.SysPrf LNN NN
@@ -5752,19 +5758,19 @@ unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
             (substituteFormula LNN
                (forallH X6 (substituteFormula LNN X1 (S X6) (var X6))) X2
                (var (S X6)));
-         [ repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]);
-            apply (rebindForall LNN LNN_dec)
+         [ repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]);
+            apply (rebindForall LNN)
          | idtac ]
     |  |- (folProof.SysPrf LNN NN (fol.iffH LNN (existH (S ?X1) ?X2) ?X3)) =>
         apply
          iffTrans with (existH X1 (substituteFormula LNN X2 (S X1) (var X1)));
-         [ apply (rebindExist LNN LNN_dec) | idtac ]
+         [ apply (rebindExist LNN) | idtac ]
     |  |- (folProof.SysPrf LNN NN (fol.iffH LNN (forallH (S ?X1) ?X2) ?X3))
     =>
         apply
          iffTrans
           with (forallH X1 (substituteFormula LNN X2 (S X1) (var X1)));
-         [ apply (rebindForall LNN LNN_dec) | idtac ]
+         [ apply (rebindForall LNN) | idtac ]
     |  |- (?X1 <> S ?X1) => apply n_Sn
     |  |- (?X1 <> S (S ?X1)) => apply n_SSn
     |  |- (?X1 <> S (S (S ?X1))) => apply n_SSSn
@@ -5808,10 +5814,10 @@ apply
   with
     (substituteFormula LNN (substituteFormula LNN A (S n) (natToTerm a0))
        (S (S (S n))) (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 PRsolveFV A B n.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5821,8 +5827,8 @@ apply
           (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
              (var (S (S (S n))))) (S (S n)) (var (S n))) 
        (S (S (S n))) (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5830,10 +5836,10 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
           (var (S (S (S n))))) (S (S (S n))) (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 PRsolveFV A B n.
-apply (subFormulaTrans LNN LNN_dec).
+apply (subFormulaTrans LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5848,8 +5854,8 @@ apply
                 (var (S (S n)))) (S (S n)) (var (S n))) 
           (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5862,8 +5868,8 @@ apply
                 2 (var (S (S (S n))))) 0 (var (S n))) 
           (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5876,8 +5882,8 @@ apply
                 2 (var (S (S (S n))))) (S (S (S n))) 
              (var (S (S n)))) 0 (var (S n))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5887,8 +5893,8 @@ apply
              (substituteFormula LNN betaFormula 1 (var (S (S (S (S n)))))) 2
              (var (S (S n)))) 0 (var (S n))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5899,9 +5905,9 @@ apply
              (substituteFormula LNN betaFormula 1 (var (S (S (S (S n)))))) 2
              (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n))))) 0
        (var (S n))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply
  iffTrans
   with
@@ -5910,10 +5916,10 @@ apply
           (substituteFormula LNN betaFormula 1 (var (S (S (S (S n))))))
           (S (S (S (S n)))) (var (S (S (S n))))) 2 
        (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN).
 PRsolveFV A B n.
 apply
  iffTrans
@@ -5926,8 +5932,8 @@ apply
                 (S (S (S n))) (var (S (S (S (S n)))))) 
              (S (S n)) (var (S n))) (S (S (S n))) (var (S (S n))))
        (S (S (S (S n)))) (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5939,8 +5945,8 @@ apply
                 (S (S n)) (var (S n))) (S (S (S n))) 
              (var (S (S (S (S n)))))) (S (S (S n))) 
           (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5950,17 +5956,17 @@ apply
              (substituteFormula LNN B (S n) (natToTerm a0)) 
              (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S (S n))))))
        (S (S (S (S n)))) (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B (S n) (natToTerm a0))
           (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S n))))).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply iffSym.
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5973,8 +5979,8 @@ apply
                 (var (S (S (S n))))) (S (S n)) (var (S n))) 
           (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5985,8 +5991,8 @@ apply
                 (Succ (var (S (S (S (S n))))))) 2 (var (S (S (S n)))))
           (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
        (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -5994,8 +6000,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 1 (Succ (var (S (S (S (S n)))))))
           2 (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6004,8 +6010,8 @@ apply
           (substituteFormula LNN betaFormula 1 (Succ (var (S (S (S (S n)))))))
           (S (S (S (S n)))) (var (S (S (S n))))) 2 
        (var (S (S n)))).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply
  iffTrans
   with
@@ -6014,7 +6020,7 @@ apply
           (var (S (S (S n))))) 1
        (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
           (S (S (S (S n)))) (var (S (S (S n)))))).
-apply (subSubFormula LNN LNN_dec); PRsolveFV A B n.
+apply (subSubFormula LNN); PRsolveFV A B n.
 replace
  (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
     (S (S (S (S n)))) (var (S (S (S n))))) with
@@ -6022,8 +6028,8 @@ replace
     (substituteTerm LNN (var (S (S (S (S n))))) (S (S (S (S n))))
        (var (S (S (S n)))))).
 rewrite (subTermVar1 LNN).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 reflexivity.
 apply
  iffTrans
@@ -6034,8 +6040,8 @@ apply
              (substituteFormula LNN A (S n) (natToTerm a0)) 
              (S (S n)) (var (S n))) (S (S (S n))) (var (S (S n))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6043,20 +6049,20 @@ apply
        (substituteFormula LNN (substituteFormula LNN A (S n) (natToTerm a0))
           (S (S (S n))) (var (S (S n)))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
     (substituteFormula LNN (substituteFormula LNN A (S n) (natToTerm a0))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply iffTrans with (substituteFormula LNN A (S n) (natToTerm a0)).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply iffSym.
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6070,8 +6076,8 @@ apply
                 (natToTerm a0)) (S (S n)) (var (S n))) 
           (S (S (S n))) (var (S (S n)))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6083,8 +6089,8 @@ apply
                 (var (S (S (S (S (S n))))))) (S (S n)) 
              (var (S n))) (S (S (S n))) (var (S (S n))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 elim (le_not_lt (S (S (S (S (S n))))) (S n)).
 rewrite H17.
 apply le_n.
@@ -6098,8 +6104,8 @@ apply
           (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
              (var (S (S (S (S (S n))))))) (S (S (S n))) 
           (var (S (S n)))) (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6107,17 +6113,17 @@ apply
        (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
           (var (S (S (S (S (S n))))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
     (substituteFormula LNN (substituteFormula LNN betaFormula 1 Zero) 2
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply iffSym.
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 elim H19; symmetry  in |- *; apply H17.
 apply
  iffTrans
@@ -6138,8 +6144,8 @@ apply
                 (S (S n)) (var (S n))) (S (S (S n))) 
              (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n)))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6157,8 +6163,8 @@ apply
                 (S (S n)) (var (S n))) (S (S (S n))) 
              (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n)))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6175,8 +6181,8 @@ apply
              (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
           (var (S (S (S n))))) (S (S (S (S (S n))))) 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 elim (le_not_lt (S (S (S (S (S n))))) (S n)).
 rewrite H17.
 apply le_n.
@@ -6195,8 +6201,8 @@ apply
                 0 (var (S n))) (S (S (S n))) (var (S (S n))))
           (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6208,8 +6214,8 @@ apply
                 2 (var (S (S (S (S (S n))))))) 0 (var (S n)))
           (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6221,8 +6227,8 @@ apply
                 2 (var (S (S (S (S (S n))))))) (S (S (S (S n))))
              (var (S (S (S n))))) 0 (var (S n))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6234,8 +6240,8 @@ apply
                 (S (S (S (S n)))) (var (S (S (S n))))) 2
              (var (S (S (S (S (S n))))))) 0 (var (S n)))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6245,8 +6251,8 @@ apply
              (substituteFormula LNN betaFormula 1 (var (S (S (S n))))) 2
              (var (S (S (S (S (S n))))))) 0 (var (S n)))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6256,8 +6262,8 @@ apply
              (substituteFormula LNN betaFormula 1 (var (S (S (S n))))) 2
              (var (S (S (S (S (S n))))))) (S (S (S (S (S n)))))
           (var (S (S (S (S n)))))) 0 (var (S n))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 elim (le_not_lt (S (S (S (S (S n))))) (S n)).
 rewrite <- H18.
 apply le_n.
@@ -6270,8 +6276,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 1 (var (S (S (S n))))) 2
           (var (S (S (S (S n)))))) 0 (var (S n))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply iffSym.
 apply
  iffTrans
@@ -6282,9 +6288,9 @@ apply
              (substituteFormula LNN betaFormula 1 (var (S (S (S n))))) 2
              (var (S (S n)))) (S (S n)) (var (S (S (S (S n)))))) 0
        (var (S n))).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaExch LNN); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 elim H19; symmetry  in |- *; assumption.
 apply
  iffTrans
@@ -6300,8 +6306,8 @@ apply
              (S (S (S n))) (var (S (S n)))) (S (S (S (S n))))
           (var (S (S (S n))))) (S (S (S (S (S n))))) 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6314,8 +6320,8 @@ apply
              (S (S n)) (var (S n))) (S (S (S (S n)))) 
           (var (S (S (S n))))) (S (S (S (S (S n))))) 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6328,8 +6334,8 @@ apply
              (S (S n)) (var (S n))) (S (S (S (S n)))) 
           (var (S (S (S n))))) (S (S (S (S (S n))))) 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6342,8 +6348,8 @@ apply
              (var (S (S (S (S n)))))) (S (S (S (S n)))) 
           (var (S (S (S n))))) (S (S (S (S (S n))))) 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6353,16 +6359,16 @@ apply
              (substituteFormula LNN B (S n) (natToTerm a0)) 
              (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S n)))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B (S n) (natToTerm a0))
           (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S n))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 elim (le_not_lt (S (S (S (S (S n))))) (S n)).
 rewrite <- H17.
 apply le_n.
@@ -6378,8 +6384,8 @@ apply
              (substituteFormula LNN B (S n) (natToTerm a0)) 
              (S (S n)) (var (S n))) (S (S (S n))) (var (S (S n)))) 
        (S (S n)) (var (S (S (S n))))).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaNil LNN); PRsolveFV A B n.
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6396,8 +6402,8 @@ apply
                 (var (S n))) (S (S (S n))) (var (S (S n)))) 
           (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6412,8 +6418,8 @@ apply
                 (var (S n))) (S (S (S n))) (var (S (S n)))) 
           (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 elim (le_not_lt (S (S (S (S (S n))))) (S n)).
 rewrite H17.
 apply le_n.
@@ -6431,8 +6437,8 @@ apply
                 (var (S (S (S (S (S n))))))) (S (S (S n))) 
              (var (S (S n)))) (S (S (S (S n)))) (var (S (S (S n)))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6443,8 +6449,8 @@ apply
                 (Succ (var (S (S (S (S n))))))) 2 (var (S (S (S (S (S n)))))))
           (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6455,8 +6461,8 @@ apply
                 (Succ (var (S (S (S (S n))))))) (S (S (S (S n))))
              (var (S (S (S n))))) 2 (var (S (S (S (S (S n)))))))
        (S (S (S (S (S n))))) (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6465,15 +6471,15 @@ apply
           (substituteFormula LNN betaFormula 1 (Succ (var (S (S (S (S n)))))))
           (S (S (S (S n)))) (var (S (S (S n))))) 2 
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
     (substituteFormula LNN
        (substituteFormula LNN betaFormula 1 (Succ (var (S (S (S n)))))) 2
        (var (S (S (S (S n)))))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply
  iffTrans
   with
@@ -6482,7 +6488,7 @@ apply
           (var (S (S (S n))))) 1
        (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
           (S (S (S (S n)))) (var (S (S (S n)))))).
-apply (subSubFormula LNN LNN_dec); PRsolveFV A B n.
+apply (subSubFormula LNN); PRsolveFV A B n.
 replace
  (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
     (S (S (S (S n)))) (var (S (S (S n))))) with
@@ -6490,11 +6496,11 @@ replace
     (substituteTerm LNN (var (S (S (S (S n))))) (S (S (S (S n))))
        (var (S (S (S n)))))).
 rewrite (subTermVar1 LNN).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 reflexivity.
 apply iffSym.
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 elim H19; symmetry  in |- *; assumption.
 apply
  iffTrans
@@ -6505,8 +6511,8 @@ apply
              (substituteFormula LNN betaFormula 2 (var (S (S (S n))))) 1
              (var (S (S n)))) (S (S n)) (var (S n))) 
        (S (S (S n))) (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaNil LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaNil LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6514,8 +6520,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 2 (var (S (S (S n))))) 1
           (var (S n))) (S (S (S n))) (var (S (S n)))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply
  iffTrans
   with
@@ -6523,9 +6529,9 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN betaFormula 2 (var (S (S (S n)))))
           (S (S (S n))) (var (S (S n)))) 1 (var (S n))).
-apply (subFormulaExch LNN LNN_dec); PRsolveFV A B n.
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaTrans LNN LNN_dec); PRsolveFV A B n.
+apply (subFormulaExch LNN); PRsolveFV A B n.
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaTrans LNN); PRsolveFV A B n.
 apply H3.
 intros.
 split.
@@ -6605,7 +6611,7 @@ elim H10; reflexivity.
 elim (le_not_lt _ _ H7).
 repeat apply lt_n_S.
 apply lt_O_Sn.
-auto.
+apply H; auto.
 Qed.
 
 Fixpoint primRecFormula (n : nat) (f : PrimRec n) {struct f} : Formula :=
@@ -6620,8 +6626,8 @@ Fixpoint primRecFormula (n : nat) (f : PrimRec n) {struct f} : Formula :=
   end
  
  with primRecsFormula (n m : nat) (fs : PrimRecs n m) {struct fs} :
- Vector (Formula * naryFunc n) m :=
-  match fs in (PrimRecs n m) return (Vector (Formula * naryFunc n) m) with
+ vector (Formula * naryFunc n) m :=
+  match fs in (PrimRecs n m) return (vector (Formula * naryFunc n) m) with
   | PRnil n => Vnil _
   | PRcons n m f fs' =>
       Vcons (Formula * naryFunc n) (primRecFormula n f, evalPrimRec n f) m
@@ -6640,9 +6646,9 @@ elim f using
            RepresentablesHelp n m (primRecsFormula n m fs) /\
            extEqualVector _ _ (FormulasToFuncs n m (primRecsFormula n m fs))
              (evalPrimRecs n m fs) /\
-           Vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+           vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
              (fun (pair : Formula * naryFunc n) (m : nat) 
-                (v : Vector _ m) (rec : Prop) =>
+                (v : vector _ m) (rec : Prop) =>
               (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\
               rec) m (primRecsFormula n m fs)).
 apply succRepresentable.

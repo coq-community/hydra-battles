@@ -12,8 +12,6 @@ Require Import Arith.
 Section More_Logic_Rules.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-
 Let Formula := Formula L.
 Let Formulas := Formulas L.
 Let System := System L.
@@ -44,8 +42,8 @@ eapply (sysExtend L) with (Empty_set Formula).
 unfold Included in |- *.
 intros.
 induction H0.
-apply (iffI L lang_dec).
-apply (impI L lang_dec).
+apply (iffI L).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H0 as (x, H0); induction H0 as (H0, H1).
@@ -53,7 +51,7 @@ induction H1 as [x H1| x H1]; [ induction H1 | induction H1 ].
 auto.
 apply forallE.
 apply Axm; right; constructor.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H0 as (x, H0); induction H0 as (H0, H1).
@@ -74,8 +72,8 @@ apply
  (impE L)
   with
     (substituteFormula L (substituteFormula L f a (var b)) b (fol.var L a)).
-apply (iffE1 L lang_dec).
-apply (subFormulaTrans L lang_dec).
+apply (iffE1 L).
+apply (subFormulaTrans L).
 apply H.
 apply forallE.
 apply Axm; right; constructor.
@@ -89,12 +87,12 @@ Proof.
 intros.
 unfold existH in |- *.
 unfold fol.existH in |- *.
-apply (reduceNot L lang_dec).
-eapply (iffTrans L lang_dec).
+apply (reduceNot L).
+eapply (iffTrans L).
 apply (rebindForall T a b (notH f)).
 apply H.
 rewrite (subFormulaNot L).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 Qed.
 
 Lemma subSubTerm :
@@ -177,14 +175,14 @@ elim f using Formula_depth_ind2; intros.
 repeat rewrite (subFormulaEqual L).
 rewrite subSubTerm; auto.
 rewrite (subSubTerm t0); auto.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 repeat rewrite (subFormulaRelation L).
 rewrite subSubTerms; auto.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 repeat rewrite (subFormulaImp L).
-apply (reduceImp L lang_dec); auto.
+apply (reduceImp L); auto.
 repeat rewrite (subFormulaNot L).
-apply (reduceNot L lang_dec); auto.
+apply (reduceNot L); auto.
 set
  (v' :=
   newVar
@@ -261,7 +259,7 @@ apply
           (substituteFormula L
              (fol.forallH L v' (substituteFormula L a v (var v'))) v2 s2) v1
           (substituteTerm L s1 v2 s2))).
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 assert
  (folProof.SysPrf L (Empty_set Formula)
     (iffH (fol.forallH L v a)
@@ -269,8 +267,8 @@ assert
 apply rebindForall.
 auto.
 repeat first
- [ apply (reduceIff L lang_dec)
- | apply (reduceSub L lang_dec)
+ [ apply (reduceIff L)
+ | apply (reduceSub L)
  | apply (notInFreeVarSys L) ]; auto.
 assert
  (forall (f : Formula) (x v : nat) (s : Term),
@@ -286,7 +284,7 @@ induction (In_dec eq_nat_dec x (freeVarTerm L s)).
 elim H8; auto.
 reflexivity.
 repeat rewrite H7; auto.
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
 apply H1.
 apply eqDepth with a.

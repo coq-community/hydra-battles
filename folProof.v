@@ -102,10 +102,10 @@ Inductive Prf : Formulas -> Formula -> Set :=
 Definition SysPrf (T : System) (f : Formula) :=
   exists Axm : Formulas,
     (exists prf : Prf Axm f,
-       (forall g : Formula, In g Axm -> Ensembles.In _ T g)).
+       (forall g : Formula, In g Axm -> mem _ T g)).
 
 Definition Inconsistent (T : System) := forall f : Formula, SysPrf T f.
 
-Definition Consistent (T : System) := ~ Inconsistent T.
+Definition Consistent (T : System) := exists f : Formula, ~ SysPrf T f.
 
 End ProofH.

@@ -8,7 +8,7 @@ Require Import code.
 Require Import codeList.
 Require Import codeFreeVar.
 Require Import extEqualNat.
-Require Import vector.
+Require Import Bvector.
 Require Import prLogic.
 
 Section close.
@@ -838,7 +838,7 @@ Definition codePA : nat -> bool :=
 
 Lemma codePAcorrect1 :
  forall f : Formula,
- codePA (codeFormula f) = true -> Ensembles.In Formula PA f.
+ codePA (codeFormula f) = true -> mem Formula PA f.
 Proof.
 intros.
 induction (PAdec f).
@@ -918,7 +918,7 @@ Qed.
 
 Lemma codePAcorrect2 :
  forall f : Formula,
- ~ Ensembles.In Formula PA f -> codePA (codeFormula f) = false.
+ ~ mem Formula PA f -> codePA (codeFormula f) = false.
 Proof.
 intros.
 assert (forall x : bool, x = true \/ x = false).
@@ -933,7 +933,7 @@ Qed.
 
 Lemma codePAcorrect3 :
  forall f : Formula,
- Ensembles.In Formula PA f -> codePA (codeFormula f) = true.
+ mem Formula PA f -> codePA (codeFormula f) = true.
 Proof.
 intros.
 unfold codePA in |- *.

@@ -29,7 +29,7 @@ rewrite (subFormulaOr LNT).
 rewrite (subFormulaEqual LNT).
 simpl in |- *.
 apply iffE1.
-apply (reduceOr LNT LNT_dec).
+apply (reduceOr LNT).
 apply iffRefl.
 rewrite (subFormulaExist LNT).
 induction (eq_nat_dec nv 0).
@@ -44,12 +44,10 @@ fold nv in |- *.
 simpl in |- *.
 auto.
 rewrite (subFormulaEqual LNT).
+Opaque eq_nat_dec.
 simpl in |- *.
-induction (
-  match nv as n return ({0 = n} + {0 <> n}) with
-    | 0 => left (0 <> 0) (refl_equal 0)
-    | S m => right (0 = S m) (O_S m)
-  end).
+Transparent eq_nat_dec.
+destruct (eq_nat_dec 0 nv).
 elim b.
 auto.
 apply iffRefl.
@@ -80,12 +78,12 @@ simpl in |- *.
 auto.
 elim H.
 rewrite (subFormulaEqual LNT).
+Opaque eq_nat_dec.
 simpl in |- *.
-induction (
-  match nv as n return ({0 = n} + {0 <> n}) with
-    | 0 => left (0 <> 0) (refl_equal 0)
-    | S m => right (0 = S m) (O_S m)
-  end).
+Transparent eq_nat_dec.
+induction
+ (nat_rec (fun n : nat => {0 = n} + {0 <> n}) (left (0 <> 0) (refl_equal 0))
+    (fun (m : nat) (_ : {0 = m} + {0 <> m}) => right (0 = S m) (O_S m)) nv).
 elim b.
 auto.
 fold var in |- *.
@@ -94,11 +92,20 @@ apply sysWeaken.
 apply existI with (var 0).
 rewrite (subFormulaEqual LNT).
 simpl in |- *.
-induction (eq_nat_dec nv nv).
-induction (eq_nat_dec nv 0).
+destruct (eq_nat_dec nv 0).
+elim b1; auto.
+change match nv as n return ({0 = n} + {0 <> n}) with
+                  | 0 => left (0 <> 0) (refl_equal 0)
+                  | S m => right (0 = S m) (O_S m)
+                  end
+ with (eq_nat_dec 0 nv).
+destruct (eq_nat_dec 0 nv).
+elim b1.
+auto.
+simpl.
+destruct (eq_nat_dec nv nv).
 apply eqRefl.
-apply eqRefl.
-elim b2.
+elim n1.
 reflexivity.
 Qed.
 
@@ -214,7 +221,7 @@ replace (equal (Plus a b) (Plus b a)) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNT LNT_dec).
+apply (subAllCloseFrom LNT).
 simpl in |- *.
 apply H.
 simpl in |- *.
@@ -419,7 +426,7 @@ apply impE with (existH 1 (equal (var 0) (Succ (var 1)))).
 replace (equal (var 0) (Succ (var 3))) with
  (substituteFormula LNT (equal (var 0) (Succ (var 1))) 1 (var 3)).
 apply iffE1.
-apply (rebindExist LNT LNT_dec).
+apply (rebindExist LNT).
 simpl in |- *.
 unfold not in |- *; intros.
 induction H as [H| H].

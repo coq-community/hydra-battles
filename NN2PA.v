@@ -94,7 +94,7 @@ apply impI.
 rewrite <- (subFormulaId LNT a x).
 rewrite LNN2LNT_natToTerm.
 apply impE with (substituteFormula LNT a x (natToTerm n)).
-apply (subWithEquals LNT LNT_dec).
+apply (subWithEquals LNT).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.

@@ -355,7 +355,7 @@ rewrite <- p0.
 rewrite translateLT1.
 apply iffSym.
 eapply iffTrans.
-apply (subSubAllFormula LNT LNT_dec).
+apply (subSubAllFormula LNT).
 rewrite <- (nilTerms _ b0).
 replace
  (substituteTerms LNN 2 (Tcons LNN 1 a (Tcons LNN 0 a0 (Tnil LNN))) v s) with
@@ -394,13 +394,13 @@ reflexivity.
 rewrite subFormulaImp.
 simpl in |- *.
 rewrite (subFormulaImp LNT).
-apply (reduceImp LNT LNT_dec).
+apply (reduceImp LNT).
 apply H.
 apply H0.
 rewrite subFormulaNot.
 simpl in |- *.
 rewrite (subFormulaNot LNT).
-apply (reduceNot LNT LNT_dec).
+apply (reduceNot LNT).
 apply H.
 simpl in |- *.
 decompose record (subFormulaForall2 LNN a v v0 s).
@@ -422,7 +422,7 @@ apply
              (substituteFormula LNN
                 (substituteFormula LNN a v (fol.var LNN x)) v0 s)) x 
           (var x0))).
-apply (rebindForall LNT LNT_dec).
+apply (rebindForall LNT).
 unfold not in |- *; intros.
 assert
  (In x0
@@ -459,7 +459,7 @@ contradiction.
 elim H4.
 rewrite LNN2LNT_freeVarTerm.
 assumption.
-apply (reduceForall LNT LNT_dec).
+apply (reduceForall LNT).
 apply (notInFreeVarSys LNT).
 apply
  iffTrans
@@ -468,7 +468,7 @@ apply
        (substituteFormula LNT
           (substituteFormula LNT (LNN2LNT_formula a) v (fol.var LNT x)) v0
           (LNN2LNT_term s)) x (var x0)).
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply (notInFreeVarSys LNT).
 eapply iffTrans.
 apply H.
@@ -476,7 +476,7 @@ eapply eqDepth.
 symmetry  in |- *; rewrite subFormulaDepth; symmetry  in |- *. (*Hack to rewrite the right occ*)
 reflexivity.
 apply depthForall.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply (notInFreeVarSys LNT).
 eapply iffTrans.
 apply H.
@@ -484,15 +484,15 @@ apply depthForall.
 simpl in |- *.
 apply iffRefl.
 eapply iffTrans.
-apply (subFormulaExch LNT LNT_dec).
+apply (subFormulaExch LNT).
 auto.
 rewrite LNN2LNT_freeVarTerm.
 auto.
 simpl in |- *.
 tauto.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply (notInFreeVarSys LNT).
-apply (subFormulaTrans LNT LNT_dec).
+apply (subFormulaTrans LNT).
 unfold not in |- *; intros; elim H2.
 apply In_list_remove3.
 apply LNN2LNT_freeVarFormula1.
@@ -689,18 +689,24 @@ Section Translate_Proof.
 Variable U : fol.System LNN.
 Variable V : System.
 
-Hypothesis ClosedV : ClosedSystem _ V.
 Hypothesis
   AxiomsOK :
     forall f : fol.Formula LNN,
-    Ensembles.In _ U f -> SysPrf V (LNN2LNT_formula f).
+    mem _ U f ->  
+    exists Axm : Formulas,
+    (exists prf : Prf LNT Axm (LNN2LNT_formula f),
+       (forall g : Formula, In g Axm -> mem _ V g)) /\
+    forall v, In v (freeVarListFormula LNT Axm) -> (In v (freeVarFormula LNN f)).
 
-Lemma translateProof :
- forall f : fol.Formula LNN,
- folProof.SysPrf LNN U f -> SysPrf V (LNN2LNT_formula f).
+Lemma translatePrf : forall f,
+ forall axm, Prf LNN axm f -> 
+  (forall g, In g axm -> mem _ U g) ->
+  exists Axm : Formulas,
+    (exists prf : Prf LNT Axm (LNN2LNT_formula f),
+       (forall g : Formula, In g Axm -> mem _ V g)) /\
+    forall v, In v (freeVarListFormula LNT Axm) -> (In v (freeVarListFormula LNN axm)).
 Proof.
-intros.
-induction H as (x, H); induction H as (x0, H).
+intros f x x0 H.
 induction x0
  as
   [A|
@@ -717,54 +723,70 @@ induction x0
    |
    R|
    f].
-apply AxiomsOK.
-apply H.
-simpl in |- *.
-tauto.
-assert (SysPrf V (LNN2LNT_formula A)).
-apply Hrecx0_0.
+destruct (AxiomsOK A).
+auto with *.
+exists x.
+destruct H0.
+split.
+apply H0.
+intros.
+simpl.
+rewrite <- app_nil_end.
+apply H1.
+apply H2.
+assert (forall g : fol.Formula LNN,
+            In g Axm2 -> mem (fol.Formula LNN) U g).
 intros.
 apply H.
 apply in_or_app.
 auto.
-assert (SysPrf V (LNN2LNT_formula (fol.impH LNN A B))).
-apply Hrecx0_1.
+assert (forall g : fol.Formula LNN,
+            In g Axm1 -> mem (fol.Formula LNN) U g).
 intros.
 apply H.
 apply in_or_app.
 auto.
-induction H0 as (x, H0); induction H0 as (x0, H0).
-induction H1 as (x1, H1); induction H1 as (x2, H1).
+destruct (Hrecx0_0 H0) as [x [[x0 I0] Z0]].
+destruct (Hrecx0_1 H1) as [x1 [[x2 I1] Z1]].
+clear H0 H1.
+rename I0 into H0.
+rename I1 into H1.
 exists (x1 ++ x).
 simpl in x2.
+split.
 exists (MP LNT _ _ _ _ x2 x0).
 intros.
 induction (in_app_or _ _ _ H2); auto.
-assert (SysPrf V (LNN2LNT_formula A)).
-apply Hrecx0.
-assumption.
-simpl in |- *.
-induction H0 as (x, H0); induction H0 as (x1, H0).
+intros.
+rewrite freeVarListFormulaApp.
+rewrite freeVarListFormulaApp in H2.
+apply in_or_app.
+destruct (in_app_or _ _ _ H2);
+auto with *.
+destruct (Hrecx0 H) as [x [[x1 H0] Z]].
 exists x.
 assert (~ In v (freeVarListFormula LNT x)).
-unfold not in |- *; intros.
-unfold ClosedSystem in ClosedV.
-induction (In_freeVarListFormulaE _ _ _ H1).
-elim (ClosedV v x2).
-apply H0.
-tauto.
-tauto.
+firstorder.
+split.
 exists (GEN LNT _ _ _ H1 x1).
 assumption.
+assumption.
 exists (nil (A:=Formula)).
+split.
 exists (IMP1 LNT (LNN2LNT_formula A) (LNN2LNT_formula B)).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (IMP2 LNT (LNN2LNT_formula A) (LNN2LNT_formula B) (LNN2LNT_formula C)).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (CP LNT (LNN2LNT_formula A) (LNN2LNT_formula B)).
 contradiction.
+contradiction.
+assert (SysPrf (Empty_set _) (LNN2LNT_formula (fol.impH LNN (fol.forallH LNN v A) (substituteFormula LNN A v t)))).
 simpl in |- *.
 apply
  impE
@@ -772,32 +794,57 @@ apply
     (impH (forallH v (LNN2LNT_formula A))
        (substituteFormula LNT (LNN2LNT_formula A) v (LNN2LNT_term t))).
 apply iffE1.
-apply (reduceImp LNT LNT_dec).
+apply (reduceImp LNT).
 apply iffRefl.
 apply iffSym.
 apply LNN2LNT_subFormula.
 exists (nil (A:=Formula)).
 exists (FA1 LNT (LNN2LNT_formula A) v (LNN2LNT_term t)).
 contradiction.
+destruct H0.
+exists x.
+split.
+destruct H0.
+exists x0.
+intros.
+elim (H0 g H1).
+intros.
+destruct H0.
+destruct x.
+assumption.
+assert (In f (f::x)).
+auto with *.
+elim (H0 f H2).
 exists (nil (A:=Formula)).
 assert (~ In v (freeVarFormula LNT (LNN2LNT_formula A))).
 unfold not in |- *; intros; elim n.
 apply LNN2LNT_freeVarFormula1.
 auto.
+split.
 exists (FA2 LNT (LNN2LNT_formula A) v H0).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (FA3 LNT (LNN2LNT_formula A) (LNN2LNT_formula B) v).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (EQ1 LNT).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (EQ2 LNT).
 contradiction.
+contradiction.
 exists (nil (A:=Formula)).
+split.
 exists (EQ3 LNT).
 contradiction.
+contradiction.
+assert (SysPrf (Empty_set _) (LNN2LNT_formula (AxmEq4 LNN R))).
 induction R.
 simpl in |- *.
 repeat apply impI.
@@ -830,17 +877,17 @@ eapply
              (substituteFormula LNT
                 (equal (Plus (var 2) (Succ (var 3))) (var 0)) 3 
                 (var 4))).
-apply (rebindExist LNT LNT_dec).
+apply (rebindExist LNT).
 simpl in |- *.
 unfold not in |- *; intros.
 decompose sum H0.
 discriminate H1.
 discriminate H2.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 unfold not in |- *; intros.
 induction H0 as (x, H0); induction H0 as (H0, H1).
 induction H1 as [x H1| x H1]; [ induction H1 as [x H1| x H1] | induction H1 ].
-elim ClosedV with 4 x; auto.
+elim H1.
 induction H1.
 simpl in H0.
 decompose sum H0.
@@ -883,11 +930,68 @@ apply Axm.
 right; constructor.
 apply eqSym.
 apply Axm; left; right; constructor.
+destruct H0.
+exists x.
+destruct H0.
+split.
+exists x0.
+intros.
+elim (H0 g H1).
+intros.
+destruct x.
+assumption.
+assert (In f (f::x)).
+auto with *.
+elim (H0 _ H2).
 replace (LNN2LNT_formula (AxmEq5 LNN f)) with (AxmEq5 LNT f).
 exists (nil (A:=Formula)).
+split.
 exists (EQ5 LNT f).
+contradiction.
 contradiction.
 induction f; reflexivity.
 Qed.
 
 End Translate_Proof.
+
+Lemma translateProof
+     : forall (U : fol.System LNN) (V : System),
+       ClosedSystem LNT V ->
+       (forall f : fol.Formula LNN,
+        mem (fol.Formula LNN) U f -> SysPrf V (LNN2LNT_formula f)) ->
+       forall f : fol.Formula LNN,
+       folProof.SysPrf LNN U f -> SysPrf V (LNN2LNT_formula f).
+Proof.
+intros.
+destruct H1.
+assert (forall f : fol.Formula LNN,
+        mem (fol.Formula LNN) U f ->
+        exists Axm : Formulas,
+          ex
+            (fun _ : Prf LNT Axm (LNN2LNT_formula f) =>
+             forall g : Formula, In g Axm -> mem (fol.Formula LNT) V g) /\
+          (forall v : nat,
+           In v (freeVarListFormula LNT Axm) -> In v (freeVarFormula LNN f))).
+intros.
+destruct (H0 f0 H2).
+exists x0.
+split.
+apply H3.
+intros.
+destruct H3.
+clear x1.
+induction x0.
+elim H4.
+destruct (in_app_or _ _ _ H4).
+elim H with v a.
+apply H3.
+auto with *.
+assumption.
+apply IHx0.
+firstorder.
+apply H5.
+destruct H1.
+destruct (translatePrf U V H2 f x x0 H1).
+exists x1.
+tauto.
+Qed.

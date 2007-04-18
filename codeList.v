@@ -3,7 +3,7 @@ Require Import cPair.
 Require Export List.
 Require Import ListExt.
 Require Import Arith.
-Require Import vector.
+Require Import Bvector.
 Require Import extEqualNat.
 
 Definition codeLength : nat -> nat :=

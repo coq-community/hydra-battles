@@ -15,7 +15,6 @@ Proof.
 intros.
 unfold wConsistent in H.
 unfold Consistent, Inconsistent in |- *.
-unfold not in |- *; intros.
 assert (SysPrf T (existH 0 (notH (notH (equal (var 0) (var 0)))))).
 apply existSimp.
 apply nnI.
@@ -24,11 +23,11 @@ assert
  (forall x : nat,
   In x (freeVarFormula LNN (notH (equal (var 0) (var 0)))) -> 0 = x).
 intros.
-simpl in H2.
-repeat induction H2; auto.
-induction (H _ _ H2 H1).
-apply H3.
-apply H0.
+simpl in H1.
+repeat induction H1; auto.
+induction (H _ _ H1 H0).
+exists (substituteFormula LNN (notH (equal (var 0) (var 0))) 0 (natToTerm x)).
+auto.
 Qed.
 
 Definition wInconsistent (T : System) :=

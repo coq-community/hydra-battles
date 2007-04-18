@@ -14,8 +14,6 @@ Require Import subProp.
 Section SubAllVars.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-
 Notation Formula := (Formula L) (only parsing).
 Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
@@ -150,26 +148,24 @@ simpl in |- *.
 auto with datatypes.
 Qed.
 
-Fixpoint subAllFormula (f : fol.Formula L) :
- (nat -> fol.Term L) -> fol.Formula L :=
-  match f return ((nat -> fol.Term L) -> fol.Formula L) with
-  | fol.equal t s => fun m => fol.equal L (subAllTerm t m) (subAllTerm s m)
-  | fol.atomic r ts => fun m => fol.atomic L r (subAllTerms _ ts m)
+Fixpoint subAllFormula (f : Formula) (m : (nat -> Term)) {struct f} : Formula :=
+  match f with
+  | fol.equal t s => equal (subAllTerm t m) (subAllTerm s m)
+  | fol.atomic r ts => atomic r (subAllTerms _ ts m)
   | fol.impH f g =>
-      fun m => fol.impH L (subAllFormula f m) (subAllFormula g m)
-  | fol.notH f => fun m => fol.notH L (subAllFormula f m)
+      impH (subAllFormula f m) (subAllFormula g m)
+  | fol.notH f => notH (subAllFormula f m)
   | fol.forallH n f =>
-      fun m =>
       let nv :=
         newVar
           (freeVarFormula L f ++
-           freeVarMap (freeVarFormula L (fol.forallH L n f)) m) in
-      fol.forallH L nv
+           freeVarMap (freeVarFormula L (forallH n f)) m) in
+      forallH nv
         (subAllFormula f
            (fun v : nat =>
             match eq_nat_dec v n with
-            | left _ => fol.var L nv
-            | right pf2 => m v
+            | left _ => var nv
+            | right _ => m v
             end))
   end.
 
@@ -554,16 +550,16 @@ intro f.
 elim f using Formula_depth_ind2; simpl in |- *; intros.
 rewrite (subFormulaEqual L).
 do 2 rewrite subSubAllTerm.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 rewrite (subFormulaRelation L).
 rewrite subSubAllTerms.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 rewrite (subFormulaImp L).
-apply (reduceImp L lang_dec).
+apply (reduceImp L).
 apply H.
 apply H0.
 rewrite (subFormulaNot L).
-apply (reduceNot L lang_dec).
+apply (reduceNot L).
 apply H.
 set
  (nv1 :=
@@ -631,7 +627,7 @@ rewrite
      | left _ => fol.var L nv2
      | right _ => m v1
      end)).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 intros.
 induction (eq_nat_dec m0 v).
 reflexivity.
@@ -639,7 +635,7 @@ apply H3.
 simpl in |- *.
 apply In_list_remove3; auto.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L x
        (substituteFormula L
@@ -649,12 +645,12 @@ apply
               | left _ => fol.var L x
               | right _ => m v1
               end)) v0 s)).
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
-apply (reduceSub L lang_dec).
+apply (reduceSub L).
 apply (notInFreeVarSys L).
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (subAllFormula a
        (fun v1 : nat =>
@@ -690,7 +686,7 @@ rewrite
        | left _ => fol.var L nv1
        | right _ => m v1
        end nv1 (fol.var L x))).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 intros.
 induction (eq_nat_dec m0 v).
 rewrite (subTermVar1 L).
@@ -709,7 +705,7 @@ eapply freeVarMap1.
 apply H4.
 apply In_list_remove3; auto.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L x
        (subAllFormula a
@@ -718,9 +714,9 @@ apply
            | left _ => fol.var L x
            | right _ => substituteTerm L (m v1) v0 s
            end))).
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
-eapply (iffTrans L lang_dec). 
+eapply (iffTrans L). 
 apply
  H
   with
@@ -746,7 +742,7 @@ rewrite
        | left _ => fol.var L x
        | right _ => m n
        end v0 s)).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 intros.
 induction (eq_nat_dec m0 v).
 rewrite subTermNil.
@@ -755,7 +751,7 @@ simpl in |- *.
 tauto.
 reflexivity.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L nv2
        (substituteFormula L
@@ -765,7 +761,7 @@ apply
               | left _ => fol.var L x
               | right _ => substituteTerm L (m v1) v0 s
               end)) x (fol.var L nv2))).
-apply (rebindForall L lang_dec).
+apply (rebindForall L).
 unfold not in |- *; intros.
 simpl in H3.
 assert
@@ -796,9 +792,9 @@ right.
 eapply freeVarMap1.
 apply H7.
 apply In_list_remove3; auto.
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
-eapply (iffTrans L lang_dec).
+eapply (iffTrans L).
 apply H.
 apply depthForall.
 simpl in |- *.
@@ -815,7 +811,7 @@ rewrite
        | left _ => fol.var L x
        | right _ => substituteTerm L (m n) v0 s
        end x (fol.var L nv2))).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 intros.
 induction (eq_nat_dec m0 v).
 rewrite (subTermVar1 L).
@@ -894,13 +890,13 @@ induction H.
 induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
  simpl in |- *.
 repeat rewrite subAllTermId.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 rewrite subAllTermsId.
-apply (iffRefl L lang_dec).
-apply (reduceImp L lang_dec).
+apply (iffRefl L).
+apply (reduceImp L).
 apply Hrecf1.
 apply Hrecf0.
-apply (reduceNot L lang_dec).
+apply (reduceNot L).
 apply Hrecf.
 set
  (nv :=
@@ -909,10 +905,10 @@ set
      freeVarMap (list_remove nat eq_nat_dec n (freeVarFormula L f))
        (fun x : nat => fol.var L x))) in *.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with (fol.forallH L n (subAllFormula f (fun x : nat => fol.var L x))).
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L nv
        (substituteFormula L (subAllFormula f (fun x : nat => fol.var L x)) n
@@ -926,17 +922,17 @@ replace
      end)) with
  (subAllFormula f
     (fun x : nat => substituteTerm L (fol.var L x) n (fol.var L nv))).
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
-apply (iffSym L lang_dec).
+apply (iffSym L).
 apply subSubAllFormula with (m := fun x : nat => fol.var L x).
 apply subAllFormula_ext.
 intros.
 simpl in |- *.
 induction (eq_nat_dec n m); induction (eq_nat_dec m n);
  reflexivity || (elimtype False; auto).
-apply (iffSym L lang_dec).
-apply (rebindForall L lang_dec).
+apply (iffSym L).
+apply (rebindForall L).
 unfold not in |- *; intros.
 assert
  (In nv (freeVarFormula L (subAllFormula f (fun x : nat => fol.var L x)))).
@@ -960,7 +956,7 @@ rewrite H1.
 eapply In_list_remove2.
 apply H.
 contradiction.
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
 apply Hrecf.
 Qed.
@@ -1014,16 +1010,16 @@ intro f.
 induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros.
 simpl in |- *.
 repeat rewrite subAllSubAllTerm.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 simpl in |- *.
 rewrite subAllSubAllTerms.
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 simpl in |- *.
-apply (reduceImp L lang_dec).
+apply (reduceImp L).
 apply Hrecf1.
 apply Hrecf0.
 simpl in |- *.
-apply (reduceNot L lang_dec).
+apply (reduceNot L).
 apply Hrecf.
 simpl in |- *.
 set
@@ -1055,7 +1051,7 @@ set
               | right _ => m1 v
               end)))) m2) in *.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (fol.forallH L (newVar nv3)
        (substituteFormula L
@@ -1069,9 +1065,9 @@ eapply (sysExtend L) with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
 induction H.
-apply (reduceForall L lang_dec).
+apply (reduceForall L).
 apply (notInFreeVarSys L).
-eapply (iffTrans L lang_dec).
+eapply (iffTrans L).
 apply Hrecf.
 set
  (a1 :=
@@ -1098,7 +1094,7 @@ replace (subAllFormula f a2) with
  (subAllFormula f
     (fun x : nat =>
      substituteTerm L (a1 x) (newVar nv2) (fol.var L (newVar nv3)))).
-apply (iffSym L lang_dec).
+apply (iffSym L).
 apply subSubAllFormula.
 apply subAllFormula_ext.
 intros.
@@ -1133,8 +1129,8 @@ eapply freeVarSubAllTerm2.
 apply H0.
 apply H1.
 apply In_list_remove3; auto.
-apply (iffSym L lang_dec).
-apply (rebindForall L lang_dec).
+apply (iffSym L).
+apply (rebindForall L).
 unfold not in |- *; intros.
 assert
  (In (newVar nv3)
@@ -1213,7 +1209,7 @@ replace
      | right _ => fol.var L (m + x)
      end)) with (subAllFormula f (fun x : nat => fol.var L x)).
 apply (impE L) with f.
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 apply subAllFormulaId.
 apply H1.
 apply subAllFormula_ext.
@@ -1226,7 +1222,7 @@ apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
 induction H2.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H2 as (x, H2); induction H2 as (H2, H3).
@@ -1305,7 +1301,7 @@ clear f H0.
 intros.
 induction n as [| n Hrecn]; simpl in |- *.
 apply H.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H0 as (x, H0); induction H0 as (H0, H1).
@@ -1331,7 +1327,7 @@ replace
        | left _ => fol.var L x
        | right _ => fol.var L (m + x)
        end n (fol.var L (m + n)))).
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 apply
  subSubAllFormula
   with
@@ -1380,7 +1376,7 @@ assert
 clear H0 H H1 m T f n Hrecn.
 intros f s n.
 induction n as [| n Hrecn]; simpl in |- *; intros.
-apply (impRefl L lang_dec).
+apply (impRefl L).
 rewrite (subFormulaForall L).
 induction (eq_nat_dec (s + n) m).
 rewrite <- a in H.
@@ -1396,7 +1392,7 @@ elim (le_not_lt (S p) p).
 auto.
 apply lt_n_Sn.
 contradiction.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H1 as (x, H1); induction H1 as (H1, H2).
@@ -1436,7 +1432,7 @@ apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
 induction H3.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H3 as (x, H3); induction H3 as (H3, H4).
@@ -1486,7 +1482,7 @@ replace
      | right _ => fol.var L x
      end)) with (subAllFormula f (fun x : nat => fol.var L x)).
 apply (impE L) with f.
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 apply subAllFormulaId.
 apply H0.
 apply subAllFormula_ext.
@@ -1531,7 +1527,7 @@ replace
            end
        | right _ => fol.var L x
        end (m + n) (map (m + n)))).
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 apply
  subSubAllFormula
   with
@@ -1596,7 +1592,7 @@ apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
 intros.
 induction H1.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H1 as (x, H1); induction H1 as (H1, H2).
@@ -1694,7 +1690,7 @@ replace
             end
         | right _ => fol.var L x0
         end))).
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 unfold f' in |- *.
 apply
  subAllSubAllFormula
@@ -1793,7 +1789,7 @@ replace (subAllFormula (fol.impH L A B) map) with
 apply subAllCloseFrom.
 induction n as [| n Hrecn].
 simpl in |- *.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 auto.
 simpl in |- *.
 apply (forallI L).
@@ -1809,11 +1805,11 @@ auto.
 auto.
 reflexivity.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
 apply H.
 auto.
-apply (iffSym L lang_dec).
+apply (iffSym L).
 auto.
 Qed.
 
@@ -1832,20 +1828,20 @@ Lemma subToSubAll :
 Proof.
 intros.
 apply
- (iffTrans L lang_dec)
+ (iffTrans L)
   with
     (substituteFormula L (subAllFormula A (fun x : nat => fol.var L x)) v s).
 apply sysExtend with (Empty_set (fol.Formula L)).
 intro.
 intros.
 induction H.
-apply (reduceSub L lang_dec).
+apply (reduceSub L).
 unfold not in |- *; intros.
 induction H as (x, H); induction H as (H, H0).
 induction H0.
-apply (iffSym L lang_dec).
+apply (iffSym L).
 apply subAllFormulaId.
-eapply (iffTrans L lang_dec).
+eapply (iffTrans L).
 apply subSubAllFormula.
 replace
  (subAllFormula A
@@ -1856,7 +1852,7 @@ replace
      end)) with
  (subAllFormula A
     (fun n : nat => substituteTerm L ((fun x : nat => fol.var L x) n) v s)).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 apply subAllFormula_ext.
 intros.
 simpl in |- *.
@@ -1880,13 +1876,13 @@ apply (sysExtend L) with (Empty_set (fol.Formula L)).
 intro.
 intros.
 induction H.
-eapply (iffTrans L lang_dec).
+eapply (iffTrans L).
 apply reduceSubAll.
 unfold not in |- *; intros.
 induction H as (x, H); induction H as (H, H0).
 induction H0.
 apply subToSubAll.
-eapply (iffTrans L lang_dec).
+eapply (iffTrans L).
 apply subAllSubAllFormula.
 replace
  (subAllFormula A
@@ -1903,7 +1899,7 @@ replace
          | left _ => s
          | right _ => fol.var L x
          end) n) map)).
-apply (iffRefl L lang_dec).
+apply (iffRefl L).
 apply subAllFormula_ext.
 intros.
 induction (eq_nat_dec v m).

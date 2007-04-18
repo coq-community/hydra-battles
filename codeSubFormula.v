@@ -4,7 +4,7 @@ Require Import Arith.
 Require Import folProp.
 Require Import code.
 Require Import extEqualNat.
-Require Import vector.
+Require Import Bvector.
 Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Max.
@@ -6301,7 +6301,7 @@ Definition codeSubFormula (f v s : nat) : nat :=
                 (ReplaceFormulaTerm f C))))).
 
 Lemma codeSubFormulaCorrect :
- forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
+ forall (f : Formula) (v : nat) (s : Term),
  codeSubFormula (codeFormula f) v (codeTerm s) =
  codeFormula (substituteFormula L f v s).
 Proof.

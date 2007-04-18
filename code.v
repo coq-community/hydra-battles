@@ -143,7 +143,7 @@ Fixpoint codeFormula (f : Formula) : nat :=
   | fol.impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
   | fol.notH f1 => cPair 2 (codeFormula f1)
   | fol.forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | fol.atomic R ts => cPair (S (S (S (S (codeR R))))) (codeTerms _ ts)
+  | fol.atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
   end.
 
 Lemma codeFormulaInj :

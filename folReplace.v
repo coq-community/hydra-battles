@@ -10,8 +10,6 @@ Require Import folProp.
 Section Replacement.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-
 Let Formula := Formula L.
 Let Formulas := Formulas L.
 Let System := System L.
@@ -41,23 +39,23 @@ assert
   SysPrf T (iffH f1 f3) ->
   SysPrf T (iffH f2 f4) -> SysPrf T (impH (impH f1 f2) (impH f3 f4))).
 intros.
-repeat apply (impI L lang_dec).
+repeat apply (impI L).
 apply impE with f2.
 repeat apply sysWeaken.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 apply H0.
 apply impE with f1.
 apply sysWeaken.
 apply Axm; right; constructor.
 apply impE with f3.
 repeat apply sysWeaken.
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 apply H.
 apply Axm; right; constructor.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
-apply H; apply (iffSym L lang_dec); auto.
+apply H; apply (iffSym L); auto.
 Qed.
 
 Lemma reduceNot :
@@ -68,15 +66,15 @@ assert
  (forall (f1 f2 : Formula) (T : System),
   SysPrf T (iffH f1 f2) -> SysPrf T (impH (notH f1) (notH f2))).
 intros.
-apply (cp2 L lang_dec).
-apply (iffE2 L lang_dec).
+apply (cp2 L).
+apply (iffE2 L).
 apply H.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H.
 assumption.
 apply H.
-apply (iffSym L lang_dec).
+apply (iffSym L).
 assumption.
 Qed.
 
@@ -86,7 +84,7 @@ Lemma impForall :
  SysPrf T (impH f1 f2) -> SysPrf T (impH (forallH v f1) (forallH v f2)).
 Proof.
 intros.
-apply (impI L lang_dec).
+apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
 induction H1 as (x, H1); induction H1 as (H1, H2).
@@ -110,12 +108,12 @@ Lemma reduceForall :
  SysPrf T (iffH f1 f2) -> SysPrf T (iffH (forallH v f1) (forallH v f2)).
 Proof.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply impForall; auto.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 apply H0.
 apply impForall; auto.
-apply (iffE2 L lang_dec).
+apply (iffE2 L).
 apply H0.
 Qed.
 
@@ -129,24 +127,24 @@ assert
   SysPrf T (iffH f1 f3) ->
   SysPrf T (iffH f2 f4) -> SysPrf T (impH (orH f1 f2) (orH f3 f4))).
 intros.
-apply (impI L lang_dec).
-apply (orSys L lang_dec).
-apply (orI1 L lang_dec).
+apply (impI L).
+apply (orSys L).
+apply (orI1 L).
 apply impE with f1.
 apply sysWeaken.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 assumption.
 apply Axm; right; constructor.
-apply (orI2 L lang_dec).
+apply (orI2 L).
 apply impE with f2.
 apply sysWeaken.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 assumption.
 apply Axm; right; constructor.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
-apply H; apply (iffSym L lang_dec); auto.
+apply H; apply (iffSym L); auto.
 Qed.
 
 Lemma reduceAnd :
@@ -159,24 +157,24 @@ assert
   SysPrf T (iffH f1 f3) ->
   SysPrf T (iffH f2 f4) -> SysPrf T (impH (andH f1 f2) (andH f3 f4))).
 intros.
-apply (impI L lang_dec).
-apply (andI L lang_dec).
+apply (impI L).
+apply (andI L).
 apply impE with f1.
 apply sysWeaken.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 assumption.
-eapply (andE1 L lang_dec).
+eapply (andE1 L).
 apply Axm; right; constructor.
 apply impE with f2.
 apply sysWeaken.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 assumption.
-eapply (andE2 L lang_dec).
+eapply (andE2 L).
 apply Axm; right; constructor.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
-apply H; apply (iffSym L lang_dec); auto.
+apply H; apply (iffSym L); auto.
 Qed.
 
 Lemma iffExist :
@@ -186,9 +184,9 @@ Lemma iffExist :
 Proof.
 intros.
 unfold existH, fol.existH in |- *.
-apply (cp2 L lang_dec).
+apply (cp2 L).
 apply impForall; auto.
-apply (cp2 L lang_dec).
+apply (cp2 L).
 apply H0.
 Qed.
 
@@ -215,19 +213,19 @@ assert
   SysPrf T (iffH f1 f3) ->
   SysPrf T (iffH f2 f4) -> SysPrf T (impH (iffH f1 f2) (iffH f3 f4))).
 intros.
-apply (impI L lang_dec).
-apply (iffTrans L lang_dec) with f2.
-apply (iffTrans L lang_dec) with f1.
+apply (impI L).
+apply (iffTrans L) with f2.
+apply (iffTrans L) with f1.
 apply sysWeaken.
-apply (iffSym L lang_dec).
+apply (iffSym L).
 apply H.
 apply Axm; right; constructor.
 apply sysWeaken.
 apply H0.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
-apply H; apply (iffSym L lang_dec); auto.
+apply H; apply (iffSym L); auto.
 Qed.
 
 Lemma reduceIfThenElse :
@@ -259,13 +257,13 @@ rewrite <- (subFormulaImp L).
 apply (forallE L).
 apply forallI.
 assumption.
-apply (iffE1 L lang_dec).
+apply (iffE1 L).
 apply H0.
 intros.
-apply (iffI L lang_dec).
+apply (iffI L).
 apply H; auto.
 apply H; auto.
-apply (iffSym L lang_dec).
+apply (iffSym L).
 auto.
 Qed.
 

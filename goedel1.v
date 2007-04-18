@@ -13,7 +13,7 @@ Require Import code.
 
 Require Import checkPrf.
 
-Section Godel's_1st_Incompleteness.
+Section Goedel's_1st_Incompleteness.
 
 Definition codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
 
@@ -28,12 +28,12 @@ Hypothesis
 Hypothesis
   expressT1 :
     forall f : Formula,
-    Ensembles.In _ T f ->
+    mem _ T f ->
     SysPrf T (substituteFormula LNN repT v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressT2 :
     forall f : Formula,
-    ~ Ensembles.In _ T f ->
+    ~ mem _ T f ->
     SysPrf T
       (notH (substituteFormula LNN repT v0 (natToTerm (codeFormula f)))).
 
@@ -61,27 +61,43 @@ Definition codeSysPrfCorrect3 :=
     codeArityLNTFIsCorrect2 codeArityLNNRIsPR codeArityLNNRIsCorrect1
     codeArityLNNRIsCorrect2 codeLNTFunctionInj codeLNNRelationInj T extendsNN.
  
-(*I don't beleive I can prove
+Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
 
- (EX f:Formula | (SysPrf T f)\/(SysPrf T (notH f))->(wInconsistent T))
- 
- So instead I prove: *)
+Lemma freeVarG : forall v : nat, ~ In v (freeVarFormula LNN G).
+Proof.
+unfold G.
+destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
+unfold not in |- *; intros.
+induction (H2 v).
+rename H3 into foo.
+rename H0 into H3.
+absurd (v = 0).
+eapply In_list_remove2.
+apply H3.
+assumption.
+eapply
+ (freeVarCodeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF
+    codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR)
+ .
+apply freeVarRepT.
+assert
+ (H5:(forall f : Formula,
+  In v (freeVarFormula LNN (notH f)) -> In v (freeVarFormula LNN f))).
+intros f H5.
+apply H5.
+apply H5.
+eapply In_list_remove1.
+unfold codeSysPf in H3.
+apply H3.
+assumption.
+Qed.
 
-Theorem Godel'sIncompleteness1st :
- wConsistent T ->
- exists f : Formula,
-   ~ SysPrf T f /\
-   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarFormula LNN f)).
+Lemma FirstIncompletenessA :
+ SysPrf T G -> Inconsistent LNN T.
 Proof.
 intros.
-assert (con : Consistent LNN T).
-apply wCon2Con.
-assumption.
-decompose record (FixPointLNN (notH codeSysPf) 0).
-exists x.
-split.
-unfold not in |- *; intros.
-apply con.
+unfold G in H.
+destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
 unfold Inconsistent in |- *.
 intros.
 apply contradiction with x.
@@ -102,7 +118,26 @@ rewrite (subFormulaNot LNN).
 apply nnI.
 apply codeSysPfCorrect.
 assumption.
-split.
+Qed.
+
+(*I don't beleive I can prove
+
+ (SysPrf T (notH G))->(wInconsistent T))
+ 
+ So instead I prove: *)
+
+Lemma FirstIncompletenessB :
+ wConsistent T -> ~ SysPrf T (notH G).
+Proof.
+intros.
+assert (con : (forall f:Formula, SysPrf T f) -> False).
+intros.
+induction (wCon2Con T).
+apply H1.
+apply H0.
+assumption.
+unfold G.
+destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
 unfold not in |- *; intros.
 set (codeX := code.codeFormula LNN codeLNTFunction codeLNNRelation x) in *.
 unfold wConsistent in H.
@@ -176,7 +211,7 @@ intros.
 clear H6 H8 x3 H7 x1.
 assert
  (~
-  (forall g : fol.Formula LNN, In g x2 -> Ensembles.In (fol.Formula LNN) T g)).
+  (forall g : fol.Formula LNN, In g x2 -> mem (fol.Formula LNN) T g)).
 unfold not in |- *; intros.
 assert (SysPrf T x).
 unfold not in |- *; intros.
@@ -189,7 +224,7 @@ apply con.
 unfold Inconsistent in |- *.
 intros.
 apply contradiction with x; assumption.
-assert (~ (exists g : Formula, In g x2 /\ ~ Ensembles.In _ T g)).
+assert (~ (exists g : Formula, In g x2 /\ ~ mem _ T g)).
 unfold not in |- *; intros.
 apply H4.
 rewrite (subFormulaNot LNN).
@@ -203,7 +238,7 @@ apply H6.
 intros.
 elim H8.
 assert
- (~ (exists g : Formula, In g x2 /\ ~ Ensembles.In (fol.Formula LNN) T g)).
+ (~ (exists g : Formula, In g x2 /\ ~ mem (fol.Formula LNN) T g)).
 unfold not in |- *; intros.
 apply H7.
 induction H8 as (x1, H8).
@@ -213,7 +248,7 @@ tauto.
 assert
  (~
   ~
-  (Ensembles.In (fol.Formula LNN) T a \/ ~ Ensembles.In (fol.Formula LNN) T a)).
+  (mem (fol.Formula LNN) T a \/ ~ mem (fol.Formula LNN) T a)).
 tauto.
 apply H9.
 unfold not in |- *; intros.
@@ -275,27 +310,25 @@ apply sysExtend with NN.
 assumption.
 apply H1.
 assumption.
-unfold not in |- *; intros.
-induction (H2 v).
-absurd (v = 0).
-eapply In_list_remove2.
-apply H3.
-assumption.
-eapply
- (freeVarCodeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF
-    codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR)
- .
-apply freeVarRepT.
-assert
- (forall f : Formula,
-  In v (freeVarFormula LNN (notH f)) -> In v (freeVarFormula LNN f)).
-intros.
-apply H5.
-apply H5.
-eapply In_list_remove1.
-unfold codeSysPf in H3.
-apply H3.
-assumption.
 Qed.
 
-End Godel's_1st_Incompleteness.
+Theorem Goedel'sIncompleteness1st :
+ wConsistent T ->
+ exists f : Formula,
+   ~ SysPrf T f /\
+   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarFormula LNN f)).
+Proof.
+intros.
+exists G.
+pose freeVarG.
+pose FirstIncompletenessA.
+pose FirstIncompletenessB.
+assert (~Inconsistent LNN T).
+intro.
+destruct (wCon2Con T H).
+apply H1.
+apply H0.
+tauto.
+Qed.
+
+End Goedel's_1st_Incompleteness.

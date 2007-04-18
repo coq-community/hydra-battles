@@ -4,7 +4,7 @@ Require Import Arith.
 Require Import folProp.
 Require Import code.
 Require Import extEqualNat.
-Require Import vector.
+Require Import Bvector.
 
 Section Code_Substitute_Term.
 

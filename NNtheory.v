@@ -169,7 +169,7 @@ apply sysWeaken.
 apply impI.
 rewrite <- (subFormulaId LNN a x).
 apply impE with (substituteFormula LNN a x (natToTerm n)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -194,7 +194,7 @@ apply sysWeaken.
 apply nn7.
 rewrite <- (subFormulaId LNN (LT (var 1) (Succ Zero)) 1).
 apply impE with (substituteFormula LNN (LT (var 1) (Succ Zero)) 1 Zero).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
@@ -237,7 +237,7 @@ apply
   with
     (substituteFormula LNN (LT (var 1) (Succ (Succ (natToTerm n)))) 1
        (Succ (natToTerm n))).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.

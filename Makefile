@@ -46,7 +46,7 @@ OPT=
 COQFLAGS=-q $(OPT) $(COQLIBS) $(OTHERFLAGS) $(COQ_XML)
 COQC=$(COQBIN)coqc
 GALLINA=gallina
-COQDOC=coqdoc
+COQDOC=$(COQBIN)coqdoc
 CAMLC=ocamlc -c
 CAMLOPTC=ocamlopt -c
 CAMLLINK=ocamlc
@@ -64,7 +64,7 @@ PP=-pp "camlp4o -I . -I $(COQTOP)/parsing $(CAMLP4EXTEND) $(GRAMMARS) -impl"
 
 OCAMLLIBS=-I .\
   -I ../../Eindhoven/POCKLINGTON
-COQLIBS=-I .\
+COQLIBS=-R . Goedel\
   -I ../../Eindhoven/POCKLINGTON
 
 ###################################
@@ -73,23 +73,8 @@ COQLIBS=-I .\
 #                                 #
 ###################################
 
-VFILES=Deduction.v\
-  LNN.v\
-  LNN2LNT.v\
-  LNT.v\
-  Languages.v\
-  ListExt.v\
-  NN.v\
-  NN2PA.v\
-  NNtheory.v\
-  PA.v\
-  PAconsistent.v\
-  PAtheory.v\
-  PRrepresentable.v\
-  cPair.v\
+VFILES=checkPrf.v\
   chRem.v\
-  checkPrf.v\
-  code.v\
   codeFreeVar.v\
   codeList.v\
   codeNatToTerm.v\
@@ -97,26 +82,41 @@ VFILES=Deduction.v\
   codeSubFormula.v\
   codeSubTerm.v\
   codeSysPrf.v\
+  code.v\
+  cPair.v\
+  Deduction.v\
   expressible.v\
   extEqualNat.v\
   fixPoint.v\
-  fol.v\
-  folLogic.v\
   folLogic2.v\
   folLogic3.v\
+  folLogic.v\
   folProof.v\
   folProp.v\
   folReplace.v\
-  godel1.v\
+  fol.v\
+  goedel1.v\
+  goedel2.v\
+  Languages.v\
+  ListExt.v\
+  LNN2LNT.v\
+  LNN.v\
+  LNT.v\
   misc.v\
   model.v\
-  prLogic.v\
+  NN2PA.v\
+  NNtheory.v\
+  NN.v\
+  PAconsistent.v\
+  PAtheory.v\
+  PA.v\
   primRec.v\
-  rosser.v\
+  prLogic.v\
+  PRrepresentable.v\
   rosserPA.v\
+  rosser.v\
   subAll.v\
   subProp.v\
-  vector.v\
   wConsistent.v\
   wellFormed.v
 VOFILES=$(VFILES:.v=.vo)
@@ -125,23 +125,8 @@ GFILES=$(VFILES:.v=.g)
 HTMLFILES=$(VFILES:.v=.html)
 GHTMLFILES=$(VFILES:.v=.g.html)
 
-all: Deduction.vo\
-  LNN.vo\
-  LNN2LNT.vo\
-  LNT.vo\
-  Languages.vo\
-  ListExt.vo\
-  NN.vo\
-  NN2PA.vo\
-  NNtheory.vo\
-  PA.vo\
-  PAconsistent.vo\
-  PAtheory.vo\
-  PRrepresentable.vo\
-  cPair.vo\
+all: checkPrf.vo\
   chRem.vo\
-  checkPrf.vo\
-  code.vo\
   codeFreeVar.vo\
   codeList.vo\
   codeNatToTerm.vo\
@@ -149,26 +134,41 @@ all: Deduction.vo\
   codeSubFormula.vo\
   codeSubTerm.vo\
   codeSysPrf.vo\
+  code.vo\
+  cPair.vo\
+  Deduction.vo\
   expressible.vo\
   extEqualNat.vo\
   fixPoint.vo\
-  fol.vo\
-  folLogic.vo\
   folLogic2.vo\
   folLogic3.vo\
+  folLogic.vo\
   folProof.vo\
   folProp.vo\
   folReplace.vo\
-  godel1.vo\
+  fol.vo\
+  goedel1.vo\
+  goedel2.vo\
+  Languages.vo\
+  ListExt.vo\
+  LNN2LNT.vo\
+  LNN.vo\
+  LNT.vo\
   misc.vo\
   model.vo\
-  prLogic.vo\
+  NN2PA.vo\
+  NNtheory.vo\
+  NN.vo\
+  PAconsistent.vo\
+  PAtheory.vo\
+  PA.vo\
   primRec.vo\
-  rosser.vo\
+  prLogic.vo\
+  PRrepresentable.vo\
   rosserPA.vo\
+  rosser.vo\
   subAll.vo\
   subProp.vo\
-  vector.vo\
   wConsistent.vo\
   wellFormed.vo
 
@@ -220,7 +220,7 @@ all-gal.ps: $(VFILES)
 	$(COQDOC) -html -g $< -o $@
 
 byte:
-	$(MAKE) all "OPT="
+	$(MAKE) all "OPT=-byte"
 
 opt:
 	$(MAKE) all "OPT=-opt"
@@ -229,12 +229,12 @@ include .depend
 
 .depend depend:
 	rm -f .depend
-	$(COQDEP) -i $(COQLIBS) *.v *.ml *.mli >.depend
-	$(COQDEP) $(COQLIBS) -suffix .html *.v >>.depend
+	$(COQDEP) -i $(COQLIBS) $(VFILES) *.ml *.mli >.depend
+	$(COQDEP) $(COQLIBS) -suffix .html $(VFILES) >>.depend
 
 install:
 	mkdir -p `$(COQC) -where`/user-contrib
-	cp -f *.vo `$(COQC) -where`/user-contrib
+	cp -f $(VOFILES) `$(COQC) -where`/user-contrib
 
 Makefile: Make
 	mv -f Makefile Makefile.bak
@@ -242,7 +242,7 @@ Makefile: Make
 
 
 clean:
-	rm -f *.cmo *.cmi *.cmx *.o *.vo *.vi *.g *~
+	rm -f *.cmo *.cmi *.cmx *.o $(VOFILES) $(VIFILES) $(GFILES) *~
 	rm -f all.ps all-gal.ps $(HTMLFILES) $(GHTMLFILES)
 
 archclean:

@@ -44,6 +44,7 @@ Inductive Formula : Set :=
 Definition Formulas := list Formula.
 
 Definition System := Ensemble Formula.
+Definition mem := Ensembles.In.
 
 Section Fol_Full.
 
@@ -59,7 +60,7 @@ End Fol_Full.
 
 Section Fol_Plus.
 
-Definition ifThenElseH (A B C : Formula) := andH (impH A C) (impH (notH A) C).
+Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
 
 End Fol_Plus.
 

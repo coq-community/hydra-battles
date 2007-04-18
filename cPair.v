@@ -2,7 +2,7 @@ Require Import Arith.
 Require Import List.
 Require Import extEqualNat.
 Require Import primRec.
-Require Import vector.
+Require Import Bvector.
 Require Import Div2.
 
 Definition sumToN (n : nat) :=
@@ -609,7 +609,7 @@ apply extEqualPrimRec.
 simpl in |- *.
 apply extEqualRefl.
 apply extEqualCompose.
-unfold extEqualVector, extEqualVectorGeneral, Vector_rect in |- *.
+unfold extEqualVector, extEqualVectorGeneral, vector_rect in |- *.
 repeat split; auto.
 apply extEqualRefl.
 auto.

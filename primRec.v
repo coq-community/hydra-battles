@@ -4,7 +4,7 @@ Require Import Compare_dec.
 Require Import List.
 Require Import Eqdep_dec.
 Require Import extEqualNat.
-Require Import vector.
+Require Import Bvector.
 Require Import misc.
 Require Export Bool.
 Require Export EqNat.
@@ -83,30 +83,30 @@ rewrite
 reflexivity.
 Qed.
 
-Fixpoint evalList (m : nat) (l : Vector nat m) {struct l} :
+Fixpoint evalList (m : nat) (l : vector nat m) {struct l} :
  naryFunc m -> nat :=
-  match l in (Vector _ m) return (naryFunc m -> nat) with
+  match l in (vector _ m) return (naryFunc m -> nat) with
   | Vnil => fun x : naryFunc 0 => x
   | Vcons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
   end.
 
-Fixpoint evalOneParamList (n m a : nat) (l : Vector (naryFunc (S n)) m)
- {struct l} : Vector (naryFunc n) m :=
-  match l in (Vector _ m) return (Vector (naryFunc n) m) with
+Fixpoint evalOneParamList (n m a : nat) (l : vector (naryFunc (S n)) m)
+ {struct l} : vector (naryFunc n) m :=
+  match l in (vector _ m) return (vector (naryFunc n) m) with
   | Vnil => Vnil (naryFunc n)
   | Vcons f m' l' => Vcons _ (f a) m' (evalOneParamList n m' a l')
   end.
 
 Fixpoint evalComposeFunc (n : nat) :
- forall m : nat, Vector (naryFunc n) m -> naryFunc m -> naryFunc n :=
+ forall m : nat, vector (naryFunc n) m -> naryFunc m -> naryFunc n :=
   match
     n
     return
-      (forall m : nat, Vector (naryFunc n) m -> naryFunc m -> naryFunc n)
+      (forall m : nat, vector (naryFunc n) m -> naryFunc m -> naryFunc n)
   with
   | O => evalList
   | S n' =>
-      fun (m : nat) (l : Vector (naryFunc (S n')) m) 
+      fun (m : nat) (l : vector (naryFunc (S n')) m) 
         (f : naryFunc m) (a : nat) =>
       evalComposeFunc n' m (evalOneParamList _ _ a l) f
   end.
@@ -139,14 +139,14 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
   end
  
  with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
- Vector (naryFunc n) m :=
-  match fs in (PrimRecs n m) return (Vector (naryFunc n) m) with
+ vector (naryFunc n) m :=
+  match fs in (PrimRecs n m) return (vector (naryFunc n) m) with
   | PRnil a => Vnil (naryFunc a)
   | PRcons a b g gs => Vcons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
 
-Definition extEqualVectorGeneral (n m : nat) (l : Vector (naryFunc n) m)
-  (m' : nat) (l' : Vector (naryFunc n) m') : Prop.
+Definition extEqualVectorGeneral (n m : nat) (l : vector (naryFunc n) m)
+  (m' : nat) (l' : vector (naryFunc n) m') : Prop.
 intros n m l.
 induction l as [| a n0 l Hrecl].
 intros.
@@ -159,7 +159,7 @@ exact False.
 exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
-Definition extEqualVector (n m : nat) (l l' : Vector (naryFunc n) m) : Prop.
+Definition extEqualVector (n m : nat) (l l' : vector (naryFunc n) m) : Prop.
 intros.
 eapply extEqualVectorGeneral.
 apply l.
@@ -167,7 +167,7 @@ apply l'.
 Defined.
 
 Lemma extEqualVectorRefl :
- forall (n m : nat) (l : Vector (naryFunc n) m), extEqualVector n m l l.
+ forall (n m : nat) (l : vector (naryFunc n) m), extEqualVector n m l l.
 Proof.
 intros.
 unfold extEqualVector in |- *.
@@ -181,14 +181,14 @@ auto.
 Qed.
 
 Lemma extEqualOneParamList :
- forall (n m : nat) (l1 l2 : Vector (naryFunc (S n)) m) (c : nat),
+ forall (n m : nat) (l1 l2 : vector (naryFunc (S n)) m) (c : nat),
  extEqualVector (S n) m l1 l2 ->
  extEqualVector n m (evalOneParamList n m c l1) (evalOneParamList n m c l2).
 Proof.
 unfold extEqualVector in |- *.
 assert
- (forall (n m : nat) (l1 : Vector (naryFunc (S n)) m) 
-    (m' : nat) (l2 : Vector (naryFunc (S n)) m') (c : nat),
+ (forall (n m : nat) (l1 : vector (naryFunc (S n)) m) 
+    (m' : nat) (l2 : vector (naryFunc (S n)) m') (c : nat),
   extEqualVectorGeneral (S n) m l1 m' l2 ->
   extEqualVectorGeneral n m (evalOneParamList n m c l1) m'
     (evalOneParamList n m' c l2)).
@@ -215,7 +215,7 @@ auto.
 Qed.
 
 Lemma extEqualCompose :
- forall (n m : nat) (l1 l2 : Vector (naryFunc n) m) (f1 f2 : naryFunc m),
+ forall (n m : nat) (l1 l2 : vector (naryFunc n) m) (f1 f2 : naryFunc m),
  extEqualVector n m l1 l2 ->
  extEqual m f1 f2 ->
  extEqual n (evalComposeFunc n m l1 f1) (evalComposeFunc n m l2 f2).
@@ -227,18 +227,15 @@ induction l1 as [| a n l1 Hrecl1]; simpl in |- *.
 intros.
 rewrite H0.
 clear H0.
-rewrite <- (nilVector _ l2).
+rewrite (V0_eq _ l2).
 simpl in |- *.
 reflexivity.
 intros.
-induction (consVector nat n l2).
-induction x as (a0, b).
-simpl in p.
-rewrite <- p in H.
+rewrite VSn_eq in H.
 unfold extEqualVector in H.
 simpl in H.
 induction H as (H, H1).
-rewrite <- p.
+rewrite (VSn_eq _ _ l2).
 simpl in |- *.
 apply Hrecl1.
 apply H1.
@@ -1630,7 +1627,7 @@ apply p.
 Defined.
 
 Definition projectionList (n m : nat) (p : m <= n) : 
-  Vector (naryFunc n) m := evalPrimRecs n m (projectionListPR n m p).
+  vector (naryFunc n) m := evalPrimRecs n m (projectionListPR n m p).
 
 Lemma projectionListInd :
  forall (n m : nat) (p1 p2 : m <= n),
@@ -1706,7 +1703,7 @@ generalize (projectionList n n (le_n n)).
 generalize f c.
 clear f c.
 assert
- (forall (m : nat) (f : naryFunc (S m)) (c : nat) (v : Vector (naryFunc n) m),
+ (forall (m : nat) (f : naryFunc (S m)) (c : nat) (v : vector (naryFunc n) m),
   extEqual n (evalComposeFunc n m v (f c))
     (evalComposeFunc n (S m) (Vcons (naryFunc n) (evalConstFunc n c) m v) f)).
 intros.
@@ -1848,7 +1845,7 @@ Qed.
 End Ignore_Params.
 
 Lemma reduce1stCompose :
- forall (c n m : nat) (v : Vector (naryFunc n) m) (g : naryFunc (S m)),
+ forall (c n m : nat) (v : vector (naryFunc n) m) (g : naryFunc (S m)),
  extEqual n
    (evalComposeFunc n _ (Vcons (naryFunc n) (evalConstFunc n c) _ v) g)
    (evalComposeFunc n _ v (g c)).
@@ -1864,7 +1861,7 @@ apply Hrecn.
 Qed.
 
 Lemma reduce2ndCompose :
- forall (c n m : nat) (v : Vector (naryFunc n) m) (n0 : naryFunc n)
+ forall (c n m : nat) (v : vector (naryFunc n) m) (n0 : naryFunc n)
    (g : naryFunc (S (S m))),
  extEqual n
    (evalComposeFunc n _

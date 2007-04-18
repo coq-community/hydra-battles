@@ -93,7 +93,7 @@ replace (impH (equal (Succ a) (Succ b)) (equal a b)) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNN LNN_dec).
+apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -132,7 +132,7 @@ replace (equal (Plus a (Succ b)) (Succ (Plus a b))) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNN LNN_dec).
+apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -172,7 +172,7 @@ replace (equal (Times a (Succ b)) (Plus (Times a b) a)) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNN LNN_dec).
+apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -213,7 +213,7 @@ replace (impH (LT a (Succ b)) (orH (LT a b) (equal a b))) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNN LNN_dec).
+apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -243,7 +243,7 @@ replace (orH (LT a b) (orH (equal a b) (LT b a))) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNN LNN_dec).
+apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -275,7 +275,7 @@ with (subAllFormula LNN (impH (orH (LT (var (0)) (var (1))) (equal (var (0)) (va
         (LT (var (0)) (Succ (var (1))))) [x:nat]Cases (le_lt_dec (2) x) of
          (left _) => (var x)
        | (right _) => (m x) end).
-Apply (subAllCloseFrom LNN LNN_dec).
+Apply (subAllCloseFrom LNN).
 Simpl.
 Apply Axm; Repeat ((Try Right; Constructor) Orelse Left).
 Simpl.

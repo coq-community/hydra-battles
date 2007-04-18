@@ -7,18 +7,12 @@ Require Import folProp.
 Section Deduction_Theorem.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-Let formula_dec := formula_dec L lang_dec.
-
 Let Formula := Formula L.
 Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
 Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
 Let impH := impH L.
 Let notH := notH L.
 Let forallH := forallH L.
@@ -29,21 +23,21 @@ Theorem DeductionTheorem :
  forall (T : System) (f g : Formula) (prf : SysPrf (Add _ T g) f),
  SysPrf T (impH g f).
 Proof.
+intros T.
 assert
  (EasyCase :
-  forall (F : Formulas) (g z : Formula),
-  Prf nil z -> SysPrf (fun x : Formula => In x F /\ x <> g) (impH g z)).
+  forall (g z : Formula),
+  Prf nil z -> SysPrf (fun x : fol.Formula L => In x nil /\ mem (fol.Formula L) T x)
+  (impH g z)).
 intros.
 set (A1 := IMP1 L z g) in *.
 set (A2 := MP L _ _ _ _ A1 H) in *.
-exists (nil ++ nil:list Formula).
+exists (nil:list Formula).
 exists A2.
 intros.
 elim H0.
-assert
- (forall (F : Formulas) (f g : Formula),
-  Prf F f -> SysPrf (fun x : Formula => In x F /\ x <> g) (impH g f)).
-intros.
+intros f g [F [H HF]].
+assert (SysPrf (fun x => In x F /\ mem _ T x) (impH g f)).
 induction  H
  as
   [A|
@@ -82,28 +76,30 @@ induction  H
    |
    R|
    f].
-induction (formula_dec A g).
-rewrite a.
+pose (HF _ (or_introl _ (refl_equal A))).
+clearbody m.
+destruct m.
+set (A1 := AXM L x) in *.
+set (A2 := IMP1 L x g) in *.
+set (A3 := MP L _ _ _ _ A2 A1) in *.
+exists (x :: nil).
+exists A3.
+intros.
+split.
+auto.
+destruct H0.
+destruct H0.
+assumption.
+contradiction.
+destruct H.
 set (A1 := IMP2 L g (impH g g) g) in *.
 set (A2 := IMP1 L g (impH g g)) in *.
 set (A3 := MP L _ _ _ _ A1 A2) in *.
 set (A4 := IMP1 L g g) in *.
 set (A5 := MP L _ _ _ _ A3 A4) in *.
-exists ((nil ++ nil) ++ nil:list Formula).
+exists (nil:list Formula).
 exists A5.
 contradiction.
-set (A1 := AXM L A) in *.
-set (A2 := IMP1 L A g) in *.
-set (A3 := MP L _ _ _ _ A2 A1) in *.
-exists (nil ++ A :: nil).
-exists A3.
-simpl in |- *.
-intros.
-induction  H as [H| H].
-rewrite <- H.
-unfold Ensembles.In in |- *.
-auto.
-elim H.
 induction  HrecH0 as (x, H).
 induction  H as (x0, H).
 induction  HrecH1 as (x1, H2).
@@ -111,25 +107,39 @@ induction  H2 as (x2, H2).
 set (A1 := IMP2 L g A B) in *.
 set (A2 := MP L _ _ _ _ A1 x2) in *.
 set (A3 := MP L _ _ _ _ A2 x0) in *.
-exists ((nil ++ x1) ++ x).
+exists (x1 ++ x).
 exists A3.
 simpl in |- *.
+clear - H H2.
 intros.
-unfold Ensembles.In in |- *.
-induction (in_app_or _ _ _ H3).
-induction (H2 _ H4).
 split.
+change (In g (Axm1++Axm2)).
 apply in_or_app.
-auto.
-auto.
-induction (H _ H4).
-split.
-apply in_or_app.
-auto.
-auto.
+destruct (in_app_or _ _ _ H0); firstorder.
+destruct (in_app_or _ _ _ H0); firstorder.
+firstorder.
+firstorder.
 induction  HrecH as (x, H0).
 induction  H0 as (x0, H0).
-induction (In_dec formula_dec g Axm).
+assert (In g Axm \/ (forall x, In x Axm -> mem _ T x)).
+clear - HF.
+induction Axm.
+firstorder.
+elim (HF a (or_introl _ (refl_equal a))).
+assert (forall g0 : fol.Formula L,
+         In g0 Axm -> mem (fol.Formula L) (Add (fol.Formula L) T g) g0) .
+firstorder.
+destruct (IHAxm H).
+firstorder.
+intros.
+right.
+intros x0 [H2|H2].
+elim H2; assumption.
+apply H0; assumption.
+intros x H.
+elim H.
+firstorder.
+destruct H1 as [a|b].
 assert (~ In v (freeVarListFormula L x)).
 clear x0 H.
 induction  x as [| a0 x Hrecx].
@@ -137,20 +147,14 @@ auto.
 unfold not in |- *; intro.
 simpl in H.
 induction (in_app_or _ _ _ H).
-assert
- (Ensembles.In (fol.Formula L) (fun x : Formula => In x Axm /\ x <> g) a0).
-apply H0.
-simpl in |- *; tauto.
-unfold Ensembles.In in H2.
-induction  H2 as (H2, H3).
 elim n.
 eapply In_freeVarListFormula.
 apply H1.
-auto.
+firstorder.
 elim Hrecx.
 intros.
 apply H0.
-simpl in |- *; tauto.
+firstorder.
 assumption.
 assert (~ In v (freeVarFormula L g)).
 unfold not in |- *; intros; elim n.
@@ -166,7 +170,7 @@ set (A6 := IMP1 L (impH (forallH v g) (forallH v A)) g) in *.
 set (A7 := MP L _ _ _ _ A6 A3) in *.
 set (A8 := MP L _ _ _ _ A5 A7) in *.
 set (A9 := MP L _ _ _ _ A8 A4) in *.
-exists ((nil ++ nil ++ nil ++ x) ++ nil).
+exists (x ++ nil).
 exists A9.
 clear A9 A8 A7 A6 A5 A4 A3 A2 A1.
 simpl in |- *.
@@ -178,16 +182,10 @@ elim H4.
 set (A1 := GEN L _ _ _ n H) in *.
 set (A2 := IMP1 L (forallH v A) g) in *.
 set (A3 := MP L _ _ _ _ A2 A1) in *.
-exists (nil ++ Axm).
+exists (Axm).
 exists A3.
-simpl in |- *.
-intros.
-unfold Ensembles.In in |- *.
-split.
-auto.
-unfold not in |- *; intros; elim b.
-rewrite H2 in H1.
-auto.
+firstorder.
+firstorder.
 apply EasyCase.
 apply (IMP1 L).
 apply EasyCase.
@@ -210,23 +208,11 @@ apply EasyCase.
 apply (EQ4 L).
 apply EasyCase.
 apply (EQ5 L).
-intros.
-induction  prf as (x, H0).
+induction  H0 as (x, H0).
 induction  H0 as (x0, H0).
-induction (H _ _ g x0).
-induction  H1 as (x2, H1).
-exists x1.
-exists x2.
-intros.
-unfold Ensembles.In in H1.
-induction (H1 _ H2).
-assert (Ensembles.In (fol.Formula L) (Add (fol.Formula L) T g) g0).
-auto.
-induction  H5 as [x3 H5| x3 H5].
-assumption.
-induction  H5 as [].
-elim H4.
-reflexivity.
+exists x.
+exists x0.
+firstorder.
 Qed.
 
 End Deduction_Theorem.

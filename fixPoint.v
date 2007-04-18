@@ -42,16 +42,16 @@ Let codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
 
 Lemma FixPointLNN :
  forall (A : Formula) (v : nat),
- exists B : Formula,
+ {B : Formula |
    SysPrf NN
      (iffH B (substituteFormula LNN A v (natToTermLNN (codeFormula B)))) /\
    (forall x : nat,
     In x (freeVarFormula LNN B) <->
-    In x (list_remove _ eq_nat_dec v (freeVarFormula LNN A))).
+    In x (list_remove _ eq_nat_dec v (freeVarFormula LNN A)))}.
 Proof.
 intros.
 set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)) in *.
-assert (represent : Representable 3 subStar subStarFormula).
+assert (represent : Representable NN 3 subStar subStarFormula).
 unfold subStarFormula in |- *.
 apply primRecRepresentable.
 set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)) in *.
@@ -137,11 +137,11 @@ apply
                       (natToTerm (codeFormula Theta))) 2 
                    (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0
              (var v)) A)).
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 eapply iffTrans.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 assumption.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -152,23 +152,23 @@ simpl in |- *.
 auto.
 apply H4.
 apply closedNatToTerm.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 eapply iffTrans.
-apply (subSubFormula LNN LNN_dec).
+apply (subSubFormula LNN).
 assumption.
 apply closedNatToTerm.
 rewrite (subTermVar1 LNN).
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 eapply iffTrans.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 assumption.
 apply closedNatToTerm.
 apply closedNatToTerm.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (subFormulaTrans LNN LNN_dec).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 assert (In nv (freeVarFormula LNN subStarFormula)).
 eapply In_list_remove1.
@@ -176,7 +176,7 @@ apply H4.
 induction represent as (H6, H7).
 elim (lt_not_le _ _ H3).
 auto.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
 fold nv in |- *.
@@ -198,7 +198,7 @@ rewrite (subTermVar1 LNN).
 rewrite (subTermNil LNN).
 apply impI.
 apply impE with (substituteFormula LNN A v (var v)).
-apply (subWithEquals LNN LNN_dec).
+apply (subWithEquals LNN).
 apply Axm; right; constructor.
 rewrite (subFormulaId LNN).
 eapply andE2.
@@ -217,7 +217,7 @@ apply
        (var v)).
 apply iffE1.
 apply sysWeaken.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 induction represent as (H4, H5).
 simpl in H5.
@@ -245,9 +245,9 @@ eapply
       (substituteFormula LNN
          (substituteFormula LNN (equal (var 0) N) 0 (var v)) v N).
 apply iffE2.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
 induction represent as (H4, H5).
 simpl in H5.
@@ -367,16 +367,16 @@ Let codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
 
 Lemma FixPointLNT :
  forall (A : Formula) (v : nat),
- exists B : Formula,
+ {B : Formula |
    SysPrf PA
      (iffH B (substituteFormula LNT A v (natToTermLNT (codeFormula B)))) /\
    (forall x : nat,
     In x (freeVarFormula LNT B) <->
-    In x (list_remove _ eq_nat_dec v (freeVarFormula LNT A))).
+    In x (list_remove _ eq_nat_dec v (freeVarFormula LNT A)))}.
 Proof.
 intros.
 set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)) in *.
-assert (represent : Representable 3 subStar subStarFormula).
+assert (represent : Representable NN 3 subStar subStarFormula).
 unfold subStarFormula in |- *.
 apply primRecRepresentable.
 set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)) in *.
@@ -462,11 +462,11 @@ apply
                       (natToTerm (codeFormula Theta))) 2 
                    (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0
              (var v)) A)).
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 eapply iffTrans.
-apply (subFormulaExch LNT LNT_dec).
+apply (subFormulaExch LNT).
 assumption.
 unfold not in |- *; intros.
 induction H4 as [H4| H4].
@@ -477,23 +477,23 @@ simpl in |- *.
 auto.
 apply H4.
 apply closedNatToTerm.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 eapply iffTrans.
-apply (subSubFormula LNT LNT_dec).
+apply (subSubFormula LNT).
 assumption.
 apply closedNatToTerm.
 rewrite (subTermVar1 LNT).
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 eapply iffTrans.
-apply (subFormulaExch LNT LNT_dec).
+apply (subFormulaExch LNT).
 assumption.
 apply closedNatToTerm.
 apply closedNatToTerm.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
-apply (subFormulaTrans LNT LNT_dec).
+apply (subFormulaTrans LNT).
 unfold not in |- *; intros.
 assert (In nv (freeVarFormula LNT (LNN2LNT_formula subStarFormula))).
 eapply In_list_remove1.
@@ -503,7 +503,7 @@ elim (lt_not_le _ _ H3).
 apply H6.
 apply LNN2LNT_freeVarFormula1.
 assumption.
-apply (subFormulaNil LNT LNT_dec).
+apply (subFormulaNil LNT).
 unfold not in |- *; intros.
 elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
 fold nv in |- *.
@@ -525,7 +525,7 @@ rewrite (subTermVar1 LNT).
 rewrite (subTermNil LNT).
 apply impI.
 apply impE with (substituteFormula LNT A v (var v)).
-apply (subWithEquals LNT LNT_dec).
+apply (subWithEquals LNT).
 apply Axm; right; constructor.
 rewrite (subFormulaId LNT).
 eapply andE2.
@@ -544,7 +544,7 @@ apply
        (var v)).
 apply iffE1.
 apply sysWeaken.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 induction represent as (H4, H5).
 simpl in H5.
@@ -570,13 +570,13 @@ apply
              (LNN.natToTerm nv)) 1 (LNN.natToTerm (codeFormula Theta)))).
 apply iffSym.
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 apply iffRefl.
 rewrite <- LNN2LNT_iff.
@@ -602,9 +602,9 @@ eapply
       (substituteFormula LNT
          (substituteFormula LNT (equal (var 0) N) 0 (var v)) v N).
 apply iffE2.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 induction represent as (H4, H5).
 simpl in H5.
@@ -630,13 +630,13 @@ apply
              (LNN.natToTerm nv)) 1 (LNN.natToTerm (codeFormula Theta)))).
 apply iffSym.
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 eapply iffTrans; [ apply LNN2LNT_subFormula | idtac ].
-rewrite LNN2LNT_natToTerm; apply (reduceSub LNT LNT_dec);
+rewrite LNN2LNT_natToTerm; apply (reduceSub LNT);
  [ apply closedPA | idtac ].
 apply iffRefl.
 rewrite <- LNN2LNT_iff.

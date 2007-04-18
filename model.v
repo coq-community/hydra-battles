@@ -3,7 +3,7 @@ Require Import List.
 Require Import ListExt.
 Require Import folProof.
 Require Import folProp.
-Require Import vector.
+Require Import Bvector.
 Require Import Peano_dec.
 Require Import misc.
 Require Import Arith.
@@ -580,8 +580,8 @@ Section Consistent_Theory.
 Variable T : System L.
 
 Fixpoint interpTermsVector (value : nat -> U M) (n : nat) 
- (ts : Terms L n) {struct ts} : Vector (U M) n :=
-  match ts in (Terms _ n) return (Vector (U M) n) with
+ (ts : Terms L n) {struct ts} : vector (U M) n :=
+  match ts in (Terms _ n) return (vector (U M) n) with
   | Tnil => Vnil (U M)
   | Tcons m t ts =>
       Vcons (U M) (interpTerm value t) m (interpTermsVector value m ts)
@@ -590,7 +590,7 @@ Fixpoint interpTermsVector (value : nat -> U M) (n : nat)
 Lemma preserveValue :
  forall value : nat -> U M,
  (forall f : Formula L,
-  Ensembles.In _ T f -> interpFormula value (nnTranslate f)) ->
+  mem _ T f -> interpFormula value (nnTranslate f)) ->
  forall g : Formula L, SysPrf L T g -> interpFormula value (nnTranslate g).
 Proof.
 intros.
@@ -851,22 +851,19 @@ Qed.
 Lemma ModelConsistent :
  forall value : nat -> U M,
  (forall f : Formula L,
-  Ensembles.In _ T f -> interpFormula value (nnTranslate f)) ->
+  mem _ T f -> interpFormula value (nnTranslate f)) ->
  Consistent L T.
 Proof.
 intros.
-unfold Consistent, Inconsistent in |- *.
+unfold Consistent in |- *.
+exists (notH L (equal L (var  L 0) (var L 0))).
 unfold not in |- *; intros.
 assert
  (interpFormula value
-    (nnTranslate (forallH L 0 (notH L (equal L (var L 0) (var L 0)))))).
+    (nnTranslate (notH L (equal L (var L 0) (var L 0))))).
 apply preserveValue.
 assumption.
-apply H0.
-simpl in H1.
-apply H1.
-intros.
-apply H2 with (value 0).
+auto.
 auto.
 Qed.
 

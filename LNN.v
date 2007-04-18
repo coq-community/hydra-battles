@@ -10,6 +10,7 @@ Require Import folLogic3.
 Definition Formula := Formula LNN.
 Definition Formulas := Formulas LNN.
 Definition System := System LNN.
+Definition Sentence := Sentence LNN.
 Definition Term := Term LNN.
 Definition Terms := Terms LNN.
 Definition var := var LNN.
@@ -91,7 +92,7 @@ End Free_Variables.
 Section Logic.
 
 Lemma Axm :
- forall (T : System) (f : Formula), Ensembles.In _ T f -> SysPrf T f.
+ forall (T : System) (f : Formula), mem _ T f -> SysPrf T f.
 Proof.
 apply (Axm LNN).
 Qed.
@@ -113,7 +114,7 @@ Lemma impI :
  forall (T : System) (f g : Formula),
  SysPrf (Add _ T g) f -> SysPrf T (impH g f).
 Proof.
-apply (impI LNN LNN_dec).
+apply (impI LNN).
 Qed.
 
 Lemma impE :
@@ -127,24 +128,24 @@ Lemma contradiction :
  forall (T : System) (f g : Formula),
  SysPrf T f -> SysPrf T (notH f) -> SysPrf T g.
 Proof.
-apply (contradiction LNN LNN_dec).
+apply (contradiction LNN).
 Qed.
 
 Lemma nnE :
  forall (T : System) (f : Formula), SysPrf T (notH (notH f)) -> SysPrf T f.
 Proof.
-apply (nnE LNN LNN_dec).
+apply (nnE LNN).
 Qed.
 
 Lemma noMiddle : forall (T : System) (f : Formula), SysPrf T (orH (notH f) f).
 Proof.
-apply (noMiddle LNN LNN_dec).
+apply (noMiddle LNN).
 Qed.
 
 Lemma nnI :
  forall (T : System) (f : Formula), SysPrf T f -> SysPrf T (notH (notH f)).
 Proof.
-apply (nnI LNN LNN_dec).
+apply (nnI LNN).
 Qed.
 
 Lemma cp1 :
@@ -158,19 +159,19 @@ Lemma cp2 :
  forall (T : System) (f g : Formula),
  SysPrf T (impH g f) -> SysPrf T (impH (notH f) (notH g)).
 Proof.
-apply (cp2 LNN LNN_dec).
+apply (cp2 LNN).
 Qed.
 
 Lemma orI1 :
  forall (T : System) (f g : Formula), SysPrf T f -> SysPrf T (orH f g).
 Proof.
-apply (orI1 LNN LNN_dec).
+apply (orI1 LNN).
 Qed.
 
 Lemma orI2 :
  forall (T : System) (f g : Formula), SysPrf T g -> SysPrf T (orH f g).
 Proof.
-apply (orI2 LNN LNN_dec).
+apply (orI2 LNN).
 Qed.
 
 Lemma orE :
@@ -178,54 +179,54 @@ Lemma orE :
  SysPrf T (orH f g) ->
  SysPrf T (impH f h) -> SysPrf T (impH g h) -> SysPrf T h.
 Proof.
-apply (orE LNN LNN_dec).
+apply (orE LNN).
 Qed.
 
 Lemma orSys :
  forall (T : System) (f g h : Formula),
  SysPrf (Add _ T f) h -> SysPrf (Add _ T g) h -> SysPrf (Add _ T (orH f g)) h.
 Proof.
-apply (orSys LNN LNN_dec).
+apply (orSys LNN).
 Qed.
 
 Lemma andI :
  forall (T : System) (f g : Formula),
  SysPrf T f -> SysPrf T g -> SysPrf T (andH f g).
 Proof.
-apply (andI LNN LNN_dec).
+apply (andI LNN).
 Qed.
 
 Lemma andE1 :
  forall (T : System) (f g : Formula), SysPrf T (andH f g) -> SysPrf T f.
 Proof.
-apply (andE1 LNN LNN_dec).
+apply (andE1 LNN).
 Qed.
 
 Lemma andE2 :
  forall (T : System) (f g : Formula), SysPrf T (andH f g) -> SysPrf T g.
 Proof.
-apply (andE2 LNN LNN_dec).
+apply (andE2 LNN).
 Qed.
 
 Lemma iffI :
  forall (T : System) (f g : Formula),
  SysPrf T (impH f g) -> SysPrf T (impH g f) -> SysPrf T (iffH f g).
 Proof.
-apply (iffI LNN LNN_dec).
+apply (iffI LNN).
 Qed.
 
 Lemma iffE1 :
  forall (T : System) (f g : Formula),
  SysPrf T (iffH f g) -> SysPrf T (impH f g).
 Proof.
-apply (iffE1 LNN LNN_dec).
+apply (iffE1 LNN).
 Qed.
 
 Lemma iffE2 :
  forall (T : System) (f g : Formula),
  SysPrf T (iffH f g) -> SysPrf T (impH g f).
 Proof.
-apply (iffE2 LNN LNN_dec).
+apply (iffE2 LNN).
 Qed.
 
 Lemma forallI :
@@ -253,7 +254,7 @@ Lemma existI :
  forall (T : System) (f : Formula) (v : nat) (t : Term),
  SysPrf T (substituteFormula LNN f v t) -> SysPrf T (existH v f).
 Proof.
-apply (existI LNN LNN_dec).
+apply (existI LNN).
 Qed.
 
 Lemma existE :
@@ -262,14 +263,14 @@ Lemma existE :
  ~ In v (freeVarFormula LNN g) ->
  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
 Proof.
-apply (existE LNN LNN_dec).
+apply (existE LNN).
 Qed.
 
 Lemma existSimp :
  forall (T : System) (f : Formula) (v : nat),
  SysPrf T f -> SysPrf T (existH v f).
 Proof.
-apply (existSimp LNN LNN_dec).
+apply (existSimp LNN).
 Qed.
 
 Lemma existSys :
@@ -278,94 +279,94 @@ Lemma existSys :
  ~ In v (freeVarFormula LNN g) ->
  SysPrf (Add _ T f) g -> SysPrf (Add _ T (existH v f)) g.
 Proof.
-apply (existSys LNN LNN_dec).
+apply (existSys LNN).
 Qed.
 
 Lemma absurd1 :
  forall (T : System) (f : Formula),
  SysPrf T (impH f (notH f)) -> SysPrf T (notH f).
 Proof. 
-apply (absurd1 LNN LNN_dec).
+apply (absurd1 LNN).
 Qed.
 
 Lemma nImp :
  forall (T : System) (f g : Formula),
  SysPrf T (andH f (notH g)) -> SysPrf T (notH (impH f g)).
 Proof.
-apply (nImp LNN LNN_dec).
+apply (nImp LNN).
 Qed.
 
 Lemma nOr :
  forall (T : System) (f g : Formula),
  SysPrf T (andH (notH f) (notH g)) -> SysPrf T (notH (orH f g)).
 Proof.
-apply (nOr LNN LNN_dec).
+apply (nOr LNN).
 Qed.
 
 Lemma nAnd :
  forall (T : System) (f g : Formula),
  SysPrf T (orH (notH f) (notH g)) -> SysPrf T (notH (andH f g)).
 Proof.
-apply (nAnd LNN LNN_dec).
+apply (nAnd LNN).
 Qed.
 
 Lemma nForall :
  forall (T : System) (f : Formula) (v : nat),
  SysPrf T (existH v (notH f)) -> SysPrf T (notH (forallH v f)).
 Proof.
-apply (nForall LNN LNN_dec).
+apply (nForall LNN).
 Qed.
 
 Lemma nExist :
  forall (T : System) (f : Formula) (v : nat),
  SysPrf T (forallH v (notH f)) -> SysPrf T (notH (existH v f)).
 Proof.
-apply (nExist LNN LNN_dec).
+apply (nExist LNN).
 Qed.
 
 Lemma impRefl : forall (T : System) (f : Formula), SysPrf T (impH f f).
 Proof.
-apply (impRefl LNN LNN_dec).
+apply (impRefl LNN).
 Qed.
 
 Lemma impTrans :
  forall (T : System) (f g h : Formula),
  SysPrf T (impH f g) -> SysPrf T (impH g h) -> SysPrf T (impH f h).
 Proof.
-apply (impTrans LNN LNN_dec).
+apply (impTrans LNN).
 Qed.
 
 Lemma orSym :
  forall (T : System) (f g : Formula),
  SysPrf T (orH f g) -> SysPrf T (orH g f).
 Proof.
-apply (orSym LNN LNN_dec).
+apply (orSym LNN).
 Qed.
 
 Lemma andSym :
  forall (T : System) (f g : Formula),
  SysPrf T (andH f g) -> SysPrf T (andH g f).
 Proof.
-apply (andSym LNN LNN_dec).
+apply (andSym LNN).
 Qed.
 
 Lemma iffRefl : forall (T : System) (f : Formula), SysPrf T (iffH f f).
 Proof.
-apply (iffRefl LNN LNN_dec).
+apply (iffRefl LNN).
 Qed.
 
 Lemma iffSym :
  forall (T : System) (f g : Formula),
  SysPrf T (iffH f g) -> SysPrf T (iffH g f).
 Proof.
-apply (iffSym LNN LNN_dec).
+apply (iffSym LNN).
 Qed.
 
 Lemma iffTrans :
  forall (T : System) (f g h : Formula),
  SysPrf T (iffH f g) -> SysPrf T (iffH g h) -> SysPrf T (iffH f h).
 Proof.
-apply (iffTrans LNN LNN_dec).
+apply (iffTrans LNN).
 Qed.
 
 Lemma eqRefl : forall (T : System) (a : Term), SysPrf T (equal a a).
@@ -377,14 +378,14 @@ Lemma eqSym :
  forall (T : System) (a b : Term),
  SysPrf T (equal a b) -> SysPrf T (equal b a).
 Proof.
-apply (eqSym LNN LNN_dec).
+apply (eqSym LNN).
 Qed.
 
 Lemma eqTrans :
  forall (T : System) (a b c : Term),
  SysPrf T (equal a b) -> SysPrf T (equal b c) -> SysPrf T (equal a c).
 Proof.
-apply (eqTrans LNN LNN_dec).
+apply (eqTrans LNN).
 Qed.
 
 Lemma eqPlus :
@@ -394,7 +395,7 @@ Lemma eqPlus :
 Proof.
 intros.
 unfold Plus in |- *.
-apply (equalFunction LNN LNN_dec).
+apply (equalFunction LNN).
 simpl in |- *.
 induction (consTerms LNN 1 (Tcons LNN 1 a (Tcons LNN 0 c (Tnil LNN)))).
 induction x as (a0, b0).
@@ -433,7 +434,7 @@ Lemma eqTimes :
 Proof.
 intros.
 unfold Times in |- *.
-apply (equalFunction LNN LNN_dec).
+apply (equalFunction LNN).
 simpl in |- *.
 induction (consTerms LNN 1 (Tcons LNN 1 a (Tcons LNN 0 c (Tnil LNN)))).
 induction x as (a0, b0).
@@ -471,7 +472,7 @@ Lemma eqSucc :
 Proof.
 intros.
 unfold Succ in |- *.
-apply (equalFunction LNN LNN_dec).
+apply (equalFunction LNN).
 simpl in |- *.
 induction (consTerms LNN 0 (Tcons LNN 0 a (Tnil LNN))).
 induction x as (a0, b0).
@@ -494,7 +495,7 @@ Lemma eqLT :
 Proof.
 intros.
 unfold LT in |- *.
-apply (equalRelation LNN LNN_dec).
+apply (equalRelation LNN).
 simpl in |- *.
 induction (consTerms LNN 1 (Tcons LNN 1 a (Tcons LNN 0 c (Tnil LNN)))).
 induction x as (a0, b0).

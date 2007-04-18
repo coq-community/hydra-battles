@@ -32,12 +32,12 @@ Hypothesis
 Hypothesis
   expressT1 :
     forall f : Formula,
-    Ensembles.In _ T f ->
+    mem _ T f ->
     SysPrf T (substituteFormula LNN repT v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressT2 :
     forall f : Formula,
-    ~ Ensembles.In _ T f ->
+    ~ mem _ T f ->
     SysPrf T
       (notH (substituteFormula LNN repT v0 (natToTerm (codeFormula f)))).
 
@@ -89,10 +89,10 @@ Definition codeSysPrfNCorrect3 :=
     repT v0 freeVarRepT.
 
 Lemma decideAxioms :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  forall x : Formulas,
- (forall g : Formula, In g x -> Ensembles.In _ T g) \/
- (exists g : Formula, In g x /\ ~ Ensembles.In _ T g).
+ (forall g : Formula, In g x -> mem _ T g) \/
+ (exists g : Formula, In g x /\ ~ mem _ T g).
 Proof.
 intros.
 induction x as [| a x Hrecx].
@@ -120,15 +120,15 @@ auto with datatypes.
 Qed.
 
 Lemma searchProof :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  forall (a b : Formula) (A : Formulas) (p : Prf LNN A a),
  (exists B : Formulas,
     (exists q : Prf LNN B b,
        codePrf _ _ q < S (codePrf _ _ p) /\
-       (forall x : Formula, In x B -> Ensembles.In _ T x))) \/
+       (forall x : Formula, In x B -> mem _ T x))) \/
  (forall (B : Formulas) (q : Prf LNN B b),
   codePrf _ _ q < S (codePrf _ _ p) ->
-  exists g : Formula, In g B /\ ~ Ensembles.In _ T g).
+  exists g : Formula, In g B /\ ~ mem _ T g).
 Proof.
 intros.
 induction (S (codePrf A a p)).
@@ -194,7 +194,7 @@ Qed.
 (*To prove the strong contructive result we need the decidability of T*)
 
 Theorem Rosser'sIncompleteness :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  exists f : Formula,
    (forall v : nat, ~ In v (freeVarFormula LNN f)) /\
    (SysPrf T f \/ SysPrf T (notH f) -> Inconsistent LNN T).
@@ -208,7 +208,7 @@ set
           (andH (LT (var 2) (var 1))
              (substituteFormula LNN codeSysPrfNot 1 (var 2)))))) 
  in *.
-decompose record (FixPointLNN A 0).
+destruct (FixPointLNN A 0) as [x [H0 H1]].
 exists x.
 split.
 unfold not in |- *; intros.
@@ -281,11 +281,11 @@ apply
 apply iffE1.
 apply sysExtend with NN.
 apply extendsNN.
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 apply iffRefl.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H4).
 apply (In_list_remove2 _ _ _ _ _ H5).
@@ -308,13 +308,13 @@ apply
 apply iffE1.
 apply sysExtend with NN.
 apply extendsNN.
-apply (reduceExist LNN LNN_dec).
+apply (reduceExist LNN).
 apply closedNN.
-apply (reduceSub LNN LNN_dec).
+apply (reduceSub LNN).
 apply closedNN.
-apply (reduceAnd LNN LNN_dec).
+apply (reduceAnd LNN).
 apply iffRefl.
-apply (subFormulaExch LNN LNN_dec).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros.
 simpl in H4.
@@ -489,11 +489,11 @@ apply
              (substituteFormula LNN codeSysPrfNot 0
                 (natToTerm (codeFormula x))) 1 (natToTerm n)))).
 apply iffE2.
-apply (reduceImp LNN LNN_dec).
-apply (subFormulaNil LNN LNN_dec).
+apply (reduceImp LNN).
+apply (subFormulaNil LNN).
 apply H4.
-apply (reduceNot LNN LNN_dec).
-apply (subFormulaTrans LNN LNN_dec).
+apply (reduceNot LNN).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 SimplFreeVar.
 apply (le_not_lt 2 1).
@@ -753,7 +753,7 @@ eapply andE1.
 apply Axm; right; constructor.
 apply impE with (substituteFormula LNN E 1 (natToTerm n)).
 apply iffE1.
-apply (subFormulaNil LNN LNN_dec).
+apply (subFormulaNil LNN).
 apply H4.
 apply Axm; left; right; constructor.
 apply
@@ -795,13 +795,13 @@ apply
           (substituteFormula LNN codeSysPrfNot 0
              (natToTermLNN (codeFormula x))) 1 (var 2)) 2
        (natToTerm (codePrf x0 (notH x) x1))).
-repeat (apply (reduceSub LNN LNN_dec); [ apply closedNN | idtac ]).
-apply (subFormulaExch LNN LNN_dec).
+repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
+apply (subFormulaExch LNN).
 discriminate.
 unfold not in |- *; intros; SimplFreeVar.
 discriminate H6.
 apply closedNatToTerm.
-apply (subFormulaTrans LNN LNN_dec).
+apply (subFormulaTrans LNN).
 unfold not in |- *; intros; SimplFreeVar.
 apply (le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
@@ -866,3 +866,33 @@ assumption.
 Qed.
 
 End Rosser's_Incompleteness.
+
+Definition RepresentsInSelf (T:System) := 
+exists rep:Formula, exists v:nat,
+(forall x : nat, In x (freeVarFormula LNN rep) -> x = v)  /\
+(forall f : Formula,
+        mem Formula T f ->
+        SysPrf T (substituteFormula LNN rep v (natToTerm (codeFormula f)))) /\
+(forall f : Formula,
+        ~ mem Formula T f ->
+        SysPrf T
+          (notH (substituteFormula LNN rep v (natToTerm (codeFormula f))))).
+
+Definition DecidableSet (A:_)(s:Ensemble A) :=
+(forall x : A,
+        mem A s x \/
+        ~ mem A s x).
+
+Theorem Incompleteness :
+       forall T : System,
+       Included Formula NN T ->
+       RepresentsInSelf T ->
+       DecidableSet Formula T ->
+       exists f : Formula,
+         (Sentence f) /\
+         (SysPrf T f \/ SysPrf T (notH f) -> Inconsistent LNN T).
+Proof.
+intros.
+repeat induction H0.
+apply Rosser'sIncompleteness with x x0; auto; tauto.
+Qed.

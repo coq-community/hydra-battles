@@ -25,7 +25,7 @@ Definition codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
 Variable T : System.
 Definition T' : fol.System LNN :=
   Union _ NN
-    (fun x : fol.Formula LNN => Ensembles.In _ T (LNN2LNT_formula x)).
+    (fun x : fol.Formula LNN => mem _ T (LNN2LNT_formula x)).
 
 Lemma extendsNN : Included _ NN T'.
 Proof.
@@ -45,12 +45,12 @@ Hypothesis
 Hypothesis
   expressT1 :
     forall f : Formula,
-    Ensembles.In _ T f ->
+    mem _ T f ->
     SysPrf T (substituteFormula LNT repT v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressT2 :
     forall f : Formula,
-    ~ Ensembles.In _ T f ->
+    ~ mem _ T f ->
     SysPrf T
       (notH (substituteFormula LNT repT v0 (natToTerm (codeFormula f)))).
 
@@ -73,7 +73,7 @@ apply
  (folLogic.sysExtend LNN)
   with
     (fun x : fol.Formula LNN =>
-     Ensembles.In (fol.Formula LNT) T (LNN2LNT_formula x)).
+     mem (fol.Formula LNT) T (LNN2LNT_formula x)).
 unfold Included in |- *.
 intros.
 right.
@@ -98,6 +98,7 @@ induction x0
    f]; simpl in |- *.
 exists (AXM LNN (LNT2LNN_formula A)).
 intros.
+unfold mem in |- *.
 unfold Ensembles.In in |- *.
 induction H0 as [H0| H0].
 rewrite <- H0.
@@ -106,10 +107,10 @@ apply H.
 auto with datatypes.
 induction H0.
 assert
- (forall g : fol.Formula LNT, In g Axm1 -> Ensembles.In (fol.Formula LNT) T g).
+ (forall g : fol.Formula LNT, In g Axm1 -> mem (fol.Formula LNT) T g).
 auto with datatypes.
 assert
- (forall g : fol.Formula LNT, In g Axm2 -> Ensembles.In (fol.Formula LNT) T g).
+ (forall g : fol.Formula LNT, In g Axm2 -> mem (fol.Formula LNT) T g).
 auto with datatypes.
 induction (Hrecx0_0 H1).
 induction (Hrecx0_1 H0).
@@ -180,7 +181,7 @@ Qed.
 
 Lemma expressT'1 :
  forall f : Formula,
- Ensembles.In _ T f ->
+ mem _ T f ->
  folProof.SysPrf LNN T'
    (substituteFormula LNN (LNT2LNN_formula repT) v0
       (natToTermLNN (codeFormula f))).
@@ -195,7 +196,7 @@ Qed.
 
 Lemma expressT'2 :
  forall f : Formula,
- ~ Ensembles.In _ T f ->
+ ~ mem _ T f ->
  folProof.SysPrf LNN T'
    (fol.notH LNN
       (substituteFormula LNN (LNT2LNN_formula repT) v0
@@ -271,10 +272,10 @@ Definition codeSysPrfNCorrect3 :=
     extendsNN (LNT2LNN_formula repT) v0 freeVarRepT'.
 
 Lemma decideAxioms :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  forall x : Formulas,
- (forall g : Formula, In g x -> Ensembles.In _ T g) \/
- (exists g : Formula, In g x /\ ~ Ensembles.In _ T g).
+ (forall g : Formula, In g x -> mem _ T g) \/
+ (exists g : Formula, In g x /\ ~ mem _ T g).
 Proof.
 intros.
 induction x as [| a x Hrecx].
@@ -302,15 +303,15 @@ auto with datatypes.
 Qed.
 
 Lemma searchProof :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  forall (a b : Formula) (A : Formulas) (p : Prf LNT A a),
  (exists B : Formulas,
     (exists q : Prf LNT B b,
        codePrf _ _ q < S (codePrf _ _ p) /\
-       (forall x : Formula, In x B -> Ensembles.In _ T x))) \/
+       (forall x : Formula, In x B -> mem _ T x))) \/
  (forall (B : Formulas) (q : Prf LNT B b),
   codePrf _ _ q < S (codePrf _ _ p) ->
-  exists g : Formula, In g B /\ ~ Ensembles.In _ T g).
+  exists g : Formula, In g B /\ ~ mem _ T g).
 Proof.
 intros.
 induction (S (codePrf A a p)).
@@ -380,7 +381,7 @@ Proof.
 assert
  (freeVarPA :
   forall x : Formulas,
-  (forall g : fol.Formula LNT, In g x -> Ensembles.In (fol.Formula LNT) PA g) ->
+  (forall g : fol.Formula LNT, In g x -> mem (fol.Formula LNT) PA g) ->
   forall v : nat, In v (freeVarListFormula LNT x) -> False).
 intros.
 induction x as [| a x Hrecx].
@@ -401,7 +402,7 @@ assert
     ex
       (fun _ : Prf LNT Axm (LNN2LNT_formula f) =>
        forall g : fol.Formula LNT,
-       In g Axm -> Ensembles.In (fol.Formula LNT) T g)).
+       In g Axm -> mem (fol.Formula LNT) T g)).
 induction x0
  as
   [A|
@@ -418,7 +419,7 @@ induction x0
    |
    R|
    f]; simpl in |- *.
-assert (Ensembles.In (fol.Formula LNN) T' A).
+assert (mem (fol.Formula LNN) T' A).
 auto with datatypes.
 repeat induction H0.
 exists (PA1 :: nil).
@@ -491,6 +492,7 @@ apply (freeVarPA x H0 v H1).
 exists x0.
 intros.
 apply extendsPA.
+fold mem.
 auto.
 assert (SysPrf PA (LNN2LNT_formula NN8)).
 apply NN82PA.
@@ -502,6 +504,7 @@ apply (freeVarPA x H0 v H1).
 exists x0.
 intros.
 apply extendsPA.
+fold mem.
 auto.
 assert (SysPrf PA (LNN2LNT_formula NN9)).
 apply NN92PA.
@@ -513,6 +516,7 @@ apply (freeVarPA x H0 v H1).
 exists x0.
 intros.
 apply extendsPA.
+fold mem.
 auto.
 exists (LNN2LNT_formula x :: nil).
 split.
@@ -522,17 +526,18 @@ apply (LNN2LNT_freeVarFormula1 x).
 exists (AXM _ (LNN2LNT_formula x)).
 intros.
 induction H1 as [H1| H1].
+unfold mem in H0.
 unfold Ensembles.In in H0.
 rewrite H1 in H0.
 apply H0.
 elim H1.
 assert
  (forall g : fol.Formula LNN,
-  In g Axm1 -> Ensembles.In (fol.Formula LNN) T' g).
+  In g Axm1 -> mem (fol.Formula LNN) T' g).
 auto with datatypes.
 assert
  (forall g : fol.Formula LNN,
-  In g Axm2 -> Ensembles.In (fol.Formula LNN) T' g).
+  In g Axm2 -> mem (fol.Formula LNN) T' g).
 auto with datatypes.
 induction (Hrecx0_1 H0).
 induction (Hrecx0_0 H1).
@@ -551,7 +556,7 @@ exists (MP _ _ _ _ _ x1 x2).
 intros.
 induction (in_app_or _ _ _ H0); auto.
 assert
- (forall g : fol.Formula LNN, In g Axm -> Ensembles.In (fol.Formula LNN) T' g).
+ (forall g : fol.Formula LNN, In g Axm -> mem (fol.Formula LNN) T' g).
 auto.
 induction (Hrecx0 H0).
 clear Hrecx0 H0.
@@ -598,7 +603,7 @@ induction H0 as (x0, H0).
 induction x as [| a x Hrecx].
 exists x0.
 simpl in |- *; tauto.
-assert (Ensembles.In (fol.Formula LNT) (Empty_set (fol.Formula LNT)) a).
+assert (mem (fol.Formula LNT) (Empty_set (fol.Formula LNT)) a).
 auto with datatypes.
 induction H1.
 exists (nil (A:=Formula)).
@@ -647,12 +652,12 @@ split.
 intros.
 induction (In_freeVarListFormulaE _ _ _ H1).
 induction H2 as (H2, H3).
-assert (Ensembles.In (fol.Formula LNT) (Empty_set Formula) x1).
+assert (mem (fol.Formula LNT) (Empty_set Formula) x1).
 auto.
 induction H4.
 exists x0.
 intros.
-assert (Ensembles.In (fol.Formula LNT) (Empty_set Formula) g).
+assert (mem (fol.Formula LNT) (Empty_set Formula) g).
 auto.
 induction H2.
 assert (SysPrf (Empty_set Formula) (LNN2LNT_formula (AxmEq5 LNN f))).
@@ -672,12 +677,12 @@ split.
 intros.
 induction (In_freeVarListFormulaE _ _ _ H1).
 induction H2 as (H2, H3).
-assert (Ensembles.In (fol.Formula LNT) (Empty_set Formula) x1).
+assert (mem (fol.Formula LNT) (Empty_set Formula) x1).
 auto.
 induction H4.
 exists x0.
 intros.
-assert (Ensembles.In (fol.Formula LNT) (Empty_set Formula) g).
+assert (mem (fol.Formula LNT) (Empty_set Formula) g).
 auto.
 induction H2.
 induction H0 as (x1, H0).
@@ -689,7 +694,7 @@ Qed.
 (*To prove the strong contructive result we need the decidability of T*)
 
 Theorem Rosser'sIncompleteness :
- (forall x : Formula, Ensembles.In _ T x \/ ~ Ensembles.In _ T x) ->
+ (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  exists f : Formula,
    (forall v : nat, ~ In v (freeVarFormula LNT f)) /\
    (SysPrf T f \/ SysPrf T (notH f) -> Inconsistent LNT T).
@@ -703,7 +708,7 @@ set
           (fol.andH LNN (LT (fol.var LNN 2) (fol.var LNN 1))
              (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))) 
  in *.
-decompose record (FixPointLNT (LNN2LNT_formula A) 0).
+destruct (FixPointLNT (LNN2LNT_formula A) 0) as [x [H0 H1]].
 exists x.
 split.
 unfold not in |- *; intros.
@@ -792,11 +797,11 @@ apply
 apply iffE1.
 apply sysExtend with PA.
 apply extendsPA.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 apply iffRefl.
-apply (subFormulaNil LNT LNT_dec).
+apply (subFormulaNil LNT).
 unfold not in |- *; intros.
 induction (freeVarSubFormula3 _ _ _ _ _ H4).
 apply (In_list_remove2 _ _ _ _ _ H5).
@@ -823,9 +828,9 @@ apply
 apply iffE1.
 apply sysExtend with PA.
 apply extendsPA.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 apply iffSym.
 rewrite <- LNN2LNT_natToTerm.
 apply LNN2LNT_subFormula.
@@ -845,13 +850,13 @@ apply
 apply iffE1.
 apply sysExtend with PA.
 apply extendsPA.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 apply iffRefl.
-apply (subFormulaExch LNT LNT_dec).
+apply (subFormulaExch LNT).
 discriminate.
 unfold not in |- *; intros.
 simpl in H4.
@@ -877,15 +882,15 @@ apply
 apply iffE1.
 apply sysExtend with PA.
 apply extendsPA.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 apply iffSym.
 rewrite <- LNN2LNT_natToTerm.
 apply LNN2LNT_subFormula.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 replace (var 2) with (LNN2LNT_term (fol.var LNN 2)).
 apply LNN2LNT_subFormula.
@@ -973,7 +978,7 @@ apply extendsPA.
 eapply iffTrans.
 apply LNN2LNT_subFormula.
 repeat rewrite <- LNN2LNT_natToTerm.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 apply LNN2LNT_subFormula.
 apply T'prf2Tprf.
@@ -1111,11 +1116,11 @@ apply
              (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 0
                 (natToTerm (codeFormula x))) 1 (natToTerm n)))).
 apply iffE2.
-apply (reduceImp LNT LNT_dec).
-apply (subFormulaNil LNT LNT_dec).
+apply (reduceImp LNT).
+apply (subFormulaNil LNT).
 apply H4.
-apply (reduceNot LNT LNT_dec).
-apply (subFormulaTrans LNT LNT_dec).
+apply (reduceNot LNT).
+apply (subFormulaTrans LNT).
 unfold not in |- *; intros.
 SimplFreeVar.
 apply (le_not_lt 2 1).
@@ -1171,7 +1176,7 @@ apply
              (substituteFormula LNN codeSysPrfNot 0
                 (natToTermLNN (codeFormula x))) 1 (natToTermLNN n0)))).
 apply iffRefl.
-apply (reduceNot LNT LNT_dec).
+apply (reduceNot LNT).
 rewrite <- LNN2LNT_natToTerm.
 rewrite <- LNN2LNT_natToTerm.
 apply
@@ -1183,7 +1188,7 @@ apply
              (natToTermLNN (codeFormula x)))) 1
        (LNN2LNT_term (natToTermLNN n0))).
 apply LNN2LNT_subFormula.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 apply LNN2LNT_subFormula.
 eapply andE1.
@@ -1416,11 +1421,11 @@ apply
                    (code.codeFormula LNT codeLNTFunction codeLNTRelation x)))))).
 repeat apply sysWeaken.
 apply iffE1.
-apply (reduceImp LNT LNT_dec).
+apply (reduceImp LNT).
 apply iffRefl.
-apply (reduceExist LNT LNT_dec).
+apply (reduceExist LNT).
 apply closedPA.
-apply (reduceAnd LNT LNT_dec).
+apply (reduceAnd LNT).
 apply
  iffTrans
   with
@@ -1430,7 +1435,7 @@ apply
              (code.codeFormula LNT codeLNTFunction codeLNTRelation x)))).
 rewrite <- LNN2LNT_iff.
 apply NN2PA.
-apply (folLogic.iffRefl LNN LNN_dec).
+apply (folLogic.iffRefl LNN).
 rewrite <- LNN2LNT_natToTerm.
 apply LNN2LNT_subFormula.
 apply iffRefl.
@@ -1545,7 +1550,7 @@ apply
              (substituteFormula LNN codeSysPrf 0
                 (natToTermLNN (codeFormula x))) 1 (natToTermLNN n0)))).
 apply iffRefl.
-apply (reduceNot LNT LNT_dec).
+apply (reduceNot LNT).
 repeat rewrite <- LNN2LNT_natToTerm.
 apply
  iffTrans
@@ -1555,14 +1560,14 @@ apply
           (substituteFormula LNN codeSysPrf 0 (natToTermLNN (codeFormula x))))
        1 (LNN2LNT_term (natToTermLNN n0))).
 apply LNN2LNT_subFormula.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 apply LNN2LNT_subFormula.
 eapply andE1.
 apply Axm; right; constructor.
 apply impE with (substituteFormula LNT E 1 (natToTerm n)).
 apply iffE1.
-apply (subFormulaNil LNT LNT_dec).
+apply (subFormulaNil LNT).
 apply H4.
 apply Axm; left; right; constructor.
 apply
@@ -1630,7 +1635,7 @@ replace
           (natToTermLNN (codePrf x0 (notH x) x1))))).
 apply NN2PA.
 unfold LT in |- *.
-apply (folLogic.impI LNN LNN_dec).
+apply (folLogic.impI LNN).
 rewrite (subFormulaRelation LNN).
 simpl in |- *.
 apply (folLogic.Axm LNN); right; constructor.
@@ -1658,7 +1663,7 @@ apply
           (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 1 (var 2)) 0
           (natToTermLNT (codeFormula x))) 2
        (natToTerm (codePrf x0 (notH x) x1))).
-repeat (apply (reduceSub LNT LNT_dec); [ apply closedPA | idtac ]).
+repeat (apply (reduceSub LNT); [ apply closedPA | idtac ]).
 replace (var 2) with (LNN2LNT_term (fol.var LNN 2)).
 apply LNN2LNT_subFormula.
 reflexivity.
@@ -1670,13 +1675,13 @@ apply
           (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 0
              (natToTermLNT (codeFormula x))) 1 (var 2)) 2
        (natToTerm (codePrf x0 (notH x) x1))).
-repeat (apply (reduceSub LNT LNT_dec); [ apply closedPA | idtac ]).
-apply (subFormulaExch LNT LNT_dec).
+repeat (apply (reduceSub LNT); [ apply closedPA | idtac ]).
+apply (subFormulaExch LNT).
 discriminate.
 unfold not in |- *; intros; SimplFreeVar.
 discriminate H6.
 apply closedNatToTerm.
-apply (subFormulaTrans LNT LNT_dec).
+apply (subFormulaTrans LNT).
 unfold not in |- *; intros; SimplFreeVar.
 apply (le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
@@ -1706,7 +1711,7 @@ apply
 apply LNN2LNT_subFormula.
 apply sysExtend with PA.
 assumption.
-apply (reduceSub LNT LNT_dec).
+apply (reduceSub LNT).
 apply closedPA.
 apply LNN2LNT_subFormula.
 apply T'prf2Tprf.
@@ -1774,14 +1779,15 @@ Require Import PAconsistent.
 
 Theorem PAIncomplete :
  exists f : Formula,
-   (forall v : nat, ~ In v (freeVarFormula LNT f)) /\
-   ~ (SysPrf PA f \/ SysPrf PA (notH f)).
+   (Sentence f) /\ ~(SysPrf PA f \/ SysPrf PA (notH f)).
 Proof.
 assert
- (Expressible 1 codePA
+ (Expressible NN 1 codePA
     (substituteFormula LNN (primRecFormula 1 (proj1_sig codePAIsPR)) 0
        (natToTermLNN 1))).
-apply Representable2Expressible.
+apply (Representable2Expressible _ closedNN1).
+simpl.
+apply nn1.
 apply primRecRepresentable.
 induction H as (H, H0).
 simpl in H0.
@@ -1882,7 +1888,7 @@ exists x.
 split.
 assumption.
 unfold not in |- *; intros.
-apply PAconsistent.
-apply H2.
+unfold Inconsistent in H2.
+induction PAconsistent.
 auto.
 Qed.

@@ -9,8 +9,6 @@ Require Import Deduction.
 Section Logic_Rules.
 
 Variable L : Language.
-Hypothesis lang_dec : language_decideable L.
-
 Let Formula := Formula L.
 Let Formulas := Formulas L.
 Let System := System L.
@@ -32,7 +30,7 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Lemma Axm :
- forall (T : System) (f : Formula), Ensembles.In _ T f -> SysPrf T f.
+ forall (T : System) (f : Formula), mem _ T f -> SysPrf T f.
 Proof.
 intros.
 exists (f :: nil).
@@ -76,7 +74,6 @@ Lemma impI :
 Proof.
 intros.
 apply (DeductionTheorem L).
-assumption.
 assumption.
 Qed.
 

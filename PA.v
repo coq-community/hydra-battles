@@ -265,7 +265,7 @@ replace (impH (equal (Succ a) (Succ b)) (equal a b)) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNT LNT_dec).
+apply (subAllCloseFrom LNT).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -304,7 +304,7 @@ replace (equal (Plus a (Succ b)) (Succ (Plus a b))) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNT LNT_dec).
+apply (subAllCloseFrom LNT).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
@@ -344,7 +344,7 @@ replace (equal (Times a (Succ b)) (Plus (Times a b) a)) with
      | left _ => var x
      | right _ => m x
      end)).
-apply (subAllCloseFrom LNT LNT_dec).
+apply (subAllCloseFrom LNT).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
