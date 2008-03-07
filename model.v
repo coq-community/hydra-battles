@@ -26,8 +26,8 @@ Fixpoint naryRel (A : Set) (n : nat) {struct n} : Type :=
 
 Record Model : Type := model
   {U : Set;
-   func : forall f : Functions L, naryFunc U (arity L (inr _ f));
-   rel : forall r : Relations L, naryRel U (arity L (inl _ r))}.
+   func : forall f : Functions L, naryFunc U (arity L (inr f));
+   rel : forall r : Relations L, naryRel U (arity L (inl r))}.
 
 Variable M : Model.
 
@@ -707,29 +707,29 @@ apply H0.
 clear H H0.
 unfold AxmEq4 in |- *.
 cut
- (forall a b : Terms L (arity L (inl (Functions L) R)),
+ (forall a b : Terms L (arity L (inl  R)),
   interpTermsVector value _ a = interpTermsVector value _ b ->
   interpFormula value (nnHelp (iffH L (atomic L R a) (atomic L R b)))).
 assert
  (forall A,
-  (forall a b : Terms L (arity L (inl (Functions L) R)),
-   interpTermsVector value (arity L (inl (Functions L) R)) a =
-   interpTermsVector value (arity L (inl (Functions L) R)) b ->
+  (forall a b : Terms L (arity L (inl R)),
+   interpTermsVector value (arity L (inl R)) a =
+   interpTermsVector value (arity L (inl R)) b ->
    interpFormula value (nnHelp (A a b))) ->
   interpFormula value
     (nnHelp
        (nat_rec (fun _ : nat => Formula L)
           (prod_rec
              (fun
-                _ : Terms L (arity L (inl (Functions L) R)) *
-                    Terms L (arity L (inl (Functions L) R)) => 
+                _ : Terms L (arity L (inl R)) *
+                    Terms L (arity L (inl R)) => 
               Formula L)
-             (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
-             (nVars L (arity L (inl (Functions L) R))))
+             (fun a b : Terms L (arity L (inl R)) => A a b)
+             (nVars L (arity L (inl R))))
           (fun (n : nat) (Hrecn : Formula L) =>
            impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
-          (arity L (inl (Functions L) R))))).
-generalize (arity L (inl (Functions L) R)).
+          (arity L (inl R))))).
+generalize (arity L (inl R)).
 simple induction n.
 simpl in |- *.
 intros.
@@ -754,7 +754,7 @@ reflexivity.
 apply (H (fun a b => iffH L (atomic L R a) (atomic L R b))).
 simpl in |- *.
 generalize (rel M R).
-generalize (arity L (inl (Functions L) R)).
+generalize (arity L (inl R)).
 intros.
 induction a as [| n t a Hreca].
 assert (b = Tnil L).
@@ -780,29 +780,29 @@ apply H0.
 clear H H0.
 unfold AxmEq5 in |- *.
 cut
- (forall a b : Terms L (arity L (inr (Relations L) f)),
+ (forall a b : Terms L (arity L (inr  f)),
   interpTermsVector value _ a = interpTermsVector value _ b ->
   interpFormula value (nnHelp (equal L (apply L f a) (apply L f b)))).
 assert
  (forall A,
-  (forall a b : Terms L (arity L (inr (Relations L) f)),
-   interpTermsVector value (arity L (inr (Relations L) f)) a =
-   interpTermsVector value (arity L (inr (Relations L) f)) b ->
+  (forall a b : Terms L (arity L (inr f)),
+   interpTermsVector value (arity L (inr f)) a =
+   interpTermsVector value (arity L (inr f)) b ->
    interpFormula value (nnHelp (A a b))) ->
   interpFormula value
     (nnHelp
        (nat_rec (fun _ : nat => Formula L)
           (prod_rec
              (fun
-                _ : Terms L (arity L (inr (Relations L) f)) *
-                    Terms L (arity L (inr (Relations L) f)) => 
+                _ : Terms L (arity L (inr f)) *
+                    Terms L (arity L (inr  f)) => 
               Formula L)
-             (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
-             (nVars L (arity L (inr (Relations L) f))))
+             (fun a b : Terms L (arity L (inr f)) => A a b)
+             (nVars L (arity L (inr f))))
           (fun (n : nat) (Hrecn : Formula L) =>
            impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
-          (arity L (inr (Relations L) f))))).
-generalize (arity L (inr (Relations L) f)).
+          (arity L (inr f))))).
+generalize (arity L (inr f)).
 simple induction n.
 simpl in |- *.
 intros.
@@ -826,7 +826,7 @@ reflexivity.
 apply (H (fun a b => equal L (apply L f a) (apply L f b))).
 simpl in |- *.
 generalize (func M f).
-generalize (arity L (inr (Relations L) f)).
+generalize (arity L (inr f)).
 intros.
 induction a as [| n t a Hreca].
 assert (b = Tnil L).

@@ -83,12 +83,12 @@ reflexivity.
 simpl in |- *.
 transitivity
  (cPair (S (codeF f))
-    (codeTerms L codeF (arity L (inr (Relations L) f))
-       (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))).
+    (codeTerms L codeF (arity L (inr f))
+       (substituteTerms L (arity L (inr f)) t0 v s))).
 rewrite <- H.
 replace (codeTerm L codeF (fol.apply L f t0)) with
- (cPair (S (codeF f)) (codeTerms L codeF (arity L (inr (Relations L) f)) t0)).
-generalize (codeF f) (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
+ (cPair (S (codeF f)) (codeTerms L codeF (arity L (inr f)) t0)).
+generalize (codeF f) (codeTerms L codeF (arity L (inr f)) t0).
 clear H t0 f.
 intros.
 unfold codeSubTerm in |- *.

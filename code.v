@@ -78,8 +78,8 @@ apply eq_add_S.
 eapply cPairInj1.
 apply H0.
 cut
- (cPair (S (codeF f)) (codeTerms (arity L (inr (Relations L) f)) t0) =
-  cPair (S (codeF f0)) (codeTerms (arity L (inr (Relations L) f0)) t1)).
+ (cPair (S (codeF f)) (codeTerms (arity L (inr f)) t0) =
+  cPair (S (codeF f0)) (codeTerms (arity L (inr f0)) t1)).
 generalize t1.
 rewrite <- H1.
 clear H1 H0 t1.
@@ -179,9 +179,9 @@ eapply cPairInj1.
 apply H.
 cut
  (cPair (S (S (S (S (codeR r)))))
-    (codeTerms (arity L (inl (Functions L) r)) t) =
+    (codeTerms (arity L (inl r)) t) =
   cPair (S (S (S (S (codeR r0)))))
-    (codeTerms (arity L (inl (Functions L) r0)) t0)).
+    (codeTerms (arity L (inl r0)) t0)).
 generalize t0.
 rewrite <- H0.
 clear H0 H t0.

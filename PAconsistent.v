@@ -7,7 +7,7 @@ Require Import model.
 Definition natModel : Model LNT :=
   model LNT nat
     (fun f : Functions LNT =>
-     match f return (naryFunc nat (arity LNT (inr (Relations LNT) f))) with
+     match f return (naryFunc nat (arity LNT (inr f))) with
      | Languages.Plus => fun x y : nat => y + x
      | Languages.Times => fun x y : nat => y * x
      | Languages.Succ => S

@@ -200,7 +200,7 @@ intros.
 simpl in |- *.
 unfold freeVarTerm in |- *.
 fold
- (freeVarTerms L _ (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))
+ (freeVarTerms L _ (substituteTerms L (arity L (inr f)) t0 v s))
  in |- *.
 apply H; auto.
 auto.

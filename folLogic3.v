@@ -402,7 +402,7 @@ Lemma equalRelation :
  PairwiseEqual T _ ts ss -> SysPrf T (iffH (atomic r ts) (atomic r ss)).
 Proof.
 intros.
-set (n := arity L (inl (Functions L) r)) in *.
+set (n := arity L (inl r)) in *.
 set (m := termsMap n ts ss) in *.
 rewrite (subAllnVars1 _ ts ss).
 fold m in |- *.
@@ -496,7 +496,7 @@ Lemma equalFunction :
  PairwiseEqual T _ ts ss -> SysPrf T (equal (apply f ts) (apply f ss)).
 Proof.
 intros.
-set (n := arity L (inr (Relations L) f)) in *.
+set (n := arity L (inr f)) in *.
 set (m := termsMap n ts ss) in *.
 rewrite (subAllnVars1 _ ts ss).
 fold m in |- *.
