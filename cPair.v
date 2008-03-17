@@ -770,8 +770,8 @@ fold (naryFunc a) in |- *.
 induction
  (sumbool_rec
     (fun _ : {a = S a} + {a <> S a} => {S a = S (S a)} + {S a <> S (S a)})
-    (fun a0 : a = S a => left (f_equal S a0))
-    (fun b : a <> S a => right (not_eq_S a (S a) b))
+    (fun a0 : a = S a => left (S a <> S (S a)) (f_equal S a0))
+    (fun b : a <> S a => right (S a = S (S a)) (not_eq_S a (S a) b))
     (eq_nat_dec a (S a))).
 elim (lt_not_le (S a) (S (S a))).
 apply lt_n_Sn.
@@ -779,8 +779,8 @@ rewrite <- a0.
 auto.
 induction
  (sumbool_rec (fun _ : {a = a} + {a <> a} => {S a = S a} + {S a <> S a})
-    (fun a0 : a = a => left (f_equal S a0))
-    (fun b0 : a <> a => right (not_eq_S a a b0)) 
+    (fun a0 : a = a => left (S a <> S a) (f_equal S a0))
+    (fun b0 : a <> a => right (S a = S a) (not_eq_S a a b0)) 
     (eq_nat_dec a a)).
 induction (eq_nat_dec a (S a)).
 elim (lt_not_le a (S a)).

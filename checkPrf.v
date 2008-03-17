@@ -20,14 +20,14 @@ Variable codeArityR : nat -> nat.
 Hypothesis codeArityFIsPR : isPR 1 codeArityF.
 Hypothesis
   codeArityFIsCorrect1 :
-    forall f : Functions L, codeArityF (codeF f) = S (arity L (inr f)).
+    forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
 Hypothesis
   codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> exists f : Functions L, codeF f = n.
 Hypothesis codeArityRIsPR : isPR 1 codeArityR.
 Hypothesis
   codeArityRIsCorrect1 :
-    forall r : Relations L, codeArityR (codeR r) = S (arity L (inl r)).
+    forall r : Relations L, codeArityR (codeR r) = S (arity L (inl _ r)).
 Hypothesis
   codeArityRIsCorrect2 :
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.
@@ -2287,12 +2287,12 @@ unfold checkPrfEQ4 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 rewrite codeArityRIsCorrect1.
 replace
- (codeAxmEqHelp (pred (S (arity L (inl R))))
+ (codeAxmEqHelp (pred (S (arity L (inl (Functions L) R))))
     (codeIff
        (cPair (S (S (S (S (codeR R)))))
-          (codeNVars1 (pred (S (arity L (inl R))))))
+          (codeNVars1 (pred (S (arity L (inl (Functions L) R))))))
        (cPair (S (S (S (S (codeR R)))))
-          (codeNVars2 (pred (S (arity L (inl R)))))))) with
+          (codeNVars2 (pred (S (arity L (inl (Functions L) R)))))))) with
  (codeFormula L codeF codeR (AxmEq4 L R)).
 unfold charFunction in |- *.
 repeat rewrite <- beq_nat_refl.
@@ -2300,20 +2300,20 @@ reflexivity.
 unfold AxmEq4 in |- *.
 clear A.
 simpl in |- *.
-induction (codeNVarsCorrect (arity L (inl R))).
+induction (codeNVarsCorrect (arity L (inl (Functions L) R))).
 rewrite H.
 rewrite H0.
 clear H H0.
-induction (nVars L (arity L (inl R))).
+induction (nVars L (arity L (inl (Functions L) R))).
 simpl in |- *.
 replace
  (codeIff
     (cPair (S (S (S (S (codeR R)))))
-       (codeTerms L codeF (arity L (inl R)) a))
+       (codeTerms L codeF (arity L (inl (Functions L) R)) a))
     (cPair (S (S (S (S (codeR R)))))
-       (codeTerms L codeF (arity L (inl R)) b))) with
+       (codeTerms L codeF (arity L (inl (Functions L) R)) b))) with
  (codeFormula L codeF codeR (iffH L (fol.atomic L R a) (fol.atomic L R b))).
-generalize (arity L (inl R)).
+generalize (arity L (inl (Functions L) R)).
 intros.
 induction n as [| n Hrecn].
 reflexivity.
@@ -2329,13 +2329,13 @@ unfold checkPrfEQ5 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 rewrite codeArityFIsCorrect1.
 replace
- (codeAxmEqHelp (pred (S (arity L (inr f))))
+ (codeAxmEqHelp (pred (S (arity L (inr (Relations L) f))))
     (cPair 0
        (cPair
           (cPair (S (codeF f))
-             (codeNVars1 (pred (S (arity L (inr f))))))
+             (codeNVars1 (pred (S (arity L (inr (Relations L) f))))))
           (cPair (S (codeF f))
-             (codeNVars2 (pred (S (arity L (inr f))))))))) with
+             (codeNVars2 (pred (S (arity L (inr (Relations L) f))))))))) with
  (codeFormula L codeF codeR (AxmEq5 L f)).
 unfold charFunction in |- *.
 repeat rewrite <- beq_nat_refl.
@@ -2343,21 +2343,21 @@ reflexivity.
 unfold AxmEq5 in |- *.
 clear A.
 simpl in |- *.
-induction (codeNVarsCorrect (arity L (inr f))).
+induction (codeNVarsCorrect (arity L (inr (Relations L) f))).
 rewrite H.
 rewrite H0.
 clear H H0.
-induction (nVars L (arity L (inr f))).
+induction (nVars L (arity L (inr (Relations L) f))).
 simpl in |- *.
 replace
  (cPair 0
     (cPair
        (cPair (S (codeF f))
-          (codeTerms L codeF (arity L (inr f)) a))
+          (codeTerms L codeF (arity L (inr (Relations L) f)) a))
        (cPair (S (codeF f))
-          (codeTerms L codeF (arity L (inr f)) b)))) with
+          (codeTerms L codeF (arity L (inr (Relations L) f)) b)))) with
  (codeFormula L codeF codeR (fol.equal L (fol.apply L f a) (fol.apply L f b))).
-generalize (arity L (inr f)).
+generalize (arity L (inr (Relations L) f)).
 intros.
 induction n as [| n Hrecn].
 reflexivity.
@@ -3378,23 +3378,23 @@ induction (codeArityRIsCorrect2 _ H4).
 rewrite <- H5 in H0.
 rewrite codeArityRIsCorrect1 in H0.
 simpl in H0.
-induction (codeNVarsCorrect (arity L (inl x0))).
+induction (codeNVarsCorrect (arity L (inl (Functions L) x0))).
 rewrite H6 in H0.
 rewrite H7 in H0.
 clear H6 H7.
 assert
  (codeIff
     (cPair (S (S (S (S (codeR x0)))))
-       (codeTerms L codeF (arity L (inl x0))
-          (fst (nVars L (arity L (inl x0))))))
+       (codeTerms L codeF (arity L (inl (Functions L) x0))
+          (fst (nVars L (arity L (inl (Functions L) x0))))))
     (cPair (S (S (S (S (codeR x0)))))
-       (codeTerms L codeF (arity L (inl x0))
-          (snd (nVars L (arity L (inl x0)))))) =
+       (codeTerms L codeF (arity L (inl (Functions L) x0))
+          (snd (nVars L (arity L (inl (Functions L) x0)))))) =
   codeIff
     (codeFormula L codeF codeR
-       (atomic x0 (fst (nVars L (arity L (inl x0))))))
+       (atomic x0 (fst (nVars L (arity L (inl (Functions L) x0))))))
     (codeFormula L codeF codeR
-       (atomic x0 (snd (nVars L (arity L (inl x0))))))).
+       (atomic x0 (snd (nVars L (arity L (inl (Functions L) x0))))))).
 reflexivity.
 rewrite H6 in H0.
 clear H6.
@@ -3402,12 +3402,12 @@ rewrite codeIffCorrect in H0.
 assert (AxmEq4 L x0 = x).
 clear H5.
 unfold AxmEq4 in |- *.
-induction (nVars L (arity L (inl x0))).
+induction (nVars L (arity L (inl (Functions L) x0))).
 simpl in |- *.
 unfold fst, snd in H0.
 cut
  ((if beq_nat
-        (codeAxmEqHelp (arity L (inl x0))
+        (codeAxmEqHelp (arity L (inl (Functions L) x0))
            (codeFormula L codeF codeR (iffH L (atomic x0 a) (atomic x0 b))))
         (codeFormula L codeF codeR x)
    then 1
@@ -3418,11 +3418,11 @@ intros.
 clear H0.
 clear a b.
 cut
- (codeAxmEqHelp (arity L (inl x0))
+ (codeAxmEqHelp (arity L (inl (Functions L) x0))
     (codeFormula L codeF codeR f) = codeFormula L codeF codeR x).
 generalize x.
 clear H5.
-induction (arity L (inl x0)); simpl in |- *; intros.
+induction (arity L (inl (Functions L) x0)); simpl in |- *; intros.
 apply (codeFormulaInj L codeF codeR codeFInj codeRInj).
 assumption.
 rename x1 into f0.
@@ -3459,19 +3459,19 @@ apply H7.
 elim O_S with (codeF f0).
 apply
  cPairInj1
-  with (S (n1 + n1)) (codeTerms L codeF (arity L (inr f0)) t).
+  with (S (n1 + n1)) (codeTerms L codeF (arity L (inr (Relations L) f0)) t).
 apply H7.
 apply cPairInj2 with 0 0.
 apply H0.
 elim O_S with (codeF f0).
 apply
  cPairInj1
-  with (n1 + n1) (codeTerms L codeF (arity L (inr f0)) t).
+  with (n1 + n1) (codeTerms L codeF (arity L (inr (Relations L) f0)) t).
 apply H0.
 assumption.
 induction
  (eq_nat_dec
-    (codeAxmEqHelp (arity L (inl x0))
+    (codeAxmEqHelp (arity L (inl (Functions L) x0))
        (codeFormula L codeF codeR f)) (codeFormula L codeF codeR x)).
 assumption.
 elim H5.
@@ -3504,7 +3504,7 @@ induction (codeArityFIsCorrect2 _ H4).
 rewrite <- H5 in H0.
 rewrite codeArityFIsCorrect1 in H0.
 simpl in H0.
-induction (codeNVarsCorrect (arity L (inr x0))).
+induction (codeNVarsCorrect (arity L (inr (Relations L) x0))).
 rewrite H6 in H0.
 rewrite H7 in H0.
 clear H6 H7.
@@ -3512,26 +3512,26 @@ assert
  (cPair 0
     (cPair
        (cPair (S (codeF x0))
-          (codeTerms L codeF (arity L (inr x0))
-             (fst (nVars L (arity L (inr x0))))))
+          (codeTerms L codeF (arity L (inr (Relations L) x0))
+             (fst (nVars L (arity L (inr (Relations L) x0))))))
        (cPair (S (codeF x0))
-          (codeTerms L codeF (arity L (inr x0))
-             (snd (nVars L (arity L (inr x0))))))) =
+          (codeTerms L codeF (arity L (inr (Relations L) x0))
+             (snd (nVars L (arity L (inr (Relations L) x0))))))) =
   codeFormula L codeF codeR
-    (equal (apply x0 (fst (nVars L (arity L (inr x0)))))
-       (apply x0 (snd (nVars L (arity L (inr x0))))))).
+    (equal (apply x0 (fst (nVars L (arity L (inr (Relations L) x0)))))
+       (apply x0 (snd (nVars L (arity L (inr (Relations L) x0))))))).
 reflexivity.
 rewrite H6 in H0.
 clear H6.
 assert (AxmEq5 L x0 = x).
 clear H5.
 unfold AxmEq5 in |- *.
-induction (nVars L (arity L (inr x0))).
+induction (nVars L (arity L (inr (Relations L) x0))).
 simpl in |- *.
 unfold fst, snd in H0.
 cut
  ((if beq_nat
-        (codeAxmEqHelp (arity L (inr x0))
+        (codeAxmEqHelp (arity L (inr (Relations L) x0))
            (codeFormula L codeF codeR (equal (apply x0 a) (apply x0 b))))
         (codeFormula L codeF codeR x)
    then 1
@@ -3542,11 +3542,11 @@ intros.
 clear H0.
 clear a b.
 cut
- (codeAxmEqHelp (arity L (inr x0))
+ (codeAxmEqHelp (arity L (inr (Relations L) x0))
     (codeFormula L codeF codeR f) = codeFormula L codeF codeR x).
 generalize x.
 clear H5.
-induction (arity L (inr x0)); simpl in |- *; intros.
+induction (arity L (inr (Relations L) x0)); simpl in |- *; intros.
 apply (codeFormulaInj L codeF codeR codeFInj codeRInj).
 assumption.
 repeat
@@ -3582,19 +3582,19 @@ apply H7.
 elim O_S with (codeF f0).
 apply
  cPairInj1
-  with (S (n1 + n1)) (codeTerms L codeF (arity L (inr f0)) t).
+  with (S (n1 + n1)) (codeTerms L codeF (arity L (inr (Relations L) f0)) t).
 apply H7.
 apply cPairInj2 with 0 0.
 apply H0.
 elim O_S with (codeF f0).
 apply
  cPairInj1
-  with (n1 + n1) (codeTerms L codeF (arity L (inr f0)) t).
+  with (n1 + n1) (codeTerms L codeF (arity L (inr (Relations L) f0)) t).
 apply H0.
 assumption.
 induction
  (eq_nat_dec
-    (codeAxmEqHelp (arity L (inr x0))
+    (codeAxmEqHelp (arity L (inr (Relations L) x0))
        (codeFormula L codeF codeR f)) (codeFormula L codeF codeR x)).
 assumption.
 elim H5.

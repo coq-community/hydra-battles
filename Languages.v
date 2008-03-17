@@ -92,7 +92,7 @@ Qed.
 
 Lemma codeArityLNNRIsCorrect1 :
  forall r : Relations LNN,
- codeArityLNNR (codeLNNRelation r) = S (arity LNN (inl r)).
+ codeArityLNNR (codeLNNRelation r) = S (arity LNN (inl _ r)).
 Proof.
 intros.
 induction r.
@@ -122,7 +122,7 @@ Qed.
 
 Lemma codeArityLNTRIsCorrect1 :
  forall r : Relations LNT,
- codeArityLNTR (codeLNTRelation r) = S (arity LNT (inl r)).
+ codeArityLNTR (codeLNTRelation r) = S (arity LNT (inl _ r)).
 Proof.
 simple induction r.
 Qed.
@@ -172,7 +172,7 @@ Qed.
 
 Lemma codeArityLNTFIsCorrect1 :
  forall f : Functions LNT,
- codeArityLNTF (codeLNTFunction f) = S (arity LNT (inr f)).
+ codeArityLNTF (codeLNTFunction f) = S (arity LNT (inr _ f)).
 Proof.
 intros.
 induction f; reflexivity.
@@ -180,7 +180,7 @@ Qed.
 
 Lemma codeArityLNNFIsCorrect1 :
  forall f : Functions LNN,
- codeArityLNTF (codeLNTFunction f) = S (arity LNN (inr f)).
+ codeArityLNTF (codeLNTFunction f) = S (arity LNN (inr _ f)).
 Proof.
 apply codeArityLNTFIsCorrect1.
 Qed.

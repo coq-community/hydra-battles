@@ -41,7 +41,7 @@ Definition PA :=
 
 Definition open :=
   Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => equal t t0)
-    (fun (r : Relations LNT) (ts : Terms (arity LNT (inl r))) =>
+    (fun (r : Relations LNT) (ts : Terms (arity LNT (inl (Functions LNT) r))) =>
      atomic LNT r ts) (fun (f : Formula) _ (f0 : Formula) _ => impH f f0)
     (fun (f : Formula) _ => notH f)
     (fun (n : nat) _ (recf : Formula) => recf).

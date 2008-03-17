@@ -31,7 +31,7 @@ Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
 Definition LTFormula :=
   existH 2 (equal (Plus (var 0) (Succ (var 2))) (var 1)).
 
-Definition translateLT (ts : fol.Terms LNN (arity LNN (inl LT))) : Formula.
+Definition translateLT (ts : fol.Terms LNN (arity LNN (inl _ LT))) : Formula.
 intro.
 simpl in ts.
 induction (consTerms _ _ ts).
@@ -94,9 +94,9 @@ Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   | fol.equal t1 t2 => equal (LNN2LNT_term t1) (LNN2LNT_term t2)
   | atomic r ts =>
       match
-        r as l return (fol.Terms LNN (arity LNN (inl l)) -> Formula)
+        r as l return (fol.Terms LNN (arity LNN (inl _ l)) -> Formula)
       with
-      | LT => fun t0 : fol.Terms LNN (arity LNN (inl LT)) => translateLT t0
+      | LT => fun t0 : fol.Terms LNN (arity LNN (inl _ LT)) => translateLT t0
       end ts
   | fol.impH A B => impH (LNN2LNT_formula A) (LNN2LNT_formula B)
   | fol.notH A => notH (LNN2LNT_formula A)

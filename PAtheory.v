@@ -82,8 +82,8 @@ Opaque eq_nat_dec.
 simpl in |- *.
 Transparent eq_nat_dec.
 induction
- (nat_rec (fun n : nat => {0 = n} + {0 <> n}) (left (refl_equal 0))
-    (fun (m : nat) (_ : {0 = m} + {0 <> m}) => right (O_S m)) nv).
+ (nat_rec (fun n : nat => {0 = n} + {0 <> n}) (left (0 <> 0) (refl_equal 0))
+    (fun (m : nat) (_ : {0 = m} + {0 <> m}) => right (0 = S m) (O_S m)) nv).
 elim b.
 auto.
 fold var in |- *.
@@ -95,8 +95,8 @@ simpl in |- *.
 destruct (eq_nat_dec nv 0).
 elim b1; auto.
 change match nv as n return ({0 = n} + {0 <> n}) with
-                  | 0 => left (refl_equal 0)
-                  | S m => right (O_S m)
+                  | 0 => left (0 <> 0) (refl_equal 0)
+                  | S m => right (0 = S m) (O_S m)
                   end
  with (eq_nat_dec 0 nv).
 destruct (eq_nat_dec 0 nv).

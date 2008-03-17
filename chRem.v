@@ -1,6 +1,6 @@
 Require Import Arith.
 Require Import Wf_nat.
-Require Import pocklington.gcd.
+Require Import gcd.
 Require Import divides.
 Require Import ZArith.
 Require Import natZ.

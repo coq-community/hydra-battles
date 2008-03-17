@@ -68,12 +68,12 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 simpl in |- *.
 reflexivity.
 unfold freeVarTerm in |- *.
-fold (freeVarTerms L (arity L (inr f)) t0) in |- *.
+fold (freeVarTerms L (arity L (inr (Relations L) f)) t0) in |- *.
 rewrite <- H.
 clear H.
 unfold codeTerm in |- *.
-fold (codeTerms L codeF (arity L (inr f)) t0) in |- *.
-generalize (codeTerms L codeF (arity L (inr f)) t0).
+fold (codeTerms L codeF (arity L (inr (Relations L) f)) t0) in |- *.
+generalize (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
 intros.
 unfold codeFreeVarTerm in |- *.
 unfold codeFreeVarTermTerms in |- *.
@@ -416,7 +416,7 @@ simpl in |- *.
 reflexivity.
 simpl in |- *.
 rewrite <- codeFreeVarTermsCorrect.
-generalize (codeTerms L codeF (arity L (inl r)) t).
+generalize (codeTerms L codeF (arity L (inl (Functions L) r)) t).
 clear t.
 intros.
 unfold codeFreeVarFormula in |- *.

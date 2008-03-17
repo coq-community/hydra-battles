@@ -47,9 +47,9 @@ induction n as [| n Hrecn].
 exact f.
 exact (impH (equal (var (n + n)) (var (S (n + n)))) Hrecn).
 apply H.
-induction (nVars (arity L (inl R))).
+induction (nVars (arity L (inl _ R))).
 apply (iffH (atomic R a) (atomic R b)).
-apply (arity L (inl R)).
+apply (arity L (inl _ R)).
 Defined.
 
 Definition AxmEq5 (f : Functions L) : Formula.
@@ -60,9 +60,9 @@ induction n as [| n Hrecn].
 exact f0.
 exact (impH (equal (var (n + n)) (var (S (n + n)))) Hrecn).
 apply H.
-induction (nVars (arity L (inr f))).
+induction (nVars (arity L (inr _ f))).
 apply (equal (apply f a) (apply f b)).
-apply (arity L (inr f)).
+apply (arity L (inr _ f)).
 Defined.
 
 Inductive Prf : Formulas -> Formula -> Set :=

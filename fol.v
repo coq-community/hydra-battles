@@ -19,7 +19,7 @@ Variable L : Language.
 
 Inductive Term : Set :=
   | var : nat -> Term
-  | apply : forall f : Functions L, Terms (arity L (inr f)) -> Term
+  | apply : forall f : Functions L, Terms (arity L (inr _ f)) -> Term
 with Terms : nat -> Set :=
   | Tnil : Terms 0
   | Tcons : forall n : nat, Term -> Terms n -> Terms (S n).
@@ -36,7 +36,7 @@ Scheme Term_Terms_rec_full := Induction for Term
 
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
-  | atomic : forall r : Relations L, Terms (arity L (inl r)) -> Formula
+  | atomic : forall r : Relations L, Terms (arity L (inl _ r)) -> Formula
   | impH : Formula -> Formula -> Formula
   | notH : Formula -> Formula
   | forallH : nat -> Formula -> Formula.
@@ -135,9 +135,9 @@ Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
 Proof.
 induction language_dec.
 assert
- (forall (f g : Functions L) (p : f = g) (ts : Terms (arity L (inr f)))
-    (ss : Terms (arity L (inr g)))
-    (q : arity L (inr f) = arity L (inr g)),
+ (forall (f g : Functions L) (p : f = g) (ts : Terms (arity L (inr _ f)))
+    (ss : Terms (arity L (inr _ g)))
+    (q : arity L (inr _ f) = arity L (inr _ g)),
   eq_rec _ (fun x => Terms x) ts _ q = ss <-> apply f ts = apply g ss).
 intros f g p.
 eapply
@@ -146,20 +146,20 @@ eapply
         (x := g)
        (P := 
          fun a =>
-         forall (ts : Terms (arity L (inr a)))
-           (ss : Terms (arity L (inr g)))
-           (q : arity L (inr a) = arity L (inr g)),
-         eq_rec (arity L (inr a)) (fun x : nat => Terms x) ts
-           (arity L (inr g)) q = ss <-> 
+         forall (ts : Terms (arity L (inr (Relations L) a)))
+           (ss : Terms (arity L (inr (Relations L) g)))
+           (q : arity L (inr (Relations L) a) = arity L (inr (Relations L) g)),
+         eq_rec (arity L (inr (Relations L) a)) (fun x : nat => Terms x) ts
+           (arity L (inr (Relations L) g)) q = ss <-> 
          apply a ts = apply g ss).
 intros ts ss q.
 apply
  K_dec_set
   with
-    (x := arity L (inr g))
+    (x := arity L (inr (Relations L) g))
     (P := fun z =>
-          eq_rec (arity L (inr g)) (fun x : nat => Terms x) ts
-            (arity L (inr g)) z = ss <->
+          eq_rec (arity L (inr (Relations L) g)) (fun x : nat => Terms x) ts
+            (arity L (inr (Relations L) g)) z = ss <->
           apply g ts = apply g ss).
 apply eq_nat_dec.
 simpl in |- *.
@@ -174,7 +174,7 @@ eapply
                  with
                  (P := 
                    fun f : Functions L =>
-                   Terms (arity L (inr f))).
+                   Terms (arity L (inr (Relations L) f))).
 assumption.
 assumption.
 auto.
@@ -201,7 +201,7 @@ induction y as [n| f0 t0].
 right.
 discriminate.
 induction (a f f0).
-assert (arity L (inr f0) = arity L (inr f)).
+assert (arity L (inr (Relations L) f0) = arity L (inr (Relations L) f)).
 rewrite a0.
 reflexivity.
 set (ss' := eq_rec _ (fun z : nat => Terms z) t0 _ H1) in *.
@@ -304,9 +304,9 @@ inversion H.
 reflexivity.
 induction (b r r0).
 assert
- (forall (f g : Relations L) (p : f = g) (ts : Terms (arity L (inl f)))
-    (ss : Terms (arity L (inl g)))
-    (q : arity L (inl f) = arity L (inl g)),
+ (forall (f g : Relations L) (p : f = g) (ts : Terms (arity L (inl _ f)))
+    (ss : Terms (arity L (inl _ g)))
+    (q : arity L (inl _ f) = arity L (inl _ g)),
   eq_rec _ (fun x => Terms x) ts _ q = ss <-> atomic f ts = atomic g ss).
 intros f g p.
 eapply
@@ -315,9 +315,9 @@ eapply
         (x := g)
        (P := 
          fun a =>
-         forall (ts : Terms (arity L (inl a)))
-           (ss : Terms (arity L (inl g)))
-           (q : arity L (inl a) = arity L (inl g)),
+         forall (ts : Terms (arity L (inl _ a)))
+           (ss : Terms (arity L (inl _ g)))
+           (q : arity L (inl _ a) = arity L (inl _ g)),
          eq_rec _ (fun x => Terms x) ts _ q = ss <->
          atomic a ts = atomic g ss).
 intros ts ss q.
@@ -335,17 +335,17 @@ eapply
                  with
                  (P := 
                    fun f : Relations L =>
-                   Terms (arity L (inl f))).
+                   Terms (arity L (inl (Functions L) f))).
 assumption.
 assumption.
 auto.
-assert (arity L (inl r) = arity L (inl r0)).
+assert (arity L (inl (Functions L) r) = arity L (inl (Functions L) r0)).
 rewrite a0.
 reflexivity.
 induction
  (terms_dec _
-    (eq_rec (arity L (inl r)) (fun x : nat => Terms x) t
-       (arity L (inl r0)) H0) t0).
+    (eq_rec (arity L (inl (Functions L) r)) (fun x : nat => Terms x) t
+       (arity L (inl (Functions L) r0)) H0) t0).
 left.
 induction (H _ _ a0 t t0 H0).
 auto.
@@ -527,7 +527,7 @@ Qed.
 
 Definition Formula_depth_rec2rec (P : Formula -> Set)
   (f1 : forall t t0 : Term, P (equal t t0))
-  (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+  (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
         P (atomic r t))
   (f3 : forall f : Formula, P f -> forall f0 : Formula, P f0 -> P (impH f f0))
   (f4 : forall f : Formula, P f -> P (notH f))
@@ -546,7 +546,7 @@ Definition Formula_depth_rec2rec (P : Formula -> Set)
 
 Definition Formula_depth_rec2 (P : Formula -> Set)
   (f1 : forall t t0 : Term, P (equal t t0))
-  (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+  (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
         P (atomic r t))
   (f3 : forall f : Formula, P f -> forall f0 : Formula, P f0 -> P (impH f f0))
   (f4 : forall f : Formula, P f -> P (notH f))
@@ -558,7 +558,7 @@ Definition Formula_depth_rec2 (P : Formula -> Set)
 Remark Formula_depth_rec2rec_nice :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -611,7 +611,7 @@ Qed.
 Lemma Formula_depth_rec2_imp :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -653,7 +653,7 @@ Qed.
 Lemma Formula_depth_rec2_not :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -692,7 +692,7 @@ Qed.
 Lemma Formula_depth_rec2_forall :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl r))),
+   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -763,7 +763,7 @@ Qed.
 Lemma Formula_depth_ind2 :
  forall P : Formula -> Prop,
  (forall t t0 : Term, P (equal t t0)) ->
- (forall (r : Relations L) (t : Terms (arity L (inl r))),
+ (forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
   P (atomic r t)) ->
  (forall f : Formula, P f -> forall f0 : Formula, P f0 -> P (impH f f0)) ->
  (forall f : Formula, P f -> P (notH f)) ->
