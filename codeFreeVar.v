@@ -1,6 +1,6 @@
 Require Import primRec.
 Require Import cPair.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import ListExt.
 Require Import Arith.
 Require Export codeList.

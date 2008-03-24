@@ -1,7 +1,7 @@
 Require Import Arith.
 Require Import fol.
 Require Import primRec.
-Require Import List.
+Require Import Coq.Lists.List.
 
 Inductive LNTFunction : Set :=
   | Plus : LNTFunction

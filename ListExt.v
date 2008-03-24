@@ -1,4 +1,4 @@
-Require Import List.
+Require Import Coq.Lists.List.
 
 Section List_Remove.
 

@@ -10,7 +10,7 @@ Require Import NNtheory.
 Require Import primRec.
 Require Import chRem.
 Require Import expressible.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import Bvector.
 Require Import ListExt.
 Require Import cPair.

@@ -1,7 +1,7 @@
 Require Import Wf_nat.
 Require Import Max.
 Require Import Arith.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import ListExt.
 Require Import Peano_dec.
 

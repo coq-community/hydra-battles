@@ -2,7 +2,7 @@ Require Import folProof.
 Require Import Arith.
 Require Import folProp.
 Require Import LNN.
-Require Import List.
+Require Import Coq.Lists.List.
 
 Definition wConsistent (T : System) :=
   forall (f : Formula) (v : nat),

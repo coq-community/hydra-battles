@@ -1,7 +1,7 @@
 Require Import Arith.
 Require Import Peano_dec.
 Require Import Compare_dec.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
 Require Import extEqualNat.
 Require Import Bvector.

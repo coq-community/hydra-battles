@@ -1,5 +1,5 @@
 Require Import Ensembles.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import primRec.
 Require Import cPair.
 Require Import Arith.

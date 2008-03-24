@@ -1,6 +1,6 @@
 Require Import Arith.
 Require Import Ensembles.
-Require Import List.
+Require Import Coq.Lists.List.
 
 Require Import Languages.
 Require Import folProof.

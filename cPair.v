@@ -1,5 +1,5 @@
 Require Import Arith.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import extEqualNat.
 Require Import primRec.
 Require Import Bvector.

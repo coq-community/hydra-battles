@@ -14,7 +14,7 @@ Require Import LNN.
 Require Import codeNatToTerm.
 Require Import PRrepresentable.
 Require Import ListExt.
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import NN.
 Require Import expressible.
 

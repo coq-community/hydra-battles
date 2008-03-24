@@ -1,4 +1,4 @@
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
 Require Import Peano_dec.
 

@@ -1,7 +1,7 @@
 (* Author: Russell O'Connor *)
 (* This file is Public Domain *)
 
-Require Import List.
+Require Import Coq.Lists.List.
 Require Import Ensembles.
 Require Import Peano_dec.
 Require Import Eqdep_dec.
