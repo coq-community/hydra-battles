@@ -122,53 +122,7 @@ GFILES:=$(VFILES:.v=.g)
 HTMLFILES:=$(VFILES:.v=.html)
 GHTMLFILES:=$(VFILES:.v=.g.html)
 
-all: checkPrf.vo\
-  chRem.vo\
-  codeFreeVar.vo\
-  codeList.vo\
-  codeNatToTerm.vo\
-  codePA.vo\
-  codeSubFormula.vo\
-  codeSubTerm.vo\
-  codeSysPrf.vo\
-  code.vo\
-  cPair.vo\
-  Deduction.vo\
-  expressible.vo\
-  extEqualNat.vo\
-  fixPoint.vo\
-  folLogic2.vo\
-  folLogic3.vo\
-  folLogic.vo\
-  folProof.vo\
-  folProp.vo\
-  folReplace.vo\
-  fol.vo\
-  goedel1.vo\
-  goedel2.vo\
-  Languages.vo\
-  ListExt.vo\
-  LNN2LNT.vo\
-  LNN.vo\
-  LNT.vo\
-  misc.vo\
-  model.vo\
-  NN2PA.vo\
-  NNtheory.vo\
-  NN.vo\
-  PAconsistent.vo\
-  PAtheory.vo\
-  PA.vo\
-  primRec.vo\
-  prLogic.vo\
-  PRrepresentable.vo\
-  rosserPA.vo\
-  rosser.vo\
-  subAll.vo\
-  subProp.vo\
-  wConsistent.vo\
-  wellFormed.vo
-
+all: $(VOFILES) 
 spec: $(VIFILES)
 
 gallina: $(GFILES)
@@ -196,8 +150,6 @@ all-gal.ps: $(VFILES)
 ####################
 
 .PHONY: all opt byte archclean clean install depend html
-
-.SUFFIXES: .v .vo .vi .g .html .tex .g.tex .g.html
 
 %.vo %.glob: %.v
 	$(COQC) -dump-glob $*.glob $(COQDEBUG) $(COQFLAGS) $*

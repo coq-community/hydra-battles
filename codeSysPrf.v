@@ -436,7 +436,7 @@ apply
   with
     (LT (var (S nv))
        (natToTerm (codeList (map (codeFormula L codeF codeR) A)))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply boundedLT.
 intros.
 rewrite (subFormulaImp LNN).

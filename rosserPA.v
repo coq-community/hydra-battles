@@ -1419,7 +1419,7 @@ apply
                    (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2))) 0
                 (natToTermLNT
                    (code.codeFormula LNT codeLNTFunction codeLNTRelation x)))))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply iffE1.
 apply (reduceImp LNT).
 apply iffRefl.
@@ -1449,7 +1449,7 @@ apply
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1))))))
     (LNN2LNT_formula
        (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply
  impE
   with
@@ -1484,7 +1484,7 @@ apply
   with
     (LNN2LNT_formula
        (LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1))))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply PAboundedLT.
 intros.
 repeat rewrite (subFormulaImp LNT).
@@ -1499,7 +1499,7 @@ apply
 apply Axm; right; constructor.
 apply sysWeaken.
 apply impE with E.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply impI.
 clear H3 H4.
 induction (S (codePrf x0 (notH x) x1)).
@@ -1578,7 +1578,7 @@ apply
           (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (LNT2LNN_formula
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1)))))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 replace
  (impH
     (LNN2LNT_formula
@@ -1614,7 +1614,7 @@ apply
   with
     (LNN2LNT_formula
        (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply
  impTrans
   with

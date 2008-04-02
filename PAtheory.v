@@ -298,21 +298,21 @@ apply paZeroOrSucc.
 apply impI.
 apply orI2.
 apply impE with (equal (Succ (var 0)) (Succ (var 1))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa2.
 apply eqTrans with (Plus (var 0) (Succ (var 3))).
 apply eqTrans with (Succ (Plus (var 0) (var 3))).
 apply eqSucc.
 apply eqTrans with (Plus (var 0) Zero).
 apply eqSym.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa3.
 apply eqPlus.
 apply eqRefl.
 apply eqSym.
 apply Axm; right; constructor.
 apply eqSym.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa4.
 apply Axm; left; right; constructor.
 unfold newVar in |- *.
@@ -336,11 +336,11 @@ apply existI with (var 4).
 rewrite (subFormulaEqual LNT).
 simpl in |- *.
 apply impE with (equal (Succ (Plus (var 0) (Succ (var 4)))) (Succ (var 1))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa2.
 apply eqTrans with (Plus (var 0) (Succ (var 3))).
 apply eqTrans with (Plus (var 0) (Succ (Succ (var 4)))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply eqSym.
 apply pa4.
 apply eqPlus.
@@ -519,14 +519,14 @@ apply eqTrans with (Succ (Plus (var 0) (var 3))).
 apply eqSucc.
 apply eqTrans with (Plus (var 0) Zero).
 apply eqSym.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa3.
 apply eqPlus.
 apply eqRefl.
 apply eqSym.
 apply Axm; right; constructor.
 apply eqSym.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply pa4.
 apply Axm; left; right; constructor.
 unfold newVar in |- *.
@@ -552,14 +552,14 @@ apply eqTrans with (Plus (var 0) (Succ (var 3))).
 apply eqTrans with (Plus (var 0) (Succ (Succ (var 4)))).
 apply eqTrans with (Succ (Plus (var 0) (Succ (var 4)))).
 apply eqTrans with (Plus (Succ (var 4)) (Succ (var 0))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply paPlusSym with (a := Succ (var 0)) (b := Succ (var 4)).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 eapply eqTrans.
 apply pa4.
 apply eqSucc.
 apply paPlusSym.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply eqSym.
 apply pa4.
 apply eqPlus.

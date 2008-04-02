@@ -682,7 +682,7 @@ apply
     (orH (LT (var 1) (natToTerm (codePrf x0 (notH x) x1)))
        (equal (var 1) (natToTerm (codePrf x0 (notH x) x1))))
     (LT (natToTerm (codePrf x0 (notH x) x1)) (var 1)).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply
  impE
   with
@@ -705,7 +705,7 @@ apply impI.
 apply impE with G.
 apply impE with E.
 apply impE with (LT (var 1) (natToTerm (S (codePrf x0 (notH x) x1)))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply boundedLT.
 intros.
 repeat apply impE.
@@ -721,7 +721,7 @@ apply
 apply Axm; right; constructor.
 apply sysWeaken.
 apply impE with E.
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 apply impI.
 clear H3.
 clear H4.
@@ -761,7 +761,7 @@ apply
   with
     (orH (LT (var 1) (natToTerm (codePrf x0 (notH x) x1)))
        (equal (var 1) (natToTerm (codePrf x0 (notH x) x1)))).
-repeat apply sysWeaken.
+repeat simple apply sysWeaken.
 simpl in |- *.
 apply nnPlusNotNeeded.
 apply Axm; right; constructor.

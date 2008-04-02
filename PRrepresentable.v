@@ -394,7 +394,7 @@ apply (subWithEquals LNN).
 apply eqSym.
 eapply andE2.
 apply Axm; right; constructor.
-repeat apply sysWeaken.
+do 2 apply sysWeaken.
 repeat first
  [ rewrite H; [ idtac | discriminate ]
  | rewrite H0
@@ -4476,7 +4476,7 @@ rewrite a0.
 apply eqRefl.
 apply contradiction with (equal (natToTerm (f x0)) (natToTerm (beta b x0))).
 apply Axm; right; constructor.
-repeat apply sysWeaken.
+do 4 apply sysWeaken.
 apply natNE.
 auto.
 apply eqSym.
@@ -4489,7 +4489,7 @@ apply
           (substituteFormula LNN
              (substituteFormula LNN betaFormula 1 (Succ (var 3))) 2 
              (var 2)) 2 (natToTerm b)) 3 (natToTerm x0)).
-repeat apply sysWeaken.
+do 4 apply sysWeaken.
 apply iffE1.
 induction repBeta as (H2, H3).
 simpl in H3.
@@ -4555,7 +4555,7 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
              (natToTerm b)) 3 (natToTerm x0)) 1 (natToTerm (beta b x0))).
-repeat apply sysWeaken.
+do 2 apply sysWeaken.
 induction H0 as (H0, H2).
 simpl in H2.
 apply iffE1.
@@ -5036,7 +5036,7 @@ apply
                    (substituteFormula LNN betaFormula 1 (Succ (var 3))) 2
                    (var 2)) 2 (natToTerm b)) 3 (natToTerm x0)) 0
           (natToTerm (f (S x0)))) 1 (natToTerm (beta b x0))).
-repeat apply sysWeaken.
+do 2 apply sysWeaken.
 apply iffE1.
 apply
  iffTrans
@@ -5125,7 +5125,7 @@ apply H3.
 eapply impE.
 eapply impE.
 apply Axm; left; right; constructor.
-repeat apply sysWeaken.
+do 2 apply sysWeaken.
 apply
  impE
   with
@@ -5234,7 +5234,7 @@ apply
           (natToTerm (f (S x0)))) 1 (natToTerm (f x0))).
 apply (subWithEquals LNN).
 apply Axm; right; constructor.
-repeat apply sysWeaken.
+do 2 apply sysWeaken.
 apply
  impE
   with
@@ -5704,12 +5704,12 @@ unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
  notH in |- *;
  repeat first
   [ discriminate
-  | apply iffRefl
-  | apply (reduceExist LNN); [ apply closedNN | idtac ]
-  | apply (reduceForall LNN); [ apply closedNN | idtac ]
-  | apply (reduceAnd LNN)
-  | apply (reduceImp LNN)
-  | apply (reduceNot LNN)
+  | simple apply iffRefl
+  | simple apply (reduceExist LNN); [ apply closedNN | idtac ]
+  | simple apply (reduceForall LNN); [ apply closedNN | idtac ]
+  | simple apply (reduceAnd LNN)
+  | simple apply (reduceImp LNN)
+  | simple apply (reduceNot LNN)
   | match goal with
     |  |-
     (folProof.SysPrf LNN NN
