@@ -25,9 +25,9 @@
 
 OCAMLLIBS:=
 COQLIBS:= -R . Goedel\
-  -R ../../Eindhoven/POCKLINGTON pocklington
+  -R ../../Eindhoven/Pocklington Pocklington
 COQDOCLIBS:=-R . Goedel\
-  -R ../../Eindhoven/POCKLINGTON pocklington
+  -R ../../Eindhoven/Pocklington Pocklington
 
 ##########################
 #                        #
