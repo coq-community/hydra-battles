@@ -7,7 +7,7 @@ Institution: University of California at Berkeley
 Date: 2007-04-13
 Description: A proof that any first order theory extending NN (which is PA
 without induction) that is complete is inconsistent
-URL: http://r6.ca/goedel1.html
+Url: http://r6.ca/goedel1.html
 Keywords: Goedel Rosser Incompleteness Logic Hilbert
 Version: 8.1
 Require: Pocklington
