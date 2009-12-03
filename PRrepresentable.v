@@ -1637,7 +1637,7 @@ induction H6 as [H6| H6].
 rewrite <- H6 in H2.
 elim (lt_irrefl _ H2).
 elim H6.
-elim Hrecv with (n0 := n0).
+lazymatch goal with _ : In ?n _ |- _ => elim Hrecv with n end.
 simpl in H4.
 tauto.
 eapply lt_trans.
