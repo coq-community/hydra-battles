@@ -165,7 +165,6 @@ Fixpoint PairwiseEqual (T : fol.System L) (n : nat) {struct n} :
   end.
 
 Let termsMap (m : nat) (ts ss : fol.Terms L m) : nat -> fol.Term L.
-intros m ts ss.
 induction m as [| m Hrecm].
 exact (fun n : nat => var n).
 induction (consTerms L _ ts).

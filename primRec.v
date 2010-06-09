@@ -145,9 +145,8 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
   | PRcons a b g gs => Vcons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
 
-Definition extEqualVectorGeneral (n m : nat) (l : vector (naryFunc n) m)
-  (m' : nat) (l' : vector (naryFunc n) m') : Prop.
-intros n m l.
+Definition extEqualVectorGeneral (n m : nat) (l : vector (naryFunc n) m) :
+  forall (m' : nat) (l' : vector (naryFunc n) m'), Prop.
 induction l as [| a n0 l Hrecl].
 intros.
 destruct l' as [| a n0 v].
@@ -160,7 +159,6 @@ exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
 Definition extEqualVector (n m : nat) (l l' : vector (naryFunc n) m) : Prop.
-intros.
 eapply extEqualVectorGeneral.
 apply l.
 apply l'.

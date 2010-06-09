@@ -32,7 +32,6 @@ Definition LTFormula :=
   existH 2 (equal (Plus (var 0) (Succ (var 2))) (var 1)).
 
 Definition translateLT (ts : fol.Terms LNN (arity LNN (inl _ LT))) : Formula.
-intro.
 simpl in ts.
 induction (consTerms _ _ ts).
 induction x as (a, b).

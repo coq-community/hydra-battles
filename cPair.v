@@ -447,8 +447,7 @@ exact (cPairPi2 (pred Hrecn)).
 exact (cPairPi1 (pred H)).
 Defined.
 
-Let drop (n : nat) (l : list nat) : list nat.
-intro.
+Let drop (n : nat) : forall (l : list nat), list nat.
 induction n as [| n Hrecn].
 exact (fun l => l).
 intros.
