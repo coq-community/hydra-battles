@@ -3,7 +3,7 @@ Require Import Coq.Lists.List.
 Require Import ListExt.
 Require Import folProof.
 Require Import folProp.
-Require Import Bvector.
+Require Vector.
 Require Import Peano_dec.
 Require Import misc.
 Require Import Arith.
@@ -580,11 +580,11 @@ Section Consistent_Theory.
 Variable T : System L.
 
 Fixpoint interpTermsVector (value : nat -> U M) (n : nat) 
- (ts : Terms L n) {struct ts} : vector (U M) n :=
-  match ts in (Terms _ n) return (vector (U M) n) with
-  | Tnil => Vnil (U M)
+ (ts : Terms L n) {struct ts} : Vector.t (U M) n :=
+  match ts in (Terms _ n) return (Vector.t (U M) n) with
+  | Tnil => Vector.nil (U M)
   | Tcons m t ts =>
-      Vcons (U M) (interpTerm value t) m (interpTermsVector value m ts)
+      Vector.cons (U M) (interpTerm value t) m (interpTermsVector value m ts)
   end.
 
 Lemma preserveValue :

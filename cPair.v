@@ -2,7 +2,7 @@ Require Import Arith.
 Require Import Coq.Lists.List.
 Require Import extEqualNat.
 Require Import primRec.
-Require Import Bvector.
+Require Vector.
 Require Import Div2.
 
 Definition sumToN (n : nat) :=
@@ -548,16 +548,16 @@ Section Strong_Recursion.
 
 Definition evalStrongRecHelp (n : nat) (f : naryFunc (S (S n))) :
   naryFunc (S n) :=
-  evalPrimRecFunc n (evalComposeFunc n 0 (Vnil _) (codeList nil))
+  evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) (codeList nil))
     (evalComposeFunc (S (S n)) 2
-       (Vcons _ f _
-          (Vcons _ (evalProjFunc (S (S n)) n (lt_S _ _ (lt_n_Sn _))) _
-             (Vnil _))) (fun a b : nat => S (cPair a b))).
+       (Vector.cons _ f _
+          (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S _ _ (lt_n_Sn _))) _
+             (Vector.nil _))) (fun a b : nat => S (cPair a b))).
 
 Definition evalStrongRec (n : nat) (f : naryFunc (S (S n))) :
   naryFunc (S n) :=
   evalComposeFunc (S n) 1
-    (Vcons _ (fun z : nat => evalStrongRecHelp n f (S z)) _ (Vnil _))
+    (Vector.cons _ (fun z : nat => evalStrongRecHelp n f (S z)) _ (Vector.nil _))
     (fun z : nat => cPairPi1 (pred z)).
 
 Lemma evalStrongRecIsPR :
@@ -569,12 +569,12 @@ unfold evalStrongRec, evalStrongRecHelp in |- *.
 fold (naryFunc (S n)) in |- *.
 set
  (A :=
-  evalPrimRecFunc n (evalComposeFunc n 0 (Vnil (naryFunc n)) (codeList nil))
+  evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil (naryFunc n)) (codeList nil))
     (evalComposeFunc (S (S n)) 2
-       (Vcons (naryFunc (S (S n))) f 1
-          (Vcons (naryFunc (S (S n)))
+       (Vector.cons (naryFunc (S (S n))) f 1
+          (Vector.cons (naryFunc (S (S n)))
              (evalProjFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n))) 0
-             (Vnil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
+             (Vector.nil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
  in *.
 assert (isPR (S n) A).
 unfold A in |- *.
@@ -598,17 +598,17 @@ exists
 apply
  extEqualTrans
   with
-    (evalPrimRecFunc n (evalComposeFunc n 0 (Vnil _) 0)
+    (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) 0)
        (evalComposeFunc (S (S n)) 2
-          (Vcons _ (evalPrimRec _ x) _
-             (Vcons _ (evalProjFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n))) _
-                (Vnil _))) (evalPrimRec _ x0))).
+          (Vector.cons _ (evalPrimRec _ x) _
+             (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n))) _
+                (Vector.nil _))) (evalPrimRec _ x0))).
 apply extEqualRefl.
 apply extEqualPrimRec.
 simpl in |- *.
 apply extEqualRefl.
 apply extEqualCompose.
-unfold extEqualVector, extEqualVectorGeneral, vector_rect in |- *.
+unfold extEqualVector, extEqualVectorGeneral, Vector.t_rect in |- *.
 repeat split; auto.
 apply extEqualRefl.
 auto.
@@ -641,8 +641,8 @@ Lemma computeEvalStrongRecHelp :
  compose2 n (evalStrongRecHelp n f c)
    (fun a0 : nat =>
     evalComposeFunc n 2
-      (Vcons (naryFunc n) (f c a0) 1
-         (Vcons (naryFunc n) (evalConstFunc n a0) 0 (Vnil (naryFunc n))))
+      (Vector.cons (naryFunc n) (f c a0) 1
+         (Vector.cons (naryFunc n) (evalConstFunc n a0) 0 (Vector.nil (naryFunc n))))
       (fun a1 b0 : nat => S (cPair a1 b0))).
 Proof.
 intros.
@@ -656,11 +656,11 @@ rewrite <- a.
 auto.
 induction (eq_nat_dec n n).
 replace
- (evalPrimRecFunc n (evalComposeFunc n 0 (Vnil (naryFunc n)) 0)
+ (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil (naryFunc n)) 0)
     (fun a0 a1 : nat =>
      evalComposeFunc n 2
-       (Vcons (naryFunc n) (f a0 a1) 1
-          (Vcons (naryFunc n) (evalConstFunc n a1) 0 (Vnil (naryFunc n))))
+       (Vector.cons (naryFunc n) (f a0 a1) 1
+          (Vector.cons (naryFunc n) (evalConstFunc n a1) 0 (Vector.nil (naryFunc n))))
        (fun a2 b0 : nat => S (cPair a2 b0))) c) with
  (evalStrongRecHelp n f c).
 reflexivity.
@@ -742,26 +742,26 @@ apply evalPrimRecParam.
 assert
  (extEqual (S a)
     (evalPrimRecFunc a
-       (evalComposeFunc (S a) 0 (Vnil (naryFunc (S a))) (codeList nil) c)
+       (evalComposeFunc (S a) 0 (Vector.nil (naryFunc (S a))) (codeList nil) c)
        (fun x y : nat =>
         evalComposeFunc (S (S (S a))) 2
-          (Vcons (naryFunc (S (S (S a)))) f 1
-             (Vcons (naryFunc (S (S (S a))))
+          (Vector.cons (naryFunc (S (S (S a)))) f 1
+             (Vector.cons (naryFunc (S (S (S a))))
                 (evalProjFunc (S (S (S a))) (S a)
                    (lt_S (S a) (S (S a)) (lt_n_Sn (S a)))) 0
-                (Vnil (naryFunc (S (S (S a)))))))
+                (Vector.nil (naryFunc (S (S (S a)))))))
           (fun a0 b : nat => S (cPair a0 b)) x y c))
     (evalPrimRecFunc a
-       (evalComposeFunc a 0 (Vnil (naryFunc a)) (codeList nil))
+       (evalComposeFunc a 0 (Vector.nil (naryFunc a)) (codeList nil))
        (evalComposeFunc (S (S a)) 2
-          (Vcons (naryFunc (S (S a))) (fun x y : nat => f x y c) 1
-             (Vcons (naryFunc (S (S a)))
+          (Vector.cons (naryFunc (S (S a))) (fun x y : nat => f x y c) 1
+             (Vector.cons (naryFunc (S (S a)))
                 (evalProjFunc (S (S a)) a (lt_S a (S a) (lt_n_Sn a))) 0
-                (Vnil (naryFunc (S (S a))))))
+                (Vector.nil (naryFunc (S (S a))))))
           (fun a0 b : nat => S (cPair a0 b))))).
 apply
  (extEqualPrimRec a
-    (evalComposeFunc (S a) 0 (Vnil (naryFunc (S a))) (codeList nil) c)).
+    (evalComposeFunc (S a) 0 (Vector.nil (naryFunc (S a))) (codeList nil) c)).
 simpl in |- *.
 apply extEqualRefl.
 simpl in |- *.
@@ -800,7 +800,7 @@ Lemma evalStrongRecHelp2 :
  forall (a : nat) (f : naryFunc (S (S a))) (n m : nat),
  m < n ->
  extEqual _
-   (evalComposeFunc _ 1 (Vcons _ (evalStrongRecHelp _ f n) 0 (Vnil _))
+   (evalComposeFunc _ 1 (Vector.cons _ (evalStrongRecHelp _ f n) 0 (Vector.nil _))
       (fun b : nat => codeNth (n - S m) b)) (evalStrongRec _ f m).
 Proof.
 intro.
@@ -815,7 +815,7 @@ set (g := fun x y : nat => f x y c) in *.
 assert
  (extEqual a
     (evalComposeFunc a 1
-       (Vcons (naryFunc a) (evalStrongRecHelp a g n) 0 (Vnil (naryFunc a)))
+       (Vector.cons (naryFunc a) (evalStrongRecHelp a g n) 0 (Vector.nil (naryFunc a)))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec a g m)).
 apply Hreca.
 auto.
@@ -826,8 +826,8 @@ apply
  extEqualTrans
   with
     (evalComposeFunc a 1
-       (Vcons (naryFunc a) (evalStrongRecHelp a (fun x y : nat => f x y c) n)
-          0 (Vnil (naryFunc a))) (fun b : nat => codeNth (n - S m) b)).
+       (Vector.cons (naryFunc a) (evalStrongRecHelp a (fun x y : nat => f x y c) n)
+          0 (Vector.nil (naryFunc a))) (fun b : nat => codeNth (n - S m) b)).
 apply extEqualCompose.
 unfold extEqualVector in |- *.
 simpl in |- *.

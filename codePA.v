@@ -8,7 +8,7 @@ Require Import code.
 Require Import codeList.
 Require Import codeFreeVar.
 Require Import extEqualNat.
-Require Import Bvector.
+Require Vector.
 Require Import prLogic.
 
 Section close.
@@ -54,7 +54,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 g n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 g n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 g m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -581,7 +581,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 g0 n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 g0 n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 g0 m)).
 intros.
 apply (evalStrongRecHelp2 1). 

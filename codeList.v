@@ -3,7 +3,7 @@ Require Import cPair.
 Require Export Coq.Lists.List.
 Require Import ListExt.
 Require Import Arith.
-Require Import Bvector.
+Require Vector.
 Require Import extEqualNat.
 
 Definition codeLength : nat -> nat :=
@@ -129,7 +129,7 @@ replace (codeList (l1 ++ l2)) with
 reflexivity.
 assert
  (extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 f n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 f n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S (codeList l1)) b))
     (evalStrongRec 1 f (codeList l1))).
 apply (evalStrongRecHelp2 1).
@@ -251,7 +251,7 @@ simpl in |- *.
 repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 assert
  (extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 f n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 f n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S (cPairPi2 (pred n))) b))
     (evalStrongRec 1 f (cPairPi2 (pred n)))).
 apply (evalStrongRecHelp2 1).
@@ -426,7 +426,7 @@ rewrite beq_nat_not_refl.
 simpl in |- *.
 assert
  (extEqual _
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 f n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 f n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 f m)).
 apply (evalStrongRecHelp2 1).
 unfold m in |- *.

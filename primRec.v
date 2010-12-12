@@ -4,7 +4,7 @@ Require Import Compare_dec.
 Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
 Require Import extEqualNat.
-Require Import Bvector.
+Require Vector.
 Require Import misc.
 Require Export Bool.
 Require Export EqNat.
@@ -83,30 +83,30 @@ rewrite
 reflexivity.
 Qed.
 
-Fixpoint evalList (m : nat) (l : vector nat m) {struct l} :
+Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
  naryFunc m -> nat :=
-  match l in (vector _ m) return (naryFunc m -> nat) with
-  | Vnil => fun x : naryFunc 0 => x
-  | Vcons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
+  match l in (Vector.t _ m) return (naryFunc m -> nat) with
+  | Vector.nil => fun x : naryFunc 0 => x
+  | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
   end.
 
-Fixpoint evalOneParamList (n m a : nat) (l : vector (naryFunc (S n)) m)
- {struct l} : vector (naryFunc n) m :=
-  match l in (vector _ m) return (vector (naryFunc n) m) with
-  | Vnil => Vnil (naryFunc n)
-  | Vcons f m' l' => Vcons _ (f a) m' (evalOneParamList n m' a l')
+Fixpoint evalOneParamList (n m a : nat) (l : Vector.t (naryFunc (S n)) m)
+ {struct l} : Vector.t (naryFunc n) m :=
+  match l in (Vector.t _ m) return (Vector.t (naryFunc n) m) with
+  | Vector.nil  => Vector.nil  (naryFunc n)
+  | Vector.cons f m' l' => Vector.cons _ (f a) m' (evalOneParamList n m' a l')
   end.
 
 Fixpoint evalComposeFunc (n : nat) :
- forall m : nat, vector (naryFunc n) m -> naryFunc m -> naryFunc n :=
+ forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
   match
     n
     return
-      (forall m : nat, vector (naryFunc n) m -> naryFunc m -> naryFunc n)
+      (forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n)
   with
   | O => evalList
   | S n' =>
-      fun (m : nat) (l : vector (naryFunc (S n')) m) 
+      fun (m : nat) (l : Vector.t (naryFunc (S n')) m) 
         (f : naryFunc m) (a : nat) =>
       evalComposeFunc n' m (evalOneParamList _ _ a l) f
   end.
@@ -139,14 +139,14 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
   end
  
  with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
- vector (naryFunc n) m :=
-  match fs in (PrimRecs n m) return (vector (naryFunc n) m) with
-  | PRnil a => Vnil (naryFunc a)
-  | PRcons a b g gs => Vcons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
+ Vector.t (naryFunc n) m :=
+  match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
+  | PRnil a => Vector.nil  (naryFunc a)
+  | PRcons a b g gs => Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
 
-Definition extEqualVectorGeneral (n m : nat) (l : vector (naryFunc n) m) :
-  forall (m' : nat) (l' : vector (naryFunc n) m'), Prop.
+Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
+  forall (m' : nat) (l' : Vector.t (naryFunc n) m'), Prop.
 induction l as [| a n0 l Hrecl].
 intros.
 destruct l' as [| a n0 v].
@@ -158,91 +158,49 @@ exact False.
 exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
-Definition extEqualVector (n m : nat) (l l' : vector (naryFunc n) m) : Prop.
-eapply extEqualVectorGeneral.
-apply l.
-apply l'.
+Definition extEqualVector n: forall m (l l' : Vector.t (naryFunc n) m), Prop.
+refine (Vector.rect2 _ _ _); intros.
+apply True.
+apply (extEqual n a b /\ X).
 Defined.
 
 Lemma extEqualVectorRefl :
- forall (n m : nat) (l : vector (naryFunc n) m), extEqualVector n m l l.
+ forall (n m : nat) (l : Vector.t (naryFunc n) m), extEqualVector n m l l.
 Proof.
 intros.
-unfold extEqualVector in |- *.
 induction l as [| a n0 l Hrecl].
-simpl in |- *.
-auto.
-simpl in |- *.
+now simpl.
 split.
 apply extEqualRefl.
 auto.
 Qed.
 
 Lemma extEqualOneParamList :
- forall (n m : nat) (l1 l2 : vector (naryFunc (S n)) m) (c : nat),
+ forall (n m : nat) (l1 l2 : Vector.t (naryFunc (S n)) m) (c : nat),
  extEqualVector (S n) m l1 l2 ->
  extEqualVector n m (evalOneParamList n m c l1) (evalOneParamList n m c l2).
 Proof.
-unfold extEqualVector in |- *.
-assert
- (forall (n m : nat) (l1 : vector (naryFunc (S n)) m) 
-    (m' : nat) (l2 : vector (naryFunc (S n)) m') (c : nat),
-  extEqualVectorGeneral (S n) m l1 m' l2 ->
-  extEqualVectorGeneral n m (evalOneParamList n m c l1) m'
-    (evalOneParamList n m' c l2)).
-intros n m l1.
-induction l1 as [| a n0 l1 Hrecl1].
-intros.
-simpl in |- *.
-induction l2 as [| a n0 l2 Hrecl2].
-simpl in |- *.
+intro; refine (Vector.rect2 _ _ _); simpl; intros.
 auto.
-simpl in H.
-elim H.
-intros.
-induction l2 as [| a0 n1 l2 Hrecl2].
-simpl in H.
-elim H.
-simpl in |- *.
-simpl in H.
-induction H as (H, H0).
-auto.
-intros.
-apply H.
-auto.
+destruct H0.
+split; auto.
 Qed.
 
 Lemma extEqualCompose :
- forall (n m : nat) (l1 l2 : vector (naryFunc n) m) (f1 f2 : naryFunc m),
+ forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m) (f1 f2 : naryFunc m),
  extEqualVector n m l1 l2 ->
  extEqual m f1 f2 ->
  extEqual n (evalComposeFunc n m l1 f1) (evalComposeFunc n m l2 f2).
 Proof.
-intro.
-induction n as [| n Hrecn]; simpl in |- *.
-intros m l1.
-induction l1 as [| a n l1 Hrecl1]; simpl in |- *.
-intros.
+induction n; refine (Vector.rect2 _ _ _); simpl; intros.
+assumption.
+destruct H0; now (apply H; [|subst a]). 
 rewrite H0.
-clear H0.
-rewrite (V0_eq _ l2).
-simpl in |- *.
-reflexivity.
-intros.
-rewrite VSn_eq in H.
-unfold extEqualVector in H.
-simpl in H.
-induction H as (H, H1).
-rewrite (VSn_eq _ _ l2).
-simpl in |- *.
-apply Hrecl1.
-apply H1.
-rewrite H.
-apply H0.
-intros.
-apply Hrecn.
-apply extEqualOneParamList.
-auto.
+apply extEqualRefl.
+destruct H0 as (Hi, Hj).
+apply IHn. split.
+apply Hi.
+now apply extEqualOneParamList.
 auto.
 Qed.
 
@@ -1304,8 +1262,8 @@ Remark replaceCompose2 :
  extEqual n b b' ->
  extEqual 2 c c' ->
  extEqual n
-   (evalComposeFunc _ _ (Vcons _ a _ (Vcons _ b _ (Vnil (naryFunc n)))) c)
-   (evalComposeFunc _ _ (Vcons _ a' _ (Vcons _ b' _ (Vnil (naryFunc n)))) c').
+   (evalComposeFunc _ _ (Vector.cons _ a _ (Vector.cons _ b _ (Vector.nil  (naryFunc n)))) c)
+   (evalComposeFunc _ _ (Vector.cons _ a' _ (Vector.cons _ b' _ (Vector.nil  (naryFunc n)))) c').
 Proof.
 intros.
 apply extEqualCompose.
@@ -1344,8 +1302,8 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n 2
-       (Vcons (naryFunc n) (charFunction n R) 1
-          (Vcons (naryFunc n) (charFunction n R') 0 (Vnil (naryFunc n))))
+       (Vector.cons (naryFunc n) (charFunction n R) 1
+          (Vector.cons (naryFunc n) (charFunction n R') 0 (Vector.nil  (naryFunc n))))
        (fun a b : nat => notZero (a + b))).
 apply replaceCompose2; auto.
 clear x p x0 p0 x1 p1.
@@ -1389,8 +1347,8 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n 2
-       (Vcons (naryFunc n) (charFunction n R) 1
-          (Vcons (naryFunc n) (charFunction n R') 0 (Vnil (naryFunc n))))
+       (Vector.cons (naryFunc n) (charFunction n R) 1
+          (Vector.cons (naryFunc n) (charFunction n R') 0 (Vector.nil  (naryFunc n))))
        mult).
 apply replaceCompose2; auto.
 clear x p x0 p0 x1 p1.
@@ -1433,7 +1391,7 @@ simpl in |- *.
 apply
  extEqualTrans
   with
-    (evalComposeFunc n 1 (Vcons _ (charFunction n R) _ (Vnil _))
+    (evalComposeFunc n 1 (Vector.cons _ (charFunction n R) _ (Vector.nil  _))
        (fun x : nat => 1 - x)).
 apply extEqualCompose.
 unfold extEqualVector in |- *.
@@ -1625,7 +1583,7 @@ apply p.
 Defined.
 
 Definition projectionList (n m : nat) (p : m <= n) : 
-  vector (naryFunc n) m := evalPrimRecs n m (projectionListPR n m p).
+  Vector.t (naryFunc n) m := evalPrimRecs n m (projectionListPR n m p).
 
 Lemma projectionListInd :
  forall (n m : nat) (p1 p2 : m <= n),
@@ -1691,7 +1649,7 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n (S n)
-       (Vcons (naryFunc n) (evalConstFunc n c) n
+       (Vector.cons (naryFunc n) (evalConstFunc n c) n
           (projectionList n n (le_n n))) f).
 apply
  extEqualTrans with (evalComposeFunc n n (projectionList n n (le_n n)) (f c)).
@@ -1701,9 +1659,9 @@ generalize (projectionList n n (le_n n)).
 generalize f c.
 clear f c.
 assert
- (forall (m : nat) (f : naryFunc (S m)) (c : nat) (v : vector (naryFunc n) m),
+ (forall (m : nat) (f : naryFunc (S m)) (c : nat) (v : Vector.t (naryFunc n) m),
   extEqual n (evalComposeFunc n m v (f c))
-    (evalComposeFunc n (S m) (Vcons (naryFunc n) (evalConstFunc n c) m v) f)).
+    (evalComposeFunc n (S m) (Vector.cons (naryFunc n) (evalConstFunc n c) m v) f)).
 intros.
 induction n as [| n Hrecn].
 simpl in |- *.
@@ -1843,9 +1801,9 @@ Qed.
 End Ignore_Params.
 
 Lemma reduce1stCompose :
- forall (c n m : nat) (v : vector (naryFunc n) m) (g : naryFunc (S m)),
+ forall (c n m : nat) (v : Vector.t (naryFunc n) m) (g : naryFunc (S m)),
  extEqual n
-   (evalComposeFunc n _ (Vcons (naryFunc n) (evalConstFunc n c) _ v) g)
+   (evalComposeFunc n _ (Vector.cons (naryFunc n) (evalConstFunc n c) _ v) g)
    (evalComposeFunc n _ v (g c)).
 Proof.
 intros c n.
@@ -1859,13 +1817,13 @@ apply Hrecn.
 Qed.
 
 Lemma reduce2ndCompose :
- forall (c n m : nat) (v : vector (naryFunc n) m) (n0 : naryFunc n)
+ forall (c n m : nat) (v : Vector.t (naryFunc n) m) (n0 : naryFunc n)
    (g : naryFunc (S (S m))),
  extEqual n
    (evalComposeFunc n _
-      (Vcons (naryFunc n) n0 _ (Vcons (naryFunc n) (evalConstFunc n c) _ v))
+      (Vector.cons (naryFunc n) n0 _ (Vector.cons (naryFunc n) (evalConstFunc n c) _ v))
       g)
-   (evalComposeFunc n _ (Vcons (naryFunc n) n0 _ v) (fun x : nat => g x c)).
+   (evalComposeFunc n _ (Vector.cons (naryFunc n) n0 _ v) (fun x : nat => g x c)).
 Proof.
 intros c n.
 induction n as [| n Hrecn].
@@ -1905,7 +1863,7 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n (S n)
-       (Vcons (naryFunc n) f n
+       (Vector.cons (naryFunc n) f n
           (evalPrimRecs n n (projectionListPR n n (le_n n)))) g).
 apply extEqualCompose.
 unfold extEqualVector in |- *.
@@ -1926,8 +1884,8 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n (S (S n))
-       (Vcons (naryFunc n) (f c) (S n)
-          (Vcons (naryFunc n) (evalConstFunc n c) n
+       (Vector.cons (naryFunc n) (f c) (S n)
+          (Vector.cons (naryFunc n) (evalConstFunc n c) n
              (projectionList n n (le_n n)))) g).
 apply extEqualSym.
 apply extEqualCompose.
@@ -1944,7 +1902,7 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n (S n)
-       (Vcons (naryFunc n) (f c) n
+       (Vector.cons (naryFunc n) (f c) n
           (evalPrimRecs n n (projectionListPR n n (le_n n))))
        (fun x : nat => g x c)).
 clear a Hrecn.
@@ -1953,7 +1911,7 @@ fold (naryFunc n) in |- *.
 fold (projectionList n n (le_n n)) in |- *.
 generalize (projectionList n n (le_n n)).
 intros.
-apply (reduce2ndCompose c n n v n0).
+apply (reduce2ndCompose c n n t n0).
 apply Hrecn.
 elim b.
 auto.
@@ -1981,7 +1939,7 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n (S n)
-       (Vcons (naryFunc n) (evalConstFunc n (f c)) n
+       (Vector.cons (naryFunc n) (evalConstFunc n (f c)) n
           (projectionList n n (le_n n))) g).
 apply extEqualSym.
 apply extEqualCompose.
@@ -1993,7 +1951,7 @@ apply
  extEqualTrans
   with
     (evalComposeFunc n 1
-       (Vcons (naryFunc n) (evalConstFunc n c) 0 (Vnil (naryFunc n))) f).
+       (Vector.cons (naryFunc n) (evalConstFunc n c) 0 (Vector.nil  (naryFunc n))) f).
 apply extEqualCompose.
 apply extEqualVectorRefl.
 auto.

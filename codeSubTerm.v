@@ -4,7 +4,7 @@ Require Import Arith.
 Require Import folProp.
 Require Import code.
 Require Import extEqualNat.
-Require Import Bvector.
+Require Vector.
 
 Section Code_Substitute_Term.
 
@@ -108,7 +108,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 assert
  (extEqual _
     (evalComposeFunc 2 1
-       (Vcons _ (evalStrongRecHelp 2 g (cPair (S n) n0)) 0 (Vnil _))
+       (Vector.cons _ (evalStrongRecHelp 2 g (cPair (S n) n0)) 0 (Vector.nil _))
        (fun b : nat => codeNth (cPair (S n) n0 - S n0) b))
     (evalStrongRec 2 g n0)).
 apply (evalStrongRecHelp2 2).
@@ -157,7 +157,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 assert
  (extEqual _
     (evalComposeFunc 2 1
-       (Vcons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vnil _))
+       (Vector.cons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vector.nil _))
        (fun b : nat => codeNth (S (cPair n n0) - S n) b))
     (evalStrongRec 2 g n)).
 apply (evalStrongRecHelp2 2).
@@ -169,7 +169,7 @@ clear H.
 assert
  (extEqual _
     (evalComposeFunc 2 1
-       (Vcons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vnil _))
+       (Vector.cons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vector.nil _))
        (fun b : nat => codeNth (S (cPair n n0) - S n0) b))
     (evalStrongRec 2 g n0)).
 apply (evalStrongRecHelp2 2).
@@ -240,7 +240,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 assert
  (extEqual _
     (evalComposeFunc 2 1
-       (Vcons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vnil _))
+       (Vector.cons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vector.nil _))
        (fun b : nat => codeNth (S (cPair n n0) - S n) b))
     (evalStrongRec 2 g n)).
 apply (evalStrongRecHelp2 2).
@@ -252,7 +252,7 @@ clear H.
 assert
  (extEqual _
     (evalComposeFunc 2 1
-       (Vcons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vnil _))
+       (Vector.cons _ (evalStrongRecHelp 2 g (S (cPair n n0))) 0 (Vector.nil _))
        (fun b : nat => codeNth (S (cPair n n0) - S n0) b))
     (evalStrongRec 2 g n0)).
 apply (evalStrongRecHelp2 2).

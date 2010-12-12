@@ -11,7 +11,7 @@ Require Import primRec.
 Require Import chRem.
 Require Import expressible.
 Require Import Coq.Lists.List.
-Require Import Bvector.
+Require Vector.
 Require Import ListExt.
 Require Import cPair.
 Require Import Decidable.
@@ -1085,26 +1085,26 @@ auto.
 Qed.
 
 Fixpoint FormulasToFormula (n w m : nat)
- (vs : vector (Formula * naryFunc n) m) {struct vs} : Formula :=
+ (vs : Vector.t (Formula * naryFunc n) m) {struct vs} : Formula :=
   match vs with
-  | Vnil => equal (var 0) (var 0)
-  | Vcons v m' vs' =>
+  | Vector.nil => equal (var 0) (var 0)
+  | Vector.cons v m' vs' =>
       andH (substituteFormula LNN (fst v) 0 (var (S m' + w)))
         (FormulasToFormula n w m' vs')
   end.
 
-Fixpoint FormulasToFuncs (n m : nat) (vs : vector (Formula * naryFunc n) m)
- {struct vs} : vector (naryFunc n) m :=
-  match vs in (vector _ m) return (vector (naryFunc n) m) with
-  | Vnil => Vnil _
-  | Vcons v m' vs' => Vcons _ (snd v) m' (FormulasToFuncs n m' vs')
+Fixpoint FormulasToFuncs (n m : nat) (vs : Vector.t (Formula * naryFunc n) m)
+ {struct vs} : Vector.t (naryFunc n) m :=
+  match vs in (Vector.t _ m) return (Vector.t (naryFunc n) m) with
+  | Vector.nil => Vector.nil _
+  | Vector.cons v m' vs' => Vector.cons _ (snd v) m' (FormulasToFuncs n m' vs')
   end.
 
 Fixpoint RepresentablesHelp (n m : nat)
- (vs : vector (Formula * naryFunc n) m) {struct vs} : Prop :=
+ (vs : Vector.t (Formula * naryFunc n) m) {struct vs} : Prop :=
   match vs with
-  | Vnil => True
-  | Vcons a m' vs' =>
+  | Vector.nil => True
+  | Vector.cons a m' vs' =>
       RepresentableHelp _ (snd a) (fst a) /\ RepresentablesHelp n m' vs'
   end.
 
@@ -1232,7 +1232,7 @@ auto.
 auto.
 Qed.
 
-Let composeSigmaFormula (n w m : nat) (A : vector (Formula * naryFunc n) m)
+Let composeSigmaFormula (n w m : nat) (A : Vector.t (Formula * naryFunc n) m)
   (B : Formula) : Formula :=
   addExists (S w) m
     (andH (FormulasToFormula n w m A)
@@ -1246,10 +1246,10 @@ Let composeSigmaFormula (n w m : nat) (A : vector (Formula * naryFunc n) m)
 Remark composeSigmaRepresentable :
  forall n w m : nat,
  n <= w ->
- forall (A : vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
+ forall (A : Vector.t (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
  RepresentablesHelp n m A ->
- vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
-   (fun (pair : Formula * naryFunc n) (m : nat) (v : vector _ m) (rec : Prop) =>
+ Vector.t_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+   (fun (pair : Formula * naryFunc n) (m : nat) (v : Vector.t _ m) (rec : Prop) =>
     (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\ rec)
    m A ->
  Representable m g B ->
@@ -1259,10 +1259,10 @@ Proof.
 assert
  (forall n w m : nat,
   n <= w ->
-  forall (A : vector (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
+  forall (A : Vector.t (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
   RepresentablesHelp n m A ->
-  vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
-    (fun (pair : Formula * naryFunc n) (m : nat) (v : vector _ m)
+  Vector.t_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+    (fun (pair : Formula * naryFunc n) (m : nat) (v : Vector.t _ m)
        (rec : Prop) =>
      (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\ rec)
     m A ->
@@ -1707,12 +1707,12 @@ apply closedNatToTerm.
 intros.
 set
  (v' :=
-  vector_rec (Formula * (nat -> naryFunc n))
-    (fun (m : nat) (v : vector _ m) => vector (Formula * naryFunc n) m)
-    (Vnil _)
+  Vector.t_rec (Formula * (nat -> naryFunc n))
+    (fun (m : nat) (v : Vector.t _ m) => Vector.t (Formula * naryFunc n) m)
+    (Vector.nil _)
     (fun (pair : Formula * (nat -> naryFunc n)) (m : nat) 
-       (v : vector _ m) (rec : vector (Formula * naryFunc n) m) =>
-     Vcons _
+       (v : Vector.t _ m) (rec : Vector.t (Formula * naryFunc n) m) =>
+     Vector.cons _
        (substituteFormula LNN (fst pair) (S n) (natToTerm a), snd pair a) m
        rec) _ A) in *.
 assert
@@ -6626,11 +6626,11 @@ Fixpoint primRecFormula (n : nat) (f : PrimRec n) {struct f} : Formula :=
   end
  
  with primRecsFormula (n m : nat) (fs : PrimRecs n m) {struct fs} :
- vector (Formula * naryFunc n) m :=
-  match fs in (PrimRecs n m) return (vector (Formula * naryFunc n) m) with
-  | PRnil n => Vnil _
+ Vector.t (Formula * naryFunc n) m :=
+  match fs in (PrimRecs n m) return (Vector.t (Formula * naryFunc n) m) with
+  | PRnil n => Vector.nil _
   | PRcons n m f fs' =>
-      Vcons (Formula * naryFunc n) (primRecFormula n f, evalPrimRec n f) m
+      Vector.cons (Formula * naryFunc n) (primRecFormula n f, evalPrimRec n f) m
         (primRecsFormula n m fs')
   end.
 
@@ -6646,9 +6646,9 @@ elim f using
            RepresentablesHelp n m (primRecsFormula n m fs) /\
            extEqualVector _ _ (FormulasToFuncs n m (primRecsFormula n m fs))
              (evalPrimRecs n m fs) /\
-           vector_rect (Formula * naryFunc n) (fun _ _ => Prop) True
+           Vector.t_rect (Formula * naryFunc n) (fun _ _ => Prop) True
              (fun (pair : Formula * naryFunc n) (m : nat) 
-                (v : vector _ m) (rec : Prop) =>
+                (v : Vector.t _ m) (rec : Prop) =>
               (forall v : nat, In v (freeVarFormula LNN (fst pair)) -> v <= n) /\
               rec) m (primRecsFormula n m fs)).
 apply succRepresentable.

@@ -4,7 +4,7 @@ Require Import Arith.
 Require Import folProp.
 Require Import code.
 Require Import extEqualNat.
-Require Import Bvector.
+Require Vector.
 Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Max.
@@ -3148,7 +3148,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -3350,7 +3350,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -3511,7 +3511,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -3607,7 +3607,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -3779,7 +3779,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -4191,7 +4191,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -4330,7 +4330,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -5159,7 +5159,7 @@ assert
  (forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
@@ -5669,7 +5669,7 @@ assert
   forall n m : nat,
   m < n ->
   extEqual 1
-    (evalComposeFunc 1 1 (Vcons _ (evalStrongRecHelp 1 A n) 0 (Vnil _))
+    (evalComposeFunc 1 1 (Vector.cons _ (evalStrongRecHelp 1 A n) 0 (Vector.nil _))
        (fun b : nat => codeNth (n - S m) b)) (evalStrongRec 1 A m)).
 intros.
 apply (evalStrongRecHelp2 1). 
