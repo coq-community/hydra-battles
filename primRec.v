@@ -159,7 +159,7 @@ exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
 Definition extEqualVector n: forall m (l l' : Vector.t (naryFunc n) m), Prop.
-refine (Vector.rect2 _ _ _); intros.
+refine (@Vector.rect2 _ _ _ _ _); intros.
 apply True.
 apply (extEqual n a b /\ X).
 Defined.
@@ -180,7 +180,7 @@ Lemma extEqualOneParamList :
  extEqualVector (S n) m l1 l2 ->
  extEqualVector n m (evalOneParamList n m c l1) (evalOneParamList n m c l2).
 Proof.
-intro; refine (Vector.rect2 _ _ _); simpl; intros.
+intro; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
 auto.
 destruct H0.
 split; auto.
@@ -192,7 +192,7 @@ Lemma extEqualCompose :
  extEqual m f1 f2 ->
  extEqual n (evalComposeFunc n m l1 f1) (evalComposeFunc n m l2 f2).
 Proof.
-induction n; refine (Vector.rect2 _ _ _); simpl; intros.
+induction n; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
 assumption.
 destruct H0; now (apply H; [|subst a]). 
 rewrite H0.
