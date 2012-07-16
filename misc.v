@@ -1,5 +1,7 @@
 Require Import Eqdep_dec.
 
+Global Set Asymmetric Patterns.
+
 Lemma inj_right_pair2 :
  forall A : Set,
  (forall x y : A, {x = y} + {x <> y}) ->
