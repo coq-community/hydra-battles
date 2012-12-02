@@ -1186,10 +1186,10 @@ induction
  (sumbool_rec
     (fun _ : {S n = S n} + {S n <> S n} =>
      {S (S n) = S (S n)} + {S (S n) <> S (S n)})
-    (fun a1 : S n = S n => left (S (S n) <> S (S n)) (f_equal S a1))
+    (fun a1 : S n = S n => left (S (S n) <> S (S n)) (f_equal_nat _ S _ _ a1))
     (fun b : S n <> S n => right (S (S n) = S (S n)) (not_eq_S (S n) (S n) b))
     (sumbool_rec (fun _ : {n = n} + {n <> n} => {S n = S n} + {S n <> S n})
-       (fun a1 : n = n => left (S n <> S n) (f_equal S a1))
+       (fun a1 : n = n => left (S n <> S n) (f_equal_nat _ S _ _ a1))
        (fun b : n <> n => right (S n = S n) (not_eq_S n n b))
        (eq_nat_dec n n))).
 simpl in |- *.
@@ -1202,7 +1202,7 @@ rewrite (subFormulaEqual LNN).
 simpl in |- *.
 induction
  (sumbool_rec (fun _ : {n = n} + {n <> n} => {S n = S n} + {S n <> S n})
-    (fun a2 : n = n => left (S n <> S n) (f_equal S a2))
+    (fun a2 : n = n => left (S n <> S n) (f_equal_nat _ S _ _ a2))
     (fun b : n <> n => right (S n = S n) (not_eq_S n n b)) 
     (eq_nat_dec n n)).
 rewrite subTermNil.
