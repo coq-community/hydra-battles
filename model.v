@@ -864,6 +864,7 @@ assert
 apply preserveValue.
 assumption.
 auto.
+simpl in *.
 auto.
 Qed.
 
