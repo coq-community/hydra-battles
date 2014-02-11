@@ -57,7 +57,7 @@ auto.
 Qed.
 
 Lemma sysWeaken :
- forall (T : System) (f g : Formula), SysPrf T f -> SysPrf (Add _ T g) f.
+ forall (T : System) (f g : Formula), SysPrf T f -> SysPrf (Ensembles.Add _ T g) f.
 Proof.
 intros.
 apply sysExtend with T.
@@ -70,7 +70,7 @@ Qed.
 
 Lemma impI :
  forall (T : System) (f g : Formula),
- SysPrf (Add _ T g) f -> SysPrf T (impH g f).
+ SysPrf (Ensembles.Add _ T g) f -> SysPrf T (impH g f).
 Proof.
 intros.
 apply (DeductionTheorem L).
@@ -236,7 +236,7 @@ Qed.
 
 Lemma orSys :
  forall (T : System) (f g h : Formula),
- SysPrf (Add _ T f) h -> SysPrf (Add _ T g) h -> SysPrf (Add _ T (orH f g)) h.
+ SysPrf (Ensembles.Add _ T f) h -> SysPrf (Ensembles.Add _ T g) h -> SysPrf (Ensembles.Add _ T (orH f g)) h.
 Proof.
 intros.
 eapply orE.
@@ -430,7 +430,7 @@ Lemma existSys :
  forall (T : System) (f g : Formula) (v : nat),
  ~ In_freeVarSys L v T ->
  ~ In v (freeVarFormula L g) ->
- SysPrf (Add _ T f) g -> SysPrf (Add _ T (existH v f)) g.
+ SysPrf (Ensembles.Add _ T f) g -> SysPrf (Ensembles.Add _ T (existH v f)) g.
 Proof.
 intros.
 eapply existE.

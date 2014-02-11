@@ -44,11 +44,11 @@ Definition NNStar :=
           (LT (var 0) (Succ (var 1))))).
 
 Definition NN :=
-  Add _
-    (Add _
-       (Add _
-          (Add _
-             (Add _ (Add _ (Add _ (Add _ (Singleton _ NN1) NN2) NN3) NN4) NN5)
+  Ensembles.Add _
+    (Ensembles.Add _
+       (Ensembles.Add _
+          (Ensembles.Add _
+             (Ensembles.Add _ (Ensembles.Add _ (Ensembles.Add _ (Ensembles.Add _ (Singleton _ NN1) NN2) NN3) NN4) NN5)
              NN6) NN7) NN8) NN9.
 
 Lemma closedNN1 : ClosedSystem LNN NN.

@@ -962,8 +962,8 @@ Qed.
 
 Remark subFormulaNTEHelp :
  forall (f g : Formula) (v : nat) (s : Term),
- SysPrf (Add _ (Empty_set Formula) f) g ->
- SysPrf (Add _ (Empty_set Formula) (substituteFormula L f v s))
+ SysPrf (Ensembles.Add _ (Empty_set Formula) f) g ->
+ SysPrf (Ensembles.Add _ (Empty_set Formula) (substituteFormula L f v s))
    (substituteFormula L g v s).
 Proof.
 intros.

@@ -20,7 +20,7 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Theorem DeductionTheorem :
- forall (T : System) (f g : Formula) (prf : SysPrf (Add _ T g) f),
+ forall (T : System) (f g : Formula) (prf : SysPrf (Ensembles.Add _ T g) f),
  SysPrf T (impH g f).
 Proof.
 intros T.
@@ -127,7 +127,7 @@ induction Axm.
 firstorder.
 elim (HF a (or_introl _ (refl_equal a))).
 assert (forall g0 : fol.Formula L,
-         In g0 Axm -> mem (fol.Formula L) (Add (fol.Formula L) T g) g0) .
+         In g0 Axm -> mem (fol.Formula L) (Ensembles.Add (fol.Formula L) T g) g0) .
 firstorder.
 destruct (IHAxm H).
 firstorder.

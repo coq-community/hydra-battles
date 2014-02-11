@@ -35,8 +35,8 @@ Definition InductionSchema (f : Formula) : Prop :=
   exists g : Formula, (exists v : nat, f = PA7 g v).
 
 Definition PA :=
-  Add _
-    (Add _ (Add _ (Add _ (Add _ (Add _ InductionSchema PA1) PA2) PA3) PA4)
+  Ensembles.Add _
+    (Ensembles.Add _ (Ensembles.Add _ (Ensembles.Add _ (Ensembles.Add _ (Ensembles.Add _ InductionSchema PA1) PA2) PA3) PA4)
        PA5) PA6.
 
 Definition open :=

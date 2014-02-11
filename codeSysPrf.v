@@ -416,7 +416,7 @@ apply impE with G.
 apply sysExtend with NN.
 assumption.
 apply impI.
-assert (forall v : nat, ~ In_freeVarSys LNN v (Add (fol.Formula LNN) NN G)).
+assert (forall v : nat, ~ In_freeVarSys LNN v (Ensembles.Add (fol.Formula LNN) NN G)).
 unfold not in |- *; intros.
 induction H8 as (x, H8).
 induction H8 as (H8, H9).
@@ -941,7 +941,7 @@ assert
  (forall v : nat,
   ~
   In_freeVarSys LNN v
-    (Add (fol.Formula LNN) NN
+    (Ensembles.Add (fol.Formula LNN) NN
        (notH
           (substituteFormula LNN fU v0
              (natToTerm (codeFormula L codeF codeR x)))))).
