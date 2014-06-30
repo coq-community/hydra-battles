@@ -660,7 +660,6 @@ Lemma subWithEquals :
  SysPrf T (equal a b) ->
  SysPrf T (impH (substituteFormula L f v a) (substituteFormula L f v b)).
 Proof.
-clear termsMap.
 intro.
 elim f using Formula_depth_ind2; intros.
 repeat rewrite subFormulaEqual.
