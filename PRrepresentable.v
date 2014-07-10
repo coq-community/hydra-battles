@@ -1168,7 +1168,7 @@ induction n as [| n Hrecn].
 elim (lt_n_O m pr).
 simpl in |- *.
 intros.
-induction (eq_nat_dec m n).
+induction (Nat.eq_dec m n).
 rewrite a0.
 clear a0 Hrecn pr m.
 induction n as [| n Hrecn].
@@ -1183,15 +1183,15 @@ unfold projFormula in |- *.
 repeat rewrite (subFormulaEqual LNN).
 simpl in |- *.
 induction
- (sumbool_rec
-    (fun _ : {S n = S n} + {S n <> S n} =>
-     {S (S n) = S (S n)} + {S (S n) <> S (S n)})
-    (fun a1 : S n = S n => left (S (S n) <> S (S n)) (f_equal_nat _ S _ _ a1))
-    (fun b : S n <> S n => right (S (S n) = S (S n)) (not_eq_S (S n) (S n) b))
-    (sumbool_rec (fun _ : {n = n} + {n <> n} => {S n = S n} + {S n <> S n})
-       (fun a1 : n = n => left (S n <> S n) (f_equal_nat _ S _ _ a1))
-       (fun b : n <> n => right (S n = S n) (not_eq_S n n b))
-       (eq_nat_dec n n))).
+ (match
+   match Nat.eq_dec n n with
+   | left e => left (f_equal_nat nat S n n e)
+   | right n0 => right (not_eq_S n n n0)
+   end
+  with
+  | left _ => _
+  | right _ => _
+  end).
 simpl in |- *.
 replace
  (fol.equal LNN (fol.var LNN 0)
@@ -1201,10 +1201,10 @@ auto.
 rewrite (subFormulaEqual LNN).
 simpl in |- *.
 induction
- (sumbool_rec (fun _ : {n = n} + {n <> n} => {S n = S n} + {S n <> S n})
-    (fun a2 : n = n => left (S n <> S n) (f_equal_nat _ S _ _ a2))
-    (fun b : n <> n => right (S n = S n) (not_eq_S n n b)) 
-    (eq_nat_dec n n)).
+ (match Nat.eq_dec n n with
+ | left e => left (f_equal_nat nat S n n e)
+ | right n0 => right (not_eq_S n n n0)
+ end).
 rewrite subTermNil.
 reflexivity.
 apply closedNatToTerm.
