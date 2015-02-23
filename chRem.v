@@ -1,13 +1,9 @@
 Require Import Arith.
 Require Import Wf_nat.
-Require Import gcd.
-Require Import divides.
 Require Import ZArith.
-Require Import natZ.
 Require Import Peano_dec.
 Require Import ZArith_dec.
-Require Import prime.
-Require Import modprime.
+From Pocklington Require Import gcd divides natZ prime modprime.
 Require Import Max.
 
 Lemma multO : forall a b : nat, a * b = 0 -> a = 0 \/ b = 0.

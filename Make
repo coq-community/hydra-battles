@@ -1,5 +1,4 @@
 -R . Goedel
--R ../../Eindhoven/Pocklington Pocklington
 checkPrf.v
 chRem.v
 codeFreeVar.v
