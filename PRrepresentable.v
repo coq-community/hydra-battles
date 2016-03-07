@@ -5792,20 +5792,20 @@ unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
   | rewrite subForallSpecial2;
      let fail :=
       (match goal with
-       |  |- (?X1 <> ?X1) => constr:false
-       | _ => constr:true
+       |  |- (?X1 <> ?X1) => constr:(false)
+       | _ => constr:(true)
        end) in
-     match constr:fail with
+     match constr:(fail) with
      | true => idtac
      end
   | rewrite subForallSpecial
   | rewrite subExistSpecial2;
      let fail :=
       (match goal with
-       |  |- (?X1 <> ?X1) => constr:false
-       | _ => constr:true
+       |  |- (?X1 <> ?X1) => constr:(false)
+       | _ => constr:(true)
        end) in
-     match constr:fail with
+     match constr:(fail) with
      | true => idtac
      end
   | rewrite subExistSpecial ].
