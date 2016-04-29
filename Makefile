@@ -11,7 +11,7 @@ ifeq ($(USE_GIT_SUBMODULES),yes)
 	$(COQBIN)coq_makefile -f Make -o Makefile.coq -R pocklington Pocklington
 else
 	# This is what we do if we can rely on things installed via OPAM
-	$(COQBIN)coq_makefile -f Make -o Makefile.coq -R `coqtop -where`/user-contrib/Pocklington Pocklington
+	$(COQBIN)coq_makefile -f Make -o Makefile.coq
 endif
 
 %: Makefile.coq
