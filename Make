@@ -1,4 +1,4 @@
--R . Goedel -R pocklington Pocklington
+-R . Goedel
 
 checkPrf.v
 chRem.v
