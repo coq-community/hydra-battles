@@ -10,8 +10,6 @@ Require Import NN.
 Require Import LNN2LNT.
 Require Export PA.
 
-Unset Standard Proposition Elimination Names.
-
 Lemma paZeroOrSucc :
  forall t : Term,
  SysPrf PA

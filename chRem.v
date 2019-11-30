@@ -167,7 +167,7 @@ assumption.
 induction (Zle_or_lt 0 (b1 - b2)).
 induction (Zle_lt_or_eq _ _ H5).
 assert (1 <= b1 - b2)%Z.
-replace 1%Z with (Zsucc 0).
+replace 1%Z with (Z.succ 0).
 apply Zlt_le_succ.
 assumption.
 auto.
@@ -176,7 +176,7 @@ replace q with (1 * q)%Z.
 rewrite <- H4.
 apply Zmult_le_compat_r.
 assumption.
-eapply Zle_trans.
+eapply Z.le_trans.
 apply H.
 apply Zlt_le_weak.
 assumption.
@@ -200,12 +200,12 @@ rewrite Zmult_comm in H4.
 rewrite <- Zmult_0_r_reverse in H4.
 rewrite <- (Zplus_opp_r r2) in H4.
 unfold Zminus in H4.
-apply Zopp_inj.
+apply Z.opp_inj.
 symmetry  in |- *.
 eapply Zplus_reg_l.
 apply H4.
 assert (1 <= b2 - b1)%Z.
-replace 1%Z with (Zsucc 0).
+replace 1%Z with (Z.succ 0).
 apply Zlt_le_succ.
 apply (Zplus_lt_reg_l 0 (b2 - b1) b1).
 rewrite Zplus_minus.
@@ -231,7 +231,7 @@ replace q with (1 * q)%Z.
 rewrite <- H7.
 apply Zmult_le_compat_r.
 assumption.
-eapply Zle_trans.
+eapply Z.le_trans.
 apply H.
 apply Zlt_le_weak.
 assumption.
@@ -264,7 +264,7 @@ intros.
 repeat rewrite Znat.inj_S in H1.
 apply eq_S.
 apply H0.
-apply Zsucc_inj.
+apply Z.succ_inj.
 assumption.
 Qed.
 
@@ -346,7 +346,7 @@ assert
   (a' >= 0)%Z ->
   {p : Z * nat | snd p < b /\ Z_of_nat (snd p) = (fst p * Z_of_nat b + a')%Z}).
 intros.
-set (A := Zabs_nat a') in *.
+set (A := Z.abs_nat a') in *.
 induction (modulo b H A).
 induction x as (a0, b0).
 exists ((- Z_of_nat a0)%Z, b0).
@@ -358,7 +358,7 @@ replace (fst ((- Z_of_nat a0)%Z, b0)) with (- Z_of_nat a0)%Z.
 replace (snd ((- Z_of_nat a0)%Z, b0)) with b0.
 rewrite Zopp_mult_distr_l_reverse.
 rewrite Zplus_comm.
-fold (Z_of_nat (Zabs_nat a') - Z_of_nat a0 * Z_of_nat b)%Z in |- *.
+fold (Z_of_nat (Z.abs_nat a') - Z_of_nat a0 * Z_of_nat b)%Z in |- *.
 apply Zplus_minus_eq.
 rewrite <- Znat.inj_mult.
 rewrite <- Znat.inj_plus.
@@ -384,7 +384,7 @@ apply Zmult_ge_compat_r.
 rewrite (Zminus_diag_reverse a).
 rewrite <- (Zplus_0_l (- a)).
 unfold Zminus in |- *.
-apply Zle_ge.
+apply Z.le_ge.
 apply Zplus_le_compat_r.
 apply Zlt_le_weak.
 assumption.
@@ -519,7 +519,7 @@ rewrite (Zmult_comm b0).
 rewrite Zopp_mult_distr_l_reverse.
 rewrite (Zmult_comm X2).
 rewrite Zopp_mult_distr_l_reverse.
-rewrite Zopp_involutive.
+rewrite Z.opp_involutive.
 unfold y in |- *.
 rewrite (Zmult_assoc_reverse (B + - A)).
 rewrite (Zmult_comm (B + - A)).
@@ -534,7 +534,7 @@ apply Zplus_minus.
 unfold Zminus in |- *.
 rewrite Zopp_plus_distr.
 rewrite Zplus_comm.
-rewrite Zopp_involutive.
+rewrite Z.opp_involutive.
 reflexivity.
 assert (x1 * x2 > 0).
 replace 0 with (0 * x2).
@@ -672,7 +672,7 @@ split.
 split.
 exists 1.
 auto.
-exists (Zabs_nat (Z_of_nat a)).
+exists (Z.abs_nat (Z_of_nat a)).
 rewrite mult_1_l.
 reflexivity.
 intros.
@@ -700,10 +700,10 @@ induction H5 as (x1, H5).
 induction H5 as (x2, H5).
 split.
 split.
-exists (Zabs_nat (Z_of_nat (a * b))).
+exists (Z.abs_nat (Z_of_nat (a * b))).
 rewrite mult_1_l.
 reflexivity.
-exists (Zabs_nat (Z_of_nat c)).
+exists (Z.abs_nat (Z_of_nat c)).
 rewrite mult_1_l.
 reflexivity.
 intros.
@@ -743,8 +743,8 @@ rewrite <- H5.
 reflexivity.
 auto.
 assert (Divides e 1).
-replace 1 with (Zabs_nat 1).
-replace e with (Zabs_nat (Z_of_nat e)).
+replace 1 with (Z.abs_nat 1).
+replace e with (Z.abs_nat (Z_of_nat e)).
 apply zdivdiv.
 rewrite H8.
 apply zdiv_plus_compat.
