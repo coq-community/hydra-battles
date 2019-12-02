@@ -6,20 +6,20 @@ Lemma inj_right_pair2 :
  forall A : Set,
  (forall x y : A, {x = y} + {x <> y}) ->
  forall (x : A) (P : A -> Set) (y y' : P x),
- existS P x y = existS P x y' -> y = y'.
+ existT P x y = existT P x y' -> y = y'.
 Proof.
 intros.
 set
  (Proj :=
-  fun (e : sigS P) (def : P x) =>
+  fun (e : sigT P) (def : P x) =>
   match e with
-  | existS x' dep =>
+  | existT x' dep =>
       match H x' x with
       | left eqdep => eq_rec x' P dep x eqdep
       | _ => def
       end
   end) in *.
-cut (Proj (existS P x y) y = Proj (existS P x y') y).
+cut (Proj (existT P x y) y = Proj (existT P x y') y).
 simpl in |- *.
 induction (H x x).
 intro e.
