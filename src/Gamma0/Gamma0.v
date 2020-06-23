@@ -245,39 +245,39 @@ Proof.
          eauto with T2. }
        case (IHl _ _ H0).
        *  destruct 1.
-  assert (t2_length t4 + t2_length (gcons t0 t1 0 zero) < l)%nat.
-  { eapply lt_lt_Sn.
-    eapply tricho_lt_2'.
-    eauto. }
-    case (IHl _ _ H1).
-  -- destruct 1.
-   ++ left;left; constructor 2;auto with T2.
-   ++  subst t4; right;  constructor 5;auto with T2.
-  --  intro H2; right; constructor 4;auto with T2.
-  --  subst t3;
-  assert (H1: (t2_length t4 + t2_length t1 < l)%nat).
-      {  eapply lt_lt_Sn.
-         eapply tricho_lt_3.
-         eauto with T2. }
-      case (IHl _ _ H1).
-     ++  destruct 1.
-         ** left;left; constructor 3. 
-            auto with T2.
-         **  subst t4; case (Compare_dec.lt_eq_lt_dec n0 n).
-             destruct 1.
-             { left;left; constructor 6.
-               auto with T2. }
-             subst n; assert (H2:(t2_length t5 + t2_length t2 < l)%nat).
-             eapply lt_lt_Sn.
-             eapply tricho_lt_7.
-             eauto with T2.
-             case (IHl _ _ H2).
-             destruct 1.
-             left;left; constructor 7;auto with T2.
-             subst t2; left;right;trivial.
-             intro H3; right;constructor 7;auto with T2.
-             right; constructor 6;auto with T2.
-             ++ intro H2; right;constructor 3;auto with T2.
+          assert (t2_length t4 + t2_length (gcons t0 t1 0 zero) < l)%nat.
+          { eapply lt_lt_Sn.
+            eapply tricho_lt_2'.
+            eauto. }
+          case (IHl _ _ H1).
+          -- destruct 1.
+             ++ left;left; constructor 2;auto with T2.
+             ++  subst t4; right;  constructor 5;auto with T2.
+          --  intro H2; right; constructor 4;auto with T2.
+          --  subst t3;
+                assert (H1: (t2_length t4 + t2_length t1 < l)%nat).
+              {  eapply lt_lt_Sn.
+                 eapply tricho_lt_3.
+                 eauto with T2. }
+              case (IHl _ _ H1).
+              ++  destruct 1.
+                  ** left;left; constructor 3. 
+                     auto with T2.
+                  **  subst t4; case (Compare_dec.lt_eq_lt_dec n0 n).
+                      destruct 1.
+                      { left;left; constructor 6.
+                        auto with T2. }
+                      subst n; assert (H2:(t2_length t5 + t2_length t2 < l)%nat).
+                      eapply lt_lt_Sn.
+                      eapply tricho_lt_7.
+                      eauto with T2.
+                      case (IHl _ _ H2).
+                      destruct 1.
+                      left;left; constructor 7;auto with T2.
+                      subst t2; left;right;trivial.
+                      intro H3; right;constructor 7;auto with T2.
+                      right; constructor 6;auto with T2.
+              ++ intro H2; right;constructor 3;auto with T2.
        *  intro H1;
             assert (H2:  (t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
           --  eapply lt_lt_Sn.
@@ -306,11 +306,11 @@ Defined.
 
 
 Definition compare (t1 t2 : T2) := 
-match trichotomy_inf t1 t2 with
-| inleft (left _) => Lt
-| inleft (right _) => Eq
-| inright _ => Gt
-end.
+  match trichotomy_inf t1 t2 with
+  | inleft (left _) => Lt
+  | inleft (right _) => Eq
+  | inright _ => Gt
+  end.
 
 
 (* introduces an hypothesis Hname for t < t', t = t', and t' < t
@@ -336,252 +336,182 @@ Section trans_proof.
       lt t t' -> lt t' t'' -> lt t t''.
 
 
-  (** To do: bulletize this proof *)
-  
   Lemma trans_aux :  gcons a1 b1 n1 c1 < gcons a3 b3 n3 c3.
-  Proof with auto with T2.
+  Proof with eauto with T2.
     inversion H12.
-    inversion H23.
-    constructor 2.
-    apply induc with a2.
-    generalize (length_a  a1 b1 n1 c1).
-    generalize (length_a  a2 b2 n2 c2).
-    generalize (length_a  a3 b3 n3 c3).
-    clear induc.
-    lia.
-    auto with T2.
-    auto with T2.
-    assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero)).
-    auto with T2.
-    apply induc with (gcons a2 b2 0 zero).
-    generalize (length_b  a1 b1 n1 c1).
-    generalize (length_psi a2 b2 n2 c2).
-    generalize (length_psi a3 b3 n3 c3).
-    clear induc.
-    lia.
-    auto with T2.
-    auto with T2.
-    subst a3.
-    constructor 2.
-    auto with T2.
-    apply induc with (gcons a2 b2 0 zero).
-    2:auto with T2.
-    
-    2:constructor 3;auto with T2.
-    generalize (length_b a1 b1 n1 c1); generalize (length_psi a2 b2 n2 c2);
-      generalize (length_psi a2 b3 n3 c3);clear induc;lia.
-    tricho a1 a3 H20.
-    constructor 2.
-    auto with T2.
-    apply induc with (gcons a2 b2 0 zero).
-    2:auto with T2.
-    generalize (length_b a1 b1 n1 c1);generalize(length_psi a2 b2 n2 c2);
-      generalize (length_psi a3 b3 n3 c3);clear induc;lia.
-    constructor 4; auto with T2.
-    clear H;subst a1.
-    constructor 3.
-    apply induc with (gcons a2 b2 0 zero);eauto with T2.
-    generalize (length_b a3 b1 n1 c1); 
-      generalize (length_b a3 b3 n3 c3); 
-      generalize (length_psi a2 b2 n2 c2);clear induc;lia. 
-    constructor 4.
-    auto with T2.
-    apply induc with (gcons a2 b2 0 zero);eauto with T2.
-    generalize (length_psi a1 b1 n1 c1); 
-      generalize (length_psi a2 b2 n2 c2); 
-      generalize (length_b a3 b3 n3 c3);clear induc;lia.
-    tricho a1 a3 H20.
-    constructor 2;auto with T2.
-    apply induc with  (gcons a2 b2 0 zero);eauto with T2.
-    subst b3.
-    generalize (length_b a1 b1 n1 c1); 
-      generalize (length_psi a2 b2 n2 c2); 
-      generalize (length_psi a3 (gcons a2 b2 0 zero) n3 c3);
-      clear induc;lia. 
-    clear H15 H9 H11 H17 H18 ;subst a3.
-    constructor 3.
-    auto with T2.
-    constructor 4;auto with T2.
-    clear H9 H11 H4 H5.
-    subst a3; subst b3.
-    constructor 2;auto with T2.
-    clear H9 H11 H4 H5.
-    subst a3;subst b3.
-    constructor 2;auto with T2.
-    clear H H1 H2 H3 H5 H6 H7.
-    clear beta1 beta2 gamma1 gamma2.
-    inversion H23.
-    constructor 2;auto with T2.
-    apply induc with b2;auto with T2.
-    generalize (length_b a1 b1 n1 c1); 
-      generalize (length_b a2 b2 n2 c2); 
-      generalize (length_psi a3 b3 n3 c3);clear induc;lia. 
-    constructor 3;auto with T2.
-    eapply induc with b2;auto with T2.
-    generalize (length_b a1 b1 n1 c1); 
-      generalize (length_b a2 b2 n2 c2); 
-      generalize (length_b a3 b3 n3 c3);clear induc;lia. 
-    constructor 4;auto with T2.
-    apply induc with (gcons a2 b2 0 zero);auto with T2.
-    pattern a2 at 1;rewrite <- H4.
-    generalize (length_psi a1 b1 n1 c1); 
-      generalize (length_psi a2 b2 n2 c2); 
-      generalize (length_b a3 b3 n3 c3);clear induc;lia. 
-    clear H;subst a2.
-    constructor 4;auto with T2.
-    rewrite <- H7.
-    constructor 3;auto with T2.
-    rewrite <- H7.
-    constructor 3;auto with T2.
-    inversion H23;auto with T2.
-
-    assert (lt (gcons a1 b1 0 zero) (gcons a3 b3 0 zero)).
-    apply induc with b2. 
-    generalize (length_psi  a1 b1 n1 c1).
-    generalize (length_b a2 b2 n2 c2).
-    generalize (length_psi a3 b3 n3 c3);
-      clear induc;
-      lia.
-
-    auto with T2.
-    auto with T2.
-    inversion_clear H20;auto with T2.
-    inversion H21.
-    inversion H21.
-    subst a3.
-    constructor 4.
-    auto with T2.
-    apply induc with b2.
-    generalize (length_psi a1 b1 n1 c1);
-      generalize (length_b a2 b2 n2 c2);
-      generalize (length_b a2 b3 n3 c3);clear induc;lia.
-    auto with T2.
-    auto with T2.
-    constructor 4.
-    apply induc with a2.
-    generalize (length_a a1 b1 n1 c1);
-      generalize (length_a a2 b2 n2 c2);
-      generalize (length_a a3 b3 n3 c3);clear induc; lia.
-    auto with T2.
-    auto with T2.
-    apply induc with (gcons a2 b2 0 zero).
-    generalize (length_psi a1 b1 n1 c1);
-      generalize (length_psi a2 b2 n2 c2);
-      generalize (length_b a3 b3 n3 c3);clear induc; lia.
-
-    auto with T2.
-    auto with T2.
-
-    constructor 4.
-    apply induc with a2;auto with T2.
-
-    generalize (length_a a1 b1 n1 c1); 
-      generalize (length_a a2 b2 n2 c2); 
-      generalize (length_a a3 b3 n3 c3);clear induc;lia.
-    constructor 4;auto with T2.
-
-
-    clear H9 H11; subst b3; subst a3.
-
-    constructor 4.
-    auto with T2.
-    auto with T2.
-
-    clear H9 H11;subst b3;subst a3.
-    constructor 4;auto with T2.
-    subst b2.
-    inversion H23;auto with T2.
-    inversion_clear H17;auto with T2.
-    inversion H18.
-    inversion H18.
-    subst a3.
-    constructor 4;auto with T2.
-
-    constructor 4;auto with T2.
-    apply induc with a2;auto with T2.
-
-    generalize (length_a a1 b1 n1 c1); 
-      generalize (length_a a2 (gcons a1 b1 0 zero) n2 c2); 
-      generalize (length_a a3 b3 n3 c3);clear induc;lia.
-
-    apply induc with (gcons a2 (gcons a1 b1 0 zero) 0 zero);auto with T2.
-
-
-    
-    generalize (length_psi  a1 b1 n1 c1); 
-      generalize (length_psi a2 (gcons a1 b1 0 zero) n2 c2); 
-      generalize (length_b a3 b3 n3 c3) ;clear induc;lia.
-    constructor 4.
-    apply induc with a2;auto with T2.
-
-
-
-
-    generalize (length_a a1 b1 n1 c1); 
-      generalize (length_a a2 (gcons a1 b1 0 zero) n2 c2); 
-      generalize (length_a a3 b3 n3 c3);clear induc;lia.
-    constructor 5;auto with T2.
-    subst a3.
-    constructor 5.
-    auto with T2.
-    subst a3.
-    constructor 5;auto with T2.
-    subst a2; subst b2.
-    inversion H23;auto with T2.
-    subst a3;subst b3.
-    constructor 6.
-    eauto with T2 arith.
-    subst b3;subst a3;subst n3.
-    constructor 6;auto with T2.
-
-    clear H H1;subst a1;subst b1.
-    subst n2.
-    inversion H23;auto with T2.
-    constructor 7.
-    apply induc with c2;auto with T2.
-    generalize (length_c a2 b2 n1 c1); 
-      generalize (length_c a2 b2 n1 c2); 
-      generalize (length_c a3 b3 n3 c3);clear induc;lia.
-
+    -  inversion H23.
+       +  constructor 2.
+          * apply induc with a2 ...
+            generalize (length_a  a1 b1 n1 c1).
+            generalize (length_a  a2 b2 n2 c2).
+            generalize (length_a  a3 b3 n3 c3).
+            clear induc;lia.
+          * assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero)) by auto with T2.
+            apply induc with (gcons a2 b2 0 zero) ...
+            generalize (length_b  a1 b1 n1 c1).
+            generalize (length_psi a2 b2 n2 c2).
+            generalize (length_psi a3 b3 n3 c3).
+            clear induc; lia.
+       +  subst a3; constructor 2 ...
+          apply induc with (gcons a2 b2 0 zero).
+          2:auto with T2.
+          2:constructor 3;auto with T2.
+          generalize (length_b a1 b1 n1 c1);
+            generalize (length_psi a2 b2 n2 c2);
+            generalize (length_psi a2 b3 n3 c3);
+            clear induc;lia.
+       +  tricho a1 a3 H20.
+          * constructor 2 ...
+            apply induc with (gcons a2 b2 0 zero).
+            2:auto with T2.
+            generalize (length_b a1 b1 n1 c1);
+              generalize(length_psi a2 b2 n2 c2);
+              generalize (length_psi a3 b3 n3 c3);
+              clear induc;lia.
+            constructor 4 ...  
+          * clear H;subst a1; constructor 3.
+            apply induc with (gcons a2 b2 0 zero) ...
+            generalize (length_b a3 b1 n1 c1); 
+              generalize (length_b a3 b3 n3 c3); 
+              generalize (length_psi a2 b2 n2 c2);
+              clear induc;lia. 
+          * constructor 4 ...
+            apply induc with (gcons a2 b2 0 zero) ...
+            generalize (length_psi a1 b1 n1 c1); 
+              generalize (length_psi a2 b2 n2 c2); 
+              generalize (length_b a3 b3 n3 c3);clear induc;lia.
+       +  tricho a1 a3 H20.
+          * constructor 2 ...
+            apply induc with  (gcons a2 b2 0 zero) ...
+            subst b3;
+              generalize (length_b a1 b1 n1 c1); 
+              generalize (length_psi a2 b2 n2 c2); 
+              generalize (length_psi a3 (gcons a2 b2 0 zero) n3 c3);
+              clear induc;lia. 
+          * clear H15 H9 H11 H17 H18 ;subst a3; constructor 3 ...
+          * constructor 4 ...
+       + clear H9 H11 H4 H5; subst a3  b3; constructor 2 ...
+       + clear H9 H11 H4 H5; subst a3  b3; constructor 2 ...
+    -    clear H H1 H2 H3 H5 H6 H7 beta1 beta2 gamma1 gamma2.
+         inversion H23.
+         + constructor 2 ...
+           apply induc with b2 ...
+           generalize (length_b a1 b1 n1 c1); 
+             generalize (length_b a2 b2 n2 c2); 
+             generalize (length_psi a3 b3 n3 c3);clear induc;lia. 
+         +  constructor 3 ...
+            eapply induc with b2 ...
+            generalize (length_b a1 b1 n1 c1); 
+              generalize (length_b a2 b2 n2 c2); 
+              generalize (length_b a3 b3 n3 c3);clear induc;lia. 
+         +  constructor 4 ...
+            apply induc with (gcons a2 b2 0 zero) ...
+            pattern a2 at 1;rewrite <- H4.
+            generalize (length_psi a1 b1 n1 c1); 
+              generalize (length_psi a2 b2 n2 c2); 
+              generalize (length_b a3 b3 n3 c3);clear induc;lia. 
+         +  clear H;subst a2; constructor 4 ...
+         + rewrite <- H7; constructor 3 ...
+         + rewrite <- H7; constructor 3 ...
+    - inversion H23 ...
+      + assert (H20 :lt (gcons a1 b1 0 zero) (gcons a3 b3 0 zero)). {
+          apply induc with b2 ...
+          generalize (length_psi  a1 b1 n1 c1).
+          generalize (length_b a2 b2 n2 c2).
+          generalize (length_psi a3 b3 n3 c3);
+            clear induc; lia. }
+        inversion_clear H20 ...
+        * inversion H21.
+        * inversion H21.
+      + subst a3; constructor 4 ...
+        apply induc with b2 ...
+        generalize (length_psi a1 b1 n1 c1);
+          generalize (length_b a2 b2 n2 c2);
+          generalize (length_b a2 b3 n3 c3);clear induc;lia.
+      +  constructor 4 ...
+         apply induc with a2 ...
+         generalize (length_a a1 b1 n1 c1);
+           generalize (length_a a2 b2 n2 c2);
+           generalize (length_a a3 b3 n3 c3);clear induc; lia.
+         apply induc with (gcons a2 b2 0 zero) ...
+         generalize (length_psi a1 b1 n1 c1);
+           generalize (length_psi a2 b2 n2 c2);
+           generalize (length_b a3 b3 n3 c3);clear induc; lia.
+      +  constructor 4 ...
+         apply induc with a2 ...
+         generalize (length_a a1 b1 n1 c1); 
+           generalize (length_a a2 b2 n2 c2); 
+           generalize (length_a a3 b3 n3 c3);clear induc;lia.
+      +  clear H9 H11; subst b3; subst a3; constructor 4 ...
+      + clear H9 H11;subst b3;subst a3; constructor 4 ...
+    -    subst b2;  inversion H23 ...
+         + inversion_clear H17 ...
+           inversion H18.
+           inversion H18.
+         + subst a3; constructor 4 ...
+         + constructor 4 ...
+           apply induc with a2 ...
+           generalize (length_a a1 b1 n1 c1); 
+             generalize (length_a a2 (gcons a1 b1 0 zero) n2 c2); 
+             generalize (length_a a3 b3 n3 c3);clear induc;lia.
+           apply induc with (gcons a2 (gcons a1 b1 0 zero) 0 zero) ...
+           generalize (length_psi  a1 b1 n1 c1); 
+             generalize (length_psi a2 (gcons a1 b1 0 zero) n2 c2); 
+             generalize (length_b a3 b3 n3 c3) ;clear induc;lia.
+         + constructor 4 .
+           apply induc with a2 ...
+           generalize (length_a a1 b1 n1 c1); 
+             generalize (length_a a2 (gcons a1 b1 0 zero) n2 c2); 
+             generalize (length_a a3 b3 n3 c3);clear induc;lia.
+           constructor 5;auto with T2.
+         + subst a3.
+           constructor 5.
+           auto with T2.
+         + subst a3.
+           constructor 5;auto with T2.
+    - subst a2; subst b2.
+      inversion H23 ...
+      + subst a3 b3;  constructor 6; eauto with T2 arith.
+      + subst b3;subst a3;subst n3 ; constructor 6 ...
+    - clear H H1;subst a1;subst b1 n2.
+      inversion H23 ...
+      constructor 7;   apply induc with c2 ...
+      generalize (length_c a2 b2 n1 c1); 
+        generalize (length_c a2 b2 n1 c2); 
+        generalize (length_c a3 b3 n3 c3);clear induc;lia.
   Qed.
 
 
 End trans_proof.
 
-Lemma transitivity0 : forall n, 
+Lemma lt_trans0 : forall n, 
     forall t1 t2 t3, 
       (t2_length t1 + t2_length t2 + t2_length t3  < n)%nat -> 
       lt t1 t2 -> lt t2 t3 ->  lt t1 t3.
 Proof.
   induction n.
-  inversion 1.
-  destruct t1; destruct t2; destruct t3.
-  inversion 1.
-  inversion 1.
-  inversion 2.
-  auto with T2.
-  inversion 3.
-  auto with T2.
-  inversion 2.
-  inversion 3.
-  2:inversion 3.
-  inversion H0.
-  intros.
-  eapply trans_aux.
-  eexact H0.
-  auto with T2.
-  intros.
-  apply IHn with t'.
-  lia.
-  auto with T2.
-  auto with T2.
+  -  inversion 1.
+  - destruct t1; destruct t2; destruct t3.
+    + intros; trivial.
+    + inversion 2.
+    +  inversion 3.
+    + auto with T2.
+    + inversion 2.
+    +  inversion 3.
+       inversion H0.
+    + inversion 3.
+    + intros;   eapply trans_aux.
+      * eexact H0.
+      *  auto with T2.
+      * intros; apply IHn with t'; auto with T2.
+        --   lia.
 Qed.
 
-Theorem transitivity : 
+Theorem lt_trans : 
   forall t1 t2 t3, t1 < t2 -> t2 < t3 -> t1 < t3.
 Proof.
   intros;
-    apply transitivity0 with (S (t2_length t1 + t2_length t2 + t2_length t3)) t2;
+    apply lt_trans0 with (S (t2_length t1 + t2_length t2 + t2_length t3)) t2;
     auto with T2 arith.
 Qed.
 
@@ -591,7 +521,7 @@ Theorem le_lt_trans : forall alpha beta gamma, alpha <= beta ->
 Proof.
   destruct 1.
   subst alpha;auto with T2.
-  intros; eapply transitivity;eauto with T2.
+  intros; eapply lt_trans;eauto with T2.
 Qed.
 
 
@@ -600,7 +530,7 @@ Theorem  lt_le_trans : forall alpha beta gamma, alpha < beta ->
                                                 alpha < gamma.
   destruct 2.
   subst beta;auto with T2.
-  eapply transitivity;eauto with T2.
+  eapply lt_trans;eauto with T2.
 Qed.
 
 Theorem le_trans : forall alpha beta gamma, alpha <= beta ->
@@ -654,7 +584,7 @@ Theorem lt_beta_psi : forall beta alpha, beta < [alpha, beta].
   assert ([alpha, beta2] < [alpha, (gcons beta1 beta2 n beta3)]).
   constructor 3. 
   apply lt_le_trans with [beta1, beta2]; auto with T2.
-  eapply transitivity;eauto with T2.
+  eapply lt_trans;eauto with T2.
 Qed.
 
 
@@ -684,7 +614,7 @@ Proof.
   right.
   constructor 2.
   apply lt_le_trans with [ alpha1,alpha2];auto with T2.
-  apply transitivity with [alpha2, beta];auto with T2.
+  apply lt_trans with [alpha2, beta];auto with T2.
   constructor 2.
   apply lt_beta_cons.
   apply lt_beta_psi.
@@ -790,7 +720,7 @@ Theorem subterm_lt : forall alpha beta, subterm alpha beta -> nf beta ->
 Proof.
   induction 1;auto with T2.
   intro;apply lt_tail;auto with T2.
-  intro; apply transitivity with t1;auto with T2.
+  intro; apply lt_trans with t1;auto with T2.
   eapply IHsubterm1. 
   eapply nf_subterm;eauto with T2.
 Qed.
@@ -972,7 +902,7 @@ Proof.
   intro;subst beta;case (lt_irr H);auto with T2.
   auto .
   intro; case (lt_irr (alpha:=alpha)).
-  eapply transitivity;eauto with T2.
+  eapply lt_trans;eauto with T2.
 Qed.
 
 Lemma compare_rw_eq : forall alpha beta, alpha = beta ->
@@ -990,7 +920,7 @@ Lemma compare_rw_gt : forall alpha beta, beta < alpha ->
   case (compare alpha beta).
   intro H0;subst beta;case (lt_irr H).
   intro; case (lt_irr (alpha:=alpha)).
-  eapply transitivity;eauto with T2.
+  eapply lt_trans;eauto with T2.
   auto with T2.
 Qed.
 
@@ -1342,7 +1272,7 @@ Lemma lt_subterm1 : forall a a'  n'  b' c', a < a' ->
                                             a < gcons a'  b' n' c'.
 Proof.
   intros.
-  apply transitivity with (gcons a b' n' c');auto with T2 .
+  apply lt_trans with (gcons a b' n' c');auto with T2 .
 Qed.
 
 Hint Resolve nat_lt_cons lt_subterm1 : T2.
@@ -2777,7 +2707,7 @@ Lemma phi_mono_r : forall a b c, nf a -> nf b -> nf c ->
   inversion H; auto with T2.
   lt_clean. 
   rewrite H3; rewrite e.
-  apply transitivity with [a, (gcons b1 b2 0 (finite (S n)))].
+  apply lt_trans with [a, (gcons b1 b2 0 (finite (S n)))].
   case n;simpl;auto with T2.
   subst b;auto with T2.
   intros (c1,(c2,(p,(H'1,(H'2,H'3))))).
@@ -3030,7 +2960,7 @@ Proof.
  split.
  unfold epsilon0.
  exact H1.
- apply transitivity with (gcons a b n c);auto with T2.
+ apply lt_trans with (gcons a b n c);auto with T2.
  apply lt_tail;auto with T2.
  inversion 1.
  inversion 2.
@@ -3055,7 +2985,7 @@ Proof.
  apply IHalpha3.
  inversion H;auto with T2.
  compute;auto with T2.
- apply transitivity with (gcons alpha1 alpha2 n alpha3).
+ apply lt_trans with (gcons alpha1 alpha2 n alpha3).
  apply lt_tail.
  auto with T2.
  auto with T2.
@@ -3162,7 +3092,7 @@ Proof.
  generalize (inj_mono l).
  intro.
  case (lt_irr (alpha:=T1_inj c)).
- eapply transitivity;eauto with T2.
+ eapply lt_trans;eauto with T2.
 Qed.
 
 
@@ -3173,7 +3103,7 @@ Proof.
  intros.
  apply lt_epsilon0_okR.
  auto with T2.
- apply transitivity with a.
+ apply lt_trans with a.
  auto with T2.
  apply lt_epsilon0_ok;auto with T2.
 Qed.
@@ -3204,7 +3134,7 @@ auto with T2.
  generalize (IHc3 (gcons d1 d2 n0 d3)).
  intros.
  assert (c3 < [a,b]).
- eapply transitivity.
+ eapply lt_trans.
  2:eexact H0.
  apply lt_tail.
  auto with T2.
@@ -3519,7 +3449,7 @@ intros.
  injection 1;intros.
  subst beta1;subst beta2.
  case (lt_irr (alpha := (gcons alpha1 alpha2 n0 beta3))).
- eapply transitivity.
+ eapply lt_trans.
  eexact H4.
  apply psi_relevance;auto with T2.
 intros.
@@ -3528,16 +3458,16 @@ intros.
   injection 1;intros.
  subst gamma1;subst gamma2.
   case (lt_irr (alpha :=gcons beta1 beta2 n0 beta3)).
- eapply transitivity.
+ eapply lt_trans.
  eexact H4.
   apply psi_relevance;auto with T2.
 auto with T2.
 intros.
  case (lt_irr (alpha := (gcons beta1 beta2 n0 beta3))).
- eapply transitivity.
+ eapply lt_trans.
  eexact H4.
  apply psi_relevance.
-apply transitivity with (gcons alpha1 alpha2 0 zero);auto with T2.
+apply lt_trans with (gcons alpha1 alpha2 0 zero);auto with T2.
 
 intros.
   generalize (compare_eq_rw  H0).
@@ -3558,11 +3488,14 @@ Qed.
 
 
 Lemma plus_mono_l_weak: 
- forall o, nf o ->
-          forall alpha,  nf alpha -> alpha < o -> 
-     forall beta,
-       nf beta -> beta < o ->  forall gamma , nf gamma -> (* gamma <= o -> *)
-         alpha < beta -> alpha + gamma <= beta  + gamma.
+  forall o, nf o ->
+    forall alpha,  nf alpha -> alpha < o -> 
+                   forall beta,
+                     nf beta -> beta < o ->
+                     forall gamma , nf gamma -> 
+                                    alpha < beta ->
+                                    alpha + gamma <= beta + gamma.
+  Proof.
  intros o Ho;pattern o.
 apply transfinite_induction.
 
@@ -3610,7 +3543,7 @@ left;auto with T2.
 
 intro H6; generalize  (compare_lt_rw  H6); intro H7.
 case (lt_irr (alpha := gcons alpha beta n gamma)).
-apply transitivity with (gcons alpha' beta' n' gamma');auto with T2.
+apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
 apply psi_relevance;auto with T2.
 
 intros;right;apply psi_relevance.
@@ -3646,7 +3579,7 @@ case (lt_irr H2).
 
 intro H6; generalize  (compare_lt_rw  H6); intro H7.
 case (lt_irr (alpha := [alpha'', beta''])).
-apply transitivity with [alpha', beta'];auto with T2.
+apply lt_trans with [alpha', beta'];auto with T2.
 
 
 intro H6; generalize  (compare_gt_rw  H6); intro H7.
@@ -3670,7 +3603,7 @@ inversion NF';auto with T2.
 
 
 assert (gamma <  gcons alpha beta n gamma').
-apply transitivity with gamma'.
+apply lt_trans with gamma'.
 auto with T2.
 apply lt_tail;auto with T2.
 
@@ -3684,12 +3617,8 @@ destruct 1;auto with T2.
 rewrite H11;auto with T2.
 
 case (lt_irr (alpha := gcons alpha beta n gamma)).
-apply transitivity with (gcons alpha' beta' n' gamma');auto with T2.
+apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
 apply psi_relevance;auto with T2.
-Qed.
-
-Remark R_predD_0 : pred zero = None.
- trivial.
 Qed.
 
 
@@ -3720,23 +3649,21 @@ Proof.
  simpl;auto.
 Qed.
 
-Lemma is_limit_ab : forall alpha beta n gamma, is_limit (gcons alpha beta n gamma)
-  -> zero < alpha \/ zero < beta.
-inversion 1.
- auto.
- generalize H5 H2 ;case gamma.
+Lemma is_limit_ab : forall alpha beta n gamma,
+    is_limit (gcons alpha beta n gamma)
+    -> zero < alpha \/ zero < beta.
+  inversion 1.
+  auto.
+  generalize H5 H2 ;case gamma.
   inversion 2.
-
- inversion_clear 1.
- 
-
- inversion_clear H7.  
- left;apply le_lt_trans with t;auto with T2.
- right; apply le_lt_trans with t0;auto with T2.
- right;  apply le_lt_trans with [t,t0];auto with T2.
- right;apply le_lt_trans with t;auto with T2.
- lt_clean.
- lt_clean.
+  inversion_clear 1.
+  inversion_clear H7.  
+  left;apply le_lt_trans with t;auto with T2.
+  right; apply le_lt_trans with t0;auto with T2.
+  right;  apply le_lt_trans with [t,t0];auto with T2.
+  right;apply le_lt_trans with t;auto with T2.
+  lt_clean.
+  lt_clean.
 Qed.
 
  
@@ -4044,7 +3971,7 @@ Lemma lt_not_gt : forall a b, a < b -> ~ (b < a).
 Proof.
   intros a b H H0.
   case (lt_irr (alpha := a));auto.
-  apply transitivity with b;auto.
+  apply lt_trans with b;auto.
 Qed.
 
 Lemma phi_mono_RR : forall a b c, nf a -> nf b -> nf c ->
