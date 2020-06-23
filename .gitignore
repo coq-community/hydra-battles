@@ -1,0 +1,20 @@
+# Compiled Files
+*.vo
+*.vos
+*.vok
+*.glob
+*.aux
+*.v.d
+\#*
+*~
+*.idx
+*.out
+*.log
+*.idx
+*.snm
+*.pygtex
+*.pygstyle
+! /src/html/index.html
+/latex/*.pdf
+/latex/*.toc
+

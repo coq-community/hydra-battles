@@ -1,0 +1,103 @@
+\documentclass{book}
+\usepackage{alltt}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{mdframed}
+\usepackage{amsmath}
+\usepackage{varioref}
+\usepackage{synttree, proof, centernot}
+\usepackage[firstpage]{draftwatermark}
+\usepackage{verbatim}
+\usepackage[note]{marginote}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\setcounter{tocdepth}{1}
+\input{coqmacros}
+
+
+
+\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, Bordeaux-INP}
+\date{\today}
+\title{The hydra and the rooster}
+\makeindex
+\begin{document}
+\maketitle
+
+
+
+
+\cleardoublepage
+
+
+
+
+% \mbox{~}
+% \clearpage
+% \newpage
+% \mbox{~}
+\vspace{10cm}
+\begin{quote} 
+{ \Large {\it
+``I start from one point and go as far as possible.'' } 
+
+John Coltrane.}
+\end{quote}
+
+\tableofcontents
+
+\include{introduction}
+\include{chapter-hydras}
+\include{chapter-termination}
+\include{chapter-ks}
+\include{chapter-large-sets}
+\include{chapter-schutte}
+
+
+
+\chapter{Appendices}
+
+\bibliographystyle{alpha}
+\bibliography{thebib, thebib2}
+
+\section{Future work (projects)}
+This document and the proof scripts are far from being complete.
+
+First, there must be a lot of typos to correct, references and index items to add. Many proofs are too complex and should be simplified, etc.
+
+The following extensions are planned, but help is needed:
+
+\begin{itemize}
+\item Semi automatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
+\item Extension to $\Gamma_0$ (in Veblen normal form)
+\item More lemmas about hierarchies of rapidly growing functions, and their relationship 
+    with primitive recursive functions and provability in Peano arithmetic 
+(following~\cite{KS81, KP82}).
+\item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
+\end{itemize}
+
+
+
+\section{How to install the libraries}
+\label{sec:orgheadline4}
+\begin{itemize}
+\item The present distribution has been checked with version 8.11.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq} and \texttt{coq-equations}.
+
+\item just go into the \texttt{src} directory, and type "\texttt{make}"
+\end{itemize}
+
+
+\section{Index}
+\printindex
+
+% \section{Main notations}
+
+% \subsubsection*{Intervals}
+
+% Let $\leq$ be a total order on a type $A$. The intervals $\{k\in A| i\leq k\leq j\}$ is written $[i,j]$. Likewise, $\{k\in A| i\leq k<j\}$ is written
+% $[i,j[$.
+
+
+\end{document} 

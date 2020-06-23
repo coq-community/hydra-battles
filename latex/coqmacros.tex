@@ -1,0 +1,365 @@
+\definecolor{termcolor}{rgb}{0.1,0.1,0.9}
+\definecolor{prooftermcolor}{rgb}{0.3,0.1,1.0}
+\definecolor{metavarcolor}{rgb}{0.5,0.0,1.0}
+\definecolor{darkgreen}{rgb}{0.1,0.7,0.1}
+\definecolor{answercolor}{rgb}{.8,.15,.08}
+\definecolor{sourcecolor}{rgb}{.07,.1,.7}
+\definecolor{normalcolor}{rgb}{0.0,0.0,0.0}
+\definecolor{exbluecolor}{rgb}{0.1,0.1,0.9}
+\definecolor{dontlookcolor}{rgb}{0.5,0.5,0.5}
+\definecolor{termcolor}{rgb}{0.05,0.05,0.4}
+\definecolor{lookcolor}{rgb}{0.9,0.1,0.0}
+\definecolor{darklookcolor}{rgb}{0.5,0.1,0.0}
+\definecolor{prooftermcolor}{rgb}{0.3,0.1,1.0}
+\definecolor{typecolor}{rgb}{1.0,0.4,0.0}
+\definecolor{taccolor}{rgb}{0.1,0.10,0.0}
+\definecolor{pink}{rgb}{0.8,0.6,0.6}
+\definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+
+
+%\newcommand{\todo}{\textbf{To do}}
+
+\usepackage{xcolor,fancyvrb, mdframed}
+
+
+%%% MMCG symbols
+
+\newcommand{\idot}[1]{\mbox{$\bullet_{#1}$}}
+\newcommand{\baredot}{\mbox{$\bullet$}}
+\newcommand{\iback}[1]{\mbox{$\backslash_{#1}$}}
+\newcommand{\back}{\mbox{$\backslash$}}
+\newcommand{\islash}[1]{\mbox{$/_{#1}$}}
+\newcommand{\icomma}[3]{\mbox{$(#1\,,\,#2)_{#3}$}}
+%\newcommand{\icomma}[3]{\mbox{$#1\,\mathbin{\circ}_{#3}\,#2$}}
+%\newcommand{\comma}{\mbox{$\mathbin{\circ}$}}
+\newcommand{\comma}{\mbox{,}}
+
+\newcommand{\slashe}{\mbox{\textbf{$/_{\textbf{E}}$}}}
+\newcommand{\slashi}{\mbox{\textbf{$/_{\textbf{I}}$}}}
+\newcommand{\backe}{\mbox{\textbf{$\backslash_{\textbf{E}}$}}}
+\newcommand{\backi}{\mbox{\textbf{$\backslash_{\textbf{I}}$}}}
+
+\newcommand{\dote}{\mbox{\textbf{$\baredot_{\textbf{E}}$}}}
+\newcommand{\doti}{\mbox{\textbf{$\baredot_{\textbf{I}}$}}}
+\newcommand{\diame}{\mbox{\textbf{$\Diamond_{\textbf{E}}$}}}
+\newcommand{\diami}{\mbox{\textbf{$\Diamond_{\textbf{I}}$}}}
+\newcommand{\struct}{\mbox{\textbf{struct}}}
+\newcommand{\axrule}{\mbox{\textbf{Ax}}}
+\newcommand{\boxe}{\mbox{\textbf{$\Box_{\textbf{E}}$}}}
+\newcommand{\boxi}{\mbox{\textbf{$\Box_{\textbf{I}}$}}}
+\newcommand{\AssD}{\textbf{L$_\Diamond$}}
+\newcommand{\ComD}{\textbf{P$_\Diamond$}}
+
+\newcommand{\marginok}[1]{\marginpar{\raggedright OK:#1}}
+\newcommand{\tab}{{\null\hskip1cm}}
+\newcommand{\Ltac}{\mbox{{$\cal L$}tac}}
+\newcommand{\coq}{\mbox{{Coq}}}
+\newcommand{\compcert}{\mbox{{CompCert}}}
+
+\newcommand{\pcoq}{\mbox{{Pcoq}}}
+\newcommand{\grail}{\mbox{{Grail}}}
+\newcommand{\lcf}{\mbox{{LCF}}}
+\newcommand{\hol}{\mbox{{HOL}}}
+\newcommand{\pvs}{\mbox{{PVS}}}
+\newcommand{\icharate}{\mbox{{Icharate}}}
+\newcommand{\isabelle}{\mbox{{Isabelle}}}
+%\newcommand{\coq}{\mbox{{Coq}}}
+\newcommand{\prolog}{\mbox{{Prolog}}}
+\newcommand{\goalbar}{\tt{}{\color{black}------------------------------------}\it}
+\newcommand{\gallina}{\mbox{{Gallina}}}
+\newcommand{\joker}{\texttt{\_}}
+\newcommand{\eprime}{\(\e^{\prime}\)}
+\newcommand{\Ztype}{\textbf{Z}}
+\newcommand{\propsort}{\textbf{Prop}}
+\newcommand{\setsort}{\textbf{Set}}
+\newcommand{\typesort}{\textbf{Type}}
+\newcommand{\ocaml}{\mbox{{OCaml}}}
+\newcommand{\haskell}{\mbox{{Haskell}}}
+\newcommand{\why}{\mbox{{Why}}}
+\newcommand{\Pascal}{\mbox{{Pascal}}}
+
+\newcommand{\ml}{\mbox{{ML}}}
+
+\newcommand{\scheme}{\mbox{{Scheme}}}
+\newcommand{\lisp}{\mbox{{Lisp}}}
+
+\newcommand{\implarrow}{\mbox{$\Rightarrow$}}
+\newcommand{\metavar}[1]{?#1}
+\newcommand{\notincoq}[1]{#1}
+\newcommand{\coqscope}[1]{\%#1}
+\newcommand{\arrow}{\mbox{$\rightarrow$}}
+\newcommand{\fleche}{\arrow}
+\newcommand{\funarrow}{\mbox{$\Rightarrow$}}
+\newcommand{\ltacarrow}{\funarrow}
+ \newcommand{\coqand}{\mbox{\(\wedge\)}}
+ \newcommand{\coqor}{\mbox{\(\vee\)}}
+ \newcommand{\coqnot}{\mbox{\(\neg\)}}
+% \newcommand{\coqand}{\texttt{/\textbackslash}}
+% \newcommand{\coqor}{\texttt{\textbackslash/}}
+% \newcommand{\coqnot}{\mbox{\(\neg\)}}
+\newcommand{\hide}[1]{}
+\newcommand{\hidedots}[1]{...}
+\newcommand{\sig}[3]{\texttt{\{}#1\texttt{:}#2 \texttt{|} #3\texttt{\}}}
+\renewcommand{\neg}{\mbox{$\sim$}}
+
+%%% Operateurs, etc.
+\newcommand{\impl}{\mbox{$\rightarrow$}}
+\newcommand{\appli}[2]{\mbox{\tt{#1 #2}}}
+\newcommand{\applis}[1]{\mbox{\texttt{#1}}}
+\newcommand{\abst}[3]{\mbox{\tt{fun #1:#2 \funarrow #3}}}
+\newcommand{\coqle}{\mbox{$\leq$}}
+\newcommand{\coqge}{\mbox{$\geq$}}
+\newcommand{\coqdiff}{\mbox{$\neq$}}
+\newcommand{\coqiff}{\mbox{$\leftrightarrow$}}
+\newcommand{\prodsym}{\mbox{\(\forall\,\)}}
+\newcommand{\exsym}{\mbox{\(\exists\,\)}}
+\newcommand{\included}{\mbox{\(\subseteq\)}}
+
+\newcommand{\substsign}{/}
+\newcommand{\subst}[3]{\mbox{#1\{#2\substsign{}#3\}}}
+\newcommand{\anoabst}[2]{\mbox{\tt[#1]#2}}
+\newcommand{\letin}[3]{\mbox{\tt let #1:=#2 in #3}}
+\newcommand{\prodep}[3]{\mbox{\tt \(\forall\,\)#1:#2,$\,$#3}}
+\newcommand{\prodplus}[2]{\mbox{\tt\(\forall\,\)$\,$#1,$\,$#2}}
+\newcommand{\dom}[1]{\textrm{dom}(#1)} % domaine d'un contexte (log function)
+\newcommand{\norm}[1]{\textrm{n}(#1)} % forme normale (log function)
+\newcommand{\coqZ}[1]{\mbox{\tt{`#1`}}}
+\newcommand{\coqnat}[1]{\mbox{\tt{#1}}}
+\newcommand{\coqcart}[2]{\mbox{\tt{#1*#2}}}
+\newcommand{\alphacong}{\mbox{$\,\cong_{\alpha}\,$}} % alpha-congruence
+\newcommand{\betareduc}{\mbox{$\,\rightsquigarrow_{\!\beta}$}\,} % beta reduction
+%\newcommand{\betastar}{\mbox{$\,\Rightarrow_{\!\beta}^{*}\,$}} % beta reduction
+\newcommand{\deltareduc}{\mbox{$\,\rightsquigarrow_{\!\delta}$}\,} % delta reduction
+\newcommand{\dbreduc}{\mbox{$\,\rightsquigarrow_{\!\delta\beta}$}\,} % delta,beta reduction
+\newcommand{\ireduc}{\mbox{$\,\rightsquigarrow_{\!\iota}$}\,} % delta,beta reduction
+
+\newcommand{\slam}[2] {\mbox{$\lambda_#1\;#2$}}
+\newcommand{\srho}[2] {\mbox{$\rho_#1\;#2$}}
+\newcommand{\Vforall}[2] {\mbox{$\forall\,#1\,\in\,V(#2)$}}
+\newcommand{\Eforall}[2] {\mbox{$\forall\,#1\,\in\,E(#2)$}}
+\newcommand{\Vforone}[2] {\mbox{$\exists!\,#1\,\in\,V(#2)$}}
+\newcommand{\Eforone}[2] {\mbox{$\exists!\,#1\,\in\,E(#2)$}}
+\newcommand{\Vforsome}[2] {\mbox{$\exists\,#1\,\in\,V(#2)$}}
+\newcommand{\Eforsome}[2] {\mbox{$\exists\,#1\,\in\,E(#2)$}}
+
+
+% jugement de typage
+\newcommand{\these}{\mbox{$\boldsymbol{\large \vdash}$}}
+\newcommand{\rthese}[1]{\mbox{$\boldsymbol{\vdash_{#1}}$}}
+\newcommand{\replace}[2]{\mbox{$#1[#2]$}}
+\newcommand{\msubst}[2]{\mbox{$#1\{#2\}$}}
+\newcommand{\disj}{\mbox{$\backslash/$}}
+\newcommand{\conj}{\mbox{$/\backslash$}}
+\newcommand{\deriv}[2]{\mbox{$#1\;\these\;#2$}}
+\newcommand{\smalljuge}[3]{\mbox{$#1 \these #2 \boldsymbol{:} #3 $}}
+%\newcommand{\juge}[3]{\mbox{$#1 \these #2 \boldsymbol{:} #3 $}}
+\newcommand{\goal}[3]{\mbox{$#1,#2 \these^{\!\!\!?} #3  $}}
+\newcommand{\sgoal}[2]{\mbox{$#1\,\these^{\!\!\!\!?}\, #2 $}}
+\newcommand{\sequent}[2]{\mbox{$#1\;\these\; #2 $}}
+
+\newcommand{\reduc}[5]{\mbox{$#1,#2 \these #3 \rhd_{#4}#5 $}}
+\newcommand{\convert}[5]{\mbox{$#1,#2 \these #3 =_{#4}#5 $}}
+\newcommand{\convorder}[5]{\mbox{$#1,#2 \these #3\leq _{#4}#5 $}}
+\newcommand{\wouff}[2]{\mbox{$\emph{WF}(#1)[#2]$}}
+
+
+
+
+\newcommand{\type}{\boldsymbol{:}}
+
+% jugement absolu
+
+%\newcommand{\ajuge}[2]{\mbox{$ \boldsymbol{\vdash} #1 : #2 $}}
+\newcommand{\ajuge}[2]{\mbox{$\these #1 \boldsymbol{:} #2 $}}
+
+%%% logique minimale
+\newcommand{\propzero}{\mbox{$P_0$}} % types de Fzero
+
+%%% logique propositionnelle classique
+\newcommand {\ff}{\boldsymbol{f}} % faux
+\newcommand {\vv}{\boldsymbol{t}} % vrai
+
+\newcommand{\verite}{\mbox{$\cal{B}$}} % {\ff,\vv}
+\newcommand{\sequ}[2]{\mbox{$#1 \vdash #2 $}} % sequent
+\newcommand{\strip}[1]{#1^o} % enlever les variables d'un contexte
+
+
+
+%%% tactiques
+\newcommand{\decomp}{\delta} % decomposition
+\newcommand{\recomp}{\rho} % recomposition
+
+%%% divers
+\newcommand{\cqfd}{\mbox{\textbf{cqfd}}}
+\newcommand{\fail}{\mbox{\textbf{F}}}
+\newcommand{\succes}{\mbox{$\blacksquare$}}
+%%% Environnements
+
+
+%% Fzero
+\newcommand{\con}{\mbox{$\cal C$}}
+\newcommand{\var}{\mbox{$\cal V$}}
+
+\newcommand{\atomzero}{\mbox{${\cal A}_0$}} % types de base de Fzero
+\newcommand{\typezero}{\mbox{${\cal T}_0$}} % types de Fzero
+\newcommand{\termzero}{\mbox{$\Lambda_0$}} % termes de Fzero 
+\newcommand{\conzero}{\mbox{$\cal C_0$}} % contextes de Fzero 
+
+\newcommand{\buts}{\mbox{$\cal B$}} % buts
+
+%%% for drawing terms
+% abstraction [x:t]e
+\newcommand{\PicAbst}[3]{\begin{bundle}{\bf abst}\chunk{#1}\chunk{#2}\chunk{#3}%
+                        \end{bundle}}
+
+% the same in DeBruijn form
+\newcommand{\PicDbj}[2]{\begin{bundle}{\bf abst}\chunk{#1}\chunk{#2}
+                       \end{bundle}}
+
+
+% applications
+\newcommand{\PicAppl}[2]{\begin{bundle}{\bf appl}\chunk{#1}\chunk{#2}%
+                         \end{bundle}}
+
+% variables
+\newcommand{\PicVar}[1]{\begin{bundle}{\bf var}\chunk{#1}
+                          \end{bundle}}
+
+% constantes
+\newcommand{\PicCon}[1]{\begin{bundle}{\bf const}\chunk{#1}\end{bundle}}
+
+% arrows
+\newcommand{\PicImpl}[2]{\begin{bundle}{\impl}\chunk{#1}\chunk{#2}%
+                         \end{bundle}}
+
+\newcommand{\todo}[1]{\textbf{Todo: #1}}
+
+% %% texte Coq
+
+% %% réponses de Coq
+% \newenvironment{coqanswer}{\begin{mdframed}[topline=false, bottomline=false, leftline=false, rightline=false, skipabove=0pt, skipbelow=1pt, backgroundcolor=gray!20]\begin{alltt}\it}
+%{\end{alltt}\end{mdframed}}
+
+
+
+
+%%%% scripts coq
+\newcommand{\prompt}{\mbox{\sl Coq $<\;$}}
+\newcommand{\natquicksort}{\texttt{nat\_quicksort}}
+
+%% ajoute des parenthèses légères aux expressions de la forme "f x y"
+
+\newcommand{\coqparen}[1]{\mbox{\textcolor{gray}{(}\,\textbf{#1}\,\textcolor{gray}{)}}}
+
+%%% texte Coq déjà parenthésé; pas la peine dans rajouter
+\newcommand{\coqsimple}[1]{\mbox{\textbf{#1}}}
+\newcommand{\safeit}{\it}
+\newcommand{\byrule}[1]{\mbox{$\underset{\scriptstyle #1}{\longrightarrow}$}}
+\newcommand{\byrules}[1]{\mbox{$\underset{\scriptstyle #1}{\longrightarrow^*}$}}
+
+\newcommand{\backback}{\mbox{$\backslash\backslash$}}
+\newcommand{\cons}{\mbox{\tt\,::\,}}
+\newcommand{\nil}{\mbox{\tt\,[\,]\,}}
+
+
+
+\usepackage{fontspec}
+
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{placeins}
+
+
+\definecolor{mintedbgcolor}{rgb}{0.95,0.95,1.0}
+\definecolor{badcoqcolor}{rgb}{0.8,0.8,0.8}
+\definecolor{altcoqcolor}{rgb}{0.7,1.0,0.8}
+
+\definecolor{mathcolor}{rgb}{0.95,0.90,0.85}
+
+\definecolor{vertfluo}{rgb}{0.623, 0.94, 0.886}
+\definecolor{lightred}{rgb}{1.0, 0.74, 0.7}
+\definecolor{lightgray}{rgb}{0.7, 0.7, 0.7}
+
+
+
+%\usepackage{fontspec}
+\usepackage{tikz}
+\usepackage{tikzsymbols}
+\usetikzlibrary{arrows}
+\usepackage{graphicx}
+\usepackage{amsmath,mathdots,dsfont}
+\usepackage{amssymb}
+
+% handling vref in both latex and html
+\newcommand{\myvref}[2]{\vref{#1}}
+% unicode stuff
+\usepackage{newunicodechar}
+\newunicodechar{𝟙}{\ensuremath{\mathds{1}}}
+\newunicodechar{ℤ}{\ensuremath{\mathds{Z}}}
+
+
+
+
+\newcommand{\rounds}{\mbox{\,\texttt{-+->}\,}}
+\newcommand{\round}{\mbox{\,\texttt{-1->}\,}}
+\newcommand{\rplus}[1]{\mbox{$\,\underset{#1}{\longrightarrow}\,$}}
+\definecolor{lookcolor}{rgb}{0.9,0.2,0.0}
+\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+\newcommand{\showmath}[1]{\mathcolor{\mbox{$#1$}}}
+\newcommand{\bigmath}[1]{\textcolor{blue}{\mbox{\[#1\]}}}
+\newcommand{\myemph}[1]{\textcolor{lookcolor}{\,\it{#1}\,}}
+\usepackage{theorem}
+
+{\theorembodyfont{\rmfamily}
+ \newtheorem{exercise}{Exercice}[chapter]
+ \newtheorem{project}{Project}[chapter]
+\newtheorem{remark}{Remark}[chapter]
+}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{conjecture}{Conjecture}[chapter]
+\newtheorem{definition}{Definition}[chapter]
+
+
+\newmdenv[linecolor=red]{mathframe}
+
+\newcommand{\mathcolor}[1]{\colorbox{mathcolor}{\mbox{#1}}}
+
+%% ajoute des parenthèses légères aux expressions de la forme "f x y"
+
+\newcommand{\kscite}[1]{\texttt{#1} {of} KS~\cite{KS81}}
+\newcommand{\kpcite}[1]{\texttt{#1} {of} KP~\cite{KP82}}
+\newcommand{\slcite}[1]{\texttt{#1} {of} TT~\cite{Sladek07thetermite}}
+
+%% KS eaters
+\newcommand{\gnaw}[2]{\mbox{$\{#1\}\langle #2 \rangle $}}
+\definecolor{darkred}{rgb}{.3,.0,.0}
+\definecolor{sourcecolor}{rgb}{.07,.1,.7}
+
+%\input{setup-latex}
+
+\DefineVerbatimEnvironment%
+{Coqsrc}{Verbatim}
+{fontsize=\small, frame=single,rulecolor=\color{blue},fillcolor=\color{blue!05}}
+
+
+\DefineVerbatimEnvironment%
+{Coqanswer}{Verbatim}
+{fontsize=\small, frame=single,fontshape=it,rulecolor=\color{red},fillcolor=\color{red!05}}
+
+\DefineVerbatimEnvironment%
+{Coqbad}{Verbatim}
+{fontsize=\small, frame=single,rulecolor=\color{black},fillcolor=\color{black!05}}
+
+
+\DefineVerbatimEnvironment%
+{Coqalt}{Verbatim}
+{fontsize=\small, frame=single,rulecolor=\color{green},fillcolor=\color{green!05}}
+
+\setcounter{secnumdepth}{5}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
