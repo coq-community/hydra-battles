@@ -22,25 +22,13 @@
 
 Require Import Epsilon0.
 
-Require Import Arith.
-Require Import List.
-Require Import Lia.
-Require Import Compare_dec.
-Require Import Relations.
-Require Import Wellfounded.
-Require Import Max.
+Require Import Arith List Lia  Compare_dec.
+Require Import Relations Wellfounded  Max.
 
-Require Import More_Arith.
-Require Import Restriction. 
-Require Import not_decreasing.
-Require Import Epsilon0.
+Require Import More_Arith Restriction  not_decreasing  Epsilon0.
 Import Datatypes.
 
-Require Import T2  Gamma0_length.
-
-Require Import term.
-Require Import rpo.
-
+Require Import T2  Gamma0_length term  rpo.
 
 Set Implicit Arguments.
 
@@ -62,8 +50,6 @@ Proof.
 Qed.
 
 Hint Resolve nf_a nf_b nf_c : T2.
-
-
 
 Ltac nf_inv := ((eapply nf_a; eassumption)|| 
                 (eapply nf_b; eassumption)|| 
@@ -173,26 +159,20 @@ Section lemmas_on_length.
       t2_length b1 + t2_length (gcons a2 b2 0 zero)  < 
       t2_length (gcons a1 b1 n1 r1) +
       t2_length (gcons a2 b2 n2 r2).
+    Proof.
     intros;apply plus_lt_le_compat.
-    apply length_b.
-    simpl.
-    intros; apply le_lt_n_Sm.
+    -  apply length_b.
+    - cbn; intros; apply le_lt_n_Sm.
     match goal with 
       [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
     apply le_plus_trans.
     replace (Max.max (t2_length b2) 0) with (t2_length b2).
-    generalize (Max.max_dec (t2_length a2) (t2_length b2)).
-    destruct 1.
-    rewrite  e.
-    repeat rewrite plus_0_r.
-    apply plus_le_compat.
-    apply le_max_l.
-    apply le_max_l.
-    repeat rewrite plus_0_r.
-    apply plus_le_compat;
-      apply  max_le_regL;
-      apply le_max_l.
-    rewrite max_l; auto with arith.
+    + destruct (Max.max_dec (t2_length a2) (t2_length b2)).   
+      rewrite  e; repeat rewrite plus_0_r.
+      *  apply plus_le_compat; apply le_max_l.
+      * repeat rewrite plus_0_r.
+         apply plus_le_compat;apply  max_le_regL;  apply le_max_l.
+    + rewrite max_l; auto with arith.
   Qed.
 
 
@@ -200,7 +180,7 @@ Section lemmas_on_length.
   Lemma tricho_lt_3 : forall a1 a2 b1 b2 n1 n2 r1 r2,
       t2_length b1 + t2_length b2  <   
       t2_length (gcons a1 b1 n1 r1) +  t2_length (gcons a2 b2 n2 r2).
-
+  Proof.
     intros;apply plus_lt_compat; apply length_b.
   Qed.
 
@@ -252,82 +232,62 @@ Lemma tricho_aux : forall l, forall t t',
       { t < t'}+{t = t'} + {t' <  t}.
 Proof.
   induction l.
-  intros. 
-  elimtype False. 
-  inversion H.
-  intros t t'.
-  case t;case t'.
-  left;right;auto with T2.
-  left;left;constructor.
-  right;constructor.
-  intros.
-  assert (t2_length t3 + t2_length t0 < l)%nat.
-  eapply lt_lt_Sn.
-  eapply tricho_lt_2.
-  eauto with T2.
-  case (IHl _ _ H0).
-  destruct 1.
+  - intros; elimtype False. 
+    inversion H.
+  -  intros t t'; case t;case t'.
+     + left;right;auto with T2.
+     + left;left;constructor.
+     + right;constructor.
+     + intros t0 t1 n t2 t3 t4 n0 t5 H.
+       assert (H0 :(t2_length t3 + t2_length t0 < l)%nat).
+       { eapply lt_lt_Sn.
+         eapply tricho_lt_2.
+         eauto with T2. }
+       case (IHl _ _ H0).
+       *  destruct 1.
   assert (t2_length t4 + t2_length (gcons t0 t1 0 zero) < l)%nat.
-  eapply lt_lt_Sn.
-  eapply tricho_lt_2'.
-  eauto.
-  case (IHl _ _ H1).
-  destruct 1.
-  left;left.
-  constructor 2;auto with T2.
-  subst t4.
-  right.
-  constructor 5;auto with T2.
-  intro.
-  right.
-  constructor 4;auto with T2.
-  subst t3.
-  assert (t2_length t4 + t2_length t1 < l)%nat.
-  eapply lt_lt_Sn.
-  eapply tricho_lt_3.
-  eauto with T2.
-  case (IHl _ _ H1).
-  destruct 1.
-  left;left. 
-  constructor 3. 
-  auto with T2.
-  subst t4.
-  
-  case (Compare_dec.lt_eq_lt_dec n0 n).
-  destruct 1.
-  left;left.
-  constructor 6.
-  auto with T2.
-  subst n.
-  assert (t2_length t5 + t2_length t2 < l)%nat.
-  eapply lt_lt_Sn.
-  eapply tricho_lt_7.
-  eauto with T2.
-  case (IHl _ _ H2).
-  destruct 1.
-  left;left.
-  constructor 7;auto with T2.
-  subst t2.
-  left;right;trivial.
-  intro.
-  right;constructor 7;auto with T2.
-  right.
-  constructor 6;auto with T2.
-  intro.
-  right;constructor 3;auto with T2.
-  intro.
-  assert  (t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat.
-  eapply lt_lt_Sn.
-  eapply tricho_lt_2'.
-  rewrite plus_comm.
-  eauto with T2.
-  case (IHl _ _ H1).
-  destruct 1.
-  right.
-  constructor 2;auto with T2.
-  subst t1.
-  left;left;constructor 5;auto with T2.
-  left;left;constructor 4;auto with T2.
+  { eapply lt_lt_Sn.
+    eapply tricho_lt_2'.
+    eauto. }
+    case (IHl _ _ H1).
+  -- destruct 1.
+   ++ left;left; constructor 2;auto with T2.
+   ++  subst t4; right;  constructor 5;auto with T2.
+  --  intro H2; right; constructor 4;auto with T2.
+  --  subst t3;
+  assert (H1: (t2_length t4 + t2_length t1 < l)%nat).
+      {  eapply lt_lt_Sn.
+         eapply tricho_lt_3.
+         eauto with T2. }
+      case (IHl _ _ H1).
+     ++  destruct 1.
+         ** left;left; constructor 3. 
+            auto with T2.
+         **  subst t4; case (Compare_dec.lt_eq_lt_dec n0 n).
+             destruct 1.
+             { left;left; constructor 6.
+               auto with T2. }
+             subst n; assert (H2:(t2_length t5 + t2_length t2 < l)%nat).
+             eapply lt_lt_Sn.
+             eapply tricho_lt_7.
+             eauto with T2.
+             case (IHl _ _ H2).
+             destruct 1.
+             left;left; constructor 7;auto with T2.
+             subst t2; left;right;trivial.
+             intro H3; right;constructor 7;auto with T2.
+             right; constructor 6;auto with T2.
+             ++ intro H2; right;constructor 3;auto with T2.
+       *  intro H1;
+            assert (H2:  (t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
+          --  eapply lt_lt_Sn.
+              ++  eapply tricho_lt_2'.
+              ++  rewrite plus_comm;  eauto with T2.
+          --  case (IHl _ _ H2).
+              ++ destruct 1.
+                 ** right;  constructor 2;auto with T2.
+                 **  subst t1; left;left;constructor 5;auto with T2.
+              ++  left;left;constructor 4;auto with T2.
 Defined.
 
 
@@ -376,9 +336,10 @@ Section trans_proof.
       lt t t' -> lt t' t'' -> lt t t''.
 
 
-
+  (** To do: bulletize this proof *)
+  
   Lemma trans_aux :  gcons a1 b1 n1 c1 < gcons a3 b3 n3 c3.
-  Proof .
+  Proof with auto with T2.
     inversion H12.
     inversion H23.
     constructor 2.
