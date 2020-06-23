@@ -102,7 +102,6 @@ Fixpoint T1_inj (alpha :T1) : T2 :=
 
 
 
-
 (* additive principals *)
 
 
@@ -177,6 +176,25 @@ Inductive nf : T2 -> Prop :=
                              nf(gcons a' b' n' c')-> 
                              nf(gcons a b n (gcons a' b' n' c')).
 Hint  Constructors nf : T2. 
+
+
+Inductive is_successor : T2 -> Prop :=
+  finite_succ : forall  n  , is_successor (gcons zero zero n zero)
+ |cons_succ : forall a b n c, nf (gcons a b n c) -> is_successor c ->
+                              is_successor (gcons  a b n c).
+
+
+
+
+Inductive is_limit : T2 -> Prop :=
+|is_limit_0 : forall alpha beta n, zero < alpha \/ zero < beta ->
+                                   nf alpha -> nf beta ->
+                                   is_limit (gcons alpha beta n zero)
+| is_limit_cons : forall alpha  beta n gamma,
+    is_limit gamma ->
+    nf (gcons alpha beta n gamma) ->
+    is_limit (gcons alpha beta n gamma).
+
 
 
 Fixpoint succ (a:T2) : T2 :=

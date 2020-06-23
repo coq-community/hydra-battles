@@ -515,22 +515,22 @@ Proof.
     auto with T2 arith.
 Qed.
 
-Theorem le_lt_trans : forall alpha beta gamma, alpha <= beta -> 
-                                               beta < gamma -> 
-                                               alpha < gamma.
+Theorem le_lt_trans alpha beta gamma:  alpha <= beta -> 
+                                       beta < gamma -> 
+                                       alpha < gamma.
 Proof.
   destruct 1.
-  subst alpha;auto with T2.
-  intros; eapply lt_trans;eauto with T2.
+  - subst alpha;auto with T2.
+  - intros; eapply lt_trans;eauto with T2.
 Qed.
 
-
-Theorem  lt_le_trans : forall alpha beta gamma, alpha < beta ->
-                                                beta <= gamma -> 
-                                                alpha < gamma.
+Theorem  lt_le_trans  alpha beta gamma : alpha < beta ->
+                                         beta <= gamma -> 
+                                         alpha < gamma.
+Proof.
   destruct 2.
-  subst beta;auto with T2.
-  eapply lt_trans;eauto with T2.
+  -  subst beta;auto with T2.
+  -  eapply lt_trans;eauto with T2.
 Qed.
 
 Theorem le_trans : forall alpha beta gamma, alpha <= beta ->
@@ -538,11 +538,12 @@ Theorem le_trans : forall alpha beta gamma, alpha <= beta ->
                                             alpha <= gamma.
 Proof.
   destruct 1.
-  subst beta;auto.
-  intros;right;eapply lt_le_trans;eauto.
+  -  subst beta;auto.
+  -  intros;right;eapply lt_le_trans;eauto.
 Qed.
 
-Lemma psi_relevance : forall alpha beta n gamma  alpha' beta' n' gamma',
+
+Lemma psi_lt_head : forall alpha beta n gamma  alpha' beta' n' gamma',
     [alpha, beta] <  [alpha', beta'] ->
     gcons alpha beta n gamma <  gcons alpha' beta' n' gamma'.
 Proof.
@@ -560,7 +561,7 @@ Lemma nf_inv_tail : forall a b n c , nf (gcons a b n c) ->
 Proof.
   inversion_clear 1.
   auto with T2.
-  apply psi_relevance;auto with T2.
+  apply psi_lt_head;auto with T2.
 Qed.
 
 
@@ -681,7 +682,7 @@ Proof.
   generalize IHc3; case c3.
   auto with T2.
   intros.
-  apply psi_relevance.
+  apply psi_lt_head.
   inversion_clear H.
   auto with T2.
 Qed.
@@ -1079,10 +1080,11 @@ Proof.
 Qed.
 
 
-(* Well foundation *)
+(** Well foundation *)
 Module  Gamma0_sig <: Signature.
 
-
+  (** Contributed by Evelyne Contejean *)
+  
 
   Inductive symb0 : Set := nat_0 | nat_S | ord_zero | ord_psi | ord_cons.
 
@@ -1094,6 +1096,8 @@ Module  Gamma0_sig <: Signature.
   Qed.
 
   (** The arity of a symbol contains also the information about built-in theories as in CiME *)
+
+  
   Inductive arity_type : Set :=
   | AC : arity_type
   | C : arity_type
@@ -1113,7 +1117,9 @@ End Gamma0_sig.
 
 
 (** * Module Type Variables. 
- There are almost no assumptions, except a decidable equality. *) 
+ There are almost no assumptions, except a decidable equality. *)
+
+
 Module Vars <: Variables.
 
   Inductive empty_set : Set := .
@@ -1166,7 +1172,8 @@ Module  Gamma0_prec <: Precedence.
 
   Lemma prec_transitive : transitive A prec.
   Proof.
-    intros s1 s2 s3; destruct s1; destruct s2; destruct s3; simpl; intros; trivial; contradiction.
+    intros s1 s2 s3; destruct s1; destruct s2; destruct s3;
+      simpl; intros; trivial; contradiction.
   Qed.
 
 End Gamma0_prec.
@@ -1174,9 +1181,7 @@ End Gamma0_prec.
 Module Gamma0_alg <: Term := term.Make (Gamma0_sig) (Vars).
 Module Gamma0_rpo <: RPO := rpo.Make (Gamma0_alg) (Gamma0_prec).
 
-Import Gamma0_alg.
-Import Gamma0_rpo.
-Import Gamma0_sig.
+Import Gamma0_alg  Gamma0_rpo  Gamma0_sig.
 
 
 Fixpoint nat_2_term (n:nat) : term :=
@@ -1420,7 +1425,8 @@ Qed.
 Lemma rpo_3_3 : forall ta1  tb1 tb2 n1 tc1,
     rpo tb1 tb2 ->
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
-    rpo (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::(nat_2_term n1) ::tc1::nil))
+    rpo (Term ord_cons
+              ((Term ord_psi (ta1:: tb1 ::nil))::(nat_2_term n1) ::tc1::nil))
         (Term ord_psi (ta1:: tb2 ::nil)).
 Proof.
   intros.
@@ -1801,7 +1807,7 @@ Section lt_incl_rpo.
     simpl;simpl in Hsize;lia.
     inversion_clear nf1.
     auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
     case (cons_rw a1 b1 n1 c1).
@@ -1828,8 +1834,6 @@ Section lt_incl_rpo.
     simpl in Hsize;lia.
     auto with T2.
     auto with T2.
-    (* Below, an "auto with T2" was working before 28 June 2014, calling "nf_b2" *)
-    (* but nf_b2 refers to a2 and nf2 which are not anymore in the context. *)
     eauto using nf_b.
     assert (rpo (T2_2_term c1) 
                 (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
@@ -1838,7 +1842,7 @@ Section lt_incl_rpo.
     simpl;simpl in Hsize;lia.
     inversion_clear nf1.
     auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
     case (cons_rw a1 b1 n1 c1).
@@ -1873,7 +1877,7 @@ Section lt_incl_rpo.
     simpl;simpl in Hsize;lia.
     inversion_clear nf1.
     auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
 
@@ -1900,7 +1904,7 @@ Section lt_incl_rpo.
     apply Hrec.
     simpl;simpl in Hsize;lia.
     inversion_clear nf1;auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
     case (cons_rw a1 b1 n1 c1).
@@ -1929,7 +1933,7 @@ Section lt_incl_rpo.
     apply Hrec.
     simpl; simpl in Hsize;lia.
     inversion nf1;auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
     case (cons_rw a1 b1 n1 c1).
@@ -1957,7 +1961,7 @@ Section lt_incl_rpo.
     apply Hrec.
     simpl; simpl in Hsize;lia.
     inversion nf1;auto with T2.
-    apply psi_relevance;auto with T2.
+    apply psi_lt_head;auto with T2.
     auto with T2.
     constructor;auto with T2.
     assert (rpo (T2_2_term c1) (T2_2_term c2)).
@@ -2762,22 +2766,7 @@ Qed.
    (as in Lepper-Moser) *)
 
 
-Inductive is_successor : T2 -> Prop :=
-  finite_succ : forall  n  , is_successor (gcons zero zero n zero)
- |cons_succ : forall a b n c, nf (gcons a b n c) -> is_successor c ->
-                              is_successor (gcons  a b n c).
 
-
-
-
-Inductive is_limit : T2 -> Prop :=
-|is_limit_0 : forall alpha beta n, zero < alpha \/ zero < beta ->
-                                   nf alpha -> nf beta ->
-                                   is_limit (gcons alpha beta n zero)
-| is_limit_cons : forall alpha  beta n gamma,
-    is_limit gamma ->
-    nf (gcons alpha beta n gamma) ->
-    is_limit (gcons alpha beta n gamma). 
 
 Lemma zero_not_lim : ~ (is_limit zero).
 Proof. red;inversion 1. Qed.
@@ -3121,7 +3110,7 @@ Lemma psi_principal : forall a b c d, nf c -> c < [a, b]
 Proof.
  induction c;destruct d;simpl;auto with T2.
  case (compare [c1,c2][d1,d2]).
- intros;apply psi_relevance.
+ intros;apply psi_lt_head.
  inversion_clear H0.
  constructor 2;auto with T2.
  constructor 3;auto with T2.
@@ -3178,7 +3167,7 @@ Lemma plus_nf : forall alpha, nf alpha -> forall beta, nf beta ->
  intros; subst beta1; subst beta2.
  inversion_clear H1.
  auto with T2.
- apply psi_relevance;auto with T2.
+ apply psi_lt_head;auto with T2.
  nf_inv.
  auto.
  intro;apply nf_intro.
@@ -3188,8 +3177,8 @@ Lemma plus_nf : forall alpha, nf alpha -> forall beta, nf beta ->
  nf_inv.
  inversion H;auto with T2.
  
- apply psi_relevance;auto with T2.
- apply psi_relevance;unfold psi; apply compare_gt_rw;auto with T2.
+ apply psi_lt_head;auto with T2.
+ apply psi_lt_head;unfold psi; apply compare_gt_rw;auto with T2.
  eapply H0;auto with T2.
  nf_inv.
  apply lt_tail;auto with T2.
@@ -3365,7 +3354,7 @@ Proof.
    case_eq( compare (gcons alpha1 alpha2 0 zero) (gcons beta1 beta2 0 zero)).
  right;constructor 6.
  lia.
- intros;right;apply psi_relevance.
+ intros;right;apply psi_lt_head.
  apply compare_lt_rw.
  auto with T2.
  intro; apply le_cons_tail.
@@ -3394,7 +3383,7 @@ injection 1.
  lia.
  left;auto with T2.
  
- intros;right;apply psi_relevance.
+ intros;right;apply psi_lt_head.
  apply compare_gt_rw.
  auto with T2.
 Qed.
@@ -3413,7 +3402,7 @@ Proof.
    case_eq (compare (gcons alpha1 alpha2 0 zero) (gcons gamma1 gamma2 0 zero)).
  constructor 6. 
  lia.
- intros;apply psi_relevance.
+ intros;apply psi_lt_head.
  apply compare_lt_rw;auto with T2.
  constructor 7.
  pattern alpha3 at 1; rewrite <- plus_alpha_0. 
@@ -3441,7 +3430,7 @@ injection 3.
 intros.
  generalize (compare_lt_rw  H0).
  generalize (compare_eq_rw  H1).
- intros;apply psi_relevance.
+ intros;apply psi_lt_head.
  auto with T2.
 intros.
  generalize (compare_gt_rw  H0).
@@ -3451,7 +3440,7 @@ intros.
  case (lt_irr (alpha := (gcons alpha1 alpha2 n0 beta3))).
  eapply lt_trans.
  eexact H4.
- apply psi_relevance;auto with T2.
+ apply psi_lt_head;auto with T2.
 intros.
  generalize (compare_lt_rw  H1).
  generalize (compare_eq_rw  H0).
@@ -3460,13 +3449,13 @@ intros.
   case (lt_irr (alpha :=gcons beta1 beta2 n0 beta3)).
  eapply lt_trans.
  eexact H4.
-  apply psi_relevance;auto with T2.
+  apply psi_lt_head;auto with T2.
 auto with T2.
 intros.
  case (lt_irr (alpha := (gcons beta1 beta2 n0 beta3))).
  eapply lt_trans.
  eexact H4.
- apply psi_relevance.
+ apply psi_lt_head.
 apply lt_trans with (gcons alpha1 alpha2 0 zero);auto with T2.
 
 intros.
@@ -3474,7 +3463,7 @@ intros.
 injection 1;intros;subst gamma1;subst gamma2.
 constructor 6;lia.
 intros.
-apply psi_relevance.
+apply psi_lt_head.
 auto with T2.
 
 intros.
@@ -3544,9 +3533,9 @@ left;auto with T2.
 intro H6; generalize  (compare_lt_rw  H6); intro H7.
 case (lt_irr (alpha := gcons alpha beta n gamma)).
 apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
-apply psi_relevance;auto with T2.
+apply psi_lt_head;auto with T2.
 
-intros;right;apply psi_relevance.
+intros;right;apply psi_lt_head.
 apply compare_gt_rw;auto with T2.
 
 intro H'; generalize  (compare_lt_rw  H'); intro H''.
@@ -3562,7 +3551,7 @@ left;auto with T2.
 
 intro H6; generalize  (compare_gt_rw  H6); intro H7.
 
-right;apply psi_relevance;auto with T2.
+right;apply psi_lt_head;auto with T2.
 
 intro H'; generalize  (compare_gt_rw  H'); intro H''.
 
@@ -3585,7 +3574,7 @@ apply lt_trans with [alpha', beta'];auto with T2.
 intro H6; generalize  (compare_gt_rw  H6); intro H7.
 
 tricho [alpha, beta] [alpha', beta'] H8.
-right;apply psi_relevance;auto with T2.
+right;apply psi_lt_head;auto with T2.
 injection H8;intros;subst alpha';subst beta'.
 case (le_inv_nc  (or_intror _ H0)).
 right;constructor 6;auto with T2.
@@ -3618,7 +3607,7 @@ rewrite H11;auto with T2.
 
 case (lt_irr (alpha := gcons alpha beta n gamma)).
 apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
-apply psi_relevance;auto with T2.
+apply psi_lt_head;auto with T2.
 Qed.
 
 
