@@ -1123,22 +1123,20 @@ Qed.
 
 Lemma nat_lt_psi : forall (n:nat) a b, rpo (nat_2_term n) 
                                            (Term ord_psi (a::b::nil)).
+Proof.
   induction n;simpl.
-  constructor 2.
-  simpl; trivial.
-  destruct 1.
-  constructor 2.
-  simpl; trivial.
-  inversion_clear 1.
-  subst s';apply IHn.
-  case H0.
+  -  constructor 2.
+   +  simpl; trivial.
+   +  destruct 1.
+  - constructor 2.
+    +  simpl; trivial.
+    +  inversion_clear 1.
+       *  subst s';apply IHn.
+       *  destruct H0.
 Qed.
 
-
-
 Theorem rpo_trans : forall t t1 t2, rpo t t1 -> rpo t1 t2 -> rpo t t2.
-  intros.
-  case (rpo_closure t2 t1 t);eauto with T2.
+  intros; case (rpo_closure t2 t1 t);eauto with T2.
 Qed.
 
 
@@ -1146,8 +1144,10 @@ Fixpoint T2_2_term (a:T2) : term :=
   match a with
     zero => Term ord_zero nil
   |gcons a b 0 zero => Term ord_psi (T2_2_term a :: T2_2_term b ::nil)
-  |gcons a b n c => Term ord_cons (Term ord_psi (T2_2_term a :: T2_2_term b ::nil) ::nat_2_term n ::
-                                       T2_2_term c::nil)
+  |gcons a b n c =>
+   Term ord_cons (Term ord_psi
+                       (T2_2_term a :: T2_2_term b ::nil) ::nat_2_term n ::
+                       T2_2_term c::nil)
   end.
 
 Fixpoint T2_size (o:T2):nat :=
@@ -1189,8 +1189,7 @@ Hint Resolve T2_size1 T2_size2 T2_size3 T2_size4 : T2.
 Lemma lt_subterm1 : forall a a'  n'  b' c', a < a' ->
                                             a < gcons a'  b' n' c'.
 Proof.
-  intros.
-  apply lt_trans with (gcons a b' n' c');auto with T2 .
+  intros; apply lt_trans with (gcons a b' n' c');auto with T2 .
 Qed.
 
 Hint Resolve nat_lt_cons lt_subterm1 : T2.
@@ -1200,51 +1199,43 @@ Lemma nat_2_term_mono : forall n n', (n < n')%nat ->
                                      rpo (nat_2_term n) (nat_2_term n').
 Proof.
   induction 1.
-  simpl.
-  eapply Subterm.
-  eleft.
-  esplit.
-  constructor.
-  simpl.
-  eapply Subterm.
-  eleft.
-  esplit.
-  constructor.
-  auto with T2.
+  -  simpl; eapply Subterm.
+     +  eleft; esplit.
+     + constructor.
+  - cbn; eapply Subterm.
+    +  eleft;  esplit.
+    + constructor; auto with T2.
 Qed.
 
 
 Lemma T2_size_psi : forall a b n c , 
     (T2_size [a,b] <= T2_size (gcons a b n c))%nat.
 Proof.
-  simpl; auto with arith T2.
-  intros;lia.
+  simpl; auto with arith T2; intros;lia.
 Qed.
 
 
-(* Lemmas for rpo *)
+(* *** Lemmas for rpo *)
+
 Lemma rpo_2_2 : forall ta1 ta2 tb1 tb2 ,
     rpo ta1 ta2 ->
     rpo tb1 (Term ord_psi (ta2:: tb2::nil)) ->
     rpo (Term ord_psi (ta1:: tb1 ::nil))
         (Term ord_psi (ta2:: tb2 ::nil)).
 Proof.
-  intros.
-  apply Top_eq_lex.
-  simpl;auto with T2.
-  left.
-  auto with T2.
-  auto with T2.
-  inversion_clear 1; try subst s'.
-  apply rpo_trans with ta2;auto with T2.
-  eapply Subterm.
-  2:eleft.
-  left.
-  auto with T2.
-  destruct H2.
-  subst s'.
-  auto with T2.
-  case H1.
+  intros; apply Top_eq_lex.
+  - cbn; auto with T2.
+  - left.
+    +  auto with T2.
+    +  auto with T2.
+  -   inversion_clear 1; try subst s'.
+   +  apply rpo_trans with ta2;auto with T2.
+      eapply Subterm; [| eleft].
+      now left.
+
+  +  destruct H2.
+     * subst s'; auto with T2.
+     * case H1.
 Qed.
 
 
