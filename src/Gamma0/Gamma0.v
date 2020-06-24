@@ -1555,6 +1555,8 @@ Proof.
 Qed.
 
 
+(**  ** inclusion of the order [lt] in the rpo *)
+
 Section lt_incl_rpo.
   Variable s :nat.
   Variables (a1 b1 c1 a2 b2 c2:T2)(n1 n2:nat).
@@ -1567,38 +1569,27 @@ Section lt_incl_rpo.
                                    rpo (T2_2_term o) (T2_2_term o').
 
   Hypothesis nf1 : nf (gcons a1 b1 n1 c1).
-  Hypothesis nf2 :  nf (gcons a2 b2 n2 c2).
+  Hypothesis nf2 : nf (gcons a2 b2 n2 c2).
 
   Remark nf_a1 : nf a1.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof.  nf_inv.  Qed.
 
   Remark nf_a2 : nf a2.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof. nf_inv.  Qed.
 
   Remark nf_b1 : nf b1.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof.  nf_inv. Qed.
 
   Remark nf_b2 : nf b2.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof. nf_inv. Qed.
+
   Hint Resolve nf1 nf2 nf_a1 nf_a2 nf_b1 nf_b2 : T2.
 
   Remark nf_c1 : nf c1.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof.  nf_inv.  Qed.
 
   Remark nf_c2 : nf c2.
-  Proof.
-    nf_inv.
-  Qed.
+  Proof. nf_inv.  Qed.
 
   Hint Resolve nf_c1 nf_c2 : T2.
 
@@ -1607,19 +1598,18 @@ Section lt_incl_rpo.
 
   Lemma cons_rw : forall a b n c, 
       (n=0 /\ c=zero /\ 
-       (T2_2_term (gcons a b n c)=(Term ord_psi 
-                                       ((T2_2_term a)::(T2_2_term b)::nil)))) \/
+       (T2_2_term (gcons a b n c)=
+        (Term ord_psi 
+              ((T2_2_term a)::(T2_2_term b)::nil)))) \/
       (T2_2_term (gcons a b n c)=
        Term ord_cons 
             ((Term ord_psi ((T2_2_term a)::(T2_2_term b)::nil))
                ::(nat_2_term n)::(T2_2_term c)::nil)).
-    
-
     destruct n. 
-    destruct c.
-    left;simpl;auto with T2.
-    right;simpl;auto with T2.
-    right;simpl;auto with T2.
+    -  destruct c.
+       + left;simpl;auto with T2.
+       + right;simpl;auto with T2.
+    - right;simpl;auto with T2.
   Qed.
 
 
@@ -1628,212 +1618,226 @@ Section lt_incl_rpo.
                                (T2_2_term (gcons a2 b2 n2 c2)).
   Proof.
     inversion H.
-    assert (rpo (T2_2_term a1) (T2_2_term a2)).
-    apply Hrec.
-    simpl in Hsize;lia.
-    auto with T2.
-    auto with T2.
-    auto with T2.
-    assert (rpo (T2_2_term b1) 
-                (Term ord_psi ((T2_2_term a2):: ((T2_2_term b2)::nil)))).
-    change (rpo (T2_2_term b1) (T2_2_term (gcons a2 b2 0 zero))).
-    apply Hrec.
-    simpl;simpl in Hsize;lia.
-    auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    assert (rpo (T2_2_term c1)
-                (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl;simpl in Hsize;lia.
-    inversion_clear nf1.
-    auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    case (cons_rw a1 b1 n1 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'2;rewrite H'3.
-    case (cons_rw a2 b2 n2 c2).
-    intros (H'5,(H'6,H'7)).
-    rewrite H'5;rewrite H'6.
-    simpl.
-    apply rpo_2_2;auto with T2.
-    intro H'6;rewrite H'6.
-    simpl.
-    apply rpo_2_4 ; auto with T2.
-    intro H'6;rewrite H'6.
-    case (cons_rw a2 b2 n2 c2).
-    intros (H''5,(H''6,H''7)).
-    rewrite H''7. 
-    apply rpo_2_3;auto with T2.
-    intro H'7;rewrite H'7.
-    apply rpo_2_1;auto with T2.
-    subst a2.
-    assert (rpo (T2_2_term b1) (T2_2_term b2)).
-    apply Hrec.
-    simpl in Hsize;lia.
-    auto with T2.
-    auto with T2.
-    eauto using nf_b.
-    assert (rpo (T2_2_term c1) 
-                (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl;simpl in Hsize;lia.
-    inversion_clear nf1.
-    auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    case (cons_rw a1 b1 n1 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'4.
-    case (cons_rw a1 b2 n2 c2).
-    intros (H'5,(H'6,H'7)).
-    rewrite H'7.
-    apply rpo_3_2;auto with T2.
-    intro H'6;rewrite H'6.
-    apply rpo_3_4 ; auto with T2.
-    intro H'6;rewrite H'6.
-    case (cons_rw a1 b2 n2 c2).
-    intros (H''5,(H''6,H''7)).
-    rewrite H''7.
-    apply rpo_3_3;auto with T2.
-    intro H'7;rewrite H'7.
-    apply rpo_3_1;auto with T2.
-    assert  (rpo (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))
-                 (T2_2_term b2)).
-    change  (rpo (T2_2_term (gcons a1 b1 0 zero))  (T2_2_term b2)).
-    apply Hrec.
-    simpl in Hsize. 
-    simpl;lia.
-    auto with T2.
-    auto with T2.
-    auto with T2.
-    assert (rpo (T2_2_term c1) 
-                (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl;simpl in Hsize;lia.
-    inversion_clear nf1.
-    auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-
-    case (cons_rw a1 b1 n1 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'4.
-    
-    case (cons_rw a2 b2 n2 c2).
-    intros (H'5,(H'6,H'7)).
-    rewrite H'7.
-    apply rpo_4_2;auto with T2.
-    intro H'6;rewrite H'6.
-    apply rpo_4_4 ; auto with T2.
-    intro H'6;rewrite H'6.
-    case (cons_rw a2 b2 n2 c2).
-    intros (H''5,(H''6,H''7)).
-    rewrite H''7.
-    apply rpo_4_3;auto with T2.
-    intro H'7;rewrite H'7.
-    apply rpo_4_1;auto with T2.
-    assert (rpo (T2_2_term c1) 
-                (Term ord_psi ((T2_2_term a1)::(T2_2_term b1)::nil))).
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl;simpl in Hsize;lia.
-    inversion_clear nf1;auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    case (cons_rw a1 b1 n1 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'4.
-    case (cons_rw a2 (gcons a1 b1 0 zero) n2 c2).
-    intros (H''5,(H''6,H''7)).
-    rewrite H''7.
-    simpl;apply rpo_5_2;auto with T2.
-    intro H'7;rewrite H'7.
-    simpl;apply rpo_5_4.
-    intro H'7;rewrite H'7.
-    case (cons_rw a2 (gcons a1 b1 0 zero) n2 c2).
-    intros (H''5,(H''6,H''7)).
-    rewrite H''7.
-    simpl;apply rpo_5_3.
-    auto with T2.
-    intro H''7;rewrite H''7.
-    simpl;apply rpo_5_1.
-    auto with T2.
-    subst a2.
-    subst b2.
-    assert (rpo (T2_2_term c1) 
-                (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))).  
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl; simpl in Hsize;lia.
-    inversion nf1;auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    case (cons_rw a1 b1 n1 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'4.
-    case (cons_rw a1 b1 n2 c2).
-    intros (H''2,(H''3,H''4)).
-    rewrite H''2 in H1.
-    inversion H1.
-    intro H'7;rewrite H'7.
-    apply rpo_6_4.
-    rewrite H'2 in H1;auto with T2.
-    intro H'7;rewrite H'7.
-    case (cons_rw a1 b1 n2 c2).
-    intros (H''2,(H''3,H''4)).
-    rewrite H''2 in H1.
-    inversion H1.
-    intro H''7;rewrite H''7.
-    apply rpo_6_1.
-    auto with T2.
-    auto with T2.
-    assert (rpo (T2_2_term c1)
-                (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))).  
-    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
-    apply Hrec.
-    simpl; simpl in Hsize;lia.
-    inversion nf1;auto with T2.
-    apply psi_lt_head;auto with T2.
-    auto with T2.
-    constructor;auto with T2.
-    assert (rpo (T2_2_term c1) (T2_2_term c2)).
-    apply Hrec.
-    simpl; simpl in Hsize;lia.
-    auto with T2.
-    auto with T2.
-    auto with T2.
-    case (cons_rw a2 b2 n2 c1).
-    intros (H'2,(H'3,H'4)).
-    rewrite H'4.
-    case (cons_rw a2 b2 n2 c2).
-    intros (H''2,(H''3,H''4)).
-    rewrite H''3 in H1.
-    inversion H1.
-    intro H'7;rewrite H'7.
-    eapply Subterm.
-    2:eleft.
-    left.
-    auto with T2.
-    intro H'7;rewrite H'7.
-    case (cons_rw a2 b2 n2 c2).
-    intros (H''2,(H''3,H''4)).
-    rewrite H''3 in H1;inversion H1.
-    intro H''7;rewrite H''7.
-    apply rpo_7_1.
-    auto with T2.
-    subst a2;subst b2.
-    auto with T2.
-    auto with T2.
+    - assert (rpo (T2_2_term a1) (T2_2_term a2)).
+      apply Hrec.
+      + simpl in Hsize;lia.
+      +  auto with T2.
+      +  auto with T2.
+      +  auto with T2.
+      + assert (rpo (T2_2_term b1) 
+                    (Term ord_psi ((T2_2_term a2):: ((T2_2_term b2)::nil)))).
+        { change (rpo (T2_2_term b1) (T2_2_term (gcons a2 b2 0 zero))).
+          apply Hrec.
+          simpl;simpl in Hsize;lia.
+          auto with T2.
+          auto with T2.
+          constructor;auto with T2.
+        }
+        assert (rpo (T2_2_term c1)
+                    (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
+        {  change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+           apply Hrec.
+           simpl;simpl in Hsize;lia.
+           inversion_clear nf1.
+           auto with T2.
+           apply psi_lt_head;auto with T2.
+           auto with T2.
+           constructor;auto with T2.
+        }
+        case (cons_rw a1 b1 n1 c1).
+        intros (H'2,(H'3,H'4)).
+        rewrite H'2;rewrite H'3.
+        case (cons_rw a2 b2 n2 c2).
+        intros (H'5,(H'6,H'7)).
+        rewrite H'5;rewrite H'6.
+        simpl.
+        apply rpo_2_2;auto with T2.
+        intro H'6;rewrite H'6.
+        simpl.
+        apply rpo_2_4 ; auto with T2.
+        intro H'6;rewrite H'6.
+        case (cons_rw a2 b2 n2 c2).
+        intros (H''5,(H''6,H''7)).
+        rewrite H''7. 
+        apply rpo_2_3;auto with T2.
+        intro H'7;rewrite H'7.
+        apply rpo_2_1;auto with T2.
+    - subst a2.
+      assert (rpo (T2_2_term b1) (T2_2_term b2)).
+      {
+        apply Hrec.
+        simpl in Hsize;lia.
+        auto with T2.
+        auto with T2.
+        eauto using nf_b.
+      }
+      assert (rpo (T2_2_term c1) 
+                  (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
+      {    change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+           apply Hrec.
+           simpl;simpl in Hsize;lia.
+           inversion_clear nf1.
+           auto with T2.
+           apply psi_lt_head;auto with T2.
+           auto with T2.
+           constructor;auto with T2.
+      }
+      case (cons_rw a1 b1 n1 c1).
+      intros (H'2,(H'3,H'4)).
+      rewrite H'4.
+      case (cons_rw a1 b2 n2 c2).
+      intros (H'5,(H'6,H'7)).
+      rewrite H'7.
+      apply rpo_3_2;auto with T2.
+      intro H'6;rewrite H'6.
+      apply rpo_3_4 ; auto with T2.
+      intro H'6;rewrite H'6.
+      case (cons_rw a1 b2 n2 c2).
+      intros (H''5,(H''6,H''7)).
+      rewrite H''7.
+      apply rpo_3_3;auto with T2.
+      intro H'7;rewrite H'7.
+      apply rpo_3_1;auto with T2.
+    - assert  (rpo (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))
+                   (T2_2_term b2)).
+      { change  (rpo (T2_2_term (gcons a1 b1 0 zero))  (T2_2_term b2)).
+        apply Hrec.
+        simpl in Hsize. 
+        simpl;lia.
+        auto with T2.
+        auto with T2.
+        auto with T2.
+      }
+      assert (rpo (T2_2_term c1) 
+                  (Term ord_psi (T2_2_term a1 :: T2_2_term b1 :: nil))).
+      {
+        change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+        apply Hrec.
+        simpl;simpl in Hsize;lia.
+        inversion_clear nf1.
+        auto with T2.
+        apply psi_lt_head;auto with T2.
+        auto with T2.
+        constructor;auto with T2.
+      }
+      case (cons_rw a1 b1 n1 c1).
+      intros (H'2,(H'3,H'4)).
+      rewrite H'4.
+      
+      case (cons_rw a2 b2 n2 c2).
+      intros (H'5,(H'6,H'7)).
+      rewrite H'7.
+      apply rpo_4_2;auto with T2.
+      intro H'6;rewrite H'6.
+      apply rpo_4_4 ; auto with T2.
+      intro H'6;rewrite H'6.
+      case (cons_rw a2 b2 n2 c2).
+      intros (H''5,(H''6,H''7)).
+      rewrite H''7.
+      apply rpo_4_3;auto with T2.
+      intro H'7;rewrite H'7.
+      apply rpo_4_1;auto with T2.
+    - assert (rpo (T2_2_term c1) 
+                  (Term ord_psi ((T2_2_term a1)::(T2_2_term b1)::nil))).
+      {
+        change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+        apply Hrec.
+        simpl;simpl in Hsize;lia.
+        inversion_clear nf1;auto with T2.
+        apply psi_lt_head;auto with T2.
+        auto with T2.
+        constructor;auto with T2.
+      }
+      case (cons_rw a1 b1 n1 c1).
+      intros (H'2,(H'3,H'4)).
+      rewrite H'4.
+      case (cons_rw a2 (gcons a1 b1 0 zero) n2 c2).
+      intros (H''5,(H''6,H''7)).
+      rewrite H''7.
+      simpl;apply rpo_5_2;auto with T2.
+      intro H'7;rewrite H'7.
+      simpl;apply rpo_5_4.
+      intro H'7;rewrite H'7.
+      case (cons_rw a2 (gcons a1 b1 0 zero) n2 c2).
+      intros (H''5,(H''6,H''7)).
+      rewrite H''7.
+      simpl;apply rpo_5_3.
+      auto with T2.
+      intro H''7;rewrite H''7.
+      simpl;apply rpo_5_1.
+      auto with T2.
+    - subst a2.
+      subst b2.
+      assert (rpo (T2_2_term c1) 
+                  (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))).  
+      {
+        change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+        apply Hrec.
+        simpl; simpl in Hsize;lia.
+        inversion nf1;auto with T2.
+        apply psi_lt_head;auto with T2.
+        auto with T2.
+        constructor;auto with T2.
+      }
+      case (cons_rw a1 b1 n1 c1).
+      intros (H'2,(H'3,H'4)).
+      rewrite H'4.
+      case (cons_rw a1 b1 n2 c2).
+      intros (H''2,(H''3,H''4)).
+      rewrite H''2 in H1.
+      inversion H1.
+      intro H'7;rewrite H'7.
+      apply rpo_6_4.
+      rewrite H'2 in H1;auto with T2.
+      intro H'7;rewrite H'7.
+      case (cons_rw a1 b1 n2 c2).
+      intros (H''2,(H''3,H''4)).
+      rewrite H''2 in H1.
+      inversion H1.
+      intro H''7;rewrite H''7.
+      apply rpo_6_1.
+      auto with T2.
+      auto with T2.
+    - assert (rpo (T2_2_term c1)
+                  (Term ord_psi ((T2_2_term a1):: (T2_2_term b1) ::nil))).  
+      {
+        change (rpo (T2_2_term c1) (T2_2_term (gcons a1 b1 0 zero))).
+        apply Hrec.
+        simpl; simpl in Hsize;lia.
+        inversion nf1;auto with T2.
+        apply psi_lt_head;auto with T2.
+        auto with T2.
+        constructor;auto with T2.
+      }
+      assert (rpo (T2_2_term c1) (T2_2_term c2)).
+      {
+        apply Hrec.
+        simpl; simpl in Hsize;lia.
+        auto with T2.
+        auto with T2.
+        auto with T2.
+      }
+      case (cons_rw a2 b2 n2 c1).
+      + intros (H'2,(H'3,H'4)).
+        rewrite H'4.
+        case (cons_rw a2 b2 n2 c2).
+        *    intros (H''2,(H''3,H''4)).
+             rewrite H''3 in H1.
+             inversion H1.
+        * intro H'7;rewrite H'7.
+          eapply Subterm; [| eleft].
+          left.
+          auto with T2.
+      + intro H'7;rewrite H'7.
+        case (cons_rw a2 b2 n2 c2).
+        *    intros (H''2,(H''3,H''4)).
+             rewrite H''3 in H1;inversion H1.
+        * intro H''7;rewrite H''7.
+          apply rpo_7_1.
+          auto with T2.
+          subst a2;subst b2.
+          auto with T2.
+          auto with T2.
   Qed.
 
 
@@ -1845,69 +1849,63 @@ Lemma lt_inc_rpo_0 : forall n,
                  rpo (T2_2_term o) (T2_2_term o').
 Proof.
   induction n.
-  destruct o;destruct o'.
-  inversion 2.
-  simpl.
-  inversion 1.
-  inversion 2.
-  simpl.
-  inversion 1.
-  destruct o'.
-  inversion 2.
-  destruct o.
-  intros. 
-  case (cons_rw o'1 o'2 n0 o'3).
-  intros (H'1,(H'2,H'3)).
-  rewrite H'3.
-  simpl;apply Top_gt.
-  simpl;auto with T2.
-  destruct 1.
-  intro H3;rewrite H3.
-  simpl;apply Top_gt.
-  simpl;auto with T2.
-  destruct 1.
-  intros. 
-  case (Lt.le_lt_or_eq _ _ H).
-  intros;apply IHn;auto with arith T2.
-
-  intros;
+ - destruct o;destruct o'.
+  + inversion 2.
+  + cbn; inversion 1.
+  + inversion 2.
+  + cbn; inversion 1.
+ - destruct o'.
+  + inversion 2.
+  + destruct o.
+   *  intros; case (cons_rw o'1 o'2 n0 o'3).
+      intros (H'1,(H'2,H'3)); rewrite H'3.
+      simpl;apply Top_gt.
+      simpl;auto with T2.
+      destruct 1.
+      intro H3;rewrite H3.
+      simpl;apply Top_gt.
+      simpl;auto with T2.
+      destruct 1.
+   * intros; case (Lt.le_lt_or_eq _ _ H).
+     -- intros;apply IHn;auto with arith T2.
+     --  intros;
     eapply lt_rpo_cons_cons;eauto with T2.
 Qed.
 
 
 
 Remark R1 : Acc P.prec nat_0. 
-  split.
-  destruct y; try contradiction.
+Proof.
+  split; destruct y; try contradiction.
 Qed.
 
 Hint Resolve R1 : T2.
 
-Remark R2 : Acc P.prec ord_zero. 
-  split.
-  destruct y; try contradiction; auto with T2.
+Remark R2 : Acc P.prec ord_zero.
+Proof.
+  split; destruct y; try contradiction; auto with T2.
 Qed.
 
 Hint Resolve R2 : T2.
 
 Remark R3 : Acc P.prec nat_S.
-  split.
-  destruct y; try contradiction;auto with T2.
+Proof.
+  split; destruct y; try contradiction;auto with T2.
 Qed.
 
 
 Hint Resolve R3 : T2.
 
 Remark R4 : Acc P.prec ord_cons.
-  split.
-  destruct y; try contradiction;auto with T2.
+Proof.
+  split; destruct y; try contradiction;auto with T2.
 Qed.
 
 Hint Resolve R4 : T2.
 
 Remark R5 : Acc P.prec ord_psi.
-  split.
-  destruct y; try contradiction;auto with T2.
+Proof.
+  split; destruct y; try contradiction;auto with T2.
 Qed.
 
 Hint Resolve R5 : T2.
@@ -1915,8 +1913,7 @@ Hint Resolve R5 : T2.
 Theorem well_founded_rpo : well_founded rpo.
 Proof.
   apply wf_rpo.
-  red.
-  destruct a;auto with T2.
+  red. intro a; destruct a;auto with T2.
 Qed.
 
 Section  well_founded.
@@ -1927,30 +1924,22 @@ Section  well_founded.
 
   Lemma R_inc_rpo : forall o o', R o o' -> rpo (T2_2_term o) (T2_2_term o').
   Proof.
-    intros o o' (H,(H1,H2)).
-    eapply lt_inc_rpo_0;auto with T2.
+    intros o o' (H,(H1,H2));  eapply lt_inc_rpo_0;auto with T2.
   Qed. 
 
   
   Lemma nf_Wf : well_founded_restriction _ nf lt.
   Proof.
-    unfold well_founded_restriction.
-    intros.
-    unfold restrict.
-    generalize (Acc_inverse_image _ _ rpo T2_2_term a (well_founded_rpo (T2_2_term a))).
-    intro.
+    intros a H;
+      assert(H0 := Acc_inverse_image _ _ rpo T2_2_term a
+                                     (well_founded_rpo (T2_2_term a))).
     eapply  Acc_incl  with  (fun x y : T2 => rpo (T2_2_term x) (T2_2_term y)). 
-    red.
-    apply R_inc_rpo.
-    auto with T2.
+    - red;     apply R_inc_rpo.
+    -  auto with T2.
   Qed.
 
 
 End well_founded.
-
-
-
-
 
 
 Definition transfinite_induction :
@@ -1974,21 +1963,18 @@ Proof.
   eapply well_founded_restriction_rect with (R:=lt)(E:=fun a => nf a /\ Q a)
                                             (a:=a).
   - red; intros a0 H1; apply Acc_incl with (restrict nf lt).
-    + red. intros; unfold restrict in *.   tauto.
-    +  
-      apply nf_Wf.
-      tauto.
-  -    
-    destruct 1; intros; eapply X; eauto.
-    intros; apply X0.  
-    red.
-    auto. 
-    auto. 
+    + red; intros; unfold restrict in *; tauto.
+    + apply nf_Wf; tauto.
+  -  destruct 1; intros; eapply X; eauto.
+     intros; apply X0; auto. 
+     + red; auto.     
   - red;auto. 
 Defined.
 
 
-(* the Veblen function phi *)
+(** *  the Veblen function phi *)
+
+(** See Schutte.Critical.phi  *)
 
 Definition  phi (alpha beta : T2) : T2 :=
   match beta with zero => [alpha, beta] 
@@ -2441,7 +2427,7 @@ Proof.
 Defined.
 
 
-(* All epsilons are fixpoints of phi 0 *)
+(**  All epsilons are fixpoints of phi 0 *)
 
 Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
                                    epsilon beta.

@@ -43,6 +43,7 @@ Definition Cr_fun : forall alpha : ON,
 Definition Cr (alpha : ON) : Ensemble ON := 
   (Fix  all_ord_acc (fun (_:ON) => Ensemble ON) Cr_fun) alpha.
 
+(**  See Gamma0.Gamma0.phi *)
 
 Definition phi (alpha : ON) : ON -> ON 
     :=  ord (Cr alpha).
