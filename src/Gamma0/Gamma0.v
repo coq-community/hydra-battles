@@ -879,109 +879,72 @@ Theorem lt_succ_le : forall a b,  a < b ->
                                   succ a <= b.
 Proof.
   induction a.
-  inversion 1.
-  simpl.
-  auto with T2.
-  generalize IHa3; case a1; case a2.
-  simpl.
-  inversion 2.
-  right; constructor 2.
-  auto with T2.
-  auto with T2.
-  right;constructor 3;auto with T2.
-  lt_clean.
-  lt_clean.
-
-  inversion H5.
-
-  case gamma2.
-  left;auto with T2.
-  right;auto with T2.
-  right;constructor 6.
-  auto with arith T2.
-  2 : {
-  simpl.
-  intros. 
-  inversion H.
-  right;constructor 2;auto with T2.
-  right;constructor 3;auto with T2.
-  inversion H5.
-  inversion H5.
-  inversion H6.
-  inversion H6.
-  inversion H6.
-  
-  
-  right;constructor 6.
-  auto with arith T2.
-  
-  right;constructor 6.
-  auto with arith T2.
-
-  apply le_cons_tail.
-  apply IHa0.
-  auto.
-  subst b.
-  inversion H0;auto with T2.
-   }
-  inversion 1.
-  subst gamma2.
-  inversion H5.
-  inversion H11.
-  inversion H17.
-  inversion H16.
-  inversion H24.
-  inversion H16.
-  inversion H16.
-
-  simpl.
-  intros.
-  inversion H.
-  right;constructor 2;auto with T2.
-  right;constructor 3;auto with T2.
-  right;constructor 4.
-  auto.
-  auto.
-  right;constructor 5;auto with T2.
-  right;constructor 6;auto with T2.
-   2 : {
-  intros.
-  simpl.
-  inversion H.
-  right;constructor 2;auto with T2.
-  right;constructor 3;auto with T2.
-  right;constructor 4;auto with T2.
-  right;constructor 5;auto with T2.
-  right; constructor 6;auto with T2. 
-  apply le_cons_tail;auto with T2.
-  auto with T2.
-  auto with T2.
-  apply IHa0;auto with T2.
-  subst b.
-  inversion H0.
-  constructor.
-  auto with T2.
-  }
-  apply le_cons_tail;auto with T2.
-   apply IHa0;auto with T2.
-  subst b.
-  inversion H0.
-  constructor.
-  auto with T2.
+  - inversion 1; cbn; auto with T2.
+  -  generalize IHa3; case a1; case a2.
+   + cbn; inversion 2.
+     *  right; constructor 2.
+      --  auto with T2.
+      --  auto with T2.
+     *   right;constructor 3;auto with T2.
+     * lt_clean.
+     *  lt_clean.
+     *  inversion H5.
+        case gamma2.
+        -- left;auto with T2.
+        --  right;auto with T2.
+        -- right;constructor 6.
+         auto with arith T2.
+     *  inversion 1.
+        -- subst gamma2; inversion H5.
+        -- inversion H11.
+           inversion H17.
+           inversion H16.
+           inversion H24.
+           inversion H16.
+           inversion H16.
+     + cbn; intros t t0 n0 t1 IHa0 b H H0;  inversion H.
+       * right;constructor 2;auto with T2.
+       * right;constructor 3;auto with T2.
+       * inversion H5.
+         inversion H5.
+         inversion H6.
+       * inversion H6.
+       * inversion H6.
+         right;constructor 6.
+         auto with arith T2.
+         right;constructor 6.
+         auto with arith T2.
+       * apply le_cons_tail.
+         apply IHa0; auto.
+         subst b;  inversion H0;auto with T2.
+     + cbn; intros;  inversion H; auto.
+       * right;constructor 2;auto with T2.
+       * right;constructor 3;auto with T2.
+       * right;constructor 4; auto.
+       * right;constructor 5;auto with T2.
+       * right;constructor 6;auto with T2.
+       *  apply le_cons_tail;auto with T2.
+          apply IHa0;auto with T2.
+          subst b; inversion H0.
+          constructor.
+          auto with T2.
+     +   intros; cbn ;  inversion H.
+         * right;constructor 2;auto with T2.
+         *  right;constructor 3;auto with T2.
+         *  right;constructor 4;auto with T2.
+         *  right;constructor 5;auto with T2.
+         *  right; constructor 6;auto with T2. 
+         *  apply le_cons_tail;auto with T2.
+            -- apply IHa0;auto with T2.
+            ++ subst b;  inversion H0;  auto with T2.
 Qed.
 
-
-
-
-
-
-Lemma succ_lt_le : forall a b, nf a -> nf b -> a < succ b -> a <= b. 
+Lemma succ_lt_le : forall a b, nf a -> nf b -> a < succ b -> a <= b.
+ Proof.
   intros.
   tricho a b H2; auto with T2.
-  generalize (lt_succ_le H2 H).
-  intro.
-  case (lt_irr (alpha:=succ b)).
-  eapply le_lt_trans;eauto with T2.
+  -  generalize (lt_succ_le H2 H); intro; case (lt_irr (alpha:=succ b)).
+     eapply le_lt_trans;eauto with T2.
 Qed.
 
 
@@ -1012,8 +975,8 @@ Theorem subterm_lt alpha beta:  subterm alpha beta -> nf beta ->
                                 alpha < beta.
 Proof.
   induction 1;auto with T2.
-  intro;apply lt_tail;auto with T2.
-  intro; apply lt_trans with t1;auto with T2.
+ -  intro;apply lt_tail;auto with T2.
+ -  intro; apply lt_trans with t1;auto with T2.
   eapply IHsubterm1; eapply nf_subterm;eauto with T2.
 Qed.
 
@@ -1033,12 +996,7 @@ Ltac subtermtac :=
   end.
 
 
-
-(** Well foundation *)
 Module  Gamma0_sig <: Signature.
-
-  (** Contributed by Evelyne Contejean *)
-  
 
   Inductive symb0 : Set := nat_0 | nat_S | ord_zero | ord_psi | ord_cons.
 
@@ -1067,7 +1025,6 @@ Module  Gamma0_sig <: Signature.
              end.
 
 End Gamma0_sig.
-
 
 
 (** * Module Type Variables. 
@@ -1148,22 +1105,24 @@ Fixpoint nat_2_term (n:nat) : term :=
 (** * Every (representation of a) natural number is less than
  a non zero ordinal *)
 
-Lemma nat_lt_cons : forall (n:nat) t p  c , rpo (nat_2_term n) 
-                                                (Term ord_cons (t::p::c::nil)).
+Lemma nat_lt_cons : forall (n:nat) t p  c ,
+    rpo (nat_2_term n) 
+        (Term ord_cons (t::p::c::nil)).
+Proof.
   induction n;simpl.
-  constructor 2.
-  simpl; trivial.
-  destruct 1.
-  constructor 2.
-  simpl; trivial.
-  inversion_clear 1.
-  subst s';apply IHn.
-  case H0.
+  -  constructor 2.
+     +   simpl; trivial.
+     +  destruct 1.
+  - constructor 2.
+   +  simpl; trivial.
+   + inversion_clear 1.
+    *  subst s';apply IHn.
+    *  case H0.
 Qed.
 
 
-Lemma nat_lt_psi : forall (n:nat) a b  , rpo (nat_2_term n) 
-                                             (Term ord_psi (a::b::nil)).
+Lemma nat_lt_psi : forall (n:nat) a b, rpo (nat_2_term n) 
+                                           (Term ord_psi (a::b::nil)).
   induction n;simpl.
   constructor 2.
   simpl; trivial.
