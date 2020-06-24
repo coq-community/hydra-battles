@@ -816,91 +816,34 @@ Arguments compare_Eq [alpha beta].
 
 Hint Resolve compare_Eq compare_Lt compare_Gt : T2.
 
-Lemma compare_rw_lt : forall alpha beta, alpha < beta ->
-                                         compare alpha beta = Lt.
+Lemma compare_rw_lt  alpha beta : alpha < beta ->
+                                  compare alpha beta = Lt.
 Proof.
   intros; generalize (compare_reflect alpha beta). 
-  case (compare alpha beta).
-  intro;subst beta;case (lt_irr H);auto with T2.
-  auto .
-  intro; case (lt_irr (alpha:=alpha)).
-  eapply lt_trans;eauto with T2.
+  case (compare alpha beta); trivial.
+  -  intro;subst beta;case (lt_irr H);auto with T2.
+  - intro; case (lt_irr (alpha:=alpha)).  
+    eapply lt_trans;eauto with T2.
 Qed.
 
-Lemma compare_rw_eq : forall alpha beta, alpha = beta ->
-                                         compare alpha beta = Eq.
+Lemma compare_rw_eq  alpha beta:  alpha = beta ->
+                                  compare alpha beta = Eq.
+  intros; subst beta; generalize (compare_reflect alpha alpha);
+    case (compare alpha alpha); trivial.
+  all : intro H0; destruct (lt_irr H0).
+Qed.
+
+Lemma compare_rw_gt  alpha beta:  beta < alpha ->
+                                  compare alpha beta = Gt.
   intros; generalize (compare_reflect alpha beta). 
-  case (compare alpha beta).
-  auto with T2.
-  intro H0;subst beta;case (lt_irr H0).
-  intro H0;subst beta;case (lt_irr H0).
-Qed.
-
-Lemma compare_rw_gt : forall alpha beta, beta < alpha ->
-                                         compare alpha beta = Gt.
-  intros; generalize (compare_reflect alpha beta). 
-  case (compare alpha beta).
-  intro H0;subst beta;case (lt_irr H).
-  intro; case (lt_irr (alpha:=alpha)).
-  eapply lt_trans;eauto with T2.
-  auto with T2.
+  case (compare alpha beta); trivial.
+  -  intro H0;subst beta;case (lt_irr H).
+  - intro; case (lt_irr (alpha:=alpha));
+      eapply lt_trans;eauto with T2.
 Qed.
 
 
-
-
-(** * Well-foundedness (with rpo) (Evelyne Contejean) *)
-
-Inductive subterm : T2 -> T2 -> Prop :=
-| subterm_a : forall a b n c, subterm a (gcons  a b n c)
-| subterm_b : forall a b n c, subterm b (gcons a b n c)
-| subterm_c : forall a b n c, subterm c (gcons a b n c)
-| subterm_trans : forall t t1 t2, subterm t t1 -> subterm t1 t2 ->
-                                  subterm t t2.
-
-Lemma nf_subterm : forall alpha beta, subterm alpha beta ->
-                                      nf beta -> 
-                                      nf alpha.
-Proof.
-  induction 1; intros; try nf_inv.
-  auto.
-Qed.
-
-
-
-Theorem subterm_lt : forall alpha beta, subterm alpha beta -> nf beta ->
-                                        alpha < beta.
-Proof.
-  induction 1;auto with T2.
-  intro;apply lt_tail;auto with T2.
-  intro; apply lt_trans with t1;auto with T2.
-  eapply IHsubterm1. 
-  eapply nf_subterm;eauto with T2.
-Qed.
-
-
-Ltac subtermtac :=
-  match goal with 
-    [|- subterm ?t1 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 1
-  | [|- subterm ?t2 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 2
-  | [|- subterm ?t3 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 3
-  | [|- subterm ?t4 (gcons ?t1 ?t2 ?n ?t3)] =>
-    ((constructor 4 with t1; subtermtac)     ||
-     (constructor 4 with t2; subtermtac)       ||
-     (constructor 4 with t3; subtermtac))
-  end.
-
-
-
-
-
-
-
-
-(* plus is defined here, because it requires decidible comparison *)
+(**  plus is defined here, because it requires decidible comparison *)
 
 Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   match t1,t2 with
@@ -925,12 +868,10 @@ Proof.
   intro alpha; case alpha ;trivial.
 Qed.
 
-
-
-Lemma lt_succ : forall a,  a < succ a.
-  induction a;simpl;auto with T2.
-  case a1;auto with arith T2.
-  case a2; auto with arith T2.
+Lemma lt_succ alpha: alpha < succ alpha.
+  induction alpha;simpl;auto with T2.
+  case alpha1;auto with arith T2.
+  case alpha2; auto with arith T2.
 Qed.
 
 Theorem lt_succ_le : forall a b,  a < b -> 
@@ -1050,6 +991,47 @@ Proof.
   destruct a;destruct b;simpl;auto with T2.
   destruct 1 as [H|H];inversion H.
 Qed.
+
+
+(** * Well-foundedness (with rpo) (Evelyne Contejean) *)
+
+Inductive subterm : T2 -> T2 -> Prop :=
+| subterm_a : forall a b n c, subterm a (gcons  a b n c)
+| subterm_b : forall a b n c, subterm b (gcons a b n c)
+| subterm_c : forall a b n c, subterm c (gcons a b n c)
+| subterm_trans : forall t t1 t2, subterm t t1 -> subterm t1 t2 ->
+                                  subterm t t2.
+
+Lemma nf_subterm alpha beta : subterm alpha beta ->
+                              nf beta ->  nf alpha.
+Proof.
+  induction 1; intros; try nf_inv; auto.
+Qed.
+
+Theorem subterm_lt alpha beta:  subterm alpha beta -> nf beta ->
+                                alpha < beta.
+Proof.
+  induction 1;auto with T2.
+  intro;apply lt_tail;auto with T2.
+  intro; apply lt_trans with t1;auto with T2.
+  eapply IHsubterm1; eapply nf_subterm;eauto with T2.
+Qed.
+
+
+Ltac subtermtac :=
+  match goal with 
+    [|- subterm ?t1 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 1
+  | [|- subterm ?t2 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 2
+  | [|- subterm ?t3 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 3
+  | [|- subterm ?t4 (gcons ?t1 ?t2 ?n ?t3)] =>
+    ((constructor 4 with t1; subtermtac)     ||
+     (constructor 4 with t2; subtermtac)       ||
+     (constructor 4 with t3; subtermtac))
+  end.
+
 
 
 (** Well foundation *)
