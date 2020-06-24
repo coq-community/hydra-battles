@@ -1,3 +1,7 @@
+(**  Veblen "pre" Normal form (for Gamma0) *)
+
+
+
 (* This program is free software; you can redistribute it and/or      *)
 (* modify it under the terms of the GNU Lesser General Public License *)
 (* as published by the Free Software Foundation; either version 2.1   *)
@@ -14,11 +18,11 @@
 (* 02110-1301 USA                                                     *)
 
 
-(*  Pierre Casteran 
+(**   Pierre Casteran 
     LaBRI, Université Bordeaux 1, and Inria Futurs (Logical)
 *)
 
-(* Veblen "pre" Normal form (for Gamma0) *)
+
 
 Require Import Epsilon0.
 
@@ -31,7 +35,6 @@ Import Datatypes.
 Require Import T2  Gamma0_length term  rpo.
 
 Set Implicit Arguments.
-
 
 
 Lemma nf_a : forall a b n c, nf (gcons a b n c) -> nf a.
@@ -216,9 +219,7 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a1 b1 n1 c2).
   Proof.
-    intros.
-    apply plus_lt_compat;
-      apply length_c. 
+    intros;    apply plus_lt_compat;  apply length_c. 
   Qed.
 
 
@@ -524,9 +525,8 @@ Proof.
   - intros; eapply lt_trans;eauto with T2.
 Qed.
 
-Theorem  lt_le_trans  alpha beta gamma : alpha < beta ->
-                                         beta <= gamma -> 
-                                         alpha < gamma.
+Theorem  lt_le_trans  alpha beta gamma :
+  alpha < beta ->  beta <= gamma ->  alpha < gamma.
 Proof.
   destruct 2.
   -  subst beta;auto with T2.
@@ -548,44 +548,43 @@ Lemma psi_lt_head : forall alpha beta n gamma  alpha' beta' n' gamma',
     gcons alpha beta n gamma <  gcons alpha' beta' n' gamma'.
 Proof.
   inversion 1.
-  constructor 2;auto with T2.
-  constructor 3;auto with T2.
-  constructor 4;auto with T2.
-  constructor 5;auto with T2.
-  inversion H1.
-  lt_clean. 
+  - constructor 2;auto with T2.
+  -  constructor 3;auto with T2.
+  -  constructor 4;auto with T2.
+  -  constructor 5;auto with T2.
+  -  inversion H1.
+  -  lt_clean. 
 Qed.
 
 Lemma nf_inv_tail : forall a b n c , nf (gcons a b n c) ->
                                      c < [a,b].
 Proof.
   inversion_clear 1.
-  auto with T2.
-  apply psi_lt_head;auto with T2.
+  - auto with T2.
+  - apply psi_lt_head;auto with T2.
 Qed.
 
 
 Theorem lt_beta_psi : forall beta alpha, beta < [alpha, beta].
+Proof.
   induction beta.
-  auto with T2.
-  intros.
-  cut  (beta2 < [alpha, (gcons beta1 beta2 n beta3)]).
-  intro H.
-  tricho beta1 alpha H0.
-  auto with T2.
-  subst alpha.
-  constructor 3.
-  apply lt_le_trans with [beta1, beta2];auto with T2.
-  case (psi_le_cons beta1 beta2 n beta3).
-  intro.
-  pattern (gcons beta1 beta2 n beta3) at 2.
-  rewrite <- H1.
-  unfold psi;constructor 5;auto with T2.
-  unfold psi; constructor 4;auto with T2.
-  assert ([alpha, beta2] < [alpha, (gcons beta1 beta2 n beta3)]).
-  constructor 3. 
-  apply lt_le_trans with [beta1, beta2]; auto with T2.
-  eapply lt_trans;eauto with T2.
+  -  auto with T2.
+  -  intro alpha;
+       assert (H : beta2 < [alpha, (gcons beta1 beta2 n beta3)]).
+     { assert ([alpha, beta2] < [alpha, (gcons beta1 beta2 n beta3)]).
+       {  constructor 3. 
+          apply lt_le_trans with [beta1, beta2]; auto with T2.
+       }
+       eapply lt_trans; eauto with T2.
+     }
+     tricho beta1 alpha H0; auto with T2.
+     +  subst alpha; constructor 3.
+        apply lt_le_trans with [beta1, beta2];auto with T2.
+     + case (psi_le_cons beta1 beta2 n beta3).
+       * intro;  pattern (gcons beta1 beta2 n beta3) at 2;
+           rewrite <- H1.
+         unfold psi; constructor 5; auto with T2.
+       * unfold psi; constructor 4; auto with T2. 
 Qed.
 
 
@@ -593,153 +592,89 @@ Lemma lt_beta_cons :  forall alpha beta n gamma,
     beta < gcons alpha beta n gamma.
 Proof.
   intros;eapply lt_le_trans.
-  2:eapply psi_le_cons.
-  apply lt_beta_psi.
+  - apply lt_beta_psi.
+  - eapply psi_le_cons.
 Qed.
-
 
 
 Theorem lt_alpha_psi : forall alpha beta, alpha < [alpha, beta].
 Proof.
   induction alpha.
-  unfold psi;auto with T2.
-  intros.
-  constructor 2.
-  apply lt_le_trans with [alpha1,alpha2];auto with T2.
-  apply lt_le_trans with [ alpha1,alpha2];auto with T2.
-  apply lt_beta_psi.
-  right;constructor 2.
-  apply lt_le_trans with [alpha1,alpha2];auto with T2.
-  apply lt_le_trans with [ alpha1,alpha2];auto with T2.
-  apply lt_beta_psi.
-  right.
-  constructor 2.
-  apply lt_le_trans with [ alpha1,alpha2];auto with T2.
-  apply lt_trans with [alpha2, beta];auto with T2.
-  constructor 2.
-  apply lt_beta_cons.
-  apply lt_beta_psi.
+  - unfold psi;auto with T2.
+  -  intros beta; constructor 2.
+     + apply lt_le_trans with [alpha1,alpha2];auto with T2.
+     + apply lt_le_trans with [ alpha1,alpha2];auto with T2.
+       * apply lt_beta_psi.
+       * right;constructor 2.
+         --   apply lt_le_trans with [alpha1,alpha2];auto with T2.
+         --  apply lt_le_trans with [ alpha1,alpha2];auto with T2.
+             ++  apply lt_beta_psi.
+             ++ right;  constructor 2.
+                **  apply lt_le_trans with [ alpha1,alpha2];auto with T2.
+                **  apply lt_trans with [alpha2, beta];auto with T2.
+                    constructor 2.
+                    apply lt_beta_cons.
+                    apply lt_beta_psi.
 Qed.
-
 
 Lemma lt_alpha_cons :  forall alpha beta n gamma, 
     alpha < gcons alpha beta n gamma.
 Proof.
   intros;eapply lt_le_trans.
-  2:eapply psi_le_cons.
-  apply lt_alpha_psi.
+  - apply lt_alpha_psi.
+  - eapply psi_le_cons.
 Qed.
 
 Hint Resolve lt_beta_cons lt_alpha_cons : T2.
 
-
-
-Lemma le_cons_tail : forall alpha beta n gamma gamma', gamma <= gamma' -> 
-                                                       gcons alpha beta n gamma <= 
-                                                       gcons alpha beta n gamma'.
+Lemma le_cons_tail alpha beta n gamma gamma':
+  gamma <= gamma' -> 
+  gcons alpha beta n gamma <=  gcons alpha beta n gamma'.
+Proof.
   destruct 1.
-  subst gamma';left;auto with T2.
-  right;auto with T2.
+  -  subst gamma';left;auto with T2.
+  -  right;auto with T2.
 Qed.
 
 
-(* terms in normal form *)
+(** ** terms in normal form *)
 
 Lemma nf_omega : nf omega.
-  compute; auto with T2.
-Qed.
+Proof.  compute; auto with T2. Qed.
 
 Lemma nf_epsilon0 : nf epsilon0.
-  compute.
-  auto with T2.
-Qed.
+Proof.  compute; auto with T2. Qed.
 
 Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
-Proof.
-  intros; compute; auto with T2. 
-Qed.
+Proof. compute; auto with T2. Qed.
 
 
-
-
-Lemma ordinal_finite : forall n, nf (finite n).
-  destruct n; compute;auto with T2.
-Qed.
+Lemma nf_finite : forall n, nf (finite n).
+Proof.  destruct n; compute;auto with T2. Qed.
 
 Lemma nf_finite_inv : forall gamma n, nf (gcons zero zero n gamma) -> 
                                       gamma = zero.
+Proof.
   inversion 1;auto with T2.
   inversion H4; lt_clean; auto with T2.
 Qed.
 
-
-
 Lemma lt_tail0: forall c, nf c -> c <> zero -> tail c < c.     
 Proof.
   induction c.
-  destruct 2;auto with T2.
-  simpl.
-  generalize IHc3; case c3.
-  auto with T2.
-  intros.
-  apply psi_lt_head.
-  inversion_clear H.
-  auto with T2.
+  -  now destruct 2.
+  - cbn; generalize IHc3; case c3;  auto with T2.
+  +  intros; apply psi_lt_head;  inversion_clear H;  auto with T2.
 Qed.
 
 
 Lemma lt_tail: forall a b n c, nf (gcons a b n c) ->  c < gcons a b n c. 
 Proof.
-  intros. 
-  replace c with (tail (gcons a b n c)). 
+  intros a b n c H; change c with (tail (gcons a b n c)). 
   apply lt_tail0.
-  simpl;auto with T2.
-  discriminate. 
-  trivial. 
+   + cbn;auto with T2.
+   +  discriminate. 
 Qed.
-
-
-Inductive subterm : T2 -> T2 -> Prop :=
-| subterm_a : forall a b n c, subterm a (gcons  a b n c)
-| subterm_b : forall a b n c, subterm b (gcons a b n c)
-| subterm_c : forall a b n c, subterm c (gcons a b n c)
-| subterm_trans : forall t t1 t2, subterm t t1 -> subterm t1 t2 ->
-                                  subterm t t2.
-
-Lemma nf_subterm : forall alpha beta, subterm alpha beta ->
-                                      nf beta -> 
-                                      nf alpha.
-Proof.
-  induction 1; intros; try nf_inv.
-  auto.
-Qed.
-
-
-
-Theorem subterm_lt : forall alpha beta, subterm alpha beta -> nf beta ->
-                                        alpha < beta.
-Proof.
-  induction 1;auto with T2.
-  intro;apply lt_tail;auto with T2.
-  intro; apply lt_trans with t1;auto with T2.
-  eapply IHsubterm1. 
-  eapply nf_subterm;eauto with T2.
-Qed.
-
-
-Ltac subtermtac :=
-  match goal with 
-    [|- subterm ?t1 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 1
-  | [|- subterm ?t2 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 2
-  | [|- subterm ?t3 (gcons ?t1 ?t2 ?n ?t3)] =>
-    constructor 3
-  | [|- subterm ?t4 (gcons ?t1 ?t2 ?n ?t3)] =>
-    ((constructor 4 with t1; subtermtac)     ||
-     (constructor 4 with t2; subtermtac)       ||
-     (constructor 4 with t3; subtermtac))
-  end.
 
 Lemma le_one_cons : forall a b n c, one <= gcons a b n c.
 Proof.
@@ -772,20 +707,18 @@ Proof.
   auto with T2.
 Qed.
 
-
 Lemma lt_cons_omega_inv : forall alpha beta n gamma, 
     gcons alpha beta n gamma < omega ->
     nf (gcons alpha beta n gamma) ->
     alpha = zero /\ beta = zero /\ gamma = zero.
 Proof.
   inversion_clear 1; lt_clean.
-  replace beta with zero.
-  inversion 1; lt_clean;auto with T2.
-  inversion  H5; lt_clean.
-  inversion H0;lt_clean;auto with T2.
-  inversion H1; lt_clean;auto with T2.
+  - replace beta with zero.
+    +  inversion 1; lt_clean;auto with T2.
+       inversion  H5; lt_clean.
+    + inversion H0;lt_clean;auto with T2.
+  -  inversion H1; lt_clean;auto with T2.
 Qed.
-
 
 Lemma lt_omega_inv : forall alpha, nf alpha -> alpha < omega ->
                                    {n:nat | alpha = finite n}.
@@ -851,8 +784,7 @@ Qed.
 
 
 
-(* the following proof won't be so trivial, when compare is
-    defined directly !!! *)
+
 
 Lemma compare_reflect : forall c c', match compare c c' with
                                      |   Lt => c < c' 
@@ -924,6 +856,57 @@ Lemma compare_rw_gt : forall alpha beta, beta < alpha ->
   eapply lt_trans;eauto with T2.
   auto with T2.
 Qed.
+
+
+
+
+(** * Well-foundedness (with rpo) (Evelyne Contejean) *)
+
+Inductive subterm : T2 -> T2 -> Prop :=
+| subterm_a : forall a b n c, subterm a (gcons  a b n c)
+| subterm_b : forall a b n c, subterm b (gcons a b n c)
+| subterm_c : forall a b n c, subterm c (gcons a b n c)
+| subterm_trans : forall t t1 t2, subterm t t1 -> subterm t1 t2 ->
+                                  subterm t t2.
+
+Lemma nf_subterm : forall alpha beta, subterm alpha beta ->
+                                      nf beta -> 
+                                      nf alpha.
+Proof.
+  induction 1; intros; try nf_inv.
+  auto.
+Qed.
+
+
+
+Theorem subterm_lt : forall alpha beta, subterm alpha beta -> nf beta ->
+                                        alpha < beta.
+Proof.
+  induction 1;auto with T2.
+  intro;apply lt_tail;auto with T2.
+  intro; apply lt_trans with t1;auto with T2.
+  eapply IHsubterm1. 
+  eapply nf_subterm;eauto with T2.
+Qed.
+
+
+Ltac subtermtac :=
+  match goal with 
+    [|- subterm ?t1 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 1
+  | [|- subterm ?t2 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 2
+  | [|- subterm ?t3 (gcons ?t1 ?t2 ?n ?t3)] =>
+    constructor 3
+  | [|- subterm ?t4 (gcons ?t1 ?t2 ?n ?t3)] =>
+    ((constructor 4 with t1; subtermtac)     ||
+     (constructor 4 with t2; subtermtac)       ||
+     (constructor 4 with t3; subtermtac))
+  end.
+
+
+
+
 
 
 
