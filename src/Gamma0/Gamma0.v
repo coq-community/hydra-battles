@@ -1247,16 +1247,14 @@ Lemma rpo_2_3 : forall ta1 ta2 tb1 tb2 n1 tc1,
                           ::(nat_2_term n1)::tc1::nil))
         (Term ord_psi (ta2:: tb2 ::nil)).
 Proof.
-  intros.
-  apply Top_gt.
-  simpl;auto with T2.
-  inversion_clear 1.
-  subst s'.
-  apply rpo_2_2;auto with T2.
-  destruct H3 as [|[|[]]]; unfold In in H2; try subst s'.
-  apply nat_lt_psi.
-  apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil));auto with T2.
-  apply rpo_2_2;auto with T2.
+  intros; apply Top_gt.
+  - cbn;auto with T2.
+  - inversion_clear 1.
+    +  subst s';  apply rpo_2_2;auto with T2.
+    + destruct H3 as [|[|[]]]; unfold In in H2; try subst s'.
+      * apply nat_lt_psi.
+      * apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil));auto with T2.
+        apply rpo_2_2;auto with T2.
 Qed.
 
 Lemma rpo_2_1 : forall ta1 ta2 tb1 tb2 n1 n2 tc1 tc2,
@@ -1268,61 +1266,44 @@ Lemma rpo_2_1 : forall ta1 ta2 tb1 tb2 n1 n2 tc1 tc2,
         (Term ord_cons ((Term ord_psi (ta2:: tb2 ::nil))
                           ::(nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with (Term ord_psi (ta2 :: tb2 :: nil)).
-  apply rpo_2_3;auto with T2.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2.
+  intros;  apply rpo_trans with (Term ord_psi (ta2 :: tb2 :: nil)).
+  -  apply rpo_2_3;auto with T2.
+  -  eapply Subterm;[| eleft].
+     left;auto with T2.
 Qed.
-
-
-
-
-
 
 Lemma rpo_2_4 : forall ta1 ta2 tb1 tb2  n2  tc2,
     rpo ta1 ta2 ->
     rpo tb1 (Term ord_psi (ta2:: tb2::nil)) ->
     rpo (Term ord_psi (ta1:: tb1 ::nil))
-        (Term ord_cons ((Term ord_psi (ta2:: tb2 ::nil))::(nat_2_term n2) ::tc2::nil)).
+        (Term ord_cons
+              ((Term ord_psi 
+                     (ta2:: tb2 ::nil)):: (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with (Term ord_psi (ta2 :: tb2 :: nil)). 
-  apply rpo_2_2;auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left.
+  intros;  apply rpo_trans with (Term ord_psi (ta2 :: tb2 :: nil)). 
+ -  apply rpo_2_2;auto with T2.
+ -  eapply Subterm.
+  + eleft; reflexivity.
+  + left.
 Qed.
-
 
 Lemma rpo_3_2 : forall ta1  tb1 tb2 ,
     rpo tb1 tb2 ->
     rpo (Term ord_psi (ta1:: tb1 ::nil))
         (Term ord_psi (ta1:: tb2 ::nil)).
 Proof.
-  intros.
-  apply Top_eq_lex.
-  simpl;auto with T2.
-  right.
-  left.
-  auto with T2.
-  auto with T2.
-  inversion_clear 1; try subst s'.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left.
-  destruct H1; unfold In in H; try subst s'.
-  eapply rpo_trans with tb2;auto with T2.
-  
-  eapply Subterm.
-  2:eleft.
-  right;
-    left.
-  auto with T2.
-  case H0.
+  intros;  apply Top_eq_lex.
+  -  cbn; auto with T2.
+  -  right; left; auto with T2.
+  -  inversion_clear 1; try subst s'.
+   +  eapply Subterm.
+    *  eleft; reflexivity.
+   *  left; destruct H1; unfold In in H; try subst s'.
+   + eapply rpo_trans with tb2;auto with T2.
+    * inversion_clear H1; subst; auto.
+      inversion H0.
+  * eapply Subterm; [| eleft].
+    right; now left.
 Qed.
 
 
@@ -1333,18 +1314,16 @@ Lemma rpo_3_3 : forall ta1  tb1 tb2 n1 tc1,
               ((Term ord_psi (ta1:: tb1 ::nil))::(nat_2_term n1) ::tc1::nil))
         (Term ord_psi (ta1:: tb2 ::nil)).
 Proof.
-  intros.
-  apply Top_gt.
-  simpl;auto with T2.
-  inversion_clear 1; try subst s'.
-  apply rpo_3_2;auto with T2.
-  destruct H2 as [<-|[<-|[]]].
-  apply nat_lt_psi.
-  apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil)).
-  auto with T2.
-  apply rpo_3_2;auto with T2.
+  intros; apply Top_gt.
+  - cbn; auto with T2.
+  -  inversion_clear 1; try subst s'.
+   +  apply rpo_3_2;auto with T2.
+   + destruct H2 as [<-|[<-|[]]].
+    * apply nat_lt_psi.
+    * apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil)).
+     --  auto with T2.
+     --  apply rpo_3_2;auto with T2.
 Qed.
-
 
 Lemma rpo_3_1 : forall ta1  tb1 tb2 n1 n2 tc1 tc2,
     rpo tb1 tb2 ->
@@ -1354,13 +1333,11 @@ Lemma rpo_3_1 : forall ta1  tb1 tb2 n1 n2 tc1 tc2,
         (Term ord_cons
               ((Term ord_psi (ta1:: tb2 ::nil))::(nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with  (Term ord_psi (ta1 :: tb2 :: nil)).
-  apply rpo_3_3;auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left;auto with T2.
+  intros;  apply rpo_trans with  (Term ord_psi (ta1 :: tb2 :: nil)).
+  -  apply rpo_3_3;auto with T2.
+  -  eapply Subterm.
+   +  now eleft.
+   + left;auto with T2.
 Qed.
 
 
@@ -1371,13 +1348,11 @@ Lemma rpo_3_4 : forall ta1  tb1 tb2  n2  tc2,
               ((Term ord_psi (ta1:: tb2 ::nil))::
                                                (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with  (Term ord_psi (ta1 :: tb2 :: nil)).
-  apply rpo_3_2;auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left;auto with T2.
+  intros; apply rpo_trans with  (Term ord_psi (ta1 :: tb2 :: nil)).
+  -  apply rpo_3_2;auto with T2.
+  -  eapply Subterm.
+     + now eleft.
+     + left;auto with T2.
 Qed.
 
 
@@ -1386,36 +1361,31 @@ Lemma rpo_4_2 : forall ta1 ta2  tb1 tb2 ,
     rpo (Term ord_psi (ta1:: tb1 ::nil))
         (Term ord_psi (ta2:: tb2 ::nil)).
 Proof.
-  intros.
-  apply rpo_trans with tb2;auto with T2.
+  intros; apply rpo_trans with tb2;auto with T2.
   eapply Subterm.
-  eright;eleft.
-  reflexivity.
-  left.
+  -  eright;eleft; reflexivity.
+  -  left.
 Qed.
 
 
 Lemma rpo_4_3 : forall ta1  ta2 tb1 tb2 n1 tc1,
     rpo (Term ord_psi (ta1:: tb1 ::nil)) tb2 ->
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
-    rpo (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                        (nat_2_term n1) ::tc1::nil))
+    rpo (Term ord_cons
+              ((Term ord_psi (ta1:: tb1 ::nil))::
+                                               (nat_2_term n1) ::tc1::nil))
         (Term ord_psi (ta2:: tb2 ::nil)).
 Proof.
-  intros.
-  apply Top_gt.
-  simpl;auto with T2.
-  inversion_clear 1; try subst s'.
-  apply rpo_4_2;auto with T2.
-  destruct H2 as [<-|[<-|[]]].
-  apply nat_lt_psi.
-  apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil)).
-  auto with T2.
-  apply rpo_4_2;auto with T2.
+  intros; apply Top_gt.
+  -  cbn;auto with T2.
+  -  inversion_clear 1; try subst s'.
+   +  apply rpo_4_2;auto with T2.
+   + destruct H2 as [<-|[<-|[]]].
+     *  apply nat_lt_psi.
+     *  apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil));
+          auto with T2.
+        apply rpo_4_2;auto with T2.
 Qed.
-
-
-
 
 Lemma rpo_4_1 : forall ta1  ta2 tb1 tb2 n1 n2 tc1 tc2,
     rpo (Term ord_psi (ta1:: tb1 ::nil)) tb2 ->
@@ -1428,17 +1398,12 @@ Lemma rpo_4_1 : forall ta1  ta2 tb1 tb2 n1 n2 tc1 tc2,
             ((Term ord_psi (ta2:: tb2 ::nil))::
                                              (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with  (Term ord_psi (ta2 :: tb2 :: nil)).
-  apply rpo_4_3;auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left;auto with T2.
+  intros; apply rpo_trans with  (Term ord_psi (ta2 :: tb2 :: nil)).
+  -  apply rpo_4_3;auto with T2.
+  -  eapply Subterm.
+   + now  eleft.
+   + left;auto with T2.
 Qed.
-
-
-
 
 Lemma rpo_4_4 : forall ta1  ta2 tb1 tb2  n2  tc2,
     rpo (Term ord_psi (ta1:: tb1 ::nil)) tb2 ->
@@ -1447,28 +1412,22 @@ Lemma rpo_4_4 : forall ta1  ta2 tb1 tb2  n2  tc2,
               ((Term ord_psi (ta2:: tb2 ::nil))::
                                                (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with  (Term ord_psi (ta2 :: tb2 :: nil)).
-  apply rpo_4_2;auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left;auto with T2.
+  intros;  apply rpo_trans with  (Term ord_psi (ta2 :: tb2 :: nil)).
+  -  apply rpo_4_2;auto with T2.
+  -  eapply Subterm.
+     + now   eleft.
+     + left;auto with T2.
 Qed.
-
 
 Lemma rpo_5_2 : 
   forall ta1 ta2  tb1  ,
     rpo (Term ord_psi (ta1:: tb1 ::nil))
         (Term ord_psi (ta2:: (Term ord_psi (ta1::tb1::nil)) ::nil)).
 Proof.
-  intros.
-  eapply Subterm.
-  eright;eleft.
-  reflexivity.
-  left.
+  intros; eapply Subterm.
+  -  eright;now eleft.
+  - left.
 Qed.
-
 
 Lemma rpo_5_3 : forall ta1  ta2 tb1  n1 tc1,
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
@@ -1478,20 +1437,16 @@ Lemma rpo_5_3 : forall ta1  ta2 tb1  n1 tc1,
                                              (nat_2_term n1) ::tc1::nil))
       (Term ord_psi (ta2:: (Term ord_psi (ta1:: tb1 ::nil)) ::nil)).
 Proof.
-  intros.
-  apply Top_gt.
-  simpl;auto with T2.
-  inversion_clear 1; try subst s'.
-  apply rpo_5_2;auto with T2.
-  destruct H1 as [<-|[<-|[]]].
-  apply nat_lt_psi.
-  apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil)).
-  auto with T2.
-  apply rpo_5_2;auto with T2.
+  intros; apply Top_gt.
+  - cbn; auto with T2.
+  -  inversion_clear 1; try subst s'.
+   + apply rpo_5_2;auto with T2.
+   + destruct H1 as [<-|[<-|[]]].
+     * apply nat_lt_psi.
+     * apply rpo_trans with (Term ord_psi (ta1 :: tb1 :: nil)).
+       -- auto with T2.
+       -- apply rpo_5_2;auto with T2.
 Qed.
-
-
-
 
 Lemma rpo_5_1 : forall ta1  ta2 tb1  n1 n2 tc1 tc2,
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
@@ -1505,15 +1460,13 @@ Lemma rpo_5_1 : forall ta1  ta2 tb1  n1 n2 tc1 tc2,
                                ::nil))::
                                       (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
+  intros;
   apply rpo_trans with  
       (Term ord_psi (ta2 :: Term ord_psi (ta1 :: tb1 :: nil) :: nil)).
-  apply rpo_5_3.
-  auto with T2.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left;auto with T2.
+  -  apply rpo_5_3; auto with T2.
+  -  eapply Subterm.
+     + now eleft.
+     + left;auto with T2.
 Qed.
 
 
@@ -1525,95 +1478,80 @@ Lemma rpo_5_4 : forall ta1  ta2 tb1  n2  tc2,
                                  ::nil))::
                                         (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply rpo_trans with 
-      (Term ord_psi (ta2 :: Term ord_psi (ta1 :: tb1 :: nil) :: nil)).
-  
-  eapply Subterm.
-  eright;eleft.
-  reflexivity.
-  left.
-  eapply Subterm.
-  eleft.
-  reflexivity.
-  left.
+  intros;
+    apply rpo_trans with 
+        (Term ord_psi (ta2 :: Term ord_psi (ta1 :: tb1 :: nil) :: nil)).
+  -  eapply Subterm.
+     +  eright; now eleft.
+     + left.
+  - eapply Subterm.
+    + now eleft.
+    +  left.
 Qed.
-
 
 
 Lemma rpo_6_1 : forall ta1 tb1 n1 n2 tc1 tc2,
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
     (n1 < n2)%nat ->
     rpo 
-      (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                      (nat_2_term n1) ::tc1::nil))
-      (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                      (nat_2_term n2) ::tc2::nil)).
+      (Term ord_cons
+            ((Term ord_psi (ta1:: tb1 ::nil))::
+                                             (nat_2_term n1) ::tc1::nil))
+      (Term ord_cons 
+            ((Term ord_psi (ta1:: tb1 ::nil)):: (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  apply Top_eq_lex.
-  simpl;auto with T2.
-  right.
-  left.
-  apply nat_2_term_mono;auto with T2.
-  auto with T2.
-  inversion_clear 1; try subst s'.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2.
-  destruct H2 as [<-|[<-|[]]].
-  apply nat_lt_cons.
-  eapply rpo_trans.
-  eexact H.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2.
+  intros; apply Top_eq_lex.
+  -  simpl;auto with T2.
+  -  right.
+     left.
+     + apply nat_2_term_mono;auto with T2.
+     + auto with T2.
+  -  inversion_clear 1; try subst s'.
+     +  eapply Subterm; [| eleft].
+        left;auto with T2.
+     + destruct H2 as [<-|[<-|[]]].
+       *  apply nat_lt_cons.
+       *  eapply rpo_trans.
+          --  eexact H.
+          --   eapply Subterm; [| eleft].
+               left;auto with T2.
 Qed.
-
-
 
 Lemma rpo_6_4 : forall ta1 tb1  n2  tc2,
     (0 < n2)%nat ->
     rpo (Term ord_psi (ta1:: tb1 ::nil))
-        (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                        (nat_2_term n2) ::tc2::nil)).
+        (Term ord_cons
+              ((Term ord_psi (ta1:: tb1 ::nil))::
+                                               (nat_2_term n2) ::tc2::nil)).
 Proof.
-  intros.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2.
+  intros; eapply Subterm; [| eleft].
+  now left. 
 Qed.
-
-
-
 
 Lemma rpo_7_1 : forall ta1 tb1 n1 tc1 tc2,
     rpo tc1 (Term ord_psi (ta1:: tb1 ::nil)) ->
     rpo tc1  tc2 ->
-    rpo (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                        (nat_2_term n1) ::tc1::nil))
-        (Term ord_cons ((Term ord_psi (ta1:: tb1 ::nil))::
-                                                        (nat_2_term n1) ::tc2::nil)).
+    rpo (Term ord_cons
+              ((Term ord_psi (ta1:: tb1 ::nil))::
+                                               (nat_2_term n1) ::tc1::nil))
+        (Term ord_cons
+              ((Term ord_psi (ta1:: tb1 ::nil))::
+                                               (nat_2_term n1) ::tc2::nil)).
 Proof.
-  intros.
-  apply Top_eq_lex.
-  simpl;auto with T2.
-  right.
-  right.
-  left.
-  auto with T2.
-  auto with T2.
-  inversion_clear 1; try subst s'.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2.
-  destruct H2 as [<-|[<-|[]]].
-  apply nat_lt_cons.
-  eapply rpo_trans.
-  eexact H.
-  eapply Subterm.
-  2:eleft.
-  left;auto with T2. 
+  intros;  apply Top_eq_lex.
+  -  simpl;auto with T2.
+  -  right.
+     right.
+     left; auto with T2.
+  - inversion_clear 1; try subst s'.
+    + eapply Subterm; [| eleft].
+      left;auto with T2.
+    + destruct H2 as [<-|[<-|[]]].
+      * apply nat_lt_cons.
+      * eapply rpo_trans.
+        -- eexact H.
+        -- eapply Subterm; [| eleft].
+           left;auto with T2. 
 Qed.
 
 
