@@ -2188,15 +2188,12 @@ Theorem phi_nf : forall alpha beta, nf alpha ->
                                     nf (phi alpha beta).
 Proof.
   intros t1 t2 v1 v2; case (phi_cases t1 v2).
-  destruct 1.
-  rewrite e;auto with T2.
-  rewrite e;unfold psi;constructor;auto with T2.
-  destruct 1 as (b', (V,(H,H0))).
-  rewrite H; unfold psi;constructor;auto with T2.
+  -  destruct 1 as [e|e].
+     + rewrite e;auto with T2.
+     +  rewrite e;unfold psi;constructor;auto with T2.
+  -  destruct 1 as (b', (H,(H0,H1))).
+     rewrite H0; unfold psi;constructor;auto with T2.
 Qed.
-
-
-
 
 Lemma phi_of_any_cons : forall alpha beta1 beta2 n gamma, 
      omega <= gamma  \/ (0 < n)%nat ->
@@ -2252,16 +2249,13 @@ Lemma phi_le : forall alpha beta alpha' beta',
     phi alpha beta = [alpha', beta'] -> alpha <= alpha'.
 Proof.
   intros a b a' b' Hb;case (phi_cases a Hb).
-  destruct 1.
-  case (phi_fix _  e).
-  intros x (beta2,(H,H0)).
-  rewrite e.
-  rewrite H.
-  injection 1.
-  intros; subst x; right;auto with T2.
-  rewrite e;injection 1;left;auto with T2.
-  intros (b0,(H1,(H2,H3))).
-  rewrite H2; injection 1;left;auto with T2.
+  -  destruct 1.
+     + case (phi_fix _  e); intros x (beta2,(H,H0)).
+       rewrite e, H; injection 1; 
+         intros; subst x; right;auto with T2.
+     +  rewrite e;injection 1;left;auto with T2.
+  -  intros (b0,(H1,(H2,H3))).
+     rewrite H2; injection 1;left;auto with T2.
 Qed.
 
 Lemma phi_le_ge :
@@ -2273,32 +2267,30 @@ Lemma phi_le_ge :
                                beta' <= beta}}.
 Proof.
   intros a b Va Vb; case (phi_cases' a Vb).
-  destruct 1.
-  case s; intros b1 (b2,(H1,(H2,H3))).
-  rewrite H1 in H3.
-  subst b.
-  exists b1;exists  b2;repeat split;auto with T2.
-  exists a;exists b;auto with T2.
-  intros (b1,(b2,(n,(H1,(H2,H3))))).
-  exists a;exists (gcons b1 b2 0 (finite n));auto with T2.
-  split;auto with T2.
-  split;auto with T2.
-  subst b;case n;simpl; auto with T2.
-  right;auto with T2.
+  - destruct 1.
+    +  case s; intros b1 (b2,(H1,(H2,H3))).
+       rewrite H1 in H3; subst b.
+       exists b1;exists  b2;repeat split;auto with T2.
+    +  exists a, b;auto with T2.
+  -  intros (b1,(b2,(n,(H1,(H2,H3)))));
+     exists a, (gcons b1 b2 0 (finite n));auto with T2.
+     repeat split;auto with T2.
+     subst b;case n;simpl; auto with T2.
+     right;auto with T2.
 Qed.
 
+(**  [phi alpha beta] is a common fixpoint of all the [phi gamma], 
+for any [gamma < alpha] as specified by Schutte *)
 
 Theorem phi_spec1 : forall alpha beta gamma, 
     nf alpha -> nf beta -> nf gamma ->
     gamma < alpha ->
     phi gamma (phi alpha beta) = phi alpha beta.
-  intros.
-  case (phi_le_ge H H0 ).
-  intros alpha' (beta', (H'1,(H'2,H'3))).
-  rewrite H'1.
-  simpl.
-  rewrite (compare_rw_lt);auto with T2.
-  apply lt_le_trans with alpha;auto with T2.
+Proof.
+  intros; case (phi_le_ge H H0 ).
+  -  intros alpha' (beta', (H'1,(H'2,H'3))); rewrite H'1; cbn.
+     rewrite (compare_rw_lt);auto with T2.
+    apply lt_le_trans with alpha;auto with T2.
 Qed.
 
 
@@ -2308,47 +2300,32 @@ Theorem phi_principalR alpha beta :
 Proof.
   intros  Valpha Vbeta; case (phi_cases' alpha Vbeta).
   destruct 1.
-  case s; intros b1 (b2,(H1,(H2,H3))).
-  case (lt_ge_dec zero alpha).
-  intro.
-  exists [alpha, beta].
-  simpl.
-  rewrite (compare_rw_lt  l);auto with T2.
-  intro; assert(alpha = zero).
-  inversion l;auto with T2.
-  lt_clean.
-  subst alpha.
-  subst beta.
-  exists (gcons b1 b2 0 (F 1)).
-  simpl.
-  rewrite (compare_rw_lt  H2);auto with T2.
-  case (lt_ge_dec zero alpha). 
-  exists (phi alpha beta).
-  rewrite phi_spec1;auto with T2.
-  intro;assert (alpha=zero).
-  case l.
-  auto with T2.
-  intro;lt_clean.
-  subst alpha.
-  exists beta.
-  auto with T2.
-  intros (b1,(b2,(n,(H1,(H2,H3))))).
-  subst beta.
-  case (lt_ge_dec zero alpha).
-  intro l.
-  exists [alpha, (gcons b1 b2 0 (F (S n)))].
-  simpl.
-  rewrite (compare_rw_lt l).
-  auto with T2.
-  intro;assert (alpha=zero).
-  case l.
-  auto with T2.
-  intro;lt_clean.
-  subst alpha.
-  exists (gcons b1 b2 0 (F (S (S n)))).
-  simpl.
-  rewrite  (compare_rw_lt H2).
-  auto with T2.
+  -  case s; intros b1 (b2,(H1,(H2,H3))).
+     case (lt_ge_dec zero alpha).
+     intro l; exists [alpha, beta]; cbn.
+     +  rewrite (compare_rw_lt  l);auto with T2.
+     + intro; assert(alpha = zero).
+       { inversion l;auto with T2. lt_clean. }
+       subst alpha beta;  exists (gcons b1 b2 0 (F 1)).
+       cbn; rewrite (compare_rw_lt  H2);auto with T2.
+  - case (lt_ge_dec zero alpha). 
+    +  exists (phi alpha beta).
+       rewrite phi_spec1;auto with T2.
+    +  intro;assert (alpha=zero).
+       case l; auto with T2.
+       intro;lt_clean.
+       subst alpha; exists beta.
+       auto with T2.
+  -   intros (b1,(b2,(n,(H1,(H2,H3))))); subst beta.
+      case (lt_ge_dec zero alpha).
+   +  intro l; exists [alpha, (gcons b1 b2 0 (F (S n)))].
+      cbn; rewrite (compare_rw_lt l).
+      reflexivity. 
+   +  intro l;assert (alpha=zero).
+      *  case l; auto with T2.
+         intro;lt_clean.
+      * subst alpha;  exists (gcons b1 b2 0 (F (S (S n))));cbn;
+          rewrite  (compare_rw_lt H2); auto with T2.
 Defined.
 
 
@@ -2363,119 +2340,100 @@ Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
 Proof. apply epsilon_fxp. Qed.
 
 
-Lemma no_critical : forall alpha, lt alpha (phi alpha zero).
+Lemma phi_alpha_zero_gt_alpha : forall alpha, alpha < phi alpha zero.
 Proof.
   induction alpha;simpl;auto with T2.
 Qed.
 
 
-Theorem le_b_phi_ab : forall a b, nf a -> nf b ->  le b (phi a b).
+Theorem le_b_phi_ab : forall a b, nf a -> nf b ->   b <= phi a b.
 Proof.
   intros a b Ha Hb; case (phi_cases a  Hb).
-  destruct 1.
-  rewrite e;left;auto with T2.
-  rewrite e;right; auto with T2.
-  intro x; case x;intros b' (e,(i,i')).
-  subst b.
-  rewrite i.
-  apply lt_succ_le;auto with T2.
+  - destruct 1.
+   +  rewrite e;left;auto with T2.
+   +  rewrite e;right; auto with T2.
+  -  intro x; case x;intros b' (e,(i,i'));  subst b;  rewrite i.
+     apply lt_succ_le;auto with T2.
 Qed.
 
 Lemma phi_of_psi_plus_finite : forall a b1 b2 n, 
     a < b1 -> phi a (gcons b1 b2 0 (finite n)) <
-              [a ,(gcons b1 b2 0 (finite n))].
-  simpl.
-  intros until n;case n.
-  simpl.
-  intro H;rewrite (compare_rw_lt H);auto with T2.
-  simpl.
-  intros n0  H;rewrite (compare_rw_lt H).
-  case n0;simpl; auto with T2.
+              [a ,gcons b1 b2 0 (F n)].
+  Proof.
+  cbn;  intros until n;case n.
+  - cbn; intro H;rewrite (compare_rw_lt H);auto with T2.
+  - cbn;  intros n0  H;rewrite (compare_rw_lt H).
+    case n0;simpl; auto with T2.
 Qed.
 
 
 Lemma phi_mono_r : forall a b c, nf a -> nf b -> nf c ->
                                  b < c -> phi a b < phi a c.
-  intros a b c Ha Hb Hc H.
-  case (phi_cases' a Hb).
-  destruct 1.
-  case s; intros b1 (b2,(H1,(H2,H3))).
-  rewrite H3.
-  apply lt_le_trans with c;auto with T2.
-  apply le_b_phi_ab;auto with T2.
-  case (phi_cases' a Hc).
-  destruct 1.
-  case s; intros c1 (c2,(H'1,(H'2,H'3))).
-  rewrite e.
-  rewrite H'3.
-  rewrite H'1.
-  constructor 2;auto with T2.
-  rewrite H'1 in H.
-  auto with T2.
-  rewrite e;rewrite e0;auto with T2. 
-  intros (c1,(c2,(n, (H1,(H2,H3))))).
-  subst c.
-  assert 
+Proof.
+  intros a b c Ha Hb Hc H;  case (phi_cases' a Hb).
+  -  destruct 1.
+   +  case s; intros b1 (b2,(H1,(H2,H3))); rewrite H3.
+      apply lt_le_trans with c;auto with T2.
+      apply le_b_phi_ab;auto with T2.
+   +  case (phi_cases' a Hc).
+    *  destruct 1.
+       -- case s; intros c1 (c2,(H'1,(H'2,H'3))).
+          rewrite e.
+          rewrite H'3.
+          rewrite H'1.
+          constructor 2;auto with T2.
+          rewrite H'1 in H.
+          auto with T2.
+       --   rewrite e;rewrite e0;auto with T2. 
+    * intros (c1,(c2,(n, (H1,(H2,H3))))); subst c.
+      assert 
     ((gcons c1 c2 0 (finite (S n))) = (succ (gcons c1 c2 0 (finite n)))).
-  simpl;auto with T2.
-  case_eq c1.
-  intro; subst c1; lt_clean.
-  case n;auto with T2.
-  assert (nf (gcons c1 c2 0 (finite n))).
-  case n.
-  inversion Hc;auto with T2.
-  inversion Hc;auto with T2.
-  intro; simpl; constructor.
-  constructor 2.
-  apply le_lt_trans with a;auto with T2.
-  auto with T2.
-  inversion Hc;auto with T2.
-  inversion Hc;auto with T2.
-  repeat constructor.
-  
-  
-  rewrite H0 in H.
-  
-  case (succ_lt_le Hb H1 H).
-  intro;subst b.
-  case (lt_irr (alpha:=[a, (gcons c1 c2 0 (finite n))])).
-  pattern  [ a, (gcons c1 c2 0 (finite n))] at 1;rewrite <- e.
-  apply phi_of_psi_plus_finite.
-  auto with T2.
-  rewrite H3.
-  rewrite e.
-  auto with T2.
-  intros (b1,(b2,(n,(H1,(H2,H3))))).
-  case (phi_cases' a Hc).
-  destruct 1.
-  case s;intros c1 (c2,(H'1,(H'2,H'3))).
-  
-  rewrite H3;rewrite H'3;rewrite H'1.
-  subst b;
-    subst c;case n;simpl;auto with T2.
-
-  constructor 2.
-  auto with T2.
-  apply le_lt_trans with  (gcons b1 b2 0 (finite (S n))).
-  simpl;auto with arith T2.
-  auto with T2.
-  constructor 2.
-  auto with T2.
-  inversion H; auto with T2.
-  lt_clean. 
-  rewrite H3; rewrite e.
-  apply lt_trans with [a, (gcons b1 b2 0 (finite (S n)))].
-  case n;simpl;auto with T2.
-  subst b;auto with T2.
-  intros (c1,(c2,(p,(H'1,(H'2,H'3))))).
-  rewrite H'3;rewrite H3.
-  subst c;subst b.
-  generalize H;inversion 1;auto with T2. 
-
-  constructor 3.
-  constructor 7.
-  apply lt_compatR.
-  inversion H4;lt_clean; auto with T2.
+    {  simpl;auto with T2.
+       case_eq c1.
+       intro; subst c1; lt_clean.
+       case n;auto with T2.
+       }
+    assert (nf (gcons c1 c2 0 (finite n))).
+    {  case n.
+       inversion Hc;auto with T2.
+       inversion Hc;auto with T2.
+       intro; cbn; constructor.
+       constructor 2.
+       apply le_lt_trans with a;auto with T2.
+       auto with T2.
+       inversion Hc;auto with T2.
+       inversion Hc;auto with T2.
+       repeat constructor.
+    }  
+    rewrite H0 in H;  case (succ_lt_le Hb H1 H).
+      --  intro;subst b.
+          case (lt_irr (alpha:=[a, (gcons c1 c2 0 (finite n))])).
+          pattern  [ a, (gcons c1 c2 0 (finite n))] at 1;rewrite <- e.
+          apply phi_of_psi_plus_finite.
+          auto with T2.
+      --   rewrite H3, e; auto with T2.
+  -  intros (b1,(b2,(n,(H1,(H2,H3))))); case (phi_cases' a Hc).
+    + destruct 1.
+     *  case s;intros c1 (c2,(H'1,(H'2,H'3))).
+        rewrite H3;rewrite H'3;rewrite H'1.
+        subst b; subst c;case n;simpl;auto with T2.
+      -- constructor 2;auto with T2.
+       apply le_lt_trans with  (gcons b1 b2 0 (finite (S n))).
+    ++ cbn;auto with arith T2.
+    ++   auto with T2.
+      --   constructor 2; auto with T2.
+           inversion H; auto with T2.
+           lt_clean. 
+     *   rewrite H3; rewrite e.
+         apply lt_trans with [a, (gcons b1 b2 0 (finite (S n)))].
+         --   case n;simpl;auto with T2.
+         --   subst b;auto with T2.
+    +  intros (c1,(c2,(p,(H'1,(H'2,H'3))))); rewrite H'3;rewrite H3.
+       subst c;subst b; generalize H;inversion 1;auto with T2. 
+       constructor 3.
+       constructor 7.
+       apply lt_compatR.
+       inversion H4;lt_clean; auto with T2.
 Qed.
 
 
@@ -2510,7 +2468,7 @@ Lemma lt_a_phi_ab : forall a b, nf a -> nf b -> a < phi a b.
 Proof.
   intros.
   apply lt_le_trans with (phi a zero).
-  apply no_critical.
+  apply phi_alpha_zero_gt_alpha.
   apply phi_mono_weak_r;auto with T2.
 Qed.
 
