@@ -2974,86 +2974,78 @@ Lemma plus_mono_r : forall alpha , nf alpha -> forall beta gamma, nf beta ->
        nf gamma -> beta < gamma -> alpha + beta < alpha + gamma.
 Proof.
  induction alpha.
- cbn.
- auto with T2.
- cbn.
- destruct beta;destruct gamma;cbn.
- inversion 3.
- intros; 
-   case_eq (compare (gcons alpha1 alpha2 0 zero) (gcons gamma1 gamma2 0 zero)).
- constructor 6. 
- lia.
- intros;apply psi_lt_head.
- apply compare_Lt;auto with T2.
- constructor 7.
- pattern alpha3 at 1; rewrite <- plus_alpha_0. 
- apply IHalpha3.
- inversion H;auto with T2.
- auto with T2.
- auto with T2.
- auto with T2.
- inversion 3.
- case_eq (compare (gcons alpha1 alpha2 0 zero) (gcons beta1 beta2 0 zero));
- case_eq ( compare (gcons alpha1 alpha2 0 zero) (gcons gamma1 gamma2 0 zero)).
- intros.
-  generalize (compare_Eq  H1).
-  generalize (compare_Eq  H0).
-injection 1.
-injection 3.
- subst gamma1;subst gamma2;intros; subst beta2;subst beta1.
- inversion_clear H4.
- case (lt_irr H6).
- case (lt_irr H6).
- case (lt_irr H6).
- case (lt_irr H6).
- constructor 6;lia.
- constructor 7;auto with T2.
-intros.
- generalize (compare_Lt  H0).
- generalize (compare_Eq  H1).
- intros;apply psi_lt_head.
- auto with T2.
-intros.
- generalize (compare_Gt  H0).
- generalize (compare_Eq  H1).
- injection 1;intros.
- subst beta1;subst beta2.
- case (lt_irr (alpha := (gcons alpha1 alpha2 n0 beta3))).
- eapply lt_trans.
- eexact H4.
- apply psi_lt_head;auto with T2.
-intros.
- generalize (compare_Lt  H1).
- generalize (compare_Eq  H0).
-  injection 1;intros.
- subst gamma1;subst gamma2.
-  case (lt_irr (alpha :=gcons beta1 beta2 n0 beta3)).
- eapply lt_trans.
- eexact H4.
-  apply psi_lt_head;auto with T2.
-auto with T2.
-intros.
- case (lt_irr (alpha := (gcons beta1 beta2 n0 beta3))).
- eapply lt_trans.
- eexact H4.
- apply psi_lt_head.
-apply lt_trans with (gcons alpha1 alpha2 0 zero);auto with T2.
-
-intros.
-  generalize (compare_Eq  H0).
-injection 1;intros;subst gamma1;subst gamma2.
-constructor 6;lia.
-intros.
-apply psi_lt_head.
-auto with T2.
-
-intros.
-constructor 7.
-apply IHalpha3.
-inversion H;auto with T2.
-auto with T2.
-auto with T2.
-auto with T2.
+ -  cbn; auto with T2.
+ - cbn; destruct beta;destruct gamma;cbn.
+   + inversion 3.
+   + intros; 
+       case_eq (compare (gcons alpha1 alpha2 0 zero)
+                          (gcons gamma1 gamma2 0 zero)).
+     * constructor 6; lia.
+     * intros;apply psi_lt_head.
+       apply compare_Lt;auto with T2.
+     *  constructor 7.
+        pattern alpha3 at 1; rewrite <- plus_alpha_0. 
+        apply IHalpha3.
+        inversion H;auto with T2.
+        auto with T2.
+        auto with T2.
+        auto with T2.
+   +  inversion 3.
+   + case_eq (compare (gcons alpha1 alpha2 0 zero)
+                      (gcons beta1 beta2 0 zero));
+       case_eq (compare (gcons alpha1 alpha2 0 zero)
+                        (gcons gamma1 gamma2 0 zero)).
+     intros H0 H1 H2 H3 H4;  generalize (compare_Eq  H1);
+     generalize (compare_Eq  H0).
+     * injection 1.
+       injection 3.
+       subst gamma1;subst gamma2;intros; subst beta2;subst beta1.
+       inversion_clear H4.
+       case (lt_irr H6).
+       case (lt_irr H6).
+       case (lt_irr H6).
+       case (lt_irr H6).
+       constructor 6;lia.
+       constructor 7;auto with T2.
+       * intros H0 H1 H2 H3 H4;  generalize (compare_Lt  H0);
+           generalize (compare_Eq  H1).
+         intros;apply psi_lt_head.
+         auto with T2.
+         * intros.
+           generalize (compare_Gt  H0).
+           generalize (compare_Eq  H1).
+           injection 1;intros.
+           subst beta1;subst beta2.
+           case (lt_irr (alpha := (gcons alpha1 alpha2 n0 beta3))).
+           eapply lt_trans.
+           eexact H4.
+           apply psi_lt_head;auto with T2.
+           * intros.
+             generalize (compare_Lt  H1).
+             generalize (compare_Eq  H0).
+             injection 1;intros.
+             subst gamma1;subst gamma2.
+             case (lt_irr (alpha :=gcons beta1 beta2 n0 beta3)).
+             eapply lt_trans.
+             eexact H4.
+             apply psi_lt_head;auto with T2.
+           * auto with T2.
+           * intros; case (lt_irr (alpha := (gcons beta1 beta2 n0 beta3))).
+             eapply lt_trans.
+             eexact H4.
+             apply psi_lt_head.
+             apply lt_trans with (gcons alpha1 alpha2 0 zero);auto with T2.
+           * intros;  generalize (compare_Eq  H0).
+             injection 1;intros;subst gamma1;subst gamma2.
+             constructor 6;lia.
+           * intros; apply psi_lt_head.
+             auto with T2.
+           * intros; constructor 7.
+             apply IHalpha3.
+             inversion H;auto with T2.
+             auto with T2.
+             auto with T2.
+             auto with T2.
 Qed.
 
 
@@ -3065,134 +3057,94 @@ Lemma plus_mono_l_weak:
                      forall gamma , nf gamma -> 
                                     alpha < beta ->
                                     alpha + gamma <= beta + gamma.
-  Proof.
+Proof.
  intros o Ho;pattern o.
-apply transfinite_induction.
-
-2:auto with T2.
-clear o Ho.
-intros o NF0 Hreco. 
-
-
-intro x;case x.
-
-cbn.
-intros;apply le_plus_l;auto with T2.
-
- 
-intros alpha beta n gamma NF.
-intro.
-intro y;case y.
-
-inversion 4.
-
-intros alpha' beta' n' gamma' NF'.
-intros H1  z.
-case z.
-do 2 rewrite (plus_alpha_0).
-
-right;auto with T2.
-
-intros alpha'' beta'' n'' gamma''  NF''.
-intros H0.
-
-simpl (gcons alpha beta n gamma + gcons alpha'' beta'' n'' gamma'').
-case_eq ( compare [alpha, beta] [alpha'', beta'']).
-intro H'; generalize  (compare_Eq  H'); intro H''.
-injection H'';intros. subst alpha'';subst beta''.
- simpl (gcons alpha' beta' n' gamma' + gcons alpha beta n'' gamma'').
- case_eq ( compare [alpha', beta'] [alpha, beta]).
-
-intro H6; generalize  (compare_Eq  H6); intro H7.
-injection H7;intros;subst alpha';subst beta'.
-case (le_inv_nc (or_intror _ H0)).
-right;constructor 6.
-auto with T2 arith.
-intros (H8,H9);subst n'.
-left;auto with T2.
-
-intro H6; generalize  (compare_Lt  H6); intro H7.
-case (lt_irr (alpha := gcons alpha beta n gamma)).
-apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
-apply psi_lt_head;auto with T2.
-
-intros;right;apply psi_lt_head.
-apply compare_Gt;auto with T2.
-
-intro H'; generalize  (compare_Lt  H'); intro H''.
-
- simpl (gcons alpha' beta' n' gamma' + gcons alpha'' beta'' n'' gamma'').
- case_eq (compare [alpha', beta'] [alpha'', beta'']).
-intro H6; generalize  (compare_Eq  H6); intro H7.
-injection H7;intros;subst alpha';subst beta'.
-right;constructor 6;auto with T2 arith.
-
-intro H6; generalize  (compare_Lt  H6); intro H7.
-left;auto with T2.
-
-intro H6; generalize  (compare_Gt  H6); intro H7.
-
-right;apply psi_lt_head;auto with T2.
-
-intro H'; generalize  (compare_Gt  H'); intro H''.
-
-assert ([alpha'',beta''] < [alpha',beta']).
-apply lt_le_trans with [alpha,beta];auto with T2.
-generalize (le_psi_term_le (or_intror _ H0)).
-cbn;auto with T2.
-simpl ( gcons alpha' beta' n' gamma' + gcons alpha'' beta'' n'' gamma'').
-case_eq ( compare [alpha', beta'] [alpha'', beta'']).
-
-intro H6; generalize  (compare_Eq  H6); intro H7.
-rewrite H7 in H2.
-case (lt_irr H2).
-
-intro H6; generalize  (compare_Lt  H6); intro H7.
-case (lt_irr (alpha := [alpha'', beta''])).
-apply lt_trans with [alpha', beta'];auto with T2.
-
-
-intro H6; generalize  (compare_Gt  H6); intro H7.
-
-tricho [alpha, beta] [alpha', beta'] H8.
-right;apply psi_lt_head;auto with T2.
-injection H8;intros;subst alpha';subst beta'.
-case (le_inv_nc  (or_intror _ H0)).
-right;constructor 6;auto with T2.
-intros (e,H9);subst n'.
-case H9.
-intro;subst gamma'.
-left;auto with T2.
-intro H10.
-
-assert (nf gamma).
-inversion NF;auto with T2.
-
-assert (nf gamma').
-inversion NF';auto with T2.
-
-
-assert (gamma <  gcons alpha beta n gamma').
-apply lt_trans with gamma'.
-auto with T2.
-apply lt_tail;auto with T2.
-
-
-
-
-
-generalize (Hreco  _ NF' H1 gamma H3 H5 gamma' H4 (lt_tail NF')
-  (gcons alpha'' beta'' n'' gamma'') NF'' H10).
-destruct 1;auto with T2.
-rewrite H11;auto with T2.
-
-case (lt_irr (alpha := gcons alpha beta n gamma)).
-apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
-apply psi_lt_head;auto with T2.
+ apply transfinite_induction; [| auto with T2].
+ clear o Ho; intros o NF0 Hreco. 
+ intro x;case x.
+ - cbn;  intros;apply le_plus_l;auto with T2.
+ - intros alpha beta n gamma NF.
+   intro; intro y;case y.
+   + inversion 4.
+   + intros alpha' beta' n' gamma' NF'  H1  z; case z.
+     do 2 rewrite (plus_alpha_0).
+     right;auto with T2.
+       intros alpha'' beta'' n'' gamma''  NF'' H0.
+       simpl (gcons alpha beta n gamma + gcons alpha'' beta'' n'' gamma'').
+       case_eq ( compare [alpha, beta] [alpha'', beta'']).
+       intro H'; generalize  (compare_Eq  H'); intro H''.
+       injection H'';intros.
+       subst alpha'';subst beta''.
+       simpl (gcons alpha' beta' n' gamma' + gcons alpha beta n'' gamma'').
+       case_eq ( compare [alpha', beta'] [alpha, beta]).
+       intro H6; generalize  (compare_Eq  H6); intro H7.
+       injection H7;intros;subst alpha';subst beta'.
+       case (le_inv_nc (or_intror _ H0)).
+     * right;constructor 6.
+        auto with T2 arith.
+     * intros (H8,H9);subst n';left;auto with T2.
+     * intro H6; generalize  (compare_Lt  H6); intro H7.
+       case (lt_irr (alpha := gcons alpha beta n gamma)).
+       apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
+       apply psi_lt_head;auto with T2.
+     * intros;right;apply psi_lt_head.
+       apply compare_Gt;auto with T2.
+     * intro H'; generalize  (compare_Lt  H'); intro H''.
+       simpl (gcons alpha' beta' n' gamma' + gcons alpha'' beta'' n'' gamma'').
+       case_eq (compare [alpha', beta'] [alpha'', beta'']).
+      -- intro H6; generalize  (compare_Eq  H6); intro H7.
+         injection H7;intros;subst alpha';subst beta'.
+         right;constructor 6;auto with T2 arith.
+      -- intro H6; generalize  (compare_Lt  H6); intro H7.
+         left;auto with T2.
+      -- intro H6; generalize  (compare_Gt  H6); intro H7.
+         right;apply psi_lt_head;auto with T2.
+     * intro H'; generalize  (compare_Gt  H'); intro H''.
+       assert ([alpha'',beta''] < [alpha',beta']). {
+         apply lt_le_trans with [alpha,beta];auto with T2.
+         generalize (le_psi_term_le (or_intror _ H0)).
+         cbn;auto with T2.
+       }
+       simpl ( gcons alpha' beta' n' gamma' +
+               gcons alpha'' beta'' n'' gamma'').
+       case_eq ( compare [alpha', beta'] [alpha'', beta'']).
+      -- intro H6; generalize  (compare_Eq  H6); intro H7.
+         rewrite H7 in H2.
+         case (lt_irr H2).
+      -- intro H6; generalize  (compare_Lt  H6); intro H7.
+         case (lt_irr (alpha := [alpha'', beta''])).
+         apply lt_trans with [alpha', beta'];auto with T2.
+      -- intro H6; generalize  (compare_Gt  H6); intro H7.
+         tricho [alpha, beta] [alpha', beta'] H8.
+         ++ right;apply psi_lt_head;auto with T2.
+         ++ injection H8;intros;subst alpha';subst beta'.
+            case (le_inv_nc  (or_intror _ H0)).
+            ** right;constructor 6;auto with T2.
+            ** intros (e,H9);subst n'; case H9.
+               intro;subst gamma'.
+               left;auto with T2.
+               intro H10;assert (nf gamma).
+               { inversion NF;auto with T2. }
+               assert (nf gamma').
+               { inversion NF';auto with T2. }
+               assert (gamma <  gcons alpha beta n gamma').
+               apply lt_trans with gamma'.
+               auto with T2.
+               apply lt_tail;auto with T2.
+               generalize
+                 (Hreco  _ NF' H1 gamma H3 H5 gamma'
+                         H4 (lt_tail NF')
+                         (gcons alpha'' beta'' n'' gamma'') NF'' H10).
+               destruct 1;auto with T2.
+               rewrite H11;auto with T2.
+         ++ case (lt_irr (alpha := gcons alpha beta n gamma)).
+            apply lt_trans with (gcons alpha' beta' n' gamma');auto with T2.
+            apply psi_lt_head;auto with T2.
 Qed.
 
 
 Remark R_pred_Sn : forall n, pred (F (S n)) = Some (F n).
+Proof.
  destruct n;cbn;trivial.
 Qed.
 
@@ -3201,14 +3153,14 @@ Lemma pred_of_cons : forall a b n c,
                        pred (gcons a b  n c) = match pred c with
                                              Some c' => 
                                                Some (gcons a b n c')
-                                            |None => None
+                                            | None => None
                                             end.
+Proof.
   destruct a.
- destruct b;cbn.
- destruct 1;lt_clean.
- auto.
- cbn.
- auto.
+  -  destruct b;cbn.
+    destruct 1;lt_clean.
+    auto.
+  -  cbn; auto.
 Qed.
 
 Lemma pred_of_cons' : forall a b n , 
@@ -3218,6 +3170,7 @@ Proof.
  intros a b n H; rewrite (pred_of_cons n zero H).
  cbn;auto.
 Qed.
+
 
 Lemma is_limit_ab : forall alpha beta n gamma,
     is_limit (gcons alpha beta n gamma)
