@@ -2073,44 +2073,31 @@ Theorem phi_of_psi_succ : forall a b1 b2 n,
 Qed.
 
 
-Lemma phi_cases_aux : forall P : T2 -> Type,
-    P zero ->
-    (forall b1 b2, nf b1 -> nf b2 -> P [b1, b2]) ->
-    (forall b1 b2 n, nf b1 -> nf b2 ->
-                     P (gcons b1 b2 0 (finite (S n)))) ->
-    (forall b1 b2 n c, nf (gcons b1 b2 n c) ->
-                       omega <= c \/ (0 < n)%nat -> 
-                       P (gcons b1 b2 n c)) ->
-    forall alpha, nf alpha -> P alpha.
-  intros until alpha.
-  case alpha.
-  auto with T2.
-  destruct n;intros until t1;case (lt_ge_dec t1 omega).
-  intros.
-  assert (nf t1).
-  inversion H;auto with T2.
-  
-  case (lt_omega_inv  H0 l).
-  intro x;case x.
-  intro;subst t1.
-  simpl.
-  refine (X0 _ _ _ _).
-  inversion H;auto with T2.
-  inversion H;auto with T2.
-  intros;subst t1.
-  apply X1.
-  inversion H;auto with T2.
-  inversion H;auto with T2.
-  intros;apply X2.
-  auto with T2.
-  auto with T2.
-  intros;apply X2.
-  auto with T2.
-  auto with arith T2.
-  intros;apply X2.
-  auto with T2.
-  auto with T2.
-Qed.
+  Lemma phi_cases_aux : forall P : T2 -> Type,
+      P zero ->
+      (forall b1 b2, nf b1 -> nf b2 -> P [b1, b2]) ->
+      (forall b1 b2 n, nf b1 -> nf b2 ->
+                       P (gcons b1 b2 0 (finite (S n)))) ->
+      (forall b1 b2 n c, nf (gcons b1 b2 n c) ->
+                         omega <= c \/ (0 < n)%nat -> 
+                         P (gcons b1 b2 n c)) ->
+      forall alpha, nf alpha -> P alpha.
+  Proof with auto with T2.
+    intros until alpha; case alpha;  auto with T2.
+    destruct n;intros until t1;case (lt_ge_dec t1 omega).
+    -  intros l H ; assert (nf t1) by (inversion H ; auto with T2).
+       case (lt_omega_inv  H0 l);  intro x;case x.
+       + intro;subst t1; cbn.
+         refine (X0 _ _ _ _).
+         * inversion H ...
+         *  inversion H ...
+       +  intros;subst t1.
+          apply X1; inversion H ...
+    -   intros;apply X2 ...
+    -   intros;apply X2 ...
+        auto with arith.
+    -   intros;apply X2 ...
+  Qed.
 
 
 Theorem phi_cases' :
@@ -2123,65 +2110,35 @@ Theorem phi_cases' :
                                       a < b1 /\ 
                                       phi a b =
                                       [a, (gcons b1 b2 0 (finite n))]}}}.
-Proof.
-  intros a b Hb.
-  pattern b; apply phi_cases_aux.
-  left;right;simpl;auto with T2.
-  intros.
-  case_eq (compare a b1).
-  left;right.
-  unfold phi.
-  simpl.
-  rewrite H1;auto with T2.
-  left.
-  left. 
-  exists b1;exists b2; split.
-  auto with T2.
-  split;simpl;auto with T2. 
-  rewrite H1;auto with T2.
-  left;right.
-  simpl.
-  rewrite H1;auto with T2.
-  intros.
-  case_eq (compare a b1).
-  left;right.
-  simpl.
-  rewrite H1.
-  auto with T2.
-  right.
-  exists b1;exists b2; exists n.
-  repeat split;auto with T2.
-  simpl.
-  rewrite H1;auto with T2.
-  left;right.
-  simpl.
-  rewrite H1;auto with T2.
-  intros.
-  left;right.
-  simpl.
-  case_eq n.
-  intro; subst n.
-  case_eq c.
-  intro; subst c.
-  case H0.
-  destruct 1.
-  discriminate H1.
-  inversion H1.
-  inversion 1.
-  intro t;case t.
-  intro t0;case t0.
-  intros until t1;case t1.
-  intro; subst c.
-  case H0.
-  destruct 1.
-  discriminate H1.
-  inversion H1; lt_clean; auto with T2.
-  inversion 1.
-  auto with T2.
-  auto with T2.
-  auto with T2.
-  auto with T2.
-  auto with T2.
+Proof with auto with T2.
+  intros a b Hb; pattern b; apply phi_cases_aux; trivial.
+  -  left;right; cbn ...
+  - intros; case_eq (compare a b1); auto.
+    + left;right; unfold phi; cbn; rewrite H1 ...
+    + left;left; exists b1;exists b2; split ...
+      split;simpl ...
+      rewrite H1 ...
+    + left;right; cbn; rewrite H1 ...
+  -   intros; case_eq (compare a b1).
+      + left;right; cbn; rewrite H1 ...
+      +  right; exists b1, b2, n; repeat split ...
+         cbn; rewrite H1 ...
+      +  left;right; cbn; rewrite H1 ...
+  -   intros;  left;right; cbn; case_eq n; trivial.
+      + intro; subst n; case_eq c.
+        *  intro; subst c; case H0.
+           --   destruct 1.
+                ++ discriminate H1.
+                ++  inversion H1.
+           --  inversion 1.
+        *   intro t;case t ...
+            -- intro t0;case t0 ...
+               ++ intros until t1;case t1 ...
+                  **  intro; subst c; case H0.
+                      destruct 1.
+                      discriminate H1.
+                      inversion H1; lt_clean ...
+                      inversion 1.
 Qed.
 
 Theorem phi_cases : forall a b, nf b ->
@@ -2189,56 +2146,41 @@ Theorem phi_cases : forall a b, nf b ->
                                 {phi a b = [a, b]} +
                                 {b': T2 | nf b' /\ phi a b = [a, b']
                                           /\ succ  b' = b}.
-Proof.
-  intros a b Hb. 
-  pattern b;apply phi_cases_aux.
-  left;right.
-  simpl; auto with T2.
-  intros.
-  generalize (phi_of_psi a b1 b2).
-  case (lt_ge_dec a b1).
-  left;left;auto with T2.
-  left;right;auto with T2.
-  intros. 
-  generalize (phi_of_psi_succ a  b1 b2 n).
-  case (lt_ge_dec a b1).
-  right.
-  exists (gcons b1 b2 0 (finite n)).
-  split.
-  case n.
-  simpl;constructor;auto with T2.
-  simpl.
-  repeat constructor;auto with T2.
-  apply le_lt_trans with a;auto with T2.
-  split; auto with T2.
-  simpl.
-  generalize l;case b1.
-  inversion 1.
-  case n;simpl;auto with T2.
-  left;right.
-  auto with T2.
-  left;right;simpl.
-  case_eq n.
-  intro;subst n.
-  case_eq c.
-  intro; subst c.
-  case H0;intro.
-  inversion H1.
-  discriminate H2.
-  lt_clean.
-  lt_clean.
-  intro t; case t.
-  intro t0;case t0.
-  intros n t1 e; subst c.
-  case H0.
-   destruct 1.
-  discriminate H1.
-  inversion H1; lt_clean;auto with T2.
-  inversion 1.
-  auto with T2.
-  auto with T2.
-  auto with T2.
-  auto with T2.
+Proof with auto with T2.
+  intros a b Hb; pattern b;apply phi_cases_aux.
+  -  left;right; cbn ...
+  -  intros; generalize (phi_of_psi a b1 b2);
+       case (lt_ge_dec a b1).
+     +  left;left ...
+     +  left;right ...
+  -   intros; generalize (phi_of_psi_succ a  b1 b2 n);
+        case (lt_ge_dec a b1).
+      +   right; exists (gcons b1 b2 0 (finite n));  split.
+          case n.
+          *   cbn; constructor ...
+          * cbn; repeat constructor ...
+            apply le_lt_trans with a ...
+          *  split ...
+             cbn; generalize l;case b1.
+             --   inversion 1.
+             -- case n; cbn ...
+      + left;right ...
+  - left;right;cbn; case_eq n ...
+    +  intro;subst n; case_eq c.
+       *  intro; subst c;  case H0;intro H1.
+          -- inversion H1.
+             ++ discriminate.
+             ++   lt_clean.
+             --  lt_clean.
+       *  intro t; case t ...
+          -- intro t0;case t0 ...
+           ++ intros n t1 e; subst c.
+              case H0.
+              ** destruct 1.
+                 discriminate H1.
+                 inversion H1; lt_clean ...
+              ** inversion 1.
+    -   auto with T2.
 Qed.
 
 Theorem phi_nf : forall alpha beta, nf alpha -> 
@@ -2798,7 +2740,7 @@ Qed.
 
 
 
-Import Direct_proof. (* reorganiser *)
+Import Direct_proof.
 
 Lemma T1_injection : forall alpha beta : T1,
     T1_inj alpha = T1_inj beta -> alpha = beta.
@@ -2871,7 +2813,7 @@ Proof.
 Qed.
 
 
-(* ICI *)
+
 
 
 (*
