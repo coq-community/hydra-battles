@@ -1992,102 +1992,85 @@ Definition  phi (alpha beta : T2) : T2 :=
              | any_beta => [alpha, any_beta]
   end.
 
-
-
 Theorem phi_of_psi  : forall a b1 b2, 
     phi a [b1, b2] =
     if (lt_ge_dec a b1) 
     then [b1, b2]
     else [a ,[b1, b2]].
-  simpl.
-  intros;case (lt_ge_dec a b1).
-  intro;  rewrite compare_rw_lt; auto with T2.
-  destruct 1.
-  subst b1; rewrite compare_rw_eq;auto with T2.
-  rewrite compare_rw_gt;auto with T2.
+Proof.
+  cbn; intros;case (lt_ge_dec a b1).
+  - intro H;  rewrite compare_rw_lt; auto with T2.
+  - destruct 1.
+   + subst b1; rewrite compare_rw_eq;auto with T2.
+   + rewrite compare_rw_gt;auto with T2.
 Qed.
 
 Lemma phi_to_psi : forall alpha beta, 
     {alpha' : T2 & {beta' : T2 | phi alpha beta = [alpha', beta']}}.
 Proof.
-  destruct beta;simpl.
-  exists alpha; exists zero;trivial.
-  case n.
-  case beta3. 
-  case (compare alpha beta1). 
-  exists alpha;exists  [beta1, beta2];trivial.
-  exists beta1;exists beta2;trivial.
-  exists alpha;exists  [beta1, beta2];trivial.
-  destruct t.
-  destruct t.
-  destruct n0.
-  destruct t.
-  case (compare alpha beta1).
-  exists alpha;exists (gcons beta1 beta2 0 [zero, zero]);trivial.
-  exists alpha;exists (gcons beta1 beta2 0 zero);trivial.
-  exists alpha;exists (gcons beta1 beta2 0 [zero, zero]);trivial.
-  exists alpha;
-    exists (gcons beta1 beta2 0 (gcons zero zero 0 (gcons t1 t2 n0 t3)));
-    trivial.
-  destruct t.
-  case (compare alpha beta1).
-  exists alpha; exists (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
-  trivial.
-  exists alpha;exists (gcons beta1 beta2 0 (F S n0));trivial.
-  exists alpha;exists ( gcons beta1 beta2 0 (gcons zero zero (S n0) zero));trivial.
-  exists alpha;
-    exists ( gcons beta1 beta2 0 (gcons zero zero (S n0) (gcons t1 t2 n1 t3)));
-    trivial.
-  intros n1 t;exists alpha;
-    exists (gcons beta1 beta2 0 (gcons zero (gcons t1 t2 n0 t3) n1 t));trivial.
-  exists alpha;exists (gcons beta1 beta2 0 (gcons (gcons t1 t2 n0 t3) t n1 t0));
-    trivial.
-  intro n0;exists alpha;exists (gcons beta1 beta2 (S n0) beta3);trivial.
+  destruct beta; cbn.
+  -  now exists alpha, zero.
+  -  case n.
+   +  case beta3. 
+      * case (compare alpha beta1). 
+        -- exists alpha;exists  [beta1, beta2];trivial.
+        --  exists beta1;exists beta2;trivial.
+        --  exists alpha;exists  [beta1, beta2];trivial.
+      *  destruct t.
+         --   destruct t.
+              ++ destruct n0.
+                 ** destruct t.
+                    case (compare alpha beta1).
+                     now exists alpha, (gcons beta1 beta2 0 [zero, zero]).
+                     now exists alpha, (gcons beta1 beta2 0 zero).
+                     now exists alpha, (gcons beta1 beta2 0 [zero, zero]).
+                     now exists alpha,
+                         (gcons beta1 beta2 0
+                                (gcons zero zero 0 (gcons t1 t2 n0 t3))).
+                 **  destruct t.
+                     case (compare alpha beta1).
+                     now exists alpha,
+                         (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
+                     now exists alpha, (gcons beta1 beta2 0 (F S n0)).
+                     now exists alpha,
+                         (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
+                     now exists alpha,
+                         (gcons beta1 beta2 0 (gcons zero zero (S n0)
+                                                     (gcons t1 t2 n1 t3))).
+              ++ intros n1 t;
+                   now exists alpha,
+                       (gcons beta1 beta2 0
+                                  (gcons zero (gcons t1 t2 n0 t3) n1 t)).
+         --   exists alpha;
+                exists (gcons beta1 beta2 0
+                              (gcons (gcons t1 t2 n0 t3) t n1 t0));
+                reflexivity.
+   +  intro n0; now exists alpha; exists (gcons beta1 beta2 (S n0) beta3).
 Qed.
 
 Lemma phi_principal : forall alpha beta, ap (phi alpha beta).
 Proof.
-  intros alpha beta; case (phi_to_psi alpha beta);intros x (y,E);
-    rewrite E;try constructor.
+  intros alpha beta; case (phi_to_psi alpha beta);intros x (y,e);
+    rewrite e;try constructor.
 Qed.
-
-
 
 Theorem phi_alpha_zero : forall alpha, phi alpha zero = [alpha, zero].
 Proof.
-  simpl;auto with T2.
+  cbn; auto with T2.
 Qed.
 
-
-
-
-Theorem phi_of_psi_succ : forall a b1 b2 n, (* nf b1 -> nf b2 -> *)
+Theorem phi_of_psi_succ : forall a b1 b2 n, 
     phi a (gcons b1 b2 0 (finite (S n))) =
     if lt_ge_dec a b1
     then [a, (gcons b1 b2 0 (finite n))]
     else [a ,(gcons b1 b2 0 (finite (S n)))].
   Proof.
-  simpl.
-  intros;case (lt_ge_dec a b1).
-  intro;  rewrite compare_rw_lt; auto with T2.
-  destruct 1.
-  subst b1; rewrite compare_rw_eq;auto with T2.
-  rewrite compare_rw_gt;auto with T2.
+  cbn; intros;case (lt_ge_dec a b1).
+  -  intro H; rewrite compare_rw_lt; auto with T2.
+  -  destruct 1.
+     +  subst b1; rewrite compare_rw_eq;auto with T2.
+     +  rewrite compare_rw_gt;auto with T2.
 Qed.
-
-(*
-Theorem phi_of_psi_gen : forall a b1 b2 n b3,
-   b1 <= a ->
-   phi a (gcons b1 b2 n b3) = psi a (gcons b1 b2 n b3).
- *)
-
-
-(* every principal ordinal is enumerated by phi zero *)
-
-
-
-
-
 
 
 Lemma phi_cases_aux : forall P : T2 -> Type,
