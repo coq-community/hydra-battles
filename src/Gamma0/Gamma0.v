@@ -2436,50 +2436,38 @@ Proof.
        inversion H4;lt_clean; auto with T2.
 Qed.
 
-
-
 Lemma phi_mono_weak_r : forall a b c, nf a -> nf b -> nf c -> 
                                       b <= c -> phi a b <= phi a c. 
 Proof.
   destruct 4.
-  subst c;left;auto with T2.
-  right; apply phi_mono_r;auto with T2.
+  -  subst c;left;auto with T2.
+  -  right; apply phi_mono_r;auto with T2.
 Qed.
 
 Lemma phi_inj_r : forall a b c, nf a -> nf b -> nf c ->
-                                phi a b = phi a c -> b= c.
+                                phi a b = phi a c -> b = c.
 Proof.
-  intros a b c Na Nb Nc E.
-  tricho b c H.
-  absurd (phi a b < phi a c). 
-  rewrite E.
-  apply lt_irr.
-  apply phi_mono_r;auto.
-  auto.
-
-  absurd (phi a c < phi a b).
-  rewrite E.
-  apply lt_irr.
-  apply phi_mono_r;auto.
+  intros a b c Na Nb Nc E; tricho b c H; trivial.
+ -  absurd (phi a b < phi a c). 
+    +  rewrite E; apply lt_irr.
+    +  apply phi_mono_r;auto.
+ -  absurd (phi a c < phi a b).
+  +  rewrite E; apply lt_irr.
+  + apply phi_mono_r;auto.
 Qed.
 
 
 Lemma lt_a_phi_ab : forall a b, nf a -> nf b -> a < phi a b.
 Proof.
-  intros.
-  apply lt_le_trans with (phi a zero).
-  apply phi_alpha_zero_gt_alpha.
-  apply phi_mono_weak_r;auto with T2.
+  intros; apply lt_le_trans with (phi a zero).
+  -  apply phi_alpha_zero_gt_alpha.
+  -  apply phi_mono_weak_r;auto with T2.
 Qed.
-
 
 (* Expressing psi in terms of phi 
    (as in Lepper-Moser) *)
 
-
-
-
-Lemma zero_not_lim : ~ (is_limit zero).
+Lemma zero_not_lim : ~ is_limit zero.
 Proof. red;inversion 1. Qed.
 
 Lemma F_not_lim : forall n, ~ is_limit (F n).
@@ -2489,34 +2477,33 @@ Proof.
   case  zero_not_lim;auto.
 Qed.
 
-Lemma is_succ_not_lim : forall alpha, is_successor alpha -> ~ is_limit alpha.
+Lemma is_succ_not_lim  alpha: is_successor alpha -> ~ is_limit alpha.
+Proof.
   induction alpha.
-  intro;apply zero_not_lim.
-  inversion_clear 1.
-  apply (F_not_lim (S n)).
-  red;inversion 1.
-  subst alpha3;inversion H1. 
-  case IHalpha3;auto. 
+  - intro;apply zero_not_lim.
+  -  inversion_clear 1.
+     +  apply (F_not_lim (S n)).
+     +  red;inversion 1.
+        * subst alpha3;inversion H1. 
+        * case IHalpha3;auto. 
 Qed.
 
 
-Lemma is_limit_not_succ:  forall alpha, is_limit alpha -> ~ is_successor alpha.
+Lemma is_limit_not_succ alpha:  is_limit alpha -> ~ is_successor alpha.
+Proof.
   induction 1.
-  red;inversion 1.
-  subst alpha;subst beta.
-  case H;intro;lt_clean.
-  inversion H8.
-  red;inversion 1.
-  subst gamma.
-  case zero_not_lim;auto.
-  case IHis_limit.
-  auto.
+  -  red;inversion 1.
+   +  subst alpha beta; case H;intro;lt_clean.
+   +  inversion H8.
+  -  red;inversion 1.
+   +  subst gamma; case zero_not_lim;auto.
+   +  case IHis_limit; auto.
 Qed.
 
 
 (* 
    limit_plus_F alpha n beta  means :
-   beta = alpha + F n and alpha is limit or alpha = zero 
+   beta = alpha + F n and (alpha is limit or alpha = zero)
  *)
 
 
@@ -2533,70 +2520,53 @@ Lemma limit_plus_F_plus : forall alpha alpha' p,
     limit_plus_F alpha p alpha' ->
     nf alpha ->
     alpha' = alpha + F p.
+Proof.
   induction alpha.
-  inversion_clear 1.
-  simpl;auto.
-  inversion_clear 1.
-  generalize (IHalpha3 gamma p).
-  intros.
-  rewrite (H H1).
-  simpl.
-  case p;simpl.
-  rewrite plus_alpha_0;trivial.
-  case_eq (compare [alpha1, alpha2] [zero, zero]).
-  intro H3; generalize (compare_Eq H3).
-  injection 1;intros;subst alpha1;subst alpha2.
-  decompose [or] H0; lt_clean.
-  intro H3; generalize (compare_Lt H3).
-  inversion_clear 1;try lt_clean.
-  auto.
-  nf_inv.
+  -  inversion_clear 1.
+     cbn;auto.
+  -  inversion_clear 1; generalize (IHalpha3 gamma p).
+     intros H H2; rewrite (H H1); cbn.
+     case p;cbn.
+     +  rewrite plus_alpha_0;trivial.
+     +  case_eq (compare [alpha1, alpha2] [zero, zero]).
+        *  intro H3; generalize (compare_Eq H3).
+           injection 1;intros;subst alpha1;subst alpha2.
+           decompose [or] H0; lt_clean.
+        *  intro H3; generalize (compare_Lt H3).
+           inversion_clear 1;try lt_clean.
+  * auto.
+  + nf_inv.
 Qed.
-
-
-
 
 Lemma limit_plus_F_lim : forall alpha alpha' p,
                       limit_plus_F alpha p alpha' ->
                       nf alpha ->
                       is_limit alpha \/ alpha=zero.
 Proof.
- intro alpha;elim alpha.
- auto.
- intros alpha1 _ alpha2 _ alpha3; case alpha3.
- left.
- inversion H0.
- case (H _ _ H9).
- nf_inv. 
- constructor.
- auto.
- auto.
- intro H18;rewrite H18;constructor 1;auto.
- nf_inv.
- nf_inv.
- left.
- 
-  inversion H0.
- case (H _ _ H9).
- nf_inv.
-  constructor.
- auto.
- auto.
- intro H10;rewrite H10;constructor;try nf_inv.
- auto.
+ intro alpha; elim alpha.
+ - auto.
+ - intros alpha1 _ alpha2 _ alpha3; case alpha3.
+ + left; inversion H0.
+   case (H _ _ H9).
+ *  nf_inv. 
+ * constructor; auto.
+ * intro H18;rewrite H18;constructor 1;auto.
+    nf_inv.
+    nf_inv.
+ + left; inversion H0; case (H _ _ H9).
+   *  nf_inv.
+  *  constructor; auto.
+* intro H10;rewrite H10;constructor;try nf_inv;auto.
 Qed.
 
 
 
-Lemma limit_plus_F_inv0 : forall alpha beta,
-                              limit_plus_F alpha 0 beta -> 
-                              nf alpha -> alpha = beta.
+Lemma limit_plus_F_inv0  alpha beta: 
+  limit_plus_F alpha 0 beta -> 
+  nf alpha -> alpha = beta.
 Proof.
- intros.
- generalize (limit_plus_F_plus H H0).
- simpl.
- rewrite plus_alpha_0.
- auto.
+ intros H H0; generalize (limit_plus_F_plus H H0).
+ cbn; now rewrite plus_alpha_0.
 Qed.
 
 Lemma is_limit_cons_inv : forall b1 b2 n c, nf (gcons b1 b2 n c) ->
@@ -2615,17 +2585,14 @@ Proof.
 Qed.
 
 
-
 Lemma lt_epsilon0_ok : forall alpha, nf alpha -> lt_epsilon0 alpha ->
                                      alpha < epsilon0.
 Proof.
  induction 1;intros; compute;auto with T2.
- inversion_clear H1.
- constructor 2.
- auto with T2.
- apply IHnf2;auto with T2.
- inversion_clear H3.
- constructor 2;auto with T2.
+ - inversion_clear H1; constructor 2.
+   + auto with T2.
+   + apply IHnf2;auto with T2.
+  - inversion_clear H3; constructor 2;auto with T2.
 Qed.
 
 
@@ -2636,85 +2603,73 @@ Derive Inversion_clear lt_02 with (forall (a b c:T2)(n:nat),
                 gcons a b n c <  epsilon0) Sort Prop.
 
 Lemma psi_lt_epsilon0 : forall a b, [a, b] < epsilon0 ->
-       a = zero /\ b < epsilon0.
+                                    a = zero /\ b < epsilon0.
 Proof.
- intros a b H.
- inversion H using lt_01.
- split.
- apply lt_one_inv;auto with T2.
- compute;auto with T2.
- inversion 1.
- inversion 2.
- inversion 1.
- inversion 1.
+  intros a b H; inversion H using lt_01.
+  -  split.
+     +  apply lt_one_inv;auto with T2.
+     +  compute;auto with T2.
+  - inversion 1.
+  - inversion 2.
+  -  inversion 1.
+  - inversion 1.
 Qed.
 
 Lemma cons_lt_epsilon0 : forall a b n c, gcons a b n c < epsilon0 ->
-       nf (gcons a b n c) ->
-       a = zero /\ b < epsilon0 /\ c < epsilon0.
+                                         nf (gcons a b n c) ->
+                                         a = zero /\ b < epsilon0 /\ c < epsilon0.
 Proof.
- intros a b n c H.
- inversion H using lt_02.
- split.
- apply lt_one_inv;auto with T2.
- split.
- unfold epsilon0.
- exact H1.
- apply lt_trans with (gcons a b n c);auto with T2.
- apply lt_tail;auto with T2.
- inversion 1.
- inversion 2.
- inversion 1.
- inversion 1.
+  intros a b n c H; inversion H using lt_02.
+  -  split.
+     +  apply lt_one_inv;auto with T2.
+     +  split.
+        *  exact H1.
+        * apply lt_trans with (gcons a b n c);auto with T2.
+          apply lt_tail;auto with T2.
+  -  inversion 1.
+  -  inversion 2.
+  -  inversion 1.
+  - inversion 1.
 Qed.
-
-
 
 Lemma lt_epsilon0_okR: forall alpha, nf alpha -> alpha < epsilon0 ->
-                                          lt_epsilon0 alpha.
+                                     lt_epsilon0 alpha.
 Proof.
- induction alpha.
- constructor.
- unfold epsilon0;intros.
- inversion H0.
- rewrite (lt_one_inv H3).
- right.
- apply IHalpha2.
- inversion H;auto with T2.
- compute;auto with T2.
- apply IHalpha3.
- inversion H;auto with T2.
- compute;auto with T2.
- apply lt_trans with (gcons alpha1 alpha2 n alpha3).
- apply lt_tail.
- auto with T2.
- auto with T2.
- inversion H2.
- inversion H10.
- inversion H2.
- inversion H2.
+  induction alpha.
+  -  constructor.
+  -  unfold epsilon0;intros; inversion H0.
+     + rewrite (lt_one_inv H3).
+       right.
+       * apply IHalpha2.
+         inversion H;auto with T2.
+         compute;auto with T2.
+       * apply IHalpha3.
+         inversion H;auto with T2.
+         compute;auto with T2.
+         apply lt_trans with (gcons alpha1 alpha2 n alpha3).
+         apply lt_tail.
+         auto with T2.
+         auto with T2.
+     +  inversion H2.
+     +  inversion H10.
+     +  inversion H2.
+     + inversion H2.
 Qed.
 
 
-
-
-Import Direct_proof.
 
 Lemma T1_injection : forall alpha beta : T1,
     T1_inj alpha = T1_inj beta -> alpha = beta.
 Proof.
  induction alpha; destruct beta;simpl;auto with T2.
- discriminate 1.
- discriminate 1.
- injection 1;auto with T2.
- rewrite (IHalpha1 beta1).
- rewrite (IHalpha2 beta2).
- destruct 2;auto with T2.
- injection H;auto with T2.
- injection H;auto with T2.
+ - discriminate 1.
+ - discriminate 1.
+ -  injection 1;auto with T2.
+   rewrite (IHalpha1 beta1),  (IHalpha2 beta2).
+    +  destruct 2;auto with T2.
+    +  injection H;auto with T2.
+    +  injection H;auto with T2.
 Qed.
-
-
 
  
 Lemma T1_injection_lt : forall c, lt_epsilon0 (T1_inj c).
@@ -2722,77 +2677,48 @@ Proof.
  induction c;simpl;constructor;auto with T2.
 Qed.
 
-
-
 Definition lt_T1_injection : forall a, lt_epsilon0 a -> {c:T1 | T1_inj c = a}.
 Proof.
  induction a.
- exists T1.zero;simpl;auto with T2.
- intro.
- case IHa2.
- inversion H;auto with T2.
- intros c2 e2.
- case IHa3.
- inversion H;auto with T2.
- intros c3 e3.
- exists (T1.ocons c2 n c3).
- rewrite <- e3;rewrite <- e2.
- replace a1 with zero.
- simpl;auto with T2.
- inversion H;auto with T2.
+ - exists T1.zero;simpl;auto with T2.
+ -  intro H; case IHa2.
+  + inversion H;auto with T2.
+  + intros c2 e2; case IHa3.
+   * inversion H;auto with T2.
+   * intros c3 e3; exists (T1.ocons c2 n c3).
+     rewrite <- e3;rewrite <- e2.
+     replace a1 with zero.
+   --  simpl;auto with T2.
+   --  inversion H;auto with T2.
 Defined.
 
 
 
-Lemma inj_mono : forall alpha beta, (T1.lt alpha beta) ->
+Lemma inj_mono : forall alpha beta, T1.lt alpha beta ->
                                     T1_inj alpha < T1_inj beta.
 Proof.
   induction alpha. 
-  destruct beta. 
-  intro H;  compute  in H.
-  discriminate. 
-  simpl. 
-  constructor.
-  destruct beta. 
-  intro H;  compute  in H.
-  discriminate. 
-  intro H. 
-  
-  destruct (lt_inv H). 
-  constructor 3.
-  now apply IHalpha1.  
-  decompose [or and] H0; clear H0.
-  subst alpha1.
-
-  now constructor 6.
-  subst alpha1 n.
-  constructor 7. 
-  now apply IHalpha2.  
+  +  destruct beta. 
+   *  intro H;  compute  in H;  discriminate. 
+   * cbn;  constructor.
+  +  destruct beta. 
+     *  intro H;  compute  in H;  discriminate. 
+     *  intro H; destruct (lt_inv H). 
+     --   constructor 3; now apply IHalpha1.  
+     --   decompose [or and] H0; clear H0; subst alpha1.
+      ++  now constructor 6.
+      ++   subst  n; constructor 7;  now apply IHalpha2.  
 Qed.
 
 
-
-
-
-(*
-  In the following proof, some new tactics must make shorter the use
-  of total order on cpnf.
-
-*)
-
 Lemma inj_monoR : forall c c', lt (T1_inj c) (T1_inj c') -> T1.lt c  c'.
 Proof.
- intros.
- case (T1.lt_eq_lt_dec c c').
- destruct 1.
- auto .
- subst c'.
- case (lt_irr H).
- intro.
- generalize (inj_mono l).
- intro.
- case (lt_irr (alpha:=T1_inj c)).
- eapply lt_trans;eauto with T2.
+ intros c c' H; case (T1.lt_eq_lt_dec c c').
+ -  destruct 1; auto.
+   subst c'; case (lt_irr H).
+ - intro l; generalize (inj_mono l); intro H0;
+     case (lt_irr (alpha:=T1_inj c)).
+   eapply lt_trans;eauto with T2.
 Qed.
 
 
@@ -2800,18 +2726,15 @@ Lemma lt_epsilon0_trans : forall a, lt_epsilon0 a ->  nf a ->
      forall b, lt b a -> nf b -> lt_epsilon0 b.
 
 Proof.
- intros.
- apply lt_epsilon0_okR.
- auto with T2.
- apply lt_trans with a.
- auto with T2.
+ intros; apply lt_epsilon0_okR; auto.
+ apply lt_trans with a; auto.
  apply lt_epsilon0_ok;auto with T2.
 Qed.
 
-Lemma nf_nat_irrelevance : forall a b n n' c, nf (gcons a b n c) -> 
-                                              nf (gcons a b n' c).
+Lemma nf_coeff_irrelevance : forall a b n n' c, nf (gcons a b n c) -> 
+                                                nf (gcons a b n' c).
 Proof.
-   inversion_clear 1;   constructor;auto with T2.
+   inversion_clear 1; constructor;auto with T2.
 Qed.
 
 
@@ -2821,79 +2744,73 @@ Lemma psi_principal : forall a b c d, nf c -> c < [a, b]
 Proof.
  induction c;destruct d;simpl;auto with T2.
  case (compare [c1,c2][d1,d2]).
- intros;apply psi_lt_head.
+ -  intros;apply psi_lt_head; inversion_clear H0.
+    + constructor 2;auto with T2.
+    + constructor 3;auto with T2.
+    + constructor 4;auto with T2.
+    + constructor 5;auto with T2.
+    + inversion H2.
+    +inversion H2.
+ - auto with T2.
+ - intros H H0 H1.
+ generalize (IHc3 (gcons d1 d2 n0 d3)); intros H2.
+ assert (H5 : c3 < [a,b]).
+ {  eapply lt_trans; [| eexact H0].
+    apply lt_tail.
+    auto with T2.
+ }
  inversion_clear H0.
- constructor 2;auto with T2.
- constructor 3;auto with T2.
- constructor 4;auto with T2.
- constructor 5;auto with T2.
- inversion H2.
- inversion H2.
-auto with T2.
- intros.
- generalize (IHc3 (gcons d1 d2 n0 d3)).
- intros.
- assert (c3 < [a,b]).
- eapply lt_trans.
- 2:eexact H0.
- apply lt_tail.
- auto with T2.
- inversion_clear H0.
- constructor 2;auto with T2.
- constructor 3;auto with T2.
- constructor 4;auto with T2.
- constructor 5;auto with T2.
- inversion H4.
- constructor 7;auto with T2.
- inversion H4.
+ + constructor 2;auto with T2.
+ + constructor 3;auto with T2.
+ + constructor 4;auto with T2.
+ +  constructor 5;auto with T2.
+ +  inversion H3.
+  +  constructor 7;auto with T2.
+     inversion H3.
 Qed.
 
 
- Lemma nf_intro : forall a b n c, nf a -> nf b -> 
+Lemma nf_intro : forall a b n c, nf a -> nf b -> 
                                   c < [a,b ] -> nf c -> nf (gcons a b n c).
- Proof.
+Proof.
   destruct c;constructor;auto with T2.
   inversion_clear H1;auto with T2.
- inversion H3.
- inversion H3.
- Qed. 
+  -  inversion H3.
+  - inversion H3.
+Qed. 
  
 
 Lemma plus_nf : forall alpha, nf alpha -> forall beta, nf beta -> 
-                                    nf (alpha + beta).
- intros alpha Halpha.
- pattern alpha.
- apply transfinite_induction.
- destruct x.
- simpl;auto with T2.
- destruct beta.
- simpl;auto with T2.
- intros;simpl.
- case_eq ( compare (gcons x1 x2 0 zero) (gcons beta1 beta2 0 zero)).
- intro;apply nf_intro.
- nf_inv.
- nf_inv.
-  generalize ( compare_Eq  H2).
- injection 1.
- intros; subst beta1; subst beta2.
- inversion_clear H1.
- auto with T2.
- apply psi_lt_head;auto with T2.
- nf_inv.
- auto.
- intro;apply nf_intro.
- nf_inv.
- nf_inv.
- apply psi_principal.
- nf_inv.
- inversion H;auto with T2.
- 
- apply psi_lt_head;auto with T2.
- apply psi_lt_head;unfold psi; apply compare_Gt;auto with T2.
- eapply H0;auto with T2.
- nf_inv.
- apply lt_tail;auto with T2.
- assumption.
+                                                       nf (alpha + beta).
+Proof.
+  intros alpha Halpha; pattern alpha; apply transfinite_induction; trivial.
+  -  destruct x.
+     + cbn;auto with T2.
+     + destruct beta.
+       * cbn;auto with T2.
+       *  intros; cbn;
+            case_eq ( compare (gcons x1 x2 0 zero) (gcons beta1 beta2 0 zero)).
+          -- intro;apply nf_intro.
+          ++  nf_inv.
+          ++ nf_inv.
+          ++ generalize ( compare_Eq  H2); injection 1.
+             intros; subst beta1; subst beta2; inversion_clear H1.
+             auto with T2.
+             apply psi_lt_head;auto with T2.
+          ++ nf_inv.
+          -- auto.
+          --  intro;apply nf_intro.
+              ++  nf_inv.
+              ++  nf_inv.
+              ++  apply psi_principal.
+                  nf_inv.
+                  **  inversion H;auto with T2.
+                   apply psi_lt_head;auto with T2.
+                  **  apply psi_lt_head;unfold psi;
+                        apply compare_Gt;auto with T2.
+              ++  eapply H0;auto with T2.
+                  **  nf_inv.
+                  **  apply lt_tail;auto with T2.
 Qed.
 
 
