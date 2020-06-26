@@ -2,87 +2,10 @@
 
 
 Require Import Hydra_Lemmas Simple_LexProd Relations Relation_Operators
-Arith Peano_dec Lia.
+Arith Peano_dec Lia Omega2.
 
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
-
-(** * Order structure on nat * nat *)
-
-Definition  t := (nat * nat)%type. 
-
-(** non-dependent lexicographic strict ordering on nat*nat *)
-
-Definition lt2 : relation t := lexico Peano.lt Peano.lt.
-Infix "<" := lt2.
-
-(** reflexive closure of lt2 *)
-
-Definition le2 := clos_refl _ lt2.
-Infix "<=" := le2.
-
-(** ** Properties of lt2 and le2 
- *)
-
-Hint Constructors clos_refl lexico : hydra.
-Hint Unfold lt2 le2 : hydra.
-
-
-Instance Sto_lt2 : StrictOrder lt2.
-Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
-
-Lemma lt2_wf : well_founded lt2.
-Proof. apply wf_lexico; apply lt_wf. Qed.
-
-Lemma le2_introl :
-  forall i j k:nat, (j <= k)%nat -> (i,j) <= (i,k).
-Proof.
-  intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with hydra.
-  - subst k; now right.
-Qed.
-
-Lemma le2_0 : forall p: t,  (0,0) <= p.
-Proof.
-  destruct p, n ; auto with arith hydra.
-  - apply le2_introl;  auto with arith hydra.
-Qed.
-
-Lemma le2_1 : forall i j p,  (i,j) < p -> (i, S j) <= p.
-Proof.
-  intros i j p H; destruct p as (k,l).
-  -  inversion_clear H; auto with hydra.
-     + destruct (Lt.le_lt_or_eq _ _ H0); auto with hydra.
-       * subst l; now right.
-Qed.
-
-Lemma le2_lt2_trans : forall p q r, p <= q -> q < r -> p < r.
-Proof.
-  destruct 1; try trivial. 
-  intro; now transitivity y.  
-Qed.   
-
-Lemma lt2_le2_trans : forall p q r, p < q -> q <= r -> p < r.
-Proof.
-  destruct 2; try trivial; now  transitivity q.
-Qed.   
-
-
-Lemma limit_is_lub : forall i p, (forall j, (i,j) < p) <->
-                            (S i, 0) <= p.
-Proof.
-  intros i (k,l) ;split; intro  H .
-  -   destruct (Nat.eq_dec (S i) k).
-    + subst k;  destruct l.
-      *  now right.
-      *   left;  right;  auto with arith.
-    +  generalize (H (S l));   inversion_clear 1.
-       destruct l.
-      *  destruct (Lt.le_lt_or_eq _ _ H1); auto with hydra.
-           subst k; now right.
-      * left; left; lia.
-      *  now destruct (Nat.nlt_succ_diag_l l).
- -   intro j; apply lt2_le2_trans with (S i, 0); auto with hydra.
-Qed.
 
 
 Section Impossibility_Proof.
@@ -94,7 +17,7 @@ Section Impossibility_Proof.
 
   Variable m : Hydra -> t.
   
-  Context (Hvar : Hvariant lt2_wf free m).
+  Context (Hvar : Hvariant lt_wf free m).
    
   Let big_h := hyd1 (hyd2 head head).
   
@@ -198,7 +121,7 @@ Section Impossibility_Proof.
 
 Hint Constructors step clos_trans_1n : hydra.
 Hint Resolve lex_1 lex_2 (m_strict_mono m Hvar) : hydra.
-Hint Unfold   lt2 : hydra.
+Hint Unfold   lt : hydra.
 
 
 Lemma step_to_round_plus : forall p q, step p q -> iota p -+-> iota q.
@@ -213,23 +136,23 @@ Lemma m_ge : m big_h <= m small_h.
 Proof.
   unfold small_h; pattern (m big_h) .   
   apply  well_founded_induction with
-      (R := lt2) (1:= lt2_wf);
+      (R := lt) (1:= lt_wf);
     intros (i,j) IHij.  
   destruct j as [|k].
   - destruct i as [| l].
     +  (* p = (0,0) *)
-      apply le2_0. 
+      apply le_0. 
     +  (* p = (S i, 0) *)
       apply limit_is_lub; intro k.
-        apply le2_lt2_trans with (m (iota (l, k))); auto with hydra.
-  - apply le2_1; apply le2_lt2_trans with (m (iota (i, k))); auto with hydra.
+        apply le_lt_trans with (m (iota (l, k))); auto with hydra.
+  - apply le_1; apply le_lt_trans with (m (iota (i, k))); auto with hydra.
 Qed.
 
 
 Theorem Impossible : False.
 Proof.
   destruct (StrictOrder_Irreflexive  (m big_h));
-    apply le2_lt2_trans with (m small_h).
+    apply le_lt_trans with (m small_h).
   -  apply m_ge.
   -  apply m_lt. 
 Qed. 

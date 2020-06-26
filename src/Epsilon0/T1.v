@@ -2000,8 +2000,10 @@ Qed.
 
 (** ** On additive principal ordinals *)
 
-Lemma ap_plus : forall a, ap a ->
-                          forall b c, nf b -> nf c -> lt b  a -> lt c  a -> lt (b + c)  a.
+Lemma ap_plus : forall a,
+    ap a ->
+    forall b c,
+      nf b -> nf c -> lt b  a -> lt c  a -> lt (b + c)  a.
 Proof.
   destruct 1. 
   intro b; elim b. 
@@ -4036,6 +4038,6 @@ Check (phi0 (phi0 (FS 6))).
 
 Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
 
+Compute pp (3 * (omega + 5)).
 
-
-
+Compute pp (3 * (omega * 7 + 15)).
