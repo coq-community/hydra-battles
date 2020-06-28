@@ -87,66 +87,52 @@ Proof.
 Qed.   
 
 
-Definition succ_R alpha beta := 
+(** alpha is an immediate predecessor of beta *)
+
+Definition ipred alpha beta := 
     alpha < beta /\  forall gamma ,  gamma < beta -> gamma <= alpha.
 
-Goal forall i j k l, succ_R (i, j) (k, l) ->
+Lemma ipred_inv : forall i j k l, ipred (i, j) (k, l) ->
                      i = k /\ l = S j.
-  unfold succ_R; intros.
-  destruct H.
-  assert (i< k \/ i=k /\ j <l)%nat.
-  { inversion_clear H; auto. }
-  destruct H1.
+Proof.
+  destruct 1 as [H H0].
+  assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
+  destruct H1 as [H1 | [H1 H2]].
   - elimtype False.
-    clear H.
-    
-    assert ((i, S j) <= (i, j)).
-    {
-      apply H0. left; auto with arith.
-    }
-    inversion H.
-    subst.       
-    inversion H2.
-    subst.
+    assert (H2: (i, S j) <= (i, j)) by (apply H0; left; auto with arith).
+    inversion H2;subst. 
+    inversion H3; try lia.
     lia.
-    lia.
-    lia.
-  -    destruct H1; subst.
-       split; auto.
-       red in H2.
-       Search (_ <= _ -> _ \/ _)%nat.
-       destruct (le_lt_or_eq _ _ H2).
-       elimtype False.
-       assert ((k, S j) <= (k, j)).
-       { apply H0.
-         right; auto.
-       }
-
-       inversion H3.
-       inversion H4. lia.
-       lia.
-       lia.
-       auto.
+  -  split; auto.
+     destruct (le_lt_or_eq _ _ H2); auto.
+     + subst; elimtype False.
+       assert (H1: (k, S j) <= (k, j)) by (apply H0;  right; auto).
+       inversion H1; try lia.
+       inversion H4; lia.
 Qed. 
 
-
-
-Lemma succ_R_ok : forall alpha,  succ_R alpha (succ alpha).
-destruct alpha.
-red.
-simpl.
-split.
-right; auto.
- intro; simpl.
-destruct gamma. unfold succ.
-  cbn. 
-  inversion 1.
+Lemma ipred_ok : forall alpha,  ipred alpha (succ alpha).
+Proof.
+  destruct alpha;red;cbn; split.
+  - right; auto.
+  - intro; destruct gamma.  unfold succ; cbn; intro H.
+  inversion H.
    subst.
 left; left; lia.
 subst.
 destruct (le_lt_or_eq _ _ H1).
   left. right; lia.
    injection H0; intros; subst; right. 
+Qed.
+
+
+
+Lemma succ_ok alpha beta : ipred alpha beta <-> beta = succ alpha.
+Proof.
+  split.  
+  - destruct alpha, beta; intro H.
+    apply ipred_inv in H. destruct H;subst. reflexivity.
+  - intros; subst ; apply ipred_ok.
 Qed.
 
 
