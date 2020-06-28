@@ -21,7 +21,136 @@ Notation "'F'" := fin : o2_scope.
 
 Coercion fin : nat >-> t.
 
-Definition is_succ (alpha: t) := match alpha with
+
+ Definition lt : relation t := lexico Peano.lt Peano.lt.
+
+ Infix "<" := lt : o2_scope.
+
+(** reflexive closure of lt *)
+
+Definition le := clos_refl _ lt.
+
+Infix "<=" := le : o2_scope.
+
+Hint Constructors clos_refl lexico : O2.
+Hint Unfold lt le : O2.
+
+Example ex1 : 6 < omega.
+Proof.
+  left; auto with arith.
+Qed.
+
+
+Example ex2 : omega < (1,1).
+Proof.
+ right; auto with arith.
+Qed.
+
+
+
+Instance Sto_lt : StrictOrder lt.
+Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
+
+Lemma lt_wf : well_founded lt.
+Proof. apply wf_lexico; apply lt_wf. Qed.
+
+Lemma le_introl :
+  forall i j k:nat, (j <= k)%nat -> (i,j) <= (i,k).
+Proof.
+  intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with O2.
+  - subst k; now right.
+Qed.
+
+Lemma le_0 : forall p: t,  (0,0) <= p.
+Proof.
+  destruct p, n ; auto with arith O2.
+  - apply le_introl;  auto with arith O2.
+Qed.
+
+Lemma le_1 : forall i j alpha,  (i,j) < alpha -> (i, S j) <= alpha.
+Proof.
+  intros i j (k,l) H.
+  -  inversion_clear H; auto with O2.
+     + destruct (Lt.le_lt_or_eq _ _ H0); auto with O2.
+       * subst l; now right.
+Qed.
+
+Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
+Proof.
+  destruct 1; trivial. 
+  intro; now transitivity y.  
+Qed.   
+
+Lemma lt_le_trans : forall p q r, p < q -> q <= r -> p < r.
+Proof.
+  destruct 2; trivial; now  transitivity q.
+Qed.   
+
+
+Definition succ_R alpha beta := 
+    alpha < beta /\  forall gamma ,  gamma < beta -> gamma <= alpha.
+
+Goal forall i j k l, succ_R (i, j) (k, l) ->
+                     i = k /\ l = S j.
+  unfold succ_R; intros.
+  destruct H.
+  assert (i< k \/ i=k /\ j <l)%nat.
+  { inversion_clear H; auto. }
+  destruct H1.
+  - elimtype False.
+    clear H.
+    
+    assert ((i, S j) <= (i, j)).
+    {
+      apply H0. left; auto with arith.
+    }
+    inversion H.
+    subst.       
+    inversion H2.
+    subst.
+    lia.
+    lia.
+    lia.
+  -    destruct H1; subst.
+       split; auto.
+       red in H2.
+       Search (_ <= _ -> _ \/ _)%nat.
+       destruct (le_lt_or_eq _ _ H2).
+       elimtype False.
+       assert ((k, S j) <= (k, j)).
+       { apply H0.
+         right; auto.
+       }
+
+       inversion H3.
+       inversion H4. lia.
+       lia.
+       lia.
+       auto.
+Qed. 
+
+
+
+Lemma succ_R_ok : forall alpha,  succ_R alpha (succ alpha).
+destruct alpha.
+red.
+simpl.
+split.
+right; auto.
+ intro; simpl.
+destruct gamma. unfold succ.
+  cbn. 
+  inversion 1.
+   subst.
+left; left; lia.
+subst.
+destruct (le_lt_or_eq _ _ H1).
+  left. right; lia.
+   injection H0; intros; subst; right. 
+Qed.
+
+
+  Definition is_succ (alpha: t) := match alpha with
                                   (_, S _) => true
                                 | _ => false
                                 end.
@@ -47,57 +176,6 @@ Definition is_limit (alpha : t) := match alpha with
  Defined.
 
 
- Definition lt : relation t := lexico Peano.lt Peano.lt.
-
- Infix "<" := lt : o2_scope.
-
-(** reflexive closure of lt *)
-
-Definition le := clos_refl _ lt.
-
-Infix "<=" := le : o2_scope.
-
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-
-
-Instance Sto_lt : StrictOrder lt.
-Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
-
-Lemma lt_wf : well_founded lt.
-Proof. apply wf_lexico; apply lt_wf. Qed.
-
-Lemma le_introl :
-  forall i j k:nat, (j <= k)%nat -> (i,j) <= (i,k).
-Proof.
-  intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with O2.
-  - subst k; now right.
-Qed.
-
-Lemma le_0 : forall p: t,  (0,0) <= p.
-Proof.
-  destruct p, n ; auto with arith O2.
-  - apply le_introl;  auto with arith O2.
-Qed.
-
-Lemma le_1 : forall i j p,  (i,j) < p -> (i, S j) <= p.
-Proof.
-  intros i j p H; destruct p as (k,l).
-  -  inversion_clear H; auto with O2.
-     + destruct (Lt.le_lt_or_eq _ _ H0); auto with O2.
-       * subst l; now right.
-Qed.
-
-Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
-Proof.
-  destruct 1; try trivial. 
-  intro; now transitivity y.  
-Qed.   
-
-Lemma lt_le_trans : forall p q r, p < q -> q <= r -> p < r.
-Proof.
-  destruct 2; try trivial; now  transitivity q.
-Qed.   
 
 
 Lemma limit_is_lub : forall i p, (forall j, (i,j) < p) <->
@@ -129,44 +207,7 @@ Qed.
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
 
-(*
 
-Lemma le_1 : forall i j p,  (i,j) < p -> (i, S j) <= p.
-Proof.
-  intros i j p H; destruct p as (k,l).
-  -  inversion_clear H; auto with hydra.
-     + destruct (Lt.le_lt_or_eq _ _ H0); auto with hydra.
-       * subst l; now right.
-Qed.
-
-Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
-Proof.
-  destruct 1; try trivial. 
-  intro; now transitivity y.  
-Qed.   
-
-Lemma lt_le_trans : forall p q r, p < q -> q <= r -> p < r.
-Proof.
-  destruct 2; try trivial; now  transitivity q.
-Qed.   
-
-
-Lemma limit_is_lub : forall i p, (forall j, (i,j) < p) <->
-                            (S i, 0) <= p.
-Proof.
-  intros i (k,l) ;split; intro  H .
-  -   destruct (Nat.eq_dec (S i) k).
-    + subst k;  destruct l.
-      *  now right.
-      *   left;  right;  auto with arith.
-    +  generalize (H (S l));   inversion_clear 1.
-       destruct l.
-      *  destruct (Lt.le_lt_or_eq _ _ H1); auto with hydra.
-           subst k; now right.
-      * left; left; lia.
-      *  now destruct (Nat.nlt_succ_diag_l l).
- -   intro j; apply lt_le_trans with (S i, 0); auto with hydra.
-Qed.
 
  Definition lt_b alpha beta : bool :=
   match compare alpha beta with
@@ -181,7 +222,26 @@ Definition eq_b alpha beta := match compare alpha beta with
                               | _ => false
                               end.
                                             
+Lemma compare_refl alpha beta :
+  match (compare alpha beta)
+  with
+    Lt => alpha < beta
+  | Eq => alpha = beta
+  | Gt => beta < alpha
+  end.
+  destruct alpha, beta; cbn. 
+  case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
+  case_eq (n ?= n1); try discriminate;
+    repeat (rewrite Nat.compare_eq_iff ||
+            rewrite Nat.compare_lt_iff ||
+            rewrite  Nat.compare_gt_iff); intros; subst; auto.
+   - now right.
+   - now left.
+   - now right.
+   - now left. 
+Qed.
 
+(*
 Definition lt alpha beta : Prop := lt_b alpha beta.
 
 Definition le (alpha beta :t) :=
