@@ -46,11 +46,25 @@ Proof.
  right; auto with arith.
 Qed.
 
+Locate StrictOrder.
 
 
-Instance Sto_lt : StrictOrder lt.
+
+Instance lt_strorder : StrictOrder lt.
 Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
 
+Instance le_preorder : PreOrder le.
+Proof.
+  split.
+  -  right.
+  - inversion_clear 1; trivial.
+    + inversion 1; left.
+      * now transitivity y.
+      * now subst.
+Qed.
+
+
+  
 Lemma lt_wf : well_founded lt.
 Proof. apply wf_lexico; apply lt_wf. Qed.
 
