@@ -117,6 +117,64 @@ Qed.
 
 
 
+
+
+ Definition compare (alpha beta: t) : comparison :=
+  match Nat.compare (fst alpha) ( fst beta) with
+    Eq => Nat.compare (snd alpha) (snd beta)
+  | c => c
+  end.
+
+ 
+
+Hint Constructors clos_refl lexico : O2.
+Hint Unfold lt le : O2.
+
+
+
+ Definition lt_b alpha beta : bool :=
+  match compare alpha beta with
+      Lt => true
+    | _ => false
+  end.
+
+Definition le_b alpha beta := negb (lt_b beta alpha).
+
+Definition eq_b alpha beta := match compare alpha beta with
+                                Eq => true
+                              | _ => false
+                              end.
+                                            
+Lemma compare_refl alpha beta :
+  match (compare alpha beta)
+  with
+    Lt => alpha < beta
+  | Eq => alpha = beta
+  | Gt => beta < alpha
+  end.
+  destruct alpha, beta; cbn. 
+  case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
+  case_eq (n ?= n1); try discriminate;
+    repeat (rewrite Nat.compare_eq_iff ||
+            rewrite Nat.compare_lt_iff ||
+            rewrite  Nat.compare_gt_iff); intros; subst; auto.
+   - now right.
+   - now left.
+   - now right.
+   - now left. 
+Qed.
+
+
+Lemma lt_eq_lt_dec alpha beta :
+  {alpha < beta} + {alpha = beta} + {beta < alpha}.
+Proof.
+ generalize (compare_refl alpha beta).
+ case_eq (compare alpha beta).
+  - intros; left; now right.
+  - intros; left; now left.
+  - intros; now right.
+Defined.
+
 (** alpha is an immediate predecessor of beta *)
 
 Definition ipred alpha beta := 
@@ -247,17 +305,24 @@ Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) < alpha) <->
                                  (S i, 0) <= alpha.
 Proof.
   intros i (k,l) ;split; intro  H .
-  -   destruct (Nat.eq_dec (S i) k).
-    + subst k;  destruct l.
-      *  now right.
-      *   left;  right;  auto with arith.
-    +  generalize (H (S l));   inversion_clear 1.
-       destruct l.
-      *  destruct (Lt.le_lt_or_eq _ _ H1); auto with O2.
-           subst k; now right.
-      * left; left; lia.
-      *  now destruct (Nat.nlt_succ_diag_l l).
- -   intro j; apply lt_le_trans with (S i, 0); auto with O2.
+  -   destruct (lt_eq_lt_dec (S i, 0) (k,l)) as [[Hlt | Heq] | Hgt].
+      + now left.
+      + rewrite Heq; now right.
+      + destruct (is_limit_limit (S i,0)) as [H1 H2].
+        * red; trivial.
+        * simpl in H1.
+       
+       destruct (H2 _ Hgt) as [x H0].
+        simpl in H0.
+        specialize (H x).
+     destruct lt_strorder as [H3 H4].
+     destruct (H3 (k,l)).        
+     transitivity (i,x); auto.
+  -    inversion_clear H.
+    + inversion_clear H0.
+   *    intro.  left.  lia.
+   *    left; left; auto. 
+     + left;left;auto. 
 Qed.
 
 Lemma limit_is_lub beta :
@@ -284,51 +349,6 @@ Qed.
 
 
 
-
- Definition compare (alpha beta: t) : comparison :=
-  match Nat.compare (fst alpha) ( fst beta) with
-    Eq => Nat.compare (snd alpha) (snd beta)
-  | c => c
-  end.
-
- 
-
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-
-
-
- Definition lt_b alpha beta : bool :=
-  match compare alpha beta with
-      Lt => true
-    | _ => false
-  end.
-
-Definition le_b alpha beta := negb (lt_b beta alpha).
-
-Definition eq_b alpha beta := match compare alpha beta with
-                                Eq => true
-                              | _ => false
-                              end.
-                                            
-Lemma compare_refl alpha beta :
-  match (compare alpha beta)
-  with
-    Lt => alpha < beta
-  | Eq => alpha = beta
-  | Gt => beta < alpha
-  end.
-  destruct alpha, beta; cbn. 
-  case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
-  case_eq (n ?= n1); try discriminate;
-    repeat (rewrite Nat.compare_eq_iff ||
-            rewrite Nat.compare_lt_iff ||
-            rewrite  Nat.compare_gt_iff); intros; subst; auto.
-   - now right.
-   - now left.
-   - now right.
-   - now left. 
-Qed.
 
 (*
 Definition lt alpha beta : Prop := lt_b alpha beta.
