@@ -48,7 +48,7 @@ Qed.
 
 Locate StrictOrder.
 
-
+Search StrictOrder.
 
 Instance lt_strorder : StrictOrder lt.
 Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
@@ -81,13 +81,11 @@ Proof.
   - apply le_introl;  auto with arith O2.
 Qed.
 
-Lemma le_1 : forall i j alpha,  (i,j) < alpha -> (i, S j) <= alpha.
-Proof.
-  intros i j (k,l) H.
-  -  inversion_clear H; auto with O2.
-     + destruct (Lt.le_lt_or_eq _ _ H0); auto with O2.
-       * subst l; now right.
-Qed.
+(** cf Peano.lt's definition  in Stdlib *)
+
+
+
+
 
 Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
 Proof.
@@ -101,13 +99,31 @@ Proof.
 Qed.   
 
 
+Lemma lt_succ_le alpha beta : alpha < beta <-> succ alpha <= beta.
+Proof.  
+ destruct alpha, beta. unfold succ; cbn.
+ split.
+  - inversion_clear 1.
+  + left; now left.
+  +  now apply le_introl.
+  -  intros; apply lt_le_trans with (n, S n0); auto.
+    right; auto.
+Qed.
+
+Lemma lt_succ alpha : alpha < succ alpha.
+Proof.
+  destruct alpha; right; cbn; lia.
+Qed.
+
+
+
 (** alpha is an immediate predecessor of beta *)
 
 Definition ipred alpha beta := 
     alpha < beta /\  forall gamma ,  gamma < beta -> gamma <= alpha.
 
 Lemma ipred_inv : forall i j k l, ipred (i, j) (k, l) ->
-                     i = k /\ l = S j.
+                                  i = k /\ l = S j.
 Proof.
   destruct 1 as [H H0].
   assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
@@ -125,21 +141,23 @@ Proof.
        inversion H4; lia.
 Qed. 
 
+Corollary ipred_not i j k : ~ ipred (i,j) (k,0).
+Proof.
+  intro H; apply ipred_inv in H. destruct H; discriminate. 
+Qed.
+
+
 Lemma ipred_ok : forall alpha,  ipred alpha (succ alpha).
 Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
-  - intro; destruct gamma.  unfold succ; cbn; intro H.
-  inversion H.
-   subst.
-left; left; lia.
-subst.
-destruct (le_lt_or_eq _ _ H1).
-  left. right; lia.
-   injection H0; intros; subst; right. 
+  -  destruct gamma as [n1 n2]; unfold succ; cbn; intro H.
+     inversion H.
+     + subst; left; left; lia.
+     + subst; destruct (le_lt_or_eq _ _ H1).
+      * left; right; lia.
+      * injection H0; intros; subst; right. 
 Qed.
-
-
 
 Lemma succ_ok alpha beta : ipred alpha beta <-> beta = succ alpha.
 Proof.
@@ -150,18 +168,105 @@ Proof.
 Qed.
 
 
-  Definition is_succ (alpha: t) := match alpha with
-                                  (_, S _) => true
-                                | _ => false
-                                end.
+Definition is_succ (alpha: t) := match alpha with
+                                   (_, S _) => true
+                                 | _ => false
+                                 end.
+Search (_ < _ -> succ _ <= _)%nat.
+
+
+
+Definition  omega_limit (s: nat -> t) (alpha:t) :=
+  (forall i: nat, s i < alpha) /\
+  (forall beta, beta < alpha ->  exists i:nat , beta < s i).
+
+
 
 Definition is_limit (alpha : t) := match alpha with
                                      (S _, 0) => true
                                    | _ => false
-                                    end.
+                                   end.
+
+Lemma omega_limit_is_limit alpha s : omega_limit s alpha ->
+                                     is_limit alpha.
+Proof.
+   destruct alpha.
+   destruct 1.
+   destruct n0.
+   - destruct n.
+    +   specialize (H 0).
+       inversion H; lia.
+    + now  cbn.
+   - 
+    destruct (H0 (n, n0)).
+    + right; auto with arith. 
+    + specialize (H x).
+     rewrite lt_succ_le in H1.
+     assert (s x < s x) by (eapply lt_le_trans; eauto).
+     destruct lt_strorder as [H3 H4].
+     destruct (H3 _ H2).
+Qed.
+
+Definition canon_seq  alpha i :=
+  match alpha with
+    (0,0) => (0,0)
+  | (_, S p) => (0,p)
+  | (S n, 0) => (n, i)
+  end.
+
+
+
+Lemma is_limit_limit alpha :
+  is_limit alpha -> omega_limit (canon_seq alpha) alpha.
+Proof.
+  destruct alpha;  inversion 1.
+  destruct n; [discriminate | unfold canon_seq].
+  split;  destruct n0; try discriminate.
+  -    left; auto with arith.
+  -  destruct beta; inversion_clear 1.
+     exists (S n1).
+     assert( H0: (n0 = n \/ n0 <  n)%nat) by lia.
+     destruct H0.
+     subst;  right; auto.
+     left; auto.
+     lia.    
+Qed.
+
+
+
+
 
  Example Ex1 : is_limit omega.
  Proof. reflexivity.  Qed.
+
+
+
+ (* A simplifier ? *)
+ 
+Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) < alpha) <->
+                                 (S i, 0) <= alpha.
+Proof.
+  intros i (k,l) ;split; intro  H .
+  -   destruct (Nat.eq_dec (S i) k).
+    + subst k;  destruct l.
+      *  now right.
+      *   left;  right;  auto with arith.
+    +  generalize (H (S l));   inversion_clear 1.
+       destruct l.
+      *  destruct (Lt.le_lt_or_eq _ _ H1); auto with O2.
+           subst k; now right.
+      * left; left; lia.
+      *  now destruct (Nat.nlt_succ_diag_l l).
+ -   intro j; apply lt_le_trans with (S i, 0); auto with O2.
+Qed.
+
+Lemma limit_is_lub beta :
+  is_limit beta -> forall alpha, 
+    (forall i,  canon_seq beta i < alpha) <-> beta <= alpha.
+Proof.  
+  destruct beta;intros H alpha;destruct n, n0; try discriminate.
+  apply limit_is_lub_0.
+Qed.
 
  Definition zero_succ_limit_dec :
   forall alpha, 
@@ -178,22 +283,6 @@ Definition is_limit (alpha : t) := match alpha with
 
 
 
-Lemma limit_is_lub : forall i p, (forall j, (i,j) < p) <->
-                            (S i, 0) <= p.
-Proof.
-  intros i (k,l) ;split; intro  H .
-  -   destruct (Nat.eq_dec (S i) k).
-    + subst k;  destruct l.
-      *  now right.
-      *   left;  right;  auto with arith.
-    +  generalize (H (S l));   inversion_clear 1.
-       destruct l.
-      *  destruct (Lt.le_lt_or_eq _ _ H1); auto with O2.
-           subst k; now right.
-      * left; left; lia.
-      *  now destruct (Nat.nlt_succ_diag_l l).
- -   intro j; apply lt_le_trans with (S i, 0); auto with O2.
-Qed.
 
 
  Definition compare (alpha beta: t) : comparison :=

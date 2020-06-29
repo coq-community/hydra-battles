@@ -143,9 +143,12 @@ Proof.
     +  (* p = (0,0) *)
       apply le_0. 
     +  (* p = (S i, 0) *)
-      apply limit_is_lub; intro k.
+      rewrite <- limit_is_lub.  intro k.
         apply le_lt_trans with (m (iota (l, k))); auto with hydra.
-  - apply le_1; apply le_lt_trans with (m (iota (i, k))); auto with hydra.
+        now red. 
+- change (i, S k) with (succ (i,k)) at 1.
+    rewrite <- lt_succ_le.
+ apply le_lt_trans with (m (iota (i, k))); auto with hydra.
 Qed.
 
 
