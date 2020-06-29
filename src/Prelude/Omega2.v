@@ -63,8 +63,11 @@ Proof.
       * now subst.
 Qed.
 
+Lemma eq_dec (alpha beta: t) : {alpha = beta} + {alpha <> beta}.
+Proof.  
+ repeat decide equality.
+Defined.
 
-  
 Lemma lt_wf : well_founded lt.
 Proof. apply wf_lexico; apply lt_wf. Qed.
 
@@ -346,28 +349,6 @@ Qed.
  Defined.
 
 
-
-
-
-
-(*
-Definition lt alpha beta : Prop := lt_b alpha beta.
-
-Definition le (alpha beta :t) :=
-  match compare alpha beta with
-    Gt => False
-  | _ => True
-  end.
-
-Hint Unfold le : t.
-
-Infix "<" := lt : o2_scope.
-Infix "<=" := le : o2_scope.
-
-
-
- *)
-
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
   | (0, b), (0, b') => (0, b + b')
@@ -379,9 +360,7 @@ Definition  plus (alpha beta : t) : t :=
  
   end.
 
-
 Infix "+" := plus : o2_scope.
-
 
 Definition mult_fin  (alpha : t) (p : nat): t :=
   match alpha, p with
@@ -412,6 +391,14 @@ Lemma plus_assoc alpha beta gamma :
   destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; lia.
 Qed.
 
+
+Lemma succ_is_plus_1  alpha : alpha + 1 = succ alpha.
+Proof.
+ unfold succ ;
+simpl; 
+ destruct alpha; cbn; destruct n, n0; try f_equal; lia.
+Qed.
+
 Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
 Proof.
  destruct alpha; simpl.
@@ -427,11 +414,12 @@ Proof.
 Qed.
 
 
-Definition ap (alpha : t) :=
-  forall beta gamma,  beta < alpha -> gamma < alpha -> beta + gamma < alpha.
+Definition ap (alpha : t) :=  alpha <> zero /\
+  (forall beta gamma,  beta < alpha -> gamma < alpha -> beta + gamma < alpha).
 
 Lemma omega_ap : ap omega.
 Proof.
+ split; [discriminate |].
   intros beta gamma H H0.
   destruct beta, gamma.
   compute in H, H0.
@@ -445,7 +433,43 @@ Proof.
 Qed.
 
 
-Compute (omega * 3)%o2.
+Lemma only_omega_is_ap alpha : ap alpha -> alpha = 1 \/ alpha = omega.
+Proof.
+  destruct (zero_succ_limit_dec alpha) as [[Hzero |  Hlim] | Hsucc].
+  - subst alpha; intro H; elimtype False.
+    destruct H as [H _]; auto.
+  - destruct alpha; unfold ap.
+    destruct n, n0; try discriminate.
+    intros [_ H1]; destruct n.
+    + now right.
+    +  right; specialize (H1 (S n,0) (S n,0)).
+       assert (H2:(S n, 0) < (S (S n), 0)) by (left; auto).
+       specialize (H1 H2 H2).
+       inversion H1; lia.
+  -  intro H;  destruct Hsucc as [beta e]; subst.
+     destruct H as [_ H].
+      destruct (eq_dec beta zero).
+       + subst; now left.
+       +  specialize  (H beta 1 (lt_succ beta)).
+          assert (1 < succ beta). {
+            destruct beta;  destruct n0, n1.
+            * now destruct n.
+            * right; cbn; lia.
+            * destruct n0; cbn.
+              left; auto.
+              left; simpl;lia.
+            * left; simpl; lia.
+          }
+          *  specialize (H H0).
+             rewrite <- succ_is_plus_1 in H.       
+             destruct lt_strorder as [H3 H4].
+             destruct (H3 _ H).        
+Qed.
+
+
+
+
+Compute (omega * 3).
 Compute (omega * 3) * 6.
 
 Compute (omega * 3 + 1) * 6.
@@ -457,3 +481,7 @@ Compute (2,2)+(3,10).
 Compute (0,2)+(0,10).
 
 Compute (0,2)+(1,10).
+
+Goal omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
+  reflexivity.
+Qed.
