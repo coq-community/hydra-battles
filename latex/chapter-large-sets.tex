@@ -118,7 +118,7 @@ First, we notice that this  number $l$ exists, thanks to the following theorems:
 \begin{Coqsrc}
 canonS_LT:
   forall (i : nat) (alpha : T1),
-  nf alpha -> alpha <> zero -> canonS i alpha < alpha.
+  nf alpha -> alpha <> zero -> canonS alpha i < alpha.
 
 T1_wf: well_founded LT.
 \end{Coqsrc}
@@ -262,7 +262,7 @@ Section lim.
             (Hnf : nf lambda)
             (Hlim : is_limit lambda)
             (f : nat -> nat -> nat)
-            (H : forall k, L_spec (canonS k lambda) (f (S k))).
+            (H : forall k, L_spec (canonS lambda k) (f (S k))).
   
   Let L_lim k := f k (S k).
 
@@ -527,7 +527,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  L_ (Canon i alpha)  (S i) ;
+          { | left _ =>  L_ (Canon alpha i)  (S i) ;
             | right notlimit =>  L_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
@@ -573,7 +573,7 @@ Lemma L_zero_eqn : forall i, L_ Zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_lim_eqn alpha i : Is_Limit alpha -> L_ alpha i =
-                                        L_ (Canon i alpha) (S i).
+                                        L_ (Canon alpha i) (S i).
 
 Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
 \end{Coqsrc}
@@ -643,7 +643,7 @@ Equations H_ (alpha: E0) (i:nat) :  nat  by wf  alpha lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  H_ (Canon (S i) alpha)  i ;
+          { | left _ =>  H_ (Canon alpha (S i))  i ;
             | right notlimit =>  H_ (Pred alpha) (S i)}}. 
 
 Solve All Obligations with auto with E0.
@@ -658,9 +658,8 @@ Proof.   intro i; now rewrite H__equation_1.  Qed.
 Lemma H_eq2 alpha i : Is_Succ alpha ->
                       H_ alpha i = H_ (Pred alpha) (S i).
 
-
 Lemma H_lim_eqn alpha i : Is_Limit alpha ->
-                      H_ alpha i =  H_ (Canon (S i) alpha) i.
+                      H_ alpha i =  H_ (Canon alpha (S i)) i.
 
 Lemma H_eq4  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
 \end{Coqsrc}
@@ -694,7 +693,7 @@ it is easy to get the formula associated with $H_\omega$.
 Lemma H_omega : forall k, H_ Omega k = S (2 * k)%nat.
 Proof with auto with E0.
   intro k; rewrite H_lim_eqn ...
-  - replace (Canon (S k) omega) with (Fin (S k)).
+  - replace (Canon omega (S k)) with (Fin (S k)).
     + rewrite H_Fin; lia.
     +  now autorewrite with E0_rw.
 Qed.
@@ -716,7 +715,7 @@ Then, we get easily formulas for $H_{\omega+i}$, and $H_{\omega\times i}$ for an
 Lemma H_omega_double k : H_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
  rewrite H_lim_eqn; simpl Canon.
- - ochange  (CanonS  k (omega * 2)%e0)  (omega + (S k))%e0.
+ - ochange  (CanonS  (omega * 2)%e0 k)  (omega + (S k))%e0.
   + rewrite H_Plus_Fin, H_omega;  lia.
   -  now compute.
 Qed.
@@ -740,7 +739,7 @@ Lemma H_omega_sqr : forall k,
 Proof.
   intro k; 
    rewrite H_lim_eqn; auto with E0.
-  - ochange (Canon (S k) (Phi0 2)) (omega * (S k))%e0.
+  - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
     +  rewrite H_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- lia. 
@@ -1029,7 +1028,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  F_ (Canon i alpha)  i ;
+          { | left _ =>  F_ (Canon alpha i)  i ;
             | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
 \end{Coqsrc}
 
@@ -1079,7 +1078,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
            { | left _ => S i ;
              | right nonzero
                  with Utils.dec (Is_Limit alpha) :=
-                 { | left _ => F_star (Canon i alpha,1) i ;
+                 { | left _ => F_star (Canon alpha i,1) i ;
                    | right notlimit =>
                      F_star (Pred alpha, S i)  i}};
     F_star (alpha,(S (S n))) i :=
@@ -1096,7 +1095,7 @@ It is quite easy to prove that our function \texttt{F\_} satisfies the equations
 Lemma F_zero_eqn : forall i, F_ Zero i = S i.
 
 Lemma F_lim_eqn : forall alpha i,  Is_Limit alpha ->
-                               F_ alpha i = F_ (Canon i alpha) i.
+                               F_ alpha i = F_ (Canon alpha i) i.
 
 Lemma F_succ_eqn : forall alpha i,
     F_ (Succ alpha) i = iterate (F_ alpha) (S i) i.

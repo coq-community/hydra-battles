@@ -37,7 +37,7 @@ Definition large_set_check alpha i j :=
   in match beta with
      | one => Ok
      | zero => Too_far
-     |  _ => Remaining (pp (canon j beta))
+     |  _ => Remaining (pp (canon beta j))
      end.
 
 Compute pp (gnaw (omega * omega) (interval 6 70)).
@@ -142,9 +142,6 @@ Compute large_set_check (omega ^ omega) 1 6.
 Compute large_set_check (omega ^ omega) 2 38.
 
 Compute large_set_check omega 33 34.
-
-Compute canon 33 omega.
-
 
 
 

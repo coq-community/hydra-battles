@@ -23,7 +23,7 @@ Equations H_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  H_ (Canon (S i) alpha)  i ;
+          { | left _ =>  H_ (Canon alpha (S i))  i ;
             | right notlimit =>  H_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
@@ -49,7 +49,7 @@ Qed.
 
 
 Lemma H_lim_eqn alpha i : Is_Limit alpha ->
-                      H_ alpha i =  H_ (Canon (S i) alpha) i.
+                      H_ alpha i =  H_ (Canon alpha (S i)) i.
 Proof.
   intros;rewrite H__equation_1.
   destruct (E0_eq_dec alpha Zero).
@@ -88,7 +88,7 @@ Qed.
 Lemma H_omega : forall k, H_ omega k = S (2 * k)%nat.
 Proof with auto with E0.
   intro k; rewrite H_lim_eqn ...
-  - replace (Canon (S k) omega) with (Fin (S k)).
+  - replace (Canon omega (S k)) with (Fin (S k)).
     + rewrite H_Fin; lia.
     + now autorewrite with E0_rw.
 Qed.
@@ -116,7 +116,7 @@ Qed.
 Lemma H_omega_double k : H_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
  rewrite H_lim_eqn; simpl Canon.
- -   ochange  (CanonS  k (omega * FinS 1)%e0)  (omega + (S k))%e0.
+ -   ochange  (CanonS  (omega * FinS 1)%e0 k)  (omega + (S k))%e0.
    
   + rewrite H_Plus_Fin, H_omega;  lia.
   -  now compute.
@@ -125,14 +125,14 @@ Qed.
 Lemma H_omega_3 k : H_ (omega * 3)%e0 k = (8 * k + 7)%nat.
 Proof.
   rewrite H_lim_eqn ; [| reflexivity].
-  ochange (Canon (S k) (omega * 3)%e0) (omega * 2 + FinS k)%e0.
+  ochange (Canon  (omega * 3)%e0 (S k)) (omega * 2 + FinS k)%e0.
   rewrite FinS_eq,  H_Plus_Fin, H_omega_double; lia.  
 Qed.
 
 Lemma H_omega_4 k : H_ (omega * 4)%e0 k = (16 * k + 15)%nat.
 Proof.
   rewrite H_lim_eqn ; [| reflexivity].
-  ochange (Canon (S k) (omega * 4)%e0) (omega * 3 + FinS k)%e0.
+  ochange (Canon  (omega * 4)%e0 (S k)) (omega * 3 + FinS k)%e0.
   rewrite FinS_eq,  H_Plus_Fin, H_omega_3; lia.
 Qed.
 
@@ -143,7 +143,7 @@ Proof.
   - ochange (omega * 0)%e0 Zero; simpl.
     intro k; rewrite H_zero_eqn; lia.
   - intro k; rewrite H_lim_eqn.
-    +  ochange (Canon (S k) (omega * S i)%e0) (omega * i + (S k))%e0.
+    +  ochange (Canon (omega * S i)%e0  (S k)) (omega * i + (S k))%e0.
        rewrite H_Plus_Fin, IHi.
         simpl (exp2 (S i)); lia.
         simpl Canon;  destruct i;reflexivity.
@@ -164,7 +164,7 @@ Lemma H_omega_sqr : forall k,
 Proof.
   intro k; 
    rewrite H_lim_eqn; auto with E0.
-  - ochange (Canon (S k) (Phi0 2)) (omega * (S k))%e0.
+  - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
     +  rewrite H_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- lia. 
@@ -188,16 +188,16 @@ Proof with auto with E0.
   -  intros beta Hbeta H;  destruct (Zero_Succ_Limit_dec beta).
      destruct s.
      + subst; intro k. autorewrite with H_rw E0_rw using trivial. 
-     + intro k;  assert (CanonS k (Omega_term alpha i + beta)%e0 =
-                          (Omega_term alpha  i + (CanonS k beta))%e0).
+     + intro k;  assert (CanonS  (Omega_term alpha i + beta)%e0 k =
+                          (Omega_term alpha  i + (CanonS beta k))%e0).
        {  rewrite CanonS_plus_1; auto with E0.           
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
           unfold Is_Limit in e; rewrite H in e; discriminate e.
        }
        rewrite H_lim_eqn, CanonS_Canon, H0.
-       specialize (Hbeta (CanonS k beta)).
-       assert (CanonS k beta < beta)%e0 by auto with E0.
-       assert (CanonS k beta < Phi0 alpha)%e0 by (eapply Lt_trans; eauto).
+       specialize (Hbeta (CanonS beta k)).
+       assert (CanonS beta k < beta)%e0 by auto with E0.
+       assert (CanonS beta k < Phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H_lim_eqn beta).
        apply Is_Limit_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
@@ -222,8 +222,8 @@ Lemma H_Omega_term_1 : alpha <> Zero -> forall  k,
 Proof with auto with E0.
   intros H k;  rewrite H_lim_eqn ...
   rewrite CanonS_Canon.
-  - ochange (CanonS k (Omega_term alpha (S i)))
-          (Ocons alpha i (CanonS  k (Phi0 alpha))).
+  - ochange (CanonS (Omega_term alpha (S i)) k)
+          (Ocons alpha i (CanonS  (Phi0 alpha) k)).
   +  rewrite H_cons ...
      *  f_equal; rewrite (H_lim_eqn (Phi0 alpha)) ...
   +  rewrite cnf_Ocons ...
@@ -478,7 +478,7 @@ Section Proof_of_Abstract_Properties.
          + subst beta0;  destruct (Halpha beta).     
            * apply Lt_Succ.
            * rewrite Canon_Succ; apply PC0.
-         + replace (Canon (S n) (Succ beta)) with beta in H0.
+         + replace (Canon (Succ beta) (S n)) with beta in H0.
             * transitivity (H_ beta (S n)).
               -- destruct (Halpha beta).
                ++ apply Lt_Succ.
@@ -515,10 +515,10 @@ Section Proof_of_Abstract_Properties.
       Remark RBlim : forall n, (n < H_ alpha n)%nat.
       Proof.
         intro n;   rewrite H_lim_eqn; auto.
-        destruct (Halpha (Canon (S n) alpha)).
+        destruct (Halpha (Canon alpha (S n))).
         -  apply Canon_lt;  now apply Limit_not_Zero.
         -  eapply PB0; intro H.
-        assert (H0 :cnf (Canon (S n) alpha) =(cnf Zero)) by (f_equal; auto).
+        assert (H0 :cnf (Canon alpha (S n)) = cnf Zero) by (f_equal; auto).
         simpl in H0;   apply (@is_limit_canonS_not_zero n (cnf alpha)); auto.
         +  apply cnf_ok.
       Qed.
@@ -527,15 +527,15 @@ Section Proof_of_Abstract_Properties.
       Proof.
         intros m n H; rewrite (H_lim_eqn); auto.
         -  rewrite (H_lim_eqn alpha); auto.
-           +  destruct (Halpha (Canon (S n) alpha)).
+           +  destruct (Halpha (Canon alpha (S n))).
               *  apply CanonS_lt;  now  apply Limit_not_Zero.
-              * apply Nat.lt_le_trans with (H_ (Canon (S m) alpha) (S m)).
-                -- destruct (Halpha (Canon (S m) alpha) ).
+              * apply Nat.lt_le_trans with (H_ (Canon alpha (S m)) (S m)).
+                -- destruct (Halpha (Canon alpha (S m)) ).
                    ++ apply CanonS_lt;  now  apply Limit_not_Zero.
                    ++   apply PA1; lia.
-                -- apply Nat.le_trans with  (H_ (Canon (S m) alpha) n).
+                -- apply Nat.le_trans with  (H_ (Canon alpha (S m)) n).
                    destruct  (Lt.le_lt_or_eq _ _ H).
-                   ++ destruct (Halpha (Canon (S m) alpha)).
+                   ++ destruct (Halpha (Canon alpha (S m))).
                       apply CanonS_lt; now  apply Limit_not_Zero.
                       specialize (PA1 (S m) n H0); lia.
                    ++ subst n; reflexivity.
@@ -568,21 +568,21 @@ Section Proof_of_Abstract_Properties.
         - destruct H.
         - destruct (Canon_plus_inv H).
          + subst;  rewrite (H_lim_eqn alpha); auto.
-          specialize (Halpha (Canon (S (S n)) alpha)).
+          specialize (Halpha (Canon alpha (S (S n)))).
           destruct Halpha.
          *  apply Canon_lt,  Limit_not_Zero; auto.
          *  apply PE0; apply Cor12_E0 with 0.
           -- apply Canon_mono1; auto. 
           -- lia.
           -- apply KS_thm_2_4_E0; auto.
-        + destruct (Halpha  (Canon (S n) alpha)).
+        + destruct (Halpha  (Canon alpha (S n))).
           apply Canon_lt,  Limit_not_Zero; auto.
           rewrite (H_lim_eqn alpha); auto.
           specialize (PE0 _ _ H0);  auto.
-          transitivity (H_ (Canon (S n) alpha) (S n)); auto.       
-          destruct (Halpha  (Canon (S (S n)) alpha)).
+          transitivity (H_ (Canon alpha (S n)) (S n)); auto.       
+          destruct (Halpha  (Canon alpha (S (S n)))).
           * apply Canon_lt, Limit_not_Zero; auto.
-          *  apply  (PE1 (Canon (S n) alpha)); auto with arith.
+          *  apply  (PE1 (Canon alpha (S n))); auto with arith.
              apply Cor12_E0 with 0; auto with arith E0.
              apply Canon_mono1; auto.
              apply KS_thm_2_4_E0; auto.

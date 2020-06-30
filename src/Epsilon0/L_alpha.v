@@ -20,7 +20,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  L_ (Canon i alpha)  (S i) ;
+          { | left _ =>  L_ (Canon alpha i)  (S i) ;
             | right notlimit =>  L_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
@@ -52,7 +52,7 @@ Qed.
 Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 Lemma L_lim_eqn alpha i : Is_Limit alpha -> L_ alpha i =
-                                        L_ (Canon i alpha) (S i).
+                                        L_ (Canon alpha i) (S i).
 Proof.
   intros;rewrite L__equation_1.
   destruct (E0_eq_dec alpha Zero).
@@ -79,7 +79,7 @@ Proof  with auto with E0.
   -  destruct s.
    +  intro; contradiction. 
    +   intros H k;  rewrite L_lim_eqn; auto.
-     *  specialize (IHalpha (Canon k alpha)).
+     *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto.
         -- transitivity (S (S (S k))); [lia | apply IHalpha ]...
@@ -94,7 +94,7 @@ Qed.
 Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
 Proof.
   intro k; rewrite L_lim_eqn.
-  - replace (Canon k omega%e0) with (Fin k).
+  - replace (Canon  omega%e0 k) with (Fin k).
     + rewrite L_finite; lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.
@@ -141,8 +141,8 @@ Section L_correct.
   intros H H0; right.
   {  destruct alpha;   cbn in H0; simpl; eauto with T1. }
   intros k; rewrite L_lim_eqn; auto.
-  -  assert (H1 :(Canon (S k) alpha < alpha)%e0) by eauto with E0. 
-     specialize (H (Canon (S k) alpha) H1); inversion H.
+  -  assert (H1 :(Canon alpha (S k) < alpha)%e0) by eauto with E0. 
+     specialize (H (Canon alpha (S k)) H1); inversion H.
      + elimtype False.
        {
          destruct alpha; simpl in H0.
@@ -150,8 +150,8 @@ Section L_correct.
        }
      + specialize (H3 (S k)); red;
          rewrite  MoreLists.interval_app with
-             (S k) (S k) (Nat.pred (L_ (Canon (S k) alpha) (S (S k)))).
-       * eapply path_to_app with (cnf (Canon (S k) alpha)).
+             (S k) (S k) (Nat.pred (L_ (Canon alpha (S k)) (S (S k)))).
+       * eapply path_to_app with (cnf (Canon alpha (S k))).
          -- apply H3.
          -- rewrite MoreLists.interval_singleton.
             ++ left.
@@ -159,8 +159,8 @@ Section L_correct.
              **  simpl;  split; auto.
                  apply is_limit_not_zero ; auto with E0.
        * auto with arith. 
-       * specialize (L_ge_S (Canon (S k) alpha)).
-         intro H6; assert (Canon (S k) alpha <> Zero); auto with E0.
+       * specialize (L_ge_S (Canon alpha (S k))).
+         intro H6; assert (Canon alpha (S k) <> Zero); auto with E0.
        specialize (H6 H7 (S (S k))); lia.
   Qed.
 
@@ -192,7 +192,7 @@ Proof with auto with E0.
   - subst; rewrite H_zero_eqn, L_zero_eqn; lia.
   - rewrite H_lim_eqn, L_lim_eqn ...
     apply Nat.lt_le_incl;
-      apply Nat.lt_le_trans with (H_ (Canon (S i) alpha) (S i)).
+      apply Nat.lt_le_trans with (H_ (Canon alpha (S i)) (S i)).
     apply H_alpha_mono; auto with arith ...
     apply IHalpha ...
   -  destruct H as [beta e]; subst alpha;

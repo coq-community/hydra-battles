@@ -26,7 +26,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ =>  F_ (Canon i alpha)  i ;
+          { | left _ =>  F_ (Canon alpha i)  i ;
             | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
 
 Definition call_lt (c c' : E0 * nat) :=
@@ -51,7 +51,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
     { | left _ => S i ;
       | right nonzero
           with Utils.dec (Is_Limit alpha) :=
-          { | left _ => F_star (Canon i alpha,1) i ;
+          { | left _ => F_star (Canon alpha i,1) i ;
             | right notlimit =>
               F_star (Pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
@@ -114,7 +114,7 @@ Proof.
 Qed.
 
 Lemma F_lim_eqn : forall alpha i,  Is_Limit alpha ->
-                               F_ alpha i = F_ (Canon i alpha) i.
+                               F_ alpha i = F_ (Canon alpha i) i.
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha Zero).
@@ -196,8 +196,8 @@ Qed.
 Lemma Canon_plus_first_step_lim:
   forall i alpha beta, Is_Limit alpha ->
                        Canon_plus (S i) alpha beta  ->
-                       beta = CanonS i alpha \/
-                       Canon_plus (S i) (CanonS i alpha) beta.
+                       beta = CanonS alpha i \/
+                       Canon_plus (S i) (CanonS alpha i) beta.
 Proof.
   destruct alpha, beta.
   unfold Canon_plus, Paths.const_path; simpl.
@@ -393,7 +393,7 @@ Section Properties.
       Remark RBlim : forall n, (n < F_ alpha n)%nat.
         intro n.
         rewrite F_lim_eqn.
-        destruct (Halpha (Canon n alpha)).
+        destruct (Halpha (Canon alpha n)).
         apply Canon_lt. 
         now apply Limit_not_Zero.
         auto.
@@ -409,7 +409,7 @@ Section Properties.
           unfold Canon.
           apply Nat.le_lt_trans with (S n).
           auto with arith.
-          destruct (Halpha (CanonS n alpha)).
+          destruct (Halpha (CanonS alpha n)).
           apply CanonS_lt. 
           now apply Limit_not_Zero.
           now apply PB0.
@@ -417,24 +417,24 @@ Section Properties.
         - destruct n. inversion H.
           rewrite (F_lim_eqn alpha (S n));auto.
           rewrite (F_lim_eqn alpha (S m));auto.
-          assert (Canon_plus 1 (Canon (S n) alpha) (Canon (S m) alpha)).
+          assert (Canon_plus 1 (Canon alpha (S n)) (Canon alpha (S m))).
           apply KS_thm_2_4_E0; auto.
           auto with arith.
-          assert (Canon_plus (S n) (Canon (S n) alpha) (Canon (S m) alpha)).
+          assert (Canon_plus (S n) (Canon alpha (S n)) (Canon alpha (S m))).
           eapply Cor12_E0 with 0; auto with arith.
           apply canonS_limit_mono; auto with T1.
           auto with arith.
           auto with E0.
           auto with arith.
-          apply Nat.le_lt_trans with (F_ (Canon (S n) alpha) (S m) ).
-          destruct (Halpha (Canon (S n) alpha)).
+          apply Nat.le_lt_trans with (F_ (Canon alpha (S n)) (S m) ).
+          destruct (Halpha (Canon alpha (S n))).
           apply Canon_lt. 
           now apply Limit_not_Zero.
           apply PE0. auto. auto.
           eapply Cor12_E0 with 0; auto with arith.
           apply canonS_limit_mono; auto with T1.
           auto with arith.
-          destruct (Halpha (Canon (S n) alpha)).
+          destruct (Halpha (Canon alpha (S n))).
           apply Canon_lt. 
           now apply Limit_not_Zero.
           auto with E0.
@@ -480,7 +480,7 @@ Section Properties.
              * now rewrite H0.
              * auto.
           +  rewrite (F_lim_eqn alpha _);auto.
-             destruct (Halpha (Canon (S n) alpha)); auto.
+             destruct (Halpha (Canon alpha (S n))); auto.
              apply CanonS_lt;  now apply Limit_not_Zero.
       Qed.
 

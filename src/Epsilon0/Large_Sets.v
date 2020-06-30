@@ -305,9 +305,9 @@ Section lim.
             (Hnf : nf lambda)
             (Hlim : is_limit lambda)
             (f : nat -> nat -> nat)
-            (H : forall k, L_spec (canonS k lambda) (f (S k))).
+            (H : forall k, L_spec (canonS lambda k) (f (S k))).
   
-  Remark canon_not_null : forall k,  canonS k lambda <> zero.
+  Remark canon_not_null : forall k,  canonS lambda k <> zero.
   Proof.
    intro; apply is_limit_canonS_not_zero; auto.  
   Qed.
@@ -319,7 +319,7 @@ Section lim.
     right.
     - apply is_limit_not_zero; auto.
     - intro k;  unfold L_lim.  red; path_decompose (S k).
-      instantiate (1:= canon (S k) lambda).
+      instantiate (1:= canon lambda (S k)).
       *  specialize (H k); inversion H.
        --  generalize (canon_not_null k); rewrite <- H0; now destruct 1.
        --  apply H1.
@@ -328,7 +328,7 @@ Section lim.
        -- split.
         ++  apply is_limit_not_zero; auto.
         ++  reflexivity.
-     *  specialize (L_pos_inv (canonS k lambda) (f (S k))
+     *  specialize (L_pos_inv (canonS lambda k) (f (S k))
                               (canon_not_null k) (H k) (S k));  lia.       
   Qed.
   
@@ -632,10 +632,7 @@ Proof.
   apply L_lim_ok.
   - auto with T1.
   - auto with T1.
-  - intro k.
-
-    simpl canonS.
-      apply L_omega_square_times_ok.
+  - intro k; simpl canonS; apply L_omega_square_times_ok.
 Qed.
 
 Lemma L_omega_cube_eqn i : L_omega_cube i = L_omega_square_times i (S i).

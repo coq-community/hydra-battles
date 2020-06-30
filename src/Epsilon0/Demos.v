@@ -111,7 +111,7 @@ Defined.
 
 (** Experimenting canonical sequences
 
-   Note : (d i alpha) is just {alpha}(i)   (KS notation)
+
 *)
 
 Example exp_ex :  (omega + 1) ^ omega = phi0 omega.
@@ -122,32 +122,33 @@ Qed.
 Compute omega * 42 + (omega + 1) ^ omega.
 
 
-Compute canon 3 (omega ^ omega).
+Compute canon (omega ^ omega) 3.
 
-Compute pp (canon 3 (omega ^ omega)).
+Compute pp (canon (omega ^ omega) 3).
 
-Compute pp (canon 3 (omega ^ omega * 2)).
+Compute pp (canon (omega ^ omega * 2) 3).
 
-Compute pp (canon 3 (omega ^ omega * 12)).
+Compute pp (canon (omega ^ omega * 12) 3).
 
 
-Compute canon 3 (omega ^ omega * 12).
+Compute canon (omega ^ omega * 12) 3.
 
-Example canon_omega : canon 42 omega =  42.
+Example canon_omega : canon omega 42 =  42.
 Proof. trivial. Qed.
 
-Compute pp (canon 42 (omega ^ omega * 3)).
+Compute pp (canon (omega ^ omega * 3) 42).
 
-Example canon_ex : canon 42 (omega ^ omega * 3) = omega ^ omega * 2 + omega ^ 42.
+Example canon_ex : canon (omega ^ omega * 3) 42 =
+                   omega ^ omega * 2 + omega ^ 42.
 Proof. reflexivity.  Qed.
 
-Example canon_ex' :  canon 3 (tower 2) = phi0 3.
+Example canon_ex' :  canon (tower 2) 3 = phi0 3.
 Proof.  reflexivity.  Qed.
 
-Example canon_ex'' :  canon 3 (tower 4) = phi0 (phi0 (phi0 3)).
+Example canon_ex'' :  canon (tower 4) 3 = phi0 (phi0 (phi0 3)).
 Proof.  reflexivity.  Qed.
 
-Example canon_ex3 : canon 42 (omega ^ omega + 2) = omega ^ omega + 1.
+Example canon_ex3 : canon (omega ^ omega + 2) 42 = omega ^ omega + 1.
 Proof.  reflexivity.  Qed.
 
 
@@ -162,16 +163,16 @@ Goal phi0 omega * FS 9 + phi0(FS 1) * FS 2 + omega * FS  7 =
 Proof. trivial. Qed.
 
 
-Goal canon 3 (phi0 (phi0 omega)) = phi0 (phi0 (FS 2)).
+Goal canon (phi0 (phi0 omega)) 3 = phi0 (phi0 (FS 2)).
 Proof.   trivial. Qed.
 
 
-Goal canon 4 (phi0 (omega * FS 1) + phi0 (omega + FS 1) * FS 1) =
+Goal canon (phi0 (omega * FS 1) + phi0 (omega + FS 1) * FS 1) 4 =
 phi0 (omega * FS 1) + phi0 (omega + FS 1) + phi0 (omega + FS 0) * FS 3.
 Proof.  reflexivity. Qed.
 
 
-Example ex: canon 42 (omega^omega^omega) = omega^(omega^42).
+Example ex: canon (omega^omega^omega) 42 = omega^(omega^42).
 Proof. trivial. Qed.
 
 
@@ -226,7 +227,7 @@ Open Scope t1_scope.
 
 
 Fixpoint find_approximant alpha beta i fuel :=
-  match compare (canon  i alpha) beta with
+  match compare (canon  alpha i) beta with
     Gt | Eq => Some i
   | Lt => match fuel with 0 => None |
                      S f => find_approximant alpha beta (S i) f
@@ -248,7 +249,7 @@ Fixpoint get_path alpha beta rev_path fuel :=
             O => None
           | S f =>
             match find_approximant alpha beta 0 fuel with
-              Some i => get_path (canon i alpha) beta (i::rev_path) f
+              Some i => get_path (canon alpha i) beta (i::rev_path) f
             | None => None
             end
           end
@@ -272,7 +273,7 @@ Section Get_path_examples.
 
 Fixpoint follow_path p alpha :=
   match p with nil => alpha
-          | i :: p' => follow_path p' (canon i alpha)
+          | i :: p' => follow_path p' (canon alpha i)
   end.
 
 Compute compare y (follow_path (1 :: 1 :: 1 :: 1 :: 1 :: 1 :: 5 :: 2 :: 1 :: 1 :: 1 :: 3 :: nil) x).
@@ -334,7 +335,7 @@ Module infinity.
    Fixpoint g0 (lambda alpha : T1) (i n: nat) :=
      match n with
        0%nat => None
-     | S p => let gamma := canonS i lambda  in
+     | S p => let gamma := canonS lambda i  in
               if lt_b  alpha gamma
               then Some gamma
               else g0 lambda alpha (S i) p

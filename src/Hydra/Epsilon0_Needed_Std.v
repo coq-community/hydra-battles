@@ -58,7 +58,7 @@ Section Impossibility_Proof.
          * subst beta;   apply canonS_iota_i; trivial.
     -  intros  H0 H1 H2 H3;   destruct i.
        + inversion H0.
-       +  eapply fight_trans with  (S i) (iota (canon (S i) alpha));
+       +  eapply fight_trans with  (S i) (iota (canon alpha (S i)));
             trivial.
           2:(left; simpl); trivial.
           replace (S i) with (Nat.pred (S (S i))).
@@ -93,9 +93,9 @@ Section Impossibility_Proof.
     -   now  left.
     -  right; destruct i.    
        +   inversion H1.
-       +   specialize (H (canonS i x) H0); 
-             assert (nf (canonS i x)) by (eapply nf_canonS; eauto).
-           assert (T1.lt (canonS i x) x).
+       +   specialize (H (canonS x i) H0); 
+             assert (nf (canonS x i)) by (eapply nf_canonS; eauto).
+           assert (T1.lt (canonS x i) x).
            { eapply canonS_lt; eauto. }
            specialize (H H2 H3 H2 (S (S i)) ).
            destruct H.
@@ -106,7 +106,7 @@ Section Impossibility_Proof.
               { left;  split; now left.
               }
            *  simpl;  destruct H; exists x0.
-              eapply fight_trans with (S i) (iota (canon (S i) x)).
+              eapply fight_trans with (S i) (iota (canon x (S i))).
               { simpl; simpl in H; trivial. }
               { left.
                 eapply canonS_iota_i; auto.

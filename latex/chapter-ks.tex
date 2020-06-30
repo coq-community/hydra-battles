@@ -116,8 +116,8 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 Our definition may look more complex than the mathematical one, but
 uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 \coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. For simplicity's sake, 
-we used an auxiliary function \texttt{canonS} of type \texttt{nat -> T1 -> T1} such that
-\texttt{canonS i $\alpha$} is equal to $\canonseq{\alpha}{i+1}$.
+we used an auxiliary function \texttt{canonS} of type \texttt{T1 -> nat  -> T1} such that
+\texttt{canonS  $\alpha$ $i$} is equal to $\canonseq{\alpha}{i+1}$.
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.Canon.html\#canonS}{Epsilon0.Canon}}
@@ -125,7 +125,7 @@ we used an auxiliary function \texttt{canonS} of type \texttt{nat -> T1 -> T1} s
 \index{Functions!canonS canonS (helper for canon)}
 \index{Functions!canon @ canon (canonical sequence)}
 \begin{Coqsrc}
-Fixpoint canonS (i:nat) alpha :=
+Fixpoint canonS alpha (i:nat) :=
   match alpha with
       zero => zero
     | ocons zero 0 zero => zero
@@ -133,14 +133,14 @@ Fixpoint canonS (i:nat) alpha :=
     | ocons gamma 0 zero =>
       match pred gamma with
           Some gamma' => ocons gamma' i zero
-        | None => ocons (canonS i gamma) 0 zero
+        | None => ocons (canonS gamma i) 0 zero
       end
     | ocons gamma (S n) zero =>
        match pred gamma with
            Some gamma' => ocons gamma n (ocons gamma' i zero)
-         | None => ocons gamma n (ocons (canonS i gamma) 0 zero)
+         | None => ocons gamma n (ocons (canonS gamma i) 0 zero)
        end
-    | ocons alpha n beta => ocons alpha n (canonS i beta)
+    | ocons alpha n beta => ocons alpha n (canonS beta i)
   end.
 \end{Coqsrc}
 
@@ -149,8 +149,8 @@ The following function computes $\canonseq{\alpha}{i}$, except for the case $i=0
 in~\cite{KS81}. This would  be done at the cost of making proofs much more complex.}.
 
 \begin{Coqsrc}
- Definition canon i alpha := 
-   match i with 0 => zero | S j => canonS j alpha end. 
+ Definition canon alpha i := 
+   match i with 0 => zero | S j => canonS alpha j end. 
 \end{Coqsrc}
 
 For instance \coq's computing facilities allow us to verify the equalities\linebreak 
@@ -159,7 +159,7 @@ For instance \coq's computing facilities allow us to verify the equalities\lineb
 
 
 \begin{Coqsrc}
-Compute (canon 3 (omega ^ omega)).
+Compute (canon (omega ^ omega) 3).
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -167,13 +167,13 @@ Compute (canon 3 (omega ^ omega)).
 \end{Coqanswer}
 
 \begin{Coqsrc}
-Example canon3 :  canon 3 (omega ^ omega) = omega ^ 3.
+Example canon3 :  canon (omega ^ omega) 3 = omega ^ 3.
 Proof. reflexivity. Qed.
 \end{Coqsrc}
 
 
 \begin{Coqsrc}
-Compute pp (canon 42 (omega ^ omega * 3)).  
+Compute pp (canon (omega ^ omega * 3) 42).  
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -194,7 +194,7 @@ Nevertheless, we could prove it by  structural induction on $\alpha$.
 
 \begin{Coqsrc}
 Lemma canonS_succ i alpha :
-  nf alpha ->  canonS i (succ alpha) = alpha.
+  nf alpha ->  canonS (succ alpha) i = alpha.
 Proof.
  induction alpha.
  (* ... *)
@@ -209,7 +209,7 @@ First, we prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i
 \label{lemma:canonS_LT}
 \begin{Coqsrc}
 Lemma canonS_LT i alpha :
-  nf alpha -> alpha <> zero -> canonS i alpha <  alpha.
+  nf alpha -> alpha <> zero -> canonS alpha i <  alpha.
 \end{Coqsrc}
 
 
@@ -230,7 +230,7 @@ Lemma canonS_limit_strong (lambda : T1) :
      nf lambda ->
      is_limit lambda  ->
      forall beta, beta < lambda ->
-                  {i:nat | beta < canonS i lambda}.
+                  {i:nat | beta < canonS lambda i}.
 
 Proof.
   transfinite_induction_LT lambda.
@@ -243,7 +243,7 @@ Defined.
 \begin{Coqsrc}
 Lemma canonS_limit_lub (lambda : T1) :
   nf lambda -> is_limit lambda  ->
-  strict_lub (fun i => canonS i lambda) lambda.
+  strict_lub (fun i => canonS lambda i) lambda.
 \end{Coqsrc}
 
 \index{Exercises}
@@ -297,7 +297,7 @@ parameterized by the destination $\beta$.
 
 \begin{Coqsrc}
 (Definition transition_S i : relation T1 :=
-  fun alpha beta =>  alpha <> zero /\ beta = canonS i alpha.
+  fun alpha beta =>  alpha <> zero /\ beta = canonS alpha i.
 
 Definition transition i : relation T1 :=
   match i with 0 => fun _ _ => False | S j => transition_S j end.
@@ -454,7 +454,7 @@ The following lemma (proved in ~\href{../src/html/hydras.Hydra.O2H.html}{Hydra.O
 \begin{Coqsrc}
 Lemma canonS_iota i alpha :
     nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canonS i alpha).
+    iota alpha -1-> iota (canonS alpha i).
 \end{Coqsrc}
                 
 
@@ -663,10 +663,10 @@ In \coq{}, standard paths can be defined as follows.
 
 Inductive standard_pathR(j:nat)( beta:T1):  nat -> T1 -> Prop :=
   std_1 : forall i alpha, 
-       beta = canon i alpha -> j = S i ->
+       beta = canon alpha i -> j = S i ->
        standard_pathR j beta i  alpha
 | std_S : forall i alpha, 
-      standard_pathR j beta (S i) (canon i alpha)  ->
+      standard_pathR j beta (S i) (canon alpha i)  ->
       standard_pathR j beta i alpha.
 
 Definition standard_path  i alpha j beta := 
@@ -704,7 +704,7 @@ Like in~\cite{KS81}, we shall use the notation $\alpha \xrightarrow[i]{} \beta$ 
 
 \begin{Coqsrc}
 Definition const_pathS i :=
-    clos_trans_1n T1 (fun alpha beta => beta = canonS i alpha).
+    clos_trans_1n T1 (fun alpha beta => beta = canonS alpha i).
 
 Definition const_path i alpha beta :=
   match i with
@@ -812,8 +812,8 @@ Theorem Theorem_2_4 (lambda : T1) :
    nf lambda ->
    is_limit lambda  ->
    forall i j, (i < j)%nat ->
-               const_pathS 0 (canonS j lambda)
-                             (canonS i lambda). 
+               const_pathS 0 (canonS lambda j)
+                             (canonS lambda i). 
   \end{Coqsrc}
 
  We build the following paths :
@@ -912,7 +912,7 @@ The following function computes $\beta$ from $\alpha$, $i$ and $l$.
 Fixpoint standard_gnaw (i:nat)(alpha : T1)(l:nat):  T1  :=
   match l with
   | 0 => alpha
-  | S m => standard_gnaw (S i) (canon i alpha) m
+  | S m => standard_gnaw (S i) (canon alpha i) m
   end.
 \end{Coqsrc}
 

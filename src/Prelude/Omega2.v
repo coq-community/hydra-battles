@@ -241,7 +241,12 @@ Definition  omega_limit (s: nat -> t) (alpha:t) :=
   (forall i: nat, s i < alpha) /\
   (forall beta, beta < alpha ->  exists i:nat , beta < s i).
 
+(* to do as an exercise *)
 
+
+Definition  omega_limit_s (s: nat -> t) (alpha:t) : Type :=
+  ((forall i: nat, s i < alpha) *
+  (forall beta, beta < alpha ->  {i:nat | beta < s i}))%type.
 
 Definition is_limit (alpha : t) := match alpha with
                                      (S _, 0) => true
@@ -258,8 +263,7 @@ Proof.
     +   specialize (H 0).
        inversion H; lia.
     + now  cbn.
-   - 
-    destruct (H0 (n, n0)).
+   -   destruct (H0 (n, n0)).
     + right; auto with arith. 
     + specialize (H x).
      rewrite lt_succ_le in H1.
@@ -268,7 +272,7 @@ Proof.
      destruct (H3 _ H2).
 Qed.
 
-Definition canon_seq  alpha i :=
+Definition canon  alpha i :=
   match alpha with
     (0,0) => (0,0)
   | (_, S p) => (0,p)
@@ -278,10 +282,10 @@ Definition canon_seq  alpha i :=
 
 
 Lemma is_limit_limit alpha :
-  is_limit alpha -> omega_limit (canon_seq alpha) alpha.
+  is_limit alpha -> omega_limit (canon alpha) alpha.
 Proof.
   destruct alpha;  inversion 1.
-  destruct n; [discriminate | unfold canon_seq].
+  destruct n; [discriminate | unfold canon].
   split;  destruct n0; try discriminate.
   -    left; auto with arith.
   -  destruct beta; inversion_clear 1.
@@ -292,10 +296,6 @@ Proof.
      left; auto.
      lia.    
 Qed.
-
-
-
-
 
  Example Ex1 : is_limit omega.
  Proof. reflexivity.  Qed.
@@ -313,9 +313,7 @@ Proof.
       + rewrite Heq; now right.
       + destruct (is_limit_limit (S i,0)) as [H1 H2].
         * red; trivial.
-        * simpl in H1.
-       
-       destruct (H2 _ Hgt) as [x H0].
+        * simpl in H1; destruct (H2 _ Hgt) as [x H0].
         simpl in H0.
         specialize (H x).
      destruct lt_strorder as [H3 H4].
@@ -330,7 +328,7 @@ Qed.
 
 Lemma limit_is_lub beta :
   is_limit beta -> forall alpha, 
-    (forall i,  canon_seq beta i < alpha) <-> beta <= alpha.
+    (forall i,  canon beta i < alpha) <-> beta <= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n, n0; try discriminate.
   apply limit_is_lub_0.
@@ -414,26 +412,38 @@ Proof.
 Qed.
 
 
+Lemma decompose (i j : nat): (i,j) = omega * i + j.
+Proof.
+  destruct i, j; cbn; (reflexivity || (try f_equal; lia)). 
+Qed.
+
+Lemma unique_decomposition alpha : exists! i j: nat,  alpha = omega * i + j.
+Proof.
+  destruct alpha as [i j]; exists i; split.
+  -  exists j; split.
+     + now rewrite decompose. 
+     + intros x; repeat rewrite <- decompose; congruence.
+  - intros x [y [Hy _]]; rewrite <- decompose in Hy; congruence.
+Qed.
+
+(** ** Additive principals *)
+
 Definition ap (alpha : t) :=  alpha <> zero /\
   (forall beta gamma,  beta < alpha -> gamma < alpha -> beta + gamma < alpha).
 
 Lemma omega_ap : ap omega.
 Proof.
- split; [discriminate |].
-  intros beta gamma H H0.
-  destruct beta, gamma.
-  compute in H, H0.
-  inversion H.
-  subst.
-  inversion H0; subst.
-  inversion H2; inversion H3; subst.
-  unfold plus. destruct n0; left. auto with arith.
-  auto with arith.
-  all : try lia.
+ split; [discriminate |];intros beta gamma H H0; destruct beta, gamma.
+ inversion H; subst.
+ -  inversion H0; subst.
+  +  inversion H2; inversion H3; subst; try lia.
+     *  unfold plus; destruct n0; left; auto with arith.
+     +  lia.
+ - lia.
 Qed.
 
 
-Lemma only_omega_is_ap alpha : ap alpha -> alpha = 1 \/ alpha = omega.
+Lemma ap_cases alpha : ap alpha -> alpha = 1 \/ alpha = omega.
 Proof.
   destruct (zero_succ_limit_dec alpha) as [[Hzero |  Hlim] | Hsucc].
   - subst alpha; intro H; elimtype False.
