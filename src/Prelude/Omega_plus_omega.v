@@ -310,58 +310,69 @@ Definition is_limit (alpha : t) := match alpha with
                                    | _ => false
                                    end.
 
-(** ICI 
+
 Lemma Omega_limit_is_limit alpha s : Omega_limit s alpha ->
                                      is_limit alpha.
 Proof.
    destruct alpha.
    destruct 1.
-   destruct n0.
-   - destruct n.
-    +   specialize (H 0).
-       inversion H; lia.
-    + now  cbn.
-   -   destruct (H0 (n, n0)).
-    + right; auto with arith. 
-    + specialize (H x).
-     rewrite lt_succ_le in H1.
-     assert (s x < s x) by (eapply lt_le_trans; eauto).
-     destruct lt_strorder as [H3 H4].
-     destruct (H3 _ H2).
+   elimtype False.
+   destruct n.
+    specialize (H 0); inversion H.
+    lia.
+    specialize (H0 (inl  n)).
+ destruct H0.
+ constructor; auto. 
+   specialize (H  x).
+   inversion H ; inversion H0; subst. rewrite <- H1 in H5. injection H5.
+   intro; subst. lia.
+   rewrite <- H1 in H6. discriminate.
+   destruct n.
+   intro; auto.
+   intro H; elimtype False.
+   destruct H.
+
+   specialize (H0 (inr n)).
+    destruct H0.
+    constructor; auto.
+    
+   -- case_eq (s x).
+   intro; subst. intro.
+    rewrite H1 in H0; inversion H0.
+    intros.
+     rewrite H1 in H0.
+      specialize (H x).
+      rewrite  H1 in *.
+    inversion H;
+      inversion H0.
+ subst.
+lia.       
 Qed.
 
 Definition canon  alpha i :=
   match alpha with
-    (0,0) => (0,0)
-  | (_, S p) => (0,p)
-  | (S n, 0) => (n, i)
+  | inl 0 => inl 0
+  | inl (S n) => inl n
+  | inr 0 => inl i
+  | inr (S n) => inr n
   end.
-
-
 
 Lemma is_limit_limit alpha :
   is_limit alpha -> Omega_limit (canon alpha) alpha.
 Proof.
   destruct alpha;  inversion 1.
-  destruct n; [discriminate | unfold canon].
-  split;  destruct n0; try discriminate.
-  -    left; auto with arith.
-  -  destruct beta; inversion_clear 1.
-     exists (S n1).
-     assert( H0: (n0 = n \/ n0 <  n)%nat) by lia.
-     destruct H0.
-     subst;  right; auto.
-     left; auto.
-     lia.    
+  
+  destruct n; [|discriminate].
+  split.
+   intro i; constructor.
+   inversion 1.
+    exists (S x); constructor; auto with arith.
+    lia.
 Qed.
 
  Example Ex1 : is_limit omega.
  Proof. reflexivity.  Qed.
-
-
-
- (* A simplifier ? *)
- 
+ (*
 Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) < alpha) <->
                                  (S i, 0) <= alpha.
 Proof.
@@ -383,13 +394,26 @@ Proof.
    *    left; left; auto. 
      + left;left;auto. 
 Qed.
-
+  *)
+ 
 Lemma limit_is_lub beta :
   is_limit beta -> forall alpha, 
     (forall i,  canon beta i < alpha) <-> beta <= alpha.
 Proof.  
-  destruct beta;intros H alpha;destruct n, n0; try discriminate.
-  apply limit_is_lub_0.
+  destruct beta;intros H alpha;destruct n. simpl.
+  inversion H.
+  inversion H.
+  split.
+  intro H0.
+   destruct alpha.
+   specialize (H0 n). inversion H0; try lia.
+   apply le_intror; auto with arith.
+   destruct alpha; inversion 1.
+   inversion H0.
+   inversion H1.
+    constructor.
+    constructor.
+    inversion H.
 Qed.
 
  Definition zero_succ_limit_dec :
@@ -397,163 +421,31 @@ Qed.
                 ({alpha = zero} + {is_limit alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
-   destruct alpha as (n,p); destruct p.
-   - destruct n.
-     + left; left;trivial.
-     +  left; now right.
-   - right; now exists (n,p).
+   destruct alpha as [n | p].
+   destruct n.
+    left.
+    now left.
+    right.
+     now exists (inl n).
+    destruct p.
+     left; now right.
+   right.  now exists (inr  p).
  Defined.
 
- (*
 
-Definition  plus (alpha beta : t) : t :=
-  match alpha,beta with
-  | (0, b), (0, b') => (0, b + b')
-  |  (0,0), y  => y
-  |  x, (0,0)  => x
-  |   (0, b), (S n', b') => (S n', b')
-  | (S n, b), (S n', b') => (S n + S n', b')
-  | (S n, b), (0, b') => (S n, b + b')
- 
-  end.
-
-Infix "+" := plus : o2_scope.
-
-Definition mult_fin  (alpha : t) (p : nat): t :=
-  match alpha, p with
- |  (0,0), _  => zero
- |  _, 0 => zero
- |  (0, n), p => (0, n * p)
- |  ( n, b),  n' => ( n *  n', b)
-               end.
-Infix "*" := mult_fin : o2_scope.
-
-Fixpoint fin_mult (n:nat)(beta : t) : t :=
-  match n, beta with
- |  0, _  => zero
- |  _, (0,0) => zero
- |   n , (0,n') => (0, (n*n')%nat)
- |  n, (n',p') => (n', (n * p')%nat)
- end.
-
-Compute (fin_mult 3 (omega * 7 + 15)).
-
-
-Compute (fin_mult 3 (omega * 1 + 15)).
-Search (_ + _ + _)%nat.
-
-Lemma plus_assoc alpha beta gamma :
-  alpha + (beta + gamma) = alpha + beta + gamma.
-  destruct alpha, beta, gamma.
-  destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; lia.
-Qed.
-
-
-Lemma succ_is_plus_1  alpha : alpha + 1 = succ alpha.
-Proof.
- unfold succ ;
-simpl; 
- destruct alpha; cbn; destruct n, n0; try f_equal; lia.
-Qed.
-  *)
  
 Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
 Proof.
  destruct alpha; simpl.
  split.
  inversion_clear 1.
- inversion H0.
-   exists n0.
-   auto.
-   inversion H1.
- inversion H0.
-    destruct 1.
-    injection H. intros; subst. left. auto.
+now exists n.
+constructor.
+split.
+inversion 1.
+lia.
+destruct 1 as [n0 e]; inversion e.
 Qed.
 
 
-Lemma decompose (i j : nat): (i,j) = omega * i + j.
-Proof.
-  destruct i, j; cbn; (reflexivity || (try f_equal; lia)). 
-Qed.
-
-Lemma unique_decomposition alpha : exists! i j: nat,  alpha = omega * i + j.
-Proof.
-  destruct alpha as [i j]; exists i; split.
-  -  exists j; split.
-     + now rewrite decompose. 
-     + intros x; repeat rewrite <- decompose; congruence.
-  - intros x [y [Hy _]]; rewrite <- decompose in Hy; congruence.
-Qed.
-
-(** ** Additive principals *)
-
-Definition ap (alpha : t) :=  alpha <> zero /\
-  (forall beta gamma,  beta < alpha -> gamma < alpha -> beta + gamma < alpha).
-
-Lemma omega_ap : ap omega.
-Proof.
- split; [discriminate |];intros beta gamma H H0; destruct beta, gamma.
- inversion H; subst.
- -  inversion H0; subst.
-  +  inversion H2; inversion H3; subst; try lia.
-     *  unfold plus; destruct n0; left; auto with arith.
-     +  lia.
- - lia.
-Qed.
-
-
-Lemma ap_cases alpha : ap alpha -> alpha = 1 \/ alpha = omega.
-Proof.
-  destruct (zero_succ_limit_dec alpha) as [[Hzero |  Hlim] | Hsucc].
-  - subst alpha; intro H; elimtype False.
-    destruct H as [H _]; auto.
-  - destruct alpha; unfold ap.
-    destruct n, n0; try discriminate.
-    intros [_ H1]; destruct n.
-    + now right.
-    +  right; specialize (H1 (S n,0) (S n,0)).
-       assert (H2:(S n, 0) < (S (S n), 0)) by (left; auto).
-       specialize (H1 H2 H2).
-       inversion H1; lia.
-  -  intro H;  destruct Hsucc as [beta e]; subst.
-     destruct H as [_ H].
-      destruct (eq_dec beta zero).
-       + subst; now left.
-       +  specialize  (H beta 1 (lt_succ beta)).
-          assert (1 < succ beta). {
-            destruct beta;  destruct n0, n1.
-            * now destruct n.
-            * right; cbn; lia.
-            * destruct n0; cbn.
-              left; auto.
-              left; simpl;lia.
-            * left; simpl; lia.
-          }
-          *  specialize (H H0).
-             rewrite <- succ_is_plus_1 in H.       
-             destruct lt_strorder as [H3 H4].
-             destruct (H3 _ H).        
-Qed.
-
-
-
-
-Compute (omega * 3).
-Compute (omega * 3) * 6.
-
-Compute (omega * 3 + 1) * 6.
-Compute fin_mult 3 omega.
-Compute (3,2)+(2,10).
-
-Compute (2,2)+(3,10).
-
-Compute (0,2)+(0,10).
-
-Compute (0,2)+(1,10).
-
-Goal omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
-  reflexivity.
-Qed.
- *)
 
