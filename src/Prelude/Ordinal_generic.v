@@ -3,7 +3,7 @@ Import Relation_Definitions.
 
 (* Immediate predecessor *)
 
-Definition ipred {A:Type}{lt : relation A}
+Definition Ipred {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (x y : A):=
   lt x y /\ (forall z,  lt z y -> clos_refl _ lt z x).
 

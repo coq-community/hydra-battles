@@ -1,57 +1,70 @@
 (**  The ordinal omega * omega *)
-Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic.
+Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic
+        Relation_Operators Disjoint_Union.
+
 Import Relations.
-Declare Scope o2_scope.
-Delimit Scope o2_scope with o2.
-Open Scope o2_scope.
+Declare Scope oo_scope.
+Delimit Scope oo_scope with oo.
+Open Scope oo_scope.
 
 Coercion is_true: bool >-> Sortclass.
 
-Definition t := (nat * nat)%type.
+Definition t := (nat + nat)%type.
+Arguments inl  {A B} _.
+Arguments inr  {A B} _.
+Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
+Infix "<" := lt : oo_scope.
 
-Definition zero: t := (0,0).
+Definition le := clos_refl _ lt.
 
-Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
+Infix "<=" := le : oo_scope.
 
-Notation "'omega'" := (1,0) : o2_scope.
 
-Definition fin (n:nat) : t := (0, n).
+Definition zero: t := inl 0.
+Notation  "'omega'"  := (inr 0) : oo_scope.
 
-Notation "'F'" := fin : o2_scope.
+
+Definition succ (alpha : t) := match alpha with
+                                 inl i => inl (S i)
+                               | inr i => inr (S i)
+                               end.
+
+
+Definition fin (n:nat) : t := inl n.
+
+Notation "'F'" := fin : oo_scope.
 
 Coercion fin : nat >-> t.
 
 
- Definition lt : relation t := lexico Peano.lt Peano.lt.
+Hint Unfold lt le : OO.
+Hint Constructors le_AsB: OO.
 
- Infix "<" := lt : o2_scope.
-
-(** reflexive closure of lt *)
-
-Definition le := clos_refl _ lt.
-
-Infix "<=" := le : o2_scope.
-
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-
-Example ex1 : 6 < omega.
+Example ex1 :  6 < omega.
 Proof.
-  left; auto with arith.
+red;  constructor 2. 
 Qed.
 
 
-Example ex2 : omega < (1,1).
+Example ex2 : omega < inr 1.
 Proof.
- right; auto with arith.
+ constructor 3; auto with arith.
 Qed.
 
-Locate StrictOrder.
 
-Search StrictOrder.
 
 Instance lt_strorder : StrictOrder lt.
-Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
+Proof.
+  split.
+  -  intros x  H. inversion H; try lia.
+  - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
+  + injection H5;constructor; lia.
+  + constructor.
+  + constructor.
+  + constructor.
+    injection H5; subst; lia.
+Qed.
+    
 
 Instance le_preorder : PreOrder le.
 Proof.
@@ -69,22 +82,31 @@ Proof.
 Defined.
 
 Lemma lt_wf : well_founded lt.
-Proof. apply wf_lexico; apply lt_wf. Qed.
+Proof. apply wf_disjoint_sum; apply lt_wf. Qed.
+
 
 Lemma le_introl :
-  forall i j k:nat, (j <= k)%nat -> (i,j) <= (i,k).
+  forall i j :nat, (i<= j)%nat -> inl i  <= inl j.
 Proof.
-  intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with O2.
-  - subst k; now right.
+  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto with OO.
+  - left; now constructor.
+  - subst; now right. 
 Qed.
 
-Lemma le_0 : forall p: t,  (0,0) <= p.
+Lemma le_intror :
+  forall i j :nat, (i<= j)%nat -> inr i  <= inr j.
 Proof.
-  destruct p, n ; auto with arith O2.
-  - apply le_introl;  auto with arith O2.
+  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto with OO.
+  - left; now constructor.
+  - subst; now right. 
 Qed.
 
-(** cf Peano.lt's definition  in Stdlib *)
+Lemma le_0 : forall p: t,   0 <= p.
+Proof.
+  destruct p.  destruct n ; [right |].
+  constructor. constructor.  auto with arith.
+  left; constructor. 
+Qed.
 
 
 
@@ -107,32 +129,43 @@ Proof.
  destruct alpha, beta. unfold succ; cbn.
  split.
   - inversion_clear 1.
-  + left; now left.
-  +  now apply le_introl.
-  -  intros; apply lt_le_trans with (n, S n0); auto.
-    right; auto.
+    + apply le_introl.   lia.
+  -     inversion_clear 1.
+        inversion_clear H0. constructor; lia.
+        constructor; auto with arith.
+  - split.
+     simpl. constructor.
+    +  constructor.
+    + constructor.
+  - split.
+    inversion_clear 1.
+    inversion_clear 1. inversion H0.
+  - split.
+   inversion_clear 1.
+    simpl.
+     apply le_intror. lia.
+   simpl.
+   inversion_clear 1.
+   inversion_clear  H0; constructor;lia.
+   constructor;lia.
 Qed.
+
 
 Lemma lt_succ alpha : alpha < succ alpha.
 Proof.
-  destruct alpha; right; cbn; lia.
+  destruct alpha; simpl; constructor; lia.
 Qed.
 
 
-
+(* ICI *)
 
 
  Definition compare (alpha beta: t) : comparison :=
-  match Nat.compare (fst alpha) ( fst beta) with
-    Eq => Nat.compare (snd alpha) (snd beta)
-  | c => c
+   match alpha, beta with
+     inl _, inr _ => Lt
+   | inl n, inl p | inr n, inr p => Nat.compare n p
+   | inr _, inl _ => Gt
   end.
-
- 
-
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-
 
 
  Definition lt_b alpha beta : bool :=
@@ -147,7 +180,7 @@ Definition eq_b alpha beta := match compare alpha beta with
                                 Eq => true
                               | _ => false
                               end.
-                                            
+
 Lemma compare_refl alpha beta :
   match (compare alpha beta)
   with
@@ -155,18 +188,12 @@ Lemma compare_refl alpha beta :
   | Eq => alpha = beta
   | Gt => beta < alpha
   end.
-  destruct alpha, beta; cbn. 
-  case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
-  case_eq (n ?= n1); try discriminate;
-    repeat (rewrite Nat.compare_eq_iff ||
-            rewrite Nat.compare_lt_iff ||
-            rewrite  Nat.compare_gt_iff); intros; subst; auto.
-   - now right.
-   - now left.
-   - now right.
-   - now left. 
+  destruct alpha, beta; cbn; auto; try (constructor; lia);
+    case_eq (Nat.compare n n0);
+    ((rewrite Nat.compare_eq_iff;  congruence)
+      || (rewrite Nat.compare_lt_iff; now constructor)
+      || (rewrite Nat.compare_gt_iff; now constructor)).
 Qed.
-
 
 Lemma lt_eq_lt_dec alpha beta :
   {alpha < beta} + {alpha = beta} + {beta < alpha}.
@@ -181,62 +208,109 @@ Defined.
 
 Arguments Ipred {A} {lt} {sto}  _ _.
 
-Lemma Ipred_inv : forall i j k l : nat, Ipred (i, j) (k, l) ->
-                                  i = k /\ l = S j.
+Lemma Ipred_inv1 : forall i j, Ipred (inl i) (inl j) -> j = S i. 
 Proof.
   destruct 1 as [H H0].
-  assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
-  destruct H1 as [H1 | [H1 H2]].
-  - elimtype False.
-    assert (H2: (i, S j) <= (i, j)) by (apply H0; left; auto with arith).
-    inversion H2;subst. 
-    inversion H3; try lia.
-    lia.
-  -  split; auto.
-     destruct (le_lt_or_eq _ _ H2); auto.
-     + subst; elimtype False.
-       assert (H1: (k, S j) <= (k, j)) by (apply H0;  right; auto).
-       inversion H1; try lia.
-       inversion H4; lia.
-Qed. 
+  inversion_clear H.
+  
+  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
+  destruct H2; trivial.
+   elimtype False.
+   Print le_AsB.
+specialize (H0 (inl (S i)) (le_aa _ _ _ _ _ _ H)).
 
-Corollary Ipred_not i j k : ~ Ipred (i,j) (k,0).
-Proof.
-  intro H; apply Ipred_inv in H. destruct H; discriminate. 
+inversion H0.
+inversion H2.
+lia.
+lia.
 Qed.
+
+Lemma Ipred_inv2 : forall i j, Ipred (inr i) (inr j) -> j = S i. 
+Proof.
+  destruct 1 as [H H0].
+  inversion_clear H.
+  
+  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
+  destruct H2; trivial.
+   elimtype False.
+   Print le_AsB.
+specialize (H0 (inr (S i)) (le_bb _ _ _ _ _ _ H)).
+
+inversion H0.
+inversion H2.
+lia.
+lia.
+Qed.
+
+Lemma Ipred_inv3 : forall i j, ~ Ipred (inl i) (inr j).
+Proof.
+  destruct 1 as [H H0].
+
+specialize (H0 (inl (S i)) (le_ab  _ _ _ _ _ _ )).
+
+inversion H0.
+inversion H1.
+lia.
+lia.
+Qed.
+
+Lemma Ipred_inv4 : forall i j, ~ Ipred (inr i) (inl j).
+Proof.
+  destruct 1 as [H H0].
+  inversion H.
+Qed.
+
+
+
+Lemma omega_not_succ : forall alpha, ~ Ipred alpha omega.
+Proof.
+ destruct alpha.
+  apply Ipred_inv3.
+  intro H; apply Ipred_inv2 in H.
+  discriminate.
+Qed.
+
 
 
 Lemma Ipred_succ : forall alpha,  Ipred alpha (succ alpha).
 Proof.
   destruct alpha;red;cbn; split.
-  - right; auto.
-  -  destruct z  as [n1 n2]; unfold succ; cbn; intro H.
-     inversion H.
-     + subst; left; left; lia.
-     + subst; destruct (le_lt_or_eq _ _ H1).
-      * left; right; lia.
-      * injection H0; intros; subst; right. 
+  - constructor; auto.
+  -  destruct z.
+     inversion_clear 1. apply le_introl. lia.
+     inversion 1.
+  -  constructor; auto.
+  - destruct z.
+    left.
+    constructor.
+    inversion_clear 1.
+    apply le_intror.
+    lia.
 Qed.
 
 Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
-    apply Ipred_inv in H. destruct H;subst. reflexivity.
-  - intros; subst ; apply Ipred_succ.
+    apply Ipred_inv1 in H. subst. reflexivity.
+    destruct (Ipred_inv3  _ _ H).
+    destruct (Ipred_inv4  _ _ H).
+apply Ipred_inv2 in  H; now subst.
+- intro;subst; now apply Ipred_succ.
 Qed.
 
 
 Definition is_succ (alpha: t) := match alpha with
-                                   (_, S _) => true
+                                   inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
 
 Definition is_limit (alpha : t) := match alpha with
-                                     (S _, 0) => true
+                                     (inr 0) => true
                                    | _ => false
                                    end.
 
+(** ICI 
 Lemma Omega_limit_is_limit alpha s : Omega_limit s alpha ->
                                      is_limit alpha.
 Proof.
@@ -330,6 +404,7 @@ Qed.
    - right; now exists (n,p).
  Defined.
 
+ (*
 
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
@@ -380,7 +455,8 @@ Proof.
 simpl; 
  destruct alpha; cbn; destruct n, n0; try f_equal; lia.
 Qed.
-
+  *)
+ 
 Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
 Proof.
  destruct alpha; simpl.
@@ -479,3 +555,5 @@ Compute (0,2)+(1,10).
 Goal omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
   reflexivity.
 Qed.
+ *)
+
