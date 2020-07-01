@@ -30,7 +30,7 @@ Proof.
 Defined.
 
 
-(** when applied to a pre-order relation le , return the equivalence and
+(** when applied to a pre-order relation le, returns the equivalence and
     the strict order associated to le *)
 
 Definition preorder_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) :=
@@ -38,9 +38,6 @@ Definition preorder_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) 
 
 Definition lt {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) :=
   le a b /\ ~ le b a.
-
-Definition strict  {A:Type}(R:relation A) := fun x y => R x y /\ x <> y.
-
 
 
 (** A class of decidable total pre-orders *)

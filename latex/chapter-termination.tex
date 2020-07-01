@@ -9,80 +9,14 @@ In this chapter, we adapt to \coq{} the well-known~\cite{KP82}  proof that Hercu
 In other words, we present  a formal and self contained proof of termination  of all [free] hydra battles.
 First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of the ordinal $\epsilon_0$ as terms in Cantor normal form. Then, we define a variant for hydra battles as a measure that maps any hydra to some ordinal strictly less than $\epsilon_0$.
 
-\section{Ordinal numbers}
-\index{Maths!Ordinal numbers}
-
-The proof of termination of all hydra battles presented in~\cite{KP82} is based
-on \emph{ordinal numbers}.
-From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded orders.
-
-We can also associate to every ordinal $\alpha$ a set whose elements are all ordinals strictly less than $\alpha$. Thus, it is meaningful  to consider \emph{finite}, \emph{infinite}, \emph{demunerable} and \emph{non-countable} ordinals.
-The relation $<$ on ordinals is well-founded, and the order $\leq$ associated with
-$<$ is total.
-
-We cannot cite all the litterature published on ordinals since Cantor's book 
-\cite{cantorbook}, and 
-leave it to the reader to explore the bibliography. Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementaion in \coq{}~\cite{CantorContrib}. 
-
-
-Out of respect of the tradition, the meta-variables for ordinals will be 
- $\alpha$, $\beta$, $\gamma$, etc. 
-
-\subsection{Definitions}
-
-\begin{itemize}
-\item Let  $\alpha$ be an ordinal; we say that  $\alpha$ is a \emph{successor} if there exists some ordinal  $\beta$ such that 
-$\alpha$ is is the least ordinal strictly greater than  $\beta$.
-
-\item We say that an ordinal $\lambda$ is a \emph{limit ordinal} is $\lambda$  is the least upper bound of a stricly increasing sequence of ordinals.
-The meta-variable $\lambda$ will be used for denoting  limit ordinals.
-
-\item \index{Maths!Transfinite induction}
-An ordinal is either $0$, a limit ordinal or a successor ordinal. This case analysis, as well as \emph{transfinite} ({i.e.}, well-founded) induction is used in many proofs about ordinal numbers.
-
-\item The segment of finite ordinals is isomorphic to the set of natural numbers.
- The first infinite ordinal is the limit ordinal $\omega$.
- 
-\item The operations $+$, $\times$ and exponentiation on $\mathbb{N}$ are extended on ordinals numbers. Note that these  extensions are not commutative any more.  For instance $\omega = 1 + \omega \not= \omega + 1$
-and $\omega = 2 \times \omega \not= \omega \times 2$.
-
-\item The ordinal $\epsilon_0$ is the least solution of the equation
- \(\alpha=\omega^{\alpha}\).
-\end{itemize}
-
-
-Please note that the set of countable ordinals is not countable.
-
- Unless otherwise specified, we will only consider ordinals strictly less than  $\epsilon_0$ in this chapter.
-
-
-% \subsection{Ordinal notations}
-% Whenever possible, define a representation of ordinals by finite expressions.
-% Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms.
-
-
-
-% \subsubsection{Notations systems for small ordinals}
-% \begin{itemize}
-% \item $\omega$
-% \item $\omega^2$
-% \item $\omega^n$
-% \item  $\omega^\omega$
-% \end{itemize}
-
-
-
 
 
 \section{The ordinal \texorpdfstring{\(\epsilon_0\)}{epsilon0}}
 \label{sec:epsilon0-intro}
 
-\subsection{Ordinal Notations}
+\subsection{Cantor normal form}
 
-In a proof assistant like \coq{},  it is useful to represent ordinals through some data-type, and make arithmetical operations and comparison effectively implemented  through certified functions.
-Our user contribution~\cite{CantorContrib} represents 
-the set of ordinals strictly less than $\epsilon_0$ in Cantor normal form as in~\cite{Manolios2005}, and also the set
-of ordinals strictly  less than $\Gamma_0$ in Veblen normal form.
+
 
 
 
@@ -132,10 +66,15 @@ Unless explicitly mentionned, the term ``ordinal" will be used instead of
 
 
 
-\subsection{A data type for  Cantor normal forms}
+\subsection{A data type for  ordinals in Cantor normal form}
 \label{sec:orgheadline72}
 \label{sec:T1-inductive-def}
 
+
+
+% Our user contribution~\cite{CantorContrib} represents 
+% the set of ordinals strictly less than $\epsilon_0$ in Cantor normal form as in~\cite{Manolios2005}, and also the set
+% of ordinals strictly  less than $\Gamma_0$ in Veblen normal form.
 
 
     Let us define an inductive type whose 

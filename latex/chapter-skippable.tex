@@ -1,7 +1,84 @@
-\chapter[Skippable chapter]{A skippable introduction to ordinal numbers and the Coq proof assistant}
+\chapter{Introduction to ordinal numbers and the Coq proof assistant}
+
+In this chapter, we introduce on a simple example the main concepts which are developped later. We assume the reader to have a very basic experience with the \coq{} proof assistant, for instance with one of the numerous tutorial one can consult on Internet
+(see for instance \url{https://coq.inria.fr/documentation}). 
+
+The definitions  and theorems we are going to show are just simpler versions (\emph{i.e.} restrictions) of the ones contained in the forthcoming chapters. We hope that this simplicity will help to understand how we represent, compute and reason about ordinal notations.
+
+Beginners in \coq{} often play with natural numbers (the type \texttt{nat} of \coq's 
+standard library), so we considered the ordinal  $\omega$ as ``well-known'' and chosed 
+$\omega^2$ as a basis for our examples.
 
 
-blah.    blah.
+
+\section{Ordinal numbers}
+\index{Maths!Ordinal numbers}
+
+The proof of termination of all hydra battles presented in~\cite{KP82} is based
+on \emph{ordinal numbers}.
+From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded orders.
+
+We can also associate to every ordinal $\alpha$ a set whose elements are all ordinals strictly less than $\alpha$. Thus, it is meaningful  to consider \emph{finite}, \emph{infinite}, \emph{demunerable} and \emph{non-countable} ordinals.
+The relation $<$ on ordinals is well-founded, and the order $\leq$ associated with
+$<$ is total.
+
+We cannot cite all the litterature published on ordinals since Cantor's book 
+\cite{cantorbook}, and 
+leave it to the reader to explore the bibliography. Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementaion in \coq{}~\cite{CantorContrib}. 
 
 
-\section{blah}
+Out of respect of the tradition, the meta-variables for ordinals will be 
+ $\alpha$, $\beta$, $\gamma$, etc. 
+
+\subsection{Definitions}
+
+\begin{itemize}
+\item Let  $\alpha$ be an ordinal; we say that  $\alpha$ is a \emph{successor} if there exists some ordinal  $\beta$ such that 
+$\alpha$ is is the least ordinal strictly greater than  $\beta$.
+
+\item We say that an ordinal $\lambda$ is a \emph{limit ordinal} is $\lambda$  is the least upper bound of a stricly increasing sequence of ordinals.
+The meta-variable $\lambda$ will be used for denoting  limit ordinals.
+
+\item \index{Maths!Transfinite induction}
+An ordinal is either $0$, a limit ordinal or a successor ordinal. This case analysis, as well as \emph{transfinite} ({i.e.}, well-founded) induction is used in many proofs about ordinal numbers.
+
+\item The segment of finite ordinals is isomorphic to the set of natural numbers.
+ The first infinite ordinal is the limit ordinal $\omega$.
+ 
+\item The operations $+$, $\times$ and exponentiation on $\mathbb{N}$ are extended on ordinals numbers. Note that these  extensions are not commutative any more.  For instance $\omega = 1 + \omega \not= \omega + 1$
+and $\omega = 2 \times \omega \not= \omega \times 2$.
+
+\item The ordinal $\epsilon_0$ is the least solution of the equation
+ \(\alpha=\omega^{\alpha}\).
+\end{itemize}
+
+
+Please note that the set of countable ordinals is not countable.
+
+ 
+
+
+\subsection{Ordinal notations}
+In a proof assistant like \coq{},  it is useful to represent ordinals through some data-type, and make arithmetical operations and comparison effectively implemented  through certified functions.
+
+Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms. 
+
+
+
+\subsubsection{Notations systems for small ordinals}
+
+The following list shows five popular notation systems for several ordinals (shown in increasing order).
+Please keep in mind that a notation system for a given ordinal $\alpha$ represents 
+ordinals \emph{strictly below} $\alpha$.
+
+\begin{itemize}
+\item $i\;(i\in\mathbb{N})$ \coq's type \verb@{j:nat | j < i}@ (see also
+\href{https://www.math.nagoya-u.ac.jp/~garrigue/lecture/2018_AW/mathcomp-1.7.0/htmldoc/mathcomp.ssreflect.fintype.html#Ordinal}{finite ordinals in Mathcomp}).
+\item $\omega$: \coq's type \texttt{nat}, with the order \texttt{Nat.lt}.
+\item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
+\item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).
+\item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap/T1}).
+\item $\Gamma_0$: The set of terms in Veblen normal form.
+\end{itemize}
+
+

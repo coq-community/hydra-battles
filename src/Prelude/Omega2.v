@@ -1,5 +1,5 @@
 (**  The ordinal omega * omega *)
-Require Import Arith Compare_dec Lia Simple_LexProd.
+Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic.
 Import Relations.
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
@@ -179,11 +179,15 @@ Proof.
 Defined.
 
 (** alpha is an immediate predecessor of beta *)
-
+(*
 Definition ipred alpha beta := 
     alpha < beta /\  forall gamma ,  gamma < beta -> gamma <= alpha.
+ *)
 
-Lemma ipred_inv : forall i j k l, ipred (i, j) (k, l) ->
+About ipred.
+Arguments ipred {A} {lt} {sto}  _ _.
+
+Lemma ipred_inv : forall i j k l : nat, ipred (i, j) (k, l) ->
                                   i = k /\ l = S j.
 Proof.
   destruct 1 as [H H0].
@@ -212,7 +216,7 @@ Lemma ipred_ok : forall alpha,  ipred alpha (succ alpha).
 Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
-  -  destruct gamma as [n1 n2]; unfold succ; cbn; intro H.
+  -  destruct z  as [n1 n2]; unfold succ; cbn; intro H.
      inversion H.
      + subst; left; left; lia.
      + subst; destruct (le_lt_or_eq _ _ H1).
@@ -233,27 +237,13 @@ Definition is_succ (alpha: t) := match alpha with
                                    (_, S _) => true
                                  | _ => false
                                  end.
-Search (_ < _ -> succ _ <= _)%nat.
-
-
-
-Definition  omega_limit (s: nat -> t) (alpha:t) :=
-  (forall i: nat, s i < alpha) /\
-  (forall beta, beta < alpha ->  exists i:nat , beta < s i).
-
-(* to do as an exercise *)
-
-
-Definition  omega_limit_s (s: nat -> t) (alpha:t) : Type :=
-  ((forall i: nat, s i < alpha) *
-  (forall beta, beta < alpha ->  {i:nat | beta < s i}))%type.
 
 Definition is_limit (alpha : t) := match alpha with
                                      (S _, 0) => true
                                    | _ => false
                                    end.
 
-Lemma omega_limit_is_limit alpha s : omega_limit s alpha ->
+Lemma Omega_limit_is_limit alpha s : Omega_limit s alpha ->
                                      is_limit alpha.
 Proof.
    destruct alpha.
@@ -282,7 +272,7 @@ Definition canon  alpha i :=
 
 
 Lemma is_limit_limit alpha :
-  is_limit alpha -> omega_limit (canon alpha) alpha.
+  is_limit alpha -> Omega_limit (canon alpha) alpha.
 Proof.
   destruct alpha;  inversion 1.
   destruct n; [discriminate | unfold canon].
