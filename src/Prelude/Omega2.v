@@ -148,7 +148,7 @@ Definition eq_b alpha beta := match compare alpha beta with
                               | _ => false
                               end.
                                             
-Lemma compare_refl alpha beta :
+Lemma compare_reflect alpha beta :
   match (compare alpha beta)
   with
     Lt => alpha < beta
@@ -171,7 +171,7 @@ Qed.
 Lemma lt_eq_lt_dec alpha beta :
   {alpha < beta} + {alpha = beta} + {beta < alpha}.
 Proof.
- generalize (compare_refl alpha beta).
+ generalize (compare_reflect alpha beta).
  case_eq (compare alpha beta).
   - intros; left; now right.
   - intros; left; now left.
