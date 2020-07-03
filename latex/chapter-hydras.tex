@@ -1022,7 +1022,7 @@ Defined.
 
 \subsection{Fights}
 
-Let $B$ be some instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
+Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
@@ -1052,6 +1052,136 @@ Inductive fight (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
 %  \end{Coqsrc}
 
 % \end{remark}
+
+
+\section{Generic properties}
+
+\subsection{Liveliness}
+
+
+Let $B$ be an instance of \texttt{Battle}. We say that $B$ is \emph{alive} if
+for any configuration $(i,h)$, where $h$ is not a head, there exists a further step in class $B$.
+
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Alive}{Hydra.Hydra\_Definitions}}
+
+\begin{Coqsrc}
+Definition Alive (B : Battle) :=
+  forall i h, 
+     h <> head -> {h' : Hydra |  B i h h'}.
+\end{Coqsrc}
+
+The theorems \texttt{Alive\_free} and \texttt{Alive\_standard} of the module 
+\url{../src/html/hydras.Hydra.Hydra_Theorems.html} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
+
+\begin{Coqsrc}
+Theorem Alive_free: Alive free.
+
+Theorem Alive_standard: Alive standard.  
+\end{Coqsrc}
+
+Both theorems are proved with the help of the  following strongly specified function:
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Lemmas.html\#next_round_dec}{Hydra.Hydra\_Lemmas}}
+
+\begin{Coqsrc}
+Definition  next_round_dec n :
+ forall h , (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}.
+\end{Coqsrc}
+
+
+\subsection{Termination}
+
+The termination of all battles is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
+ of the Standard Library.
+
+\index{Predicates!Termination}
+
+\begin{Coqsrc}
+Definition Termination :=  well_founded (transp _ round).
+\end{Coqsrc}
+
+
+
+
+Let $b$ be an instance of class \texttt{Battle}. A \emph{variant} for $b$ consists
+in a well-founded relation $<$  on some type \texttt{A}, and a function
+(also called a \emph{measure}) \texttt{m:Hydra->A} such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $b$, the inequality $m(h')<m(h)$ holds.
+
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hvariant}{Hydra.Hydra\_Definitions}}
+\index{Coq!Techniques!Type classes}
+
+\begin{Coqsrc}
+Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(b : Battle)
+                          (m: Hydra -> A): Prop :=
+ {variant_decr :forall i h h', 
+     h <> head -> b i  h h' -> Lt (m h') (m h)}.
+\end{Coqsrc}  
+
+\index{Exercises}
+
+\begin{exercise}
+ Prove that, if there is an instance of \texttt{Hvariant Lt wf\_Lt b m}, then there exists no infinite battle in  \texttt{b}.
+\end{exercise}
+
+
+
+The example we just studied shows that the termination of any battle may take a very long time. If we want to study hydra battles in general, we have to consider 
+any hydra and any strategy, both for Hercules and the hydra itself. So, we first  give some definitions, generally borrowed from transition systems vocabulary (see~\cite{tel_2000} for instance).
+
+
+\subsection{Termination of all battles}
+
+
+
+% \subsection{Reachability}
+
+
+% Let $b$ be an instance of \texttt{battle}.  We say that a configuration $(i,h)$ is 
+% \emph{reachable} if there exists some initial hydra $h_0$ such that the transformation from $(0,h_0)$ into $(i,h)$ belongs to $b$. The following inductive definition considers also the case where $i=0$ and $h=h_0$.
+
+% \vspace{4pt}
+% \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
+
+% \begin{Coqsrc}
+% Inductive reachable (b : Battle)
+%   : nat -> Hydra ->  Prop  :=
+% | reachable_0 : forall h1, reachable b 0 h1
+% | reachable_S : forall i h h0,  fight b  0 h0 i h ->
+%                                 reachable b i h.
+% \end{Coqsrc}
+
+% A nice property of the classes \texttt{free} and \texttt{standard} is that every configuration $(i,h)$ is reachable. It is sufficient to add $i$ heads to $h$'s foot and start the battle at time $0$.
+
+% \vspace{4pt}
+% \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
+
+% \begin{Coqsrc}
+% Lemma reachable_free : forall i  h, reachable free i h.
+
+% Lemma reachable_standard  : forall h i, reachable standard i h.
+% \end{Coqsrc}
+
+\subsection{Liveliness}
+
+We say that a kind  $B$ of battles is \emph{alive} if for any configuration $(i,h)$, where $h$ is not a head, there exists a further step in class $B$.
+
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Alive}{Hydra.Hydra\_Definitions}}
+
+\begin{Coqsrc}
+Definition Alive (B : Battle) :=
+  forall i h, 
+     h <> head -> {h' : Hydra |  B i h h'}.
+\end{Coqsrc}
+
+
+
 
 \section{A long battle}
 \label{sect:big-battle}
@@ -1680,112 +1810,6 @@ Lemma minoration : exp2 (exp2 95 * 95) <= N.
 The number $N$ is greater than or  equal to $2^{2^{95}\times 95}.$ If we wrote $N$ in base $10$, $N$ would require at least $10^{30}$ digits!
 
 
-\section{Reasoning about any battle}
-
-The example we just studied shows that the termination of any battle may take a very long time. If we want to study hydra battles in general, we have to consider 
-any hydra and any strategy, both for Hercules and the hydra itself. So, we first  give some definitions, generally borrowed from transition systems vocabulary (see~\cite{tel_2000} for instance).
-
-
-\subsection{Termination of all battles}
-
-The termination of all battles is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
- of the Standard Library.
-
-\index{Predicates!Termination}
-
-\begin{Coqsrc}
-Definition Termination :=  well_founded (transp _ round).
-\end{Coqsrc}
-
-
-% \subsection{Reachability}
-
-
-% Let $b$ be an instance of \texttt{battle}.  We say that a configuration $(i,h)$ is 
-% \emph{reachable} if there exists some initial hydra $h_0$ such that the transformation from $(0,h_0)$ into $(i,h)$ belongs to $b$. The following inductive definition considers also the case where $i=0$ and $h=h_0$.
-
-% \vspace{4pt}
-% \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
-
-% \begin{Coqsrc}
-% Inductive reachable (b : Battle)
-%   : nat -> Hydra ->  Prop  :=
-% | reachable_0 : forall h1, reachable b 0 h1
-% | reachable_S : forall i h h0,  fight b  0 h0 i h ->
-%                                 reachable b i h.
-% \end{Coqsrc}
-
-% A nice property of the classes \texttt{free} and \texttt{standard} is that every configuration $(i,h)$ is reachable. It is sufficient to add $i$ heads to $h$'s foot and start the battle at time $0$.
-
-% \vspace{4pt}
-% \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
-
-% \begin{Coqsrc}
-% Lemma reachable_free : forall i  h, reachable free i h.
-
-% Lemma reachable_standard  : forall h i, reachable standard i h.
-% \end{Coqsrc}
-
-\subsection{Liveliness}
-
-We say that a kind  $B$ of battles is \emph{alive} if for any configuration $(i,h)$, where $h$ is not a head, there exists a further step in class $B$.
-
-
-\vspace{4pt}
-\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Alive}{Hydra.Hydra\_Definitions}}
-
-\begin{Coqsrc}
-Definition Alive (B : Battle) :=
-  forall i h, 
-     h <> head -> {h' : Hydra |  B i h h'}.
-\end{Coqsrc}
-
-The theorems \texttt{Alive\_free} and \texttt{Alive\_standard} of the module 
-\url{../src/html/hydras.Hydra.Hydra_Theorems.html} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
-
-\begin{Coqsrc}
-Theorem Alive_free: Alive free.
-
-Theorem Alive_standard: Alive standard.  
-\end{Coqsrc}
-
-Both theorems are proved with the help of the  following strongly specified function:
-
-\vspace{4pt}
-\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Lemmas.html\#next_round_dec}{Hydra.Hydra\_Lemmas}}
-
-\begin{Coqsrc}
-Definition  next_round_dec n :
- forall h , (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}.
-\end{Coqsrc}
-
-
-\section{Termination}
-
-In this section, we are interested in proofs of termination of all battles of a  given kind, and specifically proofs by \emph{variants}.
-
-
-Let $b$ be an instance of class \texttt{Battle}. A \emph{variant} for $b$ consists
-in a well-founded relation $<$  on some type \texttt{A}, and a function
-(also called a \emph{measure}) \texttt{m:Hydra->A} such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $b$, the inequality $m(h')<m(h)$ holds.
-
-
-\vspace{4pt}
-\emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hvariant}{Hydra.Hydra\_Definitions}}
-\index{Coq!Techniques!Type classes}
-
-\begin{Coqsrc}
-Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(b : Battle)
-                          (m: Hydra -> A): Prop :=
- {variant_decr :forall i h h', 
-     h <> head -> b i  h h' -> Lt (m h') (m h)}.
-\end{Coqsrc}  
-
-\index{Exercises}
-
-\begin{exercise}
- Prove that, if there is an instance of \texttt{Hvariant Lt wf\_Lt b m}, then there exists no infinite battle in  \texttt{b}.
-\end{exercise}
 
 \subsection{Some failed attempts}
 The class \texttt{Hvariant} is parameterized by a well-founded order $<$ on some type $A$, a class of battles $B$ and a measure $m$. When $<$ or $m$ are 

@@ -1,13 +1,9 @@
 \chapter{Introduction to ordinal numbers with the Coq proof assistant}
 
-In this chapter, we introduce on a simple example the main concepts which are developped later. We assume the reader to have a very basic experience with the \coq{} proof assistant, for instance with one of the numerous tutorial one can consult on Internet
-(see for instance \url{https://coq.inria.fr/documentation}). 
+In this chapter, we introduce on  simple examples the main concepts which are developped later.  We assume the reader to have a very basic experience with the \coq{} proof assistant, for instance with one of the numerous tutorials one can consult on Internet
+(see for instance \url{https://coq.inria.fr/documentation}). A basic experience  with Peano numbers (library \texttt{Arith}) would be useful.
 
 The definitions  and theorems we are going to show are just simpler versions (\emph{i.e.} restrictions) of the ones contained in the forthcoming chapters. We hope that this simplicity will help to understand how we represent, compute and reason about ordinal notations.
-
-Beginners in \coq{} often play with natural numbers (the type \texttt{nat} of \coq's 
-standard library), so we considered the ordinal  $\omega$ as ``well-known'' and chosed 
-$\omega^2$ as a basis for our examples.
 
 
 
@@ -42,7 +38,10 @@ The meta-variable $\lambda$ will be used for denoting  limit ordinals.
 \item \index{Maths!Transfinite induction}
 An ordinal is either $0$, a limit ordinal or a successor ordinal. This case analysis, as well as \emph{transfinite} ({i.e.}, well-founded) induction is used in many proofs about ordinal numbers.
 
-\item The segment of finite ordinals is isomorphic to the set of natural numbers.
+\item Let $\alpha$ be any ordinal, the \emph{segment} $\mathbb{O}_\alpha$ is the
+interval $[0,\alpha[\,=\,\{\beta|0\leq\beta<\alpha\}$. 
+
+\item The set  of finite ordinals is a segment isomorphic to the set of natural numbers.
  The first infinite ordinal is the limit ordinal $\omega$.
  
 \item The operations $+$, $\times$ and exponentiation on $\mathbb{N}$ are extended on ordinals numbers. Note that these  extensions are not commutative any more.  For instance $\omega = 1 + \omega \not= \omega + 1$
@@ -53,23 +52,134 @@ and $\omega = 2 \times \omega \not= \omega \times 2$.
 \end{itemize}
 
 
-Please note that the set of countable ordinals is not countable.
+Please note that the set of countable ordinals is not countable. 
 
+Without ambiguity we will denote the segment $\mathbb{O}_\alpha$ by just $\alpha$.
  
 
 
-\subsection{Ordinal notations}
+\section{Ordinal notations}
 In a proof assistant like \coq{},  it is useful to represent ordinals through some data-type, and make arithmetical operations and comparison effectively implemented  through certified functions.
 
-Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms. 
+Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms. So, we will study ordinal notations just  for countable segments.
 
 
 
-\subsubsection{Notations systems for small ordinals}
+\subsection{Notation systems for some small ordinals}
 
-The following list shows five popular notation systems for several ordinals (shown in increasing order).
+The following enumeration  shows  popular notation systems for several ordinals (shown in increasing order with respect to inclusion), and their possible representation in \coq{}.
 Please keep in mind that a notation system for a given ordinal $\alpha$ represents 
 ordinals \emph{strictly below} $\alpha$.
+
+\subsubsection{Finite ordinals}
+Let $n$ be some natural number. The segment associated with $n$ is the interval 
+$[0,n[\,=\,\{0,1,\dots,n-1\}$. 
+
+One may represent the ordinal $n$ by a sigma type.
+
+
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Finite_ordinals.html}{Prelude.Finite\_ordinals}}
+
+
+\begin{Coqsrc}
+Coercion is_true: bool >-> Sortclass.
+
+Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
+\end{Coqsrc}
+
+The order on type \texttt{t $n$} is defined through the projection on \texttt{nat}.
+
+
+\begin{Coqsrc}
+Definition lt {n:nat} : relation (t n) :=
+  fun alpha beta => Nat.ltb ( proj1_sig alpha) (proj1_sig beta).
+\end{Coqsrc}
+
+For instance, let us build two elements of the segment $[0, 7[$, \emph{i.e.} two
+inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\ref{fig:O7}).
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[very thick, scale=0.6]
+
+\node (N0) at (0,0) {$\bullet$};
+\node (i0) at (0,1) {$0$};
+\node (N1) at (2,0) {$\bullet$};
+\node (i1) at (2,1) {$1$};
+\node (N2) at (4,0) {$\bullet$};
+\node (i2) at (4,1) {$2$};
+\node (N3) at (6,0) {$\bullet$};
+\node (i3) at (6,1) {$3$};
+\node (N4) at (8,0) {$\bullet$};
+\node (i4) at (8,1) {$4$};
+\node (N5) at (10,0) {$\bullet$};
+\node (i5) at (10,1) {$5$};
+\node (N6) at (12,0) {$\bullet$};
+\node (i6) at (12,1) {$6$};
+\node(alpha1) at (4,-1) {$\alpha_1$};
+\node(alpha2) at (10,-1) {$\beta_1$};
+\end{tikzpicture}
+
+\caption{The segment $\mathbb{O}_7$\label{fig:O7}}
+\end{figure}
+  
+\index{Coq!Commands!Program Definition}
+
+\begin{Coqsrc}
+Program Example alpha1 : t 7 := 2.
+
+Program Example beta1 : t 7 := 5.
+
+Example i1 : lt  alpha1 beta1.
+Proof.   now compute. Qed.
+\end{Coqsrc}
+
+
+
+
+Note that the type \texttt{t 0} is empty, and that \texttt{Program} generates an obligation
+for verifying that the constraint $i<n$ is fullfilled when one tries to build the $i$-th ordinal in type \texttt{t $n$}.
+
+\begin{Coqsrc}
+Lemma t0_empty (alpha: t 0): False.
+Proof.
+  destruct alpha.
+  destruct x; cbn in i; discriminate.
+Qed.
+
+
+Program Definition bad : t 10 := 10.
+Next Obligation.
+  compute.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 162)
+  
+  ============================
+  false = true
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Abort.
+\end{Coqsrc}
+
+Note also that attempting to compare an ordinal of type \texttt{t $n$}  with an ordinal of
+type \texttt{t $p$}  leads to an error if $n$ and $p$ are not convertible.
+
+\begin{Coqsrc}
+
+Program Example gamma1 : t 8 := 7.
+
+Fail Goal lt alpha1 gamma1.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ The command has indeed failed with message:
+The term "gamma1" has type "t 8" while it is expected to have type "t 7".
+\end{Coqanswer}
+
 
 \begin{itemize}
 \item $i\;(i\in\mathbb{N})$ \coq's type \verb@{j:nat | j < i}@ (see also
