@@ -514,6 +514,7 @@ Proof with auto.
   -  reflexivity. 
 Qed.
 
+
 Lemma compare_reflect : forall alpha beta,
     match compare alpha beta with
     |   Lt => lt alpha  beta
@@ -562,6 +563,15 @@ Proof.
       cbn; now red. 
 Qed.
 
+Lemma compare_ok  (alpha beta : T1) :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+Proof.
+  generalize (compare_reflect alpha beta).
+  destruct (compare alpha beta); now constructor.
+Qed.
+
+   
 Lemma eq_b_iff (alpha beta : T1) :
   eq_b alpha beta = true <-> alpha = beta.
 Proof.

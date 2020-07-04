@@ -167,6 +167,13 @@ Lemma compare_reflect alpha beta :
    - now left. 
 Qed.
 
+Lemma compare_ok alpha beta :
+    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+Proof.
+  generalize (compare_reflect alpha beta).
+  destruct (compare alpha beta); now constructor. 
+Qed.
 
 Lemma lt_eq_lt_dec alpha beta :
   {alpha < beta} + {alpha = beta} + {beta < alpha}.

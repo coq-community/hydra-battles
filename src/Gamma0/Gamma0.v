@@ -787,26 +787,32 @@ Proof.
 Qed.
 
 
+Lemma compare_ok alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+Proof.
+  generalize (compare_reflect alpha beta).
+  destruct (compare alpha beta); now constructor. 
+Qed.
+
+
 Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
                                          alpha < beta.
 Proof.
-  intros alpha beta; generalize (compare_reflect alpha beta).
-  case (compare alpha beta);(try discriminate 2; auto with T2).
+  intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
 Qed.
 
 
 Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
                                          alpha = beta.
 Proof.
-  intros alpha beta; generalize (compare_reflect alpha beta).
-  case (compare alpha beta);(try discriminate 2; auto with T2).
+  intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
 Qed.
 
 Lemma compare_Gt : forall alpha beta, compare alpha beta = Gt ->  
                                          beta < alpha.
 Proof.
-  intros alpha beta; generalize (compare_reflect alpha beta).
-  case (compare alpha beta);(try discriminate 2; auto with T2).
+ intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
 Qed.
 
 Arguments compare_Gt [alpha beta].

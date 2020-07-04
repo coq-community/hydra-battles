@@ -1,4 +1,4 @@
-Require Import Arith Relations Lia Logic.Eqdep_dec
+Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
 Require        Wf_nat.
 Coercion is_true: bool >-> Sortclass.
@@ -7,6 +7,9 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb ( proj1_sig alpha) (proj1_sig beta).
+
+Definition bigO {n:nat} (alpha : t n): Ensemble (t n) := fun beta =>  lt beta alpha.
+
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
@@ -63,7 +66,7 @@ Qed.
 
 
 
-Program Definition cast {i : nat} (j:nat) (H: i <= j) (alpha: t i) : t j :=
+Program Definition cast {i j : nat}  (H: i < j) (alpha: t i) : t j :=
   alpha.
 
 Next Obligation.
@@ -72,15 +75,15 @@ Next Obligation.
 Qed. 
 
 
-Lemma cast_compare_commute (i j  :nat)(H : i <= j) :
-  forall alpha beta, compare alpha beta = compare (cast j H alpha)
-                                                  (cast j H beta).
+Lemma cast_compare_commute (i j  :nat)(H : i < j) :
+  forall alpha beta, compare alpha beta = compare (cast  H alpha)
+                                                  (cast  H beta).
   reflexivity. 
 Qed.
   
-Lemma cast_mono (i j  :nat)(H : i <= j) : forall alpha beta,
+Lemma cast_mono (i j  :nat)(H : i < j) : forall alpha beta,
     lt alpha beta <->
-    lt (cast j H alpha) (cast j H beta).
+    lt (cast  H alpha) (cast  H beta).
 Proof.
   split;  unfold lt; cbn; auto.
 Qed.
@@ -94,13 +97,18 @@ Program Example alpha1 : t 7 := 2.
 Program Example beta1 : t 7 := 5.
 
 Example i1 : lt  alpha1 beta1.
-Proof.   now compute. Qed.
+Proof. reflexivity.  Qed.
 
 Program Example gamma1 : t 8 := 7.
 
 Fail Goal lt alpha1 gamma1.
 
 
+Example i2 : lt (cast (le_n 8) alpha1) gamma1.
+Proof. reflexivity. Qed.
+
+Example Ex1 : In _ (bigO beta1) alpha1.
+Proof. reflexivity. Qed.
 
 (** Hide before compiling the module 
 
