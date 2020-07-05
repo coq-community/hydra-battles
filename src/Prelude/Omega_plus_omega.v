@@ -85,6 +85,7 @@ Lemma lt_wf : well_founded lt.
 Proof. apply wf_disjoint_sum; apply lt_wf. Qed.
 
 
+
 Lemma le_introl :
   forall i j :nat, (i<= j)%nat -> inl i  <= inl j.
 Proof.
@@ -196,13 +197,21 @@ Lemma compare_reflect alpha beta :
 Qed.
 
 
-Lemma compare_ok alpha beta :
+Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
 Qed.
+
+Instance OplusO : OrdinalNotation lt_strorder compare.
+Proof.
+ split.
+ - apply compare_correct.
+ - apply lt_wf.
+Qed.
+
 
 Lemma lt_eq_lt_dec alpha beta :
   {alpha < beta} + {alpha = beta} + {beta < alpha}.

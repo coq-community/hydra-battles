@@ -563,7 +563,7 @@ Proof.
       cbn; now red. 
 Qed.
 
-Lemma compare_ok  (alpha beta : T1) :
+Lemma compare_correct  (alpha beta : T1) :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.

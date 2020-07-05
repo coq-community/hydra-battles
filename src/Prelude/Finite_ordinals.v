@@ -1,12 +1,14 @@
 Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
-        Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+        Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion
+         Ordinal_generic RelationClasses.
+
 Require        Wf_nat.
 Coercion is_true: bool >-> Sortclass.
 
 Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 
 Definition lt {n:nat} : relation (t n) :=
-  fun alpha beta => Nat.ltb ( proj1_sig alpha) (proj1_sig beta).
+  fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
 Definition bigO {n:nat} (alpha : t n): Ensemble (t n) := fun beta =>  lt beta alpha.
 
@@ -20,7 +22,7 @@ Qed.
 Definition compare {n:nat} (alpha beta : t n) :=
   Nat.compare (proj1_sig alpha) (proj1_sig beta).
 
-Lemma compare_ok {n} (alpha beta : t n) :
+Lemma compare_correct {n} (alpha beta : t n) :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
@@ -47,7 +49,7 @@ Lemma compare_reflect {n:nat} (alpha beta : t  n) :
   | Gt => lt beta  alpha
   end.
 Proof.
- now destruct (compare_ok alpha beta).
+ now destruct (compare_correct alpha beta).
 Qed.
 
 
@@ -86,6 +88,30 @@ Lemma cast_mono (i j  :nat)(H : i < j) : forall alpha beta,
     lt (cast  H alpha) (cast  H beta).
 Proof.
   split;  unfold lt; cbn; auto.
+Qed.
+
+Global Instance sto n : StrictOrder (@lt n).
+Proof.
+  split.
+   - intro x; red;  unfold lt; destruct x; cbn.
+     destruct x.
+     + discriminate.
+     +  destruct (Nat.leb_spec0 (S x) x).
+      *  lia.
+      *  discriminate.
+  - intros x y z; destruct x,y,z; cbn; destruct n.
+    +   cbn; red in i1.
+        assert (x1 < 0)%nat by (now rewrite <- Nat.ltb_lt); lia.
+    +   unfold lt; simpl; unfold is_true; repeat rewrite Nat.ltb_lt;  lia.
+Qed.
+
+
+
+Global Instance FinOrd (n:nat) : OrdinalNotation (sto n) compare.
+Proof.
+  split.
+  - apply compare_correct.
+  - apply lt_wf.
 Qed.
 
 

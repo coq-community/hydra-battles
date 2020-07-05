@@ -393,9 +393,9 @@ induction alpha.
   + simpl (inject (ocons alpha1 n alpha2));
    rewrite <- plus_assoc; simpl (inject T1.zero); 
    now rewrite alpha_plus_zero.
-  +  repeat rewrite inject_rw;  case_eq (compare alpha1 beta1).
-   * intro H1;  apply compare_Eq_impl in H1; subst beta1.
-     repeat rewrite inject_rw;  simpl T1.plus; rewrite compare_refl.
+  +  repeat rewrite inject_rw;  case_eq (T1.compare alpha1 beta1).
+   * intro H1;  apply T1.compare_Eq_impl in H1; subst beta1.
+     repeat rewrite inject_rw;  simpl T1.plus; rewrite T1.compare_refl.
      repeat rewrite inject_rw.
      rewrite <- (case_Eq (inject alpha1) (inject alpha2)
                           (inject alpha1) (inject  beta2) n n0) ...

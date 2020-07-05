@@ -26,7 +26,7 @@ _All of the Coq scripts and latex files in this project are available under the 
 -  src/Epsilon0/*.v
 	- Data types for representing ordinals less than epsilon0 in Cantor normal form
 	- The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
-	- Representation of some hierachies of fast growing functions
+	- Representation of some hierarchies of fast growing functions
    
 - src/Schutte/*.v
      - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in src/Epsilon0.

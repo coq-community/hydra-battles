@@ -11,7 +11,8 @@
 Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded  Operators_Properties
         Prelude.More_Arith  Prelude.Restriction
-        not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec.
+        not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
+        Ordinal_generic.
 
 
 Require  Export T1 Hessenberg.
@@ -257,15 +258,52 @@ Instance Two : E0 :=  ltac:(mko (fin 2)).
 
 Instance Omega_2 : E0 :=ltac:(mko (omega * omega)%t1).
 
+
+Instance Lt_sto : StrictOrder Lt.
+Proof.
+  split.
+  - intro x ; destruct x; unfold Lt.  red.
+    cbn. Search (_ < _)%t1.
+    intro; eapply LT_irrefl; eauto.
+  - intros [x Hx] [y Hy] [z Hz].
+    unfold Lt; cbn.
+    apply LT_trans.
+ Qed.
+
+Definition compare (alpha beta:E0): comparison :=
+  T1.compare (cnf alpha) (cnf beta).
+
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (alpha < beta) (beta < alpha)
+              (compare alpha beta).
+ destruct alpha, beta; unfold compare, Lt; cbn.
+destruct (T1.compare_correct cnf0 cnf1).
+ constructor 1.
+apply E0_eq_intro.
+ subst; reflexivity. 
+ constructor.
+ split; auto.
+constructor; split;auto.
+Qed.
+
 Lemma Lt_wf : well_founded Lt.
 Proof.
- split; intros [t Ht] H; apply (Acc_inverse_image _ _ LT (@cnf) 
-  {| cnf := t; cnf_ok := Ht |} );
+  split; intros [t Ht] H;
+    apply (Acc_inverse_image _ _ LT (@cnf) 
+                             {| cnf := t; cnf_ok := Ht |} );
   now   apply T1.nf_Acc. 
 Defined.
 
-
 Hint Resolve Lt_wf : E0.
+
+
+Instance Epsilon0 : OrdinalNotation Lt_sto compare.
+Proof.
+ split.
+ - apply compare_correct.
+ - apply Lt_wf.
+Qed.
+
 
 Lemma Lt_le : forall alpha beta,  beta < alpha -> Succ beta <= alpha.
 Proof.

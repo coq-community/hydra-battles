@@ -787,7 +787,7 @@ Proof.
 Qed.
 
 
-Lemma compare_ok alpha beta :
+Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
@@ -799,20 +799,20 @@ Qed.
 Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
                                          alpha < beta.
 Proof.
-  intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
 Qed.
 
 
 Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
                                          alpha = beta.
 Proof.
-  intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
 Qed.
 
 Lemma compare_Gt : forall alpha beta, compare alpha beta = Gt ->  
                                          beta < alpha.
 Proof.
- intros alpha beta; destruct (compare_ok alpha beta); trivial; discriminate. 
+ intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
 Qed.
 
 Arguments compare_Gt [alpha beta].
@@ -3543,7 +3543,12 @@ End phi_to_psi.
 
 
 
+(** * TO do
+  
+  Define a sigma type G0 (as E0 for T1) , and an instance of
+  OrdinalNotation.
 
+*)
 
  
 

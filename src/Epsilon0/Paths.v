@@ -2524,7 +2524,7 @@ Section Constant_to_standard_Proof.
   Remark Rem04 : P 0.
   Proof.
     unfold P;red; simpl.  
-    unfold le_b, lt_b; replace (compare alpha beta) with Gt.  
+    unfold le_b, lt_b; replace (T1.compare alpha beta) with Datatypes.Gt.  
     - auto.
     -  rewrite compare_rw3.
        + reflexivity. 
@@ -2536,7 +2536,7 @@ Section Constant_to_standard_Proof.
   Remark Rem05 : P t = false.
   Proof.
     unfold P,  le_b,  lt_b;
-      replace (compare (standard_gnaw (S n) alpha t) beta) with Datatypes.Lt.
+      replace (T1.compare (standard_gnaw (S n) alpha t) beta) with Datatypes.Lt.
     - reflexivity.
     - rewrite compare_rw1; auto; destruct Rem03; tauto.
   Qed.
@@ -2655,7 +2655,7 @@ Section Constant_to_standard_Proof.
   Remark R19 : beta <= gamma.
   Proof.
     generalize Rem10;unfold P; fold gamma;unfold le_b, lt_b.
-    case_eq (compare gamma beta).
+    case_eq (T1.compare gamma beta).
     - intros H H0; generalize (compare_Eq_impl _ _ H).
       intro H1; rewrite H1; apply LE_refl; eapply LT_nf_r; eauto.
     - intros; discriminate.
@@ -2715,7 +2715,7 @@ Section Constant_to_standard_Proof.
   Proof.
     rewrite R22; generalize Rem11;unfold P; intro H;
       unfold le_b, lt_b in H.
-    case_eq ( compare (standard_gnaw (S n) alpha (S l)) beta).
+    case_eq ( T1.compare (standard_gnaw (S n) alpha (S l)) beta).
     -  intro H0; rewrite H0 in H; discriminate.
     -  intro H0; rewrite H0 in H; rewrite lt_iff in H0.
        repeat split;auto.
@@ -2917,7 +2917,7 @@ Proof.
      red in H0;unfold E0.cnf; simpl in *.
      destruct beta.
      + destruct H; now apply E0_eq_intro.
-     +   case_eq (compare alpha beta1).
+     +   case_eq (T1.compare alpha beta1).
          * unfold lt in H1; simpl in H1; intro H2.
            rewrite compare_eq_iff in H2;  subst beta1.
            destruct (LT_inv H1).
