@@ -63,6 +63,30 @@ In a proof assistant like \coq{},  it is useful to represent ordinals through so
 
 Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms. So, we will study ordinal notations just  for countable segments.
 
+\subsection{A type class for ordinal notations}
+
+Let $<$ be some relation on a given type $A$. In order to build an ordinal  notation 
+system out of $(A,<)$, we require $<$ to be a strict, well-founded order, and that 
+the reflexive closure of $<$ is a total order on $A$.
+
+\index{Coq!Techniques!Type classes}
+
+Using \coq's standard library and type classes, we propose the following definition.
+
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}}
+
+\begin{Coqsrc}
+Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
+      (compare : A -> A -> comparison) :=
+  { compare_correct :
+      forall alpha beta:A,
+        CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
+                                 (compare alpha beta);
+    wf : well_founded lt}.  
+\end{Coqsrc}
+
+
 
 
 \subsection{Notation systems for some small ordinals}
@@ -81,7 +105,7 @@ One may represent the ordinal $n$ by a sigma type.
 \vspace{4pt}
 \noindent\emph{From Module~\href{../src/html/hydras.Prelude.Finite_ordinals.html}{Prelude.Finite\_ordinals}}
 
-
+\label{def: Finite-ord-type}
 \begin{Coqsrc}
 Coercion is_true: bool >-> Sortclass.
 
@@ -181,6 +205,142 @@ The term "gamma1" has type "t 8" while it is expected to have type "t 7".
 \end{Coqanswer}
 
 
+In order to build an instance of \texttt{OrdinalNotation}, we define a comparison function, by delegation to standard library's  \texttt{Nat.compare}, and prove its correction.
+
+\begin{Coqsrc}
+Definition compare {n:nat} (alpha beta : t n) :=
+  Nat.compare (proj1_sig alpha) (proj1_sig beta).
+
+Lemma compare_correct {n} (alpha beta : t n) :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+\end{Coqsrc}
+
+\begin{remark}
+ The proof of \texttt{compare\_correct} uses a well-know pattern of \coq{}.
+Let us consider  the following subgoal.
+
+\begin{Coqanswer}
+ 1 subgoal (ID 110)
+  
+  n, x0 : nat
+  i, i0 : x0 <? S n
+  ============================
+  exist (fun i1 : nat => i1 <=? n) x0 i =
+  exist (fun i1 : nat => i1 <=? n) x0 i0
+\end{Coqanswer}
+
+Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
+
+\begin{Coqanswer}
+1 subgoal (ID 112)
+  
+  n, x0 : nat
+  i, i0 : x0 <? S n
+  ============================
+  i = i0
+\end{Coqanswer}
+
+We have now to prove that two proofs of \texttt{Nat.ltb x0 (S n)} are equal.
+
+This is not obvious, but  a consequence of the following lemma of library 
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
+
+\index{Coq!Techniques!Unicity of equality proofs}
+
+\begin{Coqanswer}
+eq_proofs_unicity_on :
+forall (A : Type) (x : A),
+(forall y : A, x = y \/ x <> y) -> forall (y : A) (p1 p2 : x = y), p1 = p2
+\end{Coqanswer}
+
+Thus unicity of proofs of \texttt{Nat.ltb x0 (S n)}  comes from the decidability of
+equality on type \texttt{bool}.
+
+This is why we used the boolean function \texttt{Nat.ltb} instead of the inductive predicate \texttt{Nat.lt} in the definition of type \texttt{t $n$} (see page~\pageref{def: Finite-ord-type}).
+
+For more information about this pattern, please lokk at the numerous mailing lists and 
+FAQs on \coq{}).
+
+
+
+\end{remark}
+
+
+Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image},
+ \texttt{Coq.Wellfounded.Inclusion}, and \texttt{Coq.Arith.Wf\_nat}, we prove that our
+relation \texttt{wf} is well founded.
+
+\begin{Coqsrc}
+Lemma lt_wf (n:nat) : well_founded (@lt n).
+\end{Coqsrc}
+
+Now we can build our instance of \texttt{OrdinalNotation}.
+
+\begin{Coqsrc}
+Global Instance sto n : StrictOrder (@lt n).
+
+Global Instance FinOrd (n:nat) : OrdinalNotation (sto n) compare.
+Proof.
+  split.
+  - apply compare_correct.
+  - apply lt_wf.
+Qed.
+\end{Coqsrc}
+
+Finally, it is interesting to show that the segment $[0,n[$ is a ``sub-segment'' of
+$[0,n+1[$. Since types $t\;n$ are $t\;(n+1)$ are not convertible, we consider a ``cast'' 
+function from $t\;n$ to $t\;(n+1)$, and prove this function is compatible with
+comparison function of both types, and that it is a bijection from $t\;n$ to
+the segment $[0,n-1[$ of $t\;(n+1)$.
+
+
+In other words, \texttt{FinOrd $n$}  is a subnotation of \texttt{FinOrd $(n+1)$}.
+
+\begin{Coqsrc}
+Class  SubNotation {A:Type}
+       {ltA: relation A}{stoA:StrictOrder ltA}
+       {compareA : A -> A -> comparison}
+       (notA : OrdinalNotation stoA compareA)
+       {B:Type}{ltB: relation B}{stoB:StrictOrder ltB}
+       {compareB : B -> B -> comparison}
+       (notB : OrdinalNotation stoB compareB)
+       (bound :  B)
+       (cast : A -> B):=
+  {
+  commutation :forall a a' : A,  compareB (cast a) (cast a') =
+                                 compareA a a';
+  incl : forall a, ltB (cast a) bound;
+  surj : forall b, ltB b bound -> exists a:A, cast a = b}.
+\end{Coqsrc}
+
+Coming back to finite ordinals, the conversion function from $t\;i$ to $t\;j$ is
+defined with \texttt{Program}.
+
+\begin{Coqsrc}
+Program Definition cast {i j : nat}  (H: i < j) (alpha: t i) : t j :=
+  alpha.
+
+Lemma cast_compare_commute (i j  :nat)(H : i < j) :
+  forall alpha beta, compare alpha beta = compare (cast  H alpha)
+                                                  (cast  H beta).
+
+\end{Coqsrc}
+
+We are now able to build an instance of \texttt{SubNotation}
+
+\begin{Coqsrc}
+(** biggest element of t (S n) *)
+
+Program Definition biggest_S (n:nat) : t (S n) :=n.
+Next Obligation. 
+  red;rewrite  Nat.ltb_lt; auto with arith.
+Defined.
+
+Instance F_incl n : SubNotation  (FinOrd n) (FinOrd (S n)) (biggest_S n)
+                                 (cast (Nat.lt_succ_diag_r n)).
+\end{Coqsrc}
+         
 
 \begin{todo}
 Comments on \texttt{cast, compare, bigO}

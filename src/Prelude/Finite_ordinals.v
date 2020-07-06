@@ -3,6 +3,7 @@ Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
          Ordinal_generic RelationClasses.
 
 Require        Wf_nat.
+
 Coercion is_true: bool >-> Sortclass.
 
 Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
@@ -30,7 +31,7 @@ Proof.
   - elimtype False;  now apply t0_empty.
   - destruct alpha, beta; cbn;  case_eq (x ?= x0); unfold lt; cbn.
     + rewrite Nat.compare_eq_iff; intro; subst; f_equal. 
-      constructor 1; f_equal; apply eq_proofs_unicity_on.
+      constructor 1. f_equal.  apply eq_proofs_unicity_on.
       destruct y, (x0 <? S n); auto; right; discriminate.    
     +  rewrite Nat.compare_lt_iff;  constructor 2.
        destruct x0; [  lia |  apply leb_correct; lia].
@@ -74,12 +75,13 @@ Program Definition cast {i j : nat}  (H: i < j) (alpha: t i) : t j :=
 Next Obligation.
   destruct alpha; cbn; red in i0;rewrite  Nat.ltb_lt  in i0.
   destruct j; [lia | apply leb_correct;  lia].
-Qed. 
+Defined.
 
 
 Lemma cast_compare_commute (i j  :nat)(H : i < j) :
   forall alpha beta, compare alpha beta = compare (cast  H alpha)
                                                   (cast  H beta).
+Proof.
   reflexivity. 
 Qed.
   
@@ -115,6 +117,38 @@ Proof.
 Qed.
 
 
+Lemma sig_eq_intro {n:nat} (x y : t n) :
+  proj1_sig x = proj1_sig y -> x = y.
+Proof.
+  destruct x,y; simpl; f_equal; intro; subst. 
+  f_equal; apply eq_proofs_unicity_on.
+  destruct y, (x0 <? n); auto.
+  right; discriminate.
+Qed.
+
+(** biggest element of t (S n) *)
+
+Program Definition biggest_S (n:nat) : t (S n) :=n.
+Next Obligation. 
+  red;rewrite  Nat.ltb_lt; auto with arith.
+Defined.
+
+
+Instance F_incl n : SubNotation  (FinOrd n) (FinOrd (S n)) (biggest_S n)
+                                 (cast (Nat.lt_succ_diag_r n)).
+Proof.
+  split.
+  - intros; cbn.
+    reflexivity. 
+  -  unfold lt; simpl; destruct a; assumption.
+  -  destruct b as [x Hx].
+     unfold biggest_S.
+     unfold lt;simpl. 
+     intros.
+     exists (exist _ x H).
+     apply sig_eq_intro.     
+     reflexivity.
+Qed.
 
 (** Examples:   5 and 8 considered as members of the segma,t [0,10[ *)
 
