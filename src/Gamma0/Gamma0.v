@@ -33,6 +33,8 @@ Require Import More_Arith Restriction  not_decreasing  Epsilon0.
 Import Datatypes.
 
 Require Import T2  Gamma0_length term  rpo.
+Require Import Prelude.Restriction.
+Require Import RelationClasses Ordinal_generic. 
 
 Set Implicit Arguments.
 
@@ -312,6 +314,17 @@ Definition compare (t1 t2 : T2) :=
   | inleft (right _) => Eq
   | inright _ => Gt
   end.
+
+Fixpoint nfb (alpha : T2) : bool :=
+  match alpha with
+    zero => true
+  | gcons a b n zero => andb (nfb a) (nfb b)
+  | gcons a b n ((gcons a' b' n' c') as c) =>
+    match compare [a', b'] [a, b] with
+           Lt => andb (nfb a) (andb (nfb b) (nfb c))
+           | _ => false
+           end
+end.
 
 
 (* introduces an hypothesis Hname for t < t', t = t', and t' < t
@@ -847,6 +860,7 @@ Lemma compare_rw_gt  alpha beta:  beta < alpha ->
   - intro; case (lt_irr (alpha:=alpha));
       eapply lt_trans;eauto with T2.
 Qed.
+
 
 
 (**  plus is defined here, because it requires decidible comparison *)
@@ -1946,6 +1960,9 @@ Section  well_founded.
 
 
 End well_founded.
+
+Print well_founded_restriction.
+
 
 
 Definition transfinite_induction :
@@ -3538,18 +3555,81 @@ Qed.
 
 End phi_to_psi.
 
+Check compare.
+
+Module G0.
+
+  Definition LT := restrict nf lt.
+
+  Lemma Lt_wf : well_founded LT.
+  Proof.
+    unfold LT; generalize nf_Wf; split; split.
+    intros y0 H1;  generalize (nf_Wf); intro H2.
+    apply H2;now destruct H1.
+  Defined.
 
 
 
+Class G0 := mkg0 {vnf : T2; vnf_ok : nf vnf}.
 
 
-(** * TO do
+Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
+
+Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
+
+
+Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
+Proof.
+  destruct alpha, beta; split; auto.
+Qed.
+
+Lemma lt_wf : well_founded lt.
+Proof.
   
-  Define a sigma type G0 (as E0 for T1) , and an instance of
-  OrdinalNotation.
+  split; intros [t Ht] H.
+  eapply Acc_incl with (fun x y =>  LT (@vnf x) (@vnf y)).
+  intros x y H0;  apply lt_LT_incl; auto.
+  apply (Acc_inverse_image _ _ LT (@vnf) 
+                           {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
+Qed.
 
-*)
+Instance lt_sto : StrictOrder lt.
+Proof.
+  split.
+  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
+  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
+Qed.
 
- 
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+Proof.
+destruct alpha, beta.
+cbn.
+destruct (Gamma0.compare_correct vnf0 vnf1).
+subst. 
+unfold compare; simpl.
+Search Gamma0.compare.
+rewrite compare_rw_eq.
+constructor 1.
+admit.
+trivial.
+unfold compare; rewrite compare_rw_lt.
+constructor 2.
+red.
+assumption.
+assumption.
+unfold compare; rewrite compare_rw_gt.
+constructor 3.
+red; assumption.
+assumption. 
+Admitted.
 
+  Instance ONG0: OrdinalNotation lt_sto compare.
+Proof.
+split.
+apply compare_correct.
+apply lt_wf.
+Admitted.
 
+End G0.
