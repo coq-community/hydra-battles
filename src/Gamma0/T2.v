@@ -26,7 +26,7 @@ Require Import Arith.
 Require Import Compare_dec.
 Require Import Relations.
 Require Import Wellfounded.
-Require Import Max.
+Require Import Max Lia.
 
 Require Import More_Arith.
 Require Import Restriction.
@@ -224,4 +224,166 @@ Inductive lt_epsilon0 : T2 -> Prop :=
 
 (* end of main definitions *)
 
+
+(** * length (as in Schutte) *)
+
+
+
  
+(*
+Require Import Arith.
+Require Import Lia.
+Require Import Compare_dec.
+Require Import Relations.
+Require Import Wellfounded.
+
+
+Require Import More_Arith.
+Require Import Restriction.
+Require Import T2.
+
+Set Implicit Arguments.
+ *)
+
+Section on_length.
+
+ Open Scope nat_scope.
+
+(* length of ordinal terms *)
+(* from Schütte, Proof theory, used in proofs of transitivity
+   and total ordering *)
+   
+Fixpoint nbterms (t:T2) : nat :=
+  match t with zero => 0
+             | gcons a b n v => (S n) + nbterms v
+  end.
+
+(* is the multiplication by 2 useful ? *)
+
+Fixpoint t2_length (t:T2) : nat :=
+  match t  with zero => 0
+             | gcons a b n v => 
+                 nbterms (gcons a b n v) + 
+                  2 * (Max.max (t2_length a) (Max.max (t2_length b) (t2_length_aux v)))
+  end
+with t2_length_aux (t:T2) : nat :=
+ match t with zero => 0
+            | gcons a b n v =>
+               Max.max (t2_length a) (Max.max (t2_length b) (t2_length_aux v))
+ end.
+
+
+Lemma length_a : forall a b n v, t2_length a < 
+                                 t2_length (gcons a b n v).
+Proof.
+ simpl.
+ intros; apply le_lt_n_Sm.
+ match goal with
+     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
+ apply le_plus_trans.
+ apply le_plus_trans.
+ apply le_max_l.
+Qed.
+
+Lemma length_b : forall a b n v, t2_length b < 
+                                 t2_length (gcons a b n v).
+Proof.
+ simpl.
+ intros; apply le_lt_n_Sm.
+ match goal with 
+  [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
+ apply le_plus_trans.
+ apply le_plus_trans.
+ eapply Le.le_trans.
+ 2:eapply le_max_r.
+ apply le_max_l.
+Qed.
+
+Lemma length_c : forall a b n v, t2_length v < 
+                                    t2_length (gcons a b n v).
+Proof.
+ simpl.
+ intros; apply le_lt_n_Sm.
+ case v.
+ simpl.
+ auto with arith.
+ intros.
+ simpl (t2_length (gcons t t0 n0 t1)).
+ simpl (nbterms (gcons t t0 n0 t1)).
+ match goal with  
+  [ |- ?a <= ?b + ?c + ?d] => rewrite <- (plus_assoc b c d) end.
+ simpl (t2_length_aux (gcons t t0 n0 t1)).
+ match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
+ pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
+ generalize (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
+ intro n1.
+ simpl.
+ apply le_n_S.
+ apply plus_le_compat_l.
+ repeat rewrite plus_0_r.
+ apply plus_le_compat;
+ apply Le.le_trans with (Max.max (t2_length b) n1);
+ apply le_max_r.
+ lia.
+Qed.
+
+
+
+
+Lemma length_n : forall a b r n p, n < p ->
+                        t2_length (gcons a b n r) <
+                        t2_length (gcons a b p r).
+Proof.
+ induction 1.
+ simpl.
+ auto with arith.
+ simpl;auto with arith.
+Qed.
+
+
+Lemma length_psi : forall a b n c,
+                      t2_length [a, b] <= t2_length (gcons a b n c).
+Proof.
+ simpl.
+ intros; apply le_lt_n_Sm.
+ match goal with 
+    [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
+ apply le_plus_trans.
+ replace (Max.max (t2_length b) 0) with (t2_length b).
+ -  repeat  rewrite plus_0_r;  apply plus_le_compat. 
+   +  apply max_le_regL,  le_max_l; auto.
+   +  apply Nat.max_le_compat; auto.
+      apply le_max_l.
+ - rewrite max_l;auto with arith.
+Qed.
+
+
+Lemma length_ab : forall a b, t2_length a + t2_length b <= t2_length (gcons a b 0 zero).
+Proof.
+ simpl.
+ intros.
+ repeat rewrite (max_l (t2_length b) 0);auto with arith.
+ case (le_lt_dec (t2_length a) (t2_length b)).
+ intro;repeat rewrite max_r;auto.
+ lia.
+ intro;repeat rewrite max_l;auto.
+ lia.
+ auto with arith.
+Qed.
+
+Lemma length_abnc : forall a b n c, 
+   t2_length a + t2_length b <= t2_length (gcons a b n c).
+Proof.
+ intros.
+ eapply Le.le_trans.
+ eapply length_ab.
+ apply length_psi.
+Qed.
+
+
+End on_length.
+
+
+
+
+

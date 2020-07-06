@@ -32,9 +32,10 @@ Require Import Relations Wellfounded  Max.
 Require Import More_Arith Restriction  not_decreasing  Epsilon0.
 Import Datatypes.
 
-Require Import T2  Gamma0_length term  rpo.
+Require Import T2   term  rpo.
 Require Import Prelude.Restriction.
 Require Import RelationClasses Ordinal_generic. 
+Require Logic.Eqdep_dec.
 
 Set Implicit Arguments.
 
@@ -3568,9 +3569,62 @@ Module G0.
     apply H2;now destruct H1.
   Defined.
 
+(** ** Temporary compatibility  nf/nfb *)
 
+Lemma zero_nfb : nfb zero.
+Proof. reflexivity. Qed.
 
-Class G0 := mkg0 {vnf : T2; vnf_ok : nf vnf}.
+Lemma nfb_a a b n c: nfb (gcons a b n c) -> nfb a.
+Proof. 
+ cbn.
+ destruct c.
+ destruct (nfb b),  ( nfb a);cbn; auto.
+ destruct (compare [c1, c2] [a, b]);try  discriminate.
+  destruct (nfb a); cbn; auto. 
+Qed.
+
+Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
+Proof.
+  induction gamma.
+  - cbn; split;auto.
+    constructor.  
+  - simpl; destruct gamma3; split.
+    + case_eq (nfb gamma1); case_eq (nfb gamma2); try discriminate;  
+        rewrite IHgamma1 , IHgamma2; try constructor; auto.
+    +  inversion_clear 1;  rewrite <- IHgamma1 in H0; rewrite <- IHgamma2 in H1.
+       now rewrite H0, H1.
+    + case_eq (compare [gamma3_1, gamma3_2] [gamma1, gamma2]); intro Hcompare;
+        try discriminate.
+      generalize (compare_Lt Hcompare).
+      constructor; auto.
+      apply andb_prop in H0; destruct H0.
+      apply andb_prop in H1; destruct H1.
+      tauto.
+      apply andb_prop in H0; destruct H0.
+      apply andb_prop in H1; destruct H1.
+      tauto.
+      apply andb_prop in H0; destruct H0.
+      apply andb_prop in H1; destruct H1.
+      tauto.
+    + inversion_clear 1.
+      apply compare_rw_lt in H0.    
+      rewrite H0.
+      rewrite <- IHgamma1 in H1; rewrite H1.
+      rewrite <- IHgamma2 in H2; rewrite H2.
+      rewrite <- IHgamma3 in H3; rewrite H3.
+      reflexivity.    
+Qed.
+
+Lemma nfb_proof_unicity :
+  forall (alpha:T2) (H H': nfb alpha), H = H'.
+Proof.
+  intros;  red in H, H';  apply Eqdep_dec.eq_proofs_unicity_on.
+  destruct y. 
+  - rewrite H; auto. 
+  - rewrite H; right; discriminate. 
+Qed.
+
+Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
 
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
@@ -3580,12 +3634,11 @@ Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
 
 Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
 Proof.
-  destruct alpha, beta; split; auto.
+  destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
 Qed.
 
 Lemma lt_wf : well_founded lt.
 Proof.
-  
   split; intros [t Ht] H.
   eapply Acc_incl with (fun x y =>  LT (@vnf x) (@vnf y)).
   intros x y H0;  apply lt_LT_incl; auto.
@@ -3604,32 +3657,20 @@ Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
-destruct alpha, beta.
-cbn.
-destruct (Gamma0.compare_correct vnf0 vnf1).
-subst. 
-unfold compare; simpl.
-Search Gamma0.compare.
-rewrite compare_rw_eq.
-constructor 1.
-admit.
-trivial.
-unfold compare; rewrite compare_rw_lt.
-constructor 2.
-red.
-assumption.
-assumption.
-unfold compare; rewrite compare_rw_gt.
-constructor 3.
-red; assumption.
-assumption. 
-Admitted.
+  destruct alpha, beta; cbn.
+  destruct (Gamma0.compare_correct vnf0 vnf1);subst. 
+  unfold compare; simpl.
+  -  rewrite compare_rw_eq; auto.
+   + constructor 1; f_equal; apply nfb_proof_unicity.
+  - unfold compare; rewrite compare_rw_lt; auto.
+  - unfold compare; rewrite compare_rw_gt; auto.
+Qed. 
 
-  Instance ONG0: OrdinalNotation lt_sto compare.
+Instance ONG0: OrdinalNotation lt_sto compare.
 Proof.
-split.
-apply compare_correct.
-apply lt_wf.
-Admitted.
+  split.
+  - apply compare_correct.
+  - apply lt_wf.
+Qed.
 
 End G0.
