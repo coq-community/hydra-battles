@@ -290,63 +290,101 @@ Qed.
 
 Finally, it is interesting to show that the segment $[0,n[$ is a ``sub-segment'' of
 $[0,n+1[$. Since types $t\;n$ are $t\;(n+1)$ are not convertible, we consider a ``cast'' 
-function from $t\;n$ to $t\;(n+1)$, and prove this function is compatible with
-comparison function of both types, and that it is a bijection from $t\;n$ to
+function $\iota$ from $t\;n$ to $t\;(n+1)$, and prove this function is  a bijection  from $t\;n$ to
 the segment $[0,n-1[$ of $t\;(n+1)$.
 
 
-In other words, \texttt{FinOrd $n$}  is a subnotation of \texttt{FinOrd $(n+1)$}.
+
+This notion is defined generically as a class in
+ Module~\href{../src/html/hydras.Prelude.Ordinal-generic.html}{Prelude.Ordinal\_generic} (see Fig~\vref{figure:subsegment}).
 
 \begin{Coqsrc}
-Class  SubNotation {A:Type}
-       {ltA: relation A}{stoA:StrictOrder ltA}
-       {compareA : A -> A -> comparison}
-       (notA : OrdinalNotation stoA compareA)
-       {B:Type}{ltB: relation B}{stoB:StrictOrder ltB}
-       {compareB : B -> B -> comparison}
-       (notB : OrdinalNotation stoB compareB)
-       (bound :  B)
-       (cast : A -> B):=
+(** The segment associated with nA is isomorphic to
+    the interval [0,b[ *)
+
+Class  Subsegment 
+       `(nA : @OrdinalNotation A ltA stoA compareA)
+       `(nB : @OrdinalNotation B ltB stoB compareB)
+       (b :  B)
+       (iota : A -> B):=
   {
-  commutation :forall a a' : A,  compareB (cast a) (cast a') =
-                                 compareA a a';
-  incl : forall a, ltB (cast a) bound;
-  surj : forall b, ltB b bound -> exists a:A, cast a = b}.
+  subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
+                                 compareA x y;
+  subseg_incl : forall x, ltB (iota x) b;
+  subseg_onto : forall y, ltB y b  -> exists x:A, iota x = y}.
 \end{Coqsrc}
+
+
+ \begin{figure}[h]
+   \centering
+   \begin{tikzpicture}[very thick, scale=0.6]
+\begin{scope}[color=blue]
+\node (A) at (0,0) {$A$};
+\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
+\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
+\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
+\node (Adots) at (6,0) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red]
+\node (B) at (0,2) {$B$};
+\node(B0) at (2,2)[label=above:$0$]{$\bullet$};
+\node(B1) at (3,2)[label=above:$1$]{$\bullet$};
+\node(B2) at (4,2)[label=above:$2$]{$\bullet$};
+\node (Bdots) at (6,2) {$\ldots$};
+\node (b) at (8,2) [label=above:$b$]{$\bullet$};
+\node (bsucc) at (9,2) [label=above:$b+1$]{$\bullet$};
+\node (Bdots2) at (10,2) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red!50!blue]
+\draw [->,thin] (A0) -- node [auto] {$\iota$} (B0);
+\draw [->,thin] (A1) -- node [auto] {$\iota$} (B1);
+\draw [->,thin] (A2) -- node [auto] {$\iota$} (B2);
+\draw [->,thin] (Adots) -- node [auto] {$\iota$} (Bdots);
+\end{scope}
+\end{tikzpicture}
+   \caption{\textcolor{blue}{$A$} is a sub-segment  of \textcolor{red}{$B$}}
+   \label{fig:subsegment}
+ \end{figure}
+
+
 
 Coming back to finite ordinals, the conversion function from $t\;i$ to $t\;j$ is
 defined with \texttt{Program}.
 
 \begin{Coqsrc}
-Program Definition cast {i j : nat}  (H: i < j) (alpha: t i) : t j :=
+Program Definition iota {i j : nat}  (H: i < j) (alpha: t i) : t j :=
   alpha.
 
-Lemma cast_compare_commute (i j  :nat)(H : i < j) :
-  forall alpha beta, compare alpha beta = compare (cast  H alpha)
-                                                  (cast  H beta).
-
+Lemma iota_compare_commute (i j  :nat)(H : i < j) :
+  forall alpha beta, compare alpha beta = compare (iota  H alpha)
+                                                  (iota  H beta).
 \end{Coqsrc}
 
-We are now able to build an instance of \texttt{SubNotation}
+We are now able to build an instance of \texttt{Subsegment}
 
 \begin{Coqsrc}
-(** biggest element of t (S n) *)
+Section Inclusion_ij.
 
-Program Definition biggest_S (n:nat) : t (S n) :=n.
-Next Obligation. 
-  red;rewrite  Nat.ltb_lt; auto with arith.
-Defined.
+  Variables i j : nat.
+  Hypothesis Hij : (i < j)%nat.
 
-Instance F_incl n : SubNotation  (FinOrd n) (FinOrd (S n)) (biggest_S n)
-                                 (cast (Nat.lt_succ_diag_r n)).
+   Program Definition iota  (alpha: t i) : t j :=  alpha.
+ 
+   Let b : t j := exist _ i Ltb_ij.
+   
+  Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota.
+  
+  End Inclusion_ij.
+
 \end{Coqsrc}
          
 
-\begin{todo}
-Comments on \texttt{cast, compare, bigO}
 
-Show that there is no interesting arihmetic, due to the lack of total succesor, addition, etc.
-\end{todo}
+
+\begin{remark}
+ There is no interesting arihmetic on finite ordinals, since functions like successor, addition;, etc.,  cannot represented in \coq{} as \emph{total} functions.
+\end{remark}
+
 \begin{itemize}
 \item $i\;(i\in\mathbb{N})$ \coq's type \verb@{j:nat | j < i}@ (see also
 \href{https://www.math.nagoya-u.ac.jp/~garrigue/lecture/2018_AW/mathcomp-1.7.0/htmldoc/mathcomp.ssreflect.fintype.html#Ordinal}{finite ordinals in Mathcomp}).

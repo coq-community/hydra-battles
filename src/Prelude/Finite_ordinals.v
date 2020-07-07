@@ -69,29 +69,6 @@ Qed.
 
 
 
-Program Definition cast {i j : nat}  (H: i < j) (alpha: t i) : t j :=
-  alpha.
-
-Next Obligation.
-  destruct alpha; cbn; red in i0;rewrite  Nat.ltb_lt  in i0.
-  destruct j; [lia | apply leb_correct;  lia].
-Defined.
-
-
-Lemma cast_compare_commute (i j  :nat)(H : i < j) :
-  forall alpha beta, compare alpha beta = compare (cast  H alpha)
-                                                  (cast  H beta).
-Proof.
-  reflexivity. 
-Qed.
-  
-Lemma cast_mono (i j  :nat)(H : i < j) : forall alpha beta,
-    lt alpha beta <->
-    lt (cast  H alpha) (cast  H beta).
-Proof.
-  split;  unfold lt; cbn; auto.
-Qed.
-
 Global Instance sto n : StrictOrder (@lt n).
 Proof.
   split.
@@ -126,29 +103,57 @@ Proof.
   right; discriminate.
 Qed.
 
-(** biggest element of t (S n) *)
-
-Program Definition biggest_S (n:nat) : t (S n) :=n.
-Next Obligation. 
-  red;rewrite  Nat.ltb_lt; auto with arith.
-Defined.
 
 
-Instance F_incl n : SubNotation  (FinOrd n) (FinOrd (S n)) (biggest_S n)
-                                 (cast (Nat.lt_succ_diag_r n)).
-Proof.
-  split.
-  - intros; cbn.
+
+Section Inclusion_ij.
+
+  Variables i j : nat.
+  Hypothesis Hij : (i < j)%nat.
+
+  Remark Ltb_ij : Nat.ltb i j.
+    Search Nat.ltb .
+    red; now rewrite Nat.ltb_lt.
+  Qed.
+
+  Program Definition iota  (alpha: t i) : t j :=
+    alpha.
+  
+  Next Obligation.
+    destruct alpha; cbn; red in i0;rewrite  Nat.ltb_lt  in i0.
+    destruct j; [lia | apply leb_correct;  lia].
+  Defined.
+
+  Let b : t j := exist _ i Ltb_ij.
+   
+  Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota.
+  Proof.
+    split.
+    - intros; cbn.
+      reflexivity. 
+    -  unfold lt; simpl. intro x;  destruct x; assumption.
+    -  intro y; destruct y as [x Hx].
+       unfold b, lt;simpl. 
+       intros H; exists (exist _ x H); apply sig_eq_intro; reflexivity.
+  Qed.
+
+  Lemma iota_compare_commute :
+    forall alpha beta, compare alpha beta = compare (iota   alpha)
+                                                    (iota   beta).
+  Proof.
     reflexivity. 
-  -  unfold lt; simpl; destruct a; assumption.
-  -  destruct b as [x Hx].
-     unfold biggest_S.
-     unfold lt;simpl. 
-     intros.
-     exists (exist _ x H).
-     apply sig_eq_intro.     
-     reflexivity.
-Qed.
+  Qed.
+  
+  Lemma iota_mono  : forall alpha beta,
+      lt alpha beta <->
+      lt (iota   alpha) (iota   beta).
+  Proof.
+    split;  unfold lt; cbn; auto.
+  Qed.
+
+End Inclusion_ij.
+
+Arguments iota {i j}.
 
 (** Examples:   5 and 8 considered as members of the segma,t [0,10[ *)
 
@@ -163,8 +168,9 @@ Program Example gamma1 : t 8 := 7.
 
 Fail Goal lt alpha1 gamma1.
 
+About iota.
 
-Example i2 : lt (cast (le_n 8) alpha1) gamma1.
+Example i2 : lt (iota  (le_n 8) alpha1) gamma1.
 Proof. reflexivity. Qed.
 
 Example Ex1 : In _ (bigO beta1) alpha1.

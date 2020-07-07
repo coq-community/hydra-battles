@@ -1,6 +1,6 @@
 Require Import RelationClasses Relation_Operators.
 Import Relation_Definitions.
-
+Generalizable All Variables.
 
 Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
       (compare : A -> A -> comparison) :=
@@ -16,21 +16,19 @@ Definition Ipred {A:Type}{lt : relation A}
   lt x y /\ (forall z,  lt z y -> clos_refl _ lt z x).
 
 
+(** The segment associated with nA is isomorphic to
+    the interval [0,b[ *)
 
-Class  SubNotation {A:Type}
-       {ltA: relation A}{stoA:StrictOrder ltA}
-       {compareA : A -> A -> comparison}
-       (notA : OrdinalNotation stoA compareA)
-       {B:Type}{ltB: relation B}{stoB:StrictOrder ltB}
-       {compareB : B -> B -> comparison}
-       (notB : OrdinalNotation stoB compareB)
-       (bound :  B)
-       (cast : A -> B):=
+Class  SubSegment 
+       `(nA : @OrdinalNotation A ltA stoA compareA)
+       `(nB : @OrdinalNotation B ltB stoB compareB)
+       (b :  B)
+       (iota : A -> B):=
   {
-  commutation :forall a a' : A,  compareB (cast a) (cast a') =
-                                 compareA a a';
-  incl : forall a, ltB (cast a) bound;
-  surj : forall b, ltB b bound -> exists a:A, cast a = b}.
+  subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
+                                 compareA x y;
+  subseg_incl : forall x, ltB (iota x) b;
+  subseg_onto : forall y, ltB y b  -> exists x:A, iota x = y}.
 
 
 (* omega limit *)
