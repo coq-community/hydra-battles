@@ -288,10 +288,10 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-Finally, it is interesting to show that the segment $[0,n[$ is a ``sub-segment'' of
-$[0,n+1[$. Since types $t\;n$ are $t\;(n+1)$ are not convertible, we consider a ``cast'' 
-function $\iota$ from $t\;n$ to $t\;(n+1)$, and prove this function is  a bijection  from $t\;n$ to
-the segment $[0,n-1[$ of $t\;(n+1)$.
+Finally, it is interesting to show that, if $i<j$, then the segment $[0,i[$ is a ``sub-segment'' of
+$[0,j[$. Since the terms  $t\;i$ and $t\;j$ are not convertible, we consider a ``cast'' 
+function $\iota$ from $t\;i$ to $t\;j$, and prove this function is  a bijection  from $t\;i$ to
+the segment $[0,i[$ of $t\;j$.
 
 
 
@@ -347,20 +347,9 @@ Class  Subsegment
  \end{figure}
 
 
+\index{Coq!Commands!Program}
 
-Coming back to finite ordinals, the conversion function from $t\;i$ to $t\;j$ is
-defined with \texttt{Program}.
-
-\begin{Coqsrc}
-Program Definition iota {i j : nat}  (H: i < j) (alpha: t i) : t j :=
-  alpha.
-
-Lemma iota_compare_commute (i j  :nat)(H : i < j) :
-  forall alpha beta, compare alpha beta = compare (iota  H alpha)
-                                                  (iota  H beta).
-\end{Coqsrc}
-
-We are now able to build an instance of \texttt{Subsegment}
+We are now able to build an instance of \texttt{Subsegment}. 
 
 \begin{Coqsrc}
 Section Inclusion_ij.
@@ -368,12 +357,14 @@ Section Inclusion_ij.
   Variables i j : nat.
   Hypothesis Hij : (i < j)%nat.
 
-   Program Definition iota  (alpha: t i) : t j :=  alpha.
+   Remark Ltb_ij : Nat.ltb i j.
+   Program Definition iota_ij  (alpha: t i) : t j :=  alpha.
  
    Let b : t j := exist _ i Ltb_ij.
    
-  Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota.
-  
+   Global Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota_ij.
+  (* ... *)
+
   End Inclusion_ij.
 
 \end{Coqsrc}

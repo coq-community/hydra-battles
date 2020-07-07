@@ -112,11 +112,11 @@ Section Inclusion_ij.
   Hypothesis Hij : (i < j)%nat.
 
   Remark Ltb_ij : Nat.ltb i j.
-    Search Nat.ltb .
+  Proof.
     red; now rewrite Nat.ltb_lt.
   Qed.
 
-  Program Definition iota  (alpha: t i) : t j :=
+  Program Definition iota_ij  (alpha: t i) : t j :=
     alpha.
   
   Next Obligation.
@@ -126,7 +126,7 @@ Section Inclusion_ij.
 
   Let b : t j := exist _ i Ltb_ij.
    
-  Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota.
+  Global Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota_ij.
   Proof.
     split.
     - intros; cbn.
@@ -138,22 +138,22 @@ Section Inclusion_ij.
   Qed.
 
   Lemma iota_compare_commute :
-    forall alpha beta, compare alpha beta = compare (iota   alpha)
-                                                    (iota   beta).
+    forall alpha beta, compare alpha beta = compare (iota_ij   alpha)
+                                                    (iota_ij   beta).
   Proof.
     reflexivity. 
   Qed.
   
   Lemma iota_mono  : forall alpha beta,
       lt alpha beta <->
-      lt (iota   alpha) (iota   beta).
+      lt (iota_ij   alpha) (iota_ij   beta).
   Proof.
     split;  unfold lt; cbn; auto.
   Qed.
 
 End Inclusion_ij.
 
-Arguments iota {i j}.
+Arguments iota_ij {i j}.
 
 (** Examples:   5 and 8 considered as members of the segma,t [0,10[ *)
 
@@ -168,9 +168,7 @@ Program Example gamma1 : t 8 := 7.
 
 Fail Goal lt alpha1 gamma1.
 
-About iota.
-
-Example i2 : lt (iota  (le_n 8) alpha1) gamma1.
+Example i2 : lt (iota_ij  (le_n 8) alpha1) gamma1.
 Proof. reflexivity. Qed.
 
 Example Ex1 : In _ (bigO beta1) alpha1.
