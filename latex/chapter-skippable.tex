@@ -89,13 +89,13 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
 
 
 
-\subsection{Notation systems for some small ordinals}
+\section{Notation systems for some small ordinals}
 
 The following enumeration  shows  popular notation systems for several ordinals (shown in increasing order with respect to inclusion), and their possible representation in \coq{}.
 Please keep in mind that a notation system for a given ordinal $\alpha$ represents 
 ordinals \emph{strictly below} $\alpha$.
 
-\subsubsection{Finite ordinals}
+\subsection{Finite ordinals}
 Let $n$ be some natural number. The segment associated with $n$ is the interval 
 $[0,n[\,=\,\{0,1,\dots,n-1\}$. 
 
@@ -373,12 +373,44 @@ Section Inclusion_ij.
 
 
 \begin{remark}
- There is no interesting arihmetic on finite ordinals, since functions like successor, addition;, etc.,  cannot represented in \coq{} as \emph{total} functions.
+ There is no interesting arihmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
 \end{remark}
 
+\paragraph{Related work}
+Finite ordinals are also formailzed in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.
+
+\subsection{The first infinite ordinal : \texorpdfstring{$\omega$}{omega}}
+
+Mathematically speaking, the ordinal $\omega$ is (set-theoretically) considered as the well-ordered set of
+natural numbers. 
+Every beginner in \coq{} must have seen examples using the type \texttt{nat} of natural numbers. \coq's standard 
+library already contains a lot of functions and lemmas on Peano arithmetic. 
+
+In order to build a notation system for $\omega$, we have just to look for lemmas about strict orders and well-foundedness in type \texttt{nat}.
+
+\begin{Coqsrc}
+Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic.
+Import Relations.
+
+Search (@StrictOrder nat).
+Search @Nat.compare.
+Search (@well_founded nat).
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Instance Omega : OrdinalNotation Nat.lt_strorder Nat.compare.
+Proof.
+ split.
+ - apply Nat.compare_spec.
+ - apply lt_wf.
+Qed.
+\end{Coqsrc}
+
+
+
+
+
 \begin{itemize}
-\item $i\;(i\in\mathbb{N})$ \coq's type \verb@{j:nat | j < i}@ (see also
-\href{https://www.math.nagoya-u.ac.jp/~garrigue/lecture/2018_AW/mathcomp-1.7.0/htmldoc/mathcomp.ssreflect.fintype.html#Ordinal}{finite ordinals in Mathcomp}).
 \item $\omega$: \coq's type \texttt{nat}, with the order \texttt{Nat.lt}.
 \item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
 \item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).

@@ -3,7 +3,7 @@
 (** Maybe already done in StdLib ???? *)
 
 
-Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec  Omega 
+Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec  Lia 
         RelationClasses DecPreOrder DecPreOrder_Instances Div2 Sorting.Sorted.
 Import Relations Morphisms.
 
@@ -51,9 +51,9 @@ Section Generic.
       - injection 1; intros; subst.
         rewrite e0 in IHp; simpl in IHp; simpl.
         destruct l3.
-        inversion e0; omega.
-        destruct l3; [inversion e0; simpl;omega|].
-        specialize (IHp l3 a a1 (eq_refl _));  omega.
+        inversion e0; lia.
+        destruct l3; [inversion e0; simpl;lia|].
+        specialize (IHp l3 a a1 (eq_refl _));  lia.
     Qed.
 
     Lemma split_permutation:
@@ -88,7 +88,7 @@ Section Generic.
     Proof.
       intros; functional induction (split'_aux l l'); simpl.
       + rewrite e1 in IHp; simpl in IHp.
-        omega.
+        lia.
       + destruct l; destruct l'; simpl; auto.
         now rewrite Nat.min_0_r.
         destruct l'; simpl; auto.
@@ -111,15 +111,15 @@ Section Generic.
         simpl; apply lt_n_S.
         destruct (length l2); auto.
         apply lt_trans with (m:=S n); auto.
-        apply lt_div2; omega.
+        apply lt_div2; lia.
       + intros.
         rewrite <- (split'_aux_length_preserve l1 l1).
         assert(0<length (fst (split'_aux l1 l1)) ).
         { rewrite H.
           rewrite split'_aux_length_fst.
-          apply Nat.min_glb_lt; simpl; omega.
+          apply Nat.min_glb_lt; simpl; lia.
         }
-      unfold split'; omega.
+      unfold split'; lia.
     Qed.
 
     Lemma split'_aux_eq:

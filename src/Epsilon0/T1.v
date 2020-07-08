@@ -641,7 +641,7 @@ Theorem lt_irrefl : forall alpha, ~ lt alpha  alpha.
 Proof. 
  induction alpha.
  -  red;inversion_clear 1.
- -  intro H; case (lt_inv_strong  H); intuition.
+ -  intro H; case (lt_inv_strong  H); intuition. lia.
 Qed.
 
 

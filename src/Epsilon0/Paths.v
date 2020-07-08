@@ -15,7 +15,7 @@ P. Casteran, University of Bordeaux and Labri
 
 Require Import Canon  MoreLists First_toggle.
 Import Relations Relation_Operators.
-Import Lia.
+Require Import Lia.
 
 Set Implicit Arguments.
 Open Scope t1_scope.
