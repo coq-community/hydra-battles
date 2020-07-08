@@ -377,7 +377,7 @@ Section Inclusion_ij.
 \end{remark}
 
 \paragraph{Related work}
-Finite ordinals are also formailzed in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.
+Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.
 
 \subsection{The first infinite ordinal : \texorpdfstring{$\omega$}{omega}}
 
@@ -406,12 +406,64 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+We can also prove that any finite ordinal $i$ can be considered as a sub-segment of $\omega$.
+
+\begin{Coqsrc}
+Global Instance FinOrd_Omega (i:nat) :
+  SubSegment (FinOrd i) Omega i 
+             (fun alpha =>  proj1_sig alpha).
+\end{Coqsrc}
 
 
+\subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
 
+The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
+of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
+
+\begin{figure}[h]
+   \centering
+   \begin{tikzpicture}[very thick, scale=0.5]
+\begin{scope}[color=blue]
+\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
+\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
+\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
+\node (Adots) at (6,0) {$\ldots$};
+\node(An) at (8,0)[label=below:$n$]{$\bullet$};
+\node(A2) at (10,0)[label=below:$n+1$]{$\bullet$};
+\node (Adots1) at (12,0) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red]
+\node(B0) at (14,0)[label=below:$0$,label=above:$\omega$]{$\bullet$};
+\node(B1) at (16,0)[label=below:$1$, label=above:$\omega+1$]{$\bullet$};
+\node(B2) at (18,0)[label=below:$2$,label=above:$\omega+2$]{$\bullet$};
+\node (Bdots) at (20,0) {$\ldots$};
+\node (Bn) at (22,0) [label=below:$p$, label=above:$\omega+p$]{$\bullet$};
+\node (Bdots2) at (24,0) {$\ldots$};
+\end{scope}
+\end{tikzpicture}
+   \caption{\textcolor{blue}{$\omega+{\color{red}\omega}$}}
+   \label{fig:omega-plus-omega}
+ \end{figure}
+
+In \coq{}, we use the disjoint union \texttt{(nat+nat)\%type} for representing the elements of $\omega+\omega$.
+The blue ordinals of Figure~\ref{fig:omega-plus-omega} will be represented by terms of the form \texttt{(inl $i$)},
+the red ones by \texttt{(inr $j$)}.
+
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Omega_plus_omega.html}{Prelude.Omega\_plus\_omega}}
+
+
+\begin{Coqsrc}
+Declare Scope oo_scope.
+Delimit Scope oo_scope with oo.
+Open Scope oo_scope.
+
+Definition t := (nat + nat)%type.
+Arguments inl  {A B} _.
+Arguments inr  {A B} _.
+\end{Coqsrc}
 
 \begin{itemize}
-\item $\omega$: \coq's type \texttt{nat}, with the order \texttt{Nat.lt}.
 \item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
 \item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).
 \item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap/T1}).

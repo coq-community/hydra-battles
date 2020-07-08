@@ -1,4 +1,4 @@
-(**  The ordinal omega * omega *)
+(**  The ordinal omega + omega *)
 Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic
         Relation_Operators Disjoint_Union.
 
@@ -12,8 +12,11 @@ Coercion is_true: bool >-> Sortclass.
 Definition t := (nat + nat)%type.
 Arguments inl  {A B} _.
 Arguments inr  {A B} _.
+
 Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
 Infix "<" := lt : oo_scope.
+
+Locate sum.
 
 Definition le := clos_refl _ lt.
 
@@ -435,8 +438,8 @@ Proof.
 Qed.
 
  Definition zero_succ_limit_dec :
-  forall alpha, 
-                ({alpha = zero} + {is_limit alpha }) + 
+  forall alpha: t, 
+                ({alpha = 0} + {is_limit alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as [n | p].
