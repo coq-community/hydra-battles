@@ -296,7 +296,7 @@ the segment $[0,i[$ of $t\;j$.
 
 
 This notion is defined generically as a class in
- Module~\href{../src/html/hydras.Prelude.Ordinal-generic.html}{Prelude.Ordinal\_generic} (see Fig~\vref{figure:subsegment}).
+ Module~\href{../src/html/hydras.Prelude.Ordinal-generic.html}{Prelude.Ordinal\_generic} see Fig~\vref{figure:subsegment}).
 
 \begin{Coqsrc}
 (** The segment associated with nA is isomorphic to
@@ -463,10 +463,104 @@ Arguments inl  {A B} _.
 Arguments inr  {A B} _.
 \end{Coqsrc}
 
+The order on type \texttt{t} is already defined in
+Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}.
+
+\begin{Coqanswer}
+Inductive
+le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
+  : A + B -> A + B -> Prop :=
+    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
+  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
+  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
+Infix "<" := lt : oo_scope.
+
+Definition le := clos_refl _ lt.
+
+Infix "<=" := le : oo_scope.
+\end{Coqsrc}
+
+\subsubsection{Finite ordinals as members of \texorpdfstring{$\omega+\omega$}{omega+omega}}
+
+It is easy do define a coercion from type \texttt{nat} into our type \texttt{t}.
+
+\begin{Coqsrc}
+Definition fin (n:nat) : t := inl n.
+Coercion fin : nat >-> t.
+\end{Coqsrc}
+
+The range of \texttt{fin} is called the set of \emph{finite} ordinals.
+
+
+\index{Coq!Techniques!Coercions} 
+\begin{remark}
+Beware of coercions and notation scopes!
+
+Let us consider the following goal:
+
+\begin{Coqsrc}
+ Goal (6 < 8).
+ auto with arith.
+\end{Coqsrc}
+
+
+\begin{Coqanswer}
+1 subgoal (ID 9)
+  
+  ============================
+  6 < 8
+\end{Coqanswer}
+
+Please keep in mind that the current notation scope interprets the infix \texttt{``<''} as the predicate \texttt{Omega\_plus\_omega.lt} and not \texttt{Nat.lt}. More,  the coercion mechanism converts the terms \texttt{6:nat} [resp. \texttt{8:nat} ]
+into \texttt{inl 6} [resp. \texttt{inl 8}].  So, the initial goal is correctly interpreted by \coq{}, but not as an inequality between two natural numbers.
+
+Anyway, the initial goal is provable, using \texttt{le\_AsB} first constructor.
+
+\begin{Coqsrc}
+  constructor; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\end{remark}
+\subsubsection{Definition of \texorpdfstring{$\omega$}{omega}}
+
+We define $\omega$ as the least ordinal which is larger than any finite ordinal.
+
+\begin{Coqsrc}
+ Notation  "'omega'"  := (inr 0) : oo_scope. 
+\end{Coqsrc}
+
+\begin{exercise}
+Show that, for any $\alpha:t$, $\alpha$ is finite iff $\alpha<\omega$.
+\end{exercise}
+
+We say also that $\alpha$ is the \emph{limit} of the sequence $\textit{fin}\;i, i\in\mathbb{N}$, according to the followi,g definition (in~\href{../src/html/hydras.Prelude.Ordinal-generic.html}{Prelude.Ordinal\_generic}).
+$\alpha$ is the $\omega$-limit of the sequence $s$ if $\alpha$ is [strictly] larger than all the $s(i)$, and for any
+$\beta<\alpha$, $\beta$ is dimonated by at least an element of  the sequence $s$ (in fact $\beta$ is dominated by an infinite number of elements of the sequence (\emph{exercise!})).
+
+
+\begin{Coqsrc}
+Definition  Omega_limit
+            {A:Type}{lt : relation A}
+           {sto : StrictOrder lt} (s: nat -> A) (alpha:A)  :=
+  (forall i: nat, lt (s i) alpha) /\
+  (forall beta, lt beta  alpha -> exists i:nat, lt beta (s i)).
+
+Lemma omega_is_limit:
+   Omega_limit fin omega.
+\end{Coqsrc}
+
+
+
+
 \begin{itemize}
 \item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
 \item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).
-\item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap/T1}).
+\item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap:T1}).
 \item $\Gamma_0$: The set of terms in Veblen normal form.
 \end{itemize}
 

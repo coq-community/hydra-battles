@@ -303,13 +303,13 @@ End succ.
 Section lim.
   Variables (lambda : T1)
             (Hnf : nf lambda)
-            (Hlim : is_limit lambda)
+            (Hlim : limitb lambda)
             (f : nat -> nat -> nat)
             (H : forall k, L_spec (canonS lambda k) (f (S k))).
   
   Remark canon_not_null : forall k,  canonS lambda k <> zero.
   Proof.
-   intro; apply is_limit_canonS_not_zero; auto.  
+   intro; apply limitb_canonS_not_zero; auto.  
   Qed.
 
   Definition  L_lim k := f k (S k).
@@ -317,7 +317,7 @@ Section lim.
   Lemma L_lim_ok : L_spec lambda L_lim.
   Proof.
     right.
-    - apply is_limit_not_zero; auto.
+    - apply limitb_not_zero; auto.
     - intro k;  unfold L_lim.  red; path_decompose (S k).
       instantiate (1:= canon lambda (S k)).
       *  specialize (H k); inversion H.
@@ -326,7 +326,7 @@ Section lim.
       * rewrite interval_singleton; left.
        --    discriminate.
        -- split.
-        ++  apply is_limit_not_zero; auto.
+        ++  apply limitb_not_zero; auto.
         ++  reflexivity.
      *  specialize (L_pos_inv (canonS lambda k) (f (S k))
                               (canon_not_null k) (H k) (S k));  lia.       

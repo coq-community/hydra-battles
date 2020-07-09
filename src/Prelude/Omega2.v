@@ -247,13 +247,13 @@ Definition is_succ (alpha: t) := match alpha with
                                  | _ => false
                                  end.
 
-Definition is_limit (alpha : t) := match alpha with
+Definition limitb (alpha : t) := match alpha with
                                      (S _, 0) => true
                                    | _ => false
                                    end.
 
-Lemma Omega_limit_is_limit alpha s : Omega_limit s alpha ->
-                                     is_limit alpha.
+Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->
+                                     limitb alpha.
 Proof.
    destruct alpha.
    destruct 1.
@@ -280,8 +280,8 @@ Definition canon  alpha i :=
 
 
 
-Lemma is_limit_limit alpha :
-  is_limit alpha -> Omega_limit (canon alpha) alpha.
+Lemma limitb_limit alpha :
+  limitb alpha -> Omega_limit (canon alpha) alpha.
 Proof.
   destruct alpha;  inversion 1.
   destruct n; [discriminate | unfold canon].
@@ -296,7 +296,7 @@ Proof.
      lia.    
 Qed.
 
- Example Ex1 : is_limit omega.
+ Example Ex1 : limitb omega.
  Proof. reflexivity.  Qed.
 
 
@@ -310,7 +310,7 @@ Proof.
   -   destruct (lt_eq_lt_dec (S i, 0) (k,l)) as [[Hlt | Heq] | Hgt].
       + now left.
       + rewrite Heq; now right.
-      + destruct (is_limit_limit (S i,0)) as [H1 H2].
+      + destruct (limitb_limit (S i,0)) as [H1 H2].
         * red; trivial.
         * simpl in H1; destruct (H2 _ Hgt) as [x H0].
         simpl in H0.
@@ -326,7 +326,7 @@ Proof.
 Qed.
 
 Lemma limit_is_lub beta :
-  is_limit beta -> forall alpha, 
+  limitb beta -> forall alpha, 
     (forall i,  canon beta i < alpha) <-> beta <= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n, n0; try discriminate.
@@ -335,7 +335,7 @@ Qed.
 
  Definition zero_succ_limit_dec :
   forall alpha, 
-                ({alpha = zero} + {is_limit alpha }) + 
+                ({alpha = zero} + {limitb alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as (n,p); destruct p.

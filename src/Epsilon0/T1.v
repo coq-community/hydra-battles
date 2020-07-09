@@ -77,19 +77,19 @@ Proof. reflexivity. Qed.
 
 (** Successor and limits (syntactic definitions) *)
 
-Fixpoint is_succ alpha :=
+Fixpoint succb alpha :=
   match alpha with
       zero => false
     | ocons zero _ _ => true
-    | ocons alpha n beta => is_succ beta
+    | ocons alpha n beta => succb beta
   end.
 
-Fixpoint is_limit alpha :=
+Fixpoint limitb alpha :=
   match alpha with
       zero => false
     | ocons zero _ _ => false
     | ocons alpha n zero => true
-    | ocons alpha n beta => is_limit beta
+    | ocons alpha n beta => limitb beta
   end.
 
 (** Exponential of base [omega] *)
@@ -475,7 +475,7 @@ Proof.
 Qed.
 
 
-Lemma succ_is_succ : forall alpha, is_succ (succ alpha).
+Lemma succ_succb : forall alpha, succb (succ alpha).
 Proof.
   induction  alpha.
    -reflexivity. 
@@ -3424,11 +3424,11 @@ Qed.
 
 
 
-Lemma is_limit_cases : forall alpha n beta,
+Lemma limitb_cases : forall alpha n beta,
     nf (ocons alpha n beta) ->
-    is_limit (ocons alpha n beta)  ->
+    limitb (ocons alpha n beta)  ->
     { alpha <> zero /\ beta = zero} +
-    {alpha <> zero /\ is_limit beta }.
+    {alpha <> zero /\ limitb beta }.
 Proof.
   intros alpha n beta H;  simpl;  destruct alpha.
   - discriminate.
@@ -3473,14 +3473,14 @@ Qed.
 
 
 Lemma pred_of_limit : forall alpha, nf alpha ->
-                                    is_limit alpha ->
+                                    limitb alpha ->
                                     pred alpha = None.
 Proof.
   intros; induction alpha.
   - reflexivity. 
   -    simpl; destruct alpha1.
        +   destruct n;  simpl in H0; discriminate.
-       +   destruct (is_limit_cases  H H0).
+       +   destruct (limitb_cases  H H0).
            *  destruct a.    
               subst.
               reflexivity.
@@ -3491,7 +3491,7 @@ Qed.
 
 Definition zero_succ_limit_dec :
   forall alpha, nf alpha ->
-                ({alpha = zero} + {is_limit alpha }) + 
+                ({alpha = zero} + {limitb alpha }) + 
                 {beta : T1 |  nf beta /\ alpha = succ beta} .
 Proof with eauto with T1.
   induction alpha as [| gamma Hgamma n beta Hbeta].
@@ -3531,7 +3531,7 @@ Defined.
 
 
 Lemma pred_of_limitR : forall alpha, nf alpha -> alpha <> zero ->
-                                     pred alpha = None -> is_limit alpha.
+                                     pred alpha = None -> limitb alpha.
 Proof.
   intros alpha Halpha; destruct (zero_succ_limit_dec Halpha).
   - destruct s; auto.
@@ -3571,7 +3571,7 @@ Qed.
 
 
 
-Lemma is_limit_succ : forall alpha, nf alpha ->  ~ is_limit (succ alpha) .
+Lemma limitb_succ : forall alpha, nf alpha ->  ~ limitb (succ alpha) .
   induction alpha.
   - discriminate.
   - intros;  simpl;  destruct alpha1.
@@ -3588,28 +3588,28 @@ Proof.
   -  now apply succ_nf.
 Qed.
 
-Lemma is_limit_not_zero : forall alpha, nf alpha -> is_limit alpha  ->
+Lemma limitb_not_zero : forall alpha, nf alpha -> limitb alpha  ->
                                         alpha <> zero.
 Proof.
   unfold not; intros; subst;discriminate.
 Qed.
 
 
-Hint Resolve is_limit_not_zero : T1.
+Hint Resolve limitb_not_zero : T1.
 
 
-Lemma is_limit_succ_tail :
-  forall alpha n beta, nf beta ->  ~ is_limit (ocons alpha n (succ beta)).
+Lemma limitb_succ_tail :
+  forall alpha n beta, nf beta ->  ~ limitb (ocons alpha n (succ beta)).
 Proof.  
   simpl;intros; destruct alpha.
   - discriminate.
   -  case_eq (succ beta).
      + intro; now destruct (succ_not_zero beta).
-     +  intros gamma p delta H0;  rewrite <- H0; now  apply is_limit_succ.
+     +  intros gamma p delta H0;  rewrite <- H0; now  apply limitb_succ.
 Qed.
 
 
-Lemma succ_not_limit : forall alpha:T1, is_succ alpha -> is_limit alpha = false.
+Lemma succ_not_limit : forall alpha:T1, succb alpha -> limitb alpha = false.
 Proof.
   induction  alpha. 
   intro; discriminate.
@@ -3622,8 +3622,8 @@ Proof.
 Qed.
 
 
-Lemma is_succ_def alpha (Halpha : nf alpha) :
-  is_succ alpha -> {beta | nf beta /\ alpha = succ  beta}.
+Lemma succb_def alpha (Halpha : nf alpha) :
+  succb alpha -> {beta | nf beta /\ alpha = succ  beta}.
 Proof.
   intro H; destruct   (zero_succ_limit_dec Halpha) as [[H0 | H0] | H0].
   - subst alpha; discriminate.
@@ -3633,16 +3633,16 @@ Proof.
 Defined.
 
 
-Lemma is_succ_iff alpha (Halpha : nf alpha) :
-  is_succ alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
+Lemma succb_iff alpha (Halpha : nf alpha) :
+  succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
 Proof.
   split.
-  intro H; destruct (is_succ_def Halpha).  
+  intro H; destruct (succb_def Halpha).  
   - trivial.   
   - now exists x.
                - destruct 1 as [beta [Hbeta  H'beta]].
                  subst.     
-                 now apply succ_is_succ.
+                 now apply succ_succb.
 Qed.
 
 Lemma LE_r : forall alpha beta, alpha < beta -> alpha <= beta.
@@ -3745,8 +3745,8 @@ Qed.
 
 
 
-Lemma strict_lub_is_limit : forall (alpha :T1)(s : nat -> T1),
-    nf alpha -> strict_lub s alpha -> is_limit alpha.
+Lemma strict_lub_limitb : forall (alpha :T1)(s : nat -> T1),
+    nf alpha -> strict_lub s alpha -> limitb alpha.
 Proof.
   destruct 2.
   destruct (zero_succ_limit_dec H).
@@ -3837,13 +3837,13 @@ Qed.
 
 
 
-Lemma succ_lt_limit alpha (Halpha : nf alpha)(H : is_limit alpha ):
+Lemma succ_lt_limit alpha (Halpha : nf alpha)(H : limitb alpha ):
   forall beta, beta < alpha -> succ beta < alpha.
 Proof. 
   intros beta H0;  assert (H1 :succ beta <= alpha) by 
       (apply  LT_succ_LE; auto).
   destruct (LE_LT_eq_dec H1); auto.
-  subst alpha; destruct  (@is_limit_succ beta ); eauto with T1. 
+  subst alpha; destruct  (@limitb_succ beta ); eauto with T1. 
 Qed. 
 
 
@@ -3909,7 +3909,7 @@ Qed.
 Example Ex1 :  fin 42 + omega = omega.
 Proof. reflexivity. Qed.
 
-Example Ex2 : is_limit (omega ^ (omega + fin 5)).
+Example Ex2 : limitb (omega ^ (omega + fin 5)).
 Proof. reflexivity. Qed.
 
 

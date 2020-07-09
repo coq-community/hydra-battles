@@ -260,7 +260,7 @@ $\canonseq{\lambda}{k}$, then to $0$. In the following section, we assume that t
 Section lim.
   Variables (lambda : T1)
             (Hnf : nf lambda)
-            (Hlim : is_limit lambda)
+            (Hlim : limitb lambda)
             (f : nat -> nat -> nat)
             (H : forall k, L_spec (canonS lambda k) (f (S k))).
   
@@ -526,7 +526,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   L_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  L_ (Canon alpha i)  (S i) ;
             | right notlimit =>  L_ (Pred alpha) (S i)}}.
 
@@ -572,7 +572,7 @@ In most cases, it may be useful to write human-readable  paraphrases of these st
 Lemma L_zero_eqn : forall i, L_ Zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
-Lemma L_lim_eqn alpha i : Is_Limit alpha -> L_ alpha i =
+Lemma L_lim_eqn alpha i : Limitb alpha -> L_ alpha i =
                                         L_ (Canon alpha i) (S i).
 
 Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
@@ -642,7 +642,7 @@ Equations H_ (alpha: E0) (i:nat) :  nat  by wf  alpha lt :=
   H_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  H_ (Canon alpha (S i))  i ;
             | right notlimit =>  H_ (Pred alpha) (S i)}}. 
 
@@ -658,7 +658,7 @@ Proof.   intro i; now rewrite H__equation_1.  Qed.
 Lemma H_eq2 alpha i : Is_Succ alpha ->
                       H_ alpha i = H_ (Pred alpha) (S i).
 
-Lemma H_lim_eqn alpha i : Is_Limit alpha ->
+Lemma H_lim_eqn alpha i : Limitb alpha ->
                       H_ alpha i =  H_ (Canon alpha (S i)) i.
 
 Lemma H_eq4  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
@@ -1027,7 +1027,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  F_ (Canon alpha i)  i ;
             | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
 \end{Coqsrc}
@@ -1036,7 +1036,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 The command has indeed failed with message:
 In environment
 alpha : E0
-notlimit : Is_Limit alpha = false
+notlimit : Limitb alpha = false
 nonzero : alpha <> Zero
 i : nat
 F_ : forall x : E0, nat -> x < alpha -> nat
@@ -1077,7 +1077,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
       with E0_eq_dec alpha Zero :=
            { | left _ => S i ;
              | right nonzero
-                 with Utils.dec (Is_Limit alpha) :=
+                 with Utils.dec (Limitb alpha) :=
                  { | left _ => F_star (Canon alpha i,1) i ;
                    | right notlimit =>
                      F_star (Pred alpha, S i)  i}};
@@ -1094,7 +1094,7 @@ It is quite easy to prove that our function \texttt{F\_} satisfies the equations
 \begin{Coqsrc}
 Lemma F_zero_eqn : forall i, F_ Zero i = S i.
 
-Lemma F_lim_eqn : forall alpha i,  Is_Limit alpha ->
+Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
                                F_ alpha i = F_ (Canon alpha i) i.
 
 Lemma F_succ_eqn : forall alpha i,

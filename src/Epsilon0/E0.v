@@ -46,11 +46,11 @@ Proof.
 Defined.
 
 
-Definition Is_Limit (alpha : E0) : bool :=
-  is_limit (@cnf alpha).
+Definition Limitb (alpha : E0) : bool :=
+  limitb (@cnf alpha).
 
-Definition Is_Succ (alpha : E0) : bool :=
-  is_succ (@cnf alpha).
+Definition Succb (alpha : E0) : bool :=
+  succb (@cnf alpha).
 
 Instance _Omega : E0.
 Proof.
@@ -212,35 +212,35 @@ Proof.
   reflexivity.
 Defined.
 
-Lemma Is_Limit_Omega_term alpha i : alpha <> Zero ->
-                                    Is_Limit (Omega_term alpha i).
+Lemma Limitb_Omega_term alpha i : alpha <> Zero ->
+                                    Limitb (Omega_term alpha i).
 Proof.
-  intro H; unfold Is_Limit.
+  intro H; unfold Limitb.
   destruct alpha; simpl; destruct cnf0.
    - destruct H; auto with E0.
    -  auto.
 Qed.
 
-Lemma Is_Limit_Phi0 alpha  : alpha <> Zero ->
-                             Is_Limit (Phi0 alpha).
+Lemma Limitb_Phi0 alpha  : alpha <> Zero ->
+                             Limitb (Phi0 alpha).
 Proof.
-  unfold Phi0; apply Is_Limit_Omega_term.
+  unfold Phi0; apply Limitb_Omega_term.
 Qed.
 
-Hint Resolve Is_Limit_Phi0 : E0.
+Hint Resolve Limitb_Phi0 : E0.
 
 
 
 
 Definition Zero_Succ_Limit_dec (alpha : E0) :
-  {alpha = Zero} + {Is_Limit alpha = true} +
+  {alpha = Zero} + {Limitb alpha = true} +
   {beta : E0  | alpha = Succ beta}.
   destruct alpha as [t Ht];  destruct (zero_succ_limit_dec  Ht).  
   -  destruct s. 
      + left; left. 
        unfold Zero; subst t; f_equal.
        apply nf_proof_unicity.
-     + left;right; unfold Is_Limit; now simpl. 
+     + left;right; unfold Limitb; now simpl. 
   -  destruct s as [beta [H0 H1]]; right;  eexists (@mkord beta H0).
      subst t; unfold Succ; f_equal; apply nf_proof_unicity.
 Defined.
@@ -323,8 +323,8 @@ Proof.
   destruct s.
   - unfold Succ, Zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
-  -  unfold is_limit, Succ in e; simpl in e;
-       destruct (@T1.is_limit_succ (cnf alpha)); auto.
+  -  unfold limitb, Succ in e; simpl in e;
+       destruct (@T1.limitb_succ (cnf alpha)); auto.
         destruct alpha; simpl; auto. 
   -  destruct s.
     { unfold Succ in e.
@@ -337,10 +337,10 @@ Qed.
 
 Hint Rewrite Pred_of_Succ: E0_rw.
 
-Lemma  Pred_Lt alpha : alpha <> Zero  ->  Is_Limit alpha = false ->
+Lemma  Pred_Lt alpha : alpha <> Zero  ->  Limitb alpha = false ->
                        Pred alpha < alpha.
 Proof.
-  unfold Is_Limit, Pred, Lt; destruct alpha; intros. simpl.
+  unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
   destruct (T1.zero_succ_limit_dec cnf_ok0 ).
   destruct s.
   - subst. unfold Zero in H. destruct H. f_equal;apply nf_proof_unicity.
@@ -353,11 +353,11 @@ Hint Resolve Pred_Lt : E0.
 
 
 
-Lemma Succ_is_succ : forall alpha, Is_Succ (Succ alpha).
-destruct alpha; unfold Is_Succ, Succ; cbn; apply T1.succ_is_succ.
+Lemma Succ_succb : forall alpha, Succb (Succ alpha).
+destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
 Qed.
 
-Hint Resolve Succ_is_succ : E0.
+Hint Resolve Succ_succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -384,16 +384,16 @@ Qed.
 
 Hint Rewrite FinS_Succ_eq : E0_rw.
 
-Lemma Limit_not_Zero alpha : Is_Limit alpha -> alpha <> Zero.
+Lemma Limit_not_Zero alpha : Limitb alpha -> alpha <> Zero.
 Proof.
-  destruct alpha; unfold Is_Limit, Zero; cbn; intros H H0.
-  injection H0;  intro ; subst cnf0; eapply T1.is_limit_not_zero; eauto.
+  destruct alpha; unfold Limitb, Zero; cbn; intros H H0.
+  injection H0;  intro ; subst cnf0; eapply T1.limitb_not_zero; eauto.
 Qed.
 
 
-Lemma Succ_not_Zero alpha:  Is_Succ alpha -> alpha <> Zero.
+Lemma Succ_not_Zero alpha:  Succb alpha -> alpha <> Zero.
 Proof.
-  destruct alpha;unfold Is_Succ, Zero; cbn.
+  destruct alpha;unfold Succb, Zero; cbn.
   intros H H0.
   injection H0; intro;subst; discriminate H.
 Qed.
@@ -404,13 +404,13 @@ Proof.
 Qed.
 
 
-Lemma Succ_not_Is_Limit alpha : Is_Succ alpha -> ~ Is_Limit alpha .
+Lemma Succ_not_Limitb alpha : Succb alpha -> ~ Limitb alpha .
 Proof. 
-  red; destruct alpha; unfold Is_Succ, Is_Limit; cbn.
+  red; destruct alpha; unfold Succb, Limitb; cbn.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
-Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Is_Limit : E0.
+Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta < alpha <->
                                        Succ beta <= alpha.
@@ -489,9 +489,9 @@ Proof.
 Defined.
 
 
-Lemma Is_Limit_plus alpha beta i:
-  (beta < Phi0 alpha)%e0 -> Is_Limit beta ->
-  Is_Limit (Omega_term alpha i + beta)%e0.
+Lemma Limitb_plus alpha beta i:
+  (beta < Phi0 alpha)%e0 -> Limitb beta ->
+  Limitb (Omega_term alpha i + beta)%e0.
 Proof.
   intros.
   assert (alpha <> Zero). { intro; subst. 
@@ -501,7 +501,7 @@ Proof.
                             apply LT_one in H. subst.
                             now apply E0_eq_intro.
                           }
-                          unfold Is_Limit.
+                          unfold Limitb.
   rewrite   Omega_term_plus; auto.
 
   simpl. 
@@ -511,7 +511,7 @@ Proof.
   apply E0_eq_intro.
   apply H2.
   intros.
-  unfold Is_Limit in H0;
+  unfold Limitb in H0;
     destruct (cnf beta).   
   auto.   
   auto.

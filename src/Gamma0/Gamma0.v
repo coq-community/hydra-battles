@@ -2494,14 +2494,14 @@ Qed.
 Lemma zero_not_lim : ~ is_limit zero.
 Proof. red;inversion 1. Qed.
 
-Lemma F_not_lim : forall n, ~ is_limit (F n).
+Lemma F_not_lim : forall n, ~ is_limit  (F n).
 Proof.
   destruct n;red;inversion 1.
   decompose [or] H3; lt_clean.
   case  zero_not_lim;auto.
 Qed.
 
-Lemma is_succ_not_lim  alpha: is_successor alpha -> ~ is_limit alpha.
+Lemma succb_not_lim  alpha: is_successor alpha -> ~ is_limit alpha.
 Proof.
   induction alpha.
   - intro;apply zero_not_lim.
@@ -2914,7 +2914,7 @@ Qed.
 
 
 Lemma succ_limit_dec : forall a, nf a ->
-         {a = zero} +{is_successor a}+{is_limit a}.
+         {a = zero} +{is_successor  a}+{is_limit a}.
 Proof.
  intro a;elim a.
  - left;left;auto.

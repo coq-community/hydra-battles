@@ -25,7 +25,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  F_ (Canon alpha i)  i ;
             | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
 
@@ -50,7 +50,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
     with E0_eq_dec alpha Zero :=
     { | left _ => S i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ => F_star (Canon alpha i,1) i ;
             | right notlimit =>
               F_star (Pred alpha, S i)  i}};
@@ -100,26 +100,26 @@ Proof.
 Qed.
 
 Lemma F_eq2 : forall alpha i,
-    Is_Succ alpha -> 
+    Succb alpha -> 
     F_ alpha i = F_star (Pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha Zero).
   - subst alpha; discriminate H.
-  - cbn; destruct (Utils.dec (Is_Limit alpha)) .
+  - cbn; destruct (Utils.dec (Limitb alpha)) .
     + assert (true=false) by 
-       ( now  destruct (Succ_not_Is_Limit _ H)). 
+       ( now  destruct (Succ_not_Limitb _ H)). 
       discriminate.
     + now cbn.
 Qed.
 
-Lemma F_lim_eqn : forall alpha i,  Is_Limit alpha ->
+Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
                                F_ alpha i = F_ (Canon alpha i) i.
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha Zero).
   - now  destruct (Limit_not_Zero  H).
-  - cbn; destruct (Utils.dec (Is_Limit alpha)) .
+  - cbn; destruct (Utils.dec (Limitb alpha)) .
     + cbn; auto.
     + red in H. rewrite e in H; discriminate.
 Qed.
@@ -194,7 +194,7 @@ Proof.
 Qed.
 
 Lemma Canon_plus_first_step_lim:
-  forall i alpha beta, Is_Limit alpha ->
+  forall i alpha beta, Limitb alpha ->
                        Canon_plus (S i) alpha beta  ->
                        beta = CanonS alpha i \/
                        Canon_plus (S i) (CanonS alpha i) beta.
@@ -387,7 +387,7 @@ Section Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Is_Limit alpha.
+      Hypothesis Hlim : Limitb alpha.
 
 
       Remark RBlim : forall n, (n < F_ alpha n)%nat.

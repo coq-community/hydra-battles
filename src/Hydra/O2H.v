@@ -85,7 +85,7 @@ Proof.
 Qed.
 
 Lemma iota_rw1 :
-  forall i alpha,  nf alpha -> is_limit alpha = true ->
+  forall i alpha,  nf alpha -> limitb alpha = true ->
                    iota (canonS (ocons alpha 0 zero) i) =
                    hyd1 (iota (canonS alpha i)).
 Proof.                        
@@ -93,7 +93,7 @@ Proof.
 Qed.
 
 Lemma iota_rw2 :
-  forall i n alpha,  nf alpha -> is_limit alpha = true ->
+  forall i n alpha,  nf alpha -> limitb alpha = true ->
                      iota (canonS (ocons alpha (S n) zero) i) =
                      node (hcons_mult (iota alpha) (S n) 
                                       (hcons
@@ -176,12 +176,12 @@ Proof.
   inversion 1;   eapply S0_mem_head; eauto.
 Qed.
 
-Lemma limit_no_head : forall alpha, nf alpha -> is_limit alpha = true ->
+Lemma limit_no_head : forall alpha, nf alpha -> limitb alpha = true ->
                                     ~ mem_head (iotas alpha).
 Proof. 
   induction alpha.
   - discriminate.
-  - intros; simpl;  destruct (is_limit_cases H).
+  - intros; simpl;  destruct (limitb_cases H).
     +  auto.
     +  destruct a;  subst; intro H2;  inversion H2.
        destruct alpha1.
@@ -207,7 +207,7 @@ Qed.
 
 
 Lemma limit_no_R1 : forall alpha, nf alpha ->
-                                  is_limit alpha = true ->
+                                  limitb alpha = true ->
                                   forall h', ~ R1 (iota alpha) h'.
 Proof.
   intros alpha H H0 h' H1; generalize ( limit_no_head _ H H0).
@@ -263,13 +263,13 @@ Section DS_iota.
   
   Lemma DS_iota_2 : forall lambda,
       nf lambda -> alpha = phi0 lambda ->
-      is_limit lambda ->
+      limitb lambda ->
       round_n i (iota alpha) (iota (canonS alpha i)).                             
   Proof. 
     intros;subst alpha.
     repeat rewrite iota_phi0; trivial.
     assert (nz : lambda <> zero).
-    { eapply is_limit_not_zero; eauto. }
+    { eapply limitb_not_zero; eauto. }
     right;  specialize (Hrec lambda nz (head_LT_cons  Halpha)).
     (* unfold T1.phi0; *) rewrite iota_rw1; trivial.
     right; left;  destruct (Hrec (canonS lambda i)); auto.
@@ -293,7 +293,7 @@ Section DS_iota.
   Section Proof_case_4.
     Variable lambda: T1.
     Hypothesis Hlambda : nf lambda.
-    Hypothesis Hlim : is_limit lambda.
+    Hypothesis Hlim : limitb lambda.
     Variable n : nat.
     Hypothesis Hn : alpha = ocons lambda (S n) zero.
 
@@ -310,7 +310,7 @@ Section DS_iota.
       left;  specialize (Hrec lambda).
       assert (lambda < ocons lambda (S n) zero)%t1.
       {  apply head_LT_cons; auto with T1. }
-      specialize (Hrec (is_limit_not_zero Hlambda Hlim)
+      specialize (Hrec (limitb_not_zero Hlambda Hlim)
                        H  (canonS lambda i) (refl_equal _)).
       destruct Hrec; [| trivial];
         elimtype False;

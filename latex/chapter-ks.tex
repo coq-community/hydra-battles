@@ -228,7 +228,7 @@ relates the boolean function \texttt{is\_limit} defined on the \texttt{T1} data-
 \begin{Coqsrc}
 Lemma canonS_limit_strong (lambda : T1) : 
      nf lambda ->
-     is_limit lambda  ->
+     limitb lambda  ->
      forall beta, beta < lambda ->
                   {i:nat | beta < canonS lambda i}.
 
@@ -242,7 +242,7 @@ Defined.
 
 \begin{Coqsrc}
 Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> is_limit lambda  ->
+  nf lambda -> limitb lambda  ->
   strict_lub (fun i => canonS lambda i) lambda.
 \end{Coqsrc}
 
@@ -810,7 +810,7 @@ $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
   \begin{Coqsrc}
 Theorem Theorem_2_4 (lambda : T1) :
    nf lambda ->
-   is_limit lambda  ->
+   limitb lambda  ->
    forall i j, (i < j)%nat ->
                const_pathS 0 (canonS lambda j)
                              (canonS lambda i). 

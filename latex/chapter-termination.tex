@@ -602,29 +602,29 @@ omega + omega
 Pattern matching and structural recursion allow us to define the notions of successor and limit ordinal with the help of  boolean functions on type \texttt{T1}. 
 
  \vspace{4pt}
-\emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#is_succ}{Epsilon0.T1}}
+\emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
 
 \begin{Coqsrc}
-  Fixpoint is_succ alpha :=
+  Fixpoint succb alpha :=
   match alpha with
       zero => false
     | ocons zero _ _ => true
-    | ocons alpha n beta => is_succ beta
+    | ocons alpha n beta => succb beta
   end.
 
-Fixpoint is_limit alpha :=
+Fixpoint limitb alpha :=
   match alpha with
       zero => false
     | ocons zero _ _ => false
     | ocons alpha n zero => true
-    | ocons alpha n beta => is_limit beta
+    | ocons alpha n beta => limitb beta
   end.
 \end{Coqsrc}
 
 
 
 \begin{Coqsrc}
-  Compute is_limit omega.
+  Compute limitb omega.
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -633,7 +633,7 @@ Fixpoint is_limit alpha :=
 \end{Coqanswer}
 
 \begin{Coqsrc}
-Compute is_succ 42.
+Compute succb 42.
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -655,7 +655,7 @@ a strictly increasing sequence of ordinals.
    
 \begin{Coqsrc}
   Definition zero_succ_limit (alpha: T1) :
-  {is_succ alpha} + {is_limit alpha} +  {alpha=zero}.
+  {succb alpha} + {limitb alpha} +  {alpha=zero}.
   (* ... *)
 Defined.
  \end{Coqsrc}
@@ -685,8 +685,8 @@ The following lemma establishes the connection between the function
 
 
 \begin{Coqsrc}
- Lemma is_succ_iff alpha (Halpha : nf alpha) :
-  is_succ alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
+ Lemma succb_iff alpha (Halpha : nf alpha) :
+  succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
 \end{Coqsrc}
 
 

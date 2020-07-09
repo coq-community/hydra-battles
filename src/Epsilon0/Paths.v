@@ -630,7 +630,7 @@ Proof. reflexivity. Qed.
 
 
 Lemma gnawS_lim1 (i:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> is_limit lambda ->
+  nf lambda -> limitb lambda ->
   gnawS (ocons lambda 0 T1.zero) (i::s) =
   gnawS (ocons (canonS lambda i) 0 T1.zero) s.
 Proof.
@@ -639,7 +639,7 @@ Qed.
 
 
 Lemma gnawS_lim2 (i n:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> is_limit  lambda->
+  nf lambda -> limitb  lambda->
   gnawS (ocons lambda (S n) T1.zero) (i::s) =
   gnawS (ocons lambda n (ocons (canonS lambda i) 0 T1.zero)) s.
 Proof.
@@ -813,7 +813,7 @@ Proof with eauto with T1.
     destruct  (canonS_limit_strong H1 Hlimit H) as [j Hj].
     destruct (IHalpha (canonS alpha j)) as [x p]; auto.
     apply canonS_LT; auto.
-    apply is_limit_not_zero;auto.
+    apply limitb_not_zero;auto.
     exists (j::x); eright.
     {split. intro;  subst.
      - inversion  Hlimit.
@@ -1127,7 +1127,7 @@ Proof.
         *  apply hrec.
             -- apply canonS_LT;auto.
             --  eapply nf_canonS; eauto. 
-            -- now apply is_limit_canonS_not_zero.
+            -- now apply limitb_canonS_not_zero.
   - destruct s as [beta [Hbeta e]]; subst.
     destruct (T1_eq_dec beta zero).
    + subst;    left; split; auto.  
@@ -1223,7 +1223,7 @@ Proof.
             split;[discriminate | trivial].
           *   apply IHclos_trans_1n.
               apply nf_canonS;auto.
-              apply is_limit_canonS_not_zero; auto.
+              apply limitb_canonS_not_zero; auto.
       -  destruct s as [beta [H3 e]]; subst x.
          destruct (T1_eq_dec beta zero).
          { subst beta; destruct (const_pathS_zero H0). }
@@ -1235,7 +1235,7 @@ Qed.
 
 Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
-   is_limit lambda  ->
+   limitb lambda  ->
    forall i j, (i < j)%nat ->
                const_pathS 0 (canonS lambda j)
                              (canonS lambda i).
@@ -1247,7 +1247,7 @@ Proof with eauto with T1.
     + subst;  discriminate.
     + destruct alpha.
       * discriminate.
-      *  destruct (is_limit_cases Halpha  H).
+      *  destruct (limitb_cases Halpha  H).
          { destruct a; subst alpha2.
            intros i0 j H1;  destruct (@zero_succ_limit_dec alpha1) ...
            destruct s.
@@ -1260,7 +1260,7 @@ Proof with eauto with T1.
                split ...
                apply head_lt_ocons ...
                apply nf_canonS ... 
-               apply is_limit_canonS_not_zero ...
+               apply limitb_canonS_not_zero ...
              -  repeat rewrite canonS_lim2 ...
                 apply KS_thm_2_4_lemma1 ... 
                 apply ocons_nf ...
@@ -1275,7 +1275,7 @@ Proof with eauto with T1.
                 apply  head_lt_ocons ...
                 apply single_nf ...
                 apply nf_canonS ...
-                apply is_limit_canonS_not_zero ...
+                apply limitb_canonS_not_zero ...
            }
            destruct s as [beta [H2 H3]];  subst; clear H i; induction n.
            {
@@ -1296,14 +1296,14 @@ Proof with eauto with T1.
          apply KS_thm_2_4_lemma1 ...
          apply nf_LT_right with alpha2 ...
          apply canonS_LT ...
-         apply is_limit_canonS_not_zero ...
+         apply limitb_canonS_not_zero ...
          apply Hrec ...
          split ...
          split ...
          apply  tail_lt_ocons; auto.
          all: intro; subst; discriminate.
   -  destruct s as [beta [H0 H1]]; 
-       subst; destruct (@is_limit_succ beta); auto. 
+       subst; destruct (@limitb_succ beta); auto. 
 Qed.
 
 (**  Corollary 12 of [KS] *)
@@ -1477,7 +1477,7 @@ Proof.
            left.
            split.
            ++ intro e;subst. 
-              destruct (@is_limit_not_zero zero) ; auto.
+              destruct (@limitb_not_zero zero) ; auto.
            ++ reflexivity. 
        -- rewrite  clos_trans_t1n_iff;  apply Cor12_1 with n2; auto.
           auto with arith.  
@@ -1587,7 +1587,7 @@ Proof.
           left.
             split.
             intro;subst.
-           destruct (@is_limit_not_zero zero); auto with T1.
+           destruct (@limitb_not_zero zero); auto with T1.
            trivial.
           assert (const_pathS  (S p) lambda (T1.succ (canonS  lambda  p))).
           {
@@ -1632,7 +1632,7 @@ Proof.
           eauto with T1.
           auto.
           
-          (* end of the is_limit case *)
+          (* end of the limitb case *)
           {
             destruct s as [gamma [H1 H2]];destruct (T1_eq_dec gamma zero).
             {
@@ -2865,7 +2865,7 @@ Qed.
 
 Theorem KS_thm_2_4_E0 :
   forall lambda, 
-    Is_Limit lambda  ->
+    Limitb lambda  ->
     forall i j, (i < j)%nat ->
                 Canon_plus 1 (CanonS lambda j)
                        (CanonS lambda i).
@@ -2886,7 +2886,7 @@ Proof.
 Qed.
 
 
-Lemma Canon_mono1 alpha i j : Is_Limit alpha -> (i< j)% nat ->
+Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
                               (Canon alpha i < Canon alpha j)%e0.
 
   destruct alpha. unfold Canon.  destruct i, j.
@@ -2895,7 +2895,7 @@ Lemma Canon_mono1 alpha i j : Is_Limit alpha -> (i< j)% nat ->
     intros. 
     apply not_zero_lt.
     apply nf_canonS; auto.
-    apply is_limit_canonS_not_zero; auto.
+    apply limitb_canonS_not_zero; auto.
   -  inversion 2.
   - unfold lt; simpl.
     simpl; intros.

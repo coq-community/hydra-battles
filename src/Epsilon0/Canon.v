@@ -71,7 +71,7 @@ Proof.
     + destruct H0; auto.
 Qed.
 
-Lemma canonS_lim1 : forall i lambda, nf lambda -> is_limit lambda 
+Lemma canonS_lim1 : forall i lambda, nf lambda -> limitb lambda 
                                  -> canonS (ocons lambda 0 zero) i =
                                     phi0 (canonS lambda i).
 Proof.
@@ -83,7 +83,7 @@ Proof.
 Qed.
 
 Lemma canonS_lim2  i n lambda: 
-    nf lambda -> is_limit lambda 
+    nf lambda -> limitb lambda 
     -> canonS (ocons lambda (S n) zero) i =
        ocons  lambda n (phi0 (canonS lambda i)).
 Proof.
@@ -333,8 +333,8 @@ Qed.
 (** ** Canonical sequences of limit ordinals *)
 
 
-Lemma is_limit_canonS_not_zero i lambda:
-  nf lambda -> is_limit lambda  -> canonS lambda i <> zero.
+Lemma limitb_canonS_not_zero i lambda:
+  nf lambda -> limitb lambda  -> canonS lambda i <> zero.
 Proof.
   destruct lambda as [ | alpha1 n alpha2].
   - discriminate.
@@ -364,7 +364,7 @@ limit of its  own canonical sequence
 
 Lemma canonS_limit_strong lambda : 
   nf lambda ->
-  is_limit lambda  ->
+  limitb lambda  ->
   forall beta, beta < lambda ->
                {i:nat | beta < canonS lambda i}.
 Proof.
@@ -378,12 +378,12 @@ Proof.
       }
       destruct lambda.
       + discriminate.
-      + destruct (T1.is_limit_cases Hlambda i).
+      + destruct (T1.limitb_cases Hlambda i).
        { (* first case : beta = zero *)
         destruct a; subst lambda2; destruct beta.
         { exists 0; apply not_zero_lt. 
           apply nf_canonS; auto.
-          apply is_limit_canonS_not_zero;auto.
+          apply limitb_canonS_not_zero;auto.
         }
         destruct (LT_inv_strong H1).
         * destruct n.
@@ -483,7 +483,7 @@ Proof.
       destruct beta.
        * exists 0;  apply not_zero_lt.
          apply nf_canonS; auto with T1.
-         apply is_limit_canonS_not_zero; eauto with T1.
+         apply limitb_canonS_not_zero; eauto with T1.
        *  destruct (LT_inv_strong H1).
           -- exists 0;  rewrite canonS_tail.
              apply LT2;auto.
@@ -529,13 +529,13 @@ Proof.
       }
       all: auto. 
   -   destruct s as [t [Ht Ht']]; subst lambda.
-      destruct (@is_limit_succ t); auto. 
+      destruct (@limitb_succ t); auto. 
 Defined.
 
 
 Lemma canon_limit_strong lambda : 
   nf lambda ->
-  is_limit lambda  ->
+  limitb lambda  ->
   forall beta, (beta < lambda ->
                 {i:nat | beta < canon lambda i})%t1.
 Proof.
@@ -545,7 +545,7 @@ Defined.
 
 
 Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> is_limit lambda  ->
+  nf lambda -> limitb lambda  ->
   strict_lub (fun i => canonS lambda i) lambda.
 Proof.
   split.
@@ -570,7 +570,7 @@ Proof.
 Qed. 
 
 
-Lemma canonS_limit_mono alpha i j : nf alpha -> is_limit alpha  ->
+Lemma canonS_limit_mono alpha i j : nf alpha -> limitb alpha  ->
                                     (i < j)%nat ->
                                     canonS alpha i < canonS alpha j.
 Proof with eauto with T1.
@@ -579,7 +579,7 @@ Proof with eauto with T1.
   intros.  
   destruct alpha.
   - discriminate.
-  -  destruct (is_limit_cases alpha_nf H).
+  -  destruct (limitb_cases alpha_nf H).
      +  destruct a;subst.
         destruct (@zero_succ_limit_dec alpha1) ...
         *   destruct s.   
@@ -718,7 +718,7 @@ Proof.
   apply cnf_ok.
 Qed. 
 
-Lemma CanonS_Phi0_lim alpha k : Is_Limit alpha ->
+Lemma CanonS_Phi0_lim alpha k : Limitb alpha ->
                                 CanonS (Phi0 alpha) k =
                                 Phi0 (CanonS alpha k). (* to move *)
 Proof.
@@ -759,11 +759,11 @@ Qed.
 
 
 
-Lemma Canon_of_limit : forall i alpha, Is_Limit alpha ->
+Lemma Canon_of_limit : forall i alpha, Limitb alpha ->
                                        Canon alpha (S i) <> Zero.
 Proof.
   destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.
-  simpl;   apply is_limit_canonS_not_zero; auto.
+  simpl;   apply limitb_canonS_not_zero; auto.
 Qed.
 
 Hint Resolve CanonS_lt Canon_lt Canon_of_limit : E0.

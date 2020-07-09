@@ -187,7 +187,7 @@ Section Example2.
   Remark R1 : nf (omega^omega^omega).
   Proof. auto with T1.  Qed. 
 
-  Remark R2 : is_limit (omega^omega^omega) = true.
+  Remark R2 : limitb (omega^omega^omega) = true.
   Proof. reflexivity.  Qed.
 
   Remark R3 : omega ^ (omega * 50) < (omega^omega^omega).
@@ -209,12 +209,12 @@ Qed.
 
 Example ten : T1 := 10.
 
-Compute is_limit omega.
+Compute limitb omega.
 
 
 
 
-Compute is_succ 42.
+Compute succb 42.
 
 
 Open Scope E0_scope.
@@ -342,7 +342,7 @@ Module infinity.
      end.
 
    Definition  g (lambda alpha : T1) (n: nat) :=
-     if (andb (is_limit lambda) (lt_b alpha lambda))
+     if (andb (limitb lambda) (lt_b alpha lambda))
      then g0 lambda alpha 1 n
      else None.
    
@@ -384,7 +384,7 @@ Section alpha_beta.
 
   Variables alpha beta : T1.
   Hypothesis Hlt : alpha < beta.
-  Hypothesis Hlim : is_limit beta.
+  Hypothesis Hlim : limitb beta.
 
   Lemma Lf : forall i :  nat,  alpha < f alpha i < beta.
   Proof with eauto with T1.

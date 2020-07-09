@@ -22,7 +22,7 @@ Equations H_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   H_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  H_ (Canon alpha (S i))  i ;
             | right notlimit =>  H_ (Pred alpha) (S i)}}.
 
@@ -36,25 +36,25 @@ Proof.
   intro i; now rewrite H__equation_1. 
 Qed.
 
-Lemma H_eq2 alpha i : Is_Succ alpha ->
+Lemma H_eq2 alpha i : Succb alpha ->
                       H_ alpha i = H_ (Pred alpha) (S i).
 Proof.
   intros;rewrite H__equation_1.
   destruct (E0_eq_dec alpha Zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Is_Limit alpha)) .
-    destruct (Succ_not_Is_Limit _ H); auto.
+  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+    destruct (Succ_not_Limitb _ H); auto.
     + now cbn.
 Qed.
 
 
-Lemma H_lim_eqn alpha i : Is_Limit alpha ->
+Lemma H_lim_eqn alpha i : Limitb alpha ->
                       H_ alpha i =  H_ (Canon alpha (S i)) i.
 Proof.
   intros;rewrite H__equation_1.
   destruct (E0_eq_dec alpha Zero).
  - subst; discriminate.
- - cbn;  destruct (Utils.dec (Is_Limit alpha)) .
+ - cbn;  destruct (Utils.dec (Limitb alpha)) .
   + now cbn.    
   + red in H; rewrite e in H; discriminate.
 Qed.
@@ -63,13 +63,13 @@ Lemma H_succ_eqn  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
 Proof.
   rewrite H_eq2.
   - now rewrite Pred_of_Succ.  
-  - apply Succ_is_succ.
+  - apply Succ_succb.
 Qed.
 
 
 Hint Rewrite H_zero_eqn  H_succ_eqn : H_rw.
 
-Ltac lim_rw alpha := (assert (Is_Limit alpha) by auto with E0);
+Ltac lim_rw alpha := (assert (Limitb alpha) by auto with E0);
                      rewrite (H_lim_eqn alpha); auto with E0.
 
 
@@ -192,14 +192,14 @@ Proof with auto with E0.
                           (Omega_term alpha  i + (CanonS beta k))%e0).
        {  rewrite CanonS_plus_1; auto with E0.           
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
-          unfold Is_Limit in e; rewrite H in e; discriminate e.
+          unfold Limitb in e; rewrite H in e; discriminate e.
        }
        rewrite H_lim_eqn, CanonS_Canon, H0.
        specialize (Hbeta (CanonS beta k)).
        assert (CanonS beta k < beta)%e0 by auto with E0.
        assert (CanonS beta k < Phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H_lim_eqn beta).
-       apply Is_Limit_plus; auto.
+       apply Limitb_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
          specialize (Hbeta gamma).
          assert (gamma < Succ gamma)%e0 by (apply Lt_Succ; auto).
@@ -232,7 +232,7 @@ Proof with auto with E0.
              unfold Omega_term; simpl.
              destruct (cnf alpha) ...
              destruct (pred (ocons t1 n t2)) ...
-  -   apply Is_Limit_Omega_term ...
+  -   apply Limitb_Omega_term ...
 Qed.
 
 End H_cons.
@@ -412,7 +412,7 @@ Section Proof_of_Abstract_Properties.
     Proof.
       red;intros; rewrite H_zero_eqn, H_eq2, Pred_of_Succ, H_zero_eqn. 
        - lia.
-       - apply Succ_is_succ.
+       - apply Succ_succb.
     Qed.
 
     Hint Resolve PD_Zero PA_Zero : E0.
@@ -510,7 +510,7 @@ Section Proof_of_Abstract_Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Is_Limit alpha.
+      Hypothesis Hlim : Limitb alpha.
 
       Remark RBlim : forall n, (n < H_ alpha n)%nat.
       Proof.
@@ -519,7 +519,7 @@ Section Proof_of_Abstract_Properties.
         -  apply Canon_lt;  now apply Limit_not_Zero.
         -  eapply PB0; intro H.
         assert (H0 :cnf (Canon alpha (S n)) = cnf Zero) by (f_equal; auto).
-        simpl in H0;   apply (@is_limit_canonS_not_zero n (cnf alpha)); auto.
+        simpl in H0;   apply (@limitb_canonS_not_zero n (cnf alpha)); auto.
         +  apply cnf_ok.
       Qed.
 

@@ -19,7 +19,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   L_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
-          with Utils.dec (Is_Limit alpha) :=
+          with Utils.dec (Limitb alpha) :=
           { | left _ =>  L_ (Canon alpha i)  (S i) ;
             | right notlimit =>  L_ (Pred alpha) (S i)}}.
 
@@ -34,12 +34,12 @@ About L__equation_1. About FunctionalInduction.
 Lemma L_zero_eqn : forall i, L_ Zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
-Lemma L_eq2 alpha i : Is_Succ alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+Lemma L_eq2 alpha i : Succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 Proof.
   intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha Zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Is_Limit alpha)) .
-    apply Succ_not_Is_Limit in H; destruct H; auto.
+  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+    apply Succ_not_Limitb in H; destruct H; auto.
     now cbn.
 Qed.
 
@@ -51,13 +51,13 @@ Qed.
 
 Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
-Lemma L_lim_eqn alpha i : Is_Limit alpha -> L_ alpha i =
+Lemma L_lim_eqn alpha i : Limitb alpha -> L_ alpha i =
                                         L_ (Canon alpha i) (S i).
 Proof.
   intros;rewrite L__equation_1.
   destruct (E0_eq_dec alpha Zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Is_Limit alpha)) .
+  - cbn;  destruct (Utils.dec (Limitb alpha)) .
     + now cbn.    
     + red in H; rewrite e in H; discriminate.
 Qed.
@@ -136,7 +136,7 @@ Section L_correct.
 
   Lemma L_ok_lim  alpha  :
     (forall beta,  (beta < alpha)%e0 -> P beta) ->
-    Is_Limit alpha -> P alpha.
+    Limitb alpha -> P alpha.
   Proof with eauto with E0.
   intros H H0; right.
   {  destruct alpha;   cbn in H0; simpl; eauto with T1. }
@@ -157,7 +157,7 @@ Section L_correct.
             ++ left.
              ** discriminate.
              **  simpl;  split; auto.
-                 apply is_limit_not_zero ; auto with E0.
+                 apply limitb_not_zero ; auto with E0.
        * auto with arith. 
        * specialize (L_ge_S (Canon alpha (S k))).
          intro H6; assert (Canon alpha (S k) <> Zero); auto with E0.

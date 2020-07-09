@@ -12,18 +12,27 @@ Coercion is_true: bool >-> Sortclass.
 Definition t := (nat + nat)%type.
 Arguments inl  {A B} _.
 Arguments inr  {A B} _.
-
+Print le_AsB.
 Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
 Infix "<" := lt : oo_scope.
-
-Locate sum.
 
 Definition le := clos_refl _ lt.
 
 Infix "<=" := le : oo_scope.
 
+Hint Unfold lt le : OO.
+Hint Constructors le_AsB: OO.
 
-Definition zero: t := inl 0.
+Definition fin (n:nat) : t := inl n.
+
+Coercion fin : nat >-> t.
+
+Goal (6 < 8).
+auto with arith.
+constructor; auto with arith.
+Qed.
+
+
 Notation  "'omega'"  := (inr 0) : oo_scope.
 
 
@@ -33,15 +42,10 @@ Definition succ (alpha : t) := match alpha with
                                end.
 
 
-Definition fin (n:nat) : t := inl n.
-
-Notation "'F'" := fin : oo_scope.
-
-Coercion fin : nat >-> t.
 
 
-Hint Unfold lt le : OO.
-Hint Constructors le_AsB: OO.
+
+
 
 Example ex1 :  6 < omega.
 Proof.
@@ -321,19 +325,19 @@ apply Ipred_inv2 in  H; now subst.
 Qed.
 
 
-Definition is_succ (alpha: t) := match alpha with
+Definition succ_b (alpha: t) := match alpha with
                                    inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
 
-Definition is_limit (alpha : t) := match alpha with
+Definition limit_b (alpha : t) := match alpha with
                                      (inr 0) => true
                                    | _ => false
                                    end.
 
 
-Lemma Omega_limit_is_limit alpha s : Omega_limit s alpha ->
-                                     is_limit alpha.
+Lemma Omega_limit_limit_b alpha s : Omega_limit s alpha ->
+                                     limit_b alpha.
 Proof.
    destruct alpha.
    destruct 1.
@@ -378,47 +382,22 @@ Definition canon  alpha i :=
   | inr (S n) => inr n
   end.
 
-Lemma is_limit_limit alpha :
-  is_limit alpha -> Omega_limit (canon alpha) alpha.
+Lemma omega_limit_b:
+   Omega_limit fin omega.
 Proof.
-  destruct alpha;  inversion 1.
-  
-  destruct n; [|discriminate].
   split.
-   intro i; constructor.
-   inversion 1.
-    exists (S x); constructor; auto with arith.
-    lia.
+  - constructor.
+  - inversion_clear  1.
+    + exists (S x); constructor; auto with arith.
+    + lia.
 Qed.
 
- Example Ex1 : is_limit omega.
+ Example Ex1 : limit_b omega.
  Proof. reflexivity.  Qed.
- (*
-Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) < alpha) <->
-                                 (S i, 0) <= alpha.
-Proof.
-  intros i (k,l) ;split; intro  H .
-  -   destruct (lt_eq_lt_dec (S i, 0) (k,l)) as [[Hlt | Heq] | Hgt].
-      + now left.
-      + rewrite Heq; now right.
-      + destruct (is_limit_limit (S i,0)) as [H1 H2].
-        * red; trivial.
-        * simpl in H1; destruct (H2 _ Hgt) as [x H0].
-        simpl in H0.
-        specialize (H x).
-     destruct lt_strorder as [H3 H4].
-     destruct (H3 (k,l)).        
-     transitivity (i,x); auto.
-  -    inversion_clear H.
-    + inversion_clear H0.
-   *    intro.  left.  lia.
-   *    left; left; auto. 
-     + left;left;auto. 
-Qed.
-  *)
+
  
 Lemma limit_is_lub beta :
-  is_limit beta -> forall alpha, 
+  limit_b beta -> forall alpha, 
     (forall i,  canon beta i < alpha) <-> beta <= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n. simpl.
@@ -439,7 +418,7 @@ Qed.
 
  Definition zero_succ_limit_dec :
   forall alpha: t, 
-                ({alpha = 0} + {is_limit alpha }) + 
+                ({alpha = 0} + {limit_b alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as [n | p].
