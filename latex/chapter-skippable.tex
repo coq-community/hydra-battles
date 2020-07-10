@@ -573,7 +573,7 @@ Let $\alpha$ and $\beta$ be some ordinals, we say that \emph{$\alpha$ is an imme
 \begin{Coqsrc}
 Definition Ipred {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (x y : A):=
-  lt x y /\ (forall z,  lt z y -> clos_refl _ lt z x).
+  lt x y /\ (forall z,  lt x z -> lt z y -> False).
 
 Definition Successor {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (y x : A):= Ipred x y.

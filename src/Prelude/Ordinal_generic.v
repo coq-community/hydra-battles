@@ -37,7 +37,7 @@ Class  SubSegment
 
 Definition Ipred {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (x y : A):=
-  lt x y /\ (forall z,  lt x z -> lt z y -> clos_refl _ lt z x).
+  lt x y /\ (forall z,  lt x z -> lt z y -> False).
 
 
 Definition Successor {A:Type}{lt : relation A}
@@ -70,7 +70,5 @@ Proof.
   absurd  (lt (s i) (s i)).
    +  apply sto.
    + destruct (Hsucc0 _ Hi (Hlim i)).
-     * now transitivity y.
-     * assumption. 
 Qed.
 

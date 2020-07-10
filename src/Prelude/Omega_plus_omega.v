@@ -239,18 +239,11 @@ Proof.
   inversion_clear H.
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
-   elimtype False.
-   assert (inl i < inl (S i)) by (constructor; auto).
-   
-   
-   assert (inl (S i) < inl j) by (constructor; auto).
-   specialize (H0 (inl (S i)) H2 H3).
-    destruct lt_strorder as [irr tr].
-      destruct H0.
-     
-      apply (@irr y).
-      eapply tr;eauto.
-     eapply irr; eauto.
+  elimtype False.
+  assert (inl i < inl (S i)) by (constructor; auto).
+  assert (inl (S i) < inl j) by (constructor; auto).
+  specialize (H0 (inl (S i)) H2 H3).
+  destruct H0.
 Qed.
 
 Lemma Ipred_inv2 : forall i j, Ipred (inr i) (inr j) -> j = S i. 
@@ -265,13 +258,7 @@ Proof.
    specialize (H0 (inr (S i))).
  assert (inr i < inr (S i)) by (constructor; auto).
   assert (inr (S i) < inr j) by (constructor; auto).
-  specialize (H0 H2 H3). 
-
-
-inversion H0.
-inversion H4.
-lia.
-lia.
+  specialize (H0 H2 H3); inversion H0.
 Qed.
 
 Lemma Ipred_inv3 : forall i j, ~ Ipred (inl i) (inr j).
@@ -281,13 +268,7 @@ Proof.
   specialize (H0 (inl (S i))).
   assert (inl i < inl (S i)) by (constructor;auto).
   assert (inl (S i) < inr j) by constructor.
-   specialize (H0 H1 H2).
-   
-inversion H0.
-inversion H3. 
-
-lia.
-lia.
+  specialize (H0 H1 H2);  inversion H0.
 Qed.
 
 Lemma Ipred_inv4 : forall i j, ~ Ipred (inr i) (inl j).
@@ -314,16 +295,13 @@ Proof.
   - constructor; auto.
   -  destruct z.
      inversion_clear 1.
-     inversion_clear 1. apply le_introl. lia.
+     inversion_clear 1; lia.
      inversion 2.
   -  constructor; auto.
   - destruct z.
-    left.
-    constructor.
     inversion_clear 1.
     inversion_clear 1.
-    apply le_intror.
-    lia.
+    inversion_clear 1; lia.
 Qed.
 
 Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.

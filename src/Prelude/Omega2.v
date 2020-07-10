@@ -202,18 +202,12 @@ Proof.
   destruct 1 as [H H0].
   assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
   destruct H1 as [H1 | [H1 H2]].
-  - elimtype False.
-    assert (H2: (i, S j) <= (i, j)). {
-      apply H0. right.    auto with arith. now left. }
-    inversion H2;subst. 
-    inversion H3; try lia.
-    lia.
-  -  split; auto.
+  - destruct  (H0 (i, (S j))).
+    constructor 2; auto.
+    constructor 1;auto.
+  -  subst. 
      destruct (le_lt_or_eq _ _ H2); auto.
-     + subst; elimtype False.
-       assert (H1: (k, S j) <= (k, j)) by (apply H0;  right; auto).
-       inversion H1; try lia.
-       inversion H4; lia.
+      destruct (H0 (k, S j));  constructor 2; auto.
 Qed. 
 
 Corollary Ipred_not i j k : ~ Ipred (i,j) (k,0).
@@ -226,12 +220,8 @@ Lemma Ipred_succ : forall alpha,  Ipred alpha (succ alpha).
 Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
-  -  destruct z  as [n1 n2]; unfold succ; cbn; intros H H0.
-     inversion H0.
-     + subst.  left; left; lia.
-     + subst.  destruct (le_lt_or_eq _ _ H2).
-      * left; right; lia.
-      * injection H1; intros; subst; right. 
+  -  destruct z  as [n1 n2]; unfold succ; cbn; intros H H0;
+     inversion H0;   subst;  inversion H;  subst; lia.
 Qed.
 
 Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.
