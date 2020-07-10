@@ -237,17 +237,20 @@ Lemma Ipred_inv1 : forall i j, Ipred (inl i) (inl j) -> j = S i.
 Proof.
   destruct 1 as [H H0].
   inversion_clear H.
-  
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
    elimtype False.
-   Print le_AsB.
-specialize (H0 (inl (S i)) (le_aa _ _ _ _ _ _ H)).
-
-inversion H0.
-inversion H2.
-lia.
-lia.
+   assert (inl i < inl (S i)) by (constructor; auto).
+   
+   
+   assert (inl (S i) < inl j) by (constructor; auto).
+   specialize (H0 (inl (S i)) H2 H3).
+    destruct lt_strorder as [irr tr].
+      destruct H0.
+     
+      apply (@irr y).
+      eapply tr;eauto.
+     eapply irr; eauto.
 Qed.
 
 Lemma Ipred_inv2 : forall i j, Ipred (inr i) (inr j) -> j = S i. 
@@ -259,10 +262,14 @@ Proof.
   destruct H2; trivial.
    elimtype False.
    Print le_AsB.
-specialize (H0 (inr (S i)) (le_bb _ _ _ _ _ _ H)).
+   specialize (H0 (inr (S i))).
+ assert (inr i < inr (S i)) by (constructor; auto).
+  assert (inr (S i) < inr j) by (constructor; auto).
+  specialize (H0 H2 H3). 
+
 
 inversion H0.
-inversion H2.
+inversion H4.
 lia.
 lia.
 Qed.
@@ -271,10 +278,14 @@ Lemma Ipred_inv3 : forall i j, ~ Ipred (inl i) (inr j).
 Proof.
   destruct 1 as [H H0].
 
-specialize (H0 (inl (S i)) (le_ab  _ _ _ _ _ _ )).
-
+  specialize (H0 (inl (S i))).
+  assert (inl i < inl (S i)) by (constructor;auto).
+  assert (inl (S i) < inr j) by constructor.
+   specialize (H0 H1 H2).
+   
 inversion H0.
-inversion H1.
+inversion H3. 
+
 lia.
 lia.
 Qed.
@@ -302,12 +313,14 @@ Proof.
   destruct alpha;red;cbn; split.
   - constructor; auto.
   -  destruct z.
+     inversion_clear 1.
      inversion_clear 1. apply le_introl. lia.
-     inversion 1.
+     inversion 2.
   -  constructor; auto.
   - destruct z.
     left.
     constructor.
+    inversion_clear 1.
     inversion_clear 1.
     apply le_intror.
     lia.
@@ -434,18 +447,15 @@ Qed.
 
 
  
-Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
-Proof.
- destruct alpha; simpl.
- split.
- inversion_clear 1.
-now exists n.
-constructor.
-split.
-inversion 1.
-lia.
-destruct 1 as [n0 e]; inversion e.
-Qed.
+ Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
+ Proof.
+   destruct alpha; simpl; split.
+  -   inversion_clear 1; exists n; auto.
+  -  constructor.
+  - inversion 1.
+    lia.
+  - destruct 1 as [n0 e]; inversion e.
+ Qed.
 
 
 

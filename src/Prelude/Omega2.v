@@ -203,7 +203,8 @@ Proof.
   assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
   destruct H1 as [H1 | [H1 H2]].
   - elimtype False.
-    assert (H2: (i, S j) <= (i, j)) by (apply H0; left; auto with arith).
+    assert (H2: (i, S j) <= (i, j)). {
+      apply H0. right.    auto with arith. now left. }
     inversion H2;subst. 
     inversion H3; try lia.
     lia.
@@ -225,12 +226,12 @@ Lemma Ipred_succ : forall alpha,  Ipred alpha (succ alpha).
 Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
-  -  destruct z  as [n1 n2]; unfold succ; cbn; intro H.
-     inversion H.
-     + subst; left; left; lia.
-     + subst; destruct (le_lt_or_eq _ _ H1).
+  -  destruct z  as [n1 n2]; unfold succ; cbn; intros H H0.
+     inversion H0.
+     + subst.  left; left; lia.
+     + subst.  destruct (le_lt_or_eq _ _ H2).
       * left; right; lia.
-      * injection H0; intros; subst; right. 
+      * injection H1; intros; subst; right. 
 Qed.
 
 Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.
@@ -242,7 +243,7 @@ Proof.
 Qed.
 
 
-Definition is_succ (alpha: t) := match alpha with
+Definition succb (alpha: t) := match alpha with
                                    (_, S _) => true
                                  | _ => false
                                  end.
