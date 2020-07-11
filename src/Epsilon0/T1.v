@@ -3489,7 +3489,7 @@ Proof.
 Qed.
 
 
-Definition zero_succ_limit_dec :
+Definition zero_limit_succ_dec :
   forall alpha, nf alpha ->
                 ({alpha = zero} + {limitb alpha }) + 
                 {beta : T1 |  nf beta /\ alpha = succ beta} .
@@ -3533,7 +3533,7 @@ Defined.
 Lemma pred_of_limitR : forall alpha, nf alpha -> alpha <> zero ->
                                      pred alpha = None -> limitb alpha.
 Proof.
-  intros alpha Halpha; destruct (zero_succ_limit_dec Halpha).
+  intros alpha Halpha; destruct (zero_limit_succ_dec Halpha).
   - destruct s; auto.
   - destruct s  as [x [H H0]]; subst.
     rewrite pred_of_succ; auto.
@@ -3545,7 +3545,7 @@ Qed.
 Lemma pred_LT : forall alpha beta, nf alpha -> pred alpha = Some beta ->
                                    beta < alpha .
 Proof.
-  intros; destruct (zero_succ_limit_dec H).
+  intros; destruct (zero_limit_succ_dec H).
   - destruct s.
     +  subst; discriminate.
     +   rewrite pred_of_limit in H0; trivial.
@@ -3625,7 +3625,7 @@ Qed.
 Lemma succb_def alpha (Halpha : nf alpha) :
   succb alpha -> {beta | nf beta /\ alpha = succ  beta}.
 Proof.
-  intro H; destruct   (zero_succ_limit_dec Halpha) as [[H0 | H0] | H0].
+  intro H; destruct   (zero_limit_succ_dec Halpha) as [[H0 | H0] | H0].
   - subst alpha; discriminate.
   - rewrite succ_not_limit in H0; trivial.
     discriminate.
@@ -3749,7 +3749,7 @@ Lemma strict_lub_limitb : forall (alpha :T1)(s : nat -> T1),
     nf alpha -> strict_lub s alpha -> limitb alpha.
 Proof.
   destruct 2.
-  destruct (zero_succ_limit_dec H).
+  destruct (zero_limit_succ_dec H).
   destruct s0.
   - 
     subst.

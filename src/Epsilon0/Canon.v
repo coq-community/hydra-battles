@@ -145,7 +145,7 @@ Lemma canonSSn (i:nat) :
     canonS (ocons alpha (S n) zero) i =
     ocons alpha n (canonS (ocons alpha 0 zero) i).
 Proof. 
-  intros; destruct (@zero_succ_limit_dec alpha).
+  intros; destruct (@zero_limit_succ_dec alpha).
   - eauto with T1.
   - destruct s.
     + destruct n.
@@ -175,7 +175,7 @@ Lemma canonS_LT i alpha :
 Proof with eauto with T1.
   transfinite_induction_lt alpha.
   clear alpha; intros alpha Hrec Halpha;
-    destruct (zero_succ_limit_dec Halpha).
+    destruct (zero_limit_succ_dec Halpha).
     - destruct s.
       + (* alpha = zero *)
        subst alpha; now destruct 1.
@@ -198,7 +198,7 @@ Proof with eauto with T1.
           }
           destruct alpha2.
           { destruct n.
-             {   destruct  (@zero_succ_limit_dec alpha1) ...
+             {   destruct  (@zero_limit_succ_dec alpha1) ...
                  - destruct s.
                   + subst;  now destruct n0. 
                   + rewrite canonS_lim1.
@@ -223,7 +223,7 @@ Proof with eauto with T1.
                      }
                  }
              }
-             destruct  (@zero_succ_limit_dec alpha1) ...
+             destruct  (@zero_limit_succ_dec alpha1) ...
              { destruct s.
                - subst; now destruct n0.   
                - rewrite canonS_lim2.
@@ -371,7 +371,7 @@ Proof.
   transfinite_induction lambda; clear lambda ; intros lambda Hrec Hlambda.
   intros   H beta H1.
   assert (Hbeta: nf beta) by eauto with T1.
-  destruct (zero_succ_limit_dec Hlambda).
+  destruct (zero_limit_succ_dec Hlambda).
   -   destruct s.   
       { (* lambda = zero *)
         subst lambda; inversion H1;  destruct (not_LT_zero H1).
@@ -387,7 +387,7 @@ Proof.
         }
         destruct (LT_inv_strong H1).
         * destruct n.
-          destruct (@zero_succ_limit_dec   lambda1); eauto with T1.
+          destruct (@zero_limit_succ_dec   lambda1); eauto with T1.
         -- destruct s.
            ++ subst; assert (False) by (eapply not_LT_zero; eauto).
               contradiction. 
@@ -581,7 +581,7 @@ Proof with eauto with T1.
   - discriminate.
   -  destruct (limitb_cases alpha_nf H).
      +  destruct a;subst.
-        destruct (@zero_succ_limit_dec alpha1) ...
+        destruct (@zero_limit_succ_dec alpha1) ...
         *   destruct s.   
             { subst;   discriminate H. }
             {   destruct n.
@@ -651,7 +651,7 @@ Qed.
 Lemma canonS_LE alpha n :
     nf alpha ->  canonS alpha n <= canonS alpha (S n).
   Proof.
-    intro H; destruct (zero_succ_limit_dec H).
+    intro H; destruct (zero_limit_succ_dec H).
     -   destruct s. 
         +  subst; cbn. 
            apply LE_refl; auto with T1.

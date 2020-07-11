@@ -56,7 +56,7 @@ Section Bounded.
     destruct (T1_eq_dec alpha T1.zero).
     + subst;  repeat split; auto with T1.
       now apply nf_m . 
-    +   destruct (T1.zero_succ_limit_dec H).
+    +   destruct (T1.zero_limit_succ_dec H).
         * destruct s.
           { subst ; now destruct n. }
           { eapply strict_lub_lub with (s := fun i => canonS alpha i).

@@ -232,10 +232,10 @@ Hint Resolve Limitb_Phi0 : E0.
 
 
 
-Definition Zero_Succ_Limit_dec (alpha : E0) :
+Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = Zero} + {Limitb alpha = true} +
   {beta : E0  | alpha = Succ beta}.
-  destruct alpha as [t Ht];  destruct (zero_succ_limit_dec  Ht).  
+  destruct alpha as [t Ht];  destruct (zero_limit_succ_dec  Ht).  
   -  destruct s. 
      + left; left. 
        unfold Zero; subst t; f_equal.
@@ -245,8 +245,9 @@ Definition Zero_Succ_Limit_dec (alpha : E0) :
      subst t; unfold Succ; f_equal; apply nf_proof_unicity.
 Defined.
 
+
 Definition Pred (alpha: E0) : E0 :=
-  match Zero_Succ_Limit_dec alpha with
+  match Zero_Limit_Succ_dec  alpha with
       inl _ => Zero
     | inr (exist _ beta _) => beta
   end.
@@ -319,7 +320,7 @@ Qed.
 
 Lemma Pred_of_Succ:  forall alpha, Pred (Succ alpha) = alpha.
 Proof.
-  unfold Pred; intro alpha; destruct (Zero_Succ_Limit_dec (Succ alpha)).
+  unfold Pred; intro alpha; destruct (Zero_Limit_Succ_dec (Succ alpha)).
   destruct s.
   - unfold Succ, Zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
@@ -341,7 +342,7 @@ Lemma  Pred_Lt alpha : alpha <> Zero  ->  Limitb alpha = false ->
                        Pred alpha < alpha.
 Proof.
   unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
-  destruct (T1.zero_succ_limit_dec cnf_ok0 ).
+  destruct (T1.zero_limit_succ_dec cnf_ok0 ).
   destruct s.
   - subst. unfold Zero in H. destruct H. f_equal;apply nf_proof_unicity.
   - simpl in H0; rewrite i in H0; discriminate.

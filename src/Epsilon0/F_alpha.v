@@ -211,7 +211,7 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
   intro alpha. pattern alpha; apply well_founded_induction with E0.Lt.
   - apply E0.Lt_wf.
   - clear alpha; intros alpha Halpha.
-    destruct (Zero_Succ_Limit_dec alpha).
+    destruct (Zero_Limit_Succ_dec alpha).
     destruct s.
     + subst alpha; now rewrite F_zero_eqn.
     +  rewrite F_lim_eqn;auto; unfold Canon; now rewrite F_zero_eqn. 
@@ -488,7 +488,7 @@ Section Properties.
 
     Lemma LL : P alpha.
     Proof. 
-      destruct (Zero_Succ_Limit_dec alpha).
+      destruct (Zero_Limit_Succ_dec alpha).
       destruct s.
       - subst; apply PZero.
       - split.

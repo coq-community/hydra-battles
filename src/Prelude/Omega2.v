@@ -324,7 +324,7 @@ Proof.
   apply limit_is_lub_0.
 Qed.
 
- Definition zero_succ_limit_dec :
+ Definition zero_limit_succ_dec :
   forall alpha, 
                 ({alpha = zero} + {limitb alpha }) + 
                 {beta : t |  alpha = succ beta} .
@@ -435,7 +435,7 @@ Qed.
 
 Lemma ap_cases alpha : ap alpha -> alpha = 1 \/ alpha = omega.
 Proof.
-  destruct (zero_succ_limit_dec alpha) as [[Hzero |  Hlim] | Hsucc].
+  destruct (zero_limit_succ_dec alpha) as [[Hzero |  Hlim] | Hsucc].
   - subst alpha; intro H; elimtype False.
     destruct H as [H _]; auto.
   - destruct alpha; unfold ap.

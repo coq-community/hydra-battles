@@ -75,7 +75,7 @@ Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with Lt ...
    clear alpha; intros alpha IHalpha.
-  destruct (Zero_Succ_Limit_dec alpha).
+  destruct (Zero_Limit_Succ_dec alpha).
   -  destruct s.
    +  intro; contradiction. 
    +   intros H k;  rewrite L_lim_eqn; auto.
@@ -168,7 +168,7 @@ Section L_correct.
   Proof with eauto with E0.
     apply well_founded_induction with Lt ...
     clear alpha; intros alpha IHalpha.
-    destruct (Zero_Succ_Limit_dec alpha) as [[H | H] | H].
+    destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
     - subst; apply L_ok0.
     - apply L_ok_lim; auto.
     - destruct H as [beta Hbeta]; subst; apply L_ok_succ.
@@ -188,7 +188,7 @@ Theorem H_L_ alpha :
 Proof with auto with E0.
   pattern alpha ; apply well_founded_induction with Lt ...
   clear alpha; intros alpha IHalpha i.
-  destruct (Zero_Succ_Limit_dec alpha) as [[H | H] | H].
+  destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
   - subst; rewrite H_zero_eqn, L_zero_eqn; lia.
   - rewrite H_lim_eqn, L_lim_eqn ...
     apply Nat.lt_le_incl;

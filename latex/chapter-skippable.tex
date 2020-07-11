@@ -562,7 +562,8 @@ Lemma omega_is_limit:
 \index{Exercises}
 
 \begin{exercise}
-Prove that $\omega$ is the unique   limit ordinal \emph{(in this precise notation system! In larger segments of ordinal, there will be \emph{a lot} of limit ordinals}).
+Prove that $\omega$ is the unique   limit ordinal \emph{(in this precise notation system! In larger segments of 
+ordinals, there will be \emph{a lot} of limit ordinals}).
 \end{exercise}
 
 Let $\alpha$ and $\beta$ be some ordinals, we say that \emph{$\alpha$ is an immediate predecessor of $\beta$}
@@ -579,6 +580,13 @@ Definition Successor {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (y x : A):= Ipred x y.
 \end{Coqsrc}
 
+
+\begin{todo}
+trichotomy zero/succ/limit
+boolean functions limitb, succb
+
+
+\end{todo}
 \begin{itemize}
 \item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
 \item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).

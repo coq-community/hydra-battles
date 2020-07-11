@@ -27,13 +27,18 @@ Definition fin (n:nat) : t := inl n.
 
 Coercion fin : nat >-> t.
 
-Goal (6 < 8).
+Goal 6 < 8.
 auto with arith.
+(*  oups *)
 constructor; auto with arith.
 Qed.
 
 
 Notation  "'omega'"  := (inr 0) : oo_scope.
+
+Goal 24 < omega.
+constructor.
+Qed.
 
 
 Definition succ (alpha : t) := match alpha with
@@ -41,21 +46,9 @@ Definition succ (alpha : t) := match alpha with
                                | inr i => inr (S i)
                                end.
 
-
-
-
-
-
-
-Example ex1 :  6 < omega.
+Example ex2 : omega < succ omega.
 Proof.
-red;  constructor 2. 
-Qed.
-
-
-Example ex2 : omega < inr 1.
-Proof.
- constructor 3; auto with arith.
+ constructor; auto with arith. 
 Qed.
 
 
@@ -289,7 +282,7 @@ Qed.
 
 
 
-Lemma Ipred_succ : forall alpha,  Ipred alpha (succ alpha).
+Lemma Successor_succ : forall alpha,  Successor (succ alpha) alpha.
 Proof.
   destruct alpha;red;cbn; split.
   - constructor; auto.
@@ -304,7 +297,9 @@ Proof.
     inversion_clear 1; lia.
 Qed.
 
-Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.
+
+
+Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
@@ -312,23 +307,23 @@ Proof.
     destruct (Ipred_inv3  _ _ H).
     destruct (Ipred_inv4  _ _ H).
 apply Ipred_inv2 in  H; now subst.
-- intro;subst; now apply Ipred_succ.
+- intro;subst; now apply Successor_succ.
 Qed.
 
 
-Definition succ_b (alpha: t) := match alpha with
+Definition succb (alpha: t) := match alpha with
                                    inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
 
-Definition limit_b (alpha : t) := match alpha with
+Definition limitb (alpha : t) := match alpha with
                                      (inr 0) => true
                                    | _ => false
                                    end.
 
 
-Lemma Omega_limit_limit_b alpha s : Omega_limit s alpha ->
-                                     limit_b alpha.
+Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->
+                                     limitb alpha.
 Proof.
    destruct alpha.
    destruct 1.
@@ -373,7 +368,7 @@ Definition canon  alpha i :=
   | inr (S n) => inr n
   end.
 
-Lemma omega_limit_b:
+Lemma omega_limitb:
    Omega_limit fin omega.
 Proof.
   split.
@@ -383,12 +378,12 @@ Proof.
     + lia.
 Qed.
 
- Example Ex1 : limit_b omega.
+ Example Ex1 : limitb omega.
  Proof. reflexivity.  Qed.
 
  
 Lemma limit_is_lub beta :
-  limit_b beta -> forall alpha, 
+  limitb beta -> forall alpha, 
     (forall i,  canon beta i < alpha) <-> beta <= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n. simpl.
@@ -407,9 +402,9 @@ Proof.
     inversion H.
 Qed.
 
- Definition zero_succ_limit_dec :
+ Definition zero_limit_succ_dec :
   forall alpha: t, 
-                ({alpha = 0} + {limit_b alpha }) + 
+                ({alpha = 0} + {limitb alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as [n | p].
@@ -425,13 +420,12 @@ Qed.
 
 
  
- Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
+ Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = n.
  Proof.
    destruct alpha; simpl; split.
   -   inversion_clear 1; exists n; auto.
   -  constructor.
-  - inversion 1.
-    lia.
+  - inversion 1; lia.
   - destruct 1 as [n0 e]; inversion e.
  Qed.
 

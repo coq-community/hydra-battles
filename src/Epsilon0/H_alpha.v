@@ -185,7 +185,7 @@ Proof with auto with E0.
   unfold Ocons; intro beta; pattern beta; 
   apply well_founded_induction with Lt; clear beta.
   - exact E0.Lt_wf.
-  -  intros beta Hbeta H;  destruct (Zero_Succ_Limit_dec beta).
+  -  intros beta Hbeta H;  destruct (Zero_Limit_Succ_dec beta).
      destruct s.
      + subst; intro k. autorewrite with H_rw E0_rw using trivial. 
      + intro k;  assert (CanonS  (Omega_term alpha i + beta)%e0 k =
@@ -592,7 +592,7 @@ Section Proof_of_Abstract_Properties.
 
     Lemma P_alpha_0 : P alpha.
     Proof. 
-      destruct (Zero_Succ_Limit_dec alpha).
+      destruct (Zero_Limit_Succ_dec alpha).
       destruct s.
       - subst; apply PZero.
       - split.

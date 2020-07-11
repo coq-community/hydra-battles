@@ -455,11 +455,11 @@ Section DS_iota.
   Lemma canonS_iota_final :  round_n i (iota alpha) (iota (canonS alpha i)).
   Proof.
     destruct all_cases as [beta [n [gamma Heq]]]; decompose [and] Heq.
-    destruct (zero_succ_limit_dec Halpha).
+    destruct (zero_limit_succ_dec Halpha).
     -   destruct s.
         +  contradiction.
         +  destruct n.
-           * destruct (zero_succ_limit_dec H).
+           * destruct (zero_limit_succ_dec H).
              { destruct s.
                -  subst beta; rewrite H2 in Halpha.
                   generalize (nf_of_finite Halpha).
@@ -483,7 +483,7 @@ Section DS_iota.
              eauto.
            *  
              destruct gamma.
-             { destruct(zero_succ_limit_dec H).
+             { destruct(zero_limit_succ_dec H).
                - destruct s.  
                  + subst beta  alpha;  left.
                    split.

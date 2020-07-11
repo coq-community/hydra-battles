@@ -806,7 +806,7 @@ Proof with eauto with T1.
     clear alpha; intros alpha IHalpha H.
   assert (H0: nf beta) ...
   assert (H1: nf alpha) ...
-  destruct (zero_succ_limit_dec H1 ) as [[Hzero | Hlimit] | Hsucc].
+  destruct (zero_limit_succ_dec H1 ) as [[Hzero | Hlimit] | Hsucc].
   -  (** alpha = 0 *)
     subst alpha;  destruct (not_LT_zero H).
   -  (** alpha is a limit ordinal *)
@@ -1077,7 +1077,7 @@ Lemma KS_thm_2_4_lemma1' : forall i alpha n beta ,
     const_pathS i (ocons alpha (S n) zero)
                 (ocons alpha n  beta).
 Proof with auto with T1.
-  intros i alpha n beta H H0 H1;  destruct (zero_succ_limit_dec H). 
+  intros i alpha n beta H H0 H1;  destruct (zero_limit_succ_dec H). 
   - destruct s. 
     +  now destruct H0.
     +  destruct (const_pathS_first_step H1).
@@ -1118,7 +1118,7 @@ Lemma KS_thm_2_4_lemma2 (n:nat)(alpha:T1) :
   nf alpha -> alpha <> zero -> const_pathS n alpha zero.
 Proof.
   transfinite_induction alpha; clear alpha; intros alpha hrec Halpha.
-  destruct (zero_succ_limit_dec Halpha).
+  destruct (zero_limit_succ_dec Halpha).
   -  destruct s.
      +  intro; contradiction.
      + intros;  specialize (hrec (canonS alpha n));
@@ -1142,7 +1142,7 @@ Lemma KS_thm_2_4_lemma3_0 : forall i alpha n,
     const_pathS i (ocons alpha (S n)  zero)
             (ocons alpha n zero).
 Proof.
-  intros i alpha n H;  destruct (zero_succ_limit_dec H).
+  intros i alpha n H;  destruct (zero_limit_succ_dec H).
   - destruct s.
     +  subst.   left.   split; [discriminate | reflexivity].
     +  right with (canonS (ocons alpha (S n) zero) i).
@@ -1206,7 +1206,7 @@ Proof.
   induction 1.
   {
     destruct H as [H e]; subst y; intros.
-    destruct (zero_succ_limit_dec H0).
+    destruct (zero_limit_succ_dec H0).
     - destruct s.
       + subst x; now destruct H1.
       +   left;  now rewrite canonS_lim1.
@@ -1215,7 +1215,7 @@ Proof.
        * now apply KS_thm_2_4_lemma4.
   }
   {   destruct H as [H e];subst y; intros.
-      destruct (zero_succ_limit_dec H1).
+      destruct (zero_limit_succ_dec H1).
       - destruct s.
         + subst x; now destruct H2.
         + right with (phi0 (canonS x i)).
@@ -1242,14 +1242,14 @@ Theorem KS_thm_2_4 (lambda : T1) :
 Proof with eauto with T1.
    transfinite_induction lambda.
   clear lambda ; intros alpha Hrec Halpha H.
-  destruct (zero_succ_limit_dec Halpha).
+  destruct (zero_limit_succ_dec Halpha).
   - destruct s.
     + subst;  discriminate.
     + destruct alpha.
       * discriminate.
       *  destruct (limitb_cases Halpha  H).
          { destruct a; subst alpha2.
-           intros i0 j H1;  destruct (@zero_succ_limit_dec alpha1) ...
+           intros i0 j H1;  destruct (@zero_limit_succ_dec alpha1) ...
            destruct s.
            {subst. now contradict H0. }
            { induction n.
@@ -1316,7 +1316,7 @@ Corollary Cor12 (alpha : T1) :  nf alpha ->
 Proof.
   transfinite_induction_lt alpha.
   clear alpha ; intros alpha Hrec Halpha; intros.
-  destruct (zero_succ_limit_dec   Halpha).
+  destruct (zero_limit_succ_dec   Halpha).
   -  destruct s.
     + subst; destruct (not_LT_zero H).
 
@@ -1458,7 +1458,7 @@ Lemma Lemma2_6_1 (alpha : T1) :
     {n:nat | const_pathS n alpha beta}.
 Proof.
   transfinite_induction alpha.
-  intros x H Hx; destruct (zero_succ_limit_dec Hx).
+  intros x H Hx; destruct (zero_limit_succ_dec Hx).
   - destruct s.
    + subst;  intros;  not_neg H0.
    +  intros beta H0;  destruct (canonS_limit_strong Hx i H0) as [n1 H1].
@@ -1577,7 +1577,7 @@ Proof.
        { destruct (not_LT_zero H0). }
        {  destruct n. 
           destruct alpha2.
-          destruct (@zero_succ_limit_dec alpha1);  eauto with T1.
+          destruct (@zero_limit_succ_dec alpha1);  eauto with T1.
           destruct s.
           subst; cbn in H0.
           destruct (LT_irrefl H0).
