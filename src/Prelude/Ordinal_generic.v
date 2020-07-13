@@ -1,50 +1,9 @@
-Require Import RelationClasses Relation_Operators.
+Require Import RelationClasses Relation_Operators Ensembles.
 Import Relation_Definitions.
+
+Require Export Limits_and_Successors.
+
 Generalizable All Variables.
-
-(**
-  [x] is an immediate predecessor of [y]
-*)
-
-Definition Ipred {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (x y : A):=
-  lt x y /\ (forall z,  lt x z -> lt z y -> False).
-
-
-Definition Successor {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (y x : A):= Ipred x y.
-
-(* omega limit *)
-
-Definition  Omega_limit
-            {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (s: nat -> A) (alpha:A)  :=
-  (forall i: nat, lt (s i) alpha) /\
-  (forall beta, lt beta  alpha -> exists i:nat, lt beta (s i)).
-
-
-(* the same, with a [sig]-type *)
-
-Definition  Omega_limit_s
-              {A:Type}{lt : relation A}
-              {sto : StrictOrder lt}
-              (s: nat -> A) (alpha:A) : Type :=
-  ((forall i: nat, lt (s i) alpha) *
-  (forall beta, lt beta  alpha ->  {i:nat | lt beta (s i)}))%type.
-
-
-Lemma Limit_not_Succ  {A:Type}{lt : relation A}
-      {sto : StrictOrder lt} (s: nat -> A) (alpha:A) :
-  Omega_limit s alpha ->
-  forall beta,  ~ Successor alpha beta.
-Proof.
-  intros [Hlim Hlim0] beta [Hsucc Hsucc0].
-  destruct (Hlim0 _ Hsucc) as [i Hi].
-  absurd  (lt (s i) (s i)).
-   +  apply sto.
-   + destruct (Hsucc0 _ Hi (Hlim i)).
-Qed.
-
 
 (**
   Ordinal notation system on type [A] :
@@ -59,6 +18,15 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
                     (compare alpha beta);
     wf : well_founded lt}.
 
+
+
+
+
+(** The segment (called [O alpha] in Schutte) *)
+
+Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
+           (a: A) : Ensemble A :=
+  fun x: A => ltA x a.
 
 
 
