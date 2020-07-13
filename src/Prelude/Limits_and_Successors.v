@@ -25,6 +25,10 @@ Definition  Omega_limit
   (forall y, lt y  x -> exists i:nat, lt y (s i)).
 
 
+Definition Limit   {A:Type}{lt : relation A}
+           {sto : StrictOrder lt}  (x:A)  :=
+  exists s : nat -> A, Omega_limit s x.
+
 (* the same, with a [sig]-type *)
 
 Definition  Omega_limit_s

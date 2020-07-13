@@ -58,11 +58,11 @@ Proof.
   split.
   -  intros x  H. inversion H; try lia.
   - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
-  + injection H5;constructor; lia.
-  + constructor.
-  + constructor.
-  + constructor.
-    injection H5; subst; lia.
+    + injection H5;constructor; lia.
+    + constructor.
+    + constructor.
+    + constructor.
+      injection H5; subst; lia.
 Qed.
     
 
@@ -158,8 +158,6 @@ Proof.
 Qed.
 
 
-(* ICI *)
-
 
  Definition compare (alpha beta: t) : comparison :=
    match alpha, beta with
@@ -168,7 +166,8 @@ Qed.
    | inr _, inl _ => Gt
   end.
 
-
+ 
+ 
  Definition lt_b alpha beta : bool :=
   match compare alpha beta with
       Lt => true
@@ -205,7 +204,7 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Instance OplusO : OrdinalNotation lt_strorder compare.
+Instance OmegaPlusOmega : OrdinalNotation lt_strorder compare.
 Proof.
  split.
  - apply compare_correct.
@@ -368,7 +367,7 @@ Definition canon  alpha i :=
   | inr (S n) => inr n
   end.
 
-Lemma omega_limitb:
+Lemma omega_is_limit:
    Omega_limit fin omega.
 Proof.
   split.
@@ -404,7 +403,7 @@ Qed.
 
  Definition zero_limit_succ_dec :
   forall alpha: t, 
-                ({alpha = 0} + {limitb alpha }) + 
+                ({alpha = 0} + {limitb alpha}) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as [n | p].

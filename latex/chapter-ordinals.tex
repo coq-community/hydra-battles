@@ -1,5 +1,10 @@
 \chapter{Introduction to ordinal numbers with the Coq proof assistant}
 
+\centerline{\LARGE {\bf work in progress!}}
+
+
+
+
 In this chapter, we introduce on  simple examples the main concepts which are developped later.  We assume the reader to have a very basic experience with the \coq{} proof assistant, for instance with one of the numerous tutorials one can consult on Internet
 (see for instance \url{https://coq.inria.fr/documentation}). A basic experience  with Peano numbers (library \texttt{Arith}) would be useful.
 
@@ -85,6 +90,8 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
                                  (compare alpha beta);
     wf : well_founded lt}.  
 \end{Coqsrc}
+
+
 
 
 
@@ -288,10 +295,25 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+\begin{remark}
+It is important to keep in mind  that the integer $n$ is not an ``element'' of \texttt{FinOrd $n$}. In set-theoretic presentations of ordinals, the set associated with the ordinal $n$ is $\{0,1,\dots,n-1\}$. 
+In our formalization, the interpretation of an ordinal as a set is realized by the following definition
+(in ~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}).
+
+\begin{Coqsrc}
+Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
+           (a: A) : Ensemble A :=
+  fun x: A => ltA x a.
+\end{Coqsrc}
+\end{remark}
+
+
+
 Finally, it is interesting to show that, if $i<j$, then the segment $[0,i[$ is a ``sub-segment'' of
 $[0,j[$. Since the terms  $t\;i$ and $t\;j$ are not convertible, we consider a ``cast'' 
 function $\iota$ from $t\;i$ to $t\;j$, and prove this function is  a bijection  from $t\;i$ to
 the segment $[0,i[$ of $t\;j$.
+
 
 
 
@@ -345,6 +367,8 @@ Class  Subsegment
    \caption{\textcolor{blue}{$A$} is a sub-segment  of \textcolor{red}{$B$}}
    \label{fig:subsegment}
  \end{figure}
+
+
 
 
 \index{Coq!Commands!Program}
@@ -526,6 +550,7 @@ Qed.
 \end{Coqsrc}
 
 \end{remark}
+
 \subsubsection{Definition of \texorpdfstring{$\omega$}{omega}}
 
 We define $\omega$ as the least ordinal which is larger than any finite ordinal.
@@ -538,38 +563,99 @@ We define $\omega$ as the least ordinal which is larger than any finite ordinal.
 Show that, for any $\alpha:t$, $\alpha$ is finite iff $\alpha<\omega$.
 \end{exercise}
 
-\subsection{Limit and successor ordinals}
+
+\subsubsection{Building an instance of OrdinalNotation}
+
+The class \texttt{OrdinalNotation} is parameterized by the strictorder $<$ and a correct comparison function.
+
+First, we prove that \texttt{lt} is an instance of \texttt{StrictOrder}.
+
+\begin{Coqsrc}
+Instance lt_strorder : StrictOrder lt.
+Qed.
+\end{Coqsrc}
+
+Then, we define a comparison function by pattern matching over the sum type $t$.
+
+\begin{Coqsrc}
+Definition compare (alpha beta: t) : comparison :=
+   match alpha, beta with
+     inl _, inr _ => Lt
+   | inl n, inl p | inr n, inr p => Nat.compare n p
+   | inr _, inl _ => Gt
+  end.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Compute compare 7 omega.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= Lt : comparison
+\end{Coqanswer}
+
+
+\begin{Coqsrc}
+Compute compare  (inr 2) 42.
+\end{Coqsrc}
+ 
+\begin{Coqanswer}
+= Gt : comparison
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute compare (inr 0) omega.  
+\end{Coqsrc}
+ 
+ \begin{Coqanswer}
+= Eq : comparison
+\end{Coqanswer}
+ 
+
+Correctness of the function \texttt{compare} is asserted by the following lemma:
+
+\begin{Coqsrc}
+Lemma compare_correct alpha beta :
+    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+\end{Coqsrc}
+
+%%%% ICI %%%%
+
+\subsubsection{Limit and successor ordinals}
+
+The notions of limit and successor are defined in the module 
+\href{../src/html/hydras.Prelude.Limits_and_Successors.html}{Prelude.Limits\_and\_Successors} for any instance of
+\texttt{StrictOrder}.
+
 
 \index{Maths!Limit ordinals}
 
-We say also that $\omega$ is the \emph{limit} of the sequence $\textit{fin}\;i, i\in\mathbb{N}$, according to the followi,g definition (in~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}).
-$\alpha$ is the $\omega$-limit of the sequence $s$ if $\alpha$ is [strictly] larger than all the $s(i)$, and for any
-$\beta<\alpha$, $\beta$ is dimonated by at least an element of  the sequence $s$ (in fact $\beta$ is dominated by an infinite number of elements of the sequence (\emph{exercise!})).
+Let $<$ be a strict order on a type $A$ .
+We say $x:A$ is an  $\omega$-\emph{limit} of  a sequence $s(i), i\in\mathbb{N}$, if
+ if $x$ is [strictly] larger than all the $s(i)$, and for any
+$y<x$, $y$ is dominated by at least an element of  the sequence $s$.
 
+\vspace{4pt}
 
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Limits_and_Successors.html}{Prelude.Limits\_and\_Successors}}
 
 \begin{Coqsrc}
 Definition  Omega_limit
             {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (s: nat -> A) (alpha:A)  :=
-  (forall i: nat, lt (s i) alpha) /\
-  (forall beta, lt beta  alpha -> exists i:nat, lt beta (s i)).
+           {sto : StrictOrder lt} (s: nat -> A) (x:A)  :=
+  (forall i: nat, lt (s i) x) /\
+  (forall y, lt y  x -> exists i:nat, lt y (s i)).
 
-Lemma omega_is_limit:
-   Omega_limit fin omega.
-\end{Coqsrc}
+Definition Limit   {A:Type}{lt : relation A}
+           {sto : StrictOrder lt}  (x:A)  :=
+  exists s : nat -> A, Omega_limit s x.
+ \end{Coqsrc}
 
-\index{Exercises}
+Let $x$ and $y$ be two terms of type $A$, we say that \emph{$x$ is an immediate predecessor of $y$}
+(or that \emph{$y$ is a  successor of $x$ }) if $x<y$ and there is no $z$ between $x$ and $y$.
 
-\begin{exercise}
-Prove that $\omega$ is the unique   limit ordinal \emph{(in this precise notation system! In larger segments of 
-ordinals, there will be \emph{a lot} of limit ordinals}).
-\end{exercise}
 
-Let $\alpha$ and $\beta$ be some ordinals, we say that \emph{$\alpha$ is an immediate predecessor of $\beta$}
-(or that \emph{$\beta$ is a  successor of $\alpha$ }) if $\alpha<\$beta$ and there is no ordinal $\gamma$ between $\alpha$ and $\gamma$.
-
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}}
 
 \begin{Coqsrc}
 Definition Ipred {A:Type}{lt : relation A}
@@ -579,6 +665,33 @@ Definition Ipred {A:Type}{lt : relation A}
 Definition Successor {A:Type}{lt : relation A}
            {sto : StrictOrder lt} (y x : A):= Ipred x y.
 \end{Coqsrc}
+
+
+For instance, 
+we prove that $\omega$ is the limit of the sequence  of finite ordinals.
+
+  \begin{Coqsrc}
+Lemma omega_is_limit: Omega_limit fin omega.
+\end{Coqsrc}
+
+\index{Exercises}
+
+\begin{exercise}
+Prove that $\omega$ is the unique   limit ordinal within the notation system for $\omega+\omega$
+\emph{(in this precise notation system! In larger segments of 
+ordinals, there will be \emph{a lot} of limit ordinals}).
+\end{exercise}
+
+
+\subsection{Computing in \texorpdfstring{$\omega+\omega$}{omega+omega}}
+
+The simple data type we use for representing the ordinals less than $\omega+\omega$ allows us to compute successors, and to decide properties like \texttt{Successor} or \texttt{Limit}. 
+
+
+
+
+
+
 
 
 \begin{todo}
@@ -593,5 +706,330 @@ boolean functions limitb, succb
 \item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap:T1}).
 \item $\Gamma_0$: The set of terms in Veblen normal form.
 \end{itemize}
+
+
+
+\begin{todo}
+The following section has moved from chaper on hydras.
+Adapt the redaction to the $\omega^2$ ordinl segment.
+\end{todo}
+
+
+\subsubsection{Lexicographic order on \texorpdfstring{nat*nat}{nat*nat}}
+\label{omega2-case}
+
+We  prove now that even the type \texttt{nat * nat}, provided with the lexicographic product of \texttt{(nat,<)} by itself is too simple for proving the termination of all hydra battles. This impossibility result will prevent us from considering measures like the following one:
+
+
+  \begin{Coqsrc}
+  Let m h = (height h, hsize h).
+  \end{Coqsrc}
+
+The proof we are going to develop has exactly the same structure as in Section~\ref{sect:omega:case}
+
+
+previous one. Nevertheless, the proof of technical  lemmas is a little more complex, due to 
+ the structure of the lexicographic order on $\mathbb{N}\times\mathbb{N}$. 
+Consider for instance that there exists an infinite number of pairs between
+$(1,0)$ and $(2,0)$.
+
+
+\begin{remark}
+  The order structure we consider in this section is also known as the ordinal
+  $\omega^2$. We identify any pair $(i,j)\in \mathbb{N}\times\mathbb{N}$ with the ordinal $\omega\times i + j$. Thus the three kinds of ordinals in $\omega^2$
+  are represented as follows:
+  \begin{description}
+  \item[null ordinal] : the pair $(0,0)$
+  \item[successor ordinal] : any pair $(i,j)$ where $j>0$
+  \item[limit ordinal] : any pair $(i,0)$ where $i>0$
+  \end{description}
+\end{remark}
+
+The detailed  proof script is in the file \url{../src/html/hydras.Hydra.Omega2_Small.html}.
+
+\subsubsection{Preliminaries}
+Let us assume there is a variant from \texttt{Hydra} into \texttt{nat*nat} (with the
+   lexicographic ordering)  for proving the   termination of all hydra battles.
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
+
+
+\begin{Coqsrc}
+  Section Impossibility_Proof.
+  
+  Let t := (nat * nat)%type. 
+
+  (** non-dependent lexicographic strict ordering on nat*nat *)
+  
+  Let lt2 : relation t := lexico Peano.lt Peano.lt.
+
+  Infix "<" := lt2.
+  
+  (** reflexive closure of lt2 *)
+  Let le2 := clos_refl _ lt2.
+  Infix "<=" := le2.
+
+  Variable m : Hydra -> t.
+  
+  Context (Hvar : Hvariant lt2_wf free m).
+\end{Coqsrc}
+
+
+Let us follow the same pattern as in Sect.~\ref{omega-case}.
+First, we define an injection from type \texttt{t} into \texttt{Hydra}.
+We associate with any pair $(i,j)$ the hydra with $i$ branches of length $2$ and
+$j$ branches of length $1$.
+
+%% revenir ici
+
+\vspace{4pt}
+\emph{From Module ~\href{../src/html/hydras.Hydra.Omega2_Small.html\#iota}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+  Let iota (p: t) := 
+    node (hcons_mult (hyd1 head) (fst p)
+                     (hcons_mult head (snd p) hnil)).
+\end{Coqsrc}
+
+For instance, Figure~\vref{fig:essai2} shows the hydra associated to the pair
+$(3,5)$. 
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.4]
+\node (foot) at (6,0) {$\bullet$};
+\node (N1) at (1,3) {$\bullet$};
+\node (N2) at (3,3) {$\bullet$};
+\node (N3) at (5,3) {$\bullet$};
+\node (N4) at (8,3) {$\Smiley[2][green]$};
+\node (N5) at (11,3) {$\Smiley[2][green]$};
+\node (N6) at (14,3) {$\Smiley[2][green]$};
+\node (N7) at (17,3){$\Smiley[2][green]$};
+\node (N8) at (20,3){$\Smiley[2][green]$};
+\node  (N9) at (0,5) {$\Smiley[2][green]$};
+\node (N10) at (2,5) {$\Smiley[2][green]$};
+\node (N11) at (4,5) {$\Smiley[2][green]$};
+\draw (foot) to [bend left=10] (N1);
+\draw (foot) -- (N2);
+\draw (foot) -- (N3);
+\draw (foot) -- (N4);
+\draw (foot) -- (N5);
+\draw (foot) -- (N6);
+\draw (foot) to [bend right=10] (N7);
+\draw (foot) to [bend right=15] (N8);
+\draw (N1) to [bend left=10] (N9);
+\draw (N2) -- (N10);
+\draw (N3) -- (N11);
+\end{tikzpicture}
+\caption{\label{fig:essai2}
+The hydra $\iota(3,5)$}
+\end{figure}
+
+
+
+
+Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iota} (represented in Fig.~\vref{fig:h-omega2-small}).
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.5]
+\node (foot) at (2,0) {$\bullet$};
+\node (N1) at (2,2) {$\bullet$};
+\node (N2) at (3,4) {$\Smiley[2][green]$};
+\node (N3) at (1,4) {$\Smiley[2][green]$};
+\draw (foot) -- (N1);
+\draw (N1) to [bend right =15] (N2);
+\draw (N1) to  [bend left=15](N3);
+\end{tikzpicture}
+\caption{\label{fig:h-omega2-small}}
+ The hydra \texttt{big\_h}.
+\end{figure}
+\begin{Coqsrc}
+   Let big_h := hyd1 (hyd2 head head).  
+ \end{Coqsrc}
+ 
+ In a second step, we build a ``smaller'' hydra.
+ 
+\begin{Coqsrc}
+   Let small_h := iota (m big_h).
+\end{Coqsrc}
+
+Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h <= m small\_h < m big\_h}, which is impossible.
+
+\subsubsection{Proof of the inequality \texttt{m small\_h < m big\_h}}
+
+For proving the inequality  \texttt{m\_lt: m small\_h < m big\_h}, it suffices to
+build a fight transforming \texttt{big\_h} into \texttt{small\_h}.
+
+First we prove that \texttt{small\_h} is reachable from \texttt{big\_h} in one or two steps. Let us decompose \texttt{m big\_h}
+into the pair $(i,j)$.
+If $j=0$, then one round suffices to transform \texttt{big\_h} into $\iota(i,j)$.
+If $j>0$, then a first round transforms \texttt{big\_h} into $\iota(i+1,0)$ and a second round into $\iota(i,j)$. So, we have the folowing result.
+
+\begin{Coqsrc}
+ Lemma big_to_small: big_h -+-> small_h.
+\end{Coqsrc}
+
+Since $m$ is a variant, we infer the following inequality:
+
+\begin{Coqsrc}
+Corollary m_lt : m small_h < m big_h.
+\end{Coqsrc}
+
+
+\subsubsection{Proof of the inequality \texttt{m big\_h <= m small\_h} }
+
+
+The proof of the inequality \texttt{m big\_h <= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider some pair $(i,j)$, where $i>0$, there exists an infinite number of
+pairs stricly less than $(i,j)$, and there exists an infinite number of battles that start from
+$\iota(i,j)$. In effect, at any configuration $\iota(k,0)$, the hydra can freely chose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
+all the possible battles issued from that hydra.
+Let us give more technical details.
+
+\begin{itemize}
+\item The proof of the lemma \texttt{m\_ge : forall p : t,   p <= m (iota p)} uses well-founded induction on $p$, and not structural induction on natural numbers
+
+\item For any pair $p$, we have to distinguish between three cases, according to the value of $p$'s components.
+  \begin{itemize}
+  \item $p=(0,0)$
+  \item $p=(i,0)$, where $i>0$\,: $p$ corresponds to a limit ordinal
+  \item $p=(i,j)$, where $j>0$\,: $p$ is the successor of $(i,j-1)$.
+  \end{itemize}
+\end{itemize}
+
+Before starting the proof, we have to express the notion of \emph{limit} in terms of
+least upper bounds, through the following logical equivalence.
+
+\vspace{4pt}
+\emph{From Module ~\href{../src/html/hydras.Hydra.Omega2_Small.html\#limit_is_lub}{Hydra.Omega2\_Small.v}}.
+
+\begin{Coqsrc}
+Lemma limit_is_lub : forall i p, 
+   (forall j, (i,j) < p) <-> (S i, 0) <= p.  
+\end{Coqsrc}
+
+Let us define the notion of elementary ``step'' of decreasing sequences in
+\texttt{t}
+
+
+\begin{Coqsrc}
+Inductive step : t -> t -> Prop :=
+| succ_step : forall i j,  step (i, S j) (i, j)
+| limit_step : forall i j, step (S i, 0) (i, j).
+\end{Coqsrc}
+
+The following lemma establishes a correspondance between the relation
+\texttt{step} and hydra fights.
+
+\begin{Coqsrc}
+Lemma step_to_fight : forall p q, step p q -> iota p -+-> iota q.
+\end{Coqsrc}
+
+\index{Maths!Transfinite induction}
+
+Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
+by transfinite induction over \texttt{p} a fight 
+that transforms the hydra $\iota(p)$ into $\iota(q)$.
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html\#m_ge}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+Lemma m_ge : forall p : t,   p <= m (iota p).
+Proof.
+  intro p ; pattern p;
+    apply  well_founded_induction with 
+               (R := lt2) (1:= wf_lexico lt_wf lt_wf);
+     intros (i,j) IHij (* rest of proof skipped *)
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  i, j : nat
+  IHij : forall y : t, y < (i, j) -> y <= m (iota y)
+  ============================
+  (i, j) <= m (iota (i, j)) 
+\end{Coqanswer}
+
+
+Then we have  three cases to consider, according to the values of $i$ and $j$.
+\begin{itemize}
+\item If $p=(0,0)$ then obviously, $\iota(p)\geq p = (0,0)$
+\item If  $p=(i+1,0)$ for some $i\in\mathbb{N}$, we
+ remark  that $p$ is strictly greater than any pair $ (i, j)$, where $j$ 
+is any natural number.
+
+Applying the battle rules, for any $j$, we have $\iota(i+1,j)  {\round} \iota(i, j) $, thus $m(\iota(p)) > m(\iota(i,j)$ since  $m$ is assumed to be a variant.
+
+Applying the induction hypothesis, we get the inequality
+ $ m(\iota(i,j)) \geq (i,j)$ for any $j$. 
+
+Thus, $m(\iota(p)) > (i,j)$ for any $j$.
+Applying the lemma \texttt{limit\_is\_lub}, we get  the inequality
+$\iota(i+1,0)\geq (i+1,0)$
+
+\item If $p=(i,j+1)$ with $j\in\mathbb{N}$, we have  $\iota(p)  {\round} \iota(i, j) $,
+hence $m(\iota(p))> m(\iota(i,j)) \geq (i,j)$, thus $m(\iota(p))\geq (i,j+1)=p$
+
+\end{itemize}
+
+\subsubsection{End of the proof}
+
+Since $<$ is a strict order (irreflexive  and transitive) on \texttt{nat*nat}, we can conclude that there is no
+variant for termination on the lexicographic square of $(\mathbb{N},<)$.
+
+\begin{enumerate}
+\item From \texttt{m\_lt}, we infer the strict inequality 
+\texttt{m small\_h < m big\_h}
+\item from \texttt{m\_ge}, we get \texttt{m big\_h <= m (iota (m big\_h)) = m small\_h} 
+\end{enumerate}
+
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+Theorem Impossible : False.
+Proof.
+  destruct (StrictOrder_Irreflexive  (m big_h)).
+  apply le2_lt2_trans with (m small_h).
+  -  unfold small_h;  apply m_ge.
+  -  apply m_lt. 
+Qed. 
+
+End Impossibility_Proof.
+\end{Coqsrc}
+
+\index{Exercises}
+
+\begin{exercise}
+Prove that there exists no variant $m$ from \texttt{Hydra} into \texttt{nat*nat} for proving
+    the  termination of all \emph{standard} battles.
+\end{exercise}
+
+
+
+\begin{remark}
+In Chapter~\ref{ks-chapter}, we will prove a much more general  theorem
+than the two previous results about $\mathbb{N}$ and $\mathbb{N}\times\mathbb{N}$. The proof of that general  result will share the same structure, but will 
+require a lot of technical results. 
+\end{remark}
+
+\begin{exercise}
+
+\label{sec:orgheadline63}
+Write \emph{direct} proofs ({i.e.},  without applying the result and tools of Chap.~\ref{ks-chapter}) that the following data structures  are too simple for defining a variant for any hydra battle.
+
+\begin{itemize}
+\item  $\omega^n$ : the set of all $n$-uples of natural numbers, ordered  by 
+  lexicographic ordering
+\item  $\omega^\omega$: the set of all decreasing sequences (with respect to $\le$)  of natural numbers, ordered by lexicographic ordering on lists.
+
+For instance , the sequence $\langle 4,4,2 \rangle$ is strictly greater than 
+$\langle 4,3,3,3,3,3,3,2,2,2 \rangle$.
+\end{itemize}
+
+  
+\end{exercise}
 
 

@@ -2,9 +2,9 @@
 
 
 
-Require Import Hydra_Lemmas  Arith Omega.
+Require Import Hydra_Lemmas  Arith.
 Open Scope nat_scope.
-Import Lia.
+Require Import Lia.
 
 
 Instance height_var : Hvariant  lt_wf free height.

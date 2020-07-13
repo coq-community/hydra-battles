@@ -11,14 +11,15 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
-Definition bigO {n:nat} (alpha : t n): Ensemble (t n) := fun beta =>  lt beta alpha.
-
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
   destruct alpha.
   destruct x; cbn in i; discriminate.
 Qed.
+
+
+
 
 Definition compare {n:nat} (alpha beta : t n) :=
   Nat.compare (proj1_sig alpha) (proj1_sig beta).
@@ -94,6 +95,7 @@ Proof.
 Qed.
 
 
+
 Lemma sig_eq_intro {n:nat} (x y : t n) :
   proj1_sig x = proj1_sig y -> x = y.
 Proof.
@@ -125,6 +127,7 @@ Section Inclusion_ij.
   Defined.
 
   Let b : t j := exist _ i Ltb_ij.
+
    
   Global Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota_ij.
   Proof.

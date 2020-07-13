@@ -278,7 +278,7 @@ Proof.
   destruct n; [discriminate | unfold canon].
   split;  destruct n0; try discriminate.
   -    left; auto with arith.
-  -  destruct beta; inversion_clear 1.
+  -  destruct y; inversion_clear 1.
      exists (S n1).
      assert( H0: (n0 = n \/ n0 <  n)%nat) by lia.
      destruct H0.
