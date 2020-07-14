@@ -687,9 +687,59 @@ ordinals, there will be \emph{a lot} of limit ordinals}).
 
 The simple data type we use for representing the ordinals less than $\omega+\omega$ allows us to compute successors, and to decide properties like \texttt{Successor} or \texttt{Limit}. 
 
+\begin{Coqsrc}
+Definition succ (alpha : t) := match alpha with
+                                 inl i => inl (S i)
+                               | inr i => inr (S i)
+                               end.
+\end{Coqsrc}
 
 
 
+
+\begin{Coqsrc}
+Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
+\end{Coqsrc}
+
+
+
+\begin{Coqsrc}
+Definition succb (alpha: t) := match alpha with
+                                   inr (S  _) | inl (S _) => true
+                                 | _ => false
+                                 end.
+\end{Coqsrc}
+
+
+
+\begin{Coqsrc}
+Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+\end{Coqsrc}
+
+
+
+
+
+\begin{Coqsrc}
+Definition limitb (alpha : t) := match alpha with
+                                     (inr 0) => true
+                                   | _ => false
+                                   end.
+\end{Coqsrc}
+
+
+
+\begin{Coqsrc}
+Lemma omega_is_limit:
+   Omega_limit fin omega.
+Proof.
+  split.
+  - constructor.
+  - inversion_clear  1.
+    + exists (S x); constructor; auto with arith.
+    + lia.
+Qed.
+\end{Coqsrc}
 
 
 

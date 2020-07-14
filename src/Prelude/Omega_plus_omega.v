@@ -281,7 +281,7 @@ Qed.
 
 
 
-Lemma Successor_succ : forall alpha,  Successor (succ alpha) alpha.
+Lemma Successor_succ alpha : Successor (succ alpha) alpha.
 Proof.
   destruct alpha;red;cbn; split.
   - constructor; auto.
@@ -298,7 +298,7 @@ Qed.
 
 
 
-Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
+Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
@@ -314,6 +314,26 @@ Definition succb (alpha: t) := match alpha with
                                    inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
+
+
+
+Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+Proof.
+  destruct alpha; split.
+  - destruct n.
+   + intro; discriminate.
+   +    exists n; reflexivity.
+  - intros [[p| p] H].
+    + injection H; intro; subst; reflexivity.
+    +  discriminate. 
+  -  destruct n.
+     +  intro; discriminate.   
+     + exists (inr n); reflexivity.
+  -  intros [[p| p] H].
+     +     discriminate.
+     + injection H; intro; subst; reflexivity.
+Qed.
+
 
 Definition limitb (alpha : t) := match alpha with
                                      (inr 0) => true
