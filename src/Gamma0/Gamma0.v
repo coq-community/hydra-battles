@@ -3574,6 +3574,8 @@ Module G0.
 Lemma zero_nfb : nfb zero.
 Proof. reflexivity. Qed.
 
+
+
 Lemma nfb_a a b n c: nfb (gcons a b n c) -> nfb a.
 Proof. 
  cbn.
@@ -3666,6 +3668,13 @@ Proof.
   - unfold compare; rewrite compare_rw_gt; auto.
 Qed. 
 
+Instance Zero : G0.
+Proof.
+  refine (@mkg0 T2.zero _);  now compute. 
+Defined.
+
+   
+About lt_sto.
 Instance ONG0: OrdinalNotation lt_sto compare.
 Proof.
   split.

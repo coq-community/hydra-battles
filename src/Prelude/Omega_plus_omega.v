@@ -46,10 +46,8 @@ Definition succ (alpha : t) := match alpha with
                                | inr i => inr (S i)
                                end.
 
-Example ex2 : omega < succ omega.
-Proof.
- constructor; auto with arith. 
-Qed.
+Compute succ omega.
+
 
 
 
@@ -335,58 +333,6 @@ Proof.
 Qed.
 
 
-Definition limitb (alpha : t) := match alpha with
-                                     (inr 0) => true
-                                   | _ => false
-                                   end.
-
-
-Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->
-                                     limitb alpha.
-Proof.
-   destruct alpha.
-   destruct 1.
-   elimtype False.
-   destruct n.
-    specialize (H 0); inversion H.
-    lia.
-    specialize (H0 (inl  n)).
- destruct H0.
- constructor; auto. 
-   specialize (H  x).
-   inversion H ; inversion H0; subst. rewrite <- H1 in H5. injection H5.
-   intro; subst. lia.
-   rewrite <- H1 in H6. discriminate.
-   destruct n.
-   intro; auto.
-   intro H; elimtype False.
-   destruct H.
-
-   specialize (H0 (inr n)).
-    destruct H0.
-    constructor; auto.
-    
-   -- case_eq (s x).
-   intro; subst. intro.
-    rewrite H1 in H0; inversion H0.
-    intros.
-     rewrite H1 in H0.
-      specialize (H x).
-      rewrite  H1 in *.
-    inversion H;
-      inversion H0.
- subst.
-lia.       
-Qed.
-
-Definition canon  alpha i :=
-  match alpha with
-  | inl 0 => inl 0
-  | inl (S n) => inl n
-  | inr 0 => inl i
-  | inr (S n) => inr n
-  end.
-
 Lemma omega_is_limit:
    Omega_limit fin omega.
 Proof.
@@ -396,6 +342,63 @@ Proof.
     + exists (S x); constructor; auto with arith.
     + lia.
 Qed.
+
+
+Definition limitb (alpha : t) := match alpha with
+                                     (inr 0) => true
+                                   | _ => false
+                                   end.
+
+
+Lemma limitb_correct alpha  : limitb alpha <-> 
+                              exists s: nat -> t, Omega_limit s alpha.
+
+Proof.
+  destruct alpha; split.
+  - discriminate.  
+  - intros [s H]; destruct H.
+    elimtype False.
+    destruct n.
+    specialize (H 0); inversion H.
+    + lia.
+    +  specialize (H0 (inl  n));  destruct H0.
+       constructor; auto. 
+       specialize (H  x).
+       inversion H ; inversion H0; subst.
+       rewrite <- H1 in H5. injection H5.
+       intro; subst. lia.
+       rewrite <- H1 in H6. discriminate.
+  -    destruct n.
+       intro; auto.
+       exists fin; apply omega_is_limit.   
+       discriminate. 
+  - destruct n. 
+    intro; reflexivity. 
+    intro H; elimtype False.
+    destruct H as [s [H H0]].
+    specialize (H0 (inr n)).
+    destruct H0 as [i Hi].
+    +    constructor; auto with arith.
+    + specialize (H i).     
+      inversion Hi.
+      subst.
+      rewrite <- H1 in *. inversion H.
+      subst.
+      lia.
+Qed.
+
+
+
+
+Definition canon  alpha i :=
+  match alpha with
+  | inl 0 => inl 0
+  | inl (S n) => inl n
+  | inr 0 => inl i
+  | inr (S n) => inr n
+  end.
+
+
 
  Example Ex1 : limitb omega.
  Proof. reflexivity.  Qed.

@@ -11,12 +11,14 @@ Generalizable All Variables.
 *)
 
 Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
-      (compare : A -> A -> comparison) :=
+      (compare : A -> A -> comparison)  :=
   { compare_correct :
+
       forall alpha beta:A,
         CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                     (compare alpha beta);
-    wf : well_founded lt}.
+    wf : well_founded lt;
+  }. 
 
 
 

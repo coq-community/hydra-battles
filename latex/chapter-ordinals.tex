@@ -508,6 +508,9 @@ Definition le := clos_refl _ lt.
 Infix "<=" := le : oo_scope.
 \end{Coqsrc}
 
+
+
+
 \subsubsection{Finite ordinals as members of \texorpdfstring{$\omega+\omega$}{omega+omega}}
 
 It is easy do define a coercion from type \texttt{nat} into our type \texttt{t}.
@@ -620,6 +623,11 @@ Lemma compare_correct alpha beta :
               (compare alpha beta).
 \end{Coqsrc}
 
+
+\begin{todo}
+  Well foundedness; instance of OrdinalNotation.
+\end{todo}
+
 %%%% ICI %%%%
 
 \subsubsection{Limit and successor ordinals}
@@ -687,14 +695,34 @@ ordinals, there will be \emph{a lot} of limit ordinals}).
 
 The simple data type we use for representing the ordinals less than $\omega+\omega$ allows us to compute successors, and to decide properties like \texttt{Successor} or \texttt{Limit}. 
 
+\subsubsection{Computing successors}
+
+The following function computes the successor of any ordinal less than $\omega+\omega$, by a simple pattern matching.
+
+
 \begin{Coqsrc}
 Definition succ (alpha : t) := match alpha with
                                  inl i => inl (S i)
                                | inr i => inr (S i)
                                end.
+
+Compute succ omega.
 \end{Coqsrc}
 
 
+\begin{Coqanswer}
+  = inr 1
+     : nat + nat
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Lemma lt_succ alpha : alpha < succ alpha.
+Proof.
+ destruct alpha; constructor; auto with arith. 
+Qed.
+\end{Coqsrc}
+
+The correctness  of the \texttt{succ} function is asserted by the following lemma.
 
 
 \begin{Coqsrc}
@@ -702,44 +730,35 @@ Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
 \end{Coqsrc}
 
 
+Being a successor is decidable, thanks to the following boolean function.
+
 
 \begin{Coqsrc}
 Definition succb (alpha: t) := match alpha with
                                    inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
-\end{Coqsrc}
 
-
-
-\begin{Coqsrc}
 Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
 \end{Coqsrc}
 
 
 
+\subsubsection{Deciding whether a given ordinal is a limit}
 
+In the same way as successors, one can decide by pattern matching wether a given ordinal (dont' forget less than $\omega+\omega$ !) is a limit.
 
 \begin{Coqsrc}
 Definition limitb (alpha : t) := match alpha with
                                      (inr 0) => true
                                    | _ => false
                                    end.
+
+Lemma limitb_correct alpha  : limitb alpha <-> 
+                              exists s: nat -> t, Omega_limit s alpha.
 \end{Coqsrc}
 
 
-
-\begin{Coqsrc}
-Lemma omega_is_limit:
-   Omega_limit fin omega.
-Proof.
-  split.
-  - constructor.
-  - inversion_clear  1.
-    + exists (S x); constructor; auto with arith.
-    + lia.
-Qed.
-\end{Coqsrc}
 
 
 
