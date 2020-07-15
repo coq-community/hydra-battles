@@ -3631,6 +3631,7 @@ Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
 
+
 Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
 
 
@@ -3673,14 +3674,29 @@ Proof.
   refine (@mkg0 T2.zero _);  now compute. 
 Defined.
 
-   
+(** To complete
+
 About lt_sto.
 Instance ONG0: OrdinalNotation lt_sto compare.
 Proof.
   split.
   - apply compare_correct.
   - apply lt_wf.
-  - admit.
+  - destruct x as [v Hv].
+    destruct v.
+    left;left.
+ red.
+   Search lt.
+    destruct y.
+     destruct vnf0.
+     replace Hv with vnf_ok0.
+      right.
+apply nfb_proof_unicity.
+  left. 
+   unfold lt; cbn; constructor.
+    
+
 Admitted.
+ *)
 
 End G0.

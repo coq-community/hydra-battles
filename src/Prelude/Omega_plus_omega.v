@@ -204,9 +204,35 @@ Qed.
 
 Instance OmegaPlusOmega : OrdinalNotation lt_strorder compare.
 Proof.
- split.
- - apply compare_correct.
- - apply lt_wf.
+  split.
+  - apply compare_correct.
+  - apply lt_wf.
+  - destruct alpha.
+    + destruct n.
+      * left; left.
+        
+        intro x; apply le_0.
+      * right; exists (inl n).
+        split.
+        constructor; auto with arith.
+        destruct z.
+        inversion 1; subst; inversion 1; subst; lia.
+        inversion 2.
+    + 
+      destruct n.
+      left; right.
+      (* write a lemma *)
+      split.
+      exists (inl 0).
+      constructor.
+      inversion 1;subst.
+      exists (inl (S x)); split; constructor; auto.
+      lia.
+      right; exists (inr n).
+      split.
+      constructor; auto with arith.
+      inversion 1; subst.
+      inversion 1; subst; lia.
 Qed.
 
 

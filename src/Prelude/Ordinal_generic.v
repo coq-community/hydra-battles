@@ -18,16 +18,16 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
         CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                     (compare alpha beta);
     wf : well_founded lt;
-    ZeroLimitSucc_dec : forall x,  {Least x}+
-                                   {Limit x} +
-                                   {p: A | Successor x p}
+    ZeroLimitSucc_dec : forall alpha,  {Least alpha}+
+                                   {Limit alpha} +
+                                   {beta: A | Successor alpha beta}
   }. 
 
 
 
 
 
-(** The segment (called [O alpha] in Schutte) *)
+(** The segment called [O alpha] in Schutte *)
 
 Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
            (a: A) : Ensemble A :=

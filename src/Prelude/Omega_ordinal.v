@@ -13,6 +13,13 @@ Proof.
  split.
  - apply Nat.compare_spec.
  - apply Wf_nat.lt_wf.
+ - intro x; destruct x.
+     + left; left. intro n; destruct n.
+      * right.
+      * left; auto with arith.
+     + right; exists x. split.
+       * auto with arith.
+       * lia.
 Qed.
 
 

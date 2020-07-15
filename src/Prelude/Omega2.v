@@ -178,9 +178,29 @@ Qed.
 
 Instance Omega2 : OrdinalNotation lt_strorder compare.
 Proof.
- split.
- - apply compare_correct.
- - apply lt_wf.
+  split.
+  - apply compare_correct.
+  - apply lt_wf.
+  - destruct alpha as [n p].
+    + destruct p.
+      * destruct n.
+        --   left; left.
+             Search (0,0). exact le_0.
+        --
+          left;right.
+          split.
+          exists (0,0).
+          constructor 1; auto with arith.
+          destruct y; inversion 1; subst.
+          exists (n0, S n1); split.
+          right; auto with arith.
+          left; auto.
+          lia.
+      * right; exists (n,p); split.
+        constructor 2. auto with arith.
+        destruct z. unfold lt; cbn.
+        inversion 1; subst;
+          inversion 1; subst;try lia.
 Qed.
 
 Lemma lt_eq_lt_dec alpha beta :
