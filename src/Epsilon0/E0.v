@@ -297,13 +297,10 @@ Defined.
 
 Hint Resolve Lt_wf : E0.
 
+(** TO do:  Study relationship Limitb / Limit in T1 *)
 
-Instance Epsilon0 : OrdinalNotation Lt_sto compare.
-Proof.
- split.
- - apply compare_correct.
- - apply Lt_wf.
-Qed.
+
+
 
 
 Lemma Lt_le : forall alpha beta,  beta < alpha -> Succ beta <= alpha.
@@ -433,6 +430,65 @@ Proof.
 Qed.
 
 
+
+Instance Epsilon0 : OrdinalNotation Lt_sto compare.
+Proof.
+ split.
+ - apply compare_correct.
+ - apply Lt_wf.
+ - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
+   + subst alpha; left; left; intro beta. destruct beta as [cnf H].
+     destruct cnf.
+     replace       {| cnf := zero; cnf_ok := H |} with Zero.
+      right.
+     apply E0_eq_intro. reflexivity.
+  left.
+    unfold Lt.
+   cbn.
+   auto with T1.
+   +
+    destruct alpha as [a Ha]. unfold Limitb in H. cbn in H.
+   left;right.
+   split.  
+   exists Zero.
+   destruct a;try discriminate.
+    constructor. 
+    destruct a2; try discriminate.
+    auto with T1.
+   auto with T1.
+ split.
+   constructor.
+   auto.
+
+intros. 
+exists (Succ y).
+split.
+apply Lt_Succ.
+Search Lt Succ.
+
+   destruct y as [y Hy]; split.
+    unfold Lt, Succ; cbn.
+     now apply LT_succ.
+      unfold Lt, Succ in *.
+ cbn in *.
+ Search limitb succ LT.
+  apply succ_lt_limit; auto.
+
++ 
+  right.
+    exists p;
+    subst.
+    Search Successor.
+    red. red.
+     split.
+apply Lt_Succ.
+
+   destruct p, z. unfold Lt, Succ; cbn in *; intros.
+   destruct (@LT_irrefl cnf1).
+   apply T1.LT_LE_trans with (succ cnf0); auto with T1.
+   Search LE LT.
+   now apply LT_succ_LE.
+Qed.
 
 
 

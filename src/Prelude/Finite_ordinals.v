@@ -92,9 +92,43 @@ Proof.
   split.
   - apply compare_correct.
   - apply lt_wf.
+  - intro alpha;destruct alpha as [i Hi].
+    destruct n.
+    + discriminate.
+    + destruct i.
+      left;left. red.
+      destruct y.
+      destruct x.
+       replace Hi with i.
+        
+      right. 
+apply eq_proofs_unicity_on.
+destruct y, (0 <? S n); auto; right; discriminate.    
+left. red.
+       cbn.
+auto.      
+right.
+
+refine (exist _ (exist _ i _) _).
+red.
+red. 
+split; cbn. unfold lt. cbn. Search leb. apply Nat.leb_refl.
+intros.
+destruct z.
+unfold lt in H, H0; cbn in H, H0.
+destruct x.
+discriminate.
+Search leb.
+red in H, H0.
+apply leb_complete in H .
+apply leb_complete in H0.
+
+lia.
+Unshelve.
+Search (_ <? _).
+ red . red in Hi. rewrite Nat.ltb_lt in *.
+lia.
 Qed.
-
-
 
 Lemma sig_eq_intro {n:nat} (x y : t n) :
   proj1_sig x = proj1_sig y -> x = y.

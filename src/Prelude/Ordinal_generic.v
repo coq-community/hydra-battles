@@ -18,6 +18,9 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
         CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                     (compare alpha beta);
     wf : well_founded lt;
+    ZeroLimitSucc_dec : forall x,  {Least x}+
+                                   {Limit x} +
+                                   {p: A | Successor x p}
   }. 
 
 

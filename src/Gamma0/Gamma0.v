@@ -3680,6 +3680,7 @@ Proof.
   split.
   - apply compare_correct.
   - apply lt_wf.
-Qed.
+  - admit.
+Admitted.
 
 End G0.
