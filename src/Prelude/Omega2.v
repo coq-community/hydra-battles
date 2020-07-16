@@ -214,9 +214,8 @@ Proof.
 Defined.
 
 
-Arguments Ipred {A} {lt} {sto}  _ _.
 
-Lemma Ipred_inv : forall i j k l : nat, Ipred (i, j) (k, l) ->
+Lemma Successor_inv : forall i j k l : nat, Successor (k, l) (i, j) ->
                                   i = k /\ l = S j.
 Proof.
   destruct 1 as [H H0].
@@ -230,13 +229,13 @@ Proof.
       destruct (H0 (k, S j));  constructor 2; auto.
 Qed. 
 
-Corollary Ipred_not i j k : ~ Ipred (i,j) (k,0).
+Corollary Successor_not i j k : ~ Successor (k,0) (i,j).
 Proof.
-  intro H; apply Ipred_inv in H. destruct H; discriminate. 
+  intro H; apply Successor_inv in H. destruct H; discriminate. 
 Qed.
 
 
-Lemma Ipred_succ : forall alpha,  Ipred alpha (succ alpha).
+Lemma Successor_succ : forall alpha,  Successor (succ alpha) alpha.
 Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
@@ -244,12 +243,12 @@ Proof.
      inversion H0;   subst;  inversion H;  subst; lia.
 Qed.
 
-Lemma succ_ok alpha beta : Ipred alpha beta <-> beta = succ alpha.
+Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
-    apply Ipred_inv in H. destruct H;subst. reflexivity.
-  - intros; subst ; apply Ipred_succ.
+    apply Successor_inv in H. destruct H;subst. reflexivity.
+  - intros; subst ; apply Successor_succ.
 Qed.
 
 

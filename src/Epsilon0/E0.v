@@ -479,7 +479,7 @@ Search Lt Succ.
     exists p;
     subst.
     Search Successor.
-    red. red.
+    red. 
      split.
 apply Lt_Succ.
 

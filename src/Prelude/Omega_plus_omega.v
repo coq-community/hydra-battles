@@ -247,9 +247,9 @@ Proof.
 Defined.
 
 
-Arguments Ipred {A} {lt} {sto}  _ _.
 
-Lemma Ipred_inv1 : forall i j, Ipred (inl i) (inl j) -> j = S i. 
+
+Lemma Successor_inv1 : forall i j, Successor  (inl j) (inl i) -> j = S i. 
 Proof.
   destruct 1 as [H H0].
   inversion_clear H.
@@ -262,7 +262,7 @@ Proof.
   destruct H0.
 Qed.
 
-Lemma Ipred_inv2 : forall i j, Ipred (inr i) (inr j) -> j = S i. 
+Lemma Successor_inv2 : forall i j, Successor (inr j) (inr i) -> j = S i. 
 Proof.
   destruct 1 as [H H0].
   inversion_clear H.
@@ -277,7 +277,7 @@ Proof.
   specialize (H0 H2 H3); inversion H0.
 Qed.
 
-Lemma Ipred_inv3 : forall i j, ~ Ipred (inl i) (inr j).
+Lemma Successor_inv3 : forall i j, ~ Successor (inr j) (inl i).
 Proof.
   destruct 1 as [H H0].
 
@@ -287,7 +287,7 @@ Proof.
   specialize (H0 H1 H2);  inversion H0.
 Qed.
 
-Lemma Ipred_inv4 : forall i j, ~ Ipred (inr i) (inl j).
+Lemma Successor_inv4 : forall i j, ~ Successor (inl j) (inr i).
 Proof.
   destruct 1 as [H H0].
   inversion H.
@@ -295,11 +295,11 @@ Qed.
 
 
 
-Lemma omega_not_succ : forall alpha, ~ Ipred alpha omega.
+Lemma omega_not_succ : forall alpha, ~ Successor omega alpha.
 Proof.
  destruct alpha.
-  apply Ipred_inv3.
-  intro H; apply Ipred_inv2 in H.
+  apply Successor_inv3.
+  intro H; apply Successor_inv2 in H.
   discriminate.
 Qed.
 
@@ -326,10 +326,10 @@ Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
-    apply Ipred_inv1 in H. subst. reflexivity.
-    destruct (Ipred_inv3  _ _ H).
-    destruct (Ipred_inv4  _ _ H).
-apply Ipred_inv2 in  H; now subst.
+    apply Successor_inv1 in H. subst. reflexivity.
+    destruct (Successor_inv3  _ _ H).
+    destruct (Successor_inv4  _ _ H).
+apply Successor_inv2 in  H; now subst.
 - intro;subst; now apply Successor_succ.
 Qed.
 

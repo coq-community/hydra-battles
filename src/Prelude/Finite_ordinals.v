@@ -111,7 +111,6 @@ right.
 
 refine (exist _ (exist _ i _) _).
 red.
-red. 
 split; cbn. unfold lt. cbn. Search leb. apply Nat.leb_refl.
 intros.
 destruct z.
