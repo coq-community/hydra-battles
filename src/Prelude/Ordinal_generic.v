@@ -1,7 +1,7 @@
 Require Import RelationClasses Relation_Operators Ensembles.
 Import Relation_Definitions.
 
-Require Export Limits_and_Successors.
+Require Export MoreOrders.
 
 Generalizable All Variables.
 

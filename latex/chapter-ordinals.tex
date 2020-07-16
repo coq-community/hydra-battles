@@ -3,21 +3,79 @@
 \centerline{\LARGE {\bf work in progress!}}
 
 
+The proof of termination of all hydra battles presented in~\cite{KP82} is based
+on \emph{ordinal numbers}.
+From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded ordered sets.
 
+Chapter~\ref{chap:schutte} presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. That formalization is quite complex and technical, so we put it at the end of this document. Fortunately, the ordinals we need to study hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. On the other hand, we hope that chapter~\ref{chap:schutte} will be used
+as a mathematical reference for our constructions: inductive types, functions and predicates.
 
-In this chapter, we introduce on  simple examples the main concepts which are developped later.  We assume the reader to have a very basic experience with the \coq{} proof assistant, for instance with one of the numerous tutorials one can consult on Internet
-(see for instance \url{https://coq.inria.fr/documentation}). A basic experience  with Peano numbers (library \texttt{Arith}) would be useful.
+\section{Ordered types}
 
-The definitions  and theorems we are going to show are just simpler versions (\emph{i.e.} restrictions) of the ones contained in the forthcoming chapters. We hope that this simplicity will help to understand how we represent, compute and reason about ordinal notations.
+The library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
+Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
+
+\begin{Coqsrc}
+Variable A: Type.
+
+  Class StrictOrder (R : relation A) : Prop := {
+    StrictOrder_Irreflexive :> Irreflexive R ;
+    StrictOrder_Transitive :> Transitive R }.
+\end{Coqsrc}
+
+Let \texttt{lt} be a strict order on type $A$. 
+
+\begin{Coqsrc}
+Section A_given.
+  Variables (A : Type)
+            (lt: relation A).
+  
+Local Infix "<" := lt.
+Local Infix "<=" := (clos_refl _ lt).
+\end{Coqsrc}
+
+We define three notions in 
+\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
+
+First, we characterize a least element of $(A,\texttt{lt})$.
+
+\begin{Coqsrc}
+Definition Least `{lt : relation A}
+           {sto : StrictOrder lt} (x : A):=
+  forall y,  clos_refl A lt x y.
+\end{Coqsrc}
+
+\index{Exercises}
+
+\begin{exercise}
+Prove that there exists at most one least element w.r.t. $(A,<)$.  Give instances where no such element exists.
+\end{exercise}
+
+We say that $y$ is a successor of $x$ if $x<y$ and there is no $z$ such that $x<z<y$.
+
+\begin{Coqsrc}
+Definition Successor {sto : StrictOrder lt} (y x : A):=
+  x < y /\ (forall z,  x < z ->  z <  y -> False).
+\end{Coqsrc}
+
+An element of $A$ which is neither the least element nor a successor is called a \emph{limit}.
+
+\begin{Coqsrc}
+Definition Limit {sto : StrictOrder lt}  (x:A)  :=
+  (exists w:A,  w < x) /\
+  (forall y:A, y < x -> exists z:A, y < z /\  z < x).
+\end{Coqsrc}
 
 
 
 \section{Ordinal numbers}
 \index{Maths!Ordinal numbers}
 
-The proof of termination of all hydra battles presented in~\cite{KP82} is based
-on \emph{ordinal numbers}.
-From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded orders.
+
+
+Let us consider how these notions are represented in \coq{}.
+
+
 
 We can also associate to every ordinal $\alpha$ a set whose elements are all ordinals strictly less than $\alpha$. Thus, it is meaningful  to consider \emph{finite}, \emph{infinite}, \emph{demunerable} and \emph{non-countable} ordinals.
 The relation $<$ on ordinals is well-founded, and the order $\leq$ associated with
@@ -25,13 +83,20 @@ $<$ is total.
 
 We cannot cite all the litterature published on ordinals since Cantor's book 
 \cite{cantorbook}, and 
-leave it to the reader to explore the bibliography. Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementaion in \coq{}~\cite{CantorContrib}. 
+leave it to the reader to explore the bibliography. Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementation in \coq{}~\cite{CantorContrib}. 
 
 
 Out of respect of the tradition, the meta-variables for ordinals will be 
  $\alpha$, $\beta$, $\gamma$, etc. 
 
-\subsection{Definitions}
+\subsection{Preliminary Definitions}
+
+The type class \texttt{StrictOrder} is already defined in Standard Library
+(module.
+
+
+
+
 
 \begin{itemize}
 \item Let  $\alpha$ be an ordinal; we say that  $\alpha$ is a \emph{successor} if there exists some ordinal  $\beta$ such that 
@@ -660,27 +725,17 @@ Definition Limit   {A:Type}{lt : relation A}
   exists s : nat -> A, Omega_limit s x.
  \end{Coqsrc}
 
-Let $x$ and $y$ be two terms of type $A$, we say that \emph{$x$ is an immediate predecessor of $y$}
-(or that \emph{$y$ is a  successor of $x$ }) if $x<y$ and there is no $z$ between $x$ and $y$.
+Let $x$ and $y$ be two terms of type $A$, we say that \emph{$y$ is a successor of $x$}
+if $x<y$ and there is no $z$ strictly greater than $x$ and  strictly less than $y$.
 
 
 
 \begin{Coqsrc}
-Definition Ipred {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (x y : A):=
+Definition Successor `{lt : relation A}
+           {sto : StrictOrder lt} (y x : A):=
   lt x y /\ (forall z,  lt x z -> lt z y -> False).
-
-Definition Successor {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (y x : A):= Ipred x y.
 \end{Coqsrc}
 
-
-For instance, 
-we prove that $\omega$ is the limit of the sequence  of finite ordinals.
-
-  \begin{Coqsrc}
-Lemma omega_is_limit: Omega_limit fin omega.
-\end{Coqsrc}
 
 \index{Exercises}
 
