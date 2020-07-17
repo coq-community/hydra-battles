@@ -45,3 +45,18 @@ Class  SubSegment
   subseg_onto : forall y, ltB y b  -> exists x:A, iota x = y}.
 
 
+Class  Isomorphic 
+       `(nA : @OrdinalNotation A ltA stoA compareA)
+       `(nB : @OrdinalNotation B ltB stoB compareB)
+       (f : A -> B)
+       (g : B -> A):=
+  {
+  iso_compare_comm :forall x y : A,  compareB (f x) (f y) =
+                                 compareA x y;
+  iso_inv1 : forall a, g (f a)= a;
+  iso_inv2 : forall b, f (g b) = b}.
+
+  
+  
+
+

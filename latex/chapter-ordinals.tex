@@ -7,10 +7,67 @@ The proof of termination of all hydra battles presented in~\cite{KP82} is based
 on \emph{ordinal numbers}.
 From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded ordered sets.
 
-Chapter~\ref{chap:schutte} presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. That formalization is quite complex and technical, so we put it at the end of this document. Fortunately, the ordinals we need to study hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. On the other hand, we hope that chapter~\ref{chap:schutte} will be used
-as a mathematical reference for our constructions: inductive types, functions and predicates.
+\section{The mathematical point of view}
 
-\section{Ordered types}
+\subsection{Well-ordered sets}
+Let us start with some definitions.
+A  \emph{well-ordered set} is a set provided with a binary relation $<$ which has the following properties.
+\begin{description}
+\item[irreflexivity] : $\forall x\in A, x\not< x$
+\item[transitivity] : $\forall x\,y\,z\in A, x<y \Rightarrow y<z \Rightarrow x<z$
+\item[trichotomy]: $\forall x\,y\in A, x<y \vee x = y \vee y < x$
+\item[well foundedness] $<$ is well-founded (every element of $A$ is accessible)\footnote{In classical mathematics, we would say that there is no infinite sequence $a_1>a_2> \dots a_n> a_{n+1}\dots$ in $A$. Please refer to any documenation on \coq{} for having more details on well-foundedness and accessibility.}.
+
+\end{description}
+
+The best known examples of well-ordered sets are the set $\mathbb{N}$ of natural numbers (with the usual order $<$), as well as any finite segment $[0,i[=\{j\in\mathbb{N}|j<i\}$.
+The disjoint union of two copies of $\mathbb{N}$, \emph{i.e.} the set $\{0,1\}\times\mathbb{N}$ is also well-ordered,
+with respect to the order below:
+
+\begin{align*}
+(i,j) < (i,k) & \;\textbf{if} \; j < k\\
+(0,k) < (1,l) & \;\textbf{for\,any}\;k \;\textbf{and} \; l
+\end{align*}
+
+\subsection{Ordinal numbers}
+
+
+Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have \emph{the same order type} if 
+there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
+$\forall x\,y\in A, x <_A y \Rightarrow b(x) <_B  b(y)$.
+
+Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short \emph{ordinals}) are descriptions (\emph{names}) of the equivalence classes.
+For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
+the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
+
+If we consider an ordinal $\alpha$ as a well-ordered set, then its elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha[$. So, we can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals.
+
+For instance, the elements of $\omega$ are the finite ordinals. $\omega$ is the first infinite ordinal.
+
+We cannot cite all the litterature published on ordinals since Cantor's book 
+\cite{cantorbook}, and 
+leave it to the reader to explore the bibliography. 
+
+
+Chapter~\ref{chap:schutte} presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
+That formalization is quite complex and technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
+
+
+
+Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and any ordinal $\alpha$ is associated with the segment $\mathbb{O}_\alpha$ 
+of all ordinals strictly less than $\alpha$.
+
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations}: Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to
+Schütte's model (work in progress).
+
+
+\section{Ordinal notations in Coq}
+
+Our definition of ordinal notation borrows much material from \coq's standard library.
+
+
+
+\subsection{Ordered types}
 
 The library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
 Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
@@ -23,50 +80,40 @@ Variable A: Type.
     StrictOrder_Transitive :> Transitive R }.
 \end{Coqsrc}
 
-Let \texttt{lt} be a strict order on type $A$. 
+It is usual to classify ordinal numbers in three pairwise disjoint categories: 
+\begin{itemize}
+\item The category containing only the least ordinal (called $0$),
+\item The \emph{successors}: $y$ is a successor of $x$ if $x<y$ and there is no $z$ such that $x<z<y$. 
+\item \emph{Limit}: $x\not=0$ is a limit if $x$ is the least upper bound of the set $\{y :\mathbb{O} | y < x\}$.
+\end{itemize}
+
+
+These notions are defined in the module 
+\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}
+ (for any strict order).
+
 
 \begin{Coqsrc}
-Section A_given.
-  Variables (A : Type)
-            (lt: relation A).
+Variable lt: relation A.
   
-Local Infix "<" := lt.
-Local Infix "<=" := (clos_refl _ lt).
-\end{Coqsrc}
+ Local Infix "<" := lt.
+ Local Infix "<=" := (clos_refl _ lt).
 
-We define three notions in 
-\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
+ Definition Least  {sto : StrictOrder lt} (x : A):= forall y,  clos_refl A lt x y.
 
-First, we characterize a least element of $(A,\texttt{lt})$.
-
-\begin{Coqsrc}
-Definition Least `{lt : relation A}
-           {sto : StrictOrder lt} (x : A):=
-  forall y,  clos_refl A lt x y.
-\end{Coqsrc}
-
-\index{Exercises}
-
-\begin{exercise}
-Prove that there exists at most one least element w.r.t. $(A,<)$.  Give instances where no such element exists.
-\end{exercise}
-
-We say that $y$ is a successor of $x$ if $x<y$ and there is no $z$ such that $x<z<y$.
-
-\begin{Coqsrc}
 Definition Successor {sto : StrictOrder lt} (y x : A):=
   x < y /\ (forall z,  x < z ->  z <  y -> False).
-\end{Coqsrc}
 
-An element of $A$ which is neither the least element nor a successor is called a \emph{limit}.
-
-\begin{Coqsrc}
 Definition Limit {sto : StrictOrder lt}  (x:A)  :=
   (exists w:A,  w < x) /\
   (forall y:A, y < x -> exists z:A, y < z /\  z < x).
 \end{Coqsrc}
 
+\index{Exercises}
 
+\begin{exercise}
+Prove in \coq{} that the three predicates above are pairwise exclusive.  
+\end{exercise}
 
 \section{Ordinal numbers}
 \index{Maths!Ordinal numbers}
@@ -81,9 +128,7 @@ We can also associate to every ordinal $\alpha$ a set whose elements are all ord
 The relation $<$ on ordinals is well-founded, and the order $\leq$ associated with
 $<$ is total.
 
-We cannot cite all the litterature published on ordinals since Cantor's book 
-\cite{cantorbook}, and 
-leave it to the reader to explore the bibliography. Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementation in \coq{}~\cite{CantorContrib}. 
+Let us cite the book by Schütte~\cite{schutte} which contains an axiomatic definition of the set of countable ordinals we used as a mathematical specification of our implementation in \coq{}~\cite{CantorContrib}. 
 
 
 Out of respect of the tradition, the meta-variables for ordinals will be 

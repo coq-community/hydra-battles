@@ -49,6 +49,17 @@ Proof.
    + destruct (Hsucc0 _ Hi (Hlim i)).
 Qed.
 
+Lemma Least_not_Succ  {sto : StrictOrder lt} (x:A) :
+  Least x -> forall z, ~ Successor x z.
+Proof.
+  intros H z [H0 H1]; specialize (H z).
+  inversion H; subst. 
+  -  eapply H1; eauto.
+     now transitivity z.   
+  -  destruct sto; eauto.           
+Qed.
+
+
 Lemma Omega_limit_Limit 
       {sto : StrictOrder lt} (s: nat -> A) (x:A) :
   Omega_limit s x -> Limit x.
