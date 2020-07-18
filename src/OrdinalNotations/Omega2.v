@@ -182,7 +182,10 @@ Proof.
   split.
   - apply lt_wf.
   - apply compare_correct.
-  - destruct alpha as [n p].
+Qed.
+
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega2).
+  - intro alpha; destruct alpha as [n p].
     + destruct p.
       * destruct n.
         --   left; left.
@@ -201,7 +204,7 @@ Proof.
         destruct z. unfold lt; cbn.
         inversion 1; subst;
           inversion 1; subst;try lia.
-Qed.
+Defined.
 
 Lemma lt_eq_lt_dec alpha beta :
   {alpha < beta} + {alpha = beta} + {beta < alpha}.

@@ -92,6 +92,9 @@ Proof.
   split.
   - apply lt_wf.
   - apply compare_correct.
+Qed.
+
+Definition Zero_limit_succ_dec (n:nat) : ZeroLimitSucc_dec (on := FinOrd n).
   - intro alpha;destruct alpha as [i Hi].
     destruct n.
     + discriminate.
@@ -127,7 +130,7 @@ Unshelve.
 Search (_ <? _).
  red . red in Hi. rewrite Nat.ltb_lt in *.
 lia.
-Qed.
+Defined.
 
 Lemma sig_eq_intro {n:nat} (x y : t n) :
   proj1_sig x = proj1_sig y -> x = y.

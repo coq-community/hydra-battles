@@ -207,7 +207,10 @@ Proof.
   split.
   - apply lt_wf.
   - apply compare_correct.
-  - destruct alpha.
+Qed.
+
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
+  - intro alpha; destruct alpha.
     + destruct n.
       * left; left.
         intro x; apply le_0.
@@ -232,7 +235,8 @@ Proof.
       constructor; auto with arith.
       inversion 1; subst.
       inversion 1; subst; lia.
-Qed.
+Defined.
+
 
 
 Lemma lt_eq_lt_dec alpha beta :

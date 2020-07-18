@@ -18,11 +18,19 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
     forall alpha beta:A,
       CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                   (compare alpha beta);
-  ZeroLimitSucc_dec : forall alpha,
+  }.
+
+
+ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}{sto:StrictOrder lt}
+            {compare : A -> A -> comparison}
+            {on : OrdinalNotation sto compare} :=
+            
+    forall alpha,
       {Least alpha}+
       {Limit alpha} +
-      {beta: A | Successor alpha beta}
-  }. 
+      {beta: A | Successor alpha beta}.
+
+ About ZeroLimitSucc_dec.
 
 (** The segment called [O alpha] in Schutte *)
 

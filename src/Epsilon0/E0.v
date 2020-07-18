@@ -436,6 +436,9 @@ Proof.
  split.
  - apply Lt_wf.
  - apply compare_correct.
+Qed.
+
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
  - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
    + subst alpha; left; left; intro beta. destruct beta as [cnf H].
      destruct cnf.

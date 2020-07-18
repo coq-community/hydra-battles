@@ -8,11 +8,14 @@ Search @Nat.compare.
 Search (@well_founded nat).
 
 
-Instance Omega : OrdinalNotation Nat.lt_strorder Nat.compare.
+Global Instance Omega : OrdinalNotation Nat.lt_strorder Nat.compare.
 Proof.
  split.
  - apply Wf_nat.lt_wf.
  - apply Nat.compare_spec.
+Qed.
+
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega).
  - intro x; destruct x.
      + left; left. intro n; destruct n.
       * right.
@@ -20,7 +23,7 @@ Proof.
      + right; exists x. split.
        * auto with arith.
        * lia.
-Qed.
+Defined.
 
 
 

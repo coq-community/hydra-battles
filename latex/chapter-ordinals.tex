@@ -121,7 +121,6 @@ Prove in \coq{} that the three predicates above are pairwise exclusive.
 \subsection{A class for ordinal notations}
 
 Our definition of ordinal notation is inspired by our use of \coq{}: defining inductive data types, predicates, functions, etc, and proving properties of these functions. 
-The following type class describes a well-ordered type, and specifies functions for comparing two ordinals, and checking wether a given  ordinal is $0$, a limit or a successor.
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
@@ -136,17 +135,15 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
          forall alpha beta:A,
           CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                                    (compare alpha beta);
-      ZeroLimitSucc_dec : forall alpha,
-        {Least alpha} +
-        {Limit alpha} +
-        {beta: A | Successor alpha beta}
   }. 
 \end{Coqsrc}
 
 %%%% ICI %%%%%
 
 
-
+\begin{todo}
+Present the method ZeroLimitSucc 
+\end{todo}
 
 Let us consider how these notions are represented in \coq{}.
 

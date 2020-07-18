@@ -3674,29 +3674,13 @@ Proof.
   refine (@mkg0 T2.zero _);  now compute. 
 Defined.
 
-(** To complete
 
-About lt_sto.
 Instance ONG0: OrdinalNotation lt_sto compare.
 Proof.
   split.
+  - apply lt_wf. 
   - apply compare_correct.
-  - apply lt_wf.
-  - destruct x as [v Hv].
-    destruct v.
-    left;left.
- red.
-   Search lt.
-    destruct y.
-     destruct vnf0.
-     replace Hv with vnf_ok0.
-      right.
-apply nfb_proof_unicity.
-  left. 
-   unfold lt; cbn; constructor.
-    
+Qed.
 
-Admitted.
- *)
 
 End G0.
