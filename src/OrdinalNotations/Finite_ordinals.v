@@ -1,6 +1,6 @@
 Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion
-         Ordinal_generic RelationClasses.
+         OrdinalNotations.Definitions  RelationClasses.
 
 Require        Wf_nat.
 
@@ -90,8 +90,8 @@ Qed.
 Global Instance FinOrd (n:nat) : OrdinalNotation (sto n) compare .
 Proof.
   split.
-  - apply compare_correct.
   - apply lt_wf.
+  - apply compare_correct.
   - intro alpha;destruct alpha as [i Hi].
     destruct n.
     + discriminate.

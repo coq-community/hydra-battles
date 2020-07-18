@@ -34,7 +34,7 @@ Import Datatypes.
 
 Require Import T2   term  rpo.
 Require Import Prelude.Restriction.
-Require Import RelationClasses Ordinal_generic. 
+Require Import RelationClasses OrdinalNotations.Definitions. 
 Require Logic.Eqdep_dec.
 
 Set Implicit Arguments.

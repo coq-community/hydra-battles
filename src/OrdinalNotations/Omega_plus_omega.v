@@ -1,5 +1,5 @@
 (**  The ordinal omega + omega *)
-Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic
+Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Definitions
         Relation_Operators Disjoint_Union.
 
 Import Relations.
@@ -205,12 +205,11 @@ Qed.
 Instance OmegaPlusOmega : OrdinalNotation lt_strorder compare.
 Proof.
   split.
-  - apply compare_correct.
   - apply lt_wf.
+  - apply compare_correct.
   - destruct alpha.
     + destruct n.
       * left; left.
-        
         intro x; apply le_0.
       * right; exists (inl n).
         split.

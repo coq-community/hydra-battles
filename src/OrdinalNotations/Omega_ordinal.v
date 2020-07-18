@@ -1,7 +1,7 @@
 (**  The ordinal omega  *)
-Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic
+Require Import Arith Compare_dec Lia  OrdinalNotations.Definitions
         Finite_ordinals.
-Import Relations.
+Import Relations RelationClasses.
 
 Search (@StrictOrder nat).
 Search @Nat.compare.
@@ -11,8 +11,8 @@ Search (@well_founded nat).
 Instance Omega : OrdinalNotation Nat.lt_strorder Nat.compare.
 Proof.
  split.
- - apply Nat.compare_spec.
  - apply Wf_nat.lt_wf.
+ - apply Nat.compare_spec.
  - intro x; destruct x.
      + left; left. intro n; destruct n.
       * right.

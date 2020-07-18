@@ -12,15 +12,16 @@ Generalizable All Variables.
 
 Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
       (compare : A -> A -> comparison)  :=
-  { compare_correct :
-      forall alpha beta:A,
-        CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
-                    (compare alpha beta);
-    wf : well_founded lt;
-    ZeroLimitSucc_dec : forall alpha,
-        {Least alpha}+
-        {Limit alpha} +
-        {beta: A | Successor alpha beta}
+  {
+  wf : well_founded lt;
+  compare_correct :
+    forall alpha beta:A,
+      CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
+                  (compare alpha beta);
+  ZeroLimitSucc_dec : forall alpha,
+      {Least alpha}+
+      {Limit alpha} +
+      {beta: A | Successor alpha beta}
   }. 
 
 (** The segment called [O alpha] in Schutte *)

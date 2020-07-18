@@ -31,6 +31,7 @@ with respect to the order below:
 
 \subsection{Ordinal numbers}
 
+\index{Maths!Ordinal numbers}
 
 Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have \emph{the same order type} if 
 there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
@@ -88,9 +89,9 @@ It is usual to classify ordinal numbers in three pairwise disjoint categories:
 \end{itemize}
 
 
-These notions are defined in the module 
-\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}
- (for any strict order).
+These notions are defined (for any strict order) in the module 
+\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
+ 
 
 
 \begin{Coqsrc}
@@ -115,8 +116,35 @@ Definition Limit {sto : StrictOrder lt}  (x:A)  :=
 Prove in \coq{} that the three predicates above are pairwise exclusive.  
 \end{exercise}
 
-\section{Ordinal numbers}
-\index{Maths!Ordinal numbers}
+
+
+\subsection{A class for ordinal notations}
+
+Our definition of ordinal notation is inspired by our use of \coq{}: defining inductive data types, predicates, functions, etc, and proving properties of these functions. 
+The following type class describes a well-ordered type, and specifies functions for comparing two ordinals, and checking wether a given  ordinal is $0$, a limit or a successor.
+
+\vspace{4pt}
+\noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
+
+
+
+\begin{Coqsrc}
+Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
+      (compare : A -> A -> comparison)  :=
+  {   wf : well_founded lt;
+      compare_correct :
+         forall alpha beta:A,
+          CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
+                                   (compare alpha beta);
+      ZeroLimitSucc_dec : forall alpha,
+        {Least alpha} +
+        {Limit alpha} +
+        {beta: A | Successor alpha beta}
+  }. 
+\end{Coqsrc}
+
+%%%% ICI %%%%%
+
 
 
 
@@ -171,35 +199,6 @@ Please note that the set of countable ordinals is not countable.
 
 Without ambiguity we will often denote the segment $\mathbb{O}_\alpha$ by just $\alpha$.
  
-
-
-\section{Ordinal notations}
-In a proof assistant like \coq{},  it is useful to represent ordinals through some data-type, and make arithmetical operations and comparison effectively implemented  through certified functions.
-
-Of course, since the set of all countable ordinals is not countable, it cannot be represented by a language of finite terms. So, we will study ordinal notations just  for countable segments.
-
-\subsection{A type class for ordinal notations}
-
-Let $<$ be some relation on a given type $A$. In order to build an ordinal  notation 
-system out of $(A,<)$, we require $<$ to be a strict, well-founded order, and that 
-the reflexive closure of $<$ is a total order on $A$.
-
-\index{Coq!Techniques!Type classes}
-
-Using \coq's standard library and type classes, we propose the following definition.
-
-\vspace{4pt}
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}}
-
-\begin{Coqsrc}
-Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
-      (compare : A -> A -> comparison) :=
-  { compare_correct :
-      forall alpha beta:A,
-        CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
-                                 (compare alpha beta);
-    wf : well_founded lt}.  
-\end{Coqsrc}
 
 
 

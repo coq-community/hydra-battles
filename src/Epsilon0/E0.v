@@ -12,7 +12,7 @@ Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded  Operators_Properties
         Prelude.More_Arith  Prelude.Restriction
         not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
-        Ordinal_generic.
+        OrdinalNotations.Definitions.
 
 
 Require  Export T1 Hessenberg.
@@ -434,8 +434,8 @@ Qed.
 Instance Epsilon0 : OrdinalNotation Lt_sto compare.
 Proof.
  split.
- - apply compare_correct.
  - apply Lt_wf.
+ - apply compare_correct.
  - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
    + subst alpha; left; left; intro beta. destruct beta as [cnf H].
      destruct cnf.

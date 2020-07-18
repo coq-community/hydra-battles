@@ -1,5 +1,6 @@
 (**  The ordinal omega * omega *)
-Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic.
+Require Import Arith Compare_dec Lia Simple_LexProd
+        OrdinalNotations.Definitions.
 Import Relations.
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
@@ -179,15 +180,14 @@ Qed.
 Instance Omega2 : OrdinalNotation lt_strorder compare.
 Proof.
   split.
-  - apply compare_correct.
   - apply lt_wf.
+  - apply compare_correct.
   - destruct alpha as [n p].
     + destruct p.
       * destruct n.
         --   left; left.
              Search (0,0). exact le_0.
-        --
-          left;right.
+        -- left;right.
           split.
           exists (0,0).
           constructor 1; auto with arith.
