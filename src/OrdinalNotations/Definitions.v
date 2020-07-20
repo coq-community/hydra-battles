@@ -10,20 +10,25 @@ Generalizable All Variables.
 
 *)
 
-Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
+Class OrdinalNotation {A:Type}(lt: relation A)
       (compare : A -> A -> comparison)  :=
   {
-  wf : well_founded lt;
+  sto :> StrictOrder lt;
+wf :> well_founded lt;
   compare_correct :
     forall alpha beta:A,
       CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                   (compare alpha beta);
   }.
 
-
- Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}{sto:StrictOrder lt}
+Definition comp {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
-            {on : OrdinalNotation sto compare} :=
+            {on : OrdinalNotation lt compare} := compare.
+
+
+ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : OrdinalNotation lt compare} :=
             
     forall alpha,
       {Least alpha}+
@@ -34,7 +39,7 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
 
 (** The segment called [O alpha] in Schutte *)
 
-Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
+Definition bigO `{nA : @OrdinalNotation A ltA compareA}
            (a: A) : Ensemble A :=
   fun x: A => ltA x a.
 
@@ -43,8 +48,8 @@ Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
     the interval [0,b[ *)
 
 Class  SubSegment 
-       `(nA : @OrdinalNotation A ltA stoA compareA)
-       `(nB : @OrdinalNotation B ltB stoB compareB)
+       `(nA : @OrdinalNotation A ltA  compareA)
+       `(nB : @OrdinalNotation B ltB  compareB)
        (b :  B)
        (iota : A -> B):=
   {
@@ -55,8 +60,8 @@ Class  SubSegment
 
 
 Class  Isomorphic 
-       `(nA : @OrdinalNotation A ltA stoA compareA)
-       `(nB : @OrdinalNotation B ltB stoB compareB)
+       `(nA : @OrdinalNotation A ltA compareA)
+       `(nB : @OrdinalNotation B ltB  compareB)
        (f : A -> B)
        (g : B -> A):=
   {
@@ -68,4 +73,4 @@ Class  Isomorphic
   
   
 
-
+ 

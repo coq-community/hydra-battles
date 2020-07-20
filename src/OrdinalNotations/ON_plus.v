@@ -1,4 +1,4 @@
-(**  The ordinal omega + omega *)
+
 Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Definitions
         Relation_Operators Disjoint_Union.
 
@@ -9,15 +9,12 @@ Coercion is_true: bool >-> Sortclass.
 
 Section Defs.
 
-  Context `(ltA: relation A) (stA : StrictOrder ltA)
+  Context `(ltA: relation A)
           (compareA : A -> A -> comparison)
-          (NA: OrdinalNotation stA compareA).
-  Context `(ltB: relation B) (stB : StrictOrder ltB)
+          (NA: OrdinalNotation ltA compareA).
+  Context `(ltB: relation B)
           (compareB : B -> B -> comparison)
-          (NB: OrdinalNotation stB compareB).
-
-
-
+          (NB: OrdinalNotation ltB compareB).
 
 
 Definition t := (A + B)%type.
@@ -86,10 +83,11 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Global Instance ON_plus : OrdinalNotation lt_strorder compare.
+Global Instance ON_plus : OrdinalNotation lt compare.
 Proof.
   split.
-  - apply lt_wf.
+  - apply lt_strorder.
+  -  apply lt_wf.
   - apply compare_correct.
 Qed.
 
@@ -106,3 +104,26 @@ Defined.
 
 
 End Defs.
+
+About ON_plus.
+
+Arguments ON_plus {A ltA  compareA} _ {B ltB  compareB} _.
+
+Require Import Omega_ordinal.
+
+Check ON_plus Omega Omega.
+
+Definition Omega_plus_Omega := ON_plus Omega Omega.
+
+Existing Instance Omega_plus_Omega.
+
+About lt_eq_lt_dec.
+
+Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
+
+
+About compare.
+
+
+
+Compute comp (inl 8) (inr 4).

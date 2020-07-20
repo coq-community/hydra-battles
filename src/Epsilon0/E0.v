@@ -431,9 +431,10 @@ Qed.
 
 
 
-Instance Epsilon0 : OrdinalNotation Lt_sto compare.
+Instance Epsilon0 : OrdinalNotation Lt compare.
 Proof.
  split.
+ - apply Lt_sto.
  - apply Lt_wf.
  - apply compare_correct.
 Qed.

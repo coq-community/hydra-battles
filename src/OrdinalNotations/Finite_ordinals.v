@@ -87,9 +87,10 @@ Qed.
 
 
 
-Global Instance FinOrd (n:nat) : OrdinalNotation (sto n) compare .
+Global Instance FinOrd (n:nat) : OrdinalNotation  (@lt n) compare .
 Proof.
   split.
+ - apply sto.
   - apply lt_wf.
   - apply compare_correct.
 Qed.

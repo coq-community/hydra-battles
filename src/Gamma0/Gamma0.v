@@ -3675,9 +3675,10 @@ Proof.
 Defined.
 
 
-Instance ONG0: OrdinalNotation lt_sto compare.
+Instance ONG0: OrdinalNotation lt  compare.
 Proof.
   split.
+  - apply lt_sto.
   - apply lt_wf. 
   - apply compare_correct.
 Qed.
