@@ -33,18 +33,18 @@ Schutte's axioms, and the other ones allow us to work in that "classical" framew
 ** Schutte's Axioms 
 
  We consider a type [ON] (Ordinal numbers), well-ordered by some relation 
-[lt], and such that every subset [X] of [ON] is countable iff [X] is bounded.
+ [lt], and such that every subset [X] of [Ord] is countable iff [X] is bounded.
 
 
 [[
 
 Axiom AX1 : WO lt.
 
-Axiom AX2 : forall X: Ensemble ON, (exists a,  (forall y, X y -> y < a)) ->
+Axiom AX2 : forall X: Ensemble Ord, (exists a,  (forall y, X y -> y < a)) ->
                                    countable X.
 
 
-Axiom AX3 : forall X : Ensemble ON,
+Axiom AX3 : forall X : Ensemble Ord,
               countable X -> 
               exists a,  forall y, X y -> y < a.
 
@@ -74,7 +74,7 @@ Axiom epsilon_statement :
 *** Needed for [epsilon] to work properly.
 
 [[
-Axiom inh_ON : inhabited ON.
+Axiom inh_Ord : inhabited Ord.
 
 ]]
 

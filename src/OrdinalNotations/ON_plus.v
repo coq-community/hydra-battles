@@ -125,5 +125,13 @@ Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
 About compare.
 
 
+About lt.
+Check on_lt (inr 6) (inr 8).
 
-Compute comp (inl 8) (inr 4).
+Compute on_compare (inl 8) (inr 4).
+
+Open Scope ON_scope.
+
+Goal inl 7 < inr 0.
+constructor.
+Qed.

@@ -54,7 +54,7 @@ Proof.
 Qed.
 
 
-Example omega_In_epsilon0  : Ensembles.In _ epsilon_0 omega.
+Example omega_In_epsilon0  : Ensembles.In  epsilon_0 omega.
 Proof.  repeat    constructor. Qed.
 
 

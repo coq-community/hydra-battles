@@ -23,10 +23,10 @@ For instance, the Cantor Normal Form of [epsilon0] is just [epsilon0 :: nil].
 
 *)
 
-Definition cnf_t := list ON.
+Definition cnf_t := list Ord.
 
 
-Fixpoint eval (l : cnf_t) : ON :=
+Fixpoint eval (l : cnf_t) : Ord :=
   match l with nil => zero
               | beta :: l' => phi0 beta + eval l'
   end.
@@ -35,14 +35,14 @@ Definition sorted (l: cnf_t) :=
   LocallySorted (fun alpha beta => beta <= alpha) l.
 
 
-Definition is_cnf_of (alpha : ON)(l : cnf_t) : Prop :=
+Definition is_cnf_of (alpha : Ord)(l : cnf_t) : Prop :=
   sorted l /\ alpha = eval l.
 
 
-Definition exponents_lt (alpha: ON) :=
+Definition exponents_lt (alpha: Ord) :=
         Forall (fun beta =>  beta < alpha).
 
-Definition exponents_le (alpha : ON) :=
+Definition exponents_le (alpha : Ord) :=
         Forall (fun beta => beta <= alpha).
 
 
@@ -90,7 +90,7 @@ Qed.
 
 
 
-Lemma cnf_of_ap (alpha : ON) :
+Lemma cnf_of_ap (alpha : Ord) :
   In AP alpha -> exists l,  is_cnf_of alpha l.
 Proof.
  intros H;  case phi0_ordering.
@@ -101,7 +101,7 @@ Proof.
 Qed.
 
 
-Lemma sorted_lt_lt (beta: ON) : forall l alpha,
+Lemma sorted_lt_lt (beta: Ord) : forall l alpha,
      sorted (cons alpha l) -> alpha <  beta ->
      eval (cons alpha l) < phi0 beta.
  Proof.
@@ -264,7 +264,7 @@ Qed.
   (Proof by transfinite induction)
  *)
 
-Theorem cnf_exists (alpha : ON) :
+Theorem cnf_exists (alpha : Ord) :
   exists l: cnf_t, is_cnf_of alpha l.
 Proof.
  case (le_eq_or_lt   (zero_le  alpha)).
@@ -341,7 +341,7 @@ Qed.
 
 (** *** The main result *)
 
-Theorem cnf_exists_unique (alpha:ON) :
+Theorem cnf_exists_unique (alpha:Ord) :
   exists! l: cnf_t, is_cnf_of alpha l.
 Proof.
     destruct (cnf_exists alpha) as [l Hl]; exists l; split; auto.

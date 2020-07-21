@@ -18,7 +18,7 @@ Notation "alpha + beta " := (plus alpha beta) : schutte_scope.
 *)
                        
 
-Fixpoint mult_Sn (alpha:ON)(n:nat){struct n} :ON :=
+Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
  match n with 0 => alpha
             | S p => mult_Sn alpha p + alpha
  end.
@@ -37,7 +37,7 @@ Notation "alpha * n" := (mult_n alpha n) : schutte_scope.
 *)
 
 
-Lemma Unbounded_ge (alpha : ON)  :   Unbounded (ge alpha).
+Lemma Unbounded_ge (alpha : Ord)  :   Unbounded (ge alpha).
 Proof with auto with schutte.
   red. intros   x ; tricho alpha x H3.
  -  exists (succ x);split ...
@@ -49,7 +49,7 @@ Proof with auto with schutte.
   +  apply lt_trans with alpha ...
 Qed.
 
-Lemma ge_o_segment (alpha : ON) :
+Lemma ge_o_segment (alpha : Ord) :
  the_ordering_segment (ge alpha) = ordinal.
 Proof.
   intros;apply segment_unbounded.
@@ -69,7 +69,7 @@ Proof.
         apply Unbounded_ge;auto.
 Qed.
 
-Lemma plus_ordering (alpha : ON) :
+Lemma plus_ordering (alpha : Ord) :
   ordering_function (plus alpha)
                     ordinal
                     (ge alpha).
@@ -78,16 +78,16 @@ Proof.
     rewrite  ge_o_segment;auto.
 Qed.
 
-Lemma plus_elim (alpha : ON) :
-  forall P : (ON->ON)->Prop,
-    (forall f: ON->ON, 
+Lemma plus_elim (alpha : Ord) :
+  forall P : (Ord->Ord)->Prop,
+    (forall f: Ord->Ord, 
         ordering_function f ordinal (ge alpha)-> P f) ->
     P (plus alpha).
 Proof.
  intros  P H0; now apply H0, plus_ordering.
 Qed.
 
-Lemma normal_plus_alpha (alpha : ON) : 
+Lemma normal_plus_alpha (alpha : Ord) : 
   normal (plus alpha) (ge alpha).
 Proof.
  unfold plus;pattern (ord (ge alpha)).
@@ -105,7 +105,7 @@ Qed.
 (** ** Basic properries of addition 
  *)
 
-Lemma alpha_plus_zero (alpha: ON):   alpha + zero = alpha.
+Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha.
 Proof.
  pattern  (plus alpha); apply plus_elim;eauto.
  intros f H0 ; case (order_function_least_least H0).
@@ -117,7 +117,7 @@ Proof.
      apply lt_trans with (f zero);auto.
 Qed.
 
-Remark ge_zero : (ge zero : Ensemble ON) = ordinal.
+Remark ge_zero : (ge zero : Ensemble Ord) = ordinal.
 Proof with eauto with schutte.
   apply Extensionality_Ensembles.
   split.
@@ -126,7 +126,7 @@ Proof with eauto with schutte.
 Qed.
 
 
-Lemma zero_plus_alpha (alpha : ON) : zero + alpha = alpha.
+Lemma zero_plus_alpha (alpha : Ord) : zero + alpha = alpha.
 Proof with auto with schutte.
   pattern (plus zero);  apply plus_elim ...
  intros f H0; assert (H1:ordering_function (fun o => o) ordinal ordinal).
@@ -139,14 +139,14 @@ Proof with auto with schutte.
 Qed.
 
 
-Lemma le_plus_l (alpha beta : ON) : alpha <= alpha + beta.
+Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta.
 Proof.
   pattern alpha at 1;  rewrite  <- alpha_plus_zero;auto.
   pattern (plus alpha);apply plus_elim;auto.
   intros;eapply ordering_function_mono_weak;eauto with schutte.
 Qed.
 
-Lemma le_plus_r (alpha beta : ON) :  beta <= alpha + beta.
+Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta.
 Proof.
  pattern (plus alpha);  apply plus_elim;auto.
  intros; eapply ordering_le; eauto.  
@@ -154,7 +154,7 @@ Proof.
 Qed.
 
 
-Lemma plus_mono_r (alpha beta gamma : ON) : 
+Lemma plus_mono_r (alpha beta gamma : Ord) : 
     beta < gamma -> alpha + beta < alpha + gamma.
 Proof.
  intro  H; pattern (plus alpha); apply plus_elim;auto.
@@ -162,7 +162,7 @@ Proof.
 Qed.
 
  
-Lemma plus_mono_r_weak (alpha beta gamma : ON) :
+Lemma plus_mono_r_weak (alpha beta gamma : Ord) :
   beta <= gamma ->  alpha + beta <= alpha + gamma.
 Proof.
   intros  H;  case (le_disj H).
@@ -171,7 +171,7 @@ Proof.
 Qed.
 
 
-Lemma plus_reg_r (alpha beta gamma : ON) :
+Lemma plus_reg_r (alpha beta gamma : Ord) :
   alpha + beta = alpha + gamma  ->  beta = gamma.
 Proof with trivial.
  intros  H;   tricho beta gamma H0 ...
@@ -182,7 +182,7 @@ Proof with trivial.
 Qed.
 
 
-Lemma plus_of_succ (alpha beta : ON) :
+Lemma plus_of_succ (alpha beta : Ord) :
     alpha + (succ beta) = succ (alpha + beta).
 Proof with trivial.
  pattern (plus alpha); apply plus_elim ...
@@ -222,7 +222,7 @@ Proof.
 Qed. 
 
 
-Lemma alpha_plus_sup (alpha : ON) (A : Ensemble ON) :
+Lemma alpha_plus_sup (alpha : Ord) (A : Ensemble Ord) :
     Inhabited _ A ->
     countable A ->
     alpha + |_| A = |_| (image A (plus alpha)).
@@ -233,7 +233,7 @@ Proof.
 Qed.
 
 
-Lemma plus_limit (alpha beta : ON)
+Lemma plus_limit (alpha beta : Ord)
   : is_limit beta ->
     alpha + beta =  |_| (image (members beta) (plus alpha)).
 Proof.
@@ -305,7 +305,7 @@ Proof.
 Qed.
 
 
-Lemma minus_exists (alpha beta : ON) :
+Lemma minus_exists (alpha beta : Ord) :
   alpha <= beta ->
   exists gamma, alpha + gamma = beta.
 Proof.
@@ -317,16 +317,16 @@ Qed.
 
 
 Section proof_of_associativity.
- Variables alpha beta : ON.
+ Variables alpha beta : Ord.
  
-Lemma plus_assoc1 (gamma : ON) :
+Lemma plus_assoc1 (gamma : Ord) :
   alpha + beta <= alpha + (beta + gamma) .
 Proof.
  intros;apply plus_mono_r_weak;auto.
  -  apply le_plus_l; auto.
 Qed.
 
-Lemma plus_assoc2 (gamma : ON) :
+Lemma plus_assoc2 (gamma : Ord) :
     alpha + beta <= gamma ->
     exists khi,  gamma = alpha + (beta + khi).
 Proof.
@@ -373,14 +373,14 @@ Proof.
  - apply of_g.
 Qed.
 
-Lemma plus_assoc3 (gamma : ON) :
+Lemma plus_assoc3 (gamma : Ord) :
   f_alpha_beta  gamma =  g_alpha_beta gamma.
 Proof.
   case of_u; intros H0 H1; apply H1; auto.
   split.
 Qed.
 
-Lemma plus_assoc' (gamma : ON) :
+Lemma plus_assoc' (gamma : Ord) :
   alpha + (beta + gamma) = (alpha + beta) + gamma.
 Proof.
  intros; generalize plus_assoc3; unfold f_alpha_beta, g_alpha_beta.
@@ -389,13 +389,13 @@ Qed.
 
 End proof_of_associativity.
  
-Theorem plus_assoc (alpha beta gamma : ON) :
+Theorem plus_assoc (alpha beta gamma : Ord) :
   alpha + (beta + gamma) = (alpha + beta) + gamma.
 Proof.
   apply plus_assoc'; auto.
 Qed.
 
-Lemma one_plus_ge_omega (alpha : ON) :
+Lemma one_plus_ge_omega (alpha : Ord) :
   omega <= alpha ->  1 + alpha = alpha. 
 Proof.
  intros  H.
@@ -404,7 +404,7 @@ Proof.
  rewrite plus_assoc;auto with schutte; now rewrite one_plus_omega.
 Qed.
 
-Lemma finite_plus_ge_omega (n : nat) (alpha : ON) :
+Lemma finite_plus_ge_omega (n : nat) (alpha : Ord) :
   omega <= alpha -> n + alpha = alpha.
 Proof.
  induction n.

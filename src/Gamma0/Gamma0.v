@@ -1990,8 +1990,7 @@ Proof.
     + red; intros; unfold restrict in *; tauto.
     + apply nf_Wf; tauto.
   -  destruct 1; intros; eapply X; eauto.
-     intros; apply X0; auto. 
-     + red; auto.     
+     
   - red;auto. 
 Defined.
 

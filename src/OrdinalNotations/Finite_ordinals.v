@@ -211,7 +211,7 @@ Fail Goal lt alpha1 gamma1.
 Example i2 : lt (iota_ij  (le_n 8) alpha1) gamma1.
 Proof. reflexivity. Qed.
 
-Example Ex1 : In _ (bigO beta1) alpha1.
+Example Ex1 : In  (bigO beta1) alpha1.
 Proof. reflexivity. Qed.
 
 (** Hide before compiling the module 

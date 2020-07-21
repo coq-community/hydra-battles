@@ -22,7 +22,7 @@ Import List  PartialFun Ensembles.
 
 
 
-Fixpoint inject (t:T1) : ON :=
+Fixpoint inject (t:T1) : Ord :=
  match t with T1.zero => zero
          | T1.ocons a n b =>
            AP._phi0 (inject a) * S n + inject b
@@ -80,7 +80,7 @@ Qed.
 
 (* begin hide *)
 
-Lemma phi0_mult_lt_phi0 (alpha beta : ON) :
+Lemma phi0_mult_lt_phi0 (alpha beta : Ord) :
     alpha < beta ->
     forall n,  (AP._phi0 alpha) * S n  < AP._phi0 beta.
 Proof.
@@ -278,7 +278,7 @@ Qed.
 
 Section Equations_for_addition.
 
-Lemma plus_alpha_mult_phi0 (alpha beta : ON)  (H: alpha < AP._phi0 beta)
+Lemma plus_alpha_mult_phi0 (alpha beta : Ord)  (H: alpha < AP._phi0 beta)
 (n : nat) : alpha + mult_Sn (AP._phi0 beta) n = mult_Sn (AP._phi0 beta) n.
 Proof.
   induction n.
@@ -286,7 +286,7 @@ Proof.
   - simpl;  rewrite plus_assoc; now rewrite IHn.
 Qed.
 
-Lemma mult_Sn_dist (alpha : ON) (n p : nat) :
+Lemma mult_Sn_dist (alpha : Ord) (n p : nat) :
   mult_Sn alpha (S (n + p)) = mult_Sn alpha p + mult_Sn alpha n.
 Proof.
   induction n; simpl.
@@ -317,7 +317,7 @@ where "alpha + beta" := (plus alpha beta) : t1_scope.
 
   
 
-Variables (a b c d : ON) (n p : nat).
+Variables (a b c d : Ord) (n p : nat).
 
 Hypotheses (Hnfa : b < AP._phi0 a)
            (Hnfc : d < AP._phi0 c).
@@ -469,9 +469,9 @@ Qed.
 
 
 
-Lemma inject_lt_epsilon0_ex_cnf  (alpha : ON) :
+Lemma inject_lt_epsilon0_ex_cnf  (alpha : Ord) :
   forall (H  : alpha < epsilon0)
- (l: list ON),  is_cnf_of alpha l ->
+ (l: list Ord),  is_cnf_of alpha l ->
                 exists t: T1,  nf t /\ inject t = eval l.
 Proof.
   pattern alpha; apply well_founded_induction with (R:=lt).
@@ -512,7 +512,7 @@ Proof.
 Qed.
 
 
-Theorem inject_lt_epsilon0_ex  (alpha : ON) (H  : alpha < epsilon0) :
+Theorem inject_lt_epsilon0_ex  (alpha : Ord) (H  : alpha < epsilon0) :
          exists t: T1,  nf t /\ inject t = alpha.
 Proof.
   destruct (cnf_exists alpha) as [l Hl].
@@ -522,7 +522,7 @@ Proof.
  Qed.
 
 
-Theorem inject_lt_epsilon0_ex_unique  (alpha : ON) (H : alpha < epsilon0) :
+Theorem inject_lt_epsilon0_ex_unique  (alpha : Ord) (H : alpha < epsilon0) :
                         exists! t: T1,  nf t /\ inject t =  alpha.
 Proof.
   destruct (inject_lt_epsilon0_ex alpha H ) as [t [H0 H1]].
@@ -542,4 +542,20 @@ Proof.
        exists x; auto.
   -  intros x x' Hx Hx' H; apply inject_injective; auto.
 Qed.
-  
+
+Require Import OrdinalNotations.Definitions. 
+Generalizable All Variables.
+
+
+Instance Epsilon0_correct :
+  Notation_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+Proof.
+  split.
+  - intro a; apply embedding; red; apply cnf_ok.
+  - intros; destruct (inject_lt_epsilon0_ex_unique _ H) as [x [[H0 H1] H2]].
+    exists (mkord H0);now cbn.
+  -intros a b; destruct (compare_correct a b).
+   + now subst.
+   + apply inject_mono;destruct H; tauto.
+   + apply inject_mono;  destruct H; tauto.
+Qed.

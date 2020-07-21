@@ -29,16 +29,16 @@ Open Scope schutte_scope.
 
 (**   The type of countable ordinal numbers  *)
 
-Parameter ON : Type.
-Parameter lt : relation ON.
+Parameter Ord : Type.
+Parameter lt : relation Ord.
 Notation "a < b" := (lt a b): schutte_scope.
 
 
-Definition ordinal := Full_set ON.
+Definition ordinal := Full_set Ord.
 Hint Unfold ordinal : schutte.
 
 (* begin hide *)
-Lemma ordinal_ok : forall a : ON, ordinal a.
+Lemma ordinal_ok : forall a : Ord, ordinal a.
 Proof.
   split.
 Qed.
@@ -49,7 +49,7 @@ Hint Resolve ordinal_ok : schutte.
 
 (** * The three axioms by Schutte *)
 
-(** First Schutte's axiom  : ON is well-ordered wrt lt *)
+(** First Schutte's axiom  : Ord is well-ordered wrt lt *)
 
 Axiom AX1 : WO lt.
 Hint Resolve AX1 : schutte. 
@@ -58,28 +58,28 @@ Global Instance WO_ord : WO  lt := AX1.
 
 (** Stuff for using Coq.Logic.Epsilon *)
   
-Axiom inh_ON : inhabited ON.
+Axiom inh_Ord : inhabited Ord.
 
-Instance InH_ON : InH ON.
+Instance InH_Ord : InH Ord.
 Proof.
-  exact inh_ON.
+  exact inh_Ord.
 Qed.
 
 
 
-Instance Inh_OSets : InH (Ensemble ON).
+Instance Inh_OSets : InH (Ensemble Ord).
 Proof.
   split; apply Empty_set.
 Qed.
 
-Instance Inh_ON_ON : InH (ON -> ON).
+Instance Inh_Ord_Ord : InH (Ord -> Ord).
 Proof.
-  split;  exact (fun (alpha:ON) => alpha).
+  split;  exact (fun (alpha:Ord) => alpha).
 Qed.
 
 
 
-Hint Resolve  AX1 Inh_ON_ON Inh_OSets inh_ON : schutte.
+Hint Resolve  AX1 Inh_Ord_Ord Inh_OSets inh_Ord : schutte.
 
 Definition le := Le lt.
 
@@ -89,14 +89,14 @@ Notation "a <= b" := (le a b): schutte_scope.
 
 (** Second and third axioms from Schutte 
 
-A subset X of ON is bounded iff X is countable *)
+A subset X of Ord is bounded iff X is countable *)
 
 
-Axiom AX2 : forall X: Ensemble ON, (exists a,  (forall y, In X y -> y < a)) ->
+Axiom AX2 : forall X: Ensemble Ord, (exists a,  (forall y, In X y -> y < a)) ->
                                    countable X.
 
 
-Axiom AX3 : forall X : Ensemble ON,
+Axiom AX3 : forall X : Ensemble Ord,
               countable X -> 
               exists a,  forall y, In X y -> y < a.
 
@@ -104,10 +104,10 @@ Axiom AX3 : forall X : Ensemble ON,
 (** * First definitions  
 *)
 
-Definition ge alpha : Ensemble ON := fun beta => alpha <= beta.
+Definition ge alpha : Ensemble Ord := fun beta => alpha <= beta.
 
-Definition Unbounded (X : Ensemble ON) :=
-  forall x: ON,  exists y, In X y /\ x < y.
+Definition Unbounded (X : Ensemble Ord) :=
+  forall x: Ord,  exists y, In X y /\ x < y.
 
  
 
@@ -118,19 +118,19 @@ Definition Unbounded (X : Ensemble ON) :=
 
 Definition zero := the_least ordinal.
 
-Definition succ (alpha : ON) := the_least (fun beta => alpha < beta).
+Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
 
 (** Finite ordinals *)
 
 Reserved Notation "'F' n" (at level 29) .
 
-Fixpoint finite (i:nat) : ON :=
+Fixpoint finite (i:nat) : Ord :=
   match i with 0 => zero
             | S i => succ (F i)
   end
 where "'F' i" := (finite i)  : schutte_scope.
 
-Coercion finite : nat >-> ON.
+Coercion finite : nat >-> Ord.
 
 Definition is_finite  := seq_range finite.
 
@@ -138,14 +138,14 @@ Definition is_finite  := seq_range finite.
 
 Definition sup_spec X lambda := is_lub ordinal lt X lambda.
 
-Definition sup (X: Ensemble ON) : ON  := the  (sup_spec X).
+Definition sup (X: Ensemble Ord) : Ord  := the  (sup_spec X).
 
 Notation "'|_|' X" := (sup X) (at level 29) : schutte_scope.
 
 
 (**  Limit of omega-sequences *)
 
-Definition omega_limit (s:nat->ON) : ON 
+Definition omega_limit (s:nat->Ord) : Ord 
   := |_| (seq_range s).
 
 Definition _omega := omega_limit finite.
@@ -154,28 +154,28 @@ Notation "'omega'" := (_omega) : schutte_scope.
 
 (** Successor and limit ordinals *)
 
-Definition is_succ (alpha:ON) := exists beta, alpha = succ beta.
+Definition is_succ (alpha:Ord) := exists beta, alpha = succ beta.
 
-Definition is_limit (alpha:ON) := alpha <> zero /\ ~ is_succ alpha.
+Definition is_limit (alpha:Ord) := alpha <> zero /\ ~ is_succ alpha.
 
 (** Ordinals considered as sets *)
 
-Definition members (a:ON) := (fun b => b < a).
+Definition members (a:Ord) := (fun b => b < a).
 
-Definition set_eq (X Y: ON -> Prop) := forall a,  (X a <-> Y a).
+Definition set_eq (X Y: Ord -> Prop) := forall a,  (X a <-> Y a).
 
 (** Induction (after Schutte) *)
 
-Definition progressive (P : ON -> Prop) : Prop :=
+Definition progressive (P : Ord -> Prop) : Prop :=
   forall a, (forall b,  b < a -> P b) -> P a.
 
 
-Definition Closed (B : Ensemble ON) : Prop := 
+Definition Closed (B : Ensemble Ord) : Prop := 
   forall M, Included M B -> Inhabited _ M -> countable M ->
                             In B (|_| M).
 
 
-Definition  continuous (f:ON->ON)(A B : Ensemble ON) : Prop :=
+Definition  continuous (f:Ord->Ord)(A B : Ensemble Ord) : Prop :=
   fun_codomain A B f /\
   Closed A /\
   (forall U, Included U A -> Inhabited _ U -> 
@@ -187,7 +187,7 @@ Definition  continuous (f:ON->ON)(A B : Ensemble ON) : Prop :=
 *)
 
 
-Lemma Unbounded_not_countable (X: Ensemble ON) :
+Lemma Unbounded_not_countable (X: Ensemble Ord) :
     Unbounded X -> not (countable X).
 Proof.
   intros  H  H1; case (AX3 H1); intros x Hx.
@@ -206,10 +206,10 @@ Proof.
   split; auto.
 Qed.
 
-Theorem transfinite_induction (P: ON->Prop) : progressive P ->
+Theorem transfinite_induction (P: Ord->Prop) : progressive P ->
                                  forall a,  P a.
 Proof.
-  intros Hp; case (classic  (forall a : ON,  P a));
+  intros Hp; case (classic  (forall a : Ord,  P a));
   [trivial|idtac].
   intro H; case (not_all_ex_not _ (fun a =>  P a) H).
   intros x Hx.  
@@ -240,17 +240,17 @@ Qed.
 
 Hint Resolve le_refl : schutte.
 
-Lemma eq_le : forall a b : ON,  a = b -> a <= b.
+Lemma eq_le : forall a b : Ord,  a = b -> a <= b.
 Proof.
   left;auto.
 Qed.
 
-Lemma lt_le : forall a b: ON, a < b -> a <= b.
+Lemma lt_le : forall a b: Ord, a < b -> a <= b.
 Proof.
   right;auto.
 Qed.
 
-Lemma lt_trans : forall a b c : ON, a < b ->  b < c -> a < c.
+Lemma lt_trans : forall a b c : Ord, a < b ->  b < c -> a < c.
 Proof.
   intros; eapply Lt_trans; eauto with schutte.
 Qed.
@@ -268,7 +268,7 @@ Proof (Le_trans AX1).
 
 Lemma lt_irr : forall a, ~ (a < a).
 Proof.
-  intros a Ha; now apply (@Lt_irreflexive  ON  lt AX1 a).
+  intros a Ha; now apply (@Lt_irreflexive  Ord  lt AX1 a).
 Qed.
 
 Lemma le_antisym : forall a b, a <= b -> b <= a -> a = b.
@@ -299,13 +299,13 @@ Proof.
 Qed.
 
 
-Lemma all_ord_acc : forall alpha : ON,  Acc lt alpha.
+Lemma all_ord_acc : forall alpha : Ord,  Acc lt alpha.
 Proof.
   intros alpha ;  pattern alpha;  apply transfinite_induction; auto.
   apply Progressive_Acc; auto.  
 Qed.
 
-Lemma trichotomy : forall a b : ON , 
+Lemma trichotomy : forall a b : Ord , 
                                a < b \/ a = b \/ b < a.
 Proof (Lt_connect AX1).
 
@@ -320,7 +320,7 @@ Ltac tricho t u Hname :=
 (* end hide *)
 
 
-Lemma lt_or_ge : forall a b: ON, a < b \/ b <= a.
+Lemma lt_or_ge : forall a b: Ord, a < b \/ b <= a.
 Proof.
   intros a b ; tricho a b H;auto with schutte.
 Qed.
@@ -336,7 +336,7 @@ Hint Unfold Included : schutte.
 (** ** Global properties *)
 
 
-Theorem Non_denum : ~ countable (Full_set ON).
+Theorem Non_denum : ~ countable (Full_set Ord).
 Proof.
   red; intro H; case (AX3  H); auto.
   intros x H0; case (@lt_irr x);apply H0; split.
@@ -346,7 +346,7 @@ Qed.
 
 Lemma Inh_ord : Inhabited _ ordinal.
 Proof.
-  destruct inh_ON as [x];  exists x; split.
+  destruct inh_Ord as [x];  exists x; split.
 Qed.
 
 
@@ -373,7 +373,7 @@ Proof.
 Qed.
 
 
-Lemma the_least_ok : forall X, Inhabited ON X -> 
+Lemma the_least_ok : forall X, Inhabited Ord X -> 
                                forall a, In X a -> the_least X <= a.
 Proof.
   intros X H a H0;   pattern X, (the_least X).
@@ -389,7 +389,7 @@ Qed.
 
 
 
-Lemma zero_le (alpha : ON) :   zero <= alpha.
+Lemma zero_le (alpha : Ord) :   zero <= alpha.
 Proof.
   unfold zero, the_least, the; apply iota_ind.
   -  apply the_least_unicity, Inh_ord.
@@ -401,7 +401,7 @@ Proof.
   intros;apply le_not_gt; apply zero_le;auto.
 Qed.
 
-Lemma zero_or_greater : forall alpha : ON, 
+Lemma zero_or_greater : forall alpha : Ord, 
     alpha = zero \/ exists beta, beta < alpha.
 Proof.
   intros a; tricho zero a t;auto with schutte.
@@ -418,7 +418,7 @@ Qed.
 
 (** **  Properties of successor *)
 
-Definition succ_spec (alpha:ON) :=
+Definition succ_spec (alpha:Ord) :=
   least_member   lt (fun z => alpha < z).
 
 Lemma succ_ok : forall alpha,  succ_spec alpha  (succ alpha).
@@ -429,21 +429,21 @@ Proof.
   -  unfold succ_spec; apply the_least_unicity;  exists x; intuition.
 Qed.     
 
-Lemma lt_succ (alpha : ON) :  alpha < succ alpha.
+Lemma lt_succ (alpha : Ord) :  alpha < succ alpha.
 Proof.
   destruct  (succ_ok  alpha);  tauto.
 Qed.
 
 Hint Resolve lt_succ : schutte.
 
-Lemma lt_succ_le (alpha beta : ON):
+Lemma lt_succ_le (alpha beta : Ord):
   alpha < beta -> succ alpha <= beta.
 Proof with eauto with schutte.
   intros  H;  pattern (succ alpha); apply the_least_ok ... 
   exists (succ alpha); red;apply lt_succ ...
 Qed.
 
-Lemma lt_succ_le_2 (alpha beta : ON):
+Lemma lt_succ_le_2 (alpha beta : Ord):
   alpha < succ beta -> alpha <= beta.
 Proof.
   intro H;  tricho alpha beta t;eauto with schutte.
@@ -452,7 +452,7 @@ Proof.
   - apply lt_succ_le;eauto with schutte.
 Qed.
 
-Lemma succ_mono (alpha beta : ON):
+Lemma succ_mono (alpha beta : Ord):
   alpha < beta -> succ alpha < succ beta.
 Proof with eauto with schutte.
   intros; eapply le_lt_trans with beta  ...
@@ -461,7 +461,7 @@ Qed.
 
 Arguments succ_mono [ alpha beta].
 
-Lemma succ_monoR (alpha beta : ON) :
+Lemma succ_monoR (alpha beta : Ord) :
  succ alpha < succ beta -> alpha < beta.
 Proof.
   intro H;  tricho alpha beta t; auto with schutte.
@@ -470,7 +470,7 @@ Proof.
     apply succ_mono;auto.
 Qed.
 
-Lemma succ_injection (alpha beta : ON) :
+Lemma succ_injection (alpha beta : Ord) :
   succ alpha = succ beta -> alpha = beta.
 Proof.
   intros  H; tricho alpha beta t;auto.
@@ -480,7 +480,7 @@ Proof.
    rewrite H; intro; case (@lt_irr (succ beta));auto.
 Qed. 
 
-Lemma succ_zero_diff (alpha : ON) :  succ alpha <> zero.
+Lemma succ_zero_diff (alpha : Ord) :  succ alpha <> zero.
 Proof.
   intros  H; destruct (@not_lt_zero alpha).
   rewrite <- H; auto with schutte.
@@ -492,7 +492,7 @@ Proof.
     apply zero_le;auto.
 Qed.
 
-Lemma lt_succ_lt (alpha beta : ON) :
+Lemma lt_succ_lt (alpha beta : Ord) :
   is_limit beta ->  alpha < beta -> succ alpha < beta.
 Proof.
   intros (Hbeta, Hbeta') H;  case (lt_succ_le  H); [|auto].
@@ -546,8 +546,8 @@ Lemma sup_exists : forall X, countable  X ->
 Proof.
   intros X H; case (AX3 H); auto.
   intros x H'x; 
-  assert (H''x : forall y : ON, X y -> y=x \/ lt y x) by  intuition.
-  generalize  (@well_order   ON lt  AX1
+  assert (H''x : forall y : Ord, X y -> y=x \/ lt y x) by  intuition.
+  generalize  (@well_order   Ord lt  AX1
                              (fun z => 
                                 (forall y,   X y -> y = z \/ y < z))
                              x ).
@@ -572,7 +572,7 @@ Proof.
   case (H5 l H);auto with schutte.
 Qed.
 
-Lemma sup_spec_unicity (X:Ensemble ON) (HX : countable X) :
+Lemma sup_spec_unicity (X:Ensemble Ord) (HX : countable X) :
   exists! u, sup_spec X u.
 Proof.
   destruct (sup_exists  HX).
@@ -584,13 +584,13 @@ Proof.
 Qed.
 
 
-Lemma sup_ok1 (X: Ensemble ON)(HX : countable X) :
+Lemma sup_ok1 (X: Ensemble Ord)(HX : countable X) :
   sup_spec X (sup X).
 Proof.
   unfold sup, the;  apply iota_spec;  now apply sup_spec_unicity.
 Qed.  
 
-Lemma sup_upper_bound (X : Ensemble ON) (alpha : ON):
+Lemma sup_upper_bound (X : Ensemble Ord) (alpha : Ord):
   countable X ->  In X alpha -> alpha <= |_|  X.
 Proof.
   intros  H  H1;  generalize (sup_ok1   H).
@@ -599,7 +599,7 @@ Proof.
 Qed.
 
 
-Lemma sup_least_upper_bound (X : Ensemble ON) (alpha : ON) :
+Lemma sup_least_upper_bound (X : Ensemble Ord) (alpha : Ord) :
   countable X -> (forall y, In X y -> y <= alpha) -> sup  X <= alpha.
 Proof.
    intros  H H0;  specialize (sup_ok1   H) as H1.
@@ -608,10 +608,10 @@ Proof.
     red;  intros;  apply H0; auto.
 Qed.
 
-Lemma sup_of_leq (alpha : ON) : 
-    alpha = |_| (fun x : ON =>  x <= alpha).
+Lemma sup_of_leq (alpha : Ord) : 
+    alpha = |_| (fun x : Ord =>  x <= alpha).
 Proof.
- assert (DD :countable (fun x : ON =>  x <= alpha)).
+ assert (DD :countable (fun x : Ord =>  x <= alpha)).
   {
     apply AX2.
     -   exists (succ alpha);
@@ -623,7 +623,7 @@ Proof.
 Qed.
 
 
-Lemma sup_mono (X Y : Ensemble ON) :
+Lemma sup_mono (X Y : Ensemble Ord) :
     countable X ->
     countable Y ->
     (forall x, In X x -> exists y, In Y y /\ x <= y) ->
@@ -636,7 +636,7 @@ Proof.
   apply sup_upper_bound;auto with schutte.
 Qed.
 
-Lemma sup_eq_intro (X Y : Ensemble ON):
+Lemma sup_eq_intro (X Y : Ensemble Ord):
   countable X -> countable Y ->
   Included X Y -> Included Y X ->
 |_| X = |_| Y.
@@ -647,7 +647,7 @@ Proof.
 Qed.
 
 
-Lemma lt_sup_exists_leq (X: Ensemble ON) :
+Lemma lt_sup_exists_leq (X: Ensemble Ord) :
   countable X ->
   forall y, y < sup X ->
             exists x, In X x /\ y <= x.
@@ -673,7 +673,7 @@ Proof.
   -  intros x Hx; exists x;auto.  
 Qed.
 
-Lemma lt_sup_exists_lt (X : Ensemble ON) :
+Lemma lt_sup_exists_lt (X : Ensemble Ord) :
   countable X ->
   forall y,  y < sup X -> exists x, In X x /\ y < x.
 Proof.
@@ -694,12 +694,12 @@ Proof.
     }
     assert (sup X <= y). 
     {  apply sup_least_upper_bound; auto. }
-    case (@Lt_irreflexive ON  lt AX1  y).
+    case (@Lt_irreflexive Ord  lt AX1  y).
     eapply Lt_Le_trans;eauto with schutte.
  - intros x Hx; exists x;auto.
   Qed.
 
-Lemma members_eq (alpha beta : ON) :
+Lemma members_eq (alpha beta : Ord) :
   members alpha = members beta -> alpha = beta.
 Proof.
   intros  H; tricho alpha beta H2; auto with schutte.
@@ -710,7 +710,7 @@ Proof.
 Qed.
 
 
-Lemma sup_members_succ (alpha : ON) :
+Lemma sup_members_succ (alpha : Ord) :
   sup (members alpha) < alpha -> alpha = succ (|_| (members alpha)).
 Proof.
   intros  H;pose (A := sup (members alpha)).
@@ -729,7 +729,7 @@ Proof.
 Qed.
 
 
-Lemma sup_members_not_succ (alpha beta : ON) :
+Lemma sup_members_not_succ (alpha beta : Ord) :
   alpha = sup (members alpha) ->  alpha <> succ beta.
 Proof.
   intros   e e1;  generalize (sup_of_leq  beta).
@@ -752,32 +752,32 @@ Qed.
 (** ** Sequences of ordinals *)
 
 
-Definition seq_mono (s:nat -> ON) :=
+Definition seq_mono (s:nat -> Ord) :=
   forall i j, (i < j)%nat -> s i < s j.
 
-Lemma seq_mono_intro (s: nat -> ON) :
+Lemma seq_mono_intro (s: nat -> Ord) :
   (forall i, s i <  s (S i)) -> seq_mono s.
 Proof.
   intros  H; unfold seq_mono; induction 1;  auto.
-  apply (@Lt_trans ON  lt AX1)  with (s m);auto.
+  apply (@Lt_trans Ord  lt AX1)  with (s m);auto.
 Qed.
 
 
-Lemma seq_mono_inj (s : nat -> ON) :
+Lemma seq_mono_inj (s : nat -> Ord) :
   seq_mono s -> injective _ _ s. 
 Proof.
   unfold injective;intros  H i j H0.
   case (lt_eq_lt_dec i j).
   -   destruct 1; auto.
    + generalize (H _ _ l); auto.
-     rewrite H0;intro;case (@Lt_irreflexive ON  lt AX1  (s j));auto.
+     rewrite H0;intro;case (@Lt_irreflexive Ord  lt AX1  (s j));auto.
   - intro l;generalize (H _ _ l).
-    rewrite H0;intro;case (@Lt_irreflexive  ON lt AX1 (s j));auto.
+    rewrite H0;intro;case (@Lt_irreflexive  Ord lt AX1 (s j));auto.
 Qed.
 
 Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
 
-Lemma lt_omega_limit (s : nat -> ON) :
+Lemma lt_omega_limit (s : nat -> Ord) :
   seq_mono s -> forall i, s i <  omega_limit s.
 Proof.
   unfold omega_limit;intros.
@@ -788,9 +788,9 @@ Proof.
 Qed.
 
 
-Lemma omega_limit_least (s : nat -> ON) :
+Lemma omega_limit_least (s : nat -> Ord) :
     seq_mono s ->
-    forall y : ON,  
+    forall y : Ord,  
       (forall i, s i < y) ->
       omega_limit s <=  y.
 Proof.
@@ -801,7 +801,7 @@ Proof.
 Qed.
 
 
-Lemma lt_omega_limit_lt_exists_lt (alpha : ON) (s : nat -> ON) :
+Lemma lt_omega_limit_lt_exists_lt (alpha : Ord) (s : nat -> Ord) :
   (forall i, s i < s (S i)) ->
   alpha < omega_limit s ->
   exists j, alpha < s j.
@@ -813,7 +813,7 @@ Proof.
 Qed.
 
 
-Lemma omega_limit_least_gt (alpha : ON) (s : nat -> ON)
+Lemma omega_limit_least_gt (alpha : Ord) (s : nat -> Ord)
       (Hmono : forall i, s i < s (S i))
       (H : alpha < omega_limit s) :
   exists i, least_member Peano.lt (fun j =>  alpha <  s j) i.
@@ -839,7 +839,7 @@ Proof.
 Qed.
 
 
-Lemma lt_omega_finite (alpha : ON) :
+Lemma lt_omega_finite (alpha : Ord) :
   alpha < omega ->  exists i:nat, alpha =  i.
 Proof.
   intro H0; unfold omega_limit in H0.
@@ -890,12 +890,12 @@ Proof.
   unfold is_limit;   tauto.
 Qed.
 
-Lemma not_is_limit_succ (alpha : ON) :  is_succ alpha -> ~ is_limit alpha.
+Lemma not_is_limit_succ (alpha : Ord) :  is_succ alpha -> ~ is_limit alpha.
 Proof.
   unfold is_limit;tauto.
 Qed.
 
-Lemma not_is_succ_limit (alpha : ON) : is_limit alpha -> ~ is_succ alpha.
+Lemma not_is_succ_limit (alpha : Ord) : is_limit alpha -> ~ is_succ alpha.
 Proof.
   unfold is_limit;tauto.
 Qed.
@@ -903,19 +903,19 @@ Qed.
 
 (** ** About members *)
 
-Lemma countable_members (alpha : ON): countable (members alpha).
+Lemma countable_members (alpha : Ord): countable (members alpha).
 Proof.
  apply AX2;   now exists alpha.
 Qed.
 
 Hint Resolve countable_members : schutte.
 
-Lemma le_sup_members (alpha : ON) :  |_| (members alpha) <= alpha.
+Lemma le_sup_members (alpha : Ord) :  |_| (members alpha) <= alpha.
 Proof.
   intros; apply sup_least_upper_bound; auto with schutte.
 Qed.
 
-Lemma is_limit_sup_members (alpha : ON) :
+Lemma is_limit_sup_members (alpha : Ord) :
   is_limit alpha -> alpha = |_| (members alpha).
 Proof.
   intros;  case (@le_sup_members alpha);auto with schutte.
@@ -925,7 +925,7 @@ Proof.
 Qed.
 
 
-Lemma sup_members_disj (alpha : ON) :
+Lemma sup_members_disj (alpha : Ord) :
   alpha = sup (members alpha) ->
   alpha = zero \/ is_limit alpha.
 Proof.
@@ -938,7 +938,7 @@ Proof.
 Qed.
 
 
-Theorem classification (alpha : ON) :
+Theorem classification (alpha : Ord) :
   alpha = zero \/ is_succ alpha \/  is_limit alpha.
 Proof.
  case (le_sup_members  alpha).
@@ -960,13 +960,13 @@ Proof.
 Qed.
 
 
-Lemma Not_Unbounded_bounded (X: Ensemble ON): 
+Lemma Not_Unbounded_bounded (X: Ensemble Ord): 
    ~ Unbounded X ->
-   exists beta : ON, forall x, In X x -> x < beta.
+   exists beta : Ord, forall x, In X x -> x < beta.
 Proof.
   intros  H; apply NNPP; intro H0.
   assert (forall beta,  exists x, In X x /\ beta <= x).
-  { intros beta;  change (exists x:ON, (fun y => In X y /\ beta <= y) x).
+  { intros beta;  change (exists x:Ord, (fun y => In X y /\ beta <= y) x).
   apply not_all_not_ex.
   intro H1;  case H0;  exists beta; auto.
   - intros x H2;  tricho x beta H5;auto with schutte.
@@ -981,7 +981,7 @@ Proof.
 Qed.
 
 
-Lemma Not_Unbounded_countable (X : Ensemble ON) :
+Lemma Not_Unbounded_countable (X : Ensemble Ord) :
   ~ Unbounded X ->   countable X. 
 Proof.
   intros;eapply AX2;eauto.
@@ -989,7 +989,7 @@ Proof.
   intros x H0; exists x;auto.
 Qed.
 
-Lemma not_countable_unbounded (X : Ensemble ON): 
+Lemma not_countable_unbounded (X : Ensemble Ord): 
     ~ countable X -> Unbounded X.
 Proof.
   intros H;  apply NNPP; intro H0.
@@ -997,7 +997,7 @@ Proof.
 Qed.
 
 
-Lemma le_alpha_zero (alpha : ON) :
+Lemma le_alpha_zero (alpha : Ord) :
   alpha <= zero -> alpha = zero.
 Proof.
   intros H;  apply le_antisym;auto.
@@ -1016,31 +1016,31 @@ Qed.
 (* begin hide *) 
 Module iota_demo. 
 
-Remark R : exists! z : ON, least_member lt  ordinal z.
+Remark R : exists! z : Ord, least_member lt  ordinal z.
 Proof.
-  destruct inh_ON as [a ];   apply least_member_ex_unique with a. 
+  destruct inh_Ord as [a ];   apply least_member_ex_unique with a. 
   - apply AX1. 
   - split.
 Qed.
 
 
-Definition zero : ON.
+Definition zero : Ord.
 Proof.
   Fail destruct R.
 Abort.
 
 
-Definition zero: ON := iota inh_ON (least_member lt ordinal).
+Definition zero: Ord := iota inh_Ord (least_member lt ordinal).
 
-Lemma zero_le (alpha : ON) :  zero <= alpha.
+Lemma zero_le (alpha : Ord) :  zero <= alpha.
 Proof.
-   generalize (iota_spec inh_ON _ R). 
+   generalize (iota_spec inh_Ord _ R). 
    destruct 1 as [_ H]; apply H; split.
 Qed.
 
 Module Bad.
   
-Definition bottom := the_least (Empty_set ON).
+Definition bottom := the_least (Empty_set Ord).
 
 Compute bottom.
 

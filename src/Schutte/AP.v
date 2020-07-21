@@ -29,7 +29,7 @@ Set Implicit Arguments.
  *** Additive principal ordinals 
  *)
 
-Definition AP : Ensemble ON :=
+Definition AP : Ensemble Ord :=
   fun alpha => 
     zero < alpha /\
     (forall beta, beta < alpha ->  beta + alpha = alpha).
@@ -46,7 +46,7 @@ Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
 (**  *** Omega-towers
  *)
 
-Fixpoint omega_tower (i : nat) : ON :=
+Fixpoint omega_tower (i : nat) : Ord :=
   match i with
     0 =>  1
   | S j => phi0 (omega_tower j)
@@ -143,7 +143,7 @@ Qed.
 
 
 
-Lemma AP_plus_closed (alpha beta gamma : ON): 
+Lemma AP_plus_closed (alpha beta gamma : Ord): 
   In AP alpha ->   beta < alpha -> gamma < alpha ->
   beta + gamma < alpha.
 Proof with auto with schutte.
@@ -152,14 +152,14 @@ Proof with auto with schutte.
   replace alpha with (beta+alpha) ...
 Qed.
 
-Lemma AP_mult_Sn_closed (alpha beta: ON)  :
+Lemma AP_mult_Sn_closed (alpha beta: Ord)  :
   AP alpha -> beta < alpha -> forall n,  mult_Sn beta n  < alpha.
   intros H H0; induction n.
   - now simpl.
   -   simpl. now  apply AP_plus_closed.
 Qed.
 
-Lemma AP_mult_n_closed  (alpha beta: ON)  :
+Lemma AP_mult_n_closed  (alpha beta: Ord)  :
   AP alpha -> beta < alpha -> forall n,  beta * n  < alpha.
 Proof.
   destruct n.
@@ -170,7 +170,7 @@ Qed.
 (* begin hide *)
 
 Section AP_Unbounded.
-  Variable alpha : ON.
+  Variable alpha : Ord.
   
   Let seq := (fix seq (n:nat)  := 
                 match n with 0 => succ alpha
@@ -225,7 +225,7 @@ Section AP_Unbounded.
   Qed.
 
   Section ksi_fixed.
-    Variable ksi: ON.
+    Variable ksi: Ord.
     Hypothesis lt_ksi : ksi < beta.
 
     Remark lt_beta_exists : exists n, ksi < seq n.
@@ -308,7 +308,7 @@ Theorem AP_unbounded : Unbounded AP.
 Proof.
   intro x;  pose (H := AP_unbounded_0 x).
   exists (omega_limit
-            (fix seq (n : nat) : ON :=
+            (fix seq (n : nat) : Ord :=
                match n with
                | O => succ x
                | S p => seq p + seq p
@@ -319,7 +319,7 @@ Qed.
 (* begin hide *)
 
 Section AP_closed.
-  Variable M : Ensemble ON.
+  Variable M : Ensemble Ord.
   Hypothesis OM : Included M AP.
   Hypothesis inhM : Inhabited _ M.
   Hypothesis denM : countable M.
@@ -406,15 +406,15 @@ Proof.
     apply ord_ok.
 Qed.
 
-Lemma phi0_elim : forall P : (ON->ON)->Prop,
-    (forall f: ON->ON, 
+Lemma phi0_elim : forall P : (Ord->Ord)->Prop,
+    (forall f: Ord->Ord, 
         ordering_function f ordinal AP -> P f) ->
     P phi0.
 Proof.
   intros P H; apply H, phi0_ordering.
 Qed.
 
-Lemma AP_phi0 (alpha : ON) : In AP (phi0 alpha).
+Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha).
 Proof.
   pattern phi0; apply phi0_elim.
   destruct 1 as [H [H0 H1]];  apply H0;auto.
@@ -428,14 +428,14 @@ Proof.
 Qed.
 
 
-Lemma phi0_mono (alpha beta : ON) :
+Lemma phi0_mono (alpha beta : Ord) :
   alpha < beta ->  phi0 alpha < phi0 beta.
 Proof.
   intro H; pattern phi0; apply phi0_elim.
   intros;eapply ordering_function_mono;eauto with schutte.
 Qed.
 
-Lemma phi0_mono_weak (alpha beta : ON) :
+Lemma phi0_mono_weak (alpha beta : Ord) :
   alpha <= beta ->  phi0 alpha <= phi0 beta.
 Proof.
   destruct 1.
@@ -443,7 +443,7 @@ Proof.
   -  right;apply phi0_mono;auto.
 Qed.
 
-Lemma phi0_mono_R (alpha beta : ON) :
+Lemma phi0_mono_R (alpha beta : Ord) :
   phi0 alpha < phi0 beta -> alpha < beta.
 Proof.
   pattern phi0; apply phi0_elim.
@@ -460,7 +460,7 @@ Proof.
   all : split.
 Qed.
 
-Lemma phi0_inj (alpha beta : ON) :
+Lemma phi0_inj (alpha beta : Ord) :
   phi0 alpha = phi0 beta -> alpha = beta.
 Proof.
   intros; apply le_antisym; apply phi0_mono_R_weak;auto with schutte.
@@ -468,7 +468,7 @@ Qed.
 
 
 
-Lemma phi0_positive (alpha : ON):  zero < phi0 alpha.
+Lemma phi0_positive (alpha : Ord):  zero < phi0 alpha.
 Proof.
   intros.
   apply lt_le_trans with (phi0 zero).
@@ -510,7 +510,7 @@ Proof.
   apply H4; auto;  split.
 Qed.
 
-Lemma phi0_of_limit (alpha : ON)  :
+Lemma phi0_of_limit (alpha : Ord)  :
   is_limit alpha ->  phi0 alpha = sup (image (members alpha) phi0).
 Proof.
   intro H; pattern alpha at 1; rewrite  (is_limit_sup_members H);
@@ -525,7 +525,7 @@ Proof.
 Qed.
 
 
-Lemma AP_to_phi0 (alpha : ON) :
+Lemma AP_to_phi0 (alpha : Ord) :
   AP alpha -> exists beta,  alpha = phi0 beta.
 Proof.
   intro H; pattern phi0;apply phi0_elim.
@@ -535,7 +535,7 @@ Qed.
 
 
 
-Lemma AP_plus_AP (alpha beta gamma : ON) :
+Lemma AP_plus_AP (alpha beta gamma : Ord) :
   zero < beta -> 
   phi0 alpha + beta = phi0 gamma ->
   alpha < gamma /\  beta = phi0 gamma.
@@ -562,7 +562,7 @@ Proof.
 Qed.
 
 
-Lemma is_limit_phi0 (alpha : ON) :
+Lemma is_limit_phi0 (alpha : Ord) :
   zero < alpha ->  is_limit (phi0 alpha).
 Proof.
   intros  H; split.
@@ -617,7 +617,7 @@ Proof.
 Qed.
 
 
-Lemma le_phi0 (alpha : ON) : alpha <= phi0 alpha.
+Lemma le_phi0 (alpha : Ord) : alpha <= phi0 alpha.
 Proof.
   eapply (@ordering_le  phi0 ordinal AP).
   apply phi0_ordering.
@@ -671,7 +671,7 @@ Proof.
 Qed.
 
 
-Lemma lt_phi0 (alpha : ON):
+Lemma lt_phi0 (alpha : Ord):
   alpha < epsilon0 -> alpha < phi0 alpha.
 Proof.
   unfold epsilon0;  intros H.
@@ -709,14 +709,14 @@ Proof.
     + now right.
 Qed.
 
-Lemma phi0_lt_epsilon0 (alpha : ON) :
+Lemma phi0_lt_epsilon0 (alpha : Ord) :
   alpha < epsilon0 -> phi0 alpha < epsilon0.
 Proof.
   intro; rewrite <- epsilon0_fxp; now apply phi0_mono.
 Qed.
 
 
-Lemma phi0_lt_epsilon0_R (alpha : ON):
+Lemma phi0_lt_epsilon0_R (alpha : Ord):
   phi0 alpha < epsilon0  -> alpha < epsilon0.
 Proof.
   intro H; rewrite <- epsilon0_fxp in H; now  apply phi0_mono_R.     

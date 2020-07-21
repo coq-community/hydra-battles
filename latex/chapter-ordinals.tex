@@ -101,7 +101,30 @@ Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
           CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
                                    (compare alpha beta);
   }. 
+
+
+Definition on_t  {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : OrdinalNotation lt compare} := A.
+
+Definition on_compare {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : OrdinalNotation lt compare} := compare.
+
+
+Definition on_lt {A:Type}{lt: relation A}
+           {compare : A -> A -> comparison}
+           {on : OrdinalNotation lt compare} := lt.
+
+Definition on_le  {A:Type}{lt: relation A}
+           {compare : A -> A -> comparison}
+           {on : OrdinalNotation lt compare} :=
+  clos_refl _ on_lt.
+
 \end{Coqsrc}
+
+
+
 
 
 % ICI

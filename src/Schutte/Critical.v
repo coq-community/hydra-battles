@@ -27,36 +27,36 @@ Set Implicit Arguments.
 
 (**  let us define a functional, the fixpoint of which we shall consider *)
 
-Definition Cr_fun : forall alpha : ON,
-    (forall beta : ON, beta < alpha -> Ensemble ON) ->
-    Ensemble ON 
+Definition Cr_fun : forall alpha : Ord,
+    (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
+    Ensemble Ord 
   := 
-    fun (alpha :ON)
+    fun (alpha :Ord)
         (Cr : forall beta, 
-            beta < alpha -> Ensemble ON) 
-        (x : ON) => (
+            beta < alpha -> Ensemble Ord) 
+        (x : Ord) => (
         (alpha = zero /\ AP x) \/
         (zero < alpha /\
          forall beta (H:beta < alpha), 
            the_ordering_segment (Cr beta H) x /\ ord (Cr  beta H) x = x)).
 
-Definition Cr (alpha : ON) : Ensemble ON := 
-  (Fix  all_ord_acc (fun (_:ON) => Ensemble ON) Cr_fun) alpha.
+Definition Cr (alpha : Ord) : Ensemble Ord := 
+  (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
 
 (**  See Gamma0.Gamma0.phi *)
 
-Definition phi (alpha : ON) : ON -> ON 
+Definition phi (alpha : Ord) : Ord -> Ord 
     :=  ord (Cr alpha).
 
-Definition A (alpha : ON) : Ensemble ON :=
+Definition A (alpha : Ord) : Ensemble Ord :=
   the_ordering_segment (Cr alpha).
 
 
 Lemma Cr_extensional :
-  forall (x:ON) 
-         (f g : forall y : ON, y < x -> (fun _ : ON => Ensemble ON) y),
-    (forall (y : ON) (p : y < x), f y p = g y p) ->
-    ((Cr_fun  f  :Ensemble ON) =  (Cr_fun  g :Ensemble ON)).
+  forall (x:Ord) 
+         (f g : forall y : Ord, y < x -> (fun _ : Ord => Ensemble Ord) y),
+    (forall (y : Ord) (p : y < x), f y p = g y p) ->
+    ((Cr_fun  f  :Ensemble Ord) =  (Cr_fun  g :Ensemble Ord)).
 Proof.
   intros x f g  H0; apply Extensionality_Ensembles; split.
   -  unfold Cr_fun;red; unfold In;intros x0 H;  case H.
@@ -74,19 +74,19 @@ Proof.
 Qed.
 
 
-Lemma Cr_equation (alpha : ON) :
+Lemma Cr_equation (alpha : Ord) :
   Cr  alpha =
   Cr_fun 
-    (fun (y : ON) (h : y < alpha) =>  Cr y).
+    (fun (y : Ord) (h : y < alpha) =>  Cr y).
 
 Proof.
-  generalize (@Fix_eq ON  lt  all_ord_acc
-                      (fun _ : ON => Ensemble ON));
+  generalize (@Fix_eq Ord  lt  all_ord_acc
+                      (fun _ : Ord => Ensemble Ord));
     intros H; apply  (H Cr_fun Cr_extensional alpha).
 Qed.
 
 
-Lemma Cr_inv (alpha x : ON): 
+Lemma Cr_inv (alpha x : Ord): 
   Cr alpha x -> 
   ((alpha = zero /\ (Cr  alpha x <-> AP x)) \/
    (zero < alpha /\
@@ -112,7 +112,7 @@ Qed.
 
 Lemma Cr_pos : forall alpha,
     zero < alpha ->
-    forall x : ON , 
+    forall x : Ord , 
       (forall beta (H:beta < alpha),
           A  beta  x /\   ord (Cr  beta) x = x) ->
       Cr alpha x.
@@ -138,7 +138,7 @@ Qed.
 
 
 
-Lemma Cr_pos_inv (alpha : ON) :
+Lemma Cr_pos_inv (alpha : Ord) :
   zero < alpha ->
   forall x, 
     Cr alpha x ->
@@ -149,7 +149,7 @@ Proof.
   - destruct 1;  eauto. 
 Qed.
 
-Lemma Cr_pos_iff (alpha : ON) :
+Lemma Cr_pos_iff (alpha : Ord) :
   zero < alpha ->
   forall x, 
     (Cr alpha x <->
@@ -160,7 +160,7 @@ Proof.
   - intros; apply Cr_pos; auto. 
 Qed.
 
-Lemma A_Cr (alpha beta:ON) : In (A alpha) beta ->  phi alpha beta = beta ->
+Lemma A_Cr (alpha beta:Ord) : In (A alpha) beta ->  phi alpha beta = beta ->
                              In (Cr alpha) beta.
   unfold A; intros H H0; rewrite <- H0.
   unfold phi; destruct (ord_ok (Cr alpha)).
@@ -178,7 +178,7 @@ Proof.
   apply A_Cr; tauto.
 Qed.
 
-Lemma Cr_incl (alpha beta : ON) (H :beta <= alpha) :
+Lemma Cr_incl (alpha beta : Ord) (H :beta <= alpha) :
   Included (Cr alpha)  (Cr beta).
 Proof.
   case (le_disj H).
@@ -192,7 +192,7 @@ Proof.
   intro alpha;unfold phi, finite;  now  rewrite Cr_zero_AP.
 Qed.
 
-Lemma Cr_1_equiv (alpha : ON):
+Lemma Cr_1_equiv (alpha : Ord):
   Cr 1 alpha <->  AP alpha /\ phi0 alpha = alpha.
 Proof.
   generalize (Cr_pos_inv  (alpha := F 1)).
@@ -245,7 +245,7 @@ Qed.
 
 
 Section Proof_of_Lemma5.
-  Let P (alpha:ON) := Unbounded (Cr alpha) /\ Closed (Cr alpha).
+  Let P (alpha:Ord) := Unbounded (Cr alpha) /\ Closed (Cr alpha).
 
 
   Lemma Lemma5_0 : P zero.
@@ -256,20 +256,20 @@ Section Proof_of_Lemma5.
   Qed.
 
   Section Alpha_positive.
-    Variable alpha : ON.
+    Variable alpha : Ord.
     Hypothesis alpha_pos : zero < alpha.
     Hypothesis IHalpha : forall ksi, ksi < alpha -> P ksi.
 
 
     Section Proof_unbounded.
-      Variable beta : ON.
+      Variable beta : Ord.
 
-      Fixpoint gamma_ (n:nat) : ON :=
+      Fixpoint gamma_ (n:nat) : Ord :=
         match n with
           O => succ beta
         | S n => sup
-                   (fun (y : ON) =>
-                      exists ksi: ON, ksi  < alpha /\
+                   (fun (y : Ord) =>
+                      exists ksi: Ord, ksi  < alpha /\
                                       y = phi ksi (gamma_ n))
         end.
 
@@ -417,7 +417,7 @@ Section Proof_of_Lemma5.
 
 
     Section closedness.
-      Variable M : Ensemble ON.
+      Variable M : Ensemble Ord.
       Hypothesis HM : Inhabited _ M.
       Hypothesis CM : countable M.
       Hypothesis IM : Included  M (Cr alpha).

@@ -3,8 +3,8 @@
 
 (**   Pierre Casteran, LaBRI, University of Bordeaux  
 
-Every subset [A] of [ON] can be enumerated in an unique way 
- by a segment of [ON].
+Every subset [A] of [Ord] can be enumerated in an unique way 
+ by a segment of [Ord].
 
 Thus it makes sense to consider the [alpha]-th element of [A] 
 
@@ -27,38 +27,38 @@ Set Implicit Arguments.
  (** * Main definitions *)
  
  
-Definition segment (A: Ensemble ON) :=
+Definition segment (A: Ensemble Ord) :=
   forall alpha beta, In A alpha -> beta < alpha -> In A  beta.
 
-Definition proper_segment (A: Ensemble ON) :=
+Definition proper_segment (A: Ensemble Ord) :=
   segment A /\  ~ Same_set A ordinal.
 
 
 (* to do : define it as a class *)
 
-Definition ordering_function (f : ON -> ON)(A B : Ensemble ON) :=
+Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
  segment A /\
  (forall a, In A a -> In B (f a)) /\
  (forall b, In B b -> exists a, In A a /\ f a = b) /\
  forall a b, In A a -> In A b -> a < b ->  f a < f b.
 
-Definition ordering_segment (A B : Ensemble ON) :=
-  exists f : ON -> ON, ordering_function f A B.
+Definition ordering_segment (A B : Ensemble Ord) :=
+  exists f : Ord -> Ord, ordering_function f A B.
 
-Definition the_ordering_segment (B : Ensemble ON) :=
+Definition the_ordering_segment (B : Ensemble Ord) :=
   the  (fun x => ordering_segment x B).
 
-Definition proper_segment_of (B : Ensemble ON)(beta : ON): Ensemble ON  :=
+Definition proper_segment_of (B : Ensemble Ord)(beta : Ord): Ensemble Ord  :=
   fun alpha => In B alpha /\ alpha < beta /\ In B beta.
 
 
-Definition ord   (B : Ensemble ON) := 
+Definition ord   (B : Ensemble Ord) := 
    some (fun f => ordering_function f (the_ordering_segment B) B).
 
-Definition  normal (f : ON -> ON)(B : Ensemble ON): Prop :=
+Definition  normal (f : Ord -> Ord)(B : Ensemble Ord): Prop :=
  ordering_function f ordinal B /\ continuous f ordinal B.
 
-Definition fun_equiv (f g : ON -> ON)(A B : Ensemble ON) :=
+Definition fun_equiv (f g : Ord -> Ord)(A B : Ensemble Ord) :=
   Same_set A B /\ forall a, In A a -> f a = g a. 
 
 (**  **  Properties of  segments *)
@@ -69,7 +69,7 @@ Proof.
 Qed.
 
 
-Lemma members_proper (alpha : ON) :
+Lemma members_proper (alpha : Ord) :
   proper_segment (members alpha).
 Proof with eauto with schutte.
   split.
@@ -79,8 +79,8 @@ Proof with eauto with schutte.
 Qed.
 
 
-Lemma proper_members (A: Ensemble ON) (H :  proper_segment A) :
-   exists a: ON,  Same_set A (members a).
+Lemma proper_members (A: Ensemble Ord) (H :  proper_segment A) :
+   exists a: Ord,  Same_set A (members a).
 Proof with eauto with schutte.
   case (not_all_not_ex _ (fun b => ordinal b /\ ~ A b)).
   - intro H1;  apply H;split.
@@ -111,7 +111,7 @@ Proof with eauto with schutte.
 Qed.
 
 
-Lemma countable_segment_proper : forall A : Ensemble ON,
+Lemma countable_segment_proper : forall A : Ensemble Ord,
            segment A -> countable A -> proper_segment A.
 Proof.
  intros A H H0; split;[auto|idtac].
@@ -125,7 +125,7 @@ Lemma ordering_function_In f A B a :
 Proof.  destruct 1 as [_ [H _]]; auto. Qed.
 
   
-Lemma ordering_function_mono (f : ON -> ON) (A B: Ensemble ON) :
+Lemma ordering_function_mono (f : Ord -> Ord) (A B: Ensemble Ord) :
   ordering_function f A B ->
   forall alpha beta,
     In A alpha -> In A beta -> alpha < beta -> f alpha < f beta.
@@ -133,7 +133,7 @@ Proof.  destruct 1 ;  tauto. Qed.
 
 Hint Resolve ordering_function_mono : schutte.
 
-Lemma  ordering_function_mono_weak (f : ON -> ON) (A B: Ensemble ON) : 
+Lemma  ordering_function_mono_weak (f : Ord -> Ord) (A B: Ensemble Ord) : 
  ordering_function f A B ->
    forall a b, In A a -> In A b -> a <= b -> f a <= f b.
 Proof.
@@ -208,7 +208,7 @@ Proof.
  intros A a b H0  H1 H2; now apply H0 with a.
 Qed.
 
-Theorem segment_unbounded : forall A:Ensemble ON, segment A -> 
+Theorem segment_unbounded : forall A:Ensemble Ord, segment A -> 
                                         Unbounded A ->
                                         A = ordinal.
 Proof with eauto with schutte.
@@ -242,8 +242,8 @@ Qed.
 (* begin hide *)  
 Section ordering_function_unicity_1.
   
- Variables B A1 A2 : Ensemble ON.
- Variables f1 f2 : ON -> ON.
+ Variables B A1 A2 : Ensemble Ord.
+ Variables f1 f2 : Ord -> Ord.
  Hypothesis O1 : ordering_function f1 A1 B.
  Hypothesis O2 : ordering_function f2 A2 B.
 
@@ -350,9 +350,9 @@ End ordering_function_unicity_1.
 
 Section ordering_function_unicity.
   
- Variables B A1 A2 : Ensemble ON.
+ Variables B A1 A2 : Ensemble Ord.
 
- Variables f1 f2 : ON -> ON.
+ Variables f1 f2 : Ord -> Ord.
  Hypothesis O1 : ordering_function f1 A1 B.
  Hypothesis O2 : ordering_function f2 A2 B.
 
@@ -418,16 +418,16 @@ Proof with  eauto with schutte.
 Qed.
 
 Section building_ordering_function_1.
- Variable B : Ensemble ON.
+ Variable B : Ensemble Ord.
 
  Hypothesis H_B : forall beta, In B beta ->
-                               exists! A : Ensemble ON,
+                               exists! A : Ensemble Ord,
                                     ordering_segment A
                                              (proper_segment_of B beta).
   
  Section beta_fixed.
 
- Variable beta : ON.
+ Variable beta : Ord.
  Hypothesis beta_B : In B beta.
 
  (** Let us build an ordering function for (proper_segment_of B beta) *)
@@ -474,7 +474,7 @@ Proof.
  - eapply A_denum.
 Qed.
 
-Lemma g_def1  : exists g_beta: ON,  ordinal g_beta /\ _A = members g_beta.
+Lemma g_def1  : exists g_beta: Ord,  ordinal g_beta /\ _A = members g_beta.
 Proof.
  generalize (proper_members Proper_A); intros (a,Ha);exists a;split.
  - now destruct Ha. 
@@ -500,7 +500,7 @@ Proof.
      destruct  (@lt_irr g_beta);  now apply H6.   
 Qed.
 
-Definition g := iota inh_ON (fun o => ordinal o /\ _A = members o).
+Definition g := iota inh_Ord (fun o => ordinal o /\ _A = members o).
 
 End beta_fixed.
 
@@ -663,7 +663,7 @@ Qed.
  Hint Resolve g_bij : schutte.
 
 
-Let g_1 := inv_fun inh_ON B (image B g) g.
+Let g_1 := inv_fun inh_Ord B (image B g) g.
 
 Lemma g_1_bij : fun_bijection (image B g) B g_1.
 Proof.
@@ -733,11 +733,11 @@ End building_ordering_function_1.
 
 Section building_ordering_function_by_induction.
 
- Variable B : Ensemble ON.
+ Variable B : Ensemble Ord.
 
- Lemma ordering_segments_of_B (beta : ON) :
+ Lemma ordering_segments_of_B (beta : Ord) :
   In B beta ->
-  exists! A : Ensemble ON,
+  exists! A : Ensemble Ord,
     ordering_segment A  (proper_segment_of B beta).
   Proof with eauto with schutte.
     intros  Hbeta; pattern beta; apply transfinite_induction.
@@ -788,7 +788,7 @@ Qed.
 
 
 
-Lemma ord_eq (A : Ensemble ON) (f : ON -> ON) :
+Lemma ord_eq (A : Ensemble Ord) (f : Ord -> Ord) :
   ordering_function f A B ->
   fun_equiv f (ord B) A (the_ordering_segment B).
  Proof with eauto with schutte.
@@ -810,8 +810,8 @@ Qed.
 
 
 Section Th13_5.
- Variables (A B : Ensemble ON).
- Variable f : ON -> ON.
+ Variables (A B : Ensemble Ord).
+ Variable f : Ord -> Ord.
  Hypothesis f_ord : ordering_function f A B.
 
  Section recto.
@@ -820,7 +820,7 @@ Section Th13_5.
  (* begin hide *)
  
  Section M_fixed.
- Variable M : Ensemble ON.
+ Variable M : Ensemble Ord.
  Hypothesis inc : Included M B.
  Hypothesis ne : Inhabited _ M.
  Hypothesis den : countable M.
@@ -851,7 +851,7 @@ Qed.
  Proof. now destruct 1. Qed.
  
  Remark den_U : countable U.
- eapply countable_bij_funR with ON M f;auto.
+ eapply countable_bij_funR with Ord M f;auto.
  apply restrict.
  Qed.
 
@@ -859,11 +859,11 @@ Qed.
  Remark inh_U : Inhabited _ U.
  Proof.  
    case ne;intros.
-   exists (inv_fun inh_ON A B f x).
+   exists (inv_fun inh_Ord A B f x).
    red; unfold U; rewrite inv_composeR.
    -  split;auto.
       generalize (Ordering_bijection f_ord); 
-      intros;    generalize (inv_fun_bij inh_ON H0).
+      intros;    generalize (inv_fun_bij inh_Ord H0).
       intros;  destruct H1.
       apply H1.
       apply inc;auto.
@@ -872,17 +872,17 @@ Qed.
  Qed.
 
  
- Remark im_U_f : (image U f : Ensemble ON)  = M.
+ Remark im_U_f : (image U f : Ensemble Ord)  = M.
  Proof.
    eapply Extensionality_Ensembles;    split.
    red;destruct 1;  unfold U in H;  case H.
    intros;   case H0;intros.
    subst x;auto.
    red;  intros.
-   exists (inv_fun inh_ON A B f x);  split.
+   exists (inv_fun inh_Ord A B f x);  split.
    red;red;  generalize (Ordering_bijection f_ord).
    intros;   split.
-   case (inv_fun_bij inh_ON H0).  
+   case (inv_fun_bij inh_Ord H0).  
    auto.
    intros;   destruct H0.
    rewrite inv_composeR; auto with schutte.
@@ -927,7 +927,7 @@ Section verso.
  (* begin hide *)
  
  Section U_fixed.
- Variable U : Ensemble ON.
+ Variable U : Ensemble Ord.
  Hypothesis U_non_empty : Inhabited _ U. 
  Hypothesis U_den : countable U.
  Hypothesis U_inc_A : Included U A.
@@ -936,7 +936,7 @@ Section verso.
 
  Remark R1_aux : countable (image U f).
  Proof.
- apply countable_bij_fun with ON U f.
+ apply countable_bij_fun with Ord U f.
  - case (Ordering_bijection f_ord); intros H H0 H1;  split.
   + intros u u_In_U;  exists u; auto.
   +  intros u u_In_img; case u_In_img;  intros x Hx.
@@ -972,8 +972,8 @@ Proof.
   -  intros x; exists x;auto.
 Qed.
 
-Let alpha_ : ON :=
-  (epsilon inh_ON (fun alpha =>  In A alpha /\ f alpha = sup(image U f))).
+Let alpha_ : Ord :=
+  (epsilon inh_Ord (fun alpha =>  In A alpha /\ f alpha = sup(image U f))).
 
 
 
@@ -1112,7 +1112,7 @@ End verso.
 End Th13_5.
 
 
-Theorem TH_13_6 (B : Ensemble ON)(f : ON -> ON) :
+Theorem TH_13_6 (B : Ensemble Ord)(f : Ord -> Ord) :
   normal f B ->   Closed B /\ Unbounded B.
 Proof with eauto with schutte.
  destruct 1.
@@ -1135,20 +1135,20 @@ Proof with auto with schutte.
   intros A B f  H0;split.
   - intro; apply not_countable_unbounded.
     intro H2;  assert (H3 : countable B).
-    {  apply countable_bij_fun with ON A  f ... 
+    {  apply countable_bij_fun with Ord A  f ... 
        apply Ordering_bijection;auto.
     }
     case (countable_not_Unbounded  H3);auto.
   - intro H1;  apply not_countable_unbounded ...
     intro H2;  assert (H3 : countable A).
-    { apply countable_bij_funR with ON   B  f;auto.
+    { apply countable_bij_funR with Ord   B  f;auto.
       apply Ordering_bijection;auto.
     }
  case (countable_not_Unbounded (X:= A));auto.
 Qed.
 
 
-Theorem TH_13_6R (A B : Ensemble ON) (f : ON -> ON) : 
+Theorem TH_13_6R (A B : Ensemble Ord) (f : Ord -> Ord) : 
   ordering_function f A B ->
   Closed B ->    Unbounded B ->   normal f B.
 Proof with auto with schutte.
