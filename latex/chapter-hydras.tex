@@ -6,10 +6,11 @@ This chapter is dedicated to the representation of hydras and rules of the hydra
 Technically, a \emph{hydra} is just a finite ordered tree, each node of which 
 has any number of sons. Note that, contrary to the computer science tradition, we will show the hydras 
 with the heads up and the foot (i.e., the root of the tree) down.
-Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt{Hy} in our examples (please look at the module 
-\url{../src/html/hydras.Hydra.Hydra_Examples.html}). 
+Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt{Hy} in our examples (please look at the 
+module~\href{../src/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}). 
 
 \begin{figure}[h]
+\centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
 \node (foot) at (2,0) {$\bullet$};
@@ -37,8 +38,10 @@ Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt
 
 We use a specific vocabulary for talking about hydras. Table~\ref{tab:hyd2tree} shows the correspondance between our terminology and the usual vocabulary for trees in computer science.
 
-\begin{center}
-\begin{tabular}{ll}
+
+\begin{figure}[h]
+  \centering
+  \begin{tabular}{ll}
 Hydras & Finite rooted trees\\
 \hline
 foot & root\\
@@ -48,9 +51,10 @@ segment  & (directed) edge \\
 sub-hydra & subtree\\
 daughter & immediate subtree\\
 \end{tabular}
-\captionof{table}{\label{tab:hyd2tree}
-Translation from hydras to trees}
-\end{center}
+  \caption{Translation from hydras to trees}
+  \label{tab:hyd2tree}
+\end{figure}
+
 
 The hydra \texttt{Hy} has a \emph{foot} (below), five \emph{heads}, and eight \emph{segments}. 
 We leave it to the reader to define various parameters such as the height, the size, the highest arity (number of sons of a node) of a hydra. In our example, these parameters have the respective values : $4$, $9$ and $3$.
@@ -66,11 +70,11 @@ More formally, a  battle is a sequence of \emph{rounds}.
 At each round:
 \begin{itemize}
 \item If the hydra is composed of just one head, the battle is finished
-and  Hercules is the winner
-\item Otherwise, Hercules chops off \emph{one} head of the hydra
+and  Hercules is the winner.
+\item Otherwise, Hercules chops off \emph{one} head of the hydra,
 
 \begin{itemize}
-\item If the head is at distance 1 from the foot, the head is just lost by the hydra
+\item If the head is at distance 1 from the foot, the head is just lost by the hydra, with no more reaction.
 \item Otherwise, let us denote by \(r\) the node that was at distance \(2\) from 
 the removed head in the direction of the foot,  and consider the  sub-hydra \(h'\) of \(h\), whose  root is \(r\) \footnote{$h'$ will be called ``the wounded part of the hydra'' in the subsequent text. In Figures~\vref{fig:Hy2} and ~\vref{fig:Hy4}, this sub-hydra  is displayed in red.}. Let $n$ be some natural number.
 Then $h'$ is replaced by  $n+1$ of copies of \(h'\) which share the same root $r$.
@@ -94,10 +98,10 @@ nodes and segments from which, in order to reach the root, this segment would ha
 traversed. If the head just chopped off had the root of its nodes, no new head is grown. ''
 \end{quote}
 
-Moreover, we note that this description is in \emph{imperative} terms. In order to build a formal  study of the properties of hydra battles, we prefer to use mathematical language, i.e., graphs, relations, functions, etc.
+Moreover, we note that this description is in \emph{imperative} terms. In order to build a formal  study of the properties of hydra battles, we prefer to use a mathematical vocabulary, i.e., graphs, relations, functions, etc.
 Thus, the replication process will be represented as a binary relation on a data type \texttt{Hydra},
 linking the state of the hydra \emph{before} and \emph{after} the transformation.
-A battle will thus be represented as a sequence of terms of type \texttt{Hydra}.
+A battle will thus be represented as a sequence of terms of type \texttt{Hydra}, respecting the rules of the game.
 
 
 
@@ -110,11 +114,12 @@ At the first round, Hercules choses to chop off the rightmost head of \texttt{Hy
 Since this head is near the floor, the hydra loses this head. Let us call 
  \texttt{Hy'} the resulting state of the hydra, represented in Fig.~\vref{fig:Hy-prime}.
 
-Next, assume Hercules choses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the rotten neck in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
+Next, assume Hercules choses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the rotten neck in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part\footnote{In other words, the replication factor at this round is equal to $4$.}. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
 
 
 
 \begin{figure}[h]
+\centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
 \node (foot) at (2,0) {$\bullet$};
@@ -140,7 +145,7 @@ Next, assume Hercules choses to chop off one of the two highest heads of \texttt
 
 
 \begin{figure}[hp]
-
+\centering
 \begin{tikzpicture}[very thick, scale=0.5]
 
 \node (foot) at (2,0) {$\bullet$};
@@ -160,11 +165,12 @@ Next, assume Hercules choses to chop off one of the two highest heads of \texttt
 \draw (foot) to [bend left= 10]  (H0) ;
 \draw (N1) to [bend right= 16] (H5);
 \end{tikzpicture}
-\caption{A beheading}
+\caption{A second beheading}
 \label{fig:Hy2}
 \end{figure}
 
 \begin{figure}[hp]
+\centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
 \node (foot) at (2,0) {$\bullet$};
@@ -206,6 +212,7 @@ Next, assume Hercules choses to chop off one of the two highest heads of \texttt
 Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the battle, with a replication factor equal to $2$. Let us call \texttt{Hy'''} the state of the hydra after that third round.
 
 \begin{figure}[hp]
+\centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
 \node (foot) at (2,0)  {{\color{lightred}$\bullet$}};
@@ -246,6 +253,7 @@ Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the b
 \end{figure}
 
 \begin{figure}[hp]
+\centering
 \begin{tikzpicture}[very thick, scale=0.4]
 
 \node (foot) at (10,0) {$\bullet$};
@@ -361,15 +369,10 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 \label{sec:orgheadline48}
 
 
+In order to describe trees where each node can have an arbitrary (but finite) number of sons, it usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
+(see for instance Chapter 14, pages 400-406 of \cite{BC04}).
 
-
-
-Various \emph{Coq} libraries  represent trees the nodes of which 
-have a non-fixed number of sons. The reader can, for instance, look at
-Chapter 14, pages 400-406 of \cite{BC04}. 
-Our representation uses two mutual inductive types: \texttt{Hydra} to represent
- any hydra, and \texttt{Hydrae} to represent finite sequences of hydras.
-
+For this purpose, we define two mutual inductive types.
 \index{Types!Hydra}
 
 \vspace{4pt}

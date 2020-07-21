@@ -16,6 +16,8 @@ with Hydrae : Set :=
 | hnil : Hydrae
 | hcons : Hydra -> Hydrae -> Hydrae.
 
+(** Alternative representation (discarded) *)
+
 Module Alt.
 
   Inductive Hydra : Set :=
@@ -24,7 +26,7 @@ Module Alt.
 End Alt.
 
 
-(** ***  Mutual induction scheme for types Hydra and Hydrae 
+(**   Mutual induction scheme for types Hydra and Hydrae 
  *)
 
 Scheme Hydra_rect2 := Induction for Hydra Sort Type
@@ -39,7 +41,7 @@ Defined.
 
 
 
-(**  *** Number of nodes (a.k.a. size)
+(**   Number of nodes (a.k.a. size)
  *)
 
 Fixpoint hsize (h:Hydra) : nat :=
