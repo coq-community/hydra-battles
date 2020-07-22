@@ -196,12 +196,12 @@ Proof.
 Qed.
 
 
-(** ** Properties of [fight] *)
+(** ** Properties of [battle] *)
 
-Lemma fight_trans {b:Battle} :
-  forall i h j h', fight b i h j h' ->
-                   forall k h0,  fight b k h0 i h ->
-                                 fight b k h0 j h'.
+Lemma battle_trans {b:Battle} :
+  forall i h j h', battle b i h j h' ->
+                   forall k h0,  battle b k h0 i h ->
+                                 battle b k h0 j h'.
 Proof.  
   induction 2.
   -  now right with h'0.
@@ -219,9 +219,9 @@ Proof.
   -   intros; red.  red in H. now  exists i.
 Qed.                          
 
-Lemma standard_fight_head :
+Lemma standard_battle_head :
   forall i h j h',
-    @fight standard  i h j h' ->  h <> head.
+    @battle standard  i h j h' ->  h <> head.
 Proof.
   induction 1;  intro; subst h; eapply head_no_round_n ; eauto.
 Qed.
@@ -273,7 +273,7 @@ Proof.
   intros; left;apply R1_remove_r_i.
 Qed.
 
-Lemma remove_heads_r : forall i h j, fight standard 
+Lemma remove_heads_r : forall i h j, battle standard 
                                        j
                                        (add_r h (S i))
                                        (S i+j)%nat
@@ -285,7 +285,7 @@ Proof.
      +  left;  apply R1_remove_r_i.
      +  now rewrite add_r_0.
  - intros h j;  specialize (IHi h (S j)).
-    apply fight_trans with (S j) (add_r h (S i)).
+    apply battle_trans with (S j) (add_r h (S i)).
     +    replace (S (S i) + j)%nat with (S i + S j)%nat;  auto.
          lia.
     +   left.
@@ -293,7 +293,7 @@ Proof.
 Qed.
 
 
-Lemma remove_heads_r_free: forall i h j, fight free
+Lemma remove_heads_r_free: forall i h j, battle free
                                        j
                                        (add_r h (S i))
                                        (S i+j)%nat
@@ -315,7 +315,7 @@ Qed.
 
 Lemma variant_mono_free  {A:Type} {Lt: relation A}{Tr : Transitive Lt}
       {Wf: well_founded Lt} m {V: Hvariant Wf free m}:
-  forall i h j h', fight free i h j h' -> Lt (m h') (m h).
+  forall i h j h', battle free i h j h' -> Lt (m h') (m h).
 Proof.
   induction 1;auto. 
   -  apply (variant_decr 0).
@@ -351,8 +351,8 @@ Proof.
 Qed.
 
 
-Lemma fight_free_equiv1 : forall i j h h',
-    fight free i h j h' ->
+Lemma battle_free_equiv1 : forall i j h h',
+    battle free i h j h' ->
     h -+-> h'.
 Proof.
   induction 1.
@@ -360,9 +360,9 @@ Proof.
   - now  right with h''.
  Qed.
 
-Lemma fight_free_equiv2 : forall h h',
+Lemma battle_free_equiv2 : forall h h',
      h -+-> h' ->
-    forall i, exists j,  fight free i h j h'.
+    forall i, exists j,  battle  free i h j h'.
 Proof.
   induction 1 as [h h' H | h h'' h' H H0 Hind].
   - intro i; exists (S i); left;auto.

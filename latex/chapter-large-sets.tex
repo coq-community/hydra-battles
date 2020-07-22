@@ -5,7 +5,7 @@
 
 In this chapter, we try to feel how long a standard battle can be.
 To be precise, for any ordinal $\alpha<\epsilon0$ and any positive integer $k$,
-we give a minoration of the number of steps of a standard fight which
+we give a minoration of the number of steps of a standard battle which
 starts with the hydra $\iota(\alpha)$ and the replication factor $k$.
 
 We express this number in terms of the Hardy hierarchy of fast-growing 
@@ -600,7 +600,7 @@ Module~\href{../src/html/hydras.Hydra.Hydra_Theorems.html\#battle_length_std}{Hy
 Theorem battle_length_std (alpha : E0)  :
   alpha <> Zero ->
   forall k, (1 <= k)%nat ->
-            fight_length standard k (iota (cnf alpha))
+            battle_length standard k (iota (cnf alpha))
                          (L_ alpha (S k) - k).
 \end{Coqsrc}
 
@@ -989,7 +989,7 @@ Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k -> exists l: nat,  
        H_ alpha k - k <= l /\
-       fight_length standard k (iota (cnf alpha)) l.    
+       battle_length standard k (iota (cnf alpha)) l.    
 \end{Coqsrc}
 
 \section{The Wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}

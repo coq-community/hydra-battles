@@ -1044,7 +1044,7 @@ Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h 
 \subsubsection{Proof of the inequality \texttt{m small\_h < m big\_h}}
 
 For proving the inequality  \texttt{m\_lt: m small\_h < m big\_h}, it suffices to
-build a fight transforming \texttt{big\_h} into \texttt{small\_h}.
+build a battle transforming \texttt{big\_h} into \texttt{small\_h}.
 
 First we prove that \texttt{small\_h} is reachable from \texttt{big\_h} in one or two steps. Let us decompose \texttt{m big\_h}
 into the pair $(i,j)$.
@@ -1104,16 +1104,16 @@ Inductive step : t -> t -> Prop :=
 \end{Coqsrc}
 
 The following lemma establishes a correspondance between the relation
-\texttt{step} and hydra fights.
+\texttt{step} and hydra battles.
 
 \begin{Coqsrc}
-Lemma step_to_fight : forall p q, step p q -> iota p -+-> iota q.
+Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
 \end{Coqsrc}
 
 \index{Maths!Transfinite induction}
 
 Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
-by transfinite induction over \texttt{p} a fight 
+by transfinite induction over \texttt{p} a battle 
 that transforms the hydra $\iota(p)$ into $\iota(q)$.
 
 \vspace{4pt}

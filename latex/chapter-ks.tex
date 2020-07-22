@@ -59,7 +59,7 @@ sequence $\alpha_0=\alpha, \alpha_1, \dots, \alpha_n=\beta$, where for every $k<
 \item Canonical sequences correspond tightly to rounds of hydra battles: if $\alpha\not=0$,
 then $\iota(\alpha)$ is transformed into $\iota(\canonseq{\alpha}{i+1}$ in one round with
 the replication factor $i$ (Lemma \href{../src/html/hydras.Hydra.O2H.html\#canonS_iota_i}{Hydra.O2H.canonS\_iota\_i}).
-\item From the two previous properties, we infer that whenever $\beta<\alpha<\epsilon_0$, there exists a (free) fight from $\iota(\alpha)$ to $\iota(\beta)$.
+\item From the two previous properties, we infer that whenever $\beta<\alpha<\epsilon_0$, there exists a (free) battle from $\iota(\alpha)$ to $\iota(\beta)$.
 \end{itemize}
 
 \paragraph{Remark}
@@ -459,18 +459,18 @@ Lemma canonS_iota i alpha :
                 
 
 The next step of our development is to extend this relationship to
-the order $<$ on $[0,\epsilon_0[$ on one side, and hydra fights on the other side.
+the order $<$ on $[0,\epsilon_0[$ on one side, and hydra battles on the other side.
 
 \begin{Coqsrc}
-Lemma path_to_fight alpha s beta :
+Lemma path_to_battle alpha s beta :
   path_to  beta  s alpha -> nf alpha ->
   iota alpha -+-> iota beta.
 \end{Coqsrc}
 
-As a corollary, we are now able to transform any inequality $\beta<\alpha<\epsilon_0$ into a (free) fight.
+As a corollary, we are now able to transform any inequality $\beta<\alpha<\epsilon_0$ into a (free) battle.
 
 \begin{Coqsrc}
-Lemma LT_to_fight alpha beta :
+Lemma LT_to_battle alpha beta :
     beta < alpha ->  iota alpha -+-> iota beta.
 \end{Coqsrc}
 
@@ -582,7 +582,7 @@ Lemma m_ge : m big_h <= m small_h.
 \end{Coqsrc}
 
 \item From the hypothesis \texttt{m\_bounded}, we have \texttt{m big\_h < mu}
-\item By Lemma \texttt{LT\_to\_fight}, we get a (free) battle from
+\item By Lemma \texttt{LT\_to\_battle}, we get a (free) battle from
 \texttt{big\_h = iota mu} to \texttt{small\_h = iota (m big\_h)}.
 
 \begin{Coqsrc}
@@ -1193,7 +1193,7 @@ $\iota(\alpha)$ to $\iota(\beta)$.
 Lemma LT_to_standard_battle :
     forall alpha beta,
       beta < alpha ->
-      exists n i,  fight standard  n (iota alpha) i (iota beta).
+      exists n i,  battle standard  n (iota alpha) i (iota beta).
 \end{Coqsrc}
 
 

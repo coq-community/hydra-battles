@@ -549,7 +549,7 @@ Import MoreLists.
 (* begin hide *)
 
 Lemma trace_to_std_0 h' : forall l i h, trace_to h' (iota_from i (S l)) h ->
-                                        fight standard  i h (S l + i) h'.
+                                        battle standard  i h (S l + i) h'.
 Proof.
   induction l.
   simpl.
@@ -574,7 +574,7 @@ Qed.
 (* end hide *)
 
 Lemma trace_to_std i h j h': (i <= j)%nat -> trace_to h' (interval i j) h ->
-                                        fight standard  i h (S j) h'.
+                                        battle standard  i h (S j) h'.
 Proof.
  unfold interval. intro H.
  simpl in H.  replace (S j - i)%nat with (S (j - i))%nat by lia.

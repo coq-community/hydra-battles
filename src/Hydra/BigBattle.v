@@ -21,9 +21,9 @@ Definition h1 := (hyd1 head).
 
 
 
-Lemma L_0_2 : fight standard 0 hinit 2 (hyd1 h3). 
+Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3). 
 Proof.
-  eapply fight_trans with (h := hyd2 h3 head)(i:=1).
+  eapply battle_trans with (h := hyd2 h3 head)(i:=1).
   left; trivial.
    red. cbn. round_1 1.
    left; trivial.
@@ -44,15 +44,15 @@ Definition hyd (a b c : nat) :=
                          (hcons_mult head c hnil))).
 
 
-Lemma L_2_3 : fight standard 2 (hyd1 h3)  3 (hyd 3 0 0).
+Lemma L_2_3 : battle standard 2 (hyd1 h3)  3 (hyd 3 0 0).
 Proof.  
   left; trivial; right ; unfold  hyd; simpl;  left; left.
   split; right; right; left.
 Qed.
 
-Lemma L_0_3 : fight standard 0 hinit 3 (hyd 3 0 0).
+Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
 Proof.
-  eapply fight_trans.
+  eapply battle_trans.
   - apply L_2_3.
   - apply L_0_2.
 Qed.
@@ -218,7 +218,7 @@ Inductive one_step (i: nat) :
 
 
 Lemma step_round_plus : forall i a b c a' b' c', one_step i a b c a' b' c' ->
-                                            fight standard i (hyd  a b c)
+                                            battle standard i (hyd  a b c)
                                                   (S i) (hyd a' b' c').
   destruct 1.
   - left; trivial;   unfold hyd; left;  split.
@@ -259,12 +259,12 @@ Definition reachable (i a b c : nat) : Prop :=
 
 Lemma steps_round_plus : forall i a b c j  a' b' c',
     steps i a b c j a' b' c' ->
-    fight standard i (hyd  a b c)
+    battle standard i (hyd  a b c)
           j (hyd a' b' c').
 Proof.
   induction 1.
   - now apply step_round_plus.
-  - eapply fight_trans.
+  - eapply battle_trans.
    +   apply IHsteps2.
    +  assumption.
 Qed.
@@ -342,7 +342,7 @@ Proof.
 Qed.
 
 
-Lemma L0_95 : fight standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
+Lemma L0_95 : battle standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
 Proof.
   apply steps_round_plus.
   apply L95.
@@ -400,7 +400,7 @@ Qed.
 (** We can  ow apply our study based on abstract states to "real" hydras *)
 
 
-(** transforming our relation one_step into standard fights *)
+(** transforming our relation one_step into standard battles *)
 
 
 
@@ -408,15 +408,15 @@ Qed.
 (** We get now statements about hydras and battles *)
 
 Lemma Almost_done :
-  fight standard 3 (hyd 3 0 0) N (hyd 0 0 0).
+  battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
 Proof. 
   apply steps_round_plus, SuperbigStep.
 Qed.
 
 Theorem  Done :
-  fight standard 0 hinit N head.
+  battle standard 0 hinit N head.
 Proof.
-  eapply fight_trans.
+  eapply battle_trans.
   -   apply Almost_done.
   -  apply L_0_3.
 Qed.

@@ -315,23 +315,23 @@ Defined.
 
 (**  The following relation allows us to consider sequences of rounds in a given  class  of battles 
 
- The proposition [fight b i h j h'] holds if there is a battle of class [B] that
+ The proposition [battle b i h j h'] holds if there is a battle of class [B] that
   starts with hydra [h] at round [i] and ends with hydra [h'] at round [j]
  *)
 
 
-Inductive fight (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-  fight_1 : forall i h  h', battle_r   B i  h h' -> 
-                            fight B i h (S i) h'
-| fight_n : forall i h  j h' h'',  battle_r  B i h h''  ->
-                                   fight B (S i) h'' j h'  ->
-                                   fight B i h j h'.
+Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
+  battle_1 : forall i h  h', battle_r   B i  h h' -> 
+                            battle B i h (S i) h'
+| battle_n : forall i h  j h' h'',  battle_r  B i h h''  ->
+                                   battle B (S i) h'' j h'  ->
+                                   battle B i h j h'.
 
 
  (** number of steps leading to the hydra's death *)
 
-Definition fight_length B k h l :=
-    fight B k h  (Nat.pred (k + l)%nat) head.
+Definition battle_length B k h l :=
+    battle B k h  (Nat.pred (k + l)%nat) head.
 
 
 
