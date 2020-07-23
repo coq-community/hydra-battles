@@ -1,11 +1,52 @@
-\chapter{Introduction to ordinal numbers with the Coq proof assistant}
-
-\centerline{\LARGE {\bf work in progress!}}
+\chapter{Introduction to ordinal numbers}
 
 
 The proof of termination of all hydra battles presented in~\cite{KP82} is based
 on \emph{ordinal numbers}.
 From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded ordered sets.
+
+More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a sequence of ordinal numbers, as an extension of the sequence of natural numbers. 
+
+
+
+
+\begin{figure}[h]
+  \centering
+\fbox{\Large
+  \begin{minipage}{1.0\linewidth}
+  \begin{align*}
+     &\textcolor{blue}{0},\,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,\ldots\\
+&\textcolor{red}{\omega},\,\omega+1,\omega+2,\omega+3,\ldots\\
+&\textcolor{red}{\omega\times 2},\,\omega\times 2+1,\ldots, \textcolor{red}{\omega\times 3},\,\omega\times 3+1,\ldots, \textcolor{red}{\omega\times 4},\ldots,\\
+&\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots,\\
+&\textcolor{red}{\omega^\omega2},\ldots, \textcolor{red}{\omega^\omega\times 2},\ldots,\\
+&\textcolor{red}{\omega^{\omega^\omega}},\ldots, \textcolor{red}{\omega^{\omega^\omega}+\omega^\omega\times 42+ \omega^{55}+\omega}, \ldots, \textcolor{red}{\omega^{\omega^{\omega+1}}}, \omega^{\omega^{\omega+1}}+1,\dots\\
+& \textcolor{red}{\epsilon_0 (= \omega^\epsilon_0)}, \epsilon_0+1, \ldots,\\
+& \textcolor{red}{\epsilon_1}, \ldots, \textcolor{red}{\epsilon_2}, \ldots, \textcolor{red}{\epsilon_\omega},\ldots \\
+& \textcolor{red}{\Gamma_0}, \Gamma_0+1, \Gamma_0+2, \Gamma_0+3,\ldots, \textcolor{red}{\Gamma_0+\omega}, \ldots,\\
+&\ldots
+  \end{align*}   
+  \end{minipage}}
+ 
+ 
+  \caption{A short overview of the sequence of ordinal numbers}
+  \label{fig:ordinal-sequence}
+\end{figure}
+
+
+Let us comment some features of this table.
+
+\begin{itemize}
+\item The ordinals are listed in a strictly increasing order. 
+\item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, betaween $41$ and $43$.
+\item Each ordinal in black is an immediate successor of anotter ordinal. We call it a \emph{successor} ordinal. For instance, $43$ is the successor of $42$, and $\omega^4+1$ the successor of $\omega^4$.
+\item Ordinals that follow dots (written in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). $\omega$ is also the first limit ordinal, and the first infinite ordinal, in the sense that 
+the set $\mathbb{O}_\omega$ is infinite.
+\item The ordinal $\epsilon_0$ is the first number which is equal to its own exponential of base $\omega$. It plays an important role in proof theory, and is particularly studied in chapters~\ref{chap:T1} to \ref{chap:alpha-large}.
+\end{itemize}
+
+
 
 \section{The mathematical point of view}
 

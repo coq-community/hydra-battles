@@ -372,7 +372,7 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 In order to describe trees where each node can have an arbitrary (but finite) number of sons, it usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
 (see for instance Chapter 14, pages 400-406 of \cite{BC04}).
 
-For this purpose, we define two mutual inductive types.
+For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydra.
 \index{Types!Hydra}
 
 \vspace{4pt}
@@ -385,6 +385,13 @@ with Hydrae : Set :=
 | hnil : Hydrae
 | hcons : Hydra -> Hydrae -> Hydrae.
 \end{Coqsrc}
+
+\index{To do}
+
+\begin{todo}
+Look for an existing library on trees with nodes of arbitrary arity, iin order to replace  this ad-hoc type with something more generic.
+\end{todo}
+
 
 \index{Projects}
 
@@ -757,17 +764,16 @@ a \emph{round}, i.e., an interaction composed of the two following actions:
 \item Hercules chops off one head of the hydra
 \item Then, the  hydra replicates the wounded part (if the head is at distance $\geq 2$ from the foot).
 \end{enumerate}
-The relation associated with each round of the battle is \emph{parameterized}  by the \emph{expected} replication  factor (irrelevant if the chopped head is at distance 1 from the foot).
+The relation associated with each round of the battle is \emph{parameterized}  by the \emph{expected} replication  factor (irrelevant if the chopped head is at distance 1 from the foot,
+but present for consistency's sake).
 
 In our description,  we will apply the following naming convention: if $h$ represents the configuration of the hydra before a round, then the configuration of $h$ after this round will be called $h'$.
  Thus, we are going to define a proposition  (\texttt{round\_n $n\;h\;h'$})  whose intended meaning will be `` the hydra $h$  is transformed into $h'$  in a single round of a battle, with the expected replication factor $n$ ''.
 
 
-Since the replication of parts of the hydra depends on the distance of the chopped head from  the foot, we  decompose our description into several cases, under the form of a bunch of [mutually] inductive predicates over the types \texttt{Hydra} and \texttt{Hydrae}.
+Since the replication of parts of the hydra depends on the distance of the chopped head from  the foot, we  decompose our description into two main  cases, under the form of a bunch of [mutually] inductive predicates over the types \texttt{Hydra} and \texttt{Hydrae}.
 
-
-
-We decompose the relation associated with each  round in two cases: 
+The mutually exclusive cases we consider are the following.
 \begin{itemize}
 \item \textbf{R1}: The chopped off head was at distance 1 from the foot.
 \item \textbf{R2}: The chopped off head was at a distance greater than or equal to  $2$ from the foot.
@@ -864,7 +870,8 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\emph{Please consider exercise~\vref{exo:interactive-battle}.}
+The reader is encouraged to look at all the intermediary subgoals of this example.
+\emph{Please consider also exercise~\vref{exo:interactive-battle}.}
 
 
 \subsection{Description of any round}
@@ -1011,7 +1018,7 @@ Program Instance free : Battle :=
   (Build_Battle ( fun _  h h' => round h h') _).
 \end{Coqsrc}
 
-We chosed to call \emph{standard} the kind of battles which appear  most often in the litterature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$.
+We chosed to call \emph{standard} the kind of battles which appear  most often in the litterature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
@@ -1023,7 +1030,7 @@ Next Obligation.
 Defined.
 \end{Coqsrc}
 
-\subsection{Fights}
+\subsection{Formal definition of battles}
 
 Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
 
@@ -1031,12 +1038,12 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
-Inductive fight (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-|  fight_1 : forall i h  h', battle_r   B i  h h' -> 
-                            fight B i h (S i) h'
-| fight_n : forall i h  j h' h'',  battle_r  B i h h''  ->
-                                   fight B (S i) h'' j h'  ->
-                                   fight B i h j h'.
+Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
+| battle_1 : forall i h  h', battle_r   B i  h h' -> 
+                            battle B i h (S i) h'
+| battle_n : forall i h  j h' h'',  battle_r  B i h h''  ->
+                                   battle B (S i) h'' j h'  ->
+                                   battle B i h j h'.
 \end{Coqsrc}
 
 % \begin{remark}
@@ -1046,12 +1053,12 @@ Inductive fight (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
 % \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
 
 %  \begin{Coqsrc}
-%  Lemma fight_free_equiv1 : forall i j h h',  
-%              fight free i h j h' ->   h -+-> h'.
+%  Lemma battle_free_equiv1 : forall i j h h',  
+%              battle free i h j h' ->   h -+-> h'.
  
-%  Lemma fight_free_equiv2 : forall h h',
+%  Lemma battle_free_equiv2 : forall h h',
 %      h -+-> h' ->
-%     forall i, exists j,  fight free i h j h'.
+%     forall i, exists j,  battle free i h j h'.
 %  \end{Coqsrc}
 
 % \end{remark}
@@ -1061,8 +1068,15 @@ Inductive fight (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
 \section{A long battle}
 \label{sect:big-battle}
 
-In this section we show how long a simple hydra battle can last.  The following example
-considers a very small hydra, shown on figure~\vref{fig:hinit}.
+
+In this section we consider a simple example of battle, starting with a small hydra,
+shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
+
+\begin{itemize}
+\item Hercules chops always the rightmost head of the hydra.
+\item The battle is standard: at the round number $i$, the expected replication is $i$.
+\end{itemize}
+
 
 
 \begin{figure}[h]
@@ -1095,17 +1109,17 @@ Definition hinit := hyd3 (hyd_mult head 3)  head head.
 
 
 
-Moreover, in order to \emph{compute} the length of a battle, we set Hercules strategy : to chop the rightmost head at each round, and the hydra's strategy : at the $i$-th round, the replication factor is exactly $i$ (which means that the battle is
-a \emph{standard} battle, see section~\vref{sect:battle-classes}).
+The lemma we would like to prove is ``The considered battle lasts exactly $N$ rounds'',
+with $N$ being a natural number we gave to guess.
 
-The  battle is so long that no \emph{test} can give us an estimation of its length, and we do need the expressive power of logic to compute this length. However, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
+But the  battle is so long that no \emph{test} can give us an estimation of its length, and we do need the expressive power of logic to compute this length. However, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
 Thus, we can consider this development as a collaboration of proof with computation.
 
-We want to verify whether Hercules wins a standard battle starting from \texttt{hinit} at time $t=0$ , and in this case, in how many rounds. We assume Hercules' 
-strategy is to chop off the rightmost head at every round.
+In the following lines, we try to show faithfully how we found the value of the number $N$.
 
-The complete proof is in file \url{../src/html/hydras.Hydra.BigBattle.html}.
+The complete proof is in file \url{../src/html/hydras.Hydra.BigBattle.html}. 
 
+\subsection{The beginning of hostilities}
 During the two first rounds, our hydra loses its two rightmost heads. Thus just before the third round, it looks like in figure~\vref{fig:hinit-plus2}.
 
 
@@ -1128,11 +1142,15 @@ During the two first rounds, our hydra loses its two rightmost heads. Thus just 
   \label{fig:hinit-plus2}
 \end{figure}
 
-The following lemma  is a formal statement about the two first rounds of the battle.
+The following lemma  is a formal statement about these first rounds, in terms of the
+\texttt{battle} predicate.
 
 \begin{Coqsrc}
-Lemma L_0_2 : fight standard 0 hinit 2 (hyd1 h3).   
+Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).   
 \end{Coqsrc}
+
+
+\subsection{Looking for regularities}
 
 
 A first study with pencil and paper suggested us that, after three rounds, the hydra always looks like in figure~\vref{fig:hinit-plusn} (with a variable number of 
@@ -1217,14 +1235,13 @@ With these notations, we get a formal description of the first three rounds.
 
 
 \begin{Coqsrc}
-Lemma L_2_3 : fight standard 2 (hyd1 h3)  3 (hyd 3 0 0).
+Lemma L_2_3 : battle standard 2 (hyd1 h3)  3 (hyd 3 0 0).
 
-Lemma L_0_3 : fight standard 0 hinit 3 (hyd 3 0 0).
+Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
 \end{Coqsrc}
 
 
-We would like to have a formal proof that the length of the considered battle is 
-equal to some integer $N$, but we have first  to \emph{guess} this number.
+\subsection{Computing \dots}
 In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple datatype for representing the states as tuples composed of
 the round number, and the respective number of daughters  \texttt{h2}, \texttt{h1}, and heads
 of the current hydra.
@@ -1239,7 +1256,7 @@ of the current hydra.
 
 The following function returns the next configurarion of the game. 
 Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle will only start with the lemma
-\texttt{lemma:step-fight}, page~\pageref{lemma:step-fight}.
+\texttt{lemma:step-battle}, page~\pageref{lemma:step-battle}.
 
 
 \begin{Coqsrc}
@@ -1380,6 +1397,7 @@ Compute test (iterate doubleS 2 95).
 *)
 \end{Coqsrc}
 
+\subsection{Proving \dots}
 We are now able to reason about the sequence of transitions defined by our hydra battle. Instead of using the data-type \texttt{state} we study the relationship
 between different configurations of the battle.
 
@@ -1396,12 +1414,12 @@ Inductive one_step (i: nat) :
 
 The relation between \texttt{one\_step} and the rules of hydra battle is asserted by the following lemma. 
 
-\label{lemma:step-fight}
+\label{lemma:step-battle}
 
 \begin{Coqsrc}
-Lemma step_fight : forall i a b c a' b' c', 
+Lemma step_battle : forall i a b c a' b' c', 
    one_step i a b c a' b' c' ->
-   fight standard i (hyd  a b c)  (S i) (hyd a' b' c').
+   battle standard i (hyd  a b c)  (S i) (hyd a' b' c').
 \end{Coqsrc}
 
 Next, we define ``big steps'' as the transitive closure of \texttt{one\_step},
@@ -1424,15 +1442,15 @@ Definition reachable (i a b c : nat) : Prop :=
 \end{Coqsrc}
 
 
-The following lemma establishes a relation between \texttt{steps} and the predicate \texttt{fight}.
+The following lemma establishes a relation between \texttt{steps} and the predicate \texttt{battle}.
 
 \begin{Coqsrc}
- Lemma steps_fight : forall i a b c j a' b' c', 
+ Lemma steps_battle : forall i a b c j a' b' c', 
    steps i a b c j a' b' c' ->
-   fight standard i (hyd  a b c)   j  (hyd a' b' c').
+   battle standard i (hyd  a b c)   j  (hyd a' b' c').
 \end{Coqsrc}
 
-Thus, any result about \texttt{steps} will be applicable to standard fights.
+Thus, any result about \texttt{steps} will be applicable to standard battles.
 Using the predicate \texttt{steps} our study of the length of the considered battle
 can  be decomposed into three parts:
 
@@ -1478,7 +1496,7 @@ Qed.
 \end{Coqsrc}
 
 From now on, the lemma \texttt{reachable\_S} allows us to watch larger steps of 
-the fight.
+the battle.
 
 
 \begin{Coqsrc}
@@ -1527,7 +1545,9 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-We are now able to make giant steps in the simulation of the battle.
+\subsection{Giant steps}
+
+We are now able to make bigger steps in the simulation of the battle.
 First, we iterate the lemma \texttt{reachable\_S}.
 
 \begin{Coqsrc}
@@ -1641,24 +1661,28 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-We are now able to prove formally that the considered fight is 
+We are now able to prove formally that the considered battle is 
 composed of $N$ steps.
 
 \begin{Coqsrc}
 Lemma Almost_done :
-  fight standard 3 (hyd 3 0 0) N (hyd 0 0 0).
+  battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
 Proof. 
-  apply steps_fight, SuperbigStep.
+  apply steps_battle, SuperbigStep.
 Qed.
 
 Theorem  Done :
-  fight standard 0 hinit N head.
+  battle standard 0 hinit N head.
 Proof.
-  eapply fight_trans.
+  eapply battle_trans.
   -   apply Almost_done.
   -  apply L_0_3.
 Qed.
 \end{Coqsrc}
+
+
+
+\subsection{A minoration lemma}
 
 Now, we would like to get an intuition of  how big the number $N$ is.
 For that purpose, we use a minoration of the function \texttt{doubleS} by the
@@ -1740,9 +1764,9 @@ Definition Termination :=  well_founded (transp _ round).
 \end{Coqsrc}
 
 
-Let $b$ be an instance of class \texttt{Battle}. A \emph{variant} for $b$ consists
+Let $B$ be an instance of class \texttt{Battle}. A \emph{variant} for $B$ consists
 in a well-founded relation $<$  on some type \texttt{A}, and a function
-(also called a \emph{measure}) \texttt{m:Hydra->A} such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $b$, the inequality $m(h')<m(h)$ holds.
+(also called a \emph{measure}) \texttt{m:Hydra->A} such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $B$, the inequality $m(h')<m(h)$ holds.
 
 
 \vspace{4pt}
@@ -1750,16 +1774,17 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \index{Coq!Techniques!Type classes}
 
 \begin{Coqsrc}
-Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(b : Battle)
-                          (m: Hydra -> A): Prop :=
- {variant_decr :forall i h h', 
-     h <> head -> b i  h h' -> Lt (m h') (m h)}.
+Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
+  (m: Hydra -> A):   Prop :=
+  {variant_decr :forall i h h',
+      h <> head ->
+      battle_r  B i  h h' -> Lt (m h') (m h)}.
 \end{Coqsrc}  
 
 \index{Exercises}
 
 \begin{exercise}
- Prove that, if there is an instance of \texttt{Hvariant Lt wf\_Lt b m}, then there exists no infinite battle in  \texttt{b}.
+ Prove that, if there is an instance of \texttt{Hvariant Lt wf\_Lt $B$ $m$}, then there exists no infinite battle in  $B$.
 \end{exercise}
 
 
@@ -1767,55 +1792,10 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(b : Battle)
 
 \subsection{A first theorem of impossibility}
 
+The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
 
-The class \texttt{Hvariant} is parameterized by a well-founded order $<$ on some type $A$, a class of battles $B$ and a measure $m$. When $<$ or $m$ are 
-badly given for a given class $B$, one may fail to find a variant.
-
-We show that this is the case of the type \texttt{nat} of Peano natural numbers, provided with the usual strict order $<$. 
-
-\subsubsection{Using the Hydra's height as a variant}
-Trivially, a measure like the height will not work for building a variant.
-
-Please consider the hydras of Fig.~\vref{fig:h-omega2-small} and
-\ref{fig:h-omega-omega}. The former can be transformed into the latter in one round, but their heights are equal. 
-
-
-
-\begin{figure}[htb]
-\centering
-\begin{tikzpicture}[very thick, scale=0.5]
-\node (foot) at (2,0) {$\bullet$};
-\node (N1) at (2,2) {$\bullet$};
-\node (N2) at (2,4) {$\Smiley[2][green]$};
-\draw (foot) -- (N1);
-\draw (N1) -- (N2) ;
-\end{tikzpicture}
-\caption{\label{fig:h-omega-omega}}
-\end{figure}
-
-\vspace{4pt}
-\emph{From Module~\href{../src/html/hydras.Hydra.Omega_Small.html\#height_bad}{Hydra.Hydra.Omega\_Small}}
-
-
-\begin{Coqsrc}
-Lemma height_bad :  ~ Hvariant lt_wf free height.
-Proof.
-  intros [H];
-   specialize (H 1 (hyd1 (hyd2 head head))  (hyd1 (hyd1 head)));
-   apply (lt_irrefl 2), H.
-  -  apply reachable_free.
-  -  discriminate.
-  -  exists 0; right;  R2_here 0;  left. 
-Qed.
-\end{Coqsrc}
-
-
-
-\subsubsection{Using any variant defined on \texorpdfstring{nat}{nat}}
-\label{sect:omega-case}
-We could imagine that our previous failure is due to the choice of \texttt{height} as a measure, and that a more complex function would work.
-In fact, we can prove that 
-\emph{no} instance of class \texttt{WfVariant round Peano.lt $m$} can be build, where
+Unfortunately, we can prove that 
+\emph{no} instance of class \texttt{WfVariant round Peano.lt $m$} can be built, where
 $m$ is \emph{any} function of type \texttt{Hydra $\arrow$ nat}.
 
 
@@ -1934,8 +1914,11 @@ Prove that there exists no variant $m$ from \texttt{Hydra} into \texttt{nat} for
 
 \subsubsection{Conclusion/Teaser}
 
-In order to build a variant for proving the termination of all hydra battles, we need to consider order structures more complex than the usual order on type \texttt{nat}. The next chapter will present the notion of \emph{ordinal notation} from the point view of the \coq{} user: inductive types, functions, type classes, etc. 
-The ordinal $\epsilon_0$, the first one allowing us to build our desired variant, will be studied in detail in 
-Chapter~\ref{chap:T1}.
+In order to build a variant for proving the termination of all hydra battles, we need to consider order structures more complex than the usual order on type \texttt{nat}. 
+The notion of \emph{ordinal number} provides a catalogue of well-founded order types.
+For a reasonably large bunch of ordinal numbers, \emph{ordinal notations} are data-types which allow the \coq{} user to define functions, to compute and prove some properties, for instance by reflection.
+
+So, the next chapters will present ordinal numbers and ordinal notations, and we will
+look for a variant complex enough for proving the termination of all battles, but not too complex if possible.
 
 
