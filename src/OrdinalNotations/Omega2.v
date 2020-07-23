@@ -177,7 +177,7 @@ Proof.
 Qed.
 
 
-Instance Omega2 : OrdinalNotation  lt compare.
+Instance Omega2 : ON  lt compare.
 Proof.
   split.
   - apply lt_strorder.

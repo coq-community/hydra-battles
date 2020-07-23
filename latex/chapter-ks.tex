@@ -8,25 +8,25 @@ The reader may think that our proof of termination in the previous  chapter requ
 In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into some segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapter.
 
 \begin{itemize}
-\item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2[$ (section ~\vref{omega2-case}), and a fortiori 
-$[0,\omega[$
+\item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2)$ (section ~\vref{omega2-case}), and a fortiori 
+$[0,\omega)$
 
 \item There is a variant that maps the type \texttt{Hydra} into the
-interval $[0,\epsilon_0[$ (theorem \texttt{every\_battle\_terminates}, in section~\vref{hydra-variant}).
+interval $[0,\epsilon_0)$ (theorem \texttt{every\_battle\_terminates}, in section~\vref{hydra-variant}).
 \end{itemize}
 
 
 Thus, a very natural question is the following one:
 \begin{quote}
   `` Is there  any variant from
-\texttt{Hydra} into some interval $[0,\mu[$, where $\mu<\epsilon_0$, for proving the termination of all hydra battles ?''
+\texttt{Hydra} into some interval $[0,\mu)$, where $\mu<\epsilon_0$, for proving the termination of all hydra battles ?''
 \end{quote}
 
 We prove in \coq{} the following results:
 
 \begin{quote}
 There is no variant for proving the termination of all hydra battles
-from \texttt{Hydra} into the interval $[0..\mu[$, where
+from \texttt{Hydra} into the interval $[0..\mu)$, where
 $\mu< \epsilon_0$.
 The same impossibility holds even if we consider only standard battles (with the successive replication factors $0,1,2,\dots,t,t+1,\dots$).
 \end{quote}
@@ -380,7 +380,7 @@ Lemma path_to_LT beta s alpha :
 \label{KS-o2h}
 
 In order to apply our knowledge about  ordinal numbers (less than $\epsilon_0$) to the study of hydra battles, we define an injection
-from the interval $[0,\epsilon_0[$ into the type \texttt{Hydra}.
+from the interval $[0,\epsilon_0)$ into the type \texttt{Hydra}.
 
 \vspace{4pt}
 
@@ -459,7 +459,7 @@ Lemma canonS_iota i alpha :
                 
 
 The next step of our development is to extend this relationship to
-the order $<$ on $[0,\epsilon_0[$ on one side, and hydra fights on the other side.
+the order $<$ on $[0,\epsilon_0)$ on one side, and hydra fights on the other side.
 
 \begin{Coqsrc}
 Lemma path_to_fight alpha s beta :

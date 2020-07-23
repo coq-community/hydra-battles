@@ -11,10 +11,10 @@ Section Defs.
 
   Context `(ltA: relation A)
           (compareA : A -> A -> comparison)
-          (NA: OrdinalNotation ltA compareA).
+          (NA: ON ltA compareA).
   Context `(ltB: relation B)
           (compareB : B -> B -> comparison)
-          (NB: OrdinalNotation ltB compareB).
+          (NB: ON ltB compareB).
 
 
 Definition t := (A + B)%type.
@@ -83,7 +83,7 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Global Instance ON_plus : OrdinalNotation lt compare.
+Global Instance ON_plus : ON lt compare.
 Proof.
   split.
   - apply lt_strorder.

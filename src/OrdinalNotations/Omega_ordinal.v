@@ -8,7 +8,7 @@ Search @Nat.compare.
 Search (@well_founded nat).
 
 
-Global Instance Omega : OrdinalNotation  Peano.lt Nat.compare.
+Global Instance Omega : ON  Peano.lt Nat.compare.
 Proof.
  split.
  - apply Nat.lt_strorder.

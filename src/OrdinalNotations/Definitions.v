@@ -12,7 +12,7 @@ Generalizable All Variables.
 
 *)
 
-Class OrdinalNotation {A:Type}(lt: relation A)
+Class ON {A:Type}(lt: relation A)
       (compare : A -> A -> comparison)  :=
   {
   sto :> StrictOrder lt;
@@ -27,20 +27,20 @@ Class OrdinalNotation {A:Type}(lt: relation A)
 
 Definition on_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
-            {on : OrdinalNotation lt compare} := A.
+            {on : ON lt compare} := A.
 
 Definition on_compare {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
-            {on : OrdinalNotation lt compare} := compare.
+            {on : ON lt compare} := compare.
 
 
 Definition on_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
-           {on : OrdinalNotation lt compare} := lt.
+           {on : ON lt compare} := lt.
 
 Definition on_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
-           {on : OrdinalNotation lt compare} :=
+           {on : ON lt compare} :=
   clos_refl _ on_lt.
 
 Declare Scope ON_scope.
@@ -53,7 +53,7 @@ Infix "<=" := on_le : ON_scope.
 
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
-           {on : OrdinalNotation lt compare} :=
+           {on : ON lt compare} :=
   forall alpha,
     {Least alpha}+
     {Limit alpha} +
@@ -62,7 +62,7 @@ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
  
 (** The segment called [O alpha] in Schutte *)
 
-Definition bigO `{nA : @OrdinalNotation A ltA compareA}
+Definition bigO `{nA : @ON A ltA compareA}
            (a: A) : Ensemble A :=
   fun x: A => ltA x a.
 
@@ -71,8 +71,8 @@ Definition bigO `{nA : @OrdinalNotation A ltA compareA}
     the interval [0,b[ *)
 
 Class  SubSegment 
-       `(nA : @OrdinalNotation A ltA  compareA)
-       `(nB : @OrdinalNotation B ltB  compareB)
+       `(nA : @ON A ltA  compareA)
+       `(nB : @ON B ltB  compareB)
        (b :  B)
        (iota : A -> B):=
   {
@@ -83,8 +83,8 @@ Class  SubSegment
 
 
 Class  Isomorphic 
-       `(nA : @OrdinalNotation A ltA compareA)
-       `(nB : @OrdinalNotation B ltB  compareB)
+       `(nA : @ON A ltA compareA)
+       `(nB : @ON B ltB  compareB)
        (f : A -> B)
        (g : B -> A):=
   {
@@ -99,11 +99,11 @@ Class  Isomorphic
  Locate lt.
 
 Class Notation_for `(alpha : Schutte_basics.Ord)
-     `(nA : @OrdinalNotation A ltA  compareA)
+     `(nA : @ON A ltA  compareA)
       (iota : A -> Schutte_basics.Ord) :=
   { conform_inj : forall a, Schutte_basics.lt (iota a) alpha;
     conform_surj : forall beta, Schutte_basics.lt beta alpha ->
-                                exists b, iota b =beta;
+                                exists b, iota b = beta;
     conform_compare : forall a b:A,
         match compareA a b with
           Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)

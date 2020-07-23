@@ -34,7 +34,9 @@ Parameter lt : relation Ord.
 Notation "a < b" := (lt a b): schutte_scope.
 
 
-Definition ordinal := Full_set Ord.
+Definition ordinal : Ensemble Ord := Full_set Ord.
+Definition big0 alpha : Ensemble Ord := fun beta =>  beta < alpha.
+
 Hint Unfold ordinal : schutte.
 
 (* begin hide *)

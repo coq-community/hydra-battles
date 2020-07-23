@@ -19,9 +19,9 @@ More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It pr
 &\textcolor{red}{\omega},\,\omega+1,\omega+2,\omega+3,\ldots\\
 &\textcolor{red}{\omega\times 2},\,\omega\times 2+1,\ldots, \textcolor{red}{\omega\times 3},\,\omega\times 3+1,\ldots, \textcolor{red}{\omega\times 4},\ldots,\\
 &\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots,\\
-&\textcolor{red}{\omega^\omega2},\ldots, \textcolor{red}{\omega^\omega\times 2},\ldots,\\
+&\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots,\\
 &\textcolor{red}{\omega^{\omega^\omega}},\ldots, \textcolor{red}{\omega^{\omega^\omega}+\omega^\omega\times 42+ \omega^{55}+\omega}, \ldots, \textcolor{red}{\omega^{\omega^{\omega+1}}}, \omega^{\omega^{\omega+1}}+1,\dots\\
-& \textcolor{red}{\epsilon_0 (= \omega^\epsilon_0)}, \epsilon_0+1, \ldots,\\
+& \textcolor{red}{\epsilon_0 (= \omega^{\epsilon_0)}}, \epsilon_0+1, \epsilon_0+2, \epsilon_0+3, \ldots,\\
 & \textcolor{red}{\epsilon_1}, \ldots, \textcolor{red}{\epsilon_2}, \ldots, \textcolor{red}{\epsilon_\omega},\ldots \\
 & \textcolor{red}{\Gamma_0}, \Gamma_0+1, \Gamma_0+2, \Gamma_0+3,\ldots, \textcolor{red}{\Gamma_0+\omega}, \ldots,\\
 &\ldots
@@ -40,11 +40,15 @@ Let us comment some features of this table.
 \item The ordinals are listed in a strictly increasing order. 
 \item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, betaween $41$ and $43$.
 \item Each ordinal in black is an immediate successor of anotter ordinal. We call it a \emph{successor} ordinal. For instance, $43$ is the successor of $42$, and $\omega^4+1$ the successor of $\omega^4$.
-\item Ordinals that follow dots (written in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+\item Ordinals that  follow dots immediately (written in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+\item
 For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). $\omega$ is also the first limit ordinal, and the first infinite ordinal, in the sense that 
 the set $\mathbb{O}_\omega$ is infinite.
 \item The ordinal $\epsilon_0$ is the first number which is equal to its own exponential of base $\omega$. It plays an important role in proof theory, and is particularly studied in chapters~\ref{chap:T1} to \ref{chap:alpha-large}.
+\item All the ordinals shown in this list are either the ordinal \textcolor{blue}{$0$},
+a successor ordinal, or a \textcolor{red}{limit ordinal}.
 \end{itemize}
+
 
 
 
@@ -61,7 +65,7 @@ A  \emph{well-ordered set} is a set provided with a binary relation $<$ which ha
 
 \end{description}
 
-The best known examples of well-ordered sets are the set $\mathbb{N}$ of natural numbers (with the usual order $<$), as well as any finite segment $[0,i[=\{j\in\mathbb{N}|j<i\}$.
+The best known examples of well-ordered sets are the set $\mathbb{N}$ of natural numbers (with the usual order $<$), as well as any finite segment $[0,i)=\{j\in\mathbb{N}|j<i\}$.
 The disjoint union of two copies of $\mathbb{N}$, \emph{i.e.} the set $\{0,1\}\times\mathbb{N}$ is also well-ordered,
 with respect to the order below:
 
@@ -82,28 +86,33 @@ Having the same order type is an equivalence relation between well-ordered sets.
 For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
 the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
 
-If we consider an ordinal $\alpha$ as a well-ordered set, then its elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha[$. So, we can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals.
+In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work with type theory, 
+we do not identify ordinals as sets of ordinals, but the correspondance between ordinals and sets of ordinals is the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
+For instance $\mathbb{O}_\omega=\mathbb{N}$, and $\mathbb{O}_7=\{0,1,2,3,4,5,6\}$.
 
-For instance, the elements of $\omega$ are the finite ordinals. $\omega$ is the first infinite ordinal.
 
 We cannot cite all the litterature published on ordinals since Cantor's book 
 \cite{cantorbook}, and 
 leave it to the reader to explore the bibliography. 
 
 
-Chapter~\ref{chap:schutte} presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
+\section{Ordinal numbers in Coq}
+
+\subsection{Countable ordinals}
+
+Chapter~\ref{chap:schutte} of this document presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
 That formalization is quite complex and technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
 
+Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and associates to any ordinal $\alpha$ the segment $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+
+In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{``\_<\_''}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
+we derive some interesting properties of countable ordinals from these axioms.
 
 
-Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and any ordinal $\alpha$ is associated with the segment $\mathbb{O}_\alpha$ 
-of all ordinals strictly less than $\alpha$.
-
-Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations}: Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to
-Schütte's model (work in progress).
+\subsection{Ordinal notations}
 
 
-\section{Ordinal notations in Coq}
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations}: Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
 
 Our definition of ordinal notation borrows much material from \coq's standard library.
 
@@ -126,7 +135,7 @@ Variable A: Type.
 
 \subsection{A class for ordinal notations}
 
-Our definition of ordinal notation is inspired by our use of \coq{}: defining inductive data types, predicates, functions, etc, and proving properties of these functions. 
+The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, 
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
@@ -239,7 +248,7 @@ The meta-variable $\lambda$ will be used for denoting  limit ordinals.
 An ordinal is either $0$, a limit ordinal or a successor ordinal. This case analysis, as well as \emph{transfinite} ({i.e.}, well-founded) induction is used in many proofs about ordinal numbers.
 
 \item Let $\alpha$ be any ordinal, the \emph{segment} $\mathbb{O}_\alpha$ is the
-interval $[0,\alpha[\,=\,\{\beta|0\leq\beta<\alpha\}$. 
+interval $[0,\alpha)\,=\,\{\beta|0\leq\beta<\alpha\}$. 
 
 \item The set  of finite ordinals is a segment isomorphic to the set of natural numbers.
  The first infinite ordinal is the limit ordinal $\omega$.
@@ -270,7 +279,7 @@ ordinals \emph{strictly below} $\alpha$.
 
 \subsection{Finite ordinals}
 Let $n$ be some natural number. The segment associated with $n$ is the interval 
-$[0,n[\,=\,\{0,1,\dots,n-1\}$. 
+$)0,n[\,=\,\{0,1,\dots,n-1\}$. 
 
 One may represent the ordinal $n$ by a sigma type.
 
@@ -293,7 +302,7 @@ Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb ( proj1_sig alpha) (proj1_sig beta).
 \end{Coqsrc}
 
-For instance, let us build two elements of the segment $[0, 7[$, \emph{i.e.} two
+For instance, let us build two elements of the segment $[0, 7)$, \emph{i.e.} two
 inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\ref{fig:O7}).
 
 \begin{figure}[h]
@@ -475,10 +484,10 @@ Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
 
 
 
-Finally, it is interesting to show that, if $i<j$, then the segment $[0,i[$ is a ``sub-segment'' of
-$[0,j[$. Since the terms  $t\;i$ and $t\;j$ are not convertible, we consider a ``cast'' 
+Finally, it is interesting to show that, if $i<j$, then the segment $[0,i)$ is a ``sub-segment'' of
+$[0,j)$. Since the terms  $t\;i$ and $t\;j$ are not convertible, we consider a ``cast'' 
 function $\iota$ from $t\;i$ to $t\;j$, and prove this function is  a bijection  from $t\;i$ to
-the segment $[0,i[$ of $t\;j$.
+the segment $[0,i)$ of $t\;j$.
 
 
 
@@ -488,7 +497,7 @@ This notion is defined generically as a class in
 
 \begin{Coqsrc}
 (** The segment associated with nA is isomorphic to
-    the interval [0,b[ *)
+    the interval [0,b) *)
 
 Class  Subsegment 
        `(nA : @OrdinalNotation A ltA stoA compareA)

@@ -3674,7 +3674,7 @@ Proof.
 Defined.
 
 
-Instance ONG0: OrdinalNotation lt  compare.
+Instance ONG0: ON lt  compare.
 Proof.
   split.
   - apply lt_sto.

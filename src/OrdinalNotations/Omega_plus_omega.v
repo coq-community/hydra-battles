@@ -202,7 +202,7 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Instance OmegaPlusOmega : OrdinalNotation lt compare.
+Instance OmegaPlusOmega : ON lt compare.
 Proof.
   split.
   - apply lt_strorder.
