@@ -112,7 +112,7 @@ we derive some interesting properties of countable ordinals from these axioms.
 \subsection{Ordinal notations}
 
 
-Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations}: Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{ordinal notation systems}). Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
 
 Our definition of ordinal notation borrows much material from \coq's standard library.
 
@@ -180,6 +180,34 @@ Infix "<=" := on_le : ON_scope.
 \end{Coqsrc}
 
 
+
+
+\subsubsection{Examples}
+
+The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
+
+\vspace{4pt}
+\noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations/Omega_ON.html}{OrdinalNotations.Omega\_ON}}
+
+
+\begin{Coqsrc}
+Global Instance Omega : ON  Peano.lt Nat.compare.
+Proof.
+ split.
+ - apply Nat.lt_strorder.
+ - apply Wf_nat.lt_wf.
+ - apply Nat.compare_spec.
+Qed.
+\end{Coqsrc}
+
+
+More complex examples will be developped in further sections or chapters. For instance,
+a notation system for ordinals less than $\epsilon_0$ is presented in chapter~\ref{chap:T1}.
+Notation systems for $\omega+\omega$, $\omega^2$, etc. will be given in the next paragraphs.
+
+
+
+
 \subsection{Comparing Ordinal Notations}
 
 It is sometimes useful to compare two ordinal notations with respect to expressive power
@@ -205,7 +233,7 @@ Class  SubON
 pointers to examples 
 \end{todo}
 
-In some cases we want to show that two notation systems describe the same segment (for instance $3+\omega$ and $\omega$). For that purpose, one may prove that the two notation systems are order-isomorphic.
+In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($). For this purpose, one may prove that the two notation systems are order-isomorphic.
 
 
 \begin{Coqsrc}
@@ -215,7 +243,7 @@ Class  ON_Isomorphic
        (f : A -> B)
        (g : B -> A):=
   {
-  iso_compare_comm :forall x y : A,  compareB (f x) (f y) =
+  iso_compare: forall x y : A,  compareB (f x) (f y) =
                                  compareA x y;
   iso_inv1 : forall a, g (f a)= a;
   iso_inv2 : forall b, f (g b) = b}.
@@ -232,10 +260,10 @@ where $\alpha$ is a countable ordinal à la Schütte.
 Class ON_for `(alpha : Schutte_basics.Ord)
      `(OA : @ON A ltA  compareA)
       (iota : A -> Schutte_basics.Ord) :=
-  { conform_inj : forall a, Schutte_basics.lt (iota a) alpha;
-    conform_surj : forall beta, Schutte_basics.lt beta alpha ->
+  { ON_for_inj : forall a, Schutte_basics.lt (iota a) alpha;
+    ON_for_onto : forall beta, Schutte_basics.lt beta alpha ->
                                 exists b, iota b = beta;
-    conform_compare : forall a b:A,
+    On_compare_spec : forall a b:A,
         match compareA a b with
           Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
@@ -243,9 +271,10 @@ Class ON_for `(alpha : Schutte_basics.Ord)
         end}.
 \end{Coqsrc}
 
+
+
 For instance, the following theorem tells that \texttt{Epsilon0}, our otation system for the segment $[0,\epsilon0)$ is correct with respect to the countqable ordinal $\epsilon_0$
 (see chapter~\ref{chap:schutte} for more details).
-
 
 
 \begin{Coqsrc}
@@ -253,9 +282,9 @@ Instance Epsilon0_correct :
   ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
-\subsection{Examples}
 
-The simplest example of ordinal notation is 
+
+
 
 % ICI
 

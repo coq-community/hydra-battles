@@ -86,7 +86,7 @@ Class  ON_Isomorphic
        (f : A -> B)
        (g : B -> A):=
   {
-  iso_compare_comm :forall x y : A,  compareB (f x) (f y) =
+  iso_compare :forall x y : A,  compareB (f x) (f y) =
                                  compareA x y;
   iso_inv1 : forall a, g (f a)= a;
   iso_inv2 : forall b, f (g b) = b}.
@@ -97,10 +97,10 @@ Class  ON_Isomorphic
 Class ON_for `(alpha : Schutte_basics.Ord)
      `(OA : @ON A ltA  compareA)
       (iota : A -> Schutte_basics.Ord) :=
-  { conform_inj : forall a, Schutte_basics.lt (iota a) alpha;
-    conform_surj : forall beta, Schutte_basics.lt beta alpha ->
+  { ON_for_inj : forall a, Schutte_basics.lt (iota a) alpha;
+    ON_for_onto : forall beta, Schutte_basics.lt beta alpha ->
                                 exists b, iota b = beta;
-    conform_compare : forall a b:A,
+    On_compare_spec : forall a b:A,
         match compareA a b with
           Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b

@@ -2,7 +2,7 @@
 
 
 Require Import Hydra_Lemmas Simple_LexProd Relations Relation_Operators
-Arith Peano_dec Lia Omega2.
+Arith Peano_dec Lia ON_Omega2.
 
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
@@ -15,7 +15,7 @@ Section Impossibility_Proof.
    battles *)
  
 
-  Variable m : Hydra -> Omega2.t.
+  Variable m : Hydra -> ON_Omega2.t.
   
   Context (Hvar : Hvariant lt_wf free m).
    
@@ -24,7 +24,7 @@ Section Impossibility_Proof.
   (** To every pair $(i,j)$ of natural numbers we associate an hydra 
         with $i$ branches of length 2 and $j$ branches of length 1 *)
 
-  Let iota (p: Omega2.t) := 
+  Let iota (p: ON_Omega2.t) := 
     node (hcons_mult (hyd1 head) (fst p)
                      (hcons_mult head (snd p) hnil)).
   
