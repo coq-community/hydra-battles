@@ -166,7 +166,7 @@ Section Inclusion_ij.
   Let b : t j := exist _ i Ltb_ij.
 
    
-  Global Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota_ij.
+  Global Instance F_incl_ij  : SubON  (FinOrd i) (FinOrd j) b iota_ij.
   Proof.
     split.
     - intros; cbn.

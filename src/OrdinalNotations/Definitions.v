@@ -6,6 +6,8 @@ Require Schutte_basics.
 Require Export MoreOrders.
 
 Generalizable All Variables.
+Declare Scope ON_scope.
+Delimit Scope ON_scope with on.
 
 (**
   Ordinal notation system on type [A] :
@@ -37,17 +39,13 @@ Definition on_compare {A:Type}{lt: relation A}
 Definition on_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
+Infix "<" := on_lt : ON_scope.
 
 Definition on_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
   clos_refl _ on_lt.
 
-Declare Scope ON_scope.
-
-Delimit Scope ON_scope with on.
-
-Infix "<" := on_lt : ON_scope.
 Infix "<=" := on_le : ON_scope.
 
 
@@ -70,21 +68,21 @@ Definition bigO `{nA : @ON A ltA compareA}
 (** The segment associated with nA is isomorphic to
     the interval [0,b[ *)
 
-Class  SubSegment 
-       `(nA : @ON A ltA  compareA)
-       `(nB : @ON B ltB  compareB)
-       (b :  B)
+Class  SubON 
+       `(OA : @ON A ltA  compareA)
+       `(OB : @ON B ltB  compareB)
+       (alpha :  B)
        (iota : A -> B):=
   {
   subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
-  subseg_incl : forall x, ltB (iota x) b;
-  subseg_onto : forall y, ltB y b  -> exists x:A, iota x = y}.
+  subseg_incl : forall x, ltB (iota x) alpha;
+  subseg_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 
-Class  Isomorphic 
-       `(nA : @ON A ltA compareA)
-       `(nB : @ON B ltB  compareB)
+Class  ON_Isomorphic 
+       `(OA : @ON A ltA compareA)
+       `(OB : @ON B ltB  compareB)
        (f : A -> B)
        (g : B -> A):=
   {
@@ -93,13 +91,11 @@ Class  Isomorphic
   iso_inv1 : forall a, g (f a)= a;
   iso_inv2 : forall b, f (g b) = b}.
 
-  
-  Locate Ord.
 
- Locate lt.
+(** OA is an ordinal notation for alpha *)
 
-Class Notation_for `(alpha : Schutte_basics.Ord)
-     `(nA : @ON A ltA  compareA)
+Class ON_for `(alpha : Schutte_basics.Ord)
+     `(OA : @ON A ltA  compareA)
       (iota : A -> Schutte_basics.Ord) :=
   { conform_inj : forall a, Schutte_basics.lt (iota a) alpha;
     conform_surj : forall beta, Schutte_basics.lt beta alpha ->

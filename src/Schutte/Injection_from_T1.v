@@ -548,7 +548,7 @@ Generalizable All Variables.
 
 
 Instance Epsilon0_correct :
-  Notation_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 Proof.
   split.
   - intro a; apply embedding; red; apply cnf_ok.

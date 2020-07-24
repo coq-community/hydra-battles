@@ -29,7 +29,7 @@ Defined.
 
 
 Global Instance FinOrd_Omega (i:nat) :
-  SubSegment (FinOrd i) Omega i 
+  SubON (FinOrd i) Omega i 
              (fun alpha =>  proj1_sig alpha).
 Proof.
   split.
@@ -41,4 +41,19 @@ Proof.
       now apply  Nat.ltb_lt in H.
 Qed.
 
+
+Require Import Schutte.
+
+
+Instance omega_ok : ON_for omega Omega finite.
+Proof.
+  split.
+  - apply finite_lt_omega.
+  - intros beta Hbeta; destruct (lt_omega_finite Hbeta) as [i Hi].
+    exists i; now subst.
+  -  intros n p; destruct (Nat.compare_spec n p).
+     + now subst.
+     + now apply finite_mono.
+     + now apply finite_mono.
+Qed.
 

@@ -109,7 +109,7 @@ About ON_plus.
 
 Arguments ON_plus {A ltA  compareA} _ {B ltB  compareB} _.
 
-Require Import Omega_ordinal.
+Require Import Omega_ON.
 
 Check ON_plus Omega Omega.
 

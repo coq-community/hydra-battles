@@ -135,7 +135,7 @@ Variable A: Type.
 
 \subsection{A class for ordinal notations}
 
-The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, 
+The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}. 
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
@@ -143,39 +143,119 @@ The following class definition, parameterized with a type $A$, a binary relation
 
 
 \begin{Coqsrc}
-Class OrdinalNotation {A:Type}{lt: relation A}(sto:StrictOrder lt)
+Class ON {A:Type}(lt: relation A)
       (compare : A -> A -> comparison)  :=
-  {   wf : well_founded lt;
-      compare_correct :
-         forall alpha beta:A,
-          CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
-                                   (compare alpha beta);
-  }. 
+  {
+  sto :> StrictOrder lt;
+  wf : well_founded lt;
+  compare_correct :
+    forall alpha beta:A,
+      CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
+                  (compare alpha beta);
+  }.
+\end{Coqsrc}
 
+The following definitions allow us to make implicit several guessable arguments.
 
+\begin{Coqsrc}
 Definition on_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
-            {on : OrdinalNotation lt compare} := A.
+            {on : ON lt compare} := A.
 
 Definition on_compare {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
-            {on : OrdinalNotation lt compare} := compare.
-
+            {on : ON lt compare} := compare.
 
 Definition on_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
-           {on : OrdinalNotation lt compare} := lt.
+           {on : ON lt compare} := lt.
+Infix "<" := on_lt : ON_scope.
 
 Definition on_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
-           {on : OrdinalNotation lt compare} :=
+           {on : ON lt compare} :=
   clos_refl _ on_lt.
 
+Infix "<=" := on_le : ON_scope.
+\end{Coqsrc}
+
+
+\subsection{Comparing Ordinal Notations}
+
+It is sometimes useful to compare two ordinal notations with respect to expressive power
+(the segment of ordinals one they represent). 
+
+The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$). We require that the comparison functions of the two notation systems are compatible.
+
+\begin{Coqsrc}
+Class  SubON 
+       `(OA : @ON A ltA  compareA)
+       `(OB : @ON B ltB  compareB)
+       (alpha :  B)
+       (iota : A -> B):=
+  {
+  subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
+                                 compareA x y;
+  subseg_incl : forall x, ltB (iota x) alpha;
+  subseg_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+\end{Coqsrc}
+
+
+\begin{todo}
+pointers to examples 
+\end{todo}
+
+In some cases we want to show that two notation systems describe the same segment (for instance $3+\omega$ and $\omega$). For that purpose, one may prove that the two notation systems are order-isomorphic.
+
+
+\begin{Coqsrc}
+Class  ON_Isomorphic 
+       `(OA : @ON A ltA compareA)
+       `(OB : @ON B ltB  compareB)
+       (f : A -> B)
+       (g : B -> A):=
+  {
+  iso_compare_comm :forall x y : A,  compareB (f x) (f y) =
+                                 compareA x y;
+  iso_inv1 : forall a, g (f a)= a;
+  iso_inv2 : forall b, f (g b) = b}.
 \end{Coqsrc}
 
 
 
+Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of thhat model). This would be a relative proof of correctenss of our ordinal  notations.
 
+The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
+where $\alpha$ is a countable ordinal à la Schütte.
+
+\begin{Coqsrc}
+Class ON_for `(alpha : Schutte_basics.Ord)
+     `(OA : @ON A ltA  compareA)
+      (iota : A -> Schutte_basics.Ord) :=
+  { conform_inj : forall a, Schutte_basics.lt (iota a) alpha;
+    conform_surj : forall beta, Schutte_basics.lt beta alpha ->
+                                exists b, iota b = beta;
+    conform_compare : forall a b:A,
+        match compareA a b with
+          Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
+        | Datatypes.Eq => iota a = iota b
+        | Datatypes.Gt => Schutte_basics.lt (iota b) (iota a)
+        end}.
+\end{Coqsrc}
+
+For instance, the following theorem tells that \texttt{Epsilon0}, our otation system for the segment $[0,\epsilon0)$ is correct with respect to the countqable ordinal $\epsilon_0$
+(see chapter~\ref{chap:schutte} for more details).
+
+
+
+\begin{Coqsrc}
+Instance Epsilon0_correct :
+  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+\end{Coqsrc}
+
+\subsection{Examples}
+
+The simplest example of ordinal notation is 
 
 % ICI
 
