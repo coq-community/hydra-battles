@@ -157,12 +157,12 @@ Qed.
 
 
 
- Definition compare (alpha beta: t) : comparison :=
+Definition compare (alpha beta: t) : comparison :=
    match alpha, beta with
      inl _, inr _ => Lt
    | inl n, inl p | inr n, inr p => Nat.compare n p
    | inr _, inl _ => Gt
-  end.
+end.
 
  
  
@@ -209,6 +209,7 @@ Proof.
   - apply lt_wf.
   - apply compare_correct.
 Qed.
+
 
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
   - intro alpha; destruct alpha.

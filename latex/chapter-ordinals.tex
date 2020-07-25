@@ -182,7 +182,10 @@ Infix "<=" := on_le : ON_scope.
 
 
 
-\subsubsection{Examples}
+\subsection{Examples of Notation systems}
+
+
+\subsubsection{The ordinal \texorpdfstring{$\omega$}{omega}}
 
 The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
 
@@ -201,9 +204,116 @@ Qed.
 \end{Coqsrc}
 
 
+\subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
+
+The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
+of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
+
+\begin{figure}[h]
+   \centering
+   \begin{tikzpicture}[very thick, scale=0.5]
+\begin{scope}[color=blue]
+\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
+\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
+\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
+\node (Adots) at (6,0) {$\ldots$};
+\node(An) at (8,0)[label=below:$n$]{$\bullet$};
+\node(A2) at (10,0)[label=below:$n+1$]{$\bullet$};
+\node (Adots1) at (12,0) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red]
+\node(B0) at (14,0)[label=below:$0$,label=above:$\omega$]{$\bullet$};
+\node(B1) at (16,0)[label=below:$1$, label=above:$\omega+1$]{$\bullet$};
+\node(B2) at (18,0)[label=below:$2$,label=above:$\omega+2$]{$\bullet$};
+\node (Bdots) at (20,0) {$\ldots$};
+\node (Bn) at (22,0) [label=below:$p$, label=above:$\omega+p$]{$\bullet$};
+\node (Bdots2) at (24,0) {$\ldots$};
+\end{scope}
+\end{tikzpicture}
+   \caption{\textcolor{blue}{$\omega+{\color{red}\omega}$}}
+   \label{fig:omega-plus-omega}
+ \end{figure}
+
+In \coq{}, we use the disjoint union \texttt{(nat+nat)\%type} for representing the elements of $\omega+\omega$.
+The blue ordinals of Figure~\ref{fig:omega-plus-omega} will be represented by terms of the form \texttt{(inl $i$)},
+the red ones by \texttt{(inr $j$)}.
+
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Omega_plus_omega.html}{Prelude.Omega\_plus\_omega}}
+
+
+\begin{Coqsrc}
+Declare Scope oo_scope.
+Delimit Scope oo_scope with oo.
+Open Scope oo_scope.
+
+Definition t := (nat + nat)%type.
+Arguments inl  {A B} _.
+Arguments inr  {A B} _.
+\end{Coqsrc}
+
+The order on type \texttt{t} is already defined in
+Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}.
+
+\begin{Coqanswer}
+Inductive
+le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
+  : A + B -> A + B -> Prop :=
+    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
+  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
+  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
+Infix "<" := lt : oo_scope.
+
+Definition le := clos_refl _ lt.
+
+Infix "<=" := le : oo_scope.
+\end{Coqsrc}
+
+In order to build an instance of \texttt{ON}, we have to verify that \texttt{lt} is a well-founded strict order and define a correct comparison function.
+
+\begin{Coqsrc}
+Instance lt_strorder : StrictOrder lt.
+
+Lemma lt_wf : well_founded lt.
+Proof. apply wf_disjoint_sum; apply lt_wf. Qed.
+
+Definition compare (alpha beta: t) : comparison :=
+   match alpha, beta with
+     inl _, inr _ => Lt
+   | inl n, inl p | inr n, inr p => Nat.compare n p
+   | inr _, inl _ => Gt
+  end.
+
+Lemma compare_correct alpha beta :
+    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+
+
+Instance OmegaPlusOmega : ON lt compare.
+Proof.
+  split.
+  - apply lt_strorder.
+  - apply lt_wf.
+  - apply compare_correct.
+Qed.
+
+\end{Coqsrc}
+
+
+
+
+
+
+
+
+
+
 More complex examples will be developped in further sections or chapters. For instance,
 a notation system for ordinals less than $\epsilon_0$ is presented in chapter~\ref{chap:T1}.
-Notation systems for $\omega+\omega$, $\omega^2$, etc. will be given in the next paragraphs.
 
 
 
@@ -723,74 +833,6 @@ Global Instance FinOrd_Omega (i:nat) :
 \end{Coqsrc}
 
 
-\subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
-
-The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
-of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
-
-\begin{figure}[h]
-   \centering
-   \begin{tikzpicture}[very thick, scale=0.5]
-\begin{scope}[color=blue]
-\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
-\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
-\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
-\node (Adots) at (6,0) {$\ldots$};
-\node(An) at (8,0)[label=below:$n$]{$\bullet$};
-\node(A2) at (10,0)[label=below:$n+1$]{$\bullet$};
-\node (Adots1) at (12,0) {$\ldots$};
-\end{scope}
-\begin{scope}[color=red]
-\node(B0) at (14,0)[label=below:$0$,label=above:$\omega$]{$\bullet$};
-\node(B1) at (16,0)[label=below:$1$, label=above:$\omega+1$]{$\bullet$};
-\node(B2) at (18,0)[label=below:$2$,label=above:$\omega+2$]{$\bullet$};
-\node (Bdots) at (20,0) {$\ldots$};
-\node (Bn) at (22,0) [label=below:$p$, label=above:$\omega+p$]{$\bullet$};
-\node (Bdots2) at (24,0) {$\ldots$};
-\end{scope}
-\end{tikzpicture}
-   \caption{\textcolor{blue}{$\omega+{\color{red}\omega}$}}
-   \label{fig:omega-plus-omega}
- \end{figure}
-
-In \coq{}, we use the disjoint union \texttt{(nat+nat)\%type} for representing the elements of $\omega+\omega$.
-The blue ordinals of Figure~\ref{fig:omega-plus-omega} will be represented by terms of the form \texttt{(inl $i$)},
-the red ones by \texttt{(inr $j$)}.
-
-\vspace{4pt}
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Omega_plus_omega.html}{Prelude.Omega\_plus\_omega}}
-
-
-\begin{Coqsrc}
-Declare Scope oo_scope.
-Delimit Scope oo_scope with oo.
-Open Scope oo_scope.
-
-Definition t := (nat + nat)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
-\end{Coqsrc}
-
-The order on type \texttt{t} is already defined in
-Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}.
-
-\begin{Coqanswer}
-Inductive
-le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
-  : A + B -> A + B -> Prop :=
-    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
-  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
-  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
-Infix "<" := lt : oo_scope.
-
-Definition le := clos_refl _ lt.
-
-Infix "<=" := le : oo_scope.
-\end{Coqsrc}
 
 
 
