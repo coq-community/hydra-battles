@@ -1030,7 +1030,8 @@ Next Obligation.
 Defined.
 \end{Coqsrc}
 
-\subsection{Formal definition of battles}
+
+\subsection{Big steps}
 
 Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
 
@@ -1039,6 +1040,7 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 
 \begin{Coqsrc}
 Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
+
 | battle_1 : forall i h  h', battle_r   B i  h h' -> 
                             battle B i h (S i) h'
 | battle_n : forall i h  j h' h'',  battle_r  B i h h''  ->

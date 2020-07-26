@@ -87,17 +87,17 @@ Qed.
 Theorem battle_length_std (alpha : E0)  :
   alpha <> Zero ->
   forall k, (1 <= k)%nat ->
-            fight_length standard k (iota (cnf alpha))
+            battle_length standard k (iota (cnf alpha))
                          (L_ alpha (S k) - k).
 
-Proof.  apply fight_length_std.  Qed.
+Proof.  apply battle_length_std.  Qed.
 
 Open Scope nat_scope.
 Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k ->
              exists l: nat,  H_ alpha k - k <= l /\
-                             fight_length standard k (iota (cnf alpha)) l.    
+                             battle_length standard k (iota (cnf alpha)) l.    
 Proof.
   intros H k  H0; exists (L_ alpha (S k) - k).
   split.
@@ -106,5 +106,5 @@ Proof.
 Qed.
 
   
-Print Assumptions fight_length_std.
+Print Assumptions battle_length_std.
 

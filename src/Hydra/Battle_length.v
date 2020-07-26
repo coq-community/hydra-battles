@@ -13,7 +13,7 @@ Require Import Hydra_Lemmas  Epsilon0_Needed_Free Epsilon0_Needed_Std
         Hydra_Termination L_alpha O2H.
 Import E0 Large_Sets H_alpha Paths MoreLists.
 
-Section Fight_length.
+Section Battle_length.
 
   Variable alpha : E0.
   Hypothesis Halpha : alpha <> Zero.
@@ -66,7 +66,7 @@ Section Fight_length.
   Remark R6 : S (Nat.pred (Nat.pred l)) = (l-1)%nat.
   Proof.  generalize R0; lia. Qed.
 
-  Lemma L06:  fight standard k (iota (cnf alpha)) (l-1)%nat
+  Lemma L06:  battle standard k (iota (cnf alpha)) (l-1)%nat
                       (iota zero).
   Proof.
     rewrite <- R6; apply trace_to_std.
@@ -74,8 +74,8 @@ Section Fight_length.
     apply R5.    
   Qed.
       
-  Lemma fight_length_std:
-    fight_length  standard k (iota (cnf alpha)) (l-k)%nat.
+  Lemma battle_length_std:
+    battle_length  standard k (iota (cnf alpha)) (l-k)%nat.
   Proof.
     red; generalize L06.
     replace (l-1)%nat with (Init.Nat.pred (k + (l - k )))%nat; auto.
@@ -83,7 +83,7 @@ Section Fight_length.
   Qed.
 
  
-End Fight_length.
+End Battle_length.
 
 
 

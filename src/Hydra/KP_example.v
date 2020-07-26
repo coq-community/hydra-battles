@@ -81,7 +81,7 @@ Proof.
   left.
 Qed.
 
-Lemma battle : fight standard 1 h0 4 h3.
+Lemma battle_example : battle standard 1 h0 4 h3.
 Proof.
   eright.
   eapply h0_h1.
