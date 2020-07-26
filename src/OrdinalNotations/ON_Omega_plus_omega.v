@@ -1,93 +1,215 @@
 (**  The ordinal omega + omega *)
+
+
 Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Definitions
-        Relation_Operators Disjoint_Union.
+        ON_plus ON_Omega.
 
 Import Relations.
 Declare Scope oo_scope.
 Delimit Scope oo_scope with oo.
+Open Scope ON_scope.
 Open Scope oo_scope.
 
-Coercion is_true: bool >-> Sortclass.
 
-Definition t := (nat + nat)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
-Print le_AsB.
-Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
-Infix "<" := lt : oo_scope.
+Definition Omega_plus_Omega := ON_plus Omega Omega.
 
-Definition le := clos_refl _ lt.
+Existing Instance Omega_plus_Omega.
 
-Infix "<=" := le : oo_scope.
+Definition t := @ON_plus.t nat nat.
 
-Hint Unfold lt le : OO.
-Hint Constructors le_AsB: OO.
+Notation "'omega'" := (inr nat 0).
 
-Definition fin (n:nat) : t := inl n.
+Example ex1 : inl 7 < inr 0.
+Proof. constructor. Qed.
 
+Compute on_compare omega (inl 8).
+
+Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
-Goal 6 < 8.
-auto with arith.
-(*  oups *)
-constructor; auto with arith.
-Qed.
-
-
-Notation  "'omega'"  := (inr 0) : oo_scope.
-
-Goal 24 < omega.
-constructor.
-Qed.
-
-
-Definition succ (alpha : t) := match alpha with
-                                 inl i => inl (S i)
-                               | inr i => inr (S i)
-                               end.
-
-Compute succ omega.
-
-
-
-
-Instance lt_strorder : StrictOrder lt.
+Lemma omega_is_limit : Limit omega. 
 Proof.
   split.
-  -  intros x  H. inversion H; try lia.
-  - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
-    + injection H5;constructor; lia.
-    + constructor.
-    + constructor.
-    + constructor.
-      injection H5; subst; lia.
+  + exists (inl 0); constructor.
+  + inversion 1; subst.
+    exists (inl (S x)); split; constructor;auto with arith.
+    lia.
 Qed.
-    
 
-Instance le_preorder : PreOrder le.
+Lemma is_limit_unique alpha : Limit alpha -> alpha = omega.
 Proof.
-  split.
-  -  right.
-  - inversion_clear 1; trivial.
-    + inversion 1; left.
-      * now transitivity y.
-      * now subst.
+  destruct alpha.
+  - intro H; inversion H.
+    destruct n.
+    +  destruct H0 as [w Hw].
+       inversion Hw.   lia.
+    + specialize (H1 (inl n)).
+      destruct H1.
+      constructor; auto.
+      destruct H1.
+      inversion H2; subst; inversion H1; subst.
+      lia.
+  - destruct n.
+    + trivial.
+    + destruct 1.
+      specialize (H0 (inr n)).
+      destruct H0.
+      constructor; auto.
+      destruct H0 as [H0 H1]; inversion H1; inversion H0; subst.
+      discriminate.    
+      injection H7; intro; subst. lia.
 Qed.
+
+
+
+
+Lemma Successor_inv1 : forall i j, Successor  (inl j) (inl i) -> j = S i. 
+Proof.
+  destruct 1 as [H H0].
+  inversion_clear H.
+  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
+  destruct H2; trivial.
+  elimtype False.
+  assert (inl i < inl (S i)) by (constructor; auto).
+  assert (inl (S i) < inl j) by (constructor; auto).
+  specialize (H0 (inl (S i)) H2 H3).
+  destruct H0.
+Qed.
+
+Lemma Successor_inv2 : forall i j, Successor (inr j) (inr i) -> j = S i. 
+Proof.
+  destruct 1 as [H H0].
+  inversion_clear H.
+  
+  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
+  destruct H2; trivial.
+   elimtype False.
+     specialize (H0 (inr (S i))).
+ assert (inr i < inr (S i)) by (constructor; auto).
+  assert (inr (S i) < inr j) by (constructor; auto).
+  specialize (H0 H2 H3); inversion H0.
+Qed.
+
+Lemma Successor_inv3 : forall i j, ~ Successor (inr j) (inl i).
+Proof.
+  destruct 1 as [H H0].
+
+  specialize (H0 (inl (S i))).
+  assert (inl i < inl (S i)) by (constructor;auto).
+  assert (inl (S i) < inr j) by constructor.
+  specialize (H0 H1 H2);  inversion H0.
+Qed.
+
+Lemma Successor_inv4 : forall i j, ~ Successor (inl j) (inr i).
+Proof.
+  destruct 1 as [H H0].
+  inversion H.
+Qed.
+
+Definition succ (alpha : t) :=
+  match alpha with
+    inl n => inl (S n)
+  | inr n => inr (S n)
+  end.
+
+
+Lemma Successor_succ alpha : Successor (succ alpha) alpha.
+   destruct alpha;red;cbn; split.
+  - constructor; auto.
+  -  destruct z.
+     inversion_clear 1.
+     inversion_clear 1; lia.
+     inversion 2.
+  -  constructor; auto.
+  - destruct z.
+    inversion_clear 1.
+    inversion_clear 1.
+    inversion_clear 1; lia.
+Qed.
+
+
+
+Lemma Successor_correct alpha beta : Successor beta alpha <->
+                                     beta = succ alpha.
+Proof.
+  split.  
+  - destruct alpha, beta; intro H.
+    apply Successor_inv1 in H. subst. reflexivity.
+    destruct (Successor_inv3  _ _ H).
+    destruct (Successor_inv4  _ _ H).
+    apply Successor_inv2 in  H; now subst.
+  - intro;subst; now apply Successor_succ.
+Qed.
+
+
+Definition succb (alpha: t) := match alpha with
+                                   inr (S  _) | inl (S _) => true
+                                 | _ => false
+                                 end.
+
+Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+Proof.
+  destruct alpha; split.
+  - destruct n.
+   + intro; discriminate.
+   +    exists n; reflexivity.
+  - intros [[p| p] H].
+    + injection H; intro; subst; reflexivity.
+    +  discriminate. 
+  -  destruct n.
+     +  intro; discriminate.   
+     + exists (inr n); reflexivity.
+  -  intros [[p| p] H].
+     +     discriminate.
+     + injection H; intro; subst; reflexivity.
+Qed.
+
+
+Lemma omega_not_succ : forall alpha, ~ Successor omega alpha.
+Proof.
+ destruct alpha.
+  apply Successor_inv3.
+  intro H; apply Successor_inv2 in H.
+  discriminate.
+Qed.
+
+
+Lemma ZLS_dec (alpha : t) :
+  {alpha = 0} +
+  {Limit alpha} +
+  {beta : t | Successor alpha beta}.
+Proof.
+  destruct alpha.
+  - destruct n.
+    +   left; now left.
+    + right; exists (inl n).
+      split.
+      * constructor. auto with arith.
+      *       intros beta Hbeta Hbeta'; inversion Hbeta; subst;
+                inversion Hbeta';subst; try lia.
+  - destruct n.
+    left;right.
+    split.
+    + exists (inl 0); constructor.
+    + inversion 1; subst.
+      exists (inl (S x)); split; constructor;auto with arith.
+      lia.
+    + right; exists (inr n); split.
+      * constructor. auto with arith.
+      *       intros beta Hbeta Hbeta'; inversion Hbeta; subst;
+                inversion Hbeta';subst; try lia.
+Defined.
+
 
 Lemma eq_dec (alpha beta: t) : {alpha = beta} + {alpha <> beta}.
 Proof.  
  repeat decide equality.
 Defined.
 
-Lemma lt_wf : well_founded lt.
-Proof. apply wf_disjoint_sum; apply lt_wf. Qed.
-
-
-
 Lemma le_introl :
   forall i j :nat, (i<= j)%nat -> inl i  <= inl j.
 Proof.
-  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto with OO.
+  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto .
   - left; now constructor.
   - subst; now right. 
 Qed.
@@ -95,12 +217,12 @@ Qed.
 Lemma le_intror :
   forall i j :nat, (i<= j)%nat -> inr i  <= inr j.
 Proof.
-  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto with OO.
+  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto.
   - left; now constructor.
   - subst; now right. 
 Qed.
 
-Lemma le_0 : forall p: t,   0 <= p.
+Lemma le_0 : forall p: t,   fin 0 <= p.
 Proof.
   destruct p.  destruct n ; [right |].
   constructor. constructor.  auto with arith.
@@ -156,324 +278,7 @@ Proof.
 Qed.
 
 
-
-Definition compare (alpha beta: t) : comparison :=
-   match alpha, beta with
-     inl _, inr _ => Lt
-   | inl n, inl p | inr n, inr p => Nat.compare n p
-   | inr _, inl _ => Gt
-end.
-
- 
- 
- Definition lt_b alpha beta : bool :=
-  match compare alpha beta with
-      Lt => true
-    | _ => false
-  end.
-
-Definition le_b alpha beta := negb (lt_b beta alpha).
-
-Definition eq_b alpha beta := match compare alpha beta with
-                                Eq => true
-                              | _ => false
-                              end.
-
-Lemma compare_reflect alpha beta :
-  match (compare alpha beta)
-  with
-    Lt => alpha < beta
-  | Eq => alpha = beta
-  | Gt => beta < alpha
-  end.
-  destruct alpha, beta; cbn; auto; try (constructor; lia);
-    case_eq (Nat.compare n n0);
-    ((rewrite Nat.compare_eq_iff;  congruence)
-      || (rewrite Nat.compare_lt_iff; now constructor)
-      || (rewrite Nat.compare_gt_iff; now constructor)).
-Qed.
-
-
-Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-Proof.
-  generalize (compare_reflect alpha beta).
-  destruct (compare alpha beta); now constructor. 
-Qed.
-
-Instance OmegaPlusOmega : ON lt compare.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply lt_wf.
-  - apply compare_correct.
-Qed.
-
-
-Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
-  - intro alpha; destruct alpha.
-    + destruct n.
-      * left; left.
-        intro x; apply le_0.
-      * right; exists (inl n).
-        split.
-        constructor; auto with arith.
-        destruct z.
-        inversion 1; subst; inversion 1; subst; lia.
-        inversion 2.
-    + 
-      destruct n.
-      left; right.
-      (* write a lemma *)
-      split.
-      exists (inl 0).
-      constructor.
-      inversion 1;subst.
-      exists (inl (S x)); split; constructor; auto.
-      lia.
-      right; exists (inr n).
-      split.
-      constructor; auto with arith.
-      inversion 1; subst.
-      inversion 1; subst; lia.
-Defined.
-
-
-
-Lemma lt_eq_lt_dec alpha beta :
-  {alpha < beta} + {alpha = beta} + {beta < alpha}.
-Proof.
- generalize (compare_reflect alpha beta).
- case_eq (compare alpha beta).
-  - intros; left; now right.
-  - intros; left; now left.
-  - intros; now right.
-Defined.
-
-
-
-
-Lemma Successor_inv1 : forall i j, Successor  (inl j) (inl i) -> j = S i. 
-Proof.
-  destruct 1 as [H H0].
-  inversion_clear H.
-  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
-  destruct H2; trivial.
-  elimtype False.
-  assert (inl i < inl (S i)) by (constructor; auto).
-  assert (inl (S i) < inl j) by (constructor; auto).
-  specialize (H0 (inl (S i)) H2 H3).
-  destruct H0.
-Qed.
-
-Lemma Successor_inv2 : forall i j, Successor (inr j) (inr i) -> j = S i. 
-Proof.
-  destruct 1 as [H H0].
-  inversion_clear H.
-  
-  assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
-  destruct H2; trivial.
-   elimtype False.
-   Print le_AsB.
-   specialize (H0 (inr (S i))).
- assert (inr i < inr (S i)) by (constructor; auto).
-  assert (inr (S i) < inr j) by (constructor; auto).
-  specialize (H0 H2 H3); inversion H0.
-Qed.
-
-Lemma Successor_inv3 : forall i j, ~ Successor (inr j) (inl i).
-Proof.
-  destruct 1 as [H H0].
-
-  specialize (H0 (inl (S i))).
-  assert (inl i < inl (S i)) by (constructor;auto).
-  assert (inl (S i) < inr j) by constructor.
-  specialize (H0 H1 H2);  inversion H0.
-Qed.
-
-Lemma Successor_inv4 : forall i j, ~ Successor (inl j) (inr i).
-Proof.
-  destruct 1 as [H H0].
-  inversion H.
-Qed.
-
-
-
-Lemma omega_not_succ : forall alpha, ~ Successor omega alpha.
-Proof.
- destruct alpha.
-  apply Successor_inv3.
-  intro H; apply Successor_inv2 in H.
-  discriminate.
-Qed.
-
-
-
-Lemma Successor_succ alpha : Successor (succ alpha) alpha.
-Proof.
-  destruct alpha;red;cbn; split.
-  - constructor; auto.
-  -  destruct z.
-     inversion_clear 1.
-     inversion_clear 1; lia.
-     inversion 2.
-  -  constructor; auto.
-  - destruct z.
-    inversion_clear 1.
-    inversion_clear 1.
-    inversion_clear 1; lia.
-Qed.
-
-
-
-Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
-Proof.
-  split.  
-  - destruct alpha, beta; intro H.
-    apply Successor_inv1 in H. subst. reflexivity.
-    destruct (Successor_inv3  _ _ H).
-    destruct (Successor_inv4  _ _ H).
-apply Successor_inv2 in  H; now subst.
-- intro;subst; now apply Successor_succ.
-Qed.
-
-
-Definition succb (alpha: t) := match alpha with
-                                   inr (S  _) | inl (S _) => true
-                                 | _ => false
-                                 end.
-
-
-
-Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
-Proof.
-  destruct alpha; split.
-  - destruct n.
-   + intro; discriminate.
-   +    exists n; reflexivity.
-  - intros [[p| p] H].
-    + injection H; intro; subst; reflexivity.
-    +  discriminate. 
-  -  destruct n.
-     +  intro; discriminate.   
-     + exists (inr n); reflexivity.
-  -  intros [[p| p] H].
-     +     discriminate.
-     + injection H; intro; subst; reflexivity.
-Qed.
-
-
-Lemma omega_is_limit:
-   Omega_limit fin omega.
-Proof.
-  split.
-  - constructor.
-  - inversion_clear  1.
-    + exists (S x); constructor; auto with arith.
-    + lia.
-Qed.
-
-
-Definition limitb (alpha : t) := match alpha with
-                                     (inr 0) => true
-                                   | _ => false
-                                   end.
-
-
-Lemma limitb_correct alpha  : limitb alpha <-> 
-                              exists s: nat -> t, Omega_limit s alpha.
-
-Proof.
-  destruct alpha; split.
-  - discriminate.  
-  - intros [s H]; destruct H.
-    elimtype False.
-    destruct n.
-    specialize (H 0); inversion H.
-    + lia.
-    +  specialize (H0 (inl  n));  destruct H0.
-       constructor; auto. 
-       specialize (H  x).
-       inversion H ; inversion H0; subst.
-       rewrite <- H1 in H5. injection H5.
-       intro; subst. lia.
-       rewrite <- H1 in H6. discriminate.
-  -    destruct n.
-       intro; auto.
-       exists fin; apply omega_is_limit.   
-       discriminate. 
-  - destruct n. 
-    intro; reflexivity. 
-    intro H; elimtype False.
-    destruct H as [s [H H0]].
-    specialize (H0 (inr n)).
-    destruct H0 as [i Hi].
-    +    constructor; auto with arith.
-    + specialize (H i).     
-      inversion Hi.
-      subst.
-      rewrite <- H1 in *. inversion H.
-      subst.
-      lia.
-Qed.
-
-
-
-
-Definition canon  alpha i :=
-  match alpha with
-  | inl 0 => inl 0
-  | inl (S n) => inl n
-  | inr 0 => inl i
-  | inr (S n) => inr n
-  end.
-
-
-
- Example Ex1 : limitb omega.
- Proof. reflexivity.  Qed.
-
- 
-Lemma limit_is_lub beta :
-  limitb beta -> forall alpha, 
-    (forall i,  canon beta i < alpha) <-> beta <= alpha.
-Proof.  
-  destruct beta;intros H alpha;destruct n. simpl.
-  inversion H.
-  inversion H.
-  split.
-  intro H0.
-   destruct alpha.
-   specialize (H0 n). inversion H0; try lia.
-   apply le_intror; auto with arith.
-   destruct alpha; inversion 1.
-   inversion H0.
-   inversion H1.
-    constructor.
-    constructor.
-    inversion H.
-Qed.
-
- Definition zero_limit_succ_dec :
-  forall alpha: t, 
-                ({alpha = 0} + {limitb alpha}) + 
-                {beta : t |  alpha = succ beta} .
- Proof.
-   destruct alpha as [n | p].
-   destruct n.
-    left.
-    now left.
-    right.
-     now exists (inl n).
-    destruct p.
-     left; now right.
-   right.  now exists (inr  p).
- Defined.
-
-
- 
- Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = n.
+Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
  Proof.
    destruct alpha; simpl; split.
   -   inversion_clear 1; exists n; auto.
@@ -482,5 +287,35 @@ Qed.
   - destruct 1 as [n0 e]; inversion e.
  Qed.
 
-
+Lemma Omega_as_lub  :
+  forall alpha, 
+    (forall i,  fin i < alpha) <-> omega <= alpha.
+Proof.
+  Locate compare_correct.
+  intro alpha; destruct (Definitions.compare_correct  omega alpha).
+  - subst.
+    split.
+    right.
+    intros; constructor.
+ -  split.
+     intro H0.
+      destruct alpha.
+      specialize (H0 n).
+      inversion H0.
+      lia.
+      destruct n.
+      right.
+      left;constructor. auto with arith.
+            
+        inversion 1.
+       inversion H1.  constructor.      
+      subst; constructor.
+ - rewrite (lt_omega alpha) in H.
+   destruct H as [n Hn]; subst.
+  split.
+   intro H; generalize (H n).
+ intro; elimtype False. inversion H0. lia.
+  inversion 1.
+  inversion H0.
+Qed.
 
