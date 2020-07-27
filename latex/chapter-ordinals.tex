@@ -112,7 +112,7 @@ we derive some interesting properties of countable ordinals from these axioms.
 \subsection{Ordinal notations}
 
 
-Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{ordinal notation systems}). Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{[ordinal] notation systems}). Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
 
 Our definition of ordinal notation borrows much material from \coq's standard library.
 
@@ -182,7 +182,7 @@ Infix "<=" := on_le : ON_scope.
 
 
 
-\subsection{Examples of Notation systems}
+\subsection{Instances of notation systems}
 
 
 \subsubsection{The ordinal \texorpdfstring{$\omega$}{omega}}
@@ -190,7 +190,7 @@ Infix "<=" := on_le : ON_scope.
 The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
 
 \vspace{4pt}
-\noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations/Omega_ON.html}{OrdinalNotations.Omega\_ON}}
+\noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations/ON_Omega.html}{OrdinalNotations.ON\_Omega}}
 
 
 \begin{Coqsrc}
@@ -202,6 +202,85 @@ Proof.
  - apply Nat.compare_spec.
 Qed.
 \end{Coqsrc}
+
+
+\subsection{Sum of two ordinal notations}
+
+Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective types \texttt{A} and \texttt{B}.
+
+ We consider a new strict order
+on the disjoint sum of the associated types, by putting all elements of \texttt{A} before the elements of \texttt{B} (thanks to Standard Library's relation operator \texttt{le\_AsB}).
+(please look at Figure~\ref{fig:omega-plus-omega} for an example).
+
+
+\emph{From Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}}.
+
+\begin{Coqanswer}
+Inductive
+le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
+  : A + B -> A + B -> Prop :=
+    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
+  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
+  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
+\end{Coqanswer}
+
+
+\vspace{4pt}
+\noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations/ON_plus.html}{OrdinalNotations.ON\_plus}}
+
+
+\begin{Coqsrc}
+Section Defs.
+
+  Context `(ltA: relation A)
+          (compareA : A -> A -> comparison)
+          (NA: ON ltA compareA).
+  Context `(ltB: relation B)
+          (compareB : B -> B -> comparison)
+          (NB: ON ltB compareB).
+
+
+Definition t := (A + B)%type.
+Arguments inl  {A B} _.
+Arguments inr  {A B} _.
+
+Definition lt : relation t := le_AsB _ _ ltA ltB.
+\end{Coqsrc}
+
+In order to build an instance of \texttt{ON}, we have to define a comparison function.
+
+
+\begin{Coqsrc}
+Definition compare (alpha beta: t) : comparison :=
+   match alpha, beta with
+     inl _, inr _ => Lt
+   | inl a, inl a' => compareA a a'
+   | inr b, inr b' => compareB b b'
+   | inr _, inl _ => Gt
+  end.
+
+Lemma compare_correct alpha beta :
+    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+\end{Coqsrc}
+
+The Lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} of Standard Library
+helps us to prove that our order \texttt{lt} is well-founded.
+
+
+\begin{Coqsrc}
+Global Instance ON_plus : ON lt compare.
+Proof.
+  split.
+  - apply lt_strorder.
+  -  apply lt_wf.
+  - apply compare_correct.
+Qed.
+\end{Coqsrc}
+
+
+
+
 
 
 \subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
@@ -234,74 +313,54 @@ of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
    \label{fig:omega-plus-omega}
  \end{figure}
 
-In \coq{}, we use the disjoint union \texttt{(nat+nat)\%type} for representing the elements of $\omega+\omega$.
-The blue ordinals of Figure~\ref{fig:omega-plus-omega} will be represented by terms of the form \texttt{(inl $i$)},
-the red ones by \texttt{(inr $j$)}.
+We can define this notation in \coq{} as an instance of \texttt{ON\_plus}.
+
 
 \vspace{4pt}
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Omega_plus_omega.html}{Prelude.Omega\_plus\_omega}}
-
-
-\begin{Coqsrc}
-Declare Scope oo_scope.
-Delimit Scope oo_scope with oo.
-Open Scope oo_scope.
-
-Definition t := (nat + nat)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
-\end{Coqsrc}
-
-The order on type \texttt{t} is already defined in
-Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}.
-
-\begin{Coqanswer}
-Inductive
-le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
-  : A + B -> A + B -> Prop :=
-    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
-  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
-  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
-\end{Coqanswer}
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.ON_Omega_plus_omega.html}{Prelude.ON\_Omega\_plus\_omega}}
 
 \begin{Coqsrc}
-Definition lt : relation t := le_AsB _ _ Peano.lt Peano.lt.
-Infix "<" := lt : oo_scope.
+Definition Omega_plus_Omega := ON_plus Omega Omega.
 
-Definition le := clos_refl _ lt.
-
-Infix "<=" := le : oo_scope.
+Existing Instance Omega_plus_Omega.
+Definition t := @ON_plus.t nat nat.
 \end{Coqsrc}
-
-In order to build an instance of \texttt{ON}, we have to verify that \texttt{lt} is a well-founded strict order and define a correct comparison function.
 
 \begin{Coqsrc}
-Instance lt_strorder : StrictOrder lt.
-
-Lemma lt_wf : well_founded lt.
-Proof. apply wf_disjoint_sum; apply lt_wf. Qed.
-
-Definition compare (alpha beta: t) : comparison :=
-   match alpha, beta with
-     inl _, inr _ => Lt
-   | inl n, inl p | inr n, inr p => Nat.compare n p
-   | inr _, inl _ => Gt
-  end.
-
-Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-
-
-Instance OmegaPlusOmega : ON lt compare.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply lt_wf.
-  - apply compare_correct.
-Qed.
-
+Example ex1 : inl 7 < inr 0.
+Proof. constructor. Qed.
 \end{Coqsrc}
+
+We can now define abbreviations. For instance, the finite ordinals will be represented by the terms built with  the constructor \texttt{inl}, and the first infinite ordinal $\omega$ by the term \texttt{(inr 0)}.
+
+\begin{Coqsrc}
+Definition fin (i:nat) : t := inl i.
+Coercion fin : nat >-> t.
+
+Notation "'omega'" := (inr  0:t).
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Example ex1' : fin 7 < omega.
+Proof. constructor. Qed.
+\end{Coqsrc}
+
+\section{Limits and Successors}
+
+Let us look again at our implementation of $\omega+\omega$. We can distinguish between the three kinds of ordinals seen in Fig~\ref{fig:ordinal-sequence}:
+
+\begin{itemize}
+\item The least ordinal, \texttt{(inl 0)}, also written \texttt{(fin 0)}.
+\item The limit ordinal $\omega$.
+\item The successor ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))}
+\end{itemize}
+
+It would be interesting to specify at the most generic level, what is a zero, a successor or a limit ordinal.
+
+
+%%%% ICI ICI %%%%%%%%%%%
+
+
 
 
 
@@ -318,7 +377,7 @@ a notation system for ordinals less than $\epsilon_0$ is presented in chapter~\r
 
 
 
-\subsection{Comparing Ordinal Notations}
+\section{Comparing Ordinal Notations}
 
 It is sometimes useful to compare two ordinal notations with respect to expressive power
 (the segment of ordinals one they represent). 

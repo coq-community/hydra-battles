@@ -16,6 +16,8 @@ Proof.
  - apply Nat.compare_spec.
 Qed.
 
+
+
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega).
  - intro x; destruct x.
      + left; left. intro n; destruct n.

@@ -9,7 +9,7 @@ Declare Scope oo_scope.
 Delimit Scope oo_scope with oo.
 Open Scope ON_scope.
 Open Scope oo_scope.
-
+Print  "_ < _".
 
 Definition Omega_plus_Omega := ON_plus Omega Omega.
 
@@ -17,15 +17,22 @@ Existing Instance Omega_plus_Omega.
 
 Definition t := @ON_plus.t nat nat.
 
-Notation "'omega'" := (inr nat 0).
 
 Example ex1 : inl 7 < inr 0.
 Proof. constructor. Qed.
 
-Compute on_compare omega (inl 8).
+Notation "'omega'" := (inr  0:t).
+
 
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
+
+Compute on_compare omega  8.
+
+Compute on_compare (8:t)  omega.
+
+Example ex2 :  fin 7 < omega.
+Proof. constructor. Qed.
 
 Lemma omega_is_limit : Limit omega. 
 Proof.

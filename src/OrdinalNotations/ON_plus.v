@@ -7,6 +7,11 @@ Generalizable All Variables.
 Coercion is_true: bool >-> Sortclass.
 
 
+
+
+
+
+
 Section Defs.
 
   Context `(ltA: relation A)
@@ -43,11 +48,11 @@ Proof.
      Search Irreflexive.
      
      destruct (StrictOrder_Irreflexive _ H2).
-    subst.
- destruct (StrictOrder_Irreflexive _ H2).
-- intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
-  + injection H5;constructor.  subst.
-     now transitivity y0.    
+     subst.
+     destruct (StrictOrder_Irreflexive _ H2).
+  - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
+    + injection H5;constructor.  subst.
+      now transitivity y0.    
     + constructor.
     + constructor.
     + constructor.
@@ -55,6 +60,7 @@ Proof.
 Qed.
     
 
+Locate wf_disjoint_sum.
 
 Lemma lt_wf : well_founded lt.
 Proof. destruct NA, NB.
@@ -71,13 +77,13 @@ Lemma compare_reflect alpha beta :
   end.
   destruct alpha, beta; cbn; auto.
   destruct (compare_correct a a0); (now subst || constructor; auto).
-  - destruct (compare_correct b b0); (now subst || constructor; auto).
+   - destruct (compare_correct b b0); (now subst || constructor; auto).
 Qed.
 
 
 Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
+                (compare alpha beta).
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
@@ -95,11 +101,11 @@ Qed.
 Lemma lt_eq_lt_dec alpha beta :
   {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
 Proof.
- generalize (compare_reflect alpha beta).
- case_eq (compare alpha beta).
-  - intros; left; now right.
-  - intros; left; now left.
-  - intros; now right.
+  generalize (compare_reflect  alpha beta).
+  destruct (compare alpha beta).  
+  - left;right; auto.
+  - left;left; auto. 
+  - right;  auto.
 Defined.
 
 
