@@ -70,6 +70,13 @@ Proof.
     exists (s z); split; auto.
 Qed.
 
+
+Lemma strorder_irr {sto : StrictOrder lt} (x:A) : ~ lt x x.
+Proof.
+ destruct sto.
+ intro H; destruct (StrictOrder_Irreflexive x H).
+ Qed.
+
 End A_given.
 
 

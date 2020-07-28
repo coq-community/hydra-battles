@@ -489,13 +489,9 @@ Lemma LT_one : forall alpha, alpha < one -> alpha = zero.
 \end{Coqsrc}
 
   
-\subsection{A first-class type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsection{An ordinal notation for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-In Sect~\vref{sect:equations}, we chosed to define total functions over the set of ordinals less than $\epsilon_0$, using M. Sozeau's plug-in
-\texttt{coq-equations}\cite{sozeau:hal-01671777}.
-
-To this end, we define a type for representing terms in Cantor normal form,
-as a \coq{} type-class.
+The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
 
 \label{sect:E0-def}
 \index{Types!E0@ EO (ordinal terms below $\epsilon_0$ in normal form)} 
@@ -594,8 +590,28 @@ omega + omega
      : E0
 \end{Coqanswer}
 
+\index{Projects}
+\begin{project}
+The class \texttt{ON} of ordinal notations has been defined long after this 
+chapter, and is not used yet in the development of the type \texttt{E0}. 
+A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
+
+Nevertheless, we built an instance of \texttt{ON}, and proved its correction w.r.t. Schutte's model.
+
+\begin{Coqsrc}
+Instance Epsilon0 : ON Lt compare.  
+\end{Coqsrc}
 
 
+\emph{From Module~\href{../src/html/hydras.Schutte.Injection_from_T1.html}{Schutte.Injection\_from\_T1}}
+
+\begin{Coqsrc}
+Instance Epsilon0_correct :
+  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+\end{Coqsrc}
+
+
+\end{project}
 
 \subsection{Syntactic definition of limit and successor ordinals}
 
@@ -1028,6 +1044,7 @@ Ltac transfinite_induction alpha :=
 \begin{remark}
 The proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering is available in the module \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
  \end{remark}
+
 
 
 
