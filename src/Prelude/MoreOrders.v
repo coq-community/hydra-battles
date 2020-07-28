@@ -20,7 +20,7 @@ Definition Successor {sto : StrictOrder lt} (y x : A):=
 
 Definition Limit {sto : StrictOrder lt}  (x:A)  :=
   (exists w:A,  w < x) /\
-  (forall y:A, y < x -> exists z:A, y < z /\  z < x).
+  (forall y:A, y < x -> exists z:A, y < z /\ z < x).
 
 Definition  Omega_limit
             {sto : StrictOrder lt} (s: nat -> A) (x:A)  :=

@@ -345,6 +345,54 @@ Example ex1' : fin 7 < omega.
 Proof. constructor. Qed.
 \end{Coqsrc}
 
+
+
+\index{Coq!Techniques!Coercions} 
+\begin{remark}
+Beware of coercions and notation scopes!
+
+Let us consider the following goal:
+
+\begin{Coqsrc}
+ Goal (6 < 8).
+ auto with arith.
+\end{Coqsrc}
+
+
+\begin{Coqanswer}
+1 subgoal (ID 9)
+  
+  ============================
+  6 < 8
+\end{Coqanswer}
+
+Please keep in mind that the current notation scope interprets the infix \texttt{``<''} as the predicate \texttt{Omega\_plus\_omega.lt} and not \texttt{Nat.lt}. More,  the coercion mechanism converts the terms \texttt{6:nat} [resp. \texttt{8:nat} ]
+into \texttt{inl 6} [resp. \texttt{inl 8}].  So, the initial goal is correctly interpreted by \coq{}, but not as an inequality between two natural numbers.
+
+
+\begin{Coqsrc}
+Set Printing All.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 337)
+  
+  ============================
+  @on_lt nat Peano.lt Nat.compare Omega (S (S (S (S (S (S O))))))
+    (S (S (S (S (S (S (S (S O))))))))
+\end{Coqanswer}
+
+
+Anyway, the initial goal is provable, using \texttt{le\_AsB} first constructor.
+
+\begin{Coqsrc}
+  constructor; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\end{remark}
+
+
 \section{Limits and Successors}
 
 Let us look again at our implementation of $\omega+\omega$. We can distinguish between the three kinds of ordinals seen in Fig~\ref{fig:ordinal-sequence}:
@@ -355,34 +403,96 @@ Let us look again at our implementation of $\omega+\omega$. We can distinguish b
 \item The successor ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))}
 \end{itemize}
 
-It would be interesting to specify at the most generic level, what is a zero, a successor or a limit ordinal.
+It would be interesting to specify at the most generic level, what is a zero, a successor or a limit ordinal. Let $<$ be a strict order on a type $A$.
+
+\begin{itemize}
+\item A \emph{least} element is a minorant (in the large sense) of the full set  on $A$,
+\item $y$ is a \emph{successor} of $x$ if $x<y$ and there is no element between $x$ and $y$,
+\item $x$ is a \emph{limit} if $x$ is not a least element, and for any $y$ such that $y<x$,
+ there exists some $z$ such that $y<z<x$.
+\end{itemize}
 
 
-%%%% ICI ICI %%%%%%%%%%%
+The following definitions are in Library\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
+
+\begin{Coqsrc}
+Section A_given.
+  Variables (A : Type)  (lt: relation A).
+  
+Local Infix "<" := lt.
+Local Infix "<=" := (clos_refl _ lt).
+
+Definition Least {sto : StrictOrder lt} (x : A):=
+  forall y,  x <= y.
+
+Definition Successor {sto : StrictOrder lt} (y x : A):=
+  x < y /\ (forall z,  x < z ->  z <  y -> False).
+
+Definition Limit {sto : StrictOrder lt}  (x:A)  :=
+  (exists w:A,  w < x) /\
+  (forall y:A, y < x -> exists z:A, y < z /\ z < x).
+\end{Coqsrc}
+
+Using these definitions , we can prove the following lemmas:
+
+\vspace{4pt}
+
+\noindent\emph{From Module~\href{../src/html/hydras.Prelude.ON_Omega_plus_omega.html}{Prelude.ON\_Omega\_plus\_omega}}
+
+\begin{Coqsrc}
+ Lemma omega_is_limit : Limit omega. 
+
+Lemma limit_is_omega alpha : Limit alpha -> alpha = omega.
 
 
+\end{Coqsrc}
+
+Regarding successors, let us introduce the following definition:
+
+\begin{Coqsrc}
+Definition succ (alpha : t) :=
+  match alpha with
+    inl n => inl (S n)
+  | inr n => inr (S n)
+  end.
+\end{Coqsrc}
 
 
+\begin{Coqsrc}
+Lemma Successor_succ alpha : Successor (succ alpha) alpha.
+
+Lemma Successor_correct alpha beta : Successor beta alpha <->
+                                     beta = succ alpha.
+\end{Coqsrc}
+
+We can also check whether an ordinal is a successor:
+
+\begin{Coqsrc}
+Definition succb (alpha: t) := match alpha with
+                                   inr (S  _) | inl (S _) => true
+                                 | _ => false
+                                 end.
+
+Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+\end{Coqsrc}
 
 
+Finally the nature of any ordinal (inside this notation system) is decidable:
 
-
-
-
-
-
-More complex examples will be developped in further sections or chapters. For instance,
-a notation system for ordinals less than $\epsilon_0$ is presented in chapter~\ref{chap:T1}.
-
-
+\begin{Coqsrc}
+Lemma ZLS_dec (alpha : t) :
+  {alpha = 0} +
+  {Limit alpha} +
+  {beta : t | Successor alpha beta}.
+\end{Coqsrc}
 
 
 \section{Comparing Ordinal Notations}
 
 It is sometimes useful to compare two ordinal notations with respect to expressive power
-(the segment of ordinals one they represent). 
+(the segment of ordinals  they represent). 
 
-The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$). We require that the comparison functions of the two notation systems are compatible.
+The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented by any term of type $A$). We require also  that the comparison functions of the two notation systems are compatible.
 
 \begin{Coqsrc}
 Class  SubON 
@@ -397,30 +507,19 @@ Class  SubON
   subseg_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 \end{Coqsrc}
 
-
-\begin{todo}
-pointers to examples 
-\end{todo}
-
-In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($). For this purpose, one may prove that the two notation systems are order-isomorphic.
-
+For instance, we prove that \texttt{Omega} is a sub-notation of
+\texttt{Omega\_plus\_Omega} (with $\omega$ as the first ``new'' ordinal, and \texttt{fin} as the injection).
 
 \begin{Coqsrc}
-Class  ON_Isomorphic 
-       `(OA : @ON A ltA compareA)
-       `(OB : @ON B ltB  compareB)
-       (f : A -> B)
-       (g : B -> A):=
-  {
-  iso_compare: forall x y : A,  compareB (f x) (f y) =
-                                 compareA x y;
-  iso_inv1 : forall a, g (f a)= a;
-  iso_inv2 : forall b, f (g b) = b}.
+Instance Incl : SubON Omega Omega_plus_Omega omega fin.
 \end{Coqsrc}
 
 
 
-Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of thhat model). This would be a relative proof of correctenss of our ordinal  notations.
+
+\subsection{Comparing an ordinal notation with Schütte's model}
+
+Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctenss of our ordinal  notations.
 
 The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
 where $\alpha$ is a countable ordinal à la Schütte.
@@ -442,7 +541,7 @@ Class ON_for `(alpha : Schutte_basics.Ord)
 
 
 
-For instance, the following theorem tells that \texttt{Epsilon0}, our otation system for the segment $[0,\epsilon0)$ is correct with respect to the countqable ordinal $\epsilon_0$
+For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is correct with respect to the countqable ordinal $\epsilon_0$
 (see chapter~\ref{chap:schutte} for more details).
 
 
@@ -451,113 +550,18 @@ Instance Epsilon0_correct :
   ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
+\index{Projects}
+
+\begin{project}
+  When you have read Chapter~\ref{chap:schutte}, prove that the sum of two ordinal notations \texttt{ON\_plus} implements the addition of ordinals.
+\end{project}
 
 
+\section{A notation for finite ordinals}
 
 
-% ICI
-
-\begin{todo}
-Present instances of Ordinal notation.  
-\end{todo}
-
-
-
-
-It is usual to classify ordinal numbers in three pairwise disjoint categories: 
-\begin{itemize}
-\item The category containing only the least ordinal (called $0$),
-\item The \emph{successors}: $y$ is a successor of $x$ if $x<y$ and there is no $z$ such that $x<z<y$. 
-\item \emph{Limit}: $x\not=0$ is a limit if $x$ is the least upper bound of the set $\{y :\mathbb{O} | y < x\}$.
-\end{itemize}
-
-
-These notions are defined (for any strict order) in the module 
-\href{../src/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
- 
-
-
-\begin{Coqsrc}
-Variable lt: relation A.
-  
- Local Infix "<" := lt.
- Local Infix "<=" := (clos_refl _ lt).
-
- Definition Least  {sto : StrictOrder lt} (x : A):= forall y,  clos_refl A lt x y.
-
-Definition Successor {sto : StrictOrder lt} (y x : A):=
-  x < y /\ (forall z,  x < z ->  z <  y -> False).
-
-Definition Limit {sto : StrictOrder lt}  (x:A)  :=
-  (exists w:A,  w < x) /\
-  (forall y:A, y < x -> exists z:A, y < z /\  z < x).
-\end{Coqsrc}
-
-\index{Exercises}
-
-\begin{exercise}
-Prove in \coq{} that the three predicates above are pairwise exclusive.  
-\end{exercise}
-
-
-
-\begin{todo}
-Present the method ZeroLimitSucc 
-\end{todo}
-
-
-\subsection{Preliminary Definitions}
-
-The type class \texttt{StrictOrder} is already defined in Standard Library
-(module.
-
-
-
-
-
-\begin{itemize}
-\item Let  $\alpha$ be an ordinal; we say that  $\alpha$ is a \emph{successor} if there exists some ordinal  $\beta$ such that 
-$\alpha$ is is the least ordinal strictly greater than  $\beta$.
-
-\item We say that an ordinal $\lambda$ is a \emph{limit ordinal} is $\lambda$  is the least upper bound of a stricly increasing sequence of ordinals.
-The meta-variable $\lambda$ will be used for denoting  limit ordinals.
-
-\item \index{Maths!Transfinite induction}
-An ordinal is either $0$, a limit ordinal or a successor ordinal. This case analysis, as well as \emph{transfinite} ({i.e.}, well-founded) induction is used in many proofs about ordinal numbers.
-
-\item Let $\alpha$ be any ordinal, the \emph{segment} $\mathbb{O}_\alpha$ is the
-interval $[0,\alpha)\,=\,\{\beta|0\leq\beta<\alpha\}$. 
-
-\item The set  of finite ordinals is a segment isomorphic to the set of natural numbers.
- The first infinite ordinal is the limit ordinal $\omega$.
- 
-\item The operations $+$, $\times$ and exponentiation on $\mathbb{N}$ are extended on ordinals numbers. Note that these  extensions are not commutative any more.  For instance $\omega = 1 + \omega \not= \omega + 1$
-and $\omega = 2 \times \omega \not= \omega \times 2$.
-
-\item The ordinal $\epsilon_0$ is the least solution of the equation
- \(\alpha=\omega^{\alpha}\).
-\end{itemize}
-
-
-Please note that the set of countable ordinals is not countable. 
-
-Without ambiguity we will often denote the segment $\mathbb{O}_\alpha$ by just $\alpha$.
- 
-
-
-
-
-
-
-\section{Notation systems for some small ordinals}
-
-The following enumeration  shows  popular notation systems for several ordinals (shown in increasing order with respect to inclusion), and their possible representation in \coq{}.
-Please keep in mind that a notation system for a given ordinal $\alpha$ represents 
-ordinals \emph{strictly below} $\alpha$.
-
-\subsection{Finite ordinals}
 Let $n$ be some natural number. The segment associated with $n$ is the interval 
-$)0,n[\,=\,\{0,1,\dots,n-1\}$. 
+$[0,n)\,=\,\{0,1,\dots,n-1\}$. 
 
 One may represent the ordinal $n$ by a sigma type.
 
@@ -719,7 +723,7 @@ equality on type \texttt{bool}.
 
 This is why we used the boolean function \texttt{Nat.ltb} instead of the inductive predicate \texttt{Nat.lt} in the definition of type \texttt{t $n$} (see page~\pageref{def: Finite-ord-type}).
 
-For more information about this pattern, please lokk at the numerous mailing lists and 
+For more information about this pattern, please look at the numerous mailing lists and 
 FAQs on \coq{}).
 
 
@@ -856,294 +860,38 @@ Section Inclusion_ij.
 \paragraph{Related work}
 Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.
 
-\subsection{The first infinite ordinal : \texorpdfstring{$\omega$}{omega}}
 
-Mathematically speaking, the ordinal $\omega$ is (set-theoretically) considered as the well-ordered set of
-natural numbers. 
-Every beginner in \coq{} must have seen examples using the type \texttt{nat} of natural numbers. \coq's standard 
-library already contains a lot of functions and lemmas on Peano arithmetic. 
+\section{Isomorphism of ordinal notations}
 
-In order to build a notation system for $\omega$, we have just to look for lemmas about strict orders and well-foundedness in type \texttt{nat}.
+
+In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($). For this purpose, one may prove that the two notation systems are order-isomorphic.
+
 
 \begin{Coqsrc}
-Require Import Arith Compare_dec Lia Simple_LexProd Ordinal_generic.
-Import Relations.
-
-Search (@StrictOrder nat).
-Search @Nat.compare.
-Search (@well_founded nat).
+Class  ON_Isomorphic 
+       `(OA : @ON A ltA compareA)
+       `(OB : @ON B ltB  compareB)
+       (f : A -> B)
+       (g : B -> A):=
+  {
+  iso_compare: forall x y : A,  compareB (f x) (f y) =
+                                 compareA x y;
+  iso_inv1 : forall a, g (f a)= a;
+  iso_inv2 : forall b, f (g b) = b}.
 \end{Coqsrc}
-
-\begin{Coqsrc}
-Instance Omega : OrdinalNotation Nat.lt_strorder Nat.compare.
-Proof.
- split.
- - apply Nat.compare_spec.
- - apply lt_wf.
-Qed.
-\end{Coqsrc}
-
-We can also prove that any finite ordinal $i$ can be considered as a sub-segment of $\omega$.
-
-\begin{Coqsrc}
-Global Instance FinOrd_Omega (i:nat) :
-  SubSegment (FinOrd i) Omega i 
-             (fun alpha =>  proj1_sig alpha).
-\end{Coqsrc}
-
-
-
-
-
-
-\subsubsection{Finite ordinals as members of \texorpdfstring{$\omega+\omega$}{omega+omega}}
-
-It is easy do define a coercion from type \texttt{nat} into our type \texttt{t}.
-
-\begin{Coqsrc}
-Definition fin (n:nat) : t := inl n.
-Coercion fin : nat >-> t.
-\end{Coqsrc}
-
-The range of \texttt{fin} is called the set of \emph{finite} ordinals.
-
-
-\index{Coq!Techniques!Coercions} 
-\begin{remark}
-Beware of coercions and notation scopes!
-
-Let us consider the following goal:
-
-\begin{Coqsrc}
- Goal (6 < 8).
- auto with arith.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-1 subgoal (ID 9)
-  
-  ============================
-  6 < 8
-\end{Coqanswer}
-
-Please keep in mind that the current notation scope interprets the infix \texttt{``<''} as the predicate \texttt{Omega\_plus\_omega.lt} and not \texttt{Nat.lt}. More,  the coercion mechanism converts the terms \texttt{6:nat} [resp. \texttt{8:nat} ]
-into \texttt{inl 6} [resp. \texttt{inl 8}].  So, the initial goal is correctly interpreted by \coq{}, but not as an inequality between two natural numbers.
-
-Anyway, the initial goal is provable, using \texttt{le\_AsB} first constructor.
-
-\begin{Coqsrc}
-  constructor; auto with arith.
-Qed.
-\end{Coqsrc}
-
-\end{remark}
-
-\subsubsection{Definition of \texorpdfstring{$\omega$}{omega}}
-
-We define $\omega$ as the least ordinal which is larger than any finite ordinal.
-
-\begin{Coqsrc}
- Notation  "'omega'"  := (inr 0) : oo_scope. 
-\end{Coqsrc}
-
-\begin{exercise}
-Show that, for any $\alpha:t$, $\alpha$ is finite iff $\alpha<\omega$.
-\end{exercise}
-
-
-\subsubsection{Building an instance of OrdinalNotation}
-
-The class \texttt{OrdinalNotation} is parameterized by the strictorder $<$ and a correct comparison function.
-
-First, we prove that \texttt{lt} is an instance of \texttt{StrictOrder}.
-
-\begin{Coqsrc}
-Instance lt_strorder : StrictOrder lt.
-Qed.
-\end{Coqsrc}
-
-Then, we define a comparison function by pattern matching over the sum type $t$.
-
-\begin{Coqsrc}
-Definition compare (alpha beta: t) : comparison :=
-   match alpha, beta with
-     inl _, inr _ => Lt
-   | inl n, inl p | inr n, inr p => Nat.compare n p
-   | inr _, inl _ => Gt
-  end.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Compute compare 7 omega.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= Lt : comparison
-\end{Coqanswer}
-
-
-\begin{Coqsrc}
-Compute compare  (inr 2) 42.
-\end{Coqsrc}
- 
-\begin{Coqanswer}
-= Gt : comparison
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute compare (inr 0) omega.  
-\end{Coqsrc}
- 
- \begin{Coqanswer}
-= Eq : comparison
-\end{Coqanswer}
- 
-
-Correctness of the function \texttt{compare} is asserted by the following lemma:
-
-\begin{Coqsrc}
-Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-\end{Coqsrc}
-
-
-\begin{todo}
-  Well foundedness; instance of OrdinalNotation.
-\end{todo}
-
-%%%% ICI %%%%
-
-\subsubsection{Limit and successor ordinals}
-
-The notions of limit and successor are defined in the module 
-\href{../src/html/hydras.Prelude.Limits_and_Successors.html}{Prelude.Limits\_and\_Successors} for any instance of
-\texttt{StrictOrder}.
-
-
-\index{Maths!Limit ordinals}
-
-Let $<$ be a strict order on a type $A$ .
-We say $x:A$ is an  $\omega$-\emph{limit} of  a sequence $s(i), i\in\mathbb{N}$, if
- if $x$ is [strictly] larger than all the $s(i)$, and for any
-$y<x$, $y$ is dominated by at least an element of  the sequence $s$.
-
-\vspace{4pt}
-
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Limits_and_Successors.html}{Prelude.Limits\_and\_Successors}}
-
-\begin{Coqsrc}
-Definition  Omega_limit
-            {A:Type}{lt : relation A}
-           {sto : StrictOrder lt} (s: nat -> A) (x:A)  :=
-  (forall i: nat, lt (s i) x) /\
-  (forall y, lt y  x -> exists i:nat, lt y (s i)).
-
-Definition Limit   {A:Type}{lt : relation A}
-           {sto : StrictOrder lt}  (x:A)  :=
-  exists s : nat -> A, Omega_limit s x.
- \end{Coqsrc}
-
-Let $x$ and $y$ be two terms of type $A$, we say that \emph{$y$ is a successor of $x$}
-if $x<y$ and there is no $z$ strictly greater than $x$ and  strictly less than $y$.
-
-
-
-\begin{Coqsrc}
-Definition Successor `{lt : relation A}
-           {sto : StrictOrder lt} (y x : A):=
-  lt x y /\ (forall z,  lt x z -> lt z y -> False).
-\end{Coqsrc}
-
 
 \index{Exercises}
 
 \begin{exercise}
-Prove that $\omega$ is the unique   limit ordinal within the notation system for $\omega+\omega$
-\emph{(in this precise notation system! In larger segments of 
-ordinals, there will be \emph{a lot} of limit ordinals}).
+Let $i$ be some natural number. Prove that the notation systems 
+\texttt{Omega} and \texttt{ON\_plus (OrdFin $i$) Omega} are isomorphic.
+
+{\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
 \end{exercise}
 
-
-\subsection{Computing in \texorpdfstring{$\omega+\omega$}{omega+omega}}
-
-The simple data type we use for representing the ordinals less than $\omega+\omega$ allows us to compute successors, and to decide properties like \texttt{Successor} or \texttt{Limit}. 
-
-\subsubsection{Computing successors}
-
-The following function computes the successor of any ordinal less than $\omega+\omega$, by a simple pattern matching.
+%%%% ICI ICI
 
 
-\begin{Coqsrc}
-Definition succ (alpha : t) := match alpha with
-                                 inl i => inl (S i)
-                               | inr i => inr (S i)
-                               end.
-
-Compute succ omega.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-  = inr 1
-     : nat + nat
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Lemma lt_succ alpha : alpha < succ alpha.
-Proof.
- destruct alpha; constructor; auto with arith. 
-Qed.
-\end{Coqsrc}
-
-The correctness  of the \texttt{succ} function is asserted by the following lemma.
-
-
-\begin{Coqsrc}
-Lemma Successor_correct alpha beta : Successor beta alpha <-> beta = succ alpha.
-\end{Coqsrc}
-
-
-Being a successor is decidable, thanks to the following boolean function.
-
-
-\begin{Coqsrc}
-Definition succb (alpha: t) := match alpha with
-                                   inr (S  _) | inl (S _) => true
-                                 | _ => false
-                                 end.
-
-Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
-\end{Coqsrc}
-
-
-
-\subsubsection{Deciding whether a given ordinal is a limit}
-
-In the same way as successors, one can decide by pattern matching wether a given ordinal (dont' forget less than $\omega+\omega$ !) is a limit.
-
-\begin{Coqsrc}
-Definition limitb (alpha : t) := match alpha with
-                                     (inr 0) => true
-                                   | _ => false
-                                   end.
-
-Lemma limitb_correct alpha  : limitb alpha <-> 
-                              exists s: nat -> t, Omega_limit s alpha.
-\end{Coqsrc}
-
-
-
-
-
-
-\begin{todo}
-trichotomy zero/succ/limit
-boolean functions limitb, succb
-
-
-\end{todo}
 \begin{itemize}
 \item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
 \item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).
@@ -1154,8 +902,8 @@ boolean functions limitb, succb
 
 
 \begin{todo}
-The following section has moved from chaper on hydras.
-Adapt the redaction to the $\omega^2$ ordinl segment.
+The following section has moved from chapter on hydras.
+Adapt the redaction to the $\omega^2$ ordinal segment.
 \end{todo}
 
 

@@ -9,7 +9,6 @@ Declare Scope oo_scope.
 Delimit Scope oo_scope with oo.
 Open Scope ON_scope.
 Open Scope oo_scope.
-Print  "_ < _".
 
 Definition Omega_plus_Omega := ON_plus Omega Omega.
 
@@ -43,7 +42,7 @@ Proof.
     lia.
 Qed.
 
-Lemma is_limit_unique alpha : Limit alpha -> alpha = omega.
+Lemma limit_is_omega alpha : Limit alpha -> alpha = omega.
 Proof.
   destruct alpha.
   - intro H; inversion H.
@@ -207,11 +206,15 @@ Proof.
                 inversion Hbeta';subst; try lia.
 Defined.
 
+Definition limitb (alpha: t) := match on_compare alpha omega
+                                with  Eq => true | _ => false end.
+
 
 Lemma eq_dec (alpha beta: t) : {alpha = beta} + {alpha <> beta}.
 Proof.  
  repeat decide equality.
 Defined.
+
 
 Lemma le_introl :
   forall i j :nat, (i<= j)%nat -> inl i  <= inl j.
@@ -326,3 +329,18 @@ Proof.
   inversion H0.
 Qed.
 
+Instance Incl : SubON Omega Omega_plus_Omega omega fin.
+split.
+- intros; reflexivity.
+- constructor.
+- inversion 1; subst.
+  + exists  x; trivial.
+  + lia.
+Qed.
+
+Goal 6 < 8.
+  auto with arith.
+  Set Printing All.
+  constructor; auto with arith.
+  Unset Printing All.
+Qed.

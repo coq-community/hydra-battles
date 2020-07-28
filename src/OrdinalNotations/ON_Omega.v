@@ -1,6 +1,6 @@
 (**  The ordinal omega  *)
 Require Import Arith Compare_dec Lia  OrdinalNotations.Definitions
-        Finite_ordinals.
+        ON_Finite.
 Import Relations RelationClasses.
 Locate lt.
 Search (@StrictOrder nat).

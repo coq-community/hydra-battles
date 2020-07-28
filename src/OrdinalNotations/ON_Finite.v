@@ -87,7 +87,7 @@ Qed.
 
 
 
-Global Instance FinOrd (n:nat) : ON  (@lt n) compare .
+Global Instance FinOrd (n:nat) : ON (@lt n) compare .
 Proof.
   split.
  - apply sto.
