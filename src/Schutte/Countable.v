@@ -248,13 +248,10 @@ Section Countable_empty.
   Proof.
     (* Any relation would fit here... *)
     pose (R := fun (_ : U) (_ : nat) => False).
-    exists R.
-    split.
-    intros x.
-    destruct 1.
-    split.
-    intros x x' n x_In_empty.
-    case x_In_empty.
+    exists R;  split.
+    -  destruct 1.
+    - split.
+     - intros x x' n x_In_empty; destruct x_In_empty.
   Qed.
 
 End Countable_empty.
@@ -267,49 +264,31 @@ Section Countable_singleton.
     countable (Singleton _ x).
   Proof.
     pose (R := fun (y : U) (n : nat) => y = x).
-    exists R.
-    split.
-    intros y y_In_s.
-    exists 0.
-    inversion y_In_s.
-    rewrite <- H; unfold R; reflexivity.
-    split.
-    intros y y' n y_In_s y'_In_s _ _.
-    inversion y_In_s.
-    inversion y'_In_s.
-    subst y; auto.
+    exists R; split.
+    - intros y y_In_s; exists 0; inversion y_In_s.
+      rewrite <- H; unfold R; reflexivity.
+    - split.
+    - intros y y' n y_In_s y'_In_s _ _;
+    inversion y_In_s ;inversion y'_In_s;  subst y; auto.
   Qed.
 
 End Countable_singleton.
 
-Section Countable_seq_range.
 
+Definition seq_range (f : nat -> U) :=
+  fun x => exists n : nat, f n = x.
 
-  Definition seq_range (f : nat -> U) :=
-    fun x => exists n : nat, f n = x.
+Lemma seq_range_countable :
+  forall f, countable (seq_range f).
+Proof.
+  intros f; pose (R := fun (x : U) (n : nat) => f n = x).
+  exists R; split.
+  - intros x Hx.   destruct Hx as [x0 Hx0]; exists x0; assumption.
+  -  split.
+  - intros x x' n x_In_sr x'_In_sr x_R_n x'_R_n.
+  unfold R in x_R_n, x'_R_n; now subst.
+Qed.
 
-  Lemma seq_range_countable :
-    forall f, countable (seq_range f).
-  Proof.
-    intros f.
-    pose (R := fun (x : U) (n : nat) => f n = x).
-    exists R.
-    split.
-
-    intros x.
-    destruct 1.
-    exists x0.
-    unfold R; assumption.
-
-    split.
-
-    intros x x' n x_In_sr x'_In_sr x_R_n x'_R_n.
-    unfold R in x_R_n.
-    unfold R in x'_R_n.
-    subst x; auto.
-  Qed.
-
-End Countable_seq_range.
 
 Section Countable_bijection.
 
@@ -321,61 +300,46 @@ Section Countable_bijection.
 
   Hypothesis g_bij : fun_bijection A B g.
 
-  Lemma countable_bij_fun :
-    countable A -> countable B.
+  Lemma countable_bij_fun : countable A -> countable B.
   Proof.
-    intro A_denum; red in A_denum.
-    elim A_denum; intros Ru Ru_num.
-    pose (Rv := fun (y : V) (n : nat) => exists x : U, In A x /\ g x = y /\ Ru x n).
-    exists Rv.
-    split.
-
-    intros y y_In_B.
-    destruct Ru_num as (Ru_dom, _, _).
-    unfold Rv.
-    destruct g_bij as (_, g_onto, _).
-    elim g_onto with y; try assumption.
-    intros x (x_In_A, gx_eq_y).
-    elim Ru_dom with x; try assumption.
-    intros b x_Ru_b.
-    exists b; exists x; repeat split; assumption.
-
-    split.
-
-    intros y y' n y_In_B y'_In_B y_Rv_n y'_Rv_n.
-    unfold Rv in y_Rv_n; unfold Rv in y'_Rv_n.
-    elim y_Rv_n; intros x (x_In_A, (gx_eq_y, x_Ru_n)).
-    elim y'_Rv_n; intros x' (x'_In_A, (gx'_eq_y', x'_Ru_n)).
-    assert (x_eq : x = x').
-    destruct Ru_num as (_, _, Ru_inj).
-    apply Ru_inj with n; assumption.
-    rewrite <- gx_eq_y; rewrite x_eq; assumption.
+    intro HA; elim HA; intros Ru Ru_num.  
+    pose (Rv := fun (y : V) (n : nat) =>
+                  exists x : U, In A x /\ g x = y /\ Ru x n).
+    exists Rv; split.
+    -  intros y y_In_B;destruct Ru_num as (Ru_dom, _, _).
+       unfold Rv; destruct g_bij as (_, g_onto, _).
+       elim g_onto with y; try assumption.
+       intros x (x_In_A, gx_eq_y).
+       elim Ru_dom with x; try assumption.
+       intros b x_Ru_b;
+         exists b; exists x; repeat split; assumption.
+    - split.
+    -  intros y y' n y_In_B y'_In_B y_Rv_n y'_Rv_n.
+       unfold Rv in y_Rv_n; unfold Rv in y'_Rv_n.
+       elim y_Rv_n; intros x (x_In_A, (gx_eq_y, x_Ru_n)).
+       elim y'_Rv_n; intros x' (x'_In_A, (gx'_eq_y', x'_Ru_n)).
+       assert (x_eq : x = x').
+       { destruct Ru_num as (_, _, Ru_inj).
+         apply Ru_inj with n; assumption.
+       }
+       rewrite <- gx_eq_y; rewrite x_eq; assumption.
   Qed.
 
   Lemma countable_bij_funR :
     countable B -> countable A.
   Proof.
-    intro B_denum.
-    elim B_denum; intros Rv Rv_num.
+    intro B_denum; elim B_denum; intros Rv Rv_num.
     pose (Ru := fun (x : U) (n : nat) => Rv (g x) n).
-    exists Ru.
-    split.
-
-    intros x x_In_A.
-    unfold Ru.
-    destruct Rv_num.
-    apply H.
-    destruct g_bij.
-    apply H2; assumption.
-
-    split.
-
-    intros x x' n x_In_A x'_In_A x_Ru_n x'_Ru_n.
-    unfold Ru in x_Ru_n. unfold Ru in x'_Ru_n.
-    destruct Rv_num.
-    destruct g_bij; auto.
-    apply H4; auto.
-    apply H1 with n; auto.
+    exists Ru; split.
+    - intros x x_In_A; unfold Ru; destruct Rv_num.
+      apply H.
+      destruct g_bij.
+      apply H2; assumption.
+    -  split.
+   - intros x x' n x_In_A x'_In_A x_Ru_n x'_Ru_n.
+    unfold Ru in x_Ru_n; unfold Ru in x'_Ru_n.
+    destruct Rv_num,  g_bij; auto.
+    apply H4; auto; apply H1 with n; auto.
   Qed.
 
 End Countable_bijection.
@@ -389,12 +353,11 @@ Section Countable_finite.
   Theorem countable_finite : countable A.
   Proof.
     elim A_finite.
-    apply countable_empty.
-    intros A0 A0_finite A0_denum x x_nIn_A0.
-    unfold Add.
-    apply countable_union.
-    assumption.
-    apply countable_singleton.
+    - apply countable_empty.
+    - intros A0 A0_finite A0_denum x x_nIn_A0; unfold Add;
+        apply countable_union.
+     + assumption.
+     + apply countable_singleton.
   Qed.
 
 End Countable_finite.
