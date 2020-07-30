@@ -116,11 +116,11 @@ Section Impossibility_Proof.
 
    
 
-
+ (*m_strict_mono m Hvar*) 
 
 
 Hint Constructors step clos_trans_1n : hydra.
-Hint Resolve lex_1 lex_2 (m_strict_mono m Hvar) : hydra.
+Hint Resolve lex_1 lex_2: hydra.
 Hint Unfold   lt : hydra.
 
 
@@ -132,24 +132,26 @@ Qed.
  Hint Resolve step_to_round_plus : hydra. 
 
 
-Lemma m_ge : m big_h <= m small_h.
-Proof.
-  unfold small_h; pattern (m big_h) .   
-  apply  well_founded_induction with
-      (R := lt) (1:= lt_wf);
-    intros (i,j) IHij.  
-  destruct j as [|k].
-  - destruct i as [| l].
-    +  (* p = (0,0) *)
-      apply le_0. 
-    +  (* p = (S i, 0) *)
-      rewrite <- limit_is_lub.  intro k.
-        apply le_lt_trans with (m (iota (l, k))); auto with hydra.
-        now red. 
-- change (i, S k) with (succ (i,k)) at 1.
-    rewrite <- lt_succ_le.
- apply le_lt_trans with (m (iota (i, k))); auto with hydra.
-Qed.
+ Lemma m_ge : m big_h <= m small_h.
+ Proof.
+   unfold small_h; pattern (m big_h) .   
+   apply  well_founded_induction with
+       (R := lt) (1:= lt_wf);
+     intros (i,j) IHij.  
+   destruct j as [|k].
+   - destruct i as [| l].
+     +  (* p = (0,0) *)
+       apply le_0. 
+     +  (* p = (S i, 0) *)
+       rewrite <- limit_is_lub.  intro k.
+       apply le_lt_trans with (m (iota (l, k))); auto with hydra. 
+       red.  apply (m_strict_mono m Hvar); auto with hydra.
+       reflexivity.
+   - change (i, S k) with (succ (i,k)) at 1.
+     rewrite <- lt_succ_le.
+     apply le_lt_trans with (m (iota (i, k))); auto with hydra.
+     apply (m_strict_mono m Hvar); auto with hydra.
+ Qed.
 
 
 Theorem Impossible : False.

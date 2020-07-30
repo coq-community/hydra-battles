@@ -731,7 +731,7 @@ FAQs on \coq{}).
 \end{remark}
 
 
-Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image},
+Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image}, \linebreak
  \texttt{Coq.Wellfounded.Inclusion}, and \texttt{Coq.Arith.Wf\_nat}, we prove that our
 relation \texttt{wf} is well founded.
 
@@ -772,26 +772,6 @@ function $\iota$ from $t\;i$ to $t\;j$, and prove this function is  a bijection 
 the segment $[0,i)$ of $t\;j$.
 
 
-
-
-This notion is defined generically as a class in
- Module~\href{../src/html/hydras.Prelude.Ordinal-generic.html}{Prelude.Ordinal\_generic} see Fig~\vref{figure:subsegment}).
-
-\begin{Coqsrc}
-(** The segment associated with nA is isomorphic to
-    the interval [0,b) *)
-
-Class  Subsegment 
-       `(nA : @OrdinalNotation A ltA stoA compareA)
-       `(nB : @OrdinalNotation B ltB stoB compareB)
-       (b :  B)
-       (iota : A -> B):=
-  {
-  subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
-                                 compareA x y;
-  subseg_incl : forall x, ltB (iota x) b;
-  subseg_onto : forall y, ltB y b  -> exists x:A, iota x = y}.
-\end{Coqsrc}
 
 
  \begin{figure}[h]
@@ -843,7 +823,7 @@ Section Inclusion_ij.
  
    Let b : t j := exist _ i Ltb_ij.
    
-   Global Instance F_incl_ij  : SubSegment  (FinOrd i) (FinOrd j) b iota_ij.
+   Global Instance F_incl_ij  : SubON  (FinOrd i) (FinOrd j) b iota_ij.
   (* ... *)
 
   End Inclusion_ij.
@@ -889,15 +869,58 @@ Let $i$ be some natural number. Prove that the notation systems
 {\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
 \end{exercise}
 
+\index{Projects}
+\begin{project}
+Define in \coq{} the product of two ordinal notations $N_A$ and $N_B$.
+If $A$ [resp. $B$] is the underlying type of $N_A$ [resp. $N_B$], the
+product \texttt{ON\_mult $N_A$ $N_B$} is implemented over the cartesian product $B\times A$ (with the lexicographic ordering).
+
+For instance, the
+elements of the product \texttt{ON\_mult Omega (FinOrd 3)} are ordered as follows.
+\[(0,0),(0,1),(0,2),(0,3),(0,4),\dots,{\color{red}(1,0),} (1,1),(1,2),\dots, {\color{red}(2,0)},(2,1),(2,2),\dots\]
+
+Note that the elements of  \texttt{ON\_mult (FinOrd 3) Omega} are differently ordered (without limit ordinals):
+\[(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(0,3),\dots\]
+(no limit ordinals).
+
+Prove that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
+\texttt{Omega}  whilst
+\texttt{Omega}  is a sub-notation of \texttt{ON\_mult Omega (FinOrd $i$)},
+for any strictly positive $i$.
+\end{project}
+
+
+
+
 %%%% ICI ICI
 
+\section*{Other ordinal notations}
 
-\begin{itemize}
-\item $\omega^n$ (for some  integer  $n\geq 2$) : the type of $n$-uples of natural numbers, with the lexicographic product of $n$ copies of \texttt{Nat.lt}.
-\item  $\omega^\omega$: the set of nonincreasing sequences of natural numbers, lexicographically ordered (also the set of finite multisets of natural numbers).
-\item $\epsilon_0$: The set of terms in Cantor normal form (see Chap.~\ref{chap:T1}).
-\item $\Gamma_0$: The set of terms in Veblen normal form.
-\end{itemize}
+\index{Projects}
+\begin{project}
+Let $N_A$ be a notation system for ordinals strictly less than $\alpha$, 
+with the strict order $(A,<_A)$. Please build the notation system
+\texttt{ON\_Expl $N_A$}, on the type of multisets of elements of $A$
+(or, if preferred, the type of non-increasing finite sequences on $A$,
+provided with the lexicographic ordering on lists).
+
+For instance, let us take $N_A=\texttt{Omega}$, and take $\alpha=(4,4,2,1,0)$,
+ $\beta=(4,3,3,3,3,3,2)$, and $\gamma=(5)$. Then $\beta<\alpha<\gamma$. 
+
+In contrast the list $(5,6,3,3)$ is not non-increasing (\emph{i.e.} sorted w.r.t. $\geq$), so it is not to be considered.
+
+Note that if the notation $N_A$ implements the ordinal 
+$\alpha$,  the new notation $\omega^{N_A}$ must implement the ordinal $\varphi_0(\alpha)$, a.k.a. $\omega^\alpha$ (see chapter~\ref{chap:schutte})
+
+\end{project}
+
+\begin{remark}
+ The set of ordinal terms in Cantor normal form (see Chap.~\ref{chap:T1}) and 
+in Veblen normal form (see 
+\href{../src/html/hydras.Gamma0.Gamma0.html}{Gamma0.Gamma0}) are shown to be ordinal notation systems, but there is a lot of work to be done in order to unify ad-hoc  definitions and proofs which were written before the definition of the \texttt{ON} type class.
+\end{remark}
+
+
 
 
 

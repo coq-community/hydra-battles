@@ -45,7 +45,7 @@ Compute (succ 5).
 
 Example E0: ~ zero <= bad_term.
 Proof.
-  compute; firstorder.
+  compute.  firstorder; discriminate.
 Qed.
 
 Example E'0 : ~ bad_term <= zero.

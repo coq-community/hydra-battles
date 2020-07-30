@@ -87,10 +87,6 @@ Qed.
 
 (** cf Peano.lt's definition  in Stdlib *)
 
-
-
-
-
 Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
 Proof.
   destruct 1; trivial. 
@@ -124,7 +120,7 @@ Qed.
 
 
  Definition compare (alpha beta: t) : comparison :=
-  match Nat.compare (fst alpha) ( fst beta) with
+  match Nat.compare (fst alpha) (fst beta) with
     Eq => Nat.compare (snd alpha) (snd beta)
   | c => c
   end.

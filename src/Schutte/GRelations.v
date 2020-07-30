@@ -4,7 +4,7 @@
 
 
 
-Require Import Ensembles Le  Classical  Omega.
+Require Import Ensembles Le  Classical  Lia.
 Require Import PartialFun.
 
       
@@ -145,13 +145,14 @@ Section General_Relations.
         split.
         auto.
         intros.
-        case (le_lt_dec q p).
+        Locate le_lt_dec.
+        case (Compare_dec.le_lt_dec q p).
         auto.
         intro.
         case H.
         exists p.
         split;auto with arith.
-        omega.
+        lia.
         intros.
         eapply H with n.
         exists n;auto with arith.
