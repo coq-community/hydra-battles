@@ -6,7 +6,7 @@ Computes the first  [l]  between [n] and [p] (excluded) such that
 *)
 
 
-Require Import Arith Omega.
+Require Import Arith Lia.
 
 Section Hypos.
   Variables (P : nat -> bool)
@@ -47,7 +47,7 @@ Section Hypos.
     destruct H0; auto with arith.
 
     intros.
-    assert (i <= p - S n0 \/ i = p - n0) by omega.
+    assert (i <= p - S n0 \/ i = p - n0) by lia.
     destruct H3.
     apply invar; auto.
     subst i; auto.
@@ -57,21 +57,21 @@ Section Hypos.
     intros.
     exists (p - S n0).
     repeat split.
-    omega.
-    omega.
+    lia.
+    lia.
     auto.
     replace (S (p - S n0)) with (p - n0);auto.
-    omega.
+    lia.
   Defined.
 
   Let delta := p - n.
 
   Remark R1 : 0 < delta /\ delta <= p - n.
-  Proof.   unfold delta; omega.  Qed.
+  Proof.   unfold delta.  clear search_toggle; lia.  Qed.
 
   Remark R2 :  forall i, n <= i -> i <= p - delta -> P i = true.
   Proof.
-    unfold delta; intros; replace i with n; [trivial | omega].
+    clear search_toggle; unfold delta; intros; replace i with n; [trivial | lia].
   Qed.
 
 (* end hide *)

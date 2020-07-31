@@ -135,7 +135,7 @@ Fixpoint add_head_r_plus (s:Hydrae) (i:nat)  :=
 (** *** adds [i] heads to  the root of [h] (to the right of its daughters)
  *)
 
-Fixpoint add_r h i :=
+Definition add_r h i :=
   match h with node s => node (add_head_r_plus s i) end.
 
 
