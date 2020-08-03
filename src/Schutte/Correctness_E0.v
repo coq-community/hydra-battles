@@ -559,3 +559,11 @@ Proof.
    + apply inject_mono;destruct H; tauto.
    + apply inject_mono;  destruct H; tauto.
 Qed.
+
+(** Correctness of E0.plus *)
+
+Lemma E0_plus_correct :  ON_op_ok  E0.plus plus.
+Proof.
+  red; destruct x,y; cbn.
+  rewrite inject_plus; auto.
+Qed.

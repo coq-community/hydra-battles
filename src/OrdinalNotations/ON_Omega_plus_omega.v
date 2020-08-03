@@ -20,13 +20,13 @@ Definition t := @ON_plus.t nat nat.
 Example ex1 : inl 7 < inr 0.
 Proof. constructor. Qed.
 
-Notation "'omega'" := (inr  0:t).
-
+Notation "'omega'" := (@inr nat nat 0) : oo_scope.
+Open Scope oo_scope.
 
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
-Compute on_compare omega  8.
+Compute on_compare omega  (fin 8).
 
 Compute on_compare (8:t)  omega.
 
@@ -66,8 +66,12 @@ Proof.
       injection H7; intro; subst. lia.
 Qed.
 
-
-
+Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega.
+Proof.
+  split.
+  - intro H; now apply limit_is_omega.
+  - intro; subst; apply omega_is_limit.
+Qed.
 
 Lemma Successor_inv1 : forall i j, Successor  (inl j) (inl i) -> j = S i. 
 Proof.

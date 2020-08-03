@@ -637,7 +637,7 @@ Hint Resolve not_lt_zero : T1.
  Qed.      
 
 
-Theorem lt_irrefl : forall alpha, ~ lt alpha  alpha.
+Theorem lt_irrefl alpha :  ~ lt alpha  alpha.
 Proof. 
  induction alpha.
  -  red;inversion_clear 1.
@@ -673,11 +673,10 @@ Proof.
  tauto. 
 Qed.
 
-
-Theorem lt_trans : forall alpha beta: T1,
-    lt alpha  beta -> 
-    forall gamma, lt beta gamma -> lt alpha gamma.
-Proof.
+Theorem lt_trans (alpha beta gamma : T1) :
+  lt alpha beta -> lt beta gamma -> lt alpha gamma.
+  Proof.
+  intro H; revert gamma. revert  H; revert  alpha beta.
   induction  alpha.
   - destruct beta.
     discriminate. 

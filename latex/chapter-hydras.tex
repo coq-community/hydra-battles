@@ -1774,6 +1774,7 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hvariant}{Hydra.Hydra\_Definitions}}
 \index{Coq!Techniques!Type classes}
+\label{sect:hvariant-def}
 
 \begin{Coqsrc}
 Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
@@ -1786,13 +1787,20 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 \index{Exercises}
 
 \begin{exercise}
- Prove that, if there is an instance of \texttt{Hvariant Lt wf\_Lt $B$ $m$}, then there exists no infinite battle in  $B$.
+ Prove that, if there is an instance of (\texttt{Hvariant Lt wf\_Lt $B$ $m$}), then there exists no infinite battle in  $B$.
 \end{exercise}
 
 
 
 
-\subsection{A first theorem of impossibility}
+\subsection{Two small proofs of impossibility}
+\index{Maths!Proofs of impossibility}
+
+When one wants to prove a termination theorem with the help of a variant, 
+one has to consider first a well-founded set $(A,<)$, then a strictly decreasing measure on this set.  The following two lemmas show that if  the order structure $(A,<)$ is too simple, it is useless to look for a convenient measure, which simply no exists. Such kind of result is useful, because it saves you time and effort.
+
+\subsubsection{No variant on Peano.lt}
+\label{omega-case}
 
 The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
 
@@ -1842,6 +1850,19 @@ The hydra $\iota(3)$}
   \end{Coqsrc}
 
 Let us consider now some hydra \texttt{big\_h} out of the range of the injection $\iota$ (see Fig.~\vref{fig:h-omega-omega}).
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.5]
+\node (foot) at (2,0) {$\bullet$};
+\node (N1) at (2,2) {$\bullet$};
+\node (N2) at (2,4) {$\Smiley[2][green]$};
+\draw (foot) -- (N1);
+\draw (N1) to  (N2);
+\end{tikzpicture}
+\caption{\label{fig:h-omega-omega}}
+ The hydra \texttt{big\_h}.
+\end{figure}
 
  \begin{Coqsrc}
   Let big_h := hyd1 (hyd1 head).
@@ -1980,8 +2001,8 @@ Let us assume there is a variant from \texttt{Hydra} into \texttt{nat*nat} (with
 
 
 Let us follow the same pattern as in Sect.~\ref{omega-case}.
-First, we define an injection from type \texttt{t} into \texttt{Hydra}.
-We associate with any pair $(i,j)$ the hydra with $i$ branches of length $2$ and
+First, we define an injection from type \texttt{t} into \texttt{Hydra}, by
+ associating to  any pair $(i,j)$ the hydra with $i$ branches of length $2$ and
 $j$ branches of length $1$.
 
 %% revenir ici
@@ -2218,6 +2239,7 @@ than the two previous results about $\mathbb{N}$ and $\mathbb{N}\times\mathbb{N}
 require a lot of technical results. 
 \end{remark}
 
+\index{Exercises}
 \begin{exercise}
 
 \label{sec:orgheadline63}
@@ -2228,15 +2250,15 @@ Write \emph{direct} proofs ({i.e.},  without applying the result and tools of Ch
   lexicographic ordering
 \item  $\omega^\omega$: the set of all decreasing sequences (with respect to $\le$)  of natural numbers, ordered by lexicographic ordering on lists.
 
-For instance , the sequence $\langle 4,4,2 \rangle$ is strictly greater than 
-$\langle 4,3,3,3,3,3,3,2,2,2 \rangle$.
+For instance, the following inequality holds:
+\[\langle 4,3,3,3,3,3,3,2,2,2 \rangle\,<\,\langle 4,4,2 \rangle\]
 \end{itemize}
 
   
 \end{exercise}
 
 
-\subsubsection{Conclusion/Teaser}
+\subsubsection{Conclusion}
 
 In order to build a variant for proving the termination of all hydra battles, we need to consider order structures more complex than the usual order on type \texttt{nat}. 
 The notion of \emph{ordinal number} provides a catalogue of well-founded order types.

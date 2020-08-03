@@ -12,7 +12,7 @@
 
 
 Require Export Schutte_basics Ordering_Functions
-        Addition AP CNF Critical Injection_from_T1.
+        Addition AP CNF Critical Correctness_E0.
 
 
 

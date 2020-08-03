@@ -110,8 +110,8 @@ The name \texttt{T1} we gave to this data-type  is proper to this development an
 to a hierarchy of ordinal notations. For instance, in~\cite{CantorContrib}, the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
 
 \index{Types!T2@T2 (ordinals in Veblen normal form)}
-\emph{Please look also at sub-directory
-href{../src/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
+\emph{Please look also at the library
+\href{../src/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
 
 
 \begin{Coqsrc}
@@ -119,15 +119,6 @@ Inductive T2 : Set :=
   zero : T2
 | gcons : T2 -> T2 -> nat -> T2 -> T2.
 \end{Coqsrc}
-
-Another useful ordinal notation could be used for denoting the ordinals strictly less than $\omega^\omega$, but \texttt{list nat} could be used as well.
-
-\begin{Coqsrc}
-Inductive T0 : Set := 
-  zero : T0
-| cons : nat -> T0 -> T0.
-\end{Coqsrc}
-
 
 \subsubsection{Example}
 
@@ -174,7 +165,7 @@ level 3/.style={sibling distance=17mm}]
 For simplicity's sake, we chosed to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the contruction (\texttt{ocons $\alpha$ $n$ $\beta$} is intented to represent the
 ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
 In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
-definition. But this replacement would take a lot of time \dots.
+definition. But this replacement would take a lot of time \dots{}
 
 \subsection{Abbreviations}
 
@@ -202,12 +193,12 @@ Example ten : T1 := 10.
 \index{Coq!Techniques!Coercions}
 \index{Functions!Coercions@Coercions (from nat to ordinal types)}
 \begin{remark}
-\label{warning:coercions}
-The use of coercions like \texttt{fin} allow us to be close to the mathematical tradition where natural numbers are ordinals too.
-Nevertheless, it may happen that a goal like \texttt{3 < 5} could be 
-interpreted as \texttt{(lt (fin 3) (fin 5))},  depending on the current notation scope.  
-When this misinterpretation happens, tactics like \texttt{auto with arith}, \texttt{lia} do not work!
-Thus, it is useful to write \texttt{(3 < 5)\%nat}  an inequality between two natural numbers. 
+Please refer to the remark~\pageref{waening:coercions} about the use of coercions.
+% The use of coercions like \texttt{fin} allow us to be close to the mathematical tradition where natural numbers are ordinals too.
+% Nevertheless, it may happen that a goal like \texttt{3 < 5} could be 
+% interpreted as \texttt{(lt (fin 3) (fin 5))},  depending on the current notation scope.  
+% When this misinterpretation happens, tactics like \texttt{auto with arith}, \texttt{lia} do not work!
+% Thus, it is useful to write \texttt{(3 < 5)\%nat}  an inequality between two natural numbers. 
 \end{remark}
 
 
@@ -219,7 +210,7 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \index{Notations!omega@omega (the least infinite ordinal)}
 \begin{Coqsrc}
-Notation omega := (ocons (ocons zero 0 zero) 0 zero).
+Notation omega := (ocons (ocons zero 0 zero) 0 zero): t1_scope.
 \end{Coqsrc}
 
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
@@ -242,7 +233,7 @@ Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 29) : t1_scope.
 \label{sec:orgheadline69}
 The name \(\varphi_0\)
    comes from ordinal numbers theory. In~\cite{schutte}, Schütte defines 
-$\varphi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\varphi_0(\alpha)$.  See also Chapter~\vref{chap:schutte}.
+$\varphi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\varphi_0(\alpha)$.  See also Chapter~\ref{chap:schutte} of this document.
 \end{remark}
 
 
@@ -251,7 +242,7 @@ $\varphi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \
 \subsubsection{The hierarchy of \(\omega\)-towers:}
 \label{sec:orgheadline71}
 
-The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximed by the sequance of $\omega$-towers.
+The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximed by the sequence of $\omega$-towers.
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}}
@@ -371,12 +362,10 @@ We prove also that the relation \texttt{lt} is a strict total order.
 
   
 \begin{Coqsrc}
-Theorem lt_irrefl : forall alpha, ~ lt alpha  alpha.
+Theorem lt_irrefl  alpha :  ~ lt alpha  alpha.
 
-Theorem lt_trans :
-forall alpha beta: T1,
- lt alpha  beta -> 
- forall gamma, lt beta gamma -> lt alpha gamma.
+Theorem lt_trans (alpha beta gamma : T1) :
+  lt alpha  beta -> lt beta gamma -> lt alpha gamma.
 
 Definition lt_eq_lt_dec  :
    forall alpha beta : T1, 
@@ -389,7 +378,7 @@ in the structure (size and/or height) of the terms of \texttt{T1}.
 For instance the ordinal of Fig \ref{fig:cnf-example} is strictly less
 than the structurally simpler \(\omega^{\omega^\omega}\times 2\).
 
-\subsubsection{A Predicate for characterizing normal forms}
+\subsubsection{A predicate for characterizing normal forms}
 \label{sec:orgheadline74}
 \label{sec:orgheadline75}
 We note that our data-type \texttt{T1} allows us to write expressions that
@@ -420,7 +409,7 @@ Fixpoint nf_b (alpha : T1) : bool :=
       (nf_b a && nf_b b && lt_b a' a)%bool
   end. 
 
-Definition nf alpha :Prop := nf_b alpha.
+Definition nf alpha: Prop := nf_b alpha.
 \end{Coqsrc}
 
 \begin{Coqsrc}
@@ -603,7 +592,7 @@ Instance Epsilon0 : ON Lt compare.
 \end{Coqsrc}
 
 
-\emph{From Module~\href{../src/html/hydras.Schutte.Injection_from_T1.html}{Schutte.Injection\_from\_T1}}
+\emph{From Module~\href{../src/html/hydras.Schutte.Schutte.Correctness_E0.html}{Schutte.Schutte.Correctness\_E0}}
 
 \begin{Coqsrc}
 Instance Epsilon0_correct :

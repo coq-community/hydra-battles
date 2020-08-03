@@ -1,4 +1,4 @@
-\chapter{Introduction to ordinal numbers}
+\chapter{Introduction to ordinal numbers and ordinal notations}
 
 
 The proof of termination of all hydra battles presented in~\cite{KP82} is based
@@ -19,7 +19,7 @@ More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It pr
 &\textcolor{red}{\omega},\,\omega+1,\omega+2,\omega+3,\ldots\\
 &\textcolor{red}{\omega\times 2},\,\omega\times 2+1,\ldots, \textcolor{red}{\omega\times 3},\,\omega\times 3+1,\ldots, \textcolor{red}{\omega\times 4},\ldots,\\
 &\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots,\\
-&\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots,\\
+&\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots,\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots,\\
 &\textcolor{red}{\omega^{\omega^\omega}},\ldots, \textcolor{red}{\omega^{\omega^\omega}+\omega^\omega\times 42+ \omega^{55}+\omega}, \ldots, \textcolor{red}{\omega^{\omega^{\omega+1}}}, \omega^{\omega^{\omega+1}}+1,\dots\\
 & \textcolor{red}{\epsilon_0 (= \omega^{\epsilon_0)}}, \epsilon_0+1, \epsilon_0+2, \epsilon_0+3, \ldots,\\
 & \textcolor{red}{\epsilon_1}, \ldots, \textcolor{red}{\epsilon_2}, \ldots, \textcolor{red}{\epsilon_\omega},\ldots \\
@@ -34,13 +34,13 @@ More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It pr
 \end{figure}
 
 
-Let us comment some features of this table.
+Let us comment some features of this table:
 
 \begin{itemize}
 \item The ordinals are listed in a strictly increasing order. 
 \item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, betaween $41$ and $43$.
 \item Each ordinal in black is an immediate successor of anotter ordinal. We call it a \emph{successor} ordinal. For instance, $43$ is the successor of $42$, and $\omega^4+1$ the successor of $\omega^4$.
-\item Ordinals that  follow dots immediately (written in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+\item Ordinals that  follow dots immediately (displayed in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 \item
 For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). $\omega$ is also the first limit ordinal, and the first infinite ordinal, in the sense that 
 the set $\mathbb{O}_\omega$ is infinite.
@@ -70,8 +70,8 @@ The disjoint union of two copies of $\mathbb{N}$, \emph{i.e.} the set $\{0,1\}\t
 with respect to the order below:
 
 \begin{align*}
-(i,j) < (i,k) & \;\textbf{if} \; j < k\\
-(0,k) < (1,l) & \;\textbf{for\,any}\;k \;\textbf{and} \; l
+(i,j) < (i,k) & \;\textit{if} \; j < k\\
+(0,k) < (1,l) & \;\textit{for\,any}\;k \;\textit{and} \; l
 \end{align*}
 
 \subsection{Ordinal numbers}
@@ -112,16 +112,28 @@ we derive some interesting properties of countable ordinals from these axioms.
 \subsection{Ordinal notations}
 
 
-Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as rather simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{[ordinal] notation systems}). Let $\alpha$ be some countable ordinal; In \coq{} terms, an ordinal notation for $\alpha$ will be a data type for representing all ordinals below $\alpha$ (excluding $\alpha$) and a bunch of functions for comparing ordinals, doing some arithmetic, inspecting the topology of the order (limits, successors), and proofs of well-foundedness). These functions should be proved correct, with respect to Schütte's model.
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as quite simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{[ordinal] notation systems}). 
 
-Our definition of ordinal notation borrows much material from \coq's standard library.
+Let $\alpha$ be some (countable) ordinal; 
+in \coq{} terms, we call ordinal notation for $\alpha$ a structure composed 
+of:
+\begin{itemize}
+\item A data type $A$ for representing all ordinals strictly below $\alpha$,
+\item A well founded order $<$ on $A$, 
+\item A Function for comparing two ordinals, which implies that the reflexive closure of $<$ is a \emph{total order}.
+\end{itemize}
+
+
+Such a structure can be proved correct relatively to another ordinal notation or
+to Schütte's model.
+
 
 
 
 \subsection{Ordered types}
 
 The library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
-Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
+Coq.Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
 
 \begin{Coqsrc}
 Variable A: Type.
@@ -219,9 +231,9 @@ on the disjoint sum of the associated types, by putting all elements of \texttt{
 Inductive
 le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
   : A + B -> A + B -> Prop :=
-    le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
-  | le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
-  | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
+| le_aa : forall x y : A, leA x y -> le_AsB A B leA leB (inl x) (inl y)
+| le_ab : forall (x : A) (y : B), le_AsB A B leA leB (inl x) (inr y)
+| le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
 \end{Coqanswer}
 
 
@@ -317,7 +329,7 @@ We can define this notation in \coq{} as an instance of \texttt{ON\_plus}.
 
 
 \vspace{4pt}
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.ON_Omega_plus_omega.html}{Prelude.ON\_Omega\_plus\_omega}}
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
 \begin{Coqsrc}
 Definition Omega_plus_Omega := ON_plus Omega Omega.
@@ -346,7 +358,7 @@ Proof. constructor. Qed.
 \end{Coqsrc}
 
 
-
+\label{warning:coercions}
 \index{Coq!Techniques!Coercions} 
 \begin{remark}
 Beware of coercions and notation scopes!
@@ -433,18 +445,14 @@ Definition Limit {sto : StrictOrder lt}  (x:A)  :=
   (forall y:A, y < x -> exists z:A, y < z /\ z < x).
 \end{Coqsrc}
 
-Using these definitions , we can prove the following lemmas:
+Using these definitions , we can prove the following lemma:
 
 \vspace{4pt}
 
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.ON_Omega_plus_omega.html}{Prelude.ON\_Omega\_plus\_omega}}
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
 \begin{Coqsrc}
- Lemma omega_is_limit : Limit omega. 
-
-Lemma limit_is_omega alpha : Limit alpha -> alpha = omega.
-
-
+Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega.
 \end{Coqsrc}
 
 Regarding successors, let us introduce the following definition:
@@ -514,15 +522,19 @@ For instance, we prove that \texttt{Omega} is a sub-notation of
 Instance Incl : SubON Omega Omega_plus_Omega omega fin.
 \end{Coqsrc}
 
-
-
+\index{Projects}
+\begin{project}
+Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in order to
+have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
+a variant on $O_B$.
+\end{project}
 
 \subsection{Comparing an ordinal notation with Schütte's model}
 
 Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctenss of our ordinal  notations.
 
 The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
-where $\alpha$ is a countable ordinal à la Schütte.
+where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 
 \begin{Coqsrc}
 Class ON_for `(alpha : Schutte_basics.Ord)
@@ -541,7 +553,7 @@ Class ON_for `(alpha : Schutte_basics.Ord)
 
 
 
-For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is correct with respect to the countqable ordinal $\epsilon_0$
+For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is correct with respect to the countable ordinal $\epsilon_0$
 (see chapter~\ref{chap:schutte} for more details).
 
 
@@ -848,7 +860,7 @@ In some cases we want to show that two notation systems describe the same segmen
 
 
 \begin{Coqsrc}
-Class  ON_Isomorphic 
+Class  ON_Iso 
        `(OA : @ON A ltA compareA)
        `(OB : @ON B ltB  compareB)
        (f : A -> B)
@@ -894,7 +906,7 @@ for any strictly positive $i$.
 
 %%%% ICI ICI
 
-\section*{Other ordinal notations}
+\section{Other ordinal notations}
 
 \index{Projects}
 \begin{project}
