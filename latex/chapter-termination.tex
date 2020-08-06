@@ -445,8 +445,8 @@ Lemma plus_is_zero alpha beta :
 
 But this style leads to clumsy statements, and many sub-goals in interactive proofs (although often solved with \texttt{auto} or \texttt{eauto}).
 
-Another way is encapsulate conditions of the form \texttt{(nf $\alpha$)} in
-often used predicates. For instance, we introduced the restriction of \texttt{lt} to terms in normal form, and provided a handy notation for this restriction.
+One may encapsulate conditions of the form \texttt{(nf $\alpha$)} in
+the most used predicates. For instance, we introduce the restriction of \texttt{lt} to terms in normal form, and provide a handy notation for this restriction.
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Prelude.Restriction.html}{Ordinals.Prelude.Restriction}}
@@ -478,9 +478,11 @@ Lemma LT_one : forall alpha, alpha < one -> alpha = zero.
 \end{Coqsrc}
 
   
-\subsection{An ordinal notation for \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsubsection{A sigma type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
+This representation will be used in section~\ref{sect:equations} in order to define recursive functions with the plug-in \texttt{coq-equations}, and also to build an instance of the class \texttt{ON} of ordinal notations.
+
 
 \label{sect:E0-def}
 \index{Types!E0@ EO (ordinal terms below $\epsilon_0$ in normal form)} 
@@ -534,7 +536,7 @@ Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 
 For upgrading constants and fonctions of \texttt{T1}, we have to prove that 
 the term they build is in normal form.
-For instance, let us represent the ordinals $0$ $\omega$ as instances of the class \texttt{E0}.
+For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
 \index{Notations!omega@omega (the least infinite ordinal)}
 \index{Constants!zero:T1}
@@ -579,28 +581,6 @@ omega + omega
      : E0
 \end{Coqanswer}
 
-\index{Projects}
-\begin{project}
-The class \texttt{ON} of ordinal notations has been defined long after this 
-chapter, and is not used yet in the development of the type \texttt{E0}. 
-A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
-
-Nevertheless, we built an instance of \texttt{ON}, and proved its correction w.r.t. Schutte's model.
-
-\begin{Coqsrc}
-Instance Epsilon0 : ON Lt compare.  
-\end{Coqsrc}
-
-
-\emph{From Module~\href{../src/html/hydras.Schutte.Schutte.Correctness_E0.html}{Schutte.Schutte.Correctness\_E0}}
-
-\begin{Coqsrc}
-Instance Epsilon0_correct :
-  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
-\end{Coqsrc}
-
-
-\end{project}
 
 \subsection{Syntactic definition of limit and successor ordinals}
 
@@ -678,9 +658,10 @@ recursion on its Cantor normal form.
 
 \begin{Coqsrc}
 Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with zero => 1
-             | ocons zero n _ => ocons zero (S n) zero
-             | ocons beta n gamma => ocons beta n (succ gamma)
+  match alpha with 
+   | zero => 1
+   | ocons zero n _ => ocons zero (S n) zero
+   | ocons beta n gamma => ocons beta n (succ gamma)
  end.
 \end{Coqsrc}
 
@@ -794,7 +775,7 @@ Inductive ppT1 : Set :=
   | P_omega : ppT1
 \end{Coqsrc}
 
-The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1} into a human-readable expression. For instance, let us convert the term \texttt{alpha\_0} of~\pageref{alpha0-def}.
+The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1} into a human-readable expression. For instance, let us convert the term \texttt{alpha\_0}.
 
 \begin{Coqsrc}
 Compute pp alpha_0.
@@ -1035,6 +1016,56 @@ The proof of well-foundedness using \'Evelyne Contejean's work on recursive path
  \end{remark}
 
 
+\subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
+
+We built an instance of \texttt{ON}, and proved its correction w.r.t. Schutte's model.
+
+\begin{Coqsrc}
+Instance Epsilon0 : ON Lt compare.  
+\end{Coqsrc}
+
+
+\emph{From Module~\href{../src/html/hydras.Schutte.Schutte.Correctness_E0.html}{Schutte.Schutte.Correctness\_E0}}
+
+\begin{Coqsrc}
+Instance Epsilon0_correct :
+  ON_for epsilon0 Epsilon0 (fun alpha => inject (cnf alpha)).
+\end{Coqsrc}
+
+\index{Projects}
+\begin{project}
+ \emph{This exercise is a continuation of Project~\vref{exo:ON-mult}.}
+Define an ordinal notation \texttt{Omega2} for $\omega^2=\omega\times\omega$ (using
+\texttt{ON\_mult}). 
+
+Prove that \texttt{Omega2} is a sub-notation of \texttt{Epsilon0}.
+
+Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Epsilon0}.
+
+\textbf{Hint}. You may use the following definition (in 
+\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}).
+
+\begin{Coqsrc}
+Definition SubON_same_op  `{OA : @ON A ltA  compareA}
+       `{OB : @ON B ltB  compareB}
+       {iota : A -> B} 
+       {alpha: B}
+       {_ : SubON OA OB alpha iota}
+       (f : A -> A -> A)
+       (g : B -> B -> B)
+  :=
+  forall x y,  iota (f x y) = g (iota x) (iota y).
+\end{Coqsrc}
+
+\end{project}
+
+\index{Projects}
+\begin{project}
+The class \texttt{ON} of ordinal notations has been defined long after this 
+chapter, and is not used yet in the development of the type \texttt{E0}. 
+A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
+
+\end{project}
 
 
 \section{A variant for hydra battles}
@@ -1252,7 +1283,7 @@ Proof with auto.
 We prove  the commutativity of $\oplus$ in two steps. 
 
 First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
-interval $[0..\alpha[$ is commutative.
+interval $[0..\alpha)$ is commutative.
 
 \index{Maths!Transfinite induction}
 
@@ -1270,7 +1301,6 @@ Lemma oplus_comm_0 : forall alpha, nf alpha ->
 Then, we infer  $\oplus$'s commutativity for any pair of ordinals:
 Let $\alpha$ and $\beta$ be two ordinals strictly less than $\epsilon_0$. Both ordinals $\alpha$ and $\beta$ are
 strictly less than $\textrm{max}(\alpha,\beta)+1$.
-
     Thus, we have just to apply the lemma \coqsimple{oplus\_comm\_0}.
 
 \begin{Coqsrc}
@@ -1353,13 +1383,13 @@ with ms (s:Hydrae) :  T1 :=
 First, we prove that the measure $m(h)$  of any hydra $h$ is a well-formed ordinal term of type \texttt{T1}.
 
 \begin{Coqsrc}
-Theorem m_nf : forall h, nf (m h).
+Lemma m_nf : forall h, nf (m h).
 Proof.
  intro h; elim h using Hydra_rect2 
             with (P0 := fun s =>  nf (ms s)).
  (* ... *)
 
-Theorem ms_nf : forall s, nf (ms s).
+Lemma ms_nf : forall s, nf (ms s).
 Proof with auto with T1.
 (* ... *)
 \end{Coqsrc}
@@ -1418,10 +1448,10 @@ Qed.
 
 Let us recall three results we have proved so far.
 \begin{itemize}
-\item There exists a strictly decreasing variant mapping \texttt{Hydra} into 
-$[0,\epsilon_0[$ for proving the termination of any hydra battle
-\item There exists \emph{no} such variant from \texttt{Hydra} into $[0,\omega^2[$ and
-a fortiori into $[0,\omega[$.
+\item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
+the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
+\item There exists \emph{no} such variant from \texttt{Hydra} into $[0,\omega^2)$ and
+a fortiori into $[0,\omega)$.
 \end{itemize}
 
 So, a  natural question is `` Does there exist any strictly decreasing variant mapping

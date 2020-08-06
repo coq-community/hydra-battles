@@ -35,7 +35,7 @@ Our proofs are  constructive and require no axioms: they are  closed terms of th
 They  share much theoretical material with Kirby and Paris', although they do not use any knowledge about Peano arithmetic nor model  theory.  The combinatorial arguments we use and implement
 come from 
  an article by J.~Ketonen and R.~Solovay~\cite{KS81}, already  cited in the work
- by L.~Kirby et J.~Paris on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
+ by L.~Kirby et J.~Paris.% on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
  Section $2$ of this article: ''A hierarchy of probably recursive functions'', contains a systematic study of \emph{canonical sequences}, which are closely related to
 rounds of hydra battles. 
 
@@ -62,16 +62,19 @@ the replication factor $i$ (Lemma \href{../src/html/hydras.Hydra.O2H.html\#canon
 \item From the two previous properties, we infer that whenever $\beta<\alpha<\epsilon_0$, there exists a (free) battle from $\iota(\alpha)$ to $\iota(\beta)$.
 \end{itemize}
 
-\paragraph{Remark}
-In~\cite{KS81}, canonical sequences are defined for any ordinal $\alpha <\epsilon_0$,
-by stating that if $\alpha$ is a successor ordinal, the sequence associated with 
-$\alpha$ is simply the constant sequence whose terms are equal to the predecessor of $\alpha$. Likewise, we define the canonical sequence of $0$ as the
-sequence whose all terms are equal to $0$.
+\begin{remark}
+  In~\cite{KS81}, canonical sequences are defined for any ordinal $\alpha <\epsilon_0$,
+by stating that if $\alpha$ is a successor ordinal $\beta+1$,  the sequence associated with 
+$\alpha$ is simply the constant sequence whose terms are equal to $\beta$.
+Likewise, we define the canonical sequence of $0$ as the 
+sequence all terms of which are equal to $0$.
 
-This convention allows us to make total the function that maps any ordinal $\alpha$ and natural number $i$ to the $i$-th item of the canonical sequence associated with $\alpha$.
+This convention allows us to make total the function that maps any ordinal $\alpha$ and natural number $i$ to the ordinal $\canonseq{\alpha}{i}$.
+
+\end{remark}
 
 
-First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs\footnote{With a small diffrence: the $0$-th term of the canonical sequence is not the same in our development as in~\cite{KS81}.}
+First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs\footnote{With a small diffrence: the $0$-th term of the canonical sequence is not the same in our development as in~\cite{KS81}.}.
 
 
 
@@ -117,7 +120,7 @@ Our definition may look more complex than the mathematical one, but
 uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 \coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. For simplicity's sake, 
 we used an auxiliary function \texttt{canonS} of type \texttt{T1 -> nat  -> T1} such that
-\texttt{canonS  $\alpha$ $i$} is equal to $\canonseq{\alpha}{i+1}$.
+(\texttt{canonS  $\alpha$ $i$}) is equal to $\canonseq{\alpha}{i+1}$.
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.Canon.html\#canonS}{Epsilon0.Canon}}
@@ -262,21 +265,20 @@ Let us consider a kind of accessibility problem inside $\epsilon_0$: given two o
 where, for every $i<l$, $\gamma_i \not= 0$ and there exists some strictly positive integer $s_i$
 such that $\gamma_{i+1}=\canonseq{\gamma}{s_i})$,
 
-\subsection{Definition}
+Let $s$ be the sequence $\langle s_0,s_1,\dots, s_{l-1} \rangle$. We describe the
+existence of such a path with the notation $\alpha\xrightarrow [s]{}\beta$.
 
-We shall denote by $\alpha\xrightarrow [s]{}\beta$
-  the proposition 
-``there is a path from $\alpha$ to $\beta$ with $s$ as the sequence of indices
-$s_0,s_1,\dots,s_{l-1}$ ''.
 
 For instance, we have $\omega*2 \xrightarrow[2,2,2]{}\omega$, through the 
-sequence of ordinals $\omega\times 2, \omega+2,\omega+1,\omega$.
+path $\omega\times 2, \omega+2,\omega+1,\omega$.
 
 
+\begin{remark}
+  
 
 Note that, given $\alpha$ and $\beta$, where $\beta < \alpha$, the sequence $s$ which leads from $\alpha$ to $\beta$ is not unique.
 
-Indeed, if $\alpha$ is a limit ordinal, the first element of $s$ can be any integer $i$ such that $\beta<\canonseq{\alpha}(i)$, and if $\alpha$ is a successor ordinal,
+Indeed, if $\alpha$ is a limit ordinal, the first element of $s$ can be any integer $i$ such that $\beta<\canonseq{\alpha}{i}$, and if $\alpha$ is a successor ordinal,
 then the sequence $s$ can start with any positive integer.
 
 
@@ -284,7 +286,10 @@ For instance, we have also
 $\omega*2 \xrightarrow[3,4,5,6]{}\omega$. 
 Likewise,
 $\omega*2 \xrightarrow[{[3,14]}]{} 0$ and
-$\omega*2 \xrightarrow[s] 0$, where $s$ is the sequence containing eight times the number $3$.
+$\omega*2 \xrightarrow[3,3,3,3,3,3,3,3]{} 0$.
+\end{remark}
+
+\subsection{Formal definition}
 
 \label{path-to-definition}
 

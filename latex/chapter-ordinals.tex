@@ -362,7 +362,6 @@ Proof. constructor. Qed.
 \index{Coq!Techniques!Coercions} 
 \begin{remark}
 Beware of coercions and notation scopes!
-
 Let us consider the following goal:
 
 \begin{Coqsrc}
@@ -395,7 +394,7 @@ Set Printing All.
 \end{Coqanswer}
 
 
-Anyway, the initial goal is provable, using \texttt{le\_AsB} first constructor.
+Anyway, the initial goal is provable, using \texttt{le\_AsB}'s first constructor.
 
 \begin{Coqsrc}
   constructor; auto with arith.
@@ -882,6 +881,7 @@ Let $i$ be some natural number. Prove that the notation systems
 \end{exercise}
 
 \index{Projects}
+\label{exo:ON-mult}
 \begin{project}
 Define in \coq{} the product of two ordinal notations $N_A$ and $N_B$.
 If $A$ [resp. $B$] is the underlying type of $N_A$ [resp. $N_B$], the
