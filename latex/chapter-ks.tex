@@ -403,8 +403,7 @@ with iotas (alpha : T1) :  Hydrae :=
        match alpha with
        | T1.zero => hnil
        | ocons alpha0 n beta  => 
-           hcons_mult (iota alpha0) (S n)
-                                (iotas beta)
+           hcons_mult (iota alpha0) (S n) (iotas beta)
        end.
 \end{Coqsrc}  
 
@@ -494,13 +493,13 @@ In the module \href{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra
 \index{Coq!Techniques!Type classes}
 
 \begin{Coqsrc}
-Class BoundedVariant  (B:Battle) :=
+Class BoundedVariant (B:Battle) :=
   {
     mu:T1 ;
     m: Hydra -> T1;
-    mu_nf : nf mu;
-    Hvar : Hvariant T1_wf B m;
-    m_bounded : forall h, m h < mu
+    mu_nf: nf mu;
+    Hvar: Hvariant T1_wf B m;
+    m_bounded: forall h, m h < mu
   }.
 \end{Coqsrc}
 
@@ -508,7 +507,7 @@ Let us assume there exists such a variant:
 
 \begin{Coqsrc}
 Section Bounded.
-  Context (B: Battle)  (Hy : BoundedVariant B).
+  Context (B: Battle) (Hy : BoundedVariant B).
 
   Hypothesis m_decrease : forall  i h h',
         round_n i h h' -> m h' < m h.
@@ -681,7 +680,7 @@ Definition standard_path  i alpha j beta :=
 
 In the mathematical text and figures, we shall use the notation 
 $\alpha \xrightarrow[i,j]{}\beta$ for the proposition 
-\texttt{standard\_path $i$ $\alpha$ $j$ $\beta$}.
+(\texttt{standard\_path $i$ $\alpha$ $j$ $\beta$}).
 In~\cite{KS81} the notation is
 $\alpha \xrightarrow[i]{*}\beta$
 for 
@@ -825,7 +824,7 @@ Theorem Theorem_2_4 (lambda : T1) :
  We build the following paths :
 
  \begin{enumerate}
- \item $\alpha \xrightarrow n \canonseq{\alpha}{n}$
+ \item $\alpha \xrightarrow[n]{} \canonseq{\alpha}{n}$
  \item $\canonseq{\alpha}{n} \xrightarrow[1]{} \canonseq{\alpha}{i}$ (by \texttt{Theorem\_2\_4}),
 \item $\canonseq{\alpha}{n} \xrightarrow[n]{} \canonseq{\alpha}{i}$ (applying the induction hypothesis to the preceding path);
 \item $\canonseq{\alpha}{i} \xrightarrow[n]{} \beta$ (applying the induction hypothesis)\item $\alpha \xrightarrow[n]{} \beta$ (by composition of 1, 3, and 4).
@@ -867,9 +866,8 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 
 \begin{Coqsrc}
 Lemma Lemma2_6_1 (alpha : T1) :  
-  nf alpha ->
-  forall beta,  beta < alpha  ->
-                       {n:nat | const_pathS n alpha beta}.
+  nf alpha -> forall beta,  beta < alpha  ->
+  {n:nat | const_pathS n alpha beta}.
 Proof.
   transfinite_induction alpha.
   (* rest of proof skipped *)
@@ -923,7 +921,7 @@ Fixpoint standard_gnaw (i:nat)(alpha : T1)(l:nat):  T1  :=
 \end{Coqsrc}
 
 \begin{Coqsrc}
-  Compute standard_fun 2 omega 15.
+  Compute standard_gnaw 2 omega 15.
 (*   = zero
      : T1 *)
 Compute pp (standard_gnaw 2 (omega^omega)  10).
@@ -996,40 +994,6 @@ Applying \texttt{standard\_path\_to\_zero}, $0$ is reachable from $\alpha$ by so
 
 Since comparison on \texttt{T1} is decidable, one can compute the last step $\gamma$ of the standard path from $(\alpha,n+1)$  such that $\beta\leq \gamma$.
 Let $l$ be the length of the path from $\alpha$ to $\gamma$.  
-
-% We use for that purpose a function that computes the first index $i$ where $n\leq i <p$ and $P(i+1)$ is
-% \texttt{false}, assuming that $P(n)=\texttt{true}$ and $P(p)=\texttt{false}$.
-
-% \begin{Coqsrc}
-% first_toggle  (P : nat -> bool) (n p : nat) :
-% (n < p)%nat -> P n = true -> P p = false ->
-% {l : nat | (n <= l)%nat /\ (l < p)%nat /\
-%      (forall i : nat, (n <= i)%nat -> (i <= l)%nat -> P i = true) /\
-%       P (S l) = false}
-% \end{Coqsrc}
-
-
-% \begin{Coqsrc}
-% Let P (i:nat) := le_b beta (standard_fun (S n) alpha i).
-
-% Remark Rem2 : {t: nat | standard_fun (S n) alpha t < beta}.
-
-% Let t := proj1_sig Rem2.
-%  Remark Rem04 : P 0.
-
-% Remark Rem05 : P t = false.
-
-% Remark Rem06 : (0 <  t)%nat.
-
-%  Let l_def :=  first_toggle P 0 t  Rem06 Rem04 Rem05.
-
-% Let l := proj1_sig Rem07.
-
-% Let gamma := standard_fun (S n) alpha l.
-% \end{Coqsrc}
-
-
-
 This step of the proof is illustrated in figure~\vref{fig:belle-preuve-2}.
 
 
@@ -1166,9 +1130,8 @@ Lemma constant_to_standard_path
 Applying \texttt{Lemma2\_6\_1} and \texttt{constant\_to\_standard\_path}, we get the following corollary.
 
 \begin{Coqsrc}
-Corollary  LT_to_standard_path 
-      (alpha beta : T1) :
-  beta   < alpha ->
+Corollary  LT_to_standard_path  (alpha beta : T1) :
+  beta < alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}.
 \end{Coqsrc}
 
@@ -1211,8 +1174,9 @@ Section Impossibility_Proof.
   Context (Var : BoundedVariant standard).
  \end{Coqsrc}
 
-In the same way as for free battles, we import a large inequality from 
-the module \url{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html} .
+In the same way as for free battles, we import a large inequality 
+from 
+the module \href{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}.
 
 
 \begin{Coqsrc}
@@ -1226,7 +1190,7 @@ Lemma m_lt : m small_h  < m big_h.
 \end{Coqsrc}
 
 
-\paragraph*{Proof:} Let us recall that $\texttt{big\_h} = \iota(\mu)$
+\paragraph*{Sketch of proof:} Let us recall that $\texttt{big\_h} = \iota(\mu)$
  and $\texttt{small\_h} = \iota (m (\texttt{big\_h}))$.
 
 Since $m(\texttt{big\_h })< \mu$, there exists a standard path from $\mu$ to
@@ -1271,7 +1235,6 @@ In other words, its type should be \texttt{nat -> Hydra -> T1}, and it must
 verify the inequality $m\, (S\,i)\, h' < m\,i\, h$ whenever the configuration 
 $(i,h)$ is reachable from some initial configuration $(0,h_0)$
 and \texttt{h} is transformed into \texttt{h'} in the considered round.
- 
 Can we still prove the theorems of section~\ref{std-case} with this new definition?
 
 \end{project}

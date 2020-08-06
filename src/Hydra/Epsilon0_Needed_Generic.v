@@ -15,9 +15,9 @@ Class BoundedVariant (B:Battle) :=
   {
   mu:T1 ;
   m: Hydra -> T1;
-  mu_nf : nf mu;
-  Hvar : Hvariant T1_wf B m;
-  m_bounded : forall h, m h < mu
+  mu_nf: nf mu;
+  Hvar: Hvariant T1_wf B m;
+  m_bounded: forall h, m h < mu
   }.
 
 
