@@ -64,7 +64,7 @@ Print Assumptions Variant_lt_standard.
 
 
 Definition Bounded_variant (b: Battle) (mu:E0)(m: Hydra -> E0):=
-  (forall h, (m h < mu)%e0) /\ Hvariant E0.Lt_wf b  m.
+  (forall h, (m h o< mu)%e0) /\ Hvariant E0.Lt_wf b  m.
 
 Theorem No_bounded_Variant_Free mu (Hmu: nf mu): 
   forall m, ~ bounded_variant free mu m.

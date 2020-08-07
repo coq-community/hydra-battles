@@ -792,7 +792,7 @@ End Lemma_4_4_Proof.
 Lemma Lemma_4_4_2 : (* K-P-6 *)
   forall (s : list nat) (n : nat) (alpha beta : T1),
     nf alpha -> nf beta ->   sorted_ge n s ->
-    const_pathS_eps n alpha beta ->  gnawS beta s <= gnawS alpha s.
+    const_pathS_eps n alpha beta ->  gnawS beta s o<= gnawS alpha s.
 Proof.
   intros;  specialize (@Lemma_4_4_1 s n alpha beta H H0 H1 H2).
   intro H4;  eapply const_pathS_eps_LE_2; eauto.                              

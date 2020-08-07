@@ -25,7 +25,7 @@ Section Impossibility_Proof.
   Hint Resolve nf_m : hydra.
 
   
-  Lemma m_ge : m big_h <= m small_h.
+  Lemma m_ge : m big_h o<= m small_h.
   Proof.
     apply m_ge_generic.
     intros;  generalize Hvar ;  destruct 1.
@@ -36,11 +36,11 @@ Section Impossibility_Proof.
 
 
   
-  (** ** Proof of the inequality m small_h < m big_h 
+  (** ** Proof of the inequality m small_h o< m big_h 
    *)
 
   
-  Lemma m_variant_LT : forall h h', h -+-> h' -> m h' < m h.
+  Lemma m_variant_LT : forall h h', h -+-> h' -> m h' o< m h.
   Proof.
     intros h h' H;eapply m_strict_mono with (1 := Hvar)(2:= H).
   Qed.
@@ -53,11 +53,11 @@ Section Impossibility_Proof.
     unfold beta_h. apply (m_bounded big_h); auto.
   Qed.
 
-  Lemma m_lt : m small_h < m big_h.
+  Lemma m_lt : m small_h o< m big_h.
   Proof. apply m_variant_LT,  big_to_small. Qed.
   
 
-  Fact self_lt_free : m big_h <  m big_h .
+  Fact self_lt_free : m big_h o<  m big_h .
   Proof. 
     apply LE_LT_trans with (m small_h ).
     - apply m_ge.

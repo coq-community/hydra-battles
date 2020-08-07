@@ -171,7 +171,7 @@ Qed.
 
 Lemma canonS_LT i alpha :
   nf alpha -> alpha <> zero ->
-  canonS alpha i <  alpha.
+  canonS alpha i o<  alpha.
 Proof with eauto with T1.
   transfinite_induction_lt alpha.
   clear alpha; intros alpha Hrec Halpha;
@@ -365,8 +365,8 @@ limit of its  own canonical sequence
 Lemma canonS_limit_strong lambda : 
   nf lambda ->
   limitb lambda  ->
-  forall beta, beta < lambda ->
-               {i:nat | beta < canonS lambda i}.
+  forall beta, beta o< lambda ->
+               {i:nat | beta o< canonS lambda i}.
 Proof.
   transfinite_induction lambda; clear lambda ; intros lambda Hrec Hlambda.
   intros   H beta H1.
@@ -391,7 +391,7 @@ Proof.
         -- destruct s.
            ++ subst; assert (False) by (eapply not_LT_zero; eauto).
               contradiction. 
-           ++ assert {i :nat | (beta1 < canonS lambda1 i)%t1}.         
+           ++ assert {i :nat | (beta1 o< canonS lambda1 i)%t1}.         
               { apply Hrec.
                 apply head_LT_cons; auto with T1.
                 all: auto.
@@ -399,7 +399,7 @@ Proof.
               destruct H3 as [x l].
               exists x; rewrite canonS_lim1; eauto with T1.
         --  destruct s as [x [H4 H5]].
-            subst lambda1; assert ({beta1 < x} + {beta1 = x})%t1.
+            subst lambda1; assert ({beta1 o< x} + {beta1 = x})%t1.
             { apply  LT_succ_LT_eq_dec in H2 ;eauto with T1.  }
             destruct H3.
             ++ exists 0; rewrite canonS_phi0_succ_eqn;auto with T1.
@@ -431,7 +431,7 @@ Proof.
              }
              { eauto with T1. }
              
-             assert {i: nat |  beta2 < (canonS (ocons lambda1 0 zero) i)}%t1.
+             assert {i: nat |  beta2 o< (canonS (ocons lambda1 0 zero) i)}%t1.
              { apply Hrec.
                -- apply LT3;auto with arith.
                -- cbn;  destruct lambda1.
@@ -449,7 +449,7 @@ Proof.
              }
              subst;
                assert
-                 ({i: nat |  beta2 < (canonS (ocons lambda1 0 zero) i)})%t1.
+                 ({i: nat |  beta2 o< (canonS (ocons lambda1 0 zero) i)})%t1.
              { apply Hrec.
                - apply LT3;auto with arith.
                - cbn;  destruct lambda1.
@@ -509,7 +509,7 @@ Proof.
                  apply lt_phi0_intro with n; eauto with T1.
              }
              all: auto. 
-      --  subst; assert ({i: nat |  beta2 < (canonS lambda2 i)})%t1.
+      --  subst; assert ({i: nat |  beta2 o< (canonS lambda2 i)})%t1.
       { apply Hrec.
         { apply tail_LT_cons; auto. }
         1,2: eauto with T1.
@@ -536,8 +536,8 @@ Defined.
 Lemma canon_limit_strong lambda : 
   nf lambda ->
   limitb lambda  ->
-  forall beta, (beta < lambda ->
-                {i:nat | beta < canon lambda i})%t1.
+  forall beta, (beta o< lambda ->
+                {i:nat | beta o< canon lambda i})%t1.
 Proof.
   intros H H0 beta H1; destruct (canonS_limit_strong H H0 H1) as [x Hx];
     exists (S x);auto.
@@ -561,18 +561,18 @@ Proof.
       destruct s.
       *  auto with T1. 
       *  subst; auto with T1. 
-    + assert (l' < lambda)%t1 by (split; auto).
+    + assert (l' o< lambda)%t1 by (split; auto).
       destruct (canonS_limit_strong   H H0 H2).
       specialize (Hl' x).
-      assert (l' < l')%t1.
+      assert (l' o< l')%t1.
       { apply LT_LE_trans with  (canonS lambda x); auto. }
       now destruct (@LT_irrefl l' ).
 Qed. 
 
 
 Lemma canonS_limit_mono alpha i j : nf alpha -> limitb alpha  ->
-                                    (i < j)%nat ->
-                                    canonS alpha i < canonS alpha j.
+                                    i < j ->
+                                    canonS alpha i o< canonS alpha j.
 Proof with eauto with T1.
   pattern alpha ; apply transfinite_recursor_lt.
   clear alpha;  intros alpha Hrec alpha_nf.
@@ -649,7 +649,7 @@ Qed.
 
 
 Lemma canonS_LE alpha n :
-    nf alpha ->  canonS alpha n <= canonS alpha (S n).
+    nf alpha ->  canonS alpha n o<= canonS alpha (S n).
   Proof.
     intro H; destruct (zero_limit_succ_dec H).
     -   destruct s. 
@@ -738,7 +738,7 @@ Qed.
 
 
 
-Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i < alpha.
+Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i o< alpha.
 Proof.
   destruct alpha. unfold Lt, CanonS. cbn.
   intro;apply canonS_LT; auto.
@@ -747,7 +747,7 @@ Proof.
 Qed.
 
 
-Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i < alpha.
+Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i o< alpha.
 Proof.
   destruct i.
   - unfold Canon;  intros;  destruct alpha.

@@ -21,7 +21,7 @@ Require Import Operators_Properties  Prelude.More_Arith
         Prelude.Restriction
         not_decreasing.
 Require Import ArithRing   DecPreOrder Logic.Eqdep_dec.
-
+Require Import OrdNotations.
 Set Implicit Arguments.
 
 Declare Scope t1_scope.
@@ -1322,33 +1322,33 @@ Qed.
 
 
 Definition LT := restrict nf lt.
-Infix "<" := LT : t1_scope.
+Infix "o<" := LT : t1_scope.
 Definition LE := restrict nf le.
-Infix "<=" := LE : t1_scope.
+Infix "o<=" := LE : t1_scope.
 
-Notation "alpha < beta < gamma" := (LT alpha beta /\ LT beta gamma) : t1_scope.
+Notation "alpha o< beta o< gamma" := (LT alpha beta /\ LT beta gamma) : t1_scope.
 
 
-Lemma LT_nf_l : forall alpha beta , alpha < beta -> nf alpha.
+Lemma LT_nf_l : forall alpha beta , alpha o< beta -> nf alpha.
 Proof. now  destruct 1.
 Qed.
 
-Lemma LT_nf_r : forall alpha beta , alpha < beta -> nf beta.
+Lemma LT_nf_r : forall alpha beta , alpha o< beta -> nf beta.
 Proof. now  destruct 1 as [_ [_ H]]. 
 Qed.
 
-Lemma LT_lt alpha beta : alpha < beta -> lt alpha beta.
+Lemma LT_lt alpha beta : alpha o< beta -> lt alpha beta.
 Proof .  now destruct 1 as [_ [H _]]. Qed.
 
-Lemma LE_nf_l : forall alpha beta , alpha <= beta -> nf alpha.
+Lemma LE_nf_l : forall alpha beta , alpha o<= beta -> nf alpha.
 Proof. now  destruct 1.
 Qed.
 
-Lemma LE_nf_r : forall alpha beta , alpha <= beta -> nf beta.
+Lemma LE_nf_r : forall alpha beta , alpha o<= beta -> nf beta.
 Proof. now  destruct 1 as [_ [_ H]]. 
 Qed.
 
-Lemma LE_le alpha beta : alpha <= beta -> le alpha beta.
+Lemma LE_le alpha beta : alpha o<= beta -> le alpha beta.
 Proof .  now destruct 1 as [_ [H _]]. Qed.
 
 
@@ -1356,7 +1356,7 @@ Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
 
 
 
-Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero < alpha.
+Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero o< alpha.
 Proof.
   split.
   constructor. 
@@ -1367,7 +1367,7 @@ Proof.
 Qed.
 
 Definition Elements alpha : Ensemble T1 :=
-  fun beta => beta < alpha.
+  fun beta => beta o< alpha.
 
 
 Coercion Elements : T1 >-> Ensemble.
@@ -1378,18 +1378,18 @@ Check In T1 zero omega.
 
 
 
-Lemma LE_zero : forall alpha, nf alpha -> zero <= alpha.
+Lemma LE_zero : forall alpha, nf alpha -> zero o<= alpha.
 Proof.  
   split; auto with  T1.
 Qed. 
 
 
-Lemma LE_refl : forall alpha, nf alpha -> alpha <= alpha. 
+Lemma LE_refl : forall alpha, nf alpha -> alpha o<= alpha. 
   split; auto with  T1.
 Qed. 
 
 
-Lemma LT_trans : forall a b c:T1, a < b -> b < c -> a < c.
+Lemma LT_trans : forall a b c:T1, a o< b -> b o< c -> a o< c.
 Proof.
   unfold LT, restrict; intros a b c H H0; decompose [and] H  ;
     decompose [and] H0; repeat split; auto.
@@ -1398,15 +1398,15 @@ Qed.
 
 
 Theorem LE_trans (alpha beta gamma: T1):
-          alpha <=  beta -> beta <=  gamma ->  alpha <= gamma.
+          alpha o<=  beta -> beta o<=  gamma ->  alpha o<= gamma.
 Proof.
   unfold LE, restrict; intros  H H0; decompose [and] H  ;
     decompose [and] H0; repeat split; auto.
   now apply le_trans with beta.     
 Qed. 
 
-Lemma LE_antisym (alpha beta : T1):  alpha <= beta ->
-                                     beta <= alpha ->
+Lemma LE_antisym (alpha beta : T1):  alpha o<= beta ->
+                                     beta o<= alpha ->
                                      alpha = beta.
 Proof.
   unfold LE; intros [H [H0 H1]] [H2 [H3 H4]].
@@ -1419,50 +1419,50 @@ Qed.
 
 
 Lemma LT1 : forall alpha n beta, nf (ocons alpha n beta) ->
-                                 zero < ocons alpha n beta.
+                                 zero o< ocons alpha n beta.
 Proof.  repeat split;auto; constructor. Qed.
 
 Lemma LT2 : forall alpha alpha' n n' beta beta',
     nf (ocons alpha n beta) ->
     nf (ocons alpha' n' beta') ->
-    alpha < alpha' ->
-    ocons alpha n beta < ocons alpha' n' beta'.
+    alpha o< alpha' ->
+    ocons alpha n beta o< ocons alpha' n' beta'.
 Proof. repeat split; auto.  apply head_lt; auto. destruct H1. tauto. Qed.
 
 
 Lemma LT3 : forall alpha  n n' beta beta',
     nf (ocons alpha n beta) ->
     nf (ocons alpha n' beta') ->
-    (n < n')%nat  ->
-    ocons alpha n beta < ocons alpha n' beta'.
+    n < n'  ->
+    ocons alpha n beta o< ocons alpha n' beta'.
 Proof. repeat split; auto. apply coeff_lt. auto.   Qed.
 
 Lemma LT4 : forall alpha  n  beta beta',
     nf (ocons alpha n beta) ->
     nf (ocons alpha n beta') ->
-    beta < beta'  ->
-    ocons alpha n beta < ocons alpha n beta'.
+    beta o< beta'  ->
+    ocons alpha n beta o< ocons alpha n beta'.
 Proof.   repeat split; auto; apply tail_lt.  destruct H1; tauto. Qed.
 
 Hint Resolve LT1 LT2 LT3 LT4: T1.
 
 
 
-Lemma LT_irrefl (alpha : T1) : ~ alpha < alpha.
+Lemma LT_irrefl (alpha : T1) : ~ alpha o< alpha.
 Proof. 
   destruct 1 as [H [H0 H1]]; destruct (lt_irrefl H0).
 Qed.
 
-Lemma LE_LT_trans : forall alpha beta gamma, alpha <= beta -> beta < gamma ->
-                                             alpha < gamma.
+Lemma LE_LT_trans : forall alpha beta gamma, alpha o<= beta -> beta o< gamma ->
+                                             alpha o< gamma.
 Proof.
   intros alpha beta gamma [H1 [H2 H3]] [H4 [H5 H6]]; repeat split; auto. 
   apply le_lt_trans with beta;auto.
 Qed.
 
-Lemma LT_LE_trans (alpha beta gamma : T1) : alpha < beta ->
-                                            beta <= gamma  ->
-                                            alpha  < gamma.
+Lemma LT_LE_trans (alpha beta gamma : T1) : alpha o< beta ->
+                                            beta o<= gamma  ->
+                                            alpha  o< gamma.
 Proof.
   intros [H [H0 H1]] [H' [H'0 H'1]]; repeat split; auto with T1.
   apply lt_le_trans with beta;auto.
@@ -1471,7 +1471,7 @@ Qed.
 
 
 
-Lemma not_LT_zero : forall alpha, ~ alpha < zero.
+Lemma not_LT_zero : forall alpha, ~ alpha o< zero.
 Proof. intros alpha [H [H0 H1]]; inversion H0.
        destruct (not_lt_zero H0).
 Qed. 
@@ -1487,22 +1487,24 @@ Qed.
 Ltac not_neg H :=
   match goal with
   | H : (?i < 0)%nat |- _ => destruct (Nat.nlt_0_r i H)
-  | H : ?alpha < zero |- _ => destruct (not_LT_zero  H)
+  | H : ?alpha o< zero |- _ => destruct (not_LT_zero  H)
   | H : lt ?alpha  zero |- _ => destruct (not_lt_zero  H)
   end.
 
 
 Lemma nf_ocons_LT : forall (a : T1) (n : nat) (a' : T1) (n' : nat) (b : T1),
-    a' < a ->
+    a' o< a ->
     nf a -> nf (ocons a' n' b) -> nf (ocons a n (ocons a' n' b)).
-Proof.  intros; apply ocons_nf;auto;     destruct H;tauto. Qed.
+Proof.
+  intros; apply ocons_nf; auto; destruct H;tauto.
+Qed.
 
 Hint Resolve nf_ocons_LT: T1.
 
 Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
 
 Lemma head_LT_cons : forall alpha n beta, nf (ocons alpha n beta) ->
-                                          alpha < ocons alpha n beta.
+                                          alpha o< ocons alpha n beta.
 Proof.
   split; eauto with T1.
   split.
@@ -1511,7 +1513,7 @@ Proof.
 Qed. 
 
 Lemma tail_LT_cons : forall alpha n beta, nf (ocons alpha n beta) ->
-                                          beta < ocons alpha n beta.
+                                          beta o< ocons alpha n beta.
 Proof. 
   split;  eauto with T1.
   split; auto. 
@@ -1521,9 +1523,9 @@ Qed.
 
 
 Lemma  LT_inv : forall a n b a' n' b', 
-    ocons a n b <  ocons a' n' b' ->
-    a < a' \/
-    a = a' /\ ((n < n')%nat \/ n = n' /\   b < b').
+    ocons a n b o<  ocons a' n' b' ->
+    a o< a' \/
+    a = a' /\ (n < n'  \/ n = n' /\   b o< b').
 Proof.
   intros a n b a' n' b' H; case H.
   -   clear H;intros H (H0,H1);  case (lt_inv H0).
@@ -1540,13 +1542,13 @@ Proof.
 Qed.
 
 Inductive LT_cases (a  b : T1) (n :nat) (a' b':T1) (n':nat) : Type :=
-  LT_left (H : a < a')
-| LT_middle (H : a = a')(H1 : (n < n')%nat)
-| LT_right (H : a = a')(H1 : n = n')(H2 : b < b').
+  LT_left (H : a o< a')
+| LT_middle (H : a = a')(H1 : n < n')
+| LT_right (H : a = a')(H1 : n = n')(H2 : b o< b').
 
 
 Lemma  LT_inv_strong : forall a  b n a'  b' n', 
-    ocons a n b <  ocons a' n' b' -> LT_cases a b n a'  b' n'. 
+    ocons a n b o<  ocons a' n' b' -> LT_cases a b n a'  b' n'. 
 Proof.
   intros a  b n a' b' n' H. case H.
   -   clear H;intros H (H0,H1);  case (lt_inv_strong H0).
@@ -1559,7 +1561,7 @@ Defined.
 
 Lemma remove_first_sumand : 
   forall a n b  b', 
-    ocons a n b <  ocons a n b' -> b < b'.
+    ocons a n b o<  ocons a n b' -> b o< b'.
 Proof.
   intros a n b b' H; apply LT_inv in H.
   destruct H.
@@ -1570,8 +1572,8 @@ Proof.
 Qed.
 
 
-Lemma LT_ocons_0 : forall a n b a' b', ocons a n b <  ocons a' 0 b' ->
-                                       a < a' \/ n = 0 /\ a = a' /\  b < b'.
+Lemma LT_ocons_0 : forall a n b a' b', ocons a n b o<  ocons a' 0 b' ->
+                                       a o< a' \/ n = 0 /\ a = a' /\  b o< b'.
 Proof.
   intros a n b x c H; case (LT_inv H).
   - now left.
@@ -1583,7 +1585,7 @@ Qed.
 
 
 Lemma  LE_phi0 : forall a n b,  nf (ocons a n b) ->
-                                phi0 a <= ocons a n b.
+                                phi0 a o<= ocons a n b.
 Proof.
   intros a n b; repeat split; eauto with T1.
   apply le_phi0.
@@ -2242,7 +2244,7 @@ Proof.
 Qed. 
 
 Lemma succ_strict_mono_LT : forall alpha beta, 
-    alpha < beta -> succ alpha < succ beta.
+    alpha o< beta -> succ alpha o< succ beta.
 Proof.  
   intros alpha beta H; destruct H as [H [H0 H1]]; repeat split;auto.
   - now apply succ_nf.
@@ -2279,8 +2281,9 @@ Proof.
     auto. 
 Qed.
 
-Lemma LT_succ_LE_R : forall alpha  beta, nf alpha ->
-                                         succ alpha  <= beta -> alpha  < beta. 
+Lemma LT_succ_LE_R : forall alpha  beta,
+    nf alpha ->
+    succ alpha  o<= beta -> alpha  o< beta. 
 Proof. 
   intros. 
   destruct H0 as [H1 [H2 H3]].
@@ -2398,7 +2401,7 @@ Proof.
 Qed.
 
 Lemma LT_succ_LE : forall alpha beta ,
-    alpha < beta -> succ alpha <= beta.
+    alpha o< beta -> succ alpha o<= beta.
 Proof.   
   intros. 
   destruct H as [H1 [H2 H3]]; repeat split; auto. 
@@ -2406,8 +2409,8 @@ Proof.
   apply  lt_succ_le; auto. 
 Qed.
 
-Lemma LT_succ_LE_2: forall alpha beta : T1,  nf beta -> alpha < succ beta
-                                             -> alpha  <= beta.
+Lemma LT_succ_LE_2: forall alpha beta : T1,  nf beta -> alpha o< succ beta
+                                             -> alpha  o<= beta.
   intros.
   split; eauto with T1.
   split; eauto with T1.
@@ -2463,8 +2466,8 @@ Lemma phi0_mono_strict : forall a b, lt a  b -> lt (phi0 a) (phi0 b).
 Proof.  (* unfold phi0; *) auto with T1.  Qed.
 
 
-Lemma phi0_mono_strict_LT : forall alpha beta, alpha < beta ->
-                                               phi0 alpha < phi0 beta.
+Lemma phi0_mono_strict_LT : forall alpha beta, alpha o< beta ->
+                                               phi0 alpha o< phi0 beta.
 Proof. intros.  apply LT2; eauto with T1.
 Qed.
 
@@ -2745,7 +2748,7 @@ Defined.
 
 
 
-Lemma LT_one : forall alpha, alpha < one -> alpha = zero.
+Lemma LT_one : forall alpha, alpha o< one -> alpha = zero.
 Proof.
   intros alpha [H1 [H2 _]].
   destruct alpha; auto. 
@@ -2757,7 +2760,7 @@ Proof.
 Qed.
 
 
-Lemma lt_omega_inv : forall alpha,  alpha < omega ->
+Lemma lt_omega_inv : forall alpha,  alpha o< omega ->
                                     alpha = zero \/ exists n, alpha = FS n.
 Proof.                                    
   intros alpha [H1 [H2 _]]; destruct alpha; auto. 
@@ -2792,8 +2795,8 @@ Ltac T1_inversion H :=
   end.
 
 Lemma LT_of_finite :
-  forall alpha n, alpha < FS n -> alpha = zero \/
-                                  exists p, (p < n)%nat  /\ alpha = FS p.
+  forall alpha n, alpha o< FS n -> alpha = zero \/
+                                  exists p, p < n  /\ alpha = FS p.
 Proof.
   intros alpha n [H1 [H2 H3]].
   destruct alpha.
@@ -2902,7 +2905,7 @@ Qed.
 Lemma nf_LT_iff :
   forall alpha n beta, nf (ocons alpha n beta) <->
                        nf alpha /\ nf beta
-                       /\ beta < phi0 alpha.
+                       /\ beta o< phi0 alpha.
 Proof.
   split.
   intros H.
@@ -2970,7 +2973,7 @@ Qed.
 
 
 Lemma plus_smono_LT_r (alpha:T1) :
-  forall beta gamma,  nf alpha -> beta < gamma -> alpha + beta < alpha + gamma.
+  forall beta gamma,  nf alpha -> beta o< gamma -> alpha + beta o< alpha + gamma.
 Proof.
   destruct 2 as [H1 [H2 H3]]; split.
   apply plus_nf; auto.
@@ -2983,7 +2986,7 @@ Qed.
 
 
 Lemma LT_add (alpha beta : T1): nf alpha -> nf beta -> beta <> zero ->
-                                alpha < alpha + beta.
+                                alpha o< alpha + beta.
 Proof.
   intros H H0 H1.
   rewrite <- (plus_a_zero ) at 1.
@@ -3001,13 +3004,13 @@ Section Proof_of_nf_mult.
   Let P (beta : T1) :=
     nf beta -> nf (alpha * beta) /\
                (alpha <> zero ->
-                forall gamma, gamma < beta ->
-                              alpha * gamma < alpha * beta).
+                forall gamma, gamma o< beta ->
+                              alpha * gamma o< alpha * beta).
   Section Induction.
     
     Variable beta : T1.
     Hypothesis Hbeta : nf beta.
-    Hypothesis IHbeta : forall delta, delta < beta -> P delta.
+    Hypothesis IHbeta : forall delta, delta o< beta -> P delta.
 
 
     Lemma L1 : alpha = zero -> P beta.
@@ -3153,7 +3156,7 @@ Section Proof_of_nf_mult.
       intros H H0 H1 H2; subst alpha beta.
       assert (nf (FS n * ocons c p d)).
       { rewrite L6.
-        - assert (FS n * d < FS n * phi0 c).
+        - assert (FS n * d o< FS n * phi0 c).
           {  destruct (@IHbeta (ocons c 0 zero)); eauto with T1.
              - destruct p.
                + apply LT4;auto with T1.
@@ -3413,7 +3416,7 @@ Qed.
 
 
 Theorem mult_mono alpha beta gamma : nf alpha -> alpha <> zero ->
-                                     beta < gamma -> alpha * beta < alpha * gamma.
+                                     beta o< gamma -> alpha * beta o< alpha * gamma.
 Proof.
   intros.
   destruct  (@L14  alpha H gamma ); eauto with T1.
@@ -3542,7 +3545,7 @@ Qed.
 
 
 Lemma pred_LT : forall alpha beta, nf alpha -> pred alpha = Some beta ->
-                                   beta < alpha .
+                                   beta o< alpha .
 Proof.
   intros; destruct (zero_limit_succ_dec H).
   - destruct s.
@@ -3580,7 +3583,7 @@ Lemma limitb_succ : forall alpha, nf alpha ->  ~ limitb (succ alpha) .
       *  intros; rewrite <- H0; apply IHalpha2; eauto with T1.
 Qed. 
 
-Lemma LT_succ : forall alpha, nf alpha -> alpha < succ alpha.
+Lemma LT_succ : forall alpha, nf alpha -> alpha o< succ alpha.
 Proof. 
   repeat split; auto.
   -  apply lt_succ.
@@ -3644,13 +3647,13 @@ Proof.
                  now apply succ_succb.
 Qed.
 
-Lemma LE_r : forall alpha beta, alpha < beta -> alpha <= beta.
+Lemma LE_r : forall alpha beta, alpha o< beta -> alpha o<= beta.
 Proof.
   intros alpha beta [H1 [H2 H3]]; repeat split; eauto with T1.
 Qed.
 
-Lemma LE_LT_eq_dec : forall alpha beta, alpha <= beta ->
-                                        {alpha < beta} + {alpha = beta}.
+Lemma LE_LT_eq_dec : forall alpha beta, alpha o<= beta ->
+                                        {alpha o< beta} + {alpha = beta}.
 Proof. 
   unfold LE, restrict; intros alpha beta H; decompose [and] H.
   destruct (le_eq_lt_dec _ _ H2).
@@ -3662,7 +3665,7 @@ Defined.
 
 Lemma LT_eq_LT_dec : forall alpha beta,
     nf alpha -> nf beta ->
-    {alpha < beta} + {alpha = beta} + {beta < alpha}.
+    {alpha o< beta} + {alpha = beta} + {beta o< alpha}.
 Proof.
   intros; destruct  (lt_eq_lt_dec alpha beta) as [[H1 | H1] | H1].
   - left; left; split; eauto with T1.
@@ -3672,7 +3675,7 @@ Defined.
 
 
 Lemma LT_phi0_inv alpha n beta gamma :
-  ocons alpha n beta < phi0  gamma <-> beta < phi0 alpha /\ alpha < gamma.
+  ocons alpha n beta o< phi0  gamma <-> beta o< phi0 alpha /\ alpha o< gamma.
 Proof.                                        
   split.
   -  destruct 1 as [H [H0 H1]]; repeat split; eauto with T1.
@@ -3690,7 +3693,7 @@ Qed.
 
 Lemma nf_LT_right : forall alpha n beta beta',
     nf (ocons alpha n beta) ->
-    beta' < beta ->
+    beta' o< beta ->
     nf (ocons alpha n beta').
 Proof.
   intros alpha n beta beta'; repeat rewrite nf_LT_iff.
@@ -3701,7 +3704,7 @@ Qed.
 
 
 Lemma eq_succ_LT : forall alpha beta, nf beta -> alpha = succ beta ->
-                                      beta < alpha.
+                                      beta o< alpha.
 Proof. 
   intros; subst;  apply LT_succ; auto.
 Qed. 
@@ -3714,18 +3717,18 @@ Qed.
 
 
 Definition strict_lub (s : nat -> T1) (lambda : T1) :=
-  (forall i, s i < lambda) /\
-  (forall alpha, (forall i, s i <= alpha) -> lambda <= alpha).
+  (forall i, s i o< lambda) /\
+  (forall alpha, (forall i, s i o<= alpha) -> lambda o<= alpha).
 
 
 Definition strict_lub_lub : forall s l alpha,  strict_lub s l ->
-                                               (forall i, s i <=  alpha) ->
-                                               l <= alpha.
+                                               (forall i, s i o<=  alpha) ->
+                                               l o<= alpha.
 Proof. destruct 1; auto. Qed.
 
 
 Definition strict_lub_maj : forall s l ,  strict_lub s l ->
-                                          forall i, s i < l.
+                                          forall i, s i o< l.
 Proof. destruct 1; trivial.  Qed.
 
 
@@ -3757,14 +3760,14 @@ Proof.
   -     destruct s0 as [beta [H2 H3]].
         subst.
         specialize (H1 beta ).
-        assert (forall i, s i <= beta).
+        assert (forall i, s i o<= beta).
         {
           intro i.  
           apply LT_succ_LE_2;auto.
         }
         generalize (H1 H3).
         intro H4.
-        absurd (beta < beta).
+        absurd (beta o< beta).
         apply LT_irrefl.
         apply LT_LE_trans with (succ beta);auto.
         now    apply LT_succ.     
@@ -3812,7 +3815,7 @@ Qed.
 
 Lemma LT_succ_LT_eq_dec :
   forall alpha beta, nf alpha -> nf beta ->
-                     alpha < succ beta -> {alpha < beta} + {alpha = beta}.
+                     alpha o< succ beta -> {alpha o< beta} + {alpha = beta}.
 Proof. 
   intros.
   destruct H1 as [H2 [H3 H4]].
@@ -3823,8 +3826,8 @@ Proof.
 Defined.
 
 Lemma lt_succ_le_2':
-  forall a : T1, nf a -> forall b : T1, nf b -> a <  succ b  ->
-                                        a < b \/ a = b.
+  forall a : T1, nf a -> forall b : T1, nf b -> a o<  succ b  ->
+                                        a o< b \/ a = b.
 Proof.
   intros.
   destruct H1 as [H2 [H3 H4]].
@@ -3837,9 +3840,9 @@ Qed.
 
 
 Lemma succ_lt_limit alpha (Halpha : nf alpha)(H : limitb alpha ):
-  forall beta, beta < alpha -> succ beta < alpha.
+  forall beta, beta o< alpha -> succ beta o< alpha.
 Proof. 
-  intros beta H0;  assert (H1 :succ beta <= alpha) by 
+  intros beta H0;  assert (H1 :succ beta o<= alpha) by 
       (apply  LT_succ_LE; auto).
   destruct (LE_LT_eq_dec H1); auto.
   subst alpha; destruct  (@limitb_succ beta ); eauto with T1. 

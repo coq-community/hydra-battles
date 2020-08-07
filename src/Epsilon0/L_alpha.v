@@ -135,13 +135,13 @@ Section L_correct.
   Qed. 
 
   Lemma L_ok_lim  alpha  :
-    (forall beta,  (beta < alpha)%e0 -> P beta) ->
+    (forall beta,  (beta o< alpha)%e0 -> P beta) ->
     Limitb alpha -> P alpha.
   Proof with eauto with E0.
   intros H H0; right.
   {  destruct alpha;   cbn in H0; simpl; eauto with T1. }
   intros k; rewrite L_lim_eqn; auto.
-  -  assert (H1 :(Canon alpha (S k) < alpha)%e0) by eauto with E0. 
+  -  assert (H1 :(Canon alpha (S k) o< alpha)%e0) by eauto with E0. 
      specialize (H (Canon alpha (S k)) H1); inversion H.
      + elimtype False.
        {

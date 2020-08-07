@@ -308,7 +308,7 @@ Section DS_iota.
       right;  right ;  right; rewrite <- hcons_mult_comm.
       apply hcons_mult_S2.  
       left;  specialize (Hrec lambda).
-      assert (lambda < ocons lambda (S n) zero)%t1.
+      assert (lambda o< ocons lambda (S n) zero)%t1.
       {  apply head_LT_cons; auto with T1. }
       specialize (Hrec (limitb_not_zero Hlambda Hlim)
                        H  (canonS lambda i) (refl_equal _)).
@@ -392,7 +392,7 @@ Section DS_iota.
       subst alpha;  rewrite canonS_tail; auto with T1.    
     Qed.
     
-    Remark rem61 : gamma < alpha.
+    Remark rem61 : gamma o< alpha.
     Proof.
       subst alpha;  now apply tail_LT_cons.
     Qed. 
@@ -632,7 +632,7 @@ Qed.
   Qed.
   
   Lemma LT_to_round_plus alpha beta :
-    beta < alpha ->  iota alpha -+-> iota beta.
+    beta o< alpha ->  iota alpha -+-> iota beta.
   Proof.
     intros H; apply acc_from_to_round_plus; eauto with T1.
     - intro; subst; apply (not_LT_zero H).

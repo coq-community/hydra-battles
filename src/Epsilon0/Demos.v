@@ -43,12 +43,12 @@ Compute nf bad_term.
 
 Compute (succ 5).
 
-Example E0: ~ zero <= bad_term.
+Example E0: ~ zero o<= bad_term.
 Proof.
   compute.  firstorder; discriminate.
 Qed.
 
-Example E'0 : ~ bad_term <= zero.
+Example E'0 : ~ bad_term o<= zero.
 Proof.
   compute; firstorder.
 Qed.
@@ -62,17 +62,17 @@ Proof.  repeat    constructor. Qed.
 Example e2 : 7  + omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'2 : omega < omega + 6.
+Example e'2 : omega o< omega + 6.
 Proof. now compute. Qed.
 
 Example e''2 : 6 * omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'''2 : omega < omega * 6.
+Example e'''2 : omega o< omega * 6.
 Proof. now compute. Qed.
 
 Lemma plus_not_monotonous : exists alpha beta gamma : T1,
-    alpha < beta /\ alpha + gamma = beta + gamma.
+    alpha o< beta /\ alpha + gamma = beta + gamma.
 Proof.
   exists 3, 5, omega; now  compute.
 Qed.
@@ -87,7 +87,7 @@ Proof. reflexivity. Qed.
 
 
 Lemma mult_not_monotonous :  exists alpha beta gamma : T1,
-      alpha < beta /\ alpha * gamma = beta * gamma.
+      alpha o< beta /\ alpha * gamma = beta * gamma.
 Proof.
   exists 3, 5, omega; now compute.
 Qed.
@@ -176,7 +176,7 @@ Example ex: canon (omega^omega^omega) 42 = omega^(omega^42).
 Proof. trivial. Qed.
 
 
-Example E1 : 42 * omega < omega + 1.
+Example E1 : 42 * omega o< omega + 1.
 Proof.  easy.   Qed.
 
 Recursive Extraction canon_limit_strong.
@@ -190,7 +190,7 @@ Section Example2.
   Remark R2 : limitb (omega^omega^omega) = true.
   Proof. reflexivity.  Qed.
 
-  Remark R3 : omega ^ (omega * 50) < (omega^omega^omega).
+  Remark R3 : omega ^ (omega * 50) o< (omega^omega^omega).
   Proof.
     compute; auto with bool.
   Qed.
@@ -218,7 +218,7 @@ Compute succb 42.
 
 
 Open Scope E0_scope.
-Example E3:  Zero < omega.
+Example E3:  Zero o< omega.
   compute; firstorder.
 Qed.
 
@@ -383,10 +383,10 @@ Compute pp (gnawS (omega^omega)  (repeat 3 200)).
 Section alpha_beta.
 
   Variables alpha beta : T1.
-  Hypothesis Hlt : alpha < beta.
+  Hypothesis Hlt : alpha o< beta.
   Hypothesis Hlim : limitb beta.
 
-  Lemma Lf : forall i :  nat,  alpha < f alpha i < beta.
+  Lemma Lf : forall i :  nat,  alpha o< f alpha i o< beta.
   Proof with eauto with T1.
   split.
   - unfold f; induction i.
@@ -401,7 +401,7 @@ Section alpha_beta.
      apply succ_lt_limit; eauto with T1.
   Qed.
 
-  Lemma Lf2 : forall i, f alpha i < f alpha (S i).
+  Lemma Lf2 : forall i, f alpha i o< f alpha (S i).
   Proof with eauto with T1.
     intro i; unfold f;
     repeat rewrite <- succ_of_plus_finite ...

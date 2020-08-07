@@ -178,7 +178,7 @@ Section H_cons.
 Variable alpha : E0.
 Variable i : nat.
  
-Lemma H_cons : forall beta,  (beta < Phi0 alpha)%e0 ->
+Lemma H_cons : forall beta,  (beta o< Phi0 alpha)%e0 ->
                              forall k,  H_ (Ocons alpha i beta) k=
                                         H_ (Omega_term alpha i) (H_ beta k).
 Proof with auto with E0.
@@ -196,14 +196,14 @@ Proof with auto with E0.
        }
        rewrite H_lim_eqn, CanonS_Canon, H0.
        specialize (Hbeta (CanonS beta k)).
-       assert (CanonS beta k < beta)%e0 by auto with E0.
-       assert (CanonS beta k < Phi0 alpha)%e0 by (eapply Lt_trans; eauto).
+       assert (CanonS beta k o< beta)%e0 by auto with E0.
+       assert (CanonS beta k o< Phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H_lim_eqn beta).
        apply Limitb_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
          specialize (Hbeta gamma).
-         assert (gamma < Succ gamma)%e0 by (apply Lt_Succ; auto).
-         assert (gamma < Phi0 alpha)%e0 .
+         assert (gamma o< Succ gamma)%e0 by (apply Lt_Succ; auto).
+         assert (gamma o< Phi0 alpha)%e0 .
          { apply Lt_trans with (Succ gamma); auto. }
          rewrite (H_succ_eqn gamma);
            replace (Omega_term alpha i + Succ gamma)%e0 with
@@ -380,11 +380,11 @@ Qed.
 
 
 Remark H_non_mono1 :
-  ~ (forall alpha beta k, (alpha <= beta)%e0 ->
+  ~ (forall alpha beta k, (alpha o<= beta)%e0 ->
                           (H_ alpha k <= H_ beta k)%nat).
 Proof.
  intros H ;specialize (H 42 omega 3).
- assert (H0 :(42 <= omega)%e0) by (repeat split; auto).  
+ assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
  apply H in H0; rewrite H_Fin, H_omega  in H0; lia.
 Qed.
 

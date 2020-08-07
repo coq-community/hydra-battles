@@ -12,7 +12,7 @@ Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded  Operators_Properties
         Prelude.More_Arith  Prelude.Restriction
         not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
-        OrdinalNotations.Definitions.
+        OrdinalNotations.Definitions OrdNotations.
 
 
 Require  Export T1 Hessenberg.
@@ -37,8 +37,8 @@ Hint Resolve cnf_ok : E0.
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
 Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
 
-Infix "<" := Lt : E0_scope.
-Infix "<=" := Le : E0_scope.
+Infix "o<" := Lt : E0_scope.
+Infix "o<=" := Le : E0_scope.
 
 Instance Zero : E0.
 Proof.
@@ -264,7 +264,7 @@ Instance Lt_sto : StrictOrder Lt.
 Proof.
   split.
   - intro x ; destruct x; unfold Lt.  red.
-    cbn. Search (_ < _)%t1.
+    cbn. Search (_ o< _)%t1.
     intro; eapply LT_irrefl; eauto.
   - intros [x Hx] [y Hy] [z Hz].
     unfold Lt; cbn.
@@ -275,7 +275,7 @@ Definition compare (alpha beta:E0): comparison :=
   T1.compare (cnf alpha) (cnf beta).
 
 Lemma compare_correct alpha beta :
-  CompareSpec (alpha = beta) (alpha < beta) (beta < alpha)
+  CompareSpec (alpha = beta) (alpha o< beta) (beta o< alpha)
               (compare alpha beta).
  destruct alpha, beta; unfold compare, Lt; cbn.
 destruct (T1.compare_correct cnf0 cnf1).
@@ -303,7 +303,7 @@ Hint Resolve Lt_wf : E0.
 
 
 
-Lemma Lt_le : forall alpha beta,  beta < alpha -> Succ beta <= alpha.
+Lemma Lt_le : forall alpha beta,  beta o< alpha -> Succ beta o<= alpha.
 Proof.
   destruct alpha, beta;simpl in *;  unfold le, Lt;simpl.
   intro. split; auto.
@@ -336,7 +336,7 @@ Qed.
 Hint Rewrite Pred_of_Succ: E0_rw.
 
 Lemma  Pred_Lt alpha : alpha <> Zero  ->  Limitb alpha = false ->
-                       Pred alpha < alpha.
+                       Pred alpha o< alpha.
 Proof.
   unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
   destruct (T1.zero_limit_succ_dec cnf_ok0 ).
@@ -410,8 +410,8 @@ Qed.
 
 Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 
-Lemma lt_Succ_inv : forall alpha beta, beta < alpha <->
-                                       Succ beta <= alpha.
+Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
+                                       Succ beta o<= alpha.
 Proof.
   destruct alpha, beta; unfold lt, le, Succ; cbn; split.
   -  intro; now  apply LT_succ_LE.
@@ -419,8 +419,8 @@ Proof.
 Qed.
 
 
-Lemma le_lt_eq_dec : forall alpha beta, alpha <= beta ->
-                                        {alpha < beta} + {alpha = beta}.
+Lemma le_lt_eq_dec : forall alpha beta, alpha o<= beta ->
+                                        {alpha o< beta} + {alpha = beta}.
 Proof.
   destruct alpha, beta.
   unfold Lt, Le; cbn.
@@ -516,7 +516,7 @@ Qed.
 
 
 Lemma Lt_trans alpha beta gamma :
-  alpha < beta -> beta < gamma -> alpha < gamma.
+  alpha o< beta -> beta o< gamma -> alpha o< gamma.
 Proof.
   destruct alpha, beta, gamma; simpl. unfold lt.
   simpl.
@@ -526,7 +526,7 @@ Qed.
 
 
 Lemma Omega_term_plus alpha beta i :
-  alpha <> Zero -> (beta < Phi0 alpha)%e0 ->
+  alpha <> Zero -> (beta o< Phi0 alpha)%e0 ->
   cnf (Omega_term alpha i + beta)%e0 = ocons (cnf alpha) i (cnf beta).
 Proof.
   destruct alpha as [alpha Halpha]; destruct beta as [beta Hbeta].
@@ -542,7 +542,7 @@ Proof.
 Qed.
 
 
-Lemma cnf_Ocons (alpha beta: E0) n : alpha <>Zero -> beta < Phi0 alpha ->
+Lemma cnf_Ocons (alpha beta: E0) n : alpha <>Zero -> beta o< Phi0 alpha ->
                                           cnf (Ocons alpha n beta) =
                                           ocons (cnf alpha) n (cnf beta).
 Proof.
@@ -551,7 +551,7 @@ Defined.
 
 
 Lemma Limitb_plus alpha beta i:
-  (beta < Phi0 alpha)%e0 -> Limitb beta ->
+  (beta o< Phi0 alpha)%e0 -> Limitb beta ->
   Limitb (Omega_term alpha i + beta)%e0.
 Proof.
   intros.
@@ -579,7 +579,7 @@ Proof.
 Qed.
 
 
-Lemma Succ_cons alpha gamma i : alpha <> Zero -> gamma < Phi0 alpha ->
+Lemma Succ_cons alpha gamma i : alpha <> Zero -> gamma o< Phi0 alpha ->
                                 cnf (Succ (Omega_term alpha i + gamma)%e0) =
                                 cnf (Omega_term alpha i + Succ gamma)%e0.
 Proof.

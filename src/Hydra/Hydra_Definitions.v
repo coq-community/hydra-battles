@@ -360,7 +360,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 (** Variant bounded by some ordinal alpha < epsilon0 *)
 
 Definition bounded_variant (B: Battle) (alpha:T1)(m: Hydra -> T1):=
-  (forall h, (m h < alpha)%t1 ) /\ Hvariant T1_wf B  m.
+  (forall h, (m h o< alpha)%t1 ) /\ Hvariant T1_wf B  m.
 
 (** *** Liveness 
 
