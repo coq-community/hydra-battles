@@ -74,7 +74,7 @@ Section Impossibility_Proof.
          left; split; left.
   Qed.
   
-  Corollary m_lt : m small_h < m big_h.
+  Corollary m_lt : m small_h o< m big_h.
   Proof.
     apply m_strict_mono with (1:=Hvar) (2:=big_to_small) .  
   Qed.
@@ -132,7 +132,7 @@ Qed.
  Hint Resolve step_to_round_plus : hydra. 
 
 
- Lemma m_ge : m big_h <= m small_h.
+ Lemma m_ge : m big_h o<= m small_h.
  Proof.
    unfold small_h; pattern (m big_h) .   
    apply  well_founded_induction with

@@ -1,4 +1,4 @@
-Require Import RelationClasses Relation_Operators Ensembles .
+Require Import RelationClasses Relation_Operators Ensembles OrdNotations.
 Import Relation_Definitions.
 
 Require Import Schutte_basics.
@@ -39,14 +39,14 @@ Definition on_compare {A:Type}{lt: relation A}
 Definition on_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
-Infix "<" := on_lt : ON_scope.
+Infix "o<" := on_lt : ON_scope.
 
 Definition on_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
   clos_refl _ on_lt.
 
-Infix "<=" := on_le : ON_scope.
+Infix "o<=" := on_le : ON_scope.
 
 
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}

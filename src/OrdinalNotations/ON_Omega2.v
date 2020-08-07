@@ -25,24 +25,24 @@ Coercion fin : nat >-> t.
 
  Definition lt : relation t := lexico Peano.lt Peano.lt.
 
- Infix "<" := lt : o2_scope.
+ Infix "o<" := lt : o2_scope.
 
 (** reflexive closure of lt *)
 
 Definition le := clos_refl _ lt.
 
-Infix "<=" := le : o2_scope.
+Infix "o<=" := le : o2_scope.
 
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
 
-Example ex1 : 6 < omega.
+Example ex1 : 6 o< omega.
 Proof.
   left; auto with arith.
 Qed.
 
 
-Example ex2 : omega < (1,1).
+Example ex2 : omega o< (1,1).
 Proof.
  right; auto with arith.
 Qed.
@@ -73,13 +73,13 @@ Lemma lt_wf : well_founded lt.
 Proof. apply wf_lexico; apply lt_wf. Qed.
 
 Lemma le_introl :
-  forall i j k:nat, (j <= k)%nat -> (i,j) <= (i,k).
+  forall i j k:nat, (j <= k)%nat -> (i,j) o<= (i,k).
 Proof.
   intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with O2.
   - subst k; now right.
 Qed.
 
-Lemma le_0 : forall p: t,  (0,0) <= p.
+Lemma le_0 : forall p: t,  (0,0) o<= p.
 Proof.
   destruct p, n ; auto with arith O2.
   - apply le_introl;  auto with arith O2.
@@ -87,19 +87,19 @@ Qed.
 
 (** cf Peano.lt's definition  in Stdlib *)
 
-Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
+Lemma le_lt_trans : forall p q r, p o<= q -> q o< r -> p o< r.
 Proof.
   destruct 1; trivial. 
   intro; now transitivity y.  
 Qed.   
 
-Lemma lt_le_trans : forall p q r, p < q -> q <= r -> p < r.
+Lemma lt_le_trans : forall p q r, p o< q -> q o<= r -> p o< r.
 Proof.
   destruct 2; trivial; now  transitivity q.
 Qed.   
 
 
-Lemma lt_succ_le alpha beta : alpha < beta <-> succ alpha <= beta.
+Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
 Proof.  
  destruct alpha, beta. unfold succ; cbn.
  split.
@@ -110,7 +110,7 @@ Proof.
     right; auto.
 Qed.
 
-Lemma lt_succ alpha : alpha < succ alpha.
+Lemma lt_succ alpha : alpha o< succ alpha.
 Proof.
   destruct alpha; right; cbn; lia.
 Qed.
@@ -148,9 +148,9 @@ Definition eq_b alpha beta := match compare alpha beta with
 Lemma compare_reflect alpha beta :
   match (compare alpha beta)
   with
-    Lt => alpha < beta
+    Lt => alpha o< beta
   | Eq => alpha = beta
-  | Gt => beta < alpha
+  | Gt => beta o< alpha
   end.
   destruct alpha, beta; cbn. 
   case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
@@ -204,7 +204,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega2).
 Defined.
 
 Lemma lt_eq_lt_dec alpha beta :
-  {alpha < beta} + {alpha = beta} + {beta < alpha}.
+  {alpha o< beta} + {alpha = beta} + {beta o< alpha}.
 Proof.
  generalize (compare_reflect alpha beta).
  case_eq (compare alpha beta).
@@ -276,7 +276,7 @@ Proof.
     + right; auto with arith. 
     + specialize (H x).
      rewrite lt_succ_le in H1.
-     assert (s x < s x) by (eapply lt_le_trans; eauto).
+     assert (s x o< s x) by (eapply lt_le_trans; eauto).
      destruct lt_strorder as [H3 H4].
      destruct (H3 _ H2).
 Qed.
@@ -313,8 +313,8 @@ Qed.
 
  (* A simplifier ? *)
  
-Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) < alpha) <->
-                                 (S i, 0) <= alpha.
+Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) o< alpha) <->
+                                 (S i, 0) o<= alpha.
 Proof.
   intros i (k,l) ;split; intro  H .
   -   destruct (lt_eq_lt_dec (S i, 0) (k,l)) as [[Hlt | Heq] | Hgt].
@@ -337,7 +337,7 @@ Qed.
 
 Lemma limit_is_lub beta :
   limitb beta -> forall alpha, 
-    (forall i,  canon beta i < alpha) <-> beta <= alpha.
+    (forall i,  canon beta i o< alpha) <-> beta o<= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n, n0; try discriminate.
   apply limit_is_lub_0.
@@ -406,7 +406,7 @@ simpl;
  destruct alpha; cbn; destruct n, n0; try f_equal; lia.
 Qed.
 
-Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
+Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
 Proof.
  destruct alpha; simpl.
  split.
@@ -438,7 +438,7 @@ Qed.
 (** ** Additive principals *)
 
 Definition ap (alpha : t) :=  alpha <> zero /\
-  (forall beta gamma,  beta < alpha -> gamma < alpha -> beta + gamma < alpha).
+  (forall beta gamma,  beta o< alpha -> gamma o< alpha -> beta + gamma o< alpha).
 
 Lemma omega_ap : ap omega.
 Proof.
@@ -462,7 +462,7 @@ Proof.
     intros [_ H1]; destruct n.
     + now right.
     +  right; specialize (H1 (S n,0) (S n,0)).
-       assert (H2:(S n, 0) < (S (S n), 0)) by (left; auto).
+       assert (H2:(S n, 0) o< (S (S n), 0)) by (left; auto).
        specialize (H1 H2 H2).
        inversion H1; lia.
   -  intro H;  destruct Hsucc as [beta e]; subst.
@@ -470,7 +470,7 @@ Proof.
       destruct (eq_dec beta zero).
        + subst; now left.
        +  specialize  (H beta 1 (lt_succ beta)).
-          assert (1 < succ beta). {
+          assert (1 o< succ beta). {
             destruct beta;  destruct n0, n1.
             * now destruct n.
             * right; cbn; lia.

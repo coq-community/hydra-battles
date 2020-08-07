@@ -17,7 +17,7 @@ Existing Instance Omega_plus_Omega.
 Definition t := @ON_plus.t nat nat.
 
 
-Example ex1 : inl 7 < inr 0.
+Example ex1 : inl 7 o< inr 0.
 Proof. constructor. Qed.
 
 Notation "'omega'" := (@inr nat nat 0) : oo_scope.
@@ -30,7 +30,7 @@ Compute on_compare omega  (fin 8).
 
 Compute on_compare (8:t)  omega.
 
-Example ex2 :  fin 7 < omega.
+Example ex2 :  inl 7 o< omega.
 Proof. constructor. Qed.
 
 Lemma omega_is_limit : Limit omega. 
@@ -80,8 +80,8 @@ Proof.
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
   elimtype False.
-  assert (inl i < inl (S i)) by (constructor; auto).
-  assert (inl (S i) < inl j) by (constructor; auto).
+  assert (inl i o< inl (S i)) by (constructor; auto).
+  assert (inl (S i) o< inl j) by (constructor; auto).
   specialize (H0 (inl (S i)) H2 H3).
   destruct H0.
 Qed.
@@ -95,8 +95,8 @@ Proof.
   destruct H2; trivial.
    elimtype False.
      specialize (H0 (inr (S i))).
- assert (inr i < inr (S i)) by (constructor; auto).
-  assert (inr (S i) < inr j) by (constructor; auto).
+ assert (inr i o< inr (S i)) by (constructor; auto).
+  assert (inr (S i) o< inr j) by (constructor; auto).
   specialize (H0 H2 H3); inversion H0.
 Qed.
 
@@ -105,8 +105,8 @@ Proof.
   destruct 1 as [H H0].
 
   specialize (H0 (inl (S i))).
-  assert (inl i < inl (S i)) by (constructor;auto).
-  assert (inl (S i) < inr j) by constructor.
+  assert (inl i o< inl (S i)) by (constructor;auto).
+  assert (inl (S i) o< inr j) by constructor.
   specialize (H0 H1 H2);  inversion H0.
 Qed.
 
@@ -221,7 +221,7 @@ Defined.
 
 
 Lemma le_introl :
-  forall i j :nat, (i<= j)%nat -> inl i  <= inl j.
+  forall i j :nat, (i<= j)%nat -> inl i  o<= inl j.
 Proof.
   intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto .
   - left; now constructor.
@@ -229,14 +229,14 @@ Proof.
 Qed.
 
 Lemma le_intror :
-  forall i j :nat, (i<= j)%nat -> inr i  <= inr j.
+  forall i j :nat, (i<= j)%nat -> inr i  o<= inr j.
 Proof.
   intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto.
   - left; now constructor.
   - subst; now right. 
 Qed.
 
-Lemma le_0 : forall p: t,   fin 0 <= p.
+Lemma le_0 : forall p: t,   fin 0 o<= p.
 Proof.
   destruct p.  destruct n ; [right |].
   constructor. constructor.  auto with arith.
@@ -247,19 +247,19 @@ Qed.
 
 
 
-Lemma le_lt_trans : forall p q r, p <= q -> q < r -> p < r.
+Lemma le_lt_trans : forall p q r, p o<= q -> q o< r -> p o< r.
 Proof.
   destruct 1; trivial. 
   intro; now transitivity y.  
 Qed.   
 
-Lemma lt_le_trans : forall p q r, p < q -> q <= r -> p < r.
+Lemma lt_le_trans : forall p q r, p o< q -> q o<= r -> p o< r.
 Proof.
   destruct 2; trivial; now  transitivity q.
 Qed.   
 
 
-Lemma lt_succ_le alpha beta : alpha < beta <-> succ alpha <= beta.
+Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
 Proof.  
  destruct alpha, beta. unfold succ; cbn.
  split.
@@ -286,13 +286,13 @@ Proof.
 Qed.
 
 
-Lemma lt_succ alpha : alpha < succ alpha.
+Lemma lt_succ alpha : alpha o< succ alpha.
 Proof.
   destruct alpha; simpl; constructor; lia.
 Qed.
 
 
-Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
+Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
  Proof.
    destruct alpha; simpl; split.
   -   inversion_clear 1; exists n; auto.
@@ -303,7 +303,7 @@ Lemma lt_omega alpha : alpha < omega <-> exists n:nat,  alpha = fin n.
 
 Lemma Omega_as_lub  :
   forall alpha, 
-    (forall i,  fin i < alpha) <-> omega <= alpha.
+    (forall i,  fin i o< alpha) <-> omega o<= alpha.
 Proof.
   Locate compare_correct.
   intro alpha; destruct (Definitions.compare_correct  omega alpha).
@@ -342,7 +342,7 @@ split.
   + lia.
 Qed.
 
-Goal 6 < 8.
+Goal 6 o< 8.
   auto with arith.
   Set Printing All.
   constructor; auto with arith.

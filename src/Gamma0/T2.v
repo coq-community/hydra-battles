@@ -32,6 +32,7 @@ Require Import More_Arith.
 Require Import Restriction.
 Require Import not_decreasing.
 Require Import T1.
+Require Import OrdNotations.
 
 Set Implicit Arguments.
 
@@ -115,52 +116,52 @@ ap_intro : forall alpha beta, ap [alpha, beta].
 
 Inductive lt : T2 -> T2 -> Prop :=
 | (* 1 *) 
- lt_1 : forall alpha beta n gamma,  zero < gcons alpha beta n gamma
+ lt_1 : forall alpha beta n gamma,  zero o< gcons alpha beta n gamma
 | (* 2 *)
  lt_2 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-                alpha1 < alpha2 ->
-                beta1 < gcons alpha2 beta2 0 zero ->
-               gcons alpha1 beta1 n1 gamma1 <
+                alpha1 o< alpha2 ->
+                beta1 o< gcons alpha2 beta2 0 zero ->
+               gcons alpha1 beta1 n1 gamma1 o<
                gcons alpha2 beta2 n2 gamma2
 | (* 3 *)
  lt_3 : forall alpha1  beta1 beta2 n1 n2 gamma1 gamma2, 
-               beta1 < beta2 ->
-               gcons alpha1 beta1 n1 gamma1 <
+               beta1 o< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 o<
                gcons alpha1 beta2 n2 gamma2
 
 | (* 4 *)
  lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-               alpha2 < alpha1 ->
-               gcons alpha1 beta1 0 zero < beta2 ->
-               gcons alpha1 beta1 n1 gamma1 <
+               alpha2 o< alpha1 ->
+               gcons alpha1 beta1 0 zero o< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 o<
                gcons alpha2 beta2 n2 gamma2
 
 | (* 5 *)
 lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
-               alpha2 < alpha1 ->
-               gcons alpha1 beta1 n1 gamma1 <
+               alpha2 o< alpha1 ->
+               gcons alpha1 beta1 n1 gamma1 o<
                gcons alpha2  (gcons alpha1 beta1 0 zero) n2 gamma2
 
 | (* 6 *)
 lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
-                                    gcons alpha1 beta1 n1 gamma1 < 
+                                    gcons alpha1 beta1 n1 gamma1 o< 
                                     gcons alpha1 beta1 n2 gamma2
 
 | (* 7 *)
-  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 < gamma2 ->
-                                      gcons alpha1 beta1 n1 gamma1 <
+  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 o< gamma2 ->
+                                      gcons alpha1 beta1 n1 gamma1 o<
                                       gcons alpha1 beta1 n1 gamma2
-where  "o1 < o2" := (lt o1 o2): g0_scope.
+where  "o1 o< o2" := (lt o1 o2): g0_scope.
 Hint Constructors lt : T2.
 
 
 
 
 
-Definition le t t' := t = t' \/ t < t'.
+Definition le t t' := t = t' \/ t o< t'.
 Hint Unfold le : T2.
 
-Notation "o1 <= o2" := (le o1 o2): g0_scope.
+Notation "o1 o<= o2" := (le o1 o2): g0_scope.
 
 Definition tail c := match c with | zero => zero 
                                   | gcons a b n c => c
@@ -171,7 +172,7 @@ Inductive nf : T2 -> Prop :=
 | zero_nf : nf zero
 | single_nf : forall a b n, nf a ->  nf b -> nf (gcons a b n zero)
 | gcons_nf : forall a b n a' b' n' c', 
-                             [a', b'] < [a, b]  -> 
+                             [a', b'] o< [a, b]  -> 
                              nf a -> nf b -> 
                              nf(gcons a' b' n' c')-> 
                              nf(gcons a b n (gcons a' b' n' c')).
@@ -187,7 +188,7 @@ Inductive is_successor : T2 -> Prop :=
 
 
 Inductive is_limit : T2 -> Prop :=
-|is_limit_0 : forall alpha beta n, zero < alpha \/ zero < beta ->
+|is_limit_0 : forall alpha beta n, zero o< alpha \/ zero o< beta ->
                                    nf alpha -> nf beta ->
                                    is_limit (gcons alpha beta n zero)
 | is_limit_cons : forall alpha  beta n gamma,
