@@ -1988,11 +1988,11 @@ Let us assume there is a variant from \texttt{Hydra} into \texttt{nat*nat} (with
   
   Let lt2 : relation t := lexico Peano.lt Peano.lt.
 
-  Infix "<" := lt2.
+  Infix "o<" := lt2.
   
   (** reflexive closure of lt2 *)
   Let le2 := clos_refl _ lt2.
-  Infix "<=" := le2.
+  Infix "o<=" := le2.
 
   Variable m : Hydra -> t.
   
@@ -2079,11 +2079,11 @@ Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iot
    Let small_h := iota (m big_h).
 \end{Coqsrc}
 
-Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h <= m small\_h < m big\_h}, which is impossible.
+Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h o<= m small\_h o< m big\_h}, which is impossible.
 
-\subsubsection{Proof of the inequality \texttt{m small\_h < m big\_h}}
+\subsubsection{Proof of the inequality \texttt{m small\_h o< m big\_h}}
 
-For proving the inequality  \texttt{m\_lt: m small\_h < m big\_h}, it suffices to
+For proving the inequality  \texttt{m\_lt: m small\_h o< m big\_h}, it suffices to
 build a battle transforming \texttt{big\_h} into \texttt{small\_h}.
 
 First we prove that \texttt{small\_h} is reachable from \texttt{big\_h} in one or two steps. Let us decompose \texttt{m big\_h}
@@ -2098,21 +2098,21 @@ If $j>0$, then a first round transforms \texttt{big\_h} into $\iota(i+1,0)$ and 
 Since $m$ is a variant, we infer the following inequality:
 
 \begin{Coqsrc}
-Corollary m_lt : m small_h < m big_h.
+Corollary m_lt : m small_h o< m big_h.
 \end{Coqsrc}
 
 
-\subsubsection{Proof of the inequality \texttt{m big\_h <= m small\_h} }
+\subsubsection{Proof of the inequality \texttt{m big\_h o<= m small\_h} }
 
 
-The proof of the inequality \texttt{m big\_h <= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider some pair $(i,j)$, where $i>0$, there exists an infinite number of
+The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider some pair $(i,j)$, where $i>0$, there exists an infinite number of
 pairs stricly less than $(i,j)$, and there exists an infinite number of battles that start from
 $\iota(i,j)$. In effect, at any configuration $\iota(k,0)$, the hydra can freely chose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
 all the possible battles issued from that hydra.
 Let us give more technical details.
 
 \begin{itemize}
-\item The proof of the lemma \texttt{m\_ge : forall p : t,   p <= m (iota p)} uses well-founded induction on $p$, and not structural induction on natural numbers
+\item The proof of the lemma \texttt{m\_ge : forall p : t,   p o<= m (iota p)} uses well-founded induction on $p$, and not structural induction on natural numbers
 
 \item For any pair $p$, we have to distinguish between three cases, according to the value of $p$'s components.
   \begin{itemize}
@@ -2130,7 +2130,7 @@ least upper bounds, through the following logical equivalence.
 
 \begin{Coqsrc}
 Lemma limit_is_lub : forall i p, 
-   (forall j, (i,j) < p) <-> (S i, 0) <= p.  
+   (forall j, (i,j) o< p) <-> (S i, 0) o<= p.  
 \end{Coqsrc}
 
 Let us define the notion of elementary ``step'' of decreasing sequences in
@@ -2160,7 +2160,7 @@ that transforms the hydra $\iota(p)$ into $\iota(q)$.
 \emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html\#m_ge}{Hydra.Omega2\_Small}}
 
 \begin{Coqsrc}
-Lemma m_ge : forall p : t,   p <= m (iota p).
+Lemma m_ge : forall p : t,   p o<= m (iota p).
 Proof.
   intro p ; pattern p;
     apply  well_founded_induction with 
@@ -2170,9 +2170,9 @@ Proof.
 
 \begin{Coqanswer}
   i, j : nat
-  IHij : forall y : t, y < (i, j) -> y <= m (iota y)
+  IHij : forall y : t, y o< (i, j) -> y o<= m (iota y)
   ============================
-  (i, j) <= m (iota (i, j)) 
+  (i, j) o<= m (iota (i, j)) 
 \end{Coqanswer}
 
 
@@ -2204,8 +2204,8 @@ variant for termination on the lexicographic square of $(\mathbb{N},<)$.
 
 \begin{enumerate}
 \item From \texttt{m\_lt}, we infer the strict inequality 
-\texttt{m small\_h < m big\_h}
-\item from \texttt{m\_ge}, we get \texttt{m big\_h <= m (iota (m big\_h)) = m small\_h} 
+\texttt{m small\_h o< m big\_h}
+\item from \texttt{m\_ge}, we get \texttt{m big\_h o<= m (iota (m big\_h)) = m small\_h} 
 \end{enumerate}
 
 

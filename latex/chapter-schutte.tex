@@ -59,7 +59,7 @@ is the full set over the type \texttt{Ord}.
 \begin{Coqsrc}
 Parameter Ord : Type.
 Parameter lt : relation Ord.
-Notation "a < b" := (lt a b): schutte_scope.
+Notation "a o< b" := (lt a b): schutte_scope.
 
 Definition ordinal := Full_set Ord.
 \end{Coqsrc}
@@ -96,12 +96,12 @@ The second and third axioms say that a subset $X$ of $\mathbb{O}$ is
 
 \begin{Coqsrc}
 Axiom AX2 : forall X: Ensemble Ord, 
-   (exists a,  (forall y, In X y -> y < a)) ->
+   (exists a,  (forall y, In X y -> y o< a)) ->
    countable X.
 
 Axiom AX3 : forall X : Ensemble Ord,
               countable X -> 
-              exists a,  forall y, In X y -> y < a.
+              exists a,  forall y, In X y -> y o< a.
 \end{Coqsrc}
 
 \texttt{AX2} and \texttt{AX3} could have been replaced by a single axiom (using the \texttt{iff} connector), but we decide to respect as most as possible the structure of Schütte's definitions.
@@ -266,7 +266,7 @@ Definition zero: Ord :=the_least ordinal.
 We want to prove now that zero is less than or equal to any ordinal number.
 
 \begin{Coqsrc}
-Lemma zero_le (alpha : Ord) :  zero <= alpha.
+Lemma zero_le (alpha : Ord) :  zero o<= alpha.
 Proof.
   unfold zero, the_least, the; apply iota_ind.
 \end{Coqsrc}
@@ -287,7 +287,7 @@ According to the use of the description operator \texttt{iota}, we have to solve
 
 subgoal 2 (ID 156) is:
  forall a : Ord, unique (least_member lt ordinal) a -> 
-                a <= alpha
+                a o<= alpha
 \end{Coqanswer}
 
 \begin{Coqsrc}
@@ -317,16 +317,16 @@ Module Bad.
 Since we won't be able to prove the proposition
 \linebreak \Verb|{exists! a: Ord, least_member (Empty_set Ord) a|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
 \emph{i.e.}, satisfied by \emph{any} element of type \texttt{Ord}, like for instance
-\texttt{bottom = bottom}, or \texttt{zero <= bottom}.
+\texttt{bottom = bottom}, or \texttt{zero o<= bottom}.
 
 \begin{Coqbad}
-Lemma le_zero_bottom : zero <= bottom. 
+Lemma le_zero_bottom : zero o<= bottom. 
 Proof. apply zero_le. Qed.
 
 Lemma bottom_eq : bottom = bottom.
 Proof. trivial. Qed.
 
-Lemma le_bottom_zero : bottom <= zero.
+Lemma le_bottom_zero : bottom o<= zero.
 Proof.
    unfold bottom, the_least, the; apply iota_ind.
 \end{Coqbad}
@@ -339,7 +339,7 @@ Proof.
 
 subgoal 2 (ID 414) is:
  forall a : Ord, unique (least_member lt (Empty_set Ord)) a -> 
-      a <= zero
+      a o<= zero
 \end{Coqanswer}
 
 \begin{Coqbad}
@@ -366,7 +366,7 @@ The definition of the function \texttt{succ:Ord -> Ord} is very concise. The suc
 \index{Functions!succ (in type Ord)}
 
 \begin{Coqsrc}
-Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
+Definition succ (alpha : Ord) := the_least (fun beta => alpha o< beta).
 \end{Coqsrc}
 
 Using \texttt{succ}, we define the folloing predicates.
@@ -401,7 +401,7 @@ First, we make its specification explicit.
 
 \begin{Coqsrc}
 Definition succ_spec (alpha:Ord) :=
-  least_member   lt (fun z => alpha < z).
+  least_member   lt (fun z => alpha o< z).
 \end{Coqsrc}
 
 Then, we prove that our function \texttt{succ} meets this specification. 
@@ -438,7 +438,7 @@ We can ``uncap'' the description operator for proving properties of the
 \texttt{succ} function.
 
 \begin{Coqsrc}
-Lemma lt_succ (alpha : Ord) :  alpha < succ alpha.
+Lemma lt_succ (alpha : Ord) :  alpha o< succ alpha.
 Proof.
   destruct  (succ_ok  alpha);  tauto.
 Qed.
@@ -446,7 +446,7 @@ Qed.
 Hint Resolve lt_succ : schutte.
 
 Lemma lt_succ_le (alpha beta : Ord):
-  alpha < beta -> succ alpha <= beta.
+  alpha o< beta -> succ alpha o<= beta.
 Proof with eauto with schutte.
   intros  H;  pattern (succ alpha); apply the_least_ok ... 
   exists (succ alpha); red;apply lt_succ ...
@@ -456,16 +456,16 @@ Qed.
 
 \begin{Coqsrc}
 Lemma lt_succ_le_2 (alpha beta : Ord):
-  alpha < succ beta -> alpha <= beta.
+  alpha o< succ beta -> alpha o<= beta.
 
 Lemma succ_mono (alpha beta : Ord):
-  alpha < beta -> succ alpha < succ beta.
+  alpha o< beta -> succ alpha o< succ beta.
 
 Lemma succ_monoR (alpha beta : Ord) :
- succ alpha < succ beta -> alpha < beta.
+ succ alpha o< succ beta -> alpha o< beta.
 
 Lemma lt_succ_lt (alpha beta : Ord) :
-  is_limit beta ->  alpha < beta -> succ alpha < beta.
+  is_limit beta ->  alpha o< beta -> succ alpha o< beta.
 \end{Coqsrc}
 
 
@@ -527,10 +527,10 @@ Among the numerous properties of the ordinal $\omega$, les us quote the followin
 \href{../src/html/hydras.Schutte.Schutte_basics.html\#finite_lt_omega}{\texttt{Schutte.Schutte\_basics}})
 
 \begin{Coqsrc}
-Lemma finite_lt_omega : forall i: nat,  i < omega.
+Lemma finite_lt_omega : forall i: nat,  i o< omega.
 
 Lemma lt_omega_finite alpha : Ord) : 
-  alpha < omega ->  exists i:nat, alpha =  i.
+  alpha o< omega ->  exists i:nat, alpha =  i.
 
 Lemma is_limit_omega : is_limit omega.
 \end{Coqsrc}
@@ -561,7 +561,7 @@ $\beta<\alpha$, then $\beta\in A$; a segment is  \emph{proper} if it strictly in
 
 \begin{Coqsrc}
  Definition segment (A: Ensemble Ord) :=
-  forall alpha beta, In A alpha -> beta < alpha -> In A  beta.
+  forall alpha beta, In A alpha -> beta o< alpha -> In A  beta.
 
 Definition proper_segment (A: Ensemble Ord) :=
   segment A /\ ~ Same_set A ordinal.
@@ -579,7 +579,7 @@ Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
  segment A /\
  (forall a, In A a -> In B (f a)) /\
  (forall b, B b -> exists a, In A a /\ f a = b) /\
- forall a b, In A a -> In A b -> a < b ->  f a < f b.
+ forall a b, In A a -> In A b -> a o< b ->  f a o< f b.
 
 Definition ordering_segment (A B : Ensemble Ord) :=
   exists f : Ord -> Ord, ordering_function f A B.
@@ -636,7 +636,7 @@ Let us quote the following theorems (see Library
 \begin{Coqsrc}
 Theorem ordering_le : forall f A B,
     ordering_function f A B ->
-    forall alpha, In A alpha -> alpha  <= f alpha.
+    forall alpha, In A alpha -> alpha  o<= f alpha.
 
 Th_13_5_2 :
 forall (A B : Ensemble Ord) (f : Ord -> Ord),
@@ -695,12 +695,12 @@ The following lemmas are proved the same way.
 
 Lemma zero_plus_alpha (alpha : Ord) : zero + alpha = alpha.
 
-Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta.
+Lemma le_plus_l (alpha beta : Ord) : alpha o<= alpha + beta.
 
-Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta.
+Lemma le_plus_r (alpha beta : Ord) :  beta o<= alpha + beta.
 
 Lemma plus_mono_r (alpha beta gamma : Ord) : 
-    beta < gamma -> alpha + beta < alpha + gamma.
+    beta o< gamma -> alpha + beta o< alpha + gamma.
 
 Lemma plus_of_succ (alpha beta : Ord) :
     alpha + (succ beta) = succ (alpha + beta).
@@ -711,7 +711,7 @@ Theorem plus_assoc (alpha beta gamma : Ord) :
 Lemma one_plus_omega :  1 + omega = omega.
 
 Lemma finite_plus_ge_omega (n : nat) (alpha : Ord) :
-  omega <= alpha -> n + alpha = alpha.
+  omega o<= alpha -> n + alpha = alpha.
 \end{Coqsrc} 
 
 
@@ -773,8 +773,8 @@ We call \texttt{AP} the set of additive principal ordinals.
 \begin{Coqsrc}
 Definition AP : Ensemble Ord :=
   fun alpha => 
-  zero < alpha /\
-  (forall beta, beta < alpha ->  beta + alpha = alpha).
+  zero o< alpha /\
+  (forall beta, beta o< alpha ->  beta + alpha = alpha).
 \end{Coqsrc}
 
 \subsection{The function \texttt{phi0}}
@@ -831,7 +831,7 @@ Lemma least_AP: least_member  lt AP 1.
 
 Lemma omega_second_AP :
   least_member   lt 
-                  (fun alpha => 1 < alpha /\ In AP alpha)
+                  (fun alpha => 1 o< alpha /\ In AP alpha)
                   omega.
 \end{Coqsrc}
 
@@ -839,7 +839,7 @@ The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
 
 \begin{Coqsrc}
 Lemma AP_plus_closed (alpha beta gamma : Ord): 
-     In AP alpha -> beta < alpha -> gamma < alpha -> beta + gamma < alpha.
+     In AP alpha -> beta o< alpha -> gamma o< alpha -> beta + gamma o< alpha.
 
 Theorem AP_unbounded : Unbounded AP.
 \end{Coqsrc}
@@ -876,7 +876,7 @@ Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha).
 Lemma phi0_zero : phi0 zero =  1.
 
 Lemma phi0_mono (alpha beta : Ord) :
-  alpha < beta ->  phi0 alpha < phi0 beta.
+  alpha o< beta ->  phi0 alpha o< phi0 beta.
 
 Lemma phi0_inj (alpha beta : Ord) :
     phi0 alpha = phi0 beta -> alpha = beta.
@@ -885,11 +885,11 @@ Lemma phi0_sup : forall (U: Ensemble Ord),
    Inhabited _ U ->   countable U ->  phi0 (|_| U) = |_| (image U phi0).
 
 Lemma is_limit_phi0 (alpha : Ord) :
-  zero < alpha ->  is_limit (phi0 alpha).
+  zero o< alpha ->  is_limit (phi0 alpha).
 
 Lemma omega_eq : omega = phi0 1. 
 
-Lemma phi0_le (alpha : Ord) : alpha <= phi0 alpha.
+Lemma phi0_le (alpha : Ord) : alpha o<= phi0 alpha.
 \end{Coqsrc}
 
 Please note that the lemma \texttt{omega\_eq} above, is consistent with the interpretation of the ordering function $\varphi_0$ as the exponential of basis $\omega$. Indeed we could have written this lemma with our alternative notation:
@@ -909,7 +909,7 @@ We prove the inequality  $\alpha<\omega^\alpha$ whenever $\alpha < \epsilon_0$.
 
 \begin{Coqsrc}
 Lemma lt_phi0 (alpha : Ord):
-  alpha < epsilon0 -> alpha < phi0 alpha.
+  alpha o< epsilon0 -> alpha o< phi0 alpha.
 \end{Coqsrc}
 
 The proof is as follows:
@@ -954,16 +954,16 @@ Module \href{../src/html/hydras.Schutte.Critical.html}%
 
 \begin{Coqsrc}
 Definition Cr_fun : forall alpha : Ord,
-       (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
+       (forall beta : Ord, beta o< alpha -> Ensemble Ord) ->
         Ensemble Ord 
 := 
    fun (alpha :Ord)
         (Cr : forall beta, 
-                beta < alpha -> Ensemble Ord) 
+                beta o< alpha -> Ensemble Ord) 
         (x : Ord) => (
        (alpha = zero /\ AP x) \/
-       (zero < alpha /\
-        forall beta (H:beta < alpha),
+       (zero o< alpha /\
+        forall beta (H:beta o< alpha),
           the_ordering_segment (Cr beta H) x /\ ord (Cr  beta H) x = x)).
 
 Definition Cr (alpha : Ord) : Ensemble Ord := 
@@ -1066,7 +1066,7 @@ Fixpoint eval (l : cnf_t) : Ord :=
   end.
 
 Definition sorted (l: cnf_t) :=
-  LocallySorted (fun alpha beta => beta <= alpha) l.
+  LocallySorted (fun alpha beta => beta o<= alpha) l.
 
 Definition is_cnf_of (alpha : Ord)(l : cnf_t) : Prop :=
   sorted l /\ alpha = eval l.
@@ -1104,8 +1104,8 @@ If $\alpha<\epsilon_0$, then the Cantor normal form of $\alpha$ is made of ordin
 \begin{Coqsrc}
 Lemma cnf_lt_epsilon0 : 
  forall l alpha, 
-   is_cnf_of alpha l ->  alpha < epsilon0 ->
-   Forall (fun beta =>  beta < alpha) l.
+   is_cnf_of alpha l ->  alpha o< epsilon0 ->
+   Forall (fun beta =>  beta o< alpha) l.
 \end{Coqsrc}
 
 \index{Exercises}
@@ -1117,7 +1117,7 @@ Please consider the following statement :
 Lemma cnf_lt_epsilon0_iff : 
  forall l alpha, 
    is_cnf_of alpha l ->  
-   (alpha < epsilon0 <->  Forall (fun beta =>  beta < alpha) l).
+   (alpha o< epsilon0 <->  Forall (fun beta =>  beta o< alpha) l).
 \end{Coqsrc}
 
 Is it true ?
@@ -1184,7 +1184,7 @@ Theorem inject_mult_n (alpha : T1)  :
 Theorem inject_mono (beta gamma : T1) :
   T1.lt  beta gamma -> 
   T1.nf beta -> T1.nf gamma -> 
-  inject beta < inject gamma.
+  inject beta o< inject gamma.
 
 Theorem inject_injective (beta gamma : T1) : nf beta -> nf gamma ->
   inject beta = inject gamma -> beta = gamma.
@@ -1195,7 +1195,7 @@ Finally, we prove that \texttt{inject} is a bijection from the set of all terms 
 
 \begin{Coqsrc}
  Theorem inject_lt_epsilon0 (alpha : T1):
-      inject alpha < epsilon0.
+      inject alpha o< epsilon0.
 
 Theorem embedding : 
      fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.

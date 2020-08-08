@@ -118,7 +118,7 @@ First, we notice that this  number $l$ exists, thanks to the following theorems:
 \begin{Coqsrc}
 canonS_LT:
   forall (i : nat) (alpha : T1),
-  nf alpha -> alpha <> zero -> canonS alpha i < alpha.
+  nf alpha -> alpha <> zero -> canonS alpha i o< alpha.
 
 T1_wf: well_founded LT.
 \end{Coqsrc}
@@ -917,11 +917,11 @@ But beware of non-theorems! For instance, one could believe that $H$ is monotono
 
 \begin{Coqsrc}
 Remark H_non_mono1 :
-  ~ (forall alpha beta k, (alpha <= beta)%e0 ->
+  ~ (forall alpha beta k, (alpha o<= beta)%e0 ->
                           (H_ alpha k <= H_ beta k)%nat).
 Proof.
  intros H ;specialize (H 42 omega 3).
- assert (H0 :(42 <= omega)%e0) by (repeat split; auto).  
+ assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
  apply H in H0; rewrite H_Fin, H_omega  in H0; lia.
 Qed.
 \end{Coqsrc}
@@ -1039,10 +1039,10 @@ alpha : E0
 notlimit : Limitb alpha = false
 nonzero : alpha <> Zero
 i : nat
-F_ : forall x : E0, nat -> x < alpha -> nat
-The term "F_ (Pred alpha) ?x" has type "Pred alpha < alpha -> nat"
-while it is expected to have type "Pred alpha < alpha -> Pred alpha < alpha"
-(cannot unify "nat" and "Pred alpha < alpha").
+F_ : forall x : E0, nat -> x o< alpha -> nat
+The term "F_ (Pred alpha) ?x" has type "Pred alpha o< alpha -> nat"
+while it is expected to have type "Pred alpha o< alpha -> Pred alpha o< alpha"
+(cannot unify "nat" and "Pred alpha o< alpha").
 \end{Coqanswer}
 
 
@@ -1136,7 +1136,7 @@ As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}.
 
 \begin{Coqsrc}
 Lemma Propp284 : forall alpha beta : E0, 
-   beta < alpha -> dominates (F_ alpha) (F_ beta).
+   beta o< alpha -> dominates (F_ alpha) (F_ beta).
 \end{Coqsrc}
 
 \index{Exercises}

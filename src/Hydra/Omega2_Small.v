@@ -79,9 +79,9 @@ Section Impossibility_Proof.
     apply m_strict_mono with (1:=Hvar) (2:=big_to_small) .  
   Qed.
     
-    (** *** Proof of the inequality [m big_h <= m small_h]  *)
+    (** *** Proof of the inequality [m big_h o<= m small_h]  *)
 
-    (** *** Let us decompose any inequality p < q into elementary steps *)
+    (** *** Let us decompose any inequality p o< q into elementary steps *)
 
     Inductive step : t -> t -> Prop :=
     | succ_step : forall i j,  step (i, S j) (i, j)

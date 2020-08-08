@@ -181,14 +181,14 @@ Definition on_compare {A:Type}{lt: relation A}
 Definition on_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
-Infix "<" := on_lt : ON_scope.
+Infix "o<" := on_lt : ON_scope.
 
 Definition on_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
   clos_refl _ on_lt.
 
-Infix "<=" := on_le : ON_scope.
+Infix "o<=" := on_le : ON_scope.
 \end{Coqsrc}
 
 
@@ -339,7 +339,7 @@ Definition t := @ON_plus.t nat nat.
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Example ex1 : inl 7 < inr 0.
+Example ex1 : inl 7 o< inr 0.
 Proof. constructor. Qed.
 \end{Coqsrc}
 
@@ -353,56 +353,56 @@ Notation "'omega'" := (inr  0:t).
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Example ex1' : fin 7 < omega.
+Example ex1' : fin 7 o< omega.
 Proof. constructor. Qed.
 \end{Coqsrc}
 
 
-\label{warning:coercions}
-\index{Coq!Techniques!Coercions} 
-\begin{remark}
-Beware of coercions and notation scopes!
-Let us consider the following goal:
+% \label{warning:coercions}
+% \index{Coq!Techniques!Coercions} 
+% \begin{remark}
+% Beware of coercions and notation scopes!
+% Let us consider the following goal:
 
-\begin{Coqsrc}
- Goal (6 < 8).
- auto with arith.
-\end{Coqsrc}
+% \begin{Coqsrc}
+%  Goal (6 o< 8).
+%  auto with arith.
+% \end{Coqsrc}
 
 
-\begin{Coqanswer}
-1 subgoal (ID 9)
+% \begin{Coqanswer}
+% 1 subgoal (ID 9)
   
-  ============================
-  6 < 8
-\end{Coqanswer}
+%   ============================
+%   6 o< 8
+% \end{Coqanswer}
 
-Please keep in mind that the current notation scope interprets the infix \texttt{``<''} as the predicate \texttt{Omega\_plus\_omega.lt} and not \texttt{Nat.lt}. More,  the coercion mechanism converts the terms \texttt{6:nat} [resp. \texttt{8:nat} ]
-into \texttt{inl 6} [resp. \texttt{inl 8}].  So, the initial goal is correctly interpreted by \coq{}, but not as an inequality between two natural numbers.
+% Please keep in mind that the current notation scope interprets the infix \texttt{``<''} as the predicate \texttt{Omega\_plus\_omega.lt} and not \texttt{Nat.lt}. More,  the coercion mechanism converts the terms \texttt{6:nat} [resp. \texttt{8:nat} ]
+% into \texttt{inl 6} [resp. \texttt{inl 8}].  So, the initial goal is correctly interpreted by \coq{}, but not as an inequality between two natural numbers.
 
 
-\begin{Coqsrc}
-Set Printing All.
-\end{Coqsrc}
+% \begin{Coqsrc}
+% Set Printing All.
+% \end{Coqsrc}
 
-\begin{Coqanswer}
-1 subgoal (ID 337)
+% \begin{Coqanswer}
+% 1 subgoal (ID 337)
   
-  ============================
-  @on_lt nat Peano.lt Nat.compare Omega (S (S (S (S (S (S O))))))
-    (S (S (S (S (S (S (S (S O))))))))
-\end{Coqanswer}
+%   ============================
+%   @on_lt nat Peano.lt Nat.compare Omega (S (S (S (S (S (S O))))))
+%     (S (S (S (S (S (S (S (S O))))))))
+% \end{Coqanswer}
 
 
-Anyway, the initial goal is provable, using \texttt{le\_AsB}'s first constructor.
+% Anyway, the initial goal is provable, using \texttt{le\_AsB}'s first constructor.
 
-\begin{Coqsrc}
-  constructor; auto with arith.
-Qed.
-\end{Coqsrc}
+% \begin{Coqsrc}
+%   constructor; auto with arith.
+% Qed.
+% \end{Coqsrc}
 
-\end{remark}
-
+% \end{remark}
+%
 
 \section{Limits and Successors}
 
@@ -419,7 +419,7 @@ It would be interesting to specify at the most generic level, what is a zero, a 
 \begin{itemize}
 \item A \emph{least} element is a minorant (in the large sense) of the full set  on $A$,
 \item $y$ is a \emph{successor} of $x$ if $x<y$ and there is no element between $x$ and $y$,
-\item $x$ is a \emph{limit} if $x$ is not a least element, and for any $y$ such that $y<x$,
+\item $x$ is a \emph{limit} if $x$ is not a least element, and for any $y$ such that $yo<x$,
  there exists some $z$ such that $y<z<x$.
 \end{itemize}
 
@@ -916,10 +916,10 @@ with the strict order $(A,<_A)$. Please build the notation system
 (or, if preferred, the type of non-increasing finite sequences on $A$,
 provided with the lexicographic ordering on lists).
 
-For instance, let us take $N_A=\texttt{Omega}$, and take $\alpha=(4,4,2,1,0)$,
- $\beta=(4,3,3,3,3,3,2)$, and $\gamma=(5)$. Then $\beta<\alpha<\gamma$. 
+For instance, let us take $N_A=\texttt{Omega}$, and take $\alpha=\langle 4,4,2,1,0\rangle$,
+ $\beta=\langle 4,3,3,3,3,3,2\rangle$, and $\gamma=\langle 5\rangle$. Then $\beta<\alpha<\gamma$. 
 
-In contrast the list $(5,6,3,3)$ is not non-increasing (\emph{i.e.} sorted w.r.t. $\geq$), so it is not to be considered.
+In contrast the list $\langle5,6,3,3\rangle$ is not non-increasing (\emph{i.e.} sorted w.r.t. $\geq$), so it is not to be considered.
 
 Note that if the notation $N_A$ implements the ordinal 
 $\alpha$,  the new notation $\omega^{N_A}$ must implement the ordinal $\varphi_0(\alpha)$, a.k.a. $\omega^\alpha$ (see chapter~\ref{chap:schutte})

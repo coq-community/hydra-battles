@@ -274,8 +274,8 @@ The $\omega$-tower of height 7}
 
 
 % Our formalisation of Cantor Normal Form will take two steps:
-% 1 Definition of a strict order \texttt{<} on the type \texttt{T1}, 
-% 2 Using \texttt{<} for characterizing terms in normal form.
+% 1 Definition of a strict order \texttt{o<} on the type \texttt{T1}, 
+% 2 Using \texttt{o<} for characterizing terms in normal form.
 
 In order to compare two terms of type \texttt{T1}, we define a recursive function \texttt{compare} that maps two ordinals $\alpha$ and $\beta$ to a value of type \texttt{comparison}. This type is defined in \coq's standard library 
 \texttt{Init.Datatypes} and
@@ -462,10 +462,10 @@ Definition restrict {A:Type}(E: Ensemble A)(R: relation A) :=
 
 \begin{Coqsrc}
 Definition LT := restrict nf lt.
-Infix "<" := LT : t1_scope.
+Infix "o<" := LT : t1_scope.
 
 Definition LE := restrict nf le.
-Notation "alpha <= beta" := (LE alpha beta) : t1_scope.
+Notation "alpha o<= beta" := (LE alpha beta) : t1_scope.
 \end{Coqsrc}
 
 
@@ -480,7 +480,7 @@ Infix notation for inequalities on ordinals have changed to \texttt{o<} and \tex
 For instance, in the following lemma, the condition that $\alpha$ is in normal form is included in the condition $\alpha< 1$.
 
 \begin{Coqsrc}
-Lemma LT_one : forall alpha, alpha < one -> alpha = zero.
+Lemma LT_one : forall alpha, alpha o< one -> alpha = zero.
 \end{Coqsrc}
 
   
@@ -519,8 +519,8 @@ Then we redefine the predicates of comparison.
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
 Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
 
-Infix "<" := Lt : E0_scope.
-Infix "<=" := Le : E0_scope.
+Infix "o<" := Lt : E0_scope.
+Infix "o<=" := Le : E0_scope.
 \end{Coqsrc}
   
 \begin{todo}
@@ -730,25 +730,25 @@ are not commutative. Moreover,  both operations fail to be strictly monotonous i
 Example e2 : 6 + omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'2 : omega < omega + 6.
+Example e'2 : omega o< omega + 6.
 Proof. now compute. Qed.
 
 Example e''2 : 6 * omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'''2 : omega < omega * 6.
+Example e'''2 : omega o< omega * 6.
 Proof. now compute. Qed.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma plus_not_monotonous : exists alpha beta gamma : T1,
-    alpha < beta /\ alpha + gamma = beta + gamma.
+    alpha o< beta /\ alpha + gamma = beta + gamma.
 Proof.
   exists 3, 5, omega;  now  compute.
 Qed.
 
 Lemma mult_not_monotonous :  exists alpha beta gamma : T1,
-      alpha < beta /\ alpha * gamma = beta * gamma.
+      alpha o< beta /\ alpha * gamma = beta * gamma.
 Proof.
   exists 3, 5, omega; now compute.
 Qed.
@@ -888,7 +888,7 @@ Section First_attempt.
   IHgamma : nf gamma -> Acc LT gamma
   H : nf (ocons beta n gamma)
   delta : T1
-  Hdelta : delta < ocons beta n gamma
+  Hdelta : delta o< ocons beta n gamma
   ============================
   Acc LT delta
  \end{Coqanswer}
@@ -959,7 +959,7 @@ an accessible term $\alpha$.
   subgoal 1 
 
   alpha : T1
-  Aalpha : forall y : T1,  y < alpha -> Acc LT y
+  Aalpha : forall y : T1,  y o< alpha -> Acc LT y
   IHalpha : forall y : T1,
        LT y alpha ->
        forall (n : nat) (beta : T1),
@@ -1358,12 +1358,12 @@ At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
 
 \begin{Coqsrc}
 Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-  nf gamma   -> alpha  < beta ->
-  alpha o+ gamma < beta o+ gamma.
+  nf gamma   -> alpha  o< beta ->
+  alpha o+ gamma o< beta o+ gamma.
 
 Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
-  nf alpha -> beta < gamma ->
-  alpha o+ beta < alpha o+ gamma.
+  nf alpha -> beta o< gamma ->
+  alpha o+ beta o< alpha o+ gamma.
 \end{Coqsrc}
 
 
@@ -1408,26 +1408,26 @@ For proving the termination of all hydra battles, we have to prove that
 
 \begin{Coqsrc}
 Lemma S0_decr :
-  forall s s', S0  s s' -> ms s' < ms s.
+  forall s s', S0  s s' -> ms s' o< ms s.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma R1_decr : forall h h',
-                  R1 h h' -> m h' < m h.
+                  R1 h h' -> m h' o< m h.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma S1_decr n:
-  forall s s', S1 n s s' -> ms s' <  ms s.
+  forall s s', S1 n s s' -> ms s' o<  ms s.
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Lemma R2_decr n : forall h h', R2 n h h' -> m h'  < m h.
+Lemma R2_decr n : forall h h', R2 n h h' -> m h'  o< m h.
 \end{Coqsrc}
 
 
 \begin{Coqsrc}
-Lemma round_decr : forall h h', h -1-> h' -> m h' < m h.
+Lemma round_decr : forall h h', h -1-> h' -> m h' o< m h.
 Proof.
    destruct 1 as [n H]; destruct H. 
    -  now apply R1_decr.
@@ -1446,7 +1446,7 @@ Qed.
 Theorem every_battle_terminates: Termination.
 Proof. 
   red; apply Inclusion.wf_incl with 
-         (R2 := fun h h' =>  m h < m h').
+         (R2 := fun h h' =>  m h o< m h').
    red; intros;  now apply round_decr.
    apply Inverse_Image.wf_inverse_image, T1_wf.
 Qed.
