@@ -2,6 +2,7 @@
 Require Import Arith Compare_dec Lia Simple_LexProd
         OrdinalNotations.Definitions.
 Import Relations.
+
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
 Open Scope o2_scope.
@@ -119,13 +120,13 @@ Qed.
 
 
 
- Definition compare (alpha beta: t) : comparison :=
+Definition compare (alpha beta: t) : comparison :=
   match Nat.compare (fst alpha) (fst beta) with
     Eq => Nat.compare (snd alpha) (snd beta)
   | c => c
   end.
 
- 
+
 
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
@@ -166,7 +167,7 @@ Qed.
 
 Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
+                (compare alpha beta).
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
@@ -408,18 +409,15 @@ Qed.
 
 Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
 Proof.
- destruct alpha; simpl.
- split.
- inversion_clear 1.
- inversion H0.
-   exists n0.
-   auto.
-   inversion H1.
- inversion H0.
-    destruct 1.
-    injection H. intros; subst. left. auto.
+  destruct alpha; cbn; split.
+  - inversion_clear 1.
+    + inversion H0.
+      * exists n0; reflexivity.
+      *   inversion H1.
+    +   inversion H0.
+  -   destruct 1.
+      injection H; intros; subst; constructor; auto.
 Qed.
-
 
 Lemma decompose (i j : nat): (i,j) = omega * i + j.
 Proof.
@@ -435,10 +433,12 @@ Proof.
   - intros x [y [Hy _]]; rewrite <- decompose in Hy; congruence.
 Qed.
 
-(** ** Additive principals *)
+(** ** Additive principal ordinals  *)
 
-Definition ap (alpha : t) :=  alpha <> zero /\
-  (forall beta gamma,  beta o< alpha -> gamma o< alpha -> beta + gamma o< alpha).
+Definition ap (alpha : t) :=
+  alpha <> zero /\
+  (forall beta gamma,  beta o< alpha -> gamma o< alpha ->
+                       beta + gamma o< alpha).
 
 Lemma omega_ap : ap omega.
 Proof.

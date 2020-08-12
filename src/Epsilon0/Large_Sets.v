@@ -20,7 +20,7 @@ Open Scope t1_scope.
 
 (** ** minimal large sequences *)
 
-Definition mlarge alpha s := path_to zero s alpha.
+Definition mlarge alpha (s: list nat) := path_to zero s alpha.
 
 Definition mlargeS alpha s := path_toS zero s alpha.
 
@@ -42,8 +42,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
   - If f is correct w.r.t. [L_spec]
  : "Compute L_test alpha f k" should return (one=one).
   - If f k is too small, returns (alpha = one) (with one < alpha)
-  - If f k is too big, returns (zero = one)
- *)
+  - If f k is too big, returns (zero = one) *)
 
 
 Definition L_test (alpha:T1) f k :=
@@ -285,7 +284,7 @@ Section succ.
          -- reflexivity.
      -  unfold L_succ; right.
       +  apply succ_not_zero.
-      + intro k; red; path_decompose (S k).
+      + intro k; red. path_decompose (S k).
         instantiate (1 := beta).
         --  apply H0.
         --  rewrite interval_singleton; left.
@@ -298,6 +297,7 @@ Section succ.
    Qed.
    
 End succ.
+
 
 
 Section lim.
@@ -333,6 +333,7 @@ Section lim.
   Qed.
   
 End lim.
+
 
 (** ** Finite ordinals *)
 

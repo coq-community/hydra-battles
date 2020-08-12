@@ -1,13 +1,15 @@
 Require Import RelationClasses Relation_Operators Ensembles OrdNotations.
 Import Relation_Definitions.
+Require Export MoreOrders.
 
 Require Import Schutte_basics.
 
-Require Export MoreOrders.
+
 
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.
+Local Open Scope ON_scope.
 
 (**
   Ordinal notation system on type [A] :
@@ -62,7 +64,7 @@ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
 
 Definition bigO `{nA : @ON A ltA compareA}
            (a: A) : Ensemble A :=
-  fun x: A => ltA x a.
+  fun x: A => x o< a.
 
 
 (** The segment associated with nA is isomorphic to

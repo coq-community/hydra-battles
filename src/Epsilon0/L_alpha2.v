@@ -34,6 +34,7 @@ About L__equation_1. About FunctionalInduction.
 Lemma L_zero_eqn : forall i, L_ Zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
+About L__equation_1.
 Lemma L_eq2 alpha i : Succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 Proof.
   intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha Zero).
@@ -138,21 +139,33 @@ Section L_correct.
     (forall beta,  (beta o< alpha)%e0 -> P beta) ->
     Limitb alpha -> P alpha.
   Proof with eauto with E0.
-    unfold P; intros.
-    apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).
-    2: intro n; rewrite (L_lim_eqn alpha); trivial.
-    generalize L_lim_ok; intro H1; unfold L_lim in H1.
-    assert (limitb (cnf alpha)). { now destruct alpha. }
-    specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
-    apply H1; intro k;   specialize (H (CanonS alpha  k)).
-    assert  (H3: (CanonS alpha k o< alpha)%e0 ).
-    { apply CanonS_lt.
-      now apply Limit_not_Zero.
-    }
-   apply H in H3; apply L_spec_compat with (L_ (CanonS alpha k)); auto.
+    intros H H0. unfold P.
+    right.
+  {  destruct alpha;   cbn in H0; simpl; eauto with T1. }
+  intros k; rewrite L_lim_eqn; auto.
+  -  assert (H1 :(Canon alpha (S k) o< alpha)%e0) by eauto with E0. 
+     specialize (H (Canon alpha (S k)) H1); inversion H.
+     + elimtype False.
+       {
+         destruct alpha; simpl in H0.
+         destruct (canon_not_null cnf cnf_ok H0  k); simpl in H2; auto.
+       }
+     + specialize (H3 (S k)); red;
+         rewrite  MoreLists.interval_app with
+             (S k) (S k) (Nat.pred (L_ (Canon alpha (S k)) (S (S k)))).
+       * eapply path_to_app with (cnf (Canon alpha (S k))).
+         -- apply H3.
+         -- rewrite MoreLists.interval_singleton.
+            ++ left.
+             ** discriminate.
+             **  simpl;  split; auto.
+                 apply limitb_not_zero ; auto with E0.
+       * auto with arith. 
+       * specialize (L_ge_S (Canon alpha (S k))).
+         intro H6; assert (Canon alpha (S k) <> Zero); auto with E0.
+       specialize (H6 H7 (S (S k))); lia.
   Qed.
 
-    
   Lemma L_ok (alpha: E0) : P alpha.
   Proof with eauto with E0.
     apply well_founded_induction with Lt ...
@@ -170,7 +183,7 @@ Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
 Proof. apply L_ok. Qed.
 
 
-(** Comparison with Hardy's function H  *)
+(** Comparaison with Hardy's function H  *)
 
 Theorem H_L_ alpha :
   forall i:nat,  (H_ alpha i <= L_ alpha (S i))%nat.

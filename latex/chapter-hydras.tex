@@ -997,7 +997,7 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
-\index{Coq!Techniques!Type classes}
+\index{Coq!Type classes}
 
 \begin{Coqsrc}
 Definition dep_round_t := nat -> Hydra -> Hydra -> Prop.
@@ -1773,7 +1773,8 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hvariant}{Hydra.Hydra\_Definitions}}
-\index{Coq!Techniques!Type classes}
+
+\index{Coq!Type classes}
 \label{sect:hvariant-def}
 
 \begin{Coqsrc}
@@ -1999,6 +2000,15 @@ Let us assume there is a variant from \texttt{Hydra} into \texttt{nat*nat} (with
   Context (Hvar : Hvariant lt2_wf free m).
 \end{Coqsrc}
 
+\label{remark-infix}
+\begin{remark}
+We use in \coq{} scripts the infix notations \verb@o<@ and \verb@o<=@ for
+the orders $<$ and $\leq$ on ordinals. This convention allows us to define
+implicit coercions from \texttt{nat} into various types for representing ordinals.
+For instance a proposition like \verb@ 6 o< 8@ will be interpreted as 
+``the finite ordinal 6 is strictly less than the finite ordinal 8'', whereas 
+\verb@ 6 o< 8@ is a statement about natural numbers. Since many lemmas talk about both ordinals and natural numbers, we wished to avoid too many scope changes inside propositions.
+\end{remark}
 
 Let us follow the same pattern as in Sect.~\ref{omega-case}.
 First, we define an injection from type \texttt{t} into \texttt{Hydra}, by

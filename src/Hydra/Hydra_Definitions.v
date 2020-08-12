@@ -334,9 +334,6 @@ Definition battle_length B k h l :=
     battle B k h  (Nat.pred (k + l)%nat) head.
 
 
-
-
-
 (** *** Uniform termination *)
 
 Definition Termination :=  well_founded (transp _ round).

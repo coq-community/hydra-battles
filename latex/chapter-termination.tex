@@ -109,7 +109,7 @@ Inductive T1 : Set  :=
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
 to a hierarchy of ordinal notations. For instance, in~\cite{CantorContrib}, the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
 
-\index{Types!T2@T2 (ordinals in Veblen normal form)}
+\index{Types!T2@T2 (ordinals terms in Veblen normal form)}
 \emph{Please look also at the library
 \href{../src/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
 
@@ -486,16 +486,18 @@ Lemma LT_one : forall alpha, alpha o< one -> alpha = zero.
   
 \subsubsection{A sigma type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
-This representation will be used in section~\ref{sect:equations} in order to define recursive functions with the plug-in \texttt{coq-equations}, and also to build an instance of the class \texttt{ON} of ordinal notations.
-
+The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. Moreover,
+in Sections~\ref{sect:equations}, \ref{sect:hardy},
+and \ref{sect:wainer}, we needed to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
+ In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
+ 
 
 \label{sect:E0-def}
 \index{Types!E0@ EO (ordinal terms below $\epsilon_0$ in normal form)} 
 
 \emph{From Module~\href{../src/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
-\index{Coq!Techniques!Type classes}
+\index{Coq!Type classes}
 
 \begin{Coqsrc}
 Class E0 : Type := t1_2o {cnf : T1; cnf_ok : nf cnf}.
@@ -642,9 +644,6 @@ if $\alpha$ is (syntactically) a limit ordinal, then it is the least upper bound
 a strictly increasing sequence of ordinals.
 
 
-
-
-
    The following function is very useful in constructions by cases (proofs and function definitions).
    
 \begin{Coqsrc}
@@ -653,6 +652,8 @@ a strictly increasing sequence of ordinals.
   (* ... *)
 Defined.
  \end{Coqsrc}
+
+
 
 \subsection{Arithmetic on \texorpdfstring{$\epsilon_0$}{epsilon0}}
 \subsubsection{Successor}
@@ -684,6 +685,11 @@ The following lemma establishes the connection between the function
   succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
 \end{Coqsrc}
 
+\index{Exercises}
+ \begin{exercise}
+Prove in \coq{} that for any ordinal $\alpha<\epsilon_0$, $\alpha$ is a limit if 
+and only if for all $\beta<\alpha$, the interval $[\beta,\alpha)$ is infinite.
+ \end{exercise}
 
 \subsubsection{Addition and multiplication}
 
@@ -1031,6 +1037,7 @@ We built an instance of \texttt{ON}, and proved its correction w.r.t. Schutte's 
 
 \begin{Coqsrc}
 Instance Epsilon0 : ON Lt compare.  
+(* ... *)
 \end{Coqsrc}
 
 

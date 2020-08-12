@@ -262,6 +262,7 @@ Instead of using the \texttt{sig} type, define a simply typed function that, giv
 
 \section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : Paths}
 \index{Maths!Accessibility inside epsilon0}
+\label{sect:pathes-intro}
 
 Let us consider a kind of accessibility problem inside $\epsilon_0$: given two ordinals $\alpha$ and $\beta$, where $\beta<\alpha<\epsilon_0$, find a \emph{path} consisting of a finite sequence $\gamma_0=\alpha,\dots,\gamma_l=\beta$,
 where, for every $i<l$, $\gamma_i \not= 0$ and there exists some strictly positive integer $s_i$
@@ -311,6 +312,7 @@ Definition transition i : relation T1 :=
 \end{Coqsrc}
 
 \index{Predicates!path\_to}
+\label{sect:path-to-def}
 
 \begin{Coqsrc}
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
@@ -492,7 +494,7 @@ proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 In the module \href{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
 
 
-\index{Coq!Techniques!Type classes}
+\index{Coq!Type classes}
 
 \begin{Coqsrc}
 Class BoundedVariant (B:Battle) :=
