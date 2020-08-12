@@ -581,13 +581,6 @@ Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
 Using these three lemmas as rewrite rules, we can prove more properties of the \texttt{L\_} family of functions, including its correctness w.r.t. the specification
 \texttt{L\_spec}.
 
-
-\begin{todo}
-The proof of \texttt{L\_alpha.L\_ok\_lim} seems to be redundant with
-\texttt{Large\_Sets.L\_lim\_ok}.  
-\end{todo}
-
-
 \begin{Coqsrc}
 Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 
