@@ -140,16 +140,14 @@ Section L_correct.
   Proof with eauto with E0.
     unfold P; intros.
     apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).
-    2: intro n; rewrite (L_lim_eqn alpha); trivial.
-    generalize L_lim_ok; intro H1; unfold L_lim in H1.
-    assert (limitb (cnf alpha)). { now destruct alpha. }
-    specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
-    apply H1; intro k;   specialize (H (CanonS alpha  k)).
-    assert  (H3: (CanonS alpha k o< alpha)%e0 ).
-    { apply CanonS_lt.
-      now apply Limit_not_Zero.
-    }
-   apply H in H3; apply L_spec_compat with (L_ (CanonS alpha k)); auto.
+    -   generalize L_lim_ok; intro H1; unfold L_lim in H1.
+       assert (H2 : limitb (cnf alpha)) by (now destruct alpha). 
+       specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
+       apply H1; intro k; specialize (H (CanonS alpha  k)).
+       assert  (H3: (CanonS alpha k o< alpha)%e0 ).
+       { apply CanonS_lt;  now apply Limit_not_Zero. }
+       apply H in H3; apply L_spec_compat with (L_ (CanonS alpha k)); auto.
+    - intro n; rewrite (L_lim_eqn alpha); trivial.
   Qed.
 
     
