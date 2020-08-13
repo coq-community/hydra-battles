@@ -76,7 +76,7 @@ Ltac lim_rw alpha := (assert (Limitb alpha) by auto with E0);
 
 (** Examples : First steps of the hierarchy *)
 
-Lemma H_Fin : forall i k : nat,  H_  i k = (i+k)%nat.
+Lemma H_Fin : forall i k : nat,  H_  (Fin i) k = (i+k)%nat.
 Proof with eauto with E0.
   induction i.
   - intros; simpl Fin; simpl; autorewrite with H_rw E0_rw ... 
@@ -675,3 +675,4 @@ Goal
   - apply H_alpha_ge_id.
 Qed.
 
+About H_Fin.

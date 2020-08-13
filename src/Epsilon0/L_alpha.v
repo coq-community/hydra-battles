@@ -71,6 +71,18 @@ Proof.
    + lia.
 Qed.
 
+Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
+Proof.
+  intro k; rewrite L_lim_eqn.
+  - replace (Canon  omega%e0 k) with (Fin k).
+    + rewrite L_finite; lia.
+    +  cbn; unfold Canon; cbn.
+       apply E0_eq_intro.
+       destruct k;  reflexivity.
+  - now cbn.
+Qed.
+
+
 Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with Lt ...
@@ -91,16 +103,7 @@ Proof  with auto with E0.
               apply IHalpha ...
 Qed.
 
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
-Proof.
-  intro k; rewrite L_lim_eqn.
-  - replace (Canon  omega%e0 k) with (Fin k).
-    + rewrite L_finite; lia.
-    +  cbn; unfold Canon; cbn.
-       apply E0_eq_intro.
-       destruct k;  reflexivity.
-  - now cbn.
-Qed.
+
 
 Lemma L_succ_ok  beta f :
   nf beta -> S <<= f -> L_spec beta f ->

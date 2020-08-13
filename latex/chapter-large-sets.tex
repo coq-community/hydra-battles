@@ -202,7 +202,7 @@ Our exploration of the $L_\alpha$s  follows the usual scheme : transfinite induc
 \index{Maths!Transfinite induction}
 
 \subsubsection{The  ordinal zero}
-
+\label{sect:L-spec-zero}
 The base case is directly a consequence of the specification.
 
 \begin{Coqsrc}
@@ -210,7 +210,7 @@ Lemma L_zero_inv f : L_spec zero f -> forall k, f (S k) = S k.
 \end{Coqsrc}
 
 \subsubsection{Successor ordinals}
-
+\label{sect:L-spec-succ}
 Let $\beta$ be some ordinal, and assume the arithmetic function $f$ satisfies 
 the specification $(\texttt{L\_spec}\;\beta)$.  Let $k$ be any natural number.
 Any path from $\texttt{succ}\,\beta$ to $0$ starting at $k+1$ can be decomposed into a first step from $\texttt{succ}\,\beta$ to $\beta$, then a path from
@@ -252,6 +252,7 @@ End succ.
 \end{Coqsrc}
 
 \subsubsection{Limit ordinals}
+\label{sect:L-spec-lim}
 
 Let $\lambda<\epsilon_0$ be any limit ordinal. In a similar way as for successors, we decompose any path from $\lambda$ (at $k$) into a step to
 $\canonseq{\lambda}{k}$, then to $0$. In the following section, we assume that there exists à correct function for $\canonseq{\lambda}{k}$, \emph{for any strictly positive $k$}.
@@ -576,24 +577,37 @@ Lemma L_lim_eqn alpha i : Limitb alpha -> L_ alpha i =
                                         L_ (Canon alpha i) (S i).
 
 Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
+
+Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 \end{Coqsrc}
 
-Using these three lemmas as rewrite rules, we can prove more properties of the \texttt{L\_} family of functions, including its correctness w.r.t. the specification
-\texttt{L\_spec}.
+Using these three lemmas as rewrite rules, we can prove more properties of the functions \texttt{L\_ $\alpha$}.
+
+\begin{Coqsrc}
+Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat.  
+(* Proof by induction on i, using L_zero_eqn and L_succ_eqn *)
+
+Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
+(* Proof using L_finite and L_lim_eqn *)
+\end{Coqsrc}
+
+By  well-founded induction on $\alpha$, we prove the following lemmas:
 
 \begin{Coqsrc}
 Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
-
 Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
 \end{Coqsrc}
+
+Please note that the proof of \texttt{L\_correct} applies the lemmas proven in Sections~\ref{sect:L-spec-zero}, ~\ref{sect:L-spec-succ} and ~\ref{sect:L-spec-lim}.
+Our previous study of \texttt{L\_spec} allowed us to pave the way for the definition by \texttt{Equations} and the correctness proof.
+
 
 
 \subsubsection{Back to Hydra battles}
 
 Theorem \texttt{battle\_length\_std } of
-Module~\href{../src/html/hydras.Hydra.Hydra_Theorems.html\#battle_length_std}{Hydra.Hydra\_Theorems} relates the length of standard battles with the functions $L\_alpha$.
+Module~\href{../src/html/hydras.Hydra.Hydra_Theorems.html\#battle_length_std}{Hydra.Hydra\_Theorems} relates the length of standard battles with the functions $L_\alpha$.
 
 \begin{Coqsrc}
 Theorem battle_length_std (alpha : E0)  :
@@ -669,11 +683,11 @@ Using rewrite rules from \texttt{H\_eq1} to \texttt{H\_eq4}, we can explore the 
 
 \subsubsection{Finite ordinals} 
 
-By induction on $i$, we prove a simple expression of \texttt{H\_ (OF i)}, where 
-\texttt{OF $i$}  is the $i$-th finite ordinal.
+By induction on $i$, we prove a simple expression of \texttt{H\_ (Fin i)}, where 
+\texttt{Fin $i$}  is the $i$-th finite ordinal.
 
 \begin{Coqsrc}
-Lemma H_Fin : forall i k: nat,  H_ i k = (i+k)%nat.
+Lemma H_Fin : forall i k: nat,  H_ (Fin i) k = (i+k)%nat.
 Proof with eauto with E0.
   induction i.
   - intros; simpl OF; simpl; autorewrite with H_rw E0_rw ... 
@@ -751,7 +765,7 @@ Qed.
 
 Our next step would be to prove an exact formula for $H_{\omega^\omega}(k)$.
 Since the canonical sequence of $\omega^\omega$ is composed of all the
-$\omega^i$, we first need to express $H_{\omega^i}$ for every natural number $i$.
+$\omega^i$, we first need to express $H_{\omega^i}$ for any natural number $i$.
 
 Let $i$ and $k$ be two natural numbers. 
 The ordinal $\canonseq{\omega^(i+1)}{k}$ is the product
@@ -802,8 +816,9 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+\subsubsection{A numerical example}
 
-t seems hard to capture the complexity of this function by looking only at this
+It seems hard to capture the complexity of this function by looking only at this
 ``exact'' formula. 
 Let us consider a simple example, the number $H_{\omega^3}(3)$.  
 
@@ -925,9 +940,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-On the contrary, the fonctions of the Hardy hierarchy have the following five properties. %%% ICI lien avec KS81
-
-For any $\alpha < \epsilon_0$,
+On the contrary, the fonctions of the Hardy hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
 \begin{itemize}
 \item the function $H_\alpha$ is strictly monotonous :
       For all $n,p \in\mathbb{N}, n < p \Rightarrow H_\alpha(n)< H_\alpha(p)$.
