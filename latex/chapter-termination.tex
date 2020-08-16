@@ -190,16 +190,16 @@ Coercion fin  : nat >-> T1.
 Example ten : T1 := 10.   
 \end{Coqsrc}
 
-\index{Coq!Techniques!Coercions}
-\index{Functions!Coercions@Coercions (from nat to ordinal types)}
-\begin{remark}
-Please refer to the remark~\pageref{waening:coercions} about the use of coercions.
-% The use of coercions like \texttt{fin} allow us to be close to the mathematical tradition where natural numbers are ordinals too.
-% Nevertheless, it may happen that a goal like \texttt{3 < 5} could be 
-% interpreted as \texttt{(lt (fin 3) (fin 5))},  depending on the current notation scope.  
-% When this misinterpretation happens, tactics like \texttt{auto with arith}, \texttt{lia} do not work!
-% Thus, it is useful to write \texttt{(3 < 5)\%nat}  an inequality between two natural numbers. 
-\end{remark}
+% \index{Coq!Techniques!Coercions}
+% \index{Functions!Coercions@Coercions (from nat to ordinal types)}
+% \begin{remark}
+% Please refer to the remark~\pageref{warning:coercions} about the use of coercions.
+% % The use of coercions like \texttt{fin} allow us to be close to the mathematical tradition where natural numbers are ordinals too.
+% % Nevertheless, it may happen that a goal like \texttt{3 < 5} could be 
+% % interpreted as \texttt{(lt (fin 3) (fin 5))},  depending on the current notation scope.  
+% % When this misinterpretation happens, tactics like \texttt{auto with arith}, \texttt{lia} do not work!
+% % Thus, it is useful to write \texttt{(3 < 5)\%nat}  an inequality between two natural numbers. 
+% \end{remark}
 
 
 \subsubsection{The ordinal \(\omega\)}
@@ -487,7 +487,7 @@ Lemma LT_one : forall alpha, alpha o< one -> alpha = zero.
 \subsubsection{A sigma type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. Moreover,
-in Sections~\ref{sect:equations}, \ref{sect:hardy},
+in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
 and \ref{sect:wainer}, we needed to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
  In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
  
@@ -564,33 +564,6 @@ Proof.  now exists omega. Defined.
 Notation "'omega'"  := _Omega : E0_scope.
 \end{Coqsrc}
 
- Likewise, we define an addition in type \texttt{E0}, using the function{T1.plus}
-and its properties.
-
-\begin{Coqsrc}
-Search   (nf (_ + _)%t1).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-plus_nf: forall a : T1, nf a -> forall b : T1, nf b -> nf (a + b)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Instance plus (alpha beta : E0) : E0.
-Proof.
-  refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
-    apply plus_nf; apply cnf_ok.
-Defined.
-
-Infix "+" := plus : E0_scope.
-
-Check omega + omega.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-omega + omega
-     : E0
-\end{Coqanswer}
 
 
 \subsection{Syntactic definition of limit and successor ordinals}
@@ -690,6 +663,7 @@ The following lemma establishes the connection between the function
 Prove in \coq{} that for any ordinal $\alpha<\epsilon_0$, $\alpha$ is a limit if 
 and only if for all $\beta<\alpha$, the interval $[\beta,\alpha)$ is infinite.
  \end{exercise}
+
 
 \subsubsection{Addition and multiplication}
 
@@ -801,6 +775,46 @@ Compute pp alpha_0.
      : ppT1
 \end{Coqanswer}
 
+\subsubsection{Arithmetic on type \texttt{E0}}
+
+ We define an addition in type \texttt{E0}, using the function{T1.plus}
+and its properties.
+
+\begin{Coqsrc}
+Search   (nf (_ + _)%t1).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+plus_nf: forall a : T1, nf a -> forall b : T1, nf b -> nf (a + b)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Instance plus (alpha beta : E0) : E0.
+Proof.
+  refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
+    apply plus_nf; apply cnf_ok.
+Defined.
+
+Infix "+" := plus : E0_scope.
+
+Check omega + omega.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+omega + omega
+     : E0
+\end{Coqanswer}
+
+\index{Exercises}
+ \begin{exercise}
+Let $\alpha$ be an ordinal. We say that $\alpha$ is \emph{infinite} iff the segment $[0,\alpha)$ is an infinite set. 
+\begin{enumerate}
+\item Adapt this definition to the type \texttt{E0}.
+\item Prove that \emph{being infinite} is decidable on type \texttt{E0}.
+\item Prove that $\alpha$ is infinite if and only if for all finite ordinal $i$,
+$i+\alpha=\alpha$.
+\end{enumerate}
+ \end{exercise}
 
 \section{Well-foundedness and transfinite induction}
 

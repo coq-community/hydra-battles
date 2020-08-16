@@ -146,7 +146,7 @@ Function L (alpha: E0) (i:nat) :  nat := ...
 But we do not know how to fill the dots yet \dots{}   In the next section, we will 
 use \coq{} to reason  about the \emph{specification} of \texttt{L},
 prove properties of any function which satisfies this specification.
-In Sect.~\ref{sect:L-equaions}, we use the \texttt{coq-equations} plug-in
+In Sect.~\ref{sect:L-equations}, we use the \texttt{coq-equations} plug-in
 to define a function \texttt{L\_}, and prove its correctness w.r.t. its specification.
 
 
@@ -631,11 +631,11 @@ total arithmetic function, defined  by  transfinite recursion on $\alpha$, accor
 \index{Maths!Transfinite induction}
 
 \begin{itemize}
-\item If $\alpha=0$, then $\H_\alpha (k)= k$ for any natural number $k$.
+\item If $\alpha=0$, then $H_\alpha (k)= k$ for any natural number $k$.
 \item If $\alpha=\textrm{succ}(\beta)$, then 
 $H_\alpha(k)=H_\beta(k+1)$ for any $k \in \mathbb{N}$
 \item If $\alpha$ is a limit ordinal, then 
-$\H_\alpha(k) = H_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
+$H_\alpha(k) = H_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
 \end{itemize}
 
 \subsection{Hardy functions in \texttt{Coq}}

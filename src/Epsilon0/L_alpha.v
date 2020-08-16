@@ -192,3 +192,6 @@ Qed.
 
 
 
+Require Import Extraction.
+
+Recursive Extraction L_.
