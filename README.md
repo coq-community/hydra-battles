@@ -42,7 +42,7 @@ _All of the Coq scripts and latex files in this project are available under the 
 
 ### Installation
 
-- Just do **make** in the top directory (tested with Coq 8.11.0 and lualatex).
+- Just do **make** in the top directory (tested with Coq 8.12.0, coq-equations and lualatex).
  
 
 
