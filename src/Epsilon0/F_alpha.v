@@ -627,10 +627,10 @@ Section Proposition_page_284.
   Lemma Propp284_0 : forall n, Canon_plus (S n) alpha beta ->
                              forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
-    assert (Le (Succ beta) alpha) by (now apply Lt_le).
+    assert (Le (Succ beta) alpha) by (now apply Lt_succ_le).
     assert ({alpha = Succ beta}+{Lt (Succ beta) alpha}). {
       rewrite <- lt_Succ_inv in H.
-      apply Lt_le in H; destruct (E0.le_lt_eq_dec  H); auto.
+      apply Lt_succ_le in H; destruct (E0.le_lt_eq_dec  H); auto.
     }
     destruct H0.
     - intros; apply F2; [trivial | lia].

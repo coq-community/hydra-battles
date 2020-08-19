@@ -468,13 +468,11 @@ Definition succ (alpha : t) :=
 
 
 \begin{Coqsrc}
-Lemma Successor_succ alpha : Successor (succ alpha) alpha.
-
 Lemma Successor_correct alpha beta : Successor beta alpha <->
                                      beta = succ alpha.
 \end{Coqsrc}
 
-We can also check whether an ordinal is a successor:
+We can also check whether an ordinal is a successor by a simple pattern matching:
 
 \begin{Coqsrc}
 Definition succb (alpha: t) := match alpha with
@@ -482,7 +480,8 @@ Definition succb (alpha: t) := match alpha with
                                  | _ => false
                                  end.
 
-Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+Lemma succb_correct (alpha : t) :
+    succb alpha <->  exists beta: t,   alpha = succ beta.
 \end{Coqsrc}
 
 
@@ -579,7 +578,6 @@ Instance Epsilon0_correct :
 
 Let $n$ be some natural number. The segment associated with $n$ is the interval 
 $[0,n)\,=\,\{0,1,\dots,n-1\}$. 
-
 One may represent the ordinal $n$ by a sigma type.
 
 
@@ -590,10 +588,10 @@ One may represent the ordinal $n$ by a sigma type.
 \begin{Coqsrc}
 Coercion is_true: bool >-> Sortclass.
 
-Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
+Definition t (n:nat) := {i:nat | Nat.ltb i n}.
 \end{Coqsrc}
 
-The order on type \texttt{t $n$} is defined through the projection on \texttt{nat}.
+The order on type (\texttt{t $n$}) is defined through the projection on \texttt{nat}.
 
 
 \begin{Coqsrc}
@@ -643,8 +641,8 @@ Proof.   now compute. Qed.
 
 
 
-Note that the type \texttt{t 0} is empty, and that \texttt{Program} generates an obligation
-for verifying that the constraint $i<n$ is fullfilled when one tries to build the $i$-th ordinal in type \texttt{t $n$}.
+Note that the type (\texttt{t 0}) is empty, and that \texttt{Program} generates an obligation
+for verifying that the constraint $i<n$ is fullfilled when one tries to build the $i$-th ordinal inside the type (\texttt{t $n$}).
 
 \begin{Coqsrc}
 Lemma t0_empty (alpha: t 0): False.

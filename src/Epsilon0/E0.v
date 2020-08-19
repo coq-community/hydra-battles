@@ -26,12 +26,14 @@ Open Scope E0_scope.
 
 (** * Definitions *)
 
+
 Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
 Hint Resolve cnf_ok : E0.
 
+(** ** Lifting functions from [T1] to [E0] *)
 
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
@@ -83,7 +85,6 @@ Defined.
 
 Infix "+" := plus : E0_scope.
 
-Check omega + omega.
 
 Instance Phi0 (alpha: E0) : E0.
 Proof.
@@ -277,14 +278,12 @@ Definition compare (alpha beta:E0): comparison :=
 Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (alpha o< beta) (beta o< alpha)
               (compare alpha beta).
- destruct alpha, beta; unfold compare, Lt; cbn.
-destruct (T1.compare_correct cnf0 cnf1).
- constructor 1.
-apply E0_eq_intro.
- subst; reflexivity. 
- constructor.
- split; auto.
-constructor; split;auto.
+Proof.
+  destruct alpha, beta; unfold compare, Lt; cbn;
+    destruct (T1.compare_correct cnf0 cnf1).
+  -   constructor 1;  apply E0_eq_intro;  subst; reflexivity. 
+  -   constructor; now split.
+  -  constructor; split; auto.
 Qed.
 
 Lemma Lt_wf : well_founded Lt.
@@ -292,18 +291,12 @@ Proof.
   split; intros [t Ht] H;
     apply (Acc_inverse_image _ _ LT (@cnf) 
                              {| cnf := t; cnf_ok := Ht |} );
-  now   apply T1.nf_Acc. 
+    now   apply T1.nf_Acc. 
 Defined.
 
 Hint Resolve Lt_wf : E0.
 
-(** TO do:  Study relationship Limitb / Limit in T1 *)
-
-
-
-
-
-Lemma Lt_le : forall alpha beta,  beta o< alpha -> Succ beta o<= alpha.
+Lemma Lt_succ_le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
   destruct alpha, beta;simpl in *;  unfold le, Lt;simpl.
   intro. split; auto.
@@ -315,9 +308,9 @@ Qed.
 
 
 
-Lemma Pred_of_Succ:  forall alpha, Pred (Succ alpha) = alpha.
+Lemma Pred_of_Succ (alpha:E0) : Pred (Succ alpha) = alpha.
 Proof.
-  unfold Pred; intro alpha; destruct (Zero_Limit_Succ_dec (Succ alpha)).
+  unfold Pred; destruct (Zero_Limit_Succ_dec (Succ alpha)).
   destruct s.
   - unfold Succ, Zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
@@ -325,8 +318,7 @@ Proof.
        destruct (@T1.limitb_succ (cnf alpha)); auto.
         destruct alpha; simpl; auto. 
   -  destruct s.
-    { unfold Succ in e.
-      injection e.
+    { unfold Succ in e;  injection e.
       destruct alpha, x;simpl; intros; apply T1.succ_injective in H; auto.
       -  subst; replace cnf_ok1 with cnf_ok0; trivial.
          eapply nf_proof_unicity.
@@ -335,7 +327,7 @@ Qed.
 
 Hint Rewrite Pred_of_Succ: E0_rw.
 
-Lemma  Pred_Lt alpha : alpha <> Zero  ->  Limitb alpha = false ->
+Lemma  Pred_Lt (alpha : E0) : alpha <> Zero  ->  Limitb alpha = false ->
                        Pred alpha o< alpha.
 Proof.
   unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
@@ -350,8 +342,7 @@ Qed.
 Hint Resolve Pred_Lt : E0.
 
 
-
-Lemma Succ_succb : forall alpha, Succb (Succ alpha).
+Lemma Succ_succb (alpha : E0) : Succb (Succ alpha).
 destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
 Qed.
 
@@ -361,18 +352,13 @@ Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
 
 
-
-
 Lemma FinS_eq i : FinS i = Fin (S i).
 Proof. reflexivity. Qed.
 
-Lemma mult_fin_rw alpha (i:nat) : (alpha *  i)%e0 = Mult_i alpha i.
+Lemma mult_fin_rw alpha (i:nat) : alpha * i = Mult_i alpha i.
 Proof.
- orefl;cbn; f_equal; now destruct i.
+ orefl; cbn; f_equal; now destruct i.
  Qed.
-
-
-
 
 
 Lemma FinS_Succ_eq : forall i, FinS i = Succ (Fin i).
@@ -392,13 +378,12 @@ Qed.
 Lemma Succ_not_Zero alpha:  Succb alpha -> alpha <> Zero.
 Proof.
   destruct alpha;unfold Succb, Zero; cbn.
-  intros H H0.
-  injection H0; intro;subst; discriminate H.
+  intros H H0; injection H0; intro;subst; discriminate H.
 Qed.
 
 Lemma Lt_Succ : forall alpha, Lt alpha (Succ alpha).
 Proof.
-  destruct  alpha; unfold lt, Succ. simpl; apply LT_succ;auto.
+  destruct  alpha; unfold lt, Succ; cbn; apply LT_succ;auto.
 Qed.
 
 

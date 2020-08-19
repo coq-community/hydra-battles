@@ -967,12 +967,8 @@ Lemma oplus_lt_phi0 : forall a b c,  nf a -> nf b -> nf c ->
                                      T1.lt a c -> T1.lt b c ->
                                      T1.lt (phi0 a o+ phi0 b) (phi0 c).
 Proof.
-  intros.
-(*   unfold phi0; *)
-    rewrite oplus_cons_cons.
-  case_eq (compare a b).
-  rewrite oplus_alpha_0.
-  simpl.
-  all: intros;  apply head_lt; eauto with T1.
+  intros;  rewrite oplus_cons_cons; case_eq (compare a b).
+   rewrite oplus_alpha_0; cbn.
+   all: intros;  apply head_lt; eauto with T1.
 Qed.
 

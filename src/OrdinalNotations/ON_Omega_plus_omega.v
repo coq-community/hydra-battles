@@ -81,25 +81,23 @@ Proof.
   inversion_clear H.
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
-  elimtype False.
-  assert (inl i o< inl (S i)) by (constructor; auto).
-  assert (inl (S i) o< inl j) by (constructor; auto).
-  specialize (H0 (inl (S i)) H2 H3).
-  destruct H0.
+  elimtype False. {
+    assert (H2: inl i o< inl (S i)) by (constructor; auto).
+    assert (H3: inl (S i) o< inl j) by (constructor; auto).
+    apply (H0 (inl (S i)) H2 H3). }
 Qed.
 
 Lemma Successor_inv2 : forall i j, Successor (inr j) (inr i) -> j = S i. 
 Proof.
   destruct 1 as [H H0].
   inversion_clear H.
-  
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
-   elimtype False.
-     specialize (H0 (inr (S i))).
- assert (inr i o< inr (S i)) by (constructor; auto).
-  assert (inr (S i) o< inr j) by (constructor; auto).
-  specialize (H0 H2 H3); inversion H0.
+  elimtype False. {
+    specialize (H0 (inr (S i))).
+    assert (H2 :inr i o< inr (S i)) by (constructor; auto).
+    assert (H3 :inr (S i) o< inr j) by (constructor; auto).
+    apply (H0 H2 H3).  }
 Qed.
 
 Lemma Successor_inv3 : forall i j, ~ Successor (inr j) (inl i).
@@ -159,7 +157,8 @@ Definition succb (alpha: t) := match alpha with
                                  | _ => false
                                  end.
 
-Lemma succb_correct alpha : succb alpha <-> exists beta,  alpha = succ beta.
+Lemma succb_correct (alpha: t) :
+  succb alpha <-> exists beta: t, alpha = succ beta.
 Proof.
   destruct alpha; split.
   - destruct n.
@@ -303,37 +302,28 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
   - destruct 1 as [n0 e]; inversion e.
  Qed.
 
-Lemma Omega_as_lub  :
-  forall alpha, 
-    (forall i,  fin i o< alpha) <-> omega o<= alpha.
-Proof.
-  Locate compare_correct.
-  intro alpha; destruct (Definitions.compare_correct  omega alpha).
-  - subst.
-    split.
-    right.
-    intros; constructor.
- -  split.
-     intro H0.
-      destruct alpha.
-      specialize (H0 n).
-      inversion H0.
-      lia.
-      destruct n.
-      right.
-      left;constructor. auto with arith.
-            
-        inversion 1.
-       inversion H1.  constructor.      
-      subst; constructor.
- - rewrite (lt_omega alpha) in H.
-   destruct H as [n Hn]; subst.
-  split.
-   intro H; generalize (H n).
- intro; elimtype False. inversion H0. lia.
-  inversion 1.
-  inversion H0.
-Qed.
+ Lemma Omega_as_lub  :
+   forall alpha, 
+     (forall i,  fin i o< alpha) <-> omega o<= alpha.
+ Proof.
+   intro alpha; destruct (Definitions.compare_correct  omega alpha).
+   - subst;split.
+     +  right.
+     + intros; constructor.
+   -  split.
+      + intro H0; destruct alpha as [n | n].
+        *  specialize (H0 n); inversion H0; lia.
+        *  destruct n.
+           -- right.
+           -- left;constructor; auto with arith.
+      +  inversion 1.
+         * inversion H1; constructor.      
+         *  subst; constructor.
+   - rewrite (lt_omega alpha) in H; destruct H as [n Hn]; subst; split.
+     +  intro H; generalize (H n).
+        intro; elimtype False. { inversion H0. lia. }
+     + inversion 1;  inversion H0.
+ Qed.
 
 Instance Incl : SubON Omega Omega_plus_Omega omega fin.
 split.
