@@ -55,7 +55,6 @@ Qed.
 
 Print Assumptions Variant_lt_standard.
 
-
 (** ** Impossibility theorems 
 
   Termination of free battles cannot be proven with a variant from hydras into a segment $[0, alpha]$ with $alpha < \_epsilon0$ 

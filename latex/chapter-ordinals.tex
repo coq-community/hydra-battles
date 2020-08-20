@@ -696,7 +696,7 @@ Lemma compare_correct {n} (alpha beta : t n) :
 \end{Coqsrc}
 
 \begin{remark}
- The proof of \texttt{compare\_correct} uses a well-know pattern of \coq{}.
+ The proof of \texttt{compare\_correct} uses a well-known pattern of \coq{}.
 Let us consider  the following subgoal.
 
 \begin{Coqanswer}
@@ -720,9 +720,7 @@ Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
   i = i0
 \end{Coqanswer}
 
-We have now to prove that two proofs of \texttt{Nat.ltb x0 (S n)} are equal.
-
-This is not obvious, but  a consequence of the following lemma of library 
+We have now to prove that there exists at most one  proof of \texttt{Nat.ltb x0 (S n)}. This is not obvious, but  a consequence of the following lemma of library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
 
 \index{Coq!Techniques!Unicity of equality proofs}
@@ -735,9 +733,7 @@ forall (A : Type) (x : A),
 
 Thus unicity of proofs of \texttt{Nat.ltb x0 (S n)}  comes from the decidability of
 equality on type \texttt{bool}.
-
 This is why we used the boolean function \texttt{Nat.ltb} instead of the inductive predicate \texttt{Nat.lt} in the definition of type \texttt{t $n$} (see page~\pageref{def: Finite-ord-type}).
-
 For more information about this pattern, please look at the numerous mailing lists and 
 FAQs on \coq{}).
 
@@ -748,7 +744,7 @@ FAQs on \coq{}).
 
 Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image}, \linebreak
  \texttt{Coq.Wellfounded.Inclusion}, and \texttt{Coq.Arith.Wf\_nat}, we prove that our
-relation \texttt{wf} is well founded.
+relation \texttt{lt} is well founded.
 
 \begin{Coqsrc}
 Lemma lt_wf (n:nat) : well_founded (@lt n).
@@ -782,9 +778,9 @@ Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
 
 
 Finally, it is interesting to show that, if $i<j$, then the segment $[0,i)$ is a ``sub-segment'' of
-$[0,j)$. Since the terms  $t\;i$ and $t\;j$ are not convertible, we consider a ``cast'' 
-function $\iota$ from $t\;i$ to $t\;j$, and prove this function is  a bijection  from $t\;i$ to
-the segment $[0,i)$ of $t\;j$.
+$[0,j)$. Since the terms  ($t\;i$) and ($t\;j$) are not convertible, we consider a ``cast'' 
+function $\iota$ from ($t\;i$) into ($t\;j$), and prove that this function is  a monotonous bijection  from ($t\;i$) to
+the segment $[0,i)$ of ($t\;j$).
 
 
 
@@ -870,8 +866,8 @@ Class  ON_Iso
        (f : A -> B)
        (g : B -> A):=
   {
-  iso_compare: forall x y : A,  compareB (f x) (f y) =
-                                 compareA x y;
+  iso_compare: forall x y : A, 
+      compareB (f x) (f y) = compareA x y;
   iso_inv1 : forall a, g (f a)= a;
   iso_inv2 : forall b, f (g b) = b}.
 \end{Coqsrc}

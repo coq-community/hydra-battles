@@ -1,13 +1,19 @@
-(** injection from ordinals in CNF into hydras 
+(** Injection from ordinals (less than epsilon0) in CNF into hydras.
+
+ Pierre Castéran, LaBRI and Univ. Bordeaux 
 
 
- Pierre Castéran, LaBRI and Univ. Bordeaux *)
+We define a function [iota : T1 -> Hydra] such that if [alpha < beta], then there exists a battle from [iota beta] to [iota alpha].
+
+Note that [iota] is not a bijection, but is sufficient for proving 
+impossibility lemmas or minoration of battle lengths (see Hydra_Theorems).
+*)
 
 Require Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators .
 Import Hydra_Definitions.
 
 (** Let us transform any ordinal notation into an hydra *)
-
+ 
 Fixpoint iota (alpha : T1) : Hydra :=
   match alpha with
   | zero => head
@@ -75,8 +81,6 @@ Lemma iota_succ_round_n : forall  i alpha,
 Proof.
    left;  now apply iota_succ_R1.
 Qed.
-
-
 
 
 Lemma iota_succ_round : forall  o, nf o -> iota (T1.succ o) -1-> iota o.
