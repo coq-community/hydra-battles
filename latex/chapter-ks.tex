@@ -1040,36 +1040,14 @@ This step of the proof is illustrated in figure~\vref{fig:belle-preuve-2}.
 from  
 $\alpha$ to $\beta$ with successive indices  $n+1, n+2, \dots, n+l+1$
 
-\item Otherwise,  $\beta < \gamma$.  Let us consider  $\delta=\canonseq{\gamma}{n+l+2}$.
+\item Otherwise,  $\beta < \gamma$.  Let us consider  $\delta=\canonseq{\gamma}{n+l+1}$.
 By applying several times lemma \texttt{Cor12},  one converts  every path of Fig~\ref{fig:belle-preuve-2} into
  a $n+l+1$-path  (see figure~\ref{fig:belle-preuve-3}).
 
 
 But $\gamma$ is on the $n+l+1$-path from $\alpha$ to $\beta$.
-As shown by figure~\vref{fig:fin-belle-preuve}), the ordinal $\delta$, reachable from
+As shown by figure~\vref{fig:fin-belle-preuve}, the ordinal $\delta$, reachable from
 $\gamma$ in one single step,  must be greater than or equal to $\beta$, which contradicts our  hypothesis $\beta < \gamma$.
-
-
-
-
-
-\end{itemize}
- The only remaining case is  $\beta=\gamma$, thus we have got a standard path
-from $\alpha$ to $\beta$.
-
-
-\begin{Coqsrc}
- Lemma constant_to_standard_0 : 
-    {l : nat | standard_fun (S n) alpha l = beta}.
- 
-End Constant_to_standard_Proof.
-
-
-Lemma constant_to_standard_path 
-  (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  o< alpha ->
-  {j:nat | standard_path (S i) alpha j beta}.
-\end{Coqsrc}
 
 
 \begin{figure}[h]
@@ -1130,6 +1108,30 @@ Lemma constant_to_standard_path
 \caption{A nice proof (4)}
   \label{fig:fin-belle-preuve}
 \end{figure}
+
+
+\end{itemize}
+ The only possible case is  thus $\beta=\gamma$, so we have got a standard path  from $\alpha$ to $\beta$.
+
+
+\begin{Coqsrc}
+ Lemma constant_to_standard_0 : 
+    {l : nat | standard_fun (S n) alpha l = beta}.
+ 
+End Constant_to_standard_Proof.
+\end{Coqsrc}
+
+Here is the full statement of the conversion from constant to standard paths.
+
+\begin{Coqsrc}
+Lemma constant_to_standard_path 
+  (alpha beta : T1) (i : nat):
+  nf alpha -> const_pathS i alpha beta -> zero  o< alpha ->
+  {j:nat | standard_path (S i) alpha j beta}.
+\end{Coqsrc}
+
+
+
 
 Applying \texttt{Lemma2\_6\_1} and \texttt{constant\_to\_standard\_path}, we get the following corollary.
 
@@ -1197,7 +1199,7 @@ Lemma m_lt : m small_h  o< m big_h.
 \paragraph*{Sketch of proof:} Let us recall that $\texttt{big\_h} = \iota(\mu)$
  and $\texttt{small\_h} = \iota (m (\texttt{big\_h}))$.
 
-Since $m(\texttt{big\_h })< \mu$, there exists a standard path from $\mu$ to
+Since $m(\texttt{big\_h})< \mu$, there exists a standard path from $\mu$ to
 $m(\texttt{big\_h})$, hence a   standard battle from $\iota(\mu)$  to
 $\iota(m(\texttt{big\_h}))$,  i.e. from \texttt{big\_h} to \texttt{small\_h}.
 
