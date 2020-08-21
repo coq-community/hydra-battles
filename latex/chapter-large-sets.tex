@@ -618,6 +618,11 @@ Theorem battle_length_std (alpha : E0)  :
 \end{Coqsrc}
 
 
+\index{Projects}
+\begin{project}
+Instead of considering standard paths and battles, consider ``constant'' paths and the corresponding battles. Please use \texttt{Equations} in order to define the function that computes the length of the $k$-path which leads  from $\alpha$ to $0$.
+Prove a few  exact formulas and minoration lemmas.
+\end{project}
 
 \section{The Wainer-Hardy hierarchy}
 \label{sect:hardy}
@@ -1003,6 +1008,8 @@ Theorem battle_length_std_Hardy (alpha : E0) :
        H_ alpha k - k <= l /\
        battle_length standard k (iota (cnf alpha)) l.    
 \end{Coqsrc}
+
+
 
 \section{The Wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
 \label{sect:wainer}
