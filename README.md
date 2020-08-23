@@ -5,10 +5,13 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 
 _All of the Coq scripts and latex files in this project are available under the [CeCILL-B license](https://cecill.info/licences/Licence_CeCILL-B_V1-en.html)_.
 
+##  Installation
+-  the general Makefile is in the top directory 
+
 ##   Contents
 
 ### Documentation
-- latex/hydras.tex
+- latex/hydras.pdf  
 
 ###  coqdoc html files
  - directory src/html
@@ -40,9 +43,6 @@ _All of the Coq scripts and latex files in this project are available under the 
 - src/Prelude/*.v
   - Various auxiliary definitions and lemmas
 
-### Installation
-
-- Just do **make** in the top directory (tested with Coq 8.12.0, coq-equations and lualatex).
  
 
 
