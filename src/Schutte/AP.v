@@ -4,6 +4,7 @@
 
 (** Pierre Casteran, LaBRI, Universite de Bordeaux *)
 
+  
 (**
 
 In this library, we define the exponential of basis omega, also called [phi0].
@@ -276,7 +277,7 @@ Section AP_Unbounded.
             *  apply seq_range_countable;auto.
             *  intro; split.
          +  intros y [z [H1 H2]]; subst y.
-            destruct H1 as [x H2];  subst z; apply ksi_plus_seq_n'.
+            destruct H1 as [x [_ H2]];  subst z; apply ksi_plus_seq_n'.
       - now exists (seq 0), 0.
       -  eauto with schutte.
     Qed.
@@ -633,7 +634,7 @@ Proof.
   { exists (fun alpha i =>  alpha = omega_tower i).
     split.
     -  red; destruct 1 as [x [H H0]].
-       destruct H as [i H];  exists (S i);
+       destruct H as [i [_ H]];   exists (S i);
          cbn; rewrite H; auto.
     - red;  destruct 1;  destruct H;  split. 
     -  red; intros; congruence.
@@ -642,17 +643,17 @@ Proof.
   { apply Countable.seq_range_countable. }
   -  apply le_antisym.
      +  apply sup_mono; trivial.
-        * destruct 1 as [x0 [[i H] H0]].
+        * destruct 1 as [x0 [[i [_ H]] H0]].
           exists (phi0 x0); split.
-          {  exists (S i); simpl; auto ; now f_equal. }
+          {  exists (S i); split; auto; simpl; auto ; now f_equal. }
           left; auto.
      + apply sup_mono; trivial.
        intros alpha [i H];  exists (phi0 alpha); split; auto.
        exists alpha; split; auto.
-       * now  exists i; auto.
-                     * apply le_phi0.
-                     - exists (phi0 zero), 0; simpl; rewrite phi0_zero; trivial.
-                     - apply Countable.seq_range_countable.
+       * exists i; auto.
+       * apply le_phi0.
+  - exists (phi0 zero), 0; simpl; rewrite phi0_zero; split; auto. 
+  - apply Countable.seq_range_countable.
 Qed.
 
 

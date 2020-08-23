@@ -779,6 +779,12 @@ Qed.
 
 Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
 
+
+Lemma In_full {A:Type} (a:A) : In (Full_set A ) a.
+Proof. split. Qed.
+
+Hint Resolve In_full: core.
+
 Lemma lt_omega_limit (s : nat -> Ord) :
   seq_mono s -> forall i, s i <  omega_limit s.
 Proof.
@@ -786,7 +792,7 @@ Proof.
   apply lt_le_trans with (s (S i)).
   -  eapply H;  auto.
   -  apply sup_upper_bound;auto with schutte.
-     exists (S i);auto.
+     exists (S i);split;auto.
 Qed.
 
 
@@ -796,9 +802,9 @@ Lemma omega_limit_least (s : nat -> Ord) :
       (forall i, s i < y) ->
       omega_limit s <=  y.
 Proof.
-  intros  H y  H1;
+  intros  H y  H1.
   unfold omega_limit;apply sup_least_upper_bound;auto with schutte.
-  intro y0; destruct 1;  subst y0;auto.
+  intro y0; destruct 1 as [x [_ e]]; subst y0;auto.
   right; auto. 
 Qed.
 
@@ -811,7 +817,7 @@ Proof.
   intros H H0;  unfold omega_limit in H0.
   assert (exists y, In (seq_range s) y /\ alpha <  y).
   apply lt_sup_exists_lt; auto with schutte.
-  destruct H1 as [y [[j Hj] H'y]]; subst y; now exists j.
+  destruct H1 as [y [[j [_ Hj]] H'y]]; subst y; now exists j.
 Qed.
 
 
@@ -851,7 +857,7 @@ Proof.
   generalize (H H1);clear H;intros.
   generalize (H _ H0);clear H;intros.
   destruct H as [x [H2 H3]].
-  destruct H2 as [x0 e]; subst x.
+  destruct H2 as [x0 [_ e]].  subst x.
   destruct (le_disj H3).
   -  exists x0; auto.
   - destruct  (finite_lt_inv x0 H);auto.
@@ -957,7 +963,7 @@ Proof.
   unfold Same_set;split;
       red; unfold members, In.
   - intros x Hx; case (lt_omega_finite  Hx); intros x0; exists x0; auto.
-  -   destruct 1 as [n Hn];   subst ;auto with schutte.
+  -   destruct 1 as [n [_ Hn]];   subst ;auto with schutte.
       apply finite_lt_omega.
 Qed.
 

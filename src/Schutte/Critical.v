@@ -294,8 +294,8 @@ Section Proof_of_Lemma5.
           intro n; apply le_trans with (gamma_ (S n)).        
           cbn; apply sup_upper_bound.
           generalize (@countable_image _ _
-                                       (fun x =>  phi x (gamma_ n))
-                                       (members alpha)).
+                                       (members alpha)
+                                       (fun x =>  phi x (gamma_ n))).
           intros H;
             apply countable_inclusion with
                 (image (members alpha)
@@ -318,7 +318,7 @@ Section Proof_of_Lemma5.
         {
           apply sup_least_upper_bound.
           apply seq_range_countable.
-          intros y [n Hn].
+          intros y [n [_ Hn]].
           subst;  apply H.
         }
 
@@ -347,7 +347,7 @@ Section Proof_of_Lemma5.
              apply countable_image.
              apply seq_range_countable.
              intros y [x [H4 H5]].
-             destruct H4; subst x y; apply H.
+             destruct H4 as [z [_ H6]].  subst x y; apply H.
           -  split.
           -  exists (gamma_ 0), 0;auto. 
           -  apply seq_range_countable.

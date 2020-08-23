@@ -287,8 +287,8 @@ Proof.
           intros n e; exists (F (S n)).
           subst x; split;auto with schutte.
           exists (S n); trivial.
-          subst a.
-        left;  now rewrite <- plus_FF . 
+          subst a. split;auto.
+        subst a. left;  now rewrite <- plus_FF . 
   + unfold omega_limit; apply sup_mono.
   *    apply seq_range_countable; auto with schutte.
   *  simpl; auto with schutte.
@@ -296,7 +296,7 @@ Proof.
      apply plus_ordering; auto with schutte.
      apply countable_members; auto with schutte.
      red; split. 
-  *  intros x Hx;case Hx; intros x0 H0;subst x.
+  *  intros x [x0 [_ Hx]]; subst x.
      exists (F (S x0));split;auto with schutte.
      exists (F x0);split;auto with schutte.
      red;  red;  apply finite_lt_omega.
