@@ -50,8 +50,12 @@ is the full set over the type \texttt{Ord}.
 
 \index{Types!Ord@Ord (countable ordinals)}
 
+We use Florian Hatat's library on countable sets, written as he was a student of  \emph{\'Ecole Normale Supérieure de Lyon}. A set $A$ is countable if there is an injective function from $A$ to $\mathbb{N}$ (see 
+Library \href{../src/html/hydras.Schutte.Countable.html}%
+{\texttt{Schutte.Countable}}).
 
-\vspace{4pt}
+
+\vspace{6pt}
 
 \emph{From Module\href{../src/html/hydras.Schutte.Schutte_basics.html}%
 {\texttt{Schutte.Schutte\_basics}}}
@@ -92,7 +96,9 @@ Class WO : Type:=
 \end{Coqsrc}
 
 The second and third axioms say that a subset $X$ of $\mathbb{O}$ is
-(strictly) bounded if and only if it is countable. We use Florian Hatat's library on countable sets, written as he was a student of  \emph{\'Ecole Normale Supérieure de Lyon}.
+(strictly) bounded if and only if it is countable. 
+
+
 
 \begin{Coqsrc}
 Axiom AX2 : forall X: Ensemble Ord, 
@@ -1215,7 +1221,13 @@ Nevertheless, the other modules:
 {\texttt{Gamma0}}
 do not import any axioms and are really constructive.
 
-
+\index{Projects}
+\begin{project}
+There is no construction of ordinal multiplication in~\cite{schutte}. 
+It would be interesting to derive this operation from Schütte's axioms,
+and prove its consistence with multiplication in ordinal notations for 
+$\epsilon_0$ and $\Gamma_0$.
+\end{project}
 
 \section{Related work}
 
