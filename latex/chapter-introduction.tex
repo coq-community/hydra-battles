@@ -71,15 +71,18 @@ will show how \coq{} and its standard library are well fitted to help us to unde
 
 
 
-\subsection*{Remarks}
+\section{Remarks}
+
+\subsection{Difference from Kirby and Paris's work}
 In~\cite{KP82}, Kirby and Paris showed  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
 Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chosed to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers upto $\epsilon_0$.
 
-
+\subsection{Trust in our proofs?}
+\label{sect:trust-in-proofs}
 
 Unlike mathematical literature, where definitions and proofs are spread over many articles and books,
 the whole proof is now inside your computer. It is composed of the \texttt{.v} files you downloaded and 
-parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favourite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate}, \texttt{Print Assumptions}, etc.
+parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favourite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
 
 Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation of the set of countable ordinal numbers, all our development is axiom-free, and respects the rules of intuitionistic logic. Note that we also use the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777} for defining several rapidly growing hierarchy of functions, in Chap.~\ref{chap:alpha-large}. This plug-in imports the known-as-harmless following axiom:
 
@@ -89,9 +92,34 @@ forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
 (forall x : A, f x = g x) -> f = g
 \end{Coqsrc}
 
+\index{Coq!Commands!Print Assumptions}
 
+At any place of our development, you may use the command \texttt{Print Assumptions {\it ident}} in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
+Library~\href{../src/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, we uses the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
 
-\paragraph*{Main references}
+\begin{Coqsrc}
+About F_zero_eqn.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+F_zero_eqn : forall i : nat, F_ Zero i = S i
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Print Assumptions F_zero_eqn. 
+\end{Coqsrc}
+
+\begin{Coqanswer}
+Axioms:
+FunctionalExtensionality.functional_extensionality_dep
+  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
+    (forall x : A, f x = g x) -> f = g
+Eqdep.Eq_rect_eq.eq_rect_eq
+  : forall (U : Type) (p : U) (Q : U -> Type) (x : Q p) (h : p = p),
+    x = eq_rect p Q x p h
+\end{Coqanswer}
+
+\subsection{Main references}
 
 In our development, we adapt the definitions and prove many theorems which
 we found in the following articles. 
@@ -104,7 +132,7 @@ we found in the following articles.
 
 
 
-\subsubsection*{Structure of this document}
+\subsection{Structure of this document}
 \begin{itemize}
 \item Whenever several implementations are possible, we will discuss the pros and cons of every possible choice
 \item Most of the proofs we present are \emph{constructive}. Whenever possible, we provide the user with an associated function, which she or he can apply in \gallina{} or \ocaml{} in order to get a ``concrete'' feeling of the meaning of the considered theorem.
@@ -129,7 +157,7 @@ This document is \emph{not} an introductory text for \coq{}, and there are many 
  The reader should already have some basic experience with the \coq{} system. The Reference Manual and several tutorials are available on \coq{} page~\cite{Coq}.  First chapters of textbooks like \emph{Interactive Theorem Proving and Program Development}~\cite{BC04}, \emph{Software Foundations}~\cite{SF} or  \emph{Certified Programming with Dependent Types} ~\cite{chlipalacpdt2011} will give you the right background. 
 
 
-\subsubsection*{State of the development}
+\subsection{State of the development}
 The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on ordinal notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
 We added new material : axiomatic definition of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, equations, etc.
 
@@ -138,7 +166,7 @@ to ``factorize'' proofs as much as possible.
 
 Many ``todo''s or projects are put in this text, suggesting possible improvements.
 
-\subsubsection*{Contributions}
+\subsection{Contributions}
 Many thanks to \'Evelyne Contejean and Florian Hatat for their contribution. \'Evelyne contributed libraries on the recusrive path ordering (\emph{rpo}) for proving the well-foundedness of our representation of $\epsilon_0$ and $\Gamma_0$.
 Florian Hatat proved many useful lemmas on countable sets, which we used in our adaptation of Schütte's formalization of countable ordinals.
 
@@ -153,7 +181,7 @@ Please do not hesitate to bring your contribution!
 
 
 
-\subsubsection*{Acknowledgements}
+\subsection*{Acknowledgements}
 \label{sec:orgheadline5}
     Many thanks to David Ilcinkas, Sylvain Salvati, Alan Schmitt and Théo Zimmerman for their help on the elaboration of this document, and to the
  members of the \emph{Formal Methods} team at laBRI for their helpful comments 
@@ -165,7 +193,7 @@ The author of the present document wishes to express his gratitude to the late P
 
 I owe my interest in discrete mathematics and their relation to formal proofs and functional programming  to Srecko Brlek.  Equally, there is W. H. Burge's book ``\emph{Recursive Programming Techniques}'' ~\cite{burge} which was a great  source of inspiration.
 
-\subsection*{Typographical conventions}
+\subsection{Typographical conventions}
 
 Quotations from our  \coq{} source are displayed as follows:
 
@@ -198,7 +226,7 @@ with a different background color.
 Qed.
  \end{Coqsrc}
 
-\subsection*{Alternative or bad definitions}
+\subsection{Alternative or bad definitions}
 
 Finally, we decided to include definitions or lemma statements, as well as tactics,  that lead to
 dead-ends or to too complex developments, with the following coloring.

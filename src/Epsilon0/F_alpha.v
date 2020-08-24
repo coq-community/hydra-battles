@@ -88,6 +88,12 @@ Proof.
   - now destruct n.
 Qed.
 
+About F_zero_eqn.
+
+
+Print Assumptions F_zero_eqn. 
+
+
 Lemma F_star_zero_eqn : forall alpha i, F_star (alpha, 0) i = i.
 Proof.
   intros; now rewrite F_star_equation_1.
