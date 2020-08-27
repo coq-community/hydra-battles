@@ -1,5 +1,4 @@
-#  Hydras and roosters
-
+#  Hydra battles in Coq 
 An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant (_draft_).
 
 
