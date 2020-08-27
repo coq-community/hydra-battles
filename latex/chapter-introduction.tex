@@ -119,6 +119,41 @@ Eqdep.Eq_rect_eq.eq_rect_eq
     x = eq_rect p Q x p h
 \end{Coqanswer}
 
+
+
+\subsection{Assumed redundancy}
+
+It may often happen that several definitions of a given concept, or several proofs of a given theorem are possible. If all the versions present some interest, we will make them available, since each one may be of some methodological 
+interest (by illustrating some tactic of proof pattern, for instance).
+We may use \coq's module system to make several proofs of a givent theorem co-exists in our libraries (see also Sect~\vref{sect:alt-proofs}).
+After some discussions of the pros and cons of each solution, we will choose to develop only one of them, leaving the others  as exercises or projects (i.e., big or difficult exercises).
+In order to discuss which assumptions are really needed for proving a theorem, we will also present 
+several aborted proofs.
+Of course, do not hesitate to contribute nice proofs or alternative definitions !
+
+It may also happen that some proof looks to be useless, because the proven theorem is a trivial consequence of another (proven too) result.
+For instance, let us consider the three following statements:
+\begin{enumerate}
+\item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
+\item There is no measure into $[0,\omega^2)$ for proving the termination of all hydra battle (Sect~\vref{omega2-case}).
+\item There is no measure into $[0,\mu)$ for proving the termination of all hydra battles, for any $\mu<\epsilon_0$ (Sect\vref{sec:free-battles-case}).
+\end{enumerate}
+
+Obviously, the third theorem implies the second one, which implies the first one. So, theoretically, a library would contain only a proof of $(3)$ and remarks for $(2)$ and $(1)$. But we found it interesting to make all the three proofs available, allowing the reader to compare their common structure and notice their technical differences.
+In particular, the proof of $(3)$ uses several non-trivial combinatorial properties of ordinal numbers~\cite{KS81}, whilst $(1)$ and $(2)$ use simple properties of $\mathbb{N}$ and $\mathbb{N}^2$.
+
+
+\subsection{About Logic}
+
+Most of the proofs we present are \emph{constructive}. Whenever possible, we provide the user with an associated function, which she or he can apply in \gallina{} or \ocaml{} in order to get a ``concrete'' feeling of the meaning of the considered theorem.
+For instance, in Chapter~\vref{chap:ketonen}, the notion of \emph{limit ordinal} is
+made more ``concrete'' thanks to a function \texttt{canon} which computes every item of a sequence which converges on a given limit ordinal $\alpha$. This simply typed function allows the user/reader to make her/his own experimentations.
+For instance, one can very easily compute the $42$-nd item of a sequence which converges towards $\omega^{\omega^\omega}$.
+
+
+ 
+
+
 \subsection{Main references}
 
 In our development, we adapt the definitions and prove many theorems which
@@ -131,21 +166,6 @@ we found in the following articles.
 \end{itemize}
 
 
-
-\subsection{Structure of this document}
-\begin{itemize}
-\item Whenever several implementations are possible, we will discuss the pros and cons of every possible choice
-\item Most of the proofs we present are \emph{constructive}. Whenever possible, we provide the user with an associated function, which she or he can apply in \gallina{} or \ocaml{} in order to get a ``concrete'' feeling of the meaning of the considered theorem.
-For instance, in Chapter~\vref{chap:ketonen}, the notion of \emph{limit ordinal} is
-made more ``concrete'' thanks to a function \texttt{canon} which computes every item of a sequence which converges on a given limit ordinal $\alpha$. This simply typed function allows the user/reader to make her/his own experimentations.
-For instance, one can very easily compute the $42$-nd item of a sequence which converges towards $\omega^{\omega^\omega}$.
-
-
-\item We found it interesting to present several  implementions of a given concept. After some discussions of the pros and cons of each solution, we will choose to develop only one of them, leaving the others  as exercises or projects (i.e., big or difficult exercises).
-In order to discuss which assumptions are really needed for proving a theorem, we will also present 
-several aborted proofs.
-
- \end{itemize}
 
 
 
@@ -181,18 +201,6 @@ Please do not hesitate to bring your contribution!
 
 
 
-\subsection*{Acknowledgements}
-\label{sec:orgheadline5}
-    Many thanks to David Ilcinkas, Sylvain Salvati, Alan Schmitt and Théo Zimmerman for their help on the elaboration of this document, and to the
- members of the \emph{Formal Methods} team at laBRI for their helpful comments 
-on an oral presentation of this work. 
-
-Many thanks also to the Coq development team, Yves Bertot, and members of the \emph{Coq Club} for interesting discussions about the \coq{} system and the Calculus of Inductive Constructions.
-
-The author of the present document wishes to express his gratitude to the late Patrick Dehornoy, whose talk  was determinant for our desire to work on this topic.
-
-I owe my interest in discrete mathematics and their relation to formal proofs and functional programming  to Srecko Brlek.  Equally, there is W. H. Burge's book ``\emph{Recursive Programming Techniques}'' ~\cite{burge} which was a great  source of inspiration.
-
 \subsection{Typographical conventions}
 
 Quotations from our  \coq{} source are displayed as follows:
@@ -226,15 +234,29 @@ with a different background color.
 Qed.
  \end{Coqsrc}
 
-\subsection{Alternative or bad definitions}
 
+\subsection{Active links}
+The  links which appear in this pdf  document lead are of three possible kinds of destination:
+\begin{itemize}
+\item Local links to the document itself,
+\item External links, mainly to \coq's page,
+\item Local links to pages generated by \texttt{coqdoc}. According to the current makefile,
+  we assume that the page generated from a library \texttt{XXX/YYY.v} is stored as
+the relative address \texttt{../src/html/hydras.XXX.YYY.html} (from the location of the pdf).
+Thus,  active links towards our \coq{} modules may be incorrect if you got this \texttt{pdf} document otherwise than by compiling the distribution available in
+\url{https://framagit.org/casteran/hydra-battles-in-coq}.
+
+\end{itemize}
+
+\subsection{Alternative or bad definitions}
+\label{sect:alt-proofs}
 Finally, we decided to include definitions or lemma statements, as well as tactics,  that lead to
 dead-ends or to too complex developments, with the following coloring.
 Bad definitions 
  and encapsulation in modules called \texttt{Bad}, \texttt{Bad1}, etc.
 
 
- \begin{Coqbad}
+\begin{Coqbad}
 Module Bad.
 
 Definition double (n:nat)  := n + 2.
@@ -245,7 +267,7 @@ Proof.
 Qed.
 
 End Bad.
-  \end{Coqbad}
+\end{Coqbad}
 
 Likewise, alternative, but still unexplored definitions will be presented in modules
 \texttt{Alt}, \texttt{Alt1}, etc. Using these definitions is left as an implicit exercise.
@@ -267,10 +289,22 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+\section{Acknowledgements}
+\label{sec:orgheadline5}
+    Many thanks to David Ilcinkas, Sylvain Salvati, Alan Schmitt and Théo Zimmerman for their help on the elaboration of this document, and to the
+ members of the \emph{Formal Methods} team at laBRI for their helpful comments 
+on an oral presentation of this work. 
+
+Many thanks also to the Coq development team, Yves Bertot, and members of the \emph{Coq Club} for interesting discussions about the \coq{} system and the Calculus of Inductive Constructions.
+
+The author of the present document wishes to express his gratitude to the late Patrick Dehornoy, whose talk  was determinant for our desire to work on this topic.
+
+I owe my interest in discrete mathematics and their relation to formal proofs and functional programming  to Srecko Brlek.  Equally, there is W. H. Burge's book ``\emph{Recursive Programming Techniques}'' ~\cite{burge} which was a great  source of inspiration.
+
+
+
 % \subsubsection{Links to the Coq source}
 
-% Active links towards our \coq{} modules may be incorrect if you got this \texttt{pdf} document otherwise than by compiling the distribution available in
-% \url{http://www.labri.fr/casteran/CoqArt/le_teaser/Teaser.tar.gz}.
 
 
 
