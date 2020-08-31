@@ -93,19 +93,40 @@ The following extensions are planned, but help is needed:
 
 
 \section{Index}
+Some notations may belong to several scopes. For instance, ``\texttt{o<}'' is
+bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and locally in several libraries.
+
+
 \subsection{Infix notations}
 
 
+
+\vspace{4pt}
+
 \begin{tabular}{|c|c|c|c|l|}
 \hline
-Name & Ascii&Math& Description& Where \\\hline
- \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality & \vref{sect:on-lt-notation}\\
- \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \vref{sect:on-lt-notation}\\
-\texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \vref{sect:infix-oplus} \\
-\texttt{round} & \texttt{h -1-> h'} & & round of a battle & \vref{sect:infix-round} \\
+Name & Ascii&Math& Description& Page \\\hline
+ \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
+ \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
+\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & Ordinal addition & \pageref{sect:infix-oplus} \\
+\texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
+\texttt{round} & \texttt{h -1-> h'} & & one round of a battle & \pageref{sect:infix-round} \\
+\texttt{rounds} & \texttt{h -+-> h'} & & one or more  rounds of a battle & \pageref{sect:infix-rounds} \\
+\texttt{round\_star} & \texttt{h -*-> h'} & & any number of rounds of a battle & \pageref{sect:infix-rounds} \\
+
 \hline
 \end{tabular}
 
+\subsection{Other notations}
+
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+Name & Ascii&Math& Description& Page \\\hline
+omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega},\dots\\
+phi0     & \texttt{phi0 alpha} & $\varphi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
+
+\hline
+\end{tabular}
 
 \printindex
 

@@ -161,64 +161,64 @@ Proof.
 Qed. 
 
 Lemma inject_mono_0 : forall alpha,
-                  T1.nf alpha ->
-                  forall beta gamma, 
-                    T1.lt  beta gamma -> 
-                    T1.lt gamma alpha ->
-                    T1.nf beta -> T1.nf gamma ->
-                    (inject beta < inject gamma)%sch.
+    T1.nf alpha ->
+    forall beta gamma, 
+      T1.lt  beta gamma -> 
+      T1.lt gamma alpha ->
+      T1.nf beta -> T1.nf gamma ->
+      (inject beta < inject gamma)%sch.
 Proof with eauto with T1.
- intros alpha;  T1.transfinite_induction alpha.
+  intros alpha;  T1.transfinite_induction alpha.
   intros x Indx Nx;  induction beta; destruct gamma.
- {  intros H H0;  T1.T1_inversion H. }
- { intros H H0 H1 H2;  simpl; 
-   apply lt_le_trans with (AP._phi0 (inject gamma1))%sch.
-   -  apply phi0_positive;auto with schutte.
-   - eapply le_trans. 
-    2:eapply le_plus_l; auto with schutte.
-    apply le_a_mult_Sn_a; auto with schutte.
- }
- intros H H0 H1 H2;  T1.T1_inversion H.
- intros H H0 H1 H2; simpl;  destruct (T1.lt_inv H).
- -   apply head_lt.    
-     +  eapply IHbeta1 ...
+  {  intros H H0;  T1.T1_inversion H. }
+  { intros H H0 H1 H2;  simpl; 
+      apply lt_le_trans with (AP._phi0 (inject gamma1))%sch.
+    -  apply phi0_positive;auto with schutte.
+    - eapply le_trans. 
+      2:eapply le_plus_l; auto with schutte.
+      apply le_a_mult_Sn_a; auto with schutte.
+  }
+  intros H H0 H1 H2;  T1.T1_inversion H.
+  intros H H0 H1 H2; simpl;  destruct (T1.lt_inv H).
+  -   apply head_lt.    
+      +  eapply IHbeta1 ...
 
-   * apply T1.lt_trans with  (T1.ocons gamma1 n0 gamma2) ...
-     apply T1.head_lt_ocons; auto.
-     +  apply lt_trans with (inject (phi0 beta1)). 
-        *   eapply IHbeta2 ...
-            apply T1.lt_phi0_phi0.
-            apply T1.lt_phi0_intro with n; auto. 
-            apply  T1.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
-            apply T1.le_phi0 ; eauto with T1.
-            eapply T1.lt_trans ...
-        * simpl; rewrite alpha_plus_zero.
-          apply phi0_mono,  IHbeta1; auto. 
-          apply T1.lt_trans with (T1.ocons gamma1 n0 gamma2) ...
-          apply T1.head_lt_ocons ...
-          eauto with T1.
-          eauto with T1.
--     decompose [or and] H3.
-  subst;  apply coeff_lt. 
-  + replace  (AP._phi0 (inject gamma1)) with (inject (phi0 gamma1)).
-    *  apply IHbeta2.
-       apply T1.lt_phi0_phi0.
-       eapply T1.lt_phi0_intro; eauto.
-       apply T1.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
-       destruct n0.
-       apply T1.le_tail ...
-       apply T1.lt_le_incl.
-       apply T1.coeff_lt; auto with arith.
-       eauto with T1.
-       eapply T1.nf_phi0; eauto with T1.
-    * cbn; rewrite alpha_plus_zero ...
-  +  auto.
-  +  subst; apply plus_mono_r.
-     apply IHbeta2; eauto with schutte T1.
-     eapply T1.lt_trans.
-     2: eapply H0.
-     auto with T1.
-     apply T1.tail_lt_ocons; auto.
+         * apply T1.lt_trans with  (T1.ocons gamma1 n0 gamma2) ...
+           apply T1.head_lt_ocons; auto.
+      +  apply lt_trans with (inject (phi0 beta1)). 
+         *   eapply IHbeta2 ...
+             apply T1.lt_phi0_phi0.
+             apply T1.lt_phi0_intro with n; auto. 
+             apply  T1.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
+             apply T1.le_phi0 ; eauto with T1.
+             eapply T1.lt_trans ...
+         * simpl; rewrite alpha_plus_zero.
+           apply phi0_mono,  IHbeta1; auto. 
+           apply T1.lt_trans with (T1.ocons gamma1 n0 gamma2) ...
+           apply T1.head_lt_ocons ...
+           eauto with T1.
+           eauto with T1.
+  -     decompose [or and] H3.
+        subst;  apply coeff_lt. 
+        + replace  (AP._phi0 (inject gamma1)) with (inject (phi0 gamma1)).
+          *  apply IHbeta2.
+             apply T1.lt_phi0_phi0.
+             eapply T1.lt_phi0_intro; eauto.
+             apply T1.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
+             destruct n0.
+             apply T1.le_tail ...
+             apply T1.lt_le_incl.
+             apply T1.coeff_lt; auto with arith.
+             eauto with T1.
+             eapply T1.nf_phi0; eauto with T1.
+          * cbn; rewrite alpha_plus_zero ...
+        +  auto.
+        +  subst; apply plus_mono_r.
+           apply IHbeta2; eauto with schutte T1.
+           eapply T1.lt_trans.
+           2: eapply H0.
+           auto with T1.
+           apply T1.tail_lt_ocons; auto.
 Qed. 
 
 (* end hide *)
@@ -228,23 +228,23 @@ Theorem inject_mono (beta gamma : T1) :
   T1.nf beta -> T1.nf gamma -> 
   inject beta < inject gamma.
 Proof.  
- intros H H0 H1; apply inject_mono_0 with (T1.succ gamma);auto.
- -  apply T1.succ_nf;auto.
- -  apply T1.lt_succ;auto.
+  intros H H0 H1; apply inject_mono_0 with (T1.succ gamma);auto.
+  -  apply T1.succ_nf;auto.
+  -  apply T1.lt_succ;auto.
 Qed.
 
 Theorem inject_injective (beta gamma : T1) : nf beta -> nf gamma ->
-  inject beta = inject gamma -> beta = gamma.
+                                             inject beta = inject gamma -> beta = gamma.
 Proof.
   intros H H0 H1. 
   destruct (LT_eq_LT_dec H H0) as [[H2 | H2] | H2]; auto.
   destruct H2 as [H3 [H4 H5]].   apply inject_mono in H4; auto.    
-   rewrite H1 in H4; auto.
-   destruct (lt_irr H4); auto.
-destruct H2 as [H3 [H4 H5]].   apply inject_mono in H4; auto.    
-   rewrite H1 in H4; auto.
-   destruct (lt_irr H4); auto.
- Qed.
+  rewrite H1 in H4; auto.
+  destruct (lt_irr H4); auto.
+  destruct H2 as [H3 [H4 H5]].   apply inject_mono in H4; auto.    
+  rewrite H1 in H4; auto.
+  destruct (lt_irr H4); auto.
+Qed.
 
 Theorem inject_monoR (beta gamma : T1) : 
   T1.nf beta -> T1.nf gamma -> 
@@ -262,7 +262,7 @@ Qed.
 
 
 Theorem inject_lt_epsilon0 (alpha : T1):
-      inject alpha < epsilon0.
+  inject alpha < epsilon0.
 Proof.
   assert (Ap := epsilon0_AP); induction alpha; simpl.
   - rewrite <- epsilon0_fxp; apply phi0_positive.
@@ -273,31 +273,31 @@ Qed.
 
 (* begin hide *)
 
-  
+
 
 
 Section Equations_for_addition.
 
-Lemma plus_alpha_mult_phi0 (alpha beta : Ord)  (H: alpha < AP._phi0 beta)
-(n : nat) : alpha + mult_Sn (AP._phi0 beta) n = mult_Sn (AP._phi0 beta) n.
-Proof.
-  induction n.
-  - simpl;    destruct (AP_phi0 beta ) as [ _ H1];   apply  (H1 _ H).  
-  - simpl;  rewrite plus_assoc; now rewrite IHn.
-Qed.
+  Lemma plus_alpha_mult_phi0 (alpha beta : Ord)  (H: alpha < AP._phi0 beta)
+        (n : nat) : alpha + mult_Sn (AP._phi0 beta) n = mult_Sn (AP._phi0 beta) n.
+  Proof.
+    induction n.
+    - simpl;    destruct (AP_phi0 beta ) as [ _ H1];   apply  (H1 _ H).  
+    - simpl;  rewrite plus_assoc; now rewrite IHn.
+  Qed.
 
-Lemma mult_Sn_dist (alpha : Ord) (n p : nat) :
-  mult_Sn alpha (S (n + p)) = mult_Sn alpha p + mult_Sn alpha n.
-Proof.
-  induction n; simpl.
-  - reflexivity. 
-  - rewrite  plus_assoc;  f_equal.
-   now   rewrite <- IHn.
-Qed. 
+  Lemma mult_Sn_dist (alpha : Ord) (n p : nat) :
+    mult_Sn alpha (S (n + p)) = mult_Sn alpha p + mult_Sn alpha n.
+  Proof.
+    induction n; simpl.
+    - reflexivity. 
+    - rewrite  plus_assoc;  f_equal.
+      now   rewrite <- IHn.
+  Qed. 
 
 
 
-(*
+  (*
 
   Quoted from Epsilon0.T1
 
@@ -313,67 +313,69 @@ Qed.
      end)
   end
 where "alpha + beta" := (plus alpha beta) : t1_scope.
- *)
+   *)
 
   
 
-Variables (a b c d : Ord) (n p : nat).
+  Variables (a b c d : Ord) (n p : nat).
 
-Hypotheses (Hnfa : b < AP._phi0 a)
-           (Hnfc : d < AP._phi0 c).
- Let alpha := mult_Sn  (AP._phi0 a) n + b.
- Let beta := mult_Sn  (AP._phi0 c) p + d.
-Section case1.
-  Hypothesis Hac: a < c.
+  Hypotheses (Hnfa : b < AP._phi0 a)
+             (Hnfc : d < AP._phi0 c).
+  Let alpha := mult_Sn  (AP._phi0 a) n + b.
+  Let beta := mult_Sn  (AP._phi0 c) p + d.
+  Section case1.
+    Hypothesis Hac: a < c.
 
 
-  Lemma case_lt : alpha + beta = beta.
-  Proof.
-    unfold alpha, beta.
-    rewrite <-
-            (plus_assoc (mult_Sn (AP._phi0 a) n) b (mult_Sn (AP._phi0 c) p + d)).
-    assert (b < AP._phi0 c).
-    { apply lt_trans with (AP._phi0 a); auto with schutte.
+    Lemma case_lt : alpha + beta = beta.
+    Proof.
+      unfold alpha, beta.
+      rewrite <-
+              (plus_assoc (mult_Sn (AP._phi0 a) n)
+                          b
+                          (mult_Sn (AP._phi0 c) p + d)).
+      assert (b < AP._phi0 c).
+      { apply lt_trans with (AP._phi0 a); auto with schutte.
+        now apply phi0_mono.
+      }   
+      rewrite (plus_assoc b (mult_Sn (AP._phi0 c) p) d).
+      rewrite (plus_alpha_mult_phi0 _ _ H p).
+      rewrite  plus_assoc .
+      rewrite plus_alpha_mult_phi0.
+      auto.
+      apply AP_mult_Sn_closed.
+      apply AP_phi0.
       now apply phi0_mono.
-    }   
-    rewrite (plus_assoc b (mult_Sn (AP._phi0 c) p) d).
-    rewrite (plus_alpha_mult_phi0 _ _ H p).
-    rewrite  plus_assoc .
-    rewrite plus_alpha_mult_phi0.
-    auto.
-    apply AP_mult_Sn_closed.
-    apply AP_phi0.
-    now apply phi0_mono.
-  Qed.
+    Qed.
 
-  
-End case1.
+    
+  End case1.
 
-Section case2.
- Hypothesis Hac : c < a.
+  Section case2.
+    Hypothesis Hac : c < a.
 
- Lemma case_gt : alpha + beta = mult_Sn (AP._phi0 a) n +
-                                (b + beta). 
- Proof. 
-  unfold alpha;  now  rewrite plus_assoc.
- Qed.
+    Lemma case_gt : alpha + beta = mult_Sn (AP._phi0 a) n +
+                                   (b + beta). 
+    Proof. 
+      unfold alpha;  now  rewrite plus_assoc.
+    Qed.
 
- End case2.
+  End case2.
 
-Section case3.
+  Section case3.
 
-  Hypothesis Hac : a = c.
+    Hypothesis Hac : a = c.
 
-  Lemma case_Eq : alpha + beta = mult_Sn (AP._phi0 a) (S (n + p)) + d.
-  Proof.
-    unfold alpha, beta; subst c; rewrite <- plus_assoc.
-    rewrite (plus_assoc b (mult_Sn (AP._phi0 a) p) d).
-    rewrite (plus_alpha_mult_phi0 _ _ Hnfa).
-    rewrite plus_assoc;  f_equal.
-    rewrite Nat.add_comm; now  rewrite mult_Sn_dist.
- Qed.
+    Lemma case_Eq : alpha + beta = mult_Sn (AP._phi0 a) (S (n + p)) + d.
+    Proof.
+      unfold alpha, beta; subst c; rewrite <- plus_assoc.
+      rewrite (plus_assoc b (mult_Sn (AP._phi0 a) p) d).
+      rewrite (plus_alpha_mult_phi0 _ _ Hnfa).
+      rewrite plus_assoc;  f_equal.
+      rewrite Nat.add_comm; now  rewrite mult_Sn_dist.
+    Qed.
 
-End case3.
+  End case3.
 
 End Equations_for_addition.
 
@@ -383,40 +385,40 @@ End Equations_for_addition.
 Lemma inject_rw (a b: T1) n : inject (ocons a n b) =
                               mult_Sn (AP._phi0 (inject a)) n + inject b.
 Proof. reflexivity. Qed.
-  
+
 Theorem inject_plus (alpha beta : T1): nf alpha -> nf beta ->
-  inject (alpha + beta)%t1 = inject alpha + inject beta.
+                                       inject (alpha + beta)%t1 = inject alpha + inject beta.
 Proof with eauto with T1.
-induction alpha.
- - simpl;  now rewrite zero_plus_alpha.
- -  intros H H0;  destruct beta.
-  + simpl (inject (ocons alpha1 n alpha2));
-   rewrite <- plus_assoc; simpl (inject T1.zero); 
-   now rewrite alpha_plus_zero.
-  +  repeat rewrite inject_rw;  case_eq (T1.compare alpha1 beta1).
-   * intro H1;  apply T1.compare_Eq_impl in H1; subst beta1.
-     repeat rewrite inject_rw;  simpl T1.plus; rewrite T1.compare_refl.
-     repeat rewrite inject_rw.
-     rewrite <- (case_Eq (inject alpha1) (inject alpha2)
-                          (inject alpha1) (inject  beta2) n n0) ...
-     assert (H1 : (alpha2 o< phi0  alpha1)%t1). {
-       rewrite nf_LT_iff in H;  tauto. }
-     rewrite <- inject_of_phi0.
-     apply inject_mono ...
-     rewrite <- inject_of_phi0; apply inject_mono ...
-     rewrite nf_LT_iff in H0 ...
-      decompose [and] H0 ... 
-   * intros H1; repeat rewrite inject_rw.
-     simpl T1.plus; rewrite H1;  rewrite lt_iff in H1.
-     { repeat rewrite inject_rw; rewrite case_lt; auto.
-       rewrite <- inject_of_phi0;  apply inject_mono ...
-      -  rewrite nf_LT_iff in H; decompose [and] H ...
-      -  apply inject_mono; eauto with T1.
-     }  
-   * intros H1; repeat rewrite inject_rw.
-     simpl T1.plus; rewrite H1; rewrite gt_iff in H1.
-     repeat rewrite inject_rw; rewrite case_gt.
-     f_equal; rewrite IHalpha2 ...
+  induction alpha.
+  - simpl;  now rewrite zero_plus_alpha.
+  -  intros H H0;  destruct beta.
+     + simpl (inject (ocons alpha1 n alpha2));
+         rewrite <- plus_assoc; simpl (inject T1.zero); 
+           now rewrite alpha_plus_zero.
+     +  repeat rewrite inject_rw;  case_eq (T1.compare alpha1 beta1).
+        * intro H1;  apply T1.compare_Eq_impl in H1; subst beta1.
+          repeat rewrite inject_rw;  simpl T1.plus; rewrite T1.compare_refl.
+          repeat rewrite inject_rw.
+          rewrite <- (case_Eq (inject alpha1) (inject alpha2)
+                              (inject alpha1) (inject  beta2) n n0) ...
+          assert (H1 : (alpha2 o< phi0  alpha1)%t1). {
+            rewrite nf_LT_iff in H;  tauto. }
+          rewrite <- inject_of_phi0.
+          apply inject_mono ...
+          rewrite <- inject_of_phi0; apply inject_mono ...
+          rewrite nf_LT_iff in H0 ...
+          decompose [and] H0 ... 
+        * intros H1; repeat rewrite inject_rw.
+          simpl T1.plus; rewrite H1;  rewrite lt_iff in H1.
+          { repeat rewrite inject_rw; rewrite case_lt; auto.
+            rewrite <- inject_of_phi0;  apply inject_mono ...
+            -  rewrite nf_LT_iff in H; decompose [and] H ...
+            -  apply inject_mono; eauto with T1.
+          }  
+        * intros H1; repeat rewrite inject_rw.
+          simpl T1.plus; rewrite H1; rewrite gt_iff in H1.
+          repeat rewrite inject_rw; rewrite case_gt.
+          f_equal; rewrite IHalpha2 ...
 Qed.
 
 
@@ -471,8 +473,8 @@ Qed.
 
 Lemma inject_lt_epsilon0_ex_cnf  (alpha : Ord) :
   forall (H  : alpha < epsilon0)
- (l: list Ord),  is_cnf_of alpha l ->
-                exists t: T1,  nf t /\ inject t = eval l.
+         (l: list Ord),  is_cnf_of alpha l ->
+                         exists t: T1,  nf t /\ inject t = eval l.
 Proof.
   pattern alpha; apply well_founded_induction with (R:=lt).
   { exact all_ord_acc. }
@@ -483,7 +485,7 @@ Proof.
       pose (H3 := IHalpha o).
       assert (H0 : o < alpha).
       { simpl in H2; 
-        subst alpha; apply lt_le_trans with (AP._phi0 o).
+          subst alpha; apply lt_le_trans with (AP._phi0 o).
         - apply lt_phi0; apply le_lt_trans with (AP._phi0 o).
           + apply le_phi0.
           +  apply le_lt_trans with (2:= H); apply le_plus_l.
@@ -507,23 +509,23 @@ Proof.
             -- apply plus_nf ; eauto with T1.
             -- simpl eval;  rewrite <- H11;  rewrite inject_plus; auto with T1.
                simpl (inject (phi0 x0)); rewrite H9;  destruct H5.
-            rewrite <- H12;  rewrite alpha_plus_zero; auto.
+               rewrite <- H12;  rewrite alpha_plus_zero; auto.
   }
 Qed.
 
 
 Theorem inject_lt_epsilon0_ex  (alpha : Ord) (H  : alpha < epsilon0) :
-         exists t: T1,  nf t /\ inject t = alpha.
+  exists t: T1,  nf t /\ inject t = alpha.
 Proof.
   destruct (cnf_exists alpha) as [l Hl].
-   destruct (inject_lt_epsilon0_ex_cnf alpha H l Hl) as [t [H1 H2]].
-   exists t; split ; [trivial | ].
-   destruct Hl; congruence.
- Qed.
+  destruct (inject_lt_epsilon0_ex_cnf alpha H l Hl) as [t [H1 H2]].
+  exists t; split ; [trivial | ].
+  destruct Hl; congruence.
+Qed.
 
 
 Theorem inject_lt_epsilon0_ex_unique  (alpha : Ord) (H : alpha < epsilon0) :
-                        exists! t: T1,  nf t /\ inject t =  alpha.
+  exists! t: T1,  nf t /\ inject t =  alpha.
 Proof.
   destruct (inject_lt_epsilon0_ex alpha H ) as [t [H0 H1]].
   exists t; split.
