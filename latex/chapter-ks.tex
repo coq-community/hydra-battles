@@ -265,8 +265,8 @@ Instead of using the \texttt{sig} type, define a simply typed function that, giv
 \label{sect:pathes-intro}
 
 Let us consider a kind of accessibility problem inside $\epsilon_0$: given two ordinals $\alpha$ and $\beta$, where $\beta<\alpha<\epsilon_0$, find a \emph{path} consisting of a finite sequence $\gamma_0=\alpha,\dots,\gamma_l=\beta$,
-where, for every $i<l$, $\gamma_i \not= 0$ and there exists some strictly positive integer $s_i$
-such that $\gamma_{i+1}=\canonseq{\gamma}{s_i})$,
+where, for every $i<l$, $\gamma_i \not= 0$ \footnote{This condition allows us to ignore paths which end by a lot of useless $0$.} and there exists some strictly positive integer $s_i$
+such that $\gamma_{i+1}=\canonseq{\gamma}{s_i}$,
 
 Let $s$ be the sequence $\langle s_0,s_1,\dots, s_{l-1} \rangle$. We describe the
 existence of such a path with the notation $\alpha\xrightarrow [s]{}\beta$.
@@ -371,13 +371,13 @@ Lemma LT_path_to (alpha beta : T1) :
 
 \index{Exercises}
 
-\begin{exercise}[Continuation of exercise~\vref{exo:simply-typed-canonseq}]
+\begin{exercise}[continuation of exercise~\vref{exo:simply-typed-canonseq}]
 Define a simply typed function for computing a path from $\alpha$ to $\beta$.
 \end{exercise}
 
 % ici
 \noindent 
-From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we convert any path into an inequality on ordinals (by induction on paths).
+From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
 
 
 \begin{Coqsrc}

@@ -676,7 +676,7 @@ Qed.
 Theorem lt_trans (alpha beta gamma : T1) :
   lt alpha beta -> lt beta gamma -> lt alpha gamma.
   Proof.
-  intro H; revert gamma. revert  H; revert  alpha beta.
+  intro H; revert gamma; revert  H;  revert  alpha beta.
   induction  alpha.
   - destruct beta.
     discriminate. 
@@ -713,6 +713,7 @@ Theorem lt_trans (alpha beta gamma : T1) :
     subst; auto with T1.
     subst; eauto with T1.
 Qed.
+  
 
 
 Theorem lt_not_gt alpha beta : lt alpha beta  -> ~ lt beta  alpha.

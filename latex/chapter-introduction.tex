@@ -84,41 +84,6 @@ Unlike mathematical literature, where definitions and proofs are spread over man
 the whole proof is now inside your computer. It is composed of the \texttt{.v} files you downloaded and 
 parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favourite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
 
-Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation of the set of countable ordinal numbers, all our development is axiom-free, and respects the rules of intuitionistic logic. Note that we also use the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777} for defining several rapidly growing hierarchy of functions, in Chap.~\ref{chap:alpha-large}. This plug-in imports the known-as-harmless following axiom:
-
-\begin{Coqsrc}
-FunctionalExtensionality.functional_extensionality_dep : 
-forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
-(forall x : A, f x = g x) -> f = g
-\end{Coqsrc}
-
-\index{Coq!Commands!Print Assumptions}
-
-At any place of our development, you may use the command \texttt{Print Assumptions {\it ident}} in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
-Library~\href{../src/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, we uses the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
-
-\begin{Coqsrc}
-About F_zero_eqn.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-F_zero_eqn : forall i : nat, F_ Zero i = S i
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Print Assumptions F_zero_eqn. 
-\end{Coqsrc}
-
-\begin{Coqanswer}
-Axioms:
-FunctionalExtensionality.functional_extensionality_dep
-  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
-    (forall x : A, f x = g x) -> f = g
-Eqdep.Eq_rect_eq.eq_rect_eq
-  : forall (U : Type) (p : U) (Q : U -> Type) (x : Q p) (h : p = p),
-    x = eq_rect p Q x p h
-\end{Coqanswer}
-
 
 
 \subsection{Assumed redundancy}
@@ -152,6 +117,41 @@ For instance, one can very easily compute the $42$-nd item of a sequence which c
 
 
  
+Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation of the set of countable ordinal numbers, all our development is axiom-free, and respects the rules of intuitionistic logic. Note that we also use the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777} in the definitition of  several rapidly growing hierarchy of functions, in Chap.~\ref{chap:alpha-large}. This plug-in imports several known-as-harmless  axioms.
+
+% \begin{Coqsrc}
+% FunctionalExtensionality.functional_extensionality_dep : 
+% forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
+% (forall x : A, f x = g x) -> f = g
+% \end{Coqsrc}
+
+\index{Coq!Commands!Print Assumptions}
+
+At any place of our development, you may use the command \texttt{Print Assumptions {\it ident}} in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
+Library~\href{../src/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, where we use the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
+
+\begin{Coqsrc}
+About F_zero_eqn.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+F_zero_eqn : forall i : nat, F_ Zero i = S i
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Print Assumptions F_zero_eqn. 
+\end{Coqsrc}
+
+\begin{Coqanswer}
+Axioms:
+FunctionalExtensionality.functional_extensionality_dep
+  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
+    (forall x : A, f x = g x) -> f = g
+Eqdep.Eq_rect_eq.eq_rect_eq
+  : forall (U : Type) (p : U) (Q : U -> Type) (x : Q p) (h : p = p),
+    x = eq_rect p Q x p h
+\end{Coqanswer}
+
 
 
 \subsection{Main references}
@@ -187,7 +187,7 @@ to ``factorize'' proofs as much as possible.
 Many ``todo''s or projects are put in this text, suggesting possible improvements.
 
 \subsection{Contributions}
-Many thanks to \'Evelyne Contejean and Florian Hatat for their contribution. \'Evelyne contributed libraries on the recusrive path ordering (\emph{rpo}) for proving the well-foundedness of our representation of $\epsilon_0$ and $\Gamma_0$.
+Many thanks to \'Evelyne Contejean and Florian Hatat for their contribution. \'Evelyne contributed libraries on the recursive path ordering (\emph{rpo}) for proving the well-foundedness of our representation of $\epsilon_0$ and $\Gamma_0$.
 Florian Hatat proved many useful lemmas on countable sets, which we used in our adaptation of Schütte's formalization of countable ordinals.
 
 

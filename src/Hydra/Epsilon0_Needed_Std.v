@@ -1,4 +1,6 @@
-(* Pierre Castéran, LaBRI and University of Bordeaux *)
+(**
+ Pierre Castéran, LaBRI and University of Bordeaux 
+*)
 
 Require Import Epsilon0_Needed_Generic.
  Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators.
@@ -45,7 +47,9 @@ Section Impossibility_Proof.
   Qed.
   
   (** conversion of ordinal inequalities into  standard battles  *)
+
   
+  (* begin hide *)
   Lemma o2iota_0 : forall j beta i alpha,
       standard_pathR j beta i alpha -> (0 < i)%nat ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
@@ -112,6 +116,8 @@ Section Impossibility_Proof.
                 eapply canonS_iota_i; auto.
               }
   Qed.
+  
+  (* end hide *)
   
   Lemma LT_to_standard_battle :
     forall alpha beta,

@@ -21,7 +21,7 @@
 
 \author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, Bordeaux-INP\\with contributions by \'Evelyne Contejean and Florian Hatat}
 \date{\today}
-\title{The hydra and the rooster}
+\title{Hydra battles in Coq}
 \makeindex
 \begin{document}
 \maketitle
@@ -93,6 +93,20 @@ The following extensions are planned, but help is needed:
 
 
 \section{Index}
+\subsection{Infix notations}
+
+
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+Name & Ascii&Math& Description& Where \\\hline
+ \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality & \vref{sect:on-lt-notation}\\
+ \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \vref{sect:on-lt-notation}\\
+\texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \vref{sect:infix-oplus} \\
+\texttt{round} & \texttt{h -1-> h'} & & round of a battle & \vref{sect:infix-round} \\
+\hline
+\end{tabular}
+
+
 \printindex
 
 % \section{Main notations}

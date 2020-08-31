@@ -891,7 +891,7 @@ Definition round_n n h h' := R1 h h' \/ R2 n h h'.
 By abstraction over \texttt{n}, we define a \emph{round} (small step) of a battle:
 
 \index{Predicates!round}
-
+\label{sect:infix-round}
 \begin{Coqsrc}
 Definition round h h' := exists n,  round_n n h h'.
 

@@ -170,7 +170,8 @@ Class ON {A:Type}(lt: relation A)
 \end{Coqsrc}
 
 The following definitions allow us to make implicit several guessable arguments.
-
+\label{sect:on-lt-notation}
+\label{sect:on-le-notation}
 \begin{Coqsrc}
 Definition on_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
@@ -194,7 +195,9 @@ Infix "o<=" := on_le : ON_scope.
 \end{Coqsrc}
 
 
-
+\begin{remark}
+The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a statement. In the informal and semi-formal statements, we still use $<$ and $\leq$.
+\end{remark}
 
 \subsection{Instances of notation systems}
 
@@ -416,6 +419,7 @@ Let us look again at our implementation of $\omega+\omega$. We can distinguish b
 \item The successor ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))}
 \end{itemize}
 
+\subsection{Definitions}
 It would be interesting to specify at the most generic level, what is a zero, a successor or a limit ordinal. Let $<$ be a strict order on a type $A$.
 
 \begin{itemize}
@@ -446,7 +450,19 @@ Definition Limit {sto : StrictOrder lt}  (x:A)  :=
   (forall y:A, y < x -> exists z:A, y < z /\ z < x).
 \end{Coqsrc}
 
-Using these definitions , we can prove the following lemma:
+\index{Exercises}
+\begin{exercise}
+Prove, that, in any ordinal notation system, that if $\beta$ is a successor of $\alpha$,
+then for any $\gamma$, $\gamma<\beta$ implies 
+$\gamma\leq\alpha$.
+\end{exercise}
+
+
+
+
+\subsection{Limits and successors in \texorpdfstring{$\omega+\omega$}{omega+omega}}
+
+Using thedefinitions above, we can prove the following lemma:
 
 \vspace{4pt}
 
@@ -493,6 +509,8 @@ Lemma ZLS_dec (alpha : t) :
   {Limit alpha} +
   {beta : t | Successor alpha beta}.
 \end{Coqsrc}
+
+
 
 
 \section{Comparing Ordinal Notations}
@@ -635,7 +653,7 @@ Program Example alpha1 : t 7 := 2.
 Program Example beta1 : t 7 := 5.
 
 Example i1 : lt  alpha1 beta1.
-Proof.   now compute. Qed.
+Proof. now compute. Qed.
 \end{Coqsrc}
 
 
@@ -668,8 +686,8 @@ Next Obligation.
 Abort.
 \end{Coqsrc}
 
-Note also that attempting to compare an ordinal of type \texttt{t $n$}  with an ordinal of
-type \texttt{t $p$}  leads to an error if $n$ and $p$ are not convertible.
+Note also that attempting to compare a term  of type (\texttt{t $n$}) with a term of
+type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
 
 \begin{Coqsrc}
 
