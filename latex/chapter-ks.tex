@@ -76,7 +76,7 @@ This convention allows us to make total the function that maps any ordinal $\alp
 \end{remark}
 
 
-First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs\footnote{With a small diffrence: the $0$-th term of the canonical sequence is not the same in our development as in~\cite{KS81}.}.
+First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs\footnote{With a small difference: the $0$-th term of the canonical sequence is not the same in our development as in~\cite{KS81}.}.
 
 
 
@@ -656,10 +656,10 @@ The sequence $s$, used to build the sequence of replication factors of the battl
 $\beta$, so we cannot be sure that the generated battle is a genuine standard battle.
 
 
-The tool we need to use is once again in Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
+The tool we  use comes  once again from Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
 $\alpha_0=\alpha,\alpha_1,\dots,\alpha_k=\beta$ where $\alpha_{j+1}$ is equal
-to $\canonseq{\alpha_j}{i_j}$ for some $i_j$, 
-we will consider various constraints on these sequences.
+to $\canonseq{\alpha_j}{i_j}$ where $i_j$ is \emph{any} natural number, 
+we consider various constraints on these sequences.
 In particular, a path is called \emph{standard} if $i_{j+1} = i_j + 1$ for every $j<k$.
 It  corresponds to a ``segment'' of some standard battles. 
 Please note that the vocabulary on paths is ours, but all the concepts come really from~\cite{KS81}.
