@@ -2054,7 +2054,7 @@ Proof.
                      case (compare alpha beta1).
                      now exists alpha,
                          (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
-                     now exists alpha, (gcons beta1 beta2 0 (F S n0)).
+                     now exists alpha, (gcons beta1 beta2 0 (F (S n0))).
                      now exists alpha,
                          (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
                      now exists alpha,

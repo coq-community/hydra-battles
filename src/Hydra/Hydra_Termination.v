@@ -157,7 +157,7 @@ Qed.
 
 Lemma round_decr : forall h h', h -1-> h' -> m h' o< m h.
 Proof.
-  destruct 1 as [n H]; destruct H. 
+  destruct 1 as [n [H | H]]. 
   -  now apply R1_decr.
   -  now apply R2_decr with n.
 Qed.

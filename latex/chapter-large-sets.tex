@@ -221,7 +221,7 @@ $\{k+1\}$ and the interval $[k+2, f(k+2)-1]$.
 So, the function $\lambda\,k.\,f(k+1)$ satisfies the specification $\texttt{L\_spec}\,\beta$.
 
 
-Note that our decomposition of intervals works only if the intervals we consider are not empty. In order to ensure this property, we assume that $f\;k$ is always greater than $k$, which we note \texttt{S <= f}, or \texttt{(fun\_le S f)} (defined 
+Note that our decomposition of intervals works only if the intervals we consider are not empty. In order to ensure this property, we assume that $f\;k$ is always greater than $k$, which we note \texttt{S <<= f}, or \texttt{(fun\_le S f)} (defined 
 in~\href{../src/html/hydras.Prelude.Iterates.html\#fun_le}{Prelude.Iterates}).
 
 \begin{Coqsrc}
@@ -321,7 +321,7 @@ A first ``big step'' will lead to $\omega\times i$ at $2(k+1)$. If $i>0$, the
 next jump leads to $\omega\times(i-1)$ at $2(2(k+1))+1$, etc.
 
 The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
-is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates})
+is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}).
 
 \begin{Coqsrc}
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=

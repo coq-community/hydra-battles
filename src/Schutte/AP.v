@@ -112,7 +112,7 @@ Proof with auto with schutte.
      simpl in H0; case (@lt_irr zero);auto.
   -  intro n0;case n0; trivial.
      inversion_clear 1.
-     generalize (H1 (F 1)); intros; absurd (F 1 + F S (S n1) = F S (S n1)).
+     generalize (H1 (F 1)); intros; absurd (F 1 + F (S (S n1)) = F (S (S n1))).
      +  rewrite <- plus_FF;simpl; intro H2.
         case (@lt_irr (succ (succ (F n1)))).
         pattern (succ (succ (F n1))) at 2; rewrite <- H2 ...

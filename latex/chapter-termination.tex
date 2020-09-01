@@ -1459,7 +1459,7 @@ Lemma R2_decr n : forall h h', R2 n h h' -> m h'  o< m h.
 \begin{Coqsrc}
 Lemma round_decr : forall h h', h -1-> h' -> m h' o< m h.
 Proof.
-   destruct 1 as [n H]; destruct H. 
+   destruct 1 as [n [H | H]].
    -  now apply R1_decr.
    -  now apply R2_decr with n.
 Qed.
@@ -1489,8 +1489,8 @@ Let us recall three results we have proved so far.
 \begin{itemize}
 \item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
 the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
-\item There exists \emph{no} such variant from \texttt{Hydra} into $[0,\omega^2)$ and
-a fortiori into $[0,\omega)$.
+\item There exists \emph{no} such variant from \texttt{Hydra} into 
+$[0,\omega^2)$, \emph{a fortiori} into $[0,\omega)$.
 \end{itemize}
 
 So, a  natural question is `` Does there exist any strictly decreasing variant mapping

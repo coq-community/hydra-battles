@@ -78,7 +78,7 @@ Definition finite  p := match p with
                            | S q => gcons zero zero q zero
                            end.
 
-Notation "'F' n" := (finite n)(at level 29) : g0_scope.
+Notation "'F' n" := (finite n)(at level 10) : g0_scope.
 
 Inductive is_finite:  T2 ->  Set := 
  zero_finite : is_finite zero

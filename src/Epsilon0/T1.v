@@ -68,6 +68,8 @@ Notation "'FS' n" := (ocons zero n zero) (at level 10) : t1_scope.
 Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
 Coercion fin  : nat >-> T1.
 
+Notation "'F' n" := (fin n) (at level 10) : t1_scope.
+
 (* begin hide *)
 Lemma FS_rw (n:nat) : FS n = S n.
 Proof. reflexivity. Qed.

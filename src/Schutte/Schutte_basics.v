@@ -124,7 +124,7 @@ Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
 
 (** Finite ordinals *)
 
-Reserved Notation "'F' n" (at level 29) .
+Reserved Notation "'F' n" (at level 10) .
 
 Fixpoint finite (i:nat) : Ord :=
   match i with 0 => zero
