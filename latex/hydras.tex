@@ -14,6 +14,7 @@
 \usepackage{amsfonts}
 \usepackage{mathtools}
 \usepackage{dsfont}
+\usepackage{threeparttable}
 \setcounter{tocdepth}{2}
 \input{coqmacros}
 
@@ -93,20 +94,67 @@ The following extensions are planned, but help is needed:
 
 
 \section{Index}
-Some notations may belong to several scopes. For instance, ``\texttt{o<}'' is
-bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and locally in several libraries.
 
 
-\subsection{Infix notations}
+
+
+
+
+\begin{table}[h]
+  \centering
+  \begin{threeparttable}
+    \caption{Main types and type classes}
+\begin{tabular}{|c|c|c|l|}
+\hline
+Name & Description& Page \\\hline
+Battle & Type class of battle types & \pageref{types:Battle} \\
+E0 & (Well formed) ordinals below $\epsilon_0$ & \pageref{types:E0}\\
+Hvariant & variants for proving terminatio of hydra battles & \pageref{sect:hvariant-def} \\
+Hydra & tree-like representation of hydras & \pageref{types:Hydra} \\
+Hydrae & finite sequences of hydras & \pageref{types:Hydrae} \\
+ON & ordinal  notations & \pageref{types:ON} \\
+ON\_for & comparison of an ordinal notation with Schütte's model &  \pageref{types:ON-for}\\
+ON\_iso & isomorphism of ordinal notations  & \pageref{types:ON-iso}\\
+
+Ord & countable ordinals (after Schütte) & \pageref{types:Ord} \\
+ppT1 & pretty printed version of T1 & \pageref{types:ppT1} \\
+SubON & comparison of ordinal notations & \pageref{types:SubON} \\
+T1 & ordinal terms below $\epsilon_0$ & \pageref{types:T1} \\
+T2 & ordinal terms below $\Gamma_0$ & \pageref{types:T2} \\
+WO & well orders (Schütte's definition) & \pageref{types:WO} \\
+\hline
+\end{tabular}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \begin{threeparttable}
+    \caption{Main functions}
+\begin{tabular}{|r | c|c|c|c|l|}
+\hline
+Name & Gallina & Math & Description & Page \\ \hline
+canon & canon alpha i & $\canonseq{\alpha}{i}$& Canonical sequence & \pageref{Functions:canon}\\
+canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& Helper for canon & \pageref{Functions:canonS}\\
+F\_ & F\_ alpha n & $F_\alpha(n)$ & Wainer's \texttt{F} fast growing hierarchy & \pageref{Functions:F-alpha} \\
+iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{Functions:iterate} \\
+\hline
+\end{tabular}
+\end{threeparttable}
+\end{table}
+
 
 
 
 \vspace{4pt}
-
+\begin{table}[h]
+  \centering
+  \begin{threeparttable}
+    \caption{Infix notations}
 \begin{tabular}{|c|c|c|c|l|}
 \hline
-Name & Ascii&Math& Description& Page \\\hline
- \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
+Name & Gallina&Math& Description& Page \\\hline
+ \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality \tnote{1} & \pageref{sect:on-lt-notation}\\
  \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
 \texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & Ordinal addition & \pageref{sect:infix-oplus} \\
 \texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
@@ -117,18 +165,44 @@ Name & Ascii&Math& Description& Page \\\hline
 \hline
 \end{tabular}
 
-\subsection{Other notations}
+\begin{tablenotes}
+ \item [1]
+Some notations may belong to several scopes. For instance, ``\texttt{o<}'' is
+bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and locally in several libraries.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
+
+\begin{table}[h]
+  \centering
+  \begin{threeparttable}
+    \caption{Other notations}
 \begin{tabular}{|c|c|c|c|l|}
 \hline
-Name & Ascii&Math& Description& Page \\\hline
+Name & Gallina&Math& Description& Page \\\hline
 F & \texttt{F $n$} & $n$ & The $n$-th finite ordinal &  
-\pageref{sect:notation-F}, \pageref{sect:notation-F_sch}\\ 
-omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega},\dots\\
+\pageref{sect:notation-F}, \pageref{sect:notation-F-sch}\\ 
+FS & \texttt{FS $n$} & $n+1$ & The $n+1$-th finite ordinal  \tnote{2} &  
+\pageref{sect:notation-FS}\\ 
+omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega}, \pageref{sect:omega-T1}, \pageref{sect:omega-notation2}, \dots\\
 phi0     & \texttt{phi0 alpha} & $\varphi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
 
 \hline
 \end{tabular}
+
+\begin{tablenotes}
+  \item [2] Note that there exist also various coercions from \texttt{nat} to types of ordinal. Depending on the current scope and  \coq's syntactic analysis algorithm, \texttt{F} may be left implicit.
+\end{tablenotes}
+  \end{threeparttable}
+ 
+\end{table}
+
+
+
+
+
+
 
 \printindex
 

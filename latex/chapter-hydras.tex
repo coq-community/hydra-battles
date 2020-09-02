@@ -373,7 +373,8 @@ In order to describe trees where each node can have an arbitrary (but finite) nu
 (see for instance Chapter 14, pages 400-406 of \cite{BC04}).
 
 For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydra.
-\index{Types!Hydra}
+\label{types:Hydra}
+\label{types:Hydrae}
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hydra}{Hydra.Hydra\_Definitions}}
@@ -920,8 +921,6 @@ Definition round_star h h' := h = h' \/ round_plus h h'.
 Infix "-*->" := round_star (at level 60).
 \end{Coqsrc}
 
-\index{Notations!''-+->''}
-\index{Notations!''-*->''}
 
 \index{Exercises}
 
@@ -999,6 +998,7 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 \index{Coq!Type classes}
+\label{types:Battle}
 
 \begin{Coqsrc}
 Definition dep_round_t := nat -> Hydra -> Hydra -> Prop.
@@ -1274,13 +1274,20 @@ Definition next (s : state) :=
 
 We can make bigger steps through iterations of \texttt{next}.
 
+The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
+is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}).
+
+\label{Functions:iterate}
+
 \begin{Coqsrc}
-Fixpoint iterate {A:Type} (f : A -> A) (n:nat) (x: A) :=
- match n with 
+Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
+  match n with
   | 0 => x
-  | S p => f (iterate f p x)
- end.
+  | S p => f (iterate  f p x)
+  end.
 \end{Coqsrc}
+
+
 
 The following function computes the state of the battle at the $n$-th round.
 

@@ -90,7 +90,7 @@ with the ways to build Cantor normal forms:
 \vspace{4pt}
 \noindent\emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#T1}{Epsilon0.T1}}
 
-\index{Types!T1@T1 (ordinal terms below $\epsilon_0$)}
+\label{types:T1}
 \index{Constants!zero:T1}
 
 
@@ -109,7 +109,7 @@ Inductive T1 : Set  :=
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
 to a hierarchy of ordinal notations. For instance, in~\cite{CantorContrib}, the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
 
-\index{Types!T2@T2 (ordinals terms in Veblen normal form)}
+\label{types:T2}
 \emph{Please look also at the library
 \href{../src/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
 
@@ -175,13 +175,14 @@ Some abbreviations may help to write more consisely complex ordinal terms.
 \label{sec:orgheadline67}
 
 For representing finite ordinals, \emph{i.e.} natural numbers, we first introduce a notation for terms of the form $n+1$, then define a coercion from type \texttt{nat} into \texttt{T1}.
+\label{sect:notation-FS}
 
 \begin{Coqsrc}
 Notation "'FS' n" :=
      (ocons zero n zero) (at level 10) : t1_scope.
 \end{Coqsrc}
 
-\label{sec:notation-F}
+\label{sect:notation-F}
 
 \begin{Coqsrc}
 Definition fin (n:nat) : T1 := 
@@ -212,7 +213,7 @@ Example ten : T1 := 10.
   Since \(\omega\)'s Cantor normal form is
 i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
-\index{Notations!omega@omega (the least infinite ordinal)}
+\label{sect:omega-notation2}
 \begin{Coqsrc}
 Notation omega := (ocons (ocons zero 0 zero) 0 zero): t1_scope.
 \end{Coqsrc}
@@ -499,7 +500,7 @@ and \ref{sect:wainer}, we needed to define total recursive functions on well-for
  
 
 \label{sect:E0-def}
-\index{Types!E0@ EO (ordinal terms below $\epsilon_0$ in normal form)} 
+\label{types:E0}
 
 \emph{From Module~\href{../src/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
@@ -555,7 +556,7 @@ For upgrading constants and fonctions of \texttt{T1}, we have to prove that
 the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
-\index{Notations!omega@omega (the least infinite ordinal)}
+\label{sect:omega-T1}
 \index{Constants!zero:T1}
 
 \begin{Coqsrc}
@@ -758,7 +759,7 @@ Compute alpha_0.
 
 The following data type defines a abstract syntax fore more readable ordinals in Cantor normal form:
 
-\index{Types!ppT1@ppT1 (pretty printed ordinal terms)}
+\label{types:ppT1}
 \index{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
 
 \begin{Coqsrc}

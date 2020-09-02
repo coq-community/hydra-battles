@@ -155,6 +155,7 @@ The following class definition, parameterized with a type $A$, a binary relation
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
 
 \index{Coq!Type classes}
+\label{types:ON}
 
 \begin{Coqsrc}
 Class ON {A:Type}(lt: relation A)
@@ -521,6 +522,7 @@ It is sometimes useful to compare two ordinal notations with respect to expressi
 The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented by any term of type $A$). We require also  that the comparison functions of the two notation systems are compatible.
 
 \index{Coq!Type classes}
+\label{types:SubON}
 
 \begin{Coqsrc}
 Class  SubON 
@@ -557,6 +559,7 @@ The following class specifies that a notation \texttt{OA} describes a segment $[
 where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 
 \index{Coq!Type classes}
+\label{types:ON-for}
 
 \begin{Coqsrc}
 Class ON_for `(alpha : Schutte_basics.Ord)
@@ -876,7 +879,7 @@ Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlip
 In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($). For this purpose, one may prove that the two notation systems are order-isomorphic.
 
 \index{Coq!Type classes}
-
+\label{types:ON-iso} 
 \begin{Coqsrc}
 Class  ON_Iso 
        `(OA : @ON A ltA compareA)

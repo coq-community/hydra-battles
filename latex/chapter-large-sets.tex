@@ -320,16 +320,6 @@ Let us consider a path from  $\omega\times(i+1)$ to $0$ starting at $k+1$.
 A first ``big step'' will lead to $\omega\times i$ at $2(k+1)$. If $i>0$, the
 next jump leads to $\omega\times(i-1)$ at $2(2(k+1))+1$, etc.
 
-The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
-is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}).
-
-\begin{Coqsrc}
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
-\end{Coqsrc}
 
 The following lemma expresses the length of the mlarge sequences associated with finite multiples of $\omega$.
 
@@ -1075,7 +1065,7 @@ the iteration of \texttt{F\_}  as an helper $F^*$, then to define the function $
 \label{sect:F-equations}
 
 \index{Coq!Plug-ins!Equations}
-\index{Functions!F\_@F\_ (Wainer hierarchy)}
+\label{Functions:F-alpha}
 \index{Maths! Fast growing functions}
   
 \begin{Coqsrc}

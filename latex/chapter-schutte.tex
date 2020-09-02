@@ -48,7 +48,7 @@ Let us declare a type
  \texttt{lt}. Note that, in our development, \texttt{Ord} is a type, while the \emph{set} of countable ordinals (called $\mathbb{O}$ by Schütte) 
 is the full set over the type \texttt{Ord}.
 
-\index{Types!Ord@Ord (countable ordinals)}
+\label{types:Ord} 
 
 We use Florian Hatat's library on countable sets, written as he was a student of  \emph{\'Ecole Normale Supérieure de Lyon}. A set $A$ is countable if there is an injective function from $A$ to $\mathbb{N}$ (see 
 Library \href{../src/html/hydras.Schutte.Countable.html}%
@@ -74,6 +74,7 @@ Module~\href{../src/html/hydras.Schutte.Well_Orders.html}%
 {\texttt{Well\_Orders.v}}).
 
 \index{Coq!Type classes}
+\label{types:WO}
 
 \begin{Coqsrc}
 Variables (M:Type)
@@ -385,7 +386,7 @@ Definition is_limit (alpha:Ord) := alpha <> zero /\ ~ is_succ alpha.
 
 It is also easy to define recursively the finite ordinals.
 
-\label{sect:notation-F_sch}
+\label{sect:notation-F-sch}
 
 \begin{Coqsrc}
 Reserved Notation "'F' n" (at level 29) .
@@ -520,7 +521,7 @@ Definition omega_limit (s:nat->Ord) : Ord
 
 Then we define \texttt{omega} as the limit of the sequence of finite ordinals.
 
-\index{Notations!omega@omega (the least infinite ordinal)}
+
 \label{sect:notation-omega}
 \begin{Coqsrc}
 Definition _omega := omega_limit finite.
@@ -790,7 +791,6 @@ Definition AP : Ensemble Ord :=
 Let us call  $\varphi_0$ the ordering function of \texttt{AP}.
 In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\varphi_0(\alpha)$. 
 
-\index{Functions!phi0@phi0 (exponential of base omega)}
 
 \begin{Coqsrc}
 Definition phi0 := ord AP.
