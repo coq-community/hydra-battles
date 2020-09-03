@@ -442,7 +442,7 @@ Definition nf alpha: Prop := nf_b alpha.
 \subsection{Making normality implicit}
   We would like to get rid of terms of type \texttt{T1} which are not in Cantor normal form.
 A simple way to do this is to consider statements of the form 
-\texttt{forall alpha: T1, nf alpha -> $P$ alpha}, where $P$ is a predicate over type \texttt{T1}, lile in the following lemma.
+\texttt{forall alpha: T1, nf alpha -> $P$ alpha}, where $P$ is a predicate over type \texttt{T1}, like in the following lemma \footnote{Ordinal addition is formally defined a little later (page~\ref{sect:infix-plus-T1})}.
 
 \begin{Coqsrc}
 Lemma plus_is_zero alpha beta :
@@ -539,7 +539,7 @@ Infix notation for inequalities on ordinals have changed to \texttt{o<} and \tex
 
 Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} is
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
-equal if and only iff their projection to \texttt{T1} are equal.
+equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
 \index{Coq!Techniques!Unicity of equality proofs}
 
@@ -641,7 +641,7 @@ Defined.
 The successor of any ordinal $\alpha< \epsilon_0$ is defined by structural 
 recursion on its Cantor normal form.
 
-\index{Functions!T1.succ}
+\label{Functions:succ-T1}
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#succ}{Epsilon0.T1}}
@@ -675,6 +675,8 @@ and only if for all $\beta<\alpha$, the interval $[\beta,\alpha)$ is infinite.
 \subsubsection{Addition and multiplication}
 
 Ordinal addition and multiplication are also defined by structural recursion over the type \texttt{T1}. Please note that they use the \texttt{compare} function on some subterms of their arguments.
+
+\label{sect:infix-plus-T1}
 
 \begin{Coqsrc}
 Fixpoint plus (alpha beta : T1) : T1 :=

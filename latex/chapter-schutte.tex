@@ -171,7 +171,7 @@ Indeed, the basic logic of  \coq{} does not allow us to eliminate a proof of a p
 $\exists\,x:A,\,P(x)$ for building a term whose type lies in the sort \texttt{Type}. 
 The reasons for this impossibility are explained in many documents~\cite{BC04, chlipalacpdt2011, Coq}.
 
-Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom.
+Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom and lemmas.
 
 
 \begin{Coqsrc}
@@ -196,8 +196,6 @@ Lemma constructive_indefinite_description :
 
 If we consider the \emph{unique existential} quantifier $\exists!$, we obtain
 Church's \emph{definite description operator}.
-
-\index{Functions!iota description operator}
 
 \begin{Coqsrc}
 Definition iota (A : Type) (i:inhabited A) (P : A->Prop) : A
@@ -370,7 +368,7 @@ the definitions of  \texttt{zero}, \texttt{succ}, \texttt{plus}, etc. in the res
 
 The definition of the function \texttt{succ:Ord -> Ord} is very concise. The successor of any ordinal $\alpha$ is the smallest ordinal strictly greater than $\alpha$.
 
-\index{Functions!succ (in type Ord)}
+\label{Functions:succ-sch}
 
 \begin{Coqsrc}
 Definition succ (alpha : Ord) := the_least (fun beta => alpha o< beta).

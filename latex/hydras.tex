@@ -109,7 +109,7 @@ The following extensions are planned, but help is needed:
 Name & Description& Page \\\hline
 Battle & Type class of battle types & \pageref{types:Battle} \\
 E0 & (Well formed) ordinals below $\epsilon_0$ & \pageref{types:E0}\\
-Hvariant & variants for proving terminatio of hydra battles & \pageref{sect:hvariant-def} \\
+Hvariant & variants for proving termination of hydra battles & \pageref{sect:hvariant-def} \\
 Hydra & tree-like representation of hydras & \pageref{types:Hydra} \\
 Hydrae & finite sequences of hydras & \pageref{types:Hydrae} \\
 ON & ordinal  notations & \pageref{types:ON} \\
@@ -137,7 +137,10 @@ Name & Gallina & Math & Description & Page \\ \hline
 canon & canon alpha i & $\canonseq{\alpha}{i}$& Canonical sequence & \pageref{Functions:canon}\\
 canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& Helper for canon & \pageref{Functions:canonS}\\
 F\_ & F\_ alpha n & $F_\alpha(n)$ & Wainer's \texttt{F} fast growing hierarchy & \pageref{Functions:F-alpha} \\
+H\_ & H\_ alpha n & $H_\alpha(n)$ & Hardy's \texttt{H} fast growing hierarchy & \pageref{Functions:H-alpha} \\
 iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{Functions:iterate} \\
+L\_ & L\_ alpha k & $L_\alpha(k)$ & final step of a standard path & \pageref{Functions:L-alpha} \\
+succ & succ alpha & & Successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
 \hline
 \end{tabular}
 \end{threeparttable}
@@ -156,7 +159,7 @@ iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{F
 Name & Gallina&Math& Description& Page \\\hline
  \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality \tnote{1} & \pageref{sect:on-lt-notation}\\
  \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
-\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & Ordinal addition & \pageref{sect:infix-oplus} \\
+\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & ordinal addition & \pageref{sect:infix-plus-T1} ,\dots\\
 \texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
 \texttt{round} & \texttt{h -1-> h'} & & one round of a battle & \pageref{sect:infix-round} \\
 \texttt{rounds} & \texttt{h -+-> h'} & & one or more  rounds of a battle & \pageref{sect:infix-rounds} \\
