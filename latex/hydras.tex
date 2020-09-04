@@ -130,7 +130,7 @@ WO & well orders (Schütte's definition) & \pageref{types:WO} \\
 \begin{table}[h]
   \centering
   \begin{threeparttable}
-    \caption{Main functions}
+    \caption{Main functions and constants}
 \begin{tabular}{|r | c|c|c|c|l|}
 \hline
 Name & Gallina & Math & Description & Page \\ \hline
@@ -141,11 +141,36 @@ H\_ & H\_ alpha n & $H_\alpha(n)$ & Hardy's \texttt{H} fast growing hierarchy & 
 iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{Functions:iterate} \\
 L\_ & L\_ alpha k & $L_\alpha(k)$ & final step of a standard path & \pageref{Functions:L-alpha} \\
 succ & succ alpha & & Successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
+zero:Ord & & $0$ & The least ordinal (Schütte's model) & \pageref{Constants:zero:Ord} \\
+
+
 \hline
 \end{tabular}
 \end{threeparttable}
 \end{table}
 
+
+
+\begin{table}[h]
+  \centering
+  \begin{threeparttable}
+    \caption{Main predicates}
+\begin{tabular}{|r | c|c|c|c|l|}
+\hline
+Name & Gallina&Math& Description& Page \\\hline
+\texttt{lt : T1->T1->Prop}& lt alpha beta & $\alpha < \beta$& strict order on type \texttt{T1} \tnote{1} & \pageref{Predicates:lt-T1}\\
+\texttt{LT: T1->T1->Prop}& alpha o< beta & $\alpha < \beta$& strict order on type \texttt{T1}   \tnote{2} & \pageref{Predicates:LT-T1}\\
+\texttt{Lt : E0->E0->Prop} & alpha o< beta & $\alpha < \beta$& strict order on type \texttt{E0} \tnote{3} & \pageref{Predicates:Lt-E0} \\
+\texttt{nf: T1->Prop} & \texttt{nf alpha} && alpha is in Cantor normal form & \pageref{Predicates:nf-T1}\\
+\hline
+\end{tabular}
+\begin{tablenotes}
+  \item[1] This order is total, but not well-founded, because of not well formed terms.
+\item[2] Restriction of \texttt{lt} to terms in normal form; this order is partial, but well-founded.
+\item[3] This order is total \emph{and} well-founded.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 
 

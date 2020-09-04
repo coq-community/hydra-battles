@@ -331,8 +331,8 @@ Definition lt_b alpha beta : bool :=
 Definition lt alpha beta : Prop := lt_b alpha beta.
 \end{Coqsrc}
 
-\index{Predicates!lt @ lt (total, strict, non-well founded order on type T1)}
-Please note that this definition of \texttt{lt} makes it easy to write proofs by reflection, as shown by the following examples.
+\label{Predicates:lt-T1}
+Please note that this definition of \texttt{lt} makes it easy to write proofs by reflection, as shown by the following exampgles.
 
 \begin{Coqsrc}
 Example E1 : lt (ocons omega 56 zero) (tower 3).
@@ -405,7 +405,7 @@ the set of all well-formed ordinal terms:
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#nf_b}{Epsilon0.T1}}
 
-\index{Predicates!nf @ nf (being in Cantor normal form)}
+\label{Predicates:nf-T1}
 
 \begin{Coqsrc}
 Fixpoint nf_b (alpha : T1) : bool :=
@@ -481,7 +481,7 @@ Infix notation for inequalities on ordinals have changed to \texttt{o<} and \tex
 \end{todo}
 
 
-\index{Predicates!LT @LT (partial, well-founded strict order on type T1)}
+\index{Predicates!LT-T1}
 
 
 For instance, in the following lemma, the condition that $\alpha$ is in normal form is included in the condition $\alpha< 1$.
@@ -522,7 +522,7 @@ Open Scope E0_scope.
 
 Then we redefine the predicates of comparison.
 
-\index{Predicates!Lt @ Lt (Total, strict, well-founded order on type E0)}
+\label{Predicates:Lt-E0}
 
 \begin{Coqsrc}
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
