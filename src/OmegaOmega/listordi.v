@@ -1,158 +1,132 @@
+(** An implementation of [omega ^ omega]
+    Pascal Manoury et al. *)
+
+
 Require Import Arith.
 Require Import Coq.Logic.Eqdep_dec.
 Require Import Coq.Arith.Peano_dec.
 Require Import List.
-Require Import Recdef.
+Require Import Recdef Lia.
 
 (**
-  Arithmétique
+  Arithmetic 
 *)
 
-(* Sur la soustraction (entière) *)
-Lemma minus_Sn_n : forall (n:nat), (minus (S n) n) = (S 0).
-induction n; auto.
-Qed.
+Lemma minus_Sn_n : forall (n:nat), S n - n = 1.
+Proof. lia. Qed.
 
-Lemma lt_S_r : forall (n1 n2:nat),
-  (lt n1 n2) -> exists (n:nat), n2 = (S n).
-destruct n2.
-  intro. exfalso. apply (lt_n_0 n1). assumption.
-  intro. exists n2. trivial.
-Qed.
+
 
 Lemma minus_lt_S : forall (n1 n2:nat),
-  (lt n1 n2) -> exists (n:nat), (minus n2 n1) = (S n).
-intros. elim (lt_S_r n1 n2 H). intros n H1. rewrite H1.
-exists (minus n n1). rewrite minus_Sn_m.
-  trivial.
-  apply le_S_n. rewrite H1 in H. auto.
-Qed.
+    (lt n1 n2) -> exists (n:nat), (minus n2 n1) = (S n).
+Proof.
+  destruct n2.
+  - lia.
+  - exists (n2 - n1); lia.
+ Qed.
 
-(* Sur l'ordre strict 'lt' *)
-Lemma lt_1_0 : forall (n:nat), (lt n 1) -> (n=0).
-destruct n.
-  auto.
-  intro. inversion H. exfalso. apply (le_Sn_0 (S n)). assumption.
-Qed.
 
-Lemma lt_S_case : forall (m n:nat), (lt m (S n)) -> (lt m n) \/ (m=n).
-intros m n. generalize m. induction n.
-  intros. rewrite (lt_1_0 m0 H). tauto.
-  destruct m0.    
-    intro. auto with arith.
-    intro. elim IHn with (m:=m0); auto with arith.
-Qed.
+Lemma lt_1_0 : forall (n:nat), n <  1 -> n=0.
+Proof. lia. Qed.
 
-Lemma not_lt_Sn_n : forall (n:nat), not (lt (S n) n).
-induction n.
-  auto with arith.
-  intro. auto with arith.
-Qed.
+Lemma lt_S_case : forall (m n:nat),  m < S n ->  m < n \/ m=n.
+Proof. lia. Qed. 
 
-(* Sur l'ordre large 'le' *)
+
+Lemma not_lt_Sn_n : forall (n:nat), ~ lt (S n) n.
+Proof. lia. Qed. 
+
 Lemma not_le_Sn_n : forall (n:nat), not (le (S n) n).
-induction n.
-  auto with arith.
-  intro. auto with arith.
-Qed.
+ Proof. lia. Qed.
 
-(* Cas sur les entiers *)
 Lemma nat_compare_case : forall (n1 n2:nat),
  (lt n1 n2) \/ (n1=n2) \/ (lt n2 n1).
-induction n1.
-  destruct n2.
-    tauto.
-    left. auto with arith.
-  destruct n2.
-    right. right. auto with arith.
-    elim (IHn1 n2).
-      intro. left. auto with arith.
-      intro. elim H.
-        intro. right. left. auto.
-        intro. right. right. auto with arith.
-Qed.
+ Proof.
+ intros n1 n2;  destruct (lt_eq_lt_dec n1 n2) as [[H | H ] | H]; auto.
+Qed. 
+
 
 (**
   Sur les listes
 *)
 
 (* Sur la longueur. *)
-Lemma length_0_nil : forall (w:(list nat)),
-  (length w)=0 -> w=nil.
+Lemma length_0_nil : forall w:list nat, length w =0 -> w=nil.
 destruct w.
-  auto.
-  intro. discriminate H.
+ - trivial.
+ - intro; discriminate.
 Qed.
 
-Lemma length_Sn_cons : forall (w:(list nat)) (n:nat),
-  (length w)=(S n) -> exists (a:nat) (w':(list nat)), w = (cons a w').
-destruct w.
-  intros. discriminate H.
-  intros. exists n. exists w. trivial.
+Lemma length_Sn_cons : forall (w:list nat) (n:nat),
+  length w=S n -> exists (a:nat) (w':(list nat)), w = (cons a w').
+Proof.
+  destruct w as [| p w].
+ - intros; discriminate.
+ -   intros; now exists p, w. 
 Qed.
 
-(* Principe d'induction sur la longueur des listes *)
-Lemma list_length_ind_S : forall (P: (list nat) -> Prop),
-  (P nil)
-  -> (forall (n:nat), (forall (xs:(list nat)), (lt (length xs) (S n)) -> (P xs))
-                      -> forall (xs:(list nat)), (length xs)=(S n) -> (P xs))
-  -> forall (n:nat) (xs:(list nat)), (lt (length xs) (S n) -> (P xs)).
-intros P P0 Plt. induction n.
-  intros. assert (xs=nil).
-    apply length_0_nil. apply lt_1_0. assumption.
-    rewrite H0. assumption.
-  intros. elim (lt_S_case (length xs) (S n) H).
-    auto.
-    intro. apply (Plt n); auto.
+
+
+(* Induction on list length  *)
+Lemma list_length_ind_S :
+  forall P : list nat -> Prop,
+    P nil ->
+    (forall n : nat,
+        (forall xs : list nat, length xs < S n -> P xs) ->
+        forall xs : list nat, length xs = S n -> P xs) ->
+    forall (n : nat) (xs : list nat), length xs < S n -> P xs.
+Proof.
+  intros P P0 Plt; induction n.
+  - intros; assert (H0: xs=nil).
+    { apply length_0_nil, lt_1_0; assumption. }
+    now rewrite H0.
+  -  intros xs H;  destruct (lt_S_case (length xs) (S n) H); auto.
+     +  apply (Plt n); auto.
 Qed.
 
-Lemma list_length_ind : forall (P: (list nat) -> Prop),
-  (P nil)
-  -> (forall (n:nat), (forall (xs:(list nat)), (lt (length xs) (S n)) -> (P xs))
-                      -> forall (xs:(list nat)), (length xs)=(S n) -> (P xs))
-  -> forall (xs:(list nat)), (P xs).
-intros. apply list_length_ind_S with (n:=(length xs)).
-  assumption.
-  assumption.
-  auto with arith.
+Lemma list_length_ind :
+  forall P : list nat -> Prop,
+    P nil ->
+    (forall n : nat,
+        (forall xs : list nat, length xs < S n -> P xs) ->
+        forall xs : list nat, length xs = S n -> P xs) ->
+    forall xs : list nat, P xs.
+Proof.
+  intros; apply list_length_ind_S with (n:=(length xs)); auto with arith.
 Qed.
 
-(* Extension d'une liste avec des 0 (en tête) *)
-Fixpoint zs (n:nat) : (list nat) :=
-  match n with
-      0 => nil
-    | (S n) => (cons 0 (zs n))
-  end.
+(** list of zeroes *)
 
-Lemma zs_len: forall (n:nat), (length (zs n))=n.
+Lemma zeroes_len: forall (n:nat), (length (repeat 0  n))=n.
 induction n.
   auto.
   simpl. rewrite IHn. trivial.
 Qed.
 
-(* Complétion d'une liste en fonction d'une autre. 
-   Le résultat est une liste de la longueur de la
-   plus grande.                                   *)
+
 Definition dist (w1:(list nat)) (w2:(list nat)) :=
-  (minus (length w1) (length w2)).
+  length w1 - length w2.
 
 Definition padd (w1:(list nat)) (w2:(list nat)) :=
-  (app (zs (dist w2 w1)) w1).
+  repeat 0 (dist w2 w1) ++  w1.
 
-Lemma padd_len_lt_cons : forall (w1 w2:(list nat)),
-  (lt (length w1) (length w2)) 
-  -> exists (w:(list nat)), (padd w1 w2)=(cons 0 w).
-intros. unfold padd. unfold dist. 
-elim (minus_lt_S (length w1) (length w2) H).
-intros. rewrite H0. simpl. exists (app (zs x) w1). trivial.
+Lemma padd_len_lt_cons :
+forall w1 w2 : list nat,
+  length w1 < length w2 -> exists w : list nat, padd w1 w2 = 0 :: w.
+Proof.
+  intros w1 w2 H; unfold padd, dist. 
+  destruct (minus_lt_S (length w1) (length w2) H) as [x Hx].
+  rewrite Hx; cbn;  now exists (repeat 0 x ++ w1). 
 Qed.
 
+
 Lemma padd_len_le_len : forall (w1 w2:(list nat)),
-  (le (length w1) (length w2))
-  -> (length (padd w1 w2)) = (length w2).
-intros. unfold padd. unfold dist. rewrite app_length.
-rewrite zs_len. rewrite plus_comm. 
-rewrite le_plus_minus with (n:=(length w1)); trivial.
+  length w1 <= length w2 ->
+  length (padd w1 w2) = length w2.
+Proof.
+  intros w1 w2 H; unfold padd,dist; rewrite app_length.
+  rewrite zeroes_len, plus_comm. 
+  now rewrite le_plus_minus with (n:=(length w1)).
 Qed.
 
 Lemma padd_cons_0 : forall (w1 w2:(list nat)) (a:nat),
@@ -162,31 +136,28 @@ rewrite (minus_Sn_n (length w2)). simpl. trivial.
 Qed.
 
 (**
-  Sur l'accessibilité.
+  On accessibility 
   Tribute to P. Casteran: 
       http://www.labri.fr/perso/casteran/Cantor/HTML/AccP.html#AccElim3
 *)
 Theorem AccElim2 :
-forall (A B:Set) 
-       (RA: A -> A -> Prop) (RB: B -> B -> Prop),
- forall (P : A -> B -> Prop),
- (forall x y,
-    (forall (t : A), RA t x -> forall y', Acc RB y' -> P t y') ->
-    (forall (t : B), RB t y -> P x t) -> 
-    (P x y)) ->
-  forall x y, Acc RA x -> Acc RB y -> P x y.
+  forall (A B : Type) (RA : A -> A -> Prop) (RB : B -> B -> Prop)
+    (P : A -> B -> Prop),
+  (forall (x : A) (y : B),
+   (forall t : A, RA t x -> forall y' : B, Acc RB y' -> P t y') ->
+   (forall t : B, RB t y -> P x t) -> P x y) ->
+  forall (x : A) (y : B), Acc RA x -> Acc RB y -> P x y.
 Proof.
  intros A B RA RB P H x y Ax; generalize y; clear y.
- elim Ax. clear Ax x; intros x HAccx Hrecx y Ay.
- elim Ay. clear Ay y. intros y HAccy Hrecy. apply H.
-   auto.   
-   auto.
+ elim Ax; clear Ax x; intros x HAccx Hrecx y Ay.
+ elim Ay; clear Ay y; intros y HAccy Hrecy; apply H; auto.
 Qed.
 
 (**
-  Relation d'ordre sur les listes d'entiers considérés comme des
-  ordinaux (formes normales de Cantor à exposants finis).
-*)
+  Order on restricted Cantor normal forms (with finite exponents)
+ *)
+
+
 Inductive wlt : (list nat) -> (list nat) -> Prop :=
   wlt_nil : forall (a:nat)(w:(list nat)), (wlt nil (cons (S a) w))
 | wlt_0_w : forall (w1 w2:(list nat)), (wlt w1 w2) -> (wlt (cons 0 w1) w2)
@@ -200,27 +171,29 @@ Inductive wlt : (list nat) -> (list nat) -> Prop :=
   (length w1 = length w2) ->  (wlt w1 w2) 
     -> (wlt (cons (S a) w1) (cons (S a) w2)).
 
-(* 'nil' est minimal *)
-Lemma not_wlt_nil : forall (w:(list nat)), 
-  not (wlt w nil).
-induction w.
-  intro. inversion H.
-  case a.
-   intro. inversion H. auto.
-   intro. intro. inversion H.
+
+Lemma not_wlt_nil : forall w:list nat,  ~ wlt w nil.
+Proof.
+induction w as [ | a w H].
+ - red; inversion 1.
+ -  intro.  inversion H0; auto.
 Qed.
 
-(* Lemmes d'inversion *)
+(**  Inversion lemmas *)
+
 Lemma wlt_0_w_inv: forall (w1 w2:(list nat)),
-  (wlt (cons 0 w1) w2) -> (wlt w1 w2).
-induction w2.
-  intros. absurd (wlt (cons 0 w1) nil).
-    apply (not_wlt_nil (cons 0 w1)).
-    assumption.
-  intro. inversion H.
-    assumption.
-    apply wlt_w_0. auto.
+  wlt (cons 0 w1) w2 -> wlt w1 w2.
+Proof.
+  induction w2.
+  - intros H; absurd (wlt (cons 0 w1) nil).
+   +  apply (not_wlt_nil (cons 0 w1));  assumption.
+   +  inversion H; assumption.
+  -    inversion 1. auto.
+       apply wlt_w_0; auto.
 Qed.
+
+
+(** Here ... *)
 
 Lemma wlt_w_0_inv: forall (w1 w2:(list nat)),
   (wlt w1 (cons 0 w2)) -> (wlt w1 w2).
@@ -279,22 +252,22 @@ induction w2.
 Qed. 
 
 (* Invariance de 'wlt' pour la complétion à 0 (en tête) *)
-Lemma wlt_wlt_zs_right : forall (n:nat) (w1 w2:(list nat)),
-  (wlt w1 w2) -> (wlt w1 (app (zs n) w2)).
+Lemma wlt_wlt_zeroes_right : forall (n:nat) (w1 w2:(list nat)),
+  (wlt w1 w2) -> (wlt w1 (app (repeat 0 n) w2)).
 induction n.
   auto.
   intros. simpl. apply wlt_w_0. auto.
 Qed.
 
-Lemma wlt_zs_wlt_right : forall (n:nat) (w1 w2:(list nat)),
-  (wlt w1 (app (zs n) w2)) -> (wlt w1 w2).
+Lemma wlt_zeroes_wlt_right : forall (n:nat) (w1 w2:(list nat)),
+  (wlt w1 (app (repeat 0  n) w2)) -> (wlt w1 w2).
 induction n.
   auto.
   simpl. intros. apply IHn. apply wlt_w_0_inv. assumption.
 Qed.
 
-Lemma wlt_wlt_zs_left : forall (n:nat) (w1 w2:(list nat)),
-  (wlt w1 w2) -> (wlt (app (zs n) w1) (w2)).
+Lemma wlt_wlt_zeroes_left : forall (n:nat) (w1 w2:(list nat)),
+  (wlt w1 w2) -> (wlt (app (repeat 0 n) w1) (w2)).
 induction n.
   auto.
   intros. simpl. apply wlt_0_w. auto.
@@ -302,10 +275,11 @@ Qed.
 
 (* Caractérisation en fonction de la longueur:
    si '(wlt w1 w2)' et '#w2 < #w1' alors 'w1' commence par des 0 *)
+
 Lemma wlt_gt_length : forall (w1 w2:(list nat)),
   (wlt w1 w2) -> (lt (length w2) (length w1))
   -> exists (n:nat) (w:(list nat)),
-       (w1 = (app (zs n) w))
+       (w1 = (app (repeat 0 n) w))
        /\ (length w)=(length w2)
        /\ (wlt w w2).
 induction w1.
@@ -396,12 +370,12 @@ intros w1 w2. generalize w1. clear w1. induction w2.
         assumption.
 Qed.
 
-Lemma wlt_wlt_pad_zs : forall (w1 w2:(list nat)),
+Lemma wlt_wlt_pad_zeroes : forall (w1 w2:(list nat)),
   (length w1) < (length w2) -> (wlt w1 w2)
   -> (wlt_pad (padd w1 w2) w2).
 intros. apply wlt_wlt_pad. 
   apply padd_len_le_len. auto with arith.
-  apply wlt_wlt_zs_left. assumption. 
+  apply wlt_wlt_zeroes_left. assumption. 
 Qed.
   
 (**
@@ -463,16 +437,16 @@ Qed.
   De l'accessibilté pour l'ordre restreint à l'accessibilité
   pour l'ordre sur tout liste.
 *)
-Lemma Acc_wlt_zs_Acc_wlt : forall (n:nat) (w:(list nat)),
-  (Acc wlt (app (zs n) w)) -> (Acc wlt w).
+Lemma Acc_wlt_zeroes_Acc_wlt : forall (n:nat) (w:(list nat)),
+  (Acc wlt (app (repeat 0 n) w)) -> (Acc wlt w).
 intros. apply Acc_intro. intros w' H0. apply H.
-apply wlt_wlt_zs_right. assumption.
+apply wlt_wlt_zeroes_right. assumption.
 Qed.
 
-Lemma Acc_wlt_Acc_wlt_zs : forall (n:nat) (w:(list nat)),
-  (Acc wlt w) -> (Acc wlt (app (zs n) w)).
+Lemma Acc_wlt_Acc_wlt_zeroes : forall (n:nat) (w:(list nat)),
+  (Acc wlt w) -> (Acc wlt (app (repeat 0 n) w)).
 intros. apply Acc_intro. intros w' H0. apply H. 
-apply wlt_zs_wlt_right with (n:=n). assumption.
+apply wlt_zeroes_wlt_right with (n:=n). assumption.
 Qed.
 
 Lemma Acc_wlt_pad_Acc_wlt : forall (w:(list nat)),
@@ -480,8 +454,8 @@ Lemma Acc_wlt_pad_Acc_wlt : forall (w:(list nat)),
 intros. elim H. intros w' H0 H1. apply Acc_intro.
 intros w'' H2. elim (nat_compare_case (length w'') (length w')).
   (* #w'' < #w' *)
-  intro. apply Acc_wlt_zs_Acc_wlt with (n:=(dist w' w'')).
-  apply H1. apply wlt_wlt_pad_zs; assumption.
+  intro. apply Acc_wlt_zeroes_Acc_wlt with (n:=(dist w' w'')).
+  apply H1. apply wlt_wlt_pad_zeroes; assumption.
   (* #w'' = #w4 \/ #w' < #w'' *)
   intro. elim H3.
     (* #w'' = #w' *)
@@ -489,7 +463,7 @@ intros w'' H2. elim (nat_compare_case (length w'') (length w')).
     (* #w' < #w'' *)
     intro. elim (wlt_gt_length w'' w' H2 H4). intros a H5.
     elim H5. intro w0. intro. decompose [and] H6.
-    rewrite H7. apply Acc_wlt_Acc_wlt_zs. apply H1.
+    rewrite H7. apply Acc_wlt_Acc_wlt_zeroes. apply H1.
     apply wlt_wlt_pad; assumption.
 Qed.
 
@@ -685,7 +659,7 @@ Defined.
 Definition m_list (xs:list nat) :=
   match xs with
       nil => nil
-    | (cons x xs) => (cons (length (cons x xs)) (cons x nil))
+    | (cons x xs) => cons (S (length xs)) (cons x nil)
   end.
 
 Definition lt_list  :=
@@ -723,6 +697,7 @@ Definition m_listlist (A:Set) (xss : list (list A)) :=
 
 Definition lt_listlist (A:Set) (xss yss : list (list A)) :=
   (wlt (m_listlist A xss) (m_listlist A yss)).
+
 
 Variable A:Set.
 
@@ -998,4 +973,8 @@ by_Acc_mwlt lt_list_btree.
 Defined.
 
 End Ltb.
+
+
+
+
 
