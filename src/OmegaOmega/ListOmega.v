@@ -2,6 +2,7 @@
     Pascal Manoury et al. *)
 
 (** Proof bulletization by Pierre Casteran (in progress) *)
+(** To do : translate the comments into english (and make them coqdoc compatible) *)
 
 
 Require Import Arith.
@@ -10,6 +11,8 @@ Require Import Coq.Arith.Peano_dec.
 Require Import List.
 Require Import Recdef Lia.
 Require Import  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+
+Coercion is_true : bool >-> Sortclass.
 
 (**
   Arithmetic ( should be moved elsewhere) 
@@ -62,6 +65,40 @@ Coercion fin : nat >-> t.
 Check (1::0::nil).
 
 Check (fin 42).
+
+Definition nf (alpha : t) :bool :=
+  match alpha with
+    nil | S _ :: _ => true
+  | _ => false
+  end.
+
+Fixpoint succ (alpha: t) :=
+  match alpha with
+  | nil => 1::nil
+  | n:: nil => S n :: nil
+  | n :: l => n :: succ l
+  end.
+
+Compute succ (succ omega).
+
+(* incorrect if not nf alpha *)
+
+Fixpoint limitb (alpha: t) :=
+  match alpha with
+  |  nil | S _ :: nil => false
+  |  _ :: 0 :: nil => true
+  |  _ :: w => limitb w
+  end.
+
+
+Compute limitb omega.
+Compute limitb (3::4::0::0::1::0::nil).
+Compute succ (3::4::0::0::1::0::nil).
+Compute limitb (3::0::0::0::0::0::nil).
+
+(** to do : addition, commutative addition, compare  *)
+
+
 
 
 (* Induction on list length  *)
@@ -512,7 +549,6 @@ Qed.
 Section Example_of_use.
   Variables (A: Type)
             (RA : A -> A -> Prop)
-            (X: A -> Type)
             (m : A -> t).
   Hypothesis decr : forall a b, RA a b -> wlt (m a) (m b).
 

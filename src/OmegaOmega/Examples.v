@@ -1,5 +1,14 @@
 Require Import ListOmega Arith.
 
+
+(** TO do : verify (and prove !) the following examples 
+    really need omega^omega (and not a finite power of omega) 
+
+    translate the comments into english  and make them coqdoc compatible
+
+*)
+
+
 (* Utilitaire pour la définition des ordres *)
 Definition make_mwlt (A:Set) (m : A -> t) (a1 a2:A) :=
   (wlt (m a1) (m a2)).
