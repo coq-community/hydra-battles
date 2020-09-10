@@ -1,6 +1,6 @@
 (**  The ordinal omega * omega *)
 Require Import Arith Compare_dec Lia Simple_LexProd
-        OrdinalNotations.Definitions.
+        OrdinalNotations.Generic.
 Import Relations.
 
 Declare Scope o2_scope.
@@ -48,9 +48,6 @@ Proof.
  right; auto with arith.
 Qed.
 
-Locate StrictOrder.
-
-Search StrictOrder.
 
 Instance lt_strorder : StrictOrder lt.
 Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
@@ -187,7 +184,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega2).
     + destruct p.
       * destruct n.
         --   left; left.
-             Search (0,0). exact le_0.
+              exact le_0.
         -- left;right.
           split.
           exists (0,0).
@@ -391,7 +388,6 @@ Compute (fin_mult 3 (omega * 7 + 15)).
 
 
 Compute (fin_mult 3 (omega * 1 + 15)).
-Search (_ + _ + _)%nat.
 
 Lemma plus_assoc alpha beta gamma :
   alpha + (beta + gamma) = alpha + beta + gamma.

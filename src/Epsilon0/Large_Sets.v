@@ -710,7 +710,7 @@ Note : Some names of lemmas and theorem like [Theorem_4_5] or
 *)
 
 (** ** large sequences (as in KS ) (may contain zeros) *)
-Locate eqb.
+
 Definition largeb (alpha : T1) (s: list nat) :=
   match (gnaw alpha s)
           with zero => true | _ => false end.

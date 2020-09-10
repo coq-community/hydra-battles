@@ -12,7 +12,7 @@ Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded  Operators_Properties
         Prelude.More_Arith  Prelude.Restriction
         not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
-        OrdinalNotations.Definitions OrdNotations.
+        OrdinalNotations.Generic OrdNotations.
 
 
 Require  Export T1 Hessenberg.
@@ -75,7 +75,6 @@ Proof.
   refine (@mkord (T1.succ zero) _);now compute. 
 Defined.
 
-Search (nf (_ + _)%t1).
 
 Instance plus (alpha beta : E0) : E0.
 Proof.
@@ -265,8 +264,7 @@ Instance Lt_sto : StrictOrder Lt.
 Proof.
   split.
   - intro x ; destruct x; unfold Lt.  red.
-    cbn. Search (_ o< _)%t1.
-    intro; eapply LT_irrefl; eauto.
+    cbn; intro; eapply LT_irrefl; eauto.
   - intros [x Hx] [y Hy] [z Hz].
     unfold Lt; cbn.
     apply LT_trans.
@@ -453,21 +451,17 @@ intros.
 exists (Succ y).
 split.
 apply Lt_Succ.
-Search Lt Succ.
-
    destruct y as [y Hy]; split.
     unfold Lt, Succ; cbn.
      now apply LT_succ.
       unfold Lt, Succ in *.
  cbn in *.
- Search limitb succ LT.
   apply succ_lt_limit; auto.
 
 + 
   right.
     exists p;
     subst.
-    Search Successor.
     red. 
      split.
 apply Lt_Succ.
@@ -475,7 +469,6 @@ apply Lt_Succ.
    destruct p, z. unfold Lt, Succ; cbn in *; intros.
    destruct (@LT_irrefl cnf1).
    apply T1.LT_LE_trans with (succ cnf0); auto with T1.
-   Search LE LT.
    now apply LT_succ_LE.
 Qed.
 
@@ -616,5 +609,17 @@ Lemma oPlus_rw (alpha beta : E0) :
   cnf (alpha O+ beta)%e0 = (cnf alpha o+ cnf beta)%t1.
 Proof.
   now destruct alpha, beta.
+Qed.
+
+Compute  compare omega omega.
+
+Compute compare (3 + omega ) omega.
+Compute compare (omega + 3) omega.
+
+
+
+Example Three_plus_omega :  3 + omega = omega.
+Proof.
+  now  apply eq_intro.
 Qed.
 

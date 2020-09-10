@@ -1,10 +1,16 @@
+(**  A notation system for finite ordinals *)
+
+
+
 Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion
-         OrdinalNotations.Definitions  RelationClasses.
+         OrdinalNotations.Generic  RelationClasses.
 
-Require        Wf_nat.
+Require Wf_nat.
 
 Coercion is_true: bool >-> Sortclass.
+
+(** The type of ordinals less than [n] *)
 
 Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 
@@ -14,11 +20,9 @@ Definition lt {n:nat} : relation (t n) :=
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
-  destruct alpha.
-  destruct x; cbn in i; discriminate.
+  destruct alpha as [x H].
+  destruct x; cbn in H; discriminate.
 Qed.
-
-
 
 
 Definition compare {n:nat} (alpha beta : t n) :=
@@ -40,9 +44,6 @@ Proof.
         destruct x; [lia | apply leb_correct; lia].
 Qed.
 
-(* useful ? *)
-
-
 Lemma compare_reflect {n:nat} (alpha beta : t  n) :
   match (compare alpha beta)
   with
@@ -55,8 +56,6 @@ Proof.
 Qed.
 
 
-
-
 Lemma lt_wf (n:nat) : well_founded (@lt n).
 Proof.
   intro x; apply Acc_incl with (fun alpha beta =>
@@ -67,8 +66,6 @@ Proof.
    +  apply leb_complete in H; lia.
   -  apply Acc_inverse_image, Wf_nat.lt_wf.
 Qed.
-
-
 
 Global Instance sto n : StrictOrder (@lt n).
 Proof.
@@ -85,64 +82,48 @@ Proof.
     +   unfold lt; simpl; unfold is_true; repeat rewrite Nat.ltb_lt;  lia.
 Qed.
 
-
+(** We have now an ordinal notation *)
 
 Global Instance FinOrd (n:nat) : ON (@lt n) compare .
 Proof.
   split.
- - apply sto.
+  - apply sto.
   - apply lt_wf.
   - apply compare_correct.
 Qed.
 
 Definition Zero_limit_succ_dec (n:nat) : ZeroLimitSucc_dec (on := FinOrd n).
-  - intro alpha;destruct alpha as [i Hi].
-    destruct n.
+Proof.
+  - intros [i Hi]; destruct n.
     + discriminate.
     + destruct i.
-      left;left. red.
-      destruct y.
-      destruct x.
-       replace Hi with i.
-        
-      right. 
-apply eq_proofs_unicity_on.
-destruct y, (0 <? S n); auto; right; discriminate.    
-left. red.
-       cbn.
-auto.      
-right.
-
-refine (exist _ (exist _ i _) _).
-red.
-split; cbn. unfold lt. cbn. Search leb. apply Nat.leb_refl.
-intros.
-destruct z.
-unfold lt in H, H0; cbn in H, H0.
-destruct x.
-discriminate.
-Search leb.
-red in H, H0.
-apply leb_complete in H .
-apply leb_complete in H0.
-
-lia.
-Unshelve.
-Search (_ <? _).
- red . red in Hi. rewrite Nat.ltb_lt in *.
-lia.
+      * left;left;red; destruct y; destruct x.
+       --  replace Hi with i.
+        ++ right. 
+        ++ apply eq_proofs_unicity_on; 
+             destruct y, (0 <? S n); auto; right; discriminate.    
+       -- left; red; cbn; trivial.
+      * right; refine (exist _ (exist _ i _) _).
+        split.
+        -- cbn; unfold lt; cbn;  apply Nat.leb_refl.
+        -- intros z H H0; destruct z.
+           unfold lt in H, H0; cbn in H, H0.
+           destruct x.
+           ++ discriminate.
+           ++ red in H, H0; apply leb_complete in H .
+              apply leb_complete in H0; lia.
+              Unshelve.
+              red; red in Hi; rewrite Nat.ltb_lt in *; lia.
 Defined.
 
 Lemma sig_eq_intro {n:nat} (x y : t n) :
   proj1_sig x = proj1_sig y -> x = y.
 Proof.
-  destruct x,y; simpl; f_equal; intro; subst. 
+  destruct x, y; simpl; f_equal; intro; subst. 
   f_equal; apply eq_proofs_unicity_on.
   destruct y, (x0 <? n); auto.
   right; discriminate.
 Qed.
-
-
 
 
 Section Inclusion_ij.
@@ -153,7 +134,7 @@ Section Inclusion_ij.
   Remark Ltb_ij : Nat.ltb i j.
   Proof.
     red; now rewrite Nat.ltb_lt.
-  Qed.
+  Defined.
 
   Program Definition iota_ij  (alpha: t i) : t j :=
     alpha.

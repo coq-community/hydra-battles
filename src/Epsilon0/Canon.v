@@ -18,7 +18,7 @@ Open Scope t1_scope.
 
 (** * Definitions *)
 
-(* Computes {alpha}(i+1) *)
+(**  Computes {alpha}(i+1) *)
 
 Fixpoint canonS alpha (i:nat) : T1 :=
   match alpha with
@@ -46,7 +46,7 @@ Definition canon alpha i :=
 
 
 
-(** * Properties *)
+(** * Properties of canonical sequences *)
 
 
 (** ** Rewriting lemmas *)
@@ -70,6 +70,7 @@ Proof.
     + destruct H0; auto. 
     + destruct H0; auto.
 Qed.
+
 
 Lemma canonS_lim1 : forall i lambda, nf lambda -> limitb lambda 
                                  -> canonS (ocons lambda 0 zero) i =
@@ -167,7 +168,7 @@ Proof.
   all:  destruct (T1.pred (ocons alpha1_1 n0 alpha1_2)); try discriminate.
 Qed.
 
-(** Canonical sequences and the order LT *)
+(** ** Canonical sequences and the order LT *)
 
 Lemma canonS_LT i alpha :
   nf alpha -> alpha <> zero ->
@@ -536,8 +537,8 @@ Defined.
 Lemma canon_limit_strong lambda : 
   nf lambda ->
   limitb lambda  ->
-  forall beta, (beta o< lambda ->
-                {i:nat | beta o< canon lambda i})%t1.
+  forall beta, beta o< lambda ->
+                {i:nat | beta o< canon lambda i}.
 Proof.
   intros H H0 beta H1; destruct (canonS_limit_strong H H0 H1) as [x Hx];
     exists (S x);auto.
@@ -662,9 +663,9 @@ Lemma canonS_LE alpha n :
   Qed. 
 
 
-  (** Adaptation to E0 *)
+  (** ** Adaptation to E0 (well formed terms of type [T1] ) *)
   
-Require Export   E0.
+Require Export  E0.
 Open Scope E0_scope.
 
 Definition CanonS (alpha:E0)(i:nat): E0.
@@ -701,41 +702,27 @@ Lemma CanonSSn (i:nat) :
                     CanonS (Ocons alpha (S n) Zero) i =
                     Ocons alpha n (CanonS (Phi0 alpha) i).
 Proof.
-  intros; apply E0_eq_intro.
+  intros; apply E0_eq_intro;
   unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Ocons); auto.
-  rewrite canonSSn; auto. 
-  apply cnf_ok.
-  unfold lt.
-  unfold Phi0; repeat rewrite cnf_rw. 
-  apply canonS_LT.
-  apply nf_phi0;auto.
-  apply cnf_ok.
-  discriminate.
-  unfold lt.
-
-  apply LT1.
-  apply nf_phi0;auto.
-  apply cnf_ok.
+  - rewrite canonSSn; auto with E0.
+  -  unfold lt, Phi0; repeat rewrite cnf_rw. 
+     apply canonS_LT ; eauto with T1.
+     apply nf_phi0;auto with E0. 
+     discriminate.
+   -  unfold lt; eauto with E0.
+      apply LT1; apply nf_phi0;auto with E0.
 Qed. 
 
 Lemma CanonS_Phi0_lim alpha k : Limitb alpha ->
                                 CanonS (Phi0 alpha) k =
-                                Phi0 (CanonS alpha k). (* to move *)
+                                Phi0 (CanonS alpha k). 
 Proof.
-  intro; orefl.
-  rewrite phi0_rw.
-  unfold CanonS.
-  repeat   rewrite cnf_rw.
-  rewrite <- canonS_lim1.
-  now rewrite phi0_rw.
-  apply cnf_ok.
-  red in H.
-  destruct alpha.   simpl. auto.
+  intro; orefl; rewrite phi0_rw.
+  unfold CanonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
+  -  now rewrite phi0_rw.
+  - apply cnf_ok.
+  - destruct alpha; cbn; assumption. 
 Qed.
-
-
-
-
 
 
 Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i o< alpha.
@@ -757,13 +744,11 @@ Proof.
   -   apply CanonS_lt.
 Qed.
 
-
-
-Lemma Canon_of_limit : forall i alpha, Limitb alpha ->
+Lemma Canon_of_limit_not_null : forall i alpha, Limitb alpha ->
                                        Canon alpha (S i) <> Zero.
 Proof.
   destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.
   simpl;   apply limitb_canonS_not_zero; auto.
 Qed.
 
-Hint Resolve CanonS_lt Canon_lt Canon_of_limit : E0.
+Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.

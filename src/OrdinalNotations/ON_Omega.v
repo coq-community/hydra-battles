@@ -1,12 +1,7 @@
 (**  The ordinal omega  *)
-Require Import Arith Compare_dec Lia  OrdinalNotations.Definitions
+Require Import Arith Compare_dec Lia  OrdinalNotations.Generic
         ON_Finite.
 Import Relations RelationClasses.
-Locate lt.
-Search (@StrictOrder nat).
-Search @Nat.compare.
-Search (@well_founded nat).
-
 
 Global Instance Omega : ON  Peano.lt Nat.compare.
 Proof.
@@ -25,7 +20,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega).
       * left; auto with arith.
      + right; exists x. split.
        * auto with arith.
-       * intros z H H0. Search Nat.lt. lia.
+       * intros z H H0.  lia.
 Defined.
 
 

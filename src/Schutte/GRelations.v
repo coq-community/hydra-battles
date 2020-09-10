@@ -145,7 +145,6 @@ Section General_Relations.
         split.
         auto.
         intros.
-        Locate le_lt_dec.
         case (Compare_dec.le_lt_dec q p).
         auto.
         intro.

@@ -1,5 +1,5 @@
 
-Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Definitions
+Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
         Relation_Operators Disjoint_Union.
 
 Import Relations.
@@ -45,8 +45,6 @@ Instance lt_strorder : StrictOrder lt.
 Proof.
   split.
   -  intros x  H. inversion H. subst.
-     Search Irreflexive.
-     
      destruct (StrictOrder_Irreflexive _ H2).
      subst.
      destruct (StrictOrder_Irreflexive _ H2).
@@ -59,8 +57,6 @@ Proof.
       injection H5; intro; subst.  now transitivity y0.
 Qed.
     
-
-Locate wf_disjoint_sum.
 
 Lemma lt_wf : well_founded lt.
 Proof. destruct NA, NB.

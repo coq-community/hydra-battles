@@ -19,6 +19,8 @@
 
 Require Export Epsilon0 Schutte_basics  Addition  AP CNF.
 Import List  PartialFun Ensembles.
+Require Import OrdinalNotations.Generic. 
+Generalizable All Variables.
 
 
 
@@ -545,8 +547,6 @@ Proof.
   -  intros x x' Hx Hx' H; apply inject_injective; auto.
 Qed.
 
-Require Import OrdinalNotations.Definitions. 
-Generalizable All Variables.
 
 
 Instance Epsilon0_correct :

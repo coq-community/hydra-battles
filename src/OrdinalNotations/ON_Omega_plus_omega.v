@@ -1,14 +1,14 @@
 (**  The ordinal omega + omega *)
 
 
-Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Definitions
+Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
         ON_plus ON_Omega.
 
 Import Relations.
-Declare Scope oo_scope.
-Delimit Scope oo_scope with oo.
+Declare Scope opo_scope.
+Delimit Scope opo_scope with opo.
 Open Scope ON_scope.
-Open Scope oo_scope.
+Open Scope opo_scope.
 
 Definition Omega_plus_Omega := ON_plus Omega Omega.
 
@@ -20,10 +20,10 @@ Definition t := @ON_plus.t nat nat.
 Example ex1 : inl 7 o< inr 0.
 Proof. constructor. Qed.
 
-Notation "'omega'" := (inr 0:t) : oo_scope.
-Notation "'omega'" := (@inr nat nat 0) (only printing) : oo_scope.
+Notation "'omega'" := (inr 0:t) : opo_scope.
+Notation "'omega'" := (@inr nat nat 0) (only printing) : opo_scope.
 
-Open Scope oo_scope.
+Open Scope opo_scope.
 
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
@@ -306,7 +306,7 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
    forall alpha, 
      (forall i,  fin i o< alpha) <-> omega o<= alpha.
  Proof.
-   intro alpha; destruct (Definitions.compare_correct  omega alpha).
+   intro alpha; destruct (Generic.compare_correct  omega alpha).
    - subst;split.
      +  right.
      + intros; constructor.
