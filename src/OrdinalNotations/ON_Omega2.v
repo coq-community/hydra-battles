@@ -1,4 +1,7 @@
 (**  The ordinal omega * omega *)
+
+
+
 Require Import Arith Compare_dec Lia Simple_LexProd
         OrdinalNotations.Generic.
 Import Relations.
@@ -24,9 +27,9 @@ Notation "'F'" := fin : o2_scope.
 Coercion fin : nat >-> t.
 
 
- Definition lt : relation t := lexico Peano.lt Peano.lt.
+Definition lt : relation t := lexico Peano.lt Peano.lt.
 
- Infix "o<" := lt : o2_scope.
+Infix "o<" := lt : o2_scope.
 
 (** reflexive closure of lt *)
 
@@ -114,26 +117,19 @@ Proof.
 Qed.
 
 
-
-
-
 Definition compare (alpha beta: t) : comparison :=
   match Nat.compare (fst alpha) (fst beta) with
     Eq => Nat.compare (snd alpha) (snd beta)
   | c => c
   end.
 
-
-
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
 
-
-
- Definition lt_b alpha beta : bool :=
+Definition lt_b alpha beta : bool :=
   match compare alpha beta with
-      Lt => true
-    | _ => false
+    Lt => true
+  | _ => false
   end.
 
 Definition le_b alpha beta := negb (lt_b beta alpha).
@@ -142,7 +138,7 @@ Definition eq_b alpha beta := match compare alpha beta with
                                 Eq => true
                               | _ => false
                               end.
-                                            
+
 Lemma compare_reflect alpha beta :
   match (compare alpha beta)
   with
@@ -150,6 +146,7 @@ Lemma compare_reflect alpha beta :
   | Eq => alpha = beta
   | Gt => beta o< alpha
   end.
+Proof.
   destruct alpha, beta; cbn. 
   case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
   case_eq (n ?= n1); try discriminate;
@@ -183,22 +180,20 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega2).
   - intro alpha; destruct alpha as [n p].
     + destruct p.
       * destruct n.
-        --   left; left.
-              exact le_0.
-        -- left;right.
-          split.
-          exists (0,0).
-          constructor 1; auto with arith.
-          destruct y; inversion 1; subst.
-          exists (n0, S n1); split.
-          right; auto with arith.
-          left; auto.
-          lia.
+        --   left; left; exact le_0.
+        -- left;right;  split.
+           ++  exists (0,0).
+             constructor 1; auto with arith.
+           ++  destruct y; inversion 1; subst.
+               ** exists (n0, S n1); split.
+                 right; auto with arith.
+                 left; auto.
+               ** lia.
       * right; exists (n,p); split.
-        constructor 2. auto with arith.
-        destruct z. unfold lt; cbn.
-        inversion 1; subst;
-          inversion 1; subst;try lia.
+        -- constructor 2; auto with arith.
+        -- destruct z; unfold lt; cbn.
+           inversion 1; subst;
+             inversion 1; subst;try lia.
 Defined.
 
 Lemma lt_eq_lt_dec alpha beta :
@@ -211,10 +206,8 @@ Proof.
   - intros; now right.
 Defined.
 
-
-
 Lemma Successor_inv : forall i j k l : nat, Successor (k, l) (i, j) ->
-                                  i = k /\ l = S j.
+                                            i = k /\ l = S j.
 Proof.
   destruct 1 as [H H0].
   assert (H1 : (i< k \/ i=k /\ j <l)%nat) by (inversion_clear H; auto).
@@ -222,8 +215,7 @@ Proof.
   - destruct  (H0 (i, (S j))).
     constructor 2; auto.
     constructor 1;auto.
-  -  subst. 
-     destruct (le_lt_or_eq _ _ H2); auto.
+  -  subst; destruct (le_lt_or_eq _ _ H2); auto.
       destruct (H0 (k, S j));  constructor 2; auto.
 Qed. 
 
@@ -231,7 +223,6 @@ Corollary Successor_not i j k : ~ Successor (k,0) (i,j).
 Proof.
   intro H; apply Successor_inv in H. destruct H; discriminate. 
 Qed.
-
 
 Lemma Successor_succ : forall alpha,  Successor (succ alpha) alpha.
 Proof.
@@ -279,6 +270,8 @@ Proof.
      destruct (H3 _ H2).
 Qed.
 
+(** Canonical sequences *)
+
 Definition canon  alpha i :=
   match alpha with
     (0,0) => (0,0)
@@ -299,14 +292,13 @@ Proof.
      exists (S n1).
      assert( H0: (n0 = n \/ n0 <  n)%nat) by lia.
      destruct H0.
-     subst;  right; auto.
-     left; auto.
-     lia.    
+     + subst;  right; auto.
+     + left; auto.
+     + lia.    
 Qed.
 
  Example Ex1 : limitb omega.
  Proof. reflexivity.  Qed.
-
 
 
  (* A simplifier ? *)
@@ -376,7 +368,7 @@ Definition mult_fin  (alpha : t) (p : nat): t :=
                end.
 Infix "*" := mult_fin : o2_scope.
 
-Fixpoint fin_mult (n:nat)(beta : t) : t :=
+Definition fin_mult (n:nat)(beta : t) : t :=
   match n, beta with
  |  0, _  => zero
  |  _, (0,0) => zero
@@ -500,3 +492,11 @@ Compute (0,2)+(1,10).
 Goal omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
   reflexivity.
 Qed.
+
+Open Scope ON_scope.
+
+Example L_3_plus_omega :  3 + omega = omega.
+Proof.
+  now  apply eq_intro.
+Qed.
+

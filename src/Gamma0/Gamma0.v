@@ -230,6 +230,7 @@ End lemmas_on_length.
 
 Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3 tricho_lt_2 tricho_lt_2 : T2.
 
+Open Scope t2_scope.
 
 Lemma tricho_aux : forall l, forall t t',
       (t2_length t + t2_length t' < l)%nat  ->
@@ -881,10 +882,10 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
       | Eq  => (gcons a b (S(n+n')) c')
       end)
   end
-where "alpha + beta" := (plus alpha beta): g0_scope.
+where "alpha + beta" := (plus alpha beta): t2_scope.
 
 
-Lemma plus_alpha_0 : forall alpha,  alpha + zero = alpha.
+Lemma plus_alpha_0 : forall alpha:T2 ,  alpha + zero = alpha.
 Proof.
   intro alpha; case alpha ;trivial.
 Qed.
@@ -3558,6 +3559,8 @@ End phi_to_psi.
 
 Check compare.
 
+Declare Scope g0_scope.
+
 Module G0.
 
   Definition LT := restrict nf lt.
@@ -3674,6 +3677,12 @@ Proof.
   refine (@mkg0 T2.zero _);  now compute. 
 Defined.
 
+Instance Omega : G0.
+Proof.
+  exists omega. reflexivity. 
+Defined.
+
+Notation "'omega'" := Omega : g0_scope.
 
 Instance ONG0: ON lt  compare.
 Proof.
@@ -3682,6 +3691,36 @@ Proof.
   - apply lt_wf. 
   - apply compare_correct.
 Qed.
+Search (nat -> T2).
 
+Instance Finite (n:nat) : G0.
+Proof.
+  exists (finite n).
+   Search nf nfb.  red; rewrite nfb_equiv. apply nf_finite.
+Defined.
+
+Instance Plus (alpha beta : G0) : G0.
+destruct alpha, beta. exists (vnf0 + vnf1).
+Search nf nfb.
+red in vnf_ok0, vnf_ok1. red. 
+rewrite nfb_equiv in *.
+now apply plus_nf.
+Defined. 
+
+  Infix "+" := Plus : g0_scope.
+  
+Coercion Finite : nat >-> G0.
+
+Local Open Scope g0_scope.
+
+Example  L_3_plus_omega :   3 + omega = omega.
+now apply eq_intro.
+Qed.
 
 End G0.
+
+
+
+
+
+

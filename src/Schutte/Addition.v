@@ -267,11 +267,7 @@ Proof.
        * now simpl.
 Qed.
 
-(* begin hide *)
-(* To do *)
 
-
-(* end hide *)
 
 Lemma one_plus_omega :  1 + omega = omega.
 Proof.
@@ -395,7 +391,7 @@ Proof.
   apply plus_assoc'; auto.
 Qed.
 
-Lemma one_plus_ge_omega (alpha : Ord) :
+Lemma one_plus_infinite (alpha : Ord) :
   omega <= alpha ->  1 + alpha = alpha. 
 Proof.
  intros  H.
@@ -404,7 +400,7 @@ Proof.
  rewrite plus_assoc;auto with schutte; now rewrite one_plus_omega.
 Qed.
 
-Lemma finite_plus_ge_omega (n : nat) (alpha : Ord) :
+Lemma finite_plus_infinite (n : nat) (alpha : Ord) :
   omega <= alpha -> n + alpha = alpha.
 Proof.
  induction n.
@@ -412,8 +408,14 @@ Proof.
  -  intros; simpl; replace (succ (F n)) with (F 1 + F n).
     + rewrite <- plus_assoc; eauto with schutte.
       rewrite IHn;auto.
-      apply one_plus_ge_omega;eauto with schutte.
+      apply one_plus_infinite;eauto with schutte.
   + now   rewrite <- plus_FF.
+Qed.
+
+
+Example L_3_plus_omega : 3 + omega = omega.
+Proof.
+ apply finite_plus_infinite, le_refl.
 Qed.
 
 Lemma plus_mono_weak_l : forall alpha beta gamma,

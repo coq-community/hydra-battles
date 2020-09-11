@@ -48,11 +48,11 @@ Inductive T2 : Set :=
   zero : T2
 | gcons : T2 -> T2  -> nat -> T2 -> T2.
 
-Declare Scope g0_scope.
+Declare Scope t2_scope.
 
-Notation "[ x , y ]" := (gcons x y 0 zero) (at level 0): g0_scope.
+Notation "[ x , y ]" := (gcons x y 0 zero) (at level 0): t2_scope.
 
-Open Scope g0_scope.
+Open Scope t2_scope.
 
 Definition psi alpha beta  := [alpha, beta].
 
@@ -61,7 +61,7 @@ Definition psi_term alpha :=
                  | gcons a b n c => [a, b]
   end.
 
-Notation  "'one'"  := [zero,zero] : g0_scope.
+Notation  "'one'"  := [zero,zero] : t2_scope.
 
 
 Lemma psi_eq : forall a b, psi a b = [a,b].
@@ -78,7 +78,7 @@ Definition finite  p := match p with
                            | S q => gcons zero zero q zero
                            end.
 
-Notation "'F' n" := (finite n)(at level 10) : g0_scope.
+Notation "'F' n" := (finite n)(at level 10) : t2_scope.
 
 Inductive is_finite:  T2 ->  Set := 
  zero_finite : is_finite zero
@@ -86,7 +86,7 @@ Inductive is_finite:  T2 ->  Set :=
 
 Hint Constructors is_finite : T2.
 
-Notation "'omega'"  := [zero,one] : g0_scope.
+Notation "'omega'"  := [zero,one] : t2_scope.
 
 Definition epsilon0  := [one,zero].
 
@@ -151,7 +151,7 @@ lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
   lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 o< gamma2 ->
                                       gcons alpha1 beta1 n1 gamma1 o<
                                       gcons alpha1 beta1 n1 gamma2
-where  "o1 o< o2" := (lt o1 o2): g0_scope.
+where  "o1 o< o2" := (lt o1 o2): t2_scope.
 Hint Constructors lt : T2.
 
 
@@ -161,7 +161,7 @@ Hint Constructors lt : T2.
 Definition le t t' := t = t' \/ t o< t'.
 Hint Unfold le : T2.
 
-Notation "o1 o<= o2" := (le o1 o2): g0_scope.
+Notation "o1 o<= o2" := (le o1 o2): t2_scope.
 
 Definition tail c := match c with | zero => zero 
                                   | gcons a b n c => c

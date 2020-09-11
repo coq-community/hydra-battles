@@ -788,7 +788,7 @@ Qed.
 \begin{remark}
 It is important to keep in mind  that the integer $n$ is not an ``element'' of \texttt{FinOrd $n$}. In set-theoretic presentations of ordinals, the set associated with the ordinal $n$ is $\{0,1,\dots,n-1\}$. 
 In our formalization, the interpretation of an ordinal as a set is realized by the following definition
-(in ~\href{../src/html/hydras.Prelude.Ordinal_generic.html}{Prelude.Ordinal\_generic}).
+(in ~\href{../src/html/hydras.OrdinalNotations.Generic.html}{OrdinalNotations.Generic}).
 
 \begin{Coqsrc}
 Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
@@ -900,7 +900,10 @@ Class  ON_Iso
 Let $i$ be some natural number. Prove that the notation systems 
 \texttt{Omega} and \texttt{ON\_plus (OrdFin $i$) Omega} are isomorphic.
 
-{\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
+{\it \textbf{Note:s} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
+
+This exercise is partially solved for $i=3$ (in ~\href{../src/html/hydras.OrdinalNotations.Example_3PlusOmega.html}{OrdinalNotations.Example\_3PlusOmega}).
+
 \end{exercise}
 
 \index{Projects}

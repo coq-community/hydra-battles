@@ -28,7 +28,7 @@ Next Obligation.
 Defined.
 
 
-Instance Iso : ON_Iso _ _ f g.
+Instance L_3_plus_omega :  ON_Iso _ _ f g.
 Proof.
   split.
   - destruct x, y.   cbn.
@@ -65,4 +65,3 @@ Proof.
 Defined.
 
 
-About Iso.
