@@ -92,6 +92,7 @@ Theorem battle_length_std (alpha : E0)  :
 Proof.  apply battle_length_std.  Qed.
 
 Open Scope nat_scope.
+
 Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k ->
@@ -100,7 +101,7 @@ Theorem battle_length_std_Hardy (alpha : E0) :
 Proof.
   intros H k  H0; exists (L_ alpha (S k) - k).
   split.
-  - generalize (H_L_ alpha k);  lia.
+  - generalize (H_L_ alpha k); lia.
   - now apply battle_length_std.
 Qed.
 

@@ -2,7 +2,7 @@ all:    project pdf vo doc
 
 
 pdf:
-	(cd latex; make)
+	(cd doc; make)
 
 vo:
 	(cd src; make -f CoqMakefile all)

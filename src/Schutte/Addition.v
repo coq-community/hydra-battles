@@ -313,75 +313,75 @@ Qed.
 
 
 Section proof_of_associativity.
- Variables alpha beta : Ord.
- 
-Lemma plus_assoc1 (gamma : Ord) :
-  alpha + beta <= alpha + (beta + gamma) .
-Proof.
- intros;apply plus_mono_r_weak;auto.
- -  apply le_plus_l; auto.
-Qed.
+  Variables alpha beta : Ord.
+  
+  Lemma plus_assoc1 (gamma : Ord) :
+    alpha + beta <= alpha + (beta + gamma) .
+  Proof.
+    intros;apply plus_mono_r_weak;auto.
+    -  apply le_plus_l; auto.
+  Qed.
 
-Lemma plus_assoc2 (gamma : Ord) :
+  Lemma plus_assoc2 (gamma : Ord) :
     alpha + beta <= gamma ->
     exists khi,  gamma = alpha + (beta + khi).
-Proof.
- intros  H0; assert (H1 : alpha <= gamma).
- {  apply le_trans with (alpha + beta);auto.
-    apply le_plus_l; auto.
- }  case (minus_exists H1); intros z Hz .
+  Proof.
+    intros  H0; assert (H1 : alpha <= gamma).
+    {  apply le_trans with (alpha + beta);auto.
+       apply le_plus_l; auto.
+    }  case (minus_exists H1); intros z Hz .
     assert (H2 :beta <= z).
-   {  tricho beta z HH.
-      -  right;auto.
-      -  left;auto.
-      -  case (@lt_irr gamma).
-         pattern gamma at 1; rewrite <- Hz.
-         apply lt_le_trans with (alpha + beta);auto.
-         + apply plus_mono_r;auto.
+    {  tricho beta z HH.
+       -  right;auto.
+       -  left;auto.
+       -  case (@lt_irr gamma).
+          pattern gamma at 1; rewrite <- Hz.
+          apply lt_le_trans with (alpha + beta);auto.
+          + apply plus_mono_r;auto.
     }
-   case (minus_exists H2);intros u Hu.
-   exists u;auto.
-   rewrite Hu;auto.
-Qed.
+    case (minus_exists H2);intros u Hu.
+    exists u;auto.
+    rewrite Hu;auto.
+  Qed.
 
-Let f_alpha_beta := plus (alpha + beta).
+  Let f_alpha_beta := plus (alpha + beta).
 
-Let g_alpha_beta gamma := alpha + (beta + gamma).
+  Let g_alpha_beta gamma := alpha + (beta + gamma).
 
-Remark of_g : ordering_function g_alpha_beta ordinal (ge (alpha+beta)).
-Proof.
- repeat split.
- - intros;red; red; unfold g_alpha_beta; now apply plus_assoc1.
- -   intros b H;
-     case (plus_assoc2  H). intros x H'x;  exists x.
-    unfold g_alpha_beta;split;auto.
+  Remark of_g : ordering_function g_alpha_beta ordinal (ge (alpha+beta)).
+  Proof.
+    repeat split.
+    - intros;red; red; unfold g_alpha_beta; now apply plus_assoc1.
+    -   intros b H;
+          case (plus_assoc2  H). intros x H'x;  exists x.
+        unfold g_alpha_beta;split;auto.
+        split.
+    -  unfold g_alpha_beta;intros.
+       + apply plus_mono_r;auto with schutte.
+         apply plus_mono_r;auto with schutte.
+  Qed.
+
+
+  Lemma of_u : fun_equiv f_alpha_beta g_alpha_beta ordinal ordinal.
+  Proof.
+    eapply ordering_function_unicity.
+    - unfold f_alpha_beta; apply plus_ordering.
+    - apply of_g.
+  Qed.
+
+  Lemma plus_assoc3 (gamma : Ord) :
+    f_alpha_beta  gamma =  g_alpha_beta gamma.
+  Proof.
+    case of_u; intros H0 H1; apply H1; auto.
     split.
--  unfold g_alpha_beta;intros.
-  + apply plus_mono_r;auto with schutte.
-    apply plus_mono_r;auto with schutte.
-Qed.
+  Qed.
 
-
-Lemma of_u : fun_equiv f_alpha_beta g_alpha_beta ordinal ordinal.
-Proof.
- eapply ordering_function_unicity.
- - unfold f_alpha_beta; apply plus_ordering.
- - apply of_g.
-Qed.
-
-Lemma plus_assoc3 (gamma : Ord) :
-  f_alpha_beta  gamma =  g_alpha_beta gamma.
-Proof.
-  case of_u; intros H0 H1; apply H1; auto.
-  split.
-Qed.
-
-Lemma plus_assoc' (gamma : Ord) :
-  alpha + (beta + gamma) = (alpha + beta) + gamma.
-Proof.
- intros; generalize plus_assoc3; unfold f_alpha_beta, g_alpha_beta.
- intros;symmetry;apply H.
-Qed.
+  Lemma plus_assoc' (gamma : Ord) :
+    alpha + (beta + gamma) = (alpha + beta) + gamma.
+  Proof.
+    intros; generalize plus_assoc3; unfold f_alpha_beta, g_alpha_beta.
+    intros;symmetry;apply H.
+  Qed.
 
 End proof_of_associativity.
  

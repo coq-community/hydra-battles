@@ -1,5 +1,7 @@
 #  Hydra battles in Coq 
-An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant (_draft_).
+An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant (_work in progress_).
+
+
 
 
 _All of the Coq scripts and latex files in this project are available under the [CeCILL-B license](https://cecill.info/licences/Licence_CeCILL-B_V1-en.html)_.
@@ -10,7 +12,7 @@ _All of the Coq scripts and latex files in this project are available under the 
 ##   Contents
 
 ### Documentation
-- latex/hydras.pdf  
+- doc/hydras.pdf  
 
 ###  coqdoc html files
  - directory src/html
@@ -43,9 +45,18 @@ _All of the Coq scripts and latex files in this project are available under the 
   - Various auxiliary definitions and lemmas
 
  
+## Contributions are welcome ! 
+  Any suggestion for improving the Coq scripts and/or the documentation will be taken into account.
+  
+  - In particular, we would be delighted to replace proofs with simpler ones, and/or to propose various proofs or definitions of the same concept, in order to illustrate different techniques and patterns. New tactics for automatizing the proofs are welcome too.
 
+  - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development.
+
+  
 
 ## Main mathematical references
+
+The theoretical sources of this development come from the three following references.
 
 1.  L. Kirby and J. Paris, _Accessible Independence Results for Peano Arithmetic_,
 	Bulletin of the London Mathematical Society,  1982, pp 725-731.
@@ -55,3 +66,7 @@ _All of the Coq scripts and latex files in this project are available under the 
  
  
 3. Kurt Schütte, _Proof Theory_, Springer, 1977.
+
+
+A more detailed bibliography is at the end of the documentation. Please feel free to suggest us more references. 
+

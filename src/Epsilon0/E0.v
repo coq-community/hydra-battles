@@ -620,6 +620,6 @@ Compute compare (omega + 3) omega.
 
 Example L_3_plus_omega :  3 + omega = omega.
 Proof.
-  now  apply eq_intro.
+  now  apply compare_Eq_eq.
 Qed.
 

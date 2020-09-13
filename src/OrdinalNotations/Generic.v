@@ -209,7 +209,7 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
 
 
 
-Lemma eq_intro  `{OA : @ON A ltA  compareA} alpha beta :
+Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Eq -> alpha = beta.
  Proof.
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
