@@ -1,5 +1,8 @@
-#  Hydra battles in Coq 
-An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant (_work in progress_).
+#  Hydra battles in Coq (_work in progress_).
+
+An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant. This development includes the study of several representations of ordinal numbers, and a part of the so-called _Ketonen and Solovay machinery_ (combinatorial properties of epsilon0).
+
+
 
 
 
