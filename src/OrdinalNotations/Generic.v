@@ -1,7 +1,7 @@
 Require Import RelationClasses Relation_Operators Ensembles OrdNotations.
 Import Relation_Definitions.
-Require Export MoreOrders.
-
+Require Export MoreOrders
+  Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Require Import Schutte_basics.
 
 
@@ -50,9 +50,30 @@ Definition on_le  {A:Type}{lt: relation A}
 
 Infix "o<=" := on_le : ON_scope.
 
+Definition m_lt {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}
+            {B : Type}
+  (m : B -> A) : relation B :=
+  fun x y =>  on_lt (m x) (m y).
 
+About m_lt.
 
+            
+Lemma wf_measure  {A:Type}(lt: relation A)
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}
+            {B : Type}
+            (m : B -> A) :
 
+  well_founded (m_lt m). 
+Proof.
+  intro x. eapply Acc_incl  with (fun x y =>  on_lt (m x) (m  y)).
+  intros y z H.
+ apply H.
+  eapply Acc_inverse_image.
+   apply wf.
+ Defined. 
 
 
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}

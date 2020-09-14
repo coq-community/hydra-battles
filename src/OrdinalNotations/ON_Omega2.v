@@ -503,3 +503,30 @@ Proof.
   now  apply compare_Eq_eq.
 Qed.
 
+Require Import Coq.Program.Wf.
+
+Let m (p : list nat * list nat) := omega * length (fst p) + length (snd p).
+
+Program Fixpoint  merge  (xys: list nat * list nat) {wf (m_lt m) xys} :
+  list nat :=
+  match xys with
+      (nil, ys) => ys
+    | (xs, nil) => xs
+    | (cons x xs, cons y ys) =>
+      if (Nat.ltb x y) then (cons x (merge (xs, (cons y ys))))
+      else (cons y (merge ((cons x xs), ys)))
+  end.
+Next Obligation.
+  unfold m; destruct xs; simpl. 
+  -  left; auto with arith.
+  -  left; auto with arith.  Defined.
+Next Obligation.
+  unfold m;  red ;cbn; destruct ys; simpl.
+  - right; lia.
+  - right; lia.
+Defined.
+Next Obligation.
+   apply   wf_measure.
+Defined.
+
+
