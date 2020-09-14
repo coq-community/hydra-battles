@@ -1,15 +1,12 @@
 
+(** Sum of two ordinal  notations *)
+ 
 Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
         Relation_Operators Disjoint_Union.
 
 Import Relations.
 Generalizable All Variables.
 Coercion is_true: bool >-> Sortclass.
-
-
-
-
-
 
 
 Section Defs.
@@ -106,6 +103,7 @@ Defined.
 
 
 End Defs.
+
 Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
 Arguments ON_plus {A ltA compareA} _ {B ltB compareB}.
 

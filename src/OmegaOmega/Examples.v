@@ -8,6 +8,7 @@ Require Import ListOmega Arith.
 
 *)
 
+(** To do : make it generic (any ordinal notation) *)
 
 (* Utilitaire pour la définition des ordres *)
 Definition make_mwlt (A:Set) (m : A -> t) (a1 a2:A) :=
@@ -64,6 +65,7 @@ apply wlt_wlt_gen.
 Qed.
 
 
+(* TO do : use omega*omega ? *)
 
 (* Ordre lexicographique sur les longueurs des listes *)
 Definition wm_listxlist (A:Set) (xys: list A * list A) :=

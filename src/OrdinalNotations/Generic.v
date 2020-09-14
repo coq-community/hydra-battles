@@ -51,6 +51,10 @@ Definition on_le  {A:Type}{lt: relation A}
 Infix "o<=" := on_le : ON_scope.
 
 
+
+
+
+
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
@@ -99,7 +103,7 @@ Class  ON_Iso
 
 
 
-(** OA is an ordinal notation for alpha *)
+(** OA is an ordinal notation for alpha (in Schutte's model) *)
 
 Class ON_for `(alpha : Ord)
      `(OA : @ON A ltA  compareA)
@@ -113,6 +117,10 @@ Class ON_for `(alpha : Ord)
         | Datatypes.Eq => iota a = iota b
         | Datatypes.Gt => lt (iota b) (iota a)
         end}.
+
+
+
+
 
 Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
@@ -208,6 +216,7 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
   forall x y,  f (opA x y) = opB (f x) (f y).
 
 
+(** Technical lemmas *)
 
 Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Eq -> alpha = beta.
@@ -215,16 +224,15 @@ Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
  Qed.
 
-Lemma lt_intro  `{OA : @ON A ltA  compareA} alpha beta :
+Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Lt -> alpha o< beta.
  Proof.
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
  Qed.
 
 
- Lemma gt_intro  `{OA : @ON A ltA  compareA} alpha beta :
+ Lemma compare_Gt_gt  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Gt -> beta o< alpha.
  Proof.
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
  Qed.
-

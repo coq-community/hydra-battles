@@ -3,9 +3,9 @@
 
 The proof of termination of all hydra battles presented in~\cite{KP82} is based
 on \emph{ordinal numbers}.
-From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of strict, total and well-founded ordered sets.
+From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of  totally ordered well-founded sets.
 
-More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a sequence of ordinal numbers, as an extension of the sequence of natural numbers. 
+More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a small sequence of ordinal numbers, which extends the sequence of natural numbers. 
 
 
 
@@ -38,11 +38,11 @@ Let us comment some features of this table:
 
 \begin{itemize}
 \item The ordinals are listed in a strictly increasing order. 
-\item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, betaween $41$ and $43$.
-\item Each ordinal in black is an immediate successor of anotter ordinal. We call it a \emph{successor} ordinal. For instance, $43$ is the successor of $42$, and $\omega^4+1$ the successor of $\omega^4$.
+\item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, between $17$ and $\omega$.
+\item Each ordinal printed in black is the immediate successor of another ordinal. We call it a \emph{successor} ordinal. For instance, $12$ is the successor of $11$, and $\omega^4+1$ the successor of $\omega^4$.
 \item Ordinals that  follow dots immediately (displayed in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 \item
-For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). $\omega$ is also the first limit ordinal, and the first infinite ordinal, in the sense that 
+For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). It is also the first limit ordinal, and the first infinite ordinal, in the sense that 
 the set $\mathbb{O}_\omega$ is infinite.
 \item The ordinal $\epsilon_0$ is the first number which is equal to its own exponential of base $\omega$. It plays an important role in proof theory, and is particularly studied in chapters~\ref{chap:T1} to \ref{chap:alpha-large}.
 \item All the ordinals shown in this list are either the ordinal \textcolor{blue}{$0$},
@@ -200,10 +200,10 @@ Infix "o<=" := on_le : ON_scope.
 The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a statement. In the informal and semi-formal statements, we still use $<$ and $\leq$.
 \end{remark}
 
-\subsection{Instances of notation systems}
+\section{Instances of notation systems}
 
 
-\subsubsection{The ordinal \texorpdfstring{$\omega$}{omega}}
+\subsection{The ordinal \texorpdfstring{$\omega$}{omega}}
 
 The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
 
@@ -512,6 +512,40 @@ Lemma ZLS_dec (alpha : t) :
 \end{Coqsrc}
 
 
+\subsection{The ordinal \texorpdfstring{$\omega^2$}{omega^2}}
+
+The ordinal $\omega^2$ (also called $\varphi_0(2)$, see Chap.~\ref{chap:schutte}), is represented by the lexicographically ordered cartesian product $\mathbb{N}\times\mathbb{N}$. 
+
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega2.html}{ON\_Omega2}}
+
+\begin{Coqsrc}
+Definition t := (nat * nat)%type.
+
+Definition lt : relation t := lexico Peano.lt Peano.lt.
+Definition le := clos_refl _ lt.
+
+Infix "o<" := lt : o2_scope.
+Infix "o<=" := le : o2_scope.
+\end{Coqsrc}
+
+It is easy to represent the finite ordinals, successors and limits.
+
+\begin{Coqsrc}
+Definition zero: t := (0,0).
+
+Definition fin (n:nat) : t := (0, n).
+
+Notation "'F'" := fin : o2_scope.
+
+Coercion fin : nat >-> t.
+
+
+Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
+
+Notation "'omega'" := (1,0) : o2_scope.
+\end{Coqsrc}
+
 
 
 \section{Comparing Ordinal Notations}
@@ -550,6 +584,8 @@ Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in ord
 have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
 a variant on $O_B$.
 \end{project}
+
+
 
 \subsection{Comparing an ordinal notation with Schütte's model}
 
@@ -603,7 +639,7 @@ One may represent the ordinal $n$ by a sigma type.
 
 
 \vspace{4pt}
-\noindent\emph{From Module~\href{../src/html/hydras.Prelude.Finite_ordinals.html}{Prelude.Finite\_ordinals}}
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
 
 \label{def: Finite-ord-type}
 \begin{Coqsrc}
@@ -741,7 +777,7 @@ Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
   i = i0
 \end{Coqanswer}
 
-We have now to prove that there exists at most one  proof of \texttt{Nat.ltb x0 (S n)}. This is not obvious, but  a consequence of the following lemma of library 
+We have now to prove that there exists at most one  proof of (\texttt{Nat.ltb x0 (S n)}). This is not obvious, but  a consequence of the following lemma of library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
 
 \index{Coq!Techniques!Unicity of equality proofs}
@@ -750,7 +786,8 @@ We have now to prove that there exists at most one  proof of \texttt{Nat.ltb x0 
 \begin{Coqanswer}
 eq_proofs_unicity_on :
 forall (A : Type) (x : A),
-(forall y : A, x = y \/ x <> y) -> forall (y : A) (p1 p2 : x = y), p1 = p2
+(forall y : A, x = y \/ x <> y) -> 
+forall (y : A) (p1 p2 : x = y), p1 = p2
 \end{Coqanswer}
 
 Thus unicity of proofs of \texttt{Nat.ltb x0 (S n)}  comes from the decidability of

@@ -14,19 +14,6 @@ Coercion is_true: bool >-> Sortclass.
 
 Definition t := (nat * nat)%type.
 
-Definition zero: t := (0,0).
-
-Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
-
-Notation "'omega'" := (1,0) : o2_scope.
-
-Definition fin (n:nat) : t := (0, n).
-
-Notation "'F'" := fin : o2_scope.
-
-Coercion fin : nat >-> t.
-
-
 Definition lt : relation t := lexico Peano.lt Peano.lt.
 
 Infix "o<" := lt : o2_scope.
@@ -39,6 +26,22 @@ Infix "o<=" := le : o2_scope.
 
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
+
+
+Definition zero: t := (0,0).
+
+Definition fin (n:nat) : t := (0, n).
+
+Notation "'F'" := fin : o2_scope.
+
+Coercion fin : nat >-> t.
+
+
+Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
+
+Notation "'omega'" := (1,0) : o2_scope.
+
+
 
 Example ex1 : 6 o< omega.
 Proof.
