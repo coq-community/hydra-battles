@@ -11,6 +11,7 @@ Require Import ListOmega Arith.
 (** To do : make it generic (any ordinal notation) *)
 
 (* Utilitaire pour la définition des ordres *)
+
 Definition make_mwlt (A:Set) (m : A -> t) (a1 a2:A) :=
   (wlt (m a1) (m a2)).
  

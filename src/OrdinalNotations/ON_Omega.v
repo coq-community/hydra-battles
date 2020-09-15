@@ -13,7 +13,7 @@ Qed.
 
 
 
-Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega).
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
  - intro x; destruct x.
      + left; left. intro n; destruct n.
       * right.

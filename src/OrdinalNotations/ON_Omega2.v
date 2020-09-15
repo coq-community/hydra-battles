@@ -179,7 +179,7 @@ Proof.
   - apply compare_correct.
 Qed.
 
-Definition Zero_limit_succ_dec : ZeroLimitSucc_dec (on := Omega2).
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
   - intro alpha; destruct alpha as [n p].
     + destruct p.
       * destruct n.
@@ -352,9 +352,9 @@ Qed.
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
   | (0, b), (0, b') => (0, b + b')
-  |  (0,0), y  => y
-  |  x, (0,0)  => x
-  |   (0, b), (S n', b') => (S n', b')
+  | (0,0), y  => y
+  | x, (0,0)  => x
+  | (0, b), (S n', b') => (S n', b')
   | (S n, b), (S n', b') => (S n + S n', b')
   | (S n, b), (0, b') => (S n, b + b')
  
@@ -503,9 +503,12 @@ Proof.
   now  apply compare_Eq_eq.
 Qed.
 
+(* adapted from Pascal Manoury et al. *)
+
 Require Import Coq.Program.Wf.
 
-Let m (p : list nat * list nat) := omega * length (fst p) + length (snd p).
+Local Definition m (p : list nat * list nat) :=
+  omega * length (fst p) + length (snd p).
 
 Program Fixpoint  merge  (xys: list nat * list nat) {wf (m_lt m) xys} :
   list nat :=
@@ -516,17 +519,16 @@ Program Fixpoint  merge  (xys: list nat * list nat) {wf (m_lt m) xys} :
       if (Nat.ltb x y) then (cons x (merge (xs, (cons y ys))))
       else (cons y (merge ((cons x xs), ys)))
   end.
+
+
 Next Obligation.
-  unfold m; destruct xs; simpl. 
-  -  left; auto with arith.
-  -  left; auto with arith.  Defined.
-Next Obligation.
-  unfold m;  red ;cbn; destruct ys; simpl.
-  - right; lia.
-  - right; lia.
+  unfold m, m_lt; destruct xs; simpl; left; lia.
 Defined.
+
 Next Obligation.
-   apply   wf_measure.
+  unfold m, m_lt ;cbn; destruct ys; simpl; right; lia.
 Defined.
+
+
 
 

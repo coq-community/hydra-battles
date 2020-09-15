@@ -73,8 +73,9 @@ Proof.
  apply H.
   eapply Acc_inverse_image.
    apply wf.
- Defined. 
+Defined.
 
+Hint Resolve wf_measure : core.
 
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
@@ -84,8 +85,9 @@ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
 
- 
-(** The segment called [O alpha] in Schutte *)
+
+
+(** The segment called [O alpha] in Schutte's book *)
 
 Definition bigO `{nA : @ON A ltA compareA}
            (a: A) : Ensemble A :=
@@ -101,10 +103,10 @@ Class  SubON
        (alpha :  B)
        (iota : A -> B):=
   {
-  subseg_compare :forall x y : A,  compareB (iota x) (iota y) =
+  subon_compare :forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
-  subseg_incl : forall x, ltB (iota x) alpha;
-  subseg_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+  subon_incl : forall x, ltB (iota x) alpha;
+  subon_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 
 Class  ON_Iso 
@@ -257,3 +259,6 @@ Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
  Proof.
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
  Qed.
+
+
+ 

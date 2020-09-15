@@ -184,6 +184,27 @@ Proof.
   discriminate.
 Qed.
 
+Lemma Least_is_0 (alpha:t) : Least alpha <-> alpha = 0.
+Proof.
+  unfold Least; split; intro H.
+  - destruct alpha.    
+   +  destruct n.
+    * reflexivity.
+    *  specialize (H (inl n)); inversion H.
+     --  inversion H0; lia.
+     --  lia.
+   + specialize (H (inl 0)); inversion H.
+    *  inversion H0.
+  -  subst; destruct y.
+     + destruct n.
+       * right. 
+       * left; constructor.
+         lia.
+     +   constructor.
+         constructor.
+Qed.
+
+
 
 Lemma ZLS_dec (alpha : t) :
   {alpha = 0} +
@@ -196,8 +217,8 @@ Proof.
     + right; exists (inl n).
       split.
       * constructor. auto with arith.
-      *       intros beta Hbeta Hbeta'; inversion Hbeta; subst;
-                inversion Hbeta';subst; try lia.
+      * intros beta Hbeta Hbeta'; inversion Hbeta; subst;
+          inversion Hbeta';subst; try lia.
   - destruct n.
     left;right.
     split.
@@ -209,6 +230,17 @@ Proof.
       * constructor. auto with arith.
       *       intros beta Hbeta Hbeta'; inversion Hbeta; subst;
                 inversion Hbeta';subst; try lia.
+Defined.
+
+
+
+
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
+Proof.
+  intro alpha;  destruct (ZLS_dec alpha) as [[H | H] | H].
+  - left; left; now rewrite  Least_is_0. 
+  - left; now right.
+  - now right.
 Defined.
 
 Definition limitb (alpha: t) := match on_compare alpha omega
