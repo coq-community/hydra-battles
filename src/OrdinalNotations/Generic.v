@@ -50,7 +50,7 @@ Definition on_le  {A:Type}{lt: relation A}
 
 Infix "o<=" := on_le : ON_scope.
 
-Definition m_lt {A:Type}{lt: relation A}
+Definition measure_lt {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare}
             {B : Type}
@@ -62,7 +62,7 @@ Lemma wf_measure  {A:Type}(lt: relation A)
             {on : ON lt compare}
             {B : Type}
             (m : B -> A) :
-  well_founded (m_lt m). 
+  well_founded (measure_lt m). 
 Proof.
   intro x. eapply Acc_incl  with (fun x y =>  on_lt (m x) (m  y)).
   intros y z H.

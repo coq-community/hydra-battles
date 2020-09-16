@@ -533,10 +533,10 @@ Section Merge.
     omega * length (fst p) + length (snd p).
 
 
-  
+
 Function  merge  (ltb: A -> A -> bool)
           (xys: list A * list A)
-          {wf (m_lt m) xys} :
+          {wf (measure_lt m) xys} :
     list A :=
     match xys with
       (nil, ys) => ys
@@ -546,17 +546,12 @@ Function  merge  (ltb: A -> A -> bool)
       else y :: merge  ltb ((x :: xs), ys)
     end.
 
-  - intros.  unfold m, m_lt;  cbn; destruct xs0; simpl; left; lia.
-  - intros;    unfold m, m_lt ;cbn; destruct ys0; simpl; right; lia.
+  - intros.  unfold m, measure_lt;  cbn; destruct xs0; simpl; left; lia.
+  - intros;    unfold m, measure_lt ;cbn; destruct ys0; simpl; right; lia.
    - auto.
   Defined.
 
-  Search merge.
-
-
 End Merge.
-
-Search merge.
 
 Goal forall l,  merge nat Nat.leb (nil, l) = l.
   intro; now rewrite merge_equation.
