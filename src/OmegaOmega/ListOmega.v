@@ -51,11 +51,12 @@ Proof.
  - intros; now exists p, w. 
 Qed.
 
-Definition t := list nat.
 
 Declare Scope oo_scope.
 Delimit Scope oo_scope with oo.
 Open Scope oo_scope.
+
+Definition t := list nat.
 
 Notation  "'omega'" := (1::0::nil) : oo_scope.
 Definition fin (i:nat) : t := (i::nil).
@@ -203,12 +204,11 @@ Inductive wlt : t -> t -> Prop :=
   (length w1 = length w2) ->  (wlt w1 w2) 
     -> (wlt (cons (S a) w1) (cons (S a) w2)).
 
-
 Lemma not_wlt_nil : forall w:t,  ~ wlt w nil.
 Proof.
 induction w as [ | a w H].
  - red; inversion 1.
- -  intro.  inversion H0; auto.
+ - intro.  inversion H0; auto.
 Qed.
 
 (**  Inversion lemmas *)
@@ -234,6 +234,85 @@ Proof.
     + assumption.
 Qed.
 
+(** wlt is a strict order *)
+
+Lemma wlt_eq : forall a:nat, forall w1 w2:t,
+      (length w1)=(length w2) -> (wlt (a::w1) (a::w2)) -> (wlt w1 w2).
+Proof.
+  destruct a.
+  - intros. apply wlt_0_w_inv. apply wlt_w_0_inv. assumption.
+  - intros. inversion H0.
+    * exfalso. apply lt_irrefl with (x:=length w2). rewrite H in H2. assumption.
+    * exfalso. apply lt_irrefl with (x:=a). assumption.
+    * assumption.
+Qed.
+
+Lemma wlt_irref : forall w:t, ~ wlt w w.
+Proof. 
+  induction w.
+  - apply not_wlt_nil.
+  - case a.
+    + intro. apply IHw. apply wlt_0_w_inv. apply wlt_w_0_inv. assumption.
+    + intros. intro. inversion H.  
+      * apply lt_irrefl with (x:=length w). assumption.
+      * apply lt_irrefl with (x:=n). assumption.
+      * apply IHw. apply wlt_eq with (a:=S n); assumption.
+Qed.
+
+Lemma wlt_trans : forall w1 w2 w3:t, (wlt w1 w2) -> (wlt w2 w3) -> (wlt w1 w3).
+Proof. 
+  intros w1 w2 w3. generalize w3 w2 w1.
+  induction w0.
+  - intros. exfalso. apply (not_wlt_nil w0). assumption.
+  - case a.
+    + intros. apply wlt_w_0. apply IHw0 with (w2:=w4).
+      * assumption.
+      * apply wlt_w_0_inv. assumption.    
+
+    + induction w4.
+      * intros. exfalso. apply (not_wlt_nil w4). assumption.
+      * case a0.
+        -- intros. apply IHw4.
+           ++ apply wlt_w_0_inv. assumption.
+           ++ apply wlt_0_w_inv. assumption.
+        -- induction w5.
+           ++ intros. apply wlt_nil.
+           ++ case a1.
+              ** intros. apply wlt_0_w. apply IHw5.
+                 --- apply wlt_0_w_inv. assumption.
+                 --- assumption.
+              ** intros. inversion H.
+                 --- inversion H0.
+                     +++ apply wlt_len. apply lt_trans with (m:=length w4);
+                         assumption.
+                     +++ apply wlt_len. rewrite H9 in H2. assumption.
+                     +++ apply wlt_len. rewrite H9 in H2. assumption.
+                 --- inversion H0.
+                     +++ apply wlt_len. rewrite <- H4 in H8. assumption.
+                     +++ apply wlt_lt.
+                         *** rewrite H4. assumption.
+                         *** apply lt_trans with (m:=n0); assumption.
+                     +++ apply wlt_lt.
+                         *** rewrite H4. assumption.
+                         *** rewrite <- H9. assumption.
+                 --- inversion H0.
+                     +++ apply wlt_len. rewrite H4. assumption.
+                     +++ apply wlt_lt.
+                         *** rewrite <- H4 in H10. assumption.
+                         *** assumption.
+                     +++ apply wlt_wlt.
+                         *** rewrite <- H4 in H10. assumption.
+                         *** apply IHw0 with (w2:=w4); assumption.
+Qed.                       
+
+Require Import RelationClasses.
+
+Instance wlt_strorder : StrictOrder wlt.
+Proof.
+  split.
+  - unfold Irreflexive. unfold Reflexive. unfold complement. apply wlt_irref.
+  - unfold Transitive. intros. apply wlt_trans with (w2:=y); assumption.
+Qed.  
 
 Lemma not_wlt_len_left : forall (w1 w2:t) (a:nat),
   length w2 <= length w1 -> ~ wlt (cons (S a) w1) w2.
