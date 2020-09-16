@@ -64,7 +64,7 @@ Section Definitions.
     - unfold R;apply wf_inverse_image, wf_lexprod.
       + trivial.
       + intro; trivial.
-  Qed.
+  Defined.
 
 End Definitions.
 

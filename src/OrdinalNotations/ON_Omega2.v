@@ -336,6 +336,8 @@ Proof.
   apply limit_is_lub_0.
 Qed.
 
+
+
  Definition zero_limit_succ_dec :
   forall alpha, 
                 ({alpha = zero} + {limitb alpha }) + 
@@ -348,6 +350,7 @@ Qed.
    - right; now exists (n,p).
  Defined.
 
+ Locate t.
 
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
@@ -357,10 +360,22 @@ Definition  plus (alpha beta : t) : t :=
   | (0, b), (S n', b') => (S n', b')
   | (S n, b), (S n', b') => (S n + S n', b')
   | (S n, b), (0, b') => (S n, b + b')
- 
-  end.
+   end.
 
 Infix "+" := plus : o2_scope.
+
+Compute 3 + omega.
+
+Compute omega + 3.
+
+Example non_commutativity_of_plus :  omega + 3 <> 3 + omega.
+Proof.
+  cbn.
+  discriminate.
+Qed. 
+
+
+(** multiplication of an ordinal and a natural number *)
 
 Definition mult_fin  (alpha : t) (p : nat): t :=
   match alpha, p with
@@ -371,6 +386,8 @@ Definition mult_fin  (alpha : t) (p : nat): t :=
                end.
 Infix "*" := mult_fin : o2_scope.
 
+(** multiplication of  a natural number and an ordinal *)
+
 Definition fin_mult (n:nat)(beta : t) : t :=
   match n, beta with
  |  0, _  => zero
@@ -379,10 +396,13 @@ Definition fin_mult (n:nat)(beta : t) : t :=
  |  n, (n',p') => (n', (n * p')%nat)
  end.
 
-Compute (fin_mult 3 (omega * 7 + 15)).
 
+Example e1 : fin_mult 3 (omega * 7 + 15) = omega * 7 + 45.
+Proof. reflexivity. Qed.
 
-Compute (fin_mult 3 (omega * 1 + 15)).
+Example e2 :  omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
+Proof. reflexivity. Qed.
+
 
 Lemma plus_assoc alpha beta gamma :
   alpha + (beta + gamma) = alpha + beta + gamma.
@@ -492,9 +512,6 @@ Compute (0,2)+(0,10).
 
 Compute (0,2)+(1,10).
 
-Goal omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
-  reflexivity.
-Qed.
 
 Open Scope ON_scope.
 
@@ -505,30 +522,45 @@ Qed.
 
 (* adapted from Pascal Manoury et al. *)
 
-Require Import Coq.Program.Wf.
+Require Import Coq.Program.Wf List.
+Require Import FunInd Recdef.
 
-Local Definition m (p : list nat * list nat) :=
-  omega * length (fst p) + length (snd p).
+Section Merge.
 
-Program Fixpoint  merge  (xys: list nat * list nat) {wf (m_lt m) xys} :
-  list nat :=
-  match xys with
+  Variable A: Type.
+
+  Local Definition m (p : list A * list A) :=
+    omega * length (fst p) + length (snd p).
+
+
+  
+Function  merge  (ltb: A -> A -> bool)
+          (xys: list A * list A)
+          {wf (m_lt m) xys} :
+    list A :=
+    match xys with
       (nil, ys) => ys
     | (xs, nil) => xs
-    | (cons x xs, cons y ys) =>
-      if (Nat.ltb x y) then (cons x (merge (xs, (cons y ys))))
-      else (cons y (merge ((cons x xs), ys)))
-  end.
+    | (x :: xs, y :: ys) =>
+      if ltb x y then x :: merge  ltb (xs, (y :: ys))
+      else y :: merge  ltb ((x :: xs), ys)
+    end.
+
+  - intros.  unfold m, m_lt;  cbn; destruct xs0; simpl; left; lia.
+  - intros;    unfold m, m_lt ;cbn; destruct ys0; simpl; right; lia.
+   - auto.
+  Defined.
+
+  Search merge.
 
 
-Next Obligation.
-  unfold m, m_lt; destruct xs; simpl; left; lia.
-Defined.
+End Merge.
 
-Next Obligation.
-  unfold m, m_lt ;cbn; destruct ys; simpl; right; lia.
-Defined.
+Search merge.
 
+Goal forall l,  merge nat Nat.leb (nil, l) = l.
+  intro; now rewrite merge_equation.
+Qed.
 
-
+ 
 

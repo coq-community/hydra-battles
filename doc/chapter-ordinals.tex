@@ -209,6 +209,32 @@ Infix "o<=" := on_le : ON_scope.
 The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, we still use $<$ and $\leq$ for comparing ordinals.
 \end{remark}
 
+
+\subsection{Ordinal notations and measures for proving termination}
+\label{sect:measure-ON}
+
+The following lemma (together with the type class mechnism) allows us to use simply  measures towards an ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
+and  \texttt{Coq.Wellfounded.Inclusion}. 
+
+\begin{Coqsrc}
+Definition m_lt {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}
+            {B : Type}
+  (m : B -> A) : relation B :=
+  fun x y =>  on_lt (m x) (m y).
+            
+Lemma wf_measure  {A:Type}(lt: relation A)
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}
+            {B : Type}
+            (m : B -> A) :
+  well_founded (m_lt m). 
+\end{Coqsrc}
+
+A simple example of application is given in Sect.~\vref{sect:merge-example}.
+
+
 \section{Examples of ordinal notations}
 
 
@@ -516,13 +542,23 @@ Lemma succb_correct (alpha : t) :
 \end{Coqsrc}
 
 
-Finally the nature of any ordinal (inside this notation system) is decidable:
+Finally, the nature of any ordinal is decidable(inside this notation system) :
+
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.Generic.html}{OrdinalNotations.Generic}}
+\begin{Coqsrc}
+  Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
+           {compare : A -> A -> comparison}
+           {on : ON lt compare} :=
+  forall alpha,
+    {Least alpha} +
+    {Limit alpha} +
+    {beta: A | Successor alpha beta}.
+\end{Coqsrc}
+
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
 \begin{Coqsrc}
-Lemma ZLS_dec (alpha : t) :
-  {alpha = 0} +
-  {Limit alpha} +
-  {beta : t | Successor alpha beta}.
+Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
 \end{Coqsrc}
 
 
@@ -585,6 +621,128 @@ Instance Omega2 : ON  lt compare.
 \end{Coqsrc}
 
 
+\subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
+
+\subsubsection{Addition}
+
+We can define on \texttt{ON\_omega2} an addition which extends the addition on \texttt{nat}.
+
+\begin{Coqsrc}
+Definition  plus (alpha beta : t) : t :=
+  match alpha,beta with
+  | (0, b), (0, b') => (0, b + b')
+  | (0,0), y  => y
+  | x, (0,0)  => x
+  | (0, b), (S n', b') => (S n', b')
+  | (S n, b), (S n', b') => (S n + S n', b')
+  | (S n, b), (0, b') => (S n, b + b')
+   end.
+
+Infix "+" := plus : o2_scope.
+\end{Coqsrc}
+
+Please note that this operation is not commutative:
+
+\begin{Coqsrc}
+Example non_commutativity_of_plus :  omega + 3 <> 3 + omega.
+Proof.
+  cbn.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 237)
+  
+  ============================
+(1, 3) <> omega.
+\end{Coqanswer}
+
+\begin{Coqsrc}
+ discriminate.
+Qed.
+\end{Coqsrc}
+
+
+\subsubsection{Multiplication}
+
+The restriction of ordinal multiplication to the segment $[0,\omega^2)$ is not a total function.
+For instance $\omega\times\omega= \omega^2$ is outside the set of represented values.
+Nevertheless, we can define two operations mixing natural numbers and ordinals.
+
+\begin{Coqsrc}
+(** multiplication of an ordinal and a natural number *)
+
+Definition mult_fin  (alpha : t) (p : nat): t :=
+  match alpha, p with
+ |  (0,0), _  => zero
+ |  _, 0 => zero
+ |  (0, n), p => (0, n * p)
+ |  ( n, b),  n' => ( n *  n', b)
+               end.
+Infix "*" := mult_fin : o2_scope.
+
+(** multiplication of  a natural number and an ordinal *)
+
+Definition fin_mult (n:nat)(beta : t) : t :=
+  match n, beta with
+ |  0, _  => zero
+ |  _, (0,0) => zero
+ |   n , (0,n') => (0, (n*n')%nat)
+ |  n, (n',p') => (n', (n * p')%nat)
+ end.
+
+Example e1 : fin_mult 3 (omega * 7 + 15) = omega * 7 + 45.
+Proof. reflexivity. Qed.
+
+Example e2 :  omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
+Proof. reflexivity. Qed.
+\end{Coqsrc}
+
+Multiplication with a finite ordinal and addition are related through the following lemma:
+
+\begin{Coqsrc}
+Lemma unique_decomposition alpha : 
+    exists! i j: nat,  alpha = omega * i + j.
+\end{Coqsrc}
+
+\subsection{A proof a termination using \texorpdfstring{$\omega^2$}{omega^2}} 
+
+Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily the function which merges two 
+
+\begin{Coqsrc}
+(* adapted from Pascal Manoury et al. *)
+
+Require Import Coq.Program.Wf.
+
+Section Merge.
+
+  Variable A: Type.
+
+  Local Definition m (p : list A * list A) :=
+    omega * length (fst p) + length (snd p).
+
+  Program Fixpoint  merge  (ltb: A -> A -> bool)
+          (xys: list A * list A)
+          {wf (m_lt m) xys} :
+    list A :=
+    match xys with
+      (nil, ys) => ys
+    | (xs, nil) => xs
+    | (x :: xs, y :: ys) =>
+      if ltb x y then x :: merge  ltb (xs, (y :: ys))
+      else y :: merge  ltb ((x :: xs), ys)
+    end.
+
+  Next Obligation.
+    unfold m, m_lt; destruct xs; simpl; left; lia.
+  Defined.
+
+  Next Obligation.
+    unfold m, m_lt ;cbn; destruct ys; simpl; right; lia.
+  Defined.
+
+End Merge.
+\end{Coqsrc}
+
 
 
 
@@ -620,12 +778,15 @@ Instance Incl : SubON Omega Omega_plus_Omega omega fin.
 
 \index{Projects}
 \begin{project}
+Prove that \texttt{Omega\_plus\_Omega} cannot be a sub-notation of \texttt{Omega}.
+\end{project}
+
+\index{Projects}
+\begin{project}
 Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in order to
 have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
 a variant on $O_B$.
 \end{project}
-
-
 
 \section{Comparing an ordinal notation with Schütte's model}
 
