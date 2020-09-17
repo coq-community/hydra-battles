@@ -56,7 +56,8 @@ _All of the Coq scripts and latex files in this project are available under the 
   - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development.
 
   
-
+  - __Contact__ : pierre dot casteran [at gmail dot com | at labri dot fr]
+  
 ## Main mathematical references
 
 The theoretical sources of this development come from the three following references.
