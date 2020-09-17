@@ -532,11 +532,9 @@ Section Merge.
   Local Definition m (p : list A * list A) :=
     omega * length (fst p) + length (snd p).
 
-
-
-Function  merge  (ltb: A -> A -> bool)
-          (xys: list A * list A)
-          {wf (measure_lt m) xys} :
+  Function  merge  (ltb: A -> A -> bool)
+            (xys: list A * list A)
+            {wf (measure_lt m) xys} :
     list A :=
     match xys with
       (nil, ys) => ys
@@ -545,10 +543,10 @@ Function  merge  (ltb: A -> A -> bool)
       if ltb x y then x :: merge  ltb (xs, (y :: ys))
       else y :: merge  ltb ((x :: xs), ys)
     end.
-
-  - intros.  unfold m, measure_lt;  cbn; destruct xs0; simpl; left; lia.
-  - intros;    unfold m, measure_lt ;cbn; destruct ys0; simpl; right; lia.
-   - auto.
+  
+  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
+  - auto.
   Defined.
 
 End Merge.

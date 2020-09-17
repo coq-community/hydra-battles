@@ -709,6 +709,8 @@ Lemma unique_decomposition alpha :
 
 Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily the function which merges two lists.
 
+\index{Coq!Commands!Function}
+
 \begin{Coqsrc}
 (* adapted from Pascal Manoury et al. *)
 
@@ -723,8 +725,6 @@ Section Merge.
   Local Definition m (p : list A * list A) :=
     omega * length (fst p) + length (snd p).
 
-
-
   Function  merge  (ltb: A -> A -> bool)
           (xys: list A * list A)
           {wf (measure_lt m) xys} :
@@ -737,8 +737,8 @@ Section Merge.
       else y :: merge  ltb ((x :: xs), ys)
     end.
 
-  - intros.  unfold m, measure_lt;  cbn; destruct xs0; simpl; left; lia.
-  - intros;    unfold m, measure_lt ;cbn; destruct ys0; simpl; right; lia.
+  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
    - auto.
   Defined.
 
