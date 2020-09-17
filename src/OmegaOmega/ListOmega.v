@@ -21,8 +21,6 @@ Coercion is_true : bool >-> Sortclass.
 Lemma minus_Sn_n : forall (n:nat), S n - n = 1.
 Proof. lia. Qed.
 
-
-
 Lemma minus_lt_S : forall (n1 n2:nat),
     (lt n1 n2) -> exists (n:nat), (minus n2 n1) = (S n).
 Proof.
