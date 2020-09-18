@@ -179,6 +179,31 @@ Proof.
   - apply compare_correct.
 Qed.
 
+Lemma zero_le alpha : zero o<= alpha.
+Proof.
+  destruct alpha as [i j]; destruct i.
+  - destruct j.
+    + right.
+    + left;  right; lia.  
+  - left; left; lia.
+Qed.
+
+
+Lemma Least_zero alpha : Least alpha <-> alpha = zero.
+Proof.
+  split.
+  destruct alpha as [i j]; destruct i.
+  - destruct j; [ reflexivity| ].
+    intro H; specialize (H (0,j)); exfalso.
+    inversion H. inversion H0; lia.
+    lia.
+  -  intro H; specialize (H (0,0)); exfalso.
+     inversion H. inversion H0; lia.
+  - intro; subst; intro; apply zero_le.
+Qed.
+
+
+
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
   - intro alpha; destruct alpha as [n p].
     + destruct p.

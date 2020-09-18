@@ -124,11 +124,11 @@ Class  ON_Iso
 
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
 
-Class ON_for `(alpha : Ord)
+Class ON_correct `(alpha : Ord)
      `(OA : @ON A ltA  compareA)
       (iota : A -> Ord) :=
-  { ON_for_inj : forall a, lt (iota a) alpha;
-    ON_for_onto : forall beta, lt beta alpha ->
+  { ON_correct_inj : forall a, lt (iota a) alpha;
+    ON_correct_onto : forall beta, lt beta alpha ->
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
@@ -178,7 +178,7 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
 Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (a : A)
        (b : Ord)
   := iota a = b.
@@ -188,7 +188,7 @@ Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (f : A -> A)
        (g : Ord  -> Ord)
   :=
@@ -197,7 +197,7 @@ Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (f : A -> A -> A)
        (g : Ord  -> Ord -> Ord)
   :=

@@ -42,7 +42,7 @@ Qed.
 Require Import Schutte.
 
 
-Instance omega_ok : ON_for omega Omega finite.
+Instance omega_ok : ON_correct omega Omega finite.
 Proof.
   split.
   - apply finite_lt_omega.

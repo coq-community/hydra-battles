@@ -44,8 +44,6 @@ Fixpoint canonS alpha (i:nat) : T1 :=
 Definition canon alpha i :=
   match i with 0 => zero | S j => canonS alpha j end.
 
-
-
 (** * Properties of canonical sequences *)
 
 
