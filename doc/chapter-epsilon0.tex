@@ -481,8 +481,8 @@ Infix notation for inequalities on ordinals have changed to \texttt{o<} and \tex
 \end{todo}
 
 
-\index{Predicates!LT-T1}
-
+\label{Predicates:LT-T1}
+ 
 
 For instance, in the following lemma, the condition that $\alpha$ is in normal form is included in the condition $\alpha< 1$.
 
@@ -1068,7 +1068,7 @@ Instance Epsilon0 : ON Lt compare.
 
 \begin{Coqsrc}
 Instance Epsilon0_correct :
-  ON_for epsilon0 Epsilon0 (fun alpha => inject (cnf alpha)).
+  ON_correct epsilon0 Epsilon0 (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
 \index{Projects}

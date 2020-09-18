@@ -562,7 +562,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
 \end{Coqsrc}
 
 
-\subsection{The ordinal \texorpdfstring{$\omega^2$}{omega^2}}
+\section{The ordinal \texorpdfstring{$\omega^2$}{omega^2}}
 
 The ordinal $\omega^2$ (also called $\varphi_0(2)$, see Chap.~\ref{chap:schutte}), is represented by the lexicographically ordered cartesian product $\mathbb{N}\times\mathbb{N}$. 
 
@@ -750,6 +750,294 @@ Qed.
 \end{Coqsrc}
  
 
+\subsection{Yet another  proof of impossibility}
+\label{omega2-case}
+
+In Sect.~\vref{omega-case}, we proved that there exists no variant towards \texttt{nat}
+(\emph{i.e.} the ordinal $\omega$) for proving the termination of all hydra battles.
+We  prove now that even the ordinal $\omega^2$ is also insufficient for this purpose. 
+
+The proof we are going to develop has exactly the same structure as in Section~\ref{omega-case}.
+ Nevertheless, the proof of technical  lemmas is a little more complex, due to 
+ the structure of the lexicographic order on $\mathbb{N}\times\mathbb{N}$. 
+Consider for instance that there exists an infinite number of ordinals  between
+$\omega$ and $\omega\times 2$.
+
+
+
+The detailed  proof script is in the file \url{../src/html/hydras.Hydra.Omega2_Small.html}.
+
+\subsubsection{Preliminaries}
+Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for proving the   termination of all hydra battles.
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
+
+
+\begin{Coqsrc}
+  Section Impossibility_Proof.
+  
+ Variable m : Hydra -> ON_Omega2.t.
+  
+ Context (Hvar : Hvariant lt_wf free m).
+\end{Coqsrc}
+
+
+Let us follow the same pattern as in Sect.~\ref{omega-case}.
+First, we define an injection from type \texttt{t} into \texttt{Hydra}, by
+ associating to  each ordinal $\omega\times i+ j = (i,j)$ the hydra with $i$ branches of length $2$ and
+$j$ branches of length $1$.
+
+%% revenir ici
+
+\vspace{4pt}
+\emph{From Module ~\href{../src/html/hydras.Hydra.Omega2_Small.html\#iota}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+Let iota (p: ON_Omega2.t) := 
+    node (hcons_mult (hyd1 head) (fst p)
+                     (hcons_mult head (snd p) hnil)).
+  \end{Coqsrc}
+
+For instance, Figure~\vref{fig:essai2} shows the hydra associated to the ordinal 
+$(3,5)$, a.k.a. $\omega\times 3 + 5$.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.4]
+\node (foot) at (6,0) {$\bullet$};
+\node (N1) at (1,3) {$\bullet$};
+\node (N2) at (3,3) {$\bullet$};
+\node (N3) at (5,3) {$\bullet$};
+\node (N4) at (8,3) {$\Smiley[2][green]$};
+\node (N5) at (11,3) {$\Smiley[2][green]$};
+\node (N6) at (14,3) {$\Smiley[2][green]$};
+\node (N7) at (17,3){$\Smiley[2][green]$};
+\node (N8) at (20,3){$\Smiley[2][green]$};
+\node  (N9) at (0,5) {$\Smiley[2][green]$};
+\node (N10) at (2,5) {$\Smiley[2][green]$};
+\node (N11) at (4,5) {$\Smiley[2][green]$};
+\draw (foot) to [bend left=10] (N1);
+\draw (foot) -- (N2);
+\draw (foot) -- (N3);
+\draw (foot) -- (N4);
+\draw (foot) -- (N5);
+\draw (foot) -- (N6);
+\draw (foot) to [bend right=10] (N7);
+\draw (foot) to [bend right=15] (N8);
+\draw (N1) to [bend left=10] (N9);
+\draw (N2) -- (N10);
+\draw (N3) -- (N11);
+\end{tikzpicture}
+\caption{\label{fig:essai2}
+The hydra $\iota(\omega\times 3+5)$}
+\end{figure}
+
+
+
+
+Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iota} (represented in Fig.~\vref{fig:h-omega2-small}).
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.5]
+\node (foot) at (2,0) {$\bullet$};
+\node (N1) at (2,2) {$\bullet$};
+\node (N2) at (3,4) {$\Smiley[2][green]$};
+\node (N3) at (1,4) {$\Smiley[2][green]$};
+\draw (foot) -- (N1);
+\draw (N1) to [bend right =15] (N2);
+\draw (N1) to  [bend left=15](N3);
+\end{tikzpicture}
+\caption{\label{fig:h-omega2-small}}
+ The hydra \texttt{big\_h}.
+\end{figure}
+
+
+\begin{Coqsrc}
+   Let big_h := hyd1 (hyd2 head head).  
+\end{Coqsrc}
+ 
+ In a second step, we build a ``smaller'' hydra.
+ 
+\begin{Coqsrc}
+   Let small_h := iota (m big_h).
+\end{Coqsrc}
+
+Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h o<= m small\_h o< m big\_h}, which is impossible.
+
+\subsubsection{Proof of the inequality \texttt{m small\_h o< m big\_h}}
+
+In order to prove the inequality  \texttt{m\_lt: m small\_h o< m big\_h}, it suffices to
+build a battle transforming \texttt{big\_h} into \texttt{small\_h}.
+
+First we prove that \texttt{small\_h} is reachable from \texttt{big\_h} in one or two steps. Let us decompose \texttt{m big\_h} as $(i,j)$.
+If $j=0$, then one round suffices to transform \texttt{big\_h} into $\iota(i,j)$.
+If $j>0$, then a first round transforms \texttt{big\_h} into $\iota(i+1,0)$ and a second round into $\iota(i,j)$. So, we have the following result.
+
+\begin{Coqsrc}
+Lemma big_to_small: big_h -+-> small_h.
+\end{Coqsrc}
+
+Since $m$ is a variant, we infer the following inequality:
+
+\begin{Coqsrc}
+Corollary m_lt : m small_h o< m big_h.
+\end{Coqsrc}
+
+
+\subsubsection{Proof of the inequality \texttt{m big\_h o<= m small\_h} }
+
+
+The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider some ordinal $\alpha=(i,j)$, where $i>0$, there exists an infinite number of
+ordinals stricly less than $\alpha$, and there exists an infinite number of battles that start from
+$\iota(\alpha)$. In effect, at any configuration $\iota(k,0)$, where $k>0$, the hydra can freely chose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
+all the possible battles issued from that hydra.
+Let us give more technical details.
+
+\begin{itemize}
+\item The proof of the lemma \texttt{m\_ge : m big\_h  o<= m small\_h} uses well-founded induction on \texttt{big\_h}.
+
+\item For any pair $p$, we have to distinguish between three cases, according to the value of $p$'s components.
+  \begin{itemize}
+  \item $p=(0,0)$
+  \item $p=(i,0)$, where $i>0$\,: $p$ corresponds to a limit ordinal
+  \item $p=(i,j)$, where $j>0$\,: $p$ is the successor of $(i,j-1)$.
+  \end{itemize}
+\end{itemize}
+
+
+Let us define the notion of elementary ``step'' of decreasing sequences in
+\texttt{t}
+
+
+\begin{Coqsrc}
+Inductive step : t -> t -> Prop :=
+| succ_step : forall i j,  step (i, S j) (i, j)
+| limit_step : forall i j, step (S i, 0) (i, j).
+\end{Coqsrc}
+
+The following lemma establishes a correspondance between the relation
+\texttt{step} and hydra battles.
+
+\begin{Coqsrc}
+Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
+\end{Coqsrc}
+
+\index{Maths!Transfinite induction}
+
+Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
+by transfinite induction over \texttt{p} a battle 
+that transforms the hydra $\iota(p)$ into $\iota(q)$.
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html\#m_ge}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+Lemma m_ge : forall p : t,   p o<= m (iota p).
+Proof.
+  unfold small_h; pattern (m big_h) .   
+   apply  well_founded_induction with (R := lt) (1:= lt_wf).
+  intro p ; pattern p;
+    apply  well_founded_induction with 
+               (R := lt2) (1:= wf_lexico lt_wf lt_wf);
+     intros (i,j) IHij. 
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  i, j : nat
+  IHij : forall y : t, y o< (i, j) -> y o<= m (iota y)
+  ============================
+  (i, j) o<= m (iota (i, j)) 
+\end{Coqanswer}
+
+
+Then we have  three cases to consider, according to the values of $i$ and $j$.
+\begin{itemize}
+\item If $p=(0,0)$ then obviously, $\iota(p)\geq p = (0,0)$
+\item If  $p=(i+1,0)$ for some $i\in\mathbb{N}$, we
+ remark  that $p$ is strictly greater than any pair $ (i, j)$, where $j$ 
+is any natural number.
+
+Applying the battle rules, for any $j$, we have $\iota(i+1,j)  {\round} \iota(i, j) $, thus $m(\iota(p)) > m(\iota(i,j)$ since  $m$ is assumed to be a variant.
+
+Applying the induction hypothesis, we get the inequality
+ $ m(\iota(i,j)) \geq (i,j)$ for any $j$. 
+
+Thus, $m(\iota(p)) > (i,j)$ for any $j$.
+Applying the lemma \texttt{limit\_is\_lub}, we get  the inequality
+$\iota(i+1,0)\geq (i+1,0)$
+
+\item If $p=(i,j+1)$ with $j\in\mathbb{N}$, we have  $\iota(p)  {\round} \iota(i, j) $,
+hence $m(\iota(p))> m(\iota(i,j)) \geq (i,j)$, thus $m(\iota(p))\geq (i,j+1)=p$
+
+\end{itemize}
+
+\begin{Coqsrc}
+  (* ... *)
+Qed.
+\end{Coqsrc}
+
+\subsubsection{End of the proof}
+
+Since $<$ is a strict order (irreflexive  and transitive) on \texttt{nat*nat}, we can conclude that there is no
+variant for termination on the lexicographic square of $(\mathbb{N},<)$.
+
+\begin{enumerate}
+\item From \texttt{m\_lt}, we infer the strict inequality 
+\texttt{m small\_h o< m big\_h}
+\item from \texttt{m\_ge}, we get \texttt{m big\_h o<= m (iota (m big\_h)) = m small\_h} 
+\end{enumerate}
+
+
+\vspace{4pt}
+\emph{From Module~\href{../src/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
+
+\begin{Coqsrc}
+Theorem Impossible : False.
+Proof.
+  destruct (StrictOrder_Irreflexive  (m big_h)).
+  apply le2_lt2_trans with (m small_h).
+  -  unfold small_h;  apply m_ge.
+  -  apply m_lt. 
+Qed. 
+
+End Impossibility_Proof.
+\end{Coqsrc}
+
+\index{Exercises}
+
+\begin{exercise}
+Prove that there exists no variant $m$ from \texttt{Hydra} into $\omega^2$ for proving
+    the  termination of all \emph{standard} battles.
+\end{exercise}
+
+
+
+\begin{remark}
+In Chapter~\ref{ks-chapter}, we  prove a generalization of the impossibility lemmas of
+Sect.~\ref{omega-case} and this section, with the same proof structure, but with much more 
+complex technical details.
+ \end{remark}
+
+\index{Exercises}
+\begin{exercise}
+
+\label{sec:orgheadline63}
+Write \emph{direct} proofs ({i.e.},  without applying the result and tools of Chap.~\ref{ks-chapter}) that the following data structures  are too simple for defining a variant for any hydra battle.
+
+\begin{itemize}
+\item  $\omega^n$ : the set of all $n$-uples of natural numbers, ordered  by 
+  lexicographic ordering
+\item  $\omega^\omega$: the set of all decreasing sequences (with respect to $\le$)  of natural numbers, ordered by lexicographic ordering on lists.
+
+For instance, the following inequality holds:
+\[\langle 4,3,3,3,3,3,3,2,2,2 \rangle\,<\,\langle 4,4,2 \rangle\]
+\end{itemize}
+
+  
+\end{exercise}
+
 
 
 \section{Comparing Ordinal Notations}
@@ -758,6 +1046,8 @@ It is sometimes useful to compare two ordinal notations with respect to expressi
 (the segment of ordinals  they represent). 
 
 The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
+
+If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
 
 \index{Coq!Type classes}
 \label{types:SubON}
@@ -769,7 +1059,7 @@ Class  SubON
        (alpha :  B)
        (iota : A -> B):=
   {
-  subon_compare :forall x y : A,  compareB (iota x) (iota y) =
+  subon_compare: forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
   subon_incl : forall x, ltB (iota x) alpha;
   subon_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
@@ -805,11 +1095,11 @@ where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 \label{types:ON-for}
 
 \begin{Coqsrc}
-Class ON_for `(alpha : Schutte_basics.Ord)
+Class ON_correct `(alpha : Schutte_basics.Ord)
      `(OA : @ON A ltA  compareA)
       (iota : A -> Schutte_basics.Ord) :=
-  { ON_for_inj : forall a, Schutte_basics.lt (iota a) alpha;
-    ON_for_onto : forall beta, Schutte_basics.lt beta alpha ->
+  { ON_correct_inj : forall a, Schutte_basics.lt (iota a) alpha;
+    ON_correct_onto : forall beta, Schutte_basics.lt beta alpha ->
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
@@ -827,7 +1117,7 @@ For instance, the following theorem tells that \texttt{Epsilon0}, our notation s
 
 \begin{Coqsrc}
 Instance Epsilon0_correct :
-  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
 \index{Projects}
@@ -1144,7 +1434,7 @@ Class  ON_Iso
 Let $i$ be some natural number. Prove that the notation systems 
 \texttt{Omega} and \texttt{ON\_plus (OrdFin $i$) Omega} are isomorphic.
 
-{\it \textbf{Note:s} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
+{\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
 
 This exercise is partially solved for $i=3$ (in ~\href{../src/html/hydras.OrdinalNotations.Example_3PlusOmega.html}{OrdinalNotations.Example\_3PlusOmega}).
 
