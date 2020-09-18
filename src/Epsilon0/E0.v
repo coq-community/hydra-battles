@@ -11,7 +11,7 @@
 Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded  Operators_Properties
         Prelude.More_Arith  Prelude.Restriction
-        not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
+        ArithRing   DecPreOrder Logic.Eqdep_dec
         OrdinalNotations.Generic OrdNotations.
 
 

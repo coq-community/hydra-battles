@@ -29,7 +29,7 @@ Require Import Epsilon0.
 Require Import Arith List Lia  Compare_dec.
 Require Import Relations Wellfounded  Max.
 
-Require Import More_Arith Restriction  not_decreasing  Epsilon0.
+Require Import More_Arith Restriction  Epsilon0.
 Import Datatypes.
 
 Require Import T2   term  rpo.

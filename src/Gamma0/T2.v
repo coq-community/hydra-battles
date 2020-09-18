@@ -30,7 +30,6 @@ Require Import Max Lia.
 
 Require Import More_Arith.
 Require Import Restriction.
-Require Import not_decreasing.
 Require Import T1.
 Require Import OrdNotations.
 

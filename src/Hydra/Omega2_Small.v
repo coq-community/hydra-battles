@@ -10,9 +10,8 @@ of all hydra battles *)
 
 Section Impossibility_Proof.
 
-   (** Let us assume there is a variant from [Hydra] into nat*nat (with the
-   lexicographic oordering)  for proving the   termination of all hydra 
-   battles *)
+   (** Let us assume there is a variant from [Hydra] into [omega^2] 
+  for proving the   termination of all hydra  battles *)
  
 
   Variable m : Hydra -> ON_Omega2.t.
@@ -31,12 +30,12 @@ Section Impossibility_Proof.
  
   Let small_h := iota (m big_h).
 
-    (** *** Proof of the inequality [m small_h < m big_h] 
+    (** *** Proof of the inequality [m small_h o< m big_h] 
      *)
 
   Hint Constructors R1 S1 S2 : hydra.
 
-  Lemma m_big_h_not_null : m big_h <> (0,0).
+  Lemma m_big_h_not_null : m big_h <> zero.
   Proof.
     intro H; pose (h1 := hyd1 (hyd1 head)).
     assert (first_round : big_h -+-> h1).
@@ -124,28 +123,28 @@ Hint Resolve lex_1 lex_2: hydra.
 Hint Unfold   lt : hydra.
 
 
-Lemma step_to_round_plus : forall p q, step p q -> iota p -+-> iota q.
+Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
 Proof.
   destruct 1; [ apply succ_rounds |  apply limit_rounds].
 Qed.
 
- Hint Resolve step_to_round_plus : hydra. 
+Hint Resolve step_to_battle : hydra. 
 
 
  Lemma m_ge : m big_h o<= m small_h.
  Proof.
    unfold small_h; pattern (m big_h) .   
-   apply  well_founded_induction with
-       (R := lt) (1:= lt_wf);
-     intros (i,j) IHij.  
-   destruct j as [|k].
+   apply  well_founded_induction with (R := lt) (1:= lt_wf);
+     intros (i,j) IHij.
+     destruct j as [|k].
    - destruct i as [| l].
-     +  (* p = (0,0) *)
+     +  (* p = zero *)
        apply le_0. 
      +  (* p = (S i, 0) *)
-       rewrite <- limit_is_lub.  intro k.
+       rewrite <- limit_is_lub.
+       intro k.
        apply le_lt_trans with (m (iota (l, k))); auto with hydra. 
-       red.  apply (m_strict_mono m Hvar); auto with hydra.
+       red; apply (m_strict_mono m Hvar); auto with hydra.
        reflexivity.
    - change (i, S k) with (succ (i,k)) at 1.
      rewrite <- lt_succ_le.

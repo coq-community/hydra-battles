@@ -18,8 +18,7 @@ Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
         Wellfounded Bool RelationClasses.
 Require PArith.
 Require Import Operators_Properties  Prelude.More_Arith
-        Prelude.Restriction
-        not_decreasing.
+        Prelude.Restriction.
 Require Import ArithRing   DecPreOrder Logic.Eqdep_dec.
 Require Import OrdNotations.
 Set Implicit Arguments.
@@ -1663,16 +1662,25 @@ Module Direct_proof.
       forall n beta, 
         nf (ocons alpha n beta) -> Acc LT (ocons alpha  n beta).
 
+
+    Remark acc_impl {A} {R: A -> A -> Prop} (a b:A) :
+      R a b -> Acc R b -> Acc R a.
+    Proof.
+      intros H H0; revert a H. now induction H0.
+    Qed.
+ 
     Lemma Acc_strong_stronger : forall alpha, 
         nf alpha -> Acc_strong  alpha -> Acc LT  alpha.
     Proof.
-      intros alpha H H0; apply acc_imp with (phi0 alpha).
+      intros alpha H H0.  apply acc_impl with (phi0 alpha).
       - repeat split; trivial.
         + now apply lt_a_phi0_a.
       -  apply H0;  now apply single_nf.
     Qed.
 
-    
+
+
+ 
     Lemma Acc_implies_Acc_strong : forall alpha, 
         Acc LT  alpha -> Acc_strong alpha.
     Proof.

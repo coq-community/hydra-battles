@@ -27,7 +27,7 @@
 
 Require Import Arith  Lia  Compare_dec  Relations  Wellfounded.
 
-Require Import More_Arith  Wf_nat  Restriction  not_decreasing  ArithRing.
+Require Import More_Arith  Wf_nat  Restriction   ArithRing.
 Require Import DecPreOrder  term  rpo  List Bool.
 Require Import Coq.Logic.Eqdep_dec.
 Require Import Ensembles.
