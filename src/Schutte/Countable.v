@@ -8,7 +8,7 @@ Require Import Ensembles  Arith ArithRing Even Div2.
 
 Require Import Wellfounded Relations  Wf_nat  Finite_sets.
 Require Import Epsilon  Coq.Sets.Image.
-Require Import MoreEpsilonIota PartialFun  GRelations  Arith_lemmas.
+Require Import MoreEpsilonIota PartialFun  GRelations  Prelude.More_Arith.
 Import Lia.
 
 Set Implicit Arguments.

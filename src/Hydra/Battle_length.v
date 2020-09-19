@@ -8,9 +8,9 @@ Pierre Castéran, LaBRI, University of Bordeaux
 
 *)
 
-
-Require Import Hydra_Lemmas  Epsilon0_Needed_Free Epsilon0_Needed_Std
-        Hydra_Termination L_alpha O2H.
+From hydras.Epsilon0 Require Import L_alpha.
+From hydras.Hydra  Require Import Hydra_Lemmas  Epsilon0_Needed_Free
+     Epsilon0_Needed_Std Hydra_Termination O2H.
 Import E0 Large_Sets H_alpha Paths MoreLists.
 
 Section Battle_length.

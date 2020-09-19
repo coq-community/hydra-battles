@@ -2,11 +2,8 @@
  Pierre Castéran, LaBRI and University of Bordeaux 
 *)
 
-Require Import Epsilon0_Needed_Generic.
- Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators.
- Import O2H.
-
-
+From hydras Require Import Epsilon0_Needed_Generic.
+Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
 
 
 Open Scope t1_scope.

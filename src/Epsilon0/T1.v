@@ -14,13 +14,13 @@ LRI
  
 *)
 
-Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
-        Wellfounded Bool RelationClasses.
-Require PArith.
-Require Import Operators_Properties  Prelude.More_Arith
-        Prelude.Restriction.
-Require Import ArithRing   DecPreOrder Logic.Eqdep_dec.
-Require Import OrdNotations.
+From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
+     Wellfounded Bool RelationClasses Operators_Properties ArithRing
+     Logic.Eqdep_dec.
+
+From Coq Require PArith.
+From hydras.Prelude  Require Import  More_Arith  Restriction   DecPreOrder.
+From hydras Require Import OrdNotations.
 Set Implicit Arguments.
 
 Declare Scope t1_scope.

@@ -1,11 +1,8 @@
 
 (* Pierre Castéran, LaBRI and University of Bordeaux  *)
 
-Require Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators.
-Require Import O2H.
-
-(** 
- *)
+From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths O2H.
+From Coq Require Import Relation_Operators.
 
 Open Scope t1_scope.
 

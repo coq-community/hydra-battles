@@ -2,11 +2,10 @@
 
 (** Hessenberg sum of ordinals (commutative and strictly monotonous) *)
 
-Require Import Arith  ArithRing.
-Require Import More_Arith.
-Require Import Lia.
-Require Import Merge_Sort.
-Require Import T1.
+From Coq Require Import Arith  ArithRing Lia.
+From hydras Require Import Prelude.More_Arith Prelude.Merge_Sort Epsilon0.T1.
+
+
 Set Implicit Arguments.
 
 

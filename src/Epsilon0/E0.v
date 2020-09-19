@@ -8,16 +8,16 @@
    [E0] is a class type for ordinal terms proved to be in normal form.
 *)
 
-Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
-        Wellfounded  Operators_Properties
+From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
+     ArithRing  Wellfounded  Operators_Properties  Logic.Eqdep_dec.
+
+From hydras Require Import 
         Prelude.More_Arith  Prelude.Restriction
-        ArithRing   DecPreOrder Logic.Eqdep_dec
-        OrdinalNotations.Generic OrdNotations.
+           Prelude.DecPreOrder  OrdinalNotations.Generic OrdNotations.
 
+From hydras.Epsilon0 Require Export T1 Hessenberg.
 
-Require  Export T1 Hessenberg.
 Set Implicit Arguments.
-
 Declare Scope E0_scope.
 
 Delimit Scope E0_scope with e0.

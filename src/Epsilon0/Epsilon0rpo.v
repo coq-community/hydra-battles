@@ -25,16 +25,13 @@
 (** Cantor "pre" Normal form
  After Manolios and Vroon work on ACL2 *)
 
-Require Import Arith  Lia  Compare_dec  Relations  Wellfounded.
+From Coq Require Import Arith  Lia  Compare_dec  Relations  Wellfounded
+     Wf_nat  List Bool Eqdep_dec Ensembles ArithRing Logic.
 
-Require Import More_Arith  Wf_nat  Restriction   ArithRing.
-Require Import DecPreOrder  term  rpo  List Bool.
-Require Import Coq.Logic.Eqdep_dec.
-Require Import Ensembles.
+From hydras Require Import More_Arith Restriction   
+     DecPreOrder  rpo.term  rpo.rpo Epsilon0.T1.
 
 Set Implicit Arguments.
-
-Require Import T1.
 
 Module Alt.
   

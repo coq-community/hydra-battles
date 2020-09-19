@@ -3,11 +3,11 @@
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
-Require Import  H_alpha  E0  Simple_LexProd Iterates Canon Paths Large_Sets.
-Import RelationClasses Relations.
-
+From hydras.Epsilon0 Require Import  H_alpha  E0  Canon Paths Large_Sets.
+From hydras.Prelude Require Import  Simple_LexProd Iterates .
+From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
-Require Import ArithRing Lia.
+Import RelationClasses Relations.
 
 Instance Olt : WellFounded Lt := Lt_wf.
 Hint Resolve Olt : E0.

@@ -2,13 +2,12 @@
     After Hardy, Wainer, Ketonen, Solovay, etc .
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
-
-Require Import  E0  Simple_LexProd Iterates Canon Paths.
-Import RelationClasses Relations Exp2.
+From Coq Require Import ArithRing Lia.
+From hydras.Epsilon0 Require Import  E0    Canon Paths.
+From hydras.Prelude Require Import Exp2 Iterates Simple_LexProd.
+Import RelationClasses Relations .
 
 From Equations Require Import Equations.
-(* Require Import Equations.Subterm. *)
- Require Import ArithRing Lia.
 
  Open Scope E0_scope.
 

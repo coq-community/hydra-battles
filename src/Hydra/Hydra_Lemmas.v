@@ -2,13 +2,15 @@
       LaBRI, Université de Bordeaux
 *)
 
-Require Import Arith Lia  List  Relation_Operators  Operators_Properties
-Peano_dec.
-Require Import More_Arith Epsilon0  Hessenberg   Simple_LexProd.
-Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+From Coq Require Import Arith Lia  List  Relation_Operators
+     Operators_Properties Peano_dec Wellfounded.Inverse_Image
+     Wellfounded.Inclusion.
+     
+From hydras Require Import More_Arith Epsilon0  Hessenberg   Simple_LexProd.
+From hydras Require Export Hydra_Definitions.
 Import Relations.
 Open Scope nat_scope.
-Require Export Hydra_Definitions.
+
 
 
 (** ** Properties of the  [hydra] data type 
