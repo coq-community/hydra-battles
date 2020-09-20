@@ -6,7 +6,7 @@
 
 
 
-Require Import Wellfounded Ensembles Relations.
+From Coq Require Import Wellfounded Ensembles Relations.
 
 (* start of inclusion *)
 Definition restrict {A:Type}(E: Ensemble A)(R: relation A) :=

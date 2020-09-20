@@ -11,7 +11,7 @@
 
 
 
-Require Export Schutte_basics Ordering_Functions
+From hydras Require Export Schutte_basics Ordering_Functions
         Addition AP CNF Critical Correctness_E0.
 
 

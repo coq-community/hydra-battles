@@ -2,7 +2,7 @@
 
 Set Implicit Arguments.
 
-Require Import Relations Ensembles.
+From Coq Require Import Relations Ensembles.
 
 
 Definition upper_bound (M:Type)

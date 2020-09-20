@@ -15,10 +15,10 @@ In fact,  #<math> &omega; <sup> &alpha; </sup> </math># , written  [phi0 alpha] 
  *)
 
 (* begin hide *)
-Require Import Arith  Coq.Logic.Epsilon  Ensembles  Lia.
-Require Export Countable  Schutte_basics  Ordering_Functions.
+From Coq Require Import Arith  Logic.Epsilon  Ensembles  Lia.
+From hydras Require Export Countable  Schutte_basics  Ordering_Functions.
 Import  PartialFun  MoreEpsilonIota .
-Require Export Schutte.Addition  Well_Orders.
+From hydras Require Export Schutte.Addition  Well_Orders.
 
 
 Set Implicit Arguments.

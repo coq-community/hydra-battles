@@ -20,8 +20,8 @@
 
 Set Implicit Arguments.
 
-Require Import List.
-Require Import Arith.
+From Coq Require Import List Arith.
+
 
 (** ** Relations between length, map, append, In and nth. *)
 

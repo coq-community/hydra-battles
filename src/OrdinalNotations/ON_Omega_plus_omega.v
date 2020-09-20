@@ -1,7 +1,8 @@
 (**  The ordinal omega + omega *)
 
 
-Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
+From Coq Require Import Arith Compare_dec Lia.
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic
         ON_plus ON_Omega.
 
 Import Relations.

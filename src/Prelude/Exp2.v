@@ -1,4 +1,4 @@
-Require Import Arith.
+From Coq Require Import Arith.
 
 Fixpoint exp2 (n:nat) : nat :=
   match n with

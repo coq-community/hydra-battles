@@ -21,13 +21,9 @@
 
 Set Implicit Arguments. 
 
-Require Import Relations.
-Require Import List.
-Require Import Setoid.
-Require Import closure.
-Require Import more_list.
-Require Import Multiset.
-Require Import list_permut.
+From Coq Require Import Relations List Setoid Multiset.
+From hydras.rpo Require Import closure more_list list_permut.
+
 
 Module Make (DS1 : decidable_set.S).
 

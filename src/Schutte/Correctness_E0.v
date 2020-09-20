@@ -14,15 +14,10 @@
 
 
 
-Require Import Epsilon0.Epsilon0.
-
+From hydras Require Import Epsilon0.Epsilon0 OrdinalNotations.Generic. 
 From hydras.Schutte Require Import Schutte_basics  Addition  AP CNF.
 
 Import List  PartialFun Ensembles.
-Require Import OrdinalNotations.Generic. 
-Generalizable All Variables.
-
-Locate zero.
 
 Fixpoint inject (t:T1) : Ord :=
  match t with T1.zero => zero

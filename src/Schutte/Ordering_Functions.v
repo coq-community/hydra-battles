@@ -16,7 +16,7 @@ Schutte's definitions.
 *)
 
 
-Require Export Schutte_basics.
+From hydras Require Export Schutte_basics.
 Import Ensembles  Well_Orders  Countable  PartialFun.
 Import Classical  MoreEpsilonIota  Epsilon.
 

@@ -4,8 +4,8 @@
 
 
 
-Require Import Ensembles Le  Classical  Lia.
-Require Import PartialFun.
+From Coq Require Import Ensembles Le  Classical  Lia.
+From hydras Require Import PartialFun.
 
       
 Section General_Relations.

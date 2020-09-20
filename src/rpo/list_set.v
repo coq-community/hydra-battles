@@ -21,10 +21,9 @@
 
 Set Implicit Arguments. 
 
-Require Import List.
-Require Import more_list.
-Require Import list_permut.
-Require Import Arith.
+From Coq Require Import List Arith.
+From hydras.rpo Require Import more_list list_permut.
+
 
 Module Type S.
 

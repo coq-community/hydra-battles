@@ -1,9 +1,9 @@
 (** A proof of isomorhism between ordinal notations for 3+omega and omega *)
 
 
-Require Import ON_plus ON_Finite ON_Omega.
+From hydras.OrdinalNotations  Require Import ON_plus ON_Finite ON_Omega.
 Import Generic.
-Require Import Compare_dec Lia Logic.Eqdep_dec.
+From Coq Require Import Compare_dec Lia Logic.Eqdep_dec.
 
 
 

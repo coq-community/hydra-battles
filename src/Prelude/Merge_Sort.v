@@ -3,11 +3,14 @@
 (** Maybe already done in StdLib ???? *)
 
 
-Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec  Lia 
-        RelationClasses DecPreOrder DecPreOrder_Instances Div2 Sorting.Sorted.
+From Coq Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec
+     Lia  RelationClasses  Div2  Sorting.Sorted Sorting.Permutation.
+
+From hydras.Prelude Require Import DecPreOrder DecPreOrder_Instances Sort_spec.
 Import Relations Morphisms.
 
-Require Import Sort_spec Coq.Sorting.Permutation.
+
+
 Section Generic.
   Variables (A:Type).
   

@@ -1,6 +1,6 @@
 Open Scope nat_scope.
-Require Import RelationClasses Relations.
-Require Import Arith Max Exp2 Lia.
+From Coq Require Import RelationClasses Relations Arith Max Lia.
+From hydras.Prelude Require Import Exp2.
 
 
 (** * Abstract properties of arithmetic functions *)

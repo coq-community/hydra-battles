@@ -23,7 +23,7 @@
 
 Set Implicit Arguments. 
 
-Require Import Relations.
+From  Coq Require Import Relations.
 
 Inductive trans_clos (A : Set) (R : relation A) : relation A:=
   | t_step : forall x y, R x y -> trans_clos R x y

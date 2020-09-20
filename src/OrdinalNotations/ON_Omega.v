@@ -1,6 +1,9 @@
 (**  The ordinal omega  *)
-Require Import Arith Compare_dec Lia  OrdinalNotations.Generic
-        ON_Finite.
+
+From Coq Require Import Arith Compare_dec Lia.
+From hydras.OrdinalNotations  Require Import Generic ON_Finite.
+From hydras Require Import Schutte.
+
 Import Relations RelationClasses.
 
 Global Instance Omega : ON  Peano.lt Nat.compare.

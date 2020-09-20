@@ -6,7 +6,7 @@ Computes the first  [l]  between [n] and [p] (excluded) such that
 *)
 
 
-Require Import Arith Lia.
+From Coq Require Import Arith Lia.
 
 Section Hypos.
   Variables (P : nat -> bool)

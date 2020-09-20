@@ -1,11 +1,9 @@
-Require Import RelationClasses Relation_Operators Ensembles OrdNotations.
+From Coq Require Import RelationClasses Relation_Operators Ensembles.
+From hydras Require Import  OrdNotations Schutte_basics.
+From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Import Relation_Definitions.
-Require Export MoreOrders
-  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
-Require Import Schutte_basics.
-
-
-
+From hydras Require Export MoreOrders.
+  
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.

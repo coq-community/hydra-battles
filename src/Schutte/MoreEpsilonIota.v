@@ -7,7 +7,7 @@
   LaBRI, University of Bordeaux
 *)
 
-Require Export  Ensembles  Epsilon .
+From Coq Require Export  Ensembles  Logic.Epsilon.
 
 (*  epsilon : forall A : Type, inhabited A -> (A -> Prop) -> A *)
 

@@ -5,12 +5,10 @@
 (** To do : translate the comments into english (and make them coqdoc compatible) *)
 
 
-Require Import Arith.
-Require Import Coq.Logic.Eqdep_dec.
-Require Import Coq.Arith.Peano_dec.
-Require Import List.
-Require Import Recdef Lia.
-Require Import  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+From Coq Require Import Arith 
+     Logic.Eqdep_dec Arith.Peano_dec List Recdef Lia 
+     Wellfounded.Inverse_Image Wellfounded.Inclusion
+     RelationClasses.
 
 Coercion is_true : bool >-> Sortclass.
 
@@ -305,7 +303,6 @@ Proof.
                          *** apply IHw0 with (w2:=w4); assumption.
 Qed.                       
 
-Require Import RelationClasses.
 
 Instance wlt_strorder : StrictOrder wlt.
 Proof.

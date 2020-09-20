@@ -12,16 +12,10 @@
 *) 
 
 
-Require Import Arith.
-Require Import Coq.Logic.Epsilon.
-Require Import Ensembles.
-Require Export Schutte_basics  Ordering_Functions  Countable  Addition.
+From Coq Require Import Arith Logic.Epsilon  Ensembles Classical.
+From hydras Require Export Schutte_basics  Ordering_Functions  Countable
+     Schutte.Addition AP CNF Well_Orders MoreEpsilonIota.
 
-Require Export AP CNF.
-Require Import Classical.
-
-Require Import Well_Orders.
-Import MoreEpsilonIota.
 Set Implicit Arguments.
 
 

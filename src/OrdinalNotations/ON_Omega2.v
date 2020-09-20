@@ -2,9 +2,12 @@
 
 
 
-Require Import Arith Compare_dec Lia Simple_LexProd
-        OrdinalNotations.Generic.
+From Coq Require Import Arith Compare_dec Lia Program.Wf List
+     FunInd Recdef.
+From hydras Require Import Prelude.Simple_LexProd  OrdinalNotations.Generic.
 Import Relations.
+
+
 
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
@@ -547,8 +550,7 @@ Qed.
 
 (* adapted from Pascal Manoury et al. *)
 
-Require Import Coq.Program.Wf List.
-Require Import FunInd Recdef.
+
 
 Section Merge.
 

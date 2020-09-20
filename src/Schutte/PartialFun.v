@@ -7,7 +7,8 @@
    functions : relational presentation, and with the  [iota] description operator *)
 
 
-Require Import Ensembles  ClassicalDescription MoreEpsilonIota.
+From Coq Require Import Ensembles  ClassicalDescription .
+From hydras Require Import MoreEpsilonIota.
 
 Set Implicit Arguments.
 Arguments In {U} _ _.

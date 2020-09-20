@@ -1,8 +1,8 @@
 (** Pierre Castéran, University of Bordeaux and LaBRI *)
 
 
-Require Import Hydra_Lemmas Simple_LexProd Relations Relation_Operators
-Arith Peano_dec Lia ON_Omega2.
+From Coq Require Import Arith Peano_dec Lia Relations Relation_Operators.
+From hydras Require Import  Hydra_Lemmas Simple_LexProd ON_Omega2.
 
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)

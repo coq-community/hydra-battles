@@ -4,10 +4,11 @@
 (** Pierre Casteran, Labri and Univ Bordeaux. *)
 
 
-Require Import Arith List Sorting.Sorted.
-Require Import Coq.Logic.Epsilon Ensembles.
-Require Export Schutte_basics  Ordering_Functions  PartialFun.
-Require Export Countable  Schutte.Addition AP Classical.
+From Coq Require Import Arith List Sorting.Sorted
+     Logic.Epsilon Ensembles.
+From hydras Require Export Schutte_basics  Ordering_Functions  PartialFun
+     Countable Schutte.Addition AP.
+Require Export  Classical.
 
 
 Set Implicit Arguments.

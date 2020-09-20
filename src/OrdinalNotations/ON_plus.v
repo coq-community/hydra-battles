@@ -1,8 +1,9 @@
 
 (** Sum of two ordinal  notations *)
  
-Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
-        Relation_Operators Disjoint_Union.
+From Coq Require Import Arith Compare_dec Lia 
+     Relation_Operators Disjoint_Union.
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic.
 
 Import Relations.
 Generalizable All Variables.
