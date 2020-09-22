@@ -1,3 +1,6 @@
+# adapted from K. Palmskog and E. Martin-Dorel
+
+
 all: Makefile.coq
 	@+$(MAKE) -f Makefile.coq all
 
