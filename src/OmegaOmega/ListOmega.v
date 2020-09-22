@@ -50,13 +50,13 @@ Proof.
 Qed.
 
 
-Declare Scope oo_scope.
-Delimit Scope oo_scope with oo.
-Open Scope oo_scope.
+Declare Scope lo_scope.
+Delimit Scope lo_scope with lo.
+Open Scope lo_scope.
 
 Definition t := list nat.
 
-Notation  "'omega'" := (1::0::nil) : oo_scope.
+Notation  "'omega'" := (1::0::nil) : lo_scope.
 Definition fin (i:nat) : t := (i::nil).
 
 Coercion fin : nat >-> t.
@@ -688,9 +688,22 @@ Inductive weq : t -> t -> Prop :=
 | weq_w_0 : forall (w1 w2:t), (weq w1 w2) -> (weq w1 (0::w2))
 | weq_S : forall (a:nat) (w1 w2:t), (weq w1 w2) -> (weq (S a::w1) (S a::w2)).
 
-Axiom eq_eq_nat : forall (n1 n2:nat), (n1 ?= n2)=Eq -> (n1 = n2).
-Axiom lt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Lt -> (lt n1 n2).
-Axiom gt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Gt -> (lt n2 n1).
+
+
+Lemma eq_eq_nat : forall (n1 n2:nat), (n1 ?= n2)=Eq -> n1 = n2.
+Proof.
+  intros; destruct (Nat.compare_spec n1 n2); auto;  discriminate.
+Qed.
+
+Lemma lt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Lt -> n1 < n2 .
+Proof.
+    intros; destruct (Nat.compare_spec n1 n2); auto;  discriminate.
+Qed.
+
+Lemma gt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Gt -> (lt n2 n1).
+Proof.
+    intros; destruct (Nat.compare_spec n1 n2); auto;  discriminate.
+Qed.
 
 Lemma compare_eq_head : forall (n1 n2:nat) (w1 w2:t),
     (compare (S n1::w1) (S n2::w2))=Eq -> n1=n2.
