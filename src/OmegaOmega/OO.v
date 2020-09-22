@@ -5,8 +5,8 @@ Definition t := {l: t | nf l}.
 
 Search sig.
 
-Lemma compare_eq_nf  (l l':list nat) :
-  nf l -> nf l' -> ListOmega.compare l l' = Eq -> l = l'.
+Lemma List_compare_eq_nf  (l l':list nat) :
+  nf l \/ nf l' -> ListOmega.compare l l' = Eq -> l = l'.
 Admitted.
 
 Definition compare (alpha beta:t) := ListOmega.compare (proj1_sig alpha)
@@ -16,7 +16,7 @@ Lemma compare_eq_eq  alpha beta  : compare alpha beta = Eq -> alpha = beta.
 Proof.
   destruct alpha, beta; unfold compare;cbn.
   intro.
-  assert (x = x0) . { eapply compare_eq_nf; eauto. }
+  assert (x = x0) . { eapply List_compare_eq_nf; eauto. }
   subst.
   f_equal.
   apply eq_proofs_unicity_on.
