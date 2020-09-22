@@ -9,7 +9,7 @@ Require Import Arith.
 Require Import Coq.Logic.Eqdep_dec.
 Require Import Coq.Arith.Peano_dec.
 Require Import List.
-Require Import Recdef Lia.
+Require Import Recdef Lia Compare_dec.
 Require Import  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
 
 Coercion is_true : bool >-> Sortclass.
@@ -688,9 +688,20 @@ Inductive weq : t -> t -> Prop :=
 | weq_w_0 : forall (w1 w2:t), (weq w1 w2) -> (weq w1 (0::w2))
 | weq_S : forall (a:nat) (w1 w2:t), (weq w1 w2) -> (weq (S a::w1) (S a::w2)).
 
-Axiom eq_eq_nat : forall (n1 n2:nat), (n1 ?= n2)=Eq -> (n1 = n2).
-Axiom lt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Lt -> (lt n1 n2).
-Axiom gt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Gt -> (lt n2 n1).
+Lemma eq_eq_nat : forall (n1 n2:nat), (n1 ?= n2)=Eq -> (n1 = n2).
+Proof.
+  intros n1 n2 H; destruct (Nat.compare_spec n1 n2);trivial;discriminate.
+Qed.
+
+Lemma lt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Lt -> (lt n1 n2).
+Proof.
+  intros n1 n2 H; destruct (Nat.compare_spec n1 n2);trivial;discriminate.
+Qed.
+
+Lemma gt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Gt -> (lt n2 n1).
+Proof.
+  intros n1 n2 H; destruct (Nat.compare_spec n1 n2);trivial;discriminate.
+Qed.
 
 Lemma compare_eq_head : forall (n1 n2:nat) (w1 w2:t),
     (compare (S n1::w1) (S n2::w2))=Eq -> n1=n2.
@@ -889,4 +900,5 @@ Section Example_of_use.
   Qed.
 
   End Example_of_use.
+
 
