@@ -95,11 +95,8 @@ Compute limitb (3::4::0::0::1::0::nil).
 Compute succ (3::4::0::0::1::0::nil).
 Compute limitb (3::0::0::0::0::0::nil).
 
-(** to do : addition, commutative addition, compare  *)
-
-
-
-
+(** to do : addition, commutative addition  *)
+  
 (* Induction on list length  *)
 Lemma list_length_ind_S :
   forall P : t -> Prop,
@@ -573,6 +570,261 @@ Theorem Acc_wlt : forall (w:t), Acc wlt w.
 Proof.
  intro; apply Acc_wlt_pad_Acc_wlt; apply Acc_wlt_pad.
 Qed.
+
+(** Compare *)
+Fixpoint compare (w1 w2 : t) : comparison :=
+  match w1 with
+    nil =>
+    let fix compare2 w2 := 
+        match w2 with
+          nil => Eq
+        | 0::w2 => (compare2 w2)
+        | _ => Lt
+        end
+    in (compare2 w2)
+  | 0::w1 => (compare w1 w2)
+  | a1::w1 =>
+    let fix compare2 w2 :=
+        match w2 with
+          nil => Gt
+        | 0::w2 => (compare2 w2)
+        | a2::w2 =>
+          match (Nat.compare (length w1) (length w2)) with
+            Eq =>
+            match (Nat.compare a1 a2) with
+              Eq => (compare w1 w2)
+            | x => x
+            end
+          | x => x
+          end
+        end
+    in (compare2 w2)
+  end.
+
+Lemma compare_nil_nil : (compare nil nil) = Eq.
+Proof.
+  auto.
+Qed.
+
+Lemma compare_nil_S : forall (n:nat) (w:t), (compare nil ((S n)::w)) = Lt.
+Proof.
+  auto.
+Qed.
+
+Lemma compare_S_nil : forall (n:nat) (w:t), (compare ((S n)::w) nil) = Gt.
+Proof.
+  auto.
+Qed.
+
+Lemma compare_0_w : forall (w1 w2:t), (compare (0::w1) w2) = (compare w1 w2). 
+Proof.
+  auto.
+Qed.
+
+Lemma compare_w_0 : forall (w1 w2:t), (compare w1 (0::w2)) = (compare w1 w2).
+Proof.
+  induction w1.
+  - intro. simpl. trivial.
+  - intro. case a.
+    + simpl. rewrite IHw1. trivial.
+    + intro. simpl. trivial.
+Qed.
+
+Fixpoint nf_of (w:t) : t :=
+  match w with
+    nil => nil
+  | 0::w => (nf_of w)
+  | _ => w
+  end.
+
+Inductive Wnf : t -> Prop :=
+  Wnf_nil : (Wnf nil)
+| Wnf_cons : forall (n:nat) (w:t), (Wnf (S n::w)).
+
+Lemma nf_of_correct : forall (w:t), (Wnf (nf_of w)).
+Proof.
+  induction w.
+  - apply Wnf_nil.
+  - case a.
+    * apply IHw.
+    * intro. apply Wnf_cons.
+Qed.
+
+Lemma compare_nf : forall (w1 w2:t), (compare (nf_of w1) (nf_of w2))=(compare w1 w2).
+Proof.
+  induction w1.
+  - induction w2.
+    + auto.
+    + case a.
+      * simpl nf_of. rewrite compare_w_0. trivial.
+      * auto.
+  - case a.
+    + auto.
+    + induction w2.
+      * auto.
+      * case a0.
+        -- auto.
+        -- auto.
+Qed.
+
+Lemma compare_eq_len_nf : forall (w1 w2:t),
+    (Wnf w1) -> (Wnf w2) -> (compare w1 w2)=Eq -> (compare (length w1) (length w2))=Eq.
+Proof.
+  intros w1 w2 H. induction H.
+  - intro H. induction H.
+    + auto.
+    + discriminate.
+  - intro H. induction H.
+    + discriminate.
+    + case_eq ((length w) ?= (length w0)).
+      * intros. simpl. rewrite H. trivial.
+      * intro. simpl. rewrite H. auto.
+      * intro. simpl. rewrite H. auto.
+Qed.
+
+Inductive weq : t -> t -> Prop :=
+  weq_nil : weq nil nil
+| weq_0_w : forall (w1 w2:t), (weq w1 w2) -> (weq (0::w1) w2)
+| weq_w_0 : forall (w1 w2:t), (weq w1 w2) -> (weq w1 (0::w2))
+| weq_S : forall (a:nat) (w1 w2:t), (weq w1 w2) -> (weq (S a::w1) (S a::w2)).
+
+Axiom eq_eq_nat : forall (n1 n2:nat), (n1 ?= n2)=Eq -> (n1 = n2).
+Axiom lt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Lt -> (lt n1 n2).
+Axiom gt_lt_nat : forall (n1 n2:nat), (n1 ?= n2)=Gt -> (lt n2 n1).
+
+Lemma compare_eq_head : forall (n1 n2:nat) (w1 w2:t),
+    (compare (S n1::w1) (S n2::w2))=Eq -> n1=n2.
+Proof.
+  intros n1 n2 w1 w2. simpl. case_eq (length w1 ?= length w2).
+  - intro. case_eq (n1 ?= n2).
+    + intros. apply eq_eq_nat. assumption.
+    + discriminate.
+    + discriminate.
+  - discriminate.
+  - discriminate.
+Qed.
+    
+Lemma compare_eq_tail : forall (n1 n2:nat) (w1 w2:t),
+    (compare (S n1::w1) (S n2::w2))=Eq -> (compare w1 w2)=Eq.
+Proof.
+  intros n1 n2 w1 w2. simpl. case_eq (length w1 ?= length w2).
+  - intro. case_eq (n1 ?= n2).
+    + trivial.
+    + discriminate.
+    + discriminate.
+  - discriminate.
+  - discriminate.
+Qed.
+    
+Lemma compare_eq : forall (w1 w2:t), (compare w1 w2) = Eq -> (weq w1 w2).
+Proof.
+  induction w1.
+  - induction w2.
+    + intro. apply weq_nil.
+    + case a.
+      * intro. apply weq_w_0. apply IHw2. rewrite compare_w_0 in H. assumption.
+      * intros. simpl in H. discriminate.
+  - case a.
+    + intros. apply weq_0_w. apply IHw1. rewrite compare_0_w in H. assumption.
+    + induction w2.
+      * discriminate.
+      * case a0.
+        -- intro. apply weq_w_0. apply IHw2. rewrite compare_w_0 in H. assumption.
+        -- intros. rewrite (compare_eq_head n n0 w1 w2 H).
+           apply weq_S. apply IHw1. apply compare_eq_tail with (n1:=n) (n2:=n0).
+           assumption.
+Qed.
+
+Lemma compare_lt_wlt : forall (w1 w2:t), (compare w1 w2)=Lt -> (wlt w1 w2).
+Proof.
+  induction w1.
+  - induction w2.
+    + discriminate.
+    + case a.
+      * rewrite compare_w_0. intro. apply wlt_w_0. auto.
+      * intros. apply wlt_nil.
+  - case a.
+    + intros. apply wlt_0_w. apply IHw1.
+      rewrite compare_0_w in H. assumption.
+    + induction w2.
+      * discriminate.
+      * case a0.
+        -- intro. apply wlt_w_0. apply IHw2.
+           rewrite compare_w_0 in H. assumption.
+        -- intro. simpl. case_eq (length w1 ?= length w2).
+           ++ intro. case_eq (n ?= n0).         
+              ** intros. rewrite (eq_eq_nat n n0 H0). apply wlt_wlt.
+                 --- apply eq_eq_nat. assumption.
+                 --- apply IHw1. assumption.
+              ** intros. apply wlt_lt. 
+                 --- apply eq_eq_nat. assumption.
+                 --- apply lt_lt_nat. assumption.
+              ** discriminate.
+           ++ intros. apply wlt_len. apply lt_lt_nat. assumption.
+           ++ discriminate.
+Qed.
+
+Lemma compare_gt_wlt : forall (w1 w2:t), (compare w1 w2)=Gt -> (wlt w2 w1).
+Proof.
+  induction w1.
+  - induction w2.
+    + discriminate.
+    + case a.
+      * intro. apply wlt_0_w. apply IHw2. rewrite compare_w_0 in H. assumption.
+      * discriminate.
+  - case a.
+    + intros. apply wlt_w_0. apply IHw1. rewrite compare_0_w in H. assumption.
+    + induction w2.
+      * intro. apply wlt_nil.
+      * case a0.
+        -- intro. apply wlt_0_w. apply IHw2. rewrite compare_w_0 in H. assumption.
+        -- intro. simpl. case_eq (length w1 ?= length w2).
+           ++ intro. case_eq (n ?= n0). 
+              ** intros. rewrite (eq_eq_nat n n0 H0). apply wlt_wlt.
+                 --- rewrite (eq_eq_nat (length w1) (length w2) H). trivial.
+                 --- apply IHw1. assumption.
+              ** discriminate.
+              ** intros. apply wlt_lt.
+                 --- rewrite (eq_eq_nat (length w1) (length w2) H). trivial.
+                 --- apply gt_lt_nat. assumption.
+           ++ discriminate.
+           ++ intros. apply wlt_len.
+              apply gt_lt_nat. assumption.
+Qed.
+                   
+Lemma compare_reflect w1 w2 :
+  match (compare w1 w2) with
+    Lt => (wlt w1 w2)
+  | Eq => (weq w1 w2)
+  | GT => (wlt w2 w1)
+  end.
+Proof.
+case_eq (compare w1 w2).
++ intro. apply compare_eq. assumption.
++ intro. apply compare_lt_wlt. assumption.
++ intro. apply compare_gt_wlt. assumption.
+Qed.
+
+Lemma compare_correct (w1:t) (w2:t) :
+  CompareSpec (weq w1 w2) (wlt w1 w2) (wlt w2 w1) (compare w1 w2).
+Proof.
+  generalize (compare_reflect w1 w2).
+  destruct (compare w1 w2); now constructor.
+Qed.
+  
+(**
+  Ordinal notation
+
+Require Import OrdinalNotations.Generic.
+
+Instance OmegaOmega : ON wlt compare.
+Proof.
+  split.
+  - apply wlt_strorder.
+  - unfold well_founded. exact Acc_wlt.
+  - Abort.
+
+ *)
 
 (**
    Sur wlt
