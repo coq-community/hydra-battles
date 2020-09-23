@@ -4426,11 +4426,12 @@ For instance, let us represent the ordinals $0$ and $\omega$ as instances of the
 \begin{Coqsrc}
 Instance Zero : E0.
 Proof.
-  refine (@mkord T1.zero _);  now compute. 
+  now exists T1.zero.
 Defined.
 
 Instance _Omega : E0.
-Proof.  now exists omega. Defined.
+Proof.  now exists omega%t1. 
+Defined.
 
 Notation "'omega'"  := _Omega : E0_scope.
 \end{Coqsrc}

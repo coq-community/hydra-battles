@@ -44,7 +44,7 @@ Infix "o<=" := Le : E0_scope.
 
 Instance Zero : E0.
 Proof.
-  refine (@mkord T1.zero _);  now compute. 
+  now exists T1.zero.
 Defined.
 
 
@@ -56,13 +56,10 @@ Definition Succb (alpha : E0) : bool :=
 
 Instance _Omega : E0.
 Proof.
-  exists omega%t1; auto with T1.
+  now exists omega%t1.  
 Defined. 
 
-
 Notation "'omega'"  := _Omega : E0_scope.
-
-
 
 Instance Succ (alpha : E0) : E0.
 Proof.
