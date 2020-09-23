@@ -5,7 +5,7 @@ Require Import Arith.
 Definition t := {l: t | nf l}.
 
 Lemma List_compare_eq_nf  (l l':list nat) :
-  nf l \/ nf l' -> ListOmega.compare l l' = Eq -> l = l'.
+  nf l /\ nf l' -> ListOmega.compare l l' = Eq -> l = l'.
 Proof. 
   destruct l.
   - destruct l'.    
