@@ -17,7 +17,8 @@ Proof.
       * discriminate.
       * destruct n1.
         -- discriminate.
-        -- intro Hnfl'. simpl compare. case_eq (Nat.compare (length l) (length l')). 
+        -- intro Hnfl'; simpl compare.
+           case_eq (Nat.compare (length l) (length l')). 
            ++ intro. case_eq (Nat.compare n0 n1).
               ** intros. rewrite (Nat.compare_eq n0 n1 H0).
                  rewrite (compare_eq_len_eq l l').
