@@ -682,6 +682,10 @@ Proof.
       * intro. simpl. rewrite H. auto.
 Qed.
 
+
+
+
+      
 Inductive weq : t -> t -> Prop :=
   weq_nil : weq nil nil
 | weq_0_w : forall (w1 w2:t), (weq w1 w2) -> (weq (0::w1) w2)
@@ -728,7 +732,85 @@ Proof.
   - discriminate.
   - discriminate.
 Qed.
-    
+
+Lemma nat_compare_S : forall (n1 n2:nat), (Nat.compare (S n1) (S n2) = Nat.compare n1 n2).
+Proof.
+  intros. case_eq (Nat.compare n1 n2). 
+  - destruct n1, n2.
+    + trivial.
+    + discriminate.
+    + discriminate.
+    + trivial.
+  - destruct n1, n2.
+    + discriminate.
+    + trivial.
+    + discriminate.
+    + trivial.
+  - destruct n1, n2.
+    + discriminate.
+    + trivial.    
+    + trivial.
+    + trivial.
+Qed.
+
+Lemma compare_w_S_eq : forall (w1 w2:t) (n:nat),
+    (compare w1 (S n::w2))=Eq -> (length (S n::w2)) <= (length w1).
+Proof.
+  induction w1.
+  - discriminate.
+  - intros. destruct a.
+    + apply le_trans with (m:=length w1).
+      * apply IHw1. auto.
+      * simpl. lia.
+    + simpl. simpl in H. case_eq (length w1 ?= length w2).
+      * intro. rewrite (Nat.compare_eq (length w1) (length w2) H0).
+        lia.
+      * intro. rewrite H0 in H. discriminate.
+      * intro. rewrite H0 in H. discriminate.
+Qed.
+
+Lemma compare_S_w_eq : forall (w1 w2:t) (a:nat),
+    (compare (S a::w1) w2)=Eq -> (length (S a::w1) <= (length w2)).
+Proof.
+  induction w2.
+  - discriminate.
+  - intros. destruct a.
+    + apply le_trans with (m:=(length w2)).
+      * apply IHw2. auto.
+      * simpl. lia.
+    + simpl. simpl in H. case_eq (length w1 ?= length w2).
+      * intro. rewrite (Nat.compare_eq (length w1) (length w2) H0). lia.       
+      * intro. rewrite H0 in H. discriminate.   
+      * intro. rewrite H0 in H. discriminate.   
+Qed.
+
+Lemma compare_eq_len_eq : forall (w1 w2:t),
+    (length w1 = length w2) -> (compare w1 w2)=Eq -> (w1 = w2).
+Proof.
+  induction w1.
+  - induction w2.
+    + trivial.
+    + discriminate.
+  - induction w2.
+    + discriminate.
+    + intros. destruct a, a0.
+      * f_equal. apply IHw1.
+        -- apply eq_add_S. assumption.
+        -- simpl in H0. rewrite compare_w_0 in H0. assumption.   
+      * exfalso. assert (~ (S (length w1) <= (length w1))). 
+        { lia. }
+        apply H1. simpl in H. rewrite H. apply compare_w_S_eq with (n:=a0).
+        rewrite compare_0_w in H0. assumption.
+      * exfalso. assert (~ (S (length w2) <= (length w2))).
+        { lia. }
+        apply H1. simpl in H.  rewrite <- H. apply compare_S_w_eq with (a:=a).
+        rewrite compare_w_0 in H0. assumption.
+      * rewrite (compare_eq_head a a0 w1 w2 H0). f_equal.
+        apply IHw1.
+        -- simpl in H. lia.
+        -- apply (compare_eq_tail a a0 w1 w2 H0).
+Qed.
+          
 Lemma compare_eq : forall (w1 w2:t), (compare w1 w2) = Eq -> (weq w1 w2).
 Proof.
   induction w1.
