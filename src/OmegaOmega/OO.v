@@ -1,6 +1,7 @@
 Require Import ListOmega.
 From Coq Require Import  Logic.Eqdep_dec.
 Require Import Arith.
+Search Nat.compare_eq.
 
 Definition t := {l: t | nf l}.
 
@@ -43,5 +44,4 @@ Proof.
   apply eq_proofs_unicity_on.
   destruct y, (nf x0); (auto ||  (right; discriminate)).
 Qed.
-
 
