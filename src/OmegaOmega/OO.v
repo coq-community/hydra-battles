@@ -1,12 +1,9 @@
-
 Require Import ListOmega.
 From Coq Require Import  Logic.Eqdep_dec.
 Require Import Arith.
 Search Nat.compare_eq.
 
 Definition t := {l: t | nf l}.
-
-(* Search sig. *)
 
 Lemma List_compare_eq_nf  :
   forall (l l':list nat), nf l /\ nf l' -> ListOmega.compare l l' = Eq -> l = l'.
@@ -49,5 +46,4 @@ Proof.
   apply eq_proofs_unicity_on.
   destruct y, (nf x0); (auto ||  (right; discriminate)).
 Qed.
-
 
