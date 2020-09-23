@@ -1,7 +1,6 @@
 Require Import ListOmega.
 From Coq Require Import  Logic.Eqdep_dec.
 Require Import Arith.
-Search Nat.compare_eq.
 
 Definition t := {l: t | nf l}.
 
