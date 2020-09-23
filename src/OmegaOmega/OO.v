@@ -5,23 +5,21 @@ Require Import Arith.
 Definition t := {l: t | nf l}.
 
 Lemma List_compare_eq_nf  (l l':list nat) :
-  nf l /\ nf l' -> ListOmega.compare l l' = Eq -> l = l'.
-Proof. 
+  nf l -> nf l' -> ListOmega.compare l l' = Eq -> l = l'.
+Proof.  
   destruct l.
   - destruct l'.    
     + trivial.
-    + case n.
-      * intro. elim H. discriminate.
-      * discriminate.
+    + case n; discriminate.
   - case n.
-    + intros. elim H. discriminate.
-    + destruct l'.
+    + discriminate.
+    + intros n0 Hnfl. destruct l'.
       * discriminate.
-      * case n1.
-        -- intro. elim H. discriminate.
-        -- simpl compare. case_eq (Nat.compare (length l) (length l')).
-           ++ intros H n2. case_eq (Nat.compare n0 n2).
-              ** intros. rewrite (Nat.compare_eq n0 n2 H0).
+      * destruct n1.
+        -- discriminate.
+        -- intro Hnfl'. simpl compare. case_eq (Nat.compare (length l) (length l')). 
+           ++ intro. case_eq (Nat.compare n0 n1).
+              ** intros. rewrite (Nat.compare_eq n0 n1 H0).
                  rewrite (compare_eq_len_eq l l').
                  --- trivial.
                  --- apply (Nat.compare_eq (length l) (length l') H).
