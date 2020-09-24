@@ -49,5 +49,5 @@ Qed.
 Definition m : t -> list nat := fun x => proj1_sig x.
 
 Lemma wf_lt : well_founded lt.
-  apply (wf_measure t lt m); auto. 
+  apply (ListOmega.wf_measure t lt m); auto. 
 Qed.
