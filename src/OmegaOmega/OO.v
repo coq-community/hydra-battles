@@ -1,8 +1,9 @@
 Require Import ListOmega.
-From Coq Require Import  Logic.Eqdep_dec.
+From Coq Require Import  Logic.Eqdep_dec Wellfounded.
 Require Import Arith.
 
 Definition t := {l: t | nf l}.
+Definition lt (w1 w2:t) := (wlt (proj1_sig w1) (proj1_sig w2)).
 
 Lemma List_compare_eq_nf  (l l':list nat) :
   nf l -> nf l' -> ListOmega.compare l l' = Eq -> l = l'.
@@ -44,3 +45,9 @@ Proof.
   destruct y, (nf x0); (auto ||  (right; discriminate)).
 Qed.
 
+
+Definition m : t -> list nat := fun x => proj1_sig x.
+
+Lemma wf_lt : well_founded lt.
+  apply (wf_measure t lt m); auto. 
+Qed.
