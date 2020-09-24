@@ -99,5 +99,3 @@ Proof.
   - apply wf_lt.
   - apply compare_correct.
 Qed.
-
-
