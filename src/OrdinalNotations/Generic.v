@@ -27,33 +27,33 @@ Class ON {A:Type}(lt: relation A)
 
 (** Selectors *)
 
-Definition on_t  {A:Type}{lt: relation A}
+Definition ON_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := A.
 
-Definition on_compare {A:Type}{lt: relation A}
+Definition ON_compare {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := compare.
 
 
-Definition on_lt {A:Type}{lt: relation A}
+Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
-Infix "o<" := on_lt : ON_scope.
+Infix "o<" := ON_lt : ON_scope.
 
-Definition on_le  {A:Type}{lt: relation A}
+Definition ON_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
-  clos_refl _ on_lt.
+  clos_refl _ ON_lt.
 
-Infix "o<=" := on_le : ON_scope.
+Infix "o<=" := ON_le : ON_scope.
 
 Definition measure_lt {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare}
             {B : Type}
   (m : B -> A) : relation B :=
-  fun x y =>  on_lt (m x) (m y).
+  fun x y =>  ON_lt (m x) (m y).
             
 Lemma wf_measure  {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
@@ -62,7 +62,7 @@ Lemma wf_measure  {A:Type}(lt: relation A)
             (m : B -> A) :
   well_founded (measure_lt m). 
 Proof.
-  intro x. eapply Acc_incl  with (fun x y =>  on_lt (m x) (m  y)).
+  intro x. eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
   intros y z H.
   apply H.
   eapply Acc_inverse_image.
@@ -97,10 +97,10 @@ Class  SubON
        (alpha :  B)
        (iota : A -> B):=
   {
-  subon_compare :forall x y : A,  compareB (iota x) (iota y) =
+  SubON_compare :forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
-  subon_incl : forall x, ltB (iota x) alpha;
-  subon_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+  SubON_incl : forall x, ltB (iota x) alpha;
+  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 
 Class  ON_Iso 

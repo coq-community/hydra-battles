@@ -10,15 +10,15 @@ From Coq Require Import Compare_dec Lia Logic.Eqdep_dec.
 Definition O3O  :=  ON_plus (FinOrd 3) Omega.
 Existing Instance O3O.
 
-Arguments on_t : clear implicits.
-Arguments on_t {A lt compare} _.
+Arguments ON_t : clear implicits.
+Arguments ON_t {A lt compare} _.
 
 
-Program Definition f (z: on_t O3O) : on_t Omega :=
+Program Definition f (z: ON_t O3O) : ON_t Omega :=
   match z with inl i => i | inr j => 3+j end.
 
 
-Program Definition g (a : on_t Omega) : on_t O3O :=
+Program Definition g (a : ON_t Omega) : ON_t O3O :=
   match (le_lt_dec 3 a) with
     left _ => inr (a - 3)
   | right _ => inl a

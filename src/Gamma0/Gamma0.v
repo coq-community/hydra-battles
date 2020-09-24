@@ -3695,8 +3695,7 @@ Search (nat -> T2).
 
 Instance Finite (n:nat) : G0.
 Proof.
-  exists (finite n).
-   Search nf nfb.  red; rewrite nfb_equiv. apply nf_finite.
+  exists (finite n);  red; rewrite nfb_equiv;  apply nf_finite.
 Defined.
 
 Instance Plus (alpha beta : G0) : G0.

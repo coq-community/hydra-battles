@@ -2521,21 +2521,21 @@ Definition on_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := A.
 
-Definition on_compare {A:Type}{lt: relation A}
+Definition ON_compare {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := compare.
 
-Definition on_lt {A:Type}{lt: relation A}
+Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
-Infix "o<" := on_lt : ON_scope.
+Infix "o<" := ON_lt : ON_scope.
 
-Definition on_le  {A:Type}{lt: relation A}
+Definition ON_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
-  clos_refl _ on_lt.
+  clos_refl _ ON_lt.
 
-Infix "o<=" := on_le : ON_scope.
+Infix "o<=" := ON_le : ON_scope.
 \end{Coqsrc}
 
 
@@ -2688,7 +2688,7 @@ of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
 \node (Adots1) at (12,0) {$\ldots$};
 \end{scope}
 \begin{scope}[color=red]
-\node(B0) at (14,0)[label=below:$0$,label=above:$\omega$]{$\bullet$};
+\node(B0) at (14,0)[label=below:$0$,label=above:\textcolor{red}{$\omega$}]{$\bullet$};
 \node(B1) at (16,0)[label=below:$1$, label=above:$\omega+1$]{$\bullet$};
 \node(B2) at (18,0)[label=below:$2$,label=above:$\omega+2$]{$\bullet$};
 \node (Bdots) at (20,0) {$\ldots$};
@@ -3300,7 +3300,7 @@ Applying the induction hypothesis, we get the inequality
 
 Thus, $m(\iota(p)) > (i,j)$ for any $j$.
 Applying the lemma \texttt{limit\_is\_lub}, we get  the inequality
-$\iota(i+1,0)\geq (i+1,0)$
+$m(\iota(i+1,0))\geq (i+1,0)$
 
 \item If $p=(i,j+1)$ with $j\in\mathbb{N}$, we have  $\iota(p)  {\round} \iota(i, j) $,
 hence $m(\iota(p))> m(\iota(i,j)) \geq (i,j)$, thus $m(\iota(p))\geq (i,j+1)=p$
@@ -3393,10 +3393,10 @@ Class  SubON
        (alpha :  B)
        (iota : A -> B):=
   {
-  subon_compare: forall x y : A,  compareB (iota x) (iota y) =
+  SubON_compare: forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
-  subon_incl : forall x, ltB (iota x) alpha;
-  subon_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+  SubON_incl : forall x, ltB (iota x) alpha;
+  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 \end{Coqsrc}
 
 For instance, we prove that \texttt{Omega} is a sub-notation of
