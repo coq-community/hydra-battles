@@ -1,2 +1,1 @@
-Require Export T1.
-Require Export Canon Paths Large_Sets.
+From hydras.Epsilon0 Require Export T1  Canon Paths Large_Sets.

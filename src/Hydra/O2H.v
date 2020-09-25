@@ -9,7 +9,9 @@ Note that [iota] is not a bijection, but is sufficient for proving
 impossibility lemmas or minoration of battle lengths (see Hydra_Theorems).
 *)
 
-Require Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators .
+From Coq Require Import Relation_Operators.
+
+From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths  .
 Import Hydra_Definitions.
 
 (** Let us transform any ordinal notation into an hydra *)

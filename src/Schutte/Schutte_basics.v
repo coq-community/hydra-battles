@@ -8,10 +8,11 @@
 
 
 
-Require Import Relations  Classical  Well_Orders  Lub Countable.
- Import   Compare_dec  Coq.Sets.Image  PartialFun.
-Require Import Classical_sets .
-Import MoreEpsilonIota.
+From Coq Require Import Relations  Classical   Classical_sets.
+From hydras Require Import  Well_Orders Lub Countable.
+
+Import   Compare_dec  Coq.Sets.Image  PartialFun MoreEpsilonIota.
+
 
 Declare Scope schutte_scope.
 

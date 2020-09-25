@@ -7,8 +7,8 @@
  representing finite sequences  of hydras.
  *)
 
-Require Export Relations Max T1.
-
+From Coq Require Export Relations Max.
+From hydras Require Import T1.
 
 Inductive Hydra : Set :=
 |  node :  Hydrae -> Hydra

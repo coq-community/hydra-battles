@@ -2,9 +2,12 @@
 
 
 
-Require Import Arith Compare_dec Lia Simple_LexProd
-        OrdinalNotations.Generic.
+From Coq Require Import Arith Compare_dec Lia Program.Wf List
+     FunInd Recdef.
+From hydras Require Import Prelude.Simple_LexProd  OrdinalNotations.Generic.
 Import Relations.
+
+
 
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
@@ -178,6 +181,31 @@ Proof.
   - apply lt_wf.
   - apply compare_correct.
 Qed.
+
+Lemma zero_le alpha : zero o<= alpha.
+Proof.
+  destruct alpha as [i j]; destruct i.
+  - destruct j.
+    + right.
+    + left;  right; lia.  
+  - left; left; lia.
+Qed.
+
+
+Lemma Least_zero alpha : Least alpha <-> alpha = zero.
+Proof.
+  split.
+  destruct alpha as [i j]; destruct i.
+  - destruct j; [ reflexivity| ].
+    intro H; specialize (H (0,j)); exfalso.
+    inversion H. inversion H0; lia.
+    lia.
+  -  intro H; specialize (H (0,0)); exfalso.
+     inversion H. inversion H0; lia.
+  - intro; subst; intro; apply zero_le.
+Qed.
+
+
 
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
   - intro alpha; destruct alpha as [n p].
@@ -522,8 +550,7 @@ Qed.
 
 (* adapted from Pascal Manoury et al. *)
 
-Require Import Coq.Program.Wf List.
-Require Import FunInd Recdef.
+
 
 Section Merge.
 
@@ -532,11 +559,9 @@ Section Merge.
   Local Definition m (p : list A * list A) :=
     omega * length (fst p) + length (snd p).
 
-
-
-Function  merge  (ltb: A -> A -> bool)
-          (xys: list A * list A)
-          {wf (measure_lt m) xys} :
+  Function  merge  (ltb: A -> A -> bool)
+            (xys: list A * list A)
+            {wf (measure_lt m) xys} :
     list A :=
     match xys with
       (nil, ys) => ys
@@ -545,10 +570,10 @@ Function  merge  (ltb: A -> A -> bool)
       if ltb x y then x :: merge  ltb (xs, (y :: ys))
       else y :: merge  ltb ((x :: xs), ys)
     end.
-
-  - intros.  unfold m, measure_lt;  cbn; destruct xs0; simpl; left; lia.
-  - intros;    unfold m, measure_lt ;cbn; destruct ys0; simpl; right; lia.
-   - auto.
+  
+  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
+  - auto.
   Defined.
 
 End Merge.

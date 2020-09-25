@@ -1,5 +1,5 @@
-Require Import Arith Relations Lia.
-Require Import Hydra_Definitions Hydra_Lemmas Iterates.
+From Coq Require Import Arith Relations Lia.
+From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates.
 
 
 Definition  h3 := (hyd_mult head 3).

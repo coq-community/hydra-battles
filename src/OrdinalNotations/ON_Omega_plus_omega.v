@@ -1,7 +1,8 @@
 (**  The ordinal omega + omega *)
 
 
-Require Import Arith Compare_dec Lia Simple_LexProd OrdinalNotations.Generic
+From Coq Require Import Arith Compare_dec Lia.
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic
         ON_plus ON_Omega.
 
 Import Relations.
@@ -28,9 +29,9 @@ Open Scope opo_scope.
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
-Compute on_compare omega  (fin 8).
+Compute ON_compare omega  (fin 8).
 
-Compute on_compare (8:t)  omega.
+Compute ON_compare (8:t)  omega.
 
 Example ex2 :  inl 7 o< omega.
 Proof. constructor. Qed.
@@ -243,7 +244,7 @@ Proof.
   - now right.
 Defined.
 
-Definition limitb (alpha: t) := match on_compare alpha omega
+Definition limitb (alpha: t) := match ON_compare alpha omega
                                 with  Eq => true | _ => false end.
 
 

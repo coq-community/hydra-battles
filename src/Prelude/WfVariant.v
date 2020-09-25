@@ -1,8 +1,8 @@
 (** Pierre Casteran, LaBRI, University of Bordeaux *)
 Set Implicit Arguments. 
 
-Require Import Relations Basics.
-Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+From Coq Require Import Relations Basics
+     Wellfounded.Inverse_Image Wellfounded.Inclusion.
 
 Section Variants.
  Variable E: Type.

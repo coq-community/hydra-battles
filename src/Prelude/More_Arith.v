@@ -5,7 +5,7 @@
   Some lemmas of this file are possibly in Standard Library *)
 
 
-Require Import Arith  Div2  Even  Lia Max.
+From Coq Require Import Arith  Div2  Even  Lia Max.
 
 Section Arith_lemmas.
 

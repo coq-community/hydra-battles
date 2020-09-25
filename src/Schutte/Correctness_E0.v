@@ -14,15 +14,10 @@
 
 
 
+From hydras Require Import Epsilon0.Epsilon0 OrdinalNotations.Generic. 
+From hydras.Schutte Require Import Schutte_basics  Addition  AP CNF.
 
-
-
-Require Export Epsilon0 Schutte_basics  Addition  AP CNF.
 Import List  PartialFun Ensembles.
-Require Import OrdinalNotations.Generic. 
-Generalizable All Variables.
-
-
 
 Fixpoint inject (t:T1) : Ord :=
  match t with T1.zero => zero
@@ -536,7 +531,7 @@ Proof.
     rewrite <- H3 in H1;  now apply inject_injective.
 Qed.
 
-
+Locate members.
 
 Theorem embedding : fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.
 Proof.
@@ -548,15 +543,14 @@ Proof.
 Qed.
 
 
-
 Instance Epsilon0_correct :
-  ON_for epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 Proof.
   split.
   - intro a; apply embedding; red; apply cnf_ok.
   - intros; destruct (inject_lt_epsilon0_ex_unique _ H) as [x [[H0 H1] H2]].
     exists (mkord H0);now cbn.
-  -intros a b; destruct (compare_correct a b).
+  - intros a b; destruct (compare_correct a b).
    + now subst.
    + apply inject_mono;destruct H; tauto.
    + apply inject_mono;  destruct H; tauto.

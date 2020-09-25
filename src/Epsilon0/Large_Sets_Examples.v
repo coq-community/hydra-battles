@@ -1,4 +1,4 @@
-Require Import E0 Canon Paths  MoreLists Large_Sets.
+From hydras Require Import E0 Canon Paths  MoreLists Large_Sets.
 
 
 (* naive proofs *)

@@ -1,9 +1,9 @@
 (** Non dependent lexicographic product *)
 
-Require Import Relations Wellfounded.Lexicographic_Product
-        Wellfounded.Inverse_Image Wellfounded.Inclusion.
-Require Export RelationClasses.
-Require Import Setoid.
+From Coq Require Import Relations Wellfounded.Lexicographic_Product
+        Wellfounded.Inverse_Image Wellfounded.Inclusion Setoid.
+From Coq Require Export RelationClasses.
+
 
 
 

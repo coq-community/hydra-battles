@@ -1,11 +1,10 @@
 (** Formal specification of list sorting functions *)
 
 
-Require Export List RelationClasses.
-Require Export Relations.
-Require Export Coq.Sorting.Permutation Coq.Sorting.Sorted.
-Require Export DecPreOrder.
-Require Import DecPreOrder_Instances.
+From Coq Require Export List RelationClasses  Relations Sorting.Permutation
+     Sorting.Sorted.
+From hydras.Prelude Require Export DecPreOrder.
+From hydras.Prelude Require Import DecPreOrder_Instances.
 
 
 Definition sort_fun_t := forall A, (A -> A -> bool) -> list A -> list A.

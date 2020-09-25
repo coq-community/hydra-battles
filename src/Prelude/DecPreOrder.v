@@ -4,7 +4,7 @@
 
 *)
 
-Require Export Relations RelationClasses Setoid.
+From Coq Require Export Relations RelationClasses Setoid.
 
 Class Total {A:Type}(R: relation A) :=
   totalness : forall a b:A, R a b \/ R b a.             

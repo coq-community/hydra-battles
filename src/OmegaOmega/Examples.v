@@ -1,5 +1,5 @@
-Require Import ListOmega Arith.
-
+From Coq Require Import  Arith.
+From hydras Require Import ListOmega.
 
 (** TO do : verify (and prove !) the following examples 
     really need omega^omega (and not a finite power of omega) 

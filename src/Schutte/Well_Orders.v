@@ -3,9 +3,11 @@
 (**  Pierre Casteran LaBRI, Universite de Bordeaux  *)
 
 
-Require Import Relations  Classical  Classical_sets.
-Require Import RelationClasses  .
+From Coq Require Import Relations  Classical  Classical_sets RelationClasses
+     Wf_nat.
 
+From hydras Require Import PartialFun.
+Import MoreEpsilonIota.
 
 Arguments In [U].
 Arguments Included [U].
@@ -149,10 +151,8 @@ Section the_context.
   
 End the_context.
 
-(** from now on, we use ClassicalEpsilon *)
 
-Require Import PartialFun.
-Import MoreEpsilonIota.
+
 
 
 
@@ -173,7 +173,7 @@ Proof.
 Qed.
 
 
-Require Import Wf_nat.
+
 
 Instance WO_nat : WO Peano.lt.
 split.

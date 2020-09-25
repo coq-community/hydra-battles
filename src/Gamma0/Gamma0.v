@@ -23,19 +23,20 @@
 *)
 
 
+From Coq Require Import Arith List Lia  Compare_dec  Relations
+     Wellfounded  Max RelationClasses.
 
-Require Import Epsilon0.
 
-Require Import Arith List Lia  Compare_dec.
-Require Import Relations Wellfounded  Max.
+From hydras.Epsilon0 Require Import Epsilon0.
+From hydras.Prelude Require Import More_Arith Restriction.
+From hydras Require Import OrdinalNotations.Generic. 
+From hydras.rpo Require Import term  rpo.
+From hydras.Gamma0 Require Import T2.
 
-Require Import More_Arith Restriction  not_decreasing  Epsilon0.
 Import Datatypes.
 
-Require Import T2   term  rpo.
-Require Import Prelude.Restriction.
-Require Import RelationClasses OrdinalNotations.Generic. 
-Require Logic.Eqdep_dec.
+
+
 
 Set Implicit Arguments.
 
@@ -308,7 +309,6 @@ Definition lt_ge_dec : forall t t', {t o< t'}+{t' o<= t}.
   destruct 1 ;[left;auto with T2| right;auto with T2].
   auto with T2.
 Defined.
-
 
 Definition compare (t1 t2 : T2) := 
   match trichotomy_inf t1 t2 with
@@ -674,7 +674,7 @@ Proof.
   inversion H4; lt_clean; auto with T2.
 Qed.
 
-Lemma lt_tail0: forall c, nf c -> c <> zero -> tail c o< c.     
+Lemma lt_tail0: forall c, nf c -> c <> zero -> gtail c o< c.     
 Proof.
   induction c.
   -  now destruct 2.
@@ -685,7 +685,7 @@ Qed.
 
 Lemma lt_tail: forall a b n c, nf (gcons a b n c) ->  c o< gcons a b n c. 
 Proof.
-  intros a b n c H; change c with (tail (gcons a b n c)). 
+  intros a b n c H; change c with (gtail (gcons a b n c)). 
   apply lt_tail0.
    + cbn;auto with T2.
    +  discriminate. 
@@ -3695,8 +3695,7 @@ Search (nat -> T2).
 
 Instance Finite (n:nat) : G0.
 Proof.
-  exists (finite n).
-   Search nf nfb.  red; rewrite nfb_equiv. apply nf_finite.
+  exists (finite n);  red; rewrite nfb_equiv;  apply nf_finite.
 Defined.
 
 Instance Plus (alpha beta : G0) : G0.

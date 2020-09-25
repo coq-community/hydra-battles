@@ -18,11 +18,9 @@
 
 (** * Term algebra defined as functor from a Module Signature and a Module Variable.*)
 
-Require Import List.
-Require Import more_list.
-Require Import list_permut.
-Require Import list_set.
-Require Import Arith.
+From Coq Require Import List Arith.
+From hydras.rpo Require Import more_list list_permut list_set.
+
 
 Set Implicit Arguments.
 

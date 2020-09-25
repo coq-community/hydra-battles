@@ -11,7 +11,7 @@ clean:
 	(cd src ; make -f CoqMakefile clean)
 
 project: 
-	(cd src ; source make_make)
+	(cd src ; source make_project)
 
 doc:	html pdf
 

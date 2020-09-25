@@ -4,12 +4,13 @@
 (** To do : bulletize the proofs ! *)
 
 
-Require Import Ensembles  Arith ArithRing Even Div2.
+From Coq Require Import Ensembles  Arith ArithRing Even Div2
+     Wellfounded Relations  Wf_nat  Finite_sets
+     Logic.Epsilon  Sets.Image Lia.
 
-Require Import Wellfounded Relations  Wf_nat  Finite_sets.
-Require Import Epsilon  Coq.Sets.Image.
-Require Import MoreEpsilonIota PartialFun  GRelations  Arith_lemmas.
-Import Lia.
+From hydras Require Import MoreEpsilonIota PartialFun  GRelations
+     Prelude.More_Arith.
+
 
 Set Implicit Arguments.
 

@@ -10,8 +10,10 @@ Pierre Casteran,
 
  *)
 
-Require Export Arith Omega  T1 .
+From Coq Require Export Arith Omega .
 Import Relations Relation_Operators.
+
+From hydras.Epsilon0 Require Export T1 E0.
 
 Set Implicit Arguments.
 Open Scope t1_scope.
@@ -43,8 +45,6 @@ Fixpoint canonS alpha (i:nat) : T1 :=
 
 Definition canon alpha i :=
   match i with 0 => zero | S j => canonS alpha j end.
-
-
 
 (** * Properties of canonical sequences *)
 
@@ -665,7 +665,7 @@ Lemma canonS_LE alpha n :
 
   (** ** Adaptation to E0 (well formed terms of type [T1] ) *)
   
-Require Export  E0.
+
 Open Scope E0_scope.
 
 Definition CanonS (alpha:E0)(i:nat): E0.

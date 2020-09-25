@@ -1,5 +1,8 @@
-Require Export DecPreOrder.
-Require Import Arith ZArith List.
+From hydras.Prelude Require Export DecPreOrder.
+From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
+
+
+
 
 Instance Nat_le_TO : TotalDecPreOrder le .
 Proof.
@@ -53,10 +56,8 @@ split.
   * now right.
 Defined.
 
-(** Pre-order associated with inclusion *)
-Require Import Sets.Finite_sets.
-Require Import Sets.Ensembles.
 
+(** Pre-order associated with inclusion *)
 
 Instance PrO_Included {U:Type}: PreOrder (Included U).
 Proof.

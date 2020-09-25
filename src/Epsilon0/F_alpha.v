@@ -3,12 +3,13 @@
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
-Require Import   E0  Simple_LexProd Iterates Canon Paths.
-Import RelationClasses Relations Exp2.
+From hydras.Prelude  Require Import  Iterates  Simple_LexProd Exp2.
+From hydras.Epsilon0 Require Import  E0 Canon Paths.
+Import RelationClasses Relations.
+
+From Coq Require Import ArithRing Lia.
 
 From Equations Require Import Equations.
-
- Require Import ArithRing Lia.
 
 (** ** First steps of the hierarchy
 

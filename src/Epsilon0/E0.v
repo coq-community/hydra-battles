@@ -8,16 +8,16 @@
    [E0] is a class type for ordinal terms proved to be in normal form.
 *)
 
-Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
-        Wellfounded  Operators_Properties
+From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
+     ArithRing  Wellfounded  Operators_Properties  Logic.Eqdep_dec.
+
+From hydras Require Import 
         Prelude.More_Arith  Prelude.Restriction
-        not_decreasing  ArithRing   DecPreOrder Logic.Eqdep_dec
-        OrdinalNotations.Generic OrdNotations.
+           Prelude.DecPreOrder  OrdinalNotations.Generic OrdNotations.
 
+From hydras.Epsilon0 Require Export T1 Hessenberg.
 
-Require  Export T1 Hessenberg.
 Set Implicit Arguments.
-
 Declare Scope E0_scope.
 
 Delimit Scope E0_scope with e0.
@@ -44,7 +44,7 @@ Infix "o<=" := Le : E0_scope.
 
 Instance Zero : E0.
 Proof.
-  refine (@mkord T1.zero _);  now compute. 
+  now exists T1.zero.
 Defined.
 
 
@@ -56,13 +56,10 @@ Definition Succb (alpha : E0) : bool :=
 
 Instance _Omega : E0.
 Proof.
-  exists omega%t1; auto with T1.
+  now exists omega%t1.  
 Defined. 
 
-
 Notation "'omega'"  := _Omega : E0_scope.
-
-
 
 Instance Succ (alpha : E0) : E0.
 Proof.

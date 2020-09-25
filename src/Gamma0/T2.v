@@ -22,17 +22,8 @@
    (ordinals below Gamma0)   *)
 
 
-Require Import Arith. 
-Require Import Compare_dec.
-Require Import Relations.
-Require Import Wellfounded.
-Require Import Max Lia.
-
-Require Import More_Arith.
-Require Import Restriction.
-Require Import not_decreasing.
-Require Import T1.
-Require Import OrdNotations.
+From Coq Require Import Arith  Compare_dec Relations Wellfounded Max Lia.
+From hydras Require Import More_Arith  Restriction T1 OrdNotations.
 
 Set Implicit Arguments.
 
@@ -163,7 +154,7 @@ Hint Unfold le : T2.
 
 Notation "o1 o<= o2" := (le o1 o2): t2_scope.
 
-Definition tail c := match c with | zero => zero 
+Definition gtail c := match c with | zero => zero 
                                   | gcons a b n c => c
                              end.
 (* Veblen Normal Form *)
@@ -227,24 +218,6 @@ Inductive lt_epsilon0 : T2 -> Prop :=
 
 
 (** * length (as in Schutte) *)
-
-
-
- 
-(*
-Require Import Arith.
-Require Import Lia.
-Require Import Compare_dec.
-Require Import Relations.
-Require Import Wellfounded.
-
-
-Require Import More_Arith.
-Require Import Restriction.
-Require Import T2.
-
-Set Implicit Arguments.
- *)
 
 Section on_length.
 

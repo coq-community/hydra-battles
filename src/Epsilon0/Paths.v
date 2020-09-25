@@ -13,9 +13,9 @@ P. Casteran, University of Bordeaux and Labri
 
 
 
-Require Import Canon  MoreLists First_toggle OrdNotations.
+From hydras Require Import Canon  MoreLists First_toggle OrdNotations.
 Import Relations Relation_Operators.
-Require Import Lia.
+From Coq Require Import Lia.
 
 Set Implicit Arguments.
 Open Scope t1_scope.
@@ -842,7 +842,7 @@ Proof.
 Defined.
 
 (*
-Require Import Extraction.
+From Coq Require Import Extraction.
 Recursive Extraction LT_path_to.
  *)
 

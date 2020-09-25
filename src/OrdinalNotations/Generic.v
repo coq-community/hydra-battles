@@ -1,11 +1,9 @@
-Require Import RelationClasses Relation_Operators Ensembles OrdNotations.
+From Coq Require Import RelationClasses Relation_Operators Ensembles.
+From hydras Require Import  OrdNotations Schutte_basics.
+From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Import Relation_Definitions.
-Require Export MoreOrders
-  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
-Require Import Schutte_basics.
-
-
-
+From hydras Require Export MoreOrders.
+  
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.
@@ -29,33 +27,33 @@ Class ON {A:Type}(lt: relation A)
 
 (** Selectors *)
 
-Definition on_t  {A:Type}{lt: relation A}
+Definition ON_t  {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := A.
 
-Definition on_compare {A:Type}{lt: relation A}
+Definition ON_compare {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := compare.
 
 
-Definition on_lt {A:Type}{lt: relation A}
+Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
-Infix "o<" := on_lt : ON_scope.
+Infix "o<" := ON_lt : ON_scope.
 
-Definition on_le  {A:Type}{lt: relation A}
+Definition ON_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
-  clos_refl _ on_lt.
+  clos_refl _ ON_lt.
 
-Infix "o<=" := on_le : ON_scope.
+Infix "o<=" := ON_le : ON_scope.
 
 Definition measure_lt {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare}
             {B : Type}
   (m : B -> A) : relation B :=
-  fun x y =>  on_lt (m x) (m y).
+  fun x y =>  ON_lt (m x) (m y).
             
 Lemma wf_measure  {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
@@ -64,7 +62,7 @@ Lemma wf_measure  {A:Type}(lt: relation A)
             (m : B -> A) :
   well_founded (measure_lt m). 
 Proof.
-  intro x. eapply Acc_incl  with (fun x y =>  on_lt (m x) (m  y)).
+  intro x. eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
   intros y z H.
   apply H.
   eapply Acc_inverse_image.
@@ -99,10 +97,10 @@ Class  SubON
        (alpha :  B)
        (iota : A -> B):=
   {
-  subon_compare :forall x y : A,  compareB (iota x) (iota y) =
+  SubON_compare :forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
-  subon_incl : forall x, ltB (iota x) alpha;
-  subon_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+  SubON_incl : forall x, ltB (iota x) alpha;
+  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 
 Class  ON_Iso 
@@ -124,11 +122,11 @@ Class  ON_Iso
 
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
 
-Class ON_for `(alpha : Ord)
+Class ON_correct `(alpha : Ord)
      `(OA : @ON A ltA  compareA)
       (iota : A -> Ord) :=
-  { ON_for_inj : forall a, lt (iota a) alpha;
-    ON_for_onto : forall beta, lt beta alpha ->
+  { ON_correct_inj : forall a, lt (iota a) alpha;
+    ON_correct_onto : forall beta, lt beta alpha ->
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
@@ -178,7 +176,7 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
 Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (a : A)
        (b : Ord)
   := iota a = b.
@@ -188,7 +186,7 @@ Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (f : A -> A)
        (g : Ord  -> Ord)
   :=
@@ -197,7 +195,7 @@ Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
-       {_ : ON_for alpha OA iota}
+       {_ : ON_correct alpha OA iota}
        (f : A -> A -> A)
        (g : Ord  -> Ord -> Ord)
   :=

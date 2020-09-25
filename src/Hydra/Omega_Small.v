@@ -2,9 +2,10 @@
 
 
 
-Require Import Hydra_Lemmas  Arith.
+From Coq Require Import   Arith Lia.
+From hydras.Hydra Require Import Hydra_Lemmas.
 Open Scope nat_scope.
-Require Import Lia.
+
 
 
 Instance height_var : Hvariant  lt_wf free height.
