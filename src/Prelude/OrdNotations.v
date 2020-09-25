@@ -1,3 +1,5 @@
+(* For ordinals *)
+
 Reserved Notation "x 'o<' y" (at level 70, no associativity).
 Reserved Notation "x 'o<=' y" (at level 70, no associativity).
 Reserved Notation "x 'o>=' y" (at level 70, no associativity).

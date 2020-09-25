@@ -624,46 +624,39 @@ Qed.
 
 Lemma succ_correct alpha beta : cnf beta = succ (cnf alpha) <->
                                 Successor beta alpha.
-  destruct alpha, beta. cbn. split.
-  intro; subst. red.
-  split; unfold ON_lt. red.  cbn. red. red. repeat split; auto.
-  Search [lt succ].
-  apply lt_succ.
-  destruct z.   Print "o<". unfold Lt. cbn. intros.
-  assert (cnf1 t1< cnf1)%t1.
-  About lt_le_trans.
-  repeat split; auto.
-  apply lt_le_trans with (succ cnf0).  destruct H0; auto with T1.
-  now destruct H1.
-  Search (le (succ _ ) _).
-  apply lt_succ_le; auto.
-  apply H.
-  Search (lt ?x  ?x).
-  destruct H1.
-  destruct H2.
-  eapply lt_irrefl; eauto.
-  destruct 1.
-  unfold Lt in H , H0. cbn in H, H0.
-  destruct H.
-  destruct H1.
-  apply lt_succ_le in H1.
-  Search [lt le].
-  destruct (le_lt_or_eq _ _ H1). 
-  auto.
-  About Succ.
-  Search (T1 -> _ -> E0).
-  specialize (H0 (Succ (mkord cnf_ok0))).
-  cbn in H0.  unfold LT in H0.
-  exfalso.
-  apply H0.
-  split; auto with T1.
- split; auto with T1.
- apply lt_succ;eauto with T1.
-  Search (nf (succ _)).
-apply succ_nf; auto.
- split; auto with T1.
-apply succ_nf; auto.
-auto.
-auto.
+Proof.
+  destruct alpha, beta; cbn; split.
+  -  intro; subst.  
+     split.
+     +  unfold ON_lt; red; cbn; red; red; repeat split; auto.
+        apply lt_succ.
+     +  destruct z;  unfold Lt; cbn; intros.
+        assert (cnf1 t1< cnf1)%t1.
+        { repeat split; auto.
+          apply lt_le_trans with (succ cnf0).
+          destruct H0; auto with T1.
+          now destruct H1.
+          apply lt_succ_le; auto.
+          apply H.
+        }
+        destruct H1.
+        destruct H2.
+        eapply lt_irrefl; eauto.
+  - destruct 1.
+    unfold Lt in H, H0. cbn in H, H0.
+    destruct H.
+    destruct H1.
+    + apply lt_succ_le in H1; auto.
+      * destruct (le_lt_or_eq _ _ H1); auto.
+        specialize (H0 (Succ (mkord cnf_ok0))).
+        cbn in H0; unfold LT in H0.
+        exfalso.
+        apply H0.
+        -- split; auto with T1.
+           split; auto with T1.
+           ++ apply lt_succ;eauto with T1.
+           ++ apply succ_nf; auto.
+        -- split; auto with T1.
+           apply succ_nf; auto.
 Qed.
       
