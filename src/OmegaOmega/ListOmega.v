@@ -910,14 +910,6 @@ Qed.
 (**
   Ordinal notation
 
-Require Import OrdinalNotations.Generic.
-
-Instance OmegaOmega : ON wlt compare.
-Proof.
-  split.
-  - apply wlt_strorder.
-  - unfold well_founded. exact Acc_wlt.
-  - Abort.
 
  *)
  
