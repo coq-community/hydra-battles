@@ -500,7 +500,7 @@ Defined.
 Definition transfinite_recursor :
  forall (P:T1 -> Type),
    (forall x:T1, nf x -> 
-                   (forall y:T1, y  o< x -> P y) -> P x) ->
+                   (forall y:T1, y  t1< x -> P y) -> P x) ->
     forall a, nf a -> P a.
 Proof.
  intros; apply transfinite_recursor_lt; auto.

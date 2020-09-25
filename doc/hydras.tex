@@ -4397,7 +4397,7 @@ Infix "o<=" := Le : E0_scope.
 \end{Coqsrc}
   
 \begin{todo}
-Infix notation for inequalities on ordinals have changed to \texttt{o<} and \texttt{o<=}.  This document is not updated yet, but the \coq{} scripts are correct.
+Infix notation for inequalities on type \texttt{T1} have changed to \texttt{t1<} and \texttt{t1<=}.  This document is not updated yet, but the \coq{} scripts are correct.
 \end{todo}
 
 
@@ -4416,6 +4416,16 @@ Lemma nf_proof_unicity :
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 \end{Coqsrc}
 
+\index{Exercises}
+\begin{exercise}
+In earlier versions of this development, the predicate \texttt{nf} was defined  inductively, with various constructors describing all possible cases.
+\begin{enumerate}
+\item Please give such a definition, in a dedicated module.
+\item Prove the logical equivalence between your definition and ours.
+\item Define a variant of the type \texttt{E0} (with your definition of \texttt{nf}).
+\item Can you still prove a lemma like \texttt{E0\_eq\_iff} ? With the help of an axiom of the standard library ?
+\end{enumerate}
+\end{exercise}
 For upgrading constants and fonctions of \texttt{T1}, we have to prove that 
 the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
@@ -4492,11 +4502,11 @@ a strictly increasing sequence of ordinals.
    The following function is very useful in constructions by cases (proofs and function definitions).
    
 \begin{Coqsrc}
-  Definition zero_succ_limit (alpha: T1) :
-  {succb alpha} + {limitb alpha} +  {alpha=zero}.
-  (* ... *)
+Definition zero_succ_limit (alpha: T1) :
+    {succb alpha} + {limitb alpha} +  {alpha=zero}.
+    (* ... *)
 Defined.
- \end{Coqsrc}
+\end{Coqsrc}
 
 
 
@@ -4521,8 +4531,8 @@ Fixpoint succ (alpha:T1) : T1 :=
 \end{Coqsrc}
 
 
-The following lemma establishes the connection between the function
-\texttt{succ} and the predicate \texttt{is\_succ}.
+The following lemma establishes the connection between the  function
+\texttt{succ} and the Boolean predicate \texttt{succb}.
 
 
 \begin{Coqsrc}
@@ -4584,25 +4594,25 @@ are not commutative. Moreover,  both operations fail to be strictly monotonous i
 Example e2 : 6 + omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'2 : omega o< omega + 6.
+Example e'2 : omega t1< omega + 6.
 Proof. now compute. Qed.
 
 Example e''2 : 6 * omega = omega.
 Proof. reflexivity. Qed.
 
-Example e'''2 : omega o< omega * 6.
+Example e'''2 : omega t1< omega * 6.
 Proof. now compute. Qed.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma plus_not_monotonous : exists alpha beta gamma : T1,
-    alpha o< beta /\ alpha + gamma = beta + gamma.
+    alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
   exists 3, 5, omega;  now  compute.
 Qed.
 
 Lemma mult_not_monotonous :  exists alpha beta gamma : T1,
-      alpha o< beta /\ alpha * gamma = beta * gamma.
+      alpha t1< beta /\ alpha * gamma = beta * gamma.
 Proof.
   exists 3, 5, omega; now compute.
 Qed.
@@ -4782,7 +4792,7 @@ Section First_attempt.
   IHgamma : nf gamma -> Acc LT gamma
   H : nf (ocons beta n gamma)
   delta : T1
-  Hdelta : delta o< ocons beta n gamma
+  Hdelta : delta t1< ocons beta n gamma
   ============================
   Acc LT delta
  \end{Coqanswer}
@@ -4853,7 +4863,7 @@ an accessible term $\alpha$.
   subgoal 1 
 
   alpha : T1
-  Aalpha : forall y : T1,  y o< alpha -> Acc LT y
+  Aalpha : forall y : T1,  y t1< alpha -> Acc LT y
   IHalpha : forall y : T1,
        LT y alpha ->
        forall (n : nat) (beta : T1),
@@ -5260,12 +5270,12 @@ At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
 
 \begin{Coqsrc}
 Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-  nf gamma   -> alpha  o< beta ->
-  alpha o+ gamma o< beta o+ gamma.
+  nf gamma   -> alpha  t1< beta ->
+  alpha o+ gamma  t1< beta o+ gamma.
 
 Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
-  nf alpha -> beta o< gamma ->
-  alpha o+ beta o< alpha o+ gamma.
+  nf alpha -> beta t1< gamma ->
+  alpha o+ beta t1< alpha o+ gamma.
 \end{Coqsrc}
 
 
@@ -5310,26 +5320,26 @@ For proving the termination of all hydra battles, we have to prove that
 
 \begin{Coqsrc}
 Lemma S0_decr :
-  forall s s', S0  s s' -> ms s' o< ms s.
+  forall s s', S0  s s' -> ms s' t1< ms s.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma R1_decr : forall h h',
-                  R1 h h' -> m h' o< m h.
+                  R1 h h' -> m h' t1< m h.
 \end{Coqsrc}
 
 \begin{Coqsrc}
 Lemma S1_decr n:
-  forall s s', S1 n s s' -> ms s' o<  ms s.
+  forall s s', S1 n s s' -> ms s' t1<  ms s.
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Lemma R2_decr n : forall h h', R2 n h h' -> m h'  o< m h.
+Lemma R2_decr n : forall h h', R2 n h h' -> m h'  t1< m h.
 \end{Coqsrc}
 
 
 \begin{Coqsrc}
-Lemma round_decr : forall h h', h -1-> h' -> m h' o< m h.
+Lemma round_decr : forall h h', h -1-> h' -> m h' t1< m h.
 Proof.
    destruct 1 as [n [H | H]].
    -  now apply R1_decr.
@@ -5348,7 +5358,7 @@ Qed.
 Theorem every_battle_terminates: Termination.
 Proof. 
   red; apply Inclusion.wf_incl with 
-         (R2 := fun h h' =>  m h o< m h').
+         (R2 := fun h h' =>  m h t1< m h').
    red; intros;  now apply round_decr.
    apply Inverse_Image.wf_inverse_image, T1_wf.
 Qed.
@@ -5598,7 +5608,7 @@ First, we prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i
 \label{lemma:canonS_LT}
 \begin{Coqsrc}
 Lemma canonS_LT i alpha :
-  nf alpha -> alpha <> zero -> canonS alpha i o<  alpha.
+  nf alpha -> alpha <> zero -> canonS alpha i t1<  alpha.
 \end{Coqsrc}
 
 
@@ -5618,8 +5628,8 @@ relates the boolean function \texttt{is\_limit} defined on the \texttt{T1} data-
 Lemma canonS_limit_strong (lambda : T1) : 
      nf lambda ->
      limitb lambda  ->
-     forall beta, beta o< lambda ->
-                  {i:nat | beta o< canonS lambda i}.
+     forall beta, beta t1< lambda ->
+                  {i:nat | beta t1< canonS lambda i}.
 
 Proof.
   transfinite_induction_LT lambda.
@@ -5752,7 +5762,7 @@ on can build a path from $\alpha$ to $\beta$.
 
 \begin{Coqsrc}
 Lemma LT_path_to (alpha beta : T1) :
-  beta o< alpha -> {s : list nat | path_to beta s alpha}.
+  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
 \end{Coqsrc}
 
 \index{Exercises}
@@ -5768,7 +5778,7 @@ From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any pa
 
 \begin{Coqsrc}
 Lemma path_to_LT beta s alpha :
-  path_to beta s alpha -> nf alpha -> beta o< alpha.
+  path_to beta s alpha -> nf alpha -> beta t1< alpha.
 \end{Coqsrc}
 
 \subsection{Paths and hydra battles}
@@ -5866,7 +5876,7 @@ As a corollary, we are now able to transform any inequality $\beta<\alpha<\epsil
 
 \begin{Coqsrc}
 Lemma LT_to_battle alpha beta :
-    beta o< alpha ->  iota alpha -+-> iota beta.
+    beta t1< alpha ->  iota alpha -+-> iota beta.
 \end{Coqsrc}
 
 \section{A  proof of impossibility}
@@ -5889,7 +5899,7 @@ Class BoundedVariant (B:Battle) :=
     m: Hydra -> T1;
     mu_nf: nf mu;
     Hvar: Hvariant T1_wf B m;
-    m_bounded: forall h, m h o< mu
+    m_bounded: forall h, m h t1< mu
   }.
 \end{Coqsrc}
 
@@ -5900,7 +5910,7 @@ Section Bounded.
   Context (B: Battle) (Hy : BoundedVariant B).
 
   Hypothesis m_decrease : forall  i h h',
-        round_n i h h' -> m h' o< m h.
+        round_n i h h' -> m h' t1< m h.
 \end{Coqsrc}
 
 \begin{remark}
@@ -5914,7 +5924,7 @@ the  \texttt{free} and \texttt{standard} kinds of battles. This trick allows to
 First, we prove that $m(\iota(\alpha))$ is always greater than or equal to $\alpha$, by  transfinite induction over $\alpha$.
 
 \begin{Coqsrc}
-Lemma m_ge_0 alpha:  nf alpha -> alpha o<= m (iota alpha).
+Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha).
 \end{Coqsrc}
 
 
@@ -5943,11 +5953,11 @@ We are now able to build a counter-example.
 From Lemma \texttt{m\_ge\_0} we infer the following inequality :
 
 \begin{Coqsrc}
-    Corollary m_ge_generic : m big_h o<= m small_h.
+    Corollary m_ge_generic : m big_h t1<= m small_h.
  \end{Coqsrc}
 
 The (big) rest of the proof is dedicated to prove formally the converse inequality 
-\texttt{m small\_h o< m big\_h}. 
+\texttt{m small\_h t1< m big\_h}. 
 
 
 
@@ -5970,13 +5980,13 @@ Section Impossibility_Proof.
 satisfies trivially the hypothesis \texttt{m\_decrease}.
 
 \begin{Coqsrc}
-Lemma m_ge : m big_h o<= m small_h.
+Lemma m_ge : m big_h t1<= m small_h.
   Proof.
     apply m_ge_generic.
    (* ... *)
 \end{Coqsrc}
 
-\item From the hypothesis \texttt{m\_bounded}, we have \texttt{m big\_h o< mu}
+\item From the hypothesis \texttt{m\_bounded}, we have \texttt{m big\_h t1< mu}
 \item By Lemma \texttt{LT\_to\_battle}, we get a (free) battle from
 \texttt{big\_h = iota mu} to \texttt{small\_h = iota (m big\_h)}.
 
@@ -5986,7 +5996,7 @@ Lemma m_ge : m big_h o<= m small_h.
 \item From the hypotheses on $m$, we infer:
 
 \begin{Coqsrc}
-Lemma m_lt : m small_h o< m big_h.
+Lemma m_lt : m small_h t1< m big_h.
 \end{Coqsrc}
 
 
@@ -6024,7 +6034,7 @@ Module~\href{../src/html/hydras.Hydra.O2H.html}{Hydra.O2H}.
 
 \begin{Coqsrc}
 Lemma LT_to_round_plus alpha beta :
-    beta o< alpha ->  iota alpha -+-> iota beta.
+    beta t1< alpha ->  iota alpha -+-> iota beta.
 \end{Coqsrc}
 
 This lemma builds a battle out of any inequality $\beta<\alpha$. 
@@ -6033,7 +6043,7 @@ Module~\href{../src/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}:
 
 \begin{Coqsrc}
 Lemma LT_path_to (alpha beta : T1) :
-  beta o< alpha -> {s : list nat | path_to beta s alpha}.
+  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
 \end{Coqsrc}
 
 The sequence $s$, used to build the sequence of replication factors of the battle depends on 
@@ -6161,7 +6171,7 @@ A most interesting property of $i$-paths is that we can ``upgrade'' their index,
 
 \begin{Coqsrc}
 Corollary Cor12 (alpha : T1) :  nf alpha ->
-         forall beta i n, beta  o< alpha  ->
+         forall beta i n, beta  t1< alpha  ->
                 (i < n)%nat ->
                  const_pathS i alpha beta ->
                  const_pathS n alpha beta.
@@ -6175,7 +6185,7 @@ We shall also use a version of \texttt{Cor12} with large inequalities.
 
 \begin{Coqsrc}
 Corollary Cor12' (alpha : T1) :  nf alpha ->
-         forall beta i n, (beta o< alpha)%t1 ->
+         forall beta i n, (beta t1< alpha)%t1 ->
                (i <= n)%nat ->
                const_pathS i alpha beta ->
                const_pathS n alpha beta.
@@ -6256,7 +6266,7 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 
 \begin{Coqsrc}
 Lemma Lemma2_6_1 (alpha : T1) :  
-  nf alpha -> forall beta,  beta o< alpha  ->
+  nf alpha -> forall beta,  beta t1< alpha  ->
   {n:nat | const_pathS n alpha beta}.
 Proof.
   transfinite_induction alpha.
@@ -6286,7 +6296,7 @@ the following lemma, the proof of which is quite complex, which allows to simula
 
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  o< alpha ->
+  nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
   {l:nat | standard_path (S i) alpha j beta}.
 \end{Coqsrc}
 
@@ -6343,7 +6353,7 @@ Let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some $(n+1
  Section Constant_to_standard_Proof.
 
   Variables (alpha beta: T1) (n : nat).
-  Hypotheses (Halpha: nf alpha) (Hpos : zero o<  beta)
+  Hypotheses (Halpha: nf alpha) (Hpos : zero t1<  beta)
              (p : const_pathS n alpha  beta).
 \end{Coqsrc}
 
@@ -6512,7 +6522,7 @@ Here is the full statement of the conversion from constant to standard paths.
 \begin{Coqsrc}
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  o< alpha ->
+  nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
   {j:nat | standard_path (S i) alpha j beta}.
 \end{Coqsrc}
 
@@ -6523,7 +6533,7 @@ Applying \texttt{Lemma2\_6\_1} and \texttt{constant\_to\_standard\_path}, we get
 
 \begin{Coqsrc}
 Corollary  LT_to_standard_path  (alpha beta : T1) :
-  beta o< alpha ->
+  beta t1< alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}.
 \end{Coqsrc}
 
@@ -6553,7 +6563,7 @@ $\iota(\alpha)$ to $\iota(\beta)$.
 \begin{Coqsrc}
 Lemma LT_to_standard_battle :
     forall alpha beta,
-      beta o< alpha ->
+      beta t1< alpha ->
       exists n i,  battle standard  n (iota alpha) i (iota beta).
 \end{Coqsrc}
 
@@ -6572,13 +6582,13 @@ the module \href{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Ep
 
 
 \begin{Coqsrc}
- Lemma m_ge : m big_h o<= m small_h.
+ Lemma m_ge : m big_h t1<= m small_h.
 \end{Coqsrc}
 
 \paragraph*{} If remains to prove the following strict inequality, in order to have a contradiction.
 
 \begin{Coqsrc}
-Lemma m_lt : m small_h  o< m big_h.
+Lemma m_lt : m small_h  t1< m big_h.
 \end{Coqsrc}
 
 

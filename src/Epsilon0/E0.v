@@ -419,54 +419,55 @@ Proof.
  - apply compare_correct.
 Qed.
 
+
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
- - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
-   + subst alpha; left; left; intro beta. destruct beta as [cnf H].
-     destruct cnf.
-     replace       {| cnf := zero; cnf_ok := H |} with Zero.
+  - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
+    + subst alpha; left; left; intro beta. destruct beta as [cnf H].
+      destruct cnf.
+      replace  {| cnf := zero; cnf_ok := H |} with Zero.
       right.
-     apply E0_eq_intro. reflexivity.
-  left.
-    unfold Lt.
-   cbn.
-   auto with T1.
-   +
-    destruct alpha as [a Ha]. unfold Limitb in H. cbn in H.
-   left;right.
-   split.  
-   exists Zero.
-   destruct a;try discriminate.
-    constructor. 
-    destruct a2; try discriminate.
-    auto with T1.
-   auto with T1.
- split.
-   constructor.
-   auto.
+      apply E0_eq_intro. reflexivity.
+      left.
+      unfold Lt.
+      cbn.
+      auto with T1.
+    +
+      destruct alpha as [a Ha]. unfold Limitb in H. cbn in H.
+      left;right.
+      split.  
+      exists Zero.
+      destruct a;try discriminate.
+      constructor. 
+      destruct a2; try discriminate.
+      auto with T1.
+      auto with T1.
+      split.
+      constructor.
+      auto.
 
-intros. 
-exists (Succ y).
-split.
-apply Lt_Succ.
-   destruct y as [y Hy]; split.
-    unfold Lt, Succ; cbn.
-     now apply LT_succ.
+      intros. 
+      exists (Succ y).
+      split.
+      apply Lt_Succ.
+      destruct y as [y Hy]; split.
+      unfold Lt, Succ; cbn.
+      now apply LT_succ.
       unfold Lt, Succ in *.
- cbn in *.
-  apply succ_lt_limit; auto.
+      cbn in *.
+      apply succ_lt_limit; auto.
 
-+ 
-  right.
-    exists p;
-    subst.
-    red. 
-     split.
-apply Lt_Succ.
+    + 
+      right.
+      exists p;
+        subst.
+      red. 
+      split.
+      apply Lt_Succ.
 
-   destruct p, z. unfold Lt, Succ; cbn in *; intros.
-   destruct (@LT_irrefl cnf1).
-   apply T1.LT_LE_trans with (succ cnf0); auto with T1.
-   now apply LT_succ_LE.
+      destruct p, z. unfold Lt, Succ; cbn in *; intros.
+      destruct (@LT_irrefl cnf1).
+      apply T1.LT_LE_trans with (succ cnf0); auto with T1.
+      now apply LT_succ_LE.
 Qed.
 
 
@@ -517,9 +518,9 @@ Proof.
 Qed.
 
 
-Lemma cnf_Ocons (alpha beta: E0) n : alpha <>Zero -> beta o< Phi0 alpha ->
-                                          cnf (Ocons alpha n beta) =
-                                          ocons (cnf alpha) n (cnf beta).
+Lemma cnf_Ocons (alpha beta: E0) n : alpha <> Zero -> beta o< Phi0 alpha ->
+                                     cnf (Ocons alpha n beta) =
+                                     ocons (cnf alpha) n (cnf beta).
 Proof.
   intros. unfold Ocons. rewrite Omega_term_plus; auto.
 Defined.
@@ -538,10 +539,8 @@ Proof.
                             now apply E0_eq_intro.
                           }
                           unfold Limitb.
-  rewrite   Omega_term_plus; auto.
-
-  simpl. 
-  case_eq (cnf alpha).
+  rewrite Omega_term_plus; auto.
+  cbn;  case_eq (cnf alpha).
   intro. 
   destruct H1.
   apply E0_eq_intro.
@@ -620,3 +619,51 @@ Proof.
   now  apply compare_Eq_eq.
 Qed.
 
+
+(* to simplify ! *)
+
+Lemma succ_correct alpha beta : cnf beta = succ (cnf alpha) <->
+                                Successor beta alpha.
+  destruct alpha, beta. cbn. split.
+  intro; subst. red.
+  split; unfold ON_lt. red.  cbn. red. red. repeat split; auto.
+  Search [lt succ].
+  apply lt_succ.
+  destruct z.   Print "o<". unfold Lt. cbn. intros.
+  assert (cnf1 t1< cnf1)%t1.
+  About lt_le_trans.
+  repeat split; auto.
+  apply lt_le_trans with (succ cnf0).  destruct H0; auto with T1.
+  now destruct H1.
+  Search (le (succ _ ) _).
+  apply lt_succ_le; auto.
+  apply H.
+  Search (lt ?x  ?x).
+  destruct H1.
+  destruct H2.
+  eapply lt_irrefl; eauto.
+  destruct 1.
+  unfold Lt in H , H0. cbn in H, H0.
+  destruct H.
+  destruct H1.
+  apply lt_succ_le in H1.
+  Search [lt le].
+  destruct (le_lt_or_eq _ _ H1). 
+  auto.
+  About Succ.
+  Search (T1 -> _ -> E0).
+  specialize (H0 (Succ (mkord cnf_ok0))).
+  cbn in H0.  unfold LT in H0.
+  exfalso.
+  apply H0.
+  split; auto with T1.
+ split; auto with T1.
+ apply lt_succ;eauto with T1.
+  Search (nf (succ _)).
+apply succ_nf; auto.
+ split; auto with T1.
+apply succ_nf; auto.
+auto.
+auto.
+Qed.
+      

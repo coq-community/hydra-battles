@@ -12,19 +12,19 @@ Section Impossibility_Proof.
 
   Context (Var : BoundedVariant standard).
   
-  Lemma m_ge : m big_h o<= m small_h.
+  Lemma m_ge : m big_h t1<= m small_h.
   Proof.
     apply m_ge_generic;   intros;  generalize Hvar;  destruct 1.
     eapply variant_decr; eauto.
      intro; subst h; apply (head_no_round_n _ _ H).
   Qed.
 
-  (** ** Proof of the inequality m small_h o< m big_h *)
+  (** ** Proof of the inequality m small_h t1< m big_h *)
 
   (**  the measure is strictly decreasing along any round *)
 
   Lemma Lvar : forall h h0 i ,  h <> head -> 
-                                battle_r standard i h h0 -> m h0 o< m h.
+                                battle_r standard i h h0 -> m h0 t1< m h.
   Proof.   
     intros h h0 i H  H1;  apply Hvar with  i; auto.
   Qed.
@@ -32,7 +32,7 @@ Section Impossibility_Proof.
   (** application to standard battles *)
   
   Lemma m_decrease : forall j h0 i h,
-      h <> head -> battle standard i  h j h0  -> m h0 o< m h.
+      h <> head -> battle standard i  h j h0  -> m h0 t1< m h.
   Proof.
     induction 2.  
     -  apply Lvar with i; auto. 
@@ -118,7 +118,7 @@ Section Impossibility_Proof.
   
   Lemma LT_to_standard_battle :
     forall alpha beta,
-      beta o< alpha ->
+      beta t1< alpha ->
       exists n i,  battle standard   n (iota alpha)  i (iota beta).
   Proof.
     intros;  assert (nf beta) by eauto with T1.
@@ -157,14 +157,14 @@ Section Impossibility_Proof.
   Qed.
 
   
-  Remark Rem3 : beta_h  o< mu.
+  Remark Rem3 : beta_h  t1< mu.
   Proof. unfold beta_h; auto. destruct Var; auto. Qed.
   
   Remark Rem4 : exists n i,
       battle  standard n (iota mu) i (iota beta_h ).
   Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed. 
   
-  Lemma m_lt : m small_h  o< m big_h.
+  Lemma m_lt : m small_h  t1< m big_h.
   Proof.
     destruct Rem4 as [x [i H]].
     eapply m_decrease with i x; eauto.
@@ -178,7 +178,7 @@ Section Impossibility_Proof.
 
   (** End of the proof *)
   
-  Fact self_lt_standard : m big_h o< m big_h.
+  Fact self_lt_standard : m big_h t1< m big_h.
   Proof. 
     apply LE_LT_trans with (m small_h).
     - apply m_ge. 

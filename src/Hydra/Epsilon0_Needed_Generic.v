@@ -14,7 +14,7 @@ Class BoundedVariant (B:Battle) :=
   m: Hydra -> T1;
   mu_nf: nf mu;
   Hvar: Hvariant T1_wf B m;
-  m_bounded: forall h, m h o< mu
+  m_bounded: forall h, m h t1< mu
   }.
 
 
@@ -26,7 +26,7 @@ Section Bounded.
           (Hy : BoundedVariant B ).
 
   Hypothesis m_decrease : forall  i h h',
-      round_n i h h'   -> m h' o< m h.
+      round_n i h h'   -> m h' t1< m h.
 
   Lemma  nf_m : forall h, nf (m h).
   Proof.
@@ -46,7 +46,7 @@ Section Bounded.
   Qed.
 
 
-  Lemma m_ge_0 alpha:  nf alpha -> alpha o<= m (iota alpha).
+  Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha).
   Proof.
     transfinite_induction_lt alpha; 
       clear alpha; intros alpha Hrec H.
@@ -70,7 +70,7 @@ Section Bounded.
             apply LE_r; eapply m_decrease; eapply  H0.
           }
         *  destruct s as [x [H0 e]]; subst.
-           assert (x o< m (iota (T1.succ x))).
+           assert (x t1< m (iota (T1.succ x))).
            { 
              apply LE_LT_trans with (m (iota x)).
              apply Hrec; auto. 
@@ -100,7 +100,7 @@ Section Bounded.
   
   
   
-  Corollary m_ge_generic : m big_h o<= m small_h.
+  Corollary m_ge_generic : m big_h t1<= m small_h.
   Proof.      
     apply m_ge_0, nf_m.
   Qed.

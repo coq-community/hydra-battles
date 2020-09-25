@@ -800,7 +800,7 @@ Qed.
 
 
 Lemma LT_path_toS (alpha beta : T1) :
-  beta o< alpha -> {s : list nat | path_toS beta s alpha}.
+  beta t1< alpha -> {s : list nat | path_toS beta s alpha}.
 Proof with eauto with T1.
   transfinite_induction alpha;
     clear alpha; intros alpha IHalpha H.
@@ -835,7 +835,7 @@ Proof with eauto with T1.
 Defined.
 
 Lemma LT_path_to (alpha beta : T1) :
-  beta o< alpha -> {s : list nat | path_to beta s alpha}.
+  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
 Proof.
   intro H; destruct (LT_path_toS H) as [s Hs]; exists (shift s);
   now rewrite <- path_toS_path_to.
@@ -847,7 +847,7 @@ Recursive Extraction LT_path_to.
  *)
 
 Lemma LT_acc_from (alpha beta : T1) :
-  beta o< alpha -> acc_from alpha beta.
+  beta t1< alpha -> acc_from alpha beta.
 Proof.
   intro H; destruct (LT_path_toS H);  apply  path_acc_from with (map S x).
   now apply path_toS_path_to.  
@@ -855,7 +855,7 @@ Qed.
 
 
 Lemma path_toS_LT beta s alpha: 
-  path_toS beta s alpha -> nf alpha -> beta o< alpha.
+  path_toS beta s alpha -> nf alpha -> beta t1< alpha.
 Proof.
   induction 1.
  destruct H.
@@ -869,7 +869,7 @@ Proof.
 Qed.
 
 Lemma path_to_LT beta s alpha :
-  path_to beta s alpha -> nf alpha -> beta o< alpha.
+  path_to beta s alpha -> nf alpha -> beta t1< alpha.
 Proof.
   intro H; assert (H0 := path_to_not_In_zero  H).
   rewrite path_to_path_toS_iff in H.
@@ -880,7 +880,7 @@ Qed.
 
 
 Lemma acc_from_LT (alpha beta : T1) :
-  acc_from alpha beta ->  nf alpha ->   beta o< alpha.
+  acc_from alpha beta ->  nf alpha ->   beta t1< alpha.
 Proof.
  destruct 1 as [s Hs]; intro; eapply path_to_LT; eauto.
 Qed.
@@ -929,7 +929,7 @@ Qed.
 Lemma const_pathS_LT i  alpha beta:  (* alpha <> zero -> *)
                                      nf alpha ->
                                      const_pathS i alpha beta ->
-                                     beta o< alpha.
+                                     beta t1< alpha.
 Proof.
   intros  H0 H1; apply acc_from_LT;auto.
   - destruct (const_pathS_repeat H1) as [x H2].
@@ -940,7 +940,7 @@ Qed.
 Lemma const_path_LT i :
   forall alpha beta,
       nf alpha -> const_path i alpha beta ->
-    beta o<  alpha.
+    beta t1<  alpha.
 Proof.
   destruct i as [| i].
   -  intros alpha beta H0 H1; inversion H1.
@@ -950,7 +950,7 @@ Qed.
 
 Lemma const_pathS_LE i : forall alpha beta, 
     nf alpha -> const_pathS i alpha beta ->
-    beta  o<= alpha.
+    beta  t1<= alpha.
 Proof.
   intros; apply LE_r; eapply const_pathS_LT; eauto.
 Qed.
@@ -1004,7 +1004,7 @@ Qed.
 Lemma const_pathS_eps_LE_2 : forall n alpha beta,
     nf alpha -> nf beta ->
     const_pathS_eps n alpha beta ->
-    beta o<=  alpha.
+    beta t1<=  alpha.
 Proof. 
   destruct 3.                                           
   - eapply const_pathS_LE; eauto. 
@@ -1309,7 +1309,7 @@ Qed.
 (**  Corollary 12 of [KS] *)
 
 Corollary Cor12 (alpha : T1) :  nf alpha ->
-                forall beta i n, beta  o< alpha  ->
+                forall beta i n, beta  t1< alpha  ->
                                  (i < n)%nat ->
                                  const_pathS i alpha beta ->
                                  const_pathS n alpha beta.
@@ -1399,7 +1399,7 @@ Qed.
 
 Corollary Cor12_1 (alpha : T1) :
   nf alpha ->
-  forall beta i n, beta o< alpha ->
+  forall beta i n, beta t1< alpha ->
                    i <= n ->
                    const_pathS i alpha beta ->
                    const_pathS n alpha beta.
@@ -1429,7 +1429,7 @@ Qed.
 
 Corollary Cor12_3 (alpha : T1) :
   nf alpha ->
-  forall beta i n, beta o< alpha ->
+  forall beta i n, beta t1< alpha ->
                    i <= n ->
                    const_path i alpha beta ->
                    const_path n alpha beta.
@@ -1454,7 +1454,7 @@ Qed.
 Lemma Lemma2_6_1 (alpha : T1) :
   nf alpha ->
   forall beta,
-    beta o< alpha  ->
+    beta t1< alpha  ->
     {n:nat | const_pathS n alpha beta}.
 Proof.
   transfinite_induction alpha.
@@ -1462,7 +1462,7 @@ Proof.
   - destruct s.
    + subst;  intros;  not_neg H0.
    +  intros beta H0;  destruct (canonS_limit_strong Hx i H0) as [n1 H1].
-     assert (canonS x n1 o< x)%t1. 
+     assert (canonS x n1 t1< x)%t1. 
      { apply canonS_LT; auto.
        intro; subst; discriminate. }
      assert (nf (canonS x n1)).
@@ -1484,8 +1484,8 @@ Proof.
   -   intros beta H0.
       destruct s as [x0 [H1 H2]].
       subst.
-      assert (Hx0: (x0 o< T1.succ x0)%t1) by (apply LT_succ ;auto).
-      assert ({beta o< x0} + { beta = x0})%t1.
+      assert (Hx0: (x0 t1< T1.succ x0)%t1) by (apply LT_succ ;auto).
+      assert ({beta t1< x0} + { beta = x0})%t1.
       { apply LT_succ_LT_eq_dec in H0; eauto with T1.
       }  
       destruct H2. 
@@ -1506,7 +1506,7 @@ Defined.
 Lemma small_lemma (i:nat) (beta : T1) :  forall alpha,
       const_pathS i alpha beta ->
       nf alpha -> 
-      beta o<= canonS alpha i.
+      beta t1<= canonS alpha i.
 Proof.
   destruct (T1_eq_dec beta zero).
   -  subst; intros; apply LE_zero; auto with T1.
@@ -1529,19 +1529,19 @@ Qed.
 Lemma L2_6_2 (p: nat)  :
   forall alpha, nf alpha ->
                 forall beta, const_pathS p alpha beta ->
-                             T1.succ beta o< alpha -> 
+                             T1.succ beta t1< alpha -> 
                              const_pathS (S p) alpha (T1.succ beta).
 Proof.                                                                
   intros  alpha ; transfinite_induction alpha.
   clear alpha ; intros alpha HRecAlpha Halpha .
-  intros;assert (beta o<= canonS alpha p)%t1.
+  intros;assert (beta t1<= canonS alpha p)%t1.
   -   apply small_lemma; auto. 
   -   destruct (LE_LT_eq_dec H1).
-    +   assert (T1.succ beta o<= canonS alpha p)%t1.
+    +   assert (T1.succ beta t1<= canonS alpha p)%t1.
         { apply   LT_succ_LE;auto. }
         destruct (LE_LT_eq_dec H2).
         *   specialize (HRecAlpha (canonS alpha p) ).
-            assert (canonS alpha p o< alpha)%t1.
+            assert (canonS alpha p t1< alpha)%t1.
             {   apply canonS_LT; auto.
                 intro; subst alpha; destruct (not_LT_zero H0).
             }
@@ -1790,7 +1790,7 @@ Section Lemma_4_3_Proof.
     - apply R4_3_2.
   Qed. 
 
-  Remark R4_3_4 : (canonS beta n1 o<= canonS alpha n2)%t1.
+  Remark R4_3_4 : (canonS beta n1 t1<= canonS alpha n2)%t1.
   Proof.
     destruct (T1_eq_dec alpha beta).     
     - subst.
@@ -1799,7 +1799,7 @@ Section Lemma_4_3_Proof.
          now apply nf_canonS.
       +  apply LE_trans with  (canonS beta m);  auto. 
          apply canonS_LE; auto.
-    - assert (beta o< alpha)%t1.
+    - assert (beta t1< alpha)%t1.
       { apply  const_pathS_eps_LE_2 in H4;auto. 
         destruct H4.
         destruct H2. 
@@ -1862,7 +1862,7 @@ Qed.
 
 
 Lemma const_pathS_LT' (i : nat) (alpha beta : T1) (H:nf alpha):
-  const_pathS i alpha beta -> alpha = zero \/ beta o< alpha.
+  const_pathS i alpha beta -> alpha = zero \/ beta t1< alpha.
 Proof.
   intro H0; destruct (T1_eq_dec alpha zero).
   - now left.
@@ -2122,9 +2122,9 @@ Qed.
 
 
 Lemma standard_path_lt2 : forall i alpha j beta,
-    (0 < i)%nat -> zero o< alpha ->
+    (0 < i)%nat -> zero t1< alpha ->
     standard_pathR  j beta i alpha ->
-    beta o<  alpha.
+    beta t1<  alpha.
 Proof.
   induction 3.
   -  destruct i.
@@ -2364,7 +2364,7 @@ Qed.
 
 Lemma flatten : forall (i:nat)  alpha (j:nat)  beta, 
      standard_path i alpha  j beta   ->
-    nf alpha -> zero o<  alpha -> (0 < i)%nat  -> 
+    nf alpha -> zero t1<  alpha -> (0 < i)%nat  -> 
     const_path j alpha beta.
 Proof.
   induction 1.
@@ -2418,7 +2418,7 @@ Proof.
   destruct (T1_eq_dec alpha zero) as [e | ne].
   -  subst alpha; induction i; cbn;  now exists 0. 
   - specialize  (Halpha (canon alpha i)).  
-    assert (canon alpha i o< alpha)%t1. {
+    assert (canon alpha i t1< alpha)%t1. {
       destruct i.
       - simpl; apply not_zero_lt;auto.
       - apply canonS_LT; auto.
@@ -2471,10 +2471,10 @@ Qed.
 
 Section Constant_to_standard_Proof.
   Variables (alpha beta: T1) (n : nat).
-  Hypotheses (Halpha: nf alpha) (Hpos : zero o<  beta)
+  Hypotheses (Halpha: nf alpha) (Hpos : zero t1<  beta)
              (p : const_pathS n alpha  beta).
 
-  Remark Rem0 : beta  o< alpha.
+  Remark Rem0 : beta  t1< alpha.
   Proof.
     apply const_pathS_LT with n; auto.
   Qed.
@@ -2482,7 +2482,7 @@ Section Constant_to_standard_Proof.
   Remark Rem1 : {k:nat  &
                    {gamma: T1 |
                     standard_path (S n) alpha  k gamma   /\
-                    gamma o<  alpha}}.
+                    gamma t1<  alpha}}.
   Proof.
     destruct (standard_path_to_zero n Halpha).
    -  intro; subst; destruct (const_pathS_zero p).  
@@ -2491,7 +2491,7 @@ Section Constant_to_standard_Proof.
       eapply   const_pathS_LT; eauto.
   Defined.
   
-  Remark Rem01 : zero  o< alpha.
+  Remark Rem01 : zero  t1< alpha.
   Proof.
     apply LT_trans with beta;[trivial | apply Rem0].
   Qed.
@@ -2504,7 +2504,7 @@ Section Constant_to_standard_Proof.
 
 
 
-  Remark Rem2 : {t: nat | standard_gnaw (S n) alpha t o< beta}.
+  Remark Rem2 : {t: nat | standard_gnaw (S n) alpha t t1< beta}.
   Proof.       
     destruct (standard_gnaw_to_zero  Halpha (S n));  exists x; now rewrite e.
   Qed.
@@ -2514,7 +2514,7 @@ Section Constant_to_standard_Proof.
   
   
 
-  Remark Rem03 :  (standard_gnaw (S n) alpha t o< beta)%t1.
+  Remark Rem03 :  (standard_gnaw (S n) alpha t t1< beta)%t1.
   Proof.
     unfold t; pattern (proj1_sig Rem2); apply proj2_sig.
   Qed. 
@@ -2652,7 +2652,7 @@ Section Constant_to_standard_Proof.
   Qed.
 
 
-  Remark R19 : beta o<= gamma.
+  Remark R19 : beta t1<= gamma.
   Proof.
     generalize Rem10;unfold P; fold gamma;unfold le_b, lt_b.
     case_eq (T1.compare gamma beta).
@@ -2666,7 +2666,7 @@ Section Constant_to_standard_Proof.
   Qed.
 
 
-  Remark R20 : gamma <> zero -> (0 < l)%nat -> beta o< gamma ->
+  Remark R20 : gamma <> zero -> (0 < l)%nat -> beta t1< gamma ->
                const_pathS (n+l) gamma beta.
   Proof.
     intros; apply Proposition_2_3a with alpha; auto.
@@ -2700,7 +2700,7 @@ Section Constant_to_standard_Proof.
     intro H; now apply const_pathS_inv_strong.
   Qed.
 
-  Remark R24 : const_pathS (n+l) gamma beta -> beta o<= delta.
+  Remark R24 : const_pathS (n+l) gamma beta -> beta t1<= delta.
   Proof.
     intro H; destruct (R23 H).
     - rewrite <- e; apply LE_refl.
@@ -2711,7 +2711,7 @@ Section Constant_to_standard_Proof.
         unfold gamma; apply standard_gnaw_nf;auto. 
   Qed.
 
-   Remark R25 : delta o< beta.
+   Remark R25 : delta t1< beta.
   Proof.
     rewrite R22; generalize Rem11;unfold P; intro H;
       unfold le_b, lt_b in H.
@@ -2738,7 +2738,7 @@ Section Constant_to_standard_Proof.
     destruct (R26 H0).
   Qed.
 
-   Remark R28 : l = 0 -> (beta o<= delta)%t1.
+   Remark R28 : l = 0 -> (beta t1<= delta)%t1.
   Proof.
     intro H; apply R24; replace (n+l)%nat with n.
     -  rewrite R14; auto.
@@ -2771,7 +2771,7 @@ Section Constant_to_standard_Proof.
     generalize R19; intro.
     generalize Hpos;intro.
     intro H0; rewrite H0 in H.
-    assert (zero  o< zero).
+    assert (zero  t1< zero).
     apply LT_LE_trans with beta;auto.
     eapply LT_irrefl; eauto.
   Qed.
@@ -2802,7 +2802,7 @@ Qed.
 
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  o< alpha ->
+  nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
   {j:nat | standard_path (S i) alpha j beta}.
 Proof.
    intros H H0 H1;  destruct (T1_eq_dec beta zero).
@@ -2825,7 +2825,7 @@ Qed.
 
 Corollary  LT_to_standard_path 
       (alpha beta : T1) :
-  beta  o< alpha ->
+  beta  t1< alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}.
 Proof.
   intros H; assert (nf alpha) by eauto with T1.

@@ -246,7 +246,7 @@ Qed.
 Theorem inject_monoR (beta gamma : T1) : 
   T1.nf beta -> T1.nf gamma -> 
   inject beta < inject gamma -> 
-  (beta  o< gamma)%t1.
+  (beta  t1< gamma)%t1.
 Proof.  
   intros H H0 H1; 
   destruct (T1.lt_eq_lt_dec beta gamma) as [[H2 | H2] | H2].
@@ -398,7 +398,7 @@ Proof with eauto with T1.
           repeat rewrite inject_rw.
           rewrite <- (case_Eq (inject alpha1) (inject alpha2)
                               (inject alpha1) (inject  beta2) n n0) ...
-          assert (H1 : (alpha2 o< phi0  alpha1)%t1). {
+          assert (H1 : (alpha2 t1< phi0  alpha1)%t1). {
             rewrite nf_LT_iff in H;  tauto. }
           rewrite <- inject_of_phi0.
           apply inject_mono ...

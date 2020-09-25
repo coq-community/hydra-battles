@@ -79,7 +79,7 @@ Proof with auto with T1.
  Qed.
 
 
-Lemma S0_decr :  forall s s', S0  s s' -> ms s' o< ms s.
+Lemma S0_decr :  forall s s', S0  s s' -> ms s' t1< ms s.
 Proof.
   repeat split; auto with T1; now apply S0_decr_0.
 Qed.
@@ -97,7 +97,7 @@ Proof with auto with T1.
 Qed.
 
 Lemma R1_decr : forall h h',
-                  R1 h h' -> m h' o< m h.
+                  R1 h h' -> m h' t1< m h.
 Proof.
   repeat split; auto with T1; now apply R1_decr_0.
 Qed.
@@ -125,7 +125,7 @@ Qed.
 
 
 Lemma S1_decr n:
-  forall s s', S1 n s s' -> ms s' o< ms s.
+  forall s s', S1 n s s' -> ms s' t1< ms s.
 Proof.
   repeat split; auto with T1; now eapply S1_decr_0 with n.
 Qed.
@@ -148,14 +148,14 @@ Proof with auto with T1.
     apply oplus_strict_mono_r...
 Qed.
 
-Lemma R2_decr n : forall h h', R2 n h h' -> m h' o<  m h.
+Lemma R2_decr n : forall h h', R2 n h h' -> m h' t1<  m h.
 Proof.
   repeat split; auto with T1; now eapply R2_decr_0 with n.
 Qed.
 
 
 
-Lemma round_decr : forall h h', h -1-> h' -> m h' o< m h.
+Lemma round_decr : forall h h', h -1-> h' -> m h' t1< m h.
 Proof.
   destruct 1 as [n [H | H]]. 
   -  now apply R1_decr.
@@ -184,7 +184,7 @@ Qed.
 
 Theorem every_battle_terminates : Termination.
 Proof. 
-  red; apply Inclusion.wf_incl with (R2 := fun h h' =>  m h o< m h').
+  red; apply Inclusion.wf_incl with (R2 := fun h h' =>  m h t1< m h').
    red; intros;  now apply round_decr.
    apply Inverse_Image.wf_inverse_image, T1_wf.
 Qed.

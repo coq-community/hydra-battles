@@ -860,8 +860,8 @@ Qed.
 
 
 Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-  nf gamma   -> alpha  o< beta ->
-  alpha o+ gamma o< beta o+ gamma.
+  nf gamma   -> alpha  t1< beta ->
+  alpha o+ gamma t1< beta o+ gamma.
 Proof.
   intros  Hgamma H.
   generalize (LT_nf_l H), (LT_nf_r H); intros  Ha  Hb.
@@ -874,8 +874,8 @@ Qed.
 
 
 Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
-  nf alpha -> beta o< gamma ->
-  alpha o+ beta o< alpha o+ gamma.
+  nf alpha -> beta t1< gamma ->
+  alpha o+ beta t1< alpha o+ gamma.
 Proof.
   intros  Halpha H.
   generalize (LT_nf_l H), (LT_nf_r H); intros  Hb  Hc.
