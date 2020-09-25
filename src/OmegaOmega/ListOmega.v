@@ -10,7 +10,7 @@ Require Import Coq.Logic.Eqdep_dec.
 Require Import Coq.Arith.Peano_dec.
 Require Import List.
 Require Import Recdef Lia.
-Require Import  Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
 
 Coercion is_true : bool >-> Sortclass.
 
@@ -35,14 +35,14 @@ Proof.
 *)
 
 (* Sur la longueur. *)
-Lemma length_0_nil : forall w:list nat, length w =0 -> w=nil.
+Lemma length_0_nil : forall w:list nat, length w = 0 -> w = nil.
 destruct w.
  - trivial.
  - intro; discriminate.
 Qed.
 
 Lemma length_Sn_cons : forall (w:list nat) (n:nat),
-  length w=S n -> exists (a:nat) (w':(list nat)), w = (cons a w').
+  length w = S n -> exists (a:nat) (w':(list nat)), w = a::w'.
 Proof.
   destruct w as [| p w].
  - intros; discriminate.
@@ -80,6 +80,48 @@ Fixpoint succ (alpha: t) :=
 
 Compute succ (succ omega).
 
+Fixpoint plus (alpha beta:t) :=
+  match alpha with
+    nil => beta
+  | 0::alpha => (plus alpha beta)
+  | (S a1)::alpha' =>
+    let fix plus2 beta :=
+        match beta with
+          nil => alpha
+        | 0::beta' => (plus2 beta')
+        | (S a2)::beta' =>
+          match Nat.compare (length alpha) (length beta) with
+            Eq => (S a1 + S a2)::(plus alpha' beta')
+          | Lt => beta
+          | Gt => alpha
+          end
+        end
+    in (plus2 beta)
+  end.
+
+Compute (plus nil omega).
+Compute (plus omega nil).
+Compute (plus (1::2::3::nil) (4::5::nil)).
+Compute (plus (4::6::nil) (1::3::5::nil)).
+Compute (plus (1::2::3::nil) (3::2::1::nil)).
+Compute (plus (0::0::1::2::3::nil) (0::3::2::1::nil)).
+Compute (plus (4::6::nil) (1::3::5::nil)).
+Compute (plus (1::2::3::nil) (3::0::1::nil)).
+
+Lemma plus_nf : forall (alpha beta:t), nf alpha -> nf beta -> nf (plus alpha beta).
+Proof.
+  induction alpha.
+  - auto.
+  - case a.
+    + discriminate.
+    + induction beta.
+      * auto.
+      * case a0.
+        -- discriminate.
+        -- intros. simpl. case_eq (Nat.compare (length alpha) (length beta)); auto.
+Qed.
+
+        
 (* incorrect if not nf alpha *)
 
 Fixpoint limitb (alpha: t) :=
