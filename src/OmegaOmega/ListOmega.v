@@ -93,7 +93,7 @@ Fixpoint plus (alpha beta:t) :=
           match Nat.compare (length alpha) (length beta) with
             Eq => (S a1 + S a2)::(plus alpha' beta')
           | Lt => beta
-          | Gt => alpha
+          | Gt => (S a1)::(plus alpha' beta)
           end
         end
     in (plus2 beta)
@@ -101,6 +101,8 @@ Fixpoint plus (alpha beta:t) :=
 
 Compute (plus nil omega).
 Compute (plus omega nil).
+Compute (plus omega (1::nil)).
+Compute (plus (plus omega (1::nil)) (1::nil)).
 Compute (plus (1::2::3::nil) (4::5::nil)).
 Compute (plus (4::6::nil) (1::3::5::nil)).
 Compute (plus (1::2::3::nil) (3::2::1::nil)).
