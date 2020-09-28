@@ -15,7 +15,7 @@
 \usepackage{mathtools}
 \usepackage{dsfont}
 \usepackage{threeparttable}
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 \input{coqmacros}
 
 
@@ -63,7 +63,7 @@ John Coltrane.}
 Proof assistants are excellent tools for exploring the structure of mathematical proofs,
 studying  which hypotheses are really needed, and which proof patterns are useful and/or
 necessary. Since the development of a theory is represented as a bunch of computer files,
-everyone is able to read the proofs with an arbitrary level of detail, or to play with the theory by building alternate proofs or definitions.
+everyone is able to read the proofs with an arbitrary level of detail, or to play with the theory by writing alternate proofs or definitions.
 
 
 Among all the theorems proved with the help of proof assistants like \coq{}, \isabelle{}, \hol{}, etc.,
@@ -104,7 +104,7 @@ Here, we present a development  for the \coq{} proof assistant, after the work o
 
 \item Using a combinatorial toolkit designed by J.~Ketonen and R.~Solovay~\cite{KS81}, we prove that, for any ordinal $\mu<\epsilon_0$, there exists no such variant mapping any hydra to an ordinal stricly less than $\mu$. Thus, the complexity of $\epsilon_0$ is really needed in the previous proof.
 
-\item We prove a relation between the length of a ``classic''  class of  battles
+\item We prove a relation between the length of a ``classic''  class of  battles \footnote{This class is also called \emph{standard} in this document (text and proofs). The \emph{replication factor} of the hydra is exactly $i$ at the $i$-th round of the battle (see Sect~\vref{sect:replication-def}).}
 and the Wainer-Hardy hierarchy of ``rapidly growing functions'' $H_\alpha$~\cite{Wainer1970}. The considered class of battles, which we call \emph{standard}  is the most considered one in the scientific  litterature(including popularization).
 \end{itemize}
 
@@ -144,8 +144,8 @@ parts of \coq's standard library. Thus, there is no ambiguity in our definitions
 
 It may often happen that several definitions of a given concept, or several proofs of a given theorem are possible. If all the versions present some interest, we will make them available, since each one may be of some methodological 
 interest (by illustrating some tactic of proof pattern, for instance).
-We may use \coq's module system to make several proofs of a givent theorem co-exists in our libraries (see also Sect~\vref{sect:alt-proofs}).
-After some discussions of the pros and cons of each solution, we will choose to develop only one of them, leaving the others  as exercises or projects (i.e., big or difficult exercises).
+We may use \coq's module system to make several proofs of a given theorem co-exist in our libraries (see also Sect~\vref{sect:alt-proofs}).
+After some discussions of the pros and cons of each solution, we develop only one of them, leaving the others  as exercises or projects (i.e., big or difficult exercises).
 In order to discuss which assumptions are really needed for proving a theorem, we will also present 
 several aborted proofs.
 Of course, do not hesitate to contribute nice proofs or alternative definitions !
@@ -159,7 +159,7 @@ For instance, let us consider the three following statements:
 \end{enumerate}
 
 Obviously, the third theorem implies the second one, which implies the first one. So, theoretically, a library would contain only a proof of $(3)$ and remarks for $(2)$ and $(1)$. But we found it interesting to make all the three proofs available, allowing the reader to compare their common structure and notice their technical differences.
-In particular, the proof of $(3)$ uses several non-trivial combinatorial properties of ordinal numbers~\cite{KS81}, whilst $(1)$ and $(2)$ use simple properties of $\mathbb{N}$ and $\mathbb{N}^2$.
+In particular, the proof of $(3)$ uses several non-trivial combinatorial properties of ordinal numbersup to $\epsilon_0$~\cite{KS81}, whilst $(1)$ and $(2)$ use simple properties of $\mathbb{N}$ and $\mathbb{N}^2$.
 
 
 \subsection{About Logic}
@@ -181,7 +181,7 @@ Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation o
 
 \index{Coq!Commands!Print Assumptions}
 
-At any place of our development, you may use the command \texttt{Print Assumptions {\it ident}} in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
+At any place of our development, you may use the  \texttt{Print Assumptions {\it ident}} command in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
 Library~\href{../src/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, where we use the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
 
 \begin{Coqsrc}
@@ -241,14 +241,14 @@ to ``factorize'' proofs as much as possible.
 Many ``todo''s or projects are put in this text, suggesting possible improvements.
 
 \subsection{Contributions}
-Many thanks to \'Evelyne Contejean and Florian Hatat for their contribution. \'Evelyne contributed libraries on the recursive path ordering (\emph{rpo}) for proving the well-foundedness of our representation of $\epsilon_0$ and $\Gamma_0$.
-Florian Hatat proved many useful lemmas on countable sets, which we used in our adaptation of Schütte's formalization of countable ordinals.
+Many thanks to \'Evelyne Contejean,  Florian Hatat and Pascal Manoury  for their contribution. \'Evelyne contributed libraries on the recursive path ordering (\emph{rpo}) for proving the well-foundedness of our representation of $\epsilon_0$ and $\Gamma_0$.
+Florian Hatat proved many useful lemmas on countable sets, which we used in our adaptation of Schütte's formalization of countable ordinals. Pascal Manoury is integrating the ordinal $\omega^\omega$ into our hierarchy of ordinal notations.
 
 
 
 \label{sec:orgheadline2}
 
-Any form of contribution  is welcome: correction of errors, improvement of
+Any form of contribution  is welcome: correction of errors (typos and more serious mistakes), improvement of
 Coq scripts, proposition of inclusion of new chapters, and generally any
 comment or proposition that would help us. The text contains several \emph{projects} which, when completed, may improve the present work.
 Please do not hesitate to bring your contribution!
@@ -305,7 +305,7 @@ Thus,  active links towards our \coq{} modules may be incorrect if you got this 
 \subsection{Alternative or bad definitions}
 \label{sect:alt-proofs}
 Finally, we decided to include definitions or lemma statements, as well as tactics,  that lead to
-dead-ends or to too complex developments, with the following coloring.
+dead-ends or too complex developments, with the following coloring.
 Bad definitions 
  and encapsulation in modules called \texttt{Bad}, \texttt{Bad1}, etc.
 
@@ -435,6 +435,8 @@ We leave it to the reader to define various parameters such as the height, the s
 \subsection{The rules of the game}
 
 \label{sec:orgheadline44}
+\label{sect:replication-def}
+
 A \emph{hydra battle} is a fight between Hercules and the Hydra. 
 More formally, a  battle is a sequence of \emph{rounds}.
 At each round:
@@ -448,9 +450,9 @@ and  Hercules is the winner.
 \item Otherwise, let us denote by \(r\) the node that was at distance \(2\) from 
 the removed head in the direction of the foot,  and consider the  sub-hydra \(h'\) of \(h\), whose  root is \(r\) \footnote{$h'$ will be called ``the wounded part of the hydra'' in the subsequent text. In Figures~\vref{fig:Hy2} and ~\vref{fig:Hy4}, this sub-hydra  is displayed in red.}. Let $n$ be some natural number.
 Then $h'$ is replaced by  $n+1$ of copies of \(h'\) which share the same root $r$.
- The \emph{replication number} $n$ may be different (and generally is)   at each round of the fight.
+ The \emph{replication factor} $n$ may be different (and generally is)   at each round of the fight.
 It may be chosen by the hydra, according to its strategy, or imposed by some 
-particular rule. In many presentations of hydra battles, this number is increased by $1$ at each round. In the following presentation, we will also consider battles where the hydra is free to chose its number of replication at every round of the battle\footnote{Let us recall that, if the chopped-off head was at distance 1 from the foot, the replication factor is meaningless.}.
+particular rule. In many presentations of hydra battles, this number is increased by $1$ at each round. In the following presentation, we will also consider battles where the hydra is free to choose its ~replication factor at each round of the battle\footnote{Let us recall that, if the chopped-off head was at distance 1 from the foot, the replication factor is meaningless.}.
 \end{itemize}
 \end{itemize}
 
@@ -751,7 +753,7 @@ For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \te
 
 \begin{Coqsrc}
 Inductive Hydra : Set :=
-|  node :  Hydrae -> Hydra
+| node :  Hydrae -> Hydra
 with Hydrae : Set :=
 | hnil : Hydrae
 | hcons : Hydra -> Hydrae -> Hydrae.
@@ -1078,7 +1080,7 @@ Proof.
 
 \end{Coqanswer}
 
-This goal is easily solvable, using some arithmetic. We let the reader look at the source of this development.
+This goal is easily solvable, using some arithmetic. We let the reader look at the source.
 
 \item The second subgoal is trivial:
 
@@ -1144,7 +1146,7 @@ In our description,  we will apply the following naming convention: if $h$ repre
 
 Since the replication of parts of the hydra depends on the distance of the chopped head from  the foot, we  decompose our description into two main  cases, under the form of a bunch of [mutually] inductive predicates over the types \texttt{Hydra} and \texttt{Hydrae}.
 
-The mutually exclusive cases we consider are the following.
+The mutually exclusive cases we consider are the following:
 \begin{itemize}
 \item \textbf{R1}: The chopped off head was at distance 1 from the foot.
 \item \textbf{R2}: The chopped off head was at a distance greater than or equal to  $2$ from the foot.
@@ -1154,7 +1156,8 @@ The mutually exclusive cases we consider are the following.
 
 \subsection{Chopping off a head at distance 1 from the foot (relation  R1)}
 
-If Hercules chops off a head near the floor, there is no replication at all. We use an auxiliary predicate, associated with the removing of one head from a sequence of hydras.
+If Hercules chops off a head near the floor, there is no replication at all. We use an auxiliary 
+predicate \texttt{S0}, associated with the removing of one head from a sequence of hydras.
 
 
 \vspace{4pt}\emph{From Module\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
@@ -1190,7 +1193,7 @@ Qed.
 \subsection{Chopping of a head at distance \texorpdfstring{$\geq 2$}{>= 2} from the foot (relation R2) }
 
 
-Let us now consider beheadings  where the chopped-off head is at distance greater than or equal to $2$ from the foot. All the following relations are parameterized by the number $n$ of new copies added by the hydra.
+Let us now consider beheadings  where the chopped-off head is at distance greater than or equal to $2$ from the foot. All the following relations are parameterized by the replication factor  $n$.
 
  Let $s$ be a sequence of hydras. 
 The proposition (\texttt{S1 n s s'}) holds if $s'$ is obtained by replacing some element $h$ of $s$ by 
@@ -1245,7 +1248,7 @@ The reader is encouraged to look at all the successive subgoals of this example.
 \emph{Please consider also exercise~\vref{exo:interactive-battle}.}
 
 
-\subsection{Description of any round}
+\subsection{Relation associated with a round}
 
 We combine the two cases above into a single relation.
 First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is the expected number of  replications (irrelevant in the case of an \texttt{R1}-transformation).
@@ -1355,9 +1358,22 @@ Your tactics will have the following functionalities:
 Use your tactics for simulating a small part of a hydra battle, for instance the rounds which lead from
 \texttt{Hy} to \texttt{Hy'''}  (Fig.~\vref{fig:Hy5}).
 
-\textbf{Hint:} Please keep in mind that the last  configuration of your interactively built battle is known only at the end of the battle. Thus, you will have to create and solve subgoals with existential variables. For that purpose, the tactic \texttt{eexists}, applied to the 
+\textbf{Hints:} 
+\begin{itemize}
+
+\item Please keep in mind that the last  configuration of your interactively built battle is known only at the end of the battle. Thus, you will have to create and solve subgoals with existential variables. For that purpose, the tactic \texttt{eexists}, applied to the 
 goal \Verb@{h':Hydra | h -*-> h'}@ generates the subgoal \Verb|h -*-> ?h'|.
+\item You may use Gérard Huet's \emph{zipper} data structure~\cite{zipper} for writing tactics associated with Hercule's  interactive search of a head to chop off.
+\end{itemize}
+
+
+
+
+
+
 \end{exercise}
+
+
 
 
 \subsection{Classes of battles}
@@ -1446,7 +1462,7 @@ In this section we consider a simple example of battle, starting with a small hy
 shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 \begin{itemize}
-\item Hercules chops always the rightmost head of the hydra.
+\item Hercules chops off always the rightmost head of the hydra.
 \item The battle is standard: at the round number $i$, the expected replication is $i$.
 \end{itemize}
 
@@ -1515,7 +1531,7 @@ During the two first rounds, our hydra loses its two rightmost heads. Thus just 
   \label{fig:hinit-plus2}
 \end{figure}
 
-The following lemma  is a formal statement about these first rounds, in terms of the
+The following lemma  is a formal description of these first rounds, in terms of the
 \texttt{battle} predicate.
 
 \begin{Coqsrc}
@@ -1643,9 +1659,8 @@ Definition next (s : state) :=
 \end{Coqsrc}
 
 We can make bigger steps through iterations of \texttt{next}.
-
 The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
-is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}).
+is defined and studied in~\href{../src/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}.
 
 \label{Functions:iterate}
 
@@ -1691,7 +1706,7 @@ Compute test 2000.
 \end{Coqsrc}
 
 
-The battle we study seems to be awfully long. Let us concentrate our
+The battle we are studying seems to be awfully long. Let us concentrate our
 tests on some particular events : the states where $\texttt{nh}=0$ 
 
 From the value of \texttt{test 5},  it is obvious that at the 10-th round, the counter \texttt{nh} will be
@@ -1755,7 +1770,7 @@ Next round, we decrement \texttt{n2} and set \texttt{n1} to $95$.
 \end{Coqsrc}
 
 We now have some intuition of the sequence.
-It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-th round, then at the $2(192+1)$-th round.
+It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-th round, then at the $2(192+1)$-th round, etc.
 
 
 \begin{Coqsrc}
@@ -1787,9 +1802,9 @@ In the following definition \texttt{i} is associated with the round number (or d
 \begin{Coqsrc}
 Inductive one_step (i: nat) :
   nat -> nat -> nat -> nat -> nat -> nat -> Prop :=
-| step1 : forall a b c,  one_step i a b (S c) a b c
-| step2 : forall a b ,  one_step i a (S b) 0 a b (S i)
-| step3  : forall a, one_step i (S a) 0 0 a (S i) 0.
+| step1: forall a b c, one_step i a b (S c) a b c
+| step2:  forall a b, one_step i a (S b) 0 a b (S i)
+| step3: forall a, one_step i (S a) 0 0 a (S i) 0.
 \end{Coqsrc}
 
 The relation between \texttt{one\_step} and the rules of hydra battle is asserted by the following lemma. 
@@ -2051,7 +2066,7 @@ Proof.
   apply steps_battle, SuperbigStep.
 Qed.
 
-Theorem  Done :
+Theorem Done :
   battle standard 0 hinit N head.
 Proof.
   eapply battle_trans.
@@ -2172,21 +2187,20 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 
 
 
-\subsection{Two small proofs of impossibility}
+\subsection{A  small proof of impossibility}
 \index{Maths!Proofs of impossibility}
+
+\label{omega-case}
 
 When one wants to prove a termination theorem with the help of a variant, 
 one has to consider first a well-founded set $(A,<)$, then a strictly decreasing measure on this set.  The following two lemmas show that if  the order structure $(A,<)$ is too simple, it is useless to look for a convenient measure, which simply no exists. Such kind of result is useful, because it saves you time and effort.
 
-\subsubsection{No variant on Peano.lt}
-\label{omega-case}
 
 The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
 
 Unfortunately, we can prove that 
-\emph{no} instance of class \texttt{WfVariant round Peano.lt $m$} can be built, where
+\emph{no} instance of class (\texttt{WfVariant round Peano.lt $m$}) can be built, where
 $m$ is \emph{any} function of type \texttt{Hydra $\arrow$ nat}.
-
 
 
 Let us present the main steps of that proof, the script of which  is in the module ~\href{../src/html/hydras.Hydra.Omega_Small.html}{Hydra/Omega\_Small.v} \footnote{ The name of this file means ``the ordinal $\omega$ is too small for proving the termination of [free] hydra battles ''. In effect, the elements of $\omega$, considered as a set, are just the natural numbers (see next chapter for more details)}.
@@ -2194,7 +2208,7 @@ Let us present the main steps of that proof, the script of which  is in the modu
 %\subsubsection{Preliminaries}
 
 
-Let us assume there is a variant $m$ from \texttt{Hydra} into \texttt{nat} for proving
+Let us assume there exists some variant $m$ from \texttt{Hydra} into \texttt{nat} for proving
     the  termination of all hydra battles.
 
 \begin{Coqsrc}
@@ -2250,7 +2264,7 @@ Let us consider now some hydra \texttt{big\_h} out of the range of the injection
  Using the functions $m$ and $\iota$, we define a second hydra \texttt{small\_h}, and show
  there is a one-round battle that transforms \texttt{big\_h} into \texttt{small\_h}. Please note that,
 due to the hypothesis \texttt{Hvar}, we are interested in the termination of \emph{free} battles. 
-There is no problem to consider a round with \texttt{m big\_h} as replication factor.
+There is no problem to consider a round with (\texttt{m big\_h}) as the replication factor.
 
   \begin{Coqsrc}
  Let small_h := iota (m big_h).
@@ -2274,7 +2288,7 @@ In order to get a contradiction, it suffices to  prove the inequality
 More generally, we prove the following lemma: 
 
 \begin{Coqsrc}
-Lemma m_ge : forall i:nat , i <= m (iota i).
+Lemma m_ge : forall i:nat, i <= m (iota i).
 \end{Coqsrc}
 
 Intuitively, it means that, from any hydra of the form (\texttt{iota $i$}), the battle will 
@@ -3038,7 +3052,7 @@ Lemma unique_decomposition alpha :
     exists! i j: nat,  alpha = omega * i + j.
 \end{Coqsrc}
 
-\subsection{A proof a termination using \texorpdfstring{$\omega^2$}{omega^2}} 
+\subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.
 
 Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily the function which merges two lists.
@@ -3799,6 +3813,12 @@ for any strictly positive $i$.
 \begin{project}
 \label{project:succ-limit-dec}
 Add to the class \texttt{ON} the requirement that for any $\alpha$ it is decidable whether $\alpha$ is $0$, a successor or a limit ordinal.
+
+
+\textbf{Hint:}   Beware of the instances associated with sum and product of notations !
+  You may consider additional fields such as ``there is a greatest element'' 
+to make the sum and product of notations ``compositional''.
+
 \end{project}
 
 \index{Projects}
@@ -5654,7 +5674,7 @@ Instead of using the \texttt{sig} type, define a simply typed function that, giv
 
 
 
-\section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : Paths}
+\section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : paths}
 \index{Maths!Accessibility inside epsilon0}
 \label{sect:pathes-intro}
 
@@ -6661,9 +6681,9 @@ attractive:  they are defined as functions  in \gallina{}, and we can apply them
  Thus, our knowledge on these functions must rely on \emph{proofs}. In our development, we use often the rewriting rules generated by \coq's \texttt{Equations} plug-in.
 
 
-\section{Large  sequences}
+\section{Definitions}
 
-\subsection{Definition}
+%\subsection{Definition}
 
 \begin{definition}
 Let $0<\alpha<\epsilon_0$ be any ordinal, and $s$ a sequence of strictly positive natural numbers. 
@@ -6761,7 +6781,7 @@ Example Ex1 : mlarge (omega * omega) (interval 6 510).
 \end{Coqsrc}
 
 
-\section{Computing mlarge sequences}
+\section{The length of minimal large sequences}
 
 Now, consider any natural number $k>0$. We would like to compute
 a number $l$ such that the interval $[k,l]$ is $\alpha$-mlarge. So, 
@@ -6797,7 +6817,7 @@ to define a function \texttt{L\_}, and prove its correctness w.r.t. its specific
 
 
 
-\subsection{Looking for a function definition}
+%\subsection{Looking for a function definition}
 
 Let $0<\alpha<\epsilon_0$ be an ordinal term. We consider the functions which associate to each stritly positive integer $k$ the number $l$, where 
 the interval $[k,l)$ is $\alpha$-mlarge.
@@ -6834,7 +6854,7 @@ Lemma L_spec_unicity alpha f g :
 \end{Coqsrc}
 
 
-\subsection{Properties derived from \texttt{L\_spec}}
+\subsection{Abstract properties}
 
 
 
@@ -7128,7 +7148,7 @@ Estimation :
 \end{Coqsrc}
 
 
-\section{Using \texttt{Equations}}
+\subsection{Using \texttt{Equations}}
 \label{sect:L-equations}
 
 Note that we did not define any function $L_\alpha$ \emph{for any $\alpha<\epsilon_0$} yet. We have got no more than a collection of proved realizations of $\texttt{L\_spec}\;\alpha$ for several values of $\alpha$.
@@ -7261,7 +7281,8 @@ Instead of considering standard paths and battles, consider ``constant'' paths a
 Prove a few  exact formulas and minoration lemmas.
 \end{project}
 
-\section{The Wainer-Hardy hierarchy}
+\section{The Wainer-Hardy hierarchy (functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
+
 \label{sect:hardy}
 In order to give an idea of the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
@@ -9499,11 +9520,6 @@ The following extensions are planned, but help is needed:
 Although we do not plan to include complete solutions to the exercises, 
 we think it would be useful to include comments and hints, and questions/answers from the users. In constrast, ``projects'' are supposed, once completed, to be included in the repository.
 
-\subsubsection{Project \vref{project:succ-limit-dec}}
-\paragraph*{Hint:} 
-  Beware of the instances associated with sum and product of notations !
-  You may consider additional fields such as ``there is a greatest element'' 
-to make the sum and product of notations ``compositional''.
 
 
 

@@ -39,6 +39,7 @@ Definition ON_compare {A:Type}{lt: relation A}
 Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
+
 Infix "o<" := ON_lt : ON_scope.
 
 Definition ON_le  {A:Type}{lt: relation A}

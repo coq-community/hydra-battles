@@ -212,9 +212,9 @@ Compute test (iterate doubleS 2 95).
 
 Inductive one_step (i: nat) :
   nat -> nat -> nat -> nat -> nat -> nat -> Prop :=
-| step1 : forall a b c,  one_step i a b (S c) a b c
-| step2 : forall a b ,  one_step i a (S b) 0 a b (S i)
-| step3  : forall a, one_step i (S a) 0 0 a (S i) 0.
+| step1: forall a b c,  one_step i a b (S c) a b c
+| step2: forall a b ,  one_step i a (S b) 0 a b (S i)
+| step3: forall a, one_step i (S a) 0 0 a (S i) 0.
 
 
 Lemma step_round_plus : forall i a b c a' b' c', one_step i a b c a' b' c' ->
@@ -257,10 +257,9 @@ Definition reachable (i a b c : nat) : Prop :=
   steps 3 3 0 0 i a b c.
 
 
-Lemma steps_round_plus : forall i a b c j  a' b' c',
+Lemma steps_battle : forall i a b c j  a' b' c',
     steps i a b c j a' b' c' ->
-    battle standard i (hyd  a b c)
-          j (hyd a' b' c').
+    battle standard i (hyd  a b c) j (hyd a' b' c').
 Proof.
   induction 1.
   - now apply step_round_plus.
@@ -344,7 +343,7 @@ Qed.
 
 Lemma L0_95 : battle standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
 Proof.
-  apply steps_round_plus.
+  apply steps_battle.
   apply L95.
 Qed.
 
@@ -410,10 +409,10 @@ Qed.
 Lemma Almost_done :
   battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
 Proof. 
-  apply steps_round_plus, SuperbigStep.
+  apply steps_battle, SuperbigStep.
 Qed.
 
-Theorem  Done :
+Theorem Done :
   battle standard 0 hinit N head.
 Proof.
   eapply battle_trans.
