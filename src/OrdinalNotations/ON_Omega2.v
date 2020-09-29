@@ -64,7 +64,7 @@ Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
 Instance le_preorder : PreOrder le.
 Proof.
   split.
-  -  right.
+  - right.
   - inversion_clear 1; trivial.
     + inversion 1; left.
       * now transitivity y.

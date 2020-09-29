@@ -2382,18 +2382,18 @@ More intuitively, let us have a look at Figure~\ref{fig:ordinal-sequence}. It pr
 \end{figure}
 
 
-Let us comment some features of this table:
+Let us comment some features of this figure:
 
 \begin{itemize}
 \item The ordinals are listed in a strictly increasing order. 
 \item Dots : ``$\ldots$'' stand for an infinite sequence of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, between $17$ and $\omega$.
 \item Each ordinal printed in black is the immediate successor of another ordinal. We call it a \emph{successor} ordinal. For instance, $12$ is the successor of $11$, and $\omega^4+1$ the successor of $\omega^4$.
-\item Ordinals that  follow dots immediately (displayed in red) are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+\item Ordinals (displayed in red)  that  follow immediately dots are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 \item
 For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). It is also the first limit ordinal, and the first infinite ordinal, in the sense that 
 the set $\mathbb{O}_\omega$ is infinite.
 \item The ordinal $\epsilon_0$ is the first number which is equal to its own exponential of base $\omega$. It plays an important role in proof theory, and is particularly studied in chapters~\ref{chap:T1} to \ref{chap:alpha-large}.
-\item All the ordinals shown in this list are either the ordinal \textcolor{blue}{$0$},
+\item Any ordinal is  either the ordinal \textcolor{blue}{$0$},
 a successor ordinal, or a \textcolor{red}{limit ordinal}.
 \end{itemize}
 
@@ -2409,11 +2409,11 @@ A  \emph{well-ordered set} is a set provided with a binary relation $<$ which ha
 \item[irreflexivity] : $\forall x\in A, x\not< x$
 \item[transitivity] : $\forall x\,y\,z\in A, x<y \Rightarrow y<z \Rightarrow x<z$
 \item[trichotomy]: $\forall x\,y\in A, x<y \vee x = y \vee y < x$
-\item[well foundedness] $<$ is well-founded (every element of $A$ is accessible)\footnote{In classical mathematics, we would say that there is no infinite sequence $a_1>a_2> \dots a_n> a_{n+1}\dots$ in $A$. Please refer to any documenation on \coq{} for having more details on well-foundedness and accessibility.}.
+\item[well foundedness]: $<$ is well-founded (every element of $A$ is accessible)\footnote{In classical mathematics, we would say that there is no infinite sequence $a_1>a_2> \dots a_n> a_{n+1}\dots$ in $A$. Please refer to any documenation on \coq{} for having more details on well-foundedness and accessibility.}.
 
 \end{description}
 
-The best known examples of well-ordered sets are the set $\mathbb{N}$ of natural numbers (with the usual order $<$), as well as any finite segment $[0,i)=\{j\in\mathbb{N}|j<i\}$.
+The best known examples of well-ordered sets are the set $\mathbb{N}$ of natural numbers (with the usual order $<$), as well as any finite segment $[0,i)=\{j\in\mathbb{N}\,|\,j<i\}$.
 The disjoint union of two copies of $\mathbb{N}$, \emph{i.e.} the set $\{0,1\}\times\mathbb{N}$ is also well-ordered,
 with respect to the order below:
 
@@ -2434,7 +2434,7 @@ Having the same order type is an equivalence relation between well-ordered sets.
 For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
 the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
 
-In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work with type theory, 
+In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work within type theory, 
 we do not identify ordinals as sets of ordinals, but the correspondance between ordinals and sets of ordinals is the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
 For instance $\mathbb{O}_\omega=\mathbb{N}$, and $\mathbb{O}_7=\{0,1,2,3,4,5,6\}$.
 
@@ -2449,21 +2449,22 @@ leave it to the reader to explore the bibliography.
 Two kinds of representation of ordinals are defined herein.
 
 \begin{itemize}
-\item A ``mathematical'' representation of the set of countable ordinal numbers, afer Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmess) axioms. It is used as a reference for proving the correctness of ordinal notations.
+\item A ``mathematical'' representation of the set of countable ordinal numbers, afer Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
 \item A family of \emph{ordinal notations}, \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
-correctness of a given ordinal notation with respect to Schütte's model use axioms.
+correctness of a given ordinal notation with respect to Schütte's model obviously use axioms.
 Please execute the \texttt{Print Assumptions} command in case of doubt.
 \end{itemize}
 
 \section{Countable ordinals}
 
 Chapter~\ref{chap:schutte} of this document presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
-That formalization is quite complex and technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
+That formalization is quite complex, technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
 
 Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and associates to any ordinal $\alpha$ the segment $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 
-In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{``\_<\_''}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
+In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{"\_<\_"}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
 we derive some interesting properties of countable ordinals from these axioms.
+It is interesting to compare proofs of a given property (for instance the associativity of addition) in the computatuinal framework of some ordinal notation, and in the axiomatic model of Schütte.
 
 
 \section{Ordinal notations}
@@ -2477,7 +2478,7 @@ of:
 \begin{itemize}
 \item A data type $A$ for representing all ordinals strictly below $\alpha$,
 \item A well founded order $<$ on $A$, 
-\item A function for comparing two ordinals, whose correctnes implies that the reflexive closure of $<$ is a \emph{total order}.
+\item A correct function for comparing two ordinals. Note  that the reflexive closure of $<$ is thus a \emph{total order}.
 \end{itemize}
 
 
@@ -2506,7 +2507,16 @@ Variable A: Type.
 
 \subsection{A class for ordinal notations}
 
-The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}. 
+The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}.  The correctness of this function is expressed through Stdlib's type 
+\texttt{Datatypes.CompareSpec}.
+
+
+\begin{Coqsrc}
+Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
+    CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
+  | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
+  | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt
+\end{Coqsrc}
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
@@ -2568,16 +2578,14 @@ and  \texttt{Coq.Wellfounded.Inclusion}.
 Definition measure_lt {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare}
-            {B : Type}
-  (m : B -> A) : relation B :=
-  fun x y =>  on_lt (m x) (m y).
+            {B : Type} (m : B -> A) : relation B :=
+             fun x y => on_lt (m x) (m y).
             
 Lemma wf_measure  {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
             {on : ON lt compare}
             {B : Type}
-            (m : B -> A) :
-  well_founded (measure_lt m). 
+            (m : B -> A):  well_founded (measure_lt m). 
 \end{Coqsrc}
 
 A simple example of application is given in Sect.~\vref{sect:merge-example}.
@@ -2611,7 +2619,7 @@ Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective type
 
  We consider a new strict order
 on the disjoint sum of the associated types, by putting all elements of \texttt{A} before the elements of \texttt{B} (thanks to Standard Library's relation operator \texttt{le\_AsB}).
-(please look at Figure~\ref{fig:omega-plus-omega} for an example).
+
 
 
 \emph{From Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}}.
@@ -2744,6 +2752,10 @@ Notation "'omega'" := (inr  0:t).
 \begin{Coqsrc}
 Example ex1' : fin 7 o< omega.
 Proof. constructor. Qed.
+
+Lemma lt_omega alpha : 
+     alpha o< omega <-> exists n:nat,  alpha = fin n.
+(* ... *)
 \end{Coqsrc}
 
 
@@ -2880,13 +2892,13 @@ Lemma Successor_correct alpha beta : Successor beta alpha <->
 We can also check whether an ordinal is a successor by a simple pattern matching:
 
 \begin{Coqsrc}
-Definition succb (alpha: t) := match alpha with
-                                   inr (S  _) | inl (S _) => true
+Definition succb (alpha: t) : bool := match alpha with
+                                 | inr (S  _) | inl (S _) => true
                                  | _ => false
                                  end.
 
 Lemma succb_correct (alpha : t) :
-    succb alpha <->  exists beta: t,   alpha = succ beta.
+    succb alpha <->  exists beta: t, alpha = succ beta.
 \end{Coqsrc}
 
 
@@ -2901,6 +2913,7 @@ Finally, the nature of any ordinal is decidable(inside this notation system) :
     {Least alpha} +
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
+(* ... *)
 \end{Coqsrc}
 
 \noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
@@ -2950,11 +2963,14 @@ end.
 \end{Coqsrc}
 
 
-In order to build an ordinal notation out the type \texttt{t}, we have to define a comparison function, and prove that the order \texttt{lt} is well-founded.
+In order to build an ordinal notation out of the type \texttt{t}, we have to define a comparison function, and prove that the order \texttt{lt} is well-founded.
 
 
 
 \begin{Coqsrc}
+Instance lt_strorder : StrictOrder lt.
+(* ... *)
+
 Definition compare (alpha beta: t) : comparison :=
   match Nat.compare (fst alpha) (fst beta) with
     Eq => Nat.compare (snd alpha) (snd beta)
@@ -2965,7 +2981,15 @@ Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
                 (compare alpha beta).
 
+Lemma lt_wf : well_founded lt.
+
 Instance Omega2 : ON  lt compare.
+Proof.
+  split.
+  - apply lt_strorder.
+  - apply lt_wf.
+  - apply compare_correct.
+Qed.
 \end{Coqsrc}
 
 
@@ -3055,7 +3079,7 @@ Lemma unique_decomposition alpha :
 \subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.
 
-Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily the function which merges two lists.
+Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists.
 
 \index{Coq!Commands!Function}
 
@@ -3092,7 +3116,7 @@ Section Merge.
 
 End Merge.
 
-Goal forall l,  merge nat Nat.leb (nil, l) = l.
+Goal forall l, merge nat Nat.leb (nil, l) = l.
   intro; now rewrite merge_equation.
 Qed.
 \end{Coqsrc}
@@ -3103,7 +3127,7 @@ Qed.
 
 In Sect.~\vref{omega-case}, we proved that there exists no variant towards \texttt{nat}
 (\emph{i.e.} the ordinal $\omega$) for proving the termination of all hydra battles.
-We  prove now that even the ordinal $\omega^2$ is also insufficient for this purpose. 
+We  prove now that  the ordinal $\omega^2$ is also insufficient for this purpose. 
 
 The proof we are going to develop has exactly the same structure as in Section~\ref{omega-case}.
  Nevertheless, the proof of technical  lemmas is a little more complex, due to 
@@ -3237,11 +3261,11 @@ Corollary m_lt : m small_h o< m big_h.
 \subsubsection{Proof of the inequality \texttt{m big\_h o<= m small\_h} }
 
 
-The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider some ordinal $\alpha=(i,j)$, where $i>0$, there exists an infinite number of
+The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider any ordinal $\alpha=(i,j)$, where $i>0$, there exists an infinite number of
 ordinals stricly less than $\alpha$, and there exists an infinite number of battles that start from
-$\iota(\alpha)$. In effect, at any configuration $\iota(k,0)$, where $k>0$, the hydra can freely chose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
+$\iota(\alpha)$. Indeed, at any configuration $\iota(k,0)$, where $k>0$, the hydra can freely choose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
 all the possible battles issued from that hydra.
-Let us give more technical details.
+Let us now give more technical details.
 
 \begin{itemize}
 \item The proof of the lemma \texttt{m\_ge : m big\_h  o<= m small\_h} uses well-founded induction on \texttt{big\_h}.
@@ -3275,7 +3299,7 @@ Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
 \index{Maths!Transfinite induction}
 
 Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
-by transfinite induction over \texttt{p} a battle 
+by \emph{transfinite induction} (\emph{i.e.} well-founded) over \texttt{p} a battle 
 that transforms the hydra $\iota(p)$ into $\iota(q)$.
 
 \vspace{4pt}
@@ -3328,7 +3352,7 @@ Qed.
 
 \subsubsection{End of the proof}
 
-Since $<$ is a strict order (irreflexive  and transitive) on \texttt{nat*nat}, we can conclude that there is no
+Since $<$ is a strict order (irreflexive  and transitive) on \texttt{nat*nat}, we infer that there is no
 variant for termination on the lexicographic square of $(\mathbb{N},<)$.
 
 \begin{enumerate}
@@ -3385,94 +3409,6 @@ For instance, the following inequality holds:
 
   
 \end{exercise}
-
-
-
-\section{Comparing Ordinal Notations}
-
-It is sometimes useful to compare two ordinal notations with respect to expressive power
-(the segment of ordinals  they represent). 
-
-The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
-
-If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
-
-\index{Coq!Type classes}
-\label{types:SubON}
-
-\begin{Coqsrc}
-Class  SubON 
-       `(OA : @ON A ltA  compareA)
-       `(OB : @ON B ltB  compareB)
-       (alpha :  B)
-       (iota : A -> B):=
-  {
-  SubON_compare: forall x y : A,  compareB (iota x) (iota y) =
-                                 compareA x y;
-  SubON_incl : forall x, ltB (iota x) alpha;
-  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
-\end{Coqsrc}
-
-For instance, we prove that \texttt{Omega} is a sub-notation of
-\texttt{Omega\_plus\_Omega} (with $\omega$ as the first ``new'' ordinal, and \texttt{fin} as the injection).
-
-\begin{Coqsrc}
-Instance Incl : SubON Omega Omega_plus_Omega omega fin.
-\end{Coqsrc}
-
-\index{Projects}
-\begin{project}
-Prove that \texttt{Omega\_plus\_Omega} cannot be a sub-notation of \texttt{Omega}.
-\end{project}
-
-\index{Projects}
-\begin{project}
-Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in order to
-have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
-a variant on $O_B$.
-\end{project}
-
-\section{Comparing an ordinal notation with Schütte's model}
-
-Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctenss of our ordinal  notations.
-
-The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
-where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
-
-\index{Coq!Type classes}
-\label{types:ON-for}
-
-\begin{Coqsrc}
-Class ON_correct `(alpha : Schutte_basics.Ord)
-     `(OA : @ON A ltA  compareA)
-      (iota : A -> Schutte_basics.Ord) :=
-  { ON_correct_inj : forall a, Schutte_basics.lt (iota a) alpha;
-    ON_correct_onto : forall beta, Schutte_basics.lt beta alpha ->
-                                exists b, iota b = beta;
-    On_compare_spec : forall a b:A,
-        match compareA a b with
-          Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
-        | Datatypes.Eq => iota a = iota b
-        | Datatypes.Gt => Schutte_basics.lt (iota b) (iota a)
-        end}.
-\end{Coqsrc}
-
-
-
-For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is correct with respect to the countable ordinal $\epsilon_0$
-(see chapter~\ref{chap:schutte} for more details).
-
-
-\begin{Coqsrc}
-Instance Epsilon0_correct :
-  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
-\end{Coqsrc}
-
-\index{Projects}
-
-\begin{project}
-  When you have read Chapter~\ref{chap:schutte}, prove that the sum of two ordinal notations \texttt{ON\_plus} implements the addition of ordinals.
-\end{project}
 
 
 \section{A notation for finite ordinals}
@@ -3680,8 +3616,53 @@ Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
 \end{remark}
 
 
+\begin{remark}
+ There is no interesting arihmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
+\end{remark}
 
-Finally, it is interesting to show that, if $i<j$, then the segment $[0,i)$ is a ``sub-segment'' of
+\begin{remark}
+Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.  
+\end{remark}
+
+
+
+%%%
+
+\section{Comparing two ordinal notations}
+
+It is sometimes useful to compare two ordinal notations with respect to expressive power
+(the segment of ordinals  they represent). 
+
+The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
+
+If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
+
+\index{Coq!Type classes}
+\label{types:SubON}
+
+\begin{Coqsrc}
+Class  SubON 
+       `(OA : @ON A ltA  compareA)
+       `(OB : @ON B ltB  compareB)
+       (alpha :  B)
+       (iota : A -> B):=
+  {
+  SubON_compare: forall x y : A,  compareB (iota x) (iota y) =
+                                 compareA x y;
+  SubON_incl : forall x, ltB (iota x) alpha;
+  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+\end{Coqsrc}
+
+For instance, we prove that \texttt{Omega} is a sub-notation of
+\texttt{Omega\_plus\_Omega} (with $\omega$ as the first ``new'' ordinal, and \texttt{fin} as the injection).
+
+\begin{Coqsrc}
+Instance Incl : SubON Omega Omega_plus_Omega omega fin.
+\end{Coqsrc}
+
+
+
+We can also show that, if $i<j$, then the segment $[0,i)$ is a ``sub-segment'' of
 $[0,j)$. Since the terms  ($t\;i$) and ($t\;j$) are not convertible, we consider a ``cast'' 
 function $\iota$ from ($t\;i$) into ($t\;j$), and prove that this function is  a monotonous bijection  from ($t\;i$) to
 the segment $[0,i)$ of ($t\;j$).
@@ -3747,19 +3728,71 @@ Section Inclusion_ij.
          
 
 
+\index{Projects}
+\begin{project}
+Prove that \texttt{Omega\_plus\_Omega} cannot be a sub-notation of \texttt{Omega}.
+\end{project}
 
-\begin{remark}
- There is no interesting arihmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
-\end{remark}
+\index{Projects}
+\begin{project}
+Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in order to
+have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
+a variant on $O_B$.
+\end{project}
 
-\paragraph{Related work}
-Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.
+
+
+
+\section{Comparing an ordinal notation with Schütte's model}
+
+Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctenss of the considered  ordinal  notation.
+
+The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
+where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
+
+\index{Coq!Type classes}
+\label{types:ON-for}
+
+\begin{Coqsrc}
+Class ON_correct `(alpha : Schutte_basics.Ord)
+     `(OA : @ON A ltA  compareA)
+      (iota : A -> Schutte_basics.Ord) :=
+  { ON_correct_inj : forall a, Schutte_basics.lt (iota a) alpha;
+    ON_correct_onto : forall beta, Schutte_basics.lt beta alpha ->
+                                exists b, iota b = beta;
+    On_compare_spec : forall a b:A,
+        match compareA a b with
+          Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
+        | Datatypes.Eq => iota a = iota b
+        | Datatypes.Gt => Schutte_basics.lt (iota b) (iota a)
+        end}.
+\end{Coqsrc}
+
+
+
+For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is a correct implementation of the theoretically defined  ordinal $\epsilon_0$
+(see chapter~\ref{chap:schutte} for more details).
+
+
+\begin{Coqsrc}
+Instance Epsilon0_correct :
+  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+\end{Coqsrc}
+
+\index{Projects}
+
+\begin{project}
+  When you have read Chapter~\ref{chap:schutte}, prove that the sum of two ordinal notations \texttt{ON\_plus} implements the addition of ordinals.
+\end{project}
+
+
+
 
 
 \section{Isomorphism of ordinal notations}
 
 
-In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($). For this purpose, one may prove that the two notation systems are order-isomorphic.
+In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($\;). For this purpose, one may prove that the two notation systems are order-isomorphic.
 
 \index{Coq!Type classes}
 \label{types:ON-iso} 
@@ -3782,7 +3815,7 @@ Class  ON_Iso
 Let $i$ be some natural number. Prove that the notation systems 
 \texttt{Omega} and \texttt{ON\_plus (OrdFin $i$) Omega} are isomorphic.
 
-{\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$ we will prove in larger notation systems, as well as in Schütte's model}
+{\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$, that we will prove in larger notation systems, as well as in Schütte's model.}
 
 This exercise is partially solved for $i=3$ (in ~\href{../src/html/hydras.OrdinalNotations.Example_3PlusOmega.html}{OrdinalNotations.Example\_3PlusOmega}).
 
@@ -3815,7 +3848,7 @@ for any strictly positive $i$.
 Add to the class \texttt{ON} the requirement that for any $\alpha$ it is decidable whether $\alpha$ is $0$, a successor or a limit ordinal.
 
 
-\textbf{Hint:}   Beware of the instances associated with sum and product of notations !
+\textbf{Hint:}   Beware of the instances associated with sum and product of notations!
   You may consider additional fields such as ``there is a greatest element'' 
 to make the sum and product of notations ``compositional''.
 
@@ -9427,7 +9460,6 @@ Theorem inject_of_phi0 (alpha : T1):
 Theorem inject_plus (alpha beta : T1): nf alpha -> nf beta ->
   inject (alpha + beta)%t1 = inject alpha + inject beta.
 
-
 Theorem inject_mult_n (alpha : T1)  :
   nf alpha -> forall n:nat , inject (alpha *  n)%t1 =  inject alpha * n.
 
@@ -9444,12 +9476,13 @@ Finally, we prove that \texttt{inject} is a bijection from the set of all terms 
 \texttt{members epsilon0} of the elements of \texttt{Ord} strictly less than  $\epsilon_0$.
 
 \begin{Coqsrc}
- Theorem inject_lt_epsilon0 (alpha : T1):
+Theorem inject_lt_epsilon0 (alpha : T1):
       inject alpha o< epsilon0.
 
 Theorem embedding : 
      fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.
  \end{Coqsrc}
+
 \subsection{Remarks}
 Let us recall that the library \href{../src/html/hydras.Schutte.Schutte.html}%
 {\texttt{Schutte}} depends on five \emph{axioms} and lies explicitly in the  

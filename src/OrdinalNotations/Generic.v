@@ -25,6 +25,8 @@ Class ON {A:Type}(lt: relation A)
                   (compare alpha beta);
   }.
 
+Locate CompareSpec.
+
 (** Selectors *)
 
 Definition ON_t  {A:Type}{lt: relation A}
@@ -138,7 +140,8 @@ Class ON_correct `(alpha : Ord)
 
 
 
-
+(** ** Relative correctness of a constant, a function, 
+           and a binary operation *)
 
 Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
@@ -158,8 +161,7 @@ Definition SubON_same_fun  `{OA : @ON A ltA  compareA}
        {_ : SubON OA OB alpha iota}
        (f : A -> A)
        (g : B -> B)
-  :=
-    forall x,  iota (f x) = g (iota x).
+  := forall x,  iota (f x) = g (iota x).
 
 
 Definition SubON_same_op  `{OA : @ON A ltA  compareA}
@@ -172,6 +174,8 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
   :=
   forall x y,  iota (f x y) = g (iota x) (iota y).
 
+
+(** Correctness w.r.t. Schutte's model *)
 
 
 Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
@@ -201,6 +205,8 @@ Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
        (g : Ord  -> Ord -> Ord)
   :=
     forall x y,  iota (f x y) = g (iota x) (iota y).
+
+
 
 
 Definition Iso_same_cst  `{OA : @ON A ltA  compareA}

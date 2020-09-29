@@ -153,10 +153,11 @@ Proof.
 Qed.
 
 
-Definition succb (alpha: t) := match alpha with
-                                   inr (S  _) | inl (S _) => true
-                                 | _ => false
-                                 end.
+Definition succb (alpha: t) : bool
+  := match alpha with
+     | inr (S  _) | inl (S _) => true
+     | _ => false
+     end.
 
 Lemma succb_correct (alpha: t) :
   succb alpha <-> exists beta: t, alpha = succ beta.
