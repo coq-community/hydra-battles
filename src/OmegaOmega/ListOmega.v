@@ -332,7 +332,7 @@ Qed.
         
 Definition mult (alpha beta:t) := (raw_mult (mk_nf alpha) (mk_nf beta)).
 
-Lemma nf_mult_nf : forall (alpha beta:t), (nf (mult alpha beta)).
+Lemma nf_mult : forall (alpha beta:t), (nf (mult alpha beta)).
 Proof.
   intros. unfold mult. apply raw_mult_nf; apply nf_mk_nf.
 Qed.    
