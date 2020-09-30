@@ -65,11 +65,65 @@ Check (1::0::nil).
 
 Check (fin 42).
 
+(* monome: w^a n *)
+Definition mon (a n:nat) := n::(repeat 0 a).
+
+Lemma mon_len : forall (a n:nat),
+    (length (mon a n)) = (S a).
+Proof.
+  intros. induction a.
+  - auto.  
+  - unfold mon. unfold mon in IHa. simpl. simpl in IHa. rewrite IHa.
+    trivial.
+Qed.
+
+Compute (mon 0 3).
+Compute (mon 0 0).
+Compute (mon 3 2).
+
 Definition nf (alpha : t) :bool :=
   match alpha with
     nil | S _ :: _ => true
   | _ => false
   end.
+
+Lemma mon_nf : forall (a n:nat), (nf (mon a (S n))).
+Proof. auto. Qed.
+
+Lemma nf_nf_n : forall (n:nat) (xs ys:list nat), (nf (n::xs)) -> (nf (n::ys)).
+Proof. destruct n; auto. Qed.
+
+Lemma nf_nf_plus : forall (n m:nat) (xs ys:list nat),
+    (nf (n::xs)) -> (nf (n+m :: ys)).
+Proof.
+  destruct n.
+  - discriminate.
+  - auto.
+Qed.
+
+Lemma nf_nf_mult : forall (n m:nat) (xs ys zs:list nat),
+    (nf (n::xs)) -> (nf (m::ys)) -> (nf (n*m :: zs)).
+Proof.
+  destruct n, m.
+  - discriminate.
+  - discriminate.
+  - discriminate.
+  - auto.    
+Qed.
+
+Fixpoint mk_nf (alpha:t) :=
+  match alpha with
+    nil => nil
+  | 0::alpha => (mk_nf alpha)
+  | _ => alpha
+  end.
+
+Fact nf_mk_nf : forall (alpha:t), (nf (mk_nf alpha)).
+Proof.
+  induction alpha.
+  - auto.
+  - case a; auto.
+Qed.
 
 Fixpoint succ (alpha: t) :=
   match alpha with
@@ -80,50 +134,209 @@ Fixpoint succ (alpha: t) :=
 
 Compute succ (succ omega).
 
-Fixpoint plus (alpha beta:t) :=
-  match alpha with
-    nil => beta
-  | 0::alpha => (plus alpha beta)
-  | (S a1)::alpha' =>
-    let fix plus2 beta :=
-        match beta with
-          nil => alpha
-        | 0::beta' => (plus2 beta')
-        | (S a2)::beta' =>
-          match Nat.compare (length alpha) (length beta) with
-            Eq => (S a1 + S a2)::(plus alpha' beta')
-          | Lt => beta
-          | Gt => (S a1)::(plus alpha' beta)
-          end
-        end
-    in (plus2 beta)
+Fixpoint list_plus (ns ms:list nat) : (list nat) :=
+  match ns with
+    nil => ms
+  | n::ns =>
+    match ms with
+      nil => n::ns
+    | m::ms => (n+m)::(list_plus ns ms)
+    end
   end.
 
-Compute (plus nil omega).
-Compute (plus omega nil).
-Compute (plus omega (1::nil)).
-Compute (plus (plus omega (1::nil)) (1::nil)).
-Compute (plus (1::2::3::nil) (4::5::nil)).
-Compute (plus (4::6::nil) (1::3::5::nil)).
-Compute (plus (1::2::3::nil) (3::2::1::nil)).
-Compute (plus (0::0::1::2::3::nil) (0::3::2::1::nil)).
-Compute (plus (4::6::nil) (1::3::5::nil)).
-Compute (plus (1::2::3::nil) (3::0::1::nil)).
+(* Hyp: (nf alpha) et (nf beta) *)
+Fixpoint raw_plus (alpha:t) (beta:t) :=
+  match alpha with
+    nil => beta
+  | a::alpha' =>
+    match beta with
+      nil => alpha
+    | b::beta' =>
+      match Nat.compare (length alpha) (length beta) with
+        Lt => beta
+      | Eq => (a+b)::(raw_plus alpha' beta')
+      | Gt => a::(raw_plus alpha' beta)
+      end
+    end
+  end.
 
-Lemma plus_nf : forall (alpha beta:t), nf alpha -> nf beta -> nf (plus alpha beta).
+Lemma raw_plus_eq1 : forall (beta:t), (raw_plus nil beta)=beta.
+Proof. auto. Qed.
+
+Lemma raw_plus_eq2 : forall (alpha:t), (raw_plus alpha nil)=alpha.
+Proof. destruct alpha; auto. Qed.
+
+Lemma raw_plus_lt : forall (alpha beta:t),
+    (length alpha < length beta) -> (raw_plus alpha beta)=beta.
 Proof.
-  induction alpha.
+  destruct alpha, beta.
+  - intro. inversion H.
   - auto.
-  - case a.
-    + discriminate.
-    + induction beta.
-      * auto.
-      * case a0.
-        -- discriminate.
-        -- intros. simpl. case_eq (Nat.compare (length alpha) (length beta)); auto.
+  - intro. inversion H.
+  - intros. simpl. assert ((length alpha ?= length beta)=Lt).
+    { Search Nat.compare. apply Nat.compare_lt_iff.
+      Search lt. apply lt_S_n. assumption. }
+    rewrite H0. trivial.
 Qed.
 
+Lemma raw_plus_eq : forall (a b:nat) (alpha beta:t),
+    (length alpha = length beta)
+    -> (raw_plus (a::alpha) (b::beta)) = (a+b)::(raw_plus alpha beta).
+Proof.
+  intros. simpl. assert ((length alpha ?= length beta)=Eq).
+  { apply Nat.compare_eq_iff. assumption. }
+  rewrite H0. trivial.
+Qed.
+
+Lemma raw_plus_gt : forall (a:nat) (alpha beta:t),
+    (length alpha >= length beta)
+    -> (raw_plus (a::alpha) beta) = a::(raw_plus alpha beta).
+Proof.
+ destruct beta.
+ - intro. simpl. rewrite raw_plus_eq2. trivial.
+ - intro. simpl. assert ((length alpha ?= length beta)=Gt).
+   { apply Nat.compare_gt_iff. simpl in H. lia. }
+   rewrite H0. trivial.
+Qed.         
+
+Lemma raw_plus_length_length : forall (alpha beta:t),
+    (length alpha >= length beta) -> (length (raw_plus alpha beta) = length alpha).
+Proof.
+  induction alpha.
+  - destruct beta.
+    + auto.
+    + intro. inversion H.
+  - intros. inversion H.
+    + destruct beta.
+      * discriminate.
+      * rewrite raw_plus_eq.
+        -- simpl. rewrite IHalpha.
+           ++ trivial.
+           ++ simpl in H. lia.
+        -- simpl in H1. lia.
+    + assert (length alpha >= length beta).
+    { lia. } 
+    rewrite raw_plus_gt.
+      * simpl. rewrite IHalpha.
+        -- trivial.
+        -- assumption.
+      * assumption.
+Qed.
         
+Lemma raw_plus_nf : forall (alpha beta:t),
+    nf alpha -> nf beta -> nf (raw_plus alpha beta).
+Proof.
+  destruct alpha.  
+  - auto. 
+  - destruct beta.
+    + auto.
+    + case_eq (Nat.compare (length alpha) (length beta)).
+      * intros. simpl. rewrite H. apply nf_nf_plus with (xs:=alpha). assumption.
+      * intros. simpl. rewrite H. assumption.
+      * intros. simpl. rewrite H. apply nf_nf_n with (xs:=alpha). assumption.
+Qed.
+
+Lemma raw_plus_mon_nf : forall (a n:nat) (alpha:t),
+    (a >= (length alpha)) -> (n > 0) -> (nf (raw_plus (mon a n) alpha)).
+Proof.
+  induction a.
+  - destruct alpha.
+    + intros. destruct n.
+      * lia.
+      * auto.
+    + intros. inversion H.
+  - intros. unfold mon. rewrite raw_plus_gt.
+    + destruct n.
+      * inversion H0.
+      * auto.
+    + rewrite repeat_length. assumption.
+Qed.
+      
+Definition plus (alpha beta:t) := (raw_plus (mk_nf alpha) (mk_nf beta)).
+
+Lemma nf_plus : forall (alpha beta:t), nf (plus alpha beta).
+Proof.
+  intros. unfold plus. apply raw_plus_nf; apply nf_mk_nf.
+Qed.
+
+(* Hyp: (nf alpha) (nf beta) *)
+Fixpoint raw_mult (alpha:t) (beta:t) : t :=
+  match alpha with
+    nil => nil
+  | a::alpha' =>
+    match beta with
+      nil => nil
+    | b::nil => (a*b)::alpha'
+    | b::beta' =>
+      (raw_plus (mon (length alpha + length beta) b)
+            (raw_mult alpha beta'))
+    end
+  end.
+
+Lemma raw_mult_eq1 : forall (beta:t), (raw_mult nil beta) = nil.
+Proof.
+  destruct beta; auto.
+Qed.
+
+Lemma raw_mult_eq2 : forall (alpha:t), (raw_mult alpha nil) = nil.
+Proof. 
+  destruct alpha; auto.
+Qed.
+
+Lemma raw_mult_eq3 : forall (a b:nat) (alpha:t),
+    (raw_mult (a::alpha) (b::nil)) = (a*b)::alpha.
+Proof. auto. Qed.
+
+Lemma raw_mult_eq4 : forall (a b b':nat) (alpha beta:t),
+    (raw_mult (a::alpha) (b::b'::beta))
+    = (raw_plus (mon (length (a::alpha) + length (b::b'::beta)) b)
+                (raw_mult (a::alpha) (b'::beta))).
+Proof. auto. Qed.
+
+Lemma raw_mult_length : forall (a b:nat) (alpha beta:t),
+    (length (raw_mult (a::alpha) (b::beta)))
+    <= S (length (a::alpha) + length (b::beta)).
+Proof. 
+  intros. generalize b. induction beta.
+  - intro. rewrite raw_mult_eq3. simpl. lia.
+  - intro. rewrite raw_mult_eq4. rewrite raw_plus_length_length.
+    + simpl. rewrite repeat_length. trivial.
+    + rewrite mon_len. unfold ge.
+      apply le_trans with (m:=S (length (a :: alpha) + length (a0 :: beta))).
+      * apply IHbeta.   
+      * simpl. lia.
+Qed.
+
+(* En attendant... *)
+Lemma dummy : forall (xs ys:list nat) (n:nat),
+    (length xs + length (n::ys)) = S (length xs + length ys).
+Proof. simpl. lia. Qed.
+  
+Lemma raw_mult_nf : forall (alpha beta:t),
+    (nf alpha) -> (nf beta) -> (nf (raw_mult alpha beta)).
+Proof.  
+  destruct alpha.
+  - intros. rewrite raw_mult_eq1. trivial.
+  - intros. destruct beta.
+    + auto. 
+    + destruct beta.
+      * apply nf_nf_mult with (xs:=alpha) (ys:=nil); auto.
+      * rewrite raw_mult_eq4. apply raw_plus_mon_nf.
+        -- rewrite dummy. (* !!!! *)
+           unfold ge.
+           apply raw_mult_length.
+        -- destruct n0.
+           ++ discriminate.
+           ++ lia.
+Qed.
+        
+Definition mult (alpha beta:t) := (raw_mult (mk_nf alpha) (mk_nf beta)).
+
+Lemma nf_mult_nf : forall (alpha beta:t), (nf (mult alpha beta)).
+Proof.
+  intros. unfold mult. apply raw_mult_nf; apply nf_mk_nf.
+Qed.    
+       
 (* incorrect if not nf alpha *)
 
 Fixpoint limitb (alpha: t) :=
