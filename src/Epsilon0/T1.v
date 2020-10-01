@@ -149,6 +149,7 @@ Definition lt_b alpha beta : bool :=
     | _ => false
   end.
 
+
 Definition le_b alpha beta := negb (lt_b beta alpha).
 
 Definition eq_b alpha beta := match compare alpha beta with
@@ -637,7 +638,7 @@ Hint Resolve not_lt_zero : T1.
  Qed.      
 
 
-Theorem lt_irrefl alpha :  ~ lt alpha  alpha.
+Theorem lt_irrefl alpha: ~ lt alpha alpha.
 Proof. 
  induction alpha.
  -  red;inversion_clear 1.

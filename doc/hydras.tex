@@ -2983,7 +2983,7 @@ Lemma compare_correct alpha beta :
 
 Lemma lt_wf : well_founded lt.
 
-Instance Omega2 : ON  lt compare.
+Instance Omega2: ON lt compare.
 Proof.
   split.
   - apply lt_strorder.
@@ -3041,7 +3041,7 @@ For instance $\omega\times\omega= \omega^2$ is outside the set of represented va
 Nevertheless, we can define two operations mixing natural numbers and ordinals.
 
 \begin{Coqsrc}
-(** multiplication of an ordinal and a natural number *)
+(** multiplication of an ordinal by a natural number *)
 
 Definition mult_fin  (alpha : t) (p : nat): t :=
   match alpha, p with
@@ -3052,7 +3052,7 @@ Definition mult_fin  (alpha : t) (p : nat): t :=
                end.
 Infix "*" := mult_fin : o2_scope.
 
-(** multiplication of  a natural number and an ordinal *)
+(** multiplication of  a natural number by an ordinal *)
 
 Definition fin_mult (n:nat)(beta : t) : t :=
   match n, beta with
@@ -3932,20 +3932,15 @@ First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of t
 \label{sec:epsilon0-intro}
 
 \subsection{Cantor normal form}
-
-
-
-
+\index{Maths!Cantor normal form}
 
 The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
 the equation \(\alpha = \omega^\alpha\), where \(\omega\) is 
 the least infinite ordinal. Thus, we can consider \(\epsilon_0\) as an
 \emph{infinite} \(\omega\)-tower.
-
-\index{Maths!Cantor normal form}
-
-Any ordinal strictly less that \(\epsilon_0\) 
-can be represented by a unique  \emph{Cantor normal form}, 
+Nevertheless, 
+any ordinal strictly less that \(\epsilon_0\) 
+can be finitely represented by a unique  \emph{Cantor normal form}, 
 that is, an expression  which is either  the ordinal \(0\) or 
 a sum  \(\omega^{\alpha_1} \times n_1 + \omega^{\alpha_2} \times n_2 + 
   \dots + \omega^{\alpha_p} \times n_p\) where all the \(\alpha_i\) 
@@ -4079,14 +4074,14 @@ level 3/.style={sibling distance=17mm}]
 
 
 \paragraph{Remark}
-For simplicity's sake, we chosed to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the contruction (\texttt{ocons $\alpha$ $n$ $\beta$} is intented to represent the
+For simplicity's sake, we chosed to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the contruction (\texttt{ocons $\alpha$ $n$ $\beta$}) is intented to represent the
 ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
 In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
 definition. But this replacement would take a lot of time \dots{}
 
 \subsection{Abbreviations}
 
-Some abbreviations may help to write more consisely complex ordinal terms.
+Some abbreviations may help to write more concisely complex ordinal terms.
 
 \subsubsection{Finite ordinals}
 \label{sec:orgheadline67}
@@ -4103,11 +4098,9 @@ Notation "'FS' n" :=
 
 \begin{Coqsrc}
 Definition fin (n:nat) : T1 := 
-    match n with 0 => zero | S p => FS p end.
+    match n with 0 => zero | S p => FS p end. 
 
 Coercion fin  : nat >-> T1.
-
-Notation "'F' n" := (fin n) (at level 10) : t1_scope.
 
 Example ten : T1 := 10.   
 \end{Coqsrc}
@@ -4166,7 +4159,7 @@ $\varphi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \
 \subsubsection{The hierarchy of \(\omega\)-towers:}
 \label{sec:orgheadline71}
 
-The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximed by the sequence of $\omega$-towers.
+The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximed by the sequence of $\omega$-towers (see also Sect~\vref{sect:epsilon0-as-limit} ).
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}}
@@ -4286,7 +4279,7 @@ We prove also that the relation \texttt{lt} is a strict total order.
 
   
 \begin{Coqsrc}
-Theorem lt_irrefl  alpha :  ~ lt alpha  alpha.
+Theorem lt_irrefl (alpha: T1):  ~ lt alpha alpha.
 
 Theorem lt_trans (alpha beta gamma : T1) :
   lt alpha  beta -> lt beta gamma -> lt alpha gamma.
@@ -4305,7 +4298,7 @@ than the structurally simpler \(\omega^{\omega^\omega}\times 2\).
 \subsubsection{A predicate for characterizing normal forms}
 \label{sec:orgheadline74}
 \label{sec:orgheadline75}
-We note that our data-type \texttt{T1} allows us to write expressions that
+Our data-type \texttt{T1} allows us to write expressions that
 are not properly in Cantor normal form as specified in Section \ref{sec:epsilon0-intro}.
 For instance, consider the following term of type  \texttt{T1}. 
 
@@ -4367,7 +4360,7 @@ Lemma plus_is_zero alpha beta :
   alpha + beta  = zero -> alpha = zero /\  beta = zero.
 \end{Coqsrc}
 
-But this style leads to clumsy statements, and many sub-goals in interactive proofs (although often solved with \texttt{auto} or \texttt{eauto}).
+But this style leads to clumsy statements, and generates too many sub-goals in interactive proofs (although often solved with \texttt{auto} or \texttt{eauto}).
 
 One may encapsulate conditions of the form \texttt{(nf $\alpha$)} in
 the most used predicates. For instance, we introduce the restriction of \texttt{lt} to terms in normal form, and provide a handy notation for this restriction.
@@ -4386,16 +4379,11 @@ Definition restrict {A:Type}(E: Ensemble A)(R: relation A) :=
 
 \begin{Coqsrc}
 Definition LT := restrict nf lt.
-Infix "o<" := LT : t1_scope.
+Infix "t1<" := LT : t1_scope.
 
 Definition LE := restrict nf le.
-Notation "alpha o<= beta" := (LE alpha beta) : t1_scope.
+Infix "t1<=" := LE : t1_scope.
 \end{Coqsrc}
-
-
-\begin{todo}
-Infix notation for inequalities on ordinals have changed to \texttt{o<} and \texttt{o<=}.  This document is not updated yet, but the \coq{} scripts are correct.
-\end{todo}
 
 
 \label{Predicates:LT-T1}
@@ -4404,7 +4392,7 @@ Infix notation for inequalities on ordinals have changed to \texttt{o<} and \tex
 For instance, in the following lemma, the condition that $\alpha$ is in normal form is included in the condition $\alpha< 1$.
 
 \begin{Coqsrc}
-Lemma LT_one : forall alpha, alpha o< one -> alpha = zero.
+Lemma LT_one : forall alpha, alpha t1< one -> alpha = zero.
 \end{Coqsrc}
 
   
@@ -4449,10 +4437,6 @@ Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 \end{Coqsrc}
   
-\begin{todo}
-Infix notation for inequalities on type \texttt{T1} have changed to \texttt{t1<} and \texttt{t1<=}.  This document is not updated yet, but the \coq{} scripts are correct.
-\end{todo}
-
 
 Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} is
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
@@ -9087,6 +9071,7 @@ Fixpoint omega_tower (i : nat) : Ord :=
   end.
 \end{Coqsrc}
 
+\label{sect:epsilon0-as-limit}
 Then, the ordinal  $\epsilon_0$ is defined as the limit of the sequence of all finite towers (a kind of infinite tower).
 
 \begin{Coqsrc}
