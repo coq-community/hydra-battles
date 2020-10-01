@@ -1,5 +1,6 @@
-(** An implementation of [omega ^ omega]
-    Pascal Manoury et al. *)
+(** An implementation of # &omega;<sup>&omega;</sup> *)
+
+(**    Pascal Manoury et al. *)
 
 (** Proof bulletization by Pierre Casteran (in progress) *)
 (** To do : translate the comments into english (and make them coqdoc compatible) *)
@@ -14,9 +15,9 @@ Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
 
 Coercion is_true : bool >-> Sortclass.
 
-(**
-  Arithmetic ( should be moved elsewhere) 
-*)
+(** * Some auxiliary lemmas *)
+
+(** ** Arithmetic *)
 
 Lemma minus_Sn_n : forall (n:nat), S n - n = 1.
 Proof. lia. Qed.
@@ -30,11 +31,8 @@ Proof.
  Qed.
 
 
-(**
-  Sur les listes
-*)
+(** ** Lists and their length *)
 
-(* Sur la longueur. *)
 Lemma length_0_nil : forall w:list nat, length w = 0 -> w = nil.
 destruct w.
  - trivial.
@@ -50,46 +48,71 @@ Proof.
 Qed.
 
 
+(** * # &omega;<sup>&omega;</sup> is implemented by (list nat)
+
+    The encoding of ordinals is based on Cantor normal forms
+    where exponents are finite ordinals (natural numbers)
+
+    # &omega;<sup>k</sup> . n_k + .. + &omega; . n_1 + n_0 #
+
+    is encoded by the list
+
+    [n_k :: .. :: n_1 :: n_0 :: nil]
+
+    of length k+1
+   
+*)
+
 Declare Scope lo_scope.
 Delimit Scope lo_scope with lo.
 Open Scope lo_scope.
 
 Definition t := list nat.
 
-Notation  "'omega'" := (1::0::nil) : lo_scope.
+(** zero is [nil] *)
+
+Notation "'zero'" := nil : lo_scope.
+
+(** Finite ordinals are lists of length 1 *)
+
 Definition fin (i:nat) : t := (i::nil).
 
 Coercion fin : nat >-> t.
 
-Check (1::0::nil).
-
 Check (fin 42).
 
-(* monome: w^a n *)
+(** # &omega; #  is # &omega;<sup>1</sup> . 1 + 0 # *)
+
+Notation  "'omega'" := (1::0::nil) : lo_scope.
+
+Check (1::0::nil).
+Check omega.
+
+(** Monomial # &omega;<sup>a</sup> . n # *)
+
 Definition mon (a n:nat) := n::(repeat 0 a).
 
-Lemma mon_len : forall (a n:nat),
+Lemma mon_length : forall (a n:nat),
     (length (mon a n)) = (S a).
-Proof.
-  intros. induction a.
-  - auto.  
-  - unfold mon. unfold mon in IHa. simpl. simpl in IHa. rewrite IHa.
-    trivial.
-Qed.
+Proof. intros. unfold mon. simpl. rewrite repeat_length. trivial. Qed.
 
-Compute (mon 0 3).
-Compute (mon 0 0).
-Compute (mon 3 2).
+(** * Normal form: lists with non zero head or empty list 
 
-Definition nf (alpha : t) :bool :=
+      The 'ordinal' [0::alpha] is equal to the 'ordinal' [alpha]
+*)
+
+Definition nf (alpha : t) : bool :=
   match alpha with
     nil | S _ :: _ => true
   | _ => false
   end.
 
+(* TO DELETE
 Lemma mon_nf : forall (a n:nat), (nf (mon a (S n))).
 Proof. auto. Qed.
+ *)
 
+(** Some helping technical lemmas *)
 Lemma nf_nf_n : forall (n:nat) (xs ys:list nat), (nf (n::xs)) -> (nf (n::ys)).
 Proof. destruct n; auto. Qed.
 
@@ -111,40 +134,91 @@ Proof.
   - auto.    
 Qed.
 
-Fixpoint mk_nf (alpha:t) :=
+(** Normalizing function *)
+
+Fixpoint nfize (alpha:t) :=
   match alpha with
     nil => nil
-  | 0::alpha => (mk_nf alpha)
+  | 0::alpha => (nfize alpha)
   | _ => alpha
   end.
 
-Fact nf_mk_nf : forall (alpha:t), (nf (mk_nf alpha)).
+Fact nf_nfized : forall (alpha:t), (nf (nfize alpha)).
 Proof.
   induction alpha.
   - auto.
   - case a; auto.
 Qed.
 
+(** ** Limit and successor *)
+
+(** [raw_succb] is correct when (nf alpha) *)
+Fixpoint raw_succb (alpha:t) :=
+  match alpha with
+    nil => true 
+  | 0 :: nil => false
+  | S _ :: nil => true
+  | _ :: alpha => raw_succb alpha
+  end.
+
+Lemma raw_succb_cons_cons : forall (a1 a2:nat) (alpha:t),
+    (raw_succb (a1::a2::alpha)) = (raw_succb (a2::alpha)).
+Proof.
+  intros. destruct a1; auto.
+Qed.
+   
+Definition succb (alpha:t) := raw_succb (nfize alpha).
+
+Lemma succb_succb : forall (a:nat) (alpha:t),
+    (succb (a::alpha)) = (succb alpha).
+Proof.
+  destruct a.
+  - unfold succb. trivial.
+  - unfold succb. simpl nfize. simpl.
+    induction alpha.
+    * trivial.
+    * 
+    
+    Definition limitb (alpha:t) := negb (succb alpha).
+
+Compute (succb zero).
+Compute (limitb zero).
+Compute (succb (fin 42)).
+Compute (limitb (fin 42)).
+Compute (succb omega).
+Compute (limitb omega).
+Compute (succb (mon 0 0)).
+Compute (limitb (mon 0 0)).
+Compute (succb (mon 0 7)).
+Compute (limitb (mon 0 7)).
+Compute (succb (mon 7 0)).
+Compute (limitb (mon 7 0)).
+Compute (succb (mon 7 42)).
+Compute (limitb (mon 7 42)).
+
+Compute succb (0::0::3::4::0::0::1::4::nil).
+Compute limitb (0::0::3::4::0::0::1::4::nil).
+Compute succb (0::0::3::4::0::0::1::0::nil).
+Compute limitb (0::0::3::4::0::0::1::0::nil).
+
+(** * Ordinal arithmetics *)
+
+(** ** Successor function *)
 Fixpoint succ (alpha: t) :=
   match alpha with
-  | nil => 1::nil
-  | n:: nil => S n :: nil
-  | n :: l => n :: succ l
+  | zero => 1::zero
+  | n :: zero  => S n :: zero
+  | n :: alpha => n :: succ alpha
   end.
 
 Compute succ (succ omega).
+Compute succ (3::4::0::0::1::0::nil).
 
-Fixpoint list_plus (ns ms:list nat) : (list nat) :=
-  match ns with
-    nil => ms
-  | n::ns =>
-    match ms with
-      nil => n::ns
-    | m::ms => (n+m)::(list_plus ns ms)
-    end
-  end.
+(* TODO  
+Lemma succ_correct : forall (alpha:t), succb (succ alpha).
+ *)
 
-(* Hyp: (nf alpha) et (nf beta) *)
+ (* Hyp: (nf alpha) et (nf beta) *)
 Fixpoint raw_plus (alpha:t) (beta:t) :=
   match alpha with
     nil => beta
@@ -252,11 +326,11 @@ Proof.
     + rewrite repeat_length. assumption.
 Qed.
       
-Definition plus (alpha beta:t) := (raw_plus (mk_nf alpha) (mk_nf beta)).
+Definition plus (alpha beta:t) := (raw_plus (nfize alpha) (nfize beta)).
 
 Lemma nf_plus : forall (alpha beta:t), nf (plus alpha beta).
 Proof.
-  intros. unfold plus. apply raw_plus_nf; apply nf_mk_nf.
+  intros. unfold plus. apply raw_plus_nf; apply nf_nfized.
 Qed.
 
 (* Hyp: (nf alpha) (nf beta) *)
@@ -301,7 +375,7 @@ Proof.
   - intro. rewrite raw_mult_eq3. simpl. lia.
   - intro. rewrite raw_mult_eq4. rewrite raw_plus_length_length.
     + simpl. rewrite repeat_length. trivial.
-    + rewrite mon_len. unfold ge.
+    + rewrite mon_length. unfold ge.
       apply le_trans with (m:=S (length (a :: alpha) + length (a0 :: beta))).
       * apply IHbeta.   
       * simpl. lia.
@@ -330,27 +404,13 @@ Proof.
            ++ lia.
 Qed.
         
-Definition mult (alpha beta:t) := (raw_mult (mk_nf alpha) (mk_nf beta)).
+Definition mult (alpha beta:t) := (raw_mult (nfize alpha) (nfize beta)).
 
 Lemma nf_mult : forall (alpha beta:t), (nf (mult alpha beta)).
 Proof.
-  intros. unfold mult. apply raw_mult_nf; apply nf_mk_nf.
+  intros. unfold mult. apply raw_mult_nf; apply nf_nfized.
 Qed.    
        
-(* incorrect if not nf alpha *)
-
-Fixpoint limitb (alpha: t) :=
-  match alpha with
-  |  nil | S _ :: nil => false
-  |  _ :: 0 :: nil => true
-  |  _ :: w => limitb w
-  end.
-
-
-Compute limitb omega.
-Compute limitb (3::4::0::0::1::0::nil).
-Compute succ (3::4::0::0::1::0::nil).
-Compute limitb (3::0::0::0::0::0::nil).
 
 (** to do : addition, commutative addition  *)
   
