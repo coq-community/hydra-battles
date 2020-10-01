@@ -412,7 +412,7 @@ Section Proof_of_oplus_assoc.
           repeat rewrite oplus_cons_cons, H6.
           ass_rw Hrec (ocons a1 n a2) a2 b2 c2;eauto with T1.
           f_equal.
-          lia.
+          abstract lia.
           apply tail_lt_ocons;auto.
           apply lt_le_trans with  (phi0 a1)...
           apply lt_phi0_phi0.

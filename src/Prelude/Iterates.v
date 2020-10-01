@@ -129,15 +129,15 @@ Lemma exp2_ge_S : S  <<= exp2.
 Proof. 
   red; induction n. 
   - cbn; auto with arith. 
-  - cbn;  lia.
+  - cbn;  abstract lia.
 Qed.
 
 Lemma exp2_mono : strict_mono exp2.
 Proof.
   red; induction 1; cbn.
-  - generalize (exp2_positive n); generalize (exp2 n);intros; lia.
+  - generalize (exp2_positive n); generalize (exp2 n);intros; abstract lia.
   - generalize IHle, (exp2_positive m); generalize (exp2 n), (exp2 m);
-         intros;lia.
+         intros;abstract lia.
 Qed. 
 
 (** ** Abstract properties of iterate *)
@@ -676,7 +676,7 @@ Lemma exp2_as_iterate n : exp2 n = iterate (fun i => 2 * i)%nat n 1.
 Proof.
   induction  n.
   - reflexivity.
-  - rewrite iterate_S_eqn; simpl exp2; rewrite <- IHn; lia.
+  - rewrite iterate_S_eqn; simpl exp2; rewrite <- IHn; abstract lia.
 Qed.
 
 

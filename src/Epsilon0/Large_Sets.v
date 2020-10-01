@@ -227,7 +227,7 @@ Proof.
     inversion_clear H as [H0 H1 |].
     intro k; specialize (H1 k).      
     generalize (path_to_not_nil H1); intro H2.
-    rewrite interval_not_empty_iff in H2; lia.
+    rewrite interval_not_empty_iff in H2; abstract lia.
 Qed.
 
 Lemma L_spec_unicity alpha f g :
@@ -244,7 +244,7 @@ Proof.
        intro H9; assert (S k < f (S k))%nat by
            (eapply L_pos_inv; eauto).
        assert (S k < g (S k))%nat by (eapply L_pos_inv; eauto).
-     lia.
+     abstract lia.
 Qed.
 
 
@@ -263,12 +263,12 @@ Section succ.
 
    Lemma L_succ_mono : strict_mono L_succ.
    Proof.
-    intros x y Hxy; unfold L_succ; apply f_mono; lia.
+    intros x y Hxy; unfold L_succ; apply f_mono; abstract lia.
    Qed.
 
    Lemma L_succ_Sle : S <<= L_succ.
    Proof.
-     intro k; unfold L_succ; specialize (f_Sle (S k)); lia.
+     intro k; unfold L_succ; specialize (f_Sle (S k)); abstract lia.
    Qed.
 
    Lemma L_succ_ok : L_spec (succ beta) L_succ.
@@ -293,7 +293,7 @@ Section succ.
                **  apply succ_not_zero.
                **  now rewrite canonS_succ.
         --  apply  Nat.lt_le_pred.
-            generalize (f_Sle  (S (S k))); lia.
+            generalize (f_Sle  (S (S k))); abstract lia.
    Qed.
    
 End succ.
@@ -329,7 +329,7 @@ Section lim.
         ++  apply limitb_not_zero; auto.
         ++  reflexivity.
      *  specialize (L_pos_inv (canonS lambda k) (f (S k))
-                              (canon_not_null k) (H k) (S k));  lia.       
+                              (canon_not_null k) (H k) (S k));  abstract lia.       
   Qed.
   
 End lim.
@@ -342,16 +342,16 @@ Definition L_fin i := fun k => (i + k)%nat.
 
 Lemma L_finS_S_le i : S <<= L_fin (S i).
 Proof.
- intro k; unfold L_fin.  lia.
+ intro k; unfold L_fin.  abstract lia.
 Qed.
 
 Lemma L_fin_smono i: strict_mono (L_fin i).
 Proof.
-  intros k l Hlt; unfold L_fin, id;  lia.
+  intros k l Hlt; unfold L_fin, id;  abstract lia.
 Qed.
 
 Lemma L_S_succ_rw i : forall k,  L_fin (S i) k = L_succ (L_fin i) k.
-Proof. unfold L_succ, L_fin; intros; lia.
+Proof. unfold L_succ, L_fin; intros; abstract lia.
 Qed.
 
 
@@ -370,7 +370,7 @@ Proof.
          --  split; [ discriminate |  reflexivity].
      + apply L_succ_ok; auto with T1.
        apply  L_finS_S_le.
-     + intros ; unfold L_fin, L_succ; lia.
+     + intros ; unfold L_fin, L_succ; abstract lia.
   Qed.
 
 
@@ -382,7 +382,7 @@ Proof.
   inversion H0.
   intro k; specialize (H2 k).
   unfold L_fin in H2.
-   replace (Nat.pred (S i + S k))%nat with  (S (i + k))%nat in H2; auto;lia.
+   replace (Nat.pred (S i + S k))%nat with  (S (i + k))%nat in H2; auto;abstract lia.
 Qed.
 
 
@@ -390,13 +390,13 @@ Definition L_omega k := S (2 * k)%nat.
 
 Lemma L_omega_Sle : S <<= L_omega.
 Proof.
-  intro k; unfold L_omega; lia.
+  intro k; unfold L_omega; abstract lia.
 Qed.
 
 
 Lemma L_omega_smono : strict_mono L_omega.
 Proof.
-  intros k l Hlt; unfold L_omega; lia.
+  intros k l Hlt; unfold L_omega; abstract lia.
 Qed.
 
 
@@ -415,7 +415,7 @@ Proof.
   specialize (L_lim_ok omega nf_omega refl_equal L_fin
                        (fun i => L_fin_ok (S i))) ; intro H.
    eapply L_spec_compat with (1:=H).
-   intro ; unfold L_lim,  L_fin, L_omega; lia.
+   intro ; unfold L_lim,  L_fin, L_omega; abstract lia.
 Qed.
 
 Lemma path_to_omega_mult (i k:nat) :
@@ -431,10 +431,10 @@ Proof.
         apply path_to_tail; auto with T1.
       *  assert (H := mlarge_FS k  (S k)). 
          replace (2 * S k)%nat with (S (k + S k))%nat by lia; auto.
-      *  lia.
+      *  abstract lia.
     +  rewrite interval_singleton; left; [discriminate | ].
       simpl; replace (i + 0)%nat with i.  split; [ discriminate | reflexivity].
-      lia.
+      abstract lia.
 Qed.
 
 
@@ -447,17 +447,17 @@ Lemma omega_mult_mlarge_0 i  : forall k,
 Proof.
   unfold mlarge; induction i.
   - simpl; intro k;
-      replace (S (k + S (k + 0)))%nat with (2 * S k)%nat by lia; 
+      replace (S (k + S (k + 0)))%nat with (2 * S k)%nat by abstract lia; 
       apply mlarge_omega.
   - intro k;  path_decompose (2 * (S k))%nat.
     + instantiate (1:= omega * S i).
       * specialize (IHi (2 * S k)%nat); rewrite iterate_rw; auto.
     +   apply path_to_omega_mult.
     + clear IHi; induction i.
-      * cbn; lia.
+      * cbn; abstract lia.
       * eapply Nat.le_trans.
         --  eapply IHi.
-        --  apply Nat.pred_le_mono;  apply iterate_mono_weak; lia.
+        --  apply Nat.pred_le_mono;  apply iterate_mono_weak; abstract lia.
 Qed.
 
 
@@ -490,11 +490,11 @@ Lemma L_omega_mult_eqn (i : nat) :
                      L_omega_mult i k = (exp2 i * S k - 1)%nat.
 Proof.
   induction i.
-  - unfold L_omega_mult; simpl; intro; lia.
+  - unfold L_omega_mult; simpl; intro; abstract lia.
   - intros k Hk; simpl; unfold L_omega_mult;  simpl.
     rewrite IHi;    unfold L_omega;  simpl; auto.
     repeat   rewrite Nat.mul_succ_r;  ring_simplify.
-    generalize (exp2_ge_S i); intro; lia.
+    generalize (exp2_ge_S i); intro; abstract lia.
 Qed.
 
 
@@ -517,7 +517,7 @@ Lemma L_omega_square_eqn k :
 Proof.
   intro Hk; rewrite L_omega_square_eqn1. 
    -  rewrite L_omega_mult_eqn; auto.
-      f_equal; lia.
+      f_equal; abstract lia.
 Qed.
 
 Lemma L_omega_square_Sle : S <<= L_omega_square.
@@ -564,8 +564,8 @@ Proof.
     + discriminate.
     + split.
       * discriminate.
-     * simpl; f_equal; try lia.
-  - generalize (L_omega_mult_Sle k (S (S  k))); lia.
+     * simpl; f_equal; try abstract lia.
+  - generalize (L_omega_mult_Sle k (S (S  k))); abstract lia.
 Qed.
 
 Compute L_omega_square 8.
@@ -600,9 +600,9 @@ Proof.
                specialize (H0 (Nat.pred (f (S k)))).
                rewrite S_pred_rw in *; auto.
             --  apply path_to_mult; auto;  apply f_ok_inv.
-        --  generalize (f_Sle (S k)); lia.
+        --  generalize (f_Sle (S k)); abstract lia.
         --    generalize (iterate_Sge f  i f_Sle (f (S k)));
-                intro; rewrite iterate_rw; lia.
+                intro; rewrite iterate_rw; abstract lia.
 Qed.
 
 
@@ -645,8 +645,8 @@ Lemma exp2_k_mult_pos k:
   (0 < k -> 4 <= exp2 k * (k + 2))%nat.
 Proof.
   change 4 with (2 * 2)%nat; intro Hk; apply mult_le_compat; auto.
-  - generalize (exp2_ge_S k);  lia.
-  - lia. 
+  - generalize (exp2_ge_S k);  abstract lia.
+  - abstract lia. 
 Qed.
 
 
@@ -991,7 +991,7 @@ Proof.
 Example ex3 : ~ large 156 (interval 100 254).
 Proof.
   rewrite large_n_iff.
-  - compute; lia.
+  - compute; abstract lia.
   - apply sorted_ge_not_In, interval_sorted_ge; auto with arith.
 Qed.
 
@@ -1018,7 +1018,7 @@ Proof.
   -  apply gnaw_finite_1_iota.
   - simpl; destruct n.
     + reflexivity.
-    + lia.
+    + abstract lia.
 Qed.
 
 

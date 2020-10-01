@@ -167,7 +167,7 @@ Proof.
  unfold interval.
   intro H; replace (S j - i)%nat with 0.
   reflexivity.
-  lia.
+  abstract lia.
 Qed.
 
 Lemma shift_iota_from : forall i l,  shift (iota_from i l) = iota_from (S i) l.
@@ -247,7 +247,7 @@ Proof.
   - right.
    + assumption.
    +  eapply Forall_impl  with (P := (fun x: nat => p <= x)); [|trivial].
-     intros; lia.
+     intros; abstract lia.
 Qed.
 
 
@@ -265,7 +265,7 @@ Proof.
  intros l H; generalize (sorted_ge_Forall _ _ H); intros H0 H1.
  rewrite Forall_forall in H0. generalize (H0 n).
  intro H2; generalize (H2 H1). 
- lia.
+ abstract lia.
 Qed.
 
 
@@ -276,17 +276,17 @@ Hint Constructors sorted_ge : lists.
 Lemma sorted_inv_gt : forall n p s, sorted_ge n (p::s) ->
                                     (p < n)%nat -> False.
 Proof.
- inversion_clear 1 ; intro;lia.
+ inversion_clear 1 ; intro;abstract lia.
 Qed.
 
 Lemma iota_from_app n p :
   iota_from n (S p) = iota_from n p ++ (n+p::nil)%nat.
 Proof.
   revert n; induction p; simpl.
-  -  intros; f_equal; lia.
+  -  intros; f_equal; abstract lia.
   -  intros;  f_equal; replace (n + S p)%nat with (S n + p)%nat.
      +  rewrite  <- IHp; auto.
-     +  lia.
+     +  abstract lia.
 Qed.
 
 Lemma iota_from_plus : forall k i j, iota_from i (k+j) =
@@ -294,7 +294,7 @@ Lemma iota_from_plus : forall k i j, iota_from i (k+j) =
 Proof.
   induction k; simpl.
   - trivial.    
-  - intros; rewrite IHk; repeat  f_equal; lia.
+  - intros; rewrite IHk; repeat  f_equal; abstract lia.
 Qed.
 
 Lemma interval_not_empty : forall i j, i <= j -> interval i j <> nil.
@@ -302,7 +302,7 @@ Proof.
   induction 1.
   - unfold interval.
     case_eq (S i -  i).
-    + intro; lia.
+    + intro; abstract lia.
     + simpl. destruct i; discriminate.
   -  cbn.
      destruct i.
@@ -310,7 +310,7 @@ Proof.
      destruct i; cbn.
      discriminate.
      case_eq (m - i).
-     intro; lia.
+     intro; abstract lia.
      cbn; discriminate.
 Qed.
 
@@ -337,7 +337,7 @@ Proof.
   unfold interval;intros.
   replace (S k - i)%nat with ((S j - i) + (S k - S j))%nat.
   - rewrite iota_from_plus;repeat f_equal; lia.
-  - lia.
+  - abstract lia.
 Qed.
 
 Lemma iota_from_unroll i l : iota_from i (S l) = i :: iota_from (S i) l.
@@ -356,7 +356,7 @@ Proof.
   unfold interval.
   replace (S i - i)%nat with 1.
   reflexivity.
-  lia.
+  abstract lia.
 Qed.
 
 
@@ -599,7 +599,7 @@ Proof.
   rewrite Forall_forall in H1.
   auto.
   red. 
-  intros; lia.
+  intros; abstract lia.
 Qed.
 
 Lemma sorted_not_in_tail : forall  i j X, Sorted lt (i::X)   -> j<=i ->
@@ -608,7 +608,7 @@ Proof.
  intros. 
  red; intro. 
  specialize (sorted_In _ _ H j H1).
- intro; lia.
+ intro; abstract lia.
 Qed.
 
 Remark simple_last_correct {A}: forall s (x:A), simple_last x s = last s x.
@@ -630,7 +630,7 @@ Proof.
   -  destruct (lt_eq_lt_dec x y) as [[H1 | H2] | H3].
    +  rewrite   sorted_ge_iff in H0;  destruct H0.
      rewrite Forall_forall in H2;  specialize (H2 x H);  elimtype False.
-     lia.
+     abstract lia.
    +   subst; auto. 
    +  auto. 
 Qed. 
@@ -667,7 +667,7 @@ Proof.
   right;auto.
   subst.
   elimtype False.
-  lia.
+  abstract lia.
   auto.
 Qed.
 

@@ -54,9 +54,9 @@ Section Generic.
       - injection 1; intros; subst.
         rewrite e0 in IHp; simpl in IHp; simpl.
         destruct l3.
-        inversion e0; lia.
-        destruct l3; [inversion e0; simpl;lia|].
-        specialize (IHp l3 a a1 (eq_refl _));  lia.
+        inversion e0; abstract lia.
+        destruct l3; [inversion e0; simpl; lia|].
+        specialize (IHp l3 a a1 (eq_refl _));  abstract lia.
     Qed.
 
     Lemma split_permutation:
@@ -91,7 +91,7 @@ Section Generic.
     Proof.
       intros; functional induction (split'_aux l l'); simpl.
       + rewrite e1 in IHp; simpl in IHp.
-        lia.
+        abstract lia.
       + destruct l; destruct l'; simpl; auto.
         now rewrite Nat.min_0_r.
         destruct l'; simpl; auto.
@@ -114,15 +114,15 @@ Section Generic.
         simpl; apply lt_n_S.
         destruct (length l2); auto.
         apply lt_trans with (m:=S n); auto.
-        apply lt_div2; lia.
+        apply lt_div2; abstract lia.
       + intros.
         rewrite <- (split'_aux_length_preserve l1 l1).
         assert(0<length (fst (split'_aux l1 l1)) ).
         { rewrite H.
           rewrite split'_aux_length_fst.
-          apply Nat.min_glb_lt; simpl; lia.
+          apply Nat.min_glb_lt; simpl; abstract lia.
         }
-      unfold split'; lia.
+      unfold split'; abstract lia.
     Qed.
 
     Lemma split'_aux_eq:

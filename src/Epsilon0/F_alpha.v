@@ -171,7 +171,7 @@ Proof.
     rewrite iterate_rw, F_zero_eqn.  
     simpl; rewrite iterate_ext with (g := S).
     - undiag2 n 1 3.
-      + simpl; lia.
+      + simpl; abstract lia.
       + simpl; auto.
     - intro; now rewrite F_zero_eqn.
 Qed. 
@@ -180,9 +180,9 @@ Lemma LF2 : forall i, (exp2 i * i < F_ 2 i)%nat.
 Proof.
   intro i; ochange (Fin 2) (Succ 1); rewrite F_succ_eqn.
   undiag2 i 1 3.
-  -  intros. cbn;  intros; cbn.  repeat rewrite LF1. lia. 
+  -  intros. cbn;  intros; cbn.  repeat rewrite LF1. abstract lia. 
   - intros; simpl exp2; ring_simplify. simpl (2+n)%nat.
-      rewrite iterate_S_eqn, LF1; lia.
+      rewrite iterate_S_eqn, LF1; abstract lia.
 Qed.
 
 
@@ -253,7 +253,7 @@ Section Properties.
     Lemma F_One_Zero_dom : dominates_from 1 (F_ 1) (F_ Zero).
     Proof.
       red;intros.
-      rewrite F_zero_eqn. rewrite LF1; lia.
+      rewrite F_zero_eqn. rewrite LF1; abstract lia.
     Qed.
 
     Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
@@ -261,7 +261,7 @@ Section Properties.
     Lemma F_One_Zero_ge :  F_ Zero <<= F_ 1.
     Proof.
       intro n; destruct n;
-        rewrite F_zero_eqn, LF1; lia.  
+        rewrite F_zero_eqn, LF1; abstract lia.  
     Qed. 
 
     Hint Resolve  F_One_Zero_ge : T1.
@@ -564,7 +564,7 @@ Proof.
    {  rewrite <- Nat.mul_1_r at 1; apply Nat.mul_lt_mono_pos_l; auto.
       apply exp2_positive.
    }
-   apply LF2_0; lia.
+   apply LF2_0; abstract lia.
 Qed.
 
 Section Proposition_page_284.
@@ -618,7 +618,7 @@ Section Proposition_page_284.
 
     Fact F8 : forall i, (S n < i -> F_ beta i < F_ (Succ beta) i)%nat.
     Proof.
-      intros i H; apply  (F_alpha_dom beta i); lia.
+      intros i H; apply  (F_alpha_dom beta i); abstract lia.
     Qed.
 
     Fact F9 : forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.

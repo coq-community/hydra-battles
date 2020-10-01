@@ -298,7 +298,7 @@ Proof.
  apply plus_le_compat;
  apply Le.le_trans with (Max.max (t2_length b) n1);
  apply le_max_r.
- lia.
+ abstract lia.
 Qed.
 
 
@@ -339,9 +339,9 @@ Proof.
  repeat rewrite (max_l (t2_length b) 0);auto with arith.
  case (le_lt_dec (t2_length a) (t2_length b)).
  intro;repeat rewrite max_r;auto.
- lia.
+ abstract lia.
  intro;repeat rewrite max_l;auto.
- lia.
+ abstract lia.
  auto with arith.
 Qed.
 

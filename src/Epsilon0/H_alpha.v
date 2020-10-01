@@ -80,7 +80,7 @@ Proof with eauto with E0.
   induction i.
   - intros; simpl Fin; simpl; autorewrite with H_rw E0_rw ... 
   - intros ;simpl; autorewrite with H_rw E0_rw ... 
-    rewrite IHi; lia. 
+    rewrite IHi; abstract lia. 
 Qed.
 
 
@@ -88,7 +88,7 @@ Lemma H_omega : forall k, H_ omega k = S (2 * k)%nat.
 Proof with auto with E0.
   intro k; rewrite H_lim_eqn ...
   - replace (Canon omega (S k)) with (Fin (S k)).
-    + rewrite H_Fin; lia.
+    + rewrite H_Fin; abstract lia.
     + now autorewrite with E0_rw.
 Qed.
 
@@ -101,7 +101,7 @@ induction i.
    + rewrite Plus_rw; simpl; auto with T1.
      now rewrite plus_a_zero.
  - intro k; ochange (alpha + (S i))%e0 (Succ (alpha + i))%e0.
-   + rewrite H_succ_eqn, IHi; f_equal; lia.
+   + rewrite H_succ_eqn, IHi; f_equal; abstract lia.
    + repeat rewrite Plus_rw; simpl.
      destruct i; simpl.
     *  rewrite plus_a_zero;  now rewrite succ_is_plus_one.
@@ -117,7 +117,7 @@ Proof.
  rewrite H_lim_eqn; simpl Canon.
  -   ochange  (CanonS  (omega * FinS 1)%e0 k)  (omega + (S k))%e0.
    
-  + rewrite H_Plus_Fin, H_omega;  lia.
+  + rewrite H_Plus_Fin, H_omega;  abstract lia.
   -  now compute.
 Qed.
 
@@ -125,14 +125,14 @@ Lemma H_omega_3 k : H_ (omega * 3)%e0 k = (8 * k + 7)%nat.
 Proof.
   rewrite H_lim_eqn ; [| reflexivity].
   ochange (Canon  (omega * 3)%e0 (S k)) (omega * 2 + FinS k)%e0.
-  rewrite FinS_eq,  H_Plus_Fin, H_omega_double; lia.  
+  rewrite FinS_eq,  H_Plus_Fin, H_omega_double; abstract lia.  
 Qed.
 
 Lemma H_omega_4 k : H_ (omega * 4)%e0 k = (16 * k + 15)%nat.
 Proof.
   rewrite H_lim_eqn ; [| reflexivity].
   ochange (Canon  (omega * 4)%e0 (S k)) (omega * 3 + FinS k)%e0.
-  rewrite FinS_eq,  H_Plus_Fin, H_omega_3; lia.
+  rewrite FinS_eq,  H_Plus_Fin, H_omega_3; abstract lia.
 Qed.
 
 Lemma H_omega_i (i:nat)  : forall k,
@@ -140,11 +140,11 @@ Lemma H_omega_i (i:nat)  : forall k,
 Proof.
   induction i.
   - ochange (omega * 0)%e0 Zero; simpl.
-    intro k; rewrite H_zero_eqn; lia.
+    intro k; rewrite H_zero_eqn; abstract lia.
   - intro k; rewrite H_lim_eqn.
     +  ochange (Canon (omega * S i)%e0  (S k)) (omega * i + (S k))%e0.
        rewrite H_Plus_Fin, IHi.
-        simpl (exp2 (S i)); lia.
+        simpl (exp2 (S i)); abstract lia.
         simpl Canon;  destruct i;reflexivity.
     + reflexivity.
 Qed.
@@ -166,9 +166,9 @@ Proof.
   - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
     +  rewrite H_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
-          -- lia. 
-          --   generalize (exp2_not_zero k);  lia.
-    + cbn; f_equal; lia.
+          -- abstract lia. 
+          --   generalize (exp2_not_zero k);  abstract lia.
+    + cbn; f_equal; abstract lia.
 Qed.
 
 (** Composition lemma *)
@@ -355,7 +355,7 @@ Lemma H_omega_sqr_min : forall k,  0 <> k ->
                                    (exp2 (S k) <= H_ (Phi0 2) k)%nat.
 Proof.
   intros k Hk; rewrite H_omega_sqr.
-  generalize (exp2 (S k));  intro n;  destruct n;  lia.
+  generalize (exp2 (S k));  intro n;  destruct n;  abstract lia.
 Qed.
 
 
@@ -372,9 +372,9 @@ Proof.
    +  apply exp2_mono.
    +  apply exp2_ge_S.
    +  intros n Hn;  transitivity (exp2 (S n)).
-      *  cbn ; lia.
-      * apply H_omega_sqr_min; lia.
-   +  lia.
+      *  cbn ; abstract lia.
+      * apply H_omega_sqr_min; abstract lia.
+   +  abstract lia.
 Qed.
 
 
@@ -384,7 +384,7 @@ Remark H_non_mono1 :
 Proof.
  intros H ;specialize (H 42 omega 3).
  assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
- apply H in H0; rewrite H_Fin, H_omega  in H0; lia.
+ apply H in H0; rewrite H_Fin, H_omega  in H0; abstract lia.
 Qed.
 
 Section Proof_of_Abstract_Properties.
@@ -410,7 +410,7 @@ Section Proof_of_Abstract_Properties.
     Lemma PD_Zero : dominates_from 1 (H_ (Succ Zero)) (H_ Zero).
     Proof.
       red;intros; rewrite H_zero_eqn, H_eq2, Pred_of_Succ, H_zero_eqn. 
-       - lia.
+       - abstract lia.
        - apply Succ_succb.
     Qed.
 
@@ -493,7 +493,7 @@ Section Proof_of_Abstract_Properties.
         subst alpha; intro n; repeat rewrite H_succ_eqn.
         destruct (Halpha beta).
         -  apply Lt_Succ.
-        - specialize (PA0 (S n) (S (S n))); lia.
+        - specialize (PA0 (S n) (S (S n))); abstract lia.
       Qed.
 
       Remark RP : P alpha.
@@ -531,12 +531,12 @@ Section Proof_of_Abstract_Properties.
               * apply Nat.lt_le_trans with (H_ (Canon alpha (S m)) (S m)).
                 -- destruct (Halpha (Canon alpha (S m)) ).
                    ++ apply CanonS_lt;  now  apply Limit_not_Zero.
-                   ++   apply PA1; lia.
+                   ++   apply PA1; abstract lia.
                 -- apply Nat.le_trans with  (H_ (Canon alpha (S m)) n).
                    destruct  (Lt.le_lt_or_eq _ _ H).
                    ++ destruct (Halpha (Canon alpha (S m))).
                       apply CanonS_lt; now  apply Limit_not_Zero.
-                      specialize (PA1 (S m) n H0); lia.
+                      specialize (PA1 (S m) n H0); abstract lia.
                    ++ subst n; reflexivity.
                    ++  apply PE0;
                          specialize (KS_thm_2_4_E0 alpha Hlim  H);
@@ -544,19 +544,19 @@ Section Proof_of_Abstract_Properties.
                        inversion H.
                        apply Cor12_E0 with 0.
                        apply Canon_mono1; auto.
-                       lia.
-                       lia.
+                       abstract lia.
+                       abstract lia.
                        apply KS_thm_2_4_E0; auto.
       Qed.
 
       Remark RClim : H_ alpha <<= H_ (Succ alpha).
       Proof.
-        intro n; rewrite H_succ_eqn; apply Nat.lt_le_incl, RAlim; lia.
+        intro n; rewrite H_succ_eqn; apply Nat.lt_le_incl, RAlim; abstract lia.
       Qed.
 
       Remark RDlim : dominates_from 1 (H_ (Succ alpha)) (H_ alpha).
       Proof.
-        red;intros; rewrite H_succ_eqn; apply RAlim; lia.
+        red;intros; rewrite H_succ_eqn; apply RAlim; abstract lia.
       Qed.
 
       Remark RElim : forall beta n, Canon_plus n alpha beta -> 
@@ -572,7 +572,7 @@ Section Proof_of_Abstract_Properties.
          *  apply Canon_lt,  Limit_not_Zero; auto.
          *  apply PE0; apply Cor12_E0 with 0.
           -- apply Canon_mono1; auto. 
-          -- lia.
+          -- abstract lia.
           -- apply KS_thm_2_4_E0; auto.
         + destruct (Halpha  (Canon alpha (S n))).
           apply Canon_lt,  Limit_not_Zero; auto.
@@ -670,7 +670,7 @@ Goal
   ochange {| cnf := (omega * omega * omega)%t1; cnf_ok := eq_refl |}
           (Phi0 3).
   transitivity 11.
-  - lia.
+  - abstract lia.
   - apply H_alpha_ge_id.
 Qed.
 

@@ -42,7 +42,7 @@ Proof.
   + exists (inl 0); constructor.
   + inversion 1; subst.
     exists (inl (S x)); split; constructor;auto with arith.
-    lia.
+    abstract lia.
 Qed.
 
 Lemma limit_is_omega alpha : Limit alpha -> alpha = omega.
@@ -51,13 +51,13 @@ Proof.
   - intro H; inversion H.
     destruct n.
     +  destruct H0 as [w Hw].
-       inversion Hw.   lia.
+       inversion Hw.   abstract lia.
     + specialize (H1 (inl n)).
       destruct H1.
       constructor; auto.
       destruct H1.
       inversion H2; subst; inversion H1; subst.
-      lia.
+      abstract lia.
   - destruct n.
     + trivial.
     + destruct 1.
@@ -66,7 +66,7 @@ Proof.
       constructor; auto.
       destruct H0 as [H0 H1]; inversion H1; inversion H0; subst.
       discriminate.    
-      injection H7; intro; subst. lia.
+      injection H7; intro; subst. abstract lia.
 Qed.
 
 Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega.
@@ -129,13 +129,13 @@ Lemma Successor_succ alpha : Successor (succ alpha) alpha.
   - constructor; auto.
   -  destruct z.
      inversion_clear 1.
-     inversion_clear 1; lia.
+     inversion_clear 1; abstract lia.
      inversion 2.
   -  constructor; auto.
   - destruct z.
     inversion_clear 1.
     inversion_clear 1.
-    inversion_clear 1; lia.
+    inversion_clear 1; abstract lia.
 Qed.
 
 
@@ -193,15 +193,15 @@ Proof.
    +  destruct n.
     * reflexivity.
     *  specialize (H (inl n)); inversion H.
-     --  inversion H0; lia.
-     --  lia.
+     --  inversion H0; abstract lia.
+     --  abstract lia.
    + specialize (H (inl 0)); inversion H.
     *  inversion H0.
   -  subst; destruct y.
      + destruct n.
        * right. 
        * left; constructor.
-         lia.
+         abstract lia.
      +   constructor.
          constructor.
 Qed.
@@ -227,7 +227,7 @@ Proof.
     + exists (inl 0); constructor.
     + inversion 1; subst.
       exists (inl (S x)); split; constructor;auto with arith.
-      lia.
+      abstract lia.
     + right; exists (inr n); split.
       * constructor. auto with arith.
       *       intros beta Hbeta Hbeta'; inversion Hbeta; subst;
@@ -299,9 +299,9 @@ Proof.
  destruct alpha, beta. unfold succ; cbn.
  split.
   - inversion_clear 1.
-    + apply le_introl.   lia.
+    + apply le_introl.   abstract lia.
   -     inversion_clear 1.
-        inversion_clear H0. constructor; lia.
+        inversion_clear H0. constructor; abstract lia.
         constructor; auto with arith.
   - split.
      simpl. constructor.
@@ -313,17 +313,17 @@ Proof.
   - split.
    inversion_clear 1.
     simpl.
-     apply le_intror. lia.
+     apply le_intror. abstract lia.
    simpl.
    inversion_clear 1.
-   inversion_clear  H0; constructor;lia.
-   constructor;lia.
+   inversion_clear  H0; constructor;abstract lia.
+   constructor;abstract lia.
 Qed.
 
 
 Lemma lt_succ alpha : alpha o< succ alpha.
 Proof.
-  destruct alpha; simpl; constructor; lia.
+  destruct alpha; simpl; constructor; abstract lia.
 Qed.
 
 
@@ -332,7 +332,7 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
    destruct alpha; simpl; split.
   -   inversion_clear 1; exists n; auto.
   -  constructor.
-  - inversion 1; lia.
+  - inversion 1; abstract lia.
   - destruct 1 as [n0 e]; inversion e.
  Qed.
 
@@ -346,7 +346,7 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
      + intros; constructor.
    -  split.
       + intro H0; destruct alpha as [n | n].
-        *  specialize (H0 n); inversion H0; lia.
+        *  specialize (H0 n); inversion H0; abstract lia.
         *  destruct n.
            -- right.
            -- left;constructor; auto with arith.
@@ -365,7 +365,7 @@ split.
 - constructor.
 - inversion 1; subst.
   + exists  x; trivial.
-  + lia.
+  + abstract lia.
 Qed.
 
 Goal 6 o< 8.

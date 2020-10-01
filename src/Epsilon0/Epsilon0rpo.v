@@ -269,7 +269,7 @@ Proof.
  apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
  simpl;
  auto with arith rpo.
- lia.
+ abstract lia.
  auto.
  auto.
  eauto with T1.
@@ -325,7 +325,7 @@ apply List_gt.
 simpl in H.
 ring_simplify in H.
  clear IHn. 
- simpl in H. lia. 
+ simpl in H; abstract lia. 
  eauto with T1.
  eauto with T1.
  trivial.
@@ -409,7 +409,7 @@ apply Eq.
 apply IHn; eauto with T1 rpo.
 simpl in H. 
 clear IHn. 
-lia. 
+abstract lia. 
 inversion H4. 
 Qed. 
 

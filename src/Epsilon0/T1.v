@@ -341,7 +341,7 @@ Proof.
   unfold lt, lt_b ;  intros;  cbn;   rewrite compare_refl.
   destruct (lt_eq_lt_dec n n').
    - destruct s;  auto.
-     + subst; elimtype False; lia. 
+     + subst; elimtype False; abstract lia. 
    - destruct (Nat.lt_irrefl n);   eauto with arith. 
 Qed. 
 
@@ -352,7 +352,7 @@ Proof.
  intros; unfold lt, lt_b; cbn; rewrite compare_refl.
   destruct (lt_eq_lt_dec n n).
   - destruct s; auto. 
-  - elimtype False; lia. 
+  - elimtype False; abstract lia. 
 Qed. 
 
 Hint Resolve zero_lt head_lt coeff_lt tail_lt  : T1.
@@ -498,19 +498,19 @@ Proof with auto.
    +  destruct s.
      *  destruct (lt_eq_lt_dec n0 n). 
         destruct s. 
-        elimtype False; lia.
-        subst; elimtype False; lia.
+        elimtype False; abstract lia.
+        subst; elimtype False; abstract lia.
         reflexivity. 
       *  destruct (lt_eq_lt_dec n0 n). 
         destruct s.
-        subst;  elimtype False; lia.
+        subst;  elimtype False; abstract lia.
         rewrite IHalpha2; simpl CompOpp; reflexivity. 
-        subst;  elimtype False; lia.
+        subst;  elimtype False; abstract lia.
    +  destruct (lt_eq_lt_dec n0 n). 
     *   destruct s.
         reflexivity. 
-        subst;  elimtype False; lia.
-    * elimtype False; lia.
+        subst;  elimtype False; abstract lia.
+    * elimtype False; abstract lia.
   - now simpl CompOpp.
   -  reflexivity. 
 Qed.
@@ -544,20 +544,20 @@ Proof.
       rewrite compare_rev, H.   cbn.
       destruct (lt_eq_lt_dec n n).
       destruct s.
-      elimtype False; lia.
+      elimtype False; abstract lia.
       rewrite compare_rev, H0.
       cbn; now red.
-      elimtype False; lia.
+      elimtype False; abstract lia.
       rewrite compare_rev, H.   cbn.
       destruct (lt_eq_lt_dec n n).
       destruct s.
-      elimtype False; lia.
+      elimtype False; abstract lia.
       destruct (lt_eq_lt_dec n0 n).
       destruct s. 
       now red.
-      subst n0; elimtype False; lia.
-      elimtype False; lia.
-      elimtype False; lia.
+      subst n0; elimtype False; abstract lia.
+      elimtype False; abstract lia.
+      elimtype False; abstract lia.
       intro; now red.
       intro H.
       rewrite compare_rev, H.
@@ -642,7 +642,7 @@ Theorem lt_irrefl alpha :  ~ lt alpha  alpha.
 Proof. 
  induction alpha.
  -  red;inversion_clear 1.
- -  intro H; case (lt_inv_strong  H); intuition. lia.
+ -  intro H; case (lt_inv_strong  H); intuition. abstract lia.
 Qed.
 
 
@@ -2869,9 +2869,9 @@ Proof.
     +  simpl; rewrite compare_refl.
        destruct (Compare_dec.lt_eq_lt_dec n1 n1).
        * destruct s.
-         --  lia.
+         --  abstract lia.
          --  rewrite compare_refl;  f_equal;  ring.
-       *  lia.
+       *  abstract lia.
 Qed.
 
 
@@ -2947,7 +2947,7 @@ Lemma plus_smono_r (alpha:T1) :
     +  destruct (lt_irrefl H).
     + clear H. 
       case_eq (compare alpha1 gamma1); intro H0.
-      apply coeff_lt; lia.
+      apply coeff_lt; abstract lia.
       * apply head_lt; now rewrite <- lt_iff.
       * apply tail_lt.
         rewrite <- (plus_a_zero alpha2) at 1;  apply IHalpha2.
@@ -2968,7 +2968,7 @@ Lemma plus_smono_r (alpha:T1) :
       apply compare_Eq_impl in H2.
       subst.
       apply coeff_lt.
-      lia.
+      abstract lia.
       apply head_lt.
       rewrite <- lt_iff; auto.
       apply tail_lt.
@@ -2979,7 +2979,7 @@ Lemma plus_smono_r (alpha:T1) :
       subst.
       case_eq (compare alpha1 gamma1).
       intro.
-      apply coeff_lt; lia.
+      apply coeff_lt; abstract lia.
       intro; apply coeff_lt; auto.
       intro; apply tail_lt; apply IHalpha2.
       apply coeff_lt; auto.
@@ -3058,7 +3058,7 @@ Section Proof_of_nf_mult.
         +  destruct H0 as [p0 [H2 H3]]; subst; simpl.
            apply LT3; eauto with T1.
            apply Plus.plus_lt_le_compat; auto.
-           apply PeanoNat.Nat.mul_le_mono_l; lia.
+           apply PeanoNat.Nat.mul_le_mono_l; abstract lia.
     Qed. 
 
 
@@ -3078,7 +3078,7 @@ Section Proof_of_nf_mult.
            assert (p0 + n * S p0 < p + n * S p)%nat.
            { 
              apply Plus.plus_lt_le_compat; auto.
-             apply PeanoNat.Nat.mul_le_mono_l;  lia.
+             apply PeanoNat.Nat.mul_le_mono_l;  abstract lia.
            }
            destruct a.
            * apply LT3;auto.
@@ -3802,7 +3802,7 @@ Lemma lt_one (alpha:T1) : lt alpha one -> alpha = zero.
   -  intro H;  destruct (lt_inv H) as [H0 | H0].
      +     destruct (not_lt_zero H0).
      +   destruct H0 as [[_ H1] | [_  [_ H1]]].
-         *   lia.
+         *   abstract lia.
          *   destruct (not_lt_zero H1).
 Qed.
 

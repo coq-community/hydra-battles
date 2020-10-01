@@ -2214,7 +2214,7 @@ Proof.
 induction 1.
  - subst j; replace (S i - i)%nat  with 1.
     +  subst; reflexivity.
-    + lia.
+    + abstract lia.
  -   subst beta; assert (i < j)%nat.
         { eapply standard_path_LE; apply H. }
         assert (H1 : (S j - i = S ( j -  i))%nat) by   lia.
@@ -2234,7 +2234,7 @@ Proof.
  -  right;  specialize (IHl (S i) (canon alpha i)); simpl standard_gnaw in *.
     replace ((S l) +i )%nat with (l + S i)%nat.
     + apply IHl; auto. 
-+  lia.
++  abstract lia.
 Qed.
 
 Lemma path_to_S_iota_from :
@@ -2254,7 +2254,7 @@ Proof.
   -    right; replace (S l + i)%nat with (l + S i)%nat. 
        + apply IHl; inversion H;  subst.
          destruct H2; now subst.
-       + lia.
+       + abstract lia.
 Qed.
 
 Lemma path_to_S_standard_pathS :
@@ -2291,11 +2291,11 @@ Lemma path_to_standard_equiv i j alpha beta :
       rewrite <- path_toS_standardS_equiv.
       * rewrite <- shift_interval in H1.
         now rewrite path_toS_path_to.
-      * lia.
+      * abstract lia.
   +   rewrite <- shift_interval, <- path_toS_path_to;
        apply standard_path_unshift in H1.
       rewrite path_toS_standardS_equiv; auto.
-      lia.
+      abstract lia.
  Qed.
  
 Lemma standard_pathS_app i alpha j beta k gamma :
@@ -2310,7 +2310,7 @@ Proof.
         unfold interval in H3; replace k with (( k - i) + i)%nat.
         apply  path_to_S_iota_from; auto.   
        --   replace (S (k - i))%nat with (S k - i)%nat; [auto | lia].
-       --  lia.
+       --  abstract lia.
      * eapply standard_pathRS_le_inv;eauto.
 Qed.
 
@@ -2399,7 +2399,7 @@ Proof.
              ++ apply Cor12_1 with i; auto. 
                 ** apply canonS_LT;auto.
                 intro; subst; auto with T1.
-                ** apply standard_pathR_le_inv in H;  lia.
+                ** apply standard_pathR_le_inv in H;  abstract lia.
                 ** left; split.
                    intro; subst; auto with T1.
                    reflexivity.
@@ -2597,7 +2597,7 @@ Section Constant_to_standard_Proof.
         * discriminate.
         * unfold gamma in Hg;  intro H0;
             apply standard_gnaw_S_zero in H0; contradiction.
-      + lia.
+      + abstract lia.
   Qed.
   
   Remark R14 : l = 0 -> gamma = alpha.
@@ -2622,7 +2622,7 @@ Section Constant_to_standard_Proof.
 
   Lemma m_def : (0 < l)%nat -> (n + l = S m)%nat.
   Proof.
-    unfold m; lia.
+    unfold m; abstract lia.
   Qed.
 
   Remark R16 : (0 < l)%nat  -> const_path (n + l) alpha beta.
@@ -2630,7 +2630,7 @@ Section Constant_to_standard_Proof.
     intro H; rewrite m_def;auto.
     -  apply Cor12_1 with n;auto.
        +  apply const_pathS_LT with n; auto.
-       +  unfold m; lia.
+       +  unfold m; abstract lia.
   Qed.
 
    Remark R17 : (0 < l)%nat -> const_pathS (n+l) alpha beta.
@@ -2638,7 +2638,7 @@ Section Constant_to_standard_Proof.
     intro H;  generalize (R16 H); intro H0.
     case_eq  (n + l)%nat.
     -   intro H1;  elimtype False. 
-        lia.
+        abstract lia.
     -  intros n0 H1; rewrite H1 in *; apply Cor12_1 with n0;auto.
        apply Rem0.
   Qed. 
@@ -2646,7 +2646,7 @@ Section Constant_to_standard_Proof.
   Remark R18 : gamma <> zero -> (0 < l)%nat -> const_pathS (n+l) alpha gamma.
   Proof.
     intros Hg H; generalize (R15 Hg H); case_eq  (n + l)%nat.
-    -  intro;  elimtype False; lia.
+    -  intro;  elimtype False; abstract lia.
     -  intros n0 H1 H2;  apply Cor12_1 with n0;auto.
        apply const_pathS_LT with n0;auto;  apply Rem02.
   Qed.

@@ -64,13 +64,13 @@ Section Battle_length.
   Qed.
 
   Remark R6 : S (Nat.pred (Nat.pred l)) = (l-1)%nat.
-  Proof.  generalize R0; lia. Qed.
+  Proof.  generalize R0; abstract lia. Qed.
 
   Lemma L06:  battle standard k (iota (cnf alpha)) (l-1)%nat
                       (iota zero).
   Proof.
     rewrite <- R6; apply trace_to_std.
-    generalize R0; lia.
+    generalize R0; abstract lia.
     apply R5.    
   Qed.
       
@@ -79,7 +79,7 @@ Section Battle_length.
   Proof.
     red; generalize L06.
     replace (l-1)%nat with (Init.Nat.pred (k + (l - k )))%nat; auto.
-    generalize R0; lia.
+    generalize R0; abstract lia.
   Qed.
 
  

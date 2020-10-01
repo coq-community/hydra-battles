@@ -690,7 +690,7 @@ Proof.
     {
       tricho  alpha (omega_tower j) H2.
       -   specialize (H1 _ H2);  elimtype False.
-          destruct H1; lia.
+          destruct H1; abstract lia.
       -   left; auto.
       -   right;auto.
     }

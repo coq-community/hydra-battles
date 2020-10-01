@@ -33,7 +33,7 @@ Qed.
 Lemma double_inj :
   forall (m n : nat), double m = double n -> m = n.
 Proof.
-  intros m n double_eq; unfold double in double_eq;  lia.
+  intros m n double_eq; unfold double in double_eq;  abstract lia.
 Qed.
 
 Lemma double_is_even :
@@ -61,7 +61,7 @@ Proof.
   -   intro Hev; now apply even_mult_r.
   -   intro Hod; apply even_mult_l; replace (p + q + 1) with (S (p + q)).
       + now apply even_S.
-      +  lia.
+      +  abstract lia.
 Qed.
 
 Lemma plus_2 :
@@ -117,7 +117,7 @@ Qed.
 Lemma minus_semi_assoc :
   forall a b c, b > c -> a + (b - c) = (a + b) - c.
 Proof.
-  intros a b c;  lia.
+  intros a b c;  abstract lia.
 Qed.
 
 Lemma div_not_qlt :
@@ -130,7 +130,7 @@ Proof.
    -  apply le_trans with (r - r').
    +   rewrite <- mult_1_l with b.
        replace (r - r') with ((q' - q) * b).
-       * apply mult_le_compat_r; lia.
+       * apply mult_le_compat_r; abstract lia.
        *   transitivity (q' * b - q * b).
          {  apply mult_minus_distr_r. }
             apply plus_minus.

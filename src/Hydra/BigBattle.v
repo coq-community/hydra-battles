@@ -437,17 +437,17 @@ Qed.
 
 Lemma minoration_0 : forall n,  2 * n <= doubleS n.
 Proof.
-  unfold doubleS;intros; lia.
+  unfold doubleS;intros; abstract lia.
 Qed.
 
 Lemma minoration_1 : forall n x, exp2 n * x <= iterate doubleS n x.
 Proof.
   induction n; simpl.
-  -  intro;  lia.
+  -  intro;  abstract lia.
   -  intros; unfold doubleS;  rewrite exp2S.
      transitivity (2 * iterate doubleS n x).
     +  rewrite <- mult_assoc; apply   mult_le_compat_l; auto.   
-    +  unfold doubleS; lia.
+    +  unfold doubleS; abstract lia.
 Qed.
 
 
@@ -462,7 +462,7 @@ Lemma exp2_mono1 : forall n p,  n <= p ->  exp2 n  <= exp2 p .
 Proof.
   induction 1.
   - reflexivity.   
-  -  rewrite exp2S;  lia.
+  -  rewrite exp2S;  abstract lia.
 Qed.
 
 Lemma minoration : exp2 (exp2 95 * 95) <= N.

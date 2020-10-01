@@ -68,14 +68,14 @@ Proof.
   - simpl Fin; intro; now rewrite L_zero_eqn.
   - simpl; rewrite FinS_Succ_eq; intro k; autorewrite with E0_rw L_rw.
     rewrite IHi.
-   + lia.
+   + abstract lia.
 Qed.
 
 Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
 Proof.
   intro k; rewrite L_lim_eqn.
   - replace (Canon  omega%e0 k) with (Fin k).
-    + rewrite L_finite; lia.
+    + rewrite L_finite; abstract lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.
        destruct k;  reflexivity.
@@ -179,7 +179,7 @@ Proof with auto with E0.
   pattern alpha ; apply well_founded_induction with Lt ...
   clear alpha; intros alpha IHalpha i.
   destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
-  - subst; rewrite H_zero_eqn, L_zero_eqn; lia.
+  - subst; rewrite H_zero_eqn, L_zero_eqn; abstract lia.
   - rewrite H_lim_eqn, L_lim_eqn ...
     apply Nat.lt_le_incl;
       apply Nat.lt_le_trans with (H_ (Canon alpha (S i)) (S i)).

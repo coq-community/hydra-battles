@@ -57,17 +57,17 @@ Section Hypos.
     intros.
     exists (p - S n0).
     repeat split.
-    lia.
-    lia.
+    abstract lia.
+    abstract lia.
     auto.
     replace (S (p - S n0)) with (p - n0);auto.
-    lia.
+    abstract lia.
   Defined.
 
   Let delta := p - n.
 
   Remark R1 : 0 < delta /\ delta <= p - n.
-  Proof.   unfold delta.  clear search_toggle; lia.  Qed.
+  Proof.   unfold delta.  clear search_toggle; abstract lia.  Qed.
 
   Remark R2 :  forall i, n <= i -> i <= p - delta -> P i = true.
   Proof.

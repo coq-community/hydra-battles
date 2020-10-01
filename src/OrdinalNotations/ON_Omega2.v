@@ -119,7 +119,7 @@ Qed.
 
 Lemma lt_succ alpha : alpha o< succ alpha.
 Proof.
-  destruct alpha; right; cbn; lia.
+  destruct alpha; right; cbn; abstract lia.
 Qed.
 
 
@@ -187,8 +187,8 @@ Proof.
   destruct alpha as [i j]; destruct i.
   - destruct j.
     + right.
-    + left;  right; lia.  
-  - left; left; lia.
+    + left;  right; abstract lia.  
+  - left; left; abstract lia.
 Qed.
 
 
@@ -198,10 +198,10 @@ Proof.
   destruct alpha as [i j]; destruct i.
   - destruct j; [ reflexivity| ].
     intro H; specialize (H (0,j)); exfalso.
-    inversion H. inversion H0; lia.
-    lia.
+    inversion H. inversion H0; abstract lia.
+    abstract lia.
   -  intro H; specialize (H (0,0)); exfalso.
-     inversion H. inversion H0; lia.
+     inversion H. inversion H0; abstract lia.
   - intro; subst; intro; apply zero_le.
 Qed.
 
@@ -219,7 +219,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
                ** exists (n0, S n1); split.
                  right; auto with arith.
                  left; auto.
-               ** lia.
+               ** abstract lia.
       * right; exists (n,p); split.
         -- constructor 2; auto with arith.
         -- destruct z; unfold lt; cbn.
@@ -260,7 +260,7 @@ Proof.
   destruct alpha;red;cbn; split.
   - right; auto.
   -  destruct z  as [n1 n2]; unfold succ; cbn; intros H H0;
-     inversion H0;   subst;  inversion H;  subst; lia.
+     inversion H0;   subst;  inversion H;  subst; abstract lia.
 Qed.
 
 Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
@@ -290,7 +290,7 @@ Proof.
    destruct n0.
    - destruct n.
     +   specialize (H 0).
-       inversion H; lia.
+       inversion H; abstract lia.
     + now  cbn.
    -   destruct (H0 (n, n0)).
     + right; auto with arith. 
@@ -325,7 +325,7 @@ Proof.
      destruct H0.
      + subst;  right; auto.
      + left; auto.
-     + lia.    
+     + abstract lia.    
 Qed.
 
  Example Ex1 : limitb omega.
@@ -351,7 +351,7 @@ Proof.
      transitivity (i,x); auto.
   -    inversion_clear H.
     + inversion_clear H0.
-   *    intro.  left.  lia.
+   *    intro.  left.  abstract lia.
    *    left; left; auto. 
      + left;left;auto. 
 Qed.
@@ -403,7 +403,7 @@ Proof.
 Qed. 
 
 
-(** multiplication of an ordinal and a natural number *)
+(** multiplication of an ordinal by a natural number *)
 
 Definition mult_fin  (alpha : t) (p : nat): t :=
   match alpha, p with
@@ -414,7 +414,7 @@ Definition mult_fin  (alpha : t) (p : nat): t :=
                end.
 Infix "*" := mult_fin : o2_scope.
 
-(** multiplication of  a natural number and an ordinal *)
+(** multiplication of  a natural number by an ordinal *)
 
 Definition fin_mult (n:nat)(beta : t) : t :=
   match n, beta with
@@ -435,7 +435,7 @@ Proof. reflexivity. Qed.
 Lemma plus_assoc alpha beta gamma :
   alpha + (beta + gamma) = alpha + beta + gamma.
   destruct alpha, beta, gamma.
-  destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; lia.
+  destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; abstract lia.
 Qed.
 
 
@@ -443,7 +443,7 @@ Lemma succ_is_plus_1  alpha : alpha + 1 = succ alpha.
 Proof.
  unfold succ ;
 simpl; 
- destruct alpha; cbn; destruct n, n0; try f_equal; lia.
+ destruct alpha; cbn; destruct n, n0; try f_equal; abstract lia.
 Qed.
 
 Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
@@ -486,8 +486,8 @@ Proof.
  -  inversion H0; subst.
   +  inversion H2; inversion H3; subst; try lia.
      *  unfold plus; destruct n0; left; auto with arith.
-     +  lia.
- - lia.
+     +  abstract lia.
+ - abstract lia.
 Qed.
 
 
@@ -503,7 +503,7 @@ Proof.
     +  right; specialize (H1 (S n,0) (S n,0)).
        assert (H2:(S n, 0) o< (S (S n), 0)) by (left; auto).
        specialize (H1 H2 H2).
-       inversion H1; lia.
+       inversion H1; abstract lia.
   -  intro H;  destruct Hsucc as [beta e]; subst.
      destruct H as [_ H].
       destruct (eq_dec beta zero).
@@ -512,11 +512,11 @@ Proof.
           assert (1 o< succ beta). {
             destruct beta;  destruct n0, n1.
             * now destruct n.
-            * right; cbn; lia.
+            * right; cbn; abstract lia.
             * destruct n0; cbn.
               left; auto.
-              left; simpl;lia.
-            * left; simpl; lia.
+              left; simpl;abstract lia.
+            * left; simpl; abstract lia.
           }
           *  specialize (H H0).
              rewrite <- succ_is_plus_1 in H.       
@@ -571,8 +571,8 @@ Section Merge.
       else y :: merge  ltb ((x :: xs), ys)
     end.
   
-  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
-  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
+  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
   - auto.
   Defined.
 
