@@ -143,7 +143,11 @@ Fixpoint nfize (alpha:t) :=
   | _ => alpha
   end.
 
-Fact nf_nfized : forall (alpha:t), (nf (nfize alpha)).
+Lemma nfize_0 : forall (alpha:t), (nfize (0::alpha)) = (nfize alpha).
+Proof. auto. Qed.
+
+(** [nfize] computes a normal form *)
+Lemma nf_nfized : forall (alpha:t), (nf (nfize alpha)).
 Proof.
   induction alpha.
   - auto.
@@ -151,6 +155,9 @@ Proof.
 Qed.
 
 (** ** Limit and successor *)
+
+(** A 'successor' is a list either empty
+    or which last element is not 0 *)
 
 (** [raw_succb] is correct when (nf alpha) *)
 Fixpoint raw_succb (alpha:t) :=
@@ -161,25 +168,19 @@ Fixpoint raw_succb (alpha:t) :=
   | _ :: alpha => raw_succb alpha
   end.
 
-Lemma raw_succb_cons_cons : forall (a1 a2:nat) (alpha:t),
-    (raw_succb (a1::a2::alpha)) = (raw_succb (a2::alpha)).
+Lemma raw_succb_len : forall (n:nat) (alpha:t),
+    (length alpha) > 0 -> (raw_succb (n::alpha)) = (raw_succb alpha).
 Proof.
-  intros. destruct a1; auto.
+  destruct alpha.
+  - intro. unfold gt in H. simpl in H. lia.
+  - intro. simpl. destruct n; auto.
 Qed.
    
+(** [(succb alpha)] is [true] iif [alpha] is a 'successor' *)
 Definition succb (alpha:t) := raw_succb (nfize alpha).
 
-Lemma succb_succb : forall (a:nat) (alpha:t),
-    (succb (a::alpha)) = (succb alpha).
-Proof.
-  destruct a.
-  - unfold succb. trivial.
-  - unfold succb. simpl nfize. simpl.
-    induction alpha.
-    * trivial.
-    * 
-    
-    Definition limitb (alpha:t) := negb (succb alpha).
+(** a 'limit' ordinal is an ordinal which is not a 'successor' *)
+Definition limitb (alpha:t) := negb (succb alpha).
 
 Compute (succb zero).
 Compute (limitb zero).
@@ -214,11 +215,54 @@ Fixpoint succ (alpha: t) :=
 Compute succ (succ omega).
 Compute succ (3::4::0::0::1::0::nil).
 
-(* TODO  
-Lemma succ_correct : forall (alpha:t), succb (succ alpha).
- *)
+Lemma succ_len : forall (alpha:t), (length (succ alpha)) > 0.
+Proof.
+  destruct alpha.
+  - simpl. lia.
+  - generalize n. induction alpha.
+    + simpl. lia.
+    + intro. apply gt_trans with (m:=length (succ (a :: alpha))).
+      * simpl. lia.    
+      * auto.
+Qed.
 
- (* Hyp: (nf alpha) et (nf beta) *)
+Lemma succ_cons : forall (n m:nat) (alpha:t),
+    (succ (n::m::alpha)) = n::(succ (m::alpha)).
+Proof. auto. Qed.
+  
+Lemma succ_raw : forall (alpha:t), raw_succb (succ alpha).
+Proof.
+  destruct alpha.
+  - auto.
+  - generalize n. induction alpha.
+    + auto.
+    + intro. rewrite succ_cons. rewrite raw_succb_len.
+      * auto.
+      * apply succ_len.      
+Qed.
+
+Lemma succ_nfize : forall (alpha:t), (nfize (succ alpha)) = (succ (nfize alpha)).
+Proof.
+  destruct alpha.
+  - auto.
+  - generalize n. induction alpha.
+    + destruct n0; auto.
+    + destruct n0.
+      * rewrite succ_cons. rewrite nfize_0.
+        rewrite nfize_0. auto.
+      * auto.
+Qed.
+
+(** [succ] computes the 'successor' of its argument 
+    whatever it is in normal form or not *)
+Lemma succ_correct : forall (alpha:t), succb (succ alpha).
+Proof.
+  intro. unfold succb. rewrite succ_nfize. apply succ_raw.
+Qed.
+
+(** ** Addition *)
+
+(* [raw_plus] is correct when [(nf alpha)] and [(nf beta)] *)
 Fixpoint raw_plus (alpha:t) (beta:t) :=
   match alpha with
     nil => beta
@@ -333,7 +377,9 @@ Proof.
   intros. unfold plus. apply raw_plus_nf; apply nf_nfized.
 Qed.
 
-(* Hyp: (nf alpha) (nf beta) *)
+(** ** Multiplication *)
+
+(* [raw_mult] is correct when [(nf alpha)] and [(nf beta)] *)
 Fixpoint raw_mult (alpha:t) (beta:t) : t :=
   match alpha with
     nil => nil
@@ -381,7 +427,7 @@ Proof.
       * simpl. lia.
 Qed.
 
-(* En attendant... *)
+(* Helping lemma *)
 Lemma dummy : forall (xs ys:list nat) (n:nat),
     (length xs + length (n::ys)) = S (length xs + length ys).
 Proof. simpl. lia. Qed.
