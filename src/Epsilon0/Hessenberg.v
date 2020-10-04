@@ -25,8 +25,9 @@ Fixpoint oplus (alpha beta : T1) : T1 :=
 
 Infix "o+" := oplus  (at level 50, left associativity).
 
+
 (*
-Fail Functional Scheme oplus_ind := Induction for oplus Sort Prop.
+Functional Scheme oplus_ind := Induction for oplus Sort Prop.
 *)
 
 
@@ -970,4 +971,5 @@ Proof.
    rewrite oplus_alpha_0; cbn.
    all: intros;  apply head_lt; eauto with T1.
 Qed.
+
 

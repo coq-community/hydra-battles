@@ -2207,11 +2207,20 @@ Proof.
          case (compare  (ocons c3 n2 c4) (ocons c n1 c0));discriminate 1.
 Qed.
 
-Lemma plus_not_strict_mono_l :
-  exists a b c:T1, nf a /\ nf b /\ nf c /\ lt a  b /\ a + c = b + c.
+
+Lemma plus_not_monotonous_l : exists alpha beta gamma : T1,
+    alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
-  exists  (FS 0), (FS 1), omega;   cbn;  repeat split; auto with T1.
-Qed. 
+  exists 3, 5, omega;  now  compute.
+Qed.
+
+
+Lemma mult_not_monotonous :  exists alpha beta gamma : T1,
+      alpha t1< beta /\ alpha * gamma = beta * gamma.
+Proof.
+  exists 3, 5, omega; now compute.
+Qed.
+
 
 (** ** monotonicity of [succ]  *)
 
@@ -2484,7 +2493,7 @@ Qed.
 
 
 Lemma phi0_mono_strict : forall a b, lt a  b -> lt (phi0 a) (phi0 b).
-Proof.  (* unfold phi0; *) auto with T1.  Qed.
+Proof.  auto with T1.  Qed.
 
 
 Lemma phi0_mono_strict_LT : forall alpha beta, alpha t1< beta ->

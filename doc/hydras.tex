@@ -4296,6 +4296,8 @@ For instance the ordinal of Fig \ref{fig:cnf-example} is strictly less
 than the structurally simpler \(\omega^{\omega^\omega}\times 2\).
 
 \subsubsection{A predicate for characterizing normal forms}
+\label{sect:t1-nf}
+
 \label{sec:orgheadline74}
 \label{sec:orgheadline75}
 Our data-type \texttt{T1} allows us to write expressions that
@@ -4398,9 +4400,8 @@ Lemma LT_one : forall alpha, alpha t1< one -> alpha = zero.
   
 \subsubsection{A sigma type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-The type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. Moreover,
-in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
-and \ref{sect:wainer}, we needed to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
+As we noticed in Sect.~\ref{sect:t1-nf}, the type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In certain contexts (for instance in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
+and \ref{sect:wainer}),  we need to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
  In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
  
 
@@ -4460,7 +4461,7 @@ In earlier versions of this development, the predicate \texttt{nf} was defined  
 \item Please give such a definition, in a dedicated module.
 \item Prove the logical equivalence between your definition and ours.
 \item Define a variant of the type \texttt{E0} (with your definition of \texttt{nf}).
-\item Can you still prove a lemma like \texttt{E0\_eq\_iff} ? With the help of an axiom of the standard library ?
+\item Can you still prove a lemma like \texttt{E0\_eq\_iff} ? With the help of an axiom from some module of the standard library ?
 \end{enumerate}
 \end{exercise}
 For upgrading constants and fonctions of \texttt{T1}, we have to prove that 
@@ -4642,7 +4643,7 @@ Proof. now compute. Qed.
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Lemma plus_not_monotonous : exists alpha beta gamma : T1,
+Lemma plus_not_monotonous_l : exists alpha beta gamma : T1,
     alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
   exists 3, 5, omega;  now  compute.
@@ -4659,8 +4660,7 @@ Qed.
 \subsection{Pretty printing Ordinals in Cantor normal Form}
 
 Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
-
-If we ask \coq{} to print the normal form of \texttt{alpha\_0}, we get a hardly readable term of type \texttt{T1}.
+If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
 
 \begin{Coqsrc}
 Compute alpha_0.
@@ -4671,7 +4671,7 @@ Compute alpha_0.
      : T1
 \end{Coqanswer}
 
-The following data type defines a abstract syntax fore more readable ordinals in Cantor normal form:
+The following data type defines a abstract syntax for more readable ordinals in Cantor normal form:
 
 \label{types:ppT1}
 \index{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
@@ -4744,13 +4744,12 @@ $i+\alpha=\alpha$.
 \subsection{About  well-foundedness}
 \label{sec:orgheadline82}
    In order to use \texttt{T1} for proving termination results,
-we need to prove that  our representation of ordinals strictly less than \(\epsilon_0\)
-makes our order \texttt{<} well-founded. Then we will get \emph{transfinite induction} for free.
+we need to prove that  our order \texttt{<} is well-founded. Then we will get \emph{transfinite induction} for free.
 
 
 The proof of well-foundedness of the strict order $<$ on Cantor normal forms is already 
-available in the Cantor contribution by Castéran and Contéjean~\cite{CantorContrib}. That proof relies on a library on recursive path orderings written by
-E. Contéjean. We present also a direct proof of the same result, which does not require any knowledge on r.p.o.s.
+available in the Cantor contribution by Castéran and Contejean~\cite{CantorContrib}. That proof relies on a library on recursive path orderings written by
+E. Contejean. We present here  a direct proof of the same result, which does not require any knowledge on r.p.o.s.
 
 \index{Exercises}
 
@@ -4838,7 +4837,7 @@ Section First_attempt.
   Abort.
 \end{Coqbad}
 
-The problem comes from that \(\delta\) may be bigger that \(\beta\) or
+The problem comes from the hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
 \(\gamma\);
 for instance \(\delta\) may be of the form
 \texttt{ocons $\beta'$ $p'$  $\gamma'$},
@@ -4859,7 +4858,7 @@ term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a st
 
 The following lemma is an application of the strict inequality 
 \showmath{\alpha < \omega ^\alpha}. If \showmath{\omega^\alpha} is accessible,
-then \showmath{\alpha} is \emph{a fortori} accessible.
+then \showmath{\alpha} is \emph{a fortiori} accessible.
 
 \begin{Coqsrc}
  Lemma Acc_strong_stronger : forall alpha, 
@@ -4882,8 +4881,9 @@ is strongly accessible.
 \paragraph{A helper}
 \label{sec:orgheadline79}
 
-First, we prove that, for  any \texttt{LT}-accessible term \showmath{\alpha}, any well formed
-term (\texttt{ocons $\alpha$ $n$ $\beta$})  is accessible too.
+First, we prove that, for  any \texttt{LT}-accessible term \showmath{\alpha}, \showmath{\alpha} is 
+strongly accessible too (\emph{i.e.} any well formed
+term (\texttt{ocons $\alpha$ $n$ $\beta$})  is accessible).
 
 \begin{Coqsrc}
 Lemma Acc_implies_Acc_strong : 
@@ -4968,7 +4968,7 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on recu
 
 \subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-We built an instance of \texttt{ON}, and proved its correction w.r.t. Schutte's model.
+We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
 
 \begin{Coqsrc}
 Instance Epsilon0 : ON Lt compare.  
@@ -5097,15 +5097,15 @@ Thus, \texttt{oplus}'s definition is accepted by \coq{} as a structurally recurs
 \subsubsection{Rewriting lemmas}
 \label{sec:orgheadline86}
 
-\emph{Coq}'s constraints on recursive definitions resulted in 
+\emph{Coq}'s constraints on recursive definitions result in 
 the quite  complex form of \texttt{oplus}'s definition.
-For making easier proof of properties of this function, 
-it is helpful to \emph{derive} lemmas that will help to simplify 
+Proofs of properties of this function can be simpler if we
+ \emph{derive} rewriting lemmas that will help to simplify 
 expressions of the form (\texttt{oplus $a$ $ b$}).
 
 A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
 definition. They can be proved almost immediately, using \texttt{cbn} 
-and \texttt{rewrite} tactics.
+and \texttt{reflexivity} tactics.
 
 
 
@@ -5268,7 +5268,7 @@ strictly less than $\textrm{max}(\alpha,\beta)+1$.
   Proof with eauto with T1.
     intros alpha beta Halpha Hbeta;
     apply oplus_comm_0 with (succ (max alpha beta)) ...  
-  (* rest of proof omitted *)
+  (* ... *)
 \end{Coqsrc}
 
 The associativity of Hessenberg's sum is proved the same way.
@@ -5285,7 +5285,7 @@ The associativity of Hessenberg's sum is proved the same way.
   Proof with eauto with T1.
     intros alpha Halpha.
     transfinite_induction alpha.
-(* rest of proof omitted *) 
+    (* ... *)
 \end{Coqsrc}
 
 
@@ -5297,7 +5297,7 @@ The associativity of Hessenberg's sum is proved the same way.
  Proof with eauto with T1.
     intros;
     apply oplus_assoc_0 with (succ (max alpha (max beta gamma))) ...
-(* rest of proof omitted *)   
+    (* ... *)   
 \end{Coqsrc}
 
 
@@ -5318,7 +5318,7 @@ Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
 
 
 \subsection{A measure for hydra-battle termination}
-\label{sec:orgheadline90}
+
 \label{sec:hydra-measure}
 
 Let us define a measure from type \texttt{Hydra} into \texttt{T1}.
@@ -5386,6 +5386,8 @@ Qed.
 
 Finally, we prove the termination of all (free) battles.
 
+\label{thm:every-battle-terminates}
+
 \begin{Coqsrc}
 Global Instance HVariant : Hvariant lt_wf free var.
 Proof.
@@ -5437,14 +5439,14 @@ type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$)
 \section{Introduction}
 The reader may think that our proof of termination in the previous  chapter requires a lot of mathematical tools and may be too  complex. So, the question is ``is there  any  simpler proof'' ?
 
-In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into some segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapter.
+In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into a given initial  segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapter.
 
 \begin{itemize}
 \item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2)$ (section ~\vref{omega2-case}), and a fortiori 
-$[0,\omega)$
+$[0,\omega)$ (section ~\vref{omega-case}).
 
-\item There is a variant that maps the type \texttt{Hydra} into the
-interval $[0,\epsilon_0)$ (theorem \texttt{every\_battle\_terminates}, in section~\vref{hydra-variant}).
+\item There exists a variant which maps the type \texttt{Hydra} into the
+interval $[0,\epsilon_0)$ (theorem \texttt{every\_battle\_terminates}, in section~\vref{thm:every-battle-terminates}).
 \end{itemize}
 
 
@@ -5478,7 +5480,7 @@ We invite the reader to compare the three proofs step by step, lemma by lemma.
 \label{ketonen-solovay-sect}
 \index{Maths!Canonical sequences}
 
-Canonical sequences are functions that associate an ordinal $\canonseq{\alpha}{i}$ to every ordinal $\alpha<\epsilon_0$ and positive integer $i$. They satisfy nice properties :
+Canonical sequences are functions that associate an ordinal $\canonseq{\alpha}{i}$ to every ordinal $\alpha<\epsilon_0$ and positive integer $i$. They satisfy several nice properties:
 
 \index{Maths!Transfinite induction}
 \begin{itemize}
@@ -5490,7 +5492,7 @@ $\{\canonseq{\lambda}{i}\;|\,i\in\mathbb{N}_1\}$
 \item If $\beta<\alpha<\epsilon_0$, then there is a ``path'' from $\alpha$ to $\beta$, \emph{i.e.} a
 sequence $\alpha_0=\alpha, \alpha_1, \dots, \alpha_n=\beta$, where for every $k<n$, there exists some $i_k$ such that $\alpha_{k+1}=\canonseq{\alpha_k}{i_k}$
 \item Canonical sequences correspond tightly to rounds of hydra battles: if $\alpha\not=0$,
-then $\iota(\alpha)$ is transformed into $\iota(\canonseq{\alpha}{i+1}$ in one round with
+then $\iota(\alpha)$ is transformed into $\iota(\canonseq{\alpha}{i+1})$ in one round with
 the replication factor $i$ (Lemma \href{../src/html/hydras.Hydra.O2H.html\#canonS_iota_i}{Hydra.O2H.canonS\_iota\_i}).
 \item From the two previous properties, we infer that whenever $\beta<\alpha<\epsilon_0$, there exists a (free) battle from $\iota(\alpha)$ to $\iota(\beta)$.
 \end{itemize}
@@ -5499,8 +5501,7 @@ the replication factor $i$ (Lemma \href{../src/html/hydras.Hydra.O2H.html\#canon
   In~\cite{KS81}, canonical sequences are defined for any ordinal $\alpha <\epsilon_0$,
 by stating that if $\alpha$ is a successor ordinal $\beta+1$,  the sequence associated with 
 $\alpha$ is simply the constant sequence whose terms are equal to $\beta$.
-Likewise, we define the canonical sequence of $0$ as the 
-sequence all terms of which are equal to $0$.
+Likewise, the canonical sequence of $0$ maps any natural number to $0$.
 
 This convention allows us to make total the function that maps any ordinal $\alpha$ and natural number $i$ to the ordinal $\canonseq{\alpha}{i}$.
 
@@ -5514,10 +5515,6 @@ First, let us recall how canonical sequences are defined in~\cite{KS81}. For eff
 
 
 \subsubsection{Mathematical definition of canonical sequences} 
-
-
-
-
 
 In~\cite{KS81} the definition of $\canonseq{\alpha}{i}$ is based on the following remark:
 \begin{quote}
