@@ -2680,7 +2680,11 @@ Qed.
 
 
 
-(** ** Exponential *)  
+(** ** Exponential *)
+
+
+
+
 
 Lemma exp_fin_omega : forall n, FS (S n) ^ omega = omega.
 Proof.  reflexivity. Qed.
@@ -3453,6 +3457,35 @@ Proof.
 Qed.
 
 
+Lemma nf_exp_F alpha n : nf alpha -> nf (exp_F alpha n).
+Proof.
+  induction n; cbn.
+  - eauto with T1.
+  - intro; apply nf_mult; auto.
+Qed.
+
+
+Lemma exp_F_eq alpha n : nf alpha -> (exp_F alpha n = alpha ^ n)%t1.
+Proof.
+  induction n; cbn.
+  - destruct alpha.
+    + trivial.
+    + destruct alpha1.
+    * destruct n; auto.
+    * trivial.
+  -   destruct alpha.
+     intro; now rewrite mult_0_a.
+     destruct alpha1.
+     + destruct n0;auto.
+      intros; assert (alpha2 = zero).
+      { eapply nf_of_finite; eauto. }
+      subst; rewrite mult_1_a.
+       *  destruct n;cbn;auto.
+       * apply nf_exp_F.
+         auto with T1.
+     +  reflexivity.
+Qed.
+
 
 
 
@@ -4083,3 +4116,4 @@ Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
 Compute pp (3 * (omega + 5)).
 
 Compute pp (3 * (omega * 7 + 15)).
+

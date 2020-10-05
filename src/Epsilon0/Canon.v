@@ -752,3 +752,5 @@ Proof.
 Qed.
 
 Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
+
+

@@ -5456,7 +5456,7 @@ Thus, a very natural question is the following one:
 \texttt{Hydra} into some interval $[0,\mu)$, where $\mu<\epsilon_0$, for proving the termination of all hydra battles ?''
 \end{quote}
 
-We prove in \coq{} the following results:
+We prove in \coq{} the following result:
 
 \begin{quote}
 There is no variant for proving the termination of all hydra battles
@@ -5549,7 +5549,7 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 Our definition may look more complex than the mathematical one, but
 uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 \coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. For simplicity's sake, 
-we used an auxiliary function \texttt{canonS} of type \texttt{T1 -> nat  -> T1} such that
+we use an auxiliary function \texttt{canonS} of type \texttt{T1 -> nat  -> T1} such that
 (\texttt{canonS  $\alpha$ $i$}) is equal to $\canonseq{\alpha}{i+1}$.
 
 \vspace{4pt}
@@ -5579,7 +5579,7 @@ Fixpoint canonS alpha (i:nat) :=
 
 
 The following function computes $\canonseq{\alpha}{i}$, except for the case $i=0$, where it simply returns $0$\;\footnote{This restriction did not prevent us from proving all the main theorems of~\cite{KS81, KP82}. Nevertheless, in a future version of this development, we may define $\canonseq{\alpha}{0}$ exactly as 
-in~\cite{KS81}. This would  be done at the cost of making proofs much more complex.}.
+in~\cite{KS81}. But we are afraid this would  be done at the cost of making some proofs much more complex.}.
 
 \begin{Coqsrc}
  Definition canon alpha i := 
@@ -5623,7 +5623,7 @@ abstract properties  of canonical sequences that are really used in our proof. T
 
 Proving the equality $\canonseq{\alpha+1}{i}=\alpha$ is not 
 as simple as suggested by the equations of definition~\ref{def:canonseq-math}\,.
-Nevertheless, we could prove it by  structural induction on $\alpha$.
+Nevertheless, we can prove it by  plain structural induction on $\alpha$.
 
 \begin{Coqsrc}
 Lemma canonS_succ i alpha :
@@ -5637,7 +5637,7 @@ Proof.
 
 \index{Maths!Transfinite induction}
 
-First, we prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivates in function definitions by transfinite recursion.
+We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivates in function definitions by transfinite recursion.
 
 \label{lemma:canonS_LT}
 \begin{Coqsrc}
@@ -5651,7 +5651,7 @@ The following theorem states that any limit ordinal $\lambda<\epsilon_0$
 is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 
 Note the use of \coq's \texttt{sig} type in the theorem's statement, which
-relates the boolean function \texttt{is\_limit} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
+relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
 
 
 \vspace{4pt}
