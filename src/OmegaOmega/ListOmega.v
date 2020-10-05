@@ -1,9 +1,19 @@
-(** An implementation of # &omega;<sup>&omega;</sup> *)
+(** * An implementation of # &omega;<sup>&omega;</sup> *)
 
-(**    Pascal Manoury et al. *)
+(**    Pascal Manoury et al. Pierre Casteran *)
 
-(** Proof bulletization by Pierre Casteran (in progress) *)
-(** To do : translate the comments into english (and make them coqdoc compatible) *)
+(** The encoding of ordinals is based on Cantor normal forms
+    where exponents are finite ordinals (natural numbers).
+    The encoding is based on list of naturals (the exponents).
+
+    The ordinal 
+    # &omega;<sup>k</sup> . n_k + .. + &omega; . n_1 + n_0 #
+
+    is encoded by the list
+    [n_k :: .. :: n_1 :: n_0 :: nil]
+    of length k+1 *)
+
+(* To do : translate the comments into english (and make them coqdoc compatible) *)
 
 
 Require Import Arith.
@@ -15,9 +25,9 @@ Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
 
 Coercion is_true : bool >-> Sortclass.
 
-(** * Some auxiliary lemmas *)
+(** ** Some auxiliary lemmas and functions *)
 
-(** ** Arithmetic *)
+(** *** Arithmetic (Peano) *)
 
 Lemma minus_Sn_n : forall (n:nat), S n - n = 1.
 Proof. lia. Qed.
@@ -31,7 +41,7 @@ Proof.
  Qed.
 
 
-(** ** Lists and their length *)
+(** *** Lists and their length *)
 
 Lemma length_0_nil : forall w:list nat, length w = 0 -> w = nil.
 destruct w.
@@ -47,21 +57,90 @@ Proof.
  - intros; now exists p, w. 
 Qed.
 
+(** Induction on list length  *)
+Lemma list_length_ind_S :
+  forall P : list nat -> Prop,
+    P nil ->
+    (forall n : nat,
+        (forall xs : list nat, length xs < S n -> P xs) ->
+        forall xs : list nat, length xs = S n -> P xs) ->
+    forall (n : nat) (xs : list nat), length xs < S n -> P xs.
+Proof.
+  intros P P0 Plt; induction n.
+  - intros; assert (H0: xs=nil).
+    { apply length_0_nil, Nat.lt_1_r; assumption. }
+    now rewrite H0.
+  -  intros xs H;  assert ( length xs <= (S n)). {
+       destruct (lt_n_Sm_le (length xs) (S n) H); auto. }
+     destruct (le_lt_or_eq _ _ H0);eauto.
+Qed.
 
-(** * # &omega;<sup>&omega;</sup> is implemented by (list nat)
+Lemma list_length_ind :
+  forall P : list nat -> Prop,
+    P nil ->
+    (forall n : nat,
+        (forall xs : list nat, length xs < S n -> P xs) ->
+        forall xs : list nat, length xs = S n -> P xs) ->
+    forall xs : list nat, P xs.
+Proof.
+  intros; apply list_length_ind_S with (n:=(length xs)); auto with arith.
+Qed.
 
-    The encoding of ordinals is based on Cantor normal forms
-    where exponents are finite ordinals (natural numbers)
+(** List of 0's and list padding *)
+Definition zeroes (n:nat) : list nat := repeat 0 n.
 
-    # &omega;<sup>k</sup> . n_k + .. + &omega; . n_1 + n_0 #
 
-    is encoded by the list
+Definition dist (w1:list nat) (w2:list nat) :=
+  length w1 - length w2.
 
-    [n_k :: .. :: n_1 :: n_0 :: nil]
+Definition padd (w1:list nat) (w2:list nat) :=
+  zeroes (dist w2 w1) ++  w1.
 
-    of length k+1
-   
+
+Lemma padd_len_lt_cons :
+forall w1 w2 : list nat,
+  length w1 < length w2 -> exists w : list nat, padd w1 w2 = 0 :: w.
+Proof.
+  intros w1 w2 H; unfold padd, dist. 
+  destruct (minus_lt_S (length w1) (length w2) H) as [x Hx].
+  rewrite Hx; cbn;  now exists (zeroes x ++ w1). 
+Qed.
+
+
+Lemma padd_len_le_len : forall (w1 w2:list nat),
+  length w1 <= length w2 ->
+  length (padd w1 w2) = length w2.
+Proof.
+  intros w1 w2 H; unfold padd, dist, zeroes;
+    rewrite app_length, repeat_length; lia.  
+Qed.
+
+Lemma padd_cons_0 : forall (w1 w2:list nat) (a:nat),
+  length w1 = length w2 -> padd w1 (cons a w2) =  0 :: w1.
+Proof.
+  intros. unfold padd, dist; rewrite H. simpl length.
+  rewrite (minus_Sn_n (length w2)); reflexivity.  
+Qed.
+
+(** *** On accessibility *)
+(** c.f. P. Casteran: 
+      http://www.labri.fr/perso/casteran/Cantor/HTML/AccP.html#&num;#AccElim3
 *)
+
+Theorem AccElim2 :
+  forall (A B : Type) (RA : A -> A -> Prop) (RB : B -> B -> Prop)
+    (P : A -> B -> Prop),
+  (forall (x : A) (y : B),
+   (forall t : A, RA t x -> forall y' : B, Acc RB y' -> P t y') ->
+   (forall t : B, RB t y -> P x t) -> P x y) ->
+  forall (x : A) (y : B), Acc RA x -> Acc RB y -> P x y.
+Proof.
+ intros A B RA RB P H x y Ax; generalize y; clear y.
+ elim Ax; clear Ax x; intros x HAccx Hrecx y Ay.
+ elim Ay; clear Ay y; intros y HAccy Hrecy; apply H; auto.
+Qed.
+
+(** ** The type of _ordinals_ and some examples. *)
 
 Declare Scope lo_scope.
 Delimit Scope lo_scope with lo.
@@ -96,9 +175,11 @@ Lemma mon_length : forall (a n:nat),
     (length (mon a n)) = (S a).
 Proof. intros. unfold mon. simpl. rewrite repeat_length. trivial. Qed.
 
-(** * Normal form: lists with non zero head or empty list 
+(** ** Normal forms *)
 
-      The 'ordinal' [0::alpha] is equal to the 'ordinal' [alpha]
+(** As the _ordinal_ [0::alpha] is equal to the _ordinal_ [alpha],
+we set that _normal forms_ are lists with non 0-beginning
+(which includes the empty list ).
 *)
 
 Definition nf (alpha : t) : bool :=
@@ -113,6 +194,7 @@ Proof. auto. Qed.
  *)
 
 (** Some helping technical lemmas *)
+
 Lemma nf_nf_n : forall (n:nat) (xs ys:list nat), (nf (n::xs)) -> (nf (n::ys)).
 Proof. destruct n; auto. Qed.
 
@@ -147,6 +229,7 @@ Lemma nfize_0 : forall (alpha:t), (nfize (0::alpha)) = (nfize alpha).
 Proof. auto. Qed.
 
 (** [nfize] computes a normal form *)
+
 Lemma nf_nfized : forall (alpha:t), (nf (nfize alpha)).
 Proof.
   induction alpha.
@@ -156,10 +239,18 @@ Qed.
 
 (** ** Limit and successor *)
 
-(** A 'successor' is a list either empty
-    or which last element is not 0 *)
+(** A _successor ordinal_ is a list either empty
+    or a list whose last element is not 0 *)
 
-(** [raw_succb] is correct when (nf alpha) *)
+(* - *)
+(** The checking function for _successors_ is defined in two steps:
+    
+    - a «raw» function ([raw_succb]) which is correct when its argument in 
+      in normal form
+
+    - the «true» function ([succb]) which normalizes first its argument
+ *)
+
 Fixpoint raw_succb (alpha:t) :=
   match alpha with
     nil => true 
@@ -167,6 +258,16 @@ Fixpoint raw_succb (alpha:t) :=
   | S _ :: nil => true
   | _ :: alpha => raw_succb alpha
   end.
+
+(** [(succb alpha)] is [true] iff [alpha] is a _successor_ *)
+
+Definition succb (alpha:t) := raw_succb (nfize alpha).
+
+(** a _limit_ ordinal is an ordinal which is not a _successor_ *)
+
+Definition limitb (alpha:t) := negb (succb alpha).
+
+(** Some helping lemma (see proof of [succ_raw] below) *)
 
 Lemma raw_succb_len : forall (n:nat) (alpha:t),
     (length alpha) > 0 -> (raw_succb (n::alpha)) = (raw_succb alpha).
@@ -176,12 +277,8 @@ Proof.
   - intro. simpl. destruct n; auto.
 Qed.
    
-(** [(succb alpha)] is [true] iif [alpha] is a 'successor' *)
-Definition succb (alpha:t) := raw_succb (nfize alpha).
 
-(** a 'limit' ordinal is an ordinal which is not a 'successor' *)
-Definition limitb (alpha:t) := negb (succb alpha).
-
+(*
 Compute (succb zero).
 Compute (limitb zero).
 Compute (succb (fin 42)).
@@ -201,10 +298,13 @@ Compute succb (0::0::3::4::0::0::1::4::nil).
 Compute limitb (0::0::3::4::0::0::1::4::nil).
 Compute succb (0::0::3::4::0::0::1::0::nil).
 Compute limitb (0::0::3::4::0::0::1::0::nil).
+ *)
 
-(** * Ordinal arithmetics *)
+(** ** Ordinal arithmetics *)
 
-(** ** Successor function *)
+(* - *)
+
+(** *** Successor function *)
 Fixpoint succ (alpha: t) :=
   match alpha with
   | zero => 1::zero
@@ -215,6 +315,10 @@ Fixpoint succ (alpha: t) :=
 Compute succ (succ omega).
 Compute succ (3::4::0::0::1::0::nil).
 
+Lemma succ_cons : forall (n m:nat) (alpha:t),
+    (succ (n::m::alpha)) = n::(succ (m::alpha)).
+Proof. auto. Qed.
+  
 Lemma succ_len : forall (alpha:t), (length (succ alpha)) > 0.
 Proof.
   destruct alpha.
@@ -226,11 +330,7 @@ Proof.
       * auto.
 Qed.
 
-Lemma succ_cons : forall (n m:nat) (alpha:t),
-    (succ (n::m::alpha)) = n::(succ (m::alpha)).
-Proof. auto. Qed.
-  
-Lemma succ_raw : forall (alpha:t), raw_succb (succ alpha).
+Lemma raw_succb_succ : forall (alpha:t), raw_succb (succ alpha).
 Proof.
   destruct alpha.
   - auto.
@@ -253,14 +353,18 @@ Proof.
       * auto.
 Qed.
 
-(** [succ] computes the 'successor' of its argument 
-    whatever it is in normal form or not *)
+(** Correction of [succ]: computes the 'successor' of its argument 
+    whether it is in normal form or not *)
+
 Lemma succ_correct : forall (alpha:t), succb (succ alpha).
 Proof.
-  intro. unfold succb. rewrite succ_nfize. apply succ_raw.
+  intro. unfold succb. rewrite succ_nfize. apply raw_succb_succ.
 Qed.
 
-(** ** Addition *)
+(** *** Addition *)
+
+(** Here again, the _addition_ is defined in two steps:
+    a «raw» function and its usage on normalized lists. *)
 
 (* [raw_plus] is correct when [(nf alpha)] and [(nf beta)] *)
 Fixpoint raw_plus (alpha:t) (beta:t) :=
@@ -369,7 +473,9 @@ Proof.
       * auto.
     + rewrite repeat_length. assumption.
 Qed.
-      
+
+(** The «true» function *)
+
 Definition plus (alpha beta:t) := (raw_plus (nfize alpha) (nfize beta)).
 
 Lemma nf_plus : forall (alpha beta:t), nf (plus alpha beta).
@@ -379,7 +485,8 @@ Qed.
 
 (** ** Multiplication *)
 
-(* [raw_mult] is correct when [(nf alpha)] and [(nf beta)] *)
+(** Same principle: the «raw» function and then, the «true» one *)
+
 Fixpoint raw_mult (alpha:t) (beta:t) : t :=
   match alpha with
     nil => nil
@@ -450,104 +557,21 @@ Proof.
            ++ lia.
 Qed.
         
+(** The «true» function *)
+
 Definition mult (alpha beta:t) := (raw_mult (nfize alpha) (nfize beta)).
 
 Lemma nf_mult : forall (alpha beta:t), (nf (mult alpha beta)).
 Proof.
   intros. unfold mult. apply raw_mult_nf; apply nf_nfized.
 Qed.    
-       
 
-(** to do : addition, commutative addition  *)
+(* to do : addition, commutative addition  *)
   
-(* Induction on list length  *)
-Lemma list_length_ind_S :
-  forall P : t -> Prop,
-    P nil ->
-    (forall n : nat,
-        (forall xs : t, length xs < S n -> P xs) ->
-        forall xs : t, length xs = S n -> P xs) ->
-    forall (n : nat) (xs : t), length xs < S n -> P xs.
-Proof.
-  intros P P0 Plt; induction n.
-  - intros; assert (H0: xs=nil).
-    { apply length_0_nil, Nat.lt_1_r; assumption. }
-    now rewrite H0.
-  -  intros xs H;  assert ( length xs <= (S n)). {
-       destruct (lt_n_Sm_le (length xs) (S n) H); auto. }
-     destruct (le_lt_or_eq _ _ H0);eauto.
-Qed.
+(** ** List ordering **)
 
-Lemma list_length_ind :
-  forall P : t -> Prop,
-    P nil ->
-    (forall n : nat,
-        (forall xs : t, length xs < S n -> P xs) ->
-        forall xs : t, length xs = S n -> P xs) ->
-    forall xs : t, P xs.
-Proof.
-  intros; apply list_length_ind_S with (n:=(length xs)); auto with arith.
-Qed.
-
-(** list of zeroes *)
-
-Definition zeroes (n:nat) : t := repeat 0 n.
-
-
-Definition dist (w1:t) (w2:t) :=
-  length w1 - length w2.
-
-Definition padd (w1:t) (w2:t) :=
-  zeroes (dist w2 w1) ++  w1.
-
-
-Lemma padd_len_lt_cons :
-forall w1 w2 : t,
-  length w1 < length w2 -> exists w : t, padd w1 w2 = 0 :: w.
-Proof.
-  intros w1 w2 H; unfold padd, dist. 
-  destruct (minus_lt_S (length w1) (length w2) H) as [x Hx].
-  rewrite Hx; cbn;  now exists (zeroes x ++ w1). 
-Qed.
-
-
-Lemma padd_len_le_len : forall (w1 w2:t),
-  length w1 <= length w2 ->
-  length (padd w1 w2) = length w2.
-Proof.
-  intros w1 w2 H; unfold padd, dist, zeroes;
-    rewrite app_length, repeat_length; lia.  
-Qed.
-
-Lemma padd_cons_0 : forall (w1 w2:t) (a:nat),
-  length w1 = length w2 -> padd w1 (cons a w2) =  0 :: w1.
-Proof.
-  intros. unfold padd, dist; rewrite H. simpl length.
-  rewrite (minus_Sn_n (length w2)); reflexivity.  
-Qed.
-
-(**
-  On accessibility 
-  Tribute to P. Casteran: 
-      http://www.labri.fr/perso/casteran/Cantor/HTML/AccP.html#AccElim3
-*)
-Theorem AccElim2 :
-  forall (A B : Type) (RA : A -> A -> Prop) (RB : B -> B -> Prop)
-    (P : A -> B -> Prop),
-  (forall (x : A) (y : B),
-   (forall t : A, RA t x -> forall y' : B, Acc RB y' -> P t y') ->
-   (forall t : B, RB t y -> P x t) -> P x y) ->
-  forall (x : A) (y : B), Acc RA x -> Acc RB y -> P x y.
-Proof.
- intros A B RA RB P H x y Ax; generalize y; clear y.
- elim Ax; clear Ax x; intros x HAccx Hrecx y Ay.
- elim Ay; clear Ay y; intros y HAccy Hrecy; apply H; auto.
-Qed.
-
-(**
-  Order on restricted Cantor normal forms (with finite exponents)
- *)
-
+(** Let's define an order on lists that reflects the one for
+    ordinals of #&omega;<sup>&omega;</sup> in Cantor's notation **)
 
 Inductive wlt : t -> t -> Prop :=
   wlt_nil : forall (a:nat)(w:t), (wlt nil (cons (S a) w))
@@ -562,14 +586,14 @@ Inductive wlt : t -> t -> Prop :=
   (length w1 = length w2) ->  (wlt w1 w2) 
     -> (wlt (cons (S a) w1) (cons (S a) w2)).
 
+(**  Inversion lemmas *)
+
 Lemma not_wlt_nil : forall w:t,  ~ wlt w nil.
 Proof.
 induction w as [ | a w H].
  - red; inversion 1.
  - intro.  inversion H0; auto.
 Qed.
-
-(**  Inversion lemmas *)
 
 Lemma wlt_0_w_inv: forall (w1 w2:t),
   wlt (cons 0 w1) w2 -> wlt w1 w2.
@@ -592,9 +616,7 @@ Proof.
     + assumption.
 Qed.
 
-(** wlt is a strict order *)
-
-Lemma wlt_eq : forall a:nat, forall w1 w2:t,
+Lemma wlt_eq_length : forall a:nat, forall w1 w2:t,
       (length w1)=(length w2) -> (wlt (a::w1) (a::w2)) -> (wlt w1 w2).
 Proof.
   destruct a.
@@ -605,6 +627,79 @@ Proof.
     * assumption.
 Qed.
 
+Lemma not_wlt_len_left : forall (w1 w2:t) (a:nat),
+  length w2 <= length w1 -> ~ wlt (cons (S a) w1) w2.
+Proof.
+  induction w2.
+   - intros; apply not_wlt_nil.
+   - intros; destruct a.
+    + intro; absurd (wlt (cons (S a0) w1) w2).
+     * apply IHw2. 
+        apply le_trans with (m:=(length (cons 0 w2))).
+         --  auto with arith.
+         --  assumption.
+     *  apply wlt_w_0_inv; assumption.
+    + intro H0; inversion H0.
+      assert (length (S a :: w2) < length w2).
+       { apply le_lt_trans with (m := (length w1)); assumption. }
+       apply (Nat.nlt_succ_diag_l (length w2)); assumption.      
+       rewrite H4 in H; apply (Nat.nle_succ_diag_l (length w2)); assumption.
+       rewrite H4 in H; apply (Nat.nle_succ_diag_l (length w2)); assumption.
+Qed.
+
+Lemma not_wlt_Sn_0 : forall (w1 w2:t) (a:nat),
+  length w1 = length w2 ->  ~ wlt (cons (S a) w1) (cons 0 w2).
+Proof.
+  intros w1 w2 a H H0; inversion H0. 
+  apply (not_wlt_len_left w1 w2 a). 
+  - rewrite H; auto with arith.
+  -  now apply wlt_w_0_inv. 
+Qed.
+
+Lemma not_wlt_len: forall (w1 w2:t) (a:nat),
+    length w2 <= length w1  -> ~ wlt (cons (S a) w1) w2.
+Proof.
+  induction w2.
+  -  intros a _ H;  now apply (not_wlt_nil (cons (S a) w1)). 
+  -  intro a0; case a.
+   +  intros H H0; apply IHw2 with (a:=a0).
+     * apply le_trans with (m:=(length (cons 0 w2))); auto.
+        cbn; auto with arith.
+     * apply wlt_w_0_inv.
+       -- assumption.
+   +    intros n H H0; inversion H0.
+        apply (lt_irrefl (length w1)).
+        simpl in H; apply lt_trans with (m:=(length w2)); assumption.
+        rewrite H4 in H; apply (le_Sn_n (length w2)); assumption.
+        rewrite H4 in H; apply (le_Sn_n (length w2)); assumption.
+Qed. 
+
+(** [wlt] and padding *)
+
+Lemma wlt_zeroes_wlt_right : forall (n:nat) (w1 w2:t),
+  wlt w1 (zeroes n ++  w2) -> wlt w1 w2.
+Proof.
+  induction n; auto.
+  - cbn; intros; now apply IHn, wlt_w_0_inv. 
+Qed.
+
+Lemma wlt_wlt_zeroes_left : forall (n:nat) (w1 w2:t),
+    (wlt w1 w2) -> (wlt (zeroes n ++ w1) w2).
+Proof. 
+  induction n; auto.
+  intros; cbn; apply wlt_0_w; auto.
+Qed.     
+
+Lemma wlt_wlt_zeroes_right : forall (n:nat) (w1 w2:t),
+  wlt w1 w2 -> wlt w1 ((zeroes n) ++ w2).
+Proof.
+  induction n.
+  -  auto.
+  - intros; cbn;  now apply wlt_w_0, IHn. 
+Qed.
+
+(** *** [wlt] is a strict order *)
+
 Lemma wlt_irref : forall w:t, ~ wlt w w.
 Proof. 
   induction w.
@@ -614,7 +709,7 @@ Proof.
     + intros. intro. inversion H.  
       * apply lt_irrefl with (x:=length w). assumption.
       * apply lt_irrefl with (x:=n). assumption.
-      * apply IHw. apply wlt_eq with (a:=S n); assumption.
+      * apply IHw. apply wlt_eq_length with (a:=S n); assumption.
 Qed.
 
 Lemma wlt_trans : forall w1 w2 w3:t, (wlt w1 w2) -> (wlt w2 w3) -> (wlt w1 w3).
@@ -671,117 +766,20 @@ Proof.
   - unfold Irreflexive. unfold Reflexive. unfold complement. apply wlt_irref.
   - unfold Transitive. intros. apply wlt_trans with (w2:=y); assumption.
 Qed.  
+    
+(** *** [wlt] defines a well founded relation *)
 
-Lemma not_wlt_len_left : forall (w1 w2:t) (a:nat),
-  length w2 <= length w1 -> ~ wlt (cons (S a) w1) w2.
-Proof.
-  induction w2.
-   - intros; apply not_wlt_nil.
-   - intros; destruct a.
-    + intro; absurd (wlt (cons (S a0) w1) w2).
-     * apply IHw2. 
-        apply le_trans with (m:=(length (cons 0 w2))).
-         --  auto with arith.
-         --  assumption.
-     *  apply wlt_w_0_inv; assumption.
-    + intro H0; inversion H0.
-      assert (length (S a :: w2) < length w2).
-       { apply le_lt_trans with (m := (length w1)); assumption. }
-       apply (Nat.nlt_succ_diag_l (length w2)); assumption.      
-       rewrite H4 in H; apply (Nat.nle_succ_diag_l (length w2)); assumption.
-       rewrite H4 in H; apply (Nat.nle_succ_diag_l (length w2)); assumption.
-Qed.
+(** To get [wlt] well foundness, that is to say _accessibility_
+    with respect to [wlt], we proceed in the following steps:
 
-Lemma not_wlt_Sn_0 : forall (w1 w2:t) (a:nat),
-  length w1 = length w2 ->  ~ wlt (cons (S a) w1) (cons 0 w2).
-Proof.
-  intros w1 w2 a H H0; inversion H0. 
-  apply (not_wlt_len_left w1 w2 a). 
-  - rewrite H; auto with arith.
-  -  now apply wlt_w_0_inv. 
-Qed.
+    - we first define an ordering relation [wlt_pad] restricted to lists of same
+      length
 
-Lemma not_wlt_len: forall (w1 w2:t) (a:nat),
-    length w2 <= length w1  -> ~ wlt (cons (S a) w1) w2.
-Proof.
-  induction w2.
-  -  intros a _ H;  now apply (not_wlt_nil (cons (S a) w1)). 
-  -  intro a0; case a.
-   +  intros H H0; apply IHw2 with (a:=a0).
-     * apply le_trans with (m:=(length (cons 0 w2))); auto.
-        cbn; auto with arith.
-     * apply wlt_w_0_inv.
-       -- assumption.
-   +    intros n H H0; inversion H0.
-        apply (lt_irrefl (length w1)).
-        simpl in H; apply lt_trans with (m:=(length w2)); assumption.
-        rewrite H4 in H; apply (le_Sn_n (length w2)); assumption.
-        rewrite H4 in H; apply (le_Sn_n (length w2)); assumption.
-Qed. 
+    - we prove that [wlt_pad] satisfies the accessibility
 
-
-Lemma wlt_wlt_zeroes_right : forall (n:nat) (w1 w2:t),
-  wlt w1 w2 -> wlt w1 (app (zeroes n) w2).
-Proof.
-  induction n.
-  -  auto.
-  - intros; cbn;  now apply wlt_w_0, IHn. 
-Qed.
-
-
-
-
-Lemma wlt_zeroes_wlt_right : forall (n:nat) (w1 w2:t),
-  wlt w1 (zeroes n ++  w2) -> wlt w1 w2.
-Proof.
-  induction n; auto.
-  - cbn; intros; now apply IHn, wlt_w_0_inv. 
-Qed.
-
-Lemma wlt_wlt_zeroes_left : forall (n:nat) (w1 w2:t),
-    (wlt w1 w2) -> (wlt (app (repeat 0 n) w1) (w2)).
-Proof. 
-  induction n; auto.
-  intros; cbn; apply wlt_0_w; auto.
-Qed.     
-
-(* Caractérisation en fonction de la longueur:
-   si '(wlt w1 w2)' et '#w2 < #w1' alors 'w1' commence par des 0 *)
-
-Lemma wlt_gt_length : forall (w1 w2:t),
-    wlt w1 w2 -> lt (length w2) (length w1)
-    -> exists (n:nat) (w:t),
-        w1 = zeroes n ++  w /\ length w = length w2  /\ wlt w w2.
-Proof.
-  induction w1 as [| a w1 IHw1].
-  - intros; exfalso; apply (lt_n_0 (length w2)); auto.
-  - intros w2 H H0; cbn in H0.  assert (H1: length w2 <= length w1).
-    { apply lt_n_Sm_le; assumption. }
-    +  destruct a as [| a].
-       *  elim (le_lt_or_eq (length w2) (length w1) H1).
-          --  intro H2; elim IHw1 with (w2:=w2).
-              ++ intros z H3; elim H3; intros w1' H4; decompose [and] H4.
-                               exists (S z), w1'; split.
-                               subst; trivial.
-                               tauto.
-              ++  apply wlt_0_w_inv; assumption. 
-              ++  assumption.
-          -- exists 1, w1.  split.
-          ++  trivial.
-          ++   split. 
-               ** now symmetry.
-               **   now apply wlt_0_w_inv. 
-       *  exfalso;  apply (not_wlt_len w1 w2 a); assumption.
-Qed.
-
-
-(**
-   Restriction de l'ordre aux listes de même longueur.
-   (avec complémentation possible à 0): 
-   c'est l'ordre lexicographique.
-*)
-(* La relation sur les listes de même longueur *)
-
+    - we prove that accessibilty for [wlt_apd] entails the one of [wlt] *)
+    
+(** **** The restricted relation [wlt_pad] *)
 
 Inductive wlt_pad : t -> t -> Prop :=
   wlt_pad_len : forall (a:nat) (w1 w2: t),
@@ -794,7 +792,67 @@ Inductive wlt_pad : t -> t -> Prop :=
     length w1 = length w2 -> wlt_pad w1 w2 ->
      wlt_pad (a :: w1) (a :: w2).
 
-(* Relations entre l'ordre sur toute liste et l'ordre restreint. *)
+(** Accessibility for [wlt_padd] *)
+
+Lemma Acc_wlt_pad_ind : forall (n:nat),
+    (forall (w:t), length w < S n -> Acc wlt_pad w) 
+    -> forall (w: t), length w = S n -> Acc wlt_pad w.
+Proof.  
+  intros; elim (length_Sn_cons w n H0); intros a H1; elim H1;clear H1.
+  intros w' H1; rewrite H1; rewrite H1 in H0; clear H1; generalize H0. 
+  pattern a, w'; apply AccElim2 with (RA:=lt) (RB:=wlt_pad).
+  -  intros a' w'' H1 H2 H3; apply Acc_intro; intros w''' H4; inversion H4.   
+     elim (padd_len_lt_cons  w1 (cons (S a0) w'')).
+     + intros w0 H9; rewrite H9; apply H1.  
+       *  subst;  auto with arith.    
+       * apply H; assert (H10 : length (0 :: w0) < S (S n)).        
+         {  rewrite <- H9. rewrite padd_len_le_len.
+            rewrite H5.  rewrite H3; auto with arith.
+            transitivity (length w'');  auto with arith.
+         }
+         auto with arith.
+       * rewrite <- H9; rewrite padd_len_le_len. 
+         now rewrite H5. 
+         simpl;  auto with arith.
+     + simpl; auto with arith.
+     + apply H1.
+       * rewrite <- H5; auto with arith.
+       * apply H; rewrite H8; rewrite <- H3; auto with arith.
+       * simpl; rewrite H8; auto.
+     + apply H2.
+       *  assumption.
+       *  simpl; rewrite H8; auto.
+  - apply lt_wf.
+  - apply H.
+    rewrite <- H0; auto with arith.
+Qed.
+
+
+Lemma Acc_wlt_pad_nil : Acc wlt_pad nil.
+Proof. apply Acc_intro.  inversion 1. Qed.
+
+Lemma Acc_wlt_pad : forall (w:t), (Acc wlt_pad w).
+Proof.
+  induction w using list_length_ind.
+  - apply Acc_wlt_pad_nil.
+  - apply Acc_wlt_pad_ind with (n:=n); assumption.
+Qed.
+
+(** Accessibility for [wlt] *)
+
+Lemma Acc_wlt_zeroes_Acc_wlt : forall (n:nat) (w: t),
+    Acc wlt (zeroes n ++ w) -> Acc wlt w.
+Proof.  
+  intros; apply Acc_intro; intros w' H0; apply H.
+  now apply wlt_wlt_zeroes_right. 
+Qed.
+
+Lemma Acc_wlt_Acc_wlt_zeroes : forall (n:nat) (w:t),
+  Acc wlt w -> Acc wlt (zeroes n ++ w).
+Proof.
+  split. intros w' H0; apply H. 
+  now apply wlt_zeroes_wlt_right with (n:=n). 
+Qed.
 
 Lemma wlt_wlt_pad : forall (w1 w2:t),
     length w1 = length w2 -> wlt w1 w2 -> wlt_pad w1 w2.
@@ -842,74 +900,6 @@ Proof.
  - now apply wlt_wlt_zeroes_left. 
 Qed.
 
-
-(** Here Proof bulletization (Pierre) *)
-
-(**
-  Accessibilité pour l'ordre restreint.
-*)
-Lemma Acc_wlt_pad_ind : forall (n:nat),
-    (forall (w:t), length w < S n -> Acc wlt_pad w) 
-    -> forall (w: t), length w = S n -> Acc wlt_pad w.
-Proof.  
-  intros; elim (length_Sn_cons w n H0); intros a H1; elim H1;clear H1.
-  intros w' H1; rewrite H1; rewrite H1 in H0; clear H1; generalize H0. 
-  pattern a, w'; apply AccElim2 with (RA:=lt) (RB:=wlt_pad).
-  -  intros a' w'' H1 H2 H3; apply Acc_intro; intros w''' H4; inversion H4.   
-     elim (padd_len_lt_cons  w1 (cons (S a0) w'')).
-     + intros w0 H9; rewrite H9; apply H1.  
-       *  subst;  auto with arith.    
-       * apply H; assert (H10 : length (0 :: w0) < S (S n)).        
-         {  rewrite <- H9. rewrite padd_len_le_len.
-            rewrite H5.  rewrite H3; auto with arith.
-            transitivity (length w'');  auto with arith.
-         }
-         auto with arith.
-       * rewrite <- H9; rewrite padd_len_le_len. 
-         now rewrite H5. 
-         simpl;  auto with arith.
-     + simpl; auto with arith.
-     + apply H1.
-       * rewrite <- H5; auto with arith.
-       * apply H; rewrite H8; rewrite <- H3; auto with arith.
-       * simpl; rewrite H8; auto.
-     + apply H2.
-       *  assumption.
-       *  simpl; rewrite H8; auto.
-  - apply lt_wf.
-  - apply H.
-    rewrite <- H0; auto with arith.
-Qed.
-
-
-Lemma Acc_wlt_pad_nil : Acc wlt_pad nil.
-Proof. apply Acc_intro.  inversion 1. Qed.
-
-Lemma Acc_wlt_pad : forall (w:t), (Acc wlt_pad w).
-Proof.
-  induction w using list_length_ind.
-  - apply Acc_wlt_pad_nil.
-  - apply Acc_wlt_pad_ind with (n:=n); assumption.
-Qed.
-
-(**
-  De l'accessibilté pour l'ordre restreint à l'accessibilité
-  pour l'ordre sur tout liste.
-*)
-Lemma Acc_wlt_zeroes_Acc_wlt : forall (n:nat) (w: t),
-    Acc wlt (zeroes n ++ w) -> Acc wlt w.
-Proof.  
-  intros; apply Acc_intro; intros w' H0; apply H.
-  now apply wlt_wlt_zeroes_right. 
-Qed.
-
-Lemma Acc_wlt_Acc_wlt_zeroes : forall (n:nat) (w:t),
-  Acc wlt w -> Acc wlt (zeroes n ++ w).
-Proof.
-  split. intros w' H0; apply H. 
-  now apply wlt_zeroes_wlt_right with (n:=n). 
-Qed.
-
 Lemma Acc_wlt_pad_Acc_wlt : forall (w: t),
   Acc wlt_pad w -> Acc wlt w.
 Proof.
@@ -926,13 +916,71 @@ intros w'' H2. elim (Nat.lt_trichotomy (length w'') (length x)).
     apply wlt_wlt_pad in H7; auto. 
 Qed.
 
-(**
-  L'ordre sur toute liste est bien fondé !
-*)
 Theorem Acc_wlt : forall (w:t), Acc wlt w.
 Proof.
  intro; apply Acc_wlt_pad_Acc_wlt; apply Acc_wlt_pad.
 Qed.
+
+
+
+
+
+
+
+
+(* Caractérisation en fonction de la longueur:
+   si '(wlt w1 w2)' et '#w2 < #w1' alors 'w1' commence par des 0 *)
+
+Lemma wlt_gt_length : forall (w1 w2:t),
+    wlt w1 w2 -> lt (length w2) (length w1)
+    -> exists (n:nat) (w:t),
+        w1 = zeroes n ++  w /\ length w = length w2  /\ wlt w w2.
+Proof.
+  induction w1 as [| a w1 IHw1].
+  - intros; exfalso; apply (lt_n_0 (length w2)); auto.
+  - intros w2 H H0; cbn in H0.  assert (H1: length w2 <= length w1).
+    { apply lt_n_Sm_le; assumption. }
+    +  destruct a as [| a].
+       *  elim (le_lt_or_eq (length w2) (length w1) H1).
+          --  intro H2; elim IHw1 with (w2:=w2).
+              ++ intros z H3; elim H3; intros w1' H4; decompose [and] H4.
+                               exists (S z), w1'; split.
+                               subst; trivial.
+                               tauto.
+              ++  apply wlt_0_w_inv; assumption. 
+              ++  assumption.
+          -- exists 1, w1.  split.
+          ++  trivial.
+          ++   split. 
+               ** now symmetry.
+               **   now apply wlt_0_w_inv. 
+       *  exfalso;  apply (not_wlt_len w1 w2 a); assumption.
+Qed.
+
+
+(**
+   Restriction de l'ordre aux listes de même longueur.
+   (avec complémentation possible à 0): 
+   c'est l'ordre lexicographique.
+*)
+(* La relation sur les listes de même longueur *)
+
+
+
+(* Relations entre l'ordre sur toute liste et l'ordre restreint. *)
+
+
+
+(** Here Proof bulletization (Pierre) *)
+
+(**
+  Accessibilité pour l'ordre restreint.
+*)
+
+(**
+  De l'accessibilté pour l'ordre restreint à l'accessibilité
+  pour l'ordre sur tout liste.
+*)
 
 (** Compare *)
 Fixpoint compare (w1 w2 : t) : comparison :=
