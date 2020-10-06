@@ -1308,6 +1308,7 @@ Lemma rounds_height : forall h h',
 \end{exercise}
 
 \begin{remark}
+\label{remark:transitive-closure}
 \coq's library \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Coq.Relations.Relation\_Operators} 
 contains three logically equivalent definitions of the transitive closure of a binary relation. This equivalence is proved in 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Operators_Properties.html}{Coq.Relations.Operators\_Properties} . 
@@ -5614,6 +5615,15 @@ Compute pp (canon (omega ^ omega * 3) 42).
      : ppT1
 \end{Coqanswer}
 
+\index{Projects}
+\begin{project}
+Many lemmas presented in this chapter were stated and proved before the introduction of 
+the type class \texttt{ON} of ordinal notations, and in particular its  instance \texttt{Epsilon0}.
+Thus definitions and lemmas refer to the type \texttt{T1} of possibly not well-formed terms.
+This should be fixed in  a future version.
+\end{project}
+
+
 \subsection{Basic properties of canonical sequences}
 
 We did not  try to prove that our definition really implements Ketonen and Solovay's  \cite{KS81}'s canonical sequences. The most important is that we were able to prove the 
@@ -5650,9 +5660,6 @@ Lemma canonS_LT i alpha :
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
 is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 
-Note the use of \coq's \texttt{sig} type in the theorem's statement, which
-relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
-
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.Canon.html\#canonS_limit_strong}{Epsilon0.Canon}}
@@ -5673,6 +5680,12 @@ Defined.
 
 \label{lemma:canonS-limit}
 
+
+Note the use of \coq's \texttt{sig} type in the theorem's statement, which
+relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
+We can also state directly that $\lambda$ is a (strict) least upper bound of the elements of its canonical sequence.
+
+
 \begin{Coqsrc}
 Lemma canonS_limit_lub (lambda : T1) :
   nf lambda -> limitb lambda  ->
@@ -5688,20 +5701,22 @@ Instead of using the \texttt{sig} type, define a simply typed function that, giv
 
 
 
+
+
 \section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : paths}
 \index{Maths!Accessibility inside epsilon0}
 \label{sect:pathes-intro}
 
 Let us consider a kind of accessibility problem inside $\epsilon_0$: given two ordinals $\alpha$ and $\beta$, where $\beta<\alpha<\epsilon_0$, find a \emph{path} consisting of a finite sequence $\gamma_0=\alpha,\dots,\gamma_l=\beta$,
-where, for every $i<l$, $\gamma_i \not= 0$ \footnote{This condition allows us to ignore paths which end by a lot of useless $0$.} and there exists some strictly positive integer $s_i$
+where, for every $i<l$, $\gamma_i \not= 0$ \footnote{This condition allows us to ignore paths which end by a lot of useless $0$s.} and there exists some strictly positive integer $s_i$
 such that $\gamma_{i+1}=\canonseq{\gamma}{s_i}$,
 
 Let $s$ be the sequence $\langle s_0,s_1,\dots, s_{l-1} \rangle$. We describe the
 existence of such a path with the notation $\alpha\xrightarrow [s]{}\beta$.
 
 
-For instance, we have $\omega*2 \xrightarrow[2,2,2]{}\omega$, through the 
-path $\omega\times 2, \omega+2,\omega+1,\omega$.
+For instance, we have $\omega*2 \xrightarrow[2,2,2,4,5]{}3$, through the 
+path $\langle\omega\times 2, \omega+2,\omega+1,\omega,4,3\rangle$.
 
 
 \begin{remark}
@@ -5716,7 +5731,7 @@ then the sequence $s$ can start with any positive integer.
 For instance, we have also 
 $\omega*2 \xrightarrow[3,4,5,6]{}\omega$. 
 Likewise,
-$\omega*2 \xrightarrow[{[3,14]}]{} 0$ and
+$\omega*2 \xrightarrow[1,2,1,4]{} 0$ and
 $\omega*2 \xrightarrow[3,3,3,3,3,3,3,3]{} 0$.
 \end{remark}
 
@@ -5730,6 +5745,8 @@ parameterized by the destination $\beta$.
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
+\index{Predicates!path\_to}
+\label{sect:path-to-def}
 
 \begin{Coqsrc}
 (Definition transition_S i : relation T1 :=
@@ -5737,12 +5754,7 @@ parameterized by the destination $\beta$.
 
 Definition transition i : relation T1 :=
   match i with 0 => fun _ _ => False | S j => transition_S j end.
-\end{Coqsrc}
 
-\index{Predicates!path\_to}
-\label{sect:path-to-def}
-
-\begin{Coqsrc}
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
   path_to_1 : forall (i:nat) alpha , 
     i <> 0 ->
@@ -5755,7 +5767,9 @@ Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
     path_to beta  (i::s) alpha.
 \end{Coqsrc}
 
-
+\begin{remark}
+The definition above is parameterized with the \emph{destination} of the path and indexed by the origin, hence the name \texttt{path\_to}. The rationale behind this choice is a personal preference of the developer  for the kind of eliminators generated by \coq{} in this case. The symmetric option could have been also considered (see also Remark~\vref{remark:transitive-closure}).
+\end{remark}
 
 
 
@@ -5792,7 +5806,7 @@ You should solve automatically the following goals:
 \index{Maths!Transfinite induction}
 
 By transfinite induction on $\alpha$, we prove that for any $\beta<\alpha$, 
-on can build a path from $\alpha$ to $\beta$.
+one can build a path from $\alpha$ to $\beta$ (in other terms, $\beta$ is accessible from $\alpha$).
 
 \begin{Coqsrc}
 Lemma LT_path_to (alpha beta : T1) :
@@ -5805,7 +5819,7 @@ Lemma LT_path_to (alpha beta : T1) :
 Define a simply typed function for computing a path from $\alpha$ to $\beta$.
 \end{exercise}
 
-% ici
+
 \noindent 
 From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
 
@@ -5818,7 +5832,7 @@ Lemma path_to_LT beta s alpha :
 \subsection{Paths and hydra battles}
 \label{KS-o2h}
 
-In order to apply our knowledge about  ordinal numbers (less than $\epsilon_0$) to the study of hydra battles, we define an injection
+In order to apply our knowledge about  ordinal numbers less than $\epsilon_0$ to the study of hydra battles, we define an injection
 from the interval $[0,\epsilon_0)$ into the type \texttt{Hydra}.
 
 \vspace{4pt}
@@ -5896,7 +5910,7 @@ Lemma canonS_iota i alpha :
 \end{Coqsrc}
                 
 
-The next step of our development is to extend this relationship to
+The next step of our development extends this relationship to
 the order $<$ on $[0,\epsilon_0)$ on one side, and hydra battles on the other side.
 
 
@@ -5915,7 +5929,7 @@ Lemma LT_to_battle alpha beta :
 
 \section{A  proof of impossibility}
 
-We have got all the tools for proving there is no variant bounded by some $\mu<\epsilon_0$ for proving the termination   of all battles. The proof we are going to show is a proof by contradiction. It  can
+We now have  the tools for proving that  there exists no variant bounded by some $\mu<\epsilon_0$ for proving the termination   of all battles. The proof we are going to show is a proof by contradiction. It  can
  be considered as a generalization of the
 proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 
@@ -5947,8 +5961,9 @@ Section Bounded.
         round_n i h h' -> m h' t1< m h.
 \end{Coqsrc}
 
+\label{remark:m-decrease}
 \begin{remark}
-  The hypothesis \texttt{m\_decrease} is false in general, but is satisfied by
+  The hypothesis \texttt{m\_decrease} is not provable  in general, but is satisfied by
 the  \texttt{free} and \texttt{standard} kinds of battles. This trick allows to 
 ``factorize'' our proofs  of impossibility.
 \end{remark}
@@ -6011,7 +6026,7 @@ Section Impossibility_Proof.
 
 \begin{enumerate}
 \item The following lemma is an application of \texttt{m\_ge\_generic}, since \texttt{free}
-satisfies trivially the hypothesis \texttt{m\_decrease}.
+satisfies trivially the hypothesis \texttt{m\_decrease} (see page~\pageref{remark:m-decrease}).
 
 \begin{Coqsrc}
 Lemma m_ge : m big_h t1<= m small_h.
@@ -6084,7 +6099,7 @@ The sequence $s$, used to build the sequence of replication factors of the battl
 $\beta$, so we cannot be sure that the generated battle is a genuine standard battle.
 
 
-The tool we  use comes  once again from Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
+The solution of this issue comes  once again from Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
 $\alpha_0=\alpha,\alpha_1,\dots,\alpha_k=\beta$ where $\alpha_{j+1}$ is equal
 to $\canonseq{\alpha_j}{i_j}$ where $i_j$ is \emph{any} natural number, 
 we consider various constraints on these sequences.
@@ -6214,7 +6229,7 @@ Proof.
   (* (long) proof skipped *)
 \end{Coqsrc}
 
-We shall also use a version of \texttt{Cor12} with large inequalities.
+We  also use a version of \texttt{Cor12} with large inequalities.
 
 
 \begin{Coqsrc}
@@ -6304,7 +6319,7 @@ Lemma Lemma2_6_1 (alpha : T1) :
   {n:nat | const_pathS n alpha beta}.
 Proof.
   transfinite_induction alpha.
-  (* rest of proof skipped *)
+  (* ... *)
 \end{Coqsrc}
 
 
@@ -6381,7 +6396,7 @@ Lemma standard_path_to_zero :
 \end{Coqsrc}
 
 \paragraph*{}
-Let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some $(n+1)$-path from $\alpha$ to $\beta$.
+Noq, let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some $(n+1)$-path from $\alpha$ to $\beta$.
 
 \begin{Coqsrc}
  Section Constant_to_standard_Proof.
@@ -6547,7 +6562,8 @@ $\gamma$ in one single step,  must be greater than or equal to $\beta$, which co
 \begin{Coqsrc}
  Lemma constant_to_standard_0 : 
     {l : nat | standard_fun (S n) alpha l = beta}.
- 
+ (* ... *)
+
 End Constant_to_standard_Proof.
 \end{Coqsrc}
 
@@ -6572,11 +6588,9 @@ Corollary  LT_to_standard_path  (alpha beta : T1) :
 \end{Coqsrc}
 
 
-
-
 \subsection{Back to hydras}
 \label{sec:standard-battles-cases}
-We are now able to complete our proof that there exists no bounded variant for proving the termination of standard hydra battles. The proof we are going to comment can
+We are now able to complete our proof that there exists no bounded variant for proving the termination of standard hydra battles. This proof can
 be consulted in the module 
 \url{../src/html/hydras.Hydra.Epsilon0_Needed_Std.html}.
 Please note that it has the same global structure as in section\ref{sec:free-battles-case} 
@@ -6684,7 +6698,7 @@ Can we still prove the theorems of section~\ref{std-case} with this new definiti
 %\section{Introduction}
 
 In this chapter, we try to feel how long a standard battle can be.
-To be precise, for any ordinal $\alpha<\epsilon0$ and any positive integer $k$,
+To be precise, for any ordinal $\alpha<\epsilon_0$ and any positive integer $k$,
 we give a minoration of the number of steps of a standard battle which
 starts with the hydra $\iota(\alpha)$ and the replication factor $k$.
 
@@ -6849,8 +6863,7 @@ Our specification of the function \texttt{L} is as follows:
 
 \begin{Coqsrc}
 Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
-  L_spec0 :
-    forall f, (forall k, f k = k) ->  L_spec zero f
+| L_spec0 : forall f, (forall k, f k = k) ->  L_spec zero f
 | L_spec1 : forall alpha f,
     alpha <> zero ->
     (forall k, mlarge alpha (interval (S k) (Nat.pred (f (S k))))) ->
@@ -6863,8 +6876,7 @@ Nevertheless, the restriction of $f$ to the set of strictly positive integers is
 
 \begin{Coqsrc}
 Lemma L_spec_unicity alpha f g :
-  L_spec alpha f -> L_spec alpha g ->
-  forall k, f (S k) = g (S k).
+  L_spec alpha f -> L_spec alpha g -> forall k, f (S k) = g (S k).
 \end{Coqsrc}
 
 
@@ -6873,7 +6885,7 @@ Lemma L_spec_unicity alpha f g :
 
 
 Let us now prove properties of any function $f$ (if any) which satisfies 
-\texttt{L\_spec}. We are looking for properties which could be used for writing \emph{equations} and prove the correctness of the function generated by the \texttt{coq-equations} plugin. Moreover, they will give us some examples of
+\texttt{L\_spec}. We are looking for properties which could be used for writing \emph{equations} and prove the correctness of the function generated by the \texttt{coq-equations} plug-in. Moreover, they will give us some examples of
 $L_\alpha$ for small values of $\alpha$. 
 
 
@@ -6991,9 +7003,7 @@ $\omega \times i$.
 
 \begin{Coqsrc}
 Lemma path_to_omega_mult (i k:nat) :
-  path_to (omega * i)
-                (interval (S k) (2 * (S k)))
-                (omega * (S i)).
+  path_to (omega * i) (interval (S k) (2 * (S k))) (omega * (S i)).
 \end{Coqsrc}
 
 Let us consider a path from  $\omega\times(i+1)$ to $0$ starting at $k+1$.
@@ -7001,7 +7011,7 @@ A first ``big step'' will lead to $\omega\times i$ at $2(k+1)$. If $i>0$, the
 next jump leads to $\omega\times(i-1)$ at $2(2(k+1))+1$, etc.
 
 
-The following lemma expresses the length of the mlarge sequences associated with finite multiples of $\omega$.
+The following lemma expresses the length of the mlarge sequences associated with the finite multiples of $\omega$.
 
 
 \begin{Coqsrc}
@@ -7016,7 +7026,6 @@ Lemma omega_mult_mlarge_0 i  : forall k,
 Thus, we infer the following result:
 
 \emph{From Module~ \href{../src/html/hydras.Epsilon0.Large_Sets.html\#L_omega_mult}{Epsilon0.Large\_Sets}}
-
 
 \begin{Coqsrc}
 Definition L_omega_mult i (x:nat) :=  iterate L_omega i x.
@@ -7077,8 +7086,8 @@ Let us consider a last example, ``computing'' $L_{\omega^3}$.
 Since the canonical sequence associated with this ordinal is composed of the
 $\omega^2\times i\;(i\in\mathbb{N}_1)$, we have to study this sequence.
 
-To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ in terms of $L_{\omega^\alpha}$. Note that in this correction lemma, we assume that the fonction associated with $\alpha$ is stritly monotonous and 
-greater or equal than the successor function. 
+To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ as an iterate of $L_{\omega^\alpha}$. Note that in this lemma, we assume that the fonction associated with $\alpha$ is stritly monotonous and 
+greater or equal than the successor function, and prove that $L_{\omega^\alpha\times i}$satisfies  the same properties.
 
 \begin{Coqsrc}
 Section phi0_mult.
@@ -7128,19 +7137,20 @@ Lemma L_omega_cube_ok : L_spec (phi0 3) L_omega_cube.
 The function  $L_{\omega^3}$  is just obtained by diagonalization upon $L_{\omega^2\times i}$.
 
 \begin{Coqsrc}
-Lemma L_omega_cube_eqn i : L_omega_cube i = L_omega_square_times i (S i).
-Proof.   reflexivity. Qed.
+Lemma L_omega_cube_eqn i : 
+   L_omega_cube i = L_omega_square_times i (S i).
+Proof. reflexivity. Qed.
 \end{Coqsrc}
 
 Thus, for instance, $L_{\omega^3}(3)=L_{\omega^2\times 4}(3)$.
-So, we obtain an exact expression of this number.
+Thus, we obtain an exact expression of this number.
 
 
 \begin{Coqsrc}
 Lemma L_omega_cube_3_eq:
    let N := exp2 95 in
    let P := (N * 97 - 1)%nat in
-    L_omega_cube 3  =  (exp2 P * (P + 2) - 1)%nat.
+   L_omega_cube 3  =  (exp2 P * (P + 2) - 1)%nat.
 \end{Coqsrc}
 
 
@@ -7178,7 +7188,7 @@ In order to get a total function, we use our type \texttt{E0} of well-formed ord
 a case-study (zero, limit and successor ordinals). 
 
 
-\vspace{4pt}XS
+\vspace{4pt}
 \noindent
 \emph{From Module~\href{../src/html/hydras.Epsilon0.L_alpha.html\#L_}{L\_alpha}).}
 
@@ -7252,7 +7262,7 @@ Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
 Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 \end{Coqsrc}
 
-Using these three lemmas as rewrite rules, we can prove more properties of the functions \texttt{L\_ $\alpha$}.
+Using these three lemmas as rewrite rules, we can prove more properties of the functions \texttt{L\_$\alpha$}.
 
 \begin{Coqsrc}
 Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat.  
@@ -7342,13 +7352,13 @@ Solve All Obligations with auto with E0.
 
 
 \begin{Coqsrc}
-Lemma H_zero_eqn : forall i, H_ Zero i = i.
+Lemma H_eq1 : forall i, H_ Zero i = i.
 Proof.   intro i; now rewrite H__equation_1.  Qed.
 
 Lemma H_eq2 alpha i : Is_Succ alpha ->
                       H_ alpha i = H_ (Pred alpha) (S i).
 
-Lemma H_lim_eqn alpha i : Limitb alpha ->
+Lemma H_eq3 alpha i : Limitb alpha ->
                       H_ alpha i =  H_ (Canon alpha (S i)) i.
 
 Lemma H_eq4  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
@@ -7382,7 +7392,7 @@ it is easy to get the formula associated with $H_\omega$.
 \begin{Coqsrc}
 Lemma H_omega : forall k, H_ Omega k = S (2 * k)%nat.
 Proof with auto with E0.
-  intro k; rewrite H_lim_eqn ...
+  intro k; rewrite H_eq3 ...
   - replace (Canon omega (S k)) with (Fin (S k)).
     + rewrite H_Fin; lia.
     +  now autorewrite with E0_rw.
@@ -7409,7 +7419,6 @@ Proof.
   + rewrite H_Plus_Fin, H_omega;  lia.
   -  now compute.
 Qed.
-
 
 Lemma H_omega_3 k : H_ (omega * 3)%e0 k = (8 * k + 7)%nat.
 
@@ -7575,7 +7584,7 @@ Now, we have got at last an exact formula for $H_{\omega^\omega}$.
 Lemma H_Phi0_omega : forall k, H_ (Phi0 omega) k =
                                iterate H_succ_fun  k (H_ omega) k.
 Proof with auto with E0.
-  intro k; rewrite H_lim_eqn,  <- H_Phi0_Si ...
+  intro k; rewrite H_lim_eqn, <- H_Phi0_Si ...
   -  rewrite CanonS_Canon, CanonS_Phi0_lim;  f_equal ...
 Qed.
 \end{Coqsrc}
@@ -7635,6 +7644,12 @@ $H_\beta(n)\leq H_\alpha(n)$.
 In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjonction of the five properties.
 For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and 
 $\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially. 
+
+
+\begin{definition}
+ Let $f$ zand $g$ be two arithmetic  functions; $f$ is said to \emph{dominate} $g$ if $f(p)>g(p)$ for any all sufficiently large $p$.
+\end{definition}
+
 
 \begin{Coqsrc}
 Section Proof_of_Abstract_Properties.
@@ -7821,8 +7836,6 @@ As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}.
 
 \begin{quote}
   If $\beta<\alpha$, $F_\alpha$ dominates $F_\beta$.
-
-($f$ is said to \emph{dominate} $g$ if $f(p)>g(p)$ for any all sufficiently large $p$).
 \end{quote}
 
 \begin{Coqsrc}
