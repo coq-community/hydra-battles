@@ -27,6 +27,8 @@ Coercion is_true : bool >-> Sortclass.
 
 (** ** Some auxiliary lemmas and functions *)
 
+(* - *)
+
 (** *** Arithmetic (Peano) *)
 
 Lemma minus_Sn_n : forall (n:nat), S n - n = 1.
@@ -674,6 +676,7 @@ Proof.
         rewrite H4 in H; apply (le_Sn_n (length w2)); assumption.
 Qed. 
 
+
 (** [wlt] and padding *)
 
 Lemma wlt_zeroes_wlt_right : forall (n:nat) (w1 w2:t),
@@ -696,6 +699,32 @@ Proof.
   induction n.
   -  auto.
   - intros; cbn;  now apply wlt_w_0, IHn. 
+Qed.
+
+Lemma wlt_gt_length : forall (w1 w2:t),
+    wlt w1 w2 -> lt (length w2) (length w1)
+    -> exists (n:nat) (w:t),
+        w1 = zeroes n ++  w /\ length w = length w2  /\ wlt w w2.
+Proof.
+  induction w1 as [| a w1 IHw1].
+  - intros; exfalso; apply (lt_n_0 (length w2)); auto.
+  - intros w2 H H0; cbn in H0.  assert (H1: length w2 <= length w1).
+    { apply lt_n_Sm_le; assumption. }
+    +  destruct a as [| a].
+       *  elim (le_lt_or_eq (length w2) (length w1) H1).
+          --  intro H2; elim IHw1 with (w2:=w2).
+              ++ intros z H3; elim H3; intros w1' H4; decompose [and] H4.
+                               exists (S z), w1'; split.
+                               subst; trivial.
+                               tauto.
+              ++  apply wlt_0_w_inv; assumption. 
+              ++  assumption.
+          -- exists 1, w1.  split.
+          ++  trivial.
+          ++   split. 
+               ** now symmetry.
+               **   now apply wlt_0_w_inv. 
+       *  exfalso;  apply (not_wlt_len w1 w2 a); assumption.
 Qed.
 
 (** *** [wlt] is a strict order *)
@@ -778,7 +807,9 @@ Qed.
     - we prove that [wlt_pad] satisfies the accessibility
 
     - we prove that accessibilty for [wlt_apd] entails the one of [wlt] *)
-    
+
+(* - *)
+
 (** **** The restricted relation [wlt_pad] *)
 
 Inductive wlt_pad : t -> t -> Prop :=
@@ -838,7 +869,10 @@ Proof.
   - apply Acc_wlt_pad_ind with (n:=n); assumption.
 Qed.
 
-(** Accessibility for [wlt] *)
+(** **** Accessibility for [wlt] *)
+
+(* - *)
+(** Accessibilty and padding *)
 
 Lemma Acc_wlt_zeroes_Acc_wlt : forall (n:nat) (w: t),
     Acc wlt (zeroes n ++ w) -> Acc wlt w.
@@ -853,6 +887,8 @@ Proof.
   split. intros w' H0; apply H. 
   now apply wlt_zeroes_wlt_right with (n:=n). 
 Qed.
+
+(** From [wlt_pad] to [wlt] *)
 
 Lemma wlt_wlt_pad : forall (w1 w2:t),
     length w1 = length w2 -> wlt w1 w2 -> wlt_pad w1 w2.
@@ -903,8 +939,8 @@ Qed.
 Lemma Acc_wlt_pad_Acc_wlt : forall (w: t),
   Acc wlt_pad w -> Acc wlt w.
 Proof.
-  induction 1.   split. 
-intros w'' H2. elim (Nat.lt_trichotomy (length w'') (length x)).
+  induction 1. split. 
+  intros w'' H2. elim (Nat.lt_trichotomy (length w'') (length x)).
 
   - intro H1; apply Acc_wlt_zeroes_Acc_wlt with (n:=(dist x w'')).
      apply H0. apply wlt_wlt_pad_zeroes; assumption.
@@ -921,68 +957,8 @@ Proof.
  intro; apply Acc_wlt_pad_Acc_wlt; apply Acc_wlt_pad.
 Qed.
 
+(** ** List comparison *)
 
-
-
-
-
-
-
-(* Caractérisation en fonction de la longueur:
-   si '(wlt w1 w2)' et '#w2 < #w1' alors 'w1' commence par des 0 *)
-
-Lemma wlt_gt_length : forall (w1 w2:t),
-    wlt w1 w2 -> lt (length w2) (length w1)
-    -> exists (n:nat) (w:t),
-        w1 = zeroes n ++  w /\ length w = length w2  /\ wlt w w2.
-Proof.
-  induction w1 as [| a w1 IHw1].
-  - intros; exfalso; apply (lt_n_0 (length w2)); auto.
-  - intros w2 H H0; cbn in H0.  assert (H1: length w2 <= length w1).
-    { apply lt_n_Sm_le; assumption. }
-    +  destruct a as [| a].
-       *  elim (le_lt_or_eq (length w2) (length w1) H1).
-          --  intro H2; elim IHw1 with (w2:=w2).
-              ++ intros z H3; elim H3; intros w1' H4; decompose [and] H4.
-                               exists (S z), w1'; split.
-                               subst; trivial.
-                               tauto.
-              ++  apply wlt_0_w_inv; assumption. 
-              ++  assumption.
-          -- exists 1, w1.  split.
-          ++  trivial.
-          ++   split. 
-               ** now symmetry.
-               **   now apply wlt_0_w_inv. 
-       *  exfalso;  apply (not_wlt_len w1 w2 a); assumption.
-Qed.
-
-
-(**
-   Restriction de l'ordre aux listes de même longueur.
-   (avec complémentation possible à 0): 
-   c'est l'ordre lexicographique.
-*)
-(* La relation sur les listes de même longueur *)
-
-
-
-(* Relations entre l'ordre sur toute liste et l'ordre restreint. *)
-
-
-
-(** Here Proof bulletization (Pierre) *)
-
-(**
-  Accessibilité pour l'ordre restreint.
-*)
-
-(**
-  De l'accessibilté pour l'ordre restreint à l'accessibilité
-  pour l'ordre sur tout liste.
-*)
-
-(** Compare *)
 Fixpoint compare (w1 w2 : t) : comparison :=
   match w1 with
     nil =>
