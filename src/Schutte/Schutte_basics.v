@@ -32,7 +32,8 @@ Open Scope schutte_scope.
 
 Parameter Ord : Type.
 Parameter lt : relation Ord.
-Notation "a < b" := (lt a b): schutte_scope.
+Infix "<" := lt : schutte_scope.
+
 
 
 Definition ordinal : Ensemble Ord := Full_set Ord.
@@ -87,7 +88,7 @@ Hint Resolve  AX1 Inh_Ord_Ord Inh_OSets inh_Ord : schutte.
 Definition le := Le lt.
 
 
-Notation "a <= b" := (le a b): schutte_scope.
+Infix "<=" := le : schutte_scope.
 
 
 (** Second and third axioms from Schutte 

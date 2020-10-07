@@ -81,8 +81,7 @@ Section On_Iota.
 
 
   Lemma iota_ind (Q:A -> Prop) :
-    (forall a, unique P a -> Q a) ->
-    Q (iota inhA P).
+    (forall a, unique P a -> Q a) ->  Q (iota inhA P).
   Proof.
     intro H;apply H; now apply iota_spec_1.
   Qed.
