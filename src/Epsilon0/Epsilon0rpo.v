@@ -478,7 +478,7 @@ Proof.
 Qed.
 
 
-(** for compatibility *)
+(** For compatibility with T1 *)
 Lemma nf_Acc : forall alpha, nf alpha -> Acc LT alpha.
 Proof nf_Wf.
 

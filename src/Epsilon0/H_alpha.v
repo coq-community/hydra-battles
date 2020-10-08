@@ -359,8 +359,6 @@ Proof.
 Qed.
 
 
-(** could do better *)
-
 Lemma H_omega_cube_min k : 0 <> k ->
                            (hyper_exp2 (1 + k) <= H_ (Phi0  3) k)%nat.
 Proof.
@@ -400,7 +398,7 @@ Section Proof_of_Abstract_Properties.
   
   Section The_induction.
 
-    (** Base step : (sequential) proof of (P 0) *)
+    (* Base step : (sequential) proof of (P 0) *)
     
     Lemma PA_Zero : strict_mono (H_ Zero).
     Proof. 

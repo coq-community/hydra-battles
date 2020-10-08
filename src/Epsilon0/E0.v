@@ -1,4 +1,4 @@
-(*  Pierre Casteran 
+(**  Pierre Casteran 
     LaBRI, University of Bordeaux 
 
 
@@ -24,7 +24,7 @@ Delimit Scope E0_scope with e0.
 Open Scope E0_scope.
 
 
-(** * Definitions *)
+(** ** Definitions *)
 
 
 Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
@@ -139,7 +139,7 @@ Proof. reflexivity. Defined.
 (* end hide *)
 
 
-(** *** On equality on type [E0] *)
+(** ** On equality on type [E0] *)
 
 Lemma nf_proof_unicity :
   forall (alpha:T1) (H H': nf alpha), H = H'.
@@ -472,7 +472,7 @@ Qed.
 
 
 
-(** *** rewriting lemmas *)
+(** ** Rewriting lemmas *)
 
 Lemma Succ_rw : forall alpha, cnf (Succ alpha) = T1.succ (cnf alpha).
 Proof.

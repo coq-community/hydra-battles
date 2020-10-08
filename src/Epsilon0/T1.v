@@ -319,6 +319,10 @@ Proof.
  - destruct (Lt.lt_irrefl _ H).
 Qed.
 
+Lemma compare_of_phi0 alpha beta:
+  compare (phi0 alpha) (phi0 beta) = compare alpha beta.
+   cbn;  now destruct (compare alpha beta).
+Qed.
 
 
 

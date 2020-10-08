@@ -1,6 +1,6 @@
-(* Pierre Castéran, Labri, Université de Bordeaux *)
+(** *  Hessenberg sum of ordinals (commutative and strictly monotonous)
 
-(** Hessenberg sum of ordinals (commutative and strictly monotonous) *)
+Pierre Castéran, Labri, University of  Bordeaux *)
 
 From Coq Require Import Arith  ArithRing Lia.
 From hydras Require Import Prelude.More_Arith Prelude.Merge_Sort Epsilon0.T1.
@@ -64,7 +64,7 @@ Lemma oplus_lt_rw :
 	                 ocons a' n' (ocons a n b o+ b').
 Proof.
   intros a n b a' n' b' H; cbn.
-  generalize (compare_rw1  H); intro Hcomp;   now rewrite Hcomp.
+  generalize (compare_rw1  H); intro Hcomp; now rewrite Hcomp.
 Qed.
 
 Lemma oplus_eq_rw :
@@ -118,8 +118,8 @@ Lemma oplus_rect:
     forall a b, P a b (a o+ b).
 Proof with auto.
   induction a.
-  -    intro; simpl; destruct b;auto.
-  -   induction b.
+  -  intro; simpl; destruct b;auto.
+  -  induction b.
       + apply X0.
       + case_eq (compare a1 b1).
         * intro Comp; unfold oplus; rewrite Comp.
@@ -171,15 +171,15 @@ Proof with auto.
   induction gamma; destruct alpha, beta.  
   -     simpl; constructor.
   -  inversion 2;   inversion H5;   now simpl.
-  -   inversion 1.   T1_inversion H4.
-  -   inversion 1.   T1_inversion H4.
-  -   simpl;auto.  
-  -  simpl;   auto.
+  -  inversion 1.   T1_inversion H4.
+  -  inversion 1.   T1_inversion H4.
+  -  simpl; auto.  
+  -  simpl; auto.
   -  simpl;   auto.
   -   rewrite oplus_eqn;  case_eq (compare alpha1 beta1).
-      +  constructor; now inversion H0.
-      +   right; eapply lt_phi0_inv1;eauto.
-      +  right; eapply lt_phi0_inv1;eauto.
+      + constructor; now inversion H0.
+      + right; eapply lt_phi0_inv1;eauto.
+      + right; eapply lt_phi0_inv1;eauto.
 Qed.
 
 Section Proof_of_plus_nf.
@@ -255,7 +255,6 @@ Section Proof_of_plus_nf.
            now rewrite <- gt_iff.
   Qed.
 
-
   Lemma oplus_nf (alpha  beta : T1) :
       nf alpha ->  nf beta -> nf (alpha o+ beta). 
   Proof with auto with T1.
@@ -276,9 +275,10 @@ Section Proof_of_plus_nf.
 End Proof_of_plus_nf.
 
 Lemma o_finite_mult_nf : forall a n, nf a -> nf (o_finite_mult n a).
+Proof.
   induction n;simpl.
-   constructor.
-   intro;apply oplus_nf; auto.
+  - constructor.
+  - intro;apply oplus_nf; auto.
 Qed.
 
 Section Proof_of_oplus_comm.
@@ -320,7 +320,7 @@ Section Proof_of_oplus_comm.
       rewrite <- oplus_compare_Lt;auto.
       rewrite  oplus_compare_Lt;auto.
       f_equal.
-      intros;  f_equal; apply H0 with   (phi0 beta1) ...
+      intros;  f_equal; apply H0 with (phi0 beta1) ...
       apply LE_LT_trans with (ocons beta1 n0 beta2).
       apply LE_phi0; auto.
       repeat split; eauto with T1.
@@ -365,18 +365,17 @@ Lemma oplus_lt_rw2 : forall a n b x, nf (ocons a n b) -> nf x ->
                                      lt_phi0 x a ->
                                      ocons a n b o+  x  =
                                      ocons a n (b o+ x).
-destruct x.
- now intros; repeat rewrite oplus_alpha_0.
- intros.
- rewrite (oplus_eqn  (ocons a n b) (ocons x1 n0 x2)).
- apply lt_phi0_phi0 in H1.
- destruct (lt_inv H1).
- unfold T1.lt, lt_b in H2.
- rewrite compare_rev. 
- destruct (compare x1 a);auto; try discriminate. 
- decompose [or and] H2.
- inversion H5.
- T1_inversion H6.
+Proof.
+  destruct x.
+  - now (intros; repeat rewrite oplus_alpha_0).
+  - intros; rewrite (oplus_eqn  (ocons a n b) (ocons x1 n0 x2)).
+    apply lt_phi0_phi0 in H1.
+    destruct (lt_inv H1).
+    + unfold T1.lt, lt_b in H2; rewrite compare_rev. 
+      destruct (compare x1 a);auto; try discriminate. 
+    + decompose [or and] H2.
+      *  inversion H5.
+      * T1_inversion H6.
 Qed.
 
 
@@ -398,12 +397,10 @@ Section Proof_of_oplus_assoc.
                       T1.lt b alpha -> T1.lt c alpha ->
                       a o+ (b o+ c) = (a o+ b) o+ c.
   Proof with eauto with T1.
-    intros alpha .
-    transfinite_induction_lt alpha.
+    intros alpha; transfinite_induction_lt alpha.
     clear alpha ; intros alpha Hrec Halpha .
-    intros; destruct a, b , c; try reflexivity. 
-    - repeat rewrite oplus_0_beta; repeat rewrite oplus_alpha_0.
-      trivial.
+    intros; destruct a, b, c; try reflexivity. 
+    - repeat rewrite oplus_0_beta; repeat rewrite oplus_alpha_0; trivial.
     - now  repeat rewrite oplus_alpha_0.
     - {
         repeat rewrite oplus_cons_cons.
@@ -568,9 +565,10 @@ Section Proof_of_oplus_assoc.
     intros.
     apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma))) ...
     apply succ_nf; repeat apply max_nf ...
-    all: apply T1.le_lt_trans with (max alpha (max beta gamma)); [| apply lt_succ] ...
-    -       apply max_le_1.
-    -       rewrite (max_comm alpha (max beta gamma)).
+    all: apply T1.le_lt_trans with (max alpha (max beta gamma));
+      [| apply lt_succ] ...
+    - apply max_le_1.
+    - rewrite (max_comm alpha (max beta gamma)).
             rewrite  max_assoc;    apply max_le_1.
     -     rewrite  <- max_assoc. 
           rewrite (max_comm (max alpha beta) gamma); apply max_le_1.
@@ -851,7 +849,8 @@ Proof with auto with T1.
 Qed.  
 
 Lemma oplus_strict_mono_l : forall a b c, nf a -> nf b -> nf c ->
-                                          T1.lt a b  -> T1.lt (a o+ c) (b o+ c).
+                                          T1.lt a b  ->
+                                          T1.lt (a o+ c) (b o+ c).
 Proof.
   intros a b c Ha Hb Hc H.
   rewrite (oplus_comm  Ha Hc).
@@ -889,14 +888,14 @@ Qed.
 
 
 
-Lemma oplus_strict_mono_bi : forall a b c d , nf a -> nf b -> nf c -> nf d ->
-                                              T1.lt a b  -> T1.lt c d ->
-                                              T1.lt (a o+ c) (b o+ d).
+Lemma oplus_strict_mono_bi : forall a b c d ,
+    nf a -> nf b -> nf c -> nf d ->
+    T1.lt a b  -> T1.lt c d -> T1.lt (a o+ c) (b o+ d).
 Proof.
-  intros a b c d Ha Hb Hc Hd H0 H1.
+  intros a b c d Ha Hb Hc Hd H0 H1;
   apply lt_trans with (oplus a d).
-  apply oplus_strict_mono_r; auto.
-  apply oplus_strict_mono_l; auto.
+  -  apply oplus_strict_mono_r; auto.
+  -  apply oplus_strict_mono_l; auto.
 Qed.
 
 Lemma oplus_of_phi0_0 : forall a b,
@@ -907,14 +906,9 @@ Lemma oplus_of_phi0_0 : forall a b,
                             | Gt =>  ocons a 0 (ocons b 0 T1.zero)
                           end.
 Proof.
-  intros a b; rewrite oplus_eqn.
-  (* unfold phi0; *) cbn; now  destruct (compare a b).
+  intros a b; rewrite oplus_eqn; cbn; now  destruct (compare a b).
 Qed.
 
-Lemma compare_of_phi0 : (* to move to Epsilon0 *)
-  forall a b, compare (phi0 a) (phi0 b) = compare a b.
-   cbn; intros; now destruct (compare a b).
-Qed.
 
 Lemma oplus_of_phi0 : forall a b,
                         phi0 a o+ phi0 b =
@@ -937,7 +931,7 @@ Lemma o_finite_mult_rw : forall a n, o_finite_mult (S n) (phi0 a) =
   simpl; now rewrite compare_refl.
 Qed.
 
-(* badly named *)
+
 Lemma o_finite_mult_lt_phi0_1 : forall a b n,
                                   T1.lt a b ->
                                   T1.lt (o_finite_mult n (phi0 a)) (phi0 b).

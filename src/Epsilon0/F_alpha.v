@@ -11,14 +11,12 @@ From Coq Require Import ArithRing Lia.
 
 From Equations Require Import Equations.
 
-(** ** First steps of the hierarchy
 
-    Functions upto F_omega can be defined as structurally 
-recursive functions. For larger steps, we use Matthieu Sozeau's  Equations 
-  plug-in *)
+(** ** The Wainer hierarchy 
+
+*)
 
 
-(** ** The Wainer hierarchy *)
 
 Instance Olt : WellFounded Lt := E0.Lt_wf.
 
@@ -42,8 +40,11 @@ Qed.
 Instance WF : WellFounded call_lt := call_lt_wf.
 
 
-(** This (complex) definition will be paraphrased later (through the lemmas 
-F_zero_eqn, F_eq2, F_eq3,  and F_succ_eqn *)
+(** 
+
+   [F_star (alpha,i)] is intended to be the i-th iterate of [F_ alpha].
+ 
+   It is easy to define [F_star] using the [coq-equations] plug-in  *)
 
 Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
@@ -75,7 +76,7 @@ Next Obligation.
 Defined.
 
 
-(* Finally, F_ alpha is defined as its first iterate ! *)
+(**  Finally, [F_ alpha] is defined as its first iterate  ! *)
 
 Definition F_  alpha i := F_star (alpha, 1) i.
 
@@ -566,6 +567,8 @@ Proof.
    }
    apply LF2_0; abstract lia.
 Qed.
+
+(** From Ketonen and Solovay, page 284, op. cit. *)
 
 Section Proposition_page_284.
 

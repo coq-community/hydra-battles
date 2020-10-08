@@ -1,4 +1,4 @@
-(** An implementation through lists of "alpha-large" sets 
+(* An implementation through lists of "alpha-large" sets 
     (After Ketonen and Solovay's "rapidly growing Ramsey functions" )
 *)
 
@@ -15,8 +15,6 @@ From Coq Require Import Lia Compare_dec.
 Import Relation_Operators Sorted  Operators_Properties.
 Open Scope t1_scope.
 
-(** * Definitions *)
-
 
 (** ** minimal large sequences *)
 
@@ -25,7 +23,7 @@ Definition mlarge alpha (s: list nat) := path_to zero s alpha.
 Definition mlargeS alpha s := path_toS zero s alpha.
 
 
-(** *  Last step of a minimal path  *)
+(** **  Last step of a minimal path  *)
 
 Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
   L_spec0 :
@@ -39,8 +37,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
 
 
 (** Test functions 
-  - If f is correct w.r.t. [L_spec]
- : "Compute L_test alpha f k" should return (one=one).
+  - If f is correct w.r.t. [L_spec], "Compute L_test alpha f k" should return (one=one).
   - If f k is too small, returns (alpha = one) (with one < alpha)
   - If f k is too big, returns (zero = one) *)
 
@@ -52,7 +49,7 @@ Definition L_test (alpha:T1) f k :=
 Compute L_test omega (fun i => S (2 * i))%nat 23.
 
 
-(** ** n-large intervals *)
+(** ** Paths starting with a finite ordinal ([fin n])  *)
 
 Lemma gnaw_finite_1_iota :
   forall n i, gnaw (S n) (iota_from (S i) n) = 1.
@@ -96,7 +93,7 @@ Proof.
 Qed.
 
 
-(** * Properties of m-largeness and L-functions *)
+(** ** Properties of m-largeness and L-functions *)
 
 Lemma mlarge_unicity alpha k l l' : 
   mlarge alpha (interval (S k) l) ->
@@ -189,7 +186,7 @@ Qed.
 
 
 
-(** About the length of mlarge intervals *)
+(** ** About the length of mlarge intervals *)
 
 
 Lemma L_spec_inv2 alpha f :
@@ -209,9 +206,7 @@ Qed.
 
 
 
-(** 
-
-Properties of [L_spec]
+(** ** Properties of [L_spec]
 
 *)
 
@@ -248,7 +243,7 @@ Proof.
 Qed.
 
 
-(** Composition lemmas *)
+(** Composition lemmas for computing [L_ alpha] *)
 
 Section succ.
    Variables (beta : T1) (f : nat -> nat).
@@ -429,12 +424,13 @@ Proof.
       instantiate (1:=ocons one i (S k)). 
       + simpl (omega * S i). replace (i + 0)%nat with i.
         apply path_to_tail; auto with T1.
-      *  assert (H := mlarge_FS k  (S k)). 
-         replace (2 * S k)%nat with (S (k + S k))%nat by lia; auto.
-      *  abstract lia.
-    +  rewrite interval_singleton; left; [discriminate | ].
-      simpl; replace (i + 0)%nat with i.  split; [ discriminate | reflexivity].
-      abstract lia.
+        *  assert (H := mlarge_FS k  (S k)). 
+           replace (2 * S k)%nat with (S (k + S k))%nat by lia; auto.
+        *  abstract lia.
+      +  rewrite interval_singleton; left; [discriminate | ].
+         simpl; replace (i + 0)%nat with i.
+         split; [ discriminate | reflexivity].
+         abstract lia.
 Qed.
 
 
