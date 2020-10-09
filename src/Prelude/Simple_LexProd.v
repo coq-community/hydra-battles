@@ -1,4 +1,6 @@
 (** Non dependent lexicographic product *)
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
 
 From Coq Require Import Relations Wellfounded.Lexicographic_Product
         Wellfounded.Inverse_Image Wellfounded.Inclusion Setoid.

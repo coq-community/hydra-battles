@@ -155,7 +155,7 @@ Proof.
     now left.
 Qed.
 
-(** The sequence s contains a head *)
+(* The sequence s contains a head *)
 
 Inductive mem_head : Hydrae -> Prop :=
   hh_1 : forall s, mem_head (hcons head s)
@@ -636,8 +636,10 @@ Qed.
     eapply   path_toS_round_plus; eauto.
     eapply path_to_not_In_zero; eauto.
   Qed.
+
+  (** Any strict inequality on [T1] can be converted into a (free) battle *)
   
-  Lemma LT_to_round_plus alpha beta :
+  Theorem LT_to_round_plus alpha beta :
     beta t1< alpha ->  iota alpha -+-> iota beta.
   Proof.
     intros H; apply acc_from_to_round_plus; eauto with T1.

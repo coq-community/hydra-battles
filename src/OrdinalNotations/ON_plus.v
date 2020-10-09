@@ -1,5 +1,8 @@
 
-(** Sum of two ordinal  notations *)
+(** The sum of two ordinal  notations *)
+
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
  
 From Coq Require Import Arith Compare_dec Lia 
      Relation_Operators Disjoint_Union.

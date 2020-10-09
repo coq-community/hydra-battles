@@ -1,3 +1,9 @@
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
+(** This module defines a type class of ordinal notations, _i.e._, data types
+    wiith a well-founded inequality and a [compare] function *)
+
+
 From Coq Require Import RelationClasses Relation_Operators Ensembles.
 From hydras Require Import  OrdNotations Schutte_basics.
 From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
@@ -92,7 +98,7 @@ Definition bigO `{nA : @ON A ltA compareA}
 
 
 (** The segment associated with nA is isomorphic to
-    the interval [0,b[ *)
+    the interval [[0,b) *)
 
 Class  SubON 
        `(OA : @ON A ltA  compareA)
@@ -105,7 +111,7 @@ Class  SubON
   SubON_incl : forall x, ltB (iota x) alpha;
   SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
-
+(** [OA] and [OB] are order-isomporphic *)
 Class  ON_Iso 
        `(OA : @ON A ltA compareA)
        `(OB : @ON B ltB  compareB)
@@ -140,8 +146,7 @@ Class ON_correct `(alpha : Ord)
 
 
 
-(** ** Relative correctness of a constant, a function, 
-           and a binary operation *)
+(** ** Relative correctness of a constant or a function  *)
 
 Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}

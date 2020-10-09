@@ -1,4 +1,5 @@
 (**  A notation system for finite ordinals *)
+(** Pierre Castéran, Unviv. Bordeaux and LaBRI *)
 
 
 
@@ -196,7 +197,7 @@ Proof. reflexivity. Qed.
 Example Ex1 : In  (bigO beta1) alpha1.
 Proof. reflexivity. Qed.
 
-(** Hide before compiling the module 
+(* Hide before compiling the module 
 
 Program Definition bad : t 10 := 10.
 Next Obligation.

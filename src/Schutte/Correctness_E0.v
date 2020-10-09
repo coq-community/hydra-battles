@@ -2,6 +2,7 @@
   into the set of Schutte's countable ordinal numbers stricly less than
   epsilon0.
 
+  Pierre Castéran, Univ. Bordeuwx and LaBRI
 
    This is intented to be a validation of main constructions and functions 
    designed for the type [T1].
@@ -558,7 +559,7 @@ Qed.
 
 (** Correctness of E0.plus *)
 
-Lemma E0_plus_correct :  ON_op_ok  E0.plus plus.
+Theorem  E0_plus_correct :  ON_op_ok  E0.plus plus.
 Proof.
   red; destruct x,y; cbn.
   rewrite inject_plus; auto.

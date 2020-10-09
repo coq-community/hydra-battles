@@ -2,6 +2,7 @@
 
  Decidable, Total Pre-orders 
 
+ Pierre Castéran, Univ. Bordeaux and LaBRI 
 *)
 
 From Coq Require Export Relations RelationClasses Setoid.

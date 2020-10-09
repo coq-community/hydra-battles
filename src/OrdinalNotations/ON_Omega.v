@@ -1,4 +1,6 @@
-(**  The ordinal omega  *)
+(**  A notation system for the ordinal [omega]  *)
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
 
 From Coq Require Import Arith Compare_dec Lia.
 From hydras.OrdinalNotations  Require Import Generic ON_Finite.

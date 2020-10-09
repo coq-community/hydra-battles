@@ -1,6 +1,6 @@
 (* Pierre Casteran, LaBRI,  University of  Bordeaux *)
 
-(** *
+(** 
 
  We  adapt Schutte's definition of critical ordinals :
    
@@ -19,7 +19,7 @@ From hydras Require Export Schutte_basics  Ordering_Functions  Countable
 Set Implicit Arguments.
 
 
-(**  let us define a functional, the fixpoint of which we shall consider *)
+(**  Let us define a functional, the fixpoint of which we shall consider *)
 
 Definition Cr_fun : forall alpha : Ord,
     (forall beta : Ord, beta < alpha -> Ensemble Ord) ->

@@ -1,4 +1,7 @@
 (** Pierre Casteran, LaBRI, University of Bordeaux *)
+(** Definition of termination variants *)
+
+
 Set Implicit Arguments. 
 
 From Coq Require Import Relations Basics

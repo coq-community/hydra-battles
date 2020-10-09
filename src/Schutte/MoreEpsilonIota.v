@@ -9,17 +9,6 @@
 
 From Coq Require Export  Ensembles  Logic.Epsilon.
 
-(*  epsilon : forall A : Type, inhabited A -> (A -> Prop) -> A *)
-
-(*
-
-epsilon_spec :
-forall (A : Type) (i : inhabited A) (P : A -> Prop),
-(exists x : A, P x) -> P (epsilon i P)
-
- *)
-
-
 
 Set Implicit Arguments.
 Arguments In {U} _ _.

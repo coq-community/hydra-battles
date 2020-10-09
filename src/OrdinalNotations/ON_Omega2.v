@@ -1,5 +1,7 @@
-(**  The ordinal omega * omega *)
 
+(**  A notation system for the ordinal [omega^2]  *)
+
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 
 From Coq Require Import Arith Compare_dec Lia Program.Wf List

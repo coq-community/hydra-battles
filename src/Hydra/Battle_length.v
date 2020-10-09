@@ -1,12 +1,12 @@
-(*
+(**
 
-   "Computing" Standard battle length
+   "Computing" standard battle length
 
 Pierre Castéran, LaBRI, University of Bordeaux
 
 
 
-*)
+ *)
 
 From hydras.Epsilon0 Require Import L_alpha.
 From hydras.Hydra  Require Import Hydra_Lemmas  Epsilon0_Needed_Free
@@ -28,28 +28,28 @@ Section Battle_length.
     - apply L_correct.
   Qed.
 
-   
-    Remark R2 : mlarge (cnf alpha)  (interval (S k) (Nat.pred l)).
+  
+  Remark R2 : mlarge (cnf alpha)  (interval (S k) (Nat.pred l)).
   Proof.
     unfold l; generalize (L_correct alpha).
     inversion 1; auto.
     destruct alpha; auto.
     - rewrite E0_eq_iff in Halpha; simpl in  Halpha, H0;
-       subst cnf; now destruct Halpha.
+        subst cnf; now destruct Halpha.
   Qed.
   
   
   Remark R3 : path_toS zero
-                    (unshift (interval (S k) (Nat.pred l)))
-                    (cnf alpha).
+                       (unshift (interval (S k) (Nat.pred l)))
+                       (cnf alpha).
   Proof.  apply path_to_path_toS, R2.  Qed.  
 
   Remark R4 :
-   trace_to (O2H.iota zero)
-            (unshift (interval (S k) (Nat.pred l)))
-            (O2H.iota (cnf alpha)).
+    trace_to (O2H.iota zero)
+             (unshift (interval (S k) (Nat.pred l)))
+             (O2H.iota (cnf alpha)).
   Proof. 
-   apply O2H.path_toS_trace; [apply R3 | auto with E0].
+    apply O2H.path_toS_trace; [apply R3 | auto with E0].
   Qed.
 
   Lemma R5 : trace_to (O2H.iota zero)
@@ -67,13 +67,13 @@ Section Battle_length.
   Proof.  generalize R0; abstract lia. Qed.
 
   Lemma L06:  battle standard k (iota (cnf alpha)) (l-1)%nat
-                      (iota zero).
+                     (iota zero).
   Proof.
     rewrite <- R6; apply trace_to_std.
     generalize R0; abstract lia.
     apply R5.    
   Qed.
-      
+  
   Lemma battle_length_std:
     battle_length  standard k (iota (cnf alpha)) (l-k)%nat.
   Proof.
@@ -82,12 +82,19 @@ Section Battle_length.
     generalize R0; abstract lia.
   Qed.
 
- 
+  
 End Battle_length.
 
-
-
-
+(**
+<<
+battle_length_std :
+forall alpha : E0,
+alpha <> Zero ->
+forall k : nat,
+1 <= k -> battle_length standard k (iota (cnf alpha))
+                        (L_ alpha (S k) - k)
+>>
+ *)
 
 
 

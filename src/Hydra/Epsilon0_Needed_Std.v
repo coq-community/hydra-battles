@@ -1,6 +1,10 @@
 (**
  Pierre Castéran, LaBRI and University of Bordeaux 
-*)
+
+
+ We prove that the impossibility result of #<a href="./hydras.Hydra.Epsilon0_Needed_Free.html"> Epsilon0_Needed_Free</a># still holds for "standard" battles *)
+
+
 
 From hydras Require Import Epsilon0_Needed_Generic.
 Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
@@ -21,7 +25,7 @@ Section Impossibility_Proof.
 
   (** ** Proof of the inequality m small_h t1< m big_h *)
 
-  (**  the measure is strictly decreasing along any round *)
+  (**  The measure is strictly decreasing along any round *)
 
   Lemma Lvar : forall h h0 i ,  h <> head -> 
                                 battle_r standard i h h0 -> m h0 t1< m h.
@@ -29,7 +33,7 @@ Section Impossibility_Proof.
     intros h h0 i H  H1;  apply Hvar with  i; auto.
   Qed.
   
-  (** application to standard battles *)
+  (** Application to standard battles *)
   
   Lemma m_decrease : forall j h0 i h,
       h <> head -> battle standard i  h j h0  -> m h0 t1< m h.
@@ -43,7 +47,7 @@ Section Impossibility_Proof.
          apply Lvar with i; auto.
   Qed.
   
-  (** conversion of ordinal inequalities into  standard battles  *)
+  (** Conversion of ordinal inequalities into  standard battles  *)
 
   
   (* begin hide *)

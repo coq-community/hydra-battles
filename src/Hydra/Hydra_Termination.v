@@ -1,13 +1,17 @@
+(** ** Proof of termination of all hydra battles *)
+
+(** Pierre Casteran, Univ. Bordeaux, LaBRI, UMR 5800 *)
+
+
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
-(* ** Proof of termination of all hydra battles *)
 
 
-(** ***  Converting any hydra into an ordinal less than $\epsilon_0$  
 
-    Notice the use of Hessenberg natural sum [alpha o+ beta ]
+(** ***  Converting any hydra into an ordinal less than 
+  #epsilon0# $\epsilon_0$  
 
-  *)
+*)
 
 Fixpoint m (h:Hydra) : T1 :=
   match h with head => T1.zero
@@ -66,7 +70,7 @@ Proof with auto with T1.
     apply o_finite_mult_nf ...
 Qed. 
 
-(** Monotonicity lemmas for S0, R1, etc . *)
+(** ** Monotonicity lemmas for S0, R1, etc . *)
 
 Open Scope t1_scope.
 

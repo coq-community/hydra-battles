@@ -1,5 +1,6 @@
 (** A proof of isomorhism between ordinal notations for 3+omega and omega *)
 
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From hydras.OrdinalNotations  Require Import ON_plus ON_Finite ON_Omega.
 Import Generic.

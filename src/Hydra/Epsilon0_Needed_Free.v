@@ -1,5 +1,5 @@
 
-(* Pierre Castéran, LaBRI and University of Bordeaux  *)
+(**  Pierre Castéran, LaBRI and University of Bordeaux  *)
 
 From hydras.Hydra Require Import Epsilon0_Needed_Generic.
 Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators.
@@ -8,12 +8,11 @@ Import O2H.
 (** We generalize the results of libraries Omega_Small and Omega2_Small:
    We prove that no ordinal strictly less than epsilon0 can be used as a variant
    for proving the termination of all hydra battles.
-
- 
-   In these proofs, we use the so-called "Ketonen-Solovay machinery" for building
+We use the so-called "Ketonen-Solovay machinery" for building
 a proof that shares the same structure as for the libraries above, but is much 
 longer 
  *)
+
 (** **  Bounded variants *)
 
 Open Scope t1_scope.

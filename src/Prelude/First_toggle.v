@@ -3,7 +3,9 @@
 
 Computes the first  [l]  between [n] and [p] (excluded) such that 
        [P l = true] and  [P (S l) = false].
-*)
+ *)
+
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 
 From Coq Require Import Arith Lia.
@@ -82,7 +84,7 @@ Section Hypos.
               P (S l) = false}.
   (* begin hide *)
   Proof.
-    exact    (search_toggle  (p-n) R1 R2).
+    exact  (search_toggle  (p-n) R1 R2).
   Defined.
   (* end hide *)
  

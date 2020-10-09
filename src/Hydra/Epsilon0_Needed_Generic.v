@@ -1,5 +1,10 @@
 
-(* Pierre Castéran, LaBRI and University of Bordeaux  *)
+(**  Pierre Castéran, LaBRI and University of Bordeaux  *)
+
+(** Technical definitions and lemmas about variants bounded by some ordinal 
+    les than [epsilon0] 
+ *)
+
 
 From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths O2H.
 From Coq Require Import Relation_Operators.

@@ -1,4 +1,4 @@
-(** General relation *)
+(** General relations  *)
 
 (**  by  Florian Hatat, ENS-Lyon *)
 

@@ -4,7 +4,7 @@
 
  *)
 
-(**   Pierre Casteran, LaBRI *)
+(**   Pierre Casteran, Univ. Bordeaux and  LaBRI *)
 
 
 

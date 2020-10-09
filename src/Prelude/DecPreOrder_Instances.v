@@ -1,8 +1,7 @@
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
 From hydras.Prelude Require Export DecPreOrder.
 From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
-
-
-
 
 Instance Nat_le_TO : TotalDecPreOrder le .
 Proof.
@@ -12,11 +11,6 @@ Proof.
  + intros a b; apply Nat.le_ge_cases. 
  + intros a b; apply le_dec. 
 Defined.
-
-
-
-
-
 
 Instance Z_le_TO : TotalDecPreOrder Z.le .
 split. 

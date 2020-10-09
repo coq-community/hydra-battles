@@ -11,8 +11,6 @@ Thus it makes sense to consider the [alpha]-th element of [A]
 This module shows the construction of the _ordering function_  of [A], following
 Schutte's definitions.
 
-
-
 *)
 
 
@@ -24,7 +22,7 @@ Set Implicit Arguments.
 
 
 
- (** * Main definitions *)
+ (** ** Main definitions *)
  
  
 Definition segment (A: Ensemble Ord) :=

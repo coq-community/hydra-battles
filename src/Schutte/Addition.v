@@ -6,9 +6,10 @@ From hydras Require Export Schutte_basics  Ordering_Functions  PartialFun
 Set Implicit Arguments.
 
 
-(** * Definitions
+(** * Definitions *)
 
- **  addition, multiplication by a positive integer *)
+
+(**  **  addition, multiplication by a positive integer *)
 
 Definition plus alpha := ord (ge alpha).
 
@@ -102,7 +103,7 @@ Proof.
        *  apply sup_upper_bound;auto. 
 Qed.
 
-(** ** Basic properries of addition 
+(** ** Basic properties of addition 
  *)
 
 Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha.

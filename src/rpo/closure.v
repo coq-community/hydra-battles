@@ -14,7 +14,7 @@
 (* 02110-1301 USA                                                     *)
 
 
-(* by Evelyne Contejean *)
+(**  by Evelyne Contejean, LRI *)
 
 
 (* Note by Pierre :

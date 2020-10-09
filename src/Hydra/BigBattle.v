@@ -1,13 +1,18 @@
+(** * A long hydra battle
+
+  Pierre Castéran, LaBRI, Univ Bordeaux 
+
+ *)
+
+
 From Coq Require Import Arith Relations Lia.
 From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates.
 
 
+(** Let us consider a small hydra [hinit] *)
+
+
 Definition  h3 := (hyd_mult head 3).
-
-
-(** * Proof that the hydra hinit  is long to kill in a standard battle *)
-(** **  some useful sub-hydras *)
-
 Definition hinit := hyd3 h3  head head.
 
 
@@ -241,8 +246,6 @@ Qed.
 
 
 
-(** transitive closure *)
-
 Inductive steps : nat -> nat -> nat -> nat ->
                   nat -> nat -> nat -> nat -> Prop :=
 | steps1 : forall i a b c a' b' c',
@@ -252,7 +255,8 @@ Inductive steps : nat -> nat -> nat -> nat ->
     steps j a' b' c' k a'' b'' c'' ->
     steps i a b c k  a'' b'' c''.
 
-(* reachability (for i > 0) *)
+(**  reachability (for i > 0) *)
+
 Definition reachable (i a b c : nat) : Prop :=
   steps 3 3 0 0 i a b c.
 
@@ -269,7 +273,7 @@ Proof.
 Qed.
 
 
-(* From now on, we play again the same tests as above, but instead of plain uses of Compute, we prove and register lemmas that we will be used later *)
+(**  From now on, we play again the same tests as above, but instead of plain uses of Compute, we prove and register lemmas that we will be used later *)
 
 
 Lemma L4 : reachable 4 2 4 0.

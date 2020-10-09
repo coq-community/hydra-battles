@@ -1160,7 +1160,7 @@ Proof.
 Defined.
 
 
-(** ** Properies of [compare] *)
+(** ** Properties of [compare] *)
 
 
 Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.

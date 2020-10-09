@@ -14,7 +14,7 @@
 (* 02110-1301 USA                                                     *)
 
 
-(* by Evelyne Contejean *)
+(** by Evelyne Contejean, LRI *)
 
 (** * Term algebra defined as functor from a Module Signature and a Module Variable.*)
 

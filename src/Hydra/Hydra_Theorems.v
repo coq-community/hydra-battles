@@ -1,3 +1,5 @@
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length.
 Import E0 Large_Sets H_alpha Paths MoreLists  O2H Hydra_Definitions.

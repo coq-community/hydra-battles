@@ -15,7 +15,7 @@
 
 (** To do : Is it a clone of ListSet ? *)
 
-(** Evelyne Contejean *)
+(** Evelyne Contejean, LRI *)
 
 (** * Sets built with lists *)
 

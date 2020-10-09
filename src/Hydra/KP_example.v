@@ -1,4 +1,4 @@
-(** Pierre Casteran *)
+(** Pierre Casteran, Univ. Birdeaux and LaBRI  *)
 
 From hydras.Hydra Require Import Hydra_Definitions Hydra_Lemmas.
 

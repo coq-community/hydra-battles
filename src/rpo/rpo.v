@@ -14,7 +14,7 @@
 (* 02110-1301 USA                                                     *)
 
 
-(* by Evelyne Contejean *)
+(** by Evelyne Contejean, LRI *)
 
 
 From Coq Require Import List Relations Wellfounded Arith  Wf_nat.

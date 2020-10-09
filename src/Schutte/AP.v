@@ -25,7 +25,7 @@ Set Implicit Arguments.
 
 (* end hide *)
 
-(** * Main Definitions
+(** ** Main Definitions
 
  *** Additive principal ordinals 
  *)
@@ -58,7 +58,7 @@ Fixpoint omega_tower (i : nat) : Ord :=
 
 Definition epsilon0 := omega_limit omega_tower.
 
-(** * Proofs, proofs, proofs ... *)
+(** ** Proofs, proofs, proofs ... *)
 
 (** ** About additive principals *)
 

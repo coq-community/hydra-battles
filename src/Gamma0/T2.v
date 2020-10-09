@@ -15,7 +15,7 @@
 
 
 (**  Pierre Casteran 
-    LaBRI, Université Bordeaux 1, and Inria Futurs (Logical)
+    LaBRI, University of Bordeaux, laBRI UMR 5800 )
 *)
 
 (** Data-type for Veblen normal form 
@@ -28,12 +28,11 @@ From hydras Require Import More_Arith  Restriction T1 OrdNotations.
 Set Implicit Arguments.
 
 
-(************************)
-(*   Definitions        *)
-(************************)
+
+(** *   Definitions        *)
 
 
-(* cons a b n r is : psi(a,b)*(S n)+ r  *)
+(**  cons a b n r is : psi(a,b)*(S n)+ r  *)
 
 Inductive T2 : Set :=
   zero : T2
@@ -94,16 +93,14 @@ Fixpoint T1_inj (alpha :T1) : T2 :=
 
 
 
-(* additive principals *)
+(** additive principals *)
 
 
 Inductive ap : T2 -> Prop :=
 ap_intro : forall alpha beta, ap [alpha, beta].
 
-(* strict order on terms *)
+(** strict order on terms *)
 
-(* Note : try to use psi as often as possible in the constructors
-  premises *)
 
 Inductive lt : T2 -> T2 -> Prop :=
 | (* 1 *) 
@@ -146,17 +143,16 @@ where  "o1 o< o2" := (lt o1 o2): t2_scope.
 Hint Constructors lt : T2.
 
 
-
-
-
 Definition le t t' := t = t' \/ t o< t'.
 Hint Unfold le : T2.
 
 Notation "o1 o<= o2" := (le o1 o2): t2_scope.
 
-Definition gtail c := match c with | zero => zero 
-                                  | gcons a b n c => c
-                             end.
+Definition gtail c := match c with
+                      | zero => zero 
+                      | gcons a b n c => c
+                      end.
+
 (* Veblen Normal Form *)
 
 Inductive nf : T2 -> Prop :=
@@ -217,7 +213,7 @@ Inductive lt_epsilon0 : T2 -> Prop :=
 (* end of main definitions *)
 
 
-(** * length (as in Schutte) *)
+(** ** Length (as in Schutte) *)
 
 Section on_length.
 
@@ -232,13 +228,13 @@ Fixpoint nbterms (t:T2) : nat :=
              | gcons a b n v => (S n) + nbterms v
   end.
 
-(* is the multiplication by 2 useful ? *)
 
 Fixpoint t2_length (t:T2) : nat :=
   match t  with zero => 0
              | gcons a b n v => 
                  nbterms (gcons a b n v) + 
-                  2 * (Max.max (t2_length a) (Max.max (t2_length b) (t2_length_aux v)))
+                 2 * (Max.max (t2_length a)
+                              (Max.max (t2_length b) (t2_length_aux v)))
   end
 with t2_length_aux (t:T2) : nat :=
  match t with zero => 0
@@ -250,55 +246,45 @@ with t2_length_aux (t:T2) : nat :=
 Lemma length_a : forall a b n v, t2_length a < 
                                  t2_length (gcons a b n v).
 Proof.
- simpl.
- intros; apply le_lt_n_Sm.
+ simpl; intros; apply le_lt_n_Sm.
  match goal with
      [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
- apply le_plus_trans.
- apply le_plus_trans.
- apply le_max_l.
+ apply le_plus_trans, le_plus_trans, le_max_l.
 Qed.
 
 Lemma length_b : forall a b n v, t2_length b < 
                                  t2_length (gcons a b n v).
 Proof.
- simpl.
- intros; apply le_lt_n_Sm.
- match goal with 
-  [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
- apply le_plus_trans.
- apply le_plus_trans.
- eapply Le.le_trans.
- 2:eapply le_max_r.
- apply le_max_l.
+  simpl; intros; apply le_lt_n_Sm.
+  match goal with 
+    [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
+  apply le_plus_trans, le_plus_trans.
+  eapply Le.le_trans.
+  2:eapply le_max_r.
+  apply le_max_l.
 Qed.
 
 Lemma length_c : forall a b n v, t2_length v < 
-                                    t2_length (gcons a b n v).
+                                 t2_length (gcons a b n v).
 Proof.
- simpl.
- intros; apply le_lt_n_Sm.
- case v.
- simpl.
- auto with arith.
- intros.
- simpl (t2_length (gcons t t0 n0 t1)).
- simpl (nbterms (gcons t t0 n0 t1)).
- match goal with  
-  [ |- ?a <= ?b + ?c + ?d] => rewrite <- (plus_assoc b c d) end.
- simpl (t2_length_aux (gcons t t0 n0 t1)).
- match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
- pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
- generalize (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
- intro n1.
- simpl.
- apply le_n_S.
- apply plus_le_compat_l.
- repeat rewrite plus_0_r.
- apply plus_le_compat;
- apply Le.le_trans with (Max.max (t2_length b) n1);
- apply le_max_r.
- abstract lia.
+  simpl; intros; apply le_lt_n_Sm; case v.
+  - simpl; auto with arith.
+  - intros; simpl (t2_length (gcons t t0 n0 t1)).
+    simpl (nbterms (gcons t t0 n0 t1)).
+  match goal with  
+    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (plus_assoc b c d) end.
+  simpl (t2_length_aux (gcons t t0 n0 t1)).
+  match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
+  { pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
+    generalize (Max.max (t2_length t)
+                      (Max.max (t2_length t0) (t2_length_aux t1))).
+    intro n1; simpl;  apply le_n_S,  plus_le_compat_l.
+    repeat rewrite plus_0_r.
+    apply plus_le_compat;
+    apply Le.le_trans with (Max.max (t2_length b) n1);
+    apply le_max_r.
+  }
+  abstract lia.
 Qed.
 
 
@@ -332,26 +318,25 @@ Proof.
 Qed.
 
 
-Lemma length_ab : forall a b, t2_length a + t2_length b <= t2_length (gcons a b 0 zero).
+Lemma length_ab : forall a b,
+    t2_length a + t2_length b <= t2_length (gcons a b 0 zero).
 Proof.
- simpl.
- intros.
+ simpl; intros.
  repeat rewrite (max_l (t2_length b) 0);auto with arith.
  case (le_lt_dec (t2_length a) (t2_length b)).
- intro;repeat rewrite max_r;auto.
- abstract lia.
- intro;repeat rewrite max_l;auto.
- abstract lia.
- auto with arith.
+  -  intro;repeat rewrite max_r;auto.
+     abstract lia.
+  -  intro;repeat rewrite max_l;auto.
+     abstract lia.
+     auto with arith.
 Qed.
 
 Lemma length_abnc : forall a b n c, 
    t2_length a + t2_length b <= t2_length (gcons a b n c).
 Proof.
- intros.
- eapply Le.le_trans.
- eapply length_ab.
- apply length_psi.
+ intros; eapply Le.le_trans.
+ -  eapply length_ab.
+ - apply length_psi.
 Qed.
 
 

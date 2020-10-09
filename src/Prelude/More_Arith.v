@@ -1,6 +1,6 @@
-(* Florian Hatat, ENS-Lyon *)
+(*y  Florian Hatat, ENS-Lyon *)
 
-(* Note by Pierre:
+(** Note by Pierre:
 
   Some lemmas of this file are possibly in Standard Library *)
 

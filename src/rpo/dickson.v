@@ -16,7 +16,7 @@
 
 (**  by Evelyne Contejean *)
 
-(**  *Dickson Lemma: the multiset extension of a well-founded ordering is well-founded.
+(**  * Dickson Lemma: the multiset extension of a well-founded ordering is well-founded.
  *)
 
 Set Implicit Arguments. 

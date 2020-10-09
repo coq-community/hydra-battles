@@ -1,3 +1,8 @@
+(** Complements on lists
+
+   Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
+
 From Coq  Require Export List Arith Relations Lia.
 Require Import Sorting.Sorted  Compare_dec  Sorting.Sorted.
 

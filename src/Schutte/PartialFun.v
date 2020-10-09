@@ -1,7 +1,8 @@
-(** Pierre Casteran, LaBRI  *)
-
 
 (** * Partial functions *)
+
+(** Pierre Casteran, Univ. Bordeaux and LaBRI  *)
+
 
 (**  We study the relationship between  two representations of partial 
    functions : relational presentation, and with the  [iota] description operator *)

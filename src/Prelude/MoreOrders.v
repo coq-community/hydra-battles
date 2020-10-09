@@ -1,3 +1,8 @@
+(** Complements on strict orders
+
+    Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
+
 From Coq Require Import RelationClasses Relation_Operators Ensembles.
 Import Relation_Definitions.
 Set Implicit Arguments.

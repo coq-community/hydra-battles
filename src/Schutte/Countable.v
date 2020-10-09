@@ -1,7 +1,5 @@
 (** A formalization of denumerable sets. *)
-(** Florian Hatat *)
-
-(** To do : bulletize the proofs ! *)
+(** by Florian Hatat, ENS-Lyon *)
 
 
 From Coq Require Import Ensembles  Arith ArithRing Even Div2

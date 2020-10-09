@@ -41,8 +41,6 @@ Definition sort_correct  (f: list A -> list A) : Prop :=
   forall l:list A, sort_rel l (f l).
 
 
-(** bad notation : make the reader think it's transitive and reflexive *)
-
 
 (** already defined in DecPreOrder ? *)
 

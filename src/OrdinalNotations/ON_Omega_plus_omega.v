@@ -1,4 +1,5 @@
-(**  The ordinal omega + omega *)
+(**  A notation system for the ordinal [omega + omega] *)
+(**  Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 
 From Coq Require Import Arith Compare_dec Lia.
@@ -368,9 +369,12 @@ split.
   + abstract lia.
 Qed.
 
+
+(* begin hide *)
 Goal 6 o< 8.
   auto with arith.
   Set Printing All.
   constructor; auto with arith.
   Unset Printing All.
 Qed.
+(* end hide *)

@@ -1,9 +1,29 @@
+(**  Iteration of a function (similar to [Nat.iter]) *)
+
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+
+
 Open Scope nat_scope.
 From Coq Require Import RelationClasses Relations Arith Max Lia.
 From hydras.Prelude Require Import Exp2.
 
+Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
+  match n with
+  | 0 => x
+  | S p => f (iterate  f p x)
+  end.
 
-(** * Abstract properties of arithmetic functions *)
+(* tail recursive iterate *)
+
+Fixpoint iterate_t {A:Type}(f : A -> A) (n: nat)(x:A) :=
+  match n with
+  | 0 => x
+  | S p =>  (iterate_t  f p (f x))
+  end.
+
+
+
+(** ** Abstract properties of arithmetic functions *)
 
 Definition nat_fun := nat -> nat.
 
@@ -28,19 +48,7 @@ Infix ">>s" := dominates_strong (at level 60).
 Infix "<<=" := fun_le (at level 60).
 
 
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
 
-(* tail recursive iterate *)
-
-Fixpoint iterate_t {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p =>  (iterate_t  f p (f x))
-  end.
 
 Lemma S_pred_rw (f : nat -> nat) : S <<= f ->
                                    forall x, S (Nat.pred (f x)) = f x.
@@ -60,8 +68,6 @@ Proof.
   simpl; now f_equal.
 Qed.
 
-
-(** ** Abstract properties of arithmetic functions *)
 
 
 Lemma fun_le_trans f g h : f <<= g ->  g <<= h -> f <<= h.

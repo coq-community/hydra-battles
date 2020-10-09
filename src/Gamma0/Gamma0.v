@@ -1049,7 +1049,7 @@ Module  Gamma0_sig <: Signature.
 End Gamma0_sig.
 
 
-(** * Module Type Variables. 
+(** ** Module Type Variables. 
  There are almost no assumptions, except a decidable equality. *)
 
 
@@ -1124,7 +1124,7 @@ Fixpoint nat_2_term (n:nat) : term :=
 
 
 
-(** * Every (representation of a) natural number is less than
+(** ** Every (representation of a) natural number is less than
  a non zero ordinal *)
 
 Lemma nat_lt_cons : forall (n:nat) t p  c ,
