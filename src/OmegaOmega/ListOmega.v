@@ -413,11 +413,9 @@ Qed.
 
 
 (**
-   Restriction de l'ordre aux listes de même longueur.
-   (avec complémentation possible à 0): 
-   c'est l'ordre lexicographique.
+   Restriction of [wlt] to lists of same length (with possible addition of 
+    zeroes at the front of the lists 
 *)
-(* La relation sur les listes de même longueur *)
 
 
 Inductive wlt_pad : t -> t -> Prop :=
@@ -483,7 +481,7 @@ Qed.
 (** Here Proof bulletization (Pierre) *)
 
 (**
-  Accessibilité pour l'ordre restreint.
+  Accessibility wrt the restricted order 
 *)
 Lemma Acc_wlt_pad_ind : forall (n:nat),
     (forall (w:t), length w < S n -> Acc wlt_pad w) 
@@ -530,8 +528,7 @@ Proof.
 Qed.
 
 (**
-  De l'accessibilté pour l'ordre restreint à l'accessibilité
-  pour l'ordre sur tout liste.
+    General Accessibility 
 *)
 Lemma Acc_wlt_zeroes_Acc_wlt : forall (n:nat) (w: t),
     Acc wlt (zeroes n ++ w) -> Acc wlt w.
@@ -563,9 +560,7 @@ intros w'' H2. elim (Nat.lt_trichotomy (length w'') (length x)).
     apply wlt_wlt_pad in H7; auto. 
 Qed.
 
-(**
-  L'ordre sur toute liste est bien fondé !
-*)
+
 Theorem Acc_wlt : forall (w:t), Acc wlt w.
 Proof.
  intro; apply Acc_wlt_pad_Acc_wlt; apply Acc_wlt_pad.
@@ -907,23 +902,6 @@ Proof.
   destruct (compare w1 w2); now constructor.
 Qed.
   
-(**
-  Ordinal notation
-
-Require Import OrdinalNotations.Generic.
-
-Instance OmegaOmega : ON wlt compare.
-Proof.
-  split.
-  - apply wlt_strorder.
-  - unfold well_founded. exact Acc_wlt.
-  - Abort.
-
- *)
- 
-(**
-   Sur wlt
-*)
 
 Lemma wlt_len_gen : forall (w1 w2:t) (a:nat),
   length w1 < length (S a :: w2) -> wlt w1 (S a :: w2).
