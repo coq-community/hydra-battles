@@ -1,4 +1,5 @@
 From Coq Require Import  Arith.
+From Coq Require Import List.
 From hydras Require Import ListOmega.
 
 (** TO do : verify (and prove !) the following examples 
@@ -217,13 +218,13 @@ Arguments Node {A} _ _ _.
 Fixpoint btree_size (A:Set) (bt:btree A) :=
   match bt with
       Empty => 0
-    | (Node bt1 x bt2) => S (plus (btree_size A bt1) (btree_size A bt2))
+    | (Node bt1 x bt2) => S ((btree_size A bt1) + (btree_size A bt2))
   end.
 
 Definition m_btree (A:Set) (bt:btree A) :=
   match bt with
       Empty => nil
-    | (Node bt1 x bt2) => (cons (btree_size A bt) (cons (btree_size A bt1) nil))
+    | (Node bt1 x bt2) => (btree_size A bt)::(btree_size A bt1)::nil
   end.
 
 Definition lt_btree (A:Set) (bt1 bt2:btree A) :=
@@ -394,11 +395,11 @@ Defined.
 Fixpoint list_btree_size (A:Set) (bts:list (btree A)) : nat :=
   match bts with
       nil => 0
-    | (cons bt bts) => (plus (btree_size A bt) (list_btree_size A bts))
+    | (cons bt bts) => (btree_size A bt) + (list_btree_size A bts)
   end.
 
 Definition wm_list_btree (A:Set) (bts:list (btree A)) : t :=
-  (cons (list_btree_size A bts) (cons (length bts) nil)).
+  (list_btree_size A bts)::(length bts)::nil.
 
 Definition lt_list_btree (A:Set) :=
   (make_mwlt (list (btree A)) (wm_list_btree A)).
