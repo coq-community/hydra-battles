@@ -378,27 +378,32 @@ Section NotIncl.
 
 
   Lemma L1 : forall alpha:t,  Limit alpha -> Limit (f alpha).
-  destruct 1.
-  split.
-  Admitted.
+    Search Limit.
+     intros.  About SUBON_limit.
+     specialize (SUBON_limit _ _ Hyp). intros. now rewrite <- (H0 alpha). 
+   Qed. 
 
- Lemma L2 : forall n: nat, ~ Limit n.
- intros n H. 
- destruct H.
- destruct n.
- destruct H.
- lia. 
-  destruct  (H0 n) as [p Hp].
-  auto with arith.  
-  lia.
+  Lemma L2 : forall n: nat, ~ Limit n.
+  Proof.
+    intros n H. 
+    destruct H.
+    destruct n.
+    destruct H.
+    lia. 
+    destruct  (H0 n) as [p Hp].
+    auto with arith.  
+    lia.
+  Qed.
+
+Lemma ExNotIncl : False.
+Proof.
+  apply (L2 (f omega)).
+  apply   (SUBON_limit _ _ Hyp omega).
+  apply omega_is_limit.
 Qed.
 
-
-  Lemma ExNotIncl : False.
-  Admitted.   
-  
-
 End NotIncl.
+
 (* begin hide *)
 Goal 6 o< 8.
   auto with arith.
