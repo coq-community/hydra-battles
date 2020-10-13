@@ -1,7 +1,7 @@
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 (** This module defines a type class of ordinal notations, _i.e._, data types
-    wiith a well-founded inequality and a [compare] function *)
+    with a well-founded strict order  and a [compare] function *)
 
 
 From Coq Require Import RelationClasses Relation_Operators Ensembles.
