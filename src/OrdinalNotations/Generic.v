@@ -249,103 +249,142 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
 
 Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Eq <-> alpha = beta.
- Proof.
- split.
+Proof.
+  split.
   intro H; destruct (compare_correct alpha beta); auto; discriminate.
   intro; subst.
-   destruct (compare_correct beta beta); auto.
-destruct (StrictOrder_Irreflexive beta); trivial.   
-destruct (StrictOrder_Irreflexive beta); trivial.   
- Qed.
+  destruct (compare_correct beta beta); auto.
+  destruct (StrictOrder_Irreflexive beta); trivial.   
+  destruct (StrictOrder_Irreflexive beta); trivial.   
+Qed.
 
- 
+
 Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Lt <-> alpha o< beta.
- Proof.
- split.
- -  intro H; destruct (compare_correct alpha beta); auto; discriminate.
- - intro H.
+Proof.
+  split.
+  -  intro H; destruct (compare_correct alpha beta); auto; discriminate.
+  - intro H.
     destruct (compare_correct alpha beta); auto.
     + subst; destruct (StrictOrder_Irreflexive beta); trivial.   
     + destruct (StrictOrder_Irreflexive beta); trivial.
-     red in H.
-     now transitivity alpha.
- Qed.
+      red in H.
+      now transitivity alpha.
+Qed.
 
 
- 
 
- Lemma compare_Gt_gt  `{OA : @ON A ltA  compareA} alpha beta :
+
+Lemma compare_Gt_gt  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Gt <-> beta o< alpha.
- Proof.
-   split.
-   - intro H; destruct (compare_correct alpha beta); auto; discriminate.
+Proof.
+  split.
+  - intro H; destruct (compare_correct alpha beta); auto; discriminate.
   -   destruct (compare_correct alpha beta); auto.
-    + subst.  intro H ; destruct (StrictOrder_Irreflexive beta); trivial.   
-    + intro H0; destruct (StrictOrder_Irreflexive beta); trivial.
-     now transitivity alpha.
- Qed.
+      + subst.  intro H ; destruct (StrictOrder_Irreflexive beta); trivial.   
+      + intro H0; destruct (StrictOrder_Irreflexive beta); trivial.
+        now transitivity alpha.
+Qed.
 
+(** To do : simplify/structure  these new proofs ! *)
 
- Section SubON_properties.
-   
-   Context `{OA : @ON A ltA  compareA}
-           `{OB : @ON B ltB  compareB}
-           (f : A -> B)
-           (alpha : B)
-           (Su : SubON OA OB alpha f).
-
-   Lemma SubON_mono a b : ltA a b <-> ltB (f a) (f b).
-   Proof.
-     split;intro H.
-     apply compare_Lt_lt in H;
-       apply compare_Lt_lt;
-       now rewrite SubON_compare.
-     apply compare_Lt_lt.
-     About compare_Lt_lt.      
-     specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b)).
-     intro H0.
-     rewrite <- H0 in H.
-     
-     now rewrite SubON_compare in H.
-   Qed.    
-
-   Lemma SubON_inj : forall a b, f a = f b -> a = b.
-   Proof.
-     intros a b H.    
-     apply compare_Eq_eq.
-     apply compare_Eq_eq in H.
-     now   rewrite SubON_compare in H.
-   Qed.
-
+Section SubON_properties.
   
+  Context `{OA : @ON A ltA  compareA}
+          `{OB : @ON B ltB  compareB}
+          (f : A -> B)
+          (alpha : B)
+          (Su : SubON OA OB alpha f).
 
-   Lemma SUBON_successor : forall a b,  Successor a b <-> Successor (f a) (f b).
-   Proof.
-     split; intro H.
-     destruct H.     
-     split.
-      now apply SubON_mono.
-      intros z Hz Hz'.
-      destruct (SubON_onto z).
-      transitivity (f a); auto.       
-      apply SubON_incl.
-      subst.      
-      apply SubON_mono in Hz.
-      apply SubON_mono in Hz'.
-      eapply H0;eauto.
-       destruct H.     
-     split.
-     now apply SubON_mono.
-       intros z Hz Hz'.
-      specialize (H0 (f z)).
-      apply H0.
-      now apply SubON_mono.
-      now apply SubON_mono.
-Qed.     
+  Lemma SubON_mono a b : ltA a b <-> ltB (f a) (f b).
+  Proof.
+    split;intro H.
+    - apply compare_Lt_lt in H; apply compare_Lt_lt;
+      now rewrite SubON_compare.
+    - apply compare_Lt_lt.
+    specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b)).
+    intro H0;rewrite <- H0 in H.
+    now rewrite SubON_compare in H.
+  Qed.    
 
+  Lemma SubON_inj : forall a b, f a = f b -> a = b.
+  Proof.
+    intros a b H; apply compare_Eq_eq.
+    apply compare_Eq_eq in H.
+    now   rewrite SubON_compare in H.
+  Qed.
 
- End SubON_properties.
+  Lemma SUBON_successor : forall a b,  Successor a b <-> Successor (f a) (f b).
+  Proof.
+    split; intro H.
+    - destruct H.     
+      split.
+      +  now apply SubON_mono.
+      + intros z Hz Hz';  destruct (SubON_onto z).
+        * transitivity (f a); auto.       
+          apply SubON_incl.
+        * subst;  apply SubON_mono in Hz; apply SubON_mono in Hz'.
+          eapply H0;eauto.
+    - destruct H; split.
+     +  now apply SubON_mono.
+     + intros z Hz Hz';  specialize (H0 (f z)).
+       apply H0; now apply SubON_mono.
+  Qed.
+
+  Lemma SUBON_limit : forall a ,  Limit a  <-> Limit (f a).
+  Proof.
+    split; intro H.
+    - destruct H ; split.
+      + destruct H as [m Hm]; exists (f m); now apply SubON_mono.
+      + intros y Hy; destruct (SubON_onto y) as [x Hx].
+        * transitivity (f a); auto.       
+          apply SubON_incl.
+        * subst; apply SubON_mono in Hy.
+          destruct (H0 _ Hy) as [z [Hz Hz']].
+          exists (f z); split; apply SubON_mono; auto.
+    - destruct H; split.
+      +  destruct H as [w Hw]; destruct (SubON_onto w) as [x Hx].
+         transitivity (f a); auto.
+           * apply SubON_incl.
+           * exists x; subst w; apply SubON_mono in Hw; auto.
+      + intros y Hy; destruct (H0 (f y))  as [w [Hw Hw']].
+        * apply SubON_mono; auto.
+        * destruct (SubON_onto w) as [x Hx].
+          transitivity (f a); auto; apply SubON_incl.
+          subst w;   exists  x; split;apply SubON_mono; auto.
+  Qed.     
+
+  Lemma SubON_least : forall a ,  Least a  <-> Least (f a).
+  Proof.
+    split; intro H.
+    - intros y; destruct (compare_correct (f a) y).
+      + subst y; right.
+      + now  left.
+      + exfalso.
+        { destruct (SubON_onto y).
+          transitivity (f a); auto.
+          apply SubON_incl.
+          subst y;  apply SubON_mono in H0.
+          destruct (H x).
+          apply (StrictOrder_Irreflexive a).
+          now transitivity y.
+          apply (StrictOrder_Irreflexive a).
+          auto.
+        }
+    - intro x; destruct (compare_correct a x).
+      subst; right.
+      + now left.
+      + apply SubON_mono in H0; specialize (H (f x)).
+      exfalso.
+      { apply (StrictOrder_Irreflexive (f a)).
+        destruct H.
+        transitivity y; auto.
+        auto.
+      }
+  Qed.
   
+End SubON_properties.
 
-   
+
+
+
