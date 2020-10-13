@@ -370,6 +370,35 @@ split.
 Qed.
 
 
+
+Section NotIncl.
+  Context (i : nat)
+          (f : t -> nat)
+          (Hyp : SubON Omega_plus_Omega Omega i f).
+
+
+  Lemma L1 : forall alpha:t,  Limit alpha -> Limit (f alpha).
+  destruct 1.
+  split.
+  Admitted.
+
+ Lemma L2 : forall n: nat, ~ Limit n.
+ intros n H. 
+ destruct H.
+ destruct n.
+ destruct H.
+ lia. 
+  destruct  (H0 n) as [p Hp].
+  auto with arith.  
+  lia.
+Qed.
+
+
+  Lemma ExNotIncl : False.
+  Admitted.   
+  
+
+End NotIncl.
 (* begin hide *)
 Goal 6 o< 8.
   auto with arith.
