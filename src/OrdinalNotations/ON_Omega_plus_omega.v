@@ -377,28 +377,16 @@ Section NotIncl.
           (Hyp : SubON Omega_plus_Omega Omega i f).
 
 
-  Lemma L1 : forall alpha:t,  Limit alpha -> Limit (f alpha).
-    Search Limit.
-     intros.  About SUBON_limit.
-     specialize (SUBON_limit _ _ Hyp). intros. now rewrite <- (H0 alpha). 
-   Qed. 
-
-  Lemma L2 : forall n: nat, ~ Limit n.
+  Remark R1 :forall n: nat, ~ Limit n.
   Proof.
-    intros n H. 
-    destruct H.
-    destruct n.
-    destruct H.
-    lia. 
-    destruct  (H0 n) as [p Hp].
-    auto with arith.  
-    lia.
+    intros n [H H0]; destruct n. 
+    destruct H as [w Hw]; lia. 
+    destruct  (H0 n) as [p Hp]; lia.
   Qed.
 
 Lemma ExNotIncl : False.
 Proof.
-  apply (L2 (f omega)).
-  apply   (SUBON_limit _ _ Hyp omega).
+  apply (R1 (f omega)); apply (SUBON_limit _ _ Hyp omega).
   apply omega_is_limit.
 Qed.
 
