@@ -5,10 +5,6 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 
 
 
-
-
-_All of the Coq scripts and latex files in this project are available under the [CeCILL-B license](https://cecill.info/licences/Licence_CeCILL-B_V1-en.html)_.
-
 ##  Installation
 -  the general Makefile is in the top directory 
 
