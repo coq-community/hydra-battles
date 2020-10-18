@@ -96,12 +96,13 @@ Proof.
 Qed.
 
 
+(*  useless ? 
 Lemma oplus_rect:
   forall P: T1 -> T1 -> T1 -> Type, 
     (forall a:T1, P T1.zero a a) ->
     (forall a: T1, P a T1.zero a) ->
     (forall a1 n1 b1 a2 n2 b2 o,
-       compare a1 a2 = Gt ->
+       compare a1 a2 = Gt -> 
        P b1 (ocons a2 n2 b2) o ->
        P (ocons a1 n1 b1) (ocons a2 n2 b2)
          (ocons a1 n1 o)) ->
@@ -112,7 +113,7 @@ Lemma oplus_rect:
          (ocons a2 n2 o)) ->
     (forall a1 n1 b1 a2 n2 b2 o,
        compare a1 a2 = Eq ->
-       P b1 b2 o ->
+       P b1 b2 o -> 
        P (ocons a1 n1 b1) (ocons a2 n2 b2)
          (ocons a1 (S (n1 + n2)%nat) o)) ->
     forall a b, P a b (a o+ b).
@@ -128,8 +129,11 @@ Proof with auto.
         * intro Comp; cbn; rewrite Comp ...
 Defined.
 
-(* still unused *)
+
+
 Ltac oplus_induction a b:= pattern (a o+ b); apply oplus_rect.
+ *)
+
 
 Lemma oplus_eqn :
   forall a b, 
@@ -170,12 +174,12 @@ Lemma lt_phi0_oplus : forall gamma alpha beta,
 Proof with auto.
   induction gamma; destruct alpha, beta.  
   -     simpl; constructor.
-  -  inversion 2;   inversion H5;   now simpl.
-  -  inversion 1.   T1_inversion H4.
-  -  inversion 1.   T1_inversion H4.
+  -  inversion 2; inversion H5;   now simpl.
+  -  inversion 1; T1_inversion H4.
+  -  inversion 1; T1_inversion H4.
   -  simpl; auto.  
   -  simpl; auto.
-  -  simpl;   auto.
+  -  simpl; auto.
   -   rewrite oplus_eqn;  case_eq (compare alpha1 beta1).
       + constructor; now inversion H0.
       + right; eapply lt_phi0_inv1;eauto.
@@ -195,13 +199,12 @@ Section Proof_of_plus_nf.
       + simpl;constructor.
       + now simpl.
       + now simpl.
-      +  intros.  rewrite oplus_cons_cons.
-         case_eq (compare a1 b1).
+      +  intros; rewrite oplus_cons_cons;
+           case_eq (compare a1 b1).
          * (* a1 = b1 *)
            intro H5;  generalize (compare_Eq_impl  _ _ H5);
-           intro;subst b1. clear H5.
-           specialize (IHgamma (phi0 a1)).
-           intros; apply nf_intro...  
+           intro;subst b1;clear H5; specialize (IHgamma (phi0 a1)).
+           intros; apply nf_intro; [eauto with T1 |idtac| eauto with T1].
             eapply IHgamma.
             repeat split; eauto with T1. 
             apply le_lt_trans with (ocons a1 n a2) ...
@@ -226,8 +229,7 @@ Section Proof_of_plus_nf.
            assumption.
            eauto with T1.
            apply head_lt.
-           unfold T1.lt, lt_b. now  rewrite H4. 
-
+           unfold T1.lt, lt_b; now  rewrite H4. 
            apply  lt_phi0_phi0.
            eapply lt_phi0_intro; eauto.
            apply lt_phi0_oplus;auto.
@@ -272,6 +274,7 @@ Section Proof_of_plus_nf.
       apply max_le_1;auto.
   Qed.
 
+    
 End Proof_of_plus_nf.
 
 Lemma o_finite_mult_nf : forall a n, nf a -> nf (o_finite_mult n a).

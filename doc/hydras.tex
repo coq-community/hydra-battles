@@ -3848,7 +3848,7 @@ Add to the class \texttt{ON} the requirement that for any $\alpha$ it is decidab
 
 
 \textbf{Hint:}   Beware of the instances associated with sum and product of notations!
-  You may consider additional fields such as ``there is a greatest element'' 
+  You may consider additional fields 
 to make the sum and product of notations ``compositional''.
 
 \end{project}
@@ -3858,6 +3858,9 @@ to make the sum and product of notations ``compositional''.
 \label{project:on-setoid}
 Reconsider the  class \texttt{ON}, with an equivalence instead of Leibniz equality.
 \end{project}
+
+
+
 
 
 %%%% ICI ICI
@@ -5121,93 +5124,93 @@ Qed.
 \end{Coqsrc}
 
 
-\subsubsection{A hand-made induction principle}
-\label{sec:orgheadline85}
+% \subsubsection{A hand-made induction principle}
+% \label{sec:orgheadline85}
 
-\index{Coq!Commands!Functional Scheme}
+% \index{Coq!Commands!Functional Scheme}
 
-\emph{Coq} contains a command  \texttt{Functional Scheme} that 
-generates induction principles which correspond to recursive functions.
-Unfortunately, the current version ( \texttt{8.11.0} ) doesn't work on \texttt{oplus},
-probably because of the inner \texttt{Fix}.
+% \emph{Coq} contains a command  \texttt{Functional Scheme} that 
+% generates induction principles which correspond to recursive functions.
+% Unfortunately, the current version ( \texttt{8.11.0} ) doesn't work on \texttt{oplus},
+% probably because of the inner \texttt{Fix}.
 
-\begin{Coqsrc}
-Functional Scheme oplus_ind := Induction for oplus Sort Prop.
-\end{Coqsrc}
+% \begin{Coqsrc}
+% Functional Scheme oplus_ind := Induction for oplus Sort Prop.
+% \end{Coqsrc}
 
-\begin{Coqanswer}
-Error: Anomaly "todo." Please report at http://coq.inria.fr/bugs/.
-\end{Coqanswer}
-
-
-Fortunately, it's a good exercise for a semi-experienced user, to write
-her/him-self induction principles similar to the ones returned by
-\texttt{Functional Scheme}.
-
-\begin{itemize}
-\item First, we chose to write a version for sort \texttt{Type}, since versions
-for sorts \texttt{Prop} and \texttt{Set} can be easily derived from
-the former one. According to \emph{Coq}'s naming politics, we will call our 
-principle \texttt{oplus\_rect}
-
-\item The conclusion of \texttt{oplus\_rect} will be (\texttt{$P$ a b (oplus a b)}),
-where $P$ is an arbitrary function of type 
-\texttt{T1 -> T1 -> T1 -> Type}
-
-\item The premises of \texttt{oplus\_rect} will describe how to build an induction 
-on the graph of \texttt{oplus}.
-\end{itemize}
-
-We are now ready to state and prove \texttt{oplus\_rect}, and the reader
-will note that the statement is longer than the proof script itself,
-which is a standard proof by induction, simplification and case-analysis 
-that follows  \texttt{oplus}'s definition.
-
-We associate also a tactic to the application of \texttt{oplus\_rect}.
-
-\begin{Coqsrc}
- Lemma oplus_rect:
-      forall P: T1 -> T1 -> T1 -> Type, 
-        (forall a:T1, P zero a a) ->
-        (forall a: T1, P a zero a) ->
-        (forall a1 n1 b1 a2 n2 b2 o,
-           compare a1 a2 = Gt ->
-           P b1 (ocons a2 n2 b2) o ->
-           P (ocons a1 n1 b1) (ocons a2 n2 b2)
-             (ocons a1 n1 o)) ->
-        (forall a1 n1 b1 a2 n2 b2 o,
-           compare a1 a2 = Lt ->
-           P (ocons a1 n1 b1) b2 o ->
-           P (ocons a1 n1 b1) (ocons a2 n2 b2) 
-           (ocons a2 n2 o)) ->
-        (forall a1 n1 b1 a2 n2 b2 o,
-           compare a1 a2 = Eq ->
-           P b1 b2 o ->
-          P (ocons a1 n1 b1) (ocons a2 n2 b2)
-            (ocons a1 (S (n1 + n2)%nat) o)) ->
-         forall a b, P a b (oplus a b).
-Proof with auto.
-   induction a.
-   -    intro; simpl; destruct b;auto.
-   -   induction b.
-       + apply X0.
-       + case_eq (compare a1 b1).
-         * intro Comp; unfold oplus; rewrite Comp.
-           cbn; apply X3 ...
-         * intro Comp; cbn; rewrite Comp; apply X2...
-         * intro Comp; cbn; rewrite Comp ...
- Defined.
+% \begin{Coqanswer}
+% Error: Anomaly "todo." Please report at http://coq.inria.fr/bugs/.
+% \end{Coqanswer}
 
 
-Ltac oplus_induction a b:= pattern (oplus a b); apply oplus_rect.
-\end{Coqsrc}
+% Fortunately, it's a good exercise for a semi-experienced user, to write
+% her/him-self induction principles similar to the ones returned by
+% \texttt{Functional Scheme}.
 
-\index{Exercises}
+% \begin{itemize}
+% \item First, we chose to write a version for sort \texttt{Type}, since versions
+% for sorts \texttt{Prop} and \texttt{Set} can be easily derived from
+% the former one. According to \emph{Coq}'s naming politics, we will call our 
+% principle \texttt{oplus\_rect}
 
-\begin{exercise}
-The induction principle \texttt{oplus\_rect} is still unused in our development. 
-Please build some nice examples of application.
-\end{exercise}
+% \item The conclusion of \texttt{oplus\_rect} will be (\texttt{$P$ a b (oplus a b)}),
+% where $P$ is an arbitrary function of type 
+% \texttt{T1 -> T1 -> T1 -> Type}
+
+% \item The premises of \texttt{oplus\_rect} will describe how to build an induction 
+% on the graph of \texttt{oplus}.
+% \end{itemize}
+
+% We are now ready to state and prove \texttt{oplus\_rect}, and the reader
+% will note that the statement is longer than the proof script itself,
+% which is a standard proof by induction, simplification and case-analysis 
+% that follows  \texttt{oplus}'s definition.
+
+% We associate also a tactic to the application of \texttt{oplus\_rect}.
+
+% \begin{Coqsrc}
+%  Lemma oplus_rect:
+%       forall P: T1 -> T1 -> T1 -> Type, 
+%         (forall a:T1, P zero a a) ->
+%         (forall a: T1, P a zero a) ->
+%         (forall a1 n1 b1 a2 n2 b2 o,
+%            compare a1 a2 = Gt ->
+%            P b1 (ocons a2 n2 b2) o ->
+%            P (ocons a1 n1 b1) (ocons a2 n2 b2)
+%              (ocons a1 n1 o)) ->
+%         (forall a1 n1 b1 a2 n2 b2 o,
+%            compare a1 a2 = Lt ->
+%            P (ocons a1 n1 b1) b2 o ->
+%            P (ocons a1 n1 b1) (ocons a2 n2 b2) 
+%            (ocons a2 n2 o)) ->
+%         (forall a1 n1 b1 a2 n2 b2 o,
+%            compare a1 a2 = Eq ->
+%            P b1 b2 o ->
+%           P (ocons a1 n1 b1) (ocons a2 n2 b2)
+%             (ocons a1 (S (n1 + n2)%nat) o)) ->
+%          forall a b, P a b (oplus a b).
+% Proof with auto.
+%    induction a.
+%    -    intro; simpl; destruct b;auto.
+%    -   induction b.
+%        + apply X0.
+%        + case_eq (compare a1 b1).
+%          * intro Comp; unfold oplus; rewrite Comp.
+%            cbn; apply X3 ...
+%          * intro Comp; cbn; rewrite Comp; apply X2...
+%          * intro Comp; cbn; rewrite Comp ...
+%  Defined.
+
+
+% Ltac oplus_induction a b:= pattern (oplus a b); apply oplus_rect.
+% \end{Coqsrc}
+
+% \index{Exercises}
+
+% \begin{exercise}
+% The induction principle \texttt{oplus\_rect} is still unused in our development. 
+% Please build some nice examples of application.
+% \end{exercise}
 
 \index{Projects}
 \begin{project}
