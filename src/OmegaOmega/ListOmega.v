@@ -398,8 +398,8 @@ Proof.
   - auto.
   - intro. inversion H.
   - intros. simpl. assert ((length alpha ?= length beta)=Lt).
-    { Search Nat.compare. apply Nat.compare_lt_iff.
-      Search lt. apply lt_S_n. assumption. }
+    { apply Nat.compare_lt_iff.
+      apply lt_S_n. assumption. }
     rewrite H0. trivial.
 Qed.
 

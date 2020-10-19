@@ -245,8 +245,6 @@ Definition round h h' := exists n,  round_n n h h'.
 
 Infix "-1->" := round (at level 60).
 
-
-
 (** *** transitive closures of round 
 *)
 
@@ -257,6 +255,90 @@ Definition round_star h h' := h = h' \/ round_plus h h'.
 Infix "-+->" := round_plus (at level 60).
 Infix "-*->" := round_star (at level 60).
 
+(** **  Experimental tactics for interactive battles  *)
+
+(**  *** removes the i-th daughter (should be a head) *)
+
+Ltac chop_off i :=
+  match goal with |- S0 ?h ?h' =>
+                  match i with
+                    | O => eapply S0_first
+                    | S ?j => eapply S0_rest; chop_off j
+                  end
+                  |  |- round ?h ?h' =>
+                     exists 0; left; split; chop_off i
+                  |  |- round_n ?n ?h ?h' =>
+                     left ; split; chop_off i
+  end.
+
+
+(**  Calls the [R2] relation *)
+
+Ltac h_search_n n  :=  match goal with
+                       |- round ?h ?h' =>  exists n; eright
+                    end.
+
+Ltac h_search   :=  match goal with
+                    | |- round_n ?p ?h ?h' => eright
+                    end.
+
+
+Ltac s2_nth n :=
+  match n with
+    | 0 => eleft
+    | S ?p => eright ; s2_nth p
+    end.
+
+(** Moves to the [i]-th daugther *)
+
+Ltac r2_up i := match goal with
+                    |- R2 ?n ?h ?h' => eright; s2_nth i 
+end.
+
+Ltac S1_nth i :=
+  match goal with
+      |- S1 ?n ?h ?h' =>
+      match i with
+        | 0 => eleft
+        | S ?j => eright ; S1_nth j
+      end
+  end.
+
+
+(** Notifies we are at distance 2 from the expected head 
+    goto to [i]-th dauchter, then chop off the [j]-th head *)
+
+Ltac r2_here i j :=
+ match goal with
+      |- R2 ?n ?h ?h' =>  eleft; S1_nth i; split; chop_off j
+ end.
+
+(** End of the battle *)
+
+Ltac stop :=
+  match goal with
+      |- round_star ?h ?h' => left; reflexivity
+  end.
+
+(** Still fighting *)
+
+Lemma round_star_intro h h'' : forall h',
+    h -1-> h' -> h' -*-> h'' -> h -*-> h''.
+Proof. 
+  destruct 2.
+  - subst; right; now left .
+  - right; now right with h'.
+Qed.
+
+Ltac forward :=
+  match goal with
+      |- round_star ?h ?h' => eapply round_star_intro
+  end.
+
+
+
+(**  ** Traces *)
+
 Inductive trace_to  dest : list  nat -> Hydra -> Prop :=
   trace_to1 : forall n h, round_n  n h dest -> trace_to dest (cons n nil) h
 | trace_toS : forall n t h h',  round_n n  h h' -> trace_to dest t h' ->
@@ -264,8 +346,7 @@ Inductive trace_to  dest : list  nat -> Hydra -> Prop :=
 
 Definition trace t h h' := trace_to h' t h.
 
-(** * Choice of a head 
-
+(** 
   Let $h$ be an hydra and $n$ and expected replication factor. The next step of 
   the current battle may be specified by the following type *)
 

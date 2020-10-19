@@ -25,7 +25,7 @@ Module Examples.
   
   
   Example ex4:  round Hy Hy'.
-  Proof.  round_1 2. Qed.
+  Proof.  chop_off 2. Qed.
 
   
   Example Hy'' := 
@@ -36,21 +36,23 @@ Module Examples.
   
   Example Hy'H'' : round Hy' Hy''.
   Proof.
-    round_2 4; R2_up 1; R2_up 0; R2_here 0.
-    hremove 1.
+    h_search_n 4; r2_up 1; r2_up 0; r2_here 0 1.
   Qed.
   
   Example R2_example:  R2 4 Hy' Hy''.
   Proof.
-   R2_up 1. R2_up 0. R2_here 0. hremove 0.  
+    (** move to 2nd sub-hydra (0-based indices) *) r2_up 1. 
+    (** move to first sub-hydra *)  r2_up 0.
+    (** we're at distance 2 from the to-be-chopped-off head 
+        let's go to the first daughter, then chop-off the leftmost head *)
+    r2_here 0 0. 
   Qed.
   
   
   Example Exx :  {h' | round Hy' h'}.
   Proof.
-    eexists; round_2 4 .
-    R2_up 1; R2_up 0; R2_here 0.
-    hremove 1.
+    eexists; h_search_n 4 .
+    r2_up 1; r2_up 0; r2_here 0 1.
   Defined. 
   
   
@@ -58,11 +60,10 @@ Module Examples.
   Proof.
     eexists.
     forward.
-    - round_1 2.
+    - chop_off 2.
     - forward.
-    + round_2 4.
-      R2_here 1.
-      hremove 1.
+    + h_search_n 4.
+      r2_here 1 1.
     + stop.
   Defined.
 
@@ -90,19 +91,15 @@ Module Examples.
   Example Hy_2 : R2 4 Hy' Hy''.
   Proof.
     right.  right. left.  right; left;  left; left.
-    split; hremove 0%nat.
+    split; chop_off 0%nat.
   Qed.
   
 
 
   Example ex_2 :{Hy'' | R2 4 Hy' Hy''}.
   Proof.
-    eexists.
-    unfold Hy'.
-    R2_up 1.
-    R2_up 0. 
-    R2_here 0.
-    hremove 0%nat.
+    eexists; unfold Hy'.
+    r2_up 1;  r2_up 0;  r2_here 0 0.
   Defined.
   
   

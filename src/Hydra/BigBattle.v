@@ -30,7 +30,7 @@ Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).
 Proof.
   eapply battle_trans with (h := hyd2 h3 head)(i:=1).
   left; trivial.
-   red. cbn. round_1 1.
+   red. cbn. chop_off 1.
    left; trivial.
    red.
   left.  trivial.

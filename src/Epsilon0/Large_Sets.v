@@ -406,7 +406,6 @@ Qed.
 
 Lemma L_omega_ok : L_spec omega L_omega.
 Proof.
-  About L_lim.
   specialize (L_lim_ok omega nf_omega refl_equal L_fin
                        (fun i => L_fin_ok (S i))) ; intro H.
    eapply L_spec_compat with (1:=H).

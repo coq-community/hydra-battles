@@ -672,4 +672,3 @@ Goal
   - apply H_alpha_ge_id.
 Qed.
 
-About H_Fin.

@@ -3691,7 +3691,7 @@ Proof.
   - apply lt_wf. 
   - apply compare_correct.
 Qed.
-Search (nat -> T2).
+
 
 Instance Finite (n:nat) : G0.
 Proof.
@@ -3699,14 +3699,14 @@ Proof.
 Defined.
 
 Instance Plus (alpha beta : G0) : G0.
-destruct alpha, beta. exists (vnf0 + vnf1).
-Search nf nfb.
-red in vnf_ok0, vnf_ok1. red. 
-rewrite nfb_equiv in *.
-now apply plus_nf.
+Proof.
+  destruct alpha, beta. exists (vnf0 + vnf1).
+  red in vnf_ok0, vnf_ok1. red. 
+  rewrite nfb_equiv in *.
+  now apply plus_nf.
 Defined. 
 
-  Infix "+" := Plus : g0_scope.
+Infix "+" := Plus : g0_scope.
   
 Coercion Finite : nat >-> G0.
 

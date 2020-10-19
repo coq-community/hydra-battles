@@ -153,7 +153,6 @@ Proof.
   induction s; simpl; auto.
   intros; simpl; now rewrite IHs.
 Qed.
-About but_last_iota_from.
 
 (* useful ??? *)
 Lemma but_last_iota_from' j : forall i, but_last i (iota_from (S i) (S j)) =

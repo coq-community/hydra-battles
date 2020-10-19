@@ -228,13 +228,7 @@ Proof.
   induction 1;  intro; subst h; eapply head_no_round_n ; eauto.
 Qed.
 
-Lemma round_star_intro h h'' : forall h',
-    h -1-> h' -> h' -*-> h'' -> h -*-> h''.
-Proof. 
-  destruct 2.
-  - subst; right; now left .
-  - right; now right with h'.
-Qed.
+
 
 (** **  Generic properties of round_plus *)
 
@@ -467,65 +461,5 @@ Definition classic_battle f t h :=
                 | _, S t' => go (S n) t' (next_step f n h)
       end
   in go 1 t h.
-
-
-
-(** **  Tactics for interactive battles  *)
-
-(**  *** removes the n-th daughter (should be a head) *)
-
-Ltac hremove n :=
-  match goal with |- S0 ?h ?h' =>
-                  match n with
-                    | O => eapply S0_first
-                    | S ?p => eapply S0_rest; hremove p
-                  end
-  end.
-
-Ltac round_1 i :=
-  match goal with |- round ?h ?h' =>
-                  exists 0;  left; split; hremove i
-             | |- round_n ?n ?h ?h' =>
-                  left ; split; hremove i
-  end.
-                                                 
-Ltac round_2 n  :=  match goal with
-                        |- round ?h ?h' =>  exists n; eright
-                    end.
-                         
-Ltac S2_nth n :=
-  match n with
-    | 0 => eleft
-    | S ?p => eright ; S2_nth p
-    end.
-
-
-Ltac R2_up i := match goal with
-                    |- R2 ?n ?h ?h' => eright; S2_nth i 
-end.
-
-Ltac S1_nth i :=
-  match goal with
-      |- S1 ?n ?h ?h' =>
-      match i with
-        | 0 => eleft
-        | S ?j => eright ; S1_nth j
-      end
-  end.
-
-Ltac R2_here i :=
- match goal with
-      |- R2 ?n ?h ?h' =>  eleft; S1_nth i; split
- end.
-
-Ltac stop :=
-  match goal with
-      |- round_star ?h ?h' => left; reflexivity
-  end.
-
-Ltac forward :=
-  match goal with
-      |- round_star ?h ?h' => eapply round_star_intro
-  end.
 
 

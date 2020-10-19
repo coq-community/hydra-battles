@@ -90,9 +90,6 @@ Proof.
   - now destruct n.
 Qed.
 
-About F_zero_eqn.
-
-
 Print Assumptions F_zero_eqn. 
 
 
