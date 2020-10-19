@@ -36,7 +36,7 @@ Module Examples.
   
   Example Hy'H'' : round Hy' Hy''.
   Proof.
-    h_search_n 4; r2_up 1; r2_up 0; r2_here 0 1.
+    h_search_n 4; r2_up 1; r2_up 0; r2_d2 0 1.
   Qed.
   
   Example R2_example:  R2 4 Hy' Hy''.
@@ -45,14 +45,14 @@ Module Examples.
     (** move to first sub-hydra *)  r2_up 0.
     (** we're at distance 2 from the to-be-chopped-off head 
         let's go to the first daughter, then chop-off the leftmost head *)
-    r2_here 0 0. 
+    r2_d2 0 0. 
   Qed.
   
   
   Example Exx :  {h' | round Hy' h'}.
   Proof.
     eexists; h_search_n 4 .
-    r2_up 1; r2_up 0; r2_here 0 1.
+    r2_up 1; r2_up 0; r2_d2 0 1.
   Defined. 
   
   
@@ -62,9 +62,8 @@ Module Examples.
     forward.
     - chop_off 2.
     - forward.
-    + h_search_n 4.
-      r2_here 1 1.
-    + stop.
+      + h_search_n 4; r2_d2 1 1.
+      + stop.
   Defined.
 
 
@@ -99,7 +98,7 @@ Module Examples.
   Example ex_2 :{Hy'' | R2 4 Hy' Hy''}.
   Proof.
     eexists; unfold Hy'.
-    r2_up 1;  r2_up 0;  r2_here 0 0.
+    r2_up 1;  r2_up 0;  r2_d2 0 0.
   Defined.
   
   
@@ -148,8 +147,7 @@ Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
   | hcons h s' => P h /\ h_forall P s'
   end.
 
-Lemma  height_lt_size (h:Hydra) :
-  height h < hsize h.
+Lemma  height_lt_size (h:Hydra) :  height h < hsize h.
 Proof.
   induction h using Hydra_rect2  with 
       (P0 :=  h_forall (fun h =>  height h < hsize h)).
@@ -162,13 +160,12 @@ Proof.
                 + cbn in H0; destruct H0; apply IHs' in H0 .
                   red in H;  transitivity (hsize h0); auto.
                   auto with arith. 
-                +  
-                  cbn in H0; destruct H0. 
+                + cbn in H0; destruct H0. 
                   apply IHs' in H0.    clear IHs'.            
                   rewrite succ_max_distr; 
                     transitivity (S (height h0) + (S n)).
-                  apply max_le_plus; auto.    cbn.
-                  lia.
+                  apply max_le_plus; auto.
+                  cbn; lia.
         }
         clear H0; cbn; destruct (lheight s').
         *   lia. 

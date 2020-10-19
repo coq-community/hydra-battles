@@ -308,7 +308,7 @@ Ltac S1_nth i :=
 (** Notifies we are at distance 2 from the expected head 
     goto to [i]-th dauchter, then chop off the [j]-th head *)
 
-Ltac r2_here i j :=
+Ltac r2_d2 i j :=
  match goal with
       |- R2 ?n ?h ?h' =>  eleft; S1_nth i; split; chop_off j
  end.
