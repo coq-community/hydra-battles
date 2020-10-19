@@ -42,7 +42,7 @@ Module Examples.
   
   Example R2_example:  R2 4 Hy' Hy''.
   Proof.
-    right;  right;  left;  right; left; left; left; split; left.
+   R2_up 1. R2_up 0. R2_here 0. hremove 0.  
   Qed.
   
   

@@ -515,8 +515,7 @@ Ltac S1_nth i :=
 
 Ltac R2_here i :=
  match goal with
-      |- R2 ?n ?h ?h' =>
-      eleft; S1_nth i; split
+      |- R2 ?n ?h ?h' =>  eleft; S1_nth i; split
  end.
 
 Ltac stop :=
