@@ -1,6 +1,9 @@
 all: Makefile.coq
 	@+$(MAKE) -f Makefile.coq all
 
+html: Makefile.coq
+	@+$(MAKE) -f Makefile.coq coqdoc
+
 pdf:
 	@+$(MAKE) -C doc
 
@@ -16,4 +19,4 @@ force _CoqProject Makefile: ;
 %: Makefile.coq force
 	@+$(MAKE) -f Makefile.coq $@
 
-.PHONY: all pdf clean force
+.PHONY: all html pdf clean force
