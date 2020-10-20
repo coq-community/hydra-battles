@@ -5,10 +5,10 @@ pdf:
 	(cd doc; make)
 
 vo:
-	(cd src; make -f CoqMakefile all)
+	(cd src; make  all)
 
 clean:
-	(cd src ; make -f CoqMakefile clean)
+	(cd src ; make clean)
 
 project: 
 	(cd src ; source make_project)
