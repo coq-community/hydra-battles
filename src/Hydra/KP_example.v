@@ -61,13 +61,12 @@ Definition h3 := hyd4
 Fact h0_h1 : round_n 1 h0 h1.
 Proof.
   right. 
-  r2_up 0. r2_d2 0 0.
-
+  r2_up 0; r2_d2 0 0.
 Qed.
 
 Fact h1_h2 : round_n 2 h1 h2.
 Proof.
-  right; unfold h1, h2. r2_d2 1 0.   
+  right; unfold h1, h2; r2_d2 1 0.   
 Qed.
 
 
