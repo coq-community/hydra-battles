@@ -17,4 +17,8 @@
 ! /src/html/index.html
 /latex/*.pdf
 /latex/*.toc
-
+html/
+.lia.cache
+Makefile.coq
+Makefile.coq.conf
+.Makefile.coq.d

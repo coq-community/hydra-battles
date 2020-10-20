@@ -1,0 +1,10 @@
+GLOBFILES = $(VFILES:.v=.glob)
+COQDOCDIR = html
+
+COQDOCHTMLFLAGS = -g -utf8 -toc
+
+coqdoc: $(GLOBFILES) $(VFILES)
+	$(SHOW)'COQDOC -d $(COQDOCDIR)'
+	$(HIDE)mkdir -p $(COQDOCDIR)
+	$(HIDE)$(COQDOC) $(COQDOCHTMLFLAGS) $(COQDOCLIBS) -d $(COQDOCDIR) $(VFILES)
+.PHONY: coqdoc
