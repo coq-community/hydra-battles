@@ -14,7 +14,7 @@ jobs:
           latexmk_use_lualatex: true
       - name: Extract PDF
         run: |
-          mkdir public
+          mkdir -p public
           cp doc/hydras.pdf public/
       # Depending on whether we are on master or not, we deploy to
       # GitHub Pages or as an artifact
