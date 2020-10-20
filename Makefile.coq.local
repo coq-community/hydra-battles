@@ -1,5 +1,5 @@
 GLOBFILES = $(VFILES:.v=.glob)
-COQDOCDIR = html
+COQDOCDIR = src/html
 
 COQDOCHTMLFLAGS = -g -utf8 -toc
 
