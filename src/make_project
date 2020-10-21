@@ -1,6 +1,0 @@
-echo "-R . hydras" >_CoqProject ; find . -name '*.v' -print  >> _CoqProject
-
-
-
-
- 

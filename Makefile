@@ -1,21 +1,22 @@
-all:    project pdf vo doc
+all: Makefile.coq
+	@+$(MAKE) -f Makefile.coq all
 
+html: Makefile.coq
+	@+$(MAKE) -f Makefile.coq coqdoc
 
 pdf:
-	(cd doc; make)
+	@+$(MAKE) -C doc
 
-vo:
-	(cd src; make  all)
+clean: Makefile.coq
+	@+$(MAKE) -f Makefile.coq cleanall
+	@rm -f Makefile.coq Makefile.coq.conf
 
-clean:
-	(cd src ; make clean)
+Makefile.coq: _CoqProject
+	$(COQBIN)coq_makefile -f _CoqProject -o Makefile.coq
 
-project: 
-	(cd src ; source make_project)
+force _CoqProject Makefile: ;
 
-doc:	html pdf
+%: Makefile.coq force
+	@+$(MAKE) -f Makefile.coq $@
 
-html:
-	(cd src ; mkdir -p html; coqdoc -R . hydras -g -d html -utf8 -toc */*.v)
-
-
+.PHONY: all html pdf clean force

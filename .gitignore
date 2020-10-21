@@ -14,7 +14,8 @@
 *.snm
 *.pygtex
 *.pygstyle
-! /src/html/index.html
-/latex/*.pdf
-/latex/*.toc
-
+src/html/
+.lia.cache
+Makefile.coq
+Makefile.coq.conf
+.Makefile.coq.d
