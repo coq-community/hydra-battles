@@ -39,6 +39,12 @@ Definition Cr (alpha : Ord) : Ensemble Ord :=
 
 Definition strongly_critical alpha := In (Cr alpha) alpha.
 
+Definition maximal_critical alpha : Ensemble Ord :=
+  fun gamma =>
+    In (Cr alpha) gamma /\
+    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+
+
 
 (**  See Gamma0.Gamma0.phi *)
 

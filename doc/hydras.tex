@@ -9518,14 +9518,52 @@ $\epsilon_0$ and $\Gamma_0$.
 
 \section{Related work}
 
-In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between or ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
+In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
 of ordinal numbers after Bourbaki's set theory.
 
 
 \chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0}}
 
-\textbf{To write!}
 
+
+\section{Introduction}
+We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system fir the ordinals $<\Gamma_0$''.
+We try to be as close as possible to Schütte's text and usual practices of \coq{} developments.
+
+The ordinal $\Gamma_0$ is defined in Section 13 of ~\cite{schutte} as the least \emph{strongly critical ordinal}. It is widely known as the \emph{Feferman-Schütte ordinal}.
+Section V, 13 of~\cite{schutte} defines \emph{strongly critical} and
+\emph{maximal $\alpha$-critical} ordinals. 
+
+\noindent\emph{From \href{../src/html/hydras.Schutte.Critical.html\#strongly_critical}%
+{\texttt{Schutte.Critical}}}
+
+\begin{Coqsrc}
+Definition strongly_critical alpha := In (Cr alpha) alpha.
+
+Definition maximal_critical alpha : Ensemble Ord :=
+  fun gamma =>
+    In (Cr alpha) gamma /\
+    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+\end{Coqsrc}
+
+
+
+\index{Projects}
+
+\begin{project}
+In order to define $\Gamma_0$ as a n inhabitant of type \texttt{Ord}, you should prove that the set of strongly critical ordinal is not empty, hence has a least element.
+\end{project}
+
+
+
+
+In the present version of this development, we will only study $\Gamma_0$ as a notation system, much more powerful than the ordinal notation for $\epsilon_0$.
+
+%\index{Projects}
+%
+%\begin{project}
+% Schûtte's section 13 of~\cite{schutte} contain several definitions and lemmas which give another view on $\Gamma_0$.  We leave it as a project to implement them in \coq{}.  
+%\end{project}
 
 
 \begin{figure}[h]
@@ -9534,6 +9572,131 @@ of ordinal numbers after Bourbaki's set theory.
   \caption{Discrete mathematics and formal proofs}
   \label{fig:gamma0}
 \end{figure}
+
+
+\section{The type \texttt{T2} of ordinal terms}
+
+The notation system for ordinals less than $\gamma_0$ comes from the following theorem of~\cite{schutte}, where $\psi\,\alpha$ is the ordering function 
+of the set of maximal $\alpha$-critical ordinals.
+
+\index{Projects}
+\begin{project}
+This theorem is not formally proved in this development yet. It should be!
+\end{project}
+
+\begin{quote}
+  Any ordinal $\not= 0$ which is not strongly critical can be expressed in terms of $+$ and $\psi$.
+\end{quote}
+
+Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors, one for $0$, the other for the construction $\psi(\alpha,\beta)\times(n+1)+\gamma$, adapting a Manolios-Vroon-like notation~\cite{Manolios2005} to
+\emph{Veblen normal forms}.
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#T2}%
+{\texttt{Gamma0.T2}}}
+\begin{Coqsrc}
+(**  [gcons alpha beta n gamma] is : [psi(alpha,beta)*(S n)+ gamma]  *)
+
+Inductive T2 : Set :=
+| zero : T2
+| gcons : T2 -> T2  -> nat -> T2 -> T2.
+
+Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
+                                 (at level 0): t2_scope.
+\end{Coqsrc}
+
+Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognising simple constructs like finite ordinals, $\omega$, etc., as inhabitants of ÷texttt{T2}.
+
+\begin{Coqsrc}
+Notation  "'one'"  := [zero,zero] : T2_scope.
+
+Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
+
+
+(** the [n]-th ordinal  *)
+
+Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
+
+Notation "'omega'"  := [zero,one] : T2_scope.
+\end{Coqsrc}
+
+
+We are also able to give a term to $\epsilon_0$, and even to generalize it!.
+
+\begin{Coqsrc}
+Definition epsilon0  := [one,zero].
+
+Definition epsilon alpha := [one, alpha].
+\end{Coqsrc}
+
+The justification of the definition of \texttt{epsilon0} will be given in further sections.
+
+\section{How big is \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}?}
+
+Let us define a strict order on type \texttt{T2}. The following definition is 
+an adaptation of Schütte's, taking into account the multiplications by a natural number (inspired by~\cite{Manolios2005}, and also present in \texttt{T1}).
+
+
+\begin{Coqsrc}
+Inductive lt : T2 -> T2 -> Prop :=
+| (* 1 *) 
+ lt_1 : forall alpha beta n gamma,  zero t2< gcons alpha beta n gamma
+| (* 2 *)
+ lt_2 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
+                alpha1 t2< alpha2 ->
+                beta1 t2< gcons alpha2 beta2 0 zero ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2 beta2 n2 gamma2
+| (* 3 *)
+ lt_3 : forall alpha1  beta1 beta2 n1 n2 gamma1 gamma2, 
+               beta1 t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha1 beta2 n2 gamma2
+
+| (* 4 *)
+ lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
+               alpha2 t2< alpha1 ->
+               gcons alpha1 beta1 0 zero t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2 beta2 n2 gamma2
+
+| (* 5 *)
+lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
+               alpha2 t2< alpha1 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2  (gcons alpha1 beta1 0 zero) n2 gamma2
+
+| (* 6 *)
+lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
+                                    gcons alpha1 beta1 n1 gamma1 t2< 
+                                    gcons alpha1 beta1 n2 gamma2
+
+| (* 7 *)
+  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
+                                      gcons alpha1 beta1 n1 gamma1 t2<
+                                      gcons alpha1 beta1 n1 gamma2
+where  "o1 t2< o2" := (lt o1 o2): T2_scope.
+\end{Coqsrc}
+
+Here are two simple verifications: $\omega$ is less than $\epsilon_0$, whic is less than $\psi(2,1)$.
+
+\begin{Coqsrc}
+Goal omega t2< epsilon0.
+Proof.
+  unfold epsilon0; auto with T2.
+Qed.
+
+Goal epsilon0 t2< [2,1].
+Proof.
+  unfold epsilon0;  apply lt_2.
+  - apply lt_6; auto with arith.
+  - auto with T2.
+Qed.
+\end{Coqsrc}
+
+\index{Projects}
+\begin{project}
+Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
+\end{project}
 
 
 \chapter{Appendices}

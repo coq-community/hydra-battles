@@ -32,17 +32,20 @@ Set Implicit Arguments.
 (** *   Definitions        *)
 
 
-(**  cons a b n r is : psi(a,b)*(S n)+ r  *)
+(**  [gcons alpha beta n gamma] is : [psi(alpha,beta)*(S n)+ gamma]  *)
 
 Inductive T2 : Set :=
-  zero : T2
+| zero : T2
 | gcons : T2 -> T2  -> nat -> T2 -> T2.
 
-Declare Scope t2_scope.
+Declare Scope T2_scope.
+Delimit Scope T2_scope with t2.
 
-Notation "[ x , y ]" := (gcons x y 0 zero) (at level 0): t2_scope.
+Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
+                                 (at level 0): T2_scope.
 
-Open Scope t2_scope.
+Open Scope T2_scope.
+
 
 Definition psi alpha beta  := [alpha, beta].
 
@@ -51,7 +54,7 @@ Definition psi_term alpha :=
                  | gcons a b n c => [a, b]
   end.
 
-Notation  "'one'"  := [zero,zero] : t2_scope.
+
 
 
 Lemma psi_eq : forall a b, psi a b = [a,b].
@@ -62,13 +65,21 @@ Qed.
 Ltac fold_psi :=  rewrite <- psi_eq.
 Ltac fold_psis := repeat fold_psi.
 
+Notation  "'one'"  := [zero,zero] : T2_scope.
 
-Definition finite  p := match p with 
-                             0 => zero
-                           | S q => gcons zero zero q zero
-                           end.
+Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
 
-Notation "'F' n" := (finite n)(at level 10) : t2_scope.
+
+(** the [n]-th ordinal  *)
+
+Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
+
+Coercion fin  : nat >-> T2.
+
+
+
+
+Compute fin 42.
 
 Inductive is_finite:  T2 ->  Set := 
  zero_finite : is_finite zero
@@ -76,7 +87,7 @@ Inductive is_finite:  T2 ->  Set :=
 
 Hint Constructors is_finite : T2.
 
-Notation "'omega'"  := [zero,one] : t2_scope.
+Notation "'omega'"  := [zero,one] : T2_scope.
 
 Definition epsilon0  := [one,zero].
 
@@ -102,51 +113,75 @@ ap_intro : forall alpha beta, ap [alpha, beta].
 (** strict order on terms *)
 
 
+Reserved Notation "x 't2<' y" (at level 70, no associativity).
+Reserved Notation "x 't2<=' y" (at level 70, no associativity).
+Reserved Notation "x 't2>=' y" (at level 70, no associativity).
+Reserved Notation "x 't2>' y" (at level 70, no associativity).
+
+
+Reserved Notation "x 't2<=' y 't2<=' z" (at level 70, y at next level).
+Reserved Notation "x 't2<=' y 't2<' z" (at level 70, y at next level).
+Reserved Notation "x 't2<' y 't2<' z" (at level 70, y at next level).
+Reserved Notation "x 't2<' y 't2<=' z" (at level 70, y at next level).
+
+
 Inductive lt : T2 -> T2 -> Prop :=
 | (* 1 *) 
- lt_1 : forall alpha beta n gamma,  zero o< gcons alpha beta n gamma
+ lt_1 : forall alpha beta n gamma,  zero t2< gcons alpha beta n gamma
 | (* 2 *)
  lt_2 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-                alpha1 o< alpha2 ->
-                beta1 o< gcons alpha2 beta2 0 zero ->
-               gcons alpha1 beta1 n1 gamma1 o<
+                alpha1 t2< alpha2 ->
+                beta1 t2< gcons alpha2 beta2 0 zero ->
+               gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2 beta2 n2 gamma2
 | (* 3 *)
  lt_3 : forall alpha1  beta1 beta2 n1 n2 gamma1 gamma2, 
-               beta1 o< beta2 ->
-               gcons alpha1 beta1 n1 gamma1 o<
+               beta1 t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha1 beta2 n2 gamma2
 
 | (* 4 *)
  lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-               alpha2 o< alpha1 ->
-               gcons alpha1 beta1 0 zero o< beta2 ->
-               gcons alpha1 beta1 n1 gamma1 o<
+               alpha2 t2< alpha1 ->
+               gcons alpha1 beta1 0 zero t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2 beta2 n2 gamma2
 
 | (* 5 *)
 lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
-               alpha2 o< alpha1 ->
-               gcons alpha1 beta1 n1 gamma1 o<
+               alpha2 t2< alpha1 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2  (gcons alpha1 beta1 0 zero) n2 gamma2
 
 | (* 6 *)
 lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
-                                    gcons alpha1 beta1 n1 gamma1 o< 
+                                    gcons alpha1 beta1 n1 gamma1 t2< 
                                     gcons alpha1 beta1 n2 gamma2
 
 | (* 7 *)
-  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 o< gamma2 ->
-                                      gcons alpha1 beta1 n1 gamma1 o<
+  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
+                                      gcons alpha1 beta1 n1 gamma1 t2<
                                       gcons alpha1 beta1 n1 gamma2
-where  "o1 o< o2" := (lt o1 o2): t2_scope.
+where  "o1 t2< o2" := (lt o1 o2): T2_scope.
 Hint Constructors lt : T2.
 
+Goal omega t2< epsilon0.
+Proof.
+  unfold epsilon0; auto with T2.
+Qed.
 
-Definition le t t' := t = t' \/ t o< t'.
+Goal epsilon0 t2< [2,1].
+Proof.
+  unfold epsilon0;  apply lt_2.
+  - apply lt_6; auto with arith.
+  - auto with T2.
+Qed.
+
+
+Definition le t t' := t = t' \/ t t2< t'.
 Hint Unfold le : T2.
 
-Notation "o1 o<= o2" := (le o1 o2): t2_scope.
+Notation "o1 t2<= o2" := (le o1 o2): T2_scope.
 
 Definition gtail c := match c with
                       | zero => zero 
@@ -159,7 +194,7 @@ Inductive nf : T2 -> Prop :=
 | zero_nf : nf zero
 | single_nf : forall a b n, nf a ->  nf b -> nf (gcons a b n zero)
 | gcons_nf : forall a b n a' b' n' c', 
-                             [a', b'] o< [a, b]  -> 
+                             [a', b'] t2< [a, b]  -> 
                              nf a -> nf b -> 
                              nf(gcons a' b' n' c')-> 
                              nf(gcons a b n (gcons a' b' n' c')).
@@ -175,7 +210,7 @@ Inductive is_successor : T2 -> Prop :=
 
 
 Inductive is_limit : T2 -> Prop :=
-|is_limit_0 : forall alpha beta n, zero o< alpha \/ zero o< beta ->
+|is_limit_0 : forall alpha beta n, zero t2< alpha \/ zero t2< beta ->
                                    nf alpha -> nf beta ->
                                    is_limit (gcons alpha beta n zero)
 | is_limit_cons : forall alpha  beta n gamma,
@@ -186,8 +221,8 @@ Inductive is_limit : T2 -> Prop :=
 
 
 Fixpoint succ (a:T2) : T2 :=
- match a with zero => finite 1
-             | gcons zero zero n c => finite (S (S n))
+ match a with zero => one
+             | gcons zero zero n c => fin (S (S n))
              | gcons a b n c => gcons a b n (succ c)
  end.
 
