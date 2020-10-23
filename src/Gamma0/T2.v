@@ -1,18 +1,3 @@
-(* This program is free software; you can redistribute it and/or      *)
-(* modify it under the terms of the GNU Lesser General Public License *)
-(* as published by the Free Software Foundation; either version 2.1   *)
-(* of the License, or (at your option) any later version.             *)
-(*                                                                    *)
-(* This program is distributed in the hope that it will be useful,    *)
-(* but WITHOUT ANY WARRANTY; without even the implied warranty of     *)
-(* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      *)
-(* GNU General Public License for more details.                       *)
-(*                                                                    *)
-(* You should have received a copy of the GNU Lesser General Public   *)
-(* License along with this program; if not, write to the Free         *)
-(* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
-(* 02110-1301 USA                                                     *)
-
 
 (**  Pierre Casteran 
     LaBRI, University of Bordeaux, laBRI UMR 5800 )
@@ -89,7 +74,7 @@ Hint Constructors is_finite : T2.
 
 Notation "'omega'"  := [zero,one] : T2_scope.
 
-Definition epsilon0  := [one,zero].
+Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
 
 Definition epsilon alpha := [one, alpha].
 
@@ -143,7 +128,7 @@ Inductive lt : T2 -> T2 -> Prop :=
 | (* 4 *)
  lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
                alpha2 t2< alpha1 ->
-               gcons alpha1 beta1 0 zero t2< beta2 ->
+               [alpha1, beta1] t2< beta2 ->
                gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2 beta2 n2 gamma2
 
@@ -151,7 +136,7 @@ Inductive lt : T2 -> T2 -> Prop :=
 lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
                alpha2 t2< alpha1 ->
                gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha2  (gcons alpha1 beta1 0 zero) n2 gamma2
+               gcons alpha2  [alpha1, beta1] n2 gamma2
 
 | (* 6 *)
 lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
@@ -159,29 +144,63 @@ lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
                                     gcons alpha1 beta1 n2 gamma2
 
 | (* 7 *)
-  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
-                                      gcons alpha1 beta1 n1 gamma1 t2<
-                                      gcons alpha1 beta1 n1 gamma2
+lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,
+    gamma1 t2< gamma2 ->
+    gcons alpha1 beta1 n1 gamma1 t2< gcons alpha1 beta1 n1 gamma2
 where  "o1 t2< o2" := (lt o1 o2): T2_scope.
+
 Hint Constructors lt : T2.
-
-Goal omega t2< epsilon0.
-Proof.
-  unfold epsilon0; auto with T2.
-Qed.
-
-Goal epsilon0 t2< [2,1].
-Proof.
-  unfold epsilon0;  apply lt_2.
-  - apply lt_6; auto with arith.
-  - auto with T2.
-Qed.
-
 
 Definition le t t' := t = t' \/ t t2< t'.
 Hint Unfold le : T2.
 
 Notation "o1 t2<= o2" := (le o1 o2): T2_scope.
+
+(** *** Examples *)
+
+Example Ex1: 0 t2< epsilon0.
+Proof.  constructor 1. Qed.
+
+Example Ex2: omega t2< epsilon0.
+Proof. info_auto with T2. (* uses lt_1 and lt_2 *) Qed.
+
+Example Ex3: gcons omega 8 12 56 t2<  gcons omega 8 12 57.
+Proof.
+  constructor 7; constructor 6; auto with arith.
+Qed.
+
+
+Example Ex4: epsilon0 t2< [2,1].
+Proof.
+  apply lt_2; auto with T2.
+  - apply lt_6; auto with arith.
+Qed.
+
+Example Ex5 : [2,1] t2< [2,3].
+Proof.
+  constructor 3; auto with T2.
+  - constructor 6; auto with arith.
+Qed.
+
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof.
+  constructor 4.
+  - constructor 1.
+  - constructor 2.
+    + constructor 6; auto with arith.
+    + constructor 1.
+Qed.
+
+
+Example Ex7 : gcons 2 1 42 epsilon0 t2< [1, [2,1]].
+Proof.
+ constructor 5.
+ constructor 6; auto with arith.
+Qed.
+
+
+
+
 
 Definition gtail c := match c with
                       | zero => zero 
@@ -198,8 +217,23 @@ Inductive nf : T2 -> Prop :=
                              nf a -> nf b -> 
                              nf(gcons a' b' n' c')-> 
                              nf(gcons a b n (gcons a' b' n' c')).
-Hint  Constructors nf : T2. 
+Hint Constructors nf : T2. 
 
+Lemma  nf_finite i : nf (fin (S i)).
+Proof.
+   constructor 2; auto with T2.
+Qed.
+
+Lemma nf_epsilon0 : nf epsilon0.
+Proof. constructor 2; auto with T2. Qed.
+
+Example Ex8: nf (gcons 2 1 42 epsilon0).
+Proof.
+  constructor 3; auto with T2.
+  - apply Ex4.
+  - apply nf_finite.
+  - apply nf_finite.
+Qed.
 
 Inductive is_successor : T2 -> Prop :=
   finite_succ : forall  n  , is_successor (gcons zero zero n zero)
@@ -240,7 +274,7 @@ Fixpoint pred  (a:T2) : option T2 :=
 
 Inductive lt_epsilon0 : T2 -> Prop :=
   zero_lt_e0 : lt_epsilon0 zero 
-| gcons_lt_e0 : forall  b n c,   lt_epsilon0 b ->
+| gcons_lt_e0 : forall  b n c,  lt_epsilon0 b ->
                                 lt_epsilon0 c -> 
                                 lt_epsilon0 (gcons zero b n c).
 

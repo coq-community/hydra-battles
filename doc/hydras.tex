@@ -4975,7 +4975,7 @@ Ltac transfinite_induction alpha :=
 
 
 \begin{remark}
-The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering is available in the library \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
+The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the library \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
  \end{remark}
 
 
@@ -9623,7 +9623,7 @@ Notation "'omega'"  := [zero,one] : T2_scope.
 We are also able to give a term to $\epsilon_0$, and even to generalize it!.
 
 \begin{Coqsrc}
-Definition epsilon0  := [one,zero].
+Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
 
 Definition epsilon alpha := [one, alpha].
 \end{Coqsrc}
@@ -9635,6 +9635,7 @@ The justification of the definition of \texttt{epsilon0} will be given in furthe
 Let us define a strict order on type \texttt{T2}. The following definition is 
 an adaptation of Schütte's, taking into account the multiplications by a natural number (inspired by~\cite{Manolios2005}, and also present in \texttt{T1}).
 
+\label{sect:t2-lt-def}
 
 \begin{Coqsrc}
 Inductive lt : T2 -> T2 -> Prop :=
@@ -9655,7 +9656,7 @@ Inductive lt : T2 -> T2 -> Prop :=
 | (* 4 *)
  lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
                alpha2 t2< alpha1 ->
-               gcons alpha1 beta1 0 zero t2< beta2 ->
+               [alpha1, beta1] t2< beta2 ->
                gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2 beta2 n2 gamma2
 
@@ -9663,7 +9664,7 @@ Inductive lt : T2 -> T2 -> Prop :=
 lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
                alpha2 t2< alpha1 ->
                gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha2  (gcons alpha1 beta1 0 zero) n2 gamma2
+               gcons alpha2  [alpha1, beta1] n2 gamma2
 
 | (* 6 *)
 lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
@@ -9675,21 +9676,78 @@ lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
                                       gcons alpha1 beta1 n1 gamma1 t2<
                                       gcons alpha1 beta1 n1 gamma2
 where  "o1 t2< o2" := (lt o1 o2): T2_scope.
+
+Hint Constructors lt : T2.
 \end{Coqsrc}
 
-Here are two simple verifications: $\omega$ is less than $\epsilon_0$, whic is less than $\psi(2,1)$.
+
+
+\subsection{Examples}
+Seven constructors! In order to get accustomed with this definition, let us look at a small set of examples, covering all the constructors of \texttt{lt}.
+
+\subsubsection*{Proof of $0<\epsilon_0$}
 
 \begin{Coqsrc}
-Goal omega t2< epsilon0.
-Proof.
-  unfold epsilon0; auto with T2.
-Qed.
+Example Ex1: 0 t2< epsilon0.
+Proof.  constructor 1. Qed.
+\end{Coqsrc}
 
-Goal epsilon0 t2< [2,1].
+\subsubsection*{Proof of $\omega<\epsilon_0$}
+
+\begin{Coqsrc}
+Example Ex2: omega t2< epsilon0.
+Proof. info_auto with T2. (* uses lt_1 and lt_2 *) Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(\omega,8]\times 13+56 < \psi(\omega,8]\times 13+57 $}
+
+\begin{Coqsrc}
+Example Ex3: gcons omega 8 12 56 t2<  gcons omega 8 12 57.
 Proof.
-  unfold epsilon0;  apply lt_2.
-  - apply lt_6; auto with arith.
-  - auto with T2.
+  constructor 7; constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\epsilon_0<\psi(2,1)$}
+
+\begin{Coqsrc}
+Example Ex4: epsilon0 t2< [2,1].
+Proof.
+   constructor 2; auto with T2.
+   - constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(2,1)<\psi(2,3)$}
+
+\begin{Coqsrc}
+Example Ex5 : [2,1] t2< [2,3].
+Proof.
+  constructor 3; auto with T2.
+  - constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(1,0)\times 13+ \omega < \psi(0,\psi(2,1))$}
+
+\begin{Coqsrc}
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof.
+  constructor 4.
+  - constructor 1.
+  - constructor 2.
+    + constructor 6; auto with arith.
+    + constructor 1.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(2,1)\times 43 + \epsilon_0 < \psi(1,\psi(2,1))$}
+
+\begin{Coqsrc}
+Example Ex7 : gcons 2 1 42 epsilon0 t2< [1, [2,1]].
+Proof.
+ constructor 5.
+ constructor 6; auto with arith.
 Qed.
 \end{Coqsrc}
 
@@ -9698,7 +9756,44 @@ Qed.
 Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
 \end{project}
 
+\section{Veblen normal forms}
+\begin{definition}
+  A term of the form $\psi(\alpha_1,\beta_1)\times n_1+ \psi(\alpha_2,\beta_2)\times n_2+\dots+\psi(\alpha_k,\beta_k)\times n_k$ is said to be in
+ \emph{[Veblen] normal form} if for every $i<n$, $\psi(\alpha_i,\beta_i)<\psi(\alpha_{i+1},\beta_{i+1})$, all the $\alpha_i$ and $\beta_i$ are in normal form, and all the $n_i$ are strictly positive integers.
+\end{definition}
 
+\begin{Coqsrc}
+Inductive nf : T2 -> Prop :=
+| zero_nf : nf zero
+| single_nf : forall a b n, nf a ->  nf b -> nf (gcons a b n zero)
+| gcons_nf : forall a b n a' b' n' c', 
+                      [a', b'] t2< [a, b]  -> 
+                      nf a -> nf b -> 
+                      nf(gcons a' b' n' c')-> 
+                      nf(gcons a b n (gcons a' b' n' c')).
+\end{Coqsrc}
+
+Let us look at some positive examples (we have to prove some inversion lemmas before proving counter-examples).
+
+
+\begin{Coqsrc}
+Lemma  nf_finite i : nf (fin (S i)).
+Proof.
+   constructor 2; auto with T2.
+Qed.
+
+Lemma nf_epsilon0 : nf epsilon0.
+Proof. constructor 2; auto with T2. Qed.
+
+Example Ex8: nf (gcons 2 1 42 epsilon0).
+Proof.
+  constructor 3; auto with T2.
+  - apply Ex4.
+  - apply nf_finite.
+  - apply nf_finite.
+Qed.
+
+\end{Coqsrc}
 \chapter{Appendices}
 
 \bibliographystyle{alpha}

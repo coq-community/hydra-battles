@@ -2,24 +2,9 @@
 
 
 
-(* This program is free software; you can redistribute it and/or      *)
-(* modify it under the terms of the GNU Lesser General Public License *)
-(* as published by the Free Software Foundation; either version 2.1   *)
-(* of the License, or (at your option) any later version.             *)
-(*                                                                    *)
-(* This program is distributed in the hope that it will be useful,    *)
-(* but WITHOUT ANY WARRANTY; without even the implied warranty of     *)
-(* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      *)
-(* GNU General Public License for more details.                       *)
-(*                                                                    *)
-(* You should have received a copy of the GNU Lesser General Public   *)
-(* License along with this program; if not, write to the Free         *)
-(* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
-(* 02110-1301 USA                                                     *)
-
-
 (**   Pierre Casteran 
     LaBRI, Université Bordeaux 1, and LaBRI  (CNRS, UMR 5800)
+     with contribution by Evelyne Contejean 
 *)
 
 
@@ -235,7 +220,7 @@ Open Scope T2_scope.
 
 Lemma tricho_aux : forall l, forall t t',
       (t2_length t + t2_length t' < l)%nat  ->
-      { t t2< t'}+{t = t'} + {t' t2<  t}.
+      {t t2< t'}+{t = t'} + {t' t2<  t}.
 Proof.
   induction l.
   - intros; elimtype False. 
@@ -297,7 +282,7 @@ Proof.
 Defined.
 
 
-Definition trichotomy_inf : forall t t', {t t2< t'}+{t=t'}+{t' t2<  t}.
+Definition lt_eq_lt_dec : forall t t', {t t2< t'}+{t=t'}+{t' t2<  t}.
   intros t t'.
   eapply tricho_aux.
   eapply lt_n_Sn.
@@ -305,13 +290,13 @@ Defined.
 
 
 Definition lt_ge_dec : forall t t', {t t2< t'}+{t' t2<= t}.
-  intros t t'; case (trichotomy_inf t t').
+  intros t t'; case (lt_eq_lt_dec t t').
   destruct 1 ;[left;auto with T2| right;auto with T2].
   auto with T2.
 Defined.
 
 Definition compare (t1 t2 : T2) := 
-  match trichotomy_inf t1 t2 with
+  match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
   | inleft (right _) => Eq
   | inright _ => Gt
@@ -332,7 +317,7 @@ end.
 (* introduces an hypothesis Hname for t t2< t', t = t', and t' t2< t
     (3 subgoals) *)
 
-Ltac tricho t t' Hname := case (trichotomy_inf t t');
+Ltac tricho t t' Hname := case (lt_eq_lt_dec t t');
                           [intros [Hname|Hname] | intro Hname].
 
 
@@ -797,7 +782,7 @@ Lemma compare_reflect alpha beta : match compare alpha beta with
                                      end.
 Proof.
   unfold compare.
-  intros; case (trichotomy_inf alpha beta);auto.
+  intros; case (lt_eq_lt_dec alpha beta);auto.
   destruct s;auto with T2.
 Qed.
 
@@ -814,7 +799,8 @@ Qed.
 Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
                                          alpha t2< beta.
 Proof.
-  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta);
+    trivial; discriminate. 
 Qed.
 
 
@@ -2661,7 +2647,7 @@ Lemma lt_epsilon0_okR: forall alpha, nf alpha -> alpha t2< epsilon0 ->
 Proof.
   induction alpha.
   -  constructor.
-  -  unfold epsilon0;intros; inversion H0.
+  -  intros; inversion H0.
      + rewrite (lt_one_inv H3).
        right.
        * apply IHalpha2.
