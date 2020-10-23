@@ -1,7 +1,5 @@
 (**  * A notation system for ordinals less than  Gamma0 *)
 
-
-
 (**   Pierre Casteran 
     LaBRI, Université Bordeaux 1, and LaBRI  (CNRS, UMR 5800)
      with a contribution by Evelyne Contejean 
