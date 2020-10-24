@@ -1,10 +1,10 @@
-(**  Veblen "pre" Normal form (for Gamma0) *)
+(**  * A notation system for ordinals less than  Gamma0 *)
 
 
 
 (**   Pierre Casteran 
     LaBRI, Université Bordeaux 1, and LaBRI  (CNRS, UMR 5800)
-     with contribution by Evelyne Contejean 
+     with a contribution by Evelyne Contejean 
 *)
 
 
@@ -19,9 +19,6 @@ From hydras.rpo Require Import term  rpo.
 From hydras.Gamma0 Require Import T2.
 
 Import Datatypes.
-
-
-
 
 Set Implicit Arguments.
 
@@ -131,7 +128,7 @@ Qed.
 
 
 
-(* in order to establish trichotomy, we first use a measure on pair of
+(**  in order to establish trichotomy, we first use a measure on pair of
     terms *)
 
 Section lemmas_on_length.
@@ -807,13 +804,15 @@ Proof. now apply compare_Lt. Qed.
 Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
                                          alpha = beta.
 Proof.
-  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial;
+    discriminate. 
 Qed.
 
 Lemma compare_Gt : forall alpha beta, compare alpha beta = Gt ->  
                                          beta t2< alpha.
 Proof.
- intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial;
+    discriminate. 
 Qed.
 
 Arguments compare_Gt [alpha beta].
@@ -851,7 +850,7 @@ Qed.
 
 
 
-(**  plus is defined here, because it requires decidible comparison *)
+(**  plus is defined here, because it requires decidable comparison *)
 
 Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   match t1,t2 with
@@ -859,13 +858,10 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   |  x, zero => x
   |  gcons a b n c, gcons a' b' n' c' =>
      (match compare (gcons a b 0 zero)
-                    (gcons a' b' 0 zero)
-      with | Lt => gcons a' b' n' c'
-      | Gt =>
-        (gcons a b n
-              (c +
-               (gcons a' b' n' c')))
-      | Eq  => (gcons a b (S(n+n')) c')
+                    (gcons a' b' 0 zero) with
+      | Lt => gcons a' b' n' c'
+      | Gt => gcons a b n (c + gcons a' b' n' c')
+      | Eq  => gcons a b (S(n+n')) c'
       end)
   end
 where "alpha + beta" := (plus alpha beta): T2_scope.
@@ -881,17 +877,17 @@ Proof.
 Qed.
 
 Lemma lt_succ alpha: alpha t2< succ alpha.
+Proof.
   induction alpha;simpl;auto with T2.
   case alpha1;auto with arith T2.
   case alpha2; auto with arith T2.
 Qed.
 
-Theorem lt_succ_le : forall a b,  a t2< b -> 
-                                  nf b -> 
+Theorem lt_succ_le : forall a b,   a t2< b -> nf b -> 
                                   succ a t2<= b.
 Proof.
   induction a.
-  - inversion 1; cbn; auto with T2.
+  - inversion 1; cbn;  auto with T2. 
   -  generalize IHa3; case a1; case a2.
    + cbn; inversion 2.
      *  right; constructor 2.
@@ -3724,8 +3720,4 @@ Qed.
 
 End G0.
 
-About T1_inj.
 
-(* T1_inj : T1 -> T2 *)
-
-Search T1_inj.

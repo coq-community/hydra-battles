@@ -9525,12 +9525,14 @@ In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between ou
 of ordinal numbers after Bourbaki's set theory.
 
 
-\chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0} first draft)}
+\chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0} (first draft)}
 
+
+\emph{This chapter and the files it presents are still very incomplete, considering the impressive properties of $\Gamma_0$~\cite{Gallier91}.  We hope to add new material soon, and accept contributions!}
 
 
 \section{Introduction}
-We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system fir the ordinals $<\Gamma_0$''.
+We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system for the ordinals $<\Gamma_0$''.
 We try to be as close as possible to Schütte's text and usual practices of \coq{} developments.
 
 The ordinal $\Gamma_0$ is defined in Section 13 of ~\cite{schutte} as the least \emph{strongly critical ordinal}. It is widely known as the \emph{Feferman-Schütte ordinal}.
@@ -9980,13 +9982,10 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   |  x, zero => x
   |  gcons a b n c, gcons a' b' n' c' =>
      (match compare (gcons a b 0 zero)
-                    (gcons a' b' 0 zero)
-      with | Lt => gcons a' b' n' c'
-      | Gt =>
-        (gcons a b n
-              (c +
-               (gcons a' b' n' c')))
-      | Eq  => (gcons a b (S(n+n')) c')
+                    (gcons a' b' 0 zero) with
+      | Lt => gcons a' b' n' c'
+      | Gt => gcons a b n (c + gcons a' b' n' c')
+      | Eq => gcons a b (S(n+n')) c'
       end)
   end
 where "alpha + beta" := (plus alpha beta): T2_scope.
