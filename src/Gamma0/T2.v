@@ -83,11 +83,9 @@ Definition epsilon alpha := [one, alpha].
 
 Fixpoint T1_inj (alpha :T1) : T2 :=
   match alpha  with
-            | T1.zero => zero
-            | T1.ocons a n b => gcons zero (T1_inj a) n (T1_inj b)
- end.
-
-
+  | T1.zero => zero
+  | T1.ocons a n b => gcons zero (T1_inj a) n (T1_inj b)
+  end.
 
 (** additive principals *)
 
@@ -219,32 +217,39 @@ Inductive nf : T2 -> Prop :=
                              nf(gcons a b n (gcons a' b' n' c')).
 Hint Constructors nf : T2. 
 
-Lemma  nf_finite i : nf (fin (S i)).
+Lemma  nf_fin i : nf (fin i).
 Proof.
-   constructor 2; auto with T2.
+  destruct i.
+  - auto with T2.
+  - constructor 2; auto with T2.
 Qed.
+
+Lemma nf_omega : nf omega.
+Proof.  compute; auto with T2. Qed.
+
 
 Lemma nf_epsilon0 : nf epsilon0.
 Proof. constructor 2; auto with T2. Qed.
+
+Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
+Proof. compute; auto with T2. Qed.
 
 Example Ex8: nf (gcons 2 1 42 epsilon0).
 Proof.
   constructor 3; auto with T2.
   - apply Ex4.
-  - apply nf_finite.
-  - apply nf_finite.
+  - apply nf_fin.
+  - apply nf_fin.
 Qed.
+
 
 Inductive is_successor : T2 -> Prop :=
   finite_succ : forall  n  , is_successor (gcons zero zero n zero)
  |cons_succ : forall a b n c, nf (gcons a b n c) -> is_successor c ->
                               is_successor (gcons  a b n c).
 
-
-
-
 Inductive is_limit : T2 -> Prop :=
-|is_limit_0 : forall alpha beta n, zero t2< alpha \/ zero t2< beta ->
+| is_limit_0 : forall alpha beta n, zero t2< alpha \/ zero t2< beta ->
                                    nf alpha -> nf beta ->
                                    is_limit (gcons alpha beta n zero)
 | is_limit_cons : forall alpha  beta n gamma,
@@ -411,7 +416,4 @@ Qed.
 
 End on_length.
 
-
-
-
-
+Compute t2_length (gcons 2 1 42 epsilon0).

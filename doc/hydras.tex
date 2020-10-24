@@ -4975,6 +4975,7 @@ Ltac transfinite_induction alpha :=
 
 
 \begin{remark}
+\label{remark:a3pat}
 The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the library \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
  \end{remark}
 
@@ -4983,6 +4984,7 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on recu
 
 We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
 
+\label{instance-epsilon0}
 \begin{Coqsrc}
 Instance Epsilon0 : ON Lt compare.  
 (* ... *)
@@ -9263,6 +9265,7 @@ Definition Cr (alpha : Ord) : Ensemble Ord :=
     (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
 \end{Coqsrc}
 
+\label{sect:phi-schutte}
 
 \begin{Coqsrc}
 Definition phi (alpha : Ord) : Ord -> Ord 
@@ -9522,7 +9525,7 @@ In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between ou
 of ordinal numbers after Bourbaki's set theory.
 
 
-\chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0}}
+\chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0} first draft)}
 
 
 
@@ -9729,6 +9732,7 @@ Qed.
 \end{Coqsrc}
 
 \subsubsection*{Proof of $\psi(1,0)\times 13+ \omega < \psi(0,\psi(2,1))$}
+\label{sect:ex6-first-proof}
 
 \begin{Coqsrc}
 Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
@@ -9777,23 +9781,348 @@ Let us look at some positive examples (we have to prove some inversion lemmas be
 
 
 \begin{Coqsrc}
-Lemma  nf_finite i : nf (fin (S i)).
+Lemma  nf_fin i : nf (fin i).
 Proof.
-   constructor 2; auto with T2.
+  destruct i.
+  - auto with T2.
+  - constructor 2; auto with T2.
 Qed.
+
+Lemma nf_omega : nf omega.
+Proof.  compute; auto with T2. Qed.
 
 Lemma nf_epsilon0 : nf epsilon0.
 Proof. constructor 2; auto with T2. Qed.
+
+Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
+Proof. compute; auto with T2. Qed.
 
 Example Ex8: nf (gcons 2 1 42 epsilon0).
 Proof.
   constructor 3; auto with T2.
   - apply Ex4.
-  - apply nf_finite.
-  - apply nf_finite.
+  - apply nf_fin.
+  - apply nf_fin.
 Qed.
-
 \end{Coqsrc}
+
+
+\subsection{Length of a term}
+
+The notion of \emph{term length} is introduced by Schütte as a helper for proving (at least) the \emph{trichotomy} property and transitivity of the strict order \texttt{lt} on \texttt{T2}. These properties are proved by induction on length.
+
+\begin{Coqsrc}
+Fixpoint nbterms (t:T2) : nat :=
+  match t with zero => 0
+             | gcons a b n v => (S n) + nbterms v
+  end.
+
+Fixpoint t2_length (t:T2) : nat :=
+  match t  with 
+    zero => 0
+  | gcons a b n v => 
+       nbterms (gcons a b n v) + 
+      2 * (Max.max (t2_length a)
+                              (Max.max (t2_length b) 
+                                                (t2_length_aux v)))
+  end
+with t2_length_aux (t:T2) : nat :=
+ match t with zero => 0
+            | gcons a b n v =>
+               Max.max (t2_length a) 
+                                (Max.max (t2_length b) (t2_length_aux v))
+ end.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Compute t2_length (gcons 2 1 42 epsilon0).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ = 48 : nat
+\end{Coqanswer}
+
+\subsection{Trichotomy}
+
+\emph{Trichotomy} is another name for the well-known property of decidable total ordering (like Standard Library's \texttt{Compare\_dec.lt\_eq\_lt\_dec}).
+
+We first prove by induction on $l$ the following lemma:
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.Gamma0\#tricho_aux}%
+{\texttt{Gamma0.Gamma0}}}
+
+\begin{Coqsrc}
+Lemma tricho_aux (l: nat) : forall t t' :T2,
+      t2_length t + t2_length t' < l  ->
+      {t t2< t'} + {t = t'} + {t' t2<  t}.
+\end{Coqsrc}
+
+Then we get our version of \texttt{lt\_eq\_lt\_dec}, and derive a comparison function;
+
+\begin{Coqsrc}
+Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
+Proof.
+  eapply tricho_aux.
+  eapply lt_n_Sn.
+Defined.
+
+Definition compare (t1 t2 : T2) : comparison := 
+  match lt_eq_lt_dec t1 t2 with
+  | inleft (left _) => Lt
+  | inleft (right _) => Eq
+  | inright _ => Gt
+  end.
+\end{Coqsrc}
+
+With the help of \texttt{compare}, we get a boolean version of \texttt{nf}
+(being in Veblen normal form).
+
+\begin{Coqsrc}
+Fixpoint nfb (alpha : T2) : bool :=
+  match alpha with
+    zero => true
+  | gcons a b n zero => andb (nfb a) (nfb b)
+  | gcons a b n ((gcons a' b' n' c') as c) =>
+    match compare [a', b'] [a, b] with
+           Lt => andb (nfb a) (andb (nfb b) (nfb c))
+           | _ => false
+           end
+end.
+\end{Coqsrc}
+
+
+\begin{Coqsrc}
+Compute compare (gcons 2 1 42 epsilon0) [2,2].
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = Lt
+     : comparison
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute nfb  (gcons 2 1 42 epsilon0).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = true
+     : bool
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = false
+     : bool
+\end{Coqanswer}
+
+\begin{remark}
+The connexion between the predicate \texttt{nf} and the relation \texttt{lt} on one part, and the functions \texttt{nfb} and \texttt{compare} on the other, is expressed by the following lemmas:
+
+\begin{Coqsrc}
+Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
+
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+\end{Coqsrc}
+
+The function \texttt{compare} helps to make easier proofs of inequalities of
+closed terms of type \texttt{T2}.
+
+First, we prove a lemma:
+
+\begin{Coqsrc}
+Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
+                                         alpha t2< beta.
+Proof.
+  intros alpha beta; destruct (compare_correct alpha beta);
+    trivial; discriminate. 
+Qed.
+\end{Coqsrc}
+
+Then, we give another version of the proof of Sect.~\vref{sect:ex6-first-proof}.
+
+\begin{Coqsrc}
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof. now apply compare_Lt. Qed.
+\end{Coqsrc}
+
+\end{remark}
+
+
+\section{Main functions on \texttt{T2}}
+
+\subsection{Successor}
+The successor function is defined by structural recursion.
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#succ}%
+{\texttt{Gamma0.T2}}}
+\begin{Coqsrc}
+Fixpoint succ (a:T2) : T2 :=
+ match a with zero => one
+             | gcons zero zero n c => fin (S (S n))
+             | gcons a b n c => gcons a b n (succ c)
+ end.
+\end{Coqsrc}
+
+\subsection{Addition}
+
+Like for Cantor normal forms (see Sect.\~ref{sect:infix-plus-T1})  the definition of addition in \texttt{T2}  requires comparison between ordinal terms.
+
+
+\begin{Coqsrc}
+Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
+  match t1,t2 with
+  |  zero, y  => y
+  |  x, zero => x
+  |  gcons a b n c, gcons a' b' n' c' =>
+     (match compare (gcons a b 0 zero)
+                    (gcons a' b' 0 zero)
+      with | Lt => gcons a' b' n' c'
+      | Gt =>
+        (gcons a b n
+              (c +
+               (gcons a' b' n' c')))
+      | Eq  => (gcons a b (S(n+n')) c')
+      end)
+  end
+where "alpha + beta" := (plus alpha beta): T2_scope.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Example Ex7 : 3 + epsilon0 = epsilon0.
+Proof. trivial. Qed.
+\end{Coqsrc}
+
+\subsection{The Veblen function \texorpdfstring{$\varphi$}{\texttt{phi}}}
+
+The enumeration function of critical ordinals, presented in Sect.\~vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
+
+\begin{Coqsrc}
+Definition  phi (alpha beta : T2) : T2 :=
+  match beta with zero => [alpha, beta] 
+             | [b1, b2] => 
+               (match compare alpha b1
+                with Datatypes.Lt => [b1, b2 ]
+                | _ => [alpha,[b1, b2]]
+                end)
+             | gcons b1 b2 0 (gcons zero zero  n zero) => 
+               (match compare alpha b1
+                with  Datatypes.Lt => 
+                      [alpha, (gcons b1 b2 0 (fin n))]
+                | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
+                end)
+             | any_beta => [alpha, any_beta]
+  end.
+\end{Coqsrc}
+
+Despite its complexity, the function \texttt{phi} is well adapted to proofs by simplification or computation.
+\begin{Coqsrc}
+Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
+Proof. reflexivity. Qed.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+(**  All epsilons are fixpoints of phi 0 *)
+
+Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
+                                   epsilon beta.
+Proof. reflexivity. Qed.
+
+Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
+Proof. apply epsilon_fxp. Qed.
+\end{Coqsrc}
+
+
+The relation between the constructor $\psi$ and the function $\phi$ is
+studied in~\cite{schutte}, and partially implemented in this development.
+\emph{Please contribute!}
+ 
+For instance, the following theorem states that, if $\gamma$ is the sum of a limit ordinal $\beta$ and a finite ordinal $n$, and $\beta$ is a fixpoint of
+$\varphi(\alpha)$, then $\psi(\alpha,\gamma)=\phi(\alpha, \gamma+1)$.
+
+\begin{Coqanswer}
+phi_psi :
+forall (alpha : T2) [beta gamma : T2] [n : nat],
+nf gamma ->
+limit_plus_fin beta n gamma ->
+phi alpha beta = beta -> [alpha, gamma] = phi alpha (succ gamma)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
+Proof. trivial. Qed.
+\end{Coqsrc}
+
+On the other hand, $\varphi$ can be expressed in terms of $\psi$.
+
+\begin{Coqanswer}
+phi_of_psi:
+  forall a b1 b2 : T2,
+  phi a [b1, b2] = (if lt_ge_dec a b1 then [b1, b2] else [a, [b1, b2]])
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
+Proof. reflexivity. Qed.
+\end{Coqsrc}
+
+\section{An ordinal notation for \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}}
+
+In order to consider type \texttt{T2} as an ordinal notation, we have to build an instance of class \texttt{ON} (See Definition page~\pageref{types:ON}).
+
+First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation.
+
+\begin{Coqsrc}
+Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
+
+Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
+
+Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
+\end{Coqsrc}
+
+Then we, prove that \texttt{lt} is a well-founded strict order and that the
+function \texttt{compare} is correct.
+
+\begin{Coqsrc}
+Instance lt_sto : StrictOrder lt.
+
+Lemma lt_wf : well_founded lt.
+
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+
+Instance Gamma0: ON lt  compare.
+Proof.
+  split.
+  - apply lt_sto.
+  - apply lt_wf. 
+  - apply compare_correct.
+Qed.
+\end{Coqsrc}
+
+
+\begin{remark}
+The proof of \texttt{lt\_wf} has been written by \'Evelyne Contejean, using her library on the recursive path ordering (see also remark~\vref{remark:a3pat}).
+\end{remark}
+
+\index{Projects}
+\begin{project}
+Prove that \texttt{Epsilon0} (page~\pageref{instance-epsilon0})
+is a sub-notation system of \texttt{Gamma0}.
+
+Prove that the implemantations of \texttt{succ}, \texttt{+}, $\varphi_0$, etc.
+are compatible in both notation systems.
+
+Note that a function \texttt{T1\_inj} from \texttt{T1} to \texttt{T2} has already been defined. It may help to complete the task.
+\end{project}
+
+
+
 \chapter{Appendices}
 
 \bibliographystyle{alpha}

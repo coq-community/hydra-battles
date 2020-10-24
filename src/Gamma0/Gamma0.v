@@ -218,9 +218,9 @@ Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3 tricho
 
 Open Scope T2_scope.
 
-Lemma tricho_aux : forall l, forall t t',
-      (t2_length t + t2_length t' < l)%nat  ->
-      {t t2< t'}+{t = t'} + {t' t2<  t}.
+Lemma tricho_aux (l: nat) : forall t t': T2,
+      t2_length t + t2_length t' < l  ->
+      {t t2< t'} + {t = t'} + {t' t2<  t}.
 Proof.
   induction l.
   - intros; elimtype False. 
@@ -270,7 +270,7 @@ Proof.
                       right; constructor 6;auto with T2.
               ++ intro H2; right;constructor 3;auto with T2.
        *  intro H1;
-            assert (H2:  (t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
+            assert (H2:(t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
           --  eapply lt_lt_Sn.
               ++  eapply tricho_lt_2'.
               ++  rewrite plus_comm;  eauto with T2.
@@ -282,8 +282,8 @@ Proof.
 Defined.
 
 
-Definition lt_eq_lt_dec : forall t t', {t t2< t'}+{t=t'}+{t' t2<  t}.
-  intros t t'.
+Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
+Proof.
   eapply tricho_aux.
   eapply lt_n_Sn.
 Defined.
@@ -295,7 +295,7 @@ Definition lt_ge_dec : forall t t', {t t2< t'}+{t' t2<= t}.
   auto with T2.
 Defined.
 
-Definition compare (t1 t2 : T2) := 
+Definition compare (t1 t2 : T2) : comparison := 
   match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
   | inleft (right _) => Eq
@@ -312,6 +312,12 @@ Fixpoint nfb (alpha : T2) : bool :=
            | _ => false
            end
 end.
+
+Compute compare (gcons 2 1 42 epsilon0) [2,2].
+
+Compute nfb  (gcons 2 1 42 epsilon0).
+
+Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
 
 
 (* introduces an hypothesis Hname for t t2< t', t = t', and t' t2< t
@@ -347,7 +353,8 @@ Section trans_proof.
             generalize (length_a  a2 b2 n2 c2).
             generalize (length_a  a3 b3 n3 c3).
             clear induc;lia.
-          * assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero)) by auto with T2.
+          * assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero))
+              by auto with T2.
             apply induc with (gcons a2 b2 0 zero) ...
             generalize (length_b  a1 b1 n1 c1).
             generalize (length_psi a2 b2 n2 c2).
@@ -639,18 +646,7 @@ Qed.
 
 (** ** terms in normal form *)
 
-Lemma nf_omega : nf omega.
-Proof.  compute; auto with T2. Qed.
 
-Lemma nf_epsilon0 : nf epsilon0.
-Proof.  compute; auto with T2. Qed.
-
-Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
-Proof. compute; auto with T2. Qed.
-
-
-Lemma nf_fin : forall n, nf (fin n).
-Proof.  destruct n; compute;auto with T2. Qed.
 
 Lemma nf_fin_inv : forall gamma n, nf (gcons zero zero n gamma) -> 
                                       gamma = zero.
@@ -750,7 +746,7 @@ Proof.
 Qed.
 
 Theorem lt_compatR (n p : nat):  (n <p)%nat -> 
-                                 fin n t2<  fin p.
+                                 fin n t2< fin p.
 Proof.
   destruct n; cbn.
   -   destruct p.
@@ -803,6 +799,10 @@ Proof.
     trivial; discriminate. 
 Qed.
 
+(**  Compare with the proof of [T2.Ex6] *)
+
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof. now apply compare_Lt. Qed.
 
 Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
                                          alpha = beta.
@@ -869,6 +869,10 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
       end)
   end
 where "alpha + beta" := (plus alpha beta): T2_scope.
+
+Example Ex7 : 3 + epsilon0 = epsilon0.
+Proof. trivial. Qed.
+
 
 
 Lemma plus_alpha_0 : forall alpha:T2 ,  alpha + zero = alpha.
@@ -2002,6 +2006,22 @@ Definition  phi (alpha beta : T2) : T2 :=
              | any_beta => [alpha, any_beta]
   end.
 
+
+Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
+Proof. reflexivity. Qed.
+
+
+(**  All epsilons are fixpoints of phi 0 *)
+
+Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
+                                   epsilon beta.
+Proof. reflexivity. Qed.
+
+
+Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
+Proof. apply epsilon_fxp. Qed.
+
+
 Theorem phi_of_psi  : forall a b1 b2, 
     phi a [b1, b2] =
     if (lt_ge_dec a b1) 
@@ -2339,15 +2359,6 @@ Proof.
 Defined.
 
 
-(**  All epsilons are fixpoints of phi 0 *)
-
-Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
-                                   epsilon beta.
-Proof. reflexivity. Qed.
-
-
-Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
-Proof. apply epsilon_fxp. Qed.
 
 
 Lemma phi_alpha_zero_gt_alpha : forall alpha, alpha t2< phi alpha zero.
@@ -2511,7 +2522,7 @@ Proof.
 Qed.
 
 
-(* 
+(**
    limit_plus_fin alpha n beta  means :
    beta = alpha + fin n and (alpha is limit or alpha = zero)
  *)
@@ -2526,7 +2537,7 @@ Inductive limit_plus_fin : T2 -> nat -> T2 -> Prop :=
      limit_plus_fin (gcons beta1 beta2 n gamma0)
                   p (gcons beta1 beta2 n gamma).
 
-Lemma limit_plus_F_plus : forall alpha alpha' p,
+Lemma limit_plus_fin_plus : forall alpha alpha' p,
     limit_plus_fin alpha p alpha' ->
     nf alpha ->
     alpha' = alpha + fin p.
@@ -2548,7 +2559,7 @@ Proof.
   + nf_inv.
 Qed.
 
-Lemma limit_plus_F_lim : forall alpha alpha' p,
+Lemma limit_plus_fin_lim : forall alpha alpha' p,
                       limit_plus_fin alpha p alpha' ->
                       nf alpha ->
                       is_limit alpha \/ alpha=zero.
@@ -2571,11 +2582,11 @@ Qed.
 
 
 
-Lemma limit_plus_F_inv0  alpha beta: 
+Lemma limit_plus_fin_inv0  alpha beta: 
   limit_plus_fin alpha 0 beta -> 
   nf alpha -> alpha = beta.
 Proof.
- intros H H0; generalize (limit_plus_F_plus H H0).
+ intros H H0; generalize (limit_plus_fin_plus H H0).
  cbn; now rewrite plus_alpha_0.
 Qed.
 
@@ -2687,7 +2698,7 @@ Proof.
  induction c;simpl;constructor;auto with T2.
 Qed.
 
-Definition lt_T1_injection : forall a, lt_epsilon0 a -> {c:T1 | T1_inj c = a}.
+Definition T1_inj_R : forall a, lt_epsilon0 a -> {c:T1 | T1_inj c = a}.
 Proof.
  induction a.
  - exists T1.zero;simpl;auto with T2.
@@ -3242,7 +3253,7 @@ Qed.
 
 
 
-Lemma limit_plus_F_ok : forall alpha,  is_limit alpha ->
+Lemma limit_plus_fin_ok : forall alpha,  is_limit alpha ->
                            forall n, limit_plus_fin alpha n (alpha + fin n).
 Proof.
 induction alpha.
@@ -3357,7 +3368,7 @@ Qed.
 
 Lemma phi_to_psi_6 : forall beta, nf beta ->
                                   phi alpha beta = beta ->
-                                  [alpha,  beta] = phi alpha (succ beta).
+                                  [alpha, beta] = phi alpha (succ beta).
 Proof.  
  intros; case (phi_fix _ H0 ).
  intros beta1 (beta2,(H2,H3)); subst beta.
@@ -3372,15 +3383,15 @@ Qed.
 
 
  
-Lemma phi_psi : forall  beta0 beta n, nf beta ->
-  limit_plus_fin beta0 n beta ->  phi alpha beta0 = beta0 ->
-                           [alpha, beta]  =  phi alpha (succ beta).
+Lemma phi_psi : forall  beta gamma n, nf gamma ->
+  limit_plus_fin beta n gamma ->  phi alpha beta = beta ->
+                           [alpha, gamma]  =  phi alpha (succ gamma).
 Proof.
  intros; case (phi_fix _ H1).
   intros beta1 (beta2,(H2,H3)).
- assert (beta = (gcons beta1 beta2 0 (fin n))).
+ assert (gamma = (gcons beta1 beta2 0 (fin n))).
  {
-subst beta0.
+subst beta.
  inversion H0.
  inversion H9.
  auto with T2.
@@ -3388,8 +3399,8 @@ subst beta0.
  auto with T2.
  inversion H10;auto with T2.
  }
- subst beta.
-   cbn; subst beta0; generalize H3 H1.
+ subst gamma.
+   cbn; subst beta; generalize H3 H1.
    case beta1;case beta2.
    -   inversion 1.
    -   inversion 2.
@@ -3543,7 +3554,16 @@ Qed.
 
 End phi_to_psi.
 
-Check compare.
+About phi_psi.
+
+Compute phi 0 (epsilon 2)= epsilon 2.
+
+Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
+Proof. trivial. Qed.
+
+Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
+Proof. reflexivity. Qed.
+
 
 Declare Scope g0_scope.
 
@@ -3554,8 +3574,8 @@ Module G0.
   Lemma Lt_wf : well_founded LT.
   Proof.
     unfold LT; generalize nf_Wf; split; split.
-    intros y0 H1;  generalize (nf_Wf); intro H2.
-    apply H2;now destruct H1.
+    intros y0 H1; generalize (nf_Wf); intro H2.
+    apply H2; now destruct H1.
   Defined.
 
 (** ** Temporary compatibility  nf/nfb *)
@@ -3617,9 +3637,7 @@ Qed.
 
 Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
-
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
-
 
 Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
 
@@ -3628,6 +3646,14 @@ Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
 Proof.
   destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
 Qed.
+
+Instance lt_sto : StrictOrder lt.
+Proof.
+  split.
+  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
+  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
+Qed.
+
 
 Lemma lt_wf : well_founded lt.
 Proof.
@@ -3638,12 +3664,6 @@ Proof.
                            {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
 Qed.
 
-Instance lt_sto : StrictOrder lt.
-Proof.
-  split.
-  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
-  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
-Qed.
 
 Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
@@ -3670,7 +3690,7 @@ Defined.
 
 Notation "'omega'" := Omega : g0_scope.
 
-Instance ONG0: ON lt  compare.
+Instance Gamma0: ON lt  compare.
 Proof.
   split.
   - apply lt_sto.
@@ -3704,8 +3724,8 @@ Qed.
 
 End G0.
 
+About T1_inj.
 
+(* T1_inj : T1 -> T2 *)
 
-
-
-
+Search T1_inj.
