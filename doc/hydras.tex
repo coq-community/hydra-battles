@@ -125,13 +125,6 @@ Simply put, this document tries to combines the scientific interest of two artic
 We hope  that such a work, besides exploring a nice piece of discrete maths, 
 will show how \coq{} and its standard library are well fitted to help us to understand some non-trivial mathematical developments, and also to experiment the constructive parts of  the proof through functional programming.
 
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=11cm]{epsilon0.jpg}
-  \caption{Discrete mathematics and formal proofs}
-  \label{fig:gamma0}
-\end{figure}
  We also hope to provide a little clarification on infinity (both potential and actual) through the notions of function, computation, limit,
  types and proofs.
 
@@ -2942,7 +2935,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
 
 \section{The ordinal \texorpdfstring{$\omega^2$}{omega^2}}
 
-The ordinal $\omega^2$ (also called $\varphi_0(2)$, see Chap.~\ref{chap:schutte}), is represented by the lexicographically ordered cartesian product $\mathbb{N}\times\mathbb{N}$. 
+The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is represented by the lexicographically ordered cartesian product $\mathbb{N}\times\mathbb{N}$. 
 
 \vspace{4pt}
 \noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Omega2.html}{ON\_Omega2}}
@@ -3913,7 +3906,7 @@ For instance, let us take $N_A=\texttt{Omega}$, and take $\alpha=\langle 4,4,2,1
 In contrast the list $\langle5,6,3,3\rangle$ is not non-increasing (\emph{i.e.} sorted w.r.t. $\geq$), so it is not to be considered.
 
 Note that if the notation $N_A$ implements the ordinal 
-$\alpha$,  the new notation $\omega^{N_A}$ must implement the ordinal $\varphi_0(\alpha)$, a.k.a. $\omega^\alpha$ (see chapter~\ref{chap:schutte})
+$\alpha$,  the new notation $\omega^{N_A}$ must implement the ordinal $\phi_0(\alpha)$, a.k.a. $\omega^\alpha$ (see chapter~\ref{chap:schutte})
 
 \end{project}
 
@@ -4151,7 +4144,7 @@ Notation omega := (ocons (ocons zero 0 zero) 0 zero): t1_scope.
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
 
 
-\subsubsection{The ordinal \(\omega^\alpha\), a.k.a. \(\varphi_0(\alpha)\)}
+\subsubsection{The ordinal \(\omega^\alpha\), a.k.a. \(\phi_0(\alpha)\)}
 \label{sec:orgheadline70}
 
 We provide also a notation for ordinals of the form $\omega^\alpha$.
@@ -4168,9 +4161,9 @@ Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 29) : t1_scope.
 
 \begin{remark}
 \label{sec:orgheadline69}
-The name \(\varphi_0\)
+The name \(\phi_0\)
    comes from ordinal numbers theory. In~\cite{schutte}, Schütte defines 
-$\varphi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\varphi_0(\alpha)$.  See also Chapter~\ref{chap:schutte} of this document.
+$\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\phi_0(\alpha)$.  See also Chapter~\ref{chap:schutte} of this document.
 \end{remark}
 
 
@@ -4678,6 +4671,7 @@ Qed.
 
 
 \subsection{Pretty printing Ordinals in Cantor normal Form}
+\label{sect:ppT1}
 
 Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
 If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
@@ -4715,6 +4709,12 @@ Compute pp alpha_0.
      = (omega ^ omega + omega ^ 3 * 5 + 2)%pT1
      : ppT1
 \end{Coqanswer}
+
+\index{Projects}
+\begin{project}
+Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal terms in Cantor normal form.
+\end{project}
+
 
 \subsubsection{Arithmetic on type \texttt{E0}}
 
@@ -4982,7 +4982,8 @@ Ltac transfinite_induction alpha :=
 
 
 \begin{remark}
-The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering is available in the library \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
+\label{remark:a3pat}
+The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the library \href{../src/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
  \end{remark}
 
 
@@ -4990,6 +4991,7 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on recu
 
 We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
 
+\label{instance-epsilon0}
 \begin{Coqsrc}
 Instance Epsilon0 : ON Lt compare.  
 (* ... *)
@@ -7020,7 +7022,7 @@ Lemma L_omega_ok : L_spec omega L_omega.
 \subsubsection{Towards  \texorpdfstring{$\omega^2$}{omega*omega}}
 
 We would like to get exact formulas for the ordinal $\omega^2$, a.k.a.
-$\varphi_0(2)$. This ordinal is the limit of the sequence $\omega\times i\;(i \in \mathbb{N}$. Thus, we have to study ordinals of this form, then use 
+$\phi_0(2)$. This ordinal is the limit of the sequence $\omega\times i\;(i \in \mathbb{N}$. Thus, we have to study ordinals of this form, then use 
 our lemma on limits.
 
 The following lemma establishes a path from $\omega\times ( i+1)$ to
@@ -9051,9 +9053,9 @@ Notation "alpha * n" := (mult_n alpha n) : schutte_scope.
 
 In this section, we define the function which maps any $\alpha\in\mathbb{O}$ to
 the ordinal  $\omega^\alpha$, also written 
-$\varphi_0(\alpha)$. 
+$\phi_0(\alpha)$. 
 It is an opportunity to apply the definitions and results of the preceding section. 
-Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive principal ordinals, and $\varphi_0$  is just defined as the ordering function of this set.
+Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive principal ordinals, and $\phi_0$  is just defined as the ordering function of this set.
 
 \subsection{Additive principal ordinals}
 
@@ -9079,8 +9081,8 @@ Definition AP : Ensemble Ord :=
 
 \subsection{The function \texttt{phi0}}
 
-Let us call  $\varphi_0$ the ordering function of \texttt{AP}.
-In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\varphi_0(\alpha)$. 
+Let us call  $\phi_0$ the ordering function of \texttt{AP}.
+In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\phi_0(\alpha)$. 
 
 
 \begin{Coqsrc}
@@ -9092,7 +9094,7 @@ Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
 \subsection{Omega-towers and the ordinal \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 
-Using $\varphi_0$, we can define recursively the set of finite omega-towers.
+Using $\phi_0$, we can define recursively the set of finite omega-towers.
 
 
 \begin{Coqsrc}
@@ -9110,7 +9112,7 @@ Then, the ordinal  $\epsilon_0$ is defined as the limit of the sequence of all f
 Definition epsilon0 := omega_limit omega_tower.
 \end{Coqsrc}
 
-The rest of our library \texttt{AP} is devoted to the proof of properties of additive principal ordinals, hence of the ordering function  $\varphi0$ and the ordinal $\epsilon_0$ (which we could not express within the type \texttt{T1}).
+The rest of our library \texttt{AP} is devoted to the proof of properties of additive principal ordinals, hence of the ordering function  $\phi0$ and the ordinal $\epsilon_0$ (which we could not express within the type \texttt{T1}).
 
 \subsection{Properties of the set  \texttt{AP}}
 
@@ -9160,15 +9162,15 @@ Theorem AP_closed : Closed AP.
 Lemma AP_o_segment :  the_ordering_segment AP = ordinal.
 \end{Coqsrc}
 
-\subsubsection{Properties of the function \texorpdfstring{$\varphi_0$}{phi0}}
+\subsubsection{Properties of the function \texorpdfstring{$\phi_0$}{phi0}}
  
-The ordering function $\varphi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte says that this function is \emph{normal}).
+The ordering function $\phi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte says that this function is \emph{normal}).
 
 \begin{Coqsrc}
 Theorem normal_phi0 : normal phi0 AP.
 \end{Coqsrc}
 
-The following properties come from  the definition of $\varphi_0$ as the ordering function of \texttt{AP}. It may be interesting to compare these proofs with the computational ones described in Chapter ~\ref{chap:T1}.
+The following properties come from  the definition of $\phi_0$ as the ordering function of \texttt{AP}. It may be interesting to compare these proofs with the computational ones described in Chapter ~\ref{chap:T1}.
 
 \begin{Coqsrc}
 Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha).
@@ -9192,7 +9194,7 @@ Lemma omega_eq : omega = phi0 1.
 Lemma phi0_le (alpha : Ord) : alpha <= phi0 alpha.
 \end{Coqsrc}
 
-Please note that the lemma \texttt{omega\_eq} above, is consistent with the interpretation of the ordering function $\varphi_0$ as the exponential of basis $\omega$. Indeed we could have written this lemma with our alternative notation:
+Please note that the lemma \texttt{omega\_eq} above, is consistent with the interpretation of the ordering function $\phi_0$ as the exponential of basis $\omega$. Indeed we could have written this lemma with our alternative notation:
 
 \begin{Coqsrc}
  Lemma omega_eq : omega = omega^ 1.
@@ -9220,13 +9222,13 @@ The proof is as follows:
   \item If $i=0$, then the result is trivial (because $\alpha=0$)
  \item  Otherwise let $i=j+1$; 
           $\alpha$ is greater than or equal to the omega-tower of height $j$.
-         By monotonicity,  $\varphi_0(\alpha)$ is greater than or equal to 
+         By monotonicity,  $\phi_0(\alpha)$ is greater than or equal to 
         the omega-tower of height $j+1$, thus strictly greater than $\alpha$
   \end{itemize}
  \end{enumerate}
 
 Moreover,  $\epsilon_0$ is the least ordinal $\alpha$ that verifies the equality 
-$\alpha = \omega^\alpha$, in other words the least fixpoint of the function  $\varphi_0$.
+$\alpha = \omega^\alpha$, in other words the least fixpoint of the function  $\phi_0$.
 
 \begin{Coqsrc}
 Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
@@ -9270,6 +9272,7 @@ Definition Cr (alpha : Ord) : Ensemble Ord :=
     (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
 \end{Coqsrc}
 
+\label{sect:phi-schutte}
 
 \begin{Coqsrc}
 Definition phi (alpha : Ord) : Ord -> Ord 
@@ -9525,12 +9528,643 @@ $\epsilon_0$ and $\Gamma_0$.
 
 \section{Related work}
 
-In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between or ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
+In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
 of ordinal numbers after Bourbaki's set theory.
 
 
+\chapter{The ordinal \texorpdfstring{$\Gamma_0$}{Gamma0} (first draft)}
 
 
+\emph{This chapter and the files it presents are still very incomplete, considering the impressive properties of $\Gamma_0$~\cite{Gallier91}.  We hope to add new material soon, and accept contributions!}
+
+
+\section{Introduction}
+We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system for the ordinals $<\Gamma_0$''.
+We try to be as close as possible to Schütte's text and usual practices of \coq{} developments.
+
+The ordinal $\Gamma_0$ is defined in Section 13 of ~\cite{schutte} as the least \emph{strongly critical ordinal}. It is widely known as the \emph{Feferman-Schütte ordinal}.
+
+
+Section V, 13 of~\cite{schutte} defines \emph{strongly critical} and
+\emph{maximal $\alpha$-critical} ordinals.  
+
+
+
+We give their definition in \coq's syntax.
+
+\vspace{4pt}
+
+\noindent\emph{From \href{../src/html/hydras.Schutte.Critical.html\#strongly_critical}%
+{\texttt{Schutte.Critical}}}
+
+\begin{Coqsrc}
+Definition strongly_critical alpha := In (Cr alpha) alpha.
+
+Definition maximal_critical alpha : Ensemble Ord :=
+  fun gamma =>
+    In (Cr alpha) gamma /\
+    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+
+Definition Gamma0 := the_least strongly_critical.
+\end{Coqsrc}
+
+\index{Projects}
+\begin{project}
+Prove that a (countable)  ordinal $\alpha$ is strongly critical iff $\phi \alpha 0=\alpha$ (Theorem 13.13 of~\cite{schutte} ). 
+\end{project}
+
+
+\index{Projects}
+\begin{project}
+Prove that the set of strongly critical ordinals is unbounded and closed (Theorem 13.14 of~\cite{schutte} ). Thus this set is not empty,  hence has a least element. Otherwise, the definition of $\Gamma_0$ above would be useless.
+\end{project}
+
+
+
+
+In the present version of this development, we will only study $\Gamma_0$ as a notation system, much more powerful than the ordinal notation for $\epsilon_0$.
+
+%\index{Projects}
+%
+%\begin{project}
+% Schûtte's section 13 of~\cite{schutte} contain several definitions and lemmas which give another view on $\Gamma_0$.  We leave it as a project to implement them in \coq{}.  
+%\end{project}
+
+
+
+
+\section{The type \texttt{T2} of ordinal terms}
+
+The notation system for ordinals less than $\gamma_0$ comes from the following theorem of~\cite{schutte}, where $\psi\,\alpha$ is the ordering function 
+of the set of maximal $\alpha$-critical ordinals.
+
+
+\begin{quote}
+  Any ordinal $\not= 0$ which is not strongly critical can be expressed in terms of $+$ and $\psi$.
+\end{quote}
+
+\index{Projects}
+\begin{project}
+This theorem is not formally proved in this development yet. It should be!
+\end{project}
+
+
+Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors, one for $0$, the other for the construction $\psi(\alpha,\beta)\times(n+1)+\gamma$, adapting a Manolios-Vroon-like notation~\cite{Manolios2005} to
+\emph{Veblen normal forms}.
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#T2}%
+{\texttt{Gamma0.T2}}}
+\begin{Coqsrc}
+(**  [gcons alpha beta n gamma] is : [psi(alpha,beta)*(S n)+ gamma]  *)
+
+Inductive T2 : Set :=
+| zero : T2
+| gcons : T2 -> T2  -> nat -> T2 -> T2.
+
+Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
+                                 (at level 0): t2_scope.
+\end{Coqsrc}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=11cm]{epsilon0.jpg}
+  \caption{Veblen normal form}
+  \label{fig:gamma0}
+\end{figure}
+
+Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognising simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
+
+\begin{Coqsrc}
+Notation  "'one'"  := [zero,zero] : T2_scope.
+
+(** The (n+1)-th finite ordinal *)
+Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
+
+(** the [n]-th ordinal  *)
+Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
+
+Notation "'omega'"  := [zero,one] : T2_scope.
+\end{Coqsrc}
+
+
+\begin{Coqsrc}
+Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
+
+Definition epsilon alpha := [one, alpha].
+\end{Coqsrc}
+
+\section{How big is \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}?}
+
+Let us define a strict order on type \texttt{T2}. The following definition is 
+an adaptation of Schütte's, taking into account the multiplications by a natural number (inspired by~\cite{Manolios2005}, and also present in \texttt{T1}).
+
+\label{sect:t2-lt-def}
+
+\begin{Coqsrc}
+Inductive lt : T2 -> T2 -> Prop :=
+| (* 1 *) 
+ lt_1 : forall alpha beta n gamma,  zero t2< gcons alpha beta n gamma
+| (* 2 *)
+ lt_2 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
+                alpha1 t2< alpha2 ->
+                beta1 t2< gcons alpha2 beta2 0 zero ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2 beta2 n2 gamma2
+| (* 3 *)
+ lt_3 : forall alpha1  beta1 beta2 n1 n2 gamma1 gamma2, 
+               beta1 t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha1 beta2 n2 gamma2
+
+| (* 4 *)
+ lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
+               alpha2 t2< alpha1 ->
+               [alpha1, beta1] t2< beta2 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2 beta2 n2 gamma2
+
+| (* 5 *)
+lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
+               alpha2 t2< alpha1 ->
+               gcons alpha1 beta1 n1 gamma1 t2<
+               gcons alpha2  [alpha1, beta1] n2 gamma2
+
+| (* 6 *)
+lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
+                                    gcons alpha1 beta1 n1 gamma1 t2< 
+                                    gcons alpha1 beta1 n2 gamma2
+
+| (* 7 *)
+  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
+                                      gcons alpha1 beta1 n1 gamma1 t2<
+                                      gcons alpha1 beta1 n1 gamma2
+where  "o1 t2< o2" := (lt o1 o2): T2_scope.
+
+Hint Constructors lt : T2.
+\end{Coqsrc}
+
+Seven constructors! In order to get accustomed with this definition, let us look at a small set of examples, covering all the constructors of \texttt{lt}.
+
+
+\subsection{Examples}
+
+\subsubsection*{Proof of $0<\epsilon_0$}
+
+\begin{Coqsrc}
+Example Ex1: 0 t2< epsilon0.
+Proof.  constructor 1. Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\omega<\epsilon_0$}
+
+\begin{Coqsrc}
+Example Ex2: omega t2< epsilon0.
+Proof. info_auto with T2. (* uses lt_1 and lt_2 *) Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(\omega,8]\times 13+56 < \psi(\omega,8]\times 13+57 $}
+
+\begin{Coqsrc}
+Example Ex3: gcons omega 8 12 56 t2<  gcons omega 8 12 57.
+Proof.
+  constructor 7; constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\epsilon_0<\psi(2,1)$}
+
+\begin{Coqsrc}
+Example Ex4: epsilon0 t2< [2,1].
+Proof.
+   constructor 2; auto with T2.
+   - constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(2,1)<\psi(2,3)$}
+
+\begin{Coqsrc}
+Example Ex5 : [2,1] t2< [2,3].
+Proof.
+  constructor 3; auto with T2.
+  - constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(1,0)\times 13+ \omega < \psi(0,\psi(2,1))$}
+\label{sect:ex6-first-proof}
+
+\begin{Coqsrc}
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof.
+  constructor 4.
+  - constructor 1.
+  - constructor 2.
+    + constructor 6; auto with arith.
+    + constructor 1.
+Qed.
+\end{Coqsrc}
+
+\subsubsection*{Proof of $\psi(2,1)\times 43 + \epsilon_0 < \psi(1,\psi(2,1))$}
+
+\begin{Coqsrc}
+Example Ex7 : gcons 2 1 42 epsilon0 t2< [1, [2,1]].
+Proof.
+ constructor 5.
+ constructor 6; auto with arith.
+Qed.
+\end{Coqsrc}
+
+\index{Projects}
+\begin{project}
+Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
+\end{project}
+
+\section{Veblen normal forms}
+\begin{definition}
+  A term of the form $\psi(\alpha_1,\beta_1)\times n_1+ \psi(\alpha_2,\beta_2)\times n_2+\dots+\psi(\alpha_k,\beta_k)\times n_k$ is said to be in
+ \emph{[Veblen] normal form} if for every $i<n$, $\psi(\alpha_i,\beta_i)<\psi(\alpha_{i+1},\beta_{i+1})$, all the $\alpha_i$ and $\beta_i$ are in normal form, and all the $n_i$ are strictly positive integers.
+\end{definition}
+
+\begin{Coqsrc}
+Inductive nf : T2 -> Prop :=
+| zero_nf : nf zero
+| single_nf : forall a b n, nf a ->  nf b -> nf (gcons a b n zero)
+| gcons_nf : forall a b n a' b' n' c', 
+                      [a', b'] t2< [a, b]  -> 
+                      nf a -> nf b -> 
+                      nf(gcons a' b' n' c')-> 
+                      nf(gcons a b n (gcons a' b' n' c')).
+\end{Coqsrc}
+
+Let us look at some positive examples (we have to prove some inversion lemmas before proving counter-examples).
+
+
+\begin{Coqsrc}
+Lemma  nf_fin i : nf (fin i).
+Proof.
+  destruct i.
+  - auto with T2.
+  - constructor 2; auto with T2.
+Qed.
+
+Lemma nf_omega : nf omega.
+Proof.  compute; auto with T2. Qed.
+
+Lemma nf_epsilon0 : nf epsilon0.
+Proof. constructor 2; auto with T2. Qed.
+
+Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
+Proof. compute; auto with T2. Qed.
+
+Example Ex8: nf (gcons 2 1 42 epsilon0).
+Proof.
+  constructor 3; auto with T2.
+  - apply Ex4.
+  - apply nf_fin.
+  - apply nf_fin.
+Qed.
+\end{Coqsrc}
+
+
+\subsection{Length of a term}
+
+The notion of \emph{term length} is introduced by Schütte as a helper for proving (at least) the \emph{trichotomy} property and transitivity of the strict order \texttt{lt} on \texttt{T2}. These properties are proved by induction on length.
+
+\begin{Coqsrc}
+Fixpoint nbterms (t:T2) : nat :=
+  match t with zero => 0
+             | gcons a b n v => (S n) + nbterms v
+  end.
+
+Fixpoint t2_length (t:T2) : nat :=
+  match t  with 
+    zero => 0
+  | gcons a b n v => 
+       nbterms (gcons a b n v) + 
+      2 * (Max.max (t2_length a)
+                              (Max.max (t2_length b) 
+                                                (t2_length_aux v)))
+  end
+with t2_length_aux (t:T2) : nat :=
+ match t with 
+ | zero => 0
+  | gcons a b n v =>
+           Max.max (t2_length a) 
+                            (Max.max (t2_length b) (t2_length_aux v))
+ end.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Compute t2_length (gcons 2 1 42 epsilon0).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ = 48 : nat
+\end{Coqanswer}
+
+\subsection{Trichotomy}
+
+\emph{Trichotomy} is another name for the well-known property of decidable total ordering (like Standard Library's \texttt{Compare\_dec.lt\_eq\_lt\_dec}).
+
+We first prove by induction on $l$ the following lemma:
+
+\vspace{4pt}
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.Gamma0\#tricho_aux}%
+{\texttt{Gamma0.Gamma0}}}
+
+\begin{Coqsrc}
+Lemma tricho_aux (l: nat) : forall t t' :T2,
+      t2_length t + t2_length t' < l  ->
+      {t t2< t'} + {t = t'} + {t' t2<  t}.
+\end{Coqsrc}
+
+Then we get our version of \texttt{lt\_eq\_lt\_dec}, and derive a comparison function;
+
+\begin{Coqsrc}
+Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
+Proof.
+  eapply tricho_aux.
+  eapply lt_n_Sn.
+Defined.
+
+Definition compare (t1 t2 : T2) : comparison := 
+  match lt_eq_lt_dec t1 t2 with
+  | inleft (left _) => Lt
+  | inleft (right _) => Eq
+  | inright _ => Gt
+  end.
+\end{Coqsrc}
+
+With the help of \texttt{compare}, we get a boolean version of \texttt{nf}
+(being in Veblen normal form).
+
+\begin{Coqsrc}
+Fixpoint nfb (alpha : T2) : bool :=
+  match alpha with
+    zero => true
+  | gcons a b n zero => andb (nfb a) (nfb b)
+  | gcons a b n ((gcons a' b' n' c') as c) =>
+    match compare [a', b'] [a, b] with
+           Lt => andb (nfb a) (andb (nfb b) (nfb c))
+           | _ => false
+           end
+end.
+\end{Coqsrc}
+
+
+\begin{Coqsrc}
+Compute compare (gcons 2 1 42 epsilon0) [2,2].
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = Lt
+     : comparison
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute nfb  (gcons 2 1 42 epsilon0).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = true
+     : bool
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+   = false
+     : bool
+\end{Coqanswer}
+
+\begin{remark}
+The connexion between the predicate \texttt{nf} and the relation \texttt{lt} on one part, and the functions \texttt{nfb} and \texttt{compare} on the other, is expressed by the following lemmas:
+
+\begin{Coqsrc}
+Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
+
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+\end{Coqsrc}
+
+The function \texttt{compare} helps to make easier proofs of inequalities of
+closed terms of type \texttt{T2}.
+
+First, we prove a lemma:
+
+\begin{Coqsrc}
+Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
+                                         alpha t2< beta.
+Proof.
+  intros alpha beta; destruct (compare_correct alpha beta);
+    trivial; discriminate. 
+Qed.
+\end{Coqsrc}
+
+Then, we give another version of the proof of Sect.~\vref{sect:ex6-first-proof}.
+
+\begin{Coqsrc}
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof. now apply compare_Lt. Qed.
+\end{Coqsrc}
+
+\end{remark}
+
+
+\section{Main functions on \texttt{T2}}
+
+\subsection{Successor}
+The successor function is defined by structural recursion.
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#succ}%
+{\texttt{Gamma0.T2}}}
+\begin{Coqsrc}
+Fixpoint succ (a:T2) : T2 :=
+ match a with zero => one
+             | gcons zero zero n c => fin (S (S n))
+             | gcons a b n c => gcons a b n (succ c)
+ end.
+\end{Coqsrc}
+
+\subsection{Addition}
+
+Like for Cantor normal forms (see Sect.\~ref{sect:infix-plus-T1})  the definition of addition in \texttt{T2}  requires comparison between ordinal terms.
+
+
+\begin{Coqsrc}
+Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
+  match t1,t2 with
+  |  zero, y  => y
+  |  x, zero => x
+  |  gcons a b n c, gcons a' b' n' c' =>
+     (match compare (gcons a b 0 zero)
+                    (gcons a' b' 0 zero) with
+      | Lt => gcons a' b' n' c'
+      | Gt => gcons a b n (c + gcons a' b' n' c')
+      | Eq => gcons a b (S(n+n')) c'
+      end)
+  end
+where "alpha + beta" := (plus alpha beta): T2_scope.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Example Ex7 : 3 + epsilon0 = epsilon0.
+Proof. trivial. Qed.
+\end{Coqsrc}
+
+\subsection{The Veblen function \texorpdfstring{$\phi$}{\texttt{phi}}}
+
+The enumeration function of critical ordinals, presented in Sect.\~vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
+
+\begin{Coqsrc}
+Definition  phi (alpha beta : T2) : T2 :=
+  match beta with zero => [alpha, beta] 
+             | [b1, b2] => 
+               (match compare alpha b1
+                with Datatypes.Lt => [b1, b2 ]
+                | _ => [alpha,[b1, b2]]
+                end)
+             | gcons b1 b2 0 (gcons zero zero  n zero) => 
+               (match compare alpha b1
+                with  Datatypes.Lt => 
+                      [alpha, (gcons b1 b2 0 (fin n))]
+                | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
+                end)
+             | any_beta => [alpha, any_beta]
+  end.
+\end{Coqsrc}
+
+Despite its complexity, the function \texttt{phi} is well adapted to proofs by simplification or computation.
+\begin{Coqsrc}
+Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
+Proof. reflexivity. Qed.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+(**  All epsilons are fixpoints of phi 0 *)
+
+Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
+                                   epsilon beta.
+Proof. reflexivity. Qed.
+
+Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
+Proof. apply epsilon_fxp. Qed.
+\end{Coqsrc}
+
+
+The relation between the constructor $\psi$ and the function $\phi$ is
+studied in~\cite{schutte}, and partially implemented in this development.
+\emph{Please contribute!}
+ 
+For instance, the following theorem states that, if $\gamma$ is the sum of a limit ordinal $\beta$ and a finite ordinal $n$, and $\beta$ is a fixpoint of
+$\phi(\alpha)$, then $\psi(\alpha,\gamma)=\phi_\alpha(\gamma+1)$.
+
+\begin{Coqanswer}
+phi_psi :
+forall (alpha : T2) [beta gamma : T2] [n : nat],
+nf gamma ->
+limit_plus_fin beta n gamma ->
+phi alpha beta = beta -> [alpha, gamma] = phi alpha (succ gamma)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
+Proof. trivial. Qed.
+\end{Coqsrc}
+
+On the other hand, $\phi$ can be expressed in terms of $\psi$.
+
+\begin{Coqanswer}
+phi_of_psi:
+  forall a b1 b2 : T2,
+  phi a [b1, b2] = (if lt_ge_dec a b1 then [b1, b2] else [a, [b1, b2]])
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
+Proof. reflexivity. Qed.
+\end{Coqsrc}
+
+\index{Projects}
+\begin{project}
+Please study a way to pretty print ordinal terms in Veblen normal form (see Section~\vref{sect:ppT1}).
+\end{project}
+
+\section{An ordinal notation for \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}}
+
+In order to consider type \texttt{T2} as an ordinal notation, we have to build an instance of class \texttt{ON} (See Definition page~\pageref{types:ON}).
+
+First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation.
+
+\begin{Coqsrc}
+Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
+
+Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
+
+Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
+\end{Coqsrc}
+
+Then we, prove that \texttt{lt} is a well-founded strict order and that the
+function \texttt{compare} is correct.
+
+\begin{Coqsrc}
+Instance lt_sto : StrictOrder lt.
+
+Lemma lt_wf : well_founded lt.
+
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+
+Instance Gamma0: ON lt  compare.
+Proof.
+  split.
+  - apply lt_sto.
+  - apply lt_wf. 
+  - apply compare_correct.
+Qed.
+\end{Coqsrc}
+
+
+\begin{remark}
+The proof of \texttt{lt\_wf} has been written by \'Evelyne Contejean, using her library on the recursive path ordering (see also remark~\vref{remark:a3pat}).
+\end{remark}
+
+\index{Projects}
+\begin{project}
+Prove that \texttt{Epsilon0} (page~\pageref{instance-epsilon0})
+is a sub-notation system of \texttt{Gamma0}.
+
+Prove that the implemantations of \texttt{succ}, \texttt{+}, $\phi_0$, etc.
+are compatible in both notation systems.
+
+Note that a function \texttt{T1\_inj} from \texttt{T1} to \texttt{T2} has already been defined. It may help to complete the task.
+
+
+
+\noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#T1_to_T2}%
+{\texttt{Gamma0.T2}}}
+\begin{Coqsrc}
+(* injection from T1 *)
+
+Fixpoint T1_to_T2 (alpha :T1) : T2 :=
+  match alpha  with
+  | T1.zero => zero
+  | T1.ocons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
+  end.
+\end{Coqsrc}
+
+\end{project}
+
+\begin{project}
+Prove that the notation system \texttt{Gamma0} is a correct implementation 
+of the segment $[0,\Gamma_0)$ of the set of countable ordinals.
+\end{project}
 
 \chapter{Appendices}
 
@@ -9694,7 +10328,7 @@ F & \texttt{F $n$} & $n$ & The $n$-th finite ordinal &
 FS & \texttt{FS $n$} & $n+1$ & The $n+1$-th finite ordinal  \tnote{2} &  
 \pageref{sect:notation-FS}\\ 
 omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega}, \pageref{sect:omega-T1}, \pageref{sect:omega-notation2}, \dots\\
-phi0     & \texttt{phi0 alpha} & $\varphi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
+phi0     & \texttt{phi0 alpha} & $\phi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
 
 \hline
 \end{tabular}

@@ -37,6 +37,15 @@ Definition Cr_fun : forall alpha : Ord,
 Definition Cr (alpha : Ord) : Ensemble Ord := 
   (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
 
+Definition strongly_critical alpha := In (Cr alpha) alpha.
+
+Definition maximal_critical alpha : Ensemble Ord :=
+  fun gamma =>
+    In (Cr alpha) gamma /\
+    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+
+Definition Gamma0 := the_least strongly_critical.
+
 (**  See Gamma0.Gamma0.phi *)
 
 Definition phi (alpha : Ord) : Ord -> Ord 
@@ -517,3 +526,5 @@ Proof.
   - intros; apply Lemma5.
   - auto with schutte. 
 Qed.
+
+

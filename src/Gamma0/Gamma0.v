@@ -1,25 +1,10 @@
-(**  Veblen "pre" Normal form (for Gamma0) *)
+(**  * A notation system for ordinals less than  Gamma0 *)
 
-
-
-(* This program is free software; you can redistribute it and/or      *)
-(* modify it under the terms of the GNU Lesser General Public License *)
-(* as published by the Free Software Foundation; either version 2.1   *)
-(* of the License, or (at your option) any later version.             *)
-(*                                                                    *)
-(* This program is distributed in the hope that it will be useful,    *)
-(* but WITHOUT ANY WARRANTY; without even the implied warranty of     *)
-(* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      *)
-(* GNU General Public License for more details.                       *)
-(*                                                                    *)
-(* You should have received a copy of the GNU Lesser General Public   *)
-(* License along with this program; if not, write to the Free         *)
-(* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
-(* 02110-1301 USA                                                     *)
 
 
 (**   Pierre Casteran 
-    LaBRI, Université Bordeaux 1, and Inria Futurs (Logical)
+    LaBRI, Université Bordeaux 1, and LaBRI  (CNRS, UMR 5800)
+     with a contribution by Evelyne Contejean 
 *)
 
 
@@ -34,9 +19,6 @@ From hydras.rpo Require Import term  rpo.
 From hydras.Gamma0 Require Import T2.
 
 Import Datatypes.
-
-
-
 
 Set Implicit Arguments.
 
@@ -65,7 +47,7 @@ Ltac nf_inv := ((eapply nf_a; eassumption)||
 
 
 
-Lemma zero_lt_succ : forall alpha, zero o< succ alpha.
+Lemma zero_lt_succ : forall alpha, zero t2< succ alpha.
 Proof.
   destruct  alpha;simpl.
   - auto with T2.
@@ -73,13 +55,13 @@ Proof.
 Qed.
 
 
-Lemma not_lt_zero : forall alpha, ~ alpha o< zero. 
+Lemma not_lt_zero : forall alpha, ~ alpha t2< zero. 
 Proof.
   red; inversion 1.
 Qed.
 
 
-Lemma lt_irr : forall alpha, ~ alpha o< alpha.
+Lemma lt_irr : forall alpha, ~ alpha t2< alpha.
 Proof.
   induction alpha.
   - apply not_lt_zero. 
@@ -101,13 +83,13 @@ Ltac lt_clean :=
        end).
 
 
-Lemma le_zero_alpha : forall alpha, zero o<= alpha.
+Lemma le_zero_alpha : forall alpha, zero t2<= alpha.
 Proof.
   intro alpha; case alpha; auto with T2.
 Qed.
 
 Lemma psi_le_cons : forall alpha beta n gamma,
-    [alpha, beta] o<=  gcons alpha beta n gamma.
+    [alpha, beta] t2<=  gcons alpha beta n gamma.
 Proof.
   intros;case n; auto with arith T2.
   case gamma;auto with arith T2.
@@ -115,8 +97,8 @@ Qed.
 
 Hint Resolve psi_le_cons le_zero_alpha: T2.
 
-Lemma le_psi_term_le : forall alpha beta, alpha o<= beta ->
-                                          psi_term alpha o<= psi_term beta.
+Lemma le_psi_term_le : forall alpha beta, alpha t2<= beta ->
+                                          psi_term alpha t2<= psi_term beta.
 Proof.
   destruct 1.
   -  subst beta;auto with T2.
@@ -129,7 +111,7 @@ Qed.
 
 
 Lemma le_inv_nc : forall a b n c  n' c',
-    gcons a b n c o<= gcons a b n' c' -> (n<n')%nat \/ n=n' /\ c o<= c'.
+    gcons a b n c t2<= gcons a b n' c' -> (n<n')%nat \/ n=n' /\ c t2<= c'.
 Proof.
   inversion_clear 1.
   injection H0;intros;right;auto with T2.
@@ -138,15 +120,15 @@ Qed.
 
 
 Lemma lt_than_psi : forall a b n c a' b',
-    gcons a b n c o< [a',b'] ->
-    [a,b]o<[a',b']. 
+    gcons a b n c t2< [a',b'] ->
+    [a,b]t2<[a',b']. 
 Proof.
   inversion_clear 1;try lt_clean;auto with T2.
 Qed.
 
 
 
-(* in order to establish trichotomy, we first use a measure on pair of
+(**  in order to establish trichotomy, we first use a measure on pair of
     terms *)
 
 Section lemmas_on_length.
@@ -231,11 +213,11 @@ End lemmas_on_length.
 
 Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3 tricho_lt_2 tricho_lt_2 : T2.
 
-Open Scope t2_scope.
+Open Scope T2_scope.
 
-Lemma tricho_aux : forall l, forall t t',
-      (t2_length t + t2_length t' < l)%nat  ->
-      { t o< t'}+{t = t'} + {t' o<  t}.
+Lemma tricho_aux (l: nat) : forall t t': T2,
+      t2_length t + t2_length t' < l  ->
+      {t t2< t'} + {t = t'} + {t' t2<  t}.
 Proof.
   induction l.
   - intros; elimtype False. 
@@ -285,7 +267,7 @@ Proof.
                       right; constructor 6;auto with T2.
               ++ intro H2; right;constructor 3;auto with T2.
        *  intro H1;
-            assert (H2:  (t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
+            assert (H2:(t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
           --  eapply lt_lt_Sn.
               ++  eapply tricho_lt_2'.
               ++  rewrite plus_comm;  eauto with T2.
@@ -297,21 +279,21 @@ Proof.
 Defined.
 
 
-Definition trichotomy_inf : forall t t', {t o< t'}+{t=t'}+{t' o<  t}.
-  intros t t'.
+Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
+Proof.
   eapply tricho_aux.
   eapply lt_n_Sn.
 Defined.
 
 
-Definition lt_ge_dec : forall t t', {t o< t'}+{t' o<= t}.
-  intros t t'; case (trichotomy_inf t t').
+Definition lt_ge_dec : forall t t', {t t2< t'}+{t' t2<= t}.
+  intros t t'; case (lt_eq_lt_dec t t').
   destruct 1 ;[left;auto with T2| right;auto with T2].
   auto with T2.
 Defined.
 
-Definition compare (t1 t2 : T2) := 
-  match trichotomy_inf t1 t2 with
+Definition compare (t1 t2 : T2) : comparison := 
+  match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
   | inleft (right _) => Eq
   | inright _ => Gt
@@ -328,11 +310,17 @@ Fixpoint nfb (alpha : T2) : bool :=
            end
 end.
 
+Compute compare (gcons 2 1 42 epsilon0) [2,2].
 
-(* introduces an hypothesis Hname for t o< t', t = t', and t' o< t
+Compute nfb  (gcons 2 1 42 epsilon0).
+
+Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
+
+
+(* introduces an hypothesis Hname for t t2< t', t = t', and t' t2< t
     (3 subgoals) *)
 
-Ltac tricho t t' Hname := case (trichotomy_inf t t');
+Ltac tricho t t' Hname := case (lt_eq_lt_dec t t');
                           [intros [Hname|Hname] | intro Hname].
 
 
@@ -340,8 +328,8 @@ Section trans_proof.
   Variables a1 b1 c1 a2 b2 c2 a3 b3 c3:T2.
   Variables n1 n2 n3:nat.
 
-  Hypothesis H12 : gcons a1 b1 n1 c1 o<  gcons a2 b2 n2 c2.
-  Hypothesis H23 : gcons a2 b2 n2 c2 o<  gcons a3 b3 n3 c3.
+  Hypothesis H12 : gcons a1 b1 n1 c1 t2<  gcons a2 b2 n2 c2.
+  Hypothesis H23 : gcons a2 b2 n2 c2 t2<  gcons a3 b3 n3 c3.
 
   Hypothesis induc : forall t t' t'', 
       (t2_length t + t2_length t' + 
@@ -352,7 +340,7 @@ Section trans_proof.
       lt t t' -> lt t' t'' -> lt t t''.
 
 
-  Lemma trans_aux :  gcons a1 b1 n1 c1 o< gcons a3 b3 n3 c3.
+  Lemma trans_aux :  gcons a1 b1 n1 c1 t2< gcons a3 b3 n3 c3.
   Proof with eauto with T2.
     inversion H12.
     -  inversion H23.
@@ -362,7 +350,8 @@ Section trans_proof.
             generalize (length_a  a2 b2 n2 c2).
             generalize (length_a  a3 b3 n3 c3).
             clear induc;lia.
-          * assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero)) by auto with T2.
+          * assert (lt (gcons a2 b2 0 zero) (gcons a3 b3 0 zero))
+              by auto with T2.
             apply induc with (gcons a2 b2 0 zero) ...
             generalize (length_b  a1 b1 n1 c1).
             generalize (length_psi a2 b2 n2 c2).
@@ -524,16 +513,16 @@ Proof.
 Qed.
 
 Theorem lt_trans : 
-  forall t1 t2 t3, t1 o< t2 -> t2 o< t3 -> t1 o< t3.
+  forall t1 t2 t3, t1 t2< t2 -> t2 t2< t3 -> t1 t2< t3.
 Proof.
   intros;
     apply lt_trans0 with (S (t2_length t1 + t2_length t2 + t2_length t3)) t2;
     auto with T2 arith.
 Qed.
 
-Theorem le_lt_trans alpha beta gamma:  alpha o<= beta -> 
-                                       beta o< gamma -> 
-                                       alpha o< gamma.
+Theorem le_lt_trans alpha beta gamma:  alpha t2<= beta -> 
+                                       beta t2< gamma -> 
+                                       alpha t2< gamma.
 Proof.
   destruct 1.
   - subst alpha;auto with T2.
@@ -541,16 +530,16 @@ Proof.
 Qed.
 
 Theorem  lt_le_trans  alpha beta gamma :
-  alpha o< beta ->  beta o<= gamma ->  alpha o< gamma.
+  alpha t2< beta ->  beta t2<= gamma ->  alpha t2< gamma.
 Proof.
   destruct 2.
   -  subst beta;auto with T2.
   -  eapply lt_trans;eauto with T2.
 Qed.
 
-Theorem le_trans : forall alpha beta gamma, alpha o<= beta ->
-                                            beta o<= gamma ->
-                                            alpha o<= gamma.
+Theorem le_trans : forall alpha beta gamma, alpha t2<= beta ->
+                                            beta t2<= gamma ->
+                                            alpha t2<= gamma.
 Proof.
   destruct 1.
   -  subst beta;auto.
@@ -559,8 +548,8 @@ Qed.
 
 
 Lemma psi_lt_head : forall alpha beta n gamma  alpha' beta' n' gamma',
-    [alpha, beta] o<  [alpha', beta'] ->
-    gcons alpha beta n gamma o<  gcons alpha' beta' n' gamma'.
+    [alpha, beta] t2<  [alpha', beta'] ->
+    gcons alpha beta n gamma t2<  gcons alpha' beta' n' gamma'.
 Proof.
   inversion 1.
   - constructor 2;auto with T2.
@@ -572,7 +561,7 @@ Proof.
 Qed.
 
 Lemma nf_inv_tail : forall a b n c , nf (gcons a b n c) ->
-                                     c o< [a,b].
+                                     c t2< [a,b].
 Proof.
   inversion_clear 1.
   - auto with T2.
@@ -580,13 +569,13 @@ Proof.
 Qed.
 
 
-Theorem lt_beta_psi : forall beta alpha, beta o< [alpha, beta].
+Theorem lt_beta_psi : forall beta alpha, beta t2< [alpha, beta].
 Proof.
   induction beta.
   -  auto with T2.
   -  intro alpha;
-       assert (H : beta2 o< [alpha, (gcons beta1 beta2 n beta3)]).
-     { assert ([alpha, beta2] o< [alpha, (gcons beta1 beta2 n beta3)]).
+       assert (H : beta2 t2< [alpha, (gcons beta1 beta2 n beta3)]).
+     { assert ([alpha, beta2] t2< [alpha, (gcons beta1 beta2 n beta3)]).
        {  constructor 3. 
           apply lt_le_trans with [beta1, beta2]; auto with T2.
        }
@@ -604,7 +593,7 @@ Qed.
 
 
 Lemma lt_beta_cons :  forall alpha beta n gamma, 
-    beta o< gcons alpha beta n gamma.
+    beta t2< gcons alpha beta n gamma.
 Proof.
   intros;eapply lt_le_trans.
   - apply lt_beta_psi.
@@ -612,7 +601,7 @@ Proof.
 Qed.
 
 
-Theorem lt_alpha_psi : forall alpha beta, alpha o< [alpha, beta].
+Theorem lt_alpha_psi : forall alpha beta, alpha t2< [alpha, beta].
 Proof.
   induction alpha.
   - unfold psi;auto with T2.
@@ -633,7 +622,7 @@ Proof.
 Qed.
 
 Lemma lt_alpha_cons :  forall alpha beta n gamma, 
-    alpha o< gcons alpha beta n gamma.
+    alpha t2< gcons alpha beta n gamma.
 Proof.
   intros;eapply lt_le_trans.
   - apply lt_alpha_psi.
@@ -643,8 +632,8 @@ Qed.
 Hint Resolve lt_beta_cons lt_alpha_cons : T2.
 
 Lemma le_cons_tail alpha beta n gamma gamma':
-  gamma o<= gamma' -> 
-  gcons alpha beta n gamma o<=  gcons alpha beta n gamma'.
+  gamma t2<= gamma' -> 
+  gcons alpha beta n gamma t2<=  gcons alpha beta n gamma'.
 Proof.
   destruct 1.
   -  subst gamma';left;auto with T2.
@@ -654,27 +643,16 @@ Qed.
 
 (** ** terms in normal form *)
 
-Lemma nf_omega : nf omega.
-Proof.  compute; auto with T2. Qed.
-
-Lemma nf_epsilon0 : nf epsilon0.
-Proof.  compute; auto with T2. Qed.
-
-Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
-Proof. compute; auto with T2. Qed.
 
 
-Lemma nf_finite : forall n, nf (finite n).
-Proof.  destruct n; compute;auto with T2. Qed.
-
-Lemma nf_finite_inv : forall gamma n, nf (gcons zero zero n gamma) -> 
+Lemma nf_fin_inv : forall gamma n, nf (gcons zero zero n gamma) -> 
                                       gamma = zero.
 Proof.
   inversion 1;auto with T2.
   inversion H4; lt_clean; auto with T2.
 Qed.
 
-Lemma lt_tail0: forall c, nf c -> c <> zero -> gtail c o< c.     
+Lemma lt_tail0: forall c, nf c -> c <> zero -> gtail c t2< c.     
 Proof.
   induction c.
   -  now destruct 2.
@@ -683,7 +661,7 @@ Proof.
 Qed.
 
 
-Lemma lt_tail: forall a b n c, nf (gcons a b n c) ->  c o< gcons a b n c. 
+Lemma lt_tail: forall a b n c, nf (gcons a b n c) ->  c t2< gcons a b n c. 
 Proof.
   intros a b n c H; change c with (gtail (gcons a b n c)). 
   apply lt_tail0.
@@ -691,7 +669,7 @@ Proof.
    +  discriminate. 
 Qed.
 
-Lemma le_one_cons : forall a b n c, one o<= gcons a b n c.
+Lemma le_one_cons : forall a b n c, one t2<= gcons a b n c.
 Proof.
  
   intros. apply le_trans with [a,b];auto with T2.
@@ -700,30 +678,30 @@ Qed.
 
 Hint Resolve le_one_cons : T2.
 
-Lemma finite_lt_omega : forall n, finite  n o<  omega.
+Lemma fin_lt_omega : forall n, fin  n t2<  omega.
 Proof.
   destruct n;compute;auto with T2.
 Qed.
 
-Lemma omega_lt_epsilon0 : omega o<  epsilon0.
+Lemma omega_lt_epsilon0 : omega t2<  epsilon0.
 Proof.
   compute; auto with T2.
 Qed.
 
-Lemma omega_lt_epsilon : forall alpha, omega o< epsilon alpha.
+Lemma omega_lt_epsilon : forall alpha, omega t2< epsilon alpha.
 Proof.
   compute;auto with T2.
 Qed.
 
 
-Lemma lt_one_inv : forall alpha, alpha o< one -> alpha = zero.
+Lemma lt_one_inv : forall alpha, alpha t2< one -> alpha = zero.
 Proof.
   inversion 1; lt_clean.
   auto with T2.
 Qed.
 
 Lemma lt_cons_omega_inv : forall alpha beta n gamma, 
-    gcons alpha beta n gamma o< omega ->
+    gcons alpha beta n gamma t2< omega ->
     nf (gcons alpha beta n gamma) ->
     alpha = zero /\ beta = zero /\ gamma = zero.
 Proof.
@@ -735,8 +713,8 @@ Proof.
   -  inversion H1; lt_clean;auto with T2.
 Qed.
 
-Lemma lt_omega_inv alpha :  nf alpha -> alpha o< omega ->
-                            {n:nat | alpha = finite n}.
+Lemma lt_omega_inv alpha :  nf alpha -> alpha t2< omega ->
+                            {n:nat | alpha = fin n}.
 Proof.
   destruct alpha.
   -  exists 0; reflexivity.
@@ -745,14 +723,14 @@ Proof.
     cbn; subst ; auto with T2.
 Qed.
 
-Lemma lt_omega_is_finite alpha:  nf alpha -> alpha o< omega -> 
+Lemma lt_omega_is_fin alpha:  nf alpha -> alpha t2< omega -> 
                                          is_finite alpha.
 Proof.
   intros  N_alpha H; case (lt_omega_inv N_alpha H).
   destruct x; intro e;rewrite e; simpl; constructor.
 Qed.
 
-Theorem lt_compat (n p : nat):   finite n o<  finite p -> 
+Theorem lt_compat (n p : nat):   fin n t2<  fin p -> 
                                 (n < p)%nat.
 Proof.
   destruct n;cbn.
@@ -765,7 +743,7 @@ Proof.
 Qed.
 
 Theorem lt_compatR (n p : nat):  (n <p)%nat -> 
-                                 finite n o<  finite p.
+                                 fin n t2< fin p.
 Proof.
   destruct n; cbn.
   -   destruct p.
@@ -776,13 +754,13 @@ Proof.
    +  simpl; auto with arith T2.
 Qed.
 
-Lemma finite_is_finite : forall n, is_finite (F n).
+Lemma finite_is_finite : forall n, is_finite (fin n).
 Proof.
   destruct n;cbn;constructor.
 Qed.
 
 Lemma is_finite_finite : forall alpha, is_finite alpha ->
-                                       {n : nat | alpha = F n}.
+                                       {n : nat | alpha = fin n}.
 Proof.
   destruct 1.
  -  exists 0;cbn;auto with T2.
@@ -791,13 +769,13 @@ Qed.
 
 
 Lemma compare_reflect alpha beta : match compare alpha beta with
-                                     | Lt => alpha o< beta 
+                                     | Lt => alpha t2< beta 
                                      | Eq => alpha = beta
-                                     | Gt => beta o< alpha
+                                     | Gt => beta t2< alpha
                                      end.
 Proof.
   unfold compare.
-  intros; case (trichotomy_inf alpha beta);auto.
+  intros; case (lt_eq_lt_dec alpha beta);auto.
   destruct s;auto with T2.
 Qed.
 
@@ -812,22 +790,29 @@ Qed.
 
 
 Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
-                                         alpha o< beta.
+                                         alpha t2< beta.
 Proof.
-  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta);
+    trivial; discriminate. 
 Qed.
 
+(**  Compare with the proof of [T2.Ex6] *)
+
+Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
+Proof. now apply compare_Lt. Qed.
 
 Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
                                          alpha = beta.
 Proof.
-  intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial;
+    discriminate. 
 Qed.
 
 Lemma compare_Gt : forall alpha beta, compare alpha beta = Gt ->  
-                                         beta o< alpha.
+                                         beta t2< alpha.
 Proof.
- intros alpha beta; destruct (compare_correct alpha beta); trivial; discriminate. 
+  intros alpha beta; destruct (compare_correct alpha beta); trivial;
+    discriminate. 
 Qed.
 
 Arguments compare_Gt [alpha beta].
@@ -837,7 +822,7 @@ Arguments compare_Eq [alpha beta].
 
 Hint Resolve compare_Eq compare_Lt compare_Gt : T2.
 
-Lemma compare_rw_lt  alpha beta : alpha o< beta ->
+Lemma compare_rw_lt  alpha beta : alpha t2< beta ->
                                   compare alpha beta = Lt.
 Proof.
   intros; generalize (compare_reflect alpha beta). 
@@ -854,7 +839,7 @@ Lemma compare_rw_eq  alpha beta:  alpha = beta ->
   all : intro H0; destruct (lt_irr H0).
 Qed.
 
-Lemma compare_rw_gt  alpha beta:  beta o< alpha ->
+Lemma compare_rw_gt  alpha beta:  beta t2< alpha ->
                                   compare alpha beta = Gt.
   intros; generalize (compare_reflect alpha beta). 
   case (compare alpha beta); trivial.
@@ -865,7 +850,7 @@ Qed.
 
 
 
-(**  plus is defined here, because it requires decidible comparison *)
+(**  plus is defined here, because it requires decidable comparison *)
 
 Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   match t1,t2 with
@@ -873,16 +858,17 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   |  x, zero => x
   |  gcons a b n c, gcons a' b' n' c' =>
      (match compare (gcons a b 0 zero)
-                    (gcons a' b' 0 zero)
-      with | Lt => gcons a' b' n' c'
-      | Gt =>
-        (gcons a b n
-              (c +
-               (gcons a' b' n' c')))
-      | Eq  => (gcons a b (S(n+n')) c')
+                    (gcons a' b' 0 zero) with
+      | Lt => gcons a' b' n' c'
+      | Gt => gcons a b n (c + gcons a' b' n' c')
+      | Eq  => gcons a b (S(n+n')) c'
       end)
   end
-where "alpha + beta" := (plus alpha beta): t2_scope.
+where "alpha + beta" := (plus alpha beta): T2_scope.
+
+Example Ex7 : 3 + epsilon0 = epsilon0.
+Proof. trivial. Qed.
+
 
 
 Lemma plus_alpha_0 : forall alpha:T2 ,  alpha + zero = alpha.
@@ -890,18 +876,18 @@ Proof.
   intro alpha; case alpha ;trivial.
 Qed.
 
-Lemma lt_succ alpha: alpha o< succ alpha.
+Lemma lt_succ alpha: alpha t2< succ alpha.
+Proof.
   induction alpha;simpl;auto with T2.
   case alpha1;auto with arith T2.
   case alpha2; auto with arith T2.
 Qed.
 
-Theorem lt_succ_le : forall a b,  a o< b -> 
-                                  nf b -> 
-                                  succ a o<= b.
+Theorem lt_succ_le : forall a b,   a t2< b -> nf b -> 
+                                  succ a t2<= b.
 Proof.
   induction a.
-  - inversion 1; cbn; auto with T2.
+  - inversion 1; cbn;  auto with T2. 
   -  generalize IHa3; case a1; case a2.
    + cbn; inversion 2.
      *  right; constructor 2.
@@ -961,7 +947,7 @@ Proof.
             ++ subst b;  inversion H0;  auto with T2.
 Qed.
 
-Lemma succ_lt_le : forall a b, nf a -> nf b -> a o< succ b -> a o<= b.
+Lemma succ_lt_le : forall a b, nf a -> nf b -> a t2< succ b -> a t2<= b.
  Proof.
   intros.
   tricho a b H2; auto with T2.
@@ -970,7 +956,7 @@ Lemma succ_lt_le : forall a b, nf a -> nf b -> a o< succ b -> a o<= b.
 Qed.
 
 
-Lemma succ_of_cons : forall a b n c, zero o< a \/ zero o< b ->
+Lemma succ_of_cons : forall a b n c, zero t2< a \/ zero t2< b ->
                                      succ (gcons a b n c)= gcons a b n (succ c).
 Proof.
   destruct a;destruct b;simpl;auto with T2.
@@ -994,7 +980,7 @@ Proof.
 Qed.
 
 Theorem subterm_lt alpha beta:  subterm alpha beta -> nf beta ->
-                                alpha o< beta.
+                                alpha t2< beta.
 Proof.
   induction 1;auto with T2.
  -  intro;apply lt_tail;auto with T2.
@@ -1208,8 +1194,8 @@ Hint Resolve T2_size1 T2_size2 T2_size3 T2_size4 : T2.
 (** let us recall subterm properties on T2 *)
 
 
-Lemma lt_subterm1 : forall a a'  n'  b' c', a o< a' ->
-                                            a o< gcons a'  b' n' c'.
+Lemma lt_subterm1 : forall a a'  n'  b' c', a t2< a' ->
+                                            a t2< gcons a'  b' n' c'.
 Proof.
   intros; apply lt_trans with (gcons a b' n' c');auto with T2 .
 Qed.
@@ -1587,7 +1573,7 @@ Section lt_incl_rpo.
     ((T2_size (gcons a1 b1 n1 c1) + T2_size (gcons a2 b2 n2 c2)) = S s)%nat.
 
   Hypothesis Hrec :   forall o' o, (T2_size o + T2_size o' <= s)%nat->
-                                   o o< o' -> nf o -> nf o' -> 
+                                   o t2< o' -> nf o -> nf o' -> 
                                    rpo (T2_2_term o) (T2_2_term o').
 
   Hypothesis nf1 : nf (gcons a1 b1 n1 c1).
@@ -1615,7 +1601,7 @@ Section lt_incl_rpo.
 
   Hint Resolve nf_c1 nf_c2 : T2.
 
-  Hypothesis H : gcons a1 b1 n1 c1 o< gcons a2 b2 n2 c2.
+  Hypothesis H : gcons a1 b1 n1 c1 t2< gcons a2 b2 n2 c2.
 
 
   Lemma cons_rw : forall a b n c, 
@@ -1867,7 +1853,7 @@ End lt_incl_rpo.
 
 Lemma lt_inc_rpo_0 : forall n, 
     forall o' o, (T2_size o + T2_size o' <= n)%nat->
-                 o o< o' -> nf o -> nf o' -> 
+                 o t2< o' -> nf o -> nf o' -> 
                  rpo (T2_2_term o) (T2_2_term o').
 Proof.
   induction n.
@@ -1970,7 +1956,7 @@ Print well_founded_restriction.
 Definition transfinite_induction :
   forall (P:T2 -> Type),
     (forall x:T2, nf x ->
-                  (forall y:T2, nf y ->  y o< x -> P y) -> P x) ->
+                  (forall y:T2, nf y ->  y t2< x -> P y) -> P x) ->
     forall a, nf a -> P a.
 Proof.
   intros; eapply well_founded_restriction_rect; eauto with T2.
@@ -1981,7 +1967,7 @@ Defined.
 Definition transfinite_induction_Q :
   forall (P : T2 -> Type) (Q : T2 -> Prop),
     (forall x:T2, Q x -> nf x ->
-                  (forall y:T2, Q y -> nf y ->  y o< x -> P y) -> P x) ->
+                  (forall y:T2, Q y -> nf y ->  y t2< x -> P y) -> P x) ->
     forall a, nf a -> Q a -> P a.
 Proof.
   intros P Q X a H H0.
@@ -2010,11 +1996,27 @@ Definition  phi (alpha beta : T2) : T2 :=
              | gcons b1 b2 0 (gcons zero zero  n zero) => 
                (match compare alpha b1
                 with  Datatypes.Lt => 
-                      [alpha, (gcons b1 b2 0 (finite n))]
-                | _ =>  [alpha, (gcons b1 b2 0 (finite (S n)))]
+                      [alpha, (gcons b1 b2 0 (fin n))]
+                | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
                 end)
              | any_beta => [alpha, any_beta]
   end.
+
+
+Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
+Proof. reflexivity. Qed.
+
+
+(**  All epsilons are fixpoints of phi 0 *)
+
+Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
+                                   epsilon beta.
+Proof. reflexivity. Qed.
+
+
+Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
+Proof. apply epsilon_fxp. Qed.
+
 
 Theorem phi_of_psi  : forall a b1 b2, 
     phi a [b1, b2] =
@@ -2055,7 +2057,7 @@ Proof.
                      case (compare alpha beta1).
                      now exists alpha,
                          (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
-                     now exists alpha, (gcons beta1 beta2 0 (F (S n0))).
+                     now exists alpha, (gcons beta1 beta2 0 (fin (S n0))).
                      now exists alpha,
                          (gcons beta1 beta2 0 (gcons zero zero (S n0) zero)).
                      now exists alpha,
@@ -2084,10 +2086,10 @@ Proof.
 Qed.
 
 Theorem phi_of_psi_succ : forall a b1 b2 n, 
-    phi a (gcons b1 b2 0 (finite (S n))) =
+    phi a (gcons b1 b2 0 (fin (S n))) =
     if lt_ge_dec a b1
-    then [a, (gcons b1 b2 0 (finite n))]
-    else [a ,(gcons b1 b2 0 (finite (S n)))].
+    then [a, (gcons b1 b2 0 (fin n))]
+    else [a ,(gcons b1 b2 0 (fin (S n)))].
   Proof.
   cbn; intros;case (lt_ge_dec a b1).
   -  intro H; rewrite compare_rw_lt; auto with T2.
@@ -2101,9 +2103,9 @@ Qed.
       P zero ->
       (forall b1 b2, nf b1 -> nf b2 -> P [b1, b2]) ->
       (forall b1 b2 n, nf b1 -> nf b2 ->
-                       P (gcons b1 b2 0 (finite (S n)))) ->
+                       P (gcons b1 b2 0 (fin (S n)))) ->
       (forall b1 b2 n c, nf (gcons b1 b2 n c) ->
-                         omega o<= c \/ (0 < n)%nat -> 
+                         omega t2<= c \/ (0 < n)%nat -> 
                          P (gcons b1 b2 n c)) ->
       forall alpha, nf alpha -> P alpha.
   Proof with auto with T2.
@@ -2127,13 +2129,13 @@ Qed.
 Theorem phi_cases' :
   forall a b, nf b ->
               {b1 :T2 & {b2:T2 | b = [b1, b2] /\
-                                 a o< b1 /\ phi a b =  b}} +
+                                 a t2< b1 /\ phi a b =  b}} +
               {phi a b = [a, b]} +
               {b1 :T2 & {b2:T2 &
-                            {n: nat | b = gcons b1 b2 0 (finite (S n)) /\
-                                      a o< b1 /\ 
+                            {n: nat | b = gcons b1 b2 0 (fin (S n)) /\
+                                      a t2< b1 /\ 
                                       phi a b =
-                                      [a, (gcons b1 b2 0 (finite n))]}}}.
+                                      [a, (gcons b1 b2 0 (fin n))]}}}.
 Proof with auto with T2.
   intros a b Hb; pattern b; apply phi_cases_aux; trivial.
   -  left;right; cbn ...
@@ -2179,7 +2181,7 @@ Proof with auto with T2.
      +  left;right ...
   -   intros; generalize (phi_of_psi_succ a  b1 b2 n);
         case (lt_ge_dec a b1).
-      +   right; exists (gcons b1 b2 0 (finite n));  split.
+      +   right; exists (gcons b1 b2 0 (fin n));  split.
           case n.
           *   cbn; constructor ...
           * cbn; repeat constructor ...
@@ -2220,7 +2222,7 @@ Proof.
 Qed.
 
 Lemma phi_of_any_cons : forall alpha beta1 beta2 n gamma, 
-     omega o<= gamma  \/ (0 < n)%nat ->
+     omega t2<= gamma  \/ (0 < n)%nat ->
     phi alpha (gcons beta1 beta2 n gamma) = 
     [alpha, (gcons beta1 beta2 n gamma)].
 Proof.
@@ -2243,7 +2245,7 @@ Qed.
 Lemma phi_fix alpha beta :
   phi alpha beta = beta ->
   {beta1 : T2 & {beta2 : T2 | beta = [beta1, beta2] 
-                              /\ alpha o< beta1}}.
+                              /\ alpha t2< beta1}}.
 Proof.
   destruct beta;simpl.
   discriminate 1.
@@ -2256,7 +2258,7 @@ Proof.
               ++ refine (lt_beta_psi _ _).
           --  exists beta1, beta2; split;auto with T2.
           --   intros H H0;  injection H0.
-               intro H1;  absurd (beta2 o< [beta1, beta2]).
+               intro H1;  absurd (beta2 t2< [beta1, beta2]).
                ++  rewrite H1;apply lt_irr.
                ++  refine (lt_beta_psi _ _).
        *  destruct t;simpl.
@@ -2270,7 +2272,7 @@ Qed.
 
 Lemma phi_le : forall alpha beta alpha' beta', 
     nf beta -> 
-    phi alpha beta = [alpha', beta'] -> alpha o<= alpha'.
+    phi alpha beta = [alpha', beta'] -> alpha t2<= alpha'.
 Proof.
   intros a b a' b' Hb;case (phi_cases a Hb).
   -  destruct 1.
@@ -2287,8 +2289,8 @@ Lemma phi_le_ge :
                      {alpha':T2 &
                              {beta':T2
                              | phi alpha beta = [alpha' ,beta'] /\  
-                               alpha o<= alpha' /\ 
-                               beta' o<= beta}}.
+                               alpha t2<= alpha' /\ 
+                               beta' t2<= beta}}.
 Proof.
   intros a b Va Vb; case (phi_cases' a Vb).
   - destruct 1.
@@ -2297,18 +2299,18 @@ Proof.
        exists b1;exists  b2;repeat split;auto with T2.
     +  exists a, b;auto with T2.
   -  intros (b1,(b2,(n,(H1,(H2,H3)))));
-     exists a, (gcons b1 b2 0 (finite n));auto with T2.
+     exists a, (gcons b1 b2 0 (fin n));auto with T2.
      repeat split;auto with T2.
      subst b;case n;simpl; auto with T2.
      right;auto with T2.
 Qed.
 
 (**  [phi alpha beta] is a common fixpoint of all the [phi gamma], 
-for any [gamma o< alpha] as specified by Schutte *)
+for any [gamma t2< alpha] as specified by Schutte *)
 
 Theorem phi_spec1 : forall alpha beta gamma, 
     nf alpha -> nf beta -> nf gamma ->
-    gamma o< alpha ->
+    gamma t2< alpha ->
     phi gamma (phi alpha beta) = phi alpha beta.
 Proof.
   intros; case (phi_le_ge H H0 ).
@@ -2330,7 +2332,7 @@ Proof.
      +  rewrite (compare_rw_lt  l);auto with T2.
      + intro; assert(alpha = zero).
        { inversion l;auto with T2. lt_clean. }
-       subst alpha beta;  exists (gcons b1 b2 0 (F 1)).
+       subst alpha beta;  exists (gcons b1 b2 0 (fin 1)).
        cbn; rewrite (compare_rw_lt  H2);auto with T2.
   - case (lt_ge_dec zero alpha). 
     +  exists (phi alpha beta).
@@ -2342,35 +2344,26 @@ Proof.
        auto with T2.
   -   intros (b1,(b2,(n,(H1,(H2,H3))))); subst beta.
       case (lt_ge_dec zero alpha).
-   +  intro l; exists [alpha, (gcons b1 b2 0 (F (S n)))].
+   +  intro l; exists [alpha, (gcons b1 b2 0 (fin (S n)))].
       cbn; rewrite (compare_rw_lt l).
       reflexivity. 
    +  intro l;assert (alpha=zero).
       *  case l; auto with T2.
          intro;lt_clean.
-      * subst alpha;  exists (gcons b1 b2 0 (F (S (S n))));cbn;
+      * subst alpha;  exists (gcons b1 b2 0 (fin (S (S n))));cbn;
           rewrite  (compare_rw_lt H2); auto with T2.
 Defined.
 
 
-(**  All epsilons are fixpoints of phi 0 *)
-
-Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
-                                   epsilon beta.
-Proof. reflexivity. Qed.
 
 
-Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
-Proof. apply epsilon_fxp. Qed.
-
-
-Lemma phi_alpha_zero_gt_alpha : forall alpha, alpha o< phi alpha zero.
+Lemma phi_alpha_zero_gt_alpha : forall alpha, alpha t2< phi alpha zero.
 Proof.
   induction alpha;simpl;auto with T2.
 Qed.
 
 
-Theorem le_b_phi_ab : forall a b, nf a -> nf b ->   b o<= phi a b.
+Theorem le_b_phi_ab : forall a b, nf a -> nf b ->   b t2<= phi a b.
 Proof.
   intros a b Ha Hb; case (phi_cases a  Hb).
   - destruct 1.
@@ -2380,9 +2373,9 @@ Proof.
      apply lt_succ_le;auto with T2.
 Qed.
 
-Lemma phi_of_psi_plus_finite : forall a b1 b2 n, 
-    a o< b1 -> phi a (gcons b1 b2 0 (finite n)) o<
-              [a ,gcons b1 b2 0 (F n)].
+Lemma phi_of_psi_plus_fin : forall a b1 b2 n, 
+    a t2< b1 -> phi a (gcons b1 b2 0 (fin n)) t2<
+              [a ,gcons b1 b2 0 (fin n)].
   Proof.
   cbn;  intros until n;case n.
   - cbn; intro H;rewrite (compare_rw_lt H);auto with T2.
@@ -2392,7 +2385,7 @@ Qed.
 
 
 Lemma phi_mono_r : forall a b c, nf a -> nf b -> nf c ->
-                                 b o< c -> phi a b o< phi a c.
+                                 b t2< c -> phi a b t2< phi a c.
 Proof.
   intros a b c Ha Hb Hc H;  case (phi_cases' a Hb).
   -  destruct 1.
@@ -2411,13 +2404,13 @@ Proof.
        --   rewrite e;rewrite e0;auto with T2. 
     * intros (c1,(c2,(n, (H1,(H2,H3))))); subst c.
       assert 
-    ((gcons c1 c2 0 (finite (S n))) = (succ (gcons c1 c2 0 (finite n)))).
+    ((gcons c1 c2 0 (fin (S n))) = (succ (gcons c1 c2 0 (fin n)))).
     {  simpl;auto with T2.
        case_eq c1.
        intro; subst c1; lt_clean.
        case n;auto with T2.
        }
-    assert (nf (gcons c1 c2 0 (finite n))).
+    assert (nf (gcons c1 c2 0 (fin n))).
     {  case n.
        inversion Hc;auto with T2.
        inversion Hc;auto with T2.
@@ -2431,9 +2424,9 @@ Proof.
     }  
     rewrite H0 in H;  case (succ_lt_le Hb H1 H).
       --  intro;subst b.
-          case (lt_irr (alpha:=[a, (gcons c1 c2 0 (finite n))])).
-          pattern  [ a, (gcons c1 c2 0 (finite n))] at 1;rewrite <- e.
-          apply phi_of_psi_plus_finite.
+          case (lt_irr (alpha:=[a, (gcons c1 c2 0 (fin n))])).
+          pattern  [ a, (gcons c1 c2 0 (fin n))] at 1;rewrite <- e.
+          apply phi_of_psi_plus_fin.
           auto with T2.
       --   rewrite H3, e; auto with T2.
   -  intros (b1,(b2,(n,(H1,(H2,H3))))); case (phi_cases' a Hc).
@@ -2442,14 +2435,14 @@ Proof.
         rewrite H3;rewrite H'3;rewrite H'1.
         subst b; subst c;case n;simpl;auto with T2.
       -- constructor 2;auto with T2.
-       apply le_lt_trans with  (gcons b1 b2 0 (finite (S n))).
+       apply le_lt_trans with  (gcons b1 b2 0 (fin (S n))).
     ++ cbn;auto with arith T2.
     ++   auto with T2.
       --   constructor 2; auto with T2.
            inversion H; auto with T2.
            lt_clean. 
      *   rewrite H3; rewrite e.
-         apply lt_trans with [a, (gcons b1 b2 0 (finite (S n)))].
+         apply lt_trans with [a, (gcons b1 b2 0 (fin (S n)))].
          --   case n;simpl;auto with T2.
          --   subst b;auto with T2.
     +  intros (c1,(c2,(p,(H'1,(H'2,H'3))))); rewrite H'3;rewrite H3.
@@ -2461,7 +2454,7 @@ Proof.
 Qed.
 
 Lemma phi_mono_weak_r : forall a b c, nf a -> nf b -> nf c -> 
-                                      b o<= c -> phi a b o<= phi a c. 
+                                      b t2<= c -> phi a b t2<= phi a c. 
 Proof.
   destruct 4.
   -  subst c;left;auto with T2.
@@ -2472,16 +2465,16 @@ Lemma phi_inj_r : forall a b c, nf a -> nf b -> nf c ->
                                 phi a b = phi a c -> b = c.
 Proof.
   intros a b c Na Nb Nc E; tricho b c H; trivial.
- -  absurd (phi a b o< phi a c). 
+ -  absurd (phi a b t2< phi a c). 
     +  rewrite E; apply lt_irr.
     +  apply phi_mono_r;auto.
- -  absurd (phi a c o< phi a b).
+ -  absurd (phi a c t2< phi a b).
   +  rewrite E; apply lt_irr.
   + apply phi_mono_r;auto.
 Qed.
 
 
-Lemma lt_a_phi_ab : forall a b, nf a -> nf b -> a o< phi a b.
+Lemma lt_a_phi_ab : forall a b, nf a -> nf b -> a t2< phi a b.
 Proof.
   intros; apply lt_le_trans with (phi a zero).
   -  apply phi_alpha_zero_gt_alpha.
@@ -2494,7 +2487,7 @@ Qed.
 Lemma zero_not_lim : ~ is_limit zero.
 Proof. red;inversion 1. Qed.
 
-Lemma F_not_lim : forall n, ~ is_limit  (F n).
+Lemma F_not_lim : forall n, ~ is_limit  (fin n).
 Proof.
   destruct n;red;inversion 1.
   decompose [or] H3; lt_clean.
@@ -2525,25 +2518,25 @@ Proof.
 Qed.
 
 
-(* 
-   limit_plus_F alpha n beta  means :
-   beta = alpha + F n and (alpha is limit or alpha = zero)
+(**
+   limit_plus_fin alpha n beta  means :
+   beta = alpha + fin n and (alpha is limit or alpha = zero)
  *)
 
 
 
-Inductive limit_plus_F : T2 -> nat -> T2 -> Prop :=
-  limit_plus_F_0 : forall p, limit_plus_F zero p (F p)
+Inductive limit_plus_fin : T2 -> nat -> T2 -> Prop :=
+  limit_plus_F_0 : forall p, limit_plus_fin zero p (fin p)
  |limit_plus_F_cons : forall beta1 beta2 n gamma0 gamma p,
-     zero o< beta1 \/ zero o< beta2 ->
-     limit_plus_F gamma0 p gamma ->
-     limit_plus_F (gcons beta1 beta2 n gamma0)
+     zero t2< beta1 \/ zero t2< beta2 ->
+     limit_plus_fin gamma0 p gamma ->
+     limit_plus_fin (gcons beta1 beta2 n gamma0)
                   p (gcons beta1 beta2 n gamma).
 
-Lemma limit_plus_F_plus : forall alpha alpha' p,
-    limit_plus_F alpha p alpha' ->
+Lemma limit_plus_fin_plus : forall alpha alpha' p,
+    limit_plus_fin alpha p alpha' ->
     nf alpha ->
-    alpha' = alpha + F p.
+    alpha' = alpha + fin p.
 Proof.
   induction alpha.
   -  inversion_clear 1.
@@ -2562,8 +2555,8 @@ Proof.
   + nf_inv.
 Qed.
 
-Lemma limit_plus_F_lim : forall alpha alpha' p,
-                      limit_plus_F alpha p alpha' ->
+Lemma limit_plus_fin_lim : forall alpha alpha' p,
+                      limit_plus_fin alpha p alpha' ->
                       nf alpha ->
                       is_limit alpha \/ alpha=zero.
 Proof.
@@ -2585,11 +2578,11 @@ Qed.
 
 
 
-Lemma limit_plus_F_inv0  alpha beta: 
-  limit_plus_F alpha 0 beta -> 
+Lemma limit_plus_fin_inv0  alpha beta: 
+  limit_plus_fin alpha 0 beta -> 
   nf alpha -> alpha = beta.
 Proof.
- intros H H0; generalize (limit_plus_F_plus H H0).
+ intros H H0; generalize (limit_plus_fin_plus H H0).
  cbn; now rewrite plus_alpha_0.
 Qed.
 
@@ -2602,7 +2595,7 @@ Qed.
 
  
 Lemma is_limit_intro : forall b1 b2 n , nf b1 -> nf b2 ->
-                       zero o< b1 \/ zero o< b2 ->
+                       zero t2< b1 \/ zero t2< b2 ->
                        is_limit  (gcons b1 b2 n zero).
 Proof.
  constructor;auto.
@@ -2610,7 +2603,7 @@ Qed.
 
 
 Lemma lt_epsilon0_ok : forall alpha, nf alpha -> lt_epsilon0 alpha ->
-                                     alpha o< epsilon0.
+                                     alpha t2< epsilon0.
 Proof.
  induction 1;intros; compute;auto with T2.
  - inversion_clear H1; constructor 2.
@@ -2621,13 +2614,13 @@ Qed.
 
 
 Derive Inversion_clear lt_01 with (forall (a b:T2),
-                gcons a b 0 zero o<  epsilon0) Sort Prop.
+                gcons a b 0 zero t2<  epsilon0) Sort Prop.
 
 Derive Inversion_clear lt_02 with (forall (a b c:T2)(n:nat),
-                gcons a b n c o<  epsilon0) Sort Prop.
+                gcons a b n c t2<  epsilon0) Sort Prop.
 
-Lemma psi_lt_epsilon0 : forall a b, [a, b] o< epsilon0 ->
-                                    a = zero /\ b o< epsilon0.
+Lemma psi_lt_epsilon0 : forall a b, [a, b] t2< epsilon0 ->
+                                    a = zero /\ b t2< epsilon0.
 Proof.
   intros a b H; inversion H using lt_01.
   -  split.
@@ -2639,9 +2632,9 @@ Proof.
   - inversion 1.
 Qed.
 
-Lemma cons_lt_epsilon0 : forall a b n c, gcons a b n c o< epsilon0 ->
+Lemma cons_lt_epsilon0 : forall a b n c, gcons a b n c t2< epsilon0 ->
                                          nf (gcons a b n c) ->
-                                         a = zero /\ b o< epsilon0 /\ c o< epsilon0.
+                                         a = zero /\ b t2< epsilon0 /\ c t2< epsilon0.
 Proof.
   intros a b n c H; inversion H using lt_02.
   -  split.
@@ -2656,12 +2649,12 @@ Proof.
   - inversion 1.
 Qed.
 
-Lemma lt_epsilon0_okR: forall alpha, nf alpha -> alpha o< epsilon0 ->
+Lemma lt_epsilon0_okR: forall alpha, nf alpha -> alpha t2< epsilon0 ->
                                      lt_epsilon0 alpha.
 Proof.
   induction alpha.
   -  constructor.
-  -  unfold epsilon0;intros; inversion H0.
+  -  intros; inversion H0.
      + rewrite (lt_one_inv H3).
        right.
        * apply IHalpha2.
@@ -2682,8 +2675,8 @@ Qed.
 
 
 
-Lemma T1_injection : forall alpha beta : T1,
-    T1_inj alpha = T1_inj beta -> alpha = beta.
+Lemma T1_to_T2_inj : forall alpha beta : T1,
+    T1_to_T2 alpha = T1_to_T2 beta -> alpha = beta.
 Proof.
  induction alpha; destruct beta;simpl;auto with T2.
  - discriminate 1.
@@ -2696,12 +2689,12 @@ Proof.
 Qed.
 
  
-Lemma T1_injection_lt : forall c, lt_epsilon0 (T1_inj c).
+Lemma T1_to_T2_lt : forall c, lt_epsilon0 (T1_to_T2 c).
 Proof.
  induction c;simpl;constructor;auto with T2.
 Qed.
 
-Definition lt_T1_injection : forall a, lt_epsilon0 a -> {c:T1 | T1_inj c = a}.
+Definition T1_to_T2_R : forall a, lt_epsilon0 a -> {c:T1 | T1_to_T2 c = a}.
 Proof.
  induction a.
  - exists T1.zero;simpl;auto with T2.
@@ -2718,8 +2711,8 @@ Defined.
 
 
 
-Lemma inj_mono : forall alpha beta, T1.lt alpha beta ->
-                                    T1_inj alpha o< T1_inj beta.
+Lemma T1_to_T2_mono : forall alpha beta, T1.lt alpha beta ->
+                                    T1_to_T2 alpha t2< T1_to_T2 beta.
 Proof.
   induction alpha. 
   +  destruct beta. 
@@ -2735,13 +2728,13 @@ Proof.
 Qed.
 
 
-Lemma inj_monoR : forall c c', lt (T1_inj c) (T1_inj c') -> T1.lt c  c'.
+Lemma T1_to_T2_monoR : forall c c', lt (T1_to_T2 c) (T1_to_T2 c') -> T1.lt c  c'.
 Proof.
  intros c c' H; case (T1.lt_eq_lt_dec c c').
  -  destruct 1; auto.
    subst c'; case (lt_irr H).
- - intro l; generalize (inj_mono l); intro H0;
-     case (lt_irr (alpha:=T1_inj c)).
+ - intro l; generalize (T1_to_T2_mono l); intro H0;
+     case (lt_irr (alpha:=T1_to_T2 c)).
    eapply lt_trans;eauto with T2.
 Qed.
 
@@ -2762,9 +2755,9 @@ Proof.
 Qed.
 
 
-Lemma psi_principal : forall a b c d, nf c -> c o< [a, b] 
-                                           -> d o< [a, b] -> 
-                                          c + d o< [a, b].
+Lemma psi_principal : forall a b c d, nf c -> c t2< [a, b] 
+                                           -> d t2< [a, b] -> 
+                                          c + d t2< [a, b].
 Proof.
  induction c;destruct d;simpl;auto with T2.
  case (compare [c1,c2][d1,d2]).
@@ -2778,7 +2771,7 @@ Proof.
  - auto with T2.
  - intros H H0 H1.
  generalize (IHc3 (gcons d1 d2 n0 d3)); intros H2.
- assert (H5 : c3 o< [a,b]).
+ assert (H5 : c3 t2< [a,b]).
  {  eapply lt_trans; [| eexact H0].
     apply lt_tail.
     auto with T2.
@@ -2795,7 +2788,7 @@ Qed.
 
 
 Lemma nf_intro : forall a b n c, nf a -> nf b -> 
-                                  c o< [a,b ] -> nf c -> nf (gcons a b n c).
+                                  c t2< [a,b ] -> nf c -> nf (gcons a b n c).
 Proof.
   destruct c;constructor;auto with T2.
   inversion_clear H1;auto with T2.
@@ -2889,25 +2882,25 @@ Qed.
 
 Definition lub (P: T2 -> Prop)(x:T2) :=
   nf x /\ 
-  (forall y, P y -> nf y -> y o<= x) /\
-  (forall y, (forall x, P x -> nf x -> x o<= y) -> nf y ->
-                                    x o<= y).
+  (forall y, P y -> nf y -> y t2<= x) /\
+  (forall y, (forall x, P x -> nf x -> x t2<= y) -> nf y ->
+                                    x t2<= y).
 
 Theorem lub_unicity : forall P l l', lub P l -> lub P l' -> l = l'.
 Proof.
  intros P l l' (H1,(H2,H3)) (H'1,(H'2,H'3)).
  tricho l l' H4; trivial.
- -  absurd (l o< l).
+ -  absurd (l t2< l).
     apply lt_irr.
     apply lt_le_trans with l';auto with T2.
- -  absurd (l' o< l').
+ -  absurd (l' t2< l').
     apply lt_irr.
     apply lt_le_trans with l;auto with T2.
 Qed.
 
 Theorem lub_mono : forall (P Q :T2 -> Prop) l l', 
     (forall o, nf o -> P o -> Q o) ->
-    lub P l -> lub Q l' -> l o<= l'.
+    lub P l -> lub Q l' -> l t2<= l'.
 Proof.
  intros P Q l l' H (H1,(H2,H3)) (H'1,(H'2,H'3)).
  auto with T2.
@@ -2958,7 +2951,7 @@ Qed.
 
  
 Lemma le_plus_r : forall alpha beta, nf alpha -> nf beta -> 
-                                     alpha o<= alpha + beta.
+                                     alpha t2<= alpha + beta.
 Proof.
   induction alpha.
   -  intros;apply le_zero_alpha.
@@ -2977,7 +2970,7 @@ Proof.
 Qed.
 
 Lemma le_plus_l : forall alpha beta, nf alpha -> nf beta -> 
-                                     alpha o<= beta +  alpha.
+                                     alpha t2<= beta +  alpha.
 Proof.
  induction alpha.
  - intros;apply le_zero_alpha.
@@ -2996,7 +2989,7 @@ Qed.
 
 
 Lemma plus_mono_r : forall alpha , nf alpha -> forall beta gamma, nf beta ->
-       nf gamma -> beta o< gamma -> alpha + beta o< alpha + gamma.
+       nf gamma -> beta t2< gamma -> alpha + beta t2< alpha + gamma.
 Proof.
  induction alpha.
  -  cbn; auto with T2.
@@ -3076,12 +3069,12 @@ Qed.
 
 Lemma plus_mono_l_weak: 
   forall o, nf o ->
-    forall alpha,  nf alpha -> alpha o< o -> 
+    forall alpha,  nf alpha -> alpha t2< o -> 
                    forall beta,
-                     nf beta -> beta o< o ->
+                     nf beta -> beta t2< o ->
                      forall gamma , nf gamma -> 
-                                    alpha o< beta ->
-                                    alpha + gamma o<= beta + gamma.
+                                    alpha t2< beta ->
+                                    alpha + gamma t2<= beta + gamma.
 Proof.
  intros o Ho;pattern o.
  apply transfinite_induction; [| auto with T2].
@@ -3125,7 +3118,7 @@ Proof.
       -- intro H6; generalize  (compare_Gt  H6); intro H7.
          right;apply psi_lt_head;auto with T2.
      * intro H'; generalize  (compare_Gt  H'); intro H''.
-       assert ([alpha'',beta''] o< [alpha',beta']). {
+       assert ([alpha'',beta''] t2< [alpha',beta']). {
          apply lt_le_trans with [alpha,beta];auto with T2.
          generalize (le_psi_term_le (or_intror _ H0)).
          cbn;auto with T2.
@@ -3152,7 +3145,7 @@ Proof.
                { inversion NF;auto with T2. }
                assert (nf gamma').
                { inversion NF';auto with T2. }
-               assert (gamma o<  gcons alpha beta n gamma').
+               assert (gamma t2<  gcons alpha beta n gamma').
                apply lt_trans with gamma'.
                auto with T2.
                apply lt_tail;auto with T2.
@@ -3168,13 +3161,13 @@ Proof.
 Qed.
 
 
-Remark R_pred_Sn : forall n, pred (F (S n)) = Some (F n).
+Remark R_pred_Sn : forall n, pred (fin (S n)) = Some (fin n).
 Proof.
  destruct n;cbn;trivial.
 Qed.
 
 Lemma pred_of_cons : forall a b n c, 
-                       zero o< a \/ zero o< b -> 
+                       zero t2< a \/ zero t2< b -> 
                        pred (gcons a b  n c) = match pred c with
                                              Some c' => 
                                                Some (gcons a b n c')
@@ -3189,7 +3182,7 @@ Proof.
 Qed.
 
 Lemma pred_of_cons' : forall a b n , 
-                       zero o< a \/ zero o< b -> 
+                       zero t2< a \/ zero t2< b -> 
                        pred (gcons a b  n zero) = None.
 Proof.
  intros a b n H; rewrite (pred_of_cons n zero H).
@@ -3199,7 +3192,7 @@ Qed.
 
 Lemma is_limit_ab : forall alpha beta n gamma,
     is_limit (gcons alpha beta n gamma)
-    -> zero o< alpha \/ zero o< beta.
+    -> zero t2< alpha \/ zero t2< beta.
 Proof.
   inversion 1; [trivial |].
   generalize H5 H2 ;case gamma.
@@ -3256,15 +3249,15 @@ Qed.
 
 
 
-Lemma limit_plus_F_ok : forall alpha,  is_limit alpha ->
-                           forall n, limit_plus_F alpha n (alpha + F n).
+Lemma limit_plus_fin_ok : forall alpha,  is_limit alpha ->
+                           forall n, limit_plus_fin alpha n (alpha + fin n).
 Proof.
 induction alpha.
  - cbn;constructor 1.
  - cbn; inversion 1.
   + intro n1;case n1.
     *  cbn; constructor 2;auto.
-      change (limit_plus_F zero 0 (F 0)).
+      change (limit_plus_fin zero 0 (fin 0)).
       constructor 1.
     *  cbn; case_eq (compare [alpha1, alpha2] [zero, zero]).
        --  intro H7; generalize (compare_Eq H7).
@@ -3274,8 +3267,8 @@ induction alpha.
        -- intro H7; generalize (compare_Lt H7).
           inversion 1;intros;try lt_clean.
        --  cbn; intros;
-             change (limit_plus_F (gcons alpha1 alpha2 n zero) (S n2)
-                                  (gcons alpha1 alpha2 n (F (S n2)))).
+             change (limit_plus_fin (gcons alpha1 alpha2 n zero) (S n2)
+                                  (gcons alpha1 alpha2 n (fin (S n2)))).
            constructor.
            auto.
            constructor.
@@ -3284,7 +3277,7 @@ induction alpha.
         -- eapply is_limit_ab.
            eexact H.
         --  generalize H2; generalize (nf_c H5);  elim alpha3.
-            intros; change ( limit_plus_F zero 0 (F 0));constructor.
+            intros; change ( limit_plus_fin zero 0 (fin 0));constructor.
             constructor.
             eapply is_limit_ab.
             eexact H10.
@@ -3292,7 +3285,7 @@ induction alpha.
             intros; apply H8.
             nf_inv.
             auto.
-            intro;subst t1;change (limit_plus_F zero 0 (F 0));constructor.
+            intro;subst t1;change (limit_plus_fin zero 0 (fin 0));constructor.
             * cbn; case_eq (compare [alpha1, alpha2] [zero, zero]).
               intro H7;generalize (compare_Eq H7);injection 1;intros.
               subst alpha1;subst alpha2;subst beta;subst alpha.
@@ -3301,7 +3294,7 @@ induction alpha.
               intro H7;generalize (compare_Lt H7);intros.
               inversion H6;lt_clean.
               intro.
-              replace (gcons zero zero n1 zero) with (F (S n1)).
+              replace (gcons zero zero n1 zero) with (fin (S n1)).
               constructor 2.
               generalize (compare_Gt H6);intros.
               inversion_clear H7;auto with T2.
@@ -3316,44 +3309,44 @@ Section phi_to_psi.
  Variable alpha : T2.
 
  Lemma phi_to_psi_1 : forall beta1 beta2 n, 
-     alpha o< beta1 -> 
-     [alpha, (gcons beta1 beta2 0 (F n))] =
-     phi alpha (gcons beta1 beta2 0 (F (S n))).
+     alpha t2< beta1 -> 
+     [alpha, (gcons beta1 beta2 0 (fin n))] =
+     phi alpha (gcons beta1 beta2 0 (fin (S n))).
  Proof.
    intros;  generalize (phi_of_psi_succ alpha beta1 beta2 n).
    case (lt_ge_dec alpha beta1).
    - auto with T2.
-   - intro; absurd (alpha o< alpha).
+   - intro; absurd (alpha t2< alpha).
      apply lt_irr.
      eapply lt_le_trans;eauto with T2.
  Qed.
 
  Lemma phi_to_psi_2 : forall beta1 beta2 n, 
-     beta1 o<= alpha  -> 
-     [alpha, (gcons beta1 beta2 0 (F n))] =
-     phi alpha (gcons beta1 beta2 0 (F n)).
+     beta1 t2<= alpha  -> 
+     [alpha, (gcons beta1 beta2 0 (fin n))] =
+     phi alpha (gcons beta1 beta2 0 (fin n)).
    Proof.
    intros; case n.
-   -   simpl (F 0);  generalize (phi_of_psi alpha beta1 beta2).
+   -   simpl (fin 0);  generalize (phi_of_psi alpha beta1 beta2).
        case (lt_ge_dec alpha beta1). 
-       intro; (absurd (alpha o< alpha)). 
+       intro; (absurd (alpha t2< alpha)). 
        + apply lt_irr.
        +   eapply lt_le_trans;eauto with T2.
        + auto with T2.
    - intro n0;generalize (phi_of_psi_succ alpha beta1 beta2 n0).
      case (lt_ge_dec alpha beta1).
-     +    intro;  absurd (alpha o< alpha).
+     +    intro;  absurd (alpha t2< alpha).
           apply lt_irr.
           eapply lt_le_trans;eauto with T2.
       + auto with T2.
  Qed.
 
  Lemma phi_to_psi_3 : forall  beta1 beta2 , 
-                             beta1 o<= alpha  -> 
+                             beta1 t2<= alpha  -> 
                              [alpha, [beta1, beta2]] =
                              phi alpha [beta1, beta2].
  Proof.
-   intros; fold (F 0); apply phi_to_psi_2; auto with T2.
+   intros; fold (fin 0); apply phi_to_psi_2; auto with T2.
 Qed.
 
 Lemma phi_to_psi_4 : [alpha, zero] = phi alpha zero.
@@ -3362,7 +3355,7 @@ Proof.
 Qed.
 
 Lemma phi_to_psi_5 :
-   forall beta1 beta2 n gamma, omega o<= gamma \/ (0 < n)%nat ->
+   forall beta1 beta2 n gamma, omega t2<= gamma \/ (0 < n)%nat ->
            [alpha,gcons beta1 beta2 n gamma] =
            phi alpha (gcons beta1 beta2 n gamma).
 Proof.
@@ -3371,7 +3364,7 @@ Qed.
 
 Lemma phi_to_psi_6 : forall beta, nf beta ->
                                   phi alpha beta = beta ->
-                                  [alpha,  beta] = phi alpha (succ beta).
+                                  [alpha, beta] = phi alpha (succ beta).
 Proof.  
  intros; case (phi_fix _ H0 ).
  intros beta1 (beta2,(H2,H3)); subst beta.
@@ -3382,19 +3375,19 @@ Proof.
 Qed.
 
 
-(* gamma = gamma0 + F p, gamma0 = zero or gamma0 limit *)
+(* gamma = gamma0 + fin p, gamma0 = zero or gamma0 limit *)
 
 
  
-Lemma phi_psi : forall  beta0 beta n, nf beta ->
-  limit_plus_F beta0 n beta ->  phi alpha beta0 = beta0 ->
-                           [alpha, beta]  =  phi alpha (succ beta).
+Lemma phi_psi : forall  beta gamma n, nf gamma ->
+  limit_plus_fin beta n gamma ->  phi alpha beta = beta ->
+                           [alpha, gamma]  =  phi alpha (succ gamma).
 Proof.
  intros; case (phi_fix _ H1).
   intros beta1 (beta2,(H2,H3)).
- assert (beta = (gcons beta1 beta2 0 (F n))).
+ assert (gamma = (gcons beta1 beta2 0 (fin n))).
  {
-subst beta0.
+subst beta.
  inversion H0.
  inversion H9.
  auto with T2.
@@ -3402,16 +3395,16 @@ subst beta0.
  auto with T2.
  inversion H10;auto with T2.
  }
- subst beta.
-   cbn; subst beta0; generalize H3 H1.
+ subst gamma.
+   cbn; subst beta; generalize H3 H1.
    case beta1;case beta2.
    -   inversion 1.
    -   inversion 2.
        inversion H2.
-   -   replace (succ (F n)) with (F (S n)).
+   -   replace (succ (fin n)) with (fin (S n)).
        + intros;rewrite phi_to_psi_1; auto with T2.
        + induction n;cbn;auto with T2.
-   -  replace (succ (F n)) with (F (S n)).
+   -  replace (succ (fin n)) with (fin (S n)).
       intros;rewrite phi_to_psi_1; auto with T2.
    induction n;cbn;auto with T2.
 Qed.
@@ -3419,15 +3412,15 @@ Qed.
 Theorem th_14_5 : forall alpha1 beta1 alpha2 beta2,
                    nf alpha1 -> nf beta1 -> nf alpha2 -> nf beta2 ->
                    phi alpha1 beta1 = phi alpha2 beta2 ->
-                   {alpha1 o< alpha2 /\ beta1 = phi alpha2 beta2} +
+                   {alpha1 t2< alpha2 /\ beta1 = phi alpha2 beta2} +
                    {alpha1 = alpha2 /\ beta1 =  beta2} +
-                   {alpha2 o< alpha1 /\ phi alpha1 beta1 = beta2}.
+                   {alpha2 t2< alpha1 /\ phi alpha1 beta1 = beta2}.
 Proof.
  intros alpha1 beta1 alpha2 beta2 nfa1 nfb1 nfa2 nfb2 E.
  tricho alpha1 alpha2 H0.
  -  generalize (phi_to_psi alpha2 beta2).
     intros (gamma1, (gamma2, E')).
-    assert (alpha2 o<= gamma1). {
+    assert (alpha2 t2<= gamma1). {
       eapply phi_le; [| eexact E'].
       auto.
     }
@@ -3450,7 +3443,7 @@ Proof.
    apply phi_inj_r with alpha1;auto.
  -  generalize (phi_to_psi alpha1 beta1).
     intros (gamma1, (gamma2, E')).
-    assert (alpha1 o<= gamma1). {
+    assert (alpha1 t2<= gamma1). {
       apply phi_le with beta1 gamma2; auto.
     }
     right. 
@@ -3467,7 +3460,7 @@ Proof.
     apply phi_nf;auto.
 Qed.
 
-Lemma lt_not_gt : forall a b, a o< b -> ~ (b o< a).
+Lemma lt_not_gt : forall a b, a t2< b -> ~ (b t2< a).
 Proof.
   intros a b H H0.
   case (lt_irr (alpha := a));auto.
@@ -3475,7 +3468,7 @@ Proof.
 Qed.
 
 Lemma phi_mono_RR : forall a b c, nf a -> nf b -> nf c ->
-              phi a b o< phi a c -> b o< c.
+              phi a b t2< phi a c -> b t2< c.
  Proof.
   intros;tricho b c T;auto.
   subst c. case (lt_irr H2).
@@ -3485,16 +3478,16 @@ Lemma phi_mono_RR : forall a b c, nf a -> nf b -> nf c ->
 
 Theorem th_14_6 : forall alpha1 beta1 alpha2 beta2,
                    nf alpha1 -> nf beta1 -> nf alpha2 -> nf beta2 ->
-                   phi alpha1 beta1 o< phi alpha2 beta2 ->
-                   {alpha1 o< alpha2 /\ beta1 o< phi alpha2 beta2} +
-                   {alpha1 = alpha2 /\ beta1 o<  beta2} +
-                   {alpha2 o< alpha1 /\ phi alpha1 beta1 o< beta2}.
+                   phi alpha1 beta1 t2< phi alpha2 beta2 ->
+                   {alpha1 t2< alpha2 /\ beta1 t2< phi alpha2 beta2} +
+                   {alpha1 = alpha2 /\ beta1 t2<  beta2} +
+                   {alpha2 t2< alpha1 /\ phi alpha1 beta1 t2< beta2}.
 Proof.
   intros alpha1 beta1 alpha2 beta2 nfa1 nfb1 nfa2 nfb2 E.
   tricho alpha1 alpha2 H0.
   -  generalize (phi_to_psi alpha2 beta2).
      intros (gamma1, (gamma2, E')).
-     assert (alpha2 o<= gamma1).
+     assert (alpha2 t2<= gamma1).
      { eapply phi_le; [| eexact E'].
        auto.
      }
@@ -3511,10 +3504,10 @@ Proof.
   -  right;  split;auto. 
      generalize (phi_to_psi alpha1 beta1).
      intros (gamma1, (gamma2, E')).
-     assert (alpha1 o<= gamma1). {
+     assert (alpha1 t2<= gamma1). {
        apply phi_le with beta1 gamma2;  auto.
      }
-     assert (alpha2 o< gamma1). {
+     assert (alpha2 t2< gamma1). {
        apply lt_le_trans with alpha1;auto.
     }
      assert (phi alpha2 (phi alpha1 beta1) = phi alpha1 beta1).
@@ -3524,7 +3517,7 @@ Proof.
        rewrite (compare_rw_lt H1).
        auto.
      }
-     assert (phi alpha2 (phi alpha1 beta1) o< phi alpha2 beta2).
+     assert (phi alpha2 (phi alpha1 beta1) t2< phi alpha2 beta2).
      eapply le_lt_trans.
      eleft;eexact H2.
      auto.
@@ -3534,12 +3527,12 @@ Qed.
 
 
 Definition moser_lepper (beta0 beta:T2)(n:nat) :=
- limit_plus_F beta0 n beta /\ phi alpha beta0 = beta0.
+ limit_plus_fin beta0 n beta /\ phi alpha beta0 = beta0.
 
 Lemma ml_psi : forall beta0 beta n,
     moser_lepper beta0 beta n ->
     {t1 : T2 & {t2: T2| beta0 =
-                        [t1,t2] /\ alpha o< t1}}.
+                        [t1,t2] /\ alpha t2< t1}}.
 Proof.
  intros beta0 beta n (H1,H2).
  case (phi_fix  _  H2).
@@ -3557,7 +3550,16 @@ Qed.
 
 End phi_to_psi.
 
-Check compare.
+About phi_psi.
+
+Compute phi 0 (epsilon 2)= epsilon 2.
+
+Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
+Proof. trivial. Qed.
+
+Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
+Proof. reflexivity. Qed.
+
 
 Declare Scope g0_scope.
 
@@ -3568,8 +3570,8 @@ Module G0.
   Lemma Lt_wf : well_founded LT.
   Proof.
     unfold LT; generalize nf_Wf; split; split.
-    intros y0 H1;  generalize (nf_Wf); intro H2.
-    apply H2;now destruct H1.
+    intros y0 H1; generalize (nf_Wf); intro H2.
+    apply H2; now destruct H1.
   Defined.
 
 (** ** Temporary compatibility  nf/nfb *)
@@ -3631,9 +3633,7 @@ Qed.
 
 Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
-
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
-
 
 Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
 
@@ -3642,6 +3642,14 @@ Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
 Proof.
   destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
 Qed.
+
+Instance lt_sto : StrictOrder lt.
+Proof.
+  split.
+  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
+  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
+Qed.
+
 
 Lemma lt_wf : well_founded lt.
 Proof.
@@ -3652,12 +3660,6 @@ Proof.
                            {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
 Qed.
 
-Instance lt_sto : StrictOrder lt.
-Proof.
-  split.
-  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
-  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
-Qed.
 
 Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
@@ -3684,7 +3686,7 @@ Defined.
 
 Notation "'omega'" := Omega : g0_scope.
 
-Instance ONG0: ON lt  compare.
+Instance Gamma0: ON lt  compare.
 Proof.
   split.
   - apply lt_sto.
@@ -3695,7 +3697,7 @@ Qed.
 
 Instance Finite (n:nat) : G0.
 Proof.
-  exists (finite n);  red; rewrite nfb_equiv;  apply nf_finite.
+  exists (fin n);  red; rewrite nfb_equiv;  apply nf_fin.
 Defined.
 
 Instance Plus (alpha beta : G0) : G0.
@@ -3717,9 +3719,5 @@ now apply compare_Eq_eq.
 Qed.
 
 End G0.
-
-
-
-
 
 
