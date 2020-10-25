@@ -44,7 +44,7 @@ Definition maximal_critical alpha : Ensemble Ord :=
     In (Cr alpha) gamma /\
     forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
 
-
+Definition Gamma0 := the_least strongly_critical.
 
 (**  See Gamma0.Gamma0.phi *)
 

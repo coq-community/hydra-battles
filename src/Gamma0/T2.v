@@ -79,12 +79,12 @@ Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
 Definition epsilon alpha := [one, alpha].
 
 
-(* injection from Cantor Normal Form *)
+(* injection from T1 *)
 
-Fixpoint T1_inj (alpha :T1) : T2 :=
+Fixpoint T1_to_T2 (alpha :T1) : T2 :=
   match alpha  with
   | T1.zero => zero
-  | T1.ocons a n b => gcons zero (T1_inj a) n (T1_inj b)
+  | T1.ocons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
   end.
 
 (** additive principals *)

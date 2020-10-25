@@ -2675,8 +2675,8 @@ Qed.
 
 
 
-Lemma T1_injection : forall alpha beta : T1,
-    T1_inj alpha = T1_inj beta -> alpha = beta.
+Lemma T1_to_T2_inj : forall alpha beta : T1,
+    T1_to_T2 alpha = T1_to_T2 beta -> alpha = beta.
 Proof.
  induction alpha; destruct beta;simpl;auto with T2.
  - discriminate 1.
@@ -2689,12 +2689,12 @@ Proof.
 Qed.
 
  
-Lemma T1_injection_lt : forall c, lt_epsilon0 (T1_inj c).
+Lemma T1_to_T2_lt : forall c, lt_epsilon0 (T1_to_T2 c).
 Proof.
  induction c;simpl;constructor;auto with T2.
 Qed.
 
-Definition T1_inj_R : forall a, lt_epsilon0 a -> {c:T1 | T1_inj c = a}.
+Definition T1_to_T2_R : forall a, lt_epsilon0 a -> {c:T1 | T1_to_T2 c = a}.
 Proof.
  induction a.
  - exists T1.zero;simpl;auto with T2.
@@ -2711,8 +2711,8 @@ Defined.
 
 
 
-Lemma inj_mono : forall alpha beta, T1.lt alpha beta ->
-                                    T1_inj alpha t2< T1_inj beta.
+Lemma T1_to_T2_mono : forall alpha beta, T1.lt alpha beta ->
+                                    T1_to_T2 alpha t2< T1_to_T2 beta.
 Proof.
   induction alpha. 
   +  destruct beta. 
@@ -2728,13 +2728,13 @@ Proof.
 Qed.
 
 
-Lemma inj_monoR : forall c c', lt (T1_inj c) (T1_inj c') -> T1.lt c  c'.
+Lemma T1_to_T2_monoR : forall c c', lt (T1_to_T2 c) (T1_to_T2 c') -> T1.lt c  c'.
 Proof.
  intros c c' H; case (T1.lt_eq_lt_dec c c').
  -  destruct 1; auto.
    subst c'; case (lt_irr H).
- - intro l; generalize (inj_mono l); intro H0;
-     case (lt_irr (alpha:=T1_inj c)).
+ - intro l; generalize (T1_to_T2_mono l); intro H0;
+     case (lt_irr (alpha:=T1_to_T2 c)).
    eapply lt_trans;eauto with T2.
 Qed.
 
