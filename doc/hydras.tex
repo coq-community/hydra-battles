@@ -4016,7 +4016,7 @@ with the ways to build Cantor normal forms:
 \noindent\emph{From Module~\href{../src/html/hydras.Epsilon0.T1.html\#T1}{Epsilon0.T1}}
 
 \label{types:T1}
-\index{Constants!zero:T1}
+%\index{Constants!zero:T1}
 
 
 \begin{Coqsrc}
@@ -4034,7 +4034,7 @@ Inductive T1 : Set  :=
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
 to a hierarchy of ordinal notations. For instance, in~\cite{CantorContrib}, the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
 
-\label{types:T2}
+
 \emph{Please look also at the library
 \href{../src/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
 
@@ -4482,7 +4482,7 @@ the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
 \label{sect:omega-T1}
-\index{Constants!zero:T1}
+%\index{Constants!zero:T1}
 
 \begin{Coqsrc}
 Instance Zero : E0.
@@ -9611,6 +9611,7 @@ This theorem is not formally proved in this development yet. It should be!
 
 Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors, one for $0$, the other for the construction $\psi(\alpha,\beta)\times(n+1)+\gamma$, adapting a Manolios-Vroon-like notation~\cite{Manolios2005} to
 \emph{Veblen normal forms}.
+\label{types:T2}
 
 \noindent\emph{From \href{../src/html/hydras.Gamma0.T2.html\#T2}%
 {\texttt{Gamma0.T2}}}
@@ -10019,7 +10020,7 @@ Proof. trivial. Qed.
 
 \subsection{The Veblen function \texorpdfstring{$\phi$}{\texttt{phi}}}
 
-The enumeration function of critical ordinals, presented in Sect.\~vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
+The enumeration function of critical ordinals, presented in Sect.~\vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
 
 \begin{Coqsrc}
 Definition  phi (alpha beta : T2) : T2 :=
@@ -10102,6 +10103,8 @@ In order to consider type \texttt{T2} as an ordinal notation, we have to build a
 First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation.
 
 \begin{Coqsrc}
+Module G0.
+
 Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
