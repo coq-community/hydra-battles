@@ -42,7 +42,7 @@ Definition strongly_critical alpha := In (Cr alpha) alpha.
 Definition maximal_critical alpha : Ensemble Ord :=
   fun gamma =>
     In (Cr alpha) gamma /\
-    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+    forall xi, alpha < xi -> ~ In (Cr xi) gamma.
 
 Definition Gamma0 := the_least strongly_critical.
 
@@ -261,7 +261,7 @@ Section Proof_of_Lemma5.
   Section Alpha_positive.
     Variable alpha : Ord.
     Hypothesis alpha_pos : zero < alpha.
-    Hypothesis IHalpha : forall ksi, ksi < alpha -> P ksi.
+    Hypothesis IHalpha : forall xi, xi < alpha -> P xi.
 
 
     Section Proof_unbounded.
@@ -272,8 +272,8 @@ Section Proof_of_Lemma5.
           O => succ beta
         | S n => sup
                    (fun (y : Ord) =>
-                      exists ksi: Ord, ksi  < alpha /\
-                                      y = phi ksi (gamma_ n))
+                      exists xi: Ord, xi  < alpha /\
+                                      y = phi xi (gamma_ n))
         end.
 
       Let gamma := omega_limit gamma_.
@@ -289,10 +289,10 @@ Section Proof_of_Lemma5.
         now exists 0.
       Qed.
 
-      Lemma Lemma5_02 : forall ksi, ksi < alpha ->
-                                    phi ksi gamma = gamma.
-        intros ksi Hksi.
-        assert (forall n,  phi ksi (gamma_ n) <= gamma).
+      Lemma Lemma5_02 : forall xi, xi < alpha ->
+                                    phi xi gamma = gamma.
+        intros xi Hxi.
+        assert (forall n,  phi xi (gamma_ n) <= gamma).
         {
           intro n; apply le_trans with (gamma_ (S n)).        
           cbn; apply sup_upper_bound.
@@ -312,12 +312,12 @@ Section Proof_of_Lemma5.
           split; auto.
           destruct H0; auto.
           destruct H0;auto.
-          exists ksi; split; auto.
+          exists xi; split; auto.
           unfold gamma;  apply sup_upper_bound.
           apply seq_range_countable.
           exists (S n); auto.
         }
-        assert (sup (seq_range (fun n => phi ksi (gamma_ n))) <= gamma).
+        assert (sup (seq_range (fun n => phi xi (gamma_ n))) <= gamma).
         {
           apply sup_least_upper_bound.
           apply seq_range_countable.
@@ -325,23 +325,23 @@ Section Proof_of_Lemma5.
           subst;  apply H.
         }
 
-        assert (phi ksi gamma <= gamma).
+        assert (phi xi gamma <= gamma).
         { unfold gamma at 1; unfold omega_limit.
-          assert (continuous (phi ksi) ordinal (Cr ksi)).
+          assert (continuous (phi xi) ordinal (Cr xi)).
           { apply Th_13_5_2.  
             
-            replace ordinal with (the_ordering_segment (Cr ksi)).
+            replace ordinal with (the_ordering_segment (Cr xi)).
             apply ord_ok.
             apply segment_unbounded.
-            eapply ordering_function_seg with (Cr ksi).
-            exists (phi ksi).
+            eapply ordering_function_seg with (Cr xi).
+            exists (phi xi).
             apply ord_ok;  auto.
-            assert (Unbounded (Cr ksi)) by(now destruct (IHalpha  Hksi)).
+            assert (Unbounded (Cr xi)) by(now destruct (IHalpha  Hxi)).
             rewrite
-              (@ ordering_unbounded_unbounded (A ksi) (Cr ksi) (phi ksi)) in H1.
+              (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi)) in H1.
             auto.
             apply ord_ok.
-            destruct (IHalpha Hksi); auto. 
+            destruct (IHalpha Hxi); auto. 
           }
           destruct H1.
           destruct H2.
@@ -355,14 +355,14 @@ Section Proof_of_Lemma5.
           -  exists (gamma_ 0), 0;auto. 
           -  apply seq_range_countable.
         }
-        assert (gamma <= phi ksi gamma).
+        assert (gamma <= phi xi gamma).
         {  
           eapply ordering_le.
          -  apply ord_ok.
-         -  assert (Unbounded (Cr ksi)) by ( now destruct (IHalpha  Hksi)).
-            replace (the_ordering_segment (Cr ksi)) with ordinal.
+         -  assert (Unbounded (Cr xi)) by ( now destruct (IHalpha  Hxi)).
+            replace (the_ordering_segment (Cr xi)) with ordinal.
           + split.
-          + rewrite  (@ordering_unbounded_unbounded (A ksi) (Cr ksi) (phi ksi))
+          + rewrite  (@ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
             in H2.
            *  unfold A in H2;  symmetry;  apply segment_unbounded; auto.
               apply segment_the_ordering_segment; auto.
@@ -375,31 +375,31 @@ Section Proof_of_Lemma5.
       Lemma Lemma5_03 : In (Cr alpha) gamma.
       Proof.
         red;  apply Cr_pos; auto.
-        intros ksi Hksi;  unfold P in IHalpha; split.
-        - red; assert (Unbounded (Cr ksi)) by (now destruct (IHalpha  Hksi)).
-          rewrite (@ ordering_unbounded_unbounded (A ksi) (Cr ksi) (phi ksi))
+        intros xi Hxi;  unfold P in IHalpha; split.
+        - red; assert (Unbounded (Cr xi)) by (now destruct (IHalpha  Hxi)).
+          rewrite (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
           in H.
-        replace (the_ordering_segment (Cr ksi)) with ordinal .
+        replace (the_ordering_segment (Cr xi)) with ordinal .
         + split.
         + symmetry; apply segment_unbounded.
-          * eapply ordering_function_seg with (Cr ksi).
-            exists (phi ksi); apply ord_ok; auto.
+          * eapply ordering_function_seg with (Cr xi).
+            exists (phi xi); apply ord_ok; auto.
           * auto.
         + apply ord_ok.
        - apply Lemma5_02; auto.
       Qed.
 
-      Remark A_full : forall ksi, ksi < alpha -> A ksi = ordinal.
+      Remark A_full : forall xi, xi < alpha -> A xi = ordinal.
         unfold A; intros.      
-        replace (the_ordering_segment (Cr ksi)) with ordinal .
+        replace (the_ordering_segment (Cr xi)) with ordinal .
         split.
         symmetry; apply segment_unbounded.
-        eapply ordering_function_seg with (Cr ksi).
+        eapply ordering_function_seg with (Cr xi).
         unfold the_ordering_segment, the. 
         apply iota_ind.
         apply ordering_segment_ex_unique.
         destruct 1; auto.
-        rewrite   <-  (@ ordering_unbounded_unbounded (A ksi) (Cr ksi) (phi ksi)).
+        rewrite   <-  (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi)).
         destruct (IHalpha H);auto.
         apply ord_ok.
       Qed.
@@ -428,9 +428,9 @@ Section Proof_of_Lemma5.
       
 
       
-      Lemma Lemma5_2 : forall ksi eta,  ksi < alpha ->
+      Lemma Lemma5_2 : forall xi eta,  xi < alpha ->
                                         In M eta  ->
-                                        phi ksi eta = eta.
+                                        phi xi eta = eta.
       Proof.
         intros.
         Check (Cr_pos_iff alpha_pos).
@@ -445,18 +445,18 @@ Section Proof_of_Lemma5.
       Lemma Lemma5_7 : In (Cr alpha) (sup M).
       Proof.
         red; apply Cr_pos; auto.
-        intros ksi H; split.
+        intros xi H; split.
         rewrite (A_full H). split.
-        assert (continuous (phi ksi) ordinal (Cr ksi)).
+        assert (continuous (phi xi) ordinal (Cr xi)).
         { apply Th_13_5_2.  
-          replace ordinal with (the_ordering_segment (Cr ksi)).
+          replace ordinal with (the_ordering_segment (Cr xi)).
           apply ord_ok.
           apply segment_unbounded.
-          eapply ordering_function_seg with (Cr ksi).
-          exists (phi ksi); apply ord_ok.
-          assert (Unbounded (Cr ksi)). 
+          eapply ordering_function_seg with (Cr xi).
+          exists (phi xi); apply ord_ok.
+          assert (Unbounded (Cr xi)). 
           now destruct (IHalpha  H).
-          rewrite (@ ordering_unbounded_unbounded (A ksi) (Cr ksi) (phi ksi))
+          rewrite (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
             in H0.
           auto.
           apply ord_ok.
@@ -471,9 +471,9 @@ Section Proof_of_Lemma5.
         intro x.
         destruct 1.
         destruct H3.
-        subst; fold (phi ksi x0); rewrite Lemma5_2; auto.
+        subst; fold (phi xi x0); rewrite Lemma5_2; auto.
         intros x Hx;   exists x; split; auto.
-        fold (phi ksi x); rewrite Lemma5_2; auto.
+        fold (phi xi x); rewrite Lemma5_2; auto.
         split.
         auto.
         auto. 

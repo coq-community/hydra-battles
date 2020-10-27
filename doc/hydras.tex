@@ -92,7 +92,7 @@ This is obviously the case of the four-color theorem~\cite{fourcolors}  and the 
 
 
 
-Hydra games (a.k.a. \emph{Hydra battles}) appeared in an article published in 1982 by two mathematicians:
+Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
 L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}. 
 Although the mathematical contents of this 
 paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the page written by Andrej Bauer~\cite{bauer2008}.
@@ -314,13 +314,15 @@ Bad definitions
 
 
 \begin{Coqbad}
+Require Import Lia.
+
 Module Bad.
 
 Definition double (n:nat)  := n + 2.
  
 Lemma lt_double : forall n:nat, n < double  n.
 Proof.
-   unfold double; omega.
+   unfold double; lia.
 Qed.
 
 End Bad.
@@ -331,18 +333,18 @@ Likewise, alternative, but still unexplored definitions will be presented in mod
 
 
 \begin{Coqalt}
+Require Import Arith Lia Iterates.
 Module Alt.
-
-  Definition double (n : nat) := 2 * n.
-
+  Definition double (n : nat) := iterate S n n.
 End Alt.
 \end{Coqalt}
 
 \begin{Coqsrc}
 Lemma alt_double_ok n : Nat.double n = Alt.double n.
 Proof.
-  unfold Alt.double, Nat.double.
-  omega.
+  unfold Alt.double, Nat.double; induction n; cbn.
+  -  trivial.
+  -  rewrite <- iterate_rw, iterate_S_eqn, <- IHn; lia.
 Qed.
 \end{Coqsrc}
 
@@ -763,15 +765,16 @@ with Hydrae : Set :=
 \end{Coqsrc}
 
 %\index{To do}
+\index{Projects}
 
-\begin{todo}
+\begin{project}
 Look for an existing library on trees with nodes of arbitrary arity, in order to replace  this ad-hoc type with something more generic.
-\end{todo}
+\end{project}
 
 
 \index{Projects}
 
-\begin{project}[**]
+\begin{project}
 
  Another very similar representation could use the \texttt{list} type family instead of the specific 
 type \texttt{Hydrae}:
@@ -804,7 +807,7 @@ every non-leaf node has a \emph{multi-set} -- not an ordered list -- of daughter
 
 \subsubsection{Abbreviations}
 
-We provide several notations for ``patterns'' which occur often in our developments. 
+We provide several notations for hydra patterns  which occur often in our developments. 
 
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#head}{Hydra.Hydra\_Definitions}}
 
@@ -885,9 +888,10 @@ Example Hy'' :=
 
 When defining a recursive function over the type \texttt{Hydra}, one has to consider the three constructors 
 \texttt{node}, \texttt{hnil} and \texttt{hcons} of the mutually inductive types \texttt{Hydra} and \texttt{Hydrae}. 
-Let us define for instance the function that  computes the number of nodes of any hydra:
+Let us define for instance the function which  computes the number of nodes of any hydra:
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 
 
@@ -952,7 +956,7 @@ In this section, we show how induction principles are used to prove properties o
 
 \subsubsection{A failed attempt}
 
-One may try to use the default tactic of proof by induction, that corresponds to an application of the automatically  generated  induction principle for  type \texttt{Hydra}:
+One may try to use the default tactic of proof by induction, which corresponds to an application of the automatically  generated  induction principle for  type \texttt{Hydra}:
 
 \begin{Coqanswer}
 Hydra_ind :
@@ -963,6 +967,7 @@ forall P : Hydra -> Prop,
 Ler us start a simple proof by induction.
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
 \begin{Coqbad}
@@ -1017,7 +1022,7 @@ In order to get an appropriate induction scheme for the types
 \texttt{Hydra} and \texttt{Hydrae}, we can use  \coq{}'s  command \texttt{Scheme}.
 
 
-\index{Coq!Techniques!Mutual induction}
+\index{Coq!Techniques!Mutually inductive types}
 \index{Coq!Commands!Scheme}
 
 \begin{Coqsrc}
@@ -1051,6 +1056,7 @@ Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt
 Let us begin by defining an ad-hoc version of \texttt{List.Forall}.
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
 \begin{Coqsrc}
@@ -1140,7 +1146,7 @@ a \emph{round}, i.e., an interaction composed of the two following actions:
 \item Hercules chops off one head of the hydra
 \item Then, the  hydra replicates the wounded part (if the head is at distance $\geq 2$ from the foot).
 \end{enumerate}
-The relation associated with each round of the battle is \emph{parameterized}  by the \emph{expected} replication  factor (irrelevant if the chopped head is at distance 1 from the foot,
+The relation associated with each round of the battle is parameterized  by the \emph{expected} replication  factor (irrelevant if the chopped head is at distance 1 from the foot,
 but present for consistency's sake).
 
 In our description,  we will apply the following naming convention: if $h$ represents the configuration of the hydra before a round, then the configuration of $h$ after this round will be called $h'$.
@@ -1193,16 +1199,17 @@ Qed.
 \end{Coqsrc}
 
 
-\subsection{Chopping of a head at distance \texorpdfstring{$\geq 2$}{>= 2} from the foot (relation R2) }
+\subsection{Chopping off a head at distance \texorpdfstring{$\geq 2$}{>= 2} from the foot (relation R2) }
 
 
 Let us now consider beheadings  where the chopped-off head is at distance greater than or equal to $2$ from the foot. All the following relations are parameterized by the replication factor  $n$.
 
  Let $s$ be a sequence of hydras. 
 The proposition (\texttt{S1 n s s'}) holds if $s'$ is obtained by replacing some element $h$ of $s$ by 
-$n+1$ copies of $h'$, where  the proposition (\texttt{R1 h h'}) holds, in other words, \texttt{h'} is just \texttt{h}, without the chopped-off  head. \texttt{S1} is an inductive relation with two constructors that allow us to choose the position in $s'$ of the wounded sub-hydra $h$.
+$n+1$ copies of $h'$, where  the proposition (\texttt{R1 h h'}) holds, in other words, $h'$ is just $h$, without the chopped-off  head. \texttt{S1} is an inductive relation with two constructors that allow us to choose the position in $s'$ of the wounded sub-hydra $h$.
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#S1}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
@@ -1393,7 +1400,6 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
-\index{Coq!Type classes}
 \label{types:Battle}
 
 \begin{Coqsrc}
@@ -2177,7 +2183,7 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \vspace{4pt}
 \emph{From Module~\href{../src/html/hydras.Hydra.Hydra_Definitions.html\#Hvariant}{Hydra.Hydra\_Definitions}}
 
-\index{Coq!Type classes}
+
 \label{sect:hvariant-def}
 
 \begin{Coqsrc}
@@ -2503,7 +2509,6 @@ to Schütte's model.
 The library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
 Coq.Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
 
-\index{Coq!Type classes}
 
 \begin{Coqsrc}
 Variable A: Type.
@@ -2531,7 +2536,6 @@ Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
 \vspace{4pt}
 \noindent\emph{From Library~\href{../src/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
 
-\index{Coq!Type classes}
 \label{types:ON}
 
 \begin{Coqsrc}
@@ -3647,7 +3651,7 @@ The following class specifies a strict inclusion of segments. The notation \text
 
 If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
 
-\index{Coq!Type classes}
+
 \label{types:SubON}
 
 \begin{Coqsrc}
@@ -3760,7 +3764,7 @@ Finally, it may be interesting to compare an ordinal notation with the more theo
 The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
 where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 
-\index{Coq!Type classes}
+
 \label{types:ON-for}
 
 \begin{Coqsrc}
@@ -3804,7 +3808,7 @@ Instance Epsilon0_correct :
 
 In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega($\;). For this purpose, one may prove that the two notation systems are order-isomorphic.
 
-\index{Coq!Type classes}
+
 \label{types:ON-iso} 
 \begin{Coqsrc}
 Class  ON_Iso 
@@ -4423,7 +4427,7 @@ and \ref{sect:wainer}),  we need to define total recursive functions on well-for
 
 \emph{From Module~\href{../src/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
-\index{Coq!Type classes}
+
 
 \begin{Coqsrc}
 Class E0 : Type := t1_2o {cnf : T1; cnf_ok : nf cnf}.
@@ -4457,6 +4461,7 @@ defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists 
 equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
 \index{Coq!Techniques!Unicity of equality proofs}
+
 
 \begin{Coqsrc}
 Require Import Logic.Eqdep_dec.
@@ -4815,7 +4820,7 @@ which are not in Cantor normal form.
 
 \subsubsection{A first attempt}
 \label{sec:orgheadline77}
-\index{Coq!Techniques!Well founded relations}
+\index{Coq!Techniques!Well-founded induction}
 
 It is natural to try to prove by structural induction over \texttt{T1} 
 that every term in normal form is accessible through \texttt{LT}.
@@ -5965,7 +5970,7 @@ proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 In the module \href{../src/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
 
 
-\index{Coq!Type classes}
+
 
 \begin{Coqsrc}
 Class BoundedVariant (B:Battle) :=
@@ -8519,7 +8524,7 @@ and
 {\texttt{Schutte.PartialFun}} are extensions of \texttt{Coq.logic.Epsilon} for making easier 
 such definitions. See also an article in french~\cite{PCiota}. 
 
-\index{Coq!Type classes}
+
 
 \begin{Coqsrc}
 Class InH (A: Type) : Prop :=
@@ -9312,7 +9317,7 @@ We prove this result by transfinite induction on $\alpha$ of both properties.
 
 The proof is still quite long, by transfinite induction over $\alpha$.
 
-\index{Coq!Techniques!Simultaneous induction}
+
 \index{Coq!Techniques!Transfinite induction}
 
 \begin{Coqsrc}
@@ -9546,11 +9551,18 @@ The ordinal $\Gamma_0$ is defined in Section 13 of ~\cite{schutte} as the least 
 
 
 Section V, 13 of~\cite{schutte} defines \emph{strongly critical} and
-\emph{maximal $\alpha$-critical} ordinals.  
+\emph{maximal $\alpha$-critical} ordinals: 
+
+\begin{itemize}
+\item $\alpha$ is strongly critical if
+$\alpha$ is $\alpha$-critical,
+\item $\gamma$ is maximal $\alpha$-critical if $\gamma$ is $\alpha$-critical, and, for all $\xi>\alpha$, $\gamma$ is not $\xi$-critical.
+
+\end{itemize}
 
 
 
-We give their definition in \coq's syntax.
+
 
 \vspace{4pt}
 
@@ -9563,7 +9575,7 @@ Definition strongly_critical alpha := In (Cr alpha) alpha.
 Definition maximal_critical alpha : Ensemble Ord :=
   fun gamma =>
     In (Cr alpha) gamma /\
-    forall ksi, alpha < ksi -> ~ In (Cr alpha) ksi.
+    forall xi, alpha < xi -> ~ In (Cr xi) gamma.
 
 Definition Gamma0 := the_least strongly_critical.
 \end{Coqsrc}
@@ -10100,7 +10112,7 @@ Please study a way to pretty print ordinal terms in Veblen normal form (see Sect
 
 In order to consider type \texttt{T2} as an ordinal notation, we have to build an instance of class \texttt{ON} (See Definition page~\pageref{types:ON}).
 
-First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation.
+First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation (see for comparison the construction of type \texttt{E0} in Sect.~\vref{sect:E0-def}).
 
 \begin{Coqsrc}
 Module G0.
@@ -10112,7 +10124,7 @@ Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
 Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
 \end{Coqsrc}
 
-Then we, prove that \texttt{lt} is a well-founded strict order and that the
+Then, we prove that \texttt{lt} is a well-founded strict order and that the
 function \texttt{compare} is correct.
 
 \begin{Coqsrc}
@@ -10216,7 +10228,6 @@ we think it would be useful to include comments and hints, and questions/answers
 
 
 
-
 \begin{table}[h]
   \centering
   \begin{threeparttable}
@@ -10224,8 +10235,8 @@ we think it would be useful to include comments and hints, and questions/answers
 \begin{tabular}{|c|c|c|l|}
 \hline
 Name & Description& Page \\\hline
-Battle & Type class of battle types & \pageref{types:Battle} \\
-E0 & (Well formed) ordinals below $\epsilon_0$ & \pageref{types:E0}\\
+Battle & type class of battle types & \pageref{types:Battle} \\
+E0 & (well formed) ordinals below $\epsilon_0$ & \pageref{types:E0}\\
 Hvariant & variants for proving termination of hydra battles & \pageref{sect:hvariant-def} \\
 Hydra & tree-like representation of hydras & \pageref{types:Hydra} \\
 Hydrae & finite sequences of hydras & \pageref{types:Hydrae} \\
