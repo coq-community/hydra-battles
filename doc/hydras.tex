@@ -376,7 +376,7 @@ I owe my interest in discrete mathematics and their relation to formal proofs an
 \chapter{Hydras and Hydra Games}
 \label{sec:orgheadline91}
 
-This chapter is dedicated to the representation of hydras and rules of the hydra game in \coq's specification language:\gallina. 
+This chapter is dedicated to the representation of hydras and rules of the hydra game in \coq's specification language:~\gallina. 
 
 Technically, a \emph{hydra} is just a finite ordered tree, each node of which 
 has any number of sons. Note that, contrary to the computer science tradition, we will show the hydras 
@@ -1723,10 +1723,8 @@ Compute test 2000.
 
 
 The battle we are studying seems to be awfully long. Let us concentrate our
-tests on some particular events : the states where $\texttt{nh}=0$ 
-
-From the value of \texttt{test 5},  it is obvious that at the 10-th round, the counter \texttt{nh} will be
-equal to zero.
+tests on some particular events : the states where $\texttt{nh}=0$.
+From the value of \texttt{test 5},  it is obvious that at the 10-th round, the counter \texttt{nh} is equal to zero.
 
  \begin{Coqsrc}
  Compute test 10.
@@ -1737,8 +1735,8 @@ equal to zero.
 *)
  \end{Coqsrc}
 
-Thus, $ (1 + 11)$ rounds later, the \texttt{n1} field will be equal to $2$, and 
-\texttt{nh}  will equal to $0$. 
+Thus, $ (1 + 11)$ rounds later, the \texttt{n1} field is equal to $2$, and 
+\texttt{nh}   to $0$. 
 
 
 \begin{Coqsrc}
@@ -2102,7 +2100,8 @@ function (\texttt{fun n => 2 * n}).
 \begin{Coqsrc}
 Definition exp2 n := iterate (fun n => 2 * n) n 1.
 \end{Coqsrc}
-Using some facts (proven in \url{../src/html/BigBattle.html}),we get several  minorations.
+Using some facts (proven in 
+\href{../src/html/hydras.Hydra.BigBattle.html}{hydras.Hydra.BigBattle}),we get several  minorations.
 
 \begin{Coqsrc}
 Lemma minoration_0 : forall n,  2 * n <= doubleS n.
@@ -2952,7 +2951,7 @@ Infix "o<" := lt : o2_scope.
 Infix "o<=" := le : o2_scope.
 \end{Coqsrc}
 
-It is easy to represent the finite ordinals, successors and limits.
+It is easy to represent  finite ordinals, successors and limits.
 
 \begin{Coqsrc}
 Definition zero: t := (0,0).
@@ -3055,29 +3054,29 @@ Nevertheless, we can define two operations mixing natural numbers and ordinals.
 \begin{Coqsrc}
 (** multiplication of an ordinal by a natural number *)
 
-Definition mult_fin  (alpha : t) (p : nat): t :=
+Definition mult_alpha_n  (alpha : t) (p : nat): t :=
   match alpha, p with
  |  (0,0), _  => zero
  |  _, 0 => zero
  |  (0, n), p => (0, n * p)
  |  ( n, b),  n' => ( n *  n', b)
                end.
-Infix "*" := mult_fin : o2_scope.
+Infix "*" := mult_alpha_n : o2_scope.
 
 (** multiplication of  a natural number by an ordinal *)
 
-Definition fin_mult (n:nat)(beta : t) : t :=
-  match n, beta with
+Definition mult_n_alpha (n:nat)(alpha : t) : t :=
+  match n, alpha with
  |  0, _  => zero
  |  _, (0,0) => zero
  |   n , (0,n') => (0, (n*n')%nat)
  |  n, (n',p') => (n', (n * p')%nat)
  end.
 
-Example e1 : fin_mult 3 (omega * 7 + 15) = omega * 7 + 45.
+Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
 Proof. reflexivity. Qed.
 
-Example e2 :  omega * 2 + 2 + omega * 3 + 10 = omega * 5 + 10.
+Example e2 :  mult_n_alpha 3 (omega * 7 + 15) = omega * 7 + 45.
 Proof. reflexivity. Qed.
 \end{Coqsrc}
 
@@ -3491,8 +3490,8 @@ Proof. now compute. Qed.
 
 
 
-Note that the type (\texttt{t 0}) is empty, and that \texttt{Program} generates an obligation
-for verifying that the constraint $i<n$ is fullfilled when one tries to build the $i$-th ordinal inside the type (\texttt{t $n$}).
+Note that the type (\texttt{t 0}) is empty, and that, for any natural number
+ $n$, $n$ does not belong to (\texttt{t $n$}).
 
 \begin{Coqsrc}
 Lemma t0_empty (alpha: t 0): False.
@@ -3853,6 +3852,14 @@ Prove that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
 \texttt{Omega}  is a sub-notation of \texttt{ON\_mult Omega (FinOrd $i$)},
 for any strictly positive $i$.
 \end{project}
+
+\index{Projects}
+\begin{project}
+Consider two isomorphic ordinal notations \texttt{OA} and \texttt{OB}.
+Prove that, if \texttt{OA} [resp. \texttt{OB}] is a correct implementation 
+of $\alpha$ [resp. $\beta$], then $\alpha=\beta$.
+\end{project}
+
 
 \index{Projects}
 \begin{project}
@@ -4958,7 +4965,6 @@ Defined.
 Corollary T1_wf : well_founded LT.
 \end{Coqsrc}
 
-And we have now our transfinite recursor:
 \index{Maths!Transfinite induction}
 
 \begin{Coqsrc}
@@ -5059,7 +5065,7 @@ Thus we called \texttt{oplus} the associated \emph{Coq} function.
 
 \subsubsection{Definition of \texttt{oplus}}
 \label{sec:orgheadline84}
-\index{Functions!oplus @ oplus (Hessenberg commutative sum)}
+%\index{Functions!oplus @ oplus (Hessenberg commutative sum)}
 
 The definition of \texttt{oplus} is recursive in both of its 
 arguments, which makes a structural recursive definition a little 
@@ -6250,7 +6256,7 @@ A most interesting property of $i$-paths is that we can ``upgrade'' their index,
 \begin{Coqsrc}
 Corollary Cor12 (alpha : T1) :  nf alpha ->
          forall beta i n, beta  t1< alpha  ->
-                (i < n)%nat ->
+                i < n ->
                  const_pathS i alpha beta ->
                  const_pathS n alpha beta.
 Proof.
@@ -6262,11 +6268,12 @@ We  also use a version of \texttt{Cor12} with large inequalities.
 
 
 \begin{Coqsrc}
-Corollary Cor12' (alpha : T1) :  nf alpha ->
-         forall beta i n, (beta t1< alpha)%t1 ->
-               (i <= n)%nat ->
-               const_pathS i alpha beta ->
-               const_pathS n alpha beta.
+Corollary Cor12_1 (alpha : T1) :
+  nf alpha ->
+  forall beta i n, beta t1< alpha ->
+                   i <= n ->
+                   const_pathS i alpha beta ->
+                   const_pathS n alpha beta.
 \end{Coqsrc}
 
 
@@ -6831,6 +6838,7 @@ Lemma mlarge_iff alpha x (s:list nat) :
 
 For instance, we can verify that the interval $[6,510]$ is $\omega^2$-mlarge.
 
+\vspace{4pt}
  \noindent
 \emph{From Module~\href{../src/html/hydras.Epsilon0.Large_Sets_Examples.html}{Epsilon0.Large\_Sets\_Examples}}
 \begin{Coqsrc}
@@ -9143,7 +9151,8 @@ The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
 
 \begin{Coqsrc}
 Lemma AP_plus_closed (alpha beta gamma : Ord): 
-     In AP alpha -> beta < alpha -> gamma < alpha -> beta + gamma < alpha.
+     In AP alpha -> beta < alpha -> gamma < alpha ->
+     beta + gamma < alpha.
 
 Theorem AP_unbounded : Unbounded AP.
 \end{Coqsrc}
@@ -9166,7 +9175,7 @@ Lemma AP_o_segment :  the_ordering_segment AP = ordinal.
 
 \subsubsection{Properties of the Function \texorpdfstring{$\phi_0$}{phi0}}
  
-The ordering function $\phi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte says that this function is \emph{normal}).
+The ordering function $\phi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte calls such a  function  \emph{normal}).
 
 \begin{Coqsrc}
 Theorem normal_phi0 : normal phi0 AP.
