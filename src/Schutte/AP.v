@@ -160,7 +160,7 @@ Lemma AP_mult_Sn_closed (alpha beta: Ord)  :
   -   simpl. now  apply AP_plus_closed.
 Qed.
 
-Lemma AP_mult_n_closed  (alpha beta: Ord)  :
+Lemma AP_mult_fin_r_closed  (alpha beta: Ord)  :
   AP alpha -> beta < alpha -> forall n,  beta * n  < alpha.
 Proof.
   destruct n.

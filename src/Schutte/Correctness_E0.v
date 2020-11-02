@@ -423,7 +423,7 @@ Qed.
 
 
 
-Theorem inject_mult_n (alpha : T1)  :
+Theorem inject_mult_fin_r (alpha : T1)  :
   nf alpha -> forall n:nat , inject (alpha *  n)%t1 =  inject alpha * n.
 Proof.
   induction n.
@@ -445,7 +445,7 @@ Proof.
         *  replace (n * 1)%nat with n; auto with arith.
      +   change ((S (S n)):T1) with  (FS (S n)); rewrite mult_Sn_add.
          replace (S (S n)) with (S (S (n + 0)))%nat.
-         simpl mult_n;  rewrite inject_plus; auto with arith.
+         simpl mult_fin_r;  rewrite inject_plus; auto with arith.
          *  replace (alpha * (FS n))%t1 with (alpha * (S n))%t1.
             --  rewrite IHn;  replace (n+0)%nat with n.
                 reflexivity.

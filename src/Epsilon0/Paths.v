@@ -1309,7 +1309,7 @@ Qed.
 
 Corollary Cor12 (alpha : T1) :  nf alpha ->
                 forall beta i n, beta  t1< alpha  ->
-                                 (i < n)%nat ->
+                                 i < n ->
                                  const_pathS i alpha beta ->
                                  const_pathS n alpha beta.
 Proof.

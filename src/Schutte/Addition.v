@@ -25,13 +25,13 @@ Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
  end.
 
 
-Definition mult_n alpha n :=
+Definition mult_fin_r alpha n :=
   match n with
       0 => zero
     | S p => mult_Sn alpha p
   end.
 
-Notation "alpha * n" := (mult_n alpha n) : schutte_scope.
+Notation "alpha * n" := (mult_fin_r alpha n) : schutte_scope.
 
 
 (** * Proofs, proofs, proofs 
@@ -441,7 +441,7 @@ Proof with eauto with schutte.
  apply plus_mono_r ...
 Qed.
 
-Lemma mult_n_one : forall n, (F 1) * S n = F (S n).
+Lemma mult_fin_r_one : forall n, (F 1) * S n = F (S n).
  Proof.
   induction n.
   -   trivial.
@@ -450,7 +450,7 @@ Lemma mult_n_one : forall n, (F 1) * S n = F (S n).
  Qed.
 
  
-Lemma mult_n_mono : forall alpha beta , alpha < beta -> 
+Lemma mult_fin_r_mono : forall alpha beta , alpha < beta -> 
    forall n,  alpha * S n <  beta * S n.
 Proof with auto.
  induction n; simpl ...
@@ -473,7 +473,7 @@ Proof with auto with schutte.
  - simpl; intros; pattern ( mult_Sn a n) at 1; rewrite <- alpha_plus_zero ...
   +   apply plus_mono_r ...
  -  simpl;apply lt_trans with (mult_Sn a m);auto.
-    pattern ( mult_Sn a m) at 1; rewrite <- alpha_plus_zero ...
+    pattern (mult_Sn a m) at 1; rewrite <- alpha_plus_zero ...
     apply plus_mono_r ...
 Qed.
 

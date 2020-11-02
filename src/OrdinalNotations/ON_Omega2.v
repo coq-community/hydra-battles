@@ -407,18 +407,18 @@ Qed.
 
 (** multiplication of an ordinal by a natural number *)
 
-Definition mult_alpha_n  (alpha : t) (p : nat): t :=
+Definition mult_fin_r  (alpha : t) (p : nat): t :=
   match alpha, p with
  |  (0,0), _  => zero
  |  _, 0 => zero
  |  (0, n), p => (0, n * p)
  |  ( n, b),  n' => ( n *  n', b)
                end.
-Infix "*" := mult_alpha_n : o2_scope.
+Infix "*" := mult_fin_r : o2_scope.
 
 (** multiplication of  a natural number by an ordinal *)
 
-Definition mult_n_alpha (n:nat)(alpha : t) : t :=
+Definition mult_fin_l (n:nat)(alpha : t) : t :=
   match n, alpha with
  |  0, _  => zero
  |  _, (0,0) => zero
@@ -430,7 +430,7 @@ Definition mult_n_alpha (n:nat)(alpha : t) : t :=
 Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
 Proof. reflexivity. Qed.
 
-Example e2 :  mult_n_alpha 3 (omega * 7 + 15) = omega * 7 + 45.
+Example e2 :  mult_fin_l 3 (omega * 7 + 15) = omega * 7 + 45.
 Proof. reflexivity. Qed.
 
 
@@ -533,7 +533,7 @@ Compute (omega * 3).
 Compute (omega * 3) * 6.
 
 Compute (omega * 3 + 1) * 6.
-Compute mult_n_alpha 3 omega.
+Compute mult_fin_l 3 omega.
 Compute (3,2)+(2,10).
 
 Compute (2,2)+(3,10).

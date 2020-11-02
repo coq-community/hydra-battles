@@ -3054,18 +3054,18 @@ Nevertheless, we can define two operations mixing natural numbers and ordinals.
 \begin{Coqsrc}
 (** multiplication of an ordinal by a natural number *)
 
-Definition mult_alpha_n  (alpha : t) (p : nat): t :=
+Definition mult_fin_r  (alpha : t) (p : nat): t :=
   match alpha, p with
  |  (0,0), _  => zero
  |  _, 0 => zero
  |  (0, n), p => (0, n * p)
  |  ( n, b),  n' => ( n *  n', b)
                end.
-Infix "*" := mult_alpha_n : o2_scope.
+Infix "*" := mult_fin_r : o2_scope.
 
 (** multiplication of  a natural number by an ordinal *)
 
-Definition mult_n_alpha (n:nat)(alpha : t) : t :=
+Definition mult_fin_l (n:nat)(alpha : t) : t :=
   match n, alpha with
  |  0, _  => zero
  |  _, (0,0) => zero
@@ -3076,7 +3076,7 @@ Definition mult_n_alpha (n:nat)(alpha : t) : t :=
 Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
 Proof. reflexivity. Qed.
 
-Example e2 :  mult_n_alpha 3 (omega * 7 + 15) = omega * 7 + 45.
+Example e2 :  mult_fin_l 3 (omega * 7 + 15) = omega * 7 + 45.
 Proof. reflexivity. Qed.
 \end{Coqsrc}
 
@@ -3719,14 +3719,18 @@ the segment $[0,i)$ of ($t\;j$).
 
 We are now able to build an instance of \texttt{SubON}. 
 
+\vspace{4pt}
+\noindent\emph{From Module~\href{../src/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
+
 \begin{Coqsrc}
 Section Inclusion_ij.
 
   Variables i j : nat.
   Hypothesis Hij : (i < j)%nat.
 
-   Remark Ltb_ij : Nat.ltb i j.
-   Program Definition iota_ij  (alpha: t i) : t j :=  alpha.
+  Remark Ltb_ij : Nat.ltb i j.
+
+  Program Definition iota_ij  (alpha: t i) : t j :=  alpha.
  
    Let b : t j := exist _ i Ltb_ij.
    
@@ -3734,7 +3738,6 @@ Section Inclusion_ij.
   (* ... *)
 
   End Inclusion_ij.
-
 \end{Coqsrc}
          
 
@@ -3843,9 +3846,9 @@ For instance, the
 elements of the product \texttt{ON\_mult Omega (FinOrd 3)} are ordered as follows.
 \[(0,0),(0,1),(0,2),(0,3),(0,4),\dots,{\color{red}(1,0),} (1,1),(1,2),\dots, {\color{red}(2,0)},(2,1),(2,2),\dots\]
 
-Note that the elements of  \texttt{ON\_mult (FinOrd 3) Omega} are differently ordered (without limit ordinals):
+Note that the elements of  (\texttt{ON\_mult (FinOrd 3) Omega}) are differently ordered (without limit ordinals):
 \[(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(0,3),\dots\]
-(no limit ordinals).
+
 
 Prove that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
 \texttt{Omega}  whilst
@@ -5176,7 +5179,7 @@ Qed.
 % \texttt{Functional Scheme}.
 
 % \begin{itemize}
-% \item First, we chose to write a version for sort \texttt{Type}, since versions
+% \item First, we choose to write a version for sort \texttt{Type}, since versions
 % for sorts \texttt{Prop} and \texttt{Set} can be easily derived from
 % the former one. According to \emph{Coq}'s naming politics, we will call our 
 % principle \texttt{oplus\_rect}
@@ -8313,7 +8316,7 @@ Prove the following result~\cite{KS81}(p. 298).
 %ON
 
 In the present chapter, we  compare our implementation of the segment $[0,\epsilon_0)$ with a mathematical text in order to ``validate'' our constructions.
-We chose as reference the axiomatic definition of the set of countable ordinals,
+Our reference here is the axiomatic definition of the set of countable ordinals,
 in chapter V of Kurt Schütte's book `` Proof Theory ''~\cite{schutte}.
 
 \begin{remark}
@@ -9044,19 +9047,19 @@ The multiplication of an ordinal by a natural number is defined in terms of addi
 This operation is useful for the study of Cantor normal forms.
 
 \begin{Coqsrc}
-Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
+Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n}: Ord :=
  match n with 
             | 0 => alpha
-            | S p => mult_Sn alpha p + alpha
+            | S p => mult_Sn  alpha p + alpha
  end.
 
-Definition mult_n alpha n :=
+Definition mult_fin_r alpha n :=
   match n with
       0 => zero
     | S p => mult_Sn alpha p
   end.
 
-Notation "alpha * n" := (mult_n alpha n) : schutte_scope.
+Notation "alpha * n" := (mult_fin_r alpha n) : schutte_scope.
 \end{Coqsrc}
 
 \section{The Exponential of Basis \texorpdfstring{$\omega$}{omega}}
@@ -9491,7 +9494,7 @@ Theorem inject_of_phi0 (alpha : T1):
 Theorem inject_plus (alpha beta : T1): nf alpha -> nf beta ->
   inject (alpha + beta)%t1 = inject alpha + inject beta.
 
-Theorem inject_mult_n (alpha : T1)  :
+Theorem inject_mult_fin_r (alpha : T1)  :
   nf alpha -> forall n:nat , inject (alpha *  n)%t1 =  inject alpha * n.
 
 Theorem inject_mono (beta gamma : T1) :
@@ -9742,7 +9745,7 @@ Example Ex2: omega t2< epsilon0.
 Proof. info_auto with T2. (* uses lt_1 and lt_2 *) Qed.
 \end{Coqsrc}
 
-\subsubsection*{Proof of $\psi(\omega,8]\times 13+56 < \psi(\omega,8]\times 13+57 $}
+\subsubsection*{Proof of $\psi(\omega,8)\times 13+56 < \psi(\omega,8)\times 13+57 $}
 
 \begin{Coqsrc}
 Example Ex3: gcons omega 8 12 56 t2<  gcons omega 8 12 57.
@@ -10319,7 +10322,7 @@ Name & Gallina&Math& Description& Page \\\hline
 Name & Gallina&Math& Description& Page \\\hline
  \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality \tnote{1} & \pageref{sect:on-lt-notation}\\
  \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
-\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & ordinal addition & \pageref{sect:infix-plus-T1} ,\dots\\
+\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & ordinal addition & \pageref{sect:infix-plus-T1}, \dots\\
 \texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
 \texttt{round} & \texttt{h -1-> h'} & & one round of a battle & \pageref{sect:infix-round} \\
 \texttt{rounds} & \texttt{h -+-> h'} & & one or more  rounds of a battle & \pageref{sect:infix-rounds} \\
