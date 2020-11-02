@@ -207,27 +207,28 @@ Section Proof_of_plus_nf.
            intros; apply nf_intro; [eauto with T1 |idtac| eauto with T1].
             eapply IHgamma.
             repeat split; eauto with T1. 
-            apply le_lt_trans with (ocons a1 n a2) ...
-           apply le_phi0 ...
-           eauto with T1.
-           eauto with T1.
-           eauto with T1.
+            apply le_lt_trans with (ocons a1 n a2); [ | exact H2].
+           apply le_phi0.  
+           simple apply nf_phi0; simple eapply nf_inv1; exact H1.
+           eapply nf_inv2, H0.
+           eapply nf_inv2, H1.
            apply lt_phi0_phi0.
-           eapply lt_phi0_intro ...
-           apply lt_phi0_phi0.
-           eapply lt_phi0_intro ...
-           apply lt_phi0_oplus ...
-           eapply lt_phi0_intro ...
+           eapply lt_phi0_intro, H0. 
+           apply lt_phi0_phi0.  
+           eapply lt_phi0_intro, H1.
+           apply lt_phi0_oplus.  
+           eapply lt_phi0_intro; trivial. 
            eapply lt_phi0_intro;eauto.
-         * intros.   apply nf_intro.
-           eauto with T1.
+         * intros; apply nf_intro.
+           eapply nf_inv1, H1.
            eapply IHgamma with (phi0 b1).
-           repeat split; eauto with T1. 
-           apply le_lt_trans with (ocons b1 n0 b2) ...
-           apply le_phi0 ...
-           apply nf_phi0 ...
+           repeat split.  eapply nf_phi0, nf_inv1, H1. 
+           apply le_lt_trans with (ocons b1 n0 b2) ; [| assumption].
+           apply le_phi0. 
+           apply nf_phi0, H.
+           eapply nf_phi0, nf_inv1, H1. 
            assumption.
-           eauto with T1.
+           eapply nf_inv2, H1.
            apply head_lt.
            unfold T1.lt, lt_b; now  rewrite H4. 
            apply  lt_phi0_phi0.
@@ -242,20 +243,25 @@ Section Proof_of_plus_nf.
            eauto with T1. 
            eapply IHgamma with (phi0 a1).
            repeat split; eauto with T1.
-           apply le_lt_trans with (ocons a1 n a2)...
-           apply le_phi0.
-            eauto with T1.
-           auto.
-            eauto with T1. auto. apply  lt_phi0_phi0.
+           apply le_lt_trans with (ocons a1 n a2);[| exact H2].
+           apply le_phi0; eauto with T1.
+           eapply nf_phi0, nf_inv1, H0.
+           
+           eauto with T1.
+           assumption.
+           apply  lt_phi0_phi0.
            eapply lt_phi0_intro; eauto.
            apply head_lt.
-           unfold T1.lt, lt_b;rewrite compare_rev.  rewrite H4. 
+           unfold T1.lt, lt_b;rewrite compare_rev.
+           rewrite H4. 
            reflexivity. 
            apply lt_phi0_oplus;auto.
            eapply lt_phi0_intro; eauto.
            constructor 2.
            now rewrite <- gt_iff.
-  Qed.
+  Unshelve.
+  exact 0.
+Qed.
 
   Lemma oplus_nf (alpha  beta : T1) :
       nf alpha ->  nf beta -> nf (alpha o+ beta). 
