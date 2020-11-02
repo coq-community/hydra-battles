@@ -267,8 +267,8 @@ Qed.
       nf alpha ->  nf beta -> nf (alpha o+ beta). 
   Proof with auto with T1.
     intros  H H0;
-    apply oplus_nf_0 with (phi0 (max alpha beta)) ...
-    - apply nf_phi0. apply max_nf ...
+    apply oplus_nf_0 with (phi0 (max alpha beta)) ; trivial. 
+    - apply nf_phi0. apply max_nf; trivial.
     -  apply lt_le_trans with (phi0 alpha).
        apply lt_a_phi0_a.
        apply phi0_mono.
@@ -291,8 +291,6 @@ Proof.
 Qed.
 
 Section Proof_of_oplus_comm.
-  (* Question : do we need transfinite induction ?
-     Would structural induction be enough ? *)
   
   Lemma oplus_comm_0 : forall gamma,
     nf gamma ->
@@ -312,12 +310,16 @@ Section Proof_of_oplus_comm.
       intros; rewrite (compare_Eq_impl _ _ H1).
       repeat rewrite (Nat.add_comm n n0).
       f_equal.
-      apply H0 with   (phi0 alpha1) ...
+      apply H0 with   (phi0 alpha1) ; trivial. 
+      
       generalize (compare_Eq_impl _ _ H1).
       intro;subst beta1.
       apply LE_LT_trans with (ocons alpha1 n0 beta2).
       now apply LE_phi0 .
       repeat split; eauto with T1.
+      eapply nf_phi0, nf_inv1, H2.
+      eapply nf_phi0, nf_inv2, H2.
+      eapply nf_inv2, H3.
       apply  lt_phi0_phi0.
       eapply lt_phi0_intro;eauto.
       generalize (compare_Eq_impl _ _ H1).
@@ -329,10 +331,13 @@ Section Proof_of_oplus_comm.
       rewrite <- oplus_compare_Lt;auto.
       rewrite  oplus_compare_Lt;auto.
       f_equal.
-      intros;  f_equal; apply H0 with (phi0 beta1) ...
+      intros;  f_equal; apply H0 with (phi0 beta1) ; trivial.
+      
       apply LE_LT_trans with (ocons beta1 n0 beta2).
       apply LE_phi0; auto.
       repeat split; eauto with T1.
+      eapply nf_phi0, nf_inv1, H3.
+      eapply nf_inv2, H3.
       apply head_lt.
       unfold T1.lt, lt_b;now  rewrite H1. 
       apply  lt_phi0_phi0.
@@ -342,28 +347,28 @@ Section Proof_of_oplus_comm.
       simpl CompOpp; intro;  rewrite <- oplus_compare_Gt;auto.
       rewrite  oplus_compare_Gt;auto.
       f_equal.
-      intros; f_equal; apply H0 with   (phi0 alpha1) ...
-      apply LE_LT_trans with (ocons alpha1 n alpha2) ...
+      intros; f_equal; apply H0 with   (phi0 alpha1) ; trivial.
+      apply LE_LT_trans with (ocons alpha1 n alpha2) ; info_eauto with T1.
       now apply LE_phi0.
       repeat split; eauto with T1; apply  lt_phi0_phi0.
+      eapply nf_phi0, nf_inv1, H2.
+      eapply nf_inv2, H2.
       apply lt_phi0_phi0.
       eapply  lt_phi0_intro; eauto.
       apply head_lt.
       unfold T1.lt, lt_b; now rewrite compare_rev, H1.
   Qed. 
 
-
-
   Lemma oplus_comm : forall alpha beta, nf alpha -> nf beta ->
                                         alpha o+ beta =  beta o+ alpha.
   Proof with eauto with T1.
     intros.
-    apply oplus_comm_0 with (T1.succ (max alpha beta)) ...
+    apply oplus_comm_0 with (T1.succ (max alpha beta)) ; trivial. 
     -  apply succ_nf;  apply max_nf;auto.
-    -  apply le_lt_trans with  (max alpha beta) ...
+    -  apply le_lt_trans with  (max alpha beta) ; trivial. 
        + apply max_le_1.
        + apply lt_succ. 
-    - apply le_lt_trans with  (max alpha beta) ...
+    - apply le_lt_trans with  (max alpha beta) ; trivial. 
       +  rewrite max_comm; apply max_le_1. 
       +  apply lt_succ. 
   Qed.
@@ -417,11 +422,14 @@ Section Proof_of_oplus_assoc.
         - intro H5;  generalize (compare_Eq_impl _ _ H5); intro; subst b1.
           intro H6;  generalize (compare_Eq_impl _ _ H6); intro; subst c1.
           repeat rewrite oplus_cons_cons, H6.
-          ass_rw Hrec (ocons a1 n a2) a2 b2 c2;eauto with T1.
+          ass_rw Hrec (ocons a1 n a2) a2 b2 c2; trivial. 
           f_equal.
           abstract lia.
+          eapply nf_inv2, H.
+          eapply nf_inv2, H0.
+          eapply nf_inv2, H1.
           apply tail_lt_ocons;auto.
-          apply lt_le_trans with  (phi0 a1)...
+          apply lt_le_trans with  (phi0 a1); trivial. 
           apply lt_phi0_phi0.
           apply lt_phi0_intro with n0;auto.
           apply le_phi0;auto.
@@ -431,7 +439,9 @@ Section Proof_of_oplus_assoc.
           apply le_phi0;auto.
         -  intros H5 H6; repeat rewrite oplus_cons_cons.
            rewrite H5,H6; f_equal.
-           ass_rw Hrec (ocons b1 n0 b2) (ocons a1 n a2) b2 c2; eauto with T1.
+           ass_rw Hrec (ocons b1 n0 b2) (ocons a1 n a2) b2 c2; trivial.
+           eapply nf_inv2, H0.
+           eapply nf_inv2, H1.
            apply head_lt; unfold T1.lt, lt_b; now rewrite H5.          
            apply tail_lt_ocons;auto.
            generalize (compare_Eq_impl _ _ H6); intro; subst c1.
@@ -446,9 +456,11 @@ Section Proof_of_oplus_assoc.
           rewrite H5.
           f_equal.
           ass_rw_rev  Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2)
-                      (ocons b1 n1 c2) ...
+                      (ocons b1 n1 c2) ; trivial.
+          
           f_equal.
           now rewrite oplus_cons_cons, H6.
+          eapply nf_inv2, H.
           apply tail_lt_ocons;auto.
            apply head_lt.
            unfold T1.lt, lt_b;rewrite compare_rev.
@@ -461,9 +473,10 @@ Section Proof_of_oplus_assoc.
            repeat rewrite oplus_cons_cons, H6.
            f_equal.
            ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                   (ocons a1 n0 b2) c2 ...
+                   (ocons a1 n0 b2) c2 ; trivial. 
            f_equal.
            now repeat rewrite oplus_cons_cons, H5.
+           eapply nf_inv2, H1.
            apply head_lt;   unfold T1.lt, lt_b.
            now   rewrite H6. 
            apply head_lt;   unfold T1.lt, lt_b.
@@ -477,8 +490,9 @@ Section Proof_of_oplus_assoc.
            repeat rewrite oplus_cons_cons.
            rewrite H7, H6;    f_equal.
            ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                   (ocons a1 n0 b2) c2 ...
+                   (ocons a1 n0 b2) c2 ; trivial. 
            rewrite oplus_cons_cons, H5;   f_equal.
+           eapply nf_inv2, H1.
            apply head_lt;  unfold T1.lt, lt_b.
            now   rewrite H7. 
            apply head_lt; unfold T1.lt, lt_b.
@@ -488,7 +502,9 @@ Section Proof_of_oplus_assoc.
           case_eq (compare a1 c1); intro H7.
           + f_equal.
             generalize (compare_Eq_impl _ _ H7); intro; subst c1.
-            ass_rw  Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2) c2 ...
+            ass_rw  Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2) c2 ; trivial.
+            eapply nf_inv2, H.
+            eapply nf_inv2, H1.
             apply tail_lt_ocons;auto.
             apply head_lt;  unfold T1.lt, lt_b.
             now   rewrite H6. 
@@ -498,8 +514,9 @@ Section Proof_of_oplus_assoc.
             apply le_phi0;auto.
           +  f_equal.
              ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                     (ocons b1 n0 b2) c2 ...
+                     (ocons b1 n0 b2) c2 ; trivial.
              now rewrite oplus_cons_cons, H5.
+             eapply nf_inv2, H1.
              apply head_lt;  unfold T1.lt, lt_b.
              now   rewrite H7. 
              apply head_lt;  unfold T1.lt, lt_b.
@@ -507,8 +524,9 @@ Section Proof_of_oplus_assoc.
              apply tail_lt_ocons;auto.
           +   f_equal.   
               ass_rw_rev  Hrec (ocons a1 n a2)  a2 (ocons b1 n0 b2)
-                          (ocons c1 n1 c2) ...
+                          (ocons c1 n1 c2) ; trivial. 
               now rewrite oplus_cons_cons,  H6.
+              eapply nf_inv2, H.
               apply tail_lt_ocons;auto.
               apply head_lt.
               unfold T1.lt, lt_b;rewrite compare_rev.
@@ -521,7 +539,10 @@ Section Proof_of_oplus_assoc.
                repeat rewrite oplus_cons_cons.
                rewrite H5, H6.
                f_equal.
-               ass_rw_rev  Hrec (ocons a1 n a2)  a2 b2  (ocons c1 n1 c2) ... 
+               ass_rw_rev  Hrec (ocons a1 n a2)  a2 b2  (ocons c1 n1 c2) ;
+                 trivial. 
+               eapply nf_inv2, H.
+               eapply nf_inv2, H0.
                apply tail_lt_ocons;auto.
                apply lt_le_trans with (phi0 a1).
                apply lt_phi0_phi0.
@@ -535,7 +556,8 @@ Section Proof_of_oplus_assoc.
                 rewrite H5,H6.
                 f_equal.
                 ass_rw_rev  Hrec (ocons b1 n0 b2) (ocons a1 n a2)  b2
-                            (ocons c1 n1 c2) ...
+                            (ocons c1 n1 c2) ; trivial.
+                eapply nf_inv2, H0.
                 apply head_lt;  unfold T1.lt, lt_b.
                 now   rewrite H5. 
                 apply tail_lt_ocons;auto.
@@ -552,9 +574,10 @@ Section Proof_of_oplus_assoc.
                rewrite H5, H7.
                f_equal.
                ass_rw_rev  Hrec (ocons a1 n a2) a2  (ocons b1 n0 b2)
-                           (ocons c1 n1 c2) ...
+                           (ocons c1 n1 c2) ; trivial. 
                f_equal.
                now rewrite oplus_cons_cons, H6.
+                eapply nf_inv2, H.
                apply tail_lt_ocons;auto.
                apply head_lt.
                unfold T1.lt, lt_b;rewrite compare_rev.
