@@ -1,0 +1,66 @@
+---
+fullname: Hydra battles in Coq
+shortname: hydra-battles
+organization: coq-community
+community: true
+action: true
+
+synopsis: Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq
+
+description: |-
+  An exploration of some properties of Kirby and Paris' hydra battles,
+  with the help of the Coq Proof assistant. This development includes
+  the study of several representations of ordinal numbers, and a part
+  of the so-called Ketonen and Solovay machinery (combinatorial
+  properties of epsilon0).
+
+publications:
+- pub_url: https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf
+  pub_title: Accessible Independence Results for Peano Arithmetic
+  pub_doi: 10.1112/blms/14.4.285
+- pub_url: https://www.jstor.org/stable/2006985
+  pub_title: Rapidly Growing Ramsey Functions
+  pub_doi: 10.2307/2006985
+- pub_url: https://link.springer.com/book/10.1007/978-3-642-66473-1
+  pub_title: Proof Theory
+  pub_doi: 10.1007/978-3-642-66473-1
+
+authors:
+- name: Pierre Castéran
+
+maintainers:
+- name: Pierre Castéran
+  nickname: Casteran
+
+opam-file-maintainer: palmskog@gmail.com
+
+opam-file-version: dev
+
+license:
+  fullname: MIT License
+  identifier: MIT
+
+supported_coq_versions:
+  text: 8.11 or 8.12
+  opam: '{>= "8.11" & < "8.13~"}'
+
+tested_coq_opam_versions:
+- version: '8.12'
+- version: '8.11'
+
+dependencies:
+- opam:
+    name: coq-equations
+    version: '{>= "1.2" & < "1.3~"}'
+  description: |-
+    [Equations](https://github.com/mattam82/Coq-Equations) 1.2
+
+namespace: hydras
+
+keywords:
+- name: Ketonen-Solovay machinery
+- name: ordinals
+
+categories:
+- name: Mathematics/Combinatorics and Graph Theory
+---
