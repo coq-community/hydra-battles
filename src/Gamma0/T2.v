@@ -1,4 +1,3 @@
-
 (**  Pierre Casteran 
     LaBRI, University of Bordeaux, laBRI UMR 5800 )
 *)

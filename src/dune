@@ -1,5 +1,6 @@
 (coq.theory
  (name hydras)
- (synopsis "Hydra battles in Coq"))
+ (package coq-hydra-battles)
+ (synopsis "Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq"))
 
 (include_subdirs qualified)
