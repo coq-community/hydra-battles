@@ -4020,7 +4020,6 @@ Notation "alpha ^ beta" := (P_exp alpha beta) : ppT1_scope.
 
 Notation "'omega'" := P_omega : ppT1_scope.
 
-(*Set Printing All.*)
 Check (omega ^ omega * 2 + P_fin 1)%pT1.
 
 Fixpoint pp0 (alpha : T1) : ppT1 :=

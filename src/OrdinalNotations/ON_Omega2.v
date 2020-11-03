@@ -380,8 +380,6 @@ Qed.
    - right; now exists (n,p).
  Defined.
 
- Locate t.
-
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
   | (0, b), (0, b') => (0, b + b')

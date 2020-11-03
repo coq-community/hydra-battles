@@ -392,11 +392,4 @@ Qed.
 
 End NotIncl.
 
-(* begin hide *)
-Goal 6 o< 8.
-  auto with arith.
-  Set Printing All.
-  constructor; auto with arith.
-  Unset Printing All.
-Qed.
-(* end hide *)
+

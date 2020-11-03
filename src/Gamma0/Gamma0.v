@@ -1949,9 +1949,6 @@ Section  well_founded.
 
 End well_founded.
 
-Print well_founded_restriction.
-
-
 
 Definition transfinite_induction :
   forall (P:T2 -> Type),

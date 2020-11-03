@@ -31,7 +31,6 @@ Class ON {A:Type}(lt: relation A)
                   (compare alpha beta);
   }.
 
-Locate CompareSpec.
 
 (** Selectors *)
 

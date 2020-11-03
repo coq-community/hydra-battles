@@ -532,8 +532,6 @@ Proof.
     rewrite <- H3 in H1;  now apply inject_injective.
 Qed.
 
-Locate members.
-
 Theorem embedding : fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.
 Proof.
   split.
