@@ -595,7 +595,8 @@ Section Proof_of_oplus_assoc.
                                     alpha o+ beta o+ gamma.
   Proof with eauto with T1.
     intros.
-    apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma))) ...
+    apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma)));
+       trivial. 
     apply succ_nf; repeat apply max_nf ...
     all: apply T1.le_lt_trans with (max alpha (max beta gamma));
       [| apply lt_succ] ...
@@ -700,10 +701,17 @@ Proof with eauto with T1.
 
        generalize (compare_Eq_impl _ _ Ha1_b1).
        intro;subst b1. 
-       apply Hrec with (phi0 a1); info_eauto with T1.
+       apply Hrec with (phi0 a1); trivial.
+       nf_decomp Hc.       
+       auto with T1.
        apply le_lt_trans with (ocons a1 n a2) ; trivial. 
        apply le_phi0 ; info_eauto with T1.
-       apply lt_phi0_phi0.
+        nf_decomp Hc.       
+       auto with T1.
+       nf_decomp Ha; trivial.
+       now nf_decomp Hb.
+       now nf_decomp Hc.
+apply lt_phi0_phi0.
        eapply lt_phi0_intro ; info_eauto with T1.
        apply lt_phi0_phi0.
        eapply lt_phi0_intro ; info_eauto with T1.
@@ -884,7 +892,7 @@ Lemma oplus_strict_mono_r : forall a b c, nf a -> nf b -> nf c ->
                                           T1.lt b c -> T1.lt (a o+ b) (a o+ c).
 Proof with auto with T1.
   intros.
-  apply oplus_strict_mono_0 with (phi0 (max a c)) ...
+  apply oplus_strict_mono_0 with (phi0 (max a c)); info_eauto with T1.
   apply nf_phi0;apply max_nf ...
   apply le_lt_trans with (max a c) ...
   apply max_le_1.

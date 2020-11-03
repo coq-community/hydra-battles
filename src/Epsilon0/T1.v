@@ -425,13 +425,28 @@ Proof.
   - intros H; red in H; repeat rewrite andb_true_iff in H;  decompose [and] H; auto. 
 Qed.
 
-
+Ltac nf_decomp H :=
+  let nf0 := fresh "nf"
+  in let nf1 := fresh "nf"
+     in let Hlp := fresh "lt"
+     in 
+     match type of H with
+     | nf (ocons ?t ?n zero) => assert (nf0:= nf_inv1 H)
+     | nf (ocons ?t1 ?n (ocons ?t2 ?p ?t3))
+       => assert (nf0 := nf_inv1 H); assert(nf1 := nf_inv2 H);
+          assert (lt := nf_inv3 H)
+     | nf (ocons ?t1 ?n ?t2) => assert (nf0 := nf_inv1 H); assert(nf1 := nf_inv2 H)
+     end.
+   
 
 Inductive lt_phi0 : T1 -> T1 -> Prop :=
 | lt_phi0_z : forall alpha, lt_phi0 zero alpha
 | lt_phi0_c : forall alpha alpha' n' beta',
                 lt alpha' alpha -> 
                 lt_phi0 (ocons alpha' n' beta') alpha.
+
+
+
 
 Hint Constructors lt_phi0 : T1.
 
