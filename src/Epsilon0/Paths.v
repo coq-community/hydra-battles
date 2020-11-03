@@ -483,7 +483,8 @@ Proof.
         now destruct H.
     + destruct H; subst; apply IHpath_toS; auto.
       eapply nf_LT_right; eauto.
-      apply canonS_LT; eauto with T1.
+      apply canonS_LT; trivial.
+      eapply nf_inv2, H1. 
 Qed.
 
 
@@ -1054,7 +1055,8 @@ Proof.
        - now  rewrite canonS_tail.
        - apply IHclos_trans_1n; auto. 
          + apply nf_LT_right with x;auto. 
-           apply canonS_LT; eauto with T1.
+           apply canonS_LT; trivial.
+           eapply nf_inv2, H. 
      }
 Qed.
 
@@ -1081,22 +1083,21 @@ Proof with auto with T1.
     +  now destruct H0.
     +  destruct (const_pathS_first_step H1).
        { rewrite  e; left;  split.
-         discriminate. rewrite canonSSn ...
-       }
+         discriminate. rewrite canonSSn ; trivial. }
        { apply const_pathS_trans with
-             (ocons alpha n (phi0 (canonS alpha i))) ...
-         { left;  rewrite canonSSn ...
+             (ocons alpha n (phi0 (canonS alpha i))) ; trivial. 
+         { left;  rewrite canonSSn ; eauto with T1.
            - split.
              + discriminate.
-             + rewrite canonS_lim1 ...
+             + rewrite canonS_lim1 ; eauto with T1.
          }
          apply KS_thm_2_4_lemma1. 
-         - apply nf_ocons_LT; eauto with T1.
-           apply canonS_LT ...
-           apply single_nf ...
+         - apply nf_ocons_LT; trivial.
+           apply canonS_LT ; eauto with T1.
+           apply single_nf ; trivial. 
            now apply nf_canonS.
          - discriminate. 
-         - rewrite canonS_lim1 in c ...
+         - rewrite canonS_lim1 in c ; eauto with T1.
        }      
   - destruct s as [gamma [H2 H3]]; destruct (const_pathS_first_step H1).
     { 
@@ -1105,10 +1106,10 @@ Proof with auto with T1.
        now rewrite canonS_ocons_succ_eqn2. 
     }
     apply const_pathS_trans with (ocons alpha n (ocons gamma i zero)).
-    left; subst alpha; rewrite canonS_ocons_succ_eqn2 ... 
-    split; [discriminate |]. reflexivity. apply KS_thm_2_4_lemma1 ...
-    apply nf_ocons_LT ...
-    + subst; apply LT_succ ... 
+    left; subst alpha; rewrite canonS_ocons_succ_eqn2 ; eauto with T1. 
+    split; [discriminate |]. reflexivity. apply KS_thm_2_4_lemma1 ; trivial. 
+    apply nf_ocons_LT ; eauto with T1.
+    + subst; apply LT_succ ; eauto with T1. 
     +   discriminate. 
     +  subst alpha; rewrite  canonS_phi0_succ_eqn in c; auto. 
 Qed.
@@ -1125,7 +1126,7 @@ Proof.
         * split;trivial.
         *  apply hrec.
             -- apply canonS_LT;auto.
-            --  eapply nf_canonS; eauto. 
+            -- eapply nf_canonS; eauto. 
             -- now apply limitb_canonS_not_zero.
   - destruct s as [beta [Hbeta e]]; subst.
     destruct (T1_eq_dec beta zero).
@@ -1238,7 +1239,7 @@ Theorem KS_thm_2_4 (lambda : T1) :
    forall i j, (i < j)%nat ->
                const_pathS 0 (canonS lambda j)
                              (canonS lambda i).
-Proof with eauto with T1.
+Proof.
    transfinite_induction lambda.
   clear lambda ; intros alpha Hrec Halpha H.
   destruct (zero_limit_succ_dec Halpha).
@@ -1246,59 +1247,61 @@ Proof with eauto with T1.
     + subst;  discriminate.
     + destruct alpha.
       * discriminate.
-      *  destruct (limitb_cases Halpha  H).
+      *  nf_decomp Halpha.
+         destruct (limitb_cases Halpha  H).
          { destruct a; subst alpha2.
-           intros i0 j H1;  destruct (@zero_limit_succ_dec alpha1) ...
+           intros i0 j H1;  destruct (@zero_limit_succ_dec alpha1) ;
+             trivial.
            destruct s.
            {subst. now contradict H0. }
            { induction n.
              - repeat rewrite canonS_lim1; auto.
                apply KS_thm_2_4_lemma5. 
-               apply Hrec ... 
-               split ...     
-               split ...
-               apply head_lt_ocons ...
-               apply nf_canonS ... 
-               apply limitb_canonS_not_zero ...
-             -  repeat rewrite canonS_lim2 ...
-                apply KS_thm_2_4_lemma1 ... 
-                apply ocons_nf ...
-                apply canonS_lt ...
+               apply Hrec ; trivial.
+               split ; trivial. 
+               split ; trivial.
+               apply head_lt_ocons ; trivial.
+               apply nf_canonS ; eauto with T1. 
+               apply limitb_canonS_not_zero ; eauto with T1.
+             -  repeat rewrite canonS_lim2 ; eauto with T1.
+                apply KS_thm_2_4_lemma1 ; trivial. 
+                apply ocons_nf ; trivial. 
+                apply canonS_lt ; trivial.
                 apply single_nf.   
-                apply nf_canonS ...
+                apply nf_canonS ; eauto with T1.
                 discriminate.
-                apply KS_thm_2_4_lemma5 ...
-                apply Hrec ...
-                split ...
+                apply KS_thm_2_4_lemma5 ; trivial.
+                apply Hrec ; eauto with T1.
+                split ; eauto with T1.
                 split.
-                apply  head_lt_ocons ...
-                apply single_nf ...
-                apply nf_canonS ...
-                apply limitb_canonS_not_zero ...
+                apply  head_lt_ocons ; eauto with T1.
+                apply single_nf ; eauto with T1.
+                apply nf_canonS ; eauto with T1.
+                apply limitb_canonS_not_zero ; eauto with T1.
            }
            destruct s as [beta [H2 H3]];  subst; clear H i; induction n.
            {
-             repeat rewrite  canonS_phi0_succ_eqn ...
-             apply KS_thm_2_4_lemma3 ...
+             repeat rewrite  canonS_phi0_succ_eqn ; eauto with T1.
+             apply KS_thm_2_4_lemma3 ; eauto with T1.
            }
            { 
-             repeat rewrite  canonS_ocons_succ_eqn2 ...
-             apply KS_thm_2_4_lemma1 ...
-             apply ocons_nf ...
+             repeat rewrite  canonS_ocons_succ_eqn2 ; eauto with T1.
+             apply KS_thm_2_4_lemma1 ; trivial. 
+             apply ocons_nf ; trivial.
              apply lt_succ; auto.
              discriminate. 
-             apply KS_thm_2_4_lemma3 ...
+             apply KS_thm_2_4_lemma3 ; eauto with T1.
            }
          }
          intros i0 j H0; destruct a.
-         repeat rewrite canonS_tail ...
-         apply KS_thm_2_4_lemma1 ...
-         apply nf_LT_right with alpha2 ...
-         apply canonS_LT ...
-         apply limitb_canonS_not_zero ...
-         apply Hrec ...
-         split ...
-         split ...
+         repeat rewrite canonS_tail ; eauto with T1.
+         apply KS_thm_2_4_lemma1 ; trivial. 
+         apply nf_LT_right with alpha2 ; eauto with T1.
+         apply canonS_LT ; eauto with T1.
+         apply limitb_canonS_not_zero ; eauto with T1.
+         apply Hrec ; eauto with T1.
+         split ; eauto with T1.
+         split ; eauto with T1.
          apply  tail_lt_ocons; auto.
          all: intro; subst; discriminate.
   -  destruct s as [beta [H0 H1]]; 
@@ -1485,7 +1488,7 @@ Proof.
       subst.
       assert (Hx0: (x0 t1< T1.succ x0)%t1) by (apply LT_succ ;auto).
       assert ({beta t1< x0} + { beta = x0})%t1.
-      { apply LT_succ_LT_eq_dec in H0; eauto with T1.
+      { apply LT_succ_LT_eq_dec in H0; trivial. eauto with T1.
       }  
       destruct H2. 
     + destruct (H x0 Hx0 H1 beta l) as [n Hn]; exists n.
@@ -1554,7 +1557,7 @@ Proof.
               intro; subst. 
               destruct (not_LT_zero H0).
               destruct H3;tauto.
-              apply  Proposition_2_3a with alpha; eauto with T1.
+              apply  Proposition_2_3a with alpha; trivial.
                   intro H4; subst.
                  destruct (not_LT_zero H0).
                  left.
@@ -1576,7 +1579,8 @@ Proof.
        { destruct (not_LT_zero H0). }
        {  destruct n. 
           destruct alpha2.
-          destruct (@zero_limit_succ_dec alpha1);  eauto with T1.
+          nf_decomp Halpha.
+          destruct (@zero_limit_succ_dec alpha1);  trivial.
           destruct s.
           subst; cbn in H0.
           destruct (LT_irrefl H0).
@@ -1586,7 +1590,7 @@ Proof.
           left.
             split.
             intro;subst.
-           destruct (@limitb_not_zero zero); auto with T1.
+           destruct (@limitb_not_zero zero); trivial. 
            trivial.
           assert (const_pathS  (S p) lambda (T1.succ (canonS  lambda  p))).
           {
@@ -1597,34 +1601,35 @@ Proof.
           }
           apply const_pathS_trans
             with (ocons (T1.succ  (canonS lambda p)) 0 zero); eauto with T1.
-          apply KS_thm_2_4_lemma5; auto with T1.                                        apply HRecAlpha; eauto with T1.
+          apply KS_thm_2_4_lemma5; trivial. auto with T1.
+          apply HRecAlpha; trivial. 
           apply LT2.
           apply single_nf.
           apply succ_nf.
           apply nf_canonS.
-          eauto with T1.
+          assumption.
           apply single_nf; eauto with T1.
           apply succ_lt_limit; auto. 
           apply canonS_LT;auto with T1. 
           apply succ_nf;  apply nf_canonS; eauto with T1.
-          subst; apply KS_thm_2_4_lemma5; eauto with T1.
+          subst; apply KS_thm_2_4_lemma5; trivial.
           left;  rewrite canonS_succ; auto.
           split.
-           apply succ_not_zero; auto.
+          apply succ_not_zero; auto.
           trivial.
           apply nf_canonS; eauto with T1.
           apply succ_nf;  apply nf_canonS; eauto with T1.
           apply succ_not_zero.
           rewrite e;  apply succ_lt_limit; auto. 
-          apply single_nf; eauto with T1.
+          apply single_nf; trivial. 
           apply succ_nf;  apply nf_canonS; eauto with T1.
           simpl; case_eq (T1.succ (canonS lambda p)).
           intro; destruct (succ_not_zero (canonS lambda p)); auto. 
           auto. 
-          apply LT2; eauto with T1.
-          apply single_nf; eauto with T1.
+          apply LT2; trivial.
+          apply single_nf; trivial. 
           apply nf_canonS; eauto with T1.
-          apply single_nf; eauto with T1.
+          apply single_nf; trivial. 
           apply succ_nf;  apply nf_canonS; eauto with T1.
           apply LT_succ.
           apply nf_canonS; eauto with T1.
@@ -1647,7 +1652,7 @@ Proof.
             apply HRecAlpha.
             - subst alpha1; apply LT2. 
               apply single_nf; auto with T1.
-              apply single_nf; eauto with T1.
+              apply single_nf; trivial.
               apply LT_succ; auto. 
             - apply single_nf;auto. 
             -  rewrite H3.
@@ -1683,9 +1688,10 @@ Proof.
               rewrite succ_ocons.
               + apply KS_thm_2_4_lemma1; eauto with T1.
                 discriminate.
-                apply HRecAlpha; eauto with T1.
+                apply HRecAlpha; trivial.
                 apply LT2; eauto with T1.
                 split; eauto with T1.
+                eapply nf_inv2, Halpha.
                 now left.
                 rewrite succ_ocons in H0.
                 apply remove_first_sumand in H0.
@@ -1698,11 +1704,11 @@ Proof.
                 }
                 apply nf_LT_right with (ocons alpha2_1 n alpha2_2).
                 eapply Halpha.
-                apply canonS_LT;  eauto with T1.
+                apply canonS_LT; trivial.  eauto with T1.
                 discriminate.
               + eapply canonS_cons_not_zero; eauto. 
               +  eapply nf_LT_right; eauto.
-                 apply canonS_LT;  eauto with T1.
+                 apply canonS_LT;  trivial. eauto with T1.
                  discriminate. 
             -  eauto with T1. 
             -  discriminate. 
@@ -1726,7 +1732,7 @@ Proof.
             now left. 
             apply succ_lt_limit; eauto with T1.
             cbn;   destruct alpha1; auto.
-            apply canonS_LT; eauto with T1.
+            apply canonS_LT; trivial.
             discriminate. 
             apply canonS_cons_not_zero; auto.
             apply nf_intro. 
@@ -2329,7 +2335,8 @@ Proof.
         +  apply IHstandard_pathRS; auto.
            eapply nf_LT_right; auto.
           * eapply H.
-          * apply canonS_LT;  eauto with T1.
+          * apply canonS_LT;  trivial.
+            eauto with T1.
             intro; subst; simpl in H0; destruct H1.
             apply standard_pathRS_zero in H0; now destruct H0. 
         + intro;subst;  simpl in H0; apply standard_pathRS_zero in H0;auto.
@@ -2352,7 +2359,8 @@ Proof.
         * apply IHstandard_pathR; auto.
           eapply nf_LT_right; auto.
           -- eapply H.
-          --  unfold canon;  apply canonS_LT;  eauto with T1.
+          --  unfold canon;  apply canonS_LT; trivial.
+              eauto with T1.
               intro; subst.
               simpl in H0; apply standard_pathR_zero in H0.
               subst; now destruct H1; auto.
