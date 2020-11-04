@@ -35,10 +35,10 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
        - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
 
 - theories/Gamma0/*.v
-        - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
+    - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
   
 - theories/rpo/*.v
-        - A contribution on _recursive path orderings_ by Evelyne Contejean.
+    - A contribution on _recursive path orderings_ by Evelyne Contejean.
   
 - theories/Prelude/*.v
   - Various auxiliary definitions and lemmas
