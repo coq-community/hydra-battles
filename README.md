@@ -14,33 +14,33 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 - doc/hydras.pdf  
 
 ###  coqdoc html files
- - directory src/html
+ - directory theories/html
 
 
-### Coq sources (directory src)
+### Coq sources (directory theories)
 
-- src/Hydra/*.v
+- theories/Hydra/*.v
    - Representation in _Coq_ of hydras and hydra 
    battles
    - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
    - A proof that no variant bounded by some ordinal less than epsilon0 can prove this termination
    - Comparison of the length of some kind of Hydra battles with the Hardy hierarchy of fast growing functions
     
--  src/Epsilon0/*.v
+-  theories/Epsilon0/*.v
 	- Data types for representing ordinals less than epsilon0 in Cantor normal form
 	- The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
 	- Representation of some hierarchies of fast growing functions
    
-- src/Schutte/*.v
-     - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in src/Epsilon0.
+- theories/Schutte/*.v
+     - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
 
-- scr/Gamma0/*.v
+- theories/Gamma0/*.v
       - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
   
-- src/rpo/*.v
+- theories/rpo/*.v
    - A contribution on _recursive path orderings_ by Evelyne Contejean.
   
-- src/Prelude/*.v
+- theories/Prelude/*.v
   - Various auxiliary definitions and lemmas
 
  
