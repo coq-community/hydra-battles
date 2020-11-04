@@ -10,7 +10,7 @@ Pierre Casteran,
 
  *)
 
-From Coq Require Export Arith Omega .
+From Coq Require Export Arith Lia.
 Import Relations Relation_Operators.
 
 From hydras.Epsilon0 Require Export T1 E0.
@@ -415,11 +415,11 @@ Proof.
               discriminate. 
            ++ eapply nf_inv1, Hlambda. 
         *  subst.
-          -- destruct n.
-             not_neg H3.
-             apply lt_n_Sm_le in H3.
-             destruct (Compare_dec.le_lt_eq_dec _ _ H3).
-             exists 0; rewrite canonSSn. 
+           -- destruct n.
+              abstract lia.
+              apply lt_n_Sm_le in H3.
+              destruct (Compare_dec.le_lt_eq_dec _ _ H3).
+              exists 0; rewrite canonSSn. 
              apply LT3; auto.
              {
                apply nf_intro; trivial.

@@ -14,7 +14,7 @@
 
 
 
-From hydras Require Import Canon  MoreLists First_toggle OrdNotations.
+Require Import Canon  MoreLists First_toggle OrdNotations.
 Import Relations Relation_Operators.
 From Coq Require Import Lia.
 
@@ -1462,7 +1462,7 @@ Proof.
   transfinite_induction alpha.
   intros x H Hx; destruct (zero_limit_succ_dec Hx).
   - destruct s.
-   + subst;  intros;  not_neg H0.
+   + subst;  intros.  destruct (not_LT_zero H0).  
    +  intros beta H0;  destruct (canonS_limit_strong Hx i H0) as [n1 H1].
      assert (canonS x n1 t1< x)%t1. 
      { apply canonS_LT; auto.
@@ -2533,7 +2533,7 @@ Section Constant_to_standard_Proof.
     unfold P;red; simpl.  
     unfold le_b, lt_b; replace (T1.compare alpha beta) with Datatypes.Gt.  
     - auto.
-    -  rewrite compare_rw3.
+    -  rewrite compare_Gt_eq.
        + reflexivity. 
        +  generalize (const_pathS_LT Halpha p).
           destruct 1; tauto.
@@ -2545,7 +2545,7 @@ Section Constant_to_standard_Proof.
     unfold P,  le_b,  lt_b;
       replace (T1.compare (standard_gnaw (S n) alpha t) beta) with Datatypes.Lt.
     - reflexivity.
-    - rewrite compare_rw1; auto; destruct Rem03; tauto.
+    - rewrite compare_Lt_eq; auto; destruct Rem03; tauto.
   Qed.
 
   Remark Rem06 : (0 <  t)%nat.
