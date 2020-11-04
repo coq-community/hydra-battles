@@ -63,7 +63,7 @@ Lemma oplus_lt_rw :
 	                 ocons a' n' (ocons a n b o+ b').
 Proof.
   intros a n b a' n' b' H; cbn.
-  generalize (compare_rw1  H); intro Hcomp; now rewrite Hcomp.
+  generalize (compare_Lt_eq  H); intro Hcomp; now rewrite Hcomp.
 Qed.
 
 Lemma oplus_eq_rw :
@@ -82,7 +82,7 @@ Lemma oplus_gt_rw :
 	                 ocons a n  (b o+ ocons a' n' b').
 Proof.
   intros a n b a' n' b' H;  cbn; 
-  generalize (compare_rw3  H);  intro Hcomp; now rewrite Hcomp.
+  generalize (compare_Gt_eq  H);  intro Hcomp; now rewrite Hcomp.
 Qed.
 
 
