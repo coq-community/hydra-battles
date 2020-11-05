@@ -362,8 +362,40 @@ I owe my interest in discrete mathematics and their relation to formal proofs an
 
 
 
+
+
+\section{How to Install the Libraries}
+\label{sec:orgheadline4}
+\begin{itemize}
+\item The present distribution has been checked with version 8.11.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq} and \texttt{coq-equations}.
+
+\item Just go into the root directory, and type "\texttt{make}"
+\end{itemize}
+
+\section{Comments on Exercises and Projects}
+
+Although we do not plan to include complete solutions to the exercises, 
+we think it would be useful to include comments and hints, and questions/answers from the users. In constrast, ``projects'' are supposed, once completed, to be included in the repository.
+
 % \subsubsection{Links to the Coq source}
 
+\section{Future Work (projects)}
+\index{Projects}
+
+This document and the proof scripts are far from being complete.
+
+First, there must be a lot of typos to correct, references and index items to add. Many proofs are too complex and should be simplified, etc.
+
+The following extensions are planned, but help is needed:
+
+\begin{itemize}
+\item Semi automatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
+\item Extension to $\Gamma_0$ (in Veblen normal form)
+\item More lemmas about hierarchies of rapidly growing functions, and their relationship 
+    with primitive recursive functions and provability in Peano arithmetic 
+(following~\cite{KS81, KP82}).
+\item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
+\end{itemize}
 
 
 
@@ -1478,7 +1510,7 @@ In this section we consider a simple example of battle, starting with a small hy
 shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 \begin{itemize}
-\item Hercules chops off always the rightmost head of the hydra.
+\item At each round, Hercules chops off the rightmost head of the hydra.
 \item The battle is standard: at the round number $i$, the expected replication is $i$.
 \end{itemize}
 
@@ -10195,38 +10227,6 @@ of the segment $[0,\Gamma_0)$ of the set of countable ordinals.
 \bibliographystyle{alpha}
 \bibliography{thebib}
 
-\section{Future Work (projects)}
-\index{Projects}
-
-This document and the proof scripts are far from being complete.
-
-First, there must be a lot of typos to correct, references and index items to add. Many proofs are too complex and should be simplified, etc.
-
-The following extensions are planned, but help is needed:
-
-\begin{itemize}
-\item Semi automatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
-\item Extension to $\Gamma_0$ (in Veblen normal form)
-\item More lemmas about hierarchies of rapidly growing functions, and their relationship 
-    with primitive recursive functions and provability in Peano arithmetic 
-(following~\cite{KS81, KP82}).
-\item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
-\end{itemize}
-
-
-
-\section{How to Install the Libraries}
-\label{sec:orgheadline4}
-\begin{itemize}
-\item The present distribution has been checked with version 8.11.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq} and \texttt{coq-equations}.
-
-\item just go into the \texttt{theories} directory, and type "\texttt{make}"
-\end{itemize}
-
-\section{Comments on Exercises and Projects}
-
-Although we do not plan to include complete solutions to the exercises, 
-we think it would be useful to include comments and hints, and questions/answers from the users. In constrast, ``projects'' are supposed, once completed, to be included in the repository.
 
 
 

@@ -7,6 +7,9 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 
 ##  Installation
 -  the general Makefile is in the top directory 
+     - make : compilation of the Coq scripts
+     - make pdf : generation of the documentation
+     - make html : generation of coqdoc html files 
 
 ##   Contents
 
