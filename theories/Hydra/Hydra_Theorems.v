@@ -71,6 +71,23 @@ Proof with eauto with T1.
      split with mu m ; auto.
 Qed.
 
+(** to simplify ! !!! *)
+
+Theorem No_Bounded_Variant_Free (mu:E0) : 
+  forall m, ~ Bounded_variant free mu m.
+Proof.
+  destruct mu as [t Ht].
+  specialize (No_bounded_Variant_Free t Ht); intros H m H0.
+  apply (H (fun h =>  @cnf (m h))).
+  destruct H0; split.
+  - destruct H1;intro h; destruct (H0 h) as [H2 [H3 H4]]; split; auto.
+  - destruct H1; split; intros i h h' H1 H2.
+    destruct (variant_decr i h h' H1 H2); split; auto.
+Qed.
+
+
+
+
 Theorem No_bounded_Variant_Std  mu (Hmu: nf mu): 
   forall m, ~ bounded_variant standard mu m.
 Proof with eauto with T1.
@@ -79,7 +96,23 @@ Proof with eauto with T1.
      split with mu m ; auto.
 Qed.
 
-(**  About the length of tandard battles *)
+
+(** to simplify ! !!! 
+  Almost same proof script as Free case *)
+Theorem No_Bounded_Variant_Std (mu:E0) : 
+  forall m, ~ Bounded_variant standard mu m.
+Proof.
+  destruct mu as [t Ht].
+  specialize (No_bounded_Variant_Std t Ht); intros H m H0.
+  apply (H (fun h =>  @cnf (m h))).
+  destruct H0; split.
+  - destruct H1;intro h; destruct (H0 h) as [H2 [H3 H4]]; split; auto.
+  - destruct H1; split; intros i h h' H1 H2.
+    destruct (variant_decr i h h' H1 H2); split; auto.
+Qed.
+
+
+(**  About the length of standard battles *)
 
 
 Theorem battle_length_std (alpha : E0)  :

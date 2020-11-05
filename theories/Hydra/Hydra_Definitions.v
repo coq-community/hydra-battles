@@ -440,6 +440,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 Definition bounded_variant (B: Battle) (alpha:T1)(m: Hydra -> T1):=
   (forall h, (m h t1< alpha)%t1 ) /\ Hvariant T1_wf B  m.
 
+
 (** *** Liveness 
 
  For every reachable configuration [(i,h)], either [h] is a head, or 
