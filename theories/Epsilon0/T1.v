@@ -1014,16 +1014,16 @@ Proof.
      *  apply ocons_nf; trivial.
         -- apply lt_trans with b1;  auto.
            eapply nf_inv3; eauto.
-        -- eapply nf_inv1;eauto. 
+        -- eapply nf_inv1; eauto. 
      *  destruct H2 as [H2 | H2].
         -- decompose [and] H2;subst. 
-           apply ocons_nf;auto.
-           eapply nf_inv3;eauto.
-           eapply nf_inv1;eauto.
+           apply ocons_nf; auto.
+           eapply nf_inv3; eauto.
+           eapply nf_inv1; eauto.
         -- decompose [and] H2;subst. 
-           clear H2; apply ocons_nf;auto.
-           ++ eapply nf_inv3;eauto.
-           ++ eapply nf_inv1;eauto.
+           clear H2; apply ocons_nf; auto.
+           ++ eapply nf_inv3; eauto.
+           ++ eapply nf_inv1; eauto.
 Qed.
 
 
