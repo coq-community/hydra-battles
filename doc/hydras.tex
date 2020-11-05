@@ -2190,7 +2190,7 @@ Both theorems are proved with the help of the  following strongly specified func
 
 \begin{Coqsrc}
 Definition  next_round_dec n :
- forall h , (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}.
+ forall h , (h = head) + {h' : Hydra & {R1 h h'} + {R2 n h  h'}}.
 \end{Coqsrc}
 
 
@@ -2264,7 +2264,7 @@ Section Impossibility_Proof.
  Hypothesis Hvar : Hvariant lt_wf free m.
 \end{Coqsrc}
 
-We define an injection from the type \texttt{nat} into \texttt{Hydra}.
+We define an injection $\iota$ from the type \texttt{nat} into \texttt{Hydra}.
 For any natural number $i$, $\iota(i)$ is the hydra composed of a foot and
 $i+1$ heads at height $1$. For instance, Fig.~\ref{fig:flower} represents the hydra $\iota(3)$.
 
@@ -3199,7 +3199,7 @@ Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for provin
 
 
 Let us follow the same pattern as in Sect.~\ref{omega-case}.
-First, we define an injection from type \texttt{t} into \texttt{Hydra}, by
+First, we define an injection $\iota$ from type \texttt{t} into \texttt{Hydra}, by
  associating to  each ordinal $\omega\times i+ j = (i,j)$ the hydra with $i$ branches of length $2$ and
 $j$ branches of length $1$.
 
@@ -3367,7 +3367,7 @@ Proof.
 \end{Coqanswer}
 
 
-Then we have  three cases to consider, according to the values of $i$ and $j$.
+Then we have  three cases to consider, according to the value of $p$.
 \begin{itemize}
 \item If $p=(0,0)$ then obviously, $\iota(p)\geq p = (0,0)$
 \item If  $p=(i+1,0)$ for some $i\in\mathbb{N}$, we
@@ -3394,29 +3394,22 @@ Qed.
 \end{Coqsrc}
 
 \subsubsection{End of the Proof}
-
-Since $<$ is a strict order (irreflexive  and transitive) on \texttt{nat*nat}, we infer that there is no
-variant for termination on the lexicographic square of $(\mathbb{N},<)$.
-
-\begin{enumerate}
-\item From \texttt{m\_lt}, we infer the strict inequality 
-\texttt{m small\_h o< m big\_h}
-\item from \texttt{m\_ge}, we get \texttt{m big\_h o<= m (iota (m big\_h)) = m small\_h} 
-\end{enumerate}
+From \texttt{m\_ge}, we get \texttt{m big\_h o<= m small\_h = m (iota (m big\_h)) }. 
+Since $<$ is a strict order (irreflexive  and transitive), this inequality is incompatible with the strict inequality  \texttt{m small\_h o< m big\_h} (lemma \texttt{m\_lt}).
 
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
+\noindent
+In \coq (Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#Impossible}{Hydra.Omega2\_Small}):
 
 \begin{Coqsrc}
-Theorem Impossible : False.
+Theorem Impossible: False.
 Proof.
-  destruct (StrictOrder_Irreflexive  (m big_h)).
+  destruct (StrictOrder_Irreflexive (m big_h)).
   apply le2_lt2_trans with (m small_h).
-  -  unfold small_h;  apply m_ge.
+  -  unfold small_h; apply m_ge.
   -  apply m_lt. 
 Qed. 
-
 End Impossibility_Proof.
 \end{Coqsrc}
 
