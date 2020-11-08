@@ -14,9 +14,9 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 ##   Contents
 
 ### Documentation
-     - <https://coq-community/hydra-battles/hydras.pdf>
+- https://coq-community.org/hydra-battles/hydras.pdf
      
-     - The command "make pdf" generates a local copy as doc/hydras.pdf  
+- The command `make pdf` generates a local copy as `doc/hydras.pdf`
 
 ###  coqdoc html files
  - directory theories/html
