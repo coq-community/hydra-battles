@@ -386,7 +386,7 @@ Section NotIncl.
 
 Lemma ExNotIncl : False.
 Proof.
-  apply (R1 (f omega)); apply (SUBON_limit _ _ Hyp omega).
+  apply (R1 (f omega)); apply (SubON_limit _ _ Hyp omega).
   apply omega_is_limit.
 Qed.
 

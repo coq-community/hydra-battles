@@ -313,7 +313,7 @@ Section SubON_properties.
     now   rewrite SubON_compare in H.
   Qed.
 
-  Lemma SUBON_successor : forall a b,  Successor a b <-> Successor (f a) (f b).
+  Lemma SubON_successor : forall a b,  Successor a b <-> Successor (f a) (f b).
   Proof.
     split; intro H.
     - destruct H.     
@@ -330,7 +330,7 @@ Section SubON_properties.
        apply H0; now apply SubON_mono.
   Qed.
 
-  Lemma SUBON_limit : forall a ,  Limit a  <-> Limit (f a).
+  Lemma SubON_limit : forall a ,  Limit a  <-> Limit (f a).
   Proof.
     split; intro H.
     - destruct H ; split.
