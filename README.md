@@ -56,7 +56,7 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 
   - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development. 
   
- - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of " projects » as pull requests 
+ - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of "projects") as pull requests. 
   
   - __Contact__ : pierre dot casteran [at gmail dot com | at labri dot fr]
   
