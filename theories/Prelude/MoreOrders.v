@@ -75,12 +75,13 @@ Proof.
     exists (s z); split; auto.
 Qed.
 
-
-Lemma strorder_irr {sto : StrictOrder lt} (x:A) : ~ lt x x.
+Lemma Least_not_Limit  {sto : StrictOrder lt} x :
+  Least x -> ~ Limit x.
 Proof.
- destruct sto.
- intro H; destruct (StrictOrder_Irreflexive x H).
- Qed.
+  intros H [[w H0] H1]. specialize (H w).
+  destruct H,  (StrictOrder_Irreflexive x); trivial.
+  now transitivity y.
+Qed.
 
 End A_given.
 
