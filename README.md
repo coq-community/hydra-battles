@@ -14,7 +14,9 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 ##   Contents
 
 ### Documentation
-- doc/hydras.pdf  
+     - https://coq-community.org/hydra-battles/hydras.pdf
+     
+     - The command "make pdf" generates a local copy doc/hydras.pdf  
 
 ###  coqdoc html files
  - directory theories/html
@@ -52,8 +54,9 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
   
   - In particular, we would be delighted to replace proofs with simpler ones, and/or to propose various proofs or definitions of the same concept, in order to illustrate different techniques and patterns. New tactics for automatizing the proofs are welcome too.
 
-  - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development.
-
+  - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development. 
+  
+ - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of " projects » as pull requests 
   
   - __Contact__ : pierre dot casteran [at gmail dot com | at labri dot fr]
   
