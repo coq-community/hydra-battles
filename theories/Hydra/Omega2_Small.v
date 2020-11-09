@@ -16,8 +16,6 @@ Section Impossibility_Proof.
 
   Variable m : Hydra -> ON_Omega2.t.
  
-  About Generic.wf.
-  
   Context (Hvar : Hvariant (Generic.wf (ON:=Omega2))  free m).
   Let big_h := hyd1 (hyd2 head head).
   
@@ -143,10 +141,8 @@ Proof.
       apply le_0. 
     +  (* p = (S i, 0) *)
       rewrite <- limit_is_lub.
-      intro k. About le_lt_trans.
-      apply le_lt_trans with (m (iota (l, k))). cbn.
+      intro k; apply le_lt_trans with (m (iota (l, k))). cbn.
       apply IHij. left; auto.
-
       red; apply (m_strict_mono m Hvar); auto with hydra.
       reflexivity.
   - change (i, S k) with (succ (i,k)) at 1.
@@ -160,7 +156,7 @@ Qed.
 
 Theorem Impossible : False.
 Proof.
-  destruct (StrictOrder_Irreflexive  (m big_h));
+  destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
     apply le_lt_trans with (m small_h).
   -  apply m_ge.
   -  apply m_lt. 

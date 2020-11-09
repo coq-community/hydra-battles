@@ -315,12 +315,14 @@ Qed.
           - split...
           - split ...      
           -  destruct IHl0, IHl1. split ...
-             apply (merge_LocallySorted (merge_sort (leb le) l1) (merge_sort (leb le) l2)); trivial.
+             apply (merge_LocallySorted (merge_sort (leb le) l1)
+                                        (merge_sort (leb le) l2)); trivial.
              transitivity (l1++l2).
              generalize (split_permutation (_x :: _x0 :: _x1)).
              rewrite e0.
              intro;symmetry...       
-             transitivity ((merge_sort (leb le) l1) ++ (merge_sort (leb le) l2)).
+             transitivity ((merge_sort (leb le) l1)
+                             ++ (merge_sort (leb le) l2)).
              rewrite <- H0, <- H2 ...
              apply merge_permutation; trivial.
         Qed.

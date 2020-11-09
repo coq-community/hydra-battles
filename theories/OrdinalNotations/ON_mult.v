@@ -12,6 +12,12 @@ Import Relations.
 Generalizable All Variables.
 Coercion is_true: bool >-> Sortclass.
 
+(** * Definitions *)
+
+
+(**  The product of two notation systems NA and NB is defined as the 
+    lexicographic product of the order on NB by the order on NA 
+    (in this order ! ) *)
 
 Section Defs.
 
@@ -24,8 +30,6 @@ Section Defs.
 
 
 Definition t := (B * A)%type.
-
-
 Definition lt : relation t := lexico ltB ltA.
 
 
@@ -36,13 +40,16 @@ Definition le := clos_refl _ lt.
 
 Definition compare (alpha beta: t) : comparison :=
   match compareB (fst alpha) (fst beta) with
-    Eq => compareA (snd alpha) (snd beta)
+  |  Eq => compareA (snd alpha) (snd beta)
   | c => c
   end.
 
 Hint Constructors clos_refl lexico: core.
 
 Hint Unfold  lt le : core.
+
+
+(** * Properties *)
 
 Instance lt_strorder : StrictOrder lt.
 Proof.

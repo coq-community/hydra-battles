@@ -7,11 +7,9 @@ From Coq Require Import Arith Compare_dec Lia.
 From hydras Require Import Simple_LexProd OrdinalNotations.Generic
         ON_mult  ON_Omega.
 
-Import Relations.
-Declare Scope opo_scope.
-Delimit Scope opo_scope with opo.
+Import Relations Generic.
+
 Open Scope ON_scope.
-Open Scope opo_scope.
 
 Definition Omega2 := ON_mult Omega Omega.
 
@@ -48,19 +46,10 @@ Proof.
   + inversion 1; subst.
     * assert (a= 0) by lia; subst a.
       exists (0, S b); split.
-      constructor 2; auto.
-      constructor 1; auto.
-    *  exfalso; lia. 
+      -- constructor 2; auto.
+      -- constructor 1; auto.
+    * exfalso; lia. 
 Qed.
-
-
-(*
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-*)
-
-
-
 
 Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
 
@@ -71,36 +60,21 @@ Proof.
 Defined.
 
 
-
 Lemma le_intror :
   forall i j k:nat, (j <= k)%nat -> (i,j) o<= (i,k).
 Proof.
   intros i j k H; destruct (Lt.le_lt_or_eq j k H).
-   left; now constructor 2.    
+  - left; now constructor 2.    
   - subst k; now right.
 Qed.
 
 Lemma le_0 : forall p: t,  (0,0) o<= p.
 Proof.
-  destruct p, n ; auto. apply le_intror.  lia. 
-  - left; left. lia.
+  destruct p, n ; auto.
+  - apply le_intror; lia. 
+  - left; left; lia.
 Qed.
 
-(** cf Peano.lt's definition  in Stdlib *)
- 
-
-(** should move to generic module *)
-
-Lemma le_lt_trans : forall p q r, p o<= q -> q o< r -> p o< r.
-Proof.
-  destruct 1; trivial. 
-  intro; now transitivity y.  
-Qed.   
-
-Lemma lt_le_trans : forall p q r, p o< q -> q o<= r -> p o< r.
-Proof.
-  destruct 2; trivial; now  transitivity q.
-Qed.   
 
 
 Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
@@ -122,9 +96,6 @@ Qed.
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
 
-Import Generic.
-
-About compare_Eq_eq.
 
 
 
@@ -312,7 +283,7 @@ Qed.
  Proof. reflexivity.  Qed.
 
 
- (* A simplifier ? *)
+ (* to simplify ? *)
  
 Lemma limit_is_lub_0 : forall i alpha, (forall j, (i,j) o< alpha) <->
                                  (S i, 0) o<= alpha.
@@ -557,7 +528,7 @@ Section Merge.
 
 End Merge.
 
-Goal forall l,  merge nat Nat.leb (nil, l) = l.
+Goal forall l, merge nat Nat.leb (nil, l) = l.
   intro; now rewrite merge_equation.
 Qed.
 
