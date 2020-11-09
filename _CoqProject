@@ -3,6 +3,7 @@
 theories/OrdinalNotations/ON_Omega.v
 theories/OrdinalNotations/Generic.v
 theories/OrdinalNotations/ON_Finite.v
+theories/OrdinalNotations/ON_mult.v
 theories/OrdinalNotations/ON_Omega_plus_omega.v
 theories/OrdinalNotations/ON_plus.v
 theories/OrdinalNotations/ON_Omega2.v

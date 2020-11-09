@@ -1,12 +1,12 @@
 
-(** The sum of two ordinal  notations *)
+(** Product of ordinal  notations *)
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
  
 From Coq Require Import Arith Compare_dec Lia 
-     Relation_Operators RelationClasses Disjoint_Union.
-From hydras Require Import  OrdinalNotations.Generic MoreOrders.
+     Relation_Operators RelationClasses.
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic.
 
 Import Relations.
 Generalizable All Variables.
@@ -23,45 +23,36 @@ Section Defs.
           (NB: ON ltB compareB).
 
 
-Definition t := (A + B)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
+Definition t := (B * A)%type.
 
-Definition lt : relation t := le_AsB _ _ ltA ltB.
 
- Definition compare (alpha beta: t) : comparison :=
-   match alpha, beta with
-     inl _, inr _ => Lt
-   | inl a, inl a' => compareA a a'
-   | inr b, inr b' => compareB b b'
-   | inr _, inl _ => Gt
-  end.
+Definition lt : relation t := lexico ltB ltA.
+
+
+(** reflexive closure of lt *)
 
 Definition le := clos_refl _ lt.
 
-Hint Unfold lt le : core.
-Hint Constructors le_AsB: core.
+
+Definition compare (alpha beta: t) : comparison :=
+  match compareB (fst alpha) (fst beta) with
+    Eq => compareA (snd alpha) (snd beta)
+  | c => c
+  end.
+
+Hint Constructors clos_refl lexico: core.
+
+Hint Unfold  lt le : core.
 
 Instance lt_strorder : StrictOrder lt.
 Proof.
-  split.
-  -  intros x  H. inversion H. subst.
-     destruct (StrictOrder_Irreflexive _ H2).
-     subst.
-     destruct (StrictOrder_Irreflexive _ H2).
-  - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
-    + injection H5;constructor.  subst.
-      now transitivity y0.    
-    + constructor.
-    + constructor.
-    + constructor.
-      injection H5; intro; subst.  now transitivity y0.
+  apply Strict_lex; [apply NB | apply NA].
 Qed.
     
 
 Lemma lt_wf : well_founded lt.
-Proof. destruct NA, NB.
-       apply wf_disjoint_sum; [apply wf | apply wf0].
+Proof. 
+       apply wf_lexico; apply wf. 
 Qed.
 
 
@@ -72,9 +63,14 @@ Lemma compare_reflect alpha beta :
   | Eq => alpha = beta
   | Gt => lt beta  alpha
   end.
-  destruct alpha, beta; cbn; auto.
-  destruct (compare_correct a a0); (now subst || constructor; auto).
-   - destruct (compare_correct b b0); (now subst || constructor; auto).
+  destruct alpha, beta; cbn; auto. unfold compare. cbn.
+  destruct (compare_correct b b0).
+  - subst; destruct (compare_correct a a0).
+    + now subst.
+    + now constructor 2.
+    + now constructor 2.
+  - now constructor 1.
+  - now constructor 1.
 Qed.
 
 
@@ -86,7 +82,7 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Global Instance ON_plus : ON lt compare.
+Global Instance ON_mult : ON lt compare.
 Proof.
   split.
   - apply lt_strorder.
@@ -109,7 +105,9 @@ Defined.
 End Defs.
 
 Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
-Arguments ON_plus {A ltA compareA} _ {B ltB compareB}.
+Arguments ON_mult {A ltA compareA} _ {B ltB compareB}.
+
+
 
 
 

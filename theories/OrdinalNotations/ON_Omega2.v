@@ -3,98 +3,93 @@
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
+From Coq Require Import Arith Compare_dec Lia.
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic
+        ON_mult  ON_Omega.
 
-From Coq Require Import Arith Compare_dec Lia Program.Wf List
-     FunInd Recdef.
-From hydras Require Import Prelude.Simple_LexProd  OrdinalNotations.Generic.
 Import Relations.
+Declare Scope opo_scope.
+Delimit Scope opo_scope with opo.
+Open Scope ON_scope.
+Open Scope opo_scope.
 
+Definition Omega2 := ON_mult Omega Omega.
 
+Existing Instance Omega2.
+
+Definition t := @ON_mult.t nat nat.
+
+Example ex1 : (5,8) o< (5,10).
+constructor 2.
+auto with arith.
+Qed.
 
 Declare Scope o2_scope.
 Delimit Scope o2_scope with o2.
+Open Scope ON_scope.
 Open Scope o2_scope.
 
-Coercion is_true: bool >-> Sortclass.
-
-Definition t := (nat * nat)%type.
-
-Definition lt : relation t := lexico Peano.lt Peano.lt.
-
-Infix "o<" := lt : o2_scope.
-
-(** reflexive closure of lt *)
-
-Definition le := clos_refl _ lt.
-
-Infix "o<=" := le : o2_scope.
-
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
-
+Notation "'omega'" := (1,0): o2_scope.
 
 Definition zero: t := (0,0).
-
-Definition fin (n:nat) : t := (0, n).
-
-Notation "'F'" := fin : o2_scope.
-
+Definition fin (i:nat) : t := (0,i).
 Coercion fin : nat >-> t.
+
+Compute ON_compare omega (fin 8).
+
+Compute ON_compare (8:t) omega.
+
+
+Lemma omega_is_limit : Limit omega. 
+Proof.
+  split.
+  + exists (fin 8); constructor.
+    auto with arith.
+  + inversion 1; subst.
+    * assert (a= 0) by lia; subst a.
+      exists (0, S b); split.
+      constructor 2; auto.
+      constructor 1; auto.
+    *  exfalso; lia. 
+Qed.
+
+
+(*
+Hint Constructors clos_refl lexico : O2.
+Hint Unfold lt le : O2.
+*)
+
+
 
 
 Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
 
-Notation "'omega'" := (1,0) : o2_scope.
-
-
-
-Example ex1 : 6 o< omega.
-Proof.
-  left; auto with arith.
-Qed.
-
-
-Example ex2 : omega o< (1,1).
-Proof.
- right; auto with arith.
-Qed.
-
-
-Instance lt_strorder : StrictOrder lt.
-Proof. apply Strict_lex; apply Nat.lt_strorder. Qed.
-
-Instance le_preorder : PreOrder le.
-Proof.
-  split.
-  - right.
-  - inversion_clear 1; trivial.
-    + inversion 1; left.
-      * now transitivity y.
-      * now subst.
-Qed.
 
 Lemma eq_dec (alpha beta: t) : {alpha = beta} + {alpha <> beta}.
 Proof.  
  repeat decide equality.
 Defined.
 
-Lemma lt_wf : well_founded lt.
-Proof. apply wf_lexico; apply lt_wf. Qed.
 
-Lemma le_introl :
+
+Lemma le_intror :
   forall i j k:nat, (j <= k)%nat -> (i,j) o<= (i,k).
 Proof.
-  intros i j k H; destruct (Lt.le_lt_or_eq j k H); auto with O2.
+  intros i j k H; destruct (Lt.le_lt_or_eq j k H).
+   left; now constructor 2.    
   - subst k; now right.
 Qed.
 
 Lemma le_0 : forall p: t,  (0,0) o<= p.
 Proof.
-  destruct p, n ; auto with arith O2.
-  - apply le_introl;  auto with arith O2.
+  destruct p, n ; auto. apply le_intror.  lia. 
+  - left; left. lia.
 Qed.
 
 (** cf Peano.lt's definition  in Stdlib *)
+ 
+
+(** should move to generic module *)
 
 Lemma le_lt_trans : forall p q r, p o<= q -> q o< r -> p o< r.
 Proof.
@@ -114,7 +109,7 @@ Proof.
  split.
   - inversion_clear 1.
   + left; now left.
-  +  now apply le_introl.
+  +  now apply le_intror.
   -  intros; apply lt_le_trans with (n, S n0); auto.
     right; auto.
 Qed.
@@ -124,65 +119,46 @@ Proof.
   destruct alpha; right; cbn; abstract lia.
 Qed.
 
-
-Definition compare (alpha beta: t) : comparison :=
-  match Nat.compare (fst alpha) (fst beta) with
-    Eq => Nat.compare (snd alpha) (snd beta)
-  | c => c
-  end.
-
 Hint Constructors clos_refl lexico : O2.
 Hint Unfold lt le : O2.
 
-Definition lt_b alpha beta : bool :=
-  match compare alpha beta with
-    Lt => true
-  | _ => false
-  end.
+Import Generic.
 
-Definition le_b alpha beta := negb (lt_b beta alpha).
+About compare_Eq_eq.
 
-Definition eq_b alpha beta := match compare alpha beta with
-                                Eq => true
-                              | _ => false
-                              end.
+
 
 Lemma compare_reflect alpha beta :
-  match (compare alpha beta)
+  match (ON_compare alpha beta)
   with
     Lt => alpha o< beta
   | Eq => alpha = beta
   | Gt => beta o< alpha
   end.
 Proof.
-  destruct alpha, beta; cbn. 
-  case_eq (compare (n, n0) (n1, n2)); unfold compare; cbn;
-  case_eq (n ?= n1); try discriminate;
-    repeat (rewrite Nat.compare_eq_iff ||
-            rewrite Nat.compare_lt_iff ||
-            rewrite  Nat.compare_gt_iff); intros; subst; auto.
-   - now right.
-   - now left.
-   - now right.
-   - now left. 
+  destruct alpha, beta; cbn; unfold ON_compare.
+  destruct (compare_correct (n,n0) (n1,n2)); auto.
 Qed.
+
 
 Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
+    CompareSpec (alpha = beta) (ON_lt alpha beta) (ON_lt beta alpha)
+                (ON_compare alpha beta).
 Proof.
   generalize (compare_reflect alpha beta).
-  destruct (compare alpha beta); now constructor. 
+  destruct (ON_compare alpha beta); now constructor. 
 Qed.
 
 
-Instance Omega2 : ON  lt compare.
+(*Instance Omega2 : ON  lt compare.
 Proof.
   split.
   - apply lt_strorder.
   - apply lt_wf.
   - apply compare_correct.
 Qed.
+ *)
+
 
 Lemma zero_le alpha : zero o<= alpha.
 Proof.
@@ -233,7 +209,7 @@ Lemma lt_eq_lt_dec alpha beta :
   {alpha o< beta} + {alpha = beta} + {beta o< alpha}.
 Proof.
  generalize (compare_reflect alpha beta).
- case_eq (compare alpha beta).
+ case_eq (ON_compare alpha beta).
   - intros; left; now right.
   - intros; left; now left.
   - intros; now right.
@@ -297,10 +273,12 @@ Proof.
    -   destruct (H0 (n, n0)).
     + right; auto with arith. 
     + specialize (H x).
-     rewrite lt_succ_le in H1.
+      assert ((n,n0) o< s x).
+ apply H1.
+     rewrite  lt_succ_le in H2.
      assert (s x o< s x) by (eapply lt_le_trans; eauto).
-     destruct lt_strorder as [H3 H4].
-     destruct (H3 _ H2).
+     destruct (lt_strorder _ _ Omega _ _  Omega) as [H4 H5].
+     destruct (H4 _ H3).
 Qed.
 
 (** Canonical sequences *)
@@ -348,7 +326,7 @@ Proof.
         * simpl in H1; destruct (H2 _ Hgt) as [x H0].
         simpl in H0.
         specialize (H x).
-     destruct lt_strorder as [H3 H4].
+     destruct (lt_strorder _ _ Omega _ _ Omega) as [H3 H4].
      destruct (H3 (k,l)).        
      transitivity (i,x); auto.
   -    inversion_clear H.
@@ -509,7 +487,7 @@ Proof.
       destruct (eq_dec beta zero).
        + subst; now left.
        +  specialize  (H beta 1 (lt_succ beta)).
-          assert (1 o< succ beta). {
+          assert (fin 1 o< succ beta). {
             destruct beta;  destruct n0, n1.
             * now destruct n.
             * right; cbn; abstract lia.
@@ -520,7 +498,7 @@ Proof.
           }
           *  specialize (H H0).
              rewrite <- succ_is_plus_1 in H.       
-             destruct lt_strorder as [H3 H4].
+             destruct (lt_strorder _ _ Omega _ _ Omega) as [H3 H4].
              destruct (H3 _ H).        
 Qed.
 
@@ -551,6 +529,7 @@ Qed.
 (* adapted from Pascal Manoury et al. *)
 
 
+Require Import List.
 
 Section Merge.
 
