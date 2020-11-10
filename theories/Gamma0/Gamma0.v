@@ -3545,8 +3545,6 @@ Qed.
 
 End phi_to_psi.
 
-About phi_psi.
-
 Compute phi 0 (epsilon 2)= epsilon 2.
 
 Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).

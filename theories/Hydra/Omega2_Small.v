@@ -3,7 +3,7 @@
 
 From Coq Require Import Arith Peano_dec Lia Relations Relation_Operators.
 From hydras Require Import  Hydra_Lemmas Simple_LexProd ON_Omega2.
-
+Import Generic.
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
 
@@ -15,9 +15,9 @@ Section Impossibility_Proof.
  
 
   Variable m : Hydra -> ON_Omega2.t.
+ 
+  Context (Hvar : Hvariant (Generic.wf (ON:=Omega2))  free m).
   
-  Context (Hvar : Hvariant lt_wf free m).
-   
   Let big_h := hyd1 (hyd2 head head).
   
   (** To every pair $(i,j)$ of natural numbers we associate an hydra 
@@ -131,35 +131,38 @@ Qed.
 Hint Resolve step_to_battle : hydra. 
 
 
- Lemma m_ge : m big_h o<= m small_h.
- Proof.
-   unfold small_h; pattern (m big_h) .   
-   apply  well_founded_induction with (R := lt) (1:= lt_wf);
-     intros (i,j) IHij.
-     destruct j as [|k].
-   - destruct i as [| l].
-     +  (* p = zero *)
-       apply le_0. 
-     +  (* p = (S i, 0) *)
-       rewrite <- limit_is_lub.
-       intro k.
-       apply le_lt_trans with (m (iota (l, k))); auto with hydra. 
-       red; apply (m_strict_mono m Hvar); auto with hydra.
-       reflexivity.
-   - change (i, S k) with (succ (i,k)) at 1.
-     rewrite <- lt_succ_le.
-     apply le_lt_trans with (m (iota (i, k))); auto with hydra.
-     apply (m_strict_mono m Hvar); auto with hydra.
- Qed.
+Lemma m_ge : m big_h o<= m small_h.
+Proof.
+  unfold small_h; pattern (m big_h) .   
+  apply  well_founded_induction with (R := ON_lt) (1:= wf);
+    intros (i,j) IHij.
+  destruct j as [|k].
+  - destruct i as [| l].
+    +  (* p = zero *)
+      apply le_0. 
+    +  (* p = (S i, 0) *)
+      rewrite <- limit_is_lub.
+      intro k; apply le_lt_trans with (m (iota (l, k))). cbn.
+      apply IHij. left; auto.
+      red; apply (m_strict_mono m Hvar); auto with hydra.
+      reflexivity.
+  - change (i, S k) with (succ (i,k)) at 1.
+    rewrite <- lt_succ_le.
+    apply le_lt_trans with (m (iota (i, k))); auto with hydra.
+    apply IHij.
+    right; auto.      
+    apply (m_strict_mono m Hvar); auto with hydra.
+Qed.
 
 
 Theorem Impossible : False.
 Proof.
-  destruct (StrictOrder_Irreflexive  (m big_h));
+  destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
     apply le_lt_trans with (m small_h).
   -  apply m_ge.
   -  apply m_lt. 
 Qed. 
 
 End Impossibility_Proof.
+
 

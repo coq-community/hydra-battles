@@ -87,6 +87,21 @@ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
 
+Lemma le_lt_trans {A:Type}(lt: relation A)
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}: forall p q r, p o<= q -> q o< r -> p o< r.
+Proof.
+  destruct 1; trivial. 
+  intro; now transitivity y.  
+Qed.   
+
+Lemma lt_le_trans {A:Type}(lt: relation A)
+            {compare : A -> A -> comparison}
+            {on : ON lt compare}:
+  forall p q r, p o< q -> q o<= r -> p o< r.
+Proof.
+  destruct 2; trivial; now  transitivity q.
+Qed.   
 
 
 (** The segment called [O alpha] in Schutte's book *)
