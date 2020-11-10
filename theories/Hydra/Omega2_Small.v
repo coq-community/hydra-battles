@@ -17,6 +17,7 @@ Section Impossibility_Proof.
   Variable m : Hydra -> ON_Omega2.t.
  
   Context (Hvar : Hvariant (Generic.wf (ON:=Omega2))  free m).
+  
   Let big_h := hyd1 (hyd2 head head).
   
   (** To every pair $(i,j)$ of natural numbers we associate an hydra 

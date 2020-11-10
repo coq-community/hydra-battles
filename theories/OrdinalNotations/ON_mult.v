@@ -113,6 +113,7 @@ End Defs.
 
 Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
 Arguments ON_mult {A ltA compareA} _ {B ltB compareB}.
+Arguments lt_strorder {A} {ltA} {compareA} _  {B} {ltB} {compareB} _.
 
 
 

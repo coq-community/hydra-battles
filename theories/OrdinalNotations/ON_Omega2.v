@@ -15,27 +15,27 @@ Definition Omega2 := ON_mult Omega Omega.
 
 Existing Instance Omega2.
 
-Definition t := @ON_mult.t nat nat.
+Definition t := ON_t.  
 
 Example ex1 : (5,8) o< (5,10).
 constructor 2.
 auto with arith.
 Qed.
 
-Declare Scope o2_scope.
-Delimit Scope o2_scope with o2.
+
 Open Scope ON_scope.
-Open Scope o2_scope.
 
-Notation "'omega'" := (1,0): o2_scope.
 
+Notation "'omega'" := (1,0): ON_scope.
 Definition zero: t := (0,0).
+
 Definition fin (i:nat) : t := (0,i).
 Coercion fin : nat >-> t.
 
-Compute ON_compare omega (fin 8).
+Compute ON_compare omega   (fin 42).
 
 Compute ON_compare (8:t) omega.
+
 
 
 Lemma omega_is_limit : Limit omega. 
@@ -107,7 +107,7 @@ Lemma compare_reflect alpha beta :
   | Gt => beta o< alpha
   end.
 Proof.
-  destruct alpha, beta; cbn; unfold ON_compare.
+  destruct alpha, beta; cbn; unfold ON_compare.  
   destruct (compare_correct (n,n0) (n1,n2)); auto.
 Qed.
 
@@ -121,14 +121,6 @@ Proof.
 Qed.
 
 
-(*Instance Omega2 : ON  lt compare.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply lt_wf.
-  - apply compare_correct.
-Qed.
- *)
 
 
 Lemma zero_le alpha : zero o<= alpha.
@@ -231,8 +223,9 @@ Definition limitb (alpha : t) := match alpha with
                                    | _ => false
                                    end.
 
+
 Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->
-                                     limitb alpha.
+                                   limitb alpha.
 Proof.
    destruct alpha.
    destruct 1.
@@ -248,7 +241,7 @@ Proof.
  apply H1.
      rewrite  lt_succ_le in H2.
      assert (s x o< s x) by (eapply lt_le_trans; eauto).
-     destruct (lt_strorder _ _ Omega _ _  Omega) as [H4 H5].
+     destruct (ON_mult.lt_strorder Omega  Omega) as [H4 H5].
      destruct (H4 _ H3).
 Qed.
 
@@ -297,7 +290,7 @@ Proof.
         * simpl in H1; destruct (H2 _ Hgt) as [x H0].
         simpl in H0.
         specialize (H x).
-     destruct (lt_strorder _ _ Omega _ _ Omega) as [H3 H4].
+     destruct (ON_mult.lt_strorder Omega Omega) as [H3 H4].
      destruct (H3 (k,l)).        
      transitivity (i,x); auto.
   -    inversion_clear H.
@@ -339,7 +332,7 @@ Definition  plus (alpha beta : t) : t :=
   | (S n, b), (0, b') => (S n, b + b')
    end.
 
-Infix "+" := plus : o2_scope.
+Infix "+" := plus : ON_scope.
 
 Compute 3 + omega.
 
@@ -356,12 +349,12 @@ Qed.
 
 Definition mult_fin_r  (alpha : t) (p : nat): t :=
   match alpha, p with
- |  (0,0), _  => zero
- |  _, 0 => zero
- |  (0, n), p => (0, n * p)
- |  ( n, b),  n' => ( n *  n', b)
-               end.
-Infix "*" := mult_fin_r : o2_scope.
+  |  (0,0), _  => zero
+  |  _, 0 => zero
+  |  (0, n), p => (0, n * p)
+  |  ( n, b),  n' => ( n *  n', b)
+  end.
+Infix "*" := mult_fin_r : ON_scope.
 
 (** multiplication of  a natural number by an ordinal *)
 
@@ -469,7 +462,7 @@ Proof.
           }
           *  specialize (H H0).
              rewrite <- succ_is_plus_1 in H.       
-             destruct (lt_strorder _ _ Omega _ _ Omega) as [H3 H4].
+             destruct (ON_mult.lt_strorder  Omega  Omega) as [H3 H4].
              destruct (H3 _ H).        
 Qed.
 
@@ -497,7 +490,7 @@ Proof.
   now  apply compare_Eq_eq.
 Qed.
 
-(* adapted from Pascal Manoury et al. *)
+(* *Example adapted from Pascal Manoury et al. *)
 
 
 Require Import List.

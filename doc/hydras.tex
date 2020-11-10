@@ -2634,10 +2634,10 @@ Lemma wf_measure  {A:Type}(lt: relation A)
 A simple example of application is given in Sect.~\vref{sect:merge-example}.
 
 
-\section{Examples of Ordinal Notations}
+\section{Example: The Ordinal \texorpdfstring{$\omega$}{omega}}
 
 
-\subsection{The Ordinal \texorpdfstring{$\omega$}{omega}}
+
 
 The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
 
@@ -2653,10 +2653,16 @@ Proof.
  - apply Wf_nat.lt_wf.
  - apply Nat.compare_spec.
 Qed.
+
+Compute ON_compare 6 9.
 \end{Coqsrc}
 
+\begin{Coqanswer}
+     = Lt
+     : comparison
+\end{Coqanswer}
 
-\subsection{Sum of two Ordinal Notations}
+\section{Sum of  Ordinal Notations}
 
 Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective types \texttt{A} and \texttt{B}.
 
@@ -2664,7 +2670,7 @@ Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective type
 on the disjoint sum of the associated types, by putting all elements of \texttt{A} before the elements of \texttt{B} (thanks to Standard Library's relation operator \texttt{le\_AsB}).
 
 
-
+\noindent
 \emph{From Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}}.
 
 \begin{Coqanswer}
@@ -2848,6 +2854,8 @@ Lemma lt_omega alpha :
 % \end{remark}
 %
 
+
+
 \section{Limits and Successors}
 
 Let us look again at our implementation of $\omega+\omega$. We can distinguish between the three kinds of ordinals seen in Fig~\ref{fig:ordinal-sequence}:
@@ -2965,38 +2973,70 @@ Finally, the nature of any ordinal is decidable(inside this notation system) :
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
 \end{Coqsrc}
 
+\section{Product of Ordinal Notations}
+
+Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective  ordered types \texttt{A} and \texttt{B}. The product of \texttt{NA} and \texttt{NB} is considered as the concatenation of $B$ copies of $A$, ordered by the lexicographic order on $B\times A$.
+
+\vspace{4pt}
+\noindent
+\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_mult.html}{OrdinalNotations.ON\_mult}}
+
+\begin{Coqsrc}
+Section Defs.
+
+  Context `(ltA: relation A)
+          (compareA : A -> A -> comparison)
+          (NA: ON ltA compareA).
+  Context `(ltB: relation B)
+          (compareB : B -> B -> comparison)
+          (NB: ON ltB compareB).
+
+Definition t := (B * A)%type.
+Definition lt : relation t := lexico ltB ltA.
+Definition le := clos_refl _ lt.
+
+Definition compare (alpha beta: t) : comparison :=
+  match compareB (fst alpha) (fst beta) with
+  |  Eq => compareA (snd alpha) (snd beta)
+  | c => c
+  end.
+
+Lemma compare_reflect alpha beta :
+  match (compare alpha beta)
+  with
+    Lt => lt alpha  beta
+  | Eq => alpha = beta
+  | Gt => lt beta  alpha
+  end.
+
+Global Instance ON_mult : ON lt compare.
+
+End Defs.
+\end{Coqsrc}
 
 \section{The Ordinal \texorpdfstring{$\omega^2$}{omega^2}}
 
-The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is represented by the lexicographically ordered cartesian product $\mathbb{N}\times\mathbb{N}$. 
+The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is an instance of the multiplication presented in the last section.
 
 \vspace{4pt}
-\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{ON\_Omega2}}
+\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
 \begin{Coqsrc}
-Definition t := (nat * nat)%type.
-
-Definition lt : relation t := lexico Peano.lt Peano.lt.
-Definition le := clos_refl _ lt.
-
-Infix "o<" := lt : o2_scope.
-Infix "o<=" := le : o2_scope.
+Definition Omega2 := ON_mult Omega Omega.
+Existing Instance Omega2.
+Definition t := ON_mult.t nat nat.
 \end{Coqsrc}
 
-It is easy to represent  finite ordinals, successors and limits.
+
 
 \begin{Coqsrc}
 Definition zero: t := (0,0).
 
 Definition fin (n:nat) : t := (0, n).
 
-Notation "'F'" := fin : o2_scope.
-
 Coercion fin : nat >-> t.
 
-Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
-
-Notation "'omega'" := (1,0) : o2_scope.
+Notation "'omega'" := (1,0) : ON_scope.
 
 Definition limitb (alpha : t) := 
  match alpha with
@@ -3006,41 +3046,30 @@ end.
 \end{Coqsrc}
 
 
-In order to build an ordinal notation out of the type \texttt{t}, we have to define a comparison function, and prove that the order \texttt{lt} is well-founded.
-
-
-
-\begin{Coqsrc}
-Instance lt_strorder : StrictOrder lt.
-(* ... *)
-
-Definition compare (alpha beta: t) : comparison :=
-  match Nat.compare (fst alpha) (fst beta) with
-    Eq => Nat.compare (snd alpha) (snd beta)
-  | c => c
-  end.
-
-Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
-
-Lemma lt_wf : well_founded lt.
-
-Instance Omega2: ON lt compare.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply lt_wf.
-  - apply compare_correct.
-Qed.
-\end{Coqsrc}
 
 
 \subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
 
+\subsubsection{Successor}
+
+The successor of any ordinal is defined by a simple pattern-matching.
+This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
+
+\begin{Coqsrc}
+Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
+
+Lemma lt_succ alpha : alpha o< succ alpha.
+
+Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
+\end{Coqsrc}
+
 \subsubsection{Addition}
 
-We can define on \texttt{ON\_omega2} an addition which extends the addition on \texttt{nat}.
+We can define on \texttt{Omega2} an addition which extends the addition on \texttt{nat}.
 
 \begin{Coqsrc}
 Definition  plus (alpha beta : t) : t :=
@@ -3092,7 +3121,7 @@ Definition mult_fin_r  (alpha : t) (p : nat): t :=
  |  _, 0 => zero
  |  (0, n), p => (0, n * p)
  |  ( n, b),  n' => ( n *  n', b)
-               end.
+ end.
 Infix "*" := mult_fin_r : o2_scope.
 
 (** multiplication of  a natural number by an ordinal *)
@@ -3190,11 +3219,11 @@ Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for provin
 
 
 \begin{Coqsrc}
-  Section Impossibility_Proof.
+Section Impossibility_Proof.
   
  Variable m : Hydra -> ON_Omega2.t.
   
- Context (Hvar : Hvariant lt_wf free m).
+ Context (Hvar : Hvariant (Generic.wf (ON:=Omega2))  free m).
 \end{Coqsrc}
 
 
@@ -3209,9 +3238,9 @@ $j$ branches of length $1$.
 \emph{From Module ~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#iota}{Hydra.Omega2\_Small}}
 
 \begin{Coqsrc}
-Let iota (p: ON_Omega2.t) := 
-    node (hcons_mult (hyd1 head) (fst p)
-                     (hcons_mult head (snd p) hnil)).
+ Let iota (p: ON_Omega2.t) := 
+     node (hcons_mult (hyd1 head) (fst p)
+                                     (hcons_mult head (snd p) hnil)).
   \end{Coqsrc}
 
 For instance, Figure~\vref{fig:essai2} shows the hydra associated to the ordinal 
@@ -3291,13 +3320,13 @@ If $j=0$, then one round suffices to transform \texttt{big\_h} into $\iota(i,j)$
 If $j>0$, then a first round transforms \texttt{big\_h} into $\iota(i+1,0)$ and a second round into $\iota(i,j)$. So, we have the following result.
 
 \begin{Coqsrc}
-Lemma big_to_small: big_h -+-> small_h.
+  Lemma big_to_small: big_h -+-> small_h.
 \end{Coqsrc}
 
 Since $m$ is a variant, we infer the following inequality:
 
 \begin{Coqsrc}
-Corollary m_lt : m small_h o< m big_h.
+   Corollary m_lt : m small_h o< m big_h.
 \end{Coqsrc}
 
 
@@ -3327,16 +3356,16 @@ Let us define the notion of elementary ``step'' of decreasing sequences in
 
 
 \begin{Coqsrc}
-Inductive step : t -> t -> Prop :=
-| succ_step : forall i j,  step (i, S j) (i, j)
-| limit_step : forall i j, step (S i, 0) (i, j).
+  Inductive step : t -> t -> Prop :=
+  | succ_step : forall i j,  step (i, S j) (i, j)
+  | limit_step : forall i j, step (S i, 0) (i, j).
 \end{Coqsrc}
 
 The following lemma establishes a correspondance between the relation
 \texttt{step} and hydra battles.
 
 \begin{Coqsrc}
-Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
+  Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
 \end{Coqsrc}
 
 \index{Maths!Transfinite induction}
@@ -3349,12 +3378,12 @@ that transforms the hydra $\iota(p)$ into $\iota(q)$.
 \emph{From Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#m_ge}{Hydra.Omega2\_Small}}
 
 \begin{Coqsrc}
-Lemma m_ge : forall p : t,   p o<= m (iota p).
-Proof.
-  unfold small_h; pattern (m big_h) .   
-   apply  well_founded_induction with (R := lt) (1:= lt_wf).
-  intro p ; pattern p;
-    apply  well_founded_induction with 
+  Lemma m_ge : forall p : t,   p o<= m (iota p).
+  Proof.
+    unfold small_h; pattern (m big_h) .   
+     apply  well_founded_induction with (R := lt) (1:= lt_wf).
+     intro p ; pattern p;
+     apply  well_founded_induction with 
                (R := lt2) (1:= wf_lexico lt_wf lt_wf);
      intros (i,j) IHij. 
 \end{Coqsrc}
@@ -3403,12 +3432,12 @@ Since $<$ is a strict order (irreflexive  and transitive), this inequality is in
 In \coq (Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#Impossible}{Hydra.Omega2\_Small}):
 
 \begin{Coqsrc}
-Theorem Impossible: False.
-Proof.
-  destruct (StrictOrder_Irreflexive (m big_h)).
-  apply le2_lt2_trans with (m small_h).
-  -  unfold small_h; apply m_ge.
-  -  apply m_lt. 
+  Theorem Impossible: False.
+  Proof.
+    destruct (StrictOrder_Irreflexive (m big_h)).
+    apply le2_lt2_trans with (m small_h).
+    -  unfold small_h; apply m_ge.
+    -  apply m_lt. 
 Qed. 
 End Impossibility_Proof.
 \end{Coqsrc}
@@ -3428,23 +3457,23 @@ Sect.~\ref{omega-case} and this section, with the same proof structure, but with
 complex technical details.
  \end{remark}
 
-\index{Exercises}
-\begin{exercise}
+% \index{Exercises}
+% \begin{exercise}
 
-\label{sec:orgheadline63}
-Write \emph{direct} proofs ({i.e.},  without applying the result and tools of Chap.~\ref{ks-chapter}) that the following data structures  are too simple for defining a variant for any hydra battle.
+% \label{sec:orgheadline63}
+% Write \emph{direct} proofs ({i.e.},  without applying the result and tools of Chap.~\ref{ks-chapter}) that the following data structures  are too simple for defining a variant for any hydra battle.
 
-\begin{itemize}
-\item  $\omega^n$ : the set of all $n$-uples of natural numbers, ordered  by 
-  lexicographic ordering
-\item  $\omega^\omega$: the set of all decreasing sequences (with respect to $\le$)  of natural numbers, ordered by lexicographic ordering on lists.
+% \begin{itemize}
+% \item  $\omega^n$ : the set of all $n$-uples of natural numbers, ordered  by 
+%   lexicographic ordering
+% \item  $\omega^\omega$: the set of all decreasing sequences (with respect to $\le$)  of natural numbers, ordered by lexicographic ordering on lists.
 
-For instance, the following inequality holds:
-\[\langle 4,3,3,3,3,3,3,2,2,2 \rangle\,<\,\langle 4,4,2 \rangle\]
-\end{itemize}
+% For instance, the following inequality holds:
+% \[\langle 4,3,3,3,3,3,3,2,2,2 \rangle\,<\,\langle 4,4,2 \rangle\]
+% \end{itemize}
 
   
-\end{exercise}
+% \end{exercise}
 
 
 \section{A Notation for Finite Ordinals}
@@ -3863,9 +3892,11 @@ This exercise is partially solved for $i=3$ (in ~\href{../theories/html/hydras.O
 \index{Projects}
 \label{exo:ON-mult}
 \begin{project}
-Define in \coq{} the product of two ordinal notations $N_A$ and $N_B$.
-If $A$ [resp. $B$] is the underlying type of $N_A$ [resp. $N_B$], the
-product \texttt{ON\_mult $N_A$ $N_B$} is implemented over the cartesian product $B\times A$ (with the lexicographic ordering).
+% Define in \coq{} the product of two ordinal notations $N_A$ and $N_B$.
+% If $A$ [resp. $B$] is the underlying type of $N_A$ [resp. $N_B$], the
+% product \texttt{ON\_mult $N_A$ $N_B$} is implemented over the cartesian product $B\times A$ (with the lexicographic ordering).
+
+This exercise is about the non-commutativity of the multiplication of ordinals, reflected in ordinal notations.
 
 For instance, the
 elements of the product (\texttt{ON\_mult Omega (FinOrd 3)}) are ordered as follows.
@@ -3875,7 +3906,7 @@ Note that the elements of  (\texttt{ON\_mult (FinOrd 3) Omega}) are differently 
 \[(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(0,3),\dots\]
 
 
-Prove that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
+Prove formally  that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
 \texttt{Omega}  whilst
 \texttt{Omega}  is a sub-notation of \texttt{ON\_mult Omega (FinOrd $i$)},
 for any strictly positive $i$.
