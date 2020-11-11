@@ -62,7 +62,9 @@ Definition measure_lt {A:Type}{lt: relation A}
             {B : Type}
   (m : B -> A) : relation B :=
   fun x y =>  ON_lt (m x) (m y).
-            
+
+
+  
 Lemma wf_measure  {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
             {on : ON lt compare}
@@ -79,6 +81,7 @@ Defined.
 
 Hint Resolve wf_measure : core.
 
+
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
@@ -86,6 +89,9 @@ Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
     {Least alpha} +
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
+
+
+
 
 Lemma le_lt_trans {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
@@ -299,6 +305,40 @@ Proof.
       + intro H0; destruct (StrictOrder_Irreflexive beta); trivial.
         now transitivity alpha.
 Qed.
+
+
+Lemma lt_eq_lt {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : ON lt compare} : 
+  forall alpha beta, alpha o< beta \/ alpha = beta \/ beta o< alpha.
+Proof.
+  intros; destruct (compare_correct alpha beta); auto.
+Qed.
+
+
+Definition lt_eq_lt_dec {A:Type}{lt: relation A}
+            {compare : A -> A -> comparison}
+            {on : ON lt compare} (alpha beta : A) :
+   {alpha o< beta} + {alpha = beta} + {beta o< alpha}.
+  case_eq (compare alpha beta); intro H.
+  - left;right; now rewrite <- compare_Eq_eq.
+  - left; left; now rewrite <- compare_Lt_lt.
+  - right; now rewrite <- compare_Gt_gt.
+Defined.
+
+Lemma LimitNotSucc {A:Type}{lt: relation A}
+           {compare : A -> A -> comparison}
+           {on : ON lt compare}
+           (alpha :A)  :
+  Limit alpha -> forall beta, ~ Successor alpha beta.
+Proof.
+  intros [[w H] H0] beta [H1 H2].
+  destruct (lt_eq_lt beta w) as [H3 | [H3 | H3]].
+  - apply (H2 w);auto.
+  - subst w;  destruct (H0 _ H1) as [z [H3 H4]]; apply (H2 z);auto.
+  - destruct (H0 beta H1) as [z [H4 H5]]; eauto.
+Qed.
+
 
 (** To do : simplify/structure  these new proofs ! *)
 
