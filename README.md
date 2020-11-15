@@ -50,6 +50,10 @@ This contribution contains two parts:
 - theories/Prelude/*.v
   - Various auxiliary definitions and lemmas
 
+- theories/additions/*.v 
+  
+  - Addition chains
+
  
 ## Contributions are welcome ! 
   Any suggestion for improving the Coq scripts and/or the documentation will be taken into account.
