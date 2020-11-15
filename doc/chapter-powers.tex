@@ -23,7 +23,7 @@ $n$ is a natural number and $x$ belongs to some type for which a multiplication 
 
 
 \emph{From Module 
-\href{../src/html/addition.power.FirstSteps.html}{\texttt{Powers.FirstSteps}}}
+\href{../theories/html/hydras.additions.FirstSteps.html}{\texttt{additions.FirstSteps}}}
 \label{sect: power-definitions}
 
 \begin{Coqsrc}
@@ -154,7 +154,7 @@ section open in~\vref{sect: power-definitions}.
 \vspace{4pt}
 
 \emph{From Module
-\href{../src/html/addition.power.FirstSteps.html}{Powers.FirstSteps}}
+\href{../theories/html/hydras.additions.FirstSteps.html}{additions.FirstSteps}}
 
 
 \begin{Coqsrc}
@@ -324,6 +324,16 @@ Compute fibonacci 20.
      : N  
 \end{Coqanswer}
 
+\begin{todo}
+Document the files contributed by Yves
+\begin{itemize}
+\item additions/fib.v (to rename ?)
+\item additions/stub.ml (to keep inside theories/ or move to src/ ?)
+\item theories/additions/make\_fib\_tests.txt (to put in a Makefile?)
+\end{itemize}
+\end{todo}
+
+
 \subsubsection{Remark}
 \label{sect:faster}
 
@@ -455,7 +465,7 @@ for multiplication in any algebraic structure.
 First, we associate a class to the notion of \emph{multiplication} 
 on any type $A$.
 
-\emph{From Module \href{../src/html/addition.power.Monoid_def.html}{Powers/Monoid\_def.v}.}
+\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions/Monoid\_def.v}.}
 
 \begin{Coqsrc}
 Class Mult_op (A:Type) := mult_op : A -> A -> A.  
@@ -507,7 +517,7 @@ correctly read as an application of \texttt{mult\_op}. Nevertheless
 this term is convertible with \texttt{Nat.mul 3 4}, as shown by the 
 interaction below.
 
-\emph{From Module \href{../src/html/addition.power.Monoid_def.html}{Powers.Monoid\_def}}
+\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Set Printing All.
@@ -532,7 +542,7 @@ as \linebreak \texttt{@mult\_op string  {\color{darkred}?X} "abc"  "def"}, then 
 \texttt{string\_op}.
 
 
-\emph{From Module \href{../src/html/addition.power.Monoid_def.html}{Powers.Monoid\_def}}
+\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Require Import String.
@@ -560,7 +570,7 @@ For instance, in Sect.~\vref{nat-monoids}, we consider various monoids on types
 We are now ready to  give a definition of the \texttt{Monoid} class, using
 \texttt{*} as an infix operator in scope \coqscope{M} for the monoid  multiplication.
 
-The following class definition, from Module \href{../src/html/addition.power.Monoid_def.html}{Powers.Monoid\_def},
+The following class definition, from Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def},
 is parameterized with some type $A$,
 a multiplication (called \texttt{op} in the definition), and a neutral element
 $\mathds{1}$ (called \texttt{one} in the definition).
@@ -585,7 +595,7 @@ one has to provide proofs of ``monoid axioms'' \texttt{ op\_assoc},
 
 Let us show various instances, which will be used in further proofs and examples.
 Complete definitions and proofs are given in 
-File~\href{../src/html/addition.power.Monoid_instances.html}{Powers/Monoid\_instances.v}.
+File~\href{../theories/html/hydras.additions.Monoid_instances.html}{additions/Monoid\_instances.v}.
 
 
 \subsubsection{Monoid on \texttt{Z}}
@@ -767,7 +777,7 @@ First, let us define an operational type class for equivalence relations:
 \vspace{4pt}
 
 \noindent
-\emph{From Module \href{../src/html/addition.power.Monoid_def.html}{Powers.Monoid\_def}}
+\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Class Equiv A := equiv : relation A.
@@ -843,7 +853,7 @@ Coercion Monoid_EMonoid : Monoid >-> EMonoid.
 
 %ici% 
 
-\emph{From Module \href{../src/html/addition.power.Monoid_instances.html}{Powers.Monoid\_instances}}
+\emph{From Module \href{../theories/html/hydras.additions.Monoid_instances.html}{additions.Monoid\_instances}}
 
 \begin{Coqsrc}
 Check NMult : EMonoid  N.mul 1%N eq.
@@ -934,7 +944,7 @@ Compute (211 * 67)%M.
 
 \section{Computing Powers in any EMonoid}
 
-The  module \href{../src/html/addition.power.Pow.html}{Powers.Pow} defines two functions for exponentiation on any 
+The  module \href{../theories/html/hydras.additions.Pow.html}{additions.Pow} defines two functions for exponentiation on any 
 \texttt{EMonoid}  on carrier $A$.
 They are essentially the same as in Sect.~\vref{sect: power-definitions}. The main difference lies in the arguments of the functions, which now contain
  an instance~\texttt{M} of class \texttt{EMonoid}. 
@@ -986,7 +996,7 @@ functions between types \texttt{Z} and \texttt{int31}, used for making it possib
 
 \vspace{4pt}
 
-From Module~\href{../src/html/addition.power.Demo_power.html}{Powers.Demo\_power}
+From Module~\href{../theories/html/hydras.additions.Demo_power.html}{additions.Demo\_power}
 
 
 
@@ -1022,7 +1032,7 @@ Please find below the implementation of binary exponentiation using type classes
 % associated with equalities \ref{binary-eq4} to \ref{binary-eq6} and a main function \texttt{Pos\_bpow} associated with equalities \ref{binary-eq1} to \ref{binary-eq3}.
 
 \vspace{4pt}
-\emph{From Module~\href{../src/html/addition.power.Pow.html}{Powers.Pow}}
+\emph{From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}}
 
 \begin{Coqsrc}
 Fixpoint binary_power_mult `{M: @EMonoid A E_op E_one E_eq}
@@ -1048,7 +1058,7 @@ It is easy to extend \texttt{Pos\_bpow}'s domain to the type of all
 natural numbers:
 
 \vspace{4pt}
-From Module~\href{../src/html/addition.power.Pow.html}{Powers.Pow}
+From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}
 
 \begin{Coqsrc}
 Definition N_bpow {A} `{M: @EMonoid A E_op E_one E_eq} x (n:N) := 
@@ -1077,7 +1087,7 @@ statement (in the context of an \texttt{EMonoid} on type \texttt{A}).
 
 
 \vspace{4pt}
-From Module~\href{../src/html/addition.power.Pow.html}{Powers.Pow}
+From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}
 
 \begin{Coqsrc}
 Lemma N_bpow_ok : 
@@ -1097,7 +1107,7 @@ form a kind of  \emph{data refinement} \cite{Abrial:2010:MES:1855020, cohen:hal-
 
 \subsection{Proof of correctness of binary exponentiation w.r.t. the function \texttt{power}}
 Section \texttt{M\_given} of Module 
-~\href{../src/html/addition.power.Pow.html}{Powers.Pow} is devoted to the proof 
+~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow} is devoted to the proof 
 of properties of the functions above.
 Note that properties of \texttt{power} refer to the \emph{specification} of exponentiation, and can be applied for proving correctness of any implementation.
 
@@ -1183,7 +1193,7 @@ exponent \texttt{p:positive}, its basic properties are proved by induction
 along \texttt{positive}'s constructors.
 
 \vspace{4pt}
-\emph{From Module~\href{../src/html/addition.power.Pow.html}{Powers.Pow}}
+\emph{From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}}
 
 \begin{Coqsrc}
 Lemma binary_power_mult_ok :
@@ -1485,7 +1495,7 @@ Let  \texttt{A} be some type;  a \emph{computation} on \texttt{A} is
 
 
 
-From Module~\href{../src/html/addition.power.Chains.html}{Powers.Chains}
+From Module~\href{../theories/html/hydras.additions.Chains.html}{additions.Chains}
 
 \begin{Coqsrc}
 Inductive computation {A:Type}  : Type :=
@@ -2040,7 +2050,7 @@ Qed.
 \end{Coqsrc}
 
 This tactic is not adapted to much bigger exponents. In \linebreak
- Module~\href{../src/html/addition.power.Euclidean_Chains.html}{Euclidean\_Chains},
+ Module~\href{../theories/html/hydras.additions.Euclidean_Chains.html}{Euclidean\_Chains},
  for instance, we tried to apply this tactic for proving the correctness 
 of a chain associated with the exponent $45319$. 
  We had to interrupt the prover, which 
@@ -2603,7 +2613,7 @@ with any correct chain for $n$, returns a correct chain for $3n$.
 
 \paragraph{Note:}
 All the \coq{} material described in this section is available on 
- Module~\href{../src/html/addition.power.Euclidean_Chains.html}{Powers/Euclidean\_Chains.v}
+ Module~\href{../theories/html/hydras.additions.Euclidean_Chains.html}{additions/Euclidean\_Chains.v}
 
 \subsection{Chains and Continuations : f-chains}
 
@@ -3859,7 +3869,7 @@ Thus, a chain for $n=87$ can be built from a chain computing both $x^7$ and $x^{
 and a chain that raises its argument to its $8-th$ power.
 
 
-Module ~\href{../src/html/addition.power.Dichotomy.html}{Powers.Dichotomy} contains a definition of the function \texttt{delta}, and proofs that if 
+Module ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy} contains a definition of the function \texttt{delta}, and proofs that if 
 $n>3$ then $1<\delta(n)<n$.
 
 
