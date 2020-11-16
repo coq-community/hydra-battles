@@ -38,8 +38,9 @@ Local Notation "1" := one.
 
 \begin{Coqsrc}
 Fixpoint power (x:A)(n:nat) : A :=
-  match n with 0%nat => 1
-             | S p =>   x * x ^ p
+  match n with 
+   | 0%nat => 1
+   | S p =>   x * x ^ p
   end
 where "x ^ n" := (power x n).
 
@@ -65,8 +66,8 @@ Compute power append  "" "ab"  12.
 \end{Coqanswer}
 
 
-
-The number of multiplications needed to compute $x^n$ via this function is linear with respect to $n$. Despite this lack of efficiency, and thanks to its simplicity, we keep it as a specification for more efficient and complex exponentiation algorithms.
+An application of this function for  computing $x^n$ needs $n$ multiplications.
+ Despite this lack of efficiency, and thanks to its simplicity, we keep it as a specification for more efficient and complex exponentiation algorithms.
 A function will be considered a \emph{correct} exponentiation function if we can prove it is extensionally equivalent to \texttt{power}.
 
 % \subsection{A semi-naive algorithm}

@@ -14,6 +14,7 @@
 \usepackage{amsfonts}
 \usepackage{mathtools}
 \usepackage{dsfont}
+\usepackage{float}
 \usepackage{threeparttable}
 \setcounter{tocdepth}{1}
 \input{coqmacros}
@@ -365,11 +366,19 @@ we think it would be useful to include comments and hints, and questions/answers
 
 
 
-\section{Index}
+\chapter*{Index and tables}
+
+\begin{todo}
+ Still very incomplete!
+\end{todo}
+
+\printindex
 
 
+\section{Hydras and Ordinals}
 
-\begin{table}[h]
+
+\begin{table}[H]
   \centering
   \begin{threeparttable}
     \caption{Main types and type classes}
@@ -396,7 +405,7 @@ WO & well orders (Schütte's definition) & \pageref{types:WO} \\
 \end{threeparttable}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{threeparttable}
     \caption{Main functions and constants}
@@ -420,7 +429,7 @@ zero:Ord & & $0$ & The least ordinal (Schütte's model) & \pageref{Constants:zer
 
 
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{threeparttable}
     \caption{Main predicates}
@@ -444,7 +453,7 @@ Name & Gallina&Math& Description& Page \\\hline
 
 
 \vspace{4pt}
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{threeparttable}
     \caption{Infix notations}
@@ -471,7 +480,7 @@ bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and l
 \end{table}
 
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \begin{threeparttable}
     \caption{Other notations}
@@ -495,13 +504,11 @@ phi0     & \texttt{phi0 alpha} & $\phi_0(\alpha),\; \omega^\alpha$&exponential o
  
 \end{table}
 
+\section{Addition Chains}
 
+\begin{todo}
+\end{todo}
 
-
-
-
-
-\printindex
 
 % \section{Main notations}
 
