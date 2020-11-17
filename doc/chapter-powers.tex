@@ -1673,6 +1673,44 @@ Definition chain_apply (c:chain)
 \index{Projects}
 \begin{project}
 Study how  to compile efficiently such data structures.
+%
+%   Note to move to Euclidean chains 
+%
+% \textbf{Note:}  It may be interesting to adapt the old contrib \texttt{coq-additions}, where addition-chains are represented as sequences of instructions of a small abstract machine. This work has  started in file \href{../theories/html/hydras.additions.AM.html}{\texttt{AM.v}}.
+
+% \begin{Coqsrc}
+% (** basic instructions *)
+
+% Inductive instr : Set :=
+%   | MUL : instr
+%   | SQR : instr
+%   | PUSH : instr
+%   | SWAP : instr.       
+
+% Definition code := list instr.
+
+% (* semantics *)
+% (*************)
+
+% Section Semantics.
+
+%  Variable M : Type.
+%  Variable mul : M -> M -> M.
+%  Variable one : M.
+
+%  Definition stack := list M.
+%  Definition config := (M * list M)%type.
+
+%  Fixpoint exec (c : code) (x:M) (s: stack) : option config :=
+%    match c, s with
+%      nil, _ => Some (x,s)
+%    | MUL::c, y::s => exec c (mul x y) s
+%    | SQR::c, s => exec c (mul x x) s
+%    | PUSH::c, s => exec c x (x::s)
+%    | SWAP::c, y::z::s => exec c x (z::y::s)
+%    | _,_ => None
+%    end.
+% \end{Coqsrc}
 \end{project}
 
 
