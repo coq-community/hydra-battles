@@ -7405,7 +7405,7 @@ Prove a few  exact formulas and minoration lemmas.
 \label{sect:hardy}
 In order to give an idea of the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
-\index{Maths!Hardy Hierarchy}
+\index{Maths!Hardy hierarchy}
 
 For each ordinal $\alpha$ below $\epsilon_0$, $H_\alpha$ is a 
 total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
@@ -10140,7 +10140,7 @@ studied in~\cite{schutte}, and partially implemented in this development.
 \emph{Please contribute!}
  
 For instance, the following theorem states that, if $\gamma$ is the sum of a limit ordinal $\beta$ and a finite ordinal $n$, and $\beta$ is a fixpoint of
-$\phi(\alpha)$, then $\psi(\alpha,\gamma)=\phi_\alpha(\gamma+1)$.
+$\phi_\alpha$, then $\psi(\alpha,\gamma)=\phi_\alpha(\gamma+1)$.
 
 \begin{Coqanswer}
 phi_psi :
@@ -10295,14 +10295,14 @@ WO & well orders (Schütte's definition) & \pageref{types:WO} \\
 \begin{tabular}{|r | c|c|c|c|l|}
 \hline
 Name & Gallina & Math & Description & Page \\ \hline
-canon & canon alpha i & $\canonseq{\alpha}{i}$& Canonical sequence & \pageref{Functions:canon}\\
-canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& Helper for canon & \pageref{Functions:canonS}\\
+canon & canon alpha i & $\canonseq{\alpha}{i}$& canonical sequence & \pageref{Functions:canon}\\
+canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& helper for canon & \pageref{Functions:canonS}\\
 F\_ & F\_ alpha n & $F_\alpha(n)$ & Wainer's \texttt{F} fast growing hierarchy & \pageref{Functions:F-alpha} \\
 H\_ & H\_ alpha n & $H_\alpha(n)$ & Hardy's \texttt{H} fast growing hierarchy & \pageref{Functions:H-alpha} \\
-iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{Functions:iterate} \\
+iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & functional iteration & \pageref{Functions:iterate} \\
 L\_ & L\_ alpha k & $L_\alpha(k)$ & final step of a standard path & \pageref{Functions:L-alpha} \\
-succ & succ alpha & & Successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
-zero:Ord & & $0$ & The least ordinal (Schütte's model) & \pageref{Constants:zero:Ord} \\
+succ & succ alpha & & successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
+zero:Ord & & $0$ & the least ordinal (Schütte's model) & \pageref{Constants:zero:Ord} \\
 
 
 \hline
