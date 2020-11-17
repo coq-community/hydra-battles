@@ -9,7 +9,7 @@ This contribution contains two parts:
 
 ##  Installation
 -   __Warning:__  A few files use __Coq__ plug-ins. The easiest way is to install  the following __opam__ packages:
-      __coq-equations__,  __coq-paramcoq__, and 
+      __coq-equations__,  __coq-paramcoq__, __coq_mathcomp-ssreflect__ and 
     __coq-mathcomp-algebra__. In case of problems, please compile with __make -k__ the rest of the files.
       
 -  the general Makefile is in the top directory 
