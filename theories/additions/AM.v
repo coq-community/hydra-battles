@@ -1,10 +1,19 @@
-(** Abstract machine for following an addition chain *)
+(** Abstract machine for following an Euclidean addition chain *)
 (** adapted from the old contrib coq-additions *)
 
+(** Work in progress 
 
-Require Import Monoid_def Monoid_instances List PArith.
+Clean the import issues !!! 
+*)
+
+Require Import Monoid_def Monoid_instances List PArith Relations.
 Require Import Strategies Lia.
-
+Generalizable All Variables.
+Import Morphisms.
+Import Monoid_def.
+Require Import Recdef Wf_nat.
+Require Import More_on_positive.
+Require  Pow.
 (** basic instructions *)
 
 Inductive instr : Set :=
@@ -58,13 +67,6 @@ Section Semantics.
        * destruct s; auto.
  Qed.
  
-End Semantics.
-
-
-Definition chain_apply c {A:Type}{op:A->A->A}{one:A}{equiv: Equiv A}
-           (M: EMonoid op one equiv) x := exec _ op c x nil.
-
-
 (** Main well-formed chains *)
 Definition M1 : code := nil.
 
@@ -73,7 +75,6 @@ Definition M1 : code := nil.
 Definition M3 := PUSH::SQR::MUL::nil.
 
 (** chain for raising x to its (2 ^ q)th power *)
-
 
 Fixpoint M2q_of_nat q := match q with
                   | 0%nat => nil
@@ -99,13 +100,19 @@ Definition KMK (kpr mq: code) :=
 
 Definition FK (fn: code) := PUSH::fn. 
 
+End Semantics.
+
+
+Definition chain_apply c {A:Type}{op:A->A->A}{one:A}{equ: Equiv A}
+           (M: EMonoid op one equ) x := exec _ op c x nil.
+
+
+(** Example code for 7 via 3 *)
 Example  M7_3 := PUSH::PUSH::SQR::MUL::PUSH::SQR::SWAP::MUL::nil.
+
 Compute chain_apply  M7_3   Natplus 1%nat .
 
-
-
 (** Example code for 31 via 7 *)
-
 Example C31_7 := KMC M7_3 (M2q 2).
 
 Compute chain_apply C31_7 Natplus 1%nat.
@@ -115,8 +122,8 @@ Compute chain_apply C31_7 Natplus 1%nat.
  *)
 
 Require Import NArith.
-Compute chain_apply C31_7 NMult 2%N.
 
+Compute chain_apply C31_7 NMult 2%N.
 
 
 Compute chain_apply (MMK M3 (M2q 3)) Natplus %nat. (** 24, 3 *)
@@ -128,22 +135,14 @@ Compute K99_24.
 Compute chain_apply (KMK (MMK M3 (M2q 3)) (M2q 2)) Natplus 1%nat.
 
 
-(** Chain generation 
-
-    To do: share some stuff with Euclidean.v *)
-
-Require Import Recdef Wf_nat.
-Require Import More_on_positive.
-
-Section Gamma.
-
-Variable gamma: positive -> positive.
-Context (Hgamma : Strategy gamma).
+(** Specification and generation of correct chains *)
+(** Should be shared with Euclidean.v *)
 
 Inductive signature : Type :=
 | gen_F (n:positive) (** Fchain for the exponent n *)
 | gen_K (p d: positive) (** Kchain for the exponents p+d  and p *) . 
 
+(** Termination measure *)
 
 Definition signature_measure (s : signature) : nat :=
 match s with
@@ -152,13 +151,271 @@ match s with
 end.
 
 
-(** Unifying  statements about chain generation *)
-
 Definition signature_exponent (s:signature) : positive :=
  match s with 
 | gen_F n => n 
 | gen_K p d  =>  p + d
-end.
+ end.
+
+
+(** We have to buid equivalences between configurations *)
+
+Inductive stack_equiv {A}`{M : @EMonoid A op one equ}:
+  list A -> list A -> Prop
+  :=
+  stack_equiv0 : stack_equiv  nil nil
+| stack_equivn: forall x y s s',  x == y -> stack_equiv s s' ->
+                                  stack_equiv (x::s) (y:: s').
+
+
+
+Definition config_equiv  {A}`{M : @EMonoid A op one equ}
+           (x :A)(s:stack A)(y:A)(s':stack A) :=
+  x == y /\ stack_equiv s s'.
+
+
+
+Inductive result_equiv {A}`{M : @EMonoid A op one equ}: relation (option (config A)):= 
+  result_equiv_fail : result_equiv None None
+| result_equiv_success : forall x s y s',
+    config_equiv  x s y s' ->
+    result_equiv (Some (x,s)) (Some (y,s')).
+
+
+Inductive  chain_correct : signature ->  code -> Prop :=
+  ccF : forall p c,
+    (forall A `{M: @EMonoid A op one equ} (x:A) s,
+        result_equiv (M:=M) (exec A op c x s)
+                     (Some (Pow.Pos_bpow x p, s))) ->
+    chain_correct (gen_F p) c
+
+| ccK : forall p d c,
+    (forall  `{M: @EMonoid A op one equ} (x:A) s,
+        result_equiv (exec A op c x s)
+                     (Some (Pow.Pos_bpow  x (p+d), Pow.Pos_bpow  x p ::s))) ->
+    chain_correct (gen_K p d) c.
+
+
+
+Instance Stack_equiv_refl {A}`{M : @EMonoid A op one equ} :
+  Reflexive stack_equiv.
+Proof.
+  red; intros. induction x.
+  - now left.
+  - right; [reflexivity | assumption].
+Qed.
+
+Instance Stack_equiv_equiv {A}`{M : @EMonoid A op one equ}:
+  Equivalence stack_equiv.
+Proof.
+ split.
+ - apply Stack_equiv_refl.
+ - red. induction x; destruct y.
+   + now left.
+   + inversion 1.
+   +  inversion 1.
+   + inversion 1; subst; right.
+     * now symmetry.
+     * now apply IHx.
+ - red; induction x.
+   + inversion 1; auto.
+   + destruct y.
+     * inversion 1.
+     *  inversion 1; subst.
+        destruct z.
+        -- inversion 1.
+        -- inversion 1; subst; right.
+           transitivity a0; trivial.
+           eapply IHx;eauto.
+Qed.
+
+Instance result_equiv_equiv `{M : @EMonoid A op one equ}:
+  Equivalence result_equiv.
+Proof.
+  split.
+  - red; destruct x.
+   + destruct c; right; split; reflexivity.
+   + left.
+  - red; destruct x, y.
+    + inversion 1; subst; destruct H2; right; split; now symmetry.
+    + inversion 1.
+    + inversion 1.
+    + left.
+  - red; destruct x.
+    + destruct y.
+      *  inversion 1; subst.
+         destruct H2, z.
+         -- destruct c; inversion 1; subst; right.
+            destruct H4; split.
+            ++ now transitivity y.
+            ++ now transitivity s'.
+         -- inversion 1.
+      * inversion 1.
+    + destruct y.
+     * inversion 1.
+     * auto.
+Qed.
+
+
+Lemma exec_equiv `{M : @EMonoid A op one equ} :
+  forall c x s y s' , config_equiv x s y s' ->
+                      result_equiv (exec A op c x s) (exec A op c y s').
+Proof.
+  induction c.
+  - simpl; now constructor.
+  -  destruct a.
+     + destruct s.
+       * inversion 1; inversion H1; subst;simpl; constructor.
+       *  inversion 1; inversion H1; subst;  simpl; apply IHc.
+          constructor; trivial.
+          now apply Eop_proper.
+     +  intros;simpl; apply IHc.
+        destruct H; split; auto.
+        apply Eop_proper; auto.
+     + intros; simpl;  apply IHc.
+       destruct H; split; auto.
+       right; auto.
+     + destruct s; simpl.
+       *  destruct s'.
+          -- constructor.
+          -- inversion 1.
+             inversion H1.
+       * destruct s'.
+         inversion 1.
+         inversion H1.  destruct s, s'.
+         -- constructor.
+         -- inversion 1; inversion H1.
+            inversion H1.
+            inversion H7.
+         -- inversion 1.
+            inversion H1.
+            inversion H7.
+         --   intros; apply IHc; auto.
+              inversion H.
+              inversion H1; subst.
+              inversion H7; subst. 
+              constructor; auto; right; auto.
+              right; auto.
+Qed.
+
+
+
+Lemma M3_correct : chain_correct (gen_F 3) M3.
+Proof.
+  constructor.
+  intros.
+  simpl.
+  constructor.
+  simpl.
+  split.
+  generalize (Eop_assoc (EMonoid:=M)).
+  intro.
+   rewrite H.
+  reflexivity.
+  apply Stack_equiv_refl.
+Qed.
+
+Import Pow.
+
+
+Lemma L: forall `{M : @EMonoid A op one equ} (n:nat) x s,
+    result_equiv (exec A op (M2q_of_nat n) x s)
+                 (Some(power x (2 ^ n), s)).
+  induction n.
+  simpl.
+  intros; f_equal.
+  right.
+  split.
+  destruct M.
+  rewrite Eone_right.
+  reflexivity.
+  reflexivity.
+
+  intro x.
+  simpl.
+  intro s; rewrite IHn.
+  right.
+  split;auto.
+  replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^n) )%nat.
+  fold mult_op.
+  assert (x * x == x ^2).
+  now rewrite  sqr_def.
+  transitivity ((x ^ 2) ^2 ^n).
+  apply power_proper.
+  auto.
+  auto.
+  rewrite <- power_of_power.
+  rewrite power_of_power_comm.
+  reflexivity.
+  lia.
+  reflexivity.
+
+Qed.
+
+
+Lemma L' (n:nat)  : chain_correct (gen_F (Pos.of_nat (2 ^ n))) (M2q_of_nat n). 
+  left.
+  intros. rewrite L.
+  right.
+  split.
+  rewrite Pos_bpow_ok_R.
+  reflexivity.
+  apply Nat.pow_nonzero.
+  discriminate.
+  reflexivity.
+Qed.
+
+Lemma  L'' (n:positive)  : chain_correct (gen_F  (2 ^ n)) (M2q n). 
+
+  unfold M2q.
+  replace (2 ^n)%positive with (Pos.of_nat (2 ^ Pos.to_nat n)%nat).
+  apply L'.
+  rewrite   Compatibility.Pos_pow_power.
+  rewrite <- Pos_bpow_ok_R.
+  rewrite Pos_bpow_ok.
+  rewrite Nat2Pos.id.
+
+  generalize (Pos.to_nat n).
+  intros. rewrite Compatibility.nat_power_ok.
+  simpl. induction n0; simpl; auto.
+  simpl. 
+  rewrite  Nat2Pos.inj_mul.
+  rewrite IHn0.
+  simpl (Pos.of_nat 2).
+  f_equal.
+  unfold mult_op.
+  unfold P_mult_op.
+  f_equal.
+  discriminate.
+  clear IHn0.
+  induction n0;simpl.
+  discriminate.
+  remember (2%nat ^ n0) as n1.
+  simpl.  
+  unfold mult_op.
+  unfold Demo.nat_mult_op.
+  lia.
+
+  assert (H:= Pos2Nat.is_pos n).
+  lia.
+  assert (H:= Pos2Nat.is_pos n).
+  lia.
+Qed.
+
+
+(** TO do :
+    Corrections of composition (append), M2q, MMK, etc . *)
+
+(** *  Euclidean chain generation 
+
+    To do: share some stuff with Euclidean.v *)
+
+
+Section Gamma.
+
+Variable gamma: positive -> positive.
+Context (Hgamma : Strategy gamma).
+
 
 Function chain_gen  (s:signature) {measure signature_measure}
   :  code :=
@@ -262,6 +519,8 @@ Function chain_gen  (s:signature) {measure signature_measure}
 Defined.
 
 
+
+
 End Gamma.
 
 Arguments chain_gen gamma {Hgamma} _.
@@ -272,4 +531,10 @@ Compute chain_gen dicho (gen_F 24) .
 Compute chain_gen  dicho  (gen_F 87) .
 
 Compute chain_apply (chain_gen  dicho (gen_F 87)) Natplus 1%nat.
+
+Definition M197887 := chain_gen  dicho (gen_F 197887).
+
+Time Compute chain_apply   M197887  NPlus 1%N.
+
+Time Compute chain_apply   M197887  NPlus 1%N.
 
