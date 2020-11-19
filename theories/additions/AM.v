@@ -257,6 +257,7 @@ Proof.
 Qed.
 
 
+
 Lemma exec_equiv `{M : @EMonoid A op one equ} :
   forall c x s y s' , config_equiv x s y s' ->
                       result_equiv (exec A op c x s) (exec A op c y s').
@@ -299,107 +300,96 @@ Proof.
 Qed.
 
 
+Instance exec_Proper `{M : @EMonoid A op one equ} :
+  Proper (Logic.eq ==> equiv ==> stack_equiv ==> result_equiv) (@exec A op) .
+Proof.
+ intros c c' Hx x x' Hequiv s s' Hs; subst.
+ apply exec_equiv;split; auto.
+Qed.
+
+
+(** M3 is correct *)
 
 Lemma M3_correct : chain_correct (gen_F 3) M3.
 Proof.
+  constructor; intros. cbn.
+  fold mult_op.
   constructor.
-  intros.
-  simpl.
-  constructor.
-  simpl.
   split.
-  generalize (Eop_assoc (EMonoid:=M)).
-  intro.
-   rewrite H.
-  reflexivity.
-  apply Stack_equiv_refl.
+  - now rewrite Eop_assoc.
+  - apply Stack_equiv_refl. 
 Qed.
 
 Import Pow.
 
 
-Lemma L: forall `{M : @EMonoid A op one equ} (n:nat) x s,
+Lemma M2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
     result_equiv (exec A op (M2q_of_nat n) x s)
-                 (Some(power x (2 ^ n), s)).
+                 (Some(Pow.power x (2 ^ n), s)).
   induction n.
-  simpl.
-  intros; f_equal.
-  right.
-  split.
-  destruct M.
-  rewrite Eone_right.
-  reflexivity.
-  reflexivity.
-
-  intro x.
-  simpl.
-  intro s; rewrite IHn.
-  right.
-  split;auto.
-  replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^n) )%nat.
-  fold mult_op.
-  assert (x * x == x ^2).
-  now rewrite  sqr_def.
-  transitivity ((x ^ 2) ^2 ^n).
-  apply power_proper.
-  auto.
-  auto.
-  rewrite <- power_of_power.
-  rewrite power_of_power_comm.
-  reflexivity.
-  lia.
-  reflexivity.
-
+  -  simpl.
+     intros; f_equal; right; split.
+     + rewrite Eone_right.
+       reflexivity.
+     + reflexivity.
+     - intro x; simpl; intro s; rewrite IHn.
+       right; split;auto.
+      +  replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^n) )%nat.
+         * fold mult_op;  assert (x * x == x ^2) by (now rewrite  sqr_def).
+           transitivity ((x ^ 2) ^2 ^n).
+           -- apply power_proper;  auto.
+           -- rewrite <- power_of_power.
+              rewrite power_of_power_comm.
+              reflexivity.
+         * lia.
+      + reflexivity.
 Qed.
 
 
-Lemma L' (n:nat)  : chain_correct (gen_F (Pos.of_nat (2 ^ n))) (M2q_of_nat n). 
-  left.
-  intros. rewrite L.
-  right.
-  split.
-  rewrite Pos_bpow_ok_R.
-  reflexivity.
-  apply Nat.pow_nonzero.
-  discriminate.
-  reflexivity.
+Lemma M2q_correct_1 (n:nat)  : chain_correct (gen_F (Pos.of_nat (2 ^ n))) (M2q_of_nat n). 
+Proof.
+  left;intros;  intros; rewrite M2q_correct_0.
+  right; split.
+  -  rewrite Pos_bpow_ok_R.
+     + reflexivity.
+     + apply Nat.pow_nonzero.
+       discriminate.
+  - reflexivity.
 Qed.
 
-Lemma  L'' (n:positive)  : chain_correct (gen_F  (2 ^ n)) (M2q n). 
+Remark Pos_to_nat_diff_0 n : Pos.to_nat n <> 0%nat.
+Proof.
+   rewrite Nat.neq_0_lt_0; apply Pos2Nat.is_pos.
+Qed.
 
+
+
+Lemma  M2q_correct (n:positive)  : chain_correct (gen_F  (2 ^ n)) (M2q n). 
+Proof.
   unfold M2q.
   replace (2 ^n)%positive with (Pos.of_nat (2 ^ Pos.to_nat n)%nat).
-  apply L'.
+  apply M2q_correct_1.
   rewrite   Compatibility.Pos_pow_power.
   rewrite <- Pos_bpow_ok_R.
-  rewrite Pos_bpow_ok.
-  rewrite Nat2Pos.id.
-
-  generalize (Pos.to_nat n).
-  intros. rewrite Compatibility.nat_power_ok.
-  simpl. induction n0; simpl; auto.
-  simpl. 
-  rewrite  Nat2Pos.inj_mul.
-  rewrite IHn0.
-  simpl (Pos.of_nat 2).
-  f_equal.
-  unfold mult_op.
-  unfold P_mult_op.
-  f_equal.
-  discriminate.
-  clear IHn0.
-  induction n0;simpl.
-  discriminate.
-  remember (2%nat ^ n0) as n1.
-  simpl.  
-  unfold mult_op.
-  unfold Demo.nat_mult_op.
-  lia.
-
-  assert (H:= Pos2Nat.is_pos n).
-  lia.
-  assert (H:= Pos2Nat.is_pos n).
-  lia.
+  -  rewrite Pos_bpow_ok.
+     + rewrite Nat2Pos.id.
+       *  generalize (Pos.to_nat n).
+          intros; rewrite Compatibility.nat_power_ok.
+          induction n0; simpl; auto.
+          rewrite  Nat2Pos.inj_mul.
+         --  rewrite IHn0; simpl (Pos.of_nat 2).
+             f_equal.
+             unfold mult_op;  unfold P_mult_op.
+             f_equal.
+         -- discriminate.
+         --  clear IHn0; induction n0;simpl.
+             ++  discriminate.
+             ++  remember (2%nat ^ n0) as n1.
+                 unfold mult_op. Locate nat_mult_op.
+                 unfold nat_mult_op.
+                 lia.
+       * apply Pos_to_nat_diff_0.
+  -  apply Pos_to_nat_diff_0.
 Qed.
 
 
