@@ -4116,14 +4116,14 @@ Definition code := list instr.
 
 Section Semantics.
 
- Variable M : Type.
- Variable mul : M -> M -> M.
- Variable one : M.
+ Variable A : Type.
+ Variable mul : A -> A -> A.
+ Variable one : A.
 
- Definition stack := list M.
- Definition config := (M * list M)%type.
+ Definition stack := list A.
+ Definition config := (A * list A)%type.
 
- Fixpoint exec (c : code) (x:M) (s: stack) : option config :=
+ Fixpoint exec (c : code) (x:A) (s: stack) : option config :=
    match c, s with
      nil, _ => Some (x,s)
    | MUL::c, y::s => exec c (mul x y) s
@@ -4132,9 +4132,21 @@ Section Semantics.
    | SWAP::c, y::z::s => exec c x (z::y::s)
    | _,_ => None
    end.
+
+(* ... *)
+End Semantics.
 \end{Coqsrc}
 
-Please define an Euclidean chain generator using this data structure, and prove its correctness (partially solved in ~\href{../theories/html/hydras.additions.AM.html}{additions.AM}).
+For instance the chain of Fig.~ \vref{fig:C87} can be represented with the following code:
+
+\begin{Coqsrc}
+  PUSH :: PUSH :: SQR  :: MUL :: PUSH :: SWAP :: SQR :: MUL :: PUSH
+            :: SWAP :: MUL :: SQR :: SQR :: SQR :: MUL :: nil 
+\end{Coqsrc}
+
+
+
+Please define an Euclidean chain generator using this data structure, and prove its correctness (partially done  in ~\href{../theories/html/hydras.additions.AM.html}{additions.AM}).
 \end{project}
 
 %\subsection{Optimality and Relative Efficiency}
