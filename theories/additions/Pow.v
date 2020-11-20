@@ -260,6 +260,18 @@ Proof.
     now monoid_rw.
 Qed.
 
+Global Instance Pos_bpow_proper :
+  Proper  (equiv ==> eq ==> equiv) Pos_bpow.
+Proof.
+  intros x y Hxy n p Hnp. subst n. revert  x y Hxy.
+  induction p; cbn; intros; trivial.
+  - repeat rewrite binary_power_mult_ok.  
+    factorize.
+    apply power_proper; auto.
+  - apply IHp. now apply Eop_proper.
+Qed.
+
+
 Lemma N_bpow_ok : 
 forall n x,   x ^b n  == x ^ N.to_nat n.
 Proof.

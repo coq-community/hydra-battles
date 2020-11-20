@@ -14,13 +14,15 @@ Import Monoid_def.
 Require Import Recdef Wf_nat.
 Require Import More_on_positive.
 Require  Pow.
+Require Import Euclidean_Chains.
+
 (** basic instructions *)
 
 Inductive instr : Set :=
-  | MUL : instr
-  | SQR : instr
-  | PUSH : instr
-  | SWAP : instr.       
+| MUL : instr
+| SQR : instr
+| PUSH : instr
+| SWAP : instr.       
 
 Definition code := list instr.
 
@@ -136,35 +138,14 @@ Compute chain_apply (KMK (MMK M3 (M2q 3)) (M2q 2)) Natplus 1%nat.
 
 
 (** Specification and generation of correct chains *)
-(** Should be shared with Euclidean.v *)
 
-Inductive signature : Type :=
-| gen_F (n:positive) (** Fchain for the exponent n *)
-| gen_K (p d: positive) (** Kchain for the exponents p+d  and p *) . 
-
-(** Termination measure *)
-
-Definition signature_measure (s : signature) : nat :=
-match s with
-  | gen_F n => 2 * Pos.to_nat n 
-  | gen_K  p d => 2 * Pos.to_nat (p + d) +1
-end.
-
-
-Definition signature_exponent (s:signature) : positive :=
- match s with 
-| gen_F n => n 
-| gen_K p d  =>  p + d
- end.
-
-
-(** We have to buid equivalences between configurations *)
+(** We have to build equivalences between configurations *)
 
 Inductive stack_equiv {A}`{M : @EMonoid A op one equ}:
   list A -> list A -> Prop
   :=
   stack_equiv0 : stack_equiv  nil nil
-| stack_equivn: forall x y s s',  x == y -> stack_equiv s s' ->
+  | stack_equivn: forall x y s s',  x == y -> stack_equiv s s' ->
                                   stack_equiv (x::s) (y:: s').
 
 
@@ -364,7 +345,7 @@ Qed.
 
 
 
-Lemma  M2q_correct (n:positive)  : chain_correct (gen_F  (2 ^ n)) (M2q n). 
+Lemma  M2q_correct (n:positive)  : chain_correct (gen_F (2 ^ n)) (M2q n). 
 Proof.
   unfold M2q.
   replace (2 ^n)%positive with (Pos.of_nat (2 ^ Pos.to_nat n)%nat).
@@ -385,7 +366,7 @@ Proof.
          --  clear IHn0; induction n0;simpl.
              ++  discriminate.
              ++  remember (2%nat ^ n0) as n1.
-                 unfold mult_op. Locate nat_mult_op.
+                 unfold mult_op. 
                  unfold nat_mult_op.
                  lia.
        * apply Pos_to_nat_diff_0.
@@ -393,14 +374,50 @@ Proof.
 Qed.
 
 
+Section CompositionProofs.
+  Section App.
+  Variables n p:  positive.
+  Variables cn cp: code.
+  Hypothesis Hn : chain_correct (gen_F n) cn.
+  Hypothesis Hp : chain_correct (gen_F p) cp.
+
+  Lemma correct_app : chain_correct (gen_F (n * p)) (cn ++ cp).
+  Proof.
+  constructor.
+  intros A op one equ M x s.
+   rewrite exec_app.
+   inversion Hn; subst.
+   specialize (H0 _ _ _ _ M x s). inversion H0; subst.
+   inversion Hp; subst.
+   specialize (H3 _ _ _ _ M x0 s0). inversion H3; subst.
+   right.
+ destruct H2.
+  split.
+  destruct  H5.
+  rewrite H5.
+  rewrite H2.  
+  repeat rewrite Pos_bpow_ok.
+  rewrite power_of_power.
+   apply power_proper; auto.
+ reflexivity.
+rewrite Pos2Nat.inj_mul.
+now rewrite mult_comm.
+destruct H5; auto.
+ transitivity s0;auto.
+  Qed.
+
+  End App.
+
+
 (** TO do :
     Corrections of composition (append), M2q, MMK, etc . *)
+End CompositionProofs.
 
 (** *  Euclidean chain generation 
 
     To do: share some stuff with Euclidean.v *)
 
-
+Require Import Dichotomy.
 Section Gamma.
 
 Variable gamma: positive -> positive.
@@ -442,79 +459,23 @@ Function chain_gen  (s:signature) {measure signature_measure}
       end
   end.
 
-(** Same script as in Euclidean.v ???? *)
+(** Same script as in Euclidean.v ? Share it ! *)
 
-- intros. unfold signature_measure.
-  generalize (N.pos_div_eucl_spec i (N.pos (gamma i)));
-    rewrite teq3; N2pos_destruct q p.
-  subst r; repeat rewrite  N.add_0_r.
-  injection 1.  intro H0; rewrite H0.
-  gamma_bounds gamma i H12 H14.
-  assert (H13 : p <> 1).
-  
-  +  intro Hp ; subst p; simpl in H0.
-     destruct (Pos.lt_irrefl i).
-     now rewrite H0 at 1.
-
-  +  assert (H11 := pos_lt_mul p (gamma i) H12).
-     rewrite Pos2Nat.inj_lt in  H11.
-     rewrite  Pos2Nat.inj_mul in *;  lia.
-- intros; unfold signature_measure.
-  apply Coq.Arith.Mult.mult_lt_compat_l ;
-    [ apply Pos2Nat.inj_lt; apply gamma_lt|] ;  auto with chains.
-- intros; unfold signature_measure.
-  gamma_bounds gamma i H12 H14; quotient_small teq3 H.
-  apply Coq.Arith.Mult.mult_lt_compat_l; [ | auto with arith chains].
-  apply Pos2Nat.inj_lt.
-  destruct q; simpl in *.
-  transitivity (gamma i);auto.
-  now rewrite pos2N_inj_lt.
--  intros; unfold signature_measure.
-   apply lt_S_2i;  rewrite Pplus_minus. 
-   gamma_bounds gamma i H5 H6.
-   +  apply Pos2Nat.inj_lt;  auto.
-   +  rest_small teq3 H; now  apply Pos.lt_gt.
-- intros; unfold signature_measure;
-    subst p;  lia.
-- intros; unfold signature_measure.
-  quotient_small teq1 H.
-  destruct p; (discriminate || reflexivity).
-  N2pos_destruct q q.
-  +       destruct (pos_div_eucl_quotient_pos _ _ _ _ teq1);auto with chains.
-          rewrite pos2N_inj_add; apply N.le_add_r.
-  +  simpl; rewrite <- pos2N_inj_lt in H;
-       rewrite Pos2Nat.inj_lt in H.
-     lia.
+- intros;eapply PO1; eauto.
+- intros; eapply PO2; eauto.
+- intros; eapply PO3;eauto.
+- intros; eapply PO4;eauto.
+- intros; unfold signature_measure; subst p;  lia.
+- intros; eapply PO6; eauto.
 - intros; unfold signature_measure; pos2nat_inj_tac; lia.
-
-- intros; unfold signature_measure.
-  assert (N2pos q < p+d)%positive.
-  quotient_small teq1 H.
-  generalize anonymous; 
-    destruct p; simpl; try reflexivity.
-  now destruct 1.
-  generalize (pos_div_eucl_quotient_pos  _ _ _ _ teq1).
-  intros H0;  destruct q;auto.
-  destruct H0;auto with chains.
-  rewrite pos2N_inj_add;  apply N.le_add_r;auto with chains.
-  + revert H; pos2nat_inj_tac; intros;lia.
-- intros; unfold signature_measure. 
-  apply Coq.Arith.PeanoNat.Nat.add_lt_mono_r;
-    apply Arith.Mult.mult_S_lt_compat_l;auto with chains.
-  rewrite Pplus_minus.
-  +  apply Pos2Nat.inj_lt; apply Pos.lt_add_diag_r; cbn.
-  +  generalize (N.pos_div_eucl_remainder (p + d) (N.pos p) );
-       rewrite teq1; cbn; unfold N.lt ; intro H; red.
-     simpl in H; now rewrite Pos.compare_antisym, H.
+- intros; eapply PO8; eauto.
+- intros; eapply PO9; eauto.
 Defined.
-
-
-
 
 End Gamma.
 
 Arguments chain_gen gamma {Hgamma} _.
-Require Import Dichotomy.
+
 
 
 Compute chain_gen dicho (gen_F 24) .
