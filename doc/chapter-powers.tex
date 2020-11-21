@@ -1710,12 +1710,12 @@ integer \texttt{p} if its execution in any monoid computes $p$-th powers.
 
 \label{chain-correct-def}
 \begin{Coqsrc}
-Definition chain_correct_nat (c: chain) (n:nat) := 
+Definition chain_correct_nat (n:nat) (c: chain) := 
   n <> 0 /\
   forall `(M:@EMonoid  A E_op E_one E_eq) (x:A), 
       chain_apply c x ==   x ^ n.
 
-Definition chain_correct (c: chain) (p:positive) :=
+Definition chain_correct (p:positive) (c: chain) :=
   chain_correct_nat c (Pos.to_nat p). 
 \end{Coqsrc}
 
@@ -1746,7 +1746,7 @@ the \texttt{EMonoid} laws shown in Sect.~\vref{EMonoid-def}.
 \begin{Coqsrc}
 Ltac slow_chain_correct_tac :=
   match goal with 
-      [ |- chain_correct ?c ?p ] =>
+      [ |- chain_correct ?p ?c ] =>
       let A := fresh "A" in
       let op := fresh "op" in
       let one := fresh "one" in
@@ -1760,7 +1760,7 @@ Ltac slow_chain_correct_tac :=
   end.
 
 
-Example C7_ok : chain_correct C7 7.
+Example C7_ok : chain_correct 7 C7.
 Proof.
    slow_chain_correct_tac.
 Qed.
@@ -1770,7 +1770,7 @@ Unfortunately, this approach is terribly inefficient, even for quite small expon
 
 
 \begin{Coqsrc}
-Example C87_ok : chain_correct C87 87.
+Example C87_ok : chain_correct 87 C87.
 Proof.
  Time  slow_chain_correct_tac. 
 \end{Coqsrc}
@@ -2017,7 +2017,7 @@ of the naive exponentiation definition.
 \begin{Coqsrc}
 Ltac reflection_correct_tac :=
 match goal with
-[ |- chain_correct ?c ?n ] =>
+[ |- chain_correct ?n ?c ] =>
  split; [try discriminate |
          let A := fresh "A"
          in let op := fresh "op"
@@ -2038,7 +2038,7 @@ end.
 The following dialogue clearly shows the efficiency gain over naive setoid rewriting.
 
 \begin{Coqsrc}
-Example C87_ok : chain_correct C87 87.
+Example C87_ok : chain_correct 87 C87.
 Proof.
   Time reflection_correct_tac.
 \end{Coqsrc}
@@ -2219,7 +2219,7 @@ to prove a correctness result:
 \begin{Coqsrc}
 Lemma param_correctness_nat :
  forall c:chain, parametric c ->  
-               chain_correct_nat c  (the_exponent_nat c).
+               chain_correct_nat (the_exponent_nat c)  c.
 (* Proof omitted *)
 \end{Coqsrc}
 
@@ -2244,7 +2244,7 @@ Lemma exponent_pos_of_nat : forall c: chain,  parametric c ->
 
 Lemma param_correctness (c:chain) :
    parametric c -> 
-   chain_correct c (the_exponent c). 
+   chain_correct (the_exponent c) c. 
 Proof.
   intros; rewrite  exponent_pos_of_nat; auto.
   red;  rewrite  exponent_pos2nat;auto.
@@ -2320,11 +2320,11 @@ than our reflection tactic.
 \begin{Coqsrc}
 Ltac param_chain_correct :=
 match goal with 
-[|- chain_correct ?c ?p ] => 
+[|- chain_correct ?p ?c ] => 
 apply param_correctness; parametric_tac
 end.
 
-Lemma C87_ok' : chain_correct C87 87.
+Lemma C87_ok' : chain_correct 87 C87.
 Time param_chain_correct.
 \end{Coqsrc}
 
@@ -2404,7 +2404,7 @@ for any exponent:
 
 \begin{Coqsrc}
 Definition correct_generator (g : positive -> chain) :=
- forall p, chain_correct p (g p).
+ forall p, chain_correct (g p) p.
 \end{Coqsrc}
 
 
@@ -2806,7 +2806,7 @@ Compute F9.
 \end{Coqanswer}
 
 \begin{Coqsrc}
-Remark F9_correct :chain_correct (F2C F9) 9.
+Remark F9_correct :chain_correct 9 (F2C F9).
 Proof.
   apply param_correctness_pos;  lazy;  parametric_tac.
 Qed.
@@ -2879,7 +2879,7 @@ if for any continuation \texttt{k} and \texttt{a}, the application of
 \begin{Coqbad}
 Module Bad.
 
-Definition Fchain_correct  (f : Fchain) (n:nat) :=
+Definition Fchain_correct  (n:nat) (f : Fchain) :=
   forall A `(M : @EMonoid A op E_one E_equiv) k (a:A),
     computation_execute op (f A k  a)==
     computation_execute op (k  (a ^ n)).
@@ -2888,7 +2888,7 @@ Definition Fchain_correct  (f : Fchain) (n:nat) :=
 Let us now try to prove that \texttt{F3} is correct \emph{w.r.t.} $3$.
 
 \begin{Coqbad}
-Theorem F3_correct : Fchain_correct F3 3.
+Theorem F3_correct : Fchain_correct 3 F3.
 Proof.  
   intros    A op E_one E_equiv M k  a ; simpl.
   monoid_simpl M.  
@@ -2941,7 +2941,7 @@ We are now able to improve our definition of correctness, taking only
 proper continuations into account.
 
 \begin{Coqsrc}
-Definition Fchain_correct_nat (f : Fchain) (n:nat) :=
+Definition Fchain_correct_nat (n:nat) (f : Fchain) :=
  forall A `(M : @EMonoid A op E_one E_equiv) k
         (Hk :Fkont_proper M k)
         (a : A) ,
@@ -2949,8 +2949,8 @@ Definition Fchain_correct_nat (f : Fchain) (n:nat) :=
  computation_execute op (k  (a ^ n)).
 
 
-Definition Fchain_correct (f : Fchain) (p:positive) :=
- Fchain_correct_nat f (Pos.to_nat p).
+Definition Fchain_correct (p:positive) (f : Fchain) :=
+ Fchain_correct_nat (Pos.to_nat p) f.
 \end{Coqsrc}
 
 \subsubsection{Examples}
@@ -2958,7 +2958,7 @@ Definition Fchain_correct (f : Fchain) (p:positive) :=
 Let us show some manual correctness proofs for small f-chains:
 
 \begin{Coqsrc}
-Lemma F1_correct : Fchain_correct F1 1.
+Lemma F1_correct : Fchain_correct 1 F1.
 Proof.
   intros until M ; intros k Hk a ; unfold F1; simpl.
   apply Hk; monoid_simpl M; reflexivity.
@@ -2970,7 +2970,7 @@ Qed.
 
 
 \begin{Coqsrc}
-Theorem F3_correct : Fchain_correct F3 3.
+Theorem F3_correct : Fchain_correct 3 F3.
 Proof. 
   intros until M; intros k Hk a; simpl.
 \end{Coqsrc}
@@ -3009,7 +3009,7 @@ Qed.
 Correctness of \texttt{F2} is proved the same way:
 
 \begin{Coqsrc}
-Theorem F2_correct : Fchain_correct F2 2.
+Theorem F2_correct : Fchain_correct 2 F2.
 Proof. 
   intros until M; intros k Hk a; simpl;
   apply Hk;  monoid_simpl M;  reflexivity.
@@ -3029,10 +3029,9 @@ Let us try to certify this construction:
 Module Bad2.
 
 Lemma Fcompose_correct_attempt :
-  forall f1 f2 n1 n2, Fchain_correct f1 n1 ->
-                      Fchain_correct f2 n2 ->
-                      Fchain_correct (Fcompose f1 f2)
-                                       (n1 * n2).
+  forall f1 f2 n1 n2, Fchain_correct n1 f1 ->
+                      Fchain_correct n2 f2 ->
+                      Fchain_correct (n1 * n2) (Fcompose f1 f2).
 
 (* Beginning of proof omitted *)
 \end{Coqbad}
@@ -3161,7 +3160,7 @@ Qed.
 
 \begin{Coqsrc}
 Lemma  Fexp2_nat_correct (n:nat) : 
-         Fchain_correct_nat (Fexp2_of_nat n) (2  ^ n).
+         Fchain_correct_nat (2  ^ n) (Fexp2_of_nat n).
 Proof.
   induction n; cbn.
  - apply F1_correct.
@@ -3175,7 +3174,7 @@ Qed.
 
 \begin{Coqsrc}
 Lemma  Fexp2_correct (p:positive) : 
-                           Fchain_correct (Fexp2 p) (2  ^ p).
+                           Fchain_correct (2  ^ p) (Fexp2 p).
 (* Proof omitted *)
 
 Instance  Fexp2_proper (p:positive) : Fchain_proper (Fexp2 p).
@@ -3191,7 +3190,7 @@ Hint Resolve F1_correct F1_proper
      F3_correct F3_proper Fcompose_correct Fcompose_proper
      Fexp2_correct Fexp2_proper .
 
-Example F144:  {f : Fchain | Fchain_correct f 144 /\
+Example F144:  {f : Fchain | Fchain_correct 144 f /\
                                 Fchain_proper f}.
 Proof.
  change 144 with ( (3 * 3) * (2 ^ 4))%positive.
@@ -3385,7 +3384,7 @@ A k-chain is correct with respect to two exponents $n$ and $p$
   if it computes $x ^ n$ and $x ^ p$ for any $x$ in any monoid $M$.
 
  \begin{Coqsrc}
-Definition Kchain_correct_nat (kc : Kchain) (n p : nat) :=
+Definition Kchain_correct_nat (n p : nat) (kc : Kchain) :=
   forall `(M : @EMonoid A op E_one E_equiv)
         (k : Kkont A), 
         Kkont_proper M k ->
@@ -3396,8 +3395,8 @@ Definition Kchain_correct_nat (kc : Kchain) (n p : nat) :=
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Definition Kchain_correct (kc : Kchain) (n p : positive) :=
-  Kchain_correct_nat kc (Pos.to_nat n) (Pos.to_nat p).
+Definition Kchain_correct (n p : positive) (kc : Kchain) :=
+  Kchain_correct_nat  (Pos.to_nat n) (Pos.to_nat p) kc.
 
 Class Kchain_proper (kc : Kchain) :=
 Kchain_proper_prf : 
@@ -3419,7 +3418,7 @@ Proof.
   add_op_proper M H3; apply H1;  rewrite H2;   reflexivity. 
 Qed.
 
-Lemma k7_3_correct : Kchain_correct k7_3 7 3.
+Lemma k7_3_correct : Kchain_correct 7 3 k7_3.
 Proof.
   intros until M; intros; red; unfold k7_3; simpl.
   apply H; monoid_simpl M;  reflexivity.
@@ -3505,7 +3504,7 @@ Definition K2F (knp : Kchain) : Fchain :=
 
 Lemma K2F_correct :
   forall knp n p, Kchain_correct kc n p ->
-                 Fchain_correct (K2F knp) n.
+                 Fchain_correct (K2F n) knp.
 (* Proof omitted *)
 
 Instance K2F_proper (kc : Kchain)(_ : Kchain_proper kc) :
@@ -3558,11 +3557,11 @@ Definition KFK (kbr : Kchain) (fq : Fchain) : Kchain  :=
 
 Lemma KFK_correct :
   forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-    Kchain_correct kbr b r ->
-    Fchain_correct fq q ->
+    Kchain_correct b r  kbr ->
+    Fchain_correct q fq ->
     Kchain_proper kbr ->
     Fchain_proper fq -> 
-    Kchain_correct (KFK kbr fq) (b * q + r) b.
+    Kchain_correct  (b * q + r) b (KFK kbr fq).
 (* Proof omitted *)
 
 Instance KFK_proper :
@@ -3621,10 +3620,10 @@ Definition KFF (kbr : Kchain) (fq : Fchain) : Fchain :=
 
 Lemma KFF_correct :
 forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-Kchain_correct kbr b r ->
-Fchain_correct fq q ->
+Kchain_correct  b r kbr ->
+Fchain_correct q fq ->
 Kchain_proper kbr ->
-Fchain_proper fq -> Fchain_correct (KFF kbr fq) (b * q + r).
+Fchain_proper fq -> Fchain_correct (b * q + r) (KFF kbr fq).
 (* Proof omitted *)
 
 
@@ -3646,9 +3645,9 @@ Definition FK (f : Fchain) : Kchain :=
     f A (fun y => k y a) a.
 
 Lemma FK_correct : forall (p: positive) (Fp : Fchain),
-                     Fchain_correct  Fp p ->
+                     Fchain_correct  p Fp ->
                      Fchain_proper Fp ->
-                     Kchain_correct (FK Fp) p 1.
+                     Kchain_correct p 1 (FK Fp) .
 (* Proof omitted *)
 
 Instance  FK_proper  (Fp : Fchain) (_ : Fchain_proper Fp):
@@ -3688,10 +3687,10 @@ Definition FFK (fp fq : Fchain) : Kchain :=
 
 Lemma FFK_correct :
   forall (p q  : positive) (fp fq : Fchain),
-    Fchain_correct fp p  ->
-    Fchain_correct fq q ->
+    Fchain_correct p fp  ->
+    Fchain_correct q fq ->
     Fchain_proper fp ->
-    Fchain_proper fq -> Kchain_correct (FFK fp fq) (p * q ) p.
+    Fchain_proper fq -> Kchain_correct  (p * q ) p (FFK fp fq).
 (* Proof omitted *)
 
 Instance FFK_proper 
@@ -3714,7 +3713,7 @@ Definition F87 :=
  let k10_7 := KFK k7_3 F1 in
  KFF k10_7 (Fexp2 3).
 
-Lemma OK87 : Fchain_correct F87 87.
+Lemma OK87 : Fchain_correct 87 F87.
 Proof.
  unfold F87; change 87 with (10 * (2 ^ 3) + 7)%positive.
  apply KFF_correct;auto.
@@ -3739,7 +3738,7 @@ asserted by a  theorem:
 
 \begin{Coqsrc}
 Theorem make_chain_correct : 
-   forall p, chain_correct (make_chain p) p.  
+   forall p, chain_correct p (make_chain p).  
 \end{Coqsrc}
 
 
@@ -3824,8 +3823,8 @@ end.
 Definition correctness_statement (s: signature) : 
 chain_type s -> Prop :=
 match s  with
-  | gen_F p => fun ch => Fchain_correct ch p
-  | gen_K p d   => fun ch => Kchain_correct ch (p + d) p
+  | gen_F p => fun ch => Fchain_correct p ch
+  | gen_K p d   => fun ch => Kchain_correct (p + d) p ch
 end.
 
 Definition proper_statement (s: signature) : 
@@ -3986,7 +3985,7 @@ Proof.
 (* A lot of arithmetic proofs omitted *)
 
 Theorem make_chain_correct :
-    forall p, chain_correct (make_chain p) p.
+    forall p, chain_correct p (make_chain p).
 Proof.
  intro p; destruct (chain_gen_OK (gen_F p)).
  unfold make_chain; apply F2C_correct; apply H.
@@ -4149,21 +4148,19 @@ For instance the chain of Fig.~ \vref{fig:C87} can be represented with the follo
 Please define an Euclidean chain generator using this data structure, and prove its correctness (partially done  in ~\href{../theories/html/hydras.additions.AM.html}{additions.AM}).
 \end{project}
 
-%\subsection{Optimality and Relative Efficiency}
+\begin{project}[Some improvements]
+ \begin{enumerate}
+\item Improve automated proofs on types \texttt{positive} and \texttt{N}.
+\item Compare  \texttt{Program Fixpoint} and \texttt{Function} for
+writing \texttt{make\_chain}. Consider measure \emph{vs} well-founded 
+relations, mutual recursion, possibility of using sigma-types, etc.
+\item Chains are always associated with strictly positive exponents. 
+Thus, many lemmas about chain correctness  can be proved using semi-groups instead of
+monoids. Define type classes for semi-groups and use them whenever possible.
+\end{enumerate}  
+\end{project}
 
-% \begin{project}[Proof techniques]
-% \noindent
 
-
-% \begin{enumerate}
-% \item Improve automated proofs on types \texttt{positive} and \texttt{N}.
-% \item Compare  \texttt{Program Fixpoint} and \texttt{Function} for
-% writing \texttt{make\_chain}. Consider measure \emph{vs} well-founded 
-% relations, mutual recursion, possibility of using sigma-types, etc.
-% \item Chains are always associated with strictly positive exponents. 
-% Thus, many lemmas about chain correctness  can be proved using semi-groups instead of
-% monoids. Define type classes for semi-groups and use them whenever possible.
-% \end{enumerate}  
 % \end{project}
 
 
