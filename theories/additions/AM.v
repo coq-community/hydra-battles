@@ -70,21 +70,21 @@ Section Semantics.
  Qed.
  
 (** Main well-formed chains *)
-Definition M1 : code := nil.
+Definition F1 : code := nil.
 
 (** raises x to its cube *)
 
-Definition M3 := PUSH::SQR::MUL::nil.
+Definition F3 := PUSH::SQR::MUL::nil.
 
 (** chain for raising x to its (2 ^ q)th power *)
 
-Fixpoint M2q_of_nat q := match q with
+Fixpoint F2q_of_nat q := match q with
                   | 0%nat => nil
-                  | S p => SQR:: M2q_of_nat  p
+                  | S p => SQR:: F2q_of_nat  p
                   end.
 
-Definition M2q (p:positive) :=
-  M2q_of_nat (Pos.to_nat p). 
+Definition F2q (p:positive) :=
+  F2q_of_nat (Pos.to_nat p). 
 
 (** for computing x^(pq+r) passing by  x^p *)
 
@@ -115,7 +115,7 @@ Example  M7_3 := PUSH::PUSH::SQR::MUL::PUSH::SQR::SWAP::MUL::nil.
 Compute chain_apply  M7_3   Natplus 1%nat .
 
 (** Example code for 31 via 7 *)
-Example C31_7 := KMC M7_3 (M2q 2).
+Example C31_7 := KMC M7_3 (F2q 2).
 
 Compute chain_apply C31_7 Natplus 1%nat.
 (*
@@ -128,13 +128,13 @@ Require Import NArith.
 Compute chain_apply C31_7 NMult 2%N.
 
 
-Compute chain_apply (MMK M3 (M2q 3)) Natplus %nat. (** 24, 3 *)
+Compute chain_apply (MMK F3 (F2q 3)) Natplus %nat. (** 24, 3 *)
 
 (** For 99 and 24 *)
-Example K99_24 := KMK (MMK M3 (M2q 3)) (M2q 2).
+Example K99_24 := KMK (MMK F3 (F2q 3)) (F2q 2).
 Compute K99_24.
 
-Compute chain_apply (KMK (MMK M3 (M2q 3)) (M2q 2)) Natplus 1%nat.
+Compute chain_apply (KMK (MMK F3 (F2q 3)) (F2q 2)) Natplus 1%nat.
 
 
 (** Specification and generation of correct chains *)
@@ -162,20 +162,16 @@ Inductive result_equiv {A}`{M : @EMonoid A op one equ}: relation (option (config
     config_equiv  x s y s' ->
     result_equiv (Some (x,s)) (Some (y,s')).
 
-
-Inductive  chain_correct : signature ->  code -> Prop :=
-  ccF : forall p c,
-    (forall A `{M: @EMonoid A op one equ} (x:A) s,
+Definition Fchain_correct (p: positive) (c: code) :=
+  (forall A `{M: @EMonoid A op one equ} (x:A) s,
         result_equiv (M:=M) (exec A op c x s)
-                     (Some (Pow.Pos_bpow x p, s))) ->
-    chain_correct (gen_F p) c
+                     (Some (Pow.Pos_bpow x p, s))) .
 
-| ccK : forall p d c,
-    (forall  `{M: @EMonoid A op one equ} (x:A) s,
+
+Definition Kchain_correct  n p c :=
+   (forall  `{M: @EMonoid A op one equ} (x:A) s,
         result_equiv (exec A op c x s)
-                     (Some (Pow.Pos_bpow  x (p+d), Pow.Pos_bpow  x p ::s))) ->
-    chain_correct (gen_K p d) c.
-
+                     (Some (Pow.Pos_bpow  x n, Pow.Pos_bpow  x p ::s))).
 
 
 Instance Stack_equiv_refl {A}`{M : @EMonoid A op one equ} :
@@ -289,14 +285,13 @@ Proof.
 Qed.
 
 
-(** M3 is correct *)
+(** F3 is correct *)
 
-Lemma M3_correct : chain_correct (gen_F 3) M3.
+Lemma F3_correct : Fchain_correct  3 F3.
 Proof.
   constructor; intros. cbn.
   fold mult_op.
   constructor.
-  split.
   - now rewrite Eop_assoc.
   - apply Stack_equiv_refl. 
 Qed.
@@ -304,8 +299,8 @@ Qed.
 Import Pow.
 
 
-Lemma M2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
-    result_equiv (exec A op (M2q_of_nat n) x s)
+Lemma F2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
+    result_equiv (exec A op (F2q_of_nat n) x s)
                  (Some(Pow.power x (2 ^ n), s)).
   induction n.
   -  simpl.
@@ -327,9 +322,10 @@ Lemma M2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
 Qed.
 
 
-Lemma M2q_correct_1 (n:nat)  : chain_correct (gen_F (Pos.of_nat (2 ^ n))) (M2q_of_nat n). 
+Lemma F2q_correct_1 (n:nat)  : Fchain_correct (Pos.of_nat (2 ^ n))
+                                              (F2q_of_nat n). 
 Proof.
-  left;intros;  intros; rewrite M2q_correct_0.
+  red;intros;  intros; rewrite F2q_correct_0.
   right; split.
   -  rewrite Pos_bpow_ok_R.
      + reflexivity.
@@ -345,11 +341,11 @@ Qed.
 
 
 
-Lemma  M2q_correct (n:positive)  : chain_correct (gen_F (2 ^ n)) (M2q n). 
+Lemma  F2q_correct (n:positive)  : Fchain_correct (2 ^ n) (F2q n). 
 Proof.
-  unfold M2q.
+  unfold F2q.
   replace (2 ^n)%positive with (Pos.of_nat (2 ^ Pos.to_nat n)%nat).
-  apply M2q_correct_1.
+  apply F2q_correct_1.
   rewrite   Compatibility.Pos_pow_power.
   rewrite <- Pos_bpow_ok_R.
   -  rewrite Pos_bpow_ok.
@@ -378,44 +374,53 @@ Section CompositionProofs.
   Section App.
   Variables n p:  positive.
   Variables cn cp: code.
-  Hypothesis Hn : chain_correct (gen_F n) cn.
-  Hypothesis Hp : chain_correct (gen_F p) cp.
+  Hypothesis Hn : Fchain_correct n cn .
+  Hypothesis Hp : Fchain_correct p cp. 
 
-  Lemma correct_app : chain_correct (gen_F (n * p)) (cn ++ cp).
+  Lemma correct_app : Fchain_correct (n * p) (cn ++ cp).
   Proof.
-  constructor.
-  intros A op one equ M x s.
+    intros A op one equ M x s.
    rewrite exec_app.
-   inversion Hn; subst.
-   specialize (H0 _ _ _ _ M x s). inversion H0; subst.
-   inversion Hp; subst.
-   specialize (H3 _ _ _ _ M x0 s0). inversion H3; subst.
+      specialize (Hn _ _ _ _ M x s). inversion Hn; subst.
+   specialize (Hp _ _ _ _ M x0 s0). inversion Hp; subst.
    right.
- destruct H2.
+ destruct H3.
   split.
-  destruct  H5.
-  rewrite H5.
-  rewrite H2.  
+  
+  -      rewrite H2.
+   destruct H1.
+   rewrite H1.  
+  
   repeat rewrite Pos_bpow_ok.
   rewrite power_of_power.
    apply power_proper; auto.
  reflexivity.
 rewrite Pos2Nat.inj_mul.
 now rewrite mult_comm.
-destruct H5; auto.
+- 
  transitivity s0;auto.
+auto.
+ inversion H1;auto.
   Qed.
 
   End App.
 
+  Section MMK.
+
+ Variables n p:  positive.
+  Variables cn cp: code.
+  Hypothesis Hn : Fchain_correct n cn.
+  Hypothesis Hp : Fchain_correct p cp.
+
+  
+  End MMK.
+  
 
 (** TO do :
-    Corrections of composition (append), M2q, MMK, etc . *)
+    Corrections of oteher composition operators :  MMK, etc . *)
 End CompositionProofs.
 
-(** *  Euclidean chain generation 
-
-    To do: share some stuff with Euclidean.v *)
+(** *  Euclidean chain generation *)
 
 Require Import Dichotomy.
 Section Gamma.
@@ -428,12 +433,12 @@ Function chain_gen  (s:signature) {measure signature_measure}
   :  code :=
   match s with
     gen_F i =>
-    if pos_eq_dec i 1 then M1 else
+    if pos_eq_dec i 1 then F1 else
       if pos_eq_dec i 3
-      then M3
+      then F3
       else 
         match exact_log2 i with
-          Some p => M2q p
+          Some p => F2q p
         | _ => 
           match N.pos_div_eucl i (Npos (gamma i))
           with
@@ -459,13 +464,11 @@ Function chain_gen  (s:signature) {measure signature_measure}
       end
   end.
 
-(** Same script as in Euclidean.v ? Share it ! *)
-
-- intros;eapply PO1; eauto.
+- intros; eapply PO1; eauto.
 - intros; eapply PO2; eauto.
 - intros; eapply PO3;eauto.
 - intros; eapply PO4;eauto.
-- intros; unfold signature_measure; subst p;  lia.
+- intros; unfold signature_measure; subst p; lia.
 - intros; eapply PO6; eauto.
 - intros; unfold signature_measure; pos2nat_inj_tac; lia.
 - intros; eapply PO8; eauto.
@@ -483,9 +486,9 @@ Compute chain_gen  dicho  (gen_F 87) .
 
 Compute chain_apply (chain_gen  dicho (gen_F 87)) Natplus 1%nat.
 
-Definition M197887 := chain_gen  dicho (gen_F 197887).
+Definition F197887 := chain_gen  dicho (gen_F 197887).
 
-Time Compute chain_apply   M197887  NPlus 1%N.
+Time Compute chain_apply   F197887  NPlus 1%N.
 
-Time Compute chain_apply   M197887  NPlus 1%N.
+Time Compute chain_apply   F197887  NPlus 1%N.
 

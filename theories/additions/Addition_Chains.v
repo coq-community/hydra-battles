@@ -169,21 +169,21 @@ given any positive integer $p$, returns a chain that is correct with respect to 
 
 *)
 
-Definition chain_correct_nat (c: chain) (n:nat) := n <> 0 /\ 
+Definition chain_correct_nat (n:nat) (c: chain) := n <> 0 /\ 
 forall `(M:@EMonoid  A E_op E_one E_eq) (x:A), 
    chain_apply c x ==   x  ^  n.
 
-Definition chain_correct (c: chain) (p:positive) :=
-  chain_correct_nat c (Pos.to_nat p). 
+Definition chain_correct (p:positive) (c: chain) :=
+  chain_correct_nat (Pos.to_nat p) c. 
 
 Definition optimal (p:positive) (c : chain) :=
- forall c', chain_correct c' p -> (chain_length c <= chain_length c')%nat.
+ forall c', chain_correct p c' -> (chain_length c <= chain_length c')%nat.
 
 (** A slow tactic for proving a chain's correctness *)
 
 Ltac slow_chain_correct_tac :=
   match goal with 
-      [ |- chain_correct ?c ?p ] =>
+      [ |- chain_correct ?p ?c ] =>
       let A := fresh "A" in
       let op := fresh "op" in
       let one := fresh "one" in
@@ -195,7 +195,7 @@ Ltac slow_chain_correct_tac :=
                  intros A op one eq M x; monoid_simpl M; reflexivity]
   end.
 
-Example C7_ok : chain_correct C7 7.
+Example C7_ok : chain_correct 7 C7.
 Proof.
  slow_chain_correct_tac.
 Qed.
@@ -207,7 +207,7 @@ will be proved  more  efficiently, using  reflection or parametricity.
 
 (** Remove the comment if you can wait ...
 
-Example C87_ok : chain_correct C87 87.
+Example C87_ok : chain_correct 87 C87.
 Proof.
  Time  slow_chain_correct_tac. 
 (*
@@ -310,7 +310,7 @@ end.
 
 Ltac reflection_correct_tac :=
 match goal with
-[ |- chain_correct ?c ?n ] =>
+[ |- chain_correct ?n ?c ] =>
  split; [try discriminate |
          let A := fresh "A"
          in let op := fresh "op"
@@ -328,7 +328,7 @@ end.
  
 
 
-Example C87_ok : chain_correct C87 87.
+Example C87_ok : chain_correct 87 C87.
 Proof.
   Time reflection_correct_tac.
 (** Finished transaction in 0.038 secs (0.038u,0.s) (successful) *)
@@ -556,7 +556,7 @@ Qed.
 
 
 Lemma param_correctness_nat (c: chain) :
-  parametric c ->  chain_correct_nat c  (the_exponent_nat c).
+  parametric c ->  chain_correct_nat (the_exponent_nat c)  c.
 Proof.
  intros Hc  ; split. 
  -  now apply  exponent_nat_neq_0.
@@ -568,10 +568,10 @@ Proof.
 Qed. 
 
 Lemma param_correctness :
-  forall c:chain, parametric c -> 
-      chain_correct c (the_exponent c). 
+  forall (p:positive) (c:chain), p = the_exponent c -> parametric c -> 
+      chain_correct p  c. 
 Proof.
-  intros; rewrite  exponent_pos_of_nat; auto.
+  intros; subst p; rewrite  exponent_pos_of_nat; auto.
   red;  rewrite  exponent_pos2nat;auto.
   rewrite Pos2Nat.id,  <- exponent_pos2nat;auto.
   apply param_correctness_nat; auto.
@@ -587,11 +587,10 @@ If we admit that any chain is parametric, we infer the correctness of every chai
 
 Lemma param_correctness_for_free :
   any_chain_parametric  ->
-      forall (c : chain) ,
-chain_correct c (the_exponent c).
+      forall p (c : chain) ,
+p = the_exponent c -> chain_correct p c.
 Proof.
-  intros H c ; split;auto with chains; intros A op one Aeq M  a;
-    apply param_correctness, H.
+  intros H p c H0. rewrite H0. apply param_correctness; trivial. 
 Qed.
 
 
@@ -608,17 +607,18 @@ using the "free refinement" method
 
 Ltac param_chain_correct :=
 match goal with 
-[|- chain_correct ?c ?p ] => 
-apply param_correctness; parametric_tac
+  [|- chain_correct ?p ?c ] =>
+  let H := fresh "H" in assert (p = the_exponent c) by reflexivity;
+                        apply param_correctness;[trivial | parametric_tac]
 end.
 
-Lemma C87_ok' : chain_correct C87 87.
-Time param_chain_correct.
+Lemma C87_ok' : chain_correct 87  C87.
+ Time  param_chain_correct.
 (* Finished transaction in 0.005 secs (0.005u,0.s) (successful) *)
 Qed.
 
 
-Lemma L87'' : any_chain_parametric -> chain_correct C87 87.
+Lemma L87'' : any_chain_parametric -> chain_correct 87 C87.
 Proof.
  intro H; apply param_correctness;auto.
 Qed.
@@ -628,7 +628,7 @@ Qed.
 Definition chain_generator := positive -> chain.
 
 Definition correct_generator (gen : positive -> chain) :=
- forall p, chain_correct (gen p) p.
+ forall p, chain_correct p (gen p).
 
 
 (** Computing $x^n$ using a chain generator *)

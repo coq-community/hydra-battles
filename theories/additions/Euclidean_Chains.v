@@ -131,7 +131,7 @@ Compute F9.
 
 *)
 
-Remark F9_correct :chain_correct (F2C F9) 9.
+Remark F9_correct :chain_correct 9 (F2C F9).
 param_chain_correct.
 Qed.
 
@@ -153,13 +153,13 @@ Compute the_exponent (F2C F9).
 (** A first attempt to define Fchain correctness *)
 Module Bad.
   
-Definition Fchain_correct (fc : Fchain) (n:nat) :=
+Definition Fchain_correct (n:nat) (fc : Fchain) :=
   forall A `(M : @EMonoid A op E_one E_equiv) k (a:A),
     computation_execute op (fc A k  a)==
     computation_execute op (k  (a ^ n)).
 
 
-Theorem F3_correct : Fchain_correct F3 3.
+Theorem F3_correct : Fchain_correct 3 F3.
 Proof.  
   intros    A op E_one E_equiv M k  a ; cbn.
    monoid_simpl M. 
@@ -229,7 +229,7 @@ Qed.
 
 (** Fchain correctness (for exponent of type [nat] *)
 
-Definition Fchain_correct_nat (f : Fchain) (n:nat) :=
+Definition Fchain_correct_nat (n:nat) (f : Fchain) :=
  forall A `(M : @EMonoid A op E_one E_equiv) k
         (Hk :Fkont_proper M k)
         (a : A) ,
@@ -238,39 +238,33 @@ Definition Fchain_correct_nat (f : Fchain) (n:nat) :=
 
 (** Fchain correctness (for exponent of type [positive] *)
 
-Definition Fchain_correct (f : Fchain) (p:positive) :=
- Fchain_correct_nat f (Pos.to_nat p).
+Definition Fchain_correct (p:positive) (f : Fchain) :=
+ Fchain_correct_nat (Pos.to_nat p) f.
 
 
-
-
-Lemma F1_correct : Fchain_correct F1 1.
+Lemma F1_correct : Fchain_correct 1 F1.
 Proof.
   intros until M ; intros k Hk a ; unfold F1; simpl.
   apply Hk; monoid_simpl M; reflexivity.
 Qed.
 
-Theorem F3_correct : Fchain_correct F3 3.
+Theorem F3_correct : Fchain_correct 3 F3.
 Proof. 
   intros until M; intros k Hk a; simpl. apply Hk.
   monoid_simpl M;  reflexivity.
 Qed.
 
-Theorem F2_correct : Fchain_correct F2 2.
+Theorem F2_correct : Fchain_correct 2 F2.
 Proof. 
   intros until M; intros k Hk a; simpl;
   apply  Hk;  monoid_simpl M;  reflexivity.
 Qed.
 
 
-
-
-
-
 (** F2C preserves correctness *)
 
-Lemma F2C_correct (fc : Fchain) (p:positive) :
-  Fchain_correct fc p ->  chain_correct (F2C fc) p.
+Lemma F2C_correct (p:positive) (fc : Fchain) :
+  Fchain_correct p fc ->  chain_correct p (F2C fc).
 Proof.
   split;auto with chains;  intros until M;intro x; unfold F2C;
   specialize (H _ _ _ _ M (@Return A));
@@ -280,15 +274,13 @@ Proof.
 Qed.
 
 
-
-
 Module Bad2.
 
 Lemma Fcompose_correct :
-  forall f1 f2 n1 n2, Fchain_correct f1 n1 ->
-                        Fchain_correct f2 n2 ->
-                        Fchain_correct (Fcompose f1 f2)
-                                       (n1 * n2).
+  forall f1 f2 n1 n2, Fchain_correct n1 f1 ->
+                        Fchain_correct n2 f2 ->
+                        Fchain_correct (n1 * n2)
+                                       (Fcompose f1 f2).
 Proof.
  unfold Fchain_correct, Fcompose, Fchain_correct_nat; intros.
  specialize (H _  _ _ _ M (fun y : A => f2 A k y) ).  
@@ -373,14 +365,14 @@ Qed.
 
 
 
-(**  Fcompose respects correctness and proper-ness *)
+(**  Fcompose respects correctness and properness *)
 
 Lemma Fcompose_correct_nat : forall fc1 fc2 n1 n2,
-                           Fchain_correct_nat fc1 n1 ->
-                           Fchain_correct_nat fc2 n2 ->
+                           Fchain_correct_nat n1 fc1 ->
+                           Fchain_correct_nat n2 fc2 ->
                            Fchain_proper fc2 -> 
-                           Fchain_correct_nat (Fcompose fc1 fc2)
-                                          (n1 * n2)%nat.
+                           Fchain_correct_nat (n1 * n2)%nat
+                                              (Fcompose fc1 fc2).
 Proof.
  unfold  Fcompose, Fchain_correct_nat; intros.
  assert (Fkont_proper M (fun y : A => fc2 A k y)).
@@ -394,11 +386,11 @@ Qed.
 
 
 Lemma Fcompose_correct : forall fc1 fc2 n1 n2,
-                           Fchain_correct fc1 n1 ->
-                           Fchain_correct fc2 n2 ->
+                           Fchain_correct n1 fc1 ->
+                           Fchain_correct n2 fc2 ->
                            Fchain_proper fc2 -> 
-                           Fchain_correct (Fcompose fc1 fc2)
-                                          (n1 * n2).
+                           Fchain_correct (n1 * n2)
+                                          (Fcompose fc1 fc2).
 Proof.
  unfold Fchain_correct; intros.
  rewrite Pos2Nat.inj_mul.
@@ -426,11 +418,9 @@ Proof.
    - apply Fcompose_proper ; [apply F2_proper | apply IHn].
 Qed.
 
-
-
 Lemma  Fexp2_nat_correct (n:nat) : 
-                           Fchain_correct_nat (Fexp2_of_nat n) 
-                                              (2  ^ n).
+                           Fchain_correct_nat (2  ^ n) 
+                                              (Fexp2_of_nat n).
 Proof.
   induction n; cbn.
  - apply F1_correct.
@@ -443,7 +433,7 @@ Qed.
 
 
 Lemma  Fexp2_correct (p:positive) : 
-                           Fchain_correct (Fexp2 p) (2  ^ p).
+                           Fchain_correct (2  ^ p) (Fexp2 p).
 Proof.
  intros;red.
   rewrite Pos_pow_power, Pos2Nat_morph.
@@ -472,7 +462,7 @@ Hint Resolve F1_correct F1_proper
      F3_correct F3_proper Fcompose_correct Fcompose_proper
      Fexp2_correct Fexp2_proper : chains.
 
-Example F144:  {f : Fchain | Fchain_correct f 144 /\
+Example F144:  {f : Fchain | Fchain_correct 144 f /\
                                 Fchain_proper f}.
  change 144 with ( (3 * 3) * (2 ^ 4))%positive.
  exists (Fcompose (Fcompose F3 F3) (Fexp2 4)); auto with chains.
@@ -523,7 +513,7 @@ Definition Fplus (f1 f2 : Fchain) : Fchain :=
 Example F23 := Fplus F3 (Fplus (Fexp2 4) (Fexp2 2)).
 
 
-Lemma  F23_ok : chain_correct (F2C F23) 23.
+Lemma  F23_ok : chain_correct 23 (F2C F23).
 Proof. 
  param_chain_correct.
 Qed.
@@ -572,7 +562,7 @@ Definition Kkont_equiv  `(M : @EMonoid A op E_one E_equiv)
 
 About EMonoid.
 
-Definition Kchain_correct_nat (kc : Kchain) (n p : nat) :=
+Definition Kchain_correct_nat (n p : nat) (kc : Kchain) :=
   forall  (A : Type) (op : Mult_op A) (E_one : A) (E_equiv : Equiv A)
           (M : EMonoid op E_one E_equiv)
           (k : Kkont A),
@@ -582,8 +572,8 @@ Definition Kchain_correct_nat (kc : Kchain) (n p : nat) :=
       computation_execute op (k  (a ^ n) (a ^ p)).
 
 
-Definition Kchain_correct (kc : Kchain) (n p : positive) :=
-  Kchain_correct_nat kc (Pos.to_nat n) (Pos.to_nat p).
+Definition Kchain_correct (n p : positive) (kc : Kchain) :=
+  Kchain_correct_nat  (Pos.to_nat n) (Pos.to_nat p) kc.
 
 Class Kchain_proper (kc : Kchain) :=
 Kchain_proper_prf : 
@@ -601,7 +591,7 @@ Proof.
   add_op_proper M H3; apply H1;  rewrite H2;   reflexivity. 
 Qed.
 
-Lemma k7_3_correct : Kchain_correct k7_3 7 3.
+Lemma k7_3_correct : Kchain_correct 7 3 k7_3.
 Proof.
 intros until M; intros; red; unfold k7_3; simpl.
   apply H;  monoid_simpl M;  reflexivity.
@@ -612,8 +602,8 @@ Qed.
 
 Lemma Kchain_correct_conv (kc : Kchain) (n p : nat) :
   0%nat <> n -> 0%nat <> p ->
-  Kchain_correct_nat kc n p ->
-  Kchain_correct kc (Pos.of_nat n) (Pos.of_nat p).
+  Kchain_correct_nat n p kc ->
+  Kchain_correct (Pos.of_nat n) (Pos.of_nat p) kc.
 Proof.
   red; intros; repeat rewrite Nat2Pos.id; auto.
 Qed.
@@ -632,8 +622,8 @@ Definition K2F (knp : Kchain) : Fchain :=
 
 
 Lemma K2F_correct_nat :
-  forall knp n p, Kchain_correct_nat knp n p ->
-                 Fchain_correct_nat (K2F knp) n.
+  forall knp n p, Kchain_correct_nat  n p knp ->
+                 Fchain_correct_nat n (K2F knp).
 Proof.
  red;intros; unfold K2F;
  apply  (H _ _ _ _ M (fun x y => k x));
@@ -641,8 +631,8 @@ Proof.
 Qed.
 
 Lemma K2F_correct :
-  forall kc n p, Kchain_correct kc n p ->
-                 Fchain_correct (K2F kc) n.
+  forall kc n p, Kchain_correct n p kc ->
+                 Fchain_correct n (K2F kc).
 Proof.
  red;intros; unfold K2F, Fchain_correct. 
  apply K2F_correct_nat with (Pos.to_nat p);
@@ -696,13 +686,12 @@ Section KFK_proof.
  Variables b q r: nat.
  Variable kbr : Kchain.
  Variable fq : Fchain.
- Hypothesis Hbr : Kchain_correct_nat kbr b r.
- Hypothesis Hq : Fchain_correct_nat fq q.
+ Hypothesis Hbr : Kchain_correct_nat b r kbr.
+ Hypothesis Hq : Fchain_correct_nat q fq.
  Hypothesis Hbr_prop : Kchain_proper kbr.
  Hypothesis Hq_prop : Fchain_proper fq.
 
- Lemma KFK_correct_nat : Kchain_correct_nat (KFK kbr fq)
-                                            (b * q + r)%nat b.
+ Lemma KFK_correct_nat : Kchain_correct_nat (b * q + r)%nat b (KFK kbr fq).
  Proof.
   intros until M; intros k H a;  unfold KFK;   simpl.
   add_op_proper M Hop.
@@ -767,8 +756,7 @@ Section KFK_proof.
 Qed.
 
 
- Lemma KFF_correct_nat : Fchain_correct_nat (KFF kbr fq)
-                                            (b * q + r)%nat .
+ Lemma KFF_correct_nat : Fchain_correct_nat (b * q + r)%nat (KFF kbr fq).
  Proof.
    apply K2F_correct_nat with b;  apply KFK_correct_nat.
  Qed.
@@ -847,10 +835,10 @@ End KFK_proof.
 
 Lemma KFK_correct :
   forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-    Kchain_correct kbr b r ->
-    Fchain_correct fq q ->
+    Kchain_correct  b r kbr ->
+    Fchain_correct q fq ->
     Kchain_proper kbr ->
-    Fchain_proper fq -> Kchain_correct (KFK kbr fq) (b * q + r) b.
+    Fchain_proper fq -> Kchain_correct  (b * q + r) b (KFK kbr fq).
 Proof.
  red; intros; rewrite Pos2Nat.inj_add, Pos2Nat.inj_mul;
  apply KFK_correct_nat;assumption.
@@ -858,10 +846,10 @@ Qed.
 
 Lemma KFF_correct :
   forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-    Kchain_correct kbr b r ->
-    Fchain_correct fq q ->
+    Kchain_correct b r kbr  ->
+    Fchain_correct q fq ->
     Kchain_proper kbr ->
-    Fchain_proper fq -> Fchain_correct (KFF kbr fq) (b * q + r).
+    Fchain_proper fq -> Fchain_correct (b * q + r) (KFF kbr fq).
 Proof.
   red; intros;  rewrite Pos2Nat.inj_add, Pos2Nat.inj_mul;
   apply KFF_correct_nat;assumption.
@@ -870,10 +858,10 @@ Qed.
 
 Lemma FFK_correct_nat :
   forall (p q  : nat) (fp fq : Fchain),
-    Fchain_correct_nat fp p  ->
-    Fchain_correct_nat fq q ->
+    Fchain_correct_nat p fp  ->
+    Fchain_correct_nat q fq ->
     Fchain_proper fp ->
-    Fchain_proper fq -> Kchain_correct_nat (FFK fp fq) (p * q) p.
+    Fchain_proper fq -> Kchain_correct_nat  (p * q) p (FFK fp fq).
 Proof.
 intros.   
 red;intros.
@@ -910,10 +898,10 @@ Qed.
 
 Lemma FFK_correct :
   forall (p q  : positive) (fp fq : Fchain),
-    Fchain_correct fp p  ->
-    Fchain_correct fq q ->
+    Fchain_correct p fp  ->
+    Fchain_correct q fq ->
     Fchain_proper fp ->
-    Fchain_proper fq -> Kchain_correct (FFK fp fq) (p * q ) p.
+    Fchain_proper fq -> Kchain_correct  (p * q ) p (FFK fp fq).
 Proof.
  intros;red; rewrite  Pos2Nat.inj_mul; now apply FFK_correct_nat. 
 Qed.
@@ -951,9 +939,9 @@ Qed.
 
 
 Lemma FK_correct : forall (p: positive) (Fp : Fchain),
-                     Fchain_correct  Fp p ->
+                     Fchain_correct  p Fp ->
                      Fchain_proper Fp ->
-                     Kchain_correct (FK Fp) p 1.
+                     Kchain_correct  p 1 (FK Fp).
 Proof.
   intros;red; unfold FK;  red; intros until M;intros k H1 a.
   specialize (H _ _ _ _ M (fun y : A => k y a)).
@@ -980,7 +968,7 @@ Qed.
 
 Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
 
-Lemma k3_1_correct : Kchain_correct k3_1 3 1.
+Lemma k3_1_correct : Kchain_correct 3 1 k3_1.
 Proof.
   intros until M;intros k H a.
   unfold k3_1; simpl;  apply H; monoid_simpl M;reflexivity.
@@ -1007,7 +995,7 @@ Definition F87 :=
 Compute the_exponent (F2C F87).
 
 
-Lemma OK87 : Fchain_correct F87 87.
+Lemma OK87 : Fchain_correct 87 F87.
 Proof.
  unfold F87; change 87 with (10 * (2 ^ 3) + 7)%positive.
  apply KFF_correct;auto with chains.
@@ -1090,8 +1078,8 @@ end.
 Definition correctness_statement (s: signature) : 
 chain_type s -> Prop :=
 match s  with
-  | gen_F p => fun ch => Fchain_correct ch p
-  | gen_K p d   => fun ch => Kchain_correct ch (p + d) p
+  | gen_F p => fun ch => Fchain_correct p ch
+  | gen_K p d   => fun ch => Kchain_correct  (p + d) p ch
 end.
 
 
@@ -1337,7 +1325,7 @@ intro s; functional induction chain_gen s.
 -  destruct IHc, IHc0.
    generalize (N_pos_div_eucl_divides _ _ _ e3); intro eq_i.
     split.
-   + cbn;  rewrite <- eq_i at -1 ; apply Fcompose_correct;auto.
+   + cbn.   rewrite <- eq_i at 1 ; apply Fcompose_correct;auto.
    +  pattern i at 1 ; rewrite <- eq_i at 1; apply Fcompose_proper;auto.
 
 
@@ -1345,9 +1333,9 @@ intro s; functional induction chain_gen s.
   replace i with (gamma i * (N2pos q) + N2pos r).
    + destruct IHc, IHc0;split.
      *  apply KFF_correct;auto.
-        simpl; simpl in H; 
+        simpl; simpl in H.
         replace (gamma i) with  
-        (N2pos r + (gamma i - N2pos r)) at 2.
+        (N2pos r + (gamma i - N2pos r)) at 1.
         apply H.
         rewrite Pplus_minus;auto with chains.
         apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
@@ -1410,7 +1398,7 @@ intro s; functional induction chain_gen s.
 Qed. 
 
 
-Theorem make_chain_correct : forall p, chain_correct (make_chain p) p.
+Theorem make_chain_correct : forall p, chain_correct p (make_chain p).
 Proof.
   intro p; destruct (chain_gen_OK (gen_F p)).
   unfold make_chain; apply F2C_correct; apply H.
@@ -1525,12 +1513,12 @@ Time parametric_tac.
 Qed.
 
 
-Remark big_correct :chain_correct (make_chain 45319) 45319.
+Remark big_correct :chain_correct 45319 (make_chain 45319).
 Time param_chain_correct.
 (* Finished transaction in 4.054 secs (4.051u,0.s) (successful) *)
 Qed.
 
-Remark big_correct' : chain_correct (make_chain 453) 453.
+Remark big_correct' : chain_correct 453 (make_chain 453).
 Time reflection_correct_tac.
 Qed.
 
@@ -1544,7 +1532,7 @@ That's normal. The reflection tactic builds a linear term w.r.t. the exponent !
 *)
 
 
-Remark big_correct''' : chain_correct (make_chain 453) 453.
+Remark big_correct''' : chain_correct 453 (make_chain 453).
 Time apply make_chain_correct.
 (* Finished transaction in 0. secs (0.u,0.s) (successful)
 *)

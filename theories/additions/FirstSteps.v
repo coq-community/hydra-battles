@@ -160,3 +160,39 @@ Module Bad.
   End CounterExample.
 
 End Bad.
+
+
+(** Fibonacci matrices *)
+(*
+
+Open Scope Z_scope. 
+Definition encode (p: Z*Z) := let (a,b) := p in  mat (a+b)%Z a a b.
+
+Definition id2 := (0,1).
+Definition matfib2 := (1, 0).
+Definition mul2 (m m' : Z*Z) := let (a,b) := m in
+                        let (c,d) := m' in
+                        ((a+b)*c + a*d, a*c + b*c).
+
+
+Compute mul2 id2 matfib2.
+Compute mul2 matfib2 id2.
+
+
+Lemma mul2_assoc (m m' m'': Z*Z):
+      mul2 (mul2 m m') m'' = mul2 m (mul2 m' m'').
+destruct m,m',m''.
+  unfold mul2.
+ f_equal. ring_simplify.
+Abort.
+
+Definition yves_fib (n:nat) := let p := power mul2 id2 matfib2 n in
+                               fst p + snd p.
+
+Compute yves_fib 10.
+Compute yves_fib 0.
+Compute yves_fib 20.
+
+Compute power mul2 id2 matfib2 4%nat.
+
+*)
