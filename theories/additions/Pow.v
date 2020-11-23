@@ -305,6 +305,23 @@ Proof.
   apply power_commute.
 Qed.
 
+Lemma Pos_bpow_of_plus : forall x n p, Pos_bpow x  (n + p)%positive ==
+                                       Pos_bpow x  n *  Pos_bpow x  p.
+Proof.
+  intros; repeat rewrite Pos_bpow_ok.
+  rewrite Pos2Nat.inj_add.
+  now rewrite power_of_plus.
+Qed.
+
+Lemma Pos_bpow_of_bpow : forall (x:A) n p,
+    Pos_bpow (Pos_bpow x n) p == Pos_bpow x (p * n)%positive.
+Proof.
+  intros; repeat rewrite Pos_bpow_ok.
+  rewrite Pos2Nat.inj_mul.
+  now rewrite power_of_power.
+Qed.
+
+
 
 (** ** Remark
 

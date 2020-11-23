@@ -88,16 +88,16 @@ Definition F2q (p:positive) :=
 
 (** for computing x^(pq+r) passing by  x^p *)
 
-Definition KMC (kpr mq:code) : code := 
+Definition KFF (kpr mq:code) : code := 
   kpr++(mq++MUL::nil).
 
 (** for computing x^p and x^(pq) *)
 
-Definition MMK (mp mq: code) := mp ++ PUSH :: mq. 
+Definition FFK (mp mq: code) := mp ++ PUSH :: mq. 
 
 (** for computing x^p then x^(pq + r)  *)
 
-Definition KMK (kpr mq: code) :=
+Definition KFK (kpr mq: code) :=
   kpr ++ PUSH::SWAP :: (mq ++ MUL :: nil). 
 
 Definition FK (fn: code) := PUSH::fn. 
@@ -115,7 +115,7 @@ Example  M7_3 := PUSH::PUSH::SQR::MUL::PUSH::SQR::SWAP::MUL::nil.
 Compute chain_apply  M7_3   Natplus 1%nat .
 
 (** Example code for 31 via 7 *)
-Example C31_7 := KMC M7_3 (F2q 2).
+Example C31_7 := KFF M7_3 (F2q 2).
 
 Compute chain_apply C31_7 Natplus 1%nat.
 (*
@@ -128,13 +128,13 @@ Require Import NArith.
 Compute chain_apply C31_7 NMult 2%N.
 
 
-Compute chain_apply (MMK F3 (F2q 3)) Natplus %nat. (** 24, 3 *)
+Compute chain_apply (FFK F3 (F2q 3)) Natplus %nat. (** 24, 3 *)
 
 (** For 99 and 24 *)
-Example K99_24 := KMK (MMK F3 (F2q 3)) (F2q 2).
+Example K99_24 := KFK (FFK F3 (F2q 3)) (F2q 2).
 Compute K99_24.
 
-Compute chain_apply (KMK (MMK F3 (F2q 3)) (F2q 2)) Natplus 1%nat.
+Compute chain_apply (KFK (FFK F3 (F2q 3)) (F2q 2)) Natplus 1%nat.
 
 
 (** Specification and generation of correct chains *)
@@ -149,27 +149,26 @@ Inductive stack_equiv {A}`{M : @EMonoid A op one equ}:
                                   stack_equiv (x::s) (y:: s').
 
 
-
 Definition config_equiv  {A}`{M : @EMonoid A op one equ}
-           (x :A)(s:stack A)(y:A)(s':stack A) :=
-  x == y /\ stack_equiv s s'.
+           (c c' : config A): Prop := 
+  fst c == fst c'  /\ stack_equiv (snd c) (snd c').
 
 
 
-Inductive result_equiv {A}`{M : @EMonoid A op one equ}: relation (option (config A)):= 
+Inductive result_equiv`{M : @EMonoid A op one equ}: relation (option (config A)):= 
   result_equiv_fail : result_equiv None None
 | result_equiv_success : forall x s y s',
-    config_equiv  x s y s' ->
+    config_equiv  (x,s) (y, s') ->
     result_equiv (Some (x,s)) (Some (y,s')).
 
 Definition Fchain_correct (p: positive) (c: code) :=
-  (forall A `{M: @EMonoid A op one equ} (x:A) s,
+  (forall  `(M: @EMonoid A op one equ) (x:A) s,
         result_equiv (M:=M) (exec A op c x s)
                      (Some (Pow.Pos_bpow x p, s))) .
 
 
 Definition Kchain_correct  n p c :=
-   (forall  `{M: @EMonoid A op one equ} (x:A) s,
+   (forall  `(M: @EMonoid A op one equ) (x:A) s,
         result_equiv (exec A op c x s)
                      (Some (Pow.Pos_bpow  x n, Pow.Pos_bpow  x p ::s))).
 
@@ -236,20 +235,20 @@ Qed.
 
 
 Lemma exec_equiv `{M : @EMonoid A op one equ} :
-  forall c x s y s' , config_equiv x s y s' ->
+  forall c x s y s' , config_equiv (x, s) (y, s') ->
                       result_equiv (exec A op c x s) (exec A op c y s').
 Proof.
   induction c.
   - simpl; now constructor.
   -  destruct a.
      + destruct s.
-       * inversion 1; inversion H1; subst;simpl; constructor.
-       *  inversion 1; inversion H1; subst;  simpl; apply IHc.
+       * inversion 1.  inversion H1.  cbn in *; subst;simpl; constructor.
+       *  inversion 1; cbn in *; inversion H1; subst;  simpl; apply IHc.
           constructor; trivial.
-          now apply Eop_proper.
+          cbn; now apply Eop_proper.
      +  intros;simpl; apply IHc.
         destruct H; split; auto.
-        apply Eop_proper; auto.
+        cbn;apply Eop_proper; auto.
      + intros; simpl;  apply IHc.
        destruct H; split; auto.
        right; auto.
@@ -292,7 +291,7 @@ Proof.
   constructor; intros. cbn.
   fold mult_op.
   constructor.
-  - now rewrite Eop_assoc.
+  - cbn; now rewrite Eop_assoc.
   - apply Stack_equiv_refl. 
 Qed.
 
@@ -305,20 +304,21 @@ Lemma F2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
   induction n.
   -  simpl.
      intros; f_equal; right; split.
-     + rewrite Eone_right.
+     + cbn; rewrite Eone_right.
        reflexivity.
      + reflexivity.
-     - intro x; simpl; intro s; rewrite IHn.
-       right; split;auto.
-      +  replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^n) )%nat.
-         * fold mult_op;  assert (x * x == x ^2) by (now rewrite  sqr_def).
-           transitivity ((x ^ 2) ^2 ^n).
-           -- apply power_proper;  auto.
-           -- rewrite <- power_of_power.
-              rewrite power_of_power_comm.
-              reflexivity.
-         * lia.
-      + reflexivity.
+  - intro x; simpl; intro s; rewrite IHn.
+    right; split;auto.
+    + cbn.   replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^ n) )%nat.
+      * fold mult_op;  assert (x * x == x ^2) by (now rewrite  sqr_def).
+        transitivity ((x ^ 2) ^2 ^ n).
+        now apply power_proper.
+        rewrite  power_of_power.
+        apply power_proper.
+        reflexivity.
+        lia.
+      * lia.
+    + reflexivity.
 Qed.
 
 
@@ -327,7 +327,7 @@ Lemma F2q_correct_1 (n:nat)  : Fchain_correct (Pos.of_nat (2 ^ n))
 Proof.
   red;intros;  intros; rewrite F2q_correct_0.
   right; split.
-  -  rewrite Pos_bpow_ok_R.
+  -  cbn;rewrite Pos_bpow_ok_R.
      + reflexivity.
      + apply Nat.pow_nonzero.
        discriminate.
@@ -380,45 +380,102 @@ Section CompositionProofs.
   Lemma correct_app : Fchain_correct (n * p) (cn ++ cp).
   Proof.
     intros A op one equ M x s.
-   rewrite exec_app.
-      specialize (Hn _ _ _ _ M x s). inversion Hn; subst.
-   specialize (Hp _ _ _ _ M x0 s0). inversion Hp; subst.
-   right.
- destruct H3.
-  split.
-  
-  -      rewrite H2.
-   destruct H1.
-   rewrite H1.  
-  
-  repeat rewrite Pos_bpow_ok.
-  rewrite power_of_power.
-   apply power_proper; auto.
- reflexivity.
-rewrite Pos2Nat.inj_mul.
-now rewrite mult_comm.
-- 
- transitivity s0;auto.
-auto.
- inversion H1;auto.
+    rewrite exec_app.
+    specialize (Hn _ _ _ _ M x s). inversion Hn; subst.
+    specialize (Hp _ _ _ _ M x0 s0). inversion Hp; subst.
+    right.
+    destruct H3.
+    split.
+    - rewrite H2; destruct H1.
+      cbn in *;rewrite H1, Pos_bpow_of_bpow; now rewrite Pos.mul_comm. 
+    -  transitivity s0;auto.
+      inversion H1;auto.
   Qed.
 
   End App.
 
-  Section MMK.
+  Section FFK.
 
- Variables n p:  positive.
-  Variables cn cp: code.
-  Hypothesis Hn : Fchain_correct n cn.
+ Variables p q:  positive.
+  Variables cp cq: code.
   Hypothesis Hp : Fchain_correct p cp.
+  Hypothesis Hq : Fchain_correct q cq.
 
-  
-  End MMK.
+  Lemma FFK_correct : Kchain_correct (p * q) p (FFK cp cq).
+  Proof.
+    red; intros; unfold  FFK; cbn; rewrite exec_app.
+    specialize (Hp A op one equ M x s); inversion Hp; subst; cbn.
+    inversion H1; subst.
+    specialize (Hq A op one equ M x0 (x0::s0));inversion Hq; subst.
+    rewrite H3, Hq.
+    right; inversion H5; split.  
+    - cbn in *;rewrite H0; repeat rewrite Pos_bpow_ok; rewrite power_of_power.
+      apply power_proper; auto.
+      reflexivity.
+      rewrite Pos2Nat.inj_mul; now rewrite mult_comm.
+    - transitivity s1;auto.
+      + inversion H5;auto.
+        now  symmetry.
+      + transitivity (x0::s0); auto. 
+        right; auto.
+  Qed.
+
+  End FFK.
   
 
 (** TO do :
-    Corrections of oteher composition operators :  MMK, etc . *)
-End CompositionProofs.
+    Corrections of other composition operators  *)
+
+  Section KFK.
+    Variables p q r : positive.
+    Variables kpr mq : code.
+    Hypothesis Hpr : Kchain_correct p r kpr.
+    Hypothesis Hq : Fchain_correct q mq.
+
+    Lemma KFK_correct : Kchain_correct (p * q + r)  p (KFK kpr mq).
+    Proof.
+      red; unfold KFK.  intros; cbn.
+      rewrite exec_app.     
+      specialize (Hpr _ _ _ _ M x s).
+      inversion Hpr; subst.
+      cbn.
+      inversion H1;subst. cbn in *.
+      destruct s0; [ inversion H2|].   
+      inversion H2;subst.
+      rewrite exec_app.
+      specialize (Hq _ _ _ _ M x0 (a::x0::s0)).
+      inversion Hq;subst.
+      inversion H5. simpl in H4, H7.
+      transitivity (Some (Pos_bpow x0 q * a, x0  :: s0)). 
+      cbn .
+      inversion H7; subst.
+      right.
+      split.
+      
+      cbn. 
+      fold mult_op.
+      Fail  rewrite H12, H4. (* why ??? *)
+      destruct M (* why ?? *) . apply Eop_proper; auto.
+      cbn.
+      auto.            
+      right.
+      split.
+      cbn.
+      rewrite Pos_bpow_of_plus.
+      destruct M; apply Eop_proper.
+      rewrite Pos.mul_comm.
+      rewrite <- Pos_bpow_of_bpow.
+      apply Pos_bpow_proper.
+      auto.
+      reflexivity.
+      auto.
+      cbn.
+      right; auto.
+    Qed.
+
+    End KFK.
+
+  End CompositionProofs.
 
 (** *  Euclidean chain generation *)
 
@@ -445,7 +502,7 @@ Function chain_gen  (s:signature) {measure signature_measure}
           | (q, 0%N) => 
             (chain_gen (gen_F (gamma i))) ++
                                           (chain_gen (gen_F (N2pos q)))
-          | (q,r)  => KMC (chain_gen
+          | (q,r)  => KFF (chain_gen
                              (gen_K (N2pos r)
                                     (gamma i - N2pos r)))
                           (chain_gen (gen_F (N2pos q)))
@@ -456,9 +513,9 @@ Function chain_gen  (s:signature) {measure signature_measure}
     if pos_eq_dec p 1 then FK (chain_gen (gen_F (1 + d)))
     else
       match N.pos_div_eucl (p + d)  (Npos p) with
-      | (q, 0%N) => MMK   (chain_gen (gen_F p))
+      | (q, 0%N) => FFK (chain_gen (gen_F p))
                           (chain_gen (gen_F (N2pos q)))
-      | (q,r)  => KMK (chain_gen (gen_K (N2pos r)
+      | (q,r)  => KFK (chain_gen (gen_K (N2pos r)
                                         (p - N2pos r)))
                       (chain_gen (gen_F (N2pos q)))
       end
