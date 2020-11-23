@@ -173,6 +173,15 @@ Definition Kchain_correct  n p c :=
                      (Some (Pow.Pos_bpow  x n, Pow.Pos_bpow  x p ::s))).
 
 
+Definition correctness_statement (s: signature) : 
+code -> Prop :=
+match s  with
+  | gen_F p => fun c => Fchain_correct p c
+  | gen_K p d   => fun c => Kchain_correct  (p + d) p c
+end.
+
+
+
 Instance Stack_equiv_refl {A}`{M : @EMonoid A op one equ} :
   Reflexive stack_equiv.
 Proof.
@@ -284,7 +293,14 @@ Proof.
 Qed.
 
 
+
+Lemma F1_correct : Fchain_correct  1  F1.
+Proof.
+  constructor; intros. cbn. split; reflexivity.
+Qed.
+
 (** F3 is correct *)
+
 
 Lemma F3_correct : Fchain_correct  3 F3.
 Proof.
@@ -371,6 +387,25 @@ Qed.
 
 
 Section CompositionProofs.
+
+  Section FK.
+    Variable n : positive.
+    Variable cn : code.
+    Hypothesis Hn : Fchain_correct n cn.
+    Lemma FK_correct : Kchain_correct n 1 (FK cn).
+ intros A op one equ M x s.
+    
+    specialize (Hn _ _ _ _ M x (x::s)). inversion Hn; subst.    
+     cbn.
+      rewrite Hn.
+     right.
+ split.
+  reflexivity.
+      reflexivity.
+    Qed.
+
+    End FK.
+
   Section App.
   Variables n p:  positive.
   Variables cn cp: code.
@@ -423,9 +458,6 @@ Section CompositionProofs.
   End FFK.
   
 
-(** TO do :
-    Corrections of other composition operators  *)
-
   Section KFK.
     Variables p q r : positive.
     Variables kpr mq : code.
@@ -473,6 +505,39 @@ Section CompositionProofs.
       right; auto.
     Qed.
 
+    Lemma KFF_correct: Fchain_correct (p * q + r)  (KFF kpr mq).
+      red; unfold KFF.  intros; cbn.
+      rewrite exec_app.     
+      specialize (Hpr _ _ _ _ M x s).
+      inversion Hpr; subst.
+      inversion H1;subst. cbn in *.
+      inversion H2;subst.
+      rewrite exec_app.
+      specialize (Hq _ _ _ _ M x0 (x1::s1)).
+      
+      inversion Hq;subst.
+      inversion H5. simpl in H4, H8.
+      cbn.
+ inversion H8; subst.
+    right.
+split.
+cbn.
+fold mult_op.
+ rewrite Pos_bpow_of_plus.
+destruct M.
+apply Eop_proper.
+rewrite H4.
+
+rewrite H0.
+rewrite Pos.mul_comm.
+ rewrite <- Pos_bpow_of_bpow.
+reflexivity.
+rewrite H12.
+assumption.
+cbn.
+now transitivity s1.
+Qed.
+
     End KFK.
 
   End CompositionProofs.
@@ -480,6 +545,12 @@ Section CompositionProofs.
 (** *  Euclidean chain generation *)
 
 Require Import Dichotomy.
+
+Definition  OK (s: signature) 
+  := fun c: code => correctness_statement s c.
+
+
+
 Section Gamma.
 
 Variable gamma: positive -> positive.
@@ -531,6 +602,80 @@ Function chain_gen  (s:signature) {measure signature_measure}
 - intros; eapply PO8; eauto.
 - intros; eapply PO9; eauto.
 Defined.
+
+Definition make_chain (n:positive) : code :=
+ (chain_gen (gen_F n)).
+
+Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
+  intro s; functional induction chain_gen s.
+  red.
+  - cbn. apply F1_correct.
+  - cbn; apply F3_correct.
+  - cbn.  Search exact_log2.
+    rewrite (exact_log2_spec _ _ e2).
+    apply F2q_correct.
+  - cbn.
+    generalize (N_pos_div_eucl_divides _ _ _ e3); intro eq_i.
+    rewrite <- eq_i at 1.
+    apply correct_app.
+    apply IHc.
+    apply IHc0.
+  - cbn.
+    pattern i at 1;
+      replace i with (gamma i * (N2pos q) + N2pos r).
+    + cbn in *. 
+      *  apply KFF_correct;auto.
+         replace (gamma i) with  
+             (N2pos r + (gamma i - N2pos r)) at 1.
+         apply IHc.
+         rewrite Pplus_minus;auto with chains.
+         apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
+         generalize 
+           (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
+           rewrite e3;  simpl;auto with chains.
+         destruct r; [ contradiction | auto with chains].
+    + apply  N_pos_div_eucl_rest; auto with chains.
+      destruct r;try contradiction; auto with chains. 
+      apply (div_gamma_pos   _ _ _ e3); auto with chains.
+      apply pos_gt_3;auto with chains.
+      destruct (exact_log2 i); [contradiction | reflexivity].
+  - apply FK_correct. apply IHc.
+  - cbn. cbn in *.
+    red; replace (p + d)%positive with (p * N2pos q)%positive.
+    * apply FFK_correct; auto with chains.
+    *  generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
+         rewrite e1;    rewrite N.add_0_r ; intro  H3;
+           case_eq (q * N.pos p)%N.
+       intro H4;  rewrite H4 in H3 ; discriminate.
+       intros p0 H4; rewrite H4 in H3; injection H3;
+         intro H5;   rewrite H5.
+       N2pos_destruct q q.
+       injection H4;auto with chains.
+       rewrite  Pos.mul_comm;  auto with chains.
+  - cbn.
+    + red; replace (p+d) with (p * N2pos q + N2pos r).
+      * apply KFK_correct;auto with chains.
+        cbn in *; replace (N2pos r + (p - N2pos r))%positive with p in IHc.
+        apply IHc.  
+        rewrite Pplus_minus;  auto.
+        generalize  (N.pos_div_eucl_remainder (p + d) (N.pos p));
+          rewrite e1; cbn;  intro H3.
+        apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
+        destruct r; [contradiction | auto with chains].
+
+      *   generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p)). 
+          rewrite e1; intros H3. 
+          case_eq q.
+          {intro;   generalize (pos_div_eucl_quotient_pos _ _ _ _ e1).
+           destruct 1;auto with chains.
+           rewrite pos2N_inj_add;  apply N.le_add_r.
+          }
+          {
+            intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
+            simpl;  simpl in H3;  injection H3.
+            rewrite Pos.mul_comm; auto with chains.
+          }
+Qed.
 
 End Gamma.
 
