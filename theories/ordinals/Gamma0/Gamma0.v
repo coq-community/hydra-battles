@@ -10,11 +10,11 @@ From Coq Require Import Arith List Lia  Compare_dec  Relations
      Wellfounded  Max RelationClasses.
 
 
-From hydras.Epsilon0 Require Import Epsilon0.
-From hydras.Prelude Require Import More_Arith Restriction.
+From hydras Require Import Epsilon0.
+From hydras Require Import More_Arith Restriction.
 From hydras Require Import OrdinalNotations.Generic. 
-From hydras.rpo Require Import term  rpo.
-From hydras.Gamma0 Require Import T2.
+From hydras Require Import rpo.term  rpo.rpo.
+From hydras Require Import T2.
 
 Import Datatypes.
 

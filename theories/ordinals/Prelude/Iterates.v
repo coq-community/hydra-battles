@@ -5,7 +5,7 @@
 
 Open Scope nat_scope.
 From Coq Require Import RelationClasses Relations Arith Max Lia.
-From hydras.Prelude Require Import Exp2.
+From hydras Require Import Exp2.
 
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   match n with

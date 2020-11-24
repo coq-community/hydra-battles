@@ -2,7 +2,7 @@
 
 
 From Coq Require Import List Relations Wellfounded Arith  Wf_nat.
-From hydras.rpo Require Import more_list list_permut dickson term.
+From hydras Require Import more_list list_permut dickson term.
 
 (** A non-dependant version of lexicographic extension. *)
 Definition lex (A B : Set) (eq_A_dec : forall a1 a2, {a1=a2}+{a1<>a2}) 

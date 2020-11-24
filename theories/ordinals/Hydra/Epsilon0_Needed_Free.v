@@ -1,7 +1,7 @@
 
 (**  Pierre Castéran, LaBRI and University of Bordeaux  *)
 
-From hydras.Hydra Require Import Epsilon0_Needed_Generic.
+From hydras Require Import Epsilon0_Needed_Generic.
 Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators.
 Import O2H.
 

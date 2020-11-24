@@ -4,9 +4,9 @@
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
-From hydras.Epsilon0 Require Import  H_alpha  E0  Canon Paths
+From hydras Require Import  H_alpha  E0  Canon Paths
      Large_Sets.
-From hydras.Prelude Require Import  Simple_LexProd Iterates .
+From hydras Require Import  Simple_LexProd Iterates .
 From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
 Import RelationClasses Relations.

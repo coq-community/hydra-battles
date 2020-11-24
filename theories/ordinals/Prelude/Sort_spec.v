@@ -3,8 +3,8 @@
 
 From Coq Require Export List RelationClasses  Relations Sorting.Permutation
      Sorting.Sorted.
-From hydras.Prelude Require Export DecPreOrder.
-From hydras.Prelude Require Import DecPreOrder_Instances.
+From hydras Require Export DecPreOrder.
+From hydras Require Import DecPreOrder_Instances.
 
 
 Definition sort_fun_t := forall A, (A -> A -> bool) -> list A -> list A.

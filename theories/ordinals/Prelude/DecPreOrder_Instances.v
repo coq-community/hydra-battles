@@ -1,6 +1,6 @@
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
-From hydras.Prelude Require Export DecPreOrder.
+From hydras Require Export DecPreOrder.
 From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
 
 Instance Nat_le_TO : TotalDecPreOrder le .

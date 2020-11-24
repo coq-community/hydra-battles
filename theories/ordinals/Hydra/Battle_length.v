@@ -8,8 +8,8 @@ Pierre Castéran, LaBRI, University of Bordeaux
 
  *)
 
-From hydras.Epsilon0 Require Import L_alpha.
-From hydras.Hydra  Require Import Hydra_Lemmas  Epsilon0_Needed_Free
+From hydras Require Import L_alpha.
+From hydras  Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std Hydra_Termination O2H.
 Import E0 Large_Sets H_alpha Paths MoreLists.
 

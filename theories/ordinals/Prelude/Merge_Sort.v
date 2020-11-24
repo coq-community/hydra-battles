@@ -7,7 +7,7 @@ From Coq Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec
      Lia  RelationClasses  Div2  Sorting.Sorted Sorting.Permutation.
 
 
-From hydras.Prelude Require Import DecPreOrder DecPreOrder_Instances
+From hydras Require Import DecPreOrder DecPreOrder_Instances
      Sort_spec.
 Import Relations Morphisms.
 

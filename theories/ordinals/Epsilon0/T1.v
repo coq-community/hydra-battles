@@ -19,7 +19,7 @@ From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
      Logic.Eqdep_dec.
 
 From Coq Require PArith.
-From hydras.Prelude  Require Import  More_Arith  Restriction   DecPreOrder.
+From hydras  Require Import  More_Arith  Restriction   DecPreOrder.
 From hydras Require Import OrdNotations.
 Set Implicit Arguments.
 
