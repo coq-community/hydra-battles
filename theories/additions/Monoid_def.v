@@ -116,7 +116,7 @@ Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A)
       (E_eq: Equiv A): Prop :=
   {
     Eq_equiv :> Equivalence equiv;
-    Eop_proper :> Proper (equiv ==> equiv ==> equiv) E_op;
+    Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op;
     Eop_assoc : forall x y z, x * (y * z) == x * y * z;
     Eone_left : forall x,  E_one * x == x;
     Eone_right : forall x,  x * E_one ==  x

@@ -3,7 +3,6 @@
 
 (** Work in progress 
 
-Clean the import issues !!! 
 *)
 
 Require Import Monoid_def Monoid_instances List PArith Relations.
@@ -13,7 +12,7 @@ Import Morphisms.
 Import Monoid_def.
 Require Import Recdef Wf_nat.
 Require Import More_on_positive.
-Require  Pow.
+Require  Import Pow.
 Require Import Euclidean_Chains.
 
 (** basic instructions *)
@@ -254,10 +253,10 @@ Proof.
        * inversion 1.  inversion H1.  cbn in *; subst;simpl; constructor.
        *  inversion 1; cbn in *; inversion H1; subst;  simpl; apply IHc.
           constructor; trivial.
-          cbn; now apply Eop_proper.
+          cbn.  now apply Monoid_def.Eop_proper.
      +  intros;simpl; apply IHc.
         destruct H; split; auto.
-        cbn;apply Eop_proper; auto.
+        cbn;apply  Monoid_def.Eop_proper; auto.
      + intros; simpl;  apply IHc.
        destruct H; split; auto.
        right; auto.
@@ -392,62 +391,57 @@ Section CompositionProofs.
     Variable n : positive.
     Variable cn : code.
     Hypothesis Hn : Fchain_correct n cn.
+
     Lemma FK_correct : Kchain_correct n 1 (FK cn).
- intros A op one equ M x s.
-    
-    specialize (Hn _ _ _ _ M x (x::s)). inversion Hn; subst.    
-     cbn.
-      rewrite Hn.
-     right.
- split.
-  reflexivity.
-      reflexivity.
+    Proof.
+      intros A op one equ M x s;     
+        specialize (Hn _ _ _ _ M x (x::s)).
+      inversion Hn; subst; cbn.
+      rewrite Hn; right; split; reflexivity.
     Qed.
 
     End FK.
 
   Section App.
-  Variables n p:  positive.
-  Variables cn cp: code.
-  Hypothesis Hn : Fchain_correct n cn .
-  Hypothesis Hp : Fchain_correct p cp. 
+    Variables n p:  positive.
+    Variables cn cp: code.
+    Hypothesis Hn : Fchain_correct n cn .
+    Hypothesis Hp : Fchain_correct p cp. 
 
-  Lemma correct_app : Fchain_correct (n * p) (cn ++ cp).
-  Proof.
-    intros A op one equ M x s.
-    rewrite exec_app.
-    specialize (Hn _ _ _ _ M x s). inversion Hn; subst.
-    specialize (Hp _ _ _ _ M x0 s0). inversion Hp; subst.
-    right.
-    destruct H3.
-    split.
-    - rewrite H2; destruct H1.
-      cbn in *;rewrite H1, Pos_bpow_of_bpow; now rewrite Pos.mul_comm. 
-    -  transitivity s0;auto.
-      inversion H1;auto.
-  Qed.
+    Lemma correct_app : Fchain_correct (n * p) (cn ++ cp).
+    Proof.
+      intros A op one equ M x s.
+      rewrite exec_app.
+      specialize (Hn _ _ _ _ M x s); inversion Hn; subst.
+      specialize (Hp _ _ _ _ M x0 s0); inversion Hp; subst.
+      right; destruct H3.
+      split.
+      - rewrite H2; destruct H1.
+        cbn in *;rewrite H1, Pos_bpow_of_bpow; now rewrite Pos.mul_comm. 
+      -  transitivity s0;auto.
+         inversion H1;auto.
+    Qed.
 
   End App.
 
   Section FFK.
+    Variables p q:  positive.
+    Variables cp cq: code.
+    Hypothesis Hp : Fchain_correct p cp.
+    Hypothesis Hq : Fchain_correct q cq.
 
- Variables p q:  positive.
-  Variables cp cq: code.
-  Hypothesis Hp : Fchain_correct p cp.
-  Hypothesis Hq : Fchain_correct q cq.
-
-  Lemma FFK_correct : Kchain_correct (p * q) p (FFK cp cq).
-  Proof.
+    Lemma FFK_correct : Kchain_correct (p * q) p (FFK cp cq).
+    Proof.
     red; intros; unfold  FFK; cbn; rewrite exec_app.
     specialize (Hp A op one equ M x s); inversion Hp; subst; cbn.
     inversion H1; subst.
     specialize (Hq A op one equ M x0 (x0::s0));inversion Hq; subst.
-    rewrite H3, Hq.
-    right; inversion H5; split.  
-    - cbn in *;rewrite H0; repeat rewrite Pos_bpow_ok; rewrite power_of_power.
-      apply power_proper; auto.
-      reflexivity.
-      rewrite Pos2Nat.inj_mul; now rewrite mult_comm.
+    rewrite H3, Hq;  right; inversion H5; split.  
+    - cbn in *; rewrite H0; repeat rewrite Pos_bpow_ok; 
+        rewrite power_of_power.
+      apply power_proper; auto.  
+      + reflexivity.
+      + rewrite Pos2Nat.inj_mul; now rewrite mult_comm.
     - transitivity s1;auto.
       + inversion H5;auto.
         now  symmetry.
@@ -467,78 +461,48 @@ Section CompositionProofs.
     Lemma KFK_correct : Kchain_correct (p * q + r)  p (KFK kpr mq).
     Proof.
       red; unfold KFK.  intros; cbn.
+      generalize (Eop_proper M); intros Hprop.
       rewrite exec_app.     
-      specialize (Hpr _ _ _ _ M x s).
-      inversion Hpr; subst.
-      cbn.
-      inversion H1;subst. cbn in *.
+      specialize (Hpr _ _ _ _ M x s); inversion Hpr; subst; cbn.
+      inversion H1;subst; cbn in *.
       destruct s0; [ inversion H2|].   
-      inversion H2;subst.
-      rewrite exec_app.
+      inversion H2;subst; rewrite exec_app.
       specialize (Hq _ _ _ _ M x0 (a::x0::s0)).
       inversion Hq;subst.
-      inversion H5. simpl in H4, H7.
+      inversion H5. cbn in H4, H7.
       transitivity (Some (Pos_bpow x0 q * a, x0  :: s0)). 
-      cbn .
-      inversion H7; subst.
-      right.
-      split.
-      
-      cbn. 
-      fold mult_op.
-      Fail  rewrite H12, H4. (* why ??? *)
-      destruct M (* why ?? *) . apply Eop_proper; auto.
-      cbn.
-      auto.            
-      right.
-      split.
-      cbn.
-      rewrite Pos_bpow_of_plus.
-      destruct M; apply Eop_proper.
-      rewrite Pos.mul_comm.
-      rewrite <- Pos_bpow_of_bpow.
-      apply Pos_bpow_proper.
-      auto.
-      reflexivity.
-      auto.
-      cbn.
-      right; auto.
+      - cbn; inversion H7; subst.
+        right.
+        split.
+        * cbn; fold mult_op; cbn.
+          rewrite H12, H4; reflexivity.  
+        * cbn; assumption. 
+      - right; split.
+       +  cbn; rewrite Pos_bpow_of_plus, H6.
+      rewrite Pos.mul_comm, <- Pos_bpow_of_bpow, H0; reflexivity.
+       + cbn; right; auto.
     Qed.
 
     Lemma KFF_correct: Fchain_correct (p * q + r)  (KFF kpr mq).
-      red; unfold KFF.  intros; cbn.
+    Proof.
+      red; unfold KFF; intros; cbn.
+      generalize (Eop_proper M); intros Hprop.
       rewrite exec_app.     
       specialize (Hpr _ _ _ _ M x s).
       inversion Hpr; subst.
-      inversion H1;subst. cbn in *.
-      inversion H2;subst.
-      rewrite exec_app.
+      inversion H1;subst; cbn in *.
+      inversion H2;subst; rewrite exec_app.
       specialize (Hq _ _ _ _ M x0 (x1::s1)).
-      
       inversion Hq;subst.
-      inversion H5. simpl in H4, H8.
-      cbn.
- inversion H8; subst.
-    right.
-split.
-cbn.
-fold mult_op.
- rewrite Pos_bpow_of_plus.
-destruct M.
-apply Eop_proper.
-rewrite H4.
+      inversion H5; cbn in H4, H8; cbn.
+      inversion H8; subst; right; split.
+      - cbn; fold mult_op;
+          rewrite Pos_bpow_of_plus, H4, H0, Pos.mul_comm, Pos_bpow_of_bpow,
+          H12, H6; reflexivity.
+      - cbn; now transitivity s1.
+    Qed.
 
-rewrite H0.
-rewrite Pos.mul_comm.
- rewrite <- Pos_bpow_of_bpow.
-reflexivity.
-rewrite H12.
-assumption.
-cbn.
-now transitivity s1.
-Qed.
-
-    End KFK.
+  End KFK.
 
   End CompositionProofs.
 
@@ -606,42 +570,41 @@ Defined.
 Definition make_chain (n:positive) : code :=
  (chain_gen (gen_F n)).
 
+(** Proof of correctness *)
+
 Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
+Proof.
   intro s; functional induction chain_gen s.
   red.
   - cbn. apply F1_correct.
   - cbn; apply F3_correct.
-  - cbn.  Search exact_log2.
-    rewrite (exact_log2_spec _ _ e2).
+  - cbn; rewrite (exact_log2_spec _ _ e2).
     apply F2q_correct.
   - cbn.
     generalize (N_pos_div_eucl_divides _ _ _ e3); intro eq_i.
-    rewrite <- eq_i at 1.
-    apply correct_app.
-    apply IHc.
-    apply IHc0.
-  - cbn.
-    pattern i at 1;
+    rewrite <- eq_i at 1; apply correct_app.
+    + apply IHc.
+    + apply IHc0.
+  - cbn; pattern i at 1;
       replace i with (gamma i * (N2pos q) + N2pos r).
     + cbn in *. 
       *  apply KFF_correct;auto.
          replace (gamma i) with  
              (N2pos r + (gamma i - N2pos r)) at 1.
-         apply IHc.
-         rewrite Pplus_minus;auto with chains.
-         apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
-         generalize 
+         -- apply IHc.
+         -- rewrite Pplus_minus;auto with chains.
+            apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
+            generalize 
            (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
            rewrite e3;  simpl;auto with chains.
-         destruct r; [ contradiction | auto with chains].
+            destruct r; [ contradiction | auto with chains].
     + apply  N_pos_div_eucl_rest; auto with chains.
       destruct r;try contradiction; auto with chains. 
       apply (div_gamma_pos   _ _ _ e3); auto with chains.
       apply pos_gt_3;auto with chains.
       destruct (exact_log2 i); [contradiction | reflexivity].
-  - apply FK_correct. apply IHc.
-  - cbn. cbn in *.
-    red; replace (p + d)%positive with (p * N2pos q)%positive.
+  - apply FK_correct, IHc. 
+  - cbn in *; red; replace (p + d)%positive with (p * N2pos q)%positive.
     * apply FFK_correct; auto with chains.
     *  generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
          rewrite e1;    rewrite N.add_0_r ; intro  H3;
@@ -652,9 +615,8 @@ Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
        N2pos_destruct q q.
        injection H4;auto with chains.
        rewrite  Pos.mul_comm;  auto with chains.
-  - cbn.
-    + red; replace (p+d) with (p * N2pos q + N2pos r).
-      * apply KFK_correct;auto with chains.
+  - cbn; red; replace (p+d) with (p * N2pos q + N2pos r).
+      + apply KFK_correct;auto with chains.
         cbn in *; replace (N2pos r + (p - N2pos r))%positive with p in IHc.
         apply IHc.  
         rewrite Pplus_minus;  auto.
@@ -663,15 +625,14 @@ Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
         apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
         destruct r; [contradiction | auto with chains].
 
-      *   generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p)). 
+      + generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p)). 
           rewrite e1; intros H3. 
           case_eq q.
-          {intro;   generalize (pos_div_eucl_quotient_pos _ _ _ _ e1).
+          { intro; generalize (pos_div_eucl_quotient_pos _ _ _ _ e1).
            destruct 1;auto with chains.
            rewrite pos2N_inj_add;  apply N.le_add_r.
           }
-          {
-            intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
+          { intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
             simpl;  simpl in H3;  injection H3.
             rewrite Pos.mul_comm; auto with chains.
           }
