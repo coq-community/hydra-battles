@@ -1,5 +1,5 @@
 From Coq Require Import  Lia  Max.
-From hydras.ordinals Require Import Hydra_Lemmas More_Arith.
+From hydras Require Import Hydra_Lemmas More_Arith.
 Open Scope nat_scope.
 
 

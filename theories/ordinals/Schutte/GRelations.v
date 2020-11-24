@@ -5,7 +5,7 @@
 
 
 From Coq Require Import Ensembles Le  Classical  Lia.
-From hydras.ordinals Require Import PartialFun.
+From hydras Require Import PartialFun.
 
       
 Section General_Relations.

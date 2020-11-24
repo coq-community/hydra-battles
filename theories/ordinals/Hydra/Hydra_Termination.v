@@ -3,8 +3,8 @@
 (** Pierre Casteran, Univ. Bordeaux, LaBRI, UMR 5800 *)
 
 
-From hydras.ordinals Require Export Hydra_Lemmas.
-From hydras.ordinals Require Import E0 Hessenberg.
+From hydras Require Export Hydra_Lemmas.
+From hydras Require Import E0 Hessenberg.
 
 
 

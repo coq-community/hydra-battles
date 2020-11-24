@@ -6,7 +6,7 @@
  *)
 
 
-From hydras.ordinals Require Import Hydra_Lemmas Epsilon0 Canon Paths O2H.
+From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths O2H.
 From Coq Require Import Relation_Operators.
 
 Open Scope t1_scope.

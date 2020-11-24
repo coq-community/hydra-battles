@@ -6,7 +6,7 @@
 Set Implicit Arguments. 
 
 From Coq Require Import Relations List Setoid Multiset.
-From hydras.ordinals.rpo Require Import closure more_list list_permut.
+From hydras.rpo Require Import closure more_list list_permut.
 
 
 Module Make (DS1 : decidable_set.S).

@@ -4,7 +4,7 @@
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras.ordinals Require Import Simple_LexProd OrdinalNotations.Generic
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic
         ON_mult  ON_Omega.
 
 Import Relations Generic.

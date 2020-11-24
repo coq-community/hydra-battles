@@ -3,7 +3,7 @@
 (** * Term algebra defined as functor from a Module Signature and a Module Variable.*)
 
 From Coq Require Import List Arith.
-From hydras.ordinals.rpo Require Import more_list list_permut list_set.
+From hydras.rpo Require Import more_list list_permut list_set.
 
 
 Set Implicit Arguments.

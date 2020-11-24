@@ -6,7 +6,7 @@ From Coq Require Import Ensembles  Arith ArithRing Even Div2
      Wellfounded Relations  Wf_nat  Finite_sets
      Logic.Epsilon  Sets.Image Lia.
 
-From hydras.ordinals Require Import MoreEpsilonIota PartialFun  GRelations
+From hydras Require Import MoreEpsilonIota PartialFun  GRelations
      Prelude.More_Arith.
 
 

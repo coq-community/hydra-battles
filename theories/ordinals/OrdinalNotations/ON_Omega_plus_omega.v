@@ -3,7 +3,7 @@
 
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras.ordinals Require Import Simple_LexProd OrdinalNotations.Generic
+From hydras Require Import Simple_LexProd OrdinalNotations.Generic
         ON_plus ON_Omega.
 
 Import Relations.

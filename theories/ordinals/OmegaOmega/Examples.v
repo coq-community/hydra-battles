@@ -1,6 +1,6 @@
 From Coq Require Import  Arith.
 From Coq Require Import List.
-From hydras.ordinals Require Import ListOmega.
+From hydras Require Import ListOmega.
 
 (** TO do : verify (and prove !) the following examples 
     really need omega^omega (and not a finite power of omega) 

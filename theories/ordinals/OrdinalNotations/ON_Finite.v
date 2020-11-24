@@ -6,7 +6,7 @@
 From Coq Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         Wellfounded.Inverse_Image Wellfounded.Inclusion
         RelationClasses.
-From hydras.ordinals Require Import OrdinalNotations.Generic.
+From hydras Require Import OrdinalNotations.Generic.
 
 Require Wf_nat.
 

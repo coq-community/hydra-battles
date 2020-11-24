@@ -6,7 +6,7 @@
 
 From Coq Require Import Arith List Sorting.Sorted
      Logic.Epsilon Ensembles.
-From hydras.ordinals Require Export Schutte_basics  Ordering_Functions
+From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable Schutte.Addition AP.
 Require Export  Classical.
 

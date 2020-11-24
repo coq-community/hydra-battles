@@ -3,8 +3,8 @@
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
-From hydras.ordinals.Prelude  Require Import  Iterates  Simple_LexProd Exp2.
-From hydras.ordinals.Epsilon0 Require Import  E0 Canon Paths.
+From hydras.Prelude  Require Import  Iterates  Simple_LexProd Exp2.
+From hydras.Epsilon0 Require Import  E0 Canon Paths.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.

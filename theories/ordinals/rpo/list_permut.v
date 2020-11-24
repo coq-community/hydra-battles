@@ -5,7 +5,7 @@
 Set Implicit Arguments. 
 
 From Coq Require Import  List Multiset Arith Setoid.
-From hydras.ordinals.rpo Require Import decidable_set more_list.
+From hydras.rpo Require Import decidable_set more_list.
 
 
 Module Type Permut.

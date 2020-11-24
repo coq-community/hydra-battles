@@ -9,7 +9,7 @@
 
 
 From Coq Require Import Relations  Classical   Classical_sets.
-From hydras.ordinals Require Import  Well_Orders Lub Countable.
+From hydras Require Import  Well_Orders Lub Countable.
 
 Import   Compare_dec  Coq.Sets.Image  PartialFun MoreEpsilonIota.
 

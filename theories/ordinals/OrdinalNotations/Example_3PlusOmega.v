@@ -2,7 +2,7 @@
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
-From hydras.ordinals.OrdinalNotations
+From hydras.OrdinalNotations
      Require Import ON_plus ON_Finite ON_Omega.
 Import Generic.
 From Coq Require Import Compare_dec Lia Logic.Eqdep_dec.

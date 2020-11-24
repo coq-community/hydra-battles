@@ -13,7 +13,7 @@ Pierre Casteran,
 From Coq Require Export Arith Lia.
 Import Relations Relation_Operators.
 
-From hydras.ordinals.Epsilon0 Require Export T1 E0.
+From hydras.Epsilon0 Require Export T1 E0.
 
 Set Implicit Arguments.
 Open Scope t1_scope.

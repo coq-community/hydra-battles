@@ -6,7 +6,7 @@
 From Coq Require Import Relations  Classical  Classical_sets RelationClasses
      Wf_nat.
 
-From hydras.ordinals Require Import PartialFun.
+From hydras Require Import PartialFun.
 Import MoreEpsilonIota.
 
 Arguments In [U].

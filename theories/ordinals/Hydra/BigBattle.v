@@ -6,7 +6,7 @@
 
 
 From Coq Require Import Arith Relations Lia.
-From hydras.ordinals Require Import Hydra_Definitions Hydra_Lemmas Iterates.
+From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates.
 
 
 (** Let us consider a small hydra [hinit] *)

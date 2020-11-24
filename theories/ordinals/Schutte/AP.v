@@ -16,10 +16,10 @@ In fact,  #<math> &omega; <sup> &alpha; </sup> </math># , written  [phi0 alpha] 
 
 (* begin hide *)
 From Coq Require Import Arith  Logic.Epsilon  Ensembles  Lia.
-From hydras.ordinals Require Export Countable  Schutte_basics
+From hydras Require Export Countable  Schutte_basics
      Ordering_Functions.
 Import  PartialFun  MoreEpsilonIota .
-From hydras.ordinals Require Export Schutte.Addition  Well_Orders.
+From hydras Require Export Schutte.Addition  Well_Orders.
 
 
 Set Implicit Arguments.

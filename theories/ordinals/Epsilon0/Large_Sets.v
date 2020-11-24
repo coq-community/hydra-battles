@@ -8,8 +8,8 @@
 
  
 
-From hydras.ordinals.Epsilon0 Require Import E0 Canon Paths.
-From hydras.ordinals.Prelude Require Import  MoreLists  Iterates Exp2.
+From hydras.Epsilon0 Require Import E0 Canon Paths.
+From hydras.Prelude Require Import  MoreLists  Iterates Exp2.
 From Coq Require Import Lia Compare_dec.
 
 Import Relation_Operators Sorted  Operators_Properties.

@@ -6,7 +6,7 @@
 
 
 
-From hydras.ordinals Require Import Epsilon0_Needed_Generic.
+From hydras Require Import Epsilon0_Needed_Generic.
 Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
 
 

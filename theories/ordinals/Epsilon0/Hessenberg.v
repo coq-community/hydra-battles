@@ -3,7 +3,7 @@
 Pierre Castéran, Labri, University of  Bordeaux *)
 
 From Coq Require Import Arith  ArithRing Lia.
-From hydras.ordinals Require Import Prelude.More_Arith Prelude.Merge_Sort
+From hydras Require Import Prelude.More_Arith Prelude.Merge_Sort
      Epsilon0.T1.
 
 

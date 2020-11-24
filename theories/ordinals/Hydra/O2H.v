@@ -11,7 +11,7 @@ impossibility lemmas or minoration of battle lengths (see Hydra_Theorems).
 
 From Coq Require Import Relation_Operators.
 
-From hydras.ordinals Require Import Hydra_Lemmas Epsilon0 Canon Paths  .
+From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths  .
 Import Hydra_Definitions.
 
 (** Let us transform any ordinal notation into an hydra *)

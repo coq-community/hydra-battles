@@ -13,7 +13,7 @@
 
 
 From Coq Require Import Arith Logic.Epsilon  Ensembles Classical.
-From hydras.ordinals Require Export Schutte_basics  Ordering_Functions
+From hydras Require Export Schutte_basics  Ordering_Functions
      Countable  Schutte.Addition AP CNF Well_Orders MoreEpsilonIota.
 
 Set Implicit Arguments.

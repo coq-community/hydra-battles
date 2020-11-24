@@ -9,7 +9,7 @@
 
 
 From Coq Require Import Ensembles  ClassicalDescription .
-From hydras.ordinals Require Import MoreEpsilonIota.
+From hydras Require Import MoreEpsilonIota.
 
 Set Implicit Arguments.
 Arguments In {U} _ _.

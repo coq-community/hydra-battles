@@ -3,7 +3,7 @@
 
 
 From Coq Require Import   Arith Lia.
-From hydras.ordinals.Hydra Require Import Hydra_Lemmas.
+From hydras.Hydra Require Import Hydra_Lemmas.
 Open Scope nat_scope.
 
 

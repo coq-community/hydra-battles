@@ -1,7 +1,7 @@
 (* (C) Pierre Castéran ,Labri, Université Bordeaux 1 *)
 
 From Coq Require Import Arith  Logic.Epsilon  Ensembles.
-From hydras.ordinals Require Export Schutte_basics  Ordering_Functions
+From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable  MoreEpsilonIota.
 Set Implicit Arguments.
 

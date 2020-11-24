@@ -11,7 +11,7 @@
 
 
 
-From hydras.ordinals Require Export Schutte_basics Ordering_Functions
+From hydras Require Export Schutte_basics Ordering_Functions
         Addition AP CNF Critical Correctness_E0.
 
 
@@ -77,15 +77,4 @@ Axiom epsilon_statement :
 Axiom inh_Ord : inhabited Ord.
 
 ]]
-
-
-
-* Main result
-
-In #<a href="teaser.Ordinals.Axiomatic.Injection_from_T1.html"> this module </a>#,
-we build  an embedding from the set of ordinal terms in Cantor Normal Form into
-the interval of ordinal numbers strictly less than [epsilon0].
-
-
-
 **)

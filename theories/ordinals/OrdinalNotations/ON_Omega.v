@@ -3,8 +3,8 @@
 
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras.ordinals.OrdinalNotations  Require Import Generic ON_Finite.
-From hydras.ordinals Require Import Schutte.
+From hydras.OrdinalNotations  Require Import Generic ON_Finite.
+From hydras Require Import Schutte.
 
 Import Relations RelationClasses.
 

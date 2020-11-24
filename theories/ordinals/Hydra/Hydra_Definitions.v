@@ -8,7 +8,7 @@
  *)
 
 From Coq Require Export Relations Max.
-From hydras.ordinals Require Import T1.
+From hydras Require Import T1.
 
 Inductive Hydra : Set :=
 |  node :  Hydrae -> Hydra

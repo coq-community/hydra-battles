@@ -7,7 +7,7 @@
 
 
 From Coq Require Import Arith  Compare_dec Relations Wellfounded Max Lia.
-From hydras.ordinals Require Import More_Arith  Restriction T1 OrdNotations.
+From hydras Require Import More_Arith  Restriction T1 OrdNotations.
 
 Set Implicit Arguments.
 
