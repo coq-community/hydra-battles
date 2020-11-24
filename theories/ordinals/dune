@@ -1,5 +1,5 @@
 (coq.theory
- (name hydras.ordinals)
+ (name hydras)
  (package coq-hydra-battles)
  (synopsis "Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq"))
 
