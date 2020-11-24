@@ -1,0 +1,4 @@
+(coq.theory
+ (name additions)
+ (package coq-addition-chains)
+ (synopsis "Exponentiation algorithms following addition chains"))
