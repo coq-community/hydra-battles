@@ -1,11 +1,17 @@
-#  Hydra battles in Coq (_work in progress_).
+#  Hydra Battles and Cie (_work in progress_).
 
-An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant. This development includes the study of several representations of ordinal numbers, and a part of the so-called _Ketonen and Solovay machinery_ (combinatorial properties of epsilon0).
+This contribution contains two parts:
 
+- An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant. This development includes the study of several representations of ordinal numbers, and a part of the so-called _Ketonen and Solovay machinery_ (combinatorial properties of epsilon0).
 
+- Some algorithms for computing _x^n_ with as few multiplications as possible (using _addition chains_).
 
 
 ##  Installation
+-   __Warning:__  A few files use __Coq__ plug-ins. The easiest way is to install  the following __opam__ packages:
+      __coq-equations__,  __coq-paramcoq__, __coq_mathcomp-ssreflect__ and 
+    __coq-mathcomp-algebra__. In case of problems, please compile with __make -k__ the rest of the files.
+      
 -  the general Makefile is in the top directory 
      - make : compilation of the Coq scripts
      - make pdf : generation of the documentation
@@ -24,29 +30,34 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
 
 ### Coq sources (directory theories)
 
-- theories/Hydra/*.v
-   - Representation in _Coq_ of hydras and hydra 
+- theories/ordinals/
+  -   Hydra/*.v 
+      -    Representation in _Coq_ of hydras and hydra 
    battles
-   - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
-   - A proof that no variant bounded by some ordinal less than epsilon0 can prove this termination
-   - Comparison of the length of some kind of Hydra battles with the Hardy hierarchy of fast growing functions
+      - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
+      - A proof that no variant bounded by some ordinal less than epsilon0 can prove this termination
+      - Comparison of the length of some kind of Hydra battles with the Hardy hierarchy of fast growing functions
     
--  theories/Epsilon0/*.v
-	- Data types for representing ordinals less than epsilon0 in Cantor normal form
-	- The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
-	- Representation of some hierarchies of fast growing functions
+  -  Epsilon0/*.v
+	  - Data types for representing ordinals less than epsilon0 in Cantor normal form
+	  - The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
+	  - Representation of some hierarchies of fast growing functions
    
-- theories/Schutte/*.v
+ -  Schutte/*.v
        - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
 
-- theories/Gamma0/*.v
-    - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
+  - Gamma0/*.v
+       - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
   
-- theories/rpo/*.v
-    - A contribution on _recursive path orderings_ by Evelyne Contejean.
+  - rpo/*.v
+      - A contribution on _recursive path orderings_ by Evelyne Contejean.
   
-- theories/Prelude/*.v
-  - Various auxiliary definitions and lemmas
+  - Prelude/*.v
+     - Various auxiliary definitions and lemmas
+
+- theories/additions/*.v
+  
+      - Addition chains
 
  
 ## Contributions are welcome ! 
@@ -58,21 +69,7 @@ An exploration of some properties of Kirby and Paris' hydra battles, with the he
   
  - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of "projects") as pull requests. 
   
-  - __Contact__ : pierre dot casteran [at gmail dot com | at labri dot fr]
-  
-## Main mathematical references
+  - __Contact__ : pierre dot casteran at gmail dot com   
 
-The theoretical sources of this development come from the three following references.
-
-1.  L. Kirby and J. Paris, _Accessible Independence Results for Peano Arithmetic_,
-	Bulletin of the London Mathematical Society,  1982, pp 725-731.
-	
-	
-2. J. Ketonen and R. Solovay, _Rapidly Growing Ramsey Functions_, Annals of Mathematics, 1981, 2, pp 267-314.
- 
- 
-3. Kurt Schütte, _Proof Theory_, Springer, 1977.
-
-
-A more detailed bibliography is at the end of the documentation. Please feel free to suggest us more references. 
+A bibliography is at the end of the documentation. Please feel free to suggest us more references. 
 
