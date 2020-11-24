@@ -15,9 +15,9 @@ the study of several representations of ordinal numbers, and a part
 of the so-called Ketonen and Solovay machinery (combinatorial
 properties of epsilon0)."""
 
-build: [make "-j%{jobs}%" ]
-install: [make "install"]
+build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
+  "dune" {>= "2.5"}
   "coq" {>= "8.11" & < "8.13~"}
   "coq-equations" {>= "1.2" & < "1.3~"}
 ]

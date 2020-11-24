@@ -12,9 +12,9 @@ description: """
 Addition chains are algorithms for computations of the p-th power of some x, 
 with the least number of multiplication as possible. We present a few implementations of addition chains, with proofs of their correctness"""
 
-build: [make "-j%{jobs}%" ]
-install: [make "install"]
+build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
+  "dune" {>= "2.5"}
   "coq" {>= "8.11" & < "8.13~"}
   "coq-paramcoq" {>= "1.1.2" & < "1.2~"}
   "coq-mathcomp-ssreflect" {>= "1.11.0" & < "1.12~"}
@@ -25,7 +25,7 @@ tags: [
   "category:Mathematics/Combinatorics and Graph Theory"
   "keyword:addition-chains"
   "keyword:exponentiation algorithms"
-  "logpath:hydras"
+  "logpath:additions"
 ]
 authors: [
   "Pierre Castéran"

@@ -1,4 +1,5 @@
--R theories hydras
+-R theories/ordinals hydras.ordinals
+-R theories/additions additions
 
 theories/ordinals/OrdinalNotations/ON_Omega.v
 theories/ordinals/OrdinalNotations/Generic.v
