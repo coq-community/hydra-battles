@@ -1,3 +1,6 @@
+(** author Yves Bertot, Inria  *)
+
+
 Require Import Extraction.
 Require Import ZArith Lia.
 

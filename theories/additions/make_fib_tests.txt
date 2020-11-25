@@ -1,3 +1,5 @@
+#  Author: Yves Bertot, Inria
+
 #!/bin/bash
 ocamlc bigfib.mli && ocamlc bigfib.ml && ocamlc bigfib.cmo stub
 date
