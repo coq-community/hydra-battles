@@ -68,8 +68,9 @@ This contribution contains two parts:
   - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development. 
   
  - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of "projects") as pull requests. 
+ - Of course, new topics are welcome !
   
-  - __Contact__ : pierre dot casteran at gmail dot com   
+ - __Contact__ : pierre dot casteran at gmail dot com   
 
 A bibliography is at the end of the documentation. Please feel free to suggest us more references. 
 
