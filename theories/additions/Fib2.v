@@ -3,6 +3,14 @@ Require Import NArith Ring Monoid_instances Euclidean_Chains Pow AM
 
 Open Scope N_scope.
 
+
+
+Fixpoint fib (n:nat) : N :=
+  match n with
+    0%nat | 1%nat => 1%N
+  | (S (S p as q)) => (fib p + fib q)%N
+  end.
+
 (** Yves' encoding *)
 
 Definition phi (p:N * N) : M2 N :=
@@ -20,7 +28,7 @@ Lemma neutral_r p : mul2 p (0,1)%N  = p.
   unfold mul2.  destruct p; f_equal; ring.
 Qed.
 
-Instance mul2_Mono : Monoid  mul2 (0,1)%N.
+Instance Mul2 : Monoid  mul2 (0,1)%N.
 Proof.
   split.
   destruct x,y,z; unfold mul2;  cbn; f_equal; ring.
@@ -37,7 +45,7 @@ Lemma phi_morph (p q : N * N) :
  Qed.
 
 
- Lemma power_commute : forall n x,  phi (power (M:= mul2_Mono) x n) =
+ Lemma power_commute : forall n x,  phi (power (M:= Mul2) x n) =
                                     power (M:=M2N) (phi x) n.
   Proof.
     induction n.
@@ -49,7 +57,7 @@ Lemma phi_morph (p q : N * N) :
 
 
 Definition fib_pos n :=
-  let (a,b) := Pos_bpow (M:= mul2_Mono) (1,0)%N n in
+  let (a,b) := Pos_bpow (M:= Mul2) (1,0)%N n in
   (a+b)%N.
 
 Compute fib_pos 10%positive. 
@@ -60,7 +68,7 @@ Compute fib_pos 153%positive.
 
 
 Definition fib_with_chain c :=
-  match chain_apply c  mul2_Mono (1,0)%N with
+  match chain_apply c  Mul2 (1,0)%N with
     Some ((a,b), nil) => Some (a+b) | _ => None end.
 
 Definition c153 := chain_gen dicho (gen_F 153%positive).
@@ -78,13 +86,18 @@ Compute c153.
 Compute mults_squares c153.
 
 
-
 Compute fib_with_chain c153 .
 
 (*
  = Some 68330027629092351019822533679447
      : option N
 *)
+
+Compute mults_squares (chain_gen dicho (gen_F 30000%positive)).
+
+(*   = (6%nat, 13%nat)
+     : nat * nat  *)
+
 
 
 
