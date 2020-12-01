@@ -1,3 +1,20 @@
+[![CI][action-shield]][action-link]
+[![Contributing][contributing-shield]][contributing-link]
+[![Code of Conduct][conduct-shield]][conduct-link]
+[![Zulip][zulip-shield]][zulip-link]
+
+[action-shield]: https://github.com/coq-community/hydra-battles/workflows/CI/badge.svg?branch=master
+[action-link]: https://github.com/coq-community/hydra-battles/actions?query=workflow%3ACI
+
+[contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
+[contributing-link]: https://github.com/coq-community/hydra-battles#contributions-are-welcome-
+
+[conduct-shield]: https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-%23f15a24.svg
+[conduct-link]: https://github.com/coq-community/manifesto/blob/master/CODE_OF_CONDUCT.md
+
+[zulip-shield]: https://img.shields.io/badge/chat-on%20zulip-%23c1272d.svg
+[zulip-link]: https://coq.zulipchat.com/#narrow/stream/237663-coq-community-devs.20.26.20users
+
 #  Hydra Battles and Cie (_work in progress_).
 
 This contribution contains two parts:
@@ -8,14 +25,18 @@ This contribution contains two parts:
 
 
 ##  Installation
--   __Warning:__  A few files use __Coq__ plug-ins. The easiest way is to install  the following __opam__ packages:
-      __coq-equations__,  __coq-paramcoq__, __coq_mathcomp-ssreflect__ and 
-    __coq-mathcomp-algebra__. In case of problems, please compile with __make -k__ the rest of the files.
+- To get the required dependencies, the easiest way is to use opam. Run:
+  - `opam install coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
+  - `opam install coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
       
--  the general Makefile is in the top directory 
+- The general Makefile is in the top directory:
      - make : compilation of the Coq scripts
      - make pdf : generation of the documentation
-     - make html : generation of coqdoc html files 
+     - make html : generation of coqdoc html files
+
+- You may also rely on `dune` to install just one part. Run:
+  - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part;
+  - `dune build coq-addition-chains.install` to build only the _addition chains_ part;
 
 ##   Contents
 
@@ -57,7 +78,7 @@ This contribution contains two parts:
 
 - theories/additions/*.v
   
-      - Addition chains
+  - Addition chains
 
  
 ## Contributions are welcome ! 
