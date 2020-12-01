@@ -25,6 +25,18 @@ Inductive instr : Set :=
 
 Definition code := list instr.
 
+(* statistics *)
+
+Definition  mults_squares  c :=
+  let fix count (c: code) mults squares  :=
+    match c with
+      nil => (mults, squares)
+    | PUSH :: c' | SWAP :: c' => count c' mults squares
+    | SQR :: c' => count c' mults (S squares)
+    | MUL :: c' => count c' (S mults) squares
+    end  in count c 0%nat 0%nat.
+            
+                                 
 (* semantics *)
 (*************)
 

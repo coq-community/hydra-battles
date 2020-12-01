@@ -85,6 +85,7 @@ theories/additions/Demo_power.v
 theories/additions/Dichotomy.v
 theories/additions/Euclidean_Chains.v
 theories/additions/fib.v
+theories/additions/Fib2.v
 theories/additions/FirstSteps.v
 theories/additions/Monoid_def.v
 theories/additions/Monoid_instances.v
