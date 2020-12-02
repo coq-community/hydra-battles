@@ -1572,7 +1572,27 @@ Compute make_chain half 87.
        x9 <--- x8 times x; (* x ^87 *) 
   Return x9
      : chain
-*)
+ *)
+
+Compute make_chain two 87.
+
+(*
+fun (A : Type) (x : A) =>
+       x0 <--- x times x;  (* x ^2 *)
+       x1 <--- x0 times x0; (* x ^ 4 *)
+       x2 <--- x1 times x1; (* x ^ 8 *)
+       x3 <--- x2 times x2; (* x ^ 16 *)
+       x4 <--- x3 times x3; (* x ^ 32 *)
+       x5 <--- x4 times x4; (* x ^ 64 *)
+       x6 <--- x5 times x3; (* x ^ 80 *)
+       x7 <--- x6 times x1; (* x ^ 84 *)
+       x8 <--- x7 times x0; (* x ^ 86 *)  
+       x9 <--- x8 times x; (*  x ^ 87 *) 
+     Return x9
+     : chain
+
+ *)
+
 
 End Examples.
 

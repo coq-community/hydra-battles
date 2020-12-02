@@ -16,10 +16,14 @@ Definition half (p:positive) :=
           |    xI q | xO q =>  q
   end.
 
-
+Definition two (p:positive) := 2%positive.
 
 Instance Binary_strat : Strategy half.
 Proof.
   split; destruct p; unfold half; try lia.
 Qed.
 
+Instance Two_strat : Strategy two.
+Proof.
+  split;unfold two; lia.
+Qed.
