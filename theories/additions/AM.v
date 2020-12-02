@@ -520,7 +520,7 @@ Section CompositionProofs.
 
 (** *  Euclidean chain generation *)
 
-Require Import Dichotomy.
+Require Import Dichotomy BinaryStrat.
 
 Definition  OK (s: signature) 
   := fun c: code => correctness_statement s c.
@@ -649,6 +649,35 @@ Proof.
             rewrite Pos.mul_comm; auto with chains.
           }
 Qed.
+
+
+
+Section All_OK.
+  Variables (n:positive).
+  Let c := chain_gen (gen_F n).    
+
+
+  Lemma L0: Fchain_correct n c.
+  Proof.
+    assert (H: OK (gen_F n) c) by apply chain_gen_OK.
+    red;  intros;  destruct (H A op one equ M x s).
+    - left.
+    - now right.
+  Qed.
+
+End All_OK.
+
+Definition AM_power {A : Type}
+           `(M: @EMonoid A E_op E_one E_eq) (x:A) (n:positive) :=
+  exec A E_op (chain_gen (gen_F n))  x nil.
+
+Lemma AM_power_Ok {A : Type} 
+            `(M: @EMonoid A E_op E_one E_eq) (x:A) (n:positive):
+    result_equiv (AM_power M x n) (Some  (Pos_bpow x n, nil)).
+Proof.
+  intros;eapply L0.
+Qed.
+
 
 End Gamma.
 

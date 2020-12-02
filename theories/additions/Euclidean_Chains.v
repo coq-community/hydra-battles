@@ -21,7 +21,7 @@ Require Import More_on_positive.
 Import Monoid_def  Pow.
 Require Import Recdef Wf_nat.
 Require Import  More_on_positive .
-Require Import Wf_transparent Lexicographic_Product  Dichotomy.
+Require Import Wf_transparent Lexicographic_Product  Dichotomy BinaryStrat.
 Generalizable All Variables.
 Import Morphisms.
 Import Monoid_def.
@@ -1406,8 +1406,8 @@ Qed.
 
 End Gamma.
 
-Arguments make_chain {gamma _} _ _ _ .
-Compute the_exponent (make_chain  87).
+Arguments make_chain gamma {_} _ _ _ .
+Compute the_exponent (make_chain  dicho 87).
 
 
 (** cf Coq workshop 2014 by Jason Grosss *)
@@ -1415,11 +1415,11 @@ Compute the_exponent (make_chain  87).
 Module  Examples.
 
 Import Int31.
-Compute cpower make_chain 0 12.
-Compute cpower make_chain 87 12.
+Compute cpower (make_chain dicho) 10 12.
+Compute cpower (make_chain dicho) 87 12.
 
 Definition fast_int31_power (x :positive)(n:N) : Z :=
-  Int31.phi (cpower make_chain n (snd (positive_to_int31 x))).
+  Int31.phi (cpower (make_chain dicho) n (snd (positive_to_int31 x))).
 
 Definition slow_int31_power (x :positive)(n:N) : Z :=
   Int31.phi (power (snd (positive_to_int31 x)) (N.to_nat n) ).
@@ -1429,11 +1429,11 @@ Int31.phi (N_bpow (snd (positive_to_int31 x)) n ).
 
 
 
-
+About make_chain.
 
 (** long computations ... *)
 
-Definition big_chain := ltac:(compute_chain  (make_chain 6145319)).
+Definition big_chain := ltac:(compute_chain  (make_chain dicho 6145319)).
 
 Print big_chain.
 
@@ -1508,17 +1508,17 @@ Compute chain_length  big_chain.
 
 
 
-Goal parametric (make_chain 45319).
+Goal parametric (make_chain dicho 45319).
 Time parametric_tac.
 Qed.
 
 
-Remark big_correct :chain_correct 45319 (make_chain 45319).
+Remark big_correct :chain_correct 45319 (make_chain dicho 45319).
 Time param_chain_correct.
 (* Finished transaction in 4.054 secs (4.051u,0.s) (successful) *)
 Qed.
 
-Remark big_correct' : chain_correct 453 (make_chain 453).
+Remark big_correct' : chain_correct 453 (make_chain dicho 453).
 Time reflection_correct_tac.
 Qed.
 
@@ -1532,14 +1532,47 @@ That's normal. The reflection tactic builds a linear term w.r.t. the exponent !
 *)
 
 
-Remark big_correct''' : chain_correct 453 (make_chain 453).
+Remark big_correct''' : chain_correct 453 (make_chain dicho 453).
 Time apply make_chain_correct.
 (* Finished transaction in 0. secs (0.u,0.s) (successful)
 *)
 Qed.
 
 
-Compute make_chain 87.
+Compute make_chain dicho 87.
+(*
+ fun (A : Type) (x : A) =>
+       x0 <--- x times x; (* x^2 *)
+       x1 <--- x0 times x; (* x^3 *)
+       x2 <--- x1 times x1; (* x ^6 *)
+       x3 <--- x2 times x;  (* x ^7 *)
+       x4 <--- x3 times x1; (* x ^10 *)
+       x5 <--- x4 times x4; (* x ^20 *)
+       x6 <--- x5 times x5; (* x ^40 *)
+       x7 <--- x6 times x6; (* x ^80 *)
+       x8 <--- x7 times x3;  (* x ^87 *) 
+        Return x8
+     : chain
+ *)
+
+Compute make_chain half 87.
+
+(*
+
+    = fun (A : Type) (x : A) =>
+       x0 <--- x times x; (* x ^ 2 *)
+       x1 <--- x0 times x0; (* x ^ 4 *)
+       x2 <--- x1 times x;  (* x ^ 5 *)
+       x3 <--- x2 times x2; (* x ^ 10 *)
+       x4 <--- x3 times x3; (* x ^ 20 *)
+       x5 <--- x4 times x;  (* x ^ 21 *)
+       x6 <--- x5 times x5; (* x ^42 *)
+       x7 <--- x6 times x; (* x ^ 43 *)
+       x8 <--- x7 times x7; (* x ^86 *)
+       x9 <--- x8 times x; (* x ^87 *) 
+  Return x9
+     : chain
+*)
 
 End Examples.
 

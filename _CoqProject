@@ -79,6 +79,7 @@ theories/ordinals/Hydra/O2H.v
 theories/ordinals/Hydra/Epsilon0_Needed_Std.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
+theories/additions/BinaryStrat.v
 theories/additions/Compatibility.v
 theories/additions/Demo.v
 theories/additions/Demo_power.v
