@@ -299,41 +299,55 @@ End M2_Definitions.
 End M2.
 \end{Coqsrc}
 
-Matrix exponentiation is a well-known method for computing Fibonacci numbers:
-\index{Fibonacci numbers!Matrix exponentiation}
+\subsection{Computing Fibonacci Numbers}
 
+The sequence of Fibonacci numbers is defined by the following equations:
+
+\begin{align}
+F_0 & = 1 \\
+F_1 & = 1 \\
+F_n & = F_{n-1} + F_{n-2} \quad (n \geq 2)
+\end{align}
+
+
+In \coq{}, one can define this function by simple recursion.
+
+\emph{From Library
+\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}}
 
 \begin{Coqsrc}
+Fixpoint fib (n:nat) : N :=
+  match n with
+    0%nat | 1%nat => 1%N
+  | S (S p as q) => fib p + fib q
+  end.
 
-Import M2.
-
-Arguments M2_mult {A} plus mult  _  _.
-Arguments mat {A} _ _ _ _.
-Arguments Id2 {A}  _ _.
-
-Definition fibonacci (n:N) :=
- c00 N  (N_bpow  (M2_mult Nplus Nmult) 
-                 (Id2  0%N 1%N)
-                 (mat  1 1 1 0)%N 
-                 n).
-
-Compute fibonacci 20.
+Compute fib 20.
 \end{Coqsrc}
 
 \begin{Coqanswer}
-= 10946%N
-     : N  
+= 10946 : N
 \end{Coqanswer}
 
-\begin{todo}
-Document the files contributed by Yves
-\begin{itemize}
-\item additions/fib.v (to rename ?)
-\item additions/stub.ml (to keep inside theories/ or move to src/ ?)
-\item theories/additions/make\_fib\_tests.txt (to put in a Makefile?)
-\end{itemize}
-\end{todo}
+In~\cite{BC04}, several exercices~\footnote{Exercises 9.8 (page 270), 9.10 (page 271), 9.15 (page 276), 9.17 (page 284), and 15.8 (page 418).}  
+present ways to compute Fibonacci numbers, with the less number of recursive calls  as possible. Please note that these optimizations and the formal proof of their correctness are \emph{ad-hoc}, \emph{i.e.} exclusively written for the 
+Fibonacci numbers.
+In contrast, the optimizations we present in this document apply, in their vast majority, \emph{generic} techniques of efficient computation of powers in a monoid. 
+This example of Fibonacci numbers has been developed with Yves Bertot, who wrote a first version with \texttt{SSreflect/Mathcomp}~\cite{MCB, SSR}. 
 
+
+\subsubsection{Using 2x2 integer matrices}
+\index{Fibonacci numbers!Matrix exponentiation} 
+
+The following properties are well known. They are left as an exercise, since they are not part of our development. 
+
+\index{Exercises}
+
+\begin{exercise}
+  \begin{enumerate}
+  \item 
+
+Prove in \coq{} the following equality (for any $n\geq 2$). \label{fibmat-eq1}
 
 \[
 \left(
@@ -356,6 +370,9 @@ Document the files contributed by Yves
   \end{array}
 \right)
 \]
+  
+\item Infer (still in \coq{}) the following equality (still for $n\geq 2$).
+
 
 
 \[
@@ -374,19 +391,135 @@ Document the files contributed by Yves
 \right)^n
 \]
 
-\subsubsection{Remark}
-\label{sect:faster}
+\item Write a function using the previous equality for computing the $n$-th Fibonacci number, and prove its equivalence with \texttt{fib}.
 
-Our function \texttt{N\_bpow} is really logarithmic. Let us make a comparative 
-test with Standard Library's exponentiation function on type \texttt{N} (see section~\vref{sect:slow-computation}).
+\end{enumerate}
+\end{exercise}
+
+\subsubsection{Removing duplicate computations}
+
+Yves Bertot's optimization relies on the observation that all the powers of
+\(  \left(
+  \begin{array}{cc}
+    1 & 1 \\
+    1 & 0 
+  \end{array}
+\right) \) have the form 
+\(  \left(
+  \begin{array}{cc}
+    a+b  & a \\
+    a & b
+  \end{array}
+\right) \) where $a$ and $b$ are natural numbers.
+
+Thus, it is possible to remove duplicate data and computations by reflecting matrix multiplication and identity into $\mathbb{N}\times\mathbb{N}$.
+
+If we define $\varphi(a,b)  \left(
+  \begin{array}{cc}
+    a+b  & a \\
+    a & b
+  \end{array}
+\right)$, then $\varphi(a,b)\times \varphi(c,d)=\varphi(ac + ad + bc, ac + bd)$, and
+$\varphi(0,1)=  \left(
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & 1 
+  \end{array}
+\right) $.
+
+\index{Exercises}
+\begin{exercise}
+  Prove formally these properties. \emph{Please note that their proof is not needed in our development, they just help to understand the following optimization.}
+\end{exercise}
+
+
+So, let us define a binary operation, which makes $\mathbb{N}\times\mathbb{N}$ a monoid (with $(0,1)$ as neutral element).
+
+
+\emph{From Library
+\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}}
 
 \begin{Coqsrc}
-Time Compute (N_bpow N.mul 1 1 56666667)%N.  
+Definition mul2 (p q : N * N) :=
+  match p, q with (a, b),(c,d) => (a*c + a*d + b*c, a*c + b*d) end.
+
+Instance Mul2 : Monoid  mul2 (0,1).
+(* Proof omitted *)
 \end{Coqsrc}
 
-\begin{Coqanswer}
-Finished transaction in 0. secs (0.u,0.s) (successful)  
-\end{Coqanswer}
+The following lemma is a simplification of the equality~\vref{fibmat-eq1}.
+
+\begin{Coqsrc}
+Lemma next_fib (n:nat) : mul2 (1,0) (fib (S n), fib n) =
+                         (fib (S (S n)), fib (S n)).  
+\end{Coqsrc}
+
+By induction\footnote{Simple induction, since $n$ has type \texttt{nat}.}
+ over $n$, we obtain the following equality.
+
+ \begin{Coqsrc}
+Lemma fib_power n : fib n = let (a,b) := power (M:=Mul2) (1,0) n
+                            in (a+b).   
+\end{Coqsrc}
+
+Thus, any function able to compute more or less efficiently powers in a monoid will
+give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementionned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence 
+of the correctness of the used powering function.
+Several examples will be presented in the rest of this document.
+
+\begin{todo}
+Put links when done.
+\end{todo}
+
+
+
+% \begin{Coqsrc}
+
+% Import M2.
+
+% Arguments M2_mult {A} plus mult  _  _.
+% Arguments mat {A} _ _ _ _.
+% Arguments Id2 {A}  _ _.
+
+% Definition fibonacci (n:N) :=
+%  c00 N  (N_bpow  (M2_mult Nplus Nmult) 
+%                  (Id2  0%N 1%N)
+%                  (mat  1 1 1 0)%N 
+%                  n).
+
+% Compute fibonacci 20.
+% \end{Coqsrc}
+
+% \begin{Coqanswer}
+% = 10946%N
+%      : N  
+% \end{Coqanswer}
+
+\begin{todo}
+Document the files contributed by Yves
+\begin{itemize}
+\item additions/fib.v (to rename ?)
+\item additions/stub.ml (to keep inside theories/ or move to src/ ?)
+\item theories/additions/make\_fib\_tests.txt (to put in a Makefile?)
+\end{itemize}
+\end{todo}
+
+
+
+
+% \subsubsection{Remark}
+% \label{sect:faster}
+
+% Our function \texttt{N\_bpow} is really logarithmic. Let us make a comparative 
+% test with Standard Library's exponentiation function on type \texttt{N} (see section~\vref{sect:slow-computation}).
+
+% \begin{Coqsrc}
+% Time Compute (N_bpow N.mul 1 1 56666667)%N.  
+% \end{Coqsrc}
+
+% \begin{Coqanswer}
+% Finished transaction in 0. secs (0.u,0.s) (successful)  
+% \end{Coqanswer}
 
 
 
