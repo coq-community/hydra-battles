@@ -1593,6 +1593,12 @@ fun (A : Type) (x : A) =>
 
  *)
 
+Compute chain_length (make_chain two 56789).
+(* 25%nat *)
+Compute chain_length (make_chain half 56789).
+(* 25%nat *)
+Compute chain_length (make_chain dicho 56789).
+(* 21%nat *)
 
 End Examples.
 

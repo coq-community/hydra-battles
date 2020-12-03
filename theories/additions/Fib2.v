@@ -1,8 +1,8 @@
 
 
-Require Import NArith Ring Monoid_instances Euclidean_Chains Pow AM
-        Strategies Dichotomy.
-
+Require Import NArith Ring Monoid_instances Euclidean_Chains Pow
+        Strategies Dichotomy BinaryStrat.
+Import Addition_Chains. 
 Open Scope N_scope.
 
 
@@ -19,11 +19,11 @@ Compute fib 20.
 Lemma fib_ind (P:nat->Prop) :
   P 0%nat -> P 1%nat -> (forall n, P n -> P (S n) -> P(S (S n))) ->
   forall n, P n.
-intros.
-assert (P n /\ P (S n)).
+Proof.
+intros H0 H1 HS n; assert (P n /\ P (S n)).
 { induction n.
-  split;auto.
-   destruct IHn; split; auto.
+  - split;auto.
+  - destruct IHn; split; auto.
 }
  tauto.
 Qed.
@@ -64,8 +64,11 @@ Proof.
   - reflexivity.
 Qed.
 
-Lemma fib_power_0 (n:nat) : power (M:=Mul2) (1,0) (S (S n)) =
-                          (fib (S n), fib n).
+Definition fib_mul2 n := let (a,b) := power (M:=Mul2) (1,0) n
+                         in (a+b).
+
+Lemma fib_mul2_OK_0 (n:nat) : power (M:=Mul2) (1,0) (S (S n)) =
+                              (fib (S n), fib n).
 
 Proof.
   induction n.
@@ -73,17 +76,14 @@ Proof.
   - now rewrite power_eq2, IHn, next_fib.
 Qed.
 
-Compute  power (M:=Mul2) (1,0) 0%nat.
-Compute  power (M:=Mul2) (1,0) 1%nat.
 
-
-Lemma fib_power n : fib n = let (a,b) := power (M:=Mul2) (1,0) n
-                            in (a+b).
+Lemma fib_mul2_OK n : fib n = fib_mul2 n.
 Proof.
-pattern n;apply fib_ind; try reflexivity.
-- intros; rewrite fib_power_0; now rewrite fib_SSn, N.add_comm.
+ unfold fib_mul2; pattern n;apply fib_ind; try reflexivity.
+ - intros; rewrite fib_mul2_OK_0; now rewrite fib_SSn, N.add_comm.
 Qed.
 
+Time Compute fib_mul2 87.
 
 
 Definition fib_pos n :=
@@ -93,11 +93,26 @@ Definition fib_pos n :=
 Compute fib_pos xH.
 Compute fib_pos 10%positive. 
 
-Compute fib_pos 153%positive.
+Time Compute fib_pos 153%positive.
+
+Locate chain_apply.
+About chain_apply.
+
+Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
+  let c := make_chain gamma  n
+  in let r := chain_apply c (M:=Mul2) (1,0) in
+       fst r + snd r.
+
+Time Compute fib_eucl dicho  153.
+Time Compute fib_eucl two  153.
+Time Compute fib_eucl half 153.
+
 (*  68330027629092351019822533679447
-     : N *)
+     : N 
+Finished transaction in 0.002 secs (0.002u,0.s) (successful)
+*)
 
-
+Require Import AM.
 Definition fib_with_chain c :=
   match chain_apply c  Mul2 (1,0) with
     Some ((a,b), nil) => Some (a+b) | _ => None end.

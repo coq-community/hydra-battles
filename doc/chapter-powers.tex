@@ -397,6 +397,8 @@ Prove in \coq{} the following equality (for any $n\geq 2$). \label{fibmat-eq1}
 \end{exercise}
 
 \subsubsection{Removing duplicate computations}
+\label{sect:fibonacci-mul2}
+
 
 Yves Bertot's optimization relies on the observation that all the powers of
 \(  \left(
@@ -455,17 +457,22 @@ Lemma next_fib (n:nat) : mul2 (1,0) (fib (S n), fib n) =
 \end{Coqsrc}
 
 By induction\footnote{Simple induction, since $n$ has type \texttt{nat}.}
- over $n$, we obtain the following equality.
+ over $n$, we obtain a the following equalities.
 
- \begin{Coqsrc}
-Lemma fib_power n : fib n = let (a,b) := power (M:=Mul2) (1,0) n
-                            in (a+b).   
+\begin{Coqsrc}
+Definition fib_mul2 n := let (a,b) := power (M:=Mul2) (1,0) n   in (a+b).
+
+Lemma fib_mul2_OK_0 (n:nat) : power (M:=Mul2) (1,0) (S (S n)) =
+                              (fib (S n), fib n).
+
+Lemma fib_mul2_OK n : fib n = fib_mul2 n.
 \end{Coqsrc}
 
 Thus, any function able to compute more or less efficiently powers in a monoid will
 give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementionned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence 
 of the correctness of the used powering function.
-Several examples will be presented in the rest of this document.
+Several examples will be presented in the rest of this document
+(in sections~\vref{sect:fibonacci-pos-bpow}).
 
 \begin{todo}
 Put links when done.
@@ -1414,7 +1421,28 @@ Proof.
 Qed.  
 \end{Coqsrc}
 
+\subsection{Fibonacci, once again}
+\label{sect:fibonacci-pos-bpow}
 
+We can use the function \texttt{Pos\_bpow} for computing Fibonacci numbers
+(see Section~\vref{sect:fibonacci-mul2}).
+
+
+\begin{Coqsrc}
+Definition fib_pos n :=
+  let (a,b) := Pos_bpow (M:= Mul2) (1,0) n in
+  (a+b).
+
+Time Compute fib_pos 153%positive.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  68330027629092351019822533679447
+     : N 
+Finished transaction in 0.002 secs (0.002u,0.s) (successful)
+\end{Coqanswer}
+
+Fibonacci will come back in Sect.~\vref{sect:fibonacci-euclidean}.
 
 
 \section{Comparing Exponentiation Algorithms with respect to Efficiency}
@@ -1888,7 +1916,8 @@ Definition chain_correct_nat (n:nat) (c: chain) :=
       chain_apply c x ==   x ^ n.
 
 Definition chain_correct (p:positive) (c: chain) :=
-  chain_correct_nat c (Pos.to_nat p). 
+  chain_correct_nat c (Pos.
+to_nat p). 
 \end{Coqsrc}
 
 \begin{definition}
@@ -3169,7 +3198,8 @@ apply Hk.
 \begin{Coqanswer}
 ...
 ============================
-   a * a * a == a * (a * (a * E_one))}
+a * a * a == a * (a * (a * E_one))}
+
 \end{Coqanswer}
 
 \begin{Coqsrc}
@@ -4046,6 +4076,48 @@ Module ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichot
 $n>3$ then $1<\delta(n)<n$.
 
 
+\begin{Coqsrc}
+Function dicho_aux (p:positive) {struct p} : positive :=
+ match p with
+   | 1%positive   =>  xH
+   | 2%positive |   3%positive  => 2 
+   | xO (xO q) | xO (xI q) | xI (xO q) | xI (xI q) =>
+                                         xO (dicho_aux q)
+ end.
+
+Definition dicho  (p:positive) : positive :=
+  N2pos (N.div (Npos p) (Npos (dicho_aux p))). 
+
+Instance Dicho_strat : Strategy dicho.
+\end{Coqsrc}
+
+
+\subsection{Other strategies}
+For comparison's sake, we define two other strategies, much simpler but statically less efficient than the dichotomic strategy.
+
+\emph{From Module~\href{../theories/html/hydras.additions.BinaryStrat.html}{additions.BinaryStrat}.}
+
+\begin{Coqsrc}
+Definition half (p:positive) :=
+  match p with xH => xH
+          |    xI q | xO q =>  q
+  end.
+
+Definition two (p:positive) := 2%positive.
+
+Instance Binary_strat : Strategy half.
+Proof.
+  split; destruct p; unfold half; try lia.
+Qed.
+
+Instance Two_strat : Strategy two.
+Proof.
+  split;unfold two; lia.
+Qed.
+\end{Coqsrc}
+
+In Sect.~\ref{sect:test-strat}, we compare the three strategies with respect to the lenght of the built chains.
+
 \subsection{Main chain generation function}
 We are now able to define a function that generates a correct chain 
 for any signature. We use the \texttt{Recdef} module of Standard Library,
@@ -4137,6 +4209,58 @@ Compute make_chain 87.
      : chain 
 \end{Coqanswer}
 
+\label{sect:test-strat}
+
+The following tests show various examples of chains for the same exponent, using different strategies. The dichotomic strategy seems clearly to be the winner (at least on this sample).
+
+\begin{Coqsrc}
+Compute chain_length (make_chain two 56789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= 25%nat : nat  
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute chain_length (make_chain half 56789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ = 25%nat : nat
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute chain_length (make_chain dicho 56789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= 21%nat : nat 
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute chain_length (make_chain two 3456789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= 33%nat : nat
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute chain_length (make_chain half 3456789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+(= 33%nat : nat
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute chain_length (make_chain dicho 3456789).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= 29%nat : nat
+\end{Coqanswer}
+
 
 \subsubsection{Correctness of the Euclidean chain generator}
 
@@ -4223,6 +4347,51 @@ Compute chain_length big_chain.
 \begin{Coqanswer}
 = 29%nat
      : nat  
+\end{Coqanswer}
+
+
+
+\subsection{Fibonacci, \emph{le retour}}
+\label{sect:fibonacci-euclidean}
+
+It is now possible to use euclidean addition chains for computing Fibonacci numbers
+(see Sections~\vref{sect:fibonacci-mul2} and~\vref{sect:fibonacci-pos-bpow}).
+
+The following function is parameterized by a startegy $\gamma$.
+
+\begin{Coqsrc}
+Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
+  let c := make_chain gamma  n
+  in let r := chain_apply c (M:=Mul2) (1,0) in
+       fst r + snd r.
+
+Compute fib_eucl dicho 153.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+    = 68330027629092351019822533679447
+     : N
+Finished transaction in 0.002 secs (0.002u,0.s) (successful)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute fib_eucl two 153.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+    = 68330027629092351019822533679447
+     : N
+Finished transaction in 0.003 secs (0.003u,0.s) (successful)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Compute fib_eucl half 153.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+    = 68330027629092351019822533679447
+     : N
+Finished transaction in 0.003 secs (0.003u,0.s) (successful)
 \end{Coqanswer}
 
 
