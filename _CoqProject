@@ -95,4 +95,5 @@ theories/additions/Naive.v
 theories/additions/Pow.v
 theories/additions/Pow_variant.v
 theories/additions/Strategies.v
+theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
