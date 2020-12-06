@@ -4460,16 +4460,8 @@ Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal t
 
 \subsubsection{Arithmetic on Type \texttt{E0}}
 
- We define an addition in type \texttt{E0}, using the function{T1.plus}
-and its properties.
+ We define an addition in type \texttt{E0}, since the sum of two terms in normal form is in normal form too.
 
-\begin{Coqsrc}
-Search   (nf (_ + _)%t1).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-plus_nf: forall a : T1, nf a -> forall b : T1, nf b -> nf (a + b)
-\end{Coqanswer}
 
 \begin{Coqsrc}
 Instance plus (alpha beta : E0) : E0.
