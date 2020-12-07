@@ -4077,8 +4077,7 @@ Definition  OK (s: signature)
 
 \end{Coqsrc}
 
-\subsection{The dichotomic strategy}
-
+\subsection{Generation of chains using Euclidean Dibision}
 
 Assume we want to build automatically a correct  f-chain for some 
 positive integer $n$.
@@ -4091,10 +4090,26 @@ chains for $q$ and $r$ on one side, and $q$ on the other side.
 
 The efficiency of this method depends on the choice of $b$.
 In \cite{DBLP:journals/ita/BrlekCHM95}, the function that maps $n$ into $b$
-is called a \emph{strategy}. In this chapter, we concentrate
-on the so-called \emph{dichotomic strategy}.
+is called a \emph{strategy}. 
 
-$\delta(n) = n \div {2^k}$ where $k=\floor{(\log_2{n})/2}$.
+\vspace{4pt}
+\noindent
+From ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy}.
+\begin{Coqsrc}
+Class Strategy (gamma : positive -> positive):=
+{
+gamma_lt :forall p:positive, 3 < p -> gamma  p < p;
+gamma_gt : forall p:positive, 3 < p -> 1 < gamma  p
+}.
+
+\end{Coqsrc}
+\subsection{The dichotomic strategy}
+
+
+In this chapter, we concentrate
+on the so-called \emph{dichotomic strategy}, defined as follows:
+
+$$n \mapsto  n \div {2^k} \,\textbf{where}\, k=\floor{(\log_2{n})/2}$$
 
 Intuitively, it corresponds to splitting the binary representation of a positive
 integer into two halves. For instance, consider $n=87$ its binary representation
@@ -4104,8 +4119,7 @@ Thus, a chain for $n=87$ can be built from a chain computing both $x^7$ and $x^{
 and a chain that raises its argument to its $8-th$ power.
 
 
-Module ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy} contains a definition of the function \texttt{delta}, and proofs that if 
-$n>3$ then $1<\delta(n)<n$.
+This strategy is defined in Module ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy}.
 
 
 \begin{Coqsrc}
@@ -4148,7 +4162,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-In Sect.~\ref{sect:test-strat}, we compare the three strategies with respect to the lenght of the built chains.
+Page.~\pageref{sect:test-strat}, we compare the three strategies with respect to the length of the built chains.
 
 \subsection{Main chain generation function}
 We are now able to define a function that generates a correct chain 
@@ -4167,7 +4181,7 @@ end.
 The following function definition generates 9 sub-goals,
 for proving that the measure on signatures is strictly decreasing along
 the recursive calls. They are solved with the help of Standard Library's lemmas 
-on arithemtic of \texttt{positive} numebers end Euclidean division.
+on arithmetic of \texttt{positive} numbers and Euclidean division.
 
 
 %\todo{Is Function (from Recdef) obsolete ? Use Equations instead ? }
@@ -4241,6 +4255,8 @@ Compute make_chain 87.
      : chain 
 \end{Coqanswer}
 
+
+\subsubsection{A few tests}
 \label{sect:test-strat}
 
 The following tests show various examples of chains for the same exponent, using different strategies. The dichotomic strategy seems clearly to be the winner (at least on this sample).
@@ -4301,7 +4317,7 @@ prove that every value returned by (\texttt{chain\_gen $s$}) is correct w.r.t.
 \texttt{$s$} and proper.
 The proof obligations are solved thanks to the previous lemmas on 
 the composition operators on chains: \texttt{Fcompose}, \texttt{KFK}, etc.
-Unfortunately, a lot of interaction is still needed or proving properties of
+Unfortunately, a lot of interaction is still needed for proving properties of
 Euclidean division and binary logarithm. 
 
 
@@ -4386,10 +4402,10 @@ Compute chain_length big_chain.
 \subsection{Fibonacci, \emph{le retour}}
 \label{sect:fibonacci-euclidean}
 
-It is now possible to use euclidean addition chains for computing Fibonacci numbers
+It is now possible to use Euclidean addition chains for computing Fibonacci numbers
 (see Sections~\vref{sect:fibonacci-mul2} and~\vref{sect:fibonacci-pos-bpow}).
 
-The following function is parameterized by a startegy $\gamma$.
+The following function is parameterized by any strategy $\gamma$.
 
 \begin{Coqsrc}
 Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
@@ -4458,8 +4474,9 @@ restriction on parametric chains.
 \end{enumerate}
 \end{project}
 
-\index{Projects}
-\begin{project}
+\subsection{A data structure for Euclidean chains}
+
+
 Figures~\vref{fig:F3-as-dag} to \vref{fig:FFK} suggest that any computation following an Euclidean chain can be executed on a kind  of abstract machine with a "register'' and a stack, and only four operations:
 \begin{itemize}
 \item multiply the contents of the register by the top of the stack (and pop that stack),
@@ -4509,7 +4526,7 @@ Section Semantics.
 End Semantics.
 \end{Coqsrc}
 
-For instance the chain of Fig.~ \vref{fig:C87} can be represented with the following code:
+For instance the chain of Fig.~\vref{fig:C87} can be represented with the following code:
 
 \begin{Coqsrc}
   PUSH :: PUSH :: SQR  :: MUL :: PUSH :: SWAP :: SQR :: MUL :: PUSH
@@ -4517,11 +4534,12 @@ For instance the chain of Fig.~ \vref{fig:C87} can be represented with the follo
 \end{Coqsrc}
 
 
+In the library~\href{../theories/html/hydras.additions.AM.html}{additions.AM},
+we define a chain generator for this data structure. 
+Please note that many proof scripts are copied verbatim from 
+\texttt{Euclidean\_Chains} into \texttt{AM}. Removing such redundancies is left as a project.
 
-Please define an Euclidean chain generator using this data structure, and prove its correctness (done  in ~\href{../theories/html/hydras.additions.AM.html}{additions.AM}, but with clumsy fresh proofs). The project is now to simplify the proofs. 
-perhaps considering chains of type \texttt{code} as a refinement of functional chains. Please note that many proof scripts are copied verbatim from 
-\texttt{Euclidean\_Chains} into \texttt{AM}.
-\end{project}
+
 
 \begin{project}[Some improvements]
  \begin{enumerate}
