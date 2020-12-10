@@ -896,8 +896,7 @@ red;intros.
 Qed.
 
 
-Lemma FFK_correct :
-  forall (p q  : positive) (fp fq : Fchain),
+Lemma FFK_correct  (p q  : positive) (fp fq : Fchain):
     Fchain_correct p fp  ->
     Fchain_correct q fq ->
     Fchain_proper fp ->
@@ -908,9 +907,9 @@ Qed.
 
 
 Instance FFK_proper 
-   (fp: Fchain) (fq : Fchain)
-    (_ :   Fchain_proper fp)
-    (_ :  Fchain_proper fq) :  Kchain_proper (FFK fp fq) .
+         (fp fq : Fchain)
+         (_ :   Fchain_proper fp)
+         (_ :  Fchain_proper fq) :  Kchain_proper (FFK fp fq).
 Proof.
  red;intros;
  specialize (H _ _ _ _ M); specialize (H0 _ _ _ _ M).

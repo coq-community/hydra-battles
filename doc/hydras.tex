@@ -83,7 +83,7 @@ necessary. Since the development of a theory is represented as a bunch of comput
 everyone is able to read the proofs with an arbitrary level of detail, or to play with the theory by writing alternate proofs or definitions.
 
 
-Among all the theorems proved with the help of proof assistants like \coq{}, \isabelle{}~\cite{isabelle}, \hol{}~\cite{HOL}, etc.,
+Among all the theorems proved with the help of proof assistants like \coq{}~\cite{Coq,BC04}, \hol{}~\cite{HOL}, \isabelle{}~\cite{isabelle},  etc.,
 several statements and proofs  share some interesting features:
 \begin{itemize}
 \item Their statements are easy to understand, even by non-mathematicians
@@ -225,7 +225,7 @@ Florian Hatat proved many useful lemmas on countable sets, which we used in our 
 Any form of contribution  is welcome: correction of errors (typos and more serious mistakes), improvement of
 Coq scripts, proposition of inclusion of new chapters, and generally any
 comment or proposition that would help us. The text contains several \emph{projects} which, when completed, may improve the present work.
-Please do not hesitate to bring your contribution!
+Please do not hesitate to bring your contribution, for instance with Github's proof requests and issues. Thank you in advance!
 
 
 
@@ -235,8 +235,6 @@ Quotations from our  \coq{} source are displayed as follows:
 
 
   \begin{Coqsrc}
- Require Import Arith.
-
  Definition square (n:nat) := n * n.
 
  Lemma square_double : exists n:nat, n + n = square n.
@@ -285,8 +283,6 @@ Bad definitions
 
 
 \begin{Coqbad}
-Require Import Lia.
-
 Module Bad.
 
 Definition double (n:nat)  := n + 2.
@@ -304,7 +300,7 @@ Likewise, alternative, but still unexplored definitions will be presented in mod
 
 
 \begin{Coqalt}
-Require Import Arith Lia Iterates.
+From hydras Require Import Iterates.
 Module Alt.
   Definition double (n : nat) := iterate S n n.
 End Alt.
@@ -323,7 +319,7 @@ Qed.
 \label{sec:orgheadline5}
     Many thanks to Yves Bertot, David Ilcinkas, Karl Palmskog, Sylvain Salvati, Alan Schmitt and Théo Zimmerman for their help on the elaboration of this document, and to the
  members of the \emph{Formal Methods} team at laBRI for their helpful comments 
-on an oral presentation of this work. 
+on  oral presentations of this work. 
 
 Many thanks also to the Coq development team, Yves Bertot, and members of the \emph{Coq Club} for interesting discussions about the \coq{} system and the Calculus of Inductive Constructions.
 

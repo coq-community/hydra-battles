@@ -173,19 +173,18 @@ Inductive result_equiv`{M : @EMonoid A op one equ}: relation (option (config A))
     result_equiv (Some (x,s)) (Some (y,s')).
 
 Definition Fchain_correct (p: positive) (c: code) :=
-  (forall  `(M: @EMonoid A op one equ) (x:A) s,
+  (forall  A op one equ (M: @EMonoid A op one equ) (x:A) s,
         result_equiv (M:=M) (exec A op c x s)
                      (Some (Pow.Pos_bpow x p, s))) .
 
 
 Definition Kchain_correct  n p c :=
-   (forall  `(M: @EMonoid A op one equ) (x:A) s,
+   (forall   A op one equ (M: @EMonoid A op one equ) (x:A) s,
         result_equiv (exec A op c x s)
                      (Some (Pow.Pos_bpow  x n, Pow.Pos_bpow  x p ::s))).
 
 
-Definition correctness_statement (s: signature) : 
-code -> Prop :=
+Definition correctness_statement (s: signature) : code -> Prop :=
 match s  with
   | gen_F p => fun c => Fchain_correct p c
   | gen_K p d   => fun c => Kchain_correct  (p + d) p c

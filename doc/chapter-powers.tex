@@ -3919,16 +3919,14 @@ Definition FFK (fp fq : Fchain) : Kchain :=
   fun A k a =>  fp A (fun xb  => fq A (fun y => k y xb) xb) a. 
 
 
-Lemma FFK_correct :
-  forall (p q  : positive) (fp fq : Fchain),
+Lemma FFK_correct  (p q  : positive) (fp fq : Fchain):
     Fchain_correct p fp  ->
     Fchain_correct q fq ->
     Fchain_proper fp ->
     Fchain_proper fq -> Kchain_correct  (p * q ) p (FFK fp fq).
 (* Proof omitted *)
 
-Instance FFK_proper 
-   (fp: Fchain) (fq : Fchain)
+Instance FFK_proper  (fp fq : Fchain)
     (_ :   Fchain_proper fp)
     (_ :  Fchain_proper fq) :  Kchain_proper (FFK fp fq) .
 (* Proof omitted *)

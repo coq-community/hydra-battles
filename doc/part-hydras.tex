@@ -448,7 +448,7 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 \label{sec:orgheadline48}
 
 
-In order to describe trees where each node can have an arbitrary (but finite) number of sons, it usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
+In order to describe trees where each node can have an arbitrary (but finite) number of sons, it is usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
 (see for instance Chapter 14, pages 400-406 of \cite{BC04}).
 
 For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydra.
@@ -456,6 +456,7 @@ For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \te
 \label{types:Hydrae}
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#Hydra}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
@@ -511,6 +512,8 @@ every non-leaf node has a \emph{multi-set} -- not an ordered list -- of daughter
 
 We provide several notations for hydra patterns  which occur often in our developments. 
 
+\vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#head}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
@@ -528,6 +531,7 @@ Notation hyd3 h h' h'' :=
 For instance, the hydra \texttt{Hy}  of Figure~\vref{fig:Hy} is defined in \emph{Gallina} as follows:
 
 \vspace{4mm}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html\#Hy}{Hydra.Hydra\_Examples}}
 
 \begin{Coqsrc}
@@ -545,7 +549,7 @@ Hydras quite frequently contain  multiple  copies of the same pattern. The follo
 will help us to describe and reason about replications in hydra battles.
 
 \vspace{4pt}
-
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#hcons_mult}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
@@ -555,7 +559,7 @@ Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
   | S p => hcons h (hcons_mult h p s)
   end.
 
-(** hydra with n copies of the same daughter *)
+(** A node with n clones of the same daughter *)
 
 Definition hyd_mult h n :=
   node (hcons_mult h n hnil).
@@ -568,7 +572,7 @@ Definition hyd_mult h n :=
 For instance, the hydra $Hy''$ of Fig~\vref{fig:Hy3}  can be defined in \coq{} as follows:
 
 \vspace{4pt}
-
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
 \begin{Coqsrc}
@@ -588,7 +592,7 @@ Example Hy'' :=
 
 
 
-When defining a recursive function over the type \texttt{Hydra}, one has to consider the three constructors 
+In order to  define a recursive function over the type \texttt{Hydra}, one has to consider the three constructors 
 \texttt{node}, \texttt{hnil} and \texttt{hcons} of the mutually inductive types \texttt{Hydra} and \texttt{Hydrae}. 
 Let us define for instance the function which  computes the number of nodes of any hydra:
 
@@ -755,7 +759,6 @@ Hydra_rect2
 
 Let us now use \texttt{Hydra\_rect2} for proving that the height of any hydra is strictly less than its size.
 Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt{Hydra\_rect2}'s statement. 
-Let us begin by defining an ad-hoc version of \texttt{List.Forall}.
 
 \vspace{4pt}
 \noindent
@@ -923,7 +926,7 @@ Inductive S1 (n:nat)  : Hydrae -> Hydrae -> Prop :=
 \end{Coqsrc}
 
 
-The rest of the definition is structured as two mutually inductive relations on hydras and sequences of hydras. The first constructor of \texttt{R2} describes the case where the chopped head is exactly at height $2$. The others constructors allow us to consider beheadings at height strictly greater than $2$.
+The rest of the definition is composed of two mutually inductive relations on hydras and sequences of hydras. The first constructor of \texttt{R2} describes the case where the chopped head is exactly at height $2$. The others constructors allow us to consider beheadings at height strictly greater than $2$.
 
 
 \vspace{4pt}
