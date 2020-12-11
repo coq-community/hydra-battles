@@ -1148,12 +1148,12 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 
 \begin{Coqsrc}
 Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-
-| battle_1 : forall i h  h', battle_r   B i  h h' -> 
-                            battle B i h (S i) h'
-| battle_n : forall i h  j h' h'',  battle_r  B i h h''  ->
-                                   battle B (S i) h'' j h'  ->
-                                   battle B i h j h'.
+| battle_1 : forall i h  h', 
+      battle_r   B i  h h' -> battle B i h (S i) h'
+| battle_n : forall i h  j h' h'',  
+      battle_r  B i h h''  ->
+      battle B (S i) h'' j h'  ->
+      battle B i h j h'.
 \end{Coqsrc}
 
 % \begin{remark}
@@ -1184,7 +1184,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 \begin{itemize}
 \item At each round, Hercules chops off the rightmost head of the hydra.
-\item The battle is standard: at the round number $i$, the expected replication is $i$.
+\item The battle is called \emph{standard}\footnote{This appellation is ours. If there is a better one, we will change it.}: at the round number $i$, the expected replication is $i$.
 \end{itemize}
 
 
@@ -1222,15 +1222,13 @@ Definition hinit := hyd3 (hyd_mult head 3)  head head.
 The lemma we would like to prove is ``The considered battle lasts exactly $N$ rounds'',
 with $N$ being a natural number we gave to guess.
 
-But the  battle is so long that no \emph{test} can give us an estimation of its length, and we do need the expressive power of logic to compute this length. However, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
+But the  battle is so long that no \emph{test} can give us any estimation of its length, and we do need the expressive power of logic to compute this length. However, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
 Thus, we can consider this development as a collaboration of proof with computation.
-
-In the following lines, we try to show faithfully how we found the value of the number $N$.
-
+In the following lines, we show how we found experimentally the value of the number $N$.
 The complete proof is in file \url{../theories/html/hydras.Hydra.BigBattle.html}. 
 
-\subsection{The beginning of Hostilities}
-During the two first rounds, our hydra loses its two rightmost heads. Thus just before the third round, it looks like in figure~\vref{fig:hinit-plus2}.
+\subsection{The Beginning of Hostilities}
+During the two first rounds, our hydra loses its two rightmost heads.  Figure~\vref{fig:hinit-plus2} shows the state of the hydra   just before the third round.
 
 
 \begin{figure}[h]
@@ -1265,7 +1263,7 @@ Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).
 
 A first study with pencil and paper suggested us that, after three rounds, the hydra always looks like in figure~\vref{fig:hinit-plusn} (with a variable number of 
 subtrees of height 1 or 0).
-Thus, we introduce handy notations.
+Thus, we introduce a few handy notations.
 
 \begin{Coqsrc}
 Notation h3 := (hyd_mult head 3).
@@ -1351,7 +1349,7 @@ Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
 \end{Coqsrc}
 
 
-\subsection{Computing \dots}
+\subsection{Testing  \dots}
 In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple datatype for representing the states as tuples composed of
 the round number, and the respective number of daughters  \texttt{h2}, \texttt{h1}, and heads
 of the current hydra.
@@ -1365,8 +1363,8 @@ of the current hydra.
 \end{Coqsrc}
 
 The following function returns the next configurarion of the game. 
-Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle will only start with the lemma
-\texttt{lemma:step-battle}, page~\pageref{lemma:step-battle}.
+Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle only start with the lemma
+\texttt{step\_battle}, page~\pageref{lemma:step-battle}.
 
 
 \begin{Coqsrc}
@@ -1402,29 +1400,39 @@ The following function computes the state of the battle at the $n$-th round.
 Definition test n := iterate next (n-3) (mks 3 3 0 0).
 
 Compute test 3.
-   (**
-     = {| round := 3; n2 := 3; n1 := 0; nh := 0 |}
-     : state
-    *)
+\end{Coqsrc}
 
-Compute test 4.
- (*
+\begin{Coqanswer}
+      = {| round := 3; n2 := 3; n1 := 0; nh := 0 |}
+     : state 
+\end{Coqanswer}
+
+\begin{Coqsrc}
+ Compute test 4.
+\end{Coqsrc}
+
+\begin{Coqanswer}
   = {| round := 4; n2 := 2; n1 := 4; nh := 0 |}
      : state
- *)
+\end{Coqanswer}
 
+\begin{Coqsrc}
 Compute test 5.
- (*
-   = {| round := 5; n2 := 2; n1 := 3; nh := 5 |}
-     : state
- *)
+\end{Coqsrc}
 
+\begin{Coqanswer}
+  = {| round := 5; n2 := 2; n1 := 3; nh := 5 |}
+     : state
+\end{Coqanswer}
+
+\begin{Coqsrc}
 Compute test 2000.
-(*
+\end{Coqsrc}
+
+\begin{Coqanswer}
   = {| round := 2000; n2 := 1; n1 := 90; nh := 1102 |}
      : state
-*)
-\end{Coqsrc}
+\end{Coqanswer}
 
 
 The battle we are studying seems to be awfully long. Let us concentrate our
@@ -1433,12 +1441,12 @@ From the value of \texttt{test 5},  it is obvious that at the 10-th round, the c
 
  \begin{Coqsrc}
  Compute test 10.
-(*
+\end{Coqsrc}
 
+\begin{Coqanswer}
     = {| round := 10; n2 := 2; n1 := 3; nh := 0 |}
      : state
-*)
- \end{Coqsrc}
+ \end{Coqanswer}
 
 Thus, $ (1 + 11)$ rounds later, the \texttt{n1} field is equal to $2$, and 
 \texttt{nh}   to $0$. 
@@ -1446,32 +1454,32 @@ Thus, $ (1 + 11)$ rounds later, the \texttt{n1} field is equal to $2$, and
 
 \begin{Coqsrc}
 Compute test 22.
-(*
+\end{Coqsrc}
 
+\begin{Coqanswer}
  = {| round := 22; n2 := 2; n1 := 2; nh := 0 |}
      : state
-*)
-\end{Coqsrc}
+\end{Coqanswer}
 
 
 \begin{Coqsrc}
  Compute test 46.
-(*
+\end{Coqsrc}
 
- = {| round := 46; n2 := 2; n1 := 1; nh := 0 |}
+\begin{Coqanswer}
+( = {| round := 46; n2 := 2; n1 := 1; nh := 0 |}
      : state
+\end{Coqanswer}
 
-*)
 
+\begin{Coqsrc}
 Compute test 94.
+\end{Coqsrc}
 
-(*
-
+\begin{Coqanswer}
  = {| round := 94; n2 := 2; n1 := 0; nh := 0 |}
      : state
-
-*) 
-\end{Coqsrc}
+\end{Coqanswer}
 
 
 Next round, we decrement \texttt{n2} and set \texttt{n1} to $95$.
@@ -1479,14 +1487,12 @@ Next round, we decrement \texttt{n2} and set \texttt{n1} to $95$.
 
 \begin{Coqsrc}
  Compute test 95.
+\end{Coqsrc}
 
-(*
-
+\begin{Coqanswer}
   = {| round := 95; n2 := 1; n1 := 95; nh := 0 |}
      : state
-
-*)
-\end{Coqsrc}
+\end{Coqanswer}
 
 We now have some intuition of the sequence.
 It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-th round, then at the $2(192+1)$-th round, etc.
@@ -1496,20 +1502,21 @@ It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-
 Definition doubleS (n : nat) := 2 * (S n).
 
 Compute test (doubleS 95).
+\end{Coqsrc}
 
-(**
+\begin{Coqanswer}
  = {| round := 192; n2 := 1; n1 := 94; nh := 0 |}
      : state
- *)
+\end{Coqanswer}
 
-
+\begin{Coqsrc}
 Compute test (iterate doubleS 2 95).
+\end{Coqsrc}
 
-(*
+\begin{Coqanswer}
   = {| round := 386; n2 := 1; n1 := 93; nh := 0 |}
      : state
-*)
-\end{Coqsrc}
+\end{Coqanswer}
 
 \subsection{Proving \dots}
 We are now able to reason about the sequence of transitions defined by our hydra battle. Instead of using the data-type \texttt{state} we study the relationship
