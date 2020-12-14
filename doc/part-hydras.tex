@@ -1156,6 +1156,14 @@ Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
       battle B i h j h'.
 \end{Coqsrc}
 
+The following property allows us to build battles out of smaller ones.
+
+\begin{Coqsrc}
+Lemma battle_trans {b:Battle} :
+  forall i h j h', battle b i h j h' ->
+        forall k h0,  battle b k h0 i h -> battle b k h0 j h'.
+\end{Coqsrc}
+
 % \begin{remark}
 %  The class \texttt{free} is strongly related with the transitive closure  \texttt{round\_plus}, as expressed by the following lemmas.
 
@@ -1572,7 +1580,7 @@ The following lemma establishes a relation between \texttt{steps} and the predic
 \end{Coqsrc}
 
 Thus, any result about \texttt{steps} will be applicable to standard battles.
-Using the predicate \texttt{steps} our study of the length of the considered battle
+Using the predicate \texttt{steps},  our study of the length of the considered battle
 can  be decomposed into three parts:
 
 \begin{enumerate}
@@ -1855,7 +1863,7 @@ Definition Alive (B : Battle) :=
 \end{Coqsrc}
 
 The theorems \texttt{Alive\_free} and \texttt{Alive\_standard} of the module 
-\url{../theories/html/hydras.Hydra.Hydra_Theorems.html} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
+\href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
 
 \begin{Coqsrc}
 Theorem Alive_free: Alive free.
@@ -1870,7 +1878,7 @@ Both theorems are proved with the help of the  following strongly specified func
 
 \begin{Coqsrc}
 Definition  next_round_dec n :
- forall h , (h = head) + {h' : Hydra & {R1 h h'} + {R2 n h  h'}}.
+ forall h, (h = head) + {h' : Hydra & {R1 h h'} + {R2 n h  h'}}.
 \end{Coqsrc}
 
 
@@ -2010,7 +2018,7 @@ Lemma m_lt : m small_h < m big_h.
  \end{Coqsrc}
 
 In order to get a contradiction, it suffices to  prove the inequality
-\texttt{m big\_h <= m small\_h}, i.e.,  \texttt{m big\_h <= m (iota (m big\_h))}.
+$m(\texttt{big\_h}) \leq m(\texttt{small\_h})$ i.e.,  $m(\texttt{big\_h}\leq m(\iota (m(\texttt{big\_h})))$.
 
 More generally, we prove the following lemma: 
 
@@ -2082,7 +2090,7 @@ For the computer scientist, ordinals are tools for proving the totality of a giv
 provides a set of functions whose properties, like \emph{monotony}, allow to define \emph{variants}, \emph{i.e.} strictly decreasing measures used in proofs of termination.
 
 
-Let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a small sequence of ordinal numbers, which extends the sequence of natural numbers. 
+Let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a few items of a  sequence of ordinal numbers, which extends the sequence of natural numbers. 
 
 
 
@@ -2094,13 +2102,13 @@ Let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a small seq
   \begin{align*}
      &\textcolor{blue}{0},\,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,\ldots\\
 &\textcolor{red}{\omega},\,\omega+1,\omega+2,\omega+3,\ldots\\
-&\textcolor{red}{\omega\times 2},\,\omega\times 2+1,\ldots, \textcolor{red}{\omega\times 3},\,\omega\times 3+1,\ldots, \textcolor{red}{\omega\times 4},\ldots,\\
-&\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots,\\
-&\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots,\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots,\\
+&\textcolor{red}{\omega\times 2},\,\omega\times 2+1,\ldots, \textcolor{red}{\omega\times 3},\,\omega\times 3+1,\ldots, \textcolor{red}{\omega\times 4},\ldots\\
+&\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots\\
+&\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots,\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots\\
 &\textcolor{red}{\omega^{\omega^\omega}},\ldots, \textcolor{red}{\omega^{\omega^\omega}+\omega^\omega\times 42+ \omega^{55}+\omega}, \ldots, \textcolor{red}{\omega^{\omega^{\omega+1}}}, \omega^{\omega^{\omega+1}}+1,\dots\\
-& \textcolor{red}{\epsilon_0 (= \omega^{\epsilon_0)}}, \epsilon_0+1, \epsilon_0+2, \epsilon_0+3, \ldots,\\
+& \textcolor{red}{\epsilon_0 (= \omega^{\epsilon_0)}}, \epsilon_0+1, \epsilon_0+2, \epsilon_0+3, \ldots\\
 & \textcolor{red}{\epsilon_1}, \ldots, \textcolor{red}{\epsilon_2}, \ldots, \textcolor{red}{\epsilon_\omega},\ldots \\
-& \textcolor{red}{\Gamma_0}, \Gamma_0+1, \Gamma_0+2, \Gamma_0+3,\ldots, \textcolor{red}{\Gamma_0+\omega}, \ldots,\\
+& \textcolor{red}{\Gamma_0}, \Gamma_0+1, \Gamma_0+2, \Gamma_0+3,\ldots, \textcolor{red}{\Gamma_0+\omega}, \ldots\\
 &\ldots
   \end{align*}   
   \end{minipage}}
@@ -2115,7 +2123,7 @@ Let us comment some features of this figure:
 
 \begin{itemize}
 \item The ordinals are listed in a strictly increasing order. 
-\item Dots : ``$\ldots$'' stand for  infinite sequences of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, between $17$ and $\omega$.
+\item Dots : ``$\ldots$'' stand for  infinite sequences of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, somewhere between $17$ and $\omega$.
 \item Each ordinal printed in black is the immediate successor of another ordinal. We call it a \emph{successor} ordinal. For instance, $12$ is the successor of $11$, and $\omega^4+1$ the successor of $\omega^4$.
 \item Ordinals (displayed in red)  that  follow immediately dots are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 \item
@@ -2160,7 +2168,7 @@ Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have 
 there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
 $\forall x\,y\in A, x <_A y \Rightarrow b(x) <_B  b(y)$.
 
-Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short \emph{ordinals}) are descriptions (\emph{names}) of the equivalence classes.
+Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short: \emph{ordinals})  are descriptions (\emph{names}) of the equivalence classes.
 For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
 the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
 
@@ -2291,7 +2299,7 @@ Infix "o<=" := ON_le : ON_scope.
 
 
 \begin{remark}
-The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, we still use $<$ and $\leq$ for comparing ordinals.
+The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.
 \end{remark}
 
 
@@ -2318,7 +2326,7 @@ Lemma wf_measure  {A:Type}(lt: relation A)
 A simple example of application is given in Sect.~\vref{sect:merge-example}.
 
 
-\section{Example: The Ordinal \texorpdfstring{$\omega$}{omega}}
+\section{Example: the Ordinal \texorpdfstring{$\omega$}{omega}}
 
 
 
@@ -2346,14 +2354,14 @@ Compute ON_compare 6 9.
      : comparison
 \end{Coqanswer}
 
-\section{Sum of  Ordinal Notations}
+\section{Sum of  two Ordinal Notations}
 
 Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective types \texttt{A} and \texttt{B}.
 
  We consider a new strict order
 on the disjoint sum of the associated types, by putting all elements of \texttt{A} before the elements of \texttt{B} (thanks to Standard Library's relation operator \texttt{le\_AsB}).
 
-
+\vspace{4pt}
 \noindent
 \emph{From Library~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}}.
 
@@ -2542,10 +2550,10 @@ Lemma lt_omega alpha :
 
 \section{Limits and Successors}
 
-Let us look again at our implementation of $\omega+\omega$. We can distinguish between the three kinds of ordinals seen in Fig~\ref{fig:ordinal-sequence}:
+Let us look again at our implementation of $\omega+\omega$. We can classify its elements into three categories:
 
 \begin{itemize}
-\item The least ordinal, \texttt{(inl 0)}, also written \texttt{(fin 0)}.
+\item The least ordinal, \texttt{(inl 0)}, also known as  \texttt{(fin 0)}.
 \item The limit ordinal $\omega$.
 \item The successor ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))}
 \end{itemize}
@@ -4132,7 +4140,7 @@ One may encapsulate conditions of the form \texttt{(nf $\alpha$)} in
 the most used predicates. For instance, we introduce the restriction of \texttt{lt} to terms in normal form, and provide a handy notation for this restriction.
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Prelude.Restriction.html}{Ordinals.Prelude.Restriction}}
+\emph{From Module~\href{../theories/html/hydras.Prelude.Restriction.html}{hydras.Prelude.Restriction}}
 
 \begin{Coqsrc}
 Definition restrict {A:Type}(E: Ensemble A)(R: relation A) :=
@@ -5016,7 +5024,7 @@ Lemma oplus_comm_0 : forall alpha, nf alpha ->
                   lt b alpha ->
                   a o+ b = b o+ a.
  Proof with eauto with T1.
-    intros alpha Halph; transfinite_induction alpha.
+    intros alpha Halpha; transfinite_induction alpha.
 (* rest of proof omitted *)  
 \end{Coqsrc}
 
@@ -6437,7 +6445,7 @@ refer to a particular data type \texttt{T1}.
 In fact, our representation of ordinals strictly less than 
  $\epsilon_0$ is faithful to their mathematical definition, at least 
 Kurt Schütte's~\cite{schutte}, as proved in Chapter~\vref{chap:schutte}.
-(please see also \href{../theories/html/hydras.Schutte.Correctness_E0.html}{the module \texttt{Ordinals.Schutte.Correctness\_E0}}).
+(please see also \href{../theories/html/hydras.Schutte.Correctness_E0.html}{the module \texttt{hydras.Schutte.Correctness\_E0}}).
 
 Thus, we can infer that our theorems can be applied to any well order.
 
@@ -8070,7 +8078,7 @@ Starting with these three axioms, Schütte re-defines the vocabulary about ordin
 
 This chapter describes an adaptation to \coq{} of Schütte's axiomatization. 
  Unlike the rest of our libraries, our library
-\href{../theories/html/hydras.Schutte.Schutte.html}{Ordinals.Schutte}
+\href{../theories/html/hydras.Schutte.Schutte.html}{hydras.Schutte}
 is not constructive, and relies on several axioms.
 
 \begin{itemize}
