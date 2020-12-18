@@ -160,6 +160,15 @@ Definition eq_b alpha beta := match compare alpha beta with
 
 Definition lt alpha beta : Prop := lt_b alpha beta.
 
+Example Ex0:
+  lt (ocons (phi0 (phi0 omega)) 2
+            (ocons (phi0 10) 33
+                   (ocons (phi0 9) 63 zero)))
+     (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
+Proof.
+  reflexivity. 
+Qed.
+
 Definition le (alpha beta :T1) :=
   match compare alpha beta with
     Gt => False

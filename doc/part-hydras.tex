@@ -2166,14 +2166,14 @@ with respect to the order below:
 
 Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have \emph{the same order type} if 
 there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
-$\forall x\,y\in A, x <_A y \Rightarrow b(x) <_B  b(y)$.
+$\forall x\,y\in A,\, x <_A y \Rightarrow b(x) <_B  b(y)$.
 
 Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short: \emph{ordinals})  are descriptions (\emph{names}) of the equivalence classes.
 For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
 the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
 
 In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work within type theory, 
-we do not identify ordinals as sets of ordinals, but the correspondance between ordinals and sets of ordinals is the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
+we do not identify ordinals as sets of ordinals, but consider the correspondance between ordinals and sets of ordinals as the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
 For instance $\mathbb{O}_\omega=\mathbb{N}$, and $\mathbb{O}_7=\{0,1,2,3,4,5,6\}$.
 
 
@@ -2184,7 +2184,7 @@ leave it to the reader to explore the bibliography.
 
 \section{Ordinal Numbers in Coq}
 
-Two kinds of representation of ordinals are defined herein.
+Two kinds of representation of ordinals are defined in our development.
 
 \begin{itemize}
 \item A ``mathematical'' representation of the set of countable ordinal numbers, afer Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
@@ -2193,16 +2193,17 @@ correctness of a given ordinal notation with respect to Schütte's model obvious
 Please execute the \texttt{Print Assumptions} command in case of doubt.
 \end{itemize}
 
-\section{Countable Ordinals}
+% \section{Countable Ordinals}
 
-Chapter~\ref{chap:schutte} of this document presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
-That formalization is quite complex, technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
+% Chapter~\ref{chap:schutte} of this document presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
+% That formalization is quite complex, technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
 
-Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and associates to any ordinal $\alpha$ the segment $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
+% Please note that Schütte considers the (uncountable) set $\mathbb{O}$ of all countable ordinals. This set is well ordered (which is one of Schütte's axioms), and associates to any ordinal $\alpha$ the segment $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
 
-In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{"\_<\_"}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
-we derive some interesting properties of countable ordinals from these axioms.
-It is interesting to compare proofs of a given property (for instance the associativity of addition) in the computational framework of some ordinal notation, and in the axiomatic model of Schütte.
+% In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{"\_<\_"}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
+% we derive some interesting properties of countable ordinals from these axioms.
+
+It is interesting to compare proofs of a given property (for instance the associativity of addition) both in the computational framework of some ordinal notation, and in the axiomatic model of Schütte.
 
 \section{Ordinal Notations}
 
@@ -2210,7 +2211,7 @@ It is interesting to compare proofs of a given property (for instance the associ
 Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as quite simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{[ordinal] notation systems}). 
 
 Let $\alpha$ be some (countable) ordinal; 
-in \coq{} terms, we call ordinal notation for $\alpha$ a structure composed 
+in \coq{} terms, we call \emph{ordinal notation for $\alpha$} a structure composed 
 of:
 \begin{itemize}
 \item A data type $A$ for representing all ordinals strictly below $\alpha$,
@@ -2219,17 +2220,24 @@ of:
 \end{itemize}
 
 
-Such a structure can be proved correct relatively to another ordinal notation or
+Such a structure can be proved correct relatively to a bigger ordinal notation or
 to Schütte's model.
 
 
 
 
-\subsubsection*{Ordered Types}
 
-The library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
-Coq.Classes.RelationClasses} contains some definitions and facts about binary relations, among them strict orders.
+\subsection{A Class for Ordinal Notations}
 
+The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}.  The correctness of this function is expressed through Stdlib's type 
+\texttt{Datatypes.CompareSpec}.
+
+First, we import the definition of strict orders from
+the library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
+Classes.RelationClasses}, 
+and the inductive specification of a comparison from
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Datatypes.html}{%
+Init.Datatypes}.
 
 \begin{Coqsrc}
 Variable A: Type.
@@ -2238,13 +2246,6 @@ Variable A: Type.
     StrictOrder_Irreflexive :> Irreflexive R ;
     StrictOrder_Transitive :> Transitive R }.
 \end{Coqsrc}
-
-
-
-\subsection{A Class for Ordinal Notations}
-
-The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}.  The correctness of this function is expressed through Stdlib's type 
-\texttt{Datatypes.CompareSpec}.
 
 
 \begin{Coqsrc}
@@ -2272,7 +2273,7 @@ Class ON {A:Type}(lt: relation A)
   }.
 \end{Coqsrc}
 
-The following definitions allow us to make implicit several guessable arguments.
+%The following definitions allow us to make implicit several guessable arguments.
 \label{sect:on-lt-notation}
 \label{sect:on-le-notation}
 \begin{Coqsrc}
@@ -2287,6 +2288,7 @@ Definition ON_compare {A:Type}{lt: relation A}
 Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
+
 Infix "o<" := ON_lt : ON_scope.
 
 Definition ON_le  {A:Type}{lt: relation A}
@@ -2299,14 +2301,14 @@ Infix "o<=" := ON_le : ON_scope.
 
 
 \begin{remark}
-The infix notations \texttt{o<} and \texttt{o<=} were defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.
+The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.
 \end{remark}
 
 
 \subsection{Ordinal Notations and Measures for Proving Termination}
 \label{sect:measure-ON}
 
-The following lemma (together with the type class mechnism) allows us to use simply  measures towards an ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
+The following lemma (together with the type class mechnism) allows us to define termination measures over any ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
 and  \texttt{Coq.Wellfounded.Inclusion}. 
 
 \begin{Coqsrc}
@@ -2331,7 +2333,7 @@ A simple example of application is given in Sect.~\vref{sect:merge-example}.
 
 
 
-The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We have only to apply already proven lemmas about Peano numbers.
+The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We just have to apply already proven lemmas about Peano numbers.
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations/ON_Omega.html}{OrdinalNotations.ON\_Omega}}
@@ -2417,6 +2419,14 @@ Lemma compare_correct alpha beta :
 The Lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} of Standard Library
 helps us to prove that our order \texttt{lt} is well-founded.
 
+\begin{Coqsrc}
+Lemma lt_wf : well_founded lt.
+Proof. 
+  destruct NA, NB; apply wf_disjoint_sum; [apply wf | apply wf0].
+Qed.
+\end{Coqsrc}
+
+Then, we register an instance of \texttt{ON}:
 
 \begin{Coqsrc}
 Global Instance ON_plus : ON lt compare.
@@ -2843,17 +2853,14 @@ Lemma unique_decomposition alpha :
 \subsection{A Proof of Termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.
 
-Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists.
+Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists (example contributed by Pascal Manoury).
 
 \index{Coq!Commands!Function}
 
+\vspace{4pt}
+\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
+
 \begin{Coqsrc}
-(* adapted from Pascal Manoury et al. *)
-
-
-Require Import Coq.Program.Wf List.
-Require Import FunInd Recdef.
-
 Section Merge.
 
   Variable A: Type.
@@ -2875,7 +2882,7 @@ Section Merge.
 
   - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
   - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
-   - auto.
+  - apply wf_measure.
   Defined.
 
 End Merge.
@@ -2889,11 +2896,11 @@ Qed.
 \subsection{Yet Another  Proof of Impossibility}
 \label{omega2-case}
 
-In Sect.~\vref{omega-case}, we proved that there exists no variant towards \texttt{nat}
+In Sect.~\vref{omega-case}, we proved that there exists no variant from \texttt{Hydra} to \texttt{(nat,$<$)}
 (\emph{i.e.} the ordinal $\omega$) for proving the termination of all hydra battles.
 We  prove now that  the ordinal $\omega^2$ is also insufficient for this purpose. 
 
-The proof we are going to develop has exactly the same structure as in Section~\ref{omega-case}.
+The proof we are going to comment has exactly the same structure as in Section~\ref{omega-case}.
  Nevertheless, the proof of technical  lemmas is a little more complex, due to 
  the structure of the lexicographic order on $\mathbb{N}\times\mathbb{N}$. 
 Consider for instance that there exists an infinite number of ordinals  between
@@ -2919,7 +2926,7 @@ Section Impossibility_Proof.
 \end{Coqsrc}
 
 
-Let us follow the same pattern as in Sect.~\ref{omega-case}.
+We  follow the same pattern as in Sect.~\ref{omega-case}.
 First, we define an injection $\iota$ from type \texttt{t} into \texttt{Hydra}, by
  associating to  each ordinal $\omega\times i+ j = (i,j)$ the hydra with $i$ branches of length $2$ and
 $j$ branches of length $1$.
@@ -2932,8 +2939,8 @@ $j$ branches of length $1$.
 \begin{Coqsrc}
  Let iota (p: ON_Omega2.t) := 
      node (hcons_mult (hyd1 head) (fst p)
-                                     (hcons_mult head (snd p) hnil)).
-  \end{Coqsrc}
+                    (hcons_mult head (snd p) hnil)).
+\end{Coqsrc}
 
 For instance, Figure~\vref{fig:essai2} shows the hydra associated to the ordinal 
 $(3,5)$, a.k.a. $\omega\times 3 + 5$.
@@ -2994,7 +3001,7 @@ Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iot
    Let big_h := hyd1 (hyd2 head head).  
 \end{Coqsrc}
  
- In a second step, we build a ``smaller'' hydra.
+ In a second step, we build a ``smaller'' hydra\footnote{With respect to the measure $m$.}.
  
 \begin{Coqsrc}
    Let small_h := iota (m big_h).
@@ -3392,6 +3399,37 @@ It is sometimes useful to compare two ordinal notations with respect to expressi
 
 The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
 
+\begin{figure}[h]
+   \centering
+   \begin{tikzpicture}[very thick, scale=0.6]
+\begin{scope}[color=blue]
+\node (A) at (0,0) {$A$};
+\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
+\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
+\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
+\node (Adots) at (6,0) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red]
+\node (B) at (0,2) {$B$};
+\node(B0) at (2,2)[label=above:$0$]{$\bullet$};
+\node(B1) at (3,2)[label=above:$1$]{$\bullet$};
+\node(B2) at (4,2)[label=above:$2$]{$\bullet$};
+\node (Bdots) at (6,2) {$\ldots$};
+\node (b) at (8,2) [label=above:$\alpha$]{$\bullet$};
+\node (bsucc) at (9,2) [label=above:$\alpha+1$]{$\bullet$};
+\node (Bdots2) at (10,2) {$\ldots$};
+\end{scope}
+\begin{scope}[color=red!50!blue]
+\draw [->,thin] (A0) -- node [auto] {$\iota$} (B0);
+\draw [->,thin] (A1) -- node [auto] {$\iota$} (B1);
+\draw [->,thin] (A2) -- node [auto] {$\iota$} (B2);
+\draw [->,thin] (Adots) -- node [auto] {$\iota$} (Bdots);
+\end{scope}
+\end{tikzpicture}
+   \caption{\textcolor{blue}{$A$} is a sub-segment  of \textcolor{red}{$B$}}
+   \label{fig:subsegment}
+ \end{figure}
+
 If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
 
 
@@ -3427,37 +3465,7 @@ the segment $[0,i)$ of ($t\;j$).
 
 
 
- \begin{figure}[h]
-   \centering
-   \begin{tikzpicture}[very thick, scale=0.6]
-\begin{scope}[color=blue]
-\node (A) at (0,0) {$A$};
-\node(A0) at (2,0)[label=below:$0$]{$\bullet$};
-\node(A1) at (3,0)[label=below:$1$]{$\bullet$};
-\node(A2) at (4,0)[label=below:$2$]{$\bullet$};
-\node (Adots) at (6,0) {$\ldots$};
-\end{scope}
-\begin{scope}[color=red]
-\node (B) at (0,2) {$B$};
-\node(B0) at (2,2)[label=above:$0$]{$\bullet$};
-\node(B1) at (3,2)[label=above:$1$]{$\bullet$};
-\node(B2) at (4,2)[label=above:$2$]{$\bullet$};
-\node (Bdots) at (6,2) {$\ldots$};
-\node (b) at (8,2) [label=above:$b$]{$\bullet$};
-\node (bsucc) at (9,2) [label=above:$b+1$]{$\bullet$};
-\node (Bdots2) at (10,2) {$\ldots$};
-\end{scope}
-\begin{scope}[color=red!50!blue]
-\draw [->,thin] (A0) -- node [auto] {$\iota$} (B0);
-\draw [->,thin] (A1) -- node [auto] {$\iota$} (B1);
-\draw [->,thin] (A2) -- node [auto] {$\iota$} (B2);
-\draw [->,thin] (Adots) -- node [auto] {$\iota$} (Bdots);
-\end{scope}
-\end{tikzpicture}
-   \caption{\textcolor{blue}{$A$} is a sub-segment  of \textcolor{red}{$B$}}
-   \label{fig:subsegment}
- \end{figure}
-
+ 
 
 
 
@@ -3786,18 +3794,10 @@ Inductive T1 : Set  :=
 
 
 
-\subsubsection*{Remark}
-\label{sec:orgheadline66}
-
-
+\paragraph{Remark}
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
-to a hierarchy of ordinal notations. For instance, in~\cite{CantorContrib}, the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
-
-
-\emph{Please look also at the library
-\href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2.html}}.
-
-
+to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
+\noindent
 \begin{Coqsrc}
 Inductive T2 : Set :=
   zero : T2
@@ -3904,11 +3904,8 @@ Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfo
 
 
 \subsubsection{The Ordinal \(\omega^\alpha\), a.k.a. \(\phi_0(\alpha)\)}
-\label{sec:orgheadline70}
-
-We provide also a notation for ordinals of the form $\omega^\alpha$.
-
 \label{sect:notation-phi0}
+We provide also a notation for ordinals of the form $\omega^\alpha$.
 
 \index{Notations!phi0@phi0 (exponential of base omega)}
 
@@ -3931,7 +3928,7 @@ $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emp
 \subsubsection{The Hierarchy of \(\omega\)-towers:}
 \label{sec:orgheadline71}
 
-The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximed by the sequence of $\omega$-towers (see also Sect~\vref{sect:epsilon0-as-limit} ).
+The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximated by the sequence of $\omega$-towers (see also Sect~\vref{sect:epsilon0-as-limit} ).
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}}
@@ -3956,6 +3953,50 @@ For instance, Figure~\ref{fig:tower7} represents  the ordinal returned by the
 The $\omega$-tower of height 7}
 \end{figure}
 
+\subsection{Pretty Printing Ordinals in Cantor Normal Form}
+\label{sect:ppT1}
+
+Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
+If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
+
+\begin{Coqsrc}
+Compute alpha_0.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  = ocons omega 0 (ocons (FS 2) 4 (FS 1))
+     : T1
+\end{Coqanswer}
+
+The following data type defines an abstract syntax for more readable ordinals terms in Cantor normal form:
+
+\label{types:ppT1}
+\index{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
+
+\begin{Coqsrc}
+Inductive ppT1 : Set :=
+    P_fin : nat -> ppT1
+  | P_add : ppT1 -> ppT1 -> ppT1
+  | P_mult : ppT1 -> nat -> ppT1
+  | P_exp : ppT1 -> ppT1 -> ppT1
+  | P_omega : ppT1
+\end{Coqsrc}
+
+The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1} into a human-readable expression. For instance, let us convert the term \texttt{alpha\_0}.
+
+\begin{Coqsrc}
+Compute pp alpha_0.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+     = (omega ^ omega + omega ^ 3 * 5 + 2)%pT1
+     : ppT1
+\end{Coqanswer}
+
+\index{Projects}
+\begin{project}
+Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal terms in Cantor normal form.
+\end{project}
 
 
 \subsection{Comparison between Ordinal Terms}
@@ -4014,7 +4055,7 @@ Definition lt alpha beta : Prop := lt_b alpha beta.
 \end{Coqsrc}
 
 \label{Predicates:lt-T1}
-Please note that this definition of \texttt{lt} makes it easy to write proofs by reflection, as shown by the following exampgles.
+Please note that this definition of \texttt{lt} makes it easy to write proofs by computation, as shown by the following examples.
 
 \begin{Coqsrc}
 Example E1 : lt (ocons omega 56 zero) (tower 3).
@@ -4064,8 +4105,17 @@ Definition lt_eq_lt_dec  :
 
 Note that the order \texttt{lt} is not reflected 
 in the structure (size and/or height) of the terms of \texttt{T1}. 
-For instance the ordinal of Fig \ref{fig:cnf-example} is strictly less
-than the structurally simpler \(\omega^{\omega^\omega}\times 2\).
+
+\begin{Coqsrc}
+Example Ex0:
+  lt (ocons (phi0 (phi0 omega)) 2
+            (ocons (phi0 10) 33
+                   (ocons (phi0 9) 63 zero)))
+     (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
+Proof.
+  reflexivity. 
+Qed.
+\end{Coqsrc}
 
 \subsubsection{A Predicate for Characterizing Normal Forms}
 \label{sect:t1-nf}
@@ -4081,12 +4131,12 @@ Example bad_term  : T1 := ocons 1 1 (ocons omega 2 zero).
 \end{Coqbad}
 
 This term would have been written \(\omega^1\times 2 + \omega^\omega \times 3\) in the usual mathematical notation. We note that the exponents of $\omega$ are not in the right (strictly decreasing) order.
-
-With the help of the order \texttt{lt} on \texttt{T1}, we are now able to characterize
+Nevertheless, with the help of the order \texttt{lt} on \texttt{T1}, we are now able to characterize
 the set of all well-formed ordinal terms:
 
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#nf_b}{Epsilon0.T1}}
 
 \label{Predicates:nf-T1}
@@ -4237,7 +4287,9 @@ In earlier versions of this development, the predicate \texttt{nf} was defined  
 \item Can you still prove a lemma like \texttt{E0\_eq\_iff} ? With the help of an axiom from some module of the standard library ?
 \end{enumerate}
 \end{exercise}
-For upgrading constants and fonctions of \texttt{T1}, we have to prove that 
+
+
+In order to  upgrade constants and fonctions from type \texttt{T1} to \texttt{E0}, we have to prove that 
 the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
@@ -4261,22 +4313,24 @@ Notation "'omega'"  := _Omega : E0_scope.
 
 \subsection{Syntactic Definition of Limit and Successor Ordinals}
 
-Pattern matching and structural recursion allow us to define the notions of successor and limit ordinal with the help of  boolean functions on type \texttt{T1}. 
+Pattern matching and structural recursion allow us to define boolean characterizations  of successor and limit ordinals.
 
- \vspace{4pt}
+
+\vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
 
 \begin{Coqsrc}
-  Fixpoint succb alpha :=
+Fixpoint succb (alpha:T1) : bool :=
   match alpha with
-      zero => false
+    | zero => false
     | ocons zero _ _ => true
     | ocons alpha n beta => succb beta
   end.
 
-Fixpoint limitb alpha :=
+Fixpoint limitb (alpha : T1) : bool :=
   match alpha with
-      zero => false
+    | zero => false
     | ocons zero _ _ => false
     | ocons alpha n zero => true
     | ocons alpha n beta => limitb beta
@@ -4301,7 +4355,7 @@ Compute succb 42.
 \begin{Coqanswer}
   = true
      : bool
-   \end{Coqanswer}
+\end{Coqanswer}
 
 The correctness of these definitions with respect to the mathematical notions of
 limit and successor ordinals is established through several lemmas. For instance,
@@ -4429,51 +4483,15 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-
-\subsection{Pretty Printing Ordinals in Cantor Normal Form}
-\label{sect:ppT1}
-
-Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
-If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
+The function \texttt{succ} is related with addition through the following lemma:
 
 \begin{Coqsrc}
-Compute alpha_0.
+Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
+Proof.
+  induction alpha as [|a IHa n b IHb].
+  (* ... *)
 \end{Coqsrc}
 
-\begin{Coqanswer}
-  = ocons omega 0 (ocons (FS 2) 4 (FS 1))
-     : T1
-\end{Coqanswer}
-
-The following data type defines an abstract syntax for more readable ordinals terms in Cantor normal form:
-
-\label{types:ppT1}
-\index{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
-
-\begin{Coqsrc}
-Inductive ppT1 : Set :=
-    P_fin : nat -> ppT1
-  | P_add : ppT1 -> ppT1 -> ppT1
-  | P_mult : ppT1 -> nat -> ppT1
-  | P_exp : ppT1 -> ppT1 -> ppT1
-  | P_omega : ppT1
-\end{Coqsrc}
-
-The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1} into a human-readable expression. For instance, let us convert the term \texttt{alpha\_0}.
-
-\begin{Coqsrc}
-Compute pp alpha_0.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-     = (omega ^ omega + omega ^ 3 * 5 + 2)%pT1
-     : ppT1
-\end{Coqanswer}
-
-\index{Projects}
-\begin{project}
-Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal terms in Cantor normal form.
-\end{project}
 
 
 \subsubsection{Arithmetic on Type \texttt{E0}}
@@ -4482,6 +4500,10 @@ Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal t
 
 
 \begin{Coqsrc}
+Lemma plus_nf : forall a,  nf a -> forall b, nf b -> nf (a + b).
+Proof.
+ (* ... *)
+
 Instance plus (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
@@ -4498,13 +4520,18 @@ omega + omega
      : E0
 \end{Coqanswer}
 
+\begin{remark}
+In all this development, two representations of ordinals co-exist: ordinal terms (type \texttt{T1}, notation scope \texttt{t1\_scope}, for reasoning on the tree-structure of Cantor normal forms), and ordinal terms \emph{known to be in normal form} (type \texttt{E0}, notation scope \texttt{E0\_scope}). Looking at the contexts displayed by \coq{} prevents you from any risk of confusion.
+\end{remark}
+
+
 \index{Exercises}
  \begin{exercise}
 Let $\alpha$ be an ordinal. We say that $\alpha$ is \emph{infinite} iff the segment $[0,\alpha)$ is an infinite set. 
 \begin{enumerate}
 \item Adapt this definition to the type \texttt{E0}.
 \item Prove that \emph{being infinite} is decidable on type \texttt{E0}.
-\item Prove that $\alpha$ is infinite if and only if for all finite ordinal $i$,
+\item Prove that $\alpha$ is infinite if and only if for any finite ordinal $i$,
 $i+\alpha=\alpha$.
 \end{enumerate}
  \end{exercise}
@@ -4683,7 +4710,7 @@ an accessible term $\alpha$.
 \end{Coqanswer}
 
 Let \texttt{n:nat} and \texttt{beta:T1} such that \texttt{ocons alpha n beta} is in normal form. 
-We prove first that \texttt{beta} is accessible,  which allows us to by well-founded induction on \texttt{beta}, 
+We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
 and natural induction on \texttt{n}, that (\texttt{ocons alpha n beta}) is accessible.
 The proof, quite long, can be consulted in \url{../theories/html/hydras.Epsilon0.T1.html} 
 

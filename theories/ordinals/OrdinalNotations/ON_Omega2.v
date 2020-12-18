@@ -490,8 +490,6 @@ Proof.
   now  apply compare_Eq_eq.
 Qed.
 
-(* *Example adapted from Pascal Manoury et al. *)
-
 
 Require Import List.
 
@@ -516,7 +514,7 @@ Section Merge.
   
   - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
   - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
-  - auto.
+  - apply wf_measure. 
   Defined.
 
 End Merge.
