@@ -262,15 +262,15 @@ Proof.
               - destruct (Hrec  (ocons alpha2_1 n1 alpha2_2)) ; trivial.
                now apply head_lt.
                 discriminate.
-              - apply lt_phi0_phi0R.
+              - apply nf_helper_phi0R.
                 apply T1.lt_trans with (ocons alpha2_1 n1 alpha2_2).
                 + destruct (Hrec (ocons alpha2_1 n1 alpha2_2)) ; trivial.
                   apply head_lt; auto. 
                   *  discriminate.
                   * tauto.
              +  
-                apply lt_phi0_phi0.
-                apply lt_phi0_intro with n;auto.
+                apply nf_helper_phi0.
+                apply nf_helper_intro with n;auto.
             }
             split.
           
@@ -409,7 +409,7 @@ Proof.
            ++ apply LT2; trivial.
               apply nf_intro; trivial.
               now apply nf_canonS.
-              apply lt_phi0_phi0R.
+              apply nf_helper_phi0R.
               apply canonS_lt.
               eapply nf_coeff_irrelevance;eauto. 
               discriminate. 
@@ -424,7 +424,7 @@ Proof.
              {
                apply nf_intro; trivial.
                apply nf_canonS; trivial.
-               apply lt_phi0_phi0R.
+               apply nf_helper_phi0R.
                apply canonS_lt.
                eapply nf_coeff_irrelevance;eauto.     
                discriminate.  
@@ -443,8 +443,8 @@ Proof.
                --  split.
                    ++ eapply nf_inv2, Hbeta.
                    ++ split. 
-                      ** apply lt_phi0_phi0.     
-                      apply lt_phi0_intro with n0;auto with T1.
+                      ** apply nf_helper_phi0.     
+                      apply nf_helper_intro with n0;auto with T1.
                       ** eapply nf_coeff_irrelevance;eauto.     
              }
              subst;
@@ -461,8 +461,8 @@ Proof.
                - split.
                  + eapply nf_inv2, Hbeta. 
                  + split. 
-                 * apply lt_phi0_phi0.    
-                  apply lt_phi0_intro with n;auto with T1.
+                 * apply nf_helper_phi0.    
+                  apply nf_helper_intro with n;auto with T1.
                  * eapply nf_coeff_irrelevance;eauto.   
              }
              destruct H4;  exists x; rewrite canonSSn. 
@@ -470,7 +470,7 @@ Proof.
              { 
                apply nf_intro; auto with T1.
                eauto with T1.
-               apply lt_phi0_phi0R.   
+               apply nf_helper_phi0R.   
                apply canonS_lt.
                now apply nf_phi0. 
                intro; subst; discriminate.
@@ -491,11 +491,11 @@ Proof.
              { apply nf_intro;  trivial.
                eauto with T1.
             apply nf_canonS; trivial; eauto with T1.
-            apply lt_phi0_phi0R.   
+            apply nf_helper_phi0R.   
             apply T1.lt_trans with lambda2.
             apply canonS_lt; eauto with T1.
-            apply lt_phi0_phi0.
-            apply lt_phi0_intro with n; eauto with T1.
+            apply nf_helper_phi0.
+            apply nf_helper_intro with n; eauto with T1.
           }
           auto.
           auto.
@@ -504,11 +504,11 @@ Proof.
              { apply nf_intro. 
                - eauto with T1.
                - apply nf_canonS; eauto with T1.
-               - apply lt_phi0_phi0R.   
+               - apply nf_helper_phi0R.   
                  apply T1.lt_trans with lambda2.
                  apply canonS_lt; eauto with T1.
-                 apply lt_phi0_phi0.
-                 apply lt_phi0_intro with n; eauto with T1.
+                 apply nf_helper_phi0.
+                 apply nf_helper_intro with n; eauto with T1.
              }
              all: auto. 
       --  subst; assert ({i: nat |  beta2 t1< (canonS lambda2 i)})%t1.
@@ -523,11 +523,11 @@ Proof.
         apply nf_intro. 
         eauto with T1.
         apply nf_canonS; eauto with T1.
-        apply lt_phi0_phi0R.   
+        apply nf_helper_phi0R.   
         apply T1.lt_trans with lambda2.
         apply canonS_lt; eauto with T1.
-        apply lt_phi0_phi0.
-        apply lt_phi0_intro with n; eauto with T1.
+        apply nf_helper_phi0.
+        apply nf_helper_intro with n; eauto with T1.
       }
       all: auto. 
   -   destruct s as [t [Ht Ht']]; subst lambda.
@@ -636,18 +636,18 @@ Proof.
        * apply  LT4 ; trivial.
          apply nf_intro ; trivial. 
          apply nf_canonS ; eauto with T1.
-         apply lt_phi0_phi0R ; trivial. 
+         apply nf_helper_phi0R ; trivial. 
          apply T1.lt_trans with alpha2 ; trivial. 
          apply canonS_lt ; eauto with T1.
-         apply lt_phi0_phi0 ; eauto with T1.
-         apply lt_phi0_intro with n ; eauto with T1.
+         apply nf_helper_phi0 ; eauto with T1.
+         apply nf_helper_intro with n ; eauto with T1.
          apply nf_intro ; trivial. 
          apply nf_canonS ; eauto with T1.
-         apply lt_phi0_phi0R ; trivial. 
+         apply nf_helper_phi0R ; trivial. 
          apply T1.lt_trans with alpha2; trivial. 
          apply canonS_lt ; eauto with T1.
-         apply lt_phi0_phi0 ; eauto with T1.
-         apply lt_phi0_intro with n ; eauto with T1.
+         apply nf_helper_phi0 ; eauto with T1.
+         apply nf_helper_intro with n ; eauto with T1.
          apply Hrec ; eauto with T1.
          apply tail_lt_ocons ; eauto with T1.
 Qed.

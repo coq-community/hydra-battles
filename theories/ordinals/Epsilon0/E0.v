@@ -567,7 +567,7 @@ Proof.
   destruct H1.
   rewrite phi0_rw in H1.
   apply nf_intro; auto.
-  now apply lt_phi0_phi0R. 
+  now apply nf_helper_phi0R. 
   red.  
   apply succ_lt_limit.
   rewrite phi0_rw.

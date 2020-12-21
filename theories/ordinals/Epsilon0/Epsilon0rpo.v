@@ -222,274 +222,274 @@ Qed.
 
                        
 Theorem lt_inc_rpo_0 : forall n, 
-                           forall o' o, (T1_size o + T1_size o' <= n)%nat->
-                              lt o  o' -> nf o -> nf o' -> 
-                                  rpo (T1_2_term o) (T1_2_term o').
+    forall o' o, (T1_size o + T1_size o' <= n)%nat->
+                 lt o  o' -> nf o -> nf o' -> 
+                 rpo (T1_2_term o) (T1_2_term o').
 Proof.
- induction n.
- - destruct o'.
- +   intros; destruct (not_lt_zero H0). 
- + 
- destruct o.
-  *  simpl.
- inversion 1.
-  *  simpl;inversion 1.
- -  intros.
-    destruct o, o'.
-    + destruct (lt_irrefl H0).
-    +  simpl. apply Top_gt.
-       simpl.       trivial.
-       inversion 1.        
-   + 
-     destruct (not_lt_zero H0).
- + 
- destruct (lt_inv H0).
- simpl; intros; apply Top_eq_lex.
- simpl;trivial.
- left.
- apply IHn.
-(* subst o;subst o'. *)
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
- simpl;
- auto with arith rpo.
- abstract lia.
- auto.
- auto.
- eauto with T1.
- eauto with T1. 
+  induction n.
+  - destruct o'.
+    +   intros; destruct (not_lt_zero H0). 
+    + 
+      destruct o.
+      *  simpl.
+         inversion 1.
+      *  simpl;inversion 1.
+  -  intros.
+     destruct o, o'.
+     + destruct (lt_irrefl H0).
+     +  simpl. apply Top_gt.
+        simpl.       trivial.
+        inversion 1.        
+     + 
+       destruct (not_lt_zero H0).
+     + 
+       destruct (lt_inv H0).
+       simpl; intros; apply Top_eq_lex.
+       simpl;trivial.
+       left.
+       apply IHn.
+       (* subst o;subst o'. *)
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       simpl;
+         auto with arith rpo.
+       abstract lia.
+       auto.
+       auto.
+       eauto with T1.
+       eauto with T1. 
 
- simpl;auto with rpo.
- inversion_clear 1.
- subst s'.
- change (rpo (T1_2_term o1) (T1_2_term (ocons o'1 n1 o'2))).
- apply IHn;auto with rpo.
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
- auto with arith rpo.
- auto with rpo.
- eauto with T1 rpo.
- destruct H5 as [|[|H8]].
- subst s'.
- apply nat_lt_cons.
- subst s'.
- change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
- apply IHn;auto with rpo.
+       simpl;auto with rpo.
+       inversion_clear 1.
+       subst s'.
+       change (rpo (T1_2_term o1) (T1_2_term (ocons o'1 n1 o'2))).
+       apply IHn;auto with rpo.
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       auto with arith rpo.
+       auto with rpo.
+       eauto with T1 rpo.
+       destruct H5 as [|[|H8]].
+       subst s'.
+       apply nat_lt_cons.
+       subst s'.
+       change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
+       apply IHn;auto with rpo.
 
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
- auto with arith rpo.
- auto with rpo.
- eauto with rpo.
- eauto with T1.
- case H8.
- intros.
- simpl;apply Top_eq_lex.
- decompose [or and] H3.
- auto with rpo.
- subst. 
-   auto.
- decompose [or and] H3.
- subst. 
-constructor 2.
- constructor 1.
- apply nat_2_term_mono.
- auto.
- auto.
- subst.
-    decompose [or and] H3.
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       auto with arith rpo.
+       auto with rpo.
+       eauto with rpo.
+       eauto with T1.
+       case H8.
+       intros.
+       simpl;apply Top_eq_lex.
+       decompose [or and] H3.
+       auto with rpo.
+       subst. 
+       auto.
+       decompose [or and] H3.
+       subst. 
+       constructor 2.
+       constructor 1.
+       apply nat_2_term_mono.
+       auto.
+       auto.
+       subst.
+       decompose [or and] H3.
 
-    destruct (Nat.lt_irrefl _ H6).
- subst. 
+       destruct (Nat.lt_irrefl _ H6).
+       subst. 
 
-apply List_eq.
-apply List_eq.
-apply List_gt.
- eapply IHn; eauto. 
-simpl in H.
-ring_simplify in H.
- clear IHn. 
- simpl in H; abstract lia. 
- eauto with T1.
- eauto with T1.
- trivial.
-decompose [or and] H3.
-clear H3. subst.  
+       apply List_eq.
+       apply List_eq.
+       apply List_gt.
+       eapply IHn; eauto. 
+       simpl in H.
+       ring_simplify in H.
+       clear IHn. 
+       simpl in H; abstract lia. 
+       eauto with T1.
+       eauto with T1.
+       trivial.
+       decompose [or and] H3.
+       clear H3. subst.  
 
- inversion_clear 1.
- subst s'.
- change (rpo (T1_2_term o'1) (T1_2_term (ocons o'1 n1 o'2))).
- apply IHn;auto.
+       inversion_clear 1.
+       subst s'.
+       change (rpo (T1_2_term o'1) (T1_2_term (ocons o'1 n1 o'2))).
+       apply IHn;auto.
 
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) +
-                            T1_size (ocons o'1 n1 o'2))%nat.
- 
- auto with arith rpo.
- auto with rpo.
- apply head_lt_ocons.
-  eauto with T1.
- destruct H4 as [|[|H8]].
- subst s'.
- apply nat_lt_cons.
- subst s'.
- change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
- apply IHn;auto with rpo.
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) +
+                                  T1_size (ocons o'1 n1 o'2))%nat.
+       
+       auto with arith rpo.
+       auto with rpo.
+       apply head_lt_ocons.
+       eauto with T1.
+       destruct H4 as [|[|H8]].
+       subst s'.
+       apply nat_lt_cons.
+       subst s'.
+       change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
+       apply IHn;auto with rpo.
 
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
- auto with arith rpo.
- auto with rpo.
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       auto with arith rpo.
+       auto with rpo.
 
- apply lt_le_trans with (ocons o'1 0 zero).
-
-
-
- apply lt_phi0_phi0.
-
- eapply lt_phi0_intro. 
- eauto. 
-
-
- auto with T1 rpo.
- auto with T1 rpo.
- apply lt_le_incl.
- apply LT3.
- eauto with T1.
- eauto with T1.
- eauto with arith.
-  eauto with T1. 
-  inversion H8. 
- subst o'1 n1.
- clear H3.
-
- inversion_clear 1.
- subst. 
-   change (rpo (T1_2_term o1) (T1_2_term (ocons o1 n0 o'2))).
-  apply IHn; auto. 
- apply  lt_n_Sm_le .
- apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o1 n0 o'2))%nat.
- auto with arith rpo.
- auto with rpo.
-apply head_lt_ocons. 
-eauto with T1 rpo.
-inversion_clear H4. subst s'.
-
-apply nat_lt_cons.
-inversion_clear H3.
-subst s'.
+       apply lt_le_trans with (ocons o'1 0 zero).
 
 
 
-apply Eps0_rpo.rpo_trans with (T1_2_term o'2).
+       apply nf_helper_phi0.
 
-apply Subterm with (T1_2_term o'2).
-simpl. 
-right. 
-right. 
-now left.
+       eapply nf_helper_intro. 
+       eauto. 
 
-apply Eq.
-apply IHn; eauto with T1 rpo.
-simpl in H. 
-clear IHn. 
-abstract lia. 
-inversion H4. 
+
+       auto with T1 rpo.
+       auto with T1 rpo.
+       apply lt_le_incl.
+       apply LT3.
+       eauto with T1.
+       eauto with T1.
+       eauto with arith.
+       eauto with T1. 
+       inversion H8. 
+       subst o'1 n1.
+       clear H3.
+
+       inversion_clear 1.
+       subst. 
+       change (rpo (T1_2_term o1) (T1_2_term (ocons o1 n0 o'2))).
+       apply IHn; auto. 
+       apply  lt_n_Sm_le .
+       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o1 n0 o'2))%nat.
+       auto with arith rpo.
+       auto with rpo.
+       apply head_lt_ocons. 
+       eauto with T1 rpo.
+       inversion_clear H4. subst s'.
+
+       apply nat_lt_cons.
+       inversion_clear H3.
+       subst s'.
+
+
+
+       apply Eps0_rpo.rpo_trans with (T1_2_term o'2).
+
+       apply Subterm with (T1_2_term o'2).
+       simpl. 
+       right. 
+       right. 
+       now left.
+
+       apply Eq.
+       apply IHn; eauto with T1 rpo.
+       simpl in H. 
+       clear IHn. 
+       abstract lia. 
+       inversion H4. 
 Qed. 
 
 
- 
+
 Remark R1 : Acc P.prec nat_0. 
- split.
- destruct y; try contradiction.
+  split.
+  destruct y; try contradiction.
 Qed.
 
 Hint Resolve R1 : rpo.
 
 Remark R2 : Acc P.prec ord_zero. 
- split.
- destruct y; try contradiction; auto with rpo.
+  split.
+  destruct y; try contradiction; auto with rpo.
 Qed.
 
 Hint Resolve R2 : rpo.
 
 Remark R3 : Acc P.prec nat_S.
- split.
- destruct y; try contradiction;auto with rpo.
+  split.
+  destruct y; try contradiction;auto with rpo.
 Qed.
 
 
 Hint Resolve R3 : rpo.
 
 Remark R4 : Acc P.prec ord_cons.
- split.
- destruct y; try contradiction;auto with rpo.
+  split.
+  destruct y; try contradiction;auto with rpo.
 Qed.
 
 Hint Resolve R4 : rpo.
 
 Theorem well_founded_rpo : well_founded rpo.
 Proof.
- apply wf_rpo.
- red.
- destruct a;auto with rpo.
+  apply wf_rpo.
+  red.
+  destruct a;auto with rpo.
 Qed.
 
 Section  well_founded.
- 
+  
   Let R := restrict  nf lt.
 
   Hint Unfold restrict R : rpo.
 
- Lemma R_inc_rpo : forall o o', R o o' -> rpo (T1_2_term o) (T1_2_term o').
- Proof.
-  intros o o' (H,(H1,H2)).
-  eapply lt_inc_rpo_0;auto.
- Qed. 
+  Lemma R_inc_rpo : forall o o', R o o' -> rpo (T1_2_term o) (T1_2_term o').
+  Proof.
+    intros o o' (H,(H1,H2)).
+    eapply lt_inc_rpo_0;auto.
+  Qed. 
 
- 
- Lemma nf_Wf : well_founded_restriction _ nf lt.
-Proof.
- unfold well_founded_restriction.
- intros.
- unfold restrict.
- generalize (Acc_inverse_image _ _ rpo T1_2_term a (well_founded_rpo (T1_2_term a))).
-  intro.
- eapply  Acc_incl  with  (fun x y : T1 => rpo (T1_2_term x) (T1_2_term y)). 
- red.
- apply R_inc_rpo.
- auto.
-Qed.
-
-
-(** For compatibility with T1 *)
-Lemma nf_Acc : forall alpha, nf alpha -> Acc LT alpha.
-Proof nf_Wf.
+  
+  Lemma nf_Wf : well_founded_restriction _ nf lt.
+  Proof.
+    unfold well_founded_restriction.
+    intros.
+    unfold restrict.
+    generalize (Acc_inverse_image _ _ rpo T1_2_term a (well_founded_rpo (T1_2_term a))).
+    intro.
+    eapply  Acc_incl  with  (fun x y : T1 => rpo (T1_2_term x) (T1_2_term y)). 
+    red.
+    apply R_inc_rpo.
+    auto.
+  Qed.
 
 
+  (** For compatibility with T1 *)
+  Lemma nf_Acc : forall alpha, nf alpha -> Acc LT alpha.
+  Proof nf_Wf.
 
- End well_founded.
+
+
+End well_founded.
 
 
 Definition transfinite_recursor_lt :
- forall (P:T1 -> Type),
-   (forall x:T1, nf x -> 
-                   (forall y:T1, nf y ->  lt y  x -> P y) -> P x) ->
+  forall (P:T1 -> Type),
+    (forall x:T1, nf x -> 
+                  (forall y:T1, nf y ->  lt y  x -> P y) -> P x) ->
     forall a, nf a -> P a.
 Proof.
- intros; eapply well_founded_restriction_rect; eauto;
- eexact nf_Wf;auto.
+  intros; eapply well_founded_restriction_rect; eauto;
+    eexact nf_Wf;auto.
 Defined.
 
 Definition transfinite_recursor :
- forall (P:T1 -> Type),
-   (forall x:T1, nf x -> 
-                   (forall y:T1, y  t1< x -> P y) -> P x) ->
+  forall (P:T1 -> Type),
+    (forall x:T1, nf x -> 
+                  (forall y:T1, y  t1< x -> P y) -> P x) ->
     forall a, nf a -> P a.
 Proof.
- intros; apply transfinite_recursor_lt; auto.
- intros;  apply X;auto.
- destruct 1 as [H1 [H2 H3]];auto.
+  intros; apply transfinite_recursor_lt; auto.
+  intros;  apply X;auto.
+  destruct 1 as [H1 [H2 H3]];auto.
 Defined.
 
 

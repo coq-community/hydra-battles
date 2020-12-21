@@ -185,8 +185,8 @@ Proof with eauto with T1.
            apply T1.head_lt_ocons; auto.
       +  apply lt_trans with (inject (phi0 beta1)). 
          *   eapply IHbeta2 ...
-             apply T1.lt_phi0_phi0.
-             apply T1.lt_phi0_intro with n; auto. 
+             apply T1.nf_helper_phi0.
+             apply T1.nf_helper_intro with n; auto. 
              apply  T1.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
              apply T1.le_phi0 ; eauto with T1.
              eapply T1.lt_trans ...
@@ -200,8 +200,8 @@ Proof with eauto with T1.
         subst;  apply coeff_lt. 
         + replace  (AP._phi0 (inject gamma1)) with (inject (phi0 gamma1)).
           *  apply IHbeta2.
-             apply T1.lt_phi0_phi0.
-             eapply T1.lt_phi0_intro; eauto.
+             apply T1.nf_helper_phi0.
+             eapply T1.nf_helper_intro; eauto.
              apply T1.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
              destruct n0.
              apply T1.le_tail ...

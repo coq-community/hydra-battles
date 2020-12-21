@@ -4656,8 +4656,7 @@ term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a st
 \end{Coqsrc}
 
 The following lemma is an application of the strict inequality 
-\showmath{\alpha < \omega ^\alpha}. If \showmath{\omega^\alpha} is accessible,
-then \showmath{\alpha} is \emph{a fortiori} accessible.
+\showmath{\alpha < \omega ^\alpha}. If \showmath{\alpha} is strongly accessible, then, by definition, \showmath{\omega^\alpha} is accessible, thus \showmath{\alpha} is \emph{a fortiori} accessible.
 
 \begin{Coqsrc}
  Lemma Acc_strong_stronger : forall alpha, 
@@ -4691,7 +4690,7 @@ Lemma Acc_implies_Acc_strong :
 
 
 The proof is structured as an induction on \showmath{\alpha}'s accessibility. Let us consider
-an accessible term $\alpha$.
+any  accessible term $\alpha$.
 
 
 
@@ -4709,10 +4708,10 @@ an accessible term $\alpha$.
    nf (ocons alpha n beta) -> Acc LT (ocons alpha n beta)
 \end{Coqanswer}
 
-Let \texttt{n:nat} and \texttt{beta:T1} such that \texttt{ocons alpha n beta} is in normal form. 
+Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{ocons alpha n beta}) is in normal form. 
 We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
 and natural induction on \texttt{n}, that (\texttt{ocons alpha n beta}) is accessible.
-The proof, quite long, can be consulted in \url{../theories/html/hydras.Epsilon0.T1.html} 
+The proof, quite long, can be consulted in \href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}.
 
 \paragraph{Accessibility of any well-formed ordinal term}
 \label{sec:orgheadline80}
@@ -4820,6 +4819,11 @@ A better integration of both notions should simplify the development on ordinals
 
 \section{A Variant for Hydra Battles}
 
+In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
+In order to make such a variant easy to define (for instance by a structural recursion), we introduce a variant of addition, which, contrary to
+$+$, is commutative and strictly monotonous in both of its arguments. This last property makes it possible to prove that our function is 
+truly a variant for hydra battles (in Sect.~\vref{sect:variant-decr}).
+
 \subsection{Natural Sum (a.k.a. Hessenberg's  Sum)}
 \label{sec:orgheadline87}
 \label{hydra-variant}
@@ -4837,9 +4841,7 @@ Thus we called \texttt{oplus} the associated \emph{Coq} function.
 %\index{Functions!oplus @ oplus (Hessenberg commutative sum)}
 
 The definition of \texttt{oplus} is recursive in both of its 
-arguments, which makes a structural recursive definition a little 
-complex.
-We used the same pattern as for the \texttt{merge} function on lists of library
+arguments and uses  the same pattern as for the \texttt{merge} function on lists of library
 \texttt{Coq.Sorting.Mergesort}.
 
 \begin{enumerate}
@@ -4899,14 +4901,11 @@ Thus, \texttt{oplus}'s definition is accepted by \coq{} as a structurally recurs
 \emph{Coq}'s constraints on recursive definitions result in 
 the quite  complex form of \texttt{oplus}'s definition.
 Proofs of properties of this function can be simpler if we
- \emph{derive} rewriting lemmas that will help to simplify 
-expressions of the form (\texttt{oplus $a$ $ b$}).
+ derive a few  rewriting lemmas that will help to simplify 
+expressions of the form (\texttt{oplus $\alpha$ $\beta$}).
 
 A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
-definition. They can be proved almost immediately, using \texttt{cbn} 
-and \texttt{reflexivity} tactics.
-
-
+definition. They can be proved almost immediately.
 
 \begin{Coqsrc}
 Lemma oplus_alpha_0 (alpha : T1) : alpha o+ zero = alpha.
@@ -5025,14 +5024,11 @@ $\alpha \oplus \beta$. This result can be proved by structural induction on $\ga
 
 
 \begin{Coqsrc}
-Lemma lt_phi0_oplus : forall gamma alpha beta,
-                        lt_phi0 alpha gamma ->
-                        lt_phi0 beta gamma ->
-                        lt_phi0 (alpha o+ beta) gamma.
-
-Proof with auto.
-  induction gamma; destruct alpha, beta.  
-(* ... *)
+Lemma oplus_bounded_phi0 alpha beta gamma :
+  nf alpha -> nf beta -> nf gamma ->
+  lt alpha (phi0 gamma) ->
+  lt beta (phi0 gamma) ->
+  lt (alpha o+ beta) (phi0 gamma).
 \end{Coqsrc}
 
 \subsubsection{Commutativity, Associativity}
@@ -5159,6 +5155,8 @@ Proof with auto with T1.
 
 For proving the termination of all hydra battles, we have to prove that
 \texttt{m} is a variant. First, a few technical lemmas follow the decomposition of \texttt{round} into several relations. Then the lemma \texttt{round\_decr} gathers all the cases.
+
+\label{sect:variant-decr}
 
 \begin{Coqsrc}
 Lemma S0_decr :

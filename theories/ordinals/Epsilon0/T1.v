@@ -447,17 +447,20 @@ Ltac nf_decomp H :=
      | nf (ocons ?t1 ?n ?t2) => assert (nf0 := nf_inv1 H); assert(nf1 := nf_inv2 H)
      end.
    
+(**  lt alpha (phi0 beta)  *)
+(** Should be deprecated *)
 
-Inductive lt_phi0 : T1 -> T1 -> Prop :=
-| lt_phi0_z : forall alpha, lt_phi0 zero alpha
-| lt_phi0_c : forall alpha alpha' n' beta',
+
+Inductive nf_helper : T1 -> T1 -> Prop :=
+| nf_helper_z : forall alpha, nf_helper zero alpha
+| nf_helper_c : forall alpha alpha' n' beta',
                 lt alpha' alpha -> 
-                lt_phi0 (ocons alpha' n' beta') alpha.
+                nf_helper (ocons alpha' n' beta') alpha.
 
 
 
 
-Hint Constructors lt_phi0 : T1.
+Hint Constructors nf_helper : T1.
 
 
 
@@ -879,7 +882,7 @@ Qed.
 
 Arguments le_inv [a n b a' n' b'] _.
 
-Lemma lt_phi0_inv :
+Lemma nf_helper_inv :
   forall a n b a', lt (ocons a n b) (phi0 a') -> lt a a'.
 Proof. 
   intros a n b a' H; destruct (lt_inv H); auto. 
@@ -1045,12 +1048,12 @@ Proof.
  - intros n0 a H; apply head_lt; eapply nf_inv3; eauto.  
 Qed.
 
-Lemma lt_phi0_inv1 : forall a n b a', lt_phi0 (ocons a n b) a' -> lt a  a'.
+Lemma nf_helper_inv1 : forall a n b a', nf_helper (ocons a n b) a' -> lt a  a'.
 Proof. now inversion 1. Qed.
 
 Lemma nf_intro : forall a n b, nf a -> 
                                nf b ->
-                               lt_phi0 b a -> 
+                               nf_helper b a -> 
                                nf (ocons a n b).
 Proof.  destruct 3;  eauto with T1. Qed. 
 
@@ -1062,12 +1065,12 @@ Proof.
   destruct b.
   - eauto with T1.
   - intros H H0 H1; apply ocons_nf; auto.
-    now apply lt_phi0_inv in H1.
+    now apply nf_helper_inv in H1.
 Qed.
 
 
-Lemma lt_phi0_intro : forall a n b, nf (ocons a n b) -> 
-                                    lt_phi0 b a.
+Lemma nf_helper_intro : forall a n b, nf (ocons a n b) -> 
+                                    nf_helper b a.
 Proof.
   intros a n b H; unfold nf in H; cbn in H.
   destruct b.
@@ -1083,29 +1086,29 @@ Proof.
  intros; apply nf_intro.
  -  eapply nf_inv1;eauto.
  -  eapply nf_inv2;eauto.
- -  eapply lt_phi0_intro;eauto.
+ -  eapply nf_helper_intro;eauto.
 Qed.
 
-Lemma lt_phi0_phi0 : forall a b, lt_phi0 b a ->
+Lemma nf_helper_phi0 : forall a b, nf_helper b a ->
                                  lt b ( phi0 a).
 Proof.
   induction 1; auto with T1. 
 Qed.
 
-Lemma lt_phi0_phi0R : forall a b, lt b  (phi0 a) -> lt_phi0 b a.
+Lemma nf_helper_phi0R : forall a b, lt b  (phi0 a) -> nf_helper b a.
 Proof.
   induction b.
   - constructor.
-  - intro H; apply lt_phi0_inv in H; constructor;auto. 
+  - intro H; apply nf_helper_inv in H; constructor;auto. 
 Qed.
 
-Lemma lt_phi0_iff :
+Lemma nf_helper_iff :
   forall a b, nf a -> nf b ->
-              (lt_phi0 b a <-> forall n, nf(ocons a n b)).
+              (nf_helper b a <-> forall n, nf(ocons a n b)).
 Proof.
   split.
   - intros; now apply nf_intro.
-  - intro; now apply lt_phi0_intro with 0.
+  - intro; now apply nf_helper_intro with 0.
 Qed.
 
 Lemma nf_tower : forall n, nf (tower n).
@@ -1119,7 +1122,7 @@ Definition nf_rect : forall P : T1 -> Type,
     (forall n: nat,  P (ocons zero n zero)) ->
     (forall a n b n' b', nf (ocons a n b) -> 
                          P (ocons a n b)-> 
-                         lt_phi0 b' (ocons a n b) -> 
+                         nf_helper b' (ocons a n b) -> 
                          nf b' -> 
                          P b' ->
                          P (ocons (ocons a n b) n' b')) ->
@@ -1132,7 +1135,7 @@ Proof.
      +  intros c n0 c0 IHc0 H2; apply Hcons.
         *  eapply nf_inv1;eauto.
         *  apply IHc0; eapply nf_inv1; eauto.
-        *  eapply lt_phi0_intro;  eauto.
+        *  eapply nf_helper_intro;  eauto.
         *  eapply nf_inv2;eauto.
         * apply IHa2; eapply nf_inv2;eauto.
 Defined.
@@ -1640,7 +1643,7 @@ Module Direct_proof.
     b is accessible *)  
 
       assert(beta_Acc: 
-               forall beta, lt_phi0 beta alpha -> nf alpha -> nf beta 
+               forall beta, nf_helper beta alpha -> nf alpha -> nf beta 
                             -> Acc LT beta).
       
       (** Proof of beta_Acc
@@ -1650,7 +1653,7 @@ Module Direct_proof.
    LT alpha' alpha , so the inductive hypothesis IHalpha can be used 
        *)
       {  intros b H H' H'';  assert (H0 : LT b (phi0 alpha)).
-         { repeat split;auto; apply lt_phi0_phi0; auto. }
+         { repeat split;auto; apply nf_helper_phi0; auto. }
          generalize H0; pattern b; case b.
          - intro;apply Acc_zero.
          -  intros t n t0 H1; case H1;  destruct 2;
@@ -1679,7 +1682,7 @@ Module Direct_proof.
       -    (** n=0 let's use b's accessibility for doing an induction on b *)
         intros b Hb; assert (H : Acc LT  b).
         {  apply beta_Acc.
-           -  eapply lt_phi0_intro; eauto.
+           -  eapply nf_helper_intro; eauto.
            -  eapply nf_inv1;eauto.
            -  eapply nf_inv2;eauto.
         }
@@ -1726,7 +1729,7 @@ Module Direct_proof.
               *  subst n0 c;apply H1; auto.
                  case H3;auto.
           - apply beta_Acc. 
-            + eapply lt_phi0_intro;eauto.
+            + eapply nf_helper_intro;eauto.
             + eapply nf_inv1;eauto.
             + eapply nf_inv2;eauto.
         }
@@ -1787,8 +1790,8 @@ Ltac transfinite_induction a :=
 
 (** **  Properties of successor *)
 
-Lemma succ_lt_phi0 : forall c a n b, lt_phi0 c (ocons a n b) -> 
-                                     lt_phi0 (succ c) (ocons a n b).
+Lemma succ_nf_helper : forall c a n b, nf_helper c (ocons a n b) -> 
+                                     nf_helper (succ c) (ocons a n b).
 Proof.
   induction c.
   -  simpl; repeat constructor.
@@ -1806,7 +1809,7 @@ Proof.
      + intros c n0 c0 H H0;  apply nf_intro.
        * eapply nf_inv1; eauto.
        *  apply IHalpha2; eapply nf_inv2 ; eauto.
-       * apply succ_lt_phi0; eapply lt_phi0_intro; eauto.
+       * apply succ_nf_helper; eapply nf_helper_intro; eauto.
 Qed.
 
 (** **  properties of addition *)
@@ -1910,10 +1913,10 @@ Proof.
        *  destruct 1.
           { rewrite (plus_ocons_ocons_rw1 n t n0 c1_2 l); auto. }
           subst c1_1; rewrite (plus_ocons_ocons_rw2 H1 H5).
-          apply lt_phi0_inv  in H6.
+          apply nf_helper_inv  in H6.
           auto with T1.
        *  intro H7; rewrite plus_ocons_ocons_rw3;auto.
-          apply lt_phi0_inv  in H3; auto with T1. 
+          apply nf_helper_inv  in H3; auto with T1. 
 Qed.
 
 Lemma ap_plusR : forall c, nf c -> c <> zero ->
@@ -1978,17 +1981,17 @@ Proof.
         * eapply nf_inv1;eauto with T1.
         * nf_decomp H1; nf_decomp H2.
           eapply Cx with b1; trivial.
-          apply lt_phi0_inv in H;auto with T1.
-          apply lt_phi0_phi0. 
-          eapply lt_phi0_intro with n; trivial. 
-          apply lt_phi0_phi0. 
-          eapply lt_phi0_intro with n0; trivial. 
+          apply nf_helper_inv in H;auto with T1.
+          apply nf_helper_phi0. 
+          eapply nf_helper_intro with n; trivial. 
+          apply nf_helper_phi0. 
+          eapply nf_helper_intro with n0; trivial. 
           apply ocons_nf; auto.
         *  nf_decomp H1; nf_decomp H2.
-           apply lt_phi0_phi0R; apply ap_plus; trivial.
+           apply nf_helper_phi0R; apply ap_plus; trivial.
            constructor.
-           apply lt_phi0_phi0.
-           eapply lt_phi0_intro; trivial. 
+           apply nf_helper_phi0.
+           eapply nf_helper_intro; trivial. 
            auto with T1.
            Unshelve. 
            exact 0.
@@ -2756,11 +2759,11 @@ Proof.
   split.
   intros H.
   repeat split; eauto with T1.
-  apply    lt_phi0_phi0.
-  eapply lt_phi0_intro; eauto.
+  apply    nf_helper_phi0.
+  eapply nf_helper_intro; eauto.
   intro H; decompose [and] H.
   apply nf_intro; eauto.
-  apply lt_phi0_phi0R. destruct H3; tauto.
+  apply nf_helper_phi0R. destruct H3; tauto.
 Qed.
 
 Lemma plus_smono_r (alpha:T1) :
@@ -3104,7 +3107,7 @@ Section Proof_of_nf_mult.
             generalize (@IHbeta d); intro H1; destruct H1; auto with T1.
             apply tail_LT_cons; eauto with T1.
             eauto with T1.
-            apply lt_phi0_phi0R.
+            apply nf_helper_phi0R.
             apply lt_le_trans with (ocons a n b * phi0 c).
             {
               generalize (@IHbeta    (phi0 c)); intro H1; unfold P in H1.
@@ -3398,9 +3401,9 @@ Proof with eauto with T1.
           { apply nf_intro; auto.
             inversion H; auto.
             apply nf_inv1 in H. auto. 
-            apply lt_phi0_phi0R; apply lt_trans with (succ beta0);auto.
+            apply nf_helper_phi0R; apply lt_trans with (succ beta0);auto.
             apply lt_succ.
-            apply lt_phi0_phi0;  eapply lt_phi0_intro; eauto.
+            apply nf_helper_phi0;  eapply nf_helper_intro; eauto.
           }
           reflexivity.
 Defined. 
@@ -3549,16 +3552,16 @@ Proof.
 Defined.
 
 
-Lemma LT_phi0_inv alpha n beta gamma :
+Lemma lt_ocons_phi0_inv alpha n beta gamma :
   ocons alpha n beta t1< phi0  gamma <-> beta t1< phi0 alpha /\ alpha t1< gamma.
 Proof.                                        
   split.
   -  destruct 1 as [H [H0 H1]]; repeat split; eauto with T1.
-     apply lt_phi0_inv in H0; auto.
+     apply nf_helper_inv in H0; auto.
      rewrite nf_LT_iff in H.
      destruct H; eauto with T1.
      destruct H2; eauto with T1.
-     now apply lt_phi0_inv in H0.
+     now apply nf_helper_inv in H0.
   - destruct 1.
     apply LT2; auto.
     rewrite nf_LT_iff; eauto with T1.
