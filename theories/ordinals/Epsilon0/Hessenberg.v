@@ -192,8 +192,9 @@ Lemma oplus_bounded_phi0 alpha beta gamma :
   lt beta (phi0 gamma) ->
   lt (alpha o+ beta) (phi0 gamma).
 Proof.  
-  intros H H0 H1 H2 H3. apply nf_helper_phi0; auto.
-  apply    nf_helper_oplus; auto.
+  intros H H0 H1 H2 H3.
+  apply nf_helper_phi0; auto.
+  apply nf_helper_oplus; auto.
   eapply nf_helper_intro with 0; auto.
   eapply nf_intro;auto.
   1,2 :now apply nf_helper_phi0R.
@@ -202,26 +203,25 @@ Qed.
 Section Proof_of_plus_nf.
 
   Lemma oplus_nf_0 (gamma : T1):
-    nf gamma ->  forall a b,  nf a -> nf b ->
-                               T1.lt a gamma ->
-                               T1.lt b gamma ->
-                               nf (a o+ b).
+    nf gamma ->  forall alpha beta,  nf alpha -> nf beta ->
+                               T1.lt alpha gamma ->
+                               T1.lt beta gamma ->
+                               nf (alpha o+ beta).
   Proof.
     transfinite_induction gamma.
-    -  clear gamma ;intros gamma IHgamma  H; destruct a, b.
+    -  clear gamma ;intros gamma IHgamma  H; destruct alpha, beta.
       + simpl;constructor.
       + now simpl.
       + now simpl.
       +  intros.
          nf_decomp H0; nf_decomp H1; rewrite oplus_cons_cons;
-           case_eq (compare a1 b1).
-         * (* a1 = b1 *)
-           intro H5;  generalize (compare_Eq_impl  _ _ H5);
-           intro;subst b1;clear H5; specialize (IHgamma (phi0 a1)).
+           case_eq (compare alpha1 beta1).
+         *  intro H5;  generalize (compare_Eq_impl  _ _ H5);
+           intro;subst beta1;clear H5; specialize (IHgamma (phi0 alpha1)).
            intros; apply nf_intro; [apply nf1| | ].
             -- eapply IHgamma; trivial.
                repeat split; auto with T1. 
-               ++ apply le_lt_trans with (ocons a1 n a2); [ | exact H2].
+               ++ apply le_lt_trans with (ocons alpha1 n alpha2); [ | exact H2].
                   now apply le_phi0.
                ++ apply nf_helper_phi0.
                   eapply nf_helper_intro, H0. 
@@ -231,9 +231,9 @@ Section Proof_of_plus_nf.
                 ++ eapply nf_helper_intro; trivial. 
                 ++ eapply nf_helper_intro;eauto.
          * intros; apply nf_intro; trivial.
-           -- eapply IHgamma with (phi0 b1); auto with T1.
+           -- eapply IHgamma with (phi0 beta1); auto with T1.
               ++ repeat split; auto with T1.
-                 apply le_lt_trans with (ocons b1 n0 b2) ; [| assumption].
+                 apply le_lt_trans with (ocons beta1 n0 beta2) ; [| assumption].
                  apply le_phi0. 
               ++ apply head_lt.
                  unfold T1.lt, lt_b; now  rewrite H4. 
@@ -243,9 +243,9 @@ Section Proof_of_plus_nf.
                    unfold T1.lt, lt_b; now  rewrite H4. 
                 ++ eapply nf_helper_intro; eauto.
          * intros;  apply nf_intro; trivial.
-           -- eapply IHgamma with (phi0 a1); trivial.
+           -- eapply IHgamma with (phi0 alpha1); trivial.
               ++ repeat split; auto with T1.
-                 apply le_lt_trans with (ocons a1 n a2);[| exact H2].
+                 apply le_lt_trans with (ocons alpha1 n alpha2);[| exact H2].
                  apply le_phi0; eauto with T1.
               ++  apply  nf_helper_phi0.
                   eapply nf_helper_intro; eauto.

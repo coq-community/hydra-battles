@@ -11,20 +11,6 @@ From Coq Require Import Relation_Operators.
 
 Open Scope t1_scope.
 
-(** **  Bounded variants *)
-
-Class BoundedVariant (B:Battle) :=
-  {
-  mu:T1 ;
-  m: Hydra -> T1;
-  mu_nf: nf mu;
-  Hvar: Hvariant T1_wf B m;
-  m_bounded: forall h, m h t1< mu
-  }.
-
-
-
-
 Section Bounded.
   
   Context (B: Battle)

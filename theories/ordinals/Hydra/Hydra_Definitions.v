@@ -8,7 +8,7 @@
  *)
 
 From Coq Require Export Relations Max.
-From hydras Require Import T1.
+From hydras Require Import T1 Epsilon0.
 
 Inductive Hydra : Set :=
 |  node :  Hydrae -> Hydra
@@ -126,6 +126,7 @@ Fixpoint add_head_r (s: Hydrae) :=
 
 (** ***  Adds i   heads to the right of [s]
  *)
+
 Fixpoint add_head_r_plus (s:Hydrae) (i:nat)  :=
   match i with
     0 => s
@@ -434,11 +435,26 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 
 
 
-
 (** Variant bounded by some ordinal alpha < epsilon0 *)
+(** **  Bounded variants (by some mu < epsilon0) *)
 
-Definition bounded_variant (B: Battle) (alpha:T1)(m: Hydra -> T1):=
-  (forall h, (m h t1< alpha)%t1 ) /\ Hvariant T1_wf B  m.
+
+Class BoundedVariant (B:Battle) :=
+  {
+  mu:T1 ;
+  m: Hydra -> T1;
+  mu_nf: nf mu;
+  Hvar: Hvariant T1_wf B m;
+  m_bounded: forall h, m h t1< mu
+  }.
+
+
+
+
+
+Definition Bounded_variant (b: Battle) (mu:E0)(m: Hydra -> E0):=
+  (forall h, (m h o< mu)%e0) /\ Hvariant E0.Lt_wf b  m.
+
 
 
 (** *** Liveness 

@@ -548,7 +548,7 @@ Defined.
 
 Lemma canonS_limit_lub (lambda : T1) :
   nf lambda -> limitb lambda  ->
-  strict_lub (fun i => canonS lambda i) lambda.
+  strict_lub (canonS lambda) lambda.
 Proof.
   split.
   - intros; split.
@@ -664,9 +664,39 @@ Lemma canonS_LE alpha n :
     - destruct s as [gamma [Hgamma Hgamma']]; subst .
       repeat rewrite canonS_succ;auto with T1.
       apply LE_refl;auto. 
-  Qed. 
+  Qed.
+
+  (** exercise  after Guillaume Melquiond   *)
+  
+  Require Import Fuel. 
+
+Fixpoint  approx alpha beta fuel i :=
+  match fuel with
+          FO => None
+        | Fuel.FS f =>
+          let gamma := canonS alpha i in
+          if lt_b beta gamma
+          then Some (i,gamma)
+          else approx alpha beta  (f tt) (S i)
+        end.
 
 
+Lemma approx_ok alpha beta :
+  forall fuel i j gamma, approx alpha beta fuel i = Some (j,gamma) ->
+                         gamma = canonS alpha j /\ lt_b beta gamma.
+Proof.
+  induction fuel as [| f IHfuel ].
+  - cbn; discriminate. 
+  - intros i j gamma H0;  cbn in H0.
+    case_eq (lt_b beta (canonS alpha i));intro H1; rewrite H1 in *.
+    + injection H0; intros; subst; split;auto.
+    + now specialize (IHfuel tt (S i) _ _ H0).
+Qed.
+
+
+
+
+  
   (** ** Adaptation to E0 (well formed terms of type [T1] ) *)
   
 

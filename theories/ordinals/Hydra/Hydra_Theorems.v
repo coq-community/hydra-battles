@@ -31,15 +31,14 @@ Qed.
 (** ** Termination of free battles 
  *)
 
-
-Theorem Variant_LT_free_0 :  Hvariant T1_wf free m.
+Theorem Variant_LT_free_0 :  Hvariant  T1_wf free Hydra_Termination.m.
 Proof. split; intros; now apply round_decr. Qed.
 
 Theorem Variant_lt_free:  Hvariant E0.Lt_wf free Hydra_Termination.var.
 Proof. split; intros; now apply round_decr. Qed.
 
 
-Theorem Variant_LT_standard : Hvariant T1_wf standard m.
+Theorem Variant_LT_standard : Hvariant T1_wf standard Hydra_Termination.m.
 Proof.
  split; intros i h h' H H0; apply round_decr; now exists i.
 Qed.
@@ -60,59 +59,18 @@ Print Assumptions Variant_lt_standard.
 
 *)
 
-
-Definition Bounded_variant (b: Battle) (mu:E0)(m: Hydra -> E0):=
-  (forall h, (m h o< mu)%e0) /\ Hvariant E0.Lt_wf b  m.
-
-Theorem No_bounded_Variant_Free mu (Hmu: nf mu): 
-  forall m, ~ bounded_variant free mu m.
-Proof with eauto with T1.
-  intros m H;   destruct H; apply Impossibility_free. 
-     split with mu m ; auto.
-Qed.
-
-(** to simplify ! !!! *)
-
-Theorem No_Bounded_Variant_Free (mu:E0) : 
-  forall m, ~ Bounded_variant free mu m.
-Proof.
-  destruct mu as [t Ht].
-  specialize (No_bounded_Variant_Free t Ht); intros H m H0.
-  apply (H (fun h =>  @cnf (m h))).
-  destruct H0; split.
-  - destruct H1;intro h; destruct (H0 h) as [H2 [H3 H4]]; split; auto.
-  - destruct H1; split; intros i h h' H1 H2.
-    destruct (variant_decr i h h' H1 H2); split; auto.
-Qed.
+(** A helper : to do: remove if useless *)
 
 
+Check Impossibility_free.
+(*
+Impossibility_free
+     : BoundedVariant free -> False
+ *)
+
+Check Impossibility_std.
 
 
-Theorem No_bounded_Variant_Std  mu (Hmu: nf mu): 
-  forall m, ~ bounded_variant standard mu m.
-Proof with eauto with T1.
-  intros m H;   destruct H;
-     apply Epsilon0_Needed_Std.Impossibility. 
-     split with mu m ; auto.
-Qed.
-
-
-(** to simplify ! !!! 
-  Almost same proof script as Free case *)
-Theorem No_Bounded_Variant_Std (mu:E0) : 
-  forall m, ~ Bounded_variant standard mu m.
-Proof.
-  destruct mu as [t Ht].
-  specialize (No_bounded_Variant_Std t Ht); intros H m H0.
-  apply (H (fun h =>  @cnf (m h))).
-  destruct H0; split.
-  - destruct H1;intro h; destruct (H0 h) as [H2 [H3 H4]]; split; auto.
-  - destruct H1; split; intros i h h' H1 H2.
-    destruct (variant_decr i h h' H1 H2); split; auto.
-Qed.
-
-
-(**  About the length of standard battles *)
 
 
 Theorem battle_length_std (alpha : E0)  :

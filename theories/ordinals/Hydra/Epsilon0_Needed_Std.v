@@ -190,7 +190,7 @@ Section Impossibility_Proof.
   Qed. 
 
 
-  Theorem Impossibility: False.
+  Theorem Impossibility_std: False.
   Proof.  apply (LT_irrefl self_lt_standard).  Qed.
 
   

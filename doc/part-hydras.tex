@@ -5031,6 +5031,8 @@ Lemma oplus_bounded_phi0 alpha beta gamma :
   lt (alpha o+ beta) (phi0 gamma).
 \end{Coqsrc}
 
+This lemma helps us 
+
 \subsubsection{Commutativity, Associativity}
 
 We prove  the commutativity of $\oplus$ in two steps. 
@@ -5235,14 +5237,14 @@ type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$)
 
 %-------------------------------------------------------------------
 
-\chapter[The Ketonen-Solovay machinery]{Strolling inside \texorpdfstring{$\epsilon_0$}{Epsilon0}: The Ketonen-Solovay Machinery\label{ks-chapter}}
+\chapter[The Ketonen-Solovay machinery]{Accessibility inside \texorpdfstring{$\epsilon_0$}{Epsilon0}: The Ketonen-Solovay Machinery\label{ks-chapter}}
 \label{chap:ketonen}
 \index{Maths!Ketonen-Solovay machinery}
 
 \section{Introduction}
 The reader may think that our proof of termination in the previous  chapter requires a lot of mathematical tools and may be too  complex. So, the question is ``is there  any  simpler proof'' ?
 
-In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into a given initial  segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapter.
+In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into a given initial  segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapters.
 
 \begin{itemize}
 \item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2)$ (section ~\vref{omega2-case}), and a fortiori 
@@ -5428,7 +5430,7 @@ This should be fixed in  a future version.
 
 \subsection{Basic Properties of Canonical Sequences}
 
-We did not  try to prove that our definition really implements Ketonen and Solovay's  \cite{KS81}'s canonical sequences. The most important is that we were able to prove the 
+We did not  try to prove that our definition truly implements Ketonen and Solovay's  \cite{KS81}'s canonical sequences. The most important is that we were able to prove the 
 abstract properties  of canonical sequences that are really used in our proof. The complete proofs are in the module
 ~\href{../theories/html/hydras.Epsilon0.Canon.html}{Epsilon0.Canon}
 
@@ -5458,7 +5460,7 @@ Lemma canonS_LT i alpha :
 \end{Coqsrc}
 
 
-\subsubsection{Limit Ordinals are Really Limits}
+\subsubsection{Limit Ordinals are truly Limits}
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
 is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 
@@ -5491,13 +5493,21 @@ We can also state directly that $\lambda$ is a (strict) least upper bound of the
 \begin{Coqsrc}
 Lemma canonS_limit_lub (lambda : T1) :
   nf lambda -> limitb lambda  ->
-  strict_lub (fun i => canonS lambda i) lambda.
+  strict_lub (canonS lambda) lambda.
 \end{Coqsrc}
 
 \index{Exercises}
 
 \begin{exercise}\label{exo:simply-typed-canonseq}
-Instead of using the \texttt{sig} type, define a simply typed function that, given two ordinals $\alpha$ and $\beta$, returns a natural number $i$ such that, if $\alpha$ is a limit ordinal and $\beta<\alpha$, then $\beta< \canonseq{\alpha}{i+1}$. Of course, you will have to prove the correctness of your function.
+Instead of using the \texttt{sig} type, define a simply typed function that, given two ordinals $\alpha$ and $\beta$, returns a natural number $i$ such that, if $\alpha$ is a limit ordinal and $\beta<\alpha$, then $\beta< \canonseq{\alpha}{i+1}$. Of course, you will have to prove the correctness of your function. 
+
+\textbf{Hint:} You may add to your function a third argument usually called \texttt{fuel} for allowing you to give a structurally 
+recursive function (\emph{cf} the post of Guillaume Melquiond on Coq-club (Dec 21, 2020)
+\url{https://sympa.inria.fr/sympa/arc/coq-club/2020-12/msg00069.html}).
+The type \texttt{fuel}, an alternative 
+to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}{Prelude.Fuel}).
+\index{Coq!Techniques!Giving fuel to a long computation}
+
 \end{exercise}
 
 
@@ -6439,8 +6449,14 @@ the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hyd
 \paragraph*{} If remains to prove the following strict inequality, in order to have a contradiction.
 
 \begin{Coqsrc}
-Lemma m_lt : m small_h  t1< m big_h.
+  Lemma m_lt : m small_h  t1< m big_h.
+
+  Theorem Impossibility_std: False.
+
+End Impossibility_Proof.
 \end{Coqsrc}
+
+
 
 
 \paragraph*{Sketch of proof:} Let us recall that $\texttt{big\_h} = \iota(\mu)$
@@ -6451,6 +6467,8 @@ $m(\texttt{big\_h})$, hence a   standard battle from $\iota(\mu)$  to
 $\iota(m(\texttt{big\_h}))$,  i.e. from \texttt{big\_h} to \texttt{small\_h}.
 
 Since $m$ is assumed to be a variant for standard battles, we get the inequality  $m(\texttt{small\_h}) < m(\texttt{big\_h})$.
+
+
 
 
 
