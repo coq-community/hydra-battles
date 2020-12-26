@@ -173,14 +173,14 @@ Defined.
 
 
 
-Global Instance HVariant_0 : Hvariant T1_wf free m.
+Global Instance HVariant_0 : @Hvariant _ _ T1_wf free m.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.
 
 
 
-Global Instance HVariant : Hvariant E0.Lt_wf free var.
+Global Instance HVariant : @Hvariant _ _ E0.Lt_wf free var.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.

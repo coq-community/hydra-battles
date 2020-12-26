@@ -427,7 +427,7 @@ Definition B_termination (B: Battle) :=
 (** *** Variants for proving termination 
  *)
 
-Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
+Class Hvariant {A:Type}{Lt:relation A}{Wf: well_founded Lt}(B : Battle)
   (m: Hydra -> A):   Prop :=
   {variant_decr :forall i h h',
       h <> head ->
@@ -439,21 +439,12 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 (** **  Bounded variants (by some mu < epsilon0) *)
 
 
-Class BoundedVariant (B:Battle) :=
+Class BoundedVariant {A:Type}{Lt:relation A}{Wf: well_founded Lt}(B : Battle)
+  (m: Hydra -> A) (Var: @Hvariant _ Lt Wf  B m)(mu:A):=
   {
-  mu:T1 ;
-  m: Hydra -> T1;
-  mu_nf: nf mu;
-  Hvar: Hvariant T1_wf B m;
-  m_bounded: forall h, m h t1< mu
+  m_bounded: forall h, Lt (m h ) mu
   }.
 
-
-
-
-
-Definition Bounded_variant (b: Battle) (mu:E0)(m: Hydra -> E0):=
-  (forall h, (m h o< mu)%e0) /\ Hvariant E0.Lt_wf b  m.
 
 
 

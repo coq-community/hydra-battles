@@ -8,7 +8,7 @@ Open Scope nat_scope.
 
 
 
-Instance height_var : Hvariant  lt_wf free height.
+Instance height_var : @Hvariant  _ _ lt_wf free height.
 Proof.
   split;intros.
 (*
@@ -28,7 +28,7 @@ Proof.
 Abort.
 (* end show *)
 
-Lemma height_bad :  ~ Hvariant lt_wf free height.
+Lemma height_bad :  ~ @Hvariant _ _ lt_wf free height.
 Proof.
   intros [H];
   specialize (H 1 (hyd1 (hyd2 head head))  (hyd1 (hyd1 head)));
@@ -49,7 +49,7 @@ Section Impossibility_Proof.
   
 
   Variable m : Hydra -> nat.
-  Context (Hvar : Hvariant lt_wf free m).
+  Context (Hvar : @Hvariant _ _ lt_wf free m).
   
   Let iota (i: nat) := hyd_mult head (S i).
 

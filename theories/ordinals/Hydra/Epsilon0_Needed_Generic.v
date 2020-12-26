@@ -14,7 +14,11 @@ Open Scope t1_scope.
 Section Bounded.
   
   Context (B: Battle)
-          (Hy : BoundedVariant B ).
+          (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  B m)
+          (Hy : BoundedVariant (Lt:= LT) (Wf:= T1_wf) B m Var mu).
 
   Hypothesis m_decrease : forall  i h h',
       round_n i h h'   -> m h' t1< m h.
@@ -32,7 +36,7 @@ Section Bounded.
   Lemma mu_positive : mu <> T1.zero.
   Proof. 
     intro H; subst;  specialize (m_bounded (hyd1 head)).
-    rewrite H.
+    
     intro H0;  destruct (not_LT_zero H0). 
   Qed.
 
@@ -99,6 +103,4 @@ Section Bounded.
 End Bounded.
 
 
-Arguments big_h {B Hy}.
-Arguments small_h {B Hy}. 
-Arguments beta_h {B Hy}.
+About big_h.

@@ -13,13 +13,19 @@ Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
 Open Scope t1_scope.
 Section Impossibility_Proof.
   
+  Context (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  standard m)
+          (Hy : BoundedVariant (Lt:= LT) (Wf:= T1_wf) standard m Var mu).
 
-  Context (Var : BoundedVariant standard).
-  
+  Let big_h := big_h mu.
+  Let small_h := small_h mu m.   
+
   Lemma m_ge : m big_h t1<= m small_h.
   Proof.
-    apply m_ge_generic;   intros;  generalize Hvar;  destruct 1.
-    eapply variant_decr; eauto.
+    unfold big_h, small_h.  eapply m_ge_generic; trivial.   
+    intros; eapply variant_decr; eauto.
      intro; subst h; apply (head_no_round_n _ _ H).
   Qed.
 
@@ -30,7 +36,7 @@ Section Impossibility_Proof.
   Lemma Lvar : forall h h0 i ,  h <> head -> 
                                 battle_r standard i h h0 -> m h0 t1< m h.
   Proof.   
-    intros h h0 i H  H1;  apply Hvar with  i; auto.
+    intros h h0 i H  H1;  apply Var with  i; auto.
   Qed.
   
   (** Application to standard battles *)
@@ -160,12 +166,12 @@ Section Impossibility_Proof.
     }
   Qed.
 
-  
-  Remark Rem3 : beta_h  t1< mu.
-  Proof. unfold beta_h; auto. destruct Var; auto. Qed.
+
+  Remark Rem3 : beta_h mu m  t1< mu.
+  Proof. unfold beta_h; auto. destruct Hy; auto. Qed. 
   
   Remark Rem4 : exists n i,
-      battle  standard n (iota mu) i (iota beta_h ).
+      battle  standard n (iota mu) i (iota (beta_h mu m)).
   Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed. 
   
   Lemma m_lt : m small_h  t1< m big_h.
@@ -174,7 +180,7 @@ Section Impossibility_Proof.
     eapply m_decrease with i x; eauto.
     intro H0;  unfold big_h in *.
     clear H;  destruct (T1_eq_dec mu T1.zero).
-    -  apply (mu_positive  _  Var e). 
+    -  now apply (mu_positive  _  mu Hmu m Var Hy). 
     -  apply n;   destruct mu.
        + auto. 
        + discriminate H0.

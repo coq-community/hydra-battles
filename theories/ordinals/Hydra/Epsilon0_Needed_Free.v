@@ -18,16 +18,23 @@ longer
 Open Scope t1_scope.
 Section Impossibility_Proof.
   
+  Context 
+          (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  free m)
+          (Hy : BoundedVariant (Lt:= LT) (Wf:= T1_wf) free m Var mu).
 
-  Context (Var : BoundedVariant free).
 
   Hint Resolve nf_m : hydra.
 
   
-  Lemma m_ge : m big_h t1<= m small_h.
+  Lemma m_ge : m (big_h mu) t1<= m (small_h mu m).
   Proof.
-    apply m_ge_generic.
-    intros;  generalize Hvar ;  destruct 1.
+    About m_ge_generic.
+eapply m_ge_generic.
+auto.
+intros.   generalize Var ;  destruct 1.
     apply variant_decr with i. 
     intro ; subst; now apply (head_no_round_n _  _ H).
     exists i; apply H.    
@@ -41,24 +48,24 @@ Section Impossibility_Proof.
   
   Lemma m_variant_LT : forall h h', h -+-> h' -> m h' t1< m h.
   Proof.
-    intros h h' H;eapply m_strict_mono with (1 := Hvar)(2:= H).
+    intros h h' H;eapply m_strict_mono with (1 := Var)(2:= H).
   Qed.
 
 
 
-  Lemma  big_to_small : big_h  -+-> small_h.
+  Lemma  big_to_small : big_h mu  -+-> (small_h mu m).
   Proof. 
     unfold big_h, small_h. apply LT_to_round_plus; auto.
-    unfold beta_h. apply (m_bounded big_h); auto.
+    unfold beta_h. apply (m_bounded (big_h mu)); auto.
   Qed.
 
-  Lemma m_lt : m small_h t1< m big_h.
+  Lemma m_lt : m (small_h mu m) t1< m (big_h mu).
   Proof. apply m_variant_LT,  big_to_small. Qed.
   
 
-  Fact self_lt_free : m big_h t1<  m big_h .
+  Fact self_lt_free : m (big_h mu) t1<  m (big_h mu).
   Proof. 
-    apply LE_LT_trans with (m small_h ).
+    apply LE_LT_trans with (m (small_h mu m)).
     - apply m_ge.
     - apply m_lt.
   Qed. 
