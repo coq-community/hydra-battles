@@ -307,7 +307,7 @@ Proof.
 Qed.
 
 Lemma variant_mono_free  {A:Type} {Lt: relation A}{Tr : Transitive Lt}
-      {Wf: well_founded Lt} m {V: Hvariant (Lt:=Lt) (Wf:=Wf) free m}:
+      {Wf: well_founded Lt} m {V: Hvariant Wf free m}:
   forall i h j h', battle free i h j h' -> Lt (m h') (m h).
 Proof.
   induction 1;auto. 

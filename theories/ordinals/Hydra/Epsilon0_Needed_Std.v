@@ -16,8 +16,8 @@ Section Impossibility_Proof.
   Context (mu: T1)
           (Hmu: nf mu)
           (m : Hydra -> T1)
-          (Var : Hvariant  standard m)
-          (Hy : BoundedVariant (Lt:= LT) (Wf:= T1_wf) standard m Var mu).
+          (Var : Hvariant  T1_wf standard m)
+          (Hy : BoundedVariant Var mu).
 
   Let big_h := big_h mu.
   Let small_h := small_h mu m.   

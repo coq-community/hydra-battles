@@ -5753,24 +5753,26 @@ In the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{
 
 
 \begin{Coqsrc}
-Class BoundedVariant (B:Battle) :=
+Class BoundedVariant {A:Type}{Lt:relation A}
+      {Wf: well_founded Lt}{B : Battle}
+      {m: Hydra -> A} (Var: Hvariant  Wf  B m)(mu:A):=
   {
-    mu:T1 ;
-    m: Hydra -> T1;
-    mu_nf: nf mu;
-    Hvar: Hvariant T1_wf B m;
-    m_bounded: forall h, m h t1< mu
+  m_bounded: forall h, Lt (m h ) mu
   }.
 \end{Coqsrc}
 
 Let us assume there exists such a variant:
 
 \begin{Coqsrc}
-Section Bounded.
-  Context (B: Battle) (Hy : BoundedVariant B).
+Context (B: Battle)
+          (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  T1_wf B m)
+          (Hy : BoundedVariant  Var mu).
 
   Hypothesis m_decrease : forall  i h h',
-        round_n i h h' -> m h' t1< m h.
+      round_n i h h'   -> m h' t1< m h.
 \end{Coqsrc}
 
 \label{remark:m-decrease}
@@ -5832,7 +5834,11 @@ The case $B=\texttt{standard}$ is studied in section~\vref{std-case}.
 \begin{Coqsrc}
 Section Impossibility_Proof.
 
-  Context (Var : BoundedVariant free ).
+  Context (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  T1_wf free m)
+          (Hy : BoundedVariant Var mu).
   \end{Coqsrc}
 
 
@@ -5880,8 +5886,9 @@ Check Impossibility_free.
 \end{Coqsrc}
 
 \begin{Coqanswer}
-  Impossibility_free
-     : BoundedVariant free -> False
+Impossibility_free
+     : forall (mu : T1) (m : Hydra -> T1) (Var : Hvariant T1_wf free m),
+       BoundedVariant Var mu -> False
 \end{Coqanswer}
 %%% ICI
   
@@ -6410,12 +6417,12 @@ Please note that it has the same global structure as in section\ref{sec:free-bat
 % ICI !
 Applying the  lemmas  \texttt{Lemma2\_6\_1} of the module 
 \href{../theories/html/hydras.Epsilon0.Paths.html\#Lemma2_6_1}%
-{\texttt{Lemma2\_6\_1}}   and 
+{\texttt{Epsilon0.Paths}}   and 
 \href{../theories/html/hydras.Epsilon0.Paths.html\#constant_to_standard_path}%
 {\texttt{constant\_to\_standard\_path}},
 we can convert any inequality $\beta<\alpha<\epsilon_0$ into a standard path from
 $\alpha$ to  $\beta$, then into a fragment of a standard battle from 
-$\iota(\alpha)$ to $\iota(\beta)$.
+$\iota(\alpha)$ to $\iota(\beta)$, hence the inequality $m(\iota(\beta))<m(\iota(\alpha))$.
 
 
 \vspace{4pt}
@@ -6433,8 +6440,12 @@ Next, please consider the following context:
 
 \begin{Coqsrc}
 Section Impossibility_Proof.
- 
-  Context (Var : BoundedVariant standard).
+
+Context (mu: T1)
+          (Hmu: nf mu)
+          (m : Hydra -> T1)
+          (Var : Hvariant  T1_wf standard m)
+          (Hy : BoundedVariant Var mu).
  \end{Coqsrc}
 
 In the same way as for free battles, we import a large inequality 
