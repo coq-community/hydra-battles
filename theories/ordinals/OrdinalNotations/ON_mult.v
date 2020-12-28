@@ -6,7 +6,7 @@
  
 From Coq Require Import Arith Compare_dec Lia 
      Relation_Operators RelationClasses.
-From hydras Require Import Simple_LexProd OrdinalNotations.Generic.
+From hydras Require Import Simple_LexProd ON_Generic.
 
 Import Relations.
 Generalizable All Variables.

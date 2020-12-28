@@ -3,7 +3,7 @@
 
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras Require Import Simple_LexProd OrdinalNotations.Generic
+From hydras Require Import Simple_LexProd ON_Generic
         ON_plus ON_Omega.
 
 Import Relations.
@@ -341,7 +341,7 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
    forall alpha, 
      (forall i,  fin i o< alpha) <-> omega o<= alpha.
  Proof.
-   intro alpha; destruct (Generic.compare_correct  omega alpha).
+   intro alpha; destruct (ON_Generic.compare_correct  omega alpha).
    - subst;split.
      +  right.
      + intros; constructor.

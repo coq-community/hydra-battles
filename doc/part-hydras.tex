@@ -2074,9 +2074,9 @@ In order to build a variant for proving the termination of all hydra battles, we
 The notion of \emph{ordinal number} provides a catalogue of well-founded order types.
 For a reasonably large bunch of ordinal numbers, \emph{ordinal notations} are data-types which allow the \coq{} user to define functions, to compute and prove some properties, for instance by reflection.
 
-The next chapter is dedicated to a generic implementation of ordinal notations, and chapter~\ref{chap:T1} to a proof of termination of all hydra battles with the help of an ordinal notation for the interval $[0,\epsilon_0)$.
-
-
+The next chapter is dedicated to a generic formalization of ordinal notations, and chapter~\ref{chap:T1} to a proof of termination of all hydra battles with the help of an ordinal notation for the interval $[0,\epsilon_0)$\,\footnote{We use the mathematical notation $[a,b)$ for the interval $\{x|a\leq x < b\}$.}.
+\index{Maths!Notations!Interval}
+ 
 %--------------------------------------------------------------
 
 \chapter{Introduction to Ordinal Numbers and Ordinal Notations}
@@ -2657,7 +2657,7 @@ Lemma succb_correct (alpha : t) :
 
 Finally, the nature of any ordinal is decidable(inside this notation system) :
 
-\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.Generic.html}{OrdinalNotations.Generic}}
+\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{ON\_Generic}}
 \begin{Coqsrc}
   Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
@@ -2922,7 +2922,7 @@ Section Impossibility_Proof.
   
  Variable m : Hydra -> ON_Omega2.t.
   
- Context (Hvar : Hvariant (Generic.wf (ON:=Omega2))  free m).
+ Context (Hvar : Hvariant (ON_Generic.wf (ON:=Omega2))  free m).
 \end{Coqsrc}
 
 
@@ -3370,7 +3370,7 @@ Qed.
 \begin{remark}
 It is important to keep in mind  that the integer $n$ is not an ``element'' of \texttt{FinOrd $n$}. In set-theoretic presentations of ordinals, the set associated with the ordinal $n$ is $\{0,1,\dots,n-1\}$. 
 In our formalization, the interpretation of an ordinal as a set is realized by the following definition
-(in ~\href{../theories/html/hydras.OrdinalNotations.Generic.html}{OrdinalNotations.Generic}).
+(in ~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{ON\_Generic}).
 
 \begin{Coqsrc}
 Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
@@ -5747,7 +5747,7 @@ proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 
 
 
-In the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
+In the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
 
 
 
@@ -6450,7 +6450,7 @@ Context (mu: T1)
 
 In the same way as for free battles, we import a large inequality 
 from 
-the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}.
+the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Epsilon0\_Needed\_Generic}.
 
 
 \begin{Coqsrc}
@@ -6494,7 +6494,7 @@ Roughly steaking, our implementation \emph{builds}, out of a hypothetic
 
 
 
-On may ask whether the preceding results are not too restrictive, since they 
+On may ask whether the preceding results are too restrictive, since they 
 refer to a particular data type \texttt{T1}.
 In fact, our representation of ordinals strictly less than 
  $\epsilon_0$ is faithful to their mathematical definition, at least 

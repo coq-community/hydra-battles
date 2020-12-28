@@ -3,7 +3,7 @@
 
 From Coq Require Import Arith Peano_dec Lia Relations Relation_Operators.
 From hydras Require Import  Hydra_Lemmas Simple_LexProd ON_Omega2.
-Import Generic.
+Import ON_Generic.
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
 
@@ -16,7 +16,7 @@ Section Impossibility_Proof.
 
   Variable m : Hydra -> ON_Omega2.t.
  
-  Context (Hvar : @Hvariant _ _ (Generic.wf (ON:=Omega2))  free m).
+  Context (Hvar : @Hvariant _ _ (ON_Generic.wf (ON:=Omega2))  free m).
   
   Let big_h := hyd1 (hyd2 head head).
   

@@ -13,7 +13,7 @@ From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
 
 From hydras Require Import 
         Prelude.More_Arith  Prelude.Restriction
-           Prelude.DecPreOrder  OrdinalNotations.Generic OrdNotations.
+           Prelude.DecPreOrder  ON_Generic OrdNotations.
 
 From hydras.Epsilon0 Require Export T1 Hessenberg.
 

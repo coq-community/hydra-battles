@@ -15,7 +15,7 @@
 
 
 
-From hydras Require Import Epsilon0.Epsilon0 OrdinalNotations.Generic. 
+From hydras Require Import Epsilon0.Epsilon0 ON_Generic. 
 From hydras Require Import Schutte_basics  Schutte.Addition  AP CNF.
 
 Import List  PartialFun Ensembles.

@@ -2,7 +2,7 @@ Require Import ListOmega.
 From Coq Require Import  Logic.Eqdep_dec Wellfounded.
 Require Import Arith.
 Require Import RelationClasses.
-Require Import OrdinalNotations.Generic.
+Require Import ON_Generic.
 
 Definition t := {l: t | nf l}.
 Definition lt (w1 w2:t) := (wlt (proj1_sig w1) (proj1_sig w2)).
