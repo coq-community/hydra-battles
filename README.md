@@ -58,13 +58,16 @@ This contribution contains two parts:
       - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
       - A proof that no variant bounded by some ordinal less than epsilon0 can prove this termination
       - Comparison of the length of some kind of Hydra battles with the Hardy hierarchy of fast growing functions
+      
+  - OrdinalNotations/*.v
+      - Generic formalization on ordinal notations (well-founded ordered datatypes with a comparison function)
     
   -  Epsilon0/*.v
 	  - Data types for representing ordinals less than epsilon0 in Cantor normal form
 	  - The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
 	  - Representation of some hierarchies of fast growing functions
    
- -  Schutte/*.v
+  -  Schutte/*.v
        - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
 
   - Gamma0/*.v
