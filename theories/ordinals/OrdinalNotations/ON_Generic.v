@@ -141,13 +141,8 @@ Class  ON_Iso
   iso_compare :forall x y : A,  compareB (f x) (f y) =
                                 compareA x y;
   iso_inv1 : forall a, g (f a)= a;
-  iso_inv2 : forall b, f (g b) = b}.
-
-
-
-
-
-
+  iso_inv2 : forall b, f (g b) = b
+  }.
 
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
 
@@ -162,7 +157,8 @@ Class ON_correct `(alpha : Ord)
           Datatypes.Lt => lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
         | Datatypes.Gt => lt (iota b) (iota a)
-        end}.
+        end
+  }.
 
 
 

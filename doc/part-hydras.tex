@@ -3397,7 +3397,7 @@ Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlip
 It is sometimes useful to compare two ordinal notations with respect to expressive power
 (the segment of ordinals  they represent). 
 
-The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha($, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
+The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha)$, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
 
 \begin{figure}[h]
    \centering
@@ -3533,7 +3533,8 @@ Class ON_correct `(alpha : Schutte_basics.Ord)
           Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
         | Datatypes.Gt => Schutte_basics.lt (iota b) (iota a)
-        end}.
+        end
+}.
 \end{Coqsrc}
 
 
@@ -3574,17 +3575,18 @@ Class  ON_Iso
   iso_compare: forall x y : A, 
       compareB (f x) (f y) = compareA x y;
   iso_inv1 : forall a, g (f a)= a;
-  iso_inv2 : forall b, f (g b) = b}.
+  iso_inv2 : forall b, f (g b) = b
+}.
 \end{Coqsrc}
 
 \index{Exercises}
 
 \begin{exercise}
+\label{exo:i-plus-omega}
 Let $i$ be some natural number. Prove that the notation systems 
 \texttt{Omega} and (\texttt{ON\_plus (OrdFin $i$) Omega}) are isomorphic.
 
 {\it \textbf{Note:} This property reflects the equality $i+\omega=\omega$, that we prove also in larger notation systems, as well as in Schütte's model.}
-
 This exercise is partially solved for $i=3$ (in ~\href{../theories/html/hydras.OrdinalNotations.Example_3PlusOmega.html}{OrdinalNotations.Example\_3PlusOmega}).
 
 \end{exercise}
@@ -3609,7 +3611,9 @@ Note that the elements of  (\texttt{ON\_mult (FinOrd 3) Omega}) are differently 
 Prove formally  that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
 \texttt{Omega}  whilst
 \texttt{Omega}  is a sub-notation of \texttt{ON\_mult Omega (FinOrd $i$)},
-for any strictly positive $i$.
+for any strictly positive $i$. 
+
+\textbf{Note:} Like Exercise~\ref{exo:i-plus-omega}, this project corresponds to the [in]equalities $i+\omega=\omega<\omega+i$, for any natural number $i$.
 \end{project}
 
 \index{Projects}
