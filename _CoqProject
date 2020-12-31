@@ -99,3 +99,7 @@ theories/additions/Pow_variant.v
 theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
+theories/ordinals/primrec/misc.v
+theories/ordinals/primrec/primRec.v
+theories/ordinals/primrec/extEqualNat.v
+
