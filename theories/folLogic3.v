@@ -11,8 +11,6 @@ Require Import Arith.
 Require Import subAll.
 Require Import misc.
 
-Unset Standard Proposition Elimination Names.
-
 Section Equality_Logic_Rules.
 
 Variable L : Language.

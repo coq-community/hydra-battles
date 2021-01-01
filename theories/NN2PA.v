@@ -55,28 +55,28 @@ Lemma PAboundedLT :
  forall (m : nat) (a : Formula) (x : nat),
  (forall n : nat,
   n < m -> SysPrf PA (substituteFormula LNT a x (natToTerm n))) ->
- SysPrf PA (impH (LNN2LNT_formula (LT (fol.var LNN x) (LNN.natToTerm m))) a).
+ SysPrf PA (impH (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm m))) a).
 Proof.
 simple induction m; intros.
 apply impI.
 apply
- contradiction with (LNN2LNT_formula (LT (fol.var LNN x) (LNN.natToTerm 0))).
+ contradiction with (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm 0))).
 apply Axm; right; constructor.
 apply sysWeaken.
-replace (notH (LNN2LNT_formula (LT (fol.var LNN x) (LNN.natToTerm 0)))) with
- (LNN2LNT_formula (fol.notH LNN (LT (fol.var LNN x) (LNN.natToTerm 0)))).
+replace (notH (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))) with
+ (LNN2LNT_formula (fol.notH LNN (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))).
 apply NN2PA.
 apply nn7.
 reflexivity.
 apply impI.
 eapply orE.
-apply impE with (LNN2LNT_formula (LT (fol.var LNN x) (LNN.natToTerm (S n)))).
+apply impE with (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm (S n)))).
 apply sysWeaken.
 assert
  (SysPrf PA
     (LNN2LNT_formula
-       (LNN.impH (LT (fol.var LNN x) (LNN.Succ (LNN.natToTerm n)))
-          (LNN.orH (LT (fol.var LNN x) (LNN.natToTerm n))
+       (LNN.impH (LNN.LT (fol.var LNN x) (LNN.Succ (LNN.natToTerm n)))
+          (LNN.orH (LNN.LT (fol.var LNN x) (LNN.natToTerm n))
              (LNN.equal (fol.var LNN x) (LNN.natToTerm n)))))).
 apply NN2PA.
 apply nn8.

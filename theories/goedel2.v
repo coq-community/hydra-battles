@@ -23,8 +23,6 @@ Require Import checkPrf.
 Require Import codeNatToTerm.
 Require Import rosserPA.
 
-Unset Standard Proposition Elimination Names.
-
 Section Goedel's_2nd_Incompleteness.
 
 Variable T : System.
