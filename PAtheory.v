@@ -265,8 +265,8 @@ Proof.
 replace (LNN2LNT_formula NN8) with
  (forallH 1
     (forallH 0
-       (impH (LNN2LNT_formula (LT (LNN.var 0) (LNN.Succ (LNN.var 1))))
-          (orH (LNN2LNT_formula (LT (LNN.var 0) (LNN.var 1)))
+       (impH (LNN2LNT_formula (LNN.LT (LNN.var 0) (LNN.Succ (LNN.var 1))))
+          (orH (LNN2LNT_formula (LNN.LT (LNN.var 0) (LNN.var 1)))
              (equal (var 0) (var 1)))))).
 simpl in |- *.
 repeat rewrite translateLT1.
@@ -357,9 +357,9 @@ Proof.
 replace (LNN2LNT_formula NN9) with
  (forallH 1
     (forallH 0
-       (orH (LNN2LNT_formula (LT (LNN.var 0) (LNN.var 1)))
+       (orH (LNN2LNT_formula (LNN.LT (LNN.var 0) (LNN.var 1)))
           (orH (equal (var 0) (var 1))
-             (LNN2LNT_formula (LT (LNN.var 1) (LNN.var 0)))))));
+             (LNN2LNT_formula (LNN.LT (LNN.var 1) (LNN.var 0)))))));
  [ idtac | reflexivity ].
 simpl in |- *.
 repeat rewrite translateLT1.

@@ -705,7 +705,7 @@ set
   fol.forallH LNN 1
     (fol.impH LNN codeSysPrf
        (fol.existH LNN 2
-          (fol.andH LNN (LT (fol.var LNN 2) (fol.var LNN 1))
+          (fol.andH LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
              (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))) 
  in *.
 destruct (FixPointLNT (LNN2LNT_formula A) 0) as [x [H0 H1]].
@@ -778,7 +778,7 @@ apply
     (existH 2
        (andH
           (LNN2LNT_formula
-             (LT (fol.var LNN 2) (natToTermLNN (codePrf _ _ x1))))
+             (LNN.LT (fol.var LNN 2) (natToTermLNN (codePrf _ _ x1))))
           (substituteFormula LNT
              (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 0
                 (natToTerm (codeFormula x))) 1 (var 2)))).
@@ -788,7 +788,7 @@ apply
     (existH 2
        (andH
           (LNN2LNT_formula
-             (LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1))))
+             (LNN.LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1))))
           (substituteFormula LNT
              (substituteFormula LNT
                 (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 0
@@ -809,8 +809,8 @@ reflexivity.
 simpl in H5.
 decompose sum H5.
 discriminate H6.
-replace (LT (fol.var LNN 2) (natToTermLNN (codePrf _ _ x1))) with
- (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 1
+replace (LNN.LT (fol.var LNN 2) (natToTermLNN (codePrf _ _ x1))) with
+ (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 1
     (natToTermLNN (codePrf _ _ x1))).
 apply
  impE
@@ -818,7 +818,7 @@ apply
     (existH 2
        (andH
           (substituteFormula LNT
-             (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1))) 1
+             (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1))) 1
              (natToTerm (codePrf x0 x x1)))
           (substituteFormula LNT
              (substituteFormula LNT
@@ -842,7 +842,7 @@ apply
     (existH 2
        (substituteFormula LNT
           (fol.andH LNT
-             (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+             (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
              (substituteFormula LNT
                 (substituteFormula LNT (LNN2LNT_formula codeSysPrfNot) 1
                    (var 2)) 0 (natToTerm (codeFormula x)))) 1
@@ -863,8 +863,8 @@ simpl in H4.
 decompose sum H4.
 discriminate H5.
 apply closedNatToTerm.
-replace (LT (fol.var LNN 2) (fol.var LNN 1)) with
- (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 0
+replace (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) with
+ (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 0
     (natToTermLNN (codeFormula x))).
 apply
  impE
@@ -873,7 +873,7 @@ apply
        (substituteFormula LNT
           (fol.andH LNT
              (substituteFormula LNT
-                (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1))) 0
+                (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1))) 0
                 (natToTerm (codeFormula x)))
              (substituteFormula LNT
                 (LNN2LNT_formula
@@ -901,7 +901,7 @@ replace
     (substituteFormula LNT
        (substituteFormula LNT
           (fol.andH LNT
-             (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+             (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
              (LNN2LNT_formula
                 (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))) 0
           (natToTerm (codeFormula x))) 1 (natToTerm (codePrf x0 x x1)))) with
@@ -909,20 +909,20 @@ replace
     (existH 2
        (substituteFormula LNT
           (fol.andH LNT
-             (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+             (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
              (LNN2LNT_formula
                 (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))) 0
           (natToTerm (codeFormula x)))) 1 (natToTerm (codePrf x0 x x1))).
 replace
  (existH 2
     (substituteFormula LNT
-       (fol.andH LNT (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+       (fol.andH LNT (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
           (LNN2LNT_formula
              (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))) 0
        (natToTerm (codeFormula x)))) with
  (substituteFormula LNT
     (existH 2
-       (fol.andH LNT (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+       (fol.andH LNT (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
           (LNN2LNT_formula
              (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2))))) 0
     (natToTerm (codeFormula x))).
@@ -940,7 +940,7 @@ replace
        (fol.impH LNT (LNN2LNT_formula codeSysPrf)
           (existH 2
              (fol.andH LNT
-                (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+                (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
                 (LNN2LNT_formula
                    (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2))))))
        0 (natToTerm (codeFormula x)))) with
@@ -949,7 +949,7 @@ replace
        (fol.impH LNT (LNN2LNT_formula codeSysPrf)
           (existH 2
              (fol.andH LNT
-                (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+                (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
                 (LNN2LNT_formula
                    (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))))
     0 (natToTerm (codeFormula x))).
@@ -997,11 +997,11 @@ induction
  (In_dec eq_nat_dec 2 (freeVarTerm LNT (natToTerm (codePrf x0 x x1)))).
 elim (closedNatToTerm _ _ a).
 reflexivity.
-unfold LT in |- *.
+unfold LNN.LT in |- *.
 rewrite (subFormulaRelation LNN).
 simpl in |- *.
 reflexivity.
-unfold LT in |- *.
+unfold LNN.LT in |- *.
 rewrite (subFormulaRelation LNN).
 simpl in |- *.
 reflexivity.
@@ -1092,7 +1092,7 @@ unfold orH, fol.orH in |- *.
 apply
  impTrans
   with
-    (LNN2LNT_formula (LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1)))).
+    (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1)))).
 apply impI.
 apply nnE.
 apply Axm; right; constructor.
@@ -1101,7 +1101,7 @@ apply impE with E.
 apply
  impE
   with
-    (LNN2LNT_formula (LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1)))).
+    (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (natToTermLNN (codePrf x0 x x1)))).
 do 2 apply sysWeaken.
 apply PAboundedLT.
 intros.
@@ -1269,13 +1269,13 @@ replace
     (fol.forallH LNN 1
        (fol.impH LNN codeSysPrf
           (fol.existH LNN 2
-             (fol.andH LNN (LT (fol.var LNN 2) (fol.var LNN 1))
+             (fol.andH LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
                 (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))))
  with
  (forallH 1
     (impH (LNN2LNT_formula codeSysPrf)
        (existH 2
-          (andH (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+          (andH (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
              (LNN2LNT_formula
                 (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2))))))).
 rewrite (subFormulaForall LNT).
@@ -1413,7 +1413,7 @@ apply
              (code.codeFormula LNT codeLNTFunction codeLNTRelation x)))
        (fol.existH LNT 2
           (fol.andH LNT
-             (LNN2LNT_formula (LT (fol.var LNN 2) (fol.var LNN 1)))
+             (LNN2LNT_formula (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
              (substituteFormula LNT
                 (LNN2LNT_formula
                    (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2))) 0
@@ -1430,7 +1430,7 @@ apply
  iffTrans
   with
     (LNN2LNT_formula
-       (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 0
+       (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 0
           (natToTermLNN
              (code.codeFormula LNT codeLNTFunction codeLNTRelation x)))).
 rewrite <- LNN2LNT_iff.
@@ -1444,22 +1444,22 @@ apply
   with
     (LNN2LNT_formula
        (fol.orH LNN
-          (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
+          (LNN.LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (LNT2LNN_formula
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1))))))
     (LNN2LNT_formula
-       (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
+       (LNN.LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
 repeat simple apply sysWeaken.
 apply
  impE
   with
     (LNN2LNT_formula
        (fol.orH LNN
-          (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
+          (LNN.LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (fol.orH LNN
              (LNT2LNN_formula
                 (equal (var 1) (natToTerm (codePrf x0 (notH x) x1))))
-             (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))))).
+             (LNN.LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))))).
 repeat rewrite LNN2LNT_or.
 apply impI.
 apply orSys.
@@ -1483,7 +1483,7 @@ apply
  impE
   with
     (LNN2LNT_formula
-       (LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1))))).
+       (LNN.LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1))))).
 repeat simple apply sysWeaken.
 apply PAboundedLT.
 intros.
@@ -1575,7 +1575,7 @@ apply
   with
     (LNN2LNT_formula
        (fol.orH LNN
-          (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
+          (LNN.LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (LNT2LNN_formula
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1)))))).
 repeat simple apply sysWeaken.
@@ -1583,19 +1583,19 @@ replace
  (impH
     (LNN2LNT_formula
        (fol.orH LNN
-          (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
+          (LNN.LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (LNT2LNN_formula
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1))))))
     (LNN2LNT_formula
-       (LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1))))))
+       (LNN.LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1))))))
  with
  (LNN2LNT_formula
     (fol.impH LNN
        (fol.orH LNN
-          (LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
+          (LNN.LT (fol.var LNN 1) (natToTermLNN (codePrf x0 (notH x) x1)))
           (LNT2LNN_formula
              (equal (var 1) (natToTerm (codePrf x0 (notH x) x1)))))
-       (LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1)))))).
+       (LNN.LT (fol.var LNN 1) (natToTermLNN (S (codePrf x0 (notH x) x1)))))).
 apply NN2PA.
 simpl in |- *.
 rewrite LNT2LNN_natToTerm.
@@ -1613,28 +1613,28 @@ apply
  impE
   with
     (LNN2LNT_formula
-       (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
+       (LNN.LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))).
 repeat simple apply sysWeaken.
 apply
  impTrans
   with
     (LNN2LNT_formula
-       (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 2
+       (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 2
           (natToTermLNN (codePrf x0 (notH x) x1)))).
 replace
  (impH
     (LNN2LNT_formula
-       (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1)))
+       (LNN.LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1)))
     (LNN2LNT_formula
-       (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 2
+       (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 2
           (natToTermLNN (codePrf x0 (notH x) x1))))) with
  (LNN2LNT_formula
     (fol.impH LNN
-       (LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))
-       (substituteFormula LNN (LT (fol.var LNN 2) (fol.var LNN 1)) 2
+       (LNN.LT (natToTermLNN (codePrf x0 (notH x) x1)) (fol.var LNN 1))
+       (substituteFormula LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1)) 2
           (natToTermLNN (codePrf x0 (notH x) x1))))).
 apply NN2PA.
-unfold LT in |- *.
+unfold LNN.LT in |- *.
 apply (folLogic.impI LNN).
 rewrite (subFormulaRelation LNN).
 simpl in |- *.

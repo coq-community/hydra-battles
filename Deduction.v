@@ -117,8 +117,8 @@ change (In g (Axm1++Axm2)).
 apply in_or_app.
 destruct (in_app_or _ _ _ H0); firstorder.
 destruct (in_app_or _ _ _ H0); firstorder.
-firstorder.
-firstorder.
+firstorder auto with datatypes.
+firstorder auto with datatypes.
 induction  HrecH as (x, H0).
 induction  H0 as (x0, H0).
 assert (In g Axm \/ (forall x, In x Axm -> mem _ T x)).
