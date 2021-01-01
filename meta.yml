@@ -1,0 +1,78 @@
+---
+fullname: Goedel
+shortname: goedel
+organization: coq-community
+community: true
+action: true
+coqdoc: false
+
+synopsis: >-
+  Coq proof of the Gödel-Rosser 1st incompleteness theorem
+
+description: |-
+  A proof in Coq of the Gödel-Rosser 1st incompleteness theorem,
+  which says that any first order theory extending NN (which is PA
+  without induction) that is complete is inconsistent.
+
+publications:
+- pub_url: https://arxiv.org/abs/cs/0505034
+  pub_title: Essential Incompleteness of Arithmetic Verified by Coq
+  pub_doi: 10.1007/11541868_16
+
+authors:
+- name: Russell O'Connor
+  initial: true
+
+maintainers:
+- name: Pierre Castéran
+  nickname: Casteran
+
+opam-file-maintainer: palmskog@gmail.com
+
+opam-file-version: dev
+
+license:
+  fullname: MIT License
+  identifier: MIT
+
+supported_coq_versions:
+  text: 8.7 or later
+  opam: '{(>= "8.7" & < "8.14~") | (= "dev")}'
+
+tested_coq_nix_versions:
+- version_or_url: https://github.com/coq/coq-on-cachix/tarball/master
+
+tested_coq_opam_versions:
+- version: dev
+- version: '8.13'
+- version: '8.12'
+- version: '8.11'
+- version: '8.10'
+- version: '8.9'
+- version: '8.8'
+- version: '8.7'
+
+dependencies:
+- opam:
+    name: coq-pocklington
+    version: '{= "dev"}'
+  description: |-
+    [Pocklington](https://github.com/coq-community/pocklington)
+
+namespace: Goedel
+
+keywords:
+- name: goedel
+- name: rosser
+- name: incompleteness
+- name: logic
+- name: hilbert
+
+categories:
+- name: Mathematics/Logic/Foundations
+
+documentation: |-
+  ## Documentation
+
+  More information about the project can be found at [this website](http://r6.ca/goedel1.html).
+---
