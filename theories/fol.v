@@ -10,8 +10,6 @@ Require Import Compare_dec.
 Require Import Max.
 Require Import misc.
 
-Unset Standard Proposition Elimination Names.
-
 Record Language : Type := language
   {Relations : Set; Functions : Set; arity : Relations + Functions -> nat}.
 
