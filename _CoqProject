@@ -79,6 +79,9 @@ theories/ordinals/Hydra/Hydra_Examples.v
 theories/ordinals/Hydra/Hydra_Lemmas.v
 theories/ordinals/Hydra/O2H.v
 theories/ordinals/Hydra/Epsilon0_Needed_Std.v
+theories/ordinals/primrec/misc.v
+theories/ordinals/primrec/primRec.v
+theories/ordinals/primrec/extEqualNat.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
@@ -99,4 +102,7 @@ theories/additions/Pow_variant.v
 theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
+
+
+
 
