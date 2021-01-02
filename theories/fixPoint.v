@@ -358,10 +358,10 @@ Qed.
 
 End LNN_FixPoint.
 
-Section LNT_FixPoint.
-
 Require Import PA.
 Require Import NN2PA.
+
+Section LNT_FixPoint.
 
 Let codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
 

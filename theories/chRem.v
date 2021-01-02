@@ -254,18 +254,18 @@ Qed.
 
 Lemma chRem3 : forall a b : nat, Z_of_nat a = Z_of_nat b -> a = b.
 Proof.
-double induction a b.
+induction a; destruct b.
 reflexivity.
 intros.
-discriminate H0.
+discriminate H.
 intros.
-discriminate H0.
+discriminate H.
 intros.
-repeat rewrite Znat.inj_S in H1.
+repeat rewrite Znat.inj_S in H.
+apply Z.succ_inj in H.
 apply eq_S.
-apply H0.
-apply Z.succ_inj.
-assumption.
+apply IHa.
+apply H.
 Qed.
 
 Lemma uniqueRem :

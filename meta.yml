@@ -62,11 +62,11 @@ dependencies:
 namespace: Goedel
 
 keywords:
-- name: goedel
-- name: rosser
+- name: Goedel
+- name: Rosser
 - name: incompleteness
 - name: logic
-- name: hilbert
+- name: Hilbert
 
 categories:
 - name: Mathematics/Logic/Foundations
