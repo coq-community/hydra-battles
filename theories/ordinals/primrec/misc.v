@@ -1,3 +1,6 @@
+(** From coq-goedel 
+    Initial author: Russel O'Connor *)
+
 Require Import Eqdep_dec.
 
 Global Set Asymmetric Patterns.

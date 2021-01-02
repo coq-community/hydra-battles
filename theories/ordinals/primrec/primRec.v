@@ -1,3 +1,6 @@
+(** From coq-goedel 
+    Initial author: Russel O'Connor *)
+
 Require Import Arith.
 Require Import Peano_dec.
 Require Import Compare_dec.

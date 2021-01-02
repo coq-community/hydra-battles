@@ -1,3 +1,6 @@
+(** From coq-goedel 
+    Initial author: Russel O'Connor *)
+
 Require Import Arith.
 
 Fixpoint naryFunc (n : nat) : Set :=
