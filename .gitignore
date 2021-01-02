@@ -14,8 +14,13 @@
 *.snm
 *.pygtex
 *.pygstyle
-src/html/
+theories/html/
 .lia.cache
 Makefile.coq
 Makefile.coq.conf
 .Makefile.coq.d
+bigfib.ml
+bigfib.mli
+bigmod.ml
+bigmod.mli
+_build/

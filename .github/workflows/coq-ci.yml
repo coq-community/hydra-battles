@@ -1,4 +1,4 @@
-name: CI
+name: Docker CI
 
 on:
   push:
@@ -15,8 +15,9 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'coqorg/coq:8.12'
-          - 'coqorg/coq:8.11'
+          - 'mathcomp/mathcomp:1.12.0-coq-8.13'
+          - 'mathcomp/mathcomp:1.12.0-coq-8.12'
+          - 'mathcomp/mathcomp:1.11.0-coq-8.11'
         opam_file:
           - 'coq-hydra-battles.opam'
           - 'coq-addition-chains.opam'
