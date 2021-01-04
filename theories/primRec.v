@@ -497,29 +497,24 @@ Proof.
 Qed.
 
 Lemma filter1100IsPR :
- forall g : nat -> nat -> nat,
- isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
+  forall g : nat -> nat -> nat,
+    isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
 Proof.
-intros.
-induction H as (x, p).
-simpl in p.
-assert (isPR 4 (fun a b c d : nat => a)).
-apply pi1_4IsPR.
-assert (isPR 4 (fun a b c d : nat => b)).
-apply pi2_4IsPR.
-induction H as (x0, p0).
-simpl in p0.
-induction H0 as (x1, p1).
-simpl in p1.
-exists (composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x).
-simpl in |- *.
-intros.
-replace (g c c0) with
- (g (evalPrimRec 4 x0 c c0 c1 c2) (evalPrimRec 4 x1 c c0 c1 c2)).
-rewrite <- p.
-auto.
-auto.
+  intros g [x p]; cbn in p.
+  assert (H: isPR 4 (fun a b c d : nat => a)) by apply pi1_4IsPR.
+  assert (H0: isPR 4 (fun a b c d : nat => b)) by apply pi2_4IsPR.
+  destruct  H as [x0 p0]; cbn in p0.
+  destruct  H0 as [x1 p1]; cbn in p1.
+  exists (composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x);
+    cbn; intros.
+  replace (g c c0) with
+      (g (evalPrimRec 4 x0 c c0 c1 c2) (evalPrimRec 4 x1 c c0 c1 c2)).
+  - rewrite <- p; auto.
+  - auto.
 Qed.
+
+(* Here ... *)
+
 
 Lemma compose1_1IsPR :
  forall f : nat -> nat,
