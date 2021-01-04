@@ -8,3 +8,6 @@ coqdoc: $(GLOBFILES) $(VFILES)
 	$(HIDE)mkdir -p $(COQDOCDIR)
 	$(HIDE)$(COQDOC) $(COQDOCHTMLFLAGS) $(COQDOCLIBS) -d $(COQDOCDIR) $(VFILES)
 .PHONY: coqdoc
+
+clean::
+	$(HIDE)rm -f bigfib.ml bigfib.mli bigmod.ml bigmod.mli
