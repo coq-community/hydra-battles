@@ -1446,7 +1446,7 @@ Qed.
 
 Lemma beq_nat_not_refl : forall a b : nat, a <> b -> beq_nat a b = false.
 Proof.
-double induction a b.
+induction a; destruct b.
 intros.
 elim H.
 auto.

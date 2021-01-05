@@ -215,16 +215,16 @@ Section Nmodulo.
     intro H;subst m. discriminate. 
   Qed.
   
-  Hint Resolve m_neq_0 : chains.
+  Local Hint Resolve m_neq_0 : chains.
   
   Definition mult_mod ( x y : N) := (x * y) mod m.
   Definition mod_eq ( x y: N) := x mod m = y mod m.
   
-  Global Instance mod_equiv : Equiv N := mod_eq.
+  Local Instance mod_equiv : Equiv N := mod_eq.
 
-  Global Instance mod_op : Mult_op N := mult_mod.
+  Local Instance mod_op : Mult_op N := mult_mod.
   
-  Global Instance mod_Equiv : Equivalence mod_equiv.
+  Local Instance mod_Equiv : Equivalence mod_equiv.
   Proof.
     split.
     - intros x; reflexivity.

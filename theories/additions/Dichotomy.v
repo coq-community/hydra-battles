@@ -129,7 +129,7 @@ Proof.
     discriminate.
 Qed.
 
-Hint Resolve dicho_aux_le_xOXO dicho_aux_le_xOXI 
+Global Hint Resolve dicho_aux_le_xOXO dicho_aux_le_xOXI 
              dicho_aux_le_xIXO dicho_aux_le_xIXI : chains.
 
 Lemma dicho_aux_lt : forall p, 3 < p ->

@@ -44,9 +44,9 @@ Definition compare (alpha beta: t) : comparison :=
   | c => c
   end.
 
-Hint Constructors clos_refl lexico: core.
+Local Hint Constructors clos_refl lexico: core.
 
-Hint Unfold  lt le : core.
+Local Hint Unfold  lt le : core.
 
 
 (** * Properties *)

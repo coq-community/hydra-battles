@@ -127,7 +127,7 @@ End R_given.
 
 
 Arguments LocallySorted {A} _ _.
-Hint Constructors LocallySorted : lists.
+Global Hint Constructors LocallySorted : lists.
 
 (** A sort must work on any decidable total pre-order *)
 

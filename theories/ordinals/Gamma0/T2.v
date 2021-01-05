@@ -69,7 +69,7 @@ Inductive is_finite:  T2 ->  Set :=
  zero_finite : is_finite zero
 |succ_finite : forall n, is_finite (gcons zero zero n zero).
 
-Hint Constructors is_finite : T2.
+Global Hint Constructors is_finite : T2.
 
 Notation "'omega'"  := [zero,one] : T2_scope.
 
@@ -146,10 +146,10 @@ lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,
     gcons alpha1 beta1 n1 gamma1 t2< gcons alpha1 beta1 n1 gamma2
 where  "o1 t2< o2" := (lt o1 o2): T2_scope.
 
-Hint Constructors lt : T2.
+Global Hint Constructors lt : T2.
 
 Definition le t t' := t = t' \/ t t2< t'.
-Hint Unfold le : T2.
+Global Hint Unfold le : T2.
 
 Notation "o1 t2<= o2" := (le o1 o2): T2_scope.
 
@@ -214,7 +214,7 @@ Inductive nf : T2 -> Prop :=
                              nf a -> nf b -> 
                              nf(gcons a' b' n' c')-> 
                              nf(gcons a b n (gcons a' b' n' c')).
-Hint Constructors nf : T2. 
+Global Hint Constructors nf : T2. 
 
 Lemma  nf_fin i : nf (fin i).
 Proof.

@@ -33,7 +33,7 @@ Section Impossibility_Proof.
     (** *** Proof of the inequality [m small_h o< m big_h] 
      *)
 
-  Hint Constructors R1 S1 S2 : hydra.
+  Local Hint Constructors R1 S1 S2 : hydra.
 
   Lemma m_big_h_not_null : m big_h <> zero.
   Proof.
@@ -118,9 +118,9 @@ Section Impossibility_Proof.
  (*m_strict_mono m Hvar*) 
 
 
-Hint Constructors step clos_trans_1n : hydra.
-Hint Resolve lex_1 lex_2: hydra.
-Hint Unfold   lt : hydra.
+Local Hint Constructors step clos_trans_1n : hydra.
+Local Hint Resolve lex_1 lex_2: hydra.
+Local Hint Unfold lt : hydra.
 
 
 Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
@@ -128,7 +128,7 @@ Proof.
   destruct 1; [ apply succ_rounds |  apply limit_rounds].
 Qed.
 
-Hint Resolve step_to_battle : hydra. 
+Local Hint Resolve step_to_battle : hydra.
 
 
 Lemma m_ge : m big_h o<= m small_h.

@@ -25,7 +25,7 @@ Section Impossibility_Proof.
           (Hy : BoundedVariant Var mu).
 
 
-  Hint Resolve nf_m : hydra.
+  Local Hint Resolve nf_m : hydra.
   Let big_h := big_h mu.
   Let small_h := small_h mu m.
   

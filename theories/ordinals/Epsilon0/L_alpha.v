@@ -12,7 +12,7 @@ From Equations Require Import Equations.
 Import RelationClasses Relations.
 
 Instance Olt : WellFounded Lt := Lt_wf.
-Hint Resolve Olt : E0.
+Global Hint Resolve Olt : E0.
 
 (** Using Coq-Equations for building a function which satisfies 
     [Large_sets.L_spec] *)

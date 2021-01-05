@@ -785,6 +785,6 @@ Proof.
   simpl;   apply limitb_canonS_not_zero; auto.
 Qed.
 
-Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
+Global Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
 

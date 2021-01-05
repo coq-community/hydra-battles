@@ -62,7 +62,7 @@ Section Impossibility_Proof.
     exists (m big_h); right;  repeat constructor.     
   Qed.
 
-  Hint Resolve big_to_small : hydra.
+  Local Hint Resolve big_to_small : hydra.
 
   
   Lemma m_lt : m small_h < m big_h.

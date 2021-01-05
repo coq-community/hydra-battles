@@ -175,7 +175,7 @@ Definition le (alpha beta :T1) :=
   | _ => True
   end. 
 
-Hint Unfold le : T1. 
+Global Hint Unfold le : T1. 
 
 
 
@@ -368,7 +368,7 @@ Proof.
   - elimtype False; abstract lia. 
 Qed. 
 
-Hint Resolve zero_lt head_lt coeff_lt tail_lt  : T1.
+Global Hint Resolve zero_lt head_lt coeff_lt tail_lt  : T1.
 
 Open Scope t1_scope.
 
@@ -394,7 +394,7 @@ destruct b.
   all : destruct (lt_b b2_1 b1); simpl in *;auto.
 Qed. 
 
-Hint Resolve zero_nf single_nf ocons_nf: T1.
+Global Hint Resolve zero_nf single_nf ocons_nf: T1.
 
 
 Lemma nf_inv1 : forall a n b, nf (ocons a n b) -> nf a.
@@ -460,7 +460,7 @@ Inductive nf_helper : T1 -> T1 -> Prop :=
 
 
 
-Hint Constructors nf_helper : T1.
+Global Hint Constructors nf_helper : T1.
 
 
 
@@ -619,7 +619,7 @@ Qed.
 Theorem not_lt_zero alpha : ~ lt alpha  zero.
 Proof.  destruct alpha; compute; discriminate. Qed.
 
-Hint Resolve not_lt_zero : T1.
+Global Hint Resolve not_lt_zero : T1.
 
 
  Inductive lt_cases (a  b : T1) (n :nat) (a' b':T1) (n':nat) : Type :=
@@ -678,7 +678,7 @@ Qed.
 
 
 
-Hint Resolve lt_irrefl : T1.
+Global Hint Resolve lt_irrefl : T1.
 
 
 Lemma lt_inv_nb : forall a n n' b b',
@@ -899,7 +899,7 @@ Proof.
     eapply lt_trans;eauto.
 Qed.
 
-Hint Resolve lt_le_incl le_refl : T1.
+Global Hint Resolve lt_le_incl le_refl : T1.
 
 
 Lemma lt_inv_le : forall a n b a' n' b', 
@@ -929,7 +929,7 @@ Proof.
  -  auto with T1.
 Qed.
 
-Hint Resolve zero_le le_tail : T1.
+Global Hint Resolve zero_le le_tail : T1.
 
 Theorem le_phi0 : forall a n  b , 
                     le (phi0 a) (ocons a n b).
@@ -1332,7 +1332,7 @@ Proof. now  destruct 1. Qed.
 Lemma LE_le alpha beta : alpha t1<= beta -> le alpha beta.
 Proof. now destruct 1. Qed.
 
-Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
+Global Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
 
 Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero t1< alpha.
 Proof.
@@ -1407,7 +1407,7 @@ Lemma LT4 : forall alpha  n  beta beta',
     ocons alpha n beta t1< ocons alpha n beta'.
 Proof.   repeat split; auto; apply tail_lt.  destruct H1; tauto. Qed.
 
-Hint Resolve LT1 LT2 LT3 LT4: T1.
+Global Hint Resolve LT1 LT2 LT3 LT4: T1.
 
 
 Lemma LT_irrefl (alpha : T1) : ~ alpha t1< alpha.
@@ -1451,9 +1451,9 @@ Proof.
   intros; apply ocons_nf; auto; destruct H;tauto.
 Qed.
 
-Hint Resolve nf_ocons_LT: T1.
+Global Hint Resolve nf_ocons_LT: T1.
 
-Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
+Global Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
 
 Lemma head_LT_cons : forall alpha n beta, nf (ocons alpha n beta) ->
                                           alpha t1< ocons alpha n beta.
@@ -1552,7 +1552,7 @@ Qed.
 Module Direct_proof.
   Section well_foundedness_proof.
     
-    Hint Unfold restrict LT: T1.
+    Local Hint Unfold restrict LT: T1.
 
     Lemma Acc_zero : Acc LT  zero.
     Proof.
@@ -2673,7 +2673,7 @@ Proof. compute; auto with T1. Qed.
 
 
 
-Hint Resolve nf_phi0 : T1.
+Global Hint Resolve nf_phi0 : T1.
 
 Definition omega_omega := phi0 omega.
 
@@ -3475,7 +3475,7 @@ Proof.
 Qed.
 
 
-Hint Resolve limitb_not_zero : T1.
+Global Hint Resolve limitb_not_zero : T1.
 
 
 Lemma limitb_succ_tail :

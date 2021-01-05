@@ -46,7 +46,7 @@ Compute  (gnaw (omega * omega) (interval 6 700)).
 
 Compute pp (  gnaw (omega * omega) (interval 6 509)).
 
-Hint Resolve iota_from_lt_not_In: core.
+Global Hint Resolve iota_from_lt_not_In: core.
 
 Example Ex1 : mlarge (omega * omega) (interval 6 510).
 Proof with try (auto with arith || discriminate ).
