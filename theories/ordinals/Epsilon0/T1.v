@@ -244,11 +244,11 @@ where "alpha + beta" := (plus alpha beta) : t1_scope.
 
 Fixpoint mult (alpha beta : T1) :T1 :=
   match alpha,beta with
- |  zero, y  => zero
- |  x, zero => zero
+ |  zero, _  => zero
+ |  _, zero => zero
  |  ocons zero n _, ocons zero n' _ => 
                  ocons zero (Peano.pred((S n) * (S n'))) zero
- |  ocons a n b, ocons zero n' b' =>  
+ |  ocons a n b, ocons zero n' _ =>  
                  ocons a (Peano.pred((S n) * (S n'))) b
  |  ocons a n b, ocons a' n' b' =>
      ocons (a + a') n' ((ocons a n b) * b')
@@ -297,9 +297,9 @@ Fixpoint exp_F (alpha : T1)(n : nat) :T1 :=
 
 Fixpoint exp  (alpha beta : T1) :T1 :=
   match alpha ,beta with
- |  x, zero => ocons zero 0 zero
+ |  _, zero => ocons zero 0 zero
  | ocons zero 0 _ , _ => ocons zero 0 zero
- | zero, y            => zero
+ | zero, _         => zero
  | x , ocons zero n' _ =>  exp_F x (S n')
  | ocons zero n _, ocons  (ocons zero 0 zero) n'  b' =>
         ((ocons (ocons zero n' zero) 0 zero) * 

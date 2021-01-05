@@ -1085,8 +1085,8 @@ end.
 Definition proper_statement (s: signature) : 
 chain_type s -> Prop :=
 match s  with
-  | gen_F p => fun ch => Fchain_proper ch 
-  | gen_K p d   => fun ch => Kchain_proper ch 
+  | gen_F _ => fun ch => Fchain_proper ch 
+  | gen_K _ _   => fun ch => Kchain_proper ch 
 end.
 
 (** ** Full correctness *)
