@@ -31,7 +31,7 @@ Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
-Hint Resolve cnf_ok : E0.
+Global Hint Resolve cnf_ok : E0.
 
 (** ** Lifting functions from [T1] to [E0] *)
 
@@ -167,7 +167,7 @@ Proof.
 Qed.
 
 
-Hint Resolve E0_eq_intro : E0.
+Global Hint Resolve E0_eq_intro : E0.
 
 Ltac orefl := (apply E0_eq_intro; try reflexivity).
 
@@ -224,7 +224,7 @@ Proof.
   unfold Phi0; apply Limitb_Omega_term.
 Qed.
 
-Hint Resolve Limitb_Phi0 : E0.
+Global Hint Resolve Limitb_Phi0 : E0.
 
 
 
@@ -289,7 +289,7 @@ Proof.
     now   apply T1.nf_Acc. 
 Defined.
 
-Hint Resolve Lt_wf : E0.
+Global Hint Resolve Lt_wf : E0.
 
 Lemma Lt_succ_le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
@@ -334,14 +334,14 @@ Proof.
     apply LT_succ;auto.
 Qed.
 
-Hint Resolve Pred_Lt : E0.
+Global Hint Resolve Pred_Lt : E0.
 
 
 Lemma Succ_succb (alpha : E0) : Succb (Succ alpha).
 destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
 Qed.
 
-Hint Resolve Succ_succb : E0.
+Global Hint Resolve Succ_succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -388,7 +388,7 @@ Proof.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
-Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
+Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
                                        Succ beta o<= alpha.

@@ -28,7 +28,7 @@ Section Bounded.
     intro h0; now destruct (m_bounded h0).
   Qed.
 
-  Hint Resolve Rem0 : hydra.
+  Local Hint Resolve Rem0 : hydra.
   
 
 

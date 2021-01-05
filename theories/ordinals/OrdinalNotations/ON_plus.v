@@ -39,8 +39,8 @@ Definition lt : relation t := le_AsB _ _ ltA ltB.
 
 Definition le := clos_refl _ lt.
 
-Hint Unfold lt le : core.
-Hint Constructors le_AsB: core.
+Local Hint Unfold lt le : core.
+Local Hint Constructors le_AsB: core.
 
 Instance lt_strorder : StrictOrder lt.
 Proof.

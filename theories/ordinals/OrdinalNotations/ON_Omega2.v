@@ -93,8 +93,8 @@ Proof.
   destruct alpha; right; cbn; abstract lia.
 Qed.
 
-Hint Constructors clos_refl lexico : O2.
-Hint Unfold lt le : O2.
+Global Hint Constructors clos_refl lexico : O2.
+Global Hint Unfold lt le : O2.
 
 
 

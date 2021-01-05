@@ -173,7 +173,7 @@ Proof.
  simpl; auto with arith.
 Qed.
 
-Hint Resolve T1_size2 T1_size3 : rpo.
+Global Hint Resolve T1_size2 T1_size3 : rpo.
 
 
 (** let us recall subterm properties on T1 *)
@@ -198,9 +198,9 @@ apply  lt_le_incl.
 Qed.
 
 
-Hint Resolve nat_lt_cons : rpo.
-Hint Resolve lt_subterm2 lt_subterm1 : rpo.
-Hint Resolve T1_size3 T1_size2 T1_size1 : rpo.
+Global Hint Resolve nat_lt_cons : rpo.
+Global Hint Resolve lt_subterm2 lt_subterm1 : rpo.
+Global Hint Resolve T1_size3 T1_size2 T1_size1 : rpo.
 
 
 Lemma nat_2_term_mono : forall n n', (n < n')%nat -> 
@@ -404,14 +404,14 @@ Remark R1 : Acc P.prec nat_0.
   destruct y; try contradiction.
 Qed.
 
-Hint Resolve R1 : rpo.
+Global Hint Resolve R1 : rpo.
 
 Remark R2 : Acc P.prec ord_zero. 
   split.
   destruct y; try contradiction; auto with rpo.
 Qed.
 
-Hint Resolve R2 : rpo.
+Global Hint Resolve R2 : rpo.
 
 Remark R3 : Acc P.prec nat_S.
   split.
@@ -419,14 +419,14 @@ Remark R3 : Acc P.prec nat_S.
 Qed.
 
 
-Hint Resolve R3 : rpo.
+Global Hint Resolve R3 : rpo.
 
 Remark R4 : Acc P.prec ord_cons.
   split.
   destruct y; try contradiction;auto with rpo.
 Qed.
 
-Hint Resolve R4 : rpo.
+Global Hint Resolve R4 : rpo.
 
 Theorem well_founded_rpo : well_founded rpo.
 Proof.
@@ -439,7 +439,7 @@ Section  well_founded.
   
   Let R := restrict  nf lt.
 
-  Hint Unfold restrict R : rpo.
+  Local Hint Unfold restrict R : rpo.
 
   Lemma R_inc_rpo : forall o o', R o o' -> rpo (T1_2_term o) (T1_2_term o').
   Proof.

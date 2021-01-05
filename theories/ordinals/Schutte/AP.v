@@ -104,7 +104,7 @@ Proof with auto with schutte.
 Qed.
 
 
-Hint Resolve zero_lt_omega : schutte.
+Global Hint Resolve zero_lt_omega : schutte.
 
 Lemma AP_finite_eq_one : forall n: nat, AP n -> n = 1.
 Proof with auto with schutte.
@@ -210,7 +210,7 @@ Section AP_Unbounded.
       
   Qed.
 
-  Hint Resolve mono_seq mono_seq2 : schutte.
+  Local Hint Resolve mono_seq mono_seq2 : schutte.
 
 
   Remark alpha_lt_beta : alpha < beta.

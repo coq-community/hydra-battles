@@ -254,7 +254,7 @@ Section Properties.
       rewrite F_zero_eqn. rewrite LF1; abstract lia.
     Qed.
 
-    Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
+    Local Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
 
     Lemma F_One_Zero_ge :  F_ Zero <<= F_ 1.
     Proof.
@@ -262,7 +262,7 @@ Section Properties.
         rewrite F_zero_eqn, LF1; abstract lia.  
     Qed. 
 
-    Hint Resolve  F_One_Zero_ge : T1.
+    Local Hint Resolve  F_One_Zero_ge : T1.
 
     Lemma PZero : P Zero.
     Proof. 

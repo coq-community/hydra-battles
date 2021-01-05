@@ -18,7 +18,7 @@ Declare Scope schutte_scope.
 
 Set Implicit Arguments.
 
-Hint Unfold In : schutte.
+Global Hint Unfold In : schutte.
 Arguments Included [U] _ _.
 Arguments countable [U] _.
 Arguments Same_set [U] _ _.
@@ -39,7 +39,7 @@ Infix "<" := lt : schutte_scope.
 Definition ordinal : Ensemble Ord := Full_set Ord.
 Definition big0 alpha : Ensemble Ord := fun beta =>  beta < alpha.
 
-Hint Unfold ordinal : schutte.
+Global Hint Unfold ordinal : schutte.
 
 (* begin hide *)
 Lemma ordinal_ok : forall a : Ord, ordinal a.
@@ -49,14 +49,14 @@ Qed.
 
 (* end hide *)
 
-Hint Resolve ordinal_ok : schutte. 
+Global Hint Resolve ordinal_ok : schutte. 
 
 (** * The three axioms by Schutte *)
 
 (** First Schutte's axiom  : Ord is well-ordered wrt lt *)
 
 Axiom AX1 : WO lt.
-Hint Resolve AX1 : schutte. 
+Global Hint Resolve AX1 : schutte. 
 
 Global Instance WO_ord : WO  lt := AX1.
 
@@ -83,7 +83,7 @@ Qed.
 
 
 
-Hint Resolve  AX1 Inh_Ord_Ord Inh_OSets inh_Ord : schutte.
+Global Hint Resolve  AX1 Inh_Ord_Ord Inh_OSets inh_Ord : schutte.
 
 Definition le := Le lt.
 
@@ -242,7 +242,7 @@ Proof.
   left;auto.
 Qed.
 
-Hint Resolve le_refl : schutte.
+Global Hint Resolve le_refl : schutte.
 
 Lemma eq_le : forall a b : Ord,  a = b -> a <= b.
 Proof.
@@ -291,7 +291,7 @@ Proof.
   -  intros H0 H1;case (@lt_irr a);eapply lt_trans;eauto.
 Qed.
 
-Hint Resolve eq_le lt_le lt_trans le_trans le_lt_trans 
+Global Hint Resolve eq_le lt_le lt_trans le_trans le_lt_trans 
      lt_le_trans lt_irr le_not_gt:
   schutte.
 
@@ -335,7 +335,7 @@ Proof.
   intros a b  H1; tricho a b H2; auto with schutte;  contradiction.  
 Qed.
 
-Hint Unfold Included : schutte.
+Global Hint Unfold Included : schutte.
 
 (** ** Global properties *)
 
@@ -438,7 +438,7 @@ Proof.
   destruct  (succ_ok  alpha);  tauto.
 Qed.
 
-Hint Resolve lt_succ : schutte.
+Global Hint Resolve lt_succ : schutte.
 
 Lemma lt_succ_le (alpha beta : Ord):
   alpha < beta -> succ alpha <= beta.
@@ -505,7 +505,7 @@ Proof.
 Qed.
 
 
-Hint Resolve zero_lt_succ zero_le : schutte.
+Global Hint Resolve zero_lt_succ zero_le : schutte.
 
 (** Less than finite is finite ... *)
 
@@ -529,7 +529,7 @@ Proof.
      simpl (finite (S m)); apply lt_succ; auto with schutte.
 Qed.
 
-Hint Resolve finite_mono : schutte.
+Global Hint Resolve finite_mono : schutte.
 
 Lemma finite_inj : forall i j, F i = F j -> i = j.
 Proof.
@@ -779,13 +779,13 @@ Proof.
     rewrite H0;intro;case (@Lt_irreflexive  Ord lt AX1 (s j));auto.
 Qed.
 
-Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
+Global Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
 
 
 Lemma In_full {A:Type} (a:A) : In (Full_set A ) a.
 Proof. split. Qed.
 
-Hint Resolve In_full: core.
+Global Hint Resolve In_full: core.
 
 Lemma lt_omega_limit (s : nat -> Ord) :
   seq_mono s -> forall i, s i <  omega_limit s.
@@ -918,7 +918,7 @@ Proof.
  apply AX2;   now exists alpha.
 Qed.
 
-Hint Resolve countable_members : schutte.
+Global Hint Resolve countable_members : schutte.
 
 Lemma le_sup_members (alpha : Ord) :  |_| (members alpha) <= alpha.
 Proof.

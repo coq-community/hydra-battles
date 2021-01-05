@@ -458,7 +458,7 @@ $2^k.3^p$, using Fcompose and previous lemmas.
 Let us look at a simple example *)
 
 
-Hint Resolve F1_correct F1_proper
+Global Hint Resolve F1_correct F1_proper
      F3_correct F3_proper Fcompose_correct Fcompose_proper
      Fexp2_correct Fexp2_proper : chains.
 
@@ -965,7 +965,7 @@ Proof.
 Qed.
 
 
-Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
+Global Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
 
 Lemma k3_1_correct : Kchain_correct 3 1 k3_1.
 Proof.
@@ -981,7 +981,7 @@ Proof.
   add_op_proper M H3; rewrite H2; reflexivity.
 Qed.
 
-Hint Resolve k3_1_correct k3_1_proper : chains.          
+Global Hint Resolve k3_1_correct k3_1_proper : chains.
 
 (** an example of correct chain construction  *)
 
@@ -1096,7 +1096,7 @@ Definition  OK (s: signature)
                             proper_statement s c.
 
 
-Hint Resolve pos_gt_3 : chains.
+Global Hint Resolve pos_gt_3 : chains.
 
 Section Gamma.
 

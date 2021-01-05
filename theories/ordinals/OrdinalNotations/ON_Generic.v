@@ -79,7 +79,7 @@ Proof.
   apply wf.
 Defined.
 
-Hint Resolve wf_measure : core.
+Global Hint Resolve wf_measure : core.
 
 
 Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}

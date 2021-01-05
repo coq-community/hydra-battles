@@ -13,7 +13,7 @@ Arguments In [U].
 Arguments Included [U].
 
 Set Implicit Arguments.
-Hint Unfold In : core.
+Global Hint Unfold In : core.
 
 
 Section the_context.

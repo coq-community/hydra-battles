@@ -57,7 +57,7 @@ Proof with auto with T1.
   apply nf_phi0; now  apply m_nf.   
 Qed.   
 
-Hint Resolve m_nf nf_phi0 ms_nf : T1.
+Global Hint Resolve m_nf nf_phi0 ms_nf : T1.
 
 Lemma ms_eqn3 :  forall h n s,  ms (hcons_mult h  n s) =
                                 o_finite_mult n (phi0 (m h)) o+ ms s.

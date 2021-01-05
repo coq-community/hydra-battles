@@ -129,7 +129,7 @@ Lemma ordering_function_mono (f : Ord -> Ord) (A B: Ensemble Ord) :
     In A alpha -> In A beta -> alpha < beta -> f alpha < f beta.
 Proof.  destruct 1 ;  tauto. Qed.
 
-Hint Resolve ordering_function_mono : schutte.
+Global Hint Resolve ordering_function_mono : schutte.
 
 Lemma  ordering_function_mono_weak (f : Ord -> Ord) (A B: Ensemble Ord) : 
  ordering_function f A B ->
@@ -141,7 +141,7 @@ Proof.
  -  right;auto.
 Qed.
 
-Hint Resolve ordering_function_mono_weak : schutte.
+Global Hint Resolve ordering_function_mono_weak : schutte.
 
 Lemma ordering_function_monoR : forall f A B, ordering_function f A B ->
    forall a b, In A a -> In A b -> f a < f b -> a < b.
@@ -151,7 +151,7 @@ Proof.
   - destruct (@lt_irr (f a)); apply lt_trans with (f b);auto.
 Qed.
 
-Hint Resolve ordering_function_monoR : schutte.
+Global Hint Resolve ordering_function_monoR : schutte.
 
 
 Lemma Ordering_bijection : forall f A B, ordering_function f A B ->
@@ -180,7 +180,7 @@ Proof with auto with schutte.
   -  right; eapply ordering_function_monoR; eauto.
 Qed.
 
-Hint Resolve ordering_function_mono_weakR : schutte.
+Global Hint Resolve ordering_function_mono_weakR : schutte.
 
 
 Lemma ordering_function_seg : forall A B, ordering_segment A B ->
@@ -252,7 +252,7 @@ Section ordering_function_unicity_1.
  Remark SA2 : segment A2.
  Proof.  case O2;intuition.  Qed.
  
- Hint Resolve SA2 SA1 : schutte.
+ Local Hint Resolve SA2 SA1 : schutte.
 
   Lemma A1_A2 :forall a, In A1 a -> A2 a /\ f1 a = f2 a.
  Proof with eauto with schutte.
@@ -456,7 +456,7 @@ Section building_ordering_function_1.
   apply AX2; exists beta;  destruct 1;tauto.
  Qed.
 
-Hint Resolve  of_beta': schutte.
+ Local Hint Resolve of_beta': schutte.
 
 Remark A_denum : countable _A.
 Proof.
@@ -658,7 +658,7 @@ Qed.
       case (@lt_irr _ H2).
  Qed.
 
- Hint Resolve g_bij : schutte.
+ Local Hint Resolve g_bij : schutte.
 
 
 Let g_1 := inv_fun inh_Ord B (image B g) g.
@@ -668,7 +668,7 @@ Proof.
  unfold  g_1; apply inv_fun_bij; auto with schutte.
 Qed.
 
-Hint Resolve g_1_bij : schutte.
+Local Hint Resolve g_1_bij : schutte.
 
 
 Lemma g_1_of : ordering_function g_1 (image B g) B.
@@ -1016,7 +1016,7 @@ Proof with eauto with schutte.
 Qed.
 
 
-Hint Resolve  alpha_A : schutte.
+Local Hint Resolve  alpha_A : schutte.
  
 Remark R7 : |_| U <= alpha_ .
 Proof. 
