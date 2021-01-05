@@ -1,6 +1,9 @@
 -R theories/ordinals hydras
 -R theories/additions additions
 
+-arg -w -arg -notation-overridden
+-arg -w -arg -ambiguous-paths
+
 theories/ordinals/OrdinalNotations/ON_Omega.v
 theories/ordinals/OrdinalNotations/ON_Generic.v
 theories/ordinals/OrdinalNotations/ON_Finite.v
