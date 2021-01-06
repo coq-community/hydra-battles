@@ -46,3 +46,5 @@ theories/subAll.v
 theories/subProp.v
 theories/wConsistent.v
 theories/wellFormed.v
+
+theories/PrimRecExamples.v
