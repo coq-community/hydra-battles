@@ -28,17 +28,15 @@ Check compose2 1.
 Locate compose2.
 
 
-Definition mystere :=  compose2 1 (fun n => S n) mult.
-Check mystere. 
-Compute mystere 3.
-Compute mystere 6.
 
-
-
-Lemma exp2PR n : isPR 1 (exp2_aux n).
+Lemma exp2_auxIsPR n : isPR 1 (exp2_aux n).
 Proof.
-  unfold exp2.  apply iterateIsPR.
-  Search isPR mult.
-  Search isPR S.
-Abort.
+  unfold exp2.
+  apply iterateIsPR.
+  apply compose1_2IsPR.
+  - apply idIsPR.
+  - apply const1_NIsPR.
+  - apply multIsPR.
+Qed.
+
 
