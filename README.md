@@ -36,6 +36,7 @@ without induction) that is complete is inconsistent.
 - License: [MIT License](LICENSE)
 - Compatible Coq versions: 8.7 or later
 - Additional dependencies:
+  - Ackermann (primitive recursive functions library that is part of this repository)
   - [Pocklington](https://github.com/coq-community/pocklington)
 - Coq namespace: `Goedel`
 - Related publication(s):
