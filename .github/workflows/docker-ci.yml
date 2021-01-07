@@ -32,7 +32,10 @@ jobs:
         with:
           custom_image: ${{ matrix.image }}
           custom_script: |
-            {{before_install}}
+            startGroup "Setup and print opam config"
+              opam repo -a --set-default add coq-extra-dev https://coq.inria.fr/opam/extra-dev
+              opam config list; opam repo list; opam list
+            endGroup
             startGroup "Build ackermann dependencies"
               opam pin add -n -y -k path coq-ackermann .
               opam update -y
