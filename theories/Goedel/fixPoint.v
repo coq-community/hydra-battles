@@ -1,22 +1,22 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import code.
-Require Import codeSubFormula.
-Require Import folProp.
-Require Import folProof.
-Require Import Languages.
-Require Import subAll.
-Require Import subProp.
-Require Import folLogic3.
-Require Import folReplace.
-Require Import LNN.
-Require Import codeNatToTerm.
+From Ackermann Require Import primRec.
+From Ackermann Require Import cPair.
+From Coq Require Import Arith.
+From Ackermann Require Import code.
+From Ackermann Require Import codeSubFormula.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import Languages.
+From Ackermann Require Import subAll.
+From Ackermann Require Import subProp.
+From Ackermann Require Import folLogic3.
+From Ackermann Require Import folReplace.
+From Ackermann Require Import LNN.
+From Ackermann Require Import codeNatToTerm.
 Require Import PRrepresentable.
-Require Import ListExt.
-Require Import Coq.Lists.List.
-Require Import NN.
-Require Import expressible.
+From Ackermann Require Import ListExt.
+From Coq Require Import Lists.List.
+From Ackermann Require Import NN.
+From Ackermann Require Import expressible.
 
 Definition subStar (a v n : nat) := codeSubFormula a v (codeNatToTerm n).
 
@@ -358,8 +358,8 @@ Qed.
 
 End LNN_FixPoint.
 
-Require Import PA.
-Require Import NN2PA.
+From Ackermann Require Import PA.
+From Ackermann Require Import NN2PA.
 
 Section LNT_FixPoint.
 

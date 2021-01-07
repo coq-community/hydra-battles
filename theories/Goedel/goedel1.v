@@ -1,17 +1,17 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith.
-Require Import folProp.
-Require Import folProof.
-Require Import subProp.
-Require Import ListExt.
+From Coq Require Import Ensembles.
+From Coq Require Import Lists.List.
+From Coq Require Import Arith.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import subProp.
+From Ackermann Require Import ListExt.
 Require Import fixPoint.
 Require Import codeSysPrf.
-Require Import wConsistent.
-Require Import NN.
-Require Import code.
+From Ackermann Require Import wConsistent.
+From Ackermann Require Import NN.
+From Ackermann Require Import code.
 
-Require Import checkPrf.
+From Ackermann Require Import checkPrf.
 
 Section Goedel's_1st_Incompleteness.
 

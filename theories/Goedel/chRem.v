@@ -1,10 +1,10 @@
-Require Import Arith.
-Require Import Wf_nat.
-Require Import ZArith.
-Require Import Peano_dec.
-Require Import ZArith_dec.
+From Coq Require Import Arith.
+From Coq Require Import Wf_nat.
+From Coq Require Import ZArith.
+From Coq Require Import Peano_dec.
+From Coq Require Import ZArith_dec.
 From Pocklington Require Import gcd divides natZ prime modprime.
-Require Import Max.
+From Coq Require Import Max.
 
 Lemma multO : forall a b : nat, a * b = 0 -> a = 0 \/ b = 0.
 Proof.
