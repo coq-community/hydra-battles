@@ -65,3 +65,10 @@ make install
 ## Documentation
 
 More information about the project can be found at [this website](http://r6.ca/goedel1.html).
+
+
+## Projects
+
+ The directory theories/Ackermann contains two (not solved yet) exercises about primitive recursive functions:
+ theories\_Ackermann\_Fibonacci\_project.v and theories\_Ackermann\_Ackermann_project.v.
+ Please contribute!
