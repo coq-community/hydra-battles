@@ -1,20 +1,20 @@
-Require Import Arith.
-Require Import extEqualNat.
-Require Import subAll.
-Require Import folProp.
-Require Import subProp.
-Require Import folReplace.
-Require Import folLogic3.
-Require Import NN.
-Require Import NNtheory.
-Require Import primRec.
+From Coq Require Import Arith.
+From Ackermann Require Import extEqualNat.
+From Ackermann Require Import subAll.
+From Ackermann Require Import folProp.
+From Ackermann Require Import subProp.
+From Ackermann Require Import folReplace.
+From Ackermann Require Import folLogic3.
+From Ackermann Require Import NN.
+From Ackermann Require Import NNtheory.
+From Ackermann Require Import primRec.
 Require Import chRem.
-Require Import expressible.
-Require Import Coq.Lists.List.
-Require Vector.
-Require Import ListExt.
-Require Import cPair.
-Require Import Decidable.
+From Ackermann Require Import expressible.
+From Coq Require Import Lists.List.
+From Coq Require Vector.
+From Ackermann Require Import ListExt.
+From Ackermann Require Import cPair.
+From Coq Require Import Decidable.
 
 Section Primative_Recursive_Representable.
 

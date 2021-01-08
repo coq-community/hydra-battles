@@ -1,20 +1,20 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith.
-Require Import folProp.
-Require Import folProof.
-Require Import folReplace.
-Require Import folLogic3.
-Require Import subProp.
-Require Import ListExt.
+From Coq Require Import Ensembles.
+From Coq Require Import Lists.List.
+From Coq Require Import Arith.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import folReplace.
+From Ackermann Require Import folLogic3.
+From Ackermann Require Import subProp.
+From Ackermann Require Import ListExt.
 Require Import fixPoint.
 Require Import codeSysPrf.
-Require Import NNtheory.
-Require Import code.
+From Ackermann Require Import NNtheory.
+From Ackermann Require Import code.
 Require Import PRrepresentable.
-Require Import expressible.
-Require Import checkPrf.
-Require Import codeNatToTerm.
+From Ackermann Require Import expressible.
+From Ackermann Require Import checkPrf.
+From Ackermann Require Import codeNatToTerm.
 
 Section Rosser's_Incompleteness.
 

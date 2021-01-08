@@ -1,0 +1,4 @@
+(coq.theory
+ (name Ackermann)
+ (package coq-ackermann)
+ (synopsis "Primitive recursive functions, first-order logic, NN, and PA in Coq"))

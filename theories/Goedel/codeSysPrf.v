@@ -1,24 +1,24 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import checkPrf.
-Require Import code.
-Require Import Languages.
-Require Import folProp.
-Require Import folProof.
-Require Import folLogic3.
-Require Import folReplace.
+From Coq Require Import Ensembles.
+From Coq Require Import Lists.List.
+From Ackermann Require Import checkPrf.
+From Ackermann Require Import code.
+From Ackermann Require Import Languages.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import folLogic3.
+From Ackermann Require Import folReplace.
 Require Import PRrepresentable.
-Require Import expressible.
-Require Import primRec.
-Require Import Arith.
-Require Import PA.
-Require Import NNtheory.
-Require Import codeList.
-Require Import subProp.
-Require Import ListExt.
-Require Import cPair.
-Require Import wellFormed.
-Require Import prLogic.
+From Ackermann Require Import expressible.
+From Ackermann Require Import primRec.
+From Coq Require Import Arith.
+From Ackermann Require Import PA.
+From Ackermann Require Import NNtheory.
+From Ackermann Require Import codeList.
+From Ackermann Require Import subProp.
+From Ackermann Require Import ListExt.
+From Ackermann Require Import cPair.
+From Ackermann Require Import wellFormed.
+From Ackermann Require Import prLogic.
 
 Ltac SimplFreeVar :=
   repeat

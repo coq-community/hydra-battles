@@ -54,6 +54,10 @@ tested_coq_opam_versions:
 
 dependencies:
 - opam:
+    name: coq-ackermann
+    version: '{= version}'
+  description: Ackermann (primitive recursive functions library that is part of this repository)
+- opam:
     name: coq-pocklington
     version: '{= "dev"}'
   description: |-
