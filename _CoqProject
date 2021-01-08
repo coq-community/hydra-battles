@@ -9,6 +9,7 @@ theories/Goedel/goedel2.v
 theories/Goedel/rosserPA.v
 theories/Goedel/rosser.v
 theories/Goedel/PRrepresentable.v
+theories/Ackermann/Ackermann_project.v
 theories/Ackermann/checkPrf.v
 theories/Ackermann/codeFreeVar.v
 theories/Ackermann/codeList.v
@@ -21,6 +22,7 @@ theories/Ackermann/cPair.v
 theories/Ackermann/Deduction.v
 theories/Ackermann/expressible.v
 theories/Ackermann/extEqualNat.v
+theories/Ackermann/Fibonacci_project.v
 theories/Ackermann/folLogic2.v
 theories/Ackermann/folLogic3.v
 theories/Ackermann/folLogic.v
