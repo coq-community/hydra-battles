@@ -55,8 +55,35 @@ Proof. reflexivity. Qed.
 
 (** ** Examples *)
 
+
+Definition double n := n * 2.
+
+
 Definition fact : nat -> nat :=
   fun a => nat_rec _ 1 (fun x y =>  S x * y) a.
+
+
+Definition exp := fun a b => nat_rec (fun _ => nat)
+                                     1
+                                     (fun _ y =>  y * a)
+                                     b.
+
+Definition tower2 h : nat :=  nat_rec (fun n => nat)
+                                1
+                                (fun _  y =>  exp 2 y)
+                                h.
+
+Remark tower2_S h : tower2 (S h) = exp 2 (tower2 h).
+Proof. reflexivity. Qed.
+
+Lemma doubleIsPR : isPR 1 double.
+Proof.
+  unfold double; apply compose1_2IsPR.
+  - apply idIsPR.
+  - apply const1_NIsPR.
+  - apply multIsPR.
+Qed.
+
 
 Lemma factIsPR : isPR 1 fact.
 Proof.
@@ -68,34 +95,23 @@ Proof.
 Qed.
 
 
-Definition double n := n * 2.
-Definition exp2 := fun a => nat_rec (fun n => nat)
-                                    1
-                                    (fun _  y =>  double y)
-                                    a.
-Definition tower2 h : nat :=  nat_rec (fun n => nat)
-                                1
-                                (fun _  y =>  exp2 y)
-                                h.
-
-Lemma doubleIsPR : isPR 1 double.
+Lemma expIsPR : isPR 2 exp.
 Proof.
-  unfold double; apply compose1_2IsPR.
-  - apply idIsPR.
+  unfold exp.
+  apply swapIsPR.
+  apply ind1ParamIsPR.
+  -  apply filter011IsPR.
+     apply multIsPR.
   - apply const1_NIsPR.
-  - apply multIsPR.
 Qed.
 
-Lemma exp2IsPR : isPR 1 exp2.
-  unfold exp2; apply indIsPR.
-  apply filter01IsPR.
-  apply doubleIsPR.
+Lemma exp2IsPR : isPR 1 (exp 2).
+Proof.
+unfold exp; refine (compose2IsPR 1 (fun _ => 2) _ exp _).
+ - apply const1_NIsPR.
+ - apply expIsPR.
 Qed.
 
-
-
-Remark tower2_S h : tower2 (S h) = exp2 (tower2 h).
-Proof. reflexivity. Qed.
 
 Lemma tower2IsPR : isPR 1 tower2.
 Proof.

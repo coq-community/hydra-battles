@@ -1,7 +1,5 @@
 -R theories/ordinals hydras
 -R theories/additions additions
-# -R ../Goedel/theories/Ackermann Ackermann
-
 
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
