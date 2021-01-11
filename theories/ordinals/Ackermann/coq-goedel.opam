@@ -1,0 +1,38 @@
+# This file was generated from `meta.yml`, please do not edit manually.
+# Follow the instructions on https://github.com/coq-community/templates to regenerate.
+
+opam-version: "2.0"
+maintainer: "palmskog@gmail.com"
+version: "dev"
+
+homepage: "https://github.com/coq-community/goedel"
+dev-repo: "git+https://github.com/coq-community/goedel.git"
+bug-reports: "https://github.com/coq-community/goedel/issues"
+license: "MIT"
+
+synopsis: "Coq proof of the Gödel-Rosser 1st incompleteness theorem"
+description: """
+A proof in Coq of the Gödel-Rosser 1st incompleteness theorem,
+which says that any first order theory extending NN (which is PA
+without induction) that is complete is inconsistent."""
+
+build: ["dune" "build" "-p" name "-j" jobs]
+depends: [
+  "dune" {>= "2.5"}
+  "coq" {(>= "8.7" & < "8.14~") | (= "dev")}
+  "coq-ackermann" {= version}
+  "coq-pocklington" {= "dev"}
+]
+
+tags: [
+  "category:Mathematics/Logic/Foundations"
+  "keyword:Goedel"
+  "keyword:Rosser"
+  "keyword:incompleteness"
+  "keyword:logic"
+  "keyword:Hilbert"
+  "logpath:Goedel"
+]
+authors: [
+  "Russell O'Connor"
+]
