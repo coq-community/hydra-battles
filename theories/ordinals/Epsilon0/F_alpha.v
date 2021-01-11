@@ -4,13 +4,13 @@
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
 From hydras  Require Import  Iterates  Simple_LexProd Exp2.
-From hydras Require Import  E0 Canon Paths.
+From hydras Require Import  E0 Canon Paths primRec.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.
 
 From Equations Require Import Equations.
-
+Import Prelude.Iterates.
 
 (* 
   If _CoqProject well installed 
@@ -299,7 +299,8 @@ Section Properties.
         induction H.
         
         rewrite (iterate_S_eqn (F_ beta) (S n)).
-        apply Lt.lt_le_trans with (F_ beta (iterate (F_ beta) (S n) n)).
+        apply Lt.lt_le_trans with (F_ beta
+                                      (iterate (F_ beta) (S n) n)).
         auto. 
         apply mono_weak; auto.
         

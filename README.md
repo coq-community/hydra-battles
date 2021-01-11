@@ -52,9 +52,8 @@ This contribution contains two parts:
 ### Coq sources (directory theories)
 
 - theories/ordinals/
-  -   Hydra/*.v 
-      -    Representation in _Coq_ of hydras and hydra 
-   battles
+  - Hydra/*.v 
+      - Representation in _Coq_ of hydras and hydra battles
       - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
       - A proof that no variant bounded by some ordinal less than epsilon0 can prove this termination
       - Comparison of the length of some kind of Hydra battles with the Hardy hierarchy of fast growing functions
@@ -63,24 +62,26 @@ This contribution contains two parts:
       - Generic formalization on ordinal notations (well-founded ordered datatypes with a comparison function)
     
   -  Epsilon0/*.v
-	  - Data types for representing ordinals less than epsilon0 in Cantor normal form
-	  - The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
-	  - Representation of some hierarchies of fast growing functions
+      - Data types for representing ordinals less than epsilon0 in Cantor normal form
+      - The _Ketonen-Solovay machinery_: canonical sequences, accessibility, paths inside epsilon0
+      - Representation of some hierarchies of fast growing functions
    
-  -  Schutte/*.v
-       - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
+  - Schutte/*.v
+      - An axiomatization of countable ordinals, after Kurt Schütte. It is intended to be a reference for the data types considered in theories/Epsilon0.
 
   - Gamma0/*.v
-       - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
+      - A data type for ordinals below Gamma0 in Veblen normal form (**draft**).
   
   - rpo/*.v
       - A contribution on _recursive path orderings_ by Evelyne Contejean.
+
+  - Ackermann/*.v
+      - Primitive recursive functions, first-order logic, NN, and PA
   
   - Prelude/*.v
-     - Various auxiliary definitions and lemmas
+      - Various auxiliary definitions and lemmas
 
-- theories/additions/*.v
-  
+- theories/additions/*.v  
   - Addition chains
 
  
