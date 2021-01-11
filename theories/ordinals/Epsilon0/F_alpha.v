@@ -12,6 +12,12 @@ From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
 
 
+(* 
+  If _CoqProject well installed 
+From Ackermann Require Import primRec. *)
+Import Iterates.
+
+
 (** ** The Wainer hierarchy 
 
 *)
