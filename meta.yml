@@ -41,10 +41,12 @@ license:
   identifier: MIT
 
 supported_coq_versions:
-  text: 8.11 to 8.13
-  opam: '{>= "8.11" & < "8.14~"}'
+  text: 8.11 or later
+  opam: '{(>= "8.11" & < "8.14~") | (= "dev")}'
 
 tested_coq_opam_versions:
+- version: 'coq-dev'
+  repo: 'mathcomp/mathcomp-dev'
 - version: '1.12.0-coq-8.13'
   repo: 'mathcomp/mathcomp'
 - version: '1.12.0-coq-8.12'
@@ -55,16 +57,18 @@ tested_coq_opam_versions:
 dependencies:
 - opam:
     name: coq-equations
-    version: '{>= "1.2" & < "1.3~"}'
+    version: '{(>= "1.2" & < "1.3~") | (= "dev")}'
   description: |-
-    [Equations](https://github.com/mattam82/Coq-Equations) 1.2
+    [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
 
 namespace: hydras
 
 keywords:
 - name: Ketonen-Solovay machinery
 - name: ordinals
+- name: primitive recursive functions
 
 categories:
 - name: Mathematics/Combinatorics and Graph Theory
+- name: Mathematics/Logic/Foundations
 ---
