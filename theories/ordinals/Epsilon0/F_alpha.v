@@ -10,12 +10,12 @@ Import RelationClasses Relations.
 From Coq Require Import ArithRing Lia.
 
 From Equations Require Import Equations.
+
+From hydras Require Import primRec.
+
+(** For masking primRec's iterate *)
 Import Prelude.Iterates.
 
-(* 
-  If _CoqProject well installed 
-From Ackermann Require Import primRec. *)
-Import Iterates.
 
 
 (** ** The Wainer hierarchy 
