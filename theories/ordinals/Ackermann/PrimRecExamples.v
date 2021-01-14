@@ -1,6 +1,38 @@
-Require Import primRec.
+Require Import primRec Arith ArithRing.
 Import extEqualNat.
 
+(**
+Compute naryFunc 3.
+
+= nat -> nat -> nat -> nat
+  : Set
+
+
+Compute naryRel 2.
+
+  = nat -> nat -> bool
+     : Set
+
+*)
+Compute extEqual 2.
+(*
+    = fun a b : naryFunc 3 => forall x x0 x1 : nat, a x x0 x1 = b x x0 x1
+     : naryFunc 3 -> naryFunc 3 -> Prop
+ *)
+
+Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x - x).
+Proof.
+  intros x y.
+(*
+  x, y : nat
+  ============================
+  extEqual 0 (x * y) (y * x)
+ *)
+  cbn. 
+  rewrite <- Nat.add_sub_assoc, Nat.sub_diag.
+  - ring.
+  - apply le_n.  
+Qed.
 
 
 (** ** Understanding some constructions ...

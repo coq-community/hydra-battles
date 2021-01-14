@@ -1,0 +1,125 @@
+\chapter{Primitive Recursive Functions}
+
+\section{Introduction}
+The definition of primitive recursive functions we use come
+from Russel O'Connors formalization in \coq{} of
+G\"odel's incompleteness theorems~\cite{OConnor05}, now hosted in
+the \texttt{theories/ordinals/Ackermann} directory.
+
+This chapter contains some comments on Russel's library, as well as a few extensions.
+
+\section{First look at the Ackermann library}
+
+O'Connor's library on Gödel's incompleteness theorems contains a little more 
+than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
+
+Thus, we propose a slow exploration of this library, through examples and exercises.
+
+\subsection{Basic Libraries}
+
+The formal definition of primitive recursive functions lies in the library
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
+with preliminary definitions in 
+\href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}
+and
+\href{../theories/html/hydras.Ackermann.misc.html}{Ackermann.misc}.
+
+\subsubsection{Functions of arbitrary arity}
+
+The library allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
+curried form. This is made possible in 
+\href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
+
+\begin{Coqsrc}
+Fixpoint naryFunc (n : nat) : Set :=
+  match n with
+  | O => nat
+  | S n => nat -> naryFunc n
+  end.
+\end{Coqsrc}
+
+For instance (\texttt{naryFunc 1}) is convertible to \texttt{nat -> nat} and (\texttt{naryFunc 3})
+to \texttt{nat -> nat -> nat -> nat}.
+
+\vspace{4pt}
+\noindent
+\emph{From\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}}.
+\begin{Coqsrc}
+Require Import primRec.
+Import extEqualNat.
+
+Compute naryFunc 3.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+= nat -> nat -> nat -> nat
+  : Set  
+\end{Coqanswer}
+
+Thus, the function \texttt{plus} has also type (\texttt{naryFunc 2}).
+
+Likewise, arbitrary boolean predicates may have an arbitrary number of arguments. The dependent type
+(\texttt{naryRel $n$}), defined in the same way as \texttt{naryFunc}, is the type of $n$-ary functions from
+\texttt{nat} into \texttt{bool}.
+
+\begin{Coqsrc}
+Compute naryRel 2.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ = nat -> nat -> bool
+     : Set
+\end{Coqanswer}
+
+The magic of dependent types makes it possible to define recursively extensionnal equality between functions of the same arity.
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
+\begin{Coqsrc}
+Fixpoint  extEqual (n : nat) : forall  (a b : naryFunc n), Prop :=
+  match n with
+    0 => fun a b => a = b
+  | S p => fun a b => forall c, extEqual p (a c) (b c)
+  end.
+\end{Coqsrc}
+
+\begin{Coqsrc}
+Compute extEqual 2.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+     = fun a b : naryFunc 2 => forall x x0 : nat, a x x0 = b x x0
+     : naryFunc 2 -> naryFunc 2 -> Prop
+ \end{Coqanswer}
+ 
+\begin{Coqsrc}
+Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x -x) .
+Proof.
+  intros x y.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  x, y : nat
+  ============================
+  extEqual 0 (x * y) (y * x)
+\end{Coqanswer}
+
+\begin{Coqsrc}
+  cbn.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 10)
+  
+  x, y : nat
+  ============================
+  x * y = y * x + x - x
+\end{Coqanswer}
+
+\begin{Coqsrc}
+  rewrite <- Nat.add_sub_assoc, Nat.sub_diag.
+  - ring.
+  - apply le_n.  
+Qed.
+\end{Coqsrc}
