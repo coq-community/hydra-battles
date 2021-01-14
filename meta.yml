@@ -12,8 +12,9 @@ description: |-
   with the help of the Coq Proof assistant. This development includes
   the study of several representations of ordinal numbers, and a part
   of the so-called Ketonen and Solovay machinery (combinatorial
-  properties of epsilon0).
-
+  properties of epsilon0). This project now hosts the part of goedel
+  dedicated to primitive recursive functions and Peano arithmetics.
+  
 publications:
 - pub_url: https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf
   pub_title: Accessible Independence Results for Peano Arithmetic
@@ -27,6 +28,7 @@ publications:
 
 authors:
 - name: Pierre Castéran
+- name: Russel O'Connor
 
 maintainers:
 - name: Pierre Castéran
@@ -41,15 +43,13 @@ license:
   identifier: MIT
 
 supported_coq_versions:
-  text: 8.11 to 8.13
-  opam: '{>= "8.11" & < "8.14~"}'
+  text: 8.12 to 8.13
+  opam: '{>= "8.12" & < "8.14~"}'
 
 tested_coq_opam_versions:
 - version: '1.12.0-coq-8.13'
   repo: 'mathcomp/mathcomp'
 - version: '1.12.0-coq-8.12'
-  repo: 'mathcomp/mathcomp'
-- version: '1.11.0-coq-8.11'
   repo: 'mathcomp/mathcomp'
 
 dependencies:
@@ -64,7 +64,10 @@ namespace: hydras
 keywords:
 - name: Ketonen-Solovay machinery
 - name: ordinals
+- name: primitive recursive functions
+- name: Peano arithmetics
 
 categories:
 - name: Mathematics/Combinatorics and Graph Theory
+- name: Computability theory
 ---
