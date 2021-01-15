@@ -638,7 +638,7 @@ these definitions for defining the \texttt{Monoid} type class.
 
 \subsection{A common notation for multiplication}
 \label{op-classes}
-\index{Type Classes!Operational Type Classes}
+\index{Coq!Type Classes!Operational Type Classes}
 \emph{Operational type classes}~\cite{BS2011}
 allow us to define a common notation 
 for multiplication in any algebraic structure. 
@@ -746,7 +746,7 @@ For instance, in Sect.~\vref{nat-monoids}, we consider various monoids on types
 
 
 \subsection{The Monoid Type Class}
-\index{Type Classes}
+\index{Coq!Type Classes}
 We are now ready to  give a definition of the \texttt{Monoid} class, using
 \texttt{*} as an infix operator in scope \coqscope{M} for the monoid  multiplication.
 
@@ -930,8 +930,8 @@ Arguments M2_Monoid {A zero one plus mult} rt.
 
 
 \subsection{Monoids and Equivalence Relations}
-\index{Generalized rewriting}
-\index{Equivalence relations}
+\index{Coq!Generalized rewriting}
+\index{Coq!Equivalence relations}
 
 In some contexts, the ``axioms'' of the \texttt{Monoid} class  may be too restrictive.
 For instance, consider multiplication in $\mathds{Z}/m\mathds{Z}$ where
@@ -971,7 +971,8 @@ plus some constraints on \texttt{E\_eq}.
 Please look for instance at our tutorial on type classes and relations~\cite{PCMS} 
 for understanding the use of  type classes \texttt{Equivalence}, \texttt{Reflexive}, \texttt{Proper}, etc, in relation with tactics like \texttt{rewrite}, \texttt{reflexivity}, etc., in proofs which involve  equivalence relations instead of equality.
 
-\index{Type Classes!Proper}
+\index{Coq!Type Classes}
+\index{Coq!Proper}
 \label{EMonoid-def}
 
 %\todo{link to Proper in stdlib : Coq.Classes.Morphisms and Coq.Classes.CMorphisms}
@@ -997,7 +998,7 @@ Thus, our  definitions and theorems about exponentiation will take place as
 much as possible within the more generic framework of \texttt{EMonoid}s.
 
 
-\index{Coercions}
+\index{Coq!Coercions}
 
 \begin{Coqsrc}
 Global Instance eq_equiv {A} : Equiv A := eq.
@@ -1318,8 +1319,8 @@ the exponentiation operator, we have to prove that, whenever \texttt{$x$ == $y$}
 the equality \texttt{$x^n$ == $y^n$} holds for any exponent \texttt{$n$}. 
 For this purpose, we use the \texttt{Proper} class of module
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.Morphisms.html}{Coq.Classes.Morphisms}
-\index{Type Classes!Proper}
-
+\index{Coq!Type Classes}
+\index{Coq!Proper}
 \begin{Coqsrc}
 Global Instance power_proper :
      Proper (equiv ==> eq ==> equiv) power.
@@ -2079,7 +2080,7 @@ The rest of this chapter is devoted to the  presentation of more efficient
 
 \subsection{Correctness Proofs by Reflection}
 \label{reflection-section}
-\index{Advanced proof techniques!Proof by reflection}
+\index{Coq!Proof by reflection}
 Instead of letting the tactic \texttt{rewrite} look for contexts in which
 setoid rewriting is possible, we propose to use (deterministic) computations for
 obtaining a ``canonical'' form for terms generated from a variable \texttt{x}
@@ -2311,7 +2312,7 @@ In the next section, we present a solution that avoids doing such a lot of compu
 
 
 \subsubsection{About parametricity}
-\index{Advanced proof techniques!Parametricity}
+\index{Coq!Parametricity}
 Let us now present another tactic for proving chain correctness,
 in the tradition of works on \emph{parametricity} and its use for 
 proving properties on programs.
@@ -3156,8 +3157,8 @@ equivalent computations.
 
 
 \subsubsection{Definition:} 
-\index{Type Classes!Proper}
-
+\index{Coq!Type Classes}
+\index{Coq!Proper}
 A continuation \texttt{k:Fkont A} is \emph{proper}
 if, whenever \linebreak[3] \texttt{x == y} holds, the computations \texttt{k x} and 
 \texttt{k y} are equivalent.
@@ -4017,7 +4018,7 @@ Inductive signature : Type :=
 
 The following dependently-typed functions will help us to specify  formally
 any correct chain generator.
-\index{Dependently Typed Functions}
+\index{Coq!Dependently Typed Functions}
 
 \begin{Coqsrc}
 (** 

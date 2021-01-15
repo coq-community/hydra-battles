@@ -1,4 +1,4 @@
-Require Import primRec Arith ArithRing.
+Require Import primRec Arith ArithRing List.
 Import extEqualNat.
 
 (**
@@ -33,6 +33,42 @@ Proof.
   - ring.
   - apply le_n.  
 Qed.
+
+
+Example weirdPR : PrimRec 1 :=
+primRecFunc 0
+  (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
+  (composeFunc 2 2
+    (PRcons 2 1
+      (composeFunc 2 1
+         (PRcons 2 0 (projFunc 2 1 (le_n 2))
+                 (PRnil 2))
+         succFunc)
+      (PRcons 2 0
+        (composeFunc 2 1
+          (PRcons 2 0
+             (projFunc 2 0
+                       (le_S 1 1 (le_n 1)))
+             (PRnil 2))
+          (projFunc 1 0 (le_n 1))) (PRnil 2)))
+    (primRecFunc 1 (composeFunc 1 0 (PRnil 1) zeroFunc)
+       (composeFunc 3 2
+         (PRcons 3 1
+            (projFunc 3 1 (le_S 2 2 (le_n 2)))
+            (PRcons 3 0 (projFunc 3 0
+                          (le_S 1 2
+                                (le_S 1 1 (le_n 1))))
+                    (PRnil 3)))
+         (primRecFunc 1 (projFunc 1 0 (le_n 1))
+                      (composeFunc 3 1
+                          (PRcons 3 0
+                                  (projFunc 3 1 (le_S 2 2 (le_n 2)))
+                                  (PRnil 3))
+                          succFunc))))). 
+
+Example  mystery_fun : nat -> nat := evalPrimRec 1 weirdPR.
+
+Compute List.map mystery_fun (0::1::2::3::4::5::6::nil) : list nat.
 
 
 (** ** Understanding some constructions ...
@@ -117,6 +153,7 @@ Proof.
 Qed.
 
 
+
 Lemma factIsPR : isPR 1 fact.
 Proof.
   unfold fact; apply indIsPR.
@@ -124,7 +161,7 @@ Proof.
   -  apply filter10IsPR; apply succIsPR.
   -  apply filter01IsPR; apply idIsPR.
   -  apply multIsPR.
-Qed.
+Defined.
 
 
 Lemma expIsPR : isPR 2 exp.

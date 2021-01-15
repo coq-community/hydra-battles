@@ -728,7 +728,7 @@ In order to get an appropriate induction scheme for the types
 \texttt{Hydra} and \texttt{Hydrae}, we can use  \coq{}'s  command \texttt{Scheme}.
 
 
-\index{Coq!Techniques!Mutually inductive types}
+\index{Coq!Mutually inductive types}
 \index{Coq!Commands!Scheme}
 
 \begin{Coqsrc}
@@ -2511,7 +2511,7 @@ Lemma lt_omega alpha :
 
 
 % \label{warning:coercions}
-% \index{Coq!Techniques!Coercions} 
+% \index{Coq!Coercions} 
 % \begin{remark}
 % Beware of coercions and notation scopes!
 % Let us consider the following goal:
@@ -3325,7 +3325,7 @@ Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
 We have now to prove that there exists at most one  proof of (\texttt{Nat.ltb x0 (S n)}). This is not obvious, but  a consequence of the following lemma of library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
 
-\index{Coq!Techniques!Unicity of equality proofs}
+\index{Coq!Unicity of equality proofs}
 \label{sect:eq-proof-unicity}
 
 \begin{Coqanswer}
@@ -3881,7 +3881,7 @@ Coercion fin  : nat >-> T1.
 Example ten : T1 := 10.   
 \end{Coqsrc}
 
-% \index{Coq!Techniques!Coercions}
+% \index{Coq!Coercions}
 % \index{Functions!Coercions@Coercions (from nat to ordinal types)}
 % \begin{remark}
 % Please refer to the remark~\pageref{warning:coercions} about the use of coercions.
@@ -4269,7 +4269,7 @@ Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} i
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
 equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
-\index{Coq!Techniques!Unicity of equality proofs}
+\index{Coq!Unicity of equality proofs}
 
 
 \begin{Coqsrc}
@@ -4598,7 +4598,7 @@ which are not in Cantor normal form.
 
 \subsubsection{A First Attempt}
 \label{sec:orgheadline77}
-\index{Coq!Techniques!Well-founded induction}
+\index{Coq!Well-founded induction}
 
 It is natural to try to prove by structural induction over \texttt{T1} 
 that every term in normal form is accessible through \texttt{LT}.
@@ -5510,7 +5510,7 @@ recursive function (\emph{cf} the post of Guillaume Melquiond on Coq-club (Dec 2
 \url{https://sympa.inria.fr/sympa/arc/coq-club/2020-12/msg00069.html}).
 The type \texttt{fuel}, an alternative 
 to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}{Prelude.Fuel}).
-\index{Coq!Techniques!Giving fuel to a long computation}
+\index{Coq!Giving fuel to a long computation}
 
 \end{exercise}
 
@@ -6135,7 +6135,7 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 \verb@sig@ construct.
 
 \label{lemma:L-2_6-1}
-\index{Coq!Techniques!Sigma types}
+\index{Coq!Sigma types}
 
 \begin{Coqsrc}
 Lemma Lemma2_6_1 (alpha : T1) :  
@@ -9124,7 +9124,7 @@ We prove this result by transfinite induction on $\alpha$ of both properties.
 The proof is still quite long, by transfinite induction over $\alpha$.
 
 
-\index{Coq!Techniques!Transfinite induction}
+\index{Maths!Transfinite induction}
 
 \begin{Coqsrc}
 Section Proof_of_Lemma5.

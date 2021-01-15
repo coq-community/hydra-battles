@@ -22,9 +22,9 @@ Inductive multiset_extension_step (R : relation elt) : list elt -> list elt -> P
       list_permut l1 (la ++ l) -> list_permut l2 (a :: l) ->
       multiset_extension_step R l1 l2.
 
-(** If n << {a} U m, then 
-      either, there exists n' such that n = {a} U n' and n' << m,
-      or, there exists k, such that n = k U m, and k << {a}. *)
+(** If [n << {a} U m] , then 
+      either, there exists n' such that n = {a} U n' and [n' << m],
+      or, there exists k, such that n = k U m, and [k << {a}]. *)
 
 Lemma two_cases :
  forall R a m n, 
