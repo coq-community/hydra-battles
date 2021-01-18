@@ -133,14 +133,24 @@ Remark PrimRec_2_S  (f: naryFunc 2) (g : naryFunc 4) (i:nat) :
 Proof. reflexivity. Qed.
 
 
-(** * First proofs of isPR statements *)
+(** * First proofs of isPR statements 
+      
+  The module [Alt] presents proofs of lemma alreday proven in [primRec.v]
+  We just hope that such a redundancy will help the reader to get familiar 
+  with the various patterns allowed by that library.
 
+*)
+
+Module Alt.
+  
 Lemma zeroIsPR : isPR 0 0.
 Proof.
-  exists zeroFunc; reflexivity.
+  exists zeroFunc.
+  cbn.
+  reflexivity.
 Qed.  
 
-Lemma SIsPR : isPR 1 S.
+Lemma SuccIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
@@ -152,7 +162,61 @@ Proof.
  cbn; reflexivity.
 Qed.
 
+Check composeFunc 0 1.
 
+Fact compose_01 :
+    forall (x:PrimRec 0) (t : PrimRec 1),
+    let c := evalPrimRec 0 x in
+    let f := evalPrimRec 1 t in
+    evalPrimRec 0 (composeFunc 0 1
+                               (PRcons 0 0 x (PRnil 0))
+                               t)  =
+     f c.
+Proof. reflexivity. Qed.
+
+
+Lemma  const1_NIsPR n : isPR 0 n. 
+Proof.
+  induction n.
+ - apply zeroIsPR.
+ - destruct IHn as [x Hx].
+   exists (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) succFunc). 
+   cbn in *; intros; now rewrite Hx.
+Qed.
+
+
+Lemma isPR01  k : isPR 0 k -> isPR 1 (fun  _ =>  k).
+Proof.
+ intros [x Hx].
+ exists (composeFunc 1 0 (PRnil 1)  x);  cbn in *.
+ intros _; assumption.  
+Qed.
+
+Corollary zeroIsPR1 : isPR 1 (fun _ => 0).
+Proof.
+  apply isPR01, zeroIsPR.
+Qed.
+
+Corollary const1_NIsPR' n : isPR 1 (fun _ => n).
+Proof.
+  induction n.
+ - apply zeroIsPR1.
+ - destruct IHn as [x Hx].
+   exists (composeFunc 1 1 (PRcons 1 0 x (PRnil 1)) succFunc ).
+   cbn in *.
+   intros; now rewrite Hx.
+Qed.
+
+Lemma const1_NIsPR'' n : isPR 1 (fun _ => n).
+Proof.
+  induction n.
+  - apply zeroIsPR1.
+  - apply compose1_1IsPR.
+   +  assumption. 
+   + apply SuccIsPR.
+Qed.
+
+End Alt.
 
 
 (** ** Examples *)
