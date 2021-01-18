@@ -185,36 +185,45 @@ Proof.
 Qed.
 
 
-Lemma isPR01  k : isPR 0 k -> isPR 1 (fun  _ =>  k).
+Lemma plusIsPR : isPR 2 plus.
 Proof.
- intros [x Hx].
- exists (composeFunc 1 0 (PRnil 1)  x);  cbn in *.
- intros _; assumption.  
+  assert (H:isPR 3 (fun x y z =>  S y)).
+  {
+    apply filter010IsPR, succIsPR.
+  }
+  destruct H as [x Hx].
+  cbn in Hx.
+  assert (H0:0<1) by auto.
+  exists (primRecFunc 1 (projFunc 1 0 H0) x).
+  cbn; induction c; cbn in *.
+   -  reflexivity.
+   - intro c0;  rewrite IHc; cbn in *; now rewrite Hx.
 Qed.
 
-Corollary zeroIsPR1 : isPR 1 (fun _ => 0).
+Lemma isPR_replace n : forall f g, isPR n f ->
+                                    extEqual n f g ->
+                                    isPR n g.
 Proof.
-  apply isPR01, zeroIsPR.
+ intros f g [x Hx]; exists x.
+ apply extEqualTrans with f; auto.
 Qed.
 
-Corollary const1_NIsPR' n : isPR 1 (fun _ => n).
+Lemma plusIsPR' : isPR 2 plus.
 Proof.
-  induction n.
- - apply zeroIsPR1.
- - destruct IHn as [x Hx].
-   exists (composeFunc 1 1 (PRcons 1 0 x (PRnil 1)) succFunc ).
-   cbn in *.
-   intros; now rewrite Hx.
+  Search (isPR _ (fun _ _ => (nat_rec _ _ _ _))).
+  apply isPR_replace with (fun x y =>
+                             nat_rec  (fun n : nat => nat)
+                                      y
+                                      (fun z t =>  S t)
+                                      x).
+  - apply ind1ParamIsPR.
+    + apply filter010IsPR, succIsPR.
+    + apply idIsPR.
+  - cbn; intro c; induction c; cbn; auto.
 Qed.
 
-Lemma const1_NIsPR'' n : isPR 1 (fun _ => n).
-Proof.
-  induction n.
-  - apply zeroIsPR1.
-  - apply compose1_1IsPR.
-   +  assumption. 
-   + apply SuccIsPR.
-Qed.
+
+
 
 End Alt.
 

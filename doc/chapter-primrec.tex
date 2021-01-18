@@ -371,6 +371,21 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}, and is realized by 
+(\texttt{projFunc 1 0}).
+
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
+
+\begin{Coqsrc}
+Lemma idIsPR : isPR 1 (fun x : nat => x).
+Proof.
+  assert (H: 0 < 1) by auto.
+  exists (projFunc 1 0 H); cbn; auto.
+Qed.
+\end{Coqsrc}
 
 \subsubsection{Using Function Composition}
 
@@ -404,12 +419,36 @@ Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 Lemma  const1_NIsPR n : isPR 0 n. 
 Proof.
   induction n.
- - apply zeroIsPR.
- - destruct IHn as [x Hx].
+  - apply zeroIsPR.
+  - destruct IHn as [x Hx].
    exists (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) succFunc). 
    cbn in *; intros; now rewrite Hx.
 Qed.
 \end{Coqsrc}
 
+\begin{todo}
+Comment more examples from   \href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}.
+\end{todo}
+
+\section{Two challenges}
+
+\begin{itemize}
+\item Write a simple and readable proof that the Fibonacci function is primitive recursive.
+
+We give the tail-recursive definition from~\cite{BC04}, chapter 9. See also
+\href{https://coq-community.org/coq-art/ch9_function_specification/SRC/fib_tail.v}{this file}.
+\begin{Coqsrc}
+
+Fixpoint general_fib (a0 a1 n:nat) {struct n} : nat :=
+  match n with
+  | O => a0
+  | S p => general_fib a1 (a0 + a1) p
+  end.
+
+Definition fib_tail (n:nat) := general_fib 1 1 n.
+\end{Coqsrc}
 
 
+\item Prove formally that the Ackermann function is \emph{not} primitive recursive.
+
+\end{itemize}
