@@ -1,3 +1,6 @@
+# This file was generated from `meta.yml`, please do not edit manually.
+# Follow the instructions on https://github.com/coq-community/templates to regenerate.
+
 opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
 version: "dev"
@@ -13,21 +16,26 @@ An exploration of some properties of Kirby and Paris' hydra battles,
 with the help of the Coq Proof assistant. This development includes
 the study of several representations of ordinal numbers, and a part
 of the so-called Ketonen and Solovay machinery (combinatorial
-properties of epsilon0)."""
+properties of epsilon0). This project now hosts the part of goedel
+dedicated to primitive recursive functions and Peano arithmetics."""
 
-build: ["dune" "build" "-p" name "-j" jobs]
+build: [make "-j%{jobs}%" ]
+install: [make "install"]
 depends: [
-  "dune" {>= "2.5"}
-  "coq" {>= "8.11" & < "8.14~"}
+  "coq" {>= "8.12" & < "8.14~"}
   "coq-equations" {>= "1.2" & < "1.3~"}
 ]
 
 tags: [
   "category:Mathematics/Combinatorics and Graph Theory"
+  "category:Computability theory"
   "keyword:Ketonen-Solovay machinery"
   "keyword:ordinals"
+  "keyword:primitive recursive functions"
+  "keyword:Peano arithmetics"
   "logpath:hydras"
 ]
 authors: [
   "Pierre Castéran"
+  "Russel O'Connor"
 ]
