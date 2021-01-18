@@ -135,7 +135,7 @@ $\mathbb{N}$, for some $n\in\mathbb{N}$.
 \begin{description}
   \item[zero] the constant function of value $0$ is primitive recursive.
 \item[S] The successor function $S:\mathbb{N}\rightarrow\mathbb{N}$ is primitive recursive.
- \item[projections] For any pair $0\leq i<n$, the projection $\pi_{n,i}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{n,i}(x_0,x_1,\dots,x_{n-1})=x_i$, is primitive recursive.
+ \item[projections] For any pair $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
 \item[composition] For any $n$ and $m$, if $h: \mathbb{N}^m\rightarrow\mathbb{N}$, and
 $g_0,\dots, g_{m-1}$ are primitive recursive of $n$ arguments, then the function which maps any
 tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1}))$ is primitive recursive.
@@ -157,7 +157,7 @@ These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}}
+\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 \begin{Coqsrc}
 Inductive PrimRec : nat -> Set :=
   | succFunc : PrimRec 1
@@ -174,13 +174,27 @@ with PrimRecs : nat -> nat -> Set :=
                    PrimRecs n (S m).
 \end{Coqsrc}
 
+\begin{remark}
+Beware of the conventions used in the \texttt{primRec} library!
+The constructor (\texttt{projFunc $n$ $m$})  is associated with the projection $\pi_{n-m,n}$ and \emph{not}
+$\pi_{n, m}$.
+For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ corresponds to the term
+(\texttt{projFunc 5 3 H}), where \texttt{H} is a proof of $3<5$.
+ This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see next sub-section) . Trying the other conention is left as an exercise.
+\end{remark}
+
+
+
 \subsection{A little bit of Semantics} 
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
-is an interpretation function (\texttt{evalprimRec $n$})  from  (\texttt{PrimRec $n$}) to  (\texttt{naryFunc $n$}) (with the helper (\texttt{evalprimRecS $n$ $m$})
-from  (\texttt{PrimRecs $n$ $m$}) to  (\texttt{Vector.t (naryFunc $n$) $m$}).
+is an interpretation function (\texttt{evalprimRec $n$})  of type
+$\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ (and the helper function 
+(\texttt{evalprimRecS $n$ $m$}) of type 
+$\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
+
 
 Both functions are mutually defined through dependent pattern matching. We advise the readers who 
-would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look at the helper functions in
+would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
 
@@ -205,8 +219,9 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
        Vector.cons _ (evalPrimRec _ g) _  (evalPrimRecs _ _ gs)
   end.
 \end{Coqsrc}
-Let us take as example the following term\footnote{Of course, we never typed this term \emph{verbatim}, but obtained as the result of some computation we leave it the reader to guess and reproduce.}:
+Let us take as example the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it as the result of some computation we leave it the reader to guess and reproduce.}:
 
+\label{sect:weirdfac}
 \begin{Coqsrc}
 Example weirdPR : PrimRec 1 :=
 primRecFunc 0
@@ -254,3 +269,38 @@ Compute List.map mystery_fun (0::1::2::3::4::5::6::nil) : list nat.
 \end{Coqanswer}
 
 Ok, the term \texttt{weirdPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections much simpler ways to prove that a given function is primitive recursive, whithout looking at an unreadable term.
+
+\section{Proving that a given arithmetic function is primitive recursive}
+
+The example in the preceding section clearly shows that, in order to prove that a given arithmetic function
+(defined in \gallina{} as usual) is primitive recursive, trying to give  by hand a term  of type \texttt{PrimRec $n$} is not a good method, since such terms may be huge and complex, even for simple arithmetic functions. The method proposed in Library \texttt{primRec} is the following one:
+
+\begin{enumerate}
+\item Define a type corresponding to the statement "the function \texttt{$f$:naryFunc $n$} is primitive recursive ''.
+\item Prove handy lemmas which may help to prove that a given function is primitive recursive.
+\end{enumerate}
+
+Thus, the proof that a function, like \texttt{factorial}, is primitive recursive may be interactive, whithout having to type complex terms at any step of the development.
+
+\subsection{The predicate \texttt{isPR}}
+
+Let $f$ be an arithmetic function of arity $n$. We say that $f$ is primitive recursive if $f$ is \textbf{extensionnaly}
+equal to the interpretation of some term of type \texttt{PrimRec $n$}. 
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
+\begin{Coqsrc}
+Definition isPR (n : nat) (f : naryFunc n) : Set :=
+  {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.  
+\end{Coqsrc}
+
+The library \texttt{primRec} contains a large catalogue of lemmas allowing to prove statements 
+of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but give a few examples of
+how they may be applied.
+
+\begin{remark}
+In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}. Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page\pageref{sect:weirdfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
+\texttt{Defined}s.
+\end{remark}
+

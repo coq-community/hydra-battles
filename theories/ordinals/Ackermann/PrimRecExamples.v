@@ -70,11 +70,22 @@ Example  mystery_fun : nat -> nat := evalPrimRec 1 weirdPR.
 
 Compute List.map mystery_fun (0::1::2::3::4::5::6::nil) : list nat.
 
-
 (** ** Understanding some constructions ...
 
  These lemmas are trivial and theoretically useless, but they may help to 
    make the construction more   concrete *)
+
+Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 :=
+  composeFunc 1  _ (PRcons _  _  f  (PRnil _) ) g.
+
+Goal forall f g x, evalPrimRec 1 (PRcompose1 g f) x =
+                 evalPrimRec 1 g (evalPrimRec 1 f x).
+reflexivity. 
+Qed.
+
+(** Note : see lemma compose1_1IsPR  *)
+
+
 
 Remark compose2_0 (a:nat) (g: nat -> nat)  : compose2 0 a g = g a.
 Proof.   reflexivity. Qed.
@@ -97,7 +108,8 @@ Remark PrimRec_0_0 (a:nat)(g : nat -> nat -> nat) :
 Proof. reflexivity. Qed.
 
 Remark PrimRec_0_S (a : nat) (g : nat -> nat -> nat) (i:nat):
-  evalPrimRecFunc 0 a g (S i)  = g i (evalPrimRecFunc 0 a g  i).
+  let phi :=  evalPrimRecFunc 0 a g
+  in phi (S i)  = g i (phi i).
 Proof. reflexivity. Qed.
 
 
@@ -107,19 +119,41 @@ Proof. reflexivity. Qed.
 
 Remark PrimRec_1_S (f: nat->nat)
        (g : nat -> nat -> nat -> nat) (i:nat):
-  forall x, evalPrimRecFunc 1  f g (S i) x = g i (evalPrimRecFunc 1 f g  i x) x.
+  let phi := evalPrimRecFunc 1  f g
+  in forall x,  phi (S i) x = g i (phi i x) x.
 Proof. reflexivity. Qed.
-
-
 
 Remark PrimRec_2_0 (f : naryFunc 2) (g : naryFunc 4) :
   forall x y, evalPrimRecFunc 2 f g 0 x y = f x y.
 Proof. reflexivity. Qed.
 
 Remark PrimRec_2_S  (f: naryFunc 2) (g : naryFunc 4) (i:nat) :
-  forall x y, evalPrimRecFunc 2  f g (S i) x y =
-              g i (evalPrimRecFunc 2 f g  i x y) x y.
+  let phi := evalPrimRecFunc 2  f g
+  in  forall x y,  phi (S i) x y = g i (phi i x y) x y.
 Proof. reflexivity. Qed.
+
+
+(** * First proofs of isPR statements *)
+
+Lemma zeroIsPR : isPR 0 0.
+Proof.
+  exists zeroFunc; reflexivity.
+Qed.  
+
+Lemma SIsPR : isPR 1 S.
+Proof.
+  exists succFunc; cbn; reflexivity.
+Qed.
+
+Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
+Proof.
+ assert (H: 3 < 5) by auto.
+ exists (projFunc 5 3 H).
+ cbn; reflexivity.
+Qed.
+
+
+
 
 (** ** Examples *)
 
