@@ -123,6 +123,7 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
+theories/ordinals/Ackermann/Fibonacci.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
