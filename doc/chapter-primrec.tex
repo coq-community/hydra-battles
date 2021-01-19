@@ -414,7 +414,7 @@ Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 \vspace{4pt}
 \noindent
-\emph{From\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}}.
+\emph{From \href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}}.
 \begin{Coqsrc}
 Lemma  const1_NIsPR n : isPR 0 n. 
 Proof.
@@ -426,14 +426,179 @@ Proof.
 Qed.
 \end{Coqsrc}
 
+
+\subsubsection{Proving that \texttt{plus} is primitive recursive}
+
+The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
+\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}
+a commented version of this proof, 
+
+First, we look for lemmas which may help to prove that a given function obtained with the recursor \texttt{nat\_rec} is primitive recursive.
+
+\begin{Coqsrc}
+Search (is_PR 2 (fun _ _ => nat_rec _ _ _ _)).
+\end{Coqsrc}
+
+\begin{Coqanswer}
+ind1ParamIsPR:
+  forall f : nat -> nat -> nat -> nat,
+  isPR 3 f ->
+  forall g : nat -> nat,
+  isPR 1 g ->
+  isPR 2
+    (fun a b : nat =>
+     nat_rec (fun _ : nat => nat)
+                 (g b) (fun x y : nat => f x y b) a)
+\end{Coqanswer}
+
+We prove that the library function \texttt{plus} is extensionally equal to a function defined with
+\texttt{nat\_rec}.
+
+\begin{Coqsrc}
+Definition plus_alt x y  :=
+              nat_rec  (fun n : nat => nat)
+                       y
+                       (fun z t =>  S t)
+                       x.
+
+Lemma plus_alt_ok:
+  extEqual 2 plus_alt plus.
+Proof.
+  intro x; induction x; cbn; auto.
+  intros y; cbn; now rewrite <- (IHx y).
+Qed.
+\end{Coqsrc}
+
+A last lemma before the proof:
+
+\begin{Coqsrc}
+Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
+                                    extEqual n f g ->
+                                    isPR n g.
+Proof.
+ intros f g [x Hx]; exists x.
+ apply extEqualTrans with f; auto.
+Qed.
+\end{Coqsrc}
+
+Let us start now.
+
+\begin{Coqsrc}
+Lemma plusIsPR : isPR 2 plus.
+Proof.
+  apply isPR_extEqual_trans with plus_alt.
+  - unfold plus_alt; apply ind1ParamIsPR.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+2 subgoals (ID 126)
+  
+  ============================
+  isPR 3 (fun _ y _ : nat => S y)
+
+subgoal 2 (ID 127) is:
+ isPR 1 (fun b : nat => b)
+\end{Coqanswer}
+
+We alreday proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
+Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
+
+\begin{Coqanswer}
+filter010IsPR :
+forall g : nat -> nat, isPR 1 g -> isPR 3 (fun _ b _ : nat => g b)
+\end{Coqanswer}
+
+Thus, our first subgoal is solved easily and the proof ends, applying alreday proven lemmas.
+
+
+\begin{Coqsrc}
+ - unfold plus_alt; apply ind1ParamIsPR.
+    + apply filter010IsPR, succIsPR.
+    + apply idIsPR.
+  - apply plus_alt_ok. 
+Qed.
+\end{Coqsrc}
+
+
 \begin{todo}
 Comment more examples from   \href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}.
 \end{todo}
 
+
+\begin{exercise}
+There is a lot of lemmas similar to \texttt{filter010IsPR} in the \texttt{primRec} library, useful to control the arity of functions.
+Thus, the reader may look at them, and invent simple examples of application for each one.
+\end{exercise}
+
+\begin{exercise}
+Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
+\end{exercise}
+
+\subsubsection{More examples}
+
+The following proof decomposes the \texttt{double} function as the composition of 
+multiplication,with the pair composed of the identity and the constant function wihich returns $2$.
+\emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR} }. 
+
+\begin{Coqsrc}
+Lemma doubleIsPR : isPR 1 double.
+Proof.
+  unfold double; apply compose1_2IsPR.
+  - apply idIsPR.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+subgoal 1 (ID 110) is:
+ isPR 1 (fun _ : nat => 2)
+subgoal 2 (ID 111) is:
+ isPR 2 Init.Nat.mul
+\end{Coqanswer}
+
+ \begin{Coqsrc}
+  - apply const1_NIsPR.
+  - apply multIsPR.
+Qed.
+\end{Coqsrc}
+
+\begin{exercise}
+Consider the following functions:
+
+\begin{Coqsrc}
+Fixpoint fac n :=
+  match n with 
+          | 0 => 1
+          | S p  => n * fac p
+  end.
+
+Fixpoint exp n p :=
+  match p with
+  | 0 => 1
+  | S m =>  exp n m * n
+  end.
+
+Fixpoint tower2 n :=
+  match n with
+  | 0 => 1
+  | S p => exp 2 (tower2 p)
+  end.
+\end{Coqsrc}
+
+Prove they are primitive recursive.
+
+\textbf{Hint:} You may have to look again at the lemmas of the library
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} if you meet some difficulty.
+\end{exercise}
+
+
 \section{Two challenges}
 
-\begin{itemize}
-\item Write a simple and readable proof that the Fibonacci function is primitive recursive.
+The following projects may require to look at other libraries, and or prove new lemmas.
+Please send us your solutions (even if they are partial).
+
+\index{Projects}
+
+\begin{project}
+Write a simple and readable proof that the Fibonacci function is primitive recursive.
 
 We give the tail-recursive definition from~\cite{BC04}, chapter 9. See also
 \href{https://coq-community.org/coq-art/ch9_function_specification/SRC/fib_tail.v}{this file}.
@@ -447,8 +612,14 @@ Fixpoint general_fib (a0 a1 n:nat) {struct n} : nat :=
 
 Definition fib_tail (n:nat) := general_fib 1 1 n.
 \end{Coqsrc}
+\end{project}
+
+\begin{project}
+Prove formally that the Ackermann function is \emph{not} primitive recursive.
+
+You may find a definition and some useful lemmas in
+ \href{../theories/ordinals/Prelude/Iterates.html}%
+{ordinals.Prelude.Iterates}.
 
 
-\item Prove formally that the Ackermann function is \emph{not} primitive recursive.
-
-\end{itemize}
+\end{project}

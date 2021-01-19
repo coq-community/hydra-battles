@@ -261,18 +261,18 @@ Qed.
 
 Lemma const1_NIsPR : forall n : nat, isPR 1 (fun _ => n).
 Proof.
-intros; assert (isPR 0 n).
-{ apply const0_NIsPR. }
+  intros; assert (H: isPR 0 n) by apply const0_NIsPR.
   destruct H as (x, p).
- exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
+  exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
 Qed.
+
 
 (** ** Usual projections (in curried form) are primitive recursive *)
 
 Lemma idIsPR : isPR 1 (fun x : nat => x).
 Proof.
   assert (H: 0 < 1) by auto.
-  exists (projFunc _ _ H); cbn; auto.
+  exists (projFunc 1 0 H); cbn; auto.
 Qed.
 
 Lemma pi1_2IsPR : isPR 2 (fun a b : nat => a).
@@ -334,16 +334,16 @@ Qed.
 Lemma filter01IsPR :
  forall g : nat -> nat, isPR 1 g -> isPR 2 (fun a b : nat => g b).
 Proof.
-intros g  [x p]; cbn in p.
-assert (H: isPR 2 (fun a b : nat => b)) by apply pi2_2IsPR.
-destruct H as [x0 p0]; cbn in p0. 
-exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
-simpl in |- *; intros.
-replace (g c0) with (g (evalPrimRec 2 x0 c c0)).
-rewrite <- p.
-auto.
-rewrite p0.
-auto.
+  intros g  [x p]; cbn in p.
+  assert (H: isPR 2 (fun a b : nat => b)) by apply pi2_2IsPR.
+  destruct H as [x0 p0]; cbn in p0. 
+  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  simpl in |- *; intros.
+  replace (g c0) with (g (evalPrimRec 2 x0 c c0)).
+  rewrite <- p.
+  auto.
+  rewrite p0.
+  auto.
 Qed.
 
 Lemma filter10IsPR :

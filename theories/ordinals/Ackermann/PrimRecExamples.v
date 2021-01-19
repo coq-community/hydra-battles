@@ -141,6 +141,15 @@ Proof. reflexivity. Qed.
 
 *)
 
+Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
+                                    extEqual n f g ->
+                                    isPR n g.
+Proof.
+ intros f g [x Hx]; exists x.
+ apply extEqualTrans with f; auto.
+Qed.
+
+
 Module Alt.
   
 Lemma zeroIsPR : isPR 0 0.
@@ -175,7 +184,7 @@ Fact compose_01 :
 Proof. reflexivity. Qed.
 
 
-Lemma  const1_NIsPR n : isPR 0 n. 
+Lemma  const0_NIsPR n : isPR 0 n. 
 Proof.
   induction n.
  - apply zeroIsPR.
@@ -185,71 +194,39 @@ Proof.
 Qed.
 
 
+Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
+
+Definition plus_alt x y  :=
+              nat_rec  (fun n : nat => nat)
+                       y
+                       (fun z t =>  S t)
+                       x.
+
+Lemma plus_alt_ok:
+  extEqual 2 plus_alt plus.
+Proof.
+  intro x; induction x; cbn; auto.
+  intros y; cbn; now rewrite <- (IHx y).
+Qed.
+
+
+
 Lemma plusIsPR : isPR 2 plus.
 Proof.
-  assert (H:isPR 3 (fun x y z =>  S y)).
-  {
-    apply filter010IsPR, succIsPR.
-  }
-  destruct H as [x Hx].
-  cbn in Hx.
-  assert (H0:0<1) by auto.
-  exists (primRecFunc 1 (projFunc 1 0 H0) x).
-  cbn; induction c; cbn in *.
-   -  reflexivity.
-   - intro c0;  rewrite IHc; cbn in *; now rewrite Hx.
-Qed.
-
-Lemma isPR_replace n : forall f g, isPR n f ->
-                                    extEqual n f g ->
-                                    isPR n g.
-Proof.
- intros f g [x Hx]; exists x.
- apply extEqualTrans with f; auto.
-Qed.
-
-Lemma plusIsPR' : isPR 2 plus.
-Proof.
-  Search (isPR _ (fun _ _ => (nat_rec _ _ _ _))).
-  apply isPR_replace with (fun x y =>
-                             nat_rec  (fun n : nat => nat)
-                                      y
-                                      (fun z t =>  S t)
-                                      x).
-  - apply ind1ParamIsPR.
+  apply isPR_extEqual_trans with plus_alt.
+  - unfold plus_alt; apply ind1ParamIsPR.
     + apply filter010IsPR, succIsPR.
     + apply idIsPR.
-  - cbn; intro c; induction c; cbn; auto.
+  - apply plus_alt_ok. 
 Qed.
 
 
 
 
-End Alt.
 
-
-(** ** Examples *)
-
+(** ** Solution to an exercise (to hide ?)  *)
 
 Definition double n := n * 2.
-
-
-Definition fact : nat -> nat :=
-  fun a => nat_rec _ 1 (fun x y =>  S x * y) a.
-
-
-Definition exp := fun a b => nat_rec (fun _ => nat)
-                                     1
-                                     (fun _ y =>  y * a)
-                                     b.
-
-Definition tower2 h : nat :=  nat_rec (fun n => nat)
-                                1
-                                (fun _  y =>  exp 2 y)
-                                h.
-
-Remark tower2_S h : tower2 (S h) = exp 2 (tower2 h).
-Proof. reflexivity. Qed.
 
 Lemma doubleIsPR : isPR 1 double.
 Proof.
@@ -260,41 +237,98 @@ Proof.
 Qed.
 
 
+Fixpoint fact n :=
+  match n with 0 => 1
+          |   S p  => n * fact p
+  end.
+
+
+Definition fact_alt
+  : nat -> nat :=
+  fun a => nat_rec _ 1 (fun x y =>  S x * y) a.
+
+Remark fact_alt_ok : extEqual 1 fact_alt fact.
+Proof.
+  intro x;induction x; cbn; auto.
+Qed.
+
 
 Lemma factIsPR : isPR 1 fact.
 Proof.
-  unfold fact; apply indIsPR.
-  apply compose2_2IsPR.
-  -  apply filter10IsPR; apply succIsPR.
-  -  apply filter01IsPR; apply idIsPR.
-  -  apply multIsPR.
+  apply isPR_extEqual_trans with fact_alt.
+  - unfold fact_alt; apply indIsPR.
+    apply compose2_2IsPR.
+    +  apply filter10IsPR; apply succIsPR.
+    +  apply filter01IsPR; apply idIsPR.
+    +  apply multIsPR.
+  - apply fact_alt_ok.
 Defined.
+
+Fixpoint exp n p :=
+  match p with
+    0 => 1
+  | S m =>  exp n m * n
+  end.
+
+Definition exp_alt := fun a b => nat_rec (fun _ => nat)
+                                     1
+                                     (fun _ y =>  y * a)
+                                     b.
+
+
+Remark  exp_alt_ok : extEqual 2 exp_alt exp. 
+Proof.
+  intros x y; induction y; cbn; auto.
+Qed.
+
+
 
 
 Lemma expIsPR : isPR 2 exp.
 Proof.
-  unfold exp.
-  apply swapIsPR.
-  apply ind1ParamIsPR.
-  -  apply filter011IsPR.
-     apply multIsPR.
-  - apply const1_NIsPR.
+  apply isPR_extEqual_trans with exp_alt.
+ -  unfold exp_alt.
+    apply swapIsPR.
+    apply ind1ParamIsPR.
+    + apply filter011IsPR.
+      apply multIsPR.
+    + apply const1_NIsPR.
+- apply exp_alt_ok.
 Qed.
 
-Lemma exp2IsPR : isPR 1 (exp 2).
-Proof.
-unfold exp; refine (compose2IsPR 1 (fun _ => 2) _ exp _).
- - apply const1_NIsPR.
- - apply expIsPR.
-Qed.
+Fixpoint tower2 n :=
+  match n with
+    0 => 1
+  | S p => exp 2 (tower2 p)
+  end.
 
+Definition tower2_alt h : nat :=  nat_rec (fun n => nat)
+                                1
+                                (fun _  y =>  exp 2 y)
+                                h.
+
+Remark tower2_alt_ok  : extEqual 1 tower2_alt tower2.
+Proof. intro x; induction x; cbn; auto. Qed.
 
 Lemma tower2IsPR : isPR 1 tower2.
 Proof.
-  unfold tower2; apply indIsPR.
-  apply filter01IsPR.
-  apply exp2IsPR.
+  apply isPR_extEqual_trans with tower2_alt.
+  - unfold tower2_alt;  apply indIsPR.
+    +  apply filter01IsPR.
+       eapply compose1_2IsPR.
+       * apply const1_NIsPR.
+       * apply idIsPR.
+       * apply expIsPR.
+  - apply tower2_alt_ok.
 Qed.
 
+    
 
+
+
+
+
+
+
+End Alt.
 
