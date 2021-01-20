@@ -619,14 +619,48 @@ the associated constructor and projections are primitive recursive.
 
 \end{exercise}
 
+\index{Exercises}
+\begin{exercise}
+Show that the function \texttt{min: naryFunc\,2} is primitive recursive.
+\end{exercise}
+
+
 \index{Projects}
 \begin{project}
 Prove formally that the Ackermann function is \emph{not} primitive recursive.
-You may find a definition of the Ackermann function and a few  lemmas in
+
+
+\begin{align}
+A\,0\,m&=m+1\\
+A\,(n+1)\,0 &= A\,n\,1\\
+A\,(n+1)\,(m+1)&= A\,n\,(A\,(n+1)\,m)
+\end{align}
+
+You may find also  definition of the Ackermann function and a few  lemmas in
  \href{../theories/ordinals/Prelude/Iterates.html}%
 {ordinals.Prelude.Iterates}. 
 
+\textbf{Hint:} the reader may follow the plan suggested by Bruno Salvy (examen given at the French \'Ecole Polytechnique) (available at
+\href{http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf}{this site}).
 
+\begin{enumerate}
+\item Show that, for any $n$, the function $A\,n$ is primitive recursive.
+\item Show that for all $n$ and $m$, $A\,n\,m > m$ and  that the functions $A\,n$ are strictly monotonous.
+Show also that, for any $n$ and $m$, $A\,n\,m \leq A\,(n+1)\,m$.
+         Finally, show that for any $n$, $m$ and $k$, 
+$A\,k\,(A\,m\,n)\leq A\,(2+\textrm{max}(k,m))\,n$.
+\item Show that for any primitive recursive function $f$ of $k$ arguments,
+for any $x_1,\dots\,x_k$, $f(x_1,\dots,x_k)\leq A\,n\,(x_1+\dots+x_k)$.
+\item Show that the Ackermann function is not primitive recursive.
+      
+\end{enumerate}
+
+\begin{remark}
+Note that the Ackermann function is a counter-example to the (false) statement:
+\begin{quote}
+  ``Let $f$ be a function of type \texttt{naryFunc\,2}. If, for any $n$, the fonction $f(n)$ is primitive recursive , then f is primitive recursive.''
+\end{quote}
+\end{remark}
 \end{project}
 
 

@@ -96,7 +96,6 @@ theories/ordinals/Ackermann/wellFormed.v
 theories/ordinals/Ackermann/checkPrf.v
 theories/ordinals/Ackermann/codePA.v
 theories/ordinals/Ackermann/cPair.v
-theories/ordinals/Ackermann/Fibonacci_project.v
 theories/ordinals/Ackermann/folProof.v
 theories/ordinals/Ackermann/Languages.v
 theories/ordinals/Ackermann/LNT.v
