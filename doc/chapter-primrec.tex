@@ -7,6 +7,7 @@ G\"odel's incompleteness theorems~\cite{OConnor05}, now hosted in
 the \texttt{theories/ordinals/Ackermann} directory.
 
 This chapter contains some comments on Russel's library, as well as a few extensions.
+Contributions (under the form of comments, new examples or exercises) are welcomed!. 
 
 \section{First look at the Ackermann library}
 
@@ -590,36 +591,42 @@ Prove they are primitive recursive.
 \end{exercise}
 
 
-\section{Two challenges}
 
-The following projects may require to look at other libraries, and or prove new lemmas.
-Please send us your solutions (even if they are partial).
 
-\index{Projects}
 
-\begin{project}
+
+
+\index{Exercises}
+
+\begin{exercise}
 Write a simple and readable proof that the Fibonacci function is primitive recursive.
 
-We give the tail-recursive definition from~\cite{BC04}, chapter 9. See also
-\href{https://coq-community.org/coq-art/ch9_function_specification/SRC/fib_tail.v}{this file}.
+
 \begin{Coqsrc}
-
-Fixpoint general_fib (a0 a1 n:nat) {struct n} : nat :=
+Fixpoint fib (n:nat) : nat :=
   match n with
-  | O => a0
-  | S p => general_fib a1 (a0 + a1) p
+  | 0 => 1
+  | 1 => 1
+  | S ((S p) as q) => fib q + fib p
   end.
-
-Definition fib_tail (n:nat) := general_fib 1 1 n.
 \end{Coqsrc}
-\end{project}
 
+\textbf{Hint:}  You may use as a helper the function which computes the pair 
+$(\texttt{fib}(n+1),\texttt{fib}(n))$. 
+Library \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair} contains
+the definition of the encoding of $\mathbb{N}^2$ into $\mathbb{N}$, and the proofs that 
+the associated constructor and projections are primitive recursive.
+
+\end{exercise}
+
+\index{Projects}
 \begin{project}
 Prove formally that the Ackermann function is \emph{not} primitive recursive.
-
-You may find a definition and some useful lemmas in
+You may find a definition of the Ackermann function and a few  lemmas in
  \href{../theories/ordinals/Prelude/Iterates.html}%
-{ordinals.Prelude.Iterates}.
+{ordinals.Prelude.Iterates}. 
 
 
 \end{project}
+
+
