@@ -44,7 +44,7 @@ to \texttt{nat -> nat -> nat -> nat}.
 
 \vspace{4pt}
 \noindent
-\emph{From\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}}.
+\emph{From\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}}.
 \begin{Coqsrc}
 Require Import primRec.
 Import extEqualNat.
@@ -313,8 +313,8 @@ The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of
 Although  the following lemmas are alreday proven in 
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec.v},
 we wrote alternate proofs in 
-\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}%
-{Ackermann.PrimRecExamples.v}, in order to illustrate the main proof patterns.
+\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}%
+{Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
 
 \begin{Coqsrc}
 Module Alt.
@@ -415,7 +415,7 @@ Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}}.
+\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}}.
 \begin{Coqsrc}
 Lemma  const1_NIsPR n : isPR 0 n. 
 Proof.
@@ -431,7 +431,7 @@ Qed.
 \subsubsection{Proving that \texttt{plus} is primitive recursive}
 
 The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
-\href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}
+\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}
 a commented version of this proof, 
 
 First, we look for lemmas which may help to prove that a given function obtained with the recursor \texttt{nat\_rec} is primitive recursive.
@@ -522,7 +522,7 @@ Qed.
 
 
 \begin{todo}
-Comment more examples from   \href{../theories/html/hydras.Ackermann.PrimRecExamples.html}{Ackermann.PrimRecExamples}.
+Comment more examples from   \href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}.
 \end{todo}
 
 

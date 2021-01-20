@@ -82,7 +82,7 @@ theories/ordinals/Hydra/Hydra_Examples.v
 theories/ordinals/Hydra/Hydra_Lemmas.v
 theories/ordinals/Hydra/O2H.v
 theories/ordinals/Hydra/Epsilon0_Needed_Std.v
-theories/ordinals/Ackermann/Ackermann_project.v
+theories/ordinals/Ackermann/MoreAck/Ackermann_project.v
 theories/ordinals/Ackermann/codeNatToTerm.v
 theories/ordinals/Ackermann/code.v
 theories/ordinals/Ackermann/extEqualNat.v
@@ -110,7 +110,7 @@ theories/ordinals/Ackermann/folProp.v
 theories/ordinals/Ackermann/ListExt.v
 theories/ordinals/Ackermann/misc.v
 theories/ordinals/Ackermann/NN.v
-theories/ordinals/Ackermann/PrimRecExamples.v
+theories/ordinals/Ackermann/MoreAck/PrimRecExamples.v
 theories/ordinals/Ackermann/subProp.v
 theories/ordinals/Ackermann/codeList.v
 theories/ordinals/Ackermann/codeSubTerm.v
@@ -122,7 +122,8 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
-theories/ordinals/Ackermann/Fibonacci.v
+theories/ordinals/Ackermann/MoreAck/Fibonacci.v
+theories/ordinals/Ackermann/MoreAck/MinPR.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
