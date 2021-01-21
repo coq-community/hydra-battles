@@ -1,5 +1,6 @@
 -R theories/ordinals hydras
 -R theories/additions additions
+-R exercises hydra_exercises
 
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
@@ -82,7 +83,6 @@ theories/ordinals/Hydra/Hydra_Examples.v
 theories/ordinals/Hydra/Hydra_Lemmas.v
 theories/ordinals/Hydra/O2H.v
 theories/ordinals/Hydra/Epsilon0_Needed_Std.v
-theories/ordinals/Ackermann/MoreAck/Ackermann_project.v
 theories/ordinals/Ackermann/codeNatToTerm.v
 theories/ordinals/Ackermann/code.v
 theories/ordinals/Ackermann/extEqualNat.v
@@ -144,3 +144,9 @@ theories/additions/Pow_variant.v
 theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
+
+exercises/primrec/AckermannNotPR.v
+exercises/primrec/MinPR.v
+exercises/primrec/FibonacciPR.v
+
+
