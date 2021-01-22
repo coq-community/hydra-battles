@@ -85,6 +85,10 @@ This contribution contains two parts:
   - Addition chains
 
  
+### Exercises
+    directory exercises/
+ 
+ 
 ## Contributions are welcome ! 
   Any suggestion for improving the Coq scripts and/or the documentation will be taken into account.
   
