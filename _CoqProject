@@ -148,5 +148,6 @@ theories/additions/Wf_transparent.v
 exercises/primrec/AckermannNotPR.v
 exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v
+exercises/ordinals/T1_ltNotWf.v
 
 
