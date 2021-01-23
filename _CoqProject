@@ -150,6 +150,6 @@ exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v
 exercises/ordinals/T1_ltNotWf.v
 exercises/ordinals/predSuccUnicity.v
-
+exercises/ordinals/lt_succ_le.v
 
 

@@ -32,3 +32,24 @@ End Proof_of_MinIsPR.
 
 
 
+(** *  Variant:
+
+Define a conditional *)
+
+Parameter naryIf :
+  forall (n:nat), naryRel n -> naryFunc n -> naryFunc n -> naryFunc n.
+
+(* Then replace the former definition of [minPR] with the following one : *)
+
+Section Proof_of_MinIsPR2.
+
+Let minPR : naryFunc 2 :=
+    naryIf 2 leBool
+           (fun x _ => x)
+           (fun _ y => y).
+
+
+Lemma minIsPR2 : isPR 2 min.
+Admitted.
+
+End Proof_of_MinIsPR2.
