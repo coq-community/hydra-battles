@@ -20,7 +20,7 @@
 This contribution contains two parts:
 
 - An exploration of some properties of Kirby and Paris' hydra battles, with the help of the **Coq** Proof assistant. This development includes the study of several representations of ordinal numbers, and a part of the so-called _Ketonen and Solovay machinery_ (combinatorial properties of epsilon0).
-   - This project also hosts the foramlization by Russel O'Connor of primitive recursive functions and Peano arithmetics 
+   - This project also hosts the formalization by Russel O'Connor of primitive recursive functions and Peano arithmetics 
    (see https://github.com/coq-community/goedel)
 
 - Some algorithms for computing _x^n_ with as few multiplications as possible (using _addition chains_).
