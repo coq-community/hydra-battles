@@ -14,6 +14,7 @@ Context (A:Type)
 
 (** Please remind that [Successor beta alpha] must be read as
     "[beta] is a successor of [alpha]" *)
+
 Lemma Successor_unicity (alpha beta gamma : A):
   Successor beta alpha ->
   Successor gamma alpha ->
