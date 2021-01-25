@@ -472,6 +472,8 @@ Qed.
 
 
 
+
+
 (** ** Rewriting lemmas *)
 
 Lemma Succ_rw : forall alpha, cnf (Succ alpha) = T1.succ (cnf alpha).
@@ -659,4 +661,30 @@ Proof.
         -- split; auto with T1.
            apply succ_nf; auto.
 Qed.
-      
+
+
+
+
+
+Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
+Proof.
+  destruct alpha;unfold Lt;cbn;apply LT_irrefl.
+Qed.
+
+Lemma E0_Lt_Succ_inv (alpha beta: E0):
+  alpha o< Succ beta -> alpha o< beta \/ alpha = beta.
+Proof.
+  destruct alpha, beta; unfold Lt; cbn; intros.
+  About LT_succ_LE_2.
+  destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
+  destruct (T1.le_lt_or_eq _ _ H1) as [H3 | H3].
+  -  subst; right;apply E0_eq_intro;reflexivity. 
+  -  left; split; auto.
+Qed.
+
+Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.
+Proof.
+  destruct alpha; unfold Lt; cbn.
+  intros [H [H0 H1]]. eapply not_lt_zero; eauto. 
+Qed.
+

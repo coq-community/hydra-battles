@@ -4539,17 +4539,16 @@ omega + omega
 In all this development, two representations of ordinals co-exist: ordinal terms (type \texttt{T1}, notation scope \texttt{t1\_scope}, for reasoning on the tree-structure of Cantor normal forms), and ordinal terms \emph{known to be in normal form} (type \texttt{E0}, notation scope \texttt{E0\_scope}). Looking at the contexts displayed by \coq{} prevents you from any risk of confusion.
 \end{remark}
 
-
+%% To simplify !
 \index{Exercises}
- \begin{exercise}
-Let $\alpha$ be an ordinal. We say that $\alpha$ is \emph{infinite} iff the segment $[0,\alpha)$ is an infinite set. 
-\begin{enumerate}
-\item Adapt this definition to the type \texttt{E0}.
-\item Prove that \emph{being infinite} is decidable on type \texttt{E0}.
-\item Prove that $\alpha$ is infinite if and only if for any finite ordinal $i$,
+\begin{exercise}
+Prove that for any ordinal $\alpha:\texttt{E0}$, 
+$\omega\leq \alpha$ if and only if, for any natural number $i$,
 $i+\alpha=\alpha$.
-\end{enumerate}
- \end{exercise}
+
+\emph{You may start this exercise with the file
+\url{../exercises/ordinals/ge_omega_iff.v}.}
+\end{exercise}
 
 \section{Well-foundedness and Transfinite Induction}
 
