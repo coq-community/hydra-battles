@@ -565,10 +565,10 @@ Qed.
 Consider the following functions:
 
 \begin{Coqsrc}
-Fixpoint fac n :=
+Fixpoint fact n :=
   match n with 
           | 0 => 1
-          | S p  => n * fac p
+          | S p  => n * fact p
   end.
 
 Fixpoint exp n p :=
@@ -588,6 +588,9 @@ Prove they are primitive recursive.
 
 \textbf{Hint:} You may have to look again at the lemmas of the library
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} if you meet some difficulty.
+
+\emph{You may start this exercise with the file
+\url{../exercises/primrec/MorePRExamples.v}.}
 \end{exercise}
 
 

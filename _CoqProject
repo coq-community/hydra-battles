@@ -122,8 +122,6 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
-theories/ordinals/Ackermann/MoreAck/Fibonacci.v
-theories/ordinals/Ackermann/MoreAck/MinPR.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
@@ -148,6 +146,7 @@ theories/additions/Wf_transparent.v
 exercises/primrec/AckermannNotPR.v
 exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v
+exercises/primrec/MorePRExamples.v
 exercises/ordinals/T1_ltNotWf.v
 exercises/ordinals/predSuccUnicity.v
 exercises/ordinals/lt_succ_le.v
