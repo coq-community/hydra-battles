@@ -128,7 +128,7 @@ Lemma Cr_zero_inv : forall x, Cr zero x -> AP x.
 Proof.
   intros x H; destruct (Cr_inv zero x H) as  [[_ H1]  | [H2 H3]].
   -  tauto.
-  -  destruct (lt_irr  H2).
+  -  destruct (lt_irrefl  H2).
 Qed.
 
 

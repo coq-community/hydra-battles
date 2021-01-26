@@ -270,9 +270,9 @@ Proof (Lt_Le_trans AX1).
 Lemma le_trans : forall a b c, a <= b -> b <= c -> a <= c.
 Proof (Le_trans AX1).
 
-Lemma lt_irr : forall a, ~ (a < a).
+Lemma lt_irrefl : forall a, ~ (a < a).
 Proof.
-  intros a Ha; now apply (@Lt_irreflexive  Ord  lt AX1 a).
+  intros a Ha; now apply ( @Lt_irreflexive  Ord  lt AX1 a).
 Qed.
 
 Lemma le_antisym : forall a b, a <= b -> b <= a -> a = b.
@@ -287,12 +287,12 @@ Qed.
 Lemma le_not_gt : forall a b, a <= b -> ~ b < a.
 Proof.
   intros a b H; case (le_eq_or_lt H).
-  -  intro;subst b;apply lt_irr.
-  -  intros H0 H1;case (@lt_irr a);eapply lt_trans;eauto.
+  -  intro;subst b;apply lt_irrefl.
+  -  intros H0 H1;case (@lt_irrefl a);eapply lt_trans;eauto.
 Qed.
 
 Global Hint Resolve eq_le lt_le lt_trans le_trans le_lt_trans 
-     lt_le_trans lt_irr le_not_gt:
+     lt_le_trans lt_irrefl le_not_gt:
   schutte.
 
 
@@ -343,7 +343,7 @@ Global Hint Unfold Included : schutte.
 Theorem Non_denum : ~ countable (Full_set Ord).
 Proof.
   red; intro H; case (AX3  H); auto.
-  intros x H0; case (@lt_irr x);apply H0; split.
+  intros x H0; case (@lt_irrefl x);apply H0; split.
 Qed.
 
 
@@ -451,7 +451,7 @@ Lemma lt_succ_le_2 (alpha beta : Ord):
   alpha < succ beta -> alpha <= beta.
 Proof.
   intro H;  tricho alpha beta t;eauto with schutte.
-  case (@lt_irr alpha);  apply lt_le_trans with (succ beta).
+  case (@lt_irrefl alpha);  apply lt_le_trans with (succ beta).
   - assumption.
   - apply lt_succ_le;eauto with schutte.
 Qed.
@@ -469,8 +469,8 @@ Lemma succ_monoR (alpha beta : Ord) :
  succ alpha < succ beta -> alpha < beta.
 Proof.
   intro H;  tricho alpha beta t; auto with schutte.
-  -  subst beta; case (@lt_irr (succ alpha)); eauto with schutte.
-  - case (@lt_irr  (succ alpha)); eapply lt_trans;eauto.
+  -  subst beta; case (@lt_irrefl (succ alpha)); eauto with schutte.
+  - case (@lt_irrefl  (succ alpha)); eapply lt_trans;eauto.
     apply succ_mono;auto.
 Qed.
 
@@ -479,9 +479,9 @@ Lemma succ_injection (alpha beta : Ord) :
 Proof.
   intros  H; tricho alpha beta t;auto.
   - generalize (succ_mono t).
-    rewrite H; intro; case (@lt_irr (succ beta));auto.
+    rewrite H; intro; case (@lt_irrefl (succ beta));auto.
   - generalize (succ_mono  t).
-   rewrite H; intro; case (@lt_irr (succ beta));auto.
+   rewrite H; intro; case (@lt_irrefl (succ beta));auto.
 Qed. 
 
 Lemma succ_zero_diff (alpha : Ord) :  succ alpha <> zero.
@@ -535,11 +535,11 @@ Lemma finite_inj : forall i j, F i = F j -> i = j.
 Proof.
   intros i j H; case (lt_eq_lt_dec i j). 
   -  destruct 1.
-     +  case (@lt_irr (F i)).
+     +  case (@lt_irrefl (F i)).
         *  pattern (F i) at 2 ; rewrite H. 
            apply finite_mono;auto.
      + auto.
-  -  intro;  case (@lt_irr (F i)).
+  -  intro;  case (@lt_irrefl (F i)).
      pattern (F i) at 1 ; rewrite H; apply finite_mono;auto.
 Qed.
 
@@ -671,7 +671,7 @@ Proof.
         case (H3 n).
         split;auto with schutte.
       }
-      case ( @lt_irr y).
+      case ( @lt_irrefl y).
       eapply lt_le_trans with (|_|X);eauto.
       apply sup_least_upper_bound;auto with schutte.
   -  intros x Hx; exists x;auto.  
@@ -708,9 +708,9 @@ Lemma members_eq (alpha beta : Ord) :
 Proof.
   intros  H; tricho alpha beta H2; auto with schutte.
   -   assert (H0: members beta alpha) by auto.
-      rewrite <- H in H0;  destruct (lt_irr H0);auto.
+      rewrite <- H in H0;  destruct (lt_irrefl H0);auto.
   - assert (H0: members alpha beta) by auto.
-    rewrite  H in H0;  destruct (lt_irr H0);auto.
+    rewrite  H in H0;  destruct (lt_irrefl H0);auto.
 Qed.
 
 
@@ -728,7 +728,7 @@ Proof.
        - apply AX2; exists alpha;unfold members; auto.
        - assumption.
      }
-     destruct (@lt_irr A); apply lt_le_trans with (succ A); auto.
+     destruct (@lt_irrefl A); apply lt_le_trans with (succ A); auto.
     +     eapply lt_succ;auto.
 Qed.
 
@@ -749,7 +749,7 @@ Proof.
     -  unfold Included, In; intros x H1;  rewrite e1.
        eapply le_lt_trans;eauto with schutte.
   }
-  case (@lt_irr alpha); pattern alpha at 2;rewrite e1, e, H0;
+  case (@lt_irrefl alpha); pattern alpha at 2;rewrite e1, e, H0;
     auto with schutte.
 Qed.
 
@@ -879,7 +879,7 @@ Proof.
   {  rewrite Hx;auto with schutte. }
   destruct (lt_omega_finite  H); subst x.
   assert (omega = F (S x0)) by (simpl; trivial).
-  case ( @lt_irr omega);auto with schutte.
+  case ( @lt_irrefl omega);auto with schutte.
   pattern omega at 1;rewrite H0;auto with schutte.
   apply finite_lt_omega;auto with schutte.
 Qed.

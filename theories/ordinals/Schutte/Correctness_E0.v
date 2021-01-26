@@ -238,10 +238,10 @@ Proof.
   destruct (LT_eq_LT_dec H H0) as [[H2 | H2] | H2]; auto.
   destruct H2 as [H3 [H4 H5]].   apply inject_mono in H4; auto.    
   rewrite H1 in H4; auto.
-  destruct (lt_irr H4); auto.
+  destruct (lt_irrefl H4); auto.
   destruct H2 as [H3 [H4 H5]].   apply inject_mono in H4; auto.    
   rewrite H1 in H4; auto.
-  destruct (lt_irr H4); auto.
+  destruct (lt_irrefl H4); auto.
 Qed.
 
 Theorem inject_monoR (beta gamma : T1) : 
@@ -252,8 +252,8 @@ Proof.
   intros H H0 H1; 
   destruct (T1.lt_eq_lt_dec beta gamma) as [[H2 | H2] | H2].
   -  now split.  
-  -  subst ;  case (lt_irr  H1).
-  -  destruct (@lt_irr (inject beta)).
+  -  subst ;  case (lt_irrefl  H1).
+  -  destruct (@lt_irrefl (inject beta)).
      eapply lt_trans with (inject gamma); auto.
      now apply inject_mono.
 Qed.

@@ -139,11 +139,11 @@ Lemma cnf_head_eq alpha beta ol ol':
 Proof.
  intros H H0 H1; tricho alpha beta H2; [ | trivial | ].
  -   generalize (sorted_lt_lt  H H2) ; intro H3.
-     case (@lt_irr (eval (cons alpha ol))).
+     case (@lt_irrefl (eval (cons alpha ol))).
      apply lt_le_trans with (phi0 beta); [trivial | ].
      +   rewrite H1;  simpl ;  apply le_plus_l.
  -  generalize (sorted_lt_lt H0 H2);  intro H3.
-    case (@lt_irr (eval (cons beta ol'))).
+    case (@lt_irrefl (eval (cons beta ol'))).
     apply lt_le_trans with (phi0 alpha); [trivial | ].
     + rewrite <- H1; simpl;  apply le_plus_l.
 Qed.
@@ -219,13 +219,13 @@ Proof with eauto with schutte.
   intros alpha H H0; apply Classical_Prop.NNPP.
   intro H1;apply H0; split ...
   intros beta H2;  tricho (beta+alpha) alpha H3 ...
-  - case (@lt_irr alpha).
+  - case (@lt_irrefl alpha).
     apply le_lt_trans with (beta+alpha) ...
     apply le_plus_r ...
   -  case H1; exists beta; split ; auto. 
      tricho zero beta H4; auto with schutte.
      +  subst beta; rewrite zero_plus_alpha in H3;
-          case (@lt_irr alpha);auto.
+          case (@lt_irrefl alpha);auto.
      +   now   case (@not_lt_zero beta).     
 Qed.
  
@@ -243,17 +243,17 @@ Proof with eauto with schutte.
     split;auto.
     + tricho zero eta H3; trivial.
       *  subst eta; rewrite alpha_plus_zero in H2; trivial. 
-         decompose [and] H'khi; subst alpha; case (@lt_irr khi);auto.
+         decompose [and] H'khi; subst alpha; case (@lt_irrefl khi);auto.
       *  case (@not_lt_zero eta) ...
     +  decompose [and] H'khi; split;auto.
        split;auto.
        tricho zero khi H5 ...
        tricho eta alpha H6 ...
-       subst eta; case (@lt_irr (khi+alpha)) ...
-       case (@lt_irr (khi + eta)) ...
+       subst eta; case (@lt_irrefl (khi+alpha)) ...
+       case (@lt_irrefl (khi + eta)) ...
        apply lt_trans with (khi+alpha) ...
        apply plus_mono_r ...
-       subst khi; case (@lt_irr zero);auto.
+       subst khi; case (@lt_irrefl zero);auto.
        case (@not_lt_zero khi) ...
 Qed.
 
@@ -315,7 +315,7 @@ Proof.
  - destruct 1 as [H H0].
    simpl in H0; subst alpha;  destruct  l'.
    + auto.
-   +  destruct 1 as [H0 H1];  simpl in H1;  case (@lt_irr zero).
+   +  destruct 1 as [H0 H1];  simpl in H1;  case (@lt_irrefl zero).
       pattern zero at 2;rewrite H1.
       apply lt_le_trans with (phi0 o);auto with schutte.
       apply phi0_positive.
@@ -324,7 +324,7 @@ Proof.
     + intro;  case H;case H0;intros H1 H2 H3 H4.
       simpl in H2, H4  ;  rewrite H2 in H4.
        assert (ordinal a) by split.
-       case (@lt_irr zero).
+       case (@lt_irrefl zero).
        pattern zero at 2; rewrite H4.
        apply lt_le_trans with (phi0 a);auto.
        *  apply phi0_positive.

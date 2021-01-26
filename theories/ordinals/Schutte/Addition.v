@@ -114,7 +114,7 @@ Proof.
  -  red;red; auto with schutte.
  -  intro H4; case H1.
   +  symmetry;tauto.
-  +  intro; case (@lt_irr alpha);auto.
+  +  intro; case (@lt_irrefl alpha);auto.
      apply lt_trans with (f zero);auto.
 Qed.
 
@@ -176,9 +176,9 @@ Lemma plus_reg_r (alpha beta gamma : Ord) :
   alpha + beta = alpha + gamma  ->  beta = gamma.
 Proof with trivial.
  intros  H;   tricho beta gamma H0 ...
- -  case (@lt_irr (alpha+beta)).
+ -  case (@lt_irrefl (alpha+beta)).
     pattern (alpha+beta) at 2; rewrite H; apply plus_mono_r ...
- -  case (@lt_irr (alpha+beta)).
+ -  case (@lt_irrefl (alpha+beta)).
     pattern (alpha+beta) at 1; rewrite H; apply plus_mono_r ...
 Qed.
 
@@ -206,7 +206,7 @@ Proof with trivial.
  -  intros x [Hx Ex]; clear H8; absurd ( beta < x /\ x < succ beta).
     + intro H8; decompose [and] H8;clear H8.
       assert (H8: succ beta <= x) by (apply lt_succ_le; eauto with schutte).
-      case (@lt_irr (succ beta)).
+      case (@lt_irrefl (succ beta)).
       eapply le_lt_trans;eauto.
     +  split.
    *  eapply ordering_function_monoR;eauto.
@@ -335,7 +335,7 @@ Section proof_of_associativity.
     {  tricho beta z HH.
        -  right;auto.
        -  left;auto.
-       -  case (@lt_irr gamma).
+       -  case (@lt_irrefl gamma).
           pattern gamma at 1; rewrite <- Hz.
           apply lt_le_trans with (alpha + beta);auto.
           + apply plus_mono_r;auto.

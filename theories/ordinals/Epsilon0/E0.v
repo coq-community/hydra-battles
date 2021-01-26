@@ -609,12 +609,6 @@ Proof.
   now destruct alpha, beta.
 Qed.
 
-Compute  compare omega omega.
-
-Compute compare (3 + omega ) omega.
-Compute compare (omega + 3) omega.
-
-
 
 Example L_3_plus_omega :  3 + omega = omega.
 Proof.

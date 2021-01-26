@@ -86,7 +86,7 @@ Proof with auto with schutte.
   - intros x  H0; tricho x (F 1) H3 ...
     simpl (F 1) in H3; assert (x = zero).
     { apply le_alpha_zero, lt_succ_le_2 ... }
-    subst x; destruct H0; case (@lt_irr zero) ...
+    subst x; destruct H0; case (@lt_irrefl zero) ...
     subst x; left; trivial.
     right; auto.
 Qed.
@@ -110,12 +110,12 @@ Lemma AP_finite_eq_one : forall n: nat, AP n -> n = 1.
 Proof with auto with schutte.
   intro n;  case n.
   -  inversion 1.
-     simpl in H0; case (@lt_irr zero);auto.
+     simpl in H0; case (@lt_irrefl zero);auto.
   -  intro n0;case n0; trivial.
      inversion_clear 1.
      generalize (H1 (F 1)); intros; absurd (F 1 + F (S (S n1)) = F (S (S n1))).
      +  rewrite <- plus_FF;simpl; intro H2.
-        case (@lt_irr (succ (succ (F n1)))).
+        case (@lt_irrefl (succ (succ (F n1)))).
         pattern (succ (succ (F n1))) at 2; rewrite <- H2 ...
      + apply H, finite_mono; auto with arith.
 Qed.
@@ -136,7 +136,7 @@ Proof with auto with schutte.
      case (lt_omega_finite  H1).
      intros; subst x.
      destruct  H0 as [H2 H3];     generalize (AP_finite_eq_one _ H3).
-     intro;subst x0;now destruct  (@lt_irr (F 1)).
+     intro;subst x0;now destruct  (@lt_irrefl (F 1)).
      auto.
      red.
      intuition.
@@ -545,16 +545,16 @@ Proof.
   intros H H0;  tricho alpha gamma H3.
   -  split;auto.
      tricho beta (phi0 gamma) H4.
-     +  case (@lt_irr (phi0 gamma)).
+     +  case (@lt_irrefl (phi0 gamma)).
         pattern (phi0 gamma) at 1; rewrite <- H0.
         * apply AP_plus_closed; auto.
           apply AP_phi0;  eauto with schutte.
           apply phi0_mono;auto.
      + auto.
-     +  rewrite <- H0 in H4;  case (@lt_irr beta).
+     +  rewrite <- H0 in H4;  case (@lt_irrefl beta).
         eapply le_lt_trans;eauto.
         apply le_plus_r.
-  -  subst gamma;  case (@lt_irr (phi0 alpha)).
+  -  subst gamma;  case (@lt_irrefl (phi0 alpha)).
      pattern (phi0 alpha) at 2;  rewrite <- H0.
      pattern (phi0 alpha) at 1; rewrite <- alpha_plus_zero.
      apply plus_mono_r;auto.
@@ -568,7 +568,7 @@ Lemma is_limit_phi0 (alpha : Ord) :
   zero < alpha ->  is_limit (phi0 alpha).
 Proof.
   intros  H; split.
-  - intro H0; case (@lt_irr zero).
+  - intro H0; case (@lt_irrefl zero).
     apply lt_le_trans with alpha;auto.
     rewrite <- H0;  pattern phi0; apply phi0_elim.
     intros f H1; eapply ordering_le;eauto.
@@ -583,7 +583,7 @@ Proof.
       -  auto.
       -  subst x;  replace (succ zero) with (F 1) in H0. 
          + rewrite <- phi0_zero in H0.
-           case (@lt_irr (phi0 zero)).
+           case (@lt_irrefl (phi0 zero)).
            pattern (phi0 zero) at 2; rewrite <- H0.
            apply phi0_mono;auto.
          +  simpl;auto.
@@ -594,7 +594,7 @@ Proof.
       apply plus_mono_r;auto.
     }
     generalize (succ_mono  H6);  rewrite <- H4.
-    intros H7; apply lt_irr with (succ (x+x));  auto.
+    intros H7; apply lt_irrefl with (succ (x+x));  auto.
     now rewrite plus_of_succ in H7.
 Qed. 
 
@@ -607,7 +607,7 @@ Proof.
       inversion H0.
       +  subst i beta; simpl in Hbeta; rewrite  phi0_zero in Hbeta.
          specialize (finite_lt_omega 1); intro H1; rewrite Hbeta in H1.
-         destruct (lt_irr H1).
+         destruct (lt_irrefl H1).
       + inversion H3.
   -  now subst.
   -  specialize (phi0_mono H); intro H0;
@@ -706,7 +706,7 @@ Proof.
   - apply epsilon0_fxp.
   - intros alpha H; tricho alpha epsilon0 H0.
     + specialize (lt_phi0 H0); intro H1.
-      rewrite  H in H1; destruct (lt_irr H1).
+      rewrite  H in H1; destruct (lt_irrefl H1).
     + subst alpha; now left.
     + now right.
 Qed.
