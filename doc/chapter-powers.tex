@@ -416,7 +416,7 @@ Yves Bertot's optimization relies on the observation that all the powers of
 
 Thus, it is possible to remove duplicate data and computations by reflecting matrix multiplication and identity into $\mathbb{N}\times\mathbb{N}$.
 
-If we define $\varphi(a,b)  \left(
+If we pose $\varphi(a,b) =\left(
   \begin{array}{cc}
     a+b  & a \\
     a & b
@@ -2870,16 +2870,8 @@ However, we would like to compose the instructions of \texttt{C3}
 with a chain for another exponent $n$, in order to generate a chain for 
 the exponent $3\times n$.
 
-Since \texttt{computation} is an inductive family of types, 
-it could be possible to define a composition operator that 
-works like list appending (replacing the \texttt{Return y} of the first
-computation with the second computation).
-\emph{This approach is left as an exercise.}  The solution we present is based on functional programming and the concept of continuation.
+  The solution we present is based on functional programming and the concept of continuation.
 
-\index{Exercises}
-\begin{exercise}
-Develop the approach suggested in the previous paragraph.  
-\end{exercise}
 
 
 \subsubsection{Type definition of  f-chains}
