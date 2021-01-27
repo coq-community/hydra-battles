@@ -13,6 +13,28 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   | S p => f (iterate  f p x)
   end.
 
+(** Compatibility with Ackermann Libray's definition *)
+
+Lemma iterate_compat {f : nat -> nat}(n:nat)(x:nat):
+  iterate f n x = nat_rec 
+                    (fun _ => nat -> nat)
+                    (fun x : nat => x)
+                    (fun (_ : nat) (rec : nat -> nat) (x : nat) => f (rec x))
+                    n x.
+Proof.
+  induction n; cbn.
+   - reflexivity.
+   - now rewrite IHn.
+Qed.
+
+Lemma iterate_compat2 {A} (f : A -> A) n :
+  forall x, iterate f n x = Nat.iter n f x.
+Proof. 
+  induction n.
+  - reflexivity.  
+  - simpl; intros; now rewrite IHn.
+Qed.
+
 (* tail recursive iterate *)
 
 Fixpoint iterate_t {A:Type}(f : A -> A) (n: nat)(x:A) :=
@@ -175,13 +197,7 @@ Qed.
 
 (* rename ! *)
 
-Lemma iterate_compat {A} (f : A -> A) n :
-  forall x, iterate f n x = Nat.iter n f x.
-Proof. 
-  induction n.
-  - reflexivity.  
-  - simpl; intros; now rewrite IHn.
-Qed.
+
 
 Lemma iterate_ext {A:Type}(f g: A -> A) (H: forall x, f x = g x):
   forall n x, iterate f n x = iterate g n x.
@@ -518,82 +534,6 @@ Proof.
 Qed.
 
 
-(**  ** Ackermann stuff  *)
-
-Fixpoint Ack (m:nat) : nat -> nat :=
-  match m with 0 => S
-          |   S n => fun k =>  iterate (Ack n) (S k) 1
-  end.
-
-(** *** Equations (from wikipedia) *)
-
-Lemma Ack_0 : Ack 0 = S.
-Proof refl_equal.
-
-Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1.
-Proof.  now simpl. Qed.
-
-Lemma Ack_S_S : forall m p,
-    Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof.  now simpl. Qed.
-
-
-Definition phi_Ack (f : nat -> nat) (k : nat) :=
-       iterate f (S k) 1.
-
-Definition phi_Ack' (f : nat -> nat) (k : nat) :=
-       iterate f  k (f 1).
-
-Lemma phi_Ack'_ext f g: (forall x, f x = g x) ->
-                        forall p,  phi_Ack' f p = phi_Ack' g p.
-Proof.
-  induction p.      
-  -  cbn; auto.
-  -  cbn;  unfold phi_Ack' in IHp;  rewrite IHp;  apply H.
-Qed.
-
-Lemma phi_phi'_Ack : forall f k,
-    phi_Ack f k = phi_Ack' f k.
-Proof.
-  unfold phi_Ack, phi_Ack'; intros.
-  now rewrite iterate_S_eqn2.
-Qed.
-
-Lemma Ack_paraphrase : forall m ,  Ack m  =
-                                    match m with
-                                    | 0 => S 
-                                    | S p =>  phi_Ack  (Ack p) 
-                                    end.
-Proof.
-  destruct m; reflexivity.
-Qed.
-
-Lemma Ack_paraphrase' : forall m k,  Ack m  k=
-                                    match m with
-                                    | 0 => S k
-                                    | S p =>  phi_Ack'  (Ack p) k
-                                    end.
-Proof.
-  destruct m.
-  -   reflexivity.
-  - intro k; rewrite <- phi_phi'_Ack; reflexivity.
-Qed.
-
-Lemma Ack_as_iter' : forall m p, Ack m p = iterate phi_Ack' m S p.
-Proof.
-  induction  m.
-  - reflexivity.
-  -intro p; rewrite Ack_paraphrase', iterate_S_eqn.
-   apply phi_Ack'_ext; auto.
-Qed.
-
-
-Lemma Ack_as_iter : forall m , Ack m  = iterate phi_Ack m S.
-Proof.
-  induction  m.
-  - reflexivity.
-  - rewrite Ack_paraphrase, iterate_S_eqn;  now rewrite IHm.
-Qed.
 
 Lemma exp2_as_iterate n : exp2 n = iterate (fun i => 2 * i)%nat n 1.
 Proof.
@@ -604,5 +544,4 @@ Qed.
 
 
 Definition hyper_exp2 k := iterate exp2 k 1.
-
 

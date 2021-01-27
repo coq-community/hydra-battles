@@ -25,6 +25,7 @@ theories/ordinals/Prelude/More_Arith.v
 theories/ordinals/Prelude/DecPreOrder_Instances.v
 theories/ordinals/Prelude/Fuel.v
 theories/ordinals/Prelude/Iterates.v
+theories/ordinals/Prelude/Ack.v
 theories/ordinals/Prelude/OrdNotations.v
 theories/ordinals/Prelude/MoreLists.v
 theories/ordinals/Prelude/Restriction.v

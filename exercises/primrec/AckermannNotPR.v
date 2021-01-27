@@ -1,8 +1,21 @@
 (** Proof that the Ackermann function is not primitive recursive *)
 
 
-From hydras Require Import  primRec extEqualNat. 
-Require Import Iterates. (* For masking [iterate] *)
+From hydras Require Import  primRec extEqualNat Ack.
+Import Iterates. (* For masking [iterate] *)
+
+(** Compatibility between Ackermann Library's [primrec.iterate]
+ and [Prelude.Iterates.iterate] *)
+ 
+
+Lemma iterate_compat {f : nat -> nat}(n:nat)(x:nat):
+  Iterates.iterate f n x = primRec.iterate f n x.
+Proof.
+  induction n; cbn.
+   - reflexivity.
+   - now rewrite IHn.
+Qed.
+
 
 
 (** The Ackerman function is defined in the library 
