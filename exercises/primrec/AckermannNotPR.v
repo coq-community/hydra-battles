@@ -49,18 +49,15 @@ Qed.
 >>
 *)
 
-(** _There are many other definitions in the litterature. So feel free to 
-    use the one you prefer, but it must respect the "equations" above *)
+
+ 
+Theorem  Ackn_IsPR (n: nat) : isPR 1 (Ack n).
+Admitted. (* exercise *)
 
 
 Theorem AckIsntPR : isPR 2 Ack -> False.
+  (*  Still in project. Not proved yet *)
 Admitted.
-
-
-(**
- _This is not a trivial exercise. You may have to prove several additional 
-lemmas. 
- *)
 
 
 

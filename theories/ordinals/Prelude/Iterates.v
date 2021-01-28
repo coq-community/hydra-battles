@@ -85,11 +85,10 @@ Lemma iterate_t_rw {A}(f:A->A) : forall n x,
     iterate_t f n x = iterate f n x.
 Proof.
  induction n; simpl; auto.
-  intro; rewrite IHn.
+  intro x; rewrite IHn.
   clear IHn; induction n; auto.
   cbn; now f_equal.
 Qed.
-
 
 
 Lemma fun_le_trans f g h : f <<= g ->  g <<= h -> f <<= h.
@@ -101,18 +100,17 @@ Lemma mono_le f (Hf : strict_mono f) :  forall n, n <= f n.
 Proof.
   induction n.
   - auto with arith. 
-  -  apply Lt.le_lt_trans with (f n);  auto with arith.  
+  - apply Lt.le_lt_trans with (f n); auto with arith.  
 Qed.
 
 
 Lemma mono_injective f (Hf : strict_mono f) :
   forall n p , f n = f p -> n = p.
 Proof.
-  intros n p H.
-  destruct (PeanoNat.Nat.lt_total n p).
-  - specialize (Hf _ _ H0);   rewrite H in Hf;  destruct (Lt.lt_irrefl _ Hf).
+  intros n p H; destruct (PeanoNat.Nat.lt_total n p).
+  - specialize (Hf _ _ H0); rewrite H in Hf; destruct (Lt.lt_irrefl _ Hf).
   -  destruct H0; trivial. 
-     +  specialize (Hf _ _ H0); rewrite H in Hf; destruct (Lt.lt_irrefl _ Hf).
+     + specialize (Hf _ _ H0); rewrite H in Hf; destruct (Lt.lt_irrefl _ Hf).
 Qed.
 
 Lemma mono_weak f (H: strict_mono f) :
@@ -123,10 +121,9 @@ Proof.
   - apply PeanoNat.Nat.lt_le_incl; apply H; auto with arith. 
 Qed.
 
-
 Lemma dominates_from_max :
-  forall f g h i j, dominates_from  i g f  ->
-                    dominates_from j  h g  ->
+  forall f g h i j, dominates_from i g f  ->
+                    dominates_from j h g  ->
                     dominates_from  (Nat.max i j) h f .
 Proof.
   intros f g h i j H H0 k Hk;  transitivity (g k).
@@ -156,7 +153,7 @@ Lemma exp2_ge_S : S  <<= exp2.
 Proof. 
   red; induction n. 
   - cbn; auto with arith. 
-  - cbn;  abstract lia.
+  - cbn; abstract lia.
 Qed.
 
 Lemma exp2_mono : strict_mono exp2.
@@ -164,7 +161,7 @@ Proof.
   red; induction 1; cbn.
   - generalize (exp2_positive n); generalize (exp2 n);intros; abstract lia.
   - generalize IHle, (exp2_positive m); generalize (exp2 n), (exp2 m);
-         intros;abstract lia.
+      intros;abstract lia.
 Qed. 
 
 (** ** Abstract properties of iterate *)
@@ -173,8 +170,7 @@ Qed.
 
 Lemma iterate_S_eqn {A:Type}(f : A -> A) (n: nat)(x:A):
   iterate f (S n) x = f (iterate f n x).
-Proof. reflexivity.  Qed.
-
+Proof. reflexivity. Qed.
 
 (** *** Equation associated with tail recursion *)
 
@@ -195,14 +191,12 @@ Proof.
   -  intros; simpl; now f_equal. 
 Qed.
 
-(* rename ! *)
-
-
 
 Lemma iterate_ext {A:Type}(f g: A -> A) (H: forall x, f x = g x):
   forall n x, iterate f n x = iterate g n x.
+Proof.
   induction n; simpl; auto.
-  intro; rewrite IHn. now rewrite H.
+  intro; rewrite IHn; now rewrite H.
 Qed.
 
 Lemma iterate_ext2 {A:Type} (f g : (A ->A)->A -> A)
@@ -215,7 +209,6 @@ Proof.
   - intros; simpl; auto.
   - intros; simpl; apply H0. auto.
 Qed.
-
   
 Lemma iterate_le f (Hf : strict_mono f) :
   forall i j, i <= j -> forall z, iterate f i z <= iterate f j z.
@@ -234,8 +227,8 @@ Lemma iterate_lt  f (Hf : good_fun f):
 Proof.
   destruct Hf as [H H0]; induction 1.
   - intros; rewrite iterate_S_eqn; auto.
-  - intros; rewrite iterate_S_eqn.
-    transitivity (iterate f m z); auto. 
+  - intros; rewrite iterate_S_eqn;
+      transitivity (iterate f m z); auto. 
 Qed.
 
 Lemma iterate_mono_weak (f: nat -> nat):
@@ -252,7 +245,7 @@ Lemma iterate_mono_weak_2 (f: nat -> nat):
   forall n p x,  (n <= p -> iterate f n x <= iterate f p x)%nat.
 Proof.
   induction 2.
-  -  reflexivity.
+  - reflexivity.
   - transitivity (iterate f m x); auto.
     apply iterate_mono_weak; auto.
 Qed.
@@ -271,8 +264,8 @@ Lemma iterate_mono f (Hf : strict_mono f) (Hf' :  S  <<= f):
   forall n, strict_mono (iterate f n).
 Proof.
   induction n.
-  -  red; intro i; cbn;auto.
-  - cbn; intros i j H;  apply Hf;auto.
+  - red; intro i; cbn;auto.
+  - cbn; intros i j H; apply Hf;auto.
 Qed.
 
 Lemma iterate_ge : forall f , S  <<= f -> 
@@ -298,7 +291,7 @@ Lemma iterate_ge' : forall f,  id <<= f ->
 Proof.
   induction n.
   - inversion 1.
-  - intros; destruct n.
+  - intros j H0; destruct n.
     + simpl; apply H.
     +  transitivity (iterate f (S n) j).
        * apply IHn; auto with arith.
@@ -309,24 +302,25 @@ Lemma iterate_ge'' f : id <<= f -> strict_mono f -> forall i k,
       k <= Nat.pred (iterate (fun z => S (f z)) (S i) k).
 Proof.
   induction i.
-  -  intros; cbn ; apply H.
+  - intros; cbn; apply H.
   - intros;  rewrite iterate_rw;
     apply le_trans with
         (Nat.pred (iterate (fun z : nat => S (f z)) (S i) k)).
     + auto.
     + cbn;  assert (H1: strict_mono (fun z => S (f z))).
-   { intros x y Hlt; apply H0 in Hlt;  auto with arith. }
-   generalize  (iterate_mono _ H1).
-   assert (H2: S <<= (fun z : nat => S (f z))).
-   { intro x; auto with arith.
-     specialize (H x); auto with arith.
-   }   intros H3;  specialize (H3 H2 i).
-   apply Nat.lt_le_incl.
-   assert (H4: k < S (f k)).
-   { apply le_lt_trans with (f k).
-     - apply H.                       
-     - auto with arith.
-   }
+      { intros x y Hlt; apply H0 in Hlt;  auto with arith. }
+      generalize  (iterate_mono _ H1).
+      assert (H2: S <<= (fun z : nat => S (f z))).
+      { intro x; auto with arith.
+        specialize (H x); auto with arith.
+      }
+      intros H3;  specialize (H3 H2 i).
+      apply Nat.lt_le_incl.
+      assert (H4: k < S (f k)).
+      { apply le_lt_trans with (f k).
+        - apply H.                       
+        - auto with arith.
+      }
    specialize (H3 _ _ H4); auto.
 Qed.
 
@@ -389,21 +383,21 @@ Lemma iterate_dom_prop :
     forall k, 0 < k -> dominates_from i (iterate g k) (iterate f k).
 Proof.
   induction k.
-  -   intro H0; inversion H0.
-  -   destruct k.
-      +   simpl;  intros _ l Hl;  apply H; auto.
-      +   intros _ l Hl; repeat rewrite iterate_S_eqn.
-          transitivity (g (f (iterate f k l))).
-          *   apply H; transitivity (f l).
-              {   transitivity l;  auto. 
-                  apply PeanoNat.Nat.lt_le_incl.
-                  eapply Hgt; auto.
-              }
-              apply mono_weak;  auto.
-              eapply iterate_ge;  auto. 
-          *  apply Hm';  assert (0 < S k)%nat by auto with arith.
-             apply IHk in H0; specialize (H0 l).
-             repeat rewrite iterate_S_eqn in H0; auto.   
+  - intro H0; inversion H0.
+  - destruct k.
+    + simpl;  intros _ l Hl;  apply H; auto.
+    + intros _ l Hl; repeat rewrite iterate_S_eqn.
+      transitivity (g (f (iterate f k l))).
+      * apply H; transitivity (f l).
+        { transitivity l;  auto. 
+          apply PeanoNat.Nat.lt_le_incl.
+          eapply Hgt; auto.
+        }
+        apply mono_weak;  auto.
+        eapply iterate_ge;  auto. 
+      *  apply Hm';  assert (0 < S k)%nat by auto with arith.
+         apply IHk in H0; specialize (H0 l).
+         repeat rewrite iterate_S_eqn in H0; auto.   
 Qed.
 
 Lemma dominates_from_le  i j g f : i <= j ->
@@ -414,8 +408,6 @@ Proof.
   intros H0 x H1; apply IHle; auto.
   auto with arith.
 Qed.
-
-
 
 Lemma smono_Sle f : f 0 <> 0 -> strict_mono f -> S <<= f.
 Proof.
@@ -428,7 +420,7 @@ Proof.
     + apply H0; auto with arith.
 Qed.
 
-(* Iterating a functional *)
+(* Iteration of a functional *)
 
 Lemma iterate_2_mono (f : (nat->nat)->(nat->nat)):
    (forall g, strict_mono g -> S <<= g -> strict_mono (f g))->
@@ -438,7 +430,7 @@ Lemma iterate_2_mono (f : (nat->nat)->(nat->nat)):
                      (iterate f k g x < iterate f k g y)%nat.
   Proof.
    induction k.
-   - simpl; intros; apply (H1 _ _ H3); auto.
+   - cbn; intros; apply (H1 _ _ H3); auto.
    -  intros; rewrite iterate_S_eqn2.
       apply (IHk (f g) x y ); auto.
 Qed.
@@ -523,8 +515,8 @@ Proof.
        apply H5; auto.
      + subst; auto.
   -  intros;  repeat rewrite iterate_S_eqn2.
-    transitivity (iterate psi k (psi g) x).
-    +   specialize (IHk (phi g) x x (H g H5 H6) (H0 g H5 H6)).
+     transitivity (iterate psi k (psi g) x).
+     +   specialize (IHk (phi g) x x (H g H5 H6) (H0 g H5 H6)).
         transitivity (iterate psi k (phi g) x).
         * apply IHk; auto.
         * apply iterate2_mono3; auto.
