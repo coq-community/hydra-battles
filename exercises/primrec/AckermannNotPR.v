@@ -19,9 +19,9 @@ Qed.
 
 
 (** The Ackerman function is defined in the library 
-   [hydras.Prelude.Iterates]  *)
+   [hydras.Prelude.Ack]  *)
 
-Locate Ack.
+
 
 (** 
 <<

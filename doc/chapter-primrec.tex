@@ -648,30 +648,34 @@ A\,(n+1)\,(m+1)&= A\,n\,(A\,(n+1)\,m)
 \end{align}
 
 You may find also  definition of the Ackermann function and a few  lemmas in
- \href{../theories/ordinals/Prelude/Iterates.html}%
-{ordinals.Prelude.Iterates}. 
+ \href{../theories/ordinals/Prelude/Ack.html}%
+{ordinals.Prelude.Ack}. 
 
 \textbf{Hint:} the reader may follow the plan suggested by Bruno Salvy (examen given at the French \'Ecole Polytechnique) (available at
 \href{http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf}{this site}).
+
+The lemmas which are marked as \textbf{Done} are proved
+in the library \texttt{ordinals.Prelude.Ack}.
+
+
 
 \begin{enumerate}
 \item Show that, for any $n$, the function $A\,n$ is primitive recursive.
 \emph{\textbf{Done.}}
 
 \item Show that for all $n$ and $m$, $A\,n\,m > m$ and  that the functions $A\,n$ are strictly monotonous.
-\emph{\textbf{To do.}}
 
-Show also that, for any $n$ and $m$, $A\,n\,m \leq A\,(n+1)\,m$. \emph{\textbf{To do.}}
+Show also that, for any $n$ and $m$, $A\,n\,m \leq A\,(n+1)\,m$. 
          Finally, show that for any $n$, $m$ and $k$, 
 $A\,k\,(A\,m\,n)\leq A\,(2+\textrm{max}(k,m))\,n$.
-\emph{\textbf{To do.}}
+\emph{\textbf{Done.}}
 \item Show that for any primitive recursive function $f$ of $k$ arguments,
-for any $x_1,\dots\,x_k$, $f(x_1,\dots,x_k)\leq A\,n\,(x_1+\dots+x_k)$. \emph{\textbf{To do.}}
-\item Show that the Ackermann function is not primitive recursive. \emph{\textbf{To do.}}
+for any $x_1,\dots\,x_k$, $f(x_1,\dots,x_k)\leq A\,n\,(x_1+\dots+x_k)$. \emph{\textbf{Still to do.}}
+\item Show that the Ackermann function is not primitive recursive. \emph{\textbf{Still to do.}}
       
 \end{enumerate}
 
-\emph{You may start this exercise with
+\emph{You may start this exercise with the file
 \url{../exercises/primrec/AckermannNotPR.v}.}
 
 \begin{remark}
