@@ -1,4 +1,4 @@
-From hydras Require Export Iterates .
+From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
 
 
@@ -40,6 +40,121 @@ Proof.
 Qed.
 
 
+Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
+Proof.
+  induction n.
+  -  reflexivity.
+  - rewrite Ack_S_S, Ack_2_n, IHn.
+    replace ( exp2 (S (S (S (S n))))) with (2 * exp2 (S (S (S n)))).
+     2: reflexivity.
+
+    assert (3 <= exp2 (S (S (S n)))).
+    { clear IHn;induction n; cbn.
+      auto with arith.
+        simpl in IHn.
+lia.   }
+
+    pose (n0 := exp2 (S (S (S n)))).
+    fold n0; fold n0 in H.
+    lia.
+Qed.
+
+
+
+Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
+Proof.
+  induction n.
+  - cbn. reflexivity. 
+  -  assert (3 <= hyper_exp2 (S (S (S n)))). {
+       clear IHn; induction n.
+       cbn.
+       auto with arith.
+       rewrite hyper_exp2_S.    
+       transitivity (hyper_exp2 (S (S (S n)))).
+       auto.
+       generalize (hyper_exp2 (S (S (S n))) ).
+       induction  n0.
+       cbn; auto.
+       cbn.
+       assert (0 < exp2 n0).
+       clear IHn0; induction n0.
+       cbn;auto.
+       cbn; lia.
+       lia.
+     }
+     rewrite Ack_S_S, IHn.
+     rewrite Ack_3_n; rewrite (hyper_exp2_S  (S (S (S n)))).
+     replace (S (S (S (hyper_exp2 (S (S (S n))) - 3))))
+       with (hyper_exp2 (S (S (S n)))); auto.
+     lia.
+Qed.
+
+
+(** ** Ackermann function as a 2nd-order iteration *)
+
+
+Definition phi_Ack (f : nat -> nat) (k : nat) :=
+       iterate f (S k) 1.
+
+Definition phi_Ack' (f : nat -> nat) (k : nat) :=
+       iterate f  k (f 1).
+
+Lemma phi_Ack'_ext f g: (forall x, f x = g x) ->
+                        forall p,  phi_Ack' f p = phi_Ack' g p.
+Proof.
+  induction p.      
+  -  cbn; auto.
+  -  cbn;  unfold phi_Ack' in IHp;  rewrite IHp;  apply H.
+Qed.
+
+Lemma phi_phi'_Ack : forall f k,
+    phi_Ack f k = phi_Ack' f k.
+Proof.
+  unfold phi_Ack, phi_Ack'; intros.
+  now rewrite iterate_S_eqn2.
+Qed.
+
+Lemma Ack_paraphrase : forall m ,  Ack m  =
+                                    match m with
+                                    | 0 => S 
+                                    | S p =>  phi_Ack  (Ack p) 
+                                    end.
+Proof.
+  destruct m; reflexivity.
+Qed.
+
+Lemma Ack_paraphrase' : forall m k,  Ack m  k=
+                                    match m with
+                                    | 0 => S k
+                                    | S p =>  phi_Ack'  (Ack p) k
+                                    end.
+Proof.
+  destruct m.
+  -   reflexivity.
+  - intro k; rewrite <- phi_phi'_Ack; reflexivity.
+Qed.
+
+Lemma Ack_as_iter' : forall m p, Ack m p = iterate phi_Ack' m S p.
+Proof.
+  induction  m.
+  - reflexivity.
+  -intro p; rewrite Ack_paraphrase', iterate_S_eqn.
+   apply phi_Ack'_ext; auto.
+Qed.
+
+
+Lemma Ack_as_iter : forall m , Ack m  = iterate phi_Ack m S.
+Proof.
+  induction  m.
+  - reflexivity.
+  - rewrite Ack_paraphrase, iterate_S_eqn;  now rewrite IHm.
+Qed.
+
+(** ** monotony properties *)
+
+
+
+
 Section Ack_Properties.
   Let P (n:nat) := 
     strict_mono (Ack n) /\
@@ -61,7 +176,7 @@ Section Ack_Properties.
 
     Hypothesis Hn : P n.
       
-    Lemma L1 : strict_mono (Ack (S n)).
+    Remark  Rem1 : strict_mono (Ack (S n)).
     Proof.
       intros m p H; cbn.
       destruct Hn as [H1 H2]; apply H1.
@@ -70,7 +185,7 @@ Section Ack_Properties.
         destruct H2;  auto.
     Qed.
 
-    Lemma L2 : S <<= Ack (S n).
+    Remark Rem2 : S <<= Ack (S n).
     Proof.
       intros p; destruct Hn as [H1 [H2 H3]]. 
       transitivity (Ack n p).
@@ -87,7 +202,7 @@ Section Ack_Properties.
       - rewrite H0;auto.
     Qed.
 
-    Lemma L3 : forall m, Ack (S n) m <= Ack (S (S n)) m.
+    Remark Rem3 : forall m, Ack (S n) m <= Ack (S (S n)) m.
     Proof.
       destruct Hn as [H1 [H2 H3]].
       intro m; simpl (Ack (S (S n)) m); simpl (Ack (S n) m).  
@@ -99,7 +214,7 @@ Section Ack_Properties.
         +  apply iterate_mono_1 with 0; auto.
            * intros x y H; auto with arith.
            * intro x; auto.
-           * intros; generalize (L2 n0); auto.
+           * intros; generalize (Rem2 n0); auto.
         + induction m; cbn; auto.
     Qed.
 
@@ -107,9 +222,9 @@ Section Ack_Properties.
     Lemma L5: P (S n).
     Proof.
       repeat split.
-      - apply L1.
-      - apply L2.
-      - apply L3.
+      - apply Rem1.
+      - apply Rem2.
+      - apply Rem3.
     Qed. 
 
   End Induc.
@@ -167,14 +282,14 @@ Proof.
   - apply L07.
 Qed.
 
-Lemma L010 : forall x y ,  x<= y -> forall n,  Ack x n <= Ack y n.
+Lemma L010 : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
 Proof.
   induction 1; auto.
   intro n; transitivity (Ack m n); auto.
   destruct (Ack_properties m) as [_ [_ H0]]; auto.
 Qed.
 
-Lemma L7 : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
+Lemma Ack_Ack_le : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
 Proof.
   intros; pose (x:= Nat.max k m).
   - fold x.
@@ -247,10 +362,10 @@ Section Contrad.
   Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
   Proof.
     transitivity (Ack n (Ack 2 n)).
-   -  now  rewrite  R04.
-   - replace (n+2) with  (2 + max n 2).
-    +  apply  L7.
-    + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
+    -  now  rewrite  R04.
+    - replace (n+2) with  (2 + max n 2).
+      +  apply  Ack_Ack_le.
+      + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
   Qed.  
 
   Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
@@ -269,8 +384,7 @@ Section Contrad.
 
   Remark R08 :  Ack n (2* n + 2) < Ack n (2 * n + 3).
   Proof.
-    destruct (Ack_properties n).
-    apply H; lia.
+    destruct (Ack_properties n) as [H _]; apply H; lia.
   Qed.
 
   Lemma contrad : False.
@@ -278,7 +392,8 @@ Section Contrad.
     generalize R07, R08; intros; lia.
   Qed.
 
-
 End Contrad.
+
+
 
 

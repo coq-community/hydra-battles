@@ -537,3 +537,5 @@ Qed.
 
 Definition hyper_exp2 k := iterate exp2 k 1.
 
+Lemma hyper_exp2_S : forall n, hyper_exp2 (S n) = exp2 (hyper_exp2 n).
+Proof.  induction n; cbn; auto. Qed.

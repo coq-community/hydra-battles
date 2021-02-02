@@ -155,5 +155,6 @@ exercises/ordinals/Limit_Infinity.v
 exercises/ordinals/ge_omega_iff.v
 exercises/ordinals/schutte_cnf_counter_example.v
 
-
+theories/ordinals/Prelude/MoreVectors.v
+theories/ordinals/Ackermann/MoreAck/OnAck.v
 
