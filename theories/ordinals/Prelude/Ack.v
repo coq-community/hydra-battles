@@ -282,7 +282,7 @@ Proof.
   - apply L07.
 Qed.
 
-Lemma L010 : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
+Lemma Ack_mono_l : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
 Proof.
   induction 1; auto.
   intro n; transitivity (Ack m n); auto.
@@ -296,12 +296,12 @@ Proof.
     assert (H:m <= x) by lia.
     assert (H0: k <= x) by lia.
     simpl (2 + x); transitivity (Ack x (Ack m n)). 
-    +  apply L010; auto.
+    +  apply Ack_mono_l; auto.
     +  transitivity (Ack x (Ack  x n)).
        *  apply Ack_n_mono_weak.
           destruct (Ack_properties x) as [H1 [H2 H3]].
           repeat split; auto.
-          apply L010; lia.
+          apply Ack_mono_l; lia.
        * apply L09.
 Qed.
 
