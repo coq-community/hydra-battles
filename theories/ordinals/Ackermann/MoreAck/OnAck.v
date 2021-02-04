@@ -43,6 +43,51 @@ Proof.
 Qed. 
 
 
+Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
+                            (h: naryFunc  m),
+    evalList n v (evalComposeFunc _ _ gs h) =
+    evalList m (map (fun g =>  evalList _ v g) gs) h.
+Proof.
+  induction n.
+  - intros; rewrite (zero_nil _ v); cbn.
+    induction m.
+    + rewrite (zero_nil _ gs); cbn; auto.  
+    + rewrite (decomp _ _ gs);  cbn. 
+      simpl naryFunc in *.
+      specialize (IHm (tl gs) (h (vfst gs))); now rewrite IHm.
+  -   intros; induction m.
+      + rewrite (zero_nil _ gs);  cbn.
+        rewrite (decomp _ _ v); cbn.   
+        specialize (IHn (tl v) 0 (nil) h); rewrite IHn;  cbn;  auto.
+      +  rewrite (decomp _ _ v).
+         rewrite (decomp _ _ gs).
+         specialize (IHm  (tl gs)).
+         cbn.
+         specialize (IHn (tl v)).
+         rewrite IHn; cbn.
+         f_equal.
+         f_equal.
+         generalize m gs.
+         induction m0.
+         * cbn; intros; rewrite (decomp1  gs0); cbn; auto.
+         *   intros; replace gs0 with
+                         (cons (hd gs0) (cons (hd (tl gs0)) (tl (tl gs0)))).
+             -- cbn; cbn in *; specialize (IHm0  (tl gs0));  rewrite IHm0; auto.
+             --  rewrite decomp;  f_equal.  now rewrite decomp.
+Qed.
+
+
+Lemma max_v_lub : forall n (v: t nat n) y,
+    (Forall (fun x =>  x <= y) v) ->
+    max_v v <= y.
+Proof.
+  induction n.  
+  -  intros v; rewrite (zero_nil _ v); cbn.
+     intros; auto with arith.
+  -   intros v; rewrite (decomp _ _ v); cbn.
+      intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
+Qed.
+
 Definition P n (f: naryFunc n) := exists (N:nat),
     forall (v: Vector.t nat n), evalList _ v f <= Ack N (max_v  v).
 
@@ -102,8 +147,16 @@ subgoal 5 (ID 125) is:
   IHx0 : P_PR m x      
   ===================== =======
   P_PR n (composeFunc n m g x)
-    *)
-    admit. (* later *)
+     *)
+    destruct IHx, IHx0.
+    red.
+eexists (2 + max x0 x1). 
+intro v.
+    specialize (H0 (map (fun f : naryFunc n => evalList n v f) (evalPrimRecs n m g))).
+    pose (X:= (map (fun f : naryFunc n => evalList n v f) (evalPrimRecs n m g))).
+     fold X in H0 ; fold X.
+
+   admit. (* later *)
   - (*
 
   1 subgoal (ID 107)
@@ -140,8 +193,107 @@ subgoal 5 (ID 125) is:
       apply le_max_r.
 Admitted.
 
+Section Impossibility_Proof.
+
+  Hypothesis HAck : isPR 2 Ack.
+  
+  
+Lemma L1 : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+destruct HAck as [x Hx].
+generalize (L 2 x).
+intros.
+red in H.
+red in H.
+destruct H as [N HN].
+exists N.
+ intros; specialize (HN (cons x0 (cons y nil))).
+ cbn in HN.
+replace (evalPrimRec 2 x x0 y) with (Ack x0 y) in HN.
+ rewrite max_0_r in HN.
+transitivity  (Ack N (Nat.max x0 y)); auto.
+apply Ack_n_mono_weak.
+apply Ack_properties.
+lia.
+
+symmetry; apply Hx.
+Qed.
 
 
+Section Contrad.
+  Variable n: nat.
+  Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
+
+  Remark R01 : n <> 0.
+  Proof.
+    intro H;  subst; specialize (Hn 2 1).
+    compute in Hn; lia.
+  Qed.
+
+
+  Remark R02: n <> 1.
+  Proof. 
+    intro H; subst; specialize (Hn 2 2).
+    compute in Hn;  lia.
+  Qed.
+
+  Remark R03 : max 2 n = n.
+  Proof.
+    apply PeanoNat.Nat.max_r.
+    case_eq  n; intro.
+    -  destruct (R01 H).
+    -  destruct n0.
+       +  intro H; destruct (R02 H).
+       + intro; subst. auto with arith.
+  Qed.
+
+  Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
+  Proof.
+    now rewrite Ack_2_n.
+  Qed.
+  
+  Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
+  Proof.
+    transitivity (Ack n (Ack 2 n)).
+    -  now  rewrite  R04.
+    - replace (n+2) with  (2 + max n 2).
+      +  apply  Ack_Ack_le.
+      + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
+  Qed.  
+
+  Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
+  Proof.
+    specialize (Hn (n+2) n).
+    replace (2* n + 2) with (n+2 + n) by lia;  auto.
+  Qed.
+
+  Remark R07 : Ack n (2 * n + 3) <= Ack n (2* n + 2).
+  Proof.
+    eapply Le.le_trans.
+    - apply R05.
+    - apply R06.
+  Qed.
+
+
+  Remark R08 :  Ack n (2* n + 2) < Ack n (2 * n + 3).
+  Proof.
+    destruct (Ack_properties n) as [H _]; apply H; lia.
+  Qed.
+
+  Lemma contrad : False.
+  Proof.
+    generalize R07, R08; intros; lia.
+  Qed.
+
+End Contrad.
+
+Lemma Ack_not_PR : False.
+  destruct L1 as [n Hn].
+now apply contrad with n.
+Qed.
+
+End Impossibility_Proof.
+
+Check Ack_not_PR.
 
 
 
