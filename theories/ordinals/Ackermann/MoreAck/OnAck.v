@@ -88,6 +88,17 @@ Proof.
       intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
 Qed.
 
+
+Lemma max_v_ge : forall n (v: t nat n) y,
+    In  y  v -> y <= max_v v.
+Proof.
+  induction n.  
+  -  intros v; rewrite (zero_nil _ v); cbn; inversion 1.
+  -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
+   +  cbn in H0; subst; apply le_max_l. 
+   + cbn in H0; specialize (IHn _ _ H0); lia.
+Qed.
+
 Definition P n (f: naryFunc n) := exists (N:nat),
     forall (v: Vector.t nat n), evalList _ v f <= Ack N (max_v  v).
 
@@ -151,12 +162,34 @@ subgoal 5 (ID 125) is:
     destruct IHx, IHx0.
     red.
 eexists (2 + max x0 x1). 
-intro v.
-    specialize (H0 (map (fun f : naryFunc n => evalList n v f) (evalPrimRecs n m g))).
-    pose (X:= (map (fun f : naryFunc n => evalList n v f) (evalPrimRecs n m g))).
-     fold X in H0 ; fold X.
+intro v. simpl evalPrimRec.
+rewrite evalListComp.
+generalize 
+ (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g))).
+intro H00.
+eapply Le.le_trans.
 
-   admit. (* later *)
+
+auto.
+generalize (H v); intro HH.
+transitivity (Ack x1 (Ack x0 (max_v v))).
+apply Ack_n_mono_weak.
+apply Ack_properties.
+apply max_v_lub.
+intros.
+Search Forall.
+rewrite Forall_forall.
+intros.
+About max_v_ge.
+generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g) (evalPrimRecs n m g)) a H1).
+intro.
+lia.
+
+rewrite max_comm.
+apply Ack_Ack_le.
+
+
+
   - (*
 
   1 subgoal (ID 107)

@@ -195,6 +195,22 @@ Goal forall a b : Z, [a;b]=[5;5] -> a = 5 /\ b = 5.
 injection 1; auto.
 Qed.
 
+Search In.
+
+
+
+Lemma In_cases {A:Type}{n:nat} (v: t A (S n)) :
+  forall x, In x v ->
+            x = hd v \/ In x (tl v).
+Proof.
+  intros; rewrite (decomp _ _ v) in *.
+  inversion H.
+  - left; auto.
+  - apply Eqdep_dec.inj_pair2_eq_dec in H3.
+    + right; cbn; now subst.
+    + decide equality.
+Qed.
+
 
 
 (*
