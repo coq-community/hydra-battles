@@ -35,11 +35,11 @@ Proof.
     +  cbn;  rewrite (decomp _ _ v);  cbn; rewrite  evalList_Const;
          apply le_max_l.
     + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
-     *  replace v with (cons (hd v) (tl v)) at 1; cbn.
-       --   transitivity (max_v (tl v));  auto. 
-            apply le_max_r.
-       --  symmetry; apply decomp. 
-     *  destruct( n0 e).
+      *  replace v with (cons (hd v) (tl v)) at 1; cbn.
+         --   transitivity (max_v (tl v));  auto. 
+              apply le_max_r.
+         --  symmetry; apply decomp. 
+      *  destruct( n0 e).
 Qed. 
 
 
@@ -77,6 +77,53 @@ Proof.
 Qed.
 
 
+Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
+                                (g : naryFunc (S n)),
+    evalList n v (compose2 n f g) =
+    evalList (S n) (cons (evalList n v f) v) g.
+  induction n.
+  cbn.
+  intros.
+  rewrite (zero_nil _ v).
+  now cbn. 
+  intros.
+  rewrite (decomp _ _ v).
+  cbn.
+  rewrite IHn.
+  now cbn.
+Qed.
+
+Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
+                                 (g : naryFunc (S (S n))),
+    evalList (S n) (cons 0 v) (evalPrimRecFunc  _ f g)
+    = evalList n v f.
+  induction n.                                                
+  - intros; rewrite (zero_nil _ v).
+    now cbn.
+  - intros; rewrite (decomp _ _ v). now cbn.
+Qed.
+
+Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
+                                 (g : naryFunc (S (S n))) a,
+    evalList (S n) (cons (S a) v) (evalPrimRecFunc  _ f g)
+    = evalList (S (S n)) (cons a
+                               (cons (evalList (S n) (cons a   v)
+                                               (evalPrimRecFunc  _ f g)) v)
+                         )
+               g.
+Proof.
+  induction n.                                                
+  - intros; rewrite (zero_nil _ v).
+    now cbn.
+  - intros; rewrite (decomp _ _ v). cbn.
+    specialize (IHn (tl v)).
+    cbn.
+    rewrite evalListCompose2.
+    cbn.
+    auto.
+Qed.
+
+
 Lemma max_v_lub : forall n (v: t nat n) y,
     (Forall (fun x =>  x <= y) v) ->
     max_v v <= y.
@@ -95,8 +142,8 @@ Proof.
   induction n.  
   -  intros v; rewrite (zero_nil _ v); cbn; inversion 1.
   -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
-   +  cbn in H0; subst; apply le_max_l. 
-   + cbn in H0; specialize (IHn _ _ H0); lia.
+     +  cbn in H0; subst; apply le_max_l. 
+     + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
 
 Definition P n (f: naryFunc n) := exists (N:nat),
@@ -126,7 +173,7 @@ Qed.
 Lemma P_PR_Zero : P_PR _ zeroFunc.
 Proof.
   exists 0;
-  intro v; rewrite  (zero_nil _ v), Ack_0. cbn; auto with arith.
+    intro v; rewrite  (zero_nil _ v), Ack_0. cbn; auto with arith.
 Qed.
 
 
@@ -136,11 +183,8 @@ Proof.
                   (P0 := fun n m y => Ps_PR n m y).
   (*
 
-2 remaining  subgoals (ID 103)
-  
+1 remaining  subgoals (ID 103)
 
-subgoal 4 (ID 119) is:
- P_PR n (composeFunc n m g x)
 subgoal 5 (ID 125) is:
  P_PR (S n) (primRecFunc n x1 x2)
    *)
@@ -150,47 +194,42 @@ subgoal 5 (ID 125) is:
     rewrite Ack_0; intro v; transitivity (max_v v).
     + apply proj_le_max.
     + auto with arith.
-  - (*
-  n, m : nat
-  g : PrimRecs n m
-  x : PrimRec m
-  IHx : Ps_PR n m      g
-  IHx0 : P_PR m x      
-  ===================== =======
-  P_PR n (composeFunc n m g x)
-     *)
+  - 
     destruct IHx, IHx0.
     red.
-eexists (2 + max x0 x1). 
-intro v. simpl evalPrimRec.
-rewrite evalListComp.
-generalize 
- (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g))).
-intro H00.
-eapply Le.le_trans.
+    eexists (2 + max x0 x1). 
+    intro v. simpl evalPrimRec.
+    rewrite evalListComp.
+    generalize 
+      (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g))).
+    intro H00.
+    eapply Le.le_trans.
 
 
-auto.
-generalize (H v); intro HH.
-transitivity (Ack x1 (Ack x0 (max_v v))).
-apply Ack_n_mono_weak.
-apply Ack_properties.
-apply max_v_lub.
-intros.
-Search Forall.
-rewrite Forall_forall.
-intros.
-About max_v_ge.
-generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g) (evalPrimRecs n m g)) a H1).
-intro.
-lia.
+    auto.
+    generalize (H v); intro HH.
+    transitivity (Ack x1 (Ack x0 (max_v v))).
+    apply Ack_n_mono_weak.
+    apply Ack_properties.
+    apply max_v_lub.
+    intros.
+    Search Forall.
+    rewrite Forall_forall.
+    intros.
+    About max_v_ge.
+    generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g) (evalPrimRecs n m g)) a H1).
+    intro.
+    lia.
 
-rewrite max_comm.
-apply Ack_Ack_le.
+    rewrite max_comm.
+    apply Ack_Ack_le.
 
 
 
-  - (*
+  -
+    
+
+    (*
 
   1 subgoal (ID 107)
   
@@ -201,8 +240,111 @@ apply Ack_Ack_le.
   IHx2 : P_PR (S (S n)) x2
   ============================
   P_PR (S n) (primRecFunc n x1 x2)
-    *)
-    admit. (* later *)
+     *)
+    (* use notation of planetmath.org page *)
+    destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+    remember  (evalPrimRec n x1) as g.
+    remember (evalPrimRec _ x2) as h.
+    pose(q := S  (max r s)).
+    red.
+    remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
+                               (evalPrimRec _ x2)) as f.
+    
+    assert (L1 : forall i (v: t nat n) ,
+               evalList _
+                        (cons i v) f
+               <= Ack q (i + max_v v)).
+    {
+      
+      induction i.
+      - intros. subst f; 
+                  rewrite evalListPrimrec_0.
+        simpl plus. subst g; 
+                      transitivity (Ack r (max_v  v)).
+        auto.
+        apply Ack_mono_l.
+        unfold q; lia.
+      - intros; rewrite Heqf. rewrite evalListPrimrec_S.
+        rewrite <- Heqf. rewrite <- Heqh. 
+        pose (z:= max_v (cons i (cons (evalList (S n) (cons i v) f)
+                                      v))).
+        assert (evalList (S (S n))
+                         (cons i (cons (evalList (S n) (cons i v) f) v)) h
+                <= Ack s z).
+        {
+          unfold z; apply Hh.
+        }
+        assert (z <= Ack q (i+ max_v v)).
+        {              
+          clear H.
+          specialize (IHi v).
+          remember (evalList (S n) (cons i v) f) as p.
+          remember (Ack q (i + max_v v)) as t.
+          simpl max_v in z.
+          remember (max_v v) as u.
+          assert (i <= t).
+          rewrite Heqt.
+          transitivity (S i).
+          auto.
+          transitivity (Ack q i).                  
+          destruct (Ack_properties q) as [H0 [H1 H2]].
+          apply H1. 
+          apply Ack_n_mono_weak.
+          apply Ack_properties.
+          lia.
+          assert (u <= t).
+          rewrite Hequ, Heqt. rewrite Hequ.
+          transitivity (i + max_v v).
+          lia.
+          transitivity (S (i + max_v v)).
+          lia.
+          destruct (Ack_properties q) as [H0 [H1 H2]].
+          apply H1.
+          lia.
+        }
+        assert (Ack s z <= Ack q (S i + max_v v)).
+        {
+          unfold q. simpl plus.
+          rewrite Ack_S_S.
+          fold q.
+          transitivity (Ack (max r s) z).
+          apply Ack_mono_l.
+          lia.
+          apply Ack_n_mono_weak.
+          apply Ack_properties.
+          auto.
+        }
+        lia.
+    }
+    red.     
+    exists (4+ q).
+    intros.
+    pose (z := max (hd v) (max_v (tl v))).
+    simpl evalPrimRec.
+    rewrite <- Heqf. 
+    rewrite (decomp _ _ v).
+    remember (vfst v) as x. 
+    remember (tl v) as y.
+    transitivity (Ack q (x + max_v y)).
+    apply L1.
+    transitivity (Ack q (2 * z)).
+    apply Ack_n_mono_weak.
+    apply Ack_properties.
+    unfold z; lia.
+    transitivity (Ack q (Ack 2 z)).
+    rewrite Ack_2_n.
+    apply Ack_n_mono_weak.
+    apply Ack_properties.
+    lia.
+    simpl max_v.
+    fold z.
+    Search (Ack _ (Ack _ _)).
+    transitivity (Ack (2 + max 2 q) z).
+    rewrite max_comm. apply Ack_Ack_le.
+    Search (Ack _ ?n <= Ack _ ?n).
+    apply Ack_mono_l.
+    lia. 
+    
   - red;cbn;  red; exists 0.
     intro; rewrite Ack_0.
     cbn; auto with arith.
@@ -224,105 +366,106 @@ apply Ack_Ack_le.
     + transitivity (Ack x1 (max_v v)); auto.
       apply Ack_mono_l. 
       apply le_max_r.
-Admitted.
+Qed. 
+
 
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
   
   
-Lemma L1 : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
-destruct HAck as [x Hx].
-generalize (L 2 x).
-intros.
-red in H.
-red in H.
-destruct H as [N HN].
-exists N.
- intros; specialize (HN (cons x0 (cons y nil))).
- cbn in HN.
-replace (evalPrimRec 2 x x0 y) with (Ack x0 y) in HN.
- rewrite max_0_r in HN.
-transitivity  (Ack N (Nat.max x0 y)); auto.
-apply Ack_n_mono_weak.
-apply Ack_properties.
-lia.
+  Lemma L1 : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+    destruct HAck as [x Hx].
+    generalize (L 2 x).
+    intros.
+    red in H.
+    red in H.
+    destruct H as [N HN].
+    exists N.
+    intros; specialize (HN (cons x0 (cons y nil))).
+    cbn in HN.
+    replace (evalPrimRec 2 x x0 y) with (Ack x0 y) in HN.
+    rewrite max_0_r in HN.
+    transitivity  (Ack N (Nat.max x0 y)); auto.
+    apply Ack_n_mono_weak.
+    apply Ack_properties.
+    lia.
 
-symmetry; apply Hx.
-Qed.
-
-
-Section Contrad.
-  Variable n: nat.
-  Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
-
-  Remark R01 : n <> 0.
-  Proof.
-    intro H;  subst; specialize (Hn 2 1).
-    compute in Hn; lia.
+    symmetry; apply Hx.
   Qed.
 
 
-  Remark R02: n <> 1.
-  Proof. 
-    intro H; subst; specialize (Hn 2 2).
-    compute in Hn;  lia.
+  Section Contrad.
+    Variable n: nat.
+    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
+
+    Remark R01 : n <> 0.
+    Proof.
+      intro H;  subst; specialize (Hn 2 1).
+      compute in Hn; lia.
+    Qed.
+
+
+    Remark R02: n <> 1.
+    Proof. 
+      intro H; subst; specialize (Hn 2 2).
+      compute in Hn;  lia.
+    Qed.
+
+    Remark R03 : max 2 n = n.
+    Proof.
+      apply PeanoNat.Nat.max_r.
+      case_eq  n; intro.
+      -  destruct (R01 H).
+      -  destruct n0.
+         +  intro H; destruct (R02 H).
+         + intro; subst. auto with arith.
+    Qed.
+
+    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
+    Proof.
+      now rewrite Ack_2_n.
+    Qed.
+    
+    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
+    Proof.
+      transitivity (Ack n (Ack 2 n)).
+      -  now  rewrite  R04.
+      - replace (n+2) with  (2 + max n 2).
+        +  apply  Ack_Ack_le.
+        + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
+    Qed.  
+
+    Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
+    Proof.
+      specialize (Hn (n+2) n).
+      replace (2* n + 2) with (n+2 + n) by lia;  auto.
+    Qed.
+
+    Remark R07 : Ack n (2 * n + 3) <= Ack n (2* n + 2).
+    Proof.
+      eapply Le.le_trans.
+      - apply R05.
+      - apply R06.
+    Qed.
+
+
+    Remark R08 :  Ack n (2* n + 2) < Ack n (2 * n + 3).
+    Proof.
+      destruct (Ack_properties n) as [H _]; apply H; lia.
+    Qed.
+
+    Lemma contrad : False.
+    Proof.
+      generalize R07, R08; intros; lia.
+    Qed.
+
+  End Contrad.
+
+  Lemma Ack_not_PR : False.
+    destruct L1 as [n Hn].
+    now apply contrad with n.
   Qed.
-
-  Remark R03 : max 2 n = n.
-  Proof.
-    apply PeanoNat.Nat.max_r.
-    case_eq  n; intro.
-    -  destruct (R01 H).
-    -  destruct n0.
-       +  intro H; destruct (R02 H).
-       + intro; subst. auto with arith.
-  Qed.
-
-  Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
-  Proof.
-    now rewrite Ack_2_n.
-  Qed.
-  
-  Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
-  Proof.
-    transitivity (Ack n (Ack 2 n)).
-    -  now  rewrite  R04.
-    - replace (n+2) with  (2 + max n 2).
-      +  apply  Ack_Ack_le.
-      + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
-  Qed.  
-
-  Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
-  Proof.
-    specialize (Hn (n+2) n).
-    replace (2* n + 2) with (n+2 + n) by lia;  auto.
-  Qed.
-
-  Remark R07 : Ack n (2 * n + 3) <= Ack n (2* n + 2).
-  Proof.
-    eapply Le.le_trans.
-    - apply R05.
-    - apply R06.
-  Qed.
-
-
-  Remark R08 :  Ack n (2* n + 2) < Ack n (2 * n + 3).
-  Proof.
-    destruct (Ack_properties n) as [H _]; apply H; lia.
-  Qed.
-
-  Lemma contrad : False.
-  Proof.
-    generalize R07, R08; intros; lia.
-  Qed.
-
-End Contrad.
-
-Lemma Ack_not_PR : False.
-  destruct L1 as [n Hn].
-now apply contrad with n.
-Qed.
 
 End Impossibility_Proof.
 
