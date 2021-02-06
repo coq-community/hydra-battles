@@ -195,9 +195,6 @@ Goal forall a b : Z, [a;b]=[5;5] -> a = 5 /\ b = 5.
 injection 1; auto.
 Qed.
 
-Search In.
-
-
 
 Lemma In_cases {A:Type}{n:nat} (v: t A (S n)) :
   forall x, In x v ->
@@ -211,6 +208,47 @@ Proof.
     + decide equality.
 Qed.
 
+
+Lemma Forall_and {A:Type}(P: A -> Prop) {n:nat} (v: t A (S n)) :
+  Forall P v -> P (hd v) /\ Forall P (tl v).
+Proof.
+  rewrite (decomp _ _ v); cbn.
+  inversion 1; split; auto.
+  apply Eqdep_dec.inj_pair2_eq_dec in H2; subst; auto.
+  decide equality. 
+Qed.
+
+(** For V8.11 *)
+
+Lemma Forall_forall {A:Type}(P: A -> Prop) :
+  forall {n:nat} (v: t A n) ,
+    Forall P v <-> (forall a, In a v -> P a).
+  Proof.
+  induction n.
+  intro v; rewrite (zero_nil _ v).
+  split.
+  inversion 2.
+  left.
+  intro; rewrite (decomp _ _ v).
+  split.
+  intros H a H0.
+
+  destruct (Forall_and   _ _ H ).
+  destruct (In_cases _ _ H0).
+  now subst.
+  cbn in H2.
+  rewrite IHn in H2.
+  apply H2.
+  apply H3.
+  intros.
+  right.
+  apply H.
+  left.
+  rewrite IHn.
+  auto.
+  intros; apply H.
+  right; auto.
+Qed.
 
 
 (*

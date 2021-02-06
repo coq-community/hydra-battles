@@ -14,6 +14,9 @@ Require Import Compare_dec Max.
 Import extEqualNat  VectorNotations. 
 
 
+
+
+
 (** Maximum in a vector of nat *)
 
 Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
@@ -205,7 +208,8 @@ Proof.
     +  auto.
     + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.
-        intros; rewrite VectorSpec.Forall_forall; intros.
+         rewrite MoreVectors.Forall_forall; intros.
+
         generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
                                      (evalPrimRecs n m g)) a H1).
          intro H2;lia.
