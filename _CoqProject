@@ -25,11 +25,11 @@ theories/ordinals/Prelude/More_Arith.v
 theories/ordinals/Prelude/DecPreOrder_Instances.v
 theories/ordinals/Prelude/Fuel.v
 theories/ordinals/Prelude/Iterates.v
-theories/ordinals/Prelude/Ack.v
 theories/ordinals/Prelude/OrdNotations.v
 theories/ordinals/Prelude/MoreLists.v
 theories/ordinals/Prelude/Restriction.v
 theories/ordinals/Prelude/MoreOrders.v
+theories/ordinals/Prelude/MoreVectors.v
 theories/ordinals/Epsilon0/Hessenberg.v
 theories/ordinals/Epsilon0/Large_Sets.v
 theories/ordinals/Epsilon0/Epsilon0rpo.v
@@ -123,6 +123,8 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
+theories/ordinals/Ackermann/MoreAck/Ack.v
+theories/ordinals/Ackermann/MoreAck/AckNotPR.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
@@ -144,7 +146,6 @@ theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
 
-exercises/primrec/AckermannNotPR.v
 exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v
 exercises/primrec/MorePRExamples.v
@@ -155,6 +156,6 @@ exercises/ordinals/Limit_Infinity.v
 exercises/ordinals/ge_omega_iff.v
 exercises/ordinals/schutte_cnf_counter_example.v
 
-theories/ordinals/Prelude/MoreVectors.v
-theories/ordinals/Ackermann/MoreAck/OnAck.v
+
+
 
