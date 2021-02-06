@@ -1,3 +1,14 @@
+(** * Proof that Ack is not primitive recursive
+
+  after the following documents :
+#<a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
+planetmath page </a>#
+and
+#<a href="http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf"> Bruno Salvy's lecture</a>#.
+ *)
+
+
+
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
 Require Import Compare_dec Max.
 Import extEqualNat.
@@ -145,6 +156,8 @@ Proof.
      +  cbn in H0; subst; apply le_max_l. 
      + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
+
+
 
 Definition P n (f: naryFunc n) := exists (N:nat),
     forall (v: Vector.t nat n), evalList _ v f <= Ack N (max_v  v).
