@@ -240,6 +240,33 @@ Section Ack_Properties.
 End Ack_Properties.
 
 
+Lemma le_S_Ack n : fun_le S (Ack n).
+Proof.
+ destruct (Ack_properties n);tauto.
+Qed.
+
+
+
+Lemma Ack_strict_mono n : strict_mono (Ack n).
+Proof.
+ destruct (Ack_properties n);tauto.
+Qed.
+
+Check Ack_properties.
+
+Lemma Ack_mono_l : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
+Proof.
+  induction 1; auto.
+  intro n; transitivity (Ack m n); auto.
+  destruct (Ack_properties m) as [_ [_ H0]]; auto.
+Qed.
+
+Lemma Ack_mono_r n: forall x y, x <= y -> Ack n x <= Ack n y.
+Proof.
+  intros; apply Ack_n_mono_weak; trivial.
+  apply Ack_properties.  
+Qed.
+
 Lemma L6 (x:nat): forall n, 2 + n <= Ack (2+x) n.
 Proof.
   induction x.
@@ -248,8 +275,7 @@ Proof.
      rewrite     Ack_S_S.
      transitivity (Ack 0 (Ack 2 n)).
      +  rewrite Ack_0; lia.
-     +  destruct (Ack_properties 0) as [_ [H1 H2]].
-        apply H2.
+     +  apply Ack_mono_l; auto.
   - replace (2 + S x) with (S (2 + x)) by lia.
     destruct (Ack_properties (2+x)) as [_ [H1 H2]]. 
     intro n; transitivity   (Ack (2 + x) n); auto.
@@ -260,18 +286,14 @@ Proof.
   intro; destruct n.
   -  simpl (2 + x); rewrite Ack_S_0; left.
   -  simpl (2 + x); rewrite (Ack_S_S  (S x)).
-     generalize (L6 x n ); intro H;  apply Ack_n_mono_weak.
-     + destruct (Ack_properties (S x)) as [H1 [H2 H3]];
-       repeat split; auto.
-     + auto. 
+     generalize (L6 x n ); intro H;  apply Ack_mono_r;  auto.
 Qed.
 
 Lemma L08 (x n:nat) : Ack x (Ack x n) <= Ack (S x) (S n) .
 Proof.
   destruct (Ack_properties x) as [H1 [H2 H3]].
   transitivity (Ack x (Ack (S x) n)); auto.
-  - apply Ack_n_mono_weak.  
-    + repeat split;auto.   
+  - apply Ack_mono_r.  
     +  apply H3; rewrite <- Ack_S_S; auto.
 Qed.
 
@@ -282,12 +304,7 @@ Proof.
   - apply L07.
 Qed.
 
-Lemma Ack_mono_l : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
-Proof.
-  induction 1; auto.
-  intro n; transitivity (Ack m n); auto.
-  destruct (Ack_properties m) as [_ [_ H0]]; auto.
-Qed.
+
 
 Lemma Ack_Ack_le : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
 Proof.
@@ -298,9 +315,7 @@ Proof.
     simpl (2 + x); transitivity (Ack x (Ack m n)). 
     +  apply Ack_mono_l; auto.
     +  transitivity (Ack x (Ack  x n)).
-       *  apply Ack_n_mono_weak.
-          destruct (Ack_properties x) as [H1 [H2 H3]].
-          repeat split; auto.
+       *  apply Ack_mono_r.
           apply Ack_mono_l; lia.
        * apply L09.
 Qed.
