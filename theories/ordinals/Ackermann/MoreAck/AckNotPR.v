@@ -205,7 +205,7 @@ Proof.
     +  auto.
     + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.
-        intros; rewrite Forall_forall; intros.
+        intros; rewrite VectorSpec.Forall_forall; intros.
         generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
                                      (evalPrimRecs n m g)) a H1).
          intro H2;lia.
