@@ -12,12 +12,6 @@ Definition Vid {A : Type} {n:nat} : t A n -> t A n :=
   | S p => fun v => hd v :: tl v
   end.
 
-Eval simpl in (fun (A:Type)(v:t A 0) => (Vid  v)).
-
-Eval simpl in (fun (A:Type)(v:t A 0) => v).
-
-
-
 (* The decomposition Lemma *)
 
 Lemma Vid_eq : forall (n:nat) (A:Type)(v:t A n), v = Vid   v.
@@ -88,13 +82,11 @@ Fixpoint vector_nth (A:Type)(n:nat)(p:nat)(v:t A p){struct v}
 
 Arguments vector_nth {A } n {p}.
 
-(** Faire un fichier Zvect *)
-
 (** Vectors on Z *)
 
-Require Import ZArith.
+(*Require Import ZArith.
 Open Scope Z_scope.
-
+*)
 Lemma Forall_inv {A :Type}(P: A -> Prop)(n:nat)
       a  v  : Vector.Forall P (n:= S n) (Vector.cons a v)  ->
                 P a  /\ Vector.Forall P v .
@@ -185,15 +177,6 @@ Ltac vdec2 v a b :=
   let e :=fresh "e" in 
     destruct (decompos2 v) as [x tmp]; destruct tmp as [y e]; subst v.
 
-
-Compute match2 (fun a b =>  (a,b)) [5;8].
-
-Compute match2 (fun a b =>  Z.leb a b) [5;8].
-
-
-Goal forall a b : Z, [a;b]=[5;5] -> a = 5 /\ b = 5.
-injection 1; auto.
-Qed.
 
 
 Lemma In_cases {A:Type}{n:nat} (v: t A (S n)) :
