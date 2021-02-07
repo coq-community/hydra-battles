@@ -14,9 +14,6 @@ Require Import Compare_dec Max.
 Import extEqualNat  VectorNotations. 
 
 
-
-
-
 (** Maximum in a vector of nat *)
 
 Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
@@ -51,13 +48,14 @@ Qed.
 
 
 
-(**  uncurried apply *)
+(**  uncurried apply 
+ 
+[v_apply f (x1..x2.. ..xn::nil)]  is [f x1 x2 ... xn] 
+
+*)
 
 
 Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9). 
-
-
-
 
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
@@ -72,7 +70,7 @@ Qed.
 
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
-        v_apply  (evalProjFunc n k H) v <= max_v v.
+        v_apply (evalProjFunc n k H) v <= max_v v.
 Proof.
   induction n.
   -  cbn; intros; lia.
@@ -120,8 +118,8 @@ Qed.
 
 Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
                                 (g : naryFunc (S n)),
-    evalList n v (compose2 n f g) =
-    evalList (S n) (cons (evalList n v f) v) g.
+    v_apply (compose2 n f g) v =
+    v_apply g  ((evalList n v f) :: v).
 Proof.
   induction n.
   - cbn;  intros;  rewrite (zero_nil _ v);  now cbn. 
@@ -184,9 +182,9 @@ Proof.
 Qed.
 
 
-(** By induction on x, we prove that every PR function staisfies [P] *)
+(** By induction on x, we prove that every PR function satisfies [P] *)
 
-Lemma L: forall n (x: PrimRec n),  P_PR n x.
+Lemma PR_majorized: forall n (x: PrimRec n),  P_PR n x.
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
                   (P0 := fun n m y => Ps_PR n m y).
@@ -274,10 +272,10 @@ Proof.
     + transitivity (Ack q (2 * z)).
       * apply Ack_mono_r; unfold z; lia.
       * transitivity (Ack q (Ack 2 z)).
-      -- rewrite Ack_2_n; apply Ack_mono_r; lia.
-      -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
-         ++ rewrite max_comm; apply Ack_Ack_le.
-         ++ apply Ack_mono_l;  lia. 
+        -- rewrite Ack_2_n; apply Ack_mono_r; lia.
+        -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
+           ++ rewrite max_comm; apply Ack_Ack_le.
+           ++ apply Ack_mono_l;  lia. 
   - (**  Lists of PR functions *)
     red;cbn;  red; exists 0.
     intro; rewrite Ack_0.
@@ -293,28 +291,33 @@ Proof.
     + transitivity (Ack x0 (max_v v)); auto.
       *  apply Ack_mono_l; apply le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
-    * apply Ack_mono_l; apply le_max_r.
+      * apply Ack_mono_l; apply le_max_r.
 Qed. 
 
 
-Section Impossibility_Proof.
-
-  Hypothesis HAck : isPR 2 Ack.
+  (** we specialize Lemma [PR_majorized] to binary functions *)
   
-  (** we specialize Lemma [L] to n-binary functions *)
-  
-  Lemma L1 : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+Lemma PR_2_majorized (f: naryFunc 2)(Hf : isPR 2 f)
+  : exists (n:nat), forall x y,  f x y <= Ack n (x + y).
   Proof.
-    destruct HAck as [x Hx]; generalize (L 2 x).
+    destruct Hf as [x Hx]; generalize (PR_majorized 2 x).
     intros.
     red in H;red in H; destruct H as [N HN];  exists N.
     intros; specialize (HN [x0; y]);  cbn in HN.
-    replace (evalPrimRec 2 x x0 y) with (Ack x0 y) in HN.
+    replace (evalPrimRec 2 x x0 y) with (f x0 y) in HN.
     - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
       apply Ack_mono_r;  lia.
     - symmetry; apply Hx.
   Qed.
+  
+Section Impossibility_Proof.
 
+  Hypothesis HAck : isPR 2 Ack.
+
+  Fact Ack_majorized : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+  Proof. 
+    apply PR_2_majorized; assumption.
+  Qed.
 
   Section Contrad.
     Variable n: nat.
@@ -357,10 +360,10 @@ Section Impossibility_Proof.
     Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
     Proof.
       specialize (Hn (n+2) n).
-      replace (2* n + 2) with (n+2 + n) by lia;  auto.
+      replace (2 * n + 2) with (n + 2 + n) by lia;  auto.
     Qed.
 
-    Remark R07 : Ack n (2 * n + 3) <= Ack n (2* n + 2).
+    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
     Proof.
       eapply Le.le_trans.
       - apply R05.
@@ -368,7 +371,7 @@ Section Impossibility_Proof.
     Qed.
 
 
-    Remark R08 :  Ack n (2* n + 2) < Ack n (2 * n + 3).
+    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
     Proof.
       destruct (Ack_properties n) as [H _]; apply H; lia.
     Qed.
@@ -381,12 +384,82 @@ Section Impossibility_Proof.
   End Contrad.
 
   Lemma Ack_not_PR : False.
-    destruct L1 as [n Hn].
-    now apply contrad with n.
+  Proof.
+    destruct Ack_majorized as [n Hn].   now apply contrad with n.  
   Qed.
 
 End Impossibility_Proof.
 
+(** * Remark: for any [n], [Ack n] is primitive recursive. *)
+
+Lemma AckSn_as_iterate (n:nat) : extEqual 1 (Ack (S n))
+                                          (fun k => iterate (Ack n) (S k) 1).
+Proof. intro;reflexivity. Qed. 
+
+
+Lemma AckSn_as_PRiterate (n:nat):
+  extEqual 1 (Ack (S n)) (fun k => primRec.iterate (Ack n) (S k) 1).
+Proof.
+  intros k; rewrite AckSn_as_iterate.
+  generalize (Ack n); intro f.
+  generalize 1; generalize (S k); induction n0.
+  - cbn; auto.
+  - cbn;  intro n1; rewrite IHn0; auto.
+Qed.
+
+Lemma iterate_nat_rec (g: nat->nat) (n:nat) x :
+  iterate g n x = nat_rec (fun _ => nat) x (fun x y => g y) n.
+Proof.
+  induction n; cbn; auto.
+Qed.
+
+
+Section Proof_of_Ackn_PR.
+
+  Section S_step.
+    Variable n:nat.
+
+    Hypothesis IHn: isPR 1 (Ack n).
+
+    Remark R1 : extEqual 1 (Ack (S n))
+                         (fun a : nat =>
+                            nat_rec (fun _ : nat => nat) 1
+                                    (fun _ y : nat => Ack n y)
+                                    (S a)).
+    
+    Proof.
+      intro a; cbn; now rewrite iterate_nat_rec.
+    Qed.
+
+    Remark R2 : isPR 1
+                     (fun a : nat =>
+                        nat_rec (fun _ : nat => nat) 1
+                                (fun _ y : nat => Ack n y)
+                                (S a)).
+    Proof.
+      apply compose1_1IsPR.
+      - apply succIsPR.
+      - eapply indIsPR; now apply filter01IsPR.  
+    Qed.
+
+
+    Remark R3 : isPR 1 (Ack (S n)).
+    Proof.
+      destruct R2 as [x Hx]; exists x.
+      eapply extEqualTrans with (1:= Hx).
+      intro; symmetry; apply R1.
+    Qed.
+
+  End S_step.
+
+  Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
+  Proof.
+    induction n.
+    - cbn; apply succIsPR.
+    -  apply R3; auto.  
+  Qed.
+
+End Proof_of_Ackn_PR.
 
 
 

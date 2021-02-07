@@ -156,6 +156,7 @@ These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$
 \index{Coq!Dependent types}
 \index{Coq!Mutually inductive types}
 
+\label{def:Primrec}
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
@@ -636,47 +637,201 @@ recursive.
 \end{exercise}
 
 
-\index{Projects}
-\begin{project}
-Prove formally that the Ackermann function is \emph{not} primitive recursive.
+\section{Proving that a given function is \emph{not} primitive recursive}
+
+The best known of total function which is not primitive recursive is the Ackermann function. We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina.
+
+\subsection{The Ackermann function}
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.Ack.html}{Ackermann.MoreAck.Ack}}.
+
+\begin{Coqsrc}
+Fixpoint Ack (m:nat) : nat -> nat :=
+  match m with
+  | 0 => S
+  |   S n => fun k =>  iterate (Ack n) (S k) 1
+  end.
+\end{Coqsrc}
+ 
+This function is also known under the form of three equations, which we derive immediately from our definition.
 
 
-\begin{align}
-A\,0\,m&=m+1\\
-A\,(n+1)\,0 &= A\,n\,1\\
-A\,(n+1)\,(m+1)&= A\,n\,(A\,(n+1)\,m)
-\end{align}
+\begin{Coqsrc}
+Lemma Ack_0 : Ack 0 = S.
+Proof refl_equal.
 
-You may find also  definition of the Ackermann function and a few  lemmas in
- \href{../theories/ordinals/Prelude/Ack.html}%
-{ordinals.Prelude.Ack}. 
+Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
+Proof.  now cbn. Qed.
 
-\textbf{Hint:} the reader may follow the plan suggested by Bruno Salvy (examen given at the French \'Ecole Polytechnique) (available at
-\href{http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf}{this site}).
+Lemma Ack_S_S : forall m p,
+    Ack (S m) (S p) = Ack m (Ack (S m) p).
+Proof.  now cbn. Qed.
+\end{Coqsrc}
 
-The lemmas which are marked as \textbf{Done} are proved
-in the library \texttt{ordinals.Prelude.Ack}.
+The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.
 
+\begin{Coqsrc}
+Lemma Ack_1_n n : Ack 1 n = S (S n).
+
+Lemma Ack_2_n n: Ack 2  n = 2 * n + 3.
+
+Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
+
+Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
+\end{Coqsrc}
+
+Please note that for any given $n$, the unary function
+(\texttt{Ack\,$n$} is primitive recursive.
+
+\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}}.
+\begin{Coqsrc}
+Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
+\end{Coqsrc}
+
+
+Ìn order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
 
 
 \begin{enumerate}
-\item Show that, for any $n$, the function $A\,n$ is primitive recursive.
-\emph{\textbf{Done.}}
-
-\item Show that for all $n$ and $m$, $A\,n\,m > m$ and  that the functions $A\,n$ are strictly monotonous.
-
-Show also that, for any $n$ and $m$, $A\,n\,m \leq A\,(n+1)\,m$. 
-         Finally, show that for any $n$, $m$ and $k$, 
-$A\,k\,(A\,m\,n)\leq A\,(2+\textrm{max}(k,m))\,n$.
-\emph{\textbf{Done.}}
-\item Show that for any primitive recursive function $f$ of $k$ arguments,
-for any $x_1,\dots\,x_k$, $f(x_1,\dots,x_k)\leq A\,n\,(x_1+\dots+x_k)$. \emph{\textbf{Still to do.}}
-\item Show that the Ackermann function is not primitive recursive. \emph{\textbf{Still to do.}}
-      
+\item Prove that for any primitive recursive function $f:\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}$, there exists some natural number $n$ depending on $f$, such that, for any $x$ and $y$, 
+$f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$. Let us say that $f$ is \emph{majorized} [by some \texttt{Ack\,$n$}].
+\item Show that \texttt{Ack} fails to satisfy this property.
 \end{enumerate}
 
-\emph{You may start this exercise with the file
-\url{../exercises/primrec/AckermannNotPR.v}.}
+The second part is the easiest one, let us look at it first, and admit the following lemma.
+
+
+\begin{Coqsrc}
+Lemma PR_2_majorized (f: naryFunc 2)(Hf : isPR 2 f)
+  : exists (n:nat), forall x y,  f x y <= Ack n (x + y).
+\end{Coqsrc}
+
+
+
+Then, assume texttt{Ack} is majorized, and find a contradiction.
+
+\begin{Coqsrc}
+Section Impossibility_Proof.
+
+  Hypothesis HAck : isPR 2 Ack.
+
+  Fact Ack_majorized : 
+      exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+  
+  Section Contrad.
+    Variable n: nat.
+    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
+
+    Remark R01 : n <> 0.
+ 
+    Remark R02: n <> 1.
+ 
+    Remark R03 : max 2 n = n.
+ 
+    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
+     
+    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
+ 
+    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
+ 
+    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
+ 
+    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
+ 
+    Lemma contrad : False.
+    Proof.
+      generalize R07, R08; intros; lia.
+    Qed.
+
+  End Contrad.
+
+  Lemma Ack_not_PR : False.
+  
+End Impossibility_Proof.
+\end{Coqsrc}
+
+Now it remains to prove Lemma \texttt{PR\_2\_majorized}.
+If we look at the inductive definition of primitive recursive functions,\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
+
+\begin{Coqsrc}
+Scheme PrimRec_PrimRecs_ind := Induction for PrimRec
+  Sort Prop
+  with PrimRecs_PrimRec_ind := Induction for PrimRecs 
+  Sort Prop.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+PrimRec_PrimRecs_ind :
+forall (P : forall n : nat, PrimRec n -> Prop)
+  (P0 : forall n n0 : nat, PrimRecs n n0 -> Prop),
+(* successor *)
+P 1 succFunc ->
+
+(* zero *)
+P 0 zeroFunc ->
+
+* projections *)
+(forall (n m : nat) (l : m < n), P n (projFunc n m l)) ->
+
+(* composition *) 
+(forall (n m : nat) (g : PrimRecs n m),
+      P0 n m g -> forall h : PrimRec m, P m h -> 
+      P n (composeFunc n m g h)) ->
+
+(* primitive recursion *)
+(forall (n : nat) (g : PrimRec n),
+ P n g ->
+    forall h : PrimRec (S (S n)), P (S (S n)) h -> 
+     P (S n) (primRecFunc n g h)) ->
+
+(* empty list of functions *)
+(forall n : nat, P0 n 0 (PRnil n)) ->
+
+(* add a function to a list *)
+(forall (n m : nat) (p : PrimRec n),
+   P n p -> 
+   forall p0 : PrimRecs n m, P0 n m p0 -> 
+   P0 n (S m) (PRcons n m p p0)) ->
+
+(* conclusion ! *)
+forall (n : nat) (p : PrimRec n), P n p
+\end{Coqanswer}
+
+Thus the lemma we will have to prove is, for any primitive recursive function of abritrary arity $n$ is:
+
+\[
+   \exists q\in\mathbb{N},\, \forall x_1,\dots,x_n, 
+      f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))
+\]
+
+But dots don't belong to \gallina's syntax! So, we may use \coq's vectors for denoting arbitrary tuples.
+
+
+
+%%% ICI
+
+
+
+
+
+% \item Show that for all $n$ and $m$, $A\,n\,m > m$ and  that the functions $A\,n$ are strictly monotonous.
+
+% Show also that, for any $n$ and $m$, $A\,n\,m \leq A\,(n+1)\,m$. 
+%          Finally, show that for any $n$, $m$ and $k$, 
+% $A\,k\,(A\,m\,n)\leq A\,(2+\textrm{max}(k,m))\,n$.
+% \emph{\textbf{Done.}}
+% \item Show that for any primitive recursive function $f$ of $k$ arguments,
+% for any $x_1,\dots\,x_k$, $f(x_1,\dots,x_k)\leq A\,n\,(x_1+\dots+x_k)$. \emph{\textbf{Still to do.}}
+% \item Show that the Ackermann function is not primitive recursive. \emph{\textbf{Still to do.}}
+      
+% \end{enumerate}
+
 
 \begin{remark}
 Note that the Ackermann function is a counter-example to the (false) statement:
@@ -687,7 +842,5 @@ Note that the Ackermann function is a counter-example to the (false) statement:
 \end{remark}
 
 
-
-\end{project}
 
 
