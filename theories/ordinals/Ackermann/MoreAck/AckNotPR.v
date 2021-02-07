@@ -53,14 +53,14 @@ Qed.
 
 (**  uncurried apply *)
 
-(*
-Notation "'v_apply' f v" := (evalList _ v f) (no associativity, at level 30, f at level 20, v at  level 20).
- *)
+
+Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9). 
+
 
 
 
 Lemma evalList_Const : forall n (v:t nat n) x,
-    evalList n  v (evalConstFunc n x)  = x.
+    v_apply (evalConstFunc n x) v = x.
 Proof.
   induction n; cbn.
   - intros; cbn ; replace v with (@nil nat).
@@ -72,7 +72,7 @@ Qed.
 
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
-        evalList n v (evalProjFunc n k H) <= max_v v.
+        v_apply  (evalProjFunc n k H) v <= max_v v.
 Proof.
   induction n.
   -  cbn; intros; lia.
@@ -90,8 +90,8 @@ Qed.
 
 Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
                             (h: naryFunc  m),
-    evalList n v (evalComposeFunc _ _ gs h) =
-    evalList m (map (fun g =>  evalList _ v g) gs) h.
+    v_apply  (evalComposeFunc _ _ gs h) v =
+    v_apply  h (map (fun g =>  evalList _ v g) gs).
 Proof.
   induction n.
   - intros; rewrite (zero_nil _ v); cbn.
@@ -130,22 +130,20 @@ Qed.
 
 Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))),
-    evalList (S n) (cons 0 v) (evalPrimRecFunc  _ f g)
-    = evalList n v f.
+    v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
+    = v_apply f v.
 Proof.
   induction n.                                                
   - intros; rewrite (zero_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v); now cbn.
 Qed.
 
+
 Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))) a,
-    evalList (S n) (cons (S a) v) (evalPrimRecFunc  _ f g)
-    = evalList (S (S n)) (cons a
-                               (cons (evalList (S n) (cons a   v)
-                                               (evalPrimRecFunc  _ f g)) v)
-                         )
-               g.
+    v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
+    = v_apply g
+              (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
 Proof.
   induction n.                                                
   - intros; rewrite (zero_nil _ v); now cbn.
@@ -157,14 +155,14 @@ Qed.
 (** A property shared by any PR function *)
 
 Definition P n (f: naryFunc n) := exists (N:nat),
-    forall (v: Vector.t nat n), evalList _ v f <= Ack N (max_v  v).
+    forall (v: Vector.t nat n), v_apply  f v <= Ack N (max_v  v).
 
 
 Definition P_PR n (x : PrimRec n) :=  P _ (evalPrimRec _ x).
 
 Definition Ps n m (fs : Vector.t (naryFunc n) m) :=
   exists N, forall (v: t nat n),
-      max_v (map (fun f => evalList _ v f) fs) <= Ack N (max_v v).
+      max_v (map (fun f => v_apply f v) fs) <= Ack N (max_v v).
 
 Definition Ps_PR n m (x : PrimRecs n m) :=  Ps _ _ (evalPrimRecs _ _ x).
 
@@ -215,7 +213,6 @@ Proof.
          intro H2;lia.
       * rewrite max_comm; apply Ack_Ack_le.
   - (** Primitive recursion *)
-     (* use the notation of planetmath.org page *)
     destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
     remember (evalPrimRec _ x2) as h.
@@ -224,7 +221,7 @@ Proof.
                                (evalPrimRec _ x2)) as f.
     
     assert (L1 : forall i (v: t nat n) ,
-               evalList _ (cons i v) f  <= Ack q (i + max_v v)).
+               v_apply f (i::v)  <= Ack q (i + max_v v)).
     {
       induction i.
       - intros; subst f;  rewrite evalListPrimrec_0.
@@ -234,13 +231,12 @@ Proof.
       - intros; rewrite Heqf; rewrite evalListPrimrec_S;
           rewrite <- Heqf; rewrite <- Heqh.
         pose (z:= max_v (i :: evalList (S n) (i :: v) f :: v)).
-        assert (H: evalList (S (S n))
-                         (cons i (cons (evalList (S n) (cons i v) f) v)) h
-                <= Ack s z) by ( unfold z; apply Hh).
+        assert (H: v_apply h (i:: (v_apply f (i::v) :: v)) <= Ack s z)
+          by ( unfold z; apply Hh).
         assert (H0: z <= Ack q (i+ max_v v)).
         {              
           clear H; specialize (IHi v).
-          remember (evalList (S n) (cons i v) f) as p.
+          remember (v_apply f (i::v))  as p.
           remember (Ack q (i + max_v v)) as t.
           simpl max_v in z; remember (max_v v) as u.
           assert (H: i <= t).
@@ -282,17 +278,17 @@ Proof.
       -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
          ++ rewrite max_comm; apply Ack_Ack_le.
          ++ apply Ack_mono_l;  lia. 
-  - (* Lists of PR functions *)
+  - (**  Lists of PR functions *)
     red;cbn;  red; exists 0.
     intro; rewrite Ack_0.
     cbn; auto with arith.
   - red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
     intros v;  cbn; specialize (H0 v).
     pose (X :=
-            (max_v (map (fun f : naryFunc n => evalList n v f)
+            (max_v (map (fun f : naryFunc n => v_apply f v)
                         (evalPrimRecs n m p)))).
     fold X ; fold X in H0;  specialize (H v).
-    pose (Y := evalList n v (evalPrimRec n x)).
+    pose (Y := v_apply (evalPrimRec n x) v).
     fold Y; fold Y in H;  apply Nat.max_lub.
     + transitivity (Ack x0 (max_v v)); auto.
       *  apply Ack_mono_l; apply le_max_l.
