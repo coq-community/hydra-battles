@@ -150,23 +150,31 @@ Proof.
     cbn; auto.
 Qed.
 
-(** A property shared by any PR function *)
 
+Definition majorized {n} (f: naryFunc n) (A: naryFunc 2 ) : Prop :=
+  exists (q:nat), forall (v: t nat n),
+      v_apply f v <=  A q  (max_v v).
+
+Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
+
+(*
 Definition P n (f: naryFunc n) := exists (N:nat),
     forall (v: Vector.t nat n), v_apply  f v <= Ack N (max_v  v).
 
 
 Definition P_PR n (x : PrimRec n) :=  P _ (evalPrimRec _ x).
+ *)
 
-Definition Ps n m (fs : Vector.t (naryFunc n) m) :=
+Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m) (A : naryFunc 2):=
   exists N, forall (v: t nat n),
-      max_v (map (fun f => v_apply f v) fs) <= Ack N (max_v v).
+      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
 
-Definition Ps_PR n m (x : PrimRecs n m) :=  Ps _ _ (evalPrimRecs _ _ x).
+Definition majorizedSPR {n m} (x : PrimRecs n m) :=  majorizedS
+                                                       (evalPrimRecs _ _ x).
 
 
 
-Lemma P_PR_Succ : P_PR _ succFunc.
+Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
   exists 1; intro v.
   rewrite (decomp1 v).
@@ -175,7 +183,7 @@ Proof.
 Qed.
 
 
-Lemma P_PR_Zero : P_PR _ zeroFunc.
+Lemma majorZero : majorizedPR  zeroFunc Ack.
 Proof.
   exists 0;
     intro v; rewrite  (zero_nil _ v), Ack_0. cbn; auto with arith.
@@ -184,12 +192,12 @@ Qed.
 
 (** By induction on x, we prove that every PR function satisfies [P] *)
 
-Lemma PR_majorized: forall n (x: PrimRec n),  P_PR n x.
+Lemma majorAnyPR: forall n (x: PrimRec n),  majorizedPR  x Ack.
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
-                  (P0 := fun n m y => Ps_PR n m y).
-  - apply P_PR_Succ.
-  - apply P_PR_Zero.
+                  (P0 := fun n m y => majorizedSPR  y Ack).
+  - apply majorSucc.
+  - apply majorZero.
   - (** projection functions *)
     red; cbn; red; exists 0.
     rewrite Ack_0; intro v; transitivity (max_v v).
@@ -295,12 +303,12 @@ Proof.
 Qed. 
 
 
-  (** we specialize Lemma [PR_majorized] to binary functions *)
+  (** we specialize Lemma [majorAnyPR] to binary functions *)
   
-Lemma PR_2_majorized (f: naryFunc 2)(Hf : isPR 2 f)
+Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (x + y).
   Proof.
-    destruct Hf as [x Hx]; generalize (PR_majorized 2 x).
+    destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
     intros.
     red in H;red in H; destruct H as [N HN];  exists N.
     intros; specialize (HN [x0; y]);  cbn in HN.
@@ -316,7 +324,7 @@ Section Impossibility_Proof.
 
   Fact Ack_majorized : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
   Proof. 
-    apply PR_2_majorized; assumption.
+    apply majorPR2; assumption.
   Qed.
 
   Section Contrad.
