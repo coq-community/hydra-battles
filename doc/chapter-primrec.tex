@@ -1,7 +1,7 @@
 \chapter{Primitive Recursive Functions}
 
 \section{Introduction}
-The definition of primitive recursive functions we use come
+The definition of primitive recursive functions we use comes
 from Russel O'Connors formalization in \coq{} of
 G\"odel's incompleteness theorems~\cite{OConnor05}, now hosted in
 the \texttt{theories/ordinals/Ackermann} directory.
@@ -13,8 +13,8 @@ Contributions (under the form of comments, new examples or exercises) are welcom
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
-
-Thus, we propose a slow exploration of this library, through examples and exercises.
+Thus, we propose a slow exploration of this library, through examples and exercises. Our additions to the original library 
+are stored in a sub-directory \texttt{Ackermann/MoreAck}.
 
 \section{Basic Libraries}
 
@@ -97,7 +97,7 @@ Compute extEqual 2.
  \end{Coqanswer}
  
 \begin{Coqsrc}
-Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x -x) .
+Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x - x) .
 Proof.
   intros x y.
 \end{Coqsrc}
@@ -183,7 +183,7 @@ The constructor (\texttt{projFunc $n$ $m$})  is associated with the projection $
 $\pi_{n, m}$.
 For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ corresponds to the term
 (\texttt{projFunc 5 3 H}), where \texttt{H} is a proof of $3<5$.
- This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see next sub-section) . Trying the other conention is left as an exercise.
+ This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see next sub-section) . Trying the other convention is left as an exercise.
 \end{remark}
 
 
@@ -690,69 +690,18 @@ Please note that for any given $n$, the unary function
 Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
 \end{Coqsrc}
 
+\subsection{A proof by induction on all primitive recursive functions}
 
 Ìn order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
 
 
 \begin{enumerate}
 \item Prove that for any primitive recursive function $f:\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}$, there exists some natural number $n$ depending on $f$, such that, for any $x$ and $y$, 
-$f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$. Let us say that $f$ is \emph{majorized} [by some \texttt{Ack\,$n$}].
+$f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{majorized}  by \texttt{Ack}).
 \item Show that \texttt{Ack} fails to satisfy this property.
 \end{enumerate}
 
-The second part is the easiest one, let us look at it first, and admit the following lemma.
-
-
-\begin{Coqsrc}
-Lemma PR_2_majorized (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (x + y).
-\end{Coqsrc}
-
-
-
-Then, assume texttt{Ack} is majorized, and find a contradiction.
-
-\begin{Coqsrc}
-Section Impossibility_Proof.
-
-  Hypothesis HAck : isPR 2 Ack.
-
-  Fact Ack_majorized : 
-      exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
-  
-  Section Contrad.
-    Variable n: nat.
-    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
-
-    Remark R01 : n <> 0.
- 
-    Remark R02: n <> 1.
- 
-    Remark R03 : max 2 n = n.
- 
-    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
-     
-    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
- 
-    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
- 
-    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
- 
-    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
- 
-    Lemma contrad : False.
-    Proof.
-      generalize R07, R08; intros; lia.
-    Qed.
-
-  End Contrad.
-
-  Lemma Ack_not_PR : False.
-  
-End Impossibility_Proof.
-\end{Coqsrc}
-
-Now it remains to prove Lemma \texttt{PR\_2\_majorized}.
+First, we prove that any primitive function of two arguments is majorized.
 If we look at the inductive definition of primitive recursive functions,\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
 
 \vspace{4pt}
@@ -803,18 +752,250 @@ P 0 zeroFunc ->
 forall (n : nat) (p : PrimRec n), P n p
 \end{Coqanswer}
 
-Thus the lemma we will have to prove is, for any primitive recursive function of abritrary arity $n$ is:
+For instance, proving a property shared by any primitive recursive functions of arity 2 leads to consider the case where that function is obtained by composition with a function of any 
+arity $m$. The same problem happens with primitive 
+recursion, where a function of arity $n$ is built out of a function of arity $n+1$ and a function of arity $n-1$.
 
-\[
-   \exists q\in\mathbb{N},\, \forall x_1,\dots,x_n, 
+Thus the lemma we will have to prove is the following one:
+
+
+  \begin{quote}
+    For any $n$, and any primitive recursive function $f$ of  arity $n$, there exists some natural number $q$ such that the following inequality holds:
+ \[
+  \forall x_1,\dots,x_n, 
       f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))
 \]
+ \end{quote}
+
 
 But dots don't belong to \gallina's syntax! So, we may use \coq's vectors for denoting arbitrary tuples.
 
+First, we extend \texttt{max} to vectors of natural numbers (using the notations of module \texttt{VectorNotations} and some more definitions from 
+\href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, \texttt{t\,$A$\,$n$} is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
+\texttt{VectorDef.cons x ?n v}.
+
+
+\begin{Coqsrc}
+Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
+  match n as n0 return (Vector.t nat n0 -> nat)
+  with
+    0 => fun v => 0
+  | S p => fun (v : Vector.t nat (S p)) =>
+             (max (Vector.hd v) (max_v  (Vector.tl v)))
+  end. 
+
+Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
+
+Lemma max_v_lub : forall n (v: t nat n) y,
+    (Forall (fun x =>  x <= y) v) -> max_v v <= y.
+
+Lemma max_v_ge : forall n (v: t nat n) y,  In  y  v -> y <= max_v v.
+\end{Coqsrc}
+
+
+We have also to convert any application
+$(f\,x_1\,x_2\,\dots\,x_n)$ into an application of a function 
+to a single argument: the vector of all the $x_i$s.
+This is already done in 
+Library~\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
+
+
+\begin{Coqsrc}
+Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
+ naryFunc m -> nat :=
+  match l in (Vector.t _ m) return (naryFunc m -> nat) with
+  | Vector.nil => fun x : naryFunc 0 => x
+  | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
+  end.
+\end{Coqsrc}
+
+Indeed, (\texttt{evalList $m$ $v$ $f$}) is the application to the vector $v$ of
+an uncurried version of $f$.
+
+In Library\href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}, we introduce a lighter notation.
+
+\begin{Coqsrc}
+(**  uncurried apply:
+ 
+[v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
+ *)
+
+Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9).
+
+Example Ex2 : forall (f: naryFunc 2) x y,
+    v_apply f (x::y::nil) = f x y.
+Proof.   intros; now cbn. Qed.
+
+Example Ex4 : forall (f: naryFunc 4) x y z t,
+    v_apply f (x::y::z::t::nil) = f x y z t.
+Proof.  intros; now cbn. Qed.
+\end{Coqsrc}
+
+We are now able to translate in \gallina{} the notion of majoration:
+
+\begin{Coqsrc}
+Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
+  exists (q:nat), forall (v: t nat n),
+      v_apply f v <= A q  (max_v v).
+
+Definition majorizedPR {n} (x: PrimRec n) A := 
+           majorized (evalPrimRec n x) A.
+
+(** For vectors of functions *)
+
+Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
+           (A : naryFunc 2):=
+  exists N, forall (v: t nat n),
+      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
+
+Definition majorizedSPR {n m} (x : PrimRecs n m) :=
+  majorizedS (evalPrimRecs _ _ x).
+\end{Coqsrc}
+
+Now, it remains to prove that any primitive function is majorized by \texttt{Ack}.
+The three base cases of construction of primitive recursive function are as follows:
+
+\begin{Coqsrc}
+Lemma majorSucc : majorizedPR  succFunc Ack.
+
+Lemma majorZero : majorizedPR  zeroFunc Ack.
+
+Lemma majorProjection (n m:nat)(H: m < n):
+  majorizedPR (projFunc n m H) Ack.
+\end{Coqsrc}
+
+
+The rest of the cases are proved within a mutual  induction.
+
+
+\begin{Coqsrc}
+Lemma majorAnyPR:  forall n (x: PrimRec n),  majorizedPR  x Ack.
+Proof.
+  intros n x; induction x using PrimRec_PrimRecs_ind with
+                  (P0 := fun n m y => majorizedSPR  y Ack).
+  - apply majorSucc.
+  - apply majorZero.
+  - apply majorProjection. 
+  \end{Coqsrc}
+
+  \begin{Coqsrc}
+  - (** function composition *)
+\end{Coqsrc}
+\begin{Coqanswer}
+1 subgoal (ID 265)
+
+  n, m : nat
+  g : PrimRecs n m
+  x : PrimRec m
+  IHx : majorizedSPR g Ack
+  IHx0 : majorizedPR x Ack
+  ============================
+  majorizedPR (composeFunc n m g x) Ack
+\end{Coqanswer}
+
+\begin{Coqsrc}
+  ...
+ - (** primitive recursion *)
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 265)
+  
+  n : nat
+  x1 : PrimRec n
+  x2 : PrimRec (S (S n))
+  IHx1 : majorizedPR x1 Ack
+  IHx2 : majorizedPR x2 Ack
+  ============================
+  majorizedPR (primRecFunc n x1 x2) Ack
+\end{Coqanswer}
+
+\begin{Coqsrc}
+ ...
+-  (** empty list of functions *)
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 266)
+  
+  n : nat
+  ============================
+  majorizedSPR (PRnil n) Ack
+\end{Coqanswer}
+
+\begin{Coqsrc}
+  ...
+- (** non-empty list of functions *)
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 273)
+  
+  n, m : nat
+  x : PrimRec n
+  p : PrimRecs n m
+  IHx : majorizedPR x Ack
+  IHx0 : majorizedSPR p Ack
+  ============================
+  majorizedSPR (PRcons n m x p) Ack
+\end{Coqanswer}
+  
+\begin{Coqsrc}
+ ...
+Qed.
+\end{Coqsrc}
+
+\subsection{Looking for a contradiction}
+
+The following lemma is just a specialization of \texttt{majorAnyPR} to
+binary functions (forgetting vectors, coming back to usual notations).
+
+\begin{Coqsrc}
+Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
+  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
+\end{Coqsrc}
+
+Then, our impossibility proof is just a sequence of easy small steps.
+
+\begin{Coqsrc}
+Section Impossibility_Proof.
+
+  Hypothesis HAck : isPR 2 Ack.
+
+  Fact Ack_majorized : majorized (Ack: naryFunc 2)  Ack.
+  
+  Section Contrad.
+    Variable n: nat.
+    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (max x  y) .
+
+    Remark R01 : n <> 0.
+  
+    Remark R02: n <> 1.
+   
+    Remark R03 : max 2 n = n.
+   
+    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
+       
+    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
+   
+    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
+   
+    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
+   
+    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
+   
+    Lemma contrad : False.
+   
+  End Contrad.
+
+  Lemma Ack_not_PR : False.
+
+End Impossibility_Proof.
+\end{Coqsrc}
 
 
 %%% ICI
+
 
 
 

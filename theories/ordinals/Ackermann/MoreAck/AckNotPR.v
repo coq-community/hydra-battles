@@ -13,8 +13,7 @@ Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
 Require Import Compare_dec Max.
 Import extEqualNat  VectorNotations. 
 
-
-(** Maximum in a vector of nat *)
+(** Maximum of a vector of nat *)
 
 Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
   match n as n0 return (Vector.t nat n0 -> nat)
@@ -23,6 +22,11 @@ Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
   | S p => fun (v : Vector.t nat (S p)) =>
              (max (Vector.hd v) (max_v  (Vector.tl v)))
   end. 
+
+Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
+Proof.
+  intros; cbn. now rewrite max_0_r.
+Qed.
 
 Lemma max_v_lub : forall n (v: t nat n) y,
     (Forall (fun x =>  x <= y) v) ->
@@ -50,12 +54,43 @@ Qed.
 
 (**  uncurried apply 
  
-[v_apply f (x1..x2.. ..xn::nil)]  is [f x1 x2 ... xn] 
+[v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
 
-*)
+ *)
 
 
-Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9). 
+Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9).
+
+
+Example Ex2 : forall (f: naryFunc 2) x y,
+    v_apply f (x::y::nil) = f x y.
+Proof.
+  intros; now cbn.
+Qed.
+
+Example Ex4 : forall (f: naryFunc 4) x y z t,
+    v_apply f (x::y::z::t::nil) = f x y z t.
+Proof.
+  intros; now cbn.
+Qed.
+
+Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
+  exists (q:nat), forall (v: t nat n),
+      v_apply f v <= A q  (max_v v).
+
+Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
+
+(** For vectors of functions *)
+
+Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
+           (A : naryFunc 2):=
+  exists N, forall (v: t nat n),
+      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
+
+Definition majorizedSPR {n m} (x : PrimRecs n m) :=
+  majorizedS (evalPrimRecs _ _ x).
+
+(**  ** Technical lemmas *)
 
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
@@ -150,30 +185,6 @@ Proof.
     cbn; auto.
 Qed.
 
-
-Definition majorized {n} (f: naryFunc n) (A: naryFunc 2 ) : Prop :=
-  exists (q:nat), forall (v: t nat n),
-      v_apply f v <=  A q  (max_v v).
-
-Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
-
-(*
-Definition P n (f: naryFunc n) := exists (N:nat),
-    forall (v: Vector.t nat n), v_apply  f v <= Ack N (max_v  v).
-
-
-Definition P_PR n (x : PrimRec n) :=  P _ (evalPrimRec _ x).
- *)
-
-Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m) (A : naryFunc 2):=
-  exists N, forall (v: t nat n),
-      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
-
-Definition majorizedSPR {n m} (x : PrimRecs n m) :=  majorizedS
-                                                       (evalPrimRecs _ _ x).
-
-
-
 Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
   exists 1; intro v.
@@ -189,6 +200,14 @@ Proof.
     intro v; rewrite  (zero_nil _ v), Ack_0. cbn; auto with arith.
 Qed.
 
+Lemma majorProjection (n m:nat)(H: m < n):
+  majorizedPR (projFunc n m H) Ack.
+Proof. 
+  red; cbn; red; exists 0.
+    rewrite Ack_0; intro v; transitivity (max_v v).
+    + apply proj_le_max.
+    + auto with arith.
+Qed.
 
 (** By induction on x, we prove that every PR function satisfies [P] *)
 
@@ -198,25 +217,21 @@ Proof.
                   (P0 := fun n m y => majorizedSPR  y Ack).
   - apply majorSucc.
   - apply majorZero.
-  - (** projection functions *)
-    red; cbn; red; exists 0.
-    rewrite Ack_0; intro v; transitivity (max_v v).
-    + apply proj_le_max.
-    + auto with arith.
+  - apply majorProjection. 
   -  (** function composition *)
     destruct IHx, IHx0; red; exists (2 + max x0 x1). 
     intro v; simpl evalPrimRec; rewrite evalListComp.
     generalize 
-     (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
-    intro H00; eapply Le.le_trans.
+      (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
+      intro H00; eapply Le.le_trans.
     +  auto.
     + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.
-         rewrite MoreVectors.Forall_forall; intros.
+        rewrite MoreVectors.Forall_forall; intros.
 
         generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
                                      (evalPrimRecs n m g)) a H1).
-         intro H2;lia.
+        intro H2;lia.
       * rewrite max_comm; apply Ack_Ack_le.
   - (** Primitive recursion *)
     destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
@@ -258,9 +273,9 @@ Proof.
             - lia.
             - transitivity (S (i + max_v v)).
               lia.
-          apply le_S_Ack.
-        }
-        lia.
+              apply le_S_Ack.
+          }
+          lia.
         }
         assert (Ack s z <= Ack q (S i + max_v v)).
         {
@@ -303,33 +318,34 @@ Proof.
 Qed. 
 
 
-  (** we specialize Lemma [majorAnyPR] to binary functions *)
-  
+(** we specialize Lemma [majorAnyPR] to binary functions *)
+
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (x + y).
-  Proof.
-    destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
-    intros.
-    red in H;red in H; destruct H as [N HN];  exists N.
-    intros; specialize (HN [x0; y]);  cbn in HN.
-    replace (evalPrimRec 2 x x0 y) with (f x0 y) in HN.
-    - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
-      apply Ack_mono_r;  lia.
-    - symmetry; apply Hx.
-  Qed.
-  
+  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
+Proof.
+  destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
+  intros.
+  red in H;red in H.  destruct H as [N HN];  exists N.
+  intros; specialize (HN [x0; y]);  cbn in HN.
+  replace (evalPrimRec 2 x x0 y) with (f x0 y) in HN.
+  - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
+  - symmetry; apply Hx.
+Qed.
+
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  Fact Ack_majorized : exists (n:nat), forall x y,  Ack x y <= Ack n (x + y).
+  Fact Ack_majorized : majorized (Ack: naryFunc 2)  Ack.
   Proof. 
-    apply majorPR2; assumption.
+    generalize  (majorPR2 Ack HAck).   intros [q Hq]. red.
+    exists q; intro v; rewrite (decomp2  v), max_v_2. 
+    apply Hq.
   Qed.
 
   Section Contrad.
     Variable n: nat.
-    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (x + y) .
+    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (max x  y) .
 
     Remark R01 : n <> 0.
     Proof.
@@ -347,7 +363,7 @@ Section Impossibility_Proof.
       apply PeanoNat.Nat.max_r; case_eq  n; intros.
       -  destruct (R01 H).
       -  destruct n0.
-         +   destruct (R02 H).
+         + destruct (R02 H).
          + subst; auto with arith.
     Qed.
 
@@ -365,10 +381,11 @@ Section Impossibility_Proof.
         + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
     Qed.  
 
-    Remark R06 : Ack (n+ 2) n <= Ack n (2 * n + 2).
+    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
     Proof.
-      specialize (Hn (n+2) n).
-      replace (2 * n + 2) with (n + 2 + n) by lia;  auto.
+      specialize (Hn (n+2) n);
+        replace (2 * n + 2) with (n + 2 + n) by lia;  auto.
+      eapply Le.le_trans with (1:= Hn); apply Ack_mono_r; lia.
     Qed.
 
     Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
@@ -393,7 +410,9 @@ Section Impossibility_Proof.
 
   Lemma Ack_not_PR : False.
   Proof.
-    destruct Ack_majorized as [n Hn].   now apply contrad with n.  
+    destruct Ack_majorized as [n Hn].
+    apply (contrad n); intros x y; specialize (Hn (x::y::nil)).
+    cbn in Hn;  now   rewrite max_0_r in Hn.
   Qed.
 
 End Impossibility_Proof.
