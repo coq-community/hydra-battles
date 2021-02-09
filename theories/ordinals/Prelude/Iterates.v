@@ -13,7 +13,7 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   | S p => f (iterate  f p x)
   end.
 
-(** Compatibility with Ackermann Libray's definition *)
+(** Compatibility with Ackermann Library's definition *)
 
 Lemma iterate_compat {f : nat -> nat}(n:nat)(x:nat):
   iterate f n x = nat_rec 

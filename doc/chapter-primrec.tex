@@ -7,16 +7,17 @@ G\"odel's incompleteness theorems~\cite{OConnor05}, now hosted in
 the \texttt{theories/ordinals/Ackermann} directory.
 
 This chapter contains some comments on Russel's library, as well as a few extensions.
-Contributions (under the form of comments, new examples or exercises) are welcomed!. 
+Contributions (under the form of comments, new examples or exercises) are welcome!. 
 
-\section{First look at the Ackermann library}
+\section{First look at the Ackermann Library}
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
 Thus, we propose a slow exploration of this library, through examples and exercises. Our additions to the original library 
 are stored in a sub-directory \texttt{Ackermann/MoreAck}.
 
-\section{Basic Libraries}
+\section{Basic Definitions}
+\index{Maths!Primitive recursive functions}
 
 The formal definition of primitive recursive functions lies in the library
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
@@ -27,7 +28,7 @@ and
 
 \subsection{Functions of arbitrary arity}
 
-The library allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
+Library \texttt{primRec} allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
 curried form. This is made possible in 
 \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
 
@@ -191,11 +192,11 @@ For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ cor
 \subsection{A little bit of Semantics} 
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
-$\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ (and the helper function 
+$\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ , together with the helper function 
 (\texttt{evalprimRecS $n$ $m$}) of type 
 $\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
 
-
+\index{Coq!Dependent pattern matching}
 Both functions are mutually defined through dependent pattern matching. We advise the readers who 
 would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
@@ -222,11 +223,60 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
        Vector.cons _ (evalPrimRec _ g) _  (evalPrimRecs _ _ gs)
   end.
 \end{Coqsrc}
-Let us take as example the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it as the result of some computation we leave it the reader to guess and reproduce.}:
 
-\label{sect:weirdfac}
+Looks complicated? The following examples show that, when
+the arity is fixed, these definitions behave well w.r.t. 
+\coq's reduction rules. Moreover, they make the interpretation functions more ``concrete''.
+
 \begin{Coqsrc}
-Example weirdPR : PrimRec 1 :=
+Example Ex1 : evalPrimRec 0 zeroFunc = 0.
+Proof. reflexivity. Qed.
+
+Example Ex2 a : evalPrimRec 1 succFunc a = S a.
+Proof. reflexivity. Qed.
+
+Example Ex3 a b c d e f: forall (H: 2 < 6),
+    evalPrimRec 6
+                (projFunc 6 2 H) a b c d e f = d.
+Proof. reflexivity. Qed.
+
+Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
+  let u := composeFunc 2 3
+                       (PRcons 2 2 x
+                               (PRcons 2 1 y
+                                       (PRcons 2 0 z
+                                               (PRnil 2))))
+                       t in
+  let f := evalPrimRec 2 x in
+  let g := evalPrimRec 2 y in
+  let h := evalPrimRec 2 z in
+  let i := evalPrimRec 3 t in
+  let j := evalPrimRec 2 u in
+  forall a b, j a b = i (f a b) (g a b) (h a b).
+Proof. reflexivity. Qed.
+
+Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
+  let g := evalPrimRec _ x in
+  let h := evalPrimRec _ y in
+  let f := evalPrimRec _ (primRecFunc _ x y) in
+  forall a b,  f 0 a b = g a b.
+Proof. reflexivity.   Qed.                          
+
+Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
+  let g := evalPrimRec _ x in
+  let h := evalPrimRec _ y in
+  let f := evalPrimRec _ (primRecFunc _ x y) in
+  forall n a b,  f (S n) a b = h n (f n a b) a b.
+Proof. reflexivity.   Qed.                          
+\end{Coqsrc}
+
+
+Another example?
+Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it as the result of some computation we leave it the reader to guess and reproduce.}:
+
+\label{sect:bigfac}
+\begin{Coqsrc}
+Example bigPR : PrimRec 1 :=
 primRecFunc 0
   (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
   (composeFunc 2 2
@@ -261,17 +311,17 @@ primRecFunc 0
 Let us now interpret this term as an arithmetic function.
 
 \begin{Coqsrc}
-Example  mystery_fun : nat _> nat := evalPrimRec 1 weirdPR.
+Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
 
-Compute List.map mystery_fun (0::1::2::3::4::5::6::nil) : list nat.
+Compute map mystery_fun[0;1;2;3;4;5;6] : t nat _.
 \end{Coqsrc}
 
 \begin{Coqanswer}
  = 1 :: 1 :: 2 :: 6 :: 24 :: 120 :: 720 :: nil
-     : list nat
+     : t nat 7
 \end{Coqanswer}
 
-Ok, the term \texttt{weirdPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections much simpler ways to prove that a given function is primitive recursive, whithout looking at an unreadable term.
+Ok, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections much simpler ways to prove that a given function is primitive recursive, whithout looking at an unreadable term.
 
 \section{Proving that a given arithmetic function is primitive recursive}
 
@@ -303,7 +353,7 @@ of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but gi
 how they may be applied.
 
 \begin{remark}
-In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}. Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page\pageref{sect:weirdfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
+In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}. Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page\pageref{sect:bigfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
 \texttt{Defined}s.
 \end{remark}
 
@@ -639,19 +689,38 @@ recursive.
 
 \section{Proving that a given function is \emph{not} primitive recursive}
 
-The best known of total function which is not primitive recursive is the Ackermann function. We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina.
+The best known example of a total recursive function which is not primitive recursive is the Ackermann function. We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina. We hope this formal proof 
+ is a nice opportunity to explore
+the treatment of primitive recursive functions by R. O'Connor,
+and to play with dependent types.
 
 \subsection{The Ackermann function}
+
+Here is a possible definition, where (\texttt{iterate\,$f$\,$n$})
+is the $n$-th iteration of $f$.
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}}.
+
+\begin{Coqsrc}
+Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
+  match n with
+  | 0 => x
+  | S p => f (iterate  f p x)
+  end.
+\end{Coqsrc}
 
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.MoreAck.Ack.html}{Ackermann.MoreAck.Ack}}.
+\index{Maths!Ackermann function}
 
 \begin{Coqsrc}
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
   | 0 => S
-  |   S n => fun k =>  iterate (Ack n) (S k) 1
+  | S n => fun k =>  iterate (Ack n) (S k) 1
   end.
 \end{Coqsrc}
  
@@ -673,9 +742,9 @@ Proof.  now cbn. Qed.
 The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.
 
 \begin{Coqsrc}
-Lemma Ack_1_n n : Ack 1 n = S (S n).
+Lemma Ack_1_n n: Ack 1 n = S  (S n).
 
-Lemma Ack_2_n n: Ack 2  n = 2 * n + 3.
+Lemma Ack_2_n n: Ack 2 n = 2 * n + 3.
 
 Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
 
@@ -683,7 +752,7 @@ Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 \end{Coqsrc}
 
 Please note that for any given $n$, the unary function
-(\texttt{Ack\,$n$} is primitive recursive.
+(\texttt{Ack\,$n$}) is primitive recursive.
 
 \emph{From \href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}}.
 \begin{Coqsrc}
@@ -697,7 +766,7 @@ Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
 
 \begin{enumerate}
 \item Prove that for any primitive recursive function $f:\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}$, there exists some natural number $n$ depending on $f$, such that, for any $x$ and $y$, 
-$f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{majorized}  by \texttt{Ack}).
+$f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{``majorized''}  by \texttt{Ack}).
 \item Show that \texttt{Ack} fails to satisfy this property.
 \end{enumerate}
 
@@ -831,7 +900,7 @@ Example Ex4 : forall (f: naryFunc 4) x y z t,
 Proof.  intros; now cbn. Qed.
 \end{Coqsrc}
 
-We are now able to translate in \gallina{} the notion of majoration:
+We are now able to translate in \gallina{} the notion of ``majorization'':
 
 \begin{Coqsrc}
 Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
@@ -911,7 +980,12 @@ Proof.
 \end{Coqanswer}
 
 \begin{Coqsrc}
- ...
+ assert (L1 : forall i (v: t nat n) ,
+               v_apply f (i::v)  <= Ack q (i + max_v v)).
+    { induction i.
+      ...
+    }
+    ...
 -  (** empty list of functions *)
 \end{Coqsrc}
 
@@ -966,23 +1040,21 @@ Section Impossibility_Proof.
   
   Section Contrad.
     Variable n: nat.
-    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (max x  y) .
+    Hypothesis  Hn: forall x y,  Ack x y <= Ack n (max x  y).
 
-    Remark R01 : n <> 0.
+    Remark R01: n <> 0.
   
     Remark R02: n <> 1.
    
-    Remark R03 : max 2 n = n.
+    Remark R03: max 2 n = n.
    
-    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
+    Remark R04: Ack n (2 * n + 3) = Ack n (Ack 2 n).
        
-    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
+    Remark R05: Ack n (2 * n + 3) <= Ack (n + 2) n.
    
-    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
+    Remark R06: Ack (n + 2) n <= Ack n (n + 2).
    
-    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
-   
-    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
+    Remark R07: Ack n (n + 2) < Ack n (2 * n + 3).
    
     Lemma contrad : False.
    

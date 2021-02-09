@@ -1,6 +1,7 @@
 Require Import primRec Arith ArithRing List.
 Import extEqualNat.
-
+Require Import Vector.
+Import VectorNotations.
 (**
 Compute naryFunc 3.
 
@@ -35,7 +36,52 @@ Proof.
 Qed.
 
 
-Example weirdPR : PrimRec 1 :=
+(** ** Examples of terms of type [PrimRec n] and their interpretation *)
+
+Example Ex1 : evalPrimRec 0 zeroFunc = 0.
+Proof. reflexivity. Qed.
+
+Example Ex2 a : evalPrimRec 1 succFunc a = S a.
+Proof. reflexivity. Qed.
+
+Example Ex3 a b c d e f: forall (H: 2 < 6),
+    evalPrimRec 6
+                (projFunc 6 2 H) a b c d e f = d.
+Proof. reflexivity. Qed.
+
+
+Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
+  let u := composeFunc 2 3
+                       (PRcons 2 2 x
+                               (PRcons 2 1 y
+                                       (PRcons 2 0 z
+                                               (PRnil 2))))
+                       t in
+  let f := evalPrimRec 2 x in
+  let g := evalPrimRec 2 y in
+  let h := evalPrimRec 2 z in
+  let i := evalPrimRec 3 t in
+  let j := evalPrimRec 2 u in
+  forall a b, j a b = i (f a b) (g a b) (h a b).
+Proof. reflexivity. Qed.
+
+Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
+  let g := evalPrimRec _ x in
+  let h := evalPrimRec _ y in
+  let f := evalPrimRec _ (primRecFunc _ x y) in
+  forall a b,  f 0 a b = g a b.
+Proof. reflexivity.   Qed.                          
+
+Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
+  let g := evalPrimRec _ x in
+  let h := evalPrimRec _ y in
+  let f := evalPrimRec _ (primRecFunc _ x y) in
+  forall n a b,  f (S n) a b = h n (f n a b) a b.
+Proof. reflexivity.   Qed.                          
+
+
+
+Example bigPR : PrimRec 1 :=
 primRecFunc 0
   (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
   (composeFunc 2 2
@@ -66,9 +112,11 @@ primRecFunc 0
                                   (PRnil 3))
                           succFunc))))). 
 
-Example  mystery_fun : nat -> nat := evalPrimRec 1 weirdPR.
+Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
 
-Compute List.map mystery_fun (0::1::2::3::4::5::6::nil) : list nat.
+
+Compute map mystery_fun [0;1;2;3;4;5;6] : t nat _.
+
 
 (** ** Understanding some constructions ...
 

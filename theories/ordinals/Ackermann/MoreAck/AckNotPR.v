@@ -240,11 +240,12 @@ Proof.
     pose(q := S  (max r s)); red.
     remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
                                (evalPrimRec _ x2)) as f.
-    
+    (* begin show *)
     assert (L1 : forall i (v: t nat n) ,
                v_apply f (i::v)  <= Ack q (i + max_v v)).
     {
       induction i.
+    (* end show *)
       - intros; subst f;  rewrite evalListPrimrec_0.
         simpl plus; subst g; transitivity (Ack r (max_v  v)).
         + auto.
@@ -285,7 +286,9 @@ Proof.
           - apply Ack_mono_r; auto.
         }
         lia.
+        (* begin show *)
     }
+    (* end show *)
     exists (4+ q); intros.
     pose (z := max (hd v) (max_v (tl v))).
     simpl evalPrimRec; rewrite <- Heqf; rewrite (decomp _ _ v).
@@ -345,7 +348,7 @@ Section Impossibility_Proof.
 
   Section Contrad.
     Variable n: nat.
-    Hypothesis  Hn :  forall x y,  Ack x y <= Ack n (max x  y) .
+    Hypothesis  Hn: forall x y,  Ack x y <= Ack n (max x  y).
 
     Remark R01 : n <> 0.
     Proof.
@@ -358,13 +361,9 @@ Section Impossibility_Proof.
       intro H; subst; specialize (Hn 2 2);  compute in Hn;  lia.
     Qed.
 
-    Remark R03 : max 2 n = n.
+    Remark R03 : max n 2 = n.
     Proof.
-      apply PeanoNat.Nat.max_r; case_eq  n; intros.
-      -  destruct (R01 H).
-      -  destruct n0.
-         + destruct (R02 H).
-         + subst; auto with arith.
+      generalize R01, R02; lia.
     Qed.
 
     Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
@@ -374,36 +373,25 @@ Section Impossibility_Proof.
     
     Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
     Proof.
-      transitivity (Ack n (Ack 2 n)).
-      -  now  rewrite  R04.
-      - replace (n+2) with  (2 + max n 2).
-        +  apply  Ack_Ack_le.
-        + rewrite PeanoNat.Nat.add_comm;  now rewrite Max.max_comm, R03.
+      rewrite R04; replace (n+2) with  (2 + max n 2).
+       - apply Ack_Ack_le.
+       - rewrite R03; lia. 
     Qed.  
-
-    Remark R06 : Ack (n + 2) n <= Ack n (2 * n + 2).
+    
+    Remark R06 : Ack (n + 2) n <= Ack n (n + 2).
     Proof.
       specialize (Hn (n+2) n);
-        replace (2 * n + 2) with (n + 2 + n) by lia;  auto.
-      eapply Le.le_trans with (1:= Hn); apply Ack_mono_r; lia.
+        replace (max (n + 2) n) with (n + 2) in Hn by lia;  auto.
     Qed.
-
-    Remark R07 : Ack n (2 * n + 3) <= Ack n (2 * n + 2).
-    Proof.
-      eapply Le.le_trans.
-      - apply R05.
-      - apply R06.
-    Qed.
-
-
-    Remark R08 :  Ack n (2 * n + 2) < Ack n (2 * n + 3).
+  
+    Remark R07 :  Ack n (n + 2) < Ack n (2 * n + 3).
     Proof.
       destruct (Ack_properties n) as [H _]; apply H; lia.
     Qed.
 
     Lemma contrad : False.
     Proof.
-      generalize R07, R08; intros; lia.
+      generalize R04, R05, R06,  R07; intros; lia.
     Qed.
 
   End Contrad.
@@ -487,6 +475,8 @@ Section Proof_of_Ackn_PR.
   Qed.
 
 End Proof_of_Ackn_PR.
+
+
 
 
 
