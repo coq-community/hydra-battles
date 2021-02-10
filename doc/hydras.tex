@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage{alltt}
-\usepackage{makeidx}
+\usepackage{multind}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{mdframed}
@@ -28,7 +28,11 @@
 \author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, Bordeaux-INP\\with contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury\\ \emph{The formalization of primitive recursive functions was originally authored by Russel O'Connor}}
 \date{\today}
 \title{Hydra Battles and Cie}
-\makeindex
+\makeindex{coq}
+\makeindex{maths}
+\makeindex{hydras}
+\makeindex{additions}
+\makeindex{primrec}
 \begin{document}
 \maketitle
 
@@ -176,7 +180,7 @@ Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation o
 % (forall x : A, f x = g x) -> f = g
 % \end{Coqsrc}
 
-\index{Coq!Commands!Print Assumptions}
+\index{coq}{Commands!Print Assumptions}
 
 At any place of our development, you may use the  \texttt{Print Assumptions {\it ident}} command in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
 Library~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, where we use the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
@@ -386,8 +390,11 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 %  Still very incomplete!
 % \end{todo}
 
-\printindex
-
+\printindex{coq}{Coq, plug-ins and standard library}
+\printindex{maths}{Mathematical notions and algorithmics}
+\printindex{hydras}{Library hydras: Ordinals and hydra battles}
+\printindex{primrec}{Library hydras: Primitive recursive functions}
+\printindex{additions}{Library additions: Addition chains}
 
 \section{Hydras and Ordinals}
 

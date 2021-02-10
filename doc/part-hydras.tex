@@ -37,7 +37,7 @@ Many possible improvements are suggested as ``todo''s or ``projects'' in this te
 
 
 \section*{Future Work (projects)}
-\index{Projects}
+\index{hydras}{Projects}
 
 This document and the proof scripts are far from being complete.
 
@@ -468,14 +468,14 @@ with Hydrae : Set :=
 \end{Coqsrc}
 
 %\index{To do}
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 Look for an existing library on trees with nodes of arbitrary arity, in order to replace  this ad-hoc type with something more generic.
 \end{project}
 
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 
@@ -499,7 +499,7 @@ You will probably have to use patterns described for instance in~\cite{BC04} or 
 \end{project}
 
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 The type \texttt{Hydra} above describes hydras as \emph{plane trees}, i.e., as drawn on a sheet of paper or computer screen. Thus, hydras are \emph{oriented},
@@ -642,7 +642,7 @@ Compute height Hy.
      : nat  
 \end{Coqanswer}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Define a function \texttt{max\_degree: Hydra $\arrow$ nat} which  returns the highest degree of a node in any hydra. For instance, the evaluation of the term \texttt{(max\_degree Hy)} should return $3$.
@@ -728,8 +728,8 @@ In order to get an appropriate induction scheme for the types
 \texttt{Hydra} and \texttt{Hydrae}, we can use  \coq{}'s  command \texttt{Scheme}.
 
 
-\index{Coq!Mutually inductive types}
-\index{Coq!Commands!Scheme}
+\index{coq}{Mutually inductive types}
+\index{coq}{Commands!Scheme}
 
 \begin{Coqsrc}
 Scheme Hydra_rect2 := Induction for Hydra Sort Type
@@ -832,7 +832,7 @@ Qed.
 
 \end{enumerate}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 It happens very often that, in the proof of  a proposition of the form 
@@ -977,7 +977,7 @@ First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is t
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#round_n}{Hydra.Hydra\_Definitions}}
 
-\index{Predicates!round\_n}
+\index{hydras}{Predicates!round\_n}
 
 \begin{Coqsrc}
 Definition round_n n h h' := R1 h h' \/ R2 n h h'.  
@@ -985,7 +985,7 @@ Definition round_n n h h' := R1 h h' \/ R2 n h h'.
 
 By abstraction over \texttt{n}, we define a \emph{round} (small step) of a battle:
 
-\index{Predicates!round}
+\index{hydras}{Predicates!round}
 \label{sect:infix-round}
 \begin{Coqsrc}
 Definition round h h' := exists n,  round_n n h h'.
@@ -993,7 +993,7 @@ Definition round h h' := exists n,  round_n n h h'.
 Infix "-1->" := round (at level 60).
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 Give a direct translation of Kirby and Paris's description of hydra battles (quoted on page~\pageref{original-rules}) and prove that our relational description is consistent with theirs.
@@ -1016,7 +1016,7 @@ Infix "-*->" := round_star (at level 60).
 \end{Coqsrc}
 
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Prove the following lemma:
@@ -1052,7 +1052,7 @@ to convert any one of the three closures into another one before applying the co
 The same remark also holds for reflexive and transitive closures. 
 \end{remark}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Define a restriction of \coqsimple{round},  where Hercules always chops off
@@ -1063,7 +1063,7 @@ Prove that, if $h$ is not a simple head, then there exists a unique $h'$ such th
 
 \end{exercise}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}[Interactive battles]
 \label{exo:interactive-battle}
@@ -1887,7 +1887,7 @@ Definition  next_round_dec n :
 The termination of all battles is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
  of the Standard Library.
 
-\index{Predicates!Termination}
+\index{hydras}{Predicates!Termination}
 
 \begin{Coqsrc}
 Definition Termination :=  well_founded (transp _ round).
@@ -1913,7 +1913,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
       battle_r  B i  h h' -> Lt (m h') (m h)}.
 \end{Coqsrc}  
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
  Prove that, if there is an instance of (\texttt{Hvariant Lt wf\_Lt $B$ $m$}), then there exists no infinite battle in  $B$.
@@ -1923,7 +1923,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 
 
 \subsection{A  Small Proof of Impossibility}
-\index{Maths!Proofs of impossibility}
+\index{coq}{Proofs of impossibility}
 
 \label{omega-case}
 
@@ -2056,7 +2056,7 @@ Qed.
 End Impossibility_Proof.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Prove that there exists no variant $m$ from \texttt{Hydra} into \texttt{nat} for proving
@@ -2075,7 +2075,7 @@ The notion of \emph{ordinal number} provides a catalogue of well-founded order t
 For a reasonably large bunch of ordinal numbers, \emph{ordinal notations} are data-types which allow the \coq{} user to define functions, to compute and prove some properties, for instance by reflection.
 
 The next chapter is dedicated to a generic formalization of ordinal notations, and chapter~\ref{chap:T1} to a proof of termination of all hydra battles with the help of an ordinal notation for the interval $[0,\epsilon_0)$\,\footnote{We use the mathematical notation $[a,b)$ for the interval $\{x|a\leq x < b\}$.}.
-\index{Maths!Notations!Interval}
+\index{maths}{Notations!Interval}
  
 %--------------------------------------------------------------
 
@@ -2162,7 +2162,7 @@ with respect to the order below:
 
 \subsection{Ordinal Numbers}
 
-\index{Maths!Ordinal numbers}
+\index{maths}{Ordinal numbers}
 
 Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have \emph{the same order type} if 
 there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
@@ -2599,7 +2599,7 @@ Definition Limit {sto : StrictOrder lt}  (x:A)  :=
   (forall y:A, y < x -> exists z:A, y < z /\ z < x).
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 \begin{exercise}
 Prove, that, in any ordinal notation system, every ordinal has at most one predecessor, and at most one successor. 
 
@@ -2608,7 +2608,7 @@ Prove, that, in any ordinal notation system, every ordinal has at most one prede
 
 \end{exercise}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 \begin{exercise}
 Prove, that, in any ordinal notation system, if $\beta$ is a successor of $\alpha$,
 then for any $\gamma$, $\gamma<\beta$ implies 
@@ -2862,7 +2862,7 @@ Lemma unique_decomposition alpha :
 
 Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists (example contributed by Pascal Manoury).
 
-\index{Coq!Commands!Function}
+\index{coq}{Commands!Function}
 
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
@@ -3074,7 +3074,7 @@ The following lemma establishes a correspondance between the relation
   Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
 \end{Coqsrc}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
 by \emph{transfinite induction} (\emph{i.e.} well-founded) over \texttt{p} a battle 
@@ -3148,7 +3148,7 @@ Qed.
 End Impossibility_Proof.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Prove that there exists no variant $m$ from \texttt{Hydra} into $\omega^2$ for proving
@@ -3236,7 +3236,7 @@ inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\
 \caption{The segment $\mathbb{O}_7$\label{fig:O7}}
 \end{figure}
   
-\index{Coq!Commands!Program}
+\index{coq}{Commands!Program}
 
 \begin{Coqsrc}
 Program Example alpha1 : t 7 := 2.
@@ -3476,7 +3476,7 @@ the segment $[0,i)$ of ($t\;j$).
 
 
 
-\index{Coq!Commands!Program}
+\index{coq}{Commands!Program}
 
 We are now able to build an instance of \texttt{SubON}. 
 
@@ -3503,12 +3503,12 @@ Section Inclusion_ij.
          
 
 
-\index{Exercises}
+\index{hydras}{Exercises}
 \begin{exercise}
 Prove that \texttt{Omega\_plus\_Omega} cannot be a sub-notation of \texttt{Omega}.
 \end{exercise}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Adapt the definition of \texttt{Hvariant} (Sect.~\ref{sect:hvariant-def}) in order to
 have an ordinal notation as argument. Prove that if $O_A$ is a sub-notation of $O_B$, then any variant defined on  $O_A$ can be automatically transformed into 
@@ -3555,7 +3555,7 @@ Instance Epsilon0_correct :
   ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
   When you have read Chapter~\ref{chap:schutte}, prove that the sum of two ordinal notations \texttt{ON\_plus} implements the addition of ordinals.
@@ -3586,7 +3586,7 @@ Class  ON_Iso
 }.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 \label{exo:i-plus-omega}
@@ -3598,7 +3598,7 @@ This exercise is partially solved for $i=3$ (in ~\href{../theories/html/hydras.O
 
 \end{exercise}
 
-\index{Projects}
+\index{hydras}{Projects}
 \label{exo:ON-mult}
 \begin{project}
 % Define in \coq{} the product of two ordinal notations $N_A$ and $N_B$.
@@ -3623,7 +3623,7 @@ for any strictly positive $i$.
 \textbf{Note:} Like Exercise~\ref{exo:i-plus-omega}, this project corresponds to the [in]equalities $i+\omega=\omega<\omega+i$, for any natural number $i$.
 \end{project}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Consider two isomorphic ordinal notations \texttt{OA} and \texttt{OB}.
 Prove that, if \texttt{OA} [resp. \texttt{OB}] is a correct implementation 
@@ -3631,7 +3631,7 @@ of $\alpha$ [resp. $\beta$], then $\alpha=\beta$.
 \end{project}
 
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 \label{project:succ-limit-dec}
 Add to the class \texttt{ON} the requirement that for any $\alpha$ it is decidable whether $\alpha$ is $0$, a successor or a limit ordinal.
@@ -3643,7 +3643,7 @@ to make the sum and product of notations ``compositional''.
 
 \end{project}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 \label{project:on-setoid}
 Reconsider the  class \texttt{ON}, with an equivalence instead of Leibniz equality.
@@ -3657,7 +3657,7 @@ Reconsider the  class \texttt{ON}, with an equivalence instead of Leibniz equali
 
 \section{Other Ordinal Notations}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 The directory \texttt{theories/OmegaOmega} contains an ad-hoc formalization of $\omega^\omega$, contributed by Pascal Manoury. Every ordinal $\alpha$ is represented by a list $l$ whose elements are the coefficients of $\omega$ in  the Cantor normal form of $\alpha$ (in reverse order). For instance, the ordinal 
@@ -3670,7 +3670,7 @@ $\omega^{8}\times 5 + \omega^{6}\times 8 + \omega^2\times 10 + \omega + 7$ is re
 
 \end{project}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 Let $N_A$ be a notation system for ordinals strictly less than $\alpha$, 
@@ -3723,7 +3723,7 @@ First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of t
 \label{sec:epsilon0-intro}
 
 \subsection{Cantor Normal Form}
-\index{Maths!Cantor normal form}
+\index{maths}{Cantor normal form}
 
 The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
 the equation \(\alpha = \omega^\alpha\), where \(\omega\) is 
@@ -3918,13 +3918,13 @@ Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfo
 \label{sect:notation-phi0}
 We provide also a notation for ordinals of the form $\omega^\alpha$.
 
-\index{Notations!phi0@phi0 (exponential of base omega)}
+\index{hydras}{Notations!phi0@phi0 (exponential of base omega)}
 
 \begin{Coqsrc}
 Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 29) : t1_scope.
 \end{Coqsrc}
 
-\index{Maths!Additive principal ordinals}
+\index{maths}{Additive principal ordinals}
 
 \begin{remark}
 \label{sec:orgheadline69}
@@ -3982,7 +3982,7 @@ Compute alpha_0.
 The following data type defines an abstract syntax for more readable ordinals terms in Cantor normal form:
 
 \label{types:ppT1}
-\index{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
+\index{hydras}{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
 
 \begin{Coqsrc}
 Inductive ppT1 : Set :=
@@ -4004,7 +4004,7 @@ Compute pp alpha_0.
      : ppT1
 \end{Coqanswer}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal terms in Cantor normal form.
 \end{project}
@@ -4276,7 +4276,7 @@ Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} i
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
 equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
-\index{Coq!Unicity of equality proofs}
+\index{coq}{Unicity of equality proofs}
 
 
 \begin{Coqsrc}
@@ -4288,7 +4288,7 @@ Lemma nf_proof_unicity :
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 \begin{exercise}
 In earlier versions of this development, the predicate \texttt{nf} was defined  inductively, with various constructors describing all possible cases.
 \begin{enumerate}
@@ -4416,7 +4416,7 @@ The following lemma establishes the connection between the  function
   succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
  \begin{exercise}
 Prove in \coq{} that for any ordinal $0< \alpha<\epsilon_0$, $\alpha$ is a limit if 
 and only if for all $\beta<\alpha$, the interval $[\beta,\alpha)$ is
@@ -4540,7 +4540,7 @@ In all this development, two representations of ordinals co-exist: ordinal terms
 \end{remark}
 
 %% To simplify !
-\index{Exercises}
+\index{hydras}{Exercises} 
 \begin{exercise}
 Prove that for any ordinal $\alpha:\texttt{E0}$, 
 $\omega\leq \alpha$ if and only if, for any natural number $i$,
@@ -4552,7 +4552,7 @@ $i+\alpha=\alpha$.
 
 \section{Well-foundedness and Transfinite Induction}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \subsection{About  Well-foundedness}
 \label{sec:orgheadline82}
@@ -4564,7 +4564,7 @@ The proof of well-foundedness of the strict order $<$ on Cantor normal forms is 
 available in the Cantor contribution by Castéran and Contejean~\cite{CantorContrib}. That proof relies on a library on recursive path orderings written by
 E. Contejean. We present here  a direct proof of the same result, which does not require any knowledge on r.p.o.s.
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Prove that the \emph{total} order \texttt{lt} on \texttt{T1} is not well-founded. 
@@ -4611,7 +4611,7 @@ which are not in Cantor normal form.
 
 \subsubsection{A First Attempt}
 \label{sec:orgheadline77}
-\index{Coq!Well-founded induction}
+\index{coq}{Well-founded induction}
 
 It is natural to try to prove by structural induction over \texttt{T1} 
 that every term in normal form is accessible through \texttt{LT}.
@@ -4751,7 +4751,7 @@ Defined.
 Corollary T1_wf : well_founded LT.
 \end{Coqsrc}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \begin{Coqsrc}
 
@@ -4799,7 +4799,7 @@ Instance Epsilon0_correct :
   ON_correct epsilon0 Epsilon0 (fun alpha => inject (cnf alpha)).
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
  \emph{This exercise is a continuation of Project~\vref{exo:ON-mult}.}
 Use \texttt{ON\_mult} to define an ordinal notation \texttt{Omega2} for $\omega^2=\omega\times\omega$.
@@ -4825,7 +4825,7 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
 
 \end{project}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 The class \texttt{ON} of ordinal notations has been defined long after this 
 chapter, and is not used yet in the development of the type \texttt{E0}. 
@@ -5025,7 +5025,7 @@ Qed.
 % Please build some nice examples of application.
 % \end{exercise}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Compare \texttt{oplus}'s definition (with inner fixpoint) with other possibilities
 (\texttt{coq-equations}, \texttt{Function}, etc.).
@@ -5057,7 +5057,7 @@ We prove  the commutativity of $\oplus$ in two steps.
 First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
 interval $[0..\alpha)$ is commutative.
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \begin{Coqsrc}
 Lemma oplus_comm_0 : forall alpha, nf alpha ->
@@ -5129,7 +5129,7 @@ Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
   alpha o+ beta t1< alpha o+ gamma.
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 The library \texttt{Hessenberg} looks too long (proof scripts and compilation).
@@ -5256,7 +5256,7 @@ type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$)
 
 \chapter[The Ketonen-Solovay machinery]{Accessibility inside \texorpdfstring{$\epsilon_0$}{Epsilon0}: The Ketonen-Solovay Machinery\label{ks-chapter}}
 \label{chap:ketonen}
-\index{Maths!Ketonen-Solovay machinery}
+\index{maths}{Ordinal numbers!Ketonen-Solovay machinery}
 
 \section{Introduction}
 The reader may think that our proof of termination in the previous  chapter requires a lot of mathematical tools and may be too  complex. So, the question is ``is there  any  simpler proof'' ?
@@ -5300,11 +5300,11 @@ We invite the reader to compare the three proofs step by step, lemma by lemma.
 
 \section{Canonical Sequences}
 \label{ketonen-solovay-sect}
-\index{Maths!Canonical sequences}
+\index{maths}{Ordinal numbers!Canonical sequences}
 
 Canonical sequences are functions that associate an ordinal $\canonseq{\alpha}{i}$ to every ordinal $\alpha<\epsilon_0$ and positive integer $i$. They satisfy several nice properties:
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 \begin{itemize}
 \item If $\alpha\not=0$, then $\canonseq{\alpha}{i}<\alpha$. Thus canonical sequences can be used for proofs by transfinite induction or function definition by transfinite recursion
 \item If $\lambda$ is a limit ordinal, then $\lambda$ is the least upper bound of the set 
@@ -5436,7 +5436,7 @@ Compute pp (canon (omega ^ omega * 3) 42).
      : ppT1
 \end{Coqanswer}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Many lemmas presented in this chapter were stated and proved before the introduction of 
 the type class \texttt{ON} of ordinal notations, and in particular its  instance \texttt{Epsilon0}.
@@ -5466,7 +5466,7 @@ Proof.
 
 \subsubsection{Canonical Sequences and the Order $<$}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivates in function definitions by transfinite recursion.
 
@@ -5513,7 +5513,7 @@ Lemma canonS_limit_lub (lambda : T1) :
   strict_lub (canonS lambda) lambda.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}\label{exo:simply-typed-canonseq}
 Instead of using the \texttt{sig} type, define a simply typed function that, given two ordinals $\alpha$ and $\beta$, returns a natural number $i$ such that, if $\alpha$ is a limit ordinal and $\beta<\alpha$, then $\beta< \canonseq{\alpha}{i+1}$. Of course, you will have to prove the correctness of your function. 
@@ -5523,7 +5523,7 @@ recursive function (\emph{cf} the post of Guillaume Melquiond on Coq-club (Dec 2
 \url{https://sympa.inria.fr/sympa/arc/coq-club/2020-12/msg00069.html}).
 The type \texttt{fuel}, an alternative 
 to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}{Prelude.Fuel}).
-\index{Coq!Giving fuel to a long computation}
+\index{coq}{Giving fuel to a long computation}
 
 \end{exercise}
 
@@ -5533,7 +5533,7 @@ to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}
 
 
 \section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : Paths}
-\index{Maths!Accessibility inside epsilon0}
+\index{maths}{Ordinal numbers!Accessibility inside epsilon0}
 \label{sect:pathes-intro}
 
 Let us consider a kind of accessibility problem inside $\epsilon_0$: given two ordinals $\alpha$ and $\beta$, where $\beta<\alpha<\epsilon_0$, find a \emph{path} consisting of a finite sequence $\gamma_0=\alpha,\dots,\gamma_l=\beta$,
@@ -5574,7 +5574,7 @@ parameterized by the destination $\beta$.
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
-\index{Predicates!path\_to}
+\index{hydras}{Predicates!path\_to}
 \label{sect:path-to-def}
 
 \begin{Coqsrc}
@@ -5609,7 +5609,7 @@ In the present version of our library, we use a variant \texttt{path\_toS} of
 (\texttt{path\_to $\beta$ (shift $s$) $\alpha$}). This variant is scheduled to be deprecated.
 \end{remark}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Write a tactic for solving goals of the form (\texttt{path\_to $\beta$ $s$ $\alpha$})
@@ -5632,7 +5632,7 @@ You should solve automatically the following goals:
 
 \subsection{Existence of a Path}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 By transfinite induction on $\alpha$, we prove that for any $\beta<\alpha$, 
 one can build a path from $\alpha$ to $\beta$ (in other terms, $\beta$ is accessible from $\alpha$).
@@ -5642,7 +5642,7 @@ Lemma LT_path_to (alpha beta : T1) :
   beta t1< alpha -> {s : list nat | path_to beta s alpha}.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}[continuation of exercise~\vref{exo:simply-typed-canonseq}]
 Define a simply typed function for computing a path from $\alpha$ to $\beta$.
@@ -5799,7 +5799,7 @@ the  \texttt{free} and \texttt{standard} kinds of battles. This trick allows to
 ``factorize'' our proofs  of impossibility.
 \end{remark}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 First, we prove that $m(\iota(\alpha))$ is always greater than or equal to $\alpha$, by  transfinite induction over $\alpha$.
 
@@ -6052,7 +6052,7 @@ end.
 
 A most interesting property of $i$-paths is that we can ``upgrade'' their index, as stated by K.\&S.'s Corollary 12.
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \begin{Coqsrc}
 Corollary Cor12 (alpha : T1) :  nf alpha ->
@@ -6079,7 +6079,7 @@ Corollary Cor12_1 (alpha : T1) :
 
 
 \subsubsection{Sketch of Proof of \texttt{Cor12}}
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 We prove this lemma by transfinite induction on $\alpha$.
 Let us consider a path $\alpha \xrightarrow [i]{} \beta$ $(i>0)$. Its first step is
@@ -6131,7 +6131,7 @@ But the obtained $n$-path can be much longer than the original $i$-path.
 The following exercise will give an idea of this increase. 
 \end{remark}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 \begin{exercise}
   Prove that  the length of the $i+1$-path from
   $\omega^\omega$ to $\omega^i$ is $1 + (i+1)^{(i+1)}$, for any $i$. Note that the $i$-path from
@@ -6148,7 +6148,7 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 \verb@sig@ construct.
 
 \label{lemma:L-2_6-1}
-\index{Coq!Sigma types}
+\index{coq}{Sigma types}
 
 \begin{Coqsrc}
 Lemma Lemma2_6_1 (alpha : T1) :  
@@ -6221,7 +6221,7 @@ Compute pp (standard_gnaw 4 (omega^omega)  100).
      : ppT1 *)
 \end{Coqsrc}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 By transfinite induction over  $\alpha$, we prove that the ordinal $0$ is reachable from any ordinal $\alpha<\epsilon_0$ by some standard path.
 
@@ -6520,7 +6520,7 @@ Kurt Schütte's~\cite{schutte}, as proved in Chapter~\vref{chap:schutte}.
 
 Thus, we can infer that our theorems can be applied to any well order.
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Study a possible modification of the definition of a variant  (for  standard battles).
 
@@ -6568,8 +6568,8 @@ We say that $s$ is \emph{minimally $\alpha$-large} (in short:
 \emph{$\alpha$-mlarge}) if $s$ if $s$ is $\alpha$-large 
  and every strict prefix of $s$ leads to a non-zero ordinal (\emph{cf} Sect.~\vref{sect:path-to-def}).
 
-\index{Maths!Large sequences}
-\index{Maths!Minimal large sequences}
+\index{maths}{Ordinal numbers!Large sets}
+\index{maths}{Ordinal numbers!Minimal large sets}
 
 \end{definition}
 
@@ -6579,7 +6579,7 @@ We say that $s$ is \emph{minimally $\alpha$-large} (in short:
 \emph{From Module~ \href{../theories/html/hydras.Epsilon0.Large_Sets.html\#mlarge}{Epsilon0.Large\_Sets}}
 
 
-\index{Predicates!mlarge @ mlarge (minimal large sequences)}
+\index{hydras}{Predicates!mlarge @ mlarge (minimal large sequences)}
 \begin{Coqsrc}
 Definition mlarge alpha (s:list nat) := path_to zero s alpha.
 \end{Coqsrc}
@@ -6741,7 +6741,7 @@ $L_\alpha$ for small values of $\alpha$.
 
 Our exploration of the $L_\alpha$s  follows the usual scheme : transfinite induction, and proof-by-cases : zero, successors and limit ordinals.
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \subsubsection{The  Ordinal Zero}
 \label{sect:L-spec-zero}
@@ -7027,7 +7027,7 @@ Estimation :
 
 Note that we did not define any function $L_\alpha$ \emph{for any $\alpha<\epsilon_0$} yet. We have got no more than a collection of proved realizations of $\texttt{L\_spec}\;\alpha$ for several values of $\alpha$.
 
-\index{Coq!Plug-ins!Equations}
+\index{coq}{Plug-ins!Equations}
 
 Using the \texttt{coq-equations} plug-in by 
 M. Sozeau~\cite{sozeau:hal-01671777}, we will now define a function \texttt{L\_} which maps any ordinal  $\alpha<\epsilon_0$ to a proven realization of 
@@ -7149,7 +7149,7 @@ Theorem battle_length_std (alpha : E0)  :
 \end{Coqsrc}
 
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Instead of considering standard paths and battles, consider ``constant'' paths and the corresponding battles. Please use \texttt{Equations} in order to define the function that computes the length of the $k$-path which leads  from $\alpha$ to $0$.
 Prove a few  exact formulas and minoration lemmas.
@@ -7160,12 +7160,12 @@ Prove a few  exact formulas and minoration lemmas.
 \label{sect:hardy}
 In order to give an idea of the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
-\index{Maths!Hardy Hierarchy}
+\index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
 For each ordinal $\alpha$ below $\epsilon_0$, $H_\alpha$ is a 
 total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \begin{itemize}
 \item If $\alpha=0$, then $H_\alpha (k)= k$ for any natural number $k$.
@@ -7184,7 +7184,7 @@ We define a function \texttt{H\_} of type \texttt{E0 -> nat -> nat} by transfini
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.H_alpha.html\#H_}{Epsilon0.H\_alpha}}
 
 
-\index{Coq!Plug-ins!Equations}
+\index{coq}{Plug-ins!Equations}
 \label{Functions:H-alpha}
 
 \begin{Coqsrc}
@@ -7489,7 +7489,7 @@ On the contrary, the fonctions of the Hardy hierarchy have the following five pr
 $H_\beta(n)\leq H_\alpha(n)$.
 \end{itemize}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjonction of the five properties.
 For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and 
@@ -7551,7 +7551,7 @@ Theorem battle_length_std_Hardy (alpha : E0) :
 \section{The Wainer Hierarchy (Functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
 \label{sect:wainer}
 
-\index{Maths!Wainer Hierarchy}
+\index{maths}{Rapidly growing functions!Wainer Hierarchy}
 
 The Wainer hierarchy~\cite{BW85, Wainer1970, KS81}, is also a family of fast growing functions, indexed by ordinals below $\epsilon_0$, by the following equations:
 
@@ -7577,7 +7577,7 @@ The following code comes from
  \url{../theories/html/hydras.Epsilon0.F_alpha.html}.
 
 
-\index{Coq!Plug-ins!Equations}
+\index{coq}{Plug-ins!Equations}
 \begin{Coqsrc}
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
@@ -7611,9 +7611,9 @@ the iteration of \texttt{F\_}  as an helper $F^*$, then to define the function $
 
 \label{sect:F-equations}
 
-\index{Coq!Plug-ins!Equations}
+\index{coq}{Plug-ins!Equations}
 \label{Functions:F-alpha}
-\index{Maths! Fast growing functions}
+\index{maths}{Rapidly growing functions}
   
 \begin{Coqsrc}
 Definition call_lt (c c' : E0 * nat) :=
@@ -7693,7 +7693,7 @@ Lemma Propp284 : forall alpha beta : E0,
    beta o< alpha -> dominates (F_ alpha) (F_ beta).
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Let us quote a theorem from ~\cite{KS81} (page 297).
@@ -7714,7 +7714,7 @@ whereas \cite{KS81} define $H_\alpha(n)$ as ``the least integer $k$ such that $[
 
 \end{exercise}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Prove the following result~\cite{KS81}(p. 298).
@@ -8697,7 +8697,7 @@ Let  $A$ be a segment, and $B$ a subset of $\mathbb{O}$ : an \emph{ordering func
 The set $B$ is said to be an \emph{ordering segment} of $A$.
 Our definition in \coq{} is a direct translation of the mathematical text of~\cite{schutte}.
 
-\index{Maths!Ordering functions}
+\index{maths}{Ordinal numbers!Ordering functions}
 
 \begin{Coqsrc}
 Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
@@ -8882,7 +8882,7 @@ Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive pr
 
 \subsection{Additive Principal Ordinals}
 
-\index{Maths!Additive principal ordinals}
+\index{maths}{Ordinal numbers!Additive principal ordinals}
 
 \begin{definition}
 A non-zero ordinal  $\alpha$ is said to be \emph{additive principal} if, for all  $\beta<\alpha$, $\beta+\alpha$ is equal to  $\alpha$.
@@ -8972,7 +8972,7 @@ Theorem AP_unbounded : Unbounded AP.
 
 Finally, \texttt{AP} is (topologically) \emph{closed} and ordered by the segment of all countable ordinals.
 
-\index{Predicates!Closed}
+\index{hydras}{Predicates!Closed}
 
 \begin{Coqsrc} 
 Definition Closed (B : Ensemble Ord) : Prop := 
@@ -9061,7 +9061,7 @@ Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
 
 \section{Critical Ordinals}
 
-\index{Maths!Critical ordinals}
+\index{maths}{Ordinal numbers!Critical ordinals}
 
 For any  (countable) ordinal $\alpha$, the set $\textit{Cr}(\alpha)$ is inductively defined 
 as follows by Schütte (p.81 of~\cite{schutte}).
@@ -9115,7 +9115,7 @@ Lemma Cr_zero_AP :  Cr 0 = AP
 Lemma epsilon0_Cr1 : In (Cr 1) epsilon0.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
  Prove that $\epsilon_0$ is the least element of $\textit{Cr}(1)$.
@@ -9137,7 +9137,7 @@ We prove this result by transfinite induction on $\alpha$ of both properties.
 The proof is still quite long, by transfinite induction over $\alpha$.
 
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 \begin{Coqsrc}
 Section Proof_of_Lemma5.
@@ -9199,7 +9199,7 @@ Definition is_cnf_of (alpha : Ord)(l : cnf_t) : Prop :=
   sorted l /\ alpha = eval l.
 \end{Coqsrc}
 
-\index{Maths!Transfinite induction}
+\index{maths}{Transfinite induction}
 
 By transfinite induction on $\alpha$, we prove that every countable ordinal $\alpha$ 
  has at least a Cantor normal form.
@@ -9235,7 +9235,7 @@ Lemma cnf_lt_epsilon0 :
    Forall (fun beta =>  beta < alpha) l.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{hydras}{Exercises}
 
 \begin{exercise}
 Please consider the following statement :
@@ -9264,7 +9264,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 
 \begin{project}
 Implement pages 82 to 85 of~\cite{schutte} (critical, strongly critical, maximal critical ordinals, Feferman's ordinal $\Gamma_0$).
@@ -9345,7 +9345,7 @@ Nevertheless, the other modules:
 {\texttt{Gamma0}}
 do not import any axioms and are really constructive.
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 There is no construction of ordinal multiplication in~\cite{schutte}. 
 It would be interesting to derive this operation from Schütte's axioms,
@@ -9402,14 +9402,14 @@ Definition maximal_critical alpha : Ensemble Ord :=
 Definition Gamma0 := the_least strongly_critical.
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Prove that a (countable)  ordinal $\alpha$ is strongly critical iff 
 $\phi_\alpha(0)=\alpha$ (Theorem 13.13 of~\cite{schutte} ). 
 \end{project}
 
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Prove that the set of strongly critical ordinals is unbounded and closed (Theorem 13.14 of~\cite{schutte} ). Thus this set is not empty,  hence has a least element. Otherwise, the definition of $\Gamma_0$ above would be useless.
 \end{project}
@@ -9438,7 +9438,7 @@ of the set of maximal $\alpha$-critical ordinals.
   Any ordinal $\not= 0$ which is not strongly critical can be expressed in terms of $+$ and $\psi$.
 \end{quote}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 This theorem is not formally proved in this development yet. It should be!
 \end{project}
@@ -9611,7 +9611,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
 \end{project}
@@ -9926,7 +9926,7 @@ Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
 Proof. reflexivity. Qed.
 \end{Coqsrc}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Please study a way to pretty print ordinal terms in Veblen normal form (see Section~\vref{sect:ppT1}).
 \end{project}
@@ -9973,7 +9973,7 @@ Qed.
 The proof of \texttt{lt\_wf} has been written by \'Evelyne Contejean, using her library on the recursive path ordering (see also remark~\vref{remark:a3pat}).
 \end{remark}
 
-\index{Projects}
+\index{hydras}{Projects}
 \begin{project}
 Prove that \texttt{Epsilon0} (page~\pageref{instance-epsilon0})
 is a sub-notation system of \texttt{Gamma0}.
