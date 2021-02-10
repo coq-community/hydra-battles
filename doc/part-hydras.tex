@@ -8894,6 +8894,7 @@ Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive pr
 \subsection{Additive Principal Ordinals}
 
 \index{maths}{Ordinal numbers!Additive principal ordinals}
+\index{hydras}{Library Schutte!AP@AP (additive principal ordinals)}
 
 \begin{definition}
 A non-zero ordinal  $\alpha$ is said to be \emph{additive principal} if, for all  $\beta<\alpha$, $\beta+\alpha$ is equal to  $\alpha$.
@@ -9073,6 +9074,7 @@ Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
 \section{Critical Ordinals}
 
 \index{maths}{Ordinal numbers!Critical ordinals}
+\index{hydras}{Library Scutte!Cr@Cr (critical ordinals)}
 
 For any  (countable) ordinal $\alpha$, the set $\textit{Cr}(\alpha)$ is inductively defined 
 as follows by Schütte (p.81 of~\cite{schutte}).
@@ -9176,6 +9178,8 @@ Nevertheless, note that, contrary to the implementation based on type \texttt{T1
 the Cantor normal form of an ordinal $\alpha$ may contain $\alpha$ as a 
 sub-term\footnote{This would prevent us from trying to represent Cantor normal forms as finite trees (like in Sect.~\ref{sec:T1-inductive-def})}.
 
+\index{maths}{Ordinal numbers!Cantor normal form}
+\index{hydras}{Library Schutte!Predicates!is\_cnf\_of@is\_cnf\_o (to be a Cantor normal form}
 
 We represent  Cantor normal forms as lists of ordinals.
 A  list $l$ is a Cantor normal form of a given ordinal $\alpha$ if it satisfies two conditions:
