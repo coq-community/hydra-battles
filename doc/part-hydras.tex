@@ -1388,6 +1388,7 @@ Definition next (s : state) :=
 We can make bigger steps through iterations of \texttt{next}.
 The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
 is defined and studied in~\href{../theories/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}.
+\index{hydras}{Library Prelude!iterate}
 
 \label{Functions:iterate}
 
@@ -3918,7 +3919,7 @@ Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfo
 \label{sect:notation-phi0}
 We provide also a notation for ordinals of the form $\omega^\alpha$.
 
-\index{hydras}{Notations!phi0@phi0 (exponential of base omega)}
+\index{hydras}{Library Epsilon0!Notations!phi0@phi0 (exponential of base omega)}
 
 \begin{Coqsrc}
 Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 29) : t1_scope.
@@ -7565,6 +7566,7 @@ The Wainer hierarchy~\cite{BW85, Wainer1970, KS81}, is also a family of fast gro
 A first attempt is to write a definition of $F_\alpha$ by equations, in the same as for $H\_alpha$.  We use the functional \texttt{iterate} defined in 
 Module~\href{../theories/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}.
 
+\index{hydras}{Library Prelude!iterate}
 \begin{Coqsrc}
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   match n with
@@ -7646,6 +7648,7 @@ Definition F_  alpha i := F_star (alpha, 1) i.
 \end{Coqsrc}
 
 It is quite easy to prove that our function \texttt{F\_} satisfies the equations on page~\pageref{sect:F-equations}.
+\index{hydras}{Library Prelude!iterate}
 
 \begin{Coqsrc}
 Lemma F_zero_eqn : forall i, F_ Zero i = S i.
@@ -8177,6 +8180,8 @@ Library \href{../theories/html/hydras.Schutte.Countable.html}%
 \emph{From Module\href{../theories/html/hydras.Schutte.Schutte_basics.html}%
 {\texttt{Schutte.Schutte\_basics}}}
 
+\index{hydras}{Library Schutte!Types!Ord}
+
 \begin{Coqsrc}
 Parameter Ord : Type.
 Parameter lt : relation Ord.
@@ -8189,6 +8194,8 @@ Schütte's first axiom tells that \texttt{lt} is a well order on the set
 \texttt{ordinal} (The  class \texttt{WO} is defined in
 Module~\href{../theories/html/hydras.Schutte.Well_Orders.html}%
 {\texttt{Well\_Orders.v}}).
+
+\index{hydras}{Library Schutte!Type classes!WO@ WO (well order)}
 
 \label{types:WO}
 
@@ -8379,6 +8386,7 @@ From Module \href{../theories/html/hydras.Schutte.Schutte_basics.html}%
 {\texttt{~Schutte.Schutte\_basics}}
 
 \label{Constants:zero:Ord}
+\index{hydras}{Library Schutte!Constants!zero}
 
 \begin{Coqsrc}
 Definition zero: Ord :=the_least ordinal.
@@ -8485,6 +8493,7 @@ the definitions of  \texttt{zero}, \texttt{succ}, \texttt{plus}, etc. in the res
 The definition of the function \texttt{succ:Ord -> Ord} is very concise. The successor of any ordinal $\alpha$ is the smallest ordinal strictly greater than $\alpha$.
 
 \label{Functions:succ-sch}
+\index{hydras}{Library Schutte!Functions!succ}
 
 \begin{Coqsrc}
 Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
@@ -8698,6 +8707,7 @@ The set $B$ is said to be an \emph{ordering segment} of $A$.
 Our definition in \coq{} is a direct translation of the mathematical text of~\cite{schutte}.
 
 \index{maths}{Ordinal numbers!Ordering functions}
+\index{hydras}{Library Schutte!Predicates!ordering function@ordering\_function}
 
 \begin{Coqsrc}
 Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
@@ -8776,6 +8786,7 @@ The following definitions and proofs can be consulted in Module
 \href{../theories/html/hydras.Schutte.Addition.html}%
 {\texttt{Schutte.Addition.v}}.
 
+\index{hydras}{Library Schutte!Functions!plus}
 \begin{Coqsrc}
 Definition plus alpha := ord  (ge alpha).
 Notation "alpha + beta " := (plus alpha beta) : schutte_scope.
@@ -8907,7 +8918,7 @@ Definition AP : Ensemble Ord :=
 Let us call  $\phi_0$ the ordering function of \texttt{AP}.
 In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\phi_0(\alpha)$. 
 
-
+\index{hydras}{Library Schutte!Functions!phi0}
 \begin{Coqsrc}
 Definition phi0 := ord AP.
 
@@ -8972,7 +8983,7 @@ Theorem AP_unbounded : Unbounded AP.
 
 Finally, \texttt{AP} is (topologically) \emph{closed} and ordered by the segment of all countable ordinals.
 
-\index{hydras}{Predicates!Closed}
+\index{hydras}{Library Schutte!Predicates!Closed}
 
 \begin{Coqsrc} 
 Definition Closed (B : Ensemble Ord) : Prop := 
