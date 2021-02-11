@@ -447,6 +447,9 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 \section{Hydras and their Representation in \emph{Coq}}
 \label{sec:orgheadline48}
 
+\index{hydras}{Library Hydra!Types!Hydra}
+\index{hydras}{Library Hydra!Types!Hydrae}
+
 
 In order to describe trees where each node can have an arbitrary (but finite) number of sons, it is usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
 (see for instance Chapter 14, pages 400-406 of \cite{BC04}).
@@ -977,15 +980,14 @@ First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is t
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#round_n}{Hydra.Hydra\_Definitions}}
 
-\index{hydras}{Predicates!round\_n}
-
+\index{hydras}{Library Hydra!Predicates!round\_n}
 \begin{Coqsrc}
 Definition round_n n h h' := R1 h h' \/ R2 n h h'.  
 \end{Coqsrc}
 
 By abstraction over \texttt{n}, we define a \emph{round} (small step) of a battle:
 
-\index{hydras}{Predicates!round}
+\index{hydras}{Library Hydra!Predicates!round}
 \label{sect:infix-round}
 \begin{Coqsrc}
 Definition round h h' := exists n,  round_n n h h'.
@@ -1106,6 +1108,7 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 \label{types:Battle}
+\index{hydras}{Library Hydra!Type classes!Battle}
 
 \begin{Coqsrc}
 Definition dep_round_t := nat -> Hydra -> Hydra -> Prop.
@@ -1888,7 +1891,7 @@ Definition  next_round_dec n :
 The termination of all battles is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
  of the Standard Library.
 
-\index{hydras}{Predicates!Termination}
+\index{hydras}{Library Hydra!Predicates!Termination}
 
 \begin{Coqsrc}
 Definition Termination :=  well_founded (transp _ round).
@@ -1906,6 +1909,7 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 
 \label{sect:hvariant-def}
 
+\index{hydras}{Library Hydra!Type classes!Hvariant}
 \begin{Coqsrc}
 Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
   (m: Hydra -> A):   Prop :=
@@ -2260,6 +2264,7 @@ Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
 
 \label{types:ON}
+\index{hydras}{Library OrdinalNotations!Type classes!ON}
 
 \begin{Coqsrc}
 Class ON {A:Type}(lt: relation A)
@@ -3438,10 +3443,11 @@ The following class specifies a strict inclusion of segments. The notation \text
    \label{fig:subsegment}
  \end{figure}
 
-If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correcteness from the bigger notation system \texttt{OB}.
+If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correctness from the bigger notation system \texttt{OB}.
 
 
 \label{types:SubON}
+\index{hydras}{Library OrdinalNotations!Type classes!SunON}
 
 \begin{Coqsrc}
 Class  SubON 
@@ -3528,6 +3534,7 @@ where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 
 
 \label{types:ON-for}
+\index{hydras}{Library OrdinalNotations}{Type classes!ON\_correct}
 
 \begin{Coqsrc}
 Class ON_correct `(alpha : Schutte_basics.Ord)
@@ -3571,6 +3578,7 @@ Instance Epsilon0_correct :
 
 In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega)$\;). For this purpose, one may prove that the two notation systems are order-isomorphic.
 
+\index{hydras}{Library OrdinalNotations!Type classes!ON\_Iso}
 
 \label{types:ON-iso} 
 \begin{Coqsrc}
@@ -3983,7 +3991,7 @@ Compute alpha_0.
 The following data type defines an abstract syntax for more readable ordinals terms in Cantor normal form:
 
 \label{types:ppT1}
-\index{hydras}{Functions!pp@ pp (pretty printing terms in Cantor normal form)}
+\index{hydras}{Library Epsilon0!Functions!pp@ pp (pretty printing terms in Cantor normal form)}
 
 \begin{Coqsrc}
 Inductive ppT1 : Set :=
@@ -4241,6 +4249,7 @@ and \ref{sect:wainer}),  we need to define total recursive functions on well-for
 
 \label{sect:E0-def}
 \label{types:E0}
+\index{hydras}{Library Epsilon0!Types!E0}
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
@@ -5575,7 +5584,7 @@ parameterized by the destination $\beta$.
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
-\index{hydras}{Predicates!path\_to}
+\index{hydras}{Library Epsilon0!Predicates!path\_to}
 \label{sect:path-to-def}
 
 \begin{Coqsrc}
@@ -6580,7 +6589,7 @@ We say that $s$ is \emph{minimally $\alpha$-large} (in short:
 \emph{From Module~ \href{../theories/html/hydras.Epsilon0.Large_Sets.html\#mlarge}{Epsilon0.Large\_Sets}}
 
 
-\index{hydras}{Predicates!mlarge @ mlarge (minimal large sequences)}
+\index{hydras}{Library Epsilon0!Predicates!mlarge@mlarge (minimal large sequences)}
 \begin{Coqsrc}
 Definition mlarge alpha (s:list nat) := path_to zero s alpha.
 \end{Coqsrc}
@@ -8894,7 +8903,7 @@ Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive pr
 \subsection{Additive Principal Ordinals}
 
 \index{maths}{Ordinal numbers!Additive principal ordinals}
-\index{hydras}{Library Schutte!AP@AP (additive principal ordinals)}
+\index{hydras}{Library Schutte!Predicates!AP@AP (additive principal ordinals)}
 
 \begin{definition}
 A non-zero ordinal  $\alpha$ is said to be \emph{additive principal} if, for all  $\beta<\alpha$, $\beta+\alpha$ is equal to  $\alpha$.
@@ -9074,7 +9083,7 @@ Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
 \section{Critical Ordinals}
 
 \index{maths}{Ordinal numbers!Critical ordinals}
-\index{hydras}{Library Scutte!Cr@Cr (critical ordinals)}
+\index{hydras}{Library Schutte!Predicates!Cr@Cr (critical ordinals)}
 
 For any  (countable) ordinal $\alpha$, the set $\textit{Cr}(\alpha)$ is inductively defined 
 as follows by Schütte (p.81 of~\cite{schutte}).
@@ -9179,7 +9188,7 @@ the Cantor normal form of an ordinal $\alpha$ may contain $\alpha$ as a
 sub-term\footnote{This would prevent us from trying to represent Cantor normal forms as finite trees (like in Sect.~\ref{sec:T1-inductive-def})}.
 
 \index{maths}{Ordinal numbers!Cantor normal form}
-\index{hydras}{Library Schutte!Predicates!is\_cnf\_of@is\_cnf\_o (to be a Cantor normal form}
+\index{hydras}{Library Schutte!Predicates!is\_cnf\_of@is\_cnf\_of (to be a Cantor normal form of}
 
 We represent  Cantor normal forms as lists of ordinals.
 A  list $l$ is a Cantor normal form of a given ordinal $\alpha$ if it satisfies two conditions:
