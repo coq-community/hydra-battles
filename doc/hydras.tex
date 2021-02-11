@@ -1,6 +1,6 @@
 \documentclass[a4paper]{book}
 \usepackage{alltt}
-\usepackage{makeidx}
+\usepackage{multind}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{mdframed}
@@ -20,15 +20,19 @@
 \input{coqmacros}
 
 %\SetWatermarkLightness{0.8}
-\definecolor{lightorange}{rgb}{1,0.7,0.5}
-\SetWatermarkScale{0.35}
-\SetWatermarkText{Work in Progress}
-\SetWatermarkColor{lightorange}
+% \definecolor{lightorange}{rgb}{1,0.7,0.5}
+% \SetWatermarkScale{0.35}
+% \SetWatermarkText{Work in Progress}
+% \SetWatermarkColor{lightorange}
 
 \author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, Bordeaux-INP\\with contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury\\ \emph{The formalization of primitive recursive functions was originally authored by Russel O'Connor}}
 \date{\today}
 \title{Hydra Battles and Cie}
-\makeindex
+\makeindex{coq}
+\makeindex{maths}
+\makeindex{hydras}
+\makeindex{additions}
+\makeindex{primrec}
 \begin{document}
 \maketitle
 
@@ -176,7 +180,7 @@ Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation o
 % (forall x : A, f x = g x) -> f = g
 % \end{Coqsrc}
 
-\index{Coq!Commands!Print Assumptions}
+\index{coq}{Commands!Print Assumptions}
 
 At any place of our development, you may use the  \texttt{Print Assumptions {\it ident}} command in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
 Library~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, where we use the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
@@ -385,9 +389,13 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 % \begin{todo}
 %  Still very incomplete!
 % \end{todo}
+{\Large \textbf{In progress} This index is currently under reorganization for a few days. We aplologize for its incompleteness! }
 
-\printindex
-
+\printindex{coq}{Coq, plug-ins and standard library}
+\printindex{maths}{Mathematical notions and algorithmics}
+\printindex{hydras}{Library hydras: Ordinals and hydra battles}
+\printindex{primrec}{Library hydras.Ackermann: Primitive recursive functions}
+\printindex{additions}{Library additions: Addition chains}
 
 \section{Hydras and Ordinals}
 
@@ -399,21 +407,9 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 \begin{tabular}{|c|c|c|l|}
 \hline
 Name & Description& Page \\\hline
-Battle & type class of battle types & \pageref{types:Battle} \\
-E0 & (well formed) ordinals below $\epsilon_0$ & \pageref{types:E0}\\
-Hvariant & variants for proving termination of hydra battles & \pageref{sect:hvariant-def} \\
-Hydra & tree-like representation of hydras & \pageref{types:Hydra} \\
-Hydrae & finite sequences of hydras & \pageref{types:Hydrae} \\
-ON & ordinal  notations & \pageref{types:ON} \\
-ON\_for & comparison of an ordinal notation with Schütte's model &  \pageref{types:ON-for}\\
-ON\_iso & isomorphism of ordinal notations  & \pageref{types:ON-iso}\\
-
-Ord & countable ordinals (after Schütte) & \pageref{types:Ord} \\
 ppT1 & pretty printed version of T1 & \pageref{types:ppT1} \\
-SubON & comparison of ordinal notations & \pageref{types:SubON} \\
 T1 & ordinal terms below $\epsilon_0$ & \pageref{types:T1} \\
 T2 & ordinal terms below $\Gamma_0$ & \pageref{types:T2} \\
-WO & well orders (Schütte's definition) & \pageref{types:WO} \\
 \hline
 \end{tabular}
 \end{threeparttable}
@@ -430,12 +426,8 @@ canon & canon alpha i & $\canonseq{\alpha}{i}$& Canonical sequence & \pageref{Fu
 canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& Helper for canon & \pageref{Functions:canonS}\\
 F\_ & F\_ alpha n & $F_\alpha(n)$ & Wainer's \texttt{F} fast growing hierarchy & \pageref{Functions:F-alpha} \\
 H\_ & H\_ alpha n & $H_\alpha(n)$ & Hardy's \texttt{H} fast growing hierarchy & \pageref{Functions:H-alpha} \\
-iterate & iterate $f$ $n$ $x$ & $f^{(n)}(x)$ & Functional iteration & \pageref{Functions:iterate} \\
 L\_ & L\_ alpha k & $L_\alpha(k)$ & final step of a standard path & \pageref{Functions:L-alpha} \\
 succ & succ alpha & & Successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
-zero:Ord & & $0$ & The least ordinal (Schütte's model) & \pageref{Constants:zero:Ord} \\
-
-
 \hline
 \end{tabular}
 \end{threeparttable}

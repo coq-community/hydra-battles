@@ -337,11 +337,11 @@ This example of Fibonacci numbers has been developed with Yves Bertot, who wrote
 
 
 \subsubsection{Using 2x2 integer matrices}
-\index{Fibonacci numbers!Matrix exponentiation} 
+\index{maths}{Fibonacci numbers!Matrix exponentiation} 
 
 The following properties are well known. They are left as an exercise, since they are not part of our development. 
 
-\index{Exercises}
+\index{additions}{Exercises}
 
 \begin{exercise}
   \begin{enumerate}
@@ -429,7 +429,7 @@ $\varphi(0,1)=  \left(
   \end{array}
 \right) $.
 
-\index{Exercises}
+\index{additions}{Exercises}
 \begin{exercise}
   Prove formally these properties. \emph{Please note that their proof is not needed in our development, they just help to understand the following optimization.}
 \end{exercise}
@@ -638,7 +638,8 @@ these definitions for defining the \texttt{Monoid} type class.
 
 \subsection{A common notation for multiplication}
 \label{op-classes}
-\index{Coq!Type classes!Operational type classes}
+\index{coq}{Type classes!Operational type classes}
+≈Ò
 \emph{Operational type classes}~\cite{BS2011}
 allow us to define a common notation 
 for multiplication in any algebraic structure. 
@@ -746,7 +747,7 @@ For instance, in Sect.~\vref{nat-monoids}, we consider various monoids on types
 
 
 \subsection{The Monoid Type Class}
-\index{Coq!Type classes}
+\index{coq}{Type classes}
 We are now ready to  give a definition of the \texttt{Monoid} class, using
 \texttt{*} as an infix operator in scope \coqscope{M} for the monoid  multiplication.
 
@@ -930,8 +931,8 @@ Arguments M2_Monoid {A zero one plus mult} rt.
 
 
 \subsection{Monoids and Equivalence Relations}
-\index{Coq!Generalized rewriting}
-\index{Coq!Equivalence relations}
+\index{coq}{Generalized rewriting}
+\index{coq}{Type classes!Equivalence relations}
 
 In some contexts, the ``axioms'' of the \texttt{Monoid} class  may be too restrictive.
 For instance, consider multiplication in $\mathds{Z}/m\mathds{Z}$ where
@@ -971,8 +972,8 @@ plus some constraints on \texttt{E\_eq}.
 Please look for instance at our tutorial on type classes and relations~\cite{PCMS} 
 for understanding the use of  type classes \texttt{Equivalence}, \texttt{Reflexive}, \texttt{Proper}, etc, in relation with tactics like \texttt{rewrite}, \texttt{reflexivity}, etc., in proofs which involve  equivalence relations instead of equality.
 
-\index{Coq!Type classes}
-\index{Coq!Proper}
+\index{coq}{Type classes}
+\index{Coq}{Type classes!Proper class}
 \label{EMonoid-def}
 
 %\todo{link to Proper in stdlib : Coq.Classes.Morphisms and Coq.Classes.CMorphisms}
@@ -998,7 +999,7 @@ Thus, our  definitions and theorems about exponentiation will take place as
 much as possible within the more generic framework of \texttt{EMonoid}s.
 
 
-\index{Coq!Coercions}
+\index{coq}{Coercions}
 
 \begin{Coqsrc}
 Global Instance eq_equiv {A} : Equiv A := eq.
@@ -1319,8 +1320,8 @@ the exponentiation operator, we have to prove that, whenever \texttt{$x$ == $y$}
 the equality \texttt{$x^n$ == $y^n$} holds for any exponent \texttt{$n$}. 
 For this purpose, we use the \texttt{Proper} class of module
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.Morphisms.html}{Coq.Classes.Morphisms}
-\index{Coq!Type classes}
-\index{Coq!Proper}
+\index{coq}{Type classes}
+\index{coq}{Type classes!Proper class}
 \begin{Coqsrc}
 Global Instance power_proper :
      Proper (equiv ==> eq ==> equiv) power.
@@ -1663,7 +1664,8 @@ intermediate results by \textbf{let-in}  constructs.
 We describe below the main design choices we made:
 
 \begin{itemize}
-\item Continuation Passing Style (CPS) \index{Programming styles!Continuation Passing Style (CPS)} \cite{reynolds93}
+\item Continuation Passing Style (CPS) 
+\index{coq}{Continuation Passing Style (CPS)} \cite{reynolds93}
 is a way to make explicit the 
      control in the evaluation of an expression, in a purely functional way. 
     For every intermediate computation step, the result is sent
@@ -1673,7 +1675,7 @@ is a way to make explicit the
 
 
   
-\item Like in Parametric Higher Order Abstract Syntax (PHOAS)~\cite{PHOAS}, \index{Parametric Higher-Order Abstract Syntax (PHOAS)}
+\item Like in Parametric Higher Order Abstract Syntax (PHOAS)~\cite{PHOAS}, \index{coq}{Parametric Higher-Order Abstract Syntax (PHOAS)}
      the local variables associated to intermediate results are
      represented by variables of  type $A$, where $A$ is the underlying type
   of the considered monoid.
@@ -1871,7 +1873,7 @@ Definition chain_apply (c:chain)
     computation_eval (c A a).
 \end{Coqsrc}
 
-\index{Projects}
+\index{additions}{Projects}
 \begin{project}
 Study how  to compile efficiently such data structures.
 
@@ -1904,7 +1906,7 @@ Compute chain_apply C87 (M:=M2N) (Build_M2 1 1 1 0)%N.
      : M2 N
 \end{Coqanswer}
 
-\index{Projects}
+\index{additions}{Projects}
 \begin{project}
 Define a function which returns the sequence of operations defined by a chain.
 For instance, the chain \texttt{C87} of Figure \ref{fig:C87} can be represented as a 
@@ -2080,7 +2082,7 @@ The rest of this chapter is devoted to the  presentation of more efficient
 
 \subsection{Correctness Proofs by Reflection}
 \label{reflection-section}
-\index{Coq!Proof by reflection}
+\index{coq}{Proofs by reflection}
 Instead of letting the tactic \texttt{rewrite} look for contexts in which
 setoid rewriting is possible, we propose to use (deterministic) computations for
 obtaining a ``canonical'' form for terms generated from a variable \texttt{x}
@@ -2312,7 +2314,7 @@ In the next section, we present a solution that avoids doing such a lot of compu
 
 
 \subsubsection{About parametricity}
-\index{Coq!Parametricity}
+\index{coq}{Parametricity}
 Let us now present another tactic for proving chain correctness,
 in the tradition of works on \emph{parametricity} and its use for 
 proving properties on programs.
@@ -2347,7 +2349,7 @@ argument of \texttt{Return} are either \texttt{a} or a variable
 introduced as the formal argument of a continuation \texttt{k}.
 In effect, there is no other way to build terms of type \texttt{A} in the considered context.
 
-\index{Coq!Plug-ins!paramcoq}
+\index{coq}{Plug-ins!paramcoq}
 
 Marc Lasson's \textbf{paramcoq} plug-in~(available as  \texttt{opam} package 
 \texttt{coq-paramcoq}) generates  a family of binary relations definitions
@@ -2814,7 +2816,7 @@ Qed.
 End non_optimality_proof.
 \end{Coqsrc}
 
-\index{Exercises}
+\index{additions}{Exercises}
 \begin{exercise}
 Prove that for any positive integer $p$,  the length of any optimal chain 
 for $p$ is less  than twice the number of digits of the binary representation of $p$.
@@ -3151,8 +3153,8 @@ equivalent computations.
 
 
 \subsubsection{Definition:} 
-\index{Coq!Type classes}
-\index{Coq!Proper}
+\index{coq}{Type classes}
+\index{coq}{Type classes!Proper class}
 A continuation \texttt{k:Fkont A} is \emph{proper}
 if, whenever \linebreak[3] \texttt{x == y} holds, the computations \texttt{k x} and 
 \texttt{k y} are equivalent.
@@ -3514,7 +3516,7 @@ Thus, we extend our previous definitions to chains that return two
 different powers of their argument\footnote{The name \texttt{Kchain} comes from previous versions of this development. It may be changed later.}.
 
 
-\index{Programming styles!Continuation Passing Style (CPS)}
+\index{coq}{Continuation Passing Style (CPS)}
 
 \begin{Coqsrc}
 Definition Kkont A:=  A -> A -> @computation A.
@@ -4012,7 +4014,7 @@ Inductive signature : Type :=
 
 The following dependently-typed functions will help us to specify  formally
 any correct chain generator.
-\index{Coq!Dependently typed functions}
+\index{coq}{Dependently typed functions}
 
 \begin{Coqsrc}
 (** 
@@ -4438,7 +4440,7 @@ Finished transaction in 0.003 secs (0.003u,0.s) (successful)
 
 \section{Projects}
 
-\index{Projects}
+\index{additions}{Projects}
 \begin{project}[Optimality and relative efficiency]
 
 \vspace{3pt}

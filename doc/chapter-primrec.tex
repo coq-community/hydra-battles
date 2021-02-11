@@ -17,7 +17,7 @@ Thus, we propose a slow exploration of this library, through examples and exerci
 are stored in a sub-directory \texttt{Ackermann/MoreAck}.
 
 \section{Basic Definitions}
-\index{Maths!Primitive recursive functions}
+\index{maths}{Primitive recursive functions}
 
 The formal definition of primitive recursive functions lies in the library
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
@@ -32,6 +32,7 @@ Library \texttt{primRec} allows us to consider primitive functions on \texttt{na
 curried form. This is made possible in 
 \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
 
+\index{primrec}{Types!naryFunc}
 \begin{Coqsrc}
 Fixpoint naryFunc (n : nat) : Set :=
   match n with
@@ -75,11 +76,14 @@ Compute naryRel 2.
 
 The magic of dependent types makes it possible to define recursively extensional equality between functions of the same arity.
 
-\index{Coq!Dependent types}
-\index{Coq!Dependently typed functions}
+\index{coq}{Dependent types}
+\index{coq}{Dependently typed functions}
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
+
+\index{primrec}{Predicates!extEqual}
+
 \begin{Coqsrc}
 Fixpoint  extEqual (n : nat) : forall  (a b : naryFunc n), Prop :=
   match n with
@@ -154,9 +158,11 @@ O'Connor's formalization of primitive recursive functions takes the form of two 
 These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$ arguments), and
 (\texttt{PrimRecs $n$ $m$}) ($m$-tuples of primitive recursive functions of $n$ arguments).
 
-\index{Coq!Dependent types}
-\index{Coq!Mutually inductive types}
+\index{coq}{Dependent types}
+\index{coq}{Mutually inductive types}
 
+\index{primrec}{Types!PrimRec}
+\index{primrec}{Types!PrimRecs}
 \label{def:Primrec}
 \vspace{4pt}
 \noindent
@@ -196,7 +202,10 @@ $\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ , together with the help
 (\texttt{evalprimRecS $n$ $m$}) of type 
 $\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
 
-\index{Coq!Dependent pattern matching}
+\index{primrec}{Functions!evalPrimRec}
+\index{primrec}{Functions!evalPrimRecs}
+
+\index{coq}{Dependent pattern matching}
 Both functions are mutually defined through dependent pattern matching. We advise the readers who 
 would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
@@ -336,6 +345,9 @@ The example in the preceding section clearly shows that, in order to prove that 
 Thus, the proof that a function, like \texttt{factorial}, is primitive recursive may be interactive, whithout having to type complex terms at any step of the development.
 
 \subsection{The predicate \texttt{isPR}}
+
+\index{primrec}{Predicates!isPR}
+\index{coq}{Extensionnaly equal functions}
 
 Let $f$ be an arithmetic function of arity $n$. We say that $f$ is primitive recursive if $f$ is \textbf{extensionnaly}
 equal to the interpretation of some term of type \texttt{PrimRec $n$}. 
@@ -576,12 +588,13 @@ Qed.
 Comment more examples from   \href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}.
 \end{todo}
 
-
+\index{primrec}{Exercises}
 \begin{exercise}
 There is a lot of lemmas similar to \texttt{filter010IsPR} in the \texttt{primRec} library, useful to control the arity of functions.
 Thus, the reader may look at them, and invent simple examples of application for each one.
 \end{exercise}
 
+\index{primrec}{Exercises}
 \begin{exercise}
 Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
 \end{exercise}
@@ -612,6 +625,7 @@ subgoal 2 (ID 111) is:
 Qed.
 \end{Coqsrc}
 
+\index{primrec}{Exercises}
 \begin{exercise}
 Consider the following functions:
 
@@ -650,7 +664,7 @@ Prove they are primitive recursive.
 
 
 
-\index{Exercises}
+\index{primrec}{Exercises}
 
 \begin{exercise}
 Write a simple and readable proof that the Fibonacci function is primitive recursive.
@@ -676,7 +690,7 @@ the associated constructor and projections are primitive recursive.
 
 \end{exercise}
 
-\index{Exercises}
+\index{primrec}{Exercises}
 \begin{exercise}
 Show that the function \texttt{min: naryFunc\,2} is primitive
 recursive.
@@ -702,7 +716,7 @@ is the $n$-th iteration of $f$.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}}.
-
+\index{hydras}{Library Prelude!iterate}
 \begin{Coqsrc}
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   match n with
@@ -714,7 +728,8 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.MoreAck.Ack.html}{Ackermann.MoreAck.Ack}}.
-\index{Maths!Ackermann function}
+\index{maths}{Ackermann function}
+\index{primrec}{Ackermann function}
 
 \begin{Coqsrc}
 Fixpoint Ack (m:nat) : nat -> nat :=
@@ -777,6 +792,7 @@ If we look at the inductive definition of primitive recursive functions,\pageref
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
+\index{coq}{Commands!Scheme}
 \begin{Coqsrc}
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec
   Sort Prop
@@ -843,7 +859,7 @@ First, we extend \texttt{max} to vectors of natural numbers (using the notations
 \href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, \texttt{t\,$A$\,$n$} is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
 \texttt{VectorDef.cons x ?n v}.
 
-
+\index{coq}{Dependently typed functions}
 \begin{Coqsrc}
 Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
   match n as n0 return (Vector.t nat n0 -> nat)
@@ -883,6 +899,7 @@ an uncurried version of $f$.
 
 In Library\href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}, we introduce a lighter notation.
 
+\index{coq}{Dependently typed functions}
 \begin{Coqsrc}
 (**  uncurried apply:
  
@@ -902,6 +919,7 @@ Proof.  intros; now cbn. Qed.
 
 We are now able to translate in \gallina{} the notion of ``majorization'':
 
+\index{coq}{Dependently typed functions}
 \begin{Coqsrc}
 Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
   exists (q:nat), forall (v: t nat n),
@@ -936,6 +954,7 @@ Lemma majorProjection (n m:nat)(H: m < n):
 
 The rest of the cases are proved within a mutual  induction.
 
+\index{coq}{Mutual induction}
 
 \begin{Coqsrc}
 Lemma majorAnyPR:  forall n (x: PrimRec n),  majorizedPR  x Ack.
