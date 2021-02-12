@@ -19,13 +19,13 @@
 \setcounter{tocdepth}{1}
 \input{coqmacros}
 
-%\SetWatermarkLightness{0.8}
-% \definecolor{lightorange}{rgb}{1,0.7,0.5}
-% \SetWatermarkScale{0.35}
-% \SetWatermarkText{Work in Progress}
-% \SetWatermarkColor{lightorange}
+\SetWatermarkLightness{0.8}
+\definecolor{lightorange}{rgb}{1,0.7,0.5}
+\SetWatermarkScale{0.35}
+\SetWatermarkText{Work in Progress}
+\SetWatermarkColor{lightorange}
 
-\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, Bordeaux-INP\\with contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury\\ \emph{The formalization of primitive recursive functions was originally authored by Russel O'Connor}}
+\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \\with contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury\\ \emph{The formalization of primitive recursive functions was originally authored by Russel O'Connor}}
 \date{\today}
 \title{Hydra Battles and Cie}
 \makeindex{coq}
@@ -318,7 +318,7 @@ Qed.
 \section{How to Install the Libraries}
 \label{sec:orgheadline4}
 \begin{itemize}
-\item The present distribution has been checked with version 8.12.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq}, \texttt{coq-equations}
+\item The present distribution has been checked with version 8.13.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq}, \texttt{coq-equations}
 and \texttt{coq-mathcomp-algebra}.
 
 \item Just go into the root directory, and type "\texttt{make}" ("\texttt{make -k}"  in case of an incomplete installation).
@@ -336,7 +336,7 @@ Please consult the sub-directory \texttt{exercises/} of the
 \label{sec:orgheadline5}
     Many thanks to Yves Bertot, \'Evelyne Contejean,  Florian Hatat,  David Ilcinkas, 
 Pascal Manoury,  Karl Palmskog, Sylvain Salvati, Alan Schmitt and Théo Zimmerman for their help on the elaboration of this document, and to the
- members of the \emph{Formal Methods} team at laBRI for their helpful comments 
+ members of the \emph{Formal Methods} team and the \emph{Coq working group} at laBRI for their helpful comments 
 on  oral presentations of this work. 
 
 Many thanks also to the Coq development team, Yves Bertot, and the members of the \emph{Coq Club} for interesting discussions about the \coq{} system and the Calculus of Inductive Constructions.
@@ -400,38 +400,7 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 \section{Hydras and Ordinals}
 
 
-\begin{table}[H]
-  \centering
-  \begin{threeparttable}
-    \caption{Main types and type classes}
-\begin{tabular}{|c|c|c|l|}
-\hline
-Name & Description& Page \\\hline
-ppT1 & pretty printed version of T1 & \pageref{types:ppT1} \\
-T1 & ordinal terms below $\epsilon_0$ & \pageref{types:T1} \\
-T2 & ordinal terms below $\Gamma_0$ & \pageref{types:T2} \\
-\hline
-\end{tabular}
-\end{threeparttable}
-\end{table}
 
-\begin{table}[H]
-  \centering
-  \begin{threeparttable}
-    \caption{Main functions and constants}
-\begin{tabular}{|r | c|c|c|c|l|}
-\hline
-Name & Gallina & Math & Description & Page \\ \hline
-canon & canon alpha i & $\canonseq{\alpha}{i}$& Canonical sequence & \pageref{Functions:canon}\\
-canonS & canonS alpha i & $\canonseq{\alpha}{i+1}$& Helper for canon & \pageref{Functions:canonS}\\
-F\_ & F\_ alpha n & $F_\alpha(n)$ & Wainer's \texttt{F} fast growing hierarchy & \pageref{Functions:F-alpha} \\
-H\_ & H\_ alpha n & $H_\alpha(n)$ & Hardy's \texttt{H} fast growing hierarchy & \pageref{Functions:H-alpha} \\
-L\_ & L\_ alpha k & $L_\alpha(k)$ & final step of a standard path & \pageref{Functions:L-alpha} \\
-succ & succ alpha & & Successor & \pageref{Functions:succ-T1}, \pageref{Functions:succ-sch} \dots \\
-\hline
-\end{tabular}
-\end{threeparttable}
-\end{table}
 
 
 

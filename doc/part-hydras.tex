@@ -80,11 +80,14 @@ we found in the following articles.
 
 This chapter is dedicated to the representation of hydras and rules of the hydra game in \coq's specification language:~\gallina. 
 
+
 Technically, a \emph{hydra} is just a finite ordered tree, each node of which 
 has any number of sons. Note that, contrary to the computer science tradition, we will show the hydras 
 with the heads up and the foot (i.e., the root of the tree) down.
 Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt{Hy} in our examples (please look at the 
 module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}). 
+\emph{For a less technical description of hydras, please see 
+\url{https://www.smbc-comics.com/comic/hydra}.}
 
 \begin{figure}[h]
 \centering
@@ -3443,11 +3446,11 @@ The following class specifies a strict inclusion of segments. The notation \text
    \label{fig:subsegment}
  \end{figure}
 
-If \texttt{OB} is presumed to be correct, the we can consider that \texttt{OA} ``inherits'' its correctness from the bigger notation system \texttt{OB}.
+If \texttt{OB} is presumed to be correct, then we may consider that \texttt{OA} ``inherits'' its correctness from the bigger notation system \texttt{OB}.
 
 
 \label{types:SubON}
-\index{hydras}{Library OrdinalNotations!Type classes!SunON}
+\index{hydras}{Library OrdinalNotations!Type classes!SubON}
 
 \begin{Coqsrc}
 Class  SubON 
@@ -3534,7 +3537,7 @@ where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 
 
 \label{types:ON-for}
-\index{hydras}{Library OrdinalNotations}{Type classes!ON\_correct}
+\index{hydras}{Library OrdinalNotations!Type classes!ON\_correct}
 
 \begin{Coqsrc}
 Class ON_correct `(alpha : Schutte_basics.Ord)
@@ -3804,7 +3807,7 @@ with the ways to build Cantor normal forms:
 
 \label{types:T1}
 %\index{Constants!zero:T1}
-
+\index{hydras}{Library Epsilon0!Types!T1}
 
 \begin{Coqsrc}
 Inductive T1 : Set  :=
@@ -3975,6 +3978,7 @@ The $\omega$-tower of height 7}
 
 \subsection{Pretty Printing Ordinals in Cantor Normal Form}
 \label{sect:ppT1}
+\index{hydras}{Library Epsilon0!Types!ppT1}
 
 Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
 If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
@@ -4398,6 +4402,8 @@ Defined.
 
 \subsection{Arithmetic on \texorpdfstring{$\epsilon_0$}{epsilon0}}
 \subsubsection{Successor}
+
+\index{hydras}{Library Epsilon0!Functions!succ}
 
 The successor of any ordinal $\alpha< \epsilon_0$ is defined by structural 
 recursion on its Cantor normal form.
@@ -5377,6 +5383,8 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 \end{mathframe}
 
 \subsubsection{Canonical Sequences in Coq}
+\index{hydras}{Library Epsilon0!Functions!canon}
+\index{hydras}{Library Epsilon0!Functions!canonS}
 
 Our definition may look more complex than the mathematical one, but
 uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
@@ -7053,7 +7061,7 @@ a case-study (zero, limit and successor ordinals).
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html\#L_}{L\_alpha}).}
 
 \label{Functions:L-alpha}
- 
+ \index{hydras}{Library Epsilon0!Functions!L\_@L\_ (final step of a minimal path}
 \begin{Coqsrc}
 From Equations Require Import Equations.
 Require Import ArithRing Lia.
@@ -7193,7 +7201,7 @@ We define a function \texttt{H\_} of type \texttt{E0 -> nat -> nat} by transfini
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.H_alpha.html\#H_}{Epsilon0.H\_alpha}}
 
-
+\index{hydras}{Library Epsilon0!Functions!H\_@H\_ (Hardy hierarchy)}
 \index{coq}{Plug-ins!Equations}
 \label{Functions:H-alpha}
 
@@ -7588,6 +7596,7 @@ The following code comes from
  \url{../theories/html/hydras.Epsilon0.F_alpha.html}.
 
 
+
 \index{coq}{Plug-ins!Equations}
 \begin{Coqsrc}
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
@@ -7625,6 +7634,7 @@ the iteration of \texttt{F\_}  as an helper $F^*$, then to define the function $
 \index{coq}{Plug-ins!Equations}
 \label{Functions:F-alpha}
 \index{maths}{Rapidly growing functions}
+\index{hydras}{Library Epsilon0!Functions!F\_@F\_ (Wainer hierarchy)}
   
 \begin{Coqsrc}
 Definition call_lt (c c' : E0 * nat) :=
@@ -9457,6 +9467,7 @@ In the present version of this development, we  only study $\Gamma_0$ as a notat
 The notation system for ordinals less than $\gamma_0$ comes from the following theorem of~\cite{schutte}, where $\psi\,\alpha$ is the ordering function 
 of the set of maximal $\alpha$-critical ordinals.
 
+\index{hydras}{Library Gamma0!Types!T2}
 
 \begin{quote}
   Any ordinal $\not= 0$ which is not strongly critical can be expressed in terms of $+$ and $\psi$.
