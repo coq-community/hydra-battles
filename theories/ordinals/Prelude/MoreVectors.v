@@ -20,7 +20,7 @@ Proof.
 Defined.
 
 
-Theorem zero_nil : forall (A:Type) (v:t A 0), v = nil.
+Theorem t_0_nil : forall (A:Type) (v:t A 0), v = nil.
 Proof.
  intros.
  change (nil (A:=A)) with (@Vid _  0 v). 
@@ -40,7 +40,7 @@ Defined.
 Lemma decomp1  {A : Type}  (v : t A 1):
   v = cons (hd v) (nil).
 Proof.
- rewrite (decomp _ _ v); cbn. now rewrite (zero_nil A (tl v)).
+ rewrite (decomp _ _ v); cbn. now rewrite (t_0_nil A (tl v)).
 Qed.
 
 Definition vector_double_rect : 
@@ -50,7 +50,7 @@ Definition vector_double_rect :
              X (S n) (cons a v1) (cons  b v2)) ->
         forall n (v1 v2 : t A n), X n v1 v2.
  induction n.
- intros; rewrite (zero_nil _ v1); rewrite (zero_nil _ v2).
+ intros; rewrite (t_0_nil _ v1); rewrite (t_0_nil _ v2).
  auto.
  intros v1 v2; rewrite (decomp _ _ v1);rewrite (decomp _ _ v2).
  apply X1; auto.
@@ -65,7 +65,7 @@ Definition vector_triple_rect :
              X (S n) (cons a v1) (cons  b v2)(cons c v3)) ->
         forall n (v1 v2 v3: t A n), X n v1 v2 v3.
  induction n.
- intros; rewrite (zero_nil _ v1),(zero_nil _ v2), (zero_nil _ v3).
+ intros; rewrite (t_0_nil _ v1),(t_0_nil _ v2), (t_0_nil _ v3).
  auto.
  intros v1 v2 v3; rewrite (decomp _ _ v1), (decomp _ _ v2), (decomp _ _ v3).
  apply X1; auto.
@@ -144,7 +144,7 @@ Proof.
   intro v;
     rewrite (decomp _ 1 v), (decomp _ _ (Vector.tl v)).
     simpl.
-    rewrite (zero_nil _ (Vector.tl (Vector.tl v))).
+    rewrite (t_0_nil _ (Vector.tl (Vector.tl v))).
     reflexivity.
 Defined. 
 
@@ -208,29 +208,20 @@ Lemma Forall_forall {A:Type}(P: A -> Prop) :
     Forall P v <-> (forall a, In a v -> P a).
   Proof.
   induction n.
-  intro v; rewrite (zero_nil _ v).
-  split.
-  inversion 2.
-  left.
-  intro; rewrite (decomp _ _ v).
-  split.
-  intros H a H0.
-
-  destruct (Forall_and   _ _ H ).
-  destruct (In_cases _ _ H0).
-  now subst.
-  cbn in H2.
-  rewrite IHn in H2.
-  apply H2.
-  apply H3.
-  intros.
-  right.
-  apply H.
-  left.
-  rewrite IHn.
-  auto.
-  intros; apply H.
-  right; auto.
+  -  intro v; rewrite (t_0_nil _ v).
+     split.
+     + inversion 2.
+     + left.
+  -   intro v; rewrite (decomp _ _ v); split.
+      + intros H a H0; destruct (Forall_and   _ _ H ).
+        destruct (In_cases _ _ H0) as [H3 | H3].
+        * now subst.
+        * cbn in H2; rewrite IHn in H2;  apply H2, H3.
+      +  intros H;  right.
+         * apply H; left.
+         * rewrite IHn; auto.
+           intros; apply H.
+           right; auto.
 Qed.
 
 

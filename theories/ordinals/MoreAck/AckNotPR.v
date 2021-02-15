@@ -33,7 +33,7 @@ Lemma max_v_lub : forall n (v: t nat n) y,
     max_v v <= y.
 Proof.
   induction n.  
-  -  intros v; rewrite (zero_nil _ v); cbn.
+  -  intros v; rewrite (t_0_nil _ v); cbn.
      intros; auto with arith.
   -   intros v; rewrite (decomp _ _ v); cbn.
       intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
@@ -44,7 +44,7 @@ Lemma max_v_ge : forall n (v: t nat n) y,
     In  y  v -> y <= max_v v.
 Proof.
   induction n.  
-  -  intros v; rewrite (zero_nil _ v); cbn; inversion 1.
+  -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
   -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
      +  cbn in H0; subst; apply le_max_l. 
      + cbn in H0; specialize (IHn _ _ H0); lia.
@@ -98,11 +98,9 @@ Proof.
   induction n; cbn.
   - intros; cbn ; replace v with (@nil nat).
     + now  cbn.
-    +  symmetry; apply zero_nil.
+    +  symmetry; apply t_0_nil.
   - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
 Qed.
-
-
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
         v_apply (evalProjFunc n k H) v <= max_v v.
@@ -127,14 +125,14 @@ Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
     v_apply  h (map (fun g =>  evalList _ v g) gs).
 Proof.
   induction n.
-  - intros; rewrite (zero_nil _ v); cbn.
+  - intros; rewrite (t_0_nil _ v); cbn.
     induction m.
-    + rewrite (zero_nil _ gs); cbn; auto.  
+    + rewrite (t_0_nil _ gs); cbn; auto.  
     + rewrite (decomp _ _ gs);  cbn. 
       simpl naryFunc in *.
       specialize (IHm (tl gs) (h (vfst gs))); now rewrite IHm.
   -   intros; induction m.
-      + rewrite (zero_nil _ gs);  cbn.
+      + rewrite (t_0_nil _ gs);  cbn.
         rewrite (decomp _ _ v); cbn.   
         specialize (IHn (tl v) 0 (nil) h); rewrite IHn;  cbn;  auto.
       +  rewrite (decomp _ _ v).
@@ -157,7 +155,7 @@ Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
     v_apply g  ((evalList n v f) :: v).
 Proof.
   induction n.
-  - cbn;  intros;  rewrite (zero_nil _ v);  now cbn. 
+  - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
   -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
 Qed.
 
@@ -167,7 +165,7 @@ Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
     = v_apply f v.
 Proof.
   induction n.                                                
-  - intros; rewrite (zero_nil _ v); now cbn.
+  - intros; rewrite (t_0_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v); now cbn.
 Qed.
 
@@ -179,7 +177,7 @@ Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
               (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
 Proof.
   induction n.                                                
-  - intros; rewrite (zero_nil _ v); now cbn.
+  - intros; rewrite (t_0_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v);  cbn.
     specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
     cbn; auto.
@@ -197,7 +195,7 @@ Qed.
 Lemma majorZero : majorizedPR  zeroFunc Ack.
 Proof.
   exists 0;
-    intro v; rewrite  (zero_nil _ v), Ack_0. cbn; auto with arith.
+    intro v; rewrite  (t_0_nil _ v), Ack_0. cbn; auto with arith.
 Qed.
 
 Lemma majorProjection (n m:nat)(H: m < n):
