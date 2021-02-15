@@ -20,12 +20,13 @@
 \input{coqmacros}
 
 \SetWatermarkLightness{0.8}
-\definecolor{lightorange}{rgb}{1,0.7,0.5}
+\definecolor{lightorange}{rgb}{1,0.9,0.9}
 \SetWatermarkScale{0.35}
 \SetWatermarkText{Work in Progress}
 \SetWatermarkColor{lightorange}
 
-\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \\with contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury\\ \emph{The formalization of primitive recursive functions was originally authored by Russel O'Connor}}
+\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \thanks{With contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury. \emph{The formalization of primitive recursive functions was originally authored by 
+Russel O'Connor\cite{OConnor05}.}}}
 \date{\today}
 \title{Hydra Battles and Cie}
 \makeindex{coq}
@@ -371,7 +372,7 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 
 \include{part-hydras}
 \include{chapter-primrec}
-\part{Some Funny Algorithms}
+\part{Some  Certified Algorithms}
 
 \include{chapter-powers}
 
@@ -397,7 +398,7 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 \printindex{primrec}{Library hydras.Ackermann: Primitive recursive functions}
 \printindex{additions}{Library additions: Addition chains}
 
-\section{Hydras and Ordinals}
+\section{Main notations}
 
 
 
@@ -407,7 +408,7 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 \begin{table}[H]
   \centering
   \begin{threeparttable}
-    \caption{Main predicates}
+    \caption{Ordinals and ordinal notations}
 \begin{tabular}{|r | c|c|c|c|l|}
 \hline
 Name & Gallina&Math& Description& Page \\\hline
@@ -415,12 +416,28 @@ Name & Gallina&Math& Description& Page \\\hline
 \texttt{LT: T1->T1->Prop}& alpha o< beta & $\alpha < \beta$& strict order on type \texttt{T1}   \tnote{2} & \pageref{Predicates:LT-T1}\\
 \texttt{Lt : E0->E0->Prop} & alpha o< beta & $\alpha < \beta$& strict order on type \texttt{E0} \tnote{3} & \pageref{Predicates:Lt-E0} \\
 \texttt{nf: T1->Prop} & \texttt{nf alpha} && alpha is in Cantor normal form & \pageref{Predicates:nf-T1}\\
+ \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality \tnote{4} & \pageref{sect:on-lt-notation}\\
+ \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
+\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & ordinal addition & \pageref{sect:infix-plus-T1}, \dots\\
+\texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
+
+F & \texttt{F $n$} & $n$ & The $n$-th finite ordinal &  
+\pageref{sect:notation-F}, \pageref{sect:notation-F-sch}\\ 
+FS & \texttt{FS $n$} & $n+1$ & The $n+1$-th finite ordinal  \tnote{5} &  
+\pageref{sect:notation-FS}\\ 
+omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega}, \pageref{sect:omega-T1}, \pageref{sect:omega-notation2}, \dots\\
+phi0     & \texttt{phi0 alpha} & $\phi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
+
 \hline
 \end{tabular}
 \begin{tablenotes}
   \item[1] This order is total, but not well-founded, because of not well formed terms.
 \item[2] Restriction of \texttt{lt} to terms in normal form; this order is partial, but well-founded.
 \item[3] This order is total \emph{and} well-founded.
+\item [4]
+Some notations may belong to several scopes. For instance, ``\texttt{o<}'' is
+bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and locally in several libraries.
+  \item [5] Note that there exist also various coercions from \texttt{nat} to types of ordinal. Depending on the current scope and  \coq's syntactic analysis algorithm, \texttt{F} may be left implicit.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -428,61 +445,44 @@ Name & Gallina&Math& Description& Page \\\hline
 
 
 \vspace{4pt}
+
+
 \begin{table}[H]
-  \centering
+
   \begin{threeparttable}
-    \caption{Infix notations}
+    \caption{hydra battles}
 \begin{tabular}{|c|c|c|c|l|}
 \hline
 Name & Gallina&Math& Description& Page \\\hline
- \texttt{on\_lt} & \texttt{alpha o< beta}&$\alpha<\beta$& ordinal inequality \tnote{1} & \pageref{sect:on-lt-notation}\\
- \texttt{on\_le} & \texttt{alpha o<= beta}&$\alpha\leq\beta$& ordinal inequality & \pageref{sect:on-lt-notation}\\
-\texttt{plus} & \texttt{alpha + beta} & $\alpha + \beta$ & ordinal addition & \pageref{sect:infix-plus-T1}, \dots\\
-\texttt{oplus} & \texttt{alpha o+ beta} & $\alpha \oplus \beta$ & Hessenberg sum & \pageref{sect:infix-oplus} \\
 \texttt{round} & \texttt{h -1-> h'} & & one round of a battle & \pageref{sect:infix-round} \\
 \texttt{rounds} & \texttt{h -+-> h'} & & one or more  rounds of a battle & \pageref{sect:infix-rounds} \\
 \texttt{round\_star} & \texttt{h -*-> h'} & & any number of rounds of a battle & \pageref{sect:infix-rounds} \\
-
 \hline
 \end{tabular}
 
-\begin{tablenotes}
- \item [1]
-Some notations may belong to several scopes. For instance, ``\texttt{o<}'' is
-bound in \texttt{ON\_scope}, \texttt{E0\_scope}, \texttt{t1\_scope}, etc., and locally in several libraries.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+%\begin{tablenotes}
+%\end{tablenotes}
 
-
-\begin{table}[H]
-  \centering
-  \begin{threeparttable}
-    \caption{Other notations}
-\begin{tabular}{|c|c|c|c|l|}
-\hline
-Name & Gallina&Math& Description& Page \\\hline
-F & \texttt{F $n$} & $n$ & The $n$-th finite ordinal &  
-\pageref{sect:notation-F}, \pageref{sect:notation-F-sch}\\ 
-FS & \texttt{FS $n$} & $n+1$ & The $n+1$-th finite ordinal  \tnote{2} &  
-\pageref{sect:notation-FS}\\ 
-omega & \texttt{omega} & $\omega$ &   the first infinite ordinal   & \pageref{sect:notation-omega}, \pageref{sect:omega-T1}, \pageref{sect:omega-notation2}, \dots\\
-phi0     & \texttt{phi0 alpha} & $\phi_0(\alpha),\; \omega^\alpha$&exponential of base $\omega$ & \pageref{sect:notation-phi0}\\
-
-\hline
-\end{tabular}
-
-\begin{tablenotes}
-  \item [2] Note that there exist also various coercions from \texttt{nat} to types of ordinal. Depending on the current scope and  \coq's syntactic analysis algorithm, \texttt{F} may be left implicit.
-\end{tablenotes}
   \end{threeparttable}
  
 \end{table}
 
-\section{Addition Chains}
+\begin{table}[H]
+  \centering
+  \begin{threeparttable}
+    \caption{Addition chains}
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+Name & Gallina&Math& Description& Page \\\hline
+\texttt{Mult} & \texttt{$z$ <--- $x$ times $y$} & & monadic notation & \pageref{monadic-mult} \\
+\hline
+\end{tabular}
 
-\begin{todo}
-\end{todo}
+%\begin{tablenotes}
+%\end{tablenotes}
 
+  \end{threeparttable}
+ 
+\end{table}
 
 \end{document} 

@@ -14,7 +14,7 @@ Contributions (under the form of comments, new examples or exercises) are welcom
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
 Thus, we propose a slow exploration of this library, through examples and exercises. Our additions to the original library 
-are stored in a sub-directory \texttt{Ackermann/MoreAck}.
+are stored in the directory \texttt{theories/ordinals/MoreAck}.
 
 \section{Basic Definitions}
 \index{maths}{Primitive recursive functions}
@@ -46,7 +46,7 @@ to \texttt{nat -> nat -> nat -> nat}.
 
 \vspace{4pt}
 \noindent
-\emph{From\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}}.
+\emph{From\href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
 \begin{Coqsrc}
 Require Import primRec.
 Import extEqualNat.
@@ -376,7 +376,7 @@ The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of
 Although  the following lemmas are alreday proven in 
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec.v},
 we wrote alternate proofs in 
-\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}%
+\href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
 {Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
 
 \begin{Coqsrc}
@@ -422,7 +422,7 @@ Qed.
 \end{Coqsrc}
 
 Projections are proved primitive recursive, case by case (many examples in 
-\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec.v}).
+\href{../theories/html/hydras.primRec.html}{Ackermann.primRec.v}).
 \emph{Please notice again that the name of the projection follows the mathematical tradition, 
 whilst the arguments of  \texttt{projFunc} use another convention (\emph{cf} remark~\vref{projFunc-order-of-args}).}
 
@@ -441,7 +441,7 @@ Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
+\emph{From \href{../theories/html/hydras.primRec.html}{Ackermann.primRec}.}
 
 \begin{Coqsrc}
 Lemma idIsPR : isPR 1 (fun x : nat => x).
@@ -478,7 +478,7 @@ Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}}.
+\emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
 \begin{Coqsrc}
 Lemma  const1_NIsPR n : isPR 0 n. 
 Proof.
@@ -493,8 +493,8 @@ Qed.
 
 \subsubsection{Proving that \texttt{plus} is primitive recursive}
 
-The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
-\href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}
+The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.primRec.html}{Ackermann.primRec}. We present in 
+\href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}
 a commented version of this proof, 
 
 First, we look for lemmas which may help to prove that a given function obtained with the recursor \texttt{nat\_rec} is primitive recursive.
@@ -585,7 +585,7 @@ Qed.
 
 
 \begin{todo}
-Comment more examples from   \href{../theories/html/hydras.Ackermann.MoreAck.PrimRecExamples.html}{Ackermann.MoreAck.PrimRecExamples}.
+Comment more examples from   \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.
 \end{todo}
 
 \index{primrec}{Exercises}
@@ -727,7 +727,7 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.Ack.html}{Ackermann.MoreAck.Ack}}.
+\emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
 \index{maths}{Ackermann function}
 \index{primrec}{Ackermann function}
 
@@ -769,7 +769,7 @@ Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 Please note that for any given $n$, the unary function
 (\texttt{Ack\,$n$}) is primitive recursive.
 
-\emph{From \href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}}.
+\emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
 \begin{Coqsrc}
 Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
 \end{Coqsrc}
@@ -897,7 +897,7 @@ Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
 Indeed, (\texttt{evalList $m$ $v$ $f$}) is the application to the vector $v$ of
 an uncurried version of $f$.
 
-In Library\href{../theories/html/hydras.Ackermann.MoreAck.AckNotPR.html}{Ackermann.MoreAck.AckNotPR}, we introduce a lighter notation.
+In Library\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}, we introduce a lighter notation.
 
 \index{coq}{Dependently typed functions}
 \begin{Coqsrc}

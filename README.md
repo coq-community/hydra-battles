@@ -78,8 +78,10 @@ This contribution contains two parts:
       - A contribution on _recursive path orderings_ by Evelyne Contejean.
 
   - Ackermann/*.v
-      - Primitive recursive functions, first-order logic, NN, and PA
-  
+      - Primitive recursive functions, first-order logic, NN, and PA (from Goedel contrib)
+      
+  - MoreAck/*.v
+       -  Complements to the legacy **Ackermann** library
   - Prelude/*.v
       - Various auxiliary definitions and lemmas
 

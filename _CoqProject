@@ -111,7 +111,7 @@ theories/ordinals/Ackermann/folProp.v
 theories/ordinals/Ackermann/ListExt.v
 theories/ordinals/Ackermann/misc.v
 theories/ordinals/Ackermann/NN.v
-theories/ordinals/Ackermann/MoreAck/PrimRecExamples.v
+theories/ordinals/MoreAck/PrimRecExamples.v
 theories/ordinals/Ackermann/subProp.v
 theories/ordinals/Ackermann/codeList.v
 theories/ordinals/Ackermann/codeSubTerm.v
@@ -123,8 +123,8 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
-theories/ordinals/Ackermann/MoreAck/Ack.v
-theories/ordinals/Ackermann/MoreAck/AckNotPR.v
+theories/ordinals/MoreAck/Ack.v
+theories/ordinals/MoreAck/AckNotPR.v
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v

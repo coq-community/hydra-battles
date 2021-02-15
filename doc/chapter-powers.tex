@@ -439,7 +439,10 @@ So, let us define a binary operation, which makes $\mathbb{N}\times\mathbb{N}$ a
 
 
 \emph{From Library
-\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}}
+\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}} 
+
+\emph{The \texttt{Monoid} type class is defined 
+page~\pageref{sect:monoid-def}.}
 
 \begin{Coqsrc}
 Definition mul2 (p q : N * N) :=
@@ -474,9 +477,6 @@ of the correctness of the used powering function.
 Several examples will be presented in the rest of this document
 (in sections~\vref{sect:fibonacci-pos-bpow}).
 
-\begin{todo}
-Put links when done.
-\end{todo}
 
 
 
@@ -756,6 +756,9 @@ is parameterized with some type $A$,
 a multiplication (called \texttt{op} in the definition), and a neutral element
 $\mathds{1}$ (called \texttt{one} in the definition).
 
+\label{sect:monoid-def}
+
+\index{additions}{Type classes!Monoid}
 
 \begin{Coqsrc}
 Class Monoid {A:Type}(op : Mult_op A)(one : A) : Prop :=
@@ -979,6 +982,7 @@ for understanding the use of  type classes \texttt{Equivalence}, \texttt{Reflexi
 %\todo{link to Proper in stdlib : Coq.Classes.Morphisms and Coq.Classes.CMorphisms}
  
 
+\index{additions}{Type classes!EMonoid}
 
 \begin{Coqsrc}
 Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A) 
@@ -1527,8 +1531,9 @@ intermediary results are explicitly named for further use in the rest of the com
 
 
 \section{Addition chains}
+\index{maths}{Addition chains}
 An \emph{addition chain} (In short : \emph{a chain})~\cite{brauer1939} is a representation of a sequence of
-intermediate steps that lead to the evaluation of some $x^n$, under the 
+intermediate steps that lead to the evaluation of  $x^n$, under the 
 assumption that each of these steps is a computation of  a power $x^i$, with 
 $i<n$.
 
@@ -1708,11 +1713,13 @@ Inductive computation {A:Type}  : Type :=
 \end{Coqsrc}
 \subsubsection{Monadic Notation}
 
+\index{additions}{Types!computation}
 
 The following \emph{monadic} 
 notation makes terms of type \texttt{computation} look like
 expressions of a small programming language dedicated to sequences of mutiplications.
 Please look at \emph{CPDT}~\cite{chlipalacpdt2011} for more details on monadic notations in \coq.
+\label{monadic-mult}
 
 \begin{Coqsrc}
 Notation "z '<---'  x 'times' y ';' e2 " :=
@@ -1771,6 +1778,8 @@ We define
  any
  type \texttt{A} and any value \texttt{a} of type \texttt{A}  into a computation 
 on \texttt{A}:
+
+\index{additions}{Types!chain@chain (addition chains)}
 
 \begin{Coqsrc}
 Definition chain := forall A:Type, A -> @computation A.   
@@ -2830,7 +2839,7 @@ for $p$ is less  than twice the number of digits of the binary representation of
 
 \section{Euclidean Chains}
 \label{euclide-sect}
-
+\index{maths}{Euclidean addition chains}
 In this section, we present an efficient chain generator. The chains built by this generator
 are never longer than the chains built by the binary generator. Moreover, for an 
 infinite number of exponents, the chains it builds are strictly shorter than the chain
