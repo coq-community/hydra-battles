@@ -13,43 +13,6 @@ Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
 Require Import Compare_dec Max.
 Import extEqualNat  VectorNotations. 
 
-(** Maximum of a vector of nat *)
-
-Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
-  match n as n0 return (Vector.t nat n0 -> nat)
-  with
-    0 => fun v => 0
-  | S p => fun (v : Vector.t nat (S p)) =>
-             (max (Vector.hd v) (max_v  (Vector.tl v)))
-  end. 
-
-Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
-Proof.
-  intros; cbn. now rewrite max_0_r.
-Qed.
-
-Lemma max_v_lub : forall n (v: t nat n) y,
-    (Forall (fun x =>  x <= y) v) ->
-    max_v v <= y.
-Proof.
-  induction n.  
-  -  intros v; rewrite (t_0_nil _ v); cbn.
-     intros; auto with arith.
-  -   intros v; rewrite (decomp _ _ v); cbn.
-      intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
-Qed.
-
-
-Lemma max_v_ge : forall n (v: t nat n) y,
-    In  y  v -> y <= max_v v.
-Proof.
-  induction n.  
-  -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
-  -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
-     +  cbn in H0; subst; apply le_max_l. 
-     + cbn in H0; specialize (IHn _ _ H0); lia.
-Qed.
-
 
 
 (**  uncurried apply 

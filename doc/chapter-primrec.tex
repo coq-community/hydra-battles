@@ -706,10 +706,10 @@ The best known example of a total recursive function which is not primitive recu
 the treatment of primitive recursive functions by R. O'Connor,
 and to play with dependent types.
 
-\subsection{The Ackermann function}
+\subsection{Ackermann function}
 
 Here is a possible definition, where (\texttt{iterate\,$f$\,$n$})
-is the $n$-th iteration of $f$.
+is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRec.iterate}, which is monomorphic and does not share the same order of arguments.}
 
 \vspace{4pt}
 \noindent
@@ -737,6 +737,32 @@ Fixpoint Ack (m:nat) : nat -> nat :=
   end.
 \end{Coqsrc}
  
+
+Another way of defining this function is 
+using an inner \texttt{fix} (see for instance the discussion in \url{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq}).
+
+We preferred to use the former definition, in order to
+take advantage from generic lemmas about \texttt{iterate}.
+
+\begin{Coqsrc}
+Module Alt.
+  
+Fixpoint Ack (n m : nat) : nat :=
+  match n with
+  | O => S m
+  | S p => let fix Ackn (m : nat) :=
+               match m with
+               | O => Ack p 1
+               | S q => Ack p (Ackn q)
+               end
+           in Ackn m
+  end.
+
+End Alt.
+\end{Coqsrc}
+
+
+
 This function is also known under the form of three equations, which we derive immediately from our definition.
 
 
@@ -764,13 +790,25 @@ Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
 Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 \end{Coqsrc}
 
-Please note that for any given $n$, the unary function
+An important property of the Ackermann function helps us 
+to overcome the difficulty raised by nested recursion, by climbing up the hierarchy $\texttt{Ack}\,n\,\_\;(n\in\mathbb{N})$.
+
+\begin{Coqsrc}
+Lemma Ack_Ack_le : forall k m n, 
+    Ack k (Ack m n) <= Ack (2 + max k m) n.
+\end{Coqsrc}
+
+
+
+Please note also that for any given $n$, the unary function
 (\texttt{Ack\,$n$}) is primitive recursive.
 
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
 \begin{Coqsrc}
 Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
 \end{Coqsrc}
+
+
 
 \subsection{A proof by induction on all primitive recursive functions}
 
@@ -1046,7 +1084,9 @@ Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
 \end{Coqsrc}
 
-Then, our impossibility proof is just a sequence of easy small steps.
+Please note that, if the Ackermann function were primitive recursive, then there would exist some natural number $n$, such that, for all $x$ and $y$, the inequality 
+$\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
+Thus, our impossibility proof is just a sequence of easy small steps.
 
 \begin{Coqsrc}
 Section Impossibility_Proof.
@@ -1054,25 +1094,51 @@ Section Impossibility_Proof.
   Hypothesis HAck : isPR 2 Ack.
 
   Fact Ack_majorized : majorized (Ack: naryFunc 2)  Ack.
+ \end{Coqsrc}
   
+ In order to share the variable \texttt{n}, let us open a section.
+
+\begin{Coqsrc}
   Section Contrad.
     Variable n: nat.
     Hypothesis  Hn: forall x y,  Ack x y <= Ack n (max x  y).
+\end{Coqsrc}
 
+Firs, we get rid of the cases $n=0$ and $n=1$, thus we can rewrite
+(\texttt{max 2 n}) into \texttt{n}.
+
+  \begin{Coqsrc}
     Remark R01: n <> 0.
   
     Remark R02: n <> 1.
    
     Remark R03: max 2 n = n.
-   
+\end{Coqsrc}
+
+Please keep in mind that \texttt{(2 * n + 3)} can be safely replaced with 
+\texttt{(Ack 2 n)}.
+
+\begin{Coqsrc}
     Remark R04: Ack n (2 * n + 3) = Ack n (Ack 2 n).
        
     Remark R05: Ack n (2 * n + 3) <= Ack (n + 2) n.
-   
+\end{Coqsrc}
+
+ By hypothesis \texttt{Hn}, the following inequality holds.
+
+ \begin{Coqsrc}
     Remark R06: Ack (n + 2) n <= Ack n (n + 2).
-   
+ \end{Coqsrc}
+
+By monotony of the Ackerman function, we get:
+
+\begin{Coqsrc}
     Remark R07: Ack n (n + 2) < Ack n (2 * n + 3).
-   
+\end{Coqsrc}
+     
+which contradicts \texttt{R05}.
+
+\begin{Coqsrc}
     Lemma contrad : False.
    
   End Contrad.

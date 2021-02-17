@@ -1,4 +1,4 @@
-Require Export Bool Arith Vector .
+Require Export Bool Arith Vector Max Lia.
 Import VectorNotations.
 
 (** generalities on vectors *)
@@ -82,23 +82,22 @@ Fixpoint vector_nth (A:Type)(n:nat)(p:nat)(v:t A p){struct v}
 
 Arguments vector_nth {A } n {p}.
 
-(** Vectors on Z *)
 
-(*Require Import ZArith.
-Open Scope Z_scope.
-*)
 Lemma Forall_inv {A :Type}(P: A -> Prop)(n:nat)
       a  v  : Vector.Forall P (n:= S n) (Vector.cons a v)  ->
                 P a  /\ Vector.Forall P v .
 Proof.
   intro H. inversion H.
-  assert (v0 = v) by (refine (Eqdep_dec.inj_pair2_eq_dec nat _  _ _ _ _ H2);
+  assert (v0 = v) by
+      (refine (Eqdep_dec.inj_pair2_eq_dec nat _  _ _ _ _ H2);
        apply eq_nat_dec).
  now subst.
 Qed.
 
 Lemma Forall2_inv {A B:Type}(P: A -> B -> Prop)(n:nat)
-      a b v w : Vector.Forall2 P (n:=S n) (Vector.cons a v) (Vector.cons b w) ->
+      a b v w : Vector.Forall2 P (n:=S n)
+                               (Vector.cons a v)
+                               (Vector.cons b w) ->
                 P a b /\ Vector.Forall2 P v w.
 Proof.
   intro H.
@@ -222,6 +221,48 @@ Lemma Forall_forall {A:Type}(P: A -> Prop) :
          * rewrite IHn; auto.
            intros; apply H.
            right; auto.
+Qed.
+
+
+
+
+  (** Vectors of natural numbers *)
+
+  (** Maximum of a vector of nat *)
+
+Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
+  match n as n0 return (Vector.t nat n0 -> nat)
+  with
+    0 => fun v => 0
+  | S p => fun (v : Vector.t nat (S p)) =>
+             (max (Vector.hd v) (max_v  (Vector.tl v)))
+  end. 
+
+Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
+Proof.
+  intros; cbn. now rewrite max_0_r.
+Qed.
+
+Lemma max_v_lub : forall n (v: t nat n) y,
+    (Forall (fun x =>  x <= y) v) ->
+    max_v v <= y.
+Proof.
+  induction n.  
+  -  intros v; rewrite (t_0_nil _ v); cbn.
+     intros; auto with arith.
+  -   intros v; rewrite (decomp _ _ v); cbn.
+      intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
+Qed.
+
+
+Lemma max_v_ge : forall n (v: t nat n) y,
+    In  y  v -> y <= max_v v.
+Proof.
+  induction n.  
+  -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
+  -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
+     +  cbn in H0; subst; apply le_max_l. 
+     + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
 
 

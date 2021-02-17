@@ -13,6 +13,26 @@ Fixpoint Ack (m:nat) : nat -> nat :=
   |   S n => fun k =>  iterate (Ack n) (S k) 1
   end.
 
+(** Alternative form *)
+
+Module Alt.
+  
+Fixpoint Ack (n m : nat) : nat :=
+  match n with
+  | O => S m
+  | S p => let fix Ackn (m : nat) :=
+               match m with
+               | O => Ack p 1
+               | S q => Ack p (Ackn q)
+               end
+           in Ackn m
+  end.
+
+Compute Ack 3 2.
+
+End Alt.
+
+
 
 (** *** Usual equations *)
 
