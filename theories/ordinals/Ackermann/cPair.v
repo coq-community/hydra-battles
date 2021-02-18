@@ -5,150 +5,145 @@ Require Import primRec.
 Require Vector.
 Require Import Div2.
 
+(**  * Bijection from [nat * nat] to [nat] *)
+
+(** ** Preliminary definitions *)
+
+
 Definition sumToN (n : nat) :=
   nat_rec (fun _ => nat) 0 (fun x y : nat => S x + y) n.
 
 Lemma sumToN1 : forall n : nat, n <= sumToN n.
 Proof.
-intros.
-induction n as [| n Hrecn].
-auto.
-simpl in |- *.
-apply le_n_S.
-apply le_plus_l.
+  induction n as [| n Hrecn].
+  - auto.
+  - simpl in |- *; apply le_n_S, le_plus_l.
 Qed.
 
 Lemma sumToN2 : forall b a : nat, a <= b -> sumToN a <= sumToN b.
 Proof.
-intro.
-induction b as [| b Hrecb]; intros.
-simpl in |- *.
-rewrite <- (le_n_O_eq _ H).
-simpl in |- *.
-auto.
-induction (le_lt_or_eq _ _ H).
-apply le_trans with (sumToN b).
-apply Hrecb.
-apply lt_n_Sm_le.
-auto.
-simpl in |- *.
-apply le_S.
-apply le_plus_r.
-rewrite H0.
-auto.
+  induction b as [| b Hrecb]; intros.
+  - simpl in |- *; rewrite <- (le_n_O_eq _ H); cbn; auto.
+  - destruct (le_lt_or_eq _ _ H).
+    + transitivity (sumToN b).
+      * apply Hrecb; auto.
+        apply lt_n_Sm_le; auto.
+      * cbn in |- *; apply le_S, le_plus_r.
+    + subst a; auto.
 Qed.
 
 Lemma sumToNIsPR : isPR 1 sumToN.
 Proof.
-unfold sumToN in |- *.
-apply indIsPR with (f := fun x y : nat => S x + y).
-apply
- compose2_2IsPR
-  with (f := fun x y : nat => S x) (g := fun x y : nat => y) (h := plus).
-apply filter10IsPR.
-apply succIsPR.
-apply pi2_2IsPR.
-apply plusIsPR.
+  unfold sumToN in |- *.
+  apply indIsPR with (f := fun x y : nat => S x + y).
+  apply
+    compose2_2IsPR
+    with (f := fun x y : nat => S x) (g := fun x y : nat => y) (h := plus).
+  - apply filter10IsPR, succIsPR.
+  - apply pi2_2IsPR.
+  - apply plusIsPR.
 Qed.
+
+(** ** Properties of [cPair] *)
 
 Definition cPair (a b : nat) := a + sumToN (a + b).
 
 Lemma cPairIsPR : isPR 2 cPair.
 Proof.
-intros.
-unfold cPair in |- *.
-apply
- compose2_2IsPR
-  with
-    (f := fun x y : nat => x)
-    (g := fun x y : nat => sumToN (x + y))
-    (h := plus).
-apply pi1_2IsPR.
-apply compose2_1IsPR.
-apply plusIsPR.
-apply sumToNIsPR.
-apply plusIsPR.
+  unfold cPair;
+    apply
+      compose2_2IsPR
+      with
+        (f := fun x y : nat => x)
+        (g := fun x y : nat => sumToN (x + y))
+        (h := plus).
+  - apply pi1_2IsPR.
+  - apply compose2_1IsPR.
+    + apply plusIsPR.
+    + apply sumToNIsPR.
+  - apply plusIsPR.
 Qed.
 
 Section CPair_Injectivity.
 
-Remark cPairInjHelp :
- forall a b c d : nat, cPair a b = cPair c d -> a + b = c + d.
-Proof.
-assert (forall a b : nat, a < b -> a + sumToN a < sumToN b).
-simple induction b.
-intros.
-elim (lt_n_O _ H).
-intros.
-simpl in |- *.
-assert (a <= n).
-apply lt_n_Sm_le.
-assumption.
-induction (le_lt_or_eq a n H1).
-apply lt_trans with (sumToN n).
-auto.
-apply le_lt_n_Sm.
-apply le_plus_r.
-rewrite H2.
-apply lt_n_Sn.
-unfold cPair in |- *.
-assert
- (forall a b c d : nat,
-  a <= c -> b <= d -> a + sumToN c = b + sumToN d -> c = d).
-intros.
-induction (le_or_lt c d).
-induction (le_lt_or_eq _ _ H3).
-assert (a + sumToN c < sumToN d).
-apply le_lt_trans with (c + sumToN c).
-apply plus_le_compat_r.
-auto.
-auto.
-rewrite H2 in H5.
-elim (lt_not_le _ _ H5).
-apply le_plus_r.
-auto.
-assert (b + sumToN d < sumToN c).
-apply le_lt_trans with (d + sumToN d).
-apply plus_le_compat_r.
-auto.
-auto.
-rewrite <- H2 in H4.
-elim (lt_not_le _ _ H4).
-apply le_plus_r.
-intros.
-eapply H0.
-apply le_plus_l.
-apply le_plus_l.
-auto.
-Qed.
+  Remark cPairInjHelp :
+    forall a b c d : nat, cPair a b = cPair c d -> a + b = c + d.
+  Proof.
+    assert (H: forall a b : nat, a < b -> a + sumToN a < sumToN b).
+    {
+      simple induction b.
+      - intros.
+      elim (lt_n_O _ H).
+      -  intros.
+         simpl in |- *.
+         assert (H1: a <= n).
+         { apply lt_n_Sm_le; assumption.
+         }
+         induction (le_lt_or_eq a n H1).
+        +   apply lt_trans with (sumToN n).
+            * auto.
+            * apply le_lt_n_Sm.
+              apply le_plus_r.
+            +  rewrite H2.
+               apply lt_n_Sn.
+    }
+    unfold cPair in |- *.
+    assert
+      (H0: forall a b c d : nat,
+          a <= c -> b <= d -> a + sumToN c = b + sumToN d -> c = d).
+    { intros.
+      induction (le_or_lt c d).
+      - induction (le_lt_or_eq _ _ H3).
+        + assert (H5: a + sumToN c < sumToN d).
+          { apply le_lt_trans with (c + sumToN c).
+            apply plus_le_compat_r; auto.
+            auto.
+          }
+          rewrite H2 in H5.
+      elim (lt_not_le _ _ H5).
+      apply le_plus_r.
+      + auto.
+      - assert (H4: b + sumToN d < sumToN c).
+      { apply le_lt_trans with (d + sumToN d).
+        - apply plus_le_compat_r;  auto.
+        - auto.
+      }
+      rewrite <- H2 in H4;  elim (lt_not_le _ _ H4).
+      apply le_plus_r.
+    }
+    intros; eapply H0.
+    - apply le_plus_l.
+    - apply le_plus_l.
+    - auto.
+  Qed.
 
-Lemma cPairInj1 : forall a b c d : nat, cPair a b = cPair c d -> a = c.
-Proof.
-intros.
-assert (a + b = c + d).
-apply cPairInjHelp.
-auto.
-eapply plus_reg_l.
-unfold cPair in H.
-rewrite (plus_comm a) in H.
-rewrite (plus_comm c) in H.
-rewrite H0 in H.
-apply H.
-Qed.
+  Lemma cPairInj1 : forall a b c d : nat, cPair a b = cPair c d -> a = c.
+  Proof.
+    intros; assert (a + b = c + d) by (apply cPairInjHelp; auto). 
+    eapply plus_reg_l.
+    unfold cPair in H.
+    rewrite (plus_comm a) in H.
+    rewrite (plus_comm c) in H.
+    rewrite H0 in H. apply H.
+  Qed.
 
-Lemma cPairInj2 : forall a b c d : nat, cPair a b = cPair c d -> b = d.
-Proof.
-intros.
-assert (a + b = c + d).
-apply cPairInjHelp.
-auto.
-assert (a = c).
-eapply cPairInj1.
-apply H.
-eapply plus_reg_l.
-rewrite H1 in H0.
-apply H0.
-Qed.
+  Lemma cPairInj2 : forall a b c d : nat, cPair a b = cPair c d -> b = d.
+  Proof.
+    intros.
+    assert (a + b = c + d).
+    {
+      apply cPairInjHelp; auto.
+    }
+    assert (a = c).
+    { eapply cPairInj1; apply H.
+    }
+    eapply plus_reg_l.
+    rewrite H1 in H0;  apply H0.
+  Qed.
+
+  (** Here *)
+  
+
 
 End CPair_Injectivity.
 
