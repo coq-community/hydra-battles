@@ -141,14 +141,14 @@ Section CPair_Injectivity.
     rewrite H1 in H0;  apply H0.
   Qed.
 
-  (** Here *)
-  
 
 
 End CPair_Injectivity.
 
 Section CPair_projections.
 
+  (* @todo document boundedSearch *)
+  
 Let searchXY (a : nat) :=
   boundedSearch (fun a y : nat => ltBool a (sumToN (S y))) a.
 

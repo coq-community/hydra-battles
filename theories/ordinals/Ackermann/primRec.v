@@ -1617,7 +1617,7 @@ Proof.
       induction c; reflexivity.
 Qed.
 
-(** Returns smallest value of x below b such that (P b x). 
+(** Returns smallest value of x less or equal than b such that (P b x). 
     Otherwise returns b  *)
 
 Fixpoint boundedSearchHelp (P : naryRel 1) (b : nat) {struct b} : nat :=
