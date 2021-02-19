@@ -14,7 +14,7 @@ From Coq Require Import Min ArithRing Lia Compare_dec Arith Lia.
 Definition isqrt_spec n r := r * r <= n < S r * S r.
 
 (** Prove the following function [isqrt] is a primitive recursive 
-    implementation of this specification *)
+    (inefficient) implementation of this specification *)
 
 Section sqrtIsPR.
   
@@ -28,4 +28,10 @@ Lemma issqrtIsPR : isPR 1 isqrt.
 Admitted.
 
 End sqrtIsPR.
+
+(** Extra work :
+   Define a faster implementation of [sqrt_spec], and prove your function is 
+   extensionnaly equal to [isqrt] (hence PR!)
+ *)
+
 
