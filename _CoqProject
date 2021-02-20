@@ -111,6 +111,7 @@ theories/ordinals/Ackermann/folProp.v
 theories/ordinals/Ackermann/ListExt.v
 theories/ordinals/Ackermann/misc.v
 theories/ordinals/Ackermann/NN.v
+theories/ordinals/MoreAck/Iterate_compat.v
 theories/ordinals/MoreAck/PrimRecExamples.v
 theories/ordinals/Ackermann/subProp.v
 theories/ordinals/Ackermann/codeList.v

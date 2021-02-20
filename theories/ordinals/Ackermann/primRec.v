@@ -1839,8 +1839,10 @@ Proof.
                  (fun b0 Hrecb : nat =>
                     sumbool_rec (fun _ : {Hrecb = b0} + {Hrecb <> b0} => nat)
                                 (fun _ : Hrecb = b0 =>
-                                   bool_rec (fun _ : bool => nat) b0 (S b0) (P b b0))
-                                (fun _ : Hrecb <> b0 => Hrecb) (eq_nat_dec Hrecb b0)) b).
+                                   bool_rec (fun _ : bool => nat) b0 (S b0)
+                                            (P b b0))
+                                (fun _ : Hrecb <> b0 => Hrecb)
+                                (eq_nat_dec Hrecb b0)) b).
   auto.
   clear H x p.
   cbn in |- *.
@@ -1855,12 +1857,10 @@ Proof.
     rewrite Hrecc.
     induction (eq_nat_dec (boundedSearchHelp b c) c).
     + cbn in |- *.
-      induction (b c).
-      * auto.
-      * auto.
-    + cbn in |- *.
-      reflexivity.
+      induction (b c);  auto.
+    + cbn in |- *; reflexivity.
 Qed.
+
 
 Definition iterate (g : nat -> nat) :=
   nat_rec (fun _ => nat -> nat) (fun x : nat => x)
