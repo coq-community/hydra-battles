@@ -2,8 +2,6 @@
 
 Require primRec Iterates.
 Require Import extEqualNat.
-Print Iterates.iterate.
-
 
 (*
 
