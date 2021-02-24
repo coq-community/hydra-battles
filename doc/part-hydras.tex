@@ -7683,7 +7683,7 @@ As for the Hardy functions, we can use these equalities as rewrite rules for
 ``computing'' some values of $F_\alpha(i)$, for small values of $\alpha$.
 
 \begin{Coqsrc}
-Lemma LF1 : forall n,  F_ 1 n = S (2 * n).
+Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
 
 Lemma LF2 : forall i, (exp2 i * i < F_ 2 i)%nat.
 \end{Coqsrc}
@@ -7716,6 +7716,15 @@ Lemma Propp284 : forall alpha beta : E0,
 \end{Coqsrc}
 
 \index{hydras}{Exercises}
+
+\begin{exercise}
+Prove the following property:
+
+\begin{Coqsrc}
+Lemma LF3 : dominates_from  2 (F_ 3) (fun  n => iterate exp2 n n).
+\end{Coqsrc}
+\end{exercise}
+
 
 \begin{exercise}
 Let us quote a theorem from ~\cite{KS81} (page 297).

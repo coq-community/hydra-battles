@@ -192,7 +192,7 @@ Section Ack_Properties.
       intros m p H; cbn.
       destruct Hn as [H1 H2]; apply H1.
       apply iterate_lt; auto.
-      - split; auto.
+     
         destruct H2;  auto.
     Qed.
 

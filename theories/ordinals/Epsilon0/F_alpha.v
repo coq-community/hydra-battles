@@ -169,12 +169,12 @@ Tactic Notation "undiag2" constr(n) integer(occ1) integer(occ2) :=
   let n' := fresh "n" in
   generalize n at occ1 occ2; intro n'; induction n'.
 
-Lemma LF1 : forall n,  F_ 1 n = S (2 * n).
+Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
 Proof.
-    intro n; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
+    intro i; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
     rewrite iterate_rw, F_zero_eqn.  
     simpl; rewrite iterate_ext with (g := S).
-    - undiag2 n 1 3.
+    - undiag2 i 1 3.
       + simpl; abstract lia.
       + simpl; auto.
     - intro; now rewrite F_zero_eqn.
@@ -328,7 +328,6 @@ Section Properties.
         apply Lt_Succ.
         change n with (iterate (F_ beta) 0 n) at 1.
         apply iterate_lt;auto with arith.
-        split; auto.
       Qed.
       
       Remark RD : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
@@ -466,7 +465,7 @@ Section Properties.
         - repeat rewrite F_alpha_0_eq; auto with arith.
         -  apply Nat.lt_le_incl;  rewrite F_succ_eqn.
            change (F_ alpha (S n)) with (iterate (F_ alpha) 1 (S n)).
-           apply iterate_lt. split.
+           apply iterate_lt. 
           +  apply RAlim.
           +  red;intros; apply RBlim.
           +  auto with arith.
@@ -476,7 +475,7 @@ Section Properties.
       Proof.
         red;intros; rewrite F_succ_eqn.
         change (F_ alpha p) with (iterate (F_ alpha) 1 p);
-        apply iterate_lt. split; auto.
+        apply iterate_lt. 
         -   apply RAlim.
         -   red;intros; apply RBlim.
         -   auto with arith.

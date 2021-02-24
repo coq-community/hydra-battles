@@ -539,7 +539,7 @@ Proof.
    + apply L_omega_Sle.
    + auto with arith.
   -  apply Nat.lt_le_incl;  apply iterate_lt; auto.
-    + split.
+   
       * apply L_omega_smono.
       * apply L_omega_Sle.
 
