@@ -63,7 +63,7 @@ Proof.
 Qed.
 
 (** From now on, we abstract the configurations of the battle
-  as tuples (round number, n2, n1, nh) where n2 [resp. n1, nh) is the number of 
+  as tuples (round number, n2, n1, nh) where n2 (resp. n1, nh) is the number of 
   sub-hydras h2 [resp. h1, heads] *)
 
 Record state : Type := mks {round : nat ; n2 : nat ; n1 : nat ; nh : nat}.

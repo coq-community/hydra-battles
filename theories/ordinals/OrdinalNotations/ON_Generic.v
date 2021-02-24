@@ -118,7 +118,7 @@ Definition bigO `{nA : @ON A ltA compareA}
 
 
 (** The segment associated with nA is isomorphic to
-    the interval [[0,b) *)
+    the segment of ordinals strictly less than b *)
 
 Class  SubON 
        `(OA : @ON A ltA  compareA)

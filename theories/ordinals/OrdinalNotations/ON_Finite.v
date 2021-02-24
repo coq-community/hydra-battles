@@ -178,8 +178,6 @@ End Inclusion_ij.
 
 Arguments iota_ij {i j}.
 
-(** Examples:   2 and 5 considered as members of the segma,t [0,7[ *)
-
 Program Example alpha1 : t 7 := 2.
 
 Program Example beta1 : t 7 := 5.

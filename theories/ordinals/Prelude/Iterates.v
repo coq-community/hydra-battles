@@ -37,25 +37,6 @@ Proof.
 Qed.
 
 
-(* tail recursive iterate *)
-
-Fixpoint iterate_t {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p =>  (iterate_t  f p (f x))
-  end.
-
-Lemma iterate_t_rw {A}(f:A->A) : forall n x,
-    iterate_t f n x = iterate f n x.
-Proof.
- induction n; simpl; auto.
-  intro x; rewrite IHn.
-  clear IHn; induction n; auto.
-  cbn; now f_equal.
-Qed.
-
-
-
 (** ** Abstract properties of arithmetic functions *)
 
 Definition strict_mono f := forall n p,  n < p -> f n < f p.
@@ -407,7 +388,7 @@ Proof.
 Qed.
 
 
-Lemma iterate_2_mono (f : (nat->nat)->(nat->nat)):
+Lemma iterate2_mono (f : (nat->nat)->(nat->nat)):
    (forall g, strict_mono g -> S <<= g -> strict_mono (f g))->
    (forall g, strict_mono g -> S <<= g -> S <<=  (f g))->
    forall k g x  y,  strict_mono g -> S <<= g ->
@@ -420,7 +401,7 @@ Lemma iterate_2_mono (f : (nat->nat)->(nat->nat)):
       apply (IHk (f g) x y ); auto.
 Qed.
 
-Lemma iterate_2_mono_weak (f : (nat->nat)->(nat->nat)):
+Lemma iterate2_mono_weak (f : (nat->nat)->(nat->nat)):
    (forall g, strict_mono g -> S <<= g -> strict_mono (f g))->
    (forall g, strict_mono g -> S <<= g -> S <<=  (f g))->
    forall k g x  y,  strict_mono g -> S <<= g ->
@@ -429,7 +410,7 @@ Lemma iterate_2_mono_weak (f : (nat->nat)->(nat->nat)):
 Proof.
   intros; destruct (le_lt_or_eq x y H3).
   -  apply Nat.lt_le_incl.
-     apply iterate_2_mono; auto.
+     apply iterate2_mono; auto.
   - now subst.
 Qed.
 
@@ -482,7 +463,7 @@ Proof.
 Qed.
 
 
-Lemma iterate_2_mono2 (phi psi : (nat->nat)->(nat->nat)):
+Lemma iterate2_mono2 (phi psi : (nat->nat)->(nat->nat)):
   (forall g, strict_mono g -> S <<= g -> strict_mono (phi g))->
   (forall g, strict_mono g -> S <<= g -> S <<=  (phi g))->
   (forall g, strict_mono g -> S <<= g -> strict_mono (psi g))->
@@ -538,3 +519,96 @@ Definition hyper_exp2 k := iterate exp2 k 1.
 
 Lemma hyper_exp2_S : forall n, hyper_exp2 (S n) = exp2 (hyper_exp2 n).
 Proof.  induction n; cbn; auto. Qed.
+
+(** Old stuff : delete if useless *)
+
+Lemma iterate_ge_from : forall f i, dominates_from i f id -> 
+                               forall  j, i <= j ->
+                                          forall n,
+                                            j <= iterate f n j.
+Proof.
+  induction n.
+  cbn.
+  auto with arith.
+  apply PeanoNat.Nat.lt_le_incl.
+  rewrite iterate_S_eqn.
+  apply Lt.le_lt_trans with (iterate f n j).
+  auto.
+  apply H.
+  apply Le.le_trans with j.
+  auto.
+  auto.
+Qed.  
+
+
+Lemma dominates_iterate :
+  forall  i f,
+    dominates_from i f id ->
+    strict_mono f ->
+    forall n,
+      {j:nat | i <= j /\ dominates_from j (iterate f (S n)) id}.
+
+  induction n.
+  exists i.
+  split;auto.
+  destruct IHn as [j [H1 H2]].
+  exists j.
+  split;auto.
+  red in H2; red.
+  intros k Hk.
+  unfold id.
+  rewrite iterate_S_eqn.
+  apply Lt.le_lt_trans with (f (iterate f n k)).
+  apply Le.le_trans with  (iterate f n k).
+  apply iterate_ge_from with i.
+  auto.
+  eauto with arith.
+  apply PeanoNat.Nat.lt_le_incl.
+  apply H.
+  apply Le.le_trans with k. eauto with arith.
+  apply iterate_ge_from with i.
+  auto. 
+  eauto with arith. 
+  apply H0.
+  rewrite iterate_S_eqn.
+  apply H.
+  
+  apply Le.le_trans with  k.
+  eauto with arith. 
+  apply iterate_ge_from with i.
+  auto. 
+  eauto with arith. 
+Defined.
+
+
+Corollary iterate_gt_diag' :
+  forall  i f,
+    dominates_from i f id ->
+    strict_mono f ->
+    forall n, 0 < n -> 
+              {j:nat | i<= j /\ dominates_from j (iterate f n) id}.
+Proof.
+  destruct n.
+  -  intro H1;  elimtype False; lia.
+  - intros _; apply dominates_iterate; auto.
+Defined.
+
+Corollary iterate_ge_diag' :
+  forall  i f,
+    dominates_from i f id->
+    strict_mono f ->
+    forall n, 
+      {j:nat | i<= j /\ forall k, j<= k -> k <= iterate f n k}.
+Proof.
+  intros; destruct n.
+  -  exists i; split;auto. 
+  -  exists i; split; auto.
+     intros.
+     generalize  (H k H1); intros.
+     unfold id in H2, H; rewrite iterate_S_eqn.   
+     apply PeanoNat.Nat.lt_le_incl.
+     apply Lt.lt_le_trans with (f k);  auto.
+     apply mono_weak; auto.
+     eapply   iterate_ge_from with i; auto.
+Qed.
+
