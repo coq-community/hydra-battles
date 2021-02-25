@@ -157,6 +157,7 @@ exercises/ordinals/lt_succ_le.v
 exercises/ordinals/Limit_Infinity.v
 exercises/ordinals/ge_omega_iff.v
 exercises/ordinals/schutte_cnf_counter_example.v
+exercises/ordinals/F_3.v
 
 
 

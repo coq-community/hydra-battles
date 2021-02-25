@@ -540,8 +540,15 @@ End Properties.
   Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
   Proof. now  destruct  (TH_packed alpha). Qed.
 
-  Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
-  Proof. now  destruct  (TH_packed alpha). Qed.
+  Corollary F_alpha_positive alpha :
+    forall n, 0 < F_ alpha n.
+    Proof.
+      intro n; apply Lt.le_lt_trans with n; auto with arith.
+      apply F_alpha_ge_S.
+    Qed.
+    
+    Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
+    Proof. now  destruct  (TH_packed alpha). Qed.
 
   Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
   Proof. now  destruct  (TH_packed alpha). Qed.
