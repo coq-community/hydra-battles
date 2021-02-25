@@ -14,6 +14,7 @@ From Equations Require Import Equations.
 From hydras Require Import primRec.
 
 (** For masking primRec's iterate *)
+
 Import Prelude.Iterates.
 
 
@@ -180,7 +181,7 @@ Proof.
     - intro; now rewrite F_zero_eqn.
 Qed. 
 
-Lemma LF2 : forall i, (exp2 i * i < F_ 2 i)%nat.
+Lemma LF2 : forall i, exp2 i * i < F_ 2 i.
 Proof.
   intro i; ochange (Fin 2) (Succ 1); rewrite F_succ_eqn.
   undiag2 i 1 3.
@@ -230,16 +231,17 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
 Qed.
 
 (** Properties of [F_ alpha]  *)
+(* begin hide *)
 
 Section Properties.
   Record P (alpha:E0) : Prop :=
     mkP {
         PA : strict_mono (F_ alpha);
-        PB : forall n, (n < F_ alpha n)%nat;
+        PB : forall n, n < F_ alpha n;
         PC : F_ alpha <<= F_ (Succ alpha);
         PD : dominates_from 1 (F_ (Succ alpha)) (F_ alpha);
         PE : forall beta n, Canon_plus n alpha beta -> 
-                            (F_ beta n <= F_ alpha n)%nat}.
+                            F_ beta n <= F_ alpha n}.
 
   
   Section The_induction.
@@ -251,7 +253,7 @@ Section Properties.
       intros n p H; repeat rewrite F_zero_eqn; auto with arith. 
     Qed. 
 
-    Lemma Lt_n_F_Zero_n : forall n:nat, (n < F_ Zero n)%nat. 
+    Lemma Lt_n_F_Zero_n : forall n:nat, n < F_ Zero n. 
     Proof. intros n ; rewrite F_zero_eqn; auto with arith. Qed.
 
     Lemma F_One_Zero_dom : dominates_from 1 (F_ 1) (F_ Zero).
@@ -319,7 +321,7 @@ Section Properties.
         apply iterate_mono;auto.
       Qed.
 
-      Remark RB : forall n, (n < F_ alpha n)%nat.
+      Remark RB : forall n, n < F_ alpha n.
       Proof.
         subst  alpha.
         intro n. 
@@ -354,7 +356,7 @@ Section Properties.
 
 
       Remark RE : forall beta n, Canon_plus n alpha beta -> 
-                                 (F_ beta n <= F_ alpha n)%nat.
+                                 F_ beta n <= F_ alpha n.
       Proof.
         destruct n. repeat rewrite F_alpha_0_eq. 
         reflexivity.
@@ -401,7 +403,7 @@ Section Properties.
       Hypothesis Hlim : Limitb alpha.
 
 
-      Remark RBlim : forall n, (n < F_ alpha n)%nat.
+      Remark RBlim : forall n, n < F_ alpha n.
         intro n.
         rewrite F_lim_eqn.
         destruct (Halpha (Canon alpha n)).
@@ -482,7 +484,7 @@ Section Properties.
       Qed.
 
       Remark RElim : forall beta n, Canon_plus n alpha beta -> 
-                                    (F_ beta n <= F_ alpha n)%nat.
+                                    F_ beta n <= F_ alpha n.
       Proof.
         destruct n.
         - now  repeat rewrite F_alpha_0_eq. 
@@ -528,12 +530,14 @@ Section Properties.
 
 End Properties.
 
+(* end hide *)
+
 
   Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
   Proof. now  destruct  (TH_packed alpha). Qed.
 
   
-  Theorem F_alpha_ge_S alpha : forall n, (n < F_ alpha n)%nat.
+  Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
   Proof. now  destruct  (TH_packed alpha). Qed.
 
   Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
@@ -543,14 +547,14 @@ End Properties.
   Proof. now  destruct  (TH_packed alpha). Qed.
 
   Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta -> 
-                                        (F_ beta n <= F_ alpha n)%nat.
+                                        F_ beta n <= F_ alpha n.
   Proof. now  destruct  (TH_packed alpha). Qed.
 
 
 
 
 
-Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i)%nat.
+Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i).
 Proof.
   red. intros ; apply LF2 ; auto.  
 Qed.

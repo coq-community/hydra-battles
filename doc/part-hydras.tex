@@ -7687,7 +7687,7 @@ As for the Hardy functions, we can use these equalities as rewrite rules for
 \begin{Coqsrc}
 Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
 
-Lemma LF2 : forall i, (exp2 i * i < F_ 2 i)%nat.
+Lemma LF2 : forall i, exp2 i * i < F_ 2 i.
 \end{Coqsrc}
 
 
@@ -7696,14 +7696,15 @@ Like in Sect~\ref{sect:H-alpha-prop}, we prove by induction the following proper
 \begin{Coqsrc}
 Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
  
-Theorem F_alpha_ge_S alpha : forall n, (n < F_ alpha n)%nat.
+Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
 
 Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
 
 Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
 
-Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta -> 
-                                        (F_ beta n <= F_ alpha n)%nat.
+Theorem F_alpha_beta alpha : 
+forall beta n, Canon_plus n alpha beta -> 
+                                        F_ beta n <= F_ alpha n.
 \end{Coqsrc}
 
 As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}.
