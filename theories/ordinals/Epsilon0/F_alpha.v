@@ -1,7 +1,9 @@
-(** * A hierarchy of rapidly growing functions
-    After Wainer, Ketonen, Solovay, etc .
+(** * The Wainer hierarchy of rapidly growing functions
 
-    Pierre Casteran, LaBRI, University of  Bordeaux *)
+
+    After Wainer, Ketonen, Solovay, etc .
+ *)
+
 
 From hydras  Require Import  Iterates  Simple_LexProd Exp2.
 From hydras Require Import  E0 Canon Paths primRec.
@@ -19,13 +21,14 @@ Import Prelude.Iterates.
 
 
 
-(** ** The Wainer hierarchy 
+(** ** Definition, using [coq-equations] 
 
-*)
+The following definition is not accepted by the [equations] plug-in.
 
-
+ *)
 
 Instance Olt : WellFounded Lt := E0.Lt_wf.
+
 
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
@@ -33,7 +36,18 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
       | right nonzero
           with Utils.dec (Limitb alpha) :=
           { | left _ =>  F_ (Canon alpha i)  i ;
-            | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
+            | right notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
+
+(**
+
+    Indeed, we define the $n$-th iterate of [F_ alpha] by well-founded
+    recursion  on the pair (alpha,n), then [F_ alpha] as the first iterate 
+    of the defined function.
+*)
+
+
+
+
 
 Definition call_lt (c c' : E0 * nat) :=
   lexico Lt (Peano.lt) c c'.
@@ -49,9 +63,9 @@ Instance WF : WellFounded call_lt := call_lt_wf.
 
 (** 
 
-   [F_star (alpha,i)] is intended to be the i-th iterate of [F_ alpha].
+   [F_star (alpha,i)] is intended to be the i-th iterate of [F_ alpha]. 
+*)
  
-   It is easy to define [F_star] using the [coq-equations] plug-in  *)
 
 Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
@@ -87,18 +101,9 @@ Defined.
 
 Definition F_  alpha i := F_star (alpha, 1) i.
 
-(** We get the "usual" equations for F *)
+(** ** We get the "usual" equations for [F_]  *)
 
-Lemma F_zero_eqn : forall i, F_ Zero i = S i.
-Proof.
-  intro i. unfold F_; rewrite F_star_equation_2.
-  destruct (E0_eq_dec Zero Zero).
-  - now cbn.
-  - now destruct n.
-Qed.
-
-Print Assumptions F_zero_eqn. 
-
+(** *** Relations between [F_star] and [F_] *)
 
 Lemma F_star_zero_eqn : forall alpha i, F_star (alpha, 0) i = i.
 Proof.
@@ -125,20 +130,6 @@ Proof.
     + now cbn.
 Qed.
 
-Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
-                               F_ alpha i = F_ (Canon alpha i) i.
-Proof.
-  unfold F_; intros. rewrite F_star_equation_2.
-  destruct (E0_eq_dec alpha Zero).
-  - now  destruct (Limit_not_Zero  H).
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
-    + cbn; auto.
-    + red in H. rewrite e in H; discriminate.
-Qed.
-
-(** Derived lemmas about F_ functions *)
-
-
 Lemma F_star_Succ:  forall alpha n i,
     F_star (alpha, S n) i = 
     F_ alpha (F_star (alpha, n) i).
@@ -156,12 +147,38 @@ Proof.
   - specialize (IHn i); rewrite F_star_Succ in *;  now rewrite <- IHn.
 Qed.
 
+
+(** *** Usual equations for [F_] *)
+
+Lemma F_zero_eqn : forall i, F_ Zero i = S i.
+Proof.
+  intro i. unfold F_; rewrite F_star_equation_2.
+  destruct (E0_eq_dec Zero Zero).
+  - now cbn.
+  - now destruct n.
+Qed.
+
+
+Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
+                               F_ alpha i = F_ (Canon alpha i) i.
+Proof.
+  unfold F_; intros. rewrite F_star_equation_2.
+  destruct (E0_eq_dec alpha Zero).
+  - now  destruct (Limit_not_Zero  H).
+  - cbn; destruct (Utils.dec (Limitb alpha)) .
+    + cbn; auto.
+    + red in H. rewrite e in H; discriminate.
+Qed.
+
+
 Lemma F_succ_eqn : forall alpha i,
     F_ (Succ alpha) i = iterate (F_ alpha) (S i) i.
 Proof with auto with E0.
   intros;rewrite F_eq2,  F_star_iterate ...
   -  now rewrite Pred_of_Succ.
 Qed.
+
+(** ** First steps of Wainer hierarchy *)
 
 
 (** performs an induction only on the occ1-th and occ2_th occurrences of n *)
@@ -190,6 +207,17 @@ Proof.
       rewrite iterate_S_eqn, LF1; abstract lia.
 Qed.
 
+Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
+Proof.
+  intros;  apply Lt.le_lt_trans with (exp2 i * i).
+  - destruct (mult_O_le (exp2 i) i).
+    + lia.
+    + now rewrite mult_comm.
+  -  apply LF2.
+Qed.
+
+Search Canon.
+Locate Canon_plus_inv.
 
 Lemma Canon_plus_first_step: forall i alpha beta, 
     Canon_plus (S i) (Succ alpha) beta ->
@@ -672,5 +700,19 @@ Section Proposition_page_284.
 End Proposition_page_284.
 
 
+   
 
- 
+(*
+Lemma F_alpha_ge_exp2 :
+  forall alpha, Fin 2 o<= alpha ->
+                forall i,  2 <= i -> exp2 i <= F_ alpha i.
+Proof.
+ intros.
+ transitivity (F_ 2 i).
+ generalize (LF2' i); intro; lia.
+Abort.
+ *)
+
+
+
+
