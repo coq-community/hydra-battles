@@ -7619,7 +7619,8 @@ nonzero : alpha <> Zero
 i : nat
 F_ : forall x : E0, nat -> x o< alpha -> nat
 The term "F_ (Pred alpha) ?x" has type "Pred alpha o< alpha -> nat"
-while it is expected to have type "Pred alpha o< alpha -> Pred alpha o< alpha"
+while it is expected to have type 
+"Pred alpha o< alpha -> Pred alpha o< alpha"
 (cannot unify "nat" and "Pred alpha o< alpha").
 \end{Coqanswer}
 
@@ -7700,10 +7701,11 @@ Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
 
 Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
 
-Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
+Theorem F_alpha_dom alpha : 
+     dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
 
 Theorem F_alpha_beta alpha : 
-forall beta n, Canon_plus n alpha beta -> 
+   forall beta n, Canon_plus n alpha beta -> 
                                         F_ beta n <= F_ alpha n.
 \end{Coqsrc}
 
@@ -7726,6 +7728,26 @@ Prove the following property:
 \begin{Coqsrc}
 Lemma LF3 : dominates_from  2 (F_ 3) (fun  n => iterate exp2 n n).
 \end{Coqsrc}
+
+\emph{You may start this exercise with the file
+\url{../exercises/ordinals/F_3.v}.}
+\end{exercise}
+
+%ici
+\index{hydras}{Exercises}
+
+\begin{exercise}
+It is tempting to prove a simple property of monotony 
+of the function \texttt{F\_}.
+
+\begin{quote}
+   Let $\alpha\leq\beta<\epsilon_0$. For any $n\geq 2$,
+$F_\alpha(n)\leq F_\beta(n)$. 
+\end{quote}
+Prove or disprove this statement.
+
+\emph{You may start this exercise with the file
+\url{../exercises/ordinals/is_F_monotonous.}.}
 \end{exercise}
 
 

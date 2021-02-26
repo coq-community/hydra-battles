@@ -2965,3 +2965,33 @@ Proof.
  intro H; eapply Lemma2_6_1; eauto.
 Defined.
 
+
+(** Lemmas used by [F_alpha] *)
+
+Lemma Canon_plus_first_step: forall i alpha beta, 
+    Canon_plus (S i) (Succ alpha) beta ->
+    alpha = beta \/ Canon_plus (S i) alpha beta.
+Proof.
+  destruct alpha, beta.
+  unfold Canon_plus, Paths.const_path; simpl ;intros H.
+  destruct (Paths.const_pathS_first_step H).
+  - rewrite Canon.canonS_succ in e; auto.
+    subst cnf0;  assert (cnf_ok0 =cnf_ok).
+    apply nf_proof_unicity.
+    subst cnf_ok0; left;auto. 
+  - rewrite Canon.canonS_succ in c;[ right;auto | auto].
+Qed.
+
+Lemma Canon_plus_first_step_lim:
+  forall i alpha beta, Limitb alpha ->
+                       Canon_plus (S i) alpha beta  ->
+                       beta = CanonS alpha i \/
+                       Canon_plus (S i) (CanonS alpha i) beta.
+Proof.
+  destruct alpha, beta.
+  unfold Canon_plus, Paths.const_path; simpl.
+  intros H H0; destruct (const_pathS_first_step H0).
+  -  left;  unfold CanonS;   f_equal;  f_equal. simpl; subst cnf0.
+     f_equal; apply nf_proof_unicity.
+  - right; auto.
+Qed.

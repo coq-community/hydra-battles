@@ -110,7 +110,7 @@ Proof.
   intros; now rewrite F_star_equation_1.
 Qed.
 
-Lemma Fstar_S : forall alpha n i, F_star (alpha ,S (S n)) i =
+Lemma Fstar_S : forall alpha n i, F_star (alpha, S (S n)) i =
                                   F_ alpha  (F_star (alpha, S n) i).
 Proof.  
   unfold F_; intros; now rewrite F_star_equation_3.
@@ -216,36 +216,8 @@ Proof.
   -  apply LF2.
 Qed.
 
-Search Canon.
-Locate Canon_plus_inv.
 
-Lemma Canon_plus_first_step: forall i alpha beta, 
-    Canon_plus (S i) (Succ alpha) beta ->
-    alpha = beta \/ Canon_plus (S i) alpha beta.
-Proof.
-  destruct alpha, beta.
-  unfold Canon_plus, Paths.const_path; simpl ;intros H.
-  destruct (Paths.const_pathS_first_step H).
-  - rewrite Canon.canonS_succ in e; auto.
-    subst cnf0;  assert (cnf_ok0 =cnf_ok).
-    apply nf_proof_unicity.
-    subst cnf_ok0; left;auto. 
-  - rewrite Canon.canonS_succ in c;[ right;auto | auto].
-Qed.
 
-Lemma Canon_plus_first_step_lim:
-  forall i alpha beta, Limitb alpha ->
-                       Canon_plus (S i) alpha beta  ->
-                       beta = CanonS alpha i \/
-                       Canon_plus (S i) (CanonS alpha i) beta.
-Proof.
-  destruct alpha, beta.
-  unfold Canon_plus, Paths.const_path; simpl.
-  intros H H0; destruct (const_pathS_first_step H0).
-  -  left;  unfold CanonS;   f_equal;  f_equal. simpl; subst cnf0.
-     f_equal; apply nf_proof_unicity.
-  - right; auto.
-Qed.
 
 Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
   intro alpha. pattern alpha; apply well_founded_induction with E0.Lt.
@@ -391,7 +363,7 @@ Section Properties.
         intros. 
         transitivity (F_ beta (S n)).
         rewrite alpha_def in H.
-        - destruct (Canon_plus_first_step _ _ _ H).
+        - destruct (Canon_plus_first_step  H).
           subst beta0; reflexivity.
           destruct (Halpha beta).
           rewrite alpha_def.
@@ -516,7 +488,7 @@ Section Properties.
       Proof.
         destruct n.
         - now  repeat rewrite F_alpha_0_eq. 
-        - intros H;  destruct (Canon_plus_first_step_lim _ _  _ Hlim H).
+        - intros H;  destruct (Canon_plus_first_step_lim  Hlim H).
           +  rewrite (F_lim_eqn alpha _).
              * now rewrite H0.
              * auto.
@@ -617,7 +589,7 @@ Section Proposition_page_284.
   Variables alpha beta : E0.
   Hypothesis H_beta_alpha : Lt beta alpha.
 
-
+(* begin hide *)
   Section case_eq.
     Hypothesis Heq : alpha = Succ beta.
 
@@ -675,7 +647,8 @@ Section Proposition_page_284.
 
   End case_lt.
 
-
+  (* end hide *)
+  
   Lemma Propp284_0 : forall n, Canon_plus (S n) alpha beta ->
                              forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
@@ -689,6 +662,7 @@ Section Proposition_page_284.
     - intros; eapply F9; eauto.
   Qed.
 
+ 
   
   Lemma Propp284: dominates (F_ alpha) (F_ beta).
   Proof.
