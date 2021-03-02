@@ -1,4 +1,4 @@
-From Coq Require Import Arith.
+From Coq Require Import Arith Lia.
 
 Fixpoint exp2 (n:nat) : nat :=
   match n with
@@ -19,5 +19,9 @@ Proof.
 Qed.
 
 
-
-  
+Lemma exp2_gt_id : forall n, n < exp2 n.
+Proof.
+  induction n.
+  - cbn; auto with arith.
+  - cbn; generalize IHn; generalize (exp2 n); intros; lia.
+Qed.

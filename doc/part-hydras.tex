@@ -86,7 +86,7 @@ has any number of sons. Note that, contrary to the computer science tradition, w
 with the heads up and the foot (i.e., the root of the tree) down.
 Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt{Hy} in our examples (please look at the 
 module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}). 
-\emph{For a less technical description of hydras, please see 
+\emph{For a less formal description of hydras, please see 
 \url{https://www.smbc-comics.com/comic/hydra}.}
 
 \begin{figure}[h]
@@ -193,10 +193,10 @@ A battle will thus be represented as a sequence of terms of type \texttt{Hydra},
 Let us start a battle between Hercules and the hydra \texttt{Hy} of Fig.~\ref{fig:Hy}.
 
 At the first round, Hercules choses to chop off the rightmost head of \texttt{Hy}.
-Since this head is near the floor, the hydra loses this head. Let us call 
+Since this head is near the floor, the hydra simply loses this head. Let us call 
  \texttt{Hy'} the resulting state of the hydra, represented in Fig.~\vref{fig:Hy-prime}.
 
-Next, assume Hercules choses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the rotten neck in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part\footnote{In other words, the replication factor at this round is equal to $4$.}. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
+Next, assume Hercules choses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the broken segment in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part\footnote{In other words, the replication factor at this round is equal to $4$.}. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
 
 
 
@@ -6721,7 +6721,7 @@ Let $0<\alpha<\epsilon_0$ be an ordinal term. We consider the functions which as
 the interval $[k,l)$ is $\alpha$-mlarge.
 
 \begin{remark}
-The upper bound of the considered interval has been chosen to be  $l-1$ and not $l$, in order to simplify some statements and proofs in composition lemmas associated to ordinals of the form $\alpha\times i$ and 
+The upper bound of the considered interval has been chosen to be  $l-1$ and not $l$, in order to simplify some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
 $\omega^\alpha\times i + \beta$.
 In order to consider any ordinal below $\epsilon_0$, we consider a special case for $\alpha=0$.
 \end{remark}
@@ -7509,6 +7509,34 @@ On the contrary, the fonctions of the Hardy hierarchy have the following five pr
 $H_\beta(n)\leq H_\alpha(n)$.
 \end{itemize}
 
+These properties are defined in \coq{} in the library
+~\href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}.
+
+\index{maths}{Abstract properties of arithmetic functions}
+\index{hydras}{Abstract properties of arithmetic functions}
+
+\begin{Coqsrc}
+(** ** Abstract properties of arithmetic functions *)
+
+Definition strict_mono f := forall n p,  n < p -> f n < f p.
+
+Definition strict_mono1 f := forall n p,  0 < n < p -> f n < f p.
+
+Definition dominates_from n g f  := forall p, n <= p -> f p < g p.
+
+Definition dominates_strong g f  := {i : nat | dominates_from i g f}.
+
+Definition dominates g f := exists i : nat, dominates_from i g f .
+
+Definition fun_le f g  := forall n:nat,  f n <=  g n.
+
+Infix ">>" := dominates (at level 60).
+
+Infix ">>s" := dominates_strong (at level 60).
+
+Infix "<<=" := fun_le (at level 60).
+\end{Coqsrc}
+
 \index{maths}{Transfinite induction}
 
 In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjonction of the five properties.
@@ -7516,9 +7544,6 @@ For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and
 $\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially. 
 
 
-\begin{definition}
- Let $f$ zand $g$ be two arithmetic  functions; $f$ is said to \emph{dominate} $g$ if $f(p)>g(p)$ for any all sufficiently large $p$.
-\end{definition}
 
 
 \begin{Coqsrc}
@@ -7733,6 +7758,19 @@ Lemma LF3 : dominates_from  2 (F_ 3) (fun  n => iterate exp2 n n).
 \url{../exercises/ordinals/F_3.v}.}
 \end{exercise}
 
+\index{hydras}{Exercises}
+
+\begin{exercise}
+Prove that, for any $\alpha\geq 3$ and $n\geq 2$,
+$F_\alpha(1+n)\geq 2^{F_\alpha(n)}$.
+
+
+
+\emph{You may start this exercise with the file
+\url{../exercises/ordinals/F_3.v}.}
+\end{exercise}
+
+
 %ici
 \index{hydras}{Exercises}
 
@@ -7747,7 +7785,7 @@ $F_\alpha(n)\leq F_\beta(n)$.
 Prove or disprove this statement.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/is_F_monotonous.}.}
+\url{../exercises/ordinals/is_F_monotonous.v}.}
 \end{exercise}
 
 
@@ -7770,19 +7808,6 @@ whereas \cite{KS81} define $H_\alpha(n)$ as ``the least integer $k$ such that $[
 
 \end{exercise}
 
-\index{hydras}{Exercises}
-
-\begin{exercise}
-Prove the following properties~\cite{KS81}(p. 298).
-
-\begin{enumerate}
-\item  For any $n\geq2$, $F_3(n+1)>2^{F_3(n)}$.
-\item For any  $n\geq 2$ and $\alpha \geq 3$, $F_\alpha(n+1)\geq 2^{F_\alpha(n)}$.
-\end{enumerate}
- 
-\emph{You may start this exercise with the file
-\url{../exercises/ordinals/F_3.v}.}
-\end{exercise}
 
 
 

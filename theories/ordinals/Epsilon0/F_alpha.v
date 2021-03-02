@@ -43,7 +43,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
     Indeed, we define the $n$-th iterate of [F_ alpha] by well-founded
     recursion  on the pair (alpha,n), then [F_ alpha] as the first iterate 
     of the defined function.
-*)
+ *)
 
 
 
@@ -64,8 +64,8 @@ Instance WF : WellFounded call_lt := call_lt_wf.
 (** 
 
    [F_star (alpha,i)] is intended to be the i-th iterate of [F_ alpha]. 
-*)
- 
+ *)
+
 
 Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
@@ -125,7 +125,7 @@ Proof.
   - subst alpha; discriminate H.
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + assert (true=false) by 
-       ( now  destruct (Succ_not_Limitb _ H)). 
+          ( now  destruct (Succ_not_Limitb _ H)). 
       discriminate.
     + now cbn.
 Qed.
@@ -160,7 +160,7 @@ Qed.
 
 
 Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
-                               F_ alpha i = F_ (Canon alpha i) i.
+                                   F_ alpha i = F_ (Canon alpha i) i.
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha Zero).
@@ -189,13 +189,13 @@ Tactic Notation "undiag2" constr(n) integer(occ1) integer(occ2) :=
 
 Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
 Proof.
-    intro i; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
-    rewrite iterate_rw, F_zero_eqn.  
-    simpl; rewrite iterate_ext with (g := S).
-    - undiag2 i 1 3.
-      + simpl; abstract lia.
-      + simpl; auto.
-    - intro; now rewrite F_zero_eqn.
+  intro i; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
+  rewrite iterate_rw, F_zero_eqn.  
+  simpl; rewrite iterate_ext with (g := S).
+  - undiag2 i 1 3.
+    + simpl; abstract lia.
+    + simpl; auto.
+  - intro; now rewrite F_zero_eqn.
 Qed. 
 
 Lemma LF2 : forall i, exp2 i * i < F_ 2 i.
@@ -204,7 +204,7 @@ Proof.
   undiag2 i 1 3.
   -  intros. cbn;  intros; cbn.  repeat rewrite LF1. abstract lia. 
   - intros; simpl exp2; ring_simplify. simpl (2+n)%nat.
-      rewrite iterate_S_eqn, LF1; abstract lia.
+    rewrite iterate_S_eqn, LF1; abstract lia.
 Qed.
 
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
@@ -451,12 +451,12 @@ Section Properties.
           apply Canon_lt. 
           now apply Limit_not_Zero.
           auto with E0.
-  auto with arith.
-  apply PA.
-  apply Halpha.
-  apply CanonS_lt.
-  auto with E0.
- auto with arith.
+          auto with arith.
+          apply PA.
+          apply Halpha.
+          apply CanonS_lt.
+          auto with E0.
+          auto with arith.
       Qed.
 
 
@@ -468,16 +468,16 @@ Section Properties.
         -  apply Nat.lt_le_incl;  rewrite F_succ_eqn.
            change (F_ alpha (S n)) with (iterate (F_ alpha) 1 (S n)).
            apply iterate_lt. 
-          +  apply RAlim.
-          +  red;intros; apply RBlim.
-          +  auto with arith.
+           +  apply RAlim.
+           +  red;intros; apply RBlim.
+           +  auto with arith.
       Qed.
 
       Remark RDlim : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
       Proof.
         red;intros; rewrite F_succ_eqn.
         change (F_ alpha p) with (iterate (F_ alpha) 1 p);
-        apply iterate_lt. 
+          apply iterate_lt. 
         -   apply RAlim.
         -   red;intros; apply RBlim.
         -   auto with arith.
@@ -533,29 +533,29 @@ End Properties.
 (* end hide *)
 
 
-  Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
-  Proof. now  destruct  (TH_packed alpha). Qed.
+Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
+Proof. now  destruct  (TH_packed alpha). Qed.
 
-  
-  Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
-  Proof. now  destruct  (TH_packed alpha). Qed.
 
-  Corollary F_alpha_positive alpha :
-    forall n, 0 < F_ alpha n.
-    Proof.
-      intro n; apply Lt.le_lt_trans with n; auto with arith.
-      apply F_alpha_ge_S.
-    Qed.
-    
-    Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
-    Proof. now  destruct  (TH_packed alpha). Qed.
+Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
+Proof. now  destruct  (TH_packed alpha). Qed.
 
-  Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
-  Proof. now  destruct  (TH_packed alpha). Qed.
+Corollary F_alpha_positive alpha :
+  forall n, 0 < F_ alpha n.
+Proof.
+  intro n; apply Lt.le_lt_trans with n; auto with arith.
+  apply F_alpha_ge_S.
+Qed.
 
-  Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta -> 
-                                        F_ beta n <= F_ alpha n.
-  Proof. now  destruct  (TH_packed alpha). Qed.
+Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
+Proof. now  destruct  (TH_packed alpha). Qed.
+
+Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
+Proof. now  destruct  (TH_packed alpha). Qed.
+
+Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta -> 
+                                            F_ beta n <= F_ alpha n.
+Proof. now  destruct  (TH_packed alpha). Qed.
 
 
 
@@ -569,17 +569,17 @@ Qed.
 
 Lemma LF3_2  : dominates_from 2  (F_ 3) (fun  n => iterate exp2 (S n) n).
 Proof.  
- intros p H; assert (H0:= LF2_0).
+  intros p H; assert (H0:= LF2_0).
   ochange (Fin 3) (Succ 2); rewrite F_succ_eqn.
-   eapply iterate_dom_prop; eauto with arith. 
-   - apply exp2_ge_S.
-   - apply exp2_mono.
-   - apply F_alpha_mono.
-   - red; intros; transitivity (exp2 p0 * p0)%nat; auto.
-   {  rewrite <- Nat.mul_1_r at 1; apply Nat.mul_lt_mono_pos_l; auto.
-      apply exp2_positive.
-   }
-   apply LF2_0; abstract lia.
+  eapply iterate_dom_prop; eauto with arith. 
+  - apply exp2_ge_S.
+  - apply exp2_mono.
+  - apply F_alpha_mono.
+  - red; intros; transitivity (exp2 p0 * p0)%nat; auto.
+    {  rewrite <- Nat.mul_1_r at 1; apply Nat.mul_lt_mono_pos_l; auto.
+       apply exp2_positive.
+    }
+    apply LF2_0; abstract lia.
 Qed.
 
 (** From Ketonen and Solovay, page 284, op. cit. *)
@@ -589,7 +589,7 @@ Section Proposition_page_284.
   Variables alpha beta : E0.
   Hypothesis H_beta_alpha : Lt beta alpha.
 
-(* begin hide *)
+  (* begin hide *)
   Section case_eq.
     Hypothesis Heq : alpha = Succ beta.
 
@@ -650,7 +650,7 @@ Section Proposition_page_284.
   (* end hide *)
   
   Lemma Propp284_0 : forall n, Canon_plus (S n) alpha beta ->
-                             forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
+                               forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
     assert (Le (Succ beta) alpha) by (now apply Lt_succ_le).
     assert ({alpha = Succ beta}+{Lt (Succ beta) alpha}). {
@@ -662,7 +662,7 @@ Section Proposition_page_284.
     - intros; eapply F9; eauto.
   Qed.
 
- 
+  
   
   Lemma Propp284: dominates (F_ alpha) (F_ beta).
   Proof.
@@ -674,18 +674,7 @@ Section Proposition_page_284.
 End Proposition_page_284.
 
 
-   
 
-(*
-Lemma F_alpha_ge_exp2 :
-  forall alpha, Fin 2 o<= alpha ->
-                forall i,  2 <= i -> exp2 i <= F_ alpha i.
-Proof.
- intros.
- transitivity (F_ 2 i).
- generalize (LF2' i); intro; lia.
-Abort.
- *)
 
 
 

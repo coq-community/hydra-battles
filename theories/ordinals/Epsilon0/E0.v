@@ -42,11 +42,7 @@ Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
-Instance Zero : E0.
-Proof.
-  now exists T1.zero.
-Defined.
-
+Instance Zero : E0 := @mkord zero refl_equal.
 
 Definition Limitb (alpha : E0) : bool :=
   limitb (@cnf alpha).
@@ -322,6 +318,13 @@ Qed.
 
 Hint Rewrite Pred_of_Succ: E0_rw.
 
+Lemma Succ_inj alpha beta : Succ alpha = Succ beta -> alpha = beta.
+Proof.
+  destruct alpha, beta; intros;  apply E0_eq_intro. 
+  cbn;  unfold Succ in H; cbn in H; injection H. 
+  intro; apply succ_injective; auto.
+Qed.
+
 Lemma  Pred_Lt (alpha : E0) : alpha <> Zero  ->  Limitb alpha = false ->
                        Pred alpha o< alpha.
 Proof.
@@ -502,6 +505,16 @@ Proof.
  eapply T1.LT_trans; eauto.
 Qed.
 
+Lemma Le_trans alpha beta gamma :
+  alpha o<= beta -> beta o<= gamma -> alpha o<= gamma.
+Proof.
+  destruct alpha, beta, gamma; simpl. unfold le.
+  simpl.
+ intros; eauto with T1.
+ eapply T1.LE_trans; eauto.
+Qed.
+
+
 
 Lemma Omega_term_plus alpha beta i :
   alpha <> Zero -> (beta o< Phi0 alpha)%e0 ->
@@ -526,7 +539,6 @@ Lemma cnf_Ocons (alpha beta: E0) n : alpha <> Zero -> beta o< Phi0 alpha ->
 Proof.
   intros. unfold Ocons. rewrite Omega_term_plus; auto.
 Defined.
-
 
 Lemma Limitb_plus alpha beta i:
   (beta o< Phi0 alpha)%e0 -> Limitb beta ->
@@ -657,8 +669,21 @@ Proof.
 Qed.
 
 
+Lemma Le_refl alpha : alpha o<= alpha.
+Proof.
+  destruct alpha; split.
+  - cbn; auto.
+  - split; cbn; auto with T1.
+Qed.
 
-
+Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
+Proof.
+  destruct alpha, beta; split.
+  - cbn; auto.
+  - split; cbn; auto.
+    cbn in H; destruct H; cbn in *.
+    apply lt_le_incl; tauto.
+Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
 Proof.
@@ -669,11 +694,10 @@ Lemma E0_Lt_Succ_inv (alpha beta: E0):
   alpha o< Succ beta -> alpha o< beta \/ alpha = beta.
 Proof.
   destruct alpha, beta; unfold Lt; cbn; intros.
-  About LT_succ_LE_2.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
   destruct (T1.le_lt_or_eq _ _ H1) as [H3 | H3].
-  -  subst; right;apply E0_eq_intro;reflexivity. 
-  -  left; split; auto.
+  - subst; right;apply E0_eq_intro;reflexivity. 
+  - left; split; auto.
 Qed.
 
 Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.
