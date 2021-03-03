@@ -247,9 +247,7 @@ Proof.
           - apply Ack_mono_r; auto.
         }
         lia.
-        (* begin show *)
     }
-    (* end show *)
     exists (4+ q); intros.
     pose (z := max (hd v) (max_v (tl v))).
     simpl evalPrimRec; rewrite <- Heqf; rewrite (decomp _ _ v).
