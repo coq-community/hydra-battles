@@ -13,12 +13,14 @@ Require Import MoreVectors.
 Import primRec extEqualNat VectorNotations.
 
 
-Section F_omega_notPR.
+Section F_alpha_notPR.
 
-  Hypothesis F_omega_PR : isPR 1 (F_ omega).
+  Variable alpha: E0.
+  Hypothesis H : omega o<= alpha.
+  Hypothesis H0: isPR 1 (F_ alpha).
 
-
-  Lemma F_omega_not_PR : False.
+  Lemma F_alpha_not_PR: False.
   Admitted.
 
-End F_omega_notPR.
+End F_alpha_notPR.
+
