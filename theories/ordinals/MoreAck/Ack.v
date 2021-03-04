@@ -353,3 +353,32 @@ Proof.
 Qed.
 
 
+Remark R0  n : forall p, 1 <= p -> p < iterate (Ack n) p 1.
+Proof.
+  induction 1.
+  cbn. apply le_S_Ack.  
+  rewrite iterate_S_eqn.
+  apply Lt.lt_le_trans with (Ack n (S m)).
+- apply le_S_Ack.  
+ -  apply Ack_mono_r.
+ auto.
+Qed.
+
+
+Remark R01 n p :  Ack n (S p) < Ack (S n) (S p).
+Proof.
+  rewrite Ack_S_S; apply Ack_strict_mono.
+  apply Lt.le_lt_trans with (S n + p).
+  -   lia.
+  -  apply Ack_Sn_plus.
+Qed.
+
+Lemma Ack_strict_mono_l : forall n m p, n < m ->
+                                        Ack n (S p) < Ack m (S p).
+Proof.
+  induction 1.
+  -  apply R01.
+  -  transitivity (Ack m (S p)); auto.
+     apply R01.
+Qed.
+
