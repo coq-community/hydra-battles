@@ -147,19 +147,19 @@ theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
 
-theories/solutions/primrec/MinPR.v
-theories/solutions/primrec/FibonacciPR.v
-theories/solutions/primrec/MorePRExamples.v
-theories/solutions/primrec/isqrt.v
-theories/solutions/ordinals/T1_ltNotWf.v
-theories/solutions/ordinals/predSuccUnicity.v
-theories/solutions/ordinals/lt_succ_le.v
-theories/solutions/ordinals/Limit_Infinity.v
-theories/solutions/ordinals/ge_omega_iff.v
-theories/solutions/ordinals/schutte_cnf_counter_example.v
-theories/solutions/ordinals/F_3.v
-theories/solutions/ordinals/is_F_monotonous.v
-theories/solutions/ordinals/F_omega.v
+theories/ordinals/solutions_exercises/MinPR.v
+theories/ordinals/solutions_exercises/FibonacciPR.v
+theories/ordinals/solutions_exercises/MorePRExamples.v
+theories/ordinals/solutions_exercises/isqrt.v
+theories/ordinals/solutions_exercises/T1_ltNotWf.v
+theories/ordinals/solutions_exercises/predSuccUnicity.v
+theories/ordinals/solutions_exercises/lt_succ_le.v
+theories/ordinals/solutions_exercises/Limit_Infinity.v
+theories/ordinals/solutions_exercises/ge_omega_iff.v
+theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
+theories/ordinals/solutions_exercises/F_3.v
+theories/ordinals/solutions_exercises/is_F_monotonous.v
+theories/ordinals/solutions_exercises/F_omega.v
 
 exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v

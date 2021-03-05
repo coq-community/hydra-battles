@@ -24,3 +24,5 @@ bigfib.mli
 bigmod.ml
 bigmod.mli
 _build/
+coqdoc.sty
+.DS_Store
