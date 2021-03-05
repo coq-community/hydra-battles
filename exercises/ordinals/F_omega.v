@@ -24,3 +24,6 @@ Section F_alpha_notPR.
 
 End F_alpha_notPR.
 
+
+Theorem F_n_PR (n:nat)  : isPR 1 (F_  n).
+Admitted.

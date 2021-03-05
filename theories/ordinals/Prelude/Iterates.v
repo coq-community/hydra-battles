@@ -37,6 +37,15 @@ Proof.
 Qed.
 
 
+(** TODO : move to more generic libraries *)
+
+Lemma iterate_compat3 f x n :
+  Iterates.iterate f n x = nat_rec (fun _ : nat => nat) x (fun _ y : nat => f y) n.
+Proof.
+  induction n;cbn; auto.
+Qed.
+
+
 (** ** Abstract properties of arithmetic functions *)
 
 Definition strict_mono f := forall n p,  n < p -> f n < f p.

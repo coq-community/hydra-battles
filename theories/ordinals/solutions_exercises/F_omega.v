@@ -172,3 +172,81 @@ Section F_alpha_notPR.
 
 End F_alpha_notPR.
 
+
+(** TODO : move to more generic libraries *)
+
+Lemma isPR_trans n (f g : naryFunc n) : isPR n f ->
+                                        extEqual _ f g ->
+                                        isPR n g.
+Proof.
+  destruct 1 as [x Hx]; intros.
+  exists x;eapply extEqualTrans; eauto.
+Qed.
+
+
+
+
+(**  ** On the other hand, [F_ n] is PR for any [n:nat]
+*)
+
+
+Lemma F_0_isPR : isPR 1 (F_ 0).
+Proof.
+  apply isPR_trans with S.
+  - apply succIsPR.
+  - intro n; now rewrite F_zero_eqn.
+Qed.
+
+Section step.
+ Variable n: nat.
+ Hypothesis Hn : isPR 1 (F_ n).
+
+ (*  in order to use primRec's lemmas *)
+ Let F := fun b a =>  nat_rec (fun _ => nat) b (fun x y  => F_ n y) a.
+ 
+ Remark L00: forall i,  F_ (Succ n) i = F i (S i) .
+ Proof.
+   unfold F; intro i; rewrite F_succ_eqn.  
+   now  rewrite iterate_compat3.
+ Qed. 
+
+ Remark R01 : isPR 2 F.
+ Proof.
+   assert (H: isPR 3 (fun x y _ => F_ n y)) by (apply filter010IsPR; auto).
+   apply isPR_trans with (fun x y =>  F x y).
+   - generalize  (ind1ParamIsPR (fun x y _ => F_ n y) H (fun a =>  a) idIsPR);
+       unfold F; intro; apply swapIsPR; auto.
+   - intros x y; reflexivity.
+ Qed.
+
+ Remark  R02 : isPR 1 (fun i  =>  F i (S i)).
+ Proof.
+   apply compose1_2IsPR. 
+    - apply idIsPR.
+    - apply succIsPR.
+    - apply R01.
+Qed.
+
+ Remark R03 : isPR 1 (F_ (S n)). 
+ Proof.
+   apply isPR_trans with (F_ (Succ n)).
+   -  eapply isPR_trans.
+    +  apply R02.
+    +  intro i; red; now rewrite L00.
+   -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
+      intro; reflexivity.
+Qed.
+
+ End step.
+
+
+Theorem F_n_PR (n:nat)  : isPR 1 (F_  n).
+Proof.
+  induction n.
+  - apply F_0_isPR.
+  - now apply R03.
+Qed.
+
+
+
+
