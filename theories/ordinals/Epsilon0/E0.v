@@ -703,6 +703,35 @@ Qed.
 Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.
 Proof.
   destruct alpha; unfold Lt; cbn.
-  intros [H [H0 H1]]. eapply not_lt_zero; eauto. 
+  intros [H [H0 H1]]; eapply not_lt_zero; eauto. 
 Qed.
 
+Lemma lt_omega_inv: forall alpha:E0,  alpha o< omega -> exists (i:nat),  alpha = Fin i.
+Proof. 
+  destruct alpha;  unfold _Omega; cbn in *; intro.
+  destruct H.
+  destruct H0.
+  cbn in H0.
+  assert (H2 : cnf0 t1< omega%t1).
+  {  split; cbn in H1; tauto. }
+  destruct (lt_omega_inv H2).
+  - exists 0; subst;  unfold Fin; apply E0_eq_intro;  reflexivity. 
+  -  destruct H3; subst;  exists (S x); apply E0_eq_intro; reflexivity.
+Qed.
+
+
+Lemma E0_lt_eq_lt alpha beta : alpha o< beta \/ alpha = beta \/ beta o< alpha.
+Proof.
+  destruct (compare_correct alpha beta).
+  - subst;right;now left.
+  - now left.
+  - right; now right.
+Qed.
+
+Lemma E0_lt_ge alpha beta : alpha o< beta \/ beta o<= alpha.
+Proof.
+  destruct (E0_lt_eq_lt alpha beta) as [H | [ | H]].
+  -  now left.
+  - subst; right. apply Le_refl.
+  - right; now apply Lt_Le_incl.
+Qed.
