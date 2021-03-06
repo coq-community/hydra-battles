@@ -82,19 +82,10 @@ Proof.
   reflexivity.
 Qed.
 
-Require Import MoreVectors.
-Import primRec extEqualNat VectorNotations.
 
-Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
-  : exists (n:nat), forall x ,  f x  <= Ack n x.
-  destruct Hf as [x Hx].
-  generalize (majorAnyPR 1 x). intros.
-  destruct H as [N HN]. exists N.
-  intros x0; specialize (HN [x0]); cbn in HN.
-  replace (evalPrimRec 1 x x0) with (f x0 ) in HN.   
-  now rewrite Nat.max_0_r in HN.  
-  symmetry; apply Hx.  
-Qed.
+Import primRec extEqualNat.
+
+
 
 Section F_omega_notPR.
 
@@ -140,22 +131,19 @@ Section F_alpha_notPR.
 
     Hypothesis H: isPR 1 (F_ alpha).
 
+    Remark R00 : F_ alpha >> fun n => Ack n n.
+    Proof.
+      destruct ( Propp284 alpha omega Halpha) as [N HN];
+        exists (Nat.max N 2);  intros p Hp.
+      apply Lt.le_lt_trans with (F_ omega p).    
+      - apply F_vs_Ack; auto; lia.
+      - apply HN; lia.
+    Qed.
+
     Lemma FF : False.
-      destruct R5 as [k Hk].
-      destruct (majorPR1 _ H) as [N HN].
-      assert (H0: forall x,  k<= x -> F_ omega x < Ack N x).
-      { intros;  apply Lt.lt_le_trans with (F_ alpha x); auto.
-      }
-      generalize (F_vs_Ack); intro H1.
-      specialize (H0 (Max.max 2 (Max.max k N))).
-      specialize (H1 (Max.max 2 (Max.max k N))).
-      remember (Max.max 2  (Nat.max k N)) as X.     
-      assert (k <= X) by (subst  X; lia).
-      assert (2 <=  X) by (subst  X; lia).
-      apply H0 in H2.
-      apply H1 in H3;clear H0 H1.
-      assert (Ack N X <= Ack X X) by (apply Ack_mono_l; lia).
-      lia.
+    Proof.
+      eapply dom_AckNotPR; eauto.
+      apply R00.
     Qed.
 
   End case_lt.
@@ -187,7 +175,7 @@ Qed.
 
 
 (**  ** On the other hand, [F_ n] is PR for any [n:nat]
-*)
+ *)
 
 
 Lemma F_0_isPR : isPR 1 (F_ 0).
@@ -198,46 +186,46 @@ Proof.
 Qed.
 
 Section step.
- Variable n: nat.
- Hypothesis Hn : isPR 1 (F_ n).
+  Variable n: nat.
+  Hypothesis Hn : isPR 1 (F_ n).
 
- (*  in order to use primRec's lemmas *)
- Let F := fun b a =>  nat_rec (fun _ => nat) b (fun x y  => F_ n y) a.
- 
- Remark L00: forall i,  F_ (Succ n) i = F i (S i) .
- Proof.
-   unfold F; intro i; rewrite F_succ_eqn.  
-   now  rewrite iterate_compat3.
- Qed. 
+  (*  in order to use primRec's lemmas *)
+  Let F := fun a b =>  nat_rec (fun _ => nat) a (fun x y  => F_ n y) b.
+  
+  Remark L00: forall i,  F_ (Succ n) i = F i (S i) .
+  Proof.
+    unfold F; intro i; rewrite F_succ_eqn.  
+    now  rewrite iterate_compat3.
+  Qed. 
 
- Remark R01 : isPR 2 F.
- Proof.
-   assert (H: isPR 3 (fun x y _ => F_ n y)) by (apply filter010IsPR; auto).
-   apply isPR_trans with (fun x y =>  F x y).
-   - generalize  (ind1ParamIsPR (fun x y _ => F_ n y) H (fun a =>  a) idIsPR);
-       unfold F; intro; apply swapIsPR; auto.
-   - intros x y; reflexivity.
- Qed.
+  Remark R01 : isPR 2 F.
+  Proof.
+    assert (H: isPR 3 (fun x y _ => F_ n y)) by (apply filter010IsPR; auto).
+    apply isPR_trans with (fun x y =>  F x y).
+    apply swapIsPR; unfold F; apply ind1ParamIsPR; auto.
+    - apply idIsPR.
+    - intros x y; reflexivity.
+  Qed.
 
- Remark  R02 : isPR 1 (fun i  =>  F i (S i)).
- Proof.
-   apply compose1_2IsPR. 
+  Remark  R02 : isPR 1 (fun i  =>  F i (S i)).
+  Proof.
+    apply compose1_2IsPR. 
     - apply idIsPR.
     - apply succIsPR.
     - apply R01.
-Qed.
+  Qed.
 
- Remark R03 : isPR 1 (F_ (S n)). 
- Proof.
-   apply isPR_trans with (F_ (Succ n)).
-   -  eapply isPR_trans.
-    +  apply R02.
-    +  intro i; red; now rewrite L00.
-   -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
-      intro; reflexivity.
-Qed.
+  Remark R03 : isPR 1 (F_ (S n)). 
+  Proof.
+    apply isPR_trans with (F_ (Succ n)).
+    -  eapply isPR_trans.
+       +  apply R02.
+       +  intro i; red; now rewrite L00.
+    -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
+       intro; reflexivity.
+  Qed.
 
- End step.
+End step.
 
 
 Theorem F_n_PR (n:nat)  : isPR 1 (F_  n).

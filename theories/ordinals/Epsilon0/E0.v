@@ -731,7 +731,7 @@ Qed.
 Lemma E0_lt_ge alpha beta : alpha o< beta \/ beta o<= alpha.
 Proof.
   destruct (E0_lt_eq_lt alpha beta) as [H | [ | H]].
-  -  now left.
+  - now left.
   - subst; right. apply Le_refl.
   - right; now apply Lt_Le_incl.
 Qed.

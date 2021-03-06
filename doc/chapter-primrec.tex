@@ -763,7 +763,7 @@ Fixpoint Ack (m:nat) : nat -> nat :=
 Another way of defining this function is 
 using an inner \texttt{fix} (see for instance the discussion in \url{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq}).
 
-We preferred to use the former definition, in order to
+We prefered to use the former definition, in order to
 take advantage from generic lemmas about \texttt{iterate}.
 
 \begin{Coqsrc}
@@ -1169,6 +1169,42 @@ which contradicts \texttt{R05}.
 
 End Impossibility_Proof.
 \end{Coqsrc}
+
+
+\begin{remark}
+It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. We use an instance on \texttt{majorAnyPR} for unary functions.
+\vspace{4pt}
+\noindent
+
+\emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
+\begin{Coqsrc}
+Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
+  : exists (n:nat), forall x ,  f x  <= Ack n x.
+(* ... *)
+\end{Coqsrc}
+
+Then, we write  a short proof by contradiction.
+
+\begin{Coqsrc}
+Section dom_AckNotPR.
+
+  Variable f : nat -> nat.
+  Hypothesis Hf : dominates f (fun n => Ack n n).
+
+ Lemma dom_AckNotPR: isPR 1 f -> False.
+  Proof.
+    intros H;  destruct Hf as [N HN].
+    destruct  (majorPR1 _ H) as [M HM].
+    pose (X := Max.max N M).
+    specialize (HN X  (Max.le_max_l N M)).
+    specialize (HM X);
+      assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
+    lia.
+  Qed.
+
+End dom_AckNotPR.
+\end{Coqsrc}
+\end{remark}
 
 
 %%% ICI

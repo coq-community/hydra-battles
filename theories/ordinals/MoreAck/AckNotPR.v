@@ -294,6 +294,17 @@ Proof.
   - symmetry; apply Hx.
 Qed.
 
+Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
+  : exists (n:nat), forall x ,  f x  <= Ack n x.
+  destruct Hf as [x Hx].
+  generalize (majorAnyPR 1 x). intros.
+  destruct H as [N HN]. exists N.
+  intros x0; specialize (HN [x0]); cbn in HN.
+  replace (evalPrimRec 1 x x0) with (f x0 ) in HN.   
+  now rewrite Nat.max_0_r in HN.  
+  symmetry; apply Hx.  
+Qed.
+
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
@@ -364,7 +375,27 @@ Section Impossibility_Proof.
 
 End Impossibility_Proof.
 
-(** * Remark: for any [n], [Ack n] is primitive recursive. *)
+(** Any function which dominates (diagonalized) [Ack] fails to be PR *)
+
+Section dom_AckNotPR.
+
+  Variable f : nat -> nat.
+  Hypothesis Hf : dominates f (fun n => Ack n n).
+
+  Lemma dom_AckNotPR: isPR 1 f -> False.
+  Proof.
+    intros H;  destruct Hf as [N HN].
+    destruct  (majorPR1 _ H) as [M HM].
+    specialize (HN (Max.max N M) (Max.le_max_l N M)).
+    specialize (HM (Nat.max N M)).
+    remember (Nat.max N M) as X;
+      assert (Ack M X <= Ack X X) by ( apply Ack_mono_l; subst; lia).
+    lia.
+  Qed.
+
+End dom_AckNotPR.
+ 
+  (** * Remark: for any [n], [Ack n] is primitive recursive. *)
 
 Lemma AckSn_as_iterate (n:nat) : extEqual 1 (Ack (S n))
                                           (fun k => iterate (Ack n) (S k) 1).
