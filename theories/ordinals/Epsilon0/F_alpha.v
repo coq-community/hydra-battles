@@ -584,7 +584,7 @@ Qed.
 
 (** From Ketonen and Solovay, page 284, op. cit. *)
 
-Section Proposition_page_284.
+Section Compatibility_F_dominates.
 
   Variables alpha beta : E0.
   Hypothesis H_beta_alpha : Lt beta alpha.
@@ -649,7 +649,7 @@ Section Proposition_page_284.
 
   (* end hide *)
   
-  Lemma Propp284_0 : forall n, Canon_plus (S n) alpha beta ->
+  Lemma F_mono_l_0 : forall n, Canon_plus (S n) alpha beta ->
                                forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
     assert (Le (Succ beta) alpha) by (now apply Lt_succ_le).
@@ -664,14 +664,14 @@ Section Proposition_page_284.
 
   
   
-  Lemma Propp284: dominates (F_ alpha) (F_ beta).
+  Lemma F_mono_l: dominates (F_ alpha) (F_ beta).
   Proof.
     destruct (Lemma2_6_1_E0  H_beta_alpha) as [i Hi].
-    exists (S (S i)); intros p Hp; apply Propp284_0 with i;  auto.
+    exists (S (S i)); intros p Hp; apply F_mono_l_0 with i;  auto.
   Qed.
 
   
-End Proposition_page_284.
+End Compatibility_F_dominates.
 
 
 

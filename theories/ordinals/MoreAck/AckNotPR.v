@@ -386,10 +386,10 @@ Section dom_AckNotPR.
   Proof.
     intros H;  destruct Hf as [N HN].
     destruct  (majorPR1 _ H) as [M HM].
-    specialize (HN (Max.max N M) (Max.le_max_l N M)).
-    specialize (HM (Nat.max N M)).
-    remember (Nat.max N M) as X;
-      assert (Ack M X <= Ack X X) by ( apply Ack_mono_l; subst; lia).
+    pose (X := Max.max N M).
+    specialize (HN X  (Max.le_max_l N M)).
+    specialize (HM X);
+      assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
     lia.
   Qed.
 

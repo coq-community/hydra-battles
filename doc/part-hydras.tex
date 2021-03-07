@@ -7734,14 +7734,15 @@ Theorem F_alpha_beta alpha :
                                         F_ beta n <= F_ alpha n.
 \end{Coqsrc}
 
-As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}.
+As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}, which states that the function \texttt{F\_} is ``monotonous'' w.r.t. its first argument and ``domination''.
+
 
 \begin{quote}
   If $\beta<\alpha$, $F_\alpha$ dominates $F_\beta$.
 \end{quote}
 
 \begin{Coqsrc}
-Lemma Propp284 : forall alpha beta : E0, 
+Lemma F_mono_l: forall alpha beta : E0, 
    beta o< alpha -> dominates (F_ alpha) (F_ beta).
 \end{Coqsrc}
 

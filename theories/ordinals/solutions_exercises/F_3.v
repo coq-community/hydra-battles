@@ -209,7 +209,7 @@ Section S1.
         repeat rewrite (F_lim_eqn lambda); auto.
         transitivity (exp2 (F_ (Canon.Canon lambda (S n))  n)).
         -  apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
-           apply Propp284_0 with 0.
+           apply F_mono_l_0 with 0.
            + apply Paths.Canon_mono1; auto.
            + apply Paths.Cor12_E0 with (i := 0); auto. 
              * apply   Paths.Canon_mono1; auto.
