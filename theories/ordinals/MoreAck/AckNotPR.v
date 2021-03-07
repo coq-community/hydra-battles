@@ -294,6 +294,18 @@ Proof.
   - symmetry; apply Hx.
 Qed.
 
+Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
+    exists (n:nat),
+    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
+Proof.
+   destruct (majorPR2 _ Hf) as [m Hm].
+   exists (S (max 2 m)); intros x y; destruct x, y; try lia.
+     intros _ _;  apply Lt.le_lt_trans with (Ack m (S (Nat.max x y))).
+   - rewrite succ_max_distr; auto.
+   - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
+ Qed.
+
+
 Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
   : exists (n:nat), forall x ,  f x  <= Ack n x.
   destruct Hf as [x Hx].
@@ -309,68 +321,14 @@ Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  Fact Ack_majorized : majorized (Ack: naryFunc 2)  Ack.
-  Proof. 
-    generalize  (majorPR2 Ack HAck).   intros [q Hq]. red.
-    exists q; intro v; rewrite (decomp2  v), max_v_2. 
-    apply Hq.
-  Qed.
-
-  Section Contrad.
-    Variable n: nat.
-    Hypothesis  Hn: forall x y,  Ack x y <= Ack n (max x  y).
-
-    Remark R01 : n <> 0.
-    Proof.
-      intro H;  subst; specialize (Hn 2 1); compute in Hn; lia.
-    Qed.
-
-
-    Remark R02: n <> 1.
-    Proof. 
-      intro H; subst; specialize (Hn 2 2);  compute in Hn;  lia.
-    Qed.
-
-    Remark R03 : max n 2 = n.
-    Proof.
-      generalize R01, R02; lia.
-    Qed.
-
-    Remark R04 : Ack n (2 * n + 3) = Ack n (Ack 2 n).
-    Proof.
-      now rewrite Ack_2_n.
-    Qed.
-    
-    Remark R05 : Ack n (2 * n + 3) <= Ack (n + 2) n.
-    Proof.
-      rewrite R04; replace (n+2) with  (2 + max n 2).
-       - apply Ack_Ack_le.
-       - rewrite R03; lia. 
-    Qed.  
-    
-    Remark R06 : Ack (n + 2) n <= Ack n (n + 2).
-    Proof.
-      specialize (Hn (n+2) n);
-        replace (max (n + 2) n) with (n + 2) in Hn by lia;  auto.
-    Qed.
-  
-    Remark R07 :  Ack n (n + 2) < Ack n (2 * n + 3).
-    Proof.
-      destruct (Ack_properties n) as [H _]; apply H; lia.
-    Qed.
-
-    Lemma contrad : False.
-    Proof.
-      generalize R04, R05, R06,  R07; intros; lia.
-    Qed.
-
-  End Contrad.
 
   Lemma Ack_not_PR : False.
   Proof.
-    destruct Ack_majorized as [n Hn].
-    apply (contrad n); intros x y; specialize (Hn (x::y::nil)).
-    cbn in Hn;  now   rewrite max_0_r in Hn.
+    destruct (majorPR2_strict Ack HAck) as [m Hm];
+    pose (X := max 2 m); specialize (Hm X X).
+    rewrite max_idempotent in Hm;
+      assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
+    lia.
   Qed.
 
 End Impossibility_Proof.

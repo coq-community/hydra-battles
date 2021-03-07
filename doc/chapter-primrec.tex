@@ -1106,6 +1106,29 @@ Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
 \end{Coqsrc}
 
+Since The Ackermann function is strictly monotonous in its first argument\footnote{almost always\dots}, we may replace the large inequality with a strict one.
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}.}
+
+\begin{Coqsrc}
+Lemma Ack_strict_mono_l : forall n m p, n < m ->
+                                        Ack n (S p) < Ack m (S p).
+\end{Coqsrc}
+
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.MoreAck.AcknotPR.html}{MoreAck.AckNotPR}.}
+
+\begin{Coqsrc}
+Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
+    exists (n:nat),
+    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
+\end{Coqsrc}
+
+
+
 Please note that, if the Ackermann function were primitive recursive, then there would exist some natural number $n$, such that, for all $x$ and $y$, the inequality 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
@@ -1114,58 +1137,15 @@ Thus, our impossibility proof is just a sequence of easy small steps.
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
-
-  Fact Ack_majorized : majorized (Ack: naryFunc 2)  Ack.
- \end{Coqsrc}
   
- In order to share the variable \texttt{n}, let us open a section.
-
-\begin{Coqsrc}
-  Section Contrad.
-    Variable n: nat.
-    Hypothesis  Hn: forall x y,  Ack x y <= Ack n (max x  y).
-\end{Coqsrc}
-
-First, we get rid of the cases $n=0$ and $n=1$, thus we can rewrite
-(\texttt{max 2 n}) into \texttt{n}.
-
-  \begin{Coqsrc}
-    Remark R01: n <> 0.
-  
-    Remark R02: n <> 1.
-   
-    Remark R03: max 2 n = n.
-\end{Coqsrc}
-
-Please keep in mind that \texttt{(2 * n + 3)} can be safely replaced with 
-\texttt{(Ack 2 n)}.
-
-\begin{Coqsrc}
-    Remark R04: Ack n (2 * n + 3) = Ack n (Ack 2 n).
-       
-    Remark R05: Ack n (2 * n + 3) <= Ack (n + 2) n.
-\end{Coqsrc}
-
- By hypothesis \texttt{Hn}, the following inequality holds.
-
- \begin{Coqsrc}
-    Remark R06: Ack (n + 2) n <= Ack n (n + 2).
- \end{Coqsrc}
-
-By monotony of the Ackerman function, we get:
-
-\begin{Coqsrc}
-    Remark R07: Ack n (n + 2) < Ack n (2 * n + 3).
-\end{Coqsrc}
-     
-which contradicts \texttt{R05}.
-
-\begin{Coqsrc}
-    Lemma contrad : False.
-   
-  End Contrad.
-
   Lemma Ack_not_PR : False.
+  Proof.
+    destruct (majorPR2_strict Ack HAck) as [m Hm];
+    pose (X := max 2 m); specialize (Hm X X).
+    rewrite max_idempotent in Hm; 
+    assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
+    lia.
+  Qed.
 
 End Impossibility_Proof.
 \end{Coqsrc}
