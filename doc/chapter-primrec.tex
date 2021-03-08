@@ -825,6 +825,7 @@ Lemma Ack_Ack_le : forall k m n,
 Please note also that for any given $n$, the unary function
 (\texttt{Ack\,$n$}) is primitive recursive.
 
+\noindent
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
 \begin{Coqsrc}
 Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
@@ -954,7 +955,6 @@ Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
 
 Indeed, (\texttt{evalList $m$ $v$ $f$}) is the application to the vector $v$ of
 an uncurried version of $f$.
-
 In Library\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}, we introduce a lighter notation.
 
 \index{coq}{Dependently typed functions}
@@ -1106,11 +1106,7 @@ Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
 \end{Coqsrc}
 
-Since The Ackermann function is strictly monotonous in its first argument\footnote{almost always\dots}, we may replace the large inequality with a strict one.
-
-\vspace{4pt}
-\noindent
-\emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}.}
+We prove also a strict version of this lemma, thanks to the following property (proved in Library\href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}~).
 
 \begin{Coqsrc}
 Lemma Ack_strict_mono_l : forall n m p, n < m ->
@@ -1129,7 +1125,7 @@ Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
 
 
 
-Please note that, if the Ackermann function were primitive recursive, then there would exist some natural number $n$, such that, for all $x$ and $y$, the inequality 
+If the Ackermann function were primitive recursive, then there would exist some natural number $n$, such that, for all $x$ and $y$, the inequality 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
