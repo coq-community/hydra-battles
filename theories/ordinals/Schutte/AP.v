@@ -425,7 +425,7 @@ Qed.
 
 Lemma phi0_zero : phi0 zero =  1.
 Proof.
-  generalize (order_function_least_least  phi0_ordering),least_AP;
+  generalize (ordering_function_least_least  phi0_ordering),least_AP;
     intros H H0;  rewrite (least_member_unicity AX1  H H0);eauto.
 Qed.
 
