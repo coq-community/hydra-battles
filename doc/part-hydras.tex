@@ -7054,17 +7054,20 @@ Estimation :
 \subsection{Using \texttt{Equations}}
 \label{sect:L-equations}
 
-Note that we did not define any function $L_\alpha$ \emph{for any $\alpha<\epsilon_0$} yet. We have got no more than a collection of proved realizations of $\texttt{L\_spec}\;\alpha$ for several values of $\alpha$.
+Note that we did not define any function $L_\alpha$ \emph{for any $\alpha<\epsilon_0$} yet. We have got no more than a collection of proved realizations of $\texttt{L\_spec}\;\alpha$ for a few values of $\alpha$.
 
 \index{coq}{Plug-ins!Equations}
 
 Using the \texttt{coq-equations} plug-in by 
 M. Sozeau~\cite{sozeau:hal-01671777}, we will now define a function \texttt{L\_} which maps any ordinal  $\alpha<\epsilon_0$ to a proven realization of 
 $\texttt{L\_spec}\;\alpha$.   
-\subsection{Definition}
+To this end, we represent ordinals as inhabitants of the type 
+\texttt{E0} of well-formed ordinal terms (see Sect~\vref{sect:E0-def}). So, we define a total function \texttt{L\_} of type
+\texttt{E0 -> nat -> nat}, by transfinite recursion, considering the usual three cases : $\alpha=0$, $\alpha$ is a successor, $\alpha$ is a limit ordinal.
+ 
 
-In order to get a total function, we use our type \texttt{E0} of well-formed ordinal terms,(see Sect~\vref{sect:E0-def}).  Our definition is structured along a well-founded recursion and
-a case-study (zero, limit and successor ordinals). 
+\subsubsection{Definition}
+
 
 
 \vspace{4pt}
@@ -7187,7 +7190,7 @@ Prove a few  exact formulas and minoration lemmas.
 \section{The Wainer-Hardy Hierarchy (Functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
 
 \label{sect:hardy}
-In order to give an idea of the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
+In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
 \index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
@@ -7486,7 +7489,7 @@ Note that this short formula contains two occurences of the functional \texttt{i
 and the inner one  first-order (on type \texttt{nat}). 
 
 
-\subsection{Abstract Properties of H-functions}
+\subsection{Abstract Properties of Hardy functions}
 ~\label{sect:H-alpha-prop} 
 
 Since pure computation seems to be useless for dealing with expressions of the form $H_\alpha(k)$, even for small values of $\alpha$ and $k$, we need to prove theorems for comparing $H_\alpha(k)$ and $H_\beta(l)$, in terms of comparison
@@ -7537,7 +7540,7 @@ Definition dominates_strong g f  := {i : nat | dominates_from i g f}.
 
 Definition dominates g f := exists i : nat, dominates_from i g f .
 
-Definition fun_le f g  := forall n:nat,  f n <=  g n.
+Definition fun_le f g  := forall n:nat,  f n <= g n.
 
 Infix ">>" := dominates (at level 60).
 
@@ -7805,6 +7808,7 @@ Prove or disprove this statement.
 
 Prove that for any $n\geq 2$, $\textrm{Ack}\,\,n\,n\leq  F_\omega(n)$, where \textrm{Ack} is the Ackermann function. Next, prove that $F_\alpha$ is not primitive recursive, for any $\alpha\geq\omega$  (please see Sect.~\vref{sect:ack-not-PR}).
 On the other hand, please show that for any natural number $n$, the function $F_n$ is primitive recursive.
+Thus $F\_alpha$ is primitive recursive if and only if $\alpha$ is finite.
 
 \emph{You may start this exercise with the file
 \url{../exercises/ordinals/F_omega.v}. Properties of the Ackermann function are studied in 
@@ -8412,7 +8416,7 @@ Axiom epsilon_statement:
 Hilbert's $\epsilon$ \emph{operator} is derived from this  axiom.
 
 \begin{Coqsrc}
-  Definition epsilon (A : Type) (i:inhabited A) (P : A->Prop) : A
+Definition epsilon (A : Type) (i:inhabited A) (P : A->Prop) : A
   := proj1_sig (epsilon_statement P i).
 
 Lemma constructive_indefinite_description :
@@ -8569,8 +8573,8 @@ Proof.
 \begin{Coqanswer}
 2 subgoals (ID 413)
   
-  ============================
-  exists ! x : Ord, least_member lt (Empty_set Ord) x
+============================
+exists ! x : Ord, least_member lt (Empty_set Ord) x
 
 subgoal 2 (ID 414) is:
  forall a : Ord, unique (least_member lt (Empty_set Ord)) a -> 

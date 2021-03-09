@@ -109,7 +109,7 @@ Qed.
 Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha.
 Proof.
  pattern  (plus alpha); apply plus_elim;eauto.
- intros f H0 ; case (order_function_least_least H0).
+ intros f H0 ; case (ordering_function_least_least H0).
   intros H1 H3; case (H3 alpha);auto.
  -  red;red; auto with schutte.
  -  intro H4; case H1.

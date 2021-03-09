@@ -216,6 +216,21 @@ Proof.
   - now apply R03.
 Qed.
 
+(**  Keep in mind that [isPR] is of sort [Set], so [not] and [iff]
+     cannot be used *)
+
+Lemma F_alpha_PR_inv: forall alpha,  isPR 1 (F_ alpha) -> alpha o< omega.
+Proof.
+  intro alpha.
+  destruct (E0_lt_ge alpha omega); auto.
+  intro H0;  destruct  ( F_alpha_not_PR _ H H0).
+Qed.
 
 
-
+Lemma F_alpha_notPR_inv: forall alpha,
+    (isPR 1 (F_ alpha) -> False)  -> omega o<= alpha.
+Proof.
+  intros alpha H; destruct (E0_lt_ge alpha omega); auto.
+  destruct (lt_omega_inv  H0) as [i Hi]; subst alpha.
+  destruct H; apply F_n_PR.
+Qed.

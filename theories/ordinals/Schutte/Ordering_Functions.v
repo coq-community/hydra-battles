@@ -1158,8 +1158,10 @@ Proof with auto with schutte.
     subst A; split; [trivial | now apply Th_13_5_2].
 Qed.
 
+(** If [f] is the ordering function of [B], then [f 0] is the least element of
+   [B] *)
 
-Lemma order_function_least_least : 
+Lemma ordering_function_least_least : 
  forall B f  , ordering_function f ordinal B ->
      least_member  lt B (f zero).
 Proof with auto with schutte.
