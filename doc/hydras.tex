@@ -25,8 +25,8 @@
 \SetWatermarkText{Work in Progress}
 \SetWatermarkColor{lightorange}
 
-\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \thanks{With contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury. \emph{The formalization of primitive recursive functions was originally authored by 
-Russel O'Connor\cite{OConnor05}.}}}
+\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \thanks{With contributions by Yves Bertot, \'Evelyne Contejean,  Florian Hatat and Pascal Manoury. The formalization of primitive recursive functions was originally authored by 
+Russel O'Connor\cite{OConnor05}.}}
 \date{\today}
 \title{Hydra Battles and Cie}
 \makeindex{coq}
@@ -121,6 +121,8 @@ based on ordinal numbers, as well as a proof that this termination is not
 provable in Peano arithmetic. In the book dedicated to 
 J.P. ~Jouannaud \cite{HommageJPJ}, N.~Dershowitz and G.~Moser  give a thorough survey on this topic~\cite{Dershowitz2007}.
 
+Let us underline the analogy between hydra battles and interactive theorem proving. Hercules is the user (you!), and hydra's heads are the sub-goals: you may think that applying a tactic would solve a sub-goal, but it results often in the multiplication of such tasks.
+
 \item In the second part, we are interested in computing $x^n$ with the least number of multiplications as possible. We use the notion of \emph{addition chains}~\cite{brauer1939,DBLP:journals/ipl/BerstelB87}, to generate efficient certified exponentiation functions.
 \end{itemize}
 
@@ -133,7 +135,7 @@ This document is \emph{not} an introductory text for \coq{}, and there are many 
 
 
 
-\subsection{Trust in our Proofs}
+\subsection{Trust in our proofs}
 \label{sect:trust-in-proofs}
 
 Unlike mathematical literature, where definitions and proofs are spread over many articles and books,
@@ -142,21 +144,21 @@ parts of \coq's standard library. Thus, there is no ambiguity in our definitions
 
 
 
-\subsection{Assumed Redundancy}
+\subsection{Assumed redundancy}
 
 It may often happen that several definitions of a given concept, or several proofs of a given theorem are possible. If all the versions present some interest, we will make them available, since each one may be of some methodological 
 interest (by illustrating some tactic of proof pattern, for instance).
-We may use \coq's module system to make several proofs of a given theorem co-exist in our libraries (see also Sect~\vref{sect:alt-proofs}).
+We use \coq's module system to make several proofs of a given theorem co-exist in our libraries (see also Sect~\vref{sect:alt-proofs}).
 After some discussions of the pros and cons of each solution, we develop only one of them, leaving the others  as exercises or projects (i.e., big or difficult exercises).
 In order to discuss which assumptions are really needed for proving a theorem, we will also present 
 several aborted proofs.
-Of course, do not hesitate to contribute nice proofs or alternative definitions !
+Of course, do not hesitate to contribute nice proofs or alternative definitions!
 
 It may also happen that some proof looks to be useless, because the proven theorem is a trivial consequence of another (proven too) result.
 For instance, let us consider the three following statements:
 \begin{enumerate}
 \item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
-\item There is no measure into $[0,\omega^2)$ for proving the termination of all hydra battle (Sect~\vref{omega2-case}).
+\item There is no measure into the interval\footnote{We use the notation $[a,b)$ for denoting the set of ordinals greater or equal than $a$ and strictly less than $b$.} interval $\{x\$[0,\omega^2)$ for proving the termination of all hydra battles (Sect~\vref{omega2-case}).
 \item There is no measure into $[0,\mu)$ for proving the termination of all hydra battles, for any $\mu<\epsilon_0$ (Sect\vref{sec:free-battles-case}).
 \end{enumerate}
 
@@ -164,7 +166,7 @@ Obviously, the third theorem implies the second one, which implies the first one
 In particular, the proof of $(3)$ uses several non-trivial combinatorial properties of ordinal numbers up to $\epsilon_0$~\cite{KS81}, whilst $(1)$ and $(2)$ use simple properties of $\mathbb{N}$ and $\mathbb{N}^2$.
 
 
-\subsection{About Logic}
+\subsection{About logic}
 
 Most of the proofs we present are \emph{constructive}. Whenever possible, we provide the user with an associated function, which she or he can apply in \gallina{} or \ocaml{} in order to get a ``concrete'' feeling of the meaning of the considered theorem.
 For instance, in Chapter~\vref{chap:ketonen}, the notion of \emph{limit ordinal} is
@@ -270,7 +272,7 @@ Thus,  active links towards our \coq{} modules may be incorrect if you got this 
 
 \end{itemize}
 
-\subsection{Alternative or Bad Definitions}
+\subsection{Alternative or bad definitions}
 \label{sect:alt-proofs}
 Finally, we decided to include definitions or lemma statements, as well as tactics,  that lead to
 dead-ends or too complex developments, with the following coloring.
@@ -316,16 +318,16 @@ Qed.
 
 
 
-\section{How to Install the Libraries}
+\section{How to install the libraries}
 \label{sec:orgheadline4}
 \begin{itemize}
 \item The present distribution has been checked with version 8.13.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq}, \texttt{coq-equations}
 and \texttt{coq-mathcomp-algebra}.
 
-\item Just go into the root directory, and type "\texttt{make}" ("\texttt{make -k}"  in case of an incomplete installation).
+\item Please refer to \href{https://github.com/coq-community/hydra-battles#readme}{the README file of the project}
 \end{itemize}
 
-\section{Comments on Exercises and Projects}
+\section{Comments on exercises and projects}
 
 Although we do not plan to include complete solutions to the exercises, 
 we think it would be useful to include comments and hints, and questions/answers from the users. In constrast, ``projects'' are supposed, once completed, to be included in the repository.

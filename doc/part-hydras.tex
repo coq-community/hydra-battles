@@ -28,7 +28,7 @@ will show how \coq{} and its standard library are well fitted to help us to unde
 In~\cite{KP82}, Kirby and Paris showed  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
 Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chosed to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers upto $\epsilon_0$.
 
-\subsection*{State of the Development}
+\subsection*{State of the development}
 The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on  notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
 We added new material : axiomatic definition of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, equations, etc.
 
@@ -36,7 +36,7 @@ We are now working in order to make clumsy proofs more readable, simplify defini
 Many possible improvements are suggested as ``todo''s or ``projects'' in this text.
 
 
-\section*{Future Work (projects)}
+\section*{Future work (projects)}
 \index{hydras}{Projects}
 
 This document and the proof scripts are far from being complete.
@@ -54,7 +54,7 @@ The following extensions are planned, but help is needed:
 \item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
 \end{itemize}
 
-\subsection*{Main References}
+\subsection*{Main references}
 
 In our development, we adapt the definitions and prove many theorems which
 we found in the following articles. 
@@ -142,7 +142,7 @@ We leave it to the reader to define various parameters such as the height, the s
 
 
 
-\subsection{The Rules of the Game}
+\subsection{The rules of the game}
 
 \label{sec:orgheadline44}
 \label{sect:replication-def}
@@ -447,7 +447,7 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 % aforementionned paper shows also that there do not exist any \emph{simple} proof of this result.
 
 
-\section{Hydras and their Representation in \emph{Coq}}
+\section{Hydras and their representation in \emph{Coq}}
 \label{sec:orgheadline48}
 
 \index{hydras}{Library Hydra!Types!Hydra}
@@ -591,7 +591,7 @@ Example Hy'' :=
 
 
 
-\subsubsection{Recursive Functions on type \texttt{Hydra}}
+\subsubsection{Recursive functions on type \texttt{Hydra}}
 \label{sec:orgheadline41}
 \label{sec:hsize-def}
 
@@ -654,7 +654,7 @@ Compute height Hy.
 Define a function \texttt{max\_degree: Hydra $\arrow$ nat} which  returns the highest degree of a node in any hydra. For instance, the evaluation of the term \texttt{(max\_degree Hy)} should return $3$.
 \end{exercise}
 
-\subsection{Induction Principles for Hydras}
+\subsection{Induction principles for hydras}
 \label{sec:orgheadline42}
 
 
@@ -666,7 +666,7 @@ In this section, we show how induction principles are used to prove properties o
 
 
 
-\subsubsection{A failed Attempt}
+\subsubsection{A failed attempt}
 
 One may try to use the default tactic of proof by induction, which corresponds to an application of the automatically  generated  induction principle for  type \texttt{Hydra}:
 
@@ -729,7 +729,7 @@ Abort.
 End Bad.
 \end{Coqbad}
 
-\subsubsection{A Principle of Mutual Induction}
+\subsubsection{A Principle of mutual induction}
 In order to get an appropriate induction scheme for the types 
 \texttt{Hydra} and \texttt{Hydrae}, we can use  \coq{}'s  command \texttt{Scheme}.
 
@@ -761,7 +761,7 @@ Hydra_rect2
 
 
 
-\subsubsection{A Correct Proof}
+\subsubsection{A Correct proof}
 
 Let us now use \texttt{Hydra\_rect2} for proving that the height of any hydra is strictly less than its size.
 Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt{Hydra\_rect2}'s statement. 
@@ -848,7 +848,7 @@ is  (\texttt{h\_forall $P$}).  Design a tactic for induction on hydras that free
  
 
 
-\section{Relational Description of Hydra Battles}
+\section{Relational description of hydra battles}
 
 
 In this section, we represent the rules of hydra battles as a binary relation associated with
@@ -874,7 +874,7 @@ The mutually exclusive cases we consider are the following:
 
 
 
-\subsection{Chopping off a Head at Distance 1 from the Foot (Relation  R1)}
+\subsection{Chopping off a head at distance 1 from the foot (relation  R1)}
 
 If Hercules chops off a head near the floor, there is no replication at all. We use an auxiliary 
 predicate \texttt{S0}, associated with the removing of one head from a sequence of hydras.
@@ -910,7 +910,7 @@ Qed.
 \end{Coqsrc}
 
 
-\subsection{Chopping off a Head at Distance \texorpdfstring{$\geq 2$}{>= 2} from the Foot (relation R2) }
+\subsection{Chopping off a head at distance \texorpdfstring{$\geq 2$}{>= 2} from the foot (relation R2) }
 
 
 Let us now consider beheadings  where the chopped-off head is at distance greater than or equal to $2$ from the foot. All the following relations are parameterized by the replication factor  $n$.
@@ -975,7 +975,7 @@ The reader is encouraged to look at all the successive subgoals of this example.
 \emph{Please consider also exercise~\vref{exo:interactive-battle}.}
 
 
-\subsection{Relation Associated with a Round}
+\subsection{Binary relation associated with a round}
 
 We combine the two cases above into a single relation.
 First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is the expected number of  replications (irrelevant in the case of an \texttt{R1}-transformation).
@@ -1005,7 +1005,7 @@ Give a direct translation of Kirby and Paris's description of hydra battles (quo
 \end{project}
 
 
-\subsection{Rounds and Battles}
+\subsection{Rounds and battles}
 
 
 Using library \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Relation_Operators.html}{Relations.Relation\_Operators}, we define \texttt{round\_plus},  the transitive closure of \texttt{round}, and \texttt{round\_star},  the reflexive and transitive closure of \texttt{round}.
@@ -1103,7 +1103,7 @@ goal \Verb@{h':Hydra | h -*-> h'}@ generates the subgoal \Verb|h -*-> ?h'|.
 
 
 
-\subsection{Classes of Battles}
+\subsection{Classes of battles}
 \label{sect:battle-classes}
 
 In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transformation associated with the $i$-th round may depend on $i$. For instance, in these articles, the replication factor at the $i$-th round is equal to $i$. In other examples, one can allow the hydra to apply any replication factor at any time. In order to be the most general as possible, we define the type of predicates which relate the state of the hydra before and after the $i$-th round of a battle.
@@ -1145,7 +1145,7 @@ Defined.
 \end{Coqsrc}
 
 
-\subsection{Big Steps}
+\subsection{Big steps}
 
 Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
 
@@ -1189,7 +1189,7 @@ Lemma battle_trans {b:Battle} :
 
 
 
-\section{A Long Battle}
+\section{A Long battle}
 \label{sect:big-battle}
 
 
@@ -1241,7 +1241,7 @@ Thus, we can consider this development as a collaboration of proof with computat
 In the following lines, we show how we found experimentally the value of the number $N$.
 The complete proof is in file \url{../theories/html/hydras.Hydra.BigBattle.html}. 
 
-\subsection{The Beginning of Hostilities}
+\subsection{The beginning of hostilities}
 During the two first rounds, our hydra loses its two rightmost heads.  Figure~\vref{fig:hinit-plus2} shows the state of the hydra   just before the third round.
 
 
@@ -1272,7 +1272,7 @@ Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).
 \end{Coqsrc}
 
 
-\subsection{Looking for Regularities}
+\subsection{Looking for regularities}
 
 
 A first study with pencil and paper suggested us that, after three rounds, the hydra always looks like in figure~\vref{fig:hinit-plusn} (with a variable number of 
@@ -1681,7 +1681,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\subsection{Giant Steps}
+\subsection{Giant steps}
 
 We are now able to make bigger steps in the simulation of the battle.
 First, we iterate the lemma \texttt{reachable\_S}.
@@ -1818,7 +1818,7 @@ Qed.
 
 
 
-\subsection{A Minoration Lemma}
+\subsection{A minoration lemma}
 
 Now, we would like to get an intuition of  how big the number $N$ is.
 For that purpose, we use a minoration of the function \texttt{doubleS} by the
@@ -1846,7 +1846,7 @@ Lemma minoration : exp2 (exp2 95 * 95) <= N.
 The number $N$ is greater than or  equal to $2^{2^{95}\times 95}.$ If we wrote $N$ in base $10$, $N$ would require at least $10^{30}$ digits!
 
 
-\section{Generic Properties}
+\section{Generic properties}
 
 
 The example we just studied shows that the termination of any battle may take a very long time. If we want to study hydra battles in general, we have to consider 
@@ -1930,7 +1930,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 
 
 
-\subsection{A  Small Proof of Impossibility}
+\subsection{A  small proof of impossibility}
 \index{coq}{Proofs of impossibility}
 
 \label{omega-case}
@@ -2145,9 +2145,9 @@ a successor ordinal, or a \textcolor{red}{limit ordinal}.
 
 
 
-\section{The Mathematical Point of View}
+\section{The mathematical point of view}
 
-\subsection{Well-ordered Sets}
+\subsection{Well-ordered sets}
 Let us start with some definitions.
 A  \emph{well-ordered set} is a set provided with a binary relation $<$ which has the following properties.
 \begin{description}
@@ -2168,7 +2168,7 @@ with respect to the order below:
 (0,k) < (1,l) & \;\textit{\textbf{for\,any}}\;k \;\textit{\textbf{and}} \; l
 \end{align*}
 
-\subsection{Ordinal Numbers}
+\subsection{Ordinal numbers}
 
 \index{maths}{Ordinal numbers}
 
@@ -2190,7 +2190,7 @@ We cannot cite all the litterature published on ordinals since Cantor's book
 leave it to the reader to explore the bibliography. 
 
 
-\section{Ordinal Numbers in Coq}
+\section{Ordinal numbers in Coq}
 
 Two kinds of representation of ordinals are defined in our development.
 
@@ -2201,7 +2201,7 @@ correctness of a given ordinal notation with respect to Schütte's model obvious
 Please execute the \texttt{Print Assumptions} command in case of doubt.
 \end{itemize}
 
-% \section{Countable Ordinals}
+% \section{Countable ordinals}
 
 % Chapter~\ref{chap:schutte} of this document presents an adaptation to \coq{} of an axiomatization in classical logic of the set of countable ordinals by K. Schütte~\cite{schutte}. 
 % That formalization is quite complex, technical and unshamedly non-constructive,  so we put its description  in the last chapter of this document. 
@@ -2235,7 +2235,7 @@ to Schütte's model.
 
 
 
-\subsection{A Class for Ordinal Notations}
+\subsection{A class for ordinal notations}
 
 The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}.  The correctness of this function is expressed through Stdlib's type 
 \texttt{Datatypes.CompareSpec}.
@@ -2314,7 +2314,7 @@ The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make ap
 \end{remark}
 
 
-\subsection{Ordinal Notations and Measures for Proving Termination}
+\subsection{Ordinal notations and  termination measures}
 \label{sect:measure-ON}
 
 The following lemma (together with the type class mechnism) allows us to define termination measures over any ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
@@ -2337,7 +2337,7 @@ Lemma wf_measure  {A:Type}(lt: relation A)
 A simple example of application is given in Sect.~\vref{sect:merge-example}.
 
 
-\section{Example: the Ordinal \texorpdfstring{$\omega$}{omega}}
+\section{Example: the ordinal \texorpdfstring{$\omega$}{omega}}
 
 
 
@@ -2365,7 +2365,7 @@ Compute ON_compare 6 9.
      : comparison
 \end{Coqanswer}
 
-\section{Sum of  two Ordinal Notations}
+\section{Sum of  two ordinal notations}
 
 Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective types \texttt{A} and \texttt{B}.
 
@@ -2452,7 +2452,7 @@ Qed.
 
 
 
-\subsection{The Ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
+\subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
 
 The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
 of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
@@ -2567,7 +2567,7 @@ Lemma lt_omega alpha :
 
 
 
-\section{Limits and Successors}
+\section{Limits and successors}
 
 Let us look again at our implementation of $\omega+\omega$. We can classify its elements into three categories:
 
@@ -2630,7 +2630,7 @@ $\gamma\leq\alpha$.
 
 
 
-\subsection{Limits and Successors in \texorpdfstring{$\omega+\omega$}{omega+omega}}
+\subsection{Limits and successors in \texorpdfstring{$\omega+\omega$}{omega+omega}}
 
 Using the definitions above, we can prove the following lemma:
 
@@ -2691,7 +2691,7 @@ Finally, the nature of any ordinal is decidable(inside this notation system) :
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
 \end{Coqsrc}
 
-\section{Product of Ordinal Notations}
+\section{Product of ordinal notations}
 
 Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective  ordered types \texttt{A} and \texttt{B}. The product of \texttt{NA} and \texttt{NB} is considered as the concatenation of $B$ copies of $A$, ordered by the lexicographic order on $B\times A$.
 
@@ -2732,7 +2732,7 @@ Global Instance ON_mult : ON lt compare.
 End Defs.
 \end{Coqsrc}
 
-\section{The Ordinal \texorpdfstring{$\omega^2$}{omega2}}
+\section{The ordinal \texorpdfstring{$\omega^2$}{omega2}}
 
 The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is an instance of the multiplication presented in the last section.
 
@@ -2866,7 +2866,7 @@ Lemma unique_decomposition alpha :
     exists! i j: nat,  alpha = omega * i + j.
 \end{Coqsrc}
 
-\subsection{A Proof of Termination using \texorpdfstring{$\omega^2$}{omega^2}} 
+\subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.
 
 Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists (example contributed by Pascal Manoury).
@@ -2909,7 +2909,7 @@ Qed.
 \end{Coqsrc}
  
 
-\subsection{Yet Another  Proof of Impossibility}
+\subsection{Yet another  proof of impossibility}
 \label{omega2-case}
 
 In Sect.~\vref{omega-case}, we proved that there exists no variant from \texttt{Hydra} to \texttt{(nat,$<$)}
@@ -3025,7 +3025,7 @@ Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iot
 
 Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h o<= m small\_h o< m big\_h}, which is impossible.
 
-\subsubsection{Proof of the Inequality \texttt{m small\_h o< m big\_h}}
+\subsubsection{Proof of the inequality \texttt{m small\_h o< m big\_h}}
 
 In order to prove the inequality  \texttt{m\_lt: m small\_h o< m big\_h}, it suffices to
 build a battle transforming \texttt{big\_h} into \texttt{small\_h}.
@@ -3045,7 +3045,7 @@ Since $m$ is a variant, we infer the following inequality:
 \end{Coqsrc}
 
 
-\subsubsection{Proof of the Inequality \texttt{m big\_h o<= m small\_h} }
+\subsubsection{Proof of the inequality \texttt{m big\_h o<= m small\_h} }
 
 
 The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider any ordinal $\alpha=(i,j)$, where $i>0$, there exists an infinite number of
@@ -3137,7 +3137,7 @@ hence $m(\iota(p))> m(\iota(i,j)) \geq (i,j)$, thus $m(\iota(p))\geq (i,j+1)=p$
 Qed.
 \end{Coqsrc}
 
-\subsubsection{End of the Proof}
+\subsubsection{End of the proof}
 From \texttt{m\_ge}, we get \texttt{m big\_h o<= m small\_h = m (iota (m big\_h)) }. 
 Since $<$ is a strict order (irreflexive  and transitive), this inequality is incompatible with the strict inequality  \texttt{m small\_h o< m big\_h} (lemma \texttt{m\_lt}).
 
@@ -3191,7 +3191,7 @@ complex technical details.
 % \end{exercise}
 
 
-\section{A Notation for Finite Ordinals}
+\section{A notation for finite ordinals}
 
 
 Let $n$ be some natural number. The segment associated with $n$ is the interval 
@@ -3408,7 +3408,7 @@ Finite ordinals are also formalized in MathComp~\cite{SSR}.  See also Adam Chlip
 
 %%%
 
-\section{Comparing two Ordinal Notations}
+\section{Comparing two ordinal notations}
 
 It is sometimes useful to compare two ordinal notations with respect to expressive power
 (the segment of ordinals  they represent). 
@@ -3528,9 +3528,9 @@ a variant on $O_B$.
 
 
 
-\section{Comparing an Ordinal Notation with Schütte's Model}
+\section{Comparing an ordinal notation with Schütte's model}
 
-Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctenss of the considered  ordinal  notation.
+Finally, it may be interesting to compare an ordinal notation with the more theoretical model from Schütte (well, at least with our formalization of that model). This would be a relative proof of correctness of the considered  ordinal  notation.
 
 The following class specifies that a notation \texttt{OA} describes a segment $[0,\alpha)$,
 where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
@@ -3576,7 +3576,7 @@ Instance Epsilon0_correct :
 
 
 
-\section{Isomorphism of Ordinal Notations}
+\section{Isomorphism of ordinal notations}
 
 
 In some cases we want to show that two notation systems describe the same segment (for instance $[0,3+\omega)$ and $[0,\omega)$\;). For this purpose, one may prove that the two notation systems are order-isomorphic.
@@ -3667,7 +3667,7 @@ Reconsider the  class \texttt{ON}, with an equivalence instead of Leibniz equali
 
 %%%% ICI ICI
 
-\section{Other Ordinal Notations}
+\section{Other ordinal notations}
 
 \index{hydras}{Projects}
 
@@ -3731,10 +3731,10 @@ First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of t
 
 
 
-\section{The Ordinal \texorpdfstring{\(\epsilon_0\)}{epsilon0}}
+\section{The ordinal \texorpdfstring{\(\epsilon_0\)}{epsilon0}}
 \label{sec:epsilon0-intro}
 
-\subsection{Cantor Normal Form}
+\subsection{Cantor normal form}
 \index{maths}{Cantor normal form}
 
 The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
@@ -3781,7 +3781,7 @@ Unless explicitly mentionned, the term ``ordinal" will be used instead of
 
 
 
-\subsection{A Data Type for  Ordinals in Cantor Normal Form}
+\subsection{A data type for  ordinals in Cantor normal form}
 \label{sec:orgheadline72}
 \label{sec:T1-inductive-def}
 
@@ -3878,7 +3878,7 @@ definition. But this replacement would take a lot of time \dots{}
 
 Some abbreviations may help to write more concisely complex ordinal terms.
 
-\subsubsection{Finite Ordinals}
+\subsubsection{Finite ordinals}
 \label{sec:orgheadline67}
 
 For representing finite ordinals, \emph{i.e.} natural numbers, we first introduce a notation for terms of the form $n+1$, then define a coercion from type \texttt{nat} into \texttt{T1}.
@@ -3912,7 +3912,7 @@ Example ten : T1 := 10.
 % \end{remark}
 
 
-\subsubsection{The Ordinal \(\omega\)}
+\subsubsection{The ordinal \(\omega\)}
 \label{sec:orgheadline68}
 
   Since \(\omega\)'s Cantor normal form is
@@ -3926,7 +3926,7 @@ Notation omega := (ocons (ocons zero 0 zero) 0 zero): t1_scope.
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
 
 
-\subsubsection{The Ordinal \(\omega^\alpha\), a.k.a. \(\phi_0(\alpha)\)}
+\subsubsection{The ordinal \(\omega^\alpha\), a.k.a. \(\phi_0(\alpha)\)}
 \label{sect:notation-phi0}
 We provide also a notation for ordinals of the form $\omega^\alpha$.
 
@@ -3948,7 +3948,7 @@ $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emp
 
 
   
-\subsubsection{The Hierarchy of \(\omega\)-towers:}
+\subsubsection{The hierarchy of \(\omega\)-towers:}
 \label{sec:orgheadline71}
 
 The ordinal $\epsilon_0$, although not represented by a finite term in Cantor normal form, is approximated by the sequence of $\omega$-towers (see also Sect~\vref{sect:epsilon0-as-limit} ).
@@ -3976,7 +3976,7 @@ For instance, Figure~\ref{fig:tower7} represents  the ordinal returned by the
 The $\omega$-tower of height 7}
 \end{figure}
 
-\subsection{Pretty Printing Ordinals in Cantor Normal Form}
+\subsection{Pretty-printing ordinals in Cantor normal form}
 \label{sect:ppT1}
 \index{hydras}{Library Epsilon0!Types!ppT1}
 
@@ -4023,7 +4023,7 @@ Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal t
 \end{project}
 
 
-\subsection{Comparison between Ordinal Terms}
+\subsection{Comparison between ordinal terms}
 \label{sec:orgheadline73}
 
 
@@ -4197,7 +4197,7 @@ Definition nf alpha: Prop := nf_b alpha.
 
 
 
-\subsection{Making Normality Implicit}
+\subsection{Making normality implicit}
   We would like to get rid of terms of type \texttt{T1} which are not in Cantor normal form.
 A simple way to do this is to consider statements of the form 
 \texttt{forall alpha: T1, nf alpha -> $P$ alpha}, where $P$ is a predicate over type \texttt{T1}, like in the following lemma \footnote{Ordinal addition is formally defined a little later (page~\ref{sect:infix-plus-T1})}.
@@ -4244,7 +4244,7 @@ Lemma LT_one : forall alpha, alpha t1< one -> alpha = zero.
 \end{Coqsrc}
 
   
-\subsubsection{A Sigma Type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsubsection{A sigma-type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 As we noticed in Sect.~\ref{sect:t1-nf}, the type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In certain contexts (for instance in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
 and \ref{sect:wainer}),  we need to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
@@ -4336,7 +4336,7 @@ Notation "'omega'"  := _Omega : E0_scope.
 
 
 
-\subsection{Syntactic Definition of Limit and Successor Ordinals}
+\subsection{Syntactic definition of limit and successor ordinals}
 
 Pattern matching and structural recursion allow us to define boolean characterizations  of successor and limit ordinals.
 
@@ -4443,7 +4443,7 @@ infinite.
  \end{exercise}
 
 
-\subsubsection{Addition and Multiplication}
+\subsubsection{Addition and multiplication}
 
 Ordinal addition and multiplication are also defined by structural recursion over the type \texttt{T1}. Please note that they use the \texttt{compare} function on some subterms of their arguments.
 
@@ -4566,11 +4566,11 @@ $i+\alpha=\alpha$.
 \url{../exercises/ordinals/ge_omega_iff.v}.}
 \end{exercise}
 
-\section{Well-foundedness and Transfinite Induction}
+\section{Well-foundedness and transfinite induction}
 
 \index{maths}{Transfinite induction}
 
-\subsection{About  Well-foundedness}
+\subsection{About  well-foundedness}
 \label{sec:orgheadline82}
    In order to use \texttt{T1} for proving termination results,
 we need to prove that  our order \texttt{<} is well-founded. Then we will get \emph{transfinite induction} for free.
@@ -4625,7 +4625,7 @@ which are not in Cantor normal form.
 
 % Thus, we have 
 
-\subsubsection{A First Attempt}
+\subsubsection{A first attempt}
 \label{sec:orgheadline77}
 \index{coq}{Well-founded induction}
 
@@ -4676,7 +4676,7 @@ for instance \(\delta\) may be of the form
 where  \(\beta' \leq  \beta\) and  \(p' < n\).
 Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless for finishing our proof.
 
-\subsubsection{Using a Stronger Inductive Predicate.}
+\subsubsection{Using a stronger inductive predicate.}
 \label{sec:orgheadline78}
   Instead of trying to prove directly that any ordinal term \(\alpha\) in normal form is accessible
 through \texttt{LT}, we propose to show first that any well formed 
@@ -4797,7 +4797,7 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on recu
  \end{remark}
 
 
-\subsection{An Ordinal Notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
 
@@ -4850,14 +4850,14 @@ A better integration of both notions should simplify the development on ordinals
 \end{project}
 
 
-\section{A Variant for Hydra Battles}
+\section{A Variant for hydra battles}
 
 In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
 In order to make such a variant easy to define (for instance by a structural recursion), we introduce a variant of addition, which, contrary to
 $+$, is commutative and strictly monotonous in both of its arguments. This last property makes it possible to prove that our function is 
 truly a variant for hydra battles (in Sect.~\vref{sect:variant-decr}).
 
-\subsection{Natural Sum (a.k.a. Hessenberg's  Sum)}
+\subsection{Natural sum (a.k.a. Hessenberg's  sum)}
 \label{sec:orgheadline87}
 \label{hydra-variant}
 
@@ -4928,7 +4928,7 @@ on recursive definitions. The function \texttt{oplus} is recursively called on a
 and \texttt{oplus\_aux} on a sub-term of its unique argument.
 Thus, \texttt{oplus}'s definition is accepted by \coq{} as a structurally recursive function.
 
-\subsubsection{Rewriting Lemmas}
+\subsubsection{Rewriting lemmas}
 \label{sec:orgheadline86}
 
 \emph{Coq}'s constraints on recursive definitions result in 
@@ -5046,7 +5046,7 @@ Qed.
 Compare \texttt{oplus}'s definition (with inner fixpoint) with other possibilities
 (\texttt{coq-equations}, \texttt{Function}, etc.).
 \end{project}
-\subsection{More Theorems on Hessenberg's Sum}
+\subsection{More theorems on Hessenberg's sum}
 
 We need to prove some properties of $\oplus$, particularly about 
 its relation with the order $<$ on \texttt{T1}.
@@ -5066,7 +5066,7 @@ Lemma oplus_bounded_phi0 alpha beta gamma :
 
 This lemma helps us 
 
-\subsubsection{Commutativity, Associativity}
+\subsubsection{Commutativity, associativity}
 
 We prove  the commutativity of $\oplus$ in two steps. 
 
@@ -5153,7 +5153,7 @@ Please try to make it simpler and more efficient!
 Thanks!
 \end{project}
 
-\subsection{A Measure for Hydra-battle Termination}
+\subsection{A termination measure for hydra battles }
 
 \label{sec:hydra-measure}
 
@@ -5352,7 +5352,7 @@ First, let us recall how canonical sequences are defined in~\cite{KS81}. For eff
 
 
 
-\subsubsection{Mathematical Definition of Canonical Sequences} 
+\subsubsection{Mathematical definition of canonical sequences} 
 
 In~\cite{KS81} the definition of $\canonseq{\alpha}{i}$ is based on the following remark:
 \begin{quote}
@@ -5382,7 +5382,7 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 \end{itemize}
 \end{mathframe}
 
-\subsubsection{Canonical Sequences in Coq}
+\subsubsection{Canonical sequences in Coq}
 \index{hydras}{Library Epsilon0!Functions!canon}
 \index{hydras}{Library Epsilon0!Functions!canonS}
 
@@ -5463,7 +5463,7 @@ This should be fixed in  a future version.
 \end{project}
 
 
-\subsection{Basic Properties of Canonical Sequences}
+\subsection{Basic properties of canonical sequences}
 
 We did not  try to prove that our definition truly implements Ketonen and Solovay's  \cite{KS81}'s canonical sequences. The most important is that we were able to prove the 
 abstract properties  of canonical sequences that are really used in our proof. The complete proofs are in the module
@@ -5482,7 +5482,7 @@ Proof.
  (* ... *)
 \end{Coqsrc}
 
-\subsubsection{Canonical Sequences and the Order $<$}
+\subsubsection{Canonical sequences and the order $<$}
 
 \index{maths}{Transfinite induction}
 
@@ -5495,7 +5495,7 @@ Lemma canonS_LT i alpha :
 \end{Coqsrc}
 
 
-\subsubsection{Limit Ordinals are truly Limits}
+\subsubsection{Limit ordinals are truly limits}
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
 is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 
@@ -5583,7 +5583,7 @@ $\omega*2 \xrightarrow[1,2,1,4]{} 0$ and
 $\omega*2 \xrightarrow[3,3,3,3,3,3,3,3]{} 0$.
 \end{remark}
 
-\subsection{Formal Definition}
+\subsection{Formal definition}
 
 \label{path-to-definition}
 
@@ -5651,7 +5651,7 @@ You should solve automatically the following goals:
 
 
 
-\subsection{Existence of a Path}
+\subsection{Existence of a path}
 
 \index{maths}{Transfinite induction}
 
@@ -5679,7 +5679,7 @@ Lemma path_to_LT beta s alpha :
   path_to beta s alpha -> nf alpha -> beta t1< alpha.
 \end{Coqsrc}
 
-\subsection{Paths and Hydra Battles}
+\subsection{Paths and hydra battles}
 \label{KS-o2h}
 
 In order to apply our knowledge about  ordinal numbers less than $\epsilon_0$ to the study of hydra battles, we define an injection
@@ -5777,7 +5777,7 @@ Lemma LT_to_battle alpha beta :
     beta t1< alpha ->  iota alpha -+-> iota beta.
 \end{Coqsrc}
 
-\section{A  Proof of Impossibility}
+\section{A  proof of impossibility}
 
 We now have  the tools for proving that  there exists no variant bounded by some $\mu<\epsilon_0$ for proving the termination   of all battles. The proof we are going to show is a proof by contradiction. It  can
  be considered as a generalization of the
@@ -5862,7 +5862,7 @@ The (big) rest of the proof is dedicated to prove formally the converse inequali
 
 
 
-\subsection{The case of Free Battles}
+\subsection{The case of free battles}
 \label{sec:free-battles-case}
 Let us now consider that $B$ is instantiated to \texttt{free} (which means that we are considering proofs of termination of \emph{all} battles). The following lemmas are proved in Module~\href{../theories/html/hydras.Hydra.Epsilon0_Needed_Free.html}{Hydra.Epsilon0\_Needed\_Free}.
 The case $B=\texttt{standard}$ is studied in section~\vref{std-case}.
@@ -5933,7 +5933,7 @@ Impossibility_free
 
 
 
-\section{The Case of Standard Battles}
+\section{The case of standard battles}
 \label{sec:standard-intro}\label{std-case}
 One may wonder if our theorem holds also in the framework of standard battles. Unfortunately, its proof relies on the lemma \texttt{LT\_to\_round\_plus} of
 Module~\href{../theories/html/hydras.Hydra.O2H.html}{Hydra.O2H}.
@@ -6005,7 +6005,7 @@ paths made of steps $(\gamma,\canonseq{\gamma}{n})$, \emph{with the same $n$ all
 
 
 
-\subsection{Paths with a Constant Index}
+\subsection{Paths with a constant index}
 
 First of all, paths with a constant index 
 enjoy nice properties. They are defined as paths where all the $i_j$ are equal to the same natural number $i$, for some $i>0$. 
@@ -6099,7 +6099,7 @@ Corollary Cor12_1 (alpha : T1) :
 \end{Coqsrc}
 
 
-\subsubsection{Sketch of Proof of \texttt{Cor12}}
+\subsubsection{Sketch of proof of \texttt{Cor12}}
 \index{maths}{Transfinite induction}
 
 We prove this lemma by transfinite induction on $\alpha$.
@@ -6190,7 +6190,7 @@ Intuitively, lemma   \texttt{L2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$,
 
 
 
-\subsection{Casting Paths with a Constant Index into a Standard Path}
+\subsection{Casting paths with a constant index into a standard path}
 
 %%% traduire la v.f.  (voir %%% A traduire %%%% )
 
@@ -6209,11 +6209,11 @@ Lemma constant_to_standard_path
 
  
 
-\subsubsection{Sketch of Proof of \texttt{constant\_to\_standard\_path}}
+\subsubsection{Sketch of proof of \texttt{constant\_to\_standard\_path}}
 
 Our proof follows the proof by Ketonen and Solovay, including its organization as a sequence of lemma.  Since it is a non-trivial proof, we will comment its main steps below.
 
-\subsubsection*{Préliminaries}
+\subsubsection*{Preliminaries}
 
 
 Please note that, given an ordinal $\alpha:\texttt{T1}$, and two natural numbers $i$ and $l$, there exists at most a standard path $\alpha \xrightarrow [i,i+l]{*} \beta$.
@@ -6446,7 +6446,7 @@ Corollary  LT_to_standard_path  (alpha beta : T1) :
 \end{Coqsrc}
 
 
-\subsection{Back to Hydras}
+\subsection{Back to hydras}
 \label{sec:standard-battles-cases}
 We are now able to complete our proof that there exists no bounded variant for proving the termination of standard hydra battles. This proof can
 be consulted in the module 
@@ -6688,7 +6688,7 @@ Example Ex1 : mlarge (omega * omega) (interval 6 510).
 \end{Coqsrc}
 
 
-\section{Length of Minimal Large Sequences}
+\section{Length of minimal large sequences}
 
 Now, consider any natural number $k>0$. We would like to compute
 a number $l$ such that the interval $[k,l]$ is $\alpha$-mlarge. So, 
@@ -6723,7 +6723,7 @@ In Sect.~\ref{sect:L-equations}, we use the \texttt{coq-equations} plug-in
 to define a function \texttt{L\_}, and prove its correctness w.r.t. its specification.
 
 
-\subsection{Formal Specification}
+\subsection{Formal specification}
 
 
 Let $0<\alpha<\epsilon_0$ be an ordinal term. We consider any  function which associates maps  any strictly positive integer $k$ to the number $l$, where 
@@ -6759,7 +6759,7 @@ Lemma L_spec_unicity alpha f g :
 \end{Coqsrc}
 
 
-\subsection{Abstract Properties}
+\subsection{Abstract properties}
 
 
 
@@ -6772,7 +6772,7 @@ Our exploration of the $L_\alpha$s  follows the usual scheme : transfinite induc
 
 \index{maths}{Transfinite induction}
 
-\subsubsection{The  Ordinal Zero}
+\subsubsection{The  ordinal zero}
 \label{sect:L-spec-zero}
 The base case is directly a consequence of the specification.
 
@@ -6780,7 +6780,7 @@ The base case is directly a consequence of the specification.
 Lemma L_zero_inv f : L_spec zero f -> forall k, f (S k) = S k.
 \end{Coqsrc}
 
-\subsubsection{Successor Ordinals}
+\subsubsection{Successor ordinals}
 \label{sect:L-spec-succ}
 Let $\beta$ be some ordinal, and assume the arithmetic function $f$ satisfies 
 the specification $(\texttt{L\_spec}\;\beta)$.  Let $k$ be any natural number.
@@ -6823,7 +6823,7 @@ End succ.
 
 \end{Coqsrc}
 
-\subsubsection{Limit Ordinals}
+\subsubsection{Limit ordinals}
 \label{sect:L-spec-lim}
 
 Let $\lambda<\epsilon_0$ be any limit ordinal. In a similar way as for successors, we decompose any path from $\lambda$  into a first step to
@@ -6844,12 +6844,12 @@ Section lim.
 End lim.
 \end{Coqsrc}
 
-\subsection{First Results}
+\subsection{First results}
 
 Applying the previous lemmas on successors and limit ordinals, 
 we obtain a few  correct implementations of \texttt{(L\_spec $\alpha$)} for small values of $\alpha$.
 
-\subsubsection{Finite Ordinals}
+\subsubsection{Finite ordinals}
 
 By iterating the functional \texttt{L\_succ}, we get a realization of
 \texttt{(L\_spec (fin $i$))} for any natural number $i$. 
@@ -6860,7 +6860,7 @@ Definition L_fin i := fun k => (i + k)%nat.
 Lemma L_fin_ok i : L_spec (fin i) (L_fin i).
 \end{Coqsrc}
 
-\subsubsection{The First Limit Ordinal  \texorpdfstring{$\omega$}{omega}}
+\subsubsection{The first limit ordinal  \texorpdfstring{$\omega$}{omega}}
 
 The lemmas \texttt{L\_fin\_ok} and \texttt{L\_lim\_ok}   allow us to get 
 by diagonalization a correct implementation for 
@@ -6960,7 +6960,7 @@ Compute L_omega_square 8.
 %%%% ICI 
 
 
-\subsubsection{Going Further}
+\subsubsection{Going further}
 Let us consider a last example, ``computing'' $L_{\omega^3}$.
 Since the canonical sequence associated with this ordinal is composed of the
 $\omega^2\times i\;(i\in\mathbb{N}_1)$, we have to study this sequence.
@@ -7167,7 +7167,7 @@ Our previous study of \texttt{L\_spec} allowed us to pave the way for the defini
 
 
 
-\subsubsection{Back to Hydra Battles}
+\subsubsection{Back to hydra battles}
 
 Theorem \texttt{battle\_length\_std } of
 Module~\href{../theories/html/hydras.Hydra.Hydra_Theorems.html\#battle_length_std}{Hydra.Hydra\_Theorems} relates the length of standard battles with the functions $L_\alpha$.
@@ -7187,7 +7187,7 @@ Instead of considering standard paths and battles, consider ``constant'' paths a
 Prove a few  exact formulas and minoration lemmas.
 \end{project}
 
-\section{The Wainer-Hardy Hierarchy (Functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
+\section{The Wainer-Hardy hierarchy (functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
 
 \label{sect:hardy}
 In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
@@ -7207,7 +7207,7 @@ $H_\alpha(k)=H_\beta(k+1)$ for any $k \in \mathbb{N}$
 $H_\alpha(k) = H_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
 \end{itemize}
 
-\subsection{Hardy Functions in \texttt{Coq}}
+\subsection{Hardy functions in \texttt{Coq}}
 
 
 We define a function \texttt{H\_} of type \texttt{E0 -> nat -> nat} by transfinite induction over the type \texttt{E0} of the well formed ordinals below $\epsilon_0$.
@@ -7247,10 +7247,10 @@ Lemma H_eq4  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
 \end{Coqsrc}
 
 
-\subsection{First  Steps of the Hardy hierarchy}
+\subsection{First  steps of the Hardy hierarchy}
 Using rewrite rules from \texttt{H\_eq1} to \texttt{H\_eq4}, we can explore the functions $H_\alpha$ for some small values of $\alpha$.
 
-\subsubsection{Finite Ordinals} 
+\subsubsection{Finite ordinals} 
 
 By induction on $i$, we prove a simple expression of \texttt{H\_ (Fin i)}, where 
 \texttt{Fin $i$}  is the $i$-th finite ordinal.
@@ -7329,7 +7329,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\subsubsection{New Limits}
+\subsubsection{New limits}
 
 Our next step would be to prove an exact formula for $H_{\omega^\omega}(k)$.
 Since the canonical sequence of $\omega^\omega$ is composed of all the
@@ -7384,7 +7384,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\subsubsection{A Numerical Example}
+\subsubsection{A numerical example}
 
 It seems hard to capture the complexity of this function by looking only at this
 ``exact'' formula. 
@@ -7489,7 +7489,7 @@ Note that this short formula contains two occurences of the functional \texttt{i
 and the inner one  first-order (on type \texttt{nat}). 
 
 
-\subsection{Abstract Properties of Hardy functions}
+\subsection{Abstract properties of Hardy functions}
 ~\label{sect:H-alpha-prop} 
 
 Since pure computation seems to be useless for dealing with expressions of the form $H_\alpha(k)$, even for small values of $\alpha$ and $k$, we need to prove theorems for comparing $H_\alpha(k)$ and $H_\beta(l)$, in terms of comparison
@@ -7589,7 +7589,7 @@ By well-founded induction on $\alpha$, we prove that our $L$ hierachy is ``almos
  Theorem H_L_ alpha: forall i:nat,  (H_ alpha i <= L_ alpha (S i))%nat.
 \end{Coqsrc}
  
-\subsubsection{Back to Hydras}
+\subsubsection{Back to hydras}
 
 The following theorem relates the length of (standard) battles with the Hardy hierarchy.
 
@@ -7605,7 +7605,7 @@ Theorem battle_length_std_Hardy (alpha : E0) :
 
 
 
-\section{The Wainer Hierarchy (Functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
+\section{The wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
 \label{sect:wainer}
 
 \index{maths}{Rapidly growing functions!Wainer Hierarchy}
@@ -8271,7 +8271,7 @@ is not constructive, and relies on several axioms.
 \item Please note that only the library \href{../theories/html/hydras.Schutte.Schutte.html}{Schutte/*.v} is ``contaminated'' by axioms, and that the rest of our libraries remain constructive.
 \end{itemize}
 
-\section{Declarations and Axioms}
+\section{Declarations and axioms}
 
 Let us declare a type 
 \texttt{Ord} for representing countable ordinals, and a binary relation
@@ -8346,13 +8346,13 @@ Axiom AX3 : forall X : Ensemble Ord,
 
 \texttt{AX2} and \texttt{AX3} could have been replaced by a single axiom (using the \texttt{iff} connector), but we decide to respect as most as possible the structure of Schütte's definitions.
 
-\section{Additional  Axioms}
+\section{Additional  axioms}
 
 The adaptation of Schütte's mathematical discourse to \coq{} led us to
 import a few axioms from the standard library. We encourage the reader to consult \coq{}'s FAQ about the safe use of axioms
  \url{https://github.com/coq/coq/wiki/The-Logic-of-Coq#axioms}.
 
-\subsubsection{Classical Logic}
+\subsubsection{Classical logic}
 
 In order to work with classical logic, we import the module
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Classical.html}{Coq.Logic.Classical}  of \coq{}'s standard library, specifially the following axiom:
@@ -8362,7 +8362,7 @@ In order to work with classical logic, we import the module
 \end{Coqsrc}
 
 
-\subsubsection{Description Operators}
+\subsubsection{Description operators}
 
 In order to respect Schütte's style, we imported also the library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Epsilon.html}{\texttt{Coq.Logic.Epsilon}}.  The rest of this section presents a few examples of
@@ -8370,7 +8370,7 @@ how Hilbert's choice operator and Church's definite description allow us
  to write understandable definitions (close to the mathematical natural language).
 
 
-\subsubsection{The Definition of zero}
+\subsubsection{The definition of zero}
 
 According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique.
 
@@ -8598,7 +8598,7 @@ the definitions of  \texttt{zero}, \texttt{succ}, \texttt{plus}, etc. in the res
 \end{itemize}
 %%%% ICI ICI 
 
-\section{The  Successor Function}
+\section{The  successor function}
 
 The definition of the function \texttt{succ:Ord -> Ord} is very concise. The successor of any ordinal $\alpha$ is the smallest ordinal strictly greater than $\alpha$.
 
@@ -8695,7 +8695,7 @@ Lemma lt_succ_lt (alpha beta : Ord) :
   is_limit beta ->  alpha < beta -> succ alpha < beta.
 \end{Coqsrc}
 
-\section{Finite Ordinals}
+\section{Finite ordinals}
 
 Using \texttt{succ}, it is now easy to define recursively all the finite ordinals.
 
@@ -8714,7 +8714,7 @@ where "'F' i" := (finite i)  : schutte_scope.
 Coercion finite : nat >-> Ord.
 \end{Coqsrc}
 
-\section{The Definition of \texttt{omega}}
+\section{The definition of \texttt{omega}}
 In order to define $\omega$, the first infinite ordinal, we use an operator which
 ``returns'' the least upper bound (if it exists) of a subset $X\subseteq \mathbb{O}$.
 For that purpose, we first use a predicate:
@@ -8780,7 +8780,7 @@ Lemma is_limit_omega : is_limit omega.
 \end{Coqsrc}
 
 
-\subsection{Ordering Functions and Ordinal Addition}
+\subsection{Ordering functions and ordinal addition}
 
 After having defined the finite ordinals and the infinite ordinal $\omega$, we  define the sum $\alpha+\beta$ of two countable ordinals.
 Schütte's definition looks like the following one:
@@ -8889,7 +8889,7 @@ ordering_function f A B -> Closed B -> continuous f A B
 \end{Coqsrc}
 
 
-\subsection{Ordinal Addition}
+\subsection{Ordinal addition}
 
 We are now ready to define and study addition on the type \texttt{Ord}.
 The following definitions and proofs can be consulted in Module
@@ -8972,7 +8972,7 @@ $1+\omega=\omega$ is just proved with \texttt{reflexivity}!
 
 
 
-\subsubsection{Multiplication by a Natural Number}
+\subsubsection{Multiplication by a natural number}
 
 The multiplication of an ordinal by a natural number is defined in terms of addition.
 This operation is useful for the study of Cantor normal forms.
@@ -8993,7 +8993,7 @@ Definition mult_fin_r alpha n :=
 Notation "alpha * n" := (mult_fin_r alpha n) : schutte_scope.
 \end{Coqsrc}
 
-\section{The Exponential of Basis \texorpdfstring{$\omega$}{omega}}
+\section{The exponential of basis \texorpdfstring{$\omega$}{omega}}
 
 In this section, we define the function which maps any $\alpha\in\mathbb{O}$ to
 the ordinal  $\omega^\alpha$, also written 
@@ -9001,7 +9001,7 @@ $\phi_0(\alpha)$.
 It is an opportunity to apply the definitions and results of the preceding section. 
 Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive principal ordinals, and $\phi_0$  is just defined as the ordering function of this set.
 
-\subsection{Additive Principal Ordinals}
+\subsection{Additive principal ordinals}
 
 \index{maths}{Ordinal numbers!Additive principal ordinals}
 \index{hydras}{Library Schutte!Predicates!AP@AP (additive principal ordinals)}
@@ -9024,7 +9024,7 @@ Definition AP : Ensemble Ord :=
   (forall beta, beta < alpha ->  beta + alpha = alpha).
 \end{Coqsrc}
 
-\subsection{The Function \texttt{phi0}}
+\subsection{The function \texttt{phi0}}
 
 Let us call  $\phi_0$ the ordering function of \texttt{AP}.
 In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\phi_0(\alpha)$. 
@@ -9036,7 +9036,7 @@ Definition phi0 := ord AP.
 Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
 \end{Coqsrc}
 
-\subsection{Omega-towers and the Ordinal \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsection{Omega-towers and the ordinal \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 
 Using $\phi_0$, we can define recursively the set of finite omega-towers.
@@ -9059,7 +9059,7 @@ Definition epsilon0 := omega_limit omega_tower.
 
 The rest of our library \texttt{AP} is devoted to the proof of properties of additive principal ordinals, hence of the ordering function  $\phi0$ and the ordinal $\epsilon_0$ (which we could not express within the type \texttt{T1}).
 
-\subsection{Properties of the Set  \texttt{AP}}
+\subsection{Properties of the set  \texttt{AP}}
 
 The set of additive principal ordinals is not empty: it contains at least the ordinals  $1$ and  $\omega$. 
 
@@ -9108,7 +9108,7 @@ Theorem AP_closed : Closed AP.
 Lemma AP_o_segment :  the_ordering_segment AP = ordinal.
 \end{Coqsrc}
 
-\subsubsection{Properties of the Function \texorpdfstring{$\phi_0$}{phi0}}
+\subsubsection{Properties of the function \texorpdfstring{$\phi_0$}{phi0}}
  
 The ordering function $\phi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte calls such a  function  \emph{normal}).
 
@@ -9181,7 +9181,7 @@ Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
 \end{Coqsrc}
 
 
-\section{Critical Ordinals}
+\section{Critical ordinals}
 
 \index{maths}{Ordinal numbers!Critical ordinals}
 \index{hydras}{Library Schutte!Predicates!Cr@Cr (critical ordinals)}
@@ -9245,7 +9245,7 @@ Lemma epsilon0_Cr1 : In (Cr 1) epsilon0.
 \end{exercise}
 
 
-\subsection{A flavor of Infinity}
+\subsection{A flavor of infinity}
 
 
 
@@ -9281,7 +9281,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\section{Cantor Normal Form}
+\section{Cantor normal form}
 
 The notion of Cantor normal form is defined for all countable ordinals.
 Nevertheless, note that, contrary to the implementation based on type \texttt{T1},
@@ -9400,7 +9400,7 @@ The sub-directory \href{../theories/html/hydras.Gamma0.html}%
 {\texttt{theories/Gamma0}} contains an (incomplete, still undocumented) implementation of the set of ordinals below $\Gamma_0$, represented in Veblen normal form. 
 \end{remark}
 
-\section{An Embedding of \texttt{T1} into \texttt{Ord}}
+\section{An embedding of \texttt{T1} into \texttt{Ord}}
 
 
 Our library 
@@ -9478,7 +9478,7 @@ and prove its consistence with multiplication in ordinal notations for
 $\epsilon_0$ and $\Gamma_0$.
 \end{project}
 
-\section{Related Work}
+\section{Related work}
 
 In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
 of ordinal numbers after Bourbaki's set theory.
@@ -9553,7 +9553,7 @@ In the present version of this development, we  only study $\Gamma_0$ as a notat
 
 
 
-\section{The Type \texttt{T2} of Ordinal Terms}
+\section{The type \texttt{T2} of ordinal terms}
 
 The notation system for ordinals less than $\gamma_0$ comes from the following theorem of~\cite{schutte}, where $\psi\,\alpha$ is the ordering function 
 of the set of maximal $\alpha$-critical ordinals.
@@ -9615,7 +9615,7 @@ Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
 Definition epsilon alpha := [one, alpha].
 \end{Coqsrc}
 
-\section{How Big is \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}?}
+\section{How big is \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}?}
 
 Let us define a strict order on type \texttt{T2}. The following definition is 
 an adaptation of Schütte's, taking into account the multiplications by a natural number (inspired by~\cite{Manolios2005}, and also present in \texttt{T1}).
@@ -9742,7 +9742,7 @@ Qed.
 Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
 \end{project}
 
-\section{Veblen Normal Forms}
+\section{Veblen normal form}
 \begin{definition}
   A term of the form $\psi(\alpha_1,\beta_1)\times n_1+ \psi(\alpha_2,\beta_2)\times n_2+\dots+\psi(\alpha_k,\beta_k)\times n_k$ is said to be in
  \emph{[Veblen] normal form} if for every $i<n$, $\psi(\alpha_i,\beta_i)<\psi(\alpha_{i+1},\beta_{i+1})$, all the $\alpha_i$ and $\beta_i$ are in normal form, and all the $n_i$ are strictly positive integers.
@@ -9789,7 +9789,7 @@ Qed.
 \end{Coqsrc}
 
 
-\subsection{Length of a Term}
+\subsection{Length of a term}
 
 The notion of \emph{term length} is introduced by Schütte as a helper for proving (at least) the \emph{trichotomy} property and transitivity of the strict order \texttt{lt} on \texttt{T2}. These properties are proved by induction on length.
 
@@ -9938,7 +9938,7 @@ Proof. now apply compare_Lt. Qed.
 \end{remark}
 
 
-\section{Main Functions on \texttt{T2}}
+\section{Main functions on \texttt{T2}}
 
 \subsection{Successor}
 The successor function is defined by structural recursion.
@@ -9979,7 +9979,7 @@ Example Ex7 : 3 + epsilon0 = epsilon0.
 Proof. trivial. Qed.
 \end{Coqsrc}
 
-\subsection{The Veblen Function \texorpdfstring{$\phi$}{\texttt{phi}}}
+\subsection{The Veblen function \texorpdfstring{$\phi$}{\texttt{phi}}}
 
 The enumeration function of critical ordinals, presented in Sect.~\vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
 
@@ -10057,7 +10057,7 @@ Proof. reflexivity. Qed.
 Please study a way to pretty print ordinal terms in Veblen normal form (see Section~\vref{sect:ppT1}).
 \end{project}
 
-\section{An Ordinal Notation for \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}}
+\section{An ordinal notation for \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}}
 
 In order to consider type \texttt{T2} as an ordinal notation, we have to build an instance of class \texttt{ON} (See Definition page~\pageref{types:ON}).
 

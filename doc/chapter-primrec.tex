@@ -195,7 +195,7 @@ For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ cor
 
 
 
-\subsection{A little bit of Semantics} 
+\subsection{A little bit of semantics} 
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
 $\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ , together with the helper function 
@@ -369,7 +369,7 @@ In the library \texttt{primRec}, all these lemmas are opaque (registered with \t
 \texttt{Defined}s.
 \end{remark}
 
-\subsubsection{Elementary Proofs of \texttt{isPR} statements}
+\subsubsection{Elementary proofs of \texttt{isPR} statements}
 
 The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of type
 \texttt{PrimRec} allows us to write trivial proofs of primitive recursivity. 
@@ -451,7 +451,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-\subsubsection{Using Function Composition}
+\subsubsection{Using function composition}
 
 Let us look at the proof that any constant $n$ of type \texttt{nat} has type (\texttt{PR 0})
 (lemma  \texttt{const1\_NIsPR} of \texttt{primRec}). We carry out a proof by induction on $n$, the base case of which is already proven.

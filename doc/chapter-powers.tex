@@ -299,7 +299,7 @@ End M2_Definitions.
 End M2.
 \end{Coqsrc}
 
-\subsection{Computing Fibonacci Numbers}
+\subsection{Computing Fibonacci numbers}
 
 The sequence of Fibonacci numbers is defined by the following equations:
 
@@ -606,7 +606,7 @@ An exponentiation  function will be considered as correct if it returns always t
 
 
 
-\section{Representing Monoids in \coq \label{monoid-class-def}}
+\section{Representing monoids in \coq \label{monoid-class-def}}
 
 In this section, we present a ``minimal'' algebraic framework in which  exponentiation can be defined and efficiently implemented.
 
@@ -682,7 +682,7 @@ In case of doubt, explicit scope delimiters should be used.
 
 
 
-\subsubsection{Multiplication on Peano Numbers}
+\subsubsection{Multiplication on Peano numbers}
 
 Multiplication  on type \texttt{nat}, called \texttt{Nat.mul} in
 Standard Library, has  type \linebreak \texttt{nat -> nat -> nat}, which is
@@ -716,7 +716,7 @@ Compute 3 * 4.
  = 12  : nat  
 \end{Coqanswer}
 
-\subsubsection{String Concatenation}
+\subsubsection{String concatenation}
 We can use the notation \texttt{"\_ * \_ "} for other types than numbers.
 In the following example,  the expression \texttt{"abc" * "def"} is interpreted
 as \linebreak \texttt{@mult\_op string  {\color{darkred}?X} "abc"  "def"}, then the type  class mechanism replaces the unknown  {\color{darkred}?X} with 
@@ -736,7 +736,7 @@ Proof. reflexivity. Qed.
 \end{Coqsrc}
 
 
-\subsubsection{Solving Ambiguities}
+\subsubsection{Solving ambiguities}
 Let $A$ be some type, and let us assume there are several instances of
 \texttt{Mult\_op $A$}. For solving ambiguity issues, one can
 add a \emph{precedence} to each instance declaration of  
@@ -746,7 +746,7 @@ For instance, in Sect.~\vref{nat-monoids}, we consider various monoids on types
 \texttt{nat} and \texttt{N}. 
 
 
-\subsection{The Monoid Type Class}
+\subsection{The Monoid type class}
 \index{coq}{Type classes}
 We are now ready to  give a definition of the \texttt{Monoid} class, using
 \texttt{*} as an infix operator in scope \coqscope{M} for the monoid  multiplication.
@@ -770,7 +770,7 @@ Class Monoid {A:Type}(op : Mult_op A)(one : A) : Prop :=
 \end{Coqsrc}
 
 
-\subsection{Building Instances of \texttt{Monoid}}
+\subsection{Building instances of \texttt{Monoid}}
 Let \texttt{$A$} be some type, \texttt{{\it op}} an instance of 
 \texttt{Mult\_op $A$} and \texttt{\it one: $A$}.
 In order to build an instance of (\texttt{Monoid $A$ {\it op} {\it one}}),
@@ -933,7 +933,7 @@ Arguments M2_Monoid {A zero one plus mult} rt.
 \end{Coqsrc}
 
 
-\subsection{Monoids and Equivalence Relations}
+\subsection{Monoids and equivalence relations}
 \index{coq}{Generalized rewriting}
 \index{coq}{Type classes!Equivalence relations}
 
@@ -1128,7 +1128,7 @@ Compute (211 * 67)%M.
 = 14137 : N   
 \end{Coqanswer}
 
-\section{Computing Powers in any EMonoid}
+\section{Computing powers in any EMonoid}
 
 The  module \href{../theories/html/hydras.additions.Pow.html}{additions.Pow} defines two functions for exponentiation on any 
 \texttt{EMonoid}  on carrier $A$.
@@ -1139,7 +1139,7 @@ the neutral element and the equivalence relation associated with \texttt{M}
 are left implicit.
 
 
-\subsection{The naive (linear) Algorithm}
+\subsection{The naive (linear) algorithm}
 The new version of the linear exponentiation function is as follows:
 
 \begin{Coqsrc}
@@ -1208,7 +1208,7 @@ Compute (22%int31 ^ 20).
      : int31
 \end{Coqanswer}
 
-\subsection{The Binary Exponentiation Algorithm}
+\subsection{The binary exponentiation algorithm}
 
 Please find below the implementation of binary exponentiation using type classes
 (to be compared with the version in~\vref{polymorhic-binary_exp}).
@@ -1256,7 +1256,7 @@ Definition N_bpow {A} `{M: @EMonoid A E_op E_one E_eq} x (n:N) :=
 Infix "^b" := N_bpow (at level 30, right associativity): M_scope.
 \end{Coqsrc}
 
-\subsection{Refinement and Correctness}
+\subsection{Refinement and correctness}
 We have got two functions for computing powers in any monoid. 
 So, it is interesting to ask oneself whether this duplication is useful, and which would be the respective role of \texttt{N\_bpow} and \texttt{power}.
 
@@ -1451,7 +1451,7 @@ Finished transaction in 0.002 secs (0.002u,0.s) (successful)
 Fibonacci will come back in Sect.~\vref{sect:fibonacci-euclidean}.
 
 
-\section{Comparing Exponentiation Algorithms with Respect to Efficiency}
+\section{Comparing exponentiation algorithms with respect to efficiency}
 
 It looks obvious that  the binary exponentiation algorithm is more efficient than the 
 naive one. Can we study \emph{within \coq{}} the respective efficiency of both functions?
@@ -1711,7 +1711,7 @@ Inductive computation {A:Type}  : Type :=
 | Return (a : A)
 | Mult (x y : A) (k : A -> computation).    
 \end{Coqsrc}
-\subsubsection{Monadic Notation}
+\subsubsection{Monadic notation}
 
 \index{additions}{Types!computation}
 
@@ -1947,7 +1947,7 @@ a (non-associative) multiplication over a type of trace, and apply the function
 
 \end{project}
 
-\subsubsection{Chain Correctness and Optimality}
+\subsubsection{Chain correctness and optimality}
 
 A chain is said to be \emph{correct} with respect to a positive
 integer \texttt{p} if its execution in any monoid computes $p$-th powers.
@@ -1977,7 +1977,7 @@ Definition optimal (p:positive) (c : chain) :=
             (chain_length c <= chain_length c')%nat.
  \end{Coqsrc}
 
-\section{Proving a Chain's Correctness}
+\section{Proving a chain's correctness}
 \label{chain-correctness-sect}
 In this section, we present various ways of proving that a given chain is 
 correct w.r.t. a given exponent. First, we just try to apply 
@@ -2089,7 +2089,7 @@ The rest of this chapter is devoted to the  presentation of more efficient
  methods for proving chain correctness.
  
 
-\subsection{Correctness Proofs by Reflection}
+\subsection{Correctness proofs by reflection}
 \label{reflection-section}
 \index{coq}{Proofs by reflection}
 Instead of letting the tactic \texttt{rewrite} look for contexts in which
@@ -2628,7 +2628,7 @@ closed term, using \texttt{parametric\_tac} is so efficient than we prefer to
  avoid
 a shameful introduction of an axiom in our development.
 
-\section{Certified Chain Generators}
+\section{Certified chain generators}
 \label{chain-generation}
 
 In this section, we are interested in the \emph{correct by construction} paradigm.
@@ -2864,7 +2864,7 @@ with any correct chain for $n$, returns a correct chain for $3n$.
 All the \coq{} material described in this section is available on 
  Module~\href{../theories/html/hydras.additions.Euclidean_Chains.html}{additions/Euclidean\_Chains.v}
 
-\subsection{Chains and Continuations : f-chains}
+\subsection{Chains and continuations : f-chains}
 
 
 Please consider the following small example:
