@@ -96,6 +96,7 @@ Defined.
   
 End Alt2.
 
+  
 From Equations Require Import Equations. 
 
 Instance Lex_nat_wf : WellFounded lex_nat.
@@ -103,22 +104,22 @@ Instance Lex_nat_wf : WellFounded lex_nat.
 Defined.
 
 
+
 Module Alt3.
 
-
-  Equations (noind) Ack (p : nat * nat) : nat by wf p lex_nat :=
-    Ack (0, n) := S n ;
-    Ack (S m, 0) := Ack (m, 1);
-    Ack (S m, S n) := Ack (m, Ack (S m, n)).
-
-About Ack_graph_rect.
+  Equations ack (p : nat * nat) : nat by wf p lex_nat :=
+    ack (0, n) := S n ;
+    ack (S m, 0) := ack (m, 1);
+    ack (S m, S n) := ack (m, ack (S m, n)).
 
 End Alt3.
+
+
 
 (** ** Exercise 
 
    Prove that the four definitions of the Ackermann function 
-   [Ack] , [Alt.Ack], [Alt2.Ack],  and [Alt3.Ack] are extensionnally equal 
+   [Ack] , [Alt.Ack], [Alt2.Ack],  and [Alt3.ack] are extensionnally equal 
  *)
 
 
