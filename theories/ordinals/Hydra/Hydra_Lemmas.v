@@ -218,7 +218,7 @@ Qed.
 
 
 Lemma standard_incl_free : forall i h h',
-     battle_r standard   i h  h'-> battle_r  free  i h h' .
+     battle_rel standard   i h  h'-> battle_rel  free  i h h' .
 Proof.
   -   intros; red.  red in H. now  exists i.
 Qed.                          

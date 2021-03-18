@@ -1,19 +1,21 @@
 From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
+Require Import Coq.Program.Wf.
+Require Import Coq.Arith.Arith.
+
 
 
 (** About the famous Ackermann function *)
-
 
 (** Definition *)
 
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
   | 0 => S
-  |   S n => fun k =>  iterate (Ack n) (S k) 1
+  | S n => fun k =>  iterate (Ack n) (S k) 1
   end.
 
-(** Alternative form *)
+(** Alternative form (with inner fixpoint) *)
 
 Module Alt.
   
@@ -32,6 +34,89 @@ Compute Ack 3 2.
 
 End Alt.
 
+
+  (** Using the lexicographic ordering 
+   (post by Anton Trunov in stackoverflow (May 2018)) *)
+
+
+   Definition lex_nat (ab1 ab2 : nat * nat) : Prop :=
+    match ab1, ab2 with
+    | (a1, b1), (a2, b2) => 
+      (a1 < a2) \/ ((a1 = a2) /\ (b1 < b2))
+    end.
+
+  (* this is defined in stdlib, but unfortunately it is opaque *)
+  Lemma lt_wf_ind :
+    forall n (P:nat -> Prop), (forall n, (forall m, m < n -> P m) -> P n) -> P n.
+  Proof. intro p; intros; elim (lt_wf p); auto with arith. Defined.
+
+  (* this is defined in stdlib, but unfortunately it is opaque too *)
+  Lemma lt_wf_double_ind :
+    forall P:nat -> nat -> Prop,
+      (forall n m,
+          (forall p (q:nat), p < n -> P p q) ->
+          (forall p, p < m -> P n p) -> P n m) -> forall n m, P n m.
+  Proof.
+    intros P Hrec p. pattern p. apply lt_wf_ind.
+    intros n H q. pattern q. apply lt_wf_ind. auto.
+  Defined.
+
+  Lemma lex_nat_wf : well_founded lex_nat.
+  Proof.
+    intros (a, b); pattern a, b; apply lt_wf_double_ind.
+    intros m n H1 H2.
+    constructor; intros (m', n') [G | [-> G]].
+    - now apply H1.
+    - now apply H2.
+  Defined.
+
+ 
+
+
+Module Alt2.
+
+  Program Fixpoint Ack (ab : nat * nat) {wf lex_nat ab} : nat :=
+    match ab with
+    | (0, b) => b + 1
+    | (S a, 0) => Ack (a, 1)
+    | (S a, S b) => Ack (a, Ack (S a, b))
+    end.
+  Next Obligation.
+     injection Heq_ab; intros; subst.
+   left; auto with arith.
+   Defined.
+   Next Obligation.
+     apply lex_nat_wf.
+Defined.
+   Example test1 : Ack (1, 2) = 4 := refl_equal.  
+
+
+  Example test2 : Ack (3, 4) = 125 := eq_refl.
+  (* this may take several seconds *)
+  
+End Alt2.
+
+From Equations Require Import Equations. 
+
+Instance Lex_nat_wf : WellFounded lex_nat.
+  apply lex_nat_wf.
+Defined.
+
+
+Module Alt3.
+
+  Equations Ack (p : nat * nat) : nat by wf p lex_nat :=
+    Ack (0, n) := n + 1;
+    Ack (S m, 0) := Ack (m, 1);
+    Ack (S m, S n) := Ack (m, Ack (S m, n)).
+
+End Alt3.
+
+(** ** Exercise 
+
+   Prove that the four definitions of the Ackermann function 
+   [Ack] , [Alt.Ack], [Alt2.Ack],  and [Alt3.Ack] are extensionnally equal 
+ *)
 
 
 (** *** Usual equations *)
@@ -108,10 +193,10 @@ Qed.
 
 
 Definition phi_Ack (f : nat -> nat) (k : nat) :=
-       iterate f (S k) 1.
+  iterate f (S k) 1.
 
 Definition phi_Ack' (f : nat -> nat) (k : nat) :=
-       iterate f  k (f 1).
+  iterate f  k (f 1).
 
 Lemma phi_Ack'_ext f g: (forall x, f x = g x) ->
                         forall p,  phi_Ack' f p = phi_Ack' g p.
@@ -129,19 +214,19 @@ Qed.
 
 
 Lemma Ack_paraphrase : forall m ,  Ack m  =
-                                    match m with
-                                    | 0 => S 
-                                    | S p =>  phi_Ack  (Ack p) 
-                                    end.
+                                   match m with
+                                   | 0 => S 
+                                   | S p =>  phi_Ack  (Ack p) 
+                                   end.
 Proof.
   destruct m; reflexivity.
 Qed.
 
 Lemma Ack_paraphrase' : forall m k,  Ack m  k=
-                                    match m with
-                                    | 0 => S k
-                                    | S p =>  phi_Ack'  (Ack p) k
-                                    end.
+                                     match m with
+                                     | 0 => S k
+                                     | S p =>  phi_Ack'  (Ack p) k
+                                     end.
 Proof.
   destruct m.
   - reflexivity.
@@ -161,7 +246,7 @@ Lemma Ack_as_iter : forall m , Ack m  = iterate phi_Ack m S.
 Proof.
   induction  m.
   - reflexivity.
-  - rewrite Ack_paraphrase, iterate_S_eqn;  now rewrite IHm.
+  - rewrite Ack_paraphrase, iterate_S_eqn; now rewrite IHm.
 Qed.
 
 (** ** monotony properties *)
@@ -186,14 +271,14 @@ Section Ack_Properties.
     Variable n:nat.
 
     Hypothesis Hn : P n.
-      
+    
     Remark  Rem1 : strict_mono (Ack (S n)).
     Proof.
       intros m p H; cbn.
       destruct Hn as [H1 H2]; apply H1.
       apply iterate_lt; auto.
-     
-        destruct H2;  auto.
+      
+      destruct H2;  auto.
     Qed.
 
     Remark Rem2 : S <<= Ack (S n).
@@ -253,12 +338,12 @@ End Ack_Properties.
 
 Lemma le_S_Ack n : fun_le S (Ack n).
 Proof.
- destruct (Ack_properties n);tauto.
+  destruct (Ack_properties n);tauto.
 Qed.
 
 Lemma Ack_strict_mono n : strict_mono (Ack n).
 Proof.
- destruct (Ack_properties n);tauto.
+  destruct (Ack_properties n);tauto.
 Qed.
 
 Lemma Ack_mono_l : forall x y ,  x <= y -> forall n,  Ack x n <= Ack y n.
@@ -316,7 +401,7 @@ Section Proof_of_Ack_Ack_le.
 
 
   (** This lemma is used in the proof that [Ack] is not primitive recursive
-*)
+   *)
 
   Lemma Ack_Ack_le : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
   Proof.
@@ -332,36 +417,35 @@ Section Proof_of_Ack_Ack_le.
          * apply L09.
   Qed.
 
-  End Proof_of_Ack_Ack_le.
+End Proof_of_Ack_Ack_le.
 
 Lemma Ack_Sn_plus : forall n p, S n +  p < Ack (S n) p.
 Proof.
   induction n.
   -  intro; rewrite Ack_1_n; lia.
   -  induction p.
-   + rewrite Ack_S_0.
-     specialize (IHn 1); lia.
-   + rewrite Ack_S_S.
-     assert   (Ack (S (S n)) p < Ack (S n) (Ack (S (S n)) p)).
-     {
-       destruct (Ack_properties (S n)) as [H [H0 H1]].
-       apply H0.
-     }
-     eapply Lt.le_lt_trans with (2:= H).
-     replace (S (S n) + S p) with (S (S (S n) + p)) by lia.
-     apply IHp.
+     + rewrite Ack_S_0.
+       specialize (IHn 1); lia.
+     + rewrite Ack_S_S.
+       assert   (Ack (S (S n)) p < Ack (S n) (Ack (S (S n)) p)).
+       {
+         destruct (Ack_properties (S n)) as [H [H0 H1]].
+         apply H0.
+       }
+       eapply Lt.le_lt_trans with (2:= H).
+       replace (S (S n) + S p) with (S (S (S n) + p)) by lia.
+       apply IHp.
 Qed.
 
 
 Remark R0  n : forall p, 1 <= p -> p < iterate (Ack n) p 1.
 Proof.
   induction 1.
-  cbn. apply le_S_Ack.  
-  rewrite iterate_S_eqn.
-  apply Lt.lt_le_trans with (Ack n (S m)).
-- apply le_S_Ack.  
- -  apply Ack_mono_r.
- auto.
+  - cbn; apply le_S_Ack.  
+  - rewrite iterate_S_eqn.
+    apply Lt.lt_le_trans with (Ack n (S m)).
+    + apply le_S_Ack.  
+    + apply Ack_mono_r; auto.
 Qed.
 
 
@@ -369,7 +453,7 @@ Remark R01 n p :  Ack n (S p) < Ack (S n) (S p).
 Proof.
   rewrite Ack_S_S; apply Ack_strict_mono.
   apply Lt.le_lt_trans with (S n + p).
-  -   lia.
+  -  lia.
   -  apply Ack_Sn_plus.
 Qed.
 
@@ -381,6 +465,5 @@ Proof.
   -  transitivity (Ack m (S p)); auto.
      apply R01.
 Qed.
-
 
 

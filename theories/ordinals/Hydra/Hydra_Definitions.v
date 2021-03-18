@@ -368,11 +368,11 @@ Let us formalize this dependence through a relation linking the number of the cu
 
 Definition round_t := nat -> Hydra -> Hydra -> Prop.
 
-Class Battle :=  {battle_r : round_t;
+Class Battle :=  {battle_rel : round_t;
                   battle_ok : forall i h h',
-                      battle_r  i h h' -> round h h'}.
+                      battle_rel  i h h' -> round h h'}.
 
-Arguments battle_r : clear implicits.
+Arguments battle_rel : clear implicits.
 
 
 
@@ -385,8 +385,7 @@ Arguments battle_r : clear implicits.
 
 
   
-Program Instance free : Battle :=
-  (Build_Battle ( fun _  h h' => round h h') _).
+Program Instance free : Battle := Build_Battle (fun _  h h' => round h h') _.
 
 
 Program Instance standard : Battle := (Build_Battle round_n _).
@@ -403,9 +402,9 @@ Defined.
 
 
 Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-  battle_1 : forall i h  h', battle_r   B i  h h' -> 
+  battle_1 : forall i h  h', battle_rel   B i  h h' -> 
                             battle B i h (S i) h'
-| battle_n : forall i h  j h' h'',  battle_r  B i h h''  ->
+| battle_n : forall i h  j h' h'', battle_rel  B i h h''  ->
                                    battle B (S i) h'' j h'  ->
                                    battle B i h j h'.
 
@@ -421,7 +420,7 @@ Definition battle_length B k h l :=
 Definition Termination :=  well_founded (transp _ round).
 
 Definition B_termination (B: Battle) :=
-  well_founded (fun h' h =>  exists i:nat, battle_r B i h h' ).
+  well_founded (fun h' h =>  exists i:nat, battle_rel B i h h' ).
 
 
 (** *** Variants for proving termination 
@@ -429,9 +428,9 @@ Definition B_termination (B: Battle) :=
 
 Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
   (m: Hydra -> A): Prop :=
-  {variant_decr :forall i h h',
+  {variant_decr: forall i h h',
       h <> head ->
-      battle_r  B i  h h' -> Lt (m h') (m h)}.
+      battle_rel  B i  h h' -> Lt (m h') (m h)}.
 
 
 
@@ -458,5 +457,5 @@ Class BoundedVariant {A:Type}{Lt:relation A}
 Definition Alive (B : Battle) :=
   forall i h,
      h <> head ->
-    {h' : Hydra |  battle_r  B i h h'}.
+    {h' : Hydra |  battle_rel  B i h h'}.
 

@@ -13,20 +13,20 @@ and the Wainer-Hardy hierarchy of ``rapidly growing functions'' $H_\alpha$~\cite
 \end{itemize}
 
 
-Simply put, this document tries to combines the scientific interest of two articles~\cite{KP82, KS81} and a book~\cite{schutte} with the playful activity of truly proving theorems.
+Simply put, this document tries to combine the scientific interest of two articles~\cite{KP82, KS81} and a book~\cite{schutte} with the playful activity of truly proving theorems.
 We hope  that such a work, besides exploring a nice piece of discrete maths, 
 will show how \coq{} and its standard library are well fitted to help us to understand some non-trivial mathematical developments, and also to experiment the constructive parts of  the proof through functional programming.
 
  We also hope to provide a little clarification on infinity (both potential and actual) through the notions of function, computation, limit,
- types and proofs.
+ type and proof.
 
 
 
 %\section{Remarks}
 
 \subsection*{Difference from Kirby and Paris's Work}
-In~\cite{KP82}, Kirby and Paris showed  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
-Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chosed to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers upto $\epsilon_0$.
+In~\cite{KP82}, Kirby and Paris show  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
+Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chosed to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers up to $\epsilon_0$.
 
 \subsection*{State of the development}
 The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on  notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
@@ -82,7 +82,7 @@ This chapter is dedicated to the representation of hydras and rules of the hydra
 
 
 Technically, a \emph{hydra} is just a finite ordered tree, each node of which 
-has any number of sons. Note that, contrary to the computer science tradition, we will show the hydras 
+has any number of sons. Contrary to the computer science tradition, we display the hydras 
 with the heads up and the foot (i.e., the root of the tree) down.
 Fig.~\ref{fig:Hy} represents such  a hydra, which will be referred to as \texttt{Hy} in our examples (please look at the 
 module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}). 
@@ -1090,7 +1090,7 @@ Use your tactics for simulating a small part of a hydra battle, for instance the
 
 \item Please keep in mind that the last  configuration of your interactively built battle is known only at the end of the battle. Thus, you will have to create and solve subgoals with existential variables. For that purpose, the tactic \texttt{eexists}, applied to the 
 goal \Verb@{h':Hydra | h -*-> h'}@ generates the subgoal \Verb|h -*-> ?h'|.
-\item You may use Gérard Huet's \emph{zipper} data structure~\cite{zipper} for writing tactics associated with Hercule's  interactive search of a head to chop off.
+\item You may use Gérard Huet's \emph{zipper} data structure~\cite{zipper} for writing tactics associated with Hercule's  interactive search for a head to chop off.
 \end{itemize}
 
 
@@ -1116,10 +1116,9 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 \begin{Coqsrc}
 Definition dep_round_t := nat -> Hydra -> Hydra -> Prop.
 
-Class Battle :=  {battle_r : dep_round_t;
-                  battle_inclusion : forall i h h',
-                      battle_r i h h' -> round h h'}.
-
+Class Battle :=  
+    { battle_rel : dep_round_t;
+      battle_inclusion : forall i h h', battle_rel i h h' -> round h h'}.
 \end{Coqsrc}
 
 The most general class of battles is \texttt{free}, which allows the hydra to chose any replication factor at every step:
@@ -1128,8 +1127,7 @@ The most general class of battles is \texttt{free}, which allows the hydra to ch
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#free}{Hydra.Hydra\_Definitions}}
 
 \begin{Coqsrc}
-Program Instance free : Battle :=
-  (Build_Battle ( fun _  h h' => round h h') _).
+Program Instance free : Battle := Build_Battle (fun _  h h' => round h h') _.
 \end{Coqsrc}
 
 We chosed to call \emph{standard} the kind of battles which appear  most often in the litterature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
@@ -1155,9 +1153,9 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 \begin{Coqsrc}
 Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
 | battle_1 : forall i h  h', 
-      battle_r   B i  h h' -> battle B i h (S i) h'
+      battle_rel   B i  h h' -> battle B i h (S i) h'
 | battle_n : forall i h  j h' h'',  
-      battle_r  B i h h''  ->
+      battle_rel  B i h h''  ->
       battle B (S i) h'' j h'  ->
       battle B i h j h'.
 \end{Coqsrc}
@@ -1916,9 +1914,9 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \begin{Coqsrc}
 Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
   (m: Hydra -> A):   Prop :=
-  {variant_decr :forall i h h',
+  {variant_decr: forall i h h',
       h <> head ->
-      battle_r  B i  h h' -> Lt (m h') (m h)}.
+      battle_rel  B i  h h' -> Lt (m h') (m h)}.
 \end{Coqsrc}  
 
 \index{hydras}{Exercises}

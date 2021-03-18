@@ -57,7 +57,7 @@ Section Impossibility_Proof.
 
   Let small_h := iota (m big_h).
   
-  Fact big_to_small :  forall i,  battle_r free i big_h  small_h.
+  Fact big_to_small :  forall i,  battle_rel free i big_h  small_h.
   Proof.
     exists (m big_h); right;  repeat constructor.     
   Qed.
@@ -77,7 +77,7 @@ Section Impossibility_Proof.
        For that purpose, we prove the inequality i <= m (iota i) for any i 
    *)
   
-  Lemma round_S: forall i n, battle_r free n (iota (S i)) (iota i).
+  Lemma round_S: forall i n, battle_rel free n (iota (S i)) (iota i).
   Proof.
     intros i n; exists 0; constructor 1; constructor;  induction i.
     - right;left.

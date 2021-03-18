@@ -34,7 +34,7 @@ Section Impossibility_Proof.
   (**  The measure is strictly decreasing along any round *)
 
   Lemma Lvar : forall h h0 i ,  h <> head -> 
-                                battle_r standard i h h0 -> m h0 t1< m h.
+                                battle_rel standard i h h0 -> m h0 t1< m h.
   Proof.   
     intros h h0 i H  H1;  apply Var with  i; auto.
   Qed.
