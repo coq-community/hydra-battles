@@ -105,10 +105,13 @@ Defined.
 
 Module Alt3.
 
-  Equations Ack (p : nat * nat) : nat by wf p lex_nat :=
-    Ack (0, n) := n + 1;
+
+  Equations (noind) Ack (p : nat * nat) : nat by wf p lex_nat :=
+    Ack (0, n) := S n ;
     Ack (S m, 0) := Ack (m, 1);
     Ack (S m, S n) := Ack (m, Ack (S m, n)).
+
+About Ack_graph_rect.
 
 End Alt3.
 
