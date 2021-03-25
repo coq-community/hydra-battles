@@ -194,7 +194,7 @@ Proof.
       transitivity (iterate f m z); auto. 
 Qed.
 
-Lemma iterate_mono_weak (f: nat -> nat):
+Lemma iterate_le_n_Sn (f: nat -> nat):
   (forall x,  x <= f x) ->
   forall n x,  iterate f n x <= iterate f (S n)  x.
 Proof.
@@ -203,14 +203,14 @@ Proof.
   - cbn; intros; apply H.
 Qed.
 
-Lemma iterate_mono_weak_2 (f: nat -> nat):
+Lemma iterate_le_np_le (f: nat -> nat):
   (forall x,  (x <= f x)%nat) ->
   forall n p x,  (n <= p -> iterate f n x <= iterate f p x)%nat.
 Proof.
   induction 2.
   - reflexivity.
   - transitivity (iterate f m x); auto.
-    apply iterate_mono_weak; auto.
+    apply iterate_le_n_Sn; auto.
 Qed.
 
 Lemma iterate_mono2 (f: nat -> nat):

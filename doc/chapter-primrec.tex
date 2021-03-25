@@ -15,6 +15,7 @@ O'Connor's library on Gödel's incompleteness theorems contains a little more
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
 Thus, we propose a slow exploration of this library, through examples and exercises. Our additions to the original library 
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
+In particular, the library~\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
 
 \section{Basic Definitions}
 \index{maths}{Primitive recursive functions}
@@ -729,8 +730,68 @@ and to play with dependent types.
 
 \subsection{Ackermann function}
 
-Here is a possible definition, where (\texttt{iterate\,$f$\,$n$})
-is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRec.iterate}, which is monomorphic and does not share the same order of arguments.}
+Ackermann function is traditionally defined as a function from 
+$\mathbb{N}\times \mathbb{N}$ into $\mathbb{N}$, through
+three equations:
+
+\begin{align}
+A(0,n)&=n+1\\
+A(m+1,0)&=A(m,1)\\
+A(m+1,n+1)&=A(m,A(m+1,n))
+\end{align}
+
+Let us try to define this function in \coq{} (in curried form).
+
+\begin{Coqsrc}
+Fail
+  Fixpoint Ack (m n : nat) : nat :=
+  match m, n with
+  | 0, n => S n
+  | S m, 0 => Ack m 1
+  | S m0, S p => Ack m0 (Ack m p)
+  end.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+The command has indeed failed with message:
+Cannot guess decreasing argument of fix.
+\end{Coqanswer}
+
+A possible workaround is to make \\texttt{m} be the 
+decreasing argument, and define --- within \texttt{m}'s scope --- a local helper function which computes \texttt{Ack m n} for any \texttt{n}.
+This way, both functions \texttt{Ack} and \texttt{Ackm} have a (structurally) strictly decreasing argument.
+
+\begin{Coqsrc}
+Module Alt.
+
+   Fixpoint Ack (m n : nat) : nat :=
+     match m with
+     | O => S n
+     | S p => let fix Ackm (n : nat) :=
+                  match n with
+                  | O => Ack p 1
+                  | S q => Ack p (Ackm q)
+                  end
+              in Ackm n
+     end.
+
+    Compute Ack 3 2.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+  = 29 : nat
+\end{Coqanswer}
+
+\begin{Coqsrc}
+End Alt.
+\end{Coqsrc}
+
+We prefered to define a variant which uses explicitely 
+ the functional \texttt{iterate},
+where (\texttt{iterate\,$f$\,$n$})
+is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRec.iterate}, which is monomorphic and does not share the same order of arguments.}. It makes it possible to apply a few lemmas proved in 
+\href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}, for instance about the monotony of the $n$-th iterate of a given function. 
+
 
 \vspace{4pt}
 \noindent
@@ -744,6 +805,19 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   end.
 \end{Coqsrc}
 
+\begin{Coqsrc}
+Lemma iterate_le_n_Sn:
+forall f : nat -> nat,
+(forall x : nat, x <= f x) ->
+forall n x : nat, iterate f n x <= iterate f (S n) x.
+\end{Coqsrc}
+
+
+
+
+
+Thus, our definition of the Ackermann function is as follows:
+
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
@@ -756,31 +830,18 @@ Fixpoint Ack (m:nat) : nat -> nat :=
   | 0 => S
   | S n => fun k =>  iterate (Ack n) (S k) 1
   end.
+
+Compute Ack 3 2.
 \end{Coqsrc}
  
+\begin{Coqanswer}
+  = 29 : nat
+\end{Coqanswer}
 
-Another way of defining this function is 
-using an inner \texttt{fix} (see for instance the discussion in \url{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq}).
 
-We prefered to use the former definition, in order to
-take advantage from generic lemmas about \texttt{iterate}.
 
-\begin{Coqsrc}
-Module Alt.
-  
-Fixpoint Ack (n m : nat) : nat :=
-  match n with
-  | O => S m
-  | S p => let fix Ackn (m : nat) :=
-               match m with
-               | O => Ack p 1
-               | S q => Ack p (Ackn q)
-               end
-           in Ackn m
-  end.
 
-End Alt.
-\end{Coqsrc}
+
 
 \index{hydras}{Exercises}
 
@@ -789,8 +850,11 @@ The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents t
 Prove that all the four functions are extensionnally equal.
 \end{exercise}
 
-This function is also known under the form of three equations, which we derive immediately from our definition.
 
+\subsubsection{First properties of the Ackermann function}
+
+The three firts lemmas make us sure that our function 
+\texttt{Ack} satifies the ``usual'' equations.
 
 \begin{Coqsrc}
 Lemma Ack_0 : Ack 0 = S.
@@ -820,7 +884,7 @@ An important property of the Ackermann function helps us
 to overcome the difficulty raised by nested recursion, by climbing up the hierarchy $\texttt{Ack}\,n\,\_\;(n\in\mathbb{N})$.
 
 \begin{Coqsrc}
-Lemma Ack_Ack_le : forall k m n, 
+Lemma nested_Ack_bound : forall k m n, 
     Ack k (Ack m n) <= Ack (2 + max k m) n.
 \end{Coqsrc}
 
@@ -849,7 +913,7 @@ $f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{`
 \end{enumerate}
 
 First, we prove that any primitive function of two arguments is majorized.
-If we look at the inductive definition of primitive recursive functions,\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
+If we look at the inductive definition of primitive recursive functions, page~\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
 
 \vspace{4pt}
 \noindent
@@ -900,7 +964,7 @@ P 0 zeroFunc ->
 forall (n : nat) (p : PrimRec n), P n p
 \end{Coqanswer}
 
-For instance, proving a property shared by any primitive recursive functions of arity 2 leads to consider the case where that function is obtained by composition with a function of any 
+For instance, proving a property shared by any primitive recursive function of arity 2 leads to consider the case where that function is obtained by composition with a function of any 
 arity $m$. The same problem happens with primitive 
 recursion, where a function of arity $n$ is built out of a function of arity $n+1$ and a function of arity $n-1$.
 
@@ -920,7 +984,7 @@ But dots don't belong to \gallina's syntax! So, we may use \coq's vectors for de
 
 First, we extend \texttt{max} to vectors of natural numbers (using the notations of module \texttt{VectorNotations} and some more definitions from 
 \href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, \texttt{t\,$A$\,$n$} is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
-\texttt{VectorDef.cons x ?n v}.
+\texttt{VectorDef.cons x \_ v}.
 
 \index{coq}{Dependently typed functions}
 \begin{Coqsrc}

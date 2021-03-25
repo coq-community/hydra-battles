@@ -1,7 +1,6 @@
 (** * Proof that Ack is not primitive recursive
 
-  after the following documents :
-#<a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
+ #<a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
 planetmath page </a>#
 and
 #<a href="http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf"> Bruno Salvy's lecture</a>#.
@@ -15,14 +14,12 @@ Import extEqualNat  VectorNotations.
 
 
 
-(**  uncurried apply 
- 
-[v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
+(**  Uncurried apply :
+ [v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
 
  *)
 
-
-Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9).
+Notation "'v_apply' f v" := (evalList _ v f) (at level 10, f at level 9).
 
 
 Example Ex2 : forall (f: naryFunc 2) x y,
@@ -37,9 +34,10 @@ Proof.
   intros; now cbn.
 Qed.
 
+(** ** Comparing an n-ary and a binary functions *)
+
 Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n),
-      v_apply f v <= A q  (max_v v).
+  exists (q:nat), forall (v: t nat n), v_apply f v <= A q  (max_v v).
 
 Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
 
@@ -53,7 +51,7 @@ Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
 
-(**  ** Technical lemmas *)
+(**  ** Technical lemmas : you may skip this section *)
 
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
@@ -146,19 +144,19 @@ Proof.
     cbn; auto.
 Qed.
 
+(** ** Every primitive recursive function is majorized by [Ack] *)
+
 Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
-  exists 1; intro v.
-  rewrite (decomp1 v).
+  exists 1; intro v; rewrite (decomp1 v).
   simpl evalList; simpl max_v; rewrite max_0_r.
-  -   rewrite Ack_1_n; auto with arith.
+  rewrite Ack_1_n; auto with arith.
 Qed.
 
 
 Lemma majorZero : majorizedPR  zeroFunc Ack.
 Proof.
-  exists 0;
-    intro v; rewrite  (t_0_nil _ v), Ack_0. cbn; auto with arith.
+  exists 0; intro v; rewrite (t_0_nil _ v), Ack_0; cbn; auto with arith.
 Qed.
 
 Lemma majorProjection (n m:nat)(H: m < n):
@@ -170,9 +168,9 @@ Proof.
     + auto with arith.
 Qed.
 
-(** By induction on x, we prove that every PR function satisfies [P] *)
+(** THe general case is proved by  induction on x *)
 
-Lemma majorAnyPR: forall n (x: PrimRec n),  majorizedPR  x Ack.
+Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
                   (P0 := fun n m y => majorizedSPR  y Ack).
@@ -193,7 +191,7 @@ Proof.
         generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
                                      (evalPrimRecs n m g)) a H1).
         intro H2;lia.
-      * rewrite max_comm; apply Ack_Ack_le.
+      * rewrite max_comm; apply nested_Ack_bound.
   - (** Primitive recursion *)
     destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
@@ -204,9 +202,10 @@ Proof.
     (* begin show *)
     assert (L1 : forall i (v: t nat n) ,
                v_apply f (i::v)  <= Ack q (i + max_v v)).
+    (* end show *)
     {
       induction i.
-    (* end show *)
+   
       - intros; subst f;  rewrite evalListPrimrec_0.
         simpl plus; subst g; transitivity (Ack r (max_v  v)).
         + auto.
@@ -259,7 +258,7 @@ Proof.
       * transitivity (Ack q (Ack 2 z)).
         -- rewrite Ack_2_n; apply Ack_mono_r; lia.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
-           ++ rewrite max_comm; apply Ack_Ack_le.
+           ++ rewrite max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia. 
   - (**  Lists of PR functions *)
     red;cbn;  red; exists 0.
@@ -280,7 +279,20 @@ Proof.
 Qed. 
 
 
-(** we specialize Lemma [majorAnyPR] to binary functions *)
+(** We specialize Lemma [majorAnyPR] to unary and binary  functions 
+ *)
+
+Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
+  : exists (n:nat), forall x,  f x  <= Ack n x.
+  destruct Hf as [x Hx].
+  generalize (majorAnyPR 1 x). intros.
+  destruct H as [N HN]. exists N.
+  intros x0; specialize (HN [x0]); cbn in HN.
+  replace (evalPrimRec 1 x x0) with (f x0 ) in HN.   
+  now rewrite Nat.max_0_r in HN.  
+  symmetry; apply Hx.  
+Qed.
+
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
@@ -306,17 +318,7 @@ Proof.
  Qed.
 
 
-Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
-  : exists (n:nat), forall x ,  f x  <= Ack n x.
-  destruct Hf as [x Hx].
-  generalize (majorAnyPR 1 x). intros.
-  destruct H as [N HN]. exists N.
-  intros x0; specialize (HN [x0]); cbn in HN.
-  replace (evalPrimRec 1 x x0) with (f x0 ) in HN.   
-  now rewrite Nat.max_0_r in HN.  
-  symmetry; apply Hx.  
-Qed.
-
+(** ** Now, let us assume that [Ack] is PR *)
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
@@ -333,7 +335,7 @@ Section Impossibility_Proof.
 
 End Impossibility_Proof.
 
-(** Any function which dominates (diagonalized) [Ack] fails to be PR *)
+(** ** Any function which dominates (diagonalized) [Ack] fails to be PR *)
 
 Section dom_AckNotPR.
 
@@ -353,7 +355,7 @@ Section dom_AckNotPR.
 
 End dom_AckNotPR.
  
-  (** * Remark: for any [n], [Ack n] is primitive recursive. *)
+  (** ** For any [n], [Ack n] is primitive recursive. *)
 
 Lemma AckSn_as_iterate (n:nat) : extEqual 1 (Ack (S n))
                                           (fun k => iterate (Ack n) (S k) 1).
@@ -384,6 +386,8 @@ Section Proof_of_Ackn_PR.
 
     Hypothesis IHn: isPR 1 (Ack n).
 
+    (* begin hide *)
+    
     Remark R1 : extEqual 1 (Ack (S n))
                          (fun a : nat =>
                             nat_rec (fun _ : nat => nat) 1
@@ -405,8 +409,8 @@ Section Proof_of_Ackn_PR.
       - eapply indIsPR; now apply filter01IsPR.  
     Qed.
 
-
-    Remark R3 : isPR 1 (Ack (S n)).
+    (* end hide *)
+    Lemma iSPR_Ack_Sn : isPR 1 (Ack (S n)).
     Proof.
       destruct R2 as [x Hx]; exists x.
       eapply extEqualTrans with (1:= Hx).
@@ -419,7 +423,7 @@ Section Proof_of_Ackn_PR.
   Proof.
     induction n.
     - cbn; apply succIsPR.
-    -  apply R3; auto.  
+    - apply iSPR_Ack_Sn; auto.  
   Qed.
 
 End Proof_of_Ackn_PR.

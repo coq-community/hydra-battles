@@ -452,7 +452,7 @@ Proof.
       * cbn; abstract lia.
       * eapply Nat.le_trans.
         --  eapply IHi.
-        --  apply Nat.pred_le_mono;  apply iterate_mono_weak; abstract lia.
+        --  apply Nat.pred_le_mono;  apply iterate_le_n_Sn; abstract lia.
 Qed.
 
 

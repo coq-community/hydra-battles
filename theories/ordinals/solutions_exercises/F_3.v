@@ -9,7 +9,7 @@ Open Scope nat_scope.
 Lemma LF3 : dominates_from 2 (F_ 3) (fun  n => iterate exp2 n n).
 Proof.
   generalize (LF3_2); intros H n Hn; eapply Lt.le_lt_trans.
-  -  apply  iterate_mono_weak;  intro x; generalize (exp2_gt_id x); lia.
+  -  apply  iterate_le_n_Sn;  intro x; generalize (exp2_gt_id x); lia.
   -  now apply H.
 Qed.
 
