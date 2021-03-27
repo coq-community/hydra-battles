@@ -350,7 +350,9 @@ Section dom_AckNotPR.
     specialize (HN X  (Max.le_max_l N M)).
     specialize (HM X);
       assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
-    lia.
+    assert (Ack X X < Ack X X) by lia.
+    Search (?X < ?X)%nat.
+     destruct (Nat.lt_irrefl _ H1).     
   Qed.
 
 End dom_AckNotPR.

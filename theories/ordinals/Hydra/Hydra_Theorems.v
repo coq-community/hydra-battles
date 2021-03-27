@@ -49,9 +49,10 @@ Proof.
   split; intros i h h' H H0;  apply round_decr; now exists i.
 Qed.
 
-
+(*
 
 Print Assumptions Variant_lt_standard.
+ *)
 
 (** ** Impossibility theorems 
 
@@ -97,6 +98,7 @@ Proof.
   - now apply battle_length_std.
 Qed.
 
-  
+(*
 Print Assumptions battle_length_std.
+ *)
 
