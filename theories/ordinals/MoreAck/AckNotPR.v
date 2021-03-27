@@ -347,15 +347,11 @@ Section dom_AckNotPR.
     intros H;  destruct Hf as [N HN].
     destruct  (majorPR1 _ H) as [M HM].
     pose (X := Max.max N M).
-    specialize (HN X  (Max.le_max_l N M)).
-    specialize (HM X);
+    specialize (HN X  (Max.le_max_l N M)); (* for 8.13.dev's lia *)
+      cbn in HN.
+    specialize (HM X). 
       assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
-    assert (Ack X X < Ack X X) (* by lia. *). (* fails on 8.13.dev *)
-           { apply Lt.lt_le_trans with (f X).
-             apply HN.
-             now transitivity (Ack M X).
-     }
-     destruct (Nat.lt_irrefl _ H1).     
+    lia.    
   Qed.
 
 End dom_AckNotPR.
