@@ -350,8 +350,11 @@ Section dom_AckNotPR.
     specialize (HN X  (Max.le_max_l N M)).
     specialize (HM X);
       assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
-    assert (Ack X X < Ack X X) by lia.
-    Search (?X < ?X)%nat.
+    assert (Ack X X < Ack X X) (* by lia. *). (* fails on 8.13.dev *)
+           { apply Lt.lt_le_trans with (f X).
+             apply HN.
+             now transitivity (Ack M X).
+     }
      destruct (Nat.lt_irrefl _ H1).     
   Qed.
 
