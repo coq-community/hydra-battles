@@ -1,6 +1,6 @@
 (** * Proof that Ack is not primitive recursive
 
- #<a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
+ # After <a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
 planetmath page </a>#
 and
 #<a href="http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf"> Bruno Salvy's lecture</a>#.
@@ -318,7 +318,7 @@ Proof.
  Qed.
 
 
-(** ** Now, let us assume that [Ack] is PR *)
+(** *** Now, let us assume that [Ack] is PR *)
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
@@ -335,7 +335,7 @@ Section Impossibility_Proof.
 
 End Impossibility_Proof.
 
-(** ** Any function which dominates (diagonalized) [Ack] fails to be PR *)
+(** ***  Any function which dominates (diagonalized) [Ack] fails to be PR *)
 
 Section dom_AckNotPR.
 
@@ -355,7 +355,7 @@ Section dom_AckNotPR.
 
 End dom_AckNotPR.
  
-  (** ** For any [n], [Ack n] is primitive recursive. *)
+  (** ** Nevertheless, for any [n], [Ack n] is primitive recursive. *)
 
 Lemma AckSn_as_iterate (n:nat) : extEqual 1 (Ack (S n))
                                           (fun k => iterate (Ack n) (S k) 1).
@@ -383,7 +383,6 @@ Section Proof_of_Ackn_PR.
 
   Section S_step.
     Variable n:nat.
-
     Hypothesis IHn: isPR 1 (Ack n).
 
     (* begin hide *)

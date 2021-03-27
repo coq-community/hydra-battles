@@ -5,7 +5,11 @@ Require Import Coq.Arith.Arith.
 
 
 
-(** About the famous Ackermann function *)
+(** The famous Ackermann function *)
+
+(** The following definition fails, because Coq cannot guess a 
+  decreasing argument.
+ *)
 
 (* begin show *)
 
@@ -44,6 +48,7 @@ End Alt.
    iterate : forall {A : Type}, (A -> A) -> nat -> A -> A
 >>
 
+Allows to infer monotony properties of [Ack (S m)] from [Ack m].
 
 *)
 
@@ -67,6 +72,8 @@ Compute Ack 3 2.
       (a1 < a2) \/ ((a1 = a2) /\ (b1 < b2))
     end.
 
+   (* begin hide *)
+   
   (* this is defined in stdlib, but unfortunately it is opaque *)
   Lemma lt_wf_ind :
     forall n (P:nat -> Prop), (forall n, (forall m, m < n -> P m) -> P n) -> P n.
@@ -82,7 +89,9 @@ Compute Ack 3 2.
     intros P Hrec p. pattern p. apply lt_wf_ind.
     intros n H q. pattern q. apply lt_wf_ind. auto.
   Defined.
-
+  
+  (* end hide *)
+  
   Lemma lex_nat_wf : well_founded lex_nat.
   Proof.
     intros (a, b); pattern a, b; apply lt_wf_double_ind.
@@ -96,6 +105,8 @@ Compute Ack 3 2.
     *)  
   Defined.
 
+ 
+  
 Module Alt2.
 
   Program Fixpoint Ack (ab : nat * nat) {wf lex_nat ab} : nat :=
@@ -120,6 +131,8 @@ Module Alt2.
 End Alt2.
 
 
+(** With the Equations plug-in *)
+
 From Equations Require Import Equations. 
 
 Instance Lex_nat_wf : WellFounded lex_nat.
@@ -139,7 +152,7 @@ End Alt3.
 
 
 
-(** ** Exercise 
+(** *** Exercise 
 
    Prove that the four definitions of the Ackermann function 
    [Ack] , [Alt.Ack], [Alt2.Ack],  and [Alt3.ack] are extensionnally equal 
@@ -218,7 +231,7 @@ Qed.
 
 
 
-(** ** monotony properties 
+(** ***  monotony properties 
 
   We prove simultaneously 3 properties of [Ack n] by induction on [m]:
   - [Ack m] is strictly monotonous,

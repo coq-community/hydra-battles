@@ -14,7 +14,15 @@ Compute naryRel 2.
   = nat -> nat -> bool
      : Set
 
-*)
+ *)
+
+Check plus: naryFunc 2.
+
+Check 42: naryFunc 0.
+
+Check (fun n p q : nat =>  n * p + q): naryFunc 3.
+
+
 Compute extEqual 2.
 (*
     = fun a b : naryFunc 3 => forall x x0 x1 : nat, a x x0 x1 = b x x0 x1

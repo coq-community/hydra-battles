@@ -60,7 +60,14 @@ Compute naryFunc 3.
   : Set  
 \end{Coqanswer}
 
-Thus, the function \texttt{plus} has also type (\texttt{naryFunc 2}).
+\begin{Coqsrc}
+Check plus: naryFunc 2.
+
+Check 42: naryFunc 0.
+
+Check (fun n p q : nat =>  n * p + q): naryFunc 3.
+\end{Coqsrc}
+
 
 Likewise, arbitrary boolean predicates may have an arbitrary number of arguments. The dependent type
 (\texttt{naryRel $n$}), defined in the same way as \texttt{naryFunc}, is the type of $n$-ary functions from
@@ -374,7 +381,7 @@ In the library \texttt{primRec}, all these lemmas are opaque (registered with \t
 
 The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of type
 \texttt{PrimRec} allows us to write trivial proofs of primitive recursivity. 
-Although  the following lemmas are alreday proven in 
+Although  the following lemmas are already proven in 
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec.v},
 we wrote alternate proofs in 
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
@@ -565,7 +572,7 @@ subgoal 2 (ID 127) is:
  isPR 1 (fun b : nat => b)
 \end{Coqanswer}
 
-We alreday proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
+We already proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
 Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
 
 \begin{Coqanswer}
@@ -573,7 +580,7 @@ filter010IsPR :
 forall g : nat -> nat, isPR 1 g -> isPR 3 (fun _ b _ : nat => g b)
 \end{Coqanswer}
 
-Thus, our first subgoal is solved easily and the proof ends, applying alreday proven lemmas.
+Thus, our first subgoal is solved easily and the proof ends, applying already proven lemmas.
 
 
 \begin{Coqsrc}
