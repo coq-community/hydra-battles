@@ -9,7 +9,7 @@ the \texttt{theories/ordinals/Ackermann} directory.
 This chapter contains some comments on Russel's library, as well as a few extensions.
 Contributions (under the form of comments, new examples or exercises) are welcome!. 
 
-\section{First look at the Ackermann Library}
+\section{First look at the Ackermann library}
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
@@ -17,7 +17,7 @@ Thus, we propose a slow exploration of this library, through examples and exerci
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
 In particular, the library~\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
 
-\section{Basic Definitions}
+\section{Basic definitions}
 \index{maths}{Primitive recursive functions}
 
 The formal definition of primitive recursive functions lies in the library
@@ -198,7 +198,7 @@ The constructor (\texttt{projFunc $n$ $m$})  is associated with the projection $
 $\pi_{n, m}$.
 For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ corresponds to the term
 (\texttt{projFunc 5 3 H}), where \texttt{H} is a proof of $3<5$.
- This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see next sub-section) . Trying the other convention is left as an exercise.
+ This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see the next sub-section). Trying the other convention is left as an exercise.
 \end{remark}
 
 
@@ -231,8 +231,7 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
   | primRecFunc n g h =>
       evalPrimRecFunc n (evalPrimRec _ g) (evalPrimRec _ h)
   end
- 
- with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
+  with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
  Vector.t (naryFunc n) m :=
   match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
   | PRnil a => Vector.nil  (naryFunc a)
@@ -245,6 +244,9 @@ Looks complicated? The following examples show that, when
 the arity is fixed, these definitions behave well w.r.t. 
 \coq's reduction rules. Moreover, they make the interpretation functions more ``concrete''.
 
+\vspace{4pt}
+\noindent
+\emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.}
 \begin{Coqsrc}
 Example Ex1 : evalPrimRec 0 zeroFunc = 0.
 Proof. reflexivity. Qed.
@@ -259,9 +261,9 @@ Proof. reflexivity. Qed.
 
 Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
   let u := composeFunc 2 3
-                       (PRcons 2 2 x
-                               (PRcons 2 1 y
-                                       (PRcons 2 0 z
+                       (PRcons 2 _ x
+                               (PRcons 2 _ y
+                                       (PRcons 2 _ z
                                                (PRnil 2))))
                        t in
   let f := evalPrimRec 2 x in

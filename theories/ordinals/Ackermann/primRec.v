@@ -1,3 +1,6 @@
+(** Primitive Recursive functions *)
+(** Russel O'Connor *)
+
 Require Import Arith.
 Require Import Peano_dec.
 Require Import Compare_dec.
@@ -11,6 +14,11 @@ Require Export EqNat.
 Require Import Even.
 Require Import Max.
 
+(** * Definitions *)
+
+(** [PrimRec n] : data type of primitive recursive functions of arity [n] 
+    [PrimRec n m] : m-tuples of [PrimRec n] *)
+
 Inductive PrimRec : nat -> Set :=
   | succFunc : PrimRec 1
   | zeroFunc : PrimRec 0
@@ -23,15 +31,15 @@ with PrimRecs : nat -> nat -> Set :=
   | PRnil : forall n : nat, PrimRecs n 0
   | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> PrimRecs n (S m).
 
-Scheme PrimRec_PrimRecs_rec := Induction for PrimRec
-  Sort Set
-  with PrimRecs_PrimRec_rec := Induction for PrimRecs 
-  Sort Set.
+Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
+  with PrimRecs_PrimRec_rec := Induction for PrimRecs  Sort Set.
 
-Scheme PrimRec_PrimRecs_ind := Induction for PrimRec
-  Sort Prop
-  with PrimRecs_PrimRec_ind := Induction for PrimRecs 
-  Sort Prop.
+Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
+  with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
+
+(** ** Semantics *)
+
+(** *** Constants *)
 
 Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
   match n return (naryFunc n) with
@@ -39,7 +47,8 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
   | S n' => fun _ => evalConstFunc n' m
   end.
 
-(** The parameters are number in opposite order.
+(** *** Projections 
+   The parameters are number in opposite order.
    So proj(2,0)(a,b) = b. *)
 
 Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
@@ -58,6 +67,8 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
             end
       end
   end.
+
+(** Irrelevance of the proof that [m < n] *)
 
 Lemma evalProjFuncInd :
  forall (n m : nat) (p1 p2 : m < n),
@@ -80,7 +91,7 @@ induction n as [| n Hrecn].
       reflexivity.
 Qed.
 
-(** applies an m-ary function to the vector l *)
+(**  Applies an m-ary function to the vector l *)
 
 Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
  naryFunc m -> nat :=
@@ -95,6 +106,8 @@ Fixpoint evalOneParamList (n m a : nat) (l : Vector.t (naryFunc (S n)) m)
   | Vector.nil  => Vector.nil  (naryFunc n)
   | Vector.cons f m' l' => Vector.cons _ (f a) m' (evalOneParamList n m' a l')
   end.
+
+(** *** Function composition *)
 
 Fixpoint evalComposeFunc (n : nat) :
  forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
@@ -118,12 +131,16 @@ Fixpoint compose2 (n : nat) : naryFunc n -> naryFunc (S n) -> naryFunc n :=
       compose2 n' (f a) (fun x : nat => g x a)
   end.
 
+(** *** Primitive recursion *)
+
 Fixpoint evalPrimRecFunc (n : nat) (g : naryFunc n) 
  (h : naryFunc (S (S n))) (a : nat) {struct a} : naryFunc n :=
   match a with
   | O => g
   | S a' => compose2 _ (evalPrimRecFunc n g h a') (h a')
   end.
+
+(**  The interpretation function *)
 
 Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} : 
  naryFunc n :=
@@ -237,6 +254,8 @@ Proof.
       * simpl in |- *; intros; apply H0.
     + auto.
 Qed.
+
+(** ** Predicates "to be primitive recursive"  *)
 
 Definition isPR (n : nat) (f : naryFunc n) : Set :=
   {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.

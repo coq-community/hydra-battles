@@ -435,7 +435,7 @@ Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
 
 
 (** Variant bounded by some ordinal alpha < epsilon0 *)
-(** **  Bounded variants (by some mu < epsilon0) *)
+(** **  Strictly Bounded variants *)
 
 
 Class BoundedVariant {A:Type}{Lt:relation A}

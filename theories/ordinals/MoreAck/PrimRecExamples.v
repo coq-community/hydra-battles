@@ -60,9 +60,9 @@ Proof. reflexivity. Qed.
 
 Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
   let u := composeFunc 2 3
-                       (PRcons 2 2 x
-                               (PRcons 2 1 y
-                                       (PRcons 2 0 z
+                       (PRcons 2 _ x
+                               (PRcons 2 _ y
+                                       (PRcons 2 _ z
                                                (PRnil 2))))
                        t in
   let f := evalPrimRec 2 x in

@@ -72,14 +72,14 @@ Compute Ack 3 2.
       (a1 < a2) \/ ((a1 = a2) /\ (b1 < b2))
     end.
 
-   (* begin hide *)
+   (* begin details : Transparent accessibility lemmas (details)  *)
    
-  (* this is defined in stdlib, but unfortunately it is opaque *)
+  (** this is defined in stdlib, but unfortunately it is opaque *)
   Lemma lt_wf_ind :
     forall n (P:nat -> Prop), (forall n, (forall m, m < n -> P m) -> P n) -> P n.
   Proof. intro p; intros; elim (lt_wf p); auto with arith. Defined.
 
-  (* this is defined in stdlib, but unfortunately it is opaque too *)
+  (** this is defined in stdlib, but unfortunately it is opaque too *)
   Lemma lt_wf_double_ind :
     forall P:nat -> nat -> Prop,
       (forall n m,
@@ -90,7 +90,7 @@ Compute Ack 3 2.
     intros n H q. pattern q. apply lt_wf_ind. auto.
   Defined.
   
-  (* end hide *)
+  (* end details *)
   
   Lemma lex_nat_wf : well_founded lex_nat.
   Proof.
@@ -187,8 +187,10 @@ Qed.
 
 
 Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
+  (* begin details *)
 Proof.
   induction n.
+  (* begin details *)
   -  reflexivity.
   - rewrite Ack_S_S, Ack_2_n, IHn.
     change (exp2 (S (S (S (S n)))))
@@ -198,8 +200,11 @@ Proof.
       - auto with arith.
       - cbn in IHn; lia.
     }
-    lia. 
+    lia.
+    (* end details *)
 Qed.
+(* end details *)
+
 
 Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 Proof.

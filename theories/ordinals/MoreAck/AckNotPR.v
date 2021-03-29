@@ -53,8 +53,10 @@ Definition majorizedSPR {n m} (x : PrimRecs n m) :=
 
 (**  ** Technical lemmas : you may skip this section *)
 
+(* begin details *)
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
+(* begin details *)
 Proof.
   induction n; cbn.
   - intros; cbn ; replace v with (@nil nat).
@@ -62,9 +64,11 @@ Proof.
     +  symmetry; apply t_0_nil.
   - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
 Qed.
+(* end details *)
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
         v_apply (evalProjFunc n k H) v <= max_v v.
+(* begin details *)
 Proof.
   induction n.
   -  cbn; intros; lia.
@@ -79,11 +83,13 @@ Proof.
          --  symmetry; apply decomp. 
       *  destruct( n0 e).
 Qed. 
+(* end details *)
 
 Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
                             (h: naryFunc  m),
     v_apply  (evalComposeFunc _ _ gs h) v =
     v_apply  h (map (fun g =>  evalList _ v g) gs).
+(* begin details *)
 Proof.
   induction n.
   - intros; rewrite (t_0_nil _ v); cbn.
@@ -109,33 +115,37 @@ Proof.
              --  rewrite decomp;  f_equal.
                  now rewrite decomp.
 Qed.
-
+(* end details *)
 Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
                                 (g : naryFunc (S n)),
     v_apply (compose2 n f g) v =
     v_apply g  ((evalList n v f) :: v).
+(* begin details *)
 Proof.
   induction n.
   - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
   -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
 Qed.
+(* end details *)
 
 Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))),
     v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
     = v_apply f v.
+(* begin details *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v); now cbn.
 Qed.
-
+(* end details *)
 
 Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))) a,
     v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
     = v_apply g
               (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
+(* begin details *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
@@ -143,9 +153,12 @@ Proof.
     specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
     cbn; auto.
 Qed.
+(* end details *)
+(* end details *)
 
 (** ** Every primitive recursive function is majorized by [Ack] *)
 
+(** *** Base cases *)
 Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
   exists 1; intro v; rewrite (decomp1 v).
@@ -168,9 +181,10 @@ Proof.
     + auto with arith.
 Qed.
 
-(** THe general case is proved by  induction on x *)
+(** *** The general case is proved by  induction on x *)
 
 Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
+(* begin details : A long proof ... *)
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
                   (P0 := fun n m y => majorizedSPR  y Ack).
@@ -193,16 +207,14 @@ Proof.
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
   - (** Primitive recursion *)
-    destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+        destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
     remember (evalPrimRec _ x2) as h.
     pose(q := S  (max r s)); red.
     remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
                                (evalPrimRec _ x2)) as f.
-    (* begin show *)
     assert (L1 : forall i (v: t nat n) ,
                v_apply f (i::v)  <= Ack q (i + max_v v)).
-    (* end show *)
     {
       induction i.
    
@@ -259,8 +271,9 @@ Proof.
         -- rewrite Ack_2_n; apply Ack_mono_r; lia.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
            ++ rewrite max_comm; apply nested_Ack_bound.
-           ++ apply Ack_mono_l;  lia. 
-  - (**  Lists of PR functions *)
+           ++ apply Ack_mono_l;  lia.
+    - (**  Lists of PR functions *)
+    
     red;cbn;  red; exists 0.
     intro; rewrite Ack_0.
     cbn; auto with arith.
@@ -277,13 +290,15 @@ Proof.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
 Qed. 
+(* end details *)
 
 
-(** We specialize Lemma [majorAnyPR] to unary and binary  functions 
+(** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
  *)
 
 Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
   : exists (n:nat), forall x,  f x  <= Ack n x.
+Proof.
   destruct Hf as [x Hx].
   generalize (majorAnyPR 1 x). intros.
   destruct H as [N HN]. exists N.
@@ -319,11 +334,12 @@ Proof.
 
 
 (** *** Now, let us assume that [Ack] is PR *)
+
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-
+  (* begin show *)
   Lemma Ack_not_PR : False.
   Proof.
     destruct (majorPR2_strict Ack HAck) as [m Hm];
@@ -332,7 +348,8 @@ Section Impossibility_Proof.
       assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
   Qed.
-
+  (* end show *)
+  
 End Impossibility_Proof.
 
 (** ***  Any function which dominates (diagonalized) [Ack] fails to be PR *)
@@ -386,8 +403,7 @@ Section Proof_of_Ackn_PR.
     Variable n:nat.
     Hypothesis IHn: isPR 1 (Ack n).
 
-    (* begin hide *)
-    
+       
     Remark R1 : extEqual 1 (Ack (S n))
                          (fun a : nat =>
                             nat_rec (fun _ : nat => nat) 1
@@ -409,7 +425,7 @@ Section Proof_of_Ackn_PR.
       - eapply indIsPR; now apply filter01IsPR.  
     Qed.
 
-    (* end hide *)
+       
     Lemma iSPR_Ack_Sn : isPR 1 (Ack (S n)).
     Proof.
       destruct R2 as [x Hx]; exists x.

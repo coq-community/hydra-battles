@@ -60,7 +60,6 @@ Print Assumptions Variant_lt_standard.
 
 *)
 
-(** A helper : to do: remove if useless *)
 
 (**  Impossiblity to define a variant bounded by some ordinal less than 
      [epsilon0] *)
