@@ -1,10 +1,13 @@
-(** * Proof that Ack is not primitive recursive
+(*|
+===============================================
+Proof that Ack is not primitive recursive
+===============================================
 
- # After <a href="https://planetmath.org/ackermannfunctionisnotprimitiverecursive">
-planetmath page </a>#
+ After https://planetmath.org/ackermannfunctionisnotprimitiverecursive
 and
-#<a href="http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf"> Bruno Salvy's lecture</a>#.
- *)
+http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf
+
+|*)
 
 
 
@@ -53,10 +56,9 @@ Definition majorizedSPR {n m} (x : PrimRecs n m) :=
 
 (**  ** Technical lemmas : you may skip this section *)
 
-(* begin details *)
+
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
-(* begin details *)
 Proof.
   induction n; cbn.
   - intros; cbn ; replace v with (@nil nat).
@@ -64,11 +66,9 @@ Proof.
     +  symmetry; apply t_0_nil.
   - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
 Qed.
-(* end details *)
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
         v_apply (evalProjFunc n k H) v <= max_v v.
-(* begin details *)
 Proof.
   induction n.
   -  cbn; intros; lia.
@@ -79,17 +79,17 @@ Proof.
     + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
       *  replace v with (cons (hd v) (tl v)) at 1; cbn.
          --   transitivity (max_v (tl v));  auto. 
-              apply le_max_r.
+              apply max_v_tl.
          --  symmetry; apply decomp. 
       *  destruct( n0 e).
 Qed. 
-(* end details *)
+
+
 
 Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
                             (h: naryFunc  m),
     v_apply  (evalComposeFunc _ _ gs h) v =
     v_apply  h (map (fun g =>  evalList _ v g) gs).
-(* begin details *)
 Proof.
   induction n.
   - intros; rewrite (t_0_nil _ v); cbn.
@@ -115,37 +115,31 @@ Proof.
              --  rewrite decomp;  f_equal.
                  now rewrite decomp.
 Qed.
-(* end details *)
 Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
                                 (g : naryFunc (S n)),
     v_apply (compose2 n f g) v =
     v_apply g  ((evalList n v f) :: v).
-(* begin details *)
 Proof.
   induction n.
   - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
   -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
 Qed.
-(* end details *)
 
 Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))),
     v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
     = v_apply f v.
-(* begin details *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v); now cbn.
 Qed.
-(* end details *)
 
 Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))) a,
     v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
     = v_apply g
               (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
-(* begin details *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
@@ -153,8 +147,7 @@ Proof.
     specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
     cbn; auto.
 Qed.
-(* end details *)
-(* end details *)
+
 
 (** ** Every primitive recursive function is majorized by [Ack] *)
 
@@ -184,7 +177,6 @@ Qed.
 (** *** The general case is proved by  induction on x *)
 
 Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
-(* begin details : A long proof ... *)
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
                   (P0 := fun n m y => majorizedSPR  y Ack).
@@ -290,7 +282,6 @@ Proof.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
 Qed. 
-(* end details *)
 
 
 (** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 

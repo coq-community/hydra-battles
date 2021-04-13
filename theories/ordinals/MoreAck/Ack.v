@@ -1,17 +1,32 @@
+(*|  
+==============================
+ The famous Ackermann function 
+==============================
+
+--------------------------------
+   Definitions and properties
+--------------------------------
+
+|*)
+
 From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
 Require Import Coq.Program.Wf.
 Require Import Coq.Arith.Arith.
 
+(*| 
+
+Various definitions
+===================
 
 
-(** The famous Ackermann function *)
+A first try ...
+++++++++++++++++
 
-(** The following definition fails, because Coq cannot guess a 
-  decreasing argument.
- *)
+The following definition fails, because Coq cannot guess a  decreasing argument.
+|*)
 
-(* begin show *)
+
 
 Fail
   Fixpoint Ack (m n : nat) : nat :=
@@ -21,9 +36,15 @@ Fail
   | S m0, S p => Ack m0 (Ack m p)
   end.
 
-(* end show *)
 
-(** Definition (with inner fixpoint) *)
+
+(*| 
+
+Definition with inner fixpoint
++++++++++++++++++++++++++++++++
+
+|*)
+
 
 Module Alt.
   
@@ -43,14 +64,17 @@ Module Alt.
 End Alt.
 
 
-(** Definition using the [iterate] functional:
-<<
+(*| 
+
+Definition using the [iterate] functional
++++++++++++++++++++++++++++++++++++++++++
+
    iterate : forall {A : Type}, (A -> A) -> nat -> A -> A
->>
+
 
 Allows to infer monotony properties of [Ack (S m)] from [Ack m].
 
-*)
+|*)
 
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
@@ -61,10 +85,14 @@ Fixpoint Ack (m:nat) : nat -> nat :=
 Compute Ack 3 2.
 
 
+(*| 
 
-  (** Using the lexicographic ordering 
-   (post by Anton Trunov in stackoverflow (May 2018)) *)
+Using the lexicographic ordering 
++++++++++++++++++++++++++++++++++
 
+   (post by Anton Trunov in stackoverflow (May 2018))
+|*)
+        
 
    Definition lex_nat (ab1 ab2 : nat * nat) : Prop :=
     match ab1, ab2 with
@@ -72,26 +100,38 @@ Compute Ack 3 2.
       (a1 < a2) \/ ((a1 = a2) /\ (b1 < b2))
     end.
 
-   (* begin details : Transparent accessibility lemmas (details)  *)
+ (*|
+
+Transparent accessibility lemmas (details)
++++++++++++++++++++++++++++++++++++++++++++
    
-  (** this is defined in stdlib, but unfortunately it is opaque *)
+  This is defined in stdlib, but unfortunately it is opaque 
+|*)
+
   Lemma lt_wf_ind :
-    forall n (P:nat -> Prop), (forall n, (forall m, m < n -> P m) -> P n) -> P n.
+    forall n (P:nat -> Prop),
+      (forall n, (forall m, m < n -> P m) -> P n) ->
+      P n.
   Proof. intro p; intros; elim (lt_wf p); auto with arith. Defined.
 
-  (** this is defined in stdlib, but unfortunately it is opaque too *)
+(*|
+
+  This is defined in stdlib, but unfortunately it is opaque too 
+|*)
+  
+
   Lemma lt_wf_double_ind :
     forall P:nat -> nat -> Prop,
       (forall n m,
-          (forall p (q:nat), p < n -> P p q) ->
-          (forall p, p < m -> P n p) -> P n m) -> forall n m, P n m.
+        (forall p (q:nat), p < n -> P p q) ->
+        (forall p, p < m -> P n p) -> P n m) ->
+      forall n m, P n m.
   Proof.
     intros P Hrec p. pattern p. apply lt_wf_ind.
     intros n H q. pattern q. apply lt_wf_ind. auto.
   Defined.
   
-  (* end details *)
-  
+   
   Lemma lex_nat_wf : well_founded lex_nat.
   Proof.
     intros (a, b); pattern a, b; apply lt_wf_double_ind.
@@ -99,13 +139,14 @@ Compute Ack 3 2.
   constructor; intros (m', n') [G | [-> G]].
     - now apply H1.
     - now apply H2.
-    (*  constructor. intros (m', n') [G | [G1 G]].
-    - now apply H1.
-    - rewrite -> G1; now apply H2.
-    *)  
-  Defined.
+   Defined.
 
  
+ (*|
+   
+Using Program Fixpoint
++++++++++++++++++++++++
+|*)
   
 Module Alt2.
 
@@ -131,7 +172,11 @@ Module Alt2.
 End Alt2.
 
 
-(** With the Equations plug-in *)
+(*|
+Using the Equations plug-in 
+++++++++++++++++++++++++++++
+|*)
+
 
 From Equations Require Import Equations. 
 
@@ -152,14 +197,26 @@ End Alt3.
 
 
 
-(** *** Exercise 
+(*|
+
+Exercise 
+--------
 
    Prove that the four definitions of the Ackermann function 
    [Ack] , [Alt.Ack], [Alt2.Ack],  and [Alt3.ack] are extensionnally equal 
- *)
+ 
+|*)
 
 
-(** *** Usual equations *)
+(*| 
+    
+First levels of the (Ack n) hierarchy
+=====================================
+
+Usual equations 
+++++++++++++++++
+
+|*)
 
 Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
@@ -171,7 +228,14 @@ Lemma Ack_S_S : forall m p,
     Ack (S m) (S p) = Ack m (Ack (S m) p).
 Proof.  now cbn. Qed.
 
-(** *** First values *)
+(*|
+
+m=1,2,3 ...
+++++++++++++
+
+|*)
+
+
 
 Lemma Ack_1_n n : Ack 1 n = S (S n).
 Proof.
@@ -187,10 +251,8 @@ Qed.
 
 
 Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
-  (* begin details *)
 Proof.
   induction n.
-  (* begin details *)
   -  reflexivity.
   - rewrite Ack_S_S, Ack_2_n, IHn.
     change (exp2 (S (S (S (S n)))))
@@ -201,9 +263,8 @@ Proof.
       - cbn in IHn; lia.
     }
     lia.
-    (* end details *)
 Qed.
-(* end details *)
+
 
 
 Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
@@ -236,19 +297,34 @@ Qed.
 
 
 
-(** ***  monotony properties 
+(*|  
+
+Monotony properties
+===================
 
   We prove simultaneously 3 properties of [Ack n] by induction on [m]:
-  - [Ack m] is strictly monotonous,
-  - [Ack m n > n]
-  - [Ack m n <= Ack (S m) n]
-*)
+
+   - (Ack m) is strictly monotonous,
+
+   - Ack m n > n
+
+   - Ack m n <= Ack (S m) n
+
+|*)
 
 Section Ack_Properties.
   
   Let P (m:nat) := strict_mono (Ack m) /\
                    S <<=  (Ack m) /\
                    (forall n,  Ack m n <= Ack (S m) n).
+
+(*|
+
+Base case
+++++++++++
+
+|*)
+  
 
   Remark P0 : P 0.
   Proof.
@@ -260,6 +336,13 @@ Section Ack_Properties.
     - intro n; simpl (Ack 1); cbn; induction n; cbn; auto with arith. 
   Qed.
 
+(*|
+
+induction step
+++++++++++++++
+
+|*)
+  
   Section Induc_step.
     Variable m:nat.
     Hypothesis Hm : P m.
@@ -274,7 +357,8 @@ Section Ack_Properties.
 
     Remark Rem2 : S <<= Ack (S m).
     Proof.
-      intros p; destruct Hm as [H1 [H2 H3]]; transitivity (Ack m p); auto.
+      intros p; destruct Hm as [H1 [H2 H3]];
+        transitivity (Ack m p); auto.
     Qed.
 
     Remark Ack_m_mono_weak : forall n p, n <= p ->
@@ -347,16 +431,16 @@ Proof.
   apply Ack_properties.  
 Qed.
 
-(** ** Bounding nested calls of [Ack] 
+(*|
+
+Bounding nested calls of [Ack]
+==============================
 
    The following inequality is applied in the proof that [Ack] is not primitive 
    recursive, allowing to eliminate patterns of the form [Ack (Ack _ _ _)].
 
-<<
- Lemma nested_Ack_bound : 
-    forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
->>
-*)
+
+|*)
 
 Section Proof_of_nested_Ack_bound.
 
@@ -397,7 +481,8 @@ Section Proof_of_nested_Ack_bound.
     - apply R1.
   Qed.
 
-  Lemma nested_Ack_bound : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
+  Lemma nested_Ack_bound : forall k m n,
+      Ack k (Ack m n) <= Ack (2 + max k m) n.
   Proof.
     intros; pose (x:= Nat.max k m).
     - fold x.
@@ -430,9 +515,11 @@ Proof.
        apply IHp.
 Qed.
 
-(** **  [Ack] is (partially) strictly monotonous in its first argument  *)
+(*| 
 
+[Ack] is (partially) strictly monotonous in its first argument  
 
+|*)
 
 Remark R5 m n :  Ack m (S n) < Ack (S m) (S n).
 Proof.
@@ -451,9 +538,15 @@ Proof.
      apply R5.
 Qed.
 
-(* To delete  ????
+(*| 
 
-(** ** Ackermann function as a 2nd-order iteration  (two versions) *)
+To remove ?
+============
+
+
+ Ackermann function as a 2nd-order iteration  (two versions) 
+
+|*)
 
 
 Definition phi_Ack (f : nat -> nat) (k : nat) :=
@@ -513,4 +606,4 @@ Proof.
   - rewrite Ack_paraphrase, iterate_S_eqn; now rewrite IHm.
 Qed.
 
- *)
+
