@@ -120,11 +120,10 @@ Proof.
   + apply H0; eauto with arith.
 Qed.
 
-Lemma dominates_trans : forall f g h,  dominates g f ->
-                                       dominates h g ->
-                                       dominates h f.
+Lemma dominates_trans f g h :
+  dominates g f ->  dominates h g -> dominates h f.
 Proof.
-  intros f g h [i Hi] [j Hj]; exists (Nat.max i j);
+  intros [i Hi] [j Hj]; exists (Nat.max i j);
     eapply dominates_from_trans with g; eauto.
 Qed.
 
@@ -385,7 +384,7 @@ Qed.
 
 (**  ** Second-order iterate  *)
 
-Lemma iterate_ext2 {A:Type} (f g : (A ->A)->A -> A)
+Lemma iterate_ext2 {A:Type} (f g : (A -> A) -> A -> A)
       (h i : A->A) : (forall x, h x = i x) ->
                      (forall h' i',  (forall x, h' x = i' x) ->
                                      forall x, f h' x = g i' x) ->
@@ -477,8 +476,7 @@ Lemma iterate2_mono2 (phi psi : (nat->nat)->(nat->nat)):
   (forall g, strict_mono g -> S <<= g -> S <<=  (phi g))->
   (forall g, strict_mono g -> S <<= g -> strict_mono (psi g))->
   (forall g, strict_mono g -> S <<= g -> S <<=  (psi g))->
-  (forall g x ,  
-                 strict_mono g -> fun_le S g  -> phi g x <= psi g x) ->
+  (forall g x, strict_mono g -> fun_le S g  -> phi g x <= psi g x) ->
   (forall f g, strict_mono f -> strict_mono g -> S <<= f -> S <<= g ->
                (forall x, f x <= g x) -> (forall x, psi f x <= psi g x)) ->
   forall k g x  y,  strict_mono g -> S <<= g ->
@@ -529,7 +527,7 @@ Definition hyper_exp2 k := iterate exp2 k 1.
 Lemma hyper_exp2_S : forall n, hyper_exp2 (S n) = exp2 (hyper_exp2 n).
 Proof.  induction n; cbn; auto. Qed.
 
-(** Old stuff : delete if useless *)
+(* begin details: old stuff, delete if useless *)
 
 Lemma iterate_ge_from : forall f i, dominates_from i f id -> 
                                forall  j, i <= j ->
@@ -621,3 +619,4 @@ Proof.
      eapply   iterate_ge_from with i; auto.
 Qed.
 
+(* end details *)

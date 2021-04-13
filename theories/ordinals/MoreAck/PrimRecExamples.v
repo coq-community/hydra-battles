@@ -276,6 +276,21 @@ Proof.
   - apply plus_alt_ok. 
 Qed.
 
+About evalPrimRecFunc.
+
+Remark R02 : 1 < 2.
+Proof. auto. Qed.
+
+Let xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
+  
+Compute evalPrimRec 1 xpred 10.
+
+Lemma predIsPR : isPR 1 pred.
+Proof.
+  exists xpred.
+  intro n; induction n; now cbn. 
+Qed.
+
 
 End Alt.
 

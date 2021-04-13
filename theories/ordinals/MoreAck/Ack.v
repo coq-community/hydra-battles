@@ -94,7 +94,7 @@ Compute Ack 3 2.
   
   Lemma lex_nat_wf : well_founded lex_nat.
   Proof.
-    intros (a, b); pattern a, b; apply lt_wf_double_ind.
+    intros (a, b); pattern a, b; apply lt_wf_double_ind. 
     intros m n H1 H2.
   constructor; intros (m', n') [G | [-> G]].
     - now apply H1.
@@ -149,6 +149,7 @@ Module Alt3.
     ack (S m, S n) := ack (m, ack (S m, n)).
 
 End Alt3.
+
 
 
 
@@ -360,7 +361,7 @@ Qed.
 
 Section Proof_of_nested_Ack_bound.
 
-  Remark R0 (m:nat): forall n, 2 + n <= Ack (2+m) n.
+  Remark R0 (m:nat): forall n, 2 + n <= Ack (2 + m) n.
   Proof.
     induction m.
     -  intros; simpl (2+0).
@@ -377,7 +378,7 @@ Section Proof_of_nested_Ack_bound.
   Remark R1 : forall m n, Ack (S m) (S n) <= Ack (2 + m) n.
   Proof. 
     intro; destruct n; simpl (2 + m).
-    -   rewrite Ack_S_0; left.
+    -  rewrite Ack_S_0; left.
     -  rewrite (Ack_S_S  (S m));
          generalize (R0 m n ); intro H;  apply Ack_mono_r; auto.
   Qed.
@@ -397,9 +398,9 @@ Section Proof_of_nested_Ack_bound.
     - apply R1.
   Qed.
 
-  Lemma nested_Ack_bound : forall k m n, Ack k (Ack m n) <= Ack (2 + max k m) n.
+  Lemma nested_Ack_bound k m n :  Ack k (Ack m n) <= Ack (2 + max k m) n.
   Proof.
-    intros; pose (x:= Nat.max k m).
+    pose (x:= Nat.max k m).
     - fold x.
       assert (H: m <= x) by lia.
       assert (H0: k <= x) by lia.

@@ -95,7 +95,7 @@ Qed.
 
 Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
  naryFunc m -> nat :=
-  match l in (Vector.t _ m) return (naryFunc m -> nat) with
+  match l  in (Vector.t _ m) return (naryFunc m -> nat) with
   | Vector.nil => fun x : naryFunc 0 => x
   | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
   end.

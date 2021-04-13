@@ -37,7 +37,7 @@ Qed.
 (** ** Comparing an n-ary and a binary functions *)
 
 Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n), v_apply f v <= A q  (max_v v).
+  exists (q:nat), forall (v: t nat n), v_apply f v <= A q (max_v v).
 
 Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
 
@@ -51,9 +51,9 @@ Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
 
-(**  ** Technical lemmas : you may skip this section *)
 
-(* begin details *)
+(* begin details : A few technical  lemmas. *)
+
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
 (* begin details *)
@@ -79,16 +79,17 @@ Proof.
     + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
       *  replace v with (cons (hd v) (tl v)) at 1; cbn.
          --   transitivity (max_v (tl v));  auto. 
-              apply le_max_r.
+              apply max_v_tl. 
          --  symmetry; apply decomp. 
       *  destruct( n0 e).
 Qed. 
+
 (* end details *)
 
 Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
                             (h: naryFunc  m),
     v_apply  (evalComposeFunc _ _ gs h) v =
-    v_apply  h (map (fun g =>  evalList _ v g) gs).
+    v_apply  h (map (fun g =>  v_apply g v) gs).
 (* begin details *)
 Proof.
   induction n.
@@ -159,6 +160,7 @@ Qed.
 (** ** Every primitive recursive function is majorized by [Ack] *)
 
 (** *** Base cases *)
+
 Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
   exists 1; intro v; rewrite (decomp1 v).
@@ -322,8 +324,8 @@ Proof.
 Qed.
 
 Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
-    exists (n:nat),
-    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
+    exists n:nat,
+    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x y).
 Proof.
    destruct (majorPR2 _ Hf) as [m Hm].
    exists (S (max 2 m)); intros x y; destruct x, y; try lia.
@@ -339,16 +341,33 @@ Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  (* begin show *)
+
   Lemma Ack_not_PR : False.
+  (* begin show *)
   Proof.
-    destruct (majorPR2_strict Ack HAck) as [m Hm];
+    destruct (majorPR2_strict Ack HAck) as [m Hm].
+  (* end show *)
+    (* begin details *)
+    (**
+<<
+1 subgoal (ID 333)
+  
+  HAck : isPR 2 Ack
+  m : nat
+  Hm : forall x y : nat, 2 <= x -> 2 <= y -> Ack x y < Ack m (Nat.max x y)
+  ============================
+  False
+>>
+     **)
     pose (X := max 2 m); specialize (Hm X X).
     rewrite max_idempotent in Hm;
-      assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
+      assert (H0: Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
+    (* end details *)
+   
+ (* begin show *)
   Qed.
-  (* end show *)
+ (* end show *)  
   
 End Impossibility_Proof.
 
@@ -403,7 +422,7 @@ Section Proof_of_Ackn_PR.
     Variable n:nat.
     Hypothesis IHn: isPR 1 (Ack n).
 
-       
+    (* begin details : boring details ... *)
     Remark R1 : extEqual 1 (Ack (S n))
                          (fun a : nat =>
                             nat_rec (fun _ : nat => nat) 1
@@ -425,6 +444,7 @@ Section Proof_of_Ackn_PR.
       - eapply indIsPR; now apply filter01IsPR.  
     Qed.
 
+    (* end details *)
        
     Lemma iSPR_Ack_Sn : isPR 1 (Ack (S n)).
     Proof.
@@ -434,14 +454,15 @@ Section Proof_of_Ackn_PR.
     Qed.
 
   End S_step.
-
+  (* begin show *)
   Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
   Proof.
     induction n.
     - cbn; apply succIsPR.
     - apply iSPR_Ack_Sn; auto.  
   Qed.
-
+  (* end show *)
+  
 End Proof_of_Ackn_PR.
 
 

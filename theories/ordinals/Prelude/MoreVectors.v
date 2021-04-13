@@ -230,13 +230,13 @@ Qed.
 
   (** Maximum of a vector of nat *)
 
-Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
-  match n as n0 return (Vector.t nat n0 -> nat)
-  with
-    0 => fun v => 0
-  | S p => fun (v : Vector.t nat (S p)) =>
-             (max (Vector.hd v) (max_v  (Vector.tl v)))
-  end. 
+  Fixpoint max_v {n:nat} (v: Vector.t nat n) : nat :=
+    match v  with
+    | nil =>  0
+    | cons x t => max x (max_v t)
+    end.
+
+
 
 Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
 Proof.
@@ -265,6 +265,11 @@ Proof.
      + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
 
+Lemma max_v_tl {n:nat}(v:  Vector.t nat (S n)) :
+  max_v (Vector.tl v) <= max_v v.
+Proof.
+  rewrite (decomp _ _ v);  cbn;  apply le_max_r.
+Qed.
 
 (*
 Fixpoint vector_nth (A:Type)(n:nat)(p:nat)(v:t A p){struct v}

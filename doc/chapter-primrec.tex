@@ -1,13 +1,51 @@
 \chapter{Primitive recursive functions}
 
 \section{Introduction}
-The definition of primitive recursive functions we use comes
-from Russel O'Connors formalization in \coq{} of
-G\"odel's incompleteness theorems~\cite{OConnor05}, now hosted in
+Primitive recursive functions are a small class of total functions, corresponding to the expressive power of a simple imperative programming language without \textbf{while} loops, in which every program execution terminates.
+
+Primitive recursive functions are total functions from $\mathbb{N}^n$ to
+$\mathbb{N}$, for some $n\in\mathbb{N}$. Note that not all 
+total $n$-ary recursive functions are primitive recursive
+(see for instance Sect.~\vref{sect:ack-not-PR}).
+
+The traditional definition of the set of primitive recursive functions is structured as an inductive definition 
+in five rules: three base cases, and two recursive construction rules. 
+
+\begin{description}
+  \item[zero] the constant function of value $0$ is primitive recursive.
+\item[S] The successor function $S:\mathbb{N}\rightarrow\mathbb{N}$ is primitive recursive.
+ \item[projections] For any pair $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
+\item[composition] For any $n$ and $m$, if $h: \mathbb{N}^m\rightarrow\mathbb{N}$, and
+$g_0,\dots, g_{m-1}$ are primitive recursive of $n$ arguments, then the function which maps any
+tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1}))$ is primitive recursive.
+\item[primitive recursion]
+If $g: \mathbb{N}^n\rightarrow\mathbb{N}$ and $h: \mathbb{N}^{n+2}\rightarrow\mathbb{N}$ are primitive recursive, then the function from $\mathbb{N}^{n+1}$ into $\mathbb{N}$ defined by
+\begin{align}
+f(0,x_1,\dots,x_n)&=g(x_1,\dots,x_n)\\
+f(S(p),x_1,\dots,x_n)&=h(p,f(p, x_1,\dots,x_n),  x_1,\dots,x_n)
+\end{align} 
+is primitive recursive.
+\end{description}
+
+
+Please note the use of dots: $\ldots$ in the definition above. 
+Dots are not part of \gallina's syntax. Thus, the formal definition of the set of primitive recursive function will have to overcome this representation problem.
+
+  We present in this chapter a formalization of  primitive recursive functions, taken from  Russel O'Connor's formalization in \coq{} of
+G\"odel's incompleteness theorems~\cite{OConnor05}.
+
+\begin{remark}
+ The theory of primitive recursive function is now hosted in
 the \texttt{theories/ordinals/Ackermann} directory.
+The specific part on G\"odel's theorem,  is also on
+coq-community (\url{https://github.com/coq-community/goedel}) and requires the 
+\href{https://github.com/coq-community/pocklington}{Pocklington library} for lemmas on primality.
+\end{remark}
 
 This chapter contains some comments on Russel's library, as well as a few extensions.
 Contributions (under the form of comments, new examples or exercises) are welcome!. 
+
+
 
 \section{First look at the Ackermann library}
 
@@ -142,29 +180,10 @@ Qed.
 
 \subsection{A Data-type for Primitive Recursive Functions}
 
-The traditional definition of the set of primitive recursive functions is structured as an inductive definition 
-in five rules: three base cases, and two construction rules. Primitive recursive functions are total functions from $\mathbb{N}^n$ to
-$\mathbb{N}$, for some $n\in\mathbb{N}$.
-
-\begin{description}
-  \item[zero] the constant function of value $0$ is primitive recursive.
-\item[S] The successor function $S:\mathbb{N}\rightarrow\mathbb{N}$ is primitive recursive.
- \item[projections] For any pair $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
-\item[composition] For any $n$ and $m$, if $h: \mathbb{N}^m\rightarrow\mathbb{N}$, and
-$g_0,\dots, g_{m-1}$ are primitive recursive of $n$ arguments, then the function which maps any
-tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1}))$ is primitive recursive.
-\item[primitive recursion]
-If $g: \mathbb{N}^n\rightarrow\mathbb{N}$ and $h: \mathbb{N}^{n+2}\rightarrow\mathbb{N}$ are primitive recursive, then the function from $\mathbb{N}^{n+1}$ into $\mathbb{N}$ defined by
-\begin{align}
-f(0,x_1,\dots,x_n)&=g(x_1,\dots,x_n)\\
-f(S(p),x_1,\dots,x_n)&=h(p,f(p, x_1,\dots,x_n),  x_1,\dots,x_n)
-\end{align} 
-is primitive recursive.
-\end{description}
-
 O'Connor's formalization of primitive recursive functions takes the form of two mutually inductive dependent data types, each constructor of which is associated with one of these  rules.
 These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$ arguments), and
 (\texttt{PrimRecs $n$ $m$}) ($m$-tuples of primitive recursive functions of $n$ arguments).
+
 
 \index{coq}{Dependent types}
 \index{coq}{Mutually inductive types}
@@ -206,7 +225,8 @@ For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ cor
 \subsection{A little bit of semantics} 
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
-$\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$ , together with the  function 
+$\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$.
+This function is definied by mutual recursion,  together with the  function 
 (\texttt{evalprimRecS $n$ $m$}) of type 
 $\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
 
@@ -340,7 +360,7 @@ Compute map mystery_fun[0;1;2;3;4;5;6] : t nat _.
      : t nat 7
 \end{Coqanswer}
 
-Ok, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections much simpler ways to prove that a given function is primitive recursive, whithout looking at an unreadable term.
+After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, whithout building such an unreadable term.
 
 \section{Proving that a given arithmetic function is primitive recursive}
 
@@ -377,6 +397,9 @@ how they may be applied.
 \begin{remark}
 In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}. Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page\pageref{sect:bigfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
 \texttt{Defined}s.
+
+If it does not cause compatibility problems (with 
+\href{https://github.com/coq-community/goedel}{goedel library} fr instance), we plan to make all theses lemmas transparent.
 \end{remark}
 
 \subsubsection{Elementary proofs of \texttt{isPR} statements}
@@ -582,7 +605,8 @@ filter010IsPR :
 forall g : nat -> nat, isPR 1 g -> isPR 3 (fun _ b _ : nat => g b)
 \end{Coqanswer}
 
-Thus, our first subgoal is solved easily and the proof ends, applying already proven lemmas.
+Thus, our first subgoal is solved easily. The rest of the proof 
+is just an application of already proven lemmas.
 
 
 \begin{Coqsrc}
@@ -601,7 +625,7 @@ Comment more examples from   \href{../theories/html/hydras.MoreAck.PrimRecExampl
 \index{primrec}{Exercises}
 \begin{exercise}
 There is a lot of lemmas similar to \texttt{filter010IsPR} in the \texttt{primRec} library, useful to control the arity of functions.
-Thus, the reader may look at them, and invent simple examples of application for each one.
+Thus, the reader may look at them, and invent simple examples of application for each lemma.
 \end{exercise}
 
 \index{primrec}{Exercises}
@@ -612,7 +636,7 @@ Multiplication of natural number is already proven in the \texttt{primRec} libra
 \subsubsection{More examples}
 
 The following proof decomposes the \texttt{double} function as the composition of 
-multiplication with the identity and the constant function wihich returns $2$.
+multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
 
 \begin{Coqsrc}
@@ -862,7 +886,7 @@ Prove that all the four functions are extensionnally equal.
 
 \subsubsection{First properties of the Ackermann function}
 
-The three firts lemmas make us sure that our function 
+The three first lemmas make us sure that our function 
 \texttt{Ack} satifies the ``usual'' equations.
 
 \begin{Coqsrc}
@@ -1002,7 +1026,7 @@ Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
   with
     0 => fun v => 0
   | S p => fun (v : Vector.t nat (S p)) =>
-             (max (Vector.hd v) (max_v  (Vector.tl v)))
+             max (Vector.hd v) (max_v  (Vector.tl v))
   end. 
 
 Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
