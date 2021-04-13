@@ -1,14 +1,19 @@
 (*|
+
 ===============================================
 Proof that Ack is not primitive recursive
 ===============================================
 
- After https://planetmath.org/ackermannfunctionisnotprimitiverecursive
+|*)
+
+(*|
+
+After https://planetmath.org/ackermannfunctionisnotprimitiverecursive
+
 and
 http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf
 
 |*)
-
 
 
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
@@ -17,12 +22,17 @@ Import extEqualNat  VectorNotations.
 
 
 
-(**  Uncurried apply :
- [v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
+(*|
 
- *)
+Preliminaries
+=============
 
-Notation "'v_apply' f v" := (evalList _ v f) (at level 10, f at level 9).
+Uncurried apply
+  
+|*)
+
+Notation "'v_apply' f v" := (evalList _ v f)
+                              (at level 10, f at level 9).
 
 
 Example Ex2 : forall (f: naryFunc 2) x y,
@@ -37,14 +47,25 @@ Proof.
   intros; now cbn.
 Qed.
 
-(** ** Comparing an n-ary and a binary functions *)
+
+(*|
+
+Comparing an n-ary and a binary functions
+++++++++++++++++++++++++++++++++++++++++++
+|*)
 
 Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n), v_apply f v <= A q  (max_v v).
+  exists (q:nat), forall (v: t nat n),
+      v_apply f v <= A q  (max_v v).
 
-Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
+Definition majorizedPR {n} (x: PrimRec n) A :=
+  majorized (evalPrimRec n x) A.
 
-(** For vectors of functions *)
+(*|
+
+For vectors of functions
++++++++++++++++++++++++++
+|*)
 
 Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
            (A : naryFunc 2):=
@@ -54,7 +75,12 @@ Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
 
-(**  ** Technical lemmas : you may skip this section *)
+(*|
+
+Technical lemmas. You may skip this section.
+============================================
+
+*)
 
 
 Lemma evalList_Const : forall n (v:t nat n) x,
@@ -110,11 +136,15 @@ Proof.
          generalize m gs; intro m0;  induction m0.
          * cbn; intros; rewrite (decomp1  gs0); cbn; auto.
          *   intros; replace gs0 with
-                         (cons (hd gs0) (cons (hd (tl gs0)) (tl (tl gs0)))).
-             -- cbn; cbn in *; specialize (IHm0  (tl gs0));  rewrite IHm0; auto.
+                         (cons (hd gs0)
+                               (cons (hd (tl gs0))
+                                     (tl (tl gs0)))).
+             -- cbn; cbn in *; specialize (IHm0  (tl gs0));
+                  rewrite IHm0; auto.
              --  rewrite decomp;  f_equal.
                  now rewrite decomp.
 Qed.
+
 Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
                                 (g : naryFunc (S n)),
     v_apply (compose2 n f g) v =
@@ -149,9 +179,16 @@ Proof.
 Qed.
 
 
-(** ** Every primitive recursive function is majorized by [Ack] *)
+(*|
 
-(** *** Base cases *)
+Every primitive recursive function is majorized by Ack.
+========================================================
+
+Base cases
+++++++++++
+
+|*)
+
 Lemma majorSucc : majorizedPR  succFunc Ack.
 Proof.
   exists 1; intro v; rewrite (decomp1 v).
@@ -174,7 +211,12 @@ Proof.
     + auto with arith.
 Qed.
 
-(** *** The general case is proved by  induction on x *)
+(*|
+
+The general case is proved by  induction on x 
++++++++++++++++++++++++++++++++++++++++++++++
+
+|*)
 
 Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
 Proof.
@@ -182,22 +224,27 @@ Proof.
                   (P0 := fun n m y => majorizedSPR  y Ack).
   - apply majorSucc.
   - apply majorZero.
-  - apply majorProjection. 
-  -  (** function composition *)
+  - apply majorProjection.
+  -  (* function composition *)
     destruct IHx, IHx0; red; exists (2 + max x0 x1). 
     intro v; simpl evalPrimRec; rewrite evalListComp.
     generalize 
-      (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
+      (H0  (map (fun g0 : naryFunc n => evalList n v g0)
+                (evalPrimRecs n m g)));
       intro H00; eapply Le.le_trans.
     +  auto.
-    + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
+    + generalize (H v); intro HH;
+        transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.
         rewrite MoreVectors.Forall_forall; intros.
 
-        generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
-                                     (evalPrimRecs n m g)) a H1).
+        generalize
+          (max_v_ge m
+                    (map (fun g : naryFunc n => v_apply g v)
+                         (evalPrimRecs n m g)) a H1).
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
+        
   - (** Primitive recursion *)
         destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
@@ -284,8 +331,11 @@ Proof.
 Qed. 
 
 
-(** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
- *)
+(*|
+
+Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|*)
 
 Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
   : exists (n:nat), forall x,  f x  <= Ack n x.
@@ -324,13 +374,17 @@ Proof.
  Qed.
 
 
-(** *** Now, let us assume that [Ack] is PR *)
+(*| 
+
+Now, let us assume that [Ack] is PR
+====================================
+
+ |*)
 
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  (* begin show *)
   Lemma Ack_not_PR : False.
   Proof.
     destruct (majorPR2_strict Ack HAck) as [m Hm];
@@ -339,11 +393,14 @@ Section Impossibility_Proof.
       assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
   Qed.
-  (* end show *)
   
 End Impossibility_Proof.
 
-(** ***  Any function which dominates (diagonalized) [Ack] fails to be PR *)
+(*|
+
+Every function which dominates (diagonalized) [Ack] fails to be PR.
+====================================================================
+|*)
 
 Section dom_AckNotPR.
 
@@ -364,10 +421,15 @@ Section dom_AckNotPR.
 
 End dom_AckNotPR.
  
-  (** ** Nevertheless, for any [n], [Ack n] is primitive recursive. *)
+(*|
 
-Lemma AckSn_as_iterate (n:nat) : extEqual 1 (Ack (S n))
-                                          (fun k => iterate (Ack n) (S k) 1).
+Nevertheless, for any [n], [Ack n] is primitive recursive.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|*)
+
+Lemma AckSn_as_iterate (n:nat) :
+  extEqual 1 (Ack (S n))
+           (fun k => iterate (Ack n) (S k) 1).
 Proof. intro;reflexivity. Qed. 
 
 
