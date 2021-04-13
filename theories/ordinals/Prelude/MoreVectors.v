@@ -265,6 +265,11 @@ Proof.
      + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
 
+Lemma max_v_tl {n:nat}(v:  Vector.t nat (S n)) :
+  max_v (Vector.tl v) <= max_v v.
+Proof.
+  rewrite (decomp _ _ v);  cbn;  apply le_max_r.
+Qed.
 
 (*
 Fixpoint vector_nth (A:Type)(n:nat)(p:nat)(v:t A p){struct v}
