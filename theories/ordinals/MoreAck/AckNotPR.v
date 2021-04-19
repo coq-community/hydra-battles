@@ -531,12 +531,7 @@ Section Proof_of_Ackn_PR.
 
 End Proof_of_Ackn_PR.
 
-(*
 
-
-
-
-*)
 
 
 

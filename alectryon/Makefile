@@ -5,6 +5,7 @@
 OPTIONS=  --output-directory . -R ../theories/ordinals hydras
 INPUTDIR=../theories/ordinals
 
+all: Ack.html AckNotPR.html primRec.html
 
 Ack.html: $(INPUTDIR)/MoreAck/Ack.v
 	alectryon.py  $(OPTIONS) $<

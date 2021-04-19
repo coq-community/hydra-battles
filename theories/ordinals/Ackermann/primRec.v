@@ -1,23 +1,29 @@
-(** Primitive Recursive functions *)
-(** Russel O'Connor *)
+(*|
+====================================
+  Primitive Recursive functions
+====================================
 
-Require Import Arith.
-Require Import Peano_dec.
-Require Import Compare_dec.
-Require Import Coq.Lists.List.
-Require Import Eqdep_dec.
+----------------------
+  by  Russel O'Connor
+----------------------             
+|*)
+             
+Require Import Arith  Peano_dec Compare_dec.
+Require Import Coq.Lists.List Eqdep_dec.
 Require Import extEqualNat.
 Require Vector.
-Require Import misc.
-Require Export Bool.
-Require Export EqNat.
-Require Import Even.
-Require Import Max.
+Require Import misc  Bool  EqNat Even  Max.
 
-(** * Definitions *)
+(*| 
 
-(*| `PrimRec `` : data type of primitive recursive functions of arity ``n`` 
-    ``PrimRec n m`` : ``m``-tuples of ``PrimRec n`` |*)
+Definitions 
+-----------
+|*)
+
+(*| 
+ - ``PrimRec n`` : data type of primitive recursive functions of arity ``n`` 
+ - ``PrimRec n m`` : ``m``-tuples of ``PrimRec n`` 
+|*)
 
 Inductive PrimRec : nat -> Set :=
   | succFunc : PrimRec 1
@@ -26,7 +32,8 @@ Inductive PrimRec : nat -> Set :=
   | composeFunc :
       forall (n m : nat) (g : PrimRecs n m) (h : PrimRec m), PrimRec n
   | primRecFunc :
-      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))), PrimRec (S n)
+      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))),
+        PrimRec (S n)
 with PrimRecs : nat -> nat -> Set :=
   | PRnil : forall n : nat, PrimRecs n 0
   | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> PrimRecs n (S m).
@@ -37,9 +44,15 @@ Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
   with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
 
-(** ** Semantics *)
+(*|
+Semantics 
++++++++++++
+|*)
 
-(** *** Constants *)
+(*|
+Constants 
+**********
+|*)
 
 Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
   match n return (naryFunc n) with
@@ -47,9 +60,15 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
   | S n' => fun _ => evalConstFunc n' m
   end.
 
-(** *** Projections 
-   The parameters are number in opposite order.
-   So proj(2,0)(a,b) = b. *)
+(*| 
+Projections 
+***********
+
+The parameters are number in opposite order.
+
+So proj(2,0)(a,b) = b.
+ 
+|*)
 
 Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
   match n return (forall m : nat, m < n -> naryFunc n) with
@@ -68,7 +87,7 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
       end
   end.
 
-(** Irrelevance of the proof that [m < n] *)
+(*| Irrelevance of the proof that ``m < n`` |*)
 
 Lemma evalProjFuncInd :
  forall (n m : nat) (p1 p2 : m < n),
@@ -91,7 +110,12 @@ induction n as [| n Hrecn].
       reflexivity.
 Qed.
 
-(**  Applies an m-ary function to the vector l *)
+(*|
+
+Applies an m-ary function to the vector ``l`` 
+*********************************************
+|*)
+
 
 Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
  naryFunc m -> nat :=
@@ -100,14 +124,20 @@ Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
   | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
   end.
 
-Fixpoint evalOneParamList (n m a : nat) (l : Vector.t (naryFunc (S n)) m)
- {struct l} : Vector.t (naryFunc n) m :=
+Fixpoint evalOneParamList (n m a : nat)
+         (l : Vector.t (naryFunc (S n)) m)
+         {struct l} : Vector.t (naryFunc n) m :=
   match l in (Vector.t _ m) return (Vector.t (naryFunc n) m) with
   | Vector.nil  => Vector.nil  (naryFunc n)
-  | Vector.cons f m' l' => Vector.cons _ (f a) m' (evalOneParamList n m' a l')
+  | Vector.cons f m' l' =>
+    Vector.cons _ (f a) m' (evalOneParamList n m' a l')
   end.
 
-(** *** Function composition *)
+(*| 
+
+Function composition 
+*********************
+|*)
 
 Fixpoint evalComposeFunc (n : nat) :
  forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
@@ -131,16 +161,26 @@ Fixpoint compose2 (n : nat) : naryFunc n -> naryFunc (S n) -> naryFunc n :=
       compose2 n' (f a) (fun x : nat => g x a)
   end.
 
-(** *** Primitive recursion *)
+(*|
+Primitive recursion 
+********************
+
+|*)
 
 Fixpoint evalPrimRecFunc (n : nat) (g : naryFunc n) 
- (h : naryFunc (S (S n))) (a : nat) {struct a} : naryFunc n :=
+         (h : naryFunc (S (S n))) (a : nat) {struct a}
+  : naryFunc n :=
   match a with
   | O => g
   | S a' => compose2 _ (evalPrimRecFunc n g h a') (h a')
   end.
 
-(**  The interpretation function *)
+(*| 
+
+The interpretation function 
+****************************
+|*)
+
 
 Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} : 
  naryFunc n :=
@@ -255,13 +295,15 @@ Proof.
     + auto.
 Qed.
 
-(** ** Predicates "to be primitive recursive"  *)
+(*|  To be primitive recursive (functions and relations) |*)
 
 Definition isPR (n : nat) (f : naryFunc n) : Set :=
   {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.
 
 Definition isPRrel (n : nat) (R : naryRel n) : Set :=
   isPR n (charFunction n R).
+
+
 
 Lemma succIsPR : isPR 1 S.
 Proof.
@@ -286,7 +328,11 @@ Proof.
 Qed.
 
 
-(** ** Usual projections (in curried form) are primitive recursive *)
+(*| 
+Usual projections (in curried form) are primitive recursive 
+****************************************************************
+
+|*)
 
 Lemma idIsPR : isPR 1 (fun x : nat => x).
 Proof.
@@ -348,12 +394,17 @@ Proof.
   exists (projFunc _ _ H); cbn; reflexivity.
 Qed.
 
-(** ** Composition lemmas *)
+(*|
 
-Lemma filter01IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 2 (fun a b : nat => g b).
+Composition Lemmas
+*******************
+|*)
+
+Lemma filter01IsPR g:
+   isPR 1 g -> isPR 2 (fun a b : nat => g b).
+(*| .. coq:: none |*)
 Proof.
-  intros g  [x p]; cbn in p.
+  intros [x p]; cbn in p.
   assert (H: isPR 2 (fun a b : nat => b)) by apply pi2_2IsPR.
   destruct H as [x0 p0]; cbn in p0. 
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -364,11 +415,13 @@ Proof.
   rewrite p0.
   auto.
 Qed.
+(*||*)
 
-Lemma filter10IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 2 (fun a b : nat => g a).
+Lemma filter10IsPR g:
+   isPR 1 g -> isPR 2 (fun a b : nat => g a).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p. 
+  intros [x p]; cbn in p. 
   assert (H: isPR 2 (fun a b : nat => a)) by apply  pi1_2IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -376,6 +429,7 @@ Proof.
   - now rewrite <- p.
   - now rewrite p0.
 Qed.
+(*||*)
 
 Lemma filter100IsPR :
  forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g a).
