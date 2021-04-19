@@ -16,8 +16,8 @@ Require Import Max.
 
 (** * Definitions *)
 
-(** [PrimRec n] : data type of primitive recursive functions of arity [n] 
-    [PrimRec n m] : m-tuples of [PrimRec n] *)
+(*| `PrimRec `` : data type of primitive recursive functions of arity ``n`` 
+    ``PrimRec n m`` : ``m``-tuples of ``PrimRec n`` |*)
 
 Inductive PrimRec : nat -> Set :=
   | succFunc : PrimRec 1

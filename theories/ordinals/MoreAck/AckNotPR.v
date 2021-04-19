@@ -38,13 +38,13 @@ Notation "'v_apply' f v" := (evalList _ v f)
 Example Ex2 : forall (f: naryFunc 2) x y,
     v_apply f (x::y::nil) = f x y.
 Proof.
-  intros; now cbn.
+  reflexivity.
 Qed.
 
 Example Ex4 : forall (f: naryFunc 4) x y z t,
     v_apply f (x::y::z::t::nil) = f x y z t.
 Proof.
-  intros; now cbn.
+ reflexivity.
 Qed.
 
 
@@ -85,6 +85,7 @@ Technical lemmas. You may skip this section.
 
 Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
+(*| .. coq:: none |*)
 Proof.
   induction n; cbn.
   - intros; cbn ; replace v with (@nil nat).
@@ -92,9 +93,11 @@ Proof.
     +  symmetry; apply t_0_nil.
   - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
 Qed.
+(*||*)
 
 Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
         v_apply (evalProjFunc n k H) v <= max_v v.
+(*| .. coq:: none *)
 Proof.
   induction n.
   -  cbn; intros; lia.
@@ -108,7 +111,8 @@ Proof.
               apply max_v_tl.
          --  symmetry; apply decomp. 
       *  destruct( n0 e).
-Qed. 
+Qed.
+(*||*)
 
 
 
@@ -116,6 +120,7 @@ Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
                             (h: naryFunc  m),
     v_apply  (evalComposeFunc _ _ gs h) v =
     v_apply  h (map (fun g =>  evalList _ v g) gs).
+(*| .. coq:: none *)
 Proof.
   induction n.
   - intros; rewrite (t_0_nil _ v); cbn.
@@ -144,32 +149,39 @@ Proof.
              --  rewrite decomp;  f_equal.
                  now rewrite decomp.
 Qed.
+(*||*)
+
 
 Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
                                 (g : naryFunc (S n)),
     v_apply (compose2 n f g) v =
     v_apply g  ((evalList n v f) :: v).
+(*| .. coq:: none *)
 Proof.
   induction n.
   - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
   -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
 Qed.
+(*||*)
 
 Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))),
     v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
     = v_apply f v.
+(*| .. coq:: none *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
   - intros; rewrite (decomp _ _ v); now cbn.
 Qed.
+(*||*)
 
 Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
                                  (g : naryFunc (S (S n))) a,
     v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
     = v_apply g
               (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
+(*| .. coq:: none *)
 Proof.
   induction n.                                                
   - intros; rewrite (t_0_nil _ v); now cbn.
@@ -177,6 +189,7 @@ Proof.
     specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
     cbn; auto.
 Qed.
+(*||*)
 
 
 (*|
@@ -226,7 +239,9 @@ Proof.
   - apply majorZero.
   - apply majorProjection.
   -  (* function composition *)
-    destruct IHx, IHx0; red; exists (2 + max x0 x1). 
+    destruct IHx, IHx0; red; exists (2 + max x0 x1).
+    (* ... *)
+    (*| .. coq:: none *)
     intro v; simpl evalPrimRec; rewrite evalListComp.
     generalize 
       (H0  (map (fun g0 : naryFunc n => evalList n v g0)
@@ -244,19 +259,22 @@ Proof.
                          (evalPrimRecs n m g)) a H1).
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
+  (*||*)
         
-  - (** Primitive recursion *)
-        destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+  - (* Primitive recursion *)
+    destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
     remember (evalPrimRec _ x2) as h.
     pose(q := S  (max r s)); red.
+    (* ... *)
+    (*| .. coq:: none *)
     remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
                                (evalPrimRec _ x2)) as f.
     assert (L1 : forall i (v: t nat n) ,
                v_apply f (i::v)  <= Ack q (i + max_v v)).
     {
       induction i.
-   
+      
       - intros; subst f;  rewrite evalListPrimrec_0.
         simpl plus; subst g; transitivity (Ack r (max_v  v)).
         + auto.
@@ -311,12 +329,18 @@ Proof.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
            ++ rewrite max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia.
-    - (**  Lists of PR functions *)
-    
+  (*||*)
+  - (*  Empty List of PR functions *)
     red;cbn;  red; exists 0.
+    (* ... *)
+    (*| .. coq:: none *)
     intro; rewrite Ack_0.
     cbn; auto with arith.
-  - red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
+  (*||*)
+  - (* non-empty list of functions *)
+    red; cbn; red; destruct IHx, IHx0.  exists (max x0 x1).
+    (* ... *)
+    (*| .. coq:: none *)
     intros v;  cbn; specialize (H0 v).
     pose (X :=
             (max_v (map (fun f : naryFunc n => v_apply f v)
@@ -328,6 +352,7 @@ Proof.
       *  apply Ack_mono_l; apply le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
+        (*||*)
 Qed. 
 
 
@@ -343,15 +368,20 @@ Proof.
   destruct Hf as [x Hx].
   generalize (majorAnyPR 1 x). intros.
   destruct H as [N HN]. exists N.
+  (* ... *)
+  (*| .. coq:: none *)
   intros x0; specialize (HN [x0]); cbn in HN.
   replace (evalPrimRec 1 x x0) with (f x0 ) in HN.   
   now rewrite Nat.max_0_r in HN.  
-  symmetry; apply Hx.  
+  symmetry; apply Hx.
+  (*||*)
 Qed.
 
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
+  : exists (n:nat), forall x y,  f x y <= Ack n (max x y).
+  (* ... *)
+  (*| .. coq:: none *)
 Proof.
   destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
   intros.
@@ -361,6 +391,7 @@ Proof.
   - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
   - symmetry; apply Hx.
 Qed.
+(*||*)
 
 Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
     exists (n:nat),
@@ -368,9 +399,12 @@ Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
 Proof.
    destruct (majorPR2 _ Hf) as [m Hm].
    exists (S (max 2 m)); intros x y; destruct x, y; try lia.
+  (* ... *)
+  (*| .. coq:: none *)
      intros _ _;  apply Lt.le_lt_trans with (Ack m (S (Nat.max x y))).
    - rewrite succ_max_distr; auto.
    - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
+  (*||*)
  Qed.
 
 
@@ -497,7 +531,12 @@ Section Proof_of_Ackn_PR.
 
 End Proof_of_Ackn_PR.
 
+(*
 
+
+
+
+*)
 
 
 
