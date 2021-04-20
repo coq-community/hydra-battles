@@ -36,7 +36,9 @@ Inductive PrimRec : nat -> Set :=
         PrimRec (S n)
 with PrimRecs : nat -> nat -> Set :=
   | PRnil : forall n : nat, PrimRecs n 0
-  | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> PrimRecs n (S m).
+  | PRcons : forall n m : nat, PrimRec n ->
+                               PrimRecs n m ->
+                               PrimRecs n (S m).
 
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
   with PrimRecs_PrimRec_rec := Induction for PrimRecs  Sort Set.
@@ -64,9 +66,7 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
 Projections 
 ***********
 
-The parameters are number in opposite order.
-
-So proj(2,0)(a,b) = b.
+The parameters are number in opposite order. For instance, ``proj(2,0)(a,b) = b``.
  
 |*)
 
@@ -127,7 +127,8 @@ Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
 Fixpoint evalOneParamList (n m a : nat)
          (l : Vector.t (naryFunc (S n)) m)
          {struct l} : Vector.t (naryFunc n) m :=
-  match l in (Vector.t _ m) return (Vector.t (naryFunc n) m) with
+  match l in (Vector.t _ m)
+        return (Vector.t (naryFunc n) m) with
   | Vector.nil  => Vector.nil  (naryFunc n)
   | Vector.cons f m' l' =>
     Vector.cons _ (f a) m' (evalOneParamList n m' a l')
@@ -140,11 +141,15 @@ Function composition
 |*)
 
 Fixpoint evalComposeFunc (n : nat) :
- forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
+  forall m : nat, Vector.t (naryFunc n) m ->
+                  naryFunc m ->
+                  naryFunc n :=
   match
     n
     return
-      (forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n)
+    (forall m : nat, Vector.t (naryFunc n) m ->
+                     naryFunc m ->
+                     naryFunc n)
   with
   | O => evalList
   | S n' =>
@@ -153,13 +158,17 @@ Fixpoint evalComposeFunc (n : nat) :
       evalComposeFunc n' m (evalOneParamList _ _ a l) f
   end.
 
-Fixpoint compose2 (n : nat) : naryFunc n -> naryFunc (S n) -> naryFunc n :=
-  match n return (naryFunc n -> naryFunc (S n) -> naryFunc n) with
-  | O => fun (a : nat) (g : nat -> nat) => g a
-  | S n' =>
+Fixpoint compose2 (n : nat)
+  : naryFunc n -> naryFunc (S n) -> naryFunc n
+  :=
+    match n
+          return (naryFunc n -> naryFunc (S n) -> naryFunc n)
+    with
+    | O => fun (a : nat) (g : nat -> nat) => g a
+    | S n' =>
       fun (f : naryFunc (S n')) (g : naryFunc (S (S n'))) (a : nat) =>
-      compose2 n' (f a) (fun x : nat => g x a)
-  end.
+        compose2 n' (f a) (fun x : nat => g x a)
+    end.
 
 (*|
 Primitive recursion 
@@ -198,11 +207,14 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
  Vector.t (naryFunc n) m :=
   match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
   | PRnil a => Vector.nil  (naryFunc a)
-  | PRcons a b g gs => Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
+  | PRcons a b g gs =>
+    Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
 
-Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
+Definition extEqualVectorGeneral (n m : nat)
+           (l : Vector.t (naryFunc n) m) :
   forall (m' : nat) (l' : Vector.t (naryFunc n) m'), Prop.
+Proof.
   induction l as [| a n0 l Hrecl].
   - intros.
     destruct l' as [| a n0 v].
@@ -213,14 +225,15 @@ Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
     + exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
-Definition extEqualVector n: forall m (l l' : Vector.t (naryFunc n) m), Prop.
+Definition extEqualVector n:
+  forall m (l l' : Vector.t (naryFunc n) m), Prop.
   refine (@Vector.rect2 _ _ _ _ _); intros.
   - apply True.
   - apply (extEqual n a b /\ X).
 Defined.
 
-Lemma extEqualVectorRefl :
-  forall (n m : nat) (l : Vector.t (naryFunc n) m), extEqualVector n m l l.
+Lemma extEqualVectorRefl n m:
+  forall  (l : Vector.t (naryFunc n) m), extEqualVector n m l l.
 Proof.
   induction l as [| a n0 l Hrecl].
   - now simpl.
@@ -232,7 +245,8 @@ Qed.
 Lemma extEqualOneParamList :
   forall (n m : nat) (l1 l2 : Vector.t (naryFunc (S n)) m) (c : nat),
     extEqualVector (S n) m l1 l2 ->
-    extEqualVector n m (evalOneParamList n m c l1) (evalOneParamList n m c l2).
+    extEqualVector n m (evalOneParamList n m c l1)
+                   (evalOneParamList n m c l2).
 Proof.
   intro; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
   - assumption. 
@@ -241,7 +255,8 @@ Proof.
 Qed.
 
 Lemma extEqualCompose :
-  forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m) (f1 f2 : naryFunc m),
+  forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m)
+         (f1 f2 : naryFunc m),
     extEqualVector n m l1 l2 ->
     extEqual m f1 f2 ->
     extEqual n (evalComposeFunc n m l1 f1) (evalComposeFunc n m l2 f2).
@@ -263,7 +278,8 @@ Lemma extEqualCompose2 :
   forall (n : nat) (f1 f2 : naryFunc n),
     extEqual n f1 f2 ->
     forall g1 g2 : naryFunc (S n),
-      extEqual (S n) g1 g2 -> extEqual n (compose2 n f1 g1) (compose2 n f2 g2).
+      extEqual (S n) g1 g2 ->
+      extEqual n (compose2 n f1 g1) (compose2 n f2 g2).
 Proof.
   induction n as [| n Hrecn]; simpl in |- *; intros.
   - rewrite H; apply H0.
@@ -280,7 +296,8 @@ Proof.
   induction c as [| c Hrecc].
   - simpl in |- *; auto.
   - simpl in |- *.
-    cut (extEqual n (evalPrimRecFunc n g1 h1 c) (evalPrimRecFunc n g2 h2 c)).
+    cut (extEqual n (evalPrimRecFunc n g1 h1 c)
+                  (evalPrimRecFunc n g2 h2 c)).
     + cut (extEqual (S n) (h1 c) (h2 c)).
       * generalize (h1 c) (h2 c) (evalPrimRecFunc n g1 h1 c)
                    (evalPrimRecFunc n g2 h2 c).
@@ -431,10 +448,11 @@ Proof.
 Qed.
 (*||*)
 
-Lemma filter100IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g a).
+Lemma filter100IsPR g:
+   isPR 1 g -> isPR 3 (fun a b c : nat => g a).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p.
+  intros [x p]; cbn in p.
   assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -443,23 +461,27 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
+(*||*)
 
-Lemma filter010IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g b).
+Lemma filter010IsPR g :
+   isPR 1 g -> isPR 3 (fun a b c : nat => g b).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p.
-  assert (H:isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
+  intros [x p]; cbn in p.
+  assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x); cbn.
   intros; replace (g c0) with (g (evalPrimRec 3 x0 c c0 c1)).
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
+(*||*)
 
-Lemma filter001IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g c).
+Lemma filter001IsPR g:
+   isPR 1 g -> isPR 3 (fun a b c : nat => g c).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p. 
+  intros [x p]; cbn in p. 
   assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -467,11 +489,13 @@ Proof.
  - rewrite <- p; auto.
  - rewrite p0; auto.
 Qed.
+(*||*)
 
-Lemma filter011IsPR :
- forall g : nat -> nat -> nat, isPR 2 g -> isPR 3 (fun a b c : nat => g b c).
+Lemma filter011IsPR g:
+  isPR 2 g -> isPR 3 (fun a b c : nat => g b c).
+(*| .. coq:: none |*)
 Proof.
-   intros g [x p]; cbn in p. 
+   intros [x p]; cbn in p. 
    assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
    destruct H as [x0 p0]; cbn  in p0.
    assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
@@ -483,11 +507,13 @@ Proof.
    - rewrite <- p; auto.
    - rewrite p0, p1; auto.
 Qed.
+(*||*)
 
-Lemma filter110IsPR :
- forall g : nat -> nat -> nat, isPR 2 g -> isPR 3 (fun a b c : nat => g a b).
+Lemma filter110IsPR g:
+  isPR 2 g -> isPR 3 (fun a b c : nat => g a b).
+(*| .. coq:: none |*)
 Proof.
-   intros g [x p]; cbn in p. 
+   intros [x p]; cbn in p. 
    assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
    destruct H as [x0 p0]; cbn in p0.
    assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
@@ -499,13 +525,14 @@ Proof.
    - rewrite <- p; auto.
    - rewrite p0, p1; auto.
 Qed.
+(*||*)
 
-
-Lemma filter101IsPR :
-  forall g : nat -> nat -> nat, isPR 2 g ->
-                                isPR 3 (fun a b c : nat => g a c).
+Lemma filter101IsPR g:
+   isPR 2 g ->
+   isPR 3 (fun a b c : nat => g a c).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p.
+  intros [x p]; cbn in p.
   assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
@@ -517,12 +544,13 @@ Proof.
   -rewrite <- p; auto.
   - rewrite p0, p1; auto. 
 Qed.
+(*||*)
 
-Lemma filter0011IsPR :
-  forall g : nat -> nat -> nat,
+Lemma filter0011IsPR g:
     isPR 2 g -> isPR 4 (fun a b c d : nat => g c d).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p.
+  intros [x p]; cbn in p.
   assert (H: isPR 4 (fun a b c d : nat => c)) by apply pi3_4IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   assert (H: isPR 4 (fun a b c d : nat => d)) by apply pi4_4IsPR.
@@ -534,11 +562,13 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0, p1; auto.
 Qed.
+(*||*)
 
-Lemma filter1000IsPR :
-  forall g : nat -> nat, isPR 1 g -> isPR 4 (fun a b c d : nat => g a).
+Lemma filter1000IsPR g:
+  isPR 1 g -> isPR 4 (fun a b c d : nat => g a).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn  in p.
+  intros [x p]; cbn  in p.
   assert (H:isPR 4 (fun a b c d : nat => a)) by apply pi1_4IsPR.
   destruct H as [x0 p0]; cbn  in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -546,12 +576,13 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
+(*||*)
 
-Lemma filter1011IsPR :
- forall g : nat -> nat -> nat -> nat,
- isPR 3 g -> isPR 4 (fun a b c d : nat => g a c d).
+Lemma filter1011IsPR g:
+  isPR 3 g -> isPR 4 (fun a b c d : nat => g a c d).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn  in p.
+  intros [x p]; cbn  in p.
   assert (H: isPR 4 (fun a b c d : nat => a)) by apply pi1_4IsPR.
   assert (H0: isPR 4 (fun a b c d : nat => c)) by apply pi3_4IsPR.
   assert (H1 :isPR 4 (fun a b c d : nat => d)) by apply pi4_4IsPR.
@@ -568,12 +599,13 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
+(*||*)
 
-Lemma filter1100IsPR :
-  forall g : nat -> nat -> nat,
-    isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
+Lemma filter1100IsPR g:
+  isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
+(*| .. coq:: none |*)
 Proof.
-  intros g [x p]; cbn in p.
+  intros [x p]; cbn in p.
   assert (H: isPR 4 (fun a b c d : nat => a)) by apply pi1_4IsPR.
   assert (H0: isPR 4 (fun a b c d : nat => b)) by apply pi2_4IsPR.
   destruct  H as [x0 p0]; cbn in p0.
@@ -585,13 +617,13 @@ Proof.
   - rewrite <- p; auto.
   - auto.
 Qed.
+(*||*)
 
-Lemma compose1_1IsPR :
-  forall f : nat -> nat,
-    isPR 1 f ->
+Lemma compose1_1IsPR f:
+     isPR 1 f ->
     forall g : nat -> nat, isPR 1 g -> isPR 1 (fun x : nat => g (f x)).
 Proof.
-  intros f [x p] g [x0 p0]; cbn in *;
+  intros [x p] g [x0 p0]; cbn in *;
   exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
   cbn; intros; now rewrite <- p, p0.
 Qed.
@@ -604,12 +636,14 @@ Lemma compose1_2IsPR :
       isPR 1 f' ->
       forall g : nat -> nat -> nat,
         isPR 2 g -> isPR 1 (fun x : nat => g (f x) (f' x)).
+(*| .. coq:: none |*)
 Proof.
   intros f [x p] f' [x0 p0] g [x1 p1]; cbn in p, p0, p1.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1);
     cbn in *.
   intros; now rewrite <- p, p0, p1.
 Qed.
+(*||*)
 
 Lemma compose1_3IsPR :
  forall f1 : nat -> nat,
@@ -619,7 +653,8 @@ Lemma compose1_3IsPR :
  forall f3 : nat -> nat,
  isPR 1 f3 ->
  forall g : nat -> nat -> nat -> nat,
- isPR 3 g -> isPR 1 (fun x : nat => g (f1 x) (f2 x) (f3 x)).
+   isPR 3 g -> isPR 1 (fun x : nat => g (f1 x) (f2 x) (f3 x)).
+(*| .. coq:: none |*)
 Proof.
   intros f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2]; cbn in p, p0, p1, p2.
   exists
@@ -628,16 +663,20 @@ Proof.
     cbn in |- *.
   intros; now rewrite <- p,p0,p1,p2.
 Qed.
+(*||*)
 
 Lemma compose2_1IsPR :
   forall f : nat -> nat -> nat,
     isPR 2 f ->
-    forall g : nat -> nat, isPR 1 g -> isPR 2 (fun x y : nat => g (f x y)).
+    forall g : nat -> nat, isPR 1 g ->
+                           isPR 2 (fun x y : nat => g (f x y)).
+(*| .. coq:: none |*)
 Proof.
   intros f [x p] g [x0 p0]; cbn in p, p0.
   exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0); cbn in *.
   intros; now rewrite <- p   , p0.
 Qed.
+(*||*)
 
 Lemma compose2_2IsPR :
  forall f : nat -> nat -> nat,
@@ -646,11 +685,13 @@ Lemma compose2_2IsPR :
  isPR 2 g ->
  forall h : nat -> nat -> nat,
  isPR 2 h -> isPR 2 (fun x y : nat => h (f x y) (g x y)).
+(*| .. coq:: none |*)
 Proof.
   intros f [x p] g [x0 p0] h [x1 p1]; cbn in p, p0, p1.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
+(*||*)
 
 Lemma compose2_3IsPR :
   forall f1 : nat -> nat -> nat,
@@ -660,7 +701,9 @@ Lemma compose2_3IsPR :
       forall f3 : nat -> nat -> nat,
         isPR 2 f3 ->
         forall g : nat -> nat -> nat -> nat,
-          isPR 3 g -> isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y)).
+          isPR 3 g ->
+          isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y)).
+(*| .. coq:: none |*)
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2]; cbn in p, p0, p1, p2.
   exists
@@ -668,6 +711,7 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
+(*||*)
 
 Lemma compose2_4IsPR :
  forall f1 : nat -> nat -> nat,
@@ -679,7 +723,9 @@ Lemma compose2_4IsPR :
  forall f4 : nat -> nat -> nat,
  isPR 2 f4 ->
  forall g : nat -> nat -> nat -> nat -> nat,
- isPR 4 g -> isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y) (f4 x y)).
+   isPR 4 g ->
+   isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y) (f4 x y)).
+(*| .. coq:: none |*)
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] f4 [x2 p2] g [x3 p3];
     cbn in p, p0, p1, p2, p3.
@@ -691,16 +737,21 @@ Proof.
                  x3); cbn in *; intros.
   now rewrite <- p, p0, p1, p2, p3.
 Qed.
+(*||*)
 
 Lemma compose3_1IsPR :
   forall f : nat -> nat -> nat -> nat,
     isPR 3 f ->
-    forall g : nat -> nat, isPR 1 g -> isPR 3 (fun x y z : nat => g (f x y z)).
+    forall g : nat -> nat,
+      isPR 1 g ->
+      isPR 3 (fun x y z : nat => g (f x y z)).
+(*| .. coq:: none |*)
 Proof.
   intros f [x p] g [x0 p0]; cbn in p, p0.
   exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
   cbn in *; intros; now rewrite <- p, p0.
 Qed.
+(*||*)
 
 Lemma compose3_2IsPR :
   forall f1 : nat -> nat -> nat -> nat,
@@ -708,7 +759,8 @@ Lemma compose3_2IsPR :
     forall f2 : nat -> nat -> nat -> nat,
       isPR 3 f2 ->
       forall g : nat -> nat -> nat,
-        isPR 2 g -> isPR 3 (fun x y z : nat => g (f1 x y z) (f2 x y z)).
+        isPR 2 g ->
+        isPR 3 (fun x y z : nat => g (f1 x y z) (f2 x y z)).
 Proof.
   intros f1 [x p] f2 [x0 p0] g [x1 p1]; cbn in p, p0, p1.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1);
@@ -723,7 +775,9 @@ Lemma compose3_3IsPR :
  forall f3 : nat -> nat -> nat -> nat,
  isPR 3 f3 ->
  forall g : nat -> nat -> nat -> nat,
- isPR 3 g -> isPR 3 (fun x y z : nat => g (f1 x y z) (f2 x y z) (f3 x y z)).
+   isPR 3 g ->
+   isPR 3 (fun x y z : nat => g (f1 x y z) (f2 x y z) (f3 x y z)).
+(*| .. coq:: none |*)
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2];
     cbn in p, p0, p1, p2.
@@ -732,6 +786,7 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2.  
 Qed.
+(*||*)
 
 Lemma compose4_2IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
@@ -739,12 +794,15 @@ Lemma compose4_2IsPR :
  forall f2 : nat -> nat -> nat -> nat -> nat,
  isPR 4 f2 ->
  forall g : nat -> nat -> nat,
- isPR 2 g -> isPR 4 (fun w x y z : nat => g (f1 w x y z) (f2 w x y z)).
+   isPR 2 g ->
+   isPR 4 (fun w x y z : nat => g (f1 w x y z) (f2 w x y z)).
+(*| .. coq:: none |*)
 Proof.
   intros f1 [x p] f2 [x0 p0] g [x1 p1]; cbn in p, p0, p1.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
+(*||*)
 
 Lemma compose4_3IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
@@ -756,6 +814,7 @@ Lemma compose4_3IsPR :
  forall g : nat -> nat -> nat -> nat,
  isPR 3 g ->
  isPR 4 (fun w x y z : nat => g (f1 w x y z) (f2 w x y z) (f3 w x y z)).
+(*| .. coq:: none |*)
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2];
     cbn in p, p0, p1, p2.
@@ -764,12 +823,14 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
+(*||*)
 
-Lemma swapIsPR :
-  forall f : nat -> nat -> nat, isPR 2 f -> isPR 2 (fun x y : nat => f y x).
+Lemma swapIsPR f :
+   isPR 2 f -> isPR 2 (fun x y : nat => f y x).
 Proof.
   intros.
-  apply compose2_2IsPR with (f := fun a b : nat => b) (g := fun a b : nat => a).
+  apply compose2_2IsPR with (f := fun a b : nat => b)
+                            (g := fun a b : nat => a).
   - apply pi2_2IsPR.
   - apply pi1_2IsPR.
   - apply H.
@@ -780,8 +841,10 @@ Lemma indIsPR :
     isPR 2 f ->
     forall g : nat,
       isPR 1
-           (fun a : nat => nat_rec (fun n : nat => nat) g (fun x y : nat => f x y) a).
+           (fun a : nat => nat_rec (fun n : nat => nat) g
+                                   (fun x y : nat => f x y) a).
 Proof.
+  (*| .. coq:: none |*)
   intros f [x p] g; cbn in p.
   destruct  (const0_NIsPR g) as [x0 p0]; cbn in p0.
   exists (primRecFunc _ x0 x).
@@ -790,6 +853,7 @@ Proof.
   - simpl in |- *; now rewrite <- p0.
   - intros; cbn in |- *;  now rewrite <- p, H.
 Qed.
+(*||*)
 
 Lemma ind1ParamIsPR :
   forall f : nat -> nat -> nat -> nat,
@@ -798,7 +862,9 @@ Lemma ind1ParamIsPR :
       isPR 1 g ->
       isPR 2 
            (fun a b : nat =>
-              nat_rec (fun n : nat => nat) (g b) (fun x y : nat => f x y b) a).
+              nat_rec (fun n : nat => nat) (g b)
+                      (fun x y : nat => f x y b)
+                      a).
 Proof.
   intros f [x p] g [x0 p0]; cbn in p, p0.
   exists (primRecFunc _ x0 x); cbn in *; intros.
@@ -814,7 +880,9 @@ Lemma ind2ParamIsPR :
  isPR 2 g ->
  isPR 3
    (fun a b c : nat =>
-    nat_rec (fun n : nat => nat) (g b c) (fun x y : nat => f x y b c) a).
+      nat_rec (fun n : nat => nat) (g b c)
+              (fun x y : nat => f x y b c)
+              a).
 Proof.
 intros f [x p] g [x0 p0]; cbn in p, p0.
 exists (primRecFunc _ x0 x); cbn in *.
@@ -822,6 +890,15 @@ simple induction c.
 - intros; cbn; now rewrite p0.
 - intros; cbn in *; now rewrite p, H.
 Qed.
+
+(*|
+Usual arithmetic functions are PR
+++++++++++++++++++++++++++++++++++
+
+Addition
+*********
+
+|*)
 
 Lemma plusIndIsPR : isPR 3 (fun n fn b : nat => S fn).
 apply (filter010IsPR _ succIsPR).
@@ -833,14 +910,22 @@ assert
  (H: isPR 2
           (fun a b : nat =>
              nat_rec (fun n : nat => nat) b (fun x y : nat => S y) a))
- by  apply (ind1ParamIsPR _ plusIndIsPR _ idIsPR).
+    by  apply (ind1ParamIsPR _ plusIndIsPR _ idIsPR).
+(*| .. coq:: none |*)
  destruct H as [x  p]; cbn in p.
  exists x; cbn  in *.
  intros; rewrite p.
  induction c as [| c Hrecc].
  - auto.
  - cbn in *; now rewrite Hrecc.
+   (*||*)
 Qed.
+
+(*|
+
+Multiplication 
+***************
+|*)
 
 Lemma multIndIsPR : isPR 3 (fun n fn b : nat => fn + b).
 Proof.
@@ -852,7 +937,8 @@ Proof.
   assert
     (H: isPR 2
              (fun a b : nat =>
-                nat_rec (fun n : nat => nat) 0 (fun x y : nat => y + b) a)).
+                nat_rec (fun n : nat => nat) 0
+                        (fun x y : nat => y + b) a)).
   {
     assert (H0: isPR 1 (fun _ => 0))
       by apply const1_NIsPR.
@@ -865,6 +951,12 @@ Proof.
   - simpl in |- *; rewrite Hrecc; apply plus_comm.
 Qed.
 
+(*| 
+
+Predecessor and substraction
+*****************************
+|*)
+
 Lemma predIsPR : isPR 1 pred.
 Proof.
   assert
@@ -872,10 +964,12 @@ Proof.
              (fun a : nat =>
                 nat_rec (fun n : nat => nat) 0 (fun x y : nat => x) a))
     by apply (indIsPR _ pi1_2IsPR 0).
+  (*| .. coq:: none |*)
   destruct  H as [x p]; cbn  in p.
   exists x; cbn in |- *.
   intros;rewrite p.
   induction c as [| c Hrecc]; trivial.
+  (*||*)
 Qed.
 
 Lemma minusIndIsPR : isPR 3 (fun n fn b : nat => pred fn).
@@ -887,14 +981,17 @@ Proof.
   assert
     (H: isPR 2
              (fun b a : nat =>
-                nat_rec (fun n : nat => nat) b (fun x y : nat => pred y) a)).
+                nat_rec (fun n : nat => nat) b
+                        (fun x y : nat => pred y) a)).
   { apply
       swapIsPR
       with
         (f := fun a b : nat =>
-                nat_rec (fun n : nat => nat) b (fun x y : nat => pred y) a).
+                nat_rec (fun n : nat => nat) b
+                        (fun x y : nat => pred y) a).
     apply (ind1ParamIsPR _ minusIndIsPR _ idIsPR).
   }
+  (*| .. coq:: none |*)
   destruct  H as [x p]; cbn  in p.
   exists x; cbn in *.
   intros c c0; rewrite p.
@@ -907,7 +1004,15 @@ Proof.
     + intros; cbn in *; induction c2 as [| c2 Hrecc2].
       * cbn in |- *; apply minus_n_O.
       * apply Hrecc1.
+        (*||*)
 Qed.
+
+(*|
+
+Comparison functions
+********************
+
+|*)
 
 Definition notZero (a : nat) :=
   nat_rec (fun n : nat => nat) 0 (fun x y : nat => 1) a.
@@ -952,6 +1057,8 @@ Proof.
     - apply minusIsPR.
     - apply notZeroIsPR.
   }
+  (* ... *)
+  (*| .. coq:: none |*)
   destruct H as [x p]; cbn in p.
   exists x; cbn in *; intros.
   rewrite p; unfold ltBool in |- *.
@@ -982,12 +1089,15 @@ Proof.
            apply Hrecc0.
            apply lt_S_n; auto.
     + auto.
+      (*||*)
 Qed.
 
 
 Lemma maxIsPR : isPR 2 max.
 Proof.
   assert (H: isPR 2 (fun a b : nat => a + (b - a))).
+  (* ... *)
+  (*| .. coq:: none |*)
   { apply
       compose2_2IsPR
       with (h := plus) (f := fun a b : nat => a) (g := fun a b : nat => b - a).
@@ -1006,17 +1116,20 @@ Proof.
         -- reflexivity.
         -- now apply lt_le_weak.
       * now apply lt_not_le.
+  (*||*)
 Qed.
 
 
 Lemma gtIsPR : isPRrel 2 (fun a b : nat => ltBool b a).
 Proof.
   unfold isPRrel in |- *; cbn.
-  apply swapIsPR with (f := fun a0 a : nat => if ltBool a0 a then 1 else 0).
+  apply swapIsPR with (f := fun a0 a : nat =>
+                              if ltBool a0 a then 1 else 0).
   apply ltIsPR.
 Qed.
 
 
+(*| .. coq:: none |*)
 Remark replaceCompose2 :
  forall (n : nat) (a b a' b' : naryFunc n) (c c' : naryFunc 2),
  extEqual n a a' ->
@@ -1036,6 +1149,7 @@ Proof.
 intros;apply extEqualCompose; auto.
 - unfold extEqualVector in |- *; cbn; auto.
 Qed.
+(*||*)
 
 Definition orRel (n : nat) (R S : naryRel n) : naryRel n.
 induction n as [| n Hrecn].
@@ -1051,6 +1165,8 @@ Lemma orRelPR :
 Proof.
   intros n R R' [x p] [x0 p0];
     assert (H: isPR 2 (fun a b : nat => notZero (a + b))).
+  (* ... *)
+  (*| .. coq:: none |*)
   {
     apply compose2_1IsPR.
     - apply plusIsPR.
@@ -1075,6 +1191,7 @@ Proof.
         * destruct  R'; reflexivity.
       + cbn in |- *; fold (naryFunc n) in |- *.
         intros;  apply (Hrecn (R c) (R' c)).
+        (*||*)
 Qed.
 
 
@@ -1093,6 +1210,8 @@ Lemma andRelPR :
 Proof.
   intros n R R' [x p]  [x0 p0];
     assert (H: isPR 2 mult) by apply multIsPR.
+  (* ... *)
+  (*| .. coq:: none |*)
   destruct  H as [x1 p1].
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn  in |- *;
@@ -1114,6 +1233,7 @@ Proof.
       * reflexivity.
     + simpl in |- *;fold (naryFunc n) in |- *; intros.
       apply (Hrecn (R c) (R' c)).
+      (*||*)
 Qed.
 
 
@@ -1124,11 +1244,13 @@ induction n as [| n Hrecn].
    apply (R p).
 Defined.
 
-Lemma notRelPR :
-  forall (n : nat) (R : naryRel n), isPRrel n R -> isPRrel n (notRel n R).
+Lemma notRelPR n R:
+  isPRrel n R -> isPRrel n (notRel n R).
 Proof.
-  intros n R [x p];
+  intros [x p];
     assert (H: isPR 1 (fun x : nat => 1 - x)).
+   (* ... *)
+   (*| .. coq:: none |*)
   { apply compose1_2IsPR with (f := fun x : nat => 1) (f' := fun x : nat => x).
     - apply const1_NIsPR.
     - apply idIsPR.
@@ -1154,6 +1276,7 @@ Proof.
     + simpl in |- *.
       intros; fold (naryFunc n) in |- *.
       apply Hrecn.
+      (*||*)
 Qed.
 
 Fixpoint bodd (n : nat) : bool :=
@@ -1166,7 +1289,8 @@ Lemma boddIsPR : isPRrel 1 bodd.
 Proof.
   assert (H: isPR 2 (fun _ rec : nat => 1 - rec)).
   { apply filter01IsPR with (g := fun rec : nat => 1 - rec).
-    apply compose1_2IsPR with (f := fun _ : nat => 1) (f' := fun x : nat => x).
+    apply compose1_2IsPR with (f := fun _ : nat => 1)
+                              (f' := fun x : nat => x).
     - apply const1_NIsPR.
     - apply idIsPR.
     - apply minusIsPR.
@@ -1180,7 +1304,8 @@ Qed.
 
 (** To do: rename this lemma ????  *)
 
-Lemma beq_nat_not_refl : forall a b : nat, a <> b -> beq_nat a b = false.
+Lemma beq_nat_not_refl : forall a b : nat,
+    a <> b -> beq_nat a b = false.
 Proof.
   induction a; destruct b.
   - now destruct 1.
@@ -1197,6 +1322,8 @@ Proof.
     - apply ltIsPR.
     - apply gtIsPR.
   }
+  (* ... *)
+  (*| .. coq:: none |*)
   destruct H as [x p].
   exists x; cbn in *. 
   intros;rewrite p;clear p.
@@ -1215,17 +1342,23 @@ Proof.
       * auto.
     + reflexivity.
     + assumption.
+      (*||*)
 Qed.
 
 Lemma eqIsPR : isPRrel 2 beq_nat.
 Proof.
-  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (beq_nat a b)))).
-  { apply notRelPR.
+  assert (H: isPRrel
+               2 (notRel 2
+                         (fun a b : nat => negb (beq_nat a b)))).
+  (* ... *)
+  (*| .. coq:: none |*)
+    { apply notRelPR.
     apply neqIsPR.
   }
   cbn in H; destruct H as [x  p].
   exists x; cbn in *.
   intros c c0; rewrite p; clear p; destruct (beq_nat c c0); auto.
+  (*||*)
 Qed.
 
 Definition leBool (a b : nat) : bool.
@@ -1238,6 +1371,8 @@ Defined.
 Lemma leIsPR : isPRrel 2 leBool.
 Proof.
   assert (H: isPRrel 2 (orRel 2 ltBool beq_nat)).
+  (* ... *)
+  (*| .. coq:: none |*)
   { apply orRelPR.
     - apply ltIsPR.
     - apply eqIsPR.
@@ -1263,6 +1398,7 @@ Proof.
     * reflexivity.
     * elim (lt_irrefl c).
       apply lt_trans with c0; auto.
+      (*||*)
 Qed.
 
 
@@ -1276,6 +1412,8 @@ Section Ignore_Params.
     | S x => fun _ => ignoreParams n x f
     end.
 
+  (* ... *)
+  (*| .. coq:: none |*)
   Definition projectionListPR (n m : nat) (p : m <= n) : PrimRecs n m.
     induction m as [| m Hrecm].
     - exact (PRnil n).
@@ -1285,7 +1423,8 @@ Section Ignore_Params.
   Defined.
 
   Definition projectionList (n m : nat) (p : m <= n) : 
-    Vector.t (naryFunc n) m := evalPrimRecs n m (projectionListPR n m p).
+    Vector.t (naryFunc n) m :=
+    evalPrimRecs n m (projectionListPR n m p).
 
   Lemma projectionListInd :
     forall (n m : nat) (p1 p2 : m <= n),
@@ -1293,6 +1432,8 @@ Section Ignore_Params.
   Proof.
     intros; unfold projectionList in |- *.
     induction m as [| m Hrecm].
+    (* ... *)
+    (*| .. coq:: none |*)
     - reflexivity.
     - simpl in |- *.
       rewrite (Hrecm (le_S_n m n (le_S (S m) n p1))
@@ -1301,13 +1442,17 @@ Section Ignore_Params.
         (evalProjFuncInd _ _ (lt_S_n m n (le_lt_n_Sm (S m) n p1))
                          (lt_S_n m n (le_lt_n_Sm (S m) n p2)));
         reflexivity.
+      (*||*)
   Qed.
 
   Lemma projectionListApplyParam :
     forall (m n c : nat) (p1 : m <= n) (p2 : m <= S n),
       extEqualVector _ _ (projectionList n m p1)
-                     (evalOneParamList n m c (projectionList (S n) m p2)).
+                     (evalOneParamList n m c
+                                       (projectionList (S n) m p2)).
   Proof.
+    (* ... *)
+    (*| .. coq:: none |*)
     unfold extEqualVector, projectionList in |- *.
     simple induction m.
     - simpl in |- *; auto.
@@ -1318,7 +1463,8 @@ Section Ignore_Params.
         rewrite <- e in p1; auto.
       + split.
         rewrite
-          (evalProjFuncInd _ _ (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
+          (evalProjFuncInd _ _
+                           (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
                            match
                              le_lt_or_eq n n0
                                          (lt_n_Sm_le n n0 (lt_S_n n (S n0)
@@ -1332,12 +1478,15 @@ Section Ignore_Params.
                            end).
         apply extEqualRefl.
         apply H.
+        (*||*)
   Qed.
 
 
   Lemma projectionListId :
     forall (n : nat) (f : naryFunc n) (p : n <= n),
       extEqual n f (evalComposeFunc n n (projectionList n n p) f).
+  (* ... *)
+  (*| .. coq:: none |*)
   Proof.
     intros; induction n as [| n Hrecn].
     - cbn in |- *; reflexivity.
@@ -1380,12 +1529,13 @@ Section Ignore_Params.
             -- apply extEqualRefl.
       + now destruct b.
   Qed.
-  
-  
+  (*||*)
   
   Lemma ignoreParamsIsPR :
     forall (n m : nat) (f : naryFunc n),
       isPR _ f -> isPR _ (ignoreParams n m f).
+  (* ... *)
+  (*| .. coq:: none |*)
   Proof.
     assert
       (H: forall (n m : nat) (pr : m <= n) (f : naryFunc m) (p : n - m + m = n),
@@ -1496,14 +1646,17 @@ Section Ignore_Params.
       + rewrite plus_comm.
         now rewrite minus_plus.
   Qed.
-
+ (*||*)
 End Ignore_Params.
 
 Lemma reduce1stCompose :
-  forall (c n m : nat) (v : Vector.t (naryFunc n) m) (g : naryFunc (S m)),
+  forall (c n m : nat) (v : Vector.t (naryFunc n) m)
+         (g : naryFunc (S m)),
     extEqual n
-             (evalComposeFunc n _ (Vector.cons (naryFunc n)
-                                               (evalConstFunc n c) _ v) g)
+             (evalComposeFunc n _
+                              (Vector.cons (naryFunc n)
+                                           (evalConstFunc n c) _ v)
+                              g)
              (evalComposeFunc n _ v (g c)).
 Proof.
   induction n as [| n Hrecn].
@@ -1512,8 +1665,9 @@ Proof.
 Qed.
 
 Lemma reduce2ndCompose :
- forall (c n m : nat) (v : Vector.t (naryFunc n) m) (n0 : naryFunc n)
-   (g : naryFunc (S (S m))),
+  forall (c n m : nat) (v : Vector.t (naryFunc n) m)
+         (n0 : naryFunc n)
+         (g : naryFunc (S (S m))),
  extEqual n
    (evalComposeFunc n _
                     (Vector.cons
@@ -1544,6 +1698,8 @@ Qed.
 Lemma compose2IsPR :
   forall (n : nat) (f : naryFunc n) (p : isPR n f) (g : naryFunc (S n))
          (q : isPR (S n) g), isPR n (compose2 n f g).
+ (* ... *)
+(*| .. coq:: none |*)
 Proof.
   intros.
   induction p as (x, p).
@@ -1604,13 +1760,16 @@ Proof.
       -- elim b.
          auto.
 Qed.
+(*||*)
 
-Lemma compose1_NIsPR :
-  forall (n : nat) (g : naryFunc (S n)),
-    isPR (S n) g ->
-    forall f : naryFunc 1, isPR 1 f -> isPR (S n) (fun x : nat => g (f x)).
+Lemma compose1_NIsPR n g:
+      isPR (S n) g ->
+      forall f : naryFunc 1, isPR 1 f ->
+                             isPR (S n) (fun x : nat => g (f x)).
+(* ... *)
+(*| .. coq:: none |*)
 Proof.
-  intros n g [x p] f [x0 p0].
+  intros [x p] f [x0 p0].
   exists
     (composeFunc (S n) (S n)
                  (PRcons _ _
@@ -1658,16 +1817,14 @@ Proof.
         apply (projectionListId n (g (f c)) (le_n n)).
   - elim b; auto.
 Qed.
+(*||*)
+  
+Definition switchPR : naryFunc 3 :=
+  fun n p q => match n with 0 => q |_ => p end.
 
-Definition switchPR : naryFunc 3. 
-cbn in |- *.
-intros.
-destruct H as [| n].
-- apply H1.
-- apply H0.
-Defined.
 
 Lemma switchIsPR : isPR 3 switchPR.
+(*| .. coq:: none |*)
 Proof.
   assert (H: isPR 3
                   (fun a b c : nat =>
@@ -1689,9 +1846,12 @@ Proof.
       intros.
       induction c; reflexivity.
 Qed.
+(*||*)
 
-(** Returns smallest value of x less or equal than b such that (P b x). 
-    Otherwise returns b  *)
+(*
+    smallest value of x less or equal than b such that (P b x), 
+    otherwise returns b  
+*)
 
 Fixpoint boundedSearchHelp (P : naryRel 1) (b : nat) {struct b} : nat :=
   match b with
@@ -1710,7 +1870,8 @@ Definition boundedSearch (P : naryRel 2) (b : nat) : nat :=
   boundedSearchHelp (P b) b.
 
 Lemma boundedSearch1 :
-  forall (P : naryRel 2) (b x : nat), x < boundedSearch P b -> P b x = false.
+  forall (P : naryRel 2) (b x : nat),
+    x < boundedSearch P b -> P b x = false.
 Proof.
   unfold boundedSearch in |- *.
   intros P b.
@@ -1766,6 +1927,8 @@ Qed.
 Lemma boundSearchIsPR :
   forall P : naryRel 2,
     isPRrel 2 P -> isPR 1 (fun b : nat => boundedSearch P b).
+   (* ... *)
+  (*| .. coq:: none |*)
 Proof.
   intros; unfold boundedSearch in |- *.
   assert
@@ -1933,14 +2096,14 @@ Proof.
       induction (b c);  auto.
     + cbn in |- *; reflexivity.
 Qed.
-
+(*||*)
 
 Definition iterate (g : nat -> nat) :=
   nat_rec (fun _ => nat -> nat) (fun x : nat => x)
           (fun (_ : nat) (rec : nat -> nat) (x : nat) => g (rec x)).
 
-Lemma iterateIsPR :
-  forall g : nat -> nat, isPR 1 g -> forall n : nat, isPR 1 (iterate g n).
+Lemma iterateIsPR g:
+   isPR 1 g -> forall n : nat, isPR 1 (iterate g n).
 Proof.
   intros.
   induction n as [| n Hrecn]; cbn  in |- *.

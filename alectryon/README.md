@@ -4,9 +4,9 @@
 
    -  Files
    
-       - ../theories/ordinals/MoreAck/Ack.v
-       - ../theories/ordinals/MoreAck/AckNotPR.v
-       - ../theories/ordinals/Ackermann/primRec.v
+       - [Ack.html](./Ack.html)
+       - [AckNotPR.html](AckNotPR.html)
+       - [primRec.html](primRec.html)
        
    - Commands
   

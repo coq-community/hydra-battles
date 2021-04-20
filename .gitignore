@@ -26,3 +26,6 @@ bigmod.mli
 _build/
 coqdoc.sty
 .DS_Store
+
+alectryon/*.html
+!alectryon/index.html

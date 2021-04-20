@@ -7,6 +7,9 @@ html: Makefile.coq
 pdf:
 	@+$(MAKE) -C doc
 
+alectryon:
+	@+$(MAKE) -C alectryon
+
 clean: Makefile.coq
 	@+$(MAKE) -f Makefile.coq cleanall
 	@rm -f Makefile.coq Makefile.coq.conf
@@ -19,4 +22,4 @@ force _CoqProject Makefile: ;
 %: Makefile.coq force
 	@+$(MAKE) -f Makefile.coq $@
 
-.PHONY: all html pdf clean force
+.PHONY: all html pdf clean force alectryon
