@@ -8,6 +8,7 @@ Require Vector.
 Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Max.
+Open Scope bool_scope.
 
 Section Code_Substitute_Formula.
 

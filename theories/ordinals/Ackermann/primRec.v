@@ -12,7 +12,8 @@ Require Import Arith  Peano_dec Compare_dec.
 Require Import Coq.Lists.List Eqdep_dec.
 Require Import extEqualNat.
 Require Vector.
-Require Import misc  Bool  EqNat Even  Max.
+Require Import misc   Even  Max.
+Require Export Bool EqNat.
 
 (*| 
 
@@ -432,7 +433,7 @@ Proof.
   rewrite p0.
   auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter10IsPR g:
    isPR 1 g -> isPR 2 (fun a b : nat => g a).
@@ -446,7 +447,7 @@ Proof.
   - now rewrite <- p.
   - now rewrite p0.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter100IsPR g:
    isPR 1 g -> isPR 3 (fun a b c : nat => g a).
@@ -461,7 +462,7 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter010IsPR g :
    isPR 1 g -> isPR 3 (fun a b c : nat => g b).
@@ -475,7 +476,7 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter001IsPR g:
    isPR 1 g -> isPR 3 (fun a b c : nat => g c).
@@ -489,7 +490,7 @@ Proof.
  - rewrite <- p; auto.
  - rewrite p0; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter011IsPR g:
   isPR 2 g -> isPR 3 (fun a b c : nat => g b c).
@@ -507,7 +508,7 @@ Proof.
    - rewrite <- p; auto.
    - rewrite p0, p1; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter110IsPR g:
   isPR 2 g -> isPR 3 (fun a b c : nat => g a b).
@@ -525,7 +526,7 @@ Proof.
    - rewrite <- p; auto.
    - rewrite p0, p1; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter101IsPR g:
    isPR 2 g ->
@@ -544,7 +545,7 @@ Proof.
   -rewrite <- p; auto.
   - rewrite p0, p1; auto. 
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter0011IsPR g:
     isPR 2 g -> isPR 4 (fun a b c d : nat => g c d).
@@ -562,7 +563,7 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0, p1; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter1000IsPR g:
   isPR 1 g -> isPR 4 (fun a b c d : nat => g a).
@@ -576,7 +577,7 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter1011IsPR g:
   isPR 3 g -> isPR 4 (fun a b c d : nat => g a c d).
@@ -599,7 +600,7 @@ Proof.
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma filter1100IsPR g:
   isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
@@ -617,7 +618,7 @@ Proof.
   - rewrite <- p; auto.
   - auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose1_1IsPR f:
      isPR 1 f ->
@@ -643,7 +644,7 @@ Proof.
     cbn in *.
   intros; now rewrite <- p, p0, p1.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose1_3IsPR :
  forall f1 : nat -> nat,
@@ -663,7 +664,7 @@ Proof.
     cbn in |- *.
   intros; now rewrite <- p,p0,p1,p2.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose2_1IsPR :
   forall f : nat -> nat -> nat,
@@ -676,7 +677,7 @@ Proof.
   exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0); cbn in *.
   intros; now rewrite <- p   , p0.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose2_2IsPR :
  forall f : nat -> nat -> nat,
@@ -691,7 +692,7 @@ Proof.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose2_3IsPR :
   forall f1 : nat -> nat -> nat,
@@ -711,7 +712,7 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose2_4IsPR :
  forall f1 : nat -> nat -> nat,
@@ -737,7 +738,7 @@ Proof.
                  x3); cbn in *; intros.
   now rewrite <- p, p0, p1, p2, p3.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose3_1IsPR :
   forall f : nat -> nat -> nat -> nat,
@@ -751,7 +752,7 @@ Proof.
   exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
   cbn in *; intros; now rewrite <- p, p0.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose3_2IsPR :
   forall f1 : nat -> nat -> nat -> nat,
@@ -786,7 +787,7 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2.  
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose4_2IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
@@ -802,7 +803,7 @@ Proof.
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose4_3IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
@@ -823,7 +824,7 @@ Proof.
                                            (PRcons _ _ x1 (PRnil _)))) x2).
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
-(*| |*)
+(*||*)
 
 Lemma swapIsPR f :
    isPR 2 f -> isPR 2 (fun x y : nat => f y x).
@@ -853,7 +854,7 @@ Proof.
   - simpl in |- *; now rewrite <- p0.
   - intros; cbn in |- *;  now rewrite <- p, H.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma ind1ParamIsPR :
   forall f : nat -> nat -> nat -> nat,
@@ -918,7 +919,7 @@ assert
  induction c as [| c Hrecc].
  - auto.
  - cbn in *; now rewrite Hrecc.
-   (*| |*)
+   (*||*)
 Qed.
 
 (*|
@@ -969,7 +970,7 @@ Proof.
   exists x; cbn in |- *.
   intros;rewrite p.
   induction c as [| c Hrecc]; trivial.
-  (*| |*)
+  (*||*)
 Qed.
 
 Lemma minusIndIsPR : isPR 3 (fun n fn b : nat => pred fn).
@@ -1004,7 +1005,7 @@ Proof.
     + intros; cbn in *; induction c2 as [| c2 Hrecc2].
       * cbn in |- *; apply minus_n_O.
       * apply Hrecc1.
-        (*| |*)
+        (*||*)
 Qed.
 
 (*|
@@ -1089,7 +1090,7 @@ Proof.
            apply Hrecc0.
            apply lt_S_n; auto.
     + auto.
-      (*| |*)
+      (*||*)
 Qed.
 
 
@@ -1116,7 +1117,7 @@ Proof.
         -- reflexivity.
         -- now apply lt_le_weak.
       * now apply lt_not_le.
-  (*| |*)
+  (*||*)
 Qed.
 
 
@@ -1149,7 +1150,7 @@ Proof.
 intros;apply extEqualCompose; auto.
 - unfold extEqualVector in |- *; cbn; auto.
 Qed.
-(*| |*)
+(*||*)
 
 Definition orRel (n : nat) (R S : naryRel n) : naryRel n.
 induction n as [| n Hrecn].
@@ -1191,7 +1192,7 @@ Proof.
         * destruct  R'; reflexivity.
       + cbn in |- *; fold (naryFunc n) in |- *.
         intros;  apply (Hrecn (R c) (R' c)).
-        (*| |*)
+        (*||*)
 Qed.
 
 
@@ -1233,7 +1234,7 @@ Proof.
       * reflexivity.
     + simpl in |- *;fold (naryFunc n) in |- *; intros.
       apply (Hrecn (R c) (R' c)).
-      (*| |*)
+      (*||*)
 Qed.
 
 
@@ -1276,7 +1277,7 @@ Proof.
     + simpl in |- *.
       intros; fold (naryFunc n) in |- *.
       apply Hrecn.
-      (*| |*)
+      (*||*)
 Qed.
 
 Fixpoint bodd (n : nat) : bool :=
@@ -1342,7 +1343,7 @@ Proof.
       * auto.
     + reflexivity.
     + assumption.
-      (*| |*)
+      (*||*)
 Qed.
 
 Lemma eqIsPR : isPRrel 2 beq_nat.
@@ -1358,7 +1359,7 @@ Proof.
   cbn in H; destruct H as [x  p].
   exists x; cbn in *.
   intros c c0; rewrite p; clear p; destruct (beq_nat c c0); auto.
-  (*| |*)
+  (*||*)
 Qed.
 
 Definition leBool (a b : nat) : bool.
@@ -1398,7 +1399,7 @@ Proof.
     * reflexivity.
     * elim (lt_irrefl c).
       apply lt_trans with c0; auto.
-      (*| |*)
+      (*||*)
 Qed.
 
 
@@ -1442,7 +1443,7 @@ Section Ignore_Params.
         (evalProjFuncInd _ _ (lt_S_n m n (le_lt_n_Sm (S m) n p1))
                          (lt_S_n m n (le_lt_n_Sm (S m) n p2)));
         reflexivity.
-      (*| |*)
+      (*||*)
   Qed.
 
   Lemma projectionListApplyParam :
@@ -1478,7 +1479,7 @@ Section Ignore_Params.
                            end).
         apply extEqualRefl.
         apply H.
-        (*| |*)
+        (*||*)
   Qed.
 
 
@@ -1529,7 +1530,7 @@ Section Ignore_Params.
             -- apply extEqualRefl.
       + now destruct b.
   Qed.
-  (*| |*)
+  (*||*)
   
   Lemma ignoreParamsIsPR :
     forall (n m : nat) (f : naryFunc n),
@@ -1646,7 +1647,7 @@ Section Ignore_Params.
       + rewrite plus_comm.
         now rewrite minus_plus.
   Qed.
- (*| |*)
+ (*||*)
 End Ignore_Params.
 
 Lemma reduce1stCompose :
@@ -1760,7 +1761,7 @@ Proof.
       -- elim b.
          auto.
 Qed.
-(*| |*)
+(*||*)
 
 Lemma compose1_NIsPR n g:
       isPR (S n) g ->
@@ -1817,7 +1818,7 @@ Proof.
         apply (projectionListId n (g (f c)) (le_n n)).
   - elim b; auto.
 Qed.
-(*| |*)
+(*||*)
   
 Definition switchPR : naryFunc 3 :=
   fun n p q => match n with 0 => q |_ => p end.
@@ -1846,7 +1847,7 @@ Proof.
       intros.
       induction c; reflexivity.
 Qed.
-(*| |*)
+(*||*)
 
 (*
     smallest value of x less or equal than b such that (P b x), 
@@ -2096,7 +2097,7 @@ Proof.
       induction (b c);  auto.
     + cbn in |- *; reflexivity.
 Qed.
-(*| |*)
+(*||*)
 
 Definition iterate (g : nat -> nat) :=
   nat_rec (fun _ => nat -> nat) (fun x : nat => x)
