@@ -2,6 +2,8 @@
 
 
 
+   - Experiments with several coq+rst files. Some long proof scripts are (partially) masked with  ".. coq:: none"; 
+
    -  Files
    
        - [Ack.html](./Ack.html)
