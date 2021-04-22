@@ -350,12 +350,10 @@ Induction step
   Section Induc_step.
     Variable m:nat.
     Hypothesis Hm : P m.
-
     (*|
+
 A few lemmas ...
-
 |*)
-
     
     Remark  Rem1 : strict_mono (Ack (S m)). (* .no-goals *)
     (*| .. coq:: none |*)
@@ -404,6 +402,7 @@ A few lemmas ...
         + induction n; cbn; auto.
     Qed.
     (*||*)
+    
     
     Lemma L5: P (S m). (* .no-goals *)
     Proof.

@@ -557,13 +557,9 @@ Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta ->
                                             F_ beta n <= F_ alpha n.
 Proof. now  destruct  (TH_packed alpha). Qed.
 
-
-
-
-
 Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i).
 Proof.
-  red. intros ; apply LF2 ; auto.  
+  red; intros ; apply LF2 ; auto.  
 Qed.
 
 
@@ -608,8 +604,8 @@ Section Compatibility_F_dominates.
     Hypothesis Hd : Canon_plus (S n) alpha beta.
 
     Fact F5 : Canon_plus (S (S n)) alpha (Succ beta).
-      destruct alpha, beta. simpl.
-      apply L2_6_2; auto.
+    Proof.
+      destruct alpha, beta; cbn;  apply L2_6_2; auto.
     Qed.
 
     
