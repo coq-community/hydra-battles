@@ -51,111 +51,114 @@ Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
 
+Section evalList.
+  
+  (* begin details : A few technical  lemmas. *)
 
-(* begin details : A few technical  lemmas. *)
-
-Lemma evalList_Const : forall n (v:t nat n) x,
+  Lemma evalList_Const : forall n (v:t nat n) x,
     v_apply (evalConstFunc n x) v = x.
-(* begin details *)
-Proof.
-  induction n; cbn.
-  - intros; cbn ; replace v with (@nil nat).
-    + now  cbn.
-    +  symmetry; apply t_0_nil.
-  - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
-Qed.
-(* end details *)
+  (* begin details *)
+  Proof.
+    induction n; cbn.
+    - intros; cbn ; replace v with (@nil nat).
+      + now  cbn.
+      +  symmetry; apply t_0_nil.
+    - intros; cbn; rewrite (decomp _ _ v); cbn; auto.
+  Qed.
+  (* end details *)
 
-Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
-        v_apply (evalProjFunc n k H) v <= max_v v.
-(* begin details *)
-Proof.
-  induction n.
-  -  cbn; intros; lia.
-  - intros; specialize (IHn (tl v));  cbn.
-    destruct (Nat.eq_dec k n).
-    +  cbn;  rewrite (decomp _ _ v);  cbn; rewrite  evalList_Const;
-         apply le_max_l.
-    + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
-      *  replace v with (cons (hd v) (tl v)) at 1; cbn.
-         --   transitivity (max_v (tl v));  auto. 
-              apply max_v_tl. 
-         --  symmetry; apply decomp. 
-      *  destruct( n0 e).
-Qed. 
+  Lemma proj_le_max : forall n, forall v : t nat n, forall k (H: k < n),
+          v_apply (evalProjFunc n k H) v <= max_v v.
+  (* begin details *)
+  Proof.
+    induction n.
+    -  cbn; intros; lia.
+    - intros; specialize (IHn (tl v));  cbn.
+      destruct (Nat.eq_dec k n).
+      +  cbn;  rewrite (decomp _ _ v);  cbn; rewrite  evalList_Const;
+           apply le_max_l.
+      + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
+        *  replace v with (cons (hd v) (tl v)) at 1; cbn.
+           --   transitivity (max_v (tl v));  auto. 
+                apply max_v_tl. 
+           --  symmetry; apply decomp. 
+        *  destruct( n0 e).
+  Qed. 
 
-(* end details *)
+  (* end details *)
 
-Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
-                            (h: naryFunc  m),
-    v_apply  (evalComposeFunc _ _ gs h) v =
-    v_apply  h (map (fun g =>  v_apply g v) gs).
-(* begin details *)
-Proof.
-  induction n.
-  - intros; rewrite (t_0_nil _ v); cbn.
-    induction m.
-    + rewrite (t_0_nil _ gs); cbn; auto.  
-    + rewrite (decomp _ _ gs);  cbn. 
-      simpl naryFunc in *.
-      specialize (IHm (tl gs) (h (vfst gs))); now rewrite IHm.
-  -   intros; induction m.
-      + rewrite (t_0_nil _ gs);  cbn.
-        rewrite (decomp _ _ v); cbn.   
-        specialize (IHn (tl v) 0 (nil) h); rewrite IHn;  cbn;  auto.
-      +  rewrite (decomp _ _ v).
-         rewrite (decomp _ _ gs).
-         specialize (IHm  (tl gs));  cbn.
-         specialize (IHn (tl v));  rewrite IHn; cbn.
-         f_equal; f_equal.
-         generalize m gs; intro m0;  induction m0.
-         * cbn; intros; rewrite (decomp1  gs0); cbn; auto.
-         *   intros; replace gs0 with
-                         (cons (hd gs0) (cons (hd (tl gs0)) (tl (tl gs0)))).
-             -- cbn; cbn in *; specialize (IHm0  (tl gs0));  rewrite IHm0; auto.
-             --  rewrite decomp;  f_equal.
-                 now rewrite decomp.
-Qed.
-(* end details *)
-Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
-                                (g : naryFunc (S n)),
-    v_apply (compose2 n f g) v =
-    v_apply g  ((evalList n v f) :: v).
-(* begin details *)
-Proof.
-  induction n.
-  - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
-  -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
-Qed.
-(* end details *)
+  Lemma evalListComp : forall n  (v: t nat n) m (gs: t (naryFunc n) m)
+                              (h: naryFunc  m),
+      v_apply  (evalComposeFunc _ _ gs h) v =
+      v_apply  h (map (fun g =>  v_apply g v) gs).
+  (* begin details *)
+  Proof.
+    induction n.
+    - intros; rewrite (t_0_nil _ v); cbn.
+      induction m.
+      + rewrite (t_0_nil _ gs); cbn; auto.  
+      + rewrite (decomp _ _ gs);  cbn. 
+        simpl naryFunc in *.
+        specialize (IHm (tl gs) (h (vfst gs))); now rewrite IHm.
+    -   intros; induction m.
+        + rewrite (t_0_nil _ gs);  cbn.
+          rewrite (decomp _ _ v); cbn.   
+          specialize (IHn (tl v) 0 (nil) h); rewrite IHn;  cbn;  auto.
+        +  rewrite (decomp _ _ v).
+           rewrite (decomp _ _ gs).
+           specialize (IHm  (tl gs));  cbn.
+           specialize (IHn (tl v));  rewrite IHn; cbn.
+           f_equal; f_equal.
+           generalize m gs; intro m0;  induction m0.
+           * cbn; intros; rewrite (decomp1  gs0); cbn; auto.
+           *   intros; replace gs0 with
+                           (cons (hd gs0) (cons (hd (tl gs0)) (tl (tl gs0)))).
+               -- cbn; cbn in *; specialize (IHm0  (tl gs0));  rewrite IHm0; auto.
+               --  rewrite decomp;  f_equal.
+                   now rewrite decomp.
+  Qed.
+  (* end details *)
+  Lemma evalListCompose2 : forall n  (v: t nat n)  (f: naryFunc n)
+                                  (g : naryFunc (S n)),
+      v_apply (compose2 n f g) v =
+      v_apply g  ((evalList n v f) :: v).
+  (* begin details *)
+  Proof.
+    induction n.
+    - cbn;  intros;  rewrite (t_0_nil _ v);  now cbn. 
+    -  intros; rewrite (decomp _ _ v);  cbn; rewrite IHn;  now cbn.
+  Qed.
+  (* end details *)
 
-Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
-                                 (g : naryFunc (S (S n))),
-    v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
-    = v_apply f v.
-(* begin details *)
-Proof.
-  induction n.                                                
-  - intros; rewrite (t_0_nil _ v); now cbn.
-  - intros; rewrite (decomp _ _ v); now cbn.
-Qed.
-(* end details *)
+  Lemma evalListPrimrec_0 : forall n  (v: t nat n) (f : naryFunc n)
+                                   (g : naryFunc (S (S n))),
+      v_apply (evalPrimRecFunc  _ f g) (cons 0 v)
+      = v_apply f v.
+  (* begin details *)
+  Proof.
+    induction n.                                                
+    - intros; rewrite (t_0_nil _ v); now cbn.
+    - intros; rewrite (decomp _ _ v); now cbn.
+  Qed.
+  (* end details *)
 
-Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
-                                 (g : naryFunc (S (S n))) a,
-    v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
-    = v_apply g
-              (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
-(* begin details *)
-Proof.
-  induction n.                                                
-  - intros; rewrite (t_0_nil _ v); now cbn.
-  - intros; rewrite (decomp _ _ v);  cbn.
-    specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
-    cbn; auto.
-Qed.
-(* end details *)
-(* end details *)
+  Lemma evalListPrimrec_S : forall n  (v: t nat n) (f : naryFunc n)
+                                   (g : naryFunc (S (S n))) a,
+      v_apply  (evalPrimRecFunc  _ f g) (cons (S a) v)
+      = v_apply g
+                (a :: v_apply (evalPrimRecFunc n f g) (a :: v) :: v).
+  (* begin details *)
+  Proof.
+    induction n.                                                
+    - intros; rewrite (t_0_nil _ v); now cbn.
+    - intros; rewrite (decomp _ _ v);  cbn.
+      specialize (IHn (tl v));  cbn; rewrite evalListCompose2.
+      cbn; auto.
+  Qed.
+  (* end details *)
+  (* end details *)
+
+End evalList.
 
 (** ** Every primitive recursive function is majorized by [Ack] *)
 
@@ -196,6 +199,7 @@ Proof.
   -  (** function composition *)
     destruct IHx, IHx0; red; exists (2 + max x0 x1). 
     intro v; simpl evalPrimRec; rewrite evalListComp.
+    (* begin details *)
     generalize 
       (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
       intro H00; eapply Le.le_trans.
@@ -208,18 +212,20 @@ Proof.
                                      (evalPrimRecs n m g)) a H1).
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
+  (* end details *)
   - (** Primitive recursion *)
-        destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+    destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
     remember  (evalPrimRec n x1) as g.
     remember (evalPrimRec _ x2) as h.
     pose(q := S  (max r s)); red.
+    (* begin details *)
     remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
                                (evalPrimRec _ x2)) as f.
     assert (L1 : forall i (v: t nat n) ,
                v_apply f (i::v)  <= Ack q (i + max_v v)).
     {
       induction i.
-   
+      
       - intros; subst f;  rewrite evalListPrimrec_0.
         simpl plus; subst g; transitivity (Ack r (max_v  v)).
         + auto.
@@ -274,12 +280,13 @@ Proof.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
            ++ rewrite max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia.
-    - (**  Lists of PR functions *)
+  (* end details *)
+   (*  Lists of PR functions *)
     
-    red;cbn;  red; exists 0.
-    intro; rewrite Ack_0.
-    cbn; auto with arith.
+  - red;cbn;  red; exists 0.
+    intro; rewrite Ack_0;  cbn; auto with arith.
   - red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
+    (* begin details *)
     intros v;  cbn; specialize (H0 v).
     pose (X :=
             (max_v (map (fun f : naryFunc n => v_apply f v)
@@ -291,8 +298,12 @@ Proof.
       *  apply Ack_mono_l; apply le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
+        (* end details *)
 Qed. 
 (* end details *)
+
+
+
 
 
 (** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
@@ -379,6 +390,7 @@ Section dom_AckNotPR.
   Hypothesis Hf : dominates f (fun n => Ack n n).
 
   Lemma dom_AckNotPR: isPR 1 f -> False.
+  (* begin details *)
   Proof.
     intros H;  destruct Hf as [N HN].
     destruct  (majorPR1 _ H) as [M HM].
@@ -389,7 +401,7 @@ Section dom_AckNotPR.
       assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
     lia.    
   Qed.
-
+  (* end details *)
 End dom_AckNotPR.
  
   (** ** Nevertheless, for any [n], [Ack n] is primitive recursive. *)
