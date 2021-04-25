@@ -201,6 +201,23 @@ Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
 
+Section proof_of_predIsPR.
+  
+  Remark R02 : 1 < 2.
+  Proof. auto. Qed.
+
+  Let xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
+  
+  Compute evalPrimRec 1 xpred 10.
+
+  Lemma predIsPR : isPR 1 pred.
+  Proof.
+    exists xpred.
+    intro n; induction n; now cbn. 
+  Qed.
+
+End proof_of_predIsPR.
+
 Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
  assert (H: 3 < 5) by auto.
@@ -209,6 +226,8 @@ Proof.
 Qed.
 
 Check composeFunc 0 1.
+
+
 
 Fact compose_01 :
     forall (x:PrimRec 0) (t : PrimRec 1),

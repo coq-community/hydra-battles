@@ -338,7 +338,8 @@ Proof.
     cbn; auto with arith.
   (*||*)
   - (* non-empty list of functions *)
-    red; cbn; red; destruct IHx, IHx0.  exists (max x0 x1).
+    red; cbn; red; destruct IHx, IHx0.
+    exists (max x0 x1).
     (* ... *)
     (*| .. coq:: none *)
     intros v;  cbn; specialize (H0 v).
@@ -358,8 +359,8 @@ Qed.
 
 (*|
 
-Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Let us specialize Lemma ``majorAnyPR`` to unary and binary  functions 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |*)
 
 Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
@@ -397,11 +398,11 @@ Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
     exists (n:nat),
     forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
 Proof.
-   destruct (majorPR2 _ Hf) as [m Hm].
-   exists (S (max 2 m)); intros x y; destruct x, y; try lia.
+   destruct (majorPR2 _ Hf) as [n Hn].
+   exists (S (max 2 n)); intros x y; destruct x, y; try lia.
   (* ... *)
   (*| .. coq:: none *)
-     intros _ _;  apply Lt.le_lt_trans with (Ack m (S (Nat.max x y))).
+     intros _ _;  apply Lt.le_lt_trans with (Ack n (S (Nat.max x y))).
    - rewrite succ_max_distr; auto.
    - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
   (*||*)
@@ -432,8 +433,8 @@ End Impossibility_Proof.
 
 (*|
 
-Every function which dominates (diagonalized) [Ack] fails to be PR.
-====================================================================
+Every function which dominates (diagonalized) ``Ack`` fails to be PR.
+======================================================================
 |*)
 
 Section dom_AckNotPR.
