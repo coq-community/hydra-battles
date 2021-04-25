@@ -2,19 +2,10 @@ Require Import primRec Arith ArithRing List.
 Import extEqualNat.
 Require Import Vector.
 Import VectorNotations.
-(**
+
 Compute naryFunc 3.
 
-= nat -> nat -> nat -> nat
-  : Set
-
-
 Compute naryRel 2.
-
-  = nat -> nat -> bool
-     : Set
-
- *)
 
 Check plus: naryFunc 2.
 
@@ -24,19 +15,10 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3.
 
 
 Compute extEqual 2.
-(*
-    = fun a b : naryFunc 3 => forall x x0 x1 : nat, a x x0 x1 = b x x0 x1
-     : naryFunc 3 -> naryFunc 3 -> Prop
- *)
 
 Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x - x).
 Proof.
   intros x y.
-(*
-  x, y : nat
-  ============================
-  extEqual 0 (x * y) (y * x)
- *)
   cbn. 
   rewrite <- Nat.add_sub_assoc, Nat.sub_diag.
   - ring.
@@ -128,8 +110,8 @@ Compute map mystery_fun [0;1;2;3;4;5;6] : t nat _.
 
 (** ** Understanding some constructions ...
 
- These lemmas are trivial and theoretically useless, but they may help to 
-   make the construction more   concrete *)
+ These lemmas are trivial and theoretically useless, 
+ but they may help to make the construction more   concrete *)
 
 Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 :=
   composeFunc 1  _ (PRcons _  _  f  (PRnil _) ) g.
@@ -189,11 +171,10 @@ Remark PrimRec_2_S  (f: naryFunc 2) (g : naryFunc 4) (i:nat) :
 Proof. reflexivity. Qed.
 
 
-(** * First proofs of isPR statements 
+(* First proofs of isPR statements 
       
-  The module [Alt] presents proofs of lemma alreday proven in [primRec.v]
-  We just hope that such a redundancy will help the reader to get familiar 
-  with the various patterns allowed by that library.
+The module [Alt] presents proofs of lemmas already proven in 
+[primRec.v]. 
 
 *)
 
