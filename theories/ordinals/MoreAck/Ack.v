@@ -400,11 +400,13 @@ Section Proof_of_nested_Ack_bound.
 
   Lemma nested_Ack_bound k m n :  Ack k (Ack m n) <= Ack (2 + max k m) n.
   Proof.
-    pose (x:= Nat.max k m).
+      pose (x:= Nat.max k m).
+    (* begin details *)
     - fold x.
       assert (H: m <= x) by lia.
       assert (H0: k <= x) by lia.
-      simpl (2 + x); transitivity (Ack x (Ack m n)). 
+    (* end details *)
+    simpl (2 + x); transitivity (Ack x (Ack m n)). 
       +  apply Ack_mono_l; auto.
       +  transitivity (Ack x (Ack  x n)).
          *  apply Ack_mono_r.
