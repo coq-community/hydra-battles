@@ -259,7 +259,6 @@ Qed.
 Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
 Proof.
   induction n.
-  (* ... *)(*| .. coq:: none *)
   -  reflexivity.
   - rewrite Ack_S_S, Ack_2_n, IHn.
     change (exp2 (S (S (S (S n)))))
@@ -270,7 +269,6 @@ Proof.
       - cbn in IHn; lia.
     }
     lia.
-    (*||*)
 Qed.
 
 

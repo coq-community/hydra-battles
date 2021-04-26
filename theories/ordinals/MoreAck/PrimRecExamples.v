@@ -207,13 +207,15 @@ Section proof_of_predIsPR.
   Proof. auto. Qed.
 
   Let xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
+
+  Eval simpl in fun n => evalPrimRec 1 xpred (S n). 
   
   Compute evalPrimRec 1 xpred 10.
 
   Lemma predIsPR : isPR 1 pred.
   Proof.
     exists xpred.
-    intro n; induction n; now cbn. 
+    intro n; now destruct n. 
   Qed.
 
 End proof_of_predIsPR.

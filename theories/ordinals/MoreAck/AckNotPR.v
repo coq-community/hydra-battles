@@ -381,9 +381,7 @@ Qed.
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x y).
-  (* ... *)
-  (*| .. coq:: none *)
-Proof.
+ Proof.
   destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
   intros.
   red in H;red in H.  destruct H as [N HN];  exists N.
@@ -392,7 +390,7 @@ Proof.
   - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
   - symmetry; apply Hx.
 Qed.
-(*||*)
+
 
 Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
     exists (n:nat),
@@ -400,13 +398,10 @@ Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
 Proof.
    destruct (majorPR2 _ Hf) as [n Hn].
    exists (S (max 2 n)); intros x y; destruct x, y; try lia.
-  (* ... *)
-  (*| .. coq:: none *)
-     intros _ _;  apply Lt.le_lt_trans with (Ack n (S (Nat.max x y))).
+      intros _ _;  apply Lt.le_lt_trans with (Ack n (S (Nat.max x y))).
    - rewrite succ_max_distr; auto.
    - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
-  (*||*)
- Qed.
+  Qed.
 
 
 (*| 
