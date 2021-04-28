@@ -231,6 +231,9 @@ The general case is proved by  induction on x
 
 |*)
 
+About PrimRec_PrimRecs_ind.
+
+
 Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
 Proof.
   intros n x; induction x using PrimRec_PrimRecs_ind with
