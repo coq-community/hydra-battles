@@ -147,6 +147,7 @@ Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
   | hcons h s' => P h /\ h_forall P s'
   end.
 
+
 Lemma  height_lt_size (h:Hydra) :  height h < hsize h.
 Proof.
   induction h using Hydra_rect2  with 
