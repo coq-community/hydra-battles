@@ -45,6 +45,14 @@ Example
 Recursive Definitions on type ``Hydra``
 ---------------------------------------
 
+
+   In order to define a recursive function over the type ``Hydra``, one has
+   to consider the three constructors ``node``, ``hnil`` and ``hcons`` of
+   the mutually inductive types ``Hydra`` and ``Hydrae``. Let us define for
+   instance the function which computes the number of nodes of any hydra:
+
+   From Module \ `Hydra.Hydra_Definitions <../../../../theories/html/hydras.Hydra.Hydra_Definitions.html>`__
+   
 .. coq::
 
    Fixpoint hsize (h:Hydra) : nat :=
@@ -73,6 +81,16 @@ defined by mutual recursion:
      end.
 
     Compute height Hy. (* .unfold *)
+
+
+Exercise
+^^^^^^^^
+
+   Define a function ``max_degree: Hydra ->  nat`` which  returns the
+   highest degree of a node in any hydra.
+   For instance, the evaluation of the term ``max_degree Hy``
+   should return ``3``.
+ 
 
 Induction principles for hydras
 -------------------------------
@@ -110,7 +128,7 @@ A failed attempt
 
 ..
 
-    We might be tempted to do an induction on the sequence ``s``:
+ We might be tempted to do an induction on the sequence ``s``:
 
 .. coq:: 
 
@@ -118,7 +136,7 @@ A failed attempt
    Abort.
 ..
 
-    Note that the displayed subgoal does not contain any assumption on
+ Note that the displayed subgoal does not contain any assumption on
     ``h``, thus there is no way to infer any property about the height and
     size of the hydra ``hcons h t``.
     
@@ -126,8 +144,8 @@ A failed attempt
 A principle of mutual induction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order to get an appropriate induction scheme for the types ``Hydra``
-and ``Hydrae``, we can use Coq’s command ``Scheme``.
+ In order to get an appropriate induction scheme for the types ``Hydra``
+ and ``Hydrae``, we can use Coq’s command ``Scheme``.
 
 
 .. coq::
@@ -139,7 +157,7 @@ and ``Hydrae``, we can use Coq’s command ``Scheme``.
 
 ..
 
-A similar principle is generated for sequences of hydras.
+ A similar principle is generated for sequences of hydras.
    
 .. coq::
    
@@ -151,12 +169,12 @@ A similar principle is generated for sequences of hydras.
 A correct proof
 ^^^^^^^^^^^^^^^^
 
-  Let us now use ``Hydra_rect2`` for proving that the height of any hydra
-  is strictly less than its size. Using this scheme requires an auxiliary
-  predicate, called ``P0`` in ``Hydra_rect2``’s statement.
+ Let us now use ``Hydra_rect2`` for proving that the height of any hydra
+ is strictly less than its size. Using this scheme requires an auxiliary
+ predicate, called ``P0`` in ``Hydra_rect2``’s statement.
 
-  **To do** : The proof of ``height_lt_size`` (in three parts) is not correctly
-  indented.
+   **To do** : The proof of ``height_lt_size`` (in three parts) is not correctly
+   indented.
 
   
   From Module `Hydra.Hydra_Examples <../../../../theories/html/hydras.Hydra.Hydra_Examples.html>`__
@@ -206,7 +224,7 @@ A correct proof
 	 
 ..    
   
-       Three sub-proofs ...
+ Three sub-proofs ...
   
 .. coq:: 
 
@@ -217,12 +235,12 @@ A correct proof
 Exercise
 ^^^^^^^^^
 
-   It happens very often that, in the proof of  a proposition of the form 
-   `` forall  h:Hydra, P h``, the predicate ``P0``
-   is  just ``h_forall P``.
-   Design a tactic for induction on hydras that frees the user from binding
-   explicitly ``P0``   and solves trivial subgoals. Apply it for writing
-   a shorter proof of ``height_lt_size``.
+ It happens very often that, in the proof of  a proposition of the form 
+ `` forall  h:Hydra, P h``, the predicate ``P0``
+ is  just ``h_forall P``.
+ Design a tactic for induction on hydras that frees the user from binding
+ explicitly ``P0``   and solves trivial subgoals. Apply it for writing
+ a shorter proof of ``height_lt_size``.
 
    
 Relational description of hydra battles
@@ -259,3 +277,4 @@ The mutually exclusive cases we consider are the following:
 
 -  **R2**: The chopped off head was at a distance greater than or equal
    to :math:`2` from the foot.
+
