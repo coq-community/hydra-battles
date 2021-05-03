@@ -2,26 +2,23 @@
 ### Naive Makefile
 ##################
 
-OPTIONS=  --output-directory . -R ../theories/ordinals hydras
+OPTIONS=  --frontend coqdoc --output-directory . -R ../theories/ordinals hydras
 INPUTDIR=../theories/ordinals
+vpath %.v ../theories/ordinals/Hydra
+vpath %.v ../theories/ordinals/Ackermann
+vpath %.v ../theories/ordinals/MoreAck
+vpath %.v ../theories/ordinals/Schutte
+vpath %.v ../theories/ordinals/Epsilon0
+vpath %.v ../theories/ordinals/Gamma0
+vpath %.v ../theories/ordinals/OrdinalNotations
+vpath %.v ../theories/ordinals/Prelude
+vpath %.v ../theories/ordinals/solutions_exercises
 
-all: Ack.html AckNotPR.html primRec.html PrimRecExamples.html F_alpha.html F_omega.html 
 
-Ack.html: $(INPUTDIR)/MoreAck/Ack.v
+all: Ack.html AckNotPR.html primRec.html PrimRecExamples.html F_alpha.html \
+    F_omega.html Hydra_Definitions.html Hydra_Theorems.html \
+    Hydra_Examples.html Hydra_Lemmas.html
+
+%.html : %.v
 	alectryon.py  $(OPTIONS) $<
 
-AckNotPR.html: $(INPUTDIR)/MoreAck/AckNotPR.v
-	alectryon.py  $(OPTIONS) $<
-
-primRec.html: $(INPUTDIR)/Ackermann/primRec.v
-	alectryon.py  $(OPTIONS) $<
-
-PrimRecExamples.html: $(INPUTDIR)/MoreAck/PrimRecExamples.v
-	alectryon.py  $(OPTIONS) $<
-
-F_alpha.html: $(INPUTDIR)/Epsilon0/F_alpha.v
-	alectryon.py  $(OPTIONS) $<
-
-
-F_omega.html: $(INPUTDIR)/solutions_exercises/F_omega.v
-	alectryon.py  $(OPTIONS) $<
