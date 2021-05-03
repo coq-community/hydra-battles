@@ -12,10 +12,13 @@ docinfo
    :alectryon/serapi/args: -R ../../theories/ordinals hydras
 			   
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Contents:
 
-   on-hydras
+   hydras
+   part-hydras
+   chapter-primrec
+   chapter-powers
    
 
 
