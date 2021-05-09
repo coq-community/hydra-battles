@@ -1,9 +1,0 @@
-If I replace  the section on hydras by a reference to  on-hydras.rst in
-toctree, the coq commands  aren't properly executed.
-
-Soved? : put this line in all the chapters
-
-
-   :alectryon/serapi/args: -R ../../theories/ordinals hydras
-
-
