@@ -6,7 +6,6 @@ from pprint import pprint
 
 root = join(dirname(__file__), "..")
 sys.path.insert(0, root)
-
 sys.path.insert(0, '/Users/casteranpierre/alectryon')
 
 # import alectryon.core
@@ -24,6 +23,8 @@ def annotated_to_json():
                          ("-Q", "{},logical_name".format(root)))
     print(json.dumps(json_of_annotated(annotated)))
 
+#Todo  get JS  as an argument on the command line
+
 JS = """
 [[{
             "_type": "sentence",
@@ -34,7 +35,7 @@ JS = """
 """
 
 
-print(JS) # type of JS ?
+# print(JS) # type of JS ?
 
 
 def latex_of_movie():
@@ -48,7 +49,7 @@ def latex_of_movie():
       #  print("</latex>")
 
 def main():
-    api_annotate()
+#    api_annotate()
     latex_of_movie()
 
 if __name__ == '__main__':
