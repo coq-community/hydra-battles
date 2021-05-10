@@ -1,0 +1,30 @@
+\documentclass[a4paper]{book}
+\usepackage{texments,  alectryon, verbatim}
+\usepackage{tango_subtle}
+\title{Problem with Program Fixpoint}
+
+\begin{document}
+\usestyle{default}
+
+
+\begin{verbatim}
+Program Fixpoint Ack (ab : nat * nat) {wf lex_nat ab} : nat :=
+    match ab with
+    | (0, b) => b + 1
+    | (S a, 0) => Ack (a, 1)
+    | (S a, S b) => Ack (a, Ack (S a, b))
+    end.
+  Next Obligation.
+    injection Heq_ab; intros; subst.
+    left; auto with arith.
+  Defined.
+  Next Obligation.
+    apply lex_nat_wf.
+  Defined.
+  
+  Example test1 : Ack (1, 2) = 4 := refl_equal.  
+\end{verbatim}
+
+\input{program_issue}
+
+\end{document}

@@ -25,7 +25,9 @@ This contribution contains two parts:
 
 - Some algorithms for computing _x^n_ with as few multiplications as possible (using _addition chains_).
 
-
+##    Building doc with alectryon 
+  See [doc/Readme.md](doc/README.md)
+  
 ##  Installation
 - To get the required dependencies, the easiest way is to use opam. Run:
   - `opam install coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;

@@ -15,10 +15,14 @@ vpath %.v ../../theories/ordinals/Prelude
 vpath %.v ../../theories/ordinals/solutions_exercises
 
 
-all: Ack.json AckNotPR.json primRec.json PrimRecExamples.json F_alpha.json \
-    F_omega.json Hydra_Definitions.json Hydra_Theorems.json \
-    Hydra_Examples.json Hydra_Lemmas.json
+all: Ack.io.json AckNotPR.io.json primRec.io.json PrimRecExamples.io.json F_alpha.io.json \
+    F_omega.io.json Hydra_Definitions.io.json Hydra_Theorems.io.json \
+    Hydra_Examples.io.json Hydra_Lemmas.io.json \
+    Issue_Program.io.json
 
-%.json : %.v
+Issue_Program.io.json: Issue_Program.v
+
+
+%.io.json : %.v
 	alectryon.py  $(OPTIONS) $<
 
