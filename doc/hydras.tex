@@ -172,8 +172,8 @@ It may also happen that some proof looks to be useless, because the proven theor
 For instance, let us consider the three following statements:
 \begin{enumerate}
 \item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
-\item There is no measure into the interval\footnote{We use the notation $[a,b)$ for denoting the set of ordinals greater or equal than $a$ and strictly less than $b$.} interval $\{x\$[0,\omega^2)$ for proving the termination of all hydra battles (Sect~\vref{omega2-case}).
-\item There is no measure into $[0,\mu)$ for proving the termination of all hydra battles, for any $\mu<\epsilon_0$ (Sect\vref{sec:free-battles-case}).
+\item There is no measure into the interval\footnote{We use the notation $[a,b)$ for denoting the set of ordinals greater or equal than $a$ and strictly less than $b$.}  $[0,\omega^2)$ for proving the termination of all hydra battles (Sect.~\vref{omega2-case}).
+\item There is no measure into $[0,\mu)$ for proving the termination of all hydra battles, for any $\mu<\epsilon_0$ (Sect.\vref{sec:free-battles-case}).
 \end{enumerate}
 
 Obviously, the third theorem implies the second one, which implies the first one. So, theoretically, a library would contain only a proof of $(3)$ and remarks for $(2)$ and $(1)$. But we found it interesting to make all the three proofs available, allowing the reader to compare their common structure and notice their technical differences.
@@ -291,7 +291,7 @@ Thus,  active links towards our \coq{} modules may be incorrect if you got this 
 Finally, we decided to include definitions or lemma statements, as well as tactics,  that lead to
 dead-ends or too complex developments, with the following coloring.
 Bad definitions 
- and encapsulation in modules called \texttt{Bad}, \texttt{Bad1}, etc.
+ are ''masked '' inside modules called \texttt{Bad}, \texttt{Bad1}, etc.
 
 
 \begin{Coqbad}

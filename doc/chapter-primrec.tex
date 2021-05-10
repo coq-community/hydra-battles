@@ -913,6 +913,22 @@ Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
 Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 \end{Coqsrc}
 
+
+\begin{remark}
+ The statements above can be rewritten in a more uniform way:
+
+ \begin{quote}
+   For $m\in 1..4$, $\texttt{Ack}\,m\,n = f_m\,(n+3)-3$, where 
+   \begin{align*}
+   f_1(n)=&n+2 \\
+   f_2(n)=&n\times 2\\
+   f_3(n)=&2^n\\
+   f_4(n)=&2^{2^{\dots^2}}\quad(n\;\textit{times})
+   \end{align*}
+ \end{quote}
+\end{remark}
+
+
 An important property of the Ackermann function helps us 
 to overcome the difficulty raised by nested recursion, by climbing up the hierarchy $\texttt{Ack}\,n\,\_\;(n\in\mathbb{N})$.
 
