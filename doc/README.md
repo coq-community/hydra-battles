@@ -13,6 +13,12 @@
 
 In [cutting-table](./cutting-table/) 
 
+```
+  python3 jsonToLatex.py ../movies/<file-name>.io.json > ../<file-name>.tex
+```
+
+### Examples:
+
  ```
   python3 jsonToLatex.py ../movies/Issue_Program.io.json > ../program_issue.tex
  ```
@@ -20,10 +26,10 @@ In [cutting-table](./cutting-table/)
 ## pdf generation
 
 In the [doc](.) directory,
-the files obtained with `jsonToLatex.py` are inserted in  a global latex file as `alectryon` environment.
+the files obtained with `jsonToLatex.py` are inserted in  a global latex file as `alectryon` environments.
 
-   - [hydras.tex](./hydras.tex) the big document
-   - [Program_issue2.tex](./Program_issue2.tex) A wrapper for the issue below.
+   - [hydras.tex](./hydras.tex) : the big document
+   - [Program_issue2.tex](./Program_issue2.tex) : A wrapper for [program_issue.tex](./program_issue.tex) .
    
    
 ### known issues 
