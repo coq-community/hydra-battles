@@ -9644,18 +9644,18 @@ Inductive lt : T2 -> T2 -> Prop :=
                gcons alpha2 beta2 n2 gamma2
 
 | (* 5 *)
-lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
+ lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
                alpha2 t2< alpha1 ->
                gcons alpha1 beta1 n1 gamma1 t2<
                gcons alpha2  [alpha1, beta1] n2 gamma2
 
 | (* 6 *)
-lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
+ lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
                                     gcons alpha1 beta1 n1 gamma1 t2< 
                                     gcons alpha1 beta1 n2 gamma2
 
 | (* 7 *)
-  lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
+ lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
                                       gcons alpha1 beta1 n1 gamma1 t2<
                                       gcons alpha1 beta1 n1 gamma2
 where  "o1 t2< o2" := (lt o1 o2): T2_scope.

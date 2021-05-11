@@ -920,10 +920,10 @@ Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
  \begin{quote}
    For $m\in 1..4$, $\texttt{Ack}\,m\,n = f_m\,(n+3)-3$, where 
    \begin{align*}
-   f_1(n)=&n+2 \\
-   f_2(n)=&n\times 2\\
-   f_3(n)=&2^n\\
-   f_4(n)=&2^{2^{\dots^2}}\quad(n\;\textit{times})
+   f_1(n)=&\,n+2 \\
+   f_2(n)=&\,n\times 2\\
+   f_3(n)=&\,2^n\\
+   f_4(n)=&\,2^{2^{\dots^2}}\quad(n\;\textit{levels})
    \end{align*}
  \end{quote}
 \end{remark}
@@ -941,6 +941,8 @@ Lemma nested_Ack_bound : forall k m n,
 
 Please note also that for any given $n$, the unary function
 (\texttt{Ack\,$n$}) is primitive recursive.
+
+\vspace{4pt}
 
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
@@ -965,6 +967,7 @@ First, we prove that any primitive function of two arguments is majorized.
 If we look at the inductive definition of primitive recursive functions, page~\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
 
 \vspace{4pt}
+
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
@@ -1081,13 +1084,14 @@ In Library\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}
 [v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
  *)
 
-Notation "'v_apply' f v" := (evalList _ v f) ( at level 10, f at level 9).
+Notation "'v_apply' f v" := (evalList _ v f) 
+     (at level 10, f at level 9).
 
-Example Ex2 : forall (f: naryFunc 2) x y,
+Example Ex2: forall (f: naryFunc 2) x y,
     v_apply f (x::y::nil) = f x y.
 Proof.   intros; now cbn. Qed.
 
-Example Ex4 : forall (f: naryFunc 4) x y z t,
+Example Ex4: forall (f: naryFunc 4) x y z t,
     v_apply f (x::y::z::t::nil) = f x y z t.
 Proof.  intros; now cbn. Qed.
 \end{Coqsrc}
@@ -1266,6 +1270,7 @@ End Impossibility_Proof.
 
 \begin{remark}
 It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. We use an instance of \texttt{majorAnyPR} for unary functions.
+
 \vspace{4pt}
 \noindent
 

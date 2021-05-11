@@ -95,7 +95,7 @@ Qed.
 
 Global Hint Resolve psi_le_cons le_zero_alpha: T2.
 
-Lemma le_psi_term_le : forall alpha beta, alpha t2<= beta ->
+Lemma le_psi_term_le alpha beta:  alpha t2<= beta ->
                                           psi_term alpha t2<= psi_term beta.
 Proof.
   destruct 1.
@@ -869,24 +869,24 @@ Proof. trivial. Qed.
 
 
 
-Lemma plus_alpha_0 : forall alpha:T2 ,  alpha + zero = alpha.
+Lemma plus_alpha_0 (alpha: T2): alpha + zero = alpha.
 Proof.
-  intro alpha; case alpha ;trivial.
+  now case alpha.
 Qed.
 
-Lemma lt_succ alpha: alpha t2< succ alpha.
+Lemma lt_succ (alpha: T2): alpha t2< succ alpha.
 Proof.
   induction alpha;simpl;auto with T2.
   case alpha1;auto with arith T2.
   case alpha2; auto with arith T2.
 Qed.
 
-Theorem lt_succ_le : forall a b,   a t2< b -> nf b -> 
-                                  succ a t2<= b.
+Theorem lt_succ_le alpha : forall beta,  alpha t2< beta -> nf beta -> 
+                                  succ alpha t2<= beta.
 Proof.
-  induction a.
+  induction alpha.
   - inversion 1; cbn;  auto with T2. 
-  -  generalize IHa3; case a1; case a2.
+  -  generalize IHalpha3; case alpha1; case alpha2.
    + cbn; inversion 2.
      *  right; constructor 2.
       --  auto with T2.
@@ -930,8 +930,8 @@ Proof.
        * right;constructor 5;auto with T2.
        * right;constructor 6;auto with T2.
        *  apply le_cons_tail;auto with T2.
-          apply IHa0;auto with T2.
-          subst b; inversion H0.
+          apply IHalpha0;auto with T2.
+          subst ; inversion H0.
           constructor.
           auto with T2.
      +   intros; cbn ;  inversion H.
@@ -941,8 +941,8 @@ Proof.
          *  right;constructor 5;auto with T2.
          *  right; constructor 6;auto with T2. 
          *  apply le_cons_tail;auto with T2.
-            -- apply IHa0;auto with T2.
-            ++ subst b;  inversion H0;  auto with T2.
+            -- apply IHalpha0;auto with T2.
+            ++ subst ;  inversion H0;  auto with T2.
 Qed.
 
 Lemma succ_lt_le : forall a b, nf a -> nf b -> a t2< succ b -> a t2<= b.
