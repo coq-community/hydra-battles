@@ -219,7 +219,7 @@ Lemma H_Omega_term_1 : alpha <> Zero -> forall  k,
     H_ (Omega_term alpha (S i)) k =
     H_ (Omega_term alpha i) (H_ (Phi0 alpha) k).
 Proof with auto with E0.
-  intros H k;  rewrite H_eq3 ...
+  intros  H k;  rewrite H_eq3 ...
   rewrite CanonS_Canon.
   - ochange (CanonS (Omega_term alpha (S i)) k)
           (Ocons alpha i (CanonS  (Phi0 alpha) k)).
@@ -237,8 +237,8 @@ Qed.
 End H_cons.
 
 
-Lemma H_Omega_term (alpha : E0)  :
-alpha <> Zero -> forall i k, 
+Lemma H_Omega_term_0 (alpha : E0)  :
+alpha <> Zero ->  forall i k, 
   H_ (Omega_term alpha i) k = iterate  (H_ (Phi0 alpha)) (S i) k.
 Proof.
   induction i.
@@ -246,9 +246,36 @@ Proof.
   - intros; rewrite H_Omega_term_1, IHi; trivial; now rewrite <- iterate_rw.
 Qed.
 
+Lemma H_Fin_iterate : forall i k,
+    H_ (Fin (S i)) k = iterate (H_ (Fin 1)) (S i) k.
+  
+  intros; repeat rewrite H_Fin.
+   replace (iterate (H_ 1) (S i) k) with (iterate S (S i) k).
+  induction i; cbn.
+   auto.
+simpl Nat.add in IHi.    rewrite IHi.
+ f_equal. 
+ Search iterate.
+apply iterate_ext.
+intro; rewrite H_Fin.
+auto. 
+Qed.
 
+Lemma H_Omega_term (alpha : E0)  :
+ forall i k, 
+   H_ (Omega_term alpha i) k = iterate  (H_ (Phi0 alpha)) (S i) k.
+  
+About E0_eq_dec.
 
-
+destruct (E0_eq_dec alpha Zero).
+- subst.
+  intros; replace (Omega_term Zero i) with (Fin (S i)).
+   replace (Phi0 Zero) with (Fin 1).
+    now rewrite H_Fin_iterate.
+    compute. now apply E0_eq_intro.
+    compute. now apply E0_eq_intro.
+- intros; now apply  H_Omega_term_0.
+Qed.
 
 Definition H_succ_fun f k := iterate f (S k) k.
 

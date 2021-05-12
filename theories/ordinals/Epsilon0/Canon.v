@@ -787,4 +787,15 @@ Qed.
 
 Global Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
+Lemma CanonS_Phi0_Succ alpha i : CanonS (Phi0 (Succ alpha)) i =
+                                 Omega_term alpha i.
+Proof.      
+  apply E0_eq_intro;  unfold Omega_term, CanonS, Phi0, Succ.
+  simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
+  -  intro H;  destruct (succ_not_zero _ H);  auto.
+  - reflexivity. 
+  -  intro; apply cnf_ok.
+  - intros; apply cnf_ok.
+Qed.
+
 

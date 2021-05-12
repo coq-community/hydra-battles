@@ -674,8 +674,134 @@ Section Compatibility_F_dominates.
 End Compatibility_F_dominates.
 
 
+(** * A variant (Lob-Wainer hierarchy) *)
+
+
+Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
+  f_star (alpha, 0) i := i;
+  f_star (alpha, 1) i
+    with E0_eq_dec alpha Zero :=
+    { | left _ => S i ;
+      | right nonzero
+          with Utils.dec (Limitb alpha) :=
+          { | left _ => f_star (Canon alpha i,1) i ;
+            | right notlimit =>
+              f_star (Pred alpha, i)  i}};
+  f_star (alpha,(S (S n))) i :=
+    f_star (alpha, 1) (f_star (alpha, (S n)) i).
+
+Next Obligation.
+  left; cbn ; auto with E0. 
+Defined.
+
+Next Obligation.
+  left; cbn; auto with E0.   
+Defined.
+
+Next Obligation.
+  right; cbn; auto with arith. 
+Defined.
+
+Next Obligation.
+  right; cbn; auto with arith.
+Defined.
+
+
+(**  Finally, [f_ alpha] is defined as its first iterate  ! *)
+
+Definition f_  alpha i := f_star (alpha, 1) i.
+
+(** ** We get the "usual" equations for [F_]  *)
+
+(** *** Relations between [F_star] and [F_] *)
+
+Lemma f_star_zero_eqn : forall alpha i, f_star (alpha, 0) i = i.
+Proof.
+  intros; now rewrite f_star_equation_1.
+Qed.
+
+Lemma fstar_S : forall alpha n i, f_star (alpha, S (S n)) i =
+                                  f_ alpha  (f_star (alpha,  S n) i).
+Proof.  
+  unfold F_; intros; now rewrite f_star_equation_3.
+Qed.
+
+Lemma f_eq2 : forall alpha i,
+    Succb alpha -> 
+    f_ alpha i = f_star (Pred alpha,  i) i.
+Proof.
+  unfold f_; intros; rewrite f_star_equation_2.
+  destruct (E0_eq_dec alpha Zero).
+  - subst alpha; discriminate H.
+  - cbn; destruct (Utils.dec (Limitb alpha)) .
+    + assert (true=false) by 
+          ( now  destruct (Succ_not_Limitb _ H)). 
+      discriminate.
+    + now cbn.
+Qed.
+
+Lemma f_star_Succ:  forall alpha n i,
+    f_star (alpha, S n) i = 
+    f_ alpha (f_star (alpha, n) i).
+Proof.
+  destruct n.
+  - intros; now rewrite f_star_zero_eqn.
+  - intros i; unfold f_; now rewrite fstar_S.  
+Qed.
+
+Lemma f_star_iterate : forall alpha n i,
+    f_star (alpha, n) i =  iterate (f_ alpha) n i.
+Proof.
+  induction n; intro i; simpl.
+  - now rewrite f_star_zero_eqn. 
+  - specialize (IHn i); rewrite f_star_Succ in *;  now rewrite <- IHn.
+Qed.
 
 
 
+(** *** Usual equations for [f_] *)
+
+Lemma f_zero_eqn : forall i, f_ Zero i = S i.
+Proof.
+  intro i. unfold f_; rewrite f_star_equation_2.
+  destruct (E0_eq_dec Zero Zero).
+  - now cbn.
+  - now destruct n.
+Qed.
 
 
+Lemma f_lim_eqn : forall alpha i,  Limitb alpha ->
+                                   f_ alpha i = f_ (Canon alpha i) i.
+Proof.
+  unfold f_; intros. rewrite f_star_equation_2.
+  destruct (E0_eq_dec alpha Zero).
+  - now  destruct (Limit_not_Zero  H).
+  - cbn; destruct (Utils.dec (Limitb alpha)) .
+    + cbn; auto.
+    + red in H. rewrite e in H; discriminate.
+Qed.
+
+
+Lemma f_succ_eqn : forall alpha i,
+    f_ (Succ alpha) i = iterate (f_ alpha) i i.
+Proof with auto with E0.
+  intros;rewrite f_eq2,  f_star_iterate ...
+  -  now rewrite Pred_of_Succ.
+Qed.
+
+(** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
+
+
+(*
+Goal forall alpha i, F_ alpha i = Nat.pred (f_ alpha (S i)).
+intro alpha.
+pattern alpha; apply well_founded_induction with Lt.
+- apply Lt_wf.
+- clear alpha; intros alpha IHalpha.
+  Search Succ Zero.
+  destruct (Zero_Limit_Succ_dec alpha) as [[HZero | HSucc] | Hlim].
+  + subst. intro i; now rewrite f_zero_eqn, F_zero_eqn.
+  + intro i. rewrite f_lim_eqn, F_lim_eqn.
+    rewrite IHalpha.
+Abort.
+ *)
