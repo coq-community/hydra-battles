@@ -50,6 +50,7 @@ Definition Limitb (alpha : E0) : bool :=
 Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
+
 Instance _Omega : E0.
 Proof.
   now exists omega%t1.  
@@ -63,6 +64,8 @@ Proof.
   apply succ_nf,  cnf_ok.
 Defined.
 
+
+  
 Instance ord1 : E0.
 Proof. 
   refine (@mkord (T1.succ zero) _);now compute. 
@@ -162,6 +165,15 @@ Proof.
  - intro; now apply E0_eq_intro.
 Qed.
 
+Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
+Proof.
+  destruct alpha.
+  cbn.
+  intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
+  assert (nf (succ beta)) by eauto with T1.
+  exists (@mkord  beta Hbeta).
+  apply E0_eq_intro. now cbn.
+Defined.
 
 Global Hint Resolve E0_eq_intro : E0.
 
@@ -735,3 +747,5 @@ Proof.
   - subst; right. apply Le_refl.
   - right; now apply Lt_Le_incl.
 Qed.
+
+

@@ -262,32 +262,66 @@ auto.
 Qed.
 
 Lemma H_Omega_term (alpha : E0)  :
- forall i k, 
-   H_ (Omega_term alpha i) k = iterate  (H_ (Phi0 alpha)) (S i) k.
-  
-About E0_eq_dec.
-
-destruct (E0_eq_dec alpha Zero).
-- subst.
-  intros; replace (Omega_term Zero i) with (Fin (S i)).
-   replace (Phi0 Zero) with (Fin 1).
+  forall i k, 
+    H_ (Omega_term alpha i) k = iterate  (H_ (Phi0 alpha)) (S i) k.
+Proof.
+  destruct (E0_eq_dec alpha Zero).
+  - subst.
+    intros; replace (Omega_term Zero i) with (Fin (S i)).
+    replace (Phi0 Zero) with (Fin 1).
     now rewrite H_Fin_iterate.
     compute. now apply E0_eq_intro.
     compute. now apply E0_eq_intro.
-- intros; now apply  H_Omega_term_0.
+  - intros; now apply  H_Omega_term_0.
 Qed.
 
 Definition H_succ_fun f k := iterate f (S k) k.
 
-Lemma H_Phi0_succ alpha  : alpha <> Zero -> forall k,
+Lemma H_Phi0_succ_1 alpha  : alpha <> Zero -> forall k,
       H_ (Phi0 (Succ alpha)) k = H_succ_fun (H_ (Phi0 alpha)) k. 
 Proof with auto with E0.
   intros; unfold H_succ_fun ;
     rewrite H_eq3, CanonS_Canon, CanonS_Phi0_Succ_eqn, H_Omega_term ...
 Qed.
 
+Lemma H_Phi0_succ_0 : forall k,
+    H_ (Phi0 (Succ Zero)) k = H_succ_fun (H_ (Phi0 Zero)) k.
+  Proof with auto with E0.
+intros k.    
+  replace (Phi0 Zero) with (Fin 1).
+  Search H_ Phi0.
+  replace (Phi0 (Succ Zero)) with omega.
+   Search H_ omega.
+ rewrite H_omega.
+   unfold H_succ_fun.
+   Search (H_ 1).
+   transitivity (iterate S (S k) k).
+   replace (S (2 * k))%nat with (S k + k)%nat.
+   generalize (S k).   
+ induction n.
+  now cbn.
+  cbn. now rewrite  IHn.
+  lia.
+  apply iterate_ext.
+   intro x.
+    
+now rewrite H_Fin.
+  apply E0_eq_intro.
+  reflexivity. 
+  apply E0_eq_intro.
+  reflexivity. 
+Qed.
 
-Lemma H_Phi0_Si : forall i k,
+  Lemma H_Phi0_succ alpha  : forall k,
+      H_ (Phi0 (Succ alpha)) k = H_succ_fun (H_ (Phi0 alpha)) k. 
+  destruct (E0_eq_dec alpha Zero).  
+  subst.
+apply H_Phi0_succ_0.
+
+  now apply H_Phi0_succ_1.
+  Qed.
+  
+  Lemma H_Phi0_Si : forall i k,
       H_ (Phi0 (S i)) k = iterate H_succ_fun i (H_ omega) k. 
 Proof with auto with E0.
  induction i.
@@ -295,14 +329,12 @@ Proof with auto with E0.
  -  intro k;  rewrite <- FinS_eq, FinS_Succ_eq. (* lourd *)
    rewrite H_Phi0_succ, iterate_S_eqn.
    apply iterate_ext; auto.
-   repeat rewrite E0_eq_iff;  discriminate. 
 Qed.
 
 Lemma H_omega_cube : forall k,
     H_ (Phi0 3)%e0 k = iterate (H_ (Phi0 2))  (S k) k.
 Proof.
   intro k; rewrite <-FinS_eq, -> FinS_Succ_eq, H_Phi0_succ; auto.
-  compute; injection 1; discriminate.
 Qed.
 
 Section H_omega_cube_3.
@@ -314,7 +346,6 @@ Proof.
   ochange (Phi0 3) (Phi0 (Succ 2)); rewrite H_Phi0_succ.
   unfold H_succ_fun; apply iterate_ext.
   - intro x; now rewrite H_omega_sqr.   
-  - discriminate.
 Qed.
 
 Fact F0 : H_ (Phi0 3) 3 = f (f (f (f 3))).

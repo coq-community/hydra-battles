@@ -763,7 +763,7 @@ Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i o< alpha.
 Proof.
   destruct alpha. unfold Lt, CanonS. cbn.
   intro;apply canonS_LT; auto.
-  intro H0; subst. apply H. unfold Zero;f_equal.
+  intro H0; subst. apply H. unfold Zero; f_equal.
   apply nf_proof_unicity.
 Qed.
 
