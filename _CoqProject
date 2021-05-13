@@ -42,6 +42,7 @@ theories/ordinals/Epsilon0/Large_Sets_Examples.v
 theories/ordinals/Epsilon0/L_alpha.v
 theories/ordinals/Epsilon0/Epsilon0.v
 theories/ordinals/Epsilon0/F_alpha.v
+theories/ordinals/Epsilon0/F_omega.v
 theories/ordinals/Gamma0/T2.v
 theories/ordinals/Gamma0/Gamma0.v
 theories/ordinals/rpo/decidable_set.v
@@ -159,7 +160,7 @@ theories/ordinals/solutions_exercises/ge_omega_iff.v
 theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
 theories/ordinals/solutions_exercises/F_3.v
 theories/ordinals/solutions_exercises/is_F_monotonous.v
-theories/ordinals/solutions_exercises/F_omega.v
+
 
 exercises/primrec/MinPR.v
 exercises/primrec/FibonacciPR.v

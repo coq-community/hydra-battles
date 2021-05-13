@@ -107,6 +107,7 @@ Print Assumptions battle_length_std.
 
 Require Import primRec F_alpha H_alpha AckNotPR PrimRecExamples.
   Require Import F_omega.
+
 Section battle_lenght_notPR.
 
   About L_.
