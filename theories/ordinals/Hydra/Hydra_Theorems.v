@@ -1,8 +1,9 @@
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
-     Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length.
-Import E0 Large_Sets H_alpha Paths MoreLists  O2H Hydra_Definitions.
+     Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length Ack.
+Import E0 Large_Sets H_alpha Paths MoreLists  O2H Hydra_Definitions Iterates.
+
 
 (** ** Liveness 
 
@@ -73,15 +74,18 @@ Impossibility_free
 Check Impossibility_std.
 
 
+About battle_length_std.
 
-
-Theorem battle_length_std (alpha : E0)  :
+(* Theorem battle_length_std (alpha : E0)  :
   alpha <> Zero ->
   forall k, (1 <= k)%nat ->
             battle_length standard k (iota (cnf alpha))
                          (L_ alpha (S k) - k).
 
 Proof.  apply battle_length_std.  Qed.
+
+Locate battle_length_std.
+ *)
 
 Open Scope nat_scope.
 
@@ -106,134 +110,105 @@ Print Assumptions battle_length_std.
 (** ** Battle length is not PR *)
 
 Require Import primRec F_alpha H_alpha AckNotPR PrimRecExamples.
-  Require Import F_omega.
+Require Import F_omega.
 
 Section battle_lenght_notPR.
 
-  About L_.
-  Locate "omega".
+  (** We assume that the function with computes the length 
+      of standard battles is primitive recursive *)
+  
+  Hypothesis H: forall alpha, isPR 1 (l_std alpha).
+
+  (** A counter example *)
 
   Let alpha := Phi0 omega%e0.
-
   Let h := iota (cnf alpha).
 
-  Let l k := (L_ alpha (S k) - k)%nat.
+  (** let us get rid of the substraction ... *)
+  
   Let m k := L_ alpha (S k).
 
-  Hypothesis H: isPR 1 l.
-
-  Remark R : forall k, m k = (l k + k)%nat.
+  Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
   Proof.
-    intro k.
-    assert (k <= L_ alpha (S k)).
-    Search L_.
-    assert (S k < L_ alpha (S k)).
-    apply L_ge_S.
-    unfold alpha.
-   intro H0.
-   compute in H0.
-    injection H0.
-    intro; discriminate.
-    lia.
+    intro k; assert (k <= L_ alpha (S k)).
+    { assert (S k < L_ alpha (S k)).
+      { apply L_ge_S;  unfold alpha;  intro H0; injection H0.
+        intro; discriminate.
+      }
+      lia.
+    }
+    unfold m,l_std ; lia.   
+  Qed.
 
-   unfold m.
-   unfold l.
-   lia.
-Qed.
+   Remark mIsPR : isPR 1 m.
+  Proof.
+    destruct (H alpha) as [x Hx].
+    apply isPR_extEqual_trans with (fun k => (l_std alpha  k + k)%nat).
+    - apply compose1_2IsPR; auto.
+      + apply idIsPR.
+      + apply plusIsPR.
+    - intro k; unfold m, l_std; assert (k <=  L_ alpha (S k))%nat.
+      transitivity (S k). 
+      + auto with arith.
+      + apply Lt.lt_le_weak.
+        apply L_ge_S.
+        unfold alpha; intro H0; injection H0; discriminate.
+      + replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
+        now red.
+  Qed.
 
 
-
-  Remark R1 : forall k,  F_ omega (S k) <= m (S k).
-    intro.
-
-    rewrite R.
-    Search L_ H_.
+  Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
+  Proof.
+    intro k; rewrite m_eqn.
     transitivity (H_ alpha (S k)).
-    apply H_F.
-    unfold l.
-    Search H_ L_.
-    generalize (H_L_ alpha (S k)); intro.
-    lia.
+    - apply H_F.
+    - unfold l_std;  generalize (H_L_ alpha (S k)); lia.
   Qed.
 
-
-  Search F_ omega.
-
-  Remark R2: forall n, 2 <= n -> Ack.Ack (S n) (S n) <= m (S n).
+  (** We compare [m] with the Ackermann function *)
+  
+  Remark m_ge_Ack:  forall n, 2 <= n -> Ack (S n) (S n) <= m (S n).
   Proof.
-    intros n H0. transitivity (F_ omega (S n)).
-    apply F_vs_Ack.
-    auto.
-    apply R1.
+    intros n H0; transitivity (F_ omega (S n)).
+    - apply F_vs_Ack; auto.
+    - apply m_ge_F_omega.
   Qed.
 
 
-  Remark R3 : forall n, 3 <= n -> Ack.Ack n n <= m n.
+  Remark m_dominates_Ack_from_3 : forall n, 3 <= n -> Ack n n <= m n.
   Proof.  
     destruct n.
-    lia.
-    intro;apply R2.
-    auto with arith.
+    - lia.
+    - intro; apply m_ge_Ack; auto with arith.
   Qed.
 
-  Search (isPR _ _ -> False).
 
-  Remark R4 : Iterates.dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
-    red.
-    exists 3.
-    red.
-    intros.
+  Remark m_dominates_Ack : dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
+  Proof.     
+    exists 3; red; intros.
     apply Lt.le_lt_trans with (m p).
-    apply R3.
-    auto.
-    auto with arith.
+    - apply m_dominates_Ack_from_3; auto.
+    - auto with arith.
   Qed.
 
-  Search Iterates.dominates Ack.Ack.
-
-  Remark R5 : isPR 1 (fun n => S (m n)) -> False.
-    intro; eapply dom_AckNotPR.
-    apply R4; auto.
- auto.
+  Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
+  Proof.
+    intro; eapply dom_AckNotPR; eauto.
+    apply m_dominates_Ack; auto.
   Qed.
+ 
 
-  
-  Remark R6: isPR 1 m.
-    destruct H as [x Hx].
-
-    About isPR_extEqual_trans.
-    apply isPR_extEqual_trans with (fun k => (l k + k)%nat).
-   apply compose1_2IsPR.
- auto.
- apply idIsPR.
- apply plusIsPR.
- intro k. unfold m, l.
-assert (k <=  L_ alpha (S k))%nat.
- Search L_.
- transitivity (S k). 
-auto with arith.
-apply Lt.lt_le_weak.
- Search L_.
-apply L_ge_S.
-unfold alpha.
-intro H0.
-injection H0.
-discriminate.
-
-replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
-red.
-auto.
-  Qed.
-
-
-  Theorem L_notPR : False.
-    apply R5.
-    apply compose1_1IsPR.
-    apply R6.
-    apply succIsPR.
+  Theorem LNotPR : False.
+  Proof.
+    apply SmNotPR,  compose1_1IsPR.
+    - apply mIsPR.
+    - apply succIsPR.
   Qed.
 
 End battle_lenght_notPR.
 
-About L_notPR.
+About LNotPR.
+
+
 

@@ -7739,7 +7739,7 @@ Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
 Theorem F_alpha_dom alpha : 
      dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
 
-Theorem F_alpha_beta alpha : 
+Theorem F_restricted_mono_l alpha : 
    forall beta n, Canon_plus n alpha beta -> 
                                         F_ beta n <= F_ alpha n.
 \end{Coqsrc}

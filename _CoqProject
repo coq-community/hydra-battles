@@ -162,19 +162,7 @@ theories/ordinals/solutions_exercises/F_3.v
 theories/ordinals/solutions_exercises/is_F_monotonous.v
 
 
-exercises/primrec/MinPR.v
-exercises/primrec/FibonacciPR.v
-exercises/primrec/MorePRExamples.v
-exercises/primrec/isqrt.v
-exercises/ordinals/T1_ltNotWf.v
-exercises/ordinals/predSuccUnicity.v
-exercises/ordinals/lt_succ_le.v
-exercises/ordinals/Limit_Infinity.v
-exercises/ordinals/ge_omega_iff.v
-exercises/ordinals/schutte_cnf_counter_example.v
-exercises/ordinals/F_3.v
-exercises/ordinals/is_F_monotonous.v
-exercises/ordinals/F_omega.v
+
 
 
 

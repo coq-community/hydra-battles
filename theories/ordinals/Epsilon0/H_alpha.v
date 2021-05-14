@@ -693,7 +693,11 @@ Section Abstract_Properties.
   Theorem H_alpha_dom : dominates_from 1 (H_ (Succ alpha)) (H_ alpha).
   Proof. now  destruct  (P_alpha alpha). Qed.
 
-  Theorem H_alpha_beta : forall beta n, Canon_plus n alpha beta -> 
+  (** [H_] is not mononotonous in [alpha] in general. 
+      Nevertheless, this lemma may help (from [KS]) *)
+     
+
+  Theorem H_restricted_mono_l : forall beta n, Canon_plus n alpha beta -> 
                                         (H_ beta n <= H_ alpha n)%nat.
   Proof. now  destruct  (P_alpha alpha). Qed.
 

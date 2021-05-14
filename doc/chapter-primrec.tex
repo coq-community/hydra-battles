@@ -1313,5 +1313,125 @@ Note that the Ackermann function is a counter-example to the (false) statement:
 \end{remark}
 
 
+\subsection{The length of standard hydra battles}
 
+The module \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra\_Theorems} contains a proof that the function which computes the lenght of standard hydra battles is not primitive recursive. This proof is  a little more complex than the preceding one.
+
+\subsubsection{Definitions}
+
+The function we consider is defined and proven correct in
+Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
+
+\begin{Coqsrc}
+Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
+
+Lemma l_std_ok : forall alpha : E0,
+    alpha <> Zero ->
+    forall k : nat,
+      1 <= k -> battle_length standard k (iota (cnf alpha))
+                              (l_std alpha k).
+(* ... *)
+\end{Coqsrc}
+
+\subsubsection{Proof steps}
+
+Now, let us assume that the function \texttt{l\_std} is primitive recursive.
+
+
+\emph{From \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems}}.
+
+\begin{Coqsrc}
+Section battle_lenght_notPR.
+
+  (** We assume that the function with computes the length 
+      of standard battles is primitive recursive *)
+  
+  Hypothesis H: forall alpha, isPR 1 (l_std alpha). 
+\end{Coqsrc}
+
+Let us consider the hydra represented by the ordinal $\omega^\omega$.
+
+\begin{Coqsrc}
+Let alpha := Phi0 omega%e0.
+Let h := iota (cnf alpha).
+\end{Coqsrc}
+
+In order to get rid of the substraction in the definition of \texttt{l\_std}, we work with a helper function.
+
+\begin{Coqsrc}
+Let m k := L_ alpha (S k).
+
+Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
+(* ... *)
+\end{Coqsrc}
+
+Under the hypothesis \texttt{H}, $m$ is also primitive recursive.
+
+\begin{Coqsrc}
+Remark mIsPR : isPR 1 m.
+(* ... *)
+\end{Coqsrc}
+
+Now, let us recall the following lemmas :
+
+\begin{enumerate}
+\item 
+\emph{From \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}}
+
+\begin{Coqsrc}
+H_F : forall (alpha : E0) (n : nat), 
+     F_ alpha (S n) <= H_ (Phi0 alpha) (S n) 
+\end{Coqsrc}
+
+\emph{Please note that our proof of this lemma is not trivial at all. It uses some lemmas of Chapters~\vref{chap:ketonen} and \vref{chap:alpha-large}.}
+
+\item
+\noindent
+\emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
+
+\begin{Coqsrc}
+H_L_ : forall (alpha : E0) (i : nat), H_ alpha i <= L_ alpha (S i)
+\end{Coqsrc}
+
+\item
+
+\emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
+
+\begin{Coqsrc}
+F_vs_Ack : forall n : nat, 2 <= n -> Ack n n <= F_ omega n
+\end{Coqsrc}
+
+
+
+\end{enumerate}
+
+
+
+
+By transitivity, we get the inequality
+$F_\omega(k+1)\leq m(k+1)$, for any $k$.
+
+\begin{Coqsrc}
+Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
+\end{Coqsrc}
+
+
+We finish the proof by noting that the function $m$ (composed with \texttt{S}) dominates the Ackermann function, which leads to a contradiction.
+
+\begin{Coqsrc}
+ Remark m_dominates_Ack : 
+     dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
+(* ... *)
+
+ Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
+
+ Theorem LNotPR : False.
+  Proof.
+    apply SmNotPR,  compose1_1IsPR.
+    - apply mIsPR.
+    - apply succIsPR.
+  Qed.
+
+End battle_lenght_notPR.
+\end{Coqsrc}
 

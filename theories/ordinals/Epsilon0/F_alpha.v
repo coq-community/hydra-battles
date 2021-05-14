@@ -6,7 +6,7 @@
 
 
 From hydras  Require Import  Iterates  Simple_LexProd Exp2.
-From hydras Require Import  E0 Canon Paths primRec.
+From hydras Require Import  E0 Canon Paths primRec H_alpha.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.
@@ -553,7 +553,11 @@ Proof. now  destruct  (TH_packed alpha). Qed.
 Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
 Proof. now  destruct  (TH_packed alpha). Qed.
 
-Theorem F_alpha_beta alpha : forall beta n, Canon_plus n alpha beta -> 
+(** [F_] is not mononotonous in [alpha] in general. 
+      Nevertheless, this lemma may help (from [KS]) *)
+
+
+Theorem F_restricted_mono_l alpha : forall beta n, Canon_plus n alpha beta -> 
                                             F_ beta n <= F_ alpha n.
 Proof. now  destruct  (TH_packed alpha). Qed.
 
@@ -629,7 +633,7 @@ Section Compatibility_F_dominates.
 
     Fact F7 : forall i, (S n < i -> F_ (Succ beta) i <= F_ alpha i)%nat.
     Proof.
-      intros; apply  F_alpha_beta.  
+      intros; apply  F_restricted_mono_l.  
       apply F6; auto.
     Qed.
 
@@ -674,11 +678,12 @@ Section Compatibility_F_dominates.
 End Compatibility_F_dominates.
 
 
+(** * Comparison with the Hardy hierarchy 
+       
+      [(F_ alpha (S n) <= H_ (Phi0 alpha) (S n))]
+*)
 
 
-(** * Comparison with the Hardy hierarchy *)
-
-Require Import H_alpha.  (* to move to the head of the file *)
 
 Section H_F.
   
@@ -688,119 +693,82 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
 
  Hypothesis IHalpha : forall  beta, beta o< alpha -> P beta.
 
-  Lemma HF0 : P Zero.
-  Proof.
-   intro n.
-   Search (F_ Zero).
-   rewrite F_zero_eqn.
+ Lemma HF0 : P Zero.
+ Proof.
+   intro n; rewrite F_zero_eqn.
    replace (Phi0 Zero) with (Fin 1).
-   Search (H_ (Fin _)).
-   now rewrite H_Fin.
- Search E0 eq.
-   now apply E0_eq_intro.
+   - now rewrite H_Fin.
+   - now apply E0_eq_intro.
+ Qed.
+
+ Lemma HFsucc : Succb alpha -> P alpha.
+ Proof.
+   intro H; destruct (Succb_Succ _ H) as [beta Hbeta]; subst.
+   intro n; rewrite H_Phi0_succ.
+   unfold H_succ_fun; rewrite F_succ_eqn.
+   specialize (IHalpha beta (Lt_Succ beta));  unfold P in IHalpha.
+   - apply iterate_mono_1 with 1.
+     + apply F_alpha_mono.
+     + intro k; apply F_alpha_ge_S.
+     + intros; destruct n0.
+       * lia.
+       * apply IHalpha.
+     +lia.
  Qed.
 
 
-  Lemma HFsucc : Succb alpha -> P alpha.
-    Search H_ Phi0 .
-  intro H.   
-  Search Succb .
-  destruct (Succb_Succ _ H) as [beta Hbeta]; subst.
-  intro n.
-  Search (H_ (Phi0 (Succ _))).
-  rewrite H_Phi0_succ.
-  unfold H_succ_fun.
-  Search (F_ (Succ _)).
-  rewrite F_succ_eqn.
-  specialize (IHalpha beta (Lt_Succ beta)).
-  unfold P in IHalpha.
-  Search (iterate _ ?x ?y <= iterate _ ?x ?y)%nat.
-  apply iterate_mono_1 with 1.
-  Search strict_mono F_.
- apply F_alpha_mono.
- Search F_.
- intro k. apply F_alpha_ge_S.
- intros.  destruct n0.
-   lia.
- apply IHalpha.
-lia.
-Qed.
-
-
-  
+  (** The following proof is far from being trivial.
+      It uses some lemmas from the Ketonen-Solovay machinery *)
+ 
   Lemma HFLim : Limitb alpha -> P alpha.
-    Proof.
- intros Halpha n .
-  Search H_ Limitb.
-  rewrite H_eq3.
-  Search Limitb Phi0.
- - Search CanonS Phi0.
-Search CanonS Canon.
- rewrite CanonS_Canon.
-rewrite CanonS_Phi0_lim; [| trivial].
-Search F_ Limitb.   
- rewrite F_lim_eqn, CanonS_Canon.
-transitivity (H_ (Phi0 (CanonS alpha n)) (S n)).
-+ apply IHalpha.
-Search (CanonS ?x _ o< ?x).
-apply CanonS_lt.
-Search Limitb Zero.
-now apply Limit_not_Zero.
-+ Search (H_ _ ?x <= H_ _ ?x)%nat.
-apply H_alpha_beta.
-Search Canon_plus Limitb.
-Search Canon_plus.
-red.
-cbn.
-apply KS_thm_2_4_lemma5.
-apply Cor12_1 with 0.
-Search nf canonS.
-apply nf_canonS.
-apply cnf_ok. 
-Search (canonS ?x _ t1< canonS ?x _).
-apply canonS_limit_mono.
-apply cnf_ok.
-destruct alpha.
-cbn.
-assumption. 
-auto with arith. 
-auto with arith.
-
-Search (const_pathS 0).
-apply KS_thm_2_4.
-apply cnf_ok.
-destruct alpha; auto.
-auto with arith. 
-auto with arith.
-Search nf canonS.
-apply nf_canonS.
-apply cnf_ok.
-Search canonS zero.
-apply limitb_canonS_not_zero.
-apply cnf_ok.
-now destruct alpha.
-+ auto.
-- Search Limitb Phi0.
-apply Limitb_Phi0.
-apply Limit_not_Zero.
-auto. 
+  Proof.
+    intros Halpha n; rewrite H_eq3.
+    - rewrite CanonS_Canon;
+      rewrite CanonS_Phi0_lim; [| trivial].
+      rewrite F_lim_eqn, CanonS_Canon; auto.
+      + transitivity (H_ (Phi0 (CanonS alpha n)) (S n)).
+        *  apply IHalpha.
+           apply CanonS_lt.
+           now apply Limit_not_Zero.
+        * (** Not trivial, since [H_ ] is not monotonous ! *)
+          
+          apply H_restricted_mono_l.
+          
+          red; cbn; apply KS_thm_2_4_lemma5.
+          -- apply Cor12_1 with 0.
+           ++ apply nf_canonS, cnf_ok.
+           ++ apply canonS_limit_mono.
+              ** apply cnf_ok.
+              ** destruct alpha; cbn; assumption. 
+              ** auto with arith. 
+           ++ auto with arith.
+           ++ apply KS_thm_2_4.
+              ** apply cnf_ok.
+              ** destruct alpha; auto.
+              ** auto with arith. 
+          --  apply nf_canonS, cnf_ok.
+          --  apply limitb_canonS_not_zero.
+              ++ apply cnf_ok.
+              ++ now destruct alpha.
+    - apply Limitb_Phi0.
+      apply Limit_not_Zero; auto. 
 Qed.
 
-                  
- End H_F.
+End H_F.
+
+(** Proof using transfinite induction (prepared in the previous section) *)
 
 Lemma H_F alpha : forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
-pattern alpha; apply well_founded_induction with Lt.
-apply Lt_wf.  
- clear alpha; intros alpha IHalpha.
-  destruct (Zero_Limit_Succ_dec alpha) as [[Hzero | Hlim] | Hsucc].
-  - subst.  
-  apply HF0.
- - apply HFLim; auto.
- - destruct Hsucc; subst.
-   apply HFsucc. intros; apply IHalpha.    auto.
-   Search (Succb (Succ _)).
-   apply Succ_succb.
+Proof.
+  pattern alpha; apply well_founded_induction with Lt.
+  - apply Lt_wf.  
+  -  clear alpha; intros alpha IHalpha.
+     destruct (Zero_Limit_Succ_dec alpha) as [[Hzero | Hlim] | Hsucc].
+    + subst; apply HF0.
+    + apply HFLim; auto.
+    + destruct Hsucc; subst; apply HFsucc.
+      intros; apply IHalpha; auto.
+      apply Succ_succb.
   Qed.
 
 

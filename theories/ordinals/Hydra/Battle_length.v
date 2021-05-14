@@ -85,16 +85,16 @@ Section Battle_length.
   
 End Battle_length.
 
-(**
-<<
-battle_length_std :
-forall alpha : E0,
-alpha <> Zero ->
-forall k : nat,
-1 <= k -> battle_length standard k (iota (cnf alpha))
-                        (L_ alpha (S k) - k)
->>
- *)
+Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
+
+Lemma l_std_ok : forall alpha : E0,
+    alpha <> Zero ->
+    forall k : nat,
+      1 <= k -> battle_length standard k (iota (cnf alpha))
+                              (l_std alpha k).
+Proof. apply battle_length_std. Qed.
+
+
 
 
 
