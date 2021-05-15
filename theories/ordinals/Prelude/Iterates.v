@@ -193,6 +193,33 @@ Proof.
       transitivity (iterate f m z); auto. 
 Qed.
 
+Lemma iterate_lt_from f k:
+   strict_mono f ->
+    ( forall n,  k <= n -> n < f n) -> 
+    forall i j : nat,  i < j ->
+                       forall z : nat, k <= z ->
+                                       iterate f i z < iterate f j z.
+Proof.
+  induction 3.
+ - intros; rewrite iterate_S_eqn; auto.
+   apply H0.
+   revert i; induction i.
+   +  cbn; auto. 
+   +  transitivity (iterate f i z); auto.
+      rewrite iterate_S_eqn.
+      apply Lt.lt_le_weak.
+      apply H0; auto. 
+ - intros; transitivity (iterate f m z); auto. 
+   rewrite iterate_S_eqn; apply H0.
+   transitivity z; auto.
+   clear i H1 IHle; induction m.
+   + cbn; auto.
+   + cbn; transitivity (iterate f m z); auto.
+     apply Lt.lt_le_weak, H0.
+     lia.
+Qed. 
+
+
 Lemma iterate_le_n_Sn (f: nat -> nat):
   (forall x,  x <= f x) ->
   forall n x,  iterate f n x <= iterate f (S n)  x.

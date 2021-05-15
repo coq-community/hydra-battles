@@ -7603,12 +7603,12 @@ Theorem battle_length_std_Hardy (alpha : E0) :
 
 
 
-\section{The Wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
+\section{A variant of the Wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
 \label{sect:wainer}
 
 \index{maths}{Rapidly growing functions!Wainer Hierarchy}
 
-The Wainer hierarchy~\cite{BW85, Wainer1970, KS81}, is also a family of fast growing functions, indexed by ordinals below $\epsilon_0$, by the following equations:
+Ketonen and Solovay introduce in~\cite{KS81} a ``trivial'' variant of the Wainer hierarchy~\cite{BW85, Wainer1970} of fast growing functions, indexed by ordinals below $\epsilon_0$.
 
 \label{F_equations}
 \begin{itemize}
@@ -7617,7 +7617,15 @@ The Wainer hierarchy~\cite{BW85, Wainer1970, KS81}, is also a family of fast gro
 \item $F_\alpha(i) = F_{\canonseq{\alpha}{i}} (i)$ if $\alpha$ is a limit ordinal.
 \end{itemize}
 
-A first attempt is to write a definition of $F_\alpha$ by equations, in the same as for $H\_alpha$.  We use the functional \texttt{iterate} defined in 
+\begin{remark}
+The difference with the ``classic'' Wainer hierarchy 
+$f\_alpha\;(\alpha<\epsilon_0)$ lies in the second equation:
+$f_{\beta+1}(i) = (f_\beta)^{(i)}(i)$ and not
+$f_{\beta+1}(i) = (f_\beta)^{(i+1)}(i)$. A module about 
+the classic Wainer hierarchy is in preparation.
+\end{remark}
+
+A first attempt is to write a definition of $F_\alpha$ by equations, in the same way as for $H\_alpha$.  We use the functional \texttt{iterate} defined in 
 Module~\href{../theories/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}.
 
 \index{hydras}{Library Prelude!iterate}

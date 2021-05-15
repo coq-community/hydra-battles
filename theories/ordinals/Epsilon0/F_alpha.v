@@ -1,4 +1,4 @@
-(** * The Wainer hierarchy of rapidly growing functions
+(** * The Wainer hierarchy of rapidly growing functions (variant)
 
 
     After Wainer, Ketonen, Solovay, etc .
@@ -178,7 +178,7 @@ Proof with auto with E0.
   -  now rewrite Pred_of_Succ.
 Qed.
 
-(** ** First steps of Wainer hierarchy *)
+(** ** First steps of the hierarchy *)
 
 
 (** performs an induction only on the occ1-th and occ2_th occurrences of n *)
@@ -358,7 +358,8 @@ Section Properties.
       Remark RE : forall beta n, Canon_plus n alpha beta -> 
                                  F_ beta n <= F_ alpha n.
       Proof.
-        destruct n. repeat rewrite F_alpha_0_eq. 
+        destruct n.
+        repeat rewrite F_alpha_0_eq. 
         reflexivity.
         intros. 
         transitivity (F_ beta (S n)).

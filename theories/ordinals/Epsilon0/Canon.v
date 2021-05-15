@@ -798,4 +798,3 @@ Proof.
   - intros; apply cnf_ok.
 Qed.
 
-

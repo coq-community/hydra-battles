@@ -158,6 +158,7 @@ Section battle_lenght_notPR.
   Qed.
 
 
+
   Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
   Proof.
     intro k; rewrite m_eqn.
