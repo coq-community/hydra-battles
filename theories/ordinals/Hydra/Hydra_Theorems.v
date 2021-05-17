@@ -2,7 +2,7 @@
 
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length Ack.
-Import E0 Large_Sets H_alpha Paths MoreLists  O2H Hydra_Definitions Iterates.
+Import E0 Large_Sets Hprime Paths MoreLists  O2H Hydra_Definitions Iterates.
 
 
 (** ** Liveness 
@@ -92,12 +92,12 @@ Open Scope nat_scope.
 Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k ->
-             exists l: nat,  H_ alpha k - k <= l /\
+             exists l: nat,  H'_ alpha k - k <= l /\
                              battle_length standard k (iota (cnf alpha)) l.    
 Proof.
   intros H k  H0; exists (L_ alpha (S k) - k).
   split.
-  - generalize (H_L_ alpha k); lia.
+  - generalize (H'_L_ alpha k); lia.
   - now apply battle_length_std.
 Qed.
 
@@ -109,8 +109,9 @@ Print Assumptions battle_length_std.
 
 (** ** Battle length is not PR *)
 
-Require Import primRec F_alpha H_alpha AckNotPR PrimRecExamples.
+Require Import primRec F_alpha  AckNotPR PrimRecExamples.
 Require Import F_omega.
+Import E0.
 
 Section battle_lenght_notPR.
 
@@ -162,9 +163,9 @@ Section battle_lenght_notPR.
   Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
   Proof.
     intro k; rewrite m_eqn.
-    transitivity (H_ alpha (S k)).
-    - apply H_F.
-    - unfold l_std;  generalize (H_L_ alpha (S k)); lia.
+    transitivity (H'_ alpha (S k)).
+    - apply H'_F.
+    - unfold l_std;  generalize (H'_L_ alpha (S k)); lia.
   Qed.
 
   (** We compare [m] with the Ackermann function *)
