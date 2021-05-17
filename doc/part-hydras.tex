@@ -6564,7 +6564,7 @@ Can we still prove the theorems of section~\ref{std-case} with this new definiti
 
 \begin{remark}
 Some notations (mainly names of fast-growing functions) of our development may differ slightly from the litterature. Although this fact does not affect our proofs, we are preparing a future 
-version where the names $F\_alpha$, $f\_alpha$, $H\_alpha$, etc., are fully consistent with the cited articles. This change will be provisionally made in a branch \texttt{Hardy} (in reference to the Hardy hierarchy).
+version where the names $F\_alpha$, $f\_alpha$, $H\_alpha$, etc., are fully consistent with the cited articles. This change will be provisionally made in a branch called \texttt{Hardy} (in reference to the Hardy hierarchy).
 \end{remark}
 %\section{Introduction}
 
@@ -6731,9 +6731,11 @@ Let $0<\alpha<\epsilon_0$ be an ordinal term. We consider any  function which as
 the interval $[k,l)$ is $\alpha$-mlarge.
 
 \begin{remark}
-The upper bound of the considered interval has been chosen to be  $l-1$ and not $l$, in order to simplify some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
+In~\cite{KS81} Ketonen and Solovay consider the least natural number $l$ where the interval $[k,l]$ ($l$ included) is $\alpha$-large, and call $H_\alpha$ the function which maps $k$ to $l$. We chose to consider intervals $[l,k)$ instead of $[l,k]$
+in order to simplify  some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
 $\omega^\alpha\times i + \beta$.
-In order to consider any ordinal below $\epsilon_0$, we consider a special case for $\alpha=0$.
+Clearly, both approachs are related through the equality
+$L_\alpha(k)=H_\alpha(k)+1$, for any non-null $\alpha$ and $k$.
 \end{remark}
 
 
@@ -7098,7 +7100,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 Solve All Obligations with auto with E0.
 \end{Coqsrc}
 
-It is worth looking at the answer from \texttt{Equations} and check (with \texttt{About} ) all the lemmas this plug-in gives you for free. We show here only a part of \coq's anwer.
+It is worth looking at the answer from \texttt{Equations} and at all the lemmas this plug-in gives you for free. We show here only a part of \coq's anwer.
 
 
 \begin{Coqanswer}
@@ -7191,12 +7193,18 @@ Prove a few  exact formulas and minoration lemmas.
 \section{The Wainer-Hardy hierarchy (functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
 
 \label{sect:hardy}
+
+\begin{remark}
+  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the litterature.
+\end{remark}
+
+
 In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
 \index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
-For each ordinal $\alpha$ below $\epsilon_0$, $H_\alpha$ is a 
-total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
+For each ordinal $\alpha$ below $\epsilon_0$, $H_\alpha$ is 
+a total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
 
 \index{maths}{Transfinite induction}
 
