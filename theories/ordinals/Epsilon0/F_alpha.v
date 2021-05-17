@@ -6,7 +6,7 @@
 
 
 From hydras  Require Import  Iterates  Simple_LexProd Exp2.
-From hydras Require Import  E0 Canon Paths primRec H_alpha.
+From hydras Require Import  E0 Canon Paths primRec Hprime.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.
@@ -592,7 +592,7 @@ Qed.
 Section Compatibility_F_dominates.
 
   Variables alpha beta : E0.
-  Hypothesis H_beta_alpha : Lt beta alpha.
+  Hypothesis H'_beta_alpha : Lt beta alpha.
 
   (* begin hide *)
   Section case_eq.
@@ -671,7 +671,7 @@ Section Compatibility_F_dominates.
   
   Lemma F_mono_l: dominates (F_ alpha) (F_ beta).
   Proof.
-    destruct (Lemma2_6_1_E0  H_beta_alpha) as [i Hi].
+    destruct (Lemma2_6_1_E0  H'_beta_alpha) as [i Hi].
     exists (S (S i)); intros p Hp; apply F_mono_l_0 with i;  auto.
   Qed.
 
@@ -681,14 +681,14 @@ End Compatibility_F_dominates.
 
 (** * Comparison with the Hardy hierarchy 
        
-      [(F_ alpha (S n) <= H_ (Phi0 alpha) (S n))]
+      [(F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))]
 *)
 
 
 
-Section H_F.
+Section H'_F.
   
-Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
+Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
 
  Variable alpha: E0.
 
@@ -698,15 +698,15 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
  Proof.
    intro n; rewrite F_zero_eqn.
    replace (Phi0 Zero) with (Fin 1).
-   - now rewrite H_Fin.
+   - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
 
  Lemma HFsucc : Succb alpha -> P alpha.
  Proof.
    intro H; destruct (Succb_Succ _ H) as [beta Hbeta]; subst.
-   intro n; rewrite H_Phi0_succ.
-   unfold H_succ_fun; rewrite F_succ_eqn.
+   intro n; rewrite H'_Phi0_succ.
+   unfold H'_succ_fun; rewrite F_succ_eqn.
    specialize (IHalpha beta (Lt_Succ beta));  unfold P in IHalpha.
    - apply iterate_mono_1 with 1.
      + apply F_alpha_mono.
@@ -723,17 +723,17 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
  
   Lemma HFLim : Limitb alpha -> P alpha.
   Proof.
-    intros Halpha n; rewrite H_eq3.
+    intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_Canon;
       rewrite CanonS_Phi0_lim; [| trivial].
       rewrite F_lim_eqn, CanonS_Canon; auto.
-      + transitivity (H_ (Phi0 (CanonS alpha n)) (S n)).
+      + transitivity (H'_ (Phi0 (CanonS alpha n)) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.
-        * (** Not trivial, since [H_ ] is not monotonous ! *)
+        * (** Not trivial, since [H'_ ] is not monotonous ! *)
           
-          apply H_restricted_mono_l.
+          apply H'_restricted_mono_l.
           
           red; cbn; apply KS_thm_2_4_lemma5.
           -- apply Cor12_1 with 0.
@@ -755,11 +755,11 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
       apply Limit_not_Zero; auto. 
 Qed.
 
-End H_F.
+End H'_F.
 
 (** Proof using transfinite induction (prepared in the previous section) *)
 
-Lemma H_F alpha : forall n,  (F_ alpha (S n) <= H_ (Phi0 alpha) (S n))%nat.
+Lemma H'_F alpha : forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
 Proof.
   pattern alpha; apply well_founded_induction with Lt.
   - apply Lt_wf.  

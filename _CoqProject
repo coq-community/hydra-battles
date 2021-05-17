@@ -33,7 +33,7 @@ theories/ordinals/Prelude/MoreVectors.v
 theories/ordinals/Epsilon0/Hessenberg.v
 theories/ordinals/Epsilon0/Large_Sets.v
 theories/ordinals/Epsilon0/Epsilon0rpo.v
-theories/ordinals/Epsilon0/H_alpha.v
+theories/ordinals/Epsilon0/Hprime.v
 theories/ordinals/Epsilon0/E0.v
 theories/ordinals/Epsilon0/T1.v
 theories/ordinals/Epsilon0/Paths.v

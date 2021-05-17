@@ -4,7 +4,7 @@
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
 
-From hydras Require Import  H_alpha  E0  Canon Paths
+From hydras Require Import  Hprime  E0  Canon Paths
      Large_Sets.
 From hydras Require Import  Simple_LexProd Iterates .
 From Coq Require Import ArithRing Lia.
@@ -176,20 +176,20 @@ Proof. apply L_ok. Qed.
 
 (** Comparison with Hardy's function H  *)
 
-Theorem H_L_ alpha :
-  forall i:nat,  (H_ alpha i <= L_ alpha (S i))%nat.
+Theorem H'_L_ alpha :
+  forall i:nat,  (H'_ alpha i <= L_ alpha (S i))%nat.
 Proof with auto with E0.
   pattern alpha ; apply well_founded_induction with Lt ...
   clear alpha; intros alpha IHalpha i.
   destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
-  - subst; rewrite H_eq1, L_zero_eqn; abstract lia.
-  - rewrite H_eq3, L_lim_eqn ...
+  - subst; rewrite H'_eq1, L_zero_eqn; abstract lia.
+  - rewrite H'_eq3, L_lim_eqn ...
     apply Nat.lt_le_incl;
-      apply Nat.lt_le_trans with (H_ (Canon alpha (S i)) (S i)).
-    apply H_alpha_mono; auto with arith ...
+      apply Nat.lt_le_trans with (H'_ (Canon alpha (S i)) (S i)).
+    apply H'_alpha_mono; auto with arith ...
     apply IHalpha ...
   -  destruct H as [beta e]; subst alpha;
-       rewrite H_succ_eqn, L_succ_eqn ...
+       rewrite H'_succ_eqn, L_succ_eqn ...
 Qed.
 
 

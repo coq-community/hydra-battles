@@ -6558,11 +6558,14 @@ Can we still prove the theorems of section~\ref{std-case} with this new definiti
 \end{project}
 
 
-
+ 
 %---------------------------------------------------------------------
 \chapter{Large sets and rapidly growing functions}\label{chap:alpha-large}
 
-
+\begin{remark}
+Some notations (mainly names of fast-growing functions) of our development may differ slightly from the litterature. Although this fact does not affect our proofs, we are preparing a future 
+version where the names $F\_alpha$, $f\_alpha$, $H\_alpha$, etc., are fully consistent with the cited articles. 
+\end{remark}
 %\section{Introduction}
 
 In this chapter, we try to feel how long a standard battle can be.
@@ -6728,9 +6731,11 @@ Let $0<\alpha<\epsilon_0$ be an ordinal term. We consider any  function which as
 the interval $[k,l)$ is $\alpha$-mlarge.
 
 \begin{remark}
-The upper bound of the considered interval has been chosen to be  $l-1$ and not $l$, in order to simplify some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
+In~\cite{KS81} Ketonen and Solovay consider the least natural number $l$ where the interval $[k,l]$ ($l$ included) is $\alpha$-large, and call $H_\alpha$ the function which maps $k$ to $l$. We chose to consider intervals $[l,k)$ instead of $[l,k]$
+in order to simplify  some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
 $\omega^\alpha\times i + \beta$.
-In order to consider any ordinal below $\epsilon_0$, we consider a special case for $\alpha=0$.
+Clearly, both approachs are related through the equality
+$L_\alpha(k)=H_\alpha(k)+1$, for any non-null $\alpha$ and $k$.
 \end{remark}
 
 
@@ -7095,7 +7100,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 Solve All Obligations with auto with E0.
 \end{Coqsrc}
 
-It is worth looking at the answer from \texttt{Equations} and check (with \texttt{About} ) all the lemmas this plug-in gives you for free. We show here only a part of \coq's anwer.
+It is worth looking at the answer from \texttt{Equations} and at all the lemmas this plug-in gives you for free. We show here only a part of \coq's anwer.
 
 
 \begin{Coqanswer}
@@ -7185,46 +7190,68 @@ Instead of considering standard paths and battles, consider ``constant'' paths a
 Prove a few  exact formulas and minoration lemmas.
 \end{project}
 
-\section{The Wainer-Hardy hierarchy (functions \texorpdfstring{$H_\alpha$}{\texttt{H\_alpha}})}
+\section{A variant of the Wainer-Hardy hierarchy}
 
 \label{sect:hardy}
+
+
+
+
 In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
 \index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
-For each ordinal $\alpha$ below $\epsilon_0$, $H_\alpha$ is a 
-total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
+
+\begin{remark}
+  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the litterature. For the time being, we call our functions $H'\_alpha$ in order to underline the difference from ``classic'' Hardy functions.
+\end{remark}
+
+For each ordinal $\alpha$ below $\epsilon_0$, $H'_\alpha$ is 
+a total arithmetic function, defined  by  transfinite recursion on $\alpha$, according to three cases:
 
 \index{maths}{Transfinite induction}
+
+\begin{itemize}
+\item If $\alpha=0$, then $H'_\alpha (k)= k$ for any natural number $k$.
+\item If $\alpha=\textrm{succ}(\beta)$, then 
+$H'_\alpha(k)=H'_\beta(k+1)$ for any $k \in \mathbb{N}$
+\item If $\alpha$ is a limit ordinal, then 
+$H'_\alpha(k) = H'_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
+\end{itemize}
+
+\begin{remark}
+ The ``classic'' definition of the Wainer-Hardy hierarchy differs in the third equation.
 
 \begin{itemize}
 \item If $\alpha=0$, then $H_\alpha (k)= k$ for any natural number $k$.
 \item If $\alpha=\textrm{succ}(\beta)$, then 
 $H_\alpha(k)=H_\beta(k+1)$ for any $k \in \mathbb{N}$
 \item If $\alpha$ is a limit ordinal, then 
-$H_\alpha(k) = H_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
+$H_\alpha(k) = H_{(\canonseq{\alpha}{k})}(k)$ for any $k\in \mathbb{N}$.
 \end{itemize}
 
-\subsection{Hardy functions in \texttt{Coq}}
+\end{remark}
+
+\subsection{Definition in \texttt{Coq}}
 
 
-We define a function \texttt{H\_} of type \texttt{E0 -> nat -> nat} by transfinite induction over the type \texttt{E0} of the well formed ordinals below $\epsilon_0$.
+We define a function \texttt{H'\_} of type \texttt{E0 -> nat -> nat} by transfinite induction over the type \texttt{E0} of the well formed ordinals below $\epsilon_0$.
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.H_alpha.html\#H_}{Epsilon0.H\_alpha}}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.Hprime.html\#H_}{Epsilon0.Hprime}}
 
-\index{hydras}{Library Epsilon0!Functions!H\_@H\_ (Hardy hierarchy)}
+\index{hydras}{Library Epsilon0!Functions!H\_@H\_ (Hardy hierarchy (variant))}
 \index{coq}{Plug-ins!Equations}
-\label{Functions:H-alpha}
+\label{Functions:Hprime-alpha}
 
 \begin{Coqsrc}
-Equations H_ (alpha: E0) (i:nat) :  nat  by wf  alpha lt :=
-  H_ alpha  i with E0_eq_dec alpha Zero :=
+Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
+  H'_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _ =>  i ;
       | right nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ =>  H_ (Canon alpha (S i))  i ;
-            | right notlimit =>  H_ (Pred alpha) (S i)}}. 
+          { | left _ =>  H'_ (Canon alpha (S i))  i ;
+            | right notlimit =>  H'_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
 \end{Coqsrc} 
@@ -7232,34 +7259,39 @@ Solve All Obligations with auto with E0.
 
 
 \begin{Coqsrc}
-Lemma H_eq1 : forall i, H_ Zero i = i.
-Proof.   intro i; now rewrite H__equation_1.  Qed.
+Lemma H'_eq1 : forall i, H'_ Zero i = i.
+Proof.
+  intro i; now rewrite H'__equation_1. 
+Qed.
 
-Lemma H_eq2 alpha i : Is_Succ alpha ->
-                      H_ alpha i = H_ (Pred alpha) (S i).
+Lemma H'_eq2 alpha i : Succb alpha ->
+                       H'_ alpha i = H'_ (Pred alpha) (S i).
 
-Lemma H_eq3 alpha i : Limitb alpha ->
-                      H_ alpha i =  H_ (Canon alpha (S i)) i.
+Lemma H'_eq3 alpha i : Limitb alpha ->
+                      H'_ alpha i =  H'_ (Canon alpha (S i)) i.
 
-Lemma H_eq4  alpha i :  H_ (Succ alpha) i = H_ alpha (S i).
+Lemma H'_succ_eqn  alpha i :  
+            H'_ (Succ alpha) i = H'_ alpha (S i).
 \end{Coqsrc}
 
 
-\subsection{First  steps of the Hardy hierarchy}
-Using rewrite rules from \texttt{H\_eq1} to \texttt{H\_eq4}, we can explore the functions $H_\alpha$ for some small values of $\alpha$.
+\subsection{First  steps of the H' hierarchy}
+Using rewrite rules from \texttt{H'\_eq1} to \texttt{H'\_succ\_eqn}, we can explore the functions $H'_\alpha$ for  small values of $\alpha$.
+
+%ICI
 
 \subsubsection{Finite ordinals} 
 
-By induction on $i$, we prove a simple expression of \texttt{H\_ (Fin i)}, where 
+By induction on $i$, we prove a simple expression of \texttt{H'\_ (Fin i)}, where 
 \texttt{Fin $i$}  is the $i$-th finite ordinal.
 
 \begin{Coqsrc}
-Lemma H_Fin : forall i k: nat,  H_ (Fin i) k = (i+k)%nat.
+Lemma H'_Fin : forall i k : nat,  H'_  (Fin i) k = (i+k)%nat.
 Proof with eauto with E0.
   induction i.
-  - intros; simpl OF; simpl; autorewrite with H_rw E0_rw ... 
-  - intros ;simpl; autorewrite with H_rw E0_rw ... 
-    rewrite IHi; lia. 
+  - intros; simpl Fin; simpl; autorewrite with H'_rw E0_rw ... 
+  - intros ;simpl; autorewrite with H'_rw E0_rw ... 
+    rewrite IHi; abstract lia. 
 Qed.
 \end{Coqsrc}
 
@@ -7270,12 +7302,12 @@ it is easy to get the formula associated with $H_\omega$.
 
 
 \begin{Coqsrc}
-Lemma H_omega : forall k, H_ Omega k = S (2 * k)%nat.
+Lemma H'_omega : forall k, H'_ omega k = S (2 * k)%nat.
 Proof with auto with E0.
-  intro k; rewrite H_eq3 ...
+  intro k; rewrite H'_eq3 ...
   - replace (Canon omega (S k)) with (Fin (S k)).
-    + rewrite H_Fin; lia.
-    +  now autorewrite with E0_rw.
+    + rewrite H'_Fin; abstract lia.
+    + now autorewrite with E0_rw.
 Qed.
 \end{Coqsrc}
 
@@ -7283,101 +7315,99 @@ Qed.
 Before going further, we prove a useful rewriting lemma:
 
 \begin{Coqsrc}
-Lemma H_Plus_Fin alpha : forall i k : nat,
-    H_ (alpha + i)%e0 k = H_ alpha (i + k)%nat.
+Lemma H'_Plus_Fin alpha : forall i k : nat,
+    H'_ (alpha + i)%e0 k = H'_ alpha (i + k)%nat.
 (* Proof by induction on i *)
 \end{Coqsrc}
 
 
-Then, we get easily formulas for $H_{\omega+i}$, and $H_{\omega\times i}$ for any natural number $i$.
+Then, we get easily formulas for $H'_{\omega+i}$, and $H'_{\omega\times i}$ for any natural number $i$.
 
 \begin{Coqsrc}
-Lemma H_omega_double k : H_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
+Lemma H'_omega_double k : H'_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
- rewrite H_lim_eqn; simpl Canon.
- - ochange  (CanonS  (omega * 2)%e0 k)  (omega + (S k))%e0.
-  + rewrite H_Plus_Fin, H_omega;  lia.
+  rewrite H'_eq3; simpl Canon.
+ -   ochange  (CanonS  (omega * FinS 1)%e0 k)  (omega + (S k))%e0.
+  + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
   -  now compute.
 Qed.
 
-Lemma H_omega_3 k : H_ (omega * 3)%e0 k = (8 * k + 7)%nat.
+Lemma H'_omega_3 k : H'_ (omega * 3)%e0 k = (8 * k + 7)%nat.
 
-Lemma H_omega_4 k : H_ (omega * 4)%e0 k = (16 * k + 15)%nat.
+Lemma H'_omega_4 k : H'_ (omega * 4)%e0 k = (16 * k + 15)%nat.
 
-Lemma H_omega_i i  : forall k,
-    H_ (omega * i)%e0 k = (exp2 i * k + Nat.pred (exp2 i))%nat.
+Lemma H'_omega_i i  : forall k,
+    H'_ (omega * i)%e0 k = (exp2 i * k + Nat.pred (exp2 i))%nat.
 \end{Coqsrc}
 
 Crossing a new limit, we prove the following equality: 
-$$H_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1$$.
+$$H'_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1$$.
 
 \begin{Coqsrc}
-
-Lemma H_omega_sqr : forall k,
-    H_ (Phi0  2)%e0 k = (exp2 (S k ) *  S k - 1)%nat.
+Lemma H'_omega_sqr : forall k,
+    H'_ (Phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
 Proof.
-  intro k; 
-   rewrite H_lim_eqn; auto with E0.
+  intro k; rewrite H'_eq3; auto with E0.
   - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
-    +  rewrite H_omega_i; simpl (exp2 (S k)).
+    +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
-          -- lia. 
-          --   generalize (exp2_not_zero k);  lia.
-    + cbn; f_equal; lia.
+          -- abstract lia. 
+          --   generalize (exp2_not_zero k);  abstract lia.
+    + cbn; f_equal; abstract lia.
 Qed.
 \end{Coqsrc}
 
 \subsubsection{New limits}
 
-Our next step would be to prove an exact formula for $H_{\omega^\omega}(k)$.
+Our next step would be to prove an exact formula for $H'_{\omega^\omega}(k)$.
 Since the canonical sequence of $\omega^\omega$ is composed of all the
-$\omega^i$, we first need to express $H_{\omega^i}$ for any natural number $i$.
+$\omega^i$, we first need to express $H'_{\omega^i}$ for any natural number $i$.
 
 Let $i$ and $k$ be two natural numbers. 
 The ordinal $\canonseq{\omega^(i+1)}{k}$ is the product
 $\omega^i \times k$, so we need also to consider ordinals of this form.
 
 \begin{enumerate}
-\item First,  we express $H_{\omega^\alpha \times (i+2)}$ in terms of
-$H_{\omega^\alpha \times (i+1)}$.
+\item First,  we express $H'_{\omega^\alpha \times (i+2)}$ in terms of
+$H'_{\omega^\alpha \times (i+1)}$.
 
 \begin{Coqsrc}
-Lemma H_Omega_term_1 : alpha <> Zero -> forall  k,  
-    H_ (Omega_term alpha (S i)) k =
-    H_ (Omega_term alpha i) (H_ (Phi0 alpha) k).
+Lemma H'_Omega_term_1 : alpha <> Zero -> forall  k,  
+    H'_ (Omega_term alpha (S i)) k =
+    H'_ (Omega_term alpha i) (H'_ (Phi0 alpha) k).
 \end{Coqsrc}
 
 \item
-Then, we prove by induction on $i$ that $H_{\omega^\alpha \times (i+1)}$ is just the
-$(i+1)$-th iterate of $H_{\omega^\alpha}$.
+Then, we prove by induction on $i$ that $H'_{\omega^\alpha \times (i+1)}$ is just the
+$(i+1)$-th iterate of $H'_{\omega^\alpha}$.
 
 
 \begin{Coqsrc}
-Lemma H_Omega_term (alpha : E0)  :
+Lemma H'_Omega_term (alpha : E0)  :
 alpha <> Zero -> forall i k, 
-  H_ (Omega_term alpha i) k = iterate  (H_ (Phi0 alpha)) (S i) k.
+  H'_ (Omega_term alpha i) k = iterate  (H'_ (Phi0 alpha)) (S i) k.
 \end{Coqsrc}
 
-\item In particular, we have got a formula for $H_{\omega^{i+1}}$.
+\item In particular, we have got a formula for $H'_{\omega^{i+1}}$.
 
 \begin{Coqsrc}
-Definition H_succ_fun f k := iterate f (S k) k.
+Definition H'_succ_fun f k := iterate f (S k) k.
 
-Lemma H_Phi0_succ alpha  : alpha <> Zero -> forall k,
-      H_ (Phi0 (Succ alpha)) k = H_succ_fun (H_ (Phi0 alpha)) k. 
+Lemma H'_Phi0_succ alpha  : alpha <> Zero -> forall k,
+      H'_ (Phi0 (Succ alpha)) k = H'_succ_fun (H'_ (Phi0 alpha)) k. 
 
-Lemma H_Phi0_Si : forall i k,
-      H_ (Phi0 (S i)) k = iterate H_succ_fun i (H_ omega) k. 
+Lemma H'_Phi0_Si : forall i k,
+      H'_ (Phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
 \end{Coqsrc}
 
 \end{enumerate}
-We get now a  formula for $H_{\omega^3}$:
+We get now a  formula for $H'_{\omega^3}$:
 
 \begin{Coqsrc}
-Lemma H_omega_cube : forall k,
-    H_ (Phi0 3)%e0 k = iterate (H_ (Phi0 2))  (S k) k.
+Lemma H'_omega_cube : forall k,
+    H'_ (Phi0 3)%e0 k = iterate (H'_ (Phi0 2))  (S k) k.
 Proof.
-  intro k; rewrite <-FinS_eq, -> Fin_Succ, H_Phi0_succ; auto.
+  intro k; rewrite <-FinS_eq, -> Fin_Succ, H'_Phi0_succ; auto.
   compute; injection 1; discriminate.
 Qed.
 \end{Coqsrc}
@@ -7386,20 +7416,20 @@ Qed.
 
 It seems hard to capture the complexity of this function by looking only at this
 ``exact'' formula. 
-Let us consider a simple example, the number $H_{\omega^3}(3)$.  
+Let us consider a simple example: the number $H'_{\omega^3}(3)$.  
 
 \begin{Coqsrc}
-Section H_omega_cube_3.
+Section H'_omega_cube_3.
   
 Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
 
-Remark R0 k :  H_ (Phi0 3)%e0 k = iterate f (S k) k.
+Remark R0 k :  H'_ (Phi0 3)%e0 k = iterate f (S k) k.
 \end{Coqsrc}
 
 Thus, the number $H_{\omega^3}(3)$ can be written as four nested applications of $f$.
 
 \begin{Coqsrc}
-Fact F0 : H_ (Phi0 3) 3 = f (f (f (f 3))).
+Fact F0 : H'_ (Phi0 3) 3 = f (f (f (f 3))).
  rewrite R0; reflexivity. 
 Qed.
 \end{Coqsrc}
@@ -7423,13 +7453,13 @@ This number looks quite big; let us compute an approximation in \texttt{Ocaml}:
 
 
 \begin{Coqsrc}
-Fact F1 : H_ (Phi0 3) 3 = f (f N).
+Fact F1 : H'_ (Phi0 3) 3 = f (f N).
 Proof.
- rewrite H_omega_cube_0; reflexivity. 
+ rewrite F0; reflexivity. 
 Qed.
 
 
-Lemma F1_simpl : H_ (Phi0 3) 3 =
+Lemma F1_simpl : H'_ (Phi0 3) 3 =
                  (exp2 (exp2 (S N) * S N) * (exp2 (S N) * S N) - 1)%nat.
 
 \end{Coqsrc}
@@ -7439,7 +7469,7 @@ In a more classical writing, this number is displayed as follows:
 
 {\Large
 $$
-H_{\omega^3}(3) =  2 ^ {(2 ^ {N + 1} \, (N+1) )}   \,  (2 ^ {N+1} \, ( N +1) ) - 1
+H'_{\omega^3}(3) =  2 ^ {(2 ^ {N + 1} \, (N+1) )}   \,  (2 ^ {N+1} \, ( N +1) ) - 1
 $$
 }
 
@@ -7447,24 +7477,24 @@ $$
 We leave as an exercise to determine the best approximation as possible of
  the size of this number (for instance its number of digits).  For instance, if
 we do not take into account the multiplications in the formula above,
-we obtain that, in base $2$, the number $H_{\omega^3}(3)$ has at least
+we obtain that, in base $2$, the number $H'_{\omega^3}(3)$ has at least
 $2^{10^{21}}$  digits. But it is still an under-approximation !
 
 
 \begin{Coqsrc}
-End H_omega_cube_3.
+End H'_omega_cube_3.
 \end{Coqsrc}
 
 
 
 
-Now, we have got at last an exact formula for $H_{\omega^\omega}$.
+Now, we have got at last an exact formula for $H'_{\omega^\omega}$.
 
 \begin{Coqsrc}
-Lemma H_Phi0_omega : forall k, H_ (Phi0 omega) k =
-                               iterate H_succ_fun  k (H_ omega) k.
+Lemma H'_Phi0_omega : forall k, H'_ (Phi0 omega) k =
+                               iterate H'_succ_fun  k (H'_ omega) k.
 Proof with auto with E0.
-  intro k; rewrite H_lim_eqn, <- H_Phi0_Si ...
+  intro k; rewrite H'_eq3, <- H'_Phi0_Si ...
   -  rewrite CanonS_Canon, CanonS_Phi0_lim;  f_equal ...
 Qed.
 \end{Coqsrc}
@@ -7472,8 +7502,8 @@ Qed.
 Using extensionality of the functional \texttt{iterate}, we can get a closed formula.
 
 \begin{Coqsrc}
-Lemma H_Phi0_omega_closed_formula k :
-  H_ (Phi0 omega) k =
+Lemma H'_Phi0_omega_closed_formula k :
+  H'_ (Phi0 omega) k =
   iterate (fun (f: nat -> nat) (l : nat) => iterate  f (S l) l)
                k
                (fun k : nat => S (2 * k)%nat)
@@ -7487,36 +7517,37 @@ Note that this short formula contains two occurences of the functional \texttt{i
 and the inner one  first-order (on type \texttt{nat}). 
 
 
-\subsection{Abstract properties of Hardy functions}
+\subsection{Abstract properties of  
+\texorpdfstring{$H'_\alpha$}{H'}}
 ~\label{sect:H-alpha-prop} 
 
-Since pure computation seems to be useless for dealing with expressions of the form $H_\alpha(k)$, even for small values of $\alpha$ and $k$, we need to prove theorems for comparing $H_\alpha(k)$ and $H_\beta(l)$, in terms of comparison
+Since pure computation seems to be useless for dealing with expressions of the form $H'_\alpha(k)$, even for small values of $\alpha$ and $k$, we need to prove theorems for comparing $H'_\alpha(k)$ and $H'_\beta(l)$, in terms of comparison
 between $\alpha$ and $\beta$ on the one hand, $k$ and $l$ on the other hand.
 
-But beware of non-theorems! For instance, one could believe that $H$ is monotonous in its first argument. The following proof shows this is false.
+But beware of non-theorems! For instance, one could believe that $H'$ is monotonous in its first argument. The following proof shows this is false.
 
 \begin{Coqsrc}
-Remark H_non_mono1 :
+Remark H'_non_mono1 :
   ~ (forall alpha beta k, (alpha o<= beta)%e0 ->
-                          (H_ alpha k <= H_ beta k)%nat).
+                          (H'_ alpha k <= H'_ beta k)%nat).
 Proof.
  intros H ;specialize (H 42 omega 3).
  assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
- apply H in H0; rewrite H_Fin, H_omega  in H0; lia.
+ apply H in H0; rewrite H'_Fin, H'_omega  in H0; lia.
 Qed.
 \end{Coqsrc}
 
-On the contrary, the fonctions of the Hardy hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
+On the contrary, the fonctions of the $H'$ hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
 \begin{itemize}
-\item the function $H_\alpha$ is strictly monotonous :
-      For all $n,p \in\mathbb{N}, n < p \Rightarrow H_\alpha(n)< H_\alpha(p)$.
-\item If $\alpha \not= 0$, then for every $n$, $n<H_\alpha(n)$.
-\item The function $H_\alpha$ is pointwise less or equal than $H_{\alpha+1}$
+\item the function $H'_\alpha$ is strictly monotonous :
+      For all $n,p \in\mathbb{N}, n < p \Rightarrow H'_\alpha(n)< H'_\alpha(p)$.
+\item If $\alpha \not= 0$, then for every $n$, $n<H'_\alpha(n)$.
+\item The function $H'_\alpha$ is pointwise less or equal than $H'_{\alpha+1}$
 
-\item For any $n\geq 1$, $H_\alpha(n)<H_{\alpha+1}(n)$.
-\emph{We say that $H_{\alpha+1}$ dominates $H_\alpha$ from $1$}.
+\item For any $n\geq 1$, $H'_\alpha(n)<H'_{\alpha+1}(n)$.
+\emph{We say that $H'_{\alpha+1}$ dominates $H'_\alpha$ from $1$}.
 \item For any $n$ and $\beta$, if $\alpha \xrightarrow[n]{} \beta$, then
-$H_\beta(n)\leq H_\alpha(n)$.
+$H'_\beta(n)\leq H'_\alpha(n)$.
 \end{itemize}
 
 These properties are defined in \coq{} in the library
@@ -7560,12 +7591,12 @@ $\alpha$ is a successor are considered. Inside each case, the five sub-propertie
 Section Proof_of_Abstract_Properties.
   Record P (alpha:E0) : Prop :=
     mkP {
-        PA : strict_mono (H_ alpha);
-        PB : alpha <> Zero -> forall n,  (n < H_ alpha n)%nat;
-        PC : H_ alpha <<= H_ (Succ alpha);
-        PD : dominates_from 1 (H_ (Succ alpha)) (H_ alpha);
+        PA : strict_mono (H'_ alpha);
+        PB : alpha <> Zero -> forall n,  (n < H'_ alpha n)%nat;
+        PC : H'_ alpha <<= H'_ (Succ alpha);
+        PD : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha);
         PE : forall beta n, Canon_plus n alpha beta -> 
-                            (H_ beta n <= H_ alpha n)%nat}.
+                            (H'_ beta n <= H'_ alpha n)%nat}.
 
 
 Theorem P_alpha : forall alpha, P alpha.
@@ -7577,19 +7608,19 @@ Section Proof_of_Abstract_Properties.
 \end{Coqsrc}
 
 
-\subsection{Comparison between \texttt{L\_} and \texttt{H\_} }
+\subsection{Comparison between \texttt{L\_} and \texttt{H'\_} }
 
-By well-founded induction on $\alpha$, we prove that our $L$ hierachy is ``almost'' the Hardy hierarchy (up to a small shift).
+By well-founded induction on $\alpha$, we prove a simple relation between $L_\alpha$ and $H'\_alpha$.
 
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html\#H_L_}{Epsilon0.L\_alpha}}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html\#H'_L_}{Epsilon0.L\_alpha}}
 
 \begin{Coqsrc}
- Theorem H_L_ alpha: forall i:nat,  (H_ alpha i <= L_ alpha (S i))%nat.
+ Theorem H'_L_ alpha: forall i:nat,  (H'_ alpha i <= L_ alpha (S i))%nat.
 \end{Coqsrc}
  
 \subsubsection{Back to hydras}
 
-The following theorem relates the length of (standard) battles with the Hardy hierarchy.
+The following theorem relates the length of (standard) battles with the the $H'$ family of fast growing functions.
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
@@ -7597,7 +7628,7 @@ The following theorem relates the length of (standard) battles with the Hardy hi
 Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k -> exists l: nat,  
-       H_ alpha k - k <= l /\
+       H'_ alpha k - k <= l /\
        battle_length standard k (iota (cnf alpha)) l.    
 \end{Coqsrc}
 
@@ -7822,25 +7853,27 @@ Thus $F\_alpha$ is primitive recursive if and only if $\alpha$ is finite.
 \url{../theories/ordinals/MoreAck/AcknotPR.v}.}
 \end{exercise} 
 
-\index{hydras}{Exercises}
-\begin{exercise}
-Let us quote a theorem from ~\cite{KS81} (page 297).
+%%% TODO : Check the statement !
+%
+% \index{hydras}{Exercises}
+% \begin{exercise}
+% Let us quote a theorem from ~\cite{KS81} (page 297).
 
-\begin{quote}
-\begin{align*}
-  H_{\omega^\alpha}(n+1) &\geq F_{\alpha}(n) \quad (n\geq 1, \alpha<\epsilon_0) \\
- F_{\alpha}(n+1) &\geq H_{\omega^\alpha}(n) \quad (n\geq 1, \alpha<\epsilon_0) 
-\end{align*}
-Thus $H_{\omega^\alpha}$ and $F_{\alpha}$ have essentially the same order of growth.
+% \begin{quote}
+% \begin{align*}
+%   H'_{\omega^\alpha}(n+1) &\geq F_{\alpha}(n) \quad (n\geq 1, \alpha<\epsilon_0) \\
+%  F_{\alpha}(n+1) &\geq H'_{\omega^\alpha}(n) \quad (n\geq 1, \alpha<\epsilon_0) 
+% \end{align*}
+% Thus $H'_{\omega^\alpha}$ and $F_{\alpha}$ have essentially the same order of growth.
 
-\end{quote}
+% \end{quote}
 
- But, before trying to prove these facts, look at the definition of function $H$ in Ketonen and Solovay's paper ! Is it really the same as the definition we quote from Pr{\H o}mel's chapter~\cite{Promel2013},
-whereas \cite{KS81} define $H_\alpha(n)$ as ``the least integer $k$ such that $[n,k]$ is $\alpha$-large''. Thus, it may be useful to adapt the statement above.
+%  But, before trying to prove these facts, look at the definition of function $H$ in Ketonen and Solovay's paper ! Is it really the same as the definition we quote from Pr{\H o}mel's chapter~\cite{Promel2013},
+% whereas \cite{KS81} define $H_\alpha(n)$ as ``the least integer $k$ such that $[n,k]$ is $\alpha$-large''. Thus, it may be useful to adapt the statement above.
 
 
 
-\end{exercise}
+% \end{exercise}
 
 
 
