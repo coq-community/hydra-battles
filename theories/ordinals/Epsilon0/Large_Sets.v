@@ -25,6 +25,9 @@ Definition mlargeS alpha s := path_toS zero s alpha.
 
 (** **  Last step of a minimal path  *)
 
+(** TODO : compare with K & S's H_alpha (p. 297) *)
+
+
 Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
   L_spec0 :
     forall f, (forall k, f (S k) = S k) ->  L_spec zero f

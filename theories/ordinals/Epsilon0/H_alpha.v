@@ -2,6 +2,20 @@
     After Hardy, Wainer, Ketonen, Solovay, etc .
 
     Pierre Casteran, LaBRI, University of  Bordeaux *)
+
+(** Remark
+
+Some notations (mainly names of fast-growing functions) of our development 
+ may differ slightly from the litterature. Although this fact does not affect 
+our proofs, we are preparing a future version where the names
+ [F_ alpha], [f_alpha], [H _alpha], etc., are fully consistent with the 
+ cited articles. 
+ This change will be provisionally made in a branch called [Hardy]
+   (in reference to the Hardy hierarchy).
+
+ *)
+
+
 From Coq Require Import ArithRing Lia.
 From hydras Require Import  E0    Canon Paths.
 From hydras Require Import Exp2 Iterates Simple_LexProd.
