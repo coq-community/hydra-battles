@@ -133,7 +133,7 @@ Section battle_lenght_notPR.
   Proof.
     intro k; assert (k <= L_ alpha (S k)).
     { assert (S k < L_ alpha (S k)).
-      { apply L_ge_S;  unfold alpha;  intro H0; injection H0.
+      { apply L_ge_S; unfold alpha; intro H0; injection H0.
         intro; discriminate.
       }
       lia.
@@ -157,8 +157,6 @@ Section battle_lenght_notPR.
       + replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
         now red.
   Qed.
-
-
 
   Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
   Proof.

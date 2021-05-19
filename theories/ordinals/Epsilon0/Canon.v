@@ -751,9 +751,9 @@ Lemma CanonS_Phi0_lim alpha k : Limitb alpha ->
                                 CanonS (Phi0 alpha) k =
                                 Phi0 (CanonS alpha k). 
 Proof.
-  intro; orefl; rewrite phi0_rw.
+  intro; orefl; rewrite cnf_Phi0.
   unfold CanonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
-  -  now rewrite phi0_rw.
+  -  now rewrite cnf_Phi0.
   - apply cnf_ok.
   - destruct alpha; cbn; assumption. 
 Qed.
@@ -797,4 +797,5 @@ Proof.
   -  intro; apply cnf_ok.
   - intros; apply cnf_ok.
 Qed.
+
 

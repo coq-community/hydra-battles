@@ -403,6 +403,8 @@ Section dom_AckNotPR.
   Qed.
   (* end details *)
 End dom_AckNotPR.
+
+
  
   (** ** Nevertheless, for any [n], [Ack n] is primitive recursive. *)
 

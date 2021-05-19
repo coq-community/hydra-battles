@@ -732,7 +732,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
            apply CanonS_lt.
            now apply Limit_not_Zero.
         * (** Not trivial, since [H'_ ] is not monotonous ! *)
-          
+
           apply H'_restricted_mono_l.
           
           red; cbn; apply KS_thm_2_4_lemma5.

@@ -11,8 +11,7 @@
 From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
      ArithRing  Wellfounded  Operators_Properties  Logic.Eqdep_dec.
 
-From hydras Require Import 
-        Prelude.More_Arith  Prelude.Restriction
+From hydras Require Import Prelude.More_Arith  Prelude.Restriction
            Prelude.DecPreOrder  ON_Generic OrdNotations.
 
 From hydras.Epsilon0 Require Export T1 Hessenberg.
@@ -502,11 +501,6 @@ Proof.
   now destruct alpha, beta.
 Qed.
 
-Lemma phi0_rw : forall alpha, cnf (Phi0 alpha) = phi0 (cnf alpha).
-Proof.
-  now destruct alpha.
-Qed.
-
 
 Lemma Lt_trans alpha beta gamma :
   alpha o< beta -> beta o< gamma -> alpha o< gamma.
@@ -591,14 +585,14 @@ Proof.
   intro H1; apply H, E0_eq_intro.   assumption. 
   destruct H0.
   destruct H1.
-  rewrite phi0_rw in H1.
+  rewrite cnf_Phi0 in H1.
   apply nf_intro; auto.
   now apply nf_helper_phi0R. 
   red.  
   apply succ_lt_limit.
-  rewrite phi0_rw.
+  rewrite cnf_Phi0.
   apply nf_phi0. apply cnf_ok.
-  rewrite phi0_rw.
+  rewrite cnf_Phi0.
   simpl.
   case_eq (cnf alpha).
   intro.
@@ -749,3 +743,7 @@ Proof.
 Qed.
 
 
+Lemma Phi0_mono alpha beta : alpha o< beta -> Phi0 alpha o< Phi0 beta.
+Proof.
+  destruct alpha, beta; unfold Lt; cbn.  auto with T1.
+Qed.

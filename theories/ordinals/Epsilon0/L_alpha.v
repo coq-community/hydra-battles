@@ -182,7 +182,7 @@ Proof with auto with E0.
   pattern alpha ; apply well_founded_induction with Lt ...
   clear alpha; intros alpha IHalpha i.
   destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
-  - subst; rewrite H'_eq1, L_zero_eqn; abstract lia.
+  - subst; rewrite H'_eq1, L_zero_eqn. abstract lia.
   - rewrite H'_eq3, L_lim_eqn ...
     apply Nat.lt_le_incl;
       apply Nat.lt_le_trans with (H'_ (Canon alpha (S i)) (S i)).
@@ -191,9 +191,6 @@ Proof with auto with E0.
   -  destruct H as [beta e]; subst alpha;
        rewrite H'_succ_eqn, L_succ_eqn ...
 Qed.
-
-
-
 
 Require Import Extraction.
 
