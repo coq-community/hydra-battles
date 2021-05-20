@@ -96,10 +96,12 @@ Section sqrtIsPR.
        case_eq (a <? S (b + b * S b)); auto.
        intro H0;  rewrite Nat.ltb_lt in H0.
        now destruct H.
-Qed. 
+Defined. 
 
 
 End sqrtIsPR.
+
+Compute (proj1_sig issqrtIsPR).
 
 (** slow! *)
 

@@ -46,7 +46,7 @@ Proof.
        rewrite H0.
        replace (1 - 1) with 0; ring_simplify; reflexivity.
      +  intro H1; unfold charFunction; rewrite H1; cbn; lia. 
-Qed. 
+Defined. 
 
 Section Proof_of_MinIsPR.
 
@@ -69,14 +69,14 @@ Section Proof_of_MinIsPR.
    -  apply leIsPR.
    -  apply pi1_2IsPR.
    -  apply pi2_2IsPR. 
-  Qed.
+  Defined.
 
   Lemma minIsPR : isPR 2 min.
   Proof.
     destruct minPR_PR as [f Hf].
     exists f; eapply extEqualTrans with (1:= Hf). 
     apply minPR_correct.
-  Qed.
+  Defined.
 
 
 End Proof_of_MinIsPR.

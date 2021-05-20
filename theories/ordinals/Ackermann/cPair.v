@@ -42,7 +42,7 @@ Proof.
   - apply filter10IsPR, succIsPR.
   - apply pi2_2IsPR.
   - apply plusIsPR.
-Qed.
+Defined.
 
 (** ** Properties of [cPair] *)
 
@@ -62,7 +62,7 @@ Proof.
     + apply plusIsPR.
     + apply sumToNIsPR.
   - apply plusIsPR.
-Qed.
+Defined.
 
 Section CPair_Injectivity.
 
@@ -252,7 +252,7 @@ apply compose1_1IsPR.
 apply succIsPR.
 apply sumToNIsPR.
 apply ltIsPR.
-Qed.
+Defined.
 
 Lemma cPairPi1IsPR : isPR 1 cPairPi1.
 Proof.
@@ -268,7 +268,7 @@ apply compose1_1IsPR.
 apply searchXYIsPR.
 apply sumToNIsPR.
 apply minusIsPR.
-Qed.
+Defined.
 
 Lemma cPairPi2IsPR : isPR 1 cPairPi2.
 Proof.
@@ -277,7 +277,7 @@ apply compose1_2IsPR with (g := minus) (f := searchXY) (f' := cPairPi1).
 apply searchXYIsPR.
 apply cPairPi1IsPR.
 apply minusIsPR.
-Qed.
+Defined.
 
 Lemma cPairProjections1 : forall a b : nat, cPairPi1 (cPair a b) = a.
 Proof.
@@ -535,7 +535,7 @@ apply idIsPR.
 apply compose1_1IsPR.
 apply predIsPR.
 apply cPairPi1IsPR.
-Qed.
+Defined.
 
 End code_nat_list.
 
@@ -628,7 +628,7 @@ simpl in |- *.
 repeat split.
 apply (p0 c).
 auto.
-Qed.
+Defined.
 
 Lemma computeEvalStrongRecHelp :
  forall (n : nat) (f : naryFunc (S (S n))) (c : nat),
@@ -860,7 +860,7 @@ apply succIsPR.
 apply minusIsPR.
 apply pi2_2IsPR.
 apply codeNthIsPR.
-Qed.
+Defined.
 
 End Strong_Recursion.
 
@@ -950,4 +950,4 @@ rewrite <- H.
 unfold A in |- *.
 apply evalStrongRecHelp1.
 auto.
-Qed.
+Defined.

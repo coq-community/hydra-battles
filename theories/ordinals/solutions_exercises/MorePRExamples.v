@@ -12,7 +12,7 @@ Proof.
   - apply idIsPR.
   - apply const1_NIsPR.
   - apply multIsPR.
-Qed.
+Defined.
 
 Fixpoint exp n p :=
   match p with
@@ -49,7 +49,7 @@ Proof.
   exists x.
   apply extEqualTrans with exp_alt; auto.
   apply exp_alt_ok.
-Qed.
+Defined.
 
 Fixpoint tower2 n :=
   match n with
@@ -73,14 +73,14 @@ unfold tower2_alt;  apply indIsPR.
        * apply const1_NIsPR.
        * apply idIsPR.
        * apply expIsPR.
-         Qed.
+Defined.
 
 Lemma tower2IsPR : isPR 1 tower2.
 Proof.
  destruct tower2_alt_PR as [x Hx].
  exists x.
  apply extEqualTrans with tower2_alt; [auto | apply tower2_alt_ok].
-Qed.
+Defined.
 
     
 Fixpoint fact n :=
@@ -105,13 +105,13 @@ Proof.
   +  apply filter10IsPR; apply succIsPR.
   +  apply filter01IsPR; apply idIsPR.
   +  apply multIsPR.
-Qed.
+Defined.
 
 Lemma factIsPR : isPR 1 fact.
 Proof.
   destruct fact_altIsPR as [x Hx].
   exists x; apply extEqualTrans with fact_alt; [trivial | ].
   apply fact_alt_ok.
-Qed.
+Defined.
 
 

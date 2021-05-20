@@ -213,19 +213,19 @@ Proof.
   exists zeroFunc.
   cbn.
   reflexivity.
-Qed.  
+Defined.  
 
 Lemma SuccIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
-Qed.
+Defined.
 
 Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
  assert (H: 3 < 5) by auto.
  exists (projFunc 5 3 H).
  cbn; reflexivity.
-Qed.
+Defined.
 
 Check composeFunc 0 1.
 
@@ -274,7 +274,7 @@ Proof.
     + apply filter010IsPR, succIsPR.
     + apply idIsPR.
   - apply plus_alt_ok. 
-Qed.
+Defined.
 
 About evalPrimRecFunc.
 
@@ -289,7 +289,7 @@ Lemma predIsPR : isPR 1 pred.
 Proof.
   exists xpred.
   intro n; induction n; now cbn. 
-Qed.
+Defined.
 
 
 End Alt.

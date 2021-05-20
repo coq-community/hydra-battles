@@ -113,7 +113,7 @@ Require Import primRec F_alpha  AckNotPR PrimRecExamples.
 Require Import F_omega.
 Import E0.
 
-Section battle_lenght_notPR.
+Section battle_length_notPR.
 
   (** We assume that the function with computes the length 
       of standard battles is primitive recursive *)
@@ -122,18 +122,18 @@ Section battle_lenght_notPR.
 
   (** A counter example *)
 
-  Let alpha := Phi0 omega%e0.
-  Let h := iota (cnf alpha).
+  Let delta := Phi0 omega%e0.
+  Let h := iota (cnf delta).
 
   (** let us get rid of the substraction ... *)
   
-  Let m k := L_ alpha (S k).
+  Let m k := L_ delta (S k).
 
-  Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
+  Remark m_eqn : forall k, m k = (l_std delta k + k)%nat.
   Proof.
-    intro k; assert (k <= L_ alpha (S k)).
-    { assert (S k < L_ alpha (S k)).
-      { apply L_ge_S; unfold alpha; intro H0; injection H0.
+    intro k; assert (k <= L_ delta (S k)).
+    { assert (S k < L_ delta (S k)).
+      { apply L_ge_S; unfold delta; intro H0; injection H0.
         intro; discriminate.
       }
       lia.
@@ -143,27 +143,27 @@ Section battle_lenght_notPR.
 
    Remark mIsPR : isPR 1 m.
   Proof.
-    destruct (H alpha) as [x Hx].
-    apply isPR_extEqual_trans with (fun k => (l_std alpha  k + k)%nat).
+    destruct (H delta) as [x Hx].
+    apply isPR_extEqual_trans with (fun k => (l_std delta  k + k)%nat).
     - apply compose1_2IsPR; auto.
       + apply idIsPR.
       + apply plusIsPR.
-    - intro k; unfold m, l_std; assert (k <=  L_ alpha (S k))%nat.
+    - intro k; unfold m, l_std; assert (k <=  L_ delta (S k))%nat.
       transitivity (S k). 
       + auto with arith.
       + apply Lt.lt_le_weak.
         apply L_ge_S.
-        unfold alpha; intro H0; injection H0; discriminate.
-      + replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
+        unfold delta; intro H0; injection H0; discriminate.
+      + replace (L_ delta ( S k) -k + k)%nat with (L_ delta (S k)) by lia.
         now red.
   Qed.
 
   Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
   Proof.
     intro k; rewrite m_eqn.
-    transitivity (H'_ alpha (S k)).
+    transitivity (H'_ delta (S k)).
     - apply H'_F.
-    - unfold l_std;  generalize (H'_L_ alpha (S k)); lia.
+    - unfold l_std;  generalize (H'_L_ delta (S k)); lia.
   Qed.
 
   (** We compare [m] with the Ackermann function *)
@@ -206,9 +206,10 @@ Section battle_lenght_notPR.
     - apply succIsPR.
   Qed.
 
-End battle_lenght_notPR.
+End battle_length_notPR.
 
 About LNotPR.
+
 
 
 

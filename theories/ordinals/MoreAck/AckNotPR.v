@@ -474,7 +474,7 @@ Section Proof_of_Ackn_PR.
     induction n.
     - cbn; apply succIsPR.
     - apply iSPR_Ack_Sn; auto.  
-  Qed.
+  Defined.
   (* end show *)
   
 End Proof_of_Ackn_PR.

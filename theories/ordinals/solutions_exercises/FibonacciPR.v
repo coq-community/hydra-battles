@@ -64,7 +64,7 @@ Section Proof_of_FibIsPR.
       + apply cPairPi1IsPR.
       + apply cPairIsPR.
     - apply cPairPi2IsPR.
-  Qed.
+  Defined.
 
   (** Ok, but we must prove that [fibPR] is extensionaly equal to [fib] *)
 
@@ -102,14 +102,14 @@ Section Proof_of_FibIsPR.
   Proof.
     intro n; unfold fib_alt, fibPR. 
     rewrite (inv_Pi _ _ (L1 _ _ L0 n ));  reflexivity.
-  Qed.
+  Defined.
 
   Lemma fib_altIsPR : isPR 1 fib_alt.
   Proof.    
     destruct fibPRIsPR  as [x Hx]; exists x.
     apply extEqualTrans with fibPR; auto.
     apply extEqualSym, L2.
-  Qed.
+  Defined.
 
 
   (** It remains to prove that fib_alt is equivalent to the "classical" fib *)
@@ -136,7 +136,7 @@ Section Proof_of_FibIsPR.
     destruct fib_altIsPR as [x Hx].
     exists x;  apply extEqualTrans with fib_alt; auto.
     apply extEqualSym, fib_alt_Ok.
-  Qed.
+  Defined.
 
 End Proof_of_FibIsPR.
 

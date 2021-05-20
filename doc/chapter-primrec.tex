@@ -753,7 +753,7 @@ Prove that the function which returns the  integer square root of any natural nu
 
 \end{exercise}
 
-\section{Proving that a given function is \emph{not} primitive recursive}
+\section{Ackermann: a non  primitive recursive function}
 \label{sect:ack-not-PR}
 
 The best known example of a total recursive function which is not primitive recursive is the Ackermann function. We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina. We hope this formal proof 
@@ -1313,11 +1313,11 @@ Note that the Ackermann function is a counter-example to the (false) statement:
 \end{remark}
 
 
-\subsection{The length of standard hydra battles}
+\section{The length of standard hydra battles}
 
 The module \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra\_Theorems} contains a proof that the function which computes the lenght of standard hydra battles is not primitive recursive. This proof is  a little more complex than the preceding one.
 
-\subsubsection{Definitions}
+\subsection{Definitions}
 
 The function we consider is defined and proven correct in
 Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
@@ -1333,7 +1333,7 @@ Lemma l_std_ok : forall alpha : E0,
 (* ... *)
 \end{Coqsrc}
 
-\subsubsection{Proof steps}
+\subsection{Main proof steps}
 
 Now, let us assume that the function \texttt{l\_std} is primitive recursive.
 
@@ -1341,7 +1341,7 @@ Now, let us assume that the function \texttt{l\_std} is primitive recursive.
 \emph{From \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems}}.
 
 \begin{Coqsrc}
-Section battle_lenght_notPR.
+Section battle_length_notPR.
 
   (** We assume that the function with computes the length 
       of standard battles is primitive recursive *)
@@ -1352,16 +1352,16 @@ Section battle_lenght_notPR.
 Let us consider the hydra represented by the ordinal $\omega^\omega$.
 
 \begin{Coqsrc}
-Let alpha := Phi0 omega%e0.
-Let h := iota (cnf alpha).
+Let delta := Phi0 omega%e0.
+Let h := iota (cnf delta).
 \end{Coqsrc}
 
 In order to get rid of the substraction in the definition of \texttt{l\_std}, we work with a helper function.
 
 \begin{Coqsrc}
-Let m k := L_ alpha (S k).
+Let m k := L_ delta (S k).
 
-Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
+Remark m_eqn : forall k, m k = (l_std delta k + k)%nat.
 (* ... *)
 \end{Coqsrc}
 
@@ -1383,14 +1383,24 @@ H_F : forall (alpha : E0) (n : nat),
      F_ alpha (S n) <= H_ (Phi0 alpha) (S n) 
 \end{Coqsrc}
 
-\emph{Please note that our proof of this lemma is not trivial at all. It uses some lemmas of Chapters~\vref{chap:ketonen} and \vref{chap:alpha-large}.}
+\emph{Please note that our proof of this lemma is not trivial at all. It uses some lemmas of Chapters~\vref{chap:ketonen} and \vref{chap:alpha-large}. Mainly:}
+
+\begin{Coqanswer}
+H'_restricted_mono_l:
+  forall (alpha beta : E0) (n : nat),
+  Canon_plus n alpha beta -> H'_ beta n <= H'_ alpha n
+\end{Coqanswer}
+
+This lemma is proven in 
+\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}, with the help of the \emph{Ketonen-Solovay machinery}.
 
 \item
 \noindent
 \emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
 \begin{Coqsrc}
-H_L_ : forall (alpha : E0) (i : nat), H_ alpha i <= L_ alpha (S i)
+H'_L_: forall (alpha : E0) (i : nat), 
+      H'_ alpha i <= L_ alpha (S i)
 \end{Coqsrc}
 
 \item
@@ -1398,7 +1408,7 @@ H_L_ : forall (alpha : E0) (i : nat), H_ alpha i <= L_ alpha (S i)
 \emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
 
 \begin{Coqsrc}
-F_vs_Ack : forall n : nat, 2 <= n -> Ack n n <= F_ omega n
+F_vs_Ack: forall n : nat, 2 <= n -> Ack n n <= F_ omega n
 \end{Coqsrc}
 
 
@@ -1432,6 +1442,6 @@ We finish the proof by noting that the function $m$ (composed with \texttt{S}) d
     - apply succIsPR.
   Qed.
 
-End battle_lenght_notPR.
+End battle_length_notPR.
 \end{Coqsrc}
 
