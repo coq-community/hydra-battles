@@ -16,8 +16,8 @@ in five rules: three base cases, and two recursive construction rules.
 \item[S] The successor function $S:\mathbb{N}\rightarrow\mathbb{N}$ is primitive recursive.
  \item[projections] For any pair $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
 \item[composition] For any $n$ and $m$, if $h: \mathbb{N}^m\rightarrow\mathbb{N}$, and
-$g_0,\dots, g_{m-1}$ are primitive recursive of $n$ arguments, then the function which maps any
-tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1}))$ is primitive recursive.
+$g_0,\dots, g_{m-1}: \mathbb{N}^n\rightarrow\mathbb{N}$ are primitive recursive of $n$ arguments, then the function which maps any
+tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1})): \mathbb{N}^n\rightarrow\mathbb{N}$ is primitive recursive.
 \item[primitive recursion]
 If $g: \mathbb{N}^n\rightarrow\mathbb{N}$ and $h: \mathbb{N}^{n+2}\rightarrow\mathbb{N}$ are primitive recursive, then the function from $\mathbb{N}^{n+1}$ into $\mathbb{N}$ defined by
 \begin{align}
@@ -51,9 +51,12 @@ Contributions (under the form of comments, new examples or exercises) are welcom
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
-Thus, we propose a slow exploration of this library, through examples and exercises. Our additions to the original library 
+Thus, we propose a partial exploration of this library, through examples and exercises. Our additions to the original library --- mainly examples and counter-examples ---,
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
-In particular, the library~\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
+
+In particular, the library \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
+MoreOver, the library \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} contains 
+a proof that the length of an hydra battle (according to the initial replication factor) is not primitive recursive in general.
 
 \section{Basic definitions}
 \index{maths}{Primitive recursive functions}
@@ -67,7 +70,7 @@ and
 
 \subsection{Functions of arbitrary arity}
 
-Library \texttt{primRec} allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
+The  \texttt{primRec} library allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
 curried form. This is made possible in 
 \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
 
@@ -85,7 +88,7 @@ to \texttt{nat -> nat -> nat -> nat}.
 
 \vspace{4pt}
 \noindent
-\emph{From\href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
+\emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
 \begin{Coqsrc}
 Require Import primRec.
 Import extEqualNat.
@@ -217,7 +220,7 @@ The constructor (\texttt{projFunc $n$ $m$})  is associated with the projection $
 $\pi_{n, m}$.
 For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ corresponds to the term
 (\texttt{projFunc 5 3 H}), where \texttt{H} is a proof of $3<5$.
- This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function \texttt{evalProjFunc $n$} (see the next sub-section). Trying the other convention is left as an exercise.
+ This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function (\texttt{evalProjFunc $n$}) (see the next sub-section). Trying the other convention is left as an exercise.
 \end{remark}
 
 
@@ -226,7 +229,7 @@ For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ cor
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
 $\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$.
-This function is definied by mutual recursion,  together with the  function 
+This function is defined by mutual recursion,  together with the  function 
 (\texttt{evalprimRecS $n$ $m$}) of type 
 $\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
 
@@ -251,7 +254,7 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
   | primRecFunc n g h =>
       evalPrimRecFunc n (evalPrimRec _ g) (evalPrimRec _ h)
   end
-  with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
+with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
  Vector.t (naryFunc n) m :=
   match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
   | PRnil a => Vector.nil  (naryFunc a)
@@ -311,7 +314,8 @@ Proof. reflexivity.   Qed.
 
 
 Another example?
-Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it as the result of some computation we leave it the reader to guess and reproduce.}:
+Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it by an interactive proof the reader will be able to make after 
+reading Sect.\vref{sect:proofs-of-isPR}.}:
 
 \label{sect:bigfac}
 \begin{Coqsrc}
@@ -363,9 +367,10 @@ Compute map mystery_fun[0;1;2;3;4;5;6] : t nat _.
 After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, whithout building such an unreadable term.
 
 \section{Proving that a given arithmetic function is primitive recursive}
+\label{sect:proofs-of-isPR}
 
 The example in the preceding section clearly shows that, in order to prove that a given arithmetic function
-(defined in \gallina{} as usual) is primitive recursive, trying to give  by hand a term  of type \texttt{PrimRec $n$} is not a good method, since such terms may be huge and complex, even for simple arithmetic functions. The method proposed in Library \texttt{primRec} is the following one:
+(defined in \gallina{} as usual) is primitive recursive, trying to give  by hand a term  of type (\texttt{PrimRec $n$}) is not a good method, since such terms may be huge and complex, even for simple arithmetic functions. The method proposed in Library \texttt{primRec} is the following one:
 
 \begin{enumerate}
 \item Define a type corresponding to the statement "the function \texttt{$f$:naryFunc $n$} is primitive recursive ''.
@@ -399,7 +404,7 @@ In the library \texttt{primRec}, all these lemmas are opaque (registered with \t
 \texttt{Defined}s.
 
 If it does not cause compatibility problems (with 
-\href{https://github.com/coq-community/goedel}{goedel library} fr instance), we plan to make all theses lemmas transparent.
+\href{https://github.com/coq-community/goedel}{goedel library} for instance), we plan to make all theses lemmas transparent.
 \end{remark}
 
 \subsubsection{Elementary proofs of \texttt{isPR} statements}
@@ -718,13 +723,11 @@ Fixpoint fib (n:nat) : nat :=
   end.
 \end{Coqsrc}
 
-\textbf{Hint:}  You may use as a helper the function which computes the pair 
+\textbf{Hint:}  You may use as a helper the function which computes the pair \linebreak
 $(\texttt{fib}(n+1),\texttt{fib}(n))$. 
 Library \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair} contains
 the definition of the encoding of $\mathbb{N}^2$ into $\mathbb{N}$, and the proofs that 
 the associated constructor and projections are primitive recursive.
-
-
 \emph{You may start this exercise with the file
 \url{../exercises/primrec/FibonacciPR.v}.}
 
@@ -790,8 +793,8 @@ The command has indeed failed with message:
 Cannot guess decreasing argument of fix.
 \end{Coqanswer}
 
-A possible workaround is to make \\texttt{m} be the 
-decreasing argument, and define --- within \texttt{m}'s scope --- a local helper function which computes \texttt{Ack m n} for any \texttt{n}.
+A possible workaround is to make \texttt{m} be the 
+decreasing argument, and define --- within \texttt{m}'s scope --- a local helper function which computes (\texttt{Ack m n}) for any \texttt{n}.
 This way, both functions \texttt{Ack} and \texttt{Ackm} have a (structurally) strictly decreasing argument.
 
 \begin{Coqsrc}
@@ -880,7 +883,7 @@ Compute Ack 3 2.
 
 \begin{exercise}
 The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions\footnote{post on \href{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq} by Anton Trunov.} of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
-Prove that all the four functions are extensionnally equal.
+Prove that the four functions are extensionnally equal.
 \end{exercise}
 
 
@@ -894,11 +897,11 @@ Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
 
 Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
-Proof.  now cbn. Qed.
+Proof. now cbn. Qed.
 
 Lemma Ack_S_S : forall m p,
     Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof.  now cbn. Qed.
+Proof. now cbn. Qed.
 \end{Coqsrc}
 
 The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.
@@ -932,6 +935,9 @@ Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
 An important property of the Ackermann function helps us 
 to overcome the difficulty raised by nested recursion, by climbing up the hierarchy $\texttt{Ack}\,n\,\_\;(n\in\mathbb{N})$.
 
+
+\noindent
+\emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
 \begin{Coqsrc}
 Lemma nested_Ack_bound : forall k m n, 
     Ack k (Ack m n) <= Ack (2 + max k m) n.
@@ -963,11 +969,12 @@ $f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{`
 \item Show that \texttt{Ack} fails to satisfy this property.
 \end{enumerate}
 
-First, we prove that any primitive function of two arguments is majorized.
+First, we prove that any primitive function of two arguments is majorized by \texttt{Ack}.
 If we look at the inductive definition of primitive recursive functions, page~\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
 
-\vspace{4pt}
+The following scheme allows us to write proofs by induction on the class of primitive recursive functions. 
 
+\vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
@@ -989,7 +996,7 @@ P 1 succFunc ->
 (* zero *)
 P 0 zeroFunc ->
 
-* projections *)
+(* projections *)
 (forall (n m : nat) (l : m < n), P n (projFunc n m l)) ->
 
 (* composition *) 
@@ -1035,7 +1042,7 @@ Thus the lemma we will have to prove is the following one:
 But dots don't belong to \gallina's syntax! So, we may use \coq's vectors for denoting arbitrary tuples.
 
 First, we extend \texttt{max} to vectors of natural numbers (using the notations of module \texttt{VectorNotations} and some more definitions from 
-\href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, \texttt{t\,$A$\,$n$} is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
+\href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, (\texttt{t\,$A$\,$n$}) is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
 \texttt{VectorDef.cons x \_ v}.
 
 \index{coq}{Dependently typed functions}
@@ -1059,8 +1066,8 @@ Lemma max_v_ge : forall n (v: t nat n) y,  In  y  v -> y <= max_v v.
 
 We have also to convert any application
 $(f\,x_1\,x_2\,\dots\,x_n)$ into an application of a function 
-to a single argument: the vector of all the $x_i$s.
-This is already done in 
+to a single argument: the vector of all the $x_i$\,s.
+This is already defined in 
 Library~\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
 
@@ -1119,7 +1126,7 @@ Definition majorizedSPR {n m} (x : PrimRecs n m) :=
 \end{Coqsrc}
 
 Now, it remains to prove that any primitive function is majorized by \texttt{Ack}.
-The three base cases of construction of primitive recursive function are as follows:
+The three base cases  are as follows:
 
 \begin{Coqsrc}
 Lemma majorSucc : majorizedPR  succFunc Ack.
@@ -1313,11 +1320,13 @@ Note that the Ackermann function is a counter-example to the (false) statement:
 \end{remark}
 
 
-\subsection{The length of standard hydra battles}
+\section{The length of standard hydra battles}
 
-The module \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra\_Theorems} contains a proof that the function which computes the lenght of standard hydra battles is not primitive recursive. This proof is  a little more complex than the preceding one.
+The module \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra\_Theorems} contains a proof that the function which computes the length of standard hydra battles is not primitive recursive. More precisely, we consider, for a given hydra $h=\iota(\alpha)$, the length of a standard battle which starts with the replication factor $k$ (see Sect~\vref{def:L-alpha}).
 
-\subsubsection{Definitions}
+This proof is  a little more complex than the preceding one.
+
+\subsection{Definitions}
 
 The function we consider is defined and proven correct in
 Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
@@ -1333,7 +1342,7 @@ Lemma l_std_ok : forall alpha : E0,
 (* ... *)
 \end{Coqsrc}
 
-\subsubsection{Proof steps}
+\subsection{Proof steps}
 
 Now, let us assume that the function \texttt{l\_std} is primitive recursive.
 
@@ -1372,39 +1381,94 @@ Remark mIsPR : isPR 1 m.
 (* ... *)
 \end{Coqsrc}
 
-Now, let us recall the following lemmas :
 
-\begin{enumerate}
-\item 
-\emph{From \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}}
+\subsubsection{Comparison between $F$ and $H'$}
+
+In \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}, we prove a relation between the $F$ and $H'$ functional. For any $\alpha$ and $k>0$,
+$H'_{\omega^\alpha}(k)\geq F_\alpha(k)$.
 
 \begin{Coqsrc}
-H_F : forall (alpha : E0) (n : nat), 
-     F_ alpha (S n) <= H_ (Phi0 alpha) (S n) 
+H'_F : forall (alpha : E0) (n : nat), 
+     F_ alpha (S n) <= H'_ (Phi0 alpha) (S n) 
 \end{Coqsrc}
 
-\emph{Please note that our proof of this lemma is not trivial at all. It uses some lemmas of Chapters~\vref{chap:ketonen} and \vref{chap:alpha-large}.}
 
-\item
-\noindent
+Our proof of this lemma is not trivial at all. One of it sub-goals is the following one:
+
+\begin{Coqsrc}
+  alpha : E0
+  IHalpha : forall beta : E0, beta o< alpha -> P beta
+  Halpha : Limitb alpha
+  n : nat
+  ============================
+  H'_ (Phi0 (CanonS alpha n)) (S n) <= 
+  H'_ (Phi0 (CanonS alpha (S n))) (S n)
+\end{Coqsrc}
+
+In mathematical notation: $H'_{\omega^{\canonseq{\alpha}{n}}}(n+1) \leq
+H'_{\omega^{\canonseq{\alpha}{n+1}}}(n+1)$.
+
+\vspace{4pt}
+
+But there exists no lemma saying that, if 
+$\beta\leq \alpha$, then $H'_\beta(k)\leq H'_\alpha(k)$, for any $\alpha$ and $\beta$. For instance, 
+$H'_{42}(3)=45> H'_\omega(3)=7$.
+
+
+Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
+\href{../theories/html/hydras.Epsilon0.Hprimehtml}{Epsilon0.Hprime}):
+
+\begin{Coqanswer}
+H'_restricted_mono_l : 
+    forall (alpha beta : E0) (n : nat), 
+      Canon_plus n alpha beta -> 
+      H'_ beta n <= H'_ alpha n.
+\end{Coqanswer}
+
+Thus, it remains to prove that 
+there exists a path from ${\omega^{\canonseq{\alpha}{n+1}}}$
+to ${\omega^{\canonseq{\alpha}{n}}}$ composed of 
+$n+1$-steps.
+
+Fortunately, the Ketonen-Solovay machinery contains three lemmas which help us to build such a path.
+
+
+\begin{Coqanswer}
+KS_thm_2_4_lemma5 :
+  forall [i : nat] [alpha beta : T1],
+  const_pathS i alpha beta ->
+  nf alpha -> alpha <> zero -> 
+  const_pathS i (phi0 alpha) (phi0 beta)
+
+KS_thm_2_4 :
+  forall [lambda : T1], nf lambda ->limitb lambda ->
+  forall i j : nat, i < j -> 
+   const_pathS 0 (canonS lambda j) (canonS lambda i)
+
+Cor12_1 :
+forall [alpha : T1], nf alpha ->
+      forall (beta : T1) (i n : nat),
+      beta t1< alpha ->
+     i <= n -> const_pathS i alpha beta -> 
+     const_pathS n alpha beta
+\end{Coqanswer}
+  
+\subsubsection{End of the proof}
+
+We finish the proof by comparing several fast growing functions.
+
 \emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
 \begin{Coqsrc}
-H_L_ : forall (alpha : E0) (i : nat), H_ alpha i <= L_ alpha (S i)
+H'_L_ : forall (alpha : E0) (i : nat), H'_ alpha i <= L_ alpha (S i)
 \end{Coqsrc}
 
-\item
 
 \emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
 
 \begin{Coqsrc}
 F_vs_Ack : forall n : nat, 2 <= n -> Ack n n <= F_ omega n
 \end{Coqsrc}
-
-
-
-\end{enumerate}
-
 
 
 
