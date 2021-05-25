@@ -1321,6 +1321,7 @@ Note that the Ackermann function is a counter-example to the (false) statement:
 
 
 \section{The length of standard hydra battles}
+\label{sect:battle-length-notPR}
 
 The module \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra\_Theorems} contains a proof that the function which computes the length of standard hydra battles is not primitive recursive. More precisely, we consider, for a given hydra $h=\iota(\alpha)$, the length of a standard battle which starts with the replication factor $k$ (see Sect~\vref{def:L-alpha}).
 
@@ -1483,13 +1484,14 @@ Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
 We finish the proof by noting that the function $m$ (composed with \texttt{S}) dominates the Ackermann function, which leads to a contradiction.
 
 \begin{Coqsrc}
- Remark m_dominates_Ack : 
+Remark m_dominates_Ack : 
      dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
 (* ... *)
 
- Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
+Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
+(* ... *)
 
- Theorem LNotPR : False.
+Theorem LNotPR : False.
   Proof.
     apply SmNotPR,  compose1_1IsPR.
     - apply mIsPR.
