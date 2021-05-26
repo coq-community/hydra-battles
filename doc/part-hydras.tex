@@ -7304,7 +7304,7 @@ Qed.
 \subsubsection{Multiples of \texorpdfstring{$\omega$}{omega}}
 
 Since the canonical sequence of $\omega$ is composed of finite ordinals, 
-it is easy to get the formula associated with $H_\omega$.
+it is easy to get the formula associated with $H'_\omega$.
 
 
 \begin{Coqsrc}
@@ -7330,10 +7330,10 @@ Lemma H'_Plus_Fin alpha : forall i k : nat,
 Then, we get easily formulas for $H'_{\omega+i}$, and $H'_{\omega\times i}$ for any natural number $i$.
 
 \begin{Coqsrc}
-Lemma H'_omega_double k : H'_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
+Lemma H'_omega_double k : H'_ (omega * 2)%e0 k = (4 * k + 3)%nat.
 Proof.
   rewrite H'_eq3; simpl Canon.
- -   ochange  (CanonS  (omega * FinS 1)%e0 k)  (omega + (S k))%e0.
+ -   ochange  (CanonS  (omega * FinS 1)%e0 k) (omega + (S k))%e0.
   + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
   -  now compute.
 Qed.
@@ -7358,7 +7358,7 @@ Proof.
     +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- abstract lia. 
-          --   generalize (exp2_not_zero k);  abstract lia.
+          -- generalize (exp2_not_zero k); abstract lia.
     + cbn; f_equal; abstract lia.
 Qed.
 \end{Coqsrc}
@@ -7394,7 +7394,7 @@ alpha <> Zero -> forall i k,
   H'_ (Omega_term alpha i) k = iterate (H'_ (Phi0 alpha)) (S i) k.
 \end{Coqsrc}
 
-\item In particular, we have got a formula for $H'_{\omega^{i+1}}$.
+\item In particular, we derive a formula for $H'_{\omega^{i+1}}$.
 
 \begin{Coqsrc}
 Definition H'_succ_fun f k := iterate f (S k) k.
@@ -7433,11 +7433,10 @@ Remark R0 k :  H'_ (Phi0 3)%e0 k = iterate f (S k) k.
 \end{Coqsrc}
 
 Thus, the number $H_{\omega^3}(3)$ can be written as four nested applications of $f$.
-
+ 
 \begin{Coqsrc}
 Fact F0 : H'_ (Phi0 3) 3 = f (f (f (f 3))).
- rewrite R0; reflexivity. 
-Qed.
+proof. rewrite R0; reflexivity. Qed.
 \end{Coqsrc}
 
 In order to make this statement more readable, we can introduce a local définition.
@@ -7446,7 +7445,7 @@ In order to make this statement more readable, we can introduce a local définit
 Let N := (exp2 64 * 64 - 1)%nat.
 \end{Coqsrc}
 
-This number looks quite big; let us compute an approximation in \texttt{Ocaml}:
+This number looks quite big; let us compute an approximation with \texttt{Ocaml}:
 
 
 \begin{Coqsrc}
@@ -7530,7 +7529,7 @@ and the inner one  first-order (on type \texttt{nat}).
 Since pure computation seems to be useless for dealing with expressions of the form $H'_\alpha(k)$, even for small values of $\alpha$ and $k$, we need to prove theorems for comparing $H'_\alpha(k)$ and $H'_\beta(l)$, in terms of comparison
 between $\alpha$ and $\beta$ on the one hand, $k$ and $l$ on the other hand.
 
-But beware of non-theorems! For instance, one could believe that $H'$ is monotonous in its first argument. The following proof shows this is false.
+But beware of fake theorems! For instance, one could believe that $H'$ is monotonous in its first argument. The following proof shows this is false.
 
 \begin{Coqsrc}
 Remark H'_non_mono1 :
@@ -7628,6 +7627,9 @@ By well-founded induction on $\alpha$, we prove a simple relation between $L_\al
 
 The following theorem relates the length of (standard) battles with the the $H'$ family of fast growing functions.
 
+\vspace{4pt}
+
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
 \begin{Coqsrc}
@@ -7656,7 +7658,7 @@ Ketonen and Solovay introduce in~\cite{KS81} a ``trivial'' variant of the Wainer
 
 \begin{remark}
 The difference with the ``classic'' Wainer hierarchy 
-$f\_alpha\;(\alpha<\epsilon_0)$ lies in the second equation:
+$f\_\alpha\;(\alpha<\epsilon_0)$ lies in the second equation:
 $f_{\beta+1}(i) = (f_\beta)^{(i)}(i)$ and not
 $f_{\beta+1}(i) = (f_\beta)^{(i+1)}(i)$. A module about 
 the classic Wainer hierarchy is in preparation.
