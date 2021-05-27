@@ -736,6 +736,89 @@ End Abstract_Properties.
 
 
 
+Lemma H'_mono_l_0 alpha beta :
+  alpha o< beta ->
+  {n : nat | forall p, n <= p -> H'_ alpha (S p) <= H'_ beta (S p)}.
+Proof.
+  intro H; destruct (Lemma2_6_1_E0 H) as [n Hn].
+  exists (S n).
+  intros; apply H'_restricted_mono_l.
+  eapply Cor12_E0 with n; eauto.
+  lia.
+Qed.
+
+Lemma H'_mono_l_1 alpha beta :
+  alpha o<= beta ->
+  {n : nat | forall p, n <= p -> H'_ alpha (S p) <= H'_ beta (S p)}.
+Search (_ o<= _).
+intro H; destruct (le_lt_eq_dec H).
+now apply H'_mono_l_0.
+subst.
+ exists 0.
+  lia.
+Qed.
+
+Section H'_mono_l.
+Variables alpha beta: E0.
+Hypothesis H_alpha_beta: alpha o< beta.
+
+Section Succ_case.
+ Variable gamma: E0.  
+ Hypothesis Hgamma : beta = Succ gamma.
+
+ Remark R1 : alpha o<= gamma.
+ Proof. subst; now apply lt_succ_le_2.  Qed.
+
+ Remark R2 : {n : nat | forall p, n <= p -> H'_ alpha (S p) <= H'_ gamma (S p)}.
+ Proof.  apply  H'_mono_l_1, R1.  Qed.
+
+ Remark R3 : {n: nat | forall p, n <= p ->
+                                 H'_ alpha (S p) < H'_ beta (S p)}.
+ Proof.
+ destruct R2 as [n Hn]; exists (Max.max n 1).
+ intros p H;  apply Lt.le_lt_trans with (H'_ gamma (S p)).
+ - apply Hn; lia.
+ - subst beta; apply (H'_alpha_dom gamma (S p)); auto with arith.
+ Qed.
+
+End Succ_case.
+
+Section Limit_case.
+Hypothesis Hbeta: Limitb beta.
+
+Remark R4 : Succ alpha o< beta.
+Proof. now apply Succ_lt_limit. Qed.
+
+Remark R5 :  {n: nat | forall p, n <= p ->
+                                 H'_ alpha (S p) < H'_ beta (S p)}.
+Proof.
+  assert (Succ alpha o<= beta) by (apply Lt_Le_incl; apply R4).
+  destruct   (H'_mono_l_1 _ _ H) as [x Hx].
+  exists x; intros.
+  apply Lt.lt_le_trans with (H'_ (Succ alpha) (S p)).
+  -  apply (H'_alpha_dom alpha (S p)); auto with arith.
+  - auto.
+ Qed.
+
+End Limit_case.
+
+Lemma H'_mono_l : {n: nat | forall p, n <= p ->
+                                 H'_ alpha (S p) < H'_ beta (S p)}.
+Proof.
+ destruct (Zero_Limit_Succ_dec beta) as [[H0 | Hl] | [gamma Hgamma]].
+ - subst; destruct (E0_not_Lt_zero H_alpha_beta).
+ - now apply R5.
+ -  eapply  R3; eauto.
+Qed.
+
+Lemma H'_dom : dominates_strong (H'_ beta) (H'_ alpha).
+Proof.
+  destruct H'_mono_l as [x Hx];  exists (S x); red.
+  intros p H; inversion_clear H; apply Hx; auto with arith.
+Qed.
+
+End H'_mono_l.
+
 
 (* To do : program tactics for a better interaction *)
 

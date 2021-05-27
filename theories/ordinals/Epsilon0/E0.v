@@ -412,6 +412,20 @@ Proof.
   - intro; now apply LT_succ_LE_R.  
 Qed.
 
+Lemma lt_succ_le_2 (alpha beta: E0):
+    alpha o< Succ beta -> alpha o<= beta.
+Proof.
+ destruct alpha, beta; cbn; intros.
+ red in H; red. 
+ cbn;  apply LT_succ_LE_2; auto.
+Qed.
+
+Lemma Succ_lt_limit alpha beta:
+    Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
+Proof.
+  destruct alpha, beta;unfold Lt; cbn.
+  intros; apply succ_lt_limit; auto. 
+Qed.
 
 Lemma le_lt_eq_dec : forall alpha beta, alpha o<= beta ->
                                         {alpha o< beta} + {alpha = beta}.

@@ -3703,6 +3703,7 @@ Proof.
   left; repeat split; auto. 
 Defined.
 
+
 Lemma lt_succ_le_2':
   forall a : T1, nf a -> forall b : T1, nf b -> a t1<  succ b  ->
                                         a t1< b \/ a = b.
@@ -3713,6 +3714,7 @@ Proof.
   intro H5;  destruct (le_lt_or_eq _ _ H5); auto. 
   left; split; auto.   
 Qed.   
+
 
 
 
