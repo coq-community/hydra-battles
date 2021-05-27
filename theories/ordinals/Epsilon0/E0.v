@@ -298,7 +298,7 @@ Defined.
 
 Global Hint Resolve Lt_wf : E0.
 
-Lemma Lt_succ_le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
+Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
   destruct alpha, beta;simpl in *;  unfold le, Lt;simpl.
   intro. split; auto.
@@ -351,11 +351,11 @@ Qed.
 Global Hint Resolve Pred_Lt : E0.
 
 
-Lemma Succ_succb (alpha : E0) : Succb (Succ alpha).
+Lemma Succ_Succb (alpha : E0) : Succb (Succ alpha).
 destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
 Qed.
 
-Global Hint Resolve Succ_succb : E0.
+Global Hint Resolve Succ_Succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -412,7 +412,7 @@ Proof.
   - intro; now apply LT_succ_LE_R.  
 Qed.
 
-Lemma lt_succ_le_2 (alpha beta: E0):
+Lemma lt_Succ_le_2 (alpha beta: E0):
     alpha o< Succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
@@ -420,7 +420,7 @@ Proof.
  cbn;  apply LT_succ_LE_2; auto.
 Qed.
 
-Lemma Succ_lt_limit alpha beta:
+Lemma Succ_lt_Limitb alpha beta:
     Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
 Proof.
   destruct alpha, beta;unfold Lt; cbn.
@@ -564,30 +564,25 @@ Lemma Limitb_plus alpha beta i:
   (beta o< Phi0 alpha)%e0 -> Limitb beta ->
   Limitb (Omega_term alpha i + beta)%e0.
 Proof.
-  intros.
-  assert (alpha <> Zero). { intro; subst. 
-                            apply (Limit_not_Zero H0).
-                            destruct beta.
-                            red in H. simpl in H.
-                            apply LT_one in H. subst.
-                            now apply E0_eq_intro.
-                          }
-                          unfold Limitb.
-  rewrite Omega_term_plus; auto.
+  intros H H0;  assert (alpha <> Zero).
+  { intro; subst. 
+    apply (Limit_not_Zero H0).
+    destruct beta.
+    red in H. simpl in H.
+    apply LT_one in H. subst.
+    now apply E0_eq_intro.
+  }
+  unfold Limitb; rewrite Omega_term_plus; auto.
   cbn;  case_eq (cnf alpha).
-  intro. 
-  destruct H1.
-  apply E0_eq_intro.
-  apply H2.
-  intros.
-  unfold Limitb in H0;
-    destruct (cnf beta).   
-  auto.   
-  auto.
+  -  intro H2; destruct H1.
+     apply E0_eq_intro.
+     apply H2.
+  -  intros alpha0 n beta0 H2.
+     unfold Limitb in H0;    destruct (cnf beta); auto.
 Qed.
 
 
-Lemma Succ_cons alpha gamma i : alpha <> Zero -> gamma o< Phi0 alpha ->
+Lemma Succ_of_cons alpha gamma i : alpha <> Zero -> gamma o< Phi0 alpha ->
                                 cnf (Succ (Omega_term alpha i + gamma)%e0) =
                                 cnf (Omega_term alpha i + Succ gamma)%e0.
 Proof.
@@ -759,5 +754,5 @@ Qed.
 
 Lemma Phi0_mono alpha beta : alpha o< beta -> Phi0 alpha o< Phi0 beta.
 Proof.
-  destruct alpha, beta; unfold Lt; cbn.  auto with T1.
+  destruct alpha, beta; unfold Lt; cbn;  auto with T1.
 Qed.

@@ -657,10 +657,10 @@ Section Compatibility_F_dominates.
   Lemma F_mono_l_0 : forall n, Canon_plus (S n) alpha beta ->
                                forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
-    assert (Le (Succ beta) alpha) by (now apply Lt_succ_le).
+    assert (Le (Succ beta) alpha) by (now apply Lt_Succ_Le).
     assert ({alpha = Succ beta}+{Lt (Succ beta) alpha}). {
       rewrite <- lt_Succ_inv in H.
-      apply Lt_succ_le in H; destruct (E0.le_lt_eq_dec  H); auto.
+      apply Lt_Succ_Le in H; destruct (E0.le_lt_eq_dec  H); auto.
     }
     destruct H0.
     - intros; apply F2; [trivial | lia].
@@ -769,7 +769,7 @@ Proof.
     + apply HFLim; auto.
     + destruct Hsucc; subst; apply HFsucc.
       intros; apply IHalpha; auto.
-      apply Succ_succb.
+      apply Succ_Succb.
   Qed.
 
 

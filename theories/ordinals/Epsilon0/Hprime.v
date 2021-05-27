@@ -76,7 +76,7 @@ Lemma H'_succ_eqn  alpha i :  H'_ (Succ alpha) i = H'_ alpha (S i).
 Proof.
   rewrite H'_eq2.
   - now rewrite Pred_of_Succ.  
-  - apply Succ_succb.
+  - apply Succ_Succb.
 Qed.
 
 
@@ -222,7 +222,7 @@ Proof with auto with E0.
            replace (Omega_term alpha i + Succ gamma)%e0 with
                (Succ (Omega_term alpha i + gamma)%e0).
          rewrite H'_succ_eqn, Hbeta;  auto.
-         apply E0_eq_intro; rewrite Succ_cons; auto.
+         apply E0_eq_intro; rewrite Succ_of_cons; auto.
          intro; subst; red in H; simpl in H.
          destruct H as [H [H2 H3]]; apply lt_one in H2.
          destruct (succ_not_zero _ H2).
@@ -481,7 +481,7 @@ Section Proof_of_Abstract_Properties.
     Proof.
       red;intros; rewrite H'_eq1, H'_eq2, Pred_of_Succ, H'_eq1. 
        - abstract lia.
-       - apply Succ_succb.
+       - apply Succ_Succb.
     Qed.
 
     Local Hint Resolve PD_Zero PA_Zero : E0.
@@ -767,7 +767,7 @@ Section Succ_case.
  Hypothesis Hgamma : beta = Succ gamma.
 
  Remark R1 : alpha o<= gamma.
- Proof. subst; now apply lt_succ_le_2.  Qed.
+ Proof. subst; now apply lt_Succ_le_2.  Qed.
 
  Remark R2 : {n : nat | forall p, n <= p -> H'_ alpha (S p) <= H'_ gamma (S p)}.
  Proof.  apply  H'_mono_l_1, R1.  Qed.
@@ -787,7 +787,7 @@ Section Limit_case.
 Hypothesis Hbeta: Limitb beta.
 
 Remark R4 : Succ alpha o< beta.
-Proof. now apply Succ_lt_limit. Qed.
+Proof. now apply Succ_lt_Limitb. Qed.
 
 Remark R5 :  {n: nat | forall p, n <= p ->
                                  H'_ alpha (S p) < H'_ beta (S p)}.
