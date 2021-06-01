@@ -7031,8 +7031,6 @@ Proof. reflexivity. Qed.
 \end{Coqsrc}
 
 Thus, for instance, $L_{\omega^3}(3)=L_{\omega^2\times 4}(3)$.
-Thus, we obtain an exact expression of this number.
-
 
 \begin{Coqsrc}
 Lemma L_omega_cube_3_eq:
@@ -7043,7 +7041,7 @@ Lemma L_omega_cube_3_eq:
 
 
 This number is quite big. Using \texttt{Ocaml}'s \texttt{float} arithmetic,
-we can [under-]approximate it by $2^{3.8\times10^{30}}\times 3.8\times{10^{30}}$.
+we can under-approximate it by $2^{3.8\times10^{30}}\times 3.8\times{10^{30}}$.
 
 \begin{Coqsrc}
 # let exp2 x = 2.0 ** x;;
@@ -7204,12 +7202,12 @@ Prove a few  exact formulas and minoration lemmas.
 
 
 
-In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the so called \emph{Wainer-Hardy hierarchy} of fast growing functions,
+In order to give a feeling on  the complexity of the functions  $L_\alpha$s, we compare them with a better known family of functions, the  \emph{Wainer-Hardy hierarchy} of fast growing functions,
 presented for instance in~\cite{Promel2013}. 
 \index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
 \begin{remark}
-  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the litterature. For the time being, we call our functions $H'\_alpha$ in order to underline the difference from ``classic'' Hardy functions.
+  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the litterature. For the time being, we call our functions $H'_\alpha$ in order to underline the difference from ``classic'' Hardy functions.
 \end{remark}
 
 For each ordinal $\alpha$ below $\epsilon_0$, $H'_\alpha$ is 
@@ -7610,6 +7608,47 @@ Theorem P_alpha : forall alpha, P alpha.
    (* rest of proof skipped *)
 
 Section Proof_of_Abstract_Properties.
+\end{Coqsrc}
+
+
+By elimination, we get a catalogue of properties of the functions $L'_\alpha$:
+
+\begin{Coqsrc}
+Section Abstract_Properties.
+ Variable alpha : E0.
+
+ Theorem H'_alpha_mono : strict_mono (H'_ alpha).
+
+ Theorem H'_alpha_gt : alpha <> Zero ->
+        forall n, n < H'_ alpha n.
+
+ Theorem H'_alpha_Succ_le :
+        H'_ alpha <<= H'_ (Succ alpha).
+  
+ Theorem H'_alpha_dom :
+    dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
+
+ Theorem H'_restricted_mono_l :
+    forall beta n, Canon_plus n alpha beta -> 
+                                 H'_ beta n <= H'_ alpha n.
+
+  Lemma H'_alpha_ge_id : id <<= H'_ alpha.
+
+  Lemma H'_alpha_mono_weak : forall k l, k <= l ->
+                                        H'_ alpha k <= H'_ alpha l.
+  
+End Abstract_Properties.
+\end{Coqsrc}
+
+Using a few lemmas \emph{à la} Ketonen-Solovay, we prove that
+if $\alpha<\beta$, then $H'_\beta$ eventually dominates
+$H'_\alpha$.
+We let the reader look at its proof (Section \texttt{Proof\_of\_H'\_mono\_l} of \href{../theories/html/hydras.Epsilon0.Hprime.html\#H_}{Epsilon0.Hprime}).
+
+\noindent
+\begin{Coqsrc}
+  H'_dom : forall alpha beta : E0, alpha o< beta ->
+  dominates_strong (H'_ beta) (H'_ alpha).
 \end{Coqsrc}
 
 
@@ -8280,6 +8319,28 @@ This proof uses properties of the Ackermann function, and the $H'_\alpha$, $F_\a
 % \end{Coqsrc}
 
 
+
+%------------------------------------------------------
+\section{A certified catalogue of rapidly growing functions}
+
+In this section, we try to present an abstract of the properties of the main variants of fast-growing hierarchies of functions
+we fauund in the litterature or we had to define as helpers in our proofs.
+
+
+\subsection{Ketonen-Solovay's \texttt{F\_alpha}}
+
+  This hierarchy is presented p.280 of~\cite{KS81} as `` a trivial variant of one introduced by Wainer ''.
+  Let us recall the equations shown in Sect.~\vref{F_equations}.
+  
+\begin{itemize}
+\item $F_0(i)=i+1$
+\item $F_{\beta+1}(i)= (F_\beta)^{(i+1)}(i)$, where $f^{(i)}$ is the $i$-th iterate of $f$.
+\item $F_\alpha(i) = F_{\canonseq{\alpha}{i}} (i)$ if $\alpha$ is a limit ordinal.
+\end{itemize}
+
+Note that \cite{KS81} defines also $F_{\epsilon_0}$ (by the third equation). Since $\epsilon_0$ is not representable in type \texttt{E0}, our translation in \coq{} does not take $F_{\epsilon_0}$ into account.
+
+Several properties of $F_\alpha$ are already presented in Sect.~\ref{F_equations}.
 
 
 
