@@ -678,6 +678,8 @@ Section Compatibility_F_dominates.
   
 End Compatibility_F_dominates.
 
+About F_mono_l.
+
 
 (** * Comparison with the Hardy hierarchy 
        

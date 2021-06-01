@@ -54,9 +54,9 @@ Definition strict_mono1 f := forall n p,  0 < n < p -> f n < f p.
 
 Definition dominates_from n g f  := forall p, n <= p -> f p < g p.
 
-Definition dominates_strong g f  := {i : nat | dominates_from i g f}.
+Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
 
-Definition dominates g f := exists i : nat, dominates_from i g f .
+Definition dominates g f := exists n : nat, dominates_from n g f .
 
 Definition fun_le f g  := forall n:nat,  f n <=  g n.
 
