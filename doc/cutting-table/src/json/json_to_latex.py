@@ -14,4 +14,4 @@ def json_to_latex(annotated_json: dict, path: Path) -> None:
     """
     with open(path, 'w') as file:
         for ltx in LATEX_GENERATOR.gen(annotated_json):
-            file.write(ltx)
+            file.write(str(ltx))

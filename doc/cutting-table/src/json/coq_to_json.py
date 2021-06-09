@@ -21,13 +21,19 @@ def _alectryon_wrapper_json(input_file: Path, output_file: Path) -> None:
               f"{R_FLAG}"
 
     parser = build_parser()
-    args = post_process_arguments(parser,
-                                  parser.parse_args(options.split()))
+    args = post_process_arguments(parser, parser.parse_args(options.split()))
 
     process_pipelines(args)
 
 
 def coq_to_json(output_dir: Path, coq_file_path: Path) -> Path:
+    """
+    convert coq '.v' file to 'io.json' file.
+
+    :param output_dir: output directory to make new directory with name of coq file
+    :param coq_file_path: coq file to convert
+    :return: path of json file
+    """
     name = coq_file_path.stem
     path_dir = output_dir / name
     path_dir.mkdir(exist_ok=True)

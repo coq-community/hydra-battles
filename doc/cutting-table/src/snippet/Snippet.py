@@ -1,6 +1,4 @@
-from pathlib import Path
 from typing import Dict, Optional, Tuple
-from ..json import get_annotate_json
 from alectryon.core import Text
 import re
 
@@ -21,8 +19,8 @@ class Snippet:
     END_STATE = "end"
     PATTERN = re.compile(rf"\(\*\s*({BEGIN_STATE}|{END_STATE})\s+snippet\s+(\w+)\s*\*\)")
 
-    def __init__(self, json_path: Path):
-        self.annotate = get_annotate_json(json_path)
+    def __init__(self, annotate_json):
+        self.annotate = annotate_json
         self.next = None
         self.__in_process = {}
         self.__finish = None
@@ -34,7 +32,9 @@ class Snippet:
         if self.__finish is not None:
             return
         self.__finish = {}
-        for elm in self.annotate:
+        print(self.annotate)
+
+        for elm in self.annotate[0]: # FIXME an recursive approch can fix this problem / But check how json to latex work (and do testing)
             self.__update(elm)
 
         snippet_not_close = list(self.__in_process.keys())
@@ -48,16 +48,17 @@ class Snippet:
 
         :param element: element to add
         """
-        print(element, type)
         if isinstance(element, Text):
-            self.__update_with_text(element.content)
+            self.__update_with_text(element)
             return
-        for key in self.__in_process.keys():
-            self.__in_process[key].append(element)
+
+        else:
+            for key in self.__in_process.keys():
+                self.__in_process[key].append(element)
+
 
     def __update_with_text(self, text: Text):
         dict_match, string = self.list_pattern(text.contents)
-
         names_already_update = set()
         for name, (begin, end) in dict_match.items():
             if (name in list(self.__finish)) or (begin is not None and name in list(self.__in_process)):
@@ -66,11 +67,14 @@ class Snippet:
                 raise SnippetAlreadyCloseException(name)
             elif begin is None and end is not None and not name in list(self.__in_process):
                 raise SnippetNotExistException(name)
+            elif begin is not None:
+                self.__in_process[name] = []
 
             start_i = (begin, 0)[begin is None]
             end_i = (end, -1)[end is None]
 
-            self.__in_process[name].append(Text(string[start_i:end_i]))
+            text = Text(string[start_i:end_i])
+            self.__in_process[name].append(text)
 
             if end is not None:
                 self.__finish[name] = self.__in_process.pop(name)
@@ -93,11 +97,10 @@ class Snippet:
         """
 
         dict_name = {}
-        while (match := Snippet.PATTERN.search(string)) is None:
+        while (match := Snippet.PATTERN.search(string)) is not None:
             state, name = match.groups()
             index_start = match.start()
             string = string[:match.start()] + string[match.end():]
-
             if state == Snippet.BEGIN_STATE:
                 if name in list(dict_name.keys()):
                     raise SnippetAlreadyExistException(name)
@@ -108,7 +111,7 @@ class Snippet:
                 if index_end is not None:
                     raise SnippetAlreadyExistException(name)
 
-                dict_name[name] = (index_begin, None)
+                dict_name[name] = (index_begin, index_start)
 
         return dict_name, string
 
