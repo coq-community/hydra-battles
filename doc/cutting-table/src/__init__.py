@@ -1,5 +1,5 @@
-from .cli import parse_arg
+from .cli import parse_args
 
 __all__ = [
-    "parse_arg"
+    "parse_args"
 ]
