@@ -1,35 +1,24 @@
 from pathlib import Path
 
+from alectryon.cli import build_parser, \
+    post_process_arguments, \
+    process_pipelines
+
 COQ_EXTENSION = ".v"
 JSON_EXTENSION = ".io.json"
 
-
-def get_annotate_json(json_path: Path) -> dict:
-    """
-    get annotate json with alectryon
-
-    :param json_path: path of json file to read
-    :return: json annotate json
-    """
-    from alectryon.json import annotated_of_json
-    import json
-
-    with open(json_path, "r") as read_file:
-        return annotated_of_json(json.load(read_file, strict=False))
+R_FLAG = "-R ../../theories/ordinals hydras"  # FIXME
 
 
-def _alectryon_wrapper_json(input_file: Path, output_file: Path):
+def _alectryon_wrapper_json(input_file: Path, output_file: Path) -> None:
     """
     call alectryon script
 
     :param output_file: output file name
-    :return:
     """
-    from alectryon.cli import build_parser, \
-        post_process_arguments, \
-        process_pipelines
 
-    options = f"{input_file} --frontend coq --backend json -o {output_file}"
+    options = f"{input_file} --frontend coq --backend json -o {output_file} " \
+              f"{R_FLAG}"
 
     parser = build_parser()
     args = post_process_arguments(parser,
