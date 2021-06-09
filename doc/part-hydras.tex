@@ -4564,6 +4564,17 @@ $i+\alpha=\alpha$.
 \url{../exercises/ordinals/ge_omega_iff.v}.}
 \end{exercise}
 
+\index{hydras}{Exercises} 
+\begin{exercise}
+  Prove that that the ordinal addition on \texttt{E0} is associative.
+
+  \textbf{Warning:}  Please do not import theorems from
+  \texttt{ordinals/Schutte/}, since that library uses axioms!
+\end{exercise}
+
+
+
+
 \section{Well-foundedness and transfinite induction}
 
 \index{maths}{Transfinite induction}
@@ -4842,12 +4853,17 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
 \index{hydras}{Projects}
 \begin{project}
 The class \texttt{ON} of ordinal notations has been defined long after this 
-chapter, and is not used yet in the development of the type \texttt{E0}. 
+chapter, and is not used in the development of the type \texttt{E0} yet.
 A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
 
 \end{project}
 
+\index{hydras}{Projects}
+\begin{project}
+  Prove that ordinal multiplication is left-distributive over ordinal addition; that is:
+  $$\forall \alpha \, \beta \, \gamma < \epsilon_0, \alpha\times(\beta+\gamma) = \alpha\times\beta+ \alpha\times \gamma$$
 
+\end{project}
 \section{A Variant for hydra battles}
 
 In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
