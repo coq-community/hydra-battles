@@ -14,5 +14,5 @@ if __name__ == '__main__':
         snippets = Snippet(annotate_json).snippets
         for name, annotate_json in snippets.items():
             path = directory / (name + LATEX_EXTENSION)
-            json_to_latex([annotate_json], path)
+            json_to_latex(annotate_json, path)
             print(f"create latex file: {path}")

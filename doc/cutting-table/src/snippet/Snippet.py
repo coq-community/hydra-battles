@@ -32,7 +32,6 @@ class Snippet:
         if self.__finish is not None:
             return
         self.__finish = {}
-        print(self.annotate)
 
         for elm in self.annotate[0]: # FIXME an recursive approch can fix this problem / But check how json to latex work (and do testing)
             self.__update(elm)
@@ -77,7 +76,7 @@ class Snippet:
             self.__in_process[name].append(text)
 
             if end is not None:
-                self.__finish[name] = self.__in_process.pop(name)
+                self.__finish[name] = [self.__in_process.pop(name)]
             else:  # construct list of name already have snippet
                 names_already_update.add(name)
 

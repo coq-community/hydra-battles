@@ -20,6 +20,7 @@ def _alectryon_wrapper_json(input_file: Path, output_file: Path) -> None:
     options = f"{input_file} --frontend coq --backend json -o {output_file} " \
               f"{R_FLAG}"
 
+    print(f"alectryon {options}")
     parser = build_parser()
     args = post_process_arguments(parser, parser.parse_args(options.split()))
 

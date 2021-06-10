@@ -71,7 +71,6 @@ Module Alt.
   
 End Alt.
 
-(* end snippet AckDefinition *)
 
 (*| 
 
@@ -116,11 +115,16 @@ Lemma lt_wf_ind :
   forall n (P:nat -> Prop),
     (forall n, (forall m, m < n -> P m) -> P n) ->
     P n.
-Proof. intro p; intros; elim (lt_wf p); auto with arith. Defined.
+Proof. 
+  (* begin snippet inside_lt_wf *)
+intro p; intros; elim (lt_wf p); auto with arith. 
+  (* end snippet inside_lt_wf *)
+Defined.
 
 (* This is defined in stdlib, but unfortunately it is opaque too *)
 
 
+(* end snippet AckDefinition *)
 
 Lemma lt_wf_double_ind :
   forall P:nat -> nat -> Prop,
