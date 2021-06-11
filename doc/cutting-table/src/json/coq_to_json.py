@@ -8,6 +8,8 @@ COQ_EXTENSION = ".v"
 JSON_EXTENSION = ".io.json"
 
 R_FLAG = "-R ../../theories/ordinals hydras"  # FIXME
+FRONTEND = "coq"
+BACKEND = "json"
 
 
 def _alectryon_wrapper_json(input_file: Path, output_file: Path) -> None:
@@ -17,8 +19,8 @@ def _alectryon_wrapper_json(input_file: Path, output_file: Path) -> None:
     :param output_file: output file name
     """
 
-    options = f"{input_file} --frontend coq --backend json -o {output_file} " \
-              f"{R_FLAG}"
+    options = f"{input_file} --frontend {FRONTEND} --backend {BACKEND} " \
+              f"-o {output_file} {R_FLAG}"
 
     print(f"alectryon {options}")
     parser = build_parser()
