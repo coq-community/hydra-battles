@@ -33,11 +33,10 @@ class Snippet:
             return
         self.__finish = {}
 
-        for elm in self.annotate[0]: # FIXME an recursive approch can fix this problem / But check how json to latex work (and do testing)
+        for elm in sum(self.annotate, []):  # flatten list
             self.__update(elm)
 
-        snippet_not_close = list(self.__in_process.keys())
-        if snippet_not_close:
+        if snippet_not_close := list(self.__in_process.keys()):
             raise SnippetNotEndException(snippet_not_close)
 
     def __update(self, element) -> None:
@@ -54,7 +53,6 @@ class Snippet:
         else:
             for key in self.__in_process.keys():
                 self.__in_process[key].append(element)
-
 
     def __update_with_text(self, text: Text):
         dict_match, string = self.list_pattern(text.contents)
