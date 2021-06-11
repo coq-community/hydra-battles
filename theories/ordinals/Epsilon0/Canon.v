@@ -40,6 +40,38 @@ Fixpoint canonS alpha (i:nat) : T1 :=
   | ocons alpha n beta => ocons alpha n (canonS beta i)
   end.
 
+(** essai *)
+
+Fixpoint canon0 alpha  : T1 :=
+  match alpha with
+    (* 0 *) zero => zero
+  | (* 1 *) ocons zero 0 zero => zero
+  | (* S (S k)) *) ocons zero (S k) zero => FS k
+  | (* omega ^ gamma *)
+    ocons gamma 0 zero =>
+    match T1.pred gamma with
+      (* gamma = succ gamma' *)
+      Some gamma' => zero   
+    | (* gamma is a limit *)
+      None => ocons (canon0 gamma) 0 zero
+    end
+  |  (* omega ^ gamma * (S (S n)) *)
+     ocons gamma (S n) zero =>
+     match T1.pred gamma with
+        (* gamma = succ gamma' *)
+       Some gamma' => ocons gamma n zero
+        (* gamma is a limit *)                    
+     | None => ocons gamma n (ocons (canon0 gamma) 0 zero)
+     end
+  | ocons alpha n beta => ocons alpha n (canon0 beta)
+  end.
+
+Compute canon0 (phi0 omega).
+
+Compute canon0 (phi0 10).
+
+Compute canon0 (phi0 10 * 2)%t1.
+
 
 (** Computes {alpha}(i) for i >= 1 *)
 

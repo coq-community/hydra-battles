@@ -240,6 +240,8 @@ Fixpoint plus (alpha beta : T1) :T1 :=
 where "alpha + beta" := (plus alpha beta) : t1_scope.
 
 
+
+
 (** *** multiplication *)
 
 Fixpoint mult (alpha beta : T1) :T1 :=
@@ -3932,4 +3934,7 @@ Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
 Compute pp (3 * (omega + 5)).
 
 Compute pp (3 * (omega * 7 + 15)).
+
+
+
 
