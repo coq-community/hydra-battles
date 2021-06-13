@@ -1876,8 +1876,8 @@ Qed.
 Lemma plus_ocons_ocons_rw2 : forall a n b n' b', 
     nf (ocons a n b) ->
     nf (ocons a n' b') ->
-    plus (ocons a n b) (ocons a n' b')= 
-    ocons a (S (n + n') ) b'.  
+    ocons a n b + ocons a n' b' = 
+    ocons a (S (n + n')) b'.  
 Proof.
   cbn; destruct a.
   - intros n b n' b' H H0; now rewrite (nf_of_finite H0).
