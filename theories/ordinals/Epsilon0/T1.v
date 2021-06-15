@@ -62,7 +62,7 @@ Notation "'omega'" := (ocons (ocons zero 0 zero) 0 zero) : t1_scope.
 (** The [(S n)]-th ordinal 
  *)
 
-Notation "'FS' n" := (ocons zero n zero) (at level 10) : t1_scope.
+Notation FS n := (ocons zero n zero).
 
 (** the [n]-th ordinal 
  *)
