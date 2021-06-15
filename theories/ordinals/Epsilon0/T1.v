@@ -134,12 +134,12 @@ Fixpoint compare (alpha beta:T1):comparison :=
   | _   , zero => Gt
   | (ocons a n b),(ocons a' n' b') =>
       (match compare a a' with 
-          | Lt => Lt
-          | Gt => Gt
-          | Eq => (match Nat.compare n n' with
-                   | Eq => compare b b'
-                   | comp => comp
-                   end)
+       | Lt => Lt
+       | Gt => Gt
+       | Eq => (match Nat.compare n n' with
+                | Eq => compare b b'
+                | comp => comp
+                end)
        end)
   end.
 
