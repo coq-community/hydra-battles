@@ -136,11 +136,10 @@ Fixpoint compare (alpha beta:T1):comparison :=
       (match compare a a' with 
           | Lt => Lt
           | Gt => Gt
-          | Eq => (match lt_eq_lt_dec n n'
+          | Eq => (match Nat.compare n n'
                    with
-                       inleft  (left _) => Lt
-                     | inright _ => Gt
-                     |   _ => compare b b'
+                   | Eq => compare b b'
+                   | comp => comp
                    end)
        end)
   end.
@@ -324,11 +323,8 @@ where "alpha ^ beta " := (exp alpha beta) : t1_scope.
 Lemma compare_refl : forall alpha, compare alpha alpha =  Eq.
 Proof.
  induction alpha; cbn; auto.
- rewrite IHalpha1, IHalpha2; destruct (Compare_dec.lt_eq_lt_dec n n)
-  as [[H | _] | H].
- -  destruct (Lt.lt_irrefl _ H).
- - reflexivity.
- - destruct (Lt.lt_irrefl _ H).
+ rewrite IHalpha1, IHalpha2.
+ now rewrite Nat.compare_refl.
 Qed.
 
 Lemma compare_of_phi0 alpha beta:
@@ -353,12 +349,9 @@ Qed.
 Lemma coeff_lt : forall alpha n n' beta beta',
                 (n < n')%nat -> 
                 lt (ocons alpha n beta)  (ocons alpha n' beta').
-Proof. 
+Proof.
   unfold lt, lt_b ;  intros;  cbn;   rewrite compare_refl.
-  destruct (lt_eq_lt_dec n n').
-   - destruct s;  auto.
-     + subst; elimtype False; abstract lia. 
-   - destruct (Nat.lt_irrefl n). abstract lia.   
+  now apply Nat.compare_lt_iff in H as ->.
 Qed. 
 
 Lemma tail_lt : forall alpha n beta beta',
@@ -366,9 +359,7 @@ Lemma tail_lt : forall alpha n beta beta',
                lt (ocons alpha n beta)  (ocons alpha n beta').
 Proof.
  intros; unfold lt, lt_b; cbn; rewrite compare_refl.
-  destruct (lt_eq_lt_dec n n).
-  - destruct s; auto. 
-  - elimtype False; abstract lia. 
+ now rewrite Nat.compare_refl.
 Qed. 
 
 Global Hint Resolve zero_lt head_lt coeff_lt tail_lt  : T1.
@@ -525,78 +516,34 @@ Qed.
 
 Lemma compare_rev : forall alpha beta, compare beta alpha =
                                        CompOpp (compare alpha beta).
-Proof with auto.
-  induction alpha; destruct beta; cbn; auto.
-  rewrite IHalpha1; destruct  (compare alpha1 beta1).
-  - destruct (lt_eq_lt_dec n n0).
-   +  destruct s.
-     *  destruct (lt_eq_lt_dec n0 n). 
-        destruct s. 
-        elimtype False; abstract lia.
-        subst; elimtype False; abstract lia.
-        reflexivity. 
-      *  destruct (lt_eq_lt_dec n0 n). 
-        destruct s.
-        subst;  elimtype False; abstract lia.
-        rewrite IHalpha2; simpl CompOpp; reflexivity. 
-        subst;  elimtype False; abstract lia.
-   +  destruct (lt_eq_lt_dec n0 n). 
-    *   destruct s.
-        reflexivity. 
-        subst;  elimtype False; abstract lia.
-    * elimtype False; abstract lia.
-  - now simpl CompOpp.
-  -  reflexivity. 
+Proof.
+  induction alpha, beta.
+  1-3: easy.
+  simpl.
+  rewrite IHalpha1, Nat.compare_antisym.
+  destruct (compare alpha1 beta1).
+  2-3: easy.
+  now destruct (n ?= n0) eqn:?; simpl.
 Qed.
 
 (* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
 
 Lemma compare_reflect : forall alpha beta,
     match compare alpha beta with
-    |   Lt => lt alpha  beta
-    |   Eq => alpha = beta
-    |   Gt => lt beta  alpha
+    | Lt => lt alpha beta
+    | Eq => alpha = beta
+    | Gt => lt beta alpha
     end.
 Proof.
-  unfold lt, lt_b; induction alpha.
-  - destruct beta; cbn.
-    + trivial.
-    + now red.
-  - destruct beta; cbn.
-    + now red.
-    + case_eq (compare alpha1 beta1).
-      intro H.
-      destruct (lt_eq_lt_dec n n0).
-      destruct s.
-      now red.
-      case_eq (compare alpha2 beta2).
-      intro.
-      subst n.
-      specialize (IHalpha1 beta1); rewrite H in IHalpha1. subst beta1.
-      specialize (IHalpha2 beta2); rewrite H0 in IHalpha2. now subst beta2.
-      intro; now red.
-      intro H0; subst n0.  specialize (IHalpha1 beta1); rewrite H in IHalpha1.
-      rewrite compare_rev, H.   cbn.
-      destruct (lt_eq_lt_dec n n).
-      destruct s.
-      elimtype False; abstract lia.
-      rewrite compare_rev, H0.
-      cbn; now red.
-      elimtype False; abstract lia.
-      rewrite compare_rev, H.   cbn.
-      destruct (lt_eq_lt_dec n n).
-      destruct s.
-      elimtype False; abstract lia.
-      destruct (lt_eq_lt_dec n0 n).
-      destruct s. 
-      now red.
-      subst n0; elimtype False; abstract lia.
-      elimtype False; abstract lia.
-      elimtype False; abstract lia.
-      intro; now red.
-      intro H.
-      rewrite compare_rev, H.
-      cbn; now red. 
+  unfold lt, lt_b; induction alpha, beta.
+  1-3: easy.
+  simpl.
+  specialize (IHalpha1 beta1).
+  specialize (IHalpha2 beta2).
+  rewrite compare_rev with alpha1 beta1, compare_rev with alpha2 beta2, Nat.compare_antisym in *.
+  destruct (compare alpha1 beta1), (compare alpha2 beta2), (n0 ?= n) eqn:Heq; simpl in *; subst.
+  2-27: easy.
+  now apply Nat.compare_eq_iff in Heq as ->.
 Qed.
 
 Lemma compare_correct  (alpha beta : T1) :
@@ -607,7 +554,8 @@ Proof.
   destruct (compare alpha beta); now constructor.
 Qed.
 
-   
+(** ** Properties of [compare]: first part *)
+
 Lemma eq_b_iff (alpha beta : T1) :
   eq_b alpha beta = true <-> alpha = beta.
 Proof.
@@ -616,6 +564,25 @@ Proof.
     specialize (compare_reflect alpha beta).
     case (compare alpha beta);auto; try discriminate.
   - intro;subst;unfold eq_b; now rewrite compare_refl.
+Qed.
+
+Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
+Proof.
+  intros * H.
+  pose proof (compare_reflect a b).
+  now rewrite H in *; simpl.
+Qed.
+
+Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
+Proof.
+  split; intro H; [ now apply compare_Eq_impl|subst; apply compare_refl].
+Qed.
+
+Lemma compare_Lt_impl a b :  compare a b = Lt -> lt a b.
+Proof.
+  intros * H.
+  pose proof (compare_reflect a b).
+  now rewrite H in *; simpl.
 Qed.
 
 (** ** On [lt] and [le] *)
@@ -637,27 +604,24 @@ Global Hint Resolve not_lt_zero : T1.
      lt_cases a b n a' b' n'. 
  Proof. unfold lt, lt_b.
         intros; simpl in H.
-        case_eq (compare a a').
-        intro Ha; rewrite Ha in *.
-        replace a' with a.
-        destruct  (lt_eq_lt_dec n n'). 
-        destruct s. 
-        constructor 2. reflexivity. auto. 
-        case_eq  (compare b b'); auto.
-        intro H0. rewrite H0 in H. discriminate. 
-        intro; constructor 3. reflexivity. 
-        auto.
-        rewrite H0 in H.
-        red. unfold lt_b;auto. 
-        now rewrite H0. 
-        intro H0; rewrite H0 in H. discriminate.  discriminate. 
-        generalize (compare_reflect a a'); now rewrite Ha.
-        intro H0; rewrite H0 in H.
-        constructor 1.
-        red. unfold lt_b;auto.
-        rewrite H0;auto.
-        intro H0; rewrite H0 in H.
-        discriminate.
+        destruct (compare a a') eqn:Ha.
+        - apply compare_eq_iff in Ha as ->.
+          destruct (n ?= n') eqn:?.
+          + destruct (compare b b') eqn:?.
+            1,3: easy.
+            constructor 3.
+            * easy.
+            * now apply Nat.compare_eq_iff.
+            * now apply compare_Lt_impl.
+          + constructor 2.
+            * easy.
+            * now apply Nat.compare_lt_iff.
+          + constructor 2.
+            * easy.
+            * now apply Nat.compare_lt_iff.
+        - constructor 1.
+          now apply compare_Lt_impl.
+        - easy.
  Defined.
 
   Theorem lt_inv : forall a n b a' n' b', 
@@ -758,8 +722,13 @@ Qed.
 Lemma finite_ltR :
   forall n p : nat, lt (FS n) (FS p) -> (n < p)%nat.
 Proof.
-  intros; simpl in H. unfold lt, lt_b in H; cbn in H;
-   destruct (lt_eq_lt_dec n p) as [[H0 | H0] | H0]; auto; discriminate.
+  intros; simpl in H. unfold lt, lt_b in H.
+  destruct (compare _ _) eqn:?.
+  1,3: easy.
+  simpl in *.
+  destruct (n ?= p) eqn:?.
+  1,3: easy.
+  now apply Nat.compare_lt_iff.
 Qed.
 
 Lemma le_refl (alpha : T1) : le alpha alpha.
@@ -1144,18 +1113,7 @@ Proof.
         * apply IHa2; eapply nf_inv2;eauto.
 Defined.
 
-(** ** Properties of [compare] *)
-
-Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
-Proof.
-  intros; generalize (compare_reflect a b); rewrite H;auto.
-Qed.
-
-Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
-Proof. 
-  split; intro H; [ now apply compare_Eq_impl|subst; apply compare_refl].
-Qed.
-
+(** ** Properties of [compare]: second part *)
 
 Lemma compare_Lt_eq : forall a b, lt a  b -> compare a b = Lt.
 Proof.
@@ -1191,21 +1149,17 @@ Qed.
 Lemma lt_iff : forall alpha beta,
     compare alpha beta = Lt <-> lt alpha  beta.
 Proof.
-  intros a b ; rewrite <- compare_reflectR.
-  destruct (lt_eq_lt_dec a b) as [[H1 | H2] | H3]; split; auto;
-    try discriminate.
-  - subst b; intro H; destruct (lt_irrefl H).
-  - intro H4; destruct (@lt_irrefl a); now apply lt_trans with b.
+  split.
+  - apply compare_Lt_impl.
+  - apply compare_Lt_eq.
 Qed.
 
 Lemma gt_iff : forall alpha beta,
     compare alpha beta = Gt <-> lt beta  alpha.
 Proof.
-  intros a b ; rewrite <- compare_reflectR.
-  destruct (lt_eq_lt_dec a b) as [[H1 | H2] | H3]; split; auto;
-    try discriminate.
-  - intro H4; destruct (@lt_irrefl a); now apply lt_trans with b.
-  -  subst b; intro H; destruct (lt_irrefl H).
+  intros.
+  rewrite compare_rev, <- lt_iff.
+  now destruct (compare _ _).
 Qed.
 
 (** ** Properties of [max] *)
@@ -2668,12 +2622,9 @@ Proof.
     +  assert (H0 :alpha2 = zero).
        { eapply nf_of_finite; eauto. }
        subst;  rewrite plus_compat; f_equal;  ring.
-    +  simpl; rewrite compare_refl.
-       destruct (Compare_dec.lt_eq_lt_dec n1 n1).
-       * destruct s.
-         --  abstract lia.
-         --  rewrite compare_refl;  f_equal;  ring.
-       *  abstract lia.
+    +  simpl; rewrite !compare_refl, Nat.compare_refl.
+       f_equal.
+       lia.
 Qed.
 
 
