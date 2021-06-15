@@ -34,10 +34,13 @@ Coercion is_true: bool >-> Sortclass.
 
  *)
 
-(* **  A type of terms (not necessarily in normal form)
+(**  **  A type of terms (not necessarily in normal form)
 
 [ocons a n b]  is intended to represent
-  the ordinal  omega^a * (S n)  + b 
+  the ordinal  [omega^a * (S n)  + b]
+
+Note that [T1] contains terms which are not in Cantor normal  form.
+This issue is solved later which the help of the predicate [nf]
 
 *)
   
@@ -165,9 +168,7 @@ Example Ex0:
             (ocons (phi0 10) 33
                    (ocons (phi0 9) 63 zero)))
      (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
-Proof.
-  reflexivity. 
-Qed.
+Proof. reflexivity. Qed.
 
 Definition le (alpha beta :T1) :=
   match compare alpha beta with
@@ -251,7 +252,7 @@ Fixpoint mult (alpha beta : T1) :T1 :=
  |  ocons zero n _, ocons zero n' _ => 
                  ocons zero (Peano.pred((S n) * (S n'))) zero
  |  ocons a n b, ocons zero n' _ =>  
-                 ocons a (Peano.pred((S n) * (S n'))) b
+                 ocons a (Peano.pred ((S n) * (S n'))) b
  |  ocons a n b, ocons a' n' b' =>
      ocons (a + a') n' ((ocons a n b) * b')
  end
@@ -494,10 +495,10 @@ Ltac decomp_exhib H a n b e:=
 
 
 Lemma nf_FS : forall n:nat, nf (FS n). 
-Proof.    auto with T1. Defined.
+Proof. auto with T1. Qed.
 
 Lemma nf_fin : forall n:nat, nf (fin n). 
-Proof.    destruct n; auto with T1. Defined.
+Proof. destruct n; auto with T1.  Qed.
 
 (** ** Successors, limits and zero *)
 
@@ -548,6 +549,7 @@ Proof with auto.
   -  reflexivity. 
 Qed.
 
+(* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
 
 Lemma compare_reflect : forall alpha beta,
     match compare alpha beta with
@@ -1572,45 +1574,13 @@ Module Direct_proof.
           inversion 1.
           destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
         -  split; intros delta Hdelta. 
-           
-      (*
-     1 subgoal (ID 560)
-  
-  beta : T1
-  n : nat
-  gamma : T1
-  IHbeta : nf beta -> Acc LT beta
-  IHgamma : nf gamma -> Acc LT gamma
-  H : nf (ocons beta n gamma)
-  delta : T1
-  H1 : nf delta
-  H2 : lt delta (ocons beta n gamma)
-  H3 : nf (ocons beta n gamma)
-  ============================
-  Acc LT delta
-       *)
-           
-      (*
-  a : T1
-  n : nat
-  b : T1
-  IHa : nf a -> Acc (restrict nf lt) a
-  IHb : nf b -> Acc (restrict nf lt) b
-  H : nf (ocons a n b)
-  y : T1
-  H1 : nf y
-  H2 : y < ocons a n b
-  H3 : nf (ocons a n b)
-=============================================
-   Acc (restrict nf lt) y
-       *)
       Abort.    
 
     End First_attempt.
 
     (* end hide *)
 
-    (** strong accessibility (inspired by Tait's proof) *)
+    (** *** Strong accessibility (inspired by Tait's proof) *)
     
     Let Acc_strong (alpha:T1) :=
       forall n beta, 
@@ -1636,23 +1606,26 @@ Module Direct_proof.
     Lemma Acc_implies_Acc_strong : forall alpha, 
         Acc LT  alpha -> Acc_strong alpha.
     Proof.
-      (**  main induction (on a's accessibility)   *)
+    
+      (*  main induction (on a's accessibility)   *)
+
+      
       unfold Acc_strong; intros alpha Aalpha; pattern alpha.
       eapply Acc_ind with (R:= LT);[| assumption].
       clear alpha Aalpha; intros alpha Aalpha IHalpha. 
 
-      (** for any n and b, such that (ocons a n b) is well formed,
-    b is accessible *)  
+      (*  for any n and b, such that (ocons a n b) is well formed,
+        b is accessible 
+     *)  
 
       assert(beta_Acc: 
                forall beta, nf_helper beta alpha -> nf alpha -> nf beta 
                             -> Acc LT beta).
       
-      (** Proof of beta_Acc
-
-   Since beta is  less than omega ^ alpha, 
-   beta  is of the form omega^alpha'*(p+1)+beta' where
-   LT alpha' alpha , so the inductive hypothesis IHalpha can be used 
+      (*  Proof of beta_Acc:
+          Since beta is  less than omega ^ alpha, 
+          beta  is of the form omega^alpha'*(p+1)+beta' where
+          LT alpha' alpha, so the inductive hypothesis IHalpha can be used 
        *)
       {  intros b H H' H'';  assert (H0 : LT b (phi0 alpha)).
          { repeat split;auto; apply nf_helper_phi0; auto. }
@@ -1677,11 +1650,11 @@ Module Direct_proof.
               case H5;intros _ (_,H6);destruct (not_lt_zero H6).
       }
       
-      (** end of proof of beta_Acc *)
-      (** we can now use a nested induction on n (Peano induction)
+      (* end of proof of beta_Acc *)
+      (* we can now use a nested induction on n (Peano induction)
           then on b (well_founded induction using b_Acc) *)
       induction n.
-      -    (** n=0 let's use b's accessibility for doing an induction on b *)
+      -    (* n=0 : let's use b's accessibility for doing an induction on b *)
         intros b Hb; assert (H : Acc LT  b).
         {  apply beta_Acc.
            -  eapply nf_helper_intro; eauto.
@@ -1689,7 +1662,7 @@ Module Direct_proof.
            -  eapply nf_inv2;eauto.
         }
         
-        (** let's prove that every predecessor of (ocons a 0 b) 
+        (* let's prove that every predecessor of (ocons a 0 b) 
             is accessible *)
         { 
           pattern b;eapply Acc_ind;[|eexact H].
@@ -1700,7 +1673,7 @@ Module Direct_proof.
               intros (e,(e',r)); subst n c; auto.
         }
         
-      -  (**  induction step for (S n) *)
+      -  (*  induction step for (S n) *)
         { intros b H; generalize H; pattern b; eapply Acc_ind with (R:= LT).
           - split; intro y;pattern y; case y.
             intro;apply Acc_zero.
@@ -1737,7 +1710,7 @@ Module Direct_proof.
         }
     Qed.
 
-    (* A (last) structural induction *)
+    (** ***  A (last) structural induction *)
 
     Theorem nf_Acc : forall alpha, nf alpha -> Acc LT  alpha.
     Proof.
@@ -1787,13 +1760,14 @@ Import  Direct_proof.
 Ltac transfinite_induction_lt alpha :=
   pattern alpha; apply transfinite_recursor_lt.
 
-Ltac transfinite_induction a :=
-  pattern a; apply transfinite_recursor.
+Ltac transfinite_induction alpha :=
+  pattern alpha; apply transfinite_recursor.
 
 (** **  Properties of successor *)
 
+(* begin hide *)
 Lemma succ_nf_helper : forall c a n b, nf_helper c (ocons a n b) -> 
-                                     nf_helper (succ c) (ocons a n b).
+                                       nf_helper (succ c) (ocons a n b).
 Proof.
   induction c.
   -  simpl; repeat constructor.
@@ -1801,6 +1775,7 @@ Proof.
     +  repeat constructor.
     + intros t n0 t0 a n1 b H; inversion_clear H; constructor; auto.
 Qed.
+(* end hide *)
 
 Lemma succ_nf : forall alpha : T1 , nf alpha -> nf (succ alpha).
 Proof.
@@ -1816,23 +1791,20 @@ Qed.
 
 (** **  properties of addition *)
 
-Lemma plus_zero : forall a, zero + a  = a.
-Proof.  simpl; intro a; case a; auto. Qed.
+Lemma plus_zero alpha:  zero + alpha  = alpha.
+Proof.  simpl;  case alpha; auto. Qed.
 
-Lemma plus_a_zero : forall a,  a + zero = a.
+Lemma plus_zero_r alpha: alpha + zero = alpha.
 Proof.
-  intro a; case a;simpl.
-  -  trivial.
-  - intro a0; case a0; cbn; auto.
+   case alpha;now simpl.
 Qed.
 
 Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
 Proof.
-  induction alpha as [|a IHa n b IHb].
-  - reflexivity. 
-  - destruct  a.
-    + simpl; now rewrite <- plus_n_O.
-    + simpl; rewrite IHb; f_equal. 
+  induction alpha as [ |a IHa n b IHb]; [trivial |].
+  - destruct  a; cbn.
+    +  now rewrite <- plus_n_O.
+    +  rewrite IHb; f_equal. 
 Qed.
 
 Lemma succ_of_plus_finite :
@@ -1857,7 +1829,7 @@ Proof.
           reflexivity.
 Qed.
 
-(** **  plus and LT *)
+(** **  [plus] and [LT] *)
 
 
 Lemma plus_ocons_ocons_rw1 : forall a n b a' n' b', 
@@ -1910,7 +1882,7 @@ Proof.
     +  simpl;auto.
   -  intros c H0 n t H c0 H1 H2 H3 H4;  generalize c0 H2 H4.
      destruct c1.
-     + rewrite (plus_a_zero);auto.
+     + rewrite (plus_zero_r);auto.
      + intros H5 H6;  case (lt_eq_lt_dec c c1_1).
        *  destruct 1.
           { rewrite (plus_ocons_ocons_rw1 n t n0 c1_2 l); auto. }
@@ -1961,7 +1933,7 @@ Proof.
       *   apply nf_inv3 in H; auto. 
 Qed. 
 
-(** Technical lemma for proving plus_nf *)
+(** Technical lemma for proving [plus_nf] *)
 
 Lemma plus_nf0 : forall a, nf a -> forall b c, lt b  (phi0 a) ->
                                                lt c  (phi0 a) ->
@@ -1973,7 +1945,7 @@ Proof.
   destruct b; destruct c.
   -  simpl;constructor.
   -  simpl;auto with T1.
-  - intros;rewrite plus_a_zero; auto with T1.
+  - intros;rewrite plus_zero_r; auto with T1.
   -  intros; case (lt_eq_lt_dec b1 c1).
      +  destruct 1.
         *  rewrite plus_ocons_ocons_rw1; auto with T1. 
@@ -2043,7 +2015,7 @@ Proof.
   destruct alpha, beta.
   - now split.  
   - cbn;  discriminate 3.
-  -  intro;rewrite plus_a_zero.
+  -  intro;rewrite plus_zero_r.
      +  discriminate 2.
   -  simpl; case alpha1;case beta1.
      +  discriminate 3.
@@ -2780,7 +2752,7 @@ Lemma plus_smono_r (alpha:T1) :
       apply coeff_lt; abstract lia.
       * apply head_lt; now rewrite <- lt_iff.
       * apply tail_lt.
-        rewrite <- (plus_a_zero alpha2) at 1;  apply IHalpha2.
+        rewrite <- (plus_zero_r alpha2) at 1;  apply IHalpha2.
         apply zero_lt.
     + destruct (not_lt_zero H).
     + T1_inversion H.
@@ -2840,7 +2812,7 @@ Lemma LT_add (alpha beta : T1): nf alpha -> nf beta -> beta <> zero ->
                                 alpha t1< alpha + beta.
 Proof.
   intros H H0 H1.
-  rewrite <- (plus_a_zero ) at 1.
+  rewrite <- plus_zero_r at 1.
   apply plus_smono_LT_r; auto.
   apply not_zero_lt; auto.
 Qed.

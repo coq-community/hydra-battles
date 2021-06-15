@@ -2095,6 +2095,7 @@ From a mathematical point of view, an ordinal is a representant of an equivalenc
 For the computer scientist, ordinals are tools for proving the totality of a given recursive function, or termination of a transition system. \emph{Ordinal arithmetic} 
 provides a set of functions whose properties, like \emph{monotony}, allow to define \emph{variants}, \emph{i.e.} strictly decreasing measures used in proofs of termination.
 
+\vspace{4pt}
 
 Let us have a look at Figure~\ref{fig:ordinal-sequence}. It presents a few items of a  sequence of ordinal numbers, which extends the sequence of natural numbers. 
 
@@ -2194,7 +2195,7 @@ Two kinds of representation of ordinals are defined in our development.
 
 \begin{itemize}
 \item A ``mathematical'' representation of the set of countable ordinal numbers, afer Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
-\item A family of \emph{ordinal notations}, \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
+\item A family of \emph{ordinal notations} (also called \emph{[ordinal] notation systems}), \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
 correctness of a given ordinal notation with respect to Schütte's model obviously use axioms.
 Please execute the \texttt{Print Assumptions} command in case of doubt.
 \end{itemize}
@@ -2214,7 +2215,7 @@ It is interesting to compare proofs of a given property (for instance the associ
 \section{Ordinal Notations}
 
 
-Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as quite simple data types in \gallina. So, we will use \emph{ordinal notations} (also called \emph{[ordinal] notation systems}). 
+Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as quite simple data types in \gallina. 
 
 Let $\alpha$ be some (countable) ordinal; 
 in \coq{} terms, we call \emph{ordinal notation for $\alpha$} a structure composed 

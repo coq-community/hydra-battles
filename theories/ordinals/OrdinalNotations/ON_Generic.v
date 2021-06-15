@@ -18,6 +18,8 @@ Local Open Scope ON_scope.
 (**
   Ordinal notation system on type [A] :
 
+TODO: move [compare_correct] and associated lemmas to Prelude 
+
 *)
 
 Class ON {A:Type}(lt: relation A)

@@ -114,12 +114,12 @@ Proof.
   - intro k; ochange (alpha +  0)%e0 alpha.
     + now simpl.
     + rewrite Plus_rw; simpl; auto with T1.
-      now rewrite plus_a_zero.
+      now rewrite plus_zero_r.
   - intro k; ochange (alpha + (S i))%e0 (Succ (alpha + i))%e0.
     + rewrite H'_succ_eqn, IHi; f_equal; abstract lia.
     + repeat rewrite Plus_rw; simpl.
       destruct i; simpl.
-      *  rewrite plus_a_zero;  now rewrite succ_is_plus_one.
+      *  rewrite plus_zero_r;  now rewrite succ_is_plus_one.
       *   simpl; replace (FS i) with (fin (S i)).
           -- rewrite succ_of_plus_finite.
              ++ f_equal.
