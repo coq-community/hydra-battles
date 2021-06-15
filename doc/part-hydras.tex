@@ -4041,21 +4041,19 @@ contains three constructors:  \texttt{Lt} (less than), \texttt{Eq} (equal), and
 
 
 \begin{Coqsrc}
-Fixpoint compare (alpha alpha':T1):comparison :=
-  match alpha, alpha' with
+Fixpoint compare (alpha beta:T1):comparison :=
+  match alpha, beta with
     zero, zero => Eq
   | zero, ocons a' n' b' => Lt
   | _   , zero => Gt
   | (ocons a n b),(ocons a' n' b') =>
       (match compare a a' with 
-          | Lt => Lt
-          | Gt => Gt
-          | Eq => (match lt_eq_lt_dec n n'
-                   with
-                       inleft  (left _) => Lt
-                     | inright _ => Gt
-                     |   _ => compare b b'
-                   end)
+       | Lt => Lt
+       | Gt => Gt
+       | Eq => (match Nat.compare n n' with
+                | Eq => compare b b'
+                | comp => comp
+                end)
        end)
   end.
 \end{Coqsrc}
