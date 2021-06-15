@@ -136,8 +136,7 @@ Fixpoint compare (alpha beta:T1):comparison :=
       (match compare a a' with 
           | Lt => Lt
           | Gt => Gt
-          | Eq => (match Nat.compare n n'
-                   with
+          | Eq => (match Nat.compare n n' with
                    | Eq => compare b b'
                    | comp => comp
                    end)
@@ -158,7 +157,6 @@ Definition eq_b alpha beta := match compare alpha beta with
                                 Eq => true
                               | _ => false
                               end.
-                                            
 
 Definition lt alpha beta : Prop := lt_b alpha beta.
 
@@ -275,12 +273,11 @@ Fixpoint minus (alpha beta : T1) :T1 :=
       (match compare a a' with 
             | Lt => zero
             | Gt => ocons a n b
-            | Eq  => (match (lt_eq_lt_dec n n') with
-                            | inleft (left _) => zero
-                            | inright _ => (ocons a (Peano.pred (n-n')) b')
-                            | _ =>  b - b'
-                      end)
-
+            | Eq => (match Nat.compare n n' with
+                   | Lt => zero
+                   | Gt => (ocons a (Peano.pred (n - n')) b')
+                   | Eq => b - b'
+                   end)
        end)
  end
  where  "alpha - beta" := (minus alpha beta):t1_scope.
@@ -405,9 +402,6 @@ Proof.
   destruct (nf_b (ocons b1 n1 b2)); auto.
   destruct (nf_b (ocons a1 n a2)); auto.
 Qed.
-
-
-
 
 
 Lemma nf_inv3 : forall a n  a' n' b', nf (ocons a n (ocons a' n' b')) ->
@@ -634,7 +628,7 @@ Global Hint Resolve not_lt_zero : T1.
    - now left. 
    - right; left;auto. 
    -  right; right; auto. 
- Qed.      
+ Qed.
 
 
 Theorem lt_irrefl alpha: ~ lt alpha alpha.
@@ -932,7 +926,7 @@ Proof.
  induction alpha; destruct beta; auto with T1.
  case (IHalpha1 beta1);intros s.
  -  case s;intros; auto with T1.
-     subst beta1; case (Compare_dec.lt_eq_lt_dec n n0).
+     subst beta1. case (Compare_dec.lt_eq_lt_dec n n0).
   +  destruct 1.
      * auto with T1.
      * subst n;  case (IHalpha2 beta2); auto with T1.
@@ -2358,60 +2352,34 @@ Qed.
 
 Lemma minus_lt : forall a b, lt a  b -> a - b = zero.
 Proof.
-  induction a; destruct b.
-  - reflexivity. 
-  - reflexivity.
-  - intro H; destruct (not_lt_zero H).
-  - intro H; destruct (lt_inv H).
-    + cbn.
-      destruct a1.
-      * destruct b1.
-        destruct (not_lt_zero H0).
-        auto. 
-      * red in H0; unfold lt_b in H0; destruct (compare (ocons a1_1 n1 a1_2) b1).
-        discriminate.
-        auto. 
-        discriminate. 
-    +  destruct H0 as [[H0 H1] |[H0 [H1 H2]]].
-       cbn.   
-       subst b1.
-       destruct a1.
-       destruct (le_lt_dec n n0); auto. 
-       destruct (Lt.lt_irrefl n);eauto with arith.
-       rewrite compare_refl.
-       destruct (Compare_dec.lt_eq_lt_dec n n0).
-       destruct s; auto.
-       subst n0; destruct   (Lt.lt_irrefl n); auto. 
-       destruct (Lt.lt_irrefl n);eauto with arith.
-       cbn. 
-       destruct a1.
-       destruct b1.
-       destruct (le_lt_dec n n0); auto. 
-       subst n0; destruct (Lt.lt_irrefl n ); auto. 
-       auto. 
-       subst. 
-       rewrite compare_refl.
-       destruct (Compare_dec.lt_eq_lt_dec n0 n0); auto. 
-       destruct s. 
-       auto. 
-       auto. 
-       destruct (Lt.lt_irrefl n0 ); auto.
+  induction a, b.
+  1-3: easy.
+  - intro H;
+    destruct (lt_inv H) as [Hlt | [(Heq, Hlt) | (Heq0, (Heq1, Hlt))]]; 
+    subst; simpl.
+    + destruct a1.
+      * now destruct b1.
+      * unfold lt, lt_b in Hlt.
+        now destruct (compare _ _).
+    +  destruct b1.
+      2: simpl.
+      * destruct le_lt_dec; [easy | lia].
+      * rewrite !compare_refl, Nat.compare_refl.
+        now apply Nat.compare_lt_iff in Hlt as ->.
+    + destruct b1.
+      -- destruct le_lt_dec; [easy | lia].
+      -- rewrite compare_refl, Nat.compare_refl.
+         now apply IHa2.
 Qed.
 
 
 Lemma minus_a_a : forall a, a - a = zero.
 Proof.
-  induction a;simpl;auto.
-  -  case a1.
-     +  case (le_lt_dec n n).
-        * auto.
-        *  intros; absurd (n < n)%nat; auto with arith.
-     + case (Compare_dec.lt_eq_lt_dec n n ).
-       *  destruct s.
-          absurd (n < n)%nat;auto with arith.
-          intros;rewrite compare_refl.
-          rewrite IHa2;auto.
-       * intro; absurd (n<n)%nat;auto with arith.
+  induction a; simpl.
+  - easy.
+  - destruct a1.
+    * destruct le_lt_dec; [easy | lia].
+    * now rewrite compare_refl, Nat.compare_refl.
 Qed.
 
 Lemma minus_le : forall a b, le a b -> a - b = zero.
