@@ -193,7 +193,7 @@ Defined.
 
 Lemma alpha_plus_zero alpha : alpha + Zero = alpha.
 Proof.
-  apply E0_eq_intro; simpl; now rewrite plus_a_zero.
+  apply E0_eq_intro; simpl; now rewrite plus_zero_r.
 Qed.
 
 Hint Rewrite alpha_plus_zero : E0_rw.
