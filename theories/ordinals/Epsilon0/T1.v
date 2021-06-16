@@ -97,7 +97,7 @@ Fixpoint limitb alpha :=
 
 (** Exponential of base [omega] *)
 
-Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 10) : t1_scope.
+Notation phi0 alpha := (ocons alpha 0 zero). 
 
 
 (** multiples of [phi0 alpha]  *)
