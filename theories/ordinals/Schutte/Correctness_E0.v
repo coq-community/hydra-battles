@@ -71,7 +71,7 @@ Proof.
 Qed.
 
 Theorem inject_of_phi0 (alpha : T1):
-  inject (phi0 alpha) = AP._phi0 (inject alpha).
+  inject (T1.phi0 alpha) = AP._phi0 (inject alpha).
 Proof.
   simpl; now rewrite alpha_plus_zero.
 Qed.
@@ -183,7 +183,7 @@ Proof with eauto with T1.
 
          * apply T1.lt_trans with  (T1.ocons gamma1 n0 gamma2) ...
            apply T1.head_lt_ocons; auto.
-      +  apply lt_trans with (inject (phi0 beta1)). 
+      +  apply lt_trans with (inject (T1.phi0 beta1)). 
          *   eapply IHbeta2 ...
              apply T1.nf_helper_phi0.
              apply T1.nf_helper_intro with n; auto. 
@@ -198,7 +198,7 @@ Proof with eauto with T1.
            eauto with T1.
   -     decompose [or and] H3.
         subst;  apply coeff_lt. 
-        + replace  (AP._phi0 (inject gamma1)) with (inject (phi0 gamma1)).
+        + replace  (AP._phi0 (inject gamma1)) with (inject (T1.phi0 gamma1)).
           *  apply IHbeta2.
              apply T1.nf_helper_phi0.
              eapply T1.nf_helper_intro; eauto.
@@ -399,7 +399,7 @@ Proof with eauto with T1.
           repeat rewrite inject_rw.
           rewrite <- (case_Eq (inject alpha1) (inject alpha2)
                               (inject alpha1) (inject  beta2) n n0) ...
-          assert (H1 : (alpha2 t1< phi0  alpha1)%t1). {
+          assert (H1 : (alpha2 t1< T1.phi0  alpha1)%t1). {
             rewrite nf_LT_iff in H;  tauto. }
           rewrite <- inject_of_phi0.
           apply inject_mono ...
@@ -502,11 +502,11 @@ Proof.
       + destruct (IHalpha l).
         * split; trivial.
           eapply sorted_tail; eauto.
-        *   destruct H10 as [H10 H11];  exists (phi0 x0 + x1)%t1.
+        *   destruct H10 as [H10 H11];  exists (T1.phi0 x0 + x1)%t1.
             split.    
             -- apply plus_nf ; eauto with T1.
             -- simpl eval;  rewrite <- H11;  rewrite inject_plus; auto with T1.
-               simpl (inject (phi0 x0)); rewrite H9;  destruct H5.
+               simpl (inject (T1.phi0 x0)); rewrite H9;  destruct H5.
                rewrite <- H12;  rewrite alpha_plus_zero; auto.
   }
 Qed.
