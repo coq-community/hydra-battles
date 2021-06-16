@@ -40,7 +40,7 @@ Definition AP : Ensemble Ord :=
  *)
 
 Definition _phi0 := ord AP.
-Notation "'phi0'" := _phi0 : schutte_scope.
+Notation phi0 := _phi0.
 
 Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
 
