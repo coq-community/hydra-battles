@@ -66,7 +66,7 @@ Fixpoint canon0 alpha  : T1 :=
   | ocons alpha n beta => ocons alpha n (canon0 beta)
   end.
 
-Compute canon0 (phi0 omega).
+Compute canon0 (phi0 T1.omega).
 
 Compute canon0 (phi0 10).
 

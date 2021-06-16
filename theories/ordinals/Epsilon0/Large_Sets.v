@@ -49,7 +49,7 @@ Definition L_test (alpha:T1) f k :=
   gnaw alpha (interval k (f k - 2)%nat) = one.
 
 
-Compute L_test omega (fun i => S (2 * i))%nat 23.
+Compute L_test T1.omega (fun i => S (2 * i))%nat 23.
 
 
 (** ** Paths starting with a finite ordinal ([fin n])  *)
@@ -398,33 +398,34 @@ Proof.
 Qed.
 
 
-Lemma mlarge_omega k : mlarge omega (interval (S k) (2 * (S k))%nat).
+Lemma mlarge_omega k : mlarge T1.omega (interval (S k) (2 * (S k))%nat).
 Proof.
-  specialize (L_lim_ok omega nf_omega refl_equal L_fin (fun i => L_fin_ok (S i))).
+  specialize (L_lim_ok T1.omega nf_omega refl_equal L_fin
+                       (fun i => L_fin_ok (S i))).
   intros.
   inversion H; auto.
   unfold L_fin  in H1; specialize (H1 k).   simpl in H1. 
   now replace ( (2 * S k))%nat with   (k + S (S k))%nat by lia.
 Qed.
 
-Lemma L_omega_ok : L_spec omega L_omega.
+Lemma L_omega_ok : L_spec T1.omega L_omega.
 Proof.
-  specialize (L_lim_ok omega nf_omega refl_equal L_fin
+  specialize (L_lim_ok T1.omega nf_omega refl_equal L_fin
                        (fun i => L_fin_ok (S i))) ; intro H.
    eapply L_spec_compat with (1:=H).
    intro ; unfold L_lim,  L_fin, L_omega; abstract lia.
 Qed.
 
 Lemma path_to_omega_mult (i k:nat) :
-  path_to (omega * i)
+  path_to (T1.omega * i)
           (interval (S k) (2 * (S k))%nat)
-          (omega * (S i)).
+          (T1.omega * (S i)).
 Proof.
   destruct i.
   - simpl; apply mlarge_omega.
   -   path_decompose (S k).
       instantiate (1:=ocons one i (S k)). 
-      + simpl (omega * S i). replace (i + 0)%nat with i.
+      + simpl (T1.omega * S i). replace (i + 0)%nat with i.
         apply path_to_tail; auto with T1.
         *  assert (H := mlarge_FS k  (S k)). 
            replace (2 * S k)%nat with (S (k + S k))%nat by lia; auto.
@@ -437,7 +438,7 @@ Qed.
 
 
 Lemma omega_mult_mlarge_0 i  : forall k,
-    mlarge  (omega * (S i))
+    mlarge  (T1.omega * (S i))
             (interval (S k)
                       (Nat.pred (iterate (fun p =>  S (2 * p)%nat)
                                          (S i)
@@ -448,7 +449,7 @@ Proof.
       replace (S (k + S (k + 0)))%nat with (2 * S k)%nat by abstract lia; 
       apply mlarge_omega.
   - intro k;  path_decompose (2 * (S k))%nat.
-    + instantiate (1:= omega * S i).
+    + instantiate (1:= T1.omega * S i).
       * specialize (IHi (2 * S k)%nat); rewrite iterate_rw; auto.
     +   apply path_to_omega_mult.
     + clear IHi; induction i.
@@ -473,7 +474,7 @@ Qed.
 
 
 Lemma L_omega_mult_ok (i: nat) :
-  L_spec (omega * i) (L_omega_mult i).
+  L_spec (T1.omega * i) (L_omega_mult i).
 Proof.
  destruct i.
  - left;  intro k. reflexivity. 
@@ -549,12 +550,12 @@ Proof.
 Qed.
 
 
-Lemma L_omega_square_ok: L_spec (omega * omega) L_omega_square.
+Lemma L_omega_square_ok: L_spec (T1.omega * T1.omega) L_omega_square.
 Proof.
   right; [cbn; discriminate | ].
   intro k; rewrite L_omega_square_eqn1. 
   red; path_decompose (S k).
-  - instantiate (1 := omega * S k).
+  - instantiate (1 := T1.omega * S k).
     specialize (L_omega_mult_ok (S k)).
     inversion 1.
     apply (H1 (S k)).
@@ -998,7 +999,7 @@ Qed.
 (** omega-large intervals *)
 
 Lemma gnaw_omega_n_SSn :
-  forall n, gnaw omega (iota_from (S n) (S (S n))) = zero.
+  forall n, gnaw T1.omega (iota_from (S n) (S (S n))) = zero.
 Proof. 
   intro n;  destruct n.  
   -  reflexivity. 
@@ -1007,7 +1008,7 @@ Qed.
 
 
 Lemma gnaw_omega_1 (n:nat) :
-  gnaw omega (interval (S n) (S n + n)%nat) = 1.
+  gnaw T1.omega (interval (S n) (S n + n)%nat) = 1.
 Proof.
   unfold interval.
   replace (S (S n + n) - S n)%nat with (S n).
@@ -1020,17 +1021,17 @@ Proof.
 Qed.
 
 
-Example omega_ex1 : gnaw omega (interval 7 13) = 1.
+Example omega_ex1 : gnaw T1.omega (interval 7 13) = 1.
 reflexivity.
 Qed.
 
-Example omega_ex2 : gnaw omega (interval  1000 1999) = 1.
+Example omega_ex2 : gnaw T1.omega (interval  1000 1999) = 1.
 change 1999 with (1000 + 999)%nat; apply gnaw_omega_1.
 Qed.
 
 
 Lemma large_omega_1 : forall s n,  ~ In 0 (n::s) -> 
-                                     gnaw omega (n::s) = 0 ->
+                                     gnaw T1.omega (n::s) = 0 ->
                                      (n <= List.length s)%nat.
 Proof. 
   intros s n; destruct n.
@@ -1048,7 +1049,7 @@ Qed.
 
 Lemma large_omega_2 : forall s n,   ~In 0 (n::s) -> 
                                     (n <=  List.length s)%nat ->
-                                    gnaw omega (n::s)  = zero.
+                                    gnaw T1.omega (n::s)  = zero.
 Proof. 
   intros;  cbn;  destruct n.
   destruct H; now left.
@@ -1057,7 +1058,7 @@ Proof.
 Qed.
 
 Lemma large_omega_iff : forall s n,  ~ In 0 (n::s) ->
-                                     large omega (n::s) <->
+                                     large T1.omega (n::s) <->
                                      (n <= List.length s)%nat.
                                      
 Proof.

@@ -62,7 +62,7 @@ Proof.
 Qed.
 
 
-Theorem inject_of_omega : inject omega%t1 = Schutte_basics._omega.
+Theorem inject_of_omega : inject T1.omega = Schutte_basics._omega.
 Proof.
  simpl.
  repeat rewrite alpha_plus_zero.

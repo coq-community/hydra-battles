@@ -55,8 +55,8 @@ Inductive T1 : Set  :=
 (** Basic functions and predicates on [T1] 
 *)
 
-Notation "'one'" := (ocons zero 0 zero) : t1_scope. 
-Notation "'omega'" := (ocons (ocons zero 0 zero) 0 zero) : t1_scope.
+Notation one := (ocons zero 0 zero).
+Notation omega := (ocons (ocons zero 0 zero) 0 zero).
 
 
 (** The [(S n)]-th ordinal 
@@ -3734,7 +3734,7 @@ Fixpoint eval_pp (e : ppT1) : T1 :=
   | P_add e f => ( (eval_pp e) +  (eval_pp f))%t1
   | P_mult e n => ( (eval_pp e) * (S n))%t1
   | P_exp e f => ((eval_pp e) ^ (eval_pp f))%t1
-  | P_omega   => omega%t1
+  | _omega   => T1.omega
   end.
 
 Compute eval_pp (P_fin 4).
@@ -3742,7 +3742,7 @@ Compute eval_pp (P_fin 4).
 
 (* Coercion pp0 : T1 >-> ppT1. *)
 
-Compute (pp0 (omega ^ omega * 2 + 1))%t1.
+Compute (pp0 (T1.omega ^ T1.omega * 2 + 1))%t1.
 
 
 Fixpoint reassoc (exp : ppT1) (fuel :nat) : ppT1 :=
@@ -3768,14 +3768,14 @@ Fixpoint p_size (exp : ppT1) : nat :=
 
 Definition pp (e: T1) : ppT1  := let t := pp0 e in reassoc t (p_size t).
 
-Compute (pp (omega ^ omega * 2 + omega ^ 5 +omega +  1))%t1 .
+Compute (pp (T1.omega ^ T1.omega * 2 + T1.omega ^ 5 + T1.omega +  1))%t1 .
 
-Compute (pp (omega ^(omega ^ omega * 2 + omega ^ 5 +omega +  1)))%t1 .
+Compute (pp (T1.omega ^(T1.omega ^ T1.omega * 2 + T1.omega ^ 5 +T1.omega +  1)))%t1 .
 
-Compute pp omega%t1.
+Compute pp T1.omega.
 
 Eval simpl in  fun n:nat =>
-                 (pp (omega ^(omega ^ omega * n + omega ^ n +omega +  1)))%t1 .
+                 (pp (T1.omega ^(T1.omega ^ T1.omega * n + T1.omega ^ n +T1.omega +  1)))%t1 .
 
 
 Ltac is_closed alpha :=
