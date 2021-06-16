@@ -9731,7 +9731,7 @@ Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
 Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognising simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
 
 \begin{Coqsrc}
-Notation  one  := [zero,zero] : T2_scope.
+Notation  one  := [zero,zero].
 
 (** The (n+1)-th finite ordinal *)
 Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
@@ -10263,7 +10263,6 @@ Fixpoint T1_to_T2 (alpha :T1) : T2 :=
 Prove that the notation system \texttt{Gamma0} is a correct implementation 
 of the segment $[0,\Gamma_0)$ of the set of countable ordinals.
 \end{project}
-
 
 
 
