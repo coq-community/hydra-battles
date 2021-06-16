@@ -2505,7 +2505,7 @@ We can now define abbreviations. For instance, the finite ordinals are represent
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
-Notation "'omega'" := (inr  0:t).
+Notation omega := (inr  0:t).
 \end{Coqsrc}
 
 \begin{Coqsrc}
@@ -2753,7 +2753,7 @@ Definition fin (n:nat) : t := (0, n).
 
 Coercion fin : nat >-> t.
 
-Notation "'omega'" := (1,0) : ON_scope.
+Notation omega := (1,0).
 
 Definition limitb (alpha : t) := 
  match alpha with
@@ -3884,8 +3884,9 @@ For representing finite ordinals, \emph{i.e.} natural numbers, we first introduc
 \label{sect:notation-FS}
 
 \begin{Coqsrc}
-Notation "'FS' n" :=
-     (ocons zero n zero) (at level 10) : t1_scope.
+Notation one := (ocons zero 0 zero).
+  
+Notation FS n := (ocons zero n zero).
 \end{Coqsrc}
 
 \label{sect:notation-F}
@@ -3919,7 +3920,7 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \label{sect:omega-notation2}
 \begin{Coqsrc}
-Notation omega := (ocons (ocons zero 0 zero) 0 zero): t1_scope.
+Notation omega := (ocons (ocons zero 0 zero) 0 zero).
 \end{Coqsrc}
 
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
@@ -4003,6 +4004,9 @@ Inductive ppT1 : Set :=
   | P_mult : ppT1 -> nat -> ppT1
   | P_exp : ppT1 -> ppT1 -> ppT1
   | P_omega : ppT1
+
+Notation _omega := P_omega. 
+
 \end{Coqsrc}
 
 The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1} into a human-readable expression. For instance, let us convert the term \texttt{alpha\_0}.
@@ -4012,7 +4016,7 @@ Compute pp alpha_0.
 \end{Coqsrc}
 
 \begin{Coqanswer}
-     = (omega ^ omega + omega ^ 3 * 5 + 2)%pT1
+     = (_omega ^ _omega + _omega ^ 3 * 5 + 2)%pT1
      : ppT1
 \end{Coqanswer}
 
@@ -4328,7 +4332,7 @@ Instance _Omega : E0.
 Proof.  now exists omega%t1. 
 Defined.
 
-Notation "'omega'"  := _Omega : E0_scope.
+Notation omega  := _Omega.
 \end{Coqsrc}
 
 
@@ -6666,18 +6670,18 @@ For instance the interval $[6,70]$ leads $\omega^2$ to $\omega\times 2 + 56$. Th
 
 
 \begin{Coqsrc}
-Compute pp (gnaw (omega * omega) (interval 6 70)).
+Compute pp (gnaw (T1.omega * T1.omega) (interval 6 70)).
 \end{Coqsrc}
 
 \begin{Coqanswer}
- = (omega * 2 + 56)%pT1
+ = (_omega * 2 + 56)%pT1
      : ppT1
 \end{Coqanswer}
 
 Let us try another computation.
 
 \begin{Coqsrc}
-Compute (gnaw (omega * omega) (interval 6 700)).
+Compute (gnaw (T1.omega * T1.omega) (interval 6 700)).
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -6702,7 +6706,7 @@ For instance, we can verify that the interval $[6,510]$ is $\omega^2$-mlarge.
  \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_Sets_Examples.html}{Epsilon0.Large\_Sets\_Examples}}
 \begin{Coqsrc}
-Example Ex1 : mlarge (omega * omega) (interval 6 510).
+Example Ex1 : mlarge (T1.omega * T1.omega) (interval 6 510).
 \end{Coqsrc}
 
 
@@ -6893,7 +6897,7 @@ by diagonalization a correct implementation for
 \begin{Coqsrc}
 Definition L_omega k := S (2 * k)%nat.
 
-Lemma L_omega_ok : L_spec omega L_omega.
+Lemma L_omega_ok : L_spec T1.omega L_omega.
 \end{Coqsrc}
 
 \subsubsection{Towards  \texorpdfstring{$\omega^2$}{omega*omega}}
@@ -6907,7 +6911,8 @@ $\omega \times i$.
 
 \begin{Coqsrc}
 Lemma path_to_omega_mult (i k:nat) :
-  path_to (omega * i) (interval (S k) (2 * (S k))) (omega * (S i)).
+path_to (T1.omega * i) (interval (S k) (2 * (S k)))
+            (T1.omega * (S i)).
 \end{Coqsrc}
 
 Let us consider a path from  $\omega\times(i+1)$ to $0$ starting at $k+1$.
@@ -6919,7 +6924,7 @@ The following lemma expresses the length of the mlarge sequences associated with
 
 \begin{Coqsrc}
 Lemma omega_mult_mlarge_0 i  : forall k,
-    mlarge  (omega * (S i))
+    mlarge  (T1.omega * (S i))
             (interval (S k)
                       (Nat.pred (iterate (fun p =>  S (2 * p)%nat)
                                          (S i)
@@ -6933,7 +6938,7 @@ Thus, we infer the following result:
 \begin{Coqsrc}
 Definition L_omega_mult i (x:nat) :=  iterate L_omega i x.
 
-Lemma L_omega_mult_ok (i: nat) :  L_spec (omega * i) (L_omega_mult i).
+Lemma L_omega_mult_ok (i: nat) :  L_spec (T1.omega * i) (L_omega_mult i).
 \end{Coqsrc}
 
 For instance, let us consider the ordinal $\omega\times 8$, and a sequence 
@@ -6969,7 +6974,7 @@ Lemma L_omega_square_eqn k :
   L_omega_square k = (exp2 k * (k + 2) - 1)%nat.
 
 
-Lemma L_omega_square_ok: L_spec (omega * omega) 
+Lemma L_omega_square_ok: L_spec (T1.omega * T1.omega) 
           L_omega_square.
 
 Compute L_omega_square 8.
@@ -9726,7 +9731,7 @@ Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
 Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognising simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
 
 \begin{Coqsrc}
-Notation  "'one'"  := [zero,zero] : T2_scope.
+Notation  one  := [zero,zero] : T2_scope.
 
 (** The (n+1)-th finite ordinal *)
 Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
