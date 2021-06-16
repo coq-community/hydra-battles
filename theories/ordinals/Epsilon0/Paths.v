@@ -80,16 +80,16 @@ Ltac path_tac := (* ugly ! *)
                          
                  end).
 
-Example ex_path1: path_to omega (2::2::2::nil) (omega * 2).
+Example ex_path1: path_to T1.omega (2::2::2::nil) (T1.omega * 2).
 Proof. path_tac. Qed.
 
-Example ex_path2: path_to omega (3::4::5::6::nil) (omega * 2).
+Example ex_path2: path_to T1.omega (3::4::5::6::nil) (T1.omega * 2).
 Proof. path_tac. Qed.
 
-Example ex_path3: path_to zero (interval 3 14) (omega * 2).
+Example ex_path3: path_to zero (interval 3 14) (T1.omega * 2).
 Proof. cbn;path_tac. Qed.
 
-Example ex_path4:  path_to zero (repeat 3 8) (omega * 2).
+Example ex_path4:  path_to zero (repeat 3 8) (T1.omega * 2).
 Proof. cbn; path_tac. Qed.
 
 

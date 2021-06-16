@@ -169,7 +169,7 @@ Qed.
     Phi0 function *)
 
 
-Remark Phi0_def : Phi0 2 = ltac:(mko (omega * omega)%t1).
+Remark Phi0_def : Phi0 2 = ltac:(mko (T1.omega * T1.omega)%t1).
 Proof. apply E0_eq_intro. reflexivity. Qed.
 
 
@@ -177,7 +177,7 @@ Lemma H'_omega_sqr : forall k,
     H'_ (Phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
 Proof.
   intro k; rewrite H'_eq3; auto with E0.
-  - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
+  - ochange (Canon (Phi0 2) (S k)) (E0.omega * (S k))%e0.
     +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- abstract lia. 
@@ -829,8 +829,8 @@ End Proof_of_H'_mono_l.
 (* To do : program tactics for a better interaction *)
 
 Goal 
-  (0 < H'_ (ltac:(mko (omega * omega * omega)%t1)) 12)%nat.
-  ochange {| cnf := (omega * omega * omega)%t1; cnf_ok := eq_refl |}
+  (0 < H'_ (ltac:(mko (T1.omega * T1.omega * T1.omega)%t1)) 12)%nat.
+  ochange {| cnf := (T1.omega * T1.omega * T1.omega)%t1; cnf_ok := eq_refl |}
           (Phi0 3).
   transitivity 11.
   - abstract lia.

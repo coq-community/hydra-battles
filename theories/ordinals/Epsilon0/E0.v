@@ -55,7 +55,7 @@ Proof.
   now exists omega%t1.  
 Defined. 
 
-Notation "'omega'"  := _Omega : E0_scope.
+Notation omega  := _Omega.
 
 Instance Succ (alpha : E0) : E0.
 Proof.
@@ -261,7 +261,7 @@ Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
 Instance Two : E0 :=  ltac:(mko (fin 2)).
 
-Instance Omega_2 : E0 :=ltac:(mko (omega * omega)%t1).
+Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
 
 
 Instance Lt_sto : StrictOrder Lt.
@@ -727,7 +727,7 @@ Proof.
   destruct H.
   destruct H0.
   cbn in H0.
-  assert (H2 : cnf0 t1< omega%t1).
+  assert (H2 : cnf0 t1< T1.omega%t1).
   {  split; cbn in H1; tauto. }
   destruct (lt_omega_inv H2).
   - exists 0; subst;  unfold Fin; apply E0_eq_intro;  reflexivity. 
