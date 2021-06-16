@@ -49,9 +49,9 @@ Qed.
 Ltac fold_psi :=  rewrite <- psi_eq.
 Ltac fold_psis := repeat fold_psi.
 
-Notation  "'one'"  := [zero,zero] : T2_scope.
+Notation  one  := [zero,zero].
 
-Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
+Notation FS n := (gcons zero zero n zero). 
 
 
 (** the [n]-th ordinal  *)
@@ -71,9 +71,9 @@ Inductive is_finite:  T2 ->  Set :=
 
 Global Hint Constructors is_finite : T2.
 
-Notation "'omega'"  := [zero,one] : T2_scope.
+Notation omega  := [zero,one].
 
-Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
+Notation epsilon0  := ([one,zero]).
 
 Definition epsilon alpha := [one, alpha].
 

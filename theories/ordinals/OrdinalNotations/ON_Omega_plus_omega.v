@@ -22,8 +22,7 @@ Definition t := @ON_plus.t nat nat.
 Example ex1 : inl 7 o< inr 0.
 Proof. constructor. Qed.
 
-Notation "'omega'" := (inr 0:t) : opo_scope.
-(* Notation "'omega'" := (@inr nat nat 0) (only printing) : opo_scope. *)
+Notation omega := (inr 0:t).
 
 Open Scope opo_scope.
 

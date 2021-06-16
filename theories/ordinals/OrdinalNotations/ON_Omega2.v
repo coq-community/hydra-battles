@@ -26,7 +26,7 @@ Qed.
 Open Scope ON_scope.
 
 
-Notation "'omega'" := (1,0): ON_scope.
+Notation omega := (1,0).
 Definition zero: t := (0,0).
 
 Definition fin (i:nat) : t := (0,i).
