@@ -9734,7 +9734,7 @@ Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by reco
 Notation  one  := [zero,zero].
 
 (** The (n+1)-th finite ordinal *)
-Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
+Notation FS n := (gcons zero zero n zero).
 
 (** the [n]-th ordinal  *)
 Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
@@ -10263,7 +10263,6 @@ Fixpoint T1_to_T2 (alpha :T1) : T2 :=
 Prove that the notation system \texttt{Gamma0} is a correct implementation 
 of the segment $[0,\Gamma_0)$ of the set of countable ordinals.
 \end{project}
-
 
 
 
