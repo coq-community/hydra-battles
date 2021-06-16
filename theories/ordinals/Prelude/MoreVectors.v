@@ -131,10 +131,10 @@ Fixpoint vect_from_fun {A} (f :  nat ->  A) n from : t A n :=
 
 (** experimentation sur la decomposition des vecteurs *)
 
-Notation "'vfst'" := Vector.hd.
-Notation "'vsnd' v" := (Vector.hd (Vector.tl v)) (at level 35).
-Notation "'vthird' v" := (Vector.hd (Vector.tl (Vector.tl v))) (at level 35).
-Notation "'vfourth' v" := (Vector.hd (Vector.tl (Vector.tl (Vector.tl v)))) (at level 35).
+Notation vfst := Vector.hd.
+Notation vsnd v := (Vector.hd (Vector.tl v)).
+Notation vthird v := (Vector.hd (Vector.tl (Vector.tl v))).
+Notation vfourth v := (Vector.hd (Vector.tl (Vector.tl (Vector.tl v)))).
 
 
 Lemma decomp2 {A}  :  forall v : Vector.t A 2,
