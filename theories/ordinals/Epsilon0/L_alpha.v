@@ -81,7 +81,28 @@ Proof.
   - now cbn.
 Qed.
 
+Lemma L_ge_id alpha : forall i,  i <= L_ alpha i.
+Proof  with auto with E0.
+     pattern alpha; apply well_founded_induction with Lt ...
+   clear alpha; intros alpha IHalpha.
+  destruct (Zero_Limit_Succ_dec alpha).
+  -  destruct s.
+   +  subst alpha. intro; rewrite L_zero_eqn. auto with arith. 
+   +   intros  k;  rewrite L_lim_eqn; auto.
+     *  specialize (IHalpha (Canon alpha k)).
+        destruct k;  simpl Canon.
+        --  autorewrite with L_rw; auto.
+          auto with arith.             
+        -- transitivity (S (S k)); [lia | apply IHalpha ]...
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+        +  subst  beta alpha.
+           intros  k; autorewrite with L_rw; auto. 
+        +   subst alpha; intros k; autorewrite with L_rw ...
+              transitivity (S k); [lia |] ...
+Qed.
 
+
+              
 Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with Lt ...
@@ -93,6 +114,7 @@ Proof  with auto with E0.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto.
+            apply L_ge_id.
         -- transitivity (S (S (S k))); [lia | apply IHalpha ]...
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
         +  subst  beta alpha.
