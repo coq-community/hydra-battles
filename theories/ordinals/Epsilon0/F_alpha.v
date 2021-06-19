@@ -226,8 +226,13 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
     destruct (Zero_Limit_Succ_dec alpha).
     destruct s.
     + subst alpha; now rewrite F_zero_eqn.
-    +  rewrite F_lim_eqn;auto; unfold Canon; now rewrite F_zero_eqn. 
-    +  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
+    +  rewrite F_lim_eqn;auto; unfold Canon. rewrite Halpha. auto. 
+       apply canon0_LT.
+       apply cnf_ok.
+       intro.
+        unfold Limitb in e. 
+         rewrite H in e; discriminate.
++  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
 Qed.
 
 (** Properties of [F_ alpha]  *)

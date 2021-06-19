@@ -2105,15 +2105,15 @@ Lemma standard_pathR_nf : forall i alpha j beta,
     standard_pathR  j beta i alpha  -> nf alpha -> nf beta.
 Proof.
   induction 1.
-  - destruct i.
-    +  simpl in H. subst ;auto with T1.
+  - destruct i. now destruct H2.
     +  subst beta; intros; now apply nf_canonS.
   -  intros; apply IHstandard_pathR.
      destruct i.
-     +  simpl;auto with T1.
-     +  unfold canon; now apply nf_canonS.
+     +  simpl;auto with T1. now apply nf_canon0.
++  unfold canon; now apply nf_canonS.
 Qed.
 
+(* Here *)
 
 Lemma standard_path_zero : forall i j alpha beta,
     standard_path i alpha j beta  -> 
@@ -2148,12 +2148,15 @@ Proof.
           apply IHstandard_pathR; auto with arith.
           apply not_zero_lt.
           { destruct i.
-            - simpl; auto with T1.
+            - simpl; auto with T1. apply nf_canon0; eauto with T1.
             - apply nf_canonS,  (LT_nf_r H0); auto.
           }
           { destruct i; auto. }
           destruct i.
-          {  destruct n0;  reflexivity. }
+          {
+            apply canon0_LT; eauto with T1.
+            intro; subst; auto. 
+          }
           { apply canonS_LT.
             - apply (LT_nf_r H0).
             -  intro;subst; destruct n0;auto.
@@ -2208,7 +2211,8 @@ Proof.
   - intros; cbn ; destruct (T1_eq_dec (canon alpha i) zero) as [e|ne].   
     + rewrite e, standard_gnaw_zero; auto with T1.
     + apply IHl;  destruct i.
-    * cbn; auto with T1.
+      * cbn; auto with T1.
+     apply nf_canon0; eauto with T1.        
     * now apply nf_canon.
 Qed.
 
@@ -2427,7 +2431,7 @@ Proof.
   - specialize  (Halpha (canon alpha i)).  
     assert (canon alpha i t1< alpha)%t1. {
       destruct i.
-      - simpl; apply not_zero_lt;auto.
+      - apply canon0_LT; auto with T1. 
       - apply canonS_LT; auto.
     }
     assert (H1 := nf_canon i H).
@@ -2464,10 +2468,14 @@ Proof.
   clear alpha; intros alpha Halpha i  H.
   destruct (T1_eq_dec alpha zero).
   - subst; exists 0; trivial.
-  - specialize  (Halpha (canon alpha i)); destruct i.
-  + exists 1; cbn; auto.
-  + destruct  (Halpha (canonS_LT i H n) (S (S i))) as [x Hx].
-   * apply nf_canonS;auto.
+  - specialize  (Halpha (canon alpha i)).
+    assert (LT (canon  alpha i) alpha). (* TODO : A lemma canon_LT *)
+   { destruct i.
+    apply canon0_LT; eauto with T1.
+    apply canonS_LT; eauto with T1.
+   }
+   destruct  (Halpha H0 (S i)) as [x Hx].
+   * apply nf_canon;auto.
    * now exists (S x).
 Qed.
 
@@ -2896,15 +2904,24 @@ Qed.
 Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
                               (Canon alpha i o< Canon alpha j)%e0.
 
-  destruct alpha. unfold Canon.  destruct i, j.
-  -  inversion 2.
+  destruct alpha.
+  unfold Canon.
+  destruct i, j.
+  - inversion 2.
   - unfold lt. simpl.
-    intros. 
-    apply not_zero_lt.
-    apply nf_canonS; auto.
-    apply limitb_canonS_not_zero; auto.
-  -  inversion 2.
-  - unfold lt; simpl.
+    intros. clear H0.
+    split; auto.
+    cbn.
+    now apply nf_canon0.
+    split; cbn. 
+    apply     canon0S_limit_LT.
+    trivial.    
+    assumption.
+    apply nf_canonS.
+    trivial.
+  - intros; lia.
+  -        
+   unfold lt; simpl.
     simpl; intros.
     apply canonS_limit_mono; auto.
     auto with arith.
@@ -2995,3 +3012,5 @@ Proof.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
+
+
