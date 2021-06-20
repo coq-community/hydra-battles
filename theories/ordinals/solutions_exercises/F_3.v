@@ -151,7 +151,7 @@ Section S1.
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
           limitb beta ->
-          forall n, T1.le (fin (S n)) (Canon.canonS beta n).
+          forall n, T1.le (fin (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.
         -  discriminate.
@@ -194,9 +194,9 @@ Section S1.
 
       Lemma L04' : forall beta, Limitb beta ->
                                 forall n, (S n) o<= 
-                                          (Canon.CanonS beta n).
+                                          (Canon.Canon beta (S n)).
       Proof.
-        destruct beta; unfold Limitb, Canon.CanonS.
+        destruct beta; unfold Limitb.
         cbn; split. 
         -  apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.
