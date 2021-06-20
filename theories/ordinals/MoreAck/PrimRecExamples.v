@@ -281,7 +281,7 @@ About evalPrimRecFunc.
 Remark R02 : 1 < 2.
 Proof. auto. Qed.
 
-Let xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
+Definition xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
   
 Compute evalPrimRec 1 xpred 10.
 

@@ -1222,7 +1222,7 @@ Proof.
       destruct (zero_limit_succ_dec H1).
       - destruct s.
         + subst x; now destruct H2.
-        + right with (phi0 (canonS x i)).
+        + right with (phi0 (canon x (S i))).
           *  rewrite canonS_lim1; auto.
             split;[discriminate | trivial].
           *   apply IHclos_trans_1n.
@@ -1241,8 +1241,8 @@ Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
    limitb lambda  ->
    forall i j, (i < j)%nat ->
-               const_pathS 0 (canonS lambda j)
-                             (canonS lambda i).
+               const_pathS 0 (canon lambda (S j))
+                             (canon lambda (S i)).
 Proof.
    transfinite_induction lambda.
   clear lambda ; intros alpha Hrec Halpha H.
@@ -1259,7 +1259,7 @@ Proof.
            destruct s.
            {subst. now contradict H0. }
            { induction n.
-             - unfold canonS; repeat rewrite canonS_lim1; auto.
+             - repeat rewrite canonS_lim1; auto.
                apply KS_thm_2_4_lemma5. 
                apply Hrec ; trivial.
                split ; trivial. 
@@ -1267,7 +1267,7 @@ Proof.
                apply head_lt_ocons ; trivial.
                apply nf_canon ; eauto with T1. 
                apply limitb_canonS_not_zero ; eauto with T1.
-             -  unfold canonS; repeat rewrite canonS_lim2 ; eauto with T1.
+             - repeat rewrite canonS_lim2 ; eauto with T1.
                 apply KS_thm_2_4_lemma1 ; trivial. 
                 apply ocons_nf ; trivial. 
                 apply canonS_lt ; trivial.
@@ -1285,11 +1285,11 @@ Proof.
            }
            destruct s as [beta [H2 H3]];  subst; clear H i; induction n.
            {
-             unfold canonS; repeat rewrite  canonS_phi0_succ_eqn ; eauto with T1.
+             repeat rewrite  canonS_phi0_succ_eqn ; eauto with T1.
              apply KS_thm_2_4_lemma3 ; eauto with T1.
            }
            { 
-             unfold canonS; repeat rewrite  canonS_ocons_succ_eqn2 ; eauto with T1.
+             repeat rewrite  canonS_ocons_succ_eqn2 ; eauto with T1.
              apply KS_thm_2_4_lemma1 ; trivial. 
              apply ocons_nf ; trivial.
              apply lt_succ; auto.
@@ -1298,7 +1298,7 @@ Proof.
            }
          }
          intros i0 j H0; destruct a.
-         unfold canonS; repeat rewrite canon_tail ; eauto with T1.
+         repeat rewrite canon_tail ; eauto with T1.
          apply KS_thm_2_4_lemma1 ; trivial. 
          apply nf_LT_right with alpha2 ; eauto with T1.
          apply canonS_LT ; eauto with T1.
@@ -1329,7 +1329,7 @@ Proof.
     + (* alpha limit *)
       destruct  H1.
       {  destruct H1 as [H1 e]; subst y.
-         assert (H2: const_pathS 0 (canonS alpha n) (canonS alpha i)).     
+         assert (H2: const_pathS 0 (canon alpha (S n)) (canon alpha (S i))).     
          {  apply KS_thm_2_4;  auto. }
          constructor 2 with (canonS alpha n).
          - split ; auto.
@@ -1343,7 +1343,7 @@ Proof.
       {     
         (*   alpha -i->  y= canonS i alpha -i-+->  z *)
         destruct H1 as [H01 H1];
-          subst y;   assert (const_pathS n (canonS alpha i) z).
+          subst y;   assert (const_pathS n (canon alpha (S i)) z).
         {
           apply Hrec with i;auto.
           apply nf_canon;   auto.
@@ -1355,10 +1355,10 @@ Proof.
         }
         {
           red; rewrite <- clos_trans_t1n_iff.
-          apply t_trans with (canonS alpha n).
+          apply t_trans with (canon alpha (S n)).
           left.
           auto.
-          right with (canonS alpha i).
+          right with (canon alpha (S i)).
           rewrite  clos_trans_t1n_iff.
           apply Hrec with 0;eauto.
           now apply nf_canon.
@@ -1468,15 +1468,15 @@ Proof.
   - destruct s.
    + subst;  intros.  destruct (not_LT_zero H0).  
    +  intros beta H0;  destruct (canonS_limit_strong Hx i H0) as [n1 H1].
-     assert (canonS x n1 t1< x)%t1. 
+     assert (canon x (S n1) t1< x)%t1. 
      { apply canonS_LT; auto.
        intro; subst; discriminate. }
-     assert (nf (canonS x n1)).
+     assert (nf (canon x (S n1))).
       {  eapply nf_canon;eauto. }
-      destruct (H (canonS x n1) H2 H3 beta) as [n2 Hn2].
+      destruct (H (canon x (S n1)) H2 H3 beta) as [n2 Hn2].
       * auto.
       * exists (Nat.max n1 n2); red;rewrite  <- clos_trans_t1n_iff.
-        constructor 2  with (canonS x n1).
+        constructor 2  with (canon x (S n1)).
        --  rewrite  clos_trans_t1n_iff.
            apply Cor12_1 with n1; auto.
            auto with arith.   
@@ -1520,7 +1520,8 @@ Proof.
   - induction 1.
     +  intros;   destruct H; subst.   apply LE_refl.  auto with T1.
        apply nf_canon; auto with T1. 
-    + destruct H;  subst; intro; apply LE_trans with (canon (canonS x i) (S i)).
+    + destruct H;  subst; intro;
+        apply LE_trans with (canon (canon x (S i)) (S i)).
        * apply IHclos_trans_1n; auto.
          apply nf_canon; auto.
        * apply LE_r, canonS_LT.
@@ -1547,7 +1548,7 @@ Proof.
         { apply   LT_succ_LE;auto. }
         destruct (LE_LT_eq_dec H2).
         *   specialize (HRecAlpha (canon alpha (S p)) ).
-            assert (canonS alpha p t1< alpha)%t1.
+            assert (canon alpha (S p) t1< alpha)%t1.
             {   apply canonS_LT; auto.
                 intro; subst alpha; destruct (not_LT_zero H0).
             }
@@ -1782,7 +1783,7 @@ Section Lemma_4_3_Proof.
     - subst;now right. 
   Qed. 
 
-  Remark R4_3_2 : const_pathS_eps n2 beta (canonS beta n1).
+  Remark R4_3_2 : const_pathS_eps n2 beta (canon beta (S n1)).
   Proof.
     destruct (T1_eq_dec beta zero).
     - subst;  cbn;  now right. 
@@ -1792,21 +1793,21 @@ Section Lemma_4_3_Proof.
   Qed. 
 
   
-  Remark R4_3_3: const_pathS_eps n2 alpha (canonS beta n1).
+  Remark R4_3_3: const_pathS_eps n2 alpha (canon beta (S n1)).
   Proof.
     eapply const_pathS_eps_trans with beta; auto.
     - apply R4_3_1 .
     - apply R4_3_2.
   Qed. 
 
-  Remark R4_3_4 : (canonS beta n1 t1<= canonS alpha n2)%t1.
+  Remark R4_3_4 : (canon beta (S n1) t1<= canon alpha (S n2))%t1.
   Proof.
     destruct (T1_eq_dec alpha beta).     
     - subst.
       clear H4 H0; induction H1.
       +  apply LE_refl.
          now apply nf_canon.
-      +  apply LE_trans with  (canonS beta m);  auto. 
+      +  apply LE_trans with  (canon beta (S m));  auto. 
          apply canonS_LE; auto.
     - assert (beta t1< alpha)%t1.
       { apply  const_pathS_eps_LE_2 in H4;auto. 
@@ -1817,12 +1818,12 @@ Section Lemma_4_3_Proof.
         destruct (le_lt_eq beta alpha); auto. 
         - subst; now destruct n.
       }
-      assert (const_pathS n2 alpha (canonS beta n1)).
+      assert (const_pathS n2 alpha (canon beta (S n1))).
       {
         generalize  R4_3_3; inversion 1.  auto.
         subst.
         destruct (@LT_irrefl beta).
-        apply LT_trans with (canonS beta n1);  auto.
+        apply LT_trans with (canon beta (S n1));  auto.
         apply canonS_LT   ;auto. 
         intro;subst; cbn in H00; now destruct H00.
       }
@@ -1835,14 +1836,15 @@ Section Lemma_4_3_Proof.
       eapply nf_canon;eauto.  
   Qed. 
   
-  Lemma Lemma_4_3_0 : const_pathS_eps n2 (canonS alpha n2) (canonS beta n1).
+  Lemma Lemma_4_3_0 :
+    const_pathS_eps n2 (canon alpha (S n2)) (canon beta (S n1)).
   Proof. 
     destruct (LE_LT_eq_dec R4_3_4).
     - left.
       eapply Proposition_2_3a with (alpha := alpha); auto.   
       generalize  R4_3_3; inversion 1; auto. 
       rewrite <- H2 in l; destruct (@LT_irrefl alpha).
-      apply LT_trans with (canonS alpha n2); auto. 
+      apply LT_trans with (canon alpha (S n2)); auto. 
       apply canonS_LT;auto. 
       now left. 
     - rewrite e;  now right.
@@ -1859,7 +1861,7 @@ Lemma Lemma_4_3 :
       (n0 <= n2)%nat ->
       (n1 <= n2)%nat ->
       const_pathS_eps n0 alpha beta -> 
-      const_pathS_eps  n2 (canonS alpha n2) (canonS beta n1).
+      const_pathS_eps  n2 (canon alpha (S n2)) (canon beta (S n1)).
 Proof.
   intros.  
   destruct (T1_eq_dec alpha zero).
@@ -1956,7 +1958,7 @@ Lemma Lemma_4_4_0 :
   forall n p alpha beta (Halpha : alpha <> T1.zero),
     nf alpha -> nf beta -> (n <= p)%nat ->
     const_pathS_eps n alpha beta ->
-    const_pathS_eps p (canonS alpha p) (canonS beta p).
+    const_pathS_eps p (canon alpha (S p)) (canon beta (S p)).
 Proof.
   intros; inversion H2.
    - eapply Lemma_4_3_0 with n;auto.
@@ -2449,11 +2451,11 @@ Proof.
   intro alpha; transfinite_induction alpha;
     clear alpha; intros alpha Halpha i  H.
   destruct (T1_eq_dec alpha zero).
-  - subst; exists (S i); replace zero with (canonS zero i) at 2.
+  - subst; exists (S i); replace zero with (canon zero (S i)) at 2.
    + left; trivial.
      * discriminate.
    + reflexivity.
-  - intros _; destruct (T1_eq_dec (canonS alpha i) zero).
+  - intros _; destruct (T1_eq_dec (canon alpha (S i)) zero).
     + exists (S i); left; auto.
     + specialize (Halpha (canonS alpha i) (canonS_LT i H n) (S i)).
       destruct Halpha; auto.
@@ -2700,7 +2702,7 @@ Section Constant_to_standard_Proof.
     - left;auto. 
   Qed.
 
-  Let delta := canonS gamma (n + l)%nat.
+  Let delta := canon gamma (S (n + l))%nat.
 
   Remark R22 : delta = standard_gnaw (S n) alpha (S l).
 
@@ -2884,8 +2886,8 @@ Theorem KS_thm_2_4_E0 :
   forall lambda, 
     Limitb lambda  ->
     forall i j, (i < j)%nat ->
-                Canon_plus 1 (CanonS lambda j)
-                       (CanonS lambda i).
+                Canon_plus 1 (Canon lambda (S j))
+                       (Canon lambda (S i)).
 Proof.
   intros; destruct lambda; cbn;  apply KS_thm_2_4;auto.
 Qed.
@@ -3002,11 +3004,11 @@ Proof.
   destruct alpha, beta.
   unfold Canon_plus, const_path; simpl ;intros H.
   destruct (const_pathS_first_step H).
-  - unfold canonS in e; rewrite canon_succ in e; auto.
+  - rewrite canon_succ in e; auto.
     subst cnf0;  assert (cnf_ok0 =cnf_ok).
     apply nf_proof_unicity.
     subst cnf_ok0; left;auto. 
-  - unfold canonS in c; rewrite canon_succ in c;[ right;auto | auto].
+  - rewrite canon_succ in c;[ right;auto | auto].
 Qed.
 
 Lemma Canon_plus_first_step_lim:
