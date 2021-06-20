@@ -289,7 +289,7 @@ Section succ.
             ++ discriminate.
             ++ split.
                **  apply succ_not_zero.
-               **  now rewrite canonS_succ.
+               **  now rewrite canon_succ.
         --  apply  Nat.lt_le_pred.
             generalize (f_Sle  (S (S k))); abstract lia.
    Qed.

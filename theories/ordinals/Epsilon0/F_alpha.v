@@ -226,12 +226,8 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
     destruct (Zero_Limit_Succ_dec alpha).
     destruct s.
     + subst alpha; now rewrite F_zero_eqn.
-    +  rewrite F_lim_eqn;auto; unfold Canon. rewrite Halpha. auto. 
-       apply canon0_LT.
-       apply cnf_ok.
-       intro.
-        unfold Limitb in e. 
-         rewrite H in e; discriminate.
+    +  rewrite F_lim_eqn;auto; unfold Canon. rewrite Halpha. auto.
+       now apply Limit_gt_Zero.
 +  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
 Qed.
 
@@ -744,7 +740,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
           
           red; cbn; apply KS_thm_2_4_lemma5.
           -- apply Cor12_1 with 0.
-           ++ apply nf_canonS, cnf_ok.
+           ++ apply nf_canon, cnf_ok.
            ++ apply canonS_limit_mono.
               ** apply cnf_ok.
               ** destruct alpha; cbn; assumption. 
@@ -754,7 +750,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
               ** apply cnf_ok.
               ** destruct alpha; auto.
               ** auto with arith. 
-          --  apply nf_canonS, cnf_ok.
+          --  apply nf_canon, cnf_ok.
           --  apply limitb_canonS_not_zero.
               ++ apply cnf_ok.
               ++ now destruct alpha.

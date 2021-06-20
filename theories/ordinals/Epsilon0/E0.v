@@ -751,6 +751,13 @@ Proof.
   - right; now apply Lt_Le_incl.
 Qed.
 
+Lemma Limit_gt_Zero (alpha: E0) : Limitb alpha -> Zero o< alpha.
+Proof.
+  intro H; destruct (E0_lt_eq_lt alpha Zero) as [H0 | [H0 | H0]]; trivial.
+  - destruct (E0_not_Lt_zero H0).
+  - subst; discriminate H.
+Qed.
+
 
 Lemma Phi0_mono alpha beta : alpha o< beta -> Phi0 alpha o< Phi0 beta.
 Proof.

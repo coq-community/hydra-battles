@@ -75,7 +75,7 @@ Section Impossibility_Proof.
           replace (S i) with (Nat.pred (S (S i))).
           *   eapply IHstandard_pathR; trivial.
               auto with arith. 
-              eapply nf_canonS;eauto.
+              eapply nf_canon;eauto.
           * simpl; auto.
           * apply canonS_iota_i; trivial.
             intro; subst alpha.
@@ -105,7 +105,7 @@ Section Impossibility_Proof.
     -  right; destruct i.    
        +   inversion H1.
        +   specialize (H (canonS x i) H0); 
-             assert (nf (canonS x i)) by (eapply nf_canonS; eauto).
+             assert (nf (canonS x i)) by (eapply nf_canon; eauto).
            assert (T1.lt (canonS x i) x).
            { eapply canonS_lt; eauto. }
            specialize (H H2 H3 H2 (S (S i)) ).
