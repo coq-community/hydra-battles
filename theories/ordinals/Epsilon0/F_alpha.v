@@ -424,7 +424,7 @@ Section Properties.
           unfold Canon.
           apply Nat.le_lt_trans with (S n).
           auto with arith.
-          destruct (Halpha (CanonS alpha n)).
+          destruct (Halpha (Canon alpha (S n))).
           apply CanonS_lt. 
           now apply Limit_not_Zero.
           now apply PB0.
@@ -730,7 +730,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
     - rewrite CanonS_Canon;
       rewrite CanonS_Phi0_lim; [| trivial].
       rewrite F_lim_eqn, CanonS_Canon; auto.
-      + transitivity (H'_ (Phi0 (CanonS alpha n)) (S n)).
+      + transitivity (H'_ (Phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.

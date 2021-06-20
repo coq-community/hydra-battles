@@ -519,7 +519,7 @@ Proof.
   - subst; right with (ocons alpha i gamma).
     +  split.
      *    discriminate.
-     * unfold canonS; rewrite canonSSn.  f_equal.
+     *   unfold canonS; rewrite canonSSn.  f_equal.
      --   destruct H1; auto.
      --  auto.
     + apply path_toS_tail; auto.
@@ -633,7 +633,7 @@ Proof. reflexivity. Qed.
 Lemma gnawS_lim1 (i:nat)(s: list nat) (lambda : T1) :
   nf lambda -> limitb lambda ->
   gnawS (ocons lambda 0 T1.zero) (i::s) =
-  gnawS (ocons (canonS lambda i) 0 T1.zero) s.
+  gnawS (ocons (canon lambda (S i)) 0 T1.zero) s.
 Proof.
   intros;  rewrite gnaws_rw.
   unfold canonS;  rewrite canonS_lim1; auto.
@@ -643,10 +643,9 @@ Qed.
 Lemma gnawS_lim2 (i n:nat)(s: list nat) (lambda : T1) :
   nf lambda -> limitb  lambda->
   gnawS (ocons lambda (S n) T1.zero) (i::s) =
-  gnawS (ocons lambda n (ocons (canonS lambda i) 0 T1.zero)) s.
+  gnawS (ocons lambda n (ocons (canon lambda (S i)) 0 T1.zero)) s.
 Proof.
-  intros; unfold canonS.  rewrite gnaws_rw.   unfold canonS;
-                                                rewrite canonS_lim2; auto.
+  intros;   rewrite gnaws_rw. rewrite canonS_lim2; auto.
 Qed.
 
 
@@ -655,7 +654,7 @@ Lemma gnawS_succ_eqn1 i s gamma :
   nf gamma -> gnawS (ocons (T1.succ gamma) 0 T1.zero) (i::s) =
               gnawS (ocons gamma i T1.zero) s.
 Proof.
-intros;  rewrite gnaws_rw.   unfold canonS; rewrite canonS_phi0_succ_eqn; auto.
+intros;  rewrite gnaws_rw.    rewrite canonS_phi0_succ_eqn; auto.
 Qed.
 
 
@@ -673,7 +672,7 @@ Lemma gnawS_tail :
                   nf (ocons alpha n beta) ->
                   beta <> T1.zero -> 
                   gnawS (ocons alpha n beta) (i::s) =
-                  gnawS (ocons alpha n (canonS beta i)) s.
+                  gnawS (ocons alpha n (canon beta (S i))) s.
 Proof.
   intros; rewrite gnaws_rw, canon_tail;  auto.
 Qed.
@@ -703,7 +702,7 @@ Proof.
       destruct (T1_eq_dec beta T1.zero).  
       + subst beta;  exists nil, (a::s); repeat split;auto.
       + rewrite gnaws_rw, canon_tail  in H0; auto.
-        destruct (IHs alpha n (canonS beta a)); auto.
+        destruct (IHs alpha n (canon beta (S a))); auto.
         * apply nf_intro; auto.
           apply nf_canon;auto.
           apply nf_helper_phi0R.
@@ -814,7 +813,7 @@ Proof with eauto with T1.
     subst alpha;  destruct (not_LT_zero H).
   -  (* alpha is a limit ordinal *)
     destruct  (canonS_limit_strong H1 Hlimit H) as [j Hj].
-    destruct (IHalpha (canonS alpha j)) as [x p]; auto.
+    destruct (IHalpha (canon alpha (S j))) as [x p]; auto.
     apply canonS_LT; auto.
     apply limitb_not_zero;auto.
     exists (j::x); eright.
@@ -1065,8 +1064,8 @@ Qed.
 
 Lemma const_pathS_first_step : forall i alpha beta,
     const_pathS i alpha beta ->
-    {beta = canonS alpha i } +
-    {const_pathS i (canonS alpha i) beta}.
+    {beta = canon alpha (S i) } +
+    {const_pathS i (canon alpha (S i)) beta}.
 Proof.     
   intros; destruct (T1_eq_dec beta (canon alpha (S i))).
   - now left.   
@@ -1124,7 +1123,7 @@ Proof.
   destruct (zero_limit_succ_dec Halpha).
   -  destruct s.
      +  intro; contradiction.
-     + intros;  specialize (hrec (canonS alpha n));
+     + intros;  specialize (hrec (canon alpha (S n)));
         constructor 2 with (canon alpha (S n)).
         * split;trivial.
         *  apply hrec.
@@ -1148,7 +1147,7 @@ Proof.
   intros i alpha n H;  destruct (zero_limit_succ_dec H).
   - destruct s.
     +  subst.   left.   split; [discriminate | reflexivity].
-    +  right with (canonS (ocons alpha (S n) zero) i).
+    +  right with (canon (ocons alpha (S n) zero) (S i)).
        *  split; [discriminate | reflexivity].
        * unfold canonS; rewrite canonS_lim2;auto.
          eapply KS_thm_2_4_lemma1; auto.
@@ -1162,7 +1161,7 @@ Proof.
             apply nf_canon; auto.
          ++ discriminate.
   - destruct s as [beta [Hbeta e]]; subst.
-    right with (canonS (ocons (T1.succ beta) (S n) zero) i).
+    right with (canon (ocons (T1.succ beta) (S n) zero) (S i)).
     +  split; [discriminate | reflexivity].
     +  unfold canonS; rewrite canonS_ocons_succ_eqn2;auto.
        eapply KS_thm_2_4_lemma1; auto.

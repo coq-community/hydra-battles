@@ -51,11 +51,11 @@ Section Bounded.
     +   destruct (T1.zero_limit_succ_dec H).
         * destruct s.
           { subst ; now destruct n. }
-          { eapply strict_lub_lub with (s := fun i => canonS alpha i).
+          { eapply strict_lub_lub with (s := fun i => canon alpha (S i)).
             apply canonS_limit_lub; auto. 
-            intro i0.   assert (round_n i0 (iota alpha) (iota (canonS alpha i0))). 
+            intro i0.   assert (round_n i0 (iota alpha) (iota (canon alpha (S i0)))). 
             {   apply canonS_iota_i;  auto. }
-            apply LE_trans with (m (iota (canonS alpha i0))); auto.
+            apply LE_trans with (m (iota (canon alpha (S i0)))); auto.
             { apply Hrec; auto. 
               - apply nf_canon;  auto.
               - destruct (canonS_limit_lub H); auto. 
