@@ -95,7 +95,7 @@ Lemma iota_rw1 :
                    iota (canonS (ocons alpha 0 zero) i) =
                    hyd1 (iota (canonS alpha i)).
 Proof.                        
-  intros i alpha H H0; rewrite  canonS_lim1; auto.
+  intros i alpha H H0; unfold canonS; rewrite  canonS_lim1; auto.
 Qed.
 
 Lemma iota_rw2 :
@@ -105,7 +105,7 @@ Lemma iota_rw2 :
                                       (hcons
                                          (iota (canonS alpha i)) hnil)).
 Proof.                        
-  intros i n alpha H H0; rewrite  canonS_lim2; auto.
+  intros i n alpha H H0; unfold canonS; rewrite  canonS_lim2; auto.
 Qed.
 
 
@@ -114,7 +114,7 @@ Lemma iota_rw3 :
                     iota (canonS (ocons (T1.succ alpha) 0 zero) i) =
                     node (hcons_mult (iota alpha) (S i) hnil).
 Proof.                        
-  intros i  alpha H; rewrite  canonS_phi0_succ_eqn; auto.
+  intros i  alpha H; unfold canonS;  rewrite  canonS_phi0_succ_eqn; auto.
 Qed.
 
 
@@ -123,7 +123,9 @@ Lemma iota_rw4 :
                        iota (canonS (ocons (T1.succ alpha) (S n) zero) i) =
                        node (hcons_mult (iota (T1.succ alpha)) (S n) 
                                         (hcons_mult (iota alpha) (S i) hnil)).
-Proof. intros i  n alpha H;  rewrite  canonS_ocons_succ_eqn2; auto. Qed.
+Proof.
+  intros i  n alpha H; unfold canonS;  rewrite  canonS_ocons_succ_eqn2; auto.
+Qed.
 
 
 Lemma iota_tail :
@@ -133,7 +135,7 @@ Lemma iota_tail :
     iota (canonS (ocons alpha n beta) i) =
     node (hcons_mult (iota alpha) (S n) (iotas (canonS beta i)) ).
 Proof.                                  
-  intros i   alpha n beta H H0; rewrite  canonS_tail; auto.
+  intros i   alpha n beta H H0; unfold canonS; rewrite  canon_tail; auto.
 Qed.
 
 
@@ -305,7 +307,7 @@ Section DS_iota.
 
     Remark rem1 : canonS alpha i = ocons lambda n (phi0 (canonS lambda i)).
     Proof.
-      subst alpha;  rewrite canonS_lim2; auto.
+      subst alpha;  unfold canonS; rewrite canonS_lim2; auto.
     Qed.
 
     Lemma canonS_iota_4 :  round_n i (iota alpha) (iota (canonS alpha i)).
@@ -334,7 +336,7 @@ Section DS_iota.
     Remark rem2 : canonS alpha i =
                   ocons (T1.succ gamma)  n (ocons gamma i zero).
     Proof.
-      subst alpha;  now rewrite canonS_ocons_succ_eqn2.
+      subst alpha;  unfold canonS; now rewrite canonS_ocons_succ_eqn2.
     Qed.
     
     Remark rem3 : iota (canonS alpha i) =
@@ -395,7 +397,7 @@ Section DS_iota.
     
     Remark rem6 : canonS alpha i = ocons beta n (canonS gamma i).
     Proof.
-      subst alpha;  rewrite canonS_tail; auto with T1.    
+      subst alpha;  unfold canonS; rewrite canon_tail; auto with T1.    
     Qed.
     
     Remark rem61 : gamma t1< alpha.
@@ -414,7 +416,7 @@ Section DS_iota.
       -  simpl iota; left; apply R1_hcons; apply R1_hcons_mult;
            repeat rewrite iota_iotas.
          +  assumption.
-         + apply nf_canonS;auto.
+         + apply nf_canon;auto.
          +  auto.
       -  right;  simpl; destruct n.
          +  simpl;
@@ -423,7 +425,7 @@ Section DS_iota.
             replace  (hcons (iota beta) (iotas (canonS gamma i))) with
                 (hy_app (hcons (iota beta)hnil) (iotas (canonS gamma i))).
             apply R2_app; repeat  rewrite iota_iotas; auto.
-            eapply nf_canonS;auto.
+            eapply nf_canon;auto.
             simpl; auto.
             simpl; auto.
          + replace
@@ -438,7 +440,7 @@ Section DS_iota.
                (hy_app (hcons (iota beta) (hcons_mult (iota beta) (S n0) hnil))
                        (iotas (canonS gamma i))).
            * apply R2_app;repeat  rewrite iota_iotas; auto.
-             eapply nf_canonS;auto.
+             eapply nf_canon;auto.
            *  simpl; auto.
               simpl; auto.
               repeat f_equal.                
@@ -606,7 +608,7 @@ Proof.
     apply IHpath_toS.
     destruct H.
     subst.
-    apply nf_canonS.
+    apply nf_canon.
     auto.
 Qed.   
 

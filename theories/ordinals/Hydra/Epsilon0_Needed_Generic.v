@@ -57,10 +57,10 @@ Section Bounded.
             {   apply canonS_iota_i;  auto. }
             apply LE_trans with (m (iota (canonS alpha i0))); auto.
             { apply Hrec; auto. 
-              - apply nf_canonS;  auto.
+              - apply nf_canon;  auto.
               - destruct (canonS_limit_lub H); auto. 
                 destruct (H1 i0);   tauto.
-              - eapply nf_canonS;auto.
+              - eapply nf_canon;auto.
             }  
             apply LE_r; eapply m_decrease; eapply  H0.
           }

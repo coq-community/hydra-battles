@@ -201,7 +201,7 @@ Section S1.
         -  apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.
           + apply L04; auto.
-          + cbn; apply Canon.nf_canonS; auto.
+          + cbn; apply Canon.nf_canon; auto.
       Qed.
 
       Lemma L4 : exp2 (F_ lambda n) <= F_ lambda (S n).

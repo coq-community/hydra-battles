@@ -92,7 +92,6 @@ Proof  with auto with E0.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto.
-          auto with arith.             
         -- transitivity (S (S k)); [lia | apply IHalpha ]...
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
         +  subst  beta alpha.
@@ -114,7 +113,6 @@ Proof  with auto with E0.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto.
-            apply L_ge_id.
         -- transitivity (S (S (S k))); [lia | apply IHalpha ]...
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
         +  subst  beta alpha.
