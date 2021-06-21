@@ -529,7 +529,7 @@ Qed.
 
 Lemma canonS_iota i alpha :
     nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canonS alpha i).
+    iota alpha -1-> iota (canon alpha (S i)).
   Proof.
     intros;  destruct (canonS_iota_i i alpha  H H0).
     - exists 0; now left.

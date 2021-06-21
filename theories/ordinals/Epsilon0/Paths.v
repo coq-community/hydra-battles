@@ -127,6 +127,7 @@ Definition acc_from alpha beta := exists s, path_to beta s alpha.
 
 (** **  following a path *)
 
+(**  useful helper ? *)
 Fixpoint gnawS (alpha : T1) (s: list nat) :=
   match  s with
     | nil => alpha

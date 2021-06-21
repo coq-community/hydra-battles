@@ -5405,43 +5405,42 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 
 Our definition may look more complex than the mathematical one, but
 uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
-\coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. For simplicity's sake, 
-we use an auxiliary function \texttt{canonS} of type \texttt{T1 -> nat  -> T1} such that
-(\texttt{canonS  $\alpha$ $i$}) is equal to $\canonseq{\alpha}{i+1}$.
+\coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. 
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canonS}{Epsilon0.Canon}}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canon}{Epsilon0.Canon}}
 
 \label{Functions:canonS}
 \label{Functions:canon}
 \begin{Coqsrc}
-Fixpoint canonS alpha (i:nat) :=
+  Fixpoint canon alpha (i:nat) : T1 :=
   match alpha with
-      zero => zero
-    | ocons zero 0 zero => zero
-    | ocons zero (S k) zero => FS k
-    | ocons gamma 0 zero =>
-      match pred gamma with
-          Some gamma' => ocons gamma' i zero
-        | None => ocons (canonS gamma i) 0 zero
-      end
-    | ocons gamma (S n) zero =>
-       match pred gamma with
-           Some gamma' => ocons gamma n (ocons gamma' i zero)
-         | None => ocons gamma n (ocons (canonS gamma i) 0 zero)
-       end
-    | ocons alpha n beta => ocons alpha n (canonS beta i)
-  end.
+    zero => zero
+  | ocons zero 0 zero  => zero
+  | ocons zero (S k) zero  => FS k
+  | ocons gamma 0 zero => (match T1.pred gamma with
+                            Some gamma' =>
+                            match i with 0 => zero
+                                    |   S j => ocons gamma' j zero
+                            end
+                          | None =>
+                            ocons (canon gamma i) 0 zero
+                           end)
+  
+  |  ocons gamma (S n) zero =>
+     (match T1.pred gamma with
+       Some gamma' =>
+       (match i with
+         0 =>  ocons gamma n zero
+       | S j => ocons gamma n (ocons gamma' j zero)
+       end)
+       | None =>
+            ocons gamma n (ocons (canon gamma  i) 0 zero)
+      end)
+   |  ocons alpha n beta => ocons alpha n (canon beta i)  
+end.
 \end{Coqsrc}
 
-
-The following function computes $\canonseq{\alpha}{i}$, except for the case $i=0$, where it simply returns $0$\;\footnote{This restriction did not prevent us from proving all the main theorems of~\cite{KS81, KP82}. Nevertheless, in a future version of this development, we may define $\canonseq{\alpha}{0}$ exactly as 
-in~\cite{KS81}. But we are afraid this would  be done at the cost of making some proofs much more complex.}.
-
-\begin{Coqsrc}
- Definition canon alpha i := 
-   match i with 0 => zero | S j => canonS alpha j end. 
-\end{Coqsrc}
 
 For instance \coq's computing facilities allow us to verify the equalities\linebreak 
 \mathcolor{$\canonseq{\omega^\omega}{3} = \omega^3$} and
@@ -5449,25 +5448,21 @@ For instance \coq's computing facilities allow us to verify the equalities\lineb
 
 
 \begin{Coqsrc}
-Compute (canon (omega ^ omega) 3).
+Compute pp (canon (T1.omega ^ T1.omega) 3). 
 \end{Coqsrc}
 
 \begin{Coqanswer}
-  = phi0 (FS 2) : T1
-\end{Coqanswer}
+  = (_omega ^ 3)%pT1
+     : ppT1
+   \end{Coqanswer}
+   
 
 \begin{Coqsrc}
-Example canon3 :  canon (omega ^ omega) 3 = omega ^ 3.
-Proof. reflexivity. Qed.
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
-Compute pp (canon (omega ^ omega * 3) 42).  
+Compute pp (canon (T1.omega ^ T1.omega * 3) 42).  
 \end{Coqsrc}
 
 \begin{Coqanswer}
-    = (omega ^ omega * 2 + omega ^ 42)%pT1
+    = (_omega ^ _omega * 2 + _omega ^ 42)%pT1
      : ppT1
 \end{Coqanswer}
 
@@ -5492,10 +5487,10 @@ as simple as suggested by the equations of definition~\ref{def:canonseq-math}\,.
 Nevertheless, we can prove it by  plain structural induction on $\alpha$.
 
 \begin{Coqsrc}
-Lemma canonS_succ i alpha :
-  nf alpha ->  canonS (succ alpha) i = alpha.
+  Lemma canon_succ i alpha :
+  nf alpha -> canon (succ alpha) i = alpha.
 Proof.
- induction alpha.
+ revert i; induction alpha.
  (* ... *)
 \end{Coqsrc}
 
@@ -5508,7 +5503,8 @@ We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is
 \label{lemma:canonS_LT}
 \begin{Coqsrc}
 Lemma canonS_LT i alpha :
-  nf alpha -> alpha <> zero -> canonS alpha i t1<  alpha.
+  nf alpha -> alpha <> zero ->
+  canon alpha (S i) t1<  alpha.
 \end{Coqsrc}
 
 
@@ -5526,7 +5522,7 @@ Lemma canonS_limit_strong (lambda : T1) :
      nf lambda ->
      limitb lambda  ->
      forall beta, beta t1< lambda ->
-                  {i:nat | beta t1< canonS lambda i}.
+                  {i:nat | beta t1< canon lambda (S i)}.
 
 Proof.
   transfinite_induction_LT lambda.
@@ -5614,8 +5610,9 @@ parameterized by the destination $\beta$.
 \label{sect:path-to-def}
 
 \begin{Coqsrc}
-(Definition transition_S i : relation T1 :=
-  fun alpha beta =>  alpha <> zero /\ beta = canonS alpha i.
+Definition transition_S i : relation T1 :=
+fun alpha beta =>
+    alpha <> zero /\ beta = canonS alpha (S i).
 
 Definition transition i : relation T1 :=
   match i with 0 => fun _ _ => False | S j => transition_S j end.
@@ -5773,7 +5770,7 @@ The following lemma (proved in ~\href{../theories/html/hydras.Hydra.O2H.html}{Hy
 \begin{Coqsrc}
 Lemma canonS_iota i alpha :
     nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canonS alpha i).
+    iota alpha -1-> iota (canon alpha (S i)).
 \end{Coqsrc}
                 
 
@@ -6032,7 +6029,8 @@ Like in~\cite{KS81}, we shall use the notation $\alpha \xrightarrow[i]{} \beta$ 
 
 \begin{Coqsrc}
 Definition const_pathS i :=
-    clos_trans_1n T1 (fun alpha beta => beta = canonS alpha i).
+  clos_trans_1n T1 (fun alpha beta => alpha <> zero /\
+                                      beta = canon alpha (S i)).
 
 Definition const_path i alpha beta :=
   match i with
@@ -6136,14 +6134,14 @@ $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
 %   \end{theorem}
 
 
-  \begin{Coqsrc}
-Theorem Theorem_2_4 (lambda : T1) :
+\begin{Coqsrc}
+Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
    limitb lambda  ->
    forall i j, (i < j)%nat ->
-               const_pathS 0 (canonS lambda j)
-                             (canonS lambda i). 
-  \end{Coqsrc}
+               const_pathS 0 (canon lambda (S j))
+                             (canon lambda (S i)).
+\end{Coqsrc}
 
  We build the following paths :
 
@@ -6635,7 +6633,7 @@ Fixpoint gnaw (alpha : T1) (s: list nat) :=
   match s with
     | nil => alpha
     | (0::s') => gnaw  alpha s'
-    | (S i :: s')  =>  gnaw (canonS i alpha) s'
+    | (S i :: s')  =>  gnaw (canon alpha (S i)) s'
   end.
 
 Definition large alpha (s:list nat) := gnaw alpha s = zero.
@@ -6863,7 +6861,7 @@ Section lim.
             (Hnf : nf lambda)
             (Hlim : limitb lambda)
             (f : nat -> nat -> nat)
-            (H : forall k, L_spec (canonS lambda k) (f (S k))).
+            (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
   
   Let L_lim k := f k (S k).
 
