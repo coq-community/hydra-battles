@@ -41,11 +41,11 @@ This contribution contains two parts:
 - Coq-community maintainer(s):
   - Pierre Castéran ([**@Casteran**](https://github.com/Casteran))
 - License: [MIT License](LICENSE)
-- Compatible Coq versions: 8.11 or later
+- Compatible Coq versions: 8.13 or later
 - Additional dependencies:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.2 or later
-  - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.11 or later
+  - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - MathComp Algebra
 - Coq namespace: `hydras` + `additions`
 - Related publication(s):
