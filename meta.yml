@@ -73,17 +73,13 @@ license:
   identifier: MIT
 
 supported_coq_versions:
-  text: 8.11 or later
-  opam: '{(>= "8.11" & < "8.14~") | (= "dev")}'
+  text: 8.13 or later
+  opam: '{(>= "8.13" & < "8.14~") | (= "dev")}'
 
 tested_coq_opam_versions:
 - version: 'coq-dev'
   repo: 'mathcomp/mathcomp-dev'
 - version: '1.12.0-coq-8.13'
-  repo: 'mathcomp/mathcomp'
-- version: '1.12.0-coq-8.12'
-  repo: 'mathcomp/mathcomp'
-- version: '1.11.0-coq-8.11'
   repo: 'mathcomp/mathcomp'
 
 dependencies:
@@ -99,9 +95,9 @@ dependencies:
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.2 or later
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.11.0" & < "1.13~") | (= "dev")}'
+    version: '{(>= "1.12.0" & < "1.13~") | (= "dev")}'
   description: |-
-    [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.11 or later
+    [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
 - opam:
     name: coq-mathcomp-algebra
   description: |-
