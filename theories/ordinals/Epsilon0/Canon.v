@@ -47,7 +47,10 @@ Fixpoint canon alpha (i:nat) : T1 :=
    |  ocons alpha n beta => ocons alpha n (canon beta i)  
 end.
 
-Compute canon (phi0 T1.omega) 0. (* one *)
+
+Compute pp (canon (T1.omega ^ T1.omega) 3).
+
+Compute pp (canon (T1.omega ^ T1.omega * 3) 42).
 
 Compute canon (phi0 10) 0.
 
@@ -144,7 +147,7 @@ Proof.
  - now apply canonS_lim2.
 Qed.
 
-(* ICI *)
+
 Lemma canon_succ i alpha : nf alpha -> canon (succ alpha) i = alpha.
 Proof.
   revert i; induction alpha.
@@ -930,6 +933,9 @@ Qed.
 
 Open Scope E0_scope.
 
+(** This is a helper which should be deprecated later :
+    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
+
 Definition CanonS (alpha:E0)(i:nat): E0.
   refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canon.
   destruct alpha;auto.
@@ -1020,9 +1026,9 @@ Lemma CanonS_Phi0_Succ alpha i : CanonS (Phi0 (Succ alpha)) i =
 Proof.      
   apply E0_eq_intro;  unfold Omega_term, CanonS, Phi0, Succ, canonS.
   simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
-  -  intro H;  destruct (succ_not_zero _ H);  auto.
+  - intro H; destruct (succ_not_zero _ H);  auto.
   - reflexivity. 
-  -  intro; apply cnf_ok.
+  - intro; apply cnf_ok.
   - intros; apply cnf_ok.
 Qed.
 
