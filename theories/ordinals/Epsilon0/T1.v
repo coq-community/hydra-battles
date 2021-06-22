@@ -143,22 +143,48 @@ Fixpoint compare (alpha beta:T1):comparison :=
        end)
   end.
 
-
 Definition lt_b alpha beta : bool :=
   match compare alpha beta with
-      Lt => true
+    | Lt => true
     | _ => false
   end.
 
-
-Definition le_b alpha beta := negb (lt_b beta alpha).
-
-Definition eq_b alpha beta := match compare alpha beta with
-                                Eq => true
-                              | _ => false
-                              end.
-
 Definition lt alpha beta : Prop := lt_b alpha beta.
+
+
+Lemma compare_rev :
+  forall alpha beta,
+  compare beta alpha = CompOpp (compare alpha beta).
+Proof.
+  induction alpha, beta.
+  1-3: easy.
+  simpl.
+  rewrite IHalpha1, Nat.compare_antisym.
+  destruct (compare alpha1 beta1).
+  2-3: easy.
+  now destruct (n ?= n0) eqn:?; simpl.
+Qed.
+
+(*
+From hydras Require Import Prelude.Comparable.
+
+Instance : Comparable lt compare.
+Proof.
+  constructor.
+  unfold lt, lt_b; induction alpha, beta.
+  1-3: easy.
+  simpl.
+  specialize (IHalpha1 beta1).
+  specialize (IHalpha2 beta2).
+  rewrite compare_rev with alpha1 beta1, compare_rev with alpha2 beta2, Nat.compare_antisym in *.
+  destruct (compare alpha1 beta1), (compare alpha2 beta2), (n0 ?= n) eqn:Heq; simpl in *; subst.
+  2-27: easy.
+  now apply Nat.compare_eq_iff in Heq as ->.
+Qed.
+
+Check compare_reflect.
+Check le.
+*)
 
 Example Ex0:
   lt (ocons (phi0 (phi0 omega)) 2
@@ -166,12 +192,6 @@ Example Ex0:
                    (ocons (phi0 9) 63 zero)))
      (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
 Proof. reflexivity. Qed.
-
-Definition le (alpha beta :T1) :=
-  match compare alpha beta with
-    Gt => False
-  | _ => True
-  end. 
 
 Global Hint Unfold le : T1. 
 
@@ -238,8 +258,6 @@ Fixpoint plus (alpha beta : T1) :T1 :=
 where "alpha + beta" := (plus alpha beta) : t1_scope.
 
 
-
-
 (** *** multiplication *)
 
 Fixpoint mult (alpha beta : T1) :T1 :=
@@ -294,14 +312,14 @@ Fixpoint exp_F (alpha : T1)(n : nat) :T1 :=
 
 
 
-Fixpoint exp  (alpha beta : T1) :T1 :=
+Fixpoint exp (alpha beta : T1) :T1 :=
   match alpha ,beta with
  |  _, zero => ocons zero 0 zero
  | ocons zero 0 _ , _ => ocons zero 0 zero
  | zero, _         => zero
  | x , ocons zero n' _ =>  exp_F x (S n')
  | ocons zero n _, ocons  (ocons zero 0 zero) n'  b' =>
-        ((ocons (ocons zero n' zero) 0 zero) * 
+        ((ocons (ocons zero n' zero) 0 zero) *
                 ((ocons zero n zero) ^  b'))
  | ocons zero n _, ocons  a' n' b' =>
             (omega_term 
@@ -317,7 +335,7 @@ where "alpha ^ beta " := (exp alpha beta) : t1_scope.
 
 (** * Lemmas *)
 
-Lemma compare_refl : forall alpha, compare alpha alpha =  Eq. (** TODO remove in class Comparable **)
+Lemma compare_refl : forall alpha, compare alpha alpha =  Eq. (** TODO rm is in class comparable **)
 Proof.
  induction alpha; cbn; auto.
  rewrite IHalpha1, IHalpha2.
@@ -329,61 +347,59 @@ Lemma compare_of_phi0 alpha beta:
    cbn;  now destruct (compare alpha beta).
 Qed.
 
-
-
-Lemma zero_lt : forall alpha n beta, lt  zero (ocons alpha  n beta).
-Proof.  reflexivity. Qed. 
+Lemma zero_lt :
+  forall alpha n beta, lt zero (ocons alpha n beta).
+Proof.  reflexivity. Qed.
 
 Lemma head_lt :
   forall alpha alpha' n n' beta beta',
-       lt alpha  alpha' -> 
+       lt alpha  alpha' ->
        lt (ocons alpha n beta)  (ocons alpha' n' beta').
 Proof.
-  unfold lt, lt_b ;  intros.   
-  cbn;  destruct (compare alpha alpha') ; auto;   discriminate. 
+  unfold lt, lt_b; intros.
+  cbn;  destruct (compare alpha alpha'); auto; discriminate.
 Qed.
 
 Lemma coeff_lt : forall alpha n n' beta beta',
-                (n < n')%nat -> 
+                (n < n')%nat ->
                 lt (ocons alpha n beta)  (ocons alpha n' beta').
 Proof.
-  unfold lt, lt_b ;  intros;  cbn;   rewrite compare_refl.
+  unfold lt, lt_b ; intros; cbn; rewrite compare_refl.
   now apply Nat.compare_lt_iff in H as ->.
-Qed. 
+Qed.
 
 Lemma tail_lt : forall alpha n beta beta',
-               lt beta  beta' -> 
+               lt beta  beta' ->
                lt (ocons alpha n beta)  (ocons alpha n beta').
 Proof.
  intros; unfold lt, lt_b; cbn; rewrite compare_refl.
  now rewrite Nat.compare_refl.
-Qed. 
+Qed.
 
 Global Hint Resolve zero_lt head_lt coeff_lt tail_lt  : T1.
 
+
 Open Scope t1_scope.
 
-
-
-Lemma zero_nf : nf zero. 
+Lemma zero_nf : nf zero.
 Proof. reflexivity. Qed.
 
 
 Lemma single_nf :  forall a n, nf a ->  nf (ocons a n zero).
-Proof.   unfold nf; now cbn. Qed. 
+Proof.   unfold nf; now cbn. Qed.
 
-Lemma ocons_nf : forall a n a' n' b, lt a'  a -> 
-                           nf a -> 
-                           nf(ocons a' n' b)-> 
+Lemma ocons_nf : forall a n a' n' b, lt a'  a ->
+                           nf a ->
+                           nf(ocons a' n' b)->
                            nf(ocons a n (ocons a' n' b)).
-Proof. 
-unfold nf; cbn; intros a n a' n' b H H0 H1;  rewrite H0.
-destruct b. 
+Proof.
+unfold nf; cbn; intros a n a' n' b H H0 H1; rewrite H0.
+destruct b.
 - red in H; rewrite H1, H; reflexivity.
 - simpl; simpl in H1;
   destruct (nf_b a'), (lt_b b1 a'), (nf_b b1), (nf_b b2), b2; simpl in *; auto.
   all : destruct (lt_b b2_1 b1); simpl in *;auto.
-Qed. 
+Qed.
 
 Global Hint Resolve zero_nf single_nf ocons_nf: T1.
 
@@ -398,7 +414,7 @@ Qed.
 Lemma nf_inv2 : forall a n b, nf (ocons a n b) -> nf b.
 Proof.
   unfold nf; cbn; destruct a, b;  auto with T1.
-  destruct (nf_b (ocons b1 n0 b2)); auto. 
+  destruct (nf_b (ocons b1 n0 b2)); auto.
   destruct (nf_b (ocons b1 n1 b2)); auto.
   destruct (nf_b (ocons a1 n a2)); auto.
 Qed.
@@ -411,11 +427,11 @@ Proof.
   destruct a, a', b';  try discriminate; auto with T1.
   -   intro H; red in H;repeat rewrite andb_true_iff in H.
        simpl in H.
-      decompose [and] H.  discriminate.  
+      decompose [and] H.  discriminate.
   -   intro H;  red in H;  repeat rewrite andb_true_iff in H;
-        decompose [and] H;discriminate.  
+        decompose [and] H;discriminate.
   -   intro H;   red in H; repeat rewrite andb_true_iff in H;
-        decompose [and] H;discriminate.  
+        decompose [and] H;discriminate.
   -   unfold lt;auto.
       intro H;  red in H;  repeat rewrite andb_true_iff in H.
       decompose [and] H; auto. 
@@ -434,7 +450,7 @@ Ltac nf_decomp H :=
           assert (lt := nf_inv3 H)
      | nf (ocons ?t1 ?n ?t2) => assert (nf0 := nf_inv1 H); assert(nf1 := nf_inv2 H)
      end.
-   
+
 (**  lt alpha (phi0 beta)  *)
 (** Should be deprecated *)
 
@@ -446,13 +462,7 @@ Inductive nf_helper : T1 -> T1 -> Prop :=
                 nf_helper (ocons alpha' n' beta') alpha.
 
 
-
-
 Global Hint Constructors nf_helper : T1.
-
-
-
-
 
 (* A tactic for decomposing a non zero ordinal *)
 (* use : H : lt zero ?c ; a n b : names to give to the constituents of 
@@ -462,8 +472,8 @@ Definition get_decomposition : forall c:T1, lt zero c ->
                            {a:T1 & {n:nat & {b:T1 | c = ocons a n b}}}.
 Proof.
  intro c; case c.
- - intro H; elimtype False; inversion H. 
- -  intros c0 n c1; exists c0;exists n;exists c1;auto.
+ - intro H; elimtype False; inversion H.
+ -  intros c0 n c1; exists c0; exists n; exists c1; auto.
 Defined.
 
 Ltac decomp_exhib H a n b e:= 
@@ -508,53 +518,33 @@ Qed.
 (**  **  Properties of [compare] *)
 
 
-Lemma compare_rev : forall alpha beta, compare beta alpha =
-                                       CompOpp (compare alpha beta).
-Proof.
-  induction alpha, beta.
-  1-3: easy.
-  simpl.
-  rewrite IHalpha1, Nat.compare_antisym.
-  destruct (compare alpha1 beta1).
-  2-3: easy.
-  now destruct (n ?= n0) eqn:?; simpl.
-Qed.
 
 (* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
 
-From hydras Require Import Prelude.Comparable.
 
-Instance : Comparable lt compare.
+(** ** Properties of [compare]: first part *)
+
+Lemma eq_b_iff (alpha beta : T1) :
+  eq_b alpha beta = true <-> alpha = beta.
 Proof.
-  constructor.
-  {
-    unfold lt, lt_b; induction alpha, beta.
-    1-3: easy.
-    simpl.
-    specialize (IHalpha1 beta1).
-    specialize (IHalpha2 beta2).
-    rewrite compare_rev with alpha1 beta1, compare_rev with alpha2 beta2, Nat.compare_antisym in *.
-    destruct (compare alpha1 beta1), (compare alpha2 beta2), (n0 ?= n) eqn:Heq; simpl in *; subst.
-    2-27: easy.
-    now apply Nat.compare_eq_iff in Heq as ->.
-  }
-  {
-    induction alpha; cbn; auto.
-    rewrite IHalpha1, IHalpha2.
-    now rewrite Nat.compare_refl.
-  }
+  split.
+  - unfold eq_b.
+    specialize (compare_reflect alpha beta).
+    case (compare alpha beta);auto; try discriminate.
+  - intro;subst;unfold eq_b; now rewrite compare_refl.
 Qed.
 
-(* TODO make all binary definitions *)
-Check eq_b. (* type correct ??? *)
-Check eq_b_iff.
-Check compare_Eq_impl.
-Check compare_eq_iff.
+Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
+Proof.
+  intros * H.
+  pose proof (compare_reflect a b).
+  now rewrite H in *; simpl.
+Qed.
 
-Check compare_reflect.
-
-
-
+Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
+Proof.
+  split; intro H; [ now apply compare_Eq_impl|subst; apply compare_refl].
+Qed.
 
 Lemma compare_Lt_impl a b :  compare a b = Lt -> lt a b.
 Proof.

@@ -1,55 +1,174 @@
 From Coq Require Import Relations RelationClasses.
 
-Class Comparable {A:Type} (lt : relation A) (compare : A -> A -> comparison) :=
-  { 
-    compare_reflect : forall alpha beta,
-      match compare alpha beta with
-      | Lt => lt alpha beta
-      | Eq => alpha = beta
-      | Gt => lt beta alpha
-      end;
-    compare_refl: forall alpha, compare alpha alpha = Eq
+Class Comparable {A:Type} 
+  (lt: relation A)
+  (le: relation A)
+  (compare : A -> A -> comparison) :=
+  {
+    lt_irrefl: forall a,
+      ~ lt a a;
+    lt_trans: forall a b c,
+      lt a b -> lt b c -> lt a c;
+      (* TODO formulé la cloture transitive de `le` 
+        - reflexive
+        - lt inclus dans le
+      *)
+    le_lt_eq: forall a b,
+      le a b <-> lt a b \/ a = b;
+    compare_correct :forall a b,
+      CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
   }.
 
 Section Comparable.
 
-  Context {A:Type} {lt : relation A} {compare : A -> A -> comparison}
-          {comparable : Comparable lt compare}.
+  Context {A: Type}
+          {lt: relation A}
+          {le: relation A}
+          {eq: relation A}
+          {compare : A -> A -> comparison}
+         {comparable : Comparable lt le compare}.
 
-  (* Eq part *)
-  Definition eq_b alpha beta :=
-    match compare alpha beta with
+  (* Relation Lt *)
+  Definition lt_b a b :=
+    match compare a b with
+    | Lt => true
+    | _ => false
+    end.
+
+  Lemma lt_b_iff:
+    forall a b,
+    lt_b a b = true <-> lt a b.
+  Proof.
+    unfold lt_b.
+    intros *.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - congruence.
+    - now apply lt_irrefl in H.
+    - assumption.
+    - reflexivity.
+    - congruence.
+    - exfalso; now apply lt_irrefl with a, lt_trans with b.
+  Qed.
+
+  Lemma compare_lt_iff :
+    forall a b,
+    compare a b = Lt <-> lt a b.
+  Proof.
+    intros *.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - congruence.
+    - now apply lt_irrefl in H.
+    - assumption.
+    - reflexivity.
+    - congruence.
+    - exfalso; now apply lt_irrefl with a, lt_trans with b.
+  Qed.
+
+
+  (* Relation Eq *)
+  Definition eq_b a b :=
+    match compare a b with
     | Eq => true
     | _ => false
     end.
 
-  Lemma eq_b_iff (alpha beta : A) :
-    eq_b alpha beta = true <-> alpha = beta.
+
+  Lemma eq_b_iff:
+    forall a b,
+    eq_b a b = true <-> a = b.
   Proof.
-    split.
-    - unfold eq_b.
-      specialize (compare_reflect alpha beta).
-      case (compare alpha beta); auto; try discriminate.
-    - intro.
-      subst.
-      unfold eq_b.
-      now rewrite compare_refl.
+    intros *.
+    unfold eq_b.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - reflexivity.
+    - reflexivity.
+    - congruence.
+    - subst.
+      now apply lt_irrefl in Hlt.
+    - congruence.
+    - subst.
+      now apply lt_irrefl in Hgt.
   Qed.
 
-  Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
+  Lemma compare_eq_iff:
+    forall a b,
+    compare a b = Eq <-> a = b.
   Proof.
-    intros * H.
-    pose proof (compare_reflect a b).
-    now rewrite H in *; simpl.
+    intros *.
+    unfold eq_b.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - reflexivity.
+    - reflexivity.
+    - congruence.
+    - subst.
+      now apply lt_irrefl in Hlt.
+    - congruence.
+    - subst.
+      now apply lt_irrefl in Hgt.
   Qed.
 
-  Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
+  Lemma compare_refl:
+    forall a,
+    compare a a = Eq.
   Proof.
-    split; intro H.
-    - now apply compare_Eq_impl.
-    - rewrite H.
-      apply compare_refl.
+    intro.
+    pose proof (compare_correct a a) as [H | H | H].
+    1: reflexivity.
+    all: now apply lt_irrefl in H.
   Qed.
+
+  (* Reflation Gt *)
+  Lemma compare_gt_iff :
+    forall a b,
+    compare a b = Gt <-> lt b a.
+  Proof.
+    intros *.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - congruence.
+    - now apply lt_irrefl in H.
+    - congruence.
+    - exfalso; now apply lt_irrefl with a, lt_trans with b.
+    - assumption.
+    - reflexivity.
+  Qed.
+
+  (* Relation Le *)
+  Definition le_b a b :=
+    negb (lt_b b a).
+
+  Lemma le_b_iff:
+    forall a b,
+    le_b a b = true <-> le a b.
+  Proof.
+    intros *.
+    unfold le_b, negb, lt_b.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    only 1: subst;
+    split; intro.
+    - apply le_lt_eq; now right.
+    - now rewrite compare_refl.
+    - apply le_lt_eq; now left.
+    - now apply compare_gt_iff in Hlt as ->.
+    - apply compare_lt_iff in Hgt.
+      rewrite Hgt in H.
+      congruence.
+    - exfalso.
+      apply le_lt_eq in H as [Hlt | Heq]. 
+      * exfalso; now apply lt_irrefl with a, lt_trans with b.
+      * rewrite Heq in Hgt.
+        now apply lt_irrefl in Hgt.
+  Qed.
+
 
 
 
