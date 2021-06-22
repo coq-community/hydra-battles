@@ -317,7 +317,7 @@ where "alpha ^ beta " := (exp alpha beta) : t1_scope.
 
 (** * Lemmas *)
 
-Lemma compare_refl : forall alpha, compare alpha alpha =  Eq.
+Lemma compare_refl : forall alpha, compare alpha alpha =  Eq. (** TODO remove in class Comparable **)
 Proof.
  induction alpha; cbn; auto.
  rewrite IHalpha1, IHalpha2.
@@ -527,42 +527,34 @@ From hydras Require Import Prelude.Comparable.
 Instance : Comparable lt compare.
 Proof.
   constructor.
-  unfold lt, lt_b; induction alpha, beta.
-  1-3: easy.
-  simpl.
-  specialize (IHalpha1 beta1).
-  specialize (IHalpha2 beta2).
-  rewrite compare_rev with alpha1 beta1, compare_rev with alpha2 beta2, Nat.compare_antisym in *.
-  destruct (compare alpha1 beta1), (compare alpha2 beta2), (n0 ?= n) eqn:Heq; simpl in *; subst.
-  2-27: easy.
-  now apply Nat.compare_eq_iff in Heq as ->.
+  {
+    unfold lt, lt_b; induction alpha, beta.
+    1-3: easy.
+    simpl.
+    specialize (IHalpha1 beta1).
+    specialize (IHalpha2 beta2).
+    rewrite compare_rev with alpha1 beta1, compare_rev with alpha2 beta2, Nat.compare_antisym in *.
+    destruct (compare alpha1 beta1), (compare alpha2 beta2), (n0 ?= n) eqn:Heq; simpl in *; subst.
+    2-27: easy.
+    now apply Nat.compare_eq_iff in Heq as ->.
+  }
+  {
+    induction alpha; cbn; auto.
+    rewrite IHalpha1, IHalpha2.
+    now rewrite Nat.compare_refl.
+  }
 Qed.
+
+(* TODO make all binary definitions *)
+Check eq_b. (* type correct ??? *)
+Check eq_b_iff.
+Check compare_Eq_impl.
+Check compare_eq_iff.
 
 Check compare_reflect.
 
-(** ** Properties of [compare]: first part *)
 
-Lemma eq_b_iff (alpha beta : T1) :
-  eq_b alpha beta = true <-> alpha = beta.
-Proof.
-  split.
-  - unfold eq_b.
-    specialize (compare_reflect alpha beta).
-    case (compare alpha beta);auto; try discriminate.
-  - intro;subst;unfold eq_b; now rewrite compare_refl.
-Qed.
 
-Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
-Proof.
-  intros * H.
-  pose proof (compare_reflect a b).
-  now rewrite H in *; simpl.
-Qed.
-
-Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
-Proof.
-  split; intro H; [ now apply compare_Eq_impl|subst; apply compare_refl].
-Qed.
 
 Lemma compare_Lt_impl a b :  compare a b = Lt -> lt a b.
 Proof.

@@ -1,12 +1,14 @@
 From Coq Require Import Relations RelationClasses.
 
 Class Comparable {A:Type} (lt : relation A) (compare : A -> A -> comparison) :=
-  { compare_reflect : forall alpha beta,
+  { 
+    compare_reflect : forall alpha beta,
       match compare alpha beta with
       | Lt => lt alpha beta
       | Eq => alpha = beta
       | Gt => lt beta alpha
-      end
+      end;
+    compare_refl: forall alpha, compare alpha alpha = Eq
   }.
 
 Section Comparable.
@@ -14,6 +16,45 @@ Section Comparable.
   Context {A:Type} {lt : relation A} {compare : A -> A -> comparison}
           {comparable : Comparable lt compare}.
 
+  (* Eq part *)
+  Definition eq_b alpha beta :=
+    match compare alpha beta with
+    | Eq => true
+    | _ => false
+    end.
+
+  Lemma eq_b_iff (alpha beta : A) :
+    eq_b alpha beta = true <-> alpha = beta.
+  Proof.
+    split.
+    - unfold eq_b.
+      specialize (compare_reflect alpha beta).
+      case (compare alpha beta); auto; try discriminate.
+    - intro.
+      subst.
+      unfold eq_b.
+      now rewrite compare_refl.
+  Qed.
+
+  Lemma compare_Eq_impl : forall a b, compare a b = Eq -> a = b.
+  Proof.
+    intros * H.
+    pose proof (compare_reflect a b).
+    now rewrite H in *; simpl.
+  Qed.
+
+  Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
+  Proof.
+    split; intro H.
+    - now apply compare_Eq_impl.
+    - rewrite H.
+      apply compare_refl.
+  Qed.
+
+
+
+
+  (* other important lemmas *)
   Lemma compare_correct (alpha beta : A) :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
                 (compare alpha beta).
@@ -21,9 +62,6 @@ Section Comparable.
     generalize (compare_reflect alpha beta).
     destruct (compare alpha beta); now constructor.
   Qed.
-
-  Lemma compare_eq_iff a b :  compare a b = Eq <-> a = b.
-  Admitted.
 
   Lemma compare_trans :
     forall comp_res a b c,
