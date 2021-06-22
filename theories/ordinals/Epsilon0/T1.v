@@ -655,7 +655,7 @@ Proof.
  - assumption.
 Qed.
 
-Theorem lt_trans (alpha beta gamma : T1) :  (** TODO make lemma lt trans **)
+Theorem lt_trans (alpha beta gamma : T1) :  (** FIXME use this lemma to make Compare class **)
   lt alpha beta -> lt beta gamma -> lt alpha gamma.
   Proof.
   intro H; revert gamma; revert  H;  revert  alpha beta.
@@ -689,7 +689,7 @@ Theorem lt_trans (alpha beta gamma : T1) :  (** TODO make lemma lt trans **)
          ++  subst; eauto with T1.
 Qed.
 
-Theorem lt_not_gt alpha beta :   (** TODO make lemmain class compare **)
+Theorem lt_not_gt alpha beta :   (** TODO rm this lemma exist in compare **)
   lt alpha beta  -> ~ lt beta alpha.
 Proof.
  intros  H H0;
@@ -716,12 +716,12 @@ Proof.
   now apply Nat.compare_lt_iff.
 Qed.
 
-Lemma le_refl (alpha : T1) : le alpha alpha.  (** TODO make lemmain class compare **)
-Proof. 
+Lemma le_refl (alpha : T1) : le alpha alpha.  (** FIXME rm this lemma in compare **)
+Proof.
  unfold le; now rewrite compare_refl.
 Qed.
 
-Lemma lt_le_incl : (** TODO make lemmain class compare **)
+Lemma lt_le_incl : (** FIXME rm this lemma in compare **)
   forall alpha beta,
   lt alpha beta -> le alpha beta.
 Proof.
@@ -729,7 +729,7 @@ Proof.
   destruct (compare alpha beta); auto; try discriminate.
 Qed. 
 
-Lemma le_eq_lt_dec alpha beta: (** FIXME useless lemma (lemma le_lt_or_eq exist) **)
+Lemma le_eq_lt_dec alpha beta: (** FIXME use this lemma to init class **)
   le alpha beta ->
   {alpha = beta} + {lt alpha beta}.
 Proof.
@@ -745,11 +745,14 @@ Proof.
   - destruct alpha1; cbn ; auto with T1.
 Qed.
 
-Definition max (alpha beta : T1) : T1 := match compare alpha beta
-                             with Lt => beta | _ => alpha end.
+Definition max (alpha beta : T1) : T1 :=  (** FIXME rm exist in compare **)
+  match compare alpha beta with 
+  | Lt => beta
+  | _ => alpha
+  end.
 
 
-Lemma le_lt_or_eq (alpha beta: T1): (** FIXME use this lemma to init class **)
+Lemma le_lt_or_eq (alpha beta: T1): (** FIXME useless lemma (lemma le_eq_lt_dec exist) **)
   le alpha beta ->
   alpha = beta \/ lt alpha beta.
 Proof.
@@ -808,7 +811,7 @@ Proof.
  unfold le; destruct  a; reflexivity. 
 Qed.
 
-Theorem le_trans : (** TODO make this lema in Comparable **)
+Theorem le_trans : (** FIXME rm this lemma already exist **)
   forall a b c, le a  b -> le b  c -> le a  c.
 Proof.
  intros a b c H H0; destruct (le_lt_or_eq _ _ H).
@@ -818,7 +821,7 @@ Proof.
   + apply lt_le_incl; eapply lt_trans; eauto.
 Qed.
 
-Theorem le_lt_trans : (** TODO make this lema in Comparable **)
+Theorem le_lt_trans : (** FIXME rm this lemma already exist **)
   forall a b c, le a  b -> lt b  c -> lt a  c.
 Proof.
    intros a b c H H0; destruct (le_lt_or_eq _ _ H).
@@ -826,7 +829,7 @@ Proof.
  -  intros;eapply lt_trans;eauto.
 Qed.
 
-Theorem lt_le_trans : (** TODO make this lema in Comparable **)
+Theorem lt_le_trans : (** FIXME rm this lemma already exist **)
   forall a b c, lt a  b -> le b  c -> lt a  c.
 Proof.
   intros a b c H H0; destruct (le_lt_or_eq _ _ H0).
@@ -862,8 +865,8 @@ Proof.
   - exfalso; eapply not_lt_zero; eassumption.
 Qed.
 
-Lemma lt_not_le: (** TODO make this lema in Comparable **)
-  forall a b,  lt a b -> ~ le b  a.
+Lemma lt_not_le: (** FIXME rm this lemma already exist **)
+  forall a b,  lt a b -> ~ le b a.
 Proof.
  intros a b H H0; destruct (le_lt_or_eq _ _ H0).
  - subst; destruct (lt_irrefl H).
@@ -1128,7 +1131,7 @@ Proof.
   intros c1 c2; generalize (compare_reflect c1 c2).
   case (compare c1 c2);auto.
   - intros e H;subst c2;case (lt_irrefl H).
-  - intros H1 H2;case (lt_not_gt H2);auto.
+  - intros H1 H2; case (lt_not_gt H2);auto.
 Qed.
 
 Lemma compare_Gt_eq : (** FIXME rm this lemma use gt_iff **)
@@ -1137,7 +1140,7 @@ Proof.
   intros a b; generalize (compare_reflect a b);  
     case (compare a b);auto.
   - intros e H;subst b;case (lt_irrefl H).
-  -  intros H1 H2;case (lt_not_gt H2);auto.
+  -  intros H1 H2; case (lt_not_gt H2);auto.
 Qed.
 
 Theorem compare_reflectR ( alpha beta : T1) : (** TODO make this lemma **)
@@ -1173,7 +1176,7 @@ Qed.
 
 (** ** Properties of [max] *)
 
-Lemma max_le_1 (alpha beta : T1) : le alpha  (max alpha beta). (** TODO make this lemma **)
+Lemma max_le_1 (alpha beta : T1) : le alpha  (max alpha beta). (** TODO rm already exist in compare **)
 Proof.
   unfold max; case (lt_eq_lt_dec alpha beta).
   -  destruct 1.
@@ -1182,7 +1185,7 @@ Proof.
   - intro;rewrite compare_Gt_eq;  auto with T1. 
 Qed.
 
-Lemma max_comm alpha beta :  max alpha beta = max beta alpha. (** TODO make this lemma **)
+Lemma max_comm alpha beta :  max alpha beta = max beta alpha. (** TODO rm already exist in compare **)
 Proof.
   unfold max; case (lt_eq_lt_dec alpha beta).
   -  destruct 1.
@@ -1192,7 +1195,7 @@ Proof.
   -  intro; rewrite compare_Gt_eq ;auto; rewrite compare_Lt_eq;auto.
 Qed.
 
-Lemma max_dec alpha beta : (** TODO make this lemma **)
+Lemma max_dec alpha beta : (** TODO rm already exist in compare **)
   {max alpha beta = alpha} + {max alpha beta = beta}.
 Proof.
   unfold max;  case (lt_eq_lt_dec alpha beta);auto.
