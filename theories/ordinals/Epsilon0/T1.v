@@ -522,13 +522,11 @@ Qed.
 
 (* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
 
-Lemma compare_reflect : forall alpha beta,
-    match compare alpha beta with
-    | Lt => lt alpha beta
-    | Eq => alpha = beta
-    | Gt => lt beta alpha
-    end.
+From hydras Require Import Prelude.Comparable.
+
+Instance : Comparable lt compare.
 Proof.
+  constructor.
   unfold lt, lt_b; induction alpha, beta.
   1-3: easy.
   simpl.
@@ -540,13 +538,7 @@ Proof.
   now apply Nat.compare_eq_iff in Heq as ->.
 Qed.
 
-Lemma compare_correct  (alpha beta : T1) :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-Proof.
-  generalize (compare_reflect alpha beta).
-  destruct (compare alpha beta); now constructor.
-Qed.
+Check compare_reflect.
 
 (** ** Properties of [compare]: first part *)
 
@@ -3850,26 +3842,6 @@ Proof.
   - rewrite !gt_iff.
     intros; eapply lt_trans; eassumption.
 Qed.
-
-Ltac compare_trans H1 H2 intropattern :=
-  lazymatch type of (H1, H2) with
-  | ((compare ?a ?b = ?comp_res) * (compare ?b ?c = ?comp_res))%type =>
-      assert (compare a c = comp_res) as intropattern by
-      (apply compare_trans with b;
-      [ exact H1 | exact H2 ])
-  | ((compare ?a ?b = ?comp_res) * (compare ?b ?c = Eq))%type =>
-      assert (compare a c = comp_res) as intropattern by
-      (assert (b = c) as -> by (apply compare_eq_iff; exact H2);
-      exact H1)
-  | ((compare ?a ?b = Eq) * (compare ?b ?c = ?comp_res))%type =>
-      assert (compare a c = comp_res) as intropattern by
-      (assert (a = b) as -> by (apply compare_eq_iff; exact H1);
-      exact H2)
-  | _ => fail "Not a supported case."
-  end.
-
-Tactic Notation "compare" "trans" constr(H1) constr(H2) "as" simple_intropattern(intropattern) :=
-  compare_trans H1 H2 intropattern.
 
 Lemma plus_assoc : forall a b c: T1,  a + (b + c) = a + b + c.
 Proof.
