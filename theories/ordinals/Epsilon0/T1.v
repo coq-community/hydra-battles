@@ -3828,4 +3828,367 @@ Compute pp (3 * (omega * 7 + 15)).
 
 
 
+Lemma plus_cons_cons_eqn a n b a' n' b':
+  (ocons a n b) + (ocons a' n' b') =
+  match compare a a' with
+  | Eq => ocons a (S (n + n')) b'
+  | Lt => ocons a' n' b'
+  | Gt => ocons a n (plus b (ocons a' n' b'))
+  end.
+Proof. reflexivity. Qed.
+
+
+Lemma compare_trans :
+  forall comp_res a b c,
+  compare a b = comp_res -> compare b c = comp_res -> compare a c = comp_res.
+Proof.
+  destruct comp_res; intros *.
+  - rewrite !compare_eq_iff.
+    apply eq_trans.
+  - rewrite !lt_iff.
+    apply lt_trans.
+  - rewrite !gt_iff.
+    intros; eapply lt_trans; eassumption.
+Qed.
+
+Ltac compare_trans H1 H2 intropattern :=
+  lazymatch type of (H1, H2) with
+  | ((compare ?a ?b = ?comp_res) * (compare ?b ?c = ?comp_res))%type =>
+      assert (compare a c = comp_res) as intropattern by
+      (apply compare_trans with b;
+      [ exact H1 | exact H2 ])
+  | ((compare ?a ?b = ?comp_res) * (compare ?b ?c = Eq))%type =>
+      assert (compare a c = comp_res) as intropattern by
+      (assert (b = c) as -> by (apply compare_eq_iff; exact H2);
+      exact H1)
+  | ((compare ?a ?b = Eq) * (compare ?b ?c = ?comp_res))%type =>
+      assert (compare a c = comp_res) as intropattern by
+      (assert (a = b) as -> by (apply compare_eq_iff; exact H1);
+      exact H2)
+  | _ => fail "Not a supported case."
+  end.
+
+Tactic Notation "compare" "trans" constr(H1) constr(H2) "as" simple_intropattern(intropattern) :=
+  compare_trans H1 H2 intropattern.
+
+Lemma plus_assoc : forall a b c: T1,  a + (b + c) = a + b + c.
+Proof.
+  induction a, b, c; only 1-6: easy.
+  - now rewrite !plus_zero_r.
+  - rewrite !plus_cons_cons_eqn.
+    destruct (compare b1 c1) eqn:Hbc, (compare a1 b1) eqn:Hab;
+    rewrite !plus_cons_cons_eqn.
+    2,8: now rewrite Hbc, Hab.
+    all: try compare trans Hab Hbc as ->.
+    + rewrite Hab.
+      f_equal; lia.
+    + now rewrite <- IHa2, plus_cons_cons_eqn, Hab, Hbc.
+    + reflexivity.
+    + now rewrite Hbc.
+    + destruct (compare a1 c1) eqn:?.
+      1-2: reflexivity.
+      f_equal.
+      rewrite <- IHa2. 
+      simpl.
+      now rewrite Hbc.
+    + now rewrite Hab.
+    + rewrite Hab, <- IHa2.
+      simpl.
+      now rewrite Hbc.
+Qed.
+
+Lemma lt_plus_l:
+  forall {a b c : T1} {n:nat}, lt a (a + ocons b n c).
+Proof.
+  induction a; intros *.
+  - apply zero_lt.
+  - simpl.
+    destruct (compare a1 b) eqn: Hcomp.
+    + apply coeff_lt; lia.
+    + now apply head_lt, lt_iff.
+    + apply tail_lt, IHa2.
+Qed.
+
+
+Lemma lt_plus_r:
+  forall {a b c : T1} {n:nat}, ~ lt (a + ocons b n c) a.
+Proof.
+  induction a; simpl; intros * H.
+  - now apply not_lt_zero in H.
+  - destruct (compare a1 b) eqn: Hcomp.
+    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
+    + apply lt_iff in Hcomp.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply lt_irrefl with b, lt_trans with a1.
+      * rewrite Heq in Hcomp.
+        now apply lt_irrefl in Hcomp.
+    + now apply lt_inv_b, IHa2 in H.
+Qed.
+
+Ltac compare_destruct_eqn a b H :=
+  destruct (compare a b) eqn: H;
+  [ apply compare_eq_iff in H as <-
+  | apply lt_iff in H
+  | apply gt_iff in H
+  ].
+
+Tactic Notation "compare" "destruct" constr(a) constr(b) "as" simple_intropattern(intropattern) :=
+  compare_destruct_eqn a b intropattern.
+
+Lemma reduce_lt_plus:
+  forall {a b c: T1},
+  lt (a + b) (a + c) <-> lt b c.
+Proof.
+  induction a.
+  1: easy.
+  simpl.
+  split; intro H; destruct b, c.
+  - exfalso.
+    now apply lt_irrefl in H.
+  - apply zero_lt.
+  - exfalso.
+    compare destruct a1 b1 as Hcomp.
+    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
+    + apply lt_inv_le, le_lt_eq in H as [Hlt| Heq].
+      * now apply (lt_trans Hlt), lt_irrefl in Hcomp.
+      * rewrite Heq in Hcomp.
+        now apply lt_irrefl in Hcomp.
+    + now apply lt_inv_b, lt_plus_r in H.
+  - compare destruct a1 b1 as Hcomp_b1;
+    compare destruct a1 c1 as Hcomp_c1.
+    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)].
+      * apply coeff_lt; lia.
+      * apply PeanoNat.Nat.succ_inj, PeanoNat.Nat.add_cancel_l in Heq as ->.
+        now apply tail_lt.
+    + now apply head_lt.
+    + exfalso.
+      apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
+    + exfalso.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
+      * subst b1; now apply lt_irrefl in Hcomp_b1.
+    + assumption.
+    + exfalso.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
+      * subst b1. now apply lt_irrefl in Hcomp_b1.
+    + now apply head_lt.
+    + apply (lt_trans Hcomp_b1) in Hcomp_c1.
+      now apply head_lt.
+    + now apply lt_inv_b, (IHa2 (ocons b1 n0 b2) (ocons c1 n1 c2)) in H.
+  - now apply not_lt_zero in H.
+  - compare destruct a1 c1 as Hcomp_c1.
+    + apply coeff_lt; lia.
+    + now apply head_lt.
+    + apply tail_lt, lt_plus_l.
+  - now apply not_lt_zero in H.
+  - compare destruct a1 b1 as Hcomp_b1;
+    compare destruct a1 c1 as Hcomp_c1.
+    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)].
+      * apply coeff_lt; lia.
+      * rewrite Heq.
+        now apply tail_lt.
+    + now apply head_lt.
+    + exfalso.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply (lt_trans Hlt), lt_irrefl in Hcomp_c1.
+      * rewrite Heq in Hcomp_c1.
+        now apply lt_irrefl in Hcomp_c1.
+    + exfalso.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply (lt_trans Hlt), lt_irrefl in Hcomp_b1.
+      * rewrite Heq in Hcomp_b1.
+       now apply lt_irrefl in Hcomp_b1.
+    + assumption.
+    + exfalso.
+      apply (lt_trans Hcomp_c1) in Hcomp_b1.
+      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
+      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
+      * rewrite Heq in Hcomp_b1.
+        now apply lt_irrefl in Hcomp_b1.
+    + apply coeff_lt; lia.
+    + now apply head_lt.
+    + now apply tail_lt, IHa2.
+Qed.
+
+Require Import Simple_LexProd.
+
+
+Section Proof_of_dist.
+
+  Ltac substitute_ind Hind a b c:=
+    pose proof (Hind (a, b, c)) as ->;
+    tryif left
+     then right; now apply tail_LT_cons
+     else eauto with T1.
+
+
+  Let lex3 := lexico (lexico LT LT) LT.
+
+  (** Do we need triples ? 
+     looks like only the order on the [b] component is really used 
+     To do : look at all the specializations of the induction hypothesis *)
+
+
+  Let P (tr : T1 * T1 * T1) :=
+    match tr with (a,b,c) => nf a -> nf b -> nf c ->
+    a * (b + c) = a * b + a * c
+    end.
+
+  Lemma L0 : forall tr, P tr.
+  Proof.
+    apply well_founded_induction with lex3.
+    {   repeat    apply wf_lexico; apply T1_wf. }
+    destruct x as ((a,b),c); intro Hind; unfold P.
+    intros Hnf_a Hnf_b Hnf_c. destruct b, c.
+    3:now rewrite !mult_a_0, !plus_zero_r.
+    1-2:now rewrite !plus_zero, !mult_a_0.
+    rewrite plus_cons_cons_eqn.
+    destruct a.
+    1: now rewrite mult_0_a.
+    compare destruct b1 c1 as Hcomp_b1_c1; 
+    destruct b1, a1; try destruct c1; simpl.
+    5,7,9,11,13-16: now apply not_lt_zero in Hcomp_b1_c1.
+    - f_equal; lia.
+    - rewrite !compare_refl, Nat.compare_refl.
+      f_equal; lia.
+    - now rewrite !compare_refl, Nat.compare_refl.
+    - rewrite compare_refl.
+      now destruct (compare a1_1 b1_1).
+    - reflexivity.
+    - compare destruct a1_1 c1_1 as Hcomp_a11_c11.
+      + rewrite compare_refl.
+        enough (Nat.compare n2 (S (n2 + n3)) = Lt) as -> by reflexivity.
+        apply Nat.compare_lt_iff; lia.
+      + now apply lt_iff in Hcomp_a11_c11 as ->.
+      + rewrite compare_refl, Nat.compare_refl.
+        eenough (compare a1_2 (a1_2 + _) = Lt) as -> by reflexivity.
+        apply lt_iff, lt_plus_l.
+    - apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
+      + now apply lt_iff in Hlt as ->.
+      + rewrite Heqa, compare_refl.
+        now apply Nat.compare_lt_iff in Hlt as ->.
+      + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
+        now apply lt_iff in Hlt as ->.
+    - compare destruct a1_1 c1_1 as Hcomp_a11_c11.
+      + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
+        * apply gt_iff in Hlt as ->.
+          eenough (compare (ocons a1_1 n3 _) (ocons a1_1 (S (n3 + _)) _) = Lt) as -> by reflexivity.
+          apply lt_iff, coeff_lt; lia.
+        * rewrite Heqa, compare_refl.
+          eenough (compare (ocons a1_1 (S(n3 + n2)) _)
+                           (ocons a1_1 (S(n3 + n4)) _) = Lt) as -> by reflexivity.
+          apply lt_iff, coeff_lt. lia.
+        * rewrite Heqa, Heqn, compare_refl.
+          eenough (compare (ocons a1_1 (S (n3 + n4)) b1_2)
+                           (ocons a1_1 (S (n3 + n4)) c1_2) = Lt) as -> by reflexivity.
+          now apply lt_iff, tail_lt.
+      + compare destruct a1_1 b1_1 as Hcomp_a11_b11.
+        * eenough (compare (ocons a1_1 _ _)
+                           (ocons c1_1 _ _) = Lt) as -> by reflexivity.
+          now apply lt_iff, head_lt.
+        * now apply lt_iff in Hcomp_b1_c1 as ->.
+        * eenough (compare (ocons a1_1 _ _)
+                           (ocons c1_1 _ _) = Lt) as -> by reflexivity.
+          now apply lt_iff, head_lt.
+      + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
+        * apply (lt_trans Hlt), gt_iff in Hcomp_a11_c11 as ->.
+          eenough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 _ _))
+                           (ocons a1_1 n3 (a1_2 + ocons c1_1 _ _)) = Lt) as -> by reflexivity.
+          now apply lt_iff, tail_lt, reduce_lt_plus, head_lt.
+        * subst.
+          apply gt_iff in Hcomp_a11_c11 as ->.
+          eenough (compare (ocons a1_1 n3 (a1_2 + ocons c1_1 n2 _))
+                           (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 _)) = Lt) as -> by reflexivity.
+          now apply lt_iff, tail_lt, reduce_lt_plus, coeff_lt.
+        * subst.
+          apply gt_iff in Hcomp_a11_c11 as ->.
+          enough (compare (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 b1_2))
+                          (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Lt) as -> by reflexivity.
+          now apply lt_iff, tail_lt, reduce_lt_plus, tail_lt.
+    - substitute_ind Hind
+                     (ocons zero n1 a2)
+                     b2
+                     (ocons zero n0 c2).
+    - substitute_ind Hind
+                     (ocons zero n1 a2)
+                     b2
+                     (ocons (ocons c1_1 n3 c1_2) n0 c2).
+      apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
+      + now apply gt_iff in Hlt as ->. 
+      + rewrite Heqa, compare_refl.
+        now apply Nat.compare_gt_iff in Hlt as ->.
+      + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
+        now apply gt_iff in Hlt as ->.
+    - substitute_ind Hind
+                     (ocons (ocons a1_1 n3 a1_2) n1 a2)
+                     b2
+                     (ocons zero n0 c2).
+      compare destruct a1_1 b1_1 as Hcomp_a11_b11.
+      + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
+                         (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
+        apply gt_iff, coeff_lt; lia.
+      + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
+        now apply gt_iff, head_lt.
+      + eenough (compare (ocons a1_1 n3 (a1_2 + _)) 
+                         (ocons a1_1 n3 a1_2) = Gt) as -> by reflexivity.
+        apply gt_iff, tail_lt, lt_plus_l.
+    - substitute_ind Hind
+                     (ocons (ocons a1_1 n3 a1_2) n1 a2)
+                     b2
+                     (ocons (ocons c1_1 n4 c1_2) n0 c2).
+      simpl.
+      compare destruct a1_1 b1_1 as Hcomp_ab;
+      compare destruct a1_1 c1_1 as Hcomp_ac.
+      + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
+                         (ocons a1_1 (S (n3 + n4)) _) = Gt) as -> by reflexivity.
+      {
+        apply gt_iff.
+        apply lt_inv_nb in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
+        - apply coeff_lt; lia.
+        - subst; now apply tail_lt.
+      }
+      + exfalso.
+        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
+        * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ac.
+        * rewrite Heq in Hcomp_ac.
+          now apply lt_irrefl in Hcomp_ac.
+      + eenough (compare (ocons a1_1 (S (n3 + _)) _)
+                         (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
+        apply gt_iff, coeff_lt; lia.
+      + eenough (compare (ocons b1_1 _ _)
+                         (ocons a1_1 _ _) = Gt) as -> by reflexivity.
+        now apply gt_iff, head_lt.
+      + now apply gt_iff in Hcomp_b1_c1 as ->.
+      + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
+        now apply gt_iff, head_lt.
+      + exfalso.
+        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
+        * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ab.
+        * rewrite Heq in Hcomp_ab.
+          now apply lt_irrefl in Hcomp_ab.
+      + exfalso.
+        apply (lt_trans Hcomp_ab) in Hcomp_ac as Hbc.
+        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
+        * now apply (lt_trans Hlt), lt_irrefl in Hbc.
+        * rewrite Heq in Hbc.
+          now apply lt_irrefl in Hbc.
+      + enough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 n2 b1_2))
+                        (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Gt)
+        as -> by reflexivity.
+        now apply gt_iff, tail_lt, reduce_lt_plus.
+Qed.
+
+
+About L0.
+
+Theorem mult_plus_distr_l (a b c: T1) :
+  nf a -> nf b -> nf c ->
+  a * (b + c) = a * b + a * c.
+Proof.
+  intros; apply (L0 (a, b, c)); auto.
+Qed.
+
+End Proof_of_dist.
+
 

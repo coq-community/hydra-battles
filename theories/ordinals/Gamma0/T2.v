@@ -345,7 +345,7 @@ Proof.
   - intros; simpl (t2_length (gcons t t0 n0 t1)).
     simpl (nbterms (gcons t t0 n0 t1)).
   match goal with  
-    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (plus_assoc b c d) end.
+    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (Arith.Plus.plus_assoc b c d) end.
   simpl (t2_length_aux (gcons t t0 n0 t1)).
   match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
   { pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
