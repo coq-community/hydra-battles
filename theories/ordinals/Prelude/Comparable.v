@@ -25,21 +25,22 @@ Section Comparable.
           {le: relation A}
           {eq: relation A}
           {compare : A -> A -> comparison}
-
           {comparable : Comparable lt le compare}.
 
   (* Relation Lt *)
-  Lemma lt_not_gt {a b: A}:
+  Lemma lt_not_gt:
+    forall a b : A,
     lt a b -> ~lt b a.
   Proof.
-    intros Hlt Hgt.
+    intros a b Hlt Hgt.
     now apply lt_irrefl with a, lt_trans with b.
   Qed.
 
-  Lemma lt_not_ge {a b: A}:
+  Lemma lt_not_ge:
+    forall a b: A,
     lt a b -> ~ le b a.
   Proof.
-    intros Hlt Hle.
+    intros a b Hlt Hle.
     apply le_lt_eq in Hle as [Hgt | Heq].
     - now apply lt_not_gt in Hlt.
     - subst. now apply lt_irrefl in Hlt.
@@ -51,9 +52,11 @@ Section Comparable.
     | _ => false
     end.
 
-  Lemma lt_b_iff {a b: A}:
+  Lemma lt_b_iff:
+    forall a b: A,
     lt_b a b = true <-> lt a b.
   Proof.
+    intros a b.
     unfold lt_b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy.
@@ -61,27 +64,31 @@ Section Comparable.
     - now apply lt_not_gt in H.
   Qed.
 
-  Lemma compare_lt_iff {a b: A}:
+  Lemma compare_lt_iff:
+    forall a b,
     compare a b = Lt <-> lt a b.
   Proof.
+    intros a b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy.
     - now apply lt_irrefl in H.
     - now apply lt_not_gt in H.
   Qed.
 
-  Lemma compare_lt_trans {a b c: A}:
+  Lemma compare_lt_trans:
+    forall a b c: A,
     compare a b = Lt -> compare b c = Lt -> compare a c = Lt.
   Proof.
-    intros Hab Hbc.
+    intros a b c Hab Hbc.
     apply compare_lt_iff in Hab, Hbc; apply compare_lt_iff.
     now apply lt_trans with b.
   Qed.
 
-  Lemma compare_lt_irrefl {a: A}:
+  Lemma compare_lt_irrefl:
+    forall a: A,
     ~compare a a = Lt.
   Proof.
-    intro H.
+    intros a H.
     now apply compare_lt_iff, lt_irrefl in H.
   Qed.
 
@@ -93,45 +100,54 @@ Section Comparable.
     end.
 
 
-  Lemma eq_b_iff {a b: A}:
+  Lemma eq_b_iff:
+    forall a b: A,
     eq_b a b = true <-> a = b.
   Proof.
+    intros a b.
     unfold eq_b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy;
     now apply lt_irrefl in H.
   Qed.
 
-  Lemma compare_eq_iff {a b: A}:
+  Lemma compare_eq_iff:
+    forall a b: A,
     compare a b = Eq <-> a = b.
   Proof.
+    intros a b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy;
     now apply lt_irrefl in H.
   Qed.
 
 
-  Lemma compare_refl {a: A}:
+  Lemma compare_refl:
+    forall a: A,
     compare a a = Eq.
   Proof.
+    intro a.
     pose proof (compare_correct a a) as [H | H | H].
     1: reflexivity.
     all: now apply lt_irrefl in H.
   Qed.
 
-  Lemma compare_eq_trans {a b c: A}:
+  Lemma compare_eq_trans:
+    forall a b c : A,
     compare a b = Eq -> compare b c = Eq -> compare a c = Eq.
   Proof.
-    intros Hab Hbc.
+    intros a b c Hab Hbc.
     apply compare_eq_iff in Hab, Hbc; apply compare_eq_iff.
     now subst.
   Qed.
 
 
   (* Reflation Gt *)
-  Lemma compare_gt_iff {a b: A}:
+  Lemma compare_gt_iff:
+    forall a b: A,
     compare a b = Gt <-> lt b a.
   Proof.
+    intros a b.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
     split; intro; subst; try easy.
     - now apply lt_irrefl in H.
@@ -139,36 +155,40 @@ Section Comparable.
   Qed.
 
 
-  Lemma compare_gt_irrefl {a: A}:
+  Lemma compare_gt_irrefl:
+    forall a: A,
     ~compare a a = Gt.
   Proof.
-    intro H.
+    intros a H.
     now apply compare_gt_iff, lt_irrefl in H.
   Qed.
 
-  Lemma compare_gt_trans {a b c: A}:
+  Lemma compare_gt_trans:
+    forall a b c: A,
     compare a b = Gt -> compare b c = Gt -> compare a c = Gt.
   Proof.
-    intros Hab Hbc.
+    intros a b c Hab Hbc.
     apply compare_gt_iff in Hab, Hbc; apply compare_gt_iff.
     now apply lt_trans with b.
   Qed.
 
 
-  Lemma compare_lt_not_gt {a b: A}:
+  Lemma compare_lt_not_gt:
+    forall a b: A,
     compare a b = Lt -> ~ compare a b = Gt.
   Proof.
-    intros Hlt Hgt.
+    intros a b Hlt Hgt.
     apply compare_lt_iff in Hlt.
     apply compare_gt_iff in Hgt.
     now apply lt_not_gt in Hgt.
   Qed.
 
 
-  Lemma compare_gt_not_lt {a b: A}:
+  Lemma compare_gt_not_lt:
+    forall a b: A,
     compare a b = Gt -> ~ compare a b = Lt.
   Proof.
-    intros Hgt Hlt.
+    intros a b Hgt Hlt.
     apply compare_lt_iff in Hlt.
     apply compare_gt_iff in Hgt.
     now apply lt_not_gt in Hgt.
@@ -178,9 +198,11 @@ Section Comparable.
   Definition le_b (a b: A): bool :=
     negb (lt_b b a).
 
-  Lemma le_b_iff {a b: A}:
+  Lemma le_b_iff:
+    forall a b: A,
     le_b a b = true <-> le a b.
   Proof.
+    intros a b.
     unfold le_b, negb, lt_b.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
     split; intro; subst; try easy.
@@ -198,25 +220,31 @@ Section Comparable.
   Qed.
 
 
-  Lemma le_refl {a: A}:
+  Lemma le_refl:
+    forall a,
     le a a.
   Proof.
+    intro a.
     apply le_lt_eq.
     now right.
   Qed.
 
-  Lemma compare_le_iff_refl {a: A}:
+  Lemma compare_le_iff_refl:
+    forall a,
     le a a <-> compare a a = Eq.
   Proof.
-    split; intro.
+    intro a.
+    split; intros H.
     - apply compare_refl.
     - apply le_refl.
   Qed.
 
-  Lemma compare_le_iff {a b: A}:
+  Lemma compare_le_iff:
+    forall a b: A,
     le a b <-> compare a b = Lt \/ compare a b = Eq.
   Proof.
-    split; intro.
+    intros a b.
+    split; intro H.
     - apply le_lt_eq in H as [Hlt | Heq].
       * left; now apply compare_lt_iff.
       * right; now apply compare_eq_iff.
@@ -226,58 +254,57 @@ Section Comparable.
   Qed.
 
 
-  Lemma compare_ge_iff {a b: A}:
+  Lemma compare_ge_iff:
+    forall a b: A,
     le b a <-> compare a b = Gt \/ compare a b = Eq.
   Proof.
-    split; intro.
-    - apply le_lt_eq in H as [Hlt | Heq].
-      * left; now apply compare_gt_iff.
-      * right; now apply compare_eq_iff.
-    - apply le_lt_eq; destruct H as [Hlt | Heq].
-      * left; now apply compare_gt_iff.
-      * right; now apply compare_eq_iff in Heq.
+    intros a b.
+    rewrite compare_le_iff, compare_lt_iff, compare_gt_iff, !compare_eq_iff.
+    intuition.
   Qed.
 
-  Lemma le_trans {a b c: A}:
+  Lemma le_trans:
+    forall a b c: A,
     le a b -> le b c -> le a c.
   Proof.
-    intros Hab Hbc.
-    apply le_lt_eq.
-    apply le_lt_eq in Hab as [Hlt_ab | Heq_ab];
-    apply le_lt_eq in Hbc as [Hlt_bc | Heq_bc].
+    intros a b c.
+    rewrite !le_lt_eq.
+    intros [Hlt_ab | Heq_ab] [Hlt_bc | Heq_bc].
     - left; now apply lt_trans with b.
     - left; now subst.
     - left; now subst.
     - right; now subst.
   Qed.
 
-  Lemma le_lt_trans {a b c: A}:
+  Lemma le_lt_trans:
+    forall a b c: A,
     le a b -> lt b c -> lt a c.
   Proof.
-    intros Hle_ab Hlt_bc.
+    intros a b c Hle_ab Hlt_bc.
     apply le_lt_eq in Hle_ab as [Heq_ab | Hlt_ab].
     - now apply lt_trans with b.
     - now subst.
   Qed.
 
 
-  Lemma lt_le_trans {a b c: A}:
+  Lemma lt_le_trans:
+    forall a b c: A,
     lt a b -> le b c -> lt a c.
   Proof.
-    intros Hlt_ab Hle_bc.
-    apply le_lt_eq in Hle_bc as [Heq_bc | Hlt_bc].
+    intros a b c.
+    rewrite le_lt_eq.
+    intros Hlt_ab [Heq_bc | Hlt_bc].
     - now apply lt_trans with b.
     - now subst.
   Qed.
 
-  Lemma lt_incl_le {a b: A}:
+  Lemma lt_incl_le:
+    forall a b: A,
     lt a b -> le a b.
   Proof.
-    intro.
-    apply le_lt_eq. now left.
+    intros a b H.
+    apply le_lt_eq; now left.
   Qed.
-
-
 
 
   (* Max lemmas *)
@@ -288,16 +315,20 @@ Section Comparable.
   | _ => b
   end.
 
-  Lemma max_dec {a b: A}:
-   max a b = a \/ max a b = b.
+  Lemma max_dec:
+    forall a b: A,
+    max a b = a \/ max a b = b.
   Proof.
+    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab]; tauto.
   Qed.
 
-  Lemma max_comm {a b: A}:
+  Lemma max_comm:
+    forall a b: A,
     max a b = max b a.
   Proof.
+    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
     pose proof (compare_correct b a) as [Hba | Hba | Hba].
@@ -306,9 +337,11 @@ Section Comparable.
   Qed.
 
 
-  Lemma max_ge_a (a b: A):
+  Lemma max_ge_a:
+    forall a b: A,
     le b a <-> max a b = a.
   Proof.
+    intros a b.
     unfold max.
     split; intro H.
     - apply compare_ge_iff in H as [Hlt | Heq].
@@ -324,9 +357,11 @@ Section Comparable.
       + now apply lt_incl_le.
   Qed.
 
-  Lemma max_ge_b (a b: A):
+  Lemma max_ge_b:
+    forall a b: A,
     le a b <-> max a b = b.
   Proof.
+    intros a b.
     unfold max.
     rewrite le_lt_eq, <- compare_lt_iff, <- compare_eq_iff.
     split; intro H.
@@ -342,32 +377,39 @@ Section Comparable.
   Qed.
 
 
-  Lemma max_refl {a: A}:
+  Lemma max_refl:
+    forall a: A,
     max a a = a.
   Proof.
-    apply max_ge_a.
-    apply le_refl.
+    intro a.
+    apply max_ge_a, le_refl.
   Qed.
 
-  Lemma le_max_a {a b: A} :
+  Lemma le_max_a:
+    forall a b: A,
     le a (max a b).
   Proof.
+    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt].
     1,3: subst; now apply le_refl.
     now apply lt_incl_le.
   Qed.
 
-  Lemma le_max_b {a b: A} :
+  Lemma le_max_b:
+    forall a b: A,
     le b (max a b).
   Proof.
+    intros a b.
     rewrite max_comm.
     apply le_max_a.
   Qed.
 
-  Lemma max_assoc {a b c: A}:
-  max (max a b) c = max a (max b c).
+  Lemma max_assoc:
+    forall a b c: A,
+    max (max a b) c = max a (max b c).
   Proof.
+    intros a b c.
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
     pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
@@ -399,16 +441,20 @@ Section Comparable.
   | _ => b
   end.
 
-  Lemma min_max_iff {a b: A}:
+  Lemma min_max_iff:
+    forall a b: A,
     min a b = a <-> max a b = b.
   Proof.
+    intros a b.
     unfold min, max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab]; subst; easy.
   Qed.
 
-  Lemma min_comm {a b: A}:
+  Lemma min_comm:
+    forall a b: A,
     min a b = min b a.
   Proof.
+    intros a b.
     unfold min.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
         pose proof (compare_correct b a) as [Hba | Hba | Hba].
@@ -416,55 +462,69 @@ Section Comparable.
         all: easy.
   Qed.
 
-  Lemma min_dec {a b: A}:
-   min a b = a \/ min a b = b.
+  Lemma min_dec:
+    forall a b: A,
+    min a b = a \/ min a b = b.
   Proof.
+    intros a b.
     rewrite min_max_iff, min_comm, min_max_iff, max_comm.
     now apply max_dec.
   Qed.
 
 
 
-  Lemma min_le_a (a b: A):
+  Lemma min_le_ad:
+    forall a b: A,
     le a b <-> min a b = a.
   Proof.
+    intros *.
     rewrite min_max_iff.
     now apply max_ge_b.
   Qed.
 
-  Lemma min_le_b (a b: A):
+  Lemma min_le_b:
+    forall a b: A,
     le b a <-> min a b = b.
   Proof.
+    intros *.
     rewrite min_comm, min_max_iff.
     now apply max_ge_b.
   Qed.
 
-  Lemma min_refl {a: A}:
+  Lemma min_refl:
+    forall a: A,
     min a a = a.
   Proof.
+    intros *.
     rewrite min_max_iff.
     apply max_refl.
   Qed.
 
-  Lemma le_min_a {a b: A} :
+  Lemma le_min_a:
+    forall a b: A,
     le (min a b) a.
   Proof.
+    intros *.
     unfold min.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; subst.
     1,2: now apply le_refl.
     now apply lt_incl_le.
   Qed.
 
-  Lemma le_min_b {a b: A} :
+  Lemma le_min_bd:
+    forall a b: A,
     le (min a b) b.
   Proof.
+    intros *.
     rewrite min_comm.
     apply le_min_a.
   Qed.
 
-  Lemma min_assoc {a b c: A}:
-  min (min a b) c = min a (min b c).
+  Lemma min_assoc:
+    forall a b c: A,
+    min (min a b) c = min a (min b c).
   Proof.
+    intros *.
     unfold min.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
     pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
@@ -491,8 +551,10 @@ Section Comparable.
   (* other important lemmas *)
 
   Lemma compare_trans {a b c: A} {comp_res: comparison}:
+    forall a b c: A,
     compare a b = comp_res -> compare b c = comp_res -> compare a c = comp_res.
   Proof.
+    intros *.
     destruct comp_res.
     - apply compare_eq_trans.
     - apply compare_lt_trans.
@@ -531,3 +593,5 @@ Local Ltac compare_trans H1 H2 intropattern :=
 
 Tactic Notation "compare" "trans" constr(H1) constr(H2) "as" simple_intropattern(intropattern) :=
   compare_trans H1 H2 intropattern.
+
+
