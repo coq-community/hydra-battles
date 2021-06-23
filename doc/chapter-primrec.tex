@@ -897,11 +897,11 @@ Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
 
 Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
-Proof. now cbn. Qed.
+Proof. reflexivity. Qed.
 
 Lemma Ack_S_S : forall m p,
     Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof. now cbn. Qed.
+Proof. reflexivity. Qed.
 \end{Coqsrc}
 
 The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.

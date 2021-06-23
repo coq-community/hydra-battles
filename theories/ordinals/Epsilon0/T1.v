@@ -160,12 +160,6 @@ Definition eq_b alpha beta := match compare alpha beta with
 
 Definition lt alpha beta : Prop := lt_b alpha beta.
 
-Example Ex0:
-  lt (ocons (phi0 (phi0 omega)) 2
-            (ocons (phi0 10) 33
-                   (ocons (phi0 9) 63 zero)))
-     (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
-Proof. reflexivity. Qed.
 
 Definition le (alpha beta :T1) :=
   match compare alpha beta with
@@ -3632,33 +3626,6 @@ Proof.
 Qed.
 
 
-(* Demo *)
-
-Example alpha_0 : T1 :=
-  ocons (ocons (ocons zero 0 zero)
-               0
-               zero)
-        0
-        (ocons (ocons zero 2 zero)
-               4
-               (ocons zero 1 zero)).
-
-Compute alpha_0.
-
-(*
-   = ocons omega 0 (ocons (FS 2) 4 (FS 1))
-     : T1
- *)
-
-Compute nf_b alpha_0.
-
-
-
-Example alpha_0_eq : alpha_0 = phi0 omega  +
-                               phi0 (fin 3)  * fin 5 +
-                               fin 2.
-Proof. reflexivity. Qed.
-
 
 
 
@@ -3681,11 +3648,7 @@ Lemma succ_cons alpha i beta : alpha <> zero -> nf (ocons alpha i beta) ->
   - reflexivity.
 Qed.
 
-Example Ex1 :  fin 42 + omega = omega.
-Proof. reflexivity. Qed.
 
-Example Ex2 : limitb (omega ^ (omega + fin 5)).
-Proof. reflexivity. Qed.
 
 
 
@@ -4191,4 +4154,39 @@ Qed.
 
 End Proof_of_dist.
 
+
+(** * Examples *)
+
+Example Ex1 :  fin 42 + omega = omega.
+Proof. reflexivity. Qed.
+
+Example Ex2 : limitb (omega ^ (omega + fin 5)).
+Proof. reflexivity. Qed.
+
+(* Demo *)
+
+Example alpha_0 : T1 :=
+  ocons (ocons (ocons zero 0 zero)
+               0
+               zero)
+        0
+        (ocons (ocons zero 2 zero)
+               4
+               (ocons zero 1 zero)).
+
+Compute alpha_0.
+
+(*
+   = ocons omega 0 (ocons (FS 2) 4 (FS 1))
+     : T1
+ *)
+
+Compute nf_b alpha_0.
+
+
+
+Example alpha_0_eq : alpha_0 = phi0 omega  +
+                               phi0 (fin 3)  * fin 5 +
+                               fin 2.
+Proof. reflexivity. Qed.
 
