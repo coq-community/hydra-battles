@@ -542,7 +542,7 @@ Proof.
   - intro; subst; unfold eq_b; now rewrite compare_refl.
 Qed.
 
-Lemma compare_Eq_impl : (** TODO rm when comparable set (use compare eq iff)**)
+Lemma compare_Eq_impl : (** FIXME rm when comparable set (use compare eq iff)**)
   forall a b, compare a b = Eq -> a = b.
 Proof.
   intros * H.
@@ -550,13 +550,13 @@ Proof.
   now rewrite H in *; simpl.
 Qed.
 
-Lemma compare_eq_iff a b : (** TODO rm when comparable set **)
+Lemma compare_eq_iff a b : (** FIXME rm when comparable set **)
   compare a b = Eq <-> a = b.
 Proof.
   split; intro H; [ now apply compare_Eq_impl|subst; apply compare_refl].
 Qed.
 
-Lemma compare_Lt_impl a b : (** TODO rm when comparable set (use compare lt iff)**)
+Lemma compare_Lt_impl a b : (** FIXME rm when comparable set (use compare lt iff)**)
   compare a b = Lt -> lt a b.
 Proof.
   intros * H.
@@ -689,7 +689,7 @@ Theorem lt_trans (alpha beta gamma : T1) :  (** FIXME use this lemma to make Com
          ++  subst; eauto with T1.
 Qed.
 
-Theorem lt_not_gt alpha beta :   (** TODO rm this lemma exist in compare **)
+Theorem lt_not_gt alpha beta :   (** FIXME rm this lemma exist in compare **)
   lt alpha beta  -> ~ lt beta alpha.
 Proof.
  intros  H H0;
@@ -1158,7 +1158,7 @@ Proof.
   -  intro; rewrite compare_Gt_eq;auto.
 Qed.
 
-Lemma lt_iff : forall alpha beta, (** TODO rm already exist in compare **)
+Lemma lt_iff : forall alpha beta, (** FIXME rm already exist in compare **)
     compare alpha beta = Lt <-> lt alpha  beta.
 Proof.
   split.
@@ -1166,7 +1166,7 @@ Proof.
   - apply compare_Lt_eq.
 Qed.
 
-Lemma gt_iff : forall alpha beta, (** TODO rm already exist in compare **)
+Lemma gt_iff : forall alpha beta, (** FIXME rm already exist in compare **)
     compare alpha beta = Gt <-> lt beta  alpha.
 Proof.
   intros.
@@ -1176,7 +1176,7 @@ Qed.
 
 (** ** Properties of [max] *)
 
-Lemma max_le_1 (alpha beta : T1) : le alpha  (max alpha beta). (** TODO rm already exist in compare **)
+Lemma max_le_1 (alpha beta : T1) : le alpha  (max alpha beta). (** FIXME rm already exist in compare **)
 Proof.
   unfold max; case (lt_eq_lt_dec alpha beta).
   -  destruct 1.
@@ -1185,7 +1185,7 @@ Proof.
   - intro;rewrite compare_Gt_eq;  auto with T1. 
 Qed.
 
-Lemma max_comm alpha beta :  max alpha beta = max beta alpha. (** TODO rm already exist in compare **)
+Lemma max_comm alpha beta :  max alpha beta = max beta alpha. (** FIXME rm already exist in compare **)
 Proof.
   unfold max; case (lt_eq_lt_dec alpha beta).
   -  destruct 1.
@@ -1195,7 +1195,7 @@ Proof.
   -  intro; rewrite compare_Gt_eq ;auto; rewrite compare_Lt_eq;auto.
 Qed.
 
-Lemma max_dec alpha beta : (** TODO rm already exist in compare **)
+Lemma max_dec alpha beta : (** FIXME rm already exist in compare **)
   {max alpha beta = alpha} + {max alpha beta = beta}.
 Proof.
   unfold max;  case (lt_eq_lt_dec alpha beta);auto.
@@ -1212,7 +1212,7 @@ Proof.
 Qed.
 
 
-Lemma max_assoc : (** TODO make this lemma **)
+Lemma max_assoc : (** FIXME rm this lemma exist in compare **)
   forall alpha beta gamma,
   max (max alpha beta) gamma =
   max alpha (max beta gamma).

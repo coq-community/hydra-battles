@@ -1,4 +1,4 @@
-From Coq Require Import Relations RelationClasses.
+From Coq Require Import Relations RelationClasses Setoid.
 
 Class Comparable {A:Type} 
   (lt: relation A)
@@ -10,11 +10,6 @@ Class Comparable {A:Type}
 
     lt_trans: forall a b c,
       lt a b -> lt b c -> lt a c;
-
-      (* TODO formulé la cloture transitive de `le` 
-         - reflexive (* I have a proof ... *)
-         - lt inclus dans le
-      *)
 
     le_lt_eq: forall a b,
       le a b <-> lt a b \/ a = b;
@@ -288,12 +283,12 @@ Section Comparable.
   (* Max lemmas *)
 
   Definition max (a b : A): A :=
-  match compare a b with 
-  | Lt => b
-  | _ => a
+  match compare a b with
+  | Gt => a
+  | _ => b
   end.
 
-  Lemma max_dec {a b: A} :
+  Lemma max_dec {a b: A}:
    max a b = a \/ max a b = b.
   Proof.
     unfold max.
@@ -303,16 +298,15 @@ Section Comparable.
   Lemma max_comm {a b: A}:
     max a b = max b a.
   Proof.
-    (** FIXME Cannot pose lemma max by or `pose proof (max_dec a b) as [Ha | Hb]`. **)
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
-        pose proof (compare_correct b a) as [Hba | Hba | Hba].
-        5,9: now apply lt_not_gt in Hab.
-        all: easy.
+    pose proof (compare_correct b a) as [Hba | Hba | Hba].
+    5,9: now apply lt_not_gt in Hab.
+    all: easy.
   Qed.
 
 
-  Lemma max_correct_a (a b: A):
+  Lemma max_ge_a (a b: A):
     le b a <-> max a b = a.
   Proof.
     unfold max.
@@ -330,17 +324,16 @@ Section Comparable.
       + now apply lt_incl_le.
   Qed.
 
-  Lemma max_correct_b (a b: A):
+  Lemma max_ge_b (a b: A):
     le a b <-> max a b = b.
   Proof.
     unfold max.
+    rewrite le_lt_eq, <- compare_lt_iff, <- compare_eq_iff.
     split; intro H.
-    - apply compare_le_iff in H as [Hlt | Heq].
-      + now rewrite Hlt.
-      + rewrite Heq. now apply compare_eq_iff in Heq.
+    - now destruct H as [-> | ->].
     - pose proof (compare_correct a b) as [Hab | Hab | Hab].
-      + subst. apply le_refl.
-      + now apply lt_incl_le.
+      + now right.
+      + now left.
       + exfalso.
         apply compare_gt_iff in Hab.
         rewrite Hab in H.
@@ -349,21 +342,10 @@ Section Comparable.
   Qed.
 
 
-  Lemma max_comm_arg {a b: A}:
-   max a b = b <-> max b a = b.
-  Proof.
-    split; intro H.
-    - apply max_correct_a.
-      now apply max_correct_b in H.
-    - apply max_correct_b.
-      now apply max_correct_a in H.
-
-  Qed.
-
-  Lemma max_refl {a b: A}:
+  Lemma max_refl {a: A}:
     max a a = a.
   Proof.
-    apply max_correct_a.
+    apply max_ge_a.
     apply le_refl.
   Qed.
 
@@ -372,7 +354,7 @@ Section Comparable.
   Proof.
     unfold max.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt].
-    1,3: now apply le_refl.
+    1,3: subst; now apply le_refl.
     now apply lt_incl_le.
   Qed.
 
@@ -383,7 +365,7 @@ Section Comparable.
     apply le_max_a.
   Qed.
 
-  Lemma max_assoc {a b c: A}: (** TODO make this lemma **)
+  Lemma max_assoc {a b c: A}:
   max (max a b) c = max a (max b c).
   Proof.
     unfold max.
@@ -391,16 +373,16 @@ Section Comparable.
     pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
     pose proof (compare_correct a c) as [Hac | Hac | Hac];
     subst; try rewrite compare_refl; try easy.
-    1, 10: now apply lt_not_gt in Hbc.
-    1, 7: now apply compare_lt_iff in Hac as ->.
-    4, 5: now apply compare_lt_iff in Hab as ->.
-    - now apply lt_not_gt in Hac.
+    - now apply lt_not_gt in Hbc.
+    - now apply lt_not_gt in Hab.
     - exfalso.
       apply (lt_trans a b) in Hbc.
       2: assumption.
       now apply lt_not_gt in Hbc.
-    - now apply compare_lt_iff in Hbc as ->.
-    - now apply compare_gt_iff in Hac as ->.
+    - now apply compare_lt_iff in Hab as ->.
+    - now apply compare_lt_iff in Hab as ->.
+    - now apply compare_lt_iff in Hab as ->.
+    - now apply lt_not_gt in Hbc.
     - exfalso.
       apply (lt_trans c b) in Hab.
       2: assumption.
@@ -408,7 +390,102 @@ Section Comparable.
     - now apply compare_gt_iff in Hab as ->.
   Qed.
 
-  (** TODO do min lemmas **)
+
+  (* Min lemmas*)
+
+  Definition min (a b : A): A :=
+  match compare a b with
+  | Lt => a
+  | _ => b
+  end.
+
+  Lemma min_max_iff {a b: A}:
+    min a b = a <-> max a b = b.
+  Proof.
+    unfold min, max.
+    pose proof (compare_correct a b) as [Hab | Hab | Hab]; subst; easy.
+  Qed.
+
+  Lemma min_comm {a b: A}:
+    min a b = min b a.
+  Proof.
+    unfold min.
+    pose proof (compare_correct a b) as [Hab | Hab | Hab];
+        pose proof (compare_correct b a) as [Hba | Hba | Hba].
+        5,9: now apply lt_not_gt in Hab.
+        all: easy.
+  Qed.
+
+  Lemma min_dec {a b: A}:
+   min a b = a \/ min a b = b.
+  Proof.
+    rewrite min_max_iff, min_comm, min_max_iff, max_comm.
+    now apply max_dec.
+  Qed.
+
+
+
+  Lemma min_le_a (a b: A):
+    le a b <-> min a b = a.
+  Proof.
+    rewrite min_max_iff.
+    now apply max_ge_b.
+  Qed.
+
+  Lemma min_le_b (a b: A):
+    le b a <-> min a b = b.
+  Proof.
+    rewrite min_comm, min_max_iff.
+    now apply max_ge_b.
+  Qed.
+
+  Lemma min_refl {a: A}:
+    min a a = a.
+  Proof.
+    rewrite min_max_iff.
+    apply max_refl.
+  Qed.
+
+  Lemma le_min_a {a b: A} :
+    le (min a b) a.
+  Proof.
+    unfold min.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; subst.
+    1,2: now apply le_refl.
+    now apply lt_incl_le.
+  Qed.
+
+  Lemma le_min_b {a b: A} :
+    le (min a b) b.
+  Proof.
+    rewrite min_comm.
+    apply le_min_a.
+  Qed.
+
+  Lemma min_assoc {a b c: A}:
+  min (min a b) c = min a (min b c).
+  Proof.
+    unfold min.
+    pose proof (compare_correct a b) as [Hab | Hab | Hab];
+    pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
+    pose proof (compare_correct a c) as [Hac | Hac | Hac];
+    subst; try rewrite compare_refl; try easy.
+    - now apply lt_not_gt in Hbc.
+    - now apply lt_not_gt in Hab.
+    - now apply compare_lt_iff in Hab as ->.
+    - exfalso.
+      apply (lt_trans a b) in Hbc.
+      2: assumption.
+      now apply lt_not_gt in Hbc.
+    - now apply lt_not_gt in Hab.
+    - now apply compare_gt_iff in Hab as ->.
+    - now apply compare_gt_iff in Hab as ->.
+    - now apply compare_gt_iff in Hab as ->.
+    - exfalso.
+      apply (lt_trans c b) in Hab.
+      2: assumption.
+      now apply lt_not_gt in Hab.
+  Qed.
 
 
   (* other important lemmas *)
