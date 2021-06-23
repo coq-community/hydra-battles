@@ -162,6 +162,13 @@ Definition eq_b alpha beta :=
 Definition lt alpha beta : Prop :=
   lt_b alpha beta. (** try to change to `compare alpha beta = Lt`*)
 
+Definition le (alpha beta :T1) :=
+  lt alpha beta \/ alpha = beta.
+
+Global Hint Unfold le : T1.
+(** TODO see if can be remove lt_b eq_b ....**)
+
+
 Example Ex0:
   lt (ocons (phi0 (phi0 omega)) 2
             (ocons (phi0 10) 33
@@ -169,13 +176,6 @@ Example Ex0:
      (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
 Proof. reflexivity. Qed.
 
-Definition le (alpha beta :T1) :=
-  match compare alpha beta with
-  | Gt => False
-  | _ => True
-  end.
-
-Global Hint Unfold le : T1.
 
 (**   ** The predicate "to be in normal form"
 
@@ -504,7 +504,9 @@ Qed.
 
 (* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
 
-Lemma compare_reflect : forall alpha beta,
+
+
+Lemma compare_reflect : forall alpha beta, (** TODO add this lemma **)
     match compare alpha beta with
     | Lt => lt alpha beta
     | Eq => alpha = beta
@@ -532,7 +534,7 @@ Qed.
 
 (** ** Properties of [compare]: first part *)
 
-Lemma eq_b_iff (alpha beta : T1) :
+Lemma eq_b_iff (alpha beta : T1) : (** TODO add this lemma **)
   eq_b alpha beta = true <-> alpha = beta.
 Proof.
   split.
@@ -619,12 +621,43 @@ Global Hint Resolve not_lt_zero : T1.
   Qed.
 
 
- Theorem lt_irrefl alpha: ~ lt alpha alpha. (** TODO rm when comparable set (use compare iff)**)
- Proof.
- induction alpha.
- -  red;inversion_clear 1.
- -  intro H; case (lt_inv_strong  H); intuition. abstract lia.
- Qed.
+
+From hydras Require Import Prelude.Comparable.
+
+Instance: Comparable lt le compare.
+Proof.
+  constructor.
+  { (* irreflixivity lt *)
+    induction a.
+    - apply not_lt_zero.
+    - intro H.
+      apply lt_inv in H as [Hlt_a | [(Heq_a, Hlt_n) | (Heq_a, (Heq_n, Hlt_b))]].
+      + contradiction.
+      + lia.
+      + contradiction.
+  }
+  { (* transitivity lt *)
+    induction a, b, c.
+    1-7: easy.
+    intros Hab Hbc.
+    apply lt_inv in Hab as [Hlt_ab | [(Heq_ab, Hltn_ab) | (Heq_ab, (Heqn_ab, Hlt_ab))]];
+    apply lt_inv in Hbc as [Hlt_bc | [(Heq_bc, Hltn_bc) | (Heq_bc, (Heqn_bc, Hlt_bc))]];
+    subst.
+    2-4,7: now apply head_lt.
+    2-4: apply coeff_lt; lia.
+    + now apply head_lt, (IHa1 b1 c1).
+    + now apply tail_lt, (IHa2 b2 c2).
+  }
+  { (* le correct *)
+    now unfold le.
+  }
+  { (* compare correct *)
+    intros a b.
+    generalize (compare_reflect a b).
+    destruct (compare a b); now constructor.
+  }
+Qed.
+
 
 
 

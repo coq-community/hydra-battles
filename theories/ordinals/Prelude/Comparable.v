@@ -499,6 +499,15 @@ Section Comparable.
     - apply compare_gt_trans.
   Qed.
 
+  Lemma compare_reflect {a b: A}:
+    match compare a b with
+    | Lt => lt a b
+    | Eq => a = b
+    | Gt => lt b a
+    end.
+  Proof.
+    pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; assumption.
+  Qed.
 
 End Comparable.
 
