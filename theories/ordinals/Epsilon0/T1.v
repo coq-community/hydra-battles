@@ -1107,14 +1107,13 @@ Proof.
   + now apply compare_gt_iff.
 Qed.
 
-(* TODO fix definition
 (** ** Properties of [max] *)
 Lemma max_nf (alpha beta : T1) :
-  nf alpha -> nf beta -> nf (Comparable.max alpha beta).
+  nf alpha -> nf beta -> nf (max alpha beta).
 Proof.
   case (max_dec alpha beta); intro H; rewrite H; auto.
 Qed.
-*)
+
 
 (** **  Restriction of lt and le to terms in normal form *)
 Reserved Notation "x 't1<' y" (at level 70, no associativity).
@@ -3686,7 +3685,7 @@ Ltac is_closed alpha :=
   match alpha with
     zero => idtac
   | 0 => idtac
-  | S ?n => is_closed n          
+  | S ?n => is_closed n
   |ocons ?a ?n ?b => is_closed a ; is_closed n ; is_closed b
   | ?other => fail
   end.
@@ -3703,7 +3702,6 @@ Ltac pp0tac alpha   :=
   | ocons ?alpha 0 ?beta => exact (omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
   | ocons ?alpha ?n zero => exact (omega ^ ltac: (pp0tac alpha) * (S n))%pT1
   | ocons ?alpha ?n ?beta => exact (omega ^ ltac: (pp0tac alpha) * (S n) + ltac : (pp0tac beta)%pT1)
-                                   
   end.
 
 Ltac pptac term :=
@@ -3751,7 +3749,7 @@ Proof.
     destruct (compare b1 c1) eqn:Hbc, (compare a1 b1) eqn:Hab;
     rewrite !plus_cons_cons_eqn.
     2,8: now rewrite Hbc, Hab.
-    all: try compare trans Hab Hbc as ->.
+    compare trans Hab Hbc as ->.
     + rewrite Hab.
       f_equal; lia.
     + now rewrite <- IHa2, plus_cons_cons_eqn, Hab, Hbc.
