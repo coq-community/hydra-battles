@@ -3979,31 +3979,25 @@ Require Import Simple_LexProd.
 
 Section Proof_of_dist.
 
-  Ltac substitute_ind Hind a b c:=
-    pose proof (Hind (a, b, c)) as ->;
+  Ltac substitute_ind Hind b c:=
+    pose proof (Hind (b, c)) as -> ;
     tryif left
-     then right; now apply tail_LT_cons
-     else eauto with T1.
+    then  now apply tail_LT_cons
+    else eauto with T1.
 
+  Let lex := lexico LT LT.
 
-  Let lex3 := lexico (lexico LT LT) LT.
-
-  (** Do we need triples ? 
-     looks like only the order on the [b] component is really used 
-     To do : look at all the specializations of the induction hypothesis *)
-
-
-  Let P (tr : T1 * T1 * T1) :=
-    match tr with (a,b,c) => nf a -> nf b -> nf c ->
+  Let P (p: T1 * T1) :=
+    match p with (b,c) => forall a, nf a -> nf b -> nf c ->
     a * (b + c) = a * b + a * c
     end.
 
-  Lemma L0 : forall tr, P tr.
+  Lemma L0 : forall p, P p.
   Proof.
-    apply well_founded_induction with lex3.
+    apply well_founded_induction with lex.
     {   repeat    apply wf_lexico; apply T1_wf. }
-    destruct x as ((a,b),c); intro Hind; unfold P.
-    intros Hnf_a Hnf_b Hnf_c. destruct b, c.
+    destruct x as (b,c); intro Hind; unfold P.
+    intros a Hnf_a Hnf_b Hnf_c. destruct b, c.
     3:now rewrite !mult_a_0, !plus_zero_r.
     1-2:now rewrite !plus_zero, !mult_a_0.
     rewrite plus_cons_cons_eqn.
@@ -4070,11 +4064,10 @@ Section Proof_of_dist.
                           (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Lt) as -> by reflexivity.
           now apply lt_iff, tail_lt, reduce_lt_plus, tail_lt.
     - substitute_ind Hind
-                     (ocons zero n1 a2)
+                   
                      b2
                      (ocons zero n0 c2).
     - substitute_ind Hind
-                     (ocons zero n1 a2)
                      b2
                      (ocons (ocons c1_1 n3 c1_2) n0 c2).
       apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
@@ -4084,7 +4077,6 @@ Section Proof_of_dist.
       + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
         now apply gt_iff in Hlt as ->.
     - substitute_ind Hind
-                     (ocons (ocons a1_1 n3 a1_2) n1 a2)
                      b2
                      (ocons zero n0 c2).
       compare destruct a1_1 b1_1 as Hcomp_a11_b11.
@@ -4097,7 +4089,6 @@ Section Proof_of_dist.
                          (ocons a1_1 n3 a1_2) = Gt) as -> by reflexivity.
         apply gt_iff, tail_lt, lt_plus_l.
     - substitute_ind Hind
-                     (ocons (ocons a1_1 n3 a1_2) n1 a2)
                      b2
                      (ocons (ocons c1_1 n4 c1_2) n0 c2).
       simpl.
@@ -4149,7 +4140,7 @@ Theorem mult_plus_distr_l (a b c: T1) :
   nf a -> nf b -> nf c ->
   a * (b + c) = a * b + a * c.
 Proof.
-  intros; apply (L0 (a, b, c)); auto.
+  intros; apply (L0 (b, c)); auto.
 Qed.
 
 End Proof_of_dist.
