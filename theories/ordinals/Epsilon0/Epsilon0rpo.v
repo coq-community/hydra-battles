@@ -192,7 +192,7 @@ Lemma lt_subterm2 : forall a a' n n' b b', lt a  a' ->
 Proof.
  intros.
  apply le_lt_trans with (ocons a n b).
-apply  lt_le_incl.
+ apply lt_le_incl.
  apply tail_lt_ocons;auto.
  auto with T1.
 Qed.

@@ -393,7 +393,7 @@ Proof.
     + now apply tail_lt, (IHalpha2 beta2 gamma2).
 Qed.
 
-From hydras Require Import Prelude.Comparable.
+From hydras Require Export Prelude.Comparable.
 
 Instance: Comparable lt le compare.
 Proof.
