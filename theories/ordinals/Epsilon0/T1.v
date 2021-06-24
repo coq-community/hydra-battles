@@ -404,8 +404,6 @@ Proof.
   - apply T1.compare_correct.
 Qed.
 
-
-
 (**   ** The predicate "to be in normal form"
 
 Cantor normal form needs the exponents of omega to be
@@ -570,12 +568,16 @@ Lemma ocons_nf :
   nf(ocons a' n' b)->
   nf(ocons a n (ocons a' n' b)).
 Proof.
-unfold nf; cbn; intros a n a' n' b H H0 H1;  rewrite H0.
-destruct b.
-- red in H; rewrite H1, H; reflexivity.
-- simpl; simpl in H1;
-  destruct (nf_b a'), (lt_b b1 a'), (nf_b b1), (nf_b b2), b2; simpl in *; auto.
-  all : destruct (lt_b b2_1 b1); simpl in *;auto.
+  unfold nf.
+  simpl.
+  intros a n a' n' b' Hlta Ha.
+  apply lt_b_iff in Hlta as ->.
+  destruct b'.
+  - intro Hnfa'.
+    now rewrite Ha, Hnfa'.
+  - rewrite Ha.
+    simpl.
+    destruct b'2; intro H; now rewrite H.
 Qed.
 
 Global Hint Resolve zero_nf single_nf ocons_nf: T1.
@@ -606,7 +608,7 @@ Proof.
   unfold nf; cbn;
   destruct a, a', b'; try discriminate; auto with T1;
   intro H; red in H; repeat rewrite andb_true_iff in H; 
-  decompose [and] H; auto.
+  decompose [and] H; apply lt_b_iff; auto.
 Qed.
 
 Ltac nf_decomp H :=
@@ -629,8 +631,8 @@ Ltac nf_decomp H :=
 Inductive nf_helper : T1 -> T1 -> Prop :=
 | nf_helper_z : forall alpha, nf_helper zero alpha
 | nf_helper_c : forall alpha alpha' n' beta',
-                lt alpha' alpha ->
-                nf_helper (ocons alpha' n' beta') alpha.
+                  lt alpha' alpha ->
+                  nf_helper (ocons alpha' n' beta') alpha.
 
 
 Global Hint Constructors nf_helper : T1.
@@ -686,19 +688,7 @@ Proof.
      + simpl. trivial.
 Qed.
 
-(**  **  Properties of [compare] *)
-
-
-
-(* TODO : use new tactics on [compare] by Jeremy/Zimmi *)
-
-
-
-
-
-(** ** On [lt] and [le] *)
-
-
+(** ** Second part on [lt] and [le] *)
 
 Lemma finite_lt :
   forall n p : nat,
@@ -711,7 +701,7 @@ Lemma finite_ltR :
   forall n p : nat,
   lt (FS n) (FS p) -> (n < p)%nat.
 Proof.
-  intros; simpl in H. unfold lt, T1.lt_b in H.
+  intros; simpl in H. unfold lt in H.
   destruct (compare _ _) eqn:?.
   1,3: easy.
   simpl in *.
@@ -720,7 +710,7 @@ Proof.
   now apply Nat.compare_lt_iff.
 Qed.
 
-Lemma le_eq_lt_dec alpha beta: (** FIXME use this lemma to init class **)
+Lemma le_eq_lt_dec alpha beta:
   le alpha beta ->
   {alpha = beta} + {lt alpha beta}.
 Proof.
@@ -828,8 +818,6 @@ Proof.
   - abstract lia. 
   - exfalso; eapply not_lt_zero; eassumption.
 Qed.
-
-
 
 
 Theorem le_zero_inv :
@@ -993,8 +981,13 @@ Lemma nf_helper_intro :
   forall a n b, nf (ocons a n b) -> nf_helper b a.
 Proof.
   intros a n b H; unfold nf in H; cbn in H.
-  destruct b; constructor.
-  red in H; decompose [and] H; repeat rewrite andb_true_iff in H; tauto.
+  destruct b.
+  - constructor.
+  - red in H.
+    repeat rewrite andb_true_iff in H. 
+    destruct H as ((_, _), Hlt).
+    apply lt_b_iff in Hlt.
+    now right.
 Qed.
 
 Lemma nf_coeff_irrelevance :
@@ -1943,10 +1936,10 @@ Proof.
   intros c Hc; elim Hc using nf_rect.
   - intros;apply zero_le.
   -  intros n b H; case b; cbn.
-     + intros H0; generalize (lt_inv_nb  H0).
+     + intros H0; generalize (lt_inv_coeff_dec H0).
        intros [H2 | [_ H2]]; inversion H2.
      +    destruct alpha.
-          * intros.  destruct (lt_inv_nb H0).
+          * intros.  destruct (lt_inv_coeff_dec H0).
             assert (H8:n = n0 \/ (n < n0)%nat) by lia.
             destruct H8.
             destruct beta.
@@ -2230,7 +2223,7 @@ Proof.
     + destruct (le_lt_dec n n0).
       1: reflexivity.
       exfalso.
-      apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
+      apply lt_inv_coeff_dec in H as [Hlt | (Heq, Hlt)]; lia.
     + reflexivity.
     + apply lt_inv_strong in H as [Hlt | Heqa Hlt | Heqa Heqn Hlt].
       * now apply compare_lt_iff in Hlt as ->.
@@ -2528,60 +2521,95 @@ Proof.
   apply nf_helper_phi0R. destruct H3; tauto.
 Qed.
 
-Lemma plus_smono_r (alpha:T1) :
-  forall beta gamma,  lt beta gamma -> lt (plus alpha beta) (plus alpha gamma).
+
+Ltac compare_destruct_eqn a b H :=
+  destruct (compare a b) eqn: H;
+  [ apply compare_eq_iff in H as <-
+  | apply compare_lt_iff in H
+  | apply compare_gt_iff in H
+  ].
+
+Tactic Notation "compare" "destruct" constr(a) constr(b) "as" ident(H) :=
+  compare_destruct_eqn a b H.
+
+Lemma lt_plus_l:
+  forall {a b c : T1} {n:nat}, lt a (a + ocons b n c).
 Proof.
-  induction alpha.
-  - simpl;auto.
-  - intros; simpl.
-    destruct beta, gamma.
-    + now apply lt_irrefl in H.
-    + clear H. 
-      case_eq (compare alpha1 gamma1); intro H0.
-      apply coeff_lt; abstract lia.
-      * apply head_lt; now rewrite <- compare_lt_iff.
-      * apply tail_lt.
-        rewrite <- (plus_zero_r alpha2) at 1;  apply IHalpha2.
-        apply zero_lt.
-    + destruct (not_lt_zero H).
-    + T1_inversion H.
-      case_eq (compare alpha1 beta1); intro H1.
-      apply compare_Eq_impl in H1; subst.
-      rewrite  <- compare_lt_iff in H0; rewrite H0.
-      apply head_lt; now rewrite <- compare_lt_iff.
-      rewrite compare_lt_iff in H1.
-      assert (H2:= lt_trans  H1  H0).
-      rewrite <- compare_lt_iff in H2. rewrite H2.
-      apply head_lt. auto.
-
-      case_eq (compare alpha1 gamma1); intro H2.
-      apply compare_Eq_impl in H2.
-      subst.
-      apply coeff_lt.
-      abstract lia.
-      apply head_lt.
-      rewrite <- compare_lt_iff; auto.
-      apply tail_lt.
-      apply IHalpha2.
-      apply head_lt; auto.
-      destruct H0.
-      destruct H0.
-      subst.
-      case_eq (compare alpha1 gamma1).
-      intro.
-      apply coeff_lt; abstract lia.
-      intro; apply coeff_lt; auto.
-      intro; apply tail_lt; apply IHalpha2.
-      apply coeff_lt; auto.
-      decompose [and] H0; subst.
-      case_eq (compare alpha1 gamma1).
-
-      intro; apply tail_lt; auto.
-      intros; apply tail_lt. auto.
-      intro. apply tail_lt. apply IHalpha2.
-      apply tail_lt; auto.
+  induction a; intros *.
+  - apply zero_lt.
+  - simpl.
+    compare destruct a1 b as Hcomp.
+    + apply coeff_lt; lia.
+    + now apply head_lt.
+    + apply tail_lt, IHa2.
 Qed.
 
+
+Lemma lt_plus_r:
+  forall {a b c : T1} {n:nat}, ~ lt (a + ocons b n c) a.
+Proof.
+  induction a; simpl; intros * H.
+  - now apply not_lt_zero in H.
+  - compare destruct a1 b as Hcomp.
+    + apply lt_inv_coeff in H; lia.
+    + now apply lt_inv_head, le_not_gt in H.
+    + now apply lt_inv_tail, IHa2 in H.
+Qed.
+
+Lemma reduce_lt_plus:
+  forall a b c: T1,
+  lt (a+ b) (a + c) <-> lt b c.
+Proof.
+  induction a.
+  1: easy.
+  simpl.
+  split; intro H; destruct b, c.
+  - exfalso.
+    now apply lt_irrefl in H.
+  - apply zero_lt.
+  - exfalso.
+    compare destruct a1 b1 as Hcomp.
+    + apply lt_inv_coeff in H. lia.
+    + apply lt_inv_head in H.
+      now apply lt_not_ge in Hcomp.
+    + now apply lt_inv_tail, lt_plus_r in H.
+  - compare destruct a1 b1 as Hcomp_b1;
+    compare destruct a1 c1 as Hcomp_c1.
+    + apply lt_inv_coeff_dec in H as [Hlt | (Heq, Hlt)].
+      * apply coeff_lt; lia.
+      * apply PeanoNat.Nat.succ_inj, PeanoNat.Nat.add_cancel_l in Heq as ->.
+        now apply tail_lt.
+    + now apply head_lt.
+    + now apply lt_inv_coeff in H; lia.
+    + now apply lt_inv_head, le_not_gt in H.
+    + assumption.
+    + now apply lt_inv_head, le_not_gt in H.
+    + now apply head_lt.
+    + apply head_lt.
+      now apply (lt_trans b1 a1 c1) in Hcomp_c1.
+    + now apply lt_inv_tail, (IHa2 (ocons b1 n0 b2) (ocons c1 n1 c2)) in H.
+  - now apply not_lt_zero in H.
+  - compare destruct a1 c1 as Hcomp_c1.
+    + apply coeff_lt; lia.
+    + now apply head_lt.
+    + apply tail_lt, lt_plus_l.
+  - now apply not_lt_zero in H.
+  - compare destruct a1 b1 as Hcomp_b1;
+    compare destruct a1 c1 as Hcomp_c1.
+    + apply lt_inv_coeff_dec in H as [Hlt | (Heq, Hlt)].
+      * apply coeff_lt; lia.
+      * rewrite Heq.
+        now apply tail_lt.
+    + now apply head_lt.
+    + now apply lt_inv_head, le_not_gt in H.
+    + now apply lt_inv_head, le_not_gt in H.
+    + assumption.
+    + apply lt_inv_head, le_not_gt in H.
+      now apply (lt_trans c1 a1 b1) in Hcomp_b1.
+    + apply coeff_lt; lia.
+    + now apply head_lt.
+    + now apply tail_lt, IHa2.
+Qed.
 
 Lemma plus_smono_LT_r (alpha:T1) :
   forall beta gamma,  nf alpha -> beta t1< gamma -> alpha + beta t1< alpha + gamma.
@@ -2589,8 +2617,8 @@ Proof.
   destruct 2 as [H1 [H2 H3]]; split.
   apply plus_nf; auto.
   split.
-  now apply plus_smono_r.
-  apply plus_nf; auto.  
+  now apply reduce_lt_plus.
+  apply plus_nf; auto.
 Qed.
 
 
@@ -2638,7 +2666,7 @@ Section Proof_of_nf_mult.
       intros H0 gamma H1;  destruct (not_LT_zero H1).
     Qed.
 
-    
+
     Lemma L3 n p : alpha = FS n -> beta = FS p -> P beta.
     Proof.
       intros; subst; red; intros; split.
@@ -3737,119 +3765,8 @@ Proof.
       now rewrite Hbc.
 Qed.
 
-Lemma lt_plus_l:
-  forall {a b c : T1} {n:nat}, lt a (a + ocons b n c).
-Proof.
-  induction a; intros *.
-  - apply zero_lt.
-  - simpl.
-    destruct (compare a1 b) eqn: Hcomp.
-    + apply coeff_lt; lia.
-    + now apply head_lt, compare_lt_iff.
-    + apply tail_lt, IHa2.
-Qed.
 
 
-Lemma lt_plus_r:
-  forall {a b c : T1} {n:nat}, ~ lt (a + ocons b n c) a.
-Proof.
-  induction a; simpl; intros * H.
-  - now apply not_lt_zero in H.
-  - destruct (compare a1 b) eqn: Hcomp.
-    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
-    + apply compare_lt_iff in Hcomp.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply lt_irrefl with b, lt_trans with a1.
-      * rewrite Heq in Hcomp.
-        now apply lt_irrefl in Hcomp.
-    + now apply lt_inv_b, IHa2 in H.
-Qed.
-
-Ltac compare_destruct_eqn a b H :=
-  destruct (compare a b) eqn: H;
-  [ apply compare_eq_iff in H as <-
-  | apply compare_lt_iff in H
-  | apply compare_gt_iff in H
-  ].
-
-Tactic Notation "compare" "destruct" constr(a) constr(b) "as" simple_intropattern(intropattern) :=
-  compare_destruct_eqn a b intropattern.
-
-Lemma reduce_lt_plus:
-  forall {a b c: T1},
-  lt (a + b) (a + c) <-> lt b c.
-Proof.
-  induction a.
-  1: easy.
-  simpl.
-  split; intro H; destruct b, c.
-  - exfalso.
-    now apply lt_irrefl in H.
-  - apply zero_lt.
-  - exfalso.
-    compare destruct a1 b1 as Hcomp.
-    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
-    + apply lt_inv_le, le_lt_eq in H as [Hlt| Heq].
-      * now apply (lt_trans Hlt), lt_irrefl in Hcomp.
-      * rewrite Heq in Hcomp.
-        now apply lt_irrefl in Hcomp.
-    + now apply lt_inv_b, lt_plus_r in H.
-  - compare destruct a1 b1 as Hcomp_b1;
-    compare destruct a1 c1 as Hcomp_c1.
-    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)].
-      * apply coeff_lt; lia.
-      * apply PeanoNat.Nat.succ_inj, PeanoNat.Nat.add_cancel_l in Heq as ->.
-        now apply tail_lt.
-    + now apply head_lt.
-    + exfalso.
-      apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
-    + exfalso.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
-      * subst b1; now apply lt_irrefl in Hcomp_b1.
-    + assumption.
-    + exfalso.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
-      * subst b1. now apply lt_irrefl in Hcomp_b1.
-    + now apply head_lt.
-    + apply (lt_trans Hcomp_b1) in Hcomp_c1.
-      now apply head_lt.
-    + now apply lt_inv_b, (IHa2 (ocons b1 n0 b2) (ocons c1 n1 c2)) in H.
-  - now apply not_lt_zero in H.
-  - compare destruct a1 c1 as Hcomp_c1.
-    + apply coeff_lt; lia.
-    + now apply head_lt.
-    + apply tail_lt, lt_plus_l.
-  - now apply not_lt_zero in H.
-  - compare destruct a1 b1 as Hcomp_b1;
-    compare destruct a1 c1 as Hcomp_c1.
-    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)].
-      * apply coeff_lt; lia.
-      * rewrite Heq.
-        now apply tail_lt.
-    + now apply head_lt.
-    + exfalso.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply (lt_trans Hlt), lt_irrefl in Hcomp_c1.
-      * rewrite Heq in Hcomp_c1.
-        now apply lt_irrefl in Hcomp_c1.
-    + exfalso.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply (lt_trans Hlt), lt_irrefl in Hcomp_b1.
-      * rewrite Heq in Hcomp_b1.
-       now apply lt_irrefl in Hcomp_b1.
-    + assumption.
-    + exfalso.
-      apply (lt_trans Hcomp_c1) in Hcomp_b1.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply (lt_trans Hcomp_b1), lt_irrefl in Hlt.
-      * rewrite Heq in Hcomp_b1.
-        now apply lt_irrefl in Hcomp_b1.
-    + apply coeff_lt; lia.
-    + now apply head_lt.
-    + now apply tail_lt, IHa2.
-Qed.
 
 Require Import Simple_LexProd.
 
@@ -3932,7 +3849,7 @@ Section Proof_of_dist.
                            (ocons c1_1 _ _) = Lt) as -> by reflexivity.
           now apply compare_lt_iff, head_lt.
       + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-        * apply (lt_trans Hlt), compare_gt_iff in Hcomp_a11_c11 as ->.
+        * apply (lt_trans b1_1 c1_1 a1_1), compare_gt_iff in Hcomp_a11_c11 as ->; auto.
           eenough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 _ _))
                            (ocons a1_1 n3 (a1_2 + ocons c1_1 _ _)) = Lt) as -> by reflexivity.
           now apply compare_lt_iff, tail_lt, reduce_lt_plus, head_lt.
@@ -3984,15 +3901,12 @@ Section Proof_of_dist.
                          (ocons a1_1 (S (n3 + n4)) _) = Gt) as -> by reflexivity.
       {
         apply compare_gt_iff.
-        apply lt_inv_nb in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
+        apply lt_inv_coeff_dec in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
         - apply coeff_lt; lia.
         - subst; now apply tail_lt.
       }
       + exfalso.
-        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-        * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ac.
-        * rewrite Heq in Hcomp_ac.
-          now apply lt_irrefl in Hcomp_ac.
+        now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
       + eenough (compare (ocons a1_1 (S (n3 + _)) _)
                          (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
         apply compare_gt_iff, coeff_lt; lia.
@@ -4002,17 +3916,10 @@ Section Proof_of_dist.
       + now apply compare_gt_iff in Hcomp_b1_c1 as ->.
       + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
         now apply compare_gt_iff, head_lt.
+      + now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
       + exfalso.
-        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-        * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ab.
-        * rewrite Heq in Hcomp_ab.
-          now apply lt_irrefl in Hcomp_ab.
-      + exfalso.
-        apply (lt_trans Hcomp_ab) in Hcomp_ac as Hbc.
-        apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-        * now apply (lt_trans Hlt), lt_irrefl in Hbc.
-        * rewrite Heq in Hbc.
-          now apply lt_irrefl in Hbc.
+        apply (lt_trans b1_1 a1_1 c1_1) in Hcomp_ac as Hbc; auto.
+        now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
       + enough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 n2 b1_2))
                         (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Gt)
         as -> by reflexivity.

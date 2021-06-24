@@ -268,6 +268,12 @@ Section Comparable.
     apply le_lt_eq; now left.
   Qed.
 
+  Lemma le_not_gt (a b: A):
+    le a b -> ~ lt b a.
+  Proof.
+    intros Hlt Hle.
+    now apply lt_not_ge in Hlt.
+  Qed.
 
   (* Max lemmas *)
 
