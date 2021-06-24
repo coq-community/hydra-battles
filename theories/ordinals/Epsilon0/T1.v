@@ -1107,6 +1107,8 @@ Proof.
   + now apply compare_gt_iff.
 Qed.
 
+Check eq_b.
+Check eq_b_iff.
 (** ** Properties of [max] *)
 Lemma max_nf (alpha beta : T1) :
   nf alpha -> nf beta -> nf (max alpha beta).
@@ -3749,10 +3751,10 @@ Proof.
     destruct (compare b1 c1) eqn:Hbc, (compare a1 b1) eqn:Hab;
     rewrite !plus_cons_cons_eqn.
     2,8: now rewrite Hbc, Hab.
-    compare trans Hab Hbc as ->.
+    all: try compare trans Hab Hbc as ->.
     + rewrite Hab.
       f_equal; lia.
-    + now rewrite <- IHa2, plus_cons_cons_eqn, Hab, Hbc.
+    + now rewrite Hab, <- IHa2, plus_cons_cons_eqn, Hbc.
     + reflexivity.
     + now rewrite Hbc.
     + destruct (compare a1 c1) eqn:?.
@@ -3775,7 +3777,7 @@ Proof.
   - simpl.
     destruct (compare a1 b) eqn: Hcomp.
     + apply coeff_lt; lia.
-    + now apply head_lt, lt_iff.
+    + now apply head_lt, compare_lt_iff.
     + apply tail_lt, IHa2.
 Qed.
 
@@ -3787,7 +3789,7 @@ Proof.
   - now apply not_lt_zero in H.
   - destruct (compare a1 b) eqn: Hcomp.
     + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
-    + apply lt_iff in Hcomp.
+    + apply compare_lt_iff in Hcomp.
       apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
       * now apply lt_irrefl with b, lt_trans with a1.
       * rewrite Heq in Hcomp.
@@ -3798,8 +3800,8 @@ Qed.
 Ltac compare_destruct_eqn a b H :=
   destruct (compare a b) eqn: H;
   [ apply compare_eq_iff in H as <-
-  | apply lt_iff in H
-  | apply gt_iff in H
+  | apply compare_lt_iff in H
+  | apply compare_gt_iff in H
   ].
 
 Tactic Notation "compare" "destruct" constr(a) constr(b) "as" simple_intropattern(intropattern) :=
@@ -3920,9 +3922,9 @@ Section Proof_of_dist.
     destruct b1, a1; try destruct c1; simpl.
     5,7,9,11,13-16: now apply not_lt_zero in Hcomp_b1_c1.
     - f_equal; lia.
-    - rewrite !compare_refl, Nat.compare_refl.
+    - rewrite Nat.compare_refl, !compare_refl.
       f_equal; lia.
-    - now rewrite !compare_refl, Nat.compare_refl.
+    - now rewrite Nat.compare_refl, !compare_refl.
     - rewrite compare_refl.
       now destruct (compare a1_1 b1_1).
     - reflexivity.
@@ -3930,52 +3932,52 @@ Section Proof_of_dist.
       + rewrite compare_refl.
         enough (Nat.compare n2 (S (n2 + n3)) = Lt) as -> by reflexivity.
         apply Nat.compare_lt_iff; lia.
-      + now apply lt_iff in Hcomp_a11_c11 as ->.
+      + now apply compare_lt_iff in Hcomp_a11_c11 as ->.
       + rewrite compare_refl, Nat.compare_refl.
         eenough (compare a1_2 (a1_2 + _) = Lt) as -> by reflexivity.
-        apply lt_iff, lt_plus_l.
+        apply compare_lt_iff, lt_plus_l.
     - apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-      + now apply lt_iff in Hlt as ->.
+      + now apply compare_lt_iff in Hlt as ->.
       + rewrite Heqa, compare_refl.
         now apply Nat.compare_lt_iff in Hlt as ->.
       + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
-        now apply lt_iff in Hlt as ->.
+        now apply compare_lt_iff in Hlt as ->.
     - compare destruct a1_1 c1_1 as Hcomp_a11_c11.
       + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-        * apply gt_iff in Hlt as ->.
+        * apply compare_gt_iff in Hlt as ->.
           eenough (compare (ocons a1_1 n3 _) (ocons a1_1 (S (n3 + _)) _) = Lt) as -> by reflexivity.
-          apply lt_iff, coeff_lt; lia.
+          apply compare_lt_iff, coeff_lt; lia.
         * rewrite Heqa, compare_refl.
           eenough (compare (ocons a1_1 (S(n3 + n2)) _)
                            (ocons a1_1 (S(n3 + n4)) _) = Lt) as -> by reflexivity.
-          apply lt_iff, coeff_lt. lia.
+          apply compare_lt_iff, coeff_lt. lia.
         * rewrite Heqa, Heqn, compare_refl.
           eenough (compare (ocons a1_1 (S (n3 + n4)) b1_2)
                            (ocons a1_1 (S (n3 + n4)) c1_2) = Lt) as -> by reflexivity.
-          now apply lt_iff, tail_lt.
+          now apply compare_lt_iff, tail_lt.
       + compare destruct a1_1 b1_1 as Hcomp_a11_b11.
         * eenough (compare (ocons a1_1 _ _)
                            (ocons c1_1 _ _) = Lt) as -> by reflexivity.
-          now apply lt_iff, head_lt.
-        * now apply lt_iff in Hcomp_b1_c1 as ->.
+          now apply compare_lt_iff, head_lt.
+        * now apply compare_lt_iff in Hcomp_b1_c1 as ->.
         * eenough (compare (ocons a1_1 _ _)
                            (ocons c1_1 _ _) = Lt) as -> by reflexivity.
-          now apply lt_iff, head_lt.
+          now apply compare_lt_iff, head_lt.
       + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-        * apply (lt_trans Hlt), gt_iff in Hcomp_a11_c11 as ->.
+        * apply (lt_trans Hlt), compare_gt_iff in Hcomp_a11_c11 as ->.
           eenough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 _ _))
                            (ocons a1_1 n3 (a1_2 + ocons c1_1 _ _)) = Lt) as -> by reflexivity.
-          now apply lt_iff, tail_lt, reduce_lt_plus, head_lt.
+          now apply compare_lt_iff, tail_lt, reduce_lt_plus, head_lt.
         * subst.
-          apply gt_iff in Hcomp_a11_c11 as ->.
+          apply compare_gt_iff in Hcomp_a11_c11 as ->.
           eenough (compare (ocons a1_1 n3 (a1_2 + ocons c1_1 n2 _))
                            (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 _)) = Lt) as -> by reflexivity.
-          now apply lt_iff, tail_lt, reduce_lt_plus, coeff_lt.
+          now apply compare_lt_iff, tail_lt, reduce_lt_plus, coeff_lt.
         * subst.
-          apply gt_iff in Hcomp_a11_c11 as ->.
+          apply compare_gt_iff in Hcomp_a11_c11 as ->.
           enough (compare (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 b1_2))
                           (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Lt) as -> by reflexivity.
-          now apply lt_iff, tail_lt, reduce_lt_plus, tail_lt.
+          now apply compare_lt_iff, tail_lt, reduce_lt_plus, tail_lt.
     - substitute_ind Hind
                      (ocons zero n1 a2)
                      b2
@@ -3985,11 +3987,11 @@ Section Proof_of_dist.
                      b2
                      (ocons (ocons c1_1 n3 c1_2) n0 c2).
       apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-      + now apply gt_iff in Hlt as ->. 
+      + now apply compare_gt_iff in Hlt as ->. 
       + rewrite Heqa, compare_refl.
         now apply Nat.compare_gt_iff in Hlt as ->.
       + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
-        now apply gt_iff in Hlt as ->.
+        now apply compare_gt_iff in Hlt as ->.
     - substitute_ind Hind
                      (ocons (ocons a1_1 n3 a1_2) n1 a2)
                      b2
@@ -3997,12 +3999,12 @@ Section Proof_of_dist.
       compare destruct a1_1 b1_1 as Hcomp_a11_b11.
       + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
                          (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
-        apply gt_iff, coeff_lt; lia.
+        apply compare_gt_iff, coeff_lt; lia.
       + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-        now apply gt_iff, head_lt.
+        now apply compare_gt_iff, head_lt.
       + eenough (compare (ocons a1_1 n3 (a1_2 + _)) 
                          (ocons a1_1 n3 a1_2) = Gt) as -> by reflexivity.
-        apply gt_iff, tail_lt, lt_plus_l.
+        apply compare_gt_iff, tail_lt, lt_plus_l.
     - substitute_ind Hind
                      (ocons (ocons a1_1 n3 a1_2) n1 a2)
                      b2
@@ -4013,7 +4015,7 @@ Section Proof_of_dist.
       + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
                          (ocons a1_1 (S (n3 + n4)) _) = Gt) as -> by reflexivity.
       {
-        apply gt_iff.
+        apply compare_gt_iff.
         apply lt_inv_nb in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
         - apply coeff_lt; lia.
         - subst; now apply tail_lt.
@@ -4025,13 +4027,13 @@ Section Proof_of_dist.
           now apply lt_irrefl in Hcomp_ac.
       + eenough (compare (ocons a1_1 (S (n3 + _)) _)
                          (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
-        apply gt_iff, coeff_lt; lia.
+        apply compare_gt_iff, coeff_lt; lia.
       + eenough (compare (ocons b1_1 _ _)
                          (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-        now apply gt_iff, head_lt.
-      + now apply gt_iff in Hcomp_b1_c1 as ->.
+        now apply compare_gt_iff, head_lt.
+      + now apply compare_gt_iff in Hcomp_b1_c1 as ->.
       + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-        now apply gt_iff, head_lt.
+        now apply compare_gt_iff, head_lt.
       + exfalso.
         apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
         * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ab.
@@ -4046,7 +4048,7 @@ Section Proof_of_dist.
       + enough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 n2 b1_2))
                         (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Gt)
         as -> by reflexivity.
-        now apply gt_iff, tail_lt, reduce_lt_plus.
+        now apply compare_gt_iff, tail_lt, reduce_lt_plus.
 Qed.
 
 

@@ -23,7 +23,6 @@ Section Comparable.
   Context {A: Type}
           {lt: relation A}
           {le: relation A}
-          {eq: relation A}
           {compare : A -> A -> comparison}
           {comparable : Comparable lt le compare}.
 
@@ -44,7 +43,7 @@ Section Comparable.
     - subst. now apply lt_irrefl in Hlt.
   Qed.
 
-  Definition lt_b (a b: A): bool :=
+  Definition lt_b {comparable : Comparable lt le compare} (a b: A): bool :=
     match compare a b with
     | Lt => true
     | _ => false
@@ -85,7 +84,7 @@ Section Comparable.
   Qed.
 
   (* Relation Eq *)
-  Definition eq_b (a b: A): bool :=
+  Definition eq_b {comparable : Comparable lt le compare} (a b: A): bool :=
     match compare a b with
     | Eq => true
     | _ => false
@@ -174,7 +173,7 @@ Section Comparable.
   Qed.
 
   (* Relation Le *)
-  Definition le_b (a b: A): bool :=
+  Definition le_b {comparable : Comparable lt le compare} (a b: A): bool :=
     negb (lt_b b a).
 
   Lemma le_b_iff (a b: A):
@@ -272,26 +271,22 @@ Section Comparable.
 
   (* Max lemmas *)
 
-  Definition max (a b : A): A :=
+  Definition max {comparable : Comparable lt le compare} (a b : A): A :=
   match compare a b with
   | Gt => a
   | _ => b
   end.
 
-  Lemma max_dec:
-    forall a b: A,
+  Lemma max_dec (a b: A):
     max a b = a \/ max a b = b.
   Proof.
-    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab]; tauto.
   Qed.
 
-  Lemma max_comm:
-    forall a b: A,
+  Lemma max_comm (a b: A):
     max a b = max b a.
   Proof.
-    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab];
     pose proof (compare_correct b a) as [Hba | Hba | Hba].
@@ -300,11 +295,9 @@ Section Comparable.
   Qed.
 
 
-  Lemma max_ge_a:
-    forall a b: A,
+  Lemma max_ge_a (a b: A):
     le b a <-> max a b = a.
   Proof.
-    intros a b.
     unfold max.
     split; intro H.
     - apply compare_ge_iff in H as [Hlt | Heq].
@@ -320,11 +313,9 @@ Section Comparable.
       + now apply lt_incl_le.
   Qed.
 
-  Lemma max_ge_b:
-    forall a b: A,
+  Lemma max_ge_b (a b: A):
     le a b <-> max a b = b.
   Proof.
-    intros a b.
     unfold max.
     rewrite le_lt_eq, <- compare_lt_iff, <- compare_eq_iff.
     split; intro H.
@@ -340,19 +331,15 @@ Section Comparable.
   Qed.
 
 
-  Lemma max_refl:
-    forall a: A,
+  Lemma max_refl (a: A):
     max a a = a.
   Proof.
-    intro a.
     apply max_ge_a, le_refl.
   Qed.
 
-  Lemma le_max_a:
-    forall a b: A,
+  Lemma le_max_a (a b: A):
     le a (max a b).
   Proof.
-    intros a b.
     unfold max.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt].
     1,3: subst; now apply le_refl.
@@ -394,22 +381,20 @@ Section Comparable.
 
   (* Min lemmas*)
 
-  Definition min (a b : A): A :=
+  Definition min {comparable : Comparable lt le compare} (a b :A): A :=
   match compare a b with
   | Lt => a
   | _ => b
   end.
 
-  Lemma min_max_iff:
-    forall a b: A,
+  Lemma min_max_iff (a b: A):
     min a b = a <-> max a b = b.
   Proof.
-    intros a b.
     unfold min, max.
     pose proof (compare_correct a b) as [Hab | Hab | Hab]; subst; easy.
   Qed.
 
-  Lemma min_comm (a b:A):
+  Lemma min_comm (a b: A):
     min a b = min b a.
   Proof.
     unfold min.
@@ -422,7 +407,6 @@ Section Comparable.
   Lemma min_dec (a b: A):
     min a b = a \/ min a b = b.
   Proof.
-    intros a b.
     rewrite min_max_iff, min_comm, min_max_iff, max_comm.
     now apply max_dec.
   Qed.
@@ -432,7 +416,6 @@ Section Comparable.
   Lemma min_le_ad (a b: A):
     le a b <-> min a b = a.
   Proof.
-    intros *.
     rewrite min_max_iff.
     now apply max_ge_b.
   Qed.
@@ -440,7 +423,6 @@ Section Comparable.
   Lemma min_le_b (a b: A):
     le b a <-> min a b = b.
   Proof.
-    intros *.
     rewrite min_comm, min_max_iff.
     now apply max_ge_b.
   Qed.
@@ -448,7 +430,6 @@ Section Comparable.
   Lemma min_refl (a:A):
     min a a = a.
   Proof.
-    intros *.
     rewrite min_max_iff.
     apply max_refl.
   Qed.
@@ -501,7 +482,6 @@ Section Comparable.
   Lemma compare_trans (a b c: A) (comp_res: comparison):
     compare a b = comp_res -> compare b c = comp_res -> compare a c = comp_res.
   Proof.
-    intros *.
     destruct comp_res.
     - apply compare_eq_trans.
     - apply compare_lt_trans.
