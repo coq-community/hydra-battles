@@ -2113,7 +2113,7 @@ Lemma phi0_mono :
   forall a b, le a b -> le (phi0 a) ( phi0 b).
 Proof.
   intros a b [Hlt | Heq].
-  - apply lt_incl_le. auto with T1.
+  - apply lt_incl_le; auto with T1.
   - subst; apply le_refl.
 Qed.
 
