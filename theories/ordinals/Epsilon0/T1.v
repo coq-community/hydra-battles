@@ -1788,8 +1788,7 @@ Proof.
   -  destruct b.
      + reflexivity.
      + intro H.
-       apply nf_inv3 in H.
-       now apply compare_gt_iff in H as ->.
+       now apply nf_inv3, compare_gt_iff in H as ->.
 Qed.
 
 Lemma plus_is_zero alpha beta :
