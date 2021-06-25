@@ -2,7 +2,7 @@
   into the set of Schutte's countable ordinal numbers stricly less than
   epsilon0.
 
-  Pierre Castéran, Univ. Bordeuwx and LaBRI
+  Pierre Cast?ran, Univ. Bordeuwx and LaBRI
 
    This is intented to be a validation of main constructions and functions 
    designed for the type [T1].
@@ -10,7 +10,7 @@
 *)
 
 (*  Pierre Casteran 
-    LaBRI, Université Bordeaux 1
+    LaBRI, Universit? Bordeaux 1
 *)
 
 
@@ -187,7 +187,7 @@ Proof with eauto with T1.
          *   eapply IHbeta2 ...
              apply T1.nf_helper_phi0.
              apply T1.nf_helper_intro with n; auto. 
-             apply  T1.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
+             apply Comparable.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
              apply T1.le_phi0 ; eauto with T1.
              eapply T1.lt_trans ...
          * simpl; rewrite alpha_plus_zero.
@@ -202,10 +202,10 @@ Proof with eauto with T1.
           *  apply IHbeta2.
              apply T1.nf_helper_phi0.
              eapply T1.nf_helper_intro; eauto.
-             apply T1.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
+             apply Comparable.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
              destruct n0.
              apply T1.le_tail ...
-             apply T1.lt_le_incl.
+             apply lt_incl_le.
              apply T1.coeff_lt; auto with arith.
              eauto with T1.
              eapply T1.nf_phi0; eauto with T1.
@@ -393,28 +393,27 @@ Proof with eauto with T1.
      + simpl (inject (ocons alpha1 n alpha2));
          rewrite <- plus_assoc; simpl (inject T1.zero); 
            now rewrite alpha_plus_zero.
-     +  repeat rewrite inject_rw;  case_eq (T1.compare alpha1 beta1).
-        * intro H1;  apply T1.compare_Eq_impl in H1; subst beta1.
-          repeat rewrite inject_rw;  simpl T1.plus; rewrite T1.compare_refl.
-          repeat rewrite inject_rw.
+     + repeat rewrite inject_rw.
+       simpl.
+       destruct (T1.compare alpha1 beta1) eqn:H1;
+       repeat rewrite inject_rw.
+       * apply compare_eq_iff in H1 as <-.
           rewrite <- (case_Eq (inject alpha1) (inject alpha2)
                               (inject alpha1) (inject  beta2) n n0) ...
-          assert (H1 : (alpha2 t1< T1.phi0  alpha1)%t1). {
-            rewrite nf_LT_iff in H;  tauto. }
+          -- assert (H1 : (alpha2 t1< T1.phi0  alpha1)%t1). 
+             {  rewrite nf_LT_iff in H;  tauto. }
           rewrite <- inject_of_phi0.
           apply inject_mono ...
-          rewrite <- inject_of_phi0; apply inject_mono ...
-          rewrite nf_LT_iff in H0 ...
-          decompose [and] H0 ... 
-        * intros H1; repeat rewrite inject_rw.
-          simpl T1.plus; rewrite H1;  rewrite lt_iff in H1.
+          -- rewrite <- inject_of_phi0; apply inject_mono ...
+             rewrite nf_LT_iff in H0 ...
+             decompose [and] H0 ... 
+        * rewrite compare_lt_iff in H1.
           { repeat rewrite inject_rw; rewrite case_lt; auto.
             rewrite <- inject_of_phi0;  apply inject_mono ...
             -  rewrite nf_LT_iff in H; decompose [and] H ...
             -  apply inject_mono; eauto with T1.
           }  
-        * intros H1; repeat rewrite inject_rw.
-          simpl T1.plus; rewrite H1; rewrite gt_iff in H1.
+        * rewrite compare_gt_iff in H1.
           repeat rewrite inject_rw; rewrite case_gt.
           f_equal; rewrite IHalpha2 ...
 Qed.
