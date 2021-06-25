@@ -1662,7 +1662,7 @@ Proof.
   intro b; elim b. 
   - intro c; elim c;intros.
     + simpl; auto with T1. 
-    + simpl;auto.
+    + simpl; auto.
   - intros c H0 n t H c0 H1 H2 H3 H4;  generalize c0 H2 H4.
     destruct c1.
     + rewrite (plus_zero_r);auto.
