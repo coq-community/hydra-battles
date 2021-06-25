@@ -956,7 +956,7 @@ Lemma nf_intro :
   nf b ->
   nf_helper b a ->
   nf (ocons a n b).
-Proof.  destruct 3;  eauto with T1. Qed.
+Proof. destruct 3; eauto with T1. Qed.
 
 Lemma nf_intro' :
   forall a n b,
