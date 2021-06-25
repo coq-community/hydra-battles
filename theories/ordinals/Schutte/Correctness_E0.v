@@ -10,7 +10,7 @@
 *)
 
 (*  Pierre Casteran 
-    LaBRI, Universit? Bordeaux 1
+    LaBRI, Université Bordeaux 1
 *)
 
 
