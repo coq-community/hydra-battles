@@ -1663,7 +1663,7 @@ Proof.
   - intro c; elim c;intros.
     + simpl; auto with T1. 
     + simpl; auto.
-  - intros c H0 n t H c0 H1 H2 H3 H4;  generalize c0 H2 H4.
+  - intros c H0 n t H c0 H1 H2 H3 H4; generalize c0 H2 H4.
     destruct c1.
     + rewrite (plus_zero_r);auto.
     + intros H5 H6;  case (lt_eq_lt_dec c c1_1).
