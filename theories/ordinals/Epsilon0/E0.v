@@ -763,3 +763,20 @@ Lemma Phi0_mono alpha beta : alpha o< beta -> Phi0 alpha o< Phi0 beta.
 Proof.
   destruct alpha, beta; unfold Lt; cbn;  auto with T1.
 Qed.
+
+
+Lemma plus_assoc (alpha beta gamma: E0): 
+  alpha + (beta + gamma) = alpha + beta + gamma.
+Proof.
+  destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
+  apply  T1.plus_assoc.
+Qed.
+
+
+Theorem mult_plus_distr_l (alpha beta gamma: E0) :
+  alpha * (beta + gamma) = alpha * beta + alpha * gamma.
+Proof.
+  destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
+  now apply  T1.mult_plus_distr_l.
+Qed.
+

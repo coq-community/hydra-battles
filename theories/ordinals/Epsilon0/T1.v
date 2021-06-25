@@ -151,12 +151,6 @@ Definition le (alpha beta :T1) :=
 
 Global Hint Unfold le : T1.
 
-Example Ex0:
-  lt (ocons (phi0 (phi0 omega)) 2
-            (ocons (phi0 10) 33
-                   (ocons (phi0 9) 63 zero)))
-     (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
-Proof. reflexivity. Qed.
 
 
 
@@ -3533,33 +3527,6 @@ Proof.
 Qed.
 
 
-(* Demo *)
-
-Example alpha_0 : T1 :=
-  ocons (ocons (ocons zero 0 zero)
-               0
-               zero)
-        0
-        (ocons (ocons zero 2 zero)
-               4
-               (ocons zero 1 zero)).
-
-Compute alpha_0.
-
-(*
-   = ocons omega 0 (ocons (FS 2) 4 (FS 1))
-     : T1
- *)
-
-Compute nf_b alpha_0.
-
-
-
-Example alpha_0_eq : alpha_0 = phi0 omega  +
-                               phi0 (fin 3)  * fin 5 +
-                               fin 2.
-Proof. reflexivity. Qed.
-
 
 
 
@@ -3582,11 +3549,7 @@ Lemma succ_cons alpha i beta : alpha <> zero -> nf (ocons alpha i beta) ->
   - reflexivity.
 Qed.
 
-Example Ex1 :  fin 42 + omega = omega.
-Proof. reflexivity. Qed.
 
-Example Ex2 : limitb (omega ^ (omega + fin 5)).
-Proof. reflexivity. Qed.
 
 
 
@@ -3738,7 +3701,6 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
 Proof. reflexivity. Qed.
 
 
-
 Lemma plus_assoc : forall a b c: T1,  a + (b + c) = a + b + c.
 Proof.
   induction a, b, c; only 1-6: easy.
@@ -3764,7 +3726,6 @@ Proof.
       simpl.
       now rewrite Hbc.
 Qed.
-
 
 Require Import Simple_LexProd.
 
@@ -3801,6 +3762,7 @@ Section Proof_of_dist.
     rewrite plus_cons_cons_eqn.
     destruct a.
     1: now rewrite mult_0_a.
+
     compare destruct b1 c1 as Hcomp_b1_c1;
     destruct b1, a1; try destruct c1; simpl.
     5,7,9,11,13-16: now apply not_lt_zero in Hcomp_b1_c1.
@@ -3815,6 +3777,7 @@ Section Proof_of_dist.
       + rewrite compare_refl.
         enough (Nat.compare n2 (S (n2 + n3)) = Lt) as -> by reflexivity.
         apply Nat.compare_lt_iff; lia.
+
       + now apply compare_lt_iff in Hcomp_a11_c11 as ->.
       + rewrite compare_refl, Nat.compare_refl.
         eenough (compare a1_2 (a1_2 + _) = Lt) as -> by reflexivity.
@@ -3904,6 +3867,7 @@ Section Proof_of_dist.
         - subst; now apply tail_lt.
       }
       + exfalso.
+
         now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
       + eenough (compare (ocons a1_1 (S (n3 + _)) _)
                          (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
@@ -3936,4 +3900,37 @@ Qed.
 
 End Proof_of_dist.
 
+(** * Examples *)
 
+Example Ex1 :  fin 42 + omega = omega.
+Proof. reflexivity. Qed.
+
+Example Ex2 : limitb (omega ^ (omega + fin 5)).
+Proof. reflexivity. Qed.
+
+(* Demo *)
+
+Example alpha_0 : T1 :=
+  ocons (ocons (ocons zero 0 zero)
+               0
+               zero)
+        0
+        (ocons (ocons zero 2 zero)
+               4
+               (ocons zero 1 zero)).
+
+Compute alpha_0.
+
+(*
+   = ocons omega 0 (ocons (FS 2) 4 (FS 1))
+     : T1
+ *)
+
+Compute nf_b alpha_0.
+
+
+
+Example alpha_0_eq : alpha_0 = phi0 omega  +
+                               phi0 (fin 3)  * fin 5 +
+                               fin 2.
+Proof. reflexivity. Qed.
