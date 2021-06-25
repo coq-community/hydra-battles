@@ -454,7 +454,8 @@ Remark H'_non_mono1 :
                           (H'_ alpha k <= H'_ beta k)%nat).
 Proof.
  intros H ;specialize (H 42 omega 3).
- assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
+ assert (H0 :(42 o<= omega)%e0). repeat split; auto.  
+  compute. now left.
  apply H in H0; rewrite H'_Fin, H'_omega  in H0; abstract lia.
 Qed.
 

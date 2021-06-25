@@ -18,6 +18,7 @@
 From hydras Require Import Epsilon0.Epsilon0 ON_Generic. 
 From hydras Require Import Schutte_basics  Schutte.Addition  AP CNF.
 
+
 Import List  PartialFun Ensembles.
 
 Fixpoint inject (t:T1) : Ord :=
@@ -118,7 +119,6 @@ Proof.
        apply le_plus_r;auto with schutte.
 Qed.
 
- 
 Lemma zero_lt alpha n beta : 
   zero < mult_Sn (AP._phi0 alpha) n + beta.
 Proof.
@@ -187,7 +187,7 @@ Proof with eauto with T1.
          *   eapply IHbeta2 ...
              apply T1.nf_helper_phi0.
              apply T1.nf_helper_intro with n; auto. 
-             apply  T1.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
+             apply  Comparable.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
              apply T1.le_phi0 ; eauto with T1.
              eapply T1.lt_trans ...
          * simpl; rewrite alpha_plus_zero.
@@ -202,10 +202,10 @@ Proof with eauto with T1.
           *  apply IHbeta2.
              apply T1.nf_helper_phi0.
              eapply T1.nf_helper_intro; eauto.
-             apply T1.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
+             apply Comparable.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
              destruct n0.
              apply T1.le_tail ...
-             apply T1.lt_le_incl.
+             apply Comparable.lt_incl_le.
              apply T1.coeff_lt; auto with arith.
              eauto with T1.
              eapply T1.nf_phi0; eauto with T1.
@@ -394,7 +394,7 @@ Proof with eauto with T1.
          rewrite <- plus_assoc; simpl (inject T1.zero); 
            now rewrite alpha_plus_zero.
      +  repeat rewrite inject_rw;  case_eq (T1.compare alpha1 beta1).
-        * intro H1;  apply T1.compare_Eq_impl in H1; subst beta1.
+        * intro H1;  rewrite Comparable.compare_eq_iff in H1. subst beta1.
           repeat rewrite inject_rw;  simpl T1.plus; rewrite T1.compare_refl.
           repeat rewrite inject_rw.
           rewrite <- (case_Eq (inject alpha1) (inject alpha2)
@@ -407,14 +407,14 @@ Proof with eauto with T1.
           rewrite nf_LT_iff in H0 ...
           decompose [and] H0 ... 
         * intros H1; repeat rewrite inject_rw.
-          simpl T1.plus; rewrite H1;  rewrite lt_iff in H1.
+          simpl T1.plus; rewrite H1.   
           { repeat rewrite inject_rw; rewrite case_lt; auto.
             rewrite <- inject_of_phi0;  apply inject_mono ...
             -  rewrite nf_LT_iff in H; decompose [and] H ...
             -  apply inject_mono; eauto with T1.
           }  
         * intros H1; repeat rewrite inject_rw.
-          simpl T1.plus; rewrite H1; rewrite gt_iff in H1.
+          simpl T1.plus; rewrite H1.  rewrite Comparable.compare_gt_iff in H1.
           repeat rewrite inject_rw; rewrite case_gt.
           f_equal; rewrite IHalpha2 ...
 Qed.
