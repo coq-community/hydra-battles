@@ -106,7 +106,8 @@ Definition omega_term (alpha:T1)(k:nat) :=
   ocons alpha k zero.
 
 
-(**  omega towers **)
+(**  omega towers 
+*)
 
 Fixpoint tower (height:nat) : T1 := 
  match height with 
