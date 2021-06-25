@@ -43,7 +43,8 @@ Section Comparable.
     - subst. now apply lt_irrefl in Hlt.
   Qed.
 
-  Definition lt_b {comparable : Comparable lt le compare} (a b: A): bool :=
+  #[using="All"]
+  Definition lt_b (a b: A): bool :=
     match compare a b with
     | Lt => true
     | _ => false
@@ -84,7 +85,8 @@ Section Comparable.
   Qed.
 
   (* Relation Eq *)
-  Definition eq_b {comparable : Comparable lt le compare} (a b: A): bool :=
+  #[using="All"]
+  Definition eq_b (a b: A): bool :=
     match compare a b with
     | Eq => true
     | _ => false
@@ -173,7 +175,8 @@ Section Comparable.
   Qed.
 
   (* Relation Le *)
-  Definition le_b {comparable : Comparable lt le compare} (a b: A): bool :=
+  #[using="All"]
+  Definition le_b (a b: A): bool :=
     negb (lt_b b a).
 
   Lemma le_b_iff (a b: A):
@@ -276,8 +279,8 @@ Section Comparable.
   Qed.
 
   (* Max lemmas *)
-
-  Definition max {comparable : Comparable lt le compare} (a b : A): A :=
+  #[using="All"]
+  Definition max (a b : A): A :=
   match compare a b with
   | Gt => a
   | _ => b
@@ -386,8 +389,8 @@ Section Comparable.
 
 
   (* Min lemmas*)
-
-  Definition min {comparable : Comparable lt le compare} (a b :A): A :=
+  #[using="All"]
+  Definition min (a b :A): A :=
   match compare a b with
   | Lt => a
   | _ => b
@@ -527,4 +530,12 @@ Local Ltac compare_trans H1 H2 intropattern :=
 Tactic Notation "compare" "trans" constr(H1) constr(H2) "as" simple_intropattern(intropattern) :=
   compare_trans H1 H2 intropattern.
 
+Ltac compare_destruct_eqn a b H :=
+  destruct (_ a b) eqn: H;
+  [ apply compare_eq_iff in H as <-
+  | apply compare_lt_iff in H
+  | apply compare_gt_iff in H
+  ].
 
+Tactic Notation "compare" "destruct" constr(a) constr(b) "as" ident(H) :=
+  compare_destruct_eqn a b H.

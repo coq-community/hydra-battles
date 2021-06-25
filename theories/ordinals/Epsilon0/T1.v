@@ -2515,17 +2515,6 @@ Proof.
   apply nf_helper_phi0R. destruct H3; tauto.
 Qed.
 
-
-Ltac compare_destruct_eqn a b H :=
-  destruct (compare a b) eqn: H;
-  [ apply compare_eq_iff in H as <-
-  | apply compare_lt_iff in H
-  | apply compare_gt_iff in H
-  ].
-
-Tactic Notation "compare" "destruct" constr(a) constr(b) "as" ident(H) :=
-  compare_destruct_eqn a b H.
-
 Lemma lt_plus_l:
   forall {a b c : T1} {n:nat}, lt a (a + ocons b n c).
 Proof.
