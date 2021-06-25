@@ -2671,7 +2671,7 @@ Section Constant_to_standard_Proof.
 
   Remark R19 : beta t1<= gamma.
   Proof.
-    generalize Rem10;unfold P; fold gamma ;unfold le_b, lt_b.
+    generalize Rem10; unfold P; fold gamma ;unfold le_b, lt_b.
     intro H.
     destruct (T1.compare gamma beta) eqn: Hcomp.
     - apply compare_eq_iff in Hcomp as ->.
@@ -3024,5 +3024,4 @@ Proof.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
-
 
