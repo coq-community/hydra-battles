@@ -3765,43 +3765,6 @@ Proof.
       now rewrite Hbc.
 Qed.
 
-Lemma lt_plus_l:
-  forall {a b c : T1} {n:nat}, lt a (a + ocons b n c).
-Proof.
-  induction a; intros *.
-  - apply zero_lt.
-  - simpl.
-    destruct (compare a1 b) eqn: Hcomp.
-    + apply coeff_lt; lia.
-    + now apply head_lt, compare_lt_iff.
-    + apply tail_lt, IHa2.
-Qed.
-
-
-Lemma lt_plus_r:
-  forall {a b c : T1} {n:nat}, ~ lt (a + ocons b n c) a.
-Proof.
-  induction a; simpl; intros * H.
-  - now apply not_lt_zero in H.
-  - destruct (compare a1 b) eqn: Hcomp.
-    + apply lt_inv_nb in H as [Hlt | (Heq, Hlt)]; lia.
-    + apply compare_lt_iff in Hcomp.
-      apply lt_inv_le, le_lt_eq in H as [Hlt | Heq].
-      * now apply lt_irrefl with b, lt_trans with a1.
-      * rewrite Heq in Hcomp.
-        now apply lt_irrefl in Hcomp.
-    + now apply lt_inv_b, IHa2 in H.
-Qed.
-
-Ltac compare_destruct_eqn a b H :=
-  destruct (compare a b) eqn: H;
-  [ apply compare_eq_iff in H as <-
-  | apply compare_lt_iff in H
-  | apply compare_gt_iff in H
-  ].
-
-
-
 
 Require Import Simple_LexProd.
 
