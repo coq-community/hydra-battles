@@ -726,7 +726,7 @@ Defined.
 Lemma lt_succ (alpha : T1) : lt alpha (succ alpha).
 Proof.
   induction alpha; cbn; auto with T1.
-  - destruct alpha1; cbn ; auto with T1.
+  - destruct alpha1; cbn; auto with T1.
 Qed.
 
 
