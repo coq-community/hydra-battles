@@ -18,6 +18,7 @@
 From hydras Require Import Epsilon0.Epsilon0 ON_Generic. 
 From hydras Require Import Schutte_basics  Schutte.Addition  AP CNF.
 
+
 Import List  PartialFun Ensembles.
 
 Fixpoint inject (t:T1) : Ord :=
@@ -118,7 +119,6 @@ Proof.
        apply le_plus_r;auto with schutte.
 Qed.
 
- 
 Lemma zero_lt alpha n beta : 
   zero < mult_Sn (AP._phi0 alpha) n + beta.
 Proof.
@@ -205,7 +205,7 @@ Proof with eauto with T1.
              apply Comparable.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
              destruct n0.
              apply T1.le_tail ...
-             apply lt_incl_le.
+             apply Comparable.lt_incl_le.
              apply T1.coeff_lt; auto with arith.
              eauto with T1.
              eapply T1.nf_phi0; eauto with T1.
@@ -393,6 +393,7 @@ Proof with eauto with T1.
      + simpl (inject (ocons alpha1 n alpha2));
          rewrite <- plus_assoc; simpl (inject T1.zero); 
            now rewrite alpha_plus_zero.
+
      + repeat rewrite inject_rw.
        simpl.
        destruct (T1.compare alpha1 beta1) eqn:H1;
