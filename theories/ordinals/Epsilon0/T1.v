@@ -1049,7 +1049,7 @@ Defined.
 (** ** Properties of [compare]: second part *)
 
 
-Theorem compare_reflectR ( alpha beta : T1) : (** TODO make this lemma **)
+Theorem compare_reflectR ( alpha beta : T1) :
   (match lt_eq_lt_dec alpha beta with
    | inleft  (left _) => Lt
    | inleft  (right _) => Eq
