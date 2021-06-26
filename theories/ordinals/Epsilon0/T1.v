@@ -1063,8 +1063,6 @@ Proof.
   + now apply compare_gt_iff.
 Qed.
 
-Check eq_b.
-Check eq_b_iff.
 (** ** Properties of [max] *)
 Lemma max_nf (alpha beta : T1) :
   nf alpha -> nf beta -> nf (max alpha beta).

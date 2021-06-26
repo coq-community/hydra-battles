@@ -2,7 +2,7 @@
   into the set of Schutte's countable ordinal numbers stricly less than
   epsilon0.
 
-  Pierre Castéran, Univ. Bordeuwx and LaBRI
+  Pierre Castéran, Univ. Bordeaux and LaBRI
 
    This is intented to be a validation of main constructions and functions 
    designed for the type [T1].
