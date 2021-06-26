@@ -3731,14 +3731,14 @@ Fixpoint p_size (exp : ppT1) : nat :=
 
 Definition pp (e: T1) : ppT1  := let t := pp0 e in reassoc t (p_size t).
 
-Compute (pp (omega ^ omega * 2 + omega ^ 5 + omega +  1))%t1 .
+Compute (pp (omega ^ omega * 2 + omega ^ 5 + omega + 1))%t1 .
 
-Compute (pp (omega ^(omega ^ omega * 2 + omega ^ 5 +omega +  1)))%t1 .
+Compute (pp (omega ^ (omega ^ omega * 2 + omega ^ 5 + omega + 1)))%t1 .
 
 Compute pp omega.
 
 Eval simpl in  fun n:nat =>
-                 (pp (omega ^(omega ^ omega * n + omega ^ n +omega   +  1)))%t1 .
+                 (pp (omega ^ (omega ^ omega * n + omega ^ n + omega + 1)))%t1 .
 
 
 Ltac is_closed alpha :=
@@ -4086,7 +4086,7 @@ Section Proof_of_dist.
        + eenough (compare (ocons a1_1 n3 (a1_2 + _)) 
                           (ocons a1_1 n3 a1_2) = Gt) as -> by reflexivity.
          apply gt_iff, tail_lt, lt_plus_l.
-    -  rewrite_ind Hind b2;    simpl. 
+    -  rewrite_ind Hind b2; simpl. 
        compare destruct a1_1 b1_1 as Hcomp_ab;
          compare destruct a1_1 c1_1 as Hcomp_ac.
        + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
@@ -4135,8 +4135,8 @@ Section Proof_of_dist.
   Theorem mult_plus_distr_l (a b c: T1) :
     nf a -> nf b -> nf c ->
     a * (b + c) = a * b + a * c.
-  Proof. About L0.
-         intros Ha Hb Hc; apply (L0 Ha Hb Hc); auto.
+  Proof.
+    intros Ha Hb Hc; apply (L0 Ha Hb Hc); auto.
   Qed.
 
 End Proof_of_dist.
@@ -4173,6 +4173,5 @@ Compute nf_b alpha_0.
 
 
 Example alpha_0_eq : alpha_0 = phi0 omega  +
-                               phi0 3  *  5 + 2.
+                               phi0 3 * 5 + 2.
 Proof. reflexivity. Qed.
-
