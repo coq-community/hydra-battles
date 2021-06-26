@@ -3809,67 +3809,54 @@ Section Proof_of_dist.
           apply compare_gt_iff in Hcomp_a11_c11 as ->.
           enough (compare (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 b1_2))
                           (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Lt) as -> by reflexivity.
-          now apply lt_iff, tail_lt, reduce_lt_plus, tail_lt.
+          now apply compare_lt_iff, tail_lt, reduce_lt_plus, tail_lt.
     -  rewrite_ind Hind b2. 
     -  rewrite_ind Hind b2.
        apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-       apply gt_iff in Hlt as ->. 
-       reflexivity. 
-       rewrite Heqa, compare_refl.
-       now apply Nat.compare_gt_iff in Hlt as ->.
+       + now apply compare_gt_iff in Hlt as ->. 
+       + rewrite Heqa, compare_refl.
+         now apply Nat.compare_gt_iff in Hlt as ->.
        + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
-         now apply gt_iff in Hlt as ->.
-    -  rewrite_ind Hind b2. 
-
+         now apply compare_gt_iff in Hlt as ->.
+    -  rewrite_ind Hind b2.
        compare destruct a1_1 b1_1 as Hcomp_a11_b11.
        + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
                           (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
-         apply gt_iff, coeff_lt; lia.
+         apply compare_gt_iff, coeff_lt; lia.
        + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-         now apply gt_iff, head_lt.
+         now apply compare_gt_iff, head_lt.
        + eenough (compare (ocons a1_1 n3 (a1_2 + _)) 
                           (ocons a1_1 n3 a1_2) = Gt) as -> by reflexivity.
-         apply gt_iff, tail_lt, lt_plus_l.
-    -  rewrite_ind Hind b2; simpl. 
+         apply compare_gt_iff, tail_lt, lt_plus_l.
+    -  rewrite_ind Hind b2; simpl.
        compare destruct a1_1 b1_1 as Hcomp_ab;
          compare destruct a1_1 c1_1 as Hcomp_ac.
        + eenough (compare (ocons a1_1 (S (n3 + n2)) _)
                           (ocons a1_1 (S (n3 + n4)) _) = Gt) as -> by reflexivity.
          {
-           apply gt_iff.
-           apply lt_inv_nb in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
+           apply compare_gt_iff.
+           apply lt_inv_coeff_dec in Hcomp_b1_c1 as [Hlt | (Heq, Hlt)].
            - apply coeff_lt; lia.
            - subst; now apply tail_lt.
          }
-       + exfalso.
-         apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-         * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ac.
-         * rewrite Heq in Hcomp_ac.
-           now apply lt_irrefl in Hcomp_ac.
+       + now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
        + eenough (compare (ocons a1_1 (S (n3 + _)) _)
                           (ocons a1_1 n3 _) = Gt) as -> by reflexivity.
-         apply gt_iff, coeff_lt; lia.
+         apply compare_gt_iff, coeff_lt; lia.
        + eenough (compare (ocons b1_1 _ _)
                           (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-         now apply gt_iff, head_lt.
-       + now apply gt_iff in Hcomp_b1_c1 as ->.
+         now apply compare_gt_iff, head_lt.
+       + now apply compare_gt_iff in Hcomp_b1_c1 as ->.
        + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
-         now apply gt_iff, head_lt.
+         now apply compare_gt_iff, head_lt.
+       + now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
        + exfalso.
-         apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-         * now apply (lt_trans Hlt), lt_irrefl in Hcomp_ab.
-         * rewrite Heq in Hcomp_ab.
-           now apply lt_irrefl in Hcomp_ab.
-       + exfalso.
-         apply (lt_trans Hcomp_ab) in Hcomp_ac as Hbc.
-         apply lt_inv_le, le_lt_eq in Hcomp_b1_c1 as [Hlt | Heq].
-         * now apply (lt_trans Hlt), lt_irrefl in Hbc.
-         * rewrite Heq in Hbc.
-           now apply lt_irrefl in Hbc.
+         apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
+         now apply (lt_trans b1_1 a1_1 c1_1) in Hcomp_ac as Hbc.
        + enough (compare (ocons a1_1 n3 (a1_2 + ocons b1_1 n2 b1_2))
                          (ocons a1_1 n3 (a1_2 + ocons c1_1 n4 c1_2)) = Gt)
            as -> by reflexivity.
-         now apply gt_iff, tail_lt, reduce_lt_plus.
+         now apply compare_gt_iff, tail_lt, reduce_lt_plus.
          all: eauto with T1.
   Qed.
 
