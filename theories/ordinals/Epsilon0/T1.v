@@ -3715,7 +3715,6 @@ Proof.
 Qed.
 
 
-Require Import Simple_LexProd.
 
 
 Section Proof_of_dist.
