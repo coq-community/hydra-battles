@@ -100,22 +100,16 @@ Proof.
   refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
 Defined.
 
-
-
 Instance Fin (i:nat) : E0.
 Proof.
-  destruct i.
-  - exact Zero.
-  - exact (FinS i).
+  destruct i as [|i]; [exact Zero | exact (FinS i)].
 Defined.
 
 Coercion Fin : nat >-> E0.
 
-
 Instance Mult (alpha beta : E0) : E0.
 Proof.
-  refine (@mkord (cnf alpha * cnf beta)%t1 _).
-  apply nf_mult; apply cnf_ok.
+  refine (@mkord (cnf alpha * cnf beta)%t1 _); apply nf_mult; apply cnf_ok.
 Defined.
 
 
@@ -124,7 +118,7 @@ Infix "*" := Mult : E0_scope.
 Instance Mult_i  (alpha: E0) (n: nat) : E0.
 Proof.
   refine (@mkord (cnf alpha * n)%t1  _).
-  apply nf_mult_fin.  apply cnf_ok.
+  apply nf_mult_fin, cnf_ok.
 Defined.
 
 (** ** Lemmas *)
@@ -142,39 +136,35 @@ Proof. reflexivity. Defined.
 Lemma nf_proof_unicity :
   forall (alpha:T1) (H H': nf alpha), H = H'.
 Proof.
-  intros;  red in H, H';  apply eq_proofs_unicity_on.
+  intros; red in H, H'; apply eq_proofs_unicity_on.
   destruct y. 
   - rewrite H; auto. 
   - rewrite H; right; discriminate. 
 Qed.
 
-
 Lemma E0_eq_intro : forall alpha beta : E0,
     cnf alpha = cnf beta -> alpha = beta.
 Proof.
-  destruct alpha, beta;simpl;intros; subst;f_equal; auto.
-  apply nf_proof_unicity.
+  destruct alpha, beta; simpl; intros; subst; f_equal; auto; 
+    apply nf_proof_unicity.
 Qed.
-
 
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 Proof.
  split.
- -  intro; now f_equal.  
+ - intro; now f_equal.  
  - intro; now apply E0_eq_intro.
 Qed.
 
 Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
 Proof.
-  destruct alpha.
-  cbn.
+  destruct alpha; cbn.
   intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
   assert (nf (succ beta)) by eauto with T1.
-  exists (@mkord  beta Hbeta).
-  apply E0_eq_intro. now cbn.
+  exists (@mkord  beta Hbeta); apply E0_eq_intro; now cbn.
 Defined.
 
-Global Hint Resolve E0_eq_intro : E0.
+#[global] Hint Resolve E0_eq_intro : E0.
 
 Ltac orefl := (apply E0_eq_intro; try reflexivity).
 
@@ -212,29 +202,24 @@ Defined.
 
 Lemma cnf_Omega_term (alpha: E0) (n: nat) :
   cnf (Omega_term alpha n) = omega_term (cnf alpha) n.
-Proof.
-  reflexivity.
-Defined.
+Proof. reflexivity. Defined.
 
 Lemma Limitb_Omega_term alpha i : alpha <> Zero ->
-                                    Limitb (Omega_term alpha i).
+                                  Limitb (Omega_term alpha i).
 Proof.
-  intro H; unfold Limitb.
-  destruct alpha; simpl; destruct cnf0.
-   - destruct H; auto with E0.
-   -  auto.
+  intro H; unfold Limitb; destruct alpha as [cnf0 H0]; cbn;
+    destruct cnf0.
+  - destruct H; auto with E0.  
+  - red; trivial. 
 Qed.
 
 Lemma Limitb_Phi0 alpha  : alpha <> Zero ->
-                             Limitb (Phi0 alpha).
+                           Limitb (Phi0 alpha).
 Proof.
   unfold Phi0; apply Limitb_Omega_term.
 Qed.
 
-Global Hint Resolve Limitb_Phi0 : E0.
-
-
-
+#[global] Hint Resolve Limitb_Phi0 : E0.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = Zero} + {Limitb alpha = true} +
@@ -267,10 +252,9 @@ Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
 Instance Lt_sto : StrictOrder Lt.
 Proof.
   split.
-  - intro x ; destruct x; unfold Lt.  red.
+  - intro x ; destruct x; unfold Lt; red.
     cbn; intro; eapply LT_irrefl; eauto.
-  - intros [x Hx] [y Hy] [z Hz].
-    unfold Lt; cbn.
+  - intros [x Hx] [y Hy] [z Hz]; unfold Lt; cbn.
     apply LT_trans.
  Qed.
 
