@@ -654,7 +654,7 @@ Proof.
     destruct H.
     destruct H1.
     + apply lt_succ_le in H1; auto.
-      * destruct (le_lt_or_eq _ _ H1); auto.
+      * destruct H1; auto.
         specialize (H0 (Succ (mkord cnf_ok0))).
         cbn in H0; unfold LT in H0.
         exfalso.
@@ -681,7 +681,7 @@ Proof.
   - cbn; auto.
   - split; cbn; auto.
     cbn in H; destruct H; cbn in *.
-    apply lt_le_incl; tauto.
+    apply lt_incl_le; tauto.
 Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
@@ -694,9 +694,9 @@ Lemma E0_Lt_Succ_inv (alpha beta: E0):
 Proof.
   destruct alpha, beta; unfold Lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
-  destruct (T1.le_lt_or_eq _ _ H1) as [H3 | H3].
-  - subst; right;apply E0_eq_intro;reflexivity. 
+  destruct H1 as [H3 | H3].
   - left; split; auto.
+  - subst; right; now apply E0_eq_intro.
 Qed.
 
 Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.

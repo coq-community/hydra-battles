@@ -14,6 +14,7 @@ theories/ordinals/OrdinalNotations/ON_plus.v
 theories/ordinals/OrdinalNotations/ON_O.v
 theories/ordinals/OrdinalNotations/ON_Omega2.v
 theories/ordinals/OrdinalNotations/Example_3PlusOmega.v
+theories/ordinals/Prelude/Comparable.v
 theories/ordinals/Prelude/First_toggle.v
 theories/ordinals/Prelude/Simple_LexProd.v
 theories/ordinals/Prelude/DecPreOrder.v

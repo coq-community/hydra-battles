@@ -1812,12 +1812,10 @@ Section Lemma_4_3_Proof.
          apply canonS_LE; auto.
     - assert (beta t1< alpha)%t1.
       { apply  const_pathS_eps_LE_2 in H4;auto. 
-        destruct H4.
-        destruct H2. 
-        split; auto. 
-        split;auto. 
-        destruct (le_lt_eq beta alpha); auto. 
-        - subst; now destruct n.
+        destruct H4, H2.
+        do 2 (split; auto).
+        destruct H2; auto.
+        now subst beta.
       }
       assert (const_pathS n2 alpha (canon beta (S n1))).
       {
@@ -2544,21 +2542,20 @@ Section Constant_to_standard_Proof.
   Remark Rem04 : P 0.
   Proof.
     unfold P;red; simpl.  
-    unfold le_b, lt_b; replace (T1.compare alpha beta) with Datatypes.Gt.  
-    - auto.
-    -  rewrite compare_Gt_eq.
-       + reflexivity. 
-       +  generalize (const_pathS_LT Halpha p).
-          destruct 1; tauto.
+    unfold le_b, lt_b.
+    eenough (T1.compare alpha beta = Datatypes.Gt) as -> by auto.
+    apply compare_gt_iff.
+    generalize (const_pathS_LT Halpha p).
+    destruct 1; tauto.
   Qed. 
 
 
   Remark Rem05 : P t = false.
   Proof.
-    unfold P,  le_b,  lt_b;
-      replace (T1.compare (standard_gnaw (S n) alpha t) beta) with Datatypes.Lt.
-    - reflexivity.
-    - rewrite compare_Lt_eq; auto; destruct Rem03; tauto.
+    unfold P, le_b, lt_b;
+    enough(T1.compare (standard_gnaw (S n) alpha t) beta = Datatypes.Lt) as -> by reflexivity.
+    apply compare_lt_iff.
+    destruct Rem03; tauto.
   Qed.
 
   Remark Rem06 : (0 <  t)%nat.
@@ -2674,15 +2671,17 @@ Section Constant_to_standard_Proof.
 
   Remark R19 : beta t1<= gamma.
   Proof.
-    generalize Rem10;unfold P; fold gamma;unfold le_b, lt_b.
-    case_eq (T1.compare gamma beta).
-    - intros H H0; generalize (compare_Eq_impl _ _ H).
-      intro H1; rewrite H1; apply LE_refl; eapply LT_nf_r; eauto.
+    generalize Rem10; unfold P; fold gamma ;unfold le_b, lt_b.
+    intro H.
+    destruct (T1.compare gamma beta) eqn: Hcomp.
+    - apply compare_eq_iff in Hcomp as ->.
+      apply LE_refl.
+      eapply LT_nf_r; eauto.
     - intros; discriminate.
-    -  intros H H0; apply LE_r.
-       rewrite gt_iff in H; repeat split;auto.
-       +  eapply LT_nf_r; eauto.
-       + subst gamma; eapply standard_gnaw_nf; eauto.
+    - apply LE_r.
+      rewrite compare_gt_iff in Hcomp; repeat split; auto.
+      + eapply LT_nf_r; eauto.
+      + subst gamma; eapply standard_gnaw_nf; eauto.
   Qed.
 
 
@@ -2735,13 +2734,13 @@ Section Constant_to_standard_Proof.
   Proof.
     rewrite R22; generalize Rem11;unfold P; intro H;
       unfold le_b, lt_b in H.
-    case_eq ( T1.compare (standard_gnaw (S n) alpha (S l)) beta).
-    -  intro H0; rewrite H0 in H; discriminate.
-    -  intro H0; rewrite H0 in H; rewrite lt_iff in H0.
+    destruct( T1.compare (standard_gnaw (S n) alpha (S l)) beta) eqn: H0.
+    - discriminate.
+    - rewrite compare_lt_iff in H0.
        repeat split;auto.
        +  apply standard_gnaw_nf;auto.
        +  eapply LT_nf_r; eauto.
-    -  intro H0; rewrite H0 in H; discriminate.
+    - discriminate.
   Qed.
 
    Remark R26 : ~ const_pathS (n+l) gamma beta.
@@ -2954,28 +2953,28 @@ Proof.
      red in H0;unfold E0.cnf; simpl in *.
      destruct beta.
      + destruct H; now apply E0_eq_intro.
-     +   case_eq (T1.compare alpha beta1).
-         * unfold lt in H1; simpl in H1; intro H2.
+     + destruct (T1.compare alpha beta1) eqn:H2.
+         * unfold lt in H1; simpl in H1.
            rewrite compare_eq_iff in H2;  subst beta1.
            destruct (LT_inv H1).
-           --  destruct (LT_irrefl H2).      
-           --  destruct H2.
+           -- destruct (LT_irrefl H2).      
+           -- destruct H2.
                destruct H3.
                ++ inversion H3.
-               ++  destruct H3 as [_ H4]; destruct (not_LT_zero H4).
-         * intro H2; rewrite lt_iff in H2.
-           red in H1;simpl in H1; destruct (LT_inv H1).
-           -- destruct H3 as [_ [H4 _]]; destruct (lt_not_gt H2 H4).
-           -- destruct H3; subst.
+               ++ destruct H3 as [_ H4]; destruct (not_LT_zero H4).
+         * red in H1; simpl in H1; destruct (LT_inv H1).
+           -- destruct H3 as [_ [H4 _]].
+              now apply compare_lt_iff, lt_not_gt in H2.
+           -- destruct H3. subst.
               destruct H4.
              ++ inversion H3.
              ++ destruct H3 as [_ H4]; destruct (not_LT_zero H4).
-         * intro H2;  unfold canonS; rewrite canon_tail; auto.
+         * unfold canonS; rewrite canon_tail; auto.
            -- apply ocons_nf; auto with T1.
-              rewrite gt_iff in H2; auto.
+              rewrite compare_gt_iff in H2; auto.
            --  discriminate.
-  -   apply Lt_trans with beta; auto.
-      apply CanonS_lt; auto.
+  - apply Lt_trans with beta; auto.
+    apply CanonS_lt; auto.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
@@ -3025,5 +3024,3 @@ Proof.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
-
-

@@ -192,7 +192,7 @@ Lemma lt_subterm2 : forall a a' n n' b b', lt a  a' ->
 Proof.
  intros.
  apply le_lt_trans with (ocons a n b).
-apply  lt_le_incl.
+ apply lt_incl_le.
  apply tail_lt_ocons;auto.
  auto with T1.
 Qed.
@@ -236,7 +236,7 @@ Proof.
       *  simpl;inversion 1.
   -  intros.
      destruct o, o'.
-     + destruct (lt_irrefl H0).
+     + now apply not_lt_zero in H0.
      +  simpl. apply Top_gt.
         simpl.       trivial.
         inversion 1.        
@@ -353,7 +353,7 @@ Proof.
 
        auto with T1 rpo.
        auto with T1 rpo.
-       apply lt_le_incl.
+       apply lt_incl_le.
        apply LT3.
        eauto with T1.
        eauto with T1.
