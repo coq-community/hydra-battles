@@ -2553,7 +2553,7 @@ Section Constant_to_standard_Proof.
   Remark Rem05 : P t = false.
   Proof.
     unfold P, le_b, lt_b;
-    change (T1.compare (standard_gnaw (S n) alpha t) beta) with (Datatypes.Lt).
+    enough(T1.compare (standard_gnaw (S n) alpha t) beta = Datatypes.Lt) as -> by reflexivity.
     apply compare_lt_iff.
     destruct Rem03; tauto.
   Qed.
