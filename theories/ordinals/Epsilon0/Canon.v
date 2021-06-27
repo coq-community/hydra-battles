@@ -241,24 +241,6 @@ Proof.
            rewrite canonS_ocons_succ_eqn2 , canonS_phi0_succ_eqn; auto.   
 Qed.
 
-(** 
-Lemma canonSSn (i:nat) :
-  forall alpha n  ,
-    nf alpha -> 
-    canonS (ocons alpha (S n) zero) i =
-    ocons alpha n (canonS (ocons alpha 0 zero) i).
-Proof. 
-  intros; destruct (@zero_limit_succ_dec alpha); trivial.
-  - destruct s.
-    + destruct n; subst alpha;  reflexivity.       
-    + rewrite canonS_lim2 ; auto.
-      rewrite canonS_lim1; auto.
-  - destruct s as [beta [Hdeta e]]; subst alpha.
-    rewrite canonS_ocons_succ_eqn2, canonS_phi0_succ_eqn; auto.
-Qed.
- *)
-
-
 
 Lemma canonS_zero_inv (alpha:T1) (i:nat) : 
   canon alpha (S i) = zero -> alpha = zero \/ alpha = one.
