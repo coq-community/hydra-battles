@@ -151,7 +151,7 @@ Section S1.
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
           limitb beta ->
-          forall n, T1.le (fin (S n)) (Canon.canonS beta n).
+          forall n, T1.le (fin (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.
         -  discriminate.
@@ -164,12 +164,12 @@ Section S1.
                   destruct beta1_1; cbn.
                   ++ destruct n1.
                      ** reflexivity.
-                     ** intros; apply lt_le_incl.
+                     ** intros; apply lt_incl_le.
                         apply head_lt; auto with T1.
                   ++  destruct (pred beta1_2).
-                      ** intros; apply lt_le_incl; apply head_lt;
+                      ** intros; apply lt_incl_le; apply head_lt;
                          auto with T1.
-                      **  intros; apply lt_le_incl; apply head_lt.
+                      **  intros; apply lt_incl_le; apply head_lt.
                           { destruct  n1;cbn.
                             destruct beta1_2; cbn.
                             - destruct beta1_1_1; cbn.
@@ -181,11 +181,11 @@ Section S1.
                               * destruct n0; cbn; auto with T1.
                               * destruct (pred beta1_1_2); cbn; auto with T1.
                           }                            
-               -- intros;apply lt_le_incl.
+               -- intros;apply lt_incl_le.
                   destruct (pred (ocons beta1_1 n1 beta1_2)).
                   ++  apply head_lt; auto with T1.
                   ++ apply head_lt; auto with T1.
-             * intros; apply lt_le_incl.
+             * intros; apply lt_incl_le.
                destruct n0.
                --  apply head_lt; auto with T1.
                --  apply head_lt; auto with T1.
@@ -194,14 +194,14 @@ Section S1.
 
       Lemma L04' : forall beta, Limitb beta ->
                                 forall n, (S n) o<= 
-                                          (Canon.CanonS beta n).
+                                          (Canon.Canon beta (S n)).
       Proof.
-        destruct beta; unfold Limitb, Canon.CanonS.
+        destruct beta; unfold Limitb.
         cbn; split. 
         -  apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.
           + apply L04; auto.
-          + cbn; apply Canon.nf_canonS; auto.
+          + cbn; apply Canon.nf_canon; auto.
       Qed.
 
       Lemma L4 : exp2 (F_ lambda n) <= F_ lambda (S n).
@@ -225,8 +225,8 @@ Section S1.
               -- now compute.
               -- split.
                  ++ cbn; destruct (le_lt_or_eq _ _ Hn).
-                    **  apply lt_le_incl;  now apply finite_lt.
-                    **  subst n;  apply T1.le_refl.
+                    **  apply lt_incl_le;  now apply finite_lt.
+                    **  subst n;  apply Comparable.le_refl.
                  ++   cbn; apply nf_FS.
             *  assumption.
           + apply Canon.Canon_lt.
@@ -243,7 +243,7 @@ Section S1.
     - apply Lt_wf.
     - clear alpha; intro alpha.  intros IHalpha Halpha.
       destruct (Zero_Limit_Succ_dec  alpha) as [[H1 | H1] | H1].
-      + subst;  compute in Halpha; decompose [and] Halpha ; tauto.
+      + subst;  compute in Halpha; decompose [and] Halpha; now destruct H1.
       + red; intros;  eapply L4; auto.
       + destruct H1; subst alpha.
         assert (H: 3 o<= x \/ x = Fin 2).

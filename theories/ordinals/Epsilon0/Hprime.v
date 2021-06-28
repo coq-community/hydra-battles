@@ -169,7 +169,7 @@ Qed.
     Phi0 function *)
 
 
-Remark Phi0_def : Phi0 2 = ltac:(mko (omega * omega)%t1).
+Remark Phi0_def : Phi0 2 = ltac:(mko (T1.omega * T1.omega)%t1).
 Proof. apply E0_eq_intro. reflexivity. Qed.
 
 
@@ -177,7 +177,7 @@ Lemma H'_omega_sqr : forall k,
     H'_ (Phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
 Proof.
   intro k; rewrite H'_eq3; auto with E0.
-  - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
+  - ochange (Canon (Phi0 2) (S k)) (E0.omega * (S k))%e0.
     +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- abstract lia. 
@@ -240,12 +240,13 @@ Proof with auto with E0.
   +  rewrite H'_cons ...
      *  f_equal; rewrite (H'_eq3 (Phi0 alpha)) ...
   +  rewrite cnf_Ocons ...
-           * unfold CanonS; repeat rewrite cnf_rw.
+           * unfold CanonS.  repeat rewrite cnf_rw.
+             unfold canonS.
              rewrite cnf_Omega_term, cnf_Phi0.
-             unfold Omega_term; simpl.
+             unfold Omega_term; simpl. unfold canonS.
              destruct (cnf alpha) ...
              destruct (pred (ocons t1 n t2)) ...
-  -   apply Limitb_Omega_term ...
+-   unfold canonS; apply Limitb_Omega_term ...
 Qed.
 
 End H'_cons.
@@ -453,7 +454,8 @@ Remark H'_non_mono1 :
                           (H'_ alpha k <= H'_ beta k)%nat).
 Proof.
  intros H ;specialize (H 42 omega 3).
- assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
+ assert (H0 :(42 o<= omega)%e0). { repeat split; auto.  
+ compute. now left. }
  apply H in H0; rewrite H'_Fin, H'_omega  in H0; abstract lia.
 Qed.
 
@@ -829,11 +831,10 @@ End Proof_of_H'_mono_l.
 (* To do : program tactics for a better interaction *)
 
 Goal 
-  (0 < H'_ (ltac:(mko (omega * omega * omega)%t1)) 12)%nat.
-  ochange {| cnf := (omega * omega * omega)%t1; cnf_ok := eq_refl |}
+  (0 < H'_ (ltac:(mko (T1.omega * T1.omega * T1.omega)%t1)) 12)%nat.
+  ochange {| cnf := (T1.omega * T1.omega * T1.omega)%t1; cnf_ok := eq_refl |}
           (Phi0 3).
   transitivity 11.
   - abstract lia.
   - apply H'_alpha_ge_id.
 Qed.
-

@@ -126,13 +126,15 @@ Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
 
 (** Finite ordinals *)
 
-Reserved Notation "'F' n" (at level 10) .
+
 
 Fixpoint finite (i:nat) : Ord :=
   match i with 0 => zero
-            | S i => succ (F i)
-  end
-where "'F' i" := (finite i)  : schutte_scope.
+            | S i => succ (finite i)
+  end.
+
+Notation F i := (finite i).
+
 
 Coercion finite : nat >-> Ord.
 
@@ -154,7 +156,7 @@ Definition omega_limit (s:nat->Ord) : Ord
 
 Definition _omega := omega_limit finite.
 
-Notation "'omega'" := (_omega) : schutte_scope.
+Notation omega := (_omega).
 
 (** Successor and limit ordinals *)
 

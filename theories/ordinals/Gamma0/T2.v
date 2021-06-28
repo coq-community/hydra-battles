@@ -49,9 +49,9 @@ Qed.
 Ltac fold_psi :=  rewrite <- psi_eq.
 Ltac fold_psis := repeat fold_psi.
 
-Notation  "'one'"  := [zero,zero] : T2_scope.
+Notation  one  := [zero,zero].
 
-Notation "'FS' n" := (gcons zero zero n zero) (at level 10) : T2_scope.
+Notation FS n := (gcons zero zero n zero). 
 
 
 (** the [n]-th ordinal  *)
@@ -71,9 +71,9 @@ Inductive is_finite:  T2 ->  Set :=
 
 Global Hint Constructors is_finite : T2.
 
-Notation "'omega'"  := [zero,one] : T2_scope.
+Notation omega  := [zero,one].
 
-Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
+Notation epsilon0  := ([one,zero]).
 
 Definition epsilon alpha := [one, alpha].
 
@@ -345,7 +345,7 @@ Proof.
   - intros; simpl (t2_length (gcons t t0 n0 t1)).
     simpl (nbterms (gcons t t0 n0 t1)).
   match goal with  
-    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (plus_assoc b c d) end.
+    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (Arith.Plus.plus_assoc b c d) end.
   simpl (t2_length_aux (gcons t t0 n0 t1)).
   match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
   { pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).

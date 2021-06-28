@@ -320,7 +320,7 @@ Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
 
 Ltac tricho t t' Hname := case (lt_eq_lt_dec t t');
                           [intros [Hname|Hname] | intro Hname].
-
+Tactic Notation "tricho" constr(t) constr(t') ident(Hname) := tricho t t' Hname.
 
 Section trans_proof.
   Variables a1 b1 c1 a2 b2 c2 a3 b3 c3:T2.
@@ -2860,12 +2860,13 @@ Proof.
   + inversion 1.
 Qed.
 
-
+Check  epsilon0.
 Theorem epsilon0_as_lub : forall b, nf b -> 
                                     (forall a, lt_epsilon0 a -> lt a b) ->
                                     le epsilon0 b.
 Proof.
- intros y Vy Hy; tricho epsilon0 y H.
+  intros y Vy Hy. Locate epsilon0.
+  tricho epsilon0 y H.
  -  right;auto with T2.
  -  left;auto with T2.
  - assert (lt_epsilon0 y).
@@ -3677,7 +3678,7 @@ Proof.
   exists omega. reflexivity. 
 Defined.
 
-Notation "'omega'" := Omega : g0_scope.
+Notation omega := Omega.
 
 Instance Gamma0: ON lt  compare.
 Proof.

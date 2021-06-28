@@ -226,8 +226,9 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
     destruct (Zero_Limit_Succ_dec alpha).
     destruct s.
     + subst alpha; now rewrite F_zero_eqn.
-    +  rewrite F_lim_eqn;auto; unfold Canon; now rewrite F_zero_eqn. 
-    +  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
+    +  rewrite F_lim_eqn;auto; unfold Canon. rewrite Halpha. auto.
+       now apply Limit_gt_Zero.
++  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
 Qed.
 
 (** Properties of [F_ alpha]  *)
@@ -423,7 +424,7 @@ Section Properties.
           unfold Canon.
           apply Nat.le_lt_trans with (S n).
           auto with arith.
-          destruct (Halpha (CanonS alpha n)).
+          destruct (Halpha (Canon alpha (S n))).
           apply CanonS_lt. 
           now apply Limit_not_Zero.
           now apply PB0.
@@ -729,7 +730,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
     - rewrite CanonS_Canon;
       rewrite CanonS_Phi0_lim; [| trivial].
       rewrite F_lim_eqn, CanonS_Canon; auto.
-      + transitivity (H'_ (Phi0 (CanonS alpha n)) (S n)).
+      + transitivity (H'_ (Phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.
@@ -739,7 +740,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
           
           red; cbn; apply KS_thm_2_4_lemma5.
           -- apply Cor12_1 with 0.
-           ++ apply nf_canonS, cnf_ok.
+           ++ apply nf_canon, cnf_ok.
            ++ apply canonS_limit_mono.
               ** apply cnf_ok.
               ** destruct alpha; cbn; assumption. 
@@ -749,7 +750,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
               ** apply cnf_ok.
               ** destruct alpha; auto.
               ** auto with arith. 
-          --  apply nf_canonS, cnf_ok.
+          --  apply nf_canon, cnf_ok.
           --  apply limitb_canonS_not_zero.
               ++ apply cnf_ok.
               ++ now destruct alpha.

@@ -166,24 +166,24 @@ Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
 
 Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
-Proof.  now cbn. Qed.
+Proof. reflexivity. Qed.
 
 Lemma Ack_S_S : forall m p,
     Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof.  now cbn. Qed.
+Proof. reflexivity. Qed.
 
 (** *** First values *)
 
 Lemma Ack_1_n n : Ack 1 n = S (S n).
 Proof.
-  f_equal;induction n; cbn ;auto.
+  f_equal; induction n as [| p <-]; trivial.
 Qed.  
 
 Lemma Ack_2_n n: Ack 2  n = 2 * n + 3.
 Proof.
   induction  n.
-  -  reflexivity. 
-  -  rewrite Ack_S_S, IHn, Ack_1_n; lia.
+  - reflexivity. 
+  - rewrite Ack_S_S, IHn, Ack_1_n; lia.
 Qed.
 
 
@@ -233,9 +233,6 @@ Proof.
        with (hyper_exp2 (S (S (S n)))); auto.
      lia.
 Qed.
-
-
-
 
 (** ***  monotony properties 
 
@@ -333,8 +330,6 @@ Proof.
   destruct (Ack_properties m);tauto.
 Qed.
 
-
-
 Lemma Ack_mono_l m n :   m <= n -> forall p,  Ack m p <= Ack n p.
 Proof.
   induction 1; auto.
@@ -366,7 +361,7 @@ Section Proof_of_nested_Ack_bound.
     induction m.
     -  intros; simpl (2+0).
        induction n; auto with arith.
-       rewrite     Ack_S_S.
+       rewrite Ack_S_S.
        transitivity (Ack 0 (Ack 2 n)).
        +  rewrite Ack_0; lia.
        +  apply Ack_mono_l; auto.
@@ -380,7 +375,7 @@ Section Proof_of_nested_Ack_bound.
     intro; destruct n; simpl (2 + m).
     -  rewrite Ack_S_0; left.
     -  rewrite (Ack_S_S  (S m));
-         generalize (R0 m n ); intro H;  apply Ack_mono_r; auto.
+         generalize (R0 m n ); intro H; apply Ack_mono_r; auto.
   Qed.
 
   Remark R2 (m n:nat) : Ack m (Ack m n) <= Ack (S m) (S n) .
@@ -388,7 +383,7 @@ Section Proof_of_nested_Ack_bound.
     destruct (Ack_properties m) as [H1 [H2 H3]].
     transitivity (Ack m (Ack (S m) n)); auto.
     - apply Ack_mono_r.  
-      +  apply H3; rewrite <- Ack_S_S; auto.
+      + apply H3; rewrite <- Ack_S_S; auto.
   Qed.
 
   Remark R3 (m n:nat) : Ack m (Ack m n) <= Ack (S (S m)) n.
@@ -441,8 +436,8 @@ Remark R5 m n :  Ack m (S n) < Ack (S m) (S n).
 Proof.
   rewrite Ack_S_S; apply Ack_strict_mono.
   apply Lt.le_lt_trans with (S m + n).
-  -  lia.
-  -  apply Ack_Sn_plus.
+  - lia.
+  - apply Ack_Sn_plus.
 Qed.
 
 Lemma Ack_strict_mono_l : forall n m p, n < m ->

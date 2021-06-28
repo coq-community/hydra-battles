@@ -20,80 +20,63 @@ Open Scope t1_scope.
 
 (** * Definitions *)
 
-(**  Computes {alpha}(i+1) *)
 
-Fixpoint canonS alpha (i:nat) : T1 :=
+Fixpoint canon alpha (i:nat) : T1 :=
   match alpha with
     zero => zero
-  | ocons zero 0 zero => zero
-  | ocons zero (S k) zero => FS k
-  | ocons gamma 0 zero =>
-    match T1.pred gamma with
-      Some gamma' => ocons gamma' i zero
-    | None => ocons (canonS gamma i) 0 zero
-    end
+  | ocons zero 0 zero  => zero
+  | ocons zero (S k) zero  => FS k
+  | ocons gamma 0 zero => (match T1.pred gamma with
+                            Some gamma' =>
+                            match i with 0 => zero
+                                    |   S j => ocons gamma' j zero
+                            end
+                          | None =>
+                            ocons (canon gamma i) 0 zero
+                           end)
+  
   |  ocons gamma (S n) zero =>
-     match T1.pred gamma with
-       Some gamma' => ocons gamma n (ocons gamma' i zero)
-     | None => ocons gamma n (ocons (canonS gamma i) 0 zero)
-     end
-  | ocons alpha n beta => ocons alpha n (canonS beta i)
-  end.
-
-(** essai *)
-
-Fixpoint canon0 alpha  : T1 :=
-  match alpha with
-    (* 0 *) zero => zero
-  | (* 1 *) ocons zero 0 zero => zero
-  | (* S (S k)) *) ocons zero (S k) zero => FS k
-  | (* omega ^ gamma *)
-    ocons gamma 0 zero =>
-    match T1.pred gamma with
-      (* gamma = succ gamma' *)
-      Some gamma' => zero   
-    | (* gamma is a limit *)
-      None => ocons (canon0 gamma) 0 zero
-    end
-  |  (* omega ^ gamma * (S (S n)) *)
-     ocons gamma (S n) zero =>
-     match T1.pred gamma with
-        (* gamma = succ gamma' *)
-       Some gamma' => ocons gamma n zero
-        (* gamma is a limit *)                    
-     | None => ocons gamma n (ocons (canon0 gamma) 0 zero)
-     end
-  | ocons alpha n beta => ocons alpha n (canon0 beta)
-  end.
-
-Compute canon0 (phi0 omega).
-
-Compute canon0 (phi0 10).
-
-Compute canon0 (phi0 10 * 2)%t1.
+     (match T1.pred gamma with
+       Some gamma' =>
+       (match i with
+         0 =>  ocons gamma n zero
+       | S j => ocons gamma n (ocons gamma' j zero)
+       end)
+      | None => ocons gamma n (ocons (canon gamma  i) 0 zero)
+      end)
+   |  ocons alpha n beta => ocons alpha n (canon beta i)  
+end.
 
 
-(** Computes {alpha}(i) for i >= 1 *)
+Compute pp (canon (T1.omega ^ T1.omega) 3).
 
-Definition canon alpha i :=
-  match i with 0 => zero | S j => canonS alpha j end.
+Compute pp (canon (T1.omega ^ T1.omega * 3) 42).
+
+Compute canon (phi0 10) 0.
+
+Compute canon (T1.omega ^ T1.omega)%t1 10.
+
+(* compatibility with older versions *)
+
+
+Definition  canonS alpha (i:nat) : T1 :=
+  canon alpha (S i).
+
+Definition  canon0 alpha  : T1 :=
+  canon alpha 0.
+
+
 
 (** * Properties of canonical sequences *)
 
-
-(** ** Rewriting lemmas *)
-
-Lemma canonS_zero i  : canonS zero i = zero.
-Proof. reflexivity. Qed.
-
 Lemma canon_zero i :  canon zero i = zero.
-Proof. now destruct i. Qed.
+Proof. reflexivity.  Qed.
 
-Lemma canonS_tail :
+Lemma canon_tail :
   forall alpha n beta i,  nf (ocons alpha n beta) -> 
                           beta <> 0 ->
-                          canonS (ocons alpha n beta) i =
-                          ocons alpha n (canonS beta i).
+                          canon (ocons alpha n beta) i =
+                          ocons alpha n (canon beta i).
 Proof.
   destruct alpha as [| alpha1 n alpha2].
   - destruct 2; auto.
@@ -105,33 +88,71 @@ Qed.
 
 
 Lemma canonS_lim1 : forall i lambda, nf lambda -> limitb lambda 
-                                 -> canonS (ocons lambda 0 zero) i =
-                                    phi0 (canonS lambda i).
+                                 -> canon (ocons lambda 0 zero) (S i) =
+                                    phi0 (canon lambda (S i)).
 Proof.
-  intros; unfold canonS at 1; destruct lambda.
-  - simpl; discriminate.
-  - replace ( T1.pred (ocons lambda1 n lambda2)) with (@None T1).
-    + f_equal.
-    + rewrite pred_of_limit;auto.
+  intros; unfold canon at 1;  destruct lambda.
+  -  discriminate.
+  -  replace ( T1.pred (ocons lambda1 n lambda2)) with (@None T1).
+     + f_equal. 
+     + rewrite pred_of_limit;auto.
 Qed.
+
+Lemma canon_lim1 : forall i lambda, nf lambda -> limitb lambda 
+                                    -> canon (ocons lambda 0 zero)  i =
+                                       phi0 (canon lambda i).
+Proof.
+  destruct i. 
+  - intros; unfold canon at 1;  destruct lambda.
+    +   discriminate.
+    +   replace ( T1.pred (ocons lambda1 n lambda2)) with (@None T1).
+        * f_equal. 
+        * rewrite pred_of_limit;auto.
+  - intros; apply canonS_lim1; auto. 
+Qed.
+
+(** Here *)
 
 Lemma canonS_lim2  i n lambda: 
     nf lambda -> limitb lambda 
-    -> canonS (ocons lambda (S n) zero) i =
-       ocons  lambda n (phi0 (canonS lambda i)).
+    -> canon (ocons lambda (S n) zero) (S i) =
+       ocons  lambda n (phi0 (canon lambda (S i))).
 Proof.
-  intros; unfold canonS at 1;  destruct lambda.
+  intros;  cbn;  destruct lambda.
   - simpl; discriminate.
-  - replace ( T1.pred (ocons lambda1 n lambda2)) with (@None T1);   f_equal.
-    all :  rewrite T1.pred_of_limit;auto.
+  - remember (ocons lambda1 n0 lambda2) as lambda.
+    replace (pred lambda) with (@None T1).
+    + trivial.
+    + now rewrite pred_of_limit.
+Qed.
+
+Lemma canon0_lim2   n lambda: 
+    nf lambda -> limitb lambda 
+    -> canon (ocons lambda (S n) zero) 0 =
+       ocons  lambda n (phi0 (canon lambda 0)).
+Proof.
+  intros;  cbn; destruct lambda.
+  - simpl; discriminate.
+  -  replace ( T1.pred (ocons lambda1 n0 lambda2)) with (@None T1);   f_equal.
+  rewrite T1.pred_of_limit;auto.
+Qed.
+
+Lemma canon_lim2  i  n lambda : 
+    nf lambda -> limitb lambda 
+    -> canon (ocons lambda (S n) zero) i =
+       ocons  lambda n (phi0 (canon lambda i)).
+Proof.
+ destruct i; intros.
+ - now  apply canon0_lim2.
+ - now apply canonS_lim2.
 Qed.
 
 
-Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.
+Lemma canon_succ i alpha : nf alpha -> canon (succ alpha) i = alpha.
 Proof.
-  induction alpha.
-  -   reflexivity.
-  -   destruct alpha1.
+  revert i; induction alpha.
+  - reflexivity.
+  - destruct alpha1.
       + intros; replace alpha2 with zero.   
         * reflexivity. 
         *  T1_inversion H; auto. 
@@ -141,36 +162,86 @@ Proof.
           { simpl;destruct alpha2_1.
             - f_equal;  apply nf_inv2 in H.
               T1_inversion H; now subst. 
-            - f_equal; rewrite <- IHalpha2; f_equal. eapply nf_inv2, H. }
+            - f_equal. rewrite <- IHalpha2 with i; f_equal. eapply nf_inv2, H. }
          *  case_eq (T1.succ alpha2).
             { intros;  now destruct (@T1.succ_not_zero alpha2). }
-            { intros; f_equal ; rewrite <- IHalpha2.
+            { intros; f_equal ; rewrite <- IHalpha2 with i.
               - now rewrite <- H0.
               - eapply nf_inv2, H. }
+Qed.
+
+(** should be deprecatrd later *)
+Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.
+Proof.
+   intros; now apply canon_succ.
+Qed.
+
+Lemma canon0_succ  alpha : nf alpha -> canon0 (succ alpha)  = alpha.
+Proof.
+  intros; now apply canon_succ.
 Qed.
 
 
 Lemma canonS_phi0_succ_eqn i gamma:
   nf gamma -> 
-  canonS (phi0 (succ gamma)) i = ocons gamma i zero.
+  canon (phi0 (succ gamma)) (S i) = ocons gamma i zero.
 Proof.
-  intros; unfold canonS at 1;  rewrite T1.pred_of_succ;
+  intros;  cbn. rewrite T1.pred_of_succ;
     case_eq (T1.succ gamma); trivial.
   -  intro; destruct (succ_not_zero _ H0); auto 2.
 Qed.
 
 
+
+
+
+Lemma canon0_phi0_succ_eqn  gamma:
+  nf gamma -> 
+  canon  (phi0 (succ gamma)) 0 = zero.
+Proof.
+  intros;   cbn; rewrite T1.pred_of_succ; auto.
+    case_eq (T1.succ gamma); trivial.
+Qed.
+
+
 Lemma canonS_ocons_succ_eqn2 i n gamma :
     nf gamma -> 
-    canonS (ocons (T1.succ gamma) (S n) zero) i =
+    canon (ocons (T1.succ gamma) (S n) zero) (S i) =
     ocons (T1.succ gamma) n (ocons gamma i zero).
 Proof.
-  intros; unfold canonS at 1;   rewrite T1.pred_of_succ;
+  intros;  cbn;  rewrite T1.pred_of_succ;
     case_eq (T1.succ gamma); trivial.
   -  intro; destruct (T1.succ_not_zero _ H0).
 Qed.
 
 
+Lemma canon0_ocons_succ_eqn2 n gamma :
+    nf gamma -> 
+    canon (ocons (T1.succ gamma) (S n) zero)  0=
+    ocons (T1.succ gamma) n zero.
+Proof.
+  intros; cbn;  rewrite T1.pred_of_succ;
+    case_eq (T1.succ gamma); trivial.
+Qed.
+
+Lemma canonSSn (i:nat) :
+  forall alpha n  ,
+    nf alpha -> 
+    canon (ocons alpha (S n) zero) i =
+    ocons alpha n (canon (ocons alpha 0 zero) i).
+Proof. 
+  intros; destruct (@zero_limit_succ_dec alpha); trivial.
+  - destruct s.
+    + destruct n; subst alpha;  reflexivity.       
+    + rewrite canon_lim2 ; auto.
+      rewrite canon_lim1; auto.
+  - destruct s as [beta [Hdeta e]]; subst alpha.
+    destruct i.
+       rewrite canon0_ocons_succ_eqn2, canon0_phi0_succ_eqn; auto.
+           rewrite canonS_ocons_succ_eqn2 , canonS_phi0_succ_eqn; auto.   
+Qed.
+
+(** 
 Lemma canonSSn (i:nat) :
   forall alpha n  ,
     nf alpha -> 
@@ -185,22 +256,24 @@ Proof.
   - destruct s as [beta [Hdeta e]]; subst alpha.
     rewrite canonS_ocons_succ_eqn2, canonS_phi0_succ_eqn; auto.
 Qed.
+ *)
 
 
 
 Lemma canonS_zero_inv (alpha:T1) (i:nat) : 
-  canonS alpha i = zero -> alpha = zero \/ alpha = one.
+  canon alpha (S i) = zero -> alpha = zero \/ alpha = one.
 Proof.
   destruct alpha; cbn; auto.
   destruct alpha1, n, alpha2;auto; try discriminate.
   all:  destruct (T1.pred (ocons alpha1_1 n0 alpha1_2)); try discriminate.
 Qed.
 
+
 (** ** Canonical sequences and the order LT *)
 
 Lemma canonS_LT i alpha :
   nf alpha -> alpha <> zero ->
-  canonS alpha i t1<  alpha.
+  canon alpha (S i) t1<  alpha.
 Proof.
   transfinite_induction_lt alpha.
   clear alpha; intros alpha Hrec Halpha;
@@ -285,7 +358,7 @@ Proof.
                   - auto.
              }
           }
-          rewrite canonS_tail.
+          rewrite canon_tail.
           {
             split.
             {
@@ -321,29 +394,151 @@ Proof.
           discriminate.
     - destruct s.
       {   destruct a; subst.
-          intros; rewrite canonS_succ; auto.
+          intros.  rewrite canon_succ; auto.
           split; auto.
           split; auto; apply lt_succ; auto.
       }
 Qed. 
 
-Lemma nf_canonS  i alpha:  nf alpha -> nf (canonS alpha i).
+Lemma canon0_LT  alpha :
+  nf alpha -> alpha <> zero ->
+  canon alpha 0 t1<  alpha.
+Proof.
+  transfinite_induction_lt alpha.
+  clear alpha; intros alpha Hrec Halpha;
+    destruct (zero_limit_succ_dec Halpha).
+    - destruct s.
+      + (* alpha = zero *)
+       subst alpha; now destruct 1.
+      + (* alpha is a limit *)
+        destruct alpha.
+        * now destruct 1.
+        * intros H; destruct (T1_eq_dec alpha1 zero).
+          { subst.
+            destruct n.
+            - replace alpha2 with zero.
+              + split;auto. 
+                simpl;  constructor.
+                split;simpl;constructor.
+              + T1_inversion Halpha; auto.
+            -  replace alpha2 with zero.
+               +  simpl; split;  constructor.
+                  apply finite_lt; auto with arith. 
+                  apply nf_FS.
+               +  T1_inversion Halpha; auto. 
+          }
+          destruct alpha2.
+          { destruct n.
+             {   destruct  (@zero_limit_succ_dec alpha1) ; trivial. 
+                 - destruct s.
+                  + subst;  now destruct n0. 
+                  + rewrite canon_lim1.
+                    * split.
+                      --   apply single_nf; auto.
+                 destruct (Hrec alpha1) ; trivial. 
+                 apply head_lt_ocons ;  auto.
+                 -- split; auto with T1.
+                  ++   apply head_lt; apply Hrec ; trivial.
+                       apply head_lt_ocons; auto.
+                    * auto with T1.
+                    * trivial.
+                 -  destruct s.
+                 { destruct a.
+                     { subst; rewrite canon0_phi0_succ_eqn.
+                       - split.
+                       + auto with T1.
+                       + split; trivial.
+                         *  auto with T1.
+                       - assumption.
+                     }
+                 }
+             }
+             destruct  (@zero_limit_succ_dec alpha1) ; trivial.
+             { destruct s.
+               - subst; now destruct n0.   
+               - rewrite canon0_lim2.
+                 + split.
+                  { apply ocons_nf ; trivial.
+                    - destruct (Hrec alpha1) ; eauto with T1.
+                      + apply head_lt_ocons.
+                      + tauto.
+                    -  apply single_nf. 
+                      destruct (Hrec alpha1); trivial. 
+                      apply head_lt_ocons.
+                  }
+                  split.
+                   * apply coeff_lt; auto with arith.
+                   * auto with T1.
+                     + eapply nf_inv1, Halpha.  
+                     + auto.
+             }
+             destruct s; subst.
+             {  destruct a; subst; rewrite canon0_ocons_succ_eqn2.
+                  -  split.
+                   { eauto with T1. 
+                   }
+                     + split.
+                       {  apply coeff_lt; auto with arith. }
+                       auto with T1.
+                  - auto.
+             }
+          }
+          rewrite canon_tail.
+          {
+            split.
+            {
+              nf_decomp Halpha.
+              apply nf_intro ; trivial.
+              - destruct (Hrec  (ocons alpha2_1 n1 alpha2_2)) ; trivial.
+               now apply head_lt.
+                discriminate.
+              - apply nf_helper_phi0R.
+                apply T1.lt_trans with (ocons alpha2_1 n1 alpha2_2).
+                + destruct (Hrec (ocons alpha2_1 n1 alpha2_2)) ; trivial.
+                  apply head_lt; auto. 
+                  *  discriminate.
+                  * tauto.
+             +  
+                apply nf_helper_phi0.
+                apply nf_helper_intro with n;auto.
+            }
+            split.
+          
+            - nf_decomp Halpha.
+              apply tail_lt. 
+              destruct (Hrec (ocons alpha2_1 n1 alpha2_2)); auto.
+              +  auto with T1.
+            + discriminate. 
+            + destruct (Hrec (ocons alpha2_1 n1 alpha2_2)) ; trivial.
+              eauto with T1.
+              discriminate.
+              tauto. 
+            - trivial. 
+          }
+           eauto with T1.
+          discriminate.
+    - destruct s.
+      {   destruct a; subst.
+          intros; rewrite canon_succ; auto.
+          split; auto.
+          split; auto; apply lt_succ; auto.
+      }
+Qed. 
+
+
+Lemma nf_canon  i alpha:  nf alpha -> nf (canon alpha i).
 Proof.
   intros Hnf; destruct (T1_eq_dec alpha zero).
   - subst; constructor.
-  - destruct  (canonS_LT i  Hnf); auto.
+  - destruct i.
+    destruct  (canon0_LT   Hnf); auto.
+    destruct  (canonS_LT  i  Hnf); auto.
 Qed.
 
-Lemma nf_canon : forall i alpha, nf alpha -> nf (canon alpha i).
-Proof.
-  destruct i.
-  - simpl; auto with T1.
-  - intros; now apply nf_canonS. 
-Qed.
 
 
 Lemma canonS_lt : forall i alpha, nf alpha -> alpha <> zero ->
-                              T1.lt (canonS alpha i) alpha.
+                              T1.lt (canon alpha (S i)) alpha.
 Proof.
   intros i alpha Hnf.
   destruct (T1_eq_dec alpha zero).
@@ -352,7 +547,7 @@ Proof.
 Qed.
 
 Lemma canonS_cons_not_zero : forall i alpha n beta,
-    alpha <> zero -> canonS (ocons alpha n beta) i <> zero.
+    alpha <> zero -> canon (ocons alpha n beta) (S i) <> zero.
 Proof. 
   destruct alpha.
   -  now destruct 1.
@@ -362,11 +557,12 @@ Proof.
 Qed.
 
 
+
 (** ** Canonical sequences of limit ordinals *)
 
 
 Lemma limitb_canonS_not_zero i lambda:
-  nf lambda -> limitb lambda  -> canonS lambda i <> zero.
+  nf lambda -> limitb lambda  -> canon lambda (S i) <> zero.
 Proof.
   destruct lambda as [ | alpha1 n alpha2].
   - discriminate.
@@ -394,11 +590,13 @@ greater than beta.
 limit of its  own canonical sequence 
 *)
 
+(* Here *)
+
 Lemma canonS_limit_strong lambda : 
   nf lambda ->
   limitb lambda  ->
   forall beta, beta t1< lambda ->
-               {i:nat | beta t1< canonS lambda i}.
+               {i:nat | beta t1< canon lambda (S i)}.
 Proof.
   transfinite_induction lambda; clear lambda ; intros lambda Hrec Hlambda.
   intros   H beta H1.
@@ -414,7 +612,7 @@ Proof.
        { (* first case : beta = zero *)
         destruct a; subst lambda2; destruct beta.
         { exists 0; apply not_zero_lt. 
-          apply nf_canonS; auto.
+          apply nf_canon; auto.
           apply limitb_canonS_not_zero;auto.
         }
         destruct (LT_inv_strong H1).
@@ -440,7 +638,7 @@ Proof.
         -- clear i; exists 0; rewrite canonSSn.
            ++ apply LT2; trivial.
               apply nf_intro; trivial.
-              now apply nf_canonS.
+              now apply nf_canon.
               apply nf_helper_phi0R.
               apply canonS_lt.
               eapply nf_coeff_irrelevance;eauto. 
@@ -455,7 +653,7 @@ Proof.
              apply LT3; auto.
              {
                apply nf_intro; trivial.
-               apply nf_canonS; trivial.
+               apply nf_canon; trivial.
                apply nf_helper_phi0R.
                apply canonS_lt.
                eapply nf_coeff_irrelevance;eauto.     
@@ -515,14 +713,14 @@ Proof.
         intro; subst; discriminate.  } 
       destruct beta.
        * exists 0;  apply not_zero_lt.
-         apply nf_canonS; trivial; auto with T1.
+         apply nf_canon; trivial; auto with T1.
          apply limitb_canonS_not_zero; trivial. 
        *  destruct (LT_inv_strong H1).
-          -- exists 0;  rewrite canonS_tail.
+          -- exists 0;  rewrite canon_tail.
              apply LT2;auto.
              { apply nf_intro;  trivial.
                eauto with T1.
-            apply nf_canonS; trivial; eauto with T1.
+            apply nf_canon; trivial; eauto with T1.
             apply nf_helper_phi0R.   
             apply T1.lt_trans with lambda2.
             apply canonS_lt; eauto with T1.
@@ -531,11 +729,11 @@ Proof.
           }
           auto.
           auto.
-         --  destruct H4; exists 0; rewrite canonS_tail.
+         --  destruct H4; exists 0; rewrite canon_tail.
              apply LT3;  auto.
              { apply nf_intro. 
                - eauto with T1.
-               - apply nf_canonS; eauto with T1.
+               - apply nf_canon; eauto with T1.
                - apply nf_helper_phi0R.   
                  apply T1.lt_trans with lambda2.
                  apply canonS_lt; eauto with T1.
@@ -549,12 +747,12 @@ Proof.
         1,2: eauto with T1.
         assumption.
       }
-      destruct H4 as [x Hx]; exists x; rewrite canonS_tail.
+      destruct H4 as [x Hx]; exists x; rewrite canon_tail.
       apply LT4; auto. 
       {
         apply nf_intro. 
         eauto with T1.
-        apply nf_canonS; eauto with T1.
+        apply nf_canon; eauto with T1.
         apply nf_helper_phi0R.   
         apply T1.lt_trans with lambda2.
         apply canonS_lt; eauto with T1.
@@ -584,7 +782,7 @@ Lemma canonS_limit_lub (lambda : T1) :
 Proof.
   split.
   - intros; split.
-    + now  apply nf_canonS.
+    + now  apply nf_canon.
     +    split; trivial.
          * apply canonS_lt;    auto.
            intro H1;subst; discriminate.
@@ -620,30 +818,30 @@ Proof.
         *   destruct s.   
             { subst;   discriminate H. }
             {   destruct n.
-                - repeat rewrite canonS_lim1 ; trivial.
+                - unfold canonS; repeat rewrite canonS_lim1 ; trivial.
                   {  apply LT2 ; trivial.
                      apply single_nf. 
-                     apply nf_canonS ; eauto with T1.
+                     apply nf_canon ; eauto with T1.
                      apply single_nf. 
-                     apply nf_canonS ; eauto with T1.
+                     apply nf_canon ; eauto with T1.
                      apply Hrec ; trivial. 
                      apply head_lt_ocons.
                   }
-                - repeat rewrite canonS_lim2 ; trivial. 
+                - unfold canonS; repeat rewrite canonS_lim2 ; trivial. 
                   {
                     apply LT4 ; trivial.
                     apply nf_ocons_LT ; trivial.
                     apply canonS_LT ; trivial.
                     apply single_nf. 
-                    apply nf_canonS ; trivial.
+                    apply nf_canon ; trivial.
                     apply nf_ocons_LT; trivial.
                     apply canonS_LT ; eauto with T1.
-                    apply single_nf; apply nf_canonS ; eauto with T1.
+                    apply single_nf; apply nf_canon ; eauto with T1.
                     apply LT2 ; trivial.
                     apply single_nf;
-                      apply nf_canonS ; eauto with T1.
+                      apply nf_canon ; eauto with T1.
                     apply single_nf;
-                      apply nf_canonS ; eauto with T1.
+                      apply nf_canon ; eauto with T1.
                     apply Hrec ; trivial.
                     apply head_lt_ocons.
                   }
@@ -652,9 +850,10 @@ Proof.
           destruct a.
           subst alpha1.
           destruct n.
-          { repeat rewrite canonS_phi0_succ_eqn ; eauto with T1. }
+          { unfold canonS; repeat rewrite canonS_phi0_succ_eqn ;
+              eauto with T1. }
           {
-            repeat rewrite canonS_ocons_succ_eqn2 ; trivial. 
+            unfold canonS; repeat rewrite canonS_ocons_succ_eqn2 ; trivial. 
             apply LT4 ; trivial.
             apply nf_ocons_LT ; eauto with T1.
             apply LT_succ ; eauto with T1.
@@ -662,19 +861,19 @@ Proof.
             apply LT_succ ; eauto with T1.
             auto with T1.
           }
-     + destruct a.
-       repeat rewrite canonS_tail ; eauto with T1.
+     + destruct a. unfold canonS;
+       repeat rewrite canon_tail ; eauto with T1.
        nf_decomp alpha_nf.
        * apply  LT4 ; trivial.
          apply nf_intro ; trivial. 
-         apply nf_canonS ; eauto with T1.
+         apply nf_canon ; eauto with T1.
          apply nf_helper_phi0R ; trivial. 
          apply T1.lt_trans with alpha2 ; trivial. 
          apply canonS_lt ; eauto with T1.
          apply nf_helper_phi0 ; eauto with T1.
          apply nf_helper_intro with n ; eauto with T1.
          apply nf_intro ; trivial. 
-         apply nf_canonS ; eauto with T1.
+         apply nf_canon ; eauto with T1.
          apply nf_helper_phi0R ; trivial. 
          apply T1.lt_trans with alpha2; trivial. 
          apply canonS_lt ; eauto with T1.
@@ -686,7 +885,7 @@ Qed.
 
 
 Lemma canonS_LE alpha n :
-    nf alpha ->  canonS alpha n t1<= canonS alpha (S n).
+    nf alpha ->  canon alpha (S n) t1<= canon alpha (S (S n)).
   Proof.
     intro H; destruct (zero_limit_succ_dec H).
     -   destruct s. 
@@ -694,7 +893,7 @@ Lemma canonS_LE alpha n :
            apply LE_refl; auto with T1.
         + apply LE_r; eapply canonS_limit_mono; auto.
     - destruct s as [gamma [Hgamma Hgamma']]; subst .
-      repeat rewrite canonS_succ;auto with T1.
+      repeat rewrite canon_succ;auto with T1.
       apply LE_refl;auto. 
   Qed.
 
@@ -734,8 +933,11 @@ Qed.
 
 Open Scope E0_scope.
 
+(** This is a helper which should be deprecated later :
+    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
+
 Definition CanonS (alpha:E0)(i:nat): E0.
-  refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canonS.
+  refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canon.
   destruct alpha;auto.
 Defined.
 
@@ -770,7 +972,7 @@ Lemma CanonSSn (i:nat) :
 Proof.
   intros; apply E0_eq_intro;
   unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Ocons); auto.
-  - rewrite canonSSn; auto with E0.
+  - unfold canonS; rewrite canonSSn; auto with E0.
   -  unfold lt, Phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 
@@ -784,7 +986,7 @@ Lemma CanonS_Phi0_lim alpha k : Limitb alpha ->
                                 Phi0 (CanonS alpha k). 
 Proof.
   intro; orefl; rewrite cnf_Phi0.
-  unfold CanonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
+  unfold CanonS, canonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
   -  now rewrite cnf_Phi0.
   - apply cnf_ok.
   - destruct alpha; cbn; assumption. 
@@ -822,11 +1024,11 @@ Global Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 Lemma CanonS_Phi0_Succ alpha i : CanonS (Phi0 (Succ alpha)) i =
                                  Omega_term alpha i.
 Proof.      
-  apply E0_eq_intro;  unfold Omega_term, CanonS, Phi0, Succ.
+  apply E0_eq_intro;  unfold Omega_term, CanonS, Phi0, Succ, canonS.
   simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
-  -  intro H;  destruct (succ_not_zero _ H);  auto.
+  - intro H; destruct (succ_not_zero _ H);  auto.
   - reflexivity. 
-  -  intro; apply cnf_ok.
+  - intro; apply cnf_ok.
   - intros; apply cnf_ok.
 Qed.
 

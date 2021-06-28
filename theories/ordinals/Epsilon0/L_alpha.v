@@ -81,7 +81,27 @@ Proof.
   - now cbn.
 Qed.
 
+Lemma L_ge_id alpha : forall i,  i <= L_ alpha i.
+Proof  with auto with E0.
+     pattern alpha; apply well_founded_induction with Lt ...
+   clear alpha; intros alpha IHalpha.
+  destruct (Zero_Limit_Succ_dec alpha).
+  -  destruct s.
+   +  subst alpha. intro; rewrite L_zero_eqn. auto with arith. 
+   +   intros  k;  rewrite L_lim_eqn; auto.
+     *  specialize (IHalpha (Canon alpha k)).
+        destruct k;  simpl Canon.
+        --  autorewrite with L_rw; auto.
+        -- transitivity (S (S k)); [lia | apply IHalpha ]...
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+        +  subst  beta alpha.
+           intros  k; autorewrite with L_rw; auto. 
+        +   subst alpha; intros k; autorewrite with L_rw ...
+              transitivity (S k); [lia |] ...
+Qed.
 
+
+              
 Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with Lt ...
@@ -147,10 +167,10 @@ Section L_correct_proof.
     -   generalize L_lim_ok; intro H1; unfold L_lim in H1.
        assert (H2 : limitb (cnf alpha)) by (now destruct alpha). 
        specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
-       apply H1; intro k; specialize (H (CanonS alpha  k)).
-       assert  (H3: (CanonS alpha k o< alpha)%e0 ).
+       apply H1; intro k; specialize (H (Canon alpha  (S k))).
+       assert  (H3: (Canon alpha (S k) o< alpha)%e0 ).
        { apply CanonS_lt;  now apply Limit_not_Zero. }
-       apply H in H3; apply L_spec_compat with (L_ (CanonS alpha k)); auto.
+       apply H in H3; apply L_spec_compat with (L_ (Canon alpha (S k))); auto.
     - intro n; rewrite (L_lim_eqn alpha); trivial.
   Qed.
 

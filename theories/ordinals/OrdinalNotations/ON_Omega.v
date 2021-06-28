@@ -44,10 +44,8 @@ Proof.
 Qed.
 
 
-Require Import Schutte.
 
-
-Instance omega_ok : ON_correct omega Omega finite.
+Instance omega_ok : ON_correct Schutte_basics.omega Omega finite.
 Proof.
   split.
   - apply finite_lt_omega.
