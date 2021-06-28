@@ -11,23 +11,46 @@ on:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - 'mathcomp/mathcomp-dev:coq-dev'
+          - 'mathcomp/mathcomp:1.12.0-coq-8.13'
+        opam_file:
+          - 'coq-hydra-battles.opam'
+          - 'coq-addition-chains.opam'
+      fail-fast: false
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
+
+      - name: Compile coq Doc
+        uses: coq-community/docker-coq-action@v1
+        with:
+          opam_file: ${{ matrix.opam_file }}
+          custom_image: ${{ matrix.image }}
+          script: |
+            startGroup "Build documentation"
+              make -j2 html; # to create Makefile.coq
+              sudo chown -R coq:coq . && make -j2 html
+            endGroup
+
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
           root_file: hydras.tex
           working_directory: doc
           latexmk_use_lualatex: true
+
       - name: Extract PDF
         run: |
-          mkdir -p public
-          cp doc/hydras.pdf public/
+          mkdir -p public/doc public/theories
+          cp doc/hydras.pdf public/doc/
+          cp theories/html public/theories/
       # Depending on whether we are on master or not, we deploy to
       # GitHub Pages or as an artifact
       - name: Deploy to GitHub pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' #&& github.ref == 'refs/heads/master' TODO rm comment
         uses: crazy-max/ghaction-github-pages@v2
         with:
           build_dir: public
