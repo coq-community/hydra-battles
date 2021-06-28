@@ -15,9 +15,6 @@ jobs:
       matrix:
         image:
           - 'mathcomp/mathcomp:1.12.0-coq-8.13'
-        opam_file:
-          - 'coq-hydra-battles.opam'
-          - 'coq-addition-chains.opam'
       fail-fast: false
     steps:
       - name: Set up Git repository
@@ -27,10 +24,14 @@ jobs:
         uses: coq-community/docker-coq-action@v1
         with:
           custom_image: ${{ matrix.image }}
-          opam_file: ${{ matrix.opam_file }}
+          before_script: |
+            startGroup "Create Makefile.coq and add permission"
+              make || true
+              sudo chown -R coq:coq .
+            endGroup
           script: |
             startGroup "Build documentation"
-              make || sudo chown -R coq:coq . && make -j2 html
+              make -j2 html
             endGroup
 
       - name: Compile LaTeX document
