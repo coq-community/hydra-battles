@@ -75,6 +75,8 @@ This contribution contains two parts:
 
  The command `make pdf` generates a local copy as `doc/hydras.pdf`.
 
+## Contents
+
 ###  coqdoc html files
 
 - directory theories/html
