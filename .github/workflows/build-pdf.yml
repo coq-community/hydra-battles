@@ -33,6 +33,14 @@ jobs:
             startGroup "Build documentation"
               make -j2 html
             endGroup
+          uninstall: |
+            startGroup "Clean"
+              make clean
+            endGroup
+      - name: Revert permissions
+        # to avoid a warning at cleanup time
+        if: ${{ always() }}
+        run: sudo chown -R 1001:116 .
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
