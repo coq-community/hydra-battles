@@ -37,7 +37,7 @@ jobs:
             startGroup "Clean"
               make clean
             endGroup
-      - name: Revert permissions
+      - name: Revert coq permissions
         # to avoid a warning at cleanup time
         if: ${{ always() }}
         run: sudo chown -R 1001:116 .
@@ -49,11 +49,11 @@ jobs:
           working_directory: doc
           latexmk_use_lualatex: true
 
-      - name: Extract PDF
+      - name: Extract PDF and coq doc
         run: |
           mkdir -p public/doc public/theories
           cp doc/hydras.pdf public/doc/
-          cp theories/html public/theories/
+          cp -r theories/html public/theories/
       # Depending on whether we are on master or not, we deploy to
       # GitHub Pages or as an artifact
       - name: Deploy to GitHub pages

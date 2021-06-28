@@ -43,7 +43,7 @@ This contribution contains two parts:
 ##   Contents
 
 ### Documentation
-- https://coq-community.org/hydra-battles/hydras.pdf
+- https://coq-community.org/hydra-battles/doc/hydras.pdf
      
 - The command `make pdf` generates a local copy as `doc/hydras.pdf`
 
