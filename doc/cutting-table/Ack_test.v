@@ -15,7 +15,7 @@ From Coq Require Import Lia.
 Require Import Coq.Program.Wf.
 Require Import Coq.Arith.Arith.
 
-(* end snippet AckIntro *)
+(* end snippet                       AckIntro *)
 
 (* begin snippet AckDefinition *)
 (*|
@@ -101,7 +101,6 @@ Using the lexicographic ordering
    (post by Anton Trunov in stackoverflow (May 2018))
 |*)
 
-(*| .. coq:: none |*)
 
 Definition lex_nat (ab1 ab2 : nat * nat) : Prop :=
   match ab1, ab2 with
@@ -116,15 +115,16 @@ Lemma lt_wf_ind :
     (forall n, (forall m, m < n -> P m) -> P n) ->
     P n.
 Proof. 
-  (* begin snippet inside_lt_wf *)
+  (* begin snippet inside *)
 intro p; intros; elim (lt_wf p); auto with arith. 
-  (* end snippet inside_lt_wf *)
+  (* end snippet inside *)
 Defined.
 
 (* This is defined in stdlib, but unfortunately it is opaque too *)
 
-
 (* end snippet AckDefinition *)
+
+(*| .. coq:: none |*)
 
 Lemma lt_wf_double_ind :
   forall P:nat -> nat -> Prop,
