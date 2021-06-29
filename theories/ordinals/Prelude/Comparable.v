@@ -5,12 +5,13 @@ Class Comparable {A:Type}
   (le: relation A)
   (compare : A -> A -> comparison) :=
   {
-    lt_irrefl: forall a,
+    (*lt_irrefl: forall a,
       ~ lt a a;
 
     lt_trans: forall a b c,
       lt a b -> lt b c -> lt a c;
-
+     *)
+    sto :> StrictOrder lt;
     le_lt_eq: forall a b,
       le a b <-> lt a b \/ a = b;
 
@@ -26,12 +27,16 @@ Section Comparable.
           {compare : A -> A -> comparison}
           {comparable : Comparable lt le compare}.
 
+  (** For compatibility (provisionnal) *)
+  Definition  lt_trans := StrictOrder_Transitive.
+  Definition lt_irrefl := StrictOrder_Irreflexive.
+  
   (* Relation Lt *)
   Lemma lt_not_gt (a b: A):
     lt a b -> ~lt b a.
   Proof.
     intros Hlt Hgt.
-    now apply lt_irrefl with a, lt_trans with b.
+    apply StrictOrder_Irreflexive with a; now transitivity b.
   Qed.
 
   Lemma lt_not_ge (a b: A):
@@ -40,7 +45,7 @@ Section Comparable.
     intros Hlt Hle.
     apply le_lt_eq in Hle as [Hgt | Heq].
     - now apply lt_not_gt in Hlt.
-    - subst. now apply lt_irrefl in Hlt.
+    - subst. now apply StrictOrder_Irreflexive in Hlt.
   Qed.
 
   #[using="All"]
@@ -56,7 +61,7 @@ Section Comparable.
     unfold lt_b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy.
-    - now apply lt_irrefl in H.
+    - now apply StrictOrder_Irreflexive  in H.
     - now apply lt_not_gt in H.
   Qed.
 
@@ -65,7 +70,7 @@ Section Comparable.
   Proof.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy.
-    - now apply lt_irrefl in H.
+    - now apply StrictOrder_Irreflexive  in H.
     - now apply lt_not_gt in H.
   Qed.
 
@@ -74,14 +79,14 @@ Section Comparable.
   Proof.
     intros Hab Hbc.
     apply compare_lt_iff in Hab, Hbc; apply compare_lt_iff.
-    now apply lt_trans with b.
+    now transitivity b. 
   Qed.
 
   Lemma compare_lt_irrefl (a: A):
     ~compare a a = Lt.
   Proof.
     intro H.
-    now apply compare_lt_iff, lt_irrefl in H.
+    now apply compare_lt_iff, StrictOrder_Irreflexive in H.
   Qed.
 
   (* Relation Eq *)
@@ -99,7 +104,7 @@ Section Comparable.
     unfold eq_b.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy;
-    now apply lt_irrefl in H.
+    now apply StrictOrder_Irreflexive in H.
   Qed.
 
   Lemma compare_eq_iff (a b: A):
@@ -107,7 +112,7 @@ Section Comparable.
   Proof.
     pose proof (compare_correct a b) as [Heq | H | H];
     split; intro; subst; try easy;
-    now apply lt_irrefl in H.
+    now apply StrictOrder_Irreflexive in H.
   Qed.
 
 
@@ -116,7 +121,7 @@ Section Comparable.
   Proof.
     pose proof (compare_correct a a) as [H | H | H].
     1: reflexivity.
-    all: now apply lt_irrefl in H.
+    all: now apply StrictOrder_Irreflexive in H.
   Qed.
 
   Lemma compare_eq_trans (a b c: A):
@@ -134,7 +139,7 @@ Section Comparable.
   Proof.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
     split; intro; subst; try easy.
-    - now apply lt_irrefl in H.
+    - now apply StrictOrder_Irreflexive in H.
     - now apply lt_not_gt in H.
   Qed.
 
@@ -143,7 +148,7 @@ Section Comparable.
     ~compare a a = Gt.
   Proof.
     intros H.
-    now apply compare_gt_iff, lt_irrefl in H.
+    now apply compare_gt_iff, StrictOrder_Irreflexive in H.
   Qed.
 
   Lemma compare_gt_trans (a b c: A):
@@ -151,7 +156,7 @@ Section Comparable.
   Proof.
     intros Hab Hbc.
     apply compare_gt_iff in Hab, Hbc; apply compare_gt_iff.
-    now apply lt_trans with b.
+    now transitivity b.
   Qed.
 
 
@@ -195,7 +200,7 @@ Section Comparable.
     - exfalso.
       apply le_lt_eq in H as [Hlt | Heq].
       * now apply lt_not_gt in Hgt.
-      * rewrite Heq in Hgt; now apply lt_irrefl in Hgt.
+      * rewrite Heq in Hgt; now apply StrictOrder_Irreflexive in Hgt.
   Qed.
 
 
@@ -239,7 +244,7 @@ Section Comparable.
   Proof.
     rewrite !le_lt_eq.
     intros [Hlt_ab | Heq_ab] [Hlt_bc | Heq_bc].
-    - left; now apply lt_trans with b.
+    - left; now transitivity b.
     - left; now subst.
     - left; now subst.
     - right; now subst.
@@ -250,7 +255,7 @@ Section Comparable.
   Proof.
     intros Hle_ab Hlt_bc.
     apply le_lt_eq in Hle_ab as [Heq_ab | Hlt_ab].
-    - now apply lt_trans with b.
+    - now transitivity b.
     - now subst.
   Qed.
 
@@ -260,7 +265,7 @@ Section Comparable.
   Proof.
     rewrite le_lt_eq.
     intros Hlt_ab [Heq_bc | Hlt_bc].
-    - now apply lt_trans with b.
+    - now transitivity b.
     - now subst.
   Qed.
 
@@ -316,9 +321,7 @@ Section Comparable.
       + subst. apply le_refl.
       + exfalso.
         apply compare_lt_iff in Hab.
-        rewrite Hab in H.
-        subst.
-        now apply compare_lt_irrefl in Hab.
+        rewrite Hab in H; subst; rewrite compare_refl in Hab; discriminate. 
       + now apply lt_incl_le.
   Qed.
 
@@ -373,17 +376,15 @@ Section Comparable.
     - now apply lt_not_gt in Hbc.
     - now apply lt_not_gt in Hab.
     - exfalso.
-      apply (lt_trans a b) in Hbc.
-      2: assumption.
-      now apply lt_not_gt in Hbc.
+      assert (Hca: lt a c) by (now transitivity b). 
+      now apply (lt_not_gt _ _  Hac Hca).
     - now apply compare_lt_iff in Hab as ->.
     - now apply compare_lt_iff in Hab as ->.
     - now apply compare_lt_iff in Hab as ->.
     - now apply lt_not_gt in Hbc.
     - exfalso.
-      apply (lt_trans c b) in Hab.
-      2: assumption.
-      now apply lt_not_gt in Hab.
+      assert (Hca : lt c a) by  (now transitivity b). 
+       apply lt_not_gt in Hac.  now apply Hac. 
     - now apply compare_gt_iff in Hab as ->.
   Qed.
 
@@ -443,6 +444,8 @@ Section Comparable.
     apply max_refl.
   Qed.
 
+ 
+
   Lemma le_min_a (a b: A):
     le (min a b) a.
   Proof.
@@ -472,7 +475,7 @@ Section Comparable.
     - now apply lt_not_gt in Hab.
     - now apply compare_lt_iff in Hab as ->.
     - exfalso.
-      apply (lt_trans a b) in Hbc.
+      apply (StrictOrder_Transitive a b) in Hbc.
       2: assumption.
       now apply lt_not_gt in Hbc.
     - now apply lt_not_gt in Hab.
