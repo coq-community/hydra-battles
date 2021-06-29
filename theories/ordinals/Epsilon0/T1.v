@@ -389,12 +389,22 @@ Proof.
 Qed.
 
 From hydras Require Export Prelude.Comparable.
+Search StrictOrder.
 
+
+
+
+#[global] Instance t1_strorder: StrictOrder lt.
+Proof.
+ constructor. 
+  - intro a; apply T1.lt_irrefl.
+  - intros a b c; eapply T1.lt_trans.
+Qed.
+    
 Instance: Comparable lt le compare.
 Proof.
   constructor.
-  - apply T1.lt_irrefl.
-  - apply T1.lt_trans.
+  - exact t1_strorder. 
   - now unfold le.
   - apply T1.compare_correct.
 Qed.
