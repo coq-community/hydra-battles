@@ -20,7 +20,7 @@ def get_reader(path: Path) -> str:
         yield from enumerate(file, 1)
 
 
-def add_to_snippets(content: str, snippets: Dict[str, Snippet]) -> None:
+def add_all_snippets(content: str, snippets: Dict[str, Snippet]) -> None:
     """
     add content to all snippet
 
@@ -31,53 +31,10 @@ def add_to_snippets(content: str, snippets: Dict[str, Snippet]) -> None:
         snippet.add_content(content)
 
 
-# text pattern
+# snippet pattern
 BEGIN_STATE = "begin"
 END_STATE = "end"
-TEXT_PATTERN = re.compile(rf"\s*\\({BEGIN_STATE}|{END_STATE})\{{txt}}")
-
-# snippet pattern
-SNIPPET_PATTERN = re.compile(rf".*\\PY{{c}}{{\(\*\~+({BEGIN_STATE}|{END_STATE})\~+snippet\~+(\w+)\~+\*\)}}")
-
-BEGIN_ALECTRYON = "\\begin{alectryon}\n"
-END_ALECTRYON = "\\end{alectryon}\n"
-
-def extract_snippets_text(reader, begin_line: str,
-                          open_snippets: Dict[str, Snippet], close_snippets: List[Snippet]) -> str:
-    """
-    This function is call by extract snippet if we are in text part.
-    This function open new snippets found, or close it.
-    This function end when text part is closed.
-
-    :param reader: reader used
-    :param begin_line: begin line used
-    :param open_snippets: snippet not end
-    :param close_snippets: snippet already end
-    :return: content to add
-    """
-    content = BEGIN_ALECTRYON + begin_line  # TODO found other method
-    for num, line in reader:
-        # match open or close snippet
-        if (match := SNIPPET_PATTERN.match(line)) is not None:
-            state, name = match.groups()
-            if state == BEGIN_STATE:
-                SnippetAlreadyExistException.check(name, num, open_snippets, close_snippets)
-                open_snippets[name] = Snippet(name)
-            else:
-                SnippetAlreadyCloseException.check(name, num, close_snippets)
-                SnippetNotBeginException.check(name, num, open_snippets)
-                open_snippets[name].add_content(END_ALECTRYON)
-                close_snippets.append(open_snippets.pop(name))
-            continue
-
-        # add line to content
-        content += line
-
-        # match end of text
-        if (match := TEXT_PATTERN.match(line)) is not None \
-            and match.group(1) == END_STATE:
-            return content
-    raise Exception("not end to finish file")
+SNIPPET_PATTERN = re.compile(rf"\s*\(\*\s*({BEGIN_STATE}|{END_STATE})\s+snippet\s+(\w+)\s*\*\)")
 
 
 def extract_snippets(path: Path) -> List[Snippet]:
@@ -90,14 +47,19 @@ def extract_snippets(path: Path) -> List[Snippet]:
     open_snippets = {}
     close_snippets = []
     for num, line in reader:
-        if (match := TEXT_PATTERN.match(line)) is not None:
-            if match.group(1) == END_STATE:
-                raise Exception(fr"error parsing match \"\end{{text}}\" in line {num} but no begin")
-            line = extract_snippets_text(reader, line, open_snippets, close_snippets)
+        if (match := SNIPPET_PATTERN.match(line)) is not None:
+            state, name = match.groups()
+            if state == BEGIN_STATE:
+                SnippetAlreadyExistException.check(name, num, open_snippets, close_snippets)
+                open_snippets[name] = Snippet(name)
+            else:  # end state
+                SnippetAlreadyCloseException.check(name, num, close_snippets)
+                SnippetNotBeginException.check(name, num, open_snippets)
+                close_snippets.append(open_snippets.pop(name))
+            continue
+        add_all_snippets(line, open_snippets)
 
-        add_to_snippets(line, open_snippets)
-
-    if len(open_snippets) != 0:
-        raise SnippetNotEndException(list(open_snippets.values()))
+    if open_snippets:
+        raise SnippetNotEndException(open_snippets.values())
 
     return close_snippets

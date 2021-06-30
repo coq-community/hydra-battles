@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, Iterable, List
 from .Snippet import Snippet
 
 
@@ -85,6 +85,6 @@ class SnippetNotEndException(SnippetException):
     Raise if snippet is have not end.
     """
 
-    def __init__(self, snippets: List[Snippet]):
+    def __init__(self, *snippets: Iterable[Snippet]):
         names = ",".join(snippet.name for snippet in snippets)
         super().__init__(f"Snippets \"{names}\" never close")

@@ -27,16 +27,3 @@ class Snippet:
 
     def __str__(self) -> str:
         return self.content
-
-    def get_path(self, directory: Path = Path('.')) -> Path:
-        """
-        get path of file with directory
-
-        :param directory: destination directory
-        :return: Path of file
-        """
-        return directory / (self.name + self.LATEX_EXTENSION)
-
-    def write(self, directory: Path):
-        with open(self.get_path(directory), 'w') as file:
-            file.write(self.content)

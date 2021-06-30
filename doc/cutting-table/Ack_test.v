@@ -1,4 +1,3 @@
-(* begin snippet AckIntro *)
 (*|
 ==============================
  The famous Ackermann function 
@@ -9,6 +8,8 @@
 --------------------------------
 
 |*)
+
+(* begin snippet AckIntro *)
 
 From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
@@ -115,9 +116,9 @@ Lemma lt_wf_ind :
     (forall n, (forall m, m < n -> P m) -> P n) ->
     P n.
 Proof. 
-  (* begin snippet inside *)
+  (* begin snippet inside_lt_wf *)
 intro p; intros; elim (lt_wf p); auto with arith. 
-  (* end snippet inside *)
+  (* end snippet inside_lt_wf *)
 Defined.
 
 (* This is defined in stdlib, but unfortunately it is opaque too *)
