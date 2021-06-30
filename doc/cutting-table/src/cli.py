@@ -8,7 +8,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     :return: Argument parser
     """
-    DESCRIPTION = "Extract snippet in latex file generate by alectryon."
+    DESCRIPTION = "Extract snippet in coq file (.v) generate by alectryon."
     parser = argparse.ArgumentParser(DESCRIPTION)
 
     INPUT_FILES_HELP = "coq file '.v'"
