@@ -412,7 +412,7 @@ If it does not cause compatibility problems (with
 The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of type
 \texttt{PrimRec} allows us to write trivial proofs of primitive recursivity. 
 Although  the following lemmas are already proven in 
-\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec.v},
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
 we wrote alternate proofs in 
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
 {Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
@@ -460,7 +460,7 @@ Qed.
 \end{Coqsrc}
 
 Projections are proved primitive recursive, case by case (many examples in 
-\href{../theories/html/hydras.primRec.html}{Ackermann.primRec.v}).
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}).
 \emph{Please notice again that the name of the projection follows the mathematical tradition, 
 whilst the arguments of  \texttt{projFunc} use another convention (\emph{cf} remark~\vref{projFunc-order-of-args}).}
 
@@ -479,7 +479,7 @@ Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.primRec.html}{Ackermann.primRec}.}
+\emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
 \begin{Coqsrc}
 Lemma idIsPR : isPR 1 (fun x : nat => x).
@@ -531,7 +531,7 @@ Qed.
 
 \subsubsection{Proving that \texttt{plus} is primitive recursive}
 
-The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.primRec.html}{Ackermann.primRec}. We present in 
+The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}
 a commented version of this proof, 
 
@@ -693,7 +693,7 @@ Fixpoint tower2 n :=
 \textbf{Hint:} You may have to look again at the lemmas of the library
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} if you meet some difficulty.
 You may start this exercise with the file
-\url{../exercises/primrec/MorePRExamples.v}.
+    \href{https://https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MorePRExamples.v}{exercises/primrec/MorePRExamples.v}.
 \end{exercise}
 
 
@@ -704,7 +704,7 @@ Show that the function \texttt{min: naryFunc\,2} is primitive
 recursive.
 
 \emph{You may start this exercise with
-\url{../exercises/primrec/MinPR.v}.}
+    \href{https://https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MinPR.v}{exercises/primrec/MinPR.v}.}
 
 \end{exercise}
 
@@ -729,7 +729,7 @@ Library \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair} con
 the definition of the encoding of $\mathbb{N}^2$ into $\mathbb{N}$, and the proofs that 
 the associated constructor and projections are primitive recursive.
 \emph{You may start this exercise with the file
-\url{../exercises/primrec/FibonacciPR.v}.}
+    \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/FibonacciPR.v}{exercises/primrec/FibonacciPR.v}.}
 
 \end{exercise}
 
@@ -752,7 +752,7 @@ Lemma boundedSearch4 (P: naryRel 2) (b  : nat):
 Prove that the function which returns the  integer square root of any natural number  is primitive recursive.
 
 \emph{You may start this exercise with the file
-\url{../exercises/primrec/isqrt.v}.}
+    \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/isqrt.v}{exercises/primrec/isqrt.v}.}
 
 \end{exercise}
 
@@ -1234,7 +1234,8 @@ Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
 \end{Coqsrc}
 
-We prove also a strict version of this lemma, thanks to the following property (proved in Library\href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}~).
+We prove also a strict version of this lemma, thanks to the following property (proved in Library
+\href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}~).
 
 \begin{Coqsrc}
 Lemma Ack_strict_mono_l : forall n m p, n < m ->
@@ -1243,7 +1244,7 @@ Lemma Ack_strict_mono_l : forall n m p, n < m ->
 
 \vspace{4pt}
 \noindent
-\emph{From \href{../theories/html/hydras.MoreAck.AcknotPR.html}{MoreAck.AckNotPR}.}
+\emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}.}
 
 \begin{Coqsrc}
 Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
@@ -1417,7 +1418,7 @@ $H'_{42}(3)=45> H'_\omega(3)=7$.
 
 
 Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
-\href{../theories/html/hydras.Epsilon0.Hprimehtml}{Epsilon0.Hprime}):
+\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}):
 
 \begin{Coqanswer}
 H'_restricted_mono_l : 
