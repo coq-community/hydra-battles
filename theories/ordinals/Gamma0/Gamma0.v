@@ -3680,12 +3680,25 @@ Defined.
 
 Notation omega := Omega.
 
-Instance Gamma0: ON lt  compare.
+Definition le := clos_refl G0 lt.
+
+Instance Gamma0_comp: Comparable lt le compare.
+Proof.
+  split. 
+  - apply lt_sto.
+  - split; destruct 1.
+    + now left.
+    + now right.
+    + now left.
+    + subst; now right. 
+  - apply compare_correct.
+Qed. 
+
+Instance Gamma0: ON lt  le compare.
 Proof.
   split.
-  - apply lt_sto.
+  - apply Gamma0_comp.
   - apply lt_wf. 
-  - apply compare_correct.
 Qed.
 
 

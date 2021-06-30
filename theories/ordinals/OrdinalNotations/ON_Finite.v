@@ -19,6 +19,8 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
+Definition le {n:nat} : relation (t n) :=
+  fun alpha beta => lt alpha beta \/ alpha = beta.
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
@@ -86,12 +88,19 @@ Qed.
 
 (** We have now an ordinal notation *)
 
-Global Instance FinOrd (n:nat) : ON (@lt n) compare .
+Global Instance comp n: Comparable (@lt n) (@le n) compare.
 Proof.
   split.
-  - apply sto.
+   - apply sto.
+   - split; intros; assumption. 
+   - apply compare_correct. 
+Qed.
+
+Global Instance FinOrd n : ON (@lt n)  (@le n) compare. 
+Proof.
+  split.
+  - exact (comp n).
   - apply lt_wf.
-  - apply compare_correct.
 Qed.
 
 Definition Zero_limit_succ_dec (n:nat) : ZeroLimitSucc_dec (on := FinOrd n).

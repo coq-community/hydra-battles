@@ -16,11 +16,13 @@ Coercion is_true: bool >-> Sortclass.
 Section Defs.
 
   Context `(ltA: relation A)
+          `(leA: relation A)
           (compareA : A -> A -> comparison)
-          (NA: ON ltA compareA).
+          (NA: ON ltA leA compareA).
   Context `(ltB: relation B)
+          `(leB: relation B)
           (compareB : B -> B -> comparison)
-          (NB: ON ltB compareB).
+          (NB: ON ltB leB compareB).
 
 
 Definition t := (A + B)%type.
@@ -86,12 +88,20 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Global Instance ON_plus : ON lt compare.
+#[global] Instance plus_comp : Comparable lt le compare.
 Proof.
   split.
   - apply lt_strorder.
-  -  apply lt_wf.
+  - split.
+    + destruct 1; [now left | now right ].
+    +  destruct 1; [now left | subst; now right ].    
   - apply compare_correct.
+Qed.
+#[global] Instance ON_plus : ON lt le compare.
+Proof.
+  split.
+  - apply plus_comp.
+  -  apply lt_wf.
 Qed.
 
 
@@ -108,8 +118,8 @@ Defined.
 
 End Defs.
 
-Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
-Arguments ON_plus {A ltA compareA} _ {B ltB compareB}.
+Arguments lt_eq_lt_dec {A ltA leA compareA} _ {B ltB leB compareB} _.
+Arguments ON_plus {A ltA leA compareA} _ {B ltB leB compareB}.
 
 
 

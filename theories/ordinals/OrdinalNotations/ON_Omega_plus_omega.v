@@ -340,7 +340,7 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
    forall alpha, 
      (forall i,  fin i o< alpha) <-> omega o<= alpha.
  Proof.
-   intro alpha; destruct (ON_Generic.compare_correct  omega alpha).
+   intro alpha; destruct (Comparable.compare_correct  omega alpha).
    - subst;split.
      +  right.
      + intros; constructor.
