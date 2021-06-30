@@ -191,7 +191,7 @@ Proof.
       destruct (H0 (k, S j));  constructor 2; auto.
 Qed. 
 
-Corollary Successor_not i j k : ~ Successor (k,0) (i,j).
+Corollary Successor_not (i j k : nat) : ~ Successor (k,0) (i,j).
 Proof.
   intro H; apply Successor_inv in H. destruct H; discriminate. 
 Qed.

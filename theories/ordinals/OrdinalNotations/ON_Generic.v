@@ -9,6 +9,7 @@ From hydras Require Import  OrdNotations Schutte_basics.
 From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Import Relation_Definitions.
 From hydras Require Export MoreOrders.
+Require Export Comparable.
   
 Generalizable All Variables.
 Declare Scope ON_scope.
@@ -22,54 +23,50 @@ TODO: move [compare_correct] and associated lemmas to Prelude
 
 *)
 
-Class ON {A:Type}(lt: relation A)
+Class ON {A:Type}(lt le: relation A)
       (compare : A -> A -> comparison)  :=
   {
-  sto :> StrictOrder lt;
+  comp :> Comparable lt le  compare;
   wf : well_founded lt;
-  compare_correct :
-    forall alpha beta:A,
-      CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
-                  (compare alpha beta);
   }.
 
 
 (** Selectors *)
 
-Definition ON_t  {A:Type}{lt: relation A}
+Definition ON_t  {A:Type}{lt le: relation A}
             {compare : A -> A -> comparison}
-            {on : ON lt compare} := A.
+            {on : ON lt le compare} := A.
 
-Definition ON_compare {A:Type}{lt: relation A}
+Definition ON_compare {A:Type}{lt le: relation A}
             {compare : A -> A -> comparison}
-            {on : ON lt compare} := compare.
+            {on : ON lt le compare} := compare.
 
 
-Definition ON_lt {A:Type}{lt: relation A}
+Definition ON_lt {A:Type}{lt le: relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare} := lt.
+           {on : ON lt le compare} := lt.
 
 Infix "o<" := ON_lt : ON_scope.
 
-Definition ON_le  {A:Type}{lt: relation A}
+Definition ON_le  {A:Type}{lt le: relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare} :=
-  clos_refl _ ON_lt.
+           {on : ON lt le compare} := le.
+
 
 Infix "o<=" := ON_le : ON_scope.
 
-Definition measure_lt {A:Type}{lt: relation A}
+Definition measure_lt {A:Type}{lt le: relation A}
             {compare : A -> A -> comparison}
-            {on : ON lt compare}
+            {on : ON lt le compare}
             {B : Type}
   (m : B -> A) : relation B :=
   fun x y =>  ON_lt (m x) (m y).
 
 
   
-Lemma wf_measure  {A:Type}(lt: relation A)
+Lemma wf_measure  {A:Type}(lt le: relation A)
             {compare : A -> A -> comparison}
-            {on : ON lt compare}
+            {on : ON lt le compare}
             {B : Type}
             (m : B -> A) :
   well_founded (measure_lt m). 
@@ -84,37 +81,37 @@ Defined.
 Global Hint Resolve wf_measure : core.
 
 
-Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
+Definition ZeroLimitSucc_dec {A:Type}{lt le: relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare} :=
+           {on : ON lt le compare} :=
   forall alpha,
     {Least alpha} +
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
 
-
-
-
-Lemma le_lt_trans {A:Type}(lt: relation A)
+Lemma le_lt_trans {A:Type}(lt le: relation A)
             {compare : A -> A -> comparison}
-            {on : ON lt compare}: forall p q r, p o<= q -> q o< r -> p o< r.
+            {on : ON lt le compare}: forall p q r, p o<= q -> q o< r -> p o< r.
 Proof.
-  destruct 1; trivial. 
-  intro; now transitivity y.  
+  intros * H;  rewrite le_lt_eq in H. destruct H.
+  intro; now transitivity q.
+  now subst. 
 Qed.   
 
-Lemma lt_le_trans {A:Type}(lt: relation A)
+Lemma lt_le_trans {A:Type}(lt le: relation A)
             {compare : A -> A -> comparison}
-            {on : ON lt compare}:
+            {on : ON lt le compare}:
   forall p q r, p o< q -> q o<= r -> p o< r.
 Proof.
-  destruct 2; trivial; now  transitivity q.
+  intros * H H0; rewrite le_lt_eq in H0. destruct H0.
+  - now  transitivity q.
+  - now  subst.
 Qed.   
 
 
 (** The segment called [O alpha] in Schutte's book *)
 
-Definition bigO `{nA : @ON A ltA compareA}
+Definition bigO `{nA : @ON A ltA leA compareA}
            (a: A) : Ensemble A :=
   fun x: A => x o< a.
 
@@ -123,8 +120,8 @@ Definition bigO `{nA : @ON A ltA compareA}
     the segment of ordinals strictly less than b *)
 
 Class  SubON 
-       `(OA : @ON A ltA  compareA)
-       `(OB : @ON B ltB  compareB)
+       `(OA : @ON A ltA  leA compareA)
+       `(OB : @ON B ltB  leB compareB)
        (alpha :  B)
        (iota : A -> B):=
   {
@@ -135,8 +132,8 @@ Class  SubON
 
 (** [OA] and [OB] are order-isomporphic *)
 Class  ON_Iso 
-       `(OA : @ON A ltA compareA)
-       `(OB : @ON B ltB  compareB)
+       `(OA : @ON A ltA leA compareA)
+       `(OB : @ON B ltB  leB compareB)
        (f : A -> B)
        (g : B -> A):=
   {
@@ -149,7 +146,7 @@ Class  ON_Iso
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
 
 Class ON_correct `(alpha : Ord)
-     `(OA : @ON A ltA  compareA)
+     `(OA : @ON A ltA  leA compareA)
       (iota : A -> Ord) :=
   { ON_correct_inj : forall a, lt (iota a) alpha;
     ON_correct_onto : forall beta, lt beta alpha ->
@@ -166,8 +163,8 @@ Class ON_correct `(alpha : Ord)
 
 (** ** Relative correctness of a constant or a function  *)
 
-Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition SubON_same_cst  `{OA : @ON A ltA leA compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> B} 
        {alpha: B}
        {_ : SubON OA OB alpha iota}
@@ -177,8 +174,8 @@ Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
 
 
 
-Definition SubON_same_fun  `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition SubON_same_fun  `{OA : @ON A ltA leA  compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> B} 
        {alpha: B}
        {_ : SubON OA OB alpha iota}
@@ -187,8 +184,8 @@ Definition SubON_same_fun  `{OA : @ON A ltA  compareA}
   := forall x,  iota (f x) = g (iota x).
 
 
-Definition SubON_same_op  `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition SubON_same_op  `{OA : @ON A ltA  leA compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> B} 
        {alpha: B}
        {_ : SubON OA OB alpha iota}
@@ -201,8 +198,8 @@ Definition SubON_same_op  `{OA : @ON A ltA  compareA}
 (** Correctness w.r.t. Schutte's model *)
 
 
-Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  leA compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> Ord} 
        {_ : ON_correct alpha OA iota}
        (a : A)
@@ -211,8 +208,8 @@ Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 
 
 
-Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  leA compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> Ord} 
        {_ : ON_correct alpha OA iota}
        (f : A -> A)
@@ -220,8 +217,8 @@ Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
   :=
     forall x,  iota (f x) = g (iota x).
 
-Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  leA compareA}
+       `{OB : @ON B ltB  leB compareB}
        {iota : A -> Ord} 
        {_ : ON_correct alpha OA iota}
        (f : A -> A -> A)
@@ -232,8 +229,8 @@ Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
 
 
 
-Definition Iso_same_cst  `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+Definition Iso_same_cst  `{OA : @ON A ltA leA  compareA}
+       `{OB : @ON B ltB  leB compareB}
        {f : A -> B} {g : B -> A}
        {_ : ON_Iso  OA OB f g}
        (a : A)
@@ -242,8 +239,8 @@ Definition Iso_same_cst  `{OA : @ON A ltA  compareA}
 
 
 
-Definition Iso_same_fun  `{OA : @ON A ltA  compareA}
-           `{OB : @ON B ltB  compareB}
+Definition Iso_same_fun  `{OA : @ON A ltA leA  compareA}
+           `{OB : @ON B ltB  leB compareB}
            {f : A -> B} {g : B -> A}
            {_ : ON_Iso  OA OB f g}
            (fA : A -> A)
@@ -252,8 +249,8 @@ Definition Iso_same_fun  `{OA : @ON A ltA  compareA}
     forall x,  f (fA x) = fB (f x).
 
 
-Definition Iso_same_op  `{OA : @ON A ltA  compareA}
-           `{OB : @ON B ltB  compareB}
+Definition Iso_same_op  `{OA : @ON A ltA  leA compareA}
+           `{OB : @ON B ltB  leB compareB}
            {f : A -> B} {g : B -> A}
            {_ : ON_Iso  OA OB f g}
            (opA : A -> A -> A)
@@ -265,7 +262,7 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
 
 (** Technical lemmas *)
 
-Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
+Lemma compare_Eq_eq  `{OA : @ON A ltA  leA compareA} alpha beta :
   compareA alpha beta = Eq <-> alpha = beta.
 Proof.
   split.
@@ -277,7 +274,7 @@ Proof.
 Qed.
 
 
-Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
+Lemma compare_Lt_lt  `{OA : @ON A ltA  leA compareA} alpha beta :
   compareA alpha beta = Lt <-> alpha o< beta.
 Proof.
   split.
@@ -293,7 +290,7 @@ Qed.
 
 
 
-Lemma compare_Gt_gt  `{OA : @ON A ltA  compareA} alpha beta :
+Lemma compare_Gt_gt  `{OA : @ON A ltA leA compareA} alpha beta :
   compareA alpha beta = Gt <-> beta o< alpha.
 Proof.
   split.
@@ -305,18 +302,18 @@ Proof.
 Qed.
 
 
-Lemma lt_eq_lt {A:Type}{lt: relation A}
+Lemma lt_eq_lt {A:Type}{lt le: relation A}
             {compare : A -> A -> comparison}
-            {on : ON lt compare} : 
+            {on : ON lt le compare} : 
   forall alpha beta, alpha o< beta \/ alpha = beta \/ beta o< alpha.
 Proof.
   intros; destruct (compare_correct alpha beta); auto.
 Qed.
 
 
-Definition lt_eq_lt_dec {A:Type}{lt: relation A}
+Definition lt_eq_lt_dec {A:Type}{lt le: relation A}
             {compare : A -> A -> comparison}
-            {on : ON lt compare} (alpha beta : A) :
+            {on : ON lt le compare} (alpha beta : A) :
    {alpha o< beta} + {alpha = beta} + {beta o< alpha}.
   case_eq (compare alpha beta); intro H.
   - left;right; now rewrite <- compare_Eq_eq.
@@ -324,9 +321,9 @@ Definition lt_eq_lt_dec {A:Type}{lt: relation A}
   - right; now rewrite <- compare_Gt_gt.
 Defined.
 
-Lemma LimitNotSucc {A:Type}{lt: relation A}
+Lemma LimitNotSucc {A:Type}{lt le: relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare}
+           {on : ON lt le compare}
            (alpha :A)  :
   Limit alpha -> forall beta, ~ Successor alpha beta.
 Proof.
@@ -342,8 +339,8 @@ Qed.
 
 Section SubON_properties.
   
-  Context `{OA : @ON A ltA  compareA}
-          `{OB : @ON B ltB  compareB}
+  Context `{OA : @ON A ltA  leA compareA}
+          `{OB : @ON B ltB  leB compareB}
           (f : A -> B)
           (alpha : B)
           (Su : SubON OA OB alpha f).
@@ -354,7 +351,7 @@ Section SubON_properties.
     - apply compare_Lt_lt in H; apply compare_Lt_lt;
       now rewrite SubON_compare.
     - apply compare_Lt_lt.
-    specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b)).
+    specialize (@compare_Lt_lt B ltB leB compareB OB (f a) (f b)).
     intro H0;rewrite <- H0 in H.
     now rewrite SubON_compare in H.
   Qed.    

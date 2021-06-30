@@ -249,7 +249,7 @@ Instance Two : E0 :=  ltac:(mko (fin 2)).
 Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
 
 
-Instance Lt_sto : StrictOrder Lt.
+Instance E0_sto : StrictOrder Lt.
 Proof.
   split.
   - intro x ; destruct x; unfold Lt; red.
@@ -421,14 +421,24 @@ Proof.
   - right; subst; f_equal; apply nf_proof_unicity.
 Qed.
 
+Instance E0_comp: Comparable Lt Le compare.
+Proof.
+  split.
+  - apply E0_sto.
+  - split.
+    intro H; destruct (le_lt_eq_dec H); [now left | now right].
+    destruct 1.
+    + unfold Lt, Le in *. Search T1.LT T1.LE.   now apply T1.LE_r.
+    + subst. red. Search LE. apply LE_refl. apply cnf_ok.
+      Search compare.
+   - apply compare_correct. 
+Qed.
 
-
-Instance Epsilon0 : ON Lt compare.
+Instance Epsilon0 : ON Lt Le compare.
 Proof.
  split.
- - apply Lt_sto.
+ - apply E0_comp.
  - apply Lt_wf.
- - apply compare_correct.
 Qed.
 
 
@@ -648,7 +658,7 @@ Proof.
         }
         destruct H1.
         destruct H2.
-        eapply lt_irrefl; eauto.
+        eapply T1.lt_irrefl; eauto. 
   - destruct 1.
     unfold Lt in H, H0. cbn in H, H0.
     destruct H.

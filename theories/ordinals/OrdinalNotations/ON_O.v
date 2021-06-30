@@ -15,27 +15,30 @@ Generalizable Variables A Lt comp.
 Section OA_given.
   
   Context {A:Type}
-          {Lt : relation A}
-          `(OA : ON A Lt  comp).
+          {Lt Le: relation A}
+          {compareA : A -> A -> comparison}
+          `(OA : ON A Lt  Le compareA).
 
 (** The type of ordinals less than [a] *)
 
 
-Definition t (a:A) := {b:A | comp b a = Datatypes.Lt}.
+Definition t (a:A) := {b:A | compareA b a = Datatypes.Lt}.
 
 Definition lt {a:A} : relation (t a) :=
   fun alpha beta => ON_lt (proj1_sig alpha) (proj1_sig beta).
 
+Definition le {a:A} : relation (t a) :=
+  clos_refl (t a) lt.
 
 Definition compare {a:A} (alpha beta : t a) :=
-  comp (proj1_sig alpha) (proj1_sig beta).
+  compareA (proj1_sig alpha) (proj1_sig beta).
 
 Lemma compare_correct {a} (alpha beta : t a) :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
   - destruct alpha, beta; unfold compare; cbn.
-    case_eq (comp x x0); unfold lt; cbn.
+    case_eq (compareA x x0); unfold lt; cbn.
     + constructor 1.
       destruct (compare_correct x x0); try discriminate.
        subst; f_equal; apply eq_proofs_unicity_on.
@@ -77,14 +80,25 @@ Proof.
        apply H0.
 Qed.
 
-(** We have now an ordinal notation *)
-
-Global Instance ON_O  (a:A) : ON (@lt a) compare .
-Proof.
+#[global] Instance ON_O_comp (a:A) : Comparable (@lt a) (@le a) compare .
+Proof. 
   split.
   - apply sto.
-  - apply lt_wf.
+  - split; destruct 1.
+   + now left.
+   + now right.
+   + now left.
+   + subst; now right. 
   - apply compare_correct.
+Qed. 
+
+(** We have now an ordinal notation *)
+
+Global Instance ON_O  (a:A) : ON (@lt a) (@le a) compare .
+Proof.
+  split.
+  - apply ON_O_comp. 
+  - apply lt_wf.
 Qed.
 
 End OA_given.
