@@ -4,6 +4,7 @@
 From Coq Require Import Arith Peano_dec Lia Relations Relation_Operators.
 From hydras Require Import  Hydra_Lemmas Simple_LexProd ON_Omega2.
 Import ON_Generic.
+
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
 
@@ -11,7 +12,7 @@ of all hydra battles *)
 Section Impossibility_Proof.
 
    (** Let us assume there is a variant from [Hydra] into [omega^2] 
-  for proving the   termination of all hydra  battles *)
+  for proving the termination of all hydra  battles *)
  
 
   Variable m : Hydra -> ON_Omega2.t.
@@ -141,28 +142,23 @@ Proof.
     +  (* p = zero *)
       apply le_0. 
     +  (* p = (S i, 0) *)
-     assert (is_true (limitb (S l, 0))).
-     reflexivity.
-specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
-  intro.
-   rewrite <- H0.
-     About le_lt_trans.
-      intro k; eapply le_lt_trans.  exact Omega2.
+      assert (is_true (limitb (S l, 0))).
+      reflexivity.
+      specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
+      intro.
+      rewrite <- H0. 
+      intro k; eapply Comparable.le_lt_trans.  
       apply IHij. left; auto.
       red; apply (m_strict_mono m Hvar); auto with hydra.
-      Search iota.
- simpl canon. 
-Search iota.
-apply step_to_battle. Search step. apply limit_step. 
+      simpl canon. 
+      apply step_to_battle.  apply limit_step. 
   - change (i, S k) with (succ (i,k)) at 1.
     rewrite <- (lt_succ_le (i,k) (m (iota (i, S k)))).
-    eapply (le_lt_trans).
-    exact Omega2. instantiate (1:= (m (iota (i, k)))). 
-    apply IHij.
-    right; auto.      
+    eapply (Comparable.le_lt_trans).
+    instantiate (1:= (m (iota (i, k)))). 
+    apply IHij; right; auto.      
     apply (m_strict_mono m Hvar); auto with hydra.
 Qed.
-
 
 Theorem Impossible : False.
 Proof.
