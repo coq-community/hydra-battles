@@ -36,9 +36,11 @@ Global Hint Resolve cnf_ok : E0.
 
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
+(*  Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta). *)
+Definition Le := leq Lt.
 
-Infix "o<" := Lt : E0_scope.
+
+   Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
 Instance Zero : E0 := @mkord zero refl_equal.
@@ -149,6 +151,38 @@ Proof.
     apply nf_proof_unicity.
 Qed.
 
+
+Remark Le_iff : forall alpha beta,  Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
+Proof.
+  intros *; unfold Le, T1.LE.
+  destruct alpha, beta; split.
+  cbn.
+  rewrite le_lt_eq; destruct 1.
+  red in H. cbn in H.
+  repeat split; auto.
+  Search (leq lt). apply LE_le. 
+  repeat split; auto.
+  destruct H as [H [H0 _]].
+  now left.
+  repeat split; auto.
+ injection H.   intro; subst; right.
+ cbn.
+destruct 1 as [_ [H _]].
+ rewrite le_lt_eq in H.
+ destruct H. 
+left. 
+ red.
+ cbn. 
+ repeat split; auto.
+ subst. 
+ cbn. 
+ unfold Lt.
+ generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
+    {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
+ cbn; intro H; rewrite H. now right.
+ reflexivity.
+Qed.
+ 
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 Proof.
  split.
@@ -284,8 +318,8 @@ Global Hint Resolve Lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
-  destruct alpha, beta;simpl in *;  unfold le, Lt;simpl.
-  intro. split; auto.
+  destruct alpha, beta;simpl in *.  unfold leq , Lt;simpl.
+  intro. rewrite Le_iff. split; auto.
   - apply T1.succ_nf; auto.
   -  split; auto.
      + apply T1.lt_succ_le;auto.
@@ -391,16 +425,17 @@ Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
                                        Succ beta o<= alpha.
 Proof.
-  destruct alpha, beta; unfold lt, le, Succ; cbn; split.
-  -  intro; now  apply LT_succ_LE.
-  - intro; now apply LT_succ_LE_R.  
+  destruct alpha, beta; unfold lt, leq , Succ; cbn; split.
+  -  rewrite Le_iff.
+     intro; now  apply LT_succ_LE.
+  - rewrite Le_iff. intro. now apply LT_succ_LE_R.  
 Qed.
 
 Lemma lt_Succ_le_2 (alpha beta: E0):
     alpha o< Succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
- red in H; red. 
+ red in H; red. rewrite  Le_iff.
  cbn;  apply LT_succ_LE_2; auto.
 Qed.
 
@@ -414,27 +449,20 @@ Qed.
 Lemma le_lt_eq_dec : forall alpha beta, alpha o<= beta ->
                                         {alpha o< beta} + {alpha = beta}.
 Proof.
-  destruct alpha, beta.
-  unfold Lt, Le; cbn.
-  intro H; destruct (LE_LT_eq_dec  H).
+  destruct alpha, beta. intros. rewrite Le_iff in H.
+ destruct (LE_LT_eq_dec  H).
   - now left.
-  - right; subst; f_equal; apply nf_proof_unicity.
+  - cbn in e; subst. right; subst; f_equal; apply nf_proof_unicity.
 Qed.
 
-Instance E0_comp: Comparable Lt Le compare.
+Instance E0_comp: Comparable Lt compare.
 Proof.
   split.
   - apply E0_sto.
-  - split.
-    intro H; destruct (le_lt_eq_dec H); [now left | now right].
-    destruct 1.
-    + unfold Lt, Le in *. Search T1.LT T1.LE.   now apply T1.LE_r.
-    + subst. red. Search LE. apply LE_refl. apply cnf_ok.
-      Search compare.
-   - apply compare_correct. 
+  - apply compare_correct. 
 Qed.
 
-Instance Epsilon0 : ON Lt Le compare.
+Instance Epsilon0 : ON Lt compare.
 Proof.
  split.
  - apply E0_comp.
@@ -522,8 +550,7 @@ Qed.
 Lemma Le_trans alpha beta gamma :
   alpha o<= beta -> beta o<= gamma -> alpha o<= gamma.
 Proof.
-  destruct alpha, beta, gamma; simpl. unfold le.
-  simpl.
+  destruct alpha, beta, gamma; simpl. repeat rewrite Le_iff; cbn. 
  intros; eauto with T1.
  eapply T1.LE_trans; eauto.
 Qed.
@@ -680,18 +707,14 @@ Qed.
 
 Lemma Le_refl alpha : alpha o<= alpha.
 Proof.
-  destruct alpha; split.
-  - cbn; auto.
-  - split; cbn; auto with T1.
+  right. 
 Qed.
 
 Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
 Proof.
-  destruct alpha, beta; split.
-  - cbn; auto.
-  - split; cbn; auto.
-    cbn in H; destruct H; cbn in *.
-    apply lt_incl_le; tauto.
+  unfold Lt, Le.
+  intro; rewrite le_lt_eq.
+ destruct alpha, beta. left. auto. 
 Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.

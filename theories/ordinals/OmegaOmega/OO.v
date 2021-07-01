@@ -7,7 +7,7 @@ Import Relation_Operators.
 
 Definition t := {l: t | nf l}.
 Definition lt (w1 w2:t) := (wlt (proj1_sig w1) (proj1_sig w2)).
-Definition le := clos_refl t lt.
+Definition le := leq lt.
 
 Instance lt_strorder : StrictOrder lt.
 Proof.
@@ -95,17 +95,14 @@ Proof.
   destruct (compare alpha beta); now constructor.
 Qed.
 
-Instance OO_comp : Comparable lt le compare.
+Instance OO_comp : Comparable lt compare.
 Proof.
   split.
   - apply lt_strorder.
-  - split; destruct 1; auto.
-   + now left.
-   + subst; now right.
   - apply compare_correct.
 Qed.
 
-Instance OmegaOmega : ON lt le compare.
+Instance OmegaOmega : ON lt compare.
 Proof.
   split.
   - apply OO_comp.

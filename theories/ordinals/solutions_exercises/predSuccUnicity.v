@@ -6,7 +6,7 @@ Section Proofs_of_unicity.
 Context (A:Type)
         (lt le : relation A)
         (compare : A -> A -> comparison)
-        (On : ON lt le compare).
+        (On : ON lt compare).
 
 Section Proofs.
   Variables alpha beta : A.
