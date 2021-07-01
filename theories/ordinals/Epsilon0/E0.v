@@ -152,35 +152,25 @@ Proof.
 Qed.
 
 
-Remark Le_iff : forall alpha beta,  Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
+Remark Le_iff : forall alpha beta,
+    Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
 Proof.
-  intros *; unfold Le, T1.LE.
-  destruct alpha, beta; split.
-  cbn.
-  rewrite le_lt_eq; destruct 1.
-  red in H. cbn in H.
-  repeat split; auto.
-  Search (leq lt). apply LE_le. 
-  repeat split; auto.
-  destruct H as [H [H0 _]].
-  now left.
-  repeat split; auto.
- injection H.   intro; subst; right.
- cbn.
-destruct 1 as [_ [H _]].
- rewrite le_lt_eq in H.
- destruct H. 
-left. 
- red.
- cbn. 
- repeat split; auto.
- subst. 
- cbn. 
- unfold Lt.
- generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
-    {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
- cbn; intro H; rewrite H. now right.
- reflexivity.
+  intros *; unfold Le, T1.LE;  destruct alpha, beta; split.
+  - cbn; rewrite le_lt_eq; destruct 1.
+   + red in H; cbn in H; repeat split; auto; apply LE_le; repeat split; auto.
+     destruct H as [H [H0 _]].
+     now left.
+   + repeat split; auto.
+     injection H;  intro; subst; right.
+  - cbn; destruct 1 as [_ [H _]]; rewrite le_lt_eq in H.
+     destruct H. 
+     + left; red;  cbn; repeat split; auto.
+     + subst; cbn; unfold Lt.
+       generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
+                                {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
+       cbn; intro H; rewrite H.
+       * now right.
+       * reflexivity.
 Qed.
  
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.

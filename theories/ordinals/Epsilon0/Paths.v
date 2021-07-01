@@ -2924,16 +2924,15 @@ Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
     cbn. auto with T1.
 
     split; cbn. 
-    Search  zero canon limitb.
     specialize (limitb_canonS_not_zero j cnf_ok H).
     intro. 
     now apply not_zero_gt_0.
     apply nf_canon. 
-auto. 
+    auto. 
 
   - intros; lia.
   -        
-   unfold lt; simpl.
+    unfold lt; simpl.
     simpl; intros.
     apply canonS_limit_mono; auto.
     auto with arith.

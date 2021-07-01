@@ -94,27 +94,25 @@ Proof.
   inversion_clear H.
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
-  elimtype False. {
-    specialize (H0 (inr (S i))).
-    assert (H2 :inr i o< inr (S i)) by (constructor; auto).
-    assert (H3 :inr (S i) o< inr j) by (constructor; auto).
-    apply (H0 H2 H3).  }
+  exfalso. 
+  specialize (H0 (inr (S i))).
+  assert (H2 :inr i o< inr (S i)) by (constructor; auto).
+  assert (H3 :inr (S i) o< inr j) by (constructor; auto).
+  apply (H0 H2 H3).  
 Qed.
 
 Lemma Successor_inv3 : forall i j, ~ Successor (inr j) (inl i).
 Proof.
   destruct 1 as [H H0].
-
   specialize (H0 (inl (S i))).
-  assert (inl i o< inl (S i)) by (constructor;auto).
-  assert (inl (S i) o< inr j) by constructor.
-  specialize (H0 H1 H2);  inversion H0.
+  assert (H1: inl i o< inl (S i)) by (constructor;auto).
+  assert (H2: inl (S i) o< inr j) by constructor.
+  specialize (H0 H1 H2); inversion H0.
 Qed.
 
 Lemma Successor_inv4 : forall i j, ~ Successor (inl j) (inr i).
 Proof.
-  destruct 1 as [H H0].
-  inversion H.
+  destruct 1 as [H H0]; inversion H.
 Qed.
 
 Definition succ (alpha : t) :=
@@ -122,7 +120,6 @@ Definition succ (alpha : t) :=
     inl n => inl (S n)
   | inr n => inr (S n)
   end.
-
 
 Lemma Successor_succ alpha : Successor (succ alpha) alpha.
    destruct alpha;red;cbn; split.
@@ -162,7 +159,7 @@ Proof.
   destruct alpha; split.
   - destruct n.
    + intro; discriminate.
-   +    exists n; reflexivity.
+   + exists n; reflexivity.
   - intros [[p| p] H].
     + injection H; intro; subst; reflexivity.
     +  discriminate. 
@@ -353,17 +350,15 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
      + inversion 1; inversion H0.
  Qed.
 
-Instance Incl : SubON Omega Omega_plus_Omega omega fin.
-Proof.
-  split.
-- intros; reflexivity.
-- constructor.
-- inversion 1; subst.
-  + exists  x; trivial.
-  + abstract lia.
-Qed.
-
-
+ Instance Incl : SubON Omega Omega_plus_Omega omega fin.
+ Proof.
+   split.
+   - intros; reflexivity.
+   - constructor.
+   - inversion 1; subst.
+     + exists  x; trivial.
+     + abstract lia.
+ Qed.
 
 Section NotIncl.
   Context (i : nat)
@@ -371,14 +366,14 @@ Section NotIncl.
           (Hyp : SubON Omega_plus_Omega Omega i f).
 
 
-  Remark R1 :forall n: nat, ~ Limit n.
+  Remark R1: forall n: nat, ~ Limit n.
   Proof.
     intros n [H H0]; destruct n. 
     destruct H as [w Hw]; lia. 
     destruct  (H0 n) as [p Hp]; lia.
   Qed.
 
-Lemma ExNotIncl : False.
+Lemma ExNotIncl: False.
 Proof.
   apply (R1 (f omega)), (SubON_limit _ _ Hyp omega), omega_is_limit.
 Qed.

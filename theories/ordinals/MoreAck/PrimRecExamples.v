@@ -250,8 +250,6 @@ Proof.
 Qed.
 
 
-Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
-
 Definition plus_alt x y  :=
               nat_rec  (fun n : nat => nat)
                        y

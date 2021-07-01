@@ -22,7 +22,6 @@ From Coq Require PArith.
 From hydras  Require Import  More_Arith  Restriction   DecPreOrder.
 From hydras Require Import OrdNotations.
 From hydras Require Export Prelude.Comparable.
-Search StrictOrder.
 
 Set Implicit Arguments.
 
@@ -1917,10 +1916,8 @@ Proof.
       apply lt_succ. auto. 
     + subst. apply lt_succ.
   - intros * H H0 H1 H2 H3 b0 H4 ; rewrite le_lt_eq; intros [Hlt | Heq].
-    + apply lt_trans with (succ (ocons (ocons a n b) n' b')).
-      destruct Hlt as [H5 [H6 H7]]; trivial.
-      apply lt_succ; auto.
-      assumption.
+    + apply lt_trans with (succ (ocons (ocons a n b) n' b')); try assumption.
+      apply lt_succ.  
     + subst; apply lt_succ.
 Qed.
 
@@ -1965,7 +1962,7 @@ Proof.
             subst n0.
             auto with T1.
             subst n0; auto with T1.
-            auto with T1. left. Search lt. apply coeff_lt. auto.
+            auto with T1. left.  apply coeff_lt. auto.
             destruct a as [_ H2];  destruct (not_lt_zero H2).
           * intros.
             apply lt_incl_le.
@@ -2006,22 +2003,22 @@ Qed.
 Lemma lt_succ_le :
   forall a,
     nf a -> forall b, nf b ->
-    lt a  b -> leq lt (succ a)  b.
+                      lt a  b -> leq lt (succ a)  b.
 Proof.
   induction a.
   - intros H0 c'; case c'.
-     + intros H1 H2; destruct (not_lt_zero H2).
-     + destruct alpha.
-       * destruct n; intros t H H1;
-         generalize (nf_of_finite H);
-         intro; subst; compute. right; tauto.
-         now left.
-       * intros; simpl. left. compute; tauto.
+    + intros H1 H2; destruct (not_lt_zero H2).
+    + destruct alpha.
+      * destruct n; intros t H H1;
+          generalize (nf_of_finite H);
+          intro; subst; compute. right; tauto.
+        now left.
+      * intros; simpl. left. compute; tauto.
   - destruct b.
     intros H0 H1; destruct (not_lt_zero H1).
     intros H0 H1; destruct (lt_inv H1).
     destruct a1;
-    simpl.
+      simpl.
     apply lt_incl_le.
     auto with T1.
     apply lt_incl_le.
@@ -2041,29 +2038,27 @@ Proof.
     decompose [and] H2; subst.
     clear H2.
     simpl succ.
-    left. Search (lt (FS _) (FS _)). now apply finite_lt.
+    left.  now apply finite_lt.
     rewrite H4. right.
     destruct (lt_inv H1). left.
-  now apply coeff_lt.
+    now apply coeff_lt.
 
     destruct H2.
     destruct H2.
- left; now apply coeff_lt.
+    left; now apply coeff_lt.
     decompose [and] H2; subst.
     apply le_tail.
-        eauto with T1.
- decompose [and] H2; subst.
- auto. cbn.
- 
- destruct b1.
-generalize (nf_of_finite H0). 
+    eauto with T1.
+    decompose [and] H2; subst.
+    auto. cbn.
+    
+    destruct b1.
+    generalize (nf_of_finite H0). 
     intro; subst.
-decompose [and] H2.
+    decompose [and] H2.
     destruct (not_lt_zero H7).
-Search (leq lt).
-apply le_tail.
-Search (leq lt (succ _) _).
-apply IHa2; eauto with T1.
+    apply le_tail.
+    apply IHa2; eauto with T1.
 Qed.
 
 Lemma LT_succ_LE :
