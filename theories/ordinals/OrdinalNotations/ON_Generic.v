@@ -33,11 +33,11 @@ Class ON {A:Type}(lt : relation A)
 
 (** Selectors *)
 
-Definition ON_t  {A:Type}{lt le: relation A}
+Definition ON_t  {A:Type}{lt : relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := A.
 
-Definition ON_compare {A:Type}{lt le: relation A}
+Definition ON_compare {A:Type}{lt : relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := compare.
 
@@ -46,11 +46,14 @@ Definition ON_lt {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} := lt.
 
+Infix "o<" := ON_lt : ON_scope.
 
 Definition ON_le  {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {st : StrictOrder lt}
            {on : ON lt  compare}  :  relation A := leq lt.
+
+Infix "o<=" := ON_le : ON_scope.
 
 
 Definition measure_lt {A:Type}{lt : relation A}
@@ -62,7 +65,7 @@ Definition measure_lt {A:Type}{lt : relation A}
 
 
   
-Lemma wf_measure  {A:Type}(lt le: relation A)
+Lemma wf_measure  {A:Type}(lt : relation A)
             {compare : A -> A -> comparison}
             {on : ON lt compare}
             {B : Type}
@@ -91,11 +94,11 @@ Definition ZeroLimitSucc_dec {A:Type}{lt : relation A}
 Lemma le_lt_trans {A:Type}(lt : relation A)
             {compare : A -> A -> comparison}
             {on : ON lt compare}: forall p q r: A, leq lt p q -> lt q r ->
-                                                   leq lt p  r.
+                                                   lt p  r.
 Proof.
-  intros * H. rewrite le_lt_eq in *. destruct H.
-  intro. left; now transitivity q.
-  subst; now left.
+  intros * H.  destruct H.
+  intro. now transitivity y.
+  trivial.
 Qed.   
 
 Lemma lt_le_trans {A:Type}(lt: relation A)
