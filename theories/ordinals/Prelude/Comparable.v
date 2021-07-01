@@ -1,21 +1,12 @@
 From Coq Require Import Relations RelationClasses Setoid.
+Require Export MoreOrders.
 
 Class Comparable {A:Type} 
   (lt: relation A)
-  (le: relation A)
   (compare : A -> A -> comparison) :=
   {
-    (*lt_irrefl: forall a,
-      ~ lt a a;
-
-    lt_trans: forall a b c,
-      lt a b -> lt b c -> lt a c;
-     *)
-    sto :> StrictOrder lt;
-    le_lt_eq: forall a b,
-      le a b <-> lt a b \/ a = b;
-
-    compare_correct: forall a b,
+  sto :> StrictOrder lt;
+  compare_correct: forall a b,
       CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
   }.
 
@@ -23,9 +14,9 @@ Section Comparable.
 
   Context {A: Type}
           {lt: relation A}
-          {le: relation A}
           {compare : A -> A -> comparison}
-          {comparable : Comparable lt le compare}.
+          {comparable : Comparable lt compare}.
+  #[local] Notation le := (leq lt) . 
 
   (** For compatibility (provisionnal) *)
   Definition  lt_trans := StrictOrder_Transitive.
@@ -45,7 +36,7 @@ Section Comparable.
     intros Hlt Hle.
     apply le_lt_eq in Hle as [Hgt | Heq].
     - now apply lt_not_gt in Hlt.
-    - subst. now apply StrictOrder_Irreflexive in Hlt.
+    - subst; now apply StrictOrder_Irreflexive in Hlt.
   Qed.
 
   #[using="All"]
@@ -205,14 +196,14 @@ Section Comparable.
 
 
   Lemma le_refl (a: A):
-    le a a.
+    le  a a.
   Proof.
     apply le_lt_eq.
     now right.
   Qed.
 
   Lemma compare_le_iff_refl (a: A):
-    le a a <-> compare a a = Eq.
+    le  a a <-> compare a a = Eq.
   Proof.
     split; intros H.
     - apply compare_refl.
@@ -220,7 +211,7 @@ Section Comparable.
   Qed.
 
   Lemma compare_le_iff (a b: A):
-    le a b <-> compare a b = Lt \/ compare a b = Eq.
+    le  a b <-> compare a b = Lt \/ compare a b = Eq.
   Proof.
     split; intro H.
     - apply le_lt_eq in H as [Hlt | Heq].
@@ -233,14 +224,14 @@ Section Comparable.
 
 
   Lemma compare_ge_iff (a b: A):
-    le b a <-> compare a b = Gt \/ compare a b = Eq.
+    le  b a <-> compare a b = Gt \/ compare a b = Eq.
   Proof.
     rewrite compare_le_iff, compare_lt_iff, compare_gt_iff, !compare_eq_iff.
     intuition.
   Qed.
 
   Lemma le_trans (a b c: A):
-    le a b -> le b c -> le a c.
+    le  a b -> le  b c -> le  a c.
   Proof.
     rewrite !le_lt_eq.
     intros [Hlt_ab | Heq_ab] [Hlt_bc | Heq_bc].
@@ -261,7 +252,7 @@ Section Comparable.
 
 
   Lemma lt_le_trans (a b c: A):
-    lt a b -> le b c -> lt a c.
+    lt a b -> le  b c -> lt a c.
   Proof.
     rewrite le_lt_eq.
     intros Hlt_ab [Heq_bc | Hlt_bc].
@@ -270,14 +261,14 @@ Section Comparable.
   Qed.
 
   Lemma lt_incl_le (a b: A):
-    lt a b -> le a b.
+    lt a b -> le  a b.
   Proof.
     intro H.
     apply le_lt_eq; now left.
   Qed.
 
   Lemma le_not_gt (a b: A):
-    le a b -> ~ lt b a.
+    le  a b -> ~ lt b a.
   Proof.
     intros Hlt Hle.
     now apply lt_not_ge in Hlt.
@@ -310,7 +301,7 @@ Section Comparable.
 
 
   Lemma max_ge_a (a b: A):
-    le b a <-> max a b = a.
+    le  b a <-> max a b = a.
   Proof.
     unfold max.
     split; intro H.
@@ -326,7 +317,7 @@ Section Comparable.
   Qed.
 
   Lemma max_ge_b (a b: A):
-    le a b <-> max a b = b.
+    le  a b <-> max a b = b.
   Proof.
     unfold max.
     rewrite le_lt_eq, <- compare_lt_iff, <- compare_eq_iff.
@@ -350,7 +341,7 @@ Section Comparable.
   Qed.
 
   Lemma le_max_a (a b: A):
-    le a (max a b).
+    le  a (max a b).
   Proof.
     unfold max.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt].
@@ -359,7 +350,7 @@ Section Comparable.
   Qed.
 
   Lemma le_max_b (a b: A):
-    le b (max a b).
+    le  b (max a b).
   Proof.
     rewrite max_comm.
     apply le_max_a.

@@ -517,14 +517,15 @@ Proof.
                         apply oplus_lt1;auto.
 Qed.
 
-Lemma oplus_le : forall a b, nf a -> nf b -> T1.le a (a o+ b).
+
+Lemma oplus_le : forall a b, nf a -> nf b -> leq lt a (a o+ b).
 Proof.
   intros; destruct b.
   - now rewrite oplus_alpha_0. 
   - apply lt_incl_le; apply oplus_lt1; auto with T1.
 Qed.
 
-Lemma oplus_le2 : forall a b, nf a -> nf b -> T1.le b (a o+ b).
+Lemma oplus_le2 : forall a b, nf a -> nf b -> leq lt  b (a o+ b).
 Proof.
   intros; rewrite (@oplus_comm a b);auto.
   now apply oplus_le.
@@ -534,8 +535,8 @@ Qed.
 Lemma oplus_strict_mono_0 :
   forall alpha, nf alpha ->
                 forall a (Ha:nf a) b (Hb: nf b) c (Hc : nf c),
-                  T1.lt a alpha ->  T1.lt c alpha -> T1.lt b c ->
-                  T1.lt (a o+ b) (a o+ c).
+                  lt a alpha ->  lt c alpha -> lt b c ->
+                  lt (a o+ b) (a o+ c).
 Proof with eauto with T1.
   intros alpha ; transfinite_induction_lt alpha.
   clear alpha ; intros alpha Hrec  Halpha; intros.
@@ -648,7 +649,7 @@ Proof with eauto with T1.
              apply compare_eq_iff in H6 as <-.
              apply compare_gt_iff in H4.
              exfalso.
-             apply (lt_trans c2_1 a1 b1) in H4 as Hgt; auto.
+             apply (@lt_trans c2_1 a1 b1) in H4 as Hgt; auto.
              now apply lt_inv_head, le_not_gt in H5.
            }
            {
@@ -733,7 +734,7 @@ Qed.
 
 
 Lemma oplus_strict_mono_r : forall a b c, nf a -> nf b -> nf c ->
-                                          T1.lt b c -> T1.lt (a o+ b) (a o+ c).
+                                          lt b c -> lt (a o+ b) (a o+ c).
 Proof with auto with T1.
   intros.
   apply oplus_strict_mono_0 with (phi0 (max a c)); trivial. 

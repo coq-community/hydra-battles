@@ -19,8 +19,6 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
-Definition le {n:nat} : relation (t n) :=
-  fun alpha beta => lt alpha beta \/ alpha = beta.
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
@@ -88,15 +86,14 @@ Qed.
 
 (** We have now an ordinal notation *)
 
-Global Instance comp n: Comparable (@lt n) (@le n) compare.
+Global Instance comp n: Comparable (@lt n)  compare.
 Proof.
   split.
    - apply sto.
-   - split; intros; assumption. 
    - apply compare_correct. 
 Qed.
 
-Global Instance FinOrd n : ON (@lt n)  (@le n) compare. 
+Global Instance FinOrd n : ON (@lt n)  compare. 
 Proof.
   split.
   - exact (comp n).
