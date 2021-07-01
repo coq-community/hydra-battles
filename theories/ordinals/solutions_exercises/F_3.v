@@ -243,9 +243,10 @@ Section S1.
     - apply Lt_wf.
     - clear alpha; intro alpha.  intros IHalpha Halpha.
       destruct (Zero_Limit_Succ_dec  alpha) as [[H1 | H1] | H1].
-      +  subst.  Search Zero. rewrite Le_iff in Halpha.
+      +  subst; rewrite Le_iff in Halpha.
          decompose [and] Halpha. cbn in Halpha. destruct Halpha
-           as [H1 [H2 H3]]. rewrite le_lt_eq in H2;  destruct H2; try discriminate.
+           as [H1 [H2 H3]].
+         rewrite le_lt_eq in H2; destruct H2; try discriminate.
       + red; intros;  eapply L4; auto.
       + destruct H1; subst alpha.
         assert (H: 3 o<= x \/ x = Fin 2).
