@@ -141,14 +141,23 @@ Proof.
     +  (* p = zero *)
       apply le_0. 
     +  (* p = (S i, 0) *)
-      rewrite <- limit_is_lub.
-      intro k; apply le_lt_trans with (m (iota (l, k))). cbn.
+     assert (is_true (limitb (S l, 0))).
+     reflexivity.
+specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
+  intro.
+   rewrite <- H0.
+     About le_lt_trans.
+      intro k; eapply le_lt_trans.  exact Omega2.
       apply IHij. left; auto.
       red; apply (m_strict_mono m Hvar); auto with hydra.
-      reflexivity.
+      Search iota.
+ simpl canon. 
+Search iota.
+apply step_to_battle. Search step. apply limit_step. 
   - change (i, S k) with (succ (i,k)) at 1.
-    rewrite <- lt_succ_le.
-    apply le_lt_trans with (m (iota (i, k))); auto with hydra.
+    rewrite <- (lt_succ_le (i,k) (m (iota (i, S k)))).
+    eapply (le_lt_trans).
+    exact Omega2. instantiate (1:= (m (iota (i, k)))). 
     apply IHij.
     right; auto.      
     apply (m_strict_mono m Hvar); auto with hydra.
@@ -158,9 +167,10 @@ Qed.
 Theorem Impossible : False.
 Proof.
   destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
-    apply le_lt_trans with (m small_h).
-  -  apply m_ge.
-  -  apply m_lt. 
+    eapply le_lt_trans.
+  exact Omega2.
+    apply m_ge.
+ -  apply m_lt. 
 Qed. 
 
 End Impossibility_Proof.

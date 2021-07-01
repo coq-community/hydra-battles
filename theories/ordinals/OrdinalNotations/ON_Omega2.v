@@ -84,8 +84,10 @@ Proof.
   - inversion_clear 1.
   + left; now left.
   +  now apply le_intror.
-  -  intros; apply lt_le_trans with (n, S n0); auto.
+  -  intros. About lt_le_trans.  eapply lt_le_trans .
+     exact Omega2. instantiate (1 := (n, S n0)). 
     right; auto.
+   assumption.
 Qed.
 
 Lemma lt_succ alpha : alpha o< succ alpha.
@@ -240,7 +242,8 @@ Proof.
       assert ((n,n0) o< s x).
  apply H1.
      rewrite  lt_succ_le in H2.
-     assert (s x o< s x) by (eapply lt_le_trans; eauto).
+     assert (s x o< s x).  { eapply lt_le_trans; eauto.
+                             exact Omega2. }
      destruct (ON_mult.lt_strorder Omega  Omega) as [H4 H5].
      destruct (H4 _ H3).
 Qed.
