@@ -52,7 +52,7 @@ class SnippetExtractor:
         """
         # check
         if snippet_name in self._list_names(self.__snippet_close) or \
-            snippet_name in self._list_names(self.__snippet_open):
+            snippet_name in self._list_names(self.__snippet_open.values()):
             raise SnippetAlreadyExistException(snippet_name, line_number)
 
         # add snippet in open dict

@@ -35,12 +35,13 @@ class Snippet:
         self.content += content_to_add
 
     def _add_tags(self, template: str, tags: List[str], reverse: bool = False):
-        bias = 0
+        indent_func = lambda i: self.INDENT * i
         if reverse:
-            bias = len(tags) - 1
+            max_i = len(tags) - 1
+            indent_func = lambda i: self.INDENT * (max_i - i)
             tags = reversed(tags)
-        self.content += "\n".join(self.INDENT * (bias - i) + template.format(tag=tag)
-                                  for i, tag in enumerate(tags)) + "\n"
+
+        self.content += "\n".join(indent_func(i) + template.format(tag=tag) for i, tag in enumerate(tags)) + "\n"
 
     def close(self, tags: List[str]) -> None:
         """
