@@ -14,8 +14,8 @@ END_STATE = "end"
 STATES_GROUP = fr"({BEGIN_STATE}|{END_STATE})"
 NAME_GROUP = r"(\w+)"
 
-LATEX_TAG_PATTERN = re.compile(rf"\s*\\{STATES_GROUP}{{{NAME_GROUP}}}")
-SNIPPET_PATTERN = re.compile(rf".*\\PY{{c}}{{\(\*\~+{STATES_GROUP}\~+snippet\~+{NAME_GROUP}\~+\*\)}}")
+LATEX_TAG_PATTERN = re.compile(rf"\s*\\{STATES_GROUP}{{{NAME_GROUP}}}(.*)") #"\s*\\(begin|end){(\w+)}"
+SNIPPET_PATTERN = re.compile(rf".*\\PY{{c}}{{\(\*\~*{STATES_GROUP}\~+snippet\~+{NAME_GROUP}\~*\*\)}}")
 
 
 class SnippetExtractor:
@@ -34,9 +34,11 @@ class SnippetExtractor:
         """
         return map(lambda snippet: snippet.name, snippets)
 
-    def _match_tag(self, statement: str, tag: str, line_num: int) -> None:
+    def _match_tag(self, statement: str, tag: str, after: str, line_num: int) -> None:
         if statement == BEGIN_STATE:
             self.stack_tag.append(tag)
+            if (match:=LATEX_TAG_PATTERN.match(after)) is not None:
+                self._match_tag(*match.groups(), line_num)
 
         elif (last_tag := self.stack_tag.pop()) != tag:
             raise Exception(f"tag '{tag}' close before '{last_tag}' at line {line_num}.")
