@@ -72,12 +72,10 @@ Lemma wf_measure  {A:Type}(lt : relation A)
             (m : B -> A) :
   well_founded (measure_lt m). 
 Proof.
-  intro x. eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
-  intros y z H.
-  apply H.
-  eapply Acc_inverse_image.
-  apply wf.
-Defined.
+  intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
+  - intros y z H; apply H.
+  - eapply Acc_inverse_image, wf.
+Qed.
 
 Global Hint Resolve wf_measure : core.
 
@@ -96,9 +94,8 @@ Lemma le_lt_trans {A:Type}(lt : relation A)
             {on : ON lt compare}: forall p q r: A, leq lt p q -> lt q r ->
                                                    lt p  r.
 Proof.
-  intros * H.  destruct H.
-  intro. now transitivity y.
-  trivial.
+  intros * H;  destruct H; [| trivial].
+  - intro; now transitivity y.
 Qed.   
 
 Lemma lt_le_trans {A:Type}(lt: relation A)
@@ -106,7 +103,7 @@ Lemma lt_le_trans {A:Type}(lt: relation A)
             {on : ON lt compare}:
   forall p q r, lt p  q -> leq lt q r -> lt p  r.
 Proof.
-  intros * H H0; rewrite le_lt_eq in H0. destruct H0.
+  intros * H H0; rewrite le_lt_eq in H0;  destruct H0.
   - now  transitivity q.
   - now  subst.
 Qed.   
@@ -117,7 +114,6 @@ Qed.
 Definition bigO `{nA : @ON A ltA compareA}
            (a: A) : Ensemble A :=
   fun x: A => ltA x  a.
-
 
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)
@@ -269,11 +265,11 @@ Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Eq <-> alpha = beta.
 Proof.
   split.
-  intro H; destruct (compare_correct alpha beta); auto; discriminate.
-  intro; subst.
-  destruct (compare_correct beta beta); auto.
-  destruct (StrictOrder_Irreflexive beta); trivial.   
-  destruct (StrictOrder_Irreflexive beta); trivial.   
+  - intro H; destruct (compare_correct alpha beta); auto; discriminate.
+  - intro; subst.
+    destruct (compare_correct beta beta); auto.
+    + destruct (StrictOrder_Irreflexive beta); trivial.   
+    + destruct (StrictOrder_Irreflexive beta); trivial.   
 Qed.
 
 

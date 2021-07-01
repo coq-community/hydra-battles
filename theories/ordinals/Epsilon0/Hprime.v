@@ -19,7 +19,7 @@ our proofs, we are preparing a future version where the names
 From Coq Require Import ArithRing Lia.
 From hydras Require Import  E0    Canon Paths.
 From hydras Require Import Exp2 Iterates Simple_LexProd.
-Import RelationClasses Relations .
+Import RelationClasses Relations.
 
 From Equations Require Import Equations.
 
@@ -263,17 +263,16 @@ Qed.
 
 Lemma H'_Fin_iterate : forall i k,
     H'_ (Fin (S i)) k = iterate (H'_ (Fin 1)) (S i) k.
-  
+Proof.
   intros; repeat rewrite H'_Fin.
-   replace (iterate (H'_ 1) (S i) k) with (iterate S (S i) k).
+  replace (iterate (H'_ 1) (S i) k) with (iterate S (S i) k).
   induction i; cbn.
-   auto.
-simpl Nat.add in IHi.    rewrite IHi.
- f_equal. 
- Search iterate.
-apply iterate_ext.
-intro; rewrite H'_Fin.
-auto. 
+  auto.
+  simpl Nat.add in IHi.    rewrite IHi.
+  f_equal. 
+  apply iterate_ext.
+  intro; rewrite H'_Fin.
+  auto. 
 Qed.
 
 Lemma H'_Omega_term (alpha : E0)  :
@@ -304,12 +303,9 @@ Lemma H'_Phi0_succ_0 : forall k,
   Proof with auto with E0.
 intros k.    
   replace (Phi0 Zero) with (Fin 1).
-  Search H'_ Phi0.
   replace (Phi0 (Succ Zero)) with omega.
-   Search H'_ omega.
  rewrite H'_omega.
    unfold H'_succ_fun.
-   Search (H'_ 1).
    transitivity (iterate S (S k) k).
    replace (S (2 * k))%nat with (S k + k)%nat.
    generalize (S k).   

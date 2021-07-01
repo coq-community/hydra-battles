@@ -727,7 +727,7 @@ Lemma E0_Lt_Succ_inv (alpha beta: E0):
 Proof.
   destruct alpha, beta; unfold Lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
-  destruct H1 as [H3 | H3].
+  destruct H1 as [H3 |].
   - left; split; auto.
   - subst; right; now apply E0_eq_intro.
 Qed.
