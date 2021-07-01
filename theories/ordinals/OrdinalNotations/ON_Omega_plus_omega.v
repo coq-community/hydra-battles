@@ -127,31 +127,28 @@ Definition succ (alpha : t) :=
 Lemma Successor_succ alpha : Successor (succ alpha) alpha.
    destruct alpha;red;cbn; split.
   - constructor; auto.
-  -  destruct z.
-     inversion_clear 1.
-     inversion_clear 1; abstract lia.
-     inversion 2.
-  -  constructor; auto.
-  - destruct z.
+  - destruct z as [n0 | n1]. 
+    inversion_clear 1.
+    inversion_clear 1; abstract lia.
+    inversion 2.
+  - constructor; auto.
+  - destruct z as [n0 | n1].
     inversion_clear 1.
     inversion_clear 1.
     inversion_clear 1; abstract lia.
 Qed.
-
-
 
 Lemma Successor_correct alpha beta : Successor beta alpha <->
                                      beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.
-    apply Successor_inv1 in H. subst. reflexivity.
+    apply Successor_inv1 in H; now  subst. 
     destruct (Successor_inv3  _ _ H).
     destruct (Successor_inv4  _ _ H).
     apply Successor_inv2 in  H; now subst.
   - intro;subst; now apply Successor_succ.
 Qed.
-
 
 Definition succb (alpha: t) : bool
   := match alpha with
@@ -180,10 +177,9 @@ Qed.
 
 Lemma omega_not_succ : forall alpha, ~ Successor omega alpha.
 Proof.
- destruct alpha.
-  apply Successor_inv3.
-  intro H; apply Successor_inv2 in H.
-  discriminate.
+ destruct alpha as [n | n].
+ -  apply Successor_inv3.
+ -  intro H; apply Successor_inv2 in H; discriminate.
 Qed.
 
 Lemma Least_is_0 (alpha:t) : Least alpha <-> alpha = 0.
@@ -205,8 +201,6 @@ Proof.
      +   constructor.
          constructor.
 Qed.
-
-
 
 Lemma ZLS_dec (alpha : t) :
   {alpha = 0} +
@@ -356,11 +350,12 @@ Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
    - rewrite (lt_omega alpha) in H; destruct H as [n Hn]; subst; split.
      +  intro H; generalize (H n).
         intro; elimtype False. { inversion H0. lia. }
-     + inversion 1;  inversion H0.
+     + inversion 1; inversion H0.
  Qed.
 
 Instance Incl : SubON Omega Omega_plus_Omega omega fin.
-split.
+Proof.
+  split.
 - intros; reflexivity.
 - constructor.
 - inversion 1; subst.
