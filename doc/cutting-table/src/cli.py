@@ -22,6 +22,11 @@ def build_parser() -> argparse.ArgumentParser:
                         type=Path,
                         help=OUPUT_DIR_HELP)
 
+    DUMP_LATEX_HELP = "dump latex"
+    parser.add_argument("-d", "--dump-complete-latex",
+                        action="store_true",
+                        help=DUMP_LATEX_HELP)
+
     # serapi (copy from alectryon.cli)
     SUBP_HELP = "Pass arguments to the SerAPI process"
     subp = parser.add_argument_group("Subprocess arguments", SUBP_HELP)
@@ -69,6 +74,8 @@ def post_process_arguments(args: argparse.Namespace) -> argparse.Namespace:
         args.sertop_args.extend(("-Q", ",".join(pair)))
 
     return args
+
+
 def parse_args() -> argparse.Namespace:
     """
     parse argument
@@ -82,22 +89,36 @@ def parse_args() -> argparse.Namespace:
 EXTENSION_LATEX = ".tex"
 
 
+def get_path_latex(output_dir: Path, name: str):
+    return output_dir / (name + EXTENSION_LATEX)
+
+
+def make_latex_file(content: str, path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, 'w') as file:
+        file.write(content)
+
+
 def main():
-    from .extract import extract_snippets
-    from .docutils import coq_rst_to_latex_snippet, register_docutils
+    from .Extractor import SnippetExtractor
+    from .docutils import CoqToLatexReader, register_docutils
     args = parse_args()
-    list_snippets = extract_snippets(args.input)
+    input_name = args.input.stem
+    output_dir = args.output_dir / input_name
 
-    output_dir = args.output_dir / args.input.stem
-    if list_snippets and not output_dir.exists():
-        print(f"Directory {output_dir} not exist, create it.")
-        output_dir.mkdir(parents=True)
-
+    # make latex
     register_docutils(args.sertop_args)
-    for snippet in list_snippets:
-        path = output_dir / (snippet.name + EXTENSION_LATEX)
+    reader = CoqToLatexReader(args.input)
+    snippet_extractor = SnippetExtractor(reader)
+
+    # dump latex to debug
+    if args.dump_complete_latex:
+        path_latex = get_path_latex(output_dir, input_name)
+        print(f"Make latex file {path_latex}")
+        make_latex_file(reader.content_latex, path_latex)
+
+    # write snippets files
+    for snippet in snippet_extractor.extract():
+        path = get_path_latex(output_dir, snippet.name)
         print(f"extract snippet '{snippet.name}', dump file {path}.")
-        coq_rst = str(snippet)
-        latex = coq_rst_to_latex_snippet(coq_rst)
-        with open(path, 'w') as file:
-            file.write(latex)
+        make_latex_file(str(snippet), path)

@@ -1,5 +1,10 @@
-import re
+from pathlib import Path
 
+from .Reader import Reader
+
+
+LATEX_TAG_BEGIN_FORMAT = "\\begin{{{tag}}}"
+LATEX_TAG_END_FORMAT = "\\end{{{tag}}}"
 
 def register_docutils(sertop_args):
     """
@@ -47,11 +52,21 @@ def coq_rst_to_latex(source: str) -> str:
         enable_exit_status=True).decode("utf-8")
 
 
-PATTERN_BODY = re.compile(r"\\begin\{document\}(.+)\\end\{document\}")
-BEGIN_DOC = r"\begin{document}"
-END_DOC = r"\end{document}"
-def coq_rst_to_latex_snippet(source: str):
-    latex_source = coq_rst_to_latex(source)
-    start_index = latex_source.find(BEGIN_DOC) + len(BEGIN_DOC)
-    end_index = latex_source.find(END_DOC, start_index)
-    return latex_source[start_index:end_index]
+class CoqToLatexReader(Reader):
+    DOCUMENT_BEGIN = LATEX_TAG_BEGIN_FORMAT.format(tag="document")
+    DOCUMENT_END = LATEX_TAG_END_FORMAT.format(tag="document")
+
+    def __init__(self, path_coq: Path):
+        with open(path_coq, 'r') as file:
+            self.content_coq = file.read()
+        self.content_latex = coq_rst_to_latex(self.content_coq)
+
+    def __iter__(self):
+        start = False
+        for num, line in enumerate(self.content_latex.split('\n'), 1):
+            if line == self.DOCUMENT_BEGIN:
+                start = True
+            elif line == self.DOCUMENT_END:
+                return
+            elif start:
+                yield num, line + "\n"
