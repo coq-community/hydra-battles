@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Compile Coq-Doc
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: coq-community/docker-coq-action@v1
         with:
           custom_image: ${{ matrix.image }}
@@ -32,7 +32,7 @@ jobs:
             endGroup
           script: |
             startGroup "Build documentation"
-              make -j2 html
+              make -j`nproc` html
             endGroup
           uninstall: |
             startGroup "Clean"
