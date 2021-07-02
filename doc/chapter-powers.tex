@@ -23,7 +23,7 @@ $n$ is a natural number and $x$ belongs to some type for which a multiplication 
 
 
 \emph{From Module 
-\href{../theories/html/hydras.additions.FirstSteps.html}{\texttt{additions.FirstSteps}}}
+\href{../theories/html/additions.FirstSteps.html}{\texttt{additions.FirstSteps}}}
 \label{sect: power-definitions}
 
 \begin{Coqsrc}
@@ -155,7 +155,7 @@ section open in~\vref{sect: power-definitions}.
 \vspace{4pt}
 
 \emph{From Module
-\href{../theories/html/hydras.additions.FirstSteps.html}{additions.FirstSteps}}
+\href{../theories/html/additions.FirstSteps.html}{additions.FirstSteps}}
 
 
 \begin{Coqsrc}
@@ -313,7 +313,7 @@ F_n & = F_{n-1} + F_{n-2} \quad (n \geq 2)
 In \coq{}, one can define this function by simple recursion.
 
 \emph{From Library
-\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}}
+\href{../theories/html/additions.Fib2.html}{additions.Fib2}}
 
 \begin{Coqsrc}
 Fixpoint fib (n:nat) : N :=
@@ -439,7 +439,7 @@ So, let us define a binary operation, which makes $\mathbb{N}\times\mathbb{N}$ a
 
 
 \emph{From Library
-\href{../theories/html/hydras.additions.Fib2.html}{additions.Fib2}} 
+\href{../theories/html/additions.Fib2.html}{additions.Fib2}} 
 
 \emph{The \texttt{Monoid} type class is defined 
 page~\pageref{sect:monoid-def}.}
@@ -646,7 +646,7 @@ for multiplication in any algebraic structure.
 First, we associate a class to the notion of \emph{multiplication} 
 on any type $A$.
 
-\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions/Monoid\_def.v}.}
+\emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions/Monoid\_def.v}.}
 
 \begin{Coqsrc}
 Class Mult_op (A:Type) := mult_op : A -> A -> A.  
@@ -698,7 +698,7 @@ correctly read as an application of \texttt{mult\_op}. Nevertheless
 this term is convertible with \texttt{Nat.mul 3 4}, as shown by the 
 interaction below.
 
-\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
+\emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Set Printing All.
@@ -723,7 +723,7 @@ as \linebreak \texttt{@mult\_op string  {\color{darkred}?X} "abc"  "def"}, then 
 \texttt{string\_op}.
 
 
-\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
+\emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Require Import String.
@@ -751,7 +751,7 @@ For instance, in Sect.~\vref{nat-monoids}, we consider various monoids on types
 We are now ready to  give a definition of the \texttt{Monoid} class, using
 \texttt{*} as an infix operator in scope \coqscope{M} for the monoid  multiplication.
 
-The following class definition, from Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def},
+The following class definition, from Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def},
 is parameterized with some type $A$,
 a multiplication (called \texttt{op} in the definition), and a neutral element
 $\mathds{1}$ (called \texttt{one} in the definition).
@@ -779,7 +779,7 @@ one has to provide proofs of ``monoid axioms'' \texttt{ op\_assoc},
 
 Let us show various instances, which will be used in further proofs and examples.
 Complete definitions and proofs are given in 
-File~\href{../theories/html/hydras.additions.Monoid_instances.html}{additions/Monoid\_instances.v}.
+File~\href{../theories/html/additions.Monoid_instances.html}{additions/Monoid\_instances.v}.
 
 
 \subsubsection{Monoid on \texttt{Z}}
@@ -961,7 +961,7 @@ First, let us define an operational type class for equivalence relations:
 \vspace{4pt}
 
 \noindent
-\emph{From Module \href{../theories/html/hydras.additions.Monoid_def.html}{additions.Monoid\_def}}
+\emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
 \begin{Coqsrc}
 Class Equiv A := equiv : relation A.
@@ -1039,7 +1039,7 @@ Coercion Monoid_EMonoid : Monoid >-> EMonoid.
 
 %ici% 
 
-\emph{From Module \href{../theories/html/hydras.additions.Monoid_instances.html}{additions.Monoid\_instances}}
+\emph{From Module \href{../theories/html/additions.Monoid_instances.html}{additions.Monoid\_instances}}
 
 \begin{Coqsrc}
 Check NMult : EMonoid  N.mul 1%N eq.
@@ -1130,7 +1130,7 @@ Compute (211 * 67)%M.
 
 \section{Computing powers in any EMonoid}
 
-The  module \href{../theories/html/hydras.additions.Pow.html}{additions.Pow} defines two functions for exponentiation on any 
+The  module \href{../theories/html/additions.Pow.html}{additions.Pow} defines two functions for exponentiation on any 
 \texttt{EMonoid}  on carrier $A$.
 They are essentially the same as in Sect.~\vref{sect: power-definitions}. The main difference lies in the arguments of the functions, which now contain
  an instance~\texttt{M} of class \texttt{EMonoid}. 
@@ -1182,7 +1182,7 @@ functions between types \texttt{Z} and \texttt{int31}, used for making it possib
 
 \vspace{4pt}
 
-From Module~\href{../theories/html/hydras.additions.Demo_power.html}{additions.Demo\_power}
+From Module~\href{../theories/html/additions.Demo_power.html}{additions.Demo\_power}
 
 
 
@@ -1218,7 +1218,7 @@ Please find below the implementation of binary exponentiation using type classes
 % associated with equalities \ref{binary-eq4} to \ref{binary-eq6} and a main function \texttt{Pos\_bpow} associated with equalities \ref{binary-eq1} to \ref{binary-eq3}.
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}}
+\emph{From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}}
 
 \begin{Coqsrc}
 Fixpoint binary_power_mult `{M: @EMonoid A E_op E_one E_eq}
@@ -1244,7 +1244,7 @@ It is easy to extend \texttt{Pos\_bpow}'s domain to the type of all
 natural numbers:
 
 \vspace{4pt}
-From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}
+From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
 \begin{Coqsrc}
 Definition N_bpow {A} `{M: @EMonoid A E_op E_one E_eq} x (n:N) := 
@@ -1273,7 +1273,7 @@ statement (in the context of an \texttt{EMonoid} on type \texttt{A}).
 
 
 \vspace{4pt}
-From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}
+From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
 \begin{Coqsrc}
 Lemma N_bpow_ok : 
@@ -1293,7 +1293,7 @@ form a kind of  \emph{data refinement} \cite{Abrial:2010:MES:1855020, cohen:hal-
 
 \subsection{Proof of correctness of binary exponentiation w.r.t. the function \texttt{power}}
 Section \texttt{M\_given} of Module 
-~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow} is devoted to the proof 
+~\href{../theories/html/additions.Pow.html}{additions.Pow} is devoted to the proof 
 of properties of the functions above.
 Note that properties of \texttt{power} refer to the \emph{specification} of exponentiation, and can be applied for proving correctness of any implementation.
 
@@ -1379,7 +1379,7 @@ exponent \texttt{p:positive}, its basic properties are proved by induction
 along \texttt{positive}'s constructors.
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.additions.Pow.html}{additions.Pow}}
+\emph{From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}}
 
 \begin{Coqsrc}
 Lemma binary_power_mult_ok :
@@ -1704,7 +1704,7 @@ Let  \texttt{A} be some type;  a \emph{computation} on \texttt{A} is
 
 
 
-From Module~\href{../theories/html/hydras.additions.Addition_Chains.html}{additions.Addition\_Chains}
+From Module~\href{../theories/html/additions.Addition_Chains.html}{additions.Addition\_Chains}
 
 \begin{Coqsrc}
 Inductive computation {A:Type}  : Type :=
@@ -1940,7 +1940,7 @@ Compute chain_trace C87.
 \end{Coqanswer}
   
 
-\textbf{Note} A first solution (in ~\href{../theories/html/hydras.additions.Trace_exercise.html}{additions.Trace\_exercise}) consists in the definition of 
+\textbf{Note} A first solution (in ~\href{../theories/html/additions.Trace_exercise.html}{additions.Trace\_exercise}) consists in the definition of 
 a (non-associative) multiplication over a type of trace, and apply the function
 \texttt{chain\_execute} as if it were computing a power of \texttt{(1,Init)}.
 
@@ -2297,7 +2297,7 @@ Qed.
 \end{Coqsrc}
 
 This tactic is not adapted to much bigger exponents. In \linebreak
- Module~\href{../theories/html/hydras.additions.Euclidean_Chains.html}{Euclidean\_Chains},
+ Module~\href{../theories/html/additions.Euclidean_Chains.html}{Euclidean\_Chains},
  for instance, we tried to apply this tactic for proving the correctness 
 of a chain associated with the exponent $45319$. 
  We had to interrupt the prover, which 
@@ -2862,7 +2862,7 @@ with any correct chain for $n$, returns a correct chain for $3n$.
 
 \paragraph{Note:}
 All the \coq{} material described in this section is available on 
- Module~\href{../theories/html/hydras.additions.Euclidean_Chains.html}{additions/Euclidean\_Chains.v}
+ Module~\href{../theories/html/additions.Euclidean_Chains.html}{additions/Euclidean\_Chains.v}
 
 \subsection{Chains and continuations : f-chains}
 
@@ -4098,7 +4098,7 @@ is called a \emph{strategy}.
 
 \vspace{4pt}
 \noindent
-From ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy}.
+From ~\href{../theories/html/additions.Dichotomy.html}{additions.Dichotomy}.
 \begin{Coqsrc}
 Class Strategy (gamma : positive -> positive):=
 {
@@ -4123,7 +4123,7 @@ Thus, a chain for $n=87$ can be built from a chain computing both $x^7$ and $x^{
 and a chain that raises its argument to its $8-th$ power.
 
 
-This strategy is defined in Module ~\href{../theories/html/hydras.additions.Dichotomy.html}{additions.Dichotomy}.
+This strategy is defined in Module ~\href{../theories/html/additions.Dichotomy.html}{additions.Dichotomy}.
 
 
 \begin{Coqsrc}
@@ -4145,7 +4145,7 @@ Instance Dicho_strat : Strategy dicho.
 \subsection{Other strategies}
 For comparison's sake, we define two other strategies, much simpler but statically less efficient than the dichotomic strategy.
 
-\emph{From Module~\href{../theories/html/hydras.additions.BinaryStrat.html}{additions.BinaryStrat}.}
+\emph{From Module~\href{../theories/html/additions.BinaryStrat.html}{additions.BinaryStrat}.}
 
 \begin{Coqsrc}
 Definition half (p:positive) :=
@@ -4491,7 +4491,7 @@ Figures~\vref{fig:F3-as-dag} to \vref{fig:FFK} suggest that any computation foll
 
 In \coq{}, we define the instructions as the four constructors of an inductive type.
 
-From Module~\href{../theories/html/hydras.additions.AM.html}{additions.AM}
+From Module~\href{../theories/html/additions.AM.html}{additions.AM}
 
 \begin{Coqsrc}
 (** basic instructions *)
@@ -4538,7 +4538,7 @@ For instance the chain of Fig.~\vref{fig:C87} can be represented with the follow
 \end{Coqsrc}
 
 
-In the library~\href{../theories/html/hydras.additions.AM.html}{additions.AM},
+In the library~\href{../theories/html/additions.AM.html}{additions.AM},
 we define a chain generator for this data structure. 
 Please note that many proof scripts are copied verbatim from 
 \texttt{Euclidean\_Chains} into \texttt{AM}. Removing such redundancies is left as a project.

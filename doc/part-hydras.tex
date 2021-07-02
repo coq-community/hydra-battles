@@ -2263,7 +2263,8 @@ Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
 \end{Coqsrc}
 
 \vspace{4pt}
-\noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}}
+\noindent\emph{From
+Library~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{OrdinalNotations.ON\_Generic}}
 
 \label{types:ON}
 \index{hydras}{Library OrdinalNotations!Type classes!ON}
@@ -2344,7 +2345,7 @@ A simple example of application is given in Sect.~\vref{sect:merge-example}.
 The simplest example of ordinal notation is built over the type \texttt{nat} of \coq's standard library. We just have to apply already proven lemmas about Peano numbers.
 
 \vspace{4pt}
-\noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations/ON_Omega.html}{OrdinalNotations.ON\_Omega}}
+\noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_Omega.html}{OrdinalNotations.ON\_Omega}}
 
 
 \begin{Coqsrc}
@@ -2386,7 +2387,7 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 
 
 \vspace{4pt}
-\noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations/ON_plus.html}{OrdinalNotations.ON\_plus}}
+\noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_plus.html}{OrdinalNotations.ON\_plus}}
 
 
 \begin{Coqsrc}
@@ -2612,7 +2613,7 @@ Definition Limit {sto : StrictOrder lt}  (x:A)  :=
 Prove, that, in any ordinal notation system, every ordinal has at most one predecessor, and at most one successor. 
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/predSuccUnicity.v}.}
+\href{https://github.com/coq-community/hydra-battles/blob/master/exercises/ordinals/predSuccUnicity.v}{exercises/ordinals/predSuccUnicity.v}.}
 
 \end{exercise}
 
@@ -2623,7 +2624,7 @@ then for any $\gamma$, $\gamma<\beta$ implies
 $\gamma\leq\alpha$.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/lt_succ_le.v}.}
+\href{https://github.com/coq-community/hydra-battles/blob/master/exercises/ordinals/lt_succ_le.v}{exercises/ordinals/lt\_succ\_le.v}.}
 \end{exercise}
 
 
@@ -2923,7 +2924,8 @@ $\omega$ and $\omega\times 2$.
 
 
 
-The detailed  proof script is in the file \url{../theories/html/hydras.Hydra.Omega2_Small.html}.
+The detailed  proof script is in the file
+\href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/Hydra/Omega2_Small.v}{theories/ordinals/Hydra/Omega2\_Small.v}.
 
 \subsubsection{Preliminaries}
 Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for proving the   termination of all hydra battles.
@@ -4440,7 +4442,7 @@ and only if for all $\beta<\alpha$, the interval $[\beta,\alpha)$ is
 infinite.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/Limit_Infinity.v}.}
+     \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/Limit_Infinity.v}{exercises/ordinals/Limit\_Infinity.v}.}
  \end{exercise}
 
 
@@ -4564,7 +4566,7 @@ $\omega\leq \alpha$ if and only if, for any natural number $i$,
 $i+\alpha=\alpha$.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/ge_omega_iff.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/ge_omega_iff.v}{exercises/ordinals/ge\_omega\_iff.v}.}
 \end{exercise}
 
 \index{hydras}{Exercises} 
@@ -4600,7 +4602,7 @@ Prove that the \emph{total} order \texttt{lt} on \texttt{T1} is not well-founded
 which are not in Cantor normal form.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/T1_ltNotWf.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/T1_ltNotWf.v}{exercises/ordinals/T1\_ltNotWf.v}.}
 \end{exercise}
 
 % \subsubsection{The total order \texttt{lt} on \texttt{T1} is \emph{not} well-founded}
@@ -4701,7 +4703,8 @@ term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a st
 \end{Coqsrc}
 
 The following lemma is an application of the strict inequality 
-\showmath{\alpha < \omega ^\alpha}. If \showmath{\alpha} is strongly accessible, then, by definition, \showmath{\omega^\alpha} is accessible, thus \showmath{\alpha} is \emph{a fortiori} accessible.
+$\alpha < \omega ^\alpha$. If $\alpha$ is strongly accessible, then, by definition,
+$\omega^\alpha$ is accessible, thus $\alpha$ is \emph{a fortiori} accessible.
 
 \begin{Coqsrc}
  Lemma Acc_strong_stronger : forall alpha, 
@@ -4714,7 +4717,7 @@ The following lemma is an application of the strict inequality
 Qed.
 \end{Coqsrc}
 
-Thus, it remains to prove that every ordinal strictly less than \showmath{\epsilon_0} 
+Thus, it remains to prove that every ordinal strictly less than $\epsilon_0$
 is strongly accessible.
 
 % \subsubsection{Structure of the proof of well-foundedness of \texttt{LT}}
@@ -4724,7 +4727,7 @@ is strongly accessible.
 \paragraph{A helper}
 \label{sec:orgheadline79}
 
-First, we prove that, for  any \texttt{LT}-accessible term \showmath{\alpha}, \showmath{\alpha} is 
+First, we prove that, for  any \texttt{LT}-accessible term $\alpha$, $\alpha$ is 
 strongly accessible too (\emph{i.e.} any well formed
 term (\texttt{ocons $\alpha$ $n$ $\beta$})  is accessible).
 
@@ -4734,7 +4737,7 @@ Lemma Acc_implies_Acc_strong :
 \end{Coqsrc}
 
 
-The proof is structured as an induction on \showmath{\alpha}'s accessibility. Let us consider
+The proof is structured as an induction on $\alpha'$s accessibility. Let us consider
 any  accessible term $\alpha$.
 
 
@@ -4805,7 +4808,9 @@ Ltac transfinite_induction alpha :=
 
 \begin{remark}
 \label{remark:a3pat}
-The alternate proof of well-foundedness using \'Evelyne Contejean's work on recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the library \href{../theories/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0rpo}.
+The alternate proof of well-foundedness using \'Evelyne Contejean's work on
+    recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the
+    library \href{../theories/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0.Epsilon0rpo}.
  \end{remark}
 
 
@@ -4820,7 +4825,7 @@ Instance Epsilon0 : ON Lt compare.
 \end{Coqsrc}
 
 
-\emph{From Module~\href{../theories/html/hydras.Schutte.Schutte.Correctness_E0.html}{Schutte.Schutte.Correctness\_E0}}
+\emph{From Module~\href{../theories/html/hydras.Schutte.Correctness_E0.html}{Schutte.Correctness\_E0}}
 
 \begin{Coqsrc}
 Instance Epsilon0_correct :
@@ -4837,450 +4842,450 @@ Prove that \texttt{Omega2} is a sub-notation of \texttt{Epsilon0}.
 Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Epsilon0}.
 
 \textbf{Hint}. You may use the following definition (in 
-\href{../theories/html/hydras.OrdinalNotations.Definitions.html}{OrdinalNotations.Definitions}).
+    \href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{OrdinalNotations.ON\_Generic}).
 
-\begin{Coqsrc}
-Definition SubON_same_op  `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
-       {iota : A -> B} 
-       {alpha: B}
-       {_ : SubON OA OB alpha iota}
-       (f : A -> A -> A)
-       (g : B -> B -> B)
-  :=
-  forall x y,  iota (f x y) = g (iota x) (iota y).
-\end{Coqsrc}
+    \begin{Coqsrc}
+    Definition SubON_same_op  `{OA : @ON A ltA  compareA}
+           `{OB : @ON B ltB  compareB}
+           {iota : A -> B} 
+           {alpha: B}
+           {_ : SubON OA OB alpha iota}
+           (f : A -> A -> A)
+           (g : B -> B -> B)
+      :=
+      forall x y,  iota (f x y) = g (iota x) (iota y).
+    \end{Coqsrc}
 
-\end{project}
+    \end{project}
 
-\index{hydras}{Projects}
-\begin{project}
-The class \texttt{ON} of ordinal notations has been defined long after this 
-chapter, and is not used in the development of the type \texttt{E0} yet.
-A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
+    \index{hydras}{Projects}
+    \begin{project}
+    The class \texttt{ON} of ordinal notations has been defined long after this 
+    chapter, and is not used in the development of the type \texttt{E0} yet.
+    A better integration of both notions should simplify the development on ordinals in Cantor normal form. This integration is planned for the future versions.
 
-\end{project}
+    \end{project}
 
-\index{hydras}{Projects}
-\begin{project}
-  Prove that ordinal multiplication is left-distributive over ordinal addition; that is:
-  $$\forall \alpha \, \beta \, \gamma < \epsilon_0, \alpha\times(\beta+\gamma) = \alpha\times\beta+ \alpha\times \gamma$$
+    \index{hydras}{Projects}
+    \begin{project}
+      Prove that ordinal multiplication is left-distributive over ordinal addition; that is:
+      $$\forall \alpha \, \beta \, \gamma < \epsilon_0, \alpha\times(\beta+\gamma) = \alpha\times\beta+ \alpha\times \gamma$$
 
-\end{project}
-\section{A variant for hydra battles}
+    \end{project}
+    \section{A variant for hydra battles}
 
-In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
-In order to make such a variant easy to define (for instance by a structural recursion), we introduce a variant of addition, which, contrary to
-$+$, is commutative and strictly monotonous in both of its arguments. This last property makes it possible to prove that our function is 
-truly a variant for hydra battles (in Sect.~\vref{sect:variant-decr}).
+    In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
+    In order to make such a variant easy to define (for instance by a structural recursion), we introduce a variant of addition, which, contrary to
+    $+$, is commutative and strictly monotonous in both of its arguments. This last property makes it possible to prove that our function is 
+    truly a variant for hydra battles (in Sect.~\vref{sect:variant-decr}).
 
-\subsection{Natural sum (a.k.a. Hessenberg's  sum)}
-\label{sec:orgheadline87}
-\label{hydra-variant}
+    \subsection{Natural sum (a.k.a. Hessenberg's  sum)}
+    \label{sec:orgheadline87}
+    \label{hydra-variant}
 
-Natural sum (Hessenberg's  sum) is a commutative and monotonous version of
-addition. It is used as an auxiliary operation  for defining variants
-for hydra battles, where Hercules is allowed to chop off any  head of the hydra.
+    Natural sum (Hessenberg's  sum) is a commutative and monotonous version of
+    addition. It is used as an auxiliary operation  for defining variants
+    for hydra battles, where Hercules is allowed to chop off any  head of the hydra.
 
-In the litterature, the natural sum of ordinals \(\alpha\) and \(\beta\) 
-is often denoted by \(\alpha \# \beta\)  or  \(\alpha \oplus  \beta\).
-Thus we called \texttt{oplus} the associated \emph{Coq} function.
+    In the litterature, the natural sum of ordinals \(\alpha\) and \(\beta\) 
+    is often denoted by \(\alpha \# \beta\)  or  \(\alpha \oplus  \beta\).
+    Thus we called \texttt{oplus} the associated \emph{Coq} function.
 
-\subsubsection{Definition of \texttt{oplus}}
-\label{sec:orgheadline84}
-%\index{Functions!oplus @ oplus (Hessenberg commutative sum)}
+    \subsubsection{Definition of \texttt{oplus}}
+    \label{sec:orgheadline84}
+    %\index{Functions!oplus @ oplus (Hessenberg commutative sum)}
 
-The definition of \texttt{oplus} is recursive in both of its 
-arguments and uses  the same pattern as for the \texttt{merge} function on lists of library
-\texttt{Coq.Sorting.Mergesort}.
+    The definition of \texttt{oplus} is recursive in both of its 
+    arguments and uses  the same pattern as for the \texttt{merge} function on lists of library
+    \texttt{Coq.Sorting.Mergesort}.
 
-\begin{enumerate}
-\item Define a nested recursive function, using the \texttt{Fix} 
-    construct
+    \begin{enumerate}
+    \item Define a nested recursive function, using the \texttt{Fix} 
+        construct
 
-\item Build a principle of induction dedicated to \texttt{oplus}
+    \item Build a principle of induction dedicated to \texttt{oplus}
 
-\item Establish equations associated to each case of the definition.
-\end{enumerate}
+    \item Establish equations associated to each case of the definition.
+    \end{enumerate}
 
-\paragraph{Nested recursive definition}
-\label{sec:orgheadline83}
+    \paragraph{Nested recursive definition}
+    \label{sec:orgheadline83}
 
-The following definition is composed of 
-\begin{itemize}
-\item A main function \texttt{oplus}, structurally recursive in its 
-first argument \texttt{alpha}
-\item An auxiliary function \texttt{oplus\_aux} within the scope of \texttt{alpha},
-structurally recursive in its argument \texttt{beta};  \texttt{oplus\_aux beta} 
-   is supposed to compute  \texttt{oplus alpha beta}.
-\end{itemize}
-  
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.Hessenberg.html\#oplus}{Epsilon0.Hessenberg}}
+    The following definition is composed of 
+    \begin{itemize}
+    \item A main function \texttt{oplus}, structurally recursive in its 
+    first argument \texttt{alpha}
+    \item An auxiliary function \texttt{oplus\_aux} within the scope of \texttt{alpha},
+    structurally recursive in its argument \texttt{beta};  \texttt{oplus\_aux beta} 
+       is supposed to compute  \texttt{oplus alpha beta}.
+    \end{itemize}
+      
+    \vspace{4pt}
+    \emph{From Module~\href{../theories/html/hydras.Epsilon0.Hessenberg.html\#oplus}{Epsilon0.Hessenberg}}
 
-\label{sect:infix-oplus}
+    \label{sect:infix-oplus}
 
-\begin{Coqsrc}
-Fixpoint oplus (alpha beta : T1) : T1 :=
-  let fix oplus_aux beta {struct beta} :=
-      match alpha, beta with
-        | zero, _ => beta
-        | _,  zero => alpha
-        | ocons a1 n1 b1, ocons a2 n2 b2 =>
-          match compare a1 a2 with
-            |  Gt => ocons a1 n1 (oplus b1 beta)
-            |  Lt => ocons a2 n2 (oplus_aux b2)
-            |  Eq => ocons a1 (S (n1 + n2)%nat) (oplus b1 b2)
+    \begin{Coqsrc}
+    Fixpoint oplus (alpha beta : T1) : T1 :=
+      let fix oplus_aux beta {struct beta} :=
+          match alpha, beta with
+            | zero, _ => beta
+            | _,  zero => alpha
+            | ocons a1 n1 b1, ocons a2 n2 b2 =>
+              match compare a1 a2 with
+                |  Gt => ocons a1 n1 (oplus b1 beta)
+                |  Lt => ocons a2 n2 (oplus_aux b2)
+                |  Eq => ocons a1 (S (n1 + n2)%nat) (oplus b1 b2)
+              end
           end
-      end
-  in oplus_aux beta.
+      in oplus_aux beta.
 
-Infix "o+" := oplus  (at level 50, left associativity).
-\end{Coqsrc}
-
-
-The reader will note that each recursive call of the functions
-\texttt{oplus} and \texttt{oplus\_aux} satisfies \emph{Coq}'s constraint
-on recursive definitions. The function \texttt{oplus} is recursively called on a sub-term of its first argument,
-and \texttt{oplus\_aux} on a sub-term of its unique argument.
-Thus, \texttt{oplus}'s definition is accepted by \coq{} as a structurally recursive function.
-
-\subsubsection{Rewriting lemmas}
-\label{sec:orgheadline86}
-
-\emph{Coq}'s constraints on recursive definitions result in 
-the quite  complex form of \texttt{oplus}'s definition.
-Proofs of properties of this function can be simpler if we
- derive a few  rewriting lemmas that will help to simplify 
-expressions of the form (\texttt{oplus $\alpha$ $\beta$}).
-
-A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
-definition. They can be proved almost immediately.
-
-\begin{Coqsrc}
-Lemma oplus_alpha_0 (alpha : T1) : alpha o+ zero = alpha.
-Proof.
-  destruct alpha; reflexivity.
-Qed.
-
-Lemma oplus_0_beta (beta : T1): zero o+ beta = beta.
-Proof.
-  destruct beta; reflexivity.
-Qed.
-\end{Coqsrc}
+    Infix "o+" := oplus  (at level 50, left associativity).
+    \end{Coqsrc}
 
 
-% \subsubsection{A hand-made induction principle}
-% \label{sec:orgheadline85}
+    The reader will note that each recursive call of the functions
+    \texttt{oplus} and \texttt{oplus\_aux} satisfies \emph{Coq}'s constraint
+    on recursive definitions. The function \texttt{oplus} is recursively called on a sub-term of its first argument,
+    and \texttt{oplus\_aux} on a sub-term of its unique argument.
+    Thus, \texttt{oplus}'s definition is accepted by \coq{} as a structurally recursive function.
 
-% \index{Coq!Commands!Functional Scheme}
+    \subsubsection{Rewriting lemmas}
+    \label{sec:orgheadline86}
 
-% \emph{Coq} contains a command  \texttt{Functional Scheme} that 
-% generates induction principles which correspond to recursive functions.
-% Unfortunately, the current version ( \texttt{8.11.0} ) doesn't work on \texttt{oplus},
-% probably because of the inner \texttt{Fix}.
+    \emph{Coq}'s constraints on recursive definitions result in 
+    the quite  complex form of \texttt{oplus}'s definition.
+    Proofs of properties of this function can be simpler if we
+     derive a few  rewriting lemmas that will help to simplify 
+    expressions of the form (\texttt{oplus $\alpha$ $\beta$}).
 
-% \begin{Coqsrc}
-% Functional Scheme oplus_ind := Induction for oplus Sort Prop.
-% \end{Coqsrc}
+    A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
+    definition. They can be proved almost immediately.
 
-% \begin{Coqanswer}
-% Error: Anomaly "todo." Please report at http://coq.inria.fr/bugs/.
-% \end{Coqanswer}
+    \begin{Coqsrc}
+    Lemma oplus_alpha_0 (alpha : T1) : alpha o+ zero = alpha.
+    Proof.
+      destruct alpha; reflexivity.
+    Qed.
 
-
-% Fortunately, it's a good exercise for a semi-experienced user, to write
-% her/him-self induction principles similar to the ones returned by
-% \texttt{Functional Scheme}.
-
-% \begin{itemize}
-% \item First, we choose to write a version for sort \texttt{Type}, since versions
-% for sorts \texttt{Prop} and \texttt{Set} can be easily derived from
-% the former one. According to \emph{Coq}'s naming politics, we will call our 
-% principle \texttt{oplus\_rect}
-
-% \item The conclusion of \texttt{oplus\_rect} will be (\texttt{$P$ a b (oplus a b)}),
-% where $P$ is an arbitrary function of type 
-% \texttt{T1 -> T1 -> T1 -> Type}
-
-% \item The premises of \texttt{oplus\_rect} will describe how to build an induction 
-% on the graph of \texttt{oplus}.
-% \end{itemize}
-
-% We are now ready to state and prove \texttt{oplus\_rect}, and the reader
-% will note that the statement is longer than the proof script itself,
-% which is a standard proof by induction, simplification and case-analysis 
-% that follows  \texttt{oplus}'s definition.
-
-% We associate also a tactic to the application of \texttt{oplus\_rect}.
-
-% \begin{Coqsrc}
-%  Lemma oplus_rect:
-%       forall P: T1 -> T1 -> T1 -> Type, 
-%         (forall a:T1, P zero a a) ->
-%         (forall a: T1, P a zero a) ->
-%         (forall a1 n1 b1 a2 n2 b2 o,
-%            compare a1 a2 = Gt ->
-%            P b1 (ocons a2 n2 b2) o ->
-%            P (ocons a1 n1 b1) (ocons a2 n2 b2)
-%              (ocons a1 n1 o)) ->
-%         (forall a1 n1 b1 a2 n2 b2 o,
-%            compare a1 a2 = Lt ->
-%            P (ocons a1 n1 b1) b2 o ->
-%            P (ocons a1 n1 b1) (ocons a2 n2 b2) 
-%            (ocons a2 n2 o)) ->
-%         (forall a1 n1 b1 a2 n2 b2 o,
-%            compare a1 a2 = Eq ->
-%            P b1 b2 o ->
-%           P (ocons a1 n1 b1) (ocons a2 n2 b2)
-%             (ocons a1 (S (n1 + n2)%nat) o)) ->
-%          forall a b, P a b (oplus a b).
-% Proof with auto.
-%    induction a.
-%    -    intro; simpl; destruct b;auto.
-%    -   induction b.
-%        + apply X0.
-%        + case_eq (compare a1 b1).
-%          * intro Comp; unfold oplus; rewrite Comp.
-%            cbn; apply X3 ...
-%          * intro Comp; cbn; rewrite Comp; apply X2...
-%          * intro Comp; cbn; rewrite Comp ...
-%  Defined.
+    Lemma oplus_0_beta (beta : T1): zero o+ beta = beta.
+    Proof.
+      destruct beta; reflexivity.
+    Qed.
+    \end{Coqsrc}
 
 
-% Ltac oplus_induction a b:= pattern (oplus a b); apply oplus_rect.
-% \end{Coqsrc}
+    % \subsubsection{A hand-made induction principle}
+    % \label{sec:orgheadline85}
 
-% \index{Exercises}
+    % \index{Coq!Commands!Functional Scheme}
 
-% \begin{exercise}
-% The induction principle \texttt{oplus\_rect} is still unused in our development. 
-% Please build some nice examples of application.
-% \end{exercise}
+    % \emph{Coq} contains a command  \texttt{Functional Scheme} that 
+    % generates induction principles which correspond to recursive functions.
+    % Unfortunately, the current version ( \texttt{8.11.0} ) doesn't work on \texttt{oplus},
+    % probably because of the inner \texttt{Fix}.
 
-\index{hydras}{Projects}
-\begin{project}
-Compare \texttt{oplus}'s definition (with inner fixpoint) with other possibilities
-(\texttt{coq-equations}, \texttt{Function}, etc.).
-\end{project}
-\subsection{More theorems on Hessenberg's sum}
+    % \begin{Coqsrc}
+    % Functional Scheme oplus_ind := Induction for oplus Sort Prop.
+    % \end{Coqsrc}
 
-We need to prove some properties of $\oplus$, particularly about 
-its relation with the order $<$ on \texttt{T1}.
-
-\subsubsection{Boundedness}
-If $\alpha$ and $\beta$ are both strictly  less than  $\omega^\gamma$, then so is their natural sum
-$\alpha \oplus \beta$. This result can be proved by structural induction on $\gamma$.
+    % \begin{Coqanswer}
+    % Error: Anomaly "todo." Please report at http://coq.inria.fr/bugs/.
+    % \end{Coqanswer}
 
 
-\begin{Coqsrc}
-Lemma oplus_bounded_phi0 alpha beta gamma :
-  nf alpha -> nf beta -> nf gamma ->
-  lt alpha (phi0 gamma) ->
-  lt beta (phi0 gamma) ->
-  lt (alpha o+ beta) (phi0 gamma).
-\end{Coqsrc}
+    % Fortunately, it's a good exercise for a semi-experienced user, to write
+    % her/him-self induction principles similar to the ones returned by
+    % \texttt{Functional Scheme}.
 
-This lemma helps us 
+    % \begin{itemize}
+    % \item First, we choose to write a version for sort \texttt{Type}, since versions
+    % for sorts \texttt{Prop} and \texttt{Set} can be easily derived from
+    % the former one. According to \emph{Coq}'s naming politics, we will call our 
+    % principle \texttt{oplus\_rect}
 
-\subsubsection{Commutativity, associativity}
+    % \item The conclusion of \texttt{oplus\_rect} will be (\texttt{$P$ a b (oplus a b)}),
+    % where $P$ is an arbitrary function of type 
+    % \texttt{T1 -> T1 -> T1 -> Type}
 
-We prove  the commutativity of $\oplus$ in two steps. 
+    % \item The premises of \texttt{oplus\_rect} will describe how to build an induction 
+    % on the graph of \texttt{oplus}.
+    % \end{itemize}
 
-First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
-interval $[0..\alpha)$ is commutative.
+    % We are now ready to state and prove \texttt{oplus\_rect}, and the reader
+    % will note that the statement is longer than the proof script itself,
+    % which is a standard proof by induction, simplification and case-analysis 
+    % that follows  \texttt{oplus}'s definition.
 
-\index{maths}{Transfinite induction}
+    % We associate also a tactic to the application of \texttt{oplus\_rect}.
 
-\begin{Coqsrc}
-Lemma oplus_comm_0 : forall alpha, nf alpha ->
-     forall a b,  nf a -> nf b ->
-                  lt a alpha ->
-                  lt b alpha ->
-                  a o+ b = b o+ a.
- Proof with eauto with T1.
-    intros alpha Halpha; transfinite_induction alpha.
-(* rest of proof omitted *)  
-\end{Coqsrc}
+    % \begin{Coqsrc}
+    %  Lemma oplus_rect:
+    %       forall P: T1 -> T1 -> T1 -> Type, 
+    %         (forall a:T1, P zero a a) ->
+    %         (forall a: T1, P a zero a) ->
+    %         (forall a1 n1 b1 a2 n2 b2 o,
+    %            compare a1 a2 = Gt ->
+    %            P b1 (ocons a2 n2 b2) o ->
+    %            P (ocons a1 n1 b1) (ocons a2 n2 b2)
+    %              (ocons a1 n1 o)) ->
+    %         (forall a1 n1 b1 a2 n2 b2 o,
+    %            compare a1 a2 = Lt ->
+    %            P (ocons a1 n1 b1) b2 o ->
+    %            P (ocons a1 n1 b1) (ocons a2 n2 b2) 
+    %            (ocons a2 n2 o)) ->
+    %         (forall a1 n1 b1 a2 n2 b2 o,
+    %            compare a1 a2 = Eq ->
+    %            P b1 b2 o ->
+    %           P (ocons a1 n1 b1) (ocons a2 n2 b2)
+    %             (ocons a1 (S (n1 + n2)%nat) o)) ->
+    %          forall a b, P a b (oplus a b).
+    % Proof with auto.
+    %    induction a.
+    %    -    intro; simpl; destruct b;auto.
+    %    -   induction b.
+    %        + apply X0.
+    %        + case_eq (compare a1 b1).
+    %          * intro Comp; unfold oplus; rewrite Comp.
+    %            cbn; apply X3 ...
+    %          * intro Comp; cbn; rewrite Comp; apply X2...
+    %          * intro Comp; cbn; rewrite Comp ...
+    %  Defined.
 
-Then, we infer  $\oplus$'s commutativity for any pair of ordinals:
-Let $\alpha$ and $\beta$ be two ordinals strictly less than $\epsilon_0$. Both ordinals $\alpha$ and $\beta$ are
-strictly less than $\textrm{max}(\alpha,\beta)+1$.
-    Thus, we have just to apply the lemma \coqsimple{oplus\_comm\_0}.
 
-\begin{Coqsrc}
-  Lemma oplus_comm : forall alpha beta, 
-      nf alpha -> nf beta ->
-      alpha o+ beta =  beta o+ alpha.
-  Proof with eauto with T1.
-    intros alpha beta Halpha Hbeta;
-    apply oplus_comm_0 with (succ (max alpha beta)) ...  
-  (* ... *)
-\end{Coqsrc}
+    % Ltac oplus_induction a b:= pattern (oplus a b); apply oplus_rect.
+    % \end{Coqsrc}
 
-The associativity of Hessenberg's sum is proved the same way.
+    % \index{Exercises}
+
+    % \begin{exercise}
+    % The induction principle \texttt{oplus\_rect} is still unused in our development. 
+    % Please build some nice examples of application.
+    % \end{exercise}
+
+    \index{hydras}{Projects}
+    \begin{project}
+    Compare \texttt{oplus}'s definition (with inner fixpoint) with other possibilities
+    (\texttt{coq-equations}, \texttt{Function}, etc.).
+    \end{project}
+    \subsection{More theorems on Hessenberg's sum}
+
+    We need to prove some properties of $\oplus$, particularly about 
+    its relation with the order $<$ on \texttt{T1}.
+
+    \subsubsection{Boundedness}
+    If $\alpha$ and $\beta$ are both strictly  less than  $\omega^\gamma$, then so is their natural sum
+    $\alpha \oplus \beta$. This result can be proved by structural induction on $\gamma$.
 
 
-\begin{Coqsrc}
- Lemma oplus_assoc_0 :
-    forall alpha,
-      nf alpha ->
-      forall a b c,  nf a -> nf b -> nf c ->
+    \begin{Coqsrc}
+    Lemma oplus_bounded_phi0 alpha beta gamma :
+      nf alpha -> nf beta -> nf gamma ->
+      lt alpha (phi0 gamma) ->
+      lt beta (phi0 gamma) ->
+      lt (alpha o+ beta) (phi0 gamma).
+    \end{Coqsrc}
+
+    This lemma helps us 
+
+    \subsubsection{Commutativity, associativity}
+
+    We prove  the commutativity of $\oplus$ in two steps. 
+
+    First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
+    interval $[0..\alpha)$ is commutative.
+
+    \index{maths}{Transfinite induction}
+
+    \begin{Coqsrc}
+    Lemma oplus_comm_0 : forall alpha, nf alpha ->
+         forall a b,  nf a -> nf b ->
                       lt a alpha ->
-                      lt b alpha -> lt c alpha ->
-                      a o+ (b o+ c) = (a o+ b) o+ c.
-  Proof with eauto with T1.
-    intros alpha Halpha.
-    transfinite_induction alpha.
+                      lt b alpha ->
+                      a o+ b = b o+ a.
+     Proof with eauto with T1.
+        intros alpha Halpha; transfinite_induction alpha.
+    (* rest of proof omitted *)  
+    \end{Coqsrc}
+
+    Then, we infer  $\oplus$'s commutativity for any pair of ordinals:
+    Let $\alpha$ and $\beta$ be two ordinals strictly less than $\epsilon_0$. Both ordinals $\alpha$ and $\beta$ are
+    strictly less than $\textrm{max}(\alpha,\beta)+1$.
+        Thus, we have just to apply the lemma \coqsimple{oplus\_comm\_0}.
+
+    \begin{Coqsrc}
+      Lemma oplus_comm : forall alpha beta, 
+          nf alpha -> nf beta ->
+          alpha o+ beta =  beta o+ alpha.
+      Proof with eauto with T1.
+        intros alpha beta Halpha Hbeta;
+        apply oplus_comm_0 with (succ (max alpha beta)) ...  
+      (* ... *)
+    \end{Coqsrc}
+
+    The associativity of Hessenberg's sum is proved the same way.
+
+
+    \begin{Coqsrc}
+     Lemma oplus_assoc_0 :
+        forall alpha,
+          nf alpha ->
+          forall a b c,  nf a -> nf b -> nf c ->
+                          lt a alpha ->
+                          lt b alpha -> lt c alpha ->
+                          a o+ (b o+ c) = (a o+ b) o+ c.
+      Proof with eauto with T1.
+        intros alpha Halpha.
+        transfinite_induction alpha.
+        (* ... *)
+    \end{Coqsrc}
+
+
+    \begin{Coqsrc}
+     Lemma oplus_assoc : forall alpha beta gamma,
+                            nf alpha -> nf beta -> nf gamma ->
+                                        alpha o+ (beta o+ gamma) =
+                                        alpha o+ beta o+ gamma.
+     Proof with eauto with T1.
+        intros;
+        apply oplus_assoc_0 with (succ (max alpha (max beta gamma))) ...
+        (* ... *)   
+    \end{Coqsrc}
+
+
+    \subsubsection{Monotonicity}
+
+    At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
+
+    \begin{Coqsrc}
+    Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
+      nf gamma   -> alpha  t1< beta ->
+      alpha o+ gamma  t1< beta o+ gamma.
+
+    Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
+      nf alpha -> beta t1< gamma ->
+      alpha o+ beta t1< alpha o+ gamma.
+    \end{Coqsrc}
+
+    \index{hydras}{Projects}
+
+    \begin{project}
+    The library \texttt{Hessenberg} looks too long (proof scripts and compilation).
+    Please try to make it simpler and more efficient!
+    Thanks!
+    \end{project}
+
+    \subsection{A termination measure for hydra battles }
+
+    \label{sec:hydra-measure}
+
+    Let us define a measure from type \texttt{Hydra} into \texttt{T1}.
+
+
+    \vspace{4pt}
+    \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Termination.html\#m}{Hydra.Hydra\_Termination}}
+
+    \begin{Coqsrc}
+    Fixpoint m (h:Hydra) : T1 :=
+      match h with head => zero
+                 | node hs => ms hs
+    end 
+    with ms (s:Hydrae) :  T1 :=
+      match s with  hnil => zero
+                  | hcons h s' => phi0 (m h) o+  ms s'
+     end.  
+    \end{Coqsrc}
+
+    First, we prove that the measure $m(h)$  of any hydra $h$ is a well-formed ordinal term of type \texttt{T1}.
+
+    \begin{Coqsrc}
+    Lemma m_nf : forall h, nf (m h).
+    Proof.
+     intro h; elim h using Hydra_rect2 
+                with (P0 := fun s =>  nf (ms s)).
+     (* ... *)
+
+    Lemma ms_nf : forall s, nf (ms s).
+    Proof with auto with T1.
     (* ... *)
-\end{Coqsrc}
+    \end{Coqsrc}
+
+    For proving the termination of all hydra battles, we have to prove that
+    \texttt{m} is a variant. First, a few technical lemmas follow the decomposition of \texttt{round} into several relations. Then the lemma \texttt{round\_decr} gathers all the cases.
+
+    \label{sect:variant-decr}
+
+    \begin{Coqsrc}
+    Lemma S0_decr :
+      forall s s', S0  s s' -> ms s' t1< ms s.
+    \end{Coqsrc}
+
+    \begin{Coqsrc}
+    Lemma R1_decr : forall h h',
+                      R1 h h' -> m h' t1< m h.
+    \end{Coqsrc}
+
+    \begin{Coqsrc}
+    Lemma S1_decr n:
+      forall s s', S1 n s s' -> ms s' t1<  ms s.
+    \end{Coqsrc}
+
+    \begin{Coqsrc}
+    Lemma R2_decr n : forall h h', R2 n h h' -> m h'  t1< m h.
+    \end{Coqsrc}
 
 
-\begin{Coqsrc}
- Lemma oplus_assoc : forall alpha beta gamma,
-                        nf alpha -> nf beta -> nf gamma ->
-                                    alpha o+ (beta o+ gamma) =
-                                    alpha o+ beta o+ gamma.
- Proof with eauto with T1.
-    intros;
-    apply oplus_assoc_0 with (succ (max alpha (max beta gamma))) ...
-    (* ... *)   
-\end{Coqsrc}
+    \begin{Coqsrc}
+    Lemma round_decr : forall h h', h -1-> h' -> m h' t1< m h.
+    Proof.
+       destruct 1 as [n [H | H]].
+       -  now apply R1_decr.
+       -  now apply R2_decr with n.
+    Qed.
+    \end{Coqsrc}
+
+    Finally, we prove the termination of all (free) battles.
+
+    \label{thm:every-battle-terminates}
+
+    \begin{Coqsrc}
+    Global Instance HVariant : Hvariant lt_wf free var.
+    Proof.
+     split; intros; eapply round_decr; eauto.
+    Qed.
+
+    Theorem every_battle_terminates: Termination.
+    Proof. 
+      red; apply Inclusion.wf_incl with 
+             (R2 := fun h h' =>  m h t1< m h').
+       red; intros;  now apply round_decr.
+       apply Inverse_Image.wf_inverse_image, T1_wf.
+    Qed.
+    \end{Coqsrc}
 
 
-\subsubsection{Monotonicity}
+    \section*{Conclusion}
 
-At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
+    Let us recall three results we have proved so far.
+    \begin{itemize}
+    \item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
+    the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
+    \item There exists \emph{no} such variant from \texttt{Hydra} into 
+    $[0,\omega^2)$, \emph{a fortiori} into $[0,\omega)$.
+    \end{itemize}
 
-\begin{Coqsrc}
-Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-  nf gamma   -> alpha  t1< beta ->
-  alpha o+ gamma  t1< beta o+ gamma.
-
-Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
-  nf alpha -> beta t1< gamma ->
-  alpha o+ beta t1< alpha o+ gamma.
-\end{Coqsrc}
-
-\index{hydras}{Projects}
-
-\begin{project}
-The library \texttt{Hessenberg} looks too long (proof scripts and compilation).
-Please try to make it simpler and more efficient!
-Thanks!
-\end{project}
-
-\subsection{A termination measure for hydra battles }
-
-\label{sec:hydra-measure}
-
-Let us define a measure from type \texttt{Hydra} into \texttt{T1}.
-
-
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Termination.html\#m}{Hydra.Hydra\_Termination}}
-
-\begin{Coqsrc}
-Fixpoint m (h:Hydra) : T1 :=
-  match h with head => zero
-             | node hs => ms hs
-end 
-with ms (s:Hydrae) :  T1 :=
-  match s with  hnil => zero
-              | hcons h s' => phi0 (m h) o+  ms s'
- end.  
-\end{Coqsrc}
-
-First, we prove that the measure $m(h)$  of any hydra $h$ is a well-formed ordinal term of type \texttt{T1}.
-
-\begin{Coqsrc}
-Lemma m_nf : forall h, nf (m h).
-Proof.
- intro h; elim h using Hydra_rect2 
-            with (P0 := fun s =>  nf (ms s)).
- (* ... *)
-
-Lemma ms_nf : forall s, nf (ms s).
-Proof with auto with T1.
-(* ... *)
-\end{Coqsrc}
-
-For proving the termination of all hydra battles, we have to prove that
-\texttt{m} is a variant. First, a few technical lemmas follow the decomposition of \texttt{round} into several relations. Then the lemma \texttt{round\_decr} gathers all the cases.
-
-\label{sect:variant-decr}
-
-\begin{Coqsrc}
-Lemma S0_decr :
-  forall s s', S0  s s' -> ms s' t1< ms s.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma R1_decr : forall h h',
-                  R1 h h' -> m h' t1< m h.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma S1_decr n:
-  forall s s', S1 n s s' -> ms s' t1<  ms s.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma R2_decr n : forall h h', R2 n h h' -> m h'  t1< m h.
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
-Lemma round_decr : forall h h', h -1-> h' -> m h' t1< m h.
-Proof.
-   destruct 1 as [n [H | H]].
-   -  now apply R1_decr.
-   -  now apply R2_decr with n.
-Qed.
-\end{Coqsrc}
-
-Finally, we prove the termination of all (free) battles.
-
-\label{thm:every-battle-terminates}
-
-\begin{Coqsrc}
-Global Instance HVariant : Hvariant lt_wf free var.
-Proof.
- split; intros; eapply round_decr; eauto.
-Qed.
-
-Theorem every_battle_terminates: Termination.
-Proof. 
-  red; apply Inclusion.wf_incl with 
-         (R2 := fun h h' =>  m h t1< m h').
-   red; intros;  now apply round_decr.
-   apply Inverse_Image.wf_inverse_image, T1_wf.
-Qed.
-\end{Coqsrc}
-
-
-\section*{Conclusion}
-
-Let us recall three results we have proved so far.
-\begin{itemize}
-\item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
-the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
-\item There exists \emph{no} such variant from \texttt{Hydra} into 
-$[0,\omega^2)$, \emph{a fortiori} into $[0,\omega)$.
-\end{itemize}
-
-So, a  natural question is `` Does there exist any strictly decreasing variant mapping
-type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\alpha$, even if we consider a restriction to the set of ``standard'' battles.
+    So, a  natural question is `` Does there exist any strictly decreasing variant mapping
+    type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\alpha$, even if we consider a restriction to the set of ``standard'' battles.
 
 
 
 
 
 
-%\include{epsilon0}
+    %\include{epsilon0}
 
 
-%\include{impossibility-proofs}
+    %\include{impossibility-proofs}
 
 
 
@@ -5799,7 +5804,8 @@ proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 
 
 
-In the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
+In the module
+\href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
 
 
 
@@ -5981,7 +5987,8 @@ Please note that the vocabulary on paths is ours, but all the concepts come real
 In \coq{}, standard paths can be defined as follows.
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.KS.html}{Epsilon0.KS}}
+\emph{From
+Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
 \begin{Coqsrc}
 (**  standard path from (i, alpha) to (j, beta) *)
@@ -6465,12 +6472,12 @@ Corollary  LT_to_standard_path  (alpha beta : T1) :
 \label{sec:standard-battles-cases}
 We are now able to complete our proof that there exists no bounded variant for proving the termination of standard hydra battles. This proof can
 be consulted in the module 
-\url{../theories/html/hydras.Hydra.Epsilon0_Needed_Std.html}.
+\href{../theories/html/hydras.Hydra.Epsilon0_Needed_Std.html}{Hydra.Epsilon0\_Needed\_Std}.
 Please note that it has the same global structure as in section\ref{sec:free-battles-case} 
 % ICI !
 Applying the  lemmas  \texttt{Lemma2\_6\_1} of the module 
 \href{../theories/html/hydras.Epsilon0.Paths.html\#Lemma2_6_1}%
-{\texttt{Epsilon0.Paths}}   and 
+{Epsilon0.pathS}   and 
 \href{../theories/html/hydras.Epsilon0.Paths.html\#constant_to_standard_path}%
 {\texttt{constant\_to\_standard\_path}},
 we can convert any inequality $\beta<\alpha<\epsilon_0$ into a standard path from
@@ -6552,7 +6559,8 @@ refer to a particular data type \texttt{T1}.
 In fact, our representation of ordinals strictly less than 
  $\epsilon_0$ is faithful to their mathematical definition, at least 
 Kurt Schütte's~\cite{schutte}, as proved in Chapter~\vref{chap:schutte}.
-(please see also \href{../theories/html/hydras.Schutte.Correctness_E0.html}{the module \texttt{hydras.Schutte.Correctness\_E0}}).
+(please see also the module
+\href{../theories/html/hydras.Schutte.Correctness_E0.html}{hydras.Schutte.Correctness\_E0}).
 
 Thus, we can infer that our theorems can be applied to any well order.
 
@@ -7734,7 +7742,7 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
 \end{Coqsrc}
 
 The following code comes from 
- \url{../theories/html/hydras.Epsilon0.F_alpha.html}.
+ \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}.
 
 
 
@@ -7870,7 +7878,7 @@ Lemma LF3 : dominates_from  2 (F_ 3) (fun  n => iterate exp2 n n).
 \end{Coqsrc}
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/F_3.v}.}
+\href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/F_3.v}{exercises/ordinals/F\_3.v}.}
 \end{exercise}
 
 \index{hydras}{Exercises}
@@ -7882,7 +7890,7 @@ $F_\alpha(1+n)\geq 2^{F_\alpha(n)}$.
 
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/F_3.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/F_3.v}{exercises/ordinals/F\_3.v}.}
 \end{exercise}
 
 
@@ -7900,7 +7908,7 @@ $F_\alpha(n)\leq F_\beta(n)$.
 Prove or disprove this statement.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/is_F_monotonous.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/is_F_monotonous.v}{exercises/ordinals/is\_F\_monotonous.v}.}
 \end{exercise}
 
 \index{hydras}{Exercises}
@@ -7913,9 +7921,11 @@ On the other hand, please show that for any natural number $n$, the function $F_
 Thus $F\_alpha$ is primitive recursive if and only if $\alpha$ is finite.
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/F_omega.v}. Properties of the Ackermann function are studied in 
-\url{../theories/ordinals/MoreAck/Ack.v} and
-\url{../theories/ordinals/MoreAck/AcknotPR.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/F_omega.v}{exercises/ordinals/F\_Omega.v}.
+Properties of the Ackermann function are studied in
+    \href{https://github.com/coq-community/hydra-battles/tree/master/theories/ordinals/MoreAck/Ack.v}{theories/ordinals/MoreAck/Ack.v} and
+    \href{https://github.com/coq-community/hydra-battles/tree/master/theories/ordinals/MoreAck/AckNotPR.v}{theories/ordinals/MoreAck/AckNotPR.v}
+.}
 \end{exercise} 
 
 \section{Conclusion}
@@ -8434,8 +8444,7 @@ Definition ordinal := Full_set Ord.
 
 Schütte's first axiom tells that \texttt{lt} is a well order on the set 
 \texttt{ordinal} (The  class \texttt{WO} is defined in
-Module~\href{../theories/html/hydras.Schutte.Well_Orders.html}%
-{\texttt{Well\_Orders.v}}).
+Module~\href{../theories/html/hydras.Schutte.Well_Orders.html}{Schutte.Well\_Orders.v}).
 
 \index{hydras}{Library Schutte!Type classes!WO@ WO (well order)}
 
@@ -9284,8 +9293,8 @@ Let us recall that the limit ordinal  $\epsilon_0$ cannot be written within the 
 
 
 We prove the inequality  $\alpha<\omega^\alpha$ whenever $\alpha < \epsilon_0$.
-\emph{Note that this condition was implicit in Module \href{../theories/html/hydras.Epsilon0/T1.html\#lt_phi0}%
-{\texttt{Epsilon0.T1}}.}
+\emph{Note that this condition was implicit in Module
+\href{../theories/html/hydras.Epsilon0.T1.html\#lt_phi0}{Epsilon0.T1}.}
 
 \begin{Coqsrc}
 Lemma lt_phi0 (alpha : Ord):
@@ -9507,7 +9516,7 @@ Lemma cnf_lt_epsilon0_iff :
 Is it true ?
 
 \emph{You may start this exercise with the file
-\url{../exercises/ordinals/schutte_cnf_counter_example.v}.}
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/schutte_cnf_counter_example.v}{exercises/ordinals/schutte\_cnf\_counter\_example.v}.}
 \end{exercise}
 
 Finally, the Cantor normal form of $\epsilon_0$ is just $\omega^{\epsilon_0}$.
@@ -9528,15 +9537,15 @@ Implement pages 82 to 85 of~\cite{schutte} (critical, strongly critical, maximal
 \end{project}
 
 \begin{remark}
-The sub-directory \href{../theories/html/hydras.Gamma0.html}%
-{\texttt{theories/Gamma0}} contains an (incomplete, still undocumented) implementation of the set of ordinals below $\Gamma_0$, represented in Veblen normal form. 
+The sub-directory
+    \href{https://github.com/coq-community/hydra-battles/tree/master/theories/ordinals/Gamma0}{theories/oridinals/Gamma0} contains an (incomplete, still undocumented) implementation of the set of ordinals below $\Gamma_0$, represented in Veblen normal form. 
 \end{remark}
 
 \section{An embedding of \texttt{T1} into \texttt{Ord}}
 
 
 Our library 
-\href{../theories/html/hydras.Schutte.correctness_E0.html}%
+\href{../theories/html/hydras.Schutte.Correctness_E0.html}%
 {\texttt{Schutte.Correctness\_E0}} establishes the link between two very different modelizations of ordinal numbers. In other words, it ``validates'' a data structure in terms of
 a classical mathematical discourse considered as a model. 
 First, we define a function from \texttt{T1} into  \texttt{Ord} by structural recursion.
