@@ -34,3 +34,8 @@ snippet1.tex  snippet2.tex
 ```
 
 For more informations do `python extract_snippets -h`
+
+
+## Makefile
+Command `make file.v` extract `.v` contain in `theorie/oridinals` make a latex file. \
+And extract snippets and in directory snippets.
