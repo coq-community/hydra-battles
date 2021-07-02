@@ -22,10 +22,17 @@ def build_parser() -> argparse.ArgumentParser:
                         type=Path,
                         help=OUPUT_DIR_HELP)
 
-    DUMP_LATEX_HELP = "dump latex"
+    DUMP_LATEX_HELP = "dump latex complete file (usefull to debug)"
     parser.add_argument("-d", "--dump-complete-latex",
                         action="store_true",
                         help=DUMP_LATEX_HELP)
+
+    DUMP_LATEX_DIR_HELP = "directory to dump complete latex" \
+                          "file (please active flag '--dump-complete-latex')"
+    parser.add_argument("-D", "--dump-complete-latex-dir",
+                        type=Path,
+                        default=Path("."),
+                        help=DUMP_LATEX_DIR_HELP)
 
     # serapi (copy from alectryon.cli)
     SUBP_HELP = "Pass arguments to the SerAPI process"
@@ -107,14 +114,17 @@ def main():
     output_dir = args.output_dir / input_name
 
     # make latex
+    print(f"Convert '{args.input}' to latex.")
     register_docutils(args.sertop_args)
     reader = CoqToLatexReader(args.input)
+    print("Extract snippets.")
     snippet_extractor = SnippetExtractor(reader)
 
     # dump latex to debug
     if args.dump_complete_latex:
-        path_latex = get_path_latex(output_dir, input_name)
-        print(f"Make latex file {path_latex}")
+        path_latex = get_path_latex(args.dump_complete_latex_dir,
+                                    input_name)
+        print(f"Make complete latex file {path_latex}.")
         make_latex_file(reader.content_latex, path_latex)
 
     # write snippets files

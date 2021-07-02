@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from src.cli import main
+from extract_snippets.cli import main
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 import re
-from typing import Iterable, List
+from typing import AnyStr, Iterable, List, Match
 
 from .Reader import Reader
 from .Snippet import Snippet
@@ -14,7 +14,7 @@ END_STATE = "end"
 STATES_GROUP = fr"({BEGIN_STATE}|{END_STATE})"
 NAME_GROUP = r"(\w+)"
 
-LATEX_TAG_PATTERN = re.compile(rf"\s*\\{STATES_GROUP}{{{NAME_GROUP}}}(.*)") #"\s*\\(begin|end){(\w+)}"
+LATEX_TAG_PATTERN = re.compile(rf"\s*\\{STATES_GROUP}(\[.*\])?{{{NAME_GROUP}}}(.*)")  # "\s*(\[.*])\\(begin|end){(\w+)}"
 SNIPPET_PATTERN = re.compile(rf".*\\PY{{c}}{{\(\*\~*{STATES_GROUP}\~+snippet\~+{NAME_GROUP}\~*\*\)}}")
 
 
@@ -34,11 +34,12 @@ class SnippetExtractor:
         """
         return map(lambda snippet: snippet.name, snippets)
 
-    def _match_tag(self, statement: str, tag: str, after: str, line_num: int) -> None:
+    def _match_tag(self, match: Match[AnyStr], line_num: int) -> None:
+        statement, _, tag, after = match.groups()
         if statement == BEGIN_STATE:
             self.stack_tag.append(tag)
-            if (match:=LATEX_TAG_PATTERN.match(after)) is not None:
-                self._match_tag(*match.groups(), line_num)
+            if (match := LATEX_TAG_PATTERN.match(after)) is not None:
+                self._match_tag(match, line_num)
 
         elif (last_tag := self.stack_tag.pop()) != tag:
             raise Exception(f"tag '{tag}' close before '{last_tag}' at line {line_num}.")
@@ -83,7 +84,7 @@ class SnippetExtractor:
         snippet.close(self.stack_tag)
         self.__snippet_close.append(snippet)
 
-    def _match_snippet(self, statement: str, snippet_name: str, line_num: int):
+    def _match_snippet(self, match: Match[AnyStr], line_num: int):
         """
         call if match snippet, to open or close snippet
 
@@ -92,6 +93,7 @@ class SnippetExtractor:
         :param line_num:
         :return:
         """
+        statement, snippet_name = match.groups()
         if statement == BEGIN_STATE:
             self._open_snippet(snippet_name, line_num)
         else:  # end state
@@ -109,10 +111,10 @@ class SnippetExtractor:
 
         for num, line in self.reader:
             if (match := LATEX_TAG_PATTERN.match(line)) is not None:
-                self._match_tag(*match.groups(), line_num=num)
+                self._match_tag(match, line_num=num)
 
             elif (match := SNIPPET_PATTERN.match(line)) is not None:
-                self._match_snippet(*match.groups(), line_num=num)
+                self._match_snippet(match, line_num=num)
                 continue
 
             self._add_snippets_open(line)
