@@ -27,12 +27,12 @@ jobs:
           custom_image: ${{ matrix.image }}
           before_script: |
             startGroup "Create Makefile.coq and add permission"
-              make || true
               sudo chown -R coq:coq .
+              make Makefile.coq
             endGroup
           script: |
             startGroup "Build documentation"
-              make -j2 html
+              make -j`nproc` html
             endGroup
           uninstall: |
             startGroup "Clean"
@@ -51,10 +51,11 @@ jobs:
           latexmk_use_lualatex: true
 
       - name: Extract PDF and Coq-Doc
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           mkdir -p public/doc public/theories
           cp doc/hydras.pdf public/doc/
-          cp -r theories/html public/theories/ || true
+          cp -r theories/html public/theories/
       # Depending on whether we are on master or not, we deploy to
       # GitHub Pages or as an artifact
       - name: Deploy to GitHub pages
