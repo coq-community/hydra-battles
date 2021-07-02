@@ -14,24 +14,33 @@ vpath %.v ${INPUT_DIR}OrdinalNotations
 vpath %.v ${INPUT_DIR}Prelude
 vpath %.v ${INPUT_DIR}solutions_exercises
 
-FILES = Ack.tex \
-	AckNotPR.tex \
-	primRec.tex \
-	PrimRecExamples.tex \
-	F_alpha.tex \
-	F_omega.tex \
-	Hydra_Definitions.tex \
-	Hydra_Theorems.tex \
-	Hydra_Examples.tex \
-	Hydra_Lemmas.tex \
-	Issue_Program.tex
+COQ_FILES = Ack.v               \
+	    AckNotPR.v          \
+	    primRec.v           \
+	    PrimRecExamples.v   \
+	    F_alpha.v           \
+	    F_omega.v           \
+	    Hydra_Definitions.v \
+	    Hydra_Theorems.v    \
+	    Hydra_Examples.v    \
+	    Hydra_Lemmas.v      \
+	    Issue_Program.v     \
+
+TEX_FILE = $(COQ_FILES:.v=.tex)
+
+SNIPPET_OUTPUT = ./snippets/
+
+.PHONY: all
+all: $(TEX_FILE)
 
 
-all: $(FILES)
+.PHONY: clean
+clean:
+	@${RM} ${TEX_FILE} ${SNIPPET_OUTPUT}
 
-complete_latex/Issue_Program.tex: Issue_Program.v
+Issue_Program.tex: Issue_Program.v
 
 
 %.tex : %.v
-	python extract_snippets.py $< -d ${OPTIONS}
+	@python extract_snippets.py $< -o {SNIPPET_OUTPUT} -d ${OPTIONS}
 
