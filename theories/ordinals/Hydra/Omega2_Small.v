@@ -47,8 +47,8 @@ Section Impossibility_Proof.
     specialize (m_strict_mono m Hvar first_round).   
     rewrite H; inversion_clear 1; lia.
   Qed. 
-    
-      
+  
+  
   Lemma big_to_small : big_h -+-> small_h. 
   Proof.
     unfold small_h; case_eq  (m big_h); intros i j Hj;  destruct i.
@@ -61,7 +61,7 @@ Section Impossibility_Proof.
       + now destruct m_big_h_not_null.
       + unfold iota;cbn;left.
         exists j;right; left; constructor 1;  split;  left.
-      
+        
     (* i > 0 *)
     - unfold iota; cbn;  destruct j.
       +   left; unfold iota, big_h; cbn.
@@ -114,11 +114,6 @@ Section Impossibility_Proof.
       - apply succ_rounds.
     Qed.
 
-   
-
- (*m_strict_mono m Hvar*) 
-
-
 Local Hint Constructors step clos_trans_1n : hydra.
 Local Hint Resolve lex_1 lex_2: hydra.
 Local Hint Unfold lt : hydra.
@@ -164,9 +159,9 @@ Theorem Impossible : False.
 Proof.
   destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
     eapply le_lt_trans.
-  exact Omega2.
-    apply m_ge.
- -  apply m_lt. 
+  - exact Omega2.
+  - apply m_ge.
+  - apply m_lt. 
 Qed. 
 
 End Impossibility_Proof.

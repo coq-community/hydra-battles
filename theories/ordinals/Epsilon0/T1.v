@@ -4,14 +4,6 @@
 
 After Manolios and Vroon's work on ACL2 
 
-
-Pierre Casteran 
-LaBRI, University of Bordeaux 
-
-Evelyne Contejean
-LRI 
-
- 
 *)
 
 From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
@@ -50,9 +42,6 @@ Inductive T1 : Set  :=
 | zero 
 | ocons (alpha : T1) (n : nat) (beta : T1) .
  
-
-
-
 
 (** Basic functions and predicates on [T1] 
 *)
@@ -388,7 +377,7 @@ Proof.
   - intros a b c; eapply T1.lt_trans.
 Qed.
     
-Instance: Comparable lt compare.
+#[global] Instance: Comparable lt compare.
 Proof.
   constructor.
   - exact t1_strorder. 
@@ -432,7 +421,6 @@ Definition nf alpha :Prop :=
 (** epsilon0 as a set *)
 
 Definition epsilon_0 : Ensemble T1 := nf.
-
 
 (** ** Arithmetic functions 
 *)
