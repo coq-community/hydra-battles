@@ -27,7 +27,7 @@ A first try ...
 The following definition fails, because Coq cannot guess a  decreasing argument.
 |*)
 
-
+(* begin snippet AckFixpointFail *)
 
 Fail
   Fixpoint Ack (m n : nat) : nat :=
@@ -37,6 +37,7 @@ Fail
   | S m0, S p => Ack m0 (Ack m p)
   end.
 
+(* end snippet AckFixpointFail *)
 
 
 (*| 
@@ -50,6 +51,7 @@ Definition with inner fixpoint
 |*)
 
 
+(* begin snippet AckFixpointAlt *)
 Module Alt.
   
   Fixpoint Ack (m n : nat) : nat :=
@@ -66,6 +68,7 @@ Module Alt.
   Compute Ack 3 2.
   
 End Alt.
+(* end snippet AckFixpointAlt *)
 
 
 (*| 
@@ -80,6 +83,7 @@ This definition allows  us to to prove monotony properties of ``Ack  m`` by indu
 
 |*)
 
+(* begin snippet AckFixpointIterate *)
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
   | 0 => S
@@ -88,6 +92,7 @@ Fixpoint Ack (m:nat) : nat -> nat :=
 
 Compute Ack 3 2.
 
+(* end snippet AckFixpointIterate *)
 
 (*| 
 

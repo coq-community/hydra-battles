@@ -2,17 +2,17 @@
 ### Naive Makefile
 ##################
 
-INPUT_DIR=../../theories/ordinals/
+INPUT_DIR=../../theories/ordinals
 OPTIONS= -R ${INPUT_DIR} hydras
-HYDRA_DIR= ${INPUT_DIR}Hydra
-vpath %.v ${INPUT_DIR}Ackermann
-vpath %.v ${INPUT_DIR}MoreAck
-vpath %.v ${INPUT_DIR}Schutte
-vpath %.v ${INPUT_DIR}Epsilon0
-vpath %.v ${INPUT_DIR}Gamma0
-vpath %.v ${INPUT_DIR}OrdinalNotations
-vpath %.v ${INPUT_DIR}Prelude
-vpath %.v ${INPUT_DIR}solutions_exercises
+vpath %.v ${INPUT_DIR}/Hydra
+vpath %.v ${INPUT_DIR}/Ackermann
+vpath %.v ${INPUT_DIR}/MoreAck
+vpath %.v ${INPUT_DIR}/Schutte
+vpath %.v ${INPUT_DIR}/Epsilon0
+vpath %.v ${INPUT_DIR}/Gamma0
+vpath %.v ${INPUT_DIR}/OrdinalNotations
+vpath %.v ${INPUT_DIR}/Prelude
+vpath %.v ${INPUT_DIR}/solutions_exercises
 
 COQ_FILES = Ack.v               \
 	    AckNotPR.v          \
@@ -36,11 +36,12 @@ all: $(TEX_FILE)
 
 .PHONY: clean
 clean:
-	@${RM} ${TEX_FILE} ${SNIPPET_OUTPUT}
+	@${RM} ${TEX_FILE}
+	@${RM} -r ${SNIPPET_OUTPUT}
 
 Issue_Program.tex: Issue_Program.v
 
 
 %.tex : %.v
-	@python extract_snippets.py $< -o {SNIPPET_OUTPUT} -d ${OPTIONS}
+	@python extract_snippets.py $< -o ${SNIPPET_OUTPUT} -d ${OPTIONS}
 
