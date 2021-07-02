@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Compile Coq-Doc
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: coq-community/docker-coq-action@v1
         with:
           custom_image: ${{ matrix.image }}
@@ -29,7 +29,6 @@ jobs:
             startGroup "Create Makefile.coq and add permission"
               sudo chown -R coq:coq .
               make Makefile.coq
-              sudo chown -R coq:coq Makefile.coq
             endGroup
           script: |
             startGroup "Build documentation"
