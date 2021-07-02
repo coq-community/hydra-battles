@@ -66,7 +66,7 @@ Notation omega := (ocons (ocons zero 0 zero) 0 zero).
 
 Notation FS n := (ocons zero n zero).
 
-(** the [n]-th ordinal 
+(** the [n]-th (finite) ordinal 
  *)
 
 Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
@@ -77,7 +77,6 @@ Coercion fin  : nat >-> T1.
 Lemma FS_rw (n:nat) : FS n = S n.
 Proof. reflexivity. Qed.
 (* end hide *)
-
 
 
 (** Successor and limits (syntactic definitions) *)
@@ -288,13 +287,6 @@ Proof.
   - right; left; auto.
   - right; right; auto.
 Qed.
-
-(* Definition le (alpha beta :T1) :=
-  lt alpha beta \/ alpha = beta.
-
-Global Hint Unfold le : T1.
-*)
-
 
 Lemma lt_inv_coeff:
   forall a n n' b b',
@@ -909,13 +901,13 @@ Proof.
   - red; apply le_trans.
   - intros a b.
     destruct (lt_le_dec a b).
-    +  now do 2 left.
+    + now do 2 left.
     + now right.
   - intros a b.
     destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
     + now do 2 left.
     + subst; now left; right.
-    + right. now apply lt_not_ge.
+    + right; now apply lt_not_ge.
 Defined.
 
 
@@ -1892,18 +1884,18 @@ Qed.
 Lemma succ_mono :
   forall a b,
   nf a -> nf b ->
-  leq lt  a b -> leq lt (succ a) (succ b).
+  leq lt a b -> leq lt (succ a) (succ b).
 Proof.
   intros a b Ha Hb Hle.
   rewrite le_lt_eq in *.
   destruct Hle as [Hlt | Heq].
   - left; now apply succ_strict_mono_LT.
-  - subst. now right.
+  - subst; now right.
 Qed.
 
 Lemma lt_succ_le_R :
   forall a, nf a -> forall b, nf b ->
-  leq lt (succ a) b ->  lt a  b .
+  leq lt (succ a) b -> lt a  b .
 Proof.
   intros c Hc; elim Hc using nf_rect.
   - intros *; rewrite le_lt_eq.  intros  Hb [Hlt | Heq]; destruct b.
@@ -1927,7 +1919,6 @@ Lemma le_lt_LT alpha beta :
 Proof.                      
   repeat rewrite le_lt_eq.
   destruct 3.
-
   left; repeat split; auto.
   now right.
 Qed.
@@ -1938,8 +1929,7 @@ Lemma LT_succ_LE_R :
     nf alpha ->
     succ alpha t1<= beta -> alpha t1< beta.
 Proof.
-  intros.
-  destruct H0 as [H1 [H2 H3]].
+  intros * H H0; destruct H0 as [H1 [H2 H3]].
   repeat split; auto.
   apply  lt_succ_le_R; auto.
 Qed.
@@ -1997,8 +1987,7 @@ Proof.
 Qed.
 
 
-(* ICI *)
-
+(** TODO: bulletize this proof ! *)
 
 Lemma lt_succ_le :
   forall a,
@@ -2017,8 +2006,7 @@ Proof.
   - destruct b.
     intros H0 H1; destruct (not_lt_zero H1).
     intros H0 H1; destruct (lt_inv H1).
-    destruct a1;
-      simpl.
+    destruct a1; simpl.
     apply lt_incl_le.
     auto with T1.
     apply lt_incl_le.
@@ -2050,8 +2038,8 @@ Proof.
     apply le_tail.
     eauto with T1.
     decompose [and] H2; subst.
-    auto. cbn.
-    
+    auto.
+    cbn.
     destruct b1.
     generalize (nf_of_finite H0). 
     intro; subst.

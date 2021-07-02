@@ -1,7 +1,4 @@
-(**  Pierre Casteran 
-    LaBRI, University of Bordeaux 
-
-
+(**  
    Class of ordinals less than epsilon0 
 
 
@@ -36,11 +33,11 @@ Global Hint Resolve cnf_ok : E0.
 
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-(*  Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta). *)
+
 Definition Le := leq Lt.
 
 
-   Infix "o<" := Lt : E0_scope.
+Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
 Instance Zero : E0 := @mkord zero refl_equal.
@@ -309,7 +306,7 @@ Global Hint Resolve Lt_wf : E0.
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
   destruct alpha, beta;simpl in *.  unfold leq , Lt;simpl.
-  intro. rewrite Le_iff. split; auto.
+  intro; rewrite Le_iff; split; auto.
   - apply T1.succ_nf; auto.
   -  split; auto.
      + apply T1.lt_succ_le;auto.
@@ -425,7 +422,7 @@ Lemma lt_Succ_le_2 (alpha beta: E0):
     alpha o< Succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
- red in H; red. rewrite  Le_iff.
+ red in H; red; rewrite  Le_iff.
  cbn;  apply LT_succ_LE_2; auto.
 Qed.
 
@@ -440,7 +437,7 @@ Lemma le_lt_eq_dec : forall alpha beta, alpha o<= beta ->
                                         {alpha o< beta} + {alpha = beta}.
 Proof.
   destruct alpha, beta. intros. rewrite Le_iff in H.
- destruct (LE_LT_eq_dec  H).
+  destruct (LE_LT_eq_dec  H).
   - now left.
   - cbn in e; subst. right; subst; f_equal; apply nf_proof_unicity.
 Qed.

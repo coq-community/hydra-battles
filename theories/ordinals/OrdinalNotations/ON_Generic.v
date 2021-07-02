@@ -18,13 +18,10 @@ Local Open Scope ON_scope.
 
 (**
   Ordinal notation system on type [A] :
-
-TODO: move [compare_correct] and associated lemmas to Prelude 
-
 *)
 
-Class ON {A:Type}(lt : relation A)
-      (compare : A -> A -> comparison)  :=
+Class ON {A:Type}(lt: relation A)
+      (compare: A -> A -> comparison)  :=
   {
   comp :> Comparable lt compare;
   wf : well_founded lt;
@@ -33,7 +30,7 @@ Class ON {A:Type}(lt : relation A)
 
 (** Selectors *)
 
-Definition ON_t  {A:Type}{lt : relation A}
+Definition ON_t {A:Type}{lt : relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} := A.
 
@@ -80,7 +77,7 @@ Qed.
 Global Hint Resolve wf_measure : core.
 
 
-Definition ZeroLimitSucc_dec {A:Type}{lt : relation A}
+Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare} :=
   forall alpha,
@@ -91,17 +88,17 @@ Definition ZeroLimitSucc_dec {A:Type}{lt : relation A}
 
 Lemma le_lt_trans {A:Type}(lt : relation A)
             {compare : A -> A -> comparison}
-            {on : ON lt compare}: forall p q r: A, leq lt p q -> lt q r ->
-                                                   lt p  r.
+            {on : ON lt compare}:
+  forall p q r: A, leq lt p q -> lt q r -> lt p r.
 Proof.
   intros * H;  destruct H; [| trivial].
-  - intro; now transitivity y.
+  intro; now transitivity y.
 Qed.   
 
 Lemma lt_le_trans {A:Type}(lt: relation A)
             {compare : A -> A -> comparison}
             {on : ON lt compare}:
-  forall p q r, lt p  q -> leq lt q r -> lt p  r.
+  forall p q r, lt p q -> leq lt q r -> lt p r.
 Proof.
   intros * H H0; rewrite le_lt_eq in H0;  destruct H0.
   - now  transitivity q.
@@ -112,17 +109,16 @@ Qed.
 (** The segment called [O alpha] in Schutte's book *)
 
 Definition bigO `{nA : @ON A ltA compareA}
-           (a: A) : Ensemble A :=
-  fun x: A => ltA x  a.
+           (a: A) : Ensemble A := fun x: A => ltA x a.
 
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)
 
 Class  SubON 
-       `(OA : @ON A ltA  compareA)
-       `(OB : @ON B ltB  compareB)
-       (alpha :  B)
-       (iota : A -> B):=
+       `(OA: @ON A ltA compareA)
+       `(OB: @ON B ltB compareB)
+       (alpha:  B)
+       (iota: A -> B):=
   {
   SubON_compare :forall x y : A,  compareB (iota x) (iota y) =
                                  compareA x y;
@@ -145,7 +141,7 @@ Class  ON_Iso
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
 
 Class ON_correct `(alpha : Ord)
-     `(OA : @ON A ltA   compareA)
+     `(OA : @ON A ltA compareA)
       (iota : A -> Ord) :=
   { ON_correct_inj : forall a, lt (iota a) alpha;
     ON_correct_onto : forall beta, lt beta alpha ->
@@ -162,7 +158,7 @@ Class ON_correct `(alpha : Ord)
 
 (** ** Relative correctness of a constant or a function  *)
 
-Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
+Definition SubON_same_cst `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> B} 
        {alpha: B}
@@ -173,7 +169,7 @@ Definition SubON_same_cst  `{OA : @ON A ltA  compareA}
 
 
 
-Definition SubON_same_fun  `{OA : @ON A ltA  compareA}
+Definition SubON_same_fun `{OA : @ON A ltA  compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> B} 
        {alpha: B}
@@ -183,7 +179,7 @@ Definition SubON_same_fun  `{OA : @ON A ltA  compareA}
   := forall x,  iota (f x) = g (iota x).
 
 
-Definition SubON_same_op  `{OA : @ON A ltA   compareA}
+Definition SubON_same_op `{OA : @ON A ltA compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> B} 
        {alpha: B}
@@ -197,12 +193,12 @@ Definition SubON_same_op  `{OA : @ON A ltA   compareA}
 (** Correctness w.r.t. Schutte's model *)
 
 
-Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
+Definition ON_cst_ok  {alpha: Ord} `{OA : @ON A ltA compareA}
        `{OB : @ON B ltB  compareB}
        {iota : A -> Ord} 
        {_ : ON_correct alpha OA iota}
-       (a : A)
-       (b : Ord)
+       (a: A)
+       (b: Ord)
   := iota a = b.
 
 
@@ -217,11 +213,11 @@ Definition ON_fun_ok  {alpha: Ord} `{OA : @ON A ltA   compareA}
     forall x,  iota (f x) = g (iota x).
 
 Definition ON_op_ok  {alpha: Ord} `{OA : @ON A ltA  compareA}
-       `{OB : @ON B ltB  compareB}
+       `{OB : @ON B ltB compareB}
        {iota : A -> Ord} 
        {_ : ON_correct alpha OA iota}
        (f : A -> A -> A)
-       (g : Ord  -> Ord -> Ord)
+       (g : Ord -> Ord -> Ord)
   :=
     forall x y,  iota (f x y) = g (iota x) (iota y).
 
@@ -274,7 +270,7 @@ Qed.
 
 
 Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
-  compareA alpha beta = Lt <-> ltA alpha  beta.
+  compareA alpha beta = Lt <-> ltA alpha beta.
 Proof.
   split.
   -  intro H; destruct (compare_correct alpha beta); auto; discriminate.
@@ -297,16 +293,16 @@ Proof.
         now transitivity alpha.
 Qed.
 
-
+(** TODO: Move to comparable ? *)
 Lemma lt_eq_lt {A:Type}{lt : relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} : 
-  forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta  alpha.
+  forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta alpha.
 Proof.
   intros; destruct (compare_correct alpha beta); auto.
 Qed.
 
-
+(** TODO: Move to comparable ? *)
 Definition lt_eq_lt_dec {A:Type}{lt: relation A}
             {compare : A -> A -> comparison}
             {on : ON lt compare} (alpha beta : A) :
@@ -317,6 +313,7 @@ Definition lt_eq_lt_dec {A:Type}{lt: relation A}
   - right; now rewrite <- compare_Gt_gt.
 Defined.
 
+(** TODO: Move to comparable ? *)
 Lemma LimitNotSucc {A:Type}{lt: relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare}
@@ -330,8 +327,6 @@ Proof.
   - destruct (H0 beta H1) as [z [H4 H5]]; eauto.
 Qed.
 
-
-(** To do : simplify/structure  these new proofs ! *)
 
 Section SubON_properties.
   
@@ -347,15 +342,15 @@ Section SubON_properties.
     - apply compare_Lt_lt in H; apply compare_Lt_lt;
       now rewrite SubON_compare.
     - apply compare_Lt_lt.
-    specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b)).
-    intro H0;rewrite <- H0 in H.
-    now rewrite SubON_compare in H.
+      specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b));
+        intro H0;rewrite <- H0 in H.
+      now rewrite SubON_compare in H.
   Qed.    
 
   Lemma SubON_inj : forall a b, f a = f b -> a = b.
   Proof.
-    intros a b H; apply compare_Eq_eq.
-    apply compare_Eq_eq in H.
+    intros a b H; apply compare_Eq_eq;
+      apply compare_Eq_eq in H;
     now   rewrite SubON_compare in H.
   Qed.
 

@@ -16,8 +16,8 @@ Section OA_given.
   
   Context {A:Type}
           {Lt Le: relation A}
-          {compareA : A -> A -> comparison}
-          `(OA : ON A Lt  compareA).
+          {compareA: A -> A -> comparison}
+          `(OA : ON A Lt compareA).
 
 (** The type of ordinals less than [a] *)
 
@@ -67,7 +67,7 @@ Proof.
    destruct x; cbn; apply wf.
 Qed.
 
-Global Instance sto a : StrictOrder (@lt a).
+#[global] Instance sto a : StrictOrder (@lt a).
 Proof.
   destruct OA; split.
    - intro x; red;  unfold lt; destruct x; cbn.
@@ -89,7 +89,7 @@ Qed.
 
 (** We have now an ordinal notation *)
 
-Global Instance ON_O  (a:A) : ON (@lt a) compare .
+#[global] Instance ON_O  (a:A) : ON (@lt a) compare .
 Proof.
   split.
   - apply ON_O_comp. 

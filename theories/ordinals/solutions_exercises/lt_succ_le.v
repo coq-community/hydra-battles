@@ -19,7 +19,7 @@ Section Proofs.
   Variable gamma: A.  
   Hypothesis HGammaBeta :   lt gamma beta.
 
-  Lemma L1 :   leq lt gamma alpha.
+  Lemma L1: leq lt gamma alpha.
   Proof.
     destruct (lt_eq_lt_dec gamma alpha) as [[Hlt | Heq] | Hgt].
     - rewrite le_lt_eq; now left.

@@ -40,7 +40,7 @@ Definition le := clos_refl _ lt.
 
 Definition compare (alpha beta: t) : comparison :=
   match compareB (fst alpha) (fst beta) with
-  |  Eq => compareA (snd alpha) (snd beta)
+  | Eq => compareA (snd alpha) (snd beta)
   | c => c
   end.
 
@@ -58,9 +58,7 @@ Qed.
     
 
 Lemma lt_wf : well_founded lt.
-Proof. 
-       apply wf_lexico; apply wf. 
-Qed.
+Proof. apply wf_lexico; apply wf. Qed.
 
 
 Lemma compare_reflect alpha beta :
@@ -70,7 +68,8 @@ Lemma compare_reflect alpha beta :
   | Eq => alpha = beta
   | Gt => lt beta  alpha
   end.
-  destruct alpha, beta; cbn; auto. unfold compare. cbn.
+Proof.
+  destruct alpha, beta; cbn. unfold compare; cbn.
   destruct (compare_correct b b0).
   - subst; destruct (compare_correct a a0).
     + now subst.
@@ -85,7 +84,7 @@ Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
                 (compare alpha beta).
 Proof.
-  generalize (compare_reflect alpha beta).
+  generalize (compare_reflect alpha beta);
   destruct (compare alpha beta); now constructor. 
 Qed.
 
@@ -96,11 +95,11 @@ Proof.
   - apply compare_correct.
 Qed. 
 
-Global Instance ON_mult : ON lt compare.
+#[global] Instance ON_mult : ON lt compare.
 Proof.
   split.
   - apply mult_comp.
-  -  apply lt_wf.
+  - apply lt_wf.
 Qed.
 
 

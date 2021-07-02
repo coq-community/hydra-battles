@@ -197,8 +197,8 @@ Section S1.
                                           (Canon.Canon beta (S n)).
       Proof.
         destruct beta; unfold Limitb.
-        cbn.  intros; rewrite Le_iff. split. 
-        -  apply  (@E0.cnf_ok (FinS n0)).
+        cbn;  intros; rewrite Le_iff; split. 
+        - apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.
           + apply L04; auto.
           + cbn; apply Canon.nf_canon; auto.

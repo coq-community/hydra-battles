@@ -1,6 +1,4 @@
-(** Complements on strict orders
-
-    Pierre Castéran, Univ. Bordeaux and LaBRI *)
+(** Complements on strict orders *)
 
 
 From Coq Require Import RelationClasses Relation_Operators Ensembles Setoid.
