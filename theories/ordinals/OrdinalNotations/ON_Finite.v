@@ -69,7 +69,7 @@ Proof.
   -  apply Acc_inverse_image, Wf_nat.lt_wf.
 Qed.
 
-Global Instance sto n : StrictOrder (@lt n).
+#[global] Instance sto n : StrictOrder (@lt n).
 Proof.
   split.
    - intro x; red;  unfold lt; destruct x; cbn.
@@ -86,7 +86,7 @@ Qed.
 
 (** We have now an ordinal notation *)
 
-Global Instance comp n: Comparable (@lt n)  compare.
+#[global] Instance comp n: Comparable (@lt n) compare.
 Proof.
   split.
    - apply sto.
