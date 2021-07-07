@@ -69,7 +69,7 @@ Proof.
   -  apply Acc_inverse_image, Wf_nat.lt_wf.
 Qed.
 
-Global Instance sto n : StrictOrder (@lt n).
+#[global] Instance sto n : StrictOrder (@lt n).
 Proof.
   split.
    - intro x; red;  unfold lt; destruct x; cbn.
@@ -86,12 +86,18 @@ Qed.
 
 (** We have now an ordinal notation *)
 
-Global Instance FinOrd (n:nat) : ON (@lt n) compare .
+#[global] Instance comp n: Comparable (@lt n) compare.
 Proof.
   split.
-  - apply sto.
+   - apply sto.
+   - apply compare_correct. 
+Qed.
+
+Global Instance FinOrd n : ON (@lt n)  compare. 
+Proof.
+  split.
+  - exact (comp n).
   - apply lt_wf.
-  - apply compare_correct.
 Qed.
 
 Definition Zero_limit_succ_dec (n:nat) : ZeroLimitSucc_dec (on := FinOrd n).

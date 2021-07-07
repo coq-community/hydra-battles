@@ -8,12 +8,18 @@ From hydras Require Import Schutte.
 
 Import Relations RelationClasses.
 
-Global Instance Omega : ON  Peano.lt Nat.compare.
+#[global] Instance Omega_comp : Comparable Peano.lt  Nat.compare.
+Proof.
+  split.
+  - apply Nat.lt_strorder.
+  - apply Nat.compare_spec.
+Qed.
+
+#[global] Instance Omega : ON  Peano.lt  Nat.compare.
 Proof.
  split.
- - apply Nat.lt_strorder.
+ - apply Omega_comp.
  - apply Wf_nat.lt_wf.
- - apply Nat.compare_spec.
 Qed.
 
 

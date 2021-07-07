@@ -151,7 +151,7 @@ Section S1.
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
           limitb beta ->
-          forall n, T1.le (fin (S n)) (Canon.canon beta (S n)).
+          forall n, leq lt  (fin (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.
         -  discriminate.
@@ -197,8 +197,8 @@ Section S1.
                                           (Canon.Canon beta (S n)).
       Proof.
         destruct beta; unfold Limitb.
-        cbn; split. 
-        -  apply  (@E0.cnf_ok (FinS n0)).
+        cbn;  intros; rewrite Le_iff; split. 
+        - apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.
           + apply L04; auto.
           + cbn; apply Canon.nf_canon; auto.
@@ -221,7 +221,7 @@ Section S1.
         - apply R5; auto.
           + generalize (L04' lambda Hlambda); intro H; specialize (H n).
             eapply E0.Le_trans with (S n).
-            * split.
+            * rewrite Le_iff. split. 
               -- now compute.
               -- split.
                  ++ cbn; destruct (le_lt_or_eq _ _ Hn).
@@ -243,7 +243,10 @@ Section S1.
     - apply Lt_wf.
     - clear alpha; intro alpha.  intros IHalpha Halpha.
       destruct (Zero_Limit_Succ_dec  alpha) as [[H1 | H1] | H1].
-      + subst;  compute in Halpha; decompose [and] Halpha; now destruct H1.
+      +  subst; rewrite Le_iff in Halpha.
+         decompose [and] Halpha. cbn in Halpha. destruct Halpha
+           as [H1 [H2 H3]].
+         rewrite le_lt_eq in H2; destruct H2; try discriminate.
       + red; intros;  eapply L4; auto.
       + destruct H1; subst alpha.
         assert (H: 3 o<= x \/ x = Fin 2).

@@ -3,9 +3,11 @@ From Coq Require Import  Logic.Eqdep_dec Wellfounded.
 Require Import Arith.
 Require Import RelationClasses.
 Require Import ON_Generic.
+Import Relation_Operators.
 
 Definition t := {l: t | nf l}.
 Definition lt (w1 w2:t) := (wlt (proj1_sig w1) (proj1_sig w2)).
+Definition le := leq lt.
 
 Instance lt_strorder : StrictOrder lt.
 Proof.
@@ -93,10 +95,16 @@ Proof.
   destruct (compare alpha beta); now constructor.
 Qed.
 
-Instance OmegaOmega : ON lt compare.
+Instance OO_comp : Comparable lt compare.
 Proof.
   split.
   - apply lt_strorder.
-  - apply wf_lt.
   - apply compare_correct.
+Qed.
+
+Instance OmegaOmega : ON lt compare.
+Proof.
+  split.
+  - apply OO_comp.
+  - apply wf_lt.
 Qed.

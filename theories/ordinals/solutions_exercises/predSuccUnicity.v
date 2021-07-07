@@ -4,7 +4,7 @@ From Coq Require Import Relations.
 Section Proofs_of_unicity.
   
 Context (A:Type)
-        (lt : relation A)
+        (lt le : relation A)
         (compare : A -> A -> comparison)
         (On : ON lt compare).
 

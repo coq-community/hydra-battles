@@ -17,7 +17,7 @@ Section Defs.
 
   Context `(ltA: relation A)
           (compareA : A -> A -> comparison)
-          (NA: ON ltA compareA).
+          (NA: ON ltA  compareA).
   Context `(ltB: relation B)
           (compareB : B -> B -> comparison)
           (NB: ON ltB compareB).
@@ -86,12 +86,18 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-Global Instance ON_plus : ON lt compare.
+#[global] Instance plus_comp : Comparable lt compare.
 Proof.
   split.
   - apply lt_strorder.
+  - apply compare_correct. 
+Qed.
+
+#[global] Instance ON_plus : ON lt compare.
+Proof.
+  split.
+  - apply plus_comp.
   -  apply lt_wf.
-  - apply compare_correct.
 Qed.
 
 
@@ -108,8 +114,8 @@ Defined.
 
 End Defs.
 
-Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
-Arguments ON_plus {A ltA compareA} _ {B ltB compareB}.
+Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB  compareB} _.
+Arguments ON_plus {A ltA compareA} _ {B ltB  compareB}.
 
 
 

@@ -773,10 +773,10 @@ Proof.
     destruct (T1.lt_eq_lt_dec lambda l').
     + repeat split;auto.
       destruct s.
-      *  auto with T1. 
-      *  subst; auto with T1. 
+      *  now left.
+      *  subst; now right.
     + assert (l' t1< lambda)%t1 by (split; auto).
-      destruct (canonS_limit_strong   H H0 H2).
+      destruct (canonS_limit_strong H H0 H2).
       specialize (Hl' x).
       assert (l' t1< l')%t1.
       { apply LT_LE_trans with  (canonS lambda x); auto. }

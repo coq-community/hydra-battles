@@ -4,7 +4,7 @@ From Coq Require Import Relations.
 Section Proofs_of_lt_succ_le.
   
 Context (A:Type)
-        (lt : relation A)
+        (lt  : relation A)
         (compare : A -> A -> comparison)
         (On : ON lt compare).
 
@@ -19,13 +19,14 @@ Section Proofs.
   Variable gamma: A.  
   Hypothesis HGammaBeta :   lt gamma beta.
 
-  Lemma L1 :   ON_le gamma alpha.
+  Lemma L1: leq lt gamma alpha.
   Proof.
     destruct (lt_eq_lt_dec gamma alpha) as [[Hlt | Heq] | Hgt].
-    - now left.
-    - subst. right.
+    - rewrite le_lt_eq; now left.
+    - rewrite le_lt_eq; now right. 
     - destruct Halphabeta.
-      exfalso. eauto. 
+      exfalso.
+      eauto. 
   Qed.
 
   End S1.

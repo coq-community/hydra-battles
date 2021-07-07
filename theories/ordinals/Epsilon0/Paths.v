@@ -1815,7 +1815,7 @@ Section Lemma_4_3_Proof.
         destruct H4, H2.
         do 2 (split; auto).
         destruct H2; auto.
-        now subst beta.
+        now destruct n.
       }
       assert (const_pathS n2 alpha (canon beta (S n1))).
       {
@@ -2924,16 +2924,15 @@ Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
     cbn. auto with T1.
 
     split; cbn. 
-    Search  zero canon limitb.
     specialize (limitb_canonS_not_zero j cnf_ok H).
     intro. 
     now apply not_zero_gt_0.
     apply nf_canon. 
-auto. 
+    auto. 
 
   - intros; lia.
   -        
-   unfold lt; simpl.
+    unfold lt; simpl.
     simpl; intros.
     apply canonS_limit_mono; auto.
     auto with arith.

@@ -1,7 +1,4 @@
-(**  Pierre Casteran 
-    LaBRI, University of Bordeaux 
-
-
+(**  
    Class of ordinals less than epsilon0 
 
 
@@ -36,7 +33,9 @@ Global Hint Resolve cnf_ok : E0.
 
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
+
+Definition Le := leq Lt.
+
 
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
@@ -149,6 +148,28 @@ Proof.
     apply nf_proof_unicity.
 Qed.
 
+
+Remark Le_iff : forall alpha beta,
+    Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
+Proof.
+  intros *; unfold Le, T1.LE;  destruct alpha, beta; split.
+  - cbn; rewrite le_lt_eq; destruct 1.
+   + red in H; cbn in H; repeat split; auto; apply LE_le; repeat split; auto.
+     destruct H as [H [H0 _]].
+     now left.
+   + repeat split; auto.
+     injection H;  intro; subst; right.
+  - cbn; destruct 1 as [_ [H _]]; rewrite le_lt_eq in H.
+     destruct H. 
+     + left; red;  cbn; repeat split; auto.
+     + subst; cbn; unfold Lt.
+       generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
+                                {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
+       cbn; intro H; rewrite H.
+       * now right.
+       * reflexivity.
+Qed.
+ 
 Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
 Proof.
  split.
@@ -249,7 +270,7 @@ Instance Two : E0 :=  ltac:(mko (fin 2)).
 Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
 
 
-Instance Lt_sto : StrictOrder Lt.
+Instance E0_sto : StrictOrder Lt.
 Proof.
   split.
   - intro x ; destruct x; unfold Lt; red.
@@ -284,8 +305,8 @@ Global Hint Resolve Lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
-  destruct alpha, beta;simpl in *;  unfold le, Lt;simpl.
-  intro. split; auto.
+  destruct alpha, beta;simpl in *.  unfold leq , Lt;simpl.
+  intro; rewrite Le_iff; split; auto.
   - apply T1.succ_nf; auto.
   -  split; auto.
      + apply T1.lt_succ_le;auto.
@@ -391,16 +412,17 @@ Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
                                        Succ beta o<= alpha.
 Proof.
-  destruct alpha, beta; unfold lt, le, Succ; cbn; split.
-  -  intro; now  apply LT_succ_LE.
-  - intro; now apply LT_succ_LE_R.  
+  destruct alpha, beta; unfold lt, leq , Succ; cbn; split.
+  -  rewrite Le_iff.
+     intro; now  apply LT_succ_LE.
+  - rewrite Le_iff. intro. now apply LT_succ_LE_R.  
 Qed.
 
 Lemma lt_Succ_le_2 (alpha beta: E0):
     alpha o< Succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
- red in H; red. 
+ red in H; red; rewrite  Le_iff.
  cbn;  apply LT_succ_LE_2; auto.
 Qed.
 
@@ -414,21 +436,24 @@ Qed.
 Lemma le_lt_eq_dec : forall alpha beta, alpha o<= beta ->
                                         {alpha o< beta} + {alpha = beta}.
 Proof.
-  destruct alpha, beta.
-  unfold Lt, Le; cbn.
-  intro H; destruct (LE_LT_eq_dec  H).
+  destruct alpha, beta. intros. rewrite Le_iff in H.
+  destruct (LE_LT_eq_dec  H).
   - now left.
-  - right; subst; f_equal; apply nf_proof_unicity.
+  - cbn in e; subst. right; subst; f_equal; apply nf_proof_unicity.
 Qed.
 
-
+Instance E0_comp: Comparable Lt compare.
+Proof.
+  split.
+  - apply E0_sto.
+  - apply compare_correct. 
+Qed.
 
 Instance Epsilon0 : ON Lt compare.
 Proof.
  split.
- - apply Lt_sto.
+ - apply E0_comp.
  - apply Lt_wf.
- - apply compare_correct.
 Qed.
 
 
@@ -512,8 +537,7 @@ Qed.
 Lemma Le_trans alpha beta gamma :
   alpha o<= beta -> beta o<= gamma -> alpha o<= gamma.
 Proof.
-  destruct alpha, beta, gamma; simpl. unfold le.
-  simpl.
+  destruct alpha, beta, gamma; simpl. repeat rewrite Le_iff; cbn. 
  intros; eauto with T1.
  eapply T1.LE_trans; eauto.
 Qed.
@@ -623,7 +647,7 @@ Qed.
 
 Example L_3_plus_omega :  3 + omega = omega.
 Proof.
-  now  apply compare_Eq_eq.
+  now  rewrite <- Comparable.compare_eq_iff.
 Qed.
 
 
@@ -648,7 +672,7 @@ Proof.
         }
         destruct H1.
         destruct H2.
-        eapply lt_irrefl; eauto.
+        eapply T1.lt_irrefl; eauto. 
   - destruct 1.
     unfold Lt in H, H0. cbn in H, H0.
     destruct H.
@@ -670,18 +694,14 @@ Qed.
 
 Lemma Le_refl alpha : alpha o<= alpha.
 Proof.
-  destruct alpha; split.
-  - cbn; auto.
-  - split; cbn; auto with T1.
+  right. 
 Qed.
 
 Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
 Proof.
-  destruct alpha, beta; split.
-  - cbn; auto.
-  - split; cbn; auto.
-    cbn in H; destruct H; cbn in *.
-    apply lt_incl_le; tauto.
+  unfold Lt, Le.
+  intro; rewrite le_lt_eq.
+ destruct alpha, beta. left. auto. 
 Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
@@ -694,7 +714,7 @@ Lemma E0_Lt_Succ_inv (alpha beta: E0):
 Proof.
   destruct alpha, beta; unfold Lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
-  destruct H1 as [H3 | H3].
+  destruct H1 as [H3 |].
   - left; split; auto.
   - subst; right; now apply E0_eq_intro.
 Qed.

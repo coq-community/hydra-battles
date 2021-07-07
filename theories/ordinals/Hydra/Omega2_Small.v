@@ -4,6 +4,7 @@
 From Coq Require Import Arith Peano_dec Lia Relations Relation_Operators.
 From hydras Require Import  Hydra_Lemmas Simple_LexProd ON_Omega2.
 Import ON_Generic.
+
 (** There is no measure into omega^2  for proving termination
 of all hydra battles *)
 
@@ -11,7 +12,7 @@ of all hydra battles *)
 Section Impossibility_Proof.
 
    (** Let us assume there is a variant from [Hydra] into [omega^2] 
-  for proving the   termination of all hydra  battles *)
+  for proving the termination of all hydra battles *)
  
 
   Variable m : Hydra -> ON_Omega2.t.
@@ -46,8 +47,8 @@ Section Impossibility_Proof.
     specialize (m_strict_mono m Hvar first_round).   
     rewrite H; inversion_clear 1; lia.
   Qed. 
-    
-      
+  
+  
   Lemma big_to_small : big_h -+-> small_h. 
   Proof.
     unfold small_h; case_eq  (m big_h); intros i j Hj;  destruct i.
@@ -60,7 +61,7 @@ Section Impossibility_Proof.
       + now destruct m_big_h_not_null.
       + unfold iota;cbn;left.
         exists j;right; left; constructor 1;  split;  left.
-      
+        
     (* i > 0 *)
     - unfold iota; cbn;  destruct j.
       +   left; unfold iota, big_h; cbn.
@@ -113,11 +114,6 @@ Section Impossibility_Proof.
       - apply succ_rounds.
     Qed.
 
-   
-
- (*m_strict_mono m Hvar*) 
-
-
 Local Hint Constructors step clos_trans_1n : hydra.
 Local Hint Resolve lex_1 lex_2: hydra.
 Local Hint Unfold lt : hydra.
@@ -141,26 +137,30 @@ Proof.
     +  (* p = zero *)
       apply le_0. 
     +  (* p = (S i, 0) *)
-      rewrite <- limit_is_lub.
-      intro k; apply le_lt_trans with (m (iota (l, k))). cbn.
+      assert (is_true (limitb (S l, 0))).
+      reflexivity.
+      specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
+      intro.
+      rewrite <- H0. 
+      intro k; eapply Comparable.le_lt_trans.  
       apply IHij. left; auto.
       red; apply (m_strict_mono m Hvar); auto with hydra.
-      reflexivity.
+      simpl canon. 
+      apply step_to_battle.  apply limit_step. 
   - change (i, S k) with (succ (i,k)) at 1.
-    rewrite <- lt_succ_le.
-    apply le_lt_trans with (m (iota (i, k))); auto with hydra.
-    apply IHij.
-    right; auto.      
+    rewrite <- (lt_succ_le (i,k) (m (iota (i, S k)))).
+    eapply (Comparable.le_lt_trans).
+    instantiate (1:= (m (iota (i, k)))). 
+    apply IHij; right; auto.      
     apply (m_strict_mono m Hvar); auto with hydra.
 Qed.
-
 
 Theorem Impossible : False.
 Proof.
   destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
-    apply le_lt_trans with (m small_h).
-  -  apply m_ge.
-  -  apply m_lt. 
+    eapply le_lt_trans.
+  - apply m_ge.
+  - apply m_lt. 
 Qed. 
 
 End Impossibility_Proof.

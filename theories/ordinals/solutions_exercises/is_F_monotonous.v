@@ -12,7 +12,7 @@ Section S1.
 
  
   Remark R1 : 3 o<= omega.
-  red. compute; repeat split; auto.
+  rewrite Le_iff; repeat split; left; reflexivity.
   Qed.
 
   Remark R2 : 2 <= 2.

@@ -900,7 +900,6 @@ intro alpha.
 pattern alpha; apply well_founded_induction with Lt.
 - apply Lt_wf.
 - clear alpha; intros alpha IHalpha.
-  Search Succ Zero.
   destruct (Zero_Limit_Succ_dec alpha) as [[HZero | HSucc] | Hlim].
   + subst. intro i; now rewrite f_zero_eqn, F_zero_eqn.
   + intro i. rewrite f_lim_eqn, F_lim_eqn.
