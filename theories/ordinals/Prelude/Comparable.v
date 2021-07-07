@@ -495,6 +495,38 @@ Section Comparable.
     pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; assumption.
   Qed.
 
+
+  Lemma lt_eq_lt:
+    forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta alpha.
+  Proof.
+    intros; destruct (compare_correct alpha beta); auto.
+  Qed.
+
+  Definition lt_eq_lt_dec 
+             (alpha beta : A) :
+    {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
+    case_eq (compare alpha beta); intro H.
+    - left;right; now rewrite <- compare_eq_iff.
+    - left; left; now rewrite <- compare_lt_iff.
+    - right; now rewrite <- compare_gt_iff.
+  Defined.
+
+
+
+
+  Lemma LimitNotSucc 
+        (alpha: A)  :
+    Limit alpha -> forall beta, ~ Successor alpha beta.
+  Proof.
+    intros [[w H] H0] beta [H1 H2].
+    destruct (lt_eq_lt beta w) as [H3 | [H3 | H3]].
+    - apply (H2 w);auto.
+    - subst w;  destruct (H0 _ H1) as [z [H3 H4]]; apply (H2 z);auto.
+    - destruct (H0 beta H1) as [z [H4 H5]]; eauto.
+  Qed.
+
+
+
 End Comparable.
 
 Local Ltac compare_trans H1 H2 intropattern :=
@@ -528,37 +560,6 @@ Ltac compare_destruct_eqn a b H :=
 Tactic Notation "compare" "destruct" constr(a) constr(b) "as" ident(H) :=
   compare_destruct_eqn a b H.
 
-(* TODO : move the three following lemmas upper in the file *)
 
-Lemma lt_eq_lt {A:Type}{lt : relation A}
-      {compare : A -> A -> comparison}
-      {_ : Comparable lt compare}:
-           forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta alpha.
-Proof.
-  intros; destruct (compare_correct alpha beta); auto.
-Qed.
 
-Definition lt_eq_lt_dec {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {c : Comparable lt compare}
-           (alpha beta : A) :
-   {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
-  case_eq (compare alpha beta); intro H.
-  - left;right; now rewrite <- compare_eq_iff.
-  - left; left; now rewrite <- compare_lt_iff.
-  - right; now rewrite <- compare_gt_iff.
-Defined.
-
-Lemma LimitNotSucc {A:Type}{lt: relation A}
-           {compare: A -> A -> comparison}
-           {c: Comparable lt compare}
-           (alpha: A)  :
-  Limit alpha -> forall beta, ~ Successor alpha beta.
-Proof.
-  intros [[w H] H0] beta [H1 H2].
-  destruct (lt_eq_lt beta w) as [H3 | [H3 | H3]].
-  - apply (H2 w);auto.
-  - subst w;  destruct (H0 _ H1) as [z [H3 H4]]; apply (H2 z);auto.
-  - destruct (H0 beta H1) as [z [H4 H5]]; eauto.
-Qed.
 
