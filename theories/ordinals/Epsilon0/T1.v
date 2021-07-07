@@ -544,7 +544,6 @@ Qed.
 Lemma zero_lt : forall alpha n beta, lt zero (ocons alpha n beta).
 Proof. reflexivity. Qed. 
 
-
 Global Hint Resolve zero_lt head_lt coeff_lt tail_lt : T1.
 
 Open Scope t1_scope.
@@ -3744,10 +3743,9 @@ Section Proof_of_dist.
    TODO ? study the case where several contexts may be rewritten
    or adapt substitute_ind (with its three arguments a, b, c).
 
-
    *)
   
- #[local]  Ltac rewrite_ind Hind b :=
+ #[local] Ltac rewrite_ind Hind b :=
     pose proof (Hind b) as ->; [ | try apply tail_LT_cons| | | ];
     eauto with T1.
 

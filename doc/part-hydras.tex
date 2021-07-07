@@ -2236,23 +2236,15 @@ to Schütte's model.
 
 \subsection{A class for ordinal notations}
 
-The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order. The reflexive closure of \texttt{lt}, (called \texttt{le}, for ``less  or equal than'') is a total decidable order, implemented through a comparison function \texttt{compare}.  The correctness of this function is expressed through Stdlib's type 
+From the \coq{} user's point of view, an ordinal notation is
+a structure allowing to compare two ordinals by computation, and proving by well-founded induction.
+
+\subsubsection{The \texttt{Comparable class}}
+
+The following class, contributed by Jérémy Damour and Théo Zimmermann, allows us to apply generic lemmas and tactics
+about decidable strict orders.
+The correctness of the comparison function is expressed through Stdlib's type 
 \texttt{Datatypes.CompareSpec}.
-
-First, we import the definition of strict orders from
-the library ~\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.RelationClasses.html}{%
-Classes.RelationClasses}, 
-and the inductive specification of a comparison from
-\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Datatypes.html}{%
-Init.Datatypes}.
-
-\begin{Coqsrc}
-Variable A: Type.
-
-  Class StrictOrder (R : relation A) : Prop := {
-    StrictOrder_Irreflexive :> Irreflexive R ;
-    StrictOrder_Transitive :> Transitive R }.
-\end{Coqsrc}
 
 
 \begin{Coqsrc}
@@ -2261,6 +2253,25 @@ Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
   | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt
 \end{Coqsrc}
+
+
+\begin{Coqsrc}
+Class Comparable {A:Type} 
+  (lt: relation A)
+  (compare : A -> A -> comparison) :=
+  {
+  sto :> StrictOrder lt;
+  compare_correct: forall a b,
+      CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
+  }.
+\end{Coqsrc}
+
+
+
+\subsubsection{The \texttt{ON} class}
+
+The following class definition, parameterized with a type $A$, a binary relation \texttt{lt} on $A$, specifies that \texttt{lt} is a well-founded strict order, provided with a correct comparison function.
+
 
 \vspace{4pt}
 \noindent\emph{From
@@ -2273,12 +2284,8 @@ Library~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{OrdinalN
 Class ON {A:Type}(lt: relation A)
       (compare : A -> A -> comparison)  :=
   {
-  sto :> StrictOrder lt;
+  comp :> Comparable lt compare;
   wf : well_founded lt;
-  compare_correct :
-    forall alpha beta:A,
-      CompareSpec (alpha=beta) (lt alpha beta) (lt beta alpha)
-                  (compare alpha beta);
   }.
 \end{Coqsrc}
 
