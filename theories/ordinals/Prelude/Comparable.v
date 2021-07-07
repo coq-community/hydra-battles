@@ -16,7 +16,7 @@ Section Comparable.
           {lt: relation A}
           {compare : A -> A -> comparison}
           {comparable : Comparable lt compare}.
-  #[local] Notation le := (leq lt) . 
+  #[local] Notation le := (leq lt). 
 
   (** For compatibility (provisionnal) *)
   Definition  lt_trans := StrictOrder_Transitive.
@@ -368,8 +368,8 @@ Section Comparable.
     - now apply compare_lt_iff in Hab as ->.
     - now apply lt_not_gt in Hbc.
     - exfalso.
-      assert (Hca : lt c a) by  (now transitivity b). 
-       apply lt_not_gt in Hac.  now apply Hac. 
+      assert (Hca : lt c a) by (now transitivity b). 
+      apply lt_not_gt in Hac; now apply Hac. 
     - now apply compare_gt_iff in Hab as ->.
   Qed.
 

@@ -27,63 +27,51 @@ Class ON {A:Type}(lt: relation A)
   wf : well_founded lt;
   }.
 
-
-(** Selectors *)
-
-Definition ON_t {A:Type}{lt : relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} := A.
-
-Definition ON_compare {A:Type}{lt : relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} := compare.
-
-
-Definition ON_lt {A:Type}{lt: relation A}
+Section Definitions.
+  Context  {A:Type}{lt : relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare} := lt.
-
-Infix "o<" := ON_lt : ON_scope.
-
-Definition ON_le  {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {st : StrictOrder lt}
-           {on : ON lt  compare}  :  relation A := leq lt.
-
-Infix "o<=" := ON_le : ON_scope.
-
-
-Definition measure_lt {A:Type}{lt : relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}
-            {B : Type}
-  (m : B -> A) : relation B :=
-  fun x y =>  ON_lt (m x) (m y).
-
-
+           {on : ON lt compare}.
   
-Lemma wf_measure  {A:Type}(lt : relation A)
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}
-            {B : Type}
-            (m : B -> A) :
-  well_founded (measure_lt m). 
-Proof.
-  intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
-  - intros y z H; apply H.
-  - eapply Acc_inverse_image, wf.
-Qed.
+  #[using="All"]
+   Definition ON_t := A.
 
-Global Hint Resolve wf_measure : core.
+  #[using="All"]
+   Definition ON_compare := compare.
 
+  #[using="All"]
+   Definition ON_lt := lt.
 
-Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare} :=
+  #[using="All"]
+   Definition ON_le:  relation A := leq lt.
+
+  #[using="All"]
+   Definition measure_lt {B : Type} (m : B -> A) : relation B :=
+    fun x y =>  ON_lt (m x) (m y).
+
+  #[using="All"]
+   Lemma wf_measure {B : Type} (m : B -> A) :
+    well_founded (measure_lt m). 
+  Proof.
+    intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
+    - intros y z H; apply H.
+    - eapply Acc_inverse_image, wf.
+  Qed.
+
+ #[using="All"]
+Definition ZeroLimitSucc_dec :=
   forall alpha,
     {Least alpha} +
     {Limit alpha} +
     {beta: A | Successor alpha beta}.
+
+
+End Definitions.
+
+Infix "o<" := ON_lt : ON_scope.
+Infix "o<=" := ON_le : ON_scope.
+
+Global Hint Resolve wf_measure : core.
+
 
 
 Lemma le_lt_trans {A:Type}(lt : relation A)
