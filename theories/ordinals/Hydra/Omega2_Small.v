@@ -159,7 +159,6 @@ Theorem Impossible : False.
 Proof.
   destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
     eapply le_lt_trans.
-  - exact Omega2.
   - apply m_ge.
   - apply m_lt. 
 Qed. 

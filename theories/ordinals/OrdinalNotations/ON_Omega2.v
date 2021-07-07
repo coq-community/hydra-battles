@@ -85,7 +85,7 @@ Proof.
   + left; now left.
   +  now apply le_intror.
   -  intros. About lt_le_trans.  eapply lt_le_trans .
-     exact Omega2. instantiate (1 := (n, S n0)). 
+    instantiate (1 := (n, S n0)). 
     right; auto.
    assumption.
 Qed.
@@ -242,8 +242,7 @@ Proof.
       assert ((n,n0) o< s x).
  apply H1.
      rewrite  lt_succ_le in H2.
-     assert (s x o< s x).  { eapply lt_le_trans; eauto.
-                             exact Omega2. }
+     assert (s x o< s x) by(eapply lt_le_trans; eauto).
      destruct (ON_mult.lt_strorder Omega  Omega) as [H4 H5].
      destruct (H4 _ H3).
 Qed.
@@ -490,7 +489,7 @@ Open Scope ON_scope.
 
 Example L_3_plus_omega :  3 + omega = omega.
 Proof.
-  now  apply compare_Eq_eq.
+  now  apply Comparable.compare_eq_iff.
 Qed.
 
 

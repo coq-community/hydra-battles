@@ -647,7 +647,7 @@ Qed.
 
 Example L_3_plus_omega :  3 + omega = omega.
 Proof.
-  now  apply compare_Eq_eq.
+  now  rewrite <- Comparable.compare_eq_iff.
 Qed.
 
 
