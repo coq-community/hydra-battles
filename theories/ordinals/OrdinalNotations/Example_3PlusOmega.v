@@ -12,7 +12,7 @@ Definition O3O  :=  ON_plus (FinOrd 3) Omega.
 Existing Instance O3O.
 
 Arguments ON_t : clear implicits.
-Arguments ON_t {A lt  compare} _.
+Arguments ON_t {A lt compare} _.
 
 
 Program Definition f (z: ON_t O3O) : ON_t Omega :=

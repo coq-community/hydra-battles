@@ -15,7 +15,7 @@ Proof.
   - apply Nat.compare_spec.
 Qed.
 
-Global Instance Omega : ON  Peano.lt  Nat.compare.
+#[global] Instance Omega : ON  Peano.lt  Nat.compare.
 Proof.
  split.
  - apply Omega_comp.

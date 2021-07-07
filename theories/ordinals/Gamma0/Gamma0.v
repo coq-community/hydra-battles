@@ -3686,7 +3686,7 @@ Instance Gamma0_comp: Comparable lt compare.
 Proof.
   split. 
   - apply lt_sto.
-  -  apply compare_correct.
+  - apply compare_correct.
 Qed. 
 
 Instance Gamma0: ON lt  compare.

@@ -85,7 +85,6 @@ Section A_given.
   Qed.
 
 End A_given.
-About le.
 
 Lemma le_lt_eq  {A}{lt: relation A}:
   forall a b, leq lt a b <-> lt a b \/ a = b.

@@ -84,7 +84,7 @@ Proof.
   - inversion_clear 1.
   + left; now left.
   +  now apply le_intror.
-  -  intros. About lt_le_trans.  eapply lt_le_trans .
+  -  intros;  eapply lt_le_trans .
     instantiate (1 := (n, S n0)). 
     right; auto.
    assumption.

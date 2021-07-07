@@ -28,6 +28,7 @@ Class ON {A:Type}(lt: relation A)
   }.
 
 Section Definitions.
+  
   Context  {A:Type}{lt : relation A}
            {compare : A -> A -> comparison}
            {on : ON lt compare}.
@@ -57,13 +58,18 @@ Section Definitions.
     - eapply Acc_inverse_image, wf.
   Qed.
 
- #[using="All"]
-Definition ZeroLimitSucc_dec :=
-  forall alpha,
-    {Least alpha} +
-    {Limit alpha} +
-    {beta: A | Successor alpha beta}.
+  #[using="All"]
+   Definition ZeroLimitSucc_dec :=
+    forall alpha,
+      {Least alpha} +
+      {Limit alpha} +
+      {beta: A | Successor alpha beta}.
 
+  (** The segment called [O alpha] in Schutte's book *)
+
+  #[using="All"]
+   Definition bigO 
+   (a: A) : Ensemble A := fun x: A => lt x a.
 
 End Definitions.
 
@@ -71,11 +77,6 @@ Infix "o<" := ON_lt : ON_scope.
 Infix "o<=" := ON_le : ON_scope.
 
 Global Hint Resolve wf_measure : core.
-
-(** The segment called [O alpha] in Schutte's book *)
-
-Definition bigO `{nA : @ON A ltA compareA}
-           (a: A) : Ensemble A := fun x: A => ltA x a.
 
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)
