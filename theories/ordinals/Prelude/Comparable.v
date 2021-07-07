@@ -18,9 +18,11 @@ Section Comparable.
           {comparable : Comparable lt compare}.
   #[local] Notation le := (leq lt). 
 
-  (** For compatibility (provisionnal) *)
-  Definition  lt_trans := StrictOrder_Transitive.
-  Definition lt_irrefl := StrictOrder_Irreflexive.
+  #[deprecated(note="use StrictOrder_Transitive")]
+   Notation lt_trans := StrictOrder_Transitive (only parsing).
+
+  #[deprecated(note="use StrictOrder_Irreflexive")] 
+   Notation lt_irrefl := StrictOrder_Irreflexive (only parsing).
   
   (* Relation Lt *)
   Lemma lt_not_gt (a b: A):
@@ -468,7 +470,7 @@ Section Comparable.
     - now apply compare_gt_iff in Hab as ->.
     - now apply compare_gt_iff in Hab as ->.
     - exfalso.
-      apply (lt_trans c b) in Hab.
+      apply (StrictOrder_Transitive  c b) in Hab.
       2: assumption.
       now apply lt_not_gt in Hab.
   Qed.
