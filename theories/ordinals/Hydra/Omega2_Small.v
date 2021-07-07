@@ -12,7 +12,7 @@ of all hydra battles *)
 Section Impossibility_Proof.
 
    (** Let us assume there is a variant from [Hydra] into [omega^2] 
-  for proving the termination of all hydra  battles *)
+  for proving the termination of all hydra battles *)
  
 
   Variable m : Hydra -> ON_Omega2.t.

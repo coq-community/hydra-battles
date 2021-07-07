@@ -2288,29 +2288,53 @@ Class ON {A:Type}(lt: relation A)
   }.
 \end{Coqsrc}
 
-%The following definitions allow us to make implicit several guessable arguments.
+We give  also a few handy definitions and lemmas for any ordinal notation.
+
 \label{sect:on-lt-notation}
 \label{sect:on-le-notation}
 \begin{Coqsrc}
-Definition on_t  {A:Type}{lt: relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} := A.
-
-Definition ON_compare {A:Type}{lt: relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} := compare.
-
-Definition ON_lt {A:Type}{lt: relation A}
+Section Definitions.
+  
+  Context  {A:Type}{lt : relation A}
            {compare : A -> A -> comparison}
-           {on : ON lt compare} := lt.
+           {on : ON lt compare}.
+  
+  #[using="All"]
+   Definition ON_t := A.
+
+  #[using="All"]
+   Definition ON_compare := compare.
+
+  #[using="All"]
+   Definition ON_lt := lt.
+
+  #[using="All"]
+   Definition ON_le:  relation A := leq lt.
+
+  #[using="All"]
+   Definition measure_lt {B : Type} (m : B -> A) : relation B :=
+    fun x y =>  ON_lt (m x) (m y).
+
+  #[using="All"]
+   Lemma wf_measure {B : Type} (m : B -> A) :
+    well_founded (measure_lt m). 
+ 
+  #[using="All"]
+   Definition ZeroLimitSucc_dec :=
+    forall alpha,
+      {Least alpha} +
+      {Limit alpha} +
+      {beta: A | Successor alpha beta}.
+
+  (** The segment called [O alpha] in Schutte's book *)
+
+  #[using="All"]
+   Definition bigO 
+   (a: A) : Ensemble A := fun x: A => lt x a.
+
+End Definitions.
 
 Infix "o<" := ON_lt : ON_scope.
-
-Definition ON_le  {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare} :=
-  clos_refl _ ON_lt.
-
 Infix "o<=" := ON_le : ON_scope.
 \end{Coqsrc}
 
@@ -2320,27 +2344,27 @@ The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make ap
 \end{remark}
 
 
-\subsection{Ordinal notations and  termination measures}
-\label{sect:measure-ON}
+% \subsection{Ordinal notations and  termination measures}
+% \label{sect:measure-ON}
 
-The following lemma (together with the type class mechnism) allows us to define termination measures over any ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
-and  \texttt{Coq.Wellfounded.Inclusion}. 
+% The following lemma (together with the type class mechnism) allows us to define termination measures over any ordinal notation. It is just an application of  the libraries \texttt{Coq.Wellfounded.Inverse\_Image}
+% and  \texttt{Coq.Wellfounded.Inclusion}. 
 
-\begin{Coqsrc}
-Definition measure_lt {A:Type}{lt: relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}
-            {B : Type} (m : B -> A) : relation B :=
-             fun x y => on_lt (m x) (m y).
+% \begin{Coqsrc}
+% Definition measure_lt {A:Type}{lt: relation A}
+%             {compare : A -> A -> comparison}
+%             {on : ON lt compare}
+%             {B : Type} (m : B -> A) : relation B :=
+%              fun x y => on_lt (m x) (m y).
             
-Lemma wf_measure  {A:Type}(lt: relation A)
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}
-            {B : Type}
-            (m : B -> A):  well_founded (measure_lt m). 
-\end{Coqsrc}
+% Lemma wf_measure  {A:Type}(lt: relation A)
+%             {compare : A -> A -> comparison}
+%             {on : ON lt compare}
+%             {B : Type}
+%             (m : B -> A):  well_founded (measure_lt m). 
+% \end{Coqsrc}
 
-A simple example of application is given in Sect.~\vref{sect:merge-example}.
+% A simple example of application is given in Sect.~\vref{sect:merge-example}.
 
 
 \section{Example: the ordinal \texorpdfstring{$\omega$}{omega}}
