@@ -72,28 +72,6 @@ Infix "o<=" := ON_le : ON_scope.
 
 Global Hint Resolve wf_measure : core.
 
-
-
-Lemma le_lt_trans {A:Type}(lt : relation A)
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}:
-  forall p q r: A, leq lt p q -> lt q r -> lt p r.
-Proof.
-  intros * H;  destruct H; [| trivial].
-  intro; now transitivity y.
-Qed.   
-
-Lemma lt_le_trans {A:Type}(lt: relation A)
-            {compare : A -> A -> comparison}
-            {on : ON lt compare}:
-  forall p q r, lt p q -> leq lt q r -> lt p r.
-Proof.
-  intros * H H0; rewrite le_lt_eq in H0;  destruct H0.
-  - now  transitivity q.
-  - now  subst.
-Qed.   
-
-
 (** The segment called [O alpha] in Schutte's book *)
 
 Definition bigO `{nA : @ON A ltA compareA}
@@ -244,7 +222,8 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
 
 
 (** Technical lemmas *)
-
+(* Comparable.compare_eq_iff *)
+(*
 Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
   compareA alpha beta = Eq <-> alpha = beta.
 Proof.
@@ -255,6 +234,7 @@ Proof.
     + destruct (StrictOrder_Irreflexive beta); trivial.   
     + destruct (StrictOrder_Irreflexive beta); trivial.   
 Qed.
+ *)
 
 
 Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
@@ -296,7 +276,7 @@ Definition lt_eq_lt_dec {A:Type}{lt: relation A}
             {on : ON lt compare} (alpha beta : A) :
    {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
   case_eq (compare alpha beta); intro H.
-  - left;right; now rewrite <- compare_Eq_eq.
+  - left;right; now rewrite <- compare_eq_iff.
   - left; left; now rewrite <- compare_Lt_lt.
   - right; now rewrite <- compare_Gt_gt.
 Defined.
@@ -337,8 +317,8 @@ Section SubON_properties.
 
   Lemma SubON_inj : forall a b, f a = f b -> a = b.
   Proof.
-    intros a b H; apply compare_Eq_eq;
-      apply compare_Eq_eq in H;
+    intros a b H; apply compare_eq_iff;
+      apply compare_eq_iff in H;
     now   rewrite SubON_compare in H.
   Qed.
 

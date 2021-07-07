@@ -3717,7 +3717,7 @@ Coercion Finite : nat >-> G0.
 Local Open Scope g0_scope.
 
 Example  L_3_plus_omega :   3 + omega = omega.
-now apply compare_Eq_eq.
+now apply Comparable.compare_eq_iff.
 Qed.
 
 End G0.
