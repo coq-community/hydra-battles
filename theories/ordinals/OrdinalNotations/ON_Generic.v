@@ -222,41 +222,6 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
 
 
 
-(** TODO: Move to comparable ? *)
-Lemma lt_eq_lt {A:Type}{lt : relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} : 
-  forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta alpha.
-Proof.
-  intros; destruct (compare_correct alpha beta); auto.
-Qed.
-
-(** TODO: Move to comparable ? *)
-Definition lt_eq_lt_dec {A:Type}{lt: relation A}
-            {compare : A -> A -> comparison}
-            {on : ON lt compare} (alpha beta : A) :
-   {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
-  case_eq (compare alpha beta); intro H.
-  - left;right; now rewrite <- compare_eq_iff.
-  - left; left; now rewrite <- compare_lt_iff.
-  - right; now rewrite <- compare_gt_iff.
-Defined.
-
-(** TODO: Move to comparable ? *)
-Lemma LimitNotSucc {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare}
-           (alpha :A)  :
-  Limit alpha -> forall beta, ~ Successor alpha beta.
-Proof.
-  intros [[w H] H0] beta [H1 H2].
-  destruct (lt_eq_lt beta w) as [H3 | [H3 | H3]].
-  - apply (H2 w);auto.
-  - subst w;  destruct (H0 _ H1) as [z [H3 H4]]; apply (H2 z);auto.
-  - destruct (H0 beta H1) as [z [H4 H5]]; eauto.
-Qed.
-
-
 Section SubON_properties.
   
   Context `{OA : @ON A ltA compareA}
