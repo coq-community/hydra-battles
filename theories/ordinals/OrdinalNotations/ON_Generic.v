@@ -221,45 +221,6 @@ Definition Iso_same_op  `{OA : @ON A ltA  compareA}
   forall x y,  f (opA x y) = opB (f x) (f y).
 
 
-(** Technical lemmas *)
-(* Comparable.compare_eq_iff *)
-(*
-Lemma compare_Eq_eq  `{OA : @ON A ltA  compareA} alpha beta :
-  compareA alpha beta = Eq <-> alpha = beta.
-Proof.
-  split.
-  - intro H; destruct (compare_correct alpha beta); auto; discriminate.
-  - intro; subst.
-    destruct (compare_correct beta beta); auto.
-    + destruct (StrictOrder_Irreflexive beta); trivial.   
-    + destruct (StrictOrder_Irreflexive beta); trivial.   
-Qed.
- *)
-
-
-Lemma compare_Lt_lt  `{OA : @ON A ltA  compareA} alpha beta :
-  compareA alpha beta = Lt <-> ltA alpha beta.
-Proof.
-  split.
-  -  intro H; destruct (compare_correct alpha beta); auto; discriminate.
-  - intro H.
-    destruct (compare_correct alpha beta); auto.
-    + subst; destruct (StrictOrder_Irreflexive beta); trivial.   
-    + destruct (StrictOrder_Irreflexive beta); trivial.
-      now transitivity alpha.
-Qed.
-
-
-Lemma compare_Gt_gt  `{OA : @ON A ltA  compareA} alpha beta :
-  compareA alpha beta = Gt <-> ltA beta alpha.
-Proof.
-  split.
-  - intro H; destruct (compare_correct alpha beta); auto; discriminate.
-  -   destruct (compare_correct alpha beta); auto.
-      + subst.  intro H ; destruct (StrictOrder_Irreflexive beta); trivial.   
-      + intro H0; destruct (StrictOrder_Irreflexive beta); trivial.
-        now transitivity alpha.
-Qed.
 
 (** TODO: Move to comparable ? *)
 Lemma lt_eq_lt {A:Type}{lt : relation A}
@@ -277,8 +238,8 @@ Definition lt_eq_lt_dec {A:Type}{lt: relation A}
    {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
   case_eq (compare alpha beta); intro H.
   - left;right; now rewrite <- compare_eq_iff.
-  - left; left; now rewrite <- compare_Lt_lt.
-  - right; now rewrite <- compare_Gt_gt.
+  - left; left; now rewrite <- compare_lt_iff.
+  - right; now rewrite <- compare_gt_iff.
 Defined.
 
 (** TODO: Move to comparable ? *)
@@ -307,11 +268,10 @@ Section SubON_properties.
   Lemma SubON_mono a b : ltA a b <-> ltB (f a) (f b).
   Proof.
     split;intro H.
-    - apply compare_Lt_lt in H; apply compare_Lt_lt;
+    - apply compare_lt_iff in H; apply compare_lt_iff;
       now rewrite SubON_compare.
-    - apply compare_Lt_lt.
-      specialize (@compare_Lt_lt B ltB compareB OB (f a) (f b));
-        intro H0;rewrite <- H0 in H.
+    - apply compare_lt_iff.
+      rewrite <- compare_lt_iff in H. 
       now rewrite SubON_compare in H.
   Qed.    
 
