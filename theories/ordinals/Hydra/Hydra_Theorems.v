@@ -71,10 +71,6 @@ Impossibility_free
      : BoundedVariant free -> False
  *)
 
-Check Impossibility_std.
-
-
-About battle_length_std.
 
 (* Theorem battle_length_std (alpha : E0)  :
   alpha <> Zero ->
@@ -207,8 +203,6 @@ Section battle_lenght_notPR.
   Qed.
 
 End battle_lenght_notPR.
-
-About LNotPR.
 
 
 

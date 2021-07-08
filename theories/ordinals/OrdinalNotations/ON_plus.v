@@ -97,7 +97,7 @@ Qed.
 Proof.
   split.
   - apply plus_comp.
-  -  apply lt_wf.
+  - apply lt_wf.
 Qed.
 
 

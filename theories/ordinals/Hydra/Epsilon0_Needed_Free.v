@@ -31,10 +31,9 @@ Section Impossibility_Proof.
   
   Lemma m_ge : m big_h t1<= m small_h.
   Proof.
-    About m_ge_generic.
-eapply m_ge_generic.
-auto.
-intros.   generalize Var ;  destruct 1.
+    eapply m_ge_generic.
+    auto.
+    intros; generalize Var; destruct 1.
     apply variant_decr with i. 
     intro ; subst; now apply (head_no_round_n _  _ H).
     exists i; apply H.    

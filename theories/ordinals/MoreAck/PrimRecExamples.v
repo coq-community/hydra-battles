@@ -274,8 +274,6 @@ Proof.
   - apply plus_alt_ok. 
 Qed.
 
-About evalPrimRecFunc.
-
 Remark R02 : 1 < 2.
 Proof. auto. Qed.
 

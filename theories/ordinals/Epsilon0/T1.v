@@ -2454,8 +2454,7 @@ Proof.
     + assert (H0 :alpha2 = zero).
       { eapply nf_of_finite; eauto. }
       subst; rewrite plus_compat; f_equal;  ring.
-    + simpl. About compare_refl.
-      repeat rewrite compare_refl. rewrite Nat.compare_refl.
+    + simpl; repeat rewrite compare_refl. rewrite Nat.compare_refl.
       f_equal; lia.
 Qed.
 
@@ -3872,8 +3871,6 @@ Section Proof_of_dist.
          all: eauto with T1.
   Qed.
 
-
-  About L0.
 
   Theorem mult_plus_distr_l (a b c: T1) :
     nf a -> nf b -> nf c ->

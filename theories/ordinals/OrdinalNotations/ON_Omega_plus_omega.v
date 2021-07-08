@@ -12,17 +12,14 @@ Delimit Scope opo_scope with opo.
 Open Scope ON_scope.
 Open Scope opo_scope.
 
-Definition Omega_plus_Omega := ON_plus Omega Omega.
+Instance Omega_plus_Omega: ON _ _ :=  ON_plus Omega Omega.
 
-Existing Instance Omega_plus_Omega.
-
-Definition t := @ON_plus.t nat nat.
-
+Definition t := ON_t.
 
 Example ex1 : inl 7 o< inr 0.
 Proof. constructor. Qed.
 
-Notation omega := (inr 0:t).
+Notation omega := (inr 0:ON_t).
 
 Open Scope opo_scope.
 
@@ -122,7 +119,8 @@ Definition succ (alpha : t) :=
   end.
 
 Lemma Successor_succ alpha : Successor (succ alpha) alpha.
-   destruct alpha;red;cbn; split.
+Proof.
+  destruct alpha;red;cbn; split.
   - constructor; auto.
   - destruct z as [n0 | n1]. 
     inversion_clear 1.

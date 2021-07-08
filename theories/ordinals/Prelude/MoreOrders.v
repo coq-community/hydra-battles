@@ -12,8 +12,8 @@ Section A_given.
   Variables (A : Type)
             (lt: relation A).
   
-  Local Infix "<" := lt.
-  Local Infix "<=" := (leq lt).
+  #[local] Infix "<" := lt.
+  #[local] Infix "<=" := (leq lt).
 
   (** x is the least element of A (w.r.t. [lt] *)
 

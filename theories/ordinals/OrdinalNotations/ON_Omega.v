@@ -8,21 +8,21 @@ From hydras Require Import Schutte.
 
 Import Relations RelationClasses.
 
-#[global] Instance Omega_comp : Comparable Peano.lt  Nat.compare.
+#[global]
+ Instance Omega_comp : Comparable Peano.lt  Nat.compare.
 Proof.
   split.
   - apply Nat.lt_strorder.
   - apply Nat.compare_spec.
 Qed.
 
-#[global] Instance Omega : ON  Peano.lt  Nat.compare.
+#[global]
+ Instance Omega : ON Peano.lt Nat.compare.
 Proof.
  split.
  - apply Omega_comp.
  - apply Wf_nat.lt_wf.
 Qed.
-
-
 
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
  - intro x; destruct x.
@@ -31,7 +31,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
       * left; auto with arith.
      + right; exists x. split.
        * auto with arith.
-       * intros z H H0.  lia.
+       * intros z H H0; lia.
 Defined.
 
 
