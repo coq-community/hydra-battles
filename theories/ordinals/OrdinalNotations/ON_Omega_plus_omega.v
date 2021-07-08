@@ -26,9 +26,8 @@ Open Scope opo_scope.
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
-Compute ON_compare omega  (fin 8).
+Compute  fin 8 o?= omega.
 
-Compute ON_compare (8:t)  omega.
 
 Example ex2 :  inl 7 o< omega.
 Proof. constructor. Qed.
@@ -133,8 +132,8 @@ Proof.
     inversion_clear 1; abstract lia.
 Qed.
 
-Lemma Successor_correct alpha beta : Successor beta alpha <->
-                                     beta = succ alpha.
+Lemma succ_correct alpha beta : Successor beta alpha <->
+                                beta = succ alpha.
 Proof.
   split.  
   - destruct alpha, beta; intro H.

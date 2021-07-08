@@ -75,6 +75,7 @@ End Definitions.
 
 Infix "o<" := ON_lt : ON_scope.
 Infix "o<=" := ON_le : ON_scope.
+Infix "o?=" := ON_compare (at level 70) : ON_scope.
 
 Global Hint Resolve wf_measure : core.
 

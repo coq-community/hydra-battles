@@ -2337,6 +2337,7 @@ End Definitions.
 
 Infix "o<" := ON_lt : ON_scope.
 Infix "o<=" := ON_le : ON_scope.
+Infix "o?=" := ON_compare (at level 70) : ON_scope.
 \end{Coqsrc}
 
 
@@ -2396,7 +2397,8 @@ Proof.
  - apply Wf_nat.lt_wf.
 Qed.
 
-Compute ON_compare 6 9.
+#[local] Open Scope ON_scope.
+Compute 6 o?= 9.
 \end{Coqsrc}
 
 \begin{Coqanswer}
@@ -2554,9 +2556,15 @@ Notation omega := (inr  0:t).
 \end{Coqsrc}
 
 \begin{Coqsrc}
-Example ex1' : fin 7 o< omega.
-Proof. constructor. Qed.
+Compute  fin 8 o?= omega.
+\end{Coqsrc}
 
+\begin{Coqanswer}
+     = Lt
+     : comparison
+\end{Coqanswer}
+
+\begin{Coqsrc}
 Lemma lt_omega alpha : 
      alpha o< omega <-> exists n:nat,  alpha = fin n.
 (* ... *)
@@ -2705,10 +2713,11 @@ Lemma Successor_correct alpha beta : Successor beta alpha <->
 We can also check whether an ordinal is a successor by a simple pattern matching:
 
 \begin{Coqsrc}
-Definition succb (alpha: t) : bool := match alpha with
-                                 | inr (S  _) | inl (S _) => true
-                                 | _ => false
-                                 end.
+  Definition succb (alpha: t) : bool :=
+  match alpha with
+  | inr (S  _) | inl (S _) => true
+  | _ => false
+  end.
 
 Lemma succb_correct (alpha : t) :
     succb alpha <->  exists beta: t, alpha = succ beta.
@@ -2733,6 +2742,9 @@ Finally, the nature of any ordinal is decidable (inside this notation system) :
 
 \begin{Coqsrc}
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
+Proof.
+(* ... *)
+Defined.
 \end{Coqsrc}
 
 \section{Product of ordinal notations}

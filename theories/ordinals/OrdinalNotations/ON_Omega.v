@@ -24,6 +24,10 @@ Proof.
  - apply Wf_nat.lt_wf.
 Qed.
 
+
+#[local] Open Scope ON_scope.
+Compute 6 o?= 9.
+
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
  - intro x; destruct x.
      + left; left. intro n; destruct n.
