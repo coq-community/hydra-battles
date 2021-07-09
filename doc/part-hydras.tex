@@ -2293,6 +2293,7 @@ We give  also a few handy definitions and lemmas for any ordinal notation.
 
 \label{sect:on-lt-notation}
 \label{sect:on-le-notation}
+\label{sect:measure-ON}
 \begin{Coqsrc}
 Section Definitions.
   
@@ -2767,37 +2768,28 @@ Section Defs.
 
 Definition t := (B * A)%type.
 Definition lt : relation t := lexico ltB ltA.
-Definition le := clos_refl _ lt.
 
 Definition compare (alpha beta: t) : comparison :=
   match compareB (fst alpha) (fst beta) with
-  |  Eq => compareA (snd alpha) (snd beta)
+  | Eq => compareA (snd alpha) (snd beta)
   | c => c
   end.
 
-Lemma compare_reflect alpha beta :
-  match (compare alpha beta)
-  with
-    Lt => lt alpha  beta
-  | Eq => alpha = beta
-  | Gt => lt beta  alpha
-  end.
-
-Global Instance ON_mult : ON lt compare.
+#[global] Instance ON_mult: ON lt compare.
 
 End Defs.
 \end{Coqsrc}
 
 \section{The ordinal \texorpdfstring{$\omega^2$}{omega2}}
 
-The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is an instance of the multiplication presented in the last section.
+The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), is an instance of the multiplication presented in the preceding section.
 
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
 \begin{Coqsrc}
-Definition Omega2 := ON_mult Omega Omega.
-Existing Instance Omega2.
+Instance Omega2: ON _ _ := ON_mult Omega Omega.
+
 Definition t := ON_mult.t nat nat.
 \end{Coqsrc}
 
@@ -2812,10 +2804,16 @@ Coercion fin : nat >-> t.
 
 Notation omega := (1,0).
 
-Definition limitb (alpha : t) := 
+Definition limitb (alpha : t) : bool := 
  match alpha with
  |  (S _, 0) => true
  | _ => false
+ end.
+
+ Definition succb (alpha: t) : bool :=
+ match alpha with
+  (_, S _) => true
+  | _ => false
 end.
 \end{Coqsrc}
 
@@ -2827,10 +2825,15 @@ end.
 \subsubsection{Successor}
 
 The successor of any ordinal is defined by a simple pattern-matching.
-This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
 
 \begin{Coqsrc}
 Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
+\end{Coqsrc}
+
+This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
+
+\begin{Coqsrc}
+Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
 \end{Coqsrc}
 
 \begin{Coqsrc}
@@ -2838,7 +2841,7 @@ Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
 
 Lemma lt_succ alpha : alpha o< succ alpha.
 
-Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
+
 \end{Coqsrc}
 
 \subsubsection{Addition}
@@ -3322,10 +3325,8 @@ Note that the type (\texttt{t 0}) is empty, and that, for any natural number
 \begin{Coqsrc}
 Lemma t0_empty (alpha: t 0): False.
 Proof.
-  destruct alpha.
-  destruct x; cbn in i; discriminate.
+  destruct alpha; discriminate.
 Qed.
-
 
 Program Definition bad : t 10 := 10.
 Next Obligation.
@@ -3347,7 +3348,6 @@ Note also that attempting to compare a term  of type (\texttt{t $n$}) with a ter
 type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
 
 \begin{Coqsrc}
-
 Program Example gamma1 : t 8 := 7.
 
 Fail Goal lt alpha1 gamma1.
@@ -3359,7 +3359,7 @@ The term "gamma1" has type "t 8" while it is expected to have type "t 7".
 \end{Coqanswer}
 
 
-In order to build an instance of \texttt{OrdinalNotation}, we define a comparison function, by delegation to standard library's  \texttt{Nat.compare}, and prove its correction.
+In order to build an instance of \texttt{ON}, we define a comparison function,  and prove its correction.
 
 \begin{Coqsrc}
 Definition compare {n:nat} (alpha beta : t n) :=
@@ -3430,12 +3430,14 @@ Lemma lt_wf (n:nat) : well_founded (@lt n).
 Now we can build our instance of \texttt{OrdinalNotation}.
 
 \begin{Coqsrc}
-Global Instance sto n : StrictOrder (@lt n).
+#[global] Instance sto n : StrictOrder (@lt n).
 
-Global Instance FinOrd (n:nat) : OrdinalNotation (sto n) compare.
+#[global] Instance comp n: Comparable (@lt n) compare.
+
+#[global] Instance FinOrd n : ON (@lt n) compare. 
 Proof.
   split.
-  - apply compare_correct.
+  - exact (comp n).
   - apply lt_wf.
 Qed.
 \end{Coqsrc}
@@ -3597,19 +3599,19 @@ where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 \index{hydras}{Library OrdinalNotations!Type classes!ON\_correct}
 
 \begin{Coqsrc}
-Class ON_correct `(alpha : Schutte_basics.Ord)
-     `(OA : @ON A ltA  compareA)
-      (iota : A -> Schutte_basics.Ord) :=
-  { ON_correct_inj : forall a, Schutte_basics.lt (iota a) alpha;
-    ON_correct_onto : forall beta, Schutte_basics.lt beta alpha ->
+Class ON_correct `(alpha : Ord)
+     `(OA : @ON A ltA compareA)
+      (iota : A -> Ord) :=
+  { ON_correct_inj : forall a, lt (iota a) alpha;
+    ON_correct_onto : forall beta, lt beta alpha ->
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
-          Datatypes.Lt => Schutte_basics.lt (iota a) (iota b)
+          Datatypes.Lt => lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
-        | Datatypes.Gt => Schutte_basics.lt (iota b) (iota a)
+        | Datatypes.Gt => lt (iota b) (iota a)
         end
-}.
+  }.
 \end{Coqsrc}
 
 

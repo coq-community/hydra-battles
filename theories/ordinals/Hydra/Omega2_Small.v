@@ -11,12 +11,12 @@ of all hydra battles *)
 
 Section Impossibility_Proof.
 
-   (** Let us assume there is a variant from [Hydra] into [omega^2] 
+  (** Let us assume there is a variant from [Hydra] into [omega^2] 
   for proving the termination of all hydra battles *)
- 
+  
 
   Variable m : Hydra -> ON_Omega2.t.
- 
+  
   Context (Hvar : @Hvariant _ _ (ON_Generic.wf (ON:=Omega2))  free m).
   
   Let big_h := hyd1 (hyd2 head head).
@@ -28,13 +28,13 @@ Section Impossibility_Proof.
     node (hcons_mult (hyd1 head) (fst p)
                      (hcons_mult head (snd p) hnil)).
   
- 
+  
   Let small_h := iota (m big_h).
 
-    (** *** Proof of the inequality [m small_h o< m big_h] 
-     *)
+  (** *** Proof of the inequality [m small_h o< m big_h] 
+   *)
 
-  Local Hint Constructors R1 S1 S2 : hydra.
+  #[local] Hint Constructors R1 S1 S2 : hydra.
 
   Lemma m_big_h_not_null : m big_h <> zero.
   Proof.
@@ -78,90 +78,90 @@ Section Impossibility_Proof.
   Proof.
     apply m_strict_mono with (1:=Hvar) (2:=big_to_small) .  
   Qed.
-    
-    (** *** Proof of the inequality [m big_h o<= m small_h]  *)
+  
+  (** *** Proof of the inequality [m big_h o<= m small_h]  *)
 
-    (** *** Let us decompose any inequality p o< q into elementary steps *)
+  (** *** Let us decompose any inequality p o< q into elementary steps *)
 
-    Inductive step : t -> t -> Prop :=
-    | succ_step : forall i j,  step (i, S j) (i, j)
-    | limit_step : forall i j, step (S i, 0) (i, j).
+  Inductive step : t -> t -> Prop :=
+  | succ_step : forall i j,  step (i, S j) (i, j)
+  | limit_step : forall i j, step (S i, 0) (i, j).
 
-    
-   
-    Lemma succ_rounds : forall i j,  iota (i,S j) -+-> iota (i, j).
-    Proof.
-      unfold iota;  left; exists 0;  left;   split; 
+  
+  
+  Lemma succ_rounds : forall i j,  iota (i,S j) -+-> iota (i, j).
+  Proof.
+    unfold iota;  left; exists 0;  left;   split; 
       apply hcons_mult_S0;  constructor.
-    Qed.
+  Qed.
 
-    Lemma limit_rounds_0 :
-      forall i j, round_n j (iota (S i, 0)) (iota (i, S j)).
-    Proof.
-      intros i j;  destruct i.
-      - unfold iota;   right;  left;
-          change  (hcons head (hcons_mult head j hnil))
-            with (hcons_mult head (S j) hnil).
-        left; split;  left.
-      -   right; left; cbn;  rewrite <- hcons_mult_comm; right.
-          apply hcons_mult_S1; left; split; constructor.
-    Qed.
-    
-    Lemma limit_rounds : forall i j, iota (S i, 0) -+-> iota (i, j).
-    Proof.
-      intros i j;  apply round_plus_trans with (iota (i, S j)).
-      - left; exists j; apply limit_rounds_0.
-      - apply succ_rounds.
-    Qed.
+  Lemma limit_rounds_0 :
+    forall i j, round_n j (iota (S i, 0)) (iota (i, S j)).
+  Proof.
+    intros i j;  destruct i.
+    - unfold iota;   right;  left;
+        change  (hcons head (hcons_mult head j hnil))
+          with (hcons_mult head (S j) hnil).
+      left; split;  left.
+    -   right; left; cbn;  rewrite <- hcons_mult_comm; right.
+        apply hcons_mult_S1; left; split; constructor.
+  Qed.
+  
+  Lemma limit_rounds : forall i j, iota (S i, 0) -+-> iota (i, j).
+  Proof.
+    intros i j;  apply round_plus_trans with (iota (i, S j)).
+    - left; exists j; apply limit_rounds_0.
+    - apply succ_rounds.
+  Qed.
 
-Local Hint Constructors step clos_trans_1n : hydra.
-Local Hint Resolve lex_1 lex_2: hydra.
-Local Hint Unfold lt : hydra.
-
-
-Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
-Proof.
-  destruct 1; [ apply succ_rounds |  apply limit_rounds].
-Qed.
-
-Local Hint Resolve step_to_battle : hydra.
+  #[local] Hint Constructors step clos_trans_1n : hydra.
+  #[local] Hint Resolve lex_1 lex_2: hydra.
+  #[local] Hint Unfold lt : hydra.
 
 
-Lemma m_ge : m big_h o<= m small_h.
-Proof.
-  unfold small_h; pattern (m big_h) .   
-  apply  well_founded_induction with (R := ON_lt) (1:= wf);
-    intros (i,j) IHij.
-  destruct j as [|k].
-  - destruct i as [| l].
-    +  (* p = zero *)
-      apply le_0. 
-    +  (* p = (S i, 0) *)
-      assert (is_true (limitb (S l, 0))).
-      reflexivity.
-      specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
-      intro.
-      rewrite <- H0. 
-      intro k; eapply Comparable.le_lt_trans.  
-      apply IHij. left; auto.
-      red; apply (m_strict_mono m Hvar); auto with hydra.
-      simpl canon. 
-      apply step_to_battle.  apply limit_step. 
-  - change (i, S k) with (succ (i,k)) at 1.
-    rewrite <- (lt_succ_le (i,k) (m (iota (i, S k)))).
-    eapply (Comparable.le_lt_trans).
-    instantiate (1:= (m (iota (i, k)))). 
-    apply IHij; right; auto.      
-    apply (m_strict_mono m Hvar); auto with hydra.
-Qed.
+  Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
+  Proof.
+    destruct 1; [ apply succ_rounds |  apply limit_rounds].
+  Qed.
 
-Theorem Impossible : False.
-Proof.
-  destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
-    eapply le_lt_trans.
-  - apply m_ge.
-  - apply m_lt. 
-Qed. 
+  #[local] Hint Resolve step_to_battle : hydra.
+
+
+  Lemma m_ge : m big_h o<= m small_h.
+  Proof.
+    unfold small_h; pattern (m big_h) .   
+    apply  well_founded_induction with (R := ON_lt) (1:= wf);
+      intros (i,j) IHij.
+    destruct j as [|k].
+    - destruct i as [| l].
+      +  (* p = zero *)
+        apply le_0. 
+      +  (* p = (S i, 0) *)
+        assert (is_true (limitb (S l, 0))).
+        reflexivity.
+        specialize (limit_is_lub (S l, 0) H (m (iota (S l, 0)))).
+        intro.
+        rewrite <- H0. 
+        intro k; eapply Comparable.le_lt_trans.  
+        apply IHij. left; auto.
+        red; apply (m_strict_mono m Hvar); auto with hydra.
+        simpl canon. 
+        apply step_to_battle.  apply limit_step. 
+    - change (i, S k) with (succ (i,k)) at 1.
+      rewrite <- (lt_succ_le (i,k) (m (iota (i, S k)))).
+      eapply (Comparable.le_lt_trans).
+      instantiate (1:= (m (iota (i, k)))). 
+      apply IHij; right; auto.      
+      apply (m_strict_mono m Hvar); auto with hydra.
+  Qed.
+
+  Theorem Impossible : False.
+  Proof.
+    destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
+      eapply le_lt_trans.
+    - apply m_ge.
+    - apply m_lt. 
+  Qed. 
 
 End Impossibility_Proof.
 

@@ -22,8 +22,7 @@ Definition lt {n:nat} : relation (t n) :=
 
 Lemma t0_empty (alpha: t 0): False.
 Proof.
-  destruct alpha as [x H].
-  destruct x; cbn in H; discriminate.
+  destruct alpha ; discriminate. 
 Qed.
 
 
@@ -93,7 +92,7 @@ Proof.
    - apply compare_correct. 
 Qed.
 
-Global Instance FinOrd n : ON (@lt n)  compare. 
+#[global] Instance FinOrd n : ON (@lt n) compare. 
 Proof.
   split.
   - exact (comp n).

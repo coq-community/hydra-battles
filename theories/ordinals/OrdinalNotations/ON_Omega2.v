@@ -11,9 +11,7 @@ Import Relations ON_Generic.
 
 Open Scope ON_scope.
 
-Definition Omega2 := ON_mult Omega Omega.
-
-Existing Instance Omega2.
+Instance Omega2: ON _ _ := ON_mult Omega Omega.
 
 Definition t := ON_t.  
 
@@ -215,15 +213,17 @@ Proof.
 Qed.
 
 
-Definition succb (alpha: t) := match alpha with
-                                   (_, S _) => true
-                                 | _ => false
-                                 end.
+Definition succb (alpha: t): bool
+  := match alpha with
+       (_, S _) => true
+     | _ => false
+     end.
 
-Definition limitb (alpha : t) := match alpha with
-                                     (S _, 0) => true
-                                   | _ => false
-                                   end.
+Definition limitb (alpha : t): bool :=
+  match alpha with
+    (S _, 0) => true
+  | _ => false
+  end.
 
 
 Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->

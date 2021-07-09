@@ -44,9 +44,9 @@ Definition compare (alpha beta: t) : comparison :=
   | c => c
   end.
 
-Local Hint Constructors clos_refl lexico: core.
+#[local] Hint Constructors clos_refl lexico: core.
 
-Local Hint Unfold  lt le : core.
+#[local] Hint Unfold  lt le : core.
 
 
 (** * Properties *)
@@ -95,7 +95,7 @@ Proof.
   - apply compare_correct.
 Qed. 
 
-#[global] Instance ON_mult : ON lt compare.
+#[global] Instance ON_mult: ON lt compare.
 Proof.
   split.
   - apply mult_comp.
@@ -104,7 +104,7 @@ Qed.
 
 
 Lemma lt_eq_lt_dec alpha beta :
-  {lt alpha  beta} + {alpha = beta} + {lt beta  alpha}.
+  {lt alpha  beta} + {alpha = beta} + {lt beta alpha}.
 Proof.
   generalize (compare_reflect  alpha beta).
   destruct (compare alpha beta).  
