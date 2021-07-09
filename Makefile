@@ -8,10 +8,11 @@ pdf:
 	@+$(MAKE) -C doc
 
 alectryon:
-	@+$(MAKE) -C alectryon
+	@+$(MAKE) -C alectryon-html all
 
 clean: Makefile.coq
 	@+$(MAKE) -f Makefile.coq cleanall
+	@+$(MAKE) -C alectryon-html clean
 	@rm -f Makefile.coq Makefile.coq.conf
 
 Makefile.coq: _CoqProject
