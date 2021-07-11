@@ -108,3 +108,54 @@ Proof.
   - apply OO_comp.
   - apply wf_lt.
 Qed.
+
+
+Definition plus (alpha beta: t): t.
+Proof.
+  destruct alpha as [a nfa]; destruct beta as [b nfb];
+     exists (ListOmega.plus a b); apply nf_plus.
+Defined.
+
+Infix "+" := plus : oo_scope.
+
+Definition mult (alpha beta: t): t.
+Proof.
+  destruct alpha as [a nfa]; destruct beta as [b nfb];
+     exists (ListOmega.mult a b); apply nf_mult.
+Defined.
+
+Infix "*" := mult : oo_scope.
+
+
+Definition zero: t.
+Proof.
+  exists ListOmega.zero; now compute.
+Defined. 
+
+Definition _omega: t.
+Proof.
+  exists (ListOmega.omega); reflexivity.
+Defined.
+
+Notation omega := _omega.
+
+Definition finS (i:nat) : t.
+Proof.
+  exists (ListOmega.fin (S i)); now cbn.
+Defined.
+
+
+Definition fin (i:nat) : t :=
+  match i with 0 => zero
+          | S j =>  finS j
+  end.
+                            
+Coercion fin: nat >-> t.
+
+Example Ex42: (omega + 42 + omega * omega = omega * omega)%oo.
+Proof. 
+  now rewrite <-  compare_eq_iff.
+Qed.
+
+
+

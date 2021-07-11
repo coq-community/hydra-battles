@@ -144,19 +144,26 @@ Qed.
 
 (** ** The type of _ordinals_ and some examples. *)
 
-Declare Scope lo_scope.
-Delimit Scope lo_scope with lo.
-Open Scope lo_scope.
+Declare Scope oo_scope.
+Delimit Scope oo_scope with oo.
+Open Scope oo_scope.
 
 Definition t := list nat.
 
 (** zero is [nil] *)
 
-Notation "'zero'" := nil : lo_scope.
+Notation zero := nil.
 
-(** Finite ordinals are lists of length 1 *)
+(** Finite non-zero ordinals are lists of length 1 *)
 
-Definition fin (i:nat) : t := (i::nil).
+Definition fin (i:nat): t := (i::nil).
+(*
+Definition finS (i:nat) : t := (i::nil).
+Definition fin (i:nat) : t := match i with
+                                | 0 => zero
+                                | S i => finS i
+end.
+*)                              
 
 Coercion fin : nat >-> t.
 
@@ -164,7 +171,7 @@ Check (fin 42).
 
 (** # &omega; #  is # &omega;<sup>1</sup> . 1 + 0 # *)
 
-Notation  "'omega'" := (1::0::nil) : lo_scope.
+Notation  omega := (1::0::nil).
 
 Check (1::0::nil).
 Check omega.
@@ -1069,8 +1076,8 @@ Proof.
   - intro H. induction H.
     + discriminate.
     + case_eq ((length w) ?= (length w0)).
-      * intros. simpl. rewrite H. trivial.
-      * intro. simpl. rewrite H. auto.
+      * intros. simpl. rewrite H. trivial. 
+     * intro. simpl. rewrite H. auto.
       * intro. simpl. rewrite H. auto.
 Qed.
 
@@ -1300,12 +1307,6 @@ Proof.
 Qed.
   
 
-(**
-  Ordinal notation
-
-
- *)
- 
 
 
 Lemma wlt_len_gen : forall (w1 w2:t) (a:nat),
