@@ -689,7 +689,7 @@ End Compatibility_F_dominates.
 
 Section H'_F.
   
-Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
+Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
 
  Variable alpha: E0.
 
@@ -698,7 +698,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
  Lemma HF0 : P Zero.
  Proof.
    intro n; rewrite F_zero_eqn.
-   replace (Phi0 Zero) with (Fin 1).
+   replace (phi0 Zero) with (Fin 1).
    - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
@@ -726,9 +726,9 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
   Proof.
     intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_Canon;
-      rewrite CanonS_Phi0_lim; [| trivial].
+      rewrite CanonS_phi0_lim; [| trivial].
       rewrite F_lim_eqn, CanonS_Canon; auto.
-      + transitivity (H'_ (Phi0 (Canon alpha (S n))) (S n)).
+      + transitivity (H'_ (phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.
@@ -752,7 +752,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
           --  apply limitb_canonS_not_zero.
               ++ apply cnf_ok.
               ++ now destruct alpha.
-    - apply Limitb_Phi0.
+    - apply Limitb_phi0.
       apply Limit_not_Zero; auto. 
 Qed.
 
@@ -760,7 +760,7 @@ End H'_F.
 
 (** Proof using transfinite induction (prepared in the previous section) *)
 
-Lemma H'_F alpha : forall n,  (F_ alpha (S n) <= H'_ (Phi0 alpha) (S n))%nat.
+Lemma H'_F alpha : forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
 Proof.
   pattern alpha; apply well_founded_induction with Lt.
   - apply Lt_wf.  

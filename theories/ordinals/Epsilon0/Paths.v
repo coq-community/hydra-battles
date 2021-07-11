@@ -503,7 +503,7 @@ Qed.
 
 
 Lemma path_toS_mult  alpha s  i : nf alpha -> 
-    path_toS zero s (phi0 alpha) -> 
+    path_toS zero s (T1.phi0 alpha) -> 
     path_toS (ocons alpha i zero) s (ocons alpha (S i) zero).
 Proof.
   inversion 2.
@@ -529,7 +529,7 @@ Proof.
         apply nf_canon; now apply nf_phi0.
       * apply nf_helper_phi0R.
         destruct H1; subst.
-        generalize (@canonS_LT i0 (phi0 alpha) (nf_phi0 H)).
+        generalize (@canonS_LT i0 (T1.phi0 alpha) (nf_phi0 H)).
         destruct 1.
        -- discriminate.
        -- tauto.
@@ -537,7 +537,7 @@ Qed.
 
 Lemma path_to_mult  alpha s i :
   nf alpha ->
-  path_to zero  s (phi0 alpha) -> 
+  path_to zero  s (T1.phi0 alpha) -> 
   path_to (ocons alpha i zero) s (ocons alpha (S i) zero).
 Proof.
   intros Hnf H ; assert (H1:= path_to_not_In_zero H).
@@ -719,7 +719,7 @@ Lemma gnawS_cut2 : forall s alpha n ,
                    nf alpha -> 
                    gnawS (ocons alpha (S n) T1.zero) s = zero ->
                    exists s1 s2, s = s1 ++ s2 /\
-                                 gnawS (phi0 alpha) s1 = zero /\
+                                 gnawS (T1.phi0 alpha) s1 = zero /\
                                  gnawS (ocons alpha n T1.zero) s2 = zero.
 Proof.
   destruct s. 
@@ -730,7 +730,7 @@ Proof.
      rewrite canonSSn in H0; auto.
      destruct (T1_eq_dec alpha T1.zero).
      + subst; exists (n::nil), s;  split;auto.
-     + destruct (@gnawS_cut1 s alpha n0 (canon (phi0 alpha) (S n))).
+     + destruct (@gnawS_cut1 s alpha n0 (canon (T1.phi0 alpha) (S n))).
        2 : auto.
        rewrite <- canonSSn; auto.
          apply nf_canon;auto.
@@ -1077,7 +1077,7 @@ Qed.
 
 Lemma KS_thm_2_4_lemma1' : forall i alpha n beta ,
     nf alpha ->  alpha <> zero ->
-    const_pathS i (phi0 alpha)  beta ->
+    const_pathS i (T1.phi0 alpha)  beta ->
     const_pathS i (ocons alpha (S n) zero)
                 (ocons alpha n  beta).
 Proof with auto with T1.
@@ -1088,7 +1088,7 @@ Proof with auto with T1.
        { rewrite  e; left;  split.
          discriminate. rewrite canonSSn ; trivial. }
        { apply const_pathS_trans with
-             (ocons alpha n (phi0 (canon alpha (S i)))) ; trivial. 
+             (ocons alpha n (T1.phi0 (canon alpha (S i)))) ; trivial. 
          { left;  rewrite canonSSn ; eauto with T1.
            - split.
              + discriminate.
@@ -1188,12 +1188,12 @@ Qed.
 
 Lemma KS_thm_2_4_lemma4 : forall i alpha,
     nf alpha ->
-    const_pathS i (phi0 (succ alpha)) (phi0 alpha).
+    const_pathS i (T1.phi0 (succ alpha)) (T1.phi0 alpha).
 Proof.
   destruct i.
   - intros; left;  rewrite canonS_phi0_succ_eqn; auto.
     split; [discriminate | reflexivity].
-  -  intros; right with (canonS (phi0 (T1.succ alpha)) (S i)).
+  -  intros; right with (canonS (T1.phi0 (T1.succ alpha)) (S i)).
      + rewrite canonS_phi0_succ_eqn; auto. unfold canonS.
        split; [discriminate | ].
        rewrite canonS_phi0_succ_eqn; auto.
@@ -1206,7 +1206,7 @@ Qed.
 Lemma KS_thm_2_4_lemma5 : forall i alpha beta,
     const_pathS i alpha beta -> nf alpha ->
     alpha <> zero -> 
-    const_pathS i (phi0 alpha) (phi0 beta).
+    const_pathS i (T1.phi0 alpha) (T1.phi0 beta).
 Proof.
   induction 1.
   {
@@ -1223,7 +1223,7 @@ Proof.
       destruct (zero_limit_succ_dec H1).
       - destruct s.
         + subst x; now destruct H2.
-        + right with (phi0 (canon x (S i))).
+        + right with (T1.phi0 (canon x (S i))).
           *  rewrite canonS_lim1; auto.
             split;[discriminate | trivial].
           *   apply IHclos_trans_1n.
@@ -1233,7 +1233,7 @@ Proof.
          destruct (T1_eq_dec beta zero).
          { subst beta; destruct (const_pathS_zero H0). }
            rewrite canon_succ in IHclos_trans_1n; auto. 
-           apply const_pathS_trans with (phi0 beta); auto.
+           apply const_pathS_trans with (T1.phi0 beta); auto.
            + apply KS_thm_2_4_lemma4; auto. 
   }
 Qed.
@@ -2941,7 +2941,7 @@ Qed.
 
 Lemma CanonS_plus_1 alpha beta k i :
   beta  <> Zero -> alpha <> Zero  ->
-  (beta o< Phi0 alpha)%e0 ->
+  (beta o< phi0 alpha)%e0 ->
   (CanonS (Omega_term alpha i + beta)%e0 k =
    (Omega_term alpha  i + (CanonS beta k))%e0).
 Proof.
@@ -2977,10 +2977,10 @@ Proof.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
-  CanonS (Phi0 (Succ gamma)) i = Omega_term gamma i.
+  CanonS (phi0 (Succ gamma)) i = Omega_term gamma i.
 Proof.
   apply E0_eq_intro;  unfold CanonS, canonS.
-  rewrite cnf_rw, cnf_Omega_term, cnf_Phi0, cnf_Succ.
+  rewrite cnf_rw, cnf_Omega_term, cnf_phi0, cnf_Succ.
   rewrite canonS_phi0_succ_eqn; auto with E0.
 Qed.  
 

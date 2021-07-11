@@ -19,7 +19,7 @@ Fixpoint m (h:Hydra) : T1 :=
 end 
 with ms (s:Hydrae) :  T1 :=
   match s with  hnil => T1.zero
-              | hcons h s' => phi0 (m h) o+  ms s'
+              | hcons h s' => T1.phi0 (m h) o+  ms s'
  end.
 
 
@@ -27,7 +27,7 @@ with ms (s:Hydrae) :  T1 :=
 
 (* for rewriting ... *)
 
-Lemma ms_eqn2 :  forall h s, ms (hcons h s) = phi0 (m h) o+  ms s.
+Lemma ms_eqn2 :  forall h s, ms (hcons h s) = T1.phi0 (m h) o+  ms s.
 Proof.   reflexivity. Qed.
 
 Lemma o_finite_mult_S_rw :
@@ -60,7 +60,7 @@ Qed.
 Global Hint Resolve m_nf nf_phi0 ms_nf : T1.
 
 Lemma ms_eqn3 :  forall h n s,  ms (hcons_mult h  n s) =
-                                o_finite_mult n (phi0 (m h)) o+ ms s.
+                                o_finite_mult n (T1.phi0 (m h)) o+ ms s.
 Proof with auto with T1.
  induction n.
  - intros; simpl (hcons_mult h  0 s); simpl o_finite_mult.
@@ -94,10 +94,10 @@ Proof with auto with T1.
   destruct 1;  simpl;  destruct s, s'.
   -  inversion H.
   -  inversion H.
-  -  rewrite ms_eqn2; apply lt_le_trans with (phi0 (m h))...
+  -  rewrite ms_eqn2; apply lt_le_trans with (T1.phi0 (m h))...
 (*      +  simpl. constructor. *)
      +  apply oplus_le...
-  -  now apply   S0_decr. (* simpl in H  en V8.6 ??? *)
+  -  now apply S0_decr. (* simpl in H  en V8.6 ??? *)
 Qed.
 
 Lemma R1_decr : forall h h',

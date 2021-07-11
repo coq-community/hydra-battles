@@ -576,10 +576,10 @@ Section phi0_mult.
  Hypotheses (Halpha : nf alpha)
             (f_mono : strict_mono f)
             (f_Sle : S <<= f)
-            (f_ok : L_spec (phi0 alpha) f).
+            (f_ok : L_spec (T1.phi0 alpha) f).
 
  Remark f_ok_inv :
-   forall k, mlarge (phi0 alpha) (interval (S k) (Nat.pred (f (S k)))).
+   forall k, mlarge (T1.phi0 alpha) (interval (S k) (Nat.pred (f (S k)))).
  Proof.
    inversion_clear f_ok; assumption.   
  Qed.
@@ -626,7 +626,7 @@ Qed.
   
 Definition L_omega_cube  := L_lim  L_omega_square_times .
 
-Lemma L_omega_cube_ok : L_spec (phi0 3) L_omega_cube.
+Lemma L_omega_cube_ok : L_spec (T1.phi0 3) L_omega_cube.
 Proof.
   unfold L_omega_cube.
   apply L_lim_ok.

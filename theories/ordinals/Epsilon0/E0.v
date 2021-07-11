@@ -79,9 +79,9 @@ Defined.
 Infix "+" := plus : E0_scope.
 
 
-Instance Phi0 (alpha: E0) : E0.
+Instance phi0 (alpha: E0) : E0.
 Proof.
-  refine (@mkord (phi0 (cnf alpha)) _).
+  refine (@mkord (T1.phi0 (cnf alpha)) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
 
@@ -209,10 +209,10 @@ Qed.
 
 Hint Rewrite alpha_plus_zero : E0_rw.
 
-Lemma cnf_Phi0 (alpha : E0) :
-  cnf (Phi0 alpha) = phi0 (cnf alpha).
+Lemma cnf_phi0 (alpha : E0) :
+  cnf (phi0 alpha) = T1.phi0 (cnf alpha).
 Proof.
- unfold Phi0. now rewrite cnf_rw.
+ unfold phi0. now rewrite cnf_rw.
 Defined.
 
 Lemma cnf_Succ (alpha : E0) :
@@ -234,13 +234,13 @@ Proof.
   - red; trivial. 
 Qed.
 
-Lemma Limitb_Phi0 alpha  : alpha <> Zero ->
-                           Limitb (Phi0 alpha).
+Lemma Limitb_phi0 alpha  : alpha <> Zero ->
+                           Limitb (phi0 alpha).
 Proof.
-  unfold Phi0; apply Limitb_Omega_term.
+  unfold phi0; apply Limitb_Omega_term.
 Qed.
 
-#[global] Hint Resolve Limitb_Phi0 : E0.
+#[global] Hint Resolve Limitb_phi0 : E0.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = Zero} + {Limitb alpha = true} +
@@ -545,7 +545,7 @@ Qed.
 
 
 Lemma Omega_term_plus alpha beta i :
-  alpha <> Zero -> (beta o< Phi0 alpha)%e0 ->
+  alpha <> Zero -> (beta o< phi0 alpha)%e0 ->
   cnf (Omega_term alpha i + beta)%e0 = ocons (cnf alpha) i (cnf beta).
 Proof.
   destruct alpha as [alpha Halpha]; destruct beta as [beta Hbeta].
@@ -561,7 +561,7 @@ Proof.
 Qed.
 
 
-Lemma cnf_Ocons (alpha beta: E0) n : alpha <> Zero -> beta o< Phi0 alpha ->
+Lemma cnf_Ocons (alpha beta: E0) n : alpha <> Zero -> beta o< phi0 alpha ->
                                      cnf (Ocons alpha n beta) =
                                      ocons (cnf alpha) n (cnf beta).
 Proof.
@@ -569,7 +569,7 @@ Proof.
 Defined.
 
 Lemma Limitb_plus alpha beta i:
-  (beta o< Phi0 alpha)%e0 -> Limitb beta ->
+  (beta o< phi0 alpha)%e0 -> Limitb beta ->
   Limitb (Omega_term alpha i + beta)%e0.
 Proof.
   intros H H0;  assert (alpha <> Zero).
@@ -590,7 +590,7 @@ Proof.
 Qed.
 
 
-Lemma Succ_of_cons alpha gamma i : alpha <> Zero -> gamma o< Phi0 alpha ->
+Lemma Succ_of_cons alpha gamma i : alpha <> Zero -> gamma o< phi0 alpha ->
                                 cnf (Succ (Omega_term alpha i + gamma)%e0) =
                                 cnf (Omega_term alpha i + Succ gamma)%e0.
 Proof.
@@ -602,14 +602,14 @@ Proof.
   intro H1; apply H, E0_eq_intro.   assumption. 
   destruct H0.
   destruct H1.
-  rewrite cnf_Phi0 in H1.
+  rewrite cnf_phi0 in H1.
   apply nf_intro; auto.
   now apply nf_helper_phi0R. 
   red.  
   apply succ_lt_limit.
-  rewrite cnf_Phi0.
+  rewrite cnf_phi0.
   apply nf_phi0. apply cnf_ok.
-  rewrite cnf_Phi0.
+  rewrite cnf_phi0.
   simpl.
   case_eq (cnf alpha).
   intro.
@@ -763,7 +763,7 @@ Proof.
 Qed.
 
 
-Lemma Phi0_mono alpha beta : alpha o< beta -> Phi0 alpha o< Phi0 beta.
+Lemma phi0_mono alpha beta : alpha o< beta -> phi0 alpha o< phi0 beta.
 Proof.
   destruct alpha, beta; unfold Lt; cbn;  auto with T1.
 Qed.
@@ -785,7 +785,7 @@ Proof.
 Qed.
 
 
-Example Ex42: (omega + 42 + Phi0 2 = Phi0 2)%e0.
+Example Ex42: (omega + 42 + phi0 2 = phi0 2)%e0.
 Proof. 
   now rewrite <-  Comparable.compare_eq_iff.
 Qed.

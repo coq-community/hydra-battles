@@ -52,7 +52,7 @@ Compute pp (canon (T1.omega ^ T1.omega) 3).
 
 Compute pp (canon (T1.omega ^ T1.omega * 3) 42).
 
-Compute canon (phi0 10) 0.
+Compute canon (T1.phi0 10) 0.
 
 Compute canon (T1.omega ^ T1.omega)%t1 10.
 
@@ -89,7 +89,7 @@ Qed.
 
 Lemma canonS_lim1 : forall i lambda, nf lambda -> limitb lambda 
                                  -> canon (ocons lambda 0 zero) (S i) =
-                                    phi0 (canon lambda (S i)).
+                                    T1.phi0 (canon lambda (S i)).
 Proof.
   intros; unfold canon at 1;  destruct lambda.
   -  discriminate.
@@ -100,7 +100,7 @@ Qed.
 
 Lemma canon_lim1 : forall i lambda, nf lambda -> limitb lambda 
                                     -> canon (ocons lambda 0 zero)  i =
-                                       phi0 (canon lambda i).
+                                       T1.phi0 (canon lambda i).
 Proof.
   destruct i. 
   - intros; unfold canon at 1;  destruct lambda.
@@ -116,7 +116,7 @@ Qed.
 Lemma canonS_lim2  i n lambda: 
     nf lambda -> limitb lambda 
     -> canon (ocons lambda (S n) zero) (S i) =
-       ocons  lambda n (phi0 (canon lambda (S i))).
+       ocons  lambda n (T1.phi0 (canon lambda (S i))).
 Proof.
   intros;  cbn;  destruct lambda.
   - simpl; discriminate.
@@ -129,7 +129,7 @@ Qed.
 Lemma canon0_lim2   n lambda: 
     nf lambda -> limitb lambda 
     -> canon (ocons lambda (S n) zero) 0 =
-       ocons  lambda n (phi0 (canon lambda 0)).
+       ocons  lambda n (T1.phi0 (canon lambda 0)).
 Proof.
   intros;  cbn; destruct lambda.
   - simpl; discriminate.
@@ -140,7 +140,7 @@ Qed.
 Lemma canon_lim2  i  n lambda : 
     nf lambda -> limitb lambda 
     -> canon (ocons lambda (S n) zero) i =
-       ocons  lambda n (phi0 (canon lambda i)).
+       ocons  lambda n (T1.phi0 (canon lambda i)).
 Proof.
  destruct i; intros.
  - now  apply canon0_lim2.
@@ -184,7 +184,7 @@ Qed.
 
 Lemma canonS_phi0_succ_eqn i gamma:
   nf gamma -> 
-  canon (phi0 (succ gamma)) (S i) = ocons gamma i zero.
+  canon (T1.phi0 (succ gamma)) (S i) = ocons gamma i zero.
 Proof.
   intros;  cbn. rewrite T1.pred_of_succ;
     case_eq (T1.succ gamma); trivial.
@@ -197,7 +197,7 @@ Qed.
 
 Lemma canon0_phi0_succ_eqn  gamma:
   nf gamma -> 
-  canon  (phi0 (succ gamma)) 0 = zero.
+  canon  (T1.phi0 (succ gamma)) 0 = zero.
 Proof.
   intros;   cbn; rewrite T1.pred_of_succ; auto.
     case_eq (T1.succ gamma); trivial.
@@ -950,12 +950,12 @@ Hint Rewrite Canon_Omega : E0_rw.
 Lemma CanonSSn (i:nat) :
   forall alpha n  , alpha <> Zero ->
                     CanonS (Ocons alpha (S n) Zero) i =
-                    Ocons alpha n (CanonS (Phi0 alpha) i).
+                    Ocons alpha n (CanonS (phi0 alpha) i).
 Proof.
   intros; apply E0_eq_intro;
   unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Ocons); auto.
   - unfold canonS; rewrite canonSSn; auto with E0.
-  -  unfold lt, Phi0; repeat rewrite cnf_rw. 
+  -  unfold lt, phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 
      discriminate.
@@ -963,13 +963,13 @@ Proof.
       apply LT1; apply nf_phi0;auto with E0.
 Qed. 
 
-Lemma CanonS_Phi0_lim alpha k : Limitb alpha ->
-                                CanonS (Phi0 alpha) k =
-                                Phi0 (CanonS alpha k). 
+Lemma CanonS_phi0_lim alpha k : Limitb alpha ->
+                                CanonS (phi0 alpha) k =
+                                phi0 (CanonS alpha k). 
 Proof.
-  intro; orefl; rewrite cnf_Phi0.
+  intro; orefl; rewrite cnf_phi0.
   unfold CanonS, canonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
-  -  now rewrite cnf_Phi0.
+  -  now rewrite cnf_phi0.
   - apply cnf_ok.
   - destruct alpha; cbn; assumption. 
 Qed.
@@ -1003,10 +1003,10 @@ Qed.
 
 Global Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
-Lemma CanonS_Phi0_Succ alpha i : CanonS (Phi0 (Succ alpha)) i =
+Lemma CanonS_phi0_Succ alpha i : CanonS (phi0 (Succ alpha)) i =
                                  Omega_term alpha i.
 Proof.      
-  apply E0_eq_intro;  unfold Omega_term, CanonS, Phi0, Succ, canonS.
+  apply E0_eq_intro;  unfold Omega_term, CanonS, phi0, Succ, canonS.
   simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
   - intro H; destruct (succ_not_zero _ H);  auto.
   - reflexivity. 

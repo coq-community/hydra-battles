@@ -7433,10 +7433,10 @@ $$H'_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1$$.
 
 \begin{Coqsrc}
 Lemma H'_omega_sqr : forall k,
-    H'_ (Phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
+    H'_ (phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
 Proof.
   intro k; rewrite H'_eq3; auto with E0.
-  - ochange (Canon (Phi0 2) (S k)) (omega * (S k))%e0.
+  - ochange (Canon (phi0 2) (S k)) (omega * (S k))%e0.
     +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- abstract lia. 
@@ -7462,7 +7462,7 @@ $H'_{\omega^\alpha \times (i+1)}$.
 \begin{Coqsrc}
 Lemma H'_Omega_term_1 : alpha <> Zero -> forall k,  
     H'_ (Omega_term alpha (S i)) k =
-    H'_ (Omega_term alpha i) (H'_ (Phi0 alpha) k).
+    H'_ (Omega_term alpha i) (H'_ (phi0 alpha) k).
 \end{Coqsrc}
 
 \item
@@ -7473,7 +7473,7 @@ $(i+1)$-th iterate of $H'_{\omega^\alpha}$.
 \begin{Coqsrc}
 Lemma H'_Omega_term (alpha : E0):
 alpha <> Zero -> forall i k, 
-  H'_ (Omega_term alpha i) k = iterate (H'_ (Phi0 alpha)) (S i) k.
+  H'_ (Omega_term alpha i) k = iterate (H'_ (phi0 alpha)) (S i) k.
 \end{Coqsrc}
 
 \item In particular, we derive a formula for $H'_{\omega^{i+1}}$.
@@ -7481,11 +7481,11 @@ alpha <> Zero -> forall i k,
 \begin{Coqsrc}
 Definition H'_succ_fun f k := iterate f (S k) k.
 
-Lemma H'_Phi0_succ alpha  : alpha <> Zero -> forall k,
- H'_ (Phi0 (Succ alpha)) k = H'_succ_fun (H'_ (Phi0 alpha)) k. 
+Lemma H'_phi0_succ alpha  : alpha <> Zero -> forall k,
+ H'_ (phi0 (Succ alpha)) k = H'_succ_fun (H'_ (phi0 alpha)) k. 
 
-Lemma H'_Phi0_Si : forall i k,
- H'_ (Phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
+Lemma H'_phi0_Si : forall i k,
+ H'_ (phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
 \end{Coqsrc}
 
 \end{enumerate}
@@ -7493,9 +7493,9 @@ We get now a  formula for $H'_{\omega^3}$:
 
 \begin{Coqsrc}
 Lemma H'_omega_cube : forall k,
-    H'_ (Phi0 3)%e0 k = iterate (H'_ (Phi0 2))  (S k) k.
+    H'_ (phi0 3)%e0 k = iterate (H'_ (phi0 2))  (S k) k.
 Proof.
-  intro k; rewrite <-FinS_eq, -> Fin_Succ, H'_Phi0_succ; auto.
+  intro k; rewrite <-FinS_eq, -> Fin_Succ, H'_phi0_succ; auto.
   compute; injection 1; discriminate.
 Qed.
 \end{Coqsrc}
@@ -7511,13 +7511,13 @@ Section H'_omega_cube_3.
   
 Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
 
-Remark R0 k :  H'_ (Phi0 3)%e0 k = iterate f (S k) k.
+Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k.
 \end{Coqsrc}
 
 Thus, the number $H_{\omega^3}(3)$ can be written as four nested applications of $f$.
  
 \begin{Coqsrc}
-Fact F0 : H'_ (Phi0 3) 3 = f (f (f (f 3))).
+Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))).
 proof. rewrite R0; reflexivity. Qed.
 \end{Coqsrc}
 
@@ -7540,13 +7540,13 @@ This number looks quite big; let us compute an approximation with \texttt{Ocaml}
 
 
 \begin{Coqsrc}
-Fact F1 : H'_ (Phi0 3) 3 = f (f N).
+Fact F1 : H'_ (phi0 3) 3 = f (f N).
 Proof.
  rewrite F0; reflexivity. 
 Qed.
 
 
-Lemma F1_simpl : H'_ (Phi0 3) 3 =
+Lemma F1_simpl : H'_ (phi0 3) 3 =
                  (exp2 (exp2 (S N) * S N) * (exp2 (S N) * S N) - 1)%nat.
 
 \end{Coqsrc}
@@ -7578,19 +7578,19 @@ End H'_omega_cube_3.
 Now, we have got at last an exact formula for $H'_{\omega^\omega}$.
 
 \begin{Coqsrc}
-Lemma H'_Phi0_omega : forall k, H'_ (Phi0 omega) k =
+Lemma H'_phi0_omega : forall k, H'_ (phi0 omega) k =
                                iterate H'_succ_fun  k (H'_ omega) k.
 Proof with auto with E0.
-  intro k; rewrite H'_eq3, <- H'_Phi0_Si ...
-  -  rewrite CanonS_Canon, CanonS_Phi0_lim;  f_equal ...
+  intro k; rewrite H'_eq3, <- H'_phi0_Si ...
+  -  rewrite CanonS_Canon, CanonS_phi0_lim;  f_equal ...
 Qed.
 \end{Coqsrc}
 
 Using extensionality of the functional \texttt{iterate}, we can get a closed formula.
 
 \begin{Coqsrc}
-Lemma H'_Phi0_omega_closed_formula k :
-  H'_ (Phi0 omega) k =
+Lemma H'_phi0_omega_closed_formula k :
+  H'_ (phi0 omega) k =
   iterate (fun (f: nat -> nat) (l : nat) => iterate  f (S l) l)
                k
                (fun k : nat => S (2 * k)%nat)

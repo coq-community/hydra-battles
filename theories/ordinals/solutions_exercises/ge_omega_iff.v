@@ -22,10 +22,10 @@ Proof.
       assert (a2 = zero) by (eapply nf_of_finite; eauto).
       subst; compute in H; inversion H; lia.
     + rewrite  Le_iff; cbn.
-      apply LE_trans with (phi0 (ocons a1_1 n0 a1_2)).
+      apply LE_trans with (T1.phi0 (ocons a1_1 n0 a1_2)).
       * repeat split; auto.
-        apply phi0_mono; apply  le_trans with (ocons a1_1 0 zero).
-        -- apply phi0_mono; auto with T1.
+        apply T1.phi0_mono; apply  le_trans with (ocons a1_1 0 zero).
+        -- apply T1.phi0_mono; auto with T1.
         -- apply le_phi0.
         -- apply nf_phi0; eauto with T1.
       * repeat split; eauto with T1.

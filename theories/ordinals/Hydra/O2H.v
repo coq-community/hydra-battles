@@ -264,13 +264,13 @@ Section DS_iota.
   Qed. 
 
   Lemma iota_phi0 : forall alpha, nf alpha ->
-                                  iota (phi0 alpha)= hyd1 (iota alpha).
+                                  iota (T1.phi0 alpha)= hyd1 (iota alpha).
   Proof.
     intros; now simpl.
   Qed.
   
   Lemma DS_iota_2 : forall lambda,
-      nf lambda -> alpha = phi0 lambda ->
+      nf lambda -> alpha = T1.phi0 lambda ->
       limitb lambda ->
       round_n i (iota alpha) (iota (canonS alpha i)).                             
   Proof. 
@@ -285,7 +285,7 @@ Section DS_iota.
   Qed.
 
   Lemma DS_iota_3 : forall  gamma,   nf gamma ->
-                                     alpha = phi0 (T1.succ gamma) ->
+                                     alpha = T1.phi0 (T1.succ gamma) ->
                                      round_n i (iota alpha)
                                              (iota (canonS alpha i)).
   Proof.
@@ -305,7 +305,7 @@ Section DS_iota.
     Variable n : nat.
     Hypothesis Hn : alpha = ocons lambda (S n) zero.
 
-    Remark rem1 : canonS alpha i = ocons lambda n (phi0 (canonS lambda i)).
+    Remark rem1 : canonS alpha i = ocons lambda n (T1.phi0 (canonS lambda i)).
     Proof.
       subst alpha;  unfold canonS; rewrite canonS_lim2; auto.
     Qed.

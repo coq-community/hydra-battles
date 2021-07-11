@@ -118,7 +118,7 @@ Section battle_lenght_notPR.
 
   (** A counter example *)
 
-  Let alpha := Phi0 omega%e0.
+  Let alpha := phi0 omega%e0.
   Let h := iota (cnf alpha).
 
   (** let us get rid of the substraction ... *)
