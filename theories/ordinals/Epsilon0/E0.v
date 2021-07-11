@@ -784,3 +784,9 @@ Proof.
   now apply  T1.mult_plus_distr_l.
 Qed.
 
+
+Example Ex42: (omega + 42 + Phi0 2 = Phi0 2)%e0.
+Proof. 
+  now rewrite <-  Comparable.compare_eq_iff.
+Qed.
+

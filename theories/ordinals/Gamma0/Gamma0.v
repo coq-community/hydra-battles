@@ -3711,15 +3711,24 @@ Proof.
 Defined. 
 
 Infix "+" := Plus : g0_scope.
-  
+
+Instance Phi (alpha beta : G0) : G0.
+Proof.
+  destruct alpha, beta. exists (phi vnf0 vnf1).
+  red in vnf_ok0, vnf_ok1. red. 
+  rewrite nfb_equiv in *.
+  now apply phi_nf.
+Defined. 
+
 Coercion Finite : nat >-> G0.
 
 Local Open Scope g0_scope.
 
-Example  L_3_plus_omega :   3 + omega = omega.
-now apply Comparable.compare_eq_iff.
+Example ex42 : omega + 42 + Phi Zero 2 = Phi Zero 2.
+Proof.
+  now rewrite <- Comparable.compare_eq_iff.
 Qed.
-
+  
 End G0.
 
 

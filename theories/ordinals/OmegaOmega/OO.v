@@ -154,7 +154,7 @@ Coercion fin: nat >-> t.
 
 Example Ex42: (omega + 42 + omega * omega = omega * omega)%oo.
 Proof. 
-  now rewrite <-  compare_eq_iff.
+  now rewrite <-  Comparable.compare_eq_iff.
 Qed.
 
 

@@ -78,3 +78,16 @@ Axiom inh_Ord : inhabited Ord.
 
 ]]
 **)
+
+
+Example Ex42: omega + 42 + phi0 2 = phi0 2.
+Proof. 
+  assert (HAP:= AP_phi0 2); elim  HAP; intros  _ H0.
+  assert (H: omega < phi0 2) by
+    (rewrite omega_eqn; apply phi0_mono, finite_mono; auto with arith).
+  apply H0, AP_plus_closed; trivial.
+  apply lt_trans with omega; trivial.
+  -  apply finite_lt_omega.
+Qed. 
+
+
