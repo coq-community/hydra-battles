@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Monoid_instances</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Monoid_instances</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab334"></a><h2 class="section">Some useful instances of Monoid classes</h2>
+
+
+<div class="paragraph"> </div>
+
+File 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="additions.Monoid_def.html#"><span class="id" title="library">Monoid_def</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Classes.RelationClasses.html#"><span class="id" title="library">RelationClasses</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Classes.Morphisms.html#"><span class="id" title="library">Morphisms</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.ZArith.ZArith.html#"><span class="id" title="library">ZArith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.PArith.PArith.html#"><span class="id" title="library">PArith</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.NArith.html#"><span class="id" title="library">NArith</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.Cyclic.Int31.Ring31.html#"><span class="id" title="library">Ring31</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Z_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab335"></a><h3 class="section">Multiplicative monoid on <span class="inlinecode"><span class="id" title="var">Z</span></span></h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="Z_mult_op" class="idref" href="#Z_mult_op"><span class="id" title="instance">Z_mult_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.ZArith.BinInt.html#Z.mul"><span class="id" title="definition">Z.mul</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ZMult" class="idref" href="#ZMult"><span class="id" title="instance">ZMult</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a>  <a class="idref" href="additions.Monoid_instances.html#Z_mult_op"><span class="id" title="instance">Z_mult_op</span></a> 1.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ZMult_Abelian" class="idref" href="#ZMult_Abelian"><span class="id" title="instance">ZMult_Abelian</span></a> : <a class="idref" href="additions.Monoid_def.html#Abelian_Monoid"><span class="id" title="class">Abelian_Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#ZMult"><span class="id" title="instance">ZMult</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab336"></a><h3 class="section">Multiplicative monoid on <span class="inlinecode"><span class="id" title="var">nat</span></span></h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="nat_mult_op" class="idref" href="#nat_mult_op"><span class="id" title="instance">nat_mult_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> | 5 := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Arith.PeanoNat.html#Nat.mul"><span class="id" title="definition">Nat.mul</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Printing All</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span>  <a id="Natmult" class="idref" href="#Natmult"><span class="id" title="instance">Natmult</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#nat_mult_op"><span class="id" title="instance">nat_mult_op</span></a>  1%<span class="id" title="var">nat</span> | 5.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab337"></a><h3 class="section">Additive monoid on <span class="inlinecode"><span class="id" title="var">nat</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+The following monoid is useful for proving the correctness of complex
+exponentiation algorithms. In effect, the -th "power" of  is
+equal to . See Sect.
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="nat_plus_op" class="idref" href="#nat_plus_op"><span class="id" title="instance">nat_plus_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> | 12 := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Arith.PeanoNat.html#Nat.add"><span class="id" title="definition">Nat.add</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="Natplus" class="idref" href="#Natplus"><span class="id" title="instance">Natplus</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#nat_plus_op"><span class="id" title="instance">nat_plus_op</span></a>  0%<span class="id" title="var">nat</span> | 12.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">N_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="N_mult_op" class="idref" href="#N_mult_op"><span class="id" title="instance">N_mult_op</span></a>  : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a> | 5 := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#N.mul"><span class="id" title="definition">N.mul</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="NMult" class="idref" href="#NMult"><span class="id" title="instance">NMult</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#N_mult_op"><span class="id" title="instance">N_mult_op</span></a> 1 | 5.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="N_plus_op" class="idref" href="#N_plus_op"><span class="id" title="instance">N_plus_op</span></a>  : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a> | 12 := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#N.add"><span class="id" title="definition">N.add</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="NPlus" class="idref" href="#NPlus"><span class="id" title="instance">NPlus</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#N_plus_op"><span class="id" title="instance">N_plus_op</span></a> 0 | 12.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Multiplicative Monoid on <span class="inlinecode"><span class="id" title="var">positive</span></span> 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="P_mult_op" class="idref" href="#P_mult_op"><span class="id" title="instance">P_mult_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> | 5  := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.PArith.BinPos.html#Pos.mul"><span class="id" title="definition">Pos.mul</span></a> .<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="PMult" class="idref" href="#PMult"><span class="id" title="instance">PMult</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#P_mult_op"><span class="id" title="instance">P_mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> | 5.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">Int31</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">int31_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab338"></a><h3 class="section">Multiplicative monoid on 31-bits integers</h3>
+
+
+<div class="paragraph"> </div>
+
+Cyclic numeric types are  good candidates for testing exponentiations
+with big exponents, since the size of data is bounded.
+
+<div class="paragraph"> </div>
+
+The type <span class="inlinecode"><span class="id" title="var">int31</span></span> is defined in Standard Library in Module
+<span class="inlinecode"><span class="id" title="var">Coq.Numbers.Cyclic.Int31.Int31</span></span>.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="int31_mult_op" class="idref" href="#int31_mult_op"><span class="id" title="instance">int31_mult_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.Cyclic.Int31.Int31.html#int31"><span class="id" title="inductive">int31</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.Cyclic.Int31.Int31.html#mul31"><span class="id" title="definition">mul31</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span>  <a id="Int31mult" class="idref" href="#Int31mult"><span class="id" title="instance">Int31mult</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a> <a class="idref" href="additions.Monoid_instances.html#int31_mult_op"><span class="id" title="instance">int31_mult_op</span></a>  1.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Bad" class="idref" href="#Bad"><span class="id" title="module">Bad</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Bad.int31_from_nat" class="idref" href="#Bad.int31_from_nat"><span class="id" title="definition">int31_from_nat</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Monoid_instances.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.Cyclic.Int31.Int31.html#8063121d0805dd4ed3d6037c2823ea24"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Monoid_instances.html#int31_from_nat:2"><span class="id" title="definition">int31_from_nat</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="additions.Monoid_instances.html#Bad.int31_from_nat"><span class="id" title="definition">int31_from_nat</span></a> <a class="idref" href="additions.Monoid_instances.html#Bad.int31_from_nat"><span class="id" title="definition">:</span></a> <a class="idref" href="additions.Monoid_instances.html#Bad.int31_from_nat"><span class="id" title="definition">nat</span></a> <a class="idref" href="additions.Monoid_instances.html#Bad.int31_from_nat"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="additions.Monoid_instances.html#Bad.int31_from_nat"><span class="id" title="definition">int31</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Bad.fact" class="idref" href="#Bad.fact"><span class="id" title="definition">fact</span></a> (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <span class="id" title="keyword">match</span> <a class="idref" href="additions.Monoid_instances.html#n:4"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="additions.Monoid_instances.html#n:4"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.Cyclic.Int31.Int31.html#4cd2e826bdfd2f313a8b450aa37dca78"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#fact:5"><span class="id" title="definition">fact</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Bad.fact_zero" class="idref" href="#Bad.fact_zero"><span class="id" title="definition">fact_zero</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="additions.Monoid_instances.html#Bad.fact"><span class="id" title="definition">fact</span></a> <a class="idref" href="additions.Monoid_instances.html#n:7"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Monoid_instances.html#Bad"><span class="id" title="module">Bad</span></a>.<br/>
+<span class="id" title="keyword">Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">int31_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab339"></a><h3 class="section">Monoid of 2x2 matrices</h3>
+
+
+<div class="paragraph"> </div>
+
+Let  be some type, provided with a ring structure. We define the multiplication 
+of -matrices, the coefficients of which have type .
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="M2_def" class="idref" href="#M2_def"><span class="id" title="section">M2_def</span></a>.<br/>
+<span class="id" title="keyword">Variables</span> (<a id="M2_def.A" class="idref" href="#M2_def.A"><span class="id" title="variable">A</span></a>:<span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2_def.zero" class="idref" href="#M2_def.zero"><span class="id" title="variable">zero</span></a> <a id="M2_def.one" class="idref" href="#M2_def.one"><span class="id" title="variable">one</span></a> : <a class="idref" href="additions.Monoid_instances.html#A:8"><span class="id" title="variable">A</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2_def.plus" class="idref" href="#M2_def.plus"><span class="id" title="variable">plus</span></a> <a id="M2_def.mult" class="idref" href="#M2_def.mult"><span class="id" title="variable">mult</span></a>  : <a class="idref" href="additions.Monoid_instances.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Monoid_instances.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Monoid_instances.html#A:8"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2_def.:::'0'" class="idref" href="#M2_def.:::'0'"><span class="id" title="notation">&quot;</span></a>0" := <a class="idref" href="additions.Monoid_instances.html#M2_def.zero"><span class="id" title="variable">zero</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2_def.:::'1'" class="idref" href="#M2_def.:::'1'"><span class="id" title="notation">&quot;</span></a>1" := <a class="idref" href="additions.Monoid_instances.html#M2_def.one"><span class="id" title="variable">one</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Notation</span> <a id="b0d4ffdfad44d7e0423365f5b6c1abdc" class="idref" href="#b0d4ffdfad44d7e0423365f5b6c1abdc"><span class="id" title="notation">&quot;</span></a>x + y" := (<a class="idref" href="additions.Monoid_instances.html#M2_def.plus"><span class="id" title="variable">plus</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;<span class="id" title="keyword">Notation</span> <a id="3d24eb4e8ded7098f168acd26997b293" class="idref" href="#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">&quot;</span></a>x * y " := (<a class="idref" href="additions.Monoid_instances.html#M2_def.mult"><span class="id" title="variable">mult</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="M2_def.rt" class="idref" href="#M2_def.rt"><span class="id" title="variable">rt</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.setoid_ring.Ring_theory.html#semi_ring_theory"><span class="id" title="record">semi_ring_theory</span></a>  <a class="idref" href="additions.Monoid_instances.html#M2_def.zero"><span class="id" title="variable">zero</span></a> <a class="idref" href="additions.Monoid_instances.html#M2_def.one"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.Monoid_instances.html#M2_def.plus"><span class="id" title="variable">plus</span></a> <a class="idref" href="additions.Monoid_instances.html#M2_def.mult"><span class="id" title="variable">mult</span></a>  (@<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#eq"><span class="id" title="inductive">eq</span></a> <a class="idref" href="additions.Monoid_instances.html#M2_def.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;<span class="id" title="keyword">Add</span>  <span class="id" title="var">Ring</span> <span class="id" title="var">Aring</span> : <a class="idref" href="additions.Monoid_instances.html#M2_def.rt"><span class="id" title="variable">rt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Structure</span> <a id="M2" class="idref" href="#M2"><span class="id" title="record">M2</span></a> : <span class="id" title="keyword">Type</span> := {<a id="c00" class="idref" href="#c00"><span class="id" title="projection">c00</span></a> : <a class="idref" href="additions.Monoid_instances.html#M2_def.A"><span class="id" title="variable">A</span></a>;  <a id="c01" class="idref" href="#c01"><span class="id" title="projection">c01</span></a> : <a class="idref" href="additions.Monoid_instances.html#M2_def.A"><span class="id" title="variable">A</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="c10" class="idref" href="#c10"><span class="id" title="projection">c10</span></a> : <a class="idref" href="additions.Monoid_instances.html#M2_def.A"><span class="id" title="variable">A</span></a>;  <a id="c11" class="idref" href="#c11"><span class="id" title="projection">c11</span></a> : <a class="idref" href="additions.Monoid_instances.html#M2_def.A"><span class="id" title="variable">A</span></a>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Id2" class="idref" href="#Id2"><span class="id" title="definition">Id2</span></a> : <a class="idref" href="additions.Monoid_instances.html#M2"><span class="id" title="record">M2</span></a> := <a class="idref" href="additions.Monoid_instances.html#Build_M2"><span class="id" title="constructor">Build_M2</span></a> 1 0 0 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="M2_mult" class="idref" href="#M2_mult"><span class="id" title="definition">M2_mult</span></a> (<a id="m:19" class="idref" href="#m:19"><span class="id" title="binder">m</span></a> <a id="m':20" class="idref" href="#m':20"><span class="id" title="binder">m'</span></a>:<a class="idref" href="additions.Monoid_instances.html#M2"><span class="id" title="record">M2</span></a>) : <a class="idref" href="additions.Monoid_instances.html#M2"><span class="id" title="record">M2</span></a> :=<br/>
+&nbsp;<a class="idref" href="additions.Monoid_instances.html#Build_M2"><span class="id" title="constructor">Build_M2</span></a> (<a class="idref" href="additions.Monoid_instances.html#c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a> <a class="idref" href="additions.Monoid_instances.html#b0d4ffdfad44d7e0423365f5b6c1abdc"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Monoid_instances.html#c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Monoid_instances.html#c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a> <a class="idref" href="additions.Monoid_instances.html#b0d4ffdfad44d7e0423365f5b6c1abdc"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Monoid_instances.html#c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Monoid_instances.html#c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a> <a class="idref" href="additions.Monoid_instances.html#b0d4ffdfad44d7e0423365f5b6c1abdc"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Monoid_instances.html#c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Monoid_instances.html#c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a> <a class="idref" href="additions.Monoid_instances.html#b0d4ffdfad44d7e0423365f5b6c1abdc"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Monoid_instances.html#c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Monoid_instances.html#m:19"><span class="id" title="variable">m</span></a> <a class="idref" href="additions.Monoid_instances.html#3d24eb4e8ded7098f168acd26997b293"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Monoid_instances.html#m':20"><span class="id" title="variable">m'</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="M2_eq_intros" class="idref" href="#M2_eq_intros"><span class="id" title="lemma">M2_eq_intros</span></a> : <span class="id" title="keyword">∀</span> <a id="a:21" class="idref" href="#a:21"><span class="id" title="binder">a</span></a> <a id="b:22" class="idref" href="#b:22"><span class="id" title="binder">b</span></a> <a id="c:23" class="idref" href="#c:23"><span class="id" title="binder">c</span></a> <a id="d:24" class="idref" href="#d:24"><span class="id" title="binder">d</span></a> <a id="a':25" class="idref" href="#a':25"><span class="id" title="binder">a'</span></a> <a id="b':26" class="idref" href="#b':26"><span class="id" title="binder">b'</span></a> <a id="c':27" class="idref" href="#c':27"><span class="id" title="binder">c'</span></a> <a id="d':28" class="idref" href="#d':28"><span class="id" title="binder">d'</span></a>,<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Monoid_instances.html#a:21"><span class="id" title="variable">a</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><a class="idref" href="additions.Monoid_instances.html#a':25"><span class="id" title="variable">a'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Monoid_instances.html#b:22"><span class="id" title="variable">b</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><a class="idref" href="additions.Monoid_instances.html#b':26"><span class="id" title="variable">b'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Monoid_instances.html#c:23"><span class="id" title="variable">c</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><a class="idref" href="additions.Monoid_instances.html#c':27"><span class="id" title="variable">c'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Monoid_instances.html#d:24"><span class="id" title="variable">d</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><a class="idref" href="additions.Monoid_instances.html#d':28"><span class="id" title="variable">d'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Monoid_instances.html#Build_M2"><span class="id" title="constructor">Build_M2</span></a> <a class="idref" href="additions.Monoid_instances.html#a:21"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Monoid_instances.html#b:22"><span class="id" title="variable">b</span></a> <a class="idref" href="additions.Monoid_instances.html#c:23"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Monoid_instances.html#d:24"><span class="id" title="variable">d</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Monoid_instances.html#Build_M2"><span class="id" title="constructor">Build_M2</span></a> <a class="idref" href="additions.Monoid_instances.html#a':25"><span class="id" title="variable">a'</span></a> <a class="idref" href="additions.Monoid_instances.html#b':26"><span class="id" title="variable">b'</span></a> <a class="idref" href="additions.Monoid_instances.html#c':27"><span class="id" title="variable">c'</span></a> <a class="idref" href="additions.Monoid_instances.html#d':28"><span class="id" title="variable">d'</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Global Instance</span> <a id="M2_op" class="idref" href="#M2_op"><span class="id" title="instance">M2_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="additions.Monoid_instances.html#M2"><span class="id" title="record">M2</span></a> := <a class="idref" href="additions.Monoid_instances.html#M2_mult"><span class="id" title="definition">M2_mult</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global Instance</span> <a id="M2_Monoid" class="idref" href="#M2_Monoid"><span class="id" title="instance">M2_Monoid</span></a> : <a class="idref" href="additions.Monoid_def.html#Monoid"><span class="id" title="class">Monoid</span></a>   <a class="idref" href="additions.Monoid_instances.html#M2_op"><span class="id" title="instance">M2_op</span></a> <a class="idref" href="additions.Monoid_instances.html#Id2"><span class="id" title="definition">Id2</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Monoid_instances.html#M2_def"><span class="id" title="section">M2_def</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Matrices over N 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="M2N" class="idref" href="#M2N"><span class="id" title="definition">M2N</span></a> := <a class="idref" href="additions.Monoid_instances.html#M2_Monoid"><span class="id" title="instance">M2_Monoid</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.setoid_ring.InitialRing.html#Nth"><span class="id" title="lemma">Nth</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab340"></a><h3 class="section">Integers modulo m</h3>
+
+
+<div class="paragraph"> </div>
+
+The following instance of <span class="inlinecode"><span class="id" title="var">EMonoid</span></span> describes the set of integers modulo
+, where  is some integer greater or equal than .
+For simplicity's sake, we represent such values using the type <span class="inlinecode"><span class="id" title="var">N</span></span>,
+and consider "equivalence modulo " instead of equality.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Nmodulo" class="idref" href="#Nmodulo"><span class="id" title="section">Nmodulo</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Nmodulo.m" class="idref" href="#Nmodulo.m"><span class="id" title="variable">m</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Nmodulo.m_gt_1" class="idref" href="#Nmodulo.m_gt_1"><span class="id" title="variable">m_gt_1</span></a> : 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Monoid_instances.html#Nmodulo.m"><span class="id" title="variable">m</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_neq_0" class="idref" href="#m_neq_0"><span class="id" title="lemma">m_neq_0</span></a> : <a class="idref" href="additions.Monoid_instances.html#Nmodulo.m"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> 0.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Hint Resolve</span> <span class="id" title="var">m_neq_0</span> : <span class="id" title="var">chains</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="mult_mod" class="idref" href="#mult_mod"><span class="id" title="definition">mult_mod</span></a> ( <a id="x:31" class="idref" href="#x:31"><span class="id" title="binder">x</span></a> <a id="y:32" class="idref" href="#y:32"><span class="id" title="binder">y</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) := <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Monoid_instances.html#x:31"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#fe1417cc32a1703619b26940ce957c6a"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#y:32"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">mod</span></a> <a class="idref" href="additions.Monoid_instances.html#Nmodulo.m"><span class="id" title="variable">m</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="mod_eq" class="idref" href="#mod_eq"><span class="id" title="definition">mod_eq</span></a> ( <a id="x:33" class="idref" href="#x:33"><span class="id" title="binder">x</span></a> <a id="y:34" class="idref" href="#y:34"><span class="id" title="binder">y</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) := <a class="idref" href="additions.Monoid_instances.html#x:33"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">mod</span></a> <a class="idref" href="additions.Monoid_instances.html#Nmodulo.m"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Monoid_instances.html#y:34"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">mod</span></a> <a class="idref" href="additions.Monoid_instances.html#Nmodulo.m"><span class="id" title="variable">m</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Instance</span> <a id="mult_mod_proper" class="idref" href="#mult_mod_proper"><span class="id" title="instance">mult_mod_proper</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Classes.Morphisms.html#Proper"><span class="id" title="class">Proper</span></a> (<a class="idref" href="additions.Monoid_instances.html#mod_equiv"><span class="id" title="instance">mod_equiv</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Classes.Morphisms.html#8dc5652698a6e16f72dd37bd17d3b973"><span class="id" title="notation">==&gt;</span></a> <a class="idref" href="additions.Monoid_instances.html#mod_equiv"><span class="id" title="instance">mod_equiv</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Classes.Morphisms.html#8dc5652698a6e16f72dd37bd17d3b973"><span class="id" title="notation">==&gt;</span></a> <a class="idref" href="additions.Monoid_instances.html#mod_equiv"><span class="id" title="instance">mod_equiv</span></a>) <a class="idref" href="additions.Monoid_instances.html#mod_op"><span class="id" title="instance">mod_op</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local  Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">M_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="mult_mod_associative" class="idref" href="#mult_mod_associative"><span class="id" title="lemma">mult_mod_associative</span></a> :  <span class="id" title="keyword">∀</span> <a id="x:35" class="idref" href="#x:35"><span class="id" title="binder">x</span></a> <a id="y:36" class="idref" href="#y:36"><span class="id" title="binder">y</span></a> <a id="z:37" class="idref" href="#z:37"><span class="id" title="binder">z</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Monoid_instances.html#x:35"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Monoid_instances.html#y:36"><span class="id" title="variable">y</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#z:37"><span class="id" title="variable">z</span></a><a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.13.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Monoid_instances.html#x:35"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#y:36"><span class="id" title="variable">y</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#z:37"><span class="id" title="variable">z</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="one_mod_neutral_l" class="idref" href="#one_mod_neutral_l"><span class="id" title="lemma">one_mod_neutral_l</span></a>  : <span class="id" title="keyword">∀</span> <a id="x:38" class="idref" href="#x:38"><span class="id" title="binder">x</span></a>, 1 <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Monoid_instances.html#x:38"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Monoid_def.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Monoid_instances.html#x:38"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="one_mod_neutral_r" class="idref" href="#one_mod_neutral_r"><span class="id" title="lemma">one_mod_neutral_r</span></a>  : <span class="id" title="keyword">∀</span> <a id="x:39" class="idref" href="#x:39"><span class="id" title="binder">x</span></a>, <a class="idref" href="additions.Monoid_instances.html#x:39"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> 1 <a class="idref" href="additions.Monoid_def.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Monoid_instances.html#x:39"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Instance</span> <a id="Nmod_Monoid" class="idref" href="#Nmod_Monoid"><span class="id" title="instance">Nmod_Monoid</span></a> : <a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a>  <a class="idref" href="additions.Monoid_instances.html#mod_op"><span class="id" title="instance">mod_op</span></a> 1 <a class="idref" href="additions.Monoid_instances.html#mod_equiv"><span class="id" title="instance">mod_equiv</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Monoid_instances.html#Nmodulo"><span class="id" title="section">Nmodulo</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="S256" class="idref" href="#S256"><span class="id" title="section">S256</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="S256.mod256" class="idref" href="#S256.mod256"><span class="id" title="variable">mod256</span></a> :=  <a class="idref" href="additions.Monoid_instances.html#mod_op"><span class="id" title="instance">mod_op</span></a> 256.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+= 57 : N 
+</div>
+<div class="code">
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Monoid_instances.html#S256"><span class="id" title="section">S256</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+= 14137 : N 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">N_scope</span>.<br/>
+<span class="id" title="keyword">Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
