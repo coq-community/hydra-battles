@@ -156,18 +156,10 @@ Notation zero := nil.
 
 (** Finite non-zero ordinals are lists of length 1 *)
 
-Definition fin (i:nat): t := (i::nil).
-(*
-Definition finS (i:nat) : t := (i::nil).
-Definition fin (i:nat) : t := match i with
-                                | 0 => zero
-                                | S i => finS i
-end.
-*)                              
+Definition fin_list (i:nat): t := (i::nil).
+                    
 
-Coercion fin : nat >-> t.
-
-Check (fin 42).
+Coercion fin_list : nat >-> t.
 
 (** # &omega; #  is # &omega;<sup>1</sup> . 1 + 0 # *)
 

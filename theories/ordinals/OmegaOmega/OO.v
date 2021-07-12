@@ -141,7 +141,7 @@ Notation omega := _omega.
 
 Definition finS (i:nat) : t.
 Proof.
-  exists (ListOmega.fin (S i)); now cbn.
+  exists (ListOmega.fin_list (S i)); now cbn.
 Defined.
 
 
