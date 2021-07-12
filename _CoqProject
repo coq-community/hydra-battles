@@ -68,9 +68,9 @@ theories/ordinals/Schutte/Correctness_E0.v
 theories/ordinals/Schutte/PartialFun.v
 theories/ordinals/Schutte/Lub.v
 theories/ordinals/Schutte/GRelations.v
-theories/ordinals/OmegaOmega/OO.v
-theories/ordinals/OmegaOmega/ListOmega.v
-theories/ordinals/OmegaOmega/Examples.v
+# theories/ordinals/OmegaOmega/OO.v
+# theories/ordinals/OmegaOmega/ListOmega.v
+# theories/ordinals/OmegaOmega/Examples.v
 theories/ordinals/Hydra/Battle_length.v
 theories/ordinals/Hydra/Omega_Small.v
 theories/ordinals/Hydra/BigBattle.v
