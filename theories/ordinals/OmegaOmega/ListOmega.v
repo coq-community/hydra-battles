@@ -15,15 +15,195 @@
 
 (* To do : translate the comments into english (and make them coqdoc compatible) *)
 
+(** New implementation as a refinement of epsilon0 *)
 
+Require T1 E0.
 Require Import Arith.
 Require Import Coq.Logic.Eqdep_dec.
 Require Import Coq.Arith.Peano_dec.
 Require Import List.
 Require Import Recdef Lia.
 Require Import Coq.Wellfounded.Inverse_Image Coq.Wellfounded.Inclusion.
+Coercion is_true: bool >-> Sortclass.
 
-Coercion is_true : bool >-> Sortclass.
+Definition t := list (nat*nat).
+
+Definition  zero : t := (@nil (nat * nat): t).
+
+(** omega^ i * S n + alpha *)
+Notation ocons i n alpha := ((i,n)::alpha).
+
+Notation  FS n := (ocons 0 n zero: t).
+
+Definition fin (n:nat): t := match n with 0 => zero | S p => FS p end.
+
+Notation phi0 i := (ocons i 0 nil).
+Definition omega_term (i k: nat) : t :=
+  ocons i k zero.
+
+Notation omega := (phi0 1). 
+
+Coercion fin  : nat >-> t.
+
+Fixpoint refine (a : t) : T1.T1 :=
+  match a with
+    nil => T1.zero
+  | ocons i n b => T1.ocons (T1.fin i) n (refine b)
+  end.
+
+Compute T1.pp (refine (fin 42)).
+Compute T1.pp (refine omega).
+Compute T1.pp (refine (phi0 33)).
+
+
+
+(* begin hide *)
+Lemma FS_rw (n:nat) : FS n = S n.
+Proof. reflexivity. Qed.
+
+
+(* end hide *)
+
+Inductive ap : t -> Prop :=
+  ap_intro : forall a, ap (phi0 a).
+
+(** Successor and limits (syntactic definitions) *)
+
+Fixpoint succb (alpha:t) :=
+  match alpha with
+      nil => false
+    | ocons 0 _ _ => true
+    | ocons i n beta => succb beta
+  end.
+
+Compute succb (fin 0).
+Compute succb ((1,0)::(0,3)::nil).
+
+Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
+Proof.
+ induction a as [| a l]; cbn.
+ - trivial.
+ - destruct a as [n n0]; now destruct n.
+Qed.
+
+
+
+Fixpoint limitb (alpha:t) :=
+  match alpha with
+      nil => false
+    | ocons 0 _ _ => false
+    | ocons i n nil => true
+    | ocons i n beta => limitb beta
+  end.
+
+Compute limitb omega.
+
+Lemma limitb_ref (a:t): limitb a -> T1.limitb (refine a).
+Proof.
+  induction a as [| a l]; cbn.
+  - trivial.
+  -  destruct a as [n n0].
+     destruct n.
+     + discriminate.
+     + simpl T1.limitb; destruct l. 
+       * trivial.
+       * intro H ; rewrite IHl; case (refine (p::l)); auto.
+Qed.
+
+
+Fixpoint compare (alpha beta:t):comparison :=
+  match alpha, beta with
+  | nil, nil => Eq
+  | nil, ocons a' n' b' => Lt
+  | _   , nil => Gt
+  | (ocons a n b),(ocons a' n' b') =>
+      (match Nat.compare a a' with 
+       | Lt => Lt
+       | Gt => Gt
+       | Eq => (match Nat.compare n n' with
+                | Eq => compare b b'
+                | comp => comp
+                end)
+       end)
+  end.
+
+(** Move to T1 *)
+Lemma T1_compare_fin_rw (n n1: nat) :
+  T1.compare (T1.fin n) (T1.fin n1) = (n ?= n1).
+destruct n, n1.
+- easy.
+- now cbn.
+- now cbn.
+- cbn; case (n ?= n1); trivial.
+Qed. 
+
+
+Lemma compare_ref (alpha beta:t) :
+  compare alpha beta = T1.compare (refine alpha) (refine beta).
+Proof.
+  revert beta. induction alpha.
+  - destruct beta.
+    + easy.
+    + cbn. now destruct p.
+  - destruct a, beta.
+    + now cbn.
+    + destruct  p; cbn.
+    destruct (n ?= n1) eqn: cn_n1;
+    destruct (n0 ?= n2) eqn: c_n0_n2;
+      rewrite  T1_compare_fin_rw; now rewrite cn_n1.
+Qed.
+
+
+Definition lt alpha beta : Prop :=
+  compare alpha beta = Lt.
+
+Lemma compare_rev :
+  forall alpha beta,
+    compare beta alpha = CompOpp (compare alpha beta).
+Proof.
+  induction alpha,  beta.
+  - easy.
+  - cbn; destruct p; cbn; trivial. 
+  - cbn; destruct a; reflexivity. 
+  - cbn; rewrite IHalpha. destruct p, a;  rewrite Nat.compare_antisym.
+    destruct  (Nat.compare n1 n) eqn:? ; cbn; trivial.
+    rewrite Nat.compare_antisym;
+      destruct  (Nat.compare n2 n0) eqn:? ; now cbn.
+Qed.
+
+
+Lemma compare_reflect :
+  forall alpha beta,
+    match compare alpha beta with
+    | Lt => lt alpha beta
+    | Eq => alpha = beta
+    | Gt => lt beta alpha
+    end.
+Proof.
+  unfold lt; induction alpha  as [ | [p n]].
+  - destruct beta.
+    + easy.
+    + cbn; now destruct p.
+  - destruct beta as [ | [p0 n0] beta]. 
+    + cbn; trivial.
+    + cbn; specialize (IHalpha beta);
+        rewrite compare_rev with alpha beta; 
+        rewrite Nat.compare_antisym in * ;
+        destruct (compare alpha beta), (p0 ?= p) eqn:Heq; simpl in *;
+          subst; try easy;
+            apply Nat.compare_eq_iff in Heq as -> ;
+            destruct (n ?= n0) eqn:Heqc; trivial.
+      * now apply Nat.compare_eq_iff in Heqc as ->.
+      * destruct (n ?= n0) eqn:Heqn; trivial;
+          now rewrite Nat.compare_antisym, Heqn.
+      * rewrite Nat.compare_antisym;   now rewrite Heqc.
+      * destruct (n ?= n0) eqn:?; trivial; try discriminate.
+        rewrite Nat.compare_antisym; now rewrite Heqc0.
+      *  rewrite Nat.compare_antisym; now rewrite Heqc.
+Qed.
+
+
+(**** 
 
 (** ** Some auxiliary lemmas and functions *)
 
@@ -300,6 +480,7 @@ Compute limitb (0::0::3::4::0::0::1::4::nil).
 Compute succb (0::0::3::4::0::0::1::0::nil).
 Compute limitb (0::0::3::4::0::0::1::0::nil).
  *)
+
 
 (** ** Ordinal arithmetics *)
 
@@ -1361,3 +1542,8 @@ Section Example_of_use.
 
   End Example_of_use.
 
+
+Compute mult (1::nil) omega.
+Compute mult omega (2::nil).
+Compute mult (fin_list 1) (fin_list 6).
+ ***)
