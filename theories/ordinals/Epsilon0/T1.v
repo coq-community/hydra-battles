@@ -348,6 +348,30 @@ Proof.
   now rewrite compare_refl, Nat.compare_refl.
 Qed.
 
+
+
+Lemma compare_fin_rw (n n1: nat) :
+  T1.compare (T1.fin n) (T1.fin n1) = (n ?= n1).
+  destruct n, n1.
+  - easy.
+  - now cbn.
+  - now cbn.
+  - cbn; case (n ?= n1); trivial.
+Qed. 
+
+Lemma lt_fin_iff (i j : nat): lt (fin i) (fin j) <-> Nat.lt i j.
+Proof.
+  destruct i, j. 
+  - split; [discriminate | lia]. 
+  - split; [ auto with arith| cbn; constructor ].
+  - split; inversion 1.
+  - split; inversion 1.
+     + destruct (Nat.compare_spec i j); try discriminate.
+        auto with arith. 
+     +   apply coeff_lt; auto with arith.   
+     + apply coeff_lt; lia.
+Qed.
+
 Theorem lt_trans:
   forall alpha beta gamma: T1,
   lt alpha beta -> lt beta gamma -> lt alpha gamma.
@@ -605,6 +629,8 @@ Proof.
   intro H; red in H; repeat rewrite andb_true_iff in H; 
   decompose [and] H; apply lt_b_iff; auto.
 Qed.
+
+
 
 Ltac nf_decomp H :=
   let nf0 := fresh "nf"
