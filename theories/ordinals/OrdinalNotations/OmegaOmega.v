@@ -441,6 +441,15 @@ Module LO.
  Lemma plus_assoc (a b c: t) : a + (b + c) = a + b + c.
  Proof. apply eq_ref; rewrite !plus_ref; apply T1.plus_assoc. Qed.
 
+ Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
+                                      a * (b + c) = a * b + a * c.
+ Proof.
+   intros Ha Hb Hc;  apply eq_ref; rewrite !mult_ref, !plus_ref,
+                                   T1.mult_plus_distr_l,
+                                   !mult_ref ; trivial.
+   all: now apply nf_ref.   
+ Qed.
+
 End LO.
 
 Declare Scope OO_scope.
@@ -480,7 +489,7 @@ Module OO.
   Instance Succ (alpha : OO) : OO.
   Proof.
     refine (@mkord (LO.succ (@data alpha)) _); 
-      apply succ_nf,  data_ok.
+      apply succ_nf, data_ok.
   Defined.
 
 
@@ -571,6 +580,7 @@ Module OO.
   Qed.
 
   Import ON_Generic.
+  
   Instance ON_OO : ON lt compare.
   Proof.
     split.  
