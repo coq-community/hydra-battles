@@ -58,7 +58,7 @@ Module LO.
   Compute T1.pp (refine (fin 42)).
   Compute T1.pp (refine omega).
   Compute T1.pp (refine (phi0 33)).
-  *)
+   *)
 
 
   Inductive ap : t -> Prop :=
@@ -72,7 +72,6 @@ Module LO.
     | ocons 0 _ _ => true
     | ocons i n beta => succb beta
     end.
-
   
   Fixpoint limitb (alpha:t) :=
     match alpha with
@@ -81,6 +80,7 @@ Module LO.
     | ocons i n nil => true
     | ocons i n beta => limitb beta
     end.
+
 
   Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
   Proof.
@@ -98,7 +98,7 @@ Module LO.
        + discriminate.
        + simpl T1.limitb; destruct l. 
          * trivial.
-         * intro H ; rewrite IHl; case (refine (p::l)); auto.
+         * intro H; rewrite IHl; case (refine (p::l)); auto.
   Qed.
 
 
@@ -117,7 +117,7 @@ Module LO.
                 end)
        end)
     end.
- 
+  
   Lemma compare_ref (alpha beta:t) :
     compare alpha beta = T1.compare (refine alpha) (refine beta).
   Proof.
@@ -147,7 +147,7 @@ Module LO.
     - cbn; destruct p; cbn; trivial. 
     - cbn; destruct a; reflexivity. 
     - cbn; rewrite IHalpha. destruct p, a;  rewrite Nat.compare_antisym.
-      destruct  (Nat.compare n1 n) eqn:? ; cbn; trivial.
+      destruct (Nat.compare n1 n) eqn:? ; cbn; trivial.
       rewrite Nat.compare_antisym;
         destruct  (Nat.compare n2 n0) eqn:? ; now cbn.
   Qed.
@@ -196,7 +196,7 @@ Module LO.
     unfold lt, T1.lt; rewrite compare_ref; now split.
   Qed.
 
-  Lemma eq_ref  (a b : t) : a = b <->  refine a = refine b.
+  Lemma eq_ref  (a b : t) : a = b <-> refine a = refine b.
   Proof.
     destruct (compare_correct a b).
     - split.
@@ -214,7 +214,7 @@ Module LO.
 
   Lemma lt_irrefl (alpha: t): ~ lt alpha alpha.
   Proof.
-    rewrite lt_ref; now apply  T1.lt_irrefl.
+    rewrite lt_ref; now apply T1.lt_irrefl.
   Qed.
 
 
@@ -239,7 +239,6 @@ Module LO.
   Qed.
 
 
-
   Fixpoint nf_b (alpha : t) : bool :=
     match alpha with
     | nil => true
@@ -255,6 +254,12 @@ Module LO.
 
   Lemma zero_nf : nf zero.
   Proof. reflexivity. Qed.
+
+  Lemma fin_nf (i:nat) : nf (fin i).
+  Proof.
+    destruct i; red; now cbn.
+  Qed. 
+
 
   Lemma single_nf :
     forall i n, nf (ocons i n zero).
@@ -281,113 +286,160 @@ Module LO.
     destruct p; cbn; destruct b.
     - auto with bool. 
     - destruct p; auto with bool. 
-     rewrite andb_false_r; discriminate.
+      rewrite andb_false_r; discriminate.
     - destruct p; intro H; apply andb_prop in H; now destruct H. 
   Qed.
 
 
-Lemma nf_inv3 :
-  forall i n  j n' b',
-    nf (ocons i n (ocons j n' b')) -> Nat.lt j i.
-Proof.
-  unfold nf; cbn;
-    destruct  b'; try discriminate; auto with T1;
-      intro H; red in H; repeat rewrite andb_true_iff in H.
-  - destruct H as [_ H]; destruct i. 
-    + discriminate.
-    + rewrite  Nat.leb_le in H; lia.
-  - destruct p; destruct i.
-   + destruct j; destruct H; discriminate.
-   + destruct H; rewrite  Nat.leb_le in H0; lia.
-Qed.
+  Lemma nf_inv3 :
+    forall i n  j n' b',
+      nf (ocons i n (ocons j n' b')) -> Nat.lt j i.
+  Proof.
+    unfold nf; cbn;
+      destruct  b'; try discriminate; auto with T1;
+        intro H; red in H; repeat rewrite andb_true_iff in H.
+    - destruct H as [_ H]; destruct i. 
+      + discriminate.
+      + rewrite  Nat.leb_le in H; lia.
+    - destruct p; destruct i.
+      + destruct j; destruct H; discriminate.
+      + destruct H; rewrite  Nat.leb_le in H0; lia.
+  Qed.
 
 
-Lemma nf_ref: forall alpha, T1.nf (refine alpha) <-> nf alpha.
-Proof.
-  induction alpha.
-  - cbn; split; trivial.
-  - destruct a as [i n];  split.
-  + intro H;  destruct alpha.
-    * apply single_nf.
-    * destruct p.
-      apply ocons_nf.
-      -- cbn in H; apply T1.nf_inv3 in H; now apply T1.lt_fin_iff. 
-      -- cbn in H; apply IHalpha; apply T1.nf_inv2 in H; apply H.
-  + intro H; destruct alpha.
-   * apply T1.single_nf, T1.nf_fin.
-   * destruct p; cbn; apply T1.ocons_nf.
-     --  apply nf_inv3 in H; now apply T1.lt_fin_iff.
-     -- apply T1.nf_fin.
-     -- apply nf_inv2 in H; now rewrite IHalpha.
-Qed.
+  Lemma nf_ref: forall alpha, T1.nf (refine alpha) <-> nf alpha.
+  Proof.
+    induction alpha.
+    - cbn; split; trivial.
+    - destruct a as [i n];  split.
+      + intro H;  destruct alpha.
+        * apply single_nf.
+        * destruct p.
+          apply ocons_nf.
+          -- cbn in H; apply T1.nf_inv3 in H; now apply T1.lt_fin_iff. 
+          -- cbn in H; apply IHalpha; apply T1.nf_inv2 in H; apply H.
+      + intro H; destruct alpha.
+        * apply T1.single_nf, T1.nf_fin.
+        * destruct p; cbn; apply T1.ocons_nf.
+          --  apply nf_inv3 in H; now apply T1.lt_fin_iff.
+          -- apply T1.nf_fin.
+          -- apply nf_inv2 in H; now rewrite IHalpha.
+  Qed.
 
 
-Declare Scope lo_scope.
-Delimit Scope lo_scope with lo.
-Open Scope lo_scope.
+  Declare Scope lo_scope.
+  Delimit Scope lo_scope with lo.
+  Open Scope lo_scope.
 
-Fixpoint plus (alpha beta : t) :t :=
-  match alpha,beta with
-  |  nil, y  => y
-  |  x, nil  => x
-  |  ocons a n b, ocons a' n' b' =>
-      (match Nat.compare a a' with
-       | Lt => ocons a' n' b'
-       | Gt => (ocons a n (plus b (ocons a' n' b')))
-       | Eq  => (ocons a (S (n+n')) b')
-       end)
-  end
-where "alpha + beta" := (plus alpha beta) : lo_scope.
+  Fixpoint succ (alpha : t) : t :=
+    match alpha with
+      nil => fin 1
+    | ocons 0 n _  => ocons 0 (S n) nil
+    | ocons a n beta => ocons a n (succ beta)
+    end.
 
-Compute (omega + omega).
-(** *** multiplication *)
+  Fixpoint plus (alpha beta : t) :t :=
+    match alpha,beta with
+    |  nil, y  => y
+    |  x, nil  => x
+    |  ocons a n b, ocons a' n' b' =>
+       (match Nat.compare a a' with
+        | Lt => ocons a' n' b'
+        | Gt => (ocons a n (plus b (ocons a' n' b')))
+        | Eq  => (ocons a (S (n+n')) b')
+        end)
+    end
+  where "alpha + beta" := (plus alpha beta) : lo_scope.
 
-Fixpoint mult (alpha beta : t) : t :=
-  match alpha,beta with
-  |  nil, _  => zero
-  |  _, nil => zero
-  |  ocons 0 n _, ocons 0 n' _ =>
-      ocons 0 (Peano.pred((S n) * (S n'))) zero
-  |  ocons a n b, ocons 0 n' _ =>
-      ocons a (Peano.pred ((S n) * (S n'))) b
-  |  ocons a n b, ocons a' n' b' =>
-      ocons (a + a')%nat n' ((ocons a n b) * b')
-  end
-where "alpha * beta" := (mult alpha beta) : lo_scope.
+  Fixpoint mult (alpha beta : t) : t :=
+    match alpha,beta with
+    |  nil, _  => zero
+    |  _, nil => zero
+    |  ocons 0 n _, ocons 0 n' _ =>
+       ocons 0 (Peano.pred((S n) * (S n'))) zero
+    |  ocons a n b, ocons 0 n' _ =>
+       ocons a (Peano.pred ((S n) * (S n'))) b
+    |  ocons a n b, ocons a' n' b' =>
+       ocons (a + a')%nat n' ((ocons a n b) * b')
+    end
+  where "alpha * beta" := (mult alpha beta) : lo_scope.
 
 
-Compute omega * omega.
-Compute fin 1 * omega.
-Compute fin 42 * omega.
+  Compute omega * omega.
+  Compute fin 1 * omega.
+  Compute fin 42 * omega.
+
+  Lemma phi0_ref (i:nat) : refine (phi0 i) = T1.phi0 (T1.fin i).
+  Proof. reflexivity. Qed.
+
+  Lemma phi0_nf  (i:nat) : nf (phi0 i).
+  Proof. unfold nf;  now cbn. Qed.
+  
+  Lemma succ_ref (alpha : t) :
+    refine (succ alpha) = T1.succ (refine alpha).
+  Proof.  
+    induction alpha.
+    - now cbn.
+    - destruct alpha.
+      + destruct a;  cbn; destruct n; now cbn.
+      + destruct a; destruct n.
+        * now cbn.
+        * destruct p; destruct n1. 
+          -- now cbn.
+          -- cbn in *; now rewrite IHalpha.
+  Qed.
+
+  Lemma succ_nf alpha : nf alpha -> nf (succ alpha).
+  Proof.
+    intro H; rewrite <- nf_ref in *; rewrite succ_ref; now apply T1.succ_nf.
+  Qed.
+  
+  Lemma plus_ref : forall alpha beta: t,
+      refine (alpha + beta) = T1.plus (refine alpha) (refine beta).
+  Proof.
+    induction alpha, beta.
+    - now cbn.
+    - now cbn.
+    - cbn; destruct a. now cbn.
+    - destruct a, p; cbn;  destruct (n ?= n1) eqn:cn_n1.
+      1,2:   rewrite T1.compare_fin_rw in *; rewrite cn_n1; now cbn.
+      rewrite T1.compare_fin_rw in *; cbn;rewrite cn_n1, IHalpha; now cbn.
+  Qed.
 
 
-Lemma plus_ref : forall alpha beta: t,
-    refine (alpha + beta) = T1.plus (refine alpha) (refine beta).
-Proof.
-  induction alpha, beta.
-  - now cbn.
-  - now cbn.
-  - cbn; destruct a. now cbn.
-  - destruct a, p; cbn;  destruct (n ?= n1) eqn:cn_n1.
-  1,2:   rewrite T1.compare_fin_rw in *; rewrite cn_n1; now cbn.
-  rewrite T1.compare_fin_rw in *; cbn;rewrite cn_n1, IHalpha; now cbn.
-Qed.
+  Lemma plus_nf alpha beta : nf alpha -> nf beta -> nf (alpha + beta).
+  Proof.
+    intros Halpha Hbeta; rewrite <- nf_ref in *; rewrite plus_ref;
+      now   apply T1.plus_nf.
+  Qed.
 
-Lemma mult_ref : forall alpha beta: t,
-    refine (alpha * beta) = T1.mult (refine alpha) (refine beta).
-Proof.
-  induction alpha.  
-  -  cbn; destruct beta. 
-     + now cbn.
-     + cbn; destruct p; now cbn.
-  - induction beta.
-    +  destruct a; cbn. destruct n; now cbn.
-    +  destruct a, a0; cbn. destruct n; cbn. destruct n1; cbn; trivial.
-      * f_equal; rewrite IHbeta; f_equal.
-      * cbn. destruct n1. cbn. reflexivity.
-        cbn. f_equal. f_equal. lia.
-        rewrite IHbeta; f_equal.
-Qed.
+
+  Lemma mult_ref : forall alpha beta: t,
+      refine (alpha * beta) = T1.mult (refine alpha) (refine beta).
+  Proof.
+    induction alpha.  
+    -  cbn; destruct beta. 
+       + now cbn.
+       + cbn; destruct p; now cbn.
+    - induction beta.
+      +  destruct a; cbn. destruct n; now cbn.
+      +  destruct a, a0; cbn. destruct n; cbn. destruct n1; cbn; trivial.
+         * f_equal; rewrite IHbeta; f_equal.
+         * cbn. destruct n1. cbn. reflexivity.
+           cbn. f_equal. f_equal. lia.
+           rewrite IHbeta; f_equal.
+  Qed.
+
+
+  Lemma mult_nf alpha beta : nf alpha -> nf beta -> nf (alpha * beta).
+  Proof.
+    intros Halpha Hbeta; rewrite <- nf_ref in *; rewrite mult_ref;
+      now   apply T1.mult_nf.
+  Qed.
+
+
+ Lemma plus_assoc (a b c: t) : a + (b + c) = a + b + c.
+ Proof. apply eq_ref; rewrite !plus_ref; apply T1.plus_assoc. Qed.
 
 End LO.
 
@@ -410,7 +462,54 @@ Module OO.
   Definition le := leq lt.
   Definition compare (alpha beta: OO):= LO.compare (data alpha) (data beta).
 
+  Instance Zero : OO := @mkord nil refl_equal.
+
+  Instance _Omega : OO.
+  Proof.
+    now exists omega%lo.  
+  Defined. 
+
+
+  Instance Fin (i:nat) : OO.
+  Proof.
+    exists (LO.fin i); apply fin_nf.
+  Defined.
   
+  Notation omega  := _Omega.
+
+  Instance Succ (alpha : OO) : OO.
+  Proof.
+    refine (@mkord (LO.succ (@data alpha)) _); 
+      apply succ_nf,  data_ok.
+  Defined.
+
+
+  Instance plus (alpha beta : OO) : OO.
+  Proof.
+    refine (@mkord (LO.plus (@data alpha) (@data beta))_ );
+      apply plus_nf; apply data_ok.
+  Defined.
+
+  Infix "+" := plus : OO_scope.
+
+  Instance mult (alpha beta : OO) : OO.
+  Proof.
+    refine (@mkord (LO.mult (@data alpha) (@data beta))_ );
+      apply mult_nf; apply data_ok.
+  Defined.
+
+  Infix "*" := mult : OO_scope.
+
+  Instance phi0 (i : nat): OO.
+  Proof.
+    refine (@mkord (LO.phi0 i) _). 
+    apply phi0_nf; apply data_ok.
+  Defined.
+
+
+
+  Infix "*" := mult : OO_scope.
+
   Instance embed (alpha: OO) : E0.E0.
   Proof.
     destruct alpha as [data Hdata].
@@ -429,59 +528,59 @@ Module OO.
 
   Instance oo_str : StrictOrder lt.
   split.
-   - intros x H; destruct x.
-     unfold lt in H; cbn; destruct (LO.lt_irrefl _ H).
-   - intros x y z; destruct x, y, z.
+  - intros x H; destruct x.
+    unfold lt in H; cbn; destruct (LO.lt_irrefl _ H).
+  - intros x y z; destruct x, y, z.
     unfold lt ; cbn; intros; eapply LO.lt_trans; eauto.
   Qed.
 
   Lemma nf_proof_unicity :
-  forall (alpha:t) (H H': nf alpha), H = H'.
-Proof.
-  intros; red in H, H'; apply eq_proofs_unicity_on.
-  destruct y. 
-  - rewrite H; auto. 
-  - rewrite H; right; discriminate. 
-Qed.
-
-  Lemma OO_eq_intro : forall alpha beta : OO,
-    data alpha = data beta -> alpha = beta.
-Proof.
-  destruct alpha, beta; simpl; intros; subst; f_equal; auto; 
-    apply nf_proof_unicity.
-Qed.
-
-
-Instance OO_comp : Comparable lt compare.
-Proof.
-  split.
-  - apply oo_str.
-  - destruct a, b; unfold compare; cbn.
-    destruct (LO.compare_correct data0 data1).
-    + constructor; subst; apply OO_eq_intro; now cbn.
-    + constructor; red; now cbn.
-    + constructor; red; now cbn.
-Qed. 
-
-Lemma lt_wf : well_founded lt.
-Proof.
-  specialize  (ON_Generic.wf_measure (B:= OO) embed); intro Hm;
-  unfold ON_Generic.measure_lt in Hm; eapply wf_incl.
-  2: eassumption.
-  intros x y Hxy; red; now apply lt_embed.
+    forall (alpha:t) (H H': nf alpha), H = H'.
+  Proof.
+    intros; red in H, H'; apply eq_proofs_unicity_on.
+    destruct y. 
+    - rewrite H; auto. 
+    - rewrite H; right; discriminate. 
   Qed.
 
-Import ON_Generic.
-Instance ON_OO : ON lt compare.
-Proof.
-  split.  
-  - apply OO_comp.
-  - apply lt_wf.
-Qed.
+  Lemma OO_eq_intro : forall alpha beta : OO,
+      data alpha = data beta -> alpha = beta.
+  Proof.
+    destruct alpha, beta; simpl; intros; subst; f_equal; auto; 
+      apply nf_proof_unicity.
+  Qed.
+
+
+  Instance OO_comp : Comparable lt compare.
+  Proof.
+    split.
+    - apply oo_str.
+    - destruct a, b; unfold compare; cbn.
+      destruct (LO.compare_correct data0 data1).
+      + constructor; subst; apply OO_eq_intro; now cbn.
+      + constructor; red; now cbn.
+      + constructor; red; now cbn.
+  Qed. 
+
+  Lemma lt_wf : well_founded lt.
+  Proof.
+    specialize  (ON_Generic.wf_measure (B:= OO) embed); intro Hm;
+      unfold ON_Generic.measure_lt in Hm; eapply wf_incl.
+    2: eassumption.
+    intros x y Hxy; red; now apply lt_embed.
+  Qed.
+
+  Import ON_Generic.
+  Instance ON_OO : ON lt compare.
+  Proof.
+    split.  
+    - apply OO_comp.
+    - apply lt_wf.
+  Qed.
 
 End OO.
 
- 
+
 
 
 

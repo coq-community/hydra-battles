@@ -108,7 +108,7 @@ Coercion Fin : nat >-> E0.
 
 Instance Mult (alpha beta : E0) : E0.
 Proof.
-  refine (@mkord (cnf alpha * cnf beta)%t1 _); apply nf_mult; apply cnf_ok.
+  refine (@mkord (cnf alpha * cnf beta)%t1 _); apply mult_nf; apply cnf_ok.
 Defined.
 
 
@@ -117,7 +117,7 @@ Infix "*" := Mult : E0_scope.
 Instance Mult_i  (alpha: E0) (n: nat) : E0.
 Proof.
   refine (@mkord (cnf alpha * n)%t1  _).
-  apply nf_mult_fin, cnf_ok.
+  apply mult_nf_fin, cnf_ok.
 Defined.
 
 (** ** Lemmas *)

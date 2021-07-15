@@ -2225,7 +2225,7 @@ Proof.
     intros; subst a1; now  rewrite mult_1_r.
 Qed.
 
-Lemma nf_mult_fin alpha n:
+Lemma mult_nf_fin alpha n:
   nf alpha -> nf (alpha * fin n).
 Proof.
   revert n; induction n.
@@ -2651,7 +2651,7 @@ Qed.
 
 
 
-Section Proof_of_nf_mult.
+Section Proof_of_mult_nf.
 
   Variable alpha : T1.
   Hypothesis Halpha : nf alpha.
@@ -2686,7 +2686,7 @@ Section Proof_of_nf_mult.
     Lemma L3 n p : alpha = FS n -> beta = FS p -> P beta.
     Proof.
       intros; subst; red; intros; split.
-      - apply (nf_mult_fin  (S p) H).
+      - apply (mult_nf_fin  (S p) H).
       - intros _ gamma H1; destruct (LT_of_finite H1 ).
         + subst; rewrite mult_a_0; eauto with T1.
         +  destruct H0 as [p0 [H2 H3]]; subst; simpl.
@@ -3058,11 +3058,11 @@ Section Proof_of_nf_mult.
   Qed.
 
 
-End Proof_of_nf_mult.
+End Proof_of_mult_nf.
 
 
 
-Theorem nf_mult alpha beta : nf alpha -> nf beta ->
+Theorem mult_nf alpha beta : nf alpha -> nf beta ->
                              nf (alpha * beta).
 Proof.
   intros.
@@ -3082,7 +3082,7 @@ Lemma nf_exp_F alpha n : nf alpha -> nf (exp_F alpha n).
 Proof.
   induction n; cbn.
   - eauto with T1.
-  - intro; apply nf_mult; auto.
+  - intro; apply mult_nf; auto.
 Qed.
 
 

@@ -4931,6 +4931,13 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
       $$\forall \alpha \, \beta \, \gamma < \epsilon_0, \alpha\times(\beta+\gamma) = \alpha\times\beta+ \alpha\times \gamma$$
 
     \end{project}
+
+    \section{A refinement of \texttt{E0} : an ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
+
+    In Module   \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/OrdinalNotations/OmegaOmega.v}{theories/ordinals/OrdinalNotations/OmegaOmega.v},
+we represents ordinals below $\omega^\omega$ by list of pairs of natural numbers. we establish this representation as a \emph{refinement} of the data types we used to represent ordinals less than $\epsilon_0$. Thus, many properties like well-foundedness of $<$ and associativity of $+$,  of this ordinal notations have very short proofs.
+    
+%ici
     \section{A variant for hydra battles}
 
     In order to prove the termination of any hydra battle, we try to define a variant mapping hydras to ordinals strictly less than $\epsilon_0$.
