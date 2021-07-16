@@ -4925,17 +4925,17 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     \end{project}
 
-    \index{hydras}{Projects}
-    \begin{project}
-      Prove that ordinal multiplication is left-distributive over ordinal addition; that is:
-      $$\forall \alpha \, \beta \, \gamma < \epsilon_0, \alpha\times(\beta+\gamma) = \alpha\times\beta+ \alpha\times \gamma$$
-
-    \end{project}
+ 
 
     \section{A refinement of \texttt{E0} : an ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
 
     In Module   \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/OrdinalNotations/OmegaOmega.v}{theories/ordinals/OrdinalNotations/OmegaOmega.v},
-we represents ordinals below $\omega^\omega$ by list of pairs of natural numbers. we establish this representation as a \emph{refinement} of the data types we used to represent ordinals less than $\epsilon_0$. Thus, many properties like well-foundedness of $<$ and associativity of $+$,  of this ordinal notations have very short proofs.
+    we represent ordinals below $\omega^\omega$ by list of pairs of natural numbers (with the same coefficient shift as in \texttt{T1}).
+    For instance, the ordinal $\omega^4\times 10 + \omega^3 + \omega+ 5$ is represented by the list \texttt{(4,9)::(3,0)::(1,0)::(0,4)::nil}.
+
+  The usual operations : \texttt{succ}, \texttt{+}, \texttt{*} are simple variants of the same operations in \texttt{T1}.
+
+    We establish this representation as a \emph{refinement} of the data types we used to represent ordinals less than $\epsilon_0$. Thus, many properties like well-foundedness of $<$ and associativity of $+$,  of this ordinal notations have very short proofs.
     
 %ici
     \section{A variant for hydra battles}

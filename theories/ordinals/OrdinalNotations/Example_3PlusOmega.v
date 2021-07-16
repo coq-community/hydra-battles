@@ -32,20 +32,18 @@ Defined.
 Instance L_3_plus_omega :  ON_Iso _ _ f g.
 Proof.
   split.
-  - destruct x, y.   cbn.
+  - destruct x, y; cbn.
     +  destruct t0; unfold compare; cbn; destruct t; reflexivity.
     + cbn; destruct t.
-      red in i. assert (x < 3). {
-        now rewrite PeanoNat.Nat.ltb_lt in i. }
-      rewrite PeanoNat.Nat.compare_lt_iff.
-      simpl; lia.
+      red in i; assert (x < 3) by (now rewrite PeanoNat.Nat.ltb_lt in i).
+      rewrite PeanoNat.Nat.compare_lt_iff; simpl; lia.
     + cbn; destruct t.
       destruct x; auto.
       destruct x; auto.
       destruct x; auto.
-      assert (S (S (S x)) < 3).
-      { red in i; rewrite PeanoNat.Nat.ltb_lt in i. lia. }
-      cbn; lia.
+      assert (S (S (S x)) < 3) by
+       (red in i; rewrite PeanoNat.Nat.ltb_lt in i; lia);
+        cbn; lia.
   +  reflexivity.
   - destruct a.
     + destruct t; cbn; unfold g;  destruct (le_lt_dec 3 x).

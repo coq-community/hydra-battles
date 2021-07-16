@@ -444,9 +444,8 @@ Module LO.
  Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
                                       a * (b + c) = a * b + a * c.
  Proof.
-   intros Ha Hb Hc;  apply eq_ref; rewrite !mult_ref, !plus_ref,
-                                   T1.mult_plus_distr_l,
-                                   !mult_ref ; trivial.
+   intros Ha Hb Hc; apply eq_ref;
+     rewrite !mult_ref, !plus_ref, T1.mult_plus_distr_l, !mult_ref; trivial.
    all: now apply nf_ref.   
  Qed.
 
@@ -574,8 +573,7 @@ Module OO.
   Lemma lt_wf : well_founded lt.
   Proof.
     specialize  (ON_Generic.wf_measure (B:= OO) embed); intro Hm;
-      unfold ON_Generic.measure_lt in Hm; eapply wf_incl.
-    2: eassumption.
+      unfold ON_Generic.measure_lt in Hm; eapply wf_incl; [| eassumption].
     intros x y Hxy; red; now apply lt_embed.
   Qed.
 
@@ -590,10 +588,14 @@ Module OO.
 
 End OO.
 
+Import OO.
+#[local] Open Scope OO_scope.
+Check phi0  7.
+#[local] Coercion Fin : nat >-> OO.
 
 
-
-
-
+Goal   omega * 5 + phi0 2 = omega * omega.
+  now rewrite <- Comparable.compare_eq_iff.
+Qed.
 
 

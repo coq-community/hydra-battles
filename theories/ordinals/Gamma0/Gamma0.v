@@ -3668,7 +3668,7 @@ Proof.
   - unfold compare; rewrite compare_rw_gt; auto.
 Qed. 
 
-Instance Zero : G0.
+Instance zero : G0.
 Proof.
   refine (@mkg0 T2.zero _);  now compute. 
 Defined.
@@ -3718,13 +3718,16 @@ Proof.
   red in vnf_ok0, vnf_ok1. red. 
   rewrite nfb_equiv in *.
   now apply phi_nf.
-Defined. 
+Defined.
+
+Notation phi := Phi.
+Notation phi0 := (Phi zero).
 
 Coercion Finite : nat >-> G0.
 
 Local Open Scope g0_scope.
 
-Example ex42 : omega + 42 + Phi Zero 2 = Phi Zero 2.
+Example Ex42 : omega + 42 + phi zero 2 = phi zero 2.
 Proof.
   now rewrite <- Comparable.compare_eq_iff.
 Qed.

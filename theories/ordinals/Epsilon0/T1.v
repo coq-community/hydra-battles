@@ -2491,7 +2491,7 @@ Lemma cases_for_mult (alpha : T1) :
   nf alpha -> 
   alpha = zero \/
   (exists n : nat, alpha = FS n) \/
-  (exists a n, a<> zero /\ alpha = ocons a n zero) \/
+  (exists a n, a <> zero /\ alpha = ocons a n zero) \/
   (exists a n b,  a <> zero /\ b <> zero /\ alpha = ocons a n b).
 Proof.
   destruct alpha.

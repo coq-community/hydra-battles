@@ -81,13 +81,15 @@ Axiom inh_Ord : inhabited Ord.
 
 
 Example Ex42: omega + 42 + phi0 2 = phi0 2.
-Proof. 
-  assert (HAP:= AP_phi0 2); elim  HAP; intros  _ H0.
-  assert (H: omega < phi0 2) by
-    (rewrite omega_eqn; apply phi0_mono, finite_mono; auto with arith).
-  apply H0, AP_plus_closed; trivial.
-  apply lt_trans with omega; trivial.
-  -  apply finite_lt_omega.
+Proof.
+  (** [phi0 2] is additive principal *)
+  assert (HAP:= AP_phi0 2); elim  HAP; intros  _ H0; apply H0.
+  assert (Hlt: omega < phi0 (F 2)) by
+      (rewrite omega_eqn; apply phi0_mono, finite_mono;
+      auto with arith).
+  (** [phi0 2] is closed under addition *)
+  apply (AP_plus_closed HAP Hlt).
+  apply lt_trans with omega; [apply finite_lt_omega | apply Hlt ].
 Qed. 
 
 
