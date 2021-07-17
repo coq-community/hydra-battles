@@ -3,17 +3,12 @@
 (** New implementation as a refinement of epsilon0 *)
 
 Require T1 E0.
-Require Import Arith.
-Require Import Coq.Logic.Eqdep_dec.
-Require Import Coq.Arith.Peano_dec.
-Require Import List Bool.
-Require Import Recdef Lia.
-Require Import Coq.Wellfounded.Inverse_Image
-        Coq.Wellfounded.Inclusion RelationClasses.
+Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec  List Bool
+        Recdef Lia  Coq.Wellfounded.Inverse_Image
+        Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
 
 Coercion is_true: bool >-> Sortclass.
 Require Import Comparable.
-Require Import Logic.Eqdep_dec.
 
 (** * Representation by lists of pairs of integers *)
 
