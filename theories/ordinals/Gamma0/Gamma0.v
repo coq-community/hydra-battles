@@ -3722,12 +3722,13 @@ Defined.
 
 Notation phi := Phi.
 Notation phi0 := (Phi zero).
+Notation "'omega^'" := phi0 (only parsing) : g0_scope.
 
 Coercion Finite : nat >-> G0.
 
 Local Open Scope g0_scope.
 
-Example Ex42 : omega + 42 + phi zero 2 = phi zero 2.
+Example Ex42 : omega + 42 + omega^ 2 = omega^ 2.
 Proof.
   now rewrite <- Comparable.compare_eq_iff.
 Qed.

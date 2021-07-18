@@ -85,6 +85,8 @@ Proof.
   apply nf_phi0; apply cnf_ok.
 Defined.
 
+Notation "'omega^'" := phi0 (only parsing) : E0_scope.
+
 Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
   refine (@mkord (ocons (cnf alpha) n zero) _).
@@ -785,7 +787,7 @@ Proof.
 Qed.
 
 
-Example Ex42: (omega + 42 + phi0 2 = phi0 2)%e0.
+Example Ex42: (omega + 42 + omega^ 2 = omega^  2)%e0.
 Proof. 
   now rewrite <-  Comparable.compare_eq_iff.
 Qed.

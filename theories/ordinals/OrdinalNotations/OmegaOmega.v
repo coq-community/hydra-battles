@@ -509,7 +509,7 @@ Module OO.
     apply phi0_nf; apply data_ok.
   Defined.
 
-
+  Notation "'omega^'" := phi0 (only parsing) : OO_scope.
 
   Infix "*" := mult : OO_scope.
 
@@ -589,7 +589,7 @@ Check phi0  7.
 #[local] Coercion Fin : nat >-> OO.
 
 
-Goal   omega * 5 + phi0 2 = omega * omega.
+Goal   omega * 5 + omega^  2 = omega^ 2.
   now rewrite <- Comparable.compare_eq_iff.
 Qed.
 
