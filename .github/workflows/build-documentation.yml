@@ -57,10 +57,6 @@ jobs:
           root_file: hydras.tex
           working_directory: doc
           latexmk_use_lualatex: true
-          pre_compile: |
-            apk update
-            yes | apk add py3-pip
-            yes | pip3 install alectryon
 
       - name: Extract PDF and Coq-Doc
         run: |

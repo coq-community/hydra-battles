@@ -4,11 +4,12 @@ The script `extract_snippets.py` extract snippets block in coq+rst files.\
 This script has been tested with Python 3.7 or above and uses [Alectryon](https://github.com/cpitclaudel/alectryon),
 to transform "coq+rst" to "latex" file.
 
-###### Note (01/07/2021)
-Please use the branch [rst+latex](https://github.com/cpitclaudel/alectryon/tree/rst+latex) in alectryon projet.
-And install this alectryon version with:
+## Requirements
+Alectryon >=1.2
+
+You can install with command:
 ```shell
-~/alectryon $ pip install .
+pip install -r requirements.txt
 ```
 
 ## Snippet Block

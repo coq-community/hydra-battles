@@ -24,7 +24,6 @@ COQ_FILES = Ack.v               \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
 	    Hydra_Lemmas.v      \
-	    Issue_Program.v     \
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 
@@ -39,9 +38,5 @@ clean:
 	@${RM} ${TEX_FILE}
 	@${RM} -r ${SNIPPET_OUTPUT}
 
-Issue_Program.tex: Issue_Program.v
-
-
 %.tex : %.v
 	@python3 extract_snippets.py $< -o ${SNIPPET_OUTPUT} -d ${OPTIONS}
-

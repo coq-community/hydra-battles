@@ -1,5 +1,3 @@
-all:  hydras.pdf
-
 DEP_FILES = hydras.tex          \
 	    part-hydras.tex     \
 	    chapter-powers.tex  \
@@ -7,6 +5,9 @@ DEP_FILES = hydras.tex          \
 	    thebib.bib          \
 	    coqmacros.tex       \
 	    epsilon0.jpg        \
+
+.PHONY:all
+all: hydras.pdf
 
 hydras.pdf: ${DEP_FILES}
 	@+${MAKE} -C movies all
@@ -24,3 +25,4 @@ hydras.pdf: ${DEP_FILES}
 .PHONY:clean
 clean:
 	@+${MAKE} -C movies clean
+	@${RM} hydras.pdf *.aux *.ind *.idx *.idl *.ilg *.bbl *.log *.toc *.out

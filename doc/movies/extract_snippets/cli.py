@@ -106,19 +106,36 @@ def make_latex_file(content: str, path: Path):
         file.write(content)
 
 
-def main():
+def make_latex(input_file: Path, sertop_args):
     from .Extractor import SnippetExtractor
     from .docutils import CoqToLatexReader, register_docutils
+    print(f"Convert '{input_file}' to latex.")
+    register_docutils(sertop_args)
+    reader = CoqToLatexReader(input_file)
+    print("Extract snippets.")
+    return SnippetExtractor(reader), reader
+
+
+def copy_asset(output_dir: Path, dir_name='assets'):
+    from alectryon.cli import copy_assets
+    from alectryon.latex import ASSETS
+    from shutil import copy
+
+    STY = ASSETS.ALECTRYON_STY + ASSETS.PYGMENTS_STY
+
+    output_dir = output_dir / dir_name
+    output_dir.mkdir(exist_ok=True)
+
+    copy_assets(0, STY, copy, output_dir)
+    print(f"copy assets {STY} in {output_dir}")
+
+
+def main():
     args = parse_args()
     input_name = args.input.stem
     output_dir = args.output_dir / input_name
 
-    # make latex
-    print(f"Convert '{args.input}' to latex.")
-    register_docutils(args.sertop_args)
-    reader = CoqToLatexReader(args.input)
-    print("Extract snippets.")
-    snippet_extractor = SnippetExtractor(reader)
+    snippet_extractor, reader = make_latex(args.input, args.sertop_args)
 
     # dump latex to debug
     if args.dump_complete_latex:
@@ -128,7 +145,11 @@ def main():
         make_latex_file(reader.content_latex, path_latex)
 
     # write snippets files
-    for snippet in snippet_extractor.extract():
+    snippets = snippet_extractor.extract()
+    for snippet in snippets:
         path = get_path_latex(output_dir, snippet.name)
         print(f"extract snippet '{snippet.name}', dump file {path}.")
         make_latex_file(str(snippet), path)
+
+    if snippets:
+        copy_asset(args.output_dir)
