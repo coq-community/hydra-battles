@@ -12,6 +12,7 @@ Require Import Coq.Arith.Arith.
  *)
 
 (* begin show *)
+(* begin snippet AckFixpointFail *)
 
 Fail
   Fixpoint Ack (m n : nat) : nat :=
@@ -21,10 +22,12 @@ Fail
   | S m0, S p => Ack m0 (Ack m p)
   end.
 
+(* end snippet AckFixpointFail *)
 (* end show *)
 
 (** Definition (with inner fixpoint) *)
 
+(* begin snippet AckFixpointAlt *)
 Module Alt.
   
   Fixpoint Ack (m n : nat) : nat :=
@@ -41,6 +44,7 @@ Module Alt.
   Compute Ack 3 2.
   
 End Alt.
+(* end snippet AckFixpointAlt *)
 
 
 (** Definition using the [iterate] functional:
@@ -52,6 +56,7 @@ Allows to infer monotony properties of [Ack (S m)] from [Ack m].
 
 *)
 
+(* begin snippet AckFixpointIterate *)
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
   | 0 => S
@@ -60,6 +65,7 @@ Fixpoint Ack (m:nat) : nat -> nat :=
 
 Compute Ack 3 2.
 
+(* end snippet AckFixpointIterate *)
 
 
   (** Using the lexicographic ordering 

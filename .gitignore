@@ -31,5 +31,4 @@ doc/*.json
 doc/cutting-table/
 doc/auto/
 doc/*.pyg
-doc/movies/
 alectryon-html/
