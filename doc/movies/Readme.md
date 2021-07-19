@@ -1,7 +1,7 @@
 # Snippets coq+rst
 
 The script `extract_snippets.py` extract snippets block in coq+rst files.\
-This script has been developed in python3.9 and use [alectryon](https://github.com/cpitclaudel/alectryon),
+This script has been tested with Python 3.7 or above and uses [Alectryon](https://github.com/cpitclaudel/alectryon),
 to transform "coq+rst" to "latex" file.
 
 ###### Note (01/07/2021)

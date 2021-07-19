@@ -38,11 +38,14 @@ class SnippetExtractor:
         statement, _, tag, after = match.groups()
         if statement == BEGIN_STATE:
             self.stack_tag.append(tag)
-            if (match := LATEX_TAG_PATTERN.match(after)) is not None:
+            match = LATEX_TAG_PATTERN.match(after)
+            if match is not None:
                 self._match_tag(match, line_num)
 
-        elif (last_tag := self.stack_tag.pop()) != tag:
-            raise Exception(f"tag '{tag}' close before '{last_tag}' at line {line_num}.")
+        else:
+            last_tag = self.stack_tag.pop()
+            if last_tag != tag:
+                raise Exception(f"tag '{tag}' close before '{last_tag}' at line {line_num}.")
 
     def _open_snippet(self, snippet_name: str, line_number: int) -> None:
         """
@@ -110,12 +113,15 @@ class SnippetExtractor:
         """
 
         for num, line in self.reader:
-            if (match := LATEX_TAG_PATTERN.match(line)) is not None:
+            match = LATEX_TAG_PATTERN.match(line)
+            if match is not None:
                 self._match_tag(match, line_num=num)
 
-            elif (match := SNIPPET_PATTERN.match(line)) is not None:
-                self._match_snippet(match, line_num=num)
-                continue
+            else:
+                match = SNIPPET_PATTERN.match(line)
+                if match is not None:
+                    self._match_snippet(match, line_num=num)
+                    continue
 
             self._add_snippets_open(line)
 
