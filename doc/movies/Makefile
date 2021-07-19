@@ -43,5 +43,5 @@ Issue_Program.tex: Issue_Program.v
 
 
 %.tex : %.v
-	@python extract_snippets.py $< -o ${SNIPPET_OUTPUT} -d ${OPTIONS}
+	@python3 extract_snippets.py $< -o ${SNIPPET_OUTPUT} -d ${OPTIONS}
 
