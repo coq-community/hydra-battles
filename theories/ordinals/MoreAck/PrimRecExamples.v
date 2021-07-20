@@ -1,4 +1,6 @@
 Require Import Arith ArithRing List.
+Require Import Vector.
+Import VectorNotations.
 
 (* begin snippet naryFunc3 *)
 
@@ -9,16 +11,13 @@ Compute naryFunc 3.
 
 (* end snippet naryFunc3 *)
 
-Require Import Vector.
-Import VectorNotations.
-(**
+
+
+(* begin snippet naryRel2 *)
 
 Compute naryRel 2.
 
-  = nat -> nat -> bool
-     : Set
-
- *)
+(* end snippet naryRel2 *)
 
 (* begin snippet checknaryFunc *)
 
@@ -30,26 +29,22 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
 
 (* end snippet checknaryFunc *)
 
+(* begin snippet extEqual2a *)
 Compute extEqual 2.
-(*
-    = fun a b : naryFunc 3 => forall x x0 x1 : nat, a x x0 x1 = b x x0 x1
-     : naryFunc 3 -> naryFunc 3 -> Prop
- *)
 
-Example extEqual_ex1 : extEqual 2 mult (fun x y =>  y * x + x - x).
-Proof.
-  intros x y.
-(*
-  x, y : nat
-  ============================
-  extEqual 0 (x * y) (y * x)
- *)
-  cbn. 
+
+Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x).
+Proof. (* .no-out *)
+  intros x y; cbn.
+(* end snippet extEqual2a *)
+
+  
+(* begin snippet extEqual2b *)  
   rewrite <- Nat.add_sub_assoc, Nat.sub_diag.
-  - ring.
-  - apply le_n.  
+  - (* .no-out *) ring.
+  - (* .no-out *) apply le_n.  
 Qed.
-
+(* end snippet extEqual2b *)
 
 (** ** Examples of terms of type [PrimRec n] and their interpretation *)
 
@@ -270,6 +265,11 @@ Proof.
   intros y; cbn; now rewrite <- (IHx y).
 Qed.
 
+(* begin snippet PrimRecExamplesSearch *)
+
+Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
+
+(* end snippet PrimRecExamplesSearch *)
 
 
 Lemma plusIsPR : isPR 2 plus.

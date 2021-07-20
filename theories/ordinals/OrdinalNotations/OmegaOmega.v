@@ -589,7 +589,7 @@ Check phi0  7.
 #[local] Coercion Fin : nat >-> OO.
 
 
-Goal   omega * 5 + omega^  2 = omega^ 2.
+Example Ex42: omega + 42 + omega^ 2 = omega^ 2.
   now rewrite <- Comparable.compare_eq_iff.
 Qed.
 
