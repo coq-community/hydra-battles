@@ -1,10 +1,14 @@
 Require Import Arith.
 
+(* begin snippet naryFunc *)
+
 Fixpoint naryFunc (n : nat) : Set :=
   match n with
   | O => nat
   | S n => nat -> naryFunc n
   end.
+
+(* end snippet naryFunc *)
 
 Fixpoint naryRel (n : nat) : Set :=
   match n with
