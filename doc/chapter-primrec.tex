@@ -75,13 +75,7 @@ curried form. This is made possible in
 \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
 
 \index{primrec}{Types!naryFunc}
-\begin{Coqsrc}
-Fixpoint naryFunc (n : nat) : Set :=
-  match n with
-  | O => nat
-  | S n => nat -> naryFunc n
-  end.
-\end{Coqsrc}
+\input{movies/snippets/extEqualNat/naryFunc.tex}
 
 For instance (\texttt{naryFunc 1}) is convertible to \texttt{nat -> nat} and (\texttt{naryFunc 3})
 to \texttt{nat -> nat -> nat -> nat}.
@@ -89,25 +83,9 @@ to \texttt{nat -> nat -> nat -> nat}.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
-\begin{Coqsrc}
-Require Import primRec.
-Import extEqualNat.
 
-Compute naryFunc 3.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= nat -> nat -> nat -> nat
-  : Set  
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Check plus: naryFunc 2.
-
-Check 42: naryFunc 0.
-
-Check (fun n p q : nat =>  n * p + q): naryFunc 3.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/naryFunc3}
+\input{movies/snippets/PrimRecExamples/checknaryFunc}
 
 
 Likewise, arbitrary boolean predicates may have an arbitrary number of arguments. The dependent type
