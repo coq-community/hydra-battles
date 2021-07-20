@@ -22,11 +22,11 @@ Compute naryRel 2.
 
 (* begin snippet checknaryFunc *)
 
-Check plus: naryFunc 2.
+Check plus: naryFunc 2. (* .no-out *)
 
-Check 42: naryFunc 0.
+Check 42: naryFunc 0. (* .no-out *)
 
-Check (fun n p q : nat =>  n * p + q): naryFunc 3.
+Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
 
 (* end snippet checknaryFunc *)
 
