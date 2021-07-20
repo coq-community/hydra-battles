@@ -11,33 +11,41 @@ on:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image:
-          - 'mathcomp/mathcomp:1.12.0-coq-8.13'
-      fail-fast: false
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
 
-      - name: Compile Coq-Doc
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Build coqdoc and Alectryon movies
         uses: coq-community/docker-coq-action@v1
         with:
-          custom_image: ${{ matrix.image }}
+          # We cannot use the math-comp images because the OCaml version is too old
+          coq_version: '8.13'
+          ocaml_version: '4.07-flambda'
           before_script: |
-            startGroup "Create Makefile.coq and add permission"
+            startGroup "Install Alectryon"
+              sudo apt-get update
+              yes | sudo apt-get install python3-pip
+              yes | sudo pip3 install alectryon
+              opam install coq-serapi -y
+            endGroup
+            startGroup "Add permissions"
               sudo chown -R coq:coq .
-              make Makefile.coq
             endGroup
           script: |
-            startGroup "Build documentation"
-              make -j`nproc` html
+            startGroup "Build Coq files"
+              make -j "$(nproc)"
+            endGroup
+            startGroup "Build Alectryon movies"
+              make -C doc/movies -j "$(nproc)" all
+            endGroup
+            startGroup "Build coqdoc documentation"
+              make -j "$(nproc)" html
             endGroup
           uninstall: |
             startGroup "Clean"
               make clean
             endGroup
+
       - name: Revert Coq user permissions
         # to avoid a warning at cleanup time
         if: ${{ always() }}
@@ -51,7 +59,6 @@ jobs:
           latexmk_use_lualatex: true
 
       - name: Extract PDF and Coq-Doc
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           mkdir -p public/doc public/theories
           cp doc/hydras.pdf public/doc/

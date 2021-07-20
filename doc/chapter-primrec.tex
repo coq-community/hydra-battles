@@ -778,49 +778,13 @@ A(m+1,n+1)&=A(m,A(m+1,n))
 
 Let us try to define this function in \coq{} (in curried form).
 
-\begin{Coqsrc}
-Fail
-  Fixpoint Ack (m n : nat) : nat :=
-  match m, n with
-  | 0, n => S n
-  | S m, 0 => Ack m 1
-  | S m0, S p => Ack m0 (Ack m p)
-  end.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-The command has indeed failed with message:
-Cannot guess decreasing argument of fix.
-\end{Coqanswer}
+\input{movies/snippets/Ack/AckFixpointFail.tex}
 
 A possible workaround is to make \texttt{m} be the 
 decreasing argument, and define --- within \texttt{m}'s scope --- a local helper function which computes (\texttt{Ack m n}) for any \texttt{n}.
 This way, both functions \texttt{Ack} and \texttt{Ackm} have a (structurally) strictly decreasing argument.
 
-\begin{Coqsrc}
-Module Alt.
-
-   Fixpoint Ack (m n : nat) : nat :=
-     match m with
-     | O => S n
-     | S p => let fix Ackm (n : nat) :=
-                  match n with
-                  | O => Ack p 1
-                  | S q => Ack p (Ackm q)
-                  end
-              in Ackm n
-     end.
-
-    Compute Ack 3 2.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = 29 : nat
-\end{Coqanswer}
-
-\begin{Coqsrc}
-End Alt.
-\end{Coqsrc}
+\input{movies/snippets/Ack/AckFixpointAlt.tex}
 
 We prefered to define a variant which uses explicitely 
  the functional \texttt{iterate},
@@ -860,23 +824,7 @@ Thus, our definition of the Ackermann function is as follows:
 \index{maths}{Ackermann function}
 \index{primrec}{Ackermann function}
 
-\begin{Coqsrc}
-Fixpoint Ack (m:nat) : nat -> nat :=
-  match m with
-  | 0 => S
-  | S n => fun k =>  iterate (Ack n) (S k) 1
-  end.
-
-Compute Ack 3 2.
-\end{Coqsrc}
- 
-\begin{Coqanswer}
-  = 29 : nat
-\end{Coqanswer}
-
-
-
-
+\input{movies/snippets/Ack/AckFixpointIterate.tex}
 
 
 \index{hydras}{Exercises}
