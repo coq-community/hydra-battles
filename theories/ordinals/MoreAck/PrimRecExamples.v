@@ -1,13 +1,17 @@
-Require Import primRec Arith ArithRing List.
+Require Import Arith ArithRing List.
+
+(* begin snippet naryFunc3 *)
+
+Require Import primRec.
 Import extEqualNat.
+
+Compute naryFunc 3.
+
+(* end snippet naryFunc3 *)
+
 Require Import Vector.
 Import VectorNotations.
 (**
-Compute naryFunc 3.
-
-= nat -> nat -> nat -> nat
-  : Set
-
 
 Compute naryRel 2.
 
@@ -16,12 +20,15 @@ Compute naryRel 2.
 
  *)
 
+(* begin snippet checknaryFunc *)
+
 Check plus: naryFunc 2.
 
 Check 42: naryFunc 0.
 
 Check (fun n p q : nat =>  n * p + q): naryFunc 3.
 
+(* end snippet checknaryFunc *)
 
 Compute extEqual 2.
 (*

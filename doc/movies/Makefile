@@ -24,6 +24,7 @@ COQ_FILES = Ack.v               \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
 	    Hydra_Lemmas.v      \
+	    extEqualNat.v       \
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 
