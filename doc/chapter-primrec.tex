@@ -209,99 +209,28 @@ the arity is fixed, these definitions behave well w.r.t.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.}
-\begin{Coqsrc}
-Example Ex1 : evalPrimRec 0 zeroFunc = 0.
-Proof. reflexivity. Qed.
 
-Example Ex2 a : evalPrimRec 1 succFunc a = S a.
-Proof. reflexivity. Qed.
+\input{movies/snippets/PrimRecExamples/evalPrimRecEx}
 
-Example Ex3 a b c d e f: forall (H: 2 < 6),
-    evalPrimRec 6
-                (projFunc 6 2 H) a b c d e f = d.
-Proof. reflexivity. Qed.
-
-Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
-  let u := composeFunc 2 3
-                       (PRcons 2 _ x
-                               (PRcons 2 _ y
-                                       (PRcons 2 _ z
-                                               (PRnil 2))))
-                       t in
-  let f := evalPrimRec 2 x in
-  let g := evalPrimRec 2 y in
-  let h := evalPrimRec 2 z in
-  let i := evalPrimRec 3 t in
-  let j := evalPrimRec 2 u in
-  forall a b, j a b = i (f a b) (g a b) (h a b).
-Proof. reflexivity. Qed.
-
-Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall a b,  f 0 a b = g a b.
-Proof. reflexivity.   Qed.                          
-
-Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall n a b,  f (S n) a b = h n (f n a b) a b.
-Proof. reflexivity.   Qed.                          
-\end{Coqsrc}
-
+\vspace{4pt}
+\noindent
 
 Another example?
 Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it by an interactive proof the reader will be able to make after 
 reading Sect.\vref{sect:proofs-of-isPR}.}:
 
 \label{sect:bigfac}
-\begin{Coqsrc}
-Example bigPR : PrimRec 1 :=
-primRecFunc 0
-  (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
-  (composeFunc 2 2
-    (PRcons 2 1
-      (composeFunc 2 1
-         (PRcons 2 0 (projFunc 2 1 (le_n 2))
-                 (PRnil 2))
-         succFunc)
-      (PRcons 2 0
-        (composeFunc 2 1
-          (PRcons 2 0
-             (projFunc 2 0
-                       (le_S 1 1 (le_n 1)))
-             (PRnil 2))
-          (projFunc 1 0 (le_n 1))) (PRnil 2)))
-    (primRecFunc 1 (composeFunc 1 0 (PRnil 1) zeroFunc)
-       (composeFunc 3 2
-         (PRcons 3 1
-            (projFunc 3 1 (le_S 2 2 (le_n 2)))
-            (PRcons 3 0 (projFunc 3 0
-                          (le_S 1 2
-                                (le_S 1 1 (le_n 1))))
-                    (PRnil 3)))
-         (primRecFunc 1 (projFunc 1 0 (le_n 1))
-                      (composeFunc 3 1
-                          (PRcons 3 0
-                                  (projFunc 3 1 (le_S 2 2 (le_n 2)))
-                                  (PRnil 3))
-                          succFunc))))). 
-\end{Coqsrc}
+
+\input{movies/snippets/PrimRecExamples/bigPRa}
+
 
 Let us now interpret this term as an arithmetic function.
 
-\begin{Coqsrc}
-Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
+\vspace{4pt}
+\noindent
 
-Compute map mystery_fun[0;1;2;3;4;5;6] : t nat _.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/bigPRb}
 
-\begin{Coqanswer}
- = 1 :: 1 :: 2 :: 6 :: 24 :: 120 :: 720 :: nil
-     : t nat 7
-\end{Coqanswer}
 
 After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, whithout building such an unreadable term.
 
