@@ -104,13 +104,8 @@ The magic of dependent types makes it possible to define recursively extensional
 
 \index{primrec}{Predicates!extEqual}
 
-\begin{Coqsrc}
-Fixpoint  extEqual (n : nat) : forall  (a b : naryFunc n), Prop :=
-  match n with
-    0 => fun a b => a = b
-  | S p => fun a b => forall c, extEqual p (a c) (b c)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/extEqualNat/extEqualDef}
+
 
 \input{movies/snippets/PrimRecExamples/extEqual2a}
 
@@ -136,21 +131,8 @@ These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
-\begin{Coqsrc}
-Inductive PrimRec : nat -> Set :=
-  | succFunc : PrimRec 1
-  | zeroFunc : PrimRec 0
-  | projFunc : forall n m : nat, m < n -> PrimRec n
-  | composeFunc :
-      forall (n m : nat) (g : PrimRecs n m) (h : PrimRec m), PrimRec n
-  | primRecFunc :
-      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))), 
-      PrimRec (S n)
-with PrimRecs : nat -> nat -> Set :=
-  | PRnil : forall n : nat, PrimRecs n 0
-  | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> 
-                   PrimRecs n (S m).
-\end{Coqsrc}
+
+\input{movies/snippets/primRec/PrimRecDef}
 
 \begin{remark}
 \label{projFunc-order-of-args}
@@ -180,27 +162,11 @@ Both functions are mutually defined through dependent pattern matching. We advis
 would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
+\vspace{4pt}
 
-\begin{Coqsrc}
-Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} : 
- naryFunc n :=
-  match f in (PrimRec n) return (naryFunc n) with
-  | succFunc => S
-  | zeroFunc => 0
-  | projFunc n m pf => evalProjFunc n m pf
-  | composeFunc n m l f =>
-      evalComposeFunc n m (evalPrimRecs _ _ l) (evalPrimRec _ f)
-  | primRecFunc n g h =>
-      evalPrimRecFunc n (evalPrimRec _ g) (evalPrimRec _ h)
-  end
-with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
- Vector.t (naryFunc n) m :=
-  match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
-  | PRnil a => Vector.nil  (naryFunc a)
-  | PRcons a b g gs =>
-       Vector.cons _ (evalPrimRec _ g) _  (evalPrimRecs _ _ gs)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/primRec/evalPrimRecDef}
+
+\vspace{4pt}
 
 Looks complicated? The following examples show that, when
 the arity is fixed, these definitions behave well w.r.t. 
@@ -258,10 +224,8 @@ equal to the interpretation of some term of type \texttt{PrimRec $n$}.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
-\begin{Coqsrc}
-Definition isPR (n : nat) (f : naryFunc n) : Set :=
-  {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.  
-\end{Coqsrc}
+
+\input{movies/snippets/primRec/isPRDef}
 
 The library \texttt{primRec} contains a large catalogue of lemmas allowing to prove statements 
 of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but give a few examples of
@@ -285,61 +249,24 @@ we wrote alternate proofs in
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
 {Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
 
-\begin{Coqsrc}
-Module Alt.
-  
-Lemma zeroIsPR : isPR 0 0.
-Proof.
-  exists zeroFunc.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 90)
-  
-  ============================
-  extEqual 0 (evalPrimRec 0 zeroFunc) 0
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  cbn.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-1 subgoal (ID 91)
-  
-  ============================
-  0 = 0
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  reflexivity.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/zeroIsPR}
 
 
 Likewise, we prove that the successor function on \texttt{nat} is primitive recursive too.
 
-\begin{Coqsrc}
-Lemma SuccIsPR : isPR 1 S.
-Proof.
-  exists succFunc; cbn; reflexivity.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/SuccIsPR}
+
+
 
 Projections are proved primitive recursive, case by case (many examples in 
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}).
 \emph{Please notice again that the name of the projection follows the mathematical tradition, 
 whilst the arguments of  \texttt{projFunc} use another convention (\emph{cf} remark~\vref{projFunc-order-of-args}).}
 
-\begin{Coqsrc}
-Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
-Proof.
- assert (H: 3 < 5) by auto.
- exists (projFunc 5 3 H).
- cbn; reflexivity.
-Qed.
-\end{Coqsrc}
+
+\input{movies/snippets/PrimRecExamples/pi25IsPR}
+
+
 
 Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}, and is realized by 
 (\texttt{projFunc 1 0}).
@@ -349,13 +276,7 @@ Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
-\begin{Coqsrc}
-Lemma idIsPR : isPR 1 (fun x : nat => x).
-Proof.
-  assert (H: 0 < 1) by auto.
-  exists (projFunc 1 0 H); cbn; auto.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/primRec/idIsPR}
 
 \subsubsection{Using function composition}
 

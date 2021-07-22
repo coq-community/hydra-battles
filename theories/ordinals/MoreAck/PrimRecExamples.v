@@ -226,20 +226,33 @@ Proof.
  apply extEqualTrans with f; auto.
 Qed.
 
-
 Module Alt.
   
-Lemma zeroIsPR : isPR 0 0.
-Proof.
+(* begin snippet zeroIsPR *)
+
+Lemma zeroIsPR : isPR 0 0. (* .no-out *)
+Proof. (* .no-out *)
   exists zeroFunc.
   cbn.
   reflexivity.
 Qed.  
 
+(* end snippet zeroIsPR *)
+
+(*|
+.. coq:: no-out
+|*)
+
+(* begin snippet SuccIsPR *)
+
 Lemma SuccIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
+
+(* end snippet SuccIsPR *)
+
+(* begin snippet pi25IsPR *)
 
 Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
@@ -247,6 +260,10 @@ Proof.
  exists (projFunc 5 3 H).
  cbn; reflexivity.
 Qed.
+
+(* end snippet pi25IsPR *)
+
+(*||*)
 
 Check composeFunc 0 1.
 

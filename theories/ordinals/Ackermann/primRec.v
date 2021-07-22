@@ -19,23 +19,30 @@ Require Import Max.
 (** [PrimRec n] : data type of primitive recursive functions of arity [n] 
     [PrimRec n m] : m-tuples of [PrimRec n] *)
 
+(* begin snippet PrimRecDef *)
+
 Inductive PrimRec : nat -> Set :=
   | succFunc : PrimRec 1
   | zeroFunc : PrimRec 0
   | projFunc : forall n m : nat, m < n -> PrimRec n
   | composeFunc :
-      forall (n m : nat) (g : PrimRecs n m) (h : PrimRec m), PrimRec n
+      forall (n m : nat) (g : PrimRecs n m) (h : PrimRec m),
+        PrimRec n
   | primRecFunc :
-      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))), PrimRec (S n)
+      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))),
+        PrimRec (S n)
 with PrimRecs : nat -> nat -> Set :=
   | PRnil : forall n : nat, PrimRecs n 0
-  | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> PrimRecs n (S m).
+  | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m ->
+                               PrimRecs n (S m).
 
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
   with PrimRecs_PrimRec_rec := Induction for PrimRecs  Sort Set.
 
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
   with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
+
+(* end snippet PrimRecDef *)
 
 (** ** Semantics *)
 
@@ -142,6 +149,8 @@ Fixpoint evalPrimRecFunc (n : nat) (g : naryFunc n)
 
 (**  The interpretation function *)
 
+(* begin snippet evalPrimRecDef *)
+
 Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} : 
  naryFunc n :=
   match f in (PrimRec n) return (naryFunc n) with
@@ -158,8 +167,11 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
  Vector.t (naryFunc n) m :=
   match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
   | PRnil a => Vector.nil  (naryFunc a)
-  | PRcons a b g gs => Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
+  | PRcons a b g gs =>
+    Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
+
+(* end snippet evalPrimRecDef *)
 
 Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
   forall (m' : nat) (l' : Vector.t (naryFunc n) m'), Prop.
@@ -257,8 +269,12 @@ Qed.
 
 (** ** Predicates "to be primitive recursive"  *)
 
+(* begin snippet isPRDef *)
+
 Definition isPR (n : nat) (f : naryFunc n) : Set :=
   {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.
+
+(* end snippet isPRDef *)
 
 Definition isPRrel (n : nat) (R : naryRel n) : Set :=
   isPR n (charFunction n R).
@@ -288,11 +304,21 @@ Qed.
 
 (** ** Usual projections (in curried form) are primitive recursive *)
 
+(*| 
+.. coq:: no-out 
+|*)
+
+(* begin snippet idIsPR *)
+
 Lemma idIsPR : isPR 1 (fun x : nat => x).
 Proof.
   assert (H: 0 < 1) by auto.
   exists (projFunc 1 0 H); cbn; auto.
 Qed.
+
+(* end snippet idIsPR *)
+
+(*||*)
 
 Lemma pi1_2IsPR : isPR 2 (fun a b : nat => a).
 Proof.
