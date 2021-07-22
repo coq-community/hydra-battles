@@ -22,7 +22,7 @@ Compute naryRel 2.
 (* begin snippet checknaryFunc *)
 
 (*|
-.. coq:: .no-out
+.. coq:: no-out
 |*)
 
 Check plus: naryFunc 2.
@@ -41,7 +41,8 @@ Compute extEqual 2.
 
 Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x). (* .no-out *)
 Proof. (* .no-out *)
-  intros x y; cbn.
+  intros x y.
+  cbn.
 (* end snippet extEqual2a *)
   
 (* begin snippet extEqual2b *)  
@@ -54,7 +55,7 @@ Qed.
 (** ** Examples of terms of type [PrimRec n] and their interpretation *)
 
 (*|
-.. coq:: .no-out
+.. coq:: no-out
 |*)
 
 (* begin snippet evalPrimRecEx  *)
