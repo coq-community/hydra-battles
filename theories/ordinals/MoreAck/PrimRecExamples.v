@@ -21,11 +21,17 @@ Compute naryRel 2.
 
 (* begin snippet checknaryFunc *)
 
-Check plus: naryFunc 2. (* .no-out *)
+(*|
+.. coq:: .no-out
+|*)
 
-Check 42: naryFunc 0. (* .no-out *)
+Check plus: naryFunc 2.
 
-Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
+Check 42: naryFunc 0.
+
+Check (fun n p q : nat =>  n * p + q): naryFunc 3.
+
+(*||*)
 
 (* end snippet checknaryFunc *)
 
@@ -33,7 +39,7 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
 Compute extEqual 2.
 
 
-Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x).
+Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x). (* .no-out *)
 Proof. (* .no-out *)
   intros x y; cbn.
 (* end snippet extEqual2a *)
@@ -47,17 +53,21 @@ Qed.
 
 (** ** Examples of terms of type [PrimRec n] and their interpretation *)
 
+(*|
+.. coq:: .no-out
+|*)
+
 (* begin snippet evalPrimRecEx  *)
 
-Example Ex1 : evalPrimRec 0 zeroFunc = 0. (* .no-out *)
+Example Ex1 : evalPrimRec 0 zeroFunc = 0.
 Proof. reflexivity. Qed.
 
-Example Ex2 a : evalPrimRec 1 succFunc a = S a. (* .no-out *)
+Example Ex2 a : evalPrimRec 1 succFunc a = S a.
 Proof. reflexivity. Qed.
 
 Example Ex3 a b c d e f: forall (H: 2 < 6),
     evalPrimRec 6
-                (projFunc 6 2 H) a b c d e f = d. (* .no-out *)
+                (projFunc 6 2 H) a b c d e f = d.
 Proof. reflexivity. Qed.
 
 
@@ -73,22 +83,22 @@ Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
   let h := evalPrimRec 2 z in
   let i := evalPrimRec 3 t in
   let j := evalPrimRec 2 u in
-  forall a b, j a b = i (f a b) (g a b) (h a b). (* .no-out *)
-Proof. (* .no-out *) reflexivity. Qed.
+  forall a b, j a b = i (f a b) (g a b) (h a b).
+Proof. reflexivity. Qed.
 
 Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
   let g := evalPrimRec _ x in
   let h := evalPrimRec _ y in
   let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall a b,  f 0 a b = g a b. (* .no-out *)
-Proof. (* .no-out *) reflexivity.   Qed.                          
+  forall a b,  f 0 a b = g a b.
+Proof. reflexivity.   Qed.                          
 
 Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
   let g := evalPrimRec _ x in
   let h := evalPrimRec _ y in
   let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall n a b, f (S n) a b = h n (f n a b) a b. (* .no-out *)
-Proof. (* .no-out *) reflexivity.   Qed.                          
+  forall n a b, f (S n) a b = h n (f n a b) a b.
+Proof. reflexivity.   Qed.                          
 (* end snippet evalPrimRecEx  *)  
 
 
@@ -126,6 +136,8 @@ primRecFunc 0
                           succFunc))))).
 
 (* end snippet bigPRa  *)
+
+(*||*)
 
 (* begin snippet bigPRb  *)
 Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
