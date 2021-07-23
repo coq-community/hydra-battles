@@ -218,13 +218,24 @@ Proof. reflexivity. Qed.
 
 *)
 
-Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
-                                    extEqual n f g ->
-                                    isPR n g.
+(* begin snippet isPRExtEqualTrans *)
+
+(*|
+.. coq:: no-out
+|*)
+
+Lemma isPR_extEqual_trans n f g :
+  isPR n f -> extEqual n f g -> isPR n g.
 Proof.
- intros f g [x Hx]; exists x.
+ intros [x Hx]; exists x.
  apply extEqualTrans with f; auto.
 Qed.
+
+(*||*)
+
+(* end snippet isPRExtEqualTrans *)
+
+
 
 Module Alt.
   
@@ -267,6 +278,12 @@ Qed.
 
 Check composeFunc 0 1.
 
+(* begin snippet compose01 *)
+
+(*| 
+.. coq:: no-out 
+|*)
+
 Fact compose_01 :
     forall (x:PrimRec 0) (t : PrimRec 1),
     let c := evalPrimRec 0 x in
@@ -274,8 +291,17 @@ Fact compose_01 :
     evalPrimRec 0 (composeFunc 0 1
                                (PRcons 0 0 x (PRnil 0))
                                t)  =
-     f c.
+     f c. 
 Proof. reflexivity. Qed.
+(*||*)
+
+(* end snippet compose01 *)
+
+(* begin snippet const0NIsPR  *)
+
+(*| 
+.. coq:: no-out 
+|*)
 
 
 Lemma  const0_NIsPR n : isPR 0 n. 
@@ -287,6 +313,15 @@ Proof.
    cbn in *; intros; now rewrite Hx.
 Qed.
 
+(*||*)
+
+(* end snippet const0NIsPR  *)
+
+(* begin snippet plusAlt  *)
+
+(*| 
+.. coq:: no-out 
+|*)
 
 Definition plus_alt x y  :=
               nat_rec  (fun n : nat => nat)
@@ -301,21 +336,54 @@ Proof.
   intros y; cbn; now rewrite <- (IHx y).
 Qed.
 
+(*||*)
+
+(* end snippet plusAlt *)
+
+
 (* begin snippet PrimRecExamplesSearch *)
 
 Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
 
 (* end snippet PrimRecExamplesSearch *)
 
+(* begin snippet checkFilter0101IsPR *)
 
-Lemma plusIsPR : isPR 2 plus.
-Proof.
+(*|
+.. coq:: unfold no-in 
+|*)
+
+Check filter010IsPR.
+
+(*||*)
+
+(* end snippet checkFilter0101IsPR *)
+
+(* begin snippet plusIsPRa *)
+
+Lemma plusIsPR : isPR 2 plus. (* .no-out *)
+Proof. (* .no-out *)
   apply isPR_extEqual_trans with plus_alt.
-  - unfold plus_alt; apply ind1ParamIsPR.
+  - (* .no-out *)  unfold plus_alt; apply ind1ParamIsPR.
+    
+(* end snippet plusIsPRa *)
+
+(* begin snippet plusIsPRb *)
+    
+(*|
+.. coq:: no-out 
+|*)
+
     + apply filter010IsPR, succIsPR.
     + apply idIsPR.
   - apply plus_alt_ok. 
 Qed.
+
+(*||*)
+
+(* end snippet plusIsPRb *)
+
+
 
 Remark R02 : 1 < 2.
 Proof. auto. Qed.
@@ -332,4 +400,30 @@ Qed.
 
 
 End Alt.
+
+(* begin snippet doubleIsPRa *)
+
+Definition double (n:nat) := 2 * n.
+
+Lemma doubleIsPR : isPR 1 double. (* .no-out *)
+Proof. (* .no-out *)
+  unfold double; apply compose1_2IsPR.
+
+(* end snippet doubleIsPRa *)
+
+(* begin snippet doubleIsPRb *)
+(*|
+.. coq:: no-out 
+|*)
+
+  - apply const1_NIsPR.
+  - apply idIsPR.
+  - apply multIsPR.
+Qed.
+
+(*||*)
+
+(* end snippet doubleIsPRb *)
+
+
 

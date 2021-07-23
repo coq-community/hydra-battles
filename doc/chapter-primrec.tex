@@ -288,35 +288,19 @@ Thus we would like to compose this constant function with the unary successor fu
 This is exactly the role of the instance \texttt{composeFunc 0 1} of the dependently typed
 function \texttt{composeFunc}, as shown by the following lemma.
 
-\begin{Coqsrc}
-Fact compose_01 :
-    forall (x:PrimRec 0) (t : PrimRec 1),
-    let c := evalPrimRec 0 x in
-    let f := evalPrimRec 1 t in
-    evalPrimRec 0 (composeFunc 0 1
-                               (PRcons 0 0 x (PRnil 0))
-                               t)  =
-     f c.
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\vspace{4pt}
+\input{movies/snippets/PrimRecExamples/compose01}
 
+
+\vspace{4pt}
 Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
-\begin{Coqsrc}
-Lemma  const1_NIsPR n : isPR 0 n. 
-Proof.
-  induction n.
-  - apply zeroIsPR.
-  - destruct IHn as [x Hx].
-   exists (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) succFunc). 
-   cbn in *; intros; now rewrite Hx.
-Qed.
-\end{Coqsrc}
 
+\input{movies/snippets/PrimRecExamples/const0NIsPR}
 
 \subsubsection{Proving that \texttt{plus} is primitive recursive}
 
@@ -328,38 +312,23 @@ First, we look for lemmas which may help to prove that a given function obtained
 
 \input{movies/snippets/PrimRecExamples/PrimRecExamplesSearch}
 
-
-We prove that the library function \texttt{plus} is extensionally equal to a function defined with
+The following lemma shows it suffices to prove that
+Standard library's function \texttt{plus} is extensionally equal to a function defined with
 \texttt{nat\_rec}.
 
-\begin{Coqsrc}
-Definition plus_alt x y  :=
-              nat_rec  (fun n : nat => nat)
-                       y
-                       (fun z t =>  S t)
-                       x.
+\input{movies/snippets/PrimRecExamples/isPRExtEqualTrans}
 
-Lemma plus_alt_ok:
-  extEqual 2 plus_alt plus.
-Proof.
-  intro x; induction x; cbn; auto.
-  intros y; cbn; now rewrite <- (IHx y).
-Qed.
-\end{Coqsrc}
+Thus, let us define an helper and prove its equivalence with \texttt{plus}.
 
-A last lemma before the proof:
+\input{movies/snippets/PrimRecExamples/plusAlt}
 
-\begin{Coqsrc}
-Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
-                                    extEqual n f g ->
-                                    isPR n g.
-Proof.
- intros f g [x Hx]; exists x.
- apply extEqualTrans with f; auto.
-Qed.
-\end{Coqsrc}
 
-Let us start now.
+\vspace{4pt}
+
+
+We are now able to complete the proof.
+
+\input{movies/snippets/PrimRecExamples/plusIsPRa}
 
 \begin{Coqsrc}
 Lemma plusIsPR : isPR 2 plus.
@@ -381,22 +350,17 @@ subgoal 2 (ID 127) is:
 We already proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
 Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
 
-\begin{Coqanswer}
-filter010IsPR :
-forall g : nat -> nat, isPR 1 g -> isPR 3 (fun _ b _ : nat => g b)
-\end{Coqanswer}
+\vspace{4pt}
+\input{movies/snippets/PrimRecExamples/checkFilter0101IsPR}
+\vspace{4pt}
+
 
 Thus, our first subgoal is solved easily. The rest of the proof 
 is just an application of already proven lemmas.
 
+\vspace{4pt}
 
-\begin{Coqsrc}
- - unfold plus_alt; apply ind1ParamIsPR.
-    + apply filter010IsPR, succIsPR.
-    + apply idIsPR.
-  - apply plus_alt_ok. 
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/plusIsPRb}
 
 
 \begin{todo}
@@ -419,26 +383,9 @@ Multiplication of natural number is already proven in the \texttt{primRec} libra
 The following proof decomposes the \texttt{double} function as the composition of 
 multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
+\input{movies/snippets/PrimRecExamples/doubleIsPRa}
+\input{movies/snippets/PrimRecExamples/doubleIsPRb}
 
-\begin{Coqsrc}
-Lemma doubleIsPR : isPR 1 double.
-Proof.
-  unfold double; apply compose1_2IsPR.
-  - apply idIsPR.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-subgoal 1 (ID 110) is:
- isPR 1 (fun _ : nat => 2)
-subgoal 2 (ID 111) is:
- isPR 2 Init.Nat.mul
-\end{Coqanswer}
-
- \begin{Coqsrc}
-  - apply const1_NIsPR.
-  - apply multIsPR.
-Qed.
-\end{Coqsrc}
 
 \index{primrec}{Exercises}
 \begin{exercise}
