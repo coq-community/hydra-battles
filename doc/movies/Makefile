@@ -25,6 +25,10 @@ COQ_FILES = Ack.v               \
 	    Hydra_Examples.v    \
 	    Hydra_Lemmas.v      \
 	    extEqualNat.v       \
+	    MorePRExamples.v       \
+	    FibonacciPR.v       \
+	    isqrt.v       \
+
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 

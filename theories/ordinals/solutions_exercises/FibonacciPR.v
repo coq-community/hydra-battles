@@ -2,6 +2,8 @@ Require Import primRec cPair extEqualNat.
 
 (** The famous Fibonacci function *)
 
+(* begin snippet fibDef *)
+
 Fixpoint fib (n:nat) : nat :=
   match n with
   | 0 => 1
@@ -9,6 +11,7 @@ Fixpoint fib (n:nat) : nat :=
   | S ((S p) as q) => fib q + fib p
   end.
 
+(* end snippet fibDef *)
 
 Section Proof_of_FibIsPR.
 

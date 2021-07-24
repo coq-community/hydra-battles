@@ -330,22 +330,6 @@ We are now able to complete the proof.
 
 \input{movies/snippets/PrimRecExamples/plusIsPRa}
 
-\begin{Coqsrc}
-Lemma plusIsPR : isPR 2 plus.
-Proof.
-  apply isPR_extEqual_trans with plus_alt.
-  - unfold plus_alt; apply ind1ParamIsPR.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-2 subgoals (ID 126)
-  
-  ============================
-  isPR 3 (fun _ y _ : nat => S y)
-
-subgoal 2 (ID 127) is:
- isPR 1 (fun b : nat => b)
-\end{Coqanswer}
 
 We already proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
 Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
@@ -378,39 +362,26 @@ Thus, the reader may look at them, and invent simple examples of application for
 Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
 \end{exercise}
 
+%\input{movies/snippets/PrimRecExamples/justATest}
+
 \subsubsection{More examples}
 
 The following proof decomposes the \texttt{double} function as the composition of 
 multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
 \input{movies/snippets/PrimRecExamples/doubleIsPRa}
-\input{movies/snippets/PrimRecExamples/doubleIsPRb}
+
 
 
 \index{primrec}{Exercises}
 \begin{exercise}
 Prove that the following functions are primitive recursive. 
 
-\begin{Coqsrc}
-Fixpoint fact n :=
-  match n with 
-          | 0 => 1
-          | S p  => n * fact p
-  end.
+\input{movies/snippets/MorePRExamples/factDef}
 
-Fixpoint exp n p :=
-  match p with
-  | 0 => 1
-  | S m =>  exp n m * n
-  end.
+\input{movies/snippets/MorePRExamples/expDef}
 
-Fixpoint tower2 n :=
-  match n with
-  | 0 => 1
-  | S p => exp 2 (tower2 p)
-  end.
-\end{Coqsrc}
-
+\input{movies/snippets/MorePRExamples/tower2Def}
 
 
 \textbf{Hint:} You may have to look again at the lemmas of the library
@@ -436,15 +407,8 @@ recursive.
 \begin{exercise}
 Write a simple and readable proof that the Fibonacci function is primitive recursive.
 
+\input{movies/snippets/FibonacciPR/fibDef}
 
-\begin{Coqsrc}
-Fixpoint fib (n:nat) : nat :=
-  match n with
-  | 0 => 1
-  | 1 => 1
-  | S ((S p) as q) => fib q + fib p
-  end.
-\end{Coqsrc}
 
 \textbf{Hint:}  You may use as a helper the function which computes the pair \linebreak
 $(\texttt{fib}(n+1),\texttt{fib}(n))$. 
@@ -458,15 +422,14 @@ the associated constructor and projections are primitive recursive.
 
 \index{primrec}{Exercises}
 \begin{exercise}
+
 Prove the following lemmas (which may help to solve the next  exercise).
 
-\begin{Coqsrc}
-Lemma boundedSearch3 (P: naryRel 2) (b  : nat), 
-    boundedSearch P b <= b. 
+\input{movies/snippets/isqrt/boundedSearch3}
+\input{movies/snippets/isqrt/boundedSearch4}
 
-Lemma boundedSearch4 (P: naryRel 2) (b  : nat):
-  P b b = true -> P b (boundedSearch P b) = true.
-\end{Coqsrc}
+\textbf{Note:}  The function \texttt{boundedSearch} is defined
+in Library \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. 
 \end{exercise}
 
 \index{primrec}{Exercises}
