@@ -219,7 +219,7 @@ Qed.
 
 (** *** The general case is proved by  induction on x *)
 
-(* begin snippet majorAnyPR *)
+(* begin snippet majorAnyPRa *)
 
 (*|
 .. coq:: no-out 
@@ -234,10 +234,10 @@ Proof.
   - apply majorProjection.
 (*||*)
     
-  - (* .no-out *)  destruct IHx, IHx0; red; exists (2 + max x0 x1).
-(*|
-.. coq:: none 
-|*)               
+  - (* .no-out *) destruct IHx, IHx0; red; exists (2 + max x0 x1). (* .no-out *)
+
+    (* end snippet majorAnyPRa *)
+    
     intro v; simpl evalPrimRec; rewrite evalListComp.
     (* begin details *)
     generalize 
@@ -254,8 +254,9 @@ Proof.
       * rewrite max_comm; apply nested_Ack_bound.
  
   (*||*)
+  (* begin snippet majorAnyPRb *)
         
-  -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+  -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh]. (* .no-out *)
 
 (*|
 .. coq:: none
@@ -325,10 +326,11 @@ Proof.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
            ++ rewrite max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia.
-    (*  Lists of PR functions *)
+
   (*||*)
+  (* end snippet majorAnyPRb *)
               
-  - (* .no-out *) red;cbn;  red; exists 0. (* .none *)
+   -  (* .no-out *) red;cbn;  red; exists 0. (* .none *)
     intro; rewrite Ack_0;  cbn; auto with arith. (* .none *)
   - (* .no-out *) red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
 (*|
@@ -348,7 +350,7 @@ Proof.
 (*||*)
 Qed. 
 
-(* end snippet majorAnyPR *)
+
 
 
 (** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
@@ -374,7 +376,7 @@ Qed.
 (* begin snippet majorPR2 *)
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y). (* no-out *)
+  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y). (* .no-out *)
 
 (* end snippet majorPR2 *)
 
@@ -412,18 +414,19 @@ Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  Lemma Ack_not_PR : False. (* .no-out *)
-  Proof. (* no-out *)
-    destruct (majorPR2_strict Ack HAck) as [m Hm].
-    (*|
+  Lemma Ack_not_PR : False.
+  (*|
 .. coq:: no-out
-|*)      
+|*)    
+  Proof. 
+    destruct (majorPR2_strict Ack HAck) as [m Hm].
     pose (X := max 2 m); specialize (Hm X X).
     rewrite max_idempotent in Hm;
       assert (H0: Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
-(*||*)
   Qed.
+  (*||*)
+
   
 End Impossibility_Proof.
 

@@ -371,7 +371,19 @@ multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
 \input{movies/snippets/PrimRecExamples/doubleIsPRa}
 
+\begin{Coqanswer}
+3 subgoals (ID 184)
+  
+  ============================
+  isPR 1 (fun _ : nat => 2)
 
+subgoal 2 (ID 185) is:
+ isPR 1 (fun x : nat => x)
+subgoal 3 (ID 186) is:
+ isPR 2 Init.Nat.mul
+\end{Coqanswer}
+
+\input{movies/snippets/PrimRecExamples/doubleIsPRb}
 
 \index{primrec}{Exercises}
 \begin{exercise}
@@ -665,9 +677,67 @@ The remaining cases are proved within a mutual  induction.
 
 \index{coq}{Mutual induction}
 
-\input{movies/snippets/AckNotPR/majorAnyPR}
+\input{movies/snippets/AckNotPR/majorAnyPRa}
 
+\begin{Coqanswer}
+ x : PrimRec m
+ x0 : nat
+ H : forall v : t nat n,
+   max_v (map (fun f : naryFunc n => v_apply f v)
+           (evalPrimRecs n m g)) <=
+   Ack x0 (max_v v)
+ x1 : nat
+ H0 : forall v : t nat m, v_apply (evalPrimRec m x) v <=
+                                  Ack x1 (max_v v)
+  ============================
+  forall v : t nat n,
+  v_apply (evalPrimRec n (composeFunc n m g x)) v <=
+  Ack (2 + Nat.max x0 x1) (max_v v)
 
+\end{Coqanswer}
+
+\input{movies/snippets/AckNotPR/majorAnyPRb}
+
+\begin{Coqanswer}
+  n : nat
+  x1 : PrimRec n
+  x2 : PrimRec (S (S n))
+  r : nat
+  Hg : forall v : t nat n,
+     v_apply (evalPrimRec n x1) v <= Ack r (max_v v)
+  s : nat
+  Hh : forall v : t nat (S (S n)),
+       v_apply (evalPrimRec (S (S n)) x2) v <= Ack s (max_v v)
+  ============================
+  majorizedPR (primRecFunc n x1 x2) Ack
+\end{Coqanswer}
+
+The las two goals deal with vectors of functions.
+
+\begin{Coqanswer}
+1 subgoal (ID 289)
+  
+  n : nat
+  ============================
+  majorizedSPR (PRnil n) Ack
+
+\end{Coqanswer}
+
+\begin{Coqanswer}
+1 subgoal (ID 296)
+  
+  n, m : nat
+  x : PrimRec n
+  p : PrimRecs n m
+  IHx : majorizedPR x Ack
+  IHx0 : majorizedSPR p Ack
+  ============================
+  majorizedSPR (PRcons n m x p) Ack
+\end{Coqanswer}
+
+\begin{Coqsrc}
+Qed.
+\end{Coqsrc}
 
 \subsection{Looking for a contradiction}
 
@@ -767,7 +837,7 @@ $H'_{\omega^\alpha}(k)\geq F_\alpha(k)$.
 \input{movies/snippets/F_alpha/HprimeF}
 
 
-Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an ide or softwre like alectryon.
+Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an ide or software like alectryon.
 %%
 %%% To move the path chapter
 %%%%
@@ -834,16 +904,18 @@ Our proof of this lemma is not trivial at all, it uses some properties of the Ke
 
 We finish the proof by comparing several fast growing functions.
 
+\vspace{4pt}
+
 \emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
 \input{movies/snippets/L_alpha/HprimeL}
 
+\vspace{4pt}
+
 \emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
-
-
 \input{movies/snippets/F_omega/FVsAck}
 
-
+\vspace{4pt}
 
 By transitivity, we get the inequality
 $F_\omega(k+1)\leq m(k+1)$, for any $k$.
@@ -856,6 +928,8 @@ We finish the proof by noting that the function $m$ (composed with \texttt{S}) d
 \input{movies/snippets/Hydra_Theorems/mDominatesAck}
 
 \input{movies/snippets/Hydra_Theorems/SmNotPR}
+
+\vspace{4pt}
 
 \input{movies/snippets/Hydra_Theorems/LNotPR}
 
