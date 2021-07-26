@@ -36,13 +36,21 @@ with PrimRecs : nat -> nat -> Set :=
   | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m ->
                                PrimRecs n (S m).
 
+
+(* end snippet PrimRecDef *)
+
+
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
   with PrimRecs_PrimRec_rec := Induction for PrimRecs  Sort Set.
+
+(* begin snippet SchemePrimRecInd *)
 
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
   with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
 
-(* end snippet PrimRecDef *)
+Check PrimRec_PrimRecs_ind.
+(* end snippet SchemePrimRecInd *)
+
 
 (** ** Semantics *)
 
@@ -100,12 +108,18 @@ Qed.
 
 (**  Applies an m-ary function to the vector l *)
 
+(* begin snippet evalListDef *)
+
 Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
- naryFunc m -> nat :=
+  naryFunc m -> nat :=
   match l  in (Vector.t _ m) return (naryFunc m -> nat) with
   | Vector.nil => fun x : naryFunc 0 => x
-  | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
+  | Vector.cons a n l' =>
+    fun x : naryFunc (S n) => evalList n l' (x a)
   end.
+
+(* end snippet evalListDef *)
+
 
 Fixpoint evalOneParamList (n m a : nat) (l : Vector.t (naryFunc (S n)) m)
  {struct l} : Vector.t (naryFunc n) m :=

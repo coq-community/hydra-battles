@@ -483,23 +483,10 @@ is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRe
 \noindent
 \emph{From \href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}}.
 \index{hydras}{Library Prelude!iterate}
-\begin{Coqsrc}
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
-\end{Coqsrc}
 
-\begin{Coqsrc}
-Lemma iterate_le_n_Sn:
-forall f : nat -> nat,
-(forall x : nat, x <= f x) ->
-forall n x : nat, iterate f n x <= iterate f (S n) x.
-\end{Coqsrc}
+\input{movies/snippets/Iterates/iterateDef}
 
-
-
+\input{movies/snippets/Iterates/iterateLeNSN}
 
 
 Thus, our definition of the Ackermann function is as follows:
@@ -516,7 +503,7 @@ Thus, our definition of the Ackermann function is as follows:
 \index{hydras}{Exercises}
 
 \begin{exercise}
-The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions\footnote{post on \href{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq} by Anton Trunov.} of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
+The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
 Prove that the four functions are extensionnally equal.
 \end{exercise}
 
@@ -526,29 +513,17 @@ Prove that the four functions are extensionnally equal.
 The three first lemmas make us sure that our function 
 \texttt{Ack} satifies the ``usual'' equations.
 
-\begin{Coqsrc}
-Lemma Ack_0 : Ack 0 = S.
-Proof refl_equal.
+\input{movies/snippets/Ack/AckRewrite}
 
-Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
-Proof. reflexivity. Qed.
 
-Lemma Ack_S_S : forall m p,
-    Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\vspace{4pt}
 
 The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.
 
-\begin{Coqsrc}
-Lemma Ack_1_n n: Ack 1 n = S  (S n).
-
-Lemma Ack_2_n n: Ack 2 n = 2 * n + 3.
-
-Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
-
-Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
-\end{Coqsrc}
+\input{movies/snippets/Ack/Ack1N}
+\input{movies/snippets/Ack/Ack2N}
+\input{movies/snippets/Ack/Ack3N}
+\input{movies/snippets/Ack/Ack4N}
 
 
 \begin{remark}
@@ -572,10 +547,8 @@ to overcome the difficulty raised by nested recursion, by climbing up the hierar
 
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
-\begin{Coqsrc}
-Lemma nested_Ack_bound : forall k m n, 
-    Ack k (Ack m n) <= Ack (2 + max k m) n.
-\end{Coqsrc}
+
+\input{movies/snippets/Ack/nestedAckBound}
 
 
 
@@ -585,10 +558,12 @@ Please note also that for any given $n$, the unary function
 \vspace{4pt}
 
 \noindent
+
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
-\begin{Coqsrc}
-Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/AckNIsPR}
+
+
 
 
 
@@ -613,53 +588,12 @@ The following scheme allows us to write proofs by induction on the class of prim
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
 \index{coq}{Commands!Scheme}
-\begin{Coqsrc}
-Scheme PrimRec_PrimRecs_ind := Induction for PrimRec
-  Sort Prop
-  with PrimRecs_PrimRec_ind := Induction for PrimRecs 
-  Sort Prop.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-PrimRec_PrimRecs_ind :
-forall (P : forall n : nat, PrimRec n -> Prop)
-  (P0 : forall n n0 : nat, PrimRecs n n0 -> Prop),
-(* successor *)
-P 1 succFunc ->
+\input{movies/snippets/primRec/SchemePrimRecInd}
 
-(* zero *)
-P 0 zeroFunc ->
 
-(* projections *)
-(forall (n m : nat) (l : m < n), P n (projFunc n m l)) ->
 
-(* composition *) 
-(forall (n m : nat) (g : PrimRecs n m),
-      P0 n m g -> forall h : PrimRec m, P m h -> 
-      P n (composeFunc n m g h)) ->
-
-(* primitive recursion *)
-(forall (n : nat) (g : PrimRec n),
- P n g ->
-    forall h : PrimRec (S (S n)), P (S (S n)) h -> 
-     P (S n) (primRecFunc n g h)) ->
-
-(* empty list of functions *)
-(forall n : nat, P0 n 0 (PRnil n)) ->
-
-(* add a function to a list *)
-(forall (n m : nat) (p : PrimRec n),
-   P n p -> 
-   forall p0 : PrimRecs n m, P0 n m p0 -> 
-   P0 n (S m) (PRcons n m p p0)) ->
-
-(* conclusion ! *)
-forall (n : nat) (p : PrimRec n), P n p
-\end{Coqanswer}
-
-For instance, proving a property shared by any primitive recursive function of arity 2 leads to consider the case where that function is obtained by composition with a function of any 
-arity $m$. The same problem happens with primitive 
-recursion, where a function of arity $n$ is built out of a function of arity $n+1$ and a function of arity $n-1$.
+Please note that, in order to prove a property shared by any primitive recursive function of, say, arity 2, this induction scheme  leads you to consider an expension of the considered property to primitive recursive function of any arity.
 
 Thus the lemma we will have to prove is the following one:
 
@@ -680,22 +614,14 @@ First, we extend \texttt{max} to vectors of natural numbers (using the notations
 \texttt{VectorDef.cons x \_ v}.
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
-  match n as n0 return (Vector.t nat n0 -> nat)
-  with
-    0 => fun v => 0
-  | S p => fun (v : Vector.t nat (S p)) =>
-             max (Vector.hd v) (max_v  (Vector.tl v))
-  end. 
 
-Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
+\input{movies/snippets/MoreVectors/maxvDef}
 
-Lemma max_v_lub : forall n (v: t nat n) y,
-    (Forall (fun x =>  x <= y) v) -> max_v v <= y.
+\input{movies/snippets/MoreVectors/maxvLemmasa}
 
-Lemma max_v_ge : forall n (v: t nat n) y,  In  y  v -> y <= max_v v.
-\end{Coqsrc}
+\input{movies/snippets/MoreVectors/maxvLemmasb}
+
+\input{movies/snippets/MoreVectors/maxvLemmasc}
 
 
 We have also to convert any application
@@ -705,59 +631,24 @@ This is already defined in
 Library~\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
 
-\begin{Coqsrc}
-Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
- naryFunc m -> nat :=
-  match l in (Vector.t _ m) return (naryFunc m -> nat) with
-  | Vector.nil => fun x : naryFunc 0 => x
-  | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/primRec/evalListDef}
 
 Indeed, (\texttt{evalList $m$ $v$ $f$}) is the application to the vector $v$ of
 an uncurried version of $f$.
 In Library\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}, we introduce a lighter notation.
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-(**  uncurried apply:
- 
-[v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
- *)
 
-Notation "'v_apply' f v" := (evalList _ v f) 
-     (at level 10, f at level 9).
+\input{movies/snippets/AckNotPR/vApply}
 
-Example Ex2: forall (f: naryFunc 2) x y,
-    v_apply f (x::y::nil) = f x y.
-Proof.   intros; now cbn. Qed.
 
-Example Ex4: forall (f: naryFunc 4) x y z t,
-    v_apply f (x::y::z::t::nil) = f x y z t.
-Proof.  intros; now cbn. Qed.
-\end{Coqsrc}
 
 We are now able to translate in \gallina{} the notion of ``majorization'':
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n),
-      v_apply f v <= A q  (max_v v).
 
-Definition majorizedPR {n} (x: PrimRec n) A := 
-           majorized (evalPrimRec n x) A.
+\input{movies/snippets/AckNotPR/majorizedDefs}
 
-(** For vectors of functions *)
-
-Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
-           (A : naryFunc 2):=
-  exists N, forall (v: t nat n),
-      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
-
-Definition majorizedSPR {n m} (x : PrimRecs n m) :=
-  majorizedS (evalPrimRecs _ _ x).
-\end{Coqsrc}
 
 Now, it remains to prove that any primitive function is majorized by \texttt{Ack}.
 The three base cases  are as follows:

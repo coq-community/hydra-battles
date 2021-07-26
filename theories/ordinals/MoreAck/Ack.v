@@ -168,6 +168,13 @@ End Alt3.
 
 (** *** Usual equations *)
 
+(* begin snippet AckRewrite *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+
 Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
 
@@ -178,26 +185,42 @@ Lemma Ack_S_S : forall m p,
     Ack (S m) (S p) = Ack m (Ack (S m) p).
 Proof. reflexivity. Qed.
 
+(*||*)
+
+(* end snippet AckRewrite *)
+
 (** *** First values *)
 
-Lemma Ack_1_n n : Ack 1 n = S (S n).
+(* begin snippet Ack1N *)
+
+Lemma Ack_1_n n : Ack 1 n = S (S n). (* .no-out *)
+
+(* end snippet Ack1N *)
+
 Proof.
   f_equal; induction n as [| p <-]; trivial.
 Qed.  
 
-Lemma Ack_2_n n: Ack 2  n = 2 * n + 3.
+(* begin snippet Ack2N *)
+
+Lemma Ack_2_n n: Ack 2  n = 2 * n + 3. (* .no-out *)
+
+(* end snippet Ack2N *)
+
 Proof.
   induction  n.
   - reflexivity. 
   - rewrite Ack_S_S, IHn, Ack_1_n; lia.
 Qed.
 
+(* begin snippet Ack3N *)
 
-Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
-  (* begin details *)
+Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3. (* .no-out *)
+
+(* end snippet Ack3N *)
+
 Proof.
   induction n.
-  (* begin details *)
   -  reflexivity.
   - rewrite Ack_S_S, Ack_2_n, IHn.
     change (exp2 (S (S (S (S n)))))
@@ -208,12 +231,14 @@ Proof.
       - cbn in IHn; lia.
     }
     lia.
-    (* end details *)
 Qed.
-(* end details *)
 
+(* begin snippet Ack4N *)
 
-Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
+Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3. (* .no-out *)
+
+(* end snippet Ack4N *)
+
 Proof.
   induction n.
   - reflexivity. 
@@ -399,7 +424,14 @@ Section Proof_of_nested_Ack_bound.
     - apply R1.
   Qed.
 
-  Lemma nested_Ack_bound k m n :  Ack k (Ack m n) <= Ack (2 + max k m) n.
+  (* begin snippet nestedAckBound *)
+  
+  Lemma nested_Ack_bound k m n :
+    Ack k (Ack m n) <= Ack (2 + max k m) n. (* .no-out *)
+  
+
+  (* end snippet nestedAckBound *)
+  
   Proof.
       pose (x:= Nat.max k m).
     (* begin details *)

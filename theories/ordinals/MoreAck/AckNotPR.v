@@ -19,6 +19,12 @@ Import extEqualNat  VectorNotations.
 
  *)
 
+(*|
+.. coq:: no-out
+|*)
+
+(* begin snippet vApply *)
+
 Notation "'v_apply' f v" := (evalList _ v f) (at level 10, f at level 9).
 
 
@@ -34,12 +40,20 @@ Proof.
   intros; now cbn.
 Qed.
 
+(* end snippet vApply *)
+
+(*||*)
+
+(*  begin snippet majorizedDefs *)
+
 (** ** Comparing an n-ary and a binary functions *)
 
-Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n), v_apply f v <= A q (max_v v).
+Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) :=
+  exists (q:nat),
+    forall (v: t nat n), v_apply f v <= A q (max_v v).
 
-Definition majorizedPR {n} (x: PrimRec n) A := majorized (evalPrimRec n x) A.
+Definition majorizedPR {n} (x: PrimRec n) A :=
+  majorized (evalPrimRec n x) A.
 
 (** For vectors of functions *)
 
@@ -50,6 +64,8 @@ Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
 
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
+
+(*  end snippet majorizedDefs *)
 
 Section evalList.
   
@@ -468,10 +484,21 @@ Section Proof_of_Ackn_PR.
     Qed.
 
   End S_step.
+  
   (* begin show *)
+
+  (* begin snippet AcknIsPR *)
+
+(*|
+.. coq:: no-out 
+|*)
+  
   Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
   Proof.
     induction n.
+
+ (* end snippet AcknIsPR *)
+  
     - cbn; apply succIsPR.
     - apply iSPR_Ack_Sn; auto.  
   Qed.

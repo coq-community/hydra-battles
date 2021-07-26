@@ -28,6 +28,8 @@ COQ_FILES = Ack.v               \
 	    MorePRExamples.v       \
 	    FibonacciPR.v       \
 	    isqrt.v       \
+	    Iterates.v       \
+	    MoreVectors.v       \
 
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
