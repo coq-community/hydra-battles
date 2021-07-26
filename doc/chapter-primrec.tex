@@ -653,129 +653,41 @@ We are now able to translate in \gallina{} the notion of ``majorization'':
 Now, it remains to prove that any primitive function is majorized by \texttt{Ack}.
 The three base cases  are as follows:
 
-\begin{Coqsrc}
-Lemma majorSucc : majorizedPR  succFunc Ack.
+\input{movies/snippets/AckNotPR/majorSucc}
 
-Lemma majorZero : majorizedPR  zeroFunc Ack.
+\input{movies/snippets/AckNotPR/majorZero}
 
-Lemma majorProjection (n m:nat)(H: m < n):
-  majorizedPR (projFunc n m H) Ack.
-\end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorProjection}
 
 
-The rest of the cases are proved within a mutual  induction.
+
+The remaining cases are proved within a mutual  induction.
 
 \index{coq}{Mutual induction}
 
-\begin{Coqsrc}
-Lemma majorAnyPR:  forall n (x: PrimRec n),  majorizedPR  x Ack.
-Proof.
-  intros n x; induction x using PrimRec_PrimRecs_ind with
-                  (P0 := fun n m y => majorizedSPR  y Ack).
-  - apply majorSucc.
-  - apply majorZero.
-  - apply majorProjection. 
-  \end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorAnyPR}
 
-  \begin{Coqsrc}
-  - (** function composition *)
-\end{Coqsrc}
-\begin{Coqanswer}
-1 subgoal (ID 265)
 
-  n, m : nat
-  g : PrimRecs n m
-  x : PrimRec m
-  IHx : majorizedSPR g Ack
-  IHx0 : majorizedPR x Ack
-  ============================
-  majorizedPR (composeFunc n m g x) Ack
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  ...
- - (** primitive recursion *)
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 265)
-  
-  n : nat
-  x1 : PrimRec n
-  x2 : PrimRec (S (S n))
-  IHx1 : majorizedPR x1 Ack
-  IHx2 : majorizedPR x2 Ack
-  ============================
-  majorizedPR (primRecFunc n x1 x2) Ack
-\end{Coqanswer}
-
-\begin{Coqsrc}
- assert (L1 : forall i (v: t nat n) ,
-               v_apply f (i::v)  <= Ack q (i + max_v v)).
-    { induction i.
-      ...
-    }
-    ...
--  (** empty list of functions *)
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 266)
-  
-  n : nat
-  ============================
-  majorizedSPR (PRnil n) Ack
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  ...
-- (** non-empty list of functions *)
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 273)
-  
-  n, m : nat
-  x : PrimRec n
-  p : PrimRecs n m
-  IHx : majorizedPR x Ack
-  IHx0 : majorizedSPR p Ack
-  ============================
-  majorizedSPR (PRcons n m x p) Ack
-\end{Coqanswer}
-  
-\begin{Coqsrc}
- ...
-Qed.
-\end{Coqsrc}
 
 \subsection{Looking for a contradiction}
 
 The following lemma is just a specialization of \texttt{majorAnyPR} to
 binary functions (forgetting vectors, coming back to usual notations).
 
-\begin{Coqsrc}
-Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
-\end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorPR2}
 
 We prove also a strict version of this lemma, thanks to the following property (proved in Library
 \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}~).
 
-\begin{Coqsrc}
-Lemma Ack_strict_mono_l : forall n m p, n < m ->
-                                        Ack n (S p) < Ack m (S p).
-\end{Coqsrc}
+\input{movies/snippets/Ack/AckStrictMonoL}
+
 
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}.}
 
-\begin{Coqsrc}
-Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
-    exists (n:nat),
-    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/majorPR2Strict}
 
 
 
@@ -783,58 +695,22 @@ If the Ackermann function were primitive recursive, then there would exist some 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
-\begin{Coqsrc}
-Section Impossibility_Proof.
-
-  Hypothesis HAck : isPR 2 Ack.
-  
-  Lemma Ack_not_PR : False.
-  Proof.
-    destruct (majorPR2_strict Ack HAck) as [m Hm];
-    pose (X := max 2 m); specialize (Hm X X).
-    rewrite max_idempotent in Hm; 
-    assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
-    lia.
-  Qed.
-
-End Impossibility_Proof.
-\end{Coqsrc}
-
+\input{movies/snippets/AckNotPR/AckNotPR}
 
 \begin{remark}
-It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. We use an instance of \texttt{majorAnyPR} for unary functions.
+It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. To this end, we use an instance of \texttt{majorAnyPR} dealing with unary functions.
 
 \vspace{4pt}
 \noindent
 
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
-\begin{Coqsrc}
-Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
-  : exists (n:nat), forall x, f x <= Ack n x.
-(* ... *)
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/majorPR1}
 
 Then, we write  a short proof by contradiction.
 
-\begin{Coqsrc}
-Section dom_AckNotPR.
+\input{movies/snippets/AckNotPR/domAckNotPR}
 
-  Variable f : nat -> nat.
-  Hypothesis Hf : dominates f (fun n => Ack n n).
-
- Lemma dom_AckNotPR: isPR 1 f -> False.
-  Proof.
-    intros H;  destruct Hf as [N HN].
-    destruct  (majorPR1 _ H) as [M HM].
-    pose (X := Max.max N M).
-    specialize (HN X  (Max.le_max_l N M)).
-    specialize (HM X);
-      assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
-    lia.
-  Qed.
-
-End dom_AckNotPR.
-\end{Coqsrc}
 \end{remark}
 
 \begin{remark}
@@ -858,16 +734,7 @@ This proof is  a little more complex than the preceding one.
 The function we consider is defined and proven correct in
 Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
 
-\begin{Coqsrc}
-Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
-
-Lemma l_std_ok : forall alpha : E0,
-    alpha <> Zero ->
-    forall k : nat,
-      1 <= k -> battle_length standard k (iota (cnf alpha))
-                              (l_std alpha k).
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Battle_length/BattleLength}
 
 \subsection{Proof steps}
 
@@ -876,109 +743,92 @@ Now, let us assume that the function \texttt{l\_std} is primitive recursive.
 
 \emph{From \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems}}.
 
-\begin{Coqsrc}
-Section battle_lenght_notPR.
-
-  (** We assume that the function with computes the length 
-      of standard battles is primitive recursive *)
-  
-  Hypothesis H: forall alpha, isPR 1 (l_std alpha). 
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRa}
 
 Let us consider the hydra represented by the ordinal $\omega^\omega$.
 
-\begin{Coqsrc}
-Let alpha := Phi0 omega%e0.
-Let h := iota (cnf alpha).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRb}
+
 
 In order to get rid of the substraction in the definition of \texttt{l\_std}, we work with a helper function.
 
-\begin{Coqsrc}
-Let m k := L_ alpha (S k).
-
-Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRc}
 
 Under the hypothesis \texttt{H}, $m$ is also primitive recursive.
 
-\begin{Coqsrc}
-Remark mIsPR : isPR 1 m.
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRd}
 
 
 \subsubsection{Comparison between $F$ and $H'$}
 
-In \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}, we prove a relation between the $F$ and $H'$ functional. For any $\alpha$ and $k>0$,
+In \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}, we prove a relation between the $F$ and $H'$ functionals. For any $\alpha$ and $k>0$,
 $H'_{\omega^\alpha}(k)\geq F_\alpha(k)$.
 
-\begin{Coqsrc}
-H'_F : forall (alpha : E0) (n : nat), 
-     F_ alpha (S n) <= H'_ (Phi0 alpha) (S n) 
-\end{Coqsrc}
+\input{movies/snippets/F_alpha/HprimeF}
 
 
-Our proof of this lemma is not trivial at all. One of it sub-goals is the following one:
+Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an ide or softwre like alectryon.
+%%
+%%% To move the path chapter
+%%%%
 
-\begin{Coqsrc}
-  alpha : E0
-  IHalpha : forall beta : E0, beta o< alpha -> P beta
-  Halpha : Limitb alpha
-  n : nat
-  ============================
-  H'_ (Phi0 (CanonS alpha n)) (S n) <= 
-  H'_ (Phi0 (CanonS alpha (S n))) (S n)
-\end{Coqsrc}
+% \begin{Coqsrc}
+%   alpha : E0
+%   IHalpha : forall beta : E0, beta o< alpha -> P beta
+%   Halpha : Limitb alpha
+%   n : nat
+%   ============================
+%   H'_ (Phi0 (CanonS alpha n)) (S n) <= 
+%   H'_ (Phi0 (CanonS alpha (S n))) (S n)
+% \end{Coqsrc}
 
-In mathematical notation: $H'_{\omega^{\canonseq{\alpha}{n}}}(n+1) \leq
-H'_{\omega^{\canonseq{\alpha}{n+1}}}(n+1)$.
+% In mathematical notation: $H'_{\omega^{\canonseq{\alpha}{n}}}(n+1) \leq
+% H'_{\omega^{\canonseq{\alpha}{n+1}}}(n+1)$.
 
-\vspace{4pt}
+% \vspace{4pt}
 
-But there exists no lemma saying that, if 
-$\beta\leq \alpha$, then $H'_\beta(k)\leq H'_\alpha(k)$, for any $\alpha$ and $\beta$. For instance, 
-$H'_{42}(3)=45> H'_\omega(3)=7$.
-
-
-Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
-\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}):
-
-\begin{Coqanswer}
-H'_restricted_mono_l : 
-    forall (alpha beta : E0) (n : nat), 
-      Canon_plus n alpha beta -> 
-      H'_ beta n <= H'_ alpha n.
-\end{Coqanswer}
-
-Thus, it remains to prove that 
-there exists a path from ${\omega^{\canonseq{\alpha}{n+1}}}$
-to ${\omega^{\canonseq{\alpha}{n}}}$ composed of 
-$n+1$-steps.
-
-Fortunately, the Ketonen-Solovay machinery contains three lemmas which help us to build such a path.
+% But there exists no lemma saying that, if 
+% $\beta\leq \alpha$, then $H'_\beta(k)\leq H'_\alpha(k)$, for any $\alpha$ and $\beta$. For instance, 
+% $H'_{42}(3)=45> H'_\omega(3)=7$.
 
 
-\begin{Coqanswer}
-KS_thm_2_4_lemma5 :
-  forall [i : nat] [alpha beta : T1],
-  const_pathS i alpha beta ->
-  nf alpha -> alpha <> zero -> 
-  const_pathS i (phi0 alpha) (phi0 beta)
+% Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
+% \href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}):
 
-KS_thm_2_4 :
-  forall [lambda : T1], nf lambda ->limitb lambda ->
-  forall i j : nat, i < j -> 
-   const_pathS 0 (canonS lambda j) (canonS lambda i)
+% \begin{Coqanswer}
+% H'_restricted_mono_l : 
+%     forall (alpha beta : E0) (n : nat), 
+%       Canon_plus n alpha beta -> 
+%       H'_ beta n <= H'_ alpha n.
+% \end{Coqanswer}
 
-Cor12_1 :
-forall [alpha : T1], nf alpha ->
-      forall (beta : T1) (i n : nat),
-      beta t1< alpha ->
-     i <= n -> const_pathS i alpha beta -> 
-     const_pathS n alpha beta
-\end{Coqanswer}
+% Thus, it remains to prove that 
+% there exists a path from ${\omega^{\canonseq{\alpha}{n+1}}}$
+% to ${\omega^{\canonseq{\alpha}{n}}}$ composed of 
+% $n+1$-steps.
+
+% Fortunately, the Ketonen-Solovay machinery contains three lemmas which help us to build such a path.
+
+
+% \begin{Coqanswer}
+% KS_thm_2_4_lemma5 :
+%   forall [i : nat] [alpha beta : T1],
+%   const_pathS i alpha beta ->
+%   nf alpha -> alpha <> zero -> 
+%   const_pathS i (phi0 alpha) (phi0 beta)
+
+% KS_thm_2_4 :
+%   forall [lambda : T1], nf lambda ->limitb lambda ->
+%   forall i j : nat, i < j -> 
+%    const_pathS 0 (canonS lambda j) (canonS lambda i)
+
+% Cor12_1 :
+% forall [alpha : T1], nf alpha ->
+%       forall (beta : T1) (i n : nat),
+%       beta t1< alpha ->
+%      i <= n -> const_pathS i alpha beta -> 
+%      const_pathS n alpha beta
+% \end{Coqanswer}
   
 \subsubsection{End of the proof}
 
@@ -986,44 +836,28 @@ We finish the proof by comparing several fast growing functions.
 
 \emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
-\begin{Coqsrc}
-H'_L_ : forall (alpha : E0) (i : nat), H'_ alpha i <= L_ alpha (S i)
-\end{Coqsrc}
-
+\input{movies/snippets/L_alpha/HprimeL}
 
 \emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
 
-\begin{Coqsrc}
-F_vs_Ack : forall n : nat, 2 <= n -> Ack n n <= F_ omega n
-\end{Coqsrc}
+
+\input{movies/snippets/F_omega/FVsAck}
 
 
 
 By transitivity, we get the inequality
 $F_\omega(k+1)\leq m(k+1)$, for any $k$.
 
-\begin{Coqsrc}
-Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/mGeFOmega}
 
 
 We finish the proof by noting that the function $m$ (composed with \texttt{S}) dominates the Ackermann function, which leads to a contradiction.
 
-\begin{Coqsrc}
-Remark m_dominates_Ack : 
-     dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
-(* ... *)
+\input{movies/snippets/Hydra_Theorems/mDominatesAck}
 
-Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
-(* ... *)
+\input{movies/snippets/Hydra_Theorems/SmNotPR}
 
-Theorem LNotPR : False.
-  Proof.
-    apply SmNotPR,  compose1_1IsPR.
-    - apply mIsPR.
-    - apply succIsPR.
-  Qed.
+\input{movies/snippets/Hydra_Theorems/LNotPR}
 
-End battle_lenght_notPR.
-\end{Coqsrc}
+
 

@@ -180,21 +180,35 @@ End evalList.
 
 (** *** Base cases *)
 
-Lemma majorSucc : majorizedPR  succFunc Ack.
+(* begin snippet majorSucc *)
+
+Lemma majorSucc : majorizedPR  succFunc Ack. (* .no-out *)
+
+(* end snippet majorSucc *)
+
 Proof.
   exists 1; intro v; rewrite (decomp1 v).
   simpl evalList; simpl max_v; rewrite max_0_r.
   rewrite Ack_1_n; auto with arith.
 Qed.
 
+(* begin snippet majorZero *)
 
-Lemma majorZero : majorizedPR  zeroFunc Ack.
+Lemma majorZero : majorizedPR  zeroFunc Ack. (* .no-out *)
+
+(* end snippet majorZero *)
+
 Proof.
   exists 0; intro v; rewrite (t_0_nil _ v), Ack_0; cbn; auto with arith.
 Qed.
 
+(* begin snippet majorProjection *)
+
 Lemma majorProjection (n m:nat)(H: m < n):
-  majorizedPR (projFunc n m H) Ack.
+  majorizedPR (projFunc n m H) Ack. (* .no-out *)
+
+(* end snippet majorProjection *)
+
 Proof. 
   red; cbn; red; exists 0.
     rewrite Ack_0; intro v; transitivity (max_v v).
@@ -202,18 +216,28 @@ Proof.
     + auto with arith.
 Qed.
 
+
 (** *** The general case is proved by  induction on x *)
 
-Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack.
-(* begin details : A long proof ... *)
-Proof.
+(* begin snippet majorAnyPR *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+Lemma majorAnyPR: forall n (x: PrimRec n), majorizedPR  x Ack. (* .no-out *)
+Proof. 
   intros n x; induction x using PrimRec_PrimRecs_ind with
                   (P0 := fun n m y => majorizedSPR  y Ack).
   - apply majorSucc.
   - apply majorZero.
-  - apply majorProjection. 
-  -  (** function composition *)
-    destruct IHx, IHx0; red; exists (2 + max x0 x1). 
+  - apply majorProjection.
+(*||*)
+    
+  - (* .no-out *)  destruct IHx, IHx0; red; exists (2 + max x0 x1).
+(*|
+.. coq:: none 
+|*)               
     intro v; simpl evalPrimRec; rewrite evalListComp.
     (* begin details *)
     generalize 
@@ -228,13 +252,18 @@ Proof.
                                      (evalPrimRecs n m g)) a H1).
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
-  (* end details *)
-  - (** Primitive recursion *)
-    destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+ 
+  (*||*)
+        
+  -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh].
+
+(*|
+.. coq:: none
+|*)
+    
     remember  (evalPrimRec n x1) as g.
     remember (evalPrimRec _ x2) as h.
     pose(q := S  (max r s)); red.
-    (* begin details *)
     remember  (evalPrimRecFunc _ (evalPrimRec _ x1)
                                (evalPrimRec _ x2)) as f.
     assert (L1 : forall i (v: t nat n) ,
@@ -296,13 +325,15 @@ Proof.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
            ++ rewrite max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia.
-  (* end details *)
-   (*  Lists of PR functions *)
-    
-  - red;cbn;  red; exists 0.
-    intro; rewrite Ack_0;  cbn; auto with arith.
-  - red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
-    (* begin details *)
+    (*  Lists of PR functions *)
+  (*||*)
+              
+  - (* .no-out *) red;cbn;  red; exists 0. (* .none *)
+    intro; rewrite Ack_0;  cbn; auto with arith. (* .none *)
+  - (* .no-out *) red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
+(*|
+.. coq:: none
+|*)
     intros v;  cbn; specialize (H0 v).
     pose (X :=
             (max_v (map (fun f : naryFunc n => v_apply f v)
@@ -314,19 +345,22 @@ Proof.
       *  apply Ack_mono_l; apply le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
-        (* end details *)
+(*||*)
 Qed. 
-(* end details *)
 
-
-
+(* end snippet majorAnyPR *)
 
 
 (** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
  *)
 
+(* begin snippet majorPR1 *)
+
 Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
-  : exists (n:nat), forall x,  f x  <= Ack n x.
+  : exists (n:nat), forall x,  f x  <= Ack n x. (* .no-out *)
+
+(* end snippet majorPR1 *)
+
 Proof.
   destruct Hf as [x Hx].
   generalize (majorAnyPR 1 x). intros.
@@ -337,10 +371,14 @@ Proof.
   symmetry; apply Hx.  
 Qed.
 
+(* begin snippet majorPR2 *)
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
-Proof.
+  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y). (* no-out *)
+
+(* end snippet majorPR2 *)
+
+Proof. 
   destruct Hf as [x Hx]; generalize (majorAnyPR 2 x).
   intros.
   red in H;red in H.  destruct H as [N HN];  exists N.
@@ -350,9 +388,13 @@ Proof.
   - symmetry; apply Hx.
 Qed.
 
+(* begin snippet majorPR2Strict *)
+
 Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
     exists n:nat,
-    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x y).
+      forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x y). (* .no-out *)
+(* end snippet majorPR2Strict *)
+
 Proof.
    destruct (majorPR2 _ Hf) as [m Hm].
    exists (S (max 2 m)); intros x y; destruct x, y; try lia.
@@ -364,41 +406,38 @@ Proof.
 
 (** *** Now, let us assume that [Ack] is PR *)
 
+(* begin snippet AckNotPR *)
+
 Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-
-  Lemma Ack_not_PR : False.
-  (* begin show *)
-  Proof.
+  Lemma Ack_not_PR : False. (* .no-out *)
+  Proof. (* no-out *)
     destruct (majorPR2_strict Ack HAck) as [m Hm].
-  (* end show *)
-    (* begin details *)
-    (**
-<<
-1 subgoal (ID 333)
-  
-  HAck : isPR 2 Ack
-  m : nat
-  Hm : forall x y : nat, 2 <= x -> 2 <= y -> Ack x y < Ack m (Nat.max x y)
-  ============================
-  False
->>
-     **)
+    (*|
+.. coq:: no-out
+|*)      
     pose (X := max 2 m); specialize (Hm X X).
     rewrite max_idempotent in Hm;
       assert (H0: Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
-    (* end details *)
-   
- (* begin show *)
+(*||*)
   Qed.
- (* end show *)  
   
 End Impossibility_Proof.
 
+(* end snippet AckNotPR *)
+
+
 (** ***  Any function which dominates (diagonalized) [Ack] fails to be PR *)
+
+(* begin snippet domAckNotPR *)
+
+(*|
+.. coq:: no-out
+|*)
+
 
 Section dom_AckNotPR.
 
@@ -406,7 +445,6 @@ Section dom_AckNotPR.
   Hypothesis Hf : dominates f (fun n => Ack n n).
 
   Lemma dom_AckNotPR: isPR 1 f -> False.
-  (* begin details *)
   Proof.
     intros H;  destruct Hf as [N HN].
     destruct  (majorPR1 _ H) as [M HM].
@@ -417,10 +455,12 @@ Section dom_AckNotPR.
       assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
     lia.    
   Qed.
-  (* end details *)
+
 End dom_AckNotPR.
 
+(*||*)
 
+(* end snippet domAckNotPR *)
  
   (** ** Nevertheless, for any [n], [Ack n] is primitive recursive. *)
 

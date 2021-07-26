@@ -19,11 +19,13 @@ COQ_FILES = Ack.v               \
 	    primRec.v           \
 	    PrimRecExamples.v   \
 	    F_alpha.v           \
+	    L_alpha.v           \
 	    F_omega.v           \
 	    Hydra_Definitions.v \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
 	    Hydra_Lemmas.v      \
+	    Battle_length.v      \
 	    extEqualNat.v       \
 	    MorePRExamples.v       \
 	    FibonacciPR.v       \

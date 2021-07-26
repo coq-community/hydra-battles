@@ -61,7 +61,11 @@ Proof.
   - intros; apply L; auto.
 Qed.
 
-Lemma F_vs_Ack n : 2 <= n -> Ack n n <= F_ omega n.
+(* begin snippet FVsAck *)
+
+Lemma F_vs_Ack n : 2 <= n -> Ack n n <= F_ omega n. (* .no-out *)
+(* end snippet FVsAck *)
+
 Proof.
   intros; rewrite F_lim_eqn.
   - rewrite Canon.Canon_Omega; apply L2; auto.

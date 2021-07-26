@@ -478,8 +478,13 @@ Proof.
   - apply Ack_Sn_plus.
 Qed.
 
+(* begin snippet AckStrictMonoL *)
+
 Lemma Ack_strict_mono_l : forall n m p, n < m ->
-                                        Ack n (S p) < Ack m (S p).
+                                        Ack n (S p) < Ack m (S p). (* .no-out *)
+(* end snippet AckStrictMonoL *)
+
+
 Proof.
   induction 1.
   -  apply R5.

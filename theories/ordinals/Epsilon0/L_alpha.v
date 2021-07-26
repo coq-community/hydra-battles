@@ -196,8 +196,12 @@ Proof. apply L_ok. Qed.
 
 (** Comparison with Hardy's function H  *)
 
+(* begin snippet HprimeL *)
+
 Theorem H'_L_ alpha :
-  forall i:nat,  (H'_ alpha i <= L_ alpha (S i))%nat.
+  forall i:nat,  (H'_ alpha i <= L_ alpha (S i))%nat. (* .no-out *)
+(* end snippet HprimeL *)
+
 Proof with auto with E0.
   pattern alpha ; apply well_founded_induction with Lt ...
   clear alpha; intros alpha IHalpha i.

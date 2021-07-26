@@ -758,11 +758,19 @@ Qed.
 
 End H'_F.
 
-(** Proof using transfinite induction (prepared in the previous section) *)
+(* begin snippet HprimeF *)
 
-Lemma H'_F alpha : forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
+(*|
+.. coq:: no-out 
+|*)
+
+Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (phi0 alpha) (S n).
 Proof.
   pattern alpha; apply well_founded_induction with Lt.
+
+  (*||*)
+(* end snippet HprimeF *)
+  
   - apply Lt_wf.  
   -  clear alpha; intros alpha IHalpha.
      destruct (Zero_Limit_Succ_dec alpha) as [[Hzero | Hlim] | Hsucc].
