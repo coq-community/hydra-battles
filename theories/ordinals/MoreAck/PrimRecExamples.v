@@ -21,11 +21,17 @@ Compute naryRel 2.
 
 (* begin snippet checknaryFunc *)
 
-Check plus: naryFunc 2. (* .no-out *)
+(*|
+.. coq:: no-out
+|*)
 
-Check 42: naryFunc 0. (* .no-out *)
+Check plus: naryFunc 2.
 
-Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
+Check 42: naryFunc 0.
+
+Check (fun n p q : nat =>  n * p + q): naryFunc 3.
+
+(*||*)
 
 (* end snippet checknaryFunc *)
 
@@ -33,11 +39,11 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3. (* .no-out *)
 Compute extEqual 2.
 
 
-Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x).
+Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x). (* .no-out *)
 Proof. (* .no-out *)
-  intros x y; cbn.
+  intros x y.
+  cbn.
 (* end snippet extEqual2a *)
-
   
 (* begin snippet extEqual2b *)  
   rewrite <- Nat.add_sub_assoc, Nat.sub_diag.
@@ -47,6 +53,12 @@ Qed.
 (* end snippet extEqual2b *)
 
 (** ** Examples of terms of type [PrimRec n] and their interpretation *)
+
+(*|
+.. coq:: no-out
+|*)
+
+(* begin snippet evalPrimRecEx  *)
 
 Example Ex1 : evalPrimRec 0 zeroFunc = 0.
 Proof. reflexivity. Qed.
@@ -86,10 +98,12 @@ Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
   let g := evalPrimRec _ x in
   let h := evalPrimRec _ y in
   let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall n a b,  f (S n) a b = h n (f n a b) a b.
+  forall n a b, f (S n) a b = h n (f n a b) a b.
 Proof. reflexivity.   Qed.                          
+(* end snippet evalPrimRecEx  *)  
 
 
+(* begin snippet bigPRa  *)
 
 Example bigPR : PrimRec 1 :=
 primRecFunc 0
@@ -120,13 +134,18 @@ primRecFunc 0
                           (PRcons 3 0
                                   (projFunc 3 1 (le_S 2 2 (le_n 2)))
                                   (PRnil 3))
-                          succFunc))))). 
+                          succFunc))))).
 
+(* end snippet bigPRa  *)
+
+(*||*)
+
+(* begin snippet bigPRb  *)
 Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
-
 
 Compute map mystery_fun [0;1;2;3;4;5;6] : t nat _.
 
+(* end snippet bigPRb  *)
 
 (** ** Understanding some constructions ...
 
@@ -199,28 +218,52 @@ Proof. reflexivity. Qed.
 
 *)
 
-Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
-                                    extEqual n f g ->
-                                    isPR n g.
+(* begin snippet isPRExtEqualTrans *)
+
+(*|
+.. coq:: no-out
+|*)
+
+Lemma isPR_extEqual_trans n f g :
+  isPR n f -> extEqual n f g -> isPR n g.
 Proof.
- intros f g [x Hx]; exists x.
+ intros [x Hx]; exists x.
  apply extEqualTrans with f; auto.
 Qed.
+
+(*||*)
+
+(* end snippet isPRExtEqualTrans *)
+
 
 
 Module Alt.
   
-Lemma zeroIsPR : isPR 0 0.
-Proof.
+(* begin snippet zeroIsPR *)
+
+Lemma zeroIsPR : isPR 0 0. (* .no-out *)
+Proof. (* .no-out *)
   exists zeroFunc.
   cbn.
   reflexivity.
 Qed.  
 
+(* end snippet zeroIsPR *)
+
+(*|
+.. coq:: no-out
+|*)
+
+(* begin snippet SuccIsPR *)
+
 Lemma SuccIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
+
+(* end snippet SuccIsPR *)
+
+(* begin snippet pi25IsPR *)
 
 Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
@@ -229,7 +272,17 @@ Proof.
  cbn; reflexivity.
 Qed.
 
+(* end snippet pi25IsPR *)
+
+(*||*)
+
 Check composeFunc 0 1.
+
+(* begin snippet compose01 *)
+
+(*| 
+.. coq:: no-out 
+|*)
 
 Fact compose_01 :
     forall (x:PrimRec 0) (t : PrimRec 1),
@@ -238,8 +291,17 @@ Fact compose_01 :
     evalPrimRec 0 (composeFunc 0 1
                                (PRcons 0 0 x (PRnil 0))
                                t)  =
-     f c.
+     f c. 
 Proof. reflexivity. Qed.
+(*||*)
+
+(* end snippet compose01 *)
+
+(* begin snippet const0NIsPR  *)
+
+(*| 
+.. coq:: no-out 
+|*)
 
 
 Lemma  const0_NIsPR n : isPR 0 n. 
@@ -251,6 +313,15 @@ Proof.
    cbn in *; intros; now rewrite Hx.
 Qed.
 
+(*||*)
+
+(* end snippet const0NIsPR  *)
+
+(* begin snippet plusAlt  *)
+
+(*| 
+.. coq:: no-out 
+|*)
 
 Definition plus_alt x y  :=
               nat_rec  (fun n : nat => nat)
@@ -265,21 +336,54 @@ Proof.
   intros y; cbn; now rewrite <- (IHx y).
 Qed.
 
+(*||*)
+
+(* end snippet plusAlt *)
+
+
 (* begin snippet PrimRecExamplesSearch *)
 
 Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
 
 (* end snippet PrimRecExamplesSearch *)
 
+(* begin snippet checkFilter0101IsPR *)
 
-Lemma plusIsPR : isPR 2 plus.
-Proof.
+(*|
+.. coq:: unfold no-in 
+|*)
+
+Check filter010IsPR.
+
+(*||*)
+
+(* end snippet checkFilter0101IsPR *)
+
+(* begin snippet plusIsPRa *)
+
+Lemma plusIsPR : isPR 2 plus. (* .no-out *)
+Proof. (* .no-out *)
   apply isPR_extEqual_trans with plus_alt.
-  - unfold plus_alt; apply ind1ParamIsPR.
+  - (* .no-out *)  unfold plus_alt; apply ind1ParamIsPR.
+    
+(* end snippet plusIsPRa *)
+
+(* begin snippet plusIsPRb *)
+    
+(*|
+.. coq:: no-out 
+|*)
+
     + apply filter010IsPR, succIsPR.
     + apply idIsPR.
   - apply plus_alt_ok. 
 Qed.
+
+(*||*)
+
+(* end snippet plusIsPRb *)
+
+
 
 Remark R02 : 1 < 2.
 Proof. auto. Qed.
@@ -296,4 +400,23 @@ Qed.
 
 
 End Alt.
+
+(* begin snippet doubleIsPRa *)
+
+Definition double (n:nat) := 2 * n.
+
+Lemma doubleIsPR : isPR 1 double. (* .no-out *)
+Proof. (* .no-out *)
+  unfold double; apply compose1_2IsPR. (* .no-out *)
+  (* end snippet doubleIsPRa *)
+  
+(* begin snippet doubleIsPRb *)  
+  - (* .no-out *) apply const1_NIsPR.
+  - (* .no-out *) apply idIsPR.
+  - (* .no-out *) apply multIsPR.
+Qed.
+
+(* end snippet doubleIsPRb *)
+
+
 

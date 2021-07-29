@@ -8,11 +8,16 @@ Open Scope nat_scope.
 From Coq Require Import RelationClasses Relations Arith Max Lia.
 From hydras Require Import Exp2.
 
+(* begin snippet iterateDef *)
+
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
   match n with
   | 0 => x
   | S p => f (iterate  f p x)
-  end.
+  end. (* .no-out *)
+
+(* end snippet iterateDef *)
+
 
 (** Compatibility with Ackermann Library's definition *)
 
@@ -220,9 +225,14 @@ Proof.
 Qed. 
 
 
+(* begin snippet iterateLeNSN *)
+
 Lemma iterate_le_n_Sn (f: nat -> nat):
   (forall x,  x <= f x) ->
-  forall n x,  iterate f n x <= iterate f (S n)  x.
+  forall n x,  iterate f n x <= iterate f (S n)  x. (* .no-out *)
+
+(* end snippet iterateLeNSN *)
+
 Proof.
   induction n.
   - cbn; auto with arith.

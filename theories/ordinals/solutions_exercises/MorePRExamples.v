@@ -14,11 +14,15 @@ Proof.
   - apply multIsPR.
 Qed.
 
+(* begin snippet expDef *)
+
 Fixpoint exp n p :=
   match p with
     0 => 1
   | S m =>  exp n m * n
   end.
+
+(* end snippet expDef *)
 
 Definition exp_alt := fun a b => nat_rec (fun _ => nat)
                                      1
@@ -51,11 +55,15 @@ Proof.
   apply exp_alt_ok.
 Qed.
 
+(* begin snippet tower2Def *)
+
 Fixpoint tower2 n :=
   match n with
     0 => 1
   | S p => exp 2 (tower2 p)
   end.
+
+(* end snippet tower2Def *)
 
 Definition tower2_alt h : nat :=  nat_rec (fun n => nat)
                                 1
@@ -82,12 +90,12 @@ Proof.
  apply extEqualTrans with tower2_alt; [auto | apply tower2_alt_ok].
 Qed.
 
-    
+(* begin snippet factDef *)    
 Fixpoint fact n :=
   match n with 0 => 1
           |   S p  => n * fact p
   end.
-
+(* end snippet factDef *)    
 
 Definition fact_alt
   : nat -> nat :=

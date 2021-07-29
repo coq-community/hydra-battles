@@ -1,4 +1,5 @@
 \chapter{Primitive recursive functions}
+\label{chapter:primrec}
 
 \section{Introduction}
 Primitive recursive functions are a small class of total functions, corresponding to the expressive power of a simple imperative programming language without \textbf{while} loops, in which every program execution terminates.
@@ -54,8 +55,8 @@ than 45K lines of scripts. The part dedicated to primitive recursive functions a
 Thus, we propose a partial exploration of this library, through examples and exercises. Our additions to the original library --- mainly examples and counter-examples ---,
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
 
-In particular, the library \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
-MoreOver, the library \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} contains 
+In particular, the library \href{../theories/html/hydras.MoreAck.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
+Moreover, the library \href{../theories/html/hydras.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} contains 
 a proof that the length of an hydra battle (according to the initial replication factor) is not primitive recursive in general.
 
 \section{Basic definitions}
@@ -104,13 +105,8 @@ The magic of dependent types makes it possible to define recursively extensional
 
 \index{primrec}{Predicates!extEqual}
 
-\begin{Coqsrc}
-Fixpoint  extEqual (n : nat) : forall  (a b : naryFunc n), Prop :=
-  match n with
-    0 => fun a b => a = b
-  | S p => fun a b => forall c, extEqual p (a c) (b c)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/extEqualNat/extEqualDef}
+
 
 \input{movies/snippets/PrimRecExamples/extEqual2a}
 
@@ -136,21 +132,8 @@ These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
-\begin{Coqsrc}
-Inductive PrimRec : nat -> Set :=
-  | succFunc : PrimRec 1
-  | zeroFunc : PrimRec 0
-  | projFunc : forall n m : nat, m < n -> PrimRec n
-  | composeFunc :
-      forall (n m : nat) (g : PrimRecs n m) (h : PrimRec m), PrimRec n
-  | primRecFunc :
-      forall (n : nat) (g : PrimRec n) (h : PrimRec (S (S n))), 
-      PrimRec (S n)
-with PrimRecs : nat -> nat -> Set :=
-  | PRnil : forall n : nat, PrimRecs n 0
-  | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m -> 
-                   PrimRecs n (S m).
-\end{Coqsrc}
+
+\input{movies/snippets/primRec/PrimRecDef}
 
 \begin{remark}
 \label{projFunc-order-of-args}
@@ -180,27 +163,11 @@ Both functions are mutually defined through dependent pattern matching. We advis
 would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
+\vspace{4pt}
 
-\begin{Coqsrc}
-Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} : 
- naryFunc n :=
-  match f in (PrimRec n) return (naryFunc n) with
-  | succFunc => S
-  | zeroFunc => 0
-  | projFunc n m pf => evalProjFunc n m pf
-  | composeFunc n m l f =>
-      evalComposeFunc n m (evalPrimRecs _ _ l) (evalPrimRec _ f)
-  | primRecFunc n g h =>
-      evalPrimRecFunc n (evalPrimRec _ g) (evalPrimRec _ h)
-  end
-with evalPrimRecs (n m : nat) (fs : PrimRecs n m) {struct fs} :
- Vector.t (naryFunc n) m :=
-  match fs in (PrimRecs n m) return (Vector.t (naryFunc n) m) with
-  | PRnil a => Vector.nil  (naryFunc a)
-  | PRcons a b g gs =>
-       Vector.cons _ (evalPrimRec _ g) _  (evalPrimRecs _ _ gs)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/primRec/evalPrimRecDef}
+
+\vspace{4pt}
 
 Looks complicated? The following examples show that, when
 the arity is fixed, these definitions behave well w.r.t. 
@@ -209,99 +176,28 @@ the arity is fixed, these definitions behave well w.r.t.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.}
-\begin{Coqsrc}
-Example Ex1 : evalPrimRec 0 zeroFunc = 0.
-Proof. reflexivity. Qed.
 
-Example Ex2 a : evalPrimRec 1 succFunc a = S a.
-Proof. reflexivity. Qed.
+\input{movies/snippets/PrimRecExamples/evalPrimRecEx}
 
-Example Ex3 a b c d e f: forall (H: 2 < 6),
-    evalPrimRec 6
-                (projFunc 6 2 H) a b c d e f = d.
-Proof. reflexivity. Qed.
-
-Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
-  let u := composeFunc 2 3
-                       (PRcons 2 _ x
-                               (PRcons 2 _ y
-                                       (PRcons 2 _ z
-                                               (PRnil 2))))
-                       t in
-  let f := evalPrimRec 2 x in
-  let g := evalPrimRec 2 y in
-  let h := evalPrimRec 2 z in
-  let i := evalPrimRec 3 t in
-  let j := evalPrimRec 2 u in
-  forall a b, j a b = i (f a b) (g a b) (h a b).
-Proof. reflexivity. Qed.
-
-Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall a b,  f 0 a b = g a b.
-Proof. reflexivity.   Qed.                          
-
-Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall n a b,  f (S n) a b = h n (f n a b) a b.
-Proof. reflexivity.   Qed.                          
-\end{Coqsrc}
-
+\vspace{4pt}
+\noindent
 
 Another example?
 Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it by an interactive proof the reader will be able to make after 
 reading Sect.\vref{sect:proofs-of-isPR}.}:
 
 \label{sect:bigfac}
-\begin{Coqsrc}
-Example bigPR : PrimRec 1 :=
-primRecFunc 0
-  (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
-  (composeFunc 2 2
-    (PRcons 2 1
-      (composeFunc 2 1
-         (PRcons 2 0 (projFunc 2 1 (le_n 2))
-                 (PRnil 2))
-         succFunc)
-      (PRcons 2 0
-        (composeFunc 2 1
-          (PRcons 2 0
-             (projFunc 2 0
-                       (le_S 1 1 (le_n 1)))
-             (PRnil 2))
-          (projFunc 1 0 (le_n 1))) (PRnil 2)))
-    (primRecFunc 1 (composeFunc 1 0 (PRnil 1) zeroFunc)
-       (composeFunc 3 2
-         (PRcons 3 1
-            (projFunc 3 1 (le_S 2 2 (le_n 2)))
-            (PRcons 3 0 (projFunc 3 0
-                          (le_S 1 2
-                                (le_S 1 1 (le_n 1))))
-                    (PRnil 3)))
-         (primRecFunc 1 (projFunc 1 0 (le_n 1))
-                      (composeFunc 3 1
-                          (PRcons 3 0
-                                  (projFunc 3 1 (le_S 2 2 (le_n 2)))
-                                  (PRnil 3))
-                          succFunc))))). 
-\end{Coqsrc}
+
+\input{movies/snippets/PrimRecExamples/bigPRa}
+
 
 Let us now interpret this term as an arithmetic function.
 
-\begin{Coqsrc}
-Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
+\vspace{4pt}
+\noindent
 
-Compute map mystery_fun[0;1;2;3;4;5;6] : t nat _.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/bigPRb}
 
-\begin{Coqanswer}
- = 1 :: 1 :: 2 :: 6 :: 24 :: 120 :: 720 :: nil
-     : t nat 7
-\end{Coqanswer}
 
 After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, whithout building such an unreadable term.
 
@@ -329,10 +225,8 @@ equal to the interpretation of some term of type \texttt{PrimRec $n$}.
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
-\begin{Coqsrc}
-Definition isPR (n : nat) (f : naryFunc n) : Set :=
-  {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.  
-\end{Coqsrc}
+
+\input{movies/snippets/primRec/isPRDef}
 
 The library \texttt{primRec} contains a large catalogue of lemmas allowing to prove statements 
 of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but give a few examples of
@@ -356,61 +250,24 @@ we wrote alternate proofs in
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
 {Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
 
-\begin{Coqsrc}
-Module Alt.
-  
-Lemma zeroIsPR : isPR 0 0.
-Proof.
-  exists zeroFunc.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 90)
-  
-  ============================
-  extEqual 0 (evalPrimRec 0 zeroFunc) 0
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  cbn.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-1 subgoal (ID 91)
-  
-  ============================
-  0 = 0
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  reflexivity.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/zeroIsPR}
 
 
 Likewise, we prove that the successor function on \texttt{nat} is primitive recursive too.
 
-\begin{Coqsrc}
-Lemma SuccIsPR : isPR 1 S.
-Proof.
-  exists succFunc; cbn; reflexivity.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/SuccIsPR}
+
+
 
 Projections are proved primitive recursive, case by case (many examples in 
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}).
 \emph{Please notice again that the name of the projection follows the mathematical tradition, 
 whilst the arguments of  \texttt{projFunc} use another convention (\emph{cf} remark~\vref{projFunc-order-of-args}).}
 
-\begin{Coqsrc}
-Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
-Proof.
- assert (H: 3 < 5) by auto.
- exists (projFunc 5 3 H).
- cbn; reflexivity.
-Qed.
-\end{Coqsrc}
+
+\input{movies/snippets/PrimRecExamples/pi25IsPR}
+
+
 
 Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}, and is realized by 
 (\texttt{projFunc 1 0}).
@@ -420,13 +277,7 @@ Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
-\begin{Coqsrc}
-Lemma idIsPR : isPR 1 (fun x : nat => x).
-Proof.
-  assert (H: 0 < 1) by auto.
-  exists (projFunc 1 0 H); cbn; auto.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/primRec/idIsPR}
 
 \subsubsection{Using function composition}
 
@@ -438,35 +289,19 @@ Thus we would like to compose this constant function with the unary successor fu
 This is exactly the role of the instance \texttt{composeFunc 0 1} of the dependently typed
 function \texttt{composeFunc}, as shown by the following lemma.
 
-\begin{Coqsrc}
-Fact compose_01 :
-    forall (x:PrimRec 0) (t : PrimRec 1),
-    let c := evalPrimRec 0 x in
-    let f := evalPrimRec 1 t in
-    evalPrimRec 0 (composeFunc 0 1
-                               (PRcons 0 0 x (PRnil 0))
-                               t)  =
-     f c.
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\vspace{4pt}
+\input{movies/snippets/PrimRecExamples/compose01}
 
+
+\vspace{4pt}
 Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}.
-\begin{Coqsrc}
-Lemma  const1_NIsPR n : isPR 0 n. 
-Proof.
-  induction n.
-  - apply zeroIsPR.
-  - destruct IHn as [x Hx].
-   exists (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) succFunc). 
-   cbn in *; intros; now rewrite Hx.
-Qed.
-\end{Coqsrc}
 
+\input{movies/snippets/PrimRecExamples/const0NIsPR}
 
 \subsubsection{Proving that \texttt{plus} is primitive recursive}
 
@@ -478,75 +313,39 @@ First, we look for lemmas which may help to prove that a given function obtained
 
 \input{movies/snippets/PrimRecExamples/PrimRecExamplesSearch}
 
-
-We prove that the library function \texttt{plus} is extensionally equal to a function defined with
+The following lemma shows it suffices to prove that
+Standard library's function \texttt{plus} is extensionally equal to a function defined with
 \texttt{nat\_rec}.
 
-\begin{Coqsrc}
-Definition plus_alt x y  :=
-              nat_rec  (fun n : nat => nat)
-                       y
-                       (fun z t =>  S t)
-                       x.
+\input{movies/snippets/PrimRecExamples/isPRExtEqualTrans}
 
-Lemma plus_alt_ok:
-  extEqual 2 plus_alt plus.
-Proof.
-  intro x; induction x; cbn; auto.
-  intros y; cbn; now rewrite <- (IHx y).
-Qed.
-\end{Coqsrc}
+Thus, let us define an helper and prove its equivalence with \texttt{plus}.
 
-A last lemma before the proof:
+\input{movies/snippets/PrimRecExamples/plusAlt}
 
-\begin{Coqsrc}
-Lemma isPR_extEqual_trans n : forall f g, isPR n f ->
-                                    extEqual n f g ->
-                                    isPR n g.
-Proof.
- intros f g [x Hx]; exists x.
- apply extEqualTrans with f; auto.
-Qed.
-\end{Coqsrc}
 
-Let us start now.
+\vspace{4pt}
 
-\begin{Coqsrc}
-Lemma plusIsPR : isPR 2 plus.
-Proof.
-  apply isPR_extEqual_trans with plus_alt.
-  - unfold plus_alt; apply ind1ParamIsPR.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-2 subgoals (ID 126)
-  
-  ============================
-  isPR 3 (fun _ y _ : nat => S y)
+We are now able to complete the proof.
 
-subgoal 2 (ID 127) is:
- isPR 1 (fun b : nat => b)
-\end{Coqanswer}
+\input{movies/snippets/PrimRecExamples/plusIsPRa}
+
 
 We already proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
 Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
 
-\begin{Coqanswer}
-filter010IsPR :
-forall g : nat -> nat, isPR 1 g -> isPR 3 (fun _ b _ : nat => g b)
-\end{Coqanswer}
+\vspace{4pt}
+\input{movies/snippets/PrimRecExamples/checkFilter0101IsPR}
+\vspace{4pt}
+
 
 Thus, our first subgoal is solved easily. The rest of the proof 
 is just an application of already proven lemmas.
 
+\vspace{4pt}
 
-\begin{Coqsrc}
- - unfold plus_alt; apply ind1ParamIsPR.
-    + apply filter010IsPR, succIsPR.
-    + apply idIsPR.
-  - apply plus_alt_ok. 
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/plusIsPRb}
 
 
 \begin{todo}
@@ -564,62 +363,44 @@ Thus, the reader may look at them, and invent simple examples of application for
 Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
 \end{exercise}
 
+%\input{movies/snippets/PrimRecExamples/justATest}
+
 \subsubsection{More examples}
 
 The following proof decomposes the \texttt{double} function as the composition of 
 multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
-
-\begin{Coqsrc}
-Lemma doubleIsPR : isPR 1 double.
-Proof.
-  unfold double; apply compose1_2IsPR.
-  - apply idIsPR.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/doubleIsPRa}
 
 \begin{Coqanswer}
-subgoal 1 (ID 110) is:
- isPR 1 (fun _ : nat => 2)
-subgoal 2 (ID 111) is:
+3 subgoals (ID 184)
+  
+  ============================
+  isPR 1 (fun _ : nat => 2)
+
+subgoal 2 (ID 185) is:
+ isPR 1 (fun x : nat => x)
+subgoal 3 (ID 186) is:
  isPR 2 Init.Nat.mul
 \end{Coqanswer}
 
- \begin{Coqsrc}
-  - apply const1_NIsPR.
-  - apply multIsPR.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/PrimRecExamples/doubleIsPRb}
 
 \index{primrec}{Exercises}
 \begin{exercise}
 Prove that the following functions are primitive recursive. 
 
-\begin{Coqsrc}
-Fixpoint fact n :=
-  match n with 
-          | 0 => 1
-          | S p  => n * fact p
-  end.
+\input{movies/snippets/MorePRExamples/factDef}
 
-Fixpoint exp n p :=
-  match p with
-  | 0 => 1
-  | S m =>  exp n m * n
-  end.
+\input{movies/snippets/MorePRExamples/expDef}
 
-Fixpoint tower2 n :=
-  match n with
-  | 0 => 1
-  | S p => exp 2 (tower2 p)
-  end.
-\end{Coqsrc}
-
+\input{movies/snippets/MorePRExamples/tower2Def}
 
 
 \textbf{Hint:} You may have to look again at the lemmas of the library
 \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} if you meet some difficulty.
 You may start this exercise with the file
-    \href{https://https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MorePRExamples.v}{exercises/primrec/MorePRExamples.v}.
+    \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MorePRExamples.v}{exercises/primrec/MorePRExamples.v}.
 \end{exercise}
 
 
@@ -630,7 +411,7 @@ Show that the function \texttt{min: naryFunc\,2} is primitive
 recursive.
 
 \emph{You may start this exercise with
-    \href{https://https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MinPR.v}{exercises/primrec/MinPR.v}.}
+    \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MinPR.v}{exercises/primrec/MinPR.v}.}
 
 \end{exercise}
 
@@ -639,15 +420,8 @@ recursive.
 \begin{exercise}
 Write a simple and readable proof that the Fibonacci function is primitive recursive.
 
+\input{movies/snippets/FibonacciPR/fibDef}
 
-\begin{Coqsrc}
-Fixpoint fib (n:nat) : nat :=
-  match n with
-  | 0 => 1
-  | 1 => 1
-  | S ((S p) as q) => fib q + fib p
-  end.
-\end{Coqsrc}
 
 \textbf{Hint:}  You may use as a helper the function which computes the pair \linebreak
 $(\texttt{fib}(n+1),\texttt{fib}(n))$. 
@@ -661,15 +435,14 @@ the associated constructor and projections are primitive recursive.
 
 \index{primrec}{Exercises}
 \begin{exercise}
+
 Prove the following lemmas (which may help to solve the next  exercise).
 
-\begin{Coqsrc}
-Lemma boundedSearch3 (P: naryRel 2) (b  : nat), 
-    boundedSearch P b <= b. 
+\input{movies/snippets/isqrt/boundedSearch3}
+\input{movies/snippets/isqrt/boundedSearch4}
 
-Lemma boundedSearch4 (P: naryRel 2) (b  : nat):
-  P b b = true -> P b (boundedSearch P b) = true.
-\end{Coqsrc}
+\textbf{Note:}  The function \texttt{boundedSearch} is defined
+in Library \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. 
 \end{exercise}
 
 \index{primrec}{Exercises}
@@ -723,23 +496,10 @@ is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRe
 \noindent
 \emph{From \href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}}.
 \index{hydras}{Library Prelude!iterate}
-\begin{Coqsrc}
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
-\end{Coqsrc}
 
-\begin{Coqsrc}
-Lemma iterate_le_n_Sn:
-forall f : nat -> nat,
-(forall x : nat, x <= f x) ->
-forall n x : nat, iterate f n x <= iterate f (S n) x.
-\end{Coqsrc}
+\input{movies/snippets/Iterates/iterateDef}
 
-
-
+\input{movies/snippets/Iterates/iterateLeNSN}
 
 
 Thus, our definition of the Ackermann function is as follows:
@@ -756,7 +516,7 @@ Thus, our definition of the Ackermann function is as follows:
 \index{hydras}{Exercises}
 
 \begin{exercise}
-The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions\footnote{post on \href{https://stackoverflow.com/questions/10292421/error-in-defining-ackermann-in-coq} by Anton Trunov.} of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
+The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
 Prove that the four functions are extensionnally equal.
 \end{exercise}
 
@@ -766,29 +526,17 @@ Prove that the four functions are extensionnally equal.
 The three first lemmas make us sure that our function 
 \texttt{Ack} satifies the ``usual'' equations.
 
-\begin{Coqsrc}
-Lemma Ack_0 : Ack 0 = S.
-Proof refl_equal.
+\input{movies/snippets/Ack/AckRewrite}
 
-Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
-Proof. reflexivity. Qed.
 
-Lemma Ack_S_S : forall m p,
-    Ack (S m) (S p) = Ack m (Ack (S m) p).
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\vspace{4pt}
 
 The order of growth of the Ackermann function w.r.t. its first argument is illustrated by the following equalities.
 
-\begin{Coqsrc}
-Lemma Ack_1_n n: Ack 1 n = S  (S n).
-
-Lemma Ack_2_n n: Ack 2 n = 2 * n + 3.
-
-Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3.
-
-Lemma Ack_4_n n: Ack 4 n = hyper_exp2 (S (S (S n))) - 3.
-\end{Coqsrc}
+\input{movies/snippets/Ack/Ack1N}
+\input{movies/snippets/Ack/Ack2N}
+\input{movies/snippets/Ack/Ack3N}
+\input{movies/snippets/Ack/Ack4N}
 
 
 \begin{remark}
@@ -812,10 +560,8 @@ to overcome the difficulty raised by nested recursion, by climbing up the hierar
 
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
-\begin{Coqsrc}
-Lemma nested_Ack_bound : forall k m n, 
-    Ack k (Ack m n) <= Ack (2 + max k m) n.
-\end{Coqsrc}
+
+\input{movies/snippets/Ack/nestedAckBound}
 
 
 
@@ -825,10 +571,12 @@ Please note also that for any given $n$, the unary function
 \vspace{4pt}
 
 \noindent
+
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
-\begin{Coqsrc}
-Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/AckNIsPR}
+
+
 
 
 
@@ -853,53 +601,12 @@ The following scheme allows us to write proofs by induction on the class of prim
 \emph{From \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}
 
 \index{coq}{Commands!Scheme}
-\begin{Coqsrc}
-Scheme PrimRec_PrimRecs_ind := Induction for PrimRec
-  Sort Prop
-  with PrimRecs_PrimRec_ind := Induction for PrimRecs 
-  Sort Prop.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-PrimRec_PrimRecs_ind :
-forall (P : forall n : nat, PrimRec n -> Prop)
-  (P0 : forall n n0 : nat, PrimRecs n n0 -> Prop),
-(* successor *)
-P 1 succFunc ->
+\input{movies/snippets/primRec/SchemePrimRecInd}
 
-(* zero *)
-P 0 zeroFunc ->
 
-(* projections *)
-(forall (n m : nat) (l : m < n), P n (projFunc n m l)) ->
 
-(* composition *) 
-(forall (n m : nat) (g : PrimRecs n m),
-      P0 n m g -> forall h : PrimRec m, P m h -> 
-      P n (composeFunc n m g h)) ->
-
-(* primitive recursion *)
-(forall (n : nat) (g : PrimRec n),
- P n g ->
-    forall h : PrimRec (S (S n)), P (S (S n)) h -> 
-     P (S n) (primRecFunc n g h)) ->
-
-(* empty list of functions *)
-(forall n : nat, P0 n 0 (PRnil n)) ->
-
-(* add a function to a list *)
-(forall (n m : nat) (p : PrimRec n),
-   P n p -> 
-   forall p0 : PrimRecs n m, P0 n m p0 -> 
-   P0 n (S m) (PRcons n m p p0)) ->
-
-(* conclusion ! *)
-forall (n : nat) (p : PrimRec n), P n p
-\end{Coqanswer}
-
-For instance, proving a property shared by any primitive recursive function of arity 2 leads to consider the case where that function is obtained by composition with a function of any 
-arity $m$. The same problem happens with primitive 
-recursion, where a function of arity $n$ is built out of a function of arity $n+1$ and a function of arity $n-1$.
+Please note that, in order to prove a property shared by any primitive recursive function of, say, arity 2, this induction scheme  leads you to consider an expension of the considered property to primitive recursive function of any arity.
 
 Thus the lemma we will have to prove is the following one:
 
@@ -920,22 +627,14 @@ First, we extend \texttt{max} to vectors of natural numbers (using the notations
 \texttt{VectorDef.cons x \_ v}.
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-Fixpoint max_v {n:nat} : forall (v: Vector.t nat n) , nat :=
-  match n as n0 return (Vector.t nat n0 -> nat)
-  with
-    0 => fun v => 0
-  | S p => fun (v : Vector.t nat (S p)) =>
-             max (Vector.hd v) (max_v  (Vector.tl v))
-  end. 
 
-Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
+\input{movies/snippets/MoreVectors/maxvDef}
 
-Lemma max_v_lub : forall n (v: t nat n) y,
-    (Forall (fun x =>  x <= y) v) -> max_v v <= y.
+\input{movies/snippets/MoreVectors/maxvLemmasa}
 
-Lemma max_v_ge : forall n (v: t nat n) y,  In  y  v -> y <= max_v v.
-\end{Coqsrc}
+\input{movies/snippets/MoreVectors/maxvLemmasb}
+
+\input{movies/snippets/MoreVectors/maxvLemmasc}
 
 
 We have also to convert any application
@@ -945,144 +644,88 @@ This is already defined in
 Library~\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
 
 
-\begin{Coqsrc}
-Fixpoint evalList (m : nat) (l : Vector.t nat m) {struct l} :
- naryFunc m -> nat :=
-  match l in (Vector.t _ m) return (naryFunc m -> nat) with
-  | Vector.nil => fun x : naryFunc 0 => x
-  | Vector.cons a n l' => fun x : naryFunc (S n) => evalList n l' (x a)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/primRec/evalListDef}
 
 Indeed, (\texttt{evalList $m$ $v$ $f$}) is the application to the vector $v$ of
 an uncurried version of $f$.
 In Library\href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}, we introduce a lighter notation.
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-(**  uncurried apply:
- 
-[v_apply f (x1::x2:: ... ::xn::nil)]  is [f x1 x2 ... xn] 
- *)
 
-Notation "'v_apply' f v" := (evalList _ v f) 
-     (at level 10, f at level 9).
+\input{movies/snippets/AckNotPR/vApply}
 
-Example Ex2: forall (f: naryFunc 2) x y,
-    v_apply f (x::y::nil) = f x y.
-Proof.   intros; now cbn. Qed.
 
-Example Ex4: forall (f: naryFunc 4) x y z t,
-    v_apply f (x::y::z::t::nil) = f x y z t.
-Proof.  intros; now cbn. Qed.
-\end{Coqsrc}
 
 We are now able to translate in \gallina{} the notion of ``majorization'':
 
 \index{coq}{Dependently typed functions}
-\begin{Coqsrc}
-Definition majorized {n} (f: naryFunc n) (A: naryFunc 2) : Prop :=
-  exists (q:nat), forall (v: t nat n),
-      v_apply f v <= A q  (max_v v).
 
-Definition majorizedPR {n} (x: PrimRec n) A := 
-           majorized (evalPrimRec n x) A.
+\input{movies/snippets/AckNotPR/majorizedDefs}
 
-(** For vectors of functions *)
-
-Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
-           (A : naryFunc 2):=
-  exists N, forall (v: t nat n),
-      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
-
-Definition majorizedSPR {n m} (x : PrimRecs n m) :=
-  majorizedS (evalPrimRecs _ _ x).
-\end{Coqsrc}
 
 Now, it remains to prove that any primitive function is majorized by \texttt{Ack}.
 The three base cases  are as follows:
 
-\begin{Coqsrc}
-Lemma majorSucc : majorizedPR  succFunc Ack.
+\input{movies/snippets/AckNotPR/majorSucc}
 
-Lemma majorZero : majorizedPR  zeroFunc Ack.
+\input{movies/snippets/AckNotPR/majorZero}
 
-Lemma majorProjection (n m:nat)(H: m < n):
-  majorizedPR (projFunc n m H) Ack.
-\end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorProjection}
 
 
-The rest of the cases are proved within a mutual  induction.
+
+The remaining cases are proved within a mutual  induction.
 
 \index{coq}{Mutual induction}
 
-\begin{Coqsrc}
-Lemma majorAnyPR:  forall n (x: PrimRec n),  majorizedPR  x Ack.
-Proof.
-  intros n x; induction x using PrimRec_PrimRecs_ind with
-                  (P0 := fun n m y => majorizedSPR  y Ack).
-  - apply majorSucc.
-  - apply majorZero.
-  - apply majorProjection. 
-  \end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorAnyPRa}
 
-  \begin{Coqsrc}
-  - (** function composition *)
-\end{Coqsrc}
 \begin{Coqanswer}
-1 subgoal (ID 265)
-
-  n, m : nat
-  g : PrimRecs n m
-  x : PrimRec m
-  IHx : majorizedSPR g Ack
-  IHx0 : majorizedPR x Ack
+ x : PrimRec m
+ x0 : nat
+ H : forall v : t nat n,
+   max_v (map (fun f : naryFunc n => v_apply f v)
+           (evalPrimRecs n m g)) <=
+   Ack x0 (max_v v)
+ x1 : nat
+ H0 : forall v : t nat m, v_apply (evalPrimRec m x) v <=
+                                  Ack x1 (max_v v)
   ============================
-  majorizedPR (composeFunc n m g x) Ack
+  forall v : t nat n,
+  v_apply (evalPrimRec n (composeFunc n m g x)) v <=
+  Ack (2 + Nat.max x0 x1) (max_v v)
+
 \end{Coqanswer}
 
-\begin{Coqsrc}
-  ...
- - (** primitive recursion *)
-\end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorAnyPRb}
 
 \begin{Coqanswer}
-1 subgoal (ID 265)
-  
   n : nat
   x1 : PrimRec n
   x2 : PrimRec (S (S n))
-  IHx1 : majorizedPR x1 Ack
-  IHx2 : majorizedPR x2 Ack
+  r : nat
+  Hg : forall v : t nat n,
+     v_apply (evalPrimRec n x1) v <= Ack r (max_v v)
+  s : nat
+  Hh : forall v : t nat (S (S n)),
+       v_apply (evalPrimRec (S (S n)) x2) v <= Ack s (max_v v)
   ============================
   majorizedPR (primRecFunc n x1 x2) Ack
 \end{Coqanswer}
 
-\begin{Coqsrc}
- assert (L1 : forall i (v: t nat n) ,
-               v_apply f (i::v)  <= Ack q (i + max_v v)).
-    { induction i.
-      ...
-    }
-    ...
--  (** empty list of functions *)
-\end{Coqsrc}
+The las two goals deal with vectors of functions.
 
 \begin{Coqanswer}
-1 subgoal (ID 266)
+1 subgoal (ID 289)
   
   n : nat
   ============================
   majorizedSPR (PRnil n) Ack
+
 \end{Coqanswer}
 
-\begin{Coqsrc}
-  ...
-- (** non-empty list of functions *)
-\end{Coqsrc}
-
 \begin{Coqanswer}
-1 subgoal (ID 273)
+1 subgoal (ID 296)
   
   n, m : nat
   x : PrimRec n
@@ -1092,9 +735,8 @@ Proof.
   ============================
   majorizedSPR (PRcons n m x p) Ack
 \end{Coqanswer}
-  
+
 \begin{Coqsrc}
- ...
 Qed.
 \end{Coqsrc}
 
@@ -1103,28 +745,20 @@ Qed.
 The following lemma is just a specialization of \texttt{majorAnyPR} to
 binary functions (forgetting vectors, coming back to usual notations).
 
-\begin{Coqsrc}
-Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
-  : exists (n:nat), forall x y,  f x y <= Ack n (max x  y).
-\end{Coqsrc}
+\input{movies/snippets/AckNotPR/majorPR2}
 
 We prove also a strict version of this lemma, thanks to the following property (proved in Library
 \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}~).
 
-\begin{Coqsrc}
-Lemma Ack_strict_mono_l : forall n m p, n < m ->
-                                        Ack n (S p) < Ack m (S p).
-\end{Coqsrc}
+\input{movies/snippets/Ack/AckStrictMonoL}
+
 
 \vspace{4pt}
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}.}
 
-\begin{Coqsrc}
-Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
-    exists (n:nat),
-    forall x y, 2 <= x -> 2 <= y -> f x y < Ack n (max x  y).
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/majorPR2Strict}
 
 
 
@@ -1132,58 +766,22 @@ If the Ackermann function were primitive recursive, then there would exist some 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
-\begin{Coqsrc}
-Section Impossibility_Proof.
-
-  Hypothesis HAck : isPR 2 Ack.
-  
-  Lemma Ack_not_PR : False.
-  Proof.
-    destruct (majorPR2_strict Ack HAck) as [m Hm];
-    pose (X := max 2 m); specialize (Hm X X).
-    rewrite max_idempotent in Hm; 
-    assert (Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
-    lia.
-  Qed.
-
-End Impossibility_Proof.
-\end{Coqsrc}
-
+\input{movies/snippets/AckNotPR/AckNotPR}
 
 \begin{remark}
-It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. We use an instance of \texttt{majorAnyPR} for unary functions.
+It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. To this end, we use an instance of \texttt{majorAnyPR} dealing with unary functions.
 
 \vspace{4pt}
 \noindent
 
 \emph{From \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}}.
-\begin{Coqsrc}
-Lemma majorPR1  (f: naryFunc 1)(Hf : isPR 1 f)
-  : exists (n:nat), forall x, f x <= Ack n x.
-(* ... *)
-\end{Coqsrc}
+
+\input{movies/snippets/AckNotPR/majorPR1}
 
 Then, we write  a short proof by contradiction.
 
-\begin{Coqsrc}
-Section dom_AckNotPR.
+\input{movies/snippets/AckNotPR/domAckNotPR}
 
-  Variable f : nat -> nat.
-  Hypothesis Hf : dominates f (fun n => Ack n n).
-
- Lemma dom_AckNotPR: isPR 1 f -> False.
-  Proof.
-    intros H;  destruct Hf as [N HN].
-    destruct  (majorPR1 _ H) as [M HM].
-    pose (X := Max.max N M).
-    specialize (HN X  (Max.le_max_l N M)).
-    specialize (HM X);
-      assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
-    lia.
-  Qed.
-
-End dom_AckNotPR.
-\end{Coqsrc}
 \end{remark}
 
 \begin{remark}
@@ -1207,16 +805,7 @@ This proof is  a little more complex than the preceding one.
 The function we consider is defined and proven correct in
 Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
 
-\begin{Coqsrc}
-Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
-
-Lemma l_std_ok : forall alpha : E0,
-    alpha <> Zero ->
-    forall k : nat,
-      1 <= k -> battle_length standard k (iota (cnf alpha))
-                              (l_std alpha k).
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Battle_length/BattleLength}
 
 \subsection{Proof steps}
 
@@ -1225,154 +814,125 @@ Now, let us assume that the function \texttt{l\_std} is primitive recursive.
 
 \emph{From \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems}}.
 
-\begin{Coqsrc}
-Section battle_lenght_notPR.
-
-  (** We assume that the function with computes the length 
-      of standard battles is primitive recursive *)
-  
-  Hypothesis H: forall alpha, isPR 1 (l_std alpha). 
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRa}
 
 Let us consider the hydra represented by the ordinal $\omega^\omega$.
 
-\begin{Coqsrc}
-Let alpha := Phi0 omega%e0.
-Let h := iota (cnf alpha).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRb}
+
 
 In order to get rid of the substraction in the definition of \texttt{l\_std}, we work with a helper function.
 
-\begin{Coqsrc}
-Let m k := L_ alpha (S k).
-
-Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRc}
 
 Under the hypothesis \texttt{H}, $m$ is also primitive recursive.
 
-\begin{Coqsrc}
-Remark mIsPR : isPR 1 m.
-(* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/battleLengthNotPRd}
 
 
 \subsubsection{Comparison between $F$ and $H'$}
 
-In \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}, we prove a relation between the $F$ and $H'$ functional. For any $\alpha$ and $k>0$,
+In \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}, we prove a relation between the $F$ and $H'$ functionals. For any $\alpha$ and $k>0$,
 $H'_{\omega^\alpha}(k)\geq F_\alpha(k)$.
 
-\begin{Coqsrc}
-H'_F : forall (alpha : E0) (n : nat), 
-     F_ alpha (S n) <= H'_ (Phi0 alpha) (S n) 
-\end{Coqsrc}
+\input{movies/snippets/F_alpha/HprimeF}
 
 
-Our proof of this lemma is not trivial at all. One of it sub-goals is the following one:
+Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an ide or software like alectryon.
+%%
+%%% To move the path chapter
+%%%%
 
-\begin{Coqsrc}
-  alpha : E0
-  IHalpha : forall beta : E0, beta o< alpha -> P beta
-  Halpha : Limitb alpha
-  n : nat
-  ============================
-  H'_ (Phi0 (CanonS alpha n)) (S n) <= 
-  H'_ (Phi0 (CanonS alpha (S n))) (S n)
-\end{Coqsrc}
+% \begin{Coqsrc}
+%   alpha : E0
+%   IHalpha : forall beta : E0, beta o< alpha -> P beta
+%   Halpha : Limitb alpha
+%   n : nat
+%   ============================
+%   H'_ (Phi0 (CanonS alpha n)) (S n) <= 
+%   H'_ (Phi0 (CanonS alpha (S n))) (S n)
+% \end{Coqsrc}
 
-In mathematical notation: $H'_{\omega^{\canonseq{\alpha}{n}}}(n+1) \leq
-H'_{\omega^{\canonseq{\alpha}{n+1}}}(n+1)$.
+% In mathematical notation: $H'_{\omega^{\canonseq{\alpha}{n}}}(n+1) \leq
+% H'_{\omega^{\canonseq{\alpha}{n+1}}}(n+1)$.
 
-\vspace{4pt}
+% \vspace{4pt}
 
-But there exists no lemma saying that, if 
-$\beta\leq \alpha$, then $H'_\beta(k)\leq H'_\alpha(k)$, for any $\alpha$ and $\beta$. For instance, 
-$H'_{42}(3)=45> H'_\omega(3)=7$.
-
-
-Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
-\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}):
-
-\begin{Coqanswer}
-H'_restricted_mono_l : 
-    forall (alpha beta : E0) (n : nat), 
-      Canon_plus n alpha beta -> 
-      H'_ beta n <= H'_ alpha n.
-\end{Coqanswer}
-
-Thus, it remains to prove that 
-there exists a path from ${\omega^{\canonseq{\alpha}{n+1}}}$
-to ${\omega^{\canonseq{\alpha}{n}}}$ composed of 
-$n+1$-steps.
-
-Fortunately, the Ketonen-Solovay machinery contains three lemmas which help us to build such a path.
+% But there exists no lemma saying that, if 
+% $\beta\leq \alpha$, then $H'_\beta(k)\leq H'_\alpha(k)$, for any $\alpha$ and $\beta$. For instance, 
+% $H'_{42}(3)=45> H'_\omega(3)=7$.
 
 
-\begin{Coqanswer}
-KS_thm_2_4_lemma5 :
-  forall [i : nat] [alpha beta : T1],
-  const_pathS i alpha beta ->
-  nf alpha -> alpha <> zero -> 
-  const_pathS i (phi0 alpha) (phi0 beta)
+% Looking for lemmas of the form $H'_\beta(k)\leq H'_\alpha(k)$, we find this one (from our library
+% \href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}):
 
-KS_thm_2_4 :
-  forall [lambda : T1], nf lambda ->limitb lambda ->
-  forall i j : nat, i < j -> 
-   const_pathS 0 (canonS lambda j) (canonS lambda i)
+% \begin{Coqanswer}
+% H'_restricted_mono_l : 
+%     forall (alpha beta : E0) (n : nat), 
+%       Canon_plus n alpha beta -> 
+%       H'_ beta n <= H'_ alpha n.
+% \end{Coqanswer}
 
-Cor12_1 :
-forall [alpha : T1], nf alpha ->
-      forall (beta : T1) (i n : nat),
-      beta t1< alpha ->
-     i <= n -> const_pathS i alpha beta -> 
-     const_pathS n alpha beta
-\end{Coqanswer}
+% Thus, it remains to prove that 
+% there exists a path from ${\omega^{\canonseq{\alpha}{n+1}}}$
+% to ${\omega^{\canonseq{\alpha}{n}}}$ composed of 
+% $n+1$-steps.
+
+% Fortunately, the Ketonen-Solovay machinery contains three lemmas which help us to build such a path.
+
+
+% \begin{Coqanswer}
+% KS_thm_2_4_lemma5 :
+%   forall [i : nat] [alpha beta : T1],
+%   const_pathS i alpha beta ->
+%   nf alpha -> alpha <> zero -> 
+%   const_pathS i (phi0 alpha) (phi0 beta)
+
+% KS_thm_2_4 :
+%   forall [lambda : T1], nf lambda ->limitb lambda ->
+%   forall i j : nat, i < j -> 
+%    const_pathS 0 (canonS lambda j) (canonS lambda i)
+
+% Cor12_1 :
+% forall [alpha : T1], nf alpha ->
+%       forall (beta : T1) (i n : nat),
+%       beta t1< alpha ->
+%      i <= n -> const_pathS i alpha beta -> 
+%      const_pathS n alpha beta
+% \end{Coqanswer}
   
 \subsubsection{End of the proof}
 
 We finish the proof by comparing several fast growing functions.
 
+\vspace{4pt}
+
 \emph{From \href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
 
-\begin{Coqsrc}
-H'_L_ : forall (alpha : E0) (i : nat), H'_ alpha i <= L_ alpha (S i)
-\end{Coqsrc}
+\input{movies/snippets/L_alpha/HprimeL}
 
+\vspace{4pt}
 
 \emph{From \href{../theories/html/hydras.Epsilon0.F_omega.html}{Epsilon0.F\_omega}}
+\input{movies/snippets/F_omega/FVsAck}
 
-\begin{Coqsrc}
-F_vs_Ack : forall n : nat, 2 <= n -> Ack n n <= F_ omega n
-\end{Coqsrc}
-
-
+\vspace{4pt}
 
 By transitivity, we get the inequality
 $F_\omega(k+1)\leq m(k+1)$, for any $k$.
 
-\begin{Coqsrc}
-Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/mGeFOmega}
 
 
 We finish the proof by noting that the function $m$ (composed with \texttt{S}) dominates the Ackermann function, which leads to a contradiction.
 
-\begin{Coqsrc}
-Remark m_dominates_Ack : 
-     dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
-(* ... *)
+\input{movies/snippets/Hydra_Theorems/mDominatesAck}
 
-Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
-(* ... *)
+\input{movies/snippets/Hydra_Theorems/SmNotPR}
 
-Theorem LNotPR : False.
-  Proof.
-    apply SmNotPR,  compose1_1IsPR.
-    - apply mIsPR.
-    - apply succIsPR.
-  Qed.
+\vspace{4pt}
 
-End battle_lenght_notPR.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/LNotPR}
+
+
 

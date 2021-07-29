@@ -109,23 +109,33 @@ Require Import primRec F_alpha  AckNotPR PrimRecExamples.
 Require Import F_omega.
 Import E0.
 
+(* begin snippet battleLengthNotPRa *)
+
 Section battle_lenght_notPR.
 
-  (** We assume that the function with computes the length 
-      of standard battles is primitive recursive *)
-  
   Hypothesis H: forall alpha, isPR 1 (l_std alpha).
 
+  (* end snippet battleLengthNotPRa *)
+  
+
   (** A counter example *)
+
+  (* begin snippet battleLengthNotPRb *)
 
   Let alpha := phi0 omega%e0.
   Let h := iota (cnf alpha).
 
+   (* end snippet battleLengthNotPRb *)
+
   (** let us get rid of the substraction ... *)
+
+  (* begin snippet battleLengthNotPRc *)
   
   Let m k := L_ alpha (S k).
 
-  Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat.
+  Remark m_eqn : forall k, m k = (l_std alpha k + k)%nat. (* .no-out *)
+  (* end snippet battleLengthNotPRc *)
+  
   Proof.
     intro k; assert (k <= L_ alpha (S k)).
     { assert (S k < L_ alpha (S k)).
@@ -137,7 +147,11 @@ Section battle_lenght_notPR.
     unfold m,l_std ; lia.   
   Qed.
 
-   Remark mIsPR : isPR 1 m.
+  (* begin snippet battleLengthNotPRd *)
+  
+  Remark mIsPR : isPR 1 m. (* .no-out *)
+
+   (* end snippet battleLengthNotPRd *)
   Proof.
     destruct (H alpha) as [x Hx].
     apply isPR_extEqual_trans with (fun k => (l_std alpha  k + k)%nat).
@@ -154,7 +168,11 @@ Section battle_lenght_notPR.
         now red.
   Qed.
 
-  Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k).
+  (* begin snippet mGeFOmega *)
+  
+  Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k). (* .no-out *)
+  (* end snippet mGeFOmega *)
+  
   Proof.
     intro k; rewrite m_eqn.
     transitivity (H'_ alpha (S k)).
@@ -179,8 +197,13 @@ Section battle_lenght_notPR.
     - intro; apply m_ge_Ack; auto with arith.
   Qed.
 
+  (* begin snippet mDominatesAck *)
+  
+  Remark m_dominates_Ack :
+    dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n). (* .no-out *)
 
-  Remark m_dominates_Ack : dominates (fun n =>  S (m n)) (fun n => Ack.Ack n n).
+    (* end snippet mDominatesAck *)
+
   Proof.     
     exists 3; red; intros.
     apply Lt.le_lt_trans with (m p).
@@ -188,13 +211,24 @@ Section battle_lenght_notPR.
     - auto with arith.
   Qed.
 
-  Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False.
+  (* begin snippet SmNotPR *)
+  
+  Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False. (* .no-out *)
+ (* end snippet SmNotPR *)
+
+  
   Proof.
     intro; eapply dom_AckNotPR; eauto.
     apply m_dominates_Ack; auto.
   Qed.
  
 
+  (* begin snippet LNotPR *)
+  
+  (*| 
+.. coq:: no-out 
+|*)
+  
   Theorem LNotPR : False.
   Proof.
     apply SmNotPR,  compose1_1IsPR.
@@ -204,5 +238,7 @@ Section battle_lenght_notPR.
 
 End battle_lenght_notPR.
 
+(*||*)
 
+(* end snippet LNotPR *)
 

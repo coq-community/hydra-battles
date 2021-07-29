@@ -13,6 +13,8 @@ From hydras  Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std Hydra_Termination O2H.
 Import E0 Large_Sets Hprime Paths MoreLists.
 
+
+
 Section Battle_length.
 
   Variable alpha : E0.
@@ -85,13 +87,17 @@ Section Battle_length.
   
 End Battle_length.
 
+(* begin snippet BattleLength  *)
+
 Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
 
 Lemma l_std_ok : forall alpha : E0,
     alpha <> Zero ->
     forall k : nat,
       1 <= k -> battle_length standard k (iota (cnf alpha))
-                              (l_std alpha k).
+                              (l_std alpha k). (* .no-out *)
+(* end snippet BattleLength  *)
+
 Proof. apply battle_length_std. Qed.
 
 

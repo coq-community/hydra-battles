@@ -16,12 +16,15 @@ Fixpoint naryRel (n : nat) : Set :=
   | S n => nat -> naryRel n
   end.
 
+(* begin snippet extEqualDef *)
+
 Fixpoint  extEqual (n : nat) : forall  (a b : naryFunc n), Prop :=
   match n with
     0 => fun a b => a = b
   | S p => fun a b => forall c, extEqual p (a c) (b c)
   end.
 
+(* end snippet extEqualDef *)
 
 
 Fixpoint charFunction (n : nat) : naryRel n -> naryFunc n :=

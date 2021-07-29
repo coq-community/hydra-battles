@@ -152,6 +152,18 @@ This document is \emph{not} an introductory text for \coq{}, and there are many 
 
 %%%%% ICI
 
+ 
+\subsection{Documenting theories with alectryon}
+
+Quotations of \coq{} source and answers are progressively replaced from copy-pasted \emph{verbatim} to automatically generated \emph{LaTeX} blocks, using Clément Pit-Claudel's \emph{Alectryon} tool~\cite{alectryonpaper, alectryongithub}.
+Many thanks to Jérémy Damour and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
+
+Besides the guarantee of consistency between theories and documentation, we hope to give a corpus for experimenting new ways of documenting the implementation of non-trivial mathematics on a proof assistant.
+
+
+At present, this document is a hybrid version: Chapter~\vref{chapter:primrec} is fully adapted to \emph{Alectryon}, and we just started to re-write Chapter~\vref{chapter:hydras}.
+
+
 
 
 \subsection{Trust in our proofs}
@@ -235,6 +247,8 @@ Eqdep.Eq_rect_eq.eq_rect_eq
 
 \subsection{Typographical Conventions}
 
+\subsubsection{Verbatim quotations}
+
 Quotations from our  \coq{} source are displayed as follows:
 
 
@@ -277,7 +291,15 @@ Proof.
 
 The reader may consult the full proof scripts with Proof General or CoqIDE, for instance.
 
+\subsubsection{Using Alectryon}
 
+Alectryon's \emph{LaTeX} mode cannot be mistaken for our hand-made quotations, particularly if you read a color-print.
+Here is an example from Chapter~\ref{chapter:primrec}.
+
+\vspace{4pt}
+
+
+\input{movies/snippets/Ack/AckFixpointIterate.tex}
 \subsection{Active Links}
 The  links which appear in this pdf  document lead are of three possible kinds of destination:
 \begin{itemize}

@@ -73,7 +73,7 @@ we found in the following articles.
 \chapter{Hydras and hydra games}
 
 \label{sec:orgheadline91}
-
+\label{chapter:hydras}
 
 
 
@@ -465,13 +465,8 @@ For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \te
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#Hydra}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Inductive Hydra : Set :=
-| node :  Hydrae -> Hydra
-with Hydrae : Set :=
-| hnil : Hydrae
-| hcons : Hydra -> Hydrae -> Hydrae.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/HydraDef}
+
 
 %\index{To do}
 \index{hydras}{Projects}
@@ -489,14 +484,7 @@ Look for an existing library on trees with nodes of arbitrary arity, in order to
 type \texttt{Hydrae}:
 
 
-\begin{Coqalt}
-Module Alt.
-
-Inductive Hydra: Set :=
-  hnode (daughters : list Hydra).
-
-End Alt.
-\end{Coqalt}
+\input{movies/snippets/Hydra_Definitions/HydraAlt}
 
 Using this representation, re-define all the constructions of this chapter.
 You will probably have to use patterns described for instance in~\cite{BC04} or the archives of the Coq-club~\cite{Coq}.
@@ -522,17 +510,8 @@ We provide several notations for hydra patterns  which occur often in our develo
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#head}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-(** heads *)
-Notation head := (node hnil).
- 
-(** nodes  with 1, 2 or 3 daughters *)
-Notation hyd1 h := (node (hcons h hnil)).
-Notation hyd2 h h' := (node (hcons h (hcons h' hnil))).
-Notation hyd3 h h' h'' := 
-                   (node (hcons h (hcons h' (hcons h'' hnil)))).
-\end{Coqsrc}
 
+\input{movies/snippets/Hydra_Definitions/headsEtc}
 
 For instance, the hydra \texttt{Hy}  of Figure~\vref{fig:Hy} is defined in \emph{Gallina} as follows:
 
@@ -540,14 +519,7 @@ For instance, the hydra \texttt{Hy}  of Figure~\vref{fig:Hy} is defined in \emph
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html\#Hy}{Hydra.Hydra\_Examples}}
 
-\begin{Coqsrc}
-Example Hy := hyd3 head
-                   (hyd2
-                      (hyd1 
-                         (hyd2 head head))
-                      head) 
-                   head.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Examples/Hy}
 
 
 
@@ -558,18 +530,9 @@ will help us to describe and reason about replications in hydra battles.
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#hcons_mult}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
-  match n with 
-  | O => s
-  | S p => hcons h (hcons_mult h p s)
-  end.
+\input{movies/snippets/Hydra_Definitions/hconsMult}
 
-(** A node with n clones of the same daughter *)
 
-Definition hyd_mult h n :=
-  node (hcons_mult h n hnil).
-\end{Coqsrc}
 
 \vspace{4mm}
 
@@ -581,12 +544,9 @@ For instance, the hydra $Hy''$ of Fig~\vref{fig:Hy3}  can be defined in \coq{} a
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
-\begin{Coqsrc}
-Example Hy'' := 
-     hyd2 head
-          (hyd2 (hyd_mult (hyd1 head) 5)
-                head).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Examples/HySecond}
+
+
 
 
 
@@ -606,47 +566,19 @@ Let us define for instance the function which  computes the number of nodes of a
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 
+\input{movies/snippets/Hydra_Definitions/hsize}
 
-\begin{Coqsrc}
-Fixpoint hsize (h:Hydra) : nat :=
-  match h with node l => S (lhsize l)
-  end
-with lhsize l : nat :=
-  match l with hnil => 0
-            | hcons h hs => hsize h + lhsize hs 
-  end.
-
- Compute hsize Hy.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = 9
-     : nat 
-\end{Coqanswer}
+\input{movies/snippets/Hydra_Examples/HySize}
 
 
 Likewise, the \emph{height} (maximum distance between the foot and a head) 
 is defined by mutual recursion:
 
-\begin{Coqsrc}
-Fixpoint height  (h:Hydra) : nat :=
-  match h with node l => lheight l
-  end
-with lheight l : nat :=
-  match l with 
-  | hnil => 0
-  | hcons h hs => Max.max (S (height h)) (lheight hs)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/height}
 
-\begin{Coqsrc}
-Compute height Hy.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Examples/HyHeight}
 
-\begin{Coqanswer}
- = 4
-     : nat  
-\end{Coqanswer}
+
 
 \index{hydras}{Exercises}
 
@@ -670,64 +602,34 @@ In this section, we show how induction principles are used to prove properties o
 
 One may try to use the default tactic of proof by induction, which corresponds to an application of the automatically  generated  induction principle for  type \texttt{Hydra}:
 
-\begin{Coqanswer}
-Hydra_ind :
-forall P : Hydra -> Prop,
-(forall h : Hydrae, P (node h)) -> forall h : Hydra, P h
-\end{Coqanswer}
+\input{movies/snippets/Hydra_Examples/HydraInd}
 
-Ler us start a simple proof by induction.
+Let us start a simple proof by induction.
 
 \vspace{4pt}
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
-\begin{Coqbad}
-Module Bad.
+\input{movies/snippets/Hydra_Examples/BadInductiona}
 
-Lemma height_lt_size (h:Hydra) :
-  height h <= hsize h.
-Proof.
-  induction h as [s].
-\end{Coqbad}
 
-\begin{Coqanswer}
-1 subgoal, subgoal 1 (ID 11)
-  
-  s : Hydrae
-  ============================
-   height (node s) <= hsize (node s)
-\end{Coqanswer}
 
 We might be tempted to do an induction on the sequence \texttt{s}:
 
-% \begin{Coqbad}
-% induction  s as [ | h s'].
-%   -   cbn; auto with arith.
-%   - 
-% \end{Coqbad}
+\input{movies/snippets/Hydra_Examples/BadInductionb}
 
+The first subgoal is trivial.
 
-\begin{Coqanswer}
- 1 focused subgoal
-(unfocused: 0), subgoal 1 (ID 19)
-  
-  h : Hydra
-  s' : Hydrae
-  IHs' : height (node s') <= hsize (node s')
-  ============================
-   height (node (hcons h s')) <= hsize (node (hcons h s'))
+\input{movies/snippets/Hydra_Examples/BadInductionc}
 
-\end{Coqanswer}
+Let us look at the second sub-goal of the induction.
 
-Note that the displayed subgoal does not contain any assumption on \texttt{h}, thus there is no way to 
-infer any property about the height and size of the hydra \texttt{(hcons h t)}.
+\input{movies/snippets/Hydra_Examples/BadInductiond}
 
-\begin{Coqbad}
-Abort.
+We notice that this subgoal does not contain any hypothesis
+on the height and size of the hydra \texttt{h}. So, it looks hard to prove the conclusion. Let's stop.
 
-End Bad.
-\end{Coqbad}
+\input{movies/snippets/Hydra_Examples/BadInductione}
 
 \subsubsection{A Principle of mutual induction}
 In order to get an appropriate induction scheme for the types 
@@ -737,26 +639,10 @@ In order to get an appropriate induction scheme for the types
 \index{coq}{Mutually inductive types}
 \index{coq}{Commands!Scheme}
 
-\begin{Coqsrc}
-Scheme Hydra_rect2 := Induction for Hydra Sort Type
-with Hydrae_rect2 := Induction for Hydrae Sort Type.
-\end{Coqsrc}  
+\input{movies/snippets/Hydra_Definitions/HydraRect2}
 
+\input{movies/snippets/Hydra_Examples/HydraRect2Check}
 
-\begin{Coqsrc}
-Check Hydra_rect2.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-Hydra_rect2
- : forall (P : Hydra -> Type) (P0 : Hydrae -> Type),
-   (forall h : Hydrae, P0 h -> P (node h)) ->
-    P0 hnil ->
-    (forall h : Hydra, P h -> 
-             forall h0 : Hydrae, P0 h0 -> P0 (hcons h h0)) ->
-    forall h : Hydra, P h
-\end{Coqanswer}  
 
 
 
@@ -768,25 +654,15 @@ Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt
 
 \vspace{4pt}
 \noindent
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
+
+\input{movies/snippets/Hydra_Definitions/hForall}
+
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
-\begin{Coqsrc}
-(** All elements of s satisfy P *)
+\input{movies/snippets/Hydra_Examples/heightLtSizea}
 
-Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
-  match s with
-      hnil => True
-    | hcons h s' => P h /\ h_forall P s'
-  end.
- \end{Coqsrc}
 
- \begin{Coqsrc}
-Lemma height_lt_size (h:Hydra) :
- height h < hsize h.
-Proof.
-  induction h using Hydra_rect2  with 
-  (P0 :=  h_forall (fun h =>  height h < hsize h)).
- \end{Coqsrc}
 
 \begin{enumerate}
 \item The first subgoal is as follows:

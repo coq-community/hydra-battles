@@ -230,40 +230,57 @@ Qed.
 
   (** Maximum of a vector of nat *)
 
+  (* begin snippet maxvDef *)
+  
   Fixpoint max_v {n:nat} (v: Vector.t nat n) : nat :=
     match v  with
     | nil =>  0
     | cons x t => max x (max_v t)
     end.
 
+   (* end snippet maxvDef *)
 
+  (* begin snippet maxvLemmasa *)
 
-Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y.
-Proof.
-  intros; cbn. now rewrite max_0_r.
-Qed.
+  Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y. (* .no-out *)
 
-Lemma max_v_lub : forall n (v: t nat n) y,
-    (Forall (fun x =>  x <= y) v) ->
-    max_v v <= y.
-Proof.
-  induction n.  
-  -  intros v; rewrite (t_0_nil _ v); cbn.
-     intros; auto with arith.
-  -   intros v; rewrite (decomp _ _ v); cbn.
-      intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
-Qed.
+   (* end snippet maxvLemmasa *)
 
+  Proof.
+    intros; cbn. now rewrite max_0_r.
+  Qed.
+ 
+  (* begin snippet maxvLemmasb *)
+  
+  Lemma max_v_lub : forall n (v: t nat n) y,
+      (Forall (fun x =>  x <= y) v) ->
+      max_v v <= y. (* .no-out *)
 
-Lemma max_v_ge : forall n (v: t nat n) y,
-    In  y  v -> y <= max_v v.
-Proof.
-  induction n.  
-  -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
-  -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
-     +  cbn in H0; subst; apply le_max_l. 
-     + cbn in H0; specialize (IHn _ _ H0); lia.
-Qed.
+  (* end snippet maxvLemmasb *)
+  
+  Proof.
+    induction n.  
+    -  intros v; rewrite (t_0_nil _ v); cbn.
+       intros; auto with arith.
+    -   intros v; rewrite (decomp _ _ v); cbn.
+        intros;  destruct (Forall_inv _ _ _  _ H). apply max_lub; auto. 
+  Qed.
+
+  (* begin snippet maxvLemmasc *)
+  
+  Lemma max_v_ge : forall n (v: t nat n) y,
+      In  y  v -> y <= max_v v. (* .no-out *)
+  
+    (* end snippet maxvLemmasc *)
+
+  Proof.
+    induction n.  
+    -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
+    -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
+       +  cbn in H0; subst; apply le_max_l. 
+       + cbn in H0; specialize (IHn _ _ H0); lia.
+  Qed.
+
 
 Lemma max_v_tl {n:nat}(v:  Vector.t nat (S n)) :
   max_v (Vector.tl v) <= max_v v.

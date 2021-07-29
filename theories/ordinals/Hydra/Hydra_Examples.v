@@ -2,6 +2,12 @@ From Coq Require Import  Lia  Max.
 From hydras Require Import Hydra_Lemmas More_Arith.
 Open Scope nat_scope.
 
+(* begin snippet HydraRect2Check *)
+
+Check Hydra_rect2.
+
+(* end snippet HydraRect2Check *)
+
 
 Module Examples.
 
@@ -9,13 +15,28 @@ Module Examples.
   Example ex1 : forall h h', R1 (hyd3 h head h') (hyd2 h h').
   Proof. split.  right; left. Qed.
 
-
+  (* begin snippet Hy *)
+  
   Example Hy := hyd3 head
                      (hyd2
                         (hyd1 
                            (hyd2 head head))
                         head) 
                      head.
+  (* end snippet Hy *)
+
+  (* begin snippet HySize *)
+
+  Compute hsize Hy.
+
+  (* end snippet HySize *)
+
+
+  (* begin snippet HyHeight *)
+
+  Compute height Hy.
+
+  (* end snippet HyHeight *)
   
   Example Hy' := hyd2 head
                       (hyd2
@@ -27,12 +48,15 @@ Module Examples.
   Example ex4:  round Hy Hy'.
   Proof.  chop_off 2. Qed.
 
+  (* begin snippet HySecond *)
   
   Example Hy'' := 
     hyd2 head
          (hyd2
             (hyd_mult (hyd1 head) 5)
             head).
+
+  (* end snippet HySecond *)
   
   Example Hy'H'' : round Hy' Hy''.
   Proof.
@@ -126,32 +150,62 @@ Module Examples.
 
 End Examples.
 
+(* begin snippet HydraInd *)
+
+Check Hydra_ind.
+
+(* end snippet HydraInd *)
+
+(* begin snippet BadInductiona *)
 
 Module Bad.
 
   Lemma  height_lt_size (h:Hydra) :
-    height h < hsize h.
-  Proof.
+    height h < hsize h. (* .no-out *)
+  Proof. (* .no-out *)
     induction h as [s].
-    induction s as [| h s'].
-    - simpl.  auto with arith.
-    - cbn.
+
+    (* end snippet BadInductiona *)
+
+    (* begin snippet BadInductionb *)
+    
+    induction s as [| h s']. (* .no-out *)
+
+    (* end snippet BadInductionb *)
+
+    (* begin snippet BadInductionc *)
+    
+    -  (* .no-in  .unfold *) simpl; auto with arith. (* .no-out *)
+
+    (* end snippet BadInductionc *)
+
+    (* begin snippet BadInductiond *)
+       
+    -  (* .no-in .unfold *)
+      (* end snippet BadInductiond *)
+      
+      (* begin snippet BadInductione *)
+      
   Abort.  
 
 End Bad.
+(* end snippet BadInductione *)
 
+(* begin snippet heightLtSizea *)
 
-Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
-  match s with
-    hnil => True
-  | hcons h s' => P h /\ h_forall P s'
-  end.
+(*|
+.. coq:: no-out
+|*)
 
-Lemma  height_lt_size (h:Hydra) :  height h < hsize h.
-Proof.
+Lemma  height_lt_size (h:Hydra) :  height h < hsize h. 
+Proof. 
   induction h using Hydra_rect2  with 
       (P0 :=  h_forall (fun h =>  height h < hsize h)).
-  -  destruct h as [ | h s'].
+(*||*)
+
+(* end snippet heightLtSizea *)
+  
+  -  destruct h as [ | h s']. 
      + cbn; auto with arith.
      +  simpl.  destruct IHh; assert (lheight s' <= lhsize s').
         { clear H; induction s'. 
@@ -171,7 +225,6 @@ Proof.
         *   lia. 
         *   specialize (max_le_plus (height h) n); lia.
   -  easy.   
-  -  split;auto. 
+  -  split;auto.
 Qed. 
-
 

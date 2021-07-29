@@ -10,13 +10,19 @@
 From Coq Require Export Relations Max.
 From hydras Require Import T1 Epsilon0.
 
+(* begin snippet HydraDef *)
+
 Inductive Hydra : Set :=
 |  node :  Hydrae -> Hydra
 with Hydrae : Set :=
 | hnil : Hydrae
 | hcons : Hydra -> Hydrae -> Hydrae.
 
+(* end snippet HydraDef *)
+
 (** Alternative representation (discarded) *)
+
+(* begin snippet HydraAlt *)
 
 Module Alt.
 
@@ -25,13 +31,30 @@ Module Alt.
 
 End Alt.
 
+(* end snippet HydraAlt *)
 
 (**   Mutual induction scheme for types Hydra and Hydrae 
  *)
 
+
+(* begin snippet HydraRect2 *)
+
 Scheme Hydra_rect2 := Induction for Hydra Sort Type
 with   Hydrae_rect2 := Induction for Hydrae Sort Type.
 
+(* end snippet HydraRect2 *)
+
+(* begin snippet hForall *)
+
+(** All elements of s satisfy P *)
+
+Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
+  match s with
+    hnil => True
+  | hcons h s' => P h /\ h_forall P s'
+  end.
+
+(* end snippet hForall *)
 
 Lemma h_eq_dec : forall h h':Hydra, {h = h'}+{h <> h'}
 with hs_eq_dec : forall l l':Hydrae, {l = l'}+{l <> l'}.
@@ -44,6 +67,8 @@ Defined.
 (**   Number of nodes (a.k.a. size)
  *)
 
+(* begin snippet hsize *)
+
 Fixpoint hsize (h:Hydra) : nat :=
   match h with node l => S (lhsize l)
   end
@@ -53,10 +78,12 @@ with lhsize l : nat :=
          | hcons h hs => hsize h + lhsize hs
   end.
 
-
+(* end snippet hsize *)
 
 (** ***  height (length of longest branch) 
  *)
+
+(* begin snippet height *)
 
 Fixpoint height  (h:Hydra) : nat :=
   match h with node l => lheight l
@@ -64,9 +91,10 @@ Fixpoint height  (h:Hydra) : nat :=
 with
 lheight l : nat :=
   match l with hnil => 0
-            | hcons h hs => Max.max (S (height h)) (lheight hs)
+          | hcons h hs => Max.max (S (height h)) (lheight hs)
   end.
 
+(* end snippet height *)
 
 (** ** Abbreviations 
  *)
@@ -74,18 +102,23 @@ lheight l : nat :=
 (** *** Heads : A head is just a node without daughters
 *)
 
+(* begin snippet headsEtc *)
+
 Notation head := (node hnil).
 
 (** *** Hydra with 1, 2 or 3 daughters 
  *)
 
-
 Notation hyd1 h := (node (hcons h hnil)).
 Notation hyd2 h h' := (node (hcons h (hcons h' hnil))).
 Notation hyd3 h h' h'' := (node (hcons h (hcons h' (hcons h'' hnil)))).
 
+(* end snippet headsEtc *)
+
 (** *** Adds n copies of the same hydra h at the right of  s 
 *)
+
+(* begin snippet hconsMult *)
 
 Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
   match n with 
@@ -100,7 +133,7 @@ Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
 Definition hyd_mult h n :=
   node (hcons_mult h n hnil).
 
-
+(* end snippet hconsMult *)
 
 (** ** Managing sequences of hydras
  *)
