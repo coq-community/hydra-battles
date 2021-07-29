@@ -1,4 +1,5 @@
 \chapter{Primitive recursive functions}
+\label{chapter:primrec}
 
 \section{Introduction}
 Primitive recursive functions are a small class of total functions, corresponding to the expressive power of a simple imperative programming language without \textbf{while} loops, in which every program execution terminates.
@@ -54,19 +55,19 @@ than 45K lines of scripts. The part dedicated to primitive recursive functions a
 Thus, we propose a partial exploration of this library, through examples and exercises. Our additions to the original library --- mainly examples and counter-examples ---,
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
 
-In particular, the library \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/MoreAck/AckNotPR.v}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
-Moreover, the library \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/Hydra/Hydra_Theorems.v}{Hydra.Hydra\_Theorems} contains 
+In particular, the library \href{../theories/html/hydras.MoreAck.html}{MoreAck.AckNotPR} contains the well-known  proof that the Ackermann function is not primitive recursive (see Section~\vref{sect:ack-not-PR}).
+Moreover, the library \href{../theories/html/hydras.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} contains 
 a proof that the length of an hydra battle (according to the initial replication factor) is not primitive recursive in general.
 
 \section{Basic definitions}
 \index{maths}{Primitive recursive functions}
 
 The formal definition of primitive recursive functions lies in the library
-\href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/Ackermann/primRec.v}{Ackermann.primRec},
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
 with preliminary definitions in 
-\href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/Ackermann/extEqualNat.v}{Ackermann.extEqualNat}
+\href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}
 and
-\href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/Ackermann/misc.v}{Ackermann.misc}.
+\href{../theories/html/hydras.Ackermann.misc.html}{Ackermann.misc}.
 
 \subsection{Functions of arbitrary arity}
 

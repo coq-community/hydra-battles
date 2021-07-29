@@ -36,9 +36,25 @@ End Alt.
 (**   Mutual induction scheme for types Hydra and Hydrae 
  *)
 
+
+(* begin snippet HydraRect2 *)
+
 Scheme Hydra_rect2 := Induction for Hydra Sort Type
 with   Hydrae_rect2 := Induction for Hydrae Sort Type.
 
+(* end snippet HydraRect2 *)
+
+(* begin snippet hForall *)
+
+(** All elements of s satisfy P *)
+
+Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
+  match s with
+    hnil => True
+  | hcons h s' => P h /\ h_forall P s'
+  end.
+
+(* end snippet hForall *)
 
 Lemma h_eq_dec : forall h h':Hydra, {h = h'}+{h <> h'}
 with hs_eq_dec : forall l l':Hydrae, {l = l'}+{l <> l'}.

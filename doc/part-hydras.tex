@@ -73,7 +73,7 @@ we found in the following articles.
 \chapter{Hydras and hydra games}
 
 \label{sec:orgheadline91}
-
+\label{chapter:hydras}
 
 
 
@@ -639,26 +639,10 @@ In order to get an appropriate induction scheme for the types
 \index{coq}{Mutually inductive types}
 \index{coq}{Commands!Scheme}
 
-\begin{Coqsrc}
-Scheme Hydra_rect2 := Induction for Hydra Sort Type
-with Hydrae_rect2 := Induction for Hydrae Sort Type.
-\end{Coqsrc}  
+\input{movies/snippets/Hydra_Definitions/HydraRect2}
 
+\input{movies/snippets/Hydra_Examples/HydraRect2Check}
 
-\begin{Coqsrc}
-Check Hydra_rect2.
-\end{Coqsrc}
-
-
-\begin{Coqanswer}
-Hydra_rect2
- : forall (P : Hydra -> Type) (P0 : Hydrae -> Type),
-   (forall h : Hydrae, P0 h -> P (node h)) ->
-    P0 hnil ->
-    (forall h : Hydra, P h -> 
-             forall h0 : Hydrae, P0 h0 -> P0 (hcons h h0)) ->
-    forall h : Hydra, P h
-\end{Coqanswer}  
 
 
 
@@ -670,25 +654,15 @@ Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt
 
 \vspace{4pt}
 \noindent
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
+
+\input{movies/snippets/Hydra_Definitions/hForall}
+
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
-\begin{Coqsrc}
-(** All elements of s satisfy P *)
+\input{movies/snippets/Hydra_Examples/heightLtSizea}
 
-Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
-  match s with
-      hnil => True
-    | hcons h s' => P h /\ h_forall P s'
-  end.
- \end{Coqsrc}
 
- \begin{Coqsrc}
-Lemma height_lt_size (h:Hydra) :
- height h < hsize h.
-Proof.
-  induction h using Hydra_rect2  with 
-  (P0 :=  h_forall (fun h =>  height h < hsize h)).
- \end{Coqsrc}
 
 \begin{enumerate}
 \item The first subgoal is as follows:

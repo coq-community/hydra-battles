@@ -2,6 +2,12 @@ From Coq Require Import  Lia  Max.
 From hydras Require Import Hydra_Lemmas More_Arith.
 Open Scope nat_scope.
 
+(* begin snippet HydraRect2Check *)
+
+Check Hydra_rect2.
+
+(* end snippet HydraRect2Check *)
+
 
 Module Examples.
 
@@ -184,21 +190,22 @@ Module Bad.
 
 End Bad.
 (* end snippet BadInductione *)
-  
 
+(* begin snippet heightLtSizea *)
 
+(*|
+.. coq:: no-out
+|*)
 
-Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
-  match s with
-    hnil => True
-  | hcons h s' => P h /\ h_forall P s'
-  end.
-
-Lemma  height_lt_size (h:Hydra) :  height h < hsize h.
-Proof.
+Lemma  height_lt_size (h:Hydra) :  height h < hsize h. 
+Proof. 
   induction h using Hydra_rect2  with 
       (P0 :=  h_forall (fun h =>  height h < hsize h)).
-  -  destruct h as [ | h s'].
+(*||*)
+
+(* end snippet heightLtSizea *)
+  
+  -  destruct h as [ | h s']. 
      + cbn; auto with arith.
      +  simpl.  destruct IHh; assert (lheight s' <= lhsize s').
         { clear H; induction s'. 
@@ -218,7 +225,6 @@ Proof.
         *   lia. 
         *   specialize (max_le_plus (height h) n); lia.
   -  easy.   
-  -  split;auto. 
+  -  split;auto.
 Qed. 
-
 
