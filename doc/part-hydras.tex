@@ -758,15 +758,9 @@ predicate \texttt{S0}, associated with the removing of one head from a sequence 
 
 \vspace{4pt}\emph{From Module\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Inductive S0 :  relation Hydrae :=
-| S0_first : forall s, S0  (hcons head s) s
-| S0_rest : forall  h s s',  S0  s s' ->
-                             S0  (hcons h s) (hcons h s').
+\input{movies/snippets/Hydra_Definitions/S0Def}
 
-Inductive R1  :  Hydra -> Hydra -> Prop :=
-| R1_intro : forall s s', S0 s s' -> R1 (node s) (node s').
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/R1Def}
 
 \subsubsection{Example}
 \label{sec:orgheadline45}
@@ -778,12 +772,7 @@ the configuration represented in Fig.~\ref{fig:Hy-prime}.
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
 
 
-\begin{Coqsrc}
-Example Hy_1 : R1 Hy Hy'.
-Proof. 
-  split; right; right; left.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Examples/Hy1}
 
 
 \subsection{Chopping off a head at distance \texorpdfstring{$\geq 2$}{>= 2} from the foot (relation R2) }
@@ -799,13 +788,7 @@ $n+1$ copies of $h'$, where  the proposition (\texttt{R1 h h'}) holds, in other 
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#S1}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Inductive S1 (n:nat)  : Hydrae -> Hydrae -> Prop :=
-| S1_first : forall s h h' ,   R1 h h' -> 
-                  S1 n (hcons h s) (hcons_mult h' (S n) s)
-| S1_next : forall h s s',  S1 n s s' ->
-                   S1 n (hcons h s) (hcons h s').
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/S1Def}
 
 
 The rest of the definition is composed of two mutually inductive relations on hydras and sequences of hydras. The first constructor of \texttt{R2} describes the case where the chopped head is exactly at height $2$. The others constructors allow us to consider beheadings at height strictly greater than $2$.
@@ -814,20 +797,7 @@ The rest of the definition is composed of two mutually inductive relations on hy
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#R2}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Inductive R2 (n:nat)  :  Hydra -> Hydra -> Prop :=
-| R2_intro : forall s s', S1 n s s' -> R2 n (node s) (node s')
-| R2_intro_2 : forall s s', S2 n s s' -> R2 n (node s) (node s')
-
-with S2 (n:nat) :  Hydrae -> Hydrae -> Prop :=
-|  S2_first : forall h h' s ,
-               R2 n  h h'  -> 
-               S2  n (hcons h s) (hcons h'  s)
-|  S2_next  : forall h   r r',
-               S2 n   r r' ->
-               S2 n (hcons h r) (hcons h r').                  
-\end{Coqsrc}
-
+\input{movies/snippets/Hydra_Definitions/R2Def}
 
 \subsubsection{Example}
 Let us prove the transformation of \texttt{Hy'} into \texttt{Hy''} (see Fig.~\vref{fig:Hy3}). We use an experimental set of tactics for specifying the place where the 
@@ -836,16 +806,8 @@ interaction between Hercules and the hydra holds.
 
 \vspace{4pt}\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}. 
 
-\begin{Coqsrc}
-Example R2_example:  R2 4 Hy' Hy''.
-Proof.
-    (** move to 2nd sub-hydra (0-based indices) *) R2_up 1. 
-    (** move to first sub-hydra *)  R2_up 0.
-    (** we're at distance 2 from the to-be-chopped-off head 
-        let's go to the first daughter, 
-        then chop-off the leftmost head *)  r2_d2  0 0. 
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Examples/R2Example}
+
 
 The reader is encouraged to look at all the successive subgoals of this example.
 \emph{Please consider also exercise~\vref{exo:interactive-battle}.}

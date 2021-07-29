@@ -63,15 +63,18 @@ Module Examples.
     h_search_n 4; r2_up 1; r2_up 0; r2_d2 0 1.
   Qed.
   
-  Example R2_example:  R2 4 Hy' Hy''.
+  (* begin snippet R2Example *)
+  
+  Example R2_example:  R2 4 Hy' Hy''. (* .no-out *)
   Proof.
     (** move to 2nd sub-hydra (0-based indices) *) r2_up 1. 
     (** move to first sub-hydra *)  r2_up 0.
     (** we're at distance 2 from the to-be-chopped-off head 
-        let's go to the first daughter, then chop-off the leftmost head *)
-    r2_d2 0 0. 
+        let's go to the first daughter, 
+        then chop-off the leftmost head *) r2_d2 0 0. 
   Qed.
   
+  (* end snippet R2Example *)
   
   Example Exx :  {h' | round Hy' h'}.
   Proof.
@@ -104,12 +107,15 @@ Module Examples.
   Example height_not_strictly_decreasing : height Hy'' = height Hy'''.
   Proof. reflexivity.  Qed.
   
+  (* begin snippet Hy1 *)
   
-  Example Hy_1 : R1 Hy Hy'.
-  Proof.
-    repeat constructor.
+  Example Hy_1 : R1 Hy Hy'. (* .no-out *)
+  Proof. (* .no-out *)
+    repeat constructor. (* .no-out *)
   Qed.
   
+  (* end snippet Hy1 *)
+
   
   Example Hy_2 : R2 4 Hy' Hy''.
   Proof.

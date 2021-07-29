@@ -199,10 +199,14 @@ Before giving the definition in Coq of [round_n], we need to define several  aux
  The proposition [S0 s s'] holds if the sequence [s'] is obtained by removing one head from [s]
 *)
 
+(* begin snippet S0Def *)
+
 Inductive S0 :  relation Hydrae :=
 | S0_first : forall s, S0  (hcons head s) s
 | S0_rest : forall  h s s',
     S0  s s' ->  S0  (hcons h s) (hcons h s').
+
+(* end snippet S0Def *)
 
 (** *** R1
 
@@ -210,11 +214,12 @@ Inductive S0 :  relation Hydrae :=
 
 *)
 
+(* begin snippet R1Def *)
 
 Inductive R1  :  relation Hydra :=
 | R1_intro : forall s s', S0 s s' -> R1 (node s) (node s').
 
-
+(* end snippet R1Def *)
 
  (** *** S1 
 
@@ -222,7 +227,9 @@ Inductive R1  :  relation Hydra :=
   Thus, [n] is the number of new replicas of [h']. 
 
  *)
-  
+
+(* begin snippet S1Def *)
+
 Inductive S1 (n:nat)  : relation  Hydrae  :=
 | S1_first : forall s h h' ,
               R1 h h' -> 
@@ -231,14 +238,8 @@ Inductive S1 (n:nat)  : relation  Hydrae  :=
                  S1 n s s' ->
                  S1 n (hcons h s) (hcons h s').
 
-(* begin hide *)
-Example rep0 : forall  s h h', R1 h h' -> S1 0 (hcons h s) (hcons h' s).
-Proof.
-  intros  s h h' H;
-  change (hcons h' s) with (hcons_mult h' 1 s);
-  now left.
-Qed.
-(* end hide *)
+(* end snippet S1Def *)
+
 
 (**  *** R2
 
@@ -249,6 +250,8 @@ The proposition [R2 n h h'] holds if some sub-hydra [h0] of [h] has been replace
 
 *)
 
+(* begin snippet R2Def *)
+
 Inductive R2 (n:nat)  :  relation Hydra  :=
 | R2_intro : forall s s', S1 n s s' -> R2 n (node s) (node s')
 | R2_intro_2 : forall s s', S2 n s s' -> R2 n (node s) (node s')
@@ -258,6 +261,8 @@ with S2 (n:nat) :  relation Hydrae :=
          R2 n   h h'->  S2  n (hcons h s) (hcons h'  s)
      |  S2_next  : forall h   r r',
          S2 n r r' ->  S2 n (hcons h r) (hcons h r').
+
+(* end snippet R2Def *)
 
 (**  *** [round_n]
 
