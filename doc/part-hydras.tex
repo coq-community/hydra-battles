@@ -822,19 +822,15 @@ First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is t
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#round_n}{Hydra.Hydra\_Definitions}}
 
 \index{hydras}{Library Hydra!Predicates!round\_n}
-\begin{Coqsrc}
-Definition round_n n h h' := R1 h h' \/ R2 n h h'.  
-\end{Coqsrc}
+
+\input{movies/snippets/Hydra_Definitions/roundNDef}
 
 By abstraction over \texttt{n}, we define a \emph{round} (small step) of a battle:
 
 \index{hydras}{Library Hydra!Predicates!round}
 \label{sect:infix-round}
-\begin{Coqsrc}
-Definition round h h' := exists n,  round_n n h h'.
 
-Infix "-1->" := round (at level 60).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/roundDef}
 
 \index{hydras}{Projects}
 
@@ -850,25 +846,14 @@ Using library \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Re
 
 \label{sect:infix-rounds} 
 
-\begin{Coqsrc}
-Definition round_plus := clos_trans_1n Hydra round.
-Infix "-+->" := rounds (at level 60).
-
-Definition round_star h h' := h = h' \/ round_plus h h'.
-Infix "-*->" := round_star (at level 60).
-\end{Coqsrc}
-
+\input{movies/snippets/Hydra_Definitions/roundPlus}
 
 \index{hydras}{Exercises}
 
 \begin{exercise}
-Prove the following lemma:
+  Prove that if \texttt{$h$ -+-> $h'$}, then
+  the height of $h'$ is less or equal than the height of $h$.
 
-\begin{Coqsrc}
-Lemma rounds_height : forall h h', 
-   h -+-> h' -> height h' <= height h.  
-\end{Coqsrc}
-  
 \end{exercise}
 
 \begin{remark}
@@ -951,34 +936,23 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 \label{types:Battle}
 \index{hydras}{Library Hydra!Type classes!Battle}
 
-\begin{Coqsrc}
-Definition dep_round_t := nat -> Hydra -> Hydra -> Prop.
+\input{movies/snippets/Hydra_Definitions/BattleDef}
 
-Class Battle :=  
-    { battle_rel : dep_round_t;
-      battle_inclusion : forall i h h', battle_rel i h h' -> round h h'}.
-\end{Coqsrc}
 
 The most general class of battles is \texttt{free}, which allows the hydra to chose any replication factor at every step:
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#free}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Program Instance free : Battle := Build_Battle (fun _  h h' => round h h') _.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/freeDef}
 
 We chosed to call \emph{standard} the kind of battles which appear  most often in the litterature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Program Instance standard : Battle := (Build_Battle round_n _).
-Next Obligation.
-  now exists i.  
-Defined.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/standardDef}
+
 
 
 \subsection{Big steps}
@@ -988,23 +962,15 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-| battle_1 : forall i h  h', 
-      battle_rel   B i  h h' -> battle B i h (S i) h'
-| battle_n : forall i h  j h' h'',  
-      battle_rel  B i h h''  ->
-      battle B (S i) h'' j h'  ->
-      battle B i h j h'.
-\end{Coqsrc}
 
-The following property allows us to build battles out of smaller ones.
+\input{movies/snippets/Hydra_Definitions/battleRelDef}
 
-\begin{Coqsrc}
-Lemma battle_trans {b:Battle} :
-  forall i h j h', battle b i h j h' ->
-        forall k h0,  battle b k h0 i h -> battle b k h0 j h'.
-\end{Coqsrc}
+The following property allows us to build battles by composition of smaller ones.
+
+%% TODO display sub-goals when fixed
+
+\input{movies/snippets/Hydra_Lemmas/battleTrans}
+
 
 % \begin{remark}
 %  The class \texttt{free} is strongly related with the transitive closure  \texttt{round\_plus}, as expressed by the following lemmas.
@@ -1063,10 +1029,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 \end{figure}
 
 
-\begin{Coqsrc}
-Definition hinit := hyd3 (hyd_mult head 3)  head head.  
-\end{Coqsrc}
-
+\input{movies/snippets/BigBattle/hinitDef}
 
 
 The lemma we would like to prove is ``The considered battle lasts exactly $N$ rounds'',
@@ -1103,9 +1066,8 @@ During the two first rounds, our hydra loses its two rightmost heads.  Figure~\v
 The following lemma  is a formal description of these first rounds, in terms of the
 \texttt{battle} predicate.
 
-\begin{Coqsrc}
-Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).   
-\end{Coqsrc}
+
+\input{movies/snippets/BigBattle/L02}
 
 
 \subsection{Looking for regularities}
@@ -1113,18 +1075,9 @@ Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3).
 
 A first study with pencil and paper suggested us that, after three rounds, the hydra always looks like in figure~\vref{fig:hinit-plusn} (with a variable number of 
 subtrees of height 1 or 0).
-Thus, we introduce a few handy notations.
+Thus, we introduce a few handy abbreviations.
 
-\begin{Coqsrc}
-Notation h3 := (hyd_mult head 3).
-Notation h2 := (hyd_mult head 2).
-Notation h1 := (hyd1 head).
-
-Definition hyd a b c := 
-  node (hcons_mult h2  a
-             (hcons_mult h1  b
-                         (hcons_mult head c hnil))).
-\end{Coqsrc}
+\input{movies/snippets/BigBattle/Notations}
 
 
 For instance Fig~\vref{fig:hinit-plusn} shows the hydra (\texttt{hyd 3 4 2}). The hydra (\texttt{hyd 0 0 0})  is the ``final'' hydra of any terminating battle, {i.e.},
@@ -1191,12 +1144,7 @@ a tree whith exactly one node and no edge.
 
 With these notations, we get a formal description of the first three rounds.
 
-
-\begin{Coqsrc}
-Lemma L_2_3 : battle standard 2 (hyd1 h3)  3 (hyd 3 0 0).
-
-Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
-\end{Coqsrc}
+\input{movies/snippets/BigBattle/L23L03}
 
 
 \subsection{Testing  \dots}
@@ -1205,27 +1153,17 @@ the round number, and the respective number of daughters  \texttt{h2}, \texttt{h
 of the current hydra.
 
 
+\input{movies/snippets/BigBattle/stateDef}
 
 
-\begin{Coqsrc}
- Record state : Type :=
-    mks {round: nat ; n2 : nat ; n1 : nat ; nh : nat}.
-\end{Coqsrc}
 
 The following function returns the next configurarion of the game. 
 Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle only start with the lemma
 \texttt{step\_battle}, page~\pageref{lemma:step-battle}.
 
+\input{movies/snippets/BigBattle/nextDef}
 
-\begin{Coqsrc}
-Definition next (s : state) :=
-  match s with
-  | mks round a b (S c) => mks (S round) a b c
-  | mks round a (S b) 0 => mks (S round) a b (S round)
-  | mks round (S a) 0 0 => mks (S round) a (S round) 0
-  | _ => s
-  end.
-\end{Coqsrc}
+
 
 We can make bigger steps through iterations of \texttt{next}.
 The functional \texttt{iterate}, similar to Standard Library's \texttt{Nat.iter},
@@ -1234,140 +1172,40 @@ is defined and studied in~\href{../theories/html/hydras.Prelude.Iterates.html\#i
 
 \label{Functions:iterate}
 
-\begin{Coqsrc}
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
-\end{Coqsrc}
-
+\input{movies/snippets/Iterates/iterateDef}
 
 
 The following function computes the state of the battle at the $n$-th round.
 
+\input{movies/snippets/BigBattle/testDefTests}
 
-\begin{Coqsrc}
-Definition test n := iterate next (n-3) (mks 3 3 0 0).
-
-Compute test 3.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-      = {| round := 3; n2 := 3; n1 := 0; nh := 0 |}
-     : state 
-\end{Coqanswer}
-
-\begin{Coqsrc}
- Compute test 4.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = {| round := 4; n2 := 2; n1 := 4; nh := 0 |}
-     : state
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute test 5.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = {| round := 5; n2 := 2; n1 := 3; nh := 5 |}
-     : state
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute test 2000.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = {| round := 2000; n2 := 1; n1 := 90; nh := 1102 |}
-     : state
-\end{Coqanswer}
-
-
-The battle we are studying seems to be awfully long. Let us concentrate our
+The battle we are studying looks to be awfully long. Let us concentrate our
 tests on some particular events : the states where $\texttt{nh}=0$.
 From the value of \texttt{test 5},  it is obvious that at the 10-th round, the counter \texttt{nh} is equal to zero.
 
- \begin{Coqsrc}
- Compute test 10.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-    = {| round := 10; n2 := 2; n1 := 3; nh := 0 |}
-     : state
- \end{Coqanswer}
+\input{movies/snippets/BigBattle/smartTest}
+
+
 
 Thus, $ (1 + 11)$ rounds later, the \texttt{n1} field is equal to $2$, and 
 \texttt{nh}   to $0$. 
 
+\input{movies/snippets/BigBattle/smartTestb}
 
-\begin{Coqsrc}
-Compute test 22.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = {| round := 22; n2 := 2; n1 := 2; nh := 0 |}
-     : state
-\end{Coqanswer}
-
-
-\begin{Coqsrc}
- Compute test 46.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-( = {| round := 46; n2 := 2; n1 := 1; nh := 0 |}
-     : state
-\end{Coqanswer}
-
-
-\begin{Coqsrc}
-Compute test 94.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = {| round := 94; n2 := 2; n1 := 0; nh := 0 |}
-     : state
-\end{Coqanswer}
 
 
 Next round, we decrement \texttt{n2} and set \texttt{n1} to $95$.
 
+\input{movies/snippets/BigBattle/smartTestc}
 
-\begin{Coqsrc}
- Compute test 95.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-  = {| round := 95; n2 := 1; n1 := 95; nh := 0 |}
-     : state
-\end{Coqanswer}
 
 We now have some intuition of the sequence.
 It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-th round, then at the $2(192+1)$-th round, etc.
 
+\input{movies/snippets/BigBattle/doubleS}
 
-\begin{Coqsrc}
-Definition doubleS (n : nat) := 2 * (S n).
-
-Compute test (doubleS 95).
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = {| round := 192; n2 := 1; n1 := 94; nh := 0 |}
-     : state
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute test (iterate doubleS 2 95).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = {| round := 386; n2 := 1; n1 := 93; nh := 0 |}
-     : state
-\end{Coqanswer}
 
 \subsection{Proving \dots}
 We are now able to reason about the sequence of transitions defined by our hydra battle. Instead of using the data-type \texttt{state} we study the relationship

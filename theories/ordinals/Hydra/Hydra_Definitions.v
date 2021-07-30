@@ -272,7 +272,11 @@ with S2 (n:nat) :  relation Hydrae :=
    - or  [h'] is obtained from [h] by removing one head of height greater or equal than 2, and this beheading was made with a relocation factor [n].
 *)
 
+(* begin snippet roundNDef *)
+
 Definition round_n n h h' := R1 h h' \/ R2 n h h'.
+
+(* end snippet roundNDef *)
 
 
 (** Transition system associated with battles *)
@@ -280,12 +284,20 @@ Definition round_n n h h' := R1 h h' \/ R2 n h h'.
 
 (** *** Binary relation associated with a battle round *)
 
+(* begin snippet roundDef *)
+
 Definition round h h' := exists n,  round_n n h h'.
 
 Infix "-1->" := round (at level 60).
 
+(* end snippet roundDef *)
+
+
+
 (** *** transitive closures of round 
 *)
+
+(* begin snippet roundPlus *)
 
 Definition round_plus := clos_trans_1n Hydra round.
 
@@ -293,6 +305,8 @@ Definition round_star h h' := h = h' \/ round_plus h h'.
 
 Infix "-+->" := round_plus (at level 60).
 Infix "-*->" := round_star (at level 60).
+
+(* end snippet roundPlus *)
 
 (** **  Experimental tactics for interactive battles  *)
 
@@ -403,6 +417,7 @@ Let us formalize this dependence through a relation linking the number of the cu
 
 *)
 
+(* begin snippet BattleDef *)
 
 Definition round_t := nat -> Hydra -> Hydra -> Prop.
 
@@ -412,7 +427,7 @@ Class Battle :=  {battle_rel : round_t;
 
 Arguments battle_rel : clear implicits.
 
-
+(* end snippet BattleDef *)
 
 (** In the current state of this development, we will consider two instances of class [Battle]:
 
@@ -422,15 +437,20 @@ Arguments battle_rel : clear implicits.
  *)
 
 
+(* begin snippet freeDef *)
   
 Program Instance free : Battle := Build_Battle (fun _  h h' => round h h') _.
 
+(* end snippet freeDef *)
+
+(* begin snippet standardDef *)
 
 Program Instance standard : Battle := (Build_Battle round_n _).
 Next Obligation.
   now exists i.  
 Defined.
 
+(* end snippet standardDef *)
 
 (**  The following relation allows us to consider sequences of rounds in a given  class  of battles 
 
@@ -438,6 +458,7 @@ Defined.
   starts with hydra [h] at round [i] and ends with hydra [h'] at round [j]
  *)
 
+(* begin snippet battleRelDef *)
 
 Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
   battle_1 : forall i h  h', battle_rel   B i  h h' -> 
@@ -446,6 +467,7 @@ Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
                                    battle B (S i) h'' j h'  ->
                                    battle B i h j h'.
 
+(* end snippet battleRelDef *)
 
  (** number of steps leading to the hydra's death *)
 

@@ -25,6 +25,7 @@ COQ_FILES = Ack.v               \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
 	    Hydra_Lemmas.v      \
+	    BigBattle.v      \
 	    Battle_length.v      \
 	    extEqualNat.v       \
 	    MorePRExamples.v       \

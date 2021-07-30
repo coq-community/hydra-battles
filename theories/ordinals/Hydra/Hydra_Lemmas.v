@@ -202,17 +202,23 @@ Qed.
 
 (** ** Properties of [battle] *)
 
+(* begin snippet battleTrans *)
+
 Lemma battle_trans {b:Battle} :
   forall i h j h', battle b i h j h' ->
                    forall k h0,  battle b k h0 i h ->
-                                 battle b k h0 j h'.
-Proof.  
-  induction 2.
-  -  now right with h'0.
+                                 battle b k h0 j h'. (* .no-out *)
+(*|
+.. coq:: no-out
+|*)
+Proof. 
+  induction 2. 
+  - now right with h'0.
   - right with h'';auto.
 Qed.
+(*||*)
 
-
+(* end snippet battleTrans *)
 
 (** ** Properties of standard and free battle classes *)
 
