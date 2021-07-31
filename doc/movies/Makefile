@@ -32,6 +32,7 @@ COQ_FILES = Ack.v               \
 	    FibonacciPR.v       \
 	    isqrt.v       \
 	    Iterates.v       \
+	    Exp2.v       \
 	    MoreVectors.v       \
 
 

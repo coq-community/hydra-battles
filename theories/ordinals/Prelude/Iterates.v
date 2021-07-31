@@ -18,6 +18,15 @@ Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
 
 (* end snippet iterateDef *)
 
+Lemma iterate_comm {A: Type} f n (x:A)
+  : iterate f n (f x) = f (iterate f n x).
+Proof.
+  induction n;  simpl.
+  - trivial.   
+  - simpl;  now f_equal. 
+Qed. 
+
+
 
 (** Compatibility with Ackermann Library's definition *)
 

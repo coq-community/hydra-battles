@@ -6,7 +6,7 @@
 
 
 From Coq Require Import Arith Relations Lia.
-From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates.
+From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates Exp2.
 
 
 (** Let us consider a small hydra [hinit] *)
@@ -174,7 +174,9 @@ Compute test (iterate doubleS 2 95).
 (** steps  i a b c j a' b' c' has  almost the same meaning as
     iterate test (j - i) (mks t a b c) = (mks t' a' b' c')
 
-*)
+ *)
+
+(* begin snippet oneStep *)
 
 Inductive one_step (i: nat) :
   nat -> nat -> nat -> nat -> nat -> nat -> Prop :=
@@ -182,10 +184,19 @@ Inductive one_step (i: nat) :
 | step2: forall a b ,  one_step i a (S b) 0 a b (S i)
 | step3: forall a, one_step i (S a) 0 0 a (S i) 0.
 
+(* end snippet oneStep *)
 
-Lemma step_round_plus : forall i a b c a' b' c', one_step i a b c a' b' c' ->
-                                            battle standard i (hyd  a b c)
-                                                  (S i) (hyd a' b' c').
+(* begin snippet stepBattle *)
+
+Lemma step_battle : forall i a b c a' b' c',
+    one_step i a b c a' b' c' ->
+    battle standard i (hyd  a b c)
+           (S i) (hyd a' b' c'). (* .no-out *)
+(*|
+.. coq:: none
+|*)
+Proof.
+  
   destruct 1.
   - left; trivial;  left;  split.
     apply hcons_mult_S0.   
@@ -204,8 +215,11 @@ Lemma step_round_plus : forall i a b c a' b' c', one_step i a b c a' b' c' ->
     left; split;  simpl;  right; constructor.
 Qed.
 
+(*||*)
 
+(* end snippet stepBattle *)
 
+(* begin snippet steps *)
 
 Inductive steps : nat -> nat -> nat -> nat ->
                   nat -> nat -> nat -> nat -> Prop :=
@@ -221,41 +235,60 @@ Inductive steps : nat -> nat -> nat -> nat ->
 Definition reachable (i a b c : nat) : Prop :=
   steps 3 3 0 0 i a b c.
 
+(* end snippet steps *)
+
+(* begin snippet stepsBattle *)
 
 Lemma steps_battle : forall i a b c j  a' b' c',
     steps i a b c j a' b' c' ->
-    battle standard i (hyd  a b c) j (hyd a' b' c').
+    battle standard i (hyd  a b c) j (hyd a' b' c'). (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   induction 1.
-  - now apply step_round_plus.
+  - now apply step_battle.
   - eapply battle_trans.
    +   apply IHsteps2.
    +  assumption.
 Qed.
+(*||*)
 
+(* end snippet stepsBattle *)
 
 (**  From now on, we play again the same tests as above, but instead of plain uses of Compute, we prove and register lemmas that we will be used later *)
 
+(* begin snippet L4 *)
 
+(*|
+.. coq:: no-out 
+|*)
 Lemma L4 : reachable 4 2 4 0.
 Proof.
   left; constructor.
 Qed.
-
+(*||*)
+(* end snippet L4 *)
 
 
 (** Now we prove some laws we observed in our test phase *)
 
+(* begin snippet LS *)
+
+(*|
+.. coq:: no-out
+|*)
 Lemma LS : forall c a b i,  steps i a b (S c) (i + S c) a b 0.
 Proof.
   induction c.
- -   intros;  replace (i + 1) with (S i).
-     + repeat constructor.
-     + ring.
+ -  intros;  replace (i + 1) with (S i).
+    + repeat constructor.
+    + ring.
  -  intros; eapply  steps_S.
     +  eleft;   apply step1.
     + replace (i + S (S c)) with (S i + S c) by ring;  apply IHc.
 Qed.
+
 
 (**   The law that relates two consecutive events with  (nh = 0)  *)
 
@@ -274,6 +307,13 @@ Proof.
   intros; right with  (1 := H); apply doubleS_law.
 Qed.
 
+(* end snippet LS *)
+
+(* begin snippet L10To95 *)
+
+(*|
+.. coq:: no-out
+|*)
 
 Lemma L10 : reachable 10 2 3 0.
 Proof.
@@ -305,6 +345,9 @@ Proof.
   -  repeat constructor.
 Qed.
 
+(*||*)
+
+(* end snippet L10To95 *)
 
 Lemma L0_95 : battle standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
 Proof.
@@ -315,13 +358,12 @@ Qed.
   
 (** No more tests ! we are going to build bigger transitions *)
 
-Lemma iterate_comm {A: Type} f n (x:A)
-  : iterate f n (f x) = f (iterate f n x).
-Proof.
-  induction n;  simpl.
-  - trivial.   
-  - simpl;  now f_equal. 
-Qed. 
+
+(* begin snippet Bigstep *)
+
+(*|
+.. coq:: no-out
+|*)
 
 Lemma Bigstep : forall b i a , reachable i a b 0 ->
                                reachable (iterate doubleS b i) a 0 0.
@@ -332,17 +374,32 @@ Lemma Bigstep : forall b i a , reachable i a b 0 ->
      rewrite <- iterate_comm; now apply IHb.
  Qed.
 
+ (*||*)
+
+(* end snippet Bigstep *)
+
+ 
  (** From all the lemmas above, we now get a pretty big step *)
+
+
+ (* begin snippet MDef *)
  
 Definition M := iterate doubleS 95 95.
 
-Lemma L2_95 : reachable M 1 0 0.
-Proof.
+Lemma L2_95 : reachable M 1 0 0. (* .no-out *)
+Proof. (* .no-out *)
   apply Bigstep,  L95.
 Qed.
 
+(* end snippet MDef *)
+
 (** the next step creates (M+1) copies of h1 *)
 
+(* begin snippet L295S  *)
+
+(*|
+.. coq:: no-out
+|*)
 
 Lemma L2_95_S : reachable (S M) 0 (S M) 0.
 Proof.
@@ -351,14 +408,20 @@ Proof.
  -  left; constructor 3.
 Qed.
 
+(*||*)
+
+(* end snippet L295S  *)
+
+(* begin snippet NDef *)
 
 Definition N :=   iterate doubleS (S M) (S M).
 
-Theorem   SuperbigStep : reachable N  0 0 0 .
-Proof.
+Theorem   SuperbigStep : reachable N  0 0 0. (* .no-out *)
+Proof.  (* .no-out *)
   apply Bigstep, L2_95_S.
 Qed.
 
+(* end snippet NDef *)
 
 
 (** We can  ow apply our study based on abstract states to "real" hydras *)
@@ -371,6 +434,12 @@ Qed.
 
 (** We get now statements about hydras and battles *)
 
+(* begin snippet Done *)
+
+(*|
+.. coq:: no-out
+|*)
+
 Lemma Almost_done :
   battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
 Proof. 
@@ -381,56 +450,82 @@ Theorem Done :
   battle standard 0 hinit N head.
 Proof.
   eapply battle_trans.
-  -   apply Almost_done.
-  -  apply L_0_3.
+  - apply Almost_done.
+  - apply L_0_3.
 Qed.
+
+(*||*)
+
+(* end snippet Done *)
 
 (** The natural number N is expressed in terms of the (iterate doubleS)
    function.  The rest of this file is dedicated to get an intuition of how it is huge .
      Our idea is to get a minoration by exponentials of base 2 
 
-*)
+ *)
+
+(* begin snippet minorationLemmas *)
 
 
-Definition exp2 n := iterate (fun n => 2 * n) n 1.
+Lemma minoration_0 : forall n,  2 * n <= doubleS n. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 
-Lemma exp2S : forall n, exp2 (S n) = 2 * exp2 n.
-Proof.
-  unfold exp2;  intros; simpl; ring. 
-Qed. 
-
-
-Lemma minoration_0 : forall n,  2 * n <= doubleS n.
 Proof.
   unfold doubleS;intros; abstract lia.
 Qed.
 
+(*||*)
+
 Lemma minoration_1 : forall n x, exp2 n * x <= iterate doubleS n x.
+(* .no-out *)
+
+(*|
+.. coq:: none 
+|*)
 Proof.
   induction n; simpl.
   -  intro;  abstract lia.
-  -  intros; unfold doubleS;  rewrite exp2S.
+  -  intros; unfold doubleS. 
      transitivity (2 * iterate doubleS n x).
-    +  rewrite <- mult_assoc; apply   mult_le_compat_l; auto.   
+    +  specialize (IHn x). ring_simplify. lia. 
     +  unfold doubleS; abstract lia.
 Qed.
+(*||*)
 
 
-Lemma minoration_2 : exp2 95 * 95 <= M.
-Proof.  apply minoration_1. Qed.
+Lemma minoration_2 : exp2 95 * 95 <= M. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
+Proof. apply minoration_1. Qed.
+(*||*)
 
+Lemma minoration_3 : exp2 (S M) * S M <= N. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
+Proof. apply minoration_1.  Qed.
+(*||*)
 
-Lemma minoration_3 : exp2 (S M) * S M <= N.
-Proof.   apply minoration_1.  Qed.
-
+(*|
+.. coq:: none 
+|*)
 Lemma exp2_mono1 : forall n p,  n <= p ->  exp2 n  <= exp2 p .
 Proof.
   induction 1.
   - reflexivity.   
   -  rewrite exp2S;  abstract lia.
 Qed.
+(*||*)
 
-Lemma minoration : exp2 (exp2 95 * 95) <= N.
+
+Lemma minoration : exp2 (exp2 95 * 95) <= N. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
+
 Proof.
   transitivity (exp2 (S M) * S M).
   -   replace (exp2 (exp2 95 * 95)) with ((exp2 (exp2 95 * 95) * 1)).
@@ -443,6 +538,10 @@ Proof.
       + apply Nat.mul_1_r.
   -  apply minoration_3.
 Qed.
+(*||*)
+
+(* end snippet minorationLemmas *)
+
 
 (** Hence, the length of the battle is greater or equal than 
   exp2 (exp2 95 * 95), a number whose representation in base 10 has 

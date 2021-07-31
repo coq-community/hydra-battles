@@ -1,10 +1,15 @@
 From Coq Require Import Arith Lia.
 
+(* begin snippet exp2Def *)
+
 Fixpoint exp2 (n:nat) : nat :=
   match n with
     0 => 1
   | S i => 2 * exp2 i
   end.
+
+(* end snippet exp2Def *)
+
 
 Lemma exp2_positive : forall i, 0 < exp2 i.
 Proof.
@@ -25,3 +30,9 @@ Proof.
   - cbn; auto with arith.
   - cbn; generalize IHn; generalize (exp2 n); intros; lia.
 Qed.
+
+
+Lemma exp2S : forall n, exp2 (S n) = 2 * exp2 n.
+Proof.
+  unfold exp2;  intros; simpl; ring. 
+Qed. 
