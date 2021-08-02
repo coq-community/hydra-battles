@@ -1410,42 +1410,32 @@ for any configuration $(i,h)$, where $h$ is not a head, there exists a further s
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#Alive}{Hydra.Hydra\_Definitions}}
 
-\begin{Coqsrc}
-Definition Alive (B : Battle) :=
-  forall i h, 
-     h <> head -> {h' : Hydra |  B i h h'}.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/AliveDef}
+
 
 The theorems \texttt{Alive\_free} and \texttt{Alive\_standard} of the module 
 \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
 
-\begin{Coqsrc}
-Theorem Alive_free: Alive free.
 
-Theorem Alive_standard: Alive standard.  
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Theorems/AliveThms}
+
 
 Both theorems are proved with the help of the  following strongly specified function:
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html\#next_round_dec}{Hydra.Hydra\_Lemmas}}
 
-\begin{Coqsrc}
-Definition  next_round_dec n :
- forall h, (h = head) + {h' : Hydra & {R1 h h'} + {R2 n h  h'}}.
-\end{Coqsrc}
-
+\input{movies/snippets/Hydra_Lemmas/nextRoundDec}
 
 \subsection{Termination}
 
-The termination of all battles is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
+The termination of \emph{any}  battle is naturally expressed by the predicate \texttt{well\_founded} defined in the module \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Init.Wf.html}{Coq.Init.Wf} 
  of the Standard Library.
 
 \index{hydras}{Library Hydra!Predicates!Termination}
 
-\begin{Coqsrc}
-Definition Termination :=  well_founded (transp _ round).
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/TerminationDef}
+
 
 
 Let $B$ be an instance of class \texttt{Battle}. A \emph{variant} for $B$ consists
@@ -1460,18 +1450,13 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \label{sect:hvariant-def}
 
 \index{hydras}{Library Hydra!Type classes!Hvariant}
-\begin{Coqsrc}
-Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
-  (m: Hydra -> A):   Prop :=
-  {variant_decr: forall i h h',
-      h <> head ->
-      battle_rel  B i  h h' -> Lt (m h') (m h)}.
-\end{Coqsrc}  
+
+\input{movies/snippets/Hydra_Definitions/HvariantDef}
 
 \index{hydras}{Exercises}
 
 \begin{exercise}
- Prove that, if there is an instance of (\texttt{Hvariant Lt wf\_Lt $B$ $m$}), then there exists no infinite battle in  $B$.
+ Prove that, if there exists some  instance of (\texttt{Hvariant Lt wf\_Lt $B$ $m$}), then there exists no infinite battle in  $B$.
 \end{exercise}
 
 
@@ -1501,12 +1486,8 @@ Let us present the main steps of that proof, the script of which  is in the modu
 Let us assume there exists some variant $m$ from \texttt{Hydra} into \texttt{nat} for proving
     the  termination of all hydra battles.
 
-\begin{Coqsrc}
-Section Impossibility_Proof.
- Variable m : Hydra -> nat.
- Hypothesis Hvar : Hvariant lt_wf free m.
-\end{Coqsrc}
-
+\input{movies/snippets/Omega_Small/omegaSmalla}
+    
 We define an injection $\iota$ from the type \texttt{nat} into \texttt{Hydra}.
 For any natural number $i$, $\iota(i)$ is the hydra composed of a foot and
 $i+1$ heads at height $1$. For instance, Fig.~\ref{fig:flower} represents the hydra $\iota(3)$.
@@ -1528,9 +1509,7 @@ $i+1$ heads at height $1$. For instance, Fig.~\ref{fig:flower} represents the hy
 The hydra $\iota(3)$}
 \end{figure}
 
-  \begin{Coqsrc}
-  Let iota (i: nat) := hyd_mult head (S i).    
-  \end{Coqsrc}
+\input{movies/snippets/Omega_Small/iotaDef}
 
 Let us consider now some hydra \texttt{big\_h} out of the range of the injection $\iota$ (see Fig.~\vref{fig:h-omega-omega}).
 
@@ -1547,39 +1526,42 @@ Let us consider now some hydra \texttt{big\_h} out of the range of the injection
  The hydra \texttt{big\_h}.
 \end{figure}
 
- \begin{Coqsrc}
-  Let big_h := hyd1 (hyd1 head).
- \end{Coqsrc}
+\input{movies/snippets/Omega_Small/bigHDef}
+
 
  Using the functions $m$ and $\iota$, we define a second hydra \texttt{small\_h}, and show
  there is a one-round battle that transforms \texttt{big\_h} into \texttt{small\_h}. Please note that,
 due to the hypothesis \texttt{Hvar}, we are interested in the termination of \emph{free} battles. 
 There is no problem to consider a round with (\texttt{m big\_h}) as the replication factor.
 
-  \begin{Coqsrc}
- Let small_h := iota (m big_h).
-   
- Fact big_to_small : big_h -1-> small_h.
- Proof.
-      exists (m big_h); right; repeat constructor.     
- Qed.
-    \end{Coqsrc}
+
+\input{movies/snippets/Omega_Small/smallHDef}
+
+
  
 But, by hypothesis, $m$ is a variant. Hence, we infer the following inequality.
 
+\vspace{4pt}
 
- \begin{Coqsrc}
-Lemma m_lt : m small_h < m big_h.
- \end{Coqsrc}
+\input{movies/snippets/Omega_Small/mLt}
+
 
 In order to get a contradiction, it suffices to  prove the inequality
 $m(\texttt{big\_h}) \leq m(\texttt{small\_h})$ i.e.,  $m(\texttt{big\_h}\leq m(\iota (m(\texttt{big\_h})))$.
 
 More generally, we prove the following lemma: 
 
-\begin{Coqsrc}
-Lemma m_ge : forall i:nat, i <= m (iota i).
-\end{Coqsrc}
+\input{movies/snippets/Omega_Small/mGea}
+
+\begin{Coqanswer}
+1 subgoal (ID 23)
+  m : Hydra -> nat
+  Hvar : Hvariant lt_wf free m
+ 
+  small_h := iota (m big_h) : Hydra
+  ============================
+  forall i : nat, i <= m (iota i)
+\end{Coqanswer}
 
 Intuitively, it means that, from any hydra of the form (\texttt{iota $i$}), the battle will 
 take (at least) $i$ rounds. Thus the associated measure cannot be less than $i$.
@@ -1597,20 +1579,14 @@ Technically, we prove this lemma by Peano induction on $i$.
   \end{enumerate}
 \end{itemize}
 
- Then our proof is almost finished.
+We are now ready to complete our impossibility proof.
+
+\vspace{4pt}
+
+\input{movies/snippets/Omega_Small/mGeb}
  
-   \begin{Coqsrc}
-Theorem Contradiction : False.
-Proof.
- apply (Nat.lt_irrefl (m big_h));
-   apply  Lt.le_lt_trans with (m small_h).
-  - apply m_ge.
-  - apply m_lt.
-Qed. 
-
-End Impossibility_Proof.
-\end{Coqsrc}
-
+\input{movies/snippets/Omega_Small/omegaSmallz}
+ 
 \index{hydras}{Exercises}
 
 \begin{exercise}

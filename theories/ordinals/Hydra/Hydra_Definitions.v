@@ -477,7 +477,11 @@ Definition battle_length B k h l :=
 
 (** *** Uniform termination *)
 
+(* begin snippet TerminationDef *)
+
 Definition Termination :=  well_founded (transp _ round).
+
+(* end snippet TerminationDef *)
 
 Definition B_termination (B: Battle) :=
   well_founded (fun h' h =>  exists i:nat, battle_rel B i h h' ).
@@ -486,13 +490,16 @@ Definition B_termination (B: Battle) :=
 (** *** Variants for proving termination 
  *)
 
-Class Hvariant {A:Type}{Lt:relation A}(Wf: well_founded Lt)(B : Battle)
-  (m: Hydra -> A): Prop :=
+(* begin snippet HvariantDef *)
+
+Class Hvariant {A:Type}{Lt:relation A}
+      (Wf: well_founded Lt)(B : Battle)
+      (m: Hydra -> A): Prop :=
   {variant_decr: forall i h h',
       h <> head ->
       battle_rel  B i  h h' -> Lt (m h') (m h)}.
 
-
+(* end snippet HvariantDef *)
 
 (** Variant bounded by some ordinal alpha < epsilon0 *)
 (** **  Strictly Bounded variants *)
@@ -514,8 +521,11 @@ Class BoundedVariant {A:Type}{Lt:relation A}
  there exists a beheading leading to some configuration [(S i, h')].
  *)
 
+(* begin snippet AliveDef *)
+
 Definition Alive (B : Battle) :=
   forall i h,
      h <> head ->
     {h' : Hydra |  battle_rel  B i h h'}.
 
+(* end snippet AliveDef *)

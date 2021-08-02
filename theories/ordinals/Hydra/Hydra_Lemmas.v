@@ -394,15 +394,17 @@ Proof.
 Qed.
 
 
+(* begin snippet nextRoundDec *)
 
-
-(** If the hydra is not reduced to a head, there exists at least one that
-    Hercules can chop  *)
-
-
+(** If the hydra is not reduced to a head, there exists at 
+    least one head that  Hercules can chop off  *)
 
 Definition  next_round_dec n (h: Hydra) :
-  (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}.
+  (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
+
 Proof.
 induction h using   Hydra_rect2 with
 (P0 :=
@@ -437,7 +439,9 @@ rename h into s.
        left; right ;   now constructor.           
    *   exists (hcons h' h0);  right ;  now constructor.
 Defined.
+(*||*)
 
+(* end snippet nextRoundDec *)
 
 Definition  next_round  n :
  forall h , round_spec h n.

@@ -34,6 +34,7 @@ COQ_FILES = Ack.v               \
 	    Iterates.v       \
 	    Exp2.v       \
 	    MoreVectors.v       \
+	    Omega_Small.v       \
 
 
 TEX_FILE = $(COQ_FILES:.v=.tex)

@@ -11,16 +11,26 @@ Import E0 Large_Sets Hprime Paths MoreLists  O2H Hydra_Definitions Iterates.
   some head
  *)
 
-Theorem Alive_free :   Alive free.
+(* begin snippet AliveThms *)
+
+Theorem Alive_free :   Alive free. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
+
 Proof.
   red;intros.
   destruct (next_round i h).
   -  destruct s as [h' H'];  exists h'; now  exists i. 
   - tauto.
 Qed.
+(*||*)
 
 
-Theorem Alive_standard :   Alive standard.
+Theorem Alive_standard :   Alive standard. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   red;intros.
   destruct (next_round i h).
@@ -28,6 +38,9 @@ Proof.
      assumption.
   - now destruct H.
 Qed.
+(*||*)
+
+(* end snippet AliveThms *)
 
 (** ** Termination of free battles 
  *)
