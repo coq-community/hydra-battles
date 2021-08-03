@@ -12,6 +12,7 @@ Import Relations.
 Generalizable All Variables.
 Coercion is_true: bool >-> Sortclass.
 
+(* begin snippet Defs *)
 
 Section Defs.
 
@@ -29,13 +30,19 @@ Arguments inr  {A B} _.
 
 Definition lt : relation t := le_AsB _ _ ltA ltB.
 
- Definition compare (alpha beta: t) : comparison :=
+(* end snippet Defs *)
+
+(* begin snippet compareDef *)
+
+Definition compare (alpha beta: t) : comparison :=
    match alpha, beta with
      inl _, inr _ => Lt
    | inl a, inl a' => compareA a a'
    | inr b, inr b' => compareB b b'
    | inr _, inl _ => Gt
   end.
+
+(* end snippet compareDef *)
 
 Definition le := clos_refl _ lt.
 
@@ -59,12 +66,6 @@ Proof.
 Qed.
     
 
-Lemma lt_wf : well_founded lt.
-Proof. destruct NA, NB.
-       apply wf_disjoint_sum; [apply wf | apply wf0].
-Qed.
-
-
 Lemma compare_reflect alpha beta :
   match (compare alpha beta)
   with
@@ -77,14 +78,29 @@ Lemma compare_reflect alpha beta :
    - destruct (compare_correct b b0); (now subst || constructor; auto).
 Qed.
 
+(* begin snippet compareCorrect *)
 
 Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
+                (compare alpha beta). (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
 Qed.
+ 
+(*||*)
+
+(* end snippet compareCorrect *)
+
+(* begin snippet plusComp *)
+
+(*|
+.. coq:: no-out 
+|*)
+
 
 #[global] Instance plus_comp : Comparable lt compare.
 Proof.
@@ -93,12 +109,43 @@ Proof.
   - apply compare_correct. 
 Qed.
 
+(*||*)
+
+(* end snippet plusComp *)
+
+
+(* begin snippet ltWf *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+
+Lemma lt_wf : well_founded lt.
+Proof. destruct NA, NB.
+       apply wf_disjoint_sum; [apply wf | apply wf0].
+Qed.
+
+(*||*)
+
+(* end snippet ltWf *)
+
+(* begin snippet OnPlus *)
+
+(*|
+.. coq:: no-out 
+|*)
+
 #[global] Instance ON_plus : ON lt compare.
 Proof.
   split.
   - apply plus_comp.
   - apply lt_wf.
 Qed.
+
+(*||*)
+
+(* end snippet OnPlus *)
 
 
 Lemma lt_eq_lt_dec alpha beta :

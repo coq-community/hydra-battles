@@ -1776,20 +1776,14 @@ The correctness of the comparison function is expressed through Stdlib's type
 Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
     CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
   | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
-  | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt
+  | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
 \end{Coqsrc}
 
+\emph{From Module~\href{../theories/html/hydras.Prelude/mparable.html\#Hvariant}{Prelude.Comparable}}
 
-\begin{Coqsrc}
-Class Comparable {A:Type} 
-  (lt: relation A)
-  (compare : A -> A -> comparison) :=
-  {
-  sto :> StrictOrder lt;
-  compare_correct: forall a b,
-      CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
-  }.
-\end{Coqsrc}
+\input{movies/snippets/Comparable/ComparableDef}
+
+
 
 
 
@@ -1805,66 +1799,19 @@ Library~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{OrdinalN
 \label{types:ON}
 \index{hydras}{Library OrdinalNotations!Type classes!ON}
 
-\begin{Coqsrc}
-Class ON {A:Type}(lt: relation A)
-      (compare : A -> A -> comparison)  :=
-  {
-  comp :> Comparable lt compare;
-  wf : well_founded lt;
-  }.
-\end{Coqsrc}
+\input{movies/snippets/ON_Generic/ONDef}
+
 
 We give  also a few handy definitions and lemmas for any ordinal notation.
 
 \label{sect:on-lt-notation}
 \label{sect:on-le-notation}
 \label{sect:measure-ON}
-\begin{Coqsrc}
-Section Definitions.
-  
-  Context  {A:Type}{lt : relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare}.
-  
-  #[using="All"]
-   Definition ON_t := A.
 
-  #[using="All"]
-   Definition ON_compare := compare.
 
-  #[using="All"]
-   Definition ON_lt := lt.
+\input{movies/snippets/ON_Generic/ONDefs}
 
-  #[using="All"]
-   Definition ON_le:  relation A := leq lt.
 
-  #[using="All"]
-   Definition measure_lt {B : Type} (m : B -> A) : relation B :=
-    fun x y =>  ON_lt (m x) (m y).
-
-  #[using="All"]
-   Lemma wf_measure {B : Type} (m : B -> A) :
-    well_founded (measure_lt m). 
- 
-  #[using="All"]
-   Definition ZeroLimitSucc_dec :=
-    forall alpha,
-      {Least alpha} +
-      {Limit alpha} +
-      {beta: A | Successor alpha beta}.
-
-  (** The segment called [O alpha] in Schutte's book *)
-
-  #[using="All"]
-   Definition bigO 
-   (a: A) : Ensemble A := fun x: A => lt x a.
-
-End Definitions.
-
-Infix "o<" := ON_lt : ON_scope.
-Infix "o<=" := ON_le : ON_scope.
-Infix "o?=" := ON_compare (at level 70) : ON_scope.
-\end{Coqsrc}
 
 
 \begin{remark}
@@ -1905,32 +1852,8 @@ The simplest example of ordinal notation is built over the type \texttt{nat} of 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_Omega.html}{OrdinalNotations.ON\_Omega}}
 
+\input{movies/snippets/ON_Omega/OmegaDef}
 
-\begin{Coqsrc}
-#[global]
- Instance Omega_comp : Comparable Peano.lt  Nat.compare.
-Proof.
-  split.
-  - apply Nat.lt_strorder.
-  - apply Nat.compare_spec.
-Qed.
-
-#[global]
- Instance Omega : ON  Peano.lt  Nat.compare.
-Proof.
- split.
- - apply Omega_comp.
- - apply Wf_nat.lt_wf.
-Qed.
-
-#[local] Open Scope ON_scope.
-Compute 6 o?= 9.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-     = Lt
-     : comparison
-\end{Coqanswer}
 
 \section{Sum of  two ordinal notations}
 
@@ -1957,68 +1880,39 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_plus.html}{OrdinalNotations.ON\_plus}}
 
 
-\begin{Coqsrc}
-Section Defs.
+\input{movies/snippets/ON_plus/Defs}
 
-  Context `(ltA: relation A)
-          (compareA : A -> A -> comparison)
-          (NA: ON ltA compareA).
-  Context `(ltB: relation B)
-          (compareB : B -> B -> comparison)
-          (NB: ON ltB compareB).
+In order to build an instance of \texttt{Comparable}, we have to define a correct comparison function.
 
+\input{movies/snippets/ON_plus/compareDef}
 
-Definition t := (A + B)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
+\vspace{4pt}
 
-Definition lt : relation t := le_AsB _ _ ltA ltB.
-\end{Coqsrc}
+\input{movies/snippets/ON_plus/compareCorrect}
 
-In order to build an instance of \texttt{ON}, we have to define a comparison function.
+\vspace{4pt}
 
 
-\begin{Coqsrc}
-Definition compare (alpha beta: t) : comparison :=
-   match alpha, beta with
-     inl _, inr _ => Lt
-   | inl a, inl a' => compareA a a'
-   | inr b, inr b' => compareB b b'
-   | inr _, inl _ => Gt
-  end.
+\input{movies/snippets/ON_plus/plusComp}
 
-Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-    (compare alpha beta).
-
-#[global] Instance plus_comp : Comparable lt compare.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply compare_correct. 
-Qed.
-\end{Coqsrc}
+\vspace{4pt}
 
 The Lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} of Standard Library
 helps us to prove that our order \texttt{lt} is well-founded.
 
-\begin{Coqsrc}
-Lemma lt_wf : well_founded lt.
-Proof. 
-  destruct NA, NB; apply wf_disjoint_sum; [apply wf | apply wf0].
-Qed.
-\end{Coqsrc}
 
-Then, we register an instance of \texttt{ON}:
+\vspace{4pt}
 
-\begin{Coqsrc}
-#[global] Instance ON_plus : ON lt compare.
-Proof.
-  split.
-  - apply plus_comp.
-  - apply lt_wf.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/ON_plus/ltWf}
+
+\vspace{4pt}
+
+Then, we can build an instance of \texttt{ON}:
+
+\vspace{4pt}
+
+\input{movies/snippets/ON_plus/OnPlus}
+
 
 
 
@@ -2029,6 +1923,7 @@ Qed.
 
 The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
 of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
+It is also represented by the two first lines of Figure~\ref{fig:ordinal-sequence}.
 
 \begin{figure}[h]
    \centering
@@ -2061,40 +1956,20 @@ We can define this notation in \coq{} as an instance of \texttt{ON\_plus}.
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
-\begin{Coqsrc}
-Instance Omega_plus_Omega : ON _ _ := ON_plus Omega Omega.
+\input{movies/snippets/ON_Omega_plus_omega/OmegaPlusOmegaDef}
 
-Definition t := ON_t.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Example ex1 : inl 7 o< inr 0.
-Proof. constructor. Qed.
-\end{Coqsrc}
+\vspace{4pt}
 
 We can now define abbreviations. For instance, the finite ordinals are represented by terms built with  the constructor \texttt{inl}, and the first infinite ordinal $\omega$ by the term \texttt{(inr 0)}.
 
-\begin{Coqsrc}
-Definition fin (i:nat) : t := inl i.
-Coercion fin : nat >-> t.
+\vspace{4pt}
 
-Notation omega := (inr  0:t).
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega_plus_omega/finiteOmega}
 
-\begin{Coqsrc}
-Compute  fin 8 o?= omega.
-\end{Coqsrc}
+\vspace{4pt}
 
-\begin{Coqanswer}
-     = Lt
-     : comparison
-\end{Coqanswer}
+\input{movies/snippets/ON_Omega_plus_omega/ltOmega}
 
-\begin{Coqsrc}
-Lemma lt_omega alpha : 
-     alpha o< omega <-> exists n:nat,  alpha = fin n.
-(* ... *)
-\end{Coqsrc}
 
 
 % \label{warning:coercions}
@@ -2151,8 +2026,8 @@ Let us look again at our implementation of $\omega+\omega$. We can classify its 
 
 \begin{itemize}
 \item The least ordinal, \texttt{(inl 0)}, also known as  \texttt{(fin 0)}.
-\item The limit ordinal $\omega$.
-\item The successor ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))}
+\item The first infinite ordinal $\omega$.
+\item The remaining ordinals, either of the form \texttt{(inl (S $i$))} or \texttt{(inr (S $i$))} (in black on Figure~\ref{fig:ordinal-sequence}), called \emph{successor ordinals}.
 \end{itemize}
 
 \subsection{Definitions}
@@ -2168,23 +2043,8 @@ It would be interesting to specify at the most generic level, what is a zero, a 
 
 The following definitions are in Library \href{../theories/html/hydras.Prelude.MoreOrders.html}{Prelude.MoreOrders}.
 
-\begin{Coqsrc}
-Section A_given.
-  Variables (A : Type)  (lt: relation A).
-  
-  #[local] Infix "<" := lt.
-  #[local] Infix "<=" := (leq lt).
+\input{movies/snippets/MoreOrders/Defs}
 
- Definition Least {sto : StrictOrder lt} (x : A):=
-  forall y,  x <= y.
-
- Definition Successor {sto : StrictOrder lt} (y x : A):=
-  x < y /\ (forall z,  x < z ->  z <  y -> False).
-
- Definition Limit {sto : StrictOrder lt}  (x:A)  :=
-   (exists w:A,  w < x) /\
-   (forall y:A, y < x -> exists z:A, y < z /\ z < x).
-\end{Coqsrc}
 
 \index{hydras}{Exercises}
 \begin{exercise}

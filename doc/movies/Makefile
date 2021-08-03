@@ -33,8 +33,11 @@ COQ_FILES = Ack.v               \
 	    isqrt.v       \
 	    Iterates.v       \
 	    Exp2.v       \
-	    MoreVectors.v       \
+	    MoreVectors.v   MoreOrders.v    \
 	    Omega_Small.v       \
+	    Comparable.v       \
+	    ON_Generic.v ON_Omega.v ON_plus.v ON_Omega_plus_omega.v \
+
 
 
 TEX_FILE = $(COQ_FILES:.v=.tex)

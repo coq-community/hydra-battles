@@ -5,8 +5,11 @@ From Coq Require Import RelationClasses Relation_Operators Ensembles Setoid.
 Import Relation_Definitions.
 Set Implicit Arguments.
 
+
 Definition leq {A:Type}(lt : relation A): relation A :=
   clos_refl A lt.
+
+(* begin snippet Defs *)
 
 Section A_given.
   Variables (A : Type)
@@ -15,11 +18,8 @@ Section A_given.
   #[local] Infix "<" := lt.
   #[local] Infix "<=" := (leq lt).
 
-  (** x is the least element of A (w.r.t. [lt] *)
-
   Definition Least {sto : StrictOrder lt} (x : A):=
     forall y,  x <= y.
-
 
   Definition Successor {sto : StrictOrder lt} (y x : A):=
     x < y /\ (forall z,  x < z ->  z <  y -> False).
@@ -33,7 +33,6 @@ Section A_given.
     (forall i: nat, s i < x) /\
     (forall y, y  < x -> exists i:nat, y < s i).
 
-  (* the same, with a [sig]-type *)
 
   Definition  Omega_limit_s
               `{lt : relation A}
@@ -42,7 +41,8 @@ Section A_given.
     ((forall i: nat, s i < x) *
      (forall y, y  < x ->  {i:nat | y  < s i}))%type.
 
-
+(* end snippet Defs *)
+  
   Lemma Omega_limit_not_Succ  
         {sto : StrictOrder lt} (s: nat -> A) (x:A) :
     Omega_limit s x ->
