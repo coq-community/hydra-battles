@@ -2076,94 +2076,46 @@ Using the definitions above, we can prove the following lemma:
 
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
-\begin{Coqsrc}
-Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega_plus_omega/limitIff}
 
-Regarding successors, let us define the following function:
+\vspace{4pt}
 
-\begin{Coqsrc}
-Definition succ (alpha : t) :=
-  match alpha with
-    inl n => inl (S n)
-  | inr n => inr (S n)
-  end.
-\end{Coqsrc}
+Regarding successors, let us define the following function and prove its correctness:
 
 
-\begin{Coqsrc}
-Lemma Successor_correct alpha beta : Successor beta alpha <->
-                                     beta = succ alpha.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega_plus_omega/succDef}
 
-We can also check whether an ordinal is a successor by a simple pattern matching:
+\input{movies/snippets/ON_Omega_plus_omega/succCorrect}
 
-\begin{Coqsrc}
-  Definition succb (alpha: t) : bool :=
-  match alpha with
-  | inr (S  _) | inl (S _) => true
-  | _ => false
-  end.
+\vspace{4pt}
 
-Lemma succb_correct (alpha : t) :
-    succb alpha <->  exists beta: t, alpha = succ beta.
-\end{Coqsrc}
 
+
+We can also check whether an ordinal is a successor by a simple computation:
+
+\input{movies/snippets/ON_Omega_plus_omega/succb}
+
+\vspace{4pt}
 
 Finally, the nature of any ordinal is decidable (inside this notation system) :
 
-\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{ON\_Generic}}
-\begin{Coqsrc}
-  Definition ZeroLimitSucc_dec {A:Type}{lt: relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare} :=
-  forall alpha,
-    {Least alpha} +
-    {Limit alpha} +
-    {beta: A | Successor alpha beta}.
-(* ... *)
-\end{Coqsrc}
+
 
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
-\begin{Coqsrc}
-Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
-Proof.
-(* ... *)
-Defined.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega_plus_omega/ZeroLimitSuccDec}
 
 \section{Product of ordinal notations}
 
 Let \texttt{NA} and \texttt{NB} be two ordinal notations, on the respective  ordered types \texttt{A} and \texttt{B}. The product of \texttt{NA} and \texttt{NB} is considered as the concatenation of $B$ copies of $A$, ordered by the lexicographic order on $B\times A$.
 
+In \coq{}, we build an instance of class \texttt{ON} through a sequence of steps as for the sum of ordinal notations.
+
 \vspace{4pt}
 \noindent
 \emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_mult.html}{OrdinalNotations.ON\_mult}}
 
-\begin{Coqsrc}
-Section Defs.
-
-  Context `(ltA: relation A)
-          (compareA : A -> A -> comparison)
-          (NA: ON ltA compareA).
-  Context `(ltB: relation B)
-          (compareB : B -> B -> comparison)
-          (NB: ON ltB compareB).
-
-Definition t := (B * A)%type.
-Definition lt : relation t := lexico ltB ltA.
-
-Definition compare (alpha beta: t) : comparison :=
-  match compareB (fst alpha) (fst beta) with
-  | Eq => compareA (snd alpha) (snd beta)
-  | c => c
-  end.
-
-#[global] Instance ON_mult: ON lt compare.
-
-End Defs.
-\end{Coqsrc}
+\input{movies/snippets/ON_mult/Defs}
 
 \section{The ordinal \texorpdfstring{$\omega^2$}{omega2}}
 
@@ -2172,38 +2124,9 @@ The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), 
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
-\begin{Coqsrc}
-Instance Omega2: ON _ _ := ON_mult Omega Omega.
+\input{movies/snippets/ON_Omega2/Omega2Def}
 
-Definition t := ON_mult.t nat nat.
-\end{Coqsrc}
-
-
-
-\begin{Coqsrc}
-Definition zero: t := (0,0).
-
-Definition fin (n:nat) : t := (0, n).
-
-Coercion fin : nat >-> t.
-
-Notation omega := (1,0).
-
-Definition limitb (alpha : t) : bool := 
- match alpha with
- |  (S _, 0) => true
- | _ => false
- end.
-
- Definition succb (alpha: t) : bool :=
- match alpha with
-  (_, S _) => true
-  | _ => false
-end.
-\end{Coqsrc}
-
-
-
+\input{movies/snippets/ON_Omega2/Defs}
 
 \subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
 
@@ -2211,23 +2134,15 @@ end.
 
 The successor of any ordinal is defined by a simple pattern-matching.
 
-\begin{Coqsrc}
-Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega2/Defs}
+
 
 This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
 
-\begin{Coqsrc}
-Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega2/succOK}
 
-\begin{Coqsrc}
-Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
+\input{movies/snippets/ON_Omega2/succLemmas}
 
-Lemma lt_succ alpha : alpha o< succ alpha.
-
-
-\end{Coqsrc}
 
 \subsubsection{Addition}
 

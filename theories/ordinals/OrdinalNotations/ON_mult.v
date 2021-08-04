@@ -19,6 +19,9 @@ Coercion is_true: bool >-> Sortclass.
     lexicographic product of the order on NB by the order on NA 
     (in this order ! ) *)
 
+
+(* begin snippet Defs *)
+
 Section Defs.
 
   Context `(ltA: relation A)
@@ -31,11 +34,7 @@ Section Defs.
 
 Definition t := (B * A)%type.
 Definition lt : relation t := lexico ltB ltA.
-
-
-(** reflexive closure of lt *)
-
-Definition le := clos_refl _ lt.
+Definition le := clos_refl _ lt. (* .none *)
 
 
 Definition compare (alpha beta: t) : comparison :=
@@ -43,6 +42,10 @@ Definition compare (alpha beta: t) : comparison :=
   | Eq => compareA (snd alpha) (snd beta)
   | c => c
   end.
+
+(*| 
+.. coq:: none 
+|*)
 
 #[local] Hint Constructors clos_refl lexico: core.
 
@@ -88,14 +91,24 @@ Proof.
   destruct (compare alpha beta); now constructor. 
 Qed.
 
-#[global] Instance mult_comp:  Comparable lt compare.
+(*||*)
+
+#[global] Instance mult_comp:  Comparable lt compare. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   split.
   - apply lt_strorder.
   - apply compare_correct.
 Qed. 
-
-#[global] Instance ON_mult: ON lt compare.
+ 
+(*||*)
+ 
+#[global] Instance ON_mult: ON lt compare. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   split.
   - apply mult_comp.
@@ -113,8 +126,11 @@ Proof.
   - right;  auto.
 Defined.
 
+(*||*)
 
 End Defs.
+
+(* end snippet Defs *)
 
 Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
 Arguments ON_mult {A ltA  compareA} _ {B ltB compareB}.

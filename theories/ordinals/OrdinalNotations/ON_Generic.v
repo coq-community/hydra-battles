@@ -69,7 +69,7 @@ Section Definitions.
   Qed.
   (*||*)
     
-  
+    
   #[using="All"]
    Definition ZeroLimitSucc_dec :=
     forall alpha,

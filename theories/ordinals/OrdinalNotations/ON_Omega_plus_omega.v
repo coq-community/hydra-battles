@@ -76,12 +76,20 @@ Proof.
       injection H7; intro; subst. abstract lia.
 Qed.
 
-Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega.
+(* begin snippet limitIff *)
+
+Lemma limit_iff (alpha : t) : Limit alpha <-> alpha = omega. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   split.
   - intro H; now apply limit_is_omega.
   - intro; subst; apply omega_is_limit.
 Qed.
+(*||*)
+(* end snippet limitIff *)
+
 
 Lemma Successor_inv1 : forall i j, Successor  (inl j) (inl i) -> j = S i. 
 Proof.
@@ -122,11 +130,16 @@ Proof.
   destruct 1 as [H H0]; inversion H.
 Qed.
 
+(* begin snippet succDef *)
+
 Definition succ (alpha : t) :=
   match alpha with
     inl n => inl (S n)
   | inr n => inr (S n)
   end.
+
+(* end snippet succDef *)
+
 
 Lemma Successor_succ alpha : Successor (succ alpha) alpha.
 Proof.
@@ -143,8 +156,14 @@ Proof.
     inversion_clear 1; abstract lia.
 Qed.
 
-Lemma succ_correct alpha beta : Successor beta alpha <->
-                                beta = succ alpha.
+
+(* begin snippet succCorrect *)
+
+Lemma succ_correct alpha beta :
+  Successor beta alpha <-> beta = succ alpha. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   split.  
   - destruct alpha, beta; intro H.
@@ -154,6 +173,12 @@ Proof.
     apply Successor_inv2 in  H; now subst.
   - intro;subst; now apply Successor_succ.
 Qed.
+(*||*)
+
+(* end snippet succCorrect *)
+
+
+(* begin snippet succb *)
 
 Definition succb (alpha: t) : bool
   := match alpha with
@@ -162,7 +187,10 @@ Definition succb (alpha: t) : bool
      end.
 
 Lemma succb_correct (alpha: t) :
-  succb alpha <-> exists beta: t, alpha = succ beta.
+  succb alpha <-> exists beta: t, alpha = succ beta. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   destruct alpha; split.
   - destruct n.
@@ -178,7 +206,9 @@ Proof.
      +     discriminate.
      + injection H; intro; subst; reflexivity.
 Qed.
+(*||*)
 
+(* end snippet succb *)
 
 Lemma omega_not_succ : forall alpha, ~ Successor omega alpha.
 Proof.
@@ -234,15 +264,23 @@ Proof.
 Defined.
 
 
+(* begin snippet ZeroLimitSuccDec *)
 
-
-Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.
+Definition Zero_limit_succ_dec : ON_Generic.ZeroLimitSucc_dec. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   intro alpha;  destruct (ZLS_dec alpha) as [[H | H] | H].
   - left; left; now rewrite  Least_is_0. 
   - left; now right.
   - now right.
 Defined.
+(*||*)
+
+
+(* end snippet ZeroLimitSuccDec *)
+
 
 Definition limitb (alpha: t) := match ON_compare alpha omega
                                 with  Eq => true | _ => false end.

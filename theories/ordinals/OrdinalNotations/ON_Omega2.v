@@ -11,9 +11,13 @@ Import Relations ON_Generic.
 
 Open Scope ON_scope.
 
+(* begin snippet Omega2Def *)
+
 Instance Omega2: ON _ _ := ON_mult Omega Omega.
 
 Definition t := ON_t.  
+
+(* end snippet Omega2Def *)
 
 Example ex1 : (5,8) o< (5,10).
 constructor 2.
@@ -23,6 +27,7 @@ Qed.
 
 Open Scope ON_scope.
 
+(* begin snippet Defs *)
 
 Notation omega := (1,0).
 Definition zero: t := (0,0).
@@ -30,7 +35,9 @@ Definition zero: t := (0,0).
 Definition fin (i:nat) : t := (0,i).
 Coercion fin : nat >-> t.
 
-Compute ON_compare omega   (fin 42).
+(* end snippet Defs *)
+
+Compute ON_compare omega (fin 42).
 
 Compute ON_compare (8:t) omega.
 
@@ -49,8 +56,11 @@ Proof.
     * exfalso; lia. 
 Qed.
 
+(* begin snippet succ *)
+
 Definition succ (alpha : t) := (fst alpha, S (snd alpha)).
 
+(* end snippet succ *)
 
 Lemma eq_dec (alpha beta: t) : {alpha = beta} + {alpha <> beta}.
 Proof.  
@@ -73,9 +83,14 @@ Proof.
   - left; left; lia.
 Qed.
 
+(* begin snippet succLemmas *)
 
+Lemma lt_succ_le alpha beta :
+  alpha o< beta <-> succ alpha o<= beta. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 
-Lemma lt_succ_le alpha beta : alpha o< beta <-> succ alpha o<= beta.
 Proof.  
  destruct alpha, beta. unfold succ; cbn.
  split.
@@ -87,11 +102,20 @@ Proof.
     right; auto.
    assumption.
 Qed.
+(*||*)
 
-Lemma lt_succ alpha : alpha o< succ alpha.
-Proof.
+(*|
+.. coq:: no-out
+|*)
+
+Lemma lt_succ alpha : alpha o< succ alpha. 
+Proof. 
   destruct alpha; right; cbn; abstract lia.
 Qed.
+
+(*||*)
+
+(* end snippet succLemmas *)
 
 Global Hint Constructors clos_refl lexico : O2.
 Global Hint Unfold lt le : O2.
@@ -204,14 +228,22 @@ Proof.
      inversion H0;   subst;  inversion H;  subst; abstract lia.
 Qed.
 
-Lemma succ_ok alpha beta : Successor beta alpha <-> beta = succ alpha.
+(* begin snippet succOk *)
+
+Lemma succ_ok alpha beta :
+  Successor beta alpha <-> beta = succ alpha. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   split.  
   - destruct alpha, beta; intro H.
     apply Successor_inv in H. destruct H;subst. reflexivity.
   - intros; subst ; apply Successor_succ.
 Qed.
+(*||*)
 
+(* end snippet succOk *)
 
 Definition succb (alpha: t): bool
   := match alpha with
