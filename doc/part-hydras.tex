@@ -2146,41 +2146,9 @@ This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
 
 \subsubsection{Addition}
 
-We can define on \texttt{Omega2} an addition which extends the addition on \texttt{nat}.
+We can define on \texttt{Omega2} an addition which extends the addition on \texttt{nat}. Please note that this operation is not commutative:
 
-\begin{Coqsrc}
-Definition  plus (alpha beta : t) : t :=
-  match alpha,beta with
-  | (0, b), (0, b') => (0, b + b')
-  | (0,0), y  => y
-  | x, (0,0)  => x
-  | (0, b), (S n', b') => (S n', b')
-  | (S n, b), (S n', b') => (S n + S n', b')
-  | (S n, b), (0, b') => (S n, b + b')
-   end.
-
-Infix "+" := plus : o2_scope.
-\end{Coqsrc}
-
-Please note that this operation is not commutative:
-
-\begin{Coqsrc}
-Example non_commutativity_of_plus :  omega + 3 <> 3 + omega.
-Proof.
-  cbn.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 237)
-  
-  ============================
-(1, 3) <> omega.
-\end{Coqanswer}
-
-\begin{Coqsrc}
- discriminate.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega2/plusDef}
 
 
 \subsubsection{Multiplication}

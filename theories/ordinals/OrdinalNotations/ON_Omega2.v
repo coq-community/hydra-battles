@@ -356,6 +356,8 @@ Qed.
    - right; now exists (n,p).
  Defined.
 
+ (* begin snippet plusDef *)
+ 
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
   | (0, b), (0, b') => (0, b + b')
@@ -367,16 +369,31 @@ Definition  plus (alpha beta : t) : t :=
    end.
 
 Infix "+" := plus : ON_scope.
+(*|
+.. coq:: no-out
+|*)
+Lemma plus_compat (n p: nat) :
+  fin  (n + p )%nat =  fin n + fin p. (* .no-out *)
+Proof. 
+  destruct n; now cbn. 
+Qed.
 
+(*||*)
+  
 Compute 3 + omega.
 
 Compute omega + 3.
 
-Example non_commutativity_of_plus :  omega + 3 <> 3 + omega.
-Proof.
-  cbn.
-  discriminate.
-Qed. 
+(*|
+.. coq:: no-out
+|*)
+
+Example non_commutativity_of_plus :  omega + 3 <> 3 + omega. 
+Proof.  discriminate. Qed.
+
+(*  end snippet plusDef *)
+
+
 
 
 (** multiplication of an ordinal by a natural number *)
