@@ -216,6 +216,8 @@ Example Ex1 : In  (bigO beta1) alpha1.
 Proof. reflexivity. Qed.
 
 
+(** results in an error with coq.dev 
+
 (* begin snippet bad *)
 
 Program Definition bad : t 10 := 10.
@@ -226,6 +228,7 @@ Abort.
 (* end snippet bad *)
 
 
+ *)
 
 
 

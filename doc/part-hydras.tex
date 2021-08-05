@@ -2448,7 +2448,14 @@ Note that the type (\texttt{t 0}) is empty, and that, for any natural number
 
  \input{movies/snippets/ON_Finite/t0Empty}
 
- \input{movies/snippets/ON_Finite/bad}
+\begin{Coqsrc}
+Program Definition bad : t 10 := 10.
+Next Obligation.
+  compute.
+Abort.
+\end{Coqsrc}
+
+%\input{movies/snippets/ON_Finite/bad}
 
  
 
