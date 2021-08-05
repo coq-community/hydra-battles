@@ -10,7 +10,12 @@ From hydras Require Import ON_Generic.
 
 Require Wf_nat.
 
+
+
+
 Coercion is_true: bool >-> Sortclass.
+
+(* begin snippet Defs *)
 
 (** The type of ordinals less than [n] *)
 
@@ -19,11 +24,17 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
+(* end snippet Defs *)
 
-Lemma t0_empty (alpha: t 0): False.
-Proof.
+
+(* begin snippet t0Empty *)
+
+Lemma t0_empty (alpha: t 0): False. (* .no-out *)
+Proof. (* .no-out *)
   destruct alpha ; discriminate. 
 Qed.
+
+(* end snippet t0Empty *)
 
 
 Definition compare {n:nat} (alpha beta : t n) :=
@@ -183,12 +194,16 @@ End Inclusion_ij.
 
 Arguments iota_ij {i j}.
 
+(* begin snippet Example1 *)
+
 Program Example alpha1 : t 7 := 2.
 
 Program Example beta1 : t 7 := 5.
 
-Example i1 : lt  alpha1 beta1.
-Proof. reflexivity.  Qed.
+Example i1 : lt  alpha1 beta1. (* .no-out *)
+Proof. (* .no-out *) reflexivity.  Qed.
+
+(* end snippet Example1 *)
 
 Program Example gamma1 : t 8 := 7.
 
@@ -200,13 +215,16 @@ Proof. reflexivity. Qed.
 Example Ex1 : In  (bigO beta1) alpha1.
 Proof. reflexivity. Qed.
 
-(* Hide before compiling the module 
+
+(* begin snippet bad *)
 
 Program Definition bad : t 10 := 10.
 Next Obligation.
   compute.
 Abort.
- **)
+
+(* end snippet bad *)
+
 
 
 

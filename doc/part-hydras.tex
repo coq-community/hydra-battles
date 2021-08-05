@@ -2405,19 +2405,8 @@ One may represent the ordinal $n$ by a sigma type.
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
 
 \label{def: Finite-ord-type}
-\begin{Coqsrc}
-Coercion is_true: bool >-> Sortclass.
 
-Definition t (n:nat) := {i:nat | Nat.ltb i n}.
-\end{Coqsrc}
-
-The order on type (\texttt{t $n$}) is defined through the projection on \texttt{nat}.
-
-
-\begin{Coqsrc}
-Definition lt {n:nat} : relation (t n) :=
-  fun alpha beta => Nat.ltb ( proj1_sig alpha) (proj1_sig beta).
-\end{Coqsrc}
+\input{movies/snippets/ON_Finite/Defs}
 
 For instance, let us build two elements of the segment $[0, 7)$, \emph{i.e.} two
 inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\ref{fig:O7}).
@@ -2449,14 +2438,7 @@ inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\
   
 \index{coq}{Commands!Program}
 
-\begin{Coqsrc}
-Program Example alpha1 : t 7 := 2.
-
-Program Example beta1 : t 7 := 5.
-
-Example i1 : lt  alpha1 beta1.
-Proof. now compute. Qed.
-\end{Coqsrc}
+\input{movies/snippets/ON_Finite/Example1}
 
 
 
@@ -2464,27 +2446,11 @@ Proof. now compute. Qed.
 Note that the type (\texttt{t 0}) is empty, and that, for any natural number
  $n$, $n$ does not belong to (\texttt{t $n$}).
 
-\begin{Coqsrc}
-Lemma t0_empty (alpha: t 0): False.
-Proof.
-  destruct alpha; discriminate.
-Qed.
+ \input{movies/snippets/ON_Finite/t0Empty}
 
-Program Definition bad : t 10 := 10.
-Next Obligation.
-  compute.
-\end{Coqsrc}
+ \input{movies/snippets/ON_Finite/bad}
 
-\begin{Coqanswer}
-1 subgoal (ID 162)
-  
-  ============================
-  false = true
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Abort.
-\end{Coqsrc}
+ 
 
 Note also that attempting to compare a term  of type (\texttt{t $n$}) with a term of
 type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.

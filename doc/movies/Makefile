@@ -37,7 +37,7 @@ COQ_FILES = Ack.v               \
 	    Omega_Small.v       \
 	    Comparable.v       \
 	    ON_Generic.v ON_Omega.v ON_plus.v ON_Omega_plus_omega.v \
-	    ON_mult.v ON_Omega2.v \
+	    ON_mult.v ON_Omega2.v ON_Finite.v \
 	    Omega2_Small.v \
 
 
