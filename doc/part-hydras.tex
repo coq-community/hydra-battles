@@ -2157,41 +2157,17 @@ The restriction of ordinal multiplication to the segment $[0,\omega^2)$ is not a
 For instance $\omega\times\omega= \omega^2$ is outside the set of represented values.
 Nevertheless, we can define two operations mixing natural numbers and ordinals.
 
-\begin{Coqsrc}
-(** multiplication of an ordinal by a natural number *)
+\input{movies/snippets/ON_Omega2/multFinDef}
 
-Definition mult_fin_r  (alpha : t) (p : nat): t :=
-  match alpha, p with
- |  (0,0), _  => zero
- |  _, 0 => zero
- |  (0, n), p => (0, n * p)
- |  ( n, b),  n' => ( n *  n', b)
- end.
-Infix "*" := mult_fin_r : o2_scope.
+\vspace{4pt}
 
-(** multiplication of  a natural number by an ordinal *)
 
-Definition mult_fin_l (n:nat)(alpha : t) : t :=
-  match n, alpha with
- |  0, _  => zero
- |  _, (0,0) => zero
- |   n , (0,n') => (0, (n*n')%nat)
- |  n, (n',p') => (n', (n * p')%nat)
- end.
-
-Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
-Proof. reflexivity. Qed.
-
-Example e2 :  mult_fin_l 3 (omega * 7 + 15) = omega * 7 + 45.
-Proof. reflexivity. Qed.
-\end{Coqsrc}
 
 Multiplication with a finite ordinal and addition are related through the following lemma:
 
-\begin{Coqsrc}
-Lemma unique_decomposition alpha : 
-    exists! i j: nat,  alpha = omega * i + j.
-\end{Coqsrc}
+ 
+\input{movies/snippets/ON_Omega2/uniqueDecomposition}
+
 
 \subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.
@@ -2203,37 +2179,8 @@ Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total fu
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
-\begin{Coqsrc}
-Section Merge.
 
-  Variable A: Type.
-
-  Local Definition m (p : list A * list A) :=
-    omega * length (fst p) + length (snd p).
-
-  Function  merge  (ltb: A -> A -> bool)
-          (xys: list A * list A)
-          {wf (measure_lt m) xys} :
-    list A :=
-    match xys with
-      (nil, ys) => ys
-    | (xs, nil) => xs
-    | (x :: xs, y :: ys) =>
-      if ltb x y then x :: merge  ltb (xs, (y :: ys))
-      else y :: merge  ltb ((x :: xs), ys)
-    end.
-
-  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; lia.
-  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; lia.
-  - apply wf_measure.
-  Defined.
-
-End Merge.
-
-Goal forall l, merge nat Nat.leb (nil, l) = l.
-  intro; now rewrite merge_equation.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/ON_Omega2/Merge}
  
 
 \subsection{Yet another  proof of impossibility}
@@ -2260,14 +2207,9 @@ Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for provin
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html}{Hydra.Omega2\_Small}}
 
+\input{movies/snippets/Omega2_Small/Impossibility}
+\input{movies/snippets/Omega2_Small/Impossibilitya}
 
-\begin{Coqsrc}
-Section Impossibility_Proof.
-  
- Variable m : Hydra -> ON_Omega2.t.
-  
- Context (Hvar : Hvariant (ON_Generic.wf (ON:=Omega2))  free m).
-\end{Coqsrc}
 
 
 We  follow the same pattern as in Sect.~\ref{omega-case}.
@@ -2280,11 +2222,8 @@ $j$ branches of length $1$.
 \vspace{4pt}
 \emph{From Module ~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#iota}{Hydra.Omega2\_Small}}
 
-\begin{Coqsrc}
- Let iota (p: ON_Omega2.t) := 
-     node (hcons_mult (hyd1 head) (fst p)
-                    (hcons_mult head (snd p) hnil)).
-\end{Coqsrc}
+
+\input{movies/snippets/Omega2_Small/Impossibilityc}
 
 For instance, Figure~\vref{fig:essai2} shows the hydra associated to the ordinal 
 $(3,5)$, a.k.a. $\omega\times 3 + 5$.
@@ -2341,15 +2280,14 @@ Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iot
 \end{figure}
 
 
-\begin{Coqsrc}
-   Let big_h := hyd1 (hyd2 head head).  
-\end{Coqsrc}
+\input{movies/snippets/Omega2_Small/Impossibilityb}
+
  
  In a second step, we build a ``smaller'' hydra\footnote{With respect to the measure $m$.}.
  
-\begin{Coqsrc}
-   Let small_h := iota (m big_h).
-\end{Coqsrc}
+\input{movies/snippets/Omega2_Small/Impossibilityd}
+
+\vspace{4pt}
 
 Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h o<= m small\_h o< m big\_h}, which is impossible.
 
@@ -2362,15 +2300,12 @@ First we prove that \texttt{small\_h} is reachable from \texttt{big\_h} in one o
 If $j=0$, then one round suffices to transform \texttt{big\_h} into $\iota(i,j)$.
 If $j>0$, then a first round transforms \texttt{big\_h} into $\iota(i+1,0)$ and a second round into $\iota(i,j)$. So, we have the following result.
 
-\begin{Coqsrc}
-  Lemma big_to_small: big_h -+-> small_h.
-\end{Coqsrc}
+\input{movies/snippets/Omega2_Small/bigToSmall}
 
 Since $m$ is a variant, we infer the following inequality:
 
-\begin{Coqsrc}
-   Corollary m_lt : m small_h o< m big_h.
-\end{Coqsrc}
+\input{movies/snippets/Omega2_Small/mLt}
+
 
 
 \subsubsection{Proof of the inequality \texttt{m big\_h o<= m small\_h} }
@@ -2382,88 +2317,35 @@ $\iota(\alpha)$. Indeed, at any configuration $\iota(k,0)$, where $k>0$, the hyd
 all the possible battles issued from that hydra.
 Let us now give more technical details.
 
-\begin{itemize}
-\item The proof of the lemma \texttt{m\_ge : m big\_h  o<= m small\_h} uses well-founded induction on \texttt{big\_h}.
-
-\item For any pair $p$, we have to distinguish between three cases, according to the value of $p$'s components.
-  \begin{itemize}
-  \item $p=(0,0)$
-  \item $p=(i,0)$, where $i>0$\,: $p$ corresponds to a limit ordinal
-  \item $p=(i,j)$, where $j>0$\,: $p$ is the successor of $(i,j-1)$.
-  \end{itemize}
-\end{itemize}
+The first steps of our proof prepare a well-founded indsction on $\omega^2$.
 
 
-Let us define the notion of elementary ``step'' of decreasing sequences in
-\texttt{t}
-
-
-\begin{Coqsrc}
-  Inductive step : t -> t -> Prop :=
-  | succ_step : forall i j,  step (i, S j) (i, j)
-  | limit_step : forall i j, step (S i, 0) (i, j).
-\end{Coqsrc}
-
-The following lemma establishes a correspondance between the relation
-\texttt{step} and hydra battles.
-
-\begin{Coqsrc}
-  Lemma step_to_battle : forall p q, step p q -> iota p -+-> iota q.
-\end{Coqsrc}
-
-\index{maths}{Transfinite induction}
-
-Thus, starting from any inequality $q < p$ on type \texttt{t}, we can build 
-by \emph{transfinite induction} (\emph{i.e.} well-founded) over \texttt{p} a battle 
-that transforms the hydra $\iota(p)$ into $\iota(q)$.
-
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#m_ge}{Hydra.Omega2\_Small}}
-
-\begin{Coqsrc}
-  Lemma m_ge : forall p : t,   p o<= m (iota p).
-  Proof.
-    unfold small_h; pattern (m big_h) .   
-     apply  well_founded_induction with (R := lt) (1:= lt_wf).
-     intro p ; pattern p;
-     apply  well_founded_induction with 
-               (R := lt2) (1:= wf_lexico lt_wf lt_wf);
-     intros (i,j) IHij. 
-\end{Coqsrc}
+\input{movies/snippets/Omega2_Small/mGe}
 
 \begin{Coqanswer}
   i, j : nat
   IHij : forall y : t, y o< (i, j) -> y o<= m (iota y)
   ============================
-  (i, j) o<= m (iota (i, j)) 
+  (i, j) o<= m (iota (i, j))
+
 \end{Coqanswer}
 
 
-Then we have  three cases to consider, according to the value of $p$.
+Then a case analysis on $i$ and $j$ allows us to
+consider three cases :
+
 \begin{itemize}
-\item If $p=(0,0)$ then obviously, $\iota(p)\geq p = (0,0)$
-\item If  $p=(i+1,0)$ for some $i\in\mathbb{N}$, we
- remark  that $p$ is strictly greater than any pair $ (i, j)$, where $j$ 
-is any natural number.
+\item $i=j=0$: the inequality is trivial.
+\item $i=1+l, j=0$ ($(i,j)$ is a limit ordinal): By the induction hypothesis \texttt{IHij},
+  $(l,k)\leq m(\iota(l,k))$ for any $k$. But (by the rules of the hydra game), $\iota(i,0)$ is transformed into any $\iota(l,k)$ in one round. Thus $m(\iota(l,k)) < m(\iota(i,0))$ for any $k$.
+  Therefore, $(l,k) <  m(\iota(i,0))$ for any $k$, thus
+  $(i,0) \leq m(\iota(i,0))$.
+ \item $j= l+1$  ($(i,j)$ is a successor).  a similar, but simpler case: we apply the induction hypothesis to the pair $(i,l)$.
+ \end{itemize}
 
-Applying the battle rules, for any $j$, we have $\iota(i+1,j)  {\round} \iota(i, j) $, thus $m(\iota(p)) > m(\iota(i,j)$ since  $m$ is assumed to be a variant.
-
-Applying the induction hypothesis, we get the inequality
- $ m(\iota(i,j)) \geq (i,j)$ for any $j$. 
-
-Thus, $m(\iota(p)) > (i,j)$ for any $j$.
-Applying the lemma \texttt{limit\_is\_lub}, we get  the inequality
-$m(\iota(i+1,0))\geq (i+1,0)$
-
-\item If $p=(i,j+1)$ with $j\in\mathbb{N}$, we have  $\iota(p)  {\round} \iota(i, j) $,
-hence $m(\iota(p))> m(\iota(i,j)) \geq (i,j)$, thus $m(\iota(p))\geq (i,j+1)=p$
-
-\end{itemize}
-
-\begin{Coqsrc}
-  (* ... *)
-Qed.
-\end{Coqsrc}
+ Please look at the proof script for more details.
+ 
+ \input{movies/snippets/Omega2_Small/mGeb}
 
 \subsubsection{End of the proof}
 From \texttt{m\_ge}, we get \texttt{m big\_h o<= m small\_h = m (iota (m big\_h)) }. 
@@ -2472,18 +2354,10 @@ Since $<$ is a strict order (irreflexive  and transitive), this inequality is in
 
 \vspace{4pt}
 \noindent
-In \coq (Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#Impossible}{Hydra.Omega2\_Small}):
+\emph{From Module~\href{../theories/html/hydras.Hydra.Omega2_Small.html\#Impossible}{Hydra.Omega2\_Small}}
 
-\begin{Coqsrc}
-  Theorem Impossible: False.
-  Proof.
-    destruct (StrictOrder_Irreflexive (m big_h)).
-    apply le2_lt2_trans with (m small_h).
-    -  unfold small_h; apply m_ge.
-    -  apply m_lt. 
-Qed. 
-End Impossibility_Proof.
-\end{Coqsrc}
+
+  \input{movies/snippets/Omega2_Small/Impossible}
 
 \index{hydras}{Exercises}
 

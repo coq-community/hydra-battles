@@ -103,11 +103,11 @@ Proof.
    assumption.
 Qed.
 (*||*)
-
+   
 (*|
 .. coq:: no-out
 |*)
-
+ 
 Lemma lt_succ alpha : alpha o< succ alpha. 
 Proof. 
   destruct alpha; right; cbn; abstract lia.
@@ -394,7 +394,7 @@ Proof.  discriminate. Qed.
 (*  end snippet plusDef *)
 
 
-
+(* begin snippet multFinDef *)
 
 (** multiplication of an ordinal by a natural number *)
 
@@ -417,6 +417,9 @@ Definition mult_fin_l (n:nat)(alpha : t) : t :=
  |  n, (n',p') => (n', (n * p')%nat)
  end.
 
+(*|
+.. coq:: no-out 
+|*)
 
 Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
 Proof. reflexivity. Qed.
@@ -424,6 +427,9 @@ Proof. reflexivity. Qed.
 Example e2 :  mult_fin_l 3 (omega * 7 + 15) = omega * 7 + 45.
 Proof. reflexivity. Qed.
 
+(*||*)
+
+(* end snippet multFinDef *)
 
 Lemma plus_assoc alpha beta gamma :
   alpha + (beta + gamma) = alpha + beta + gamma.
@@ -456,14 +462,29 @@ Proof.
   destruct i, j; cbn; (reflexivity || (try f_equal; lia)). 
 Qed.
 
-Lemma unique_decomposition alpha : exists! i j: nat,  alpha = omega * i + j.
+(* begin snippet uniqueDecomposition *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+Lemma unique_decomposition alpha:
+  exists! i j: nat,  alpha = omega * i + j.
 Proof.
   destruct alpha as [i j]; exists i; split.
+  (*||*)
+  (* ... *)
+  (*|
+.. coq:: none 
+|*)
   -  exists j; split.
      + now rewrite decompose. 
      + intros x; repeat rewrite <- decompose; congruence.
   - intros x [y [Hy _]]; rewrite <- decompose in Hy; congruence.
 Qed.
+(*||*)
+
+(* end snippet uniqueDecomposition *)
 
 (** ** Additive principal ordinals  *)
 
@@ -544,6 +565,12 @@ Qed.
 
 Require Import List.
 
+(* begin snippet Merge *)
+
+(*|
+.. coq:: no-out 
+|*)
+
 Section Merge.
 
   Variable A: Type.
@@ -562,17 +589,25 @@ Section Merge.
       if ltb x y then x :: merge  ltb (xs, (y :: ys))
       else y :: merge  ltb ((x :: xs), ys)
     end.
+  (*||*)
+  (*| 
+.. coq:: none
+|*)
   
   - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
   - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
   - apply wf_measure. 
   Defined.
 
+  (*||*)
+
+  
 End Merge.
 
 Goal forall l, merge nat Nat.leb (nil, l) = l.
   intro; now rewrite merge_equation.
 Qed.
 
- 
+
+(* end snippet Merge *)
 
