@@ -79,6 +79,7 @@ Section Definitions.
 
   (** The segment called [O alpha] in Schutte's book *)
 
+
   #[using="All"]
    Definition bigO (a: A) : Ensemble A := fun x: A => lt x a.
 
@@ -95,18 +96,27 @@ Global Hint Resolve wf_measure : core.
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)
 
+(* begin snippet SubONDef *)
+
 Class  SubON 
        `(OA: @ON A ltA compareA)
        `(OB: @ON B ltB compareB)
        (alpha:  B)
        (iota: A -> B):=
   {
-  SubON_compare :forall x y : A,  compareB (iota x) (iota y) =
-                                 compareA x y;
+  SubON_compare: forall x y : A,
+      compareB (iota x) (iota y) =
+      compareA x y;
   SubON_incl : forall x, ltB (iota x) alpha;
-  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+  SubON_onto : forall y,
+      ltB y alpha  -> exists x:A, iota x = y}.
+
+(* end snippet SubONDef *)
 
 (** [OA] and [OB] are order-isomporphic *)
+
+(* begin snippet ONIso *)
+
 Class  ON_Iso 
        `(OA : @ON A ltA compareA)
        `(OB : @ON B ltB compareB)
@@ -119,7 +129,11 @@ Class  ON_Iso
   iso_inv2 : forall b, f (g b) = b
   }.
 
+(* end snippet ONIso *)
+
 (** OA is an ordinal notation for alpha (in Schutte's model) *)
+
+(* begin snippet ONCorrect *)
 
 Class ON_correct `(alpha : Ord)
      `(OA : @ON A ltA compareA)
@@ -135,7 +149,7 @@ Class ON_correct `(alpha : Ord)
         end
   }.
 
-
+(* end snippet ONCorrect *)
 
 (** ** Relative correctness of a constant or a function  *)
 

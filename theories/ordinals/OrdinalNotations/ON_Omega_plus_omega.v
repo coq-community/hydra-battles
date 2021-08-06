@@ -405,7 +405,11 @@ Proof.
      + inversion 1; inversion H0.
  Qed.
 
- Instance Incl : SubON Omega Omega_plus_Omega omega fin.
+ (* begin snippet Incl *)
+ 
+ Instance Incl : SubON Omega Omega_plus_Omega omega fin. (* .no-out *)
+
+ (* end snippet Incl *)
  Proof.
    split.
    - intros; reflexivity.

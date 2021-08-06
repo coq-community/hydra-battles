@@ -541,9 +541,12 @@ Proof.
   -  intros x x' Hx Hx' H; apply inject_injective; auto.
 Qed.
 
+(* begin snippet Epsilon0Correct *)
 
 Instance Epsilon0_correct :
-  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
+  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)). (* .no-out *)
+(* end snippet Epsilon0Correct *)
+
 Proof.
   split.
   - intro a; apply embedding; red; apply cnf_ok.
@@ -554,6 +557,9 @@ Proof.
    + apply inject_mono;destruct H; tauto.
    + apply inject_mono;  destruct H; tauto.
 Qed.
+
+
+
 
 (** Correctness of E0.plus *)
 

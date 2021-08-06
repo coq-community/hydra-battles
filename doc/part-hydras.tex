@@ -1807,6 +1807,7 @@ We give  also a few handy definitions and lemmas for any ordinal notation.
 \label{sect:on-lt-notation}
 \label{sect:on-le-notation}
 \label{sect:measure-ON}
+\label{sect:bigO-ON}
 
 
 \input{movies/snippets/ON_Generic/ONDefs}
@@ -2451,6 +2452,16 @@ Note that the type (\texttt{t 0}) is empty, and that, for any natural number
 \begin{Coqsrc}
 Program Definition bad : t 10 := 10.
 Next Obligation.
+\end{Coqsrc}
+
+\begin{Coqanswer}
+1 subgoal (ID 118)
+  
+  ============================
+  10 <? 10 
+\end{Coqanswer}
+
+\begin{Coqsrc}
   compute.
 Abort.
 \end{Coqsrc}
@@ -2459,31 +2470,14 @@ Abort.
 
  
 
-Note also that attempting to compare a term  of type (\texttt{t $n$}) with a term of
-type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
 
-\begin{Coqsrc}
-Program Example gamma1 : t 8 := 7.
-
-Fail Goal lt alpha1 gamma1.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- The command has indeed failed with message:
-The term "gamma1" has type "t 8" while it is expected to have type "t 7".
-\end{Coqanswer}
 
 
 In order to build an instance of \texttt{ON}, we define a comparison function,  and prove its correction.
 
-\begin{Coqsrc}
-Definition compare {n:nat} (alpha beta : t n) :=
-  Nat.compare (proj1_sig alpha) (proj1_sig beta).
+\input{movies/snippets/ON_Finite/compareDef}
 
-Lemma compare_correct {n} (alpha beta : t n) :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-\end{Coqsrc}
+
 
 \begin{remark}
  The proof of \texttt{compare\_correct} uses a well-known pattern of \coq{}.
@@ -2533,40 +2527,28 @@ FAQs on \coq{}).
 
 \end{remark}
 
+Please note  that attempting to compare a term  of type (\texttt{t $n$}) with a term of
+type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
+
+
+\input{movies/snippets/ON_Finite/Example2}
+
+
 
 Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image}, \linebreak
  \texttt{Coq.Wellfounded.Inclusion}, and \texttt{Coq.Arith.Wf\_nat}, we prove that our
 relation \texttt{lt} is well founded.
 
-\begin{Coqsrc}
-Lemma lt_wf (n:nat) : well_founded (@lt n).
-\end{Coqsrc}
+\input{movies/snippets/ON_Finite/ltWf}
+
 
 Now we can build our instance of \texttt{OrdinalNotation}.
 
-\begin{Coqsrc}
-#[global] Instance sto n : StrictOrder (@lt n).
-
-#[global] Instance comp n: Comparable (@lt n) compare.
-
-#[global] Instance FinOrd n : ON (@lt n) compare. 
-Proof.
-  split.
-  - exact (comp n).
-  - apply lt_wf.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/ON_Finite/ONInstance}
 
 \begin{remark}
 It is important to keep in mind  that the integer $n$ is not an ``element'' of \texttt{FinOrd $n$}. In set-theoretic presentations of ordinals, the set associated with the ordinal $n$ is $\{0,1,\dots,n-1\}$. 
-In our formalization, the interpretation of an ordinal as a set is realized by the following definition
-(in ~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{ON\_Generic}).
-
-\begin{Coqsrc}
-Definition bigO `{nA : @OrdinalNotation A ltA stoA compareA}
-           (a: A) : Ensemble A :=
-  fun x: A => ltA x a.
-\end{Coqsrc}
+In our formalization, the interpretation of an ordinal as a set is realized by the function \texttt{bigO} (see Section\vref{sect:bigO-ON}).
 \end{remark}
 
 
@@ -2626,25 +2608,22 @@ If \texttt{OB} is presumed to be correct, then we may consider that \texttt{OA} 
 \label{types:SubON}
 \index{hydras}{Library OrdinalNotations!Type classes!SubON}
 
-\begin{Coqsrc}
-Class  SubON 
-       `(OA : @ON A ltA  compareA)
-       `(OB : @ON B ltB  compareB)
-       (alpha :  B)
-       (iota : A -> B):=
-  {
-  SubON_compare: forall x y : A,  compareB (iota x) (iota y) =
-                                 compareA x y;
-  SubON_incl : forall x, ltB (iota x) alpha;
-  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
-\end{Coqsrc}
+following definition
+(in ~\href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{ON\_Generic}).
+
+\input{movies/snippets/ON_Generic/SubONDef}
+
+
 
 For instance, we prove that \texttt{Omega} is a sub-notation of
 \texttt{Omega\_plus\_Omega} (with $\omega$ as the first ``new'' ordinal, and \texttt{fin} as the injection).
 
-\begin{Coqsrc}
-Instance Incl : SubON Omega Omega_plus_Omega omega fin.
-\end{Coqsrc}
+\vspace{4pt}
+\noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
+
+\input{movies/snippets/ON_Omega_plus_omega/Incl}
+
+
 
 
 
@@ -2662,29 +2641,16 @@ the segment $[0,i)$ of ($t\;j$).
 
 \index{coq}{Commands!Program}
 
-We are now able to build an instance of \texttt{SubON}. 
-
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
 
-\begin{Coqsrc}
-Section Inclusion_ij.
 
-  Variables i j : nat.
-  Hypothesis Hij : (i < j)%nat.
+\input{movies/snippets/ON_Finite/InclIJ}
+\input{movies/snippets/ON_Finite/InclIJa}
+\input{movies/snippets/ON_Finite/InclIJb}
+\input{movies/snippets/ON_Finite/InclIJc}
+\input{movies/snippets/ON_Finite/InclIJd}
 
-  Remark Ltb_ij : Nat.ltb i j.
-
-  Program Definition iota_ij  (alpha: t i) : t j :=  alpha.
- 
-   Let b : t j := exist _ i Ltb_ij.
-   
-   Global Instance F_incl_ij  : SubON  (FinOrd i) (FinOrd j) b iota_ij.
-  (* ... *)
-
-  End Inclusion_ij.
-\end{Coqsrc}
-         
 
 
 \index{hydras}{Exercises}
@@ -2713,32 +2679,18 @@ where $\alpha$ is a countable ordinal \emph{à la}  Schütte.
 \label{types:ON-for}
 \index{hydras}{Library OrdinalNotations!Type classes!ON\_correct}
 
-\begin{Coqsrc}
-Class ON_correct `(alpha : Ord)
-     `(OA : @ON A ltA compareA)
-      (iota : A -> Ord) :=
-  { ON_correct_inj : forall a, lt (iota a) alpha;
-    ON_correct_onto : forall beta, lt beta alpha ->
-                                exists b, iota b = beta;
-    On_compare_spec : forall a b:A,
-        match compareA a b with
-          Datatypes.Lt => lt (iota a) (iota b)
-        | Datatypes.Eq => iota a = iota b
-        | Datatypes.Gt => lt (iota b) (iota a)
-        end
-  }.
-\end{Coqsrc}
-
+\input{movies/snippets/ON_Generic/ONCorrect}
 
 
 For instance, the following theorem tells that \texttt{Epsilon0}, our notation system for the segment $[0,\epsilon0)$ is a correct implementation of the theoretically defined  ordinal $\epsilon_0$
 (see chapter~\ref{chap:schutte} for more details).
 
+\vspace{4pt}
+\noindent\emph{From Module~\href{../theories/html/hydras.Schutte.Correctness_E0.html}{Schutte.Correctness\_E0}}
 
-\begin{Coqsrc}
-Instance Epsilon0_correct :
-  ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)).
-\end{Coqsrc}
+\input{movies/snippets/Correctness_E0/Epsilon0Correct}
+
+
 
 \index{hydras}{Projects}
 
@@ -2758,19 +2710,10 @@ In some cases we want to show that two notation systems describe the same segmen
 \index{hydras}{Library OrdinalNotations!Type classes!ON\_Iso}
 
 \label{types:ON-iso} 
-\begin{Coqsrc}
-Class  ON_Iso 
-       `(OA : @ON A ltA compareA)
-       `(OB : @ON B ltB  compareB)
-       (f : A -> B)
-       (g : B -> A):=
-  {
-  iso_compare: forall x y : A, 
-      compareB (f x) (f y) = compareA x y;
-  iso_inv1 : forall a, g (f a)= a;
-  iso_inv2 : forall b, f (g b) = b
-}.
-\end{Coqsrc}
+
+
+\input{movies/snippets/ON_Generic/ONIso}
+
 
 \index{hydras}{Exercises}
 
