@@ -39,13 +39,13 @@ Qed.
 
 (* begin snippet compareDef *)
 
-Definition compare {n:nat} (alpha beta : t n) :=
-  Nat.compare (proj1_sig alpha) (proj1_sig beta).
-
-
 (*|
 .. coq:: no-out
 |*)
+
+Definition compare {n:nat} (alpha beta : t n) :=
+  Nat.compare (proj1_sig alpha) (proj1_sig beta).
+ 
 
 Lemma compare_correct {n} (alpha beta : t n) :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
