@@ -1,6 +1,7 @@
 (coq.theory
  (name hydras)
  (package coq-hydra-battles)
- (synopsis "Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq"))
+ (synopsis "Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq")
+ (flags -w -deprecated-instance-without-locality -w -deprecated-hint-rewrite-without-locality))
 
 (include_subdirs qualified)
