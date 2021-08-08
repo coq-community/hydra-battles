@@ -3,18 +3,18 @@
 In this part, we present a development  for the \coq{} proof assistant, after the work of Kirby and Paris. This formalization contains the following main parts:
 
 \begin{itemize}
-\item Representation in \coq{} of hydras and hydra battles
+\item Representation in \coq{} of hydras and hydra battles.
 \item A proof that every battle is finite and won by Hercules. This proof is based on a \emph{variant} which maps any hydra to an ordinal strictly less than $\epsilon_0$ and is strictly decreasing along any battle.
 
-\item Using a combinatorial toolkit designed by J.~Ketonen and R.~Solovay~\cite{KS81}, we prove that, for any ordinal $\mu<\epsilon_0$, there exists no such variant mapping any hydra to an ordinal stricly less than $\mu$. Thus, the complexity of $\epsilon_0$ is really needed in the previous proof.
+\item Using a combinatorial toolkit designed by J.~Ketonen and R.~Solovay~\cite{KS81}, we prove that, for any ordinal $\mu<\epsilon_0$, there exists no such variant mapping any hydra to an ordinal strictly less than $\mu$. Thus, the complexity of $\epsilon_0$ is really needed in the previous proof.
 
 \item We prove a relation between the length of a ``classic''  kind of  battles \footnote{This class is also called \emph{standard} in this document (text and proofs). The \emph{replication factor} of the hydra is exactly $i$ at the $i$-th round of the battle (see Sect~\vref{sect:replication-def}).}
-and the Wainer-Hardy hierarchy of ``rapidly growing functions'' $H_\alpha$~\cite{Wainer1970}. The considered class of battles, which we call \emph{standard}  is the most considered one in the scientific  litterature(including popularization).
+and the Wainer-Hardy hierarchy of ``rapidly growing functions'' $H_\alpha$~\cite{Wainer1970}. The considered class of battles, which we call \emph{standard},  is the most considered one in the scientific  literature (including popularization).
 \end{itemize}
 
 
 Simply put, this document tries to combine the scientific interest of two articles~\cite{KP82, KS81} and a book~\cite{schutte} with the playful activity of truly proving theorems.
-We hope  that such a work, besides exploring a nice piece of discrete maths, 
+We hope  that such a work, besides exploring a nice piece of discrete mathematics,
 will show how \coq{} and its standard library are well fitted to help us to understand some non-trivial mathematical developments, and also to experiment the constructive parts of  the proof through functional programming.
 
  We also hope to provide a little clarification on infinity (both potential and actual) through the notions of function, computation, limit,
@@ -24,13 +24,13 @@ will show how \coq{} and its standard library are well fitted to help us to unde
 
 %\section{Remarks}
 
-\subsection*{Difference from Kirby and Paris's Work}
+\subsection*{Difference from Kirby and Paris's work}
 In~\cite{KP82}, Kirby and Paris show  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
-Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chosed to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers up to $\epsilon_0$.
+Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chose to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers up to $\epsilon_0$.
 
 \subsection*{State of the development}
 The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on  notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
-We added new material : axiomatic definition of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, equations, etc.
+We added new material: axiomatic definitions of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, equations, etc.
 
 We are now working in order to make clumsy proofs more readable, simplify definitions, and ``factorize'' proofs as much as possible. 
 Many possible improvements are suggested as ``todo''s or ``projects'' in this text.
@@ -111,12 +111,12 @@ module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Exa
 \draw (foot) to [bend right = 10] (H4) ;
 \draw (N1) to [bend right= 16] (H5);
 \end{tikzpicture}
-\caption{The hydra Hy \label{fig:Hy}}
+\caption{The hydra \texttt{Hy} \label{fig:Hy}}
 \end{figure}
 
 
 
-We use a specific vocabulary for talking about hydras. Table~\ref{tab:hyd2tree} shows the correspondance between our terminology and the usual vocabulary for trees in computer science.
+We use a specific vocabulary for talking about hydras. Table~\ref{tab:hyd2tree} shows the correspondence between our terminology and the usual vocabulary for trees in computer science.
 
 
 \begin{figure}[h]
@@ -137,7 +137,7 @@ daughter & immediate subtree\\
 
 
 The hydra \texttt{Hy} has a \emph{foot} (below), five \emph{heads}, and eight \emph{segments}. 
-We leave it to the reader to define various parameters such as the height, the size, the highest arity (number of sons of a node) of a hydra. In our example, these parameters have the respective values : $4$, $9$ and $3$.
+We leave it to the reader to define various parameters such as the height, the size, the highest arity (number of sons of a node) of a hydra. In our example, these parameters have the respective values $4$, $9$ and $3$.
 
 
 
@@ -180,7 +180,7 @@ nodes and segments from which, in order to reach the root, this segment would ha
 traversed. If the head just chopped off had the root of its nodes, no new head is grown. ''
 \end{quote}
 
-Moreover, we note that this description is in \emph{imperative} terms. In order to build a formal  study of the properties of hydra battles, we prefer to use a mathematical vocabulary, i.e., graphs, relations, functions, etc.
+Moreover, we note that this description is in \emph{imperative} terms. In order to formally study the properties of hydra battles, we prefer to use a mathematical vocabulary, i.e., graphs, relations, functions, etc.
 Thus, the replication process will be represented as a binary relation on a data type \texttt{Hydra},
 linking the state of the hydra \emph{before} and \emph{after} the transformation.
 A battle will thus be represented as a sequence of terms of type \texttt{Hydra}, respecting the rules of the game.
@@ -192,11 +192,11 @@ A battle will thus be represented as a sequence of terms of type \texttt{Hydra},
 \subsection{Example}
 Let us start a battle between Hercules and the hydra \texttt{Hy} of Fig.~\ref{fig:Hy}.
 
-At the first round, Hercules choses to chop off the rightmost head of \texttt{Hy}.
+At the first round, Hercules chooses to chop off the rightmost head of \texttt{Hy}.
 Since this head is near the floor, the hydra simply loses this head. Let us call 
  \texttt{Hy'} the resulting state of the hydra, represented in Fig.~\vref{fig:Hy-prime}.
 
-Next, assume Hercules choses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the broken segment in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part\footnote{In other words, the replication factor at this round is equal to $4$.}. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
+Next, assume Hercules chooses to chop off one of the two highest heads of \texttt{Hy'}, for instance the rightmost one. Fig.~\vref{fig:Hy2} represents the broken segment in dashed lines, and the part that will be replicated in red. Assume also that the hydra decides to add 4 copies of the red part\footnote{In other words, the replication factor at this round is equal to $4$.}. We obtain a new state \texttt{Hy''} depicted in Fig.~\ref{fig:Hy3}.
 
 
 
@@ -222,7 +222,7 @@ Next, assume Hercules choses to chop off one of the two highest heads of \texttt
 \draw (N1) to [bend right= 16] (H5);
 \end{tikzpicture}
 
-\caption{Hy': the state  of Hy after one round \label{fig:Hy-prime}}
+\caption{\texttt{Hy'}: the state  of \texttt{Hy} after one round \label{fig:Hy-prime}}
 \end{figure}
 
 
@@ -288,7 +288,7 @@ Next, assume Hercules choses to chop off one of the two highest heads of \texttt
 \draw (foot) to [bend left= 10]  (H0) ;
 \draw (N1) to [bend left= 10]  (H5) ;
 \end{tikzpicture}
-\caption{Hy'', the state of Hy after two rounds \label{fig:Hy3}}
+\caption{\texttt{Hy''}: the state of \texttt{Hy} after two rounds \label{fig:Hy3}}
 \end{figure}
 
 Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the battle, with a replication factor equal to $2$. Let us call \texttt{Hy'''} the state of the hydra after that third round.
@@ -431,7 +431,7 @@ Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the b
 \draw (N0033) to   [bend left= 10](H0013) ;
 \draw (N0034) to   [bend left= 10](H0014) ;
 \end{tikzpicture}
-\caption{The configuration Hy''' of Hy \label{fig:Hy5}}
+\caption{The configuration \texttt{Hy'''} of \texttt{Hy} \label{fig:Hy5}}
 \end{figure}
 \FloatBarrier
 
@@ -538,7 +538,7 @@ will help us to describe and reason about replications in hydra battles.
 
 
 
-For instance, the hydra $Hy''$ of Fig~\vref{fig:Hy3}  can be defined in \coq{} as follows:
+For instance, the hydra \texttt{Hy''} of Fig~\vref{fig:Hy3}  can be defined in \coq{} as follows:
 
 \vspace{4pt}
 \noindent
@@ -730,7 +730,7 @@ is  (\texttt{h\_forall $P$}).  Design a tactic for induction on hydras that free
 In this section, we represent the rules of hydra battles as a binary relation associated with
 a \emph{round}, i.e., an interaction composed of the two following actions:
 \begin{enumerate}
-\item Hercules chops off one head of the hydra
+\item Hercules chops off one head of the hydra.
 \item Then, the  hydra replicates the wounded part (if the head is at distance $\geq 2$ from the foot).
 \end{enumerate}
 The relation associated with each round of the battle is parameterized  by the \emph{expected} replication  factor (irrelevant if the chopped head is at distance 1 from the foot,
@@ -913,7 +913,7 @@ Use your tactics for simulating a small part of a hydra battle, for instance the
 
 \item Please keep in mind that the last  configuration of your interactively built battle is known only at the end of the battle. Thus, you will have to create and solve subgoals with existential variables. For that purpose, the tactic \texttt{eexists}, applied to the 
 goal \Verb@{h':Hydra | h -*-> h'}@ generates the subgoal \Verb|h -*-> ?h'|.
-\item You may use Gérard Huet's \emph{zipper} data structure~\cite{zipper} for writing tactics associated with Hercule's  interactive search for a head to chop off.
+\item You may use Gérard Huet's \emph{zipper} data structure~\cite{zipper} for writing tactics associated with Hercules's  interactive search for a head to chop off.
 \end{itemize}
 
 
@@ -946,7 +946,7 @@ The most general class of battles is \texttt{free}, which allows the hydra to ch
 
 \input{movies/snippets/Hydra_Definitions/freeDef}
 
-We chosed to call \emph{standard} the kind of battles which appear  most often in the litterature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
+We chose to call \emph{standard} the kind of battles which appear  most often in the literature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
@@ -1024,7 +1024,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 \draw (foot) to  [bend right=20] (h6);
 \end{tikzpicture}
 
-  \caption{The hydra hinit}
+  \caption{The hydra \texttt{hinit}}
   \label{fig:hinit}
 \end{figure}
 
@@ -1059,7 +1059,7 @@ During the two first rounds, our hydra loses its two rightmost heads.  Figure~\v
 \draw (n1) to   [bend right=20] (h3);
 \end{tikzpicture}
 
-  \caption{The hydra (hyd1 h3)}
+  \caption{The hydra (\texttt{hyd1 h3})}
   \label{fig:hinit-plus2}
 \end{figure}
 
@@ -1137,7 +1137,7 @@ a tree whith exactly one node and no edge.
 % \draw (n1) to   [bend right=20] (h3);
 \end{tikzpicture}
 
-  \caption{The hydra (hyd 3 4 2)}
+  \caption{The hydra (\texttt{hyd 3 4 2})}
   \label{fig:hinit-plusn}
 \end{figure}
 
@@ -1148,7 +1148,7 @@ With these notations, we get a formal description of the first three rounds.
 
 
 \subsection{Testing  \dots}
-In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple datatype for representing the states as tuples composed of
+In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple data type for representing the states as tuples composed of
 the round number, and the respective number of daughters  \texttt{h2}, \texttt{h1}, and heads
 of the current hydra.
 
@@ -1157,7 +1157,7 @@ of the current hydra.
 
 
 
-The following function returns the next configurarion of the game. 
+The following function returns the next configuration of the game.
 Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle only start with the lemma
 \texttt{step\_battle}, page~\pageref{lemma:step-battle}.
 
@@ -1573,7 +1573,7 @@ Technically, we prove this lemma by Peano induction on $i$.
   $i \leq m(\iota(i))$.
   \begin{enumerate}
   \item  But the hydra $\iota(S(i))$ can be transformed in one round into
-    $\iota(i)$ (by losing its righmost head, for instance)
+    $\iota(i)$ (by losing its rightmost head, for instance)
   \item Since $m$ is a variant, we have $m(\iota(i)) < m(\iota(S(i)))$,
     hence  $i< m(\iota(S(i)))$, which implies  $S(i)\leq  m(\iota(S(i)))$.
   \end{enumerate}
@@ -1615,7 +1615,7 @@ The next chapter is dedicated to a generic formalization of ordinal notations, a
 
 The proof of termination of all hydra battles presented in~\cite{KP82} is based
 on \emph{ordinal numbers}.
-From a mathematical point of view, an ordinal is a representant of an equivalence class for isomorphims of  totally ordered well-founded sets.
+From a mathematical point of view, an ordinal is a representative of an equivalence class for isomorphisms of  totally ordered well-founded sets.
 
 For the computer scientist, ordinals are tools for proving the totality of a given recursive function, or termination of a transition system. \emph{Ordinal arithmetic} 
 provides a set of functions whose properties, like \emph{monotony}, allow to define \emph{variants}, \emph{i.e.} strictly decreasing measures used in proofs of termination.
@@ -1705,11 +1705,11 @@ For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal 
 the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
 
 In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work within type theory, 
-we do not identify ordinals as sets of ordinals, but consider the correspondance between ordinals and sets of ordinals as the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
+we do not identify ordinals as sets of ordinals, but consider the correspondence between ordinals and sets of ordinals as the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
 For instance $\mathbb{O}_\omega=\mathbb{N}$, and $\mathbb{O}_7=\{0,1,2,3,4,5,6\}$.
 
 
-We cannot cite all the litterature published on ordinals since Cantor's book 
+We cannot cite all the literature published on ordinals since Cantor's book
 \cite{cantorbook}, and 
 leave it to the reader to explore the bibliography. 
 
@@ -1719,7 +1719,7 @@ leave it to the reader to explore the bibliography.
 Two kinds of representation of ordinals are defined in our development.
 
 \begin{itemize}
-\item A ``mathematical'' representation of the set of countable ordinal numbers, afer Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
+\item A ``mathematical'' representation of the set of countable ordinal numbers, after Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
 \item A family of \emph{ordinal notations} (also called \emph{[ordinal] notation systems}), \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
 correctness of a given ordinal notation with respect to Schütte's model obviously use axioms.
 Please execute the \texttt{Print Assumptions} command in case of doubt.
@@ -2313,12 +2313,12 @@ Since $m$ is a variant, we infer the following inequality:
 
 
 The proof of the inequality \texttt{m big\_h o<= m small\_h} is quite more complex than in Sect~\ref{omega-case}.  If we consider any ordinal $\alpha=(i,j)$, where $i>0$, there exists an infinite number of
-ordinals stricly less than $\alpha$, and there exists an infinite number of battles that start from
+ordinals strictly less than $\alpha$, and there exists an infinite number of battles that start from
 $\iota(\alpha)$. Indeed, at any configuration $\iota(k,0)$, where $k>0$, the hydra can freely choose any replication number. Intuitively, the measure of such a hydra must be large enough for taking into account
 all the possible battles issued from that hydra.
 Let us now give more technical details.
 
-The first steps of our proof prepare a well-founded indsction on $\omega^2$.
+The first steps of our proof prepare a well-founded induction on $\omega^2$.
 
 
 \input{movies/snippets/Omega2_Small/mGe}
@@ -2555,7 +2555,7 @@ In our formalization, the interpretation of an ordinal as a set is realized by t
 
 
 \begin{remark}
- There is no interesting arihmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
+ There is no interesting arithmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
 \end{remark}
 
 \begin{remark}
@@ -2896,7 +2896,7 @@ and addition.
 
 \paragraph*{Remark}
 \label{sec:orgheadline65}
-Unless explicitly mentionned, the term ``ordinal" will be used instead of
+Unless explicitly mentioned, the term ``ordinal" will be used instead of
 ``ordinal strictly less than \(\epsilon_0\)" (except in Chapter~\ref{chap:schutte} where it stands for ``countable ordinal'').
 
 
@@ -2975,7 +2975,7 @@ level 3/.style={sibling distance=17mm}]
 
 
 \paragraph{Remark}
-For simplicity's sake, we chosed to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the contruction (\texttt{ocons $\alpha$ $n$ $\beta$}) is intented to represent the
+For simplicity's sake, we chose to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the construction (\texttt{ocons $\alpha$ $n$ $\beta$}) is intended to represent the
 ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
 In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
 definition. But this replacement would take a lot of time \dots{}
@@ -3407,7 +3407,7 @@ In earlier versions of this development, the predicate \texttt{nf} was defined  
 \end{exercise}
 
 
-In order to  upgrade constants and fonctions from type \texttt{T1} to \texttt{E0}, we have to prove that 
+In order to  upgrade constants and functions from type \texttt{T1} to \texttt{E0}, we have to prove that
 the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
@@ -3984,7 +3984,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     addition. It is used as an auxiliary operation  for defining variants
     for hydra battles, where Hercules is allowed to chop off any  head of the hydra.
 
-    In the litterature, the natural sum of ordinals \(\alpha\) and \(\beta\) 
+    In the literature, the natural sum of ordinals \(\alpha\) and \(\beta\)
     is often denoted by \(\alpha \# \beta\)  or  \(\alpha \oplus  \beta\).
     Thus we called \texttt{oplus} the associated \emph{Coq} function.
 
@@ -4426,7 +4426,7 @@ Our proofs are  constructive and require no axioms: they are  closed terms of th
 They  share much theoretical material with Kirby and Paris', although they do not use any knowledge about Peano arithmetic nor model  theory.  The combinatorial arguments we use and implement
 come from 
  an article by J.~Ketonen and R.~Solovay~\cite{KS81}, already  cited in the work
- by L.~Kirby et J.~Paris.% on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
+ by L.~Kirby and J.~Paris.% on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
  Section $2$ of this article: ''A hierarchy of probably recursive functions'', contains a systematic study of \emph{canonical sequences}, which are closely related to
 rounds of hydra battles. 
 Nevertheless, they have the same global structure as the simple proofs described in
@@ -4600,7 +4600,7 @@ Proof.
 
 \index{maths}{Transfinite induction}
 
-We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivates in function definitions by transfinite recursion.
+We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivatives in function definitions by transfinite recursion.
 
 \label{lemma:canonS_LT}
 \begin{Coqsrc}
@@ -5281,7 +5281,7 @@ The following exercise will give an idea of this increase.
 
 Why is \texttt{Cor12} so useful? 
 Let us  consider two ordinals  $\beta<\alpha<\epsilon_0$. By induction on $\alpha$,
-we decompose any inequality $\beta<\alpha$ into $\beta < \canonseq{\alpha}{i}< \alpha$, where $i$ is some integer. Applying collorary \texttt{Cor12'} we build a $n$-path from $\beta$ to $\alpha$,
+we decompose any inequality $\beta<\alpha$ into $\beta < \canonseq{\alpha}{i}< \alpha$, where $i$ is some integer. Applying corollary \texttt{Cor12'} we build a $n$-path from $\beta$ to $\alpha$,
 where $n$ is the maximum of the indices $i$ met in the induction.
 
  Lemma 1, Section 2.6 of~\cite{KS81} is naturally expressed in terms of \coq's
@@ -5646,7 +5646,7 @@ We are grateful to
  J. Ketonen and R. Solovay  for the high quality of their explanations and proof details.
 Our proof follows tightly the sequence of lemmas in their article, with a focus on 
 constructive aspects.
-Roughly steaking, our implementation \emph{builds}, out of a hypothetic 
+Roughly speaking, our implementation \emph{builds}, out of a hypothetical
   variant $m$, bounded by some ordinal $\mu<\epsilon_0$, a hydra \texttt{big\_h} which verifies the impossible inequality  $m(\texttt{big\_h})< m(\texttt{big\_h})$.
 
 
@@ -5685,7 +5685,7 @@ Can we still prove the theorems of section~\ref{std-case} with this new definiti
 \chapter{Large sets and rapidly growing functions}\label{chap:alpha-large}
 
 \begin{remark}
-Some notations (mainly names of fast-growing functions) of our development may differ slightly from the litterature. Although this fact does not affect our proofs, we are preparing a future version where the names $F\_alpha$, $f\_alpha$, $H\_alpha$, etc., are fully consistent with the cited articles. 
+Some notations (mainly names of fast-growing functions) of our development may differ slightly from the literature. Although this fact does not affect our proofs, we are preparing a future version where the names $F\_alpha$, $f\_alpha$, $H\_alpha$, etc., are fully consistent with the cited articles.
 
 \end{remark}
 %\section{Introduction}
@@ -5722,7 +5722,7 @@ We say also that $s$ is \emph{minimally $\alpha$-large} (in short:
 
 
 \begin{remark}
-  Ketonen and Solovay~\cite{KS81} consider  large finite \emph{sets} of natural numbers,  but they are mainly used as sequences. Thus, we chosed to represent them explicitely as (sorted) lists. 
+  Ketonen and Solovay~\cite{KS81} consider  large finite \emph{sets} of natural numbers,  but they are mainly used as sequences. Thus, we chose to represent them explicitely as (sorted) lists. 
 \end{remark}
 
 
@@ -5858,7 +5858,7 @@ the interval $[k,l)$ is $\alpha$-mlarge.
 In~\cite{KS81} Ketonen and Solovay consider the least natural number $l$ where the interval $[k,l]$ ($l$ included) is $\alpha$-large, and call $H_\alpha$ the function which maps $k$ to $l$. We chose to consider intervals $[l,k)$ instead of $[l,k]$
 in order to simplify  some statements and proofs in composition lemmas associated with the ordinals of the form $\alpha\times i$ and 
 $\omega^\alpha\times i + \beta$.
-Clearly, both approachs are related through the equality
+Clearly, both approaches are related through the equality
 $L_\alpha(k)=H_\alpha(k)+1$, for any non-null $\alpha$ and $k$.
 \end{remark}
 
@@ -5883,7 +5883,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
 
 
 Note that, for $\alpha\not=0$, the value of $f(0)$ is not specified.
-Nevertheless, the restriction of $f$ to the set of strictly positive integers is unique (up to extensionnality).
+Nevertheless, the restriction of $f$ to the set of strictly positive integers is unique (up to extensionality).
 
 \begin{Coqsrc}
 Lemma L_spec_unicity alpha f g :
@@ -6097,7 +6097,7 @@ Let us consider a last example, ``computing'' $L_{\omega^3}$.
 Since the canonical sequence associated with this ordinal is composed of the
 $\omega^2\times i\;(i\in\mathbb{N}_1)$, we have to study this sequence.
 
-To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ as an iterate of $L_{\omega^\alpha}$. Note that in this lemma, we assume that the fonction associated with $\alpha$ is stritly monotonous and 
+To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ as an iterate of $L_{\omega^\alpha}$. Note that in this lemma, we assume that the function associated with $\alpha$ is strictly monotonous and
 greater or equal than the successor function, and prove that $L_{\omega^\alpha\times i}$ satisfies  the same properties.
 
 \begin{Coqsrc}
@@ -6227,7 +6227,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 Solve All Obligations with auto with E0.
 \end{Coqsrc}
 
-It is worth looking at the answer from \texttt{Equations} and at all the lemmas this plug-in gives you for free. We show here only a part of \coq's anwer.
+It is worth looking at the answer from \texttt{Equations} and at all the lemmas this plug-in gives you for free. We show here only a part of \coq's answer.
 
 
 \begin{Coqanswer}
@@ -6330,7 +6330,7 @@ presented for instance in~\cite{Promel2013}.
 \index{maths}{Rapidly growing functions!Hardy Hierarchy}
 
 \begin{remark}
-  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the litterature. For the time being, we call our functions $H'_\alpha$ in order to underline the difference from ``classic'' Hardy functions.
+  Indeed, the functions presented in this section are a \emph{variant} of the Hardy hierarchy of functions. In the future versions of this development, we will correct the references to the literature. For the time being, we call our functions $H'_\alpha$ in order to underline the difference from ``classic'' Hardy functions.
 \end{remark}
 
 For each ordinal $\alpha$ below $\epsilon_0$, $H'_\alpha$ is 
@@ -6639,7 +6639,7 @@ Lemma H'_phi0_omega_closed_formula k :
 
 
 
-Note that this short formula contains two occurences of the functional \texttt{iterate}, the outer one is in fact a second-order iteration (on type \texttt{nat -> nat)}
+Note that this short formula contains two occurrences of the functional \texttt{iterate}, the outer one is in fact a second-order iteration (on type \texttt{nat -> nat)}
 and the inner one  first-order (on type \texttt{nat}). 
 
 
@@ -6663,7 +6663,7 @@ Proof.
 Qed.
 \end{Coqsrc}
 
-On the contrary, the fonctions of the $H'$ hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
+On the contrary, the functions of the $H'$ hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
 \begin{itemize}
 \item the function $H'_\alpha$ is strictly monotonous :
       For all $n,p \in\mathbb{N}, n < p \Rightarrow H'_\alpha(n)< H'_\alpha(p)$.
@@ -6706,7 +6706,7 @@ Infix "<<=" := fun_le (at level 60).
 
 \index{maths}{Transfinite induction}
 
-In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjonction of the five properties.
+In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjunction of the five properties.
 For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and 
 $\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially. 
 
@@ -7449,7 +7449,7 @@ This proof uses properties of the Ackermann function, and the $H'_\alpha$, $F_\a
 \section{A certified catalogue of rapidly growing functions}
 
 In this section, we try to present an abstract of the properties of the main variants of fast-growing hierarchies of functions
-we fauund in the litterature or we had to define as helpers in our proofs.
+we found in the literature or we had to define as helpers in our proofs.
 
 
 \subsection{Ketonen-Solovay's \texttt{F\_alpha}}
@@ -7593,7 +7593,7 @@ import a few axioms from the standard library. We encourage the reader to consul
 \subsubsection{Classical logic}
 
 In order to work with classical logic, we import the module
-\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Classical.html}{Coq.Logic.Classical}  of \coq{}'s standard library, specifially the following axiom:
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Classical.html}{Coq.Logic.Classical}  of \coq{}'s standard library, specifically the following axiom:
 
 \begin{Coqsrc}
  Axiom classic : forall P:Prop, P \/ ~P.
@@ -8004,7 +8004,7 @@ Notation "'omega'" := (_omega) : schutte_scope.
 
 
 
-Among the numerous properties of the ordinal $\omega$, les us quote the following ones
+Among the numerous properties of the ordinal $\omega$, let us quote the following ones
 (proved in Module 
 \href{../theories/html/hydras.Schutte.Schutte_basics.html\#finite_lt_omega}{\texttt{Schutte.Schutte\_basics}})
 
@@ -8199,7 +8199,7 @@ Lemma finite_plus_infinite (n : nat) (alpha : Ord) :
 \end{Coqsrc} 
 
 
-It isinteresting to compare the proof of these lemmas with the 
+It is interesting to compare the proof of these lemmas with the
 computational proofs of the corresponding statements in Module
 \href{../theories/html/hydras.Epsilon0.T1.html}%
 {\texttt{Epsilon0.T1}}. 
@@ -8718,7 +8718,7 @@ $\epsilon_0$ and $\Gamma_0$.
 
 \section{Related work}
 
-In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations (\texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
+In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations \texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
 of ordinal numbers after Bourbaki's set theory.
 
 
@@ -8832,7 +8832,7 @@ Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
   \label{fig:gamma0}
 \end{figure}
 
-Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognising simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
+Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognizing simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
 
 \begin{Coqsrc}
 Notation  one  := [zero,zero].
@@ -9142,7 +9142,7 @@ Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
 \end{Coqanswer}
 
 \begin{remark}
-The connexion between the predicate \texttt{nf} and the relation \texttt{lt} on one part, and the functions \texttt{nfb} and \texttt{compare} on the other, is expressed by the following lemmas:
+The connection between the predicate \texttt{nf} and the relation \texttt{lt} on one part, and the functions \texttt{nfb} and \texttt{compare} on the other, is expressed by the following lemmas:
 
 \begin{Coqsrc}
 Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
