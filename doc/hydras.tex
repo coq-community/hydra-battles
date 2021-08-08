@@ -129,11 +129,11 @@ In this document, we present two examples which seem to have the above propertie
 \item Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
 L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}. 
 Although the mathematical contents of this 
-paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the page written by Andrej Bauer~\cite{bauer2008}.
+paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
 
 
-Hydra battles, as well as Goodstein Sequences~\cite{goodstein_1944, KP82}
+Hydra battles, as well as Goodstein sequences~\cite{goodstein_1944, KP82}
 are a nice way to present complex termination problems.
 The article by Kirby and Paris presents a proof of termination
 based on ordinal numbers, as well as a proof that this termination is not
@@ -148,12 +148,12 @@ Let us underline the analogy between hydra battles and interactive theorem provi
 \paragraph*{Warning:}
 
 This document is \emph{not} an introductory text for \coq{}, and there are many aspects of this proof assistant that are not covered. 
- The reader should already have some basic experience with the \coq{} system. The Reference Manual and several tutorials are available on \coq{} page~\cite{Coq}.  First chapters of textbooks like \emph{Interactive Theorem Proving and Program Development}~\cite{BC04}, \emph{Software Foundations}~\cite{SF} or  \emph{Certified Programming with Dependent Types} ~\cite{chlipalacpdt2011} will give you the right background. 
+ The reader should already have some basic experience with the \coq{} system. The Reference Manual and several tutorials are available on the \coq{} website~\cite{Coq}. The first chapters of textbooks like \emph{Interactive Theorem Proving and Program Development}~\cite{BC04}, \emph{Software Foundations}~\cite{SF} or  \emph{Certified Programming with Dependent Types} ~\cite{chlipalacpdt2011} will give you the right background.
 
 %%%%% ICI
 
  
-\subsection{Documenting theories with alectryon}
+\subsection{Documenting theories with Alectryon}
 
 Quotations of \coq{} source and answers are progressively replaced from copy-pasted \emph{verbatim} to automatically generated \emph{LaTeX} blocks, using Clément Pit-Claudel's \emph{Alectryon} tool~\cite{alectryonpaper, alectryongithub}.
 Many thanks to Jérémy Damour and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
@@ -169,9 +169,9 @@ At present, this document is a hybrid version: Chapter~\vref{chapter:primrec} is
 \subsection{Trust in our proofs}
 \label{sect:trust-in-proofs}
 
-Unlike mathematical literature, where definitions and proofs are spread over many articles and books,
-the whole proof is now inside your computer. It is composed of the \texttt{.v} files you downloaded and 
-parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favourite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
+Unlike mathematical literature, where definitions and proofs are spread out over many articles and books,
+the whole proof is now inside your computer. It is composed from the \texttt{.v} files you downloaded and
+parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favorite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
 
 
 
@@ -185,7 +185,7 @@ In order to discuss which assumptions are really needed for proving a theorem, w
 several aborted proofs.
 Of course, do not hesitate to contribute nice proofs or alternative definitions!
 
-It may also happen that some proof looks to be useless, because the proven theorem is a trivial consequence of another (proven too) result.
+It may also happen that some proof looks to be useless, because the proven theorem is a trivial consequence of another (also proven) result.
 For instance, let us consider the three following statements:
 \begin{enumerate}
 \item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
@@ -206,7 +206,7 @@ For instance, one can very easily compute the $42$-nd item of a sequence which c
 
 
  
-Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation of the set of countable ordinal numbers, all our development is axiom-free, and respects the rules of intuitionistic logic. Note that we also use the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777} in the definitition of  several rapidly growing hierarchy of functions, in Chap.~\ref{chap:alpha-large}. This plug-in imports several known-as-harmless  axioms.
+Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation of the set of countable ordinal numbers, all of our development is axiom-free, and respects the rules of intuitionistic logic. Note that we also use the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777} in the definition of  several rapidly growing hierarchy of functions, in Chap.~\ref{chap:alpha-large}. This plug-in imports several known-as-harmless  axioms.
 
 % \begin{Coqsrc}
 % FunctionalExtensionality.functional_extensionality_dep : 
@@ -278,7 +278,7 @@ with a different background color.
 Qed.
  \end{Coqsrc}
 
-In general, we do not include full proof scripts in this document. The only exceptions are very short proofs (\emph{e.g.} proofs by computation, or by application of automatic tactics). Likewise, we may display only the important steps on a long interactive proof, for instance, in the following lemma (\vref{lemma:L-2_6-1}):
+In general, we do not include full proof scripts in this document. The only exceptions are very short proofs (\emph{e.g.}, proofs by computation, or by application of automatic tactics). Likewise, we may display only the important steps on a long interactive proof, for instance, in the following lemma (\vref{lemma:L-2_6-1}):
 
 \begin{Coqsrc}
 Lemma Lemma2_6_1 (alpha : T1) :  
@@ -300,15 +300,15 @@ Here is an example from Chapter~\ref{chapter:primrec}.
 
 
 \input{movies/snippets/Ack/AckFixpointIterate.tex}
-\subsection{Active Links}
+\subsection{Active links}
 The  links which appear in this pdf  document lead are of three possible kinds of destination:
 \begin{itemize}
 \item Local links to the document itself,
-\item External links, mainly to \coq's page,
+\item External links, mainly to \coq's website,
 \item Local links to pages generated by \texttt{coqdoc}. According to the current makefile (through the commands \texttt{make html} and \texttt{make pdf}), 
   we assume that the page generated from a library \texttt{XXX/YYY.v} is stored as
 the relative address \texttt{../theories/html/hydras.XXX.YYY.html} (from the location of the pdf)
-Thus,  active links towards our \coq{} modules may be incorrect if you got this \texttt{pdf} document otherwise than by compiling the distribution available in
+Thus,  active links to our \coq{} modules may be incorrect if you did not get this \texttt{pdf} document by compiling the distribution available at
 \url{https://github.com/coq-community/hydra-battles}.
 
 \end{itemize}
@@ -362,7 +362,7 @@ Qed.
 \section{How to install the libraries}
 \label{sec:orgheadline4}
 \begin{itemize}
-\item The present distribution has been checked with version 8.13.0 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq}, \texttt{coq-equations}
+\item The present distribution has been checked with version 8.13.2 of the Coq proof assistant, with the plug-ins \texttt{coq-paramcoq}, \texttt{coq-equations}
 and \texttt{coq-mathcomp-algebra}.
 
 \item Please refer to \href{https://github.com/coq-community/hydra-battles#readme}{the README file of the project}
@@ -371,7 +371,7 @@ and \texttt{coq-mathcomp-algebra}.
 \section{Comments on exercises and projects}
 
 Although we do not plan to include complete solutions to the exercises, 
-we think it would be useful to include comments and hints, and questions/answers from the users. In constrast, ``projects'' are supposed, once completed, to be included in the repository.
+we think it would be useful to include comments and hints, and questions/answers from the users. In contrast, ``projects'' are supposed, once completed, to be included in the repository.
 
 Please consult the sub-directory \texttt{exercises/} of the
  project (in construction).
@@ -403,7 +403,7 @@ The formalization of primitive recursive functions was originally a part of  Rus
 Any form of contribution  is welcome: correction of errors (typos and more serious mistakes), improvement of
 Coq scripts, proposition of inclusion of new chapters, and generally any
 comment or proposition that would help us. The text contains several \emph{projects} which, when completed, may improve the present work.
-Please do not hesitate to bring your contribution, for instance with Github's proof requests and issues. Thank you in advance!
+Please do not hesitate to share your contributions, for instance using pull requests and issues on GitHub. Thank you in advance!
 
 
 
@@ -433,7 +433,7 @@ Please do not hesitate to bring your contribution, for instance with Github's pr
 % \begin{todo}
 %  Still very incomplete!
 % \end{todo}
-{\Large \textbf{In progress} This index is currently under reorganization for a few days. We aplologize for its incompleteness! }
+{\Large \textbf{In progress} This index is currently under reorganization for a few days. We apologize for its incompleteness! }
 
 \printindex{coq}{Coq, plug-ins and standard library}
 \printindex{maths}{Mathematical notions and algorithmics}
