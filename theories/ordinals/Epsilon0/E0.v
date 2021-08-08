@@ -40,7 +40,7 @@ Definition Le := leq Lt.
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
-Instance Zero : E0 := @mkord zero refl_equal.
+#[global] Instance Zero : E0 := @mkord zero refl_equal.
 
 Definition Limitb (alpha : E0) : bool :=
   limitb (@cnf alpha).
@@ -49,14 +49,14 @@ Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
 
-Instance _Omega : E0.
+#[global] Instance _Omega : E0.
 Proof.
   now exists omega%t1.  
 Defined. 
 
 Notation omega  := _Omega.
 
-Instance Succ (alpha : E0) : E0.
+#[global] Instance Succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
   apply succ_nf,  cnf_ok.
@@ -64,13 +64,13 @@ Defined.
 
 
   
-Instance ord1 : E0.
+#[global] Instance ord1 : E0.
 Proof. 
   refine (@mkord (T1.succ zero) _);now compute. 
 Defined.
 
 
-Instance plus (alpha beta : E0) : E0.
+#[global] Instance plus (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
     apply plus_nf; apply cnf_ok.
@@ -79,7 +79,7 @@ Defined.
 Infix "+" := plus : E0_scope.
 
 
-Instance phi0 (alpha: E0) : E0.
+#[global] Instance phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkord (T1.phi0 (cnf alpha)) _).
   apply nf_phi0; apply cnf_ok.
@@ -87,16 +87,16 @@ Defined.
 
 Notation "'omega^'" := phi0 (only parsing) : E0_scope.
 
-Instance Omega_term (alpha: E0) (n: nat) : E0.
+#[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
   refine (@mkord (ocons (cnf alpha) n zero) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
 
-Instance Ocons (alpha : E0) (n: nat) (beta: E0) : E0
+#[global] Instance Ocons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
-Instance FinS (i:nat) : E0.
+#[global] Instance FinS (i:nat) : E0.
 Proof.
   refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
 Defined.
@@ -108,7 +108,7 @@ Defined.
 
 Coercion Fin : nat >-> E0.
 
-Instance Mult (alpha beta : E0) : E0.
+#[global] Instance Mult (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (cnf alpha * cnf beta)%t1 _); apply mult_nf; apply cnf_ok.
 Defined.
@@ -116,7 +116,7 @@ Defined.
 
 Infix "*" := Mult : E0_scope.
 
-Instance Mult_i  (alpha: E0) (n: nat) : E0.
+#[global] Instance Mult_i  (alpha: E0) (n: nat) : E0.
 Proof.
   refine (@mkord (cnf alpha * n)%t1  _).
   apply mult_nf_fin, cnf_ok.
@@ -267,12 +267,12 @@ Definition Pred (alpha: E0) : E0 :=
 
 Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
-Instance Two : E0 :=  ltac:(mko (fin 2)).
+#[global] Instance Two : E0 :=  ltac:(mko (fin 2)).
 
-Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
+#[global] Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
 
 
-Instance E0_sto : StrictOrder Lt.
+#[global] Instance E0_sto : StrictOrder Lt.
 Proof.
   split.
   - intro x ; destruct x; unfold Lt; red.
@@ -444,14 +444,14 @@ Proof.
   - cbn in e; subst. right; subst; f_equal; apply nf_proof_unicity.
 Qed.
 
-Instance E0_comp: Comparable Lt compare.
+#[global] Instance E0_comp: Comparable Lt compare.
 Proof.
   split.
   - apply E0_sto.
   - apply compare_correct. 
 Qed.
 
-Instance Epsilon0 : ON Lt compare.
+#[global] Instance Epsilon0 : ON Lt compare.
 Proof.
  split.
  - apply E0_comp.
@@ -623,7 +623,7 @@ Proof.
 Qed.
 
 
-Instance Oplus (alpha beta : E0) : E0.
+#[global] Instance Oplus (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (oplus (cnf alpha) (cnf beta) )_).
   apply oplus_nf; apply cnf_ok.

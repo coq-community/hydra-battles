@@ -1,6 +1,3 @@
-(**  Pierre Casteran 
-    LaBRI, University of Bordeaux, laBRI UMR 5800 )
-*)
 
 (** Data-type for Veblen normal form 
    (ordinals below Gamma0)   *)
@@ -13,14 +10,18 @@ Set Implicit Arguments.
 
 
 
-(** *   Definitions        *)
+(** *   Definitions *)
 
 
 (**  [gcons alpha beta n gamma] is : [psi(alpha,beta)*(S n)+ gamma]  *)
 
+(* begin snippet T2Def *)
+
 Inductive T2 : Set :=
 | zero : T2
 | gcons : T2 -> T2  -> nat -> T2 -> T2.
+
+(* end snippet T2Def *)
 
 Declare Scope T2_scope.
 Delimit Scope T2_scope with t2.
@@ -293,7 +294,7 @@ Section on_length.
  Open Scope nat_scope.
 
 (* length of ordinal terms *)
-(* from Schütte, Proof theory, used in proofs of transitivity
+(* from Schutte, Proof theory, used in proofs of transitivity
    and total ordering *)
    
 Fixpoint nbterms (t:T2) : nat :=
@@ -415,4 +416,4 @@ Qed.
 
 End on_length.
 
-Compute t2_length (gcons 2 1 42 epsilon0).
+

@@ -37,18 +37,22 @@ Note that [T1] contains terms which are not in Cantor normal  form.
 This issue is solved later which the help of the predicate [nf]
 
 *)
-  
+
+(* begin snippet T1Def *)
+
 Inductive T1 : Set  :=
 | zero 
 | ocons (alpha : T1) (n : nat) (beta : T1) .
- 
+
+(* end snippet T1Def *)
 
 (** Basic functions and predicates on [T1] 
 *)
 
-Notation one := (ocons zero 0 zero).
-Notation omega := (ocons (ocons zero 0 zero) 0 zero).
 
+(* begin snippet finiteOrds *)
+
+Notation one := (ocons zero 0 zero).
 
 (** The [(S n)]-th ordinal 
  *)
@@ -61,6 +65,15 @@ Notation FS n := (ocons zero n zero).
 Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
 Coercion fin  : nat >-> T1.
 
+Example ten : T1 := 10.
+
+(* end snippet finiteOrds *)
+
+(* begin snippet omegaDef *)
+
+Notation omega := (ocons (ocons zero 0 zero) 0 zero).
+
+(* end snippet omegaDef *)
 
 (* begin hide *)
 Lemma FS_rw (n:nat) : FS n = S n.
@@ -87,8 +100,11 @@ Fixpoint limitb alpha :=
 
 (** Exponential of base [omega] *)
 
+(* begin snippet phi0Def *)
+
 Notation phi0 alpha := (ocons alpha 0 zero).
 
+(* end snippet phi0Def *)
 
 (** multiples of [phi0 alpha]  *)
 
@@ -99,12 +115,15 @@ Definition omega_term (alpha:T1)(k:nat) :=
 (**  omega towers 
 *)
 
+(* begin snippet towerDef *)
+
 Fixpoint tower (height:nat) : T1 := 
  match height with 
 | 0 =>  FS 0 
 | S h => phi0 (tower h)
  end.
 
+(* end snippet towerDef *)
 
 (** Additive principal ordinals
  *)
@@ -140,11 +159,15 @@ Definition lt alpha beta : Prop :=
 
 (** ** Properties of [compare] *)
 
+(* begin snippet compareRev *)
+
 Lemma compare_rev :
   forall alpha beta,
-  compare beta alpha = CompOpp (compare alpha beta).
-Proof.
-  induction alpha, beta.
+  compare beta alpha = CompOpp (compare alpha beta). (* .no-out *)
+Proof. (* .no-out *)
+  induction alpha, beta. (* .unfold -.g#* .g#1 *)
+  (* end snippet compareRev *)
+  
   1-3: easy.
   simpl.
   rewrite IHalpha1, Nat.compare_antisym.
@@ -152,6 +175,7 @@ Proof.
   2-3: easy.
   now destruct (n ?= n0) eqn:?; simpl.
 Qed.
+
 
 Lemma compare_reflect :
   forall alpha beta,
@@ -351,7 +375,7 @@ Qed.
 
 
 Lemma compare_fin_rw (n n1: nat) :
-  T1.compare (T1.fin n) (T1.fin n1) = (n ?= n1).
+  compare (fin n) (fin n1) = (n ?= n1).
   destruct n, n1.
   - easy.
   - now cbn.
@@ -397,15 +421,15 @@ Qed.
 #[global] Instance t1_strorder: StrictOrder lt.
 Proof.
  constructor. 
-  - intro a; apply T1.lt_irrefl.
-  - intros a b c; eapply T1.lt_trans.
+  - intro a; apply lt_irrefl.
+  - intros a b c; eapply lt_trans.
 Qed.
     
 #[global] Instance: Comparable lt compare.
 Proof.
   constructor.
   - exact t1_strorder. 
-  - apply T1.compare_correct.
+  - apply compare_correct.
 Qed.
 
 
@@ -3917,6 +3941,8 @@ Proof. reflexivity. Qed.
 
 (* Demo *)
 
+(* begin snippet alpha0 *)
+
 Example alpha_0 : T1 :=
   ocons (ocons (ocons zero 0 zero)
                0
@@ -3925,6 +3951,8 @@ Example alpha_0 : T1 :=
         (ocons (ocons zero 2 zero)
                4
                (ocons zero 1 zero)).
+
+(* end snippet alpha0 *)
 
 Compute alpha_0.
 

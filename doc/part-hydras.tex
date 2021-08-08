@@ -2929,11 +2929,7 @@ with the ways to build Cantor normal forms:
 %\index{Constants!zero:T1}
 \index{hydras}{Library Epsilon0!Types!T1}
 
-\begin{Coqsrc}
-Inductive T1 : Set  :=
-| zero : T1
-| ocons : T1 -> nat -> T1 -> T1.
-\end{Coqsrc}
+\input{movies/snippets/T1/T1Def}
 
 
 
@@ -2941,28 +2937,18 @@ Inductive T1 : Set  :=
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
 to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
 \noindent
-\begin{Coqsrc}
-Inductive T2 : Set :=
-  zero : T2
-| gcons : T2 -> T2 -> nat -> T2 -> T2.
-\end{Coqsrc}
+
+\input{movies/snippets/T2/T2Def}
+
 
 \subsubsection{Example}
 
 \label{alpha0-def}
 For instance, the ordinal  $\omega^\omega+\omega^3\times 5+2$ is represented by the following term:
 
-\begin{Coqsrc}
-Example alpha_0 : T1 :=
-  ocons (ocons (ocons zero 0 zero)
-               0
-               zero)
-        0
-       (ocons (ocons zero 2 zero)
-              4
-              (ocons zero 1 zero)).
-\end{Coqsrc}
 
+
+\input{movies/snippets/T1/alpha0}
 
 \begin{figure}[htb]
 \centering
@@ -3004,22 +2990,9 @@ Some abbreviations may help to write more concisely complex ordinal terms.
 For representing finite ordinals, \emph{i.e.} natural numbers, we first introduce a notation for terms of the form $n+1$, then define a coercion from type \texttt{nat} into \texttt{T1}.
 \label{sect:notation-FS}
 
-\begin{Coqsrc}
-Notation one := (ocons zero 0 zero).
-  
-Notation FS n := (ocons zero n zero).
-\end{Coqsrc}
-
 \label{sect:notation-F}
 
-\begin{Coqsrc}
-Definition fin (n:nat) : T1 := 
-    match n with 0 => zero | S p => FS p end. 
-
-Coercion fin  : nat >-> T1.
-
-Example ten : T1 := 10.   
-\end{Coqsrc}
+\input{movies/snippets/T1/finiteOrds}
 
 % \index{Coq!Coercions}
 % \index{Functions!Coercions@Coercions (from nat to ordinal types)}
@@ -3040,9 +3013,9 @@ Example ten : T1 := 10.
 i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \label{sect:omega-notation2}
-\begin{Coqsrc}
-Notation omega := (ocons (ocons zero 0 zero) 0 zero).
-\end{Coqsrc}
+
+\input{movies/snippets/T1/omegaDef}
+
 
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
 
@@ -3053,9 +3026,8 @@ We provide also a notation for ordinals of the form $\omega^\alpha$.
 
 \index{hydras}{Library Epsilon0!Notations!phi0@phi0 (exponential of base omega)}
 
-\begin{Coqsrc}
-Notation "'phi0' alpha" := (ocons alpha 0 zero) (at level 29) : t1_scope.
-\end{Coqsrc}
+
+\input{movies/snippets/T1/phi0Def}
 
 \index{maths}{Additive principal ordinals}
 
@@ -3077,13 +3049,8 @@ The ordinal $\epsilon_0$, although not represented by a finite term in Cantor no
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}}
 
-\begin{Coqsrc}
-Fixpoint omega_tower (height:nat) : T1 := 
- match height with 
- | 0 =>  1 
- | S h => phi0 (omega_tower h)
- end.
-\end{Coqsrc}
+\input{movies/snippets/T1/towerDef}
+
 
 For instance, Figure~\ref{fig:tower7} represents  the ordinal returned by the
  evaluation of the term \texttt{omega\_tower 7}.
@@ -3262,6 +3229,10 @@ Proof.
   reflexivity. 
 Qed.
 \end{Coqsrc}
+
+% Uncomment for testing 
+%\textbf{Todo: Fix subgoal display }
+%\input{movies/snippets/T1/compareRev}
 
 \subsubsection{A Predicate for Characterizing Normal Forms}
 \label{sect:t1-nf}

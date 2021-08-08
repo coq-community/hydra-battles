@@ -14,13 +14,10 @@ vpath %.v ${INPUT_DIR}/OrdinalNotations
 vpath %.v ${INPUT_DIR}/Prelude
 vpath %.v ${INPUT_DIR}/solutions_exercises
 
-COQ_FILES = Ack.v               \
-	    AckNotPR.v          \
+COQ_FILES = Ack.v AckNotPR.v    \
 	    primRec.v           \
 	    PrimRecExamples.v   \
-	    F_alpha.v           \
-	    L_alpha.v           \
-	    F_omega.v           \
+	    F_alpha.v L_alpha.v F_omega.v  \
 	    Hydra_Definitions.v \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
@@ -40,7 +37,8 @@ COQ_FILES = Ack.v               \
 	    ON_mult.v ON_Omega2.v ON_Finite.v \
 	    Omega2_Small.v \
 	    Correctness_E0.v \
-
+	    T1.v \
+	    T2.v \
 
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
