@@ -329,7 +329,7 @@ Compute fib 20.
 = 10946 : N
 \end{Coqanswer}
 
-In~\cite{BC04}, several exercices~\footnote{Exercises 9.8 (page 270), 9.10 (page 271), 9.15 (page 276), 9.17 (page 284), and 15.8 (page 418).}  
+In~\cite{BC04}, several exercises~\footnote{Exercises 9.8 (page 270), 9.10 (page 271), 9.15 (page 276), 9.17 (page 284), and 15.8 (page 418).}
 present ways to compute Fibonacci numbers, with the less number of recursive calls  as possible. Please note that these optimizations and the formal proof of their correctness are \emph{ad-hoc}, \emph{i.e.} exclusively written for the 
 Fibonacci numbers.
 In contrast, the optimizations we present in this document apply, in their vast majority, \emph{generic} techniques of efficient computation of powers in a monoid. 
@@ -472,7 +472,7 @@ Lemma fib_mul2_OK n : fib n = fib_mul2 n.
 \end{Coqsrc}
 
 Thus, any function able to compute more or less efficiently powers in a monoid will
-give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementionned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence 
+give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementioned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence
 of the correctness of the used powering function.
 Several examples will be presented in the rest of this document
 (in sections~\vref{sect:fibonacci-pos-bpow}).
@@ -1698,7 +1698,7 @@ Let  \texttt{A} be some type;  a \emph{computation} on \texttt{A} is
 \end{itemize}
   
   In the following inductive type definition, the intended meaning 
-  of the contruct (\texttt{Mult $x$ $y$ $k$})  is \emph{``multiply \texttt{x} with 
+  of the construct (\texttt{Mult $x$ $y$ $k$})  is \emph{``multiply \texttt{x} with
 \texttt{y}, then send  the result of this multiplication to 
   the continuation  \texttt{k}''}.
 
@@ -1717,7 +1717,7 @@ Inductive computation {A:Type}  : Type :=
 
 The following \emph{monadic} 
 notation makes terms of type \texttt{computation} look like
-expressions of a small programming language dedicated to sequences of mutiplications.
+expressions of a small programming language dedicated to sequences of multiplications.
 Please look at \emph{CPDT}~\cite{chlipalacpdt2011} for more details on monadic notations in \coq.
 \label{monadic-mult}
 
@@ -2095,7 +2095,7 @@ The rest of this chapter is devoted to the  presentation of more efficient
 Instead of letting the tactic \texttt{rewrite} look for contexts in which
 setoid rewriting is possible, we propose to use (deterministic) computations for
 obtaining a ``canonical'' form for terms generated from a variable \texttt{x}
-by contructors associated with monoid multiplication and neutral element.
+by constructors associated with monoid multiplication and neutral element.
 
 The reader will find general explanations about proofs by reflection in \coq{},
 for instance in Chapter 16 of Coq'Art\cite{BC04} and the numerous examples (including the \texttt{ring} tactic) 
@@ -2395,7 +2395,7 @@ are related \emph{w.r.t.} \texttt{R}.
 
 
 \subsubsection{Definition}
-A chain $c$ is \emph{parametric} if it has the same behaviour for any
+A chain $c$ is \emph{parametric} if it has the same behavior for any
 pair of types $A$  and $B$, any relation $R$
 between  $A$ and $B$ and any $R$-related pair of 
 arguments $a$ and $b$:
@@ -3481,7 +3481,7 @@ Let F23 := Fplus F3 (Fplus (Fexp2 4) (Fexp2 2)).
 \end{Coqbad}
 
 Unfortunately, our construct is still very inefficient, since it results in 
-duplications of computations, as shown by the normal form of \texttt{F23}.
+duplication of computations, as shown by the normal form of \texttt{F23}.
 
 \begin{Coqbad}
 Compute F23
@@ -3668,7 +3668,7 @@ Qed.
 \subsection{Systematic construction of  correct f-chains and k-chains}
 
 We are now ready to define various operators on f- and k-chains, and prove these
-operators preserve correcness and properness. We will also show that 
+operators preserve correctness and properness. We will also show that
 these operators allow to generate easily correct chains for any positive 
 exponent. They will be used to generate chains for
 numbers of the form $n=bq+r$ where $0\leq r < b$, assuming the previous
@@ -3991,7 +3991,7 @@ f-chains, associated with a single exponent, and k-chains, associated with two e
 
 Since our construction is based on Euclidean division, we could not
 define our chain generator by structural recursion. 
-For simplicity's sake, we chosed to avoid dependent elimination
+For simplicity's sake, we chose to avoid dependent elimination
  and used \texttt{Function}  with a decreasing measure.
 
  For this purpose, we define a single data-type for associated with
@@ -4000,7 +4000,7 @@ For simplicity's sake, we chosed to avoid dependent elimination
 
 We had two slight technical problems to consider:
 \begin{itemize}
-\item The generation of a k-chain for $n$ and $p$ is meaningfull only if $p < n$. Thus, in order to avoid a clumsy  dependent pattern-matching, we chosed to represent 
+\item The generation of a k-chain for $n$ and $p$ is meaningful only if $p < n$. Thus, in order to avoid a clumsy  dependent pattern-matching, we chose to represent
      a pair $(n,p)$ where $0<p<n$ by a pair of positive numbers $(p,d)$ where 
      $d=n-p$
 \item In order to avoid to deal explicitly with mutual recursion, we
@@ -4081,7 +4081,7 @@ Definition  OK (s: signature)
 
 \end{Coqsrc}
 
-\subsection{Generation of chains using Euclidean Dibision}
+\subsection{Generation of chains using Euclidean Division}
 
 Assume we want to build automatically a correct  f-chain for some 
 positive integer $n$.
@@ -4466,7 +4466,7 @@ greater than or equal to $\floor{\log_2{n}}$.
 of positive integers $n$, the first chain  is strictly shorter
 than  the latter.
 \item Prove that our implementation of the dichotomic strategy describes
- the same function as in the litterature (for instance ~\cite{DBLP:journals/ita/BrlekCHM95}.)
+ the same function as in the literature (for instance ~\cite{DBLP:journals/ita/BrlekCHM95}.)
 This is important if we want to follow the complexity analyses in this and similar articles.
 \item Study how to \emph{compile} a chain into imperative code, using a register allocation strategy (it may be useful  to define \emph{chain width} ).
 
