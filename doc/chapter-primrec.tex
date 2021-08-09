@@ -51,7 +51,7 @@ Contributions (under the form of comments, new examples or exercises) are welcom
 \section{First look at the Ackermann library}
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
-than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetics is 32K lines long and is originally structured in 38 modules.
+than 45K lines of scripts. The part dedicated to primitive recursive functions and Peano arithmetic is 32K lines long and is originally structured in 38 modules.
 Thus, we propose a partial exploration of this library, through examples and exercises. Our additions to the original library --- mainly examples and counter-examples ---,
 are stored in the directory \texttt{theories/ordinals/MoreAck}.
 
@@ -199,7 +199,7 @@ Let us now interpret this term as an arithmetic function.
 \input{movies/snippets/PrimRecExamples/bigPRb}
 
 
-After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, whithout building such an unreadable term.
+After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, without building such an unreadable term.
 
 \section{Proving that a given arithmetic function is primitive recursive}
 \label{sect:proofs-of-isPR}
@@ -212,14 +212,14 @@ The example in the preceding section clearly shows that, in order to prove that 
 \item Prove handy lemmas which may help to prove that a given function is primitive recursive.
 \end{enumerate}
 
-Thus, the proof that a function, like \texttt{factorial}, is primitive recursive may be interactive, whithout having to type complex terms at any step of the development.
+Thus, the proof that a function, like \texttt{factorial}, is primitive recursive may be interactive, without having to type complex terms at any step of the development.
 
 \subsection{The predicate \texttt{isPR}}
 
 \index{primrec}{Predicates!isPR}
-\index{coq}{Extensionnaly equal functions}
+\index{coq}{Extensionally equal functions}
 
-Let $f$ be an arithmetic function of arity $n$. We say that $f$ is primitive recursive if $f$ is \textbf{extensionnaly}
+Let $f$ be an arithmetic function of arity $n$. We say that $f$ is primitive recursive if $f$ is \textbf{extensionally}
 equal to the interpretation of some term of type \texttt{PrimRec $n$}. 
 
 \vspace{4pt}
@@ -485,7 +485,7 @@ This way, both functions \texttt{Ack} and \texttt{Ackm} have a (structurally) st
 
 \input{movies/snippets/Ack/AckFixpointAlt.tex}
 
-We prefered to define a variant which uses explicitely 
+We preferred to define a variant which uses explicitly
  the functional \texttt{iterate},
 where (\texttt{iterate\,$f$\,$n$})
 is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRec.iterate}, which is monomorphic and does not share the same order of arguments.}. It makes it possible to apply a few lemmas proved in 
@@ -517,14 +517,14 @@ Thus, our definition of the Ackermann function is as follows:
 
 \begin{exercise}
 The file \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack} presents two other definitions of the Ackermann functions based on the lexicographic ordering on $\mathbb{N}\times\mathbb{N}$.
-Prove that the four functions are extensionnally equal.
+Prove that the four functions are extensionally equal.
 \end{exercise}
 
 
 \subsubsection{First properties of the Ackermann function}
 
 The three first lemmas make us sure that our function 
-\texttt{Ack} satifies the ``usual'' equations.
+\texttt{Ack} satisfies the ``usual'' equations.
 
 \input{movies/snippets/Ack/AckRewrite}
 
@@ -582,7 +582,7 @@ Please note also that for any given $n$, the unary function
 
 \subsection{A proof by induction on all primitive recursive functions}
 
-Ìn order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
+In order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
 
 
 \begin{enumerate}
@@ -606,7 +606,7 @@ The following scheme allows us to write proofs by induction on the class of prim
 
 
 
-Please note that, in order to prove a property shared by any primitive recursive function of, say, arity 2, this induction scheme  leads you to consider an expension of the considered property to primitive recursive function of any arity.
+Please note that, in order to prove a property shared by any primitive recursive function of, say, arity 2, this induction scheme  leads you to consider an extension of the considered property to primitive recursive function of any arity.
 
 Thus the lemma we will have to prove is the following one:
 
@@ -769,7 +769,7 @@ Thus, our impossibility proof is just a sequence of easy small steps.
 \input{movies/snippets/AckNotPR/AckNotPR}
 
 \begin{remark}
-It is easy to prove that any unary function which dominatates \texttt{fun n => Ack n n} fails to be primitive recursive. To this end, we use an instance of \texttt{majorAnyPR} dealing with unary functions.
+It is easy to prove that any unary function which dominates \texttt{fun n => Ack n n} fails to be primitive recursive. To this end, we use an instance of \texttt{majorAnyPR} dealing with unary functions.
 
 \vspace{4pt}
 \noindent
@@ -788,7 +788,7 @@ Then, we write  a short proof by contradiction.
 Note that the Ackermann function is a counter-example to the (false) statement:
 \begin{quote}
 {\color{red}
-  ``Let $f$ be a function of type \texttt{naryFunc\,2}. If, for any $n$, the fonction $f(n)$ is primitive recursive, then f is primitive recursive.''}
+  ``Let $f$ be a function of type \texttt{naryFunc\,2}. If, for any $n$, the function $f(n)$ is primitive recursive, then f is primitive recursive.''}
 \end{quote}
 \end{remark}
 
@@ -821,7 +821,7 @@ Let us consider the hydra represented by the ordinal $\omega^\omega$.
 \input{movies/snippets/Hydra_Theorems/battleLengthNotPRb}
 
 
-In order to get rid of the substraction in the definition of \texttt{l\_std}, we work with a helper function.
+In order to get rid of the subtraction in the definition of \texttt{l\_std}, we work with a helper function.
 
 \input{movies/snippets/Hydra_Theorems/battleLengthNotPRc}
 
@@ -838,7 +838,7 @@ $H'_{\omega^\alpha}(k)\geq F_\alpha(k)$.
 \input{movies/snippets/F_alpha/HprimeF}
 
 
-Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an ide or software like alectryon.
+Our proof of this lemma is not trivial at all, it uses some properties of the Ketonen-Solovay's toolkit. We advise the reader to explore this proof, with the help of an IDE or software like Alectryon.
 %%
 %%% To move the path chapter
 %%%%
