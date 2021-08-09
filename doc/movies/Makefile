@@ -30,7 +30,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    isqrt.v       \
 	    Iterates.v       \
 	    Exp2.v       \
-	    MoreVectors.v   MoreOrders.v    \
+	    MoreVectors.v   MoreOrders.v Restriction.v \
 	    Omega_Small.v       \
 	    Comparable.v       \
 	    ON_Generic.v ON_Omega.v ON_plus.v ON_Omega_plus_omega.v \

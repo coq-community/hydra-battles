@@ -8,9 +8,12 @@
 
 From Coq Require Import Wellfounded Ensembles Relations.
 
-(* start of inclusion *)
+(* begin snippet restrictionDef *)
+
 Definition restrict {A:Type}(E: Ensemble A)(R: relation A) :=
   fun a b => E a /\ R a b /\ E b.
+
+(* end snippet restrictionDef *)
 
 Section restricted_recursion.
 

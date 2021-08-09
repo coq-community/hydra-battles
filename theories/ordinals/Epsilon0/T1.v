@@ -136,6 +136,8 @@ Inductive ap : T1 -> Prop :=
 (**  **  A linear  strict order on [T1]
  *)
 
+(* begin snippet compareDef *)
+
 Fixpoint compare (alpha beta:T1):comparison :=
   match alpha, beta with
   | zero, zero => Eq
@@ -156,6 +158,23 @@ Fixpoint compare (alpha beta:T1):comparison :=
 Definition lt alpha beta : Prop :=
   compare alpha beta = Lt.
 
+(* end snippet compareDef *)
+
+(* begin snippet ltExamples *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+Example E1 : lt (ocons omega 56 zero) (tower 3). 
+Proof.  reflexivity. Qed.
+
+Example E2 : ~ lt (tower 3) (tower 3).
+Proof.  discriminate.  Qed.
+
+(*||*)
+
+(* end snippet ltExamples *)
 
 (** ** Properties of [compare] *)
 
@@ -416,22 +435,31 @@ Qed.
 
 
 
+(* begin snippet Instances *)
 
-
-#[global] Instance t1_strorder: StrictOrder lt.
+#[global] Instance t1_strorder: StrictOrder lt. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
  constructor. 
   - intro a; apply lt_irrefl.
   - intros a b c; eapply lt_trans.
 Qed.
-    
-#[global] Instance: Comparable lt compare.
+(*||*)
+
+#[global] Instance: Comparable lt compare. (* .no-out *)
+(*|
+.. coq:: none 
+|*)
 Proof.
   constructor.
   - exact t1_strorder. 
   - apply compare_correct.
 Qed.
+(*||*)
 
+(* end snippet Instances *)
 
 Lemma lt_inv_head :
   forall a n b a' n' b',
@@ -454,6 +482,7 @@ Qed.
 Cantor normal form needs the exponents of omega to be
    in strict decreasing order *)
 
+(* begin snippet nfDef *)
 
 Fixpoint nf_b (alpha : T1) : bool :=
   match alpha with
@@ -465,6 +494,15 @@ Fixpoint nf_b (alpha : T1) : bool :=
 
 Definition nf alpha :Prop := 
   nf_b alpha.
+
+
+(* end snippet nfDef *)
+
+(* begin snippet badTerm *)
+
+Example bad_term: T1 := ocons 1 1 (ocons omega 2 zero).
+
+(* end snippet badTerm *)
 
 (** epsilon0 as a set *)
 
@@ -1126,10 +1164,15 @@ Reserved Notation "x 't1<=' y 't1<' z" (at level 70, y at next level).
 Reserved Notation "x 't1<' y 't1<' z" (at level 70, y at next level).
 Reserved Notation "x 't1<' y 't1<=' z" (at level 70, y at next level).
 
+(* begin snippet LTDef *)
+
 Definition LT := restrict nf lt.
 Infix "t1<" := LT : t1_scope.
+
 Definition LE := restrict nf (leq lt).
 Infix "t1<=" := LE : t1_scope.
+
+(* end snippet LTDef *)
 
 Notation "alpha t1< beta t1< gamma" :=
   (LT alpha beta /\ LT beta gamma) : t1_scope.
@@ -1832,9 +1875,13 @@ Proof.
        now apply nf_inv3, compare_gt_iff in H as ->.
 Qed.
 
+(* begin snippet plusIsZero *)
+
 Lemma plus_is_zero alpha beta :
   nf alpha -> nf beta ->
-  alpha + beta  = zero -> alpha = zero /\  beta = zero.
+  alpha + beta  = zero -> alpha = zero /\  beta = zero. (* .no-out *)
+(* end snippet plusIsZero *)
+
 Proof.
   destruct alpha, beta.
   - now split.
@@ -2403,18 +2450,30 @@ Proof.
     + assumption.
 Defined.
 
-Lemma LT_one :
-  forall alpha, alpha t1< one -> alpha = zero.
-Proof.
-  intros alpha [H1 [H2 _]].
-  destruct alpha; auto. 
+(* begin snippet LTOnea *)
+
+Lemma LT_one alpha :
+  alpha t1< one -> alpha = zero. (* .no-out *)
+Proof. (* .no-out *)
+  intros  [H1 [H2 _]]; destruct alpha; auto. (* .no-out *)
+
+  (* end snippet LTOnea *)
+
+  (* begin snippet LTOneb *)
+
+  (* ... *)
+  (*|
+.. coq:: none
+|*)
+
   destruct (lt_inv H2).
   - destruct (not_lt_zero H). 
   -  decompose [and or] H.
      destruct (Nat.nlt_0_r _ H4).
      destruct (not_lt_zero H5). 
+(*||*)
 Qed.
-
+(* end snippet LTOneb *)
 
 Lemma lt_omega_inv :
   forall alpha,
@@ -3603,144 +3662,6 @@ Qed.
 
 
 
-(**  **  An abstract syntax for ordinals in Cantor normal form *)
-Declare Scope ppT1_scope.
-Delimit Scope ppT1_scope with pT1.
-
-Inductive ppT1 :=
-| P_fin (_ : nat)
-| P_add (_ _ : ppT1)
-| P_mult (_ : ppT1) (_ : nat)
-| P_exp (_ _ : ppT1)
-| P_omega
-.
-
-Coercion P_fin : nat >-> ppT1. 
-
-Notation "alpha + beta" := (P_add alpha beta) : ppT1_scope.
-
-Notation "alpha * n" := (P_mult alpha n) : ppT1_scope.
-
-Notation "alpha ^ beta" := (P_exp alpha beta) : ppT1_scope.
-
-Notation _omega := P_omega.
-
-Check (_omega ^ _omega * 2 + P_fin 1)%pT1.
-
-Fixpoint pp0 (alpha : T1) : ppT1 :=
-  match alpha with
-  | zero => P_fin 0
-  | ocons zero n zero => P_fin (S n)
-  | ocons one 0 zero => _omega
-  | ocons one 0 beta => (_omega + pp0 beta)%pT1
-  | ocons one n zero => (_omega * (S n))%pT1
-  | ocons one n beta => (_omega * (S n) + pp0 beta)%pT1
-  | ocons alpha 0 zero => (_omega ^ pp0 alpha)%pT1
-  | ocons alpha 0 beta => (_omega ^ pp0 alpha + pp0 beta)%pT1
-  | ocons alpha n zero => (_omega ^ pp0 alpha * (S n))%pT1
-  | ocons alpha n beta => (_omega ^ pp0 alpha * (S n) + pp0 beta)%pT1
-  end.
-
-Fixpoint eval_pp (e : ppT1) : T1 :=
-  match e with
-    P_fin 0 => zero
-  | P_fin n => n       
-  | P_add e f => ( (eval_pp e) +  (eval_pp f))%t1
-  | P_mult e n => ( (eval_pp e) * (S n))%t1
-  | P_exp e f => ((eval_pp e) ^ (eval_pp f))%t1
-  | _omega   => omega
-  end.
-
-Compute eval_pp (P_fin 4).
-
-
-(* Coercion pp0 : T1 >-> ppT1. *)
-
-Compute (pp0 (omega ^ omega * 2 + 1))%t1.
-
-
-Fixpoint reassoc (exp : ppT1) (fuel :nat) : ppT1 :=
-  match exp, fuel  with
-  | exp, 0 => exp
-  | P_add e (P_add f g), S n =>
-    reassoc (P_add (P_add (reassoc  e n) (reassoc f n))
-                   (reassoc g n)) n
-  | P_add e f , S n =>  P_add (reassoc e n) (reassoc f n)
-  | P_mult e i , S n=> P_mult (reassoc e n) i
-  | P_exp e f , S n => P_exp (reassoc e n) (reassoc f n)
-  | e, _=> e
-  end.
-
-
-
-Fixpoint p_size (exp : ppT1) : nat :=
-  match exp with
-    P_add e f |  P_exp e f => (S ((p_size e) + (p_size f)))%nat
-  | P_mult e _ => S (p_size e)
-  | _ => 1%nat
-  end.
-
-Definition pp (e: T1) : ppT1  := let t := pp0 e in reassoc t (p_size t).
-
-Compute (pp (omega ^ omega * 2 + omega ^ 5 + omega + 1))%t1 .
-
-Compute (pp (omega ^ (omega ^ omega * 2 + omega ^ 5 + omega + 1)))%t1 .
-
-Compute pp omega.
-
-Eval simpl in  fun n:nat =>
-                 (pp (omega ^ (omega ^ omega * n + omega ^ n + omega + 1)))%t1 .
-
-
-Ltac is_closed alpha :=
-  match alpha with
-    zero => idtac
-  | 0 => idtac
-  | S ?n => is_closed n
-  |ocons ?a ?n ?b => is_closed a ; is_closed n ; is_closed b
-  | ?other => fail
-  end.
-
-Ltac pp0tac alpha   :=
-  match alpha with
-  | zero => exact 0
-  | ocons zero ?n zero => exact (S n)
-  | ocons one 0 zero => exact omega%pT1
-  | ocons one 0 ?beta => exact (omega + ltac :(pp0tac beta))%pT1
-  | ocons one ?n zero => exact (omega * (S n))%pT1
-  | ocons one ?n ?beta => exact (omega * (S n) + ltac: (pp0tac beta))%pT1
-  | ocons ?alpha 0 zero => exact (omega ^ ltac: (pp0tac alpha))%pT1
-  | ocons ?alpha 0 ?beta => exact (omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
-  | ocons ?alpha ?n zero => exact (omega ^ ltac: (pp0tac alpha) * (S n))%pT1
-  | ocons ?alpha ?n ?beta => exact (omega ^ ltac: (pp0tac alpha) * (S n) + ltac : (pp0tac beta)%pT1)
-  end.
-
-Ltac pptac term :=
-  let t := eval cbn in term
-    in tryif is_closed t then exact (pp t) (* (ltac: (pp0tac t)) *)
-      else exact term.   
-
-Section essai.
-  Variable n : nat.
-
-  
-  Compute  ltac: (pp0tac (ocons (ocons zero 0 zero) 3 zero)).
-  Compute ltac: (pptac (ocons omega (S (S n)) (ocons omega (S n) 4))%t1).
-  Compute ltac: (pptac (1 + omega * (S 6))).
-
-End essai.
-
-
-Check (phi0 (phi0 (FS 6))).
-
-Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
-
-Compute pp (3 * (omega + 5)).
-
-Compute pp (3 * (omega * 7 + 15)).
-
-
-
 Lemma plus_cons_cons_eqn a n b a' n' b':
   (ocons a n b) + (ocons a' n' b') =
   match compare a a' with
@@ -3931,6 +3852,156 @@ Section Proof_of_dist.
 
 End Proof_of_dist.
 
+
+
+(**  **  An abstract syntax for ordinals in Cantor normal form *)
+(* begin snippet ppT1Def *)
+
+
+Declare Scope ppT1_scope.
+Delimit Scope ppT1_scope with pT1.
+
+Inductive ppT1 :=
+| PP_fin (_ : nat)
+| PP_add (_ _ : ppT1)
+| PP_mult (_ : ppT1) (_ : nat)
+| PP_exp (_ _ : ppT1)
+| PP_omega.
+
+
+Coercion PP_fin : nat >-> ppT1. 
+
+Notation "alpha + beta" := (PP_add alpha beta) : ppT1_scope.
+
+Notation "alpha * n" := (PP_mult alpha n) : ppT1_scope.
+
+Notation "alpha ^ beta" := (PP_exp alpha beta) : ppT1_scope.
+
+Notation _omega := PP_omega.
+
+Check (_omega ^ _omega * 2 + PP_fin 1)%pT1.
+
+(* end snippet ppT1Def *)
+
+
+Fixpoint pp0 (alpha : T1) : ppT1 :=
+  match alpha with
+  | zero => PP_fin 0
+  | ocons zero n zero => PP_fin (S n)
+  | ocons one 0 zero => _omega
+  | ocons one 0 beta => (_omega + pp0 beta)%pT1
+  | ocons one n zero => (_omega * (S n))%pT1
+  | ocons one n beta => (_omega * (S n) + pp0 beta)%pT1
+  | ocons alpha 0 zero => (_omega ^ pp0 alpha)%pT1
+  | ocons alpha 0 beta => (_omega ^ pp0 alpha + pp0 beta)%pT1
+  | ocons alpha n zero => (_omega ^ pp0 alpha * (S n))%pT1
+  | ocons alpha n beta => (_omega ^ pp0 alpha * (S n) + pp0 beta)%pT1
+  end.
+
+Fixpoint eval_pp (e : ppT1) : T1 :=
+  match e with
+    PP_fin 0 => zero
+  | PP_fin n => n       
+  | PP_add e f => ( (eval_pp e) +  (eval_pp f))%t1
+  | PP_mult e n => ( (eval_pp e) * (S n))%t1
+  | PP_exp e f => ((eval_pp e) ^ (eval_pp f))%t1
+  | _omega   => omega
+  end.
+
+Compute eval_pp (PP_fin 4).
+
+
+(* Coercion pp0 : T1 >-> ppT1. *)
+
+Compute (pp0 (omega ^ omega * 2 + 1))%t1.
+
+
+Fixpoint reassoc (exp : ppT1) (fuel :nat) : ppT1 :=
+  match exp, fuel  with
+  | exp, 0 => exp
+  | PP_add e (PP_add f g), S n =>
+    reassoc (PP_add (PP_add (reassoc  e n) (reassoc f n))
+                   (reassoc g n)) n
+  | PP_add e f , S n =>  PP_add (reassoc e n) (reassoc f n)
+  | PP_mult e i , S n=> PP_mult (reassoc e n) i
+  | PP_exp e f , S n => PP_exp (reassoc e n) (reassoc f n)
+  | e, _=> e
+  end.
+
+
+
+Fixpoint pp_size (exp : ppT1) : nat :=
+  match exp with
+    PP_add e f |  PP_exp e f => (S ((pp_size e) + (pp_size f)))%nat
+  | PP_mult e _ => S (pp_size e)
+  | _ => 1%nat
+  end.
+
+Definition pp (e: T1) : ppT1  := let t := pp0 e in reassoc t (pp_size t).
+
+
+
+Compute (pp (omega ^ omega * 2 + omega ^ 5 + omega + 1))%t1.
+
+Compute (pp (omega ^ (omega ^ omega * 2 + omega ^ 5 + omega + 1)))%t1 .
+
+Compute pp omega.
+
+Eval simpl in  fun n:nat =>
+                 (pp (omega ^ (omega ^ omega * n + omega ^ n + omega + 1)))%t1 .
+
+
+Ltac is_closed alpha :=
+  match alpha with
+    zero => idtac
+  | 0 => idtac
+  | S ?n => is_closed n
+  |ocons ?a ?n ?b => is_closed a ; is_closed n ; is_closed b
+  | ?other => fail
+  end.
+
+Ltac pp0tac alpha   :=
+  match alpha with
+  | zero => exact 0
+  | ocons zero ?n zero => exact (S n)
+  | ocons one 0 zero => exact omega%pT1
+  | ocons one 0 ?beta => exact (omega + ltac :(pp0tac beta))%pT1
+  | ocons one ?n zero => exact (omega * (S n))%pT1
+  | ocons one ?n ?beta => exact (omega * (S n) + ltac: (pp0tac beta))%pT1
+  | ocons ?alpha 0 zero => exact (omega ^ ltac: (pp0tac alpha))%pT1
+  | ocons ?alpha 0 ?beta =>
+    exact (omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
+  | ocons ?alpha ?n zero =>
+    exact (omega ^ ltac: (pp0tac alpha) * (S n))%pT1
+  | ocons ?alpha ?n ?beta =>
+    exact (omega ^ ltac: (pp0tac alpha) * (S n) +
+                   ltac : (pp0tac beta)%pT1)
+  end.
+
+Ltac pptac term :=
+  let t := eval cbn in term
+    in tryif is_closed t then exact (pp t) (* (ltac: (pp0tac t)) *)
+      else exact term.   
+
+Section essai.
+  Variable n : nat.
+
+  
+  Compute  ltac: (pp0tac (ocons (ocons zero 0 zero) 3 zero)).
+  Compute ltac: (pptac (ocons omega (S (S n)) (ocons omega (S n) 4))%t1).
+  Compute ltac: (pptac (1 + omega * (S 6))).
+
+End essai.
+
+
+Check (phi0 (phi0 (FS 6))).
+
+Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
+
+Compute pp (3 * (omega + 5)).
+
+Compute pp (3 * (omega * 7 + 15)).
+
 (** * Examples *)
 
 Example Ex1 :  42 + omega = omega.
@@ -3954,15 +4025,29 @@ Example alpha_0 : T1 :=
 
 (* end snippet alpha0 *)
 
+(* begin snippet alpha0Compute *)
+
 Compute alpha_0.
 
-(*
-   = ocons omega 0 (ocons (FS 2) 4 (FS 1))
-     : T1
- *)
+(* end snippet alpha0Compute *)
+
+(* begin snippet ppAlpha0 *)
+
+Compute pp alpha_0.
+
+(* end snippet ppAlpha0 *)
+
+(* begin snippet nfAlpha0 *)
 
 Compute nf_b alpha_0.
 
+(* end snippet nfAlpha0 *)
+
+(* begin snippet nfBadTerm *)
+
+Compute nf_b bad_term.
+
+(* end snippet nfBadTerm *)
 
 
 Example alpha_0_eq : alpha_0 = phi0 omega  +
