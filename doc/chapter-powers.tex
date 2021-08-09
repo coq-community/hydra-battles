@@ -2,13 +2,13 @@
 \label{chapter-powers}
 \section{Introduction}
 
-Nothing looks simpler than writing some function for computing $x^n$.
-On the contrary, this simple programming exercise allows us to address
+Nothing looks simpler than writing a function for computing $x^n$.
+But on the contrary, this simple programming exercise allows us to address
 advanced programming techniques such as:
 \begin{itemize}
 \item monadic programming, and continuation passing style
 \item type classes, and generalized rewriting
-\item proof engineering, in particular proof re-using
+\item proof engineering, in particular proof reuse
 \item proof by reflection
 \item polymorphism and parametricity
 \item composition of correct programs, etc.
@@ -330,7 +330,7 @@ Compute fib 20.
 \end{Coqanswer}
 
 In~\cite{BC04}, several exercises~\footnote{Exercises 9.8 (page 270), 9.10 (page 271), 9.15 (page 276), 9.17 (page 284), and 15.8 (page 418).}
-present ways to compute Fibonacci numbers, with the less number of recursive calls  as possible. Please note that these optimizations and the formal proof of their correctness are \emph{ad-hoc}, \emph{i.e.} exclusively written for the 
+present ways to compute Fibonacci numbers, with the less number of recursive calls  as possible. Please note that these optimizations and the formal proof of their correctness are \emph{ad-hoc}, \emph{i.e.}, exclusively written for the
 Fibonacci numbers.
 In contrast, the optimizations we present in this document apply, in their vast majority, \emph{generic} techniques of efficient computation of powers in a monoid. 
 This example of Fibonacci numbers has been developed with Yves Bertot, who wrote a first version with \texttt{SSreflect/Mathcomp}~\cite{MCB}.
@@ -639,7 +639,7 @@ these definitions for defining the \texttt{Monoid} type class.
 \subsection{A common notation for multiplication}
 \label{op-classes}
 \index{coq}{Type classes!Operational type classes}
-≈Ò
+
 \emph{Operational type classes}~\cite{BS2011}
 allow us to define a common notation 
 for multiplication in any algebraic structure. 
@@ -894,8 +894,8 @@ End Bad.
 In Sect.\vref{naive-matrix}, we defined a function for computing powers of any $2\times 2$ 
 matrix over any semi-ring. For proving a simple property of matrix exponentiation, we had
  to prove that matrix multiplication is associative and admits the identity matrix as a neutral element. These properties are easily expressed within the type class framework, by defining a \emph{family} of monoids.
-It suffices to define an instance of \texttt{Monoid} within the scope of an hypothesis
-of type \texttt{semi\_ring\_theory}
+It suffices to define an instance of \texttt{Monoid} within the scope of a hypothesis
+of type \texttt{semi\_ring\_theory}.
 
 \begin{Coqsrc}
 Section M2_def.
@@ -1532,13 +1532,13 @@ intermediary results are explicitly named for further use in the rest of the com
 
 \section{Addition chains}
 \index{maths}{Addition chains}
-An \emph{addition chain} (In short : \emph{a chain})~\cite{brauer1939} is a representation of a sequence of
+An \emph{addition chain} (in short, a \emph{chain})~\cite{brauer1939} is a representation of a sequence of
 intermediate steps that lead to the evaluation of  $x^n$, under the 
 assumption that each of these steps is a computation of  a power $x^i$, with 
 $i<n$.
 
 In articles from the combinatorist  community, 
-\emph{e.g.}~\cite{brauer1939,DBLP:journals/ipl/BerstelB87},  addition chains 
+\emph{e.g.},~\cite{brauer1939,DBLP:journals/ipl/BerstelB87},  addition chains
 are represented as sequences of positive integers, each member of which 
 is either $1$ or  the sum of two previous elements.
 For instance, the three following sequences are addition chains for the exponent $87$:
@@ -1554,7 +1554,7 @@ whenever $i=j+k$, there is an arc from $x^j$ to $x^i$ and an arc
 from $x^k$ to $x^i$. Figures~\ref{fig:chain-87-eucl}  and 
 \ref{fig:chain-87-bin} show the graphical representations of 
  $c_{87}$  and $c'_{87}$. 
-Please note that some chains may be represented by various different dags.
+Please note that some chains may be represented by various different dags (directed acyclic graphs).
 For instance, we can associate four different dags to the chain $(1,2,3,4,6,9,13)$. 
 
 
@@ -2126,7 +2126,7 @@ Arguments A_node {A} _ .
 
 
 
-Thus, the main steps of a correctness proof of a given chain, \emph{e.g.}
+Thus, the main steps of a correctness proof of a given chain, \emph{e.g.},
 \texttt{C87} will be the following ones:
 \begin{enumerate}
 \item generate a subgoal as in page~\pageref{fig:big-goal},
