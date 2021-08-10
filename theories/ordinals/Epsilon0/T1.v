@@ -83,6 +83,8 @@ Proof. reflexivity. Qed.
 
 (** Successor and limits (syntactic definitions) *)
 
+(* begin snippet succbLimitb *)
+
 Fixpoint succb alpha :=
   match alpha with
       zero => false
@@ -97,6 +99,16 @@ Fixpoint limitb alpha :=
     | ocons alpha n zero => true
     | ocons alpha n beta => limitb beta
   end.
+
+Compute limitb omega.
+
+Compute limitb 42.
+
+Compute succb 42.
+
+Compute succb omega.
+
+(* end snippet succbLimitb *)
 
 (** Exponential of base [omega] *)
 
@@ -250,6 +262,7 @@ Proof.
 Qed.
 
 (** ** Properties of [lt] *)
+
 Theorem not_lt_zero alpha : ~ lt alpha  zero.
 Proof.  destruct alpha; compute; discriminate. Qed.
 
@@ -1438,20 +1451,31 @@ Module Direct_proof.
     Qed.
 
 
-    (* begin hide *)
+    (* begin snippet wfLTBada *)
+
+    (*|
+.. coq:: no-out
+|*)
+
     Section First_attempt.
+      
       Lemma wf_LT : forall alpha: T1,  nf alpha -> Acc LT alpha. 
       Proof.
         induction alpha as [| beta IHbeta n gamma IHgamma].
         - split.
           inversion 1.
           destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
-        -  split; intros delta Hdelta. 
+        -  split; intros delta Hdelta.
+           (*||*)
+           (* end snippet wfLTBada *)
+
+           (* begin snippet wfLTBadz *)
+           
       Abort.
 
     End First_attempt.
 
-    (* end hide *)
+   (* end snippet wfLTBadz *)
 
     (** *** Strong accessibility (inspired by Tait's proof) *)
     Let Acc_strong (alpha:T1) :=
