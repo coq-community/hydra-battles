@@ -1,11 +1,11 @@
+(** Comparison between Hydra-battle's and Gaia's [T1]  *)
+
+
+
+
 From hydras Require  T1.
-From gaia Require ssete9.
+From gaia Require Import ssete9.
 
-
-
-Import ssete9.
-
-Locate T1.
 
 Fixpoint to_gaia (alpha : T1.T1) : CantorOrdinal.T1 :=
   match alpha with
@@ -23,14 +23,16 @@ Fixpoint from_gaia (alpha : CantorOrdinal.T1) : T1.T1 :=
 Lemma to_from alpha:  to_gaia (from_gaia alpha) = alpha.
 Proof.
   induction alpha.
-  trivial.
-   cbn; now rewrite IHalpha1, IHalpha2. 
+  - trivial.
+  - cbn; now rewrite IHalpha1, IHalpha2. 
 Qed.
 
 Lemma from_to alpha:  from_gaia (to_gaia alpha) = alpha.
 Proof.
   induction alpha.
-  trivial.
-   cbn; now rewrite IHalpha1, IHalpha2. 
+  - trivial.
+  - cbn; now rewrite IHalpha1, IHalpha2. 
 Qed.
+
+
 
