@@ -2,6 +2,8 @@
 -R theories/additions additions
 -R exercises hydra_exercises
 
+-Q ../gaia/theories gaia
+
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
 -arg -w -arg -deprecated-instance-without-locality
@@ -161,6 +163,8 @@ theories/ordinals/solutions_exercises/ge_omega_iff.v
 theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
 theories/ordinals/solutions_exercises/F_3.v
 theories/ordinals/solutions_exercises/is_F_monotonous.v
+
+theories/Bridge/T1Bridge.v
 
 
 
