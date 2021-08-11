@@ -164,7 +164,7 @@ theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
 theories/ordinals/solutions_exercises/F_3.v
 theories/ordinals/solutions_exercises/is_F_monotonous.v
 
-theories/Bridge/T1Bridge.v
+theories/Bridges/T1Bridge.v
 
 
 
