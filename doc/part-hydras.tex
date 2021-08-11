@@ -3341,20 +3341,9 @@ the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
 
 \label{sect:omega-T1}
-%\index{Constants!zero:T1}
 
-\begin{Coqsrc}
-Instance Zero : E0.
-Proof.
-  now exists T1.zero.
-Defined.
+\input{movies/snippets/E0/ZeroOmegaDef}
 
-Instance _Omega : E0.
-Proof.  now exists omega%t1. 
-Defined.
-
-Notation omega  := _Omega.
-\end{Coqsrc}
 
 
 

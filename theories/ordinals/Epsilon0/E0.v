@@ -40,7 +40,6 @@ Definition Le := leq Lt.
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
-#[global] Instance Zero : E0 := @mkord zero refl_equal.
 
 Definition Limitb (alpha : E0) : bool :=
   limitb (@cnf alpha).
@@ -48,6 +47,13 @@ Definition Limitb (alpha : E0) : bool :=
 Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
+(* begin snippet ZeroOmegaDef *)
+
+(*|
+.. coq:: no-out
+|*)
+
+#[global] Instance Zero : E0 := @mkord zero refl_equal.
 
 #[global] Instance _Omega : E0.
 Proof.
@@ -56,11 +62,15 @@ Defined.
 
 Notation omega  := _Omega.
 
+(* end snippet ZeroOmegaDef *)
+
+
 #[global] Instance Succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
   apply succ_nf,  cnf_ok.
 Defined.
+(*||*)
 
 
   
