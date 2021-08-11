@@ -57,10 +57,9 @@ Locate phi0.
 
 
 
-Lemma phi0_ref x y : refines0 x y ->
-                     refines0 (T1.phi0 x)  (CantorOrdinal.phi0 y).
+Lemma phi0_ref x :  refines0 (T1.phi0 x)  (CantorOrdinal.phi0 (iota x)).
 Proof.
-  intros H; red; now rewrite H.
+   reflexivity. 
 Qed.
 
 
