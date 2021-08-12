@@ -2511,7 +2511,8 @@ Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
 We have now to prove that there exists at most one  proof of (\texttt{Nat.ltb x0 (S n)}). This is not obvious, but  a consequence of the following lemma of library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
 
-\index{Coq!Unicity of equality proofs}
+\index{Coq}{Unicity of equality proofs}
+
 \label{sect:eq-proof-unicity}
 
 \begin{Coqanswer}
@@ -3279,34 +3280,13 @@ and \ref{sect:wainer}),  we need to define total recursive functions on well-for
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
+\input{movies/snippets/E0/E0Def}
 
-
-\begin{Coqsrc}
-Class E0 : Type := t1_2o {cnf : T1; cnf_ok : nf cnf}.
-\end{Coqsrc}
 
 Many constructs : types, predicates, functions, notations, etc., on type \texttt{T1} are adapted to \texttt{E0}.
 
-First, we declare a notation scope for \texttt{E0}.
+\input{movies/snippets/E0/LtLeDef}
 
-\begin{Coqsrc}
-Declare Scope E0_scope.
-Delimit Scope E0_scope with e0.
-Open Scope E0_scope.
-\end{Coqsrc}
-
-Then we redefine the predicates of comparison.
-
-\label{Predicates:Lt-E0}
-
-\begin{Coqsrc}
-Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le (alpha beta : E0) := T1.LE (@cnf alpha) (@cnf beta).
-
-Infix "o<" := Lt : E0_scope.
-Infix "o<=" := Le : E0_scope.
-\end{Coqsrc}
-  
 
 Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} is
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
@@ -3314,31 +3294,19 @@ equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~
 
 \index{coq}{Unicity of equality proofs}
 
+\input{movies/snippets/E0/nfProofUnicity}
 
-\begin{Coqsrc}
-Require Import Logic.Eqdep_dec.
+\vspace{4pt}
 
-Lemma nf_proof_unicity :
-  forall (alpha:T1) (H H': nf alpha), H = H'.
+\input{movies/snippets/E0/E0EqIff}
 
-Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
-\end{Coqsrc}
-
-\index{hydras}{Exercises}
-\begin{exercise}
-In earlier versions of this development, the predicate \texttt{nf} was defined  inductively, with various constructors describing all possible cases.
-\begin{enumerate}
-\item Please give such a definition, in a dedicated module.
-\item Prove the logical equivalence between your definition and ours.
-\item Define a variant of the type \texttt{E0} (with your definition of \texttt{nf}).
-\item Can you still prove a lemma like \texttt{E0\_eq\_iff} ? With the help of an axiom from some module of the standard library ?
-\end{enumerate}
-\end{exercise}
-
+\vspace{4pt}
 
 In order to  upgrade constants and functions from type \texttt{T1} to \texttt{E0}, we have to prove that
 the term they build is in normal form.
 For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
+
+\vspace{4pt}
 
 \label{sect:omega-T1}
 
@@ -3356,60 +3324,15 @@ Pattern matching and structural recursion allow us to define boolean characteriz
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
 
-\begin{Coqsrc}
-Fixpoint succb (alpha:T1) : bool :=
-  match alpha with
-    | zero => false
-    | ocons zero _ _ => true
-    | ocons alpha n beta => succb beta
-  end.
-
-Fixpoint limitb (alpha : T1) : bool :=
-  match alpha with
-    | zero => false
-    | ocons zero _ _ => false
-    | ocons alpha n zero => true
-    | ocons alpha n beta => limitb beta
-  end.
-\end{Coqsrc}
+\input{movies/snippets/T1/succbLimitb}
 
 
-
-\begin{Coqsrc}
-  Compute limitb omega.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = true
-     : bool
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute succb 42.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = true
-     : bool
-\end{Coqanswer}
 
 The correctness of these definitions with respect to the mathematical notions of
 limit and successor ordinals is established through several lemmas. For instance,
 Lemma \texttt{canonS\_limit}, page~\pageref{lemma:canonS-limit}, shows that
 if $\alpha$ is (syntactically) a limit ordinal, then it is the least upper bound of
 a strictly increasing sequence of ordinals.
-
-
-   The following function is very useful in constructions by cases (proofs and function definitions).
-   
-\begin{Coqsrc}
-Definition zero_succ_limit (alpha: T1) :
-    {succb alpha} + {limitb alpha} +  {alpha=zero}.
-    (* ... *)
-Defined.
-\end{Coqsrc}
-
-
 
 \subsection{Arithmetic on \texorpdfstring{$\epsilon_0$}{epsilon0}}
 \subsubsection{Successor}
@@ -3424,24 +3347,18 @@ recursion on its Cantor normal form.
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succ}{Epsilon0.T1}}
 
-\begin{Coqsrc}
-Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with 
-   | zero => 1
-   | ocons zero n _ => ocons zero (S n) zero
-   | ocons beta n gamma => ocons beta n (succ gamma)
- end.
-\end{Coqsrc}
+\input{movies/snippets/T1/succDef}
 
 
 The following lemma establishes the connection between the  function
 \texttt{succ} and the Boolean predicate \texttt{succb}.
 
+\vspace{4pt}
 
-\begin{Coqsrc}
- Lemma succb_iff alpha (Halpha : nf alpha) :
-  succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
-\end{Coqsrc}
+\input{movies/snippets/T1/succbIff}
+
+
+
 
 \index{hydras}{Exercises}
  \begin{exercise}
@@ -3460,35 +3377,9 @@ Ordinal addition and multiplication are also defined by structural recursion ove
 
 \label{sect:infix-plus-T1}
 
-\begin{Coqsrc}
-Fixpoint plus (alpha beta : T1) : T1 :=
-  match alpha,beta with
- |  zero, y  => y
- |  x, zero  => x
- |  ocons a n b, ocons a' n' b' =>
-    (match compare a a' with
-     | Lt => ocons a' n' b'
-     | Gt => (ocons a n (plus b (ocons a' n' b')))
-     | Eq  => (ocons a (S(n+n')) b')
-     end)
-  end
-where "alpha + beta" := (plus alpha beta) : t1_scope.
-\end{Coqsrc}
+\input{movies/snippets/T1/plusDef}
 
-\begin{Coqsrc}
-Fixpoint mult (alpha beta : T1) :T1 :=
-  match alpha,beta with
- |  zero, y  => zero
- |  x, zero => zero
- |  ocons zero n _, ocons zero n' _ => 
-                 ocons zero (Peano.pred((S n) * (S n'))) zero
- |  ocons a n b, ocons zero n' b' =>  
-                 ocons a (Peano.pred((S n) * (S n'))) b
- |  ocons a n b, ocons a' n' b' =>
-     ocons (a + a') n' ((ocons a n b) * b')
- end
-where  "alpha * beta" := (mult alpha beta) : t1_scope.
-\end{Coqsrc}
+\input{movies/snippets/T1/multDef}
 
 
 \subsubsection{Examples}
@@ -3496,20 +3387,7 @@ where  "alpha * beta" := (mult alpha beta) : t1_scope.
 The following examples are instances of \emph{proofs by computation}. Please note that  addition and multiplication on \texttt{T1}
 are not commutative. Moreover,  both operations fail to be strictly monotonous in their first argument.
 
-
-\begin{Coqsrc}
-Example e2 : 6 + omega = omega.
-Proof. reflexivity. Qed.
-
-Example e'2 : omega t1< omega + 6.
-Proof. now compute. Qed.
-
-Example e''2 : 6 * omega = omega.
-Proof. reflexivity. Qed.
-
-Example e'''2 : omega t1< omega * 6.
-Proof. now compute. Qed.
-\end{Coqsrc}
+\input{movies/snippets/T1/plusMultExamples}
 
 \begin{Coqsrc}
 Lemma plus_not_monotonous_l : exists alpha beta gamma : T1,

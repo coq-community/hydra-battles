@@ -83,6 +83,8 @@ Proof. reflexivity. Qed.
 
 (** Successor and limits (syntactic definitions) *)
 
+(* begin snippet succbLimitb *)
+
 Fixpoint succb alpha :=
   match alpha with
       zero => false
@@ -97,6 +99,12 @@ Fixpoint limitb alpha :=
     | ocons alpha n zero => true
     | ocons alpha n beta => limitb beta
   end.
+
+Compute limitb omega.
+Compute succb 42.
+
+
+(* end snippet succbLimitb *)
 
 (** Exponential of base [omega] *)
 
@@ -513,11 +521,15 @@ Definition epsilon_0 : Ensemble T1 := nf.
 
 (** *** Successor *)
 
+(* begin snippet succDef *)
+
 Fixpoint succ (alpha:T1) : T1 :=
   match alpha with zero => fin 1
   | ocons zero n _ => ocons zero (S n) zero
   | ocons beta n gamma => ocons beta n (succ gamma)
- end.
+  end.
+
+(* end snippet succDef *)
 
 (** *** Predecessor (partial function *)
 
@@ -534,6 +546,8 @@ Fixpoint pred (c:T1) : option T1 :=
 
 (** *** Addition *)
 
+(* begin snippet plusDef *)
+
 Fixpoint plus (alpha beta : T1) :T1 :=
   match alpha,beta with
   |  zero, y  => y
@@ -547,7 +561,12 @@ Fixpoint plus (alpha beta : T1) :T1 :=
   end
 where "alpha + beta" := (plus alpha beta) : t1_scope.
 
+(* end snippet plusDef *)
+
+
 (** *** multiplication *)
+
+(* begin snippet multDef *)
 
 Fixpoint mult (alpha beta : T1) :T1 :=
   match alpha,beta with
@@ -562,7 +581,7 @@ Fixpoint mult (alpha beta : T1) :T1 :=
   end
 where "alpha * beta" := (mult alpha beta) : t1_scope.
 
-
+(* end snippet multDef *)
 
 (**  *** Substraction  (used as a helper for exponentiation) *)
 
@@ -3401,9 +3420,15 @@ Proof.
   -   exact H0.
 Defined.
 
+(* begin snippet succbIff *)
 
 Lemma succb_iff alpha (Halpha : nf alpha) :
-  succb alpha <-> exists beta : T1, nf beta /\ alpha = succ  beta.
+  succb alpha <->
+  exists beta : T1,
+    nf beta /\ alpha = succ  beta. (* .no-out *)
+(*|
+.. coq:: none
+|*)
 Proof.
   split.
   intro H; destruct (succb_def Halpha).  
@@ -3413,6 +3438,8 @@ Proof.
                  subst.     
                  now apply succ_succb.
 Qed.
+(*||*)
+(* end snippet succbIff *)
 
 Lemma LE_r : forall alpha beta, alpha t1< beta -> alpha t1<= beta.
 Proof.
@@ -4004,10 +4031,31 @@ Compute pp (3 * (omega * 7 + 15)).
 
 (** * Examples *)
 
+
+(* begin snippet plusMultExamples *)
+
+(*|
+.. coq:: no-out 
+|*)
+
+
 Example Ex1 :  42 + omega = omega.
 Proof. reflexivity. Qed.
 
-Example Ex2 : limitb (omega ^ (omega + 5)).
+Example Ex2 : omega t1< omega + 42.
+Proof. now compute. Qed.
+
+Example Ex3 : 5 * omega = omega.
+Proof. reflexivity. Qed.
+
+Example Ex4 : omega t1<  omega * 5.
+Proof. now compute. Qed.
+
+(*||*)
+(* end snippet plusMultExamples *)
+
+
+Example Ex5 : limitb (omega ^ (omega + 5)).
 Proof. reflexivity. Qed.
 
 (* Demo *)

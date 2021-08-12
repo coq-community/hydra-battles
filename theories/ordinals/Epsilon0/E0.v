@@ -14,28 +14,31 @@ From hydras Require Import Prelude.More_Arith  Prelude.Restriction
 From hydras.Epsilon0 Require Export T1 Hessenberg.
 
 Set Implicit Arguments.
+
+(** ** Definitions *)
+
+(* begin snippet E0Def *)
+
 Declare Scope E0_scope.
 
 Delimit Scope E0_scope with e0.
 Open Scope E0_scope.
 
-
-(** ** Definitions *)
-
-
 Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
-Global Hint Resolve cnf_ok : E0.
+#[global] Hint Resolve cnf_ok : E0.
+
+(* end snippet E0Def *)
 
 (** ** Lifting functions from [T1] to [E0] *)
 
+(* begin snippet LtLeDef *)
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
 
 Definition Le := leq Lt.
-
 
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
@@ -46,6 +49,8 @@ Definition Limitb (alpha : E0) : bool :=
 
 Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
+
+(* end snippet LtLeDef *)
 
 (* begin snippet ZeroOmegaDef *)
 
@@ -144,22 +149,45 @@ Proof. reflexivity. Defined.
 
 (** ** On equality on type [E0] *)
 
-Lemma nf_proof_unicity :
-  forall (alpha:T1) (H H': nf alpha), H = H'.
-Proof.
+(* begin snippet nfProofUnicity *)
+
+Lemma nf_proof_unicity (alpha:T1) : forall (H H': nf alpha), H = H'. 
+Proof. (* .no-out *)
   intros; red in H, H'; apply eq_proofs_unicity_on.
-  destruct y. 
-  - rewrite H; auto. 
-  - rewrite H; right; discriminate. 
+  intro y; destruct (bool_dec (nf_b alpha)  y); auto. (* .no-out *)
 Qed.
 
+  
+(*|
+.. coq:: none
+|*)
+
 Lemma E0_eq_intro : forall alpha beta : E0,
-    cnf alpha = cnf beta -> alpha = beta.
+    cnf alpha = cnf beta -> alpha = beta. 
 Proof.
   destruct alpha, beta; simpl; intros; subst; f_equal; auto; 
     apply nf_proof_unicity.
 Qed.
 
+(*||*)
+(* end snippet nfProofUnicity *)
+
+(* begin snippet E0EqIff  *)
+
+Corollary E0_eq_iff (alpha beta: E0) :
+  alpha = beta <-> cnf alpha = cnf beta. (* .no-out *)
+(*|
+.. coq:: none
+|*)
+Proof.
+ split.
+ - intro; now f_equal.  
+ - intro; now apply E0_eq_intro.
+Qed.
+
+(*||*)
+
+(* end snippet E0EqIff  *)
 
 Remark Le_iff : forall alpha beta,
     Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
@@ -182,12 +210,6 @@ Proof.
        * reflexivity.
 Qed.
  
-Lemma E0_eq_iff alpha beta : alpha = beta <-> cnf alpha = cnf beta.
-Proof.
- split.
- - intro; now f_equal.  
- - intro; now apply E0_eq_intro.
-Qed.
 
 Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
 Proof.
