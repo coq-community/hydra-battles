@@ -172,4 +172,27 @@ Proof.
       * now apply T1lt_anti in H.
 Qed.
 
+(* To do : Must assume arguments of mul in nf *)
 
+
+
+Lemma mult_ref : refines2 T1.mult T1mul.
+Proof.
+  intro x; induction x.
+  - destruct y; reflexivity. 
+  - destruct y.
+    + cbn. now destruct x1.
+    + cbn.
+      case_eq (T1eq (iota x1) zero); case_eq (T1eq (iota y1) zero).
+      cbn. intros H1 H2.
+      assert (x1 = T1.zero) by admit. rewrite H. 
+      assert (y1 = T1.zero) by admit. rewrite H0. 
+      cbn. f_equal.
+       Search ssrnat.addn.
+       rewrite <- ssrnat.addnE, <- ssrnat.plusE .
+   Search ssrnat.muln_rec. 
+      rewrite <-   ssrnat.mulnE.
+      Search ssrnat.muln.
+      rewrite <- ssrnat.multE.
+      ring.
+      Abort. 

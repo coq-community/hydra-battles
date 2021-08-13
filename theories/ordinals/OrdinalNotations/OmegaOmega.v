@@ -350,8 +350,8 @@ Module LO.
     match alpha,beta with
     |  nil, _  => zero
     |  _, nil => zero
-    |  ocons 0 n _, ocons 0 n' _ =>
-       ocons 0 (Peano.pred((S n) * (S n'))) zero
+    |  ocons 0 n _, ocons 0 n' b' =>
+       ocons 0 (Peano.pred((S n) * (S n'))) b'
     |  ocons a n b, ocons 0 n' _ =>
        ocons a (Peano.pred ((S n) * (S n'))) b
     |  ocons a n b, ocons a' n' b' =>
