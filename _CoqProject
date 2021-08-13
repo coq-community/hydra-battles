@@ -2,7 +2,7 @@
 -R theories/additions additions
 -R exercises hydra_exercises
 
--Q ../gaia/theories gaia
+# -Q ../gaia/theories gaia
 
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
