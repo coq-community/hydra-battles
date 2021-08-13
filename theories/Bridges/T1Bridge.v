@@ -37,12 +37,19 @@ Proof.
   - cbn; now rewrite IHalpha1, IHalpha2. 
 Qed.
 
+
+
+Definition refines0 (x:T1.T1)(y:CantorOrdinal.T1) :=
+y = iota x.
+
+
 Definition refines1 (f:T1.T1 -> T1.T1)
            (f': CantorOrdinal.T1 -> CantorOrdinal.T1) :=
   forall x: T1.T1, f' (iota x) = iota (f x).
 
-Definition refines0 (x:T1.T1)(y:CantorOrdinal.T1) :=
-y = iota x.
+Definition refines2 (f:T1.T1 -> T1.T1 -> T1.T1)
+           (f': CantorOrdinal.T1 -> CantorOrdinal.T1 -> CantorOrdinal.T1 ) :=
+  forall x y : T1.T1, f' (iota x) (iota y) = iota (f x y).
 
 
 Lemma refines1_R f f' :
@@ -147,5 +154,22 @@ Proof.
 Qed. 
 
 
+Lemma plus_ref : refines2 T1.plus T1add.
+Proof.
+  intro x. induction x.
+  - now destruct y.
+  - destruct y.
+    reflexivity.
+    cbn.
+    case_eq (T1.compare x1 y1);
+      intro Hx1y1; generalize (compare_ref x1 y1);  rewrite Hx1y1; intro H.
+    + rewrite H, T1ltnn; cbn; now f_equal.
+    + rewrite H; cbn; now f_equal.
+    + replace (iota x1 < iota y1) with false.
+      * rewrite H; cbn;  f_equal. 
+        change  (cons (iota y1) n0 (iota y2)) with (iota (T1.ocons y1 n0 y2)).
+        now rewrite IHx2.
+      * now apply T1lt_anti in H.
+Qed.
 
 
