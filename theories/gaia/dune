@@ -1,0 +1,6 @@
+(coq.theory
+ (name gaia_hydras)
+ (package coq-gaia-hydras)
+ (synopsis "Comparison between ordinals in Gaia and Hydra battles")
+ ;(theories hydras)
+ (flags -w -notation-overridden -w -ambiguous-paths))
