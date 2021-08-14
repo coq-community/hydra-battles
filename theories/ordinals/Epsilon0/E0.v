@@ -15,6 +15,7 @@ From hydras.Epsilon0 Require Export T1 Hessenberg.
 
 Set Implicit Arguments.
 
+
 (* begin snippet E0Scope *)
 
 Declare Scope E0_scope.
@@ -23,7 +24,8 @@ Open Scope E0_scope.
 
 (* end snippet E0Scope *)
 
-(** ** Definitions *)
+Declare Scope E0_scope.
+
 
 (* begin snippet E0Def *)
 
@@ -31,15 +33,13 @@ Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
-(* end snippet E0Def *)
-
-
-
 #[global] Hint Resolve cnf_ok : E0.
+
+(* end snippet E0Def *)
 
 (** ** Lifting functions from [T1] to [E0] *)
 
-(* begin snippet LtDef *)
+(* begin snippet LtLeDef *)
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
 
@@ -48,13 +48,17 @@ Definition Le := leq Lt.
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
-(* end snippet LtDef *)
+(* end snippet LtLeDef *)
+
 
 (* begin snippet ZeroOmega *)
 
 (*|
 .. coq:: no-out
 |*)
+
+
+
 
 
 #[global] Instance Zero : E0 := @mkord zero refl_equal.
@@ -64,15 +68,18 @@ Proof. now exists omega%t1. Defined.
 
 Notation omega  := _Omega.
 
+
 (*||*)
 
 (* end snippet ZeroOmega *)
+
 
 #[global] Instance Succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
   apply succ_nf, cnf_ok.
 Defined.
+(*||*)
 
 
 
@@ -155,6 +162,7 @@ Proof. reflexivity. Defined.
 
 (* begin snippet nfProofUnicity *)
 
+
 (*|
 .. coq:: no-out
 |*)
@@ -163,10 +171,9 @@ Lemma nf_proof_unicity :
   forall (alpha:T1) (H H': nf alpha), H = H'.
 Proof.
   intros; red in H, H'; apply eq_proofs_unicity_on.
-  destruct y. 
-  - rewrite H; auto. 
-  - rewrite H; right; discriminate. 
+  intro y; destruct (bool_dec (nf_b alpha)  y); auto. (* .no-out *)
 Qed.
+
 
 (*||*)
 
@@ -174,12 +181,29 @@ Qed.
 
 
 Lemma E0_eq_intro : forall alpha beta : E0,
-    cnf alpha = cnf beta -> alpha = beta.
+    cnf alpha = cnf beta -> alpha = beta. 
 Proof.
   destruct alpha, beta; simpl; intros; subst; f_equal; auto; 
     apply nf_proof_unicity.
 Qed.
 
+
+(* begin snippet E0EqIff  *)
+
+Corollary E0_eq_iff (alpha beta: E0) :
+  alpha = beta <-> cnf alpha = cnf beta. (* .no-out *)
+(*|
+.. coq:: none
+|*)
+Proof.
+ split.
+ - intro; now f_equal.  
+ - intro; now apply E0_eq_intro.
+Qed.
+
+(*||*)
+
+(* end snippet E0EqIff  *)
 
 
 Remark Le_iff : forall alpha beta,
@@ -203,24 +227,7 @@ Proof.
        * reflexivity.
 Qed.
 
-(* begin snippet E0EqIff *)
 
-Lemma E0_eq_iff alpha beta :
-  alpha = beta <-> cnf alpha = cnf beta. (* .no-out *)
-
-(*| 
-.. coq:: none
-|*)
-
-Proof.
- split.
- - intro; now f_equal.  
- - intro; now apply E0_eq_intro.
-Qed.
-
-(*||*)
-
-(* end snippet E0EqIff *)
 
 Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
 Proof.
