@@ -1,8 +1,7 @@
 -R theories/ordinals hydras
 -R theories/additions additions
+-R theories/gaia gaia_hydras
 -R exercises hydra_exercises
-
-# -Q ../gaia/theories gaia
 
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
@@ -164,10 +163,4 @@ theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
 theories/ordinals/solutions_exercises/F_3.v
 theories/ordinals/solutions_exercises/is_F_monotonous.v
 
-theories/Bridges/T1Bridge.v
-
-
-
-
-
-
+theories/gaia/T1Bridge.v
