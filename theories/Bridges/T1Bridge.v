@@ -104,8 +104,6 @@ Proof.
  - now destruct n0.
 Qed. 
 
-(* Ugly !!! I should learn ssr ! *)
-
 Lemma compare_ref x  :
   forall y,
     match T1.compare x y with
@@ -154,6 +152,7 @@ Proof.
 Qed. 
 
 
+
 Lemma plus_ref : refines2 T1.plus T1add.
 Proof.
   intro x. induction x.
@@ -172,8 +171,18 @@ Proof.
       * now apply T1lt_anti in H.
 Qed.
 
-(* To do : Must assume arguments of mul in nf *)
+Lemma T1eq_rw a b: T1eq a b -> pi a = pi b.
+Proof.
+   intro H; destruct (@T1eqP a b).
+   - now subst.
+   - discriminate. 
+Qed. 
 
+Lemma T1eq_iota_rw a b : T1eq (iota a) (iota b) -> a = b.
+Proof.
+  intro H; rewrite <- (pi_iota a), <- (pi_iota b).
+  now apply T1eq_rw.
+Qed.
 
 
 Lemma mult_ref : refines2 T1.mult T1mul.
@@ -182,7 +191,7 @@ Proof.
   - destruct y; reflexivity. 
   - destruct y.
     + cbn. now destruct x1.
-    + cbn.
+    + 
       case_eq (T1eq (iota x1) zero); case_eq (T1eq (iota y1) zero).
       cbn. intros H1 H2.
       assert (x1 = T1.zero) by admit. rewrite H. 
@@ -195,4 +204,53 @@ Proof.
       Search ssrnat.muln.
       rewrite <- ssrnat.multE.
       ring.
-      Abort. 
+      intros. cbn.
+      replace x1 with T1.zero.
+      destruct y1.
+      cbn.
+      exfalso.
+      admit.
+    cbn.
+    f_equal.
+
+   destruct y2; cbn.
+ auto.
+ case_eq (T1eq (iota y2_1) zero).
+  intro.
+ replace y2_1 with T1.zero.
+ cbn.
+ f_equal.
+rewrite <- ssrnat.addnE, <- ssrnat.plusE .
+
+      rewrite <-   ssrnat.mulnE.
+
+      rewrite <- ssrnat.multE. 
+ring. 
+admit.
+intros.
+replace x1 with T1.zero.
+destruct y2_1.
+exfalso.
+admit.
+cbn.
+f_equal.
+destruct y2_2.
+cbn.
+trivial.
+cbn.
+case_eq (T1eq (iota y2_2_1) zero).
+  intro.
+ replace y2_2_1 with T1.zero.
+ cbn.
+ f_equal.
+rewrite <- ssrnat.addnE, <- ssrnat.plusE .
+
+      rewrite <-   ssrnat.mulnE.
+
+      rewrite <- ssrnat.multE. 
+ring. 
+admit. 
+
+
+
+rewrite addnE.
