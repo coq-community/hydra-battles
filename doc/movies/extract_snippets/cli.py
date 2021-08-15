@@ -122,11 +122,12 @@ def copy_asset(output_dir: Path, dir_name='assets'):
     from shutil import copy
 
     STY = ASSETS.ALECTRYON_STY + ASSETS.PYGMENTS_STY
+    assets = [(ASSETS.PATH, asset) for asset in STY]
 
     output_dir = output_dir / dir_name
     output_dir.mkdir(exist_ok=True)
 
-    copy_assets(0, STY, copy, output_dir)
+    copy_assets(None, assets, copy, output_dir)
     print(f"copy assets {STY} in {output_dir}")
 
 
