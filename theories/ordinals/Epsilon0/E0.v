@@ -15,14 +15,19 @@ From hydras.Epsilon0 Require Export T1 Hessenberg.
 
 Set Implicit Arguments.
 
-(** ** Definitions *)
 
-(* begin snippet E0Def *)
+(* begin snippet E0Scope *)
+
+Declare Scope E0_scope.
+Delimit Scope E0_scope with e0.
+Open Scope E0_scope.
+
+(* end snippet E0Scope *)
 
 Declare Scope E0_scope.
 
-Delimit Scope E0_scope with e0.
-Open Scope E0_scope.
+
+(* begin snippet E0Def *)
 
 Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
@@ -43,40 +48,46 @@ Definition Le := leq Lt.
 Infix "o<" := Lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
+(* end snippet LtLeDef *)
+
+
+(* begin snippet ZeroOmega *)
+
+(*|
+.. coq:: no-out
+|*)
+
+
+
+
+
+#[global] Instance Zero : E0 := @mkord zero refl_equal.
+
+#[global] Instance _Omega : E0. 
+Proof. now exists omega%t1. Defined. 
+
+Notation omega  := _Omega.
+
+
+(*||*)
+
+(* end snippet ZeroOmega *)
+
+
+#[global] Instance Succ (alpha : E0) : E0.
+Proof.
+  refine (@mkord (T1.succ (@cnf alpha)) _); 
+  apply succ_nf, cnf_ok.
+Defined.
+(*||*)
+
+
 
 Definition Limitb (alpha : E0) : bool :=
   limitb (@cnf alpha).
 
 Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
-
-(* end snippet LtLeDef *)
-
-(* begin snippet ZeroOmegaDef *)
-
-(*|
-.. coq:: no-out
-|*)
-
-#[global] Instance Zero : E0 := @mkord zero refl_equal.
-
-#[global] Instance _Omega : E0.
-Proof.
-  now exists omega%t1.  
-Defined. 
-
-Notation omega  := _Omega.
-
-(* end snippet ZeroOmegaDef *)
-
-
-#[global] Instance Succ (alpha : E0) : E0.
-Proof.
-  refine (@mkord (T1.succ (@cnf alpha)) _); 
-  apply succ_nf,  cnf_ok.
-Defined.
-(*||*)
-
 
   
 #[global] Instance ord1 : E0.
@@ -151,16 +162,23 @@ Proof. reflexivity. Defined.
 
 (* begin snippet nfProofUnicity *)
 
-Lemma nf_proof_unicity (alpha:T1) : forall (H H': nf alpha), H = H'. 
-Proof. (* .no-out *)
+
+(*|
+.. coq:: no-out
+|*)
+
+Lemma nf_proof_unicity :
+  forall (alpha:T1) (H H': nf alpha), H = H'.
+Proof.
   intros; red in H, H'; apply eq_proofs_unicity_on.
   intro y; destruct (bool_dec (nf_b alpha)  y); auto. (* .no-out *)
 Qed.
 
-  
-(*|
-.. coq:: none
-|*)
+
+(*||*)
+
+(* end snippet nfProofUnicity *)
+
 
 Lemma E0_eq_intro : forall alpha beta : E0,
     cnf alpha = cnf beta -> alpha = beta. 
@@ -169,8 +187,6 @@ Proof.
     apply nf_proof_unicity.
 Qed.
 
-(*||*)
-(* end snippet nfProofUnicity *)
 
 (* begin snippet E0EqIff  *)
 
@@ -188,6 +204,7 @@ Qed.
 (*||*)
 
 (* end snippet E0EqIff  *)
+
 
 Remark Le_iff : forall alpha beta,
     Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
@@ -209,7 +226,8 @@ Proof.
        * now right.
        * reflexivity.
 Qed.
- 
+
+
 
 Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
 Proof.

@@ -2512,7 +2512,6 @@ We have now to prove that there exists at most one  proof of (\texttt{Nat.ltb x0
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
 
 \index{Coq}{Unicity of equality proofs}
-
 \label{sect:eq-proof-unicity}
 
 \begin{Coqanswer}
@@ -3285,16 +3284,32 @@ and \ref{sect:wainer}),  we need to define total recursive functions on well-for
 
 Many constructs : types, predicates, functions, notations, etc., on type \texttt{T1} are adapted to \texttt{E0}.
 
+First, we declare a notation scope for \texttt{E0}.
+
+
+\input{movies/snippets/E0/E0Scope}
+
+
+Then we redefine the predicates of comparison.
+
+\label{Predicates:Lt-E0}
+
 \input{movies/snippets/E0/LtLeDef}
+
+
 
 
 Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} is
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
 equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
+\vspace{4pt}
+
+
 \index{coq}{Unicity of equality proofs}
 
 \input{movies/snippets/E0/nfProofUnicity}
+
 
 \vspace{4pt}
 
@@ -3304,13 +3319,16 @@ equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~
 
 In order to  upgrade constants and functions from type \texttt{T1} to \texttt{E0}, we have to prove that
 the term they build is in normal form.
-For instance, let us represent the ordinals $0$ and $\omega$ as instances of the class \texttt{E0}.
+For instance, let us represent the ordinals $0$ and $\omega$   as instances of the class \texttt{E0}.
 
 \vspace{4pt}
 
 \label{sect:omega-T1}
 
-\input{movies/snippets/E0/ZeroOmegaDef}
+\input{movies/snippets/E0/ZeroOmega}
+
+%\index{Constants!zero:T1}
+
 
 
 
@@ -3324,15 +3342,21 @@ Pattern matching and structural recursion allow us to define boolean characteriz
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
 
-\input{movies/snippets/T1/succbLimitb}
 
+
+\input{movies/snippets/T1/succbLimitb}
 
 
 The correctness of these definitions with respect to the mathematical notions of
 limit and successor ordinals is established through several lemmas. For instance,
-Lemma \texttt{canonS\_limit}, page~\pageref{lemma:canonS-limit}, shows that
+Lemma \texttt{canonS\_limit\_lub}, page~\pageref{lemma:canonS-limit}, shows that
 if $\alpha$ is (syntactically) a limit ordinal, then it is the least upper bound of
 a strictly increasing sequence of ordinals.
+
+
+
+
+
 
 \subsection{Arithmetic on \texorpdfstring{$\epsilon_0$}{epsilon0}}
 \subsubsection{Successor}
@@ -3347,7 +3371,15 @@ recursion on its Cantor normal form.
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succ}{Epsilon0.T1}}
 
-\input{movies/snippets/T1/succDef}
+
+\begin{Coqsrc}
+Fixpoint succ (alpha:T1) : T1 :=
+  match alpha with 
+   | zero => 1
+   | ocons zero n _ => ocons zero (S n) zero
+   | ocons beta n gamma => ocons beta n (succ gamma)
+ end.
+\end{Coqsrc}
 
 
 The following lemma establishes the connection between the  function
@@ -3455,15 +3487,6 @@ $i+\alpha=\alpha$.
     \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/ge_omega_iff.v}{exercises/ordinals/ge\_omega\_iff.v}.}
 \end{exercise}
 
-\index{hydras}{Exercises} 
-\begin{exercise}
-  Prove that that the ordinal addition on \texttt{E0} is associative.
-
-  \textbf{Warning:}  Please do not import theorems from
-  \texttt{ordinals/Schutte/}, since that library uses axioms!
-\end{exercise}
-
-
 
 
 \section{Well-foundedness and transfinite induction}
@@ -3491,40 +3514,6 @@ which are not in Cantor normal form.
     \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/T1_ltNotWf.v}{exercises/ordinals/T1\_ltNotWf.v}.}
 \end{exercise}
 
-% \subsubsection{The total order \texttt{lt} on \texttt{T1} is \emph{not} well-founded}
-% \label{sec:orgheadline76}
-
-% Let us recall that the data type \texttt{T1} contains too many inhabitants, including
-% terms which are not in Cantor normal form. Thus, the following result is not 
-% very surprising.
-
-% \begin{Coqsrc}
-% Section lt_not_well_founded.
-  
-%   (* let us build the sequence of terms :
-%         omega + omega + .... + omega ^ 2   *)
-%   Let f := (fix f (i:nat): T1 :=
-%             match i with 0 => phi0 2
-%                        | S i => ocons 1 1 (f  i)
-%             end).
-
- 
-%  Lemma  f_decreases : forall i, f (S i) <  f i.
-%  Proof.
-%   induction i; compute; auto with T1.
-%  Qed.
-
-%  Theorem lt_not_wf : ~  well_founded lt.
-%  Proof. 
-%    intro wf; case (not_decreasing _ lt);auto.
-%    exists f; apply f_decreases.
-%  Qed.
-
-% End lt_not_well_founded.
-% \end{Coqsrc}
-
-% Thus, we have 
-
 \subsubsection{A first attempt}
 \label{sec:orgheadline77}
 \index{coq}{Well-founded induction}
@@ -3538,17 +3527,8 @@ Unfortunately, it won't work. Let us consider some well-formed term
 any well formed term \(\delta\) such that \(\delta<\alpha\). 
 But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
 
-\begin{Coqbad}
-Section First_attempt.
+\input{movies/snippets/T1/wfLTBada}
 
- Lemma wf_LT : forall alpha,  nf alpha -> Acc LT alpha. 
- Proof.
-  induction alpha as [| beta IHbeta n gamma IHgamma].
-  - split.
-    inversion 1.
-    destruct H2 as [H3 _];not_neg H3.
-  -  split; intros delta Hdelta.
-\end{Coqbad}
 
 \begin{Coqanswer}
 1 subgoal (ID 560)
@@ -3565,9 +3545,8 @@ Section First_attempt.
   Acc LT delta
  \end{Coqanswer}
 
-\begin{Coqbad}
-  Abort.
-\end{Coqbad}
+ 
+
 
 The problem comes from the hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
 \(\gamma\);
@@ -3575,6 +3554,8 @@ for instance \(\delta\) may be of the form
 \texttt{ocons $\beta'$ $p'$  $\gamma'$},
 where  \(\beta' \leq  \beta\) and  \(p' < n\).
 Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless for finishing our proof.
+
+\input{movies/snippets/T1/wfLTBadz}
 
 \subsubsection{Using a stronger inductive predicate.}
 \label{sec:orgheadline78}

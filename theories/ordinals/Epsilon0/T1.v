@@ -101,8 +101,12 @@ Fixpoint limitb alpha :=
   end.
 
 Compute limitb omega.
+
+Compute limitb 42.
+
 Compute succb 42.
 
+Compute succb omega.
 
 (* end snippet succbLimitb *)
 
@@ -258,6 +262,7 @@ Proof.
 Qed.
 
 (** ** Properties of [lt] *)
+
 Theorem not_lt_zero alpha : ~ lt alpha  zero.
 Proof.  destruct alpha; compute; discriminate. Qed.
 
@@ -572,8 +577,8 @@ Fixpoint mult (alpha beta : T1) :T1 :=
   match alpha,beta with
   |  zero, _  => zero
   |  _, zero => zero
-  |  ocons zero n _, ocons zero n' _ =>
-      ocons zero (Peano.pred((S n) * (S n'))) zero
+  |  ocons zero n _, ocons zero n' b' =>
+      ocons zero (Peano.pred((S n) * (S n'))) b'
   |  ocons a n b, ocons zero n' _ =>
       ocons a (Peano.pred ((S n) * (S n'))) b
   |  ocons a n b, ocons a' n' b' =>
@@ -1457,20 +1462,31 @@ Module Direct_proof.
     Qed.
 
 
-    (* begin hide *)
+    (* begin snippet wfLTBada *)
+
+    (*|
+.. coq:: no-out
+|*)
+
     Section First_attempt.
+      
       Lemma wf_LT : forall alpha: T1,  nf alpha -> Acc LT alpha. 
       Proof.
         induction alpha as [| beta IHbeta n gamma IHgamma].
         - split.
           inversion 1.
           destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
-        -  split; intros delta Hdelta. 
+        -  split; intros delta Hdelta.
+           (*||*)
+           (* end snippet wfLTBada *)
+
+           (* begin snippet wfLTBadz *)
+           
       Abort.
 
     End First_attempt.
 
-    (* end hide *)
+   (* end snippet wfLTBadz *)
 
     (** *** Strong accessibility (inspired by Tait's proof) *)
     Let Acc_strong (alpha:T1) :=
@@ -2323,8 +2339,10 @@ Proof.
   -  cbn; destruct alpha as [|alpha0 np alpha1].
      +  auto.
      + destruct alpha0.
-       * intro; apply nf_FS.
+       * intro; eapply nf_coeff_irrelevance; eauto. eapply nf_FS.
        * intro; eapply nf_coeff_irrelevance; eauto.
+ Unshelve.
+ exact 0.
 Qed.
 
 (**  **  About minus *)
@@ -2808,7 +2826,7 @@ Section Proof_of_mult_nf.
          + apply nf_coeff_irrelevance with n; auto.
       -  intros _ gamma H4; destruct (LT_of_finite H4).
          +   subst; rewrite mult_a_0; simpl;  destruct a.
-             *  apply LT1,  nf_FS.
+             *  apply LT1. apply nf_of_finite in Halpha. now destruct H. 
              *  auto with T1.
          + destruct H0 as [p0 [H5 H6]]; subst; simpl.
            assert (p0 + n * S p0 < p + n * S p)%nat.

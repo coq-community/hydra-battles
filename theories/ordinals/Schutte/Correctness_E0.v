@@ -438,11 +438,12 @@ Proof.
         *   f_equal;  destruct n; simpl; auto.
             assert (alpha2 = T1.zero).  
             {  eapply nf_of_finite; eauto. }
-            -- now subst.
-            --  assert (alpha2 = T1.zero).  
-                { eapply nf_of_finite; eauto. }
-                subst;  f_equal;   auto with arith.
-        *  replace (n * 1)%nat with n; auto with arith.
+            -- subst. f_equal; ring.
+            -- assert (alpha2 = T1.zero).  
+            {  eapply nf_of_finite; eauto. }
+            subst.
+            replace (n * 1)%nat with n; auto with arith.
+*  replace (n * 1)%nat with n; auto with arith.
      +   change ((S (S n)):T1) with  (FS (S n)); rewrite mult_Sn_add.
          replace (S (S n)) with (S (S (n + 0)))%nat.
          simpl mult_fin_r;  rewrite inject_plus; auto with arith.
@@ -456,11 +457,11 @@ Proof.
              clear IHn; induction n; simpl.
              destruct alpha;  auto.
              destruct alpha1.
-             apply nf_FS.
+             apply nf_of_finite in H; subst; apply nf_FS.
              replace (n * 1)%nat with n; auto with arith.
              destruct alpha; auto with T1.
              destruct alpha1.
-             apply nf_FS.
+              apply nf_of_finite in H; subst; apply nf_FS.
              eapply nf_coeff_irrelevance. eauto. 
            }
          *   auto with arith.
