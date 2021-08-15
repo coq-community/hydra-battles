@@ -26,9 +26,7 @@ def coq_rst_to_latex(source: str) -> str:
     """
     from alectryon.docutils import LatexWriter
     from docutils.core import publish_string
-    from alectryon.docutils import \
-        RSTCoqParser as Parser, \
-        RSTCoqStandaloneReader as Reader
+    from alectryon.docutils import RSTCoqParser as Parser
 
     settings_overrides = {
         'traceback': True,
@@ -44,7 +42,6 @@ def coq_rst_to_latex(source: str) -> str:
     parser = Parser()
     return publish_string(
         source=source.encode("utf-8"),
-        reader=Reader(parser), reader_name=None,
         parser=parser, parser_name=None,
         writer=LatexWriter(), writer_name=None,
         settings=None, settings_spec=None,
