@@ -1,1 +1,1 @@
-alectryon >=1.2
+alectryon >=1.3
