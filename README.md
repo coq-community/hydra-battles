@@ -56,8 +56,8 @@ This contribution contains two parts:
 ## Installation
 
 - To get the required dependencies, the easiest way is to use opam. Run:
-  - `opam install coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
-  - `opam install coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
+  - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
+  - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
 
 - Building the PDF documentation also requires Alectryon 1.2 and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
