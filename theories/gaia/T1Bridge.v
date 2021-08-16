@@ -4,8 +4,9 @@ First experiments *)
 
 
 From hydras Require T1.
-From mathcomp Require Import all_ssreflect.
+From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
+
 
 Set Bullet Behavior "Strict Subproofs".
 
@@ -55,6 +56,15 @@ Lemma refines1_R f f' :
   forall y: CantorOrdinal.T1, f (pi y) = pi (f' y).
 Proof.
 move => Href y; rewrite -{2}(iota_pi y).
+by rewrite Href pi_iota.
+Qed.
+
+
+Lemma refines2_R f f' :
+  refines2 f f' ->
+  forall y z: CantorOrdinal.T1, f (pi y) (pi z) = pi (f' y z).
+Proof.
+move => Href y z; rewrite -{2}(iota_pi y). rewrite -{2}(iota_pi z).
 by rewrite Href pi_iota.
 Qed.
 
@@ -163,76 +173,169 @@ case Hx1y1: (T1.compare x1 y1); move: (compare_ref x1 y1); rewrite Hx1y1 => H.
 Qed.
 
 
+(** Equations for multiplication *)
 
 
 
-(* 
+Lemma T1mul_eqn1 (c : CantorOrdinal.T1) : c * zero = zero. 
+Proof. by []. Qed.
+
+Check T1.zero. 
+
+Lemma mult_eqn1 c : T1.mult c T1.zero = T1.zero.
+Proof. case: c; cbn. 
+       - trivial.
+       - by case. 
+Qed.
+
+Lemma T1mul_eqn2 c : zero * c = zero.
+Proof. 
+  case: c => //. 
+Qed.
+
+Lemma mult_eqn2 c : T1.mult T1.zero c  = T1.zero.
+Proof. case: c => //.  
+Qed.
+
+Lemma T1mul_eqn3 n b n' b' : cons zero n b * cons zero n' b' =
+                     cons zero (n * n' + n + n') b'.      
+Proof. by [].  Qed. 
+
+
+Lemma mult_eqn3 n b n' b' :
+  T1.mult (T1.ocons T1.zero n b) (T1.ocons T1.zero n' b') =
+                     T1.ocons T1.zero (n * n' + n + n') b'.      
+Proof. cbn; f_equal; nia. Qed.
+
+
+Lemma T1mul_eqn4 a n b n' b' :
+  a != zero -> (cons a n b) * (cons zero n' b') =
+               cons a (n * n' + n + n') b.
+Proof. 
+  move => /T1eqP.  cbn.
+  move =>  Ha'; have Heq: T1eq a zero = false.
+  { move: Ha'. case: a => //. }
+  rewrite Heq.   by cbn.        
+Qed.
+
+
+Lemma mult_eqn4 a n b n' b' :
+  a <> T1.zero -> T1.mult (T1.ocons a n b)  (T1.ocons T1.zero n' b') =
+               T1.ocons a (n * n' + n + n') b.
+Proof. 
+  cbn.
+  move =>  Ha'. destruct a.
+  -  now destruct Ha'.
+  - f_equal. nia. 
+Qed.
+
+Lemma T1mul_eqn5 a n b a' n' b' :
+   a' != zero ->
+  (cons a n b) * (cons a' n' b') =
+  cons (a + a') n' (T1mul (cons a n b) b').
+Proof. 
+  move => H /=.
+  cbn.
+   have Ha' : T1eq a' zero = false. 
+   move: a' H; case => //.
+   case (T1eq a zero); cbn; by rewrite Ha'. 
+Qed.
+
+Lemma mult_eqn5 a n b a' n' b' :
+  a' <>  T1.zero ->
+  T1.mult (T1.ocons a n b)  (T1.ocons a' n' b') =
+  T1.ocons (T1.plus a  a') n' (T1.mult (T1.ocons a n b) b').
+Proof.
+  move => Ha'. cbn. destruct a. 
+  - destruct a'.
+    + now destruct Ha'.
+    + reflexivity. 
+  - destruct a'. 
+    + now destruct Ha'.
+    + reflexivity. 
+Qed. 
+
+
+Lemma iota_cons_rw a n b : iota (T1.ocons a n b)= cons (iota a) n (iota b). 
+Proof. by []. Qed.
+
+Lemma iota_zero_rw  : iota T1.zero = zero. 
+Proof. by []. Qed.
+
+
 Lemma mult_ref : refines2 T1.mult T1mul.
 Proof.
-  intro x; induction x.
-  - destruct y; reflexivity. 
-  - destruct y.
-    + cbn. now destruct x1.
-    + 
-      case_eq (T1eq (iota x1) zero); case_eq (T1eq (iota y1) zero).
-      cbn. intros H1 H2.
-      assert (x1 = T1.zero) by admit. rewrite H. 
-      assert (y1 = T1.zero) by admit. rewrite H0. 
-      cbn. f_equal.
-       Search ssrnat.addn.
-       rewrite <- ssrnat.addnE, <- ssrnat.plusE .
-   Search ssrnat.muln_rec. 
-      rewrite <-   ssrnat.mulnE.
-      Search ssrnat.muln.
-      rewrite <- ssrnat.multE.
-      ring.
-      intros. cbn.
-      replace x1 with T1.zero.
-      destruct y1.
-      cbn.
-      exfalso.
-      admit.
-    cbn.
+  red.   intros x y. revert x.  induction y.
+  move => x. simpl iota; rewrite T1mul_eqn1; case x => //.
+  case => //.
+  case. simpl iota => //.
+  move => alpha n0 beta.
+  destruct (T1.T1_eq_dec  alpha T1.zero).
+  + subst.  destruct (T1.T1_eq_dec  y1 T1.zero).
+    subst y1;  simpl iota; rewrite T1mul_eqn3;   f_equal; nia.
+    * repeat rewrite iota_cons_rw iota_zero_rw.
+      rewrite iota_cons_rw.
+      rewrite T1mul_eqn5.  
+      rewrite mult_eqn5.   
+    simpl iota. 
+    simpl T1add. 
     f_equal.
+    destruct (T1.T1_eq_dec  y2 T1.zero).
+    subst. 
+    cbn. 
+    trivial.
+    change (cons zero n0 (iota beta)) with (iota (T1.ocons T1.zero n0 beta)).
+   
+    rewrite IHy2. auto. 
+    auto.  destruct y1. now destruct n1.
+           now compute. 
 
-   destruct y2; cbn.
- auto.
- case_eq (T1eq (iota y2_1) zero).
-  intro.
- replace y2_1 with T1.zero.
- cbn.
- f_equal.
-rewrite <- ssrnat.addnE, <- ssrnat.plusE .
+  + destruct (T1.T1_eq_dec y1 T1.zero).
+    subst. 
+repeat rewrite iota_cons_rw iota_zero_rw.
+      repeat rewrite iota_cons_rw.
+ rewrite   iota_zero_rw. repeat rewrite iota_cons_rw iota_zero_rw.
+rewrite T1mul_eqn4.
 
-      rewrite <-   ssrnat.mulnE.
+    rewrite mult_eqn4. 
+  by [].
+    by [].
+    destruct alpha. now destruct n1.
+           now compute. 
 
-      rewrite <- ssrnat.multE. 
-ring. 
-admit.
-intros.
-replace x1 with T1.zero.
-destruct y2_1.
-exfalso.
-admit.
-cbn.
-f_equal.
-destruct y2_2.
-cbn.
-trivial.
-cbn.
-case_eq (T1eq (iota y2_2_1) zero).
-  intro.
- replace y2_2_1 with T1.zero.
- cbn.
- f_equal.
-rewrite <- ssrnat.addnE, <- ssrnat.plusE .
+  repeat rewrite iota_cons_rw iota_zero_rw.
+  repeat rewrite iota_cons_rw iota_zero_rw.
+repeat rewrite iota_cons_rw iota_zero_rw.  
+repeat rewrite iota_cons_rw. 
+rewrite T1mul_eqn5.
+rewrite mult_eqn5.
+simpl iota. 
+rewrite plus_ref. 
+f_equal. 
+change ( cons (iota alpha) n0 (iota beta)) with (iota (T1.ocons alpha n0 beta)).
+now rewrite IHy2.
+auto. 
+destruct y1. now destruct n1.
+           now compute. 
+Qed.
 
-      rewrite <-   ssrnat.mulnE.
+Lemma mult_refR a b : T1.mult (pi a) (pi b) = pi (a * b).
 
-      rewrite <- ssrnat.multE. 
-ring. 
-admit. 
+Proof.
+apply refines2_R. 
+apply mult_ref. 
+Qed. 
 
- *)
-
+Lemma mult_assoc : forall a b c,  T1.mult a (T1.mult b c) =
+                                  T1.mult (T1.mult a b) c.
+Proof. 
+  move => a b c.
+  replace a with (pi (iota a)).
+  replace b with (pi (iota b)).
+    replace c with (pi (iota c)).
+  repeat rewrite mult_refR. Search T1mul. now rewrite mulA. 
+  now rewrite pi_iota.
+   now rewrite pi_iota.  
+   now rewrite pi_iota.
+Qed.
 
