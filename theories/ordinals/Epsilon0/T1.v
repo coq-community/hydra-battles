@@ -2492,7 +2492,7 @@ Defined.
 Lemma LT_one alpha :
   alpha t1< one -> alpha = zero. (* .no-out *)
 Proof. (* .no-out *)
-  intros  [H1 [H2 _]]; destruct alpha; auto. (* .no-out *)
+  intros  [H1 [H2 _]]; destruct alpha; auto. 
 
   (* end snippet LTOnea *)
 
