@@ -1699,13 +1699,21 @@ Proof.
    case alpha; now simpl.
 Qed.
 
-Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
-Proof.
-  induction alpha as [ |a IHa n b IHb]; [trivial |].
+(* begin snippet succIsPlusOne *)
+
+Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1. (* .no-out *)
+Proof. (* .no-out *)
+  induction alpha as [ |a IHa n b IHb]; [trivial |]. (* .no-out *)
+  (* ... *) (* .no-out *)
+  (*|
+.. coq:: none 
+|*)
   - destruct  a; cbn.
     + now rewrite <- plus_n_O.
     + rewrite IHb; f_equal.
+      (*||*)
 Qed.
+(* end snippet succIsPlusOne *)
 
 Lemma succ_of_plus_finite :
   forall alpha (H: nf alpha) (i:nat) , succ (alpha + i) = alpha + S i.
@@ -1933,12 +1941,17 @@ Proof.
     now destruct (compare beta0 beta) eqn:?.
 Qed.
 
+(* begin snippet notMono *)
+
+(*|
+.. coq:: no-out
+|*)
 
 Lemma plus_not_monotonous_l :
   exists alpha beta gamma : T1,
     alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
-  exists 3, 5, omega;  now  compute.
+  exists 3, 5, omega; now  compute.
 Qed.
 
 
@@ -1948,6 +1961,9 @@ Lemma mult_not_monotonous :
 Proof.
   exists 3, 5, omega; now compute.
 Qed.
+(*||*)
+(* end snippet notMono *)
+
 
 
 (** ** monotonicity of [succ]  *)

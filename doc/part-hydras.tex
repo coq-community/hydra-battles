@@ -664,55 +664,12 @@ Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt
 
 
 
-\begin{enumerate}
-\item The first subgoal is as follows:
 
-\begin{Coqanswer}
-
-  h: Hydrae
-  IHh : h_forall (fun h : Hydra => height h < hsize h) h
-  ============================
-   height (node s) < hsize (node s) 
-
-\end{Coqanswer}
-
-This goal is easily solvable, using some arithmetic. We let the reader look at the source.
-
-\item The second subgoal is trivial:
-
-\begin{Coqanswer}
-
-  ============================
-    h_forall (fun h : Hydra => height h < hsize h) hnil
-
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  reflexivity.
-\end{Coqsrc}
-
-\item Finally, the last subgoal is also easy to solve:
+The first subgoal is easily solvable, using some arithmetic. We let the reader look at the source. The second and third are
+almost trivial. 
 
 
 
-\begin{Coqanswer}
-  h : Hydra
-  h0 : Hydrae
-  IHh : height h < hsize h
-  IHh0 : h_forall (fun h : Hydra => height h < hsize h) h0
-  ============================
-   h_forall (fun h1 : Hydra => height h1 < hsize h1) 
-                 (hcons h h0)
-\end{Coqanswer}  
-
-
-
-\begin{Coqsrc}
- split;auto. 
-Qed.   
-\end{Coqsrc}
-
-\end{enumerate}
 
 \index{hydras}{Exercises}
 
@@ -1549,19 +1506,9 @@ But, by hypothesis, $m$ is a variant. Hence, we infer the following inequality.
 In order to get a contradiction, it suffices to  prove the inequality
 $m(\texttt{big\_h}) \leq m(\texttt{small\_h})$ i.e.,  $m(\texttt{big\_h}\leq m(\iota (m(\texttt{big\_h})))$.
 
-More generally, we prove the following lemma: 
 
 \input{movies/snippets/Omega_Small/mGea}
 
-\begin{Coqanswer}
-1 subgoal (ID 23)
-  m : Hydra -> nat
-  Hvar : Hvariant lt_wf free m
- 
-  small_h := iota (m big_h) : Hydra
-  ============================
-  forall i : nat, i <= m (iota i)
-\end{Coqanswer}
 
 Intuitively, it means that, from any hydra of the form (\texttt{iota $i$}), the battle will 
 take (at least) $i$ rounds. Thus the associated measure cannot be less than $i$.
@@ -2324,14 +2271,6 @@ The first steps of our proof prepare a well-founded induction on $\omega^2$.
 
 
 \input{movies/snippets/Omega2_Small/mGe}
-
-\begin{Coqanswer}
-  i, j : nat
-  IHij : forall y : t, y o< (i, j) -> y o<= m (iota y)
-  ============================
-  (i, j) o<= m (iota (i, j))
-
-\end{Coqanswer}
 
 
 Then a case analysis on $i$ and $j$ allows us to
@@ -3358,15 +3297,7 @@ recursion on its Cantor normal form.
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succ}{Epsilon0.T1}}
 
 
-\begin{Coqsrc}
-Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with 
-   | zero => 1
-   | ocons zero n _ => ocons zero (S n) zero
-   | ocons beta n gamma => ocons beta n (succ gamma)
- end.
-\end{Coqsrc}
-
+\input{movies/snippets/T1/succDef}
 
 The following lemma establishes the connection between the  function
 \texttt{succ} and the Boolean predicate \texttt{succb}.
@@ -3399,7 +3330,6 @@ Ordinal addition and multiplication are also defined by structural recursion ove
 
 \input{movies/snippets/T1/multDef}
 
-
 \subsubsection{Examples}
 
 The following examples are instances of \emph{proofs by computation}. Please note that  addition and multiplication on \texttt{T1}
@@ -3407,32 +3337,16 @@ are not commutative. Moreover,  both operations fail to be strictly monotonous i
 
 \input{movies/snippets/T1/plusMultExamples}
 
-\begin{Coqsrc}
-Lemma plus_not_monotonous_l : exists alpha beta gamma : T1,
-    alpha t1< beta /\ alpha + gamma = beta + gamma.
-Proof.
-  exists 3, 5, omega;  now  compute.
-Qed.
+\input{movies/snippets/T1/notMono}
 
-Lemma mult_not_monotonous :  exists alpha beta gamma : T1,
-      alpha t1< beta /\ alpha * gamma = beta * gamma.
-Proof.
-  exists 3, 5, omega; now compute.
-Qed.
-\end{Coqsrc}
 
 The function \texttt{succ} is related with addition through the following lemma:
 
-\begin{Coqsrc}
-Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
-Proof.
-  induction alpha as [|a IHa n b IHb].
-  (* ... *)
-\end{Coqsrc}
+\input{movies/snippets/T1/succIsPlusOne}
 
 
 
-\subsubsection{Arithmetic on Type \texttt{E0}}
+\subsubsection{Arithmetic on type \texttt{E0}}
 
  We define an addition in type \texttt{E0}, since the sum of two terms in normal form is in normal form too.
 

@@ -115,37 +115,28 @@ Section Impossibility_Proof.
 
   (* begin snippet mGea *)
 
-  (*|
-.. coq:: no-out 
-|*)
-
-  Lemma m_ge : m big_h <= m small_h. 
-  Proof.
-    unfold small_h;  generalize (m big_h) as i.
-(*||*)
-    
+  Lemma m_ge : m big_h <= m small_h. (* .no-out *)
+  Proof. (* .no-out *)
+    unfold small_h; generalize (m big_h) as i.
   (* end snippet mGea *)
 
-    (* begin snippet mGeb *)
-    
-    (*|
-.. coq:: no-out 
+  (* begin snippet mGeb *)
+
+  (*|
+.. coq:: no-out
 |*)
     induction i.
     - auto with arith.
-    -  apply Lt.le_lt_trans with (m (iota i)).
-       (*||*)
-       (* ... *)
+    -  apply Lt.le_lt_trans with (m (iota i)). 
+       (* ... *) (*||*)
     (*|
 .. coq:: none 
 |*)       
        + assumption.
        +  apply (variant_decr  0).
           * discriminate.
-          * cbn; apply round_S; exact 0.
-(*||*)
+          * cbn; apply round_S; exact 0. (*||*)
   Qed.     
-
   (* end snippet mGeb *)
  
 

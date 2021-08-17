@@ -166,19 +166,15 @@ Section Impossibility_Proof.
 
   (* begin snippet mGe *)
 
-  (*|
-.. coq:: no-out
-|*)
+
   
-  Lemma m_ge : m big_h o<= m small_h.
-  Proof.
+  Lemma m_ge : m big_h o<= m small_h. (* .no-out *)
+  Proof. (* .no-out *)
     unfold small_h;
     pattern (m big_h);
       apply  well_founded_induction with (R := ON_lt) (1:= wf);
       intros (i,j) IHij.
 
-    (*||*)
-    
     (* end snippet mGe *)
 
     (* begin snippet mGeb *)

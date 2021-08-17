@@ -205,10 +205,9 @@ End Bad.
 
 Lemma  height_lt_size (h:Hydra) :  height h < hsize h. 
 Proof. 
+(*||*)
   induction h using Hydra_rect2  with 
       (P0 :=  h_forall (fun h =>  height h < hsize h)).
-(*||*)
-
 (* end snippet heightLtSizea *)
   
   -  destruct h as [ | h s']. 

@@ -299,14 +299,13 @@ Qed.
 Lemma mult_refR a b : T1.mult (pi a) (pi b) = pi (a * b).
 
 Proof.
-apply refines2_R; apply mult_ref. 
+apply refines2_R,  mult_ref. 
 Qed. 
 
 Lemma multA : associative T1.mult.
 Proof. 
-  move => a  b c;
-  rewrite - (pi_iota a) -(pi_iota b) -(pi_iota c). 
-  repeat rewrite mult_refR; now rewrite mulA. 
+  move => a b c;
+  by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
 
 
