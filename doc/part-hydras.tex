@@ -3249,21 +3249,7 @@ the most used predicates. For instance, we introduce the restriction of \texttt{
 
 For instance, in the following lemma, the condition that $\alpha$ is in normal form is included in the condition $\alpha< 1$.
 
-\input{movies/snippets/T1/LTOnea}
-
-\begin{Coqanswer}
-1 subgoal (ID 738)
-  
-  alpha1 : T1
-  n : nat
-  alpha2 : T1
-  H1 : nf (ocons alpha1 n alpha2)
-  H2 : lt (ocons alpha1 n alpha2) one
-  ============================
-  ocons alpha1 n alpha2 = zero
-\end{Coqanswer}
-
-\input{movies/snippets/T1/LTOneb}
+\input{movies/snippets/T1/LTOne}
 
 
 \subsubsection{A sigma-type for \texorpdfstring{$\epsilon_0$}{epsilon0}}

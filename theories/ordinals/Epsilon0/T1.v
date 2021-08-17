@@ -2487,18 +2487,14 @@ Proof.
     + assumption.
 Defined.
 
-(* begin snippet LTOnea *)
+(* begin snippet LTOne *)
 
 Lemma LT_one alpha :
   alpha t1< one -> alpha = zero. (* .no-out *)
 Proof. (* .no-out *)
-  intros  [H1 [H2 _]]; destruct alpha; auto. (* .no-out *)
+  intros  [H1 [H2 _]]; destruct alpha; auto. 
 
-  (* end snippet LTOnea *)
-
-  (* begin snippet LTOneb *)
-
-  (* ... *)
+   (* ... *)
   (*|
 .. coq:: none
 |*)
@@ -2510,7 +2506,7 @@ Proof. (* .no-out *)
      destruct (not_lt_zero H5). 
 (*||*)
 Qed.
-(* end snippet LTOneb *)
+(* end snippet LTOne *)
 
 Lemma lt_omega_inv :
   forall alpha,

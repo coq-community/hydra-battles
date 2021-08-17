@@ -38,6 +38,12 @@
 \setcounter{tocdepth}{1}
 \input{coqmacros}
 
+%%% One hypothesis per line 
+\makeatletter
+\renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
+\makeatother
+
+
 \SetWatermarkLightness{0.8}
 \definecolor{lightorange}{rgb}{1,0.9,0.9}
 \SetWatermarkScale{0.35}
