@@ -1,25 +1,35 @@
-(** Comparison between Hydra-battle's and Gaia's [T1]  
+(**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
+ *)
 
-First experiments *)
+
+
+
 
 
 From hydras Require T1.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
 
+(** Hydra-Battles' type for ordinal terms below [epsilon0] *)
+
+#[global]Notation hT1 := T1.T1.
+
+(** Gaia's type for ordinal terms below [epsilon0] *)
+
+#[global]Notation gT1 := CantorOrdinal.T1. 
 
 Set Bullet Behavior "Strict Subproofs".
 
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-Fixpoint iota (alpha : T1.T1) : CantorOrdinal.T1 :=
+Fixpoint iota (alpha : hT1) : gT1 :=
   match alpha with
     T1.zero => zero
   | T1.ocons alpha n beta => cons (iota alpha) n (iota beta)
   end.
 
-Fixpoint pi (alpha : CantorOrdinal.T1) : T1.T1 :=
+Fixpoint pi (alpha : gT1) : hT1 :=
   match alpha with
     zero => T1.zero
   | cons alpha n beta => T1.ocons (pi alpha) n (pi beta)
@@ -40,20 +50,20 @@ move => t1 IHalpha1 n t2 IHalpha2.
 by rewrite IHalpha1 IHalpha2.
 Qed.
 
-Definition refines0 (x:T1.T1)(y:CantorOrdinal.T1) :=
+Definition refines0 (x:hT1)(y:gT1) :=
 y = iota x.
 
-Definition refines1 (f:T1.T1 -> T1.T1)
- (f': CantorOrdinal.T1 -> CantorOrdinal.T1) :=
-  forall x: T1.T1, f' (iota x) = iota (f x).
+Definition refines1 (f:hT1 -> hT1)
+ (f': gT1 -> gT1) :=
+  forall x: hT1, f' (iota x) = iota (f x).
 
-Definition refines2 (f:T1.T1 -> T1.T1 -> T1.T1)
- (f': CantorOrdinal.T1 -> CantorOrdinal.T1 -> CantorOrdinal.T1 ) :=
-  forall x y : T1.T1, f' (iota x) (iota y) = iota (f x y).
+Definition refines2 (f:hT1 -> hT1 -> hT1)
+ (f': gT1 -> gT1 -> gT1 ) :=
+  forall x y : hT1, f' (iota x) (iota y) = iota (f x y).
 
 Lemma refines1_R f f' :
   refines1 f f' ->
-  forall y: CantorOrdinal.T1, f (pi y) = pi (f' y).
+  forall y: gT1, f (pi y) = pi (f' y).
 Proof.
 move => Href y; rewrite -{2}(iota_pi y).
 by rewrite Href pi_iota.
@@ -62,7 +72,7 @@ Qed.
 
 Lemma refines2_R f f' :
   refines2 f f' ->
-  forall y z: CantorOrdinal.T1, f (pi y) (pi z) = pi (f' y z).
+  forall y z: gT1, f (pi y) (pi z) = pi (f' y z).
 Proof.
 move => Href y z; rewrite -{2}(iota_pi y) -{2}(iota_pi z);
           by rewrite Href pi_iota.
@@ -74,13 +84,13 @@ Proof. by []. Qed.
 Lemma one_ref : refines0 (T1.one) CantorOrdinal.one.
 Proof. by []. Qed.
 
-Lemma omega_ref : refines0 (T1.omega) CantorOrdinal.T1omega.
+Lemma omega_ref : refines0 T1.omega T1omega.
 Proof. by []. Qed.
 
 Lemma Finite_ref (n:nat) : refines0 (T1.fin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma ap_ref alpha : T1.ap alpha <-> CantorOrdinal.T1ap (iota alpha).
+Lemma ap_ref alpha : T1.ap alpha <-> T1ap (iota alpha).
 Proof.
 split => Hap; first by case: Hap.
 move: Hap; case: alpha => //=.
@@ -93,9 +103,7 @@ Lemma T1eq_refl a : T1eq a a.
 Proof. by apply/T1eqP. Qed.
 
 Lemma T1eq_rw a b: T1eq a b -> pi a = pi b.
-Proof.
-  by  move => /T1eqP ->. 
-Qed. 
+Proof. by  move => /T1eqP ->. Qed. 
 
 Lemma T1eq_iota_rw a b : T1eq (iota a) (iota b) -> a = b.
 Proof.
@@ -134,7 +142,7 @@ case H: (T1.compare x1 y1).
 - specialize (IHx1 y1); rewrite H in IHx1; now rewrite IHx1.
 Qed.
 
-Lemma lt_ref (a b : T1.T1): T1.lt a b <-> (iota a < iota b).
+Lemma lt_ref (a b : hT1): T1.lt a b <-> (iota a < iota b).
 Proof.
   split.
   - unfold T1.lt; move => Hab; generalize (compare_ref a b); now rewrite Hab.
@@ -150,7 +158,7 @@ Proof.
       * by rewrite T1ltnn in H2. 
 Qed.
 
-Lemma eqref (a b : T1.T1):  a = b <-> (iota a = iota b).
+Lemma eqref (a b : hT1):  a = b <-> (iota a = iota b).
 Proof.
   split.
   - by move => ->.
@@ -171,11 +179,9 @@ case Hx1y1: (T1.compare x1 y1); move: (compare_ref x1 y1); rewrite Hx1y1 => H.
 Qed.
 
 
-(** Equations for multiplication *)
+(** Equations for multiplication (helpers for proving [mult_ref]) *)
 
-
-
-Lemma T1mul_eqn1 (c : CantorOrdinal.T1) : c * zero = zero. 
+Lemma T1mul_eqn1 (c : gT1) : c * zero = zero. 
 Proof. by []. Qed.
 
 Lemma mult_eqn1 c : T1.mult c T1.zero = T1.zero.
@@ -296,11 +302,11 @@ Proof.
 apply refines2_R; apply mult_ref. 
 Qed. 
 
-Lemma mult_assoc : forall a b c,  T1.mult a (T1.mult b c) =
-                                  T1.mult (T1.mult a b) c.
+Lemma multA : associative T1.mult.
 Proof. 
-  move => a b c.
-  rewrite <- (pi_iota a), <- (pi_iota b), <- (pi_iota c). 
+  move => a  b c;
+  rewrite - (pi_iota a) -(pi_iota b) -(pi_iota c). 
   repeat rewrite mult_refR; now rewrite mulA. 
 Qed.
+
 
