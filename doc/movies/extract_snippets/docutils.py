@@ -12,9 +12,10 @@ def register_docutils(sertop_args):
     :param sertop_args: sertop arguments to used
     :return:
     """
-    from alectryon.docutils import setup, AlectryonTransform
-    AlectryonTransform.SERTOP_ARGS = sertop_args
-    setup()
+    import alectryon.docutils
+    alectryon.docutils.AlectryonTransform.SERTOP_ARGS = sertop_args
+    alectryon.docutils.LONG_LINE_THRESHOLD = 88
+    alectryon.docutils.setup()
 
 
 def coq_rst_to_latex(source: str) -> str:
