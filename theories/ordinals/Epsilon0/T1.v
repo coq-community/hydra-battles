@@ -276,6 +276,14 @@ Proof.
   now rewrite H in *; simpl.
 Qed.
 
+Lemma compare_lt_iff a b :
+  compare a b = Lt <-> lt a b.
+Proof.
+  split.
+  - apply compare_lt_impl.
+  - trivial. 
+Qed.
+
 (** ** Properties of [lt] inv*)
 Inductive lt_cases (a  b : T1) (n :nat) (a' b':T1) (n':nat) : Type :=
   | lt_left (H : lt a a')
@@ -728,7 +736,51 @@ Proof.
    trivial. 
 Qed. 
 
+Lemma nf_cons_iff a n b : nf (ocons a n b) <-> nf a /\ nf b /\ lt b (phi0 a).
+Proof. 
+  split.
+  - apply nf_cons_inv.
+  - intros [H1 [H2 H3]]; destruct b.     
+    + now apply single_nf. 
+    + apply ocons_nf; eauto with T1.
+      destruct (lt_inv H3); trivial.
+      decompose [or and] H.
+      * lia.
+      *  exfalso; eapply not_lt_zero; eauto.
+Qed.
 
+(** already in Stdlib ? *)
+
+Lemma bool_eq_iff (b b':bool) : b = b' <-> (b <-> b').
+Proof.
+  case b; case b'; simpl; split; auto; try tauto; try discriminate.
+    destruct 1 as [H H0]; assert (false) by (now apply H);  discriminate.
+    destruct 1 as [H H0]; assert (false) by (now apply H0);  discriminate.
+Qed.
+
+
+Lemma lt_b_lt_iff a b : lt_b a b <-> lt a b.
+Proof.
+  split.
+  - intro H;red in H; now rewrite lt_b_iff in H.  
+  - intro; red; now rewrite  lt_b_iff.
+Qed.
+
+
+Lemma nf_b_cons_eq a n b : nf_b (ocons a n b) =
+                           nf_b a && nf_b b && lt_b b (phi0 a).
+Proof.
+  rewrite bool_eq_iff; generalize (nf_cons_iff a n b); unfold nf;
+    intro H; rewrite H.
+  rewrite <- lt_b_lt_iff; split. 
+  -  case (nf_b a); case (nf_b b); case_eq (lt_b b (phi0 a));
+       cbn; auto with bool;
+         intros _ H0; decompose [and] H0; try discriminate.
+  -  intro H0;  red in H0; repeat rewrite andb_true_iff in H0; 
+       decompose [and] H0;  now rewrite H2, H3, H4.
+Qed.
+
+      
 Ltac nf_decomp H :=
   let nf0 := fresh "nf"
   in let nf1 := fresh "nf"
