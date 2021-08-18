@@ -1,0 +1,246 @@
+jobs:
+  coq:
+    needs: []
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - id: stepCheck
+      name: Checking presence of CI target coq
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
+        \ bundle \"default\" --argstr job \"coq\" \\\n --dry-run 2>&1 > /dev/null)\n\
+        echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
+        \ \"s/.*/built/\")\n"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: Building/fetching current CI target
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coq"
+  gaia-hydras:
+    needs:
+    - coq
+    - hydra-battles
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - id: stepCheck
+      name: Checking presence of CI target gaia-hydras
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
+        \ bundle \"default\" --argstr job \"gaia-hydras\" \\\n --dry-run 2>&1 > /dev/null)\n\
+        echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
+        \ \"s/.*/built/\")\n"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: coq'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coq"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: hydra-battles'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "hydra-battles"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: gaia'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "gaia"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: Building/fetching current CI target
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "gaia-hydras"
+  goedel:
+    needs:
+    - coq
+    - hydra-battles
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - id: stepCheck
+      name: Checking presence of CI target goedel
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
+        \ bundle \"default\" --argstr job \"goedel\" \\\n --dry-run 2>&1 > /dev/null)\n\
+        echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
+        \ \"s/.*/built/\")\n"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: coq'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coq"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: hydra-battles'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "hydra-battles"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: pocklington'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "pocklington"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: Building/fetching current CI target
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "goedel"
+  hydra-battles:
+    needs:
+    - coq
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - id: stepCheck
+      name: Checking presence of CI target hydra-battles
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
+        \ bundle \"default\" --argstr job \"hydra-battles\" \\\n --dry-run 2>&1 >\
+        \ /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep \"\
+        built:\" | sed \"s/.*/built/\")\n"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: coq'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coq"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: equations'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "equations"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: Building/fetching current CI target
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "hydra-battles"
+  hydra-battles-single:
+    needs:
+    - coq
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - id: stepCheck
+      name: Checking presence of CI target hydra-battles-single
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
+        \ bundle \"default\" --argstr job \"hydra-battles-single\" \\\n --dry-run\
+        \ 2>&1 > /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep\
+        \ \"built:\" | sed \"s/.*/built/\")\n"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: coq'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coq"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: equations'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "equations"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: gaia'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "gaia"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: mathcomp-ssreflect'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "mathcomp-ssreflect"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: mathcomp-algebra'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "mathcomp-algebra"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: paramcoq'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "paramcoq"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: Building/fetching current CI target
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "hydra-battles-single"
+name: Nix CI for bundle default
+'on':
+  pull_request:
+    branches:
+    - '**'
+  push:
+    branches:
+    - master
