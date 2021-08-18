@@ -62,6 +62,22 @@ Section Comparable.
     - now apply lt_not_gt in H.
   Qed.
 
+  Lemma lt_b_false_iff (a b: A):
+    lt_b a b = false  <-> ~ lt a b.
+  Proof.
+     unfold lt_b.
+    pose proof (compare_correct a b) as [Heq | H | H];
+    split; intro; subst; try easy.
+    - apply StrictOrder_Irreflexive.   
+    - now apply lt_not_gt.
+  Qed.
+
+  Lemma lt_b_irrefl (a :A) :
+    lt_b a a = false.
+  Proof. 
+   rewrite lt_b_false_iff; apply StrictOrder_Irreflexive.   
+  Qed.
+  
   Lemma compare_lt_iff (a b: A):
     compare a b = Lt <-> lt a b.
   Proof.

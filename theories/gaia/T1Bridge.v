@@ -4,8 +4,6 @@
 
 
 
-
-
 From hydras Require T1.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
@@ -308,4 +306,34 @@ Proof.
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
 
+
+(*
+
+T1nf = 
+fix T1nf (x : gT1) : bool :=
+  match x with
+  | zero => true
+  | cons a _ b => [&& T1nf a, T1nf b & b < phi0 a]
+  end
+     : gT1 -> bool
+
+ *)
+
+(*
+
+T1.nf_b = 
+fix nf_b (alpha : hT1) : bool :=
+  match alpha with
+  | T1.zero => true
+  | T1.ocons a _ T1.zero => nf_b a
+  | T1.ocons a _ (T1.ocons a' _ _ as b) =>
+      nf_b a && nf_b b && Comparable.lt_b a' a
+  end
+     : hT1 -> bool
+
+ *)
+
+(** TODO
+   Prove T1.nf_b  a = T1nf (iota a).
+*)
 

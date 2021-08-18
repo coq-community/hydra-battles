@@ -718,6 +718,17 @@ Qed.
 
 
 
+Lemma nf_cons_inv a n b : nf (ocons a n b) -> nf a /\ nf b /\ lt b (phi0 a).
+Proof. 
+  unfold nf; cbn; destruct b. 
+  -  repeat split; auto with T1.
+  - intro H; red in H; repeat rewrite andb_true_iff in H;
+   decompose [and]  H; repeat split; auto.
+   red; cbn; unfold lt_b in H1; destruct (compare b1 a); try discriminate. 
+   trivial. 
+Qed. 
+
+
 Ltac nf_decomp H :=
   let nf0 := fresh "nf"
   in let nf1 := fresh "nf"
