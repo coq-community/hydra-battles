@@ -1950,9 +1950,14 @@ Proof.
            exact 0.
 Defined.
 
+(* begin snippet plusNf *)
 
 Lemma plus_nf:
-  forall a, nf a -> forall b, nf b -> nf (a + b).
+  forall a, nf a -> forall b, nf b -> nf (a + b). (* .no-out *)
+(*|
+.. coq:: none
+|*)
+
 Proof.
   intros a Ha b Hb; case (lt_eq_lt_dec a b).
   - destruct 1.
@@ -1968,7 +1973,9 @@ Proof.
    + apply lt_a_phi0_a.
    + apply lt_trans with a;auto; apply lt_a_phi0_a.
 Qed.
+(*||*)
 
+(* end snippet plusNf *)
 
 Lemma omega_term_plus_rw:
   forall a n b,
@@ -1982,6 +1989,7 @@ Proof.
      + intro H.
        now apply nf_inv3, compare_gt_iff in H as ->.
 Qed.
+
 
 (* begin snippet plusIsZero *)
 

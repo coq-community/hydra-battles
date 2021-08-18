@@ -95,6 +95,11 @@ Proof.
   refine (@mkord (T1.succ zero) _);now compute. 
 Defined.
 
+(* begin snippet plusE0 *)
+
+(*|
+.. coq:: no-out
+|*)
 
 #[global] Instance plus (alpha beta : E0) : E0.
 Proof.
@@ -104,12 +109,22 @@ Defined.
 
 Infix "+" := plus : E0_scope.
 
+(*||*)
+(* end snippet plusE0 *)
+
+(* begin snippet CheckPlus *)
+
+Check omega + omega.
+
+(* end snippet CheckPlus *)
+
 
 #[global] Instance phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkord (T1.phi0 (cnf alpha)) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
+
 
 Notation "'omega^'" := phi0 (only parsing) : E0_scope.
 

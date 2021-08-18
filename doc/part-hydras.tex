@@ -3350,27 +3350,11 @@ The function \texttt{succ} is related with addition through the following lemma:
 
  We define an addition in type \texttt{E0}, since the sum of two terms in normal form is in normal form too.
 
+\input{movies/snippets/T1/plusNf}
 
-\begin{Coqsrc}
-Lemma plus_nf : forall a,  nf a -> forall b, nf b -> nf (a + b).
-Proof.
- (* ... *)
+\input{movies/snippets/E0/plusE0}
+\input{movies/snippets/E0/CheckPlus}
 
-Instance plus (alpha beta : E0) : E0.
-Proof.
-  refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
-    apply plus_nf; apply cnf_ok.
-Defined.
-
-Infix "+" := plus : E0_scope.
-
-Check omega + omega.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-omega + omega
-     : E0
-\end{Coqanswer}
 
 \begin{remark}
 In all this development, two representations of ordinals co-exist: ordinal terms (type \texttt{T1}, notation scope \texttt{t1\_scope}, for reasoning on the tree-structure of Cantor normal forms), and ordinal terms \emph{known to be in normal form} (type \texttt{E0}, notation scope \texttt{E0\_scope}). Looking at the contexts displayed by \coq{} prevents you from any risk of confusion.
