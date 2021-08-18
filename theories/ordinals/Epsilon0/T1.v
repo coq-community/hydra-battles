@@ -751,11 +751,13 @@ Qed.
 
 (** already in Stdlib ? *)
 
-Lemma bool_eq_iff (b b':bool) : b = b' <-> (b <-> b').
+Lemma bool_eq_iff (b b':bool) : (b = b') <-> (b <-> b').
 Proof.
-  case b; case b'; simpl; split; auto; try tauto; try discriminate.
-    destruct 1 as [H H0]; assert (false) by (now apply H);  discriminate.
-    destruct 1 as [H H0]; assert (false) by (now apply H0);  discriminate.
+ split.
+ - intro; subst; tauto.
+ - case b; case b'; auto; destruct 1 as [H H0].
+   assert (false)  by (now apply H);  discriminate.
+    assert (false)  by (now apply H0);  discriminate.
 Qed.
 
 

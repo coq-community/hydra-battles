@@ -156,6 +156,8 @@ Proof.
       * by rewrite T1ltnn in H2. 
 Qed.
 
+
+
 Lemma eqref (a b : hT1):  a = b <-> (iota a = iota b).
 Proof.
   split.
@@ -249,7 +251,7 @@ Proof. by []. Qed.
 Lemma iota_zero_rw  : iota T1.zero = zero. 
 Proof. by []. Qed.
 
-(** ugky ! to simplify ! *)
+(** ugly ! to simplify ! *)
 
 Lemma mult_ref : refines2 T1.mult T1mul.
 Proof.
@@ -307,33 +309,27 @@ Proof.
 Qed.
 
 
-(*
+Lemma Comparable_T1lt_eq  a b:
+  Comparable.lt_b a b = (iota a < iota b).
+Proof.
+  unfold Comparable.lt_b; generalize (compare_ref a b). 
+  case_eq (T1.compare a b).    
+  - move => _  ->;  by rewrite T1ltnn.
+  - by []. 
+  - move => _ H; case_eq (iota a < iota b). 
+   + move => H0;
+    have H1 : (iota b < iota b)  by apply T1lt_trans with (iota a).
+    by rewrite T1ltnn in H1. 
++ by [].
+Qed.
 
-T1nf = 
-fix T1nf (x : gT1) : bool :=
-  match x with
-  | zero => true
-  | cons a _ b => [&& T1nf a, T1nf b & b < phi0 a]
-  end
-     : gT1 -> bool
 
- *)
+Lemma nf_ref a : T1.nf_b a = T1nf (iota a).
+Proof.
+  elim: a => //.
+  - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
+    rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
+    rewrite andbA; cbn; by rewrite Comparable_T1lt_eq.
+Qed.
 
-(*
-
-T1.nf_b = 
-fix nf_b (alpha : hT1) : bool :=
-  match alpha with
-  | T1.zero => true
-  | T1.ocons a _ T1.zero => nf_b a
-  | T1.ocons a _ (T1.ocons a' _ _ as b) =>
-      nf_b a && nf_b b && Comparable.lt_b a' a
-  end
-     : hT1 -> bool
-
- *)
-
-(** TODO
-   Prove T1.nf_b  a = T1nf (iota a).
-*)
-
+ 
