@@ -3498,19 +3498,18 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on
 
 We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
 
-\label{instance-epsilon0}
-\begin{Coqsrc}
-Instance Epsilon0 : ON Lt compare.  
-(* ... *)
-\end{Coqsrc}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
+\input{movies/snippets/E0/InstanceEpsilon0}
+
+\label{instance-epsilon0}
 
 \emph{From Module~\href{../theories/html/hydras.Schutte.Correctness_E0.html}{Schutte.Correctness\_E0}}
 
-\begin{Coqsrc}
-Instance Epsilon0_correct :
-  ON_correct epsilon0 Epsilon0 (fun alpha => inject (cnf alpha)).
-\end{Coqsrc}
+
+\input{movies/snippets/Correctness_E0/injectDef}
+
+\input{movies/snippets/Correctness_E0/Epsilon0Correct}
 
 \index{hydras}{Projects}
 \begin{project}
@@ -3524,19 +3523,9 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 \textbf{Hint}. You may use the following definition (in 
     \href{../theories/html/hydras.OrdinalNotations.ON_Generic.html}{OrdinalNotations.ON\_Generic}).
 
-    \begin{Coqsrc}
-    Definition SubON_same_op  `{OA : @ON A ltA  compareA}
-           `{OB : @ON B ltB  compareB}
-           {iota : A -> B} 
-           {alpha: B}
-           {_ : SubON OA OB alpha iota}
-           (f : A -> A -> A)
-           (g : B -> B -> B)
-      :=
-      forall x y,  iota (f x y) = g (iota x) (iota y).
-    \end{Coqsrc}
-
-    \end{project}
+\input{movies/snippets/ON_Generic/SubONSameOp}
+    
+     \end{project}
 
     \index{hydras}{Projects}
     \begin{project}
@@ -3612,25 +3601,9 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     \label{sect:infix-oplus}
 
-    \begin{Coqsrc}
-    Fixpoint oplus (alpha beta : T1) : T1 :=
-      let fix oplus_aux beta {struct beta} :=
-          match alpha, beta with
-            | zero, _ => beta
-            | _,  zero => alpha
-            | ocons a1 n1 b1, ocons a2 n2 b2 =>
-              match compare a1 a2 with
-                |  Gt => ocons a1 n1 (oplus b1 beta)
-                |  Lt => ocons a2 n2 (oplus_aux b2)
-                |  Eq => ocons a1 (S (n1 + n2)%nat) (oplus b1 b2)
-              end
-          end
-      in oplus_aux beta.
-
-    Infix "o+" := oplus  (at level 50, left associativity).
-    \end{Coqsrc}
-
-
+    \input{movies/snippets/Hessenberg/oplusDef}
+    
+ 
     The reader will note that each recursive call of the functions
     \texttt{oplus} and \texttt{oplus\_aux} satisfies \emph{Coq}'s constraint
     on recursive definitions. The function \texttt{oplus} is recursively called on a sub-term of its first argument,
@@ -3649,17 +3622,8 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
     definition. They can be proved almost immediately.
 
-    \begin{Coqsrc}
-    Lemma oplus_alpha_0 (alpha : T1) : alpha o+ zero = alpha.
-    Proof.
-      destruct alpha; reflexivity.
-    Qed.
-
-    Lemma oplus_0_beta (beta : T1): zero o+ beta = beta.
-    Proof.
-      destruct beta; reflexivity.
-    Qed.
-    \end{Coqsrc}
+    \input{movies/snippets/Hessenberg/oplusNeutral}
+    
 
 
     % \subsubsection{A hand-made induction principle}

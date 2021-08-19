@@ -21,12 +21,15 @@ From hydras Require Import Schutte_basics  Schutte.Addition  AP CNF.
 
 Import List  PartialFun Ensembles.
 
+(* begin snippet injectDef *)
+
 Fixpoint inject (t:T1) : Ord :=
  match t with T1.zero => zero
          | T1.ocons a n b =>
            AP._phi0 (inject a) * S n + inject b
  end.
 
+(* end snippet injectDef *)
 
 Lemma inject_of_finite_pos : forall n, inject (T1.fin (S n)) = F (S n).
 Proof.

@@ -509,6 +509,12 @@ Proof.
   - cbn in e; subst. right; subst; f_equal; apply nf_proof_unicity.
 Qed.
 
+(* begin snippet InstanceEpsilon0 *)
+
+(*|
+.. coq:: no-out
+ *)
+
 #[global] Instance E0_comp: Comparable Lt compare.
 Proof.
   split.
@@ -523,6 +529,8 @@ Proof.
  - apply Lt_wf.
 Qed.
 
+(*||*)
+(* end snippet InstanceEpsilon0 *)
 
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
   - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].

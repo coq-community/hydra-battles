@@ -9,6 +9,8 @@ From hydras Require Import Prelude.More_Arith Prelude.Merge_Sort
 
 Set Implicit Arguments.
 
+(* begin snippet oplusDef *)
+
 Fixpoint oplus (alpha beta : T1) : T1 :=
   let fix oplus_aux beta {struct beta} :=
       match alpha, beta with
@@ -25,6 +27,7 @@ Fixpoint oplus (alpha beta : T1) : T1 :=
 
 Infix "o+" := oplus  (at level 50, left associativity).
 
+(* end snippet oplusDef *)
 
 (*
 Functional Scheme oplus_ind := Induction for oplus Sort Prop.
@@ -40,15 +43,24 @@ match n with
 
 Open Scope t1_scope.
 
-Lemma oplus_alpha_0 (alpha : T1) : alpha o+ zero = alpha.
+(* begin snippet oplusNeutral *)
+
+(*|
+.. coq:: no-out
+|*)
+
+Lemma oplus_0_r (alpha : T1) : alpha o+ zero = alpha.
 Proof.
   destruct alpha; reflexivity.
 Qed.
 
-Lemma oplus_0_beta (beta : T1): zero o+ beta = beta.
+Lemma oplus_0_l (beta : T1): zero o+ beta = beta.
 Proof.
   destruct beta; reflexivity.
 Qed.
+(*||*)
+
+(* end snippet oplusNeutral *)
 
 Lemma oplus_compare_Lt:
   forall a n b a' n' b', 
@@ -333,7 +345,7 @@ Lemma oplus_lt_rw2 : forall a n b x, nf (ocons a n b) -> nf x ->
                                      ocons a n (b o+ x).
 Proof.
   destruct x.
-  - now (intros; repeat rewrite oplus_alpha_0).
+  - now (intros; repeat rewrite oplus_0_r).
   - intros; rewrite (oplus_eqn  (ocons a n b) (ocons x1 n0 x2)).
     apply nf_helper_phi0 in H1.
     destruct (lt_inv H1).
@@ -366,8 +378,8 @@ Section Proof_of_oplus_assoc.
     intros alpha; transfinite_induction_lt alpha.
     clear alpha ; intros alpha Hrec Halpha .
     intros; destruct a, b, c; try reflexivity. 
-    - repeat rewrite oplus_0_beta; repeat rewrite oplus_alpha_0; trivial.
-    - now  repeat rewrite oplus_alpha_0.
+    - repeat rewrite oplus_0_l; repeat rewrite oplus_0_r; trivial.
+    - now  repeat rewrite oplus_0_r.
     - {  nf_decomp H; nf_decomp H0; nf_decomp H1.
         repeat rewrite oplus_cons_cons.
         destruct (compare b1 c1) eqn:Hbc;
@@ -521,7 +533,7 @@ Qed.
 Lemma oplus_le : forall a b, nf a -> nf b -> leq lt a (a o+ b).
 Proof.
   intros; destruct b.
-  - now rewrite oplus_alpha_0. 
+  - now rewrite oplus_0_r. 
   - apply lt_incl_le; apply oplus_lt1; auto with T1.
 Qed.
 
@@ -542,11 +554,11 @@ Proof with eauto with T1.
   clear alpha ; intros alpha Hrec  Halpha; intros.
   destruct a. 
   {
-    now  repeat rewrite  oplus_0_beta.
+    now  repeat rewrite  oplus_0_l.
   }
   destruct b, c.
   - inversion H1.
-  - rewrite  oplus_alpha_0.
+  - rewrite  oplus_0_r.
     now apply oplus_lt1.
   - T1_inversion H1.
   -  nf_decomp Ha; nf_decomp Hb; nf_decomp Hc.
@@ -848,7 +860,7 @@ Lemma o_finite_mult_mono : forall a b n,  nf a -> nf b -> T1.lt a b ->
                                              (o_finite_mult (S n) b).
 Proof with auto with T1.
   induction n.
-  -  simpl;   repeat rewrite oplus_alpha_0;auto.
+  -  simpl;   repeat rewrite oplus_0_r;auto.
   -  simpl; intros; 
      apply oplus_strict_mono_bi ...
      apply oplus_nf;auto.
@@ -862,7 +874,7 @@ Lemma oplus_lt_phi0 : forall a b c,  nf a -> nf b -> nf c ->
                                      T1.lt (phi0 a o+ phi0 b) (phi0 c).
 Proof.
   intros;  rewrite oplus_cons_cons; case_eq (compare a b).
-   rewrite oplus_alpha_0; cbn.
+   rewrite oplus_0_r; cbn.
    all: intros;  apply head_lt; eauto with T1.
 Qed.
 

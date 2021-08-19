@@ -173,6 +173,7 @@ Definition SubON_same_fun `{OA : @ON A ltA  compareA}
        (g : B -> B)
   := forall x,  iota (f x) = g (iota x).
 
+(* begin snippet SubONSameOp *)
 
 Definition SubON_same_op `{OA : @ON A ltA compareA}
        `{OB : @ON B ltB  compareB}
@@ -183,6 +184,8 @@ Definition SubON_same_op `{OA : @ON A ltA compareA}
        (g : B -> B -> B)
   :=
   forall x y,  iota (f x y) = g (iota x) (iota y).
+
+(* end snippet SubONSameOp *)
 
 
 (** Correctness w.r.t. Schutte's model *)

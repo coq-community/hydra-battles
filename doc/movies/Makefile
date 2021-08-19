@@ -37,7 +37,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    ON_mult.v ON_Omega2.v ON_Finite.v \
 	    Omega2_Small.v \
 	    Correctness_E0.v \
-	    T1.v E0.v \
+	    T1.v E0.v Hessenberg.v \
 	    T2.v \
 
 

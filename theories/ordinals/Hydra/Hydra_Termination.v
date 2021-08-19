@@ -64,7 +64,7 @@ Lemma ms_eqn3 :  forall h n s,  ms (hcons_mult h  n s) =
 Proof with auto with T1.
  induction n.
  - intros; simpl (hcons_mult h  0 s); simpl o_finite_mult.
-   rewrite oplus_0_beta; reflexivity.
+   rewrite oplus_0_l; reflexivity.
  -  intros; simpl hcons_mult;  rewrite ms_eqn2.
     rewrite o_finite_mult_S_rw, IHn, oplus_assoc ...
     apply o_finite_mult_nf ...
