@@ -3414,29 +3414,11 @@ But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\
 \input{movies/snippets/T1/wfLTBada}
 
 
-\begin{Coqanswer}
-1 subgoal (ID 560)
-  
-  beta : T1
-  n : nat
-  gamma : T1
-  IHbeta : nf beta -> Acc LT beta
-  IHgamma : nf gamma -> Acc LT gamma
-  H : nf (ocons beta n gamma)
-  delta : T1
-  Hdelta : delta t1< ocons beta n gamma
-  ============================
-  Acc LT delta
- \end{Coqanswer}
-
- 
-
-
 The problem comes from the hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
 \(\gamma\);
 for instance \(\delta\) may be of the form
-\texttt{ocons $\beta'$ $p'$  $\gamma'$},
-where  \(\beta' \leq  \beta\) and  \(p' < n\).
+\texttt{ocons $\beta$ $p'$  $\gamma'$},
+where    \(p' < n\).
 Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless for finishing our proof.
 
 \input{movies/snippets/T1/wfLTBadz}
@@ -3447,26 +3429,15 @@ Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless
 through \texttt{LT}, we propose to show first that any well formed 
 term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a stronger result).
 
-\begin{Coqsrc}
- Let Acc_strong (alpha:T1) :=
-      forall n beta, 
-        nf (ocons alpha n beta) -> Acc LT (ocons alpha  n beta).
-\end{Coqsrc}
+\input{movies/snippets/T1/AccStrongDef}
+
 
 The following lemma is an application of the strict inequality 
 $\alpha < \omega ^\alpha$. If $\alpha$ is strongly accessible, then, by definition,
 $\omega^\alpha$ is accessible, thus $\alpha$ is \emph{a fortiori} accessible.
 
-\begin{Coqsrc}
- Lemma Acc_strong_stronger : forall alpha, 
-     nf alpha -> Acc_strong  alpha -> Acc LT  alpha.
- Proof.
-  intros alpha H H0; apply acc_imp with (phi0 alpha).
-  - repeat split; trivial.
-    + now apply lt_a_phi0_a.
-  -  apply H0;  now apply single_nf.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/T1/AccStrongStronger}
+
 
 Thus, it remains to prove that every ordinal strictly less than $\epsilon_0$
 is strongly accessible.
@@ -3482,30 +3453,12 @@ First, we prove that, for  any \texttt{LT}-accessible term $\alpha$, $\alpha$ is
 strongly accessible too (\emph{i.e.} any well formed
 term (\texttt{ocons $\alpha$ $n$ $\beta$})  is accessible).
 
-\begin{Coqsrc}
-Lemma Acc_implies_Acc_strong : 
-   forall alpha, Acc LT  alpha -> Acc_strong alpha.
-\end{Coqsrc}
-
-
 The proof is structured as an induction on $\alpha'$s accessibility. Let us consider
 any  accessible term $\alpha$.
 
+\input{movies/snippets/T1/AccImpAccStrong}
 
 
-\begin{Coqanswer}
-  subgoal 1 
-
-  alpha : T1
-  Aalpha : forall y : T1,  y t1< alpha -> Acc LT y
-  IHalpha : forall y : T1,
-       LT y alpha ->
-       forall (n : nat) (beta : T1),
-       nf (ocons y n beta) -> Acc LT (ocons y n beta)
-  ============================
-   forall (n : nat) (beta : T1),
-   nf (ocons alpha n beta) -> Acc LT (ocons alpha n beta)
-\end{Coqanswer}
 
 Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{ocons alpha n beta}) is in normal form. 
 We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
@@ -3516,45 +3469,21 @@ The proof, quite long, can be consulted in \href{../theories/html/hydras.Epsilon
 \label{sec:orgheadline80}
 
 Our goal is still to prove accessibility of any well formed ordinal term.
-Thanks to our previous lemmas, we are almost done.
+Thanks to our previous lemmas, we are almost done (by a simple structural induction!).
 
-\begin{Coqsrc}
-(* A (last) structural induction *)
+\input{movies/snippets/T1/nfAcc}
 
-Theorem nf_Acc : forall alpha, nf alpha -> Acc LT  alpha.
-Proof.
- induction alpha.
--  intro; apply Acc_zero.
- -  intros; eapply Acc_implies_Acc_strong;auto.
-    apply IHalpha1;eauto.
-    apply nf_inv1 in H; auto. 
-Defined.
-
-Corollary T1_wf : well_founded LT.
-\end{Coqsrc}
+\input{movies/snippets/T1/T1Wf}
 
 \index{maths}{Transfinite induction}
 
-\begin{Coqsrc}
+\input{movies/snippets/T1/transfiniteRecursor}
 
-Definition transfinite_recursor :
- forall (P:T1 -> Type),
-   (forall x:T1, 
-     (forall y:T1, nf x -> nf y ->  lt y  x -> P y) -> P x) ->
-    forall alpha:T1, P alpha.
-Proof.
- intros; apply well_founded_induction_type with LT.
- -  exact T1_wf;auto.
- - intros. apply X. intros; apply X0. repeat split;auto. 
-Defined.
-\end{Coqsrc}
+
 
 The following tactic starts a proof by  transfinite induction on any ordinal \mathcolor{$\alpha<\epsilon_0$}.
 
-\begin{Coqsrc}
-Ltac transfinite_induction alpha :=
-  pattern alpha; apply transfinite_recursor;[ | try assumption].
-\end{Coqsrc}
+\input{movies/snippets/T1/transfiniteInduction}
 
 
 \begin{remark}

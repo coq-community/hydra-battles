@@ -1541,7 +1541,11 @@ Module Direct_proof.
         - split.
           inversion 1.
           destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
-        -  split; intros delta Hdelta.
+        (*||*)
+        (*|
+.. coq:: -.h#beta -.h#n -.h#gamma -.h#H 
+|*)
+        -  (* .no-out *) split; intros delta Hdelta.
            (*||*)
            (* end snippet wfLTBada *)
 
@@ -1554,17 +1558,24 @@ Module Direct_proof.
    (* end snippet wfLTBadz *)
 
     (** *** Strong accessibility (inspired by Tait's proof) *)
+    (* begin snippet AccStrongDef *)
+    
     Let Acc_strong (alpha:T1) :=
       forall n beta, 
         nf (ocons alpha n beta) -> Acc LT (ocons alpha  n beta).
-
+    (* end snippet AccStrongDef *)
 
     Remark acc_impl {A} {R: A -> A -> Prop} (a b:A) :
       R a b -> Acc R b -> Acc R a.
     Proof.
       intros H H0; revert a H; now destruct H0.
     Qed.
- 
+
+    (* begin snippet AccStrongStronger *)
+
+    (*|
+.. coq:: no-out
+|*)
     Lemma Acc_strong_stronger : forall alpha,
         nf alpha -> Acc_strong alpha -> Acc LT alpha.
     Proof.
@@ -1573,15 +1584,26 @@ Module Direct_proof.
         + now apply lt_a_phi0_a.
       -  apply H0;  now apply single_nf.
     Qed.
+    (*||*)
+    
+    (* end snippet AccStrongStronger *)
 
- 
+    (* begin snippet AccImpAccStrong *)
+    
     Lemma Acc_implies_Acc_strong : forall alpha,
-        Acc LT  alpha -> Acc_strong alpha.
-    Proof.
+        Acc LT  alpha -> Acc_strong alpha. (* .no-out *)
+    Proof. (* .no-out *)
       (*  main induction (on a's accessibility)   *)
-      unfold Acc_strong; intros alpha Aalpha; pattern alpha.
-      eapply Acc_ind with (R:= LT);[| assumption].
-      clear alpha Aalpha; intros alpha Aalpha IHalpha. 
+      (*|
+.. coq:: -.h#Acc_strong
+|*)
+      unfold Acc_strong; intros alpha Aalpha; pattern alpha;
+      eapply Acc_ind with (R:= LT);[| assumption];
+        clear alpha Aalpha; intros alpha Aalpha IHalpha.
+      (*||*)
+      (*|
+.. coq:: none
+|*)
 
       (*  for any n and b, such that (ocons a n b) is well formed,
         b is accessible 
@@ -1673,19 +1695,24 @@ Module Direct_proof.
             + eapply nf_inv2;eauto.
         }
     Qed.
+    (*||*)
 
+    (* end snippet AccImpAccStrong *)
+    
     (** ***  A (last) structural induction *)
 
-    Theorem nf_Acc :
-      forall alpha, nf alpha -> Acc LT alpha.
-    Proof.
-      induction alpha.
-      -  intro; apply Acc_zero.
-      -  intros; eapply Acc_implies_Acc_strong;auto.
+    (* begin snippet nfAcc *)
+    
+    Theorem nf_Acc (alpha : T1): nf alpha -> Acc LT alpha. (* .no-out *)
+    Proof. (* .no-out *)
+      induction alpha. (* .no-out *)
+      -  (* .no-out *) intro; apply Acc_zero. (* .no-out *)
+      -  (* .no-out *) intros; eapply Acc_implies_Acc_strong;auto. (* .no-out *)
          apply IHalpha1; eauto.
          apply nf_inv1 in H; auto.
     Qed.
 
+       (* end snippet nfAcc *)
 
   End well_foundedness_proof.
 End Direct_proof.
@@ -1696,8 +1723,11 @@ Definition nf_Acc := Direct_proof.nf_Acc.
 Corollary nf_Wf : well_founded_restriction _ nf lt.
 Proof.  red; intros; now apply nf_Acc. Qed.
 
+(* begin snippet T1Wf *)
 
-Corollary T1_wf : well_founded LT.
+Corollary T1_wf : well_founded LT. (* .no-out *)
+(* end snippet T1Wf *)
+
 Proof.
   intros alpha; case_eq(nf_b alpha).
   - intro H; now generalize (nf_Wf H).
@@ -1718,15 +1748,25 @@ Proof.
     intros; apply X0; repeat split;auto. 
 Defined.
 
+(* begin snippet transfiniteRecursor *)
+
 Definition transfinite_recursor := well_founded_induction_type T1_wf.
+
+Check transfinite_recursor.
+
+(* end snippet transfiniteRecursor *)
 
 Import Direct_proof.
 
 Ltac transfinite_induction_lt alpha :=
   pattern alpha; apply transfinite_recursor_lt.
 
+(* begin snippet transfiniteInduction *)
+
 Ltac transfinite_induction alpha :=
   pattern alpha; apply transfinite_recursor.
+
+(* end snippet transfiniteInduction *)
 
 (** **  Properties of successor *)
 
