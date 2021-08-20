@@ -236,6 +236,61 @@ jobs:
       name: Building/fetching current CI target
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
         --argstr job "hydra-battles-single"
+  build-pdf:
+    needs:
+    - hydra-battles-single
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Git repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cachix install
+      uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixpkgs-unstable
+    - name: Cachix setup coq
+      uses: cachix/cachix-action@v8
+      with:
+        name: coq
+    - name: Cachix setup coq-community
+      uses: cachix/cachix-action@v8
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: coq-community
+    - name: Cachix setup math-comp
+      uses: cachix/cachix-action@v8
+      with:
+        name: math-comp
+    - name: Build Alectryon movies
+      run: |
+        nix-shell --run "cachedMake"
+        nix-shell --run "make -C doc/movies -j $(nproc) all"
+    - name: Build coqdoc
+      run: nix-shell --run "make -j $(nproc) html"
+    - name: Compile LaTeX document
+      run: nix-shell --run "make pdf"
+    - name: Extract PDF and Coq-Doc
+      run: |
+        mkdir -p public/doc public/theories
+        cp doc/hydras.pdf public/doc/
+        cp -r theories/html public/theories/
+    # Depending on whether we are on master or not, we deploy to
+    # GitHub Pages or as an artifact
+    - name: Deploy to GitHub pages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        build_dir: public
+        jekyll: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Deploy artifact
+      if: github.event_name == 'pull_request' || github.ref != 'refs/heads/master'
+      uses: actions/upload-artifact@v2
+      with:
+        path: public
+
 name: Nix CI for bundle default
 'on':
   pull_request:
