@@ -174,9 +174,7 @@ Definition lt alpha beta : Prop :=
 
 (* begin snippet ltExamples *)
 
-(*|
-.. coq:: no-out 
-|*)
+(*| .. coq:: no-out |*)
 
 Example E1 : lt (ocons omega 56 zero) (tower 3). 
 Proof.  reflexivity. Qed.

@@ -45,9 +45,7 @@ Open Scope t1_scope.
 
 (* begin snippet oplusNeutral *)
 
-(*|
-.. coq:: no-out
-|*)
+(*| .. coq:: no-out |*)
 
 Lemma oplus_0_r (alpha : T1) : alpha o+ zero = alpha.
 Proof.
@@ -198,6 +196,7 @@ Proof with auto.
       + right; eapply nf_helper_inv1;eauto.
 Qed.
 
+
 Lemma oplus_bounded_phi0 alpha beta gamma :
   nf alpha -> nf beta -> nf gamma ->
   lt alpha (phi0 gamma) ->
@@ -211,7 +210,7 @@ Proof.
   eapply nf_intro;auto.
   1,2 :now apply nf_helper_phi0R.
 Qed.
-   
+
 Section Proof_of_plus_nf.
 
   Lemma oplus_nf_0 (gamma : T1):
@@ -281,7 +280,9 @@ Proof.
 Qed.
 
 Section Proof_of_oplus_comm.
+  (* begin snippet oplusComm0 *)
   
+  (*| .. coq:: no-out |*)
   Lemma oplus_comm_0 : forall gamma,
     nf gamma ->
     forall alpha beta,  nf alpha -> nf beta ->
@@ -290,6 +291,10 @@ Section Proof_of_oplus_comm.
                         alpha o+ beta = beta o+ alpha.
   Proof.
     intros gamma ; transfinite_induction gamma.
+    (* ... *)
+    (*||*)
+    (*| .. coq:: none |*)
+    
     intros x H0 H; destruct alpha, beta; try reflexivity.
     rewrite oplus_eqn.
     rewrite (oplus_eqn  (ocons beta1 n0 beta2) (ocons alpha1 n alpha2)).
@@ -322,12 +327,20 @@ Section Proof_of_oplus_comm.
       + apply nf_helper_phi0, nf_helper_intro with n; eauto.
       + now apply head_lt, compare_gt_iff.
   Qed.
+  (*||*)
+  (* end snippet oplusComm0 *)
 
+  (* begin snippet oplusComm *)
+
+  (*| .. coq:: no-out |*)
   Lemma oplus_comm :
     forall alpha beta, nf alpha -> nf beta ->
     alpha o+ beta =  beta o+ alpha.
   Proof.
-    intros; apply oplus_comm_0 with (T1.succ (max alpha beta)) ; trivial. 
+    intros; apply oplus_comm_0 with (T1.succ (max alpha beta));
+      trivial.
+    (* ... *)
+    (*| .. coq:: none |*)
     - apply succ_nf; apply max_nf;auto.
     - apply le_lt_trans with (max alpha beta); trivial.
       + apply le_max_a.
@@ -336,7 +349,10 @@ Section Proof_of_oplus_comm.
       + apply le_max_b.
       + apply lt_succ.
   Qed.
+  (*||*)
 
+  (* end snippet oplusComm *)
+  
 End Proof_of_oplus_comm.
 
 Lemma oplus_lt_rw2 : forall a n b x, nf (ocons a n b) -> nf x ->
@@ -366,7 +382,9 @@ Section Proof_of_oplus_assoc.
   Ltac ass_rw_rev Hrec alpha a b c :=
     match goal with |- context Gamma [oplus (oplus ?a  ?b)  ?c] =>
                           erewrite <- Hrec with alpha  a b c end.
-
+  (* begin snippet oplusAssoc0 *)
+  
+  (*| .. coq:: no-out |*)
   Lemma oplus_assoc_0 :
     forall alpha,
       nf alpha ->
@@ -376,7 +394,10 @@ Section Proof_of_oplus_assoc.
                       a o+ (b o+ c) = (a o+ b) o+ c.
   Proof.
     intros alpha; transfinite_induction_lt alpha.
-    clear alpha ; intros alpha Hrec Halpha .
+    clear alpha ; intros alpha Hrec Halpha.
+    (* ... *)
+    (*||*)
+    (*| .. coq:: none |*)
     intros; destruct a, b, c; try reflexivity. 
     - repeat rewrite oplus_0_l; repeat rewrite oplus_0_r; trivial.
     - now  repeat rewrite oplus_0_r.
@@ -470,15 +491,23 @@ Section Proof_of_oplus_assoc.
             * now apply head_lt, compare_gt_iff.
       }
   Qed.
+  (*||*)
+(* end snippet oplusAssoc0 *)  
 
+  (* begin snippet oplusAssoc *)
 
+  (*| .. coq:: no-out |*)
   Lemma oplus_assoc : forall alpha beta gamma,
                         nf alpha -> nf beta -> nf gamma ->
                                     alpha o+ (beta o+ gamma) =
                                     alpha o+ beta o+ gamma.
   Proof with eauto with T1.
     intros.
-    apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma))); trivial.
+    apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma)));
+      trivial.
+    (* ... *)
+    (*||*)
+    (*| .. coq:: none |*)
     1: apply succ_nf; repeat apply max_nf ...
     all: apply le_lt_trans with (max alpha (max beta gamma));
       [| apply lt_succ] ...
@@ -489,7 +518,10 @@ Section Proof_of_oplus_assoc.
       rewrite (max_comm (max alpha beta) gamma).
       apply le_max_a.
   Qed.
+  (*||*)
 
+  (* end snippet oplusAssoc *)
+  
 End Proof_of_oplus_assoc.
 
 Section Proof_of_oplus_lt1.
@@ -769,10 +801,12 @@ Proof.
   now apply oplus_strict_mono_r.
 Qed.
 
+(* begin snippet oplusMono *)
 
 Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-  nf gamma   -> alpha  t1< beta ->
-  alpha o+ gamma t1< beta o+ gamma.
+  nf gamma -> alpha  t1< beta ->
+  alpha o+ gamma t1< beta o+ gamma. (* .no-out *)
+(*| .. coq:: none *)
 Proof.
   intros  Hgamma H.
   generalize (LT_nf_l H), (LT_nf_r H); intros  Ha  Hb.
@@ -782,11 +816,12 @@ Proof.
   auto with T1.
   now apply oplus_nf.
 Qed.
-
+(*||*)
 
 Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
   nf alpha -> beta t1< gamma ->
-  alpha o+ beta t1< alpha o+ gamma.
+  alpha o+ beta t1< alpha o+ gamma. (* .no-out *)
+(*| .. coq:: none *)
 Proof.
   intros  Halpha H.
   generalize (LT_nf_l H), (LT_nf_r H); intros  Hb  Hc.
@@ -796,7 +831,8 @@ Proof.
   auto with T1.
   now apply oplus_nf.
 Qed.
-
+(*||*)
+(* end snippet oplusMono *)
 
 
 Lemma oplus_strict_mono_bi : forall a b c d ,

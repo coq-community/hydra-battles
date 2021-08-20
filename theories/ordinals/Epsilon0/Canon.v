@@ -20,6 +20,7 @@ Open Scope t1_scope.
 
 (** * Definitions *)
 
+(* begin snippet canonDef *)
 
 Fixpoint canon alpha (i:nat) : T1 :=
   match alpha with
@@ -46,15 +47,24 @@ Fixpoint canon alpha (i:nat) : T1 :=
       end)
    |  ocons alpha n beta => ocons alpha n (canon beta i)  
 end.
+(* end snippet canonDef *)
 
+(* begin snippet canonExamples *)
 
-Compute pp (canon (T1.omega ^ T1.omega) 3).
+Section Canon_examples.
+Import T1. 
 
-Compute pp (canon (T1.omega ^ T1.omega * 3) 42).
+Compute pp (canon (omega ^ omega) 3).
 
-Compute canon (T1.phi0 10) 0.
+Compute pp (canon (omega ^ omega * 3) 42).
 
-Compute canon (T1.omega ^ T1.omega)%t1 10.
+Compute canon (phi0 10) 0.
+
+Goal canon (omega ^ omega) 10 = phi0 10. (* .no-out *)
+Proof. (* .no-out *) reflexivity. Qed. 
+
+End Canon_examples.
+(* end snippet canonExamples *)
 
 (* compatibility with older versions *)
 
@@ -147,10 +157,14 @@ Proof.
  - now apply canonS_lim2.
 Qed.
 
+(* begin snippet canonSucc *)
 
-Lemma canon_succ i alpha : nf alpha -> canon (succ alpha) i = alpha.
-Proof.
+Lemma canon_succ i alpha :
+  nf alpha -> canon (succ alpha) i = alpha. (* .no-out *)
+Proof. (* .no-out *)
   revert i; induction alpha.
+  (* ... *)
+  (*| .. coq:: none |*)
   - reflexivity.
   - destruct alpha1.
       + intros; replace alpha2 with zero.   
@@ -168,7 +182,9 @@ Proof.
             { intros; f_equal ; rewrite <- IHalpha2 with i.
               - now rewrite <- H0.
               - eapply nf_inv2, H. }
+(*||*)
 Qed.
+(* end snippet canonSucc *)
 
 (** should be deprecatrd later *)
 Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.

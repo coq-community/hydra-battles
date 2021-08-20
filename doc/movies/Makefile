@@ -21,7 +21,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Hydra_Definitions.v \
 	    Hydra_Theorems.v    \
 	    Hydra_Examples.v    \
-	    Hydra_Lemmas.v      \
+	    Hydra_Lemmas.v   Hydra_Termination.v    \
 	    BigBattle.v      \
 	    Battle_length.v      \
 	    extEqualNat.v       \
@@ -39,7 +39,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Correctness_E0.v \
 	    T1.v E0.v Hessenberg.v \
 	    T2.v \
-
+	    Canon.v \
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 

@@ -3724,21 +3724,6 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     We need to prove some properties of $\oplus$, particularly about 
     its relation with the order $<$ on \texttt{T1}.
 
-    \subsubsection{Boundedness}
-    If $\alpha$ and $\beta$ are both strictly  less than  $\omega^\gamma$, then so is their natural sum
-    $\alpha \oplus \beta$. This result can be proved by structural induction on $\gamma$.
-
-
-    \begin{Coqsrc}
-    Lemma oplus_bounded_phi0 alpha beta gamma :
-      nf alpha -> nf beta -> nf gamma ->
-      lt alpha (phi0 gamma) ->
-      lt beta (phi0 gamma) ->
-      lt (alpha o+ beta) (phi0 gamma).
-    \end{Coqsrc}
-
-    This lemma helps us 
-
     \subsubsection{Commutativity, associativity}
 
     We prove  the commutativity of $\oplus$ in two steps. 
@@ -3748,77 +3733,33 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     \index{maths}{Transfinite induction}
 
-    \begin{Coqsrc}
-    Lemma oplus_comm_0 : forall alpha, nf alpha ->
-         forall a b,  nf a -> nf b ->
-                      lt a alpha ->
-                      lt b alpha ->
-                      a o+ b = b o+ a.
-     Proof with eauto with T1.
-        intros alpha Halpha; transfinite_induction alpha.
-    (* rest of proof omitted *)  
-    \end{Coqsrc}
+    \input{movies/snippets/Hessenberg/oplusComm0}
+
+    
 
     Then, we infer  $\oplus$'s commutativity for any pair of ordinals:
     Let $\alpha$ and $\beta$ be two ordinals strictly less than $\epsilon_0$. Both ordinals $\alpha$ and $\beta$ are
     strictly less than $\textrm{max}(\alpha,\beta)+1$.
         Thus, we have just to apply the lemma \coqsimple{oplus\_comm\_0}.
 
-    \begin{Coqsrc}
-      Lemma oplus_comm : forall alpha beta, 
-          nf alpha -> nf beta ->
-          alpha o+ beta =  beta o+ alpha.
-      Proof with eauto with T1.
-        intros alpha beta Halpha Hbeta;
-        apply oplus_comm_0 with (succ (max alpha beta)) ...  
-      (* ... *)
-    \end{Coqsrc}
+\input{movies/snippets/Hessenberg/oplusComm}
+  
 
-    The associativity of Hessenberg's sum is proved the same way.
+    Associativity of Hessenberg's sum is proved the same way.
 
-
-    \begin{Coqsrc}
-     Lemma oplus_assoc_0 :
-        forall alpha,
-          nf alpha ->
-          forall a b c,  nf a -> nf b -> nf c ->
-                          lt a alpha ->
-                          lt b alpha -> lt c alpha ->
-                          a o+ (b o+ c) = (a o+ b) o+ c.
-      Proof with eauto with T1.
-        intros alpha Halpha.
-        transfinite_induction alpha.
-        (* ... *)
-    \end{Coqsrc}
-
-
-    \begin{Coqsrc}
-     Lemma oplus_assoc : forall alpha beta gamma,
-                            nf alpha -> nf beta -> nf gamma ->
-                                        alpha o+ (beta o+ gamma) =
-                                        alpha o+ beta o+ gamma.
-     Proof with eauto with T1.
-        intros;
-        apply oplus_assoc_0 with (succ (max alpha (max beta gamma))) ...
-        (* ... *)   
-    \end{Coqsrc}
-
+    \input{movies/snippets/Hessenberg/oplusAssoc0}
+    \input{movies/snippets/Hessenberg/oplusAssoc}
+    
+    
+ 
 
     \subsubsection{Monotonicity}
 
     At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
 
-    \begin{Coqsrc}
-    Lemma oplus_strict_mono_LT_l (alpha beta gamma : T1) :
-      nf gamma   -> alpha  t1< beta ->
-      alpha o+ gamma  t1< beta o+ gamma.
-
-    Lemma oplus_strict_mono_LT_r (alpha beta gamma : T1) :
-      nf alpha -> beta t1< gamma ->
-      alpha o+ beta t1< alpha o+ gamma.
-    \end{Coqsrc}
-
-    \index{hydras}{Projects}
+    \input{movies/snippets/Hessenberg/oplusMono}
+    
+      \index{hydras}{Projects}
 
     \begin{project}
     The library \texttt{Hessenberg} looks too long (proof scripts and compilation).
@@ -3836,84 +3777,30 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \vspace{4pt}
     \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Termination.html\#m}{Hydra.Hydra\_Termination}}
 
-    \begin{Coqsrc}
-    Fixpoint m (h:Hydra) : T1 :=
-      match h with head => zero
-                 | node hs => ms hs
-    end 
-    with ms (s:Hydrae) :  T1 :=
-      match s with  hnil => zero
-                  | hcons h s' => phi0 (m h) o+  ms s'
-     end.  
-    \end{Coqsrc}
+   \input{movies/snippets/Hydra_Termination/mDef}
+
+
 
     First, we prove that the measure $m(h)$  of any hydra $h$ is a well-formed ordinal term of type \texttt{T1}.
 
-    \begin{Coqsrc}
-    Lemma m_nf : forall h, nf (m h).
-    Proof.
-     intro h; elim h using Hydra_rect2 
-                with (P0 := fun s =>  nf (ms s)).
-     (* ... *)
-
-    Lemma ms_nf : forall s, nf (ms s).
-    Proof with auto with T1.
-    (* ... *)
-    \end{Coqsrc}
-
+    \input{movies/snippets/Hydra_Termination/mNf}
+   
     For proving the termination of all hydra battles, we have to prove that
     \texttt{m} is a variant. First, a few technical lemmas follow the decomposition of \texttt{round} into several relations. Then the lemma \texttt{round\_decr} gathers all the cases.
 
     \label{sect:variant-decr}
 
-    \begin{Coqsrc}
-    Lemma S0_decr :
-      forall s s', S0  s s' -> ms s' t1< ms s.
-    \end{Coqsrc}
-
-    \begin{Coqsrc}
-    Lemma R1_decr : forall h h',
-                      R1 h h' -> m h' t1< m h.
-    \end{Coqsrc}
-
-    \begin{Coqsrc}
-    Lemma S1_decr n:
-      forall s s', S1 n s s' -> ms s' t1<  ms s.
-    \end{Coqsrc}
-
-    \begin{Coqsrc}
-    Lemma R2_decr n : forall h h', R2 n h h' -> m h'  t1< m h.
-    \end{Coqsrc}
-
-
-    \begin{Coqsrc}
-    Lemma round_decr : forall h h', h -1-> h' -> m h' t1< m h.
-    Proof.
-       destruct 1 as [n [H | H]].
-       -  now apply R1_decr.
-       -  now apply R2_decr with n.
-    Qed.
-    \end{Coqsrc}
-
-    Finally, we prove the termination of all (free) battles.
+    \input{movies/snippets/Hydra_Termination/S0Decr}
+    \input{movies/snippets/Hydra_Termination/R1Decr}
+    \input{movies/snippets/Hydra_Termination/S1Decr}
+    \input{movies/snippets/Hydra_Termination/R2Decr}
+     \input{movies/snippets/Hydra_Termination/RoundDecr}
+ 
+      Finally, we prove termination of all (free) battles.
 
     \label{thm:every-battle-terminates}
 
-    \begin{Coqsrc}
-    Global Instance HVariant : Hvariant lt_wf free var.
-    Proof.
-     split; intros; eapply round_decr; eauto.
-    Qed.
-
-    Theorem every_battle_terminates: Termination.
-    Proof. 
-      red; apply Inclusion.wf_incl with 
-             (R2 := fun h h' =>  m h t1< m h').
-       red; intros;  now apply round_decr.
-       apply Inverse_Image.wf_inverse_image, T1_wf.
-    Qed.
-    \end{Coqsrc}
-
+    \input{movies/snippets/Hydra_Termination/FinalThm}
 
     \section*{Conclusion}
 
@@ -4068,59 +3955,16 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 
 \label{Functions:canonS}
 \label{Functions:canon}
-\begin{Coqsrc}
-  Fixpoint canon alpha (i:nat) : T1 :=
-  match alpha with
-    zero => zero
-  | ocons zero 0 zero  => zero
-  | ocons zero (S k) zero  => FS k
-  | ocons gamma 0 zero => (match T1.pred gamma with
-                            Some gamma' =>
-                            match i with 0 => zero
-                                    |   S j => ocons gamma' j zero
-                            end
-                          | None =>
-                            ocons (canon gamma i) 0 zero
-                           end)
-  
-  |  ocons gamma (S n) zero =>
-     (match T1.pred gamma with
-       Some gamma' =>
-       (match i with
-         0 =>  ocons gamma n zero
-       | S j => ocons gamma n (ocons gamma' j zero)
-       end)
-       | None =>
-            ocons gamma n (ocons (canon gamma  i) 0 zero)
-      end)
-   |  ocons alpha n beta => ocons alpha n (canon beta i)  
-end.
-\end{Coqsrc}
+
+\input{movies/snippets/Canon/canonDef}
+
 
 
 For instance \coq's computing facilities allow us to verify the equalities\linebreak 
 \mathcolor{$\canonseq{\omega^\omega}{3} = \omega^3$} and
 \mathcolor{$\canonseq{\omega^\omega*3}{42} = \omega^\omega*2 + \omega^{42}$}.
 
-
-\begin{Coqsrc}
-Compute pp (canon (T1.omega ^ T1.omega) 3). 
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = (_omega ^ 3)%pT1
-     : ppT1
-   \end{Coqanswer}
-   
-
-\begin{Coqsrc}
-Compute pp (canon (T1.omega ^ T1.omega * 3) 42).  
-\end{Coqsrc}
-
-\begin{Coqanswer}
-    = (_omega ^ _omega * 2 + _omega ^ 42)%pT1
-     : ppT1
-\end{Coqanswer}
+\input{movies/snippets/Canon/canonExamples}
 
 \index{hydras}{Projects}
 \begin{project}
@@ -4137,18 +3981,10 @@ We did not  try to prove that our definition truly implements Ketonen and Solova
 abstract properties  of canonical sequences that are really used in our proof. The complete proofs are in the module
 ~\href{../theories/html/hydras.Epsilon0.Canon.html}{Epsilon0.Canon}
 
+For instance, the equality $\canonseq{\alpha+1}{i}=\alpha$  can be  proved by  structural induction on $\alpha$.
 
-Proving the equality $\canonseq{\alpha+1}{i}=\alpha$ is not 
-as simple as suggested by the equations of definition~\ref{def:canonseq-math}\,.
-Nevertheless, we can prove it by  plain structural induction on $\alpha$.
+\input{movies/snippets/Canon/canonSucc}
 
-\begin{Coqsrc}
-  Lemma canon_succ i alpha :
-  nf alpha -> canon (succ alpha) i = alpha.
-Proof.
- revert i; induction alpha.
- (* ... *)
-\end{Coqsrc}
 
 \subsubsection{Canonical sequences and the order $<$}
 
