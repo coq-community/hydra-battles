@@ -11,6 +11,9 @@ From Coq Require Import Relation_Operators.
 
 Open Scope t1_scope.
 
+(* begin snippet theContext *)
+(*| .. coq:: no-out |*)
+
 Section Bounded.
   
   Context (B: Battle)
@@ -21,8 +24,10 @@ Section Bounded.
           (Hy : BoundedVariant  Var mu).
 
   Hypothesis m_decrease : forall  i h h',
-      round_n i h h'   -> m h' t1< m h.
-
+      round_n i h h'-> m h' t1< m h.
+  (*||*)
+  (* end snippet theContext *)
+  
   Lemma  nf_m : forall h, nf (m h).
   Proof.
     intro h0; now destruct (m_bounded h0).

@@ -4153,23 +4153,7 @@ from the interval $[0,\epsilon_0)$ into the type \texttt{Hydra}.
 
 \emph{From Module~\href{../theories/html/hydras.Hydra.O2H.html}{Hydra.O2H}}
 
-
-\begin{Coqsrc}
-Fixpoint iota (alpha : T1) : Hydra :=
-  match alpha with
-  | T1.zero => head
-  | ocons gamma n beta => 
-         node (hcons_mult (iota gamma) (S n) (iotas beta))
-  end 
-with iotas (alpha : T1) :  Hydrae :=
-       match alpha with
-       | T1.zero => hnil
-       | ocons alpha0 n beta  => 
-           hcons_mult (iota alpha0) (S n) (iotas beta)
-       end.
-\end{Coqsrc}  
-
-
+\input{movies/snippets/O2H/iotaDef}
 
 
 For instance Fig.~\ref{fig:iota-example} shows the image by $\iota$ of the ordinal  \textcolor{black}{$\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$}
@@ -4217,29 +4201,17 @@ The following lemma (proved in ~\href{../theories/html/hydras.Hydra.O2H.html}{Hy
 
 \label{lemma:canonS-iota}
 
-\begin{Coqsrc}
-Lemma canonS_iota i alpha :
-    nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canon alpha (S i)).
-\end{Coqsrc}
-                
+\input{movies/snippets/O2H/canonSIota}
 
 The next step of our development extends this relationship to
 the order $<$ on $[0,\epsilon_0)$ on one side, and hydra battles on the other side.
 
-
-\begin{Coqsrc}
-Lemma path_to_battle alpha s beta :
-  path_to  beta  s alpha -> nf alpha ->
-  iota alpha -+-> iota beta.
-\end{Coqsrc}
+\input{movies/snippets/O2H/pathToRoundPlus}
 
 As a corollary, we are now able to transform any inequality $\beta<\alpha<\epsilon_0$ into a (free) battle.
 
-\begin{Coqsrc}
-Lemma LT_to_battle alpha beta :
-    beta t1< alpha ->  iota alpha -+-> iota beta.
-\end{Coqsrc}
+\input{movies/snippets/O2H/LTToRoundPlus}
+
 
 \section{A  proof of impossibility}
 
@@ -4254,29 +4226,11 @@ In the module
 
 
 
-
-\begin{Coqsrc}
-Class BoundedVariant {A:Type}{Lt:relation A}
-      {Wf: well_founded Lt}{B : Battle}
-      {m: Hydra -> A} (Var: Hvariant  Wf  B m)(mu:A):=
-  {
-  m_bounded: forall h, Lt (m h ) mu
-  }.
-\end{Coqsrc}
+\input{movies/snippets/Hydra_Definitions/BoundedVariant}
 
 Let us assume there exists such a variant:
 
-\begin{Coqsrc}
-Context (B: Battle)
-          (mu: T1)
-          (Hmu: nf mu)
-          (m : Hydra -> T1)
-          (Var : Hvariant  T1_wf B m)
-          (Hy : BoundedVariant  Var mu).
-
-  Hypothesis m_decrease : forall  i h h',
-      round_n i h h'   -> m h' t1< m h.
-\end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Generic/theContext}
 
 \label{remark:m-decrease}
 \begin{remark}

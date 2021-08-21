@@ -14,20 +14,24 @@ From Coq Require Import Relation_Operators.
 From hydras Require Import Hydra_Lemmas Epsilon0 Canon Paths  .
 Import Hydra_Definitions.
 
-(** Let us transform any ordinal notation into an hydra *)
- 
+(** Let us transform any ordinal term into an hydra *)
+
+(* begin snippet iotaDef *)
+
 Fixpoint iota (alpha : T1) : Hydra :=
   match alpha with
   | zero => head
   | ocons gamma n beta => node (hcons_mult (iota gamma) (S n)
                                            (iotas beta))
   end 
-with iotas (alpha : T1) :  Hydrae :=
-       match alpha with
-       | zero => hnil
-       | ocons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
-                                            (iotas beta)
-       end.
+with
+iotas (alpha : T1) :  Hydrae :=
+  match alpha with
+  | zero => hnil
+  | ocons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
+                                       (iotas beta)
+  end.
+(* end snippet iotaDef *)
 
 (**  We now prove  a lot of technical lemmas that relate Hydras and 
 ordinals. *)
@@ -526,16 +530,20 @@ Proof.
   intros beta H2 H3 gamma H4; rewrite H4; apply H; eauto with T1.
 Qed.
 
+(* begin snippet canonSIota *)
 
 Lemma canonS_iota i alpha :
     nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canon alpha (S i)).
+    iota alpha -1-> iota (canon alpha (S i)). (* .no-out *)
+(*| .. coq:: none |*)
   Proof.
     intros;  destruct (canonS_iota_i i alpha  H H0).
     - exists 0; now left.
     - exists i; now right.
   Qed.
-
+  (*||*)
+  (* end snippet canonSIota *)
+  
   Lemma canonS_rel_rounds : forall n alpha beta,
       nf alpha -> nf beta ->
       alpha <> zero ->
@@ -619,15 +627,19 @@ Qed.
     now apply path_toS_trace.
   Qed.
 
-
+  (* begin snippet pathToRoundPlus *)
+  
   Lemma path_to_round_plus alpha s beta :
     path_to beta s alpha -> nf alpha ->
-    iota alpha -+-> iota beta.
+    iota alpha -+-> iota beta. (* .no-out *)
+  (*| .. coq:: none |*)
   Proof.
     intros H H0; apply path_to_path_toS in H.
     now apply  path_toS_round_plus with (MoreLists.unshift s).
   Qed.
-
+  (*||*)
+  (* end snippet pathToRoundPlus *)
+  
   
   Lemma acc_from_to_round_plus alpha beta :
     nf alpha -> nf beta -> alpha <> 0 ->
@@ -640,13 +652,16 @@ Qed.
   Qed.
 
   (** Any strict inequality on [T1] can be converted into a (free) battle *)
+
+  (* begin snippet LTToRoundPlus *)
   
   Theorem LT_to_round_plus alpha beta :
-    beta t1< alpha ->  iota alpha -+-> iota beta.
+    beta t1< alpha ->  iota alpha -+-> iota beta. (* .no-out *)
+  (*| .. coq:: none |*)
   Proof.
     intros H; apply acc_from_to_round_plus; eauto with T1.
     - intro; subst; apply (not_LT_zero H).
     - apply LT_acc_from; eauto with T1.
   Qed.
-
-
+ (*||*)
+ (* end snippet LTToRoundPlus *)

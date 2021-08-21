@@ -17,9 +17,10 @@ vpath %.v ${INPUT_DIR}/solutions_exercises
 COQ_FILES = Ack.v AckNotPR.v    \
 	    extEqualNat.v  primRec.v PrimRecExamples.v   \
 	    F_alpha.v L_alpha.v F_omega.v  \
-	    Hydra_Definitions.v \
+	    Hydra_Definitions.v O2H.v \
 	    Hydra_Theorems.v  Hydra_Examples.v    \
 	    Hydra_Lemmas.v   Hydra_Termination.v    \
+	    Epsilon0_Needed_Generic.v \
 	    BigBattle.v      \
 	    Battle_length.v      \
 	    MorePRExamples.v FibonacciPR.v  isqrt.v       \

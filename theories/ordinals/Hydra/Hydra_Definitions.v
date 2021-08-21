@@ -504,6 +504,7 @@ Class Hvariant {A:Type}{Lt:relation A}
 (** Variant bounded by some ordinal alpha < epsilon0 *)
 (** **  Strictly Bounded variants *)
 
+(* begin snippet BoundedVariant *)
 
 Class BoundedVariant {A:Type}{Lt:relation A}
       {Wf: well_founded Lt}{B : Battle}
@@ -512,6 +513,7 @@ Class BoundedVariant {A:Type}{Lt:relation A}
   m_bounded: forall h, Lt (m h ) mu
   }.
 
+(* end snippet BoundedVariant *)
 
 
 
