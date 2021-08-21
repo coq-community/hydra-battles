@@ -3813,7 +3813,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \end{itemize}
 
     So, a  natural question is `` Does there exist any strictly decreasing variant mapping
-    type \texttt{Hydra} into some interval $[0,\alpha[$ (where $\alpha <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\alpha$, even if we consider a restriction to the set of ``standard'' battles.
+    type \texttt{Hydra} into some interval $[0,\alpha)$ (where $\alpha <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\alpha$, even if we consider a restriction to the set of ``standard'' battles.
 
 
 
@@ -3958,6 +3958,10 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 
 \input{movies/snippets/Canon/canonDef}
 
+In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. 
+
+\input{movies/snippets/Canon/CanonS0}
+
 
 
 For instance \coq's computing facilities allow us to verify the equalities\linebreak 
@@ -3966,13 +3970,15 @@ For instance \coq's computing facilities allow us to verify the equalities\lineb
 
 \input{movies/snippets/Canon/canonExamples}
 
-\index{hydras}{Projects}
-\begin{project}
-Many lemmas presented in this chapter were stated and proved before the introduction of 
-the type class \texttt{ON} of ordinal notations, and in particular its  instance \texttt{Epsilon0}.
-Thus definitions and lemmas refer to the type \texttt{T1} of possibly not well-formed terms.
-This should be fixed in  a future version.
-\end{project}
+
+
+% \index{hydras}{Projects}
+% \begin{project}
+% Many lemmas presented in this chapter were stated and proved before the introduction of 
+% the type class \texttt{ON} of ordinal notations, and in particular its  instance \texttt{Epsilon0}.
+% Thus definitions and lemmas refer to the type \texttt{T1} of possibly not well-formed terms.
+% This should be fixed in  a future version.
+% \end{project}
 
 
 \subsection{Basic properties of canonical sequences}
@@ -3993,12 +3999,8 @@ For instance, the equality $\canonseq{\alpha+1}{i}=\alpha$  can be  proved by  s
 We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivatives in function definitions by transfinite recursion.
 
 \label{lemma:canonS_LT}
-\begin{Coqsrc}
-Lemma canonS_LT i alpha :
-  nf alpha -> alpha <> zero ->
-  canon alpha (S i) t1<  alpha.
-\end{Coqsrc}
 
+\input{movies/snippets/Canon/canonSLT}
 
 \subsubsection{Limit ordinals are truly limits}
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
@@ -4006,21 +4008,12 @@ is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 
 
 \vspace{4pt}
+
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canonS_limit_strong}{Epsilon0.Canon}}
 
+\input{movies/snippets/Canon/canonSLimitStrong}
 
-\begin{Coqsrc}
-Lemma canonS_limit_strong (lambda : T1) : 
-     nf lambda ->
-     limitb lambda  ->
-     forall beta, beta t1< lambda ->
-                  {i:nat | beta t1< canon lambda (S i)}.
 
-Proof.
-  transfinite_induction_LT lambda.
-  (* ... *)
-Defined.
-\end{Coqsrc}
 
 \label{lemma:canonS-limit}
 
@@ -4029,12 +4022,7 @@ Note the use of \coq's \texttt{sig} type in the theorem's statement, which
 relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
 We can also state directly that $\lambda$ is a (strict) least upper bound of the elements of its canonical sequence.
 
-
-\begin{Coqsrc}
-Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> limitb lambda  ->
-  strict_lub (canonS lambda) lambda.
-\end{Coqsrc}
+\input{movies/snippets/Canon/canonSLimitLub}
 
 \index{hydras}{Exercises}
 
@@ -4101,39 +4089,15 @@ parameterized by the destination $\beta$.
 \index{hydras}{Library Epsilon0!Predicates!path\_to}
 \label{sect:path-to-def}
 
-\begin{Coqsrc}
-Definition transition_S i : relation T1 :=
-fun alpha beta =>
-    alpha <> zero /\ beta = canonS alpha (S i).
+\input{movies/snippets/Paths/transitionDefs}
 
-Definition transition i : relation T1 :=
-  match i with 0 => fun _ _ => False | S j => transition_S j end.
-
-Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
-  path_to_1 : forall (i:nat) alpha , 
-    i <> 0 ->
-    transition i alpha beta ->
-    path_to beta (i::nil) alpha
-| path_to_cons : forall i alpha s gamma,
-    i <> 0 ->
-    transition i alpha gamma ->
-    path_to beta  s gamma ->
-    path_to beta  (i::s) alpha.
-\end{Coqsrc}
-
-
-
-\begin{remark}
-The definition above is parameterized with the \emph{destination} of the path and indexed by the origin, hence the name \texttt{path\_to}. The rationale behind this choice is a personal preference of the developer  for the kind of eliminators generated by \coq{} in this case. The symmetric option could have been also considered (see also Remark~\vref{remark:transitive-closure}).
-\end{remark}
-
-
+\input{movies/snippets/Paths/pathDef}
 
 \begin{remark}
 In the present version of our library, we use a variant \texttt{path\_toS} of
 \texttt{path\_to}, where the proposition
 (\texttt{path\_toS $\beta$ $s$ $\alpha$}) is equivalent to
-(\texttt{path\_to $\beta$ (shift $s$) $\alpha$}). This variant is scheduled to be deprecated.
+(\texttt{path\_to $\beta$ (List.map S $s$) $\alpha$}). This variant is scheduled to be deprecated.
 \end{remark}
 
 \index{hydras}{Exercises}
@@ -4164,26 +4128,20 @@ You should solve automatically the following goals:
 By transfinite induction on $\alpha$, we prove that for any $\beta<\alpha$, 
 one can build a path from $\alpha$ to $\beta$ (in other terms, $\beta$ is accessible from $\alpha$).
 
-\begin{Coqsrc}
-Lemma LT_path_to (alpha beta : T1) :
-  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
-\end{Coqsrc}
+\input{movies/snippets/Paths/LTPathTo}
+
+
+
+\noindent 
+From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
+
+\input{movies/snippets/Paths/pathToLT}
 
 \index{hydras}{Exercises}
 
 \begin{exercise}[continuation of exercise~\vref{exo:simply-typed-canonseq}]
 Define a simply typed function for computing a path from $\alpha$ to $\beta$.
 \end{exercise}
-
-
-\noindent 
-From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
-
-
-\begin{Coqsrc}
-Lemma path_to_LT beta s alpha :
-  path_to beta s alpha -> nf alpha -> beta t1< alpha.
-\end{Coqsrc}
 
 \subsection{Paths and hydra battles}
 \label{KS-o2h}
@@ -8115,7 +8073,7 @@ The Gaia project ~\url{https://github.com/coq-community/gaia} maintains Grimm's 
 of the present ordinal theory with Gaia, i.e., relating the different notions of ordinals
 and transferring relevant results, is an interesting project.
 First experiments in that direction are developped in
-\href{https://github.com/coq-community/hydra-battles/blob/master/theories/gaia/T1Bridge.v}{theories/gaia/T1Bridge.v}.
+the \href{https://github.com/coq-community/hydra-battles/blob/master/theories/gaia/}{theories/gaia/} directory.
 
 
 

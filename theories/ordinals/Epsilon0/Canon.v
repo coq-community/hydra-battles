@@ -68,6 +68,7 @@ End Canon_examples.
 
 (* compatibility with older versions *)
 
+(* begin snippet canonS0 *)
 
 Definition  canonS alpha (i:nat) : T1 :=
   canon alpha (S i).
@@ -75,7 +76,7 @@ Definition  canonS alpha (i:nat) : T1 :=
 Definition  canon0 alpha  : T1 :=
   canon alpha 0.
 
-
+(* end snippet canonS0 *)
 
 (** * Properties of canonical sequences *)
 
@@ -186,7 +187,7 @@ Proof. (* .no-out *)
 Qed.
 (* end snippet canonSucc *)
 
-(** should be deprecatrd later *)
+(** should be deprecated later *)
 Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.
 Proof.
    intros; now apply canon_succ.
@@ -269,11 +270,15 @@ Qed.
 
 (** ** Canonical sequences and the order LT *)
 
+(* begin snippet canonSLT *)
+
+(*| .. coq:: no-out |*)
 Lemma canonS_LT i alpha :
   nf alpha -> alpha <> zero ->
   canon alpha (S i) t1<  alpha.
 Proof.
   transfinite_induction_lt alpha.
+  (* ... *)  (*||*)  (*| .. coq:: none |*)
   clear alpha; intros alpha Hrec Halpha;
     destruct (zero_limit_succ_dec Halpha).
     - destruct s.
@@ -396,7 +401,9 @@ Proof.
           split; auto.
           split; auto; apply lt_succ; auto.
       }
+      (*||*)
 Qed. 
+(* end snippet canonSLT *)
 
 Lemma canon0_LT  alpha :
   nf alpha -> alpha <> zero ->
@@ -588,15 +595,18 @@ greater than beta.
 limit of its  own canonical sequence 
 *)
 
-(* Here *)
+(* begin snippet canonSLimitStrong *)
 
+(*| .. coq:: no-out *)
 Lemma canonS_limit_strong lambda : 
   nf lambda ->
   limitb lambda  ->
   forall beta, beta t1< lambda ->
                {i:nat | beta t1< canon lambda (S i)}.
 Proof.
-  transfinite_induction lambda; clear lambda ; intros lambda Hrec Hlambda.
+  transfinite_induction lambda.
+  (* ... *) (*||*) (*| .. coq:: none |*)
+  clear lambda ; intros lambda Hrec Hlambda.
   intros   H beta H1.
   assert (Hbeta: nf beta)  by eauto with T1.
   destruct (zero_limit_succ_dec Hlambda).
@@ -759,9 +769,10 @@ Proof.
       }
       all: auto. 
   -   destruct s as [t [Ht Ht']]; subst lambda.
-      destruct (@limitb_succ t); auto. 
+      destruct (@limitb_succ t); auto.
+      (*||*)
 Defined.
-
+      (* end snippet canonSLimitStrong *)
 
 Lemma canon_limit_strong lambda : 
   nf lambda ->
@@ -773,10 +784,11 @@ Proof.
     exists (S x);auto.
 Defined.
 
+(* begin snippet canonSLimitLub *)
 
 Lemma canonS_limit_lub (lambda : T1) :
   nf lambda -> limitb lambda  ->
-  strict_lub (canonS lambda) lambda.
+  strict_lub (canonS lambda) lambda. (* .no-out *) (*| .. coq:: none |*)
 Proof.
   split.
   - intros; split.
@@ -798,6 +810,8 @@ Proof.
       { apply LT_LE_trans with  (canonS lambda x); auto. }
       now destruct (@LT_irrefl l' ).
 Qed. 
+(*||*)
+(* end snippet canonSLimitLub *)
 
 
 Lemma canonS_limit_mono alpha i j : nf alpha -> limitb alpha  ->

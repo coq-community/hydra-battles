@@ -24,12 +24,15 @@ Open Scope t1_scope.
 
 (** ** relations  associated with canonical sequences *)
 
+(* begin snippet transitionDefs *)
+
 Definition transition_S i : relation T1 :=
   fun alpha beta =>  alpha <> zero /\ beta = canon alpha (S i).
 
 Definition transition i : relation T1 :=
   match i with 0 => fun _ _ => False | S j => transition_S j end.
-                             
+
+(* end snippet transitionDefs *)                             
 
 Definition bounded_transition (n:nat) alpha beta :=
   exists i:nat, (i <= n)%nat /\ transition_S i alpha beta. 
@@ -51,6 +54,7 @@ associated with   the [canonS i] functions. In module [O2H] we show how pathes a
    Note that only beta can be equal to zero
  *)
 
+(* begin snippet pathDef *)
 
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
   path_to_1 : forall (i:nat) alpha , 
@@ -64,6 +68,8 @@ Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
     path_to beta  (i::s) alpha.
 
 Definition path alpha s beta := path_to beta s alpha.
+
+(* end snippet pathDef *)
 
 (** tries to solve a goal of the form (path_to beta s alpha) *)
 
@@ -837,12 +843,18 @@ Proof with eauto with T1.
            -- now rewrite canon_succ.
 Defined.
 
+(* begin snippet LTPathTo *)
+
 Lemma LT_path_to (alpha beta : T1) :
-  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
+  beta t1< alpha -> {s : list nat | path_to beta s alpha}. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H; destruct (LT_path_toS H) as [s Hs]; exists (shift s);
     now rewrite <- path_toS_path_to.
 Defined.
+(*||*)
+
+(* end snippet LTPathTo *)
 
 (*
 From Coq Require Import Extraction.
@@ -871,14 +883,19 @@ Proof.
   subst; apply canonS_LT; auto.   
 Qed.
 
+(* begin snippet pathToLT *)
+
 Lemma path_to_LT beta s alpha :
-  path_to beta s alpha -> nf alpha -> beta t1< alpha.
+  path_to beta s alpha -> nf alpha -> beta t1< alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H; assert (H0 := path_to_not_In_zero  H).
   rewrite path_to_path_toS_iff in H.
   intro; eapply path_toS_LT; eauto.
   auto.
 Qed.
+(*||*)
+(* end snippet pathToLT *)
 
 
 
