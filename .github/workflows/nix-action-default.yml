@@ -3,10 +3,18 @@ jobs:
     needs: []
     runs-on: ubuntu-latest
     steps:
+    - name: Determine which ref to test
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+        \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
+        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ env.tested_ref }}
     - name: Cachix install
       uses: cachix/install-nix-action@v12
       with:
@@ -40,10 +48,18 @@ jobs:
     - hydra-battles
     runs-on: ubuntu-latest
     steps:
+    - name: Determine which ref to test
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+        \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
+        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ env.tested_ref }}
     - name: Cachix install
       uses: cachix/install-nix-action@v12
       with:
@@ -93,10 +109,18 @@ jobs:
     - hydra-battles
     runs-on: ubuntu-latest
     steps:
+    - name: Determine which ref to test
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+        \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
+        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ env.tested_ref }}
     - name: Cachix install
       uses: cachix/install-nix-action@v12
       with:
@@ -141,10 +165,18 @@ jobs:
     - coq
     runs-on: ubuntu-latest
     steps:
+    - name: Determine which ref to test
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+        \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
+        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ env.tested_ref }}
     - name: Cachix install
       uses: cachix/install-nix-action@v12
       with:
@@ -185,10 +217,18 @@ jobs:
     - coq
     runs-on: ubuntu-latest
     steps:
+    - name: Determine which ref to test
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+        \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
+        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ env.tested_ref }}
     - name: Cachix install
       uses: cachix/install-nix-action@v12
       with:
@@ -247,8 +287,11 @@ jobs:
 name: Nix CI for bundle default
 'on':
   pull_request:
-    branches:
-    - '**'
+    paths:
+    - .github/workflows/**
+  pull_request_target:
+    paths:
+    - '!.github/workflows/**'
   push:
     branches:
     - master
