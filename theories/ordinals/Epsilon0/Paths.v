@@ -165,6 +165,8 @@ Definition KP_arrow n := clos_trans_1n T1 (bounded_transition n).
 
 (** ** Paths with constant index *)
 
+(* begin snippet constPathDef *)
+
 Definition const_pathS i :=
   clos_trans_1n T1 (fun alpha beta => alpha <> zero /\
                                       beta = canon alpha (S i)).
@@ -175,12 +177,15 @@ Definition const_path i alpha beta :=
   | S j => const_pathS j alpha beta
   end.
 
+(* end snippet constPathDef *)
+
+
 Definition const_pathS_eps i := clos_refl _ (const_pathS i).
 
 (** ** standard paths *)
 
 
-(**  standard path from (i, alpha) to (j, beta) *)
+
 
 (* todo : use transition_S in the definition *)
 
@@ -193,15 +198,24 @@ Inductive standard_pathRS (j:nat)( beta : T1):  nat -> T1 -> Prop :=
 
 Definition standard_pathS  i alpha j beta := standard_pathRS j beta i alpha.
 
+(* begin snippet standardPathR *)
+
 Inductive standard_pathR (j:nat)( beta : T1):  nat -> T1 -> Prop :=
-  std_1 : forall i alpha, alpha <> zero ->
-                          beta = canon alpha i -> j = i -> i <> 0 ->
-                          standard_pathR j beta i  alpha
-| std_S : forall i alpha, standard_pathR j beta (S i) (canon alpha i)  ->
-                          standard_pathR j beta i alpha.
+  std_1 : forall i alpha,
+    alpha <> zero ->
+    beta = canon alpha i -> j = i -> i <> 0 ->
+    standard_pathR j beta i  alpha
+| std_S : forall i alpha,
+    standard_pathR j beta (S i) (canon alpha i)  ->
+    standard_pathR j beta i alpha.
 
 
-Definition standard_path  i alpha j beta := standard_pathR j beta i alpha.
+(**  standard path from (i, alpha) to (j, beta) *)
+
+Definition standard_path  i alpha j beta :=
+  standard_pathR j beta i alpha.
+(* end snippet standardPathR *)
+
 
 Lemma path_to_interval_inv_le alpha beta i j :
   path_to beta (interval i j) alpha ->

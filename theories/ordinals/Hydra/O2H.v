@@ -655,7 +655,7 @@ Qed.
 
   (* begin snippet LTToRoundPlus *)
   
-  Theorem LT_to_round_plus alpha beta :
+  Lemma LT_to_round_plus alpha beta :
     beta t1< alpha ->  iota alpha -+-> iota beta. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.

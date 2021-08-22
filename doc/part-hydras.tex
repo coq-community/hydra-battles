@@ -4305,27 +4305,20 @@ We have now proved there exists no bounded variant for the class of free battles
 
 \input{movies/snippets/Epsilon0_Needed_Free/CheckDemo}
 
-
 \section{The case of standard battles}
 \label{sec:standard-intro}\label{std-case}
 One may wonder if our theorem holds also in the framework of standard battles. Unfortunately, its proof relies on the lemma \texttt{LT\_to\_round\_plus} of
 Module~\href{../theories/html/hydras.Hydra.O2H.html}{Hydra.O2H}.
 
-\begin{Coqsrc}
-Lemma LT_to_round_plus alpha beta :
-    beta t1< alpha ->  iota alpha -+-> iota beta.
-\end{Coqsrc}
+\input{movies/snippets/O2H/LTToRoundPlus}
 
 This lemma builds a battle out of any inequality $\beta<\alpha$. 
 It is a straightforward application of \texttt{LT\_path\_to} of
 Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}:
 
-\begin{Coqsrc}
-Lemma LT_path_to (alpha beta : T1) :
-  beta t1< alpha -> {s : list nat | path_to beta s alpha}.
-\end{Coqsrc}
+\input{movies/snippets/Paths/LTPathTo}
 
-The sequence $s$, used to build the sequence of replication factors of the battle depends on 
+The sequence $s$, used to build the sequence of replication factors of the battle, depends on 
 $\beta$, so we cannot be sure that the generated battle is a genuine standard battle.
 
 
@@ -4343,20 +4336,7 @@ In \coq{}, standard paths can be defined as follows.
 \emph{From
 Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
-\begin{Coqsrc}
-(**  standard path from (i, alpha) to (j, beta) *)
-
-Inductive standard_pathR(j:nat)( beta:T1):  nat -> T1 -> Prop :=
-  std_1 : forall i alpha, 
-       beta = canon alpha i -> j = S i ->
-       standard_pathR j beta i  alpha
-| std_S : forall i alpha, 
-      standard_pathR j beta (S i) (canon alpha i)  ->
-      standard_pathR j beta i alpha.
-
-Definition standard_path  i alpha j beta := 
-   standard_pathR j beta i alpha.
-\end{Coqsrc}
+\input{movies/snippets/Paths/standardPathR}
 
 In the mathematical text and figures, we shall use the notation 
 $\alpha \xrightarrow[i,j]{}\beta$ for the proposition 
@@ -4387,17 +4367,7 @@ enjoy nice properties. They are defined as paths where all the $i_j$ are equal t
 
 Like in~\cite{KS81}, we shall use the notation $\alpha \xrightarrow[i]{} \beta$ for denoting such a path, also called an $i$-path.
 
-\begin{Coqsrc}
-Definition const_pathS i :=
-  clos_trans_1n T1 (fun alpha beta => alpha <> zero /\
-                                      beta = canon alpha (S i)).
-
-Definition const_path i alpha beta :=
-  match i with
-    0 => False
-  | S j => const_pathS j alpha beta
-end.
-\end{Coqsrc}
+\input{movies/snippets/Paths/constPathDef}
 
 % Paths with a given index can be effectively computed.
 % Given $i$, $\alpha$ and $l$, the following function returns the ordinal $\beta$ such that there exists a path 
@@ -4442,8 +4412,6 @@ end.
 % = (omega ^ 4 * 4 + omega ^ 3 * 4 + omega ^ 2 + omega * 4 + 4)%pT1
 %      : ppT1
 % \end{Coqanswer}
-
-
 
 
 A most interesting property of $i$-paths is that we can ``upgrade'' their index, as stated by K.\&S.'s Corollary 12.

@@ -33,7 +33,7 @@ Section Impossibility_Proof.
 
   (**  The measure is strictly decreasing along any round *)
 
-  Lemma Lvar : forall h h0 i ,  h <> head -> 
+  Lemma Lvar : forall h h0 i,  h <> head -> 
                                 battle_rel standard i h h0 -> m h0 t1< m h.
   Proof.   
     intros h h0 i H  H1;  apply Var with  i; auto.
@@ -47,7 +47,7 @@ Section Impossibility_Proof.
     induction 2.  
     -  apply Lvar with i; auto. 
     -  destruct (h_eq_dec h'' head).
-       +  rewrite e in H1;  elimtype False.
+       + rewrite e in H1;  elimtype False.
           eapply standard_battle_head; eauto.  
        + apply LT_trans with (m h'');auto.
          apply Lvar with i; auto.
@@ -83,14 +83,12 @@ Section Impossibility_Proof.
   Qed.
 
   Lemma o2iota_1 : forall j beta i alpha,
-      standard_pathR j beta ( S i) alpha ->  nf alpha ->
+      standard_pathR j beta (S i) alpha ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
       battle standard  i (iota alpha) j (iota beta) .
   Proof.
-    intros.    
-    change i with (Nat.pred (S i)).
-    apply o2iota_0; auto.
- auto with arith.
+    intros; change i with (Nat.pred (S i)); apply o2iota_0; trivial. 
+    auto with arith.
   Qed.
   
   Lemma o2iota : forall alpha  ,
