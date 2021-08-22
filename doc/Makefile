@@ -12,6 +12,7 @@ all: hydras.pdf
 hydras.pdf: ${DEP_FILES}
 	@+${MAKE} -C movies all
 	lualatex hydras.tex
+	bibtex hydras
 	lualatex hydras.tex
 	makeindex coq
 	makeindex maths
@@ -19,7 +20,6 @@ hydras.pdf: ${DEP_FILES}
 	makeindex primrec
 	makeindex additions
 	lualatex hydras.tex
-	bibtex hydras
 	lualatex hydras.tex
 
 .PHONY:clean
