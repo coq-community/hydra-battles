@@ -45,9 +45,11 @@ Section Bounded.
     intro H0;  destruct (not_LT_zero H0). 
   Qed.
 
-
-  Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha).
-  Proof.
+  (* begin snippet mGe0 *)
+  
+  Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha). (* .no-out *)
+ (*| .. coq:: none |*)
+ Proof.
     transfinite_induction_lt alpha; 
       clear alpha; intros alpha Hrec H.
     destruct (T1_eq_dec alpha T1.zero).
@@ -58,7 +60,8 @@ Section Bounded.
           { subst ; now destruct n. }
           { eapply strict_lub_lub with (s := fun i => canon alpha (S i)).
             apply canonS_limit_lub; auto. 
-            intro i0.   assert (round_n i0 (iota alpha) (iota (canon alpha (S i0)))). 
+            intro i0;
+              assert (round_n i0 (iota alpha) (iota (canon alpha (S i0)))). 
             {   apply canonS_iota_i;  auto. }
             apply LE_trans with (m (iota (canon alpha (S i0)))); auto.
             { apply Hrec; auto. 
@@ -84,21 +87,20 @@ Section Bounded.
            Unshelve.
            exact 0.
   Qed.
+ (*||*)
+ (* end snippet mGe0 *)
 
+ (* begin snippet mGeGeneric *)
+ (*| .. coq:: no-out |*)
+ 
   Definition big_h := iota mu.
   Definition beta_h := m big_h.
   Definition small_h := iota beta_h.
-
-  
-  
 
   Lemma mu_beta_h : acc_from mu beta_h.
   Proof.
     apply LT_acc_from,  m_bounded. 
   Qed.
-
-  
-  
   
   Corollary m_ge_generic : m big_h t1<= m small_h.
   Proof.      
@@ -106,6 +108,8 @@ Section Bounded.
   Qed.
 
 End Bounded.
+(*||*)
+(* end snippet mGeGeneric *)
 
 
 

@@ -16,6 +16,9 @@ longer
 (** **  Bounded variants *)
 
 Open Scope t1_scope.
+(* begin snippet theContext *)
+
+(*| .. coq:: no-out |*)
 Section Impossibility_Proof.
   
   Context (mu: T1)
@@ -24,22 +27,26 @@ Section Impossibility_Proof.
           (Var : Hvariant  T1_wf free m)
           (Hy : BoundedVariant Var mu).
 
-
-  Local Hint Resolve nf_m : hydra.
   Let big_h := big_h mu.
   Let small_h := small_h mu m.
-  
-  Lemma m_ge : m big_h t1<= m small_h.
+  (*||*)
+  (* end snippet theContext *)
+
+  #[local] Hint Resolve nf_m : hydra.
+
+  (* begin snippet mGe *)
+
+  (*| .. coq:: no-out |*)
+    Lemma m_ge : m big_h t1<= m small_h.
   Proof.
-    eapply m_ge_generic.
-    auto.
-    intros; generalize Var; destruct 1.
+    apply m_ge_generic with (1 := Hy).
+    intros i h h' H; generalize Var; destruct 1.
     apply variant_decr with i. 
-    intro ; subst; now apply (head_no_round_n _  _ H).
+    intro H0; subst; now apply (head_no_round_n _  _ H).
     exists i; apply H.    
   Qed.
-
-
+  (*||*)
+(* end snippet mGe *)
   
   (** ** Proof of the inequality m small_h t1< m big_h 
    *)
@@ -51,17 +58,29 @@ Section Impossibility_Proof.
   Qed.
 
 
+  (* begin snippet bigToSmall *)
 
+  (*| .. coq:: no-out |*)
   Lemma  big_to_small : big_h  -+-> small_h.
   Proof. 
     unfold big_h, small_h. apply LT_to_round_plus; auto.
     unfold beta_h. apply (m_bounded big_h); auto.
   Qed.
+  (*||*)
+  (* end snippet bigToSmall *)
 
+   (* begin snippet mLt *)
+
+  (*| .. coq:: no-out |*)
   Lemma m_lt : m small_h  t1< m big_h.
   Proof. apply m_variant_LT,  big_to_small. Qed.
+  (*||*)
+  (* end snippet mLt *)
   
+  (* begin snippet ImpossibilityFree *)
 
+  (*| .. coq:: no-out |*)
+  
   Fact self_lt_free : m big_h  t1<  m big_h .
   Proof. 
     apply LE_LT_trans with (m small_h).
@@ -74,6 +93,10 @@ Section Impossibility_Proof.
 
 
 End Impossibility_Proof.
+ (*||*)
+(* end snippet ImpossibilityFree *)
 
+(* begin snippet CheckDemo *)
 
-
+Check Impossibility_free.
+(* end snippet CheckDemo *)

@@ -4243,10 +4243,8 @@ the  \texttt{free} and \texttt{standard} kinds of battles. This trick allows to
 
 First, we prove that $m(\iota(\alpha))$ is always greater than or equal to $\alpha$, by  transfinite induction over $\alpha$.
 
-\begin{Coqsrc}
-Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha).
-\end{Coqsrc}
 
+\input{movies/snippets/Epsilon0_Needed_Generic/mGe0}
 
 \begin{itemize}
 \item If $\alpha=0$, the inequality trivially holds
@@ -4264,17 +4262,7 @@ Please note that the impossibility proofs of
 sections~\vref{omega-case} and \vref{omega2-case} contain a similar lemma, also called \texttt{m\_ge}.
 We are now able to build a counter-example.
 
-\begin{Coqsrc}
-  Definition big_h := iota mu.
-  Definition beta_h := m big_h.
-  Definition small_h := iota beta_h.
-\end{Coqsrc}
-  
-From Lemma \texttt{m\_ge\_0} we infer the following inequality :
-
-\begin{Coqsrc}
-    Corollary m_ge_generic : m big_h t1<= m small_h.
- \end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Generic/mGeGeneric}
 
 The (big) rest of the proof is dedicated to prove formally the converse inequality 
 \texttt{m small\_h t1< m big\_h}. 
@@ -4287,69 +4275,35 @@ Let us now consider that $B$ is instantiated to \texttt{free} (which means that 
 The case $B=\texttt{standard}$ is studied in section~\vref{std-case}.
 
 
-
-\begin{Coqsrc}
-Section Impossibility_Proof.
-
-  Context (mu: T1)
-          (Hmu: nf mu)
-          (m : Hydra -> T1)
-          (Var : Hvariant  T1_wf free m)
-          (Hy : BoundedVariant Var mu).
-  \end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Free/theContext}
 
 
 \begin{enumerate}
 \item The following lemma is an application of \texttt{m\_ge\_generic}, since \texttt{free}
 satisfies trivially the hypothesis \texttt{m\_decrease} (see page~\pageref{remark:m-decrease}).
 
-\begin{Coqsrc}
-Lemma m_ge : m big_h t1<= m small_h.
-  Proof.
-    apply m_ge_generic.
-   (* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Free/mGe}
 
-\item From the hypothesis \texttt{m\_bounded}, we have \texttt{m big\_h t1< mu}
-\item By Lemma \texttt{LT\_to\_battle}, we get a (free) battle from
+
+\item From the hypothesis \texttt{Hy}, we have \texttt{m big\_h t1< mu}
+\item By Lemma \texttt{LT\_to\_round\_plus}, we get a (free) battle from
 \texttt{big\_h = iota mu} to \texttt{small\_h = iota (m big\_h)}.
 
-\begin{Coqsrc}
-  Lemma  big_to_small : big_h  -+-> small_h.
-\end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Free/bigToSmall}
+
+
 \item From the hypotheses on $m$, we infer:
-
-\begin{Coqsrc}
-Lemma m_lt : m small_h t1< m big_h.
-\end{Coqsrc}
-
+\input{movies/snippets/Epsilon0_Needed_Free/mLt}
 
 \item From lemmas \texttt{m\_ge} and \texttt{m\_lt}, and the irreflexivity of $<$, we get a contradiction. 
-
-  \begin{Coqsrc}
-Theorem Impossibility_free : False.
-
-End Impossibility_Proof.
-\end{Coqsrc}
-
+\input{movies/snippets/Epsilon0_Needed_Free/ImpossibilityFree}
 
 \end{enumerate}
 
 We have now proved there exists no bounded variant for the class of free battles.
 
- 
-\begin{Coqsrc}
-Check Impossibility_free.
-\end{Coqsrc}
 
-\begin{Coqanswer}
-Impossibility_free
-     : forall (mu : T1) (m : Hydra -> T1) (Var : Hvariant T1_wf free m),
-       BoundedVariant Var mu -> False
-\end{Coqanswer}
-%%% ICI
-  
-
+\input{movies/snippets/Epsilon0_Needed_Free/CheckDemo}
 
 
 \section{The case of standard battles}

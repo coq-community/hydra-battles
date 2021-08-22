@@ -20,7 +20,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Hydra_Definitions.v O2H.v \
 	    Hydra_Theorems.v  Hydra_Examples.v    \
 	    Hydra_Lemmas.v   Hydra_Termination.v    \
-	    Epsilon0_Needed_Generic.v \
+	    Epsilon0_Needed_Generic.v Epsilon0_Needed_Free.v \
 	    BigBattle.v      \
 	    Battle_length.v      \
 	    MorePRExamples.v FibonacciPR.v  isqrt.v       \
