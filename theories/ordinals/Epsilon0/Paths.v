@@ -1355,13 +1355,20 @@ Qed.
 
 (**  Corollary 12 of [KS] *)
 
+(* begin snippet Cor12 *)
+
 Corollary Cor12 (alpha : T1) :  nf alpha ->
                 forall beta i n, beta  t1< alpha  ->
                                  i < n ->
                                  const_pathS i alpha beta ->
-                                 const_pathS n alpha beta.
-Proof.
-  transfinite_induction_lt alpha.
+                                 const_pathS n alpha beta. (* .no-out *)
+
+Proof. (* .no-out *)
+  transfinite_induction_lt alpha. (* .no-out *)
+  (* ... *)
+
+  (* end snippet Cor12 *)
+  
   clear alpha ; intros alpha Hrec Halpha; intros.
   destruct (zero_limit_succ_dec   Halpha).
   -  destruct s.
@@ -1444,12 +1451,16 @@ Proof.
     }
 Qed.
 
+(* begin snippet Cor121 *)
+
 Corollary Cor12_1 (alpha : T1) :
   nf alpha ->
   forall beta i n, beta t1< alpha ->
                    i <= n ->
                    const_pathS i alpha beta ->
-                   const_pathS n alpha beta.
+                   const_pathS n alpha beta. (* .no-out *)
+(* end snippet Cor121 *)
+
 Proof.
   intros H beta i n H0 H1 H2; destruct (Lt.le_lt_or_eq _ _ H1).
   -   eapply Cor12;eauto.
