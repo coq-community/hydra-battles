@@ -22,12 +22,13 @@ def coq_rst_to_latex(source: str) -> str:
     """
     convert coq content to latex (please setup doctutils with register_docutils before)
     (function inspired by `_gen_docutils` in alectryon cli)
-    :param source: source to conver
-    :return:
+    :param source: source to convert
+    :return: Exit code (int) and output (str).
     """
-    from alectryon.docutils import LuaLatexWriter
     from docutils.core import publish_string
-    from alectryon.docutils import RSTCoqParser as Parser
+    from docutils.readers.standalone import Reader
+    from alectryon.cli import _gen_docutils
+    from alectryon.docutils import LuaLatexWriter, RSTCoqParser as Parser
 
     settings_overrides = {
         'traceback': True,
@@ -38,17 +39,15 @@ def coq_rst_to_latex(source: str) -> str:
         'alectryon_vernums': False,
         'input_encoding': 'utf-8',
         'output_encoding': 'utf-8',
+        'exit_status_level': 3,
     }
 
-    parser = Parser()
-    return publish_string(
-        source=source.encode("utf-8"),
-        parser=parser, parser_name=None,
-        writer=LuaLatexWriter(), writer_name=None,
-        settings=None, settings_spec=None,
-        settings_overrides=settings_overrides, config_section=None,
-        enable_exit_status=True).decode("utf-8")
+    output, _pub, exit_code = \
+        _gen_docutils(source, None,
+                      Parser, Reader, LuaLatexWriter,
+                      settings_overrides)
 
+    return exit_code, output
 
 class CoqToLatexReader(Reader):
     DOCUMENT_BEGIN = LATEX_TAG_BEGIN_FORMAT.format(tag="document")
@@ -57,7 +56,7 @@ class CoqToLatexReader(Reader):
     def __init__(self, path_coq: Path):
         with open(path_coq, 'r') as file:
             self.content_coq = file.read()
-        self.content_latex = coq_rst_to_latex(self.content_coq)
+        self.exit_code, self.content_latex = coq_rst_to_latex(self.content_coq)
 
     def __iter__(self):
         start = False
