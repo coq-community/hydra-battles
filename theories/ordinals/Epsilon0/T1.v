@@ -1,3 +1,5 @@
+(*| .. coq:: none |*)
+
 (**  
 
   A type for ordinals terms in Cantor Normal Form
@@ -5,6 +7,7 @@
 After Manolios and Vroon's work on ACL2 
 
 *)
+
 
 From Coq Require Import Arith Max Bool Lia  Compare_dec  Relations Ensembles
      Wellfounded Bool RelationClasses Operators_Properties ArithRing
@@ -38,6 +41,7 @@ This issue is solved later which the help of the predicate [nf]
 
 *)
 
+(*||*)
 (* begin snippet T1Def *)
 
 Inductive T1 : Set  :=
@@ -46,10 +50,12 @@ Inductive T1 : Set  :=
 
 (* end snippet T1Def *)
 
+(*| .. coq:: none |*)
+
 (** Basic functions and predicates on [T1] 
 *)
 
-
+(*||*)
 (* begin snippet finiteOrds *)
 
 Notation one := (ocons zero 0 zero).
@@ -75,6 +81,8 @@ Notation omega := (ocons (ocons zero 0 zero) 0 zero).
 
 (* end snippet omegaDef *)
 
+(*| .. coq:: none |*)
+
 (* begin hide *)
 Lemma FS_rw (n:nat) : FS n = S n.
 Proof. reflexivity. Qed.
@@ -82,7 +90,7 @@ Proof. reflexivity. Qed.
 
 
 (** Successor and limits (syntactic definitions) *)
-
+(*||*)
 (* begin snippet succbLimitb *)
 
 Fixpoint succb alpha :=
@@ -110,13 +118,17 @@ Compute succb omega.
 
 (* end snippet succbLimitb *)
 
+(*| .. coq:: none |*)
 (** Exponential of base [omega] *)
 
+(*||*)
 (* begin snippet phi0Def *)
 
 Notation phi0 alpha := (ocons alpha 0 zero).
 
 (* end snippet phi0Def *)
+
+(*| .. coq:: none |*)
 
 (** multiples of [phi0 alpha]  *)
 
@@ -127,6 +139,7 @@ Definition omega_term (alpha:T1)(k:nat) :=
 (**  omega towers 
 *)
 
+(*||*)
 (* begin snippet towerDef *)
 
 Fixpoint tower (height:nat) : T1 := 
@@ -136,6 +149,8 @@ Fixpoint tower (height:nat) : T1 :=
  end.
 
 (* end snippet towerDef *)
+
+(*| .. coq:: none |*)
 
 (** Additive principal ordinals
  *)
@@ -148,6 +163,7 @@ Inductive ap : T1 -> Prop :=
 (**  **  A linear  strict order on [T1]
  *)
 
+(*||*)
 (* begin snippet compareDef *)
 
 Fixpoint compare (alpha beta:T1):comparison :=
@@ -186,8 +202,11 @@ Proof.  discriminate.  Qed.
 
 (* end snippet ltExamples *)
 
+(*| .. coq:: none |*)
+
 (** ** Properties of [compare] *)
 
+(*||*)
 (* begin snippet compareRev *)
 
 Lemma compare_rev :
@@ -196,7 +215,8 @@ Lemma compare_rev :
 Proof. (* .no-out *)
   induction alpha, beta. (* .unfold -.g#* .g#1 *)
   (* end snippet compareRev *)
-  
+
+  (*| .. coq:: none |*)
   1-3: easy.
   simpl.
   rewrite IHalpha1, Nat.compare_antisym.
@@ -453,7 +473,7 @@ Qed.
 
 
 
-
+(*||*)
 (* begin snippet Instances *)
 
 #[global] Instance t1_strorder: StrictOrder lt. (* .no-out *)
@@ -480,6 +500,8 @@ Qed.
 
 (* end snippet Instances *)
 
+(*| .. coq:: none |*)
+
 Lemma lt_inv_head :
   forall a n b a' n' b',
     lt (ocons a n b) (ocons a' n' b') -> leq lt  a a'.
@@ -501,6 +523,7 @@ Qed.
 Cantor normal form needs the exponents of omega to be
    in strict decreasing order *)
 
+(*||*)
 (* begin snippet nfDef *)
 
 Fixpoint nf_b (alpha : T1) : bool :=
@@ -523,6 +546,7 @@ Example bad_term: T1 := ocons 1 1 (ocons omega 2 zero).
 
 (* end snippet badTerm *)
 
+(*| .. coq:: none |*)
 (** epsilon0 as a set *)
 
 Definition epsilon_0 : Ensemble T1 := nf.
@@ -532,6 +556,7 @@ Definition epsilon_0 : Ensemble T1 := nf.
 
 (** *** Successor *)
 
+(*||*)
 (* begin snippet succDef *)
 
 Fixpoint succ (alpha:T1) : T1 :=
@@ -541,6 +566,8 @@ Fixpoint succ (alpha:T1) : T1 :=
   end.
 
 (* end snippet succDef *)
+
+(*| .. coq:: none |*)
 
 (** *** Predecessor (partial function *)
 
@@ -557,6 +584,7 @@ Fixpoint pred (c:T1) : option T1 :=
 
 (** *** Addition *)
 
+(*||*)
 (* begin snippet plusDef *)
 
 Fixpoint plus (alpha beta : T1) :T1 :=
@@ -574,9 +602,11 @@ where "alpha + beta" := (plus alpha beta) : t1_scope.
 
 (* end snippet plusDef *)
 
+(*| .. coq:: none |*)
 
 (** *** multiplication *)
 
+(*||*)
 (* begin snippet multDef *)
 
 Fixpoint mult (alpha beta : T1) :T1 :=
@@ -593,6 +623,8 @@ Fixpoint mult (alpha beta : T1) :T1 :=
 where "alpha * beta" := (mult alpha beta) : t1_scope.
 
 (* end snippet multDef *)
+
+(*| .. coq:: none |*)
 
 (**  *** Substraction  (used as a helper for exponentiation) *)
 
@@ -1251,6 +1283,7 @@ Reserved Notation "x 't1<=' y 't1<' z" (at level 70, y at next level).
 Reserved Notation "x 't1<' y 't1<' z" (at level 70, y at next level).
 Reserved Notation "x 't1<' y 't1<=' z" (at level 70, y at next level).
 
+(*||*)
 (* begin snippet LTDef *)
 
 Definition LT := restrict nf lt.
@@ -1260,6 +1293,8 @@ Definition LE := restrict nf (leq lt).
 Infix "t1<=" := LE : t1_scope.
 
 (* end snippet LTDef *)
+
+(*| .. coq:: none |*)
 
 Notation "alpha t1< beta t1< gamma" :=
   (LT alpha beta /\ LT beta gamma) : t1_scope.
@@ -1524,7 +1559,7 @@ Module Direct_proof.
       split; intros y (H1, (H2, H3)). destruct (not_lt_zero H2).
     Qed.
 
-
+    (*||*)
     (* begin snippet wfLTBada *)
 
     (*|
@@ -1553,9 +1588,12 @@ Module Direct_proof.
 
     End First_attempt.
 
-   (* end snippet wfLTBadz *)
+    (* end snippet wfLTBadz *)
+
+    (*| .. coq:: none |*)
 
     (** *** Strong accessibility (inspired by Tait's proof) *)
+    (*||*)
     (* begin snippet AccStrongDef *)
     
     Let Acc_strong (alpha:T1) :=
@@ -1563,12 +1601,15 @@ Module Direct_proof.
         nf (ocons alpha n beta) -> Acc LT (ocons alpha  n beta).
     (* end snippet AccStrongDef *)
 
+    (*| .. coq:: none |*)
+
     Remark acc_impl {A} {R: A -> A -> Prop} (a b:A) :
       R a b -> Acc R b -> Acc R a.
     Proof.
       intros H H0; revert a H; now destruct H0.
     Qed.
 
+    (*||*)
     (* begin snippet AccStrongStronger *)
 
     (*|
@@ -1710,7 +1751,9 @@ Module Direct_proof.
          apply nf_inv1 in H; auto.
     Qed.
 
-       (* end snippet nfAcc *)
+    (* end snippet nfAcc *)
+
+    (*| .. coq:: none |*)
 
   End well_foundedness_proof.
 End Direct_proof.
@@ -1721,11 +1764,13 @@ Definition nf_Acc := Direct_proof.nf_Acc.
 Corollary nf_Wf : well_founded_restriction _ nf lt.
 Proof.  red; intros; now apply nf_Acc. Qed.
 
+(*||*)
 (* begin snippet T1Wf *)
 
 Corollary T1_wf : well_founded LT. (* .no-out *)
 (* end snippet T1Wf *)
 
+(*| .. coq:: none |*)
 Proof.
   intros alpha; case_eq(nf_b alpha).
   - intro H; now generalize (nf_Wf H).
@@ -1746,6 +1791,7 @@ Proof.
     intros; apply X0; repeat split;auto. 
 Defined.
 
+(*||*)
 (* begin snippet transfiniteRecursor *)
 
 Definition transfinite_recursor := well_founded_induction_type T1_wf.
@@ -1754,17 +1800,22 @@ Check transfinite_recursor.
 
 (* end snippet transfiniteRecursor *)
 
+(*| .. coq:: none |*)
+
 Import Direct_proof.
 
 Ltac transfinite_induction_lt alpha :=
   pattern alpha; apply transfinite_recursor_lt.
 
+(*||*)
 (* begin snippet transfiniteInduction *)
 
 Ltac transfinite_induction alpha :=
   pattern alpha; apply transfinite_recursor.
 
 (* end snippet transfiniteInduction *)
+
+(*| .. coq:: none |*)
 
 (** **  Properties of successor *)
 
@@ -1802,6 +1853,7 @@ Proof.
    case alpha; now simpl.
 Qed.
 
+(*||*)
 (* begin snippet succIsPlusOne *)
 
 Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1. (* .no-out *)
@@ -1818,10 +1870,12 @@ Proof. (* .no-out *)
 Qed.
 (* end snippet succIsPlusOne *)
 
+(*| .. coq:: none |*)
+
 Lemma succ_of_plus_finite :
   forall alpha (H: nf alpha) (i:nat) , succ (alpha + i) = alpha + S i.
 Proof.
-  induction  alpha; cbn.
+  induction alpha; cbn.
   -  destruct i; reflexivity.
   -  destruct i.
      + simpl.
@@ -1988,6 +2042,7 @@ Proof.
            exact 0.
 Defined.
 
+(*||*)
 (* begin snippet plusNf *)
 
 Lemma plus_nf:
@@ -2015,6 +2070,8 @@ Qed.
 
 (* end snippet plusNf *)
 
+(*| .. coq:: none |*)
+
 Lemma omega_term_plus_rw:
   forall a n b,
     nf (ocons a n b) ->
@@ -2028,7 +2085,7 @@ Proof.
        now apply nf_inv3, compare_gt_iff in H as ->.
 Qed.
 
-
+(*||*)
 (* begin snippet plusIsZero *)
 
 Lemma plus_is_zero alpha beta :
@@ -2036,6 +2093,7 @@ Lemma plus_is_zero alpha beta :
   alpha + beta  = zero -> alpha = zero /\  beta = zero. (* .no-out *)
 (* end snippet plusIsZero *)
 
+(*| .. coq:: none |*)
 Proof.
   destruct alpha, beta.
   - now split.
@@ -2051,7 +2109,7 @@ Proof.
     2-3: easy.
     now destruct (compare beta0 beta) eqn:?.
 Qed.
-
+(*||*)
 (* begin snippet notMono *)
 
 (*|
@@ -2075,7 +2133,7 @@ Qed.
 (*||*)
 (* end snippet notMono *)
 
-
+(*| .. coq:: none |*)
 
 (** ** monotonicity of [succ]  *)
 
@@ -2614,6 +2672,8 @@ Proof.
     + assumption.
 Defined.
 
+(*||*)
+
 (* begin snippet LTOne *)
 
 Lemma LT_one alpha :
@@ -2634,6 +2694,8 @@ Proof. (* .no-out *)
 (*||*)
 Qed.
 (* end snippet LTOne *)
+
+(*| .. coq:: none |*)
 
 Lemma lt_omega_inv :
   forall alpha,
@@ -3561,6 +3623,8 @@ Proof.
   -   exact H0.
 Defined.
 
+(*||*)
+
 (* begin snippet succbIff *)
 
 Lemma succb_iff alpha (Halpha : nf alpha) :
@@ -3581,6 +3645,8 @@ Proof.
 Qed.
 (*||*)
 (* end snippet succbIff *)
+
+(*| .. coq:: none |*)
 
 Lemma LE_r : forall alpha beta, alpha t1< beta -> alpha t1<= beta.
 Proof.
@@ -4023,6 +4089,9 @@ End Proof_of_dist.
 
 
 (**  **  An abstract syntax for ordinals in Cantor normal form *)
+
+(*||*)
+
 (* begin snippet ppT1Def *)
 
 
@@ -4051,6 +4120,7 @@ Check (_omega ^ _omega * 2 + PP_fin 1)%pT1.
 
 (* end snippet ppT1Def *)
 
+(*| .. coq:: none |*)
 
 Fixpoint pp0 (alpha : T1) : ppT1 :=
   match alpha with
@@ -4172,7 +4242,7 @@ Compute pp (3 * (omega * 7 + 15)).
 
 (** * Examples *)
 
-
+(*||*)
 (* begin snippet plusMultExamples *)
 
 (*|
@@ -4195,11 +4265,14 @@ Proof. now compute. Qed.
 (*||*)
 (* end snippet plusMultExamples *)
 
+(*| .. coq:: none |*)
 
 Example Ex5 : limitb (omega ^ (omega + 5)).
 Proof. reflexivity. Qed.
 
 (* Demo *)
+
+(*||*)
 
 (* begin snippet alpha0 *)
 
@@ -4238,6 +4311,7 @@ Compute nf_b bad_term.
 
 (* end snippet nfBadTerm *)
 
+(*||*)
 
 Example alpha_0_eq : alpha_0 = phi0 omega  +
                                phi0 3 * 5 + 2.
