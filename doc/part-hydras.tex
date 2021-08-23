@@ -4418,28 +4418,16 @@ A most interesting property of $i$-paths is that we can ``upgrade'' their index,
 
 \index{maths}{Transfinite induction}
 
-\begin{Coqsrc}
-Corollary Cor12 (alpha : T1) :  nf alpha ->
-         forall beta i n, beta  t1< alpha  ->
-                i < n ->
-                 const_pathS i alpha beta ->
-                 const_pathS n alpha beta.
-Proof.
-  transfinite_induction_lt alpha.
-  (* (long) proof skipped *)
-\end{Coqsrc}
+\emph{From
+  Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
+
+\input{movies/snippets/Paths/Cor12}
+
 
 We  also use a version of \texttt{Cor12} with large inequalities.
 
+\input{movies/snippets/Paths/Cor121}
 
-\begin{Coqsrc}
-Corollary Cor12_1 (alpha : T1) :
-  nf alpha ->
-  forall beta i n, beta t1< alpha ->
-                   i <= n ->
-                   const_pathS i alpha beta ->
-                   const_pathS n alpha beta.
-\end{Coqsrc}
 
 
 \subsubsection{Sketch of proof of \texttt{Cor12}}
