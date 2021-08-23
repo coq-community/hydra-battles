@@ -13,6 +13,7 @@
  *)
 
 
+(*| .. coq:: none |*)
 
 Require Import Canon  MoreLists First_toggle OrdNotations.
 Import Relations Relation_Operators.
@@ -23,7 +24,7 @@ Open Scope t1_scope.
 
 
 (** ** relations  associated with canonical sequences *)
-
+(*||*)
 (* begin snippet transitionDefs *)
 
 Definition transition_S i : relation T1 :=
@@ -33,6 +34,8 @@ Definition transition i : relation T1 :=
   match i with 0 => fun _ _ => False | S j => transition_S j end.
 
 (* end snippet transitionDefs *)                             
+
+(*| ..coq:: none |*)
 
 Definition bounded_transition (n:nat) alpha beta :=
   exists i:nat, (i <= n)%nat /\ transition_S i alpha beta. 
@@ -53,7 +56,7 @@ associated with   the [canonS i] functions. In module [O2H] we show how pathes a
 
    Note that only beta can be equal to zero
  *)
-
+(*||*)
 (* begin snippet pathDef *)
 
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
@@ -70,6 +73,8 @@ Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
 Definition path alpha s beta := path_to beta s alpha.
 
 (* end snippet pathDef *)
+
+(*| .. coq:: none |*)
 
 (** tries to solve a goal of the form (path_to beta s alpha) *)
 
@@ -164,7 +169,7 @@ Definition KP_arrow n := clos_trans_1n T1 (bounded_transition n).
 
 
 (** ** Paths with constant index *)
-
+(*||*)
 (* begin snippet constPathDef *)
 
 Definition const_pathS i :=
@@ -179,6 +184,7 @@ Definition const_path i alpha beta :=
 
 (* end snippet constPathDef *)
 
+(*| .. coq:: none |*)
 
 Definition const_pathS_eps i := clos_refl _ (const_pathS i).
 
@@ -198,9 +204,11 @@ Inductive standard_pathRS (j:nat)( beta : T1):  nat -> T1 -> Prop :=
 
 Definition standard_pathS  i alpha j beta := standard_pathRS j beta i alpha.
 
+(*||*)
 (* begin snippet standardPathR *)
 
-Inductive standard_pathR (j:nat)( beta : T1):  nat -> T1 -> Prop :=
+Inductive standard_pathR (j:nat)( beta : T1)
+  :  nat -> T1 -> Prop :=
   std_1 : forall i alpha,
     alpha <> zero ->
     beta = canon alpha i -> j = i -> i <> 0 ->
@@ -216,6 +224,7 @@ Definition standard_path  i alpha j beta :=
   standard_pathR j beta i alpha.
 (* end snippet standardPathR *)
 
+(*| .. coq:: none |*)
 
 Lemma path_to_interval_inv_le alpha beta i j :
   path_to beta (interval i j) alpha ->
@@ -808,6 +817,10 @@ Lemma gnaw_path_to : forall s alpha , s <> nil -> ~ In 0 s ->
 Qed.
 
 
+(* just for testing latex generation  *)
+Compute (9999+1)%nat.
+
+
 
 (** **  Properties of acc_from  *)
 
@@ -857,6 +870,7 @@ Proof with eauto with T1.
            -- now rewrite canon_succ.
 Defined.
 
+(*||*)
 (* begin snippet LTPathTo *)
 
 Lemma LT_path_to (alpha beta : T1) :
@@ -869,6 +883,8 @@ Defined.
 (*||*)
 
 (* end snippet LTPathTo *)
+
+(*| .. coq:: none |*)
 
 (*
 From Coq Require Import Extraction.
@@ -897,6 +913,7 @@ Proof.
   subst; apply canonS_LT; auto.   
 Qed.
 
+(*||*)
 (* begin snippet pathToLT *)
 
 Lemma path_to_LT beta s alpha :
@@ -911,7 +928,7 @@ Qed.
 (*||*)
 (* end snippet pathToLT *)
 
-
+(*| .. coq:: none |*)
 
 Lemma acc_from_LT (alpha beta : T1) :
   acc_from alpha beta ->  nf alpha ->   beta t1< alpha.
@@ -1346,13 +1363,20 @@ Qed.
 
 (**  Corollary 12 of [KS] *)
 
-Corollary Cor12 (alpha : T1) :  nf alpha ->
-                forall beta i n, beta  t1< alpha  ->
-                                 i < n ->
-                                 const_pathS i alpha beta ->
-                                 const_pathS n alpha beta.
+(*||*)
+(* begin snippet Cor12 *)
+
+(*| .. coq:: no-out |*)
+
+Corollary Cor12 (alpha : T1) :
+  nf alpha ->
+  forall beta i n, beta  t1< alpha  ->
+                   i < n ->
+                   const_pathS i alpha beta ->
+                   const_pathS n alpha beta.
 Proof.
   transfinite_induction_lt alpha.
+  (* ... *) (*| .. coq:: none |*)
   clear alpha ; intros alpha Hrec Halpha; intros.
   destruct (zero_limit_succ_dec   Halpha).
   -  destruct s.
@@ -1434,18 +1458,27 @@ Proof.
          + auto. 
     }
 Qed.
+(*||*)
+(* end snippet Cor12 *)
+
+(* begin snippet Cor121 *)
 
 Corollary Cor12_1 (alpha : T1) :
   nf alpha ->
   forall beta i n, beta t1< alpha ->
                    i <= n ->
                    const_pathS i alpha beta ->
-                   const_pathS n alpha beta.
+                   const_pathS n alpha beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros H beta i n H0 H1 H2; destruct (Lt.le_lt_or_eq _ _ H1).
   -   eapply Cor12;eauto.
   -   now subst.
 Qed.
+(*||*)
+(* end snippet Cor121 *)
+
+(*| .. coq:: none |*)
 
 Corollary Cor12_2 (alpha : T1) : 
     nf alpha ->
@@ -3054,3 +3087,5 @@ Proof.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
+
+(*||*)
