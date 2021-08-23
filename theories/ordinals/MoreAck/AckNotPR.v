@@ -414,7 +414,7 @@ Section Impossibility_Proof.
 
   Hypothesis HAck : isPR 2 Ack.
 
-  Lemma Ack_not_PR : False.
+  Lemma Ack_not_PR : False. (* .no-out *)
   (*|
 .. coq:: no-out
 |*)    

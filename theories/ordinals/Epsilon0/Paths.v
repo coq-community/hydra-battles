@@ -148,12 +148,15 @@ Fixpoint gnaw (alpha : T1) (s: list nat) :=
   end.
 
 
+(* begin snippet standardGnaw *)
 
 Fixpoint standard_gnaw (i:nat)(alpha : T1)(l:nat):  T1  :=
   match l with
   | 0 => alpha
   | S m => standard_gnaw (S i) (canon alpha i) m
   end.
+
+(* end snippet standardGnaw *)
 
 (** alpha ---> beta in KP 
              n
@@ -1269,6 +1272,9 @@ Proof.
   }
 Qed.
 
+(* begin snippet KSThm24 *)
+
+(*| .. coq:: no-out |*)
 Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
    limitb lambda  ->
@@ -1276,7 +1282,8 @@ Theorem KS_thm_2_4 (lambda : T1) :
                const_pathS 0 (canon lambda (S j))
                              (canon lambda (S i)).
 Proof.
-   transfinite_induction lambda.
+  transfinite_induction lambda.
+  (* ... *) (*||*) (*| .. coq:: none |*)
   clear lambda ; intros alpha Hrec Halpha H.
   destruct (zero_limit_succ_dec Halpha).
   - destruct s.
@@ -1341,8 +1348,10 @@ Proof.
          apply  tail_lt_ocons; auto.
          all: intro; subst; discriminate.
   -  destruct s as [beta [H0 H1]]; 
-       subst; destruct (@limitb_succ beta); auto. 
+       subst; destruct (@limitb_succ beta); auto.
+     (*||*)
 Qed.
+(* end snippet KSThm24 *)
 
 (**  Corollary 12 of [KS] *)
 
@@ -1489,11 +1498,17 @@ Qed.
 
 (* Lemma 1, Section 2.6 *)
 
+(* begin snippet Lemma261 *)
+
+(*| .. coq:: no-out |*)
 Lemma Lemma2_6_1 (alpha : T1) :
   nf alpha ->
   forall beta,
     beta t1< alpha  ->
     {n:nat | const_pathS n alpha beta}.
+(*||*)
+(* end snippet Lemma261 *)
+
 Proof.
   transfinite_induction alpha.
   intros x H Hx; destruct (zero_limit_succ_dec Hx).
@@ -2473,10 +2488,13 @@ Proof.
     destruct Halpha as [x e]; exists (S x); simpl; auto.
 Qed.
 
+(* begin snippet standardPathToZero *)
 
 Lemma standard_path_to_zero:
   forall  alpha i, nf alpha -> alpha <> zero  ->
-                   {j: nat | standard_path (S i) alpha j zero}.
+                   {j: nat | standard_path (S i) alpha j zero}. (* .no-out *)
+(* end snippet standardPathToZero *)
+
 Proof.
   intro alpha; transfinite_induction alpha;
     clear alpha; intros alpha Halpha i  H.
@@ -2517,12 +2535,14 @@ Qed.
     We associate to any path  from alpha to beta with a constant index $n+1$ 
     a path from alpha to beta with a sequence of indices n+1, n+2, n+3, ... *)
 
+(* begin snippet ConstantToStandardProof *)
 
 Section Constant_to_standard_Proof.
   Variables (alpha beta: T1) (n : nat).
   Hypotheses (Halpha: nf alpha) (Hpos : zero t1<  beta)
              (p : const_pathS n alpha  beta).
-
+  (* end snippet ConstantToStandardProof *)
+  
   Remark Rem0 : beta  t1< alpha.
   Proof.
     apply const_pathS_LT with n; auto.
@@ -2830,17 +2850,24 @@ Section Constant_to_standard_Proof.
   Proof.
     apply R31_0, gamma_positive.
   Qed.
+
+(* begin snippet constantToStandard0 *)
   
   Lemma constant_to_standard_0 :
-    {l : nat | standard_gnaw (S n) alpha l = beta}.
+    {l : nat | standard_gnaw (S n) alpha l = beta}. (* .no-out *)
+  (*| .. coq:: none |*)
   Proof. exists l; now rewrite R31.  Qed. 
-  
+  (*||*)
 End Constant_to_standard_Proof.
+(* end snippet constantToStandard0 *)
 
+(* begin snippet constantToStandard *)
 
 Lemma  constant_to_standard  (alpha beta : T1) (n : nat):
     nf alpha -> const_pathS n alpha beta ->
-    {l : nat | standard_gnaw (S n) alpha l = beta}.
+    {l : nat | standard_gnaw (S n) alpha l = beta}. (* .no-out *)
+(* end snippet constantToStandard *)
+
 Proof.
   intros  H H0; destruct (T1_eq_dec beta zero).
   - subst beta;  destruct (standard_gnaw_to_zero H (S n)).
@@ -2850,10 +2877,13 @@ Proof.
                  now apply const_pathS_nf with n alpha.
 Qed.
 
+(* begin snippet constantToStandardPath *)
+
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
   nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
-  {j:nat | standard_path (S i) alpha j beta}.
+  {j:nat | standard_path (S i) alpha j beta}. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
    intros H H0 H1;  destruct (T1_eq_dec beta zero).
    - subst; apply standard_path_to_zero; auto.
@@ -2871,12 +2901,16 @@ Proof.
     * discriminate.
     * intro H2; apply standard_gnaw_S_zero in H2; contradiction.
 Qed.
+(*||*)
+(* end snippet constantToStandardPath *)
 
+(* begin snippet LTToStandardPath *)
 
 Corollary  LT_to_standard_path 
       (alpha beta : T1) :
   beta  t1< alpha ->
-  {n : nat & {j:nat | standard_path (S n) alpha j beta}}.
+  {n : nat & {j:nat | standard_path (S n) alpha j beta}}. (* .no-out *)
+(*| .. coq:: none |*) 
 Proof.
   intros H; assert (nf alpha) by eauto with T1.
   destruct (Lemma2_6_1 H0 H) as [n Hn].
@@ -2884,6 +2918,9 @@ Proof.
   apply LE_LT_trans with beta; eauto with T1.
   apply LE_zero; eauto with T1.
 Qed.
+(*||*)
+(* end snippet LTToStandardPath *)
+
 
 Lemma const_path_const_pathS_equiv : forall alpha i beta ,
     const_path (S i) alpha beta <->

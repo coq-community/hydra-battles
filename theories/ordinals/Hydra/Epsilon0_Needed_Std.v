@@ -11,6 +11,8 @@ Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
 
 
 Open Scope t1_scope.
+(* begin snippet theContext *)
+
 Section Impossibility_Proof.
   
   Context (mu: T1)
@@ -20,15 +22,22 @@ Section Impossibility_Proof.
           (Hy : BoundedVariant Var mu).
 
   Let big_h := big_h mu.
-  Let small_h := small_h mu m.   
+  Let small_h := small_h mu m.
 
-  Lemma m_ge : m big_h t1<= m small_h.
+  (* end snippet theContext *)
+
+  (* begin snippet mGe *)
+  
+  Lemma m_ge : m big_h t1<= m small_h. (* .no-out *)
+  (* end snippet mGe *)
+
   Proof.
     unfold big_h, small_h.  eapply m_ge_generic; trivial.   
     intros; eapply variant_decr; eauto.
      intro; subst h; apply (head_no_round_n _ _ H).
   Qed.
 
+  
   (** ** Proof of the inequality m small_h t1< m big_h *)
 
   (**  The measure is strictly decreasing along any round *)
@@ -123,11 +132,15 @@ Section Impossibility_Proof.
   Qed.
   
   (* end hide *)
+
+  (* begin snippet LTToStandardBattle *)
   
   Lemma LT_to_standard_battle :
     forall alpha beta,
       beta t1< alpha ->
-      exists n i,  battle standard   n (iota alpha)  i (iota beta).
+      exists n i,  battle standard n (iota alpha) i (iota beta). (* .no-out *)
+  (* end snippet LTToStandardBattle *)
+  
   Proof.
     intros;  assert (nf beta) by eauto with T1.
     assert (nf alpha) by eauto with T1.
@@ -172,7 +185,10 @@ Section Impossibility_Proof.
       battle  standard n (iota mu) i (iota (beta_h mu m)).
   Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed. 
   
-  Lemma m_lt : m small_h  t1< m big_h.
+  (* begin snippet mLt *)
+  
+  Lemma m_lt : m small_h  t1< m big_h. (* .no-out *)
+  (* end snippet mLt *)
   Proof.
     destruct Rem4 as [x [i H]].
     eapply m_decrease with i x; eauto.
@@ -185,6 +201,10 @@ Section Impossibility_Proof.
   Qed. 
 
   (** End of the proof *)
+
+  (* begin snippet endOfProof *)
+
+  (*| .. coq:: no-out |*)
   
   Fact self_lt_standard : m big_h t1< m big_h.
   Proof. 
@@ -197,8 +217,7 @@ Section Impossibility_Proof.
   Theorem Impossibility_std: False.
   Proof.  apply (LT_irrefl self_lt_standard).  Qed.
 
-  
-
 End Impossibility_Proof.
-
+(*||*)
+ (* end snippet endOfProof *)
 

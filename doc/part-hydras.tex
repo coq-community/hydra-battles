@@ -4449,15 +4449,8 @@ $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
 % Let $\lambda$ be a limit ordinal, then for any pair of indices $0<i<j$, there is a path $\canonseq{\lambda}{j} \xrightarrow[1]{} \canonseq{\lambda}{i}$.    
 %   \end{theorem}
 
-
-\begin{Coqsrc}
-Theorem KS_thm_2_4 (lambda : T1) :
-   nf lambda ->
-   limitb lambda  ->
-   forall i j, (i < j)%nat ->
-               const_pathS 0 (canon lambda (S j))
-                             (canon lambda (S i)).
-\end{Coqsrc}
+\input{movies/snippets/Paths/KSThm24}
+  
 
  We build the following paths :
 
@@ -4502,18 +4495,10 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 \label{lemma:L-2_6-1}
 \index{coq}{Sigma types}
 
-\begin{Coqsrc}
-Lemma Lemma2_6_1 (alpha : T1) :  
-  nf alpha -> forall beta,  beta t1< alpha  ->
-  {n:nat | const_pathS n alpha beta}.
-Proof.
-  transfinite_induction alpha.
-  (* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Paths/Lemma261}
 
 
-
-Intuitively, lemma   \texttt{L2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$, then there exists  a battle from $\iota(\alpha)$ to $\iota(\beta)$ where the replication factor is constant, although large enough. 
+Intuitively, lemma   \texttt{Lemma2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$, then there exists  a battle from $\iota(\alpha)$ to $\iota(\beta)$ where the replication factor is constant, although large enough. 
 
 
 
@@ -4523,22 +4508,11 @@ Intuitively, lemma   \texttt{L2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$,
 
 \subsection{Casting paths with a constant index into a standard path}
 
-%%% traduire la v.f.  (voir %%% A traduire %%%% )
 
 The article~\cite{KS81} contains 
 the following lemma, the proof of which is quite complex, which allows to simulate $i$-paths by $[i+1,j]$-paths, where $j$ is large enough.
 
-
-\begin{Coqsrc}
-(* Lemma 1 page 300 of [KS] *)
-
-Lemma constant_to_standard_path 
-  (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
-  {l:nat | standard_path (S i) alpha j beta}.
-\end{Coqsrc}
-
- 
+\input{movies/snippets/Paths/constantToStandard}
 
 \subsubsection{Sketch of proof of \texttt{constant\_to\_standard\_path}}
 
@@ -4550,50 +4524,22 @@ Our proof follows the proof by Ketonen and Solovay, including its organization a
 Please note that, given an ordinal $\alpha:\texttt{T1}$, and two natural numbers $i$ and $l$, there exists at most a standard path $\alpha \xrightarrow [i,i+l]{*} \beta$.
 The following function computes $\beta$ from $\alpha$, $i$ and $l$.
 
-\begin{Coqsrc}
-Fixpoint standard_gnaw (i:nat)(alpha : T1)(l:nat):  T1  :=
-  match l with
-  | 0 => alpha
-  | S m => standard_gnaw (S i) (canon alpha i) m
-  end.
-\end{Coqsrc}
+\input{movies/snippets/Paths/standardGnaw}
 
-\begin{Coqsrc}
-  Compute standard_gnaw 2 omega 15.
-(*   = zero
-     : T1 *)
-Compute pp (standard_gnaw 2 (omega^omega)  10).
-(*
-= (omega + 7)%pT1
-     : ppT1
-*)
-Compute pp (standard_gnaw 4 (omega^omega)  100).
-(*
- = (omega ^ 3 * 4 + omega ^ 2 * 5 + omega * 3 + 39)%pT1
-     : ppT1 *)
-\end{Coqsrc}
+
 
 \index{maths}{Transfinite induction}
 
 By transfinite induction over  $\alpha$, we prove that the ordinal $0$ is reachable from any ordinal $\alpha<\epsilon_0$ by some standard path.
 
+\input{movies/snippets/Paths/standardPathToZero}
 
-\begin{Coqsrc}
-Lemma standard_path_to_zero :
-  forall  alpha i, nf alpha ->
-                   {j: nat | standard_path (S i) alpha j zero}.
-\end{Coqsrc}
 
 \paragraph*{}
-Noq, let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some $(n+1)$-path from $\alpha$ to $\beta$.
+Now, let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some $(n+1)$-path from $\alpha$ to $\beta$.
 
-\begin{Coqsrc}
- Section Constant_to_standard_Proof.
+\input{movies/snippets/Paths/ConstantToStandardProof}
 
-  Variables (alpha beta: T1) (n : nat).
-  Hypotheses (Halpha: nf alpha) (Hpos : zero t1<  beta)
-             (p : const_pathS n alpha  beta).
-\end{Coqsrc}
 
 Applying \texttt{standard\_path\_to\_zero}, $0$ is reachable from $\alpha$ by some standard path  (see figure~\vref{fig:belle-preuve-1}).
 
@@ -4747,34 +4693,18 @@ $\gamma$ in one single step,  must be greater than or equal to $\beta$, which co
 \end{itemize}
  The only possible case is  thus $\beta=\gamma$, so we have got a standard path  from $\alpha$ to $\beta$.
 
+\input{movies/snippets/Paths/constantToStandard0}
+ 
 
-\begin{Coqsrc}
- Lemma constant_to_standard_0 : 
-    {l : nat | standard_fun (S n) alpha l = beta}.
- (* ... *)
-
-End Constant_to_standard_Proof.
-\end{Coqsrc}
 
 Here is the full statement of the conversion from constant to standard paths.
 
-\begin{Coqsrc}
-Lemma constant_to_standard_path 
-  (alpha beta : T1) (i : nat):
-  nf alpha -> const_pathS i alpha beta -> zero  t1< alpha ->
-  {j:nat | standard_path (S i) alpha j beta}.
-\end{Coqsrc}
-
-
+\input{movies/snippets/Paths/constantToStandardPath}
 
 
 Applying \texttt{Lemma2\_6\_1} and \texttt{constant\_to\_standard\_path}, we get the following corollary.
 
-\begin{Coqsrc}
-Corollary  LT_to_standard_path  (alpha beta : T1) :
-  beta t1< alpha ->
-  {n : nat & {j:nat | standard_path (S n) alpha j beta}}.
-\end{Coqsrc}
+\input{movies/snippets/Paths/LTToStandardPath}
 
 
 \subsection{Back to hydras}
@@ -4797,46 +4727,24 @@ $\iota(\alpha)$ to $\iota(\beta)$, hence the inequality $m(\iota(\beta))<m(\iota
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Epsilon0_Needed_Std.html\#LT_to_standard_battle}{Hydra.Epsilon0\_Needed\_Std}}
 
-\begin{Coqsrc}
-Lemma LT_to_standard_battle :
-    forall alpha beta,
-      beta t1< alpha ->
-      exists n i,  battle standard  n (iota alpha) i (iota beta).
-\end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Std/LTToStandardBattle}
 
 
 Next, please consider the following context:
 
-\begin{Coqsrc}
-Section Impossibility_Proof.
-
-Context (mu: T1)
-          (Hmu: nf mu)
-          (m : Hydra -> T1)
-          (Var : Hvariant  T1_wf standard m)
-          (Hy : BoundedVariant Var mu).
- \end{Coqsrc}
+\input{movies/snippets/Epsilon0_Needed_Std/theContext}
 
 In the same way as for free battles, we import a large inequality 
 from 
 the module \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Epsilon0\_Needed\_Generic}.
 
+\input{movies/snippets/Epsilon0_Needed_Std/mGe}
 
-\begin{Coqsrc}
- Lemma m_ge : m big_h t1<= m small_h.
-\end{Coqsrc}
+
 
 \paragraph*{} If remains to prove the following strict inequality, in order to have a contradiction.
 
-\begin{Coqsrc}
-  Lemma m_lt : m small_h  t1< m big_h.
-
-  Theorem Impossibility_std: False.
-
-End Impossibility_Proof.
-\end{Coqsrc}
-
-
+\input{movies/snippets/Epsilon0_Needed_Std/mLt}
 
 
 \paragraph*{Sketch of proof:} Let us recall that $\texttt{big\_h} = \iota(\mu)$
@@ -4848,6 +4756,8 @@ $\iota(m(\texttt{big\_h}))$,  i.e. from \texttt{big\_h} to \texttt{small\_h}.
 
 Since $m$ is assumed to be a variant for standard battles, we get the inequality  $m(\texttt{small\_h}) < m(\texttt{big\_h})$.
 
+
+\input{movies/snippets/Epsilon0_Needed_Std/endOfProof}
 
 
 
