@@ -5105,26 +5105,14 @@ Correctness of the function \texttt{L\_omega\_mult} is asserted through the foll
 
 By diagonalization, we obtain a simple formula for $L_{\omega^2}$.
 
-\begin{Coqsrc}
-Definition L_omega_square k := iterate (fun z => S (2 * z)%nat)
-                                        k
-                                        (S k).
-
-Lemma L_omega_square_eqn k :
-  (0 < k)%nat ->
-  L_omega_square k = (exp2 k * (k + 2) - 1)%nat.
+\input{movies/snippets/Large_Sets/LOmegaSquare}
+\input{movies/snippets/Large_Sets/LOmegaSquareEqn}
+\input{movies/snippets/Large_Sets/LOmegaSquareOk}
 
 
-Lemma L_omega_square_ok: L_spec (T1.omega * T1.omega) 
-          L_omega_square.
 
-Compute L_omega_square 8.
-\end{Coqsrc}
 
-\begin{Coqanswer}
- = 2559
-     : nat
-\end{Coqanswer}
+
 
 
 %%%% ICI 
@@ -5138,67 +5126,23 @@ $\omega^2\times i\;(i\in\mathbb{N}_1)$, we have to study this sequence.
 To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ as an iterate of $L_{\omega^\alpha}$. Note that in this lemma, we assume that the function associated with $\alpha$ is strictly monotonous and
 greater or equal than the successor function, and prove that $L_{\omega^\alpha\times i}$ satisfies  the same properties.
 
-\begin{Coqsrc}
-Section phi0_mult.
- Variables (alpha : T1) (f : nat -> nat).
- Hypotheses (Halpha : nf alpha)
-            (f_mono : strict_mono f)
-            (f_Sle : S <<= f)
-            (f_ok : L_spec (phi0 alpha) f).
 
- Definition L_phi0_mult i := iterate f i.
+\input{movies/snippets/Large_Sets/phi0Mult}
 
-Lemma L_phi0_mult_ok i: 
-  L_spec (ocons alpha i zero)  (L_phi0_mult (S i)).
+Let us look now
+at the ordinal $\omega^2\times i$, using \texttt{L\_phi0\_mult}.
 
- Lemma L_phi0_mult_smono i: strict_mono (L_phi0_mult i).
-
- Lemma L_phi0_mult_Sle i: S <<=  L_phi0_mult (S i).
-
-End phi0_mult.
-\end{Coqsrc}
-
-Let us look 
-at the ordinal $\omega^2\times i$, using \texttt{L\_phi0\_mult}
-
-\begin{Coqsrc}
- Definition L_omega_square_times i :=  iterate L_omega_square i.
-
- Lemma L_omega_square_times_ok i : 
-    L_spec (ocons 2 i zero) (L_omega_square_times (S i)).
- Proof.
-  apply L_phi0_mult_ok.
-  -  auto with T1.
-  -  apply L_omega_square_Sle.
-  -  apply L_omega_square_ok.
- Qed.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LOmegaSquareTimes}
 
 
-We are now ready to get an exact formula for $L_{\omega^3}$. 
-\begin{Coqsrc}
-Definition L_omega_cube  := L_lim  L_omega_square_times .
+We are now ready to get an exact formula for $L_{\omega^3}$, by diagonalization upon $L_{\omega^2\times i}$.
 
-Lemma L_omega_cube_ok : L_spec (phi0 3) L_omega_cube.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LOmegaCube}
 
-
-The function  $L_{\omega^3}$  is just obtained by diagonalization upon $L_{\omega^2\times i}$.
-
-\begin{Coqsrc}
-Lemma L_omega_cube_eqn i : 
-   L_omega_cube i = L_omega_square_times i (S i).
-Proof. reflexivity. Qed.
-\end{Coqsrc}
 
 Thus, for instance, $L_{\omega^3}(3)=L_{\omega^2\times 4}(3)$.
 
-\begin{Coqsrc}
-Lemma L_omega_cube_3_eq:
-   let N := exp2 95 in
-   let P := (N * 97 - 1)%nat in
-   L_omega_cube 3  =  (exp2 P * (P + 2) - 1)%nat.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LOmegaCube3Eq}
 
 
 This number is quite big. Using \texttt{Ocaml}'s \texttt{float} arithmetic,
@@ -5244,73 +5188,20 @@ To this end, we represent ordinals as inhabitants of the type
 
 \label{Functions:L-alpha}
  \index{hydras}{Library Epsilon0!Functions!L\_@L\_ (final step of a minimal path}
-\begin{Coqsrc}
-From Equations Require Import Equations.
-Require Import ArithRing Lia.
 
-Instance Olt : WellFounded Lt := Lt_wf.
-Hint Resolve Olt : E0.
+\input{movies/snippets/L_alpha/LDef}
+ 
+This definition results in a bunch of automatically generated lemmas. For instance:
 
-(** Using Coq-Equations for building a function which satisfies 
-    Large_sets.L_spec *)
-
-Equations  L_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
-  L_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
-          with Utils.dec (Limitb alpha) :=
-          { | left _ =>  L_ (Canon alpha i)  (S i) ;
-            | right notlimit =>  L_ (Pred alpha) (S i)}}.
-
-Solve All Obligations with auto with E0.
-\end{Coqsrc}
-
-It is worth looking at the answer from \texttt{Equations} and at all the lemmas this plug-in gives you for free. We show here only a part of \coq's answer.
+\input{movies/snippets/L_alpha/AboutLEquation1}
 
 
-\begin{Coqanswer}
-L__obligations_obligation_1 is defined
-L__obligations_obligation_2 is defined
-L__obligations is defined
-L__clause_1 is defined
-L__functional is defined
-L_ is defined
-...
-L__equation_1 is defined
-L__graph_mut is defined
-L__graph_rect is recursively defined
-L__graph_correct is defined
-L__elim has type-checked, generating 1 obligation
-L__elim is defined
-FunctionalElimination_L_ is defined
-FunctionalInduction_L_ is defined
-\end{Coqanswer}
-
-Sometimes, these automatically generated statements may look cryptic. 
-
-\begin{Coqsrc}
-About L__equation_1.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-L__equation_1 :
-forall (alpha : E0) (i : nat),
-L_ alpha i = L__unfold_clause_1 alpha (E0_eq_dec alpha Zero) i
-\end{Coqanswer}
 
 In most cases, it may be useful to write human-readable  paraphrases of these statements.
 
-\begin{Coqsrc}
-Lemma L_zero_eqn : forall i, L_ Zero i = i.
-Proof. intro i; now rewrite L__equation_1. Qed.
+\input{movies/snippets/L_alpha/Paraphrases}
 
-Lemma L_lim_eqn alpha i : Limitb alpha -> L_ alpha i =
-                                        L_ (Canon alpha i) (S i).
 
-Lemma L_succ_eqn alpha i :  L_ (Succ alpha) i = L_  alpha (S i).
-
-Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
-\end{Coqsrc}
 
 Using these three lemmas as rewrite rules, we can prove more properties of the functions \texttt{L\_$\alpha$}.
 
