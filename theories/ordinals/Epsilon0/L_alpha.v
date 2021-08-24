@@ -85,7 +85,10 @@ Qed.
 (*||*)
 (* end snippet Paraphrases *)
 
-Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat.
+(* begin snippet LFiniteOmega *)
+
+Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction i.
   - simpl Fin; intro; now rewrite L_zero_eqn.
@@ -93,8 +96,10 @@ Proof.
     rewrite IHi.
    + abstract lia.
 Qed.
+(*||*)
 
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
+Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro k; rewrite L_lim_eqn.
   - replace (Canon  omega%e0 k) with (Fin k).
@@ -104,6 +109,8 @@ Proof.
        destruct k;  reflexivity.
   - now cbn.
 Qed.
+(*||*)
+(* end snippet LFiniteOmega *)
 
 Lemma L_ge_id alpha : forall i,  i <= L_ alpha i.
 Proof  with auto with E0.
@@ -125,8 +132,11 @@ Proof  with auto with E0.
 Qed.
 
 
-              
-Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
+(* begin snippet LGeS *)
+
+Lemma L_ge_S alpha :
+  alpha <> Zero -> S <<= L_ alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with Lt ...
    clear alpha; intros alpha IHalpha.
@@ -145,8 +155,8 @@ Proof  with auto with E0.
               transitivity (S (S k)); [lia |] ...
               apply IHalpha ...
 Qed.
-
-
+(*||*)
+(* end snippet LGeS *)
 
 Lemma L_succ_ok  beta f :
   nf beta -> S <<= f -> L_spec beta f ->
@@ -214,9 +224,13 @@ Section L_correct_proof.
   
 End L_correct_proof.
 
-Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
-Proof. apply L_ok. Qed.
+(* begin snippet LCorrect *)
 
+Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha). (* .no-out *)
+(*| .. coq:: none |*)
+Proof. apply L_ok. Qed.
+(*||*)
+(* end snippet LCorrect *)
 
 (** Comparison with Hardy's function H  *)
 

@@ -5205,21 +5205,14 @@ In most cases, it may be useful to write human-readable  paraphrases of these st
 
 Using these three lemmas as rewrite rules, we can prove more properties of the functions \texttt{L\_$\alpha$}.
 
-\begin{Coqsrc}
-Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat.  
-(* Proof by induction on i, using L_zero_eqn and L_succ_eqn *)
-
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat.
-(* Proof using L_finite and L_lim_eqn *)
-\end{Coqsrc}
+\input{movies/snippets/L_alpha/LFiniteOmega}
 
 By  well-founded induction on $\alpha$, we prove the following lemmas:
 
-\begin{Coqsrc}
-Lemma L_ge_S alpha : alpha <> Zero -> S <<= L_ alpha.
+\input{movies/snippets/L_alpha/LGeS}
 
-Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
-\end{Coqsrc}
+\input{movies/snippets/L_alpha/LCorrect}
+
 
 Please note that the proof of \texttt{L\_correct} applies the lemmas proven in Sections~\ref{sect:L-spec-zero}, ~\ref{sect:L-spec-succ} and ~\ref{sect:L-spec-lim}.
 Our previous study of \texttt{L\_spec} allowed us to pave the way for the definition by \texttt{Equations} and the correctness proof.
