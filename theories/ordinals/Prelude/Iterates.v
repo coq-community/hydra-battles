@@ -62,24 +62,24 @@ Qed.
 
 (** ** Abstract properties of arithmetic functions *)
 
+(* begin snippet funLeDef *)
+
 Definition strict_mono f := forall n p,  n < p -> f n < f p.
 
 Definition strict_mono1 f := forall n p,  0 < n < p -> f n < f p.
 
 Definition dominates_from n g f  := forall p, n <= p -> f p < g p.
 
-Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
-
-Definition dominates g f := exists n : nat, dominates_from n g f .
-
-Definition fun_le f g  := forall n:nat,  f n <=  g n.
-
-Infix ">>" := dominates (at level 60).
-
-Infix ">>s" := dominates_strong (at level 60).
-
+Definition fun_le f g := forall n:nat, f n <=  g n.
 Infix "<<=" := fun_le (at level 60).
 
+Definition dominates g f := exists n : nat, dominates_from n g f .
+Infix ">>" := dominates (at level 60).
+
+Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
+Infix ">>s" := dominates_strong (at level 60).
+
+(* end snippet funLeDef *)
 
 
 Lemma S_pred_rw (f : nat -> nat) : S <<= f ->

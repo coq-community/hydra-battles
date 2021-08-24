@@ -4855,16 +4855,15 @@ The following function ``gnaws'' an ordinal $\alpha$, following a sequence of in
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Paths.html\#gnaw}{Epsilon0.Paths}}
 
-\begin{Coqsrc}
-Fixpoint gnaw (alpha : T1) (s: list nat) :=
-  match s with
-    | nil => alpha
-    | (0::s') => gnaw  alpha s'
-    | (S i :: s')  =>  gnaw (canon alpha (S i)) s'
-  end.
+\input{movies/snippets/Paths/gnawDef}
 
-Definition large alpha (s:list nat) := gnaw alpha s = zero.
-\end{Coqsrc}
+
+\noindent
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_SetsPaths.html\#gnaw}{Epsilon0.Large\_Sets}}
+
+
+\input{movies/snippets/Large_Sets/largeDef}
+
 
 
 Minimal large sequences can be directly defined in terms of the
@@ -4877,13 +4876,8 @@ predicate \texttt{path\_to} (\vref{sect:path-to-def}) which already prohibits pa
 
 
 \index{hydras}{Library Epsilon0!Predicates!mlarge@mlarge (minimal large sequences)}
-\begin{Coqsrc}
-Definition mlarge alpha (s:list nat) := path_to zero s alpha.
-\end{Coqsrc}
 
-
-
-
+\input{movies/snippets/Large_Sets/largeDef}
 
 
 Let us consider two integers $k$ and $l$, such that $0<k<l$. In order to check whether the interval $[k,l]$ is minimally large for $\alpha$, it is enough to
@@ -4894,35 +4888,27 @@ follow from $\alpha$ the path associated with the interval $[k,l)$ and verify th
 For instance the interval $[6,70]$ leads $\omega^2$ to $\omega\times 2 + 56$. Thus this interval is not $\omega^2$-mlarge.
 
 
-\begin{Coqsrc}
-Compute pp (gnaw (T1.omega * T1.omega) (interval 6 70)).
-\end{Coqsrc}
 
-\begin{Coqanswer}
- = (_omega * 2 + 56)%pT1
-     : ppT1
-\end{Coqanswer}
+\noindent
+\emph{From Module~ \href{../theories/html/hydras.Epsilon0.Large_Sets_Examples.html\#mlarge}{Epsilon0.Large\_Sets\_Examples}}
+
+\input{movies/snippets/Large_Sets_Examples/gnawEx1}
+
+
 
 Let us try another computation.
+\input{movies/snippets/Large_Sets_Examples/gnawEx2}
 
-\begin{Coqsrc}
-Compute (gnaw (T1.omega * T1.omega) (interval 6 700)).
-\end{Coqsrc}
 
-\begin{Coqanswer}
- = zero : T1
-\end{Coqanswer}
 
 We may say that the interval $[6,700]$ is $\omega^2$-large, since it leads to $0$, but nothing assures us that the condition of minimality is satisfied.
 
-The following lemma relates minimal largeness with the function 
+The following lemma relates minimal largeness with the
+function 
 \texttt{gnaw}. 
 
-\begin{Coqsrc}
-Lemma mlarge_iff alpha x (s:list nat) :
-  s <> nil -> ~ In 0 (x::s) ->
-  mlarge alpha (x::s) <-> gnaw alpha (but_last x s) = one.
- \end{Coqsrc}
+\input{movies/snippets/Large_Sets/mlargeIff}
+
 
 
 For instance, we can verify that the interval $[6,510]$ is $\omega^2$-mlarge.
@@ -4930,10 +4916,8 @@ For instance, we can verify that the interval $[6,510]$ is $\omega^2$-mlarge.
 \vspace{4pt}
  \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_Sets_Examples.html}{Epsilon0.Large\_Sets\_Examples}}
-\begin{Coqsrc}
-Example Ex1 : mlarge (T1.omega * T1.omega) (interval 6 510).
-\end{Coqsrc}
 
+\input{movies/snippets/Large_Sets_Examples/Ex1Lemma}
 
 \section{Length of minimal large sequences}
 
@@ -4949,14 +4933,11 @@ Moreover, it is unique:
 \vspace{4pt}
 \noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_Sets.html}{Epsilon0.Large\_Sets}}
-\begin{Coqsrc}
-Lemma mlarge_unicity alpha k l l' : 
-  mlarge alpha (interval (S k) l) ->
-  mlarge alpha (interval (S k) l') ->
-  l = l'.
-\end{Coqsrc}
 
-Thus, it seems obvious that there must exist a function, parameterized by $\alpha$ which associates to any  strictly positive integer $k$ the number $l$ such that
+\input{movies/snippets/Large_Sets/mlargeUnicity}
+
+
+Thus, we would like to define a function, parameterized by $\alpha$ which associates to any  strictly positive integer $k$ the number $l$ such that
 the interval $[k,l]$ is $\alpha$-mlarge. It would be fine to write in \gallina{} a definition like this:
 
 \begin{Coqbad}
@@ -4989,14 +4970,10 @@ $L_\alpha(k)=H_\alpha(k)+1$, for any non-null $\alpha$ and $k$.
 
 Our specification of the function \texttt{L} is as follows:
 
-\begin{Coqsrc}
-Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
-| L_spec0 : forall f, (forall k, f k = k) ->  L_spec zero f
-| L_spec1 : forall alpha f,
-    alpha <> zero ->
-    (forall k, mlarge alpha (interval (S k) (Nat.pred (f (S k))))) ->
-    L_spec alpha f.
-\end{Coqsrc}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_Sets.html}{Epsilon0.Large\_Sets}}
+
+\input{movies/snippets/Large_Sets/LSpecDef}
+
 
 \begin{todo}
  Check if the functions $L_\alpha$ are the same as
@@ -5007,10 +4984,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
 Note that, for $\alpha\not=0$, the value of $f(0)$ is not specified.
 Nevertheless, the restriction of $f$ to the set of strictly positive integers is unique (up to extensionality).
 
-\begin{Coqsrc}
-Lemma L_spec_unicity alpha f g :
-  L_spec alpha f -> L_spec alpha g -> forall k, f (S k) = g (S k).
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LSpecUnicity}
 
 
 \subsection{Abstract properties}
@@ -5021,6 +4995,7 @@ Let us now prove properties of any function $f$ (if any) which satisfies
 \texttt{L\_spec}. We are looking for properties which could be used for writing \emph{equations} and prove the correctness of the function generated by the \texttt{coq-equations} plug-in. Moreover, they will give us some examples (for small values of $\alpha$).
 
 
+
 Our exploration of the $L_\alpha$\,s  follows the usual scheme : transfinite induction, and proof-by-cases : zero, successors and limit ordinals.
 
 \index{maths}{Transfinite induction}
@@ -5029,9 +5004,8 @@ Our exploration of the $L_\alpha$\,s  follows the usual scheme : transfinite ind
 \label{sect:L-spec-zero}
 The base case is directly a consequence of the specification.
 
-\begin{Coqsrc}
-Lemma L_zero_inv f : L_spec zero f -> forall k, f (S k) = S k.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LZeroInv}
+
 
 \subsubsection{Successor ordinals}
 \label{sect:L-spec-succ}
@@ -5045,36 +5019,22 @@ $\{k+1\}$ and the interval $[k+2, f(k+2)-1]$.
 So, the function $\lambda\,k.\,f(k+1)$ satisfies the specification $\texttt{L\_spec}\,\beta$.
 
 
-Note that our decomposition of intervals works only if the intervals we consider are not empty. In order to ensure this property, we assume that $f\;k$ is always greater than $k$, which we note \texttt{S <<= f}, or \texttt{(fun\_le S f)} (defined 
-in~\href{../theories/html/hydras.Prelude.Iterates.html\#fun_le}{Prelude.Iterates}).
+Note that our decomposition of intervals works only if the intervals we consider are not empty. In order to ensure this property, we assume that $f\;k$ is always greater than $k$, which we note \texttt{S <<= f}, or \texttt{(fun\_le S f)}.
 
-\begin{Coqsrc}
-Definition fun_le f g  := forall n:nat, f n <=  g n.
-Infix "<<=" := fun_le (at level 60).
-\end{Coqsrc}
+Useful abstract properties of arithmetic functions are
+defined 
+in~\href{../theories/html/hydras.Prelude.Iterates.html\#fun_le}{Prelude.Iterates}.
 
-It looks also natural to show that the functions we consider are strictly monotonous. The section on successor ordinals has thus the following structure.
+\label{sect:abstract-arith-prop}
 
-\begin{Coqsrc}
-Section succ.
-   Variables (beta : T1) (f : nat -> nat).
+\input{movies/snippets/Iterates/funLeDef}
 
-   Hypotheses (Hbeta : nf beta)
-              (f_mono : strict_mono f)
-              (f_Sle : S <<= f)
-              (f_ok : L_spec beta f).
+We prove also that the functions we consider are strictly monotonous. The section on successor ordinals has the following structure.
 
-   Definition L_succ := fun k => f (S k).
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.Large_Sets.html}{Epsilon0.Large\_Sets}}
 
-   Lemma L_succ_mono : strict_mono L_succ.
+\input{movies/snippets/Large_Sets/SectionSucc}
 
-   Lemma L_succ_Sle : S <<= L_succ.
-  
-   Lemma L_succ_ok : L_spec (succ beta) L_succ.
-     
-End succ.
-
-\end{Coqsrc}
 
 \subsubsection{Limit ordinals}
 \label{sect:L-spec-lim}
@@ -5082,20 +5042,8 @@ End succ.
 Let $\lambda<\epsilon_0$ be any limit ordinal. In a similar way as for successors, we decompose any path from $\lambda$  into a first step to
 $\canonseq{\lambda}{k}$, followed by a path to $0$. In the following section, we assume that there exists a correct function computing  $L_{\canonseq{\lambda}{k}}$ for any strictly positive $k$.
 
-\begin{Coqsrc}
-Section lim.
-  Variables (lambda : T1)
-            (Hnf : nf lambda)
-            (Hlim : limitb lambda)
-            (f : nat -> nat -> nat)
-            (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
-  
-  Let L_lim k := f k (S k).
+\input{movies/snippets/Large_Sets/SectionLim}
 
-  Lemma L_lim_ok : L_spec lambda L_lim.
-  
-End lim.
-\end{Coqsrc}
 
 \subsection{First results}
 
@@ -5107,11 +5055,9 @@ we obtain a few  correct implementations of \texttt{(L\_spec $\alpha$)} for smal
 By iterating the functional \texttt{L\_succ}, we get a realization of
 \texttt{(L\_spec (fin $i$))} for any natural number $i$. 
 
-\begin{Coqsrc}
-Definition L_fin i := fun k => (i + k)%nat.
-
-Lemma L_fin_ok i : L_spec (fin i) (L_fin i).
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LFinDef}
+\vspace{-16pt}
+\input{movies/snippets/Large_Sets/LFinOk}
 
 \subsubsection{The first limit ordinal  \texorpdfstring{$\omega$}{omega}}
 
@@ -5119,11 +5065,9 @@ The lemmas \texttt{L\_fin\_ok} and \texttt{L\_lim\_ok}   allow us to get
 by diagonalization a correct implementation for 
 \texttt{L\_spec omega}.
 
-\begin{Coqsrc}
-Definition L_omega k := S (2 * k)%nat.
-
-Lemma L_omega_ok : L_spec T1.omega L_omega.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LOmegaDef}
+\vspace{-16pt}
+\input{movies/snippets/Large_Sets/LOmegaOk}
 
 \subsubsection{Towards  \texorpdfstring{$\omega^2$}{omega*omega}}
 
@@ -5134,11 +5078,7 @@ our lemma on limits.
 The following lemma establishes a path from $\omega\times ( i+1)$ to
 $\omega \times i$.
 
-\begin{Coqsrc}
-Lemma path_to_omega_mult (i k:nat) :
-path_to (T1.omega * i) (interval (S k) (2 * (S k)))
-            (T1.omega * (S i)).
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/pathToOmegaMult}
 
 Let us consider a path from  $\omega\times(i+1)$ to $0$ starting at $k+1$.
 A first ``big step'' will lead to $\omega\times i$ at $2(k+1)$. If $i>0$, the
@@ -5146,45 +5086,21 @@ next jump leads to $\omega\times(i-1)$ at $2(2(k+1))+1$, etc.
 
 The following lemma expresses the length of the mlarge sequences associated with the finite multiples of $\omega$.
 
+\input{movies/snippets/Large_Sets/omegaMultMlarge0}
 
-\begin{Coqsrc}
-Lemma omega_mult_mlarge_0 i  : forall k,
-    mlarge  (T1.omega * (S i))
-            (interval (S k)
-                      (Nat.pred (iterate (fun p =>  S (2 * p)%nat)
-                                         (S i)
-                                         (S k)))).
-\end{Coqsrc}
-
-Thus, we infer the following result:
 
 \emph{From Module~ \href{../theories/html/hydras.Epsilon0.Large_Sets.html\#L_omega_mult}{Epsilon0.Large\_Sets}}
 
-\begin{Coqsrc}
-Definition L_omega_mult i (x:nat) :=  iterate L_omega i x.
-
-Lemma L_omega_mult_ok (i: nat) :  L_spec (T1.omega * i) (L_omega_mult i).
-\end{Coqsrc}
-
-For instance, let us consider the ordinal $\omega\times 8$, and a sequence 
-starting at $k=5$.
-
-\begin{Coqsrc}
-Compute L_omega_mult 8 5.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= 1535
-     : nat
-\end{Coqanswer}
+\input{movies/snippets/Large_Sets/LOmegaMultDef}
 
 More generally, we prove the equality $L_{\omega\times i}(k)=2^i\times(k+1)-1$.
 
-\begin{Coqsrc}
-Lemma L_omega_mult_eqn (i : nat) :
-  forall (k : nat),  (0 < k)%nat  ->
-                     L_omega_mult i k = (exp2 i * S k - 1)%nat.
-\end{Coqsrc}
+\input{movies/snippets/Large_Sets/LOmegaMultEqn}
+
+
+Correctness of the function \texttt{L\_omega\_mult} is asserted through the following lemma.
+
+\input{movies/snippets/Large_Sets/LOmegaMultOk}
 
 
 By diagonalization, we obtain a simple formula for $L_{\omega^2}$.
@@ -5798,41 +5714,16 @@ On the contrary, the functions of the $H'$ hierarchy have the following five pro
 $H'_\beta(n)\leq H'_\alpha(n)$.
 \end{itemize}
 
-These properties are defined in \coq{} in the library
-~\href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}.
 
 \index{maths}{Abstract properties of arithmetic functions}
 \index{hydras}{Abstract properties of arithmetic functions}
 
-\begin{Coqsrc}
-(** ** Abstract properties of arithmetic functions *)
-
-Definition strict_mono f := forall n p,  n < p -> f n < f p.
-
-Definition strict_mono1 f := forall n p,  0 < n < p -> f n < f p.
-
-Definition dominates_from n g f  := forall p, n <= p -> f p < g p.
-
-Definition dominates_strong g f  := {i : nat | dominates_from i g f}.
-
-Definition dominates g f := exists i : nat, dominates_from i g f .
-
-Definition fun_le f g  := forall n:nat,  f n <= g n.
-
-Infix ">>" := dominates (at level 60).
-
-Infix ">>s" := dominates_strong (at level 60).
-
-Infix "<<=" := fun_le (at level 60).
-\end{Coqsrc}
 
 \index{maths}{Transfinite induction}
 
 In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  proof by transfinite induction on $\alpha$ of the conjunction of the five properties.
 For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and 
-$\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially. 
-
-
+$\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially, using the abstract properties defined in Sect~\vref{sect:abstract-arith-prop}
 
 
 \begin{Coqsrc}
