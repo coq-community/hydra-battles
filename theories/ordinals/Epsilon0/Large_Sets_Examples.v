@@ -40,21 +40,34 @@ Definition large_set_check alpha i j :=
      |  _ => Remaining (pp (canon beta j))
      end.
 
+(* begin snippet gnawEx1 *)
+
 Compute pp (gnaw (T1.omega * T1.omega) (interval 6 70)).
 
+(* end snippet gnawEx1 *)
+
+(* begin snippet gnawEx2 *)
+
 Compute  (gnaw (T1.omega * T1.omega) (interval 6 700)).
+
+(* end snippet gnawEx2 *)
+
 
 Compute pp (  gnaw (T1.omega * T1.omega) (interval 6 509)).
 
 Global Hint Resolve iota_from_lt_not_In: core.
 
+(* begin snippet Ex1Lemma *)
+
+(*| .. coq:: no-out |*)
 Example Ex1 : mlarge (T1.omega * T1.omega) (interval 6 510).
 Proof with try (auto with arith || discriminate ).
   unfold interval; simpl Peano.minus. 
   do 2 rewrite iota_from_unroll; rewrite mlarge_iff  ... 
   repeat rewrite not_in_cons ...  
 Qed.  
-
+(*||*)
+(* end snippet Ex1Lemma *)
 
 Compute large_set_check T1.omega 1 2.
 

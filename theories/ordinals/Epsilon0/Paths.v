@@ -140,6 +140,8 @@ Fixpoint gnawS (alpha : T1) (s: list nat) :=
     | (i::s') => gnawS (canon alpha (S i)) s'
   end.
 
+(* begin snippet gnawDef *)
+
 Fixpoint gnaw (alpha : T1) (s: list nat) :=
   match  s with
     | nil => alpha
@@ -147,6 +149,7 @@ Fixpoint gnaw (alpha : T1) (s: list nat) :=
     | (S i :: s')  =>  gnaw (canon alpha (S i)) s'
   end.
 
+(* end snippet gnawDef *)
 
 (* begin snippet standardGnaw *)
 
@@ -2551,7 +2554,7 @@ Qed.
 Section Constant_to_standard_Proof.
   Variables (alpha beta: T1) (n : nat).
   Hypotheses (Halpha: nf alpha) (Hpos : zero t1<  beta)
-             (p : const_pathS n alpha  beta).
+             (Hpa : const_pathS n alpha  beta).
   (* end snippet ConstantToStandardProof *)
   
   Remark Rem0 : beta  t1< alpha.
@@ -2565,7 +2568,7 @@ Section Constant_to_standard_Proof.
                     gamma t1<  alpha}}.
   Proof.
     destruct (standard_path_to_zero n Halpha).
-   -  intro; subst; destruct (const_pathS_zero p).  
+   -  intro; subst; destruct (const_pathS_zero Hpa).  
    -  exists x, zero; split;auto.
       apply LT_trans with beta;auto.
       eapply   const_pathS_LT; eauto.
@@ -2607,7 +2610,7 @@ Section Constant_to_standard_Proof.
     unfold le_b, lt_b.
     eenough (T1.compare alpha beta = Datatypes.Gt) as -> by auto.
     apply compare_gt_iff.
-    generalize (const_pathS_LT Halpha p).
+    generalize (const_pathS_LT Halpha Hpa).
     destruct 1; tauto.
   Qed. 
 

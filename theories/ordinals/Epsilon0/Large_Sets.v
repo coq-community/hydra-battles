@@ -17,8 +17,11 @@ Open Scope t1_scope.
 
 
 (** ** minimal large sequences *)
+(* begin snippet mlargeDef *)
 
 Definition mlarge alpha (s: list nat) := path_to zero s alpha.
+
+(* end snippet mlargeDef *)
 
 Definition mlargeS alpha s := path_toS zero s alpha.
 
@@ -27,16 +30,18 @@ Definition mlargeS alpha s := path_toS zero s alpha.
 
 (** TODO : compare with K & S's H_alpha (p. 297) *)
 
+(* begin snippet LSpecDef *)
 
 Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
   L_spec0 :
     forall f, (forall k, f (S k) = S k) ->  L_spec zero f
 | L_spec1 : forall alpha f,
     alpha <> zero ->
-    (forall k, mlarge alpha (interval (S k) (Nat.pred (f (S k))))) ->
+    (forall k,
+        mlarge alpha (interval (S k)(Nat.pred (f (S k))))) ->
     L_spec alpha f.
 
-
+(* end snippet LSpecDef *)
 
 
 (** Test functions 
@@ -98,10 +103,13 @@ Qed.
 
 (** ** Properties of m-largeness and L-functions *)
 
+(* begin snippet mlargeUnicity *)
+
 Lemma mlarge_unicity alpha k l l' : 
   mlarge alpha (interval (S k) l) ->
   mlarge alpha (interval (S k) l') ->
-  l = l'.
+  l = l'. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros H H0; assert (H1 : (S k<= l)%nat) by
       (eapply path_to_interval_inv_le; eauto).
@@ -136,7 +144,8 @@ Proof.
       { apply path_to_gnaw in H0; apply path_to_gnaw in H3; congruence. }
       subst; destruct (path_to_zero H4).
 Qed.
-
+(*||*)
+(* end snippet mlargeUnicity *)
 
 Lemma mlargeS_iff alpha x s : s <>nil ->
                               mlargeS alpha (x::s) <->
@@ -162,10 +171,12 @@ Proof.
     now split.
 Qed.
 
+(* begin snippet mlargeIff *)
 
 Lemma mlarge_iff alpha x (s:list nat) :
   s <> nil -> ~ In 0 (x::s) ->
-  mlarge alpha (x::s) <-> gnaw alpha (but_last x s) = one.
+  mlarge alpha (x::s) <-> gnaw alpha (but_last x s) = one. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros H H0; split.
   - intros H1; rewrite mlarge_unshift in H1; auto.
@@ -182,15 +193,11 @@ Proof.
        simpl; rewrite mlargeS_iff;  auto.
        apply unshift_not_nil; intro; apply H0; now right.
 Qed.
-
-
-
-
-
+(*||*)
+(* end snippet mlargeIff *)
 
 
 (** ** About the length of mlarge intervals *)
-
 
 Lemma L_spec_inv2 alpha f :
   L_spec alpha f -> alpha <> zero ->
@@ -212,11 +219,14 @@ Qed.
 (** ** Properties of [L_spec]
 
 *)
+(* begin snippet LZeroInv *)
 
-Lemma L_zero_inv f : L_spec zero f -> forall k, f (S k) = S k.
+Lemma L_zero_inv f : L_spec zero f -> forall k, f (S k) = S k. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   inversion_clear 1; [auto | now destruct H0]. 
 Qed.
+(*||*) (* end snippet LZeroInv *)
 
 Lemma L_pos_inv alpha  f : alpha <> zero -> L_spec alpha f ->
                         forall k, (S k < f (S k))%nat.
@@ -228,9 +238,12 @@ Proof.
     rewrite interval_not_empty_iff in H2; abstract lia.
 Qed.
 
+(* begin snippet LSpecUnicity *)
+
 Lemma L_spec_unicity alpha f g :
   L_spec alpha f -> L_spec alpha g ->
-  forall k, f (S k) = g (S k).
+  forall k, f (S k) = g (S k). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   inversion 1.
   - subst; inversion 1.
@@ -244,10 +257,15 @@ Proof.
        assert (S k < g (S k))%nat by (eapply L_pos_inv; eauto).
      abstract lia.
 Qed.
+(*||*)
+(* end snippet LSpecUnicity *)
 
 
 (** Composition lemmas for computing [L_ alpha] *)
 
+(* begin snippet SectionSucc *)
+
+(*| .. coq:: no-out |*)
 Section succ.
    Variables (beta : T1) (f : nat -> nat).
 
@@ -259,17 +277,24 @@ Section succ.
 
    Definition L_succ := fun k => f (S k).
 
-   Lemma L_succ_mono : strict_mono L_succ.
+   (*||*)
+   
+   Lemma L_succ_mono : strict_mono L_succ. (* .no-out *)
+   (*| .. coq:: none |*)
    Proof.
     intros x y Hxy; unfold L_succ; apply f_mono; abstract lia.
    Qed.
+   (*||*)
 
-   Lemma L_succ_Sle : S <<= L_succ.
+   Lemma L_succ_Sle : S <<= L_succ. (* .no-out *)
+    (*| .. coq:: none |*)
    Proof.
      intro k; unfold L_succ; specialize (f_Sle (S k)); abstract lia.
    Qed.
-
-   Lemma L_succ_ok : L_spec (succ beta) L_succ.
+   (*||*)
+   
+   Lemma L_succ_ok : L_spec (succ beta) L_succ. (* .no-out *)
+   (*| .. coq:: none |*)
    Proof.
      inversion_clear f_ok.
      - unfold L_succ; right.
@@ -293,10 +318,13 @@ Section succ.
         --  apply  Nat.lt_le_pred.
             generalize (f_Sle  (S (S k))); abstract lia.
    Qed.
-   
+   (*||*)
 End succ.
+(* end snippet SectionSucc *)
 
+(* begin snippet SectionLim *)
 
+(*| .. coq:: no-out |*)
 
 Section lim.
   Variables (lambda : T1)
@@ -306,13 +334,16 @@ Section lim.
             (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
   
   Remark canon_not_null : forall k,  canon lambda (S k) <> zero.
+  (*| .. coq:: none |*)
   Proof.
    intro; apply limitb_canonS_not_zero; auto.  
   Qed.
-
+  (*||*)
+  
   Definition  L_lim k := f k (S k).
 
-  Lemma L_lim_ok : L_spec lambda L_lim.
+  Lemma L_lim_ok : L_spec lambda L_lim. (* .no-out *)
+  (*| .. coq:: none |*)
   Proof.
     right.
     - apply limitb_not_zero; auto.
@@ -329,14 +360,18 @@ Section lim.
      *  specialize (L_pos_inv (canon lambda (S k)) (f (S k))
                               (canon_not_null k) (H k) (S k));  abstract lia.       
   Qed.
+  (*||*)
   
 End lim.
-
+(* end snippet SectionLim *)
 
 (** ** Finite ordinals *)
 
+(* begin snippet LFinDef *)
 
 Definition L_fin i := fun k => (i + k)%nat.
+(* end snippet LFinDef *)
+
 
 Lemma L_finS_S_le i : S <<= L_fin (S i).
 Proof.
@@ -352,10 +387,13 @@ Lemma L_S_succ_rw i : forall k,  L_fin (S i) k = L_succ (L_fin i) k.
 Proof. unfold L_succ, L_fin; intros; abstract lia.
 Qed.
 
+(* begin snippet LFinOk *)
 
-Lemma L_fin_ok i : L_spec (fin i) (L_fin i).
-Proof.
-  induction i.  
+Lemma L_fin_ok i : L_spec (fin i) (L_fin i). (* .no-out *)
+Proof. (* .no-out *)
+  induction i.
+  (* ... *) (* .no-out *)
+  (*| .. coq:: none |*)
   - left; reflexivity.
   -  apply L_spec_compat with (L_succ (L_fin i)).
      change (fin (S i)) with (FS i); rewrite <- succ_compat.
@@ -369,8 +407,9 @@ Proof.
      + apply L_succ_ok; auto with T1.
        apply  L_finS_S_le.
      + intros ; unfold L_fin, L_succ; abstract lia.
+       (*||*)
   Qed.
-
+(* end snippet LFinOk *)
 
 Lemma mlarge_FS :
   forall i k,  mlarge (FS i) (interval (S k) (S (i+k)%nat)). 
@@ -383,8 +422,11 @@ Proof.
    replace (Nat.pred (S i + S k))%nat with  (S (i + k))%nat in H2; auto;abstract lia.
 Qed.
 
+(* begin snippet LOmegaDef *)
 
 Definition L_omega k := S (2 * k)%nat.
+
+(* end snippet LOmegaDef *)
 
 Lemma L_omega_Sle : S <<= L_omega.
 Proof.
@@ -408,18 +450,26 @@ Proof.
   now replace ( (2 * S k))%nat with   (k + S (S k))%nat by lia.
 Qed.
 
+(* begin snippet LOmegaOk *)
+
+(*| .. coq:: no-out |*)
 Lemma L_omega_ok : L_spec T1.omega L_omega.
 Proof.
   specialize (L_lim_ok T1.omega nf_omega refl_equal L_fin
                        (fun i => L_fin_ok (S i))) ; intro H.
    eapply L_spec_compat with (1:=H).
-   intro ; unfold L_lim,  L_fin, L_omega; abstract lia.
+   intro ; unfold L_lim, L_fin, L_omega; abstract lia.
 Qed.
+(*||*)
+(* end snippet LOmegaOk *)
+
+(* begin snippet pathToOmegaMult *)
 
 Lemma path_to_omega_mult (i k:nat) :
   path_to (T1.omega * i)
           (interval (S k) (2 * (S k))%nat)
-          (T1.omega * (S i)).
+          (T1.omega * (S i)). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   destruct i.
   - simpl; apply mlarge_omega.
@@ -435,14 +485,18 @@ Proof.
          split; [ discriminate | reflexivity].
          abstract lia.
 Qed.
+(*||*)
+(* end snippet pathToOmegaMult *)
 
+(* begin snippet omegaMultMlarge0 *)
 
 Lemma omega_mult_mlarge_0 i  : forall k,
     mlarge  (T1.omega * (S i))
             (interval (S k)
                       (Nat.pred (iterate (fun p =>  S (2 * p)%nat)
                                          (S i)
-                                         (S k)))).
+                                         (S k)))). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   unfold mlarge; induction i.
   - simpl; intro k;
@@ -458,9 +512,16 @@ Proof.
         --  eapply IHi.
         --  apply Nat.pred_le_mono;  apply iterate_le_n_Sn; abstract lia.
 Qed.
+(*||*)
+(* end snippet omegaMultMlarge0 *)
 
+(* begin snippet LOmegaMultDef *)
 
 Definition L_omega_mult i (x:nat) :=  iterate L_omega i x.
+
+Compute L_omega_mult 8 5.
+
+(* end snippet LOmegaMultDef *)
 
 
 Example Ex : L_omega_mult 8 5 = 1535.
@@ -472,9 +533,11 @@ Proof.
 Qed.
 
 
+(* begin snippet LOmegaMultOk *)
 
 Lemma L_omega_mult_ok (i: nat) :
-  L_spec (T1.omega * i) (L_omega_mult i).
+  L_spec (T1.omega * i) (L_omega_mult i). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
  destruct i.
  - left;  intro k. reflexivity. 
@@ -482,11 +545,18 @@ Proof.
    + cbn; discriminate.
    + intros k; unfold L_omega_mult, L_omega;
        apply omega_mult_mlarge_0.
- Qed.
+Qed.
+(*||*)
+
+(* end snippet LOmegaMultOk *)
+
+(* begin snippet LOmegaMultEqn *)
 
 Lemma L_omega_mult_eqn (i : nat) :
-  forall (k : nat),  (0 < k)%nat  ->
-                     L_omega_mult i k = (exp2 i * S k - 1)%nat.
+  forall (k : nat),
+    (0 < k)%nat  ->
+    L_omega_mult i k = (exp2 i * S k - 1)%nat. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction i.
   - unfold L_omega_mult; simpl; intro; abstract lia.
@@ -495,7 +565,8 @@ Proof.
     repeat   rewrite Nat.mul_succ_r;  ring_simplify.
     generalize (exp2_ge_S i); intro; abstract lia.
 Qed.
-
+(*||*)
+(* end snippet LOmegaMultEqn *)
 
 
 (** ** [omega * omega]  *)
@@ -710,14 +781,16 @@ Note : Some names of lemmas and theorem like [Theorem_4_5] or
 
 (** ** large sequences (as in KS ) (may contain zeros) *)
 
+(* begin snippet largeDef *)
+
 Definition largeb (alpha : T1) (s: list nat) :=
   match (gnaw alpha s)
           with zero => true | _ => false end.
 
-
 Definition large (alpha : T1) (s : list nat) : Prop :=
   largeb alpha s.
 
+(* end snippet largeDef *)
 
 
 Definition largeSb (alpha : T1) (s: list nat) :=

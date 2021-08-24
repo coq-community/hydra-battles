@@ -36,7 +36,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Correctness_E0.v \
 	    T1.v E0.v Hessenberg.v \
 	    T2.v \
-	    Canon.v Paths.v \
+	    Canon.v Paths.v Large_Sets.v Large_Sets_Examples.v \
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 
