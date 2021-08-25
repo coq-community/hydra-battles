@@ -17,19 +17,28 @@ Global Hint Unfold In : core.
 
 
 Section the_context.
+
+  (* begin snippet MDecl *)
+  
   Variables (M:Type)
             (Lt : relation M).
+
+  (* end snippet MDecl *)
   
   Definition Le (a b:M) :=  a = b \/ Lt a b.
   
+  (* begin snippet leastMemberDef *)
   
   Definition least_member  (X:Ensemble M)(a:M) :=
     In X a /\ forall x,  In X x -> Le a x.
+  (* end snippet leastMemberDef *)
 
   Definition least_fixpoint (f : M -> M) (x:M) :=
     f x = x /\ forall y: M,  f y = y -> Le x y.
   
   (** Well Ordering *)
+  
+  (* begin snippet WODef *)
   
   Class WO : Type:=
     {
@@ -39,6 +48,8 @@ Section the_context.
           In X a ->
           exists a0:M, least_member  X a0
     }.
+
+   (* end snippet WODef *)
   
   (* Some derived properties of well ordered sets *)
   
@@ -143,22 +154,18 @@ Section the_context.
     Proof.
       intros X Y a b H H0  [H3 H4 ] [H6 H7].  apply Le_antisym;auto.
     Qed.
-    
-
-
 
   End About_WO.
   
 End the_context.
 
-
-
-
-
+(* begin snippet theLeast *)
 
 Definition the_least {M: Type} {Lt}
            {inh : InH M} {WO: WO Lt} (X: Ensemble M)  : M :=
-  the (least_member  Lt X ).
+  the (least_member Lt X ).
+
+(* end snippet theLeast *)
 
 Lemma  the_least_unicity {M: Type} {Lt}
            {inh : InH M} {WO: WO Lt} (X: Ensemble M)

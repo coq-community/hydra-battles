@@ -81,13 +81,18 @@ Ltac iota_elim :=
   match goal with |- context c [(iota ?b ?P)] =>
   apply iota_ind end.
 
+
+(* begin snippet Defs *)
+
 Class InH (A: Type) : Prop :=
    InHWit : inhabited A.
 
+Definition some {A:Type} {H : InH A} (P: A -> Prop)
+  := epsilon (@InHWit A H) P.
 
-Definition some {A:Type} {H : InH A} (P: A -> Prop) := epsilon (@InHWit A H) P.
-
-Definition the {A:Type} {H : InH A} (P: A -> Prop) := iota (@InHWit A H) P.
+Definition the {A:Type} {H : InH A} (P: A -> Prop)
+  := iota (@InHWit A H) P.
+(* end snippet Defs *)
 
 
 Instance inhNat : InH nat.

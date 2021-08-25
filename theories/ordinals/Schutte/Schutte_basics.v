@@ -30,16 +30,18 @@ Open Scope schutte_scope.
 
 (**   The type of countable ordinal numbers  *)
 
+(* begin snippet OrdDecl *)
+
 Parameter Ord : Type.
 Parameter lt : relation Ord.
 Infix "<" := lt : schutte_scope.
-
-
 
 Definition ordinal : Ensemble Ord := Full_set Ord.
 Definition big0 alpha : Ensemble Ord := fun beta =>  beta < alpha.
 
 Global Hint Unfold ordinal : schutte.
+
+(* end snippet OrdDecl *)
 
 (* begin hide *)
 Lemma ordinal_ok : forall a : Ord, ordinal a.
@@ -55,20 +57,26 @@ Global Hint Resolve ordinal_ok : schutte.
 
 (** First Schutte's axiom  : Ord is well-ordered wrt lt *)
 
+(* begin snippet AX1 *)
+
 Axiom AX1 : WO lt.
+(* end snippet AX1 *)
+
+
 Global Hint Resolve AX1 : schutte. 
 
 Global Instance WO_ord : WO  lt := AX1.
 
 (** Stuff for using Coq.Logic.Epsilon *)
-  
+(* begin snippet inhOrd *)  
+
 Axiom inh_Ord : inhabited Ord.
 
-Instance InH_Ord : InH Ord.
-Proof.
-  exact inh_Ord.
-Qed.
-
+Instance InH_Ord : InH Ord. (* .no-out *)
+Proof. (* .no-out *)
+  exact inh_Ord. (* .no-out *)
+Qed. (* .no-out *)
+(* end snippet inhOrd *)  
 
 
 Instance Inh_OSets : InH (Ensemble Ord).
@@ -95,15 +103,19 @@ Infix "<=" := le : schutte_scope.
 
 A subset X of Ord is bounded iff X is countable *)
 
+(* begin snippet AX23 *)
 
-Axiom AX2 : forall X: Ensemble Ord, (exists a,  (forall y, In X y -> y < a)) ->
-                                   countable X.
+Axiom AX2 :
+  forall X: Ensemble Ord,
+    (exists a,  (forall y, In X y -> y < a)) ->
+    countable X.
 
+Axiom AX3 :
+  forall X : Ensemble Ord,
+    countable X -> 
+    exists a,  forall y, In X y -> y < a.
 
-Axiom AX3 : forall X : Ensemble Ord,
-              countable X -> 
-              exists a,  forall y, In X y -> y < a.
-
+(* end snippet AX23 *)
 
 (** * First definitions  
 *)
@@ -118,15 +130,19 @@ Definition Unbounded (X : Ensemble Ord) :=
 
 
 
-
+(* begin snippet zeroDef *)
 
 Definition zero := the_least ordinal.
+(* end snippet zeroDef *)
 
-Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
+(* begin snippet succDef *)
+
+Definition succ (alpha : Ord)
+  := the_least (fun beta => alpha < beta).
+
+(* end snippet succDef *)
 
 (** Finite ordinals *)
-
-
 
 Fixpoint finite (i:nat) : Ord :=
   match i with 0 => zero
@@ -159,10 +175,14 @@ Definition _omega := omega_limit finite.
 Notation omega := (_omega).
 
 (** Successor and limit ordinals *)
+(* begin snippet isSuccIsLimit *)
 
-Definition is_succ (alpha:Ord) := exists beta, alpha = succ beta.
+Definition is_succ (alpha:Ord)
+  := exists beta, alpha = succ beta.
 
-Definition is_limit (alpha:Ord) := alpha <> zero /\ ~ is_succ alpha.
+Definition is_limit (alpha:Ord)
+  := alpha <> zero /\ ~ is_succ alpha.
+(* end snippet isSuccIsLimit *)
 
 (** Ordinals considered as sets *)
 
@@ -393,14 +413,16 @@ Qed.
 (** ** About zero *)
 
 
+(* begin snippet zeroLe *)
 
-
-Lemma zero_le (alpha : Ord) :   zero <= alpha.
-Proof.
+Lemma zero_le (alpha : Ord) : zero <= alpha. (* .no-out *)
+Proof. (* .no-out *)
   unfold zero, the_least, the; apply iota_ind.
-  -  apply the_least_unicity, Inh_ord.
-  -  destruct 1 as [[_ H1] _];  apply H1; split. 
+  -  (* .no-out *) apply the_least_unicity, Inh_ord.
+  -  (* .no-out *) destruct 1 as [[_ H1] _]; apply H1; split. 
 Qed.
+
+(* end snippet zeroLe *)
 
 Lemma not_lt_zero : forall alpha,  ~ alpha < zero.
 Proof.
@@ -424,23 +446,40 @@ Qed.
 
 (** **  Properties of successor *)
 
-Definition succ_spec (alpha:Ord) :=
-  least_member   lt (fun z => alpha < z).
+(* begin snippet succSpec *)
 
-Lemma succ_ok : forall alpha,  succ_spec alpha  (succ alpha).
-Proof.
-  intros; unfold succ, the_least,the;  apply iota_spec.
+Definition succ_spec (alpha:Ord) :=
+  least_member lt (fun z => alpha < z).
+(* end snippet succSpec *)
+
+(* begin snippet succOka *)
+
+Lemma succ_ok :
+  forall alpha,  succ_spec alpha  (succ alpha). (* .no-out *)
+Proof. (* .no-out *)
+  intro alpha; unfold succ, the_least, the; apply iota_spec.
+  (* end snippet succOka *)
+
+  (* begin snippet succOkb *)
+
+  (*| .. coq:: no-out |*)
   destruct (@AX3 (Singleton _ alpha)).
   - apply countable_singleton.
   -  unfold succ_spec; apply the_least_unicity;  exists x; intuition.
 Qed.     
+(*||*)
+(* end snippet succOkb *)
+
+(* begin snippet succProps *)
+
+(*| .. coq:: no-out |*)
 
 Lemma lt_succ (alpha : Ord) :  alpha < succ alpha.
 Proof.
   destruct  (succ_ok  alpha);  tauto.
 Qed.
 
-Global Hint Resolve lt_succ : schutte.
+#[global] Hint Resolve lt_succ : schutte. (* .none *)
 
 Lemma lt_succ_le (alpha beta : Ord):
   alpha < beta -> succ alpha <= beta.
@@ -448,36 +487,45 @@ Proof with eauto with schutte.
   intros  H;  pattern (succ alpha); apply the_least_ok ... 
   exists (succ alpha); red;apply lt_succ ...
 Qed.
+(*||*)
+
 
 Lemma lt_succ_le_2 (alpha beta : Ord):
-  alpha < succ beta -> alpha <= beta.
+  alpha < succ beta -> alpha <= beta. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intro H;  tricho alpha beta t;eauto with schutte.
   case (@lt_irrefl alpha);  apply lt_le_trans with (succ beta).
   - assumption.
   - apply lt_succ_le;eauto with schutte.
 Qed.
+(*||*)
 
 Lemma succ_mono (alpha beta : Ord):
-  alpha < beta -> succ alpha < succ beta.
+  alpha < beta -> succ alpha < succ beta. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof with eauto with schutte.
   intros; eapply le_lt_trans with beta  ...
   - eapply lt_succ_le ...
 Qed.
 
 Arguments succ_mono [ alpha beta].
+(*||*)
 
 Lemma succ_monoR (alpha beta : Ord) :
- succ alpha < succ beta -> alpha < beta.
+ succ alpha < succ beta -> alpha < beta. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intro H;  tricho alpha beta t; auto with schutte.
   -  subst beta; case (@lt_irrefl (succ alpha)); eauto with schutte.
   - case (@lt_irrefl  (succ alpha)); eapply lt_trans;eauto.
     apply succ_mono;auto.
 Qed.
+(*||*)
 
 Lemma succ_injection (alpha beta : Ord) :
-  succ alpha = succ beta -> alpha = beta.
+  succ alpha = succ beta -> alpha = beta. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intros  H; tricho alpha beta t;auto.
   - generalize (succ_mono t).
@@ -485,27 +533,36 @@ Proof.
   - generalize (succ_mono  t).
    rewrite H; intro; case (@lt_irrefl (succ beta));auto.
 Qed. 
+(*||*)
 
-Lemma succ_zero_diff (alpha : Ord) :  succ alpha <> zero.
+Lemma succ_zero_diff (alpha : Ord): succ alpha <> zero. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intros  H; destruct (@not_lt_zero alpha).
   rewrite <- H; auto with schutte.
 Qed.
+(*||*)
 
-Lemma zero_lt_succ : forall alpha,  zero < succ alpha.
+
+Lemma zero_lt_succ : forall alpha,  zero < succ alpha. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intros a;  apply le_lt_trans with a;eauto with schutte;
     apply zero_le;auto.
 Qed.
+(*||*)
 
 Lemma lt_succ_lt (alpha beta : Ord) :
-  is_limit beta ->  alpha < beta -> succ alpha < beta.
+  is_limit beta ->  alpha < beta -> succ alpha < beta. (* .no-out *)
+ (*| .. coq:: none |*)
 Proof.
   intros (Hbeta, Hbeta') H;  case (lt_succ_le  H); [|auto].
   - intros H' ; subst ;  case Hbeta'.
     exists alpha;split; eauto with schutte.
 Qed.
+(*||*)
 
+(* end snippet succProps *)
 
 Global Hint Resolve zero_lt_succ zero_le : schutte.
 
@@ -1025,54 +1082,76 @@ Proof.
 Qed. 
  
 
-(* begin hide *) 
-Module iota_demo. 
+(* begin hide *)
 
-Remark R : exists! z : Ord, least_member lt  ordinal z.
-Proof.
-  destruct inh_Ord as [a ];   apply least_member_ex_unique with a. 
-  - apply AX1. 
-  - split.
-Qed.
+Module iota_demo.
 
+  (* begin snippet iotaDemo *)
 
-Definition zero : Ord.
-Proof.
-  Fail destruct R.
-Abort.
+  (*| .. coq:: no-out |*)
 
+  Remark R : exists! z : Ord, least_member lt  ordinal z.
+  (*||*) (*| .. coq:: none |*)
+  Proof.
+    destruct inh_Ord as [a ];  apply least_member_ex_unique with a. 
+    - apply AX1. 
+    - split.
+  Qed.
+  (*||*)
+
+  Definition zero : Ord. (* .no-out *)
+  Proof. (* .no-out *)
+    Fail destruct R.
+  Abort.
+
+  (* end snippet iotaDemo *)
+
+(* end hide *)
 
 Definition zero: Ord := iota inh_Ord (least_member lt ordinal).
 
 Lemma zero_le (alpha : Ord) :  zero <= alpha.
 Proof.
-   generalize (iota_spec inh_Ord _ R). 
-   destruct 1 as [_ H]; apply H; split.
+  generalize (iota_spec inh_Ord _ R). 
+  destruct 1 as [_ H]; apply H; split.
 Qed.
+
+(* begin snippet BadBottoma *)
 
 Module Bad.
   
-Definition bottom := the_least (Empty_set Ord).
+  Definition bottom := the_least (Empty_set Ord).
 
-Compute bottom.
+(* end snippet BadBottoma *)
 
-Lemma le_zero_bottom : zero <= bottom. 
-Proof. apply zero_le. Qed.
 
-Lemma bottom_eq : bottom = bottom.
-Proof. trivial. Qed.
+  (* begin snippet trivialProps *)
 
-Lemma le_bottom_zero : bottom <= zero.
-Proof.
-   unfold bottom, the_least, the; apply iota_ind.
-Abort.
+  (*| .. coq:: no-out |*)
+  
+  Lemma le_zero_bottom : zero <= bottom. 
+  Proof. apply zero_le. Qed.
+
+  Lemma bottom_eq : bottom = bottom.
+  Proof. trivial. Qed.
+
+  (*||*) (* end snippet trivialProps *)
+
+  (* begin snippet Failure *)
+  
+  Lemma le_bottom_zero : bottom <= zero. (* .no-out *)
+  Proof. (* .no-out *)
+    unfold bottom, the_least, the; apply iota_ind.
+  Abort.
 
 End Bad.
 
+(* end snippet Failure *)
 
 End iota_demo.
 
-(* end hide *) 
+
+
 
 
 

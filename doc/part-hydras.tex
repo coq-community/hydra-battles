@@ -6176,13 +6176,8 @@ Library \href{../theories/html/hydras.Schutte.Countable.html}%
 
 \index{hydras}{Library Schutte!Types!Ord}
 
-\begin{Coqsrc}
-Parameter Ord : Type.
-Parameter lt : relation Ord.
-Infix "<" := lt : schutte_scope.
+\input{movies/snippets/Schutte_basics/OrdDecl}
 
-Definition ordinal := Full_set Ord.
-\end{Coqsrc}
 
 Schütte's first axiom tells that \texttt{lt} is a well order on the set 
 \texttt{ordinal} (The  class \texttt{WO} is defined in
@@ -6192,42 +6187,19 @@ Module~\href{../theories/html/hydras.Schutte.Well_Orders.html}{Schutte.Well\_Ord
 
 \label{types:WO}
 
-\begin{Coqsrc}
-Variables (M:Type)
-         (Lt : relation M).
-  
-Class WO : Type:=
-    {
-      Lt_trans : Transitive  Lt;
-      Lt_irreflexive : forall a:M, ~ (Lt a a);
-      well_order : forall (X:Ensemble M)(a:M),
-          In X a ->
-          exists a0:M, least_member  X a0
-    }.
-\end{Coqsrc}
+\input{movies/snippets/Well_Orders/Mdecl}
 
+\input{movies/snippets/Well_Orders/WODef}
 
-
-\begin{Coqsrc}
-  Axiom AX1 : WO lt.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/AX1}
 
 The second and third axioms say that a subset $X$ of $\mathbb{O}$ is
 (strictly) bounded if and only if it is countable. 
 
+\input{movies/snippets/Schutte_basics/AX23}
 
 
-\begin{Coqsrc}
-Axiom AX2 : forall X: Ensemble Ord, 
-   (exists a,  (forall y, In X y -> y < a)) ->
-   countable X.
-
-Axiom AX3 : forall X : Ensemble Ord,
-              countable X -> 
-              exists a,  forall y, In X y -> y < a.
-\end{Coqsrc}
-
-\texttt{AX2} and \texttt{AX3} could have been replaced by a single axiom (using the \texttt{iff} connector), but we decide to respect as most as possible the structure of Schütte's definitions.
+\texttt{AX2} and \texttt{AX3} could have been replaced by a single axiom (using the \texttt{iff} connector), but we decided to respect as most as possible the structure of Schütte's definitions.
 
 \section{Additional  axioms}
 
@@ -6252,39 +6224,18 @@ In order to respect Schütte's style, we imported also the library
 how Hilbert's choice operator and Church's definite description allow us
  to write understandable definitions (close to the mathematical natural language).
 
-
 \subsubsection{The definition of zero}
 
-According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique.
+According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique. We would like to call this element  \texttt{zero}.
 
-
-\begin{Coqsrc}
-Remark R : exists! z : Ord, least_member lt  ordinal z.
-Proof.
-  destruct inh_Ord as [a]; apply (well_order (WO:=AX1)) with a .
-  split.
-Qed.
-\end{Coqsrc}
-
-Assume we want to call this element  \texttt{zero}.
+\input{movies/snippets/Schutte_basics/iotaDemo}
 
 
 
-\begin{Coqsrc}
-Definition zero : Ord.
-Proof.
-  Fail destruct R.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-The command has indeed failed with message:
-Case analysis on sort Type is not allowed for inductive 
-definition ex.
-\end{Coqanswer}
 
 
 Indeed, the basic logic of  \coq{} does not allow us to eliminate a proof of a proposition 
-$\exists\,x:A,\,P(x)$ for building a term whose type lies in the sort \texttt{Type}. 
+$\exists!\,x:A,\,P(x)$ for building a term whose type lies in the sort \texttt{Type}. 
 The reasons for this impossibility are explained in many documents~\cite{BC04, chlipalacpdt2011, Coq}.
 
 Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom and lemmas.
@@ -6343,34 +6294,26 @@ and
 such definitions. See also an article in french~\cite{PCiota}. 
 
 
+\input{movies/snippets/MoreEpsilonIota/Defs}
 
-\begin{Coqsrc}
-Class InH (A: Type) : Prop :=
-   InHWit : inhabited A.
 
-Definition some {A:Type} {H : InH A} (P: A -> Prop) := 
-   epsilon (@InHWit A H) P.
+In order to use these tools,  we have to tell \coq{}  that the declared type \texttt{Ord} is not empty:
 
-Definition the {A:Type} {H : InH A} (P: A -> Prop) := 
-   iota (@InHWit A H) P.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/inhOrd}
 
-In order to use these tools,  we had to tell \coq{}  that the type \texttt{Ord} is not empty:
 
-\begin{Coqsrc}
-Axiom inh_Ord : inhabited Ord.
-\end{Coqsrc}
 
 
 We are now able to define \texttt{zero} as the least ordinal. For this purpose,
 we define a function returning the least element of any [non-empty]  subset.
 
 
-\begin{Coqsrc}
-Definition the_least {M: Type} {Lt}
-           {inh : InH M} {WO: WO Lt} (X: Ensemble M)  : M :=
-  the  (least_member  Lt X ).
-\end{Coqsrc}
+\emph{From Module\href{../theories/html/hydras.Schutte.Well_Orders.html}%
+  {\texttt{Schutte.Well\_Orders}}}
+
+\input{movies/snippets/Well_Orders/leastMemberDef}
+\input{movies/snippets/Well_Orders/theLeast}
+
 
 
 \vspace{4pt}
@@ -6381,42 +6324,12 @@ From Module \href{../theories/html/hydras.Schutte.Schutte_basics.html}%
 \label{Constants:zero:Ord}
 \index{hydras}{Library Schutte!Constants!zero}
 
-\begin{Coqsrc}
-Definition zero: Ord :=the_least ordinal.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/zeroDef}
 
 We want to prove now that zero is less than or equal to any ordinal number.
 
-\begin{Coqsrc}
-Lemma zero_le (alpha : Ord) :  zero <= alpha.
-Proof.
-  unfold zero, the_least, the; apply iota_ind.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/zeroLe}
 
-According to the use of the description operator \texttt{iota}, we have to solve  two trivial sub-goals.
-\begin{enumerate}
-\item Prove that there exists a unique least member of \texttt{Ord}
-\item Prove that being a least member of \texttt{Ord} entails the announced inequality 
-\end{enumerate}
-
-
-\begin{Coqanswer}
-2 subgoals (ID 155)
-  
-  alpha : Ord
-  ============================
-  exists ! x : Ord, least_member lt ordinal x
-
-subgoal 2 (ID 156) is:
- forall a : Ord, unique (least_member lt ordinal) a -> 
-                a <= alpha
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  -  apply the_least_unicity, Inh_ord.
-  -  destruct 1 as [[_ H1] _]; apply H1; split. 
-Qed.
-\end{Coqsrc}
 
 \subsubsection{Remarks on \texttt{epsilon} and \texttt{iota}}
 
@@ -6426,48 +6339,18 @@ a specification for \texttt{iota} that admits several realizations.
 
 Let us consider an example:
 
-\begin{Coqbad}
-Module Bad.
-
- Definition bottom := the_least (Empty_set Ord).
-\end{Coqbad}
-
-\begin{Coqanswer}
- bottom is defined
-\end{Coqanswer}
+\input{movies/snippets/Schutte_basics/BadBottoma}
 
 Since we won't be able to prove the proposition
 \linebreak \Verb|{exists! a: Ord, least_member (Empty_set Ord) a|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
 \emph{i.e.}, satisfied by \emph{any} element of type \texttt{Ord}, like for instance
 \texttt{bottom = bottom}, or \texttt{zero <= bottom}.
 
-\begin{Coqbad}
-Lemma le_zero_bottom : zero <= bottom. 
-Proof. apply zero_le. Qed.
+\input{movies/snippets/Schutte_basics/trivialProps}
 
-Lemma bottom_eq : bottom = bottom.
-Proof. trivial. Qed.
+On the other hand, the following attempt fails, because of the unprovable first sub-goal (please notice that the second sub-goal is easy to solve !).
 
-Lemma le_bottom_zero : bottom <= zero.
-Proof.
-   unfold bottom, the_least, the; apply iota_ind.
-\end{Coqbad}
-
-\begin{Coqanswer}
-2 subgoals (ID 413)
-  
-============================
-exists ! x : Ord, least_member lt (Empty_set Ord) x
-
-subgoal 2 (ID 414) is:
- forall a : Ord, unique (least_member lt (Empty_set Ord)) a -> 
-      a <= zero
-\end{Coqanswer}
-
-\begin{Coqbad}
-Abort.
-End Bad.
-\end{Coqbad}
+\input{movies/snippets/Schutte_basics/Failure}
 
 
 In short, using \texttt{epsilon} and \texttt{iota} in our implementation of countable ordinals after Schütte has two main advantages.
@@ -6488,95 +6371,41 @@ The definition of the function \texttt{succ:Ord -> Ord} is very concise. The suc
 \label{Functions:succ-sch}
 \index{hydras}{Library Schutte!Functions!succ}
 
-\begin{Coqsrc}
-Definition succ (alpha : Ord) := the_least (fun beta => alpha < beta).
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/succDef}
 
-Using \texttt{succ}, we define the folloing predicates.
+Using \texttt{succ}, we define the following predicates.
 
-\begin{Coqsrc}
-Definition is_succ (alpha:Ord) := exists beta, alpha = succ beta.
+\input{movies/snippets/Schutte_basics/isSuccIsLimit}
 
-Definition is_limit (alpha:Ord) := alpha <> zero /\ ~ is_succ alpha.
-\end{Coqsrc}
 
 
 
 % \begin{remark}
 % Please look at remark~\vref{warning:coercions}.
-% \end{remark}
 
 How do we prove properties of the successor function?
 First, we make its specification explicit.
 
-\begin{Coqsrc}
-Definition succ_spec (alpha:Ord) :=
-  least_member   lt (fun z => alpha < z).
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/succSpec}
 
 Then, we prove that our function \texttt{succ} meets this specification. 
 
+\input{movies/snippets/Schutte_basics/succOka}
 
-\begin{Coqsrc}
-Lemma succ_ok : forall alpha,  succ_spec alpha  (succ alpha).
-Proof.
-  intros; unfold succ, the_least, the;  apply iota_spec.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 172)
-  
-  alpha : Ord
-  ============================
-  exists ! x : Ord, succ_spec alpha x
-\end{Coqanswer}
 
 We have now to prove that the set of all ordinals strictly greater than $\alpha$ has a unique least element. But the singleton set $\{\alpha\}$ is countable, hence  bounded (by the axiom \texttt{AX3}). Hence; the set $\{\beta\in\mathbb{O}|\alpha < \beta\}$ is not empty
 and therefore has a unique least element.
 
-The \coq{} proof script is quite short.
+The rest of the \coq{} proof script is quite short.
 
-\begin{Coqsrc}
-  destruct (@AX3 (Singleton _ alpha)).
-  - apply countable_singleton.
-  -  unfold succ_spec; apply the_least_unicity;  exists x; intuition.
-Qed.     
-\end{Coqsrc}
-
+\input{movies/snippets/Schutte_basics/succOkb}
 
 We can ``uncap'' the description operator for proving properties of the
 \texttt{succ} function.
 
-\begin{Coqsrc}
-Lemma lt_succ (alpha : Ord) :  alpha < succ alpha.
-Proof.
-  destruct  (succ_ok  alpha);  tauto.
-Qed.
-
-Hint Resolve lt_succ : schutte.
-
-Lemma lt_succ_le (alpha beta : Ord):
-  alpha < beta -> succ alpha <= beta.
-Proof with eauto with schutte.
-  intros  H;  pattern (succ alpha); apply the_least_ok ... 
-  exists (succ alpha); red;apply lt_succ ...
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/succProps}
 
 
-\begin{Coqsrc}
-Lemma lt_succ_le_2 (alpha beta : Ord):
-  alpha < succ beta -> alpha <= beta.
-
-Lemma succ_mono (alpha beta : Ord):
-  alpha < beta -> succ alpha < succ beta.
-
-Lemma succ_monoR (alpha beta : Ord) :
- succ alpha < succ beta -> alpha < beta.
-
-Lemma lt_succ_lt (alpha beta : Ord) :
-  is_limit beta ->  alpha < beta -> succ alpha < beta.
-\end{Coqsrc}
 
 \section{Finite ordinals}
 
