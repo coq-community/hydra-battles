@@ -98,17 +98,22 @@ Locate battle_length_std.
 
 Open Scope nat_scope.
 
+(* begin snippet battleLengthStdHardy *)
+
+(*| .. coq:: no-out |*)
 Theorem battle_length_std_Hardy (alpha : E0) :
   alpha <> Zero ->
   forall k , 1 <= k ->
-             exists l: nat,  H'_ alpha k - k <= l /\
-                             battle_length standard k (iota (cnf alpha)) l.    
-Proof.
-  intros H k  H0; exists (L_ alpha (S k) - k).
-  split.
+             exists l: nat,
+               H'_ alpha k - k <= l /\
+               battle_length standard k (iota (cnf alpha)) l. 
+Proof. 
+  intros H k  H0; exists (L_ alpha (S k) - k); split. 
   - generalize (H'_L_ alpha k); lia.
   - now apply battle_length_std.
 Qed.
+(*||*)
+(* end snippet battleLengthStdHardy *)
 
 
 

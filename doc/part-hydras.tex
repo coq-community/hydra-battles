@@ -5416,30 +5416,16 @@ $2^{10^{21}}$  digits. But it is still an under-approximation !
 
 Now, we have got at last an exact formula for $H'_{\omega^\omega}$.
 
-\begin{Coqsrc}
-Lemma H'_phi0_omega : forall k, H'_ (phi0 omega) k =
-                               iterate H'_succ_fun  k (H'_ omega) k.
-Proof with auto with E0.
-  intro k; rewrite H'_eq3, <- H'_phi0_Si ...
-  -  rewrite CanonS_Canon, CanonS_phi0_lim;  f_equal ...
-Qed.
-\end{Coqsrc}
-
-Using extensionality of the functional \texttt{iterate}, we can get a closed formula.
-
-\begin{Coqsrc}
-Lemma H'_phi0_omega_closed_formula k :
-  H'_ (phi0 omega) k =
-  iterate (fun (f: nat -> nat) (l : nat) => iterate  f (S l) l)
-               k
-               (fun k : nat => S (2 * k)%nat)
-               k.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimePhi0Omega}
 
 
 
+Using extensionality of the functional \texttt{iterate}, we also get a closed formula.
 
-Note that this short formula contains two occurrences of the functional \texttt{iterate}, the outer one is in fact a second-order iteration (on type \texttt{nat -> nat)}
+\input{movies/snippets/Hprime/HprimePhi0OmegaClosed}
+
+
+Note that this formula contains two occurrences of the functional \texttt{iterate}, the outer one is in fact a second-order iteration (on type \texttt{nat -> nat)}
 and the inner one  first-order (on type \texttt{nat}). 
 
 
@@ -5452,16 +5438,8 @@ between $\alpha$ and $\beta$ on the one hand, $k$ and $l$ on the other hand.
 
 But beware of fake theorems! For instance, one could believe that $H'$ is monotonous in its first argument. The following proof shows this is false.
 
-\begin{Coqsrc}
-Remark H'_non_mono1 :
-  ~ (forall alpha beta k, (alpha o<= beta)%e0 ->
-                          (H'_ alpha k <= H'_ beta k)%nat).
-Proof.
- intros H ;specialize (H 42 omega 3).
- assert (H0 :(42 o<= omega)%e0) by (repeat split; auto).  
- apply H in H0; rewrite H'_Fin, H'_omega  in H0; lia.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeNonMono1}
+
 
 On the contrary, the functions of the $H'$ hierarchy have the following five properties~\cite{KS81}: for any $\alpha < \epsilon_0$,
 \begin{itemize}
@@ -5487,56 +5465,39 @@ In \coq{}, we follow the  proof in~\cite{KS81}. This proof is mainly a single  p
 For each $\alpha$, the three cases : $\alpha=0$, $\alpha$ is a limit, and 
 $\alpha$ is a successor are considered. Inside each case, the five sub-properties are proved sequentially, using the abstract properties defined in Sect~\vref{sect:abstract-arith-prop}
 
-
-\begin{Coqsrc}
-Section Proof_of_Abstract_Properties.
-  Record P (alpha:E0) : Prop :=
-    mkP {
-        PA : strict_mono (H'_ alpha);
-        PB : alpha <> Zero -> forall n,  (n < H'_ alpha n)%nat;
-        PC : H'_ alpha <<= H'_ (Succ alpha);
-        PD : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha);
-        PE : forall beta n, Canon_plus n alpha beta -> 
-                            (H'_ beta n <= H'_ alpha n)%nat}.
+\input{movies/snippets/Hprime/PAP}
 
 
-Theorem P_alpha : forall alpha, P alpha.
-  Proof.
-    intro alpha; apply well_founded_induction with lt.
-   (* rest of proof skipped *)
-
-Section Proof_of_Abstract_Properties.
-\end{Coqsrc}
 
 
-By elimination, we get a catalogue of properties of the functions $L'_\alpha$:
+% By elimination, we get a catalogue of properties of the functions $L'_\alpha$:
 
-\begin{Coqsrc}
-Section Abstract_Properties.
- Variable alpha : E0.
+% \begin{Coqsrc}
+% Section Abstract_Properties.
+%  Variable alpha : E0.
 
- Theorem H'_alpha_mono : strict_mono (H'_ alpha).
+%  Theorem H'_alpha_mono : strict_mono (H'_ alpha).
 
- Theorem H'_alpha_gt : alpha <> Zero ->
-        forall n, n < H'_ alpha n.
+%  Theorem H'_alpha_gt : alpha <> Zero ->
+%         forall n, n < H'_ alpha n.
 
- Theorem H'_alpha_Succ_le :
-        H'_ alpha <<= H'_ (Succ alpha).
+%  Theorem H'_alpha_Succ_le :
+%         H'_ alpha <<= H'_ (Succ alpha).
   
- Theorem H'_alpha_dom :
-    dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
+%  Theorem H'_alpha_dom :
+%     dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
 
- Theorem H'_restricted_mono_l :
-    forall beta n, Canon_plus n alpha beta -> 
-                                 H'_ beta n <= H'_ alpha n.
+%  Theorem H'_restricted_mono_l :
+%     forall beta n, Canon_plus n alpha beta -> 
+%                                  H'_ beta n <= H'_ alpha n.
 
-  Lemma H'_alpha_ge_id : id <<= H'_ alpha.
+%   Lemma H'_alpha_ge_id : id <<= H'_ alpha.
 
-  Lemma H'_alpha_mono_weak : forall k l, k <= l ->
-                                        H'_ alpha k <= H'_ alpha l.
+%   Lemma H'_alpha_mono_weak : forall k l, k <= l ->
+%                                         H'_ alpha k <= H'_ alpha l.
   
-End Abstract_Properties.
-\end{Coqsrc}
+% End Abstract_Properties.
+% \end{Coqsrc}
 
 Using a few lemmas \emph{à la} Ketonen-Solovay, we prove that
 if $\alpha<\beta$, then $H'_\beta$ eventually dominates
@@ -5544,11 +5505,7 @@ $H'_\alpha$.
 We let the reader look at its proof (Section \texttt{Proof\_of\_H'\_mono\_l} of \href{../theories/html/hydras.Epsilon0.Hprime.html\#H_}{Epsilon0.Hprime}).
 
 \noindent
-\begin{Coqsrc}
-  H'_dom : forall alpha beta : E0, alpha o< beta ->
-  dominates_strong (H'_ beta) (H'_ alpha).
-\end{Coqsrc}
-
+\input{movies/snippets/Hprime/HprimeDom}
 
 \subsection{Comparison between \texttt{L\_} and \texttt{H'\_} }
 
@@ -5556,9 +5513,7 @@ By well-founded induction on $\alpha$, we prove a simple relation between $L_\al
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html\#H'_L_}{Epsilon0.L\_alpha}}
 
-\begin{Coqsrc}
- Theorem H'_L_ alpha: forall i:nat,  (H'_ alpha i <= L_ alpha (S i))%nat.
-\end{Coqsrc}
+\input{movies/snippets/L_alpha/HprimeL}
  
 \subsubsection{Back to hydras}
 
@@ -5567,16 +5522,9 @@ The following theorem relates the length of (standard) battles with the the $H'$
 \vspace{4pt}
 
 \noindent
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}}
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems}}
 
-\begin{Coqsrc}
-Theorem battle_length_std_Hardy (alpha : E0) :
-  alpha <> Zero ->
-  forall k , 1 <= k -> exists l: nat,  
-       H'_ alpha k - k <= l /\
-       battle_length standard k (iota (cnf alpha)) l.    
-\end{Coqsrc}
-
+\input{movies/snippets/Hydra_Theorems/battleLengthStdHardy}
 
 
 \section{A variant of the Wainer hierarchy (functions \texorpdfstring{$F_\alpha$}{F\_alpha})}
@@ -5605,43 +5553,19 @@ A first attempt is to write a definition of $F_\alpha$ by equations, in the same
 Module~\href{../theories/html/hydras.Prelude.Iterates.html\#iterate}{Prelude.Iterates}.
 
 \index{hydras}{Library Prelude!iterate}
-\begin{Coqsrc}
-Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
-  match n with
-  | 0 => x
-  | S p => f (iterate  f p x)
-  end.
-\end{Coqsrc}
+
+\input{movies/snippets/Iterates/iterateDef}
+
 
 The following code comes from 
  \href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}.
 
 
 
-\index{coq}{Plug-ins!Equations}
-\begin{Coqsrc}
-Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
-  F_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
-          with Utils.dec (Limitb alpha) :=
-          { | left _ =>  F_ (Canon alpha i)  i ;
-            | right notlimit =>  iterate (F_ (Pred alpha))  (S i) i}}.
-\end{Coqsrc}
+ \index{coq}{Plug-ins!Equations}
 
-\begin{Coqanswer}
-The command has indeed failed with message:
-In environment
-alpha : E0
-notlimit : Limitb alpha = false
-nonzero : alpha <> Zero
-i : nat
-F_ : forall x : E0, nat -> x o< alpha -> nat
-The term "F_ (Pred alpha) ?x" has type "Pred alpha o< alpha -> nat"
-while it is expected to have type 
-"Pred alpha o< alpha -> Pred alpha o< alpha"
-(cannot unify "nat" and "Pred alpha o< alpha").
-\end{Coqanswer}
+ \input{movies/snippets/F_alpha/FailDemo}
+ 
 
 
 We presume that this error comes from the recursive call of \texttt{F\_} inside
@@ -5658,87 +5582,33 @@ the iteration of \texttt{F\_}  as an helper $F^*$, then to define the function $
 \index{maths}{Rapidly growing functions}
 \index{hydras}{Library Epsilon0!Functions!F\_@F\_ (Wainer hierarchy)}
   
-\begin{Coqsrc}
-Definition call_lt (c c' : E0 * nat) :=
-  lexico Lt (Peano.lt) c c'.
+\input{movies/snippets/F_alpha/goodDef}
 
-Lemma call_lt_wf : well_founded call_lt.
-  unfold call_lt; apply Inverse_Image.wf_inverse_image,  wf_lexico.
-  -  apply E0.Lt_wf.
-  -  unfold Peano.lt; apply Nat.lt_wf_0. 
-Qed.
-
-Instance WF : WellFounded call_lt := call_lt_wf.
-
-Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
-    F_star (alpha, 0) i := i;
-    F_star (alpha, 1) i
-      with E0_eq_dec alpha Zero :=
-           { | left _ => S i ;
-             | right nonzero
-                 with Utils.dec (Limitb alpha) :=
-                 { | left _ => F_star (Canon alpha i,1) i ;
-                   | right notlimit =>
-                     F_star (Pred alpha, S i)  i}};
-    F_star (alpha,(S (S n))) i :=
-               F_star (alpha, 1) (F_star (alpha, (S n)) i).
-
-(* Finally, F_ alpha is defined as its first iterate ! *)
-
-Definition F_  alpha i := F_star (alpha, 1) i.
-\end{Coqsrc}
 
 It is quite easy to prove that our function \texttt{F\_} satisfies the equations on page~\pageref{sect:F-equations}.
 \index{hydras}{Library Prelude!iterate}
 
-\begin{Coqsrc}
-Lemma F_zero_eqn : forall i, F_ Zero i = S i.
+\input{movies/snippets/F_alpha/FEquations}
 
-Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
-                               F_ alpha i = F_ (Canon alpha i) i.
-
-Lemma F_succ_eqn : forall alpha i,
-    F_ (Succ alpha) i = iterate (F_ alpha) (S i) i.
-\end{Coqsrc}
 
 As for the Hardy functions, we can use these equalities as rewrite rules for
 ``computing'' some values of $F_\alpha(i)$, for small values of $\alpha$.
 
-\begin{Coqsrc}
-Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
-
-Lemma LF2 : forall i, exp2 i * i < F_ 2 i.
-\end{Coqsrc}
-
+\input{movies/snippets/F_alpha/FirstValues}
 
 Like in Sect~\ref{sect:H-alpha-prop}, we prove by induction the following properties (see~\cite{KS81}). 
 
-\begin{Coqsrc}
-Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
- 
-Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
-
-Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
-
-Theorem F_alpha_dom alpha : 
-     dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
-
-Theorem F_restricted_mono_l alpha : 
-   forall beta n, Canon_plus n alpha beta -> 
-                                        F_ beta n <= F_ alpha n.
-\end{Coqsrc}
-
-As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}, which states that the function \texttt{F\_} is ``monotonous'' w.r.t. its first argument and ``domination''.
+\input{movies/snippets/F_alpha/FalphaThms}
 
 
+As a corollary, we prove the following proposition, p. 284 of~\cite{KS81}.
 \begin{quote}
   If $\beta<\alpha$, $F_\alpha$ dominates $F_\beta$.
 \end{quote}
 
-\begin{Coqsrc}
-Lemma F_mono_l: forall alpha beta : E0, 
-   beta o< alpha -> dominates (F_ alpha) (F_ beta).
-\end{Coqsrc}
+\input{movies/snippets/F_alpha/FDomContext}
+\input{movies/snippets/F_alpha/FDom}
+
 
 \index{hydras}{Exercises}
 
