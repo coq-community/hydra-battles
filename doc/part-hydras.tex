@@ -5222,16 +5222,10 @@ Our previous study of \texttt{L\_spec} allowed us to pave the way for the defini
 \subsubsection{Back to hydra battles}
 \label{def:L-alpha}
 
-Theorem \texttt{battle\_length\_std } of
-Module~\href{../theories/html/hydras.Hydra.Hydra_Theorems.html\#battle_length_std}{Hydra.Hydra\_Theorems} relates the length of standard battles with the functions $L_\alpha$.
+Lemma \texttt{battle\_length\_std } of
+Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length} relates the length of standard battles with the functions $L_\alpha$.
 
-\begin{Coqsrc}
-Theorem battle_length_std (alpha : E0)  :
-  alpha <> Zero ->
-  forall k, (1 <= k)%nat ->
-            battle_length standard k (iota (cnf alpha))
-                         (L_ alpha (S k) - k).
-\end{Coqsrc}
+\input{movies/snippets/Battle_length/battleLengthStd}
 
 
 \index{hydras}{Projects}
@@ -5293,35 +5287,10 @@ We define a function \texttt{H'\_} of type \texttt{E0 -> nat -> nat} by transfin
 \index{coq}{Plug-ins!Equations}
 \label{Functions:Hprime-alpha}
 
-\begin{Coqsrc}
-Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
-  H'_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
-          with Utils.dec (Limitb alpha) :=
-          { | left _ =>  H'_ (Canon alpha (S i))  i ;
-            | right notlimit =>  H'_ (Pred alpha) (S i)}}.
-
-Solve All Obligations with auto with E0.
-\end{Coqsrc} 
+\input{movies/snippets/Hprime/HprimeDef}
  
+\input{movies/snippets/Hprime/paraphrases}
 
-
-\begin{Coqsrc}
-Lemma H'_eq1 : forall i, H'_ Zero i = i.
-Proof.
-  intro i; now rewrite H'__equation_1. 
-Qed.
-
-Lemma H'_eq2 alpha i : Succb alpha ->
-                       H'_ alpha i = H'_ (Pred alpha) (S i).
-
-Lemma H'_eq3 alpha i : Limitb alpha ->
-                      H'_ alpha i =  H'_ (Canon alpha (S i)) i.
-
-Lemma H'_succ_eqn  alpha i :  
-            H'_ (Succ alpha) i = H'_ alpha (S i).
-\end{Coqsrc}
 
 
 \subsection{First  steps of the H' hierarchy}
@@ -5334,77 +5303,33 @@ Using rewrite rules from \texttt{H'\_eq1} to \texttt{H'\_succ\_eqn}, we can expl
 By induction on $i$, we prove a simple expression of \texttt{H'\_ (Fin i)}, where 
 \texttt{Fin $i$}  is the $i$-th finite ordinal.
 
-\begin{Coqsrc}
-Lemma H'_Fin : forall i k : nat,  H'_  (Fin i) k = (i+k)%nat.
-Proof with eauto with E0.
-  induction i.
-  - intros; simpl Fin; simpl; autorewrite with H'_rw E0_rw ... 
-  - intros ;simpl; autorewrite with H'_rw E0_rw ... 
-    rewrite IHi; abstract lia. 
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeFin}
+
 
 \subsubsection{Multiples of \texorpdfstring{$\omega$}{omega}}
 
 Since the canonical sequence of $\omega$ is composed of finite ordinals, 
 it is easy to get the formula associated with $H'_\omega$.
 
-
-\begin{Coqsrc}
-Lemma H'_omega : forall k, H'_ omega k = S (2 * k)%nat.
-Proof with auto with E0.
-  intro k; rewrite H'_eq3 ...
-  - replace (Canon omega (S k)) with (Fin (S k)).
-    + rewrite H'_Fin; abstract lia.
-    + now autorewrite with E0_rw.
-Qed.
-\end{Coqsrc}
-
+\input{movies/snippets/Hprime/HprimeOmega}
 
 Before going further, we prove a useful rewriting lemma:
 
-\begin{Coqsrc}
-Lemma H'_Plus_Fin alpha : forall i k : nat,
-    H'_ (alpha + i)%e0 k = H'_ alpha (i + k)%nat.
-(* Proof by induction on i *)
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimePlusFin}
+
 
 
 Then, we get easily formulas for $H'_{\omega+i}$, and $H'_{\omega\times i}$ for any natural number $i$.
 
-\begin{Coqsrc}
-Lemma H'_omega_double k : H'_ (omega * 2)%e0 k = (4 * k + 3)%nat.
-Proof.
-  rewrite H'_eq3; simpl Canon.
- -   ochange  (CanonS  (omega * FinS 1)%e0 k) (omega + (S k))%e0.
-  + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
-  -  now compute.
-Qed.
 
-Lemma H'_omega_3 k : H'_ (omega * 3)%e0 k = (8 * k + 7)%nat.
+\input{movies/snippets/Hprime/HprimeExamples}
 
-Lemma H'_omega_4 k : H'_ (omega * 4)%e0 k = (16 * k + 15)%nat.
-
-Lemma H'_omega_i i  : forall k,
-    H'_ (omega * i)%e0 k = (exp2 i * k + Nat.pred (exp2 i))%nat.
-\end{Coqsrc}
 
 Crossing a new limit, we prove the following equality: 
 $$H'_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1$$.
 
-\begin{Coqsrc}
-Lemma H'_omega_sqr : forall k,
-    H'_ (phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat.
-Proof.
-  intro k; rewrite H'_eq3; auto with E0.
-  - ochange (Canon (phi0 2) (S k)) (omega * (S k))%e0.
-    +  rewrite H'_omega_i; simpl (exp2 (S k)).
-       *  rewrite Nat.add_pred_r.
-          -- abstract lia. 
-          -- generalize (exp2_not_zero k); abstract lia.
-    + cbn; f_equal; abstract lia.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeOmegaSqr}
+
 
 \subsubsection{New limits}
 
@@ -5420,73 +5345,43 @@ $\omega^i \times k$, so we need also to consider ordinals of this form.
 \item First,  we express $H'_{\omega^\alpha \times (i+2)}$ in terms of
 $H'_{\omega^\alpha \times (i+1)}$.
 
-\begin{Coqsrc}
-Lemma H'_Omega_term_1 : alpha <> Zero -> forall k,  
-    H'_ (Omega_term alpha (S i)) k =
-    H'_ (Omega_term alpha i) (H'_ (phi0 alpha) k).
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeOmegaTerm1}
+
 
 \item
 Then, we prove by induction on $i$ that $H'_{\omega^\alpha \times (i+1)}$ is just the
 $(i+1)$-th iterate of $H'_{\omega^\alpha}$.
 
-
-\begin{Coqsrc}
-Lemma H'_Omega_term (alpha : E0):
-alpha <> Zero -> forall i k, 
-  H'_ (Omega_term alpha i) k = iterate (H'_ (phi0 alpha)) (S i) k.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeOmegaTerm}
 
 \item In particular, we derive a formula for $H'_{\omega^{i+1}}$.
 
-\begin{Coqsrc}
-Definition H'_succ_fun f k := iterate f (S k) k.
+\input{movies/snippets/Hprime/HprimeSuccFun}
+\input{movies/snippets/Hprime/HprimePhi0SI}  
 
-Lemma H'_phi0_succ alpha  : alpha <> Zero -> forall k,
- H'_ (phi0 (Succ alpha)) k = H'_succ_fun (H'_ (phi0 alpha)) k. 
+\item We get now a  formula for $H'_{\omega^3}$:
 
-Lemma H'_phi0_Si : forall i k,
- H'_ (phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
-\end{Coqsrc}
-
+\input{movies/snippets/Hprime/HprimeOmegaCube}
 \end{enumerate}
-We get now a  formula for $H'_{\omega^3}$:
 
-\begin{Coqsrc}
-Lemma H'_omega_cube : forall k,
-    H'_ (phi0 3)%e0 k = iterate (H'_ (phi0 2))  (S k) k.
-Proof.
-  intro k; rewrite <-FinS_eq, -> Fin_Succ, H'_phi0_succ; auto.
-  compute; injection 1; discriminate.
-Qed.
-\end{Coqsrc}
 
 \subsubsection{A numerical example}
 
-It seems hard to capture the complexity of this function by looking only at this
+It looks hard to capture the complexity of this function by looking only at this
 ``exact'' formula. 
 Let us consider a simple example: the number $H'_{\omega^3}(3)$.  
 
-\begin{Coqsrc}
-Section H'_omega_cube_3.
-  
-Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
+\input{movies/snippets/Hprime/HprimeOmegaCube3a}
 
-Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k.
-\end{Coqsrc}
 
 Thus, the number $H_{\omega^3}(3)$ can be written as four nested applications of $f$.
  
-\begin{Coqsrc}
-Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))).
-proof. rewrite R0; reflexivity. Qed.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeOmegaCube3b}
 
 In order to make this statement more readable, we can introduce a local définition.
 
-\begin{Coqsrc}
-Let N := (exp2 64 * 64 - 1)%nat.
-\end{Coqsrc}
+\input{movies/snippets/Hprime/HprimeOmegaCube3c}
+
 
 This number looks quite big; let us compute an approximation with \texttt{Ocaml}:
 
@@ -5499,18 +5394,8 @@ This number looks quite big; let us compute an approximation with \texttt{Ocaml}
 - : float = 1.1805916207174113e+21
 \end{Coqanswer}
 
+\input{movies/snippets/Hprime/HprimeOmegaCube3d}
 
-\begin{Coqsrc}
-Fact F1 : H'_ (phi0 3) 3 = f (f N).
-Proof.
- rewrite F0; reflexivity. 
-Qed.
-
-
-Lemma F1_simpl : H'_ (phi0 3) 3 =
-                 (exp2 (exp2 (S N) * S N) * (exp2 (S N) * S N) - 1)%nat.
-
-\end{Coqsrc}
 
 
 In a more classical writing, this number is displayed as follows:
@@ -5527,13 +5412,6 @@ We leave as an exercise to determine the best approximation as possible of
 we do not take into account the multiplications in the formula above,
 we obtain that, in base $2$, the number $H'_{\omega^3}(3)$ has at least
 $2^{10^{21}}$  digits. But it is still an under-approximation !
-
-
-\begin{Coqsrc}
-End H'_omega_cube_3.
-\end{Coqsrc}
-
-
 
 
 Now, we have got at last an exact formula for $H'_{\omega^\omega}$.

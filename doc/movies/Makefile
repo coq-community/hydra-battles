@@ -16,7 +16,7 @@ vpath %.v ${INPUT_DIR}/solutions_exercises
 
 COQ_FILES = Ack.v AckNotPR.v    \
 	    extEqualNat.v  primRec.v PrimRecExamples.v   \
-	    F_alpha.v L_alpha.v F_omega.v  \
+	    F_alpha.v L_alpha.v F_omega.v Hprime.v \
 	    Hydra_Definitions.v O2H.v \
 	    Hydra_Theorems.v  Hydra_Examples.v    \
 	    Hydra_Lemmas.v   Hydra_Termination.v    \
