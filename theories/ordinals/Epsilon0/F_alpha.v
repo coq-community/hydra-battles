@@ -29,6 +29,7 @@ The following definition is not accepted by the [equations] plug-in.
 
 Instance Olt : WellFounded Lt := E0.Lt_wf.
 
+(* begin snippet FailDemo *)
 
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
@@ -37,6 +38,8 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
           with Utils.dec (Limitb alpha) :=
           { | left _ =>  F_ (Canon alpha i)  i ;
             | right notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
+
+(* end snippet FailDemo *)
 
 (**
 
@@ -47,7 +50,9 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 
 
 
+(* begin snippet goodDef *)
 
+(*| .. coq:: no-out |*)
 
 Definition call_lt (c c' : E0 * nat) :=
   lexico Lt (Peano.lt) c c'.
@@ -61,11 +66,7 @@ Qed.
 Instance WF : WellFounded call_lt := call_lt_wf.
 
 
-(** 
-
-   [F_star (alpha,i)] is intended to be the i-th iterate of [F_ alpha]. 
- *)
-
+(*  F_star (alpha,i) is intended to be the i-th iterate of F_ alpha *)
 
 Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
@@ -79,6 +80,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
               F_star (Pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
     F_star (alpha, 1) (F_star (alpha, (S n)) i).
+(*||*) (*| .. coq:: none |*)
 
 Next Obligation.
   left; cbn ; auto with E0. 
@@ -96,10 +98,13 @@ Next Obligation.
   right; cbn; auto with arith.
 Defined.
 
+(*||*) (*| .. coq:: no-out |*)
 
-(**  Finally, [F_ alpha] is defined as its first iterate  ! *)
+Definition F_ alpha i := F_star (alpha, 1) i.
 
-Definition F_  alpha i := F_star (alpha, 1) i.
+(*||*)
+
+(* end snippet goodDef *)
 
 (** ** We get the "usual" equations for [F_]  *)
 
@@ -150,17 +155,22 @@ Qed.
 
 (** *** Usual equations for [F_] *)
 
-Lemma F_zero_eqn : forall i, F_ Zero i = S i.
+(* begin snippet FEquations *)
+
+Lemma F_zero_eqn : forall i, F_ Zero i = S i.  (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro i. unfold F_; rewrite F_star_equation_2.
   destruct (E0_eq_dec Zero Zero).
   - now cbn.
   - now destruct n.
 Qed.
+(*||*)
 
-
-Lemma F_lim_eqn : forall alpha i,  Limitb alpha ->
-                                   F_ alpha i = F_ (Canon alpha i) i.
+Lemma F_lim_eqn : forall alpha i,
+    Limitb alpha ->
+    F_ alpha i = F_ (Canon alpha i) i. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha Zero).
@@ -169,14 +179,17 @@ Proof.
     + cbn; auto.
     + red in H. rewrite e in H; discriminate.
 Qed.
-
+(*||*)
 
 Lemma F_succ_eqn : forall alpha i,
-    F_ (Succ alpha) i = iterate (F_ alpha) (S i) i.
+    F_ (Succ alpha) i = iterate (F_ alpha) (S i) i. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with E0.
   intros;rewrite F_eq2,  F_star_iterate ...
   -  now rewrite Pred_of_Succ.
 Qed.
+(*||*)
+(* end snippet FEquations *)
 
 (** ** First steps of the hierarchy *)
 
@@ -187,7 +200,10 @@ Tactic Notation "undiag2" constr(n) integer(occ1) integer(occ2) :=
   let n' := fresh "n" in
   generalize n at occ1 occ2; intro n'; induction n'.
 
-Lemma LF1 : forall i,  F_ 1 i = S (2 * i).
+(* begin snippet FirstValues *)
+
+Lemma LF1 : forall i,  F_ 1 i = S (2 * i). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro i; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
   rewrite iterate_rw, F_zero_eqn.  
@@ -197,8 +213,10 @@ Proof.
     + simpl; auto.
   - intro; now rewrite F_zero_eqn.
 Qed. 
+(*||*)
 
-Lemma LF2 : forall i, exp2 i * i < F_ 2 i.
+Lemma LF2 : forall i, exp2 i * i < F_ 2 i. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro i; ochange (Fin 2) (Succ 1); rewrite F_succ_eqn.
   undiag2 i 1 3.
@@ -206,6 +224,8 @@ Proof.
   - intros; simpl exp2; ring_simplify. simpl (2+n)%nat.
     rewrite iterate_S_eqn, LF1; abstract lia.
 Qed.
+(*||*)
+(* end snippet FirstValues *)
 
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
 Proof.
@@ -534,38 +554,51 @@ End Properties.
 
 (* end hide *)
 
+(* begin snippet FalphaThms *)
 
-Theorem F_alpha_mono alpha : strict_mono (F_ alpha).
+Theorem F_alpha_mono alpha : strict_mono (F_ alpha). (* .no-out *)
+(*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
+(*||*)
 
-
-Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n.
+Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n. (* .no-out *)
+(*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
+(*||*)
 
-Corollary F_alpha_positive alpha :
-  forall n, 0 < F_ alpha n.
+Corollary F_alpha_positive alpha :  forall n, 0 < F_ alpha n. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro n; apply Lt.le_lt_trans with n; auto with arith.
   apply F_alpha_ge_S.
 Qed.
 
-Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha).
-Proof. now  destruct  (TH_packed alpha). Qed.
 
-Theorem F_alpha_dom alpha : dominates_from 1 (F_ (Succ alpha)) (F_ alpha).
+
+Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (Succ alpha). 
+(*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
+(*||*)
+
+
+Theorem F_alpha_dom alpha :
+  dominates_from 1 (F_ (Succ alpha)) (F_ alpha). (* .no-out *)
+(*| .. coq:: none |*)
+Proof. now  destruct  (TH_packed alpha). Qed.
+(*||*)
 
 (** [F_] is not mononotonous in [alpha] in general. 
       Nevertheless, this lemma may help (from [KS]) *)
 
 
-Theorem F_restricted_mono_l alpha : forall beta n, Canon_plus n alpha beta -> 
-                                            F_ beta n <= F_ alpha n.
+Theorem F_restricted_mono_l alpha :
+  forall beta n, Canon_plus n alpha beta -> 
+                 F_ beta n <= F_ alpha n. (* .no-out *)
+(*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
+(*||*)
 
-
-
-
+(* end snippet FalphaThms *)
 
 Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i).
 Proof.
@@ -590,11 +623,15 @@ Qed.
 
 (** From Ketonen and Solovay, page 284, op. cit. *)
 
+(* begin snippet FDomContext *)
+
 Section Compatibility_F_dominates.
 
   Variables alpha beta : E0.
   Hypothesis H'_beta_alpha : Lt beta alpha.
 
+  (* end snippet FDomContext *)
+  
   (* begin hide *)
   Section case_eq.
     Hypothesis Heq : alpha = Succ beta.
@@ -668,16 +705,18 @@ Section Compatibility_F_dominates.
     - intros; eapply F9; eauto.
   Qed.
 
+  (* begin snippet FDom *)
   
-  
-  Lemma F_mono_l: dominates (F_ alpha) (F_ beta).
+  Lemma F_mono_l: dominates (F_ alpha) (F_ beta). (* .no-out *)
+  (*| .. coq:: none |*)
   Proof.
     destruct (Lemma2_6_1_E0  H'_beta_alpha) as [i Hi].
     exists (S (S i)); intros p Hp; apply F_mono_l_0 with i;  auto.
   Qed.
-
+  (*||*)
   
 End Compatibility_F_dominates.
+(* end snippet FDom *)
 
 
 (** * Comparison with the Hardy hierarchy 
