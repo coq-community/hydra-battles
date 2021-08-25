@@ -144,6 +144,8 @@ Definition succ (alpha : Ord)
 
 (** Finite ordinals *)
 
+(* begin snippet finiteDef *)
+
 Fixpoint finite (i:nat) : Ord :=
   match i with 0 => zero
             | S i => succ (finite i)
@@ -151,21 +153,28 @@ Fixpoint finite (i:nat) : Ord :=
 
 Notation F i := (finite i).
 
-
 Coercion finite : nat >-> Ord.
+
+(* end snippet finiteDef *)
+
 
 Definition is_finite  := seq_range finite.
 
 (** ** Limits *)
 
+(* begin snippet supDef *)
+
 Definition sup_spec X lambda := is_lub ordinal lt X lambda.
 
-Definition sup (X: Ensemble Ord) : Ord  := the  (sup_spec X).
+Definition sup (X: Ensemble Ord) : Ord := the (sup_spec X).
 
 Notation "'|_|' X" := (sup X) (at level 29) : schutte_scope.
 
+(* end snippet supDef *)
 
 (**  Limit of omega-sequences *)
+
+(* begin snippet omegaDef *)
 
 Definition omega_limit (s:nat->Ord) : Ord 
   := |_| (seq_range s).
@@ -173,6 +182,8 @@ Definition omega_limit (s:nat->Ord) : Ord
 Definition _omega := omega_limit finite.
 
 Notation omega := (_omega).
+
+(* end snippet omegaDef *)
 
 (** Successor and limit ordinals *)
 (* begin snippet isSuccIsLimit *)
@@ -465,7 +476,7 @@ Proof. (* .no-out *)
   (*| .. coq:: no-out |*)
   destruct (@AX3 (Singleton _ alpha)).
   - apply countable_singleton.
-  -  unfold succ_spec; apply the_least_unicity;  exists x; intuition.
+  - unfold succ_spec; apply the_least_unicity; exists x; intuition.
 Qed.     
 (*||*)
 (* end snippet succOkb *)
@@ -474,9 +485,9 @@ Qed.
 
 (*| .. coq:: no-out |*)
 
-Lemma lt_succ (alpha : Ord) :  alpha < succ alpha.
+Lemma lt_succ (alpha : Ord): alpha < succ alpha.
 Proof.
-  destruct  (succ_ok  alpha);  tauto.
+  destruct  (succ_ok  alpha); tauto.
 Qed.
 
 #[global] Hint Resolve lt_succ : schutte. (* .none *)
@@ -568,11 +579,12 @@ Global Hint Resolve zero_lt_succ zero_le : schutte.
 
 (** Less than finite is finite ... *)
 
-Lemma finite_lt_inv : forall i o,  o < F i -> 
-                                   exists j:nat , (j<i)%nat /\ o = F j.
+Lemma finite_lt_inv : forall i o,
+    o < F i -> 
+    exists j:nat , (j<i)%nat /\ o = F j.
 Proof.
   induction i.
-  - simpl (F 0); intros ; destruct  (not_lt_zero  H ).
+  - simpl (F 0); intros ; destruct (not_lt_zero  H ).
   - simpl (F (S i));intros o H; destruct (@lt_succ_le_2 o (F i));
       auto with schutte.
     +  exists i; split; auto.
@@ -895,21 +907,26 @@ Qed.
 
 (** ** Properties of omega *)
 
+(* begin snippet omegaProps *)
 
-Lemma finite_lt_omega (i : nat) :   i < omega.
+Lemma finite_lt_omega (i : nat) : i < omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
    intros; apply lt_omega_limit; auto with schutte.
 Qed.
+(*||*)
 
 
-Lemma zero_lt_omega : zero < omega.
+Lemma zero_lt_omega : zero < omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   change zero with (F 0); apply finite_lt_omega.
 Qed.
-
+(*||*)
 
 Lemma lt_omega_finite (alpha : Ord) :
-  alpha < omega ->  exists i:nat, alpha =  i.
+  alpha < omega ->  exists i:nat, alpha = i. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H0; unfold omega_limit in H0.
   generalize (lt_sup_exists_leq (X:=(seq_range finite))  ).
@@ -924,10 +941,10 @@ Proof.
   - destruct  (finite_lt_inv x0 H);auto.
     exists x; tauto.
 Qed.
+(*||*)
 
-
-
-Lemma is_limit_omega : is_limit omega.
+Lemma is_limit_omega : is_limit omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   repeat split; auto with schutte.
   - intro H;  absurd (F 1 < zero).
@@ -942,8 +959,9 @@ Proof.
   pattern omega at 1;rewrite H0;auto with schutte.
   apply finite_lt_omega;auto with schutte.
 Qed.
+(*||*)
 
-
+(* end snippet omegaProps *)
 
 
 (** ** About zero, is_succ and is_limit *)

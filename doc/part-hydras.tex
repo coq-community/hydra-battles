@@ -6413,18 +6413,7 @@ Using \texttt{succ}, it is now easy to define recursively all the finite ordinal
 
 \label{sect:notation-F-sch}
 
-\begin{Coqsrc}
-Reserved Notation "'F' n" (at level 29) .
-
-Fixpoint finite (i:nat) : Ord :=
-  match i with 
-            | 0 => zero
-            | S i => succ (F i)
-  end
-where "'F' i" := (finite i)  : schutte_scope.
-
-Coercion finite : nat >-> Ord.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/finiteDef}
 
 \section{The definition of \texttt{omega}}
 In order to define $\omega$, the first infinite ordinal, we use an operator which
@@ -6434,47 +6423,20 @@ For that purpose, we first use a predicate:
 upper bound  of $X$ (with respect to \textit{lt}).
 
 
-\begin{Coqsrc}
-Definition is_lub (M:Type)
-                  (D : Ensemble M)
-                  (lt : relation M)
-                  (X:Ensemble M)
-                  (a:M) :=
-   In _ D a  /\ upper_bound  D lt X a  /\
-   (forall y, In _ D y -> upper_bound  D lt X y  -> 
-                  y = a \/ lt a y).
-\end{Coqsrc}
+\input{movies/snippets/Lub/isLubDef}
 
-
-\begin{Coqsrc}
-Definition sup_spec X lambda := is_lub ordinal lt X lambda.
-
-Definition sup (X: Ensemble Ord) : Ord  := the  (sup_spec X).
-
-Notation "'|_|' X" := (sup X) (at level 29) : schutte_scope.
-\end{Coqsrc}
-
+\input{movies/snippets/Schutte_basics/supDef}
 
 
 Then, we define the function \texttt{omega\_limit} which returns the least upper bound 
 of the  (denumerable) range of any sequence \texttt{s: nat -> Ord}. 
 By \texttt{AX3} this range is bounded, hence the set of its upper bounds is not empty and has a least element.
-
-
-\begin{Coqsrc}
-Definition omega_limit (s:nat->Ord) : Ord 
-  := |_| (seq_range s).
-\end{Coqsrc}
-
 Then we define \texttt{omega} as the limit of the sequence of finite ordinals.
 
+\input{movies/snippets/Schutte_basics/omegaDef}
 
 \label{sect:notation-omega}
-\begin{Coqsrc}
-Definition _omega := omega_limit finite.
 
-Notation "'omega'" := (_omega) : schutte_scope.
-\end{Coqsrc}
 
 
 
@@ -6482,14 +6444,8 @@ Among the numerous properties of the ordinal $\omega$, let us quote the followin
 (proved in Module 
 \href{../theories/html/hydras.Schutte.Schutte_basics.html\#finite_lt_omega}{\texttt{Schutte.Schutte\_basics}})
 
-\begin{Coqsrc}
-Lemma finite_lt_omega : forall i: nat,  i < omega.
+\input{movies/snippets/Schutte_basics/omegaProps}
 
-Lemma lt_omega_finite alpha : Ord) : 
-  alpha < omega ->  exists i:nat, alpha =  i.
-
-Lemma is_limit_omega : is_limit omega.
-\end{Coqsrc}
 
 
 \subsection{Ordering functions and ordinal addition}
