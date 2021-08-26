@@ -257,6 +257,10 @@ jobs:
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
         --argstr job "coq"
     - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: serapi'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "serapi"
+    - if: steps.stepCheck.outputs.status == 'built'
       name: 'Building/fetching previous CI target: equations'
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
         --argstr job "equations"
@@ -328,7 +332,7 @@ jobs:
     - name: Build coqdoc
       run: nix-shell --run "make -j $(nproc) html"
     - name: Compile LaTeX document
-      run: nix-shell --run "make pdf"
+      run: nix-shell --run "make pdf SOURCE_DATE_EPOCH=$(date +%s)"
     - name: Extract PDF and Coqdoc
       run: |
         mkdir -p public/doc public/theories
@@ -356,8 +360,10 @@ name: Nix CI for bundle default
     paths:
     - .github/workflows/**
   pull_request_target:
-    paths:
-    - '!.github/workflows/**'
+    types:
+    - opened
+    - synchronize
+    - reopened
   push:
     branches:
     - master
