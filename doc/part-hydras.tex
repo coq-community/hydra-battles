@@ -6950,16 +6950,8 @@ $\alpha$ is $\alpha$-critical,
 \noindent\emph{From \href{../theories/html/hydras.Schutte.Critical.html\#strongly_critical}%
 {\texttt{Schutte.Critical}}}
 
-\begin{Coqsrc}
-Definition strongly_critical alpha := In (Cr alpha) alpha.
+\input{movies/snippets/Critical/Gamma0Def}
 
-Definition maximal_critical alpha : Ensemble Ord :=
-  fun gamma =>
-    In (Cr alpha) gamma /\
-    forall xi, alpha < xi -> ~ In (Cr xi) gamma.
-
-Definition Gamma0 := the_least strongly_critical.
-\end{Coqsrc}
 
 \index{hydras}{Projects}
 \begin{project}
@@ -7010,16 +7002,9 @@ Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors
 
 \noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#T2}%
 {\texttt{Gamma0.T2}}}
-\begin{Coqsrc}
-(**  [gcons alpha beta n gamma] is : [psi(alpha,beta)*(S n)+ gamma]  *)
 
-Inductive T2 : Set :=
-| zero : T2
-| gcons : T2 -> T2  -> nat -> T2 -> T2.
+\input{movies/snippets/T2/T2Def}
 
-Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
-                                 (at level 0): t2_scope.
-\end{Coqsrc}
 
 \begin{figure}[h]
   \centering
@@ -7030,24 +7015,7 @@ Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
 
 Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognizing simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
 
-\begin{Coqsrc}
-Notation  one  := [zero,zero].
-
-(** The (n+1)-th finite ordinal *)
-Notation FS n := (gcons zero zero n zero).
-
-(** the [n]-th ordinal  *)
-Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
-
-Notation "'omega'"  := [zero,one] : T2_scope.
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
-Notation "'epsilon0'"  := ([one,zero]) : T2_scope.
-
-Definition epsilon alpha := [one, alpha].
-\end{Coqsrc}
+\input{movies/snippets/T2/Notations}
 
 \section{How big is \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}?}
 
@@ -7056,120 +7024,14 @@ an adaptation of Schütte's, taking into account the multiplications by a natura
 
 \label{sect:t2-lt-def}
 
-\begin{Coqsrc}
-Inductive lt : T2 -> T2 -> Prop :=
-| (* 1 *) 
- lt_1 : forall alpha beta n gamma,  zero t2< gcons alpha beta n gamma
-| (* 2 *)
- lt_2 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-                alpha1 t2< alpha2 ->
-                beta1 t2< gcons alpha2 beta2 0 zero ->
-               gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha2 beta2 n2 gamma2
-| (* 3 *)
- lt_3 : forall alpha1  beta1 beta2 n1 n2 gamma1 gamma2, 
-               beta1 t2< beta2 ->
-               gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha1 beta2 n2 gamma2
+\input{movies/snippets/T2/ltDef}
 
-| (* 4 *)
- lt_4 : forall alpha1 alpha2 beta1 beta2 n1 n2 gamma1 gamma2, 
-               alpha2 t2< alpha1 ->
-               [alpha1, beta1] t2< beta2 ->
-               gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha2 beta2 n2 gamma2
-
-| (* 5 *)
- lt_5 : forall alpha1 alpha2 beta1 n1 n2 gamma1 gamma2, 
-               alpha2 t2< alpha1 ->
-               gcons alpha1 beta1 n1 gamma1 t2<
-               gcons alpha2  [alpha1, beta1] n2 gamma2
-
-| (* 6 *)
- lt_6 : forall alpha1 beta1  n1  n2 gamma1 gamma2,  (n1 < n2)%nat ->
-                                    gcons alpha1 beta1 n1 gamma1 t2< 
-                                    gcons alpha1 beta1 n2 gamma2
-
-| (* 7 *)
- lt_7 : forall alpha1 beta1 n1   gamma1 gamma2,  gamma1 t2< gamma2 ->
-                                      gcons alpha1 beta1 n1 gamma1 t2<
-                                      gcons alpha1 beta1 n1 gamma2
-where  "o1 t2< o2" := (lt o1 o2): T2_scope.
-
-Hint Constructors lt : T2.
-\end{Coqsrc}
 
 Seven constructors! In order to get accustomed with this definition, let us look at a small set of examples, covering all the constructors of \texttt{lt}.
 
 
-\subsection{Examples}
+\input{movies/snippets/T2/ltExamples}
 
-\subsubsection*{Proof of $0<\epsilon_0$}
-
-\begin{Coqsrc}
-Example Ex1: 0 t2< epsilon0.
-Proof.  constructor 1. Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\omega<\epsilon_0$}
-
-\begin{Coqsrc}
-Example Ex2: omega t2< epsilon0.
-Proof. info_auto with T2. (* uses lt_1 and lt_2 *) Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\psi(\omega,8)\times 13+56 < \psi(\omega,8)\times 13+57 $}
-
-\begin{Coqsrc}
-Example Ex3: gcons omega 8 12 56 t2<  gcons omega 8 12 57.
-Proof.
-  constructor 7; constructor 6; auto with arith.
-Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\epsilon_0<\psi(2,1)$}
-
-\begin{Coqsrc}
-Example Ex4: epsilon0 t2< [2,1].
-Proof.
-   constructor 2; auto with T2.
-   - constructor 6; auto with arith.
-Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\psi(2,1)<\psi(2,3)$}
-
-\begin{Coqsrc}
-Example Ex5 : [2,1] t2< [2,3].
-Proof.
-  constructor 3; auto with T2.
-  - constructor 6; auto with arith.
-Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\psi(1,0)\times 13+ \omega < \psi(0,\psi(2,1))$}
-\label{sect:ex6-first-proof}
-
-\begin{Coqsrc}
-Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
-Proof.
-  constructor 4.
-  - constructor 1.
-  - constructor 2.
-    + constructor 6; auto with arith.
-    + constructor 1.
-Qed.
-\end{Coqsrc}
-
-\subsubsection*{Proof of $\psi(2,1)\times 43 + \epsilon_0 < \psi(1,\psi(2,1))$}
-
-\begin{Coqsrc}
-Example Ex7 : gcons 2 1 42 epsilon0 t2< [1, [2,1]].
-Proof.
- constructor 5.
- constructor 6; auto with arith.
-Qed.
-\end{Coqsrc}
 
 \index{hydras}{Projects}
 \begin{project}
@@ -7182,82 +7044,19 @@ Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2<
  \emph{[Veblen] normal form} if for every $i<n$, $\psi(\alpha_i,\beta_i)<\psi(\alpha_{i+1},\beta_{i+1})$, all the $\alpha_i$ and $\beta_i$ are in normal form, and all the $n_i$ are strictly positive integers.
 \end{definition}
 
-\begin{Coqsrc}
-Inductive nf : T2 -> Prop :=
-| zero_nf : nf zero
-| single_nf : forall a b n, nf a ->  nf b -> nf (gcons a b n zero)
-| gcons_nf : forall a b n a' b' n' c', 
-                      [a', b'] t2< [a, b]  -> 
-                      nf a -> nf b -> 
-                      nf(gcons a' b' n' c')-> 
-                      nf(gcons a b n (gcons a' b' n' c')).
-\end{Coqsrc}
+\input{movies/snippets/T2/nfDef}
+
+
 
 Let us look at some positive examples (we have to prove some inversion lemmas before proving counter-examples).
 
-
-\begin{Coqsrc}
-Lemma  nf_fin i : nf (fin i).
-Proof.
-  destruct i.
-  - auto with T2.
-  - constructor 2; auto with T2.
-Qed.
-
-Lemma nf_omega : nf omega.
-Proof.  compute; auto with T2. Qed.
-
-Lemma nf_epsilon0 : nf epsilon0.
-Proof. constructor 2; auto with T2. Qed.
-
-Lemma nf_epsilon : forall alpha, nf alpha -> nf (epsilon alpha).
-Proof. compute; auto with T2. Qed.
-
-Example Ex8: nf (gcons 2 1 42 epsilon0).
-Proof.
-  constructor 3; auto with T2.
-  - apply Ex4.
-  - apply nf_fin.
-  - apply nf_fin.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/T2/nfExamples}
 
 
 \subsection{Length of a term}
 
 The notion of \emph{term length} is introduced by Schütte as a helper for proving (at least) the \emph{trichotomy} property and transitivity of the strict order \texttt{lt} on \texttt{T2}. These properties are proved by induction on length.
 
-\begin{Coqsrc}
-Fixpoint nbterms (t:T2) : nat :=
-  match t with zero => 0
-             | gcons a b n v => (S n) + nbterms v
-  end.
-
-Fixpoint t2_length (t:T2) : nat :=
-  match t  with 
-    zero => 0
-  | gcons a b n v => 
-       nbterms (gcons a b n v) + 
-      2 * (Max.max (t2_length a)
-                              (Max.max (t2_length b) 
-                                                (t2_length_aux v)))
-  end
-with t2_length_aux (t:T2) : nat :=
- match t with 
- | zero => 0
-  | gcons a b n v =>
-           Max.max (t2_length a) 
-                            (Max.max (t2_length b) (t2_length_aux v))
- end.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Compute t2_length (gcons 2 1 42 epsilon0).
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = 48 : nat
-\end{Coqanswer}
 
 \subsection{Trichotomy}
 
@@ -7270,106 +7069,18 @@ We first prove by induction on $l$ the following lemma:
 \noindent\emph{From \href{../theories/html/hydras.Gamma0.Gamma0\#tricho_aux}%
 {\texttt{Gamma0.Gamma0}}}
 
-\begin{Coqsrc}
-Lemma tricho_aux (l: nat) : forall t t' :T2,
-      t2_length t + t2_length t' < l  ->
-      {t t2< t'} + {t = t'} + {t' t2<  t}.
-\end{Coqsrc}
+\input{movies/snippets/Gamma0/tricho}
 
-Then we get our version of \texttt{lt\_eq\_lt\_dec}, and derive a comparison function;
+\input{movies/snippets/Gamma0/compare}
 
-\begin{Coqsrc}
-Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
-Proof.
-  eapply tricho_aux.
-  eapply lt_n_Sn.
-Defined.
-
-Definition compare (t1 t2 : T2) : comparison := 
-  match lt_eq_lt_dec t1 t2 with
-  | inleft (left _) => Lt
-  | inleft (right _) => Eq
-  | inright _ => Gt
-  end.
-\end{Coqsrc}
 
 With the help of \texttt{compare}, we get a boolean version of \texttt{nf}
 (being in Veblen normal form).
 
-\begin{Coqsrc}
-Fixpoint nfb (alpha : T2) : bool :=
-  match alpha with
-    zero => true
-  | gcons a b n zero => andb (nfb a) (nfb b)
-  | gcons a b n ((gcons a' b' n' c') as c) =>
-    match compare [a', b'] [a, b] with
-           Lt => andb (nfb a) (andb (nfb b) (nfb c))
-           | _ => false
-           end
-end.
-\end{Coqsrc}
+\input{movies/snippets/Gamma0/nfb}
 
 
-\begin{Coqsrc}
-Compute compare (gcons 2 1 42 epsilon0) [2,2].
-\end{Coqsrc}
 
-\begin{Coqanswer}
-   = Lt
-     : comparison
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute nfb  (gcons 2 1 42 epsilon0).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-   = true
-     : bool
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-   = false
-     : bool
-\end{Coqanswer}
-
-\begin{remark}
-The connection between the predicate \texttt{nf} and the relation \texttt{lt} on one part, and the functions \texttt{nfb} and \texttt{compare} on the other, is expressed by the following lemmas:
-
-\begin{Coqsrc}
-Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
-
-Lemma compare_correct alpha beta :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-\end{Coqsrc}
-
-The function \texttt{compare} helps to make easier proofs of inequalities of
-closed terms of type \texttt{T2}.
-
-First, we prove a lemma:
-
-\begin{Coqsrc}
-Lemma compare_Lt : forall alpha beta, compare alpha beta = Lt -> 
-                                         alpha t2< beta.
-Proof.
-  intros alpha beta; destruct (compare_correct alpha beta);
-    trivial; discriminate. 
-Qed.
-\end{Coqsrc}
-
-Then, we give another version of the proof of Sect.~\vref{sect:ex6-first-proof}.
-
-\begin{Coqsrc}
-Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
-Proof. now apply compare_Lt. Qed.
-\end{Coqsrc}
-
-\end{remark}
 
 
 \section{Main functions on \texttt{T2}}
@@ -7379,78 +7090,28 @@ The successor function is defined by structural recursion.
 
 \noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#succ}%
 {\texttt{Gamma0.T2}}}
-\begin{Coqsrc}
-Fixpoint succ (a:T2) : T2 :=
- match a with zero => one
-             | gcons zero zero n c => fin (S (S n))
-             | gcons a b n c => gcons a b n (succ c)
- end.
-\end{Coqsrc}
+
+\input{movies/snippets/T2/succDef}
+
 
 \subsection{Addition}
 
 Like for Cantor normal forms (see Sect.~\ref{sect:infix-plus-T1}),  the definition of addition in \texttt{T2}  requires comparison between ordinal terms.
 
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.Gamma0T2.html\#succ}%
+  {\texttt{Gamma0.Gamma0}}}
 
-\begin{Coqsrc}
-Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
-  match t1,t2 with
-  |  zero, y  => y
-  |  x, zero => x
-  |  gcons a b n c, gcons a' b' n' c' =>
-     (match compare (gcons a b 0 zero)
-                    (gcons a' b' 0 zero) with
-      | Lt => gcons a' b' n' c'
-      | Gt => gcons a b n (c + gcons a' b' n' c')
-      | Eq => gcons a b (S(n+n')) c'
-      end)
-  end
-where "alpha + beta" := (plus alpha beta): T2_scope.
-\end{Coqsrc}
+\input{movies/snippets/Gamma0/plusDef}
 
-\begin{Coqsrc}
-Example Ex7 : 3 + epsilon0 = epsilon0.
-Proof. trivial. Qed.
-\end{Coqsrc}
+
 
 \subsection{The Veblen function \texorpdfstring{$\phi$}{\texttt{phi}}}
 
 The enumeration function of critical ordinals, presented in Sect.~\vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
 
-\begin{Coqsrc}
-Definition  phi (alpha beta : T2) : T2 :=
-  match beta with zero => [alpha, beta] 
-             | [b1, b2] => 
-               (match compare alpha b1
-                with Datatypes.Lt => [b1, b2 ]
-                | _ => [alpha,[b1, b2]]
-                end)
-             | gcons b1 b2 0 (gcons zero zero  n zero) => 
-               (match compare alpha b1
-                with  Datatypes.Lt => 
-                      [alpha, (gcons b1 b2 0 (fin n))]
-                | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
-                end)
-             | any_beta => [alpha, any_beta]
-  end.
-\end{Coqsrc}
+\input{movies/snippets/Gamma0/phiDef}
 
 Despite its complexity, the function \texttt{phi} is well adapted to proofs by simplification or computation.
-\begin{Coqsrc}
-Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
-Proof. reflexivity. Qed.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-(**  All epsilons are fixpoints of phi 0 *)
-
-Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
-                                   epsilon beta.
-Proof. reflexivity. Qed.
-
-Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
-Proof. apply epsilon_fxp. Qed.
-\end{Coqsrc}
 
 
 The relation between the constructor $\psi$ and the function $\phi$ is
@@ -7460,31 +7121,16 @@ studied in~\cite{schutte}, and partially implemented in this development.
 For instance, the following theorem states that, if $\gamma$ is the sum of a limit ordinal $\beta$ and a finite ordinal $n$, and $\beta$ is a fixpoint of
 $\phi(\alpha)$, then $\psi(\alpha,\gamma)=\phi_\alpha(\gamma+1)$.
 
-\begin{Coqanswer}
-phi_psi :
-forall (alpha : T2) [beta gamma : T2] [n : nat],
-nf gamma ->
-limit_plus_fin beta n gamma ->
-phi alpha beta = beta -> [alpha, gamma] = phi alpha (succ gamma)
-\end{Coqanswer}
+\input{movies/snippets/Gamma0/phiPsi}
+\input{movies/snippets/Gamma0/Ex9}
 
-\begin{Coqsrc}
-Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
-Proof. trivial. Qed.
-\end{Coqsrc}
+
+
 
 On the other hand, $\phi$ can be expressed in terms of $\psi$.
 
-\begin{Coqanswer}
-phi_of_psi:
-  forall a b1 b2 : T2,
-  phi a [b1, b2] = (if lt_ge_dec a b1 then [b1, b2] else [a, [b1, b2]])
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\input{movies/snippets/Gamma0/phiOfPsi}
+\input{movies/snippets/Gamma0/Ex10}
 
 \index{hydras}{Projects}
 \begin{project}
@@ -7497,36 +7143,17 @@ In order to consider type \texttt{T2} as an ordinal notation, we have to build a
 
 First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation (see for comparison the construction of type \texttt{E0} in Sect.~\vref{sect:E0-def}).
 
-\begin{Coqsrc}
-Module G0.
+\input{movies/snippets/Gamma0/G0a}
+\input{movies/snippets/Gamma0/G0b}
 
-Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
-Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
-
-Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
-\end{Coqsrc}
-
-Then, we prove that \texttt{lt} is a well-founded strict order and that the
+Then, we buils an instance of class \texttt{ON}. 
 function \texttt{compare} is correct.
 
-\begin{Coqsrc}
-Instance lt_sto : StrictOrder lt.
+\input{movies/snippets/Gamma0/ltSto}
+\input{movies/snippets/Gamma0/ltWf}
+\input{movies/snippets/Gamma0/ONGamma0}
 
-Lemma lt_wf : well_founded lt.
-
-Lemma compare_correct alpha beta :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-
-Instance Gamma0: ON lt  compare.
-Proof.
-  split.
-  - apply lt_sto.
-  - apply lt_wf. 
-  - apply compare_correct.
-Qed.
-\end{Coqsrc}
 
 
 \begin{remark}
@@ -7538,7 +7165,7 @@ The proof of \texttt{lt\_wf} has been written by \'Evelyne Contejean, using her 
 Prove that \texttt{Epsilon0} (page~\pageref{instance-epsilon0})
 is a sub-notation system of \texttt{Gamma0}.
 
-Prove that the implemantations of \texttt{succ}, \texttt{+}, $\phi_0$, etc.
+Prove that the implementations of \texttt{succ}, \texttt{+}, $\phi_0$, etc.
 are compatible in both notation systems.
 
 Note that a function \texttt{T1\_inj} from \texttt{T1} to \texttt{T2} has already been defined. It may help to complete the task.
@@ -7547,15 +7174,8 @@ Note that a function \texttt{T1\_inj} from \texttt{T1} to \texttt{T2} has alread
 
 \noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#T1_to_T2}%
 {\texttt{Gamma0.T2}}}
-\begin{Coqsrc}
-(* injection from T1 *)
 
-Fixpoint T1_to_T2 (alpha :T1) : T2 :=
-  match alpha  with
-  | T1.zero => zero
-  | T1.ocons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
-  end.
-\end{Coqsrc}
+\input{movies/snippets/T2/T1ToT2}
 
 \end{project}
 

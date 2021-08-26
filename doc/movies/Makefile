@@ -35,7 +35,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Omega2_Small.v \
 	    Correctness_E0.v \
 	    T1.v E0.v Hessenberg.v \
-	    T2.v \
+	    T2.v Gamma0.v \
 	    Canon.v Paths.v Large_Sets.v Large_Sets_Examples.v \
 	    Schutte_basics.v Well_Orders.v Lub.v \
 	    MoreEpsilonIota.v \

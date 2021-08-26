@@ -213,9 +213,12 @@ Global Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3
 
 Open Scope T2_scope.
 
+(* begin snippet tricho *)
+
 Lemma tricho_aux (l: nat) : forall t t': T2,
       t2_length t + t2_length t' < l  ->
-      {t t2< t'} + {t = t'} + {t' t2<  t}.
+      {t t2< t'} + {t = t'} + {t' t2<  t}. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction l.
   - intros; elimtype False. 
@@ -275,14 +278,17 @@ Proof.
                  **  subst t1; left;left;constructor 5;auto with T2.
               ++  left;left;constructor 4;auto with T2.
 Defined.
+(*||*)
 
-
-Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}.
+(*| .. coq:: no-out |*)
+Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}. 
 Proof.
   eapply tricho_aux.
   eapply lt_n_Sn.
 Defined.
+(*||*)
 
+(* end snippet tricho *)
 
 Definition lt_ge_dec : forall t t', {t t2< t'}+{t' t2<= t}.
   intros t t'; case (lt_eq_lt_dec t t').
@@ -290,12 +296,19 @@ Definition lt_ge_dec : forall t t', {t t2< t'}+{t' t2<= t}.
   auto with T2.
 Defined.
 
+(* begin snippet compare *)
+
 Definition compare (t1 t2 : T2) : comparison := 
   match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
   | inleft (right _) => Eq
   | inright _ => Gt
   end.
+
+Compute compare (gcons 2 1 42 epsilon0) [2,2].
+(* end snippet compare *)
+
+(* begin snippet nfb *)
 
 Fixpoint nfb (alpha : T2) : bool :=
   match alpha with
@@ -308,11 +321,13 @@ Fixpoint nfb (alpha : T2) : bool :=
            end
 end.
 
-Compute compare (gcons 2 1 42 epsilon0) [2,2].
-
 Compute nfb  (gcons 2 1 42 epsilon0).
 
 Compute nfb (gcons 2 1 42 (gcons 2 2 4 epsilon0)).
+
+(* end snippet nfb *)
+
+
 
 
 (* introduces an hypothesis Hname for t t2< t', t = t', and t' t2< t
@@ -850,7 +865,9 @@ Qed.
 
 (**  plus is defined here, because it requires decidable comparison *)
 
-Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
+(* begin snippet plusDef *)
+
+Fixpoint plus (t1 t2 : T2) {struct t1} : T2 :=
   match t1,t2 with
   |  zero, y  => y
   |  x, zero => x
@@ -864,10 +881,10 @@ Fixpoint plus (t1 t2 : T2) {struct t1}:T2 :=
   end
 where "alpha + beta" := (plus alpha beta): T2_scope.
 
-Example Ex7 : 3 + epsilon0 = epsilon0.
-Proof. trivial. Qed.
+Example Ex7 : 3 + epsilon0 = epsilon0. (* .no-out *)
+Proof. (* .no-out *) trivial. Qed.
 
-
+(* end snippet plusDef *)
 
 Lemma plus_alpha_0 (alpha: T2): alpha + zero = alpha.
 Proof.
@@ -1981,43 +1998,56 @@ Defined.
 
 (** See Schutte.Critical.phi  *)
 
+(* begin snippet phiDef *)
+
 Definition  phi (alpha beta : T2) : T2 :=
-  match beta with zero => [alpha, beta] 
-             | [b1, b2] => 
-               (match compare alpha b1
-                with Datatypes.Lt => [b1, b2 ]
-                | _ => [alpha,[b1, b2]]
-                end)
-             | gcons b1 b2 0 (gcons zero zero  n zero) => 
-               (match compare alpha b1
-                with  Datatypes.Lt => 
-                      [alpha, (gcons b1 b2 0 (fin n))]
-                | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
-                end)
-             | any_beta => [alpha, any_beta]
+  match beta with
+    zero => [alpha, beta] 
+  | [b1, b2] => 
+    (match compare alpha b1
+     with Datatypes.Lt => [b1, b2 ]
+     | _ => [alpha,[b1, b2]]
+     end)
+  | gcons b1 b2 0 (gcons zero zero  n zero) => 
+    (match compare alpha b1
+     with  Datatypes.Lt => 
+           [alpha, (gcons b1 b2 0 (fin n))]
+     | _ =>  [alpha, (gcons b1 b2 0 (fin (S n)))]
+     end)
+  | any_beta => [alpha, any_beta]
   end.
 
 
-Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1].
-Proof. reflexivity. Qed.
+Example Ex8:  phi 1 (succ epsilon0) = [1, [1,0] + 1]. (* .no-out *)
+Proof. (* .no-out *) reflexivity. Qed.
 
+(* end snippet phiDef *)
 
 (**  All epsilons are fixpoints of phi 0 *)
+
+(* begin snippet epsilonFxp *)
+
+(*| .. coq:: no-out |*)
 
 Theorem epsilon_fxp : forall beta, phi zero (epsilon beta) =
                                    epsilon beta.
 Proof. reflexivity. Qed.
 
-
 Theorem epsilon0_fxp : epsilon0 = phi zero epsilon0.
 Proof. apply epsilon_fxp. Qed.
 
+(*||*)
+
+(* end snippet epsilonFxp *)
+
+(* begin snippet phiOfPsi *)
 
 Theorem phi_of_psi  : forall a b1 b2, 
     phi a [b1, b2] =
     if (lt_ge_dec a b1) 
     then [b1, b2]
-    else [a ,[b1, b2]].
+    else [a ,[b1, b2]]. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   cbn; intros;case (lt_ge_dec a b1).
   - intro H;  rewrite compare_rw_lt; auto with T2.
@@ -2025,6 +2055,9 @@ Proof.
    + subst b1; rewrite compare_rw_eq;auto with T2.
    + rewrite compare_rw_gt;auto with T2.
 Qed.
+(*||*)
+(* end snippet phiOfPsi *)
+
 
 Lemma phi_to_psi : forall alpha beta, 
     {alpha' : T2 & {beta' : T2 | phi alpha beta = [alpha', beta']}}.
@@ -3374,10 +3407,14 @@ Qed.
 (* gamma = gamma0 + fin p, gamma0 = zero or gamma0 limit *)
 
 
- 
-Lemma phi_psi : forall  beta gamma n, nf gamma ->
-  limit_plus_fin beta n gamma ->  phi alpha beta = beta ->
-                           [alpha, gamma]  =  phi alpha (succ gamma).
+(* begin snippet phiPsi *)
+
+Lemma phi_psi : forall  beta gamma n,
+    nf gamma ->
+    limit_plus_fin beta n gamma ->
+    phi alpha beta = beta ->
+    [alpha, gamma] = phi alpha (succ gamma). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
  intros; case (phi_fix _ H1).
   intros beta1 (beta2,(H2,H3)).
@@ -3404,6 +3441,9 @@ subst beta.
       intros;rewrite phi_to_psi_1; auto with T2.
    induction n;cbn;auto with T2.
 Qed.
+(*||*)
+(* end snippet phiPsi *)
+
 
 Theorem th_14_5 : forall alpha1 beta1 alpha2 beta2,
                    nf alpha1 -> nf beta1 -> nf alpha2 -> nf beta2 ->
@@ -3548,19 +3588,31 @@ End phi_to_psi.
 
 Compute phi 0 (epsilon 2)= epsilon 2.
 
-Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5).
-Proof. trivial. Qed.
+(* begin snippet Ex9 *)
 
-Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5].
-Proof. reflexivity. Qed.
+Example Ex9 : [zero, epsilon 2 + 4] = phi 0 (epsilon 2 + 5). (* .no-out *)
+Proof. (* .no-out *) trivial. Qed.
+(* end snippet Ex9 *)
+
+(* begin snippet Ex10 *)
+
+Example Ex10 : phi omega [epsilon0, 5] = [epsilon0, 5]. (* .no-out *)
+Proof. (* .no-out *) reflexivity. Qed.
+(* end snippet Ex10 *)
+
+
 
 
 Declare Scope g0_scope.
+
+(* begin snippet G0a *)
 
 Module G0.
 
   Definition LT := restrict nf lt.
 
+  (* end snippet G0a *)
+  
   Lemma Lt_wf : well_founded LT.
   Proof.
     unfold LT; generalize nf_Wf; split; split.
@@ -3625,11 +3677,15 @@ Proof.
   - rewrite H; right; discriminate. 
 Qed.
 
+(* begin snippet G0b *)
+
 Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
 Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
 
-Definition compare alpha beta := Gamma0.compare (@vnf alpha) (@vnf beta).
+Definition compare alpha beta := compare (@vnf alpha) (@vnf beta).
+
+(* end snippet G0b *)
 
 
 Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
@@ -3637,15 +3693,22 @@ Proof.
   destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
 Qed.
 
-Instance lt_sto : StrictOrder lt.
+(* begin snippet ltSto *)
+
+Instance lt_sto : StrictOrder lt. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split.
   -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
   -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
 Qed.
+(*||*)
+(* end snippet ltSto *)
 
+(* begin snippet ltWf *)
 
-Lemma lt_wf : well_founded lt.
+Lemma lt_wf : well_founded lt. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split; intros [t Ht] H.
   eapply Acc_incl with (fun x y =>  LT (@vnf x) (@vnf y)).
@@ -3653,14 +3716,15 @@ Proof.
   apply (Acc_inverse_image _ _ LT (@vnf) 
                            {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
 Qed.
-
+(*||*)
+(* end snippet ltWf *)
 
 Lemma compare_correct alpha beta :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
 Proof.
   destruct alpha, beta; cbn.
-  destruct (Gamma0.compare_correct vnf0 vnf1);subst. 
+  destruct (compare_correct vnf0 vnf1);subst. 
   unfold compare; simpl.
   -  rewrite compare_rw_eq; auto.
    + constructor 1; f_equal; apply nfb_proof_unicity.
@@ -3682,19 +3746,27 @@ Notation omega := Omega.
 
 Definition le := clos_refl G0 lt.
 
-Instance Gamma0_comp: Comparable lt compare.
+(* begin snippet ONGamma0 *)
+
+Instance Gamma0_comp: Comparable lt compare. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split. 
   - apply lt_sto.
   - apply compare_correct.
 Qed. 
+(*||*)
 
-Instance Gamma0: ON lt  compare.
+Instance Gamma0: ON lt  compare. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split.
   - apply Gamma0_comp.
   - apply lt_wf. 
 Qed.
+(*||*)
+(* end snippet ONGamma0 *)
+
 
 
 Instance Finite (n:nat) : G0.
