@@ -52,6 +52,9 @@ Qed.
 
 
 
+(* begin snippet commutationLemmas *)
+
+(*| .. coq:: no-out |*)
 
 Theorem inject_of_zero : inject T1.zero = zero.
 Proof. reflexivity. Qed.
@@ -59,26 +62,35 @@ Proof. reflexivity. Qed.
 
 Theorem inject_of_finite (n : nat):
   inject (T1.fin n) =  n.
+(*||*) (*| .. coq:: none |*)
 Proof.
   destruct n.
   - apply inject_of_zero.
   - apply inject_of_finite_pos.
 Qed.
+(*||*)
 
 
-Theorem inject_of_omega : inject T1.omega = Schutte_basics._omega.
+Theorem inject_of_omega :
+  inject T1.omega = Schutte_basics._omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
- simpl.
- repeat rewrite alpha_plus_zero.
+ simpl; repeat rewrite alpha_plus_zero.
  rewrite phi0_zero;  generalize omega_second_AP; destruct 1.
  red in H; unfold Ensembles.In in H0; now rewrite omega_eqn.
 Qed.
+(*||*)
+
 
 Theorem inject_of_phi0 (alpha : T1):
-  inject (T1.phi0 alpha) = AP._phi0 (inject alpha).
+  inject (T1.phi0 alpha) = AP._phi0 (inject alpha). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   simpl; now rewrite alpha_plus_zero.
 Qed.
+
+(*||*)
+(* end snippet commutationLemmas *)
 
 (* begin hide *)
 
@@ -261,9 +273,11 @@ Proof.
      now apply inject_mono.
 Qed.
 
+(* begin snippet injectLtEpsilon0 *)
 
 Theorem inject_lt_epsilon0 (alpha : T1):
-  inject alpha < epsilon0.
+  inject alpha < epsilon0. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   assert (Ap := epsilon0_AP); induction alpha; simpl.
   - rewrite <- epsilon0_fxp; apply phi0_positive.
@@ -271,6 +285,9 @@ Proof.
     apply AP_mult_Sn_closed; auto.
     now apply phi0_lt_epsilon0.
 Qed.
+(*||*)
+(* end snippet injectLtEpsilon0 *)
+
 
 (* begin hide *)
 
@@ -387,8 +404,12 @@ Lemma inject_rw (a b: T1) n : inject (ocons a n b) =
                               mult_Sn (AP._phi0 (inject a)) n + inject b.
 Proof. reflexivity. Qed.
 
-Theorem inject_plus (alpha beta : T1): nf alpha -> nf beta ->
-                                       inject (alpha + beta)%t1 = inject alpha + inject beta.
+(* begin snippet injectPlus *)
+
+Theorem inject_plus (alpha beta : T1):
+  nf alpha -> nf beta ->
+  inject (alpha + beta)%t1 = inject alpha + inject beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with eauto with T1.
   induction alpha.
   - simpl;  now rewrite zero_plus_alpha.
@@ -421,13 +442,17 @@ Proof with eauto with T1.
           repeat rewrite inject_rw; rewrite case_gt.
           f_equal; rewrite IHalpha2 ...
 Qed.
+(*||*)
+(* end snippet injectPlus *)
 
 
-
-
+(* begin snippet injectMultFinR *)
 
 Theorem inject_mult_fin_r (alpha : T1)  :
-  nf alpha -> forall n:nat , inject (alpha *  n)%t1 =  inject alpha * n.
+  nf alpha ->
+  forall n:nat,
+    inject (alpha *  n)%t1 =  inject alpha * n. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction n.
   - simpl.
@@ -470,7 +495,8 @@ Proof.
          *   auto with arith.
          * auto.
 Qed. 
-
+(*||*)
+(* end snippet injectMultFinR *)
 
 
 Lemma inject_lt_epsilon0_ex_cnf  (alpha : Ord) :
@@ -536,7 +562,12 @@ Proof.
     rewrite <- H3 in H1;  now apply inject_injective.
 Qed.
 
-Theorem embedding : fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.
+(* begin snippet embedding *)
+
+Theorem embedding : fun_bijection (nf: Ensemble T1)
+                                  (members epsilon0)
+                                  inject. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split.
   -   intros x Hx; apply inject_lt_epsilon0.
@@ -544,6 +575,8 @@ Proof.
        exists x; auto.
   -  intros x x' Hx Hx' H; apply inject_injective; auto.
 Qed.
+(*||*)
+(* end snippet embedding *)
 
 (* begin snippet Epsilon0Correct *)
 

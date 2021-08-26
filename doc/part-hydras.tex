@@ -6471,13 +6471,7 @@ Complete definitions and proofs can be found in Module
 A \emph{segment} is a set $A$ of ordinals such that, whenever  $\alpha\in A$ and
 $\beta<\alpha$, then $\beta\in A$; a segment is  \emph{proper} if it strictly included in $\mathbb{O}$.
 
-\begin{Coqsrc}
- Definition segment (A: Ensemble Ord) :=
-  forall alpha beta, In A alpha -> beta < alpha -> In A  beta.
-
-Definition proper_segment (A: Ensemble Ord) :=
-  segment A /\ ~ Same_set A ordinal.
-\end{Coqsrc}
+\input{movies/snippets/Ordering_Functions/segmentDef}
 
 
 Let  $A$ be a segment, and $B$ a subset of $\mathbb{O}$ : an \emph{ordering function for $A$ and  $B$} is a strictly increasing bijection from $A$ to $B$.
@@ -6487,27 +6481,12 @@ Our definition in \coq{} is a direct translation of the mathematical text of~\ci
 \index{maths}{Ordinal numbers!Ordering functions}
 \index{hydras}{Library Schutte!Predicates!ordering function@ordering\_function}
 
-\begin{Coqsrc}
-Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
- segment A /\
- (forall a, In A a -> In B (f a)) /\
- (forall b, B b -> exists a, In A a /\ f a = b) /\
- forall a b, In A a -> In A b -> a < b ->  f a < f b.
-
-Definition ordering_segment (A B : Ensemble Ord) :=
-  exists f : Ord -> Ord, ordering_function f A B.
-\end{Coqsrc}
-
+\input{movies/snippets/Ordering_Functions/orderingFunctionDef}
 
 We are now able to associate with any subset $B$ of $\mathbb{O}$ its ordering segment and ordering function.
 
-\begin{Coqsrc}
-Definition the_ordering_segment (B : Ensemble Ord) :=
-  the  (fun x => ordering_segment x B).
+\input{movies/snippets/Ordering_Functions/ordDef}
 
-Definition ord  (B : Ensemble Ord) := 
-  some (fun f => ordering_function f (the_ordering_segment B) B).
-\end{Coqsrc}
 
 Thus (\texttt{ord $B \;\alpha$}) is the $\alpha$-th element of $B$.
 Please note that the last definition uses the epsilon-based operator \texttt{some} and
@@ -6521,40 +6500,15 @@ One of the main theorems of
 {\texttt{Ordering\_Functions}} 
 associates a unique segment and a unique (up to extensionality) ordering function to every subset $B$ of $\mathbb{O}$.
 
-\begin{Coqsrc}
-About ordering_function_ex.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-forall B : Ensemble Ord,
- exists ! S : Ensemble Ord, 
-      exists f : Ord -> Ord, ordering_function f S B
-\end{Coqanswer}
-
-
-\begin{Coqanswer}
-ordering_function_unicity :
-forall (B S1 S2 : Ensemble Ord) (f1 f2 : Ord -> Ord),
-ordering_function f1 S B ->
-ordering_function f2 S2 B -> 
-fun_equiv f1 f2 S1 S2
-\end{Coqanswer}
+\input{movies/snippets/Ordering_Functions/orderingFunctionEx}
 
 Thus,  our function \texttt{ord}  which enumerates the elements of $B$ is defined in a non-ambiguous way.
 Let us quote the following theorems (see Library
 \href{../theories/html/hydras.Schutte.Ordering_Functions.html}%
 {\texttt{Schutte.Ordering\_Functions}} for more details).
  
-
-\begin{Coqsrc}
-Theorem ordering_le : forall f A B,
-    ordering_function f A B ->
-    forall alpha, In A alpha -> alpha <= f alpha.
-
-Th_13_5_2 :
-forall (A B : Ensemble Ord) (f : Ord -> Ord),
-ordering_function f A B -> Closed B -> continuous f A B
-\end{Coqsrc}
+\input{movies/snippets/Ordering_Functions/orderingLe}
+\input{movies/snippets/Ordering_Functions/Th1352}
 
 
 \subsection{Ordinal addition}
@@ -6565,10 +6519,8 @@ The following definitions and proofs can be consulted in Module
 {\texttt{Schutte.Addition.v}}.
 
 \index{hydras}{Library Schutte!Functions!plus}
-\begin{Coqsrc}
-Definition plus alpha := ord  (ge alpha).
-Notation "alpha + beta " := (plus alpha beta) : schutte_scope.
-\end{Coqsrc}
+
+\input{movies/snippets/Addition/additionDef}
 
 In other words,  $\alpha + \beta$ is the  $\beta$-th ordinal greater than or equal to $\alpha$. 
 Thanks to generic properties of ordering functions, we can show the following 
@@ -6582,51 +6534,21 @@ Lemma plus_elim (alpha : Ord) :
     P (plus alpha).
 \end{Coqsrc}
 
+As a use-case, let us prove that $0$ is a right neutral element of $+$.
 
-\begin{Coqsrc}
-Lemma alpha_plus_zero (alpha: Ord): alpha + zero = alpha.
-Proof.
- pattern  (plus alpha); apply plus_elim; eauto.
- \end{Coqsrc}
+\input{movies/snippets/Addition/alphaPlusZero}
 
- \begin{Coqanswer}
- 1 subgoal (ID 24)
-  
-  alpha : Ord
-  ============================
-  forall f : Ord -> Ord,
-  ordering_function f ordinal (ge alpha) -> 
-  f zero = alpha
- \end{Coqanswer}
-
- \begin{Coqsrc}
- (* rest of proof skipped *)
- \end{Coqsrc}
 
 The following lemmas are proved the same way.
 
- \begin{Coqsrc}
+\input{movies/snippets/Addition/bunchOfLemmas}
 
-Lemma zero_plus_alpha (alpha : Ord) : zero + alpha = alpha.
 
-Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta.
+The following lemmas are not direct applications of \texttt{plus\_elim}.
 
-Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta.
-
-Lemma plus_mono_r (alpha beta gamma : Ord) : 
-    beta < gamma -> alpha + beta < alpha + gamma.
-
-Lemma plus_of_succ (alpha beta : Ord) :
-    alpha + (succ beta) = succ (alpha + beta).
-
-Theorem plus_assoc (alpha beta gamma : Ord) :
-  alpha + (beta + gamma) = (alpha + beta) + gamma.
-
-Lemma one_plus_omega :  1 + omega = omega.
-
-Lemma finite_plus_infinite (n : nat) (alpha : Ord) :
-  omega <= alpha -> n + alpha = alpha.
-\end{Coqsrc} 
+\input{movies/snippets/Addition/plusAssoc}
+\input{movies/snippets/Addition/finitePlusInfinite}
+  
 
 
 It is interesting to compare the proof of these lemmas with the
@@ -6645,21 +6567,7 @@ $1+\omega=\omega$ is just proved with \texttt{reflexivity}!
 The multiplication of an ordinal by a natural number is defined in terms of addition.
 This operation is useful for the study of Cantor normal forms.
 
-\begin{Coqsrc}
-Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n}: Ord :=
- match n with 
-            | 0 => alpha
-            | S p => mult_Sn  alpha p + alpha
- end.
-
-Definition mult_fin_r alpha n :=
-  match n with
-      0 => zero
-    | S p => mult_Sn alpha p
-  end.
-
-Notation "alpha * n" := (mult_fin_r alpha n) : schutte_scope.
-\end{Coqsrc}
+\input{movies/snippets/Addition/multFin}
 
 \section{The exponential of basis \texorpdfstring{$\omega$}{omega}}
 
@@ -6685,12 +6593,7 @@ We call \texttt{AP} the set of additive principal ordinals.
 \noindent\emph{From Module \href{../theories/html/hydras.Schutte.AP.html}%
 {\texttt{Schutte.AP}}}
 
-\begin{Coqsrc}
-Definition AP : Ensemble Ord :=
-  fun alpha => 
-  zero < alpha /\
-  (forall beta, beta < alpha ->  beta + alpha = alpha).
-\end{Coqsrc}
+\input{movies/snippets/AP/APDef}
 
 \subsection{The function \texttt{phi0}}
 
@@ -6698,32 +6601,24 @@ Let us call  $\phi_0$ the ordering function of \texttt{AP}.
 In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\phi_0(\alpha)$. 
 
 \index{hydras}{Library Schutte!Functions!phi0}
-\begin{Coqsrc}
-Definition phi0 := ord AP.
 
-Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
-\end{Coqsrc}
+\input{movies/snippets/AP/phi0Def}
+
 
 \subsection{Omega-towers and the ordinal \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 
 Using $\phi_0$, we can define recursively the set of finite omega-towers.
 
+\input{movies/snippets/AP/omegaTower}
 
-\begin{Coqsrc}
-Fixpoint omega_tower (i : nat) : Ord :=
-  match i with
-    0 =>  1
-  | S j => phi0 (omega_tower j)
-  end.
-\end{Coqsrc}
+
 
 \label{sect:epsilon0-as-limit}
 Then, the ordinal  $\epsilon_0$ is defined as the limit of the sequence of all finite towers (a kind of infinite tower).
 
-\begin{Coqsrc}
-Definition epsilon0 := omega_limit omega_tower.
-\end{Coqsrc}
+\input{movies/snippets/AP/epsilon0Def}
+
 
 The rest of our library \texttt{AP} is devoted to the proof of properties of additive principal ordinals, hence of the ordering function  $\phi0$ and the ordinal $\epsilon_0$ (which we could not express within the type \texttt{T1}).
 
@@ -6731,50 +6626,26 @@ The rest of our library \texttt{AP} is devoted to the proof of properties of add
 
 The set of additive principal ordinals is not empty: it contains at least the ordinals  $1$ and  $\omega$. 
 
-\begin{Coqsrc}
-Lemma AP_one : In AP 1.
+\input{movies/snippets/AP/APOne}
 
-Lemma AP_omega : In AP omega.
-\end{Coqsrc}
-
-Moreover, $1$ is the least principal ordinal and $\omega$ is the second element of
-\texttt{AP}.
-
-
-\begin{Coqsrc}
-Lemma least_AP: least_member  lt AP 1. 
-
-Lemma omega_second_AP :
-  least_member   lt 
-                  (fun alpha => 1 < alpha /\ In AP alpha)
-                  omega.
-\end{Coqsrc}
 
 The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
 
-\begin{Coqsrc}
-Lemma AP_plus_closed (alpha beta gamma : Ord): 
-     In AP alpha -> beta < alpha -> gamma < alpha ->
-     beta + gamma < alpha.
+\input{movies/snippets/AP/APPlusClosed}
 
-Theorem AP_unbounded : Unbounded AP.
-\end{Coqsrc}
+\input{movies/snippets/AP/APUnbounded}
 
 Finally, \texttt{AP} is (topologically) \emph{closed} and ordered by the segment of all countable ordinals.
 
 \index{hydras}{Library Schutte!Predicates!Closed}
 
-\begin{Coqsrc} 
-Definition Closed (B : Ensemble Ord) : Prop := 
-  forall M, Included M B -> Inhabited _ M -> 
-                 countable M -> In B (|_| M).
-\end{Coqsrc}
+From Module \href{../theories/html/hydras.Schutte.Schutte_basics.html}%
+{\texttt{~Schutte.Schutte\_basics}}
 
-\begin{Coqsrc}
-Theorem AP_closed : Closed AP.
 
-Lemma AP_o_segment :  the_ordering_segment AP = ordinal.
-\end{Coqsrc}
+\input{movies/snippets/Schutte_basics/ClosedDef}
+\input{movies/snippets/AP/APClosed}
+
 
 \subsubsection{Properties of the function \texorpdfstring{$\phi_0$}{phi0}}
  
@@ -6786,33 +6657,9 @@ Theorem normal_phi0 : normal phi0 AP.
 
 The following properties come from  the definition of $\phi_0$ as the ordering function of \texttt{AP}. It may be interesting to compare these proofs with the computational ones described in Chapter ~\ref{chap:T1}.
 
-\begin{Coqsrc}
-Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha).
+\input{movies/snippets/AP/APPhi0}
 
-Lemma phi0_zero : phi0 zero =  1.
 
-Lemma phi0_mono (alpha beta : Ord) :
-  alpha < beta ->  phi0 alpha < phi0 beta.
-
-Lemma phi0_inj (alpha beta : Ord) :
-    phi0 alpha = phi0 beta -> alpha = beta.
-
-Lemma phi0_sup : forall (U: Ensemble Ord),
-   Inhabited _ U ->   countable U ->  phi0 (|_| U) = |_| (image U phi0).
-
-Lemma is_limit_phi0 (alpha : Ord) :
-  zero < alpha ->  is_limit (phi0 alpha).
-
-Lemma omega_eq : omega = phi0 1. 
-
-Lemma phi0_le (alpha : Ord) : alpha <= phi0 alpha.
-\end{Coqsrc}
-
-Please note that the lemma \texttt{omega\_eq} above, is consistent with the interpretation of the ordering function $\phi_0$ as the exponential of basis $\omega$. Indeed we could have written this lemma with our alternative notation:
-
-\begin{Coqsrc}
- Lemma omega_eq : omega = omega^ 1.
-\end{Coqsrc}
 
 \section{More about \texorpdfstring{$\epsilon_0$}{\texttt{epsilon0}}}
 
@@ -6823,10 +6670,8 @@ We prove the inequality  $\alpha<\omega^\alpha$ whenever $\alpha < \epsilon_0$.
 \emph{Note that this condition was implicit in Module
 \href{../theories/html/hydras.Epsilon0.T1.html\#lt_phi0}{Epsilon0.T1}.}
 
-\begin{Coqsrc}
-Lemma lt_phi0 (alpha : Ord):
-  alpha < epsilon0 -> alpha < phi0 alpha.
-\end{Coqsrc}
+\input{movies/snippets/AP/ltPhi0}
+
 
 The proof is as follows:
 \begin{enumerate}
@@ -6842,12 +6687,9 @@ The proof is as follows:
  \end{enumerate}
 
 Moreover,  $\epsilon_0$ is the least ordinal $\alpha$ that verifies the equality 
-$\alpha = \omega^\alpha$, in other words the least fixpoint of the function  $\phi_0$.
+$\alpha = \omega^\alpha$, in other words, the least fixpoint of the function  $\phi_0$.
 
-\begin{Coqsrc}
-Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
-\end{Coqsrc}
-
+\input{movies/snippets/AP/epsilon0Lfp}
 
 \section{Critical ordinals}
 
@@ -6868,43 +6710,23 @@ This definition is translated in \coq{} in
 Module \href{../theories/html/hydras.Schutte.Critical.html}%
 {\texttt{Schutte.Critical}}, as the least fixpoint of a functional. 
 
+\input{movies/snippets/Critical/CrDef}
 
-\begin{Coqsrc}
-Definition Cr_fun : forall alpha : Ord,
-       (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
-        Ensemble Ord 
-:= 
-   fun (alpha :Ord)
-        (Cr : forall beta, 
-                beta < alpha -> Ensemble Ord) 
-        (x : Ord) => (
-       (alpha = zero /\ AP x) \/
-       (zero < alpha /\
-        forall beta (H:beta < alpha),
-          the_ordering_segment (Cr beta H) x /\ ord (Cr  beta H) x = x)).
+Lets us denote by $\varphi_\alpha$ the ordering function of the set $\textit{Cr}(\alpha)$ and by $A_\alpha$ its ordering segment.
 
-Definition Cr (alpha : Ord) : Ensemble Ord := 
-    (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
-\end{Coqsrc}
+\input{movies/snippets/Critical/phiDef}
 
 \label{sect:phi-schutte}
 
-\begin{Coqsrc}
-Definition phi (alpha : Ord) : Ord -> Ord 
-    :=  ord (Cr alpha).
 
-Definition A (alpha : Ord) : Ensemble Ord :=
-  the_ordering_segment (Cr alpha).
-\end{Coqsrc}
 
 For instance,  we prove that $\textit{Cr}(0)$ is the set of additive principals and that $\epsilon_0$
 belongs to $\textit{Cr}(1)$.
 
-\begin{Coqsrc}
-Lemma Cr_zero_AP :  Cr 0 = AP
 
-Lemma epsilon0_Cr1 : In (Cr 1) epsilon0.
-\end{Coqsrc}
+\input{movies/snippets/Critical/CrZeroAP}
+\input{movies/snippets/Critical/epsilon0Cr1}
+
 
 \index{hydras}{Exercises}
 
@@ -6923,31 +6745,16 @@ Let us quote Lemma 5, p. 82  of~\cite{schutte}:
   For all $\alpha$, the set $\textit{Cr}(\alpha)$ is closed (for the least upper bound of non-empty countable sets) and unbounded.
 \end{quote}
 
-We prove this result by transfinite induction on $\alpha$ of both properties.
+We prove this result by a transfinite induction on $\alpha$ of the conjunction of  both properties.
 
-The proof is still quite long, by transfinite induction over $\alpha$.
+
 
 
 \index{maths}{Transfinite induction}
 
-\begin{Coqsrc}
-Section Proof_of_Lemma5.
-  Let P (alpha:Ord) := Unbounded (Cr alpha) /\ Closed (Cr alpha).
- 
- Lemma Lemma5 : forall alpha, P alpha.
-(* ... *)
- End Proof_of_Lemma5.
+\input{movies/snippets/Critical/Lemma5}
 
-Corollary Unbounded_Cr alpha : Unbounded (Cr alpha).
-Proof.
-  now destruct (Lemma5 alpha).
-Qed.
 
-Corollary Closed_Cr alpha : Closed (Cr alpha).
-Proof.
-  now destruct (Lemma5 alpha).
-Qed.
-\end{Coqsrc}
 
 \section{Cantor normal form}
 
@@ -6976,57 +6783,33 @@ A  list $l$ is a Cantor normal form of a given ordinal $\alpha$ if it satisfies 
 \noindent\emph{From \href{../theories/html/hydras.Schutte.CNF.html\#cnf_t}%
 {\texttt{Schutte.CNF}}}
 
+\input{movies/snippets/CNF/Defs}
 
-\begin{Coqsrc}
- Definition cnf_t := list Ord.
 
-Fixpoint eval (l : cnf_t) : Ord :=
-  match l with nil => zero
-              | beta :: l' => phi0 beta + eval l'
-  end.
-
-Definition sorted (l: cnf_t) :=
-  LocallySorted (fun alpha beta => beta <= alpha) l.
-
-Definition is_cnf_of (alpha : Ord)(l : cnf_t) : Prop :=
-  sorted l /\ alpha = eval l.
-\end{Coqsrc}
 
 \index{maths}{Transfinite induction}
 
 By transfinite induction on $\alpha$, we prove that every countable ordinal $\alpha$ 
  has at least a Cantor normal form.
 
-\begin{Coqsrc}
-Theorem cnf_exists (alpha : Ord) :
-  exists l: cnf_t, is_cnf_of alpha l.
-\end{Coqsrc}
+\input{movies/snippets/CNF/cnfExists}
 
 By structural induction on lists, we prove that this normal form is unique.
 
-\begin{Coqsrc}
- Lemma cnf_unicity : forall l alpha, 
-   is_cnf_of alpha l -> 
-   forall l',  is_cnf_of alpha l' -> l=l'.
-Proof.
- induction l.
- (*  ...  *)
 
-Theorem cnf_exists_unique (alpha:Ord) :
-  exists! l: cnf_t, is_cnf_of alpha l.
-\end{Coqsrc}
+\input{movies/snippets/CNF/cnfUnicity}
+
+\input{movies/snippets/CNF/cnfExUnique}
+
 
 
 Finally, the following two lemmas relate  $\epsilon_0$ with Cantor normal forms.
 
 If $\alpha<\epsilon_0$, then the Cantor normal form of $\alpha$ is made of ordinals strictly less than $\alpha$.
 
-\begin{Coqsrc}
-Lemma cnf_lt_epsilon0 : 
- forall l alpha, 
-   is_cnf_of alpha l ->  alpha < epsilon0 ->
-   Forall (fun beta =>  beta < alpha) l.
-\end{Coqsrc}
+\input{movies/snippets/CNF/cnfLtEpsilon0}
+
+
 
 \index{hydras}{Exercises}
 
@@ -7048,14 +6831,7 @@ Is it true ?
 
 Finally, the Cantor normal form of $\epsilon_0$ is just $\omega^{\epsilon_0}$.
 
-\begin{Coqsrc}
-Lemma cnf_of_epsilon0 : is_cnf_of epsilon0 (epsilon0 :: nil).
-Proof.
-  split.
-  - constructor.  
-  - simpl;  now rewrite alpha_plus_zero, epsilon0_fxp.
-Qed.
-\end{Coqsrc}
+\input{movies/snippets/CNF/cnfOfEpsilon0}
 
 \index{hydras}{Projects}
 
@@ -7077,51 +6853,33 @@ Our library
 a classical mathematical discourse considered as a model. 
 First, we define a function from \texttt{T1} into  \texttt{Ord} by structural recursion.
 
-\begin{Coqsrc}
-Fixpoint inject (t:T1) : Ord :=
- match t with 
-     | T1.zero => zero
-     | T1.ocons a n b =>  AP.phi0 (inject a) * S n + inject b
- end.  
-\end{Coqsrc}
+\input{movies/snippets/Correctness_E0/injectDef}
+
 
 This function enjoys good commutation properties with respect to the main operations which
-allow us to build Cantor normal form.
+allow us to build Cantor normal forms.
 
-\begin{Coqsrc}
-Theorem inject_of_zero : inject T1.zero = zero.
+\input{movies/snippets/Correctness_E0/commutationLemmas}
+\input{movies/snippets/Correctness_E0/injectPlus}
+\input{movies/snippets/Correctness_E0/injectMultFinR}
 
-Theorem inject_of_finite (n : nat):
-  inject (T1.fin n) =  n.
+% \begin{Coqsrc}
+% Theorem inject_mono (beta gamma : T1) :
+%   T1.lt  beta gamma -> 
+%   T1.nf beta -> T1.nf gamma -> 
+%   inject beta < inject gamma.
 
-Theorem inject_of_phi0 (alpha : T1):
-  inject (phi0 alpha) = AP.phi0 (inject alpha).
-
-Theorem inject_plus (alpha beta : T1): nf alpha -> nf beta ->
-  inject (alpha + beta)%t1 = inject alpha + inject beta.
-
-Theorem inject_mult_fin_r (alpha : T1)  :
-  nf alpha -> forall n:nat , inject (alpha *  n)%t1 =  inject alpha * n.
-
-Theorem inject_mono (beta gamma : T1) :
-  T1.lt  beta gamma -> 
-  T1.nf beta -> T1.nf gamma -> 
-  inject beta < inject gamma.
-
-Theorem inject_injective (beta gamma : T1) : nf beta -> nf gamma ->
-  inject beta = inject gamma -> beta = gamma.
-\end{Coqsrc}
+% Theorem inject_injective (beta gamma : T1) : nf beta -> nf gamma ->
+%   inject beta = inject gamma -> beta = gamma.
+% \end{Coqsrc}
 
 Finally, we prove that \texttt{inject} is a bijection from the set of all terms of \texttt{T1} in normal form to the set 
 \texttt{members epsilon0} of the elements of \texttt{Ord} strictly less than  $\epsilon_0$.
 
-\begin{Coqsrc}
-Theorem inject_lt_epsilon0 (alpha : T1):
-      inject alpha < epsilon0.
+\input{movies/snippets/Correctness_E0/injectLtEpsilon0}
+\input{movies/snippets/Correctness_E0/embedding}
 
-Theorem embedding : 
-     fun_bijection (nf: Ensemble T1)  (members epsilon0) inject.
- \end{Coqsrc}
+
 
 \subsection{Remarks}
 Let us recall that the library \href{../theories/html/hydras.Schutte.Schutte.html}%

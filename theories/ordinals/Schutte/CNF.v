@@ -24,8 +24,9 @@ For instance, the Cantor Normal Form of [epsilon0] is just [epsilon0 :: nil].
 
 *)
 
-Definition cnf_t := list Ord.
+(* begin snippet Defs *)
 
+Definition cnf_t := list Ord.
 
 Fixpoint eval (l : cnf_t) : Ord :=
   match l with nil => zero
@@ -38,6 +39,8 @@ Definition sorted (l: cnf_t) :=
 
 Definition is_cnf_of (alpha : Ord)(l : cnf_t) : Prop :=
   sorted l /\ alpha = eval l.
+
+(* end snippet Defs *)
 
 
 Definition exponents_lt (alpha: Ord) :=
@@ -265,10 +268,13 @@ Qed.
   (Proof by transfinite induction)
  *)
 
+(* begin snippet cnfExists *)
+
 Theorem cnf_exists (alpha : Ord) :
-  exists l: cnf_t, is_cnf_of alpha l.
+  exists l: cnf_t, is_cnf_of alpha l. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
- case (le_eq_or_lt   (zero_le  alpha)).
+ case (le_eq_or_lt (zero_le  alpha)).
  -  exists nil;  split.
     +  constructor.
     +  simpl;auto.
@@ -286,6 +292,8 @@ Proof.
         --  intros x1 H4;  decompose [and] H6;  subst a.
             destruct (cnf_plus H H4) as [x2 Hx2];  exists x2; auto.
 Qed.
+(*||*)
+(* end snippet cnfExists *)
 
 Lemma sorted_lt : forall l alpha, sorted (cons alpha l) ->
                                       eval l < phi0 alpha + eval l.
@@ -301,15 +309,20 @@ Proof.
 Qed.
 
 
+
 (** *** Unicity of cnf 
 
 (Proof by induction on lists)
 
 *)
 
+(* begin snippet cnfUnicity *)
 
-Lemma cnf_unicity : forall l alpha, is_cnf_of alpha l -> forall l',
-                           is_cnf_of alpha l' -> l=l'.
+Lemma cnf_unicity : forall l alpha,
+    is_cnf_of alpha l ->
+    forall l', is_cnf_of alpha l' ->
+               l=l'. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
  induction l.
  - destruct 1 as [H H0].
@@ -338,25 +351,34 @@ Proof.
           rewrite H6;split;auto with schutte.
           inversion H1; auto with schutte. 
 Qed.
+(*||*)
+(* end snippet cnfUnicity *)
 
 
 (** *** The main result *)
 
+(* begin snippet cnfExUnique *)
+
+(*| .. coq:: no-out |*)
 Theorem cnf_exists_unique (alpha:Ord) :
-  exists! l: cnf_t, is_cnf_of alpha l.
+  exists! l: cnf_t, is_cnf_of alpha l. 
 Proof.
     destruct (cnf_exists alpha) as [l Hl]; exists l; split; auto.
     now apply cnf_unicity.
 Qed.
+(*||*)
+(* end snippet cnfExUnique *)
 
 
 (** ** Cantor Normal Form and the ordinal epsilon0 *)
 
+(* begin snippet cnfLtEpsilon0 *)
 
 Lemma cnf_lt_epsilon0 : forall l alpha,
     is_cnf_of alpha l ->
     alpha < epsilon0 ->
-    Forall (fun beta =>  beta < alpha) l.
+    Forall (fun beta =>  beta < alpha) l. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction l.
   - constructor.
@@ -382,11 +404,16 @@ Proof.
         apply le_lt_trans with (2 := H0).
         subst alpha; apply (le_plus_r).
 Qed.
+(*||*)
 
+(* end snippet cnfLtEpsilon0 *)
 
 (** The normal form of [epsilon0] is just [phi0 epsilon0] 
  *)
 
+(* begin snippet cnfOfEpsilon0 *)
+
+(*| .. coq:: no-out |*)
 
 Lemma cnf_of_epsilon0 : is_cnf_of epsilon0 (epsilon0 :: nil).
 Proof.
@@ -394,4 +421,6 @@ Proof.
   - constructor.  
   - simpl; now rewrite alpha_plus_zero, epsilon0_fxp.
 Qed.
+(*||*)
 
+(* end snippet cnfOfEpsilon0 *)

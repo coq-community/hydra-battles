@@ -206,11 +206,13 @@ Definition set_eq (X Y: Ord -> Prop) := forall a,  (X a <-> Y a).
 Definition progressive (P : Ord -> Prop) : Prop :=
   forall a, (forall b,  b < a -> P b) -> P a.
 
+(* begin snippet ClosedDef *)
 
 Definition Closed (B : Ensemble Ord) : Prop := 
   forall M, Included M B -> Inhabited _ M -> countable M ->
                             In B (|_| M).
 
+(* end snippet ClosedDef *)
 
 Definition  continuous (f:Ord->Ord)(A B : Ensemble Ord) : Prop :=
   fun_codomain A B f /\

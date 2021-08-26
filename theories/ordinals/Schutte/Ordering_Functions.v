@@ -23,18 +23,24 @@ Set Implicit Arguments.
 
 
  (** ** Main definitions *)
- 
- 
+
+(* begin snippet segmentDef *)
+
 Definition segment (A: Ensemble Ord) :=
   forall alpha beta, In A alpha -> beta < alpha -> In A  beta.
 
 Definition proper_segment (A: Ensemble Ord) :=
   segment A /\  ~ Same_set A ordinal.
 
+(* end snippet segmentDef *)
 
 (* to do : define it as a class *)
 
-Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
+
+(* begin snippet orderingFunctionDef *)
+
+Definition ordering_function (f : Ord -> Ord)
+           (A B : Ensemble Ord) :=
  segment A /\
  (forall a, In A a -> In B (f a)) /\
  (forall b, In B b -> exists a, In A a /\ f a = b) /\
@@ -43,15 +49,19 @@ Definition ordering_function (f : Ord -> Ord)(A B : Ensemble Ord) :=
 Definition ordering_segment (A B : Ensemble Ord) :=
   exists f : Ord -> Ord, ordering_function f A B.
 
+(* end snippet orderingFunctionDef *)
+
+(* begin snippet ordDef *)
+
 Definition the_ordering_segment (B : Ensemble Ord) :=
   the  (fun x => ordering_segment x B).
 
+Definition ord   (B : Ensemble Ord) := 
+  some (fun f => ordering_function f (the_ordering_segment B) B).
+(* end snippet ordDef *)
+
 Definition proper_segment_of (B : Ensemble Ord)(beta : Ord): Ensemble Ord  :=
   fun alpha => In B alpha /\ alpha < beta /\ In B beta.
-
-
-Definition ord   (B : Ensemble Ord) := 
-   some (fun f => ordering_function f (the_ordering_segment B) B).
 
 Definition  normal (f : Ord -> Ord)(B : Ensemble Ord): Prop :=
  ordering_function f ordinal B /\ continuous f ordinal B.
@@ -216,11 +226,14 @@ Proof with eauto with schutte.
     destruct H1; now apply H with x0. 
 Qed.
 
-(**  Theorem 13.3 of Schutte's book *)
+(* begin snippet orderingLe *)
+
+(*  Theorem 13.3 of Schutte's book *)
 
 Theorem ordering_le : forall f A B,
     ordering_function f A B ->
-    forall alpha, In A alpha -> alpha  <= f alpha.
+    forall alpha, In A alpha -> alpha  <= f alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   intros f A B H alpha H0; generalize H0;
     pattern alpha; apply transfinite_induction.
@@ -236,6 +249,8 @@ Proof with auto with schutte.
       case (le_not_gt (a:= f alpha)(b:=f (f alpha)));auto.
       apply H6;  eauto with schutte.
 Qed.
+(*||*)
+(* end snippet orderingLe *)
 
 (* begin hide *)  
 Section ordering_function_unicity_1.
@@ -797,6 +812,12 @@ Lemma ord_eq (A : Ensemble Ord) (f : Ord -> Ord) :
 
 End building_ordering_function_by_induction.
 
+(* begin snippet orderingFunctionEx *)
+
+About ordering_function_ex.
+About ordering_function_unicity.
+
+(* end snippet orderingFunctionEx *)
 
 Lemma of_image : forall f A B, ordering_function f A B ->
                                ordering_function f A (image A f).
@@ -1192,6 +1213,13 @@ Proof.
   -   intros beta H0;  eapply ordering_function_In; [ eexact H0 | trivial].
 Qed. 
 
+(* begin snippet Th1352 *)
+
+(* Theorem 13.5.2 by Schutte *)
+
+About Th_13_5_2.
+
+(* end snippet Th1352 *)
 
 Arguments ord  : clear implicits.
 Arguments the_ordering_segment : clear implicits.

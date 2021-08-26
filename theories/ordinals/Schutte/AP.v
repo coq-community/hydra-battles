@@ -31,22 +31,32 @@ Set Implicit Arguments.
  *** Additive principal ordinals 
  *)
 
+(* begin snippet APDef *)
+
 Definition AP : Ensemble Ord :=
   fun alpha => 
     zero < alpha /\
-    (forall beta, beta < alpha ->  beta + alpha = alpha).
+    (forall beta, beta < alpha -> beta + alpha = alpha).
+
+(* end snippet APDef *)
 
 (**  *** Exponential of basis omega
  *)
 
+(* begin snippet phi0Def *)
+
 Definition _phi0 := ord AP.
+
 Notation phi0 := _phi0.
 
 Notation "'omega^'" := phi0 (only parsing) : schutte_scope.
 
+(* end snippet phi0Def *)
 
 (**  *** Omega-towers
  *)
+
+(* begin snippet omegaTower *)
 
 Fixpoint omega_tower (i : nat) : Ord :=
   match i with
@@ -54,16 +64,24 @@ Fixpoint omega_tower (i : nat) : Ord :=
   | S j => phi0 (omega_tower j)
   end.
 
+(* end snippet omegaTower *)
+
 (** *** The limit ordinal [epsilon0] 
  *)
+(* begin snippet epsilon0Def *)
 
 Definition epsilon0 := omega_limit omega_tower.
+
+(* end snippet epsilon0Def *)
 
 (** ** Proofs, proofs, proofs ... *)
 
 (** ** About additive principals *)
 
-Lemma AP_one : In AP 1.
+(* begin snippet APOne *)
+
+Lemma AP_one : In AP 1. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   split.
   -  simpl (F 1) ...
@@ -72,10 +90,10 @@ Proof with auto with schutte.
      { apply lt_succ_le_2 ... }
      rewrite (le_alpha_zero H0), zero_plus_alpha...
 Qed.
+(*||*)
 
-(** [F 1] is the least additive principal *)
-
-Lemma least_AP :least_member  lt AP 1. 
+Lemma least_AP :least_member  lt AP 1. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   repeat split ...
   - simpl (F 1) ...
@@ -90,10 +108,10 @@ Proof with auto with schutte.
     subst x; left; trivial.
     right; auto.
 Qed.
+(*||*)
 
-
-
-Lemma AP_omega : In AP omega.
+Lemma AP_omega : In AP omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   repeat split.
   - apply lt_trans with (F 1).
@@ -102,6 +120,7 @@ Proof with auto with schutte.
   - intros beta H; case (@lt_omega_finite _  H).
     intros;subst beta;apply finite_plus_infinite ...
 Qed.
+
 
 
 Global Hint Resolve zero_lt_omega : schutte.
@@ -121,11 +140,13 @@ Proof with auto with schutte.
 Qed.
 
 (** Thus, omega is the second additive principal *)
+(*||*)
 
 Lemma omega_second_AP :
   least_member   lt 
                  (fun alpha => 1 < alpha /\ In AP alpha)
-                 omega.
+                 omega. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   split  ...
   split ...
@@ -141,18 +162,25 @@ Proof with auto with schutte.
      red.
      intuition.
 Qed.
+(*||*)
+(* end snippet APOne *)
 
 
 
+(* begin snippet APPlusClosed *)
 
 Lemma AP_plus_closed (alpha beta gamma : Ord): 
   In AP alpha ->   beta < alpha -> gamma < alpha ->
-  beta + gamma < alpha.
+  beta + gamma < alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof with auto with schutte.
   intros  H  H0 H1; case H;  intros H2 H3.
   generalize (@plus_mono_r  beta gamma alpha); intro H4.
   replace alpha with (beta+alpha) ...
 Qed.
+(*||*)
+
+(* end snippet APPlusClosed *)
 
 Lemma AP_mult_Sn_closed (alpha beta: Ord)  :
   AP alpha -> beta < alpha -> forall n,  mult_Sn beta n  < alpha.
@@ -306,6 +334,8 @@ End AP_Unbounded.
 
 (* end hide *)
 
+(* begin snippet APUnbounded *)
+
 Theorem AP_unbounded : Unbounded AP.
 Proof.
   intro x;  pose (H := AP_unbounded_0 x).
@@ -317,6 +347,8 @@ Proof.
                end)).
   now destruct H.
 Qed.
+
+(* end snippet APUnbounded *)
 
 (* begin hide *)
 
@@ -368,16 +400,19 @@ End AP_closed.
 
 (* end hide *)
 
+(* begin snippet APClosed *)
 
-Theorem AP_closed : Closed AP.
+Theorem AP_closed : Closed AP. (* .no-out *)
+(*| .. coq:: none |*)
+Proof.
   split.
   -  apply AP_sup;auto.
   -  intros;  apply AP_sup;auto.
 Qed.
+(*||*)
 
-
-
-Lemma AP_o_segment :  the_ordering_segment AP = ordinal.
+Theorem AP_o_segment :  the_ordering_segment AP = ordinal. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros;apply segment_unbounded.
   eapply SA2.
@@ -390,6 +425,8 @@ Proof.
   generalize (H (ord_ok  AP)); intro H0;  rewrite <- H0.
   now  apply AP_unbounded.
 Qed.
+(*||*)
+(* end snippet APClosed *)
 
 (** ** Properties of [phi0] *)
 
@@ -408,6 +445,11 @@ Proof.
     apply ord_ok.
 Qed.
 
+
+(* begin snippet APPhi0 *)
+
+(*| .. coq:: no-out |*)
+
 Lemma phi0_elim : forall P : (Ord->Ord)->Prop,
     (forall f: Ord->Ord, 
         ordering_function f ordinal AP -> P f) ->
@@ -416,61 +458,72 @@ Proof.
   intros P H; apply H, phi0_ordering.
 Qed.
 
-Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha).
-Proof.
+Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha). (* .no-out *)
+Proof. (* .no-out *)
   pattern phi0; apply phi0_elim.
-  destruct 1 as [H [H0 H1]];  apply H0;auto.
-  split.
+  destruct 1 as [H [H0 H1]];  apply H0;auto; split.
 Qed. 
 
-Lemma phi0_zero : phi0 zero =  1.
+
+Lemma phi0_zero : phi0 zero =  1. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   generalize (ordering_function_least_least  phi0_ordering),least_AP;
-    intros H H0;  rewrite (least_member_unicity AX1  H H0);eauto.
+    intros H H0; rewrite (least_member_unicity AX1  H H0);eauto.
 Qed.
-
+(*||*)
 
 Lemma phi0_mono (alpha beta : Ord) :
-  alpha < beta ->  phi0 alpha < phi0 beta.
+  alpha < beta ->  phi0 alpha < phi0 beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H; pattern phi0; apply phi0_elim.
   intros;eapply ordering_function_mono;eauto with schutte.
 Qed.
+(*||*)
 
 Lemma phi0_mono_weak (alpha beta : Ord) :
-  alpha <= beta ->  phi0 alpha <= phi0 beta.
+  alpha <= beta ->  phi0 alpha <= phi0 beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   destruct 1.
   -  subst beta; auto with schutte.
   -  right;apply phi0_mono;auto.
 Qed.
+(*||*)
 
 Lemma phi0_mono_R (alpha beta : Ord) :
-  phi0 alpha < phi0 beta -> alpha < beta.
+  phi0 alpha < phi0 beta -> alpha < beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   pattern phi0; apply phi0_elim.
   intros;eapply ordering_function_monoR; eauto.
   all : split.
 Qed.
+(*||*)
 
 Lemma phi0_mono_R_weak : forall alpha beta, 
-    phi0 alpha <= phi0 beta -> alpha <= beta.
+    phi0 alpha <= phi0 beta -> alpha <= beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros alpha beta;  pattern phi0; apply phi0_elim.
   intros.
   eapply ordering_function_mono_weakR;eauto.
   all : split.
 Qed.
+(*||*)
 
 Lemma phi0_inj (alpha beta : Ord) :
-  phi0 alpha = phi0 beta -> alpha = beta.
+  phi0 alpha = phi0 beta -> alpha = beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros; apply le_antisym; apply phi0_mono_R_weak;auto with schutte.
 Qed.
+(*||*)
 
 
-
-Lemma phi0_positive (alpha : Ord):  zero < phi0 alpha.
+Lemma phi0_positive (alpha : Ord):  zero < phi0 alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros.
   apply lt_le_trans with (phi0 zero).
@@ -481,9 +534,13 @@ Proof.
   intros.
   eapply ordering_function_mono_weak; eauto with schutte.
 Qed.
+(*||*)
 
-Lemma plus_lt_phi0 : forall ksi alpha, ksi < phi0 alpha ->
-                                       ksi + phi0 alpha = phi0 alpha.
+
+Lemma plus_lt_phi0 : forall ksi alpha,
+    ksi < phi0 alpha ->
+    ksi + phi0 alpha = phi0 alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros ksi alpha ;  pattern (phi0 alpha);  apply phi0_elim.
   intros f Hf;  assert (AP (f alpha)).
@@ -491,29 +548,40 @@ Proof.
      apply H1 ; split. }
   destruct H;  auto. 
 Qed.
+(*||*)
 
 
-Lemma phi0_alpha_phi0_beta : forall alpha beta, alpha < beta ->
-                                                phi0 alpha + phi0 beta =
-                                                phi0 beta.
+Lemma phi0_alpha_phi0_beta :
+  forall alpha beta, alpha < beta ->
+                     phi0 alpha + phi0 beta =
+                     phi0 beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros.
   apply plus_lt_phi0; eauto with schutte.
   apply phi0_mono.
   auto.
 Qed.
+(*||*)
 
-Lemma phi0_sup : forall U,  Inhabited _ U ->
-                            countable U ->
-                            phi0 (|_| U) = |_| (image U phi0).
+
+Lemma phi0_sup : forall U: Ensemble Ord,
+    Inhabited _ U ->
+    countable U ->
+    phi0 (|_| U) = |_| (image U phi0). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros U H0 H1;  case normal_phi0.
   destruct 2 as [H2 [H3 H4]]; symmetry; auto.
   apply H4; auto;  split.
 Qed.
+(*||*)
+
 
 Lemma phi0_of_limit (alpha : Ord)  :
-  is_limit alpha ->  phi0 alpha = sup (image (members alpha) phi0).
+  is_limit alpha ->
+  phi0 alpha = |_| (image (members alpha) phi0). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H; pattern alpha at 1; rewrite  (is_limit_sup_members H);
     destruct  normal_phi0 as [H0 H1].
@@ -525,22 +593,24 @@ Proof.
     + destruct (not_lt_zero HH). 
   - apply countable_members;auto.
 Qed.
-
+(*||*)
 
 Lemma AP_to_phi0 (alpha : Ord) :
-  AP alpha -> exists beta,  alpha = phi0 beta.
+  AP alpha -> exists beta,  alpha = phi0 beta. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intro H; pattern phi0;apply phi0_elim.
   destruct 1 as [H0 [H1 [H2 H3]]].  
   case (H2 _ H); intros x [_ H4]; exists x; now rewrite H4.
 Qed.
-
+(*||*)
 
 
 Lemma AP_plus_AP (alpha beta gamma : Ord) :
   zero < beta -> 
   phi0 alpha + beta = phi0 gamma ->
-  alpha < gamma /\  beta = phi0 gamma.
+  alpha < gamma /\  beta = phi0 gamma. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros H H0;  tricho alpha gamma H3.
   -  split;auto.
@@ -562,10 +632,12 @@ Proof.
     { rewrite <- H0; apply le_plus_l. }
     case (le_not_gt H1);  apply phi0_mono;auto.
 Qed.
+(*||*)
 
 
 Lemma is_limit_phi0 (alpha : Ord) :
-  zero < alpha ->  is_limit (phi0 alpha).
+  zero < alpha ->  is_limit (phi0 alpha). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   intros  H; split.
   - intro H0; case (@lt_irrefl zero).
@@ -597,9 +669,11 @@ Proof.
     intros H7; apply lt_irrefl with (succ (x+x));  auto.
     now rewrite plus_of_succ in H7.
 Qed. 
+(*||*)
 
 
-Lemma omega_eqn : omega = phi0 1. (** [omega^ 1] *)
+Lemma omega_eqn : omega = phi0 1. (* .no-out *)
+(*| .. coq:: none |*)
 Proof. 
   destruct (AP_to_phi0 (AP_omega)) as [beta Hbeta]; rewrite Hbeta;
     tricho beta (F 1) H. 
@@ -617,14 +691,18 @@ Proof.
      rewrite Hi in H2;   destruct (finite_not_limit i).
      apply H2,  lt_succ.
 Qed.
+(*||*)
 
-
-Lemma le_phi0 (alpha : Ord) : alpha <= phi0 alpha.
+Lemma le_phi0 (alpha : Ord) : alpha <= phi0 alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   eapply (@ordering_le  phi0 ordinal AP).
   apply phi0_ordering.
   split.
 Qed.
+(*||*)
+(* end snippet APPhi0 *)
+
 
 (** ** Properties of [epsilon0] *)
 
@@ -672,9 +750,11 @@ Proof.
   -  simpl in IHi; now apply phi0_mono.
 Qed.
 
+(* begin snippet ltPhi0 *)
 
 Lemma lt_phi0 (alpha : Ord):
-  alpha < epsilon0 -> alpha < phi0 alpha.
+  alpha < epsilon0 -> alpha < phi0 alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   unfold epsilon0;  intros H.
   specialize (@omega_limit_least_gt alpha omega_tower omega_tower_mono H);
@@ -699,8 +779,13 @@ Proof.
     {   simpl.   now apply phi0_mono_weak. }
     apply lt_le_trans with (omega_tower (S j)); auto.
 Qed.
+(*||*)
+(* end snippet ltPhi0 *)
 
-Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0.
+(* begin snippet epsilon0Lfp *)
+
+Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   split.
   - apply epsilon0_fxp.
@@ -710,6 +795,9 @@ Proof.
     + subst alpha; now left.
     + now right.
 Qed.
+(*||*)
+(* end snippet epsilon0Lfp *)
+
 
 Lemma phi0_lt_epsilon0 (alpha : Ord) :
   alpha < epsilon0 -> phi0 alpha < epsilon0.

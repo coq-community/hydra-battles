@@ -21,6 +21,8 @@ Set Implicit Arguments.
 
 (**  Let us define a functional, the fixpoint of which we shall consider *)
 
+(* begin snippet CrDef *)
+
 Definition Cr_fun : forall alpha : Ord,
     (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
     Ensemble Ord 
@@ -32,10 +34,15 @@ Definition Cr_fun : forall alpha : Ord,
         (alpha = zero /\ AP x) \/
         (zero < alpha /\
          forall beta (H:beta < alpha), 
-           the_ordering_segment (Cr beta H) x /\ ord (Cr  beta H) x = x)).
+           the_ordering_segment (Cr beta H) x /\
+           ord (Cr beta H) x = x)).
 
 Definition Cr (alpha : Ord) : Ensemble Ord := 
-  (Fix  all_ord_acc (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
+  (Fix  all_ord_acc
+        (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
+
+(* end snippet CrDef *)
+
 
 Definition strongly_critical alpha := In (Cr alpha) alpha.
 
@@ -48,11 +55,15 @@ Definition Gamma0 := the_least strongly_critical.
 
 (**  See Gamma0.Gamma0.phi *)
 
+(* begin snippet phiDef *)
+
 Definition phi (alpha : Ord) : Ord -> Ord 
     :=  ord (Cr alpha).
 
-Definition A (alpha : Ord) : Ensemble Ord :=
+Definition A_ (alpha : Ord) : Ensemble Ord :=
   the_ordering_segment (Cr alpha).
+
+(* end snippet phiDef *)
 
 
 Lemma Cr_extensional :
@@ -94,7 +105,7 @@ Lemma Cr_inv (alpha x : Ord):
   ((alpha = zero /\ (Cr  alpha x <-> AP x)) \/
    (zero < alpha /\
     (forall beta (H:beta < alpha),
-        A beta  x /\  ord (Cr  beta ) x = x))).
+        A_ beta  x /\  ord (Cr  beta ) x = x))).
 Proof.
   rewrite (Cr_equation alpha);  unfold Cr_fun at 1.
   intros H;  case H;auto.
@@ -117,7 +128,7 @@ Lemma Cr_pos : forall alpha,
     zero < alpha ->
     forall x : Ord , 
       (forall beta (H:beta < alpha),
-          A  beta  x /\   ord (Cr  beta) x = x) ->
+          A_  beta  x /\   ord (Cr  beta) x = x) ->
       Cr alpha x.
 Proof.
   intros; rewrite Cr_equation; right . split; auto.
@@ -131,21 +142,24 @@ Proof.
   -  destruct (lt_irrefl  H2).
 Qed.
 
+(* begin snippet CrZeroAP *)
 
-Lemma Cr_zero_AP :  Cr zero = AP.
+Lemma Cr_zero_AP :  Cr zero = AP. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   apply Extensionality_Ensembles;  split.
   - red; intros; red; apply Cr_zero_inv; auto.
   - red; intros;  apply Cr_zero; auto.
 Qed.
-
+(*||*)
+(* end snippet CrZeroAP *)
 
 
 Lemma Cr_pos_inv (alpha : Ord) :
   zero < alpha ->
   forall x, 
     Cr alpha x ->
-    (forall beta (H:beta < alpha), In (A beta) x /\ phi beta x = x).
+    (forall beta (H:beta < alpha), In (A_ beta) x /\ phi beta x = x).
 Proof.
   intros H x H0 beta H1; case (Cr_inv alpha x H0).
   - destruct 1; subst alpha; case (@not_lt_zero beta);  auto. 
@@ -156,16 +170,16 @@ Lemma Cr_pos_iff (alpha : Ord) :
   zero < alpha ->
   forall x, 
     (Cr alpha x <->
-     (forall beta (H:beta < alpha), In (A beta) x /\ phi beta x = x)).
+     (forall beta (H:beta < alpha), In (A_ beta) x /\ phi beta x = x)).
 Proof.
   split.
   - intros; apply Cr_pos_inv with alpha; auto.
   - intros; apply Cr_pos; auto. 
 Qed.
 
-Lemma A_Cr (alpha beta:Ord) : In (A alpha) beta ->  phi alpha beta = beta ->
+Lemma A_Cr (alpha beta:Ord) : In (A_ alpha) beta ->  phi alpha beta = beta ->
                              In (Cr alpha) beta.
-  unfold A; intros H H0; rewrite <- H0.
+  unfold A_; intros H H0; rewrite <- H0.
   unfold phi; destruct (ord_ok (Cr alpha)).
   decompose [and] H2.
   specialize (H3 _ H); auto.
@@ -234,18 +248,22 @@ Proof.
 Qed.
 
 
+(* begin snippet epsilon0Cr1 *)
 
-Lemma epsilon0_Cr1 : In (Cr 1) epsilon0.
+Lemma epsilon0_Cr1 : In (Cr 1) epsilon0. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   red;rewrite Cr_1_equiv; split.
   - apply epsilon0_AP.
   - apply epsilon0_fxp.
 Qed.
+(*||*)
+
+(* end snippet epsilon0Cr1 *)
 
 (** Lemma 5, p 82 of Schutte's book *)
 
 (* TO DO : make the proof cleaner and shorter !!!! *)
-
 
 Section Proof_of_Lemma5.
   Let P (alpha:Ord) := Unbounded (Cr alpha) /\ Closed (Cr alpha).
@@ -338,7 +356,7 @@ Section Proof_of_Lemma5.
             apply ord_ok;  auto.
             assert (Unbounded (Cr xi)) by(now destruct (IHalpha  Hxi)).
             rewrite
-              (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi)) in H1.
+              (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi)) in H1.
             auto.
             apply ord_ok.
             destruct (IHalpha Hxi); auto. 
@@ -362,9 +380,9 @@ Section Proof_of_Lemma5.
          -  assert (Unbounded (Cr xi)) by ( now destruct (IHalpha  Hxi)).
             replace (the_ordering_segment (Cr xi)) with ordinal.
           + split.
-          + rewrite  (@ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
+          + rewrite  (@ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi))
             in H2.
-           *  unfold A in H2;  symmetry;  apply segment_unbounded; auto.
+           *  unfold A_ in H2;  symmetry;  apply segment_unbounded; auto.
               apply segment_the_ordering_segment; auto.
            *  apply ord_ok.
         }
@@ -377,7 +395,7 @@ Section Proof_of_Lemma5.
         red;  apply Cr_pos; auto.
         intros xi Hxi;  unfold P in IHalpha; split.
         - red; assert (Unbounded (Cr xi)) by (now destruct (IHalpha  Hxi)).
-          rewrite (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
+          rewrite (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi))
           in H.
         replace (the_ordering_segment (Cr xi)) with ordinal .
         + split.
@@ -389,8 +407,8 @@ Section Proof_of_Lemma5.
        - apply Lemma5_02; auto.
       Qed.
 
-      Remark A_full : forall xi, xi < alpha -> A xi = ordinal.
-        unfold A; intros.      
+      Remark A_full : forall xi, xi < alpha -> A_ xi = ordinal.
+        unfold A_; intros.      
         replace (the_ordering_segment (Cr xi)) with ordinal .
         split.
         symmetry; apply segment_unbounded.
@@ -399,7 +417,7 @@ Section Proof_of_Lemma5.
         apply iota_ind.
         apply ordering_segment_ex_unique.
         destruct 1; auto.
-        rewrite   <-  (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi)).
+        rewrite   <-  (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi)).
         destruct (IHalpha H);auto.
         apply ord_ok.
       Qed.
@@ -456,7 +474,7 @@ Section Proof_of_Lemma5.
           exists (phi xi); apply ord_ok.
           assert (Unbounded (Cr xi)). 
           now destruct (IHalpha  H).
-          rewrite (@ ordering_unbounded_unbounded (A xi) (Cr xi) (phi xi))
+          rewrite (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi))
             in H0.
           auto.
           apply ord_ok.
@@ -500,26 +518,34 @@ Section Proof_of_Lemma5.
 
 End Proof_of_Lemma5.
 
-Corollary Unbounded_Cr alpha : Unbounded (Cr alpha).
-Proof.
-  now destruct (Lemma5 alpha).
-Qed.
+(* begin snippet Lemma5 *)
 
-Corollary Closed_Cr alpha : Closed (Cr alpha).
+Theorem Unbounded_Cr alpha : Unbounded (Cr alpha). (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   now destruct (Lemma5 alpha).
 Qed.
+(*||*)
+
+Theorem Closed_Cr alpha : Closed (Cr alpha). (* .no-out *)
+(*| .. coq:: none |*)
+Proof.
+  now destruct (Lemma5 alpha).
+Qed.
+(*||*)
+
+(* end snippet Lemma5 *)
 
 Theorem Th13_8 alpha : normal (phi alpha) (Cr alpha).
 Proof.
-  eapply TH_13_6R with (A alpha).
+  eapply TH_13_6R with (A_ alpha).
   apply ord_ok.
   apply Closed_Cr.
   apply Unbounded_Cr.
 Qed.
 
 
-Corollary Th13_8_1 alpha : A alpha = ordinal.
+Corollary Th13_8_1 alpha : A_ alpha = ordinal.
 Proof.
   destruct Th13_8 with alpha.
   eapply A_full with (succ alpha).

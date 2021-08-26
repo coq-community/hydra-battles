@@ -39,6 +39,7 @@ COQ_FILES = Ack.v AckNotPR.v    \
 	    Canon.v Paths.v Large_Sets.v Large_Sets_Examples.v \
 	    Schutte_basics.v Well_Orders.v Lub.v \
 	    MoreEpsilonIota.v \
+	    Ordering_Functions.v Addition.v AP.v Critical.v CNF.v \
 
 TEX_FILE = $(COQ_FILES:.v=.tex)
 

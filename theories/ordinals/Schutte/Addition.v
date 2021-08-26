@@ -1,4 +1,3 @@
-(* (C) Pierre Castéran ,Labri, Université Bordeaux 1 *)
 
 From Coq Require Import Arith  Logic.Epsilon  Ensembles.
 From hydras Require Export Schutte_basics  Ordering_Functions
@@ -11,13 +10,18 @@ Set Implicit Arguments.
 
 (**  **  addition, multiplication by a positive integer *)
 
+(* begin snippet additionDef *)
+
 Definition plus alpha := ord (ge alpha).
 
-Notation "alpha + beta " := (plus alpha beta) : schutte_scope.
+Infix "+"  := plus : schutte_scope.
+
+(* end snippet additionDef *)
 
 (** returns [alpha * (S n)]
 *)
                        
+(* begin snippet multFin *)
 
 Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
  match n with 0 => alpha
@@ -31,8 +35,9 @@ Definition mult_fin_r alpha n :=
     | S p => mult_Sn alpha p
   end.
 
-Notation "alpha * n" := (mult_fin_r alpha n) : schutte_scope.
+Infix "*" := mult_fin_r : schutte_scope.
 
+(* end snippet multFin *)
 
 (** * Proofs, proofs, proofs 
 *)
@@ -79,6 +84,9 @@ Proof.
     rewrite  ge_o_segment;auto.
 Qed.
 
+(* begin snippet plusElim *)
+
+(*| .. coq:: no-out |*)
 Lemma plus_elim (alpha : Ord) :
   forall P : (Ord->Ord)->Prop,
     (forall f: Ord->Ord, 
@@ -87,6 +95,8 @@ Lemma plus_elim (alpha : Ord) :
 Proof.
  intros  P H0; now apply H0, plus_ordering.
 Qed.
+(*||*)
+(* end snippet plusElim *)
 
 Lemma normal_plus_alpha (alpha : Ord) : 
   normal (plus alpha) (ge alpha).
@@ -106,9 +116,13 @@ Qed.
 (** ** Basic properties of addition 
  *)
 
-Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha.
-Proof.
- pattern  (plus alpha); apply plus_elim;eauto.
+(* begin snippet alphaPlusZero *)
+
+Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha. (* .no-out *)
+Proof. (* .no-out *)
+  pattern  (plus alpha); apply plus_elim;eauto.
+  (* ... *)
+  (*| .. coq:: none |*)
  intros f H0 ; case (ordering_function_least_least H0).
   intros H1 H3; case (H3 alpha);auto.
  -  red;red; auto with schutte.
@@ -116,7 +130,10 @@ Proof.
   +  symmetry;tauto.
   +  intro; case (@lt_irrefl alpha);auto.
      apply lt_trans with (f zero);auto.
+  (*||*)
 Qed.
+
+(* end snippet alphaPlusZero *)
 
 Remark ge_zero : (ge zero : Ensemble Ord) = ordinal.
 Proof with eauto with schutte.
@@ -126,11 +143,15 @@ Proof with eauto with schutte.
    + unfold ge ...
 Qed.
 
+(* begin snippet bunchOfLemmas *)
 
-Lemma zero_plus_alpha (alpha : Ord) : zero + alpha = alpha.
+(*| .. coq:: no-out |*)
+Lemma zero_plus_alpha (alpha : Ord): zero + alpha = alpha.
+(*||*) (*| .. coq:: none |*)
 Proof with auto with schutte.
   pattern (plus zero);  apply plus_elim ...
- intros f H0; assert (H1:ordering_function (fun o => o) ordinal ordinal).
+  intros f H0;
+    assert (H1:ordering_function (fun o => o) ordinal ordinal).
  {  (repeat split) ...
      -  eauto with schutte.
  }
@@ -138,53 +159,38 @@ Proof with auto with schutte.
  generalize (ordering_function_unicity H0 H1); destruct 1; auto.
  apply H2; split.
 Qed.
+(*||*)
 
-
-Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta.
+Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta. (* .no-out *)
+(*||*) (*| .. coq:: none |*)
 Proof.
   pattern alpha at 1;  rewrite  <- alpha_plus_zero;auto.
   pattern (plus alpha);apply plus_elim;auto.
   intros;eapply ordering_function_mono_weak;eauto with schutte.
 Qed.
+(*||*)
 
-Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta.
+Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta. (* .no-out *)
+(*||*) (*| .. coq:: none |*)
 Proof.
  pattern (plus alpha);  apply plus_elim;auto.
  intros; eapply ordering_le; eauto.  
  split.
 Qed.
-
+(*||*)
 
 Lemma plus_mono_r (alpha beta gamma : Ord) : 
-    beta < gamma -> alpha + beta < alpha + gamma.
+  beta < gamma -> alpha + beta < alpha + gamma. (* .no-out *)
+(*||*) (*| .. coq:: none |*)
 Proof.
  intro  H; pattern (plus alpha); apply plus_elim;auto.
  intros; eapply ordering_function_mono;eauto with schutte.
 Qed.
-
- 
-Lemma plus_mono_r_weak (alpha beta gamma : Ord) :
-  beta <= gamma ->  alpha + beta <= alpha + gamma.
-Proof.
-  intros  H;  case (le_disj H).
- - intros; subst gamma; auto with schutte.    
- - right;  apply plus_mono_r;auto.
-Qed.
-
-
-Lemma plus_reg_r (alpha beta gamma : Ord) :
-  alpha + beta = alpha + gamma  ->  beta = gamma.
-Proof with trivial.
- intros  H;   tricho beta gamma H0 ...
- -  case (@lt_irrefl (alpha+beta)).
-    pattern (alpha+beta) at 2; rewrite H; apply plus_mono_r ...
- -  case (@lt_irrefl (alpha+beta)).
-    pattern (alpha+beta) at 1; rewrite H; apply plus_mono_r ...
-Qed.
-
+(*||*)
 
 Lemma plus_of_succ (alpha beta : Ord) :
-    alpha + (succ beta) = succ (alpha + beta).
+  alpha + (succ beta) = succ (alpha + beta). (* .no-out *)
+(*||*) (*| .. coq:: none |*)
 Proof with trivial.
  pattern (plus alpha); apply plus_elim ...
  intros plus_alpha Hp;
@@ -215,8 +221,32 @@ Proof with trivial.
    *  rewrite <- Ex in H6; eapply ordering_function_monoR;eauto.
      auto with schutte.
 Qed.
+(*||*)
 
-Lemma succ_is_plus_1 alpha :  succ alpha = alpha +  1.
+(* end snippet bunchOfLemmas *)
+
+Lemma plus_mono_r_weak (alpha beta gamma : Ord) :
+  beta <= gamma -> alpha + beta <= alpha + gamma.
+Proof.
+  intros  H;  case (le_disj H).
+ - intros; subst gamma; auto with schutte.    
+ - right;  apply plus_mono_r;auto.
+Qed.
+
+
+Lemma plus_reg_r (alpha beta gamma : Ord) :
+  alpha + beta = alpha + gamma  ->  beta = gamma.
+Proof with trivial.
+ intros  H;   tricho beta gamma H0 ...
+ -  case (@lt_irrefl (alpha+beta)).
+    pattern (alpha+beta) at 2; rewrite H; apply plus_mono_r ...
+ -  case (@lt_irrefl (alpha+beta)).
+    pattern (alpha+beta) at 1; rewrite H; apply plus_mono_r ...
+Qed.
+
+
+
+Lemma succ_is_plus_1 alpha :  succ alpha = alpha + 1.
 Proof. 
    rewrite  <- alpha_plus_zero  at 1; change (F 1) with (succ zero).
    rewrite   plus_of_succ;   now repeat rewrite alpha_plus_zero.
@@ -385,12 +415,19 @@ Section proof_of_associativity.
   Qed.
 
 End proof_of_associativity.
- 
+
+(* begin snippet plusAssoc *)
+
 Theorem plus_assoc (alpha beta gamma : Ord) :
-  alpha + (beta + gamma) = (alpha + beta) + gamma.
+  alpha + (beta + gamma) = (alpha + beta) + gamma. (* .no-out *)
+(* end snippet plusAssoc *)
+
 Proof.
   apply plus_assoc'; auto.
 Qed.
+
+
+
 
 Lemma one_plus_infinite (alpha : Ord) :
   omega <= alpha ->  1 + alpha = alpha. 
@@ -401,8 +438,11 @@ Proof.
  rewrite plus_assoc;auto with schutte; now rewrite one_plus_omega.
 Qed.
 
+(* begin snippet finitePlusInfinite *)
+
 Lemma finite_plus_infinite (n : nat) (alpha : Ord) :
-  omega <= alpha -> n + alpha = alpha.
+  omega <= alpha -> n + alpha = alpha. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
  induction n.
  - simpl; intros;rewrite zero_plus_alpha;trivial; eauto with schutte.
@@ -412,6 +452,8 @@ Proof.
       apply one_plus_infinite;eauto with schutte.
   + now   rewrite <- plus_FF.
 Qed.
+(*||*)
+(* end snippet finitePlusInfinite *)
 
 
 Example L_3_plus_omega : 3 + omega = omega.

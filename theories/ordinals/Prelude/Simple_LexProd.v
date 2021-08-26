@@ -23,19 +23,9 @@ Section Definitions.
   
   Inductive lexico : relation (A * B) :=
     lex_1 : forall a a' b b', ltA a a' -> lexico (a,b) (a',b')
-  |  lex_2 : forall a  b b', ltB b b' -> lexico (a,b) (a,b') .                                          
+  |  lex_2 : forall a  b b', ltB b b' -> lexico (a,b) (a,b') .
 
-  (* Alternative definition 
-
-  Definition lexico' : relation (A * B) :=
-    fun p q : A * B =>
-              lexprod A (fun _ : A => B) ltA
-                      (fun _ : A => ltB)
-                      (pair2sig p)
-                      (pair2sig q).
-
-   *)
-  
+   
   #[global] Instance Trans_lex  {SA : StrictOrder ltA}
          {SB : StrictOrder ltB}  :Transitive lexico. 
   Proof.
@@ -80,6 +70,7 @@ Section Definitions.
       + intro; trivial.
   Defined.
 
+ 
 End Definitions.
 
 Arguments lexico {A B} _ _ _ _.
@@ -94,6 +85,7 @@ Example Ex2 : lexico lt lt (3,5) (3,6).
 Proof.
 right;auto.
 Qed.
+
 
 
 
