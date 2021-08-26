@@ -328,7 +328,7 @@ jobs:
     - name: Build coqdoc
       run: nix-shell --run "make -j $(nproc) html"
     - name: Compile LaTeX document
-      run: nix-shell --run "make pdf"
+      run: nix-shell --run "make pdf SOURCE_DATE_EPOCH=$(date +%s)"
     - name: Extract PDF and Coqdoc
       run: |
         mkdir -p public/doc public/theories
