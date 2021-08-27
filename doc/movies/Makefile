@@ -1,58 +1,25 @@
+PYTHON ?= python3
 
-### Naive Makefile
-##################
+export coq_root := ../../theories/ordinals
+export snippets_root := ./snippets
+assets_root := $(snippets_root)/assets
 
-INPUT_DIR=../../theories/ordinals
-OPTIONS= -R ${INPUT_DIR} hydras
-vpath %.v ${INPUT_DIR}/Hydra
-vpath %.v ${INPUT_DIR}/Ackermann
-vpath %.v ${INPUT_DIR}/MoreAck
-vpath %.v ${INPUT_DIR}/Schutte
-vpath %.v ${INPUT_DIR}/Epsilon0
-vpath %.v ${INPUT_DIR}/Gamma0
-vpath %.v ${INPUT_DIR}/OrdinalNotations
-vpath %.v ${INPUT_DIR}/Prelude
-vpath %.v ${INPUT_DIR}/solutions_exercises
+default: all
 
-COQ_FILES = Ack.v AckNotPR.v    \
-	    extEqualNat.v  primRec.v PrimRecExamples.v   \
-	    F_alpha.v L_alpha.v F_omega.v Hprime.v \
-	    Hydra_Definitions.v O2H.v \
-	    Hydra_Theorems.v  Hydra_Examples.v    \
-	    Hydra_Lemmas.v   Hydra_Termination.v    \
-	    Epsilon0_Needed_Generic.v Epsilon0_Needed_Free.v \
-	    Epsilon0_Needed_Std.v \
-	    BigBattle.v      \
-	    Battle_length.v      \
-	    MorePRExamples.v FibonacciPR.v  isqrt.v       \
-	    Iterates.v       \
-	    Exp2.v       \
-	    MoreVectors.v MoreOrders.v Restriction.v \
-	    Omega_Small.v       \
-	    Comparable.v       \
-	    ON_Generic.v ON_Omega.v ON_plus.v ON_Omega_plus_omega.v \
-	    ON_mult.v ON_Omega2.v ON_Finite.v \
-	    Omega2_Small.v \
-	    Correctness_E0.v \
-	    T1.v E0.v Hessenberg.v \
-	    T2.v Gamma0.v \
-	    Canon.v Paths.v Large_Sets.v Large_Sets_Examples.v \
-	    Schutte_basics.v Well_Orders.v Lub.v \
-	    MoreEpsilonIota.v \
-	    Ordering_Functions.v Addition.v AP.v Critical.v CNF.v \
+targets.mk:
+	@$(PYTHON) gen_targets.py "$(coq_root)" "$(snippets_root)" > "$@"
 
-TEX_FILE = $(COQ_FILES:.v=.tex)
+include targets.mk
 
-SNIPPET_OUTPUT = ./snippets/
+coq_flags := -R $(coq_root) hydras
+alectryon_flags := --frontend coq --backend snippets-hydras $(coq_flags)
 
-.PHONY: all
-all: $(TEX_FILE)
+alectryon = $(PYTHON) ./driver.py $(alectryon_flags) --output-directory "$@"
 
+.PHONY: all clean targets.mk
 
-.PHONY: clean
+all: $(targets)
+	@$(PYTHON) ./driver.py --frontend coq --backend assets --output-directory $(assets_root) -
+
 clean:
-	@${RM} ${TEX_FILE}
-	@${RM} -r ${SNIPPET_OUTPUT}
-
-%.tex : %.v
-	@python3 extract_snippets.py $< -o ${SNIPPET_OUTPUT} -d ${OPTIONS}
+	rm -fr $(snippets_root)

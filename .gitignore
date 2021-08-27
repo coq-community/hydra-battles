@@ -31,7 +31,7 @@ doc/*.json
 doc/cutting-table/
 doc/auto/
 doc/*.pyg
-doc/movies/snippets
-doc/movies/*.tex
+doc/movies/snippets/
+doc/movies/targets.mk
 __pycache__
 alectryon-html/
