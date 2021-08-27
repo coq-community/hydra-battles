@@ -951,3 +951,12 @@ pattern alpha; apply well_founded_induction with Lt.
     rewrite IHalpha.
 Abort.
  *)
+
+(* begin snippet DemoAssumptions *)
+
+About F_zero_eqn.
+
+Print Assumptions F_zero_eqn.
+
+(* end snippet DemoAssumptions *)
+

@@ -169,7 +169,7 @@ Many thanks to Jérémy Damour and Théo Zimmermann who designed tools for maint
 Besides the guarantee of consistency between theories and documentation, we hope to give a corpus for experimenting new ways of documenting the implementation of non-trivial mathematics on a proof assistant.
 
 
-At present, this document is a hybrid version: Chapter~\vref{chapter:primrec} is fully adapted to \emph{Alectryon}, and we just started to re-write Chapter~\vref{chapter:hydras}.
+At present, this document is a hybrid version: Chapter~\vref{chapter:hydras} to \vref{chapter:primrec} are fully adapted to \emph{Alectryon}.  The rest of the document (Chapter \vref{chapter-powers} is still to be rewritten.
 
 
 
@@ -227,37 +227,26 @@ Except in the \texttt{Schutte} library, dedicated to an axiomatic presentation o
 At any place of our development, you may use the  \texttt{Print Assumptions {\it ident}} command in order to verify on which axiom the theorem {\it ident} may depend. The following example is extracted from 
 Library~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_alpha}, where we use the \texttt{coq-equations} plug-in (see Sect.~\vref{sect:wainer}).
 
-\begin{Coqsrc}
-About F_zero_eqn.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-F_zero_eqn : forall i : nat, F_ Zero i = S i
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Print Assumptions F_zero_eqn. 
-\end{Coqsrc}
-
-\begin{Coqanswer}
-Axioms:
-FunctionalExtensionality.functional_extensionality_dep
-  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
-    (forall x : A, f x = g x) -> f = g
-Eqdep.Eq_rect_eq.eq_rect_eq
-  : forall (U : Type) (p : U) (Q : U -> Type) (x : Q p) (h : p = p),
-    x = eq_rect p Q x p h
-\end{Coqanswer}
-
-
-
+\input{movies/snippets/F_alpha/DemoAssumptions}
 
 
 \subsection{Typographical Conventions}
 
+
+\subsubsection{Using Alectryon}
+
+Alectryon's \emph{LaTeX} mode cannot be mistaken for our hand-made quotations, particularly if you read a color-print.
+Here is an example from Chapter~\ref{chapter:primrec}.
+
+\vspace{4pt}
+
+
+\input{movies/snippets/Ack/AckFixpointIterate.tex}
+
 \subsubsection{Verbatim quotations}
 
-Quotations from our  \coq{} source are displayed as follows:
+Quotations of \coq{} source and answers from Chapter~\ref{chapter-powers}, as well as definitions from Standard Library and
+other contributions are displayed as follows.
 
 
   \begin{Coqsrc}
@@ -286,28 +275,15 @@ with a different background color.
 Qed.
  \end{Coqsrc}
 
+ \subsection{Remark}
+ 
 In general, we do not include full proof scripts in this document. The only exceptions are very short proofs (\emph{e.g.}, proofs by computation, or by application of automatic tactics). Likewise, we may display only the important steps on a long interactive proof, for instance, in the following lemma (\vref{lemma:L-2_6-1}):
 
-\begin{Coqsrc}
-Lemma Lemma2_6_1 (alpha : T1) :  
-  nf alpha -> forall beta,  beta t1< alpha  ->
-  {n:nat | const_pathS n alpha beta}.
-Proof.
-  transfinite_induction alpha.
-  (* ... *)
-\end{Coqsrc}
+\input{movies/snippets/Paths/Lemma261}
+
 
 The reader may consult the full proof scripts with Proof General or CoqIDE, for instance.
 
-\subsubsection{Using Alectryon}
-
-Alectryon's \emph{LaTeX} mode cannot be mistaken for our hand-made quotations, particularly if you read a color-print.
-Here is an example from Chapter~\ref{chapter:primrec}.
-
-\vspace{4pt}
-
-
-\input{movies/snippets/Ack/AckFixpointIterate.tex}
 \subsection{Active links}
 The  links which appear in this pdf  document lead are of three possible kinds of destination:
 \begin{itemize}
@@ -328,42 +304,14 @@ dead-ends or too complex developments, with the following coloring.
 Bad definitions 
  are ''masked '' inside modules called \texttt{Bad}, \texttt{Bad1}, etc.
 
-
-\begin{Coqbad}
-Module Bad.
-
-Definition double (n:nat)  := n + 2.
- 
-Lemma lt_double : forall n:nat, n < double  n.
-Proof.
-   unfold double; lia.
-Qed.
-
-End Bad.
-\end{Coqbad}
+\input{movies/snippets/Schutte_basics/BadBottoma}
+\input{movies/snippets/Schutte_basics/trivialProps}
+\input{movies/snippets/Schutte_basics/Failure}
 
 Likewise, alternative, but still unexplored definitions will be presented in modules
 \texttt{Alt}, \texttt{Alt1}, etc. Using these definitions is left as an implicit exercise.
 
-
-\begin{Coqalt}
-From hydras Require Import Iterates.
-Module Alt.
-  Definition double (n : nat) := iterate S n n.
-End Alt.
-\end{Coqalt}
-
-\begin{Coqsrc}
-Lemma alt_double_ok n : Nat.double n = Alt.double n.
-Proof.
-  unfold Alt.double, Nat.double; induction n; cbn.
-  -  trivial.
-  -  rewrite <- iterate_rw, iterate_S_eqn, <- IHn; lia.
-Qed.
-\end{Coqsrc}
-
-
-
+\input{movies/snippets/Hydra_Definitions/HydraAlt}
 
 
 

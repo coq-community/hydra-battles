@@ -1137,35 +1137,25 @@ Proof.
 Qed.
 
 (* begin snippet BadBottoma *)
-
 Module Bad.
   
   Definition bottom := the_least (Empty_set Ord).
-
 (* end snippet BadBottoma *)
 
-
-  (* begin snippet trivialProps *)
-
-  (*| .. coq:: no-out |*)
-  
+  (* begin snippet trivialProps *) (*| .. coq:: no-out |*) 
   Lemma le_zero_bottom : zero <= bottom. 
   Proof. apply zero_le. Qed.
 
   Lemma bottom_eq : bottom = bottom.
   Proof. trivial. Qed.
-
   (*||*) (* end snippet trivialProps *)
-
   (* begin snippet Failure *)
-  
   Lemma le_bottom_zero : bottom <= zero. (* .no-out *)
   Proof. (* .no-out *)
     unfold bottom, the_least, the; apply iota_ind.
   Abort.
 
 End Bad.
-
 (* end snippet Failure *)
 
 End iota_demo.

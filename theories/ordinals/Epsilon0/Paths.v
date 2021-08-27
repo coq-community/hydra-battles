@@ -1520,11 +1520,9 @@ Lemma Lemma2_6_1 (alpha : T1) :
   forall beta,
     beta t1< alpha  ->
     {n:nat | const_pathS n alpha beta}.
-(*||*)
-(* end snippet Lemma261 *)
-
 Proof.
   transfinite_induction alpha.
+  (* ... *) (*||*) (*| .. coq:: none |*)
   intros x H Hx; destruct (zero_limit_succ_dec Hx).
   - destruct s.
    + subst;  intros.  destruct (not_LT_zero H0).  
@@ -1567,8 +1565,10 @@ Proof.
     +  exists 1; subst;left.
        rewrite canon_succ; trivial.
      *  split; trivial.
-        -- now apply succ_not_zero.
+        -- now apply succ_not_zero. (*||*)
 Defined.
+(*||*)
+(* end snippet Lemma261 *)
 
 Lemma small_lemma (i:nat) (beta : T1) :  forall alpha,
       const_pathS i alpha beta ->
