@@ -622,7 +622,7 @@ The first subgoal is trivial.
 
 \input{movies/snippets/Hydra_Examples/BadInductionc}
 
-Let us look at the second sub-goal of the induction.
+Let us look at the second subgoal of the induction.
 
 \input{movies/snippets/Hydra_Examples/BadInductiond}
 
@@ -659,15 +659,15 @@ Using this scheme requires an auxiliary predicate, called \texttt{P0} in \texttt
 \input{movies/snippets/Hydra_Definitions/hForall}
 
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
-
 \input{movies/snippets/Hydra_Examples/heightLtSizea}
 
 
 
 
-The first subgoal is easily solvable, using some arithmetic. We let the reader look at the source. The second and third are
-almost trivial. 
-
+The first subgoal is easily solvable, using some arithmetic.
+The second and third ones are
+almost trivial. We let the reader look at the source. 
+\input{movies/snippets/Hydra_Examples/heightLtSizez}
 
 
 
@@ -716,7 +716,6 @@ predicate \texttt{S0}, associated with the removing of one head from a sequence 
 \vspace{4pt}\emph{From Module\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 
 \input{movies/snippets/Hydra_Definitions/S0Def}
-
 \input{movies/snippets/Hydra_Definitions/R1Def}
 
 \subsubsection{Example}
@@ -924,7 +923,7 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 
 The following property allows us to build battles by composition of smaller ones.
 
-%% TODO display sub-goals when fixed
+%% TODO display subgoals when fixed
 
 \input{movies/snippets/Hydra_Lemmas/battleTrans}
 
@@ -3168,7 +3167,7 @@ A simple way to do this is to consider statements of the form
 \vspace{4pt}
 
 
-But this style leads to clumsy statements, and generates too many sub-goals in interactive proofs (although often solved with \texttt{auto} or \texttt{eauto}).
+But this style leads to clumsy statements, and generates too many subgoals in interactive proofs (although often solved with \texttt{auto} or \texttt{eauto}).
 
 One may encapsulate conditions of the form \texttt{(nf $\alpha$)} in
 the most used predicates. For instance, we introduce the restriction of \texttt{lt} to terms in normal form, and provide a handy notation for this restriction.
@@ -6348,7 +6347,7 @@ Since we won't be able to prove the proposition
 
 \input{movies/snippets/Schutte_basics/trivialProps}
 
-On the other hand, the following attempt fails, because of the unprovable first sub-goal (please notice that the second sub-goal is easy to solve !).
+On the other hand, the following attempt fails, because of the unprovable first subgoal (please notice that the second subgoal is easy to solve !).
 
 \input{movies/snippets/Schutte_basics/Failure}
 

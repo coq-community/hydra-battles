@@ -38,22 +38,17 @@ End Alt.
 
 
 (* begin snippet HydraRect2 *)
-
 Scheme Hydra_rect2 := Induction for Hydra Sort Type
 with   Hydrae_rect2 := Induction for Hydrae Sort Type.
-
 (* end snippet HydraRect2 *)
 
 (* begin snippet hForall *)
-
 (** All elements of s satisfy P *)
-
 Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
   match s with
     hnil => True
   | hcons h s' => P h /\ h_forall P s'
   end.
-
 (* end snippet hForall *)
 
 Lemma h_eq_dec : forall h h':Hydra, {h = h'}+{h <> h'}
@@ -68,32 +63,26 @@ Defined.
  *)
 
 (* begin snippet hsize *)
-
 Fixpoint hsize (h:Hydra) : nat :=
-  match h with node l => S (lhsize l)
-  end
+  match h with node l => S (lhsize l) end
 with lhsize l : nat :=
        match l with
          | hnil => 0
          | hcons h hs => hsize h + lhsize hs
   end.
-
 (* end snippet hsize *)
 
 (** ***  height (length of longest branch) 
  *)
 
 (* begin snippet height *)
-
 Fixpoint height  (h:Hydra) : nat :=
-  match h with node l => lheight l
-  end
+  match h with node l => lheight l  end
 with
 lheight l : nat :=
   match l with hnil => 0
           | hcons h hs => Max.max (S (height h)) (lheight hs)
   end.
-
 (* end snippet height *)
 
 (** ** Abbreviations 
@@ -119,7 +108,6 @@ Notation hyd3 h h' h'' := (node (hcons h (hcons h' (hcons h'' hnil)))).
 *)
 
 (* begin snippet hconsMult *)
-
 Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
   match n with 
   | O => s
@@ -127,12 +115,10 @@ Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
   end.
 
 
-(** *** Hydra with n equal daughters 
-*)
+(** *** Hydra with n equal daughters *)
 
 Definition hyd_mult h n :=
   node (hcons_mult h n hnil).
-
 (* end snippet hconsMult *)
 
 (** ** Managing sequences of hydras
@@ -200,12 +186,10 @@ Before giving the definition in Coq of [round_n], we need to define several  aux
 *)
 
 (* begin snippet S0Def *)
-
 Inductive S0 :  relation Hydrae :=
 | S0_first : forall s, S0  (hcons head s) s
 | S0_rest : forall  h s s',
     S0  s s' ->  S0  (hcons h s) (hcons h s').
-
 (* end snippet S0Def *)
 
 (** *** R1
@@ -215,10 +199,8 @@ Inductive S0 :  relation Hydrae :=
 *)
 
 (* begin snippet R1Def *)
-
 Inductive R1  :  relation Hydra :=
 | R1_intro : forall s s', S0 s s' -> R1 (node s) (node s').
-
 (* end snippet R1Def *)
 
  (** *** S1 
@@ -251,7 +233,6 @@ The proposition [R2 n h h'] holds if some sub-hydra [h0] of [h] has been replace
 *)
 
 (* begin snippet R2Def *)
-
 Inductive R2 (n:nat)  :  relation Hydra  :=
 | R2_intro : forall s s', S1 n s s' -> R2 n (node s) (node s')
 | R2_intro_2 : forall s s', S2 n s s' -> R2 n (node s) (node s')
@@ -261,7 +242,6 @@ with S2 (n:nat) :  relation Hydrae :=
          R2 n   h h'->  S2  n (hcons h s) (hcons h'  s)
      |  S2_next  : forall h   r r',
          S2 n r r' ->  S2 n (hcons h r) (hcons h r').
-
 (* end snippet R2Def *)
 
 (**  *** [round_n]
@@ -273,9 +253,7 @@ with S2 (n:nat) :  relation Hydrae :=
 *)
 
 (* begin snippet roundNDef *)
-
 Definition round_n n h h' := R1 h h' \/ R2 n h h'.
-
 (* end snippet roundNDef *)
 
 
@@ -285,11 +263,9 @@ Definition round_n n h h' := R1 h h' \/ R2 n h h'.
 (** *** Binary relation associated with a battle round *)
 
 (* begin snippet roundDef *)
-
 Definition round h h' := exists n,  round_n n h h'.
 
 Infix "-1->" := round (at level 60).
-
 (* end snippet roundDef *)
 
 
@@ -298,14 +274,12 @@ Infix "-1->" := round (at level 60).
 *)
 
 (* begin snippet roundPlus *)
-
 Definition round_plus := clos_trans_1n Hydra round.
 
 Definition round_star h h' := h = h' \/ round_plus h h'.
 
 Infix "-+->" := round_plus (at level 60).
 Infix "-*->" := round_star (at level 60).
-
 (* end snippet roundPlus *)
 
 (** **  Experimental tactics for interactive battles  *)
