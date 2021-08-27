@@ -291,22 +291,3 @@ Proof. reflexivity. Qed.
 
 Example Ex1 : In  (bigO beta1) alpha1.
 Proof. reflexivity. Qed.
-
-(* results in a CI error 
-
-(* begin snippet bad *)
-
-Program Definition bad : t 10 := 10.
-Next Obligation.
-  compute.
-Abort.
-
-(* end snippet bad *)
-
-
- *)
-
-
-
-
-
