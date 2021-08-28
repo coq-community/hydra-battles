@@ -79,7 +79,6 @@ Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
   apply succ_nf, cnf_ok.
 Defined.
-(*||*)
 
 
 

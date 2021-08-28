@@ -54,11 +54,10 @@ Qed.
 
 (** ** Examples of terms of type [PrimRec n] and their interpretation *)
 
+(* begin snippet evalPrimRecEx  *)
 (*|
 .. coq:: no-out
 |*)
-
-(* begin snippet evalPrimRecEx  *)
 
 Example Ex1 : evalPrimRec 0 zeroFunc = 0.
 Proof. reflexivity. Qed.
@@ -136,9 +135,8 @@ primRecFunc 0
                                   (PRnil 3))
                           succFunc))))).
 
-(* end snippet bigPRa  *)
-
 (*||*)
+(* end snippet bigPRa  *)
 
 (* begin snippet bigPRb  *)
 Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
@@ -250,11 +248,11 @@ Qed.
 
 (* end snippet zeroIsPR *)
 
+(* begin snippet SuccIsPR *)
+
 (*|
 .. coq:: no-out
 |*)
-
-(* begin snippet SuccIsPR *)
 
 Lemma SuccIsPR : isPR 1 S.
 Proof.
@@ -265,6 +263,10 @@ Qed.
 
 (* begin snippet pi25IsPR *)
 
+(*|
+.. coq:: no-out
+|*)
+
 Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
  assert (H: 3 < 5) by auto.
@@ -272,9 +274,9 @@ Proof.
  cbn; reflexivity.
 Qed.
 
-(* end snippet pi25IsPR *)
-
 (*||*)
+
+(* end snippet pi25IsPR *)
 
 Check composeFunc 0 1.
 
