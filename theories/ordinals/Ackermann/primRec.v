@@ -318,11 +318,10 @@ Qed.
 
 (** ** Usual projections (in curried form) are primitive recursive *)
 
-(*| 
-.. coq:: no-out 
-|*)
-
 (* begin snippet idIsPR *)
+(*|
+.. coq:: no-out
+|*)
 
 Lemma idIsPR : isPR 1 (fun x : nat => x).
 Proof.
@@ -330,9 +329,8 @@ Proof.
   exists (projFunc 1 0 H); cbn; auto.
 Qed.
 
-(* end snippet idIsPR *)
-
 (*||*)
+(* end snippet idIsPR *)
 
 Lemma pi1_2IsPR : isPR 2 (fun a b : nat => a).
 Proof.

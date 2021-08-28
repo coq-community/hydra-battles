@@ -19,11 +19,10 @@ Import extEqualNat  VectorNotations.
 
  *)
 
+(* begin snippet vApply *)
 (*|
 .. coq:: no-out
 |*)
-
-(* begin snippet vApply *)
 
 Notation "'v_apply' f v" := (evalList _ v f) (at level 10, f at level 9).
 
@@ -40,9 +39,8 @@ Proof.
   intros; now cbn.
 Qed.
 
-(* end snippet vApply *)
-
 (*||*)
+(* end snippet vApply *)
 
 (*  begin snippet majorizedDefs *)
 
@@ -253,8 +251,8 @@ Proof.
         intro H2;lia.
       * rewrite max_comm; apply nested_Ack_bound.
  
-  (*||*)
   (* begin snippet majorAnyPRb *)
+  (*||*)
         
   -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh]. (* .no-out *)
 
@@ -333,9 +331,6 @@ Proof.
    -  (* .no-out *) red;cbn;  red; exists 0. (* .none *)
     intro; rewrite Ack_0;  cbn; auto with arith. (* .none *)
   - (* .no-out *) red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
-(*|
-.. coq:: none
-|*)
     intros v;  cbn; specialize (H0 v).
     pose (X :=
             (max_v (map (fun f : naryFunc n => v_apply f v)
@@ -347,8 +342,7 @@ Proof.
       *  apply Ack_mono_l; apply le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
       * apply Ack_mono_l; apply le_max_r.
-(*||*)
-Qed. 
+Qed.
 
 
 
