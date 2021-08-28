@@ -894,7 +894,6 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 
 \input{movies/snippets/Hydra_Definitions/BattleDef}
 
-
 The most general class of battles is \texttt{free}, which allows the hydra to chose any replication factor at every step:
 
 \vspace{4pt}
@@ -902,7 +901,7 @@ The most general class of battles is \texttt{free}, which allows the hydra to ch
 
 \input{movies/snippets/Hydra_Definitions/freeDef}
 
-We chose to call \emph{standard} the kind of battles which appear  most often in the literature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
+We chose to call \emph{standard}\footnote{This appellation is ours. If there is a better one, we will change it.} the kind of battles which appear  most often in the literature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
@@ -913,11 +912,10 @@ We chose to call \emph{standard} the kind of battles which appear  most often in
 
 \subsection{Big steps}
 
-Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$.
+Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$. 
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
-
 
 \input{movies/snippets/Hydra_Definitions/battleRelDef}
 
@@ -925,6 +923,10 @@ The following property allows us to build battles by composition of smaller ones
 
 %% TODO display subgoals when fixed
 
+\vspace{4pt}
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
+
+\noindent
 \input{movies/snippets/Hydra_Lemmas/battleTrans}
 
 
@@ -956,7 +958,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 \begin{itemize}
 \item At each round, Hercules chops off the rightmost head of the hydra.
-\item The battle is called \emph{standard}\footnote{This appellation is ours. If there is a better one, we will change it.}: at the round number $i$, the expected replication is $i$.
+\item The battle is {standard}: at the round number $i$, the expected replication is $i$.
 \end{itemize}
 
 
@@ -984,6 +986,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
   \label{fig:hinit}
 \end{figure}
 
+\emph{From Module~\href{../theories/html/hydras.Hydra.BigBattle.html}{Hydra.BigBattle}}
 
 \input{movies/snippets/BigBattle/hinitDef}
 
@@ -1036,9 +1039,8 @@ Thus, we introduce a few handy abbreviations.
 \input{movies/snippets/BigBattle/Notations}
 
 
-For instance Fig~\vref{fig:hinit-plusn} shows the hydra (\texttt{hyd 3 4 2}). The hydra (\texttt{hyd 0 0 0})  is the ``final'' hydra of any terminating battle, {i.e.},
+For instance, the hydra shown in  Fig~\ref{fig:hinit-plusn} is  (\texttt{hyd 3 4 2}). The hydra (\texttt{hyd 0 0 0})  is the ``final'' hydra of any terminating battle, {i.e.},
 a tree whith exactly one node and no edge.
-
 
 \begin{figure}[h]
   \centering
@@ -1082,15 +1084,6 @@ a tree whith exactly one node and no edge.
 \draw (e) -- (ea);
 \draw (f) -- (fa);
 \draw (g) -- (ga);
-% \node (a) at  (3,4) {$\bullet$};
-% \node (h1) at  (1,6) 
-% \node (h2) at  (3,6) {$\Smiley[1][green]$};
-% \node (h3) at  (6,6) {$\Smiley[1][green]$};
-% \node (h4) at  (6,6) {$\Smiley[1][green]$};
-% \draw (foot) -- (n1);
-% \draw (n1) to   [bend left=20] (h1);
-% \draw (n1) to   (h2);
-% \draw (n1) to   [bend right=20] (h3);
 \end{tikzpicture}
 
   \caption{The hydra (\texttt{hyd 3 4 2})}

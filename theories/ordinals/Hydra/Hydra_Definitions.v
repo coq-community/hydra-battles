@@ -264,7 +264,6 @@ Definition round_n n h h' := R1 h h' \/ R2 n h h'.
 
 (* begin snippet roundDef *)
 Definition round h h' := exists n,  round_n n h h'.
-
 Infix "-1->" := round (at level 60).
 (* end snippet roundDef *)
 
@@ -275,7 +274,6 @@ Infix "-1->" := round (at level 60).
 
 (* begin snippet roundPlus *)
 Definition round_plus := clos_trans_1n Hydra round.
-
 Definition round_star h h' := h = h' \/ round_plus h h'.
 
 Infix "-+->" := round_plus (at level 60).
@@ -392,15 +390,13 @@ Let us formalize this dependence through a relation linking the number of the cu
 *)
 
 (* begin snippet BattleDef *)
-
 Definition round_t := nat -> Hydra -> Hydra -> Prop.
 
 Class Battle :=  {battle_rel : round_t;
                   battle_ok : forall i h h',
-                      battle_rel  i h h' -> round h h'}.
+                      battle_rel i h h' -> round h h'}.
 
 Arguments battle_rel : clear implicits.
-
 (* end snippet BattleDef *)
 
 (** In the current state of this development, we will consider two instances of class [Battle]:
@@ -412,18 +408,15 @@ Arguments battle_rel : clear implicits.
 
 
 (* begin snippet freeDef *)
-  
-Program Instance free : Battle := Build_Battle (fun _  h h' => round h h') _.
-
+Program Instance free : Battle 
+  := Build_Battle (fun _  h h' => round h h') _.
 (* end snippet freeDef *)
 
 (* begin snippet standardDef *)
-
-Program Instance standard : Battle := (Build_Battle round_n _).
+Program Instance standard : Battle := Build_Battle round_n _.
 Next Obligation.
   now exists i.  
 Defined.
-
 (* end snippet standardDef *)
 
 (**  The following relation allows us to consider sequences of rounds in a given  class  of battles 
@@ -433,21 +426,21 @@ Defined.
  *)
 
 (* begin snippet battleRelDef *)
+Inductive battle (B:Battle)
+  : nat -> Hydra -> nat -> Hydra -> Prop :=
+  battle_1 : forall i h  h',
+    battle_rel   B i  h h' -> 
+    battle B i h (S i) h'
+| battle_n : forall i h  j h' h'',
+    battle_rel  B i h h''  ->
+    battle B (S i) h'' j h'  ->
+    battle B i h j h'.
 
-Inductive battle (B:Battle) : nat -> Hydra -> nat -> Hydra -> Prop :=
-  battle_1 : forall i h  h', battle_rel   B i  h h' -> 
-                            battle B i h (S i) h'
-| battle_n : forall i h  j h' h'', battle_rel  B i h h''  ->
-                                   battle B (S i) h'' j h'  ->
-                                   battle B i h j h'.
-
-(* end snippet battleRelDef *)
-
- (** number of steps leading to the hydra's death *)
+(** number of steps leading to the hydra's death *)
 
 Definition battle_length B k h l :=
-    battle B k h  (Nat.pred (k + l)%nat) head.
-
+    battle B k h (Nat.pred (k + l)%nat) head.
+(* end snippet battleRelDef *)
 
 (** *** Uniform termination *)
 

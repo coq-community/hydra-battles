@@ -12,11 +12,8 @@ From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates Exp2.
 (** Let us consider a small hydra [hinit] *)
 
 (* begin snippet hinitDef *)
-
 Notation  h3 := (hyd_mult head 3).
-
 Definition hinit := hyd3 h3  head head.
-
 (* end snippet hinitDef *)
 
 
@@ -34,10 +31,7 @@ Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3). (* .no-out *)
 Proof. (* .no-out *)
   eapply battle_trans with (h := hyd2 h3 head) (i:=1).
   (* ... *)
-  (*|
-.. coq:: none 
-|*)
-  
+  (*| .. coq:: none |*)
   - left; trivial.
     red. cbn. chop_off 1.
   - left; trivial.
@@ -67,11 +61,7 @@ Notation hyd a b c :=
 (* end snippet Notations *)
 
 (* begin snippet L23L03 *)
-
-(*|
-.. coq:: no-out 
-|*)
-
+(*| .. coq:: no-out |*)
 Lemma L_2_3 : battle standard 2 (hyd1 h3)  3 (hyd 3 0 0).
 Proof.  
   left; trivial; right ;  simpl;  left; left.
@@ -84,9 +74,7 @@ Proof.
   - apply L_2_3.
   - apply L_0_2.
 Qed.
-
 (*||*)
-
 (* end snippet L23L03 *)
 
 (** From now on, we abstract the configurations of the battle
