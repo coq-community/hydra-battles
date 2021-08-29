@@ -26,21 +26,18 @@ the first steps of a standard battle (Hercules chops off the rightmost head)
 
 
 (* begin snippet L02 *)
-
-Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3). (* .no-out *)
-Proof. (* .no-out *)
+(*| .. coq:: no-out |*)
+Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3). 
+Proof. 
   eapply battle_trans with (h := hyd2 h3 head) (i:=1).
-  (* ... *)
-  (*| .. coq:: none |*)
+  (* ... *) (*| .. coq:: none |*)
   - left; trivial.
     red. cbn. chop_off 1.
   - left; trivial.
     red; left;  trivial.
     split; repeat constructor. 
-  (*||*)
+(*||*)
 Qed.
-
-
 (* end snippet L02 *)
 
 (** In the next round, there is a replication of h3 into 3 copies of h2 
@@ -453,25 +450,15 @@ Qed.
  *)
 
 (* begin snippet minorationLemmas *)
-
-
 Lemma minoration_0 : forall n,  2 * n <= doubleS n. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
-
+(*| .. coq:: none |*)
 Proof.
   unfold doubleS;intros; abstract lia.
 Qed.
-
 (*||*)
 
-Lemma minoration_1 : forall n x, exp2 n * x <= iterate doubleS n x.
-(* .no-out *)
-
-(*|
-.. coq:: none 
-|*)
+Lemma minoration_1 : forall n x, exp2 n * x <= iterate doubleS n x. (* .no-out *)
+(*| .. coq:: none |*)
 Proof.
   induction n; simpl.
   -  intro;  abstract lia.
@@ -482,24 +469,17 @@ Proof.
 Qed.
 (*||*)
 
-
 Lemma minoration_2 : exp2 95 * 95 <= M. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
+(*| .. coq:: none |*)
 Proof. apply minoration_1. Qed.
 (*||*)
 
 Lemma minoration_3 : exp2 (S M) * S M <= N. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
+(*| .. coq:: none |*)
 Proof. apply minoration_1.  Qed.
 (*||*)
 
-(*|
-.. coq:: none 
-|*)
+(*| .. coq:: none |*)
 Lemma exp2_mono1 : forall n p,  n <= p ->  exp2 n  <= exp2 p .
 Proof.
   induction 1.
@@ -508,12 +488,8 @@ Proof.
 Qed.
 (*||*)
 
-
 Lemma minoration : exp2 (exp2 95 * 95) <= N. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
-
+(*| .. coq:: none |*)
 Proof.
   transitivity (exp2 (S M) * S M).
   -   replace (exp2 (exp2 95 * 95)) with ((exp2 (exp2 95 * 95) * 1)).
@@ -527,7 +503,6 @@ Proof.
   -  apply minoration_3.
 Qed.
 (*||*)
-
 (* end snippet minorationLemmas *)
 
 

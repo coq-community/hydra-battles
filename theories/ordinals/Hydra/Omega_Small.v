@@ -127,15 +127,15 @@ Section Impossibility_Proof.
 |*)
     induction i.
     - auto with arith.
-    -  apply Lt.le_lt_trans with (m (iota i)). 
-       (* ... *) (*||*)
-    (*|
-.. coq:: none 
-|*)       
+    - apply Lt.le_lt_trans with (m (iota i)). 
+       (* ... *) 
+       
+       (*||*)(*| .. coq:: none |*)       
        + assumption.
-       +  apply (variant_decr  0).
+       + apply (variant_decr  0).
           * discriminate.
-          * cbn; apply round_S; exact 0. (*||*)
+          * cbn; apply round_S; exact 0.
+      (*||*)(*| .. coq:: no-out |*)  
   Qed.     
   (* end snippet mGeb *)
  
@@ -151,7 +151,7 @@ Section Impossibility_Proof.
   Proof. 
    generalize m_lt,  m_ge; intros; lia.
   Qed. 
-(*||*)
+
 
 End Impossibility_Proof.
 

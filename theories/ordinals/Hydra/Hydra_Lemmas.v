@@ -397,10 +397,7 @@ Qed.
 
 Definition  next_round_dec n (h: Hydra) :
   (h = head) + {h' : Hydra & {R1 h h'} + {R2  n h  h'}}. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
-
+(*| .. coq:: none |*)
 Proof.
 induction h using   Hydra_rect2 with
 (P0 :=

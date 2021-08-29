@@ -1,13 +1,11 @@
 From Coq Require Import Arith Lia.
 
 (* begin snippet exp2Def *)
-
 Fixpoint exp2 (n:nat) : nat :=
   match n with
     0 => 1
   | S i => 2 * exp2 i
   end.
-
 (* end snippet exp2Def *)
 
 

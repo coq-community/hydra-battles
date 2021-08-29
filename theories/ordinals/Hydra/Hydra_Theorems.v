@@ -12,13 +12,8 @@ Import E0 Large_Sets Hprime Paths MoreLists  O2H Hydra_Definitions Iterates.
  *)
 
 (* begin snippet AliveThms *)
-
 Theorem Alive_free :   Alive free. (* .no-out *)
-
-(*|
-.. coq:: none 
-|*)
-
+(*| .. coq:: none |*)
 Proof.
   red;intros.
   destruct (next_round i h).
@@ -27,8 +22,7 @@ Proof.
 Qed.
 (*||*)
 
-
-Theorem Alive_standard :   Alive standard. (* .no-out *)
+Theorem Alive_standard : Alive standard. (* .no-out *)
 (*|
 .. coq:: none 
 |*)
