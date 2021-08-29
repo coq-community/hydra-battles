@@ -59,7 +59,7 @@ This contribution contains two parts:
   - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
   - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
 
-- Building the PDF documentation also requires Alectryon 1.3.1 and SerAPI.
+- Building the PDF documentation also requires Alectryon 1.3.1 or later, and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:
