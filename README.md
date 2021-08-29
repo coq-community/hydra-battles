@@ -59,7 +59,7 @@ This contribution contains two parts:
   - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
   - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
 
-- Building the PDF documentation also requires Alectryon 1.2 and SerAPI.
+- Building the PDF documentation also requires Alectryon 1.3.1 and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:
@@ -76,8 +76,7 @@ This contribution contains two parts:
  Documentation for the `master` branch is continuously deployed at:
  https://coq-community.org/hydra-battles/doc/hydras.pdf
 
- The command `make pdf` generates a local copy as `doc/hydras.pdf`.
-
+ The command `make pdf` generates a local copy as `doc/hydras.pdf`. 
 ## Contents
 
 ###  coqdoc html files
