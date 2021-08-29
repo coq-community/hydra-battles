@@ -112,7 +112,6 @@ def make_latex(input_file: Path, sertop_args):
     print(f"Convert '{input_file}' to latex.")
     register_docutils(sertop_args)
     reader = CoqToLatexReader(input_file)
-    print("Extract snippets.")
     return SnippetExtractor(reader), reader
 
 
@@ -138,6 +137,9 @@ def main():
 
     snippet_extractor, reader = make_latex(args.input, args.sertop_args)
 
+    if reader.exit_code > 0:
+        return reader.exit_code
+
     # dump latex to debug
     if args.dump_complete_latex:
         path_latex = get_path_latex(args.dump_complete_latex_dir,
@@ -146,6 +148,7 @@ def main():
         make_latex_file(reader.content_latex, path_latex)
 
     # write snippets files
+    print("Extract snippets.")
     snippets = snippet_extractor.extract()
     for snippet in snippets:
         path = get_path_latex(output_dir, snippet.name)
@@ -154,3 +157,5 @@ def main():
 
     if snippets:
         copy_asset(args.output_dir)
+
+    return 0
