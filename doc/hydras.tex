@@ -35,6 +35,10 @@
 \usepackage{movies/snippets/assets/alectryon}
 \usepackage{movies/snippets/assets/pygments}
 
+% Prevent breaks in the middle of syntactic units
+\let\OldPY\PY
+\def\PY#1#2{\OldPY{#1}{\mbox{#2}}}
+
 \setcounter{tocdepth}{1}
 \input{coqmacros}
 
