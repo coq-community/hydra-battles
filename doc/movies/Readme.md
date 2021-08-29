@@ -5,12 +5,12 @@ This script has been tested with Python 3.7 or above and uses [Alectryon](https:
 to transform "coq+rst" to "latex" file.
 
 ## Requirements
-Alectryon >=1.3.1
+The script has been tested with a recent version of Alectryon (Aug 28th, 2021). You can download it from
+[Alectryon's site](https://github.com/cpitclaudel/alectryon) and run `pip install .` .
 
-You can install with command:
-```shell
-pip install -r requirements.txt
-```
+you may also run `pip install -r requirements.txt`
+
+
 
 ## Snippet Block
 A snippet blocs is a block formed by this template:
