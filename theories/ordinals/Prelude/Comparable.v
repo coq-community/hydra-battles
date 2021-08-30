@@ -1,8 +1,8 @@
 From Coq Require Import Relations RelationClasses Setoid.
 Require Export MoreOrders.
 
-(* begin snippet ComparableDef *)
 
+(* begin snippet ComparableDef *)
 Class Comparable {A:Type} 
   (lt: relation A)
   (compare : A -> A -> comparison) :=
@@ -11,7 +11,6 @@ Class Comparable {A:Type}
   compare_correct: forall a b,
       CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
   }.
-
 (* end snippet ComparableDef *)
 
 Section Comparable.
