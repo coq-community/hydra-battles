@@ -13,7 +13,6 @@ Generalizable All Variables.
 Coercion is_true: bool >-> Sortclass.
 
 (* begin snippet Defs *)
-
 Section Defs.
 
   Context `(ltA: relation A)
@@ -23,17 +22,14 @@ Section Defs.
           (compareB : B -> B -> comparison)
           (NB: ON ltB compareB).
 
+  Definition t := (A + B)%type.
+  Arguments inl  {A B} _.
+  Arguments inr  {A B} _.
 
-Definition t := (A + B)%type.
-Arguments inl  {A B} _.
-Arguments inr  {A B} _.
-
-Definition lt : relation t := le_AsB _ _ ltA ltB.
-
+  Definition lt : relation t := le_AsB _ _ ltA ltB.
 (* end snippet Defs *)
 
 (* begin snippet compareDef *)
-
 Definition compare (alpha beta: t) : comparison :=
    match alpha, beta with
      inl _, inr _ => Lt
@@ -41,7 +37,6 @@ Definition compare (alpha beta: t) : comparison :=
    | inr b, inr b' => compareB b b'
    | inr _, inl _ => Gt
   end.
-
 (* end snippet compareDef *)
 
 Definition le := clos_refl _ lt.
@@ -78,29 +73,20 @@ Lemma compare_reflect alpha beta :
    - destruct (compare_correct b b0); (now subst || constructor; auto).
 Qed.
 
-(* begin snippet compareCorrect *)
+(* begin snippet compareCorrect:: no-out  *)
 
 Lemma compare_correct alpha beta :
     CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
                 (compare alpha beta). (* .no-out *)
-(*|
-.. coq:: none 
-|*)
+(* end snippet compareCorrect *)
+
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
 Qed.
  
-(*||*)
 
-(* end snippet compareCorrect *)
-
-(* begin snippet plusComp *)
-
-(*|
-.. coq:: no-out 
-|*)
-
+(* begin snippet plusComp:: no-out *)
 
 #[global] Instance plus_comp : Comparable lt compare.
 Proof.
@@ -108,9 +94,6 @@ Proof.
   - apply lt_strorder.
   - apply compare_correct. 
 Qed.
-
-(*||*)
-
 (* end snippet plusComp *)
 
 

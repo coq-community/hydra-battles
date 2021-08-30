@@ -29,15 +29,12 @@ Qed.
 Open Scope opo_scope.
 
 (* begin snippet finiteOmega *)
-
 Definition fin (i:nat) : t := inl i.
 Coercion fin : nat >-> t.
 
 Notation omega := (inr 0:ON_t).
 
-
 Compute  fin 8 o?= omega.
-
 (* end snippet finiteOmega *)
 
 Example ex2 :  inl 7 o< omega.
@@ -363,13 +360,11 @@ Proof.
   destruct alpha; simpl; constructor; abstract lia.
 Qed.
 
-(* begin snippet ltOmega *)
-
+(* begin snippet ltOmega:: no-out *)
 Lemma lt_omega alpha :
-  alpha o< omega <-> exists n:nat,  alpha = fin n. (* .no-out *)
-(*|
-.. coq:: none 
-|*)
+  alpha o< omega <-> exists n:nat,  alpha = fin n. 
+(* end snippet ltOmega *)
+
 Proof.
    destruct alpha; simpl; split.
   - inversion_clear 1; exists n; auto.
@@ -378,11 +373,7 @@ Proof.
   - destruct 1 as [n0 e]; inversion e.
  Qed.
 
-(*||*)
-
-(* end snippet ltOmega *)
-
- Lemma Omega_as_lub  :
+Lemma Omega_as_lub  :
    forall alpha, 
      (forall i,  fin i o< alpha) <-> omega o<= alpha.
  Proof.

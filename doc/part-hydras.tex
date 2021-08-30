@@ -1827,40 +1827,14 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 
 In order to build an instance of \texttt{Comparable}, we have to define a correct comparison function.
 
-\input{movies/snippets/ON_plus/compareDef}
+\inputsnippets{ON_plus/compareDef,
+  ON_plus/compareCorrect, ON_plus/plusComp}
 
-\vspace{4pt}
-
-\input{movies/snippets/ON_plus/compareCorrect}
-
-\vspace{4pt}
-
-
-\input{movies/snippets/ON_plus/plusComp}
-
-\vspace{4pt}
 
 The Lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} of Standard Library
-helps us to prove that our order \texttt{lt} is well-founded.
+helps us to prove that our order \texttt{lt} is well-founded, thenwe can build an instance of \texttt{ON}:
 
-
-\vspace{4pt}
-
-\input{movies/snippets/ON_plus/ltWf}
-
-\vspace{4pt}
-
-Then, we can build an instance of \texttt{ON}:
-
-\vspace{4pt}
-
-\input{movies/snippets/ON_plus/OnPlus}
-
-
-
-
-
-
+\inputsnippets{ON_plus/ltWf, ON_plus/OnPlus}
 
 \subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
 
@@ -2058,7 +2032,9 @@ In \coq{}, we build an instance of class \texttt{ON} through a sequence of steps
 \noindent
 \emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_mult.html}{OrdinalNotations.ON\_mult}}
 
-\input{movies/snippets/ON_mult/Defs}
+\inputsnippets{ON_mult/Defs}
+\inputsnippets{ON_mult/multComp,  ON_mult/ONMult}
+\inputsnippets{ON_mult/endDefs} 
 
 \section{The ordinal \texorpdfstring{$\omega^2$}{omega2}}
 
@@ -2067,9 +2043,7 @@ The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), 
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
-\input{movies/snippets/ON_Omega2/Omega2Def}
-
-\input{movies/snippets/ON_Omega2/Defs}
+\inputsnippets{ON_Omega2/Omega2Def, ON_Omega2/Defs}
 
 \subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
 
@@ -2077,7 +2051,7 @@ The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), 
 
 The successor of any ordinal is defined by a simple pattern-matching.
 
-\input{movies/snippets/ON_Omega2/Defs}
+\input{movies/snippets/ON_Omega2/succ}
 
 
 This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
@@ -2091,7 +2065,7 @@ This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
 
 We can define on \texttt{Omega2} an addition which extends the addition on \texttt{nat}. Please note that this operation is not commutative:
 
-\input{movies/snippets/ON_Omega2/plusDef}
+\inputsnippets{ON_Omega2/plusDef, ON_Omega2/plusExamples}
 
 
 \subsubsection{Multiplication}
@@ -2101,16 +2075,15 @@ For instance $\omega\times\omega= \omega^2$ is outside the set of represented va
 Nevertheless, we can define two operations mixing natural numbers and ordinals.
 
 \input{movies/snippets/ON_Omega2/multFinDef}
-
-\vspace{4pt}
-
+\input{movies/snippets/ON_Omega2/multFinExamples}
 
 
 Multiplication with a finite ordinal and addition are related through the following lemma:
 
  
-\input{movies/snippets/ON_Omega2/uniqueDecomposition}
-
+\inputsnippets{ON_Omega2/uniqueDecompositiona,
+  ON_Omega2/uniqueDecompositionb,
+  ON_Omega2/uniqueDecompositionz}
 
 \subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
 \label{sect:merge-example}.

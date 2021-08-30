@@ -11,19 +11,16 @@ Import Relations ON_Generic.
 
 Open Scope ON_scope.
 
-(* begin snippet Omega2Def *)
-
+(* begin snippet Omega2Def:: no-out *)
 Instance Omega2: ON _ _ := ON_mult Omega Omega.
 
 Definition t := ON_t.  
 
-(* end snippet Omega2Def *)
-
 Example ex1 : (5,8) o< (5,10).
-constructor 2.
-auto with arith.
+Proof.
+  right; auto with arith.
 Qed.
-
+(* end snippet Omega2Def *)
 
 Open Scope ON_scope.
 
@@ -357,7 +354,6 @@ Qed.
  Defined.
 
  (* begin snippet plusDef *)
- 
 Definition  plus (alpha beta : t) : t :=
   match alpha,beta with
   | (0, b), (0, b') => (0, b + b')
@@ -369,30 +365,24 @@ Definition  plus (alpha beta : t) : t :=
    end.
 
 Infix "+" := plus : ON_scope.
-(*|
-.. coq:: no-out
-|*)
+
 Lemma plus_compat (n p: nat) :
   fin  (n + p )%nat =  fin n + fin p. (* .no-out *)
-Proof. 
+Proof. (* .no-out *)
   destruct n; now cbn. 
 Qed.
+(* end snippet plusDef *)
 
-(*||*)
-  
+
+(* begin snippet plusExamples *)
+
 Compute 3 + omega.
 
 Compute omega + 3.
 
-(*|
-.. coq:: no-out
-|*)
-
 Example non_commutativity_of_plus :  omega + 3 <> 3 + omega. 
 Proof.  discriminate. Qed.
-
-(*  end snippet plusDef *)
-
+(* end snippet plusExamples *)
 
 (* begin snippet multFinDef *)
 
@@ -403,7 +393,7 @@ Definition mult_fin_r  (alpha : t) (p : nat): t :=
   |  (0,0), _  => zero
   |  _, 0 => zero
   |  (0, n), p => (0, n * p)
-  |  ( n, b),  n' => ( n *  n', b)
+  |  (n, b),  n' => ( n *  n', b)
   end.
 Infix "*" := mult_fin_r : ON_scope.
 
@@ -411,15 +401,15 @@ Infix "*" := mult_fin_r : ON_scope.
 
 Definition mult_fin_l (n:nat)(alpha : t) : t :=
   match n, alpha with
- |  0, _  => zero
- |  _, (0,0) => zero
- |   n , (0,n') => (0, (n*n')%nat)
- |  n, (n',p') => (n', (n * p')%nat)
- end.
+  |  0, _  => zero
+  |  _, (0,0) => zero
+  |   n , (0,n') => (0, (n*n')%nat)
+  |  n, (n',p') => (n', (n * p')%nat)
+  end.
 
-(*|
-.. coq:: no-out 
-|*)
+(* end snippet multFinDef *)
+
+(* begin snippet multFinExamples:: no-out *)
 
 Example e1 : (omega * 7 + 15) * 3 = omega * 21 + 15.
 Proof. reflexivity. Qed.
@@ -427,9 +417,7 @@ Proof. reflexivity. Qed.
 Example e2 :  mult_fin_l 3 (omega * 7 + 15) = omega * 7 + 45.
 Proof. reflexivity. Qed.
 
-(*||*)
-
-(* end snippet multFinDef *)
+(* end snippet multFinExamples *)
 
 Lemma plus_assoc alpha beta gamma :
   alpha + (beta + gamma) = alpha + beta + gamma.
@@ -462,29 +450,23 @@ Proof.
   destruct i, j; cbn; (reflexivity || (try f_equal; lia)). 
 Qed.
 
-(* begin snippet uniqueDecomposition *)
+(* begin snippet uniqueDecompositiona:: no-out  *)
 
-(*|
-.. coq:: no-out 
-|*)
-
-Lemma unique_decomposition alpha:
-  exists! i j: nat,  alpha = omega * i + j.
+Lemma unique_decomposition (alpha: t) :
+  exists! i j: nat, alpha = omega * i + j.
 Proof.
+(* end snippet uniqueDecompositiona *)
+(* begin snippet uniqueDecompositionb *)
   destruct alpha as [i j]; exists i; split.
-  (*||*)
   (* ... *)
-  (*|
-.. coq:: none 
-|*)
+  (* end snippet uniqueDecompositionb *)
   -  exists j; split.
      + now rewrite decompose. 
      + intros x; repeat rewrite <- decompose; congruence.
   - intros x [y [Hy _]]; rewrite <- decompose in Hy; congruence.
+(* begin snippet uniqueDecompositionz *)    
 Qed.
-(*||*)
-
-(* end snippet uniqueDecomposition *)
+(* end snippet uniqueDecompositionz *)    
 
 (** ** Additive principal ordinals  *)
 

@@ -10,7 +10,6 @@ Definition leq {A:Type}(lt : relation A): relation A :=
   clos_refl A lt.
 
 (* begin snippet Defs *)
-
 Section A_given.
   Variables (A : Type)
             (lt: relation A).
@@ -31,17 +30,15 @@ Section A_given.
   Definition  Omega_limit
               {sto : StrictOrder lt} (s: nat -> A) (x:A)  :=
     (forall i: nat, s i < x) /\
-    (forall y, y  < x -> exists i:nat, y < s i).
-
-
-  Definition  Omega_limit_s
+    (forall y, y < x -> exists i:nat, y < s i).
+  (* end snippet Defs *)
+  
+  Definition  Omega_limit_type
               `{lt : relation A}
               {sto : StrictOrder lt}
               (s: nat -> A) (x:A) : Type :=
     ((forall i: nat, s i < x) *
-     (forall y, y  < x ->  {i:nat | y  < s i}))%type.
-
-(* end snippet Defs *)
+     (forall y, y < x -> {i:nat | y  < s i}))%type.
   
   Lemma Omega_limit_not_Succ  
         {sto : StrictOrder lt} (s: nat -> A) (x:A) :
