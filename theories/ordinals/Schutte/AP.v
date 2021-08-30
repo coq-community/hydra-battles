@@ -78,10 +78,9 @@ Definition epsilon0 := omega_limit omega_tower.
 
 (** ** About additive principals *)
 
-(* begin snippet APOne *)
-
-Lemma AP_one : In AP 1. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet APOne:: no-out *)
+Lemma AP_one : In AP 1.
+(* end snippet APOne *)
 Proof with auto with schutte.
   split.
   -  simpl (F 1) ...
@@ -90,10 +89,10 @@ Proof with auto with schutte.
      { apply lt_succ_le_2 ... }
      rewrite (le_alpha_zero H0), zero_plus_alpha...
 Qed.
-(*||*)
 
-Lemma least_AP :least_member  lt AP 1. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet APOne_least_AP:: no-out *)
+Lemma least_AP : least_member lt AP 1.
+(* end snippet APOne_least_AP *)
 Proof with auto with schutte.
   repeat split ...
   - simpl (F 1) ...
@@ -108,10 +107,10 @@ Proof with auto with schutte.
     subst x; left; trivial.
     right; auto.
 Qed.
-(*||*)
 
-Lemma AP_omega : In AP omega. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet APOne_AP_omega:: no-out *)
+Lemma AP_omega : In AP omega.
+(* end snippet APOne_AP_omega *)
 Proof with auto with schutte.
   repeat split.
   - apply lt_trans with (F 1).
@@ -140,13 +139,13 @@ Proof with auto with schutte.
 Qed.
 
 (** Thus, omega is the second additive principal *)
-(*||*)
 
+(* begin snippet APOne_omega_second_AP:: no-out *)
 Lemma omega_second_AP :
-  least_member   lt 
-                 (fun alpha => 1 < alpha /\ In AP alpha)
-                 omega. (* .no-out *)
-(*| .. coq:: none |*)
+  least_member lt
+               (fun alpha => 1 < alpha /\ In AP alpha)
+               omega.
+(* end snippet APOne_omega_second_AP *)
 Proof with auto with schutte.
   split  ...
   split ...
@@ -162,10 +161,6 @@ Proof with auto with schutte.
      red.
      intuition.
 Qed.
-(*||*)
-(* end snippet APOne *)
-
-
 
 (* begin snippet APPlusClosed *)
 

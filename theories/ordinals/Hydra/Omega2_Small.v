@@ -178,9 +178,7 @@ Section Impossibility_Proof.
     (* end snippet mGe *)
 
     (* begin snippet mGeb *)
-
-    (* ... *)
-      (*|
+       (*|
 .. coq:: none
 |*)
     destruct j as [|k].
@@ -200,7 +198,7 @@ Section Impossibility_Proof.
       apply IHij; right; auto.      
       apply (m_strict_mono m Hvar); auto with hydra.
       (*||*)
-      
+      (* ... *)
   Qed.
 
     (* end snippet mGeb *)

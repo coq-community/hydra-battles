@@ -21,18 +21,15 @@ Local Open Scope ON_scope.
 *)
 
 (* begin snippet ONDef *)
-
 Class ON {A:Type}(lt: relation A)
-      (compare: A -> A -> comparison)  :=
+      (compare: A -> A -> comparison) :=
   {
   comp :> Comparable lt compare;
   wf : well_founded lt;
   }.
-
 (* end snippet ONDef *)
 
-(* begin snippet ONDefs *)
-
+(* begin snippet ONDefsa:: no-out  *)
 Section Definitions.
   
   Context  {A:Type}{lt : relation A}
@@ -55,21 +52,18 @@ Section Definitions.
    Definition measure_lt {B : Type} (m : B -> A) : relation B :=
     fun x y =>  ON_lt (m x) (m y).
 
-  
   #[using="All"]
    Lemma wf_measure {B : Type} (m : B -> A) :
-    well_founded (measure_lt m). (* .no-out *)
-  (*|
-.. coq:: none 
-|*)
+    well_founded (measure_lt m).
+(* end snippet ONDefsa *)
+  
   Proof.
     intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
     - intros y z H; apply H.
     - eapply Acc_inverse_image, wf.
   Qed.
-  (*||*)
-    
-    
+
+  (* begin snippet ONDefsb *)
   #[using="All"]
    Definition ZeroLimitSucc_dec :=
     forall alpha,
@@ -78,7 +72,6 @@ Section Definitions.
       {beta: A | Successor alpha beta}.
 
   (** The segment called [O alpha] in Schutte's book *)
-
 
   #[using="All"]
    Definition bigO (a: A) : Ensemble A := fun x: A => lt x a.
@@ -89,7 +82,7 @@ Infix "o<" := ON_lt : ON_scope.
 Infix "o<=" := ON_le : ON_scope.
 Infix "o?=" := ON_compare (at level 70) : ON_scope.
 
-(* end snippet ONDefs *)
+(* end snippet ONDefsb *)
 
 Global Hint Resolve wf_measure : core.
 

@@ -113,48 +113,32 @@ Section Impossibility_Proof.
   Qed.
 
 
-  (* begin snippet mGea *)
-
-  Lemma m_ge : m big_h <= m small_h. (* .no-out *)
-  Proof. (* .no-out *)
-    unfold small_h; generalize (m big_h) as i.
+  (* begin snippet mGea:: no-out  *)
+  Lemma m_ge : m big_h <= m small_h. 
   (* end snippet mGea *)
-
-  (* begin snippet mGeb *)
-
-  (*|
-.. coq:: no-out
-|*)
+  Proof. 
+    unfold small_h; generalize (m big_h) as i.
+  (* begin snippet mGeb:: no-out *)
     induction i.
     - auto with arith.
     - apply Lt.le_lt_trans with (m (iota i)). 
-       (* ... *) 
-       
-       (*||*)(*| .. coq:: none |*)       
+      (* ... *) 
+     (* end snippet mGeb *)  
        + assumption.
        + apply (variant_decr  0).
           * discriminate.
           * cbn; apply round_S; exact 0.
-      (*||*)(*| .. coq:: no-out |*)  
+ (* begin snippet mGez:: no-out  *)
   Qed.     
-  (* end snippet mGeb *)
- 
-
-  (* begin snippet omegaSmallz *)
-
-  (*|
-.. coq:: no-out
-|*)
+  (* end snippet mGez *)
   
-
+(* begin snippet omegaSmallz:: no-out *)
   Theorem Contradiction : False. 
   Proof. 
    generalize m_lt,  m_ge; intros; lia.
   Qed. 
 
-
 End Impossibility_Proof.
-
 (* end snippet omegaSmallz *)
 
 

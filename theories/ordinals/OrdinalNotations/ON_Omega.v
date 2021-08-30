@@ -8,12 +8,7 @@ From hydras Require Import Schutte.
 
 Import Relations RelationClasses.
 
-(* begin snippet OmegaDef *)
-
-(*|
-.. coq:: no-out 
-|*)
-
+(* begin snippet OmegaDefa:: no-out *)
 #[global]
  Instance Omega_comp : Comparable Peano.lt  Nat.compare.
 Proof.
@@ -22,7 +17,6 @@ Proof.
   - apply Nat.compare_spec.
 Qed.
 
-
 #[global]
  Instance Omega : ON Peano.lt Nat.compare.
 Proof.
@@ -30,14 +24,14 @@ Proof.
  - apply Omega_comp.
  - apply Wf_nat.lt_wf.
 Qed.
+(* end snippet OmegaDefa *)
 
-(*||*)
+(* begin snippet OmegaDefb *)
 
 #[local] Open Scope ON_scope.
 
 Compute 6 o?= 9.
-
-(* end snippet OmegaDef *)
+(* end snippet OmegaDefb *)
 
 
 Definition Zero_limit_succ_dec : ZeroLimitSucc_dec.

@@ -43,6 +43,20 @@
 \renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
 \makeatother
 
+%%% \snippets{A,B,C,…} inputs a series of snippets as one block (with \itemsep
+%%% between them).  A, B, C should be paths to files in movies/snippets/.
+\usepackage{etoolbox}
+\makeatletter
+\newcommand{\inputsnippets}[1]
+  {{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
+    \alectryon@copymacros\begin{io}
+      \forcsvlist{\item\@inputsnippet}{#1}
+    \end{io}}}
+\let\input@old\input % Save definition of \input
+\newcommand{\@inputsnippet}[1]
+  {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \input@old{movies/snippets/#1}}}
+\makeatother
 
 \SetWatermarkLightness{0.8}
 \definecolor{lightorange}{rgb}{1,0.9,0.9}

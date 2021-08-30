@@ -1524,10 +1524,11 @@ We are now ready to complete our impossibility proof.
 
 \vspace{4pt}
 
-\input{movies/snippets/Omega_Small/mGeb}
+\inputsnippets{Omega_Small/mGeb, omega_Small/mGez,
+  Omega_Small/omegaSmallz}
  
-\input{movies/snippets/Omega_Small/omegaSmallz}
- 
+
+
 \index{hydras}{Exercises}
 
 \begin{exercise}
@@ -1753,10 +1754,7 @@ We give  also a few handy definitions and lemmas for any ordinal notation.
 \label{sect:bigO-ON}
 
 
-\input{movies/snippets/ON_Generic/ONDefs}
-
-
-
+\inputsnippets{ON_Generic/ONDefsa, ON_Generic/ONDefsb}
 
 \begin{remark}
 The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.
@@ -1796,7 +1794,7 @@ The simplest example of ordinal notation is built over the type \texttt{nat} of 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_Omega.html}{OrdinalNotations.ON\_Omega}}
 
-\input{movies/snippets/ON_Omega/OmegaDef}
+\inputsnippets{ON_Omega/OmegaDefa, ON_Omega/OmegaDefb}
 
 
 \section{Sum of  two ordinal notations}
@@ -1819,6 +1817,7 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
 \end{Coqanswer}
 
+\pagebreak
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_plus.html}{OrdinalNotations.ON\_plus}}
@@ -6620,8 +6619,7 @@ The rest of our library \texttt{AP} is devoted to the proof of properties of add
 
 The set of additive principal ordinals is not empty: it contains at least the ordinals  $1$ and  $\omega$. 
 
-\input{movies/snippets/AP/APOne}
-
+\inputsnippets{AP/APOne,AP/APOne_least_AP,AP/APOne_AP_omega,AP/APOne_omega_second_AP}
 
 The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
 
