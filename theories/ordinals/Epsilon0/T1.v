@@ -128,13 +128,13 @@ Definition omega_term (alpha:T1)(k:nat) :=
 *)
 
 (* begin snippet towerDef *)
-
 Fixpoint tower (height:nat) : T1 := 
- match height with 
-| 0 =>  FS 0 
-| S h => phi0 (tower h)
- end.
+  match height with 
+  | 0 =>  FS 0 
+  | S h => phi0 (tower h)
+  end.
 
+Compute tower 7.
 (* end snippet towerDef *)
 
 (** Additive principal ordinals
@@ -166,10 +166,8 @@ Fixpoint compare (alpha beta:T1):comparison :=
        end)
   end.
 
-
 Definition lt alpha beta : Prop :=
   compare alpha beta = Lt.
-
 (* end snippet compareDef *)
 
 (* begin snippet ltExamples *)
