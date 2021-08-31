@@ -1524,7 +1524,7 @@ We are now ready to complete our impossibility proof.
 
 \vspace{4pt}
 
-\inputsnippets{Omega_Small/mGeb, omega_Small/mGez,
+\inputsnippets{Omega_Small/mGeb, Omega_Small/mGez,
   Omega_Small/omegaSmallz}
  
 
@@ -2988,7 +2988,6 @@ Please note that this definition of \texttt{lt} makes it easy to write proofs by
 
 \input{movies/snippets/T1/ltExamples}
 
-%%% TODO : link to Comparable and StrictOrder classes
 
 Links between the function \texttt{compare} and the relations
 \texttt{lt} and \texttt{eq} are established through the following lemmas (~\vref{sect:comparable-def}).
@@ -2997,59 +2996,6 @@ Links between the function \texttt{compare} and the relations
 \input{movies/snippets/T1/Instances}
 
 
-% \vspace{4pt}
-% \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#compare_refl}{Epsilon0.T1}}
-
-
-% \begin{Coqsrc}
-% Lemma compare_refl : forall alpha, compare alpha alpha =  Eq.
-% \end{Coqsrc}
-
-% \begin{Coqsrc}
-% Lemma compare_reflect : forall alpha beta,
-%     match compare alpha beta with
-%     |   Lt => lt alpha  beta
-%     |   Eq => alpha = beta
-%     |   Gt => lt beta  alpha
-%     end.
-% \end{Coqsrc}
-
-% We prove also that the relation \texttt{lt} is a strict total order.
-
-% \vspace{4pt}
-% \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#lt_irrefl}{Epsilon0.T1}}
-
-  
-% \begin{Coqsrc}
-% Theorem lt_irrefl (alpha: T1):  ~ lt alpha alpha.
-
-% Theorem lt_trans (alpha beta gamma : T1) :
-%   lt alpha  beta -> lt beta gamma -> lt alpha gamma.
-
-% Definition lt_eq_lt_dec  :
-%    forall alpha beta : T1, 
-%           {lt alpha  beta} + {alpha = beta} + {lt beta alpha}.
-% \end{Coqsrc}
-
-% \vspace{4pt}
-
-% Please note that the order \texttt{lt} is not reflected 
-% in the structure (size and/or height) of the terms of \texttt{T1}. 
-
-% \begin{Coqsrc}
-% Example Ex0:
-%   lt (ocons (phi0 (phi0 omega)) 2
-%             (ocons (phi0 10) 33
-%                    (ocons (phi0 9) 63 zero)))
-%      (ocons  (phi0 (phi0 omega)) 2 (phi0 (phi0 11))).
-% Proof.
-%   reflexivity. 
-% Qed.
-% \end{Coqsrc}
-
-% Uncomment for testing 
-%\textbf{Todo: Fix subgoal display }
-%\input{movies/snippets/T1/compareRev}
 
 \subsubsection{A Predicate for Characterizing Normal Forms}
 \label{sect:t1-nf}

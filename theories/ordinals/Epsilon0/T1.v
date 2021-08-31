@@ -170,18 +170,12 @@ Definition lt alpha beta : Prop :=
   compare alpha beta = Lt.
 (* end snippet compareDef *)
 
-(* begin snippet ltExamples *)
-
-(*| .. coq:: no-out |*)
-
+(* begin snippet ltExamples:: no-out *)
 Example E1 : lt (ocons omega 56 zero) (tower 3). 
 Proof.  reflexivity. Qed.
 
 Example E2 : ~ lt (tower 3) (tower 3).
 Proof.  discriminate.  Qed.
-
-(*||*)
-
 (* end snippet ltExamples *)
 
 (** ** Properties of [compare] *)
