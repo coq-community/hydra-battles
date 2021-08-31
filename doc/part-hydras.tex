@@ -2096,7 +2096,7 @@ Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total fu
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
 
-\input{movies/snippets/ON_Omega2/Merge}
+\inputsnippets{ON_Omega2/Merge, ON_Omega2/Mergeb}
  
 
 \subsection{Yet another  proof of impossibility}
@@ -2316,6 +2316,8 @@ One may represent the ordinal $n$ by a sigma type.
 
 \input{movies/snippets/ON_Finite/Defs}
 
+\subsubsection{Examples}
+
 For instance, let us build two elements of the segment $[0, 7)$, \emph{i.e.} two
 inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\ref{fig:O7}).
 
@@ -2354,31 +2356,9 @@ inhabitants of   type (\texttt{t 7}), and prove a simple  inequality (see Fig.~\
 Note that the type (\texttt{t 0}) is empty, and that, for any natural number
  $n$, $n$ does not belong to (\texttt{t $n$}).
 
- \input{movies/snippets/ON_Finite/t0Empty}
+ \inputsnippets{ON_Finite/t0Empty, ON_Finite/bad10}
 
-\begin{Coqsrc}
-Program Definition bad : t 10 := 10.
-Next Obligation.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-1 subgoal (ID 118)
-  
-  ============================
-  10 <? 10 
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  compute.
-Abort.
-\end{Coqsrc}
-
-%\input{movies/snippets/ON_Finite/bad}
-
- 
-
-
-
+\subsubsection{Comparison function}
 
 In order to build an instance of \texttt{ON}, we define a comparison function,  and prove its correctiness.
 
@@ -2391,27 +2371,14 @@ In order to build an instance of \texttt{ON}, we define a comparison function,  
 \begin{remark}
  The proof of \texttt{compare\_correct} uses a well-known pattern of \coq{}.
 Let us consider  the following subgoal.
+ 
+\input{movies/snippets/ON_Finite/compareCorrectb}
 
-\begin{Coqanswer}
- 1 subgoal (ID 110)
-  
-  n, x0 : nat
-  i, i0 : x0 <? S n
-  ============================
-  exist (fun i1 : nat => i1 <=? n) x0 i =
-  exist (fun i1 : nat => i1 <=? n) x0 i0
-\end{Coqanswer}
 
 Applying the tactic \texttt{f\_equal} generates a simpler subgoal.
 
-\begin{Coqanswer}
-1 subgoal (ID 112)
-  
-  n, x0 : nat
-  i, i0 : x0 <? S n
-  ============================
-  i = i0
-\end{Coqanswer}
+\input{movies/snippets/ON_Finite/compareCorrectc}
+
 
 We have now to prove that there exists at most one  proof of (\texttt{Nat.ltb x0 (S n)}). This is not obvious, but  a consequence of the following lemma of library 
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Eqdep_dec.html}{Coq.Logic.Eqdep\_dec}.
@@ -2432,10 +2399,12 @@ This is why we used the boolean function \texttt{Nat.ltb} instead of the inducti
 For more information about this pattern, please look at the numerous mailing lists and 
 FAQs on \coq{}).
 
-
+\inputsnippets{ON_Finite/compareCorrectd}
 
 \end{remark}
 
+\begin{remark}
+  
 Please note  that attempting to compare a term  of type (\texttt{t $n$}) with a term of
 type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
 
@@ -2443,6 +2412,9 @@ type (\texttt{t $p$})  leads to an error if $n$ and $p$ are not convertible.
 \input{movies/snippets/ON_Finite/Example2}
 
 
+\end{remark}
+
+\subsubsection{Building an instance of \texttt{ON}}
 
 Applying lemmas of the libraries \texttt{Coq.Wellfounded.Inverse\_Image}, \linebreak
  \texttt{Coq.Wellfounded.Inclusion}, and \texttt{Coq.Arith.Wf\_nat}, we prove that our
@@ -2527,38 +2499,27 @@ following definition
 For instance, we prove that \texttt{Omega} is a sub-notation of
 \texttt{Omega\_plus\_Omega} (with $\omega$ as the first ``new'' ordinal, and \texttt{fin} as the injection).
 
-\vspace{4pt}
+\vspace{10pt}
+
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega_plus_omega.html}{OrdinalNotations.ON\_Omega\_plus\_omega}}
 
 \input{movies/snippets/ON_Omega_plus_omega/Incl}
-
-
-
-
 
 We can also show that, if $i<j$, then the segment $[0,i)$ is a ``sub-segment'' of
 $[0,j)$. Since the terms  ($t\;i$) and ($t\;j$) are not convertible, we consider a ``cast'' 
 function $\iota$ from ($t\;i$) into ($t\;j$), and prove that this function is  a monotonous bijection  from ($t\;i$) to
 the segment $[0,i)$ of ($t\;j$).
 
-
-
-
- 
-
-
-
 \index{coq}{Commands!Program}
 
-\vspace{4pt}
+\vspace{10pt}
+
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
 
 
-\input{movies/snippets/ON_Finite/InclIJ}
-\input{movies/snippets/ON_Finite/InclIJa}
-\input{movies/snippets/ON_Finite/InclIJb}
-\input{movies/snippets/ON_Finite/InclIJc}
-\input{movies/snippets/ON_Finite/InclIJd}
+\inputsnippets{ON_Finite/InclIJ, ON_Finite/InclIJa,
+  ON_Finite/InclIJb,ON_Finite/InclIJc, ON_Finite/InclIJd,
+ON_Finite/InclIJz}
 
 
 

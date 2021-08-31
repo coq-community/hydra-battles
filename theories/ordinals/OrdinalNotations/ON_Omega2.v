@@ -547,12 +547,7 @@ Qed.
 
 Require Import List.
 
-(* begin snippet Merge *)
-
-(*|
-.. coq:: no-out 
-|*)
-
+(* begin snippet Merge:: no-out  *)
 Section Merge.
 
   Variable A: Type.
@@ -571,25 +566,19 @@ Section Merge.
       if ltb x y then x :: merge  ltb (xs, (y :: ys))
       else y :: merge  ltb ((x :: xs), ys)
     end.
-  (*||*)
-  (*| 
-.. coq:: none
-|*)
+(* end snippet Merge *) 
   
   - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
   - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
   - apply wf_measure. 
   Defined.
 
-  (*||*)
 
-  
+(* begin snippet Mergeb:: no-out  *)  
 End Merge.
 
 Goal forall l, merge nat Nat.leb (nil, l) = l.
   intro; now rewrite merge_equation.
 Qed.
-
-
-(* end snippet Merge *)
+(* end snippet Mergeb *)
 

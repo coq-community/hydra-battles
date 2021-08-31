@@ -24,24 +24,27 @@ Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
 
+
 (* end snippet Defs *)
 
 Open Scope ON_scope.
 
-(* begin snippet t0Empty *)
+(* begin snippet t0Empty:: no-out *)
 
-Lemma t0_empty (alpha: t 0): False. (* .no-out *)
-Proof. (* .no-out *)
+Lemma t0_empty (alpha: t 0): False. 
+Proof. 
   destruct alpha ; discriminate. 
 Qed.
 
 (* end snippet t0Empty *)
 
-(* begin snippet compareDef *)
+(* begin snippet bad10  *)
+Definition bad :  t 10. (* .no-out *)
+exists 10. 
+Abort. 
+(* end snippet bad10  *)
 
-(*|
-.. coq:: no-out
-|*)
+(* begin snippet compareDef:: no-out *)
 
 Definition compare {n:nat} (alpha beta : t n) :=
   Nat.compare (proj1_sig alpha) (proj1_sig beta).
@@ -50,7 +53,6 @@ Definition compare {n:nat} (alpha beta : t n) :=
 Lemma compare_correct {n} (alpha beta : t n) :
   CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
               (compare alpha beta).
-(*||*)
 (* end snippet compareDef *)
 
 Proof.
@@ -58,8 +60,17 @@ Proof.
   - elimtype False;  now apply t0_empty.
   - destruct alpha, beta; cbn;  case_eq (x ?= x0); unfold lt; cbn.
     + rewrite Nat.compare_eq_iff; intro; subst; f_equal. 
-      constructor 1. f_equal.  apply eq_proofs_unicity_on.
+(* begin snippet compareCorrectb:: no-in unfold *)
+      constructor 1.
+(* end snippet compareCorrectb *)
+(* begin snippet compareCorrectc *)
+      f_equal.
+(* end snippet compareCorrectc *)
+(* begin snippet compareCorrectd *)
+      apply eq_proofs_unicity_on.
       destruct y, (x0 <? S n); auto; right; discriminate.    
+     (* ... *)
+(* end snippet compareCorrectd *)
     +  rewrite Nat.compare_lt_iff;  constructor 2.
        destruct x0; [  lia |  apply leb_correct; lia].
     +   rewrite Nat.compare_gt_iff; constructor 3.
@@ -171,52 +182,36 @@ Proof.
   right; discriminate.
 Qed.
 
-(* begin snippet InclIJ *)
+(* begin snippet InclIJ:: no-out *)
 
 Section Inclusion_ij.
 
   Variables i j : nat.
   Hypothesis Hij : i < j.
 
-  Remark Ltb_ij : Nat.ltb i j. (* .no-out *)
+  Remark Ltb_ij : Nat.ltb i j. 
+(* end snippet InclIJ:: no-out *)
 
-  (*|
-.. coq:: none
-|*)  
   Proof.
     red; now rewrite Nat.ltb_lt.
   Defined.
-  (*||*) 
   
-  (* end snippet InclIJ *)
-
   
-  (* begin snippet InclIJa *)
-  
-  #[program] Definition iota_ij  (alpha: t i) : t j :=  alpha. (* .no-out *)
-  (*|
-.. coq:: none
-|*)
+  (* begin snippet InclIJa:: no-out *)
+  #[program] Definition iota_ij  (alpha: t i) : t j :=  alpha. 
+  (* end snippet InclIJa *)
   
   Next Obligation.
     destruct alpha; cbn; red in i0;rewrite  Nat.ltb_lt  in i0.
     destruct j; [lia | apply leb_correct;  lia].
   Defined.
-  (*||*)
 
-  (* end snippet InclIJa *)
-
-  (* begin snippet InclIJb *)
-  
+  (* begin snippet InclIJb:: no-out *)
    Let b : t j := exist _ i Ltb_ij.
 
-   #[global]
-   Instance F_incl_ij: SubON  (FinOrd i) (FinOrd j) b iota_ij. (* .no-out *)
-
-    
-  (*|
-.. coq:: none
-|*)
+  #[global]
+   Instance F_incl_ij: SubON (FinOrd i) (FinOrd j) b iota_ij. 
+  (* end snippet InclIJb *)
   Proof.
     split.
     - intros; cbn.
@@ -226,44 +221,29 @@ Section Inclusion_ij.
        unfold b, lt;simpl. 
        intros H; exists (exist _ x H); apply sig_eq_intro; reflexivity.
   Qed.
-  (*||*)
-  (* end snippet InclIJb *)
 
-  (* begin snippet InclIJc *)
-  
+  (* begin snippet InclIJc:: no-out *)
   Lemma iota_compare_commute alpha beta:
     compare alpha beta =
-    compare (iota_ij alpha) (iota_ij beta). (* .no-out *)
-   
-  (*|
-.. coq:: none
-|*)
-  Proof.
-    reflexivity. 
-  Qed.
-  (*||*)
-  (* end snippet InclIJc *)
-  
+    compare (iota_ij alpha) (iota_ij beta). 
+  (* end snippet InclIJc *)   
 
-  (* begin snippet InclIJd *)
-  
+  Proof. reflexivity. Qed.
+
+  (* begin snippet InclIJd:: no-out *)
   Lemma iota_mono  : forall alpha beta,
       lt alpha beta <->
-      lt (iota_ij alpha) (iota_ij beta). (* .no-out *)
- 
-  (*|
-.. coq:: none
-|*)
+      lt (iota_ij alpha) (iota_ij beta). 
+ (* end snippet InclIJd *)
+
   Proof.
-    split;  unfold lt; cbn; auto.
+    split; unfold lt; cbn; auto.
   Qed.
-  (*||*)
 
-    
-  
+  (* begin snippet InclIJz *)
 End Inclusion_ij.
+  (* end snippet InclIJz *)
 
-(* end snippet InclIJd *)
 
 Arguments iota_ij {i j}.
 
