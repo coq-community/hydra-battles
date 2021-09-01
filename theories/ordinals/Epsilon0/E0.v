@@ -42,7 +42,6 @@ Arguments cnf : clear implicits.
 (* begin snippet LtLeDef *)
 
 Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-
 Definition Le := leq Lt.
 
 Infix "o<" := Lt : E0_scope.
@@ -51,35 +50,22 @@ Infix "o<=" := Le : E0_scope.
 (* end snippet LtLeDef *)
 
 
-(* begin snippet ZeroOmega *)
-
-(*|
-.. coq:: no-out
-|*)
-
-
-
-
-
+(* begin snippet ZeroOmega:: no-out  *)
 #[global] Instance Zero : E0 := @mkord zero refl_equal.
 
 #[global] Instance _Omega : E0. 
 Proof. now exists omega%t1. Defined. 
 
-Notation omega  := _Omega.
-
-
-(*||*)
-
+Notation omega := _Omega.
 (* end snippet ZeroOmega *)
 
-
+(* begin snippet SuccOnE0:: no-out *)
 #[global] Instance Succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
-  apply succ_nf, cnf_ok.
+    apply succ_nf, cnf_ok.
 Defined.
-
+(* end snippet SuccOnE0 *)
 
 
 Definition Limitb (alpha : E0) : bool :=
@@ -174,12 +160,7 @@ Proof. reflexivity. Defined.
 
 (** ** On equality on type [E0] *)
 
-(* begin snippet nfProofUnicity *)
-
-
-(*|
-.. coq:: no-out
-|*)
+(* begin snippet nfProofUnicity:: no-out  *)
 
 Lemma nf_proof_unicity :
   forall (alpha:T1) (H H': nf alpha), H = H'.
@@ -187,10 +168,6 @@ Proof.
   intros; red in H, H'; apply eq_proofs_unicity_on.
   intro y; destruct (bool_dec (nf_b alpha)  y); auto. (* .no-out *)
 Qed.
-
-
-(*||*)
-
 (* end snippet nfProofUnicity *)
 
 
@@ -202,23 +179,17 @@ Proof.
 Qed.
 
 
-(* begin snippet E0EqIff  *)
+(* begin snippet E0EqIff:: no-out *)
 
 Corollary E0_eq_iff (alpha beta: E0) :
-  alpha = beta <-> cnf alpha = cnf beta. (* .no-out *)
-(*|
-.. coq:: none
-|*)
+  alpha = beta <-> cnf alpha = cnf beta. 
+(* end snippet E0EqIff *)
+
 Proof.
  split.
  - intro; now f_equal.  
  - intro; now apply E0_eq_intro.
 Qed.
-
-(*||*)
-
-(* end snippet E0EqIff  *)
-
 
 Remark Le_iff : forall alpha beta,
     Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
@@ -359,13 +330,15 @@ Proof.
   -  constructor; split; auto.
 Qed.
 
+(* begin snippet E0LtWf:: no-out *)
 Lemma Lt_wf : well_founded Lt.
 Proof.
   split; intros [t Ht] H;
     apply (Acc_inverse_image _ _ LT (@cnf) 
-                             {| cnf := t; cnf_ok := Ht |} );
-    now   apply T1.nf_Acc. 
+                             {| cnf := t; cnf_ok := Ht |});
+    now apply T1.nf_Acc. 
 Defined.
+(* end snippet E0LtWf *)
 
 Global Hint Resolve Lt_wf : E0.
 

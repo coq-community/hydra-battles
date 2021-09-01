@@ -2812,7 +2812,7 @@ to a hierarchy of ordinal notations. For instance, in Library \href{../theories/
 \subsubsection{Example}
 
 \label{alpha0-def}
-For instance, the ordinal  $\omega^\omega+\omega^3\times 5+2$ is represented by the following term:
+For instance, the ordinal  $\omega^\omega+\omega^3\times 5+2$ is represented by the following term of type \texttt{T1}:
 
 
 
@@ -3099,21 +3099,16 @@ Then we redefine the predicates of comparison.
 
 Equality in \texttt{E0} is just Leibniz equality. Note that, since \texttt{nf} is
 defined by a Boolean function, for  any term $\alpha:\texttt{T1}$, there exists at most one proof of \texttt{nf $\alpha$}, thus two ordinals of type \texttt{E0} are
-equal if and only iff their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
+equal if and only if their projection to \texttt{T1} are equal (see also Sect.~\vref{sect:eq-proof-unicity}).
 
 \vspace{4pt}
 
 
 \index{coq}{Unicity of equality proofs}
 
-\input{movies/snippets/E0/nfProofUnicity}
+\inputsnippets{E0/nfProofUnicity}
+\inputsnippets{E0/E0EqIff}
 
-
-\vspace{4pt}
-
-\input{movies/snippets/E0/E0EqIff}
-
-\vspace{4pt}
 
 In order to  upgrade constants and functions from type \texttt{T1} to \texttt{E0}, we have to prove that
 the term they build is in normal form.
@@ -3180,8 +3175,13 @@ The following lemma establishes the connection between the  function
 \input{movies/snippets/T1/succbIff}
 
 
+The function \texttt{succ} on \texttt{T1} is extended to \texttt{E0} the following way:
 
+ \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
+ \inputsnippets{E0/SuccOnE0}
+
+ 
 \index{hydras}{Exercises}
  \begin{exercise}
 Prove in \coq{} that for any ordinal $0< \alpha<\epsilon_0$, $\alpha$ is a limit if 
@@ -3192,7 +3192,8 @@ infinite.
      \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/Limit_Infinity.v}{exercises/ordinals/Limit\_Infinity.v}.}
  \end{exercise}
 
-
+ 
+  
 \subsubsection{Addition and multiplication}
 
 Ordinal addition and multiplication are also defined by structural recursion over the type \texttt{T1}. Please note that they use the \texttt{compare} function on some subterms of their arguments.
@@ -3215,7 +3216,7 @@ are not commutative. Moreover,  both operations fail to be strictly monotonous i
 
 The function \texttt{succ} is related with addition through the following lemma:
 
-\input{movies/snippets/T1/succIsPlusOne}
+\inputsnippets{T1/succIsPlusOne, T1/succIsPlusOnez}
 
 
 
@@ -3350,13 +3351,14 @@ Thanks to our previous lemmas, we are almost done (by a simple structural induct
 
 \index{maths}{Transfinite induction}
 
-\input{movies/snippets/T1/transfiniteRecursor}
 
+Traditionnally, well-founded induction on ordinals is called \emph{transfinite induction}.
 
+\inputsnippets{T1/transfiniteRecursor, T1/transfiniteInduction}
 
-The following tactic starts a proof by  transfinite induction on any ordinal \mathcolor{$\alpha<\epsilon_0$}.
+As a corollary, the order \texttt{Lt} on type \texttt{Ord} is well-founded too.
 
-\input{movies/snippets/T1/transfiniteInduction}
+\inputsnippets{E0/E0LtWf}.
 
 
 \begin{remark}
@@ -3367,9 +3369,10 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on
  \end{remark}
 
 
+
 \subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-We build an instance of \texttt{ON}, and prove its correction w.r.t. Schutte's model.
+We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's model.
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
@@ -3413,12 +3416,45 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \section{A refinement of \texttt{E0} : an ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
 
     In Module   \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ordinals/OrdinalNotations/OmegaOmega.v}{theories/ordinals/OrdinalNotations/OmegaOmega.v},
-    we represent ordinals below $\omega^\omega$ by list of pairs of natural numbers (with the same coefficient shift as in \texttt{T1}).
+    we represent ordinals below $\omega^\omega$ by lists of pairs of natural numbers (with the same coefficient shift as in \texttt{T1}).
     For instance, the ordinal $\omega^4\times 10 + \omega^3 + \omega+ 5$ is represented by the list \texttt{(4,9)::(3,0)::(1,0)::(0,4)::nil}.
 
+\inputsnippets{OmegaOmega/LODef}
+    
+    
   The usual operations : \texttt{succ}, \texttt{+}, \texttt{*} are simple variants of the same operations in \texttt{T1}.
 
+  \inputsnippets{OmegaOmega/succPlusMult}
+  
     We establish this representation as a \emph{refinement} of the data types we used to represent ordinals less than $\epsilon_0$. Thus, many properties like well-foundedness of $<$ and associativity of $+$,  of this ordinal notations have very short proofs.
+
+    \inputsnippets{OmegaOmega/refineDef, OmegaOmega/phi0Ref,
+      OmegaOmega/succRef, OmegaOmega/plusRef,
+      OmegaOmega/multRef}
+
+    In order to make an ordinal notation for $\omega^\omega$, we follow the same steps as for $\epsilon_0$:
+    \begin{enumerate}
+    \item Define an order \texttt{lt}, which refines the order
+      \texttt{lt} on \texttt{T1}.
+      \inputsnippets{OmegaOmega/compareDef}
+      \inputsnippets{ OmegaOmega/ltDef, OmegaOmega/ltRef}
+      
+    \item Define the predicate ``to be in normal form''.
+      \inputsnippets{OmegaOmega/nfDef}
+    \item Define a class \texttt{OO} of terms in normal form, and an embedding from \texttt{E0} into \texttt{OO}.
+      \inputsnippets{OmegaOmega/OODef}
+       \inputsnippets{OmegaOmega/embedDef}
+      \item Infer well-foundedness of the order on \texttt{OO}.
+    \inputsnippets{OmegaOmega/ltWf} 
+      
+    \end{enumerate}
+
+    \inputsnippets{OmegaOmega/ONOO, OmegaOmega/OOz}
+
+    Let us show a few examples.
+    
+    \inputsnippets{OmegaOmega/OODemo}
+
     
 %ici
     \section{A variant for hydra battles}

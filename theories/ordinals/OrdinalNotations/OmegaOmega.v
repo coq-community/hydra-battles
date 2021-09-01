@@ -12,11 +12,12 @@ Require Import Comparable.
 
 (** * Representation by lists of pairs of integers *)
 
+(* begin snippet LODef *)
 Module LO.
   
   Definition t := list (nat*nat).
 
-  Definition  zero : t := (@nil (nat * nat): t).
+  Definition zero : t := (@nil (nat * nat): t).
 
   (** omega^ i * S n + alpha *)
 
@@ -27,6 +28,7 @@ Module LO.
   Notation  FS n := (ocons 0 n zero: t).
 
   Definition fin (n:nat): t := match n with 0 => zero | S p => FS p end.
+  Coercion fin  : nat >-> t.
 
   (** [omega ^i ] *)
 
@@ -39,23 +41,18 @@ Module LO.
 
   Notation omega := (phi0 1). 
 
-  Coercion fin  : nat >-> t.
-
+  (* end snippet LODef *)
+  
   (** data refinement *)
 
+  (* begin snippet refineDef  *)
   Fixpoint refine (a : t) : T1.T1 :=
     match a with
       nil => T1.zero
     | ocons i n b => T1.ocons (T1.fin i) n (refine b)
     end.
-
-  (**  Examples 
-  Compute T1.pp (refine (fin 42)).
-  Compute T1.pp (refine omega).
-  Compute T1.pp (refine (phi0 33)).
-   *)
-
-
+  (* end snippet refineDef *)
+  
   Inductive ap : t -> Prop :=
     ap_intro : forall a, ap (phi0 a).
 
@@ -76,7 +73,6 @@ Module LO.
     | ocons i n beta => limitb beta
     end.
 
-
   Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
   Proof.
     induction a as [| a l]; cbn.
@@ -96,7 +92,7 @@ Module LO.
          * intro H; rewrite IHl; case (refine (p::l)); auto.
   Qed.
 
-
+  (* begin snippet compareDef:: no-out  *)
   Fixpoint compare (alpha beta:t):comparison :=
     match alpha, beta with
     | nil, nil => Eq
@@ -115,6 +111,7 @@ Module LO.
   
   Lemma compare_ref (alpha beta:t) :
     compare alpha beta = T1.compare (refine alpha) (refine beta).
+ (* end snippet compareDef  *)  
   Proof.
     revert beta. induction alpha.
     - destruct beta.
@@ -128,11 +125,11 @@ Module LO.
           rewrite  T1.compare_fin_rw; now rewrite cn_n1.
   Qed.
 
-
+  (* begin snippet ltDef *)
   Definition lt alpha beta : Prop :=
     compare alpha beta = Lt.
-
-
+  (* end snippet ltDef *)
+  
   Lemma compare_rev :
     forall alpha beta,
       compare beta alpha = CompOpp (compare alpha beta).
@@ -186,7 +183,11 @@ Module LO.
     destruct (compare alpha beta); now constructor.
   Qed.
 
-  Lemma lt_ref (a b : t) : lt a b <-> T1.lt (refine a) (refine b).
+  (* begin snippet ltRef:: no-out *)
+  Lemma lt_ref (a b : t) :
+    lt a b <-> T1.lt (refine a) (refine b).
+  (* end snippet ltRef *)
+  
   Proof.
     unfold lt, T1.lt; rewrite compare_ref; now split.
   Qed.
@@ -233,7 +234,7 @@ Module LO.
     - apply compare_correct.
   Qed.
 
-
+(* begin snippet nfDef *)
   Fixpoint nf_b (alpha : t) : bool :=
     match alpha with
     | nil => true
@@ -244,7 +245,7 @@ Module LO.
 
   Definition nf alpha :Prop := 
     nf_b alpha.
-
+(* end snippet nfDef *)
   (** refinements of T1's lemmas *)
 
   Lemma zero_nf : nf zero.
@@ -326,6 +327,8 @@ Module LO.
   Delimit Scope lo_scope with lo.
   Open Scope lo_scope.
 
+  (* begin snippet succPlusMult *)
+  
   Fixpoint succ (alpha : t) : t :=
     match alpha with
       nil => fin 1
@@ -364,14 +367,22 @@ Module LO.
   Compute fin 1 * omega.
   Compute fin 42 * omega.
 
+  (* end snippet succPlusMult *)
+  
+  (* begin snippet phi0Ref:: no-out *)
   Lemma phi0_ref (i:nat) : refine (phi0 i) = T1.phi0 (T1.fin i).
   Proof. reflexivity. Qed.
+  (* end snippet phi0Ref *)
 
+  
   Lemma phi0_nf  (i:nat) : nf (phi0 i).
   Proof. unfold nf;  now cbn. Qed.
-  
+
+  (* begin snippet succRef:: no-out  *)
   Lemma succ_ref (alpha : t) :
     refine (succ alpha) = T1.succ (refine alpha).
+  (* end snippet succRef *)
+  
   Proof.  
     induction alpha.
     - now cbn.
@@ -388,9 +399,11 @@ Module LO.
   Proof.
     intro H; rewrite <- nf_ref in *; rewrite succ_ref; now apply T1.succ_nf.
   Qed.
-  
+
+  (* begin snippet plusRef:: no-out  *)
   Lemma plus_ref : forall alpha beta: t,
       refine (alpha + beta) = T1.plus (refine alpha) (refine beta).
+  (* end snippet plusRef *)
   Proof.
     induction alpha, beta.
     - now cbn.
@@ -408,9 +421,12 @@ Module LO.
       now   apply T1.plus_nf.
   Qed.
 
-
+  (* begin snippet multRef:: no-out   *)
   Lemma mult_ref : forall alpha beta: t,
-      refine (alpha * beta) = T1.mult (refine alpha) (refine beta).
+      refine (alpha * beta) =
+      T1.mult (refine alpha) (refine beta).
+  (* end snippet multRef *)
+  
   Proof.
     induction alpha.  
     -  cbn; destruct beta. 
@@ -433,16 +449,16 @@ Module LO.
   Qed.
 
 
- Lemma plus_assoc (a b c: t) : a + (b + c) = a + b + c.
- Proof. apply eq_ref; rewrite !plus_ref; apply T1.plus_assoc. Qed.
+  Lemma plus_assoc (a b c: t) : a + (b + c) = a + b + c.
+  Proof. apply eq_ref; rewrite !plus_ref; apply T1.plus_assoc. Qed.
 
- Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
-                                      a * (b + c) = a * b + a * c.
- Proof.
-   intros Ha Hb Hc; apply eq_ref;
-     rewrite !mult_ref, !plus_ref, T1.mult_plus_distr_l, !mult_ref; trivial.
-   all: now apply nf_ref.   
- Qed.
+  Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
+                                       a * (b + c) = a * b + a * c.
+  Proof.
+    intros Ha Hb Hc; apply eq_ref;
+      rewrite !mult_ref, !plus_ref, T1.mult_plus_distr_l, !mult_ref; trivial.
+    all: now apply nf_ref.   
+  Qed.
 
 End LO.
 
@@ -455,7 +471,7 @@ Import LO.
 (** * well formed ordinal representation *)
 
 Module OO.
-  
+  (* begin snippet OODef *)
   Class OO : Type := mkord {data: LO.t ; data_ok : LO.nf data}.
   
   Arguments data : clear implicits.
@@ -464,6 +480,7 @@ Module OO.
   Definition lt (alpha beta: OO) := LO.lt (data alpha) (data beta).
   Definition le := leq lt.
   Definition compare (alpha beta: OO):= LO.compare (data alpha) (data beta).
+  (*  end snippet OODef *)
 
   Instance Zero : OO := @mkord nil refl_equal.
 
@@ -513,13 +530,15 @@ Module OO.
 
   Infix "*" := mult : OO_scope.
 
+  (* begin snippet embedDef:: no-out *)
   Instance embed (alpha: OO) : E0.E0.
   Proof.
     destruct alpha as [data Hdata].
     refine (@E0.mkord (LO.refine data) _).
     now apply nf_ref.  
   Defined.
-
+  (* end snippet embedDef *)
+  
   Lemma lt_embed (alpha beta : OO): lt alpha beta ->
                                     E0.Lt (embed alpha) (embed beta).
   Proof.
@@ -565,7 +584,9 @@ Module OO.
       + constructor; red; now cbn.
   Qed. 
 
+  (* begin snippet ltWf:: no-out *)
   Lemma lt_wf : well_founded lt.
+  (* end snippet ltWf *)
   Proof.
     specialize  (ON_Generic.wf_measure (B:= OO) embed); intro Hm;
       unfold ON_Generic.measure_lt in Hm; eapply wf_incl; [| eassumption].
@@ -573,24 +594,32 @@ Module OO.
   Qed.
 
   Import ON_Generic.
-  
+
+  (* begin snippet ONOO:: no-out *)
   Instance ON_OO : ON lt compare.
+  (* end snippet ONOO *)
   Proof.
     split.  
     - apply OO_comp.
     - apply lt_wf.
   Qed.
 
+(* begin snippet OOz:: no-out *)  
 End OO.
+(* end snippet OOz *)
 
+(* begin snippet OODemo *)
 Import OO.
 #[local] Open Scope OO_scope.
+
 Check phi0  7.
+
 #[local] Coercion Fin : nat >-> OO.
 
-
-Example Ex42: omega + 42 + omega^ 2 = omega^ 2.
-  now rewrite <- Comparable.compare_eq_iff.
+Example Ex42: omega + 42 + omega^ 2 = omega^ 2. (* .no-out *)
+rewrite <- Comparable.compare_eq_iff.
+reflexivity.
 Qed.
 
+(* end snippet OODemo *)
 

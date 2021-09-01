@@ -52,21 +52,18 @@ Inductive T1 : Set  :=
 
 (* begin snippet finiteOrds *)
 
-Notation one := (ocons zero 0 zero).
 
-(** The [(S n)]-th ordinal 
- *)
 
+(** The [(S n)]-th ordinal *)
 Notation FS n := (ocons zero n zero).
 
-(** the [n]-th (finite) ordinal 
- *)
+Notation one := (FS 0).
 
+(** the [n]-th (finite) ordinal  *)
 Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
 Coercion fin  : nat >-> T1.
 
 Example ten : T1 := 10.
-
 (* end snippet finiteOrds *)
 
 (* begin snippet omegaDef *)
@@ -172,10 +169,10 @@ Definition lt alpha beta : Prop :=
 
 (* begin snippet ltExamples:: no-out *)
 Example E1 : lt (ocons omega 56 zero) (tower 3). 
-Proof.  reflexivity. Qed.
+Proof. reflexivity. Qed.
 
 Example E2 : ~ lt (tower 3) (tower 3).
-Proof.  discriminate.  Qed.
+Proof. discriminate.  Qed.
 (* end snippet ltExamples *)
 
 (** ** Properties of [compare] *)
@@ -1794,21 +1791,19 @@ Proof.
    case alpha; now simpl.
 Qed.
 
-(* begin snippet succIsPlusOne *)
+(* begin snippet succIsPlusOne:: no-out *)
 
-Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1. (* .no-out *)
-Proof. (* .no-out *)
-  induction alpha as [ |a IHa n b IHb]; [trivial |]. (* .no-out *)
-  (* ... *) (* .no-out *)
-  (*|
-.. coq:: none 
-|*)
-  - destruct  a; cbn.
+Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
+Proof. 
+  induction alpha as [ |a IHa n b IHb]; [trivial |]. 
+  (* ... *)
+  (* end snippet succIsPlusOne *)
+   - destruct  a; cbn.
     + now rewrite <- plus_n_O.
     + rewrite IHb; f_equal.
-      (*||*)
+(* begin snippet succIsPlusOnez *)
 Qed.
-(* end snippet succIsPlusOne *)
+(* end snippet succIsPlusOnez *)
 
 Lemma succ_of_plus_finite :
   forall alpha (H: nf alpha) (i:nat) , succ (alpha + i) = alpha + S i.
@@ -2044,19 +2039,14 @@ Proof.
     now destruct (compare beta0 beta) eqn:?.
 Qed.
 
-(* begin snippet notMono *)
-
-(*|
-.. coq:: no-out
-|*)
+(* begin snippet notMono:: no-out  *)
 
 Lemma plus_not_monotonous_l :
   exists alpha beta gamma : T1,
     alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
-  exists 3, 5, omega; now  compute.
+  exists 3, 5, omega; now compute.
 Qed.
-
 
 Lemma mult_not_monotonous :
   exists alpha beta gamma : T1,
@@ -2064,7 +2054,6 @@ Lemma mult_not_monotonous :
 Proof.
   exists 3, 5, omega; now compute.
 Qed.
-(*||*)
 (* end snippet notMono *)
 
 
@@ -3553,26 +3542,21 @@ Proof.
   -   exact H0.
 Defined.
 
-(* begin snippet succbIff *)
-
+(* begin snippet succbIff:: no-out *)
 Lemma succb_iff alpha (Halpha : nf alpha) :
   succb alpha <->
   exists beta : T1,
-    nf beta /\ alpha = succ  beta. (* .no-out *)
-(*|
-.. coq:: none
-|*)
+    nf beta /\ alpha = succ  beta.
+(* end snippet succbIff *)
+
 Proof.
   split.
-  intro H; destruct (succb_def Halpha).  
-  - trivial.   
-  - now exists x.
-               - destruct 1 as [beta [Hbeta  H'beta]].
-                 subst.     
-                 now apply succ_succb.
+  - intro H; destruct (succb_def Halpha); [trivial | ].  
+     exists x; assumption.
+  - destruct 1 as [beta [Hbeta  H'beta]]; subst;   
+      now apply succ_succb.
 Qed.
-(*||*)
-(* end snippet succbIff *)
+
 
 Lemma LE_r : forall alpha beta, alpha t1< beta -> alpha t1<= beta.
 Proof.
