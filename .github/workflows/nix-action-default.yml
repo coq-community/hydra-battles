@@ -4,12 +4,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine which ref to test
-      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
-        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n  echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n  merge_commit=$(git ls-remote ${{\
         \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
-        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
+        \ | cut -f1)\n  if [ -z \"$merge_commit\" ]; then\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n  else\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n  fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
@@ -34,8 +34,8 @@ jobs:
         name: math-comp
     - id: stepCheck
       name: Checking presence of CI target coq
-      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
-        \ bundle \"default\" --argstr job \"coq\" \\\n --dry-run 2>&1 > /dev/null)\n\
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n   --argstr\
+        \ bundle \"default\" --argstr job \"coq\" \\\n   --dry-run 2>&1 > /dev/null)\n\
         echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
         \ \"s/.*/built/\")\n"
     - if: steps.stepCheck.outputs.status == 'built'
@@ -49,12 +49,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine which ref to test
-      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
-        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n  echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n  merge_commit=$(git ls-remote ${{\
         \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
-        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
+        \ | cut -f1)\n  if [ -z \"$merge_commit\" ]; then\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n  else\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n  fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
@@ -79,10 +79,10 @@ jobs:
         name: math-comp
     - id: stepCheck
       name: Checking presence of CI target gaia-hydras
-      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
-        \ bundle \"default\" --argstr job \"gaia-hydras\" \\\n --dry-run 2>&1 > /dev/null)\n\
-        echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
-        \ \"s/.*/built/\")\n"
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n   --argstr\
+        \ bundle \"default\" --argstr job \"gaia-hydras\" \\\n   --dry-run 2>&1 >\
+        \ /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep \"\
+        built:\" | sed \"s/.*/built/\")\n"
     - if: steps.stepCheck.outputs.status == 'built'
       name: 'Building/fetching previous CI target: coq'
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
@@ -110,12 +110,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine which ref to test
-      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
-        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n  echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n  merge_commit=$(git ls-remote ${{\
         \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
-        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
+        \ | cut -f1)\n  if [ -z \"$merge_commit\" ]; then\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n  else\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n  fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
@@ -140,8 +140,8 @@ jobs:
         name: math-comp
     - id: stepCheck
       name: Checking presence of CI target goedel
-      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
-        \ bundle \"default\" --argstr job \"goedel\" \\\n --dry-run 2>&1 > /dev/null)\n\
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n   --argstr\
+        \ bundle \"default\" --argstr job \"goedel\" \\\n   --dry-run 2>&1 > /dev/null)\n\
         echo ::set-output name=status::$(echo $nb_dry_run | grep \"built:\" | sed\
         \ \"s/.*/built/\")\n"
     - if: steps.stepCheck.outputs.status == 'built'
@@ -166,12 +166,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine which ref to test
-      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
-        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n  echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n  merge_commit=$(git ls-remote ${{\
         \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
-        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
+        \ | cut -f1)\n  if [ -z \"$merge_commit\" ]; then\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n  else\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n  fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
@@ -196,9 +196,9 @@ jobs:
         name: math-comp
     - id: stepCheck
       name: Checking presence of CI target hydra-battles
-      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
-        \ bundle \"default\" --argstr job \"hydra-battles\" \\\n --dry-run 2>&1 >\
-        \ /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep \"\
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n   --argstr\
+        \ bundle \"default\" --argstr job \"hydra-battles\" \\\n   --dry-run 2>&1\
+        \ > /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep \"\
         built:\" | sed \"s/.*/built/\")\n"
     - if: steps.stepCheck.outputs.status == 'built'
       name: 'Building/fetching previous CI target: coq'
@@ -218,12 +218,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine which ref to test
-      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n echo \"tested_ref=${{\
-        \ github.ref }}\" >> $GITHUB_ENV\nelse\n merge_commit=$(git ls-remote ${{\
+      run: "if [ ${{ github.event_name }} = \"push\" ]; then\n  echo \"tested_ref=${{\
+        \ github.ref }}\" >> $GITHUB_ENV\nelse\n  merge_commit=$(git ls-remote ${{\
         \ github.event.repository.html_url }} refs/pull/${{ github.event.number }}/merge\
-        \ | cut -f1)\n if [ -z \"$merge_commit\" ]; then\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/head\" >> $GITHUB_ENV\n else\n echo \"tested_ref=refs/pull/${{\
-        \ github.event.number }}/merge\" >> $GITHUB_ENV\n fi\nfi\n"
+        \ | cut -f1)\n  if [ -z \"$merge_commit\" ]; then\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/head\" >> $GITHUB_ENV\n  else\n    echo \"tested_ref=refs/pull/${{\
+        \ github.event.number }}/merge\" >> $GITHUB_ENV\n  fi\nfi\n"
     - name: Git checkout
       uses: actions/checkout@v2
       with:
@@ -248,8 +248,8 @@ jobs:
         name: math-comp
     - id: stepCheck
       name: Checking presence of CI target hydra-battles-single
-      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n --argstr\
-        \ bundle \"default\" --argstr job \"hydra-battles-single\" \\\n --dry-run\
+      run: "nb_dry_run=$(NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link \\\n   --argstr\
+        \ bundle \"default\" --argstr job \"hydra-battles-single\" \\\n   --dry-run\
         \ 2>&1 > /dev/null)\necho ::set-output name=status::$(echo $nb_dry_run | grep\
         \ \"built:\" | sed \"s/.*/built/\")\n"
     - if: steps.stepCheck.outputs.status == 'built'
