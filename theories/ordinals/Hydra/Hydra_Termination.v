@@ -38,32 +38,32 @@ Proof.   reflexivity.  Qed.
 (**  The functions [m] and [ms] return well formed ordinals (less than epsilon0)
  *)
 
-(* begin snippet mNf *)
-
-Lemma  m_nf : forall h, nf (m h). (* .no-out *)
-Proof. (* .no-out *)
+(* begin snippet mNf:: no-out *)
+Lemma  m_nf : forall h, nf (m h). 
+Proof.
   induction h using Hydra_rect2 
-    with (P0 := fun s =>  nf (ms s)). (* .no-out *)
-  (*| .. coq:: none |*)
- -  destruct h; simpl; auto.
+    with (P0 := fun s =>  nf (ms s)).
+  (* ... *)
+  (* end snippet mNf:: no-out *)
+  
+ - destruct h; simpl; auto.
  - constructor.
- -  intros;  rewrite ms_eqn2; apply oplus_nf.
+ - intros;  rewrite ms_eqn2; apply oplus_nf.
   + now apply nf_phi0.
   + assumption.
 Qed.
-(*||*)
 
 
-Lemma ms_nf : forall s, nf (ms s). (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet msNf:: no-out *)
+Lemma ms_nf : forall s, nf (ms s). 
+(* end snippet msNf *)
 Proof with auto with T1.
   induction s...
    rewrite ms_eqn2...
   apply oplus_nf...
   apply nf_phi0; now  apply m_nf.   
 Qed.   
-(*||*)
-(* end snippet mNf *)
+
 
 #[global] Hint Resolve m_nf nf_phi0 ms_nf : T1.
 
@@ -90,15 +90,13 @@ Proof with auto with T1.
  -  repeat rewrite ms_eqn2; apply oplus_strict_mono_r ...
  Qed.
 
-(* begin snippet S0Decr *)
-
-Lemma S0_decr: forall s s', S0  s s' -> ms s' t1< ms s. (* .no-out *)
-(*| .. coq:: none *)
+(* begin snippet S0Decr:: no-out *)
+Lemma S0_decr:
+  forall s s', S0  s s' -> ms s' t1< ms s. 
+(* end snippet S0Decr *)
 Proof.
   repeat split; auto with T1; now apply S0_decr_0.
 Qed.
-(*||*)
-(* end snippet S0Decr *)
 
 Lemma R1_decr_0 : forall h h',
                   R1 h h' -> T1.lt (m h') (m h).
@@ -113,8 +111,8 @@ Qed.
 
 (* begin snippet R1Decr *)
 
-Lemma R1_decr : forall h h',
-    R1 h h' -> m h' t1< m h. (* .no-out *)
+Lemma R1_decr :
+  forall h h',  R1 h h' -> m h' t1< m h. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   repeat split; auto with T1; now apply R1_decr_0.

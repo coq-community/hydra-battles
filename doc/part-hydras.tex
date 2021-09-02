@@ -3505,7 +3505,8 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
        is supposed to compute  \texttt{oplus alpha beta}.
     \end{itemize}
       
-    \vspace{4pt}
+  \pagebreak 
+  \vspace{4pt}
     \emph{From Module~\href{../theories/html/hydras.Epsilon0.Hessenberg.html\#oplus}{Epsilon0.Hessenberg}}
 
     \label{sect:infix-oplus}
@@ -3529,9 +3530,13 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     expressions of the form (\texttt{oplus $\alpha$ $\beta$}).
 
     A first set of lemmas correspond to the various cases of \texttt{oplus}'s 
-    definition. They can be proved almost immediately.
+    definition. They can be proved almost immediately. Here are a few examples.
+    
 
-    \input{movies/snippets/Hessenberg/oplusNeutral}
+    \inputsnippets{Hessenberg/oplusNeutral,
+      Hessenberg/oplusCompareLt}
+
+   
     
 
 
@@ -3636,7 +3641,6 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \subsubsection{Commutativity, associativity}
 
     We prove  the commutativity of $\oplus$ in two steps. 
-
     First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
     interval $[0..\alpha)$ is commutative.
 
@@ -3693,6 +3697,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     First, we prove that the measure $m(h)$  of any hydra $h$ is a well-formed ordinal term of type \texttt{T1}.
 
     \input{movies/snippets/Hydra_Termination/mNf}
+      \input{movies/snippets/Hydra_Termination/msNf}
    
     For proving the termination of all hydra battles, we have to prove that
     \texttt{m} is a variant. First, a few technical lemmas follow the decomposition of \texttt{round} into several relations. Then the lemma \texttt{round\_decr} gathers all the cases.
