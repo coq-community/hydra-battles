@@ -158,14 +158,15 @@ Proof.
  - now apply canonS_lim2.
 Qed.
 
-(* begin snippet canonSucc *)
+(* begin snippet canonSucc  *)
 
 Lemma canon_succ i alpha :
   nf alpha -> canon (succ alpha) i = alpha. (* .no-out *)
 Proof. (* .no-out *)
   revert i; induction alpha.
   (* ... *)
-  (*| .. coq:: none |*)
+(* end snippet canonSucc *)
+
   - reflexivity.
   - destruct alpha1.
       + intros; replace alpha2 with zero.   
@@ -183,9 +184,8 @@ Proof. (* .no-out *)
             { intros; f_equal ; rewrite <- IHalpha2 with i.
               - now rewrite <- H0.
               - eapply nf_inv2, H. }
-(*||*)
 Qed.
-(* end snippet canonSucc *)
+
 
 (** should be deprecated later *)
 Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.
@@ -270,15 +270,14 @@ Qed.
 
 (** ** Canonical sequences and the order LT *)
 
-(* begin snippet canonSLT *)
-
-(*| .. coq:: no-out |*)
+(* begin snippet canonSLT:: no-out *)
 Lemma canonS_LT i alpha :
   nf alpha -> alpha <> zero ->
   canon alpha (S i) t1<  alpha.
 Proof.
   transfinite_induction_lt alpha.
-  (* ... *)  (*||*)  (*| .. coq:: none |*)
+  (* ... *)
+  (* end snippet canonSLT *)
   clear alpha; intros alpha Hrec Halpha;
     destruct (zero_limit_succ_dec Halpha).
     - destruct s.
@@ -401,9 +400,8 @@ Proof.
           split; auto.
           split; auto; apply lt_succ; auto.
       }
-      (*||*)
 Qed. 
-(* end snippet canonSLT *)
+
 
 Lemma canon0_LT  alpha :
   nf alpha -> alpha <> zero ->

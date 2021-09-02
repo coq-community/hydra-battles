@@ -85,7 +85,7 @@ Ltac path_tac := (* ugly ! *)
                             split;cbn ; [discriminate | reflexivity]])
                          
                  end).
-
+(* begin snippet exPathTac:: no-out *)
 Example ex_path1: path_to T1.omega (2::2::2::nil) (T1.omega * 2).
 Proof. path_tac. Qed.
 
@@ -95,9 +95,9 @@ Proof. path_tac. Qed.
 Example ex_path3: path_to zero (interval 3 14) (T1.omega * 2).
 Proof. cbn;path_tac. Qed.
 
-Example ex_path4:  path_to zero (repeat 3 8) (T1.omega * 2).
+Example ex_path4: path_to zero (List.repeat 3 8) (T1.omega * 2).
 Proof. cbn; path_tac. Qed.
-
+(* end snippet exPathTac *)
 
 (** path_toS beta s alpha :
     pathS alpha s beta :
@@ -903,20 +903,17 @@ Proof.
   subst; apply canonS_LT; auto.   
 Qed.
 
-(* begin snippet pathToLT *)
-
+(* begin snippet pathToLT:: no-out *)
 Lemma path_to_LT beta s alpha :
-  path_to beta s alpha -> nf alpha -> beta t1< alpha. (* .no-out *)
-(*| .. coq:: none |*)
+  path_to beta s alpha -> nf alpha -> beta t1< alpha. 
+(* end snippet pathToLT *)
+
 Proof.
   intro H; assert (H0 := path_to_not_In_zero  H).
   rewrite path_to_path_toS_iff in H.
   intro; eapply path_toS_LT; eauto.
   auto.
 Qed.
-(*||*)
-(* end snippet pathToLT *)
-
 
 
 Lemma acc_from_LT (alpha beta : T1) :

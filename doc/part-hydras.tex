@@ -3918,7 +3918,7 @@ We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is
 
 \subsubsection{Limit ordinals are truly limits}
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
-is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
+is the limit of the sequence $\canonseq{\lambda}{i}\;(1\le i)$.
 
 
 \vspace{4pt}
@@ -3926,8 +3926,6 @@ is the limit of the sequence \showmath{\canonseq{\lambda}{i}\;(1\le i)}.
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canonS_limit_strong}{Epsilon0.Canon}}
 
 \input{movies/snippets/Canon/canonSLimitStrong}
-
-
 
 \label{lemma:canonS-limit}
 
@@ -4021,16 +4019,7 @@ Write a tactic for solving goals of the form (\texttt{path\_to $\beta$ $s$ $\alp
 where $\alpha$, $\beta$ and $s$ are closed terms. 
 You should solve automatically the following goals:
 
-\begin{Coqsrc}
- path_to omega (2::2::2::nil) (omega * 2).
-
- path_to omega (3::4::5::6::nil) (omega * 2).
-
- path_to zero (interval 3 14) (omega * 2).
-
- path_to zero (repeat 3 8) (omega * 2).
-\end{Coqsrc}
-
+\inputsnippets{Paths/exPathTac} 
 \end{exercise}
 
 
