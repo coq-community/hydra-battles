@@ -4170,8 +4170,6 @@ We are now able to build a counter-example.
 The (big) rest of the proof is dedicated to prove formally the converse inequality 
 \texttt{m small\_h t1< m big\_h}. 
 
-
-
 \subsection{The case of free battles}
 \label{sec:free-battles-case}
 Let us now consider that $B$ is instantiated to \texttt{free} (which means that we are considering proofs of termination of \emph{all} battles). The following lemmas are proved in Module~\href{../theories/html/hydras.Hydra.Epsilon0_Needed_Free.html}{Hydra.Epsilon0\_Needed\_Free}.
@@ -4185,7 +4183,9 @@ The case $B=\texttt{standard}$ is studied in section~\vref{std-case}.
 \item The following lemma is an application of \texttt{m\_ge\_generic}, since \texttt{free}
 satisfies trivially the hypothesis \texttt{m\_decrease} (see page~\pageref{remark:m-decrease}).
 
-\input{movies/snippets/Epsilon0_Needed_Free/mGe}
+\pagebreak
+
+\inputsnippets{Epsilon0_Needed_Free/mGe}
 
 
 \item From the hypothesis \texttt{Hy}, we have \texttt{m big\_h t1< mu}
@@ -4236,6 +4236,7 @@ Please note that the vocabulary on paths is ours, but all the concepts come real
 In \coq{}, standard paths can be defined as follows.
 
 \vspace{4pt}
+
 \emph{From
 Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
@@ -4355,13 +4356,15 @@ $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
 \input{movies/snippets/Paths/KSThm24}
   
 
- We build the following paths :
+The proof of the limit case, is decomposed into a sequence
+of path constructions leading to $\alpha \xrightarrow[n]{} \beta$.
 
  \begin{enumerate}
- \item $\alpha \xrightarrow[n]{} \canonseq{\alpha}{n}$
+ \item $\alpha \xrightarrow[n]{} \canonseq{\alpha}{n}$ (single step path)
  \item $\canonseq{\alpha}{n} \xrightarrow[1]{} \canonseq{\alpha}{i}$ (by \texttt{Theorem\_2\_4}),
 \item $\canonseq{\alpha}{n} \xrightarrow[n]{} \canonseq{\alpha}{i}$ (applying the induction hypothesis to the preceding path);
-\item $\canonseq{\alpha}{i} \xrightarrow[n]{} \beta$ (applying the induction hypothesis)\item $\alpha \xrightarrow[n]{} \beta$ (by composition of 1, 3, and 4).
+\item $\canonseq{\alpha}{i} \xrightarrow[n]{} \beta$ (applying the induction hypothesis)
+\item $\alpha \xrightarrow[n]{} \beta$ (by composition of 1, 3, and 4).
 
 
  \end{enumerate}
@@ -4373,18 +4376,6 @@ $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
 
 
 
-\begin{remark}
- \texttt{Cor12} ``casts'' $i$-paths into $n$-paths for any $n>i$.
-But the obtained $n$-path can be much longer than the original $i$-path.
-The following exercise will give an idea of this increase. 
-\end{remark}
-
-\index{hydras}{Exercises}
-\begin{exercise}
-  Prove that  the length of the $i+1$-path from
-  $\omega^\omega$ to $\omega^i$ is $1 + (i+1)^{(i+1)}$, for any $i$. Note that the $i$-path from
-  $\omega^\omega$ to $\omega^i$ is only one step long.
- \end{exercise}
 
 
 Why is \texttt{Cor12} so useful? 
@@ -4405,6 +4396,18 @@ Intuitively, lemma   \texttt{Lemma2\_6\_1}  shows that if $\beta<\alpha<\epsilon
 
 
 
+\begin{remark}
+ \texttt{Cor12} ``casts'' $i$-paths into $n$-paths for any $n>i$.
+But the obtained $n$-path can be much longer than the original $i$-path.
+The following exercise will give an idea of this increase. 
+\end{remark}
+
+\index{hydras}{Exercises}
+\begin{exercise}
+  Prove that  the length of the $i+1$-path from
+  $\omega^\omega$ to $\omega^i$ is $1 + (i+1)^{(i+1)}$, for any $i$. Note that the $i$-path from
+  $\omega^\omega$ to $\omega^i$ is only one step long.
+ \end{exercise}
 
 
 
@@ -4413,7 +4416,7 @@ Intuitively, lemma   \texttt{Lemma2\_6\_1}  shows that if $\beta<\alpha<\epsilon
 
 
 The article~\cite{KS81} contains 
-the following lemma, the proof of which is quite complex, which allows to simulate $i$-paths by $[i+1,j]$-paths, where $j$ is large enough.
+the following lemma, which allows us to simulate $i$-paths by $[i+1,j]$-paths, where $j$ is large enough.
 
 \input{movies/snippets/Paths/constantToStandard}
 
@@ -4519,7 +4522,7 @@ This step of the proof is illustrated in figure~\vref{fig:belle-preuve-2}.
 \paragraph*{}
 
 \begin{itemize}
-\item If $\beta=\gamma$, its OK! We have got a standard path
+\item If $\beta=\gamma$, it's OK! We have got a standard path
 from  
 $\alpha$ to $\beta$ with successive indices  $n+1, n+2, \dots, n+l+1$
 
@@ -4596,7 +4599,8 @@ $\gamma$ in one single step,  must be greater than or equal to $\beta$, which co
 \end{itemize}
  The only possible case is  thus $\beta=\gamma$, so we have got a standard path  from $\alpha$ to $\beta$.
 
-\input{movies/snippets/Paths/constantToStandard0}
+ \input{movies/snippets/Paths/constantToStandard0}
+ \input{movies/snippets/Paths/constantToStandardz}
  
 
 
@@ -4633,7 +4637,7 @@ $\iota(\alpha)$ to $\iota(\beta)$, hence the inequality $m(\iota(\beta))<m(\iota
 \input{movies/snippets/Epsilon0_Needed_Std/LTToStandardBattle}
 
 
-Next, please consider the following context:
+Now, please consider the following context:
 
 \input{movies/snippets/Epsilon0_Needed_Std/theContext}
 

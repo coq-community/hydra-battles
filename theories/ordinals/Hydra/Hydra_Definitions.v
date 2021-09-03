@@ -482,7 +482,7 @@ Class BoundedVariant {A:Type}{Lt:relation A}
 
 (* end snippet BoundedVariant *)
 
-
+ 
 
 (** *** Liveness 
 

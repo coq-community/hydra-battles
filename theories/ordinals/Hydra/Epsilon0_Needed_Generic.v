@@ -11,9 +11,7 @@ From Coq Require Import Relation_Operators.
 
 Open Scope t1_scope.
 
-(* begin snippet theContext *)
-(*| .. coq:: no-out |*)
-
+(* begin snippet theContext:: no-out *)
 Section Bounded.
   
   Context (B: Battle)
@@ -25,7 +23,6 @@ Section Bounded.
 
   Hypothesis m_decrease : forall  i h h',
       round_n i h h'-> m h' t1< m h.
-  (*||*)
   (* end snippet theContext *)
   
   Lemma  nf_m : forall h, nf (m h).
@@ -45,10 +42,9 @@ Section Bounded.
     intro H0;  destruct (not_LT_zero H0). 
   Qed.
 
-  (* begin snippet mGe0 *)
-  
-  Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha). (* .no-out *)
- (*| .. coq:: none |*)
+  (* begin snippet mGe0:: no-out *)
+  Lemma m_ge_0 alpha:  nf alpha -> alpha t1<= m (iota alpha). 
+  (* end snippet mGe0 *)
  Proof.
     transfinite_induction_lt alpha; 
       clear alpha; intros alpha Hrec H.
@@ -86,29 +82,26 @@ Section Bounded.
            now  apply LT_succ_LE.
            Unshelve.
            exact 0.
-  Qed.
- (*||*)
- (* end snippet mGe0 *)
-
- (* begin snippet mGeGeneric *)
- (*| .. coq:: no-out |*)
+ Qed.
  
-  Definition big_h := iota mu.
-  Definition beta_h := m big_h.
-  Definition small_h := iota beta_h.
+ 
 
-  Lemma mu_beta_h : acc_from mu beta_h.
-  Proof.
-    apply LT_acc_from,  m_bounded. 
-  Qed.
-  
-  Corollary m_ge_generic : m big_h t1<= m small_h.
-  Proof.      
-    apply m_ge_0, nf_m.
-  Qed.
+ (* begin snippet mGeGeneric:: no-out  *)
+ Definition big_h := iota mu.
+ Definition beta_h := m big_h.
+ Definition small_h := iota beta_h.
+
+ Lemma mu_beta_h : acc_from mu beta_h.
+ Proof.
+   apply LT_acc_from,  m_bounded. 
+ Qed.
+ 
+ Corollary m_ge_generic : m big_h t1<= m small_h.
+ Proof.      
+   apply m_ge_0, nf_m.
+ Qed.
 
 End Bounded.
-(*||*)
 (* end snippet mGeGeneric *)
 
 

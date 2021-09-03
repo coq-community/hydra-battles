@@ -12,7 +12,7 @@
 
  *)
 
-
+(** TODO: Check wether the predicates ...PathS... are still useful *)
 
 Require Import Canon  MoreLists First_toggle OrdNotations.
 Import Relations Relation_Operators.
@@ -190,36 +190,34 @@ Definition const_pathS_eps i := clos_refl _ (const_pathS i).
 
 (** ** standard paths *)
 
-
-
-
 (* todo : use transition_S in the definition *)
 
-Inductive standard_pathRS (j:nat)( beta : T1):  nat -> T1 -> Prop :=
-  stdS_1 : forall i alpha, alpha <> zero ->
-                           beta = canon alpha (S i) -> j = i ->
-                          standard_pathRS j beta i  alpha
-| stdS_S : forall i alpha, standard_pathRS j beta (S i) (canon alpha (S i))  ->
-                          standard_pathRS j beta i alpha.
+Inductive standard_path_toS (j:nat)( beta : T1):  nat -> T1 -> Prop :=
+  stdS_1 : forall i alpha,
+    alpha <> zero ->
+    beta = canon alpha (S i) -> j = i ->
+    standard_path_toS j beta i  alpha
+| stdS_S : forall i alpha,
+    standard_path_toS j beta (S i) (canon alpha (S i))  ->
+    standard_path_toS j beta i alpha.
 
-Definition standard_pathS  i alpha j beta := standard_pathRS j beta i alpha.
+Definition standard_pathS  i alpha j beta :=
+  standard_path_toS j beta i alpha.
 
 (* begin snippet standardPathR *)
 
-Inductive standard_pathR (j:nat)( beta : T1):  nat -> T1 -> Prop :=
+Inductive standard_path_to (j:nat)(beta : T1)
+  : nat -> T1 -> Prop :=
   std_1 : forall i alpha,
     alpha <> zero ->
     beta = canon alpha i -> j = i -> i <> 0 ->
-    standard_pathR j beta i  alpha
+    standard_path_to j beta i  alpha
 | std_S : forall i alpha,
-    standard_pathR j beta (S i) (canon alpha i)  ->
-    standard_pathR j beta i alpha.
-
-
-(**  standard path from (i, alpha) to (j, beta) *)
+    standard_path_to j beta (S i) (canon alpha i)  ->
+    standard_path_to j beta i alpha.
 
 Definition standard_path  i alpha j beta :=
-  standard_pathR j beta i alpha.
+  standard_path_to j beta i alpha.
 (* end snippet standardPathR *)
 
 
@@ -1015,7 +1013,6 @@ Proof.
     +  trivial.
 Qed.
 
-
 Lemma const_pathS_trans : forall n alpha beta gamma,
     const_pathS n alpha beta ->
     const_pathS n beta gamma ->
@@ -1272,7 +1269,7 @@ Proof.
   }
 Qed.
 
-(* begin snippet KSThm24 *)
+(* begin snippet KSThm24:: no-out *)
 
 (*| .. coq:: no-out |*)
 Theorem KS_thm_2_4 (lambda : T1) :
@@ -1283,7 +1280,8 @@ Theorem KS_thm_2_4 (lambda : T1) :
                              (canon lambda (S i)).
 Proof.
   transfinite_induction lambda.
-  (* ... *) (*||*) (*| .. coq:: none |*)
+  (* ... *)
+  (* end snippet KSThm24 *)
   clear lambda ; intros alpha Hrec Halpha H.
   destruct (zero_limit_succ_dec Halpha).
   - destruct s.
@@ -1351,22 +1349,21 @@ Proof.
        subst; destruct (@limitb_succ beta); auto.
      (*||*)
 Qed.
-(* end snippet KSThm24 *)
+
 
 (**  Corollary 12 of [KS] *)
 
-(* begin snippet Cor12 *)
+(* begin snippet Cor12:: no-out *)
 
 Corollary Cor12 (alpha : T1) :  nf alpha ->
                 forall beta i n, beta  t1< alpha  ->
                                  i < n ->
                                  const_pathS i alpha beta ->
-                                 const_pathS n alpha beta. (* .no-out *)
+                                 const_pathS n alpha beta.
 
-Proof. (* .no-out *)
-  transfinite_induction_lt alpha. (* .no-out *)
+Proof. 
+  transfinite_induction_lt alpha. 
   (* ... *)
-
   (* end snippet Cor12 *)
   
   clear alpha ; intros alpha Hrec Halpha; intros.
@@ -2040,7 +2037,7 @@ Proof.
    -  intros k l H3 H4; subst; left; auto.
       injection H4; congruence.
    -  intros; subst; right.
-      apply IHstandard_pathR; auto.
+      apply IHstandard_path_to; auto.
 Qed.
 
 Lemma standard_path_unshift i alpha j beta : 
@@ -2051,16 +2048,16 @@ Proof.
 Qed.
 
 
-Lemma standard_pathRS_le_inv : forall j beta i alpha, 
-    standard_pathRS j beta i alpha -> (i <= j)%nat.
+Lemma standard_path_toS_le_inv : forall j beta i alpha, 
+    standard_path_toS j beta i alpha -> (i <= j)%nat.
 Proof.
   induction 1.  
   - subst;auto with arith.
   - auto with arith.
 Qed.
 
-Lemma standard_pathR_le_inv : forall j beta i alpha, 
-    standard_pathR j beta i alpha -> (i <= j)%nat.
+Lemma standard_path_to_le_inv : forall j beta i alpha, 
+    standard_path_to j beta i alpha -> (i <= j)%nat.
 Proof.
   induction 1.  
   - subst;auto with arith.
@@ -2068,21 +2065,21 @@ Proof.
 Qed.
 
 
-Lemma standard_pathRS_zero : forall j beta i alpha,
-    standard_pathRS j beta i alpha -> alpha <> zero.
+Lemma standard_path_toS_zero : forall j beta i alpha,
+    standard_path_toS j beta i alpha -> alpha <> zero.
 Proof.
 induction 1.    
  - intro; now subst.
- - intro; subst; apply IHstandard_pathRS; auto.
+ - intro; subst; apply IHstandard_path_toS; auto.
 Qed.
 
 
-Lemma standard_pathR_zero : forall j beta i alpha,
-   standard_pathR j beta i alpha -> alpha <> zero.
+Lemma standard_path_origin : forall j beta i alpha,
+   standard_path_to j beta i alpha -> alpha <> zero.
 Proof.
   induction 1.    
   - intro; now subst.
-  - intro; subst; apply IHstandard_pathR; auto.
+  - intro; subst; apply IHstandard_path_to; auto.
 Qed.
 
 Lemma standard_pathS_path_toS :
@@ -2096,10 +2093,10 @@ Proof.
   - intros; rewrite interval_unroll. 
     + eright; auto.
       * split; auto.
-        intro;subst; cbn in H; apply standard_pathRS_zero in H;
+        intro;subst; cbn in H; apply standard_path_toS_zero in H;
           now destruct H.
-       * apply IHstandard_pathRS;  eapply standard_pathRS_le_inv; eauto.
-    + eapply standard_pathRS_le_inv;eauto.
+       * apply IHstandard_path_toS;  eapply standard_path_toS_le_inv; eauto.
+    + eapply standard_path_toS_le_inv;eauto.
 Qed.
 
 Lemma standard_path_path_to i alpha j beta :
@@ -2118,12 +2115,12 @@ Proof.
      *   eright; auto.
        --  esplit.
            ++ intro; subst; simpl in H.
-              apply standard_pathR_zero in H.
+              apply standard_path_origin in H.
               now destruct H. 
            ++  reflexivity.
-       -- eapply IHstandard_pathR; eauto.
-          eapply standard_pathR_le_inv;eauto.
-   + eapply standard_pathR_le_inv;eauto.
+       -- eapply IHstandard_path_to; eauto.
+          eapply standard_path_to_le_inv;eauto.
+   + eapply standard_path_to_le_inv;eauto.
 Qed.
 
 Lemma standard_gnaw_zero l i :  standard_gnaw i zero l = zero.
@@ -2154,26 +2151,22 @@ Proof.
 Qed. 
 
 Lemma standard_path_LE : forall  j beta i alpha, 
-    standard_path i alpha j beta   ->
-    (i <= j)%nat.
+    standard_path i alpha j beta -> (i <= j)%nat.
 Proof.
-   eapply standard_pathR_le_inv; eauto.
+   eapply standard_path_to_le_inv; eauto.
 Qed.
 
-
-Lemma standard_pathR_nf : forall i alpha j beta,
-    standard_pathR  j beta i alpha  -> nf alpha -> nf beta.
+Lemma standard_path_to_nf : forall i alpha j beta,
+    standard_path_to  j beta i alpha  -> nf alpha -> nf beta.
 Proof.
   induction 1.
   - destruct i. now destruct H2.
     +  subst beta; intros; now apply nf_canon.
-  -  intros; apply IHstandard_pathR.
+  -  intros; apply IHstandard_path_to.
      destruct i.
      +  simpl;auto with T1. now apply nf_canon.
 +  unfold canon; now apply nf_canon.
 Qed.
-
-(* Here *)
 
 Lemma standard_path_zero : forall i j alpha beta,
     standard_path i alpha j beta  -> 
@@ -2182,13 +2175,13 @@ Lemma standard_path_zero : forall i j alpha beta,
 Proof.
   induction 1. 
   - intro; subst; now rewrite canon_zero.
-  - intro; subst; rewrite canon_zero in IHstandard_pathR; auto.
+  - intro; subst; rewrite canon_zero in IHstandard_path_to; auto.
 Qed.
 
 
 Lemma standard_path_lt2 : forall i alpha j beta,
     (0 < i)%nat -> zero t1< alpha ->
-    standard_pathR  j beta i alpha ->
+    standard_path_to  j beta i alpha ->
     beta t1<  alpha.
 Proof.
   induction 3.
@@ -2205,7 +2198,7 @@ Proof.
          { eapply standard_path_zero ; eauto. }
          subst;auto.
        *  apply LT_trans with (canon alpha i) ; auto.
-          apply IHstandard_pathR; auto with arith.
+          apply IHstandard_path_to; auto with arith.
           apply not_zero_lt.
           { destruct i.
             - simpl; auto with T1. apply nf_canon; eauto with T1.
@@ -2309,7 +2302,7 @@ Qed.
 Lemma path_to_S_iota_from :
   forall l i alpha beta,  
     path_toS beta (iota_from i (S l)) alpha ->
-    standard_pathRS (l + i)%nat beta i alpha.
+    standard_path_toS (l + i)%nat beta i alpha.
 Proof.
   induction l as [| l IHl]. 
   - left. 
@@ -2380,7 +2373,7 @@ Proof.
         apply  path_to_S_iota_from; auto.   
        --   replace (S (k - i))%nat with (S k - i)%nat; [auto | lia].
        --  abstract lia.
-     * eapply standard_pathRS_le_inv;eauto.
+     * eapply standard_path_toS_le_inv;eauto.
 Qed.
 
 Lemma ocons_standard_pathS : forall alpha n beta , 
@@ -2396,14 +2389,14 @@ Proof.
       * assumption.
       * intro; subst; simpl in H3;  now destruct H3.
   -  right; rewrite  canon_tail; auto.
-        +  apply IHstandard_pathRS; auto.
+        +  apply IHstandard_path_toS; auto.
            eapply nf_LT_right; auto.
           * eapply H.
           * apply canonS_LT;  trivial.
             eauto with T1.
             intro; subst; simpl in H0; destruct H1.
-            apply standard_pathRS_zero in H0; now destruct H0. 
-        + intro;subst;  simpl in H0; apply standard_pathRS_zero in H0;auto.
+            apply standard_path_toS_zero in H0; now destruct H0. 
+        + intro;subst;  simpl in H0; apply standard_path_toS_zero in H0;auto.
 Qed.
 
 Lemma ocons_standard_path : forall alpha n beta , 
@@ -2420,15 +2413,15 @@ Proof.
   -  intros; destruct i.
      + now destruct H2.
      + right;  rewrite  canon_tail; auto.
-        * apply IHstandard_pathR; auto.
+        * apply IHstandard_path_to; auto.
           eapply nf_LT_right; auto.
           -- eapply H.
           --   apply canonS_LT; trivial.
               eauto with T1.
               intro; subst.
-              simpl in H0; apply standard_pathR_zero in H0.
+              simpl in H0; apply standard_path_origin in H0.
               subst; now destruct H1; auto.
-        * intro;subst;  apply standard_pathR_zero in H0.
+        * intro;subst;  apply standard_path_origin in H0.
           subst;  destruct H1; auto.
           simpl in H0; now destruct H0.
 Qed.
@@ -2443,7 +2436,7 @@ Proof.
     + now destruct H2.
     +  now left.
   -  intros;  assert (0 < j)%nat.
-       { generalize (standard_pathR_le_inv H).
+       { generalize (standard_path_to_le_inv H).
          intro;  auto with arith.
          lia.
          }
@@ -2455,7 +2448,7 @@ Proof.
             - destruct (canonS_zero_inv _ _ e).   
               + subst; red; destruct j.
                 * inversion H3.
-                * left; apply standard_pathR_zero in H;  now destruct H.
+                * left; apply standard_path_origin in H;  now destruct H.
               + destruct j.
                 * inversion  H3.
                 * left; split.
@@ -2470,11 +2463,11 @@ Proof.
              ++ apply Cor12_1 with i; auto. 
                 ** apply canonS_LT;auto.
                 intro; subst; auto with T1.
-                ** apply standard_pathR_le_inv in H;  abstract lia.
+                ** apply standard_path_to_le_inv in H;  abstract lia.
                 ** left; split.
                    intro; subst; auto with T1.
                    reflexivity.
-             ++  apply IHstandard_pathR; auto.
+             ++  apply IHstandard_path_to; auto.
                  ** apply nf_canon; auto.
                  ** apply not_zero_lt;auto.
                     apply nf_canon; auto.
@@ -2862,15 +2855,15 @@ Section Constant_to_standard_Proof.
     apply R31_0, gamma_positive.
   Qed.
 
-(* begin snippet constantToStandard0 *)
-  
+(* begin snippet constantToStandard0:: no-out  *)
   Lemma constant_to_standard_0 :
-    {l : nat | standard_gnaw (S n) alpha l = beta}. (* .no-out *)
-  (*| .. coq:: none |*)
-  Proof. exists l; now rewrite R31.  Qed. 
-  (*||*)
-End Constant_to_standard_Proof.
+    {l : nat | standard_gnaw (S n) alpha l = beta}. 
 (* end snippet constantToStandard0 *)
+   Proof. exists l; now rewrite R31.  Qed. 
+
+(* begin snippet constantToStandardz *)   
+End Constant_to_standard_Proof.
+(* end snippet constantToStandardz *)   
 
 (* begin snippet constantToStandard *)
 
@@ -2915,13 +2908,13 @@ Qed.
 (*||*)
 (* end snippet constantToStandardPath *)
 
-(* begin snippet LTToStandardPath *)
-
+(* begin snippet LTToStandardPath:: no-out *)
 Corollary  LT_to_standard_path 
       (alpha beta : T1) :
-  beta  t1< alpha ->
-  {n : nat & {j:nat | standard_path (S n) alpha j beta}}. (* .no-out *)
-(*| .. coq:: none |*) 
+  beta t1< alpha ->
+  {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
+(* end snippet LTToStandardPath *)
+
 Proof.
   intros H; assert (nf alpha) by eauto with T1.
   destruct (Lemma2_6_1 H0 H) as [n Hn].
@@ -2929,9 +2922,6 @@ Proof.
   apply LE_LT_trans with beta; eauto with T1.
   apply LE_zero; eauto with T1.
 Qed.
-(*||*)
-(* end snippet LTToStandardPath *)
-
 
 Lemma const_path_const_pathS_equiv : forall alpha i beta ,
     const_path (S i) alpha beta <->

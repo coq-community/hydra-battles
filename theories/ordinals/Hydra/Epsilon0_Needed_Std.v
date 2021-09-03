@@ -67,7 +67,7 @@ Section Impossibility_Proof.
   
   (* begin hide *)
   Lemma o2iota_0 : forall j beta i alpha,
-      standard_pathR j beta i alpha -> (0 < i)%nat ->  nf alpha ->
+      standard_path_to j beta i alpha -> (0 < i)%nat ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
       battle standard (Nat.pred i) (iota alpha) j (iota beta) .
   Proof.
@@ -82,7 +82,7 @@ Section Impossibility_Proof.
             trivial.
           2:(left; simpl); trivial.
           replace (S i) with (Nat.pred (S (S i))).
-          *   eapply IHstandard_pathR; trivial.
+          *   eapply IHstandard_path_to; trivial.
               auto with arith. 
               eapply nf_canon;eauto.
           * simpl; auto.
@@ -92,7 +92,7 @@ Section Impossibility_Proof.
   Qed.
 
   Lemma o2iota_1 : forall j beta i alpha,
-      standard_pathR j beta (S i) alpha ->  nf alpha ->
+      standard_path_to j beta (S i) alpha ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
       battle standard  i (iota alpha) j (iota beta) .
   Proof.

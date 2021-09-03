@@ -16,9 +16,8 @@ longer
 (** **  Bounded variants *)
 
 Open Scope t1_scope.
-(* begin snippet theContext *)
 
-(*| .. coq:: no-out |*)
+(* begin snippet theContext:: no-out *)
 Section Impossibility_Proof.
   
   Context (mu: T1)
@@ -29,24 +28,21 @@ Section Impossibility_Proof.
 
   Let big_h := big_h mu.
   Let small_h := small_h mu m.
-  (*||*)
   (* end snippet theContext *)
 
   #[local] Hint Resolve nf_m : hydra.
 
-  (* begin snippet mGe *)
-
-  (*| .. coq:: no-out |*)
-    Lemma m_ge : m big_h t1<= m small_h.
+  (* begin snippet mGe:: no-out *)
+  
+  Lemma m_ge : m big_h t1<= m small_h.
   Proof.
-    apply m_ge_generic with (1 := Hy).
+    apply m_ge_generic with (1 := Hy). 
     intros i h h' H; generalize Var; destruct 1.
     apply variant_decr with i. 
     intro H0; subst; now apply (head_no_round_n _  _ H).
-    exists i; apply H.    
+    exists i; apply H.      
   Qed.
-  (*||*)
-(* end snippet mGe *)
+  (* end snippet mGe *)
   
   (** ** Proof of the inequality m small_h t1< m big_h 
    *)
