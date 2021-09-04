@@ -132,16 +132,15 @@ Global Hint Constructors LocallySorted : lists.
 (** A sort must work on any decidable total pre-order *)
 
 Definition sort_spec (f : sort_fun_t) :=
-forall  (A:Type)(le:relation A)(P:TotalDecPreOrder le)
-        (l:list A),
-    let l' := f A (leb le) l in Permutation l l' /\ LocallySorted le l'.
+ forall (A:Type) (le:relation A) (P:TotalPreOrder le) (dec:RelDecision le) (l:list A),
+ let l' := f A (fun x y => bool_decide (le x y)) l in Permutation l l' /\ LocallySorted le l'.
 
 (** A prototype for using TotalDecPreOrder type class *)
 
 Definition sort (f:sort_fun_t)
-           {A} {le : relation A}{P: TotalDecPreOrder le}
-           (l: list A) :=
-  f A (leb le) l.
+ {A} {le : relation A} {P: TotalPreOrder le} {dec:RelDecision le}
+ (l: list A) :=
+  f A (fun x y => bool_decide (le x y)) l.
 
 
 
@@ -157,15 +156,12 @@ list (A * B) -> Prop :=
                            leA a a' -> lt  b b') ->
             marked leA leB ((a,b)::l).
 
-
-
 Definition stable (f : sort_fun_t) : Prop :=
-  forall (A B : Type) leA leB (PA : TotalDecPreOrder leA)
-         (PB : TotalDecPreOrder leB)
-         (l : list (A * B)),
+  forall (A B : Type) leA leB
+    (PA : TotalPreOrder leA) (PB : TotalPreOrder leB)
+    (dec : RelDecision leA) (l : list (A * B)),
          marked leA leB l ->
-         marked leA  leB
-                (sort f  (P:= TotalDec_Inverse_fun
+         marked leA leB (sort f  (P:= Total_Inverse_fun
                                 (f:= fst : A * B -> A))
                       l).
                            
@@ -179,10 +175,10 @@ end.
 
 
 Definition stable_test (f : sort_fun_t)
-      {A} {le : relation A}{P: TotalDecPreOrder le}
+      {A} {le : relation A}{P: TotalPreOrder le} {dec:RelDecision le}
            (l: list A) : list (A  * nat)                                                               :=
     let m := mark l 0 in
-      sort f  (P:= @TotalDec_Inverse_fun (A * nat) A fst le P) m. 
+      sort f  (P:= @Total_Inverse_fun (A * nat) A fst le P) m.
 
 
 

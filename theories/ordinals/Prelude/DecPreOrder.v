@@ -8,28 +8,43 @@
 From Coq Require Export Relations RelationClasses Setoid.
 
 Class Total {A:Type}(R: relation A) :=
-  totalness : forall a b:A, R a b \/ R b a.             
+  totalness : forall a b:A, R a b \/ R b a.
 
-Class Decidable {A:Type}(R: relation A) :=
-  rel_dec : forall a b, {R a b} + {~ R a b}.
+(** Decision typeclasses following Spitters and van der Weegen *)
 
+Class Decision (P : Prop) := decide : {P} + {~P}.
+#[export] Hint Mode Decision ! : typeclass_instances.
+Arguments decide _ {_} : simpl never, assert.
+
+Class RelDecision {A B} (R : A -> B -> Prop) :=
+  decide_rel x y :> Decision (R x y).
+#[export] Hint Mode RelDecision ! ! ! : typeclass_instances.
+Arguments decide_rel {_ _} _ {_} _ _ : simpl never, assert.
+
+Notation EqDecision A := (RelDecision (@eq A)).
+
+Definition bool_decide (P : Prop) {dec : Decision P} : bool :=
+  if dec then true else false.
 
 Instance Total_Reflexive{A:Type}{R: relation A}(rt : Total R):
   Reflexive R.
 Proof. intros a ; now destruct (rt a a). Qed.
 
+Module Semibundled.
+
 Class TotalDec {A:Type}(R: relation A):=
   { total_dec :> Total R ;
-    dec_dec :> Decidable R}.
+    dec_dec :> RelDecision R}.
 
-Definition left_right_dec {A:Type}{R: relation A}{T : Total R}{D: Decidable R}:
-  forall a b, {R a b}+{R b a}.
-Proof.  
-  intros a b; destruct (D a b).
-  - now left.
-  - right; destruct (T a b);[contradiction|trivial].
-Defined.
+(** A class of decidable total pre-orders *)
 
+Class TotalDecPreOrder {A:Type}(le: relation A) :=
+  {
+    total_dec_pre_order :> PreOrder le;
+    total_dec_total  :> TotalDec le
+  }.
+
+End Semibundled.
 
 (** when applied to a pre-order relation le, returns the equivalence and
     the strict order associated to le *)
@@ -40,15 +55,12 @@ Definition preorder_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) 
 Definition lt {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) :=
   le a b /\ ~ le b a.
 
+(** A class of total pre-orders *)
 
-(** A class of decidable total pre-orders *)
-
-Class TotalDecPreOrder {A:Type}(le: relation A) :=
-  {
-    total_dec_pre_order :> PreOrder le;
-    total_dec_total  :> TotalDec le 
-  }.
-
+Class TotalPreOrder {A} (R : relation A) : Prop := {
+  total_pre_order_pre :> PreOrder R;
+  total_pre_order_total :> Total R
+}.
 
 (** Properties of decidable total pre-orders *)
 Lemma lt_irreflexive  {A:Type}{le:relation A}{P:PreOrder le}:
@@ -63,14 +75,14 @@ Proof.
    intros a b [H H0]; assumption.
 Qed.
 
-Lemma not_le_ge {A:Type}{le:relation A}{P0: TotalDecPreOrder le}:
-  forall a b,  ~ le  a b ->  le b a.
+Lemma not_le_ge {A} {le:relation A} {P0 : TotalPreOrder le} :
+  forall a b, ~ le a b -> le b a.
 Proof.
-  intros a b H; destruct P0. destruct (left_right_dec b a).
+  intros a b H. destruct P0.
+  destruct (totalness a b).
+  - contradiction.
   - assumption.
-  -  contradiction.
-Qed.  
-
+Qed.
 
 Lemma le_not_gt {A:Type}{le:relation A}{P:PreOrder le}:
   forall a b,  le  a b -> ~ lt b a.
@@ -129,74 +141,19 @@ split.
 - intros x y z Hxy Hyz; destruct Hxy, Hyz; split; transitivity y;auto.
 Qed.
 
-(** weakening of le_dec *)
-
-Definition leb {A:Type}(le : relation A)
-      {P0: TotalDecPreOrder le} (a b : A) :=
-   if rel_dec a b then true else false.
-
-Lemma leb_true {A:Type}(le : relation A)
-      (P0: TotalDecPreOrder le) (a b:A) :
-  leb le a b = true <-> le a b.
+Lemma le_lt_equiv_dec  {A:Type} {le : relation A}
+ {P0: TotalPreOrder le} {dec : RelDecision le} (a b:A) :
+ le a b -> {lt a b}+{preorder_equiv a b}.
 Proof.
-  unfold leb;split.
-  -   destruct (rel_dec a b);auto; discriminate.
-  -  intro;  destruct (rel_dec a b);auto.
-      contradiction.
-Qed.   
-
-(** if Hle assumes (le a b), asserts  (H: leb le a b = true) *)
-
-Ltac le_2_leb  Hle H:=
-  match goal with [Q : @TotalDecPreOrder ?A ?R, Hle: ?R ?x ?b |- _] => 
-                  let HH := fresh in
-                  let hypo := fresh H in
-                  destruct (@leb_true _ _ Q x b ) as
-                      [_ HH]; generalize (HH Hle); clear HH; intro  hypo
-  end.
-
-(** if Hlen assumes (leb a b = true), asserts  (H: le a b ) *)
-
-Ltac leb_2_le Hleb H:=
- match goal with [Q : @TotalDecPreOrder ?A ?R,
-                      Hleb : @leb ?A ?R ?Q ?x ?b = true |- _] => 
-                 let HH := fresh in
-                 let hypo := fresh H in
-                 destruct (@leb_true _ _ Q x b ) as
-                     [HH _]; generalize (HH Hleb); clear HH; intro  hypo
- end.
-
-
-Lemma leb_false {A:Type}(le : relation A)
-      (P0: TotalDecPreOrder le) (a b:A) :
-  leb le a b = false <-> lt  b a.
-Proof.
-  unfold leb, lt;split.
-  -   destruct (rel_dec a b);auto.  
-      + discriminate.
-      +   intros _; destruct (rel_dec b a); auto.
-          split;auto.
-          { destruct (left_right_dec a b);try contradiction. }
-  -  destruct (rel_dec a b).
-     + destruct 1; contradiction.   
-     +   auto . 
-Qed.   
-
-
-Lemma le_lt_equiv_dec  {A:Type}(le : relation A)
-      (P0: TotalDecPreOrder le) (a b:A) :
-   le a b -> {lt a b}+{preorder_equiv a b}.
-Proof.
-  intro H;  destruct (rel_dec b a).
- -   right;split;auto.
- -  left;split;auto.
+  intro H; destruct (decide (le b a)).
+  - right;split;auto.
+  - left;split;auto.
 Defined.
 
-
 Lemma not_le_gt {A:Type}(le : relation A)
-      (P0: TotalDecPreOrder le) (a b:A) : ~ le a b -> lt b a.
+      (P0: TotalPreOrder le) (a b:A) : ~ le a b -> lt b a.
 Proof.
-  intro H; destruct (left_right_dec b a).
+  intro H. destruct (totalness b a).
   - split; auto.   
   - contradiction.
 Qed.

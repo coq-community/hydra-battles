@@ -156,36 +156,33 @@ Section Generic.
 
     Variable le : relation A.
 
-    Context (le_total : TotalDecPreOrder le ).
+    Context (le_total : TotalPreOrder le).
+    Context (le_dec : RelDecision le).
 
     Notation "a <= b" := (le a b).
-    Notation "a <=? b" := (leb le a b).
 
     Lemma merge_rect:
       forall P: list A -> list A -> list A -> Type,
         (forall l:list A, P nil l l) ->
         (forall l: list A, P l nil l) ->
-        (forall a1 l1 a2 l2 p,
-           dec_dec a1 a2 = left p ->
-           P l1 (a2::l2) (merge (leb le) l1 (a2::l2)) ->
-           P (a1::l1) (a2::l2) (a1::(merge (leb le)l1 (a2::l2)))) ->
-        (forall a1 l1 a2 l2 p,
-           dec_dec a1 a2 = right p ->
-           P (a1::l1) l2 (merge (leb le)(a1::l1) l2) ->
-           P (a1::l1) (a2::l2) (a2::(merge (leb le) (a1::l1) l2))) ->
-        forall l1 l2, P l1 l2 (merge (leb le) l1 l2).
+        (forall a1 l1 a2 l2,
+           a1 <= a2 ->
+           P l1 (a2::l2) (merge (fun x y => bool_decide (x <= y)) l1 (a2::l2)) ->
+           P (a1::l1) (a2::l2) (a1::(merge (fun x y => bool_decide (x <= y))l1 (a2::l2)))) ->
+        (forall a1 l1 a2 l2,
+           ~ le a1 a2 ->
+           P (a1::l1) l2 (merge (fun x y => bool_decide (x <= y))(a1::l1) l2) ->
+           P (a1::l1) (a2::l2) (a2::(merge (fun x y => bool_decide (x <= y)) (a1::l1) l2))) ->
+        forall l1 l2, P l1 l2 (merge (fun x y => bool_decide (x <= y)) l1 l2).
     Proof with auto.
       induction l1.
       - intros; simpl; destruct  l2; apply X.
       - induction l2.
         + apply X0.
-        + case_eq (dec_dec a a0); intros Eq Comp.
-          * simpl. le_2_leb Eq H1. rewrite H1; simpl.
-            eapply X1.   eexact Comp. apply IHl1.  
-          * simpl.  assert (a <=? a0 = false).
-            rewrite  leb_false.
-            apply not_le_gt; auto.
-            rewrite H.  eapply X2;eauto. 
+        + simpl; unfold bool_decide.
+          destruct (decide_rel le a a0).
+          * apply X1; [assumption|apply IHl1].
+          * apply X2; assumption.
     Qed.
 
     Definition merge_ind ( P: list A -> list A -> list A -> Prop) :=
@@ -195,24 +192,26 @@ Section Generic.
       merge_rect P.
 
 
-    Ltac induction_merge l1 l2:= pattern (merge (leb le) l1 l2 ); apply merge_rect.
+    Ltac induction_merge l1 l2:= pattern (merge (fun x y => bool_decide (x <= y)) l1 l2 ); apply merge_rect.
     
     Lemma merge_equation:
       forall l1 l2,
-        merge (leb le) l1 l2 =
+        merge (fun x y => bool_decide (x <= y)) l1 l2 =
         match l1,l2 with
           | nil,_ => l2
           | _,nil => l1
           | a1::l1',a2::l2' =>
-            if dec_dec a1  a2 then a1 :: merge (leb le) l1' l2
-            else a2 :: merge (leb le) l1 l2'
+            if decide (a1 <= a2) then a1 :: merge (fun x y => bool_decide (x <= y)) l1' l2
+            else a2 :: merge (fun x y => bool_decide (x <= y)) l1 l2'
         end.
     Proof.
       intros l1 l2.
       induction_merge l1 l2; trivial.
       - now intros l; destruct l.
-      - intros a1 l1' a2 l2' Comp Eq .  rewrite Eq; reflexivity.
-      - intros a1 l1' a2 l2' Comp Eq; rewrite Eq; reflexivity.
+      - intros a1 l1' a2 l2' Comp Eq.
+        destruct (decide (a1 <= a2)); [reflexivity|contradiction].
+      - intros a1 l1' a2 l2' Comp Eq.
+        destruct (decide (a1 <= a2)); [contradiction|reflexivity].
     Qed.
 
 
@@ -226,7 +225,7 @@ Section Generic.
         forall  (f:A->Prop) l1 l2,
           List.Forall f l1 ->
           List.Forall f l2  ->
-          List.Forall f (merge (leb le) l1 l2) .
+          List.Forall f (merge (fun x y => bool_decide (x <= y)) l1 l2) .
       Proof with auto.
         intros f l1 l2.
         induction_merge l1 l2; intros ...
@@ -239,7 +238,7 @@ Section Generic.
 
       Lemma merge_LocallySorted:
         forall l1 l2, LocallySorted  le l1 -> LocallySorted le  l2 ->
-                      LocallySorted le (merge (leb le) l1 l2).
+                      LocallySorted le (merge (fun x y => bool_decide (x <= y)) l1 l2).
       Proof with auto.
         intros l1 l2; induction_merge l1 l2; intros ...
         - rewrite <- (LocallySorted_cons' A le).
@@ -269,7 +268,7 @@ Section Generic.
 Qed.
 
       Lemma merge_permutation:
-        forall l1 l2, Permutation (l1++l2) (merge (leb le) l1 l2).
+        forall l1 l2, Permutation (l1++l2) (merge (fun x y => bool_decide (x <= y)) l1 l2).
       Proof with auto.
         intros l1 l2;  induction_merge l1 l2; intros. 
         - reflexivity.
@@ -311,20 +310,20 @@ Qed.
           now rewrite teq1.
         Defined.
         
-        Theorem merge_sort_correct: sort_correct A le (merge_sort (leb le)).
+        Theorem merge_sort_correct: sort_correct A le (merge_sort (fun x y => bool_decide (x <= y))).
         Proof with auto with lists.
-          intro l;   functional induction (merge_sort (leb le) l) ...
+          intro l;   functional induction (merge_sort (fun x y => bool_decide (x <= y)) l) ...
           - split...
           - split ...      
           -  destruct IHl0, IHl1. split ...
-             apply (merge_LocallySorted (merge_sort (leb le) l1)
-                                        (merge_sort (leb le) l2)); trivial.
+             apply (merge_LocallySorted (merge_sort (fun x y => bool_decide (x <= y)) l1)
+                                        (merge_sort (fun x y => bool_decide (x <= y)) l2)); trivial.
              transitivity (l1++l2).
              generalize (split_permutation (_x :: _x0 :: _x1)).
              rewrite e0.
              intro;symmetry...       
-             transitivity ((merge_sort (leb le) l1)
-                             ++ (merge_sort (leb le) l2)).
+             transitivity ((merge_sort (fun x y => bool_decide (x <= y)) l1)
+                             ++ (merge_sort (fun x y => bool_decide (x <= y)) l2)).
              rewrite <- H0, <- H2 ...
              apply merge_permutation; trivial.
         Qed.
@@ -346,7 +345,7 @@ Check (stable_merge_sort: sort_fun_t).
 
 Theorem sp_mergesort_OK : sort_spec sp_merge_sort.
 Proof.
-  red; intros.  now destruct  (merge_sort_correct A le P
+  red; intros.  now destruct  (merge_sort_correct A le P _
                                                   (split _) (split_decr _)
                                                   (split_permutation _)
                                                   l).
@@ -354,7 +353,7 @@ Qed.
 
 Theorem stable_mergesort_OK : sort_spec stable_merge_sort.
 Proof.
-  red; intros.  now destruct  (merge_sort_correct A le P
+  red; intros.  now destruct  (merge_sort_correct A le P _
                                                   (split' _) (split'_decr _)
                                                   (split'_permutation _)
                                                   l).
