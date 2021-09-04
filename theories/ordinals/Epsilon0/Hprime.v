@@ -43,20 +43,22 @@ Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 Solve All Obligations with auto with E0.
 (* end snippet HprimeDef *)
 
-(* begin snippet paraphrases *)
-
 (** Paraphrases of the equations for H'_ *)
 
-(*| .. coq:: no-out |*)
+(* begin snippet paraphrasesa:: no-out  *)
 Lemma H'_eq1 : forall i, H'_ Zero i = i.
 Proof.
   intro i; now rewrite H'__equation_1. 
 Qed.
 
+(* end snippet paraphrasesa *)
+
+(* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2 alpha i :
   Succb alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
-(*||*) (*| .. coq:: none |*)
+(* end snippet paraphrasesb *)
+
 Proof.
   intros;rewrite H'__equation_1.
   destruct (E0_eq_dec alpha Zero).
@@ -65,12 +67,13 @@ Proof.
     destruct (Succ_not_Limitb _ H); auto.
     + now cbn.
 Qed.
-(*||*)
 
+(* begin snippet paraphrasesc:: no-out  *)
 Lemma H'_eq3 alpha i :
   Limitb alpha ->
-  H'_ alpha i =  H'_ (Canon alpha (S i)) i. (* .no-out *)
-(*||*) (*| .. coq:: none |*)
+  H'_ alpha i =  H'_ (Canon alpha (S i)) i.
+(* end snippet paraphrasesc *)
+
 Proof.
   intros;rewrite H'__equation_1.
   destruct (E0_eq_dec alpha Zero).
@@ -79,19 +82,17 @@ Proof.
   + now cbn.    
   + red in H; rewrite e in H; discriminate.
 Qed.
-(*||*)
 
+(* begin snippet paraphrasesd:: no-out  *)
 Lemma H'_succ_eqn  alpha i :
-  H'_ (Succ alpha) i = H'_ alpha (S i). (* .no-out *)
-(*||*) (*| .. coq:: none |*)
+  H'_ (Succ alpha) i = H'_ alpha (S i).
+(* end snippet paraphrasesd  *)
+
 Proof.
   rewrite H'_eq2.
   - now rewrite Pred_of_Succ.  
   - apply Succ_Succb.
 Qed.
-(*||*)
-
-(* end snippet paraphrases *)
 
 Hint Rewrite H'_eq1  H'_succ_eqn : H'_rw.
 
@@ -128,13 +129,15 @@ Qed.
 (*||*)
 (* end snippet HprimeOmega *)
 
-(* begin snippet HprimePlusFin *)
+(* begin snippet HprimePlusFin:: no-out *)
 
 Lemma H'_Plus_Fin alpha : forall i k : nat,
-    H'_ (alpha + i)%e0 k = H'_ alpha (i + k)%nat. (* .no-out *)
-Proof. (* .no-out *)
-  induction i. (* .no-out *)
-  (* ... *) (*| .. coq:: none |*)
+    H'_ (alpha + i)%e0 k = H'_ alpha (i + k)%nat. 
+Proof. 
+  induction i. 
+  (* ... *)
+  (* end snippet HprimePlusFin *)
+  
   - intro k; ochange (alpha +  0)%e0 alpha.
     + now simpl.
     + rewrite Plus_rw; simpl; auto with T1.
@@ -149,13 +152,10 @@ Proof. (* .no-out *)
              ++ f_equal.
              ++ apply cnf_ok.
           --  reflexivity.
-(*||*)
 Qed.
-(* end snippet HprimePlusFin *)
 
-(* begin snippet HprimeExamples *)
 
-(*| .. coq:: no-out |*)
+(* begin snippet HprimeExamplesa:: no-out  *)
 Lemma H'_omega_double k :
   H'_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
@@ -164,28 +164,36 @@ Proof.
   + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
   - now compute.
 Qed.
+(* end snippet HprimeExamplesa:: no-out  *)
 
+(* begin snippet HprimeExamplesb:: no-out  *)
 Lemma H'_omega_3 k : H'_ (omega * 3)%e0 k = (8 * k + 7)%nat.
-(*||*) (*| .. coq:: none |*)
+(* end snippet HprimeExamplesb *)
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
-  ochange (Canon  (omega * 3)%e0 (S k)) (omega * 2 + FinS k)%e0.
+  ochange (Canon (omega * 3)%e0 (S k)) (omega * 2 + FinS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_double; abstract lia.  
 Qed.
-(*||*)
-Lemma H'_omega_4 k : H'_ (omega * 4)%e0 k = (16 * k + 15)%nat. (* .no-out *)
-(*||*) (*| .. coq:: none |*)
+
+(* begin snippet HprimeExamplesc:: no-out  *)
+Lemma H'_omega_4 k : H'_ (omega * 4)%e0 k = (16 * k + 15)%nat.
+(* end snippet HprimeExamplesc *)
+
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
   ochange (Canon  (omega * 4)%e0 (S k)) (omega * 3 + FinS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_3; abstract lia.
 Qed.
-(*||*)
+
+(* begin snippet HprimeExamplesd:: no-out  *)
 Lemma H'_omega_i (i:nat)  : forall k,
-    H'_ (omega * i)%e0 k = (exp2 i * k + Nat.pred (exp2 i))%nat. (* .no-out *)
-(*||*) (*| .. coq:: none |*)
+    H'_ (omega * i)%e0 k =
+    (exp2 i * k + Nat.pred (exp2 i))%nat. 
 Proof.
   induction i.
+  (* ... *)
+  (* end snippet HprimeExamplesd  *)
+  
   - ochange (omega * 0)%e0 Zero; simpl.
     intro k; rewrite H'_eq1; abstract lia.
   - intro k; rewrite H'_eq3.
@@ -195,8 +203,7 @@ Proof.
         simpl Canon;  destruct i;reflexivity.
     + reflexivity.
 Qed.
-(*||*)
-(* end snippet HprimeExamples *)
+
 
 (** Let us note that the square of omega can be expressed through the
     Phi0 function *)
@@ -315,12 +322,12 @@ Proof.
   auto. 
 Qed.
 
-(* begin snippet HprimeOmegaTerm *)
+(* begin snippet HprimeOmegaTerm:: no-out *)
 
 Lemma H'_Omega_term (alpha : E0)  :
   forall i k, 
     H'_ (Omega_term alpha i) k =
-    iterate  (H'_ (phi0 alpha)) (S i) k. (* .no-out *)
+    iterate  (H'_ (phi0 alpha)) (S i) k. 
 (* end snippet HprimeOmegaTerm *)
 
 Proof.
@@ -378,11 +385,11 @@ Proof.
   - now apply H'_Phi0_succ_1.
 Qed.
 
-(* begin snippet HprimePhi0SI *)
+(* begin snippet HprimePhi0SI:: no-out *)
 
 Lemma H'_Phi0_Si : forall i k,
-    H'_ (phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. (* .no-out *)
-(*| .. coq:: none |*)
+    H'_ (phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
+(* end snippet HprimePhi0SI *)
 Proof with auto with E0.
   induction i.
   - simpl;  replace (phi0 (FinS 0)) with omega; auto;  orefl.   
@@ -390,68 +397,56 @@ Proof with auto with E0.
      rewrite H'_Phi0_succ, iterate_S_eqn.
      apply iterate_ext; auto.
 Qed.
-(*||*)
-(* end snippet HprimePhi0SI *)
 
-(* begin snippet HprimeOmegaCube *)
+(* begin snippet HprimeOmegaCube:: no-out *)
 Lemma H'_omega_cube : forall k,
-    H'_ (phi0 3)%e0 k = iterate (H'_ (phi0 2)) (S k) k. (* .no-out *)
-(*| .. coq:: none |*)
+    H'_ (phi0 3)%e0 k = iterate (H'_ (phi0 2)) (S k) k. 
+(* end snippet HprimeOmegaCube *)
 Proof.
   intro k; rewrite <- FinS_eq, -> FinS_Succ_eq, H'_Phi0_succ; auto.
 Qed.
-(*||*)
-(* end snippet HprimeOmegaCube *)
 
 Section H'_omega_cube_3.
   
-(* begin snippet HprimeOmegaCube3a *)
+(* begin snippet HprimeOmegaCube3a:: no-out *)
 
   Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
 
-  Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k. (* .no-out *)
-  (*| .. coq:: none |*)
-  Proof.
+  Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k. 
+   Proof.
     ochange (phi0 3) (phi0 (Succ 2)); rewrite H'_Phi0_succ.
     unfold H'_succ_fun; apply iterate_ext.
     - intro x; now rewrite H'_omega_sqr.   
   Qed.
-  (*||*)
+ 
 
   (* end snippet HprimeOmegaCube3a *)
 
-  (* begin snippet HprimeOmegaCube3b *)
+  (* begin snippet HprimeOmegaCube3b:: no-out *)
   
-  Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). (* .no-out *)
-  (*| .. coq:: none |*)
-  Proof.  rewrite R0; reflexivity.   Qed.
-  (*||*)
+  Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). 
+   Proof.  rewrite R0; reflexivity.   Qed.
+ 
   (* end snippet HprimeOmegaCube3b *)
   
-  (* begin snippet HprimeOmegaCube3c *)
+  (* begin snippet HprimeOmegaCube3c:: no-out *)
   
   Let N := (exp2 64 * 64 - 1)%nat.
   (* end snippet HprimeOmegaCube3c *)
-  
-  (*
-# (2.0 ** 64.0 *. 64.0 -. 1.0);; 
-- : float = 1.1805916207174113e+21
-   *)
 
-  (* begin snippet HprimeOmegaCube3d *)
-
-  (*| .. coq:: no-out |*)
+  (* begin snippet  HprimeOmegaCube3d:: no-out *)
   
   Fact F1 : H'_ (phi0 3) 3 = f (f N).
   Proof.
     rewrite F0; reflexivity. 
   Qed.
 
-
   Lemma F1_simpl :
     H'_ (phi0 3) 3 =
     (exp2 (exp2 (S N) * S N) * (exp2 (S N) * S N) - 1)%nat.
-   (*||*) (*| .. coq:: none |*)
+  
+ (* end snippet HprimeOmegaCube3d *)
+  
   Proof.
     rewrite F1; unfold f.
     assert (forall k,  k <> 0 -> (S  (k -1) = k)%nat) by lia.
@@ -461,12 +456,11 @@ Section H'_omega_cube_3.
       + apply  exp2_not_zero.
       + discriminate.
   Qed.
-  (*||*)
 
   
 End H'_omega_cube_3.
 
-(* end snippet HprimeOmegaCube3d *)
+
 
 (* begin snippet HprimePhi0Omega *)
 
@@ -481,7 +475,7 @@ Qed.
 (*||*)
 (* end snippet HprimePhi0Omega *)
 
-(* begin snippet HprimePhi0OmegaClosed *)
+(* begin snippet HprimePhi0OmegaClosed:: no-out *)
 
 Lemma H'_Phi0_omega_closed_formula k :
   H'_ (phi0 omega) k =
@@ -489,15 +483,13 @@ Lemma H'_Phi0_omega_closed_formula k :
              iterate f (S l) l)
           k
           (fun k : nat => S (2 * k)%nat)
-          k. (* .no-out *)
-Proof. (* .no-out *)
-(*| .. coq:: none |*)  
+          k. 
+(* end snippet HprimePhi0OmegaClosed *)
+Proof. 
   rewrite H'_Phi0_omega; unfold H'_succ_fun; apply iterate_ext2.
   - intro; now rewrite H'_omega. 
   - intros; now apply iterate_ext.  
 Qed.
-(*||*)
-(* end snippet HprimePhi0OmegaClosed *)
 
 Lemma H'_omega_sqr_min : forall k,  0 <> k ->
                                     (exp2 (S k) <= H'_ (phi0 2) k)%nat.
@@ -523,23 +515,21 @@ Proof.
       +  abstract lia.
 Qed.
 
-(* begin snippet HprimeNonMono1 *)
-
+(* begin snippet HprimeNonMono1:: no-out *)
 Remark H'_non_mono1 :
   ~ (forall alpha beta k,
         (alpha o<= beta)%e0 ->
-        (H'_ alpha k <= H'_ beta k)%nat). (* .no-out *)
-Proof. (* .no-out *)
-  intros H ;specialize (H 42 omega 3). (* .no-out *)
+        (H'_ alpha k <= H'_ beta k)%nat). 
+Proof. 
+  intros H ;specialize (H 42 omega 3). 
   (* ... *)
-  (*| .. coq:: none |*)
+(* end snippet HprimeNonMono1 *)
   assert (H0 :(42 o<= omega)%e0).
   { repeat split; auto.  
     compute. now left. }
   apply H in H0; rewrite H'_Fin, H'_omega  in H0; abstract lia.
-  (*||*)
 Qed.
-(* end snippet HprimeNonMono1 *)
+
 
 (* begin snippet PAP *)
 

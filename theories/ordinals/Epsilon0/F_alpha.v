@@ -50,10 +50,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 
 
 
-(* begin snippet goodDef *)
-
-(*| .. coq:: no-out |*)
-
+(* begin snippet goodDefa:: no-out *)
 Definition call_lt (c c' : E0 * nat) :=
   lexico Lt (Peano.lt) c c'.
 
@@ -64,7 +61,6 @@ Lemma call_lt_wf : well_founded call_lt.
 Qed.
 
 Instance WF : WellFounded call_lt := call_lt_wf.
-
 
 (*  F_star (alpha,i) is intended to be the i-th iterate of F_ alpha *)
 
@@ -80,7 +76,8 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
               F_star (Pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
     F_star (alpha, 1) (F_star (alpha, (S n)) i).
-(*||*) (*| .. coq:: none |*)
+(* end snippet goodDefa *)
+
 
 Next Obligation.
   left; cbn ; auto with E0. 
@@ -98,13 +95,9 @@ Next Obligation.
   right; cbn; auto with arith.
 Defined.
 
-(*||*) (*| .. coq:: no-out |*)
-
+(* begin snippet goodDefb *)
 Definition F_ alpha i := F_star (alpha, 1) i.
-
-(*||*)
-
-(* end snippet goodDef *)
+(* end snippet goodDefb *)
 
 (** ** We get the "usual" equations for [F_]  *)
 

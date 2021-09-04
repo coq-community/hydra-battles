@@ -387,13 +387,13 @@ Lemma L_S_succ_rw i : forall k,  L_fin (S i) k = L_succ (L_fin i) k.
 Proof. unfold L_succ, L_fin; intros; abstract lia.
 Qed.
 
-(* begin snippet LFinOk *)
-
-Lemma L_fin_ok i : L_spec (fin i) (L_fin i). (* .no-out *)
-Proof. (* .no-out *)
+(* begin snippet LFinOk:: no-out *)
+Lemma L_fin_ok i : L_spec (fin i) (L_fin i). 
+Proof. 
   induction i.
-  (* ... *) (* .no-out *)
-  (*| .. coq:: none |*)
+  (* ... *)
+  (* end snippet LFinOk *)
+
   - left; reflexivity.
   -  apply L_spec_compat with (L_succ (L_fin i)).
      change (fin (S i)) with (FS i); rewrite <- succ_compat.
@@ -407,9 +407,8 @@ Proof. (* .no-out *)
      + apply L_succ_ok; auto with T1.
        apply  L_finS_S_le.
      + intros ; unfold L_fin, L_succ; abstract lia.
-       (*||*)
   Qed.
-(* end snippet LFinOk *)
+
 
 Lemma mlarge_FS :
   forall i k,  mlarge (FS i) (interval (S k) (S (i+k)%nat)). 
@@ -450,19 +449,17 @@ Proof.
   now replace ( (2 * S k))%nat with   (k + S (S k))%nat by lia.
 Qed.
 
-(* begin snippet LOmegaOk *)
-
-(*| .. coq:: no-out |*)
+(* begin snippet LOmegaOk:: no-out *)
 Lemma L_omega_ok : L_spec T1.omega L_omega.
 Proof.
-  specialize (L_lim_ok T1.omega nf_omega refl_equal L_fin
-                       (fun i => L_fin_ok (S i))) ; intro H.
-   eapply L_spec_compat with (1:=H).
+  specialize
+    (L_lim_ok T1.omega nf_omega refl_equal L_fin
+              (fun i => L_fin_ok (S i))); intro H.
+   eapply L_spec_compat with (1:=H); 
    intro ; unfold L_lim, L_fin, L_omega; abstract lia.
 Qed.
-(*||*)
 (* end snippet LOmegaOk *)
-
+ 
 (* begin snippet pathToOmegaMult *)
 
 Lemma path_to_omega_mult (i k:nat) :
@@ -573,9 +570,8 @@ Qed.
 
 (* begin snippet LOmegaSquare *)
 
-Definition L_omega_square k := iterate (fun z => S (2 * z)%nat)
-                                        k
-                                        (S k).
+Definition L_omega_square k :=
+  iterate (fun z => S (2 * z)%nat) k (S k).
 
 Compute L_omega_square 8.
 (* end snippet LOmegaSquare *)
@@ -657,25 +653,27 @@ Qed.
 (* begin snippet phi0Mult *)
 
 Section phi0_mult.
- Variables (alpha : T1) (f : nat -> nat).
- Hypotheses (Halpha : nf alpha)
-            (f_mono : strict_mono f)
-            (f_Sle : S <<= f)
-            (f_ok : L_spec (T1.phi0 alpha) f).
-
- (*| .. coq:: none |*)
+  
+  Variables (alpha : T1) (f : nat -> nat).
+  
+  Hypotheses (Halpha : nf alpha)
+             (f_mono : strict_mono f)
+             (f_Sle : S <<= f)
+             (f_ok : L_spec (T1.phi0 alpha) f).
+  
+  Definition L_phi0_mult i := iterate f i.
+(* end snippet phi0Mult *)
+  
  Remark f_ok_inv :
    forall k, mlarge (T1.phi0 alpha) (interval (S k) (Nat.pred (f (S k)))).
  Proof.
    inversion_clear f_ok; assumption.   
  Qed.
 
- (*||*)
-Definition L_phi0_mult i := iterate f i.
-
+(* begin snippet phi0MultOK:: no-out *)
 Lemma L_phi0_mult_ok i:
-  L_spec (ocons alpha i zero) (L_phi0_mult (S i)). (* .no-out *)
- (*| .. coq:: none |*)
+  L_spec (ocons alpha i zero) (L_phi0_mult (S i)).
+(* end snippet phi0MultOK *)
 Proof.
   induction i.
   - unfold L_phi0_mult; simpl. assumption.
@@ -692,17 +690,19 @@ Proof.
         --    generalize (iterate_Sge f  i f_Sle (f (S k)));
                 intro; rewrite iterate_rw; abstract lia.
 Qed.
-(*||*) (*| .. coq:: no-out |*)
+
 
 Lemma L_phi0_mult_smono i: strict_mono (L_phi0_mult i). 
 Proof.  now  apply iterate_mono. Qed.
+
+(* begin snippet phi0MultSLe:: no-out *)
 
 Lemma L_phi0_mult_Sle i: S <<=  L_phi0_mult (S i).
 Proof.   now apply iterate_Sge. Qed.
 
 End phi0_mult.
-(*||*)
-(* end snippet phi0Mult *)
+(* end snippet phi0MultSLe:: no-out *)
+
 
 (* begin snippet LOmegaSquareTimes *)
 
@@ -714,31 +714,26 @@ Lemma L_omega_square_times_ok i : L_spec (ocons 2 i zero)
                                          (L_omega_square_times (S i)).
 Proof.
   apply L_phi0_mult_ok.
-  -  auto with T1.
-  -  apply L_omega_square_Sle.
-  -  apply L_omega_square_ok.
+  - auto with T1.
+  - apply L_omega_square_Sle.
+  - apply L_omega_square_ok.
 Qed.
 (*||*)
 (* end snippet LOmegaSquareTimes *)
 
-(* begin snippet LOmegaCube *)
+(* begin snippet LOmegaCube:: no-out *)
 
 Definition L_omega_cube  := L_lim  L_omega_square_times .
 
-(*| .. coq:: no-out |*)
 Lemma L_omega_cube_ok : L_spec (T1.phi0 3) L_omega_cube.
 Proof.
-  unfold L_omega_cube.
-  apply L_lim_ok.
-  - auto with T1.
-  - auto with T1.
+  unfold L_omega_cube; apply L_lim_ok; auto with T1.
   - intro k; simpl canonS; apply L_omega_square_times_ok.
 Qed.
 
-Lemma L_omega_cube_eqn i : L_omega_cube i = L_omega_square_times i (S i).
-Proof.   reflexivity. Qed.
-(*||*)
-
+Lemma L_omega_cube_eqn i :
+  L_omega_cube i = L_omega_square_times i (S i).
+Proof. reflexivity. Qed.
 (* end snippet LOmegaCube *)
 
 Lemma exp2_k_mult_pos k:

@@ -68,7 +68,8 @@ Definition strict_mono f := forall n p,  n < p -> f n < f p.
 
 Definition strict_mono1 f := forall n p,  0 < n < p -> f n < f p.
 
-Definition dominates_from n g f  := forall p, n <= p -> f p < g p.
+Definition dominates_from n g f :=
+  forall p, n <= p -> f p < g p.
 
 Definition fun_le f g := forall n:nat, f n <=  g n.
 Infix "<<=" := fun_le (at level 60).

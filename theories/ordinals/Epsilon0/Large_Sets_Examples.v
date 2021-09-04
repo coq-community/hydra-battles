@@ -49,6 +49,7 @@ Compute pp (gnaw (T1.omega * T1.omega) (interval 6 70)).
 (* begin snippet gnawEx2 *)
 
 Compute  (gnaw (T1.omega * T1.omega) (interval 6 700)).
+Compute  (gnaw (T1.omega * T1.omega) (interval 6 699)).
 
 (* end snippet gnawEx2 *)
 
@@ -57,19 +58,20 @@ Compute pp (  gnaw (T1.omega * T1.omega) (interval 6 509)).
 
 Global Hint Resolve iota_from_lt_not_In: core.
 
-(* begin snippet Ex1Lemma *)
-
-(*| .. coq:: no-out |*)
+(* begin snippet Ex1Lemma:: no-out *)
 Example Ex1 : mlarge (T1.omega * T1.omega) (interval 6 510).
 Proof with try (auto with arith || discriminate ).
   unfold interval; simpl Peano.minus. 
   do 2 rewrite iota_from_unroll; rewrite mlarge_iff  ... 
   repeat rewrite not_in_cons ...  
 Qed.  
-(*||*)
 (* end snippet Ex1Lemma *)
 
-Compute large_set_check T1.omega 1 2.
+(* begin snippet Ex2Lemma:: no-out *)
+Example Ex2 : large (T1.omega * T1.omega) (interval 6 700).
+Proof.   reflexivity. Qed. 
+(* end snippet Ex2Lemma *)
+
 
 Compute large_set_check T1.omega 2 3.
 
