@@ -1044,23 +1044,25 @@ Proof.
   - right; apply le_lt_eq ; now left. 
 Defined.
 
-
-Instance epsilon0_pre_order : TotalDecPreOrder (leq lt).
+Instance epsilon0_pre_order : TotalPreOrder (leq lt).
 Proof.
-  do 2 split.
+  split; [split|].
   - intro x; apply le_refl.
   - red; apply le_trans.
   - intros a b.
     destruct (lt_le_dec a b).
     + now do 2 left.
     + now right.
-  - intros a b.
-    destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
-    + now do 2 left.
-    + subst; now left; right.
-    + right; now apply lt_not_ge.
 Defined.
 
+Instance epsilon0_dec : RelDecision (leq lt).
+Proof.
+intros a b.
+destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
++ now do 2 left.
++ subst; now left; right.
++ right; now apply lt_not_ge.
+Defined.
 
 Ltac auto_nf :=
   match goal with

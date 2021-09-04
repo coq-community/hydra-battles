@@ -3,24 +3,24 @@
 From hydras Require Export DecPreOrder.
 From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
 
-Instance Nat_le_TO : TotalDecPreOrder le .
+Instance Nat_le_dec : RelDecision le := le_dec.
+
+Instance Nat_le_TO : TotalPreOrder le.
 Proof.
  split.
  - apply Nat.le_preorder.
- - split.
- + intros a b; apply Nat.le_ge_cases. 
- + intros a b; apply le_dec. 
-Defined.
+ - intros a b; apply Nat.le_ge_cases.
+Qed.
 
-Instance Z_le_TO : TotalDecPreOrder Z.le .
-split. 
+Instance Z_le_dec : RelDecision Z.le := Z_le_dec.
+
+Instance Z_le_TO : TotalPreOrder Z.le.
+split.
 - apply Z.le_preorder.
-- split.
-  + intros a b; destruct (Z_le_gt_dec a b).
+- intros a b; destruct (Z_le_gt_dec a b).
     *  left;auto.
     *  right; auto with zarith.
- + intros a b;apply  Z_le_dec.   
-Defined.
+Qed.
 
 Import DecPreOrder.
 
@@ -36,20 +36,23 @@ Proof.
 Defined.
 
 
-Instance TotalDec_Inverse_fun {A B:Type}{f : A -> B}
-         {leB: relation B}{TB: TotalDecPreOrder leB} :
-                     TotalDecPreOrder (fun x y => leB (f x) (f y)).
+Instance Total_Inverse_fun {A B:Type}{f : A -> B}
+         {leB: relation B}{TB: TotalPreOrder leB} :
+                     TotalPreOrder (fun x y => leB (f x) (f y)).
 Proof.
 split.
 - apply Inverse_fun.
--  split. intros a b; destruct (left_right_dec (f a) (f b)).
+- intros a b.
+  destruct TB.
+  destruct (total_pre_order_total (f a) (f b)).
   + now left.
   + now right.
-  +   intros a b; destruct (dec_dec (f a) (f b)). 
-  *  now left.
-  * now right.
 Defined.
 
+Instance RelDecision_Inverse_fun {A B:Type}{f : A -> B}
+ {leB: relation B} {RDB : RelDecision leB} :
+  RelDecision (fun x y => leB (f x) (f y)) :=
+  fun x y => decide_rel leB (f x) (f y).
 
 (** Pre-order associated with inclusion *)
 
@@ -72,8 +75,8 @@ Infix "'<s'" := Included_s (at level 30).
   Lists (pre-ordered by their length) *)
 
 Instance  List_length {A:Type}: 
-   TotalDecPreOrder (fun l l' : list A => List.length l <= List.length l')%nat.
-apply TotalDec_Inverse_fun.
+   TotalPreOrder (fun l l' : list A => List.length l <= List.length l')%nat.
+apply Total_Inverse_fun.
 Defined.
 
 (** Non dependent lexicographic product *)
@@ -82,11 +85,13 @@ Section lexprod.
  Variables (A B : Type)
            (leA : relation A) 
            (leB : relation B).
- Context (TA : TotalDecPreOrder leA)
-         (TB : TotalDecPreOrder leB).
+ Context (TA : TotalPreOrder leA)
+         (TB : TotalPreOrder leB)
+         (DA : RelDecision leA)
+         (DB : RelDecision leB).
  
- Definition PA := @total_dec_pre_order A leA TA. 
- Definition PB := @total_dec_pre_order B leB TB.
+ Definition PA := @total_pre_order_pre A leA TA.
+ Definition PB := @total_pre_order_pre B leB TB.
  
  
 Notation "x '<=A' y" := (leA x y) (at level 70, no associativity).
@@ -172,54 +177,55 @@ Proof.
   apply (@lt_irreflexive _ _ PA a).
   apply DecPreOrder.lt_le_trans with a'; auto.
   apply (lex_inv_left _ _ _ _ H0).
-Qed. 
+Qed.
 
-
-Global Instance To_lex_prod : TotalDecPreOrder lex_prod.
+Global Instance To_lex_prod : TotalPreOrder lex_prod.
 Proof.
   split.
   - apply PO_lex_prod.
-  -  split.
-  
-  +  intros x y; destruct x, y.
-     destruct (left_right_dec a a0).
-     * destruct (le_lt_equiv_dec _ _ a a0 l). 
-       { left;left;auto. }
-       { destruct (left_right_dec b b0).
-         { left;right;auto. }
-         { right; right;  simpl. now symmetry.
-           assumption.
-         }
-       }
-     *  destruct (le_lt_equiv_dec _ _ a0 a l). 
-        {  right;left. assumption.  }
-        { destruct (left_right_dec b0 b).
-           right; right;  simpl;  assumption. 
-           left;  right;[ now symmetry | assumption].
-        }
-  + intros x y; destruct x, y.
-    destruct (dec_dec a a0).
-    *  destruct (le_lt_equiv_dec _ _ a a0 l).
-       {     left;  left.   simpl. apply l0. }
-       {   destruct (dec_dec b b0).
-           {  left;auto.
-              constructor 2; simpl;auto.
-           }
-           {
-             right.      
-             inversion 1.
-             simpl in H0.
-             now destruct (equiv_not_lt  _ _  p).
-             simpl in *.
-             contradiction.
-           }
-       }
-    * right.
-      inversion 1.
-      simpl in H0.
-      destruct n;now apply le_lt_weak.
-      simpl in H0;destruct H0.
-      contradiction.
+  - destruct TA as [Apre Atot].
+    destruct TB as [Bpre Btot].
+    intros x y; destruct x, y.
+    destruct (Atot a a0) as [HAle|HAle].
+    * destruct (le_lt_equiv_dec a a0 HAle) as [Ha|Ha].
+      + left;left;auto.
+      + destruct (Btot b b0).
+        { left;right;auto. }
+        { right; right; simpl. now symmetry. assumption. }
+    * destruct (le_lt_equiv_dec a0 a HAle).
+      + right;left. assumption.
+      + destruct (Btot b0 b).
+        { right; right; simpl; assumption. }
+        { left;  right;[ now symmetry | assumption]. }
+Qed.
+
+Global Instance lex_prod_dec : RelDecision lex_prod.
+Proof.
+intros x y; destruct x, y.
+destruct (decide (leA a a0)) as [HAle|Hale].
+- destruct (le_lt_equiv_dec a a0 HAle) as [Ha|Ha].
+  * left;left;auto.
+  * destruct (decide (leB b b0)) as [HBle|HBle].
+    + left;right;auto.
+    + right; intro Hle.
+      contradict HBle.
+      destruct Hle as [Hle|Hle].
+      { simpl in Hle.
+        destruct Ha.
+        destruct Hle.
+        contradiction. }
+      { simpl in Hle.
+        simpl in H.
+        assumption. }
+- right. intro Hle.
+  destruct Hle as [Hle|Hle].
+  * simpl in Hle.
+    destruct Hle.
+    contradiction.
+  * simpl in Hle.
+    contradict Hale.
+    destruct Hle.
+    assumption.
 Defined.
 
 End lexprod.
