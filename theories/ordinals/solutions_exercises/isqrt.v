@@ -8,11 +8,9 @@ From hydras Require Import  primRec extEqualNat.
 From Coq Require Import Min ArithRing Lia Compare_dec Arith Lia.
 
 
-(* begin snippet boundedSearch3 *)
-
+(* begin snippet boundedSearch3:: no-out *)
 Lemma boundedSearch3 :
-  forall (P : naryRel 2) (b  : nat), boundedSearch P b <= b. (* .no-out *)
-
+  forall (P : naryRel 2) (b  : nat), boundedSearch P b <= b. 
 (* end snippet boundedSearch3 *)
 
 Proof.
@@ -23,13 +21,12 @@ Proof.
     case_eq (P b b0); auto.
 Qed.
 
-(* begin snippet boundedSearch4 *)
+(* begin snippet boundedSearch4:: no-out *)
 
 Lemma boundedSearch4 :
   forall (P : naryRel 2) (b  : nat),
     P b b = true ->
-    P b (boundedSearch P b) = true. (* .no-out *)
-
+    P b (boundedSearch P b) = true. 
 (* end snippet boundedSearch4 *)
 
 Proof.

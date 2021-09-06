@@ -56,7 +56,7 @@ Coercion fin  : nat >-> T2.
 
 Notation omega  := [zero,one].
 
-Notation epsilon0  := ([one,zero]).
+Notation epsilon0  := [one,zero].
 
 Definition epsilon alpha := [one, alpha].
 

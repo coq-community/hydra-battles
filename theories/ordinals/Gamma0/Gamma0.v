@@ -3620,191 +3620,190 @@ Module G0.
     apply H2; now destruct H1.
   Defined.
 
-(** ** Temporary compatibility  nf/nfb *)
+  (** ** Temporary compatibility  nf/nfb *)
 
-Lemma zero_nfb : nfb zero.
-Proof. reflexivity. Qed.
-
-
-
-Lemma nfb_a a b n c: nfb (gcons a b n c) -> nfb a.
-Proof. 
- cbn.
- destruct c.
- destruct (nfb b),  ( nfb a);cbn; auto.
- destruct (compare [c1, c2] [a, b]);try  discriminate.
-  destruct (nfb a); cbn; auto. 
-Qed.
-
-Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
-Proof.
-  induction gamma.
-  - cbn; split;auto.
-    constructor.  
-  - simpl; destruct gamma3; split.
-    + case_eq (nfb gamma1); case_eq (nfb gamma2); try discriminate;  
-        rewrite IHgamma1 , IHgamma2; try constructor; auto.
-    +  inversion_clear 1;  rewrite <- IHgamma1 in H0; rewrite <- IHgamma2 in H1.
-       now rewrite H0, H1.
-    + case_eq (compare [gamma3_1, gamma3_2] [gamma1, gamma2]); intro Hcompare;
-        try discriminate.
-      generalize (compare_Lt Hcompare).
-      constructor; auto.
-      apply andb_prop in H0; destruct H0.
-      apply andb_prop in H1; destruct H1.
-      tauto.
-      apply andb_prop in H0; destruct H0.
-      apply andb_prop in H1; destruct H1.
-      tauto.
-      apply andb_prop in H0; destruct H0.
-      apply andb_prop in H1; destruct H1.
-      tauto.
-    + inversion_clear 1.
-      apply compare_rw_lt in H0.    
-      rewrite H0.
-      rewrite <- IHgamma1 in H1; rewrite H1.
-      rewrite <- IHgamma2 in H2; rewrite H2.
-      rewrite <- IHgamma3 in H3; rewrite H3.
-      reflexivity.    
-Qed.
-
-Lemma nfb_proof_unicity :
-  forall (alpha:T2) (H H': nfb alpha), H = H'.
-Proof.
-  intros;  red in H, H';  apply Eqdep_dec.eq_proofs_unicity_on.
-  destruct y. 
-  - rewrite H; auto. 
-  - rewrite H; right; discriminate. 
-Qed.
-
-(* begin snippet G0b *)
-
-Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
-
-Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
-
-Definition compare alpha beta := compare (@vnf alpha) (@vnf beta).
-
-(* end snippet G0b *)
-
-
-Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
-Proof.
-  destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
-Qed.
-
-(* begin snippet ltSto *)
-
-Instance lt_sto : StrictOrder lt. (* .no-out *)
-(*| .. coq:: none |*)
-Proof.
-  split.
-  -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
-  -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
-Qed.
-(*||*)
-(* end snippet ltSto *)
-
-(* begin snippet ltWf *)
-
-Lemma lt_wf : well_founded lt. (* .no-out *)
-(*| .. coq:: none |*)
-Proof.
-  split; intros [t Ht] H.
-  eapply Acc_incl with (fun x y =>  LT (@vnf x) (@vnf y)).
-  intros x y H0;  apply lt_LT_incl; auto.
-  apply (Acc_inverse_image _ _ LT (@vnf) 
-                           {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
-Qed.
-(*||*)
-(* end snippet ltWf *)
-
-Lemma compare_correct alpha beta :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
-Proof.
-  destruct alpha, beta; cbn.
-  destruct (compare_correct vnf0 vnf1);subst. 
-  unfold compare; simpl.
-  -  rewrite compare_rw_eq; auto.
-   + constructor 1; f_equal; apply nfb_proof_unicity.
-  - unfold compare; rewrite compare_rw_lt; auto.
-  - unfold compare; rewrite compare_rw_gt; auto.
-Qed. 
-
-Instance zero : G0.
-Proof.
-  refine (@mkg0 T2.zero _);  now compute. 
-Defined.
-
-Instance Omega : G0.
-Proof.
-  exists omega. reflexivity. 
-Defined.
-
-Notation omega := Omega.
-
-Definition le := clos_refl G0 lt.
-
-(* begin snippet ONGamma0 *)
-
-Instance Gamma0_comp: Comparable lt compare. (* .no-out *)
-(*| .. coq:: none |*)
-Proof.
-  split. 
-  - apply lt_sto.
-  - apply compare_correct.
-Qed. 
-(*||*)
-
-Instance Gamma0: ON lt  compare. (* .no-out *)
-(*| .. coq:: none |*)
-Proof.
-  split.
-  - apply Gamma0_comp.
-  - apply lt_wf. 
-Qed.
-(*||*)
-(* end snippet ONGamma0 *)
+  Lemma zero_nfb : nfb zero.
+  Proof. reflexivity. Qed.
 
 
 
-Instance Finite (n:nat) : G0.
-Proof.
-  exists (fin n);  red; rewrite nfb_equiv;  apply nf_fin.
-Defined.
+  Lemma nfb_a a b n c: nfb (gcons a b n c) -> nfb a.
+  Proof. 
+    cbn.
+    destruct c.
+    destruct (nfb b),  ( nfb a);cbn; auto.
+    destruct (compare [c1, c2] [a, b]);try  discriminate.
+    destruct (nfb a); cbn; auto. 
+  Qed.
 
-Instance Plus (alpha beta : G0) : G0.
-Proof.
-  destruct alpha, beta. exists (vnf0 + vnf1).
-  red in vnf_ok0, vnf_ok1. red. 
-  rewrite nfb_equiv in *.
-  now apply plus_nf.
-Defined. 
+  Lemma nfb_equiv gamma : nfb gamma = true <-> nf gamma.
+  Proof.
+    induction gamma.
+    - cbn; split;auto.
+      constructor.  
+    - simpl; destruct gamma3; split.
+      + case_eq (nfb gamma1); case_eq (nfb gamma2); try discriminate;  
+          rewrite IHgamma1 , IHgamma2; try constructor; auto.
+      +  inversion_clear 1;  rewrite <- IHgamma1 in H0; rewrite <- IHgamma2 in H1.
+         now rewrite H0, H1.
+      + case_eq (compare [gamma3_1, gamma3_2] [gamma1, gamma2]); intro Hcompare;
+          try discriminate.
+        generalize (compare_Lt Hcompare).
+        constructor; auto.
+        apply andb_prop in H0; destruct H0.
+        apply andb_prop in H1; destruct H1.
+        tauto.
+        apply andb_prop in H0; destruct H0.
+        apply andb_prop in H1; destruct H1.
+        tauto.
+        apply andb_prop in H0; destruct H0.
+        apply andb_prop in H1; destruct H1.
+        tauto.
+      + inversion_clear 1.
+        apply compare_rw_lt in H0.    
+        rewrite H0.
+        rewrite <- IHgamma1 in H1; rewrite H1.
+        rewrite <- IHgamma2 in H2; rewrite H2.
+        rewrite <- IHgamma3 in H3; rewrite H3.
+        reflexivity.    
+  Qed.
 
-Infix "+" := Plus : g0_scope.
+  Lemma nfb_proof_unicity :
+    forall (alpha:T2) (H H': nfb alpha), H = H'.
+  Proof.
+    intros;  red in H, H';  apply Eqdep_dec.eq_proofs_unicity_on.
+    destruct y. 
+    - rewrite H; auto. 
+    - rewrite H; right; discriminate. 
+  Qed.
 
-Instance Phi (alpha beta : G0) : G0.
-Proof.
-  destruct alpha, beta. exists (phi vnf0 vnf1).
-  red in vnf_ok0, vnf_ok1. red. 
-  rewrite nfb_equiv in *.
-  now apply phi_nf.
-Defined.
+  (* begin snippet G0b *)
 
-Notation phi := Phi.
-Notation phi0 := (Phi zero).
-Notation "'omega^'" := phi0 (only parsing) : g0_scope.
+  Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
-Coercion Finite : nat >-> G0.
+  Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
 
-Local Open Scope g0_scope.
+  Definition compare alpha beta := compare (@vnf alpha) (@vnf beta).
 
-Example Ex42 : omega + 42 + omega^ 2 = omega^ 2.
-Proof.
-  now rewrite <- Comparable.compare_eq_iff.
-Qed.
-  
+  (* end snippet G0b *)
+
+
+  Lemma lt_LT_incl  alpha beta : lt alpha beta -> LT (@vnf alpha) (@vnf beta).
+  Proof.
+    destruct alpha, beta; split; auto; rewrite <- nfb_equiv; auto.
+  Qed.
+
+  (* begin snippet ltSto *)
+
+  Instance lt_sto : StrictOrder lt. (* .no-out *)
+  (*| .. coq:: none |*)
+  Proof.
+    split.
+    -  intro x; destruct x; unfold lt; simpl; apply lt_irr.
+    -  intros x y z; destruct x, y, z; unfold lt; simpl; apply lt_trans.
+  Qed.
+  (*||*)
+  (* end snippet ltSto *)
+
+  (* begin snippet ltWf *)
+
+  Lemma lt_wf : well_founded lt. (* .no-out *)
+  (*| .. coq:: none |*)
+  Proof.
+    split; intros [t Ht] H.
+    eapply Acc_incl with (fun x y =>  LT (@vnf x) (@vnf y)).
+    intros x y H0;  apply lt_LT_incl; auto.
+    apply (Acc_inverse_image _ _ LT (@vnf) 
+                             {| vnf := t; vnf_ok := Ht |} ),  Lt_wf. 
+  Qed.
+  (*||*)
+  (* end snippet ltWf *)
+
+  Lemma compare_correct alpha beta :
+    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+                (compare alpha beta).
+  Proof.
+    destruct alpha, beta; cbn.
+    destruct (compare_correct vnf0 vnf1);subst. 
+    unfold compare; simpl.
+    -  rewrite compare_rw_eq; auto.
+       + constructor 1; f_equal; apply nfb_proof_unicity.
+    - unfold compare; rewrite compare_rw_lt; auto.
+    - unfold compare; rewrite compare_rw_gt; auto.
+  Qed. 
+
+  Instance zero : G0.
+  Proof.
+    refine (@mkg0 T2.zero _);  now compute. 
+  Defined.
+
+  Instance Omega : G0.
+  Proof.
+    exists omega. reflexivity. 
+  Defined.
+
+  Notation omega := Omega.
+
+  Definition le := clos_refl G0 lt.
+
+  (* begin snippet ONGamma0 *)
+
+  Instance Gamma0_comp: Comparable lt compare. (* .no-out *)
+  (*| .. coq:: none |*)
+  Proof.
+    split. 
+    - apply lt_sto.
+    - apply compare_correct.
+  Qed. 
+  (*||*)
+
+  Instance Gamma0: ON lt  compare. (* .no-out *)
+  (*| .. coq:: none |*)
+  Proof.
+    split.
+    - apply Gamma0_comp.
+    - apply lt_wf. 
+  Qed.
+  (*||*)
+  (* end snippet ONGamma0 *)
+
+  Instance Finite (n:nat) : G0.
+  Proof.
+    exists (fin n);  red; rewrite nfb_equiv;  apply nf_fin.
+  Defined.
+
+  Instance Plus (alpha beta : G0) : G0.
+  Proof.
+    destruct alpha, beta. exists (vnf0 + vnf1).
+    red in vnf_ok0, vnf_ok1. red. 
+    rewrite nfb_equiv in *.
+    now apply plus_nf.
+  Defined. 
+
+  Infix "+" := Plus : g0_scope.
+
+  Instance Phi (alpha beta : G0) : G0.
+  Proof.
+    destruct alpha, beta. exists (phi vnf0 vnf1).
+    red in vnf_ok0, vnf_ok1. red. 
+    rewrite nfb_equiv in *.
+    now apply phi_nf.
+  Defined.
+
+  Notation phi := Phi.
+  Notation phi0 := (Phi zero).
+  Notation "'omega^'" := phi0 (only parsing) : g0_scope.
+
+  Coercion Finite : nat >-> G0.
+
+  Local Open Scope g0_scope.
+
+  Example Ex42 : omega + 42 + omega^ 2 = omega^ 2.
+  Proof.
+    now rewrite <- Comparable.compare_eq_iff.
+  Qed.
+
+  (* begin snippet G0z *)  
 End G0.
-
+(* end snippet G0z *)
 

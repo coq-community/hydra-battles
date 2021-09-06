@@ -232,7 +232,7 @@ Proof.
   - apply majorProjection.
 (*||*)
     
-  - (* .no-out *) destruct IHx, IHx0; red; exists (2 + max x0 x1). (* .no-out *)
+  - (* .no-out *) destruct IHx, IHx0; red; exists (2 + max x0 x1). 
 
     (* end snippet majorAnyPRa *)
     
@@ -254,7 +254,7 @@ Proof.
   (* begin snippet majorAnyPRb *)
   (*||*)
         
-  -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh]. (* .no-out *)
+  -  (* .no-out *)  destruct IHx1 as [r Hg]; destruct IHx2 as [s Hh]. 
 
 (*|
 .. coq:: none
@@ -327,11 +327,14 @@ Proof.
 
   (*||*)
   (* end snippet majorAnyPRb *)
-              
-   -  (* .no-out *) red;cbn;  red; exists 0. (* .none *)
+
+  (* begin snippet majorAnyPRVec *)
+  -   red;cbn;  red; exists 0. (* .none *)
     intro; rewrite Ack_0;  cbn; auto with arith. (* .none *)
-  - (* .no-out *) red; cbn; red; destruct IHx, IHx0; exists (max x0 x1).
-    intros v;  cbn; specialize (H0 v).
+    - red; cbn; red; destruct IHx, IHx0; exists (max x0 x1). (* .none *)
+  (* end snippet majorAnyPRVec *)
+
+  intros v;  cbn; specialize (H0 v).
     pose (X :=
             (max_v (map (fun f : naryFunc n => v_apply f v)
                         (evalPrimRecs n m p)))).

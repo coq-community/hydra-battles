@@ -409,7 +409,7 @@ Definition double (n:nat) := 2 * n.
 
 Lemma doubleIsPR : isPR 1 double. (* .no-out *)
 Proof. (* .no-out *)
-  unfold double; apply compose1_2IsPR. (* .no-out *)
+  unfold double; apply compose1_2IsPR. 
   (* end snippet doubleIsPRa *)
   
 (* begin snippet doubleIsPRb *)  

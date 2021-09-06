@@ -34,7 +34,6 @@ Definition proper_segment (A: Ensemble Ord) :=
 
 (* end snippet segmentDef *)
 
-(* TODO : use type classes *) 
 (* begin snippet orderingFunctionDef *)
 
 Class ordering_function (f : Ord -> Ord)
@@ -45,7 +44,6 @@ Class ordering_function (f : Ord -> Ord)
       OF_onto : forall b, In B b -> exists a, In A a /\ f a = b;
       OF_mono : forall a b, In A a -> In A b -> a < b -> f a < f b
     }. 
-
 
 Definition ordering_segment (A B : Ensemble Ord) :=
   exists f : Ord -> Ord, ordering_function f A B.
@@ -99,8 +97,7 @@ Proof with eauto with schutte.
   -  intros x H1; case (@well_order _  lt AX1 (fun x => ordinal x /\ ~ A x) x). 
      + auto.
      +  intros y Hy.
-        case Hy;intros H2 H3. red in H2.
-        destruct H2.
+        case Hy;intros H2 H3; destruct H2.
         exists y;split...
         * intros a H6; tricho a y T ...
           case H;auto.
@@ -111,7 +108,7 @@ Proof with eauto with schutte.
           red in H.
           specialize (H a y H6 T).
           contradiction.
-        *   red; unfold In;intros; apply NNPP.
+        *  red; unfold In;intros; apply NNPP.
           case Hy;  intros H7 H8 H10.  
           case (H8 x0 ).
           { red; split ... }
@@ -131,14 +128,14 @@ Qed.
 
 Lemma ordering_function_In f A B a :
    ordering_function f A B -> In A a -> In B (f a).
-Proof.  destruct 1; auto.  Qed.
+Proof. destruct 1; auto. Qed.
 
   
 Lemma ordering_function_mono (f : Ord -> Ord) (A B: Ensemble Ord) :
   ordering_function f A B ->
   forall alpha beta,
     In A alpha -> In A beta -> alpha < beta -> f alpha < f beta.
-Proof.  destruct 1 ;  tauto. Qed.
+Proof.  now destruct 1. Qed.
 
 Global Hint Resolve ordering_function_mono : schutte.
 
@@ -148,7 +145,7 @@ Lemma  ordering_function_mono_weak (f : Ord -> Ord) (A B: Ensemble Ord) :
 Proof.
  destruct 1 as [H H0 H1 H2].
  destruct 3.
- -  subst b;  left; auto with schutte.
+ -  subst b; left; auto with schutte.
  -  right;auto.
 Qed.
 
@@ -160,7 +157,7 @@ Proof.
   destruct 1 as [H H0 H1 H2];
     intros a b H3 H4 H5; tricho a b Ht; auto.
   - subst b; now destruct (@lt_irrefl (f a)).
-  - destruct (@lt_irrefl (f a)); apply lt_trans with (f b);auto.
+  - destruct (@lt_irrefl (f a)); apply lt_trans with (f b); auto.
 Qed.
 
 Global Hint Resolve ordering_function_monoR : schutte.
@@ -185,7 +182,7 @@ Lemma  ordering_function_mono_weakR :
 Proof with auto with schutte.
   intros f A B H a b H0 H1 H2.
   case H; intros H3 H4 H5 H6.
-  destruct H2 as [H2  | H2].
+  destruct H2 as [H2 | H2].
   case (Ordering_bijection H).
   intros H10 H11 H12 ; specialize (H12 a b H0 H1 )...
   -  right; eapply ordering_function_monoR; eauto.

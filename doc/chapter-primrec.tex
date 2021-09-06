@@ -372,18 +372,6 @@ multiplication with the identity and the constant function which returns $2$.
 \emph{Note that the lemma \texttt{const1\_NIsPR} considers this function as an unary function (unlike \texttt{const0\_NIsPR})}. 
 \input{movies/snippets/PrimRecExamples/doubleIsPRa}
 
-\begin{Coqanswer}
-3 subgoals (ID 184)
-  
-  ============================
-  isPR 1 (fun _ : nat => 2)
-
-subgoal 2 (ID 185) is:
- isPR 1 (fun x : nat => x)
-subgoal 3 (ID 186) is:
- isPR 2 Init.Nat.mul
-\end{Coqanswer}
-
 \input{movies/snippets/PrimRecExamples/doubleIsPRb}
 
 \index{primrec}{Exercises}
@@ -438,8 +426,7 @@ the associated constructor and projections are primitive recursive.
 
 Prove the following lemmas (which may help to solve the next  exercise).
 
-\input{movies/snippets/isqrt/boundedSearch3}
-\input{movies/snippets/isqrt/boundedSearch4}
+\inputsnippets{isqrt/boundedSearch3, isqrt/boundedSearch4}
 
 \textbf{Note:}  The function \texttt{boundedSearch} is defined
 in Library \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. 
@@ -680,65 +667,15 @@ The remaining cases are proved within a mutual  induction.
 
 \input{movies/snippets/AckNotPR/majorAnyPRa}
 
-\begin{Coqanswer}
- x : PrimRec m
- x0 : nat
- H : forall v : t nat n,
-   max_v (map (fun f : naryFunc n => v_apply f v)
-           (evalPrimRecs n m g)) <=
-   Ack x0 (max_v v)
- x1 : nat
- H0 : forall v : t nat m, v_apply (evalPrimRec m x) v <=
-                                  Ack x1 (max_v v)
-  ============================
-  forall v : t nat n,
-  v_apply (evalPrimRec n (composeFunc n m g x)) v <=
-  Ack (2 + Nat.max x0 x1) (max_v v)
 
-\end{Coqanswer}
 
 \input{movies/snippets/AckNotPR/majorAnyPRb}
 
-\begin{Coqanswer}
-  n : nat
-  x1 : PrimRec n
-  x2 : PrimRec (S (S n))
-  r : nat
-  Hg : forall v : t nat n,
-     v_apply (evalPrimRec n x1) v <= Ack r (max_v v)
-  s : nat
-  Hh : forall v : t nat (S (S n)),
-       v_apply (evalPrimRec (S (S n)) x2) v <= Ack s (max_v v)
-  ============================
-  majorizedPR (primRecFunc n x1 x2) Ack
-\end{Coqanswer}
 
-The las two goals deal with vectors of functions.
+The last two goals deal with vectors of functions.
 
-\begin{Coqanswer}
-1 subgoal (ID 289)
-  
-  n : nat
-  ============================
-  majorizedSPR (PRnil n) Ack
+\input{movies/snippets/AckNotPR/majorAnyPRVec}
 
-\end{Coqanswer}
-
-\begin{Coqanswer}
-1 subgoal (ID 296)
-  
-  n, m : nat
-  x : PrimRec n
-  p : PrimRecs n m
-  IHx : majorizedPR x Ack
-  IHx0 : majorizedSPR p Ack
-  ============================
-  majorizedSPR (PRcons n m x p) Ack
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Qed.
-\end{Coqsrc}
 
 \subsection{Looking for a contradiction}
 
