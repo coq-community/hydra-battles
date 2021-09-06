@@ -1057,12 +1057,13 @@ Defined.
 
 Instance epsilon0_dec : RelDecision (leq lt).
 Proof.
-intros a b.
-destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
-+ now do 2 left.
-+ subst; now left; right.
-+ right; now apply lt_not_ge.
+  intros a b.
+  destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
+  + now do 2 left.
+  + subst; now left; right.
+  + right; now apply lt_not_ge.
 Defined.
+
 
 Ltac auto_nf :=
   match goal with

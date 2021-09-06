@@ -19,43 +19,36 @@ Global Hint Unfold In : core.
 Section the_context.
 
   (* begin snippet MDecl *)
-  
   Variables (M:Type)
             (Lt : relation M).
 
-  (* end snippet MDecl *)
-  
   Definition Le (a b:M) :=  a = b \/ Lt a b.
   
-  (* begin snippet leastMemberDef *)
-  
-  Definition least_member  (X:Ensemble M)(a:M) :=
+  Definition least_member  (X:Ensemble M) (a:M) :=
     In X a /\ forall x,  In X x -> Le a x.
-  (* end snippet leastMemberDef *)
-
+  (* end snippet MDecl *)
+  
   Definition least_fixpoint (f : M -> M) (x:M) :=
     f x = x /\ forall y: M,  f y = y -> Le x y.
   
   (** Well Ordering *)
   
   (* begin snippet WODef *)
-  
   Class WO : Type:=
     {
-      Lt_trans : Transitive  Lt;
-      Lt_irreflexive : forall a:M, ~ Lt a a;
-      well_order : forall (X:Ensemble M)(a:M),
-          In X a ->
-          exists a0:M, least_member  X a0
+    Lt_trans : Transitive  Lt;
+    Lt_irreflexive : forall a:M, ~ Lt a a;
+    well_order : forall (X:Ensemble M)(a:M),
+        In X a ->
+        exists a0:M, least_member  X a0
     }.
-
-   (* end snippet WODef *)
+  (* end snippet WODef *)
   
   (* Some derived properties of well ordered sets *)
   
   Section About_WO.
     Context (Wo : WO).
- 
+    
     Lemma  Lt_connect : forall a b,  Lt a b \/ a = b \/ Lt b a.
     Proof.
       intros a b ; generalize (well_order  (Couple _ a b) a ).
@@ -66,7 +59,7 @@ Section the_context.
          +  destruct (H3 b);auto; now right.
          +  destruct (H3 a);auto; now left.       
     Qed.
- 
+    
     Lemma Le_refl : forall x:M, Le x x.
     Proof.
       red;unfold Le;auto.
@@ -137,7 +130,7 @@ Section the_context.
     
     Theorem least_member_ex_unique :
       forall   X  x 
-              (inhX: In X x), 
+               (inhX: In X x), 
       exists! a,  least_member  X a.
     Proof.
       intros;destruct (well_order X x); auto.
@@ -168,8 +161,8 @@ Definition the_least {M: Type} {Lt}
 (* end snippet theLeast *)
 
 Lemma  the_least_unicity {M: Type} {Lt}
-           {inh : InH M} {WO: WO Lt} (X: Ensemble M)
-        (HX: Inhabited _ X ) 
+       {inh : InH M} {WO: WO Lt} (X: Ensemble M)
+       (HX: Inhabited _ X ) 
   : exists! l , least_member   Lt X l.
 Proof.
   destruct HX as [x Hx].
@@ -190,8 +183,8 @@ split.
    + apply lt_wf.
    + intros;
        destruct (classic (least_member lt X x)).
-    * exists x; auto.
-    * unfold least_member in H1;     destruct (not_and_or _ _ H1).
+     * exists x; auto.
+     * unfold least_member in H1;     destruct (not_and_or _ _ H1).
        contradiction.
        destruct (not_all_ex_not _ _ H2).     
        destruct (imply_to_and _ _ H3).
@@ -200,9 +193,9 @@ split.
          - destruct s; auto.
            + subst x0; unfold Le in H5.
              destruct H5; auto.
-             - destruct H5; now right.
-         }
+         - destruct H5; now right.
+       }
        destruct (H x0 H6 H4);  exists x1;  auto.
 Qed.
 
-   
+

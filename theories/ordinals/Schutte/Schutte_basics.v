@@ -909,26 +909,25 @@ Qed.
 
 (** ** Properties of omega *)
 
-(* begin snippet omegaProps *)
-
-Lemma finite_lt_omega (i : nat) : i < omega. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet omegaPropsa:: no-out *)
+Lemma finite_lt_omega (i : nat) : i < omega. 
+(* end snippet omegaPropsa *)
 Proof.
    intros; apply lt_omega_limit; auto with schutte.
 Qed.
-(*||*)
 
 
-Lemma zero_lt_omega : zero < omega. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet omegaPropsb:: no-out *)
+Lemma zero_lt_omega : zero < omega. 
 Proof.
   change zero with (F 0); apply finite_lt_omega.
 Qed.
-(*||*)
+(* end snippet omegaPropsb *)
 
+(* begin snippet omegaPropsc:: no-out *)
 Lemma lt_omega_finite (alpha : Ord) :
-  alpha < omega ->  exists i:nat, alpha = i. (* .no-out *)
-(*| .. coq:: none |*)
+  alpha < omega ->  exists i:nat, alpha = i. 
+(* end snippet omegaPropsc *)
 Proof.
   intro H0; unfold omega_limit in H0.
   generalize (lt_sup_exists_leq (X:=(seq_range finite))  ).
@@ -943,10 +942,10 @@ Proof.
   - destruct  (finite_lt_inv x0 H);auto.
     exists x; tauto.
 Qed.
-(*||*)
 
-Lemma is_limit_omega : is_limit omega. (* .no-out *)
-(*| .. coq:: none |*)
+(* begin snippet omegaPropsd:: no-out *)
+Lemma is_limit_omega : is_limit omega. 
+(* end snippet omegaPropsd *)
 Proof.
   repeat split; auto with schutte.
   - intro H;  absurd (F 1 < zero).
@@ -961,9 +960,6 @@ Proof.
   pattern omega at 1;rewrite H0;auto with schutte.
   apply finite_lt_omega;auto with schutte.
 Qed.
-(*||*)
-
-(* end snippet omegaProps *)
 
 
 (** ** About zero, is_succ and is_limit *)
@@ -1106,25 +1102,23 @@ Qed.
 
 Module iota_demo.
 
-  (* begin snippet iotaDemo *)
-
-  (*| .. coq:: no-out |*)
-
+  (* begin snippet iotaDemoa:: no-out  *)
   Remark R : exists! z : Ord, least_member lt  ordinal z.
-  (*||*) (*| .. coq:: none |*)
   Proof.
-    destruct inh_Ord as [a ];  apply least_member_ex_unique with a. 
+    destruct inh_Ord as [a ];
+      apply least_member_ex_unique with a. 
     - apply AX1. 
     - split.
   Qed.
-  (*||*)
+  (* end snippet iotaDemoa *)
 
+ (* begin snippet iotaDemob *)
   Definition zero : Ord. (* .no-out *)
   Proof. (* .no-out *)
     Fail destruct R.
   Abort.
 
-  (* end snippet iotaDemo *)
+  (* end snippet iotaDemob *)
 
 (* end hide *)
 
@@ -1136,19 +1130,20 @@ Proof.
   destruct 1 as [_ H]; apply H; split.
 Qed.
 
-(* begin snippet BadBottoma *)
+(* begin snippet BadBottoma:: no-out *)
 Module Bad.
   
   Definition bottom := the_least (Empty_set Ord).
 (* end snippet BadBottoma *)
 
-  (* begin snippet trivialProps *) (*| .. coq:: no-out |*) 
+  (* begin snippet trivialProps:: no-out *) 
   Lemma le_zero_bottom : zero <= bottom. 
   Proof. apply zero_le. Qed.
 
   Lemma bottom_eq : bottom = bottom.
   Proof. trivial. Qed.
-  (*||*) (* end snippet trivialProps *)
+  (* end snippet trivialProps *)
+  
   (* begin snippet Failure *)
   Lemma le_bottom_zero : bottom <= zero. (* .no-out *)
   Proof. (* .no-out *)
