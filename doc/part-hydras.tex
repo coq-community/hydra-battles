@@ -5683,35 +5683,69 @@ In order to respect Schütte's style, we imported also the library
 how Hilbert's choice operator and Church's definite description allow us
  to write understandable definitions (close to the mathematical natural language).
 
-\subsection{The definition of zero}
+\subsubsection{The definition of zero}
 
 According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique. We would like to call this element  \texttt{zero}.
 
-\input{movies/snippets/Schutte_basics/iotaDemoa}
-\input{movies/snippets/Schutte_basics/iotaDemob}
+\input{movies/snippets/Schutte_basics/iotaDemo}
 
 
-Indeed, the logic of  \coq{} does not allow us to eliminate a proof of a proposition 
+
+
+
+Indeed, the basic logic of  \coq{} does not allow us to eliminate a proof of a proposition 
 $\exists!\,x:A,\,P(x)$ for building a term whose type lies in the sort \texttt{Type}. 
 The reasons for this impossibility are explained in many documents~\cite{BC04, chlipalacpdt2011, Coq}.
 
 Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom and lemmas.
 
-\inputsnippets{MoreEpsilonIota/EpsilonStatement}
 
-\emph{Hilbert's $\epsilon$ operator} is derived from this  axiom.
+\begin{Coqsrc}
+Axiom epsilon_statement:
+  forall (A : Type) (P : A->Prop), inhabited A ->
+    {x : A | (exists x, P x) -> P x}.
+\end{Coqsrc}
 
-\inputsnippets{MoreEpsilonIota/EpsilonDef}
+Hilbert's $\epsilon$ \emph{operator} is derived from this  axiom.
+
+\begin{Coqsrc}
+Definition epsilon (A : Type) (i:inhabited A) (P : A->Prop) : A
+  := proj1_sig (epsilon_statement P i).
+
+Lemma constructive_indefinite_description :
+  forall (A : Type) (P : A->Prop),
+    (exists x, P x) -> { x : A | P x }.
+\end{Coqsrc}
+
 
 
 
 If we consider the \emph{unique existential} quantifier $\exists!$, we obtain
 Church's \emph{definite description operator}.
 
-\inputsnippets{MoreEpsilonIota/IotaDef}
+\begin{Coqsrc}
+Definition iota (A : Type) (i:inhabited A) (P : A->Prop) : A
+  := proj1_sig (iota_statement P i).
+\end{Coqsrc}
 
 
-Indeed, the operators \texttt{epsilon} and \texttt{iota} allow us to write formal definitions close to Schütte's text. Our libraries \href{../theories/html/hydras.Schutte.MoreEpsilonIota.html}%
+\begin{Coqsrc}
+ Lemma constructive_definite_description :
+  forall (A : Type) (P : A->Prop),
+    (exists! x, P x) -> { x : A | P x }.
+\end{Coqsrc}
+
+
+\begin{Coqsrc}
+Definition iota_spec (A : Type) (i:inhabited A) (P : A->Prop) :
+  (exists! x:A, P x) -> P (iota i P)
+  := proj2_sig (iota_statement P i).
+\end{Coqsrc}
+
+
+
+Indeed, the operators \texttt{epsilon} and \texttt{iota} allowed us to make our definitions 
+quite close to Schütte's text. Our libraries \href{../theories/html/hydras.Schutte.MoreEpsilonIota.html}%
 {\texttt{Schutte.MoreEpsilonIota}}
 and
 \href{../theories/html/hydras.Schutte.PartialFun.html}%
@@ -5736,6 +5770,7 @@ we define a function returning the least element of any [non-empty]  subset.
 \emph{From Module\href{../theories/html/hydras.Schutte.Well_Orders.html}%
   {\texttt{Schutte.Well\_Orders}}}
 
+\input{movies/snippets/Well_Orders/leastMemberDef}
 \input{movies/snippets/Well_Orders/theLeast}
 
 
@@ -5766,7 +5801,7 @@ Let us consider an example:
 \input{movies/snippets/Schutte_basics/BadBottoma}
 
 Since we won't be able to prove the proposition
-\linebreak \Verb|exists! a: Ord, least_member (Empty_set Ord) a|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
+\linebreak \Verb|{exists! a: Ord, least_member (Empty_set Ord) a|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
 \emph{i.e.}, satisfied by \emph{any} element of type \texttt{Ord}, like for instance
 \texttt{bottom = bottom}, or \texttt{zero <= bottom}.
 
@@ -5833,7 +5868,7 @@ We can ``uncap'' the description operator for proving properties of the
 
 \section{Finite ordinals}
 
-Using \texttt{succ}, it is now easy to define recursively the set of the  finite ordinals.
+Using \texttt{succ}, it is now easy to define recursively all the finite ordinals.
 
 \label{sect:notation-F-sch}
 
@@ -5868,10 +5903,7 @@ Among the numerous properties of the ordinal $\omega$, let us quote the followin
 (proved in Module 
 \href{../theories/html/hydras.Schutte.Schutte_basics.html\#finite_lt_omega}{\texttt{Schutte.Schutte\_basics}})
 
-\input{movies/snippets/Schutte_basics/omegaPropsa}
-\input{movies/snippets/Schutte_basics/omegaPropsb}
-\input{movies/snippets/Schutte_basics/omegaPropsc}
-\input{movies/snippets/Schutte_basics/omegaPropsd}
+\input{movies/snippets/Schutte_basics/omegaProps}
 
 
 
@@ -5907,10 +5939,6 @@ Our definition in \coq{} is a direct translation of the mathematical text of~\ci
 
 \index{maths}{Ordinal numbers!Ordering functions}
 \index{hydras}{Library Schutte!Predicates!ordering function@ordering\_function}
-
-\begin{todo}
-Define \texttt{ordering\_function} as a type class !
-\end{todo}
 
 
 \input{movies/snippets/Ordering_Functions/orderingFunctionDef}
@@ -5958,13 +5986,7 @@ In other words,  $\alpha + \beta$ is the  $\beta$-th ordinal greater than or equ
 Thanks to generic properties of ordering functions, we can show the following 
 properties of addition on $\mathbb{O}$. First, we prove a useful lemma:
 
-\begin{Coqsrc}
-Lemma plus_elim (alpha : Ord) :
-  forall P : (Ord->Ord)->Prop,
-    (forall f: Ord->Ord, 
-        ordering_function f ordinal (ge alpha)-> P f) ->
-    P (plus alpha).
-\end{Coqsrc}
+\input{movies/snippets/Addition/plusElim}
 
 As a use-case, let us prove that $0$ is a right neutral element of $+$.
 
@@ -6155,8 +6177,8 @@ For instance,  we prove that $\textit{Cr}(0)$ is the set of additive principals 
 belongs to $\textit{Cr}(1)$.
 
 
-\input{movies/snippets/Critical/CrZeroAP}
-\input{movies/snippets/Critical/epsilon0Cr1}
+\inputsnippets{Critical/CrZeroAP,
+  Critical/epsilon0Cr1}
 
 
 \index{hydras}{Exercises}
@@ -6228,9 +6250,7 @@ By transfinite induction on $\alpha$, we prove that every countable ordinal $\al
 By structural induction on lists, we prove that this normal form is unique.
 
 
-\input{movies/snippets/CNF/cnfUnicity}
-
-\input{movies/snippets/CNF/cnfExUnique}
+\inputsnippets{CNF/cnfUnicity,CNF/cnfExUnique}
 
 
 

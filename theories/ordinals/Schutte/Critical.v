@@ -184,8 +184,7 @@ Lemma A_Cr (alpha beta:Ord) : In (A_ alpha) beta ->  phi alpha beta = beta ->
                              In (Cr alpha) beta.
   unfold A_; intros H H0; rewrite <- H0.
   unfold phi; destruct (ord_ok (Cr alpha)).
-  decompose [and] H2.
-  specialize (H3 _ H); auto.
+  specialize (OF_total _ H); auto.
 Qed.
 
 Lemma Cr_lt : forall alpha beta,

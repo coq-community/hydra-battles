@@ -203,13 +203,13 @@ Proof with trivial.
  generalize (@lt_succ_le (plus_alpha  beta) (plus_alpha  (succ beta))).
  intros H2.
  generalize (H2 H1);  intro H5; case (le_disj H5) ; auto. 
- intro H6;case Hp;intros H7 H8; decompose [and] H8.
- case (H3 (succ (plus_alpha beta))).
+ intro H6;case Hp;intros H H3 H4 H7.
+ case (H4 (succ (plus_alpha beta))).
  -  red; apply le_trans with (plus_alpha  beta).
    +  generalize (H beta );  unfold In,  ge;  auto.
-      intro H9; apply H9; split.
+      intro H9. apply H3. auto.  split.
    +  right; apply lt_succ;  auto.
- -  intros x [Hx Ex]; clear H8; absurd ( beta < x /\ x < succ beta).
+ -  intros x [Hx Ex].  absurd ( beta < x /\ x < succ beta).
     + intro H8; decompose [and] H8;clear H8.
       assert (H8: succ beta <= x) by (apply lt_succ_le; eauto with schutte).
       case (@lt_irrefl (succ beta)).
@@ -337,9 +337,9 @@ Lemma minus_exists (alpha beta : Ord) :
   exists gamma, alpha + gamma = beta.
 Proof.
  intro H; pattern (plus alpha); apply plus_elim;auto.
- intros f H2; case H2;intros H3 H4; decompose [and] H4; clear H4.
+ intros f H2; case H2;intros H3 H4 H5 H6.
  case (H5 beta H).  intros;exists x;auto.
- now destruct H1.
+ now destruct H0.
 Qed.
 
 

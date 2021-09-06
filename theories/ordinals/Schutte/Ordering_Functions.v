@@ -690,17 +690,17 @@ Lemma g_1_of : ordering_function g_1 (image B g) B.
 Proof.
  split.
  -  apply L3a.
- - repeat split; auto.
-  +   destruct 1 as [x [H0 H1]]. rewrite <- H1.
+ - 
+   destruct 1 as [x [H0 H1]]. rewrite <- H1.
       replace (g_1 (g x)) with x;  auto.
       symmetry;unfold g_1;eapply inv_compose;eauto.
       auto with schutte.
- + intros b H;  exists (g b);  split;auto.
-   *  exists b;  split;auto.
-   *  unfold g_1;eapply inv_compose;eauto.
+ - intros b H;  exists (g b);  split;auto.
+   +  exists b;  split;auto.
+   +  unfold g_1;eapply inv_compose;eauto.
       auto with schutte.
- +  intros;  tricho (g_1 a) (g_1 b) Hab; auto with schutte.
-    * case g_1_bij; intros.
+  -  intros;  tricho (g_1 a) (g_1 b) Hab; auto with schutte.
+    + case g_1_bij; intros.
       generalize (H2 a H).
       case g_1_bij; intros.
       generalize (H2 b H0).
@@ -710,7 +710,7 @@ Proof.
       case (@lt_irrefl _ H1).
       unfold g_1;  apply inv_composeR;  auto with schutte.
       unfold g_1;  apply inv_composeR;  auto with schutte.
-    *  case (le_not_gt (a:=a)(b:= b));  auto with schutte.
+    +  case (le_not_gt (a:=a)(b:= b));  auto with schutte.
        replace a with (g (g_1 a));
          replace b with (g (g_1 b)) .
        apply g_mono;auto with schutte.
@@ -973,10 +973,10 @@ Section verso.
  Proof.
    apply  B_closed.
    -  red;red;  destruct 1.
-      case f_ord; intros _ (_,(H2,_)).
+      case f_ord. intros H0 H1 H2 H3. 
       case H;intros; subst x; destruct f_ord.
       decompose [and] H3.
-      apply H4; apply U_inc_A;auto. 
+      apply OF_total0. apply U_inc_A;auto. 
    -  case U_non_empty;intros x H;  exists (f x);auto.
       exists x;auto.
    - apply R1_aux.
@@ -984,16 +984,14 @@ Section verso.
 
 Remark R3: exists alpha, In A alpha /\ f alpha = |_|  (image U f).
 Proof.
- case f_ord.
- intros H H0;  decompose [and] H0.
-  case (H3 (|_|image U f)).
+ case f_ord; intros H H0 H1 H2.
+  case (H1 (|_|image U f)).
   -  apply R2.
   -  intros x; exists x;auto.
 Qed.
 
 Let alpha_ : Ord :=
   (epsilon inh_Ord (fun alpha =>  In A alpha /\ f alpha = sup(image U f))).
-
 
 
 Lemma alpha_A :   In A alpha_.
@@ -1027,12 +1025,12 @@ Proof with eauto with schutte.
     *  apply U_inc_A;auto.
     * apply alpha_A.
     *  case H0;auto.
- -  right; case f_ord; intros _ H1; decompose [and] H1.
+ -  right; case f_ord; intros _ H1 H2 H3.
     tricho khi alpha_ H7; auto.
    +    subst khi; case (@lt_irrefl _ H0).
    + case (@lt_irrefl (f alpha_));auto.
      apply lt_trans with (f khi); auto.
-     * apply H5; auto.
+     * apply H3; auto.
       apply alpha_A;  auto.
 Qed.
 
@@ -1042,10 +1040,6 @@ Local Hint Resolve  alpha_A : schutte.
 Remark R7 : |_| U <= alpha_ .
 Proof. 
  apply sup_least_upper_bound; trivial.
- (*-  intros y H;  destruct f_ord as [H0 H1].
-    destruct H0;  apply H0;  now apply U_inc_A.*)
- (*-  destruct f_ord as [H H0]; destruct H.
-    apply H, alpha_A. *)
  - intros;now apply R6.
 Qed.
  
@@ -1069,12 +1063,11 @@ Qed.
 
 Remark R4' : forall khi, In U khi -> f khi <= f (sup U).
 Proof.
- intros; case f_ord;intros. 
- decompose [and] H1.
- clear H1; case (R4 H).
+ intros khi H ; case f_ord;intros H0 H1 H2 H3 . 
+ case (R4 H).
  - intro;  subst khi;left;auto with schutte.
  -  right;auto.
-    apply H5;auto with schutte.
+    apply H3;auto with schutte.
     apply A_closed;auto.
 Qed.
 
@@ -1092,12 +1085,11 @@ Qed.
 Remark R42 : f (sup U) <= |_| (image U f).
 Proof.
  apply le_trans with (f alpha_).
- -  case f_ord;intros.
-    decompose [and] H0;clear H0.
+ -  case f_ord;intros H H0 H1 H2.
     case R7.
     +  intro H5; rewrite H5;auto with schutte.
     +  right;auto.
-       apply H4;auto with schutte.
+       apply H2;auto with schutte.
        apply A_closed;auto with schutte.
  -  unfold alpha_; apply epsilon_ind.
     + apply R3.
@@ -1186,11 +1178,11 @@ Lemma ordering_function_least_least :
  forall B f  , ordering_function f ordinal B ->
      least_member  lt B (f zero).
 Proof with auto with schutte.
- intros b f H; case H; intros H0 H1; decompose [and] H1; clear H1.
- case H; intros H8 (H9,H10); split.
+ intros b f H; case H; intros H0 H2 H3 H4 .
+ split.
  -  apply H2 ...
- -  intros x  H55;  decompose [and] H10.
-   case (H1 _ H55); intros x0 (Hx0,H'x0); subst x.
+ -  intros x  H55.
+   case (H3 _ H55); intros x0 (Hx0,H'x0); subst x.
    generalize (ordering_function_mono_weak H (a:=zero) (b:=x0)).
    intro H6;  apply H6 ...
 Qed.
