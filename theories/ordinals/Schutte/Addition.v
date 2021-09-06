@@ -13,7 +13,6 @@ Set Implicit Arguments.
 (* begin snippet additionDef *)
 
 Definition plus alpha := ord (ge alpha).
-
 Infix "+"  := plus : schutte_scope.
 
 (* end snippet additionDef *)
@@ -84,9 +83,7 @@ Proof.
     rewrite  ge_o_segment;auto.
 Qed.
 
-(* begin snippet plusElim *)
-
-(*| .. coq:: no-out |*)
+(* begin snippet plusElim:: no-out  *)
 Lemma plus_elim (alpha : Ord) :
   forall P : (Ord->Ord)->Prop,
     (forall f: Ord->Ord, 
@@ -95,7 +92,6 @@ Lemma plus_elim (alpha : Ord) :
 Proof.
  intros  P H0; now apply H0, plus_ordering.
 Qed.
-(*||*)
 (* end snippet plusElim *)
 
 Lemma normal_plus_alpha (alpha : Ord) : 
@@ -122,18 +118,16 @@ Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha. (* .no-out *)
 Proof. (* .no-out *)
   pattern  (plus alpha); apply plus_elim;eauto.
   (* ... *)
-  (*| .. coq:: none |*)
- intros f H0 ; case (ordering_function_least_least H0).
-  intros H1 H3; case (H3 alpha);auto.
- -  red;red; auto with schutte.
- -  intro H4; case H1.
-  +  symmetry;tauto.
-  +  intro; case (@lt_irrefl alpha);auto.
-     apply lt_trans with (f zero);auto.
-  (*||*)
-Qed.
+  (* end snippet alphaPlusZero *)
 
-(* end snippet alphaPlusZero *)
+  intros f H0 ; case (ordering_function_least_least H0).
+  intros H1 H3; case (H3 alpha);auto.
+  -  red;red; auto with schutte.
+  -  intro H4; case H1.
+     +  symmetry;tauto.
+     +  intro; case (@lt_irrefl alpha);auto.
+        apply lt_trans with (f zero);auto.
+Qed.
 
 Remark ge_zero : (ge zero : Ensemble Ord) = ordinal.
 Proof with eauto with schutte.

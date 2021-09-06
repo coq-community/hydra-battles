@@ -331,19 +331,20 @@ End AP_Unbounded.
 
 (* begin snippet APUnbounded *)
 
-Theorem AP_unbounded : Unbounded AP.
-Proof.
-  intro x;  pose (H := AP_unbounded_0 x).
+Theorem AP_unbounded : Unbounded AP. (* .no-out *)
+Proof. (* .no-out *)
+  intro x.
+  
   exists (omega_limit
             (fix seq (n : nat) : Ord :=
                match n with
                | O => succ x
                | S p => seq p + seq p
-               end)).
-  now destruct H.
+               end)). (* .no-out *)
+  (* ... *)
+  (* end snippet APUnbounded *)
+  destruct (AP_unbounded_0 x); now split.
 Qed.
-
-(* end snippet APUnbounded *)
 
 (* begin hide *)
 

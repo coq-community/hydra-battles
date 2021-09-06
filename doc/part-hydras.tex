@@ -5940,6 +5940,10 @@ Our definition in \coq{} is a direct translation of the mathematical text of~\ci
 \index{maths}{Ordinal numbers!Ordering functions}
 \index{hydras}{Library Schutte!Predicates!ordering function@ordering\_function}
 
+\begin{todo}
+Make \texttt{Ordering\_Function} a type class!
+\end{todo}
+
 \input{movies/snippets/Ordering_Functions/orderingFunctionDef}
 
 We are now able to associate with any subset $B$ of $\mathbb{O}$ its ordering segment and ordering function.
@@ -5985,13 +5989,7 @@ In other words,  $\alpha + \beta$ is the  $\beta$-th ordinal greater than or equ
 Thanks to generic properties of ordering functions, we can show the following 
 properties of addition on $\mathbb{O}$. First, we prove a useful lemma:
 
-\begin{Coqsrc}
-Lemma plus_elim (alpha : Ord) :
-  forall P : (Ord->Ord)->Prop,
-    (forall f: Ord->Ord, 
-        ordering_function f ordinal (ge alpha)-> P f) ->
-    P (plus alpha).
-\end{Coqsrc}
+\input{movies/snippets/Addition/plusElim}
 
 As a use-case, let us prove that $0$ is a right neutral element of $+$.
 
@@ -6182,8 +6180,8 @@ For instance,  we prove that $\textit{Cr}(0)$ is the set of additive principals 
 belongs to $\textit{Cr}(1)$.
 
 
-\input{movies/snippets/Critical/CrZeroAP}
-\input{movies/snippets/Critical/epsilon0Cr1}
+\inputsnippets{Critical/CrZeroAP,
+  Critical/epsilon0Cr1}
 
 
 \index{hydras}{Exercises}
@@ -6255,9 +6253,7 @@ By transfinite induction on $\alpha$, we prove that every countable ordinal $\al
 By structural induction on lists, we prove that this normal form is unique.
 
 
-\input{movies/snippets/CNF/cnfUnicity}
-
-\input{movies/snippets/CNF/cnfExUnique}
+\inputsnippets{CNF/cnfUnicity,CNF/cnfExUnique}
 
 
 
