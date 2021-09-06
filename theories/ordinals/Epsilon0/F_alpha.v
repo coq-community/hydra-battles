@@ -790,17 +790,12 @@ Qed.
 
 End H'_F.
 
-(* begin snippet HprimeF *)
-
-(*|
-.. coq:: no-out 
-|*)
+(* begin snippet HprimeF:: no-out  *)
 
 Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (phi0 alpha) (S n).
 Proof.
   pattern alpha; apply well_founded_induction with Lt.
 
-  (*||*)
 (* end snippet HprimeF *)
   
   - apply Lt_wf.  
