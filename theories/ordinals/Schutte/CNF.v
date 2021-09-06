@@ -98,7 +98,7 @@ Lemma cnf_of_ap (alpha : Ord) :
   In AP alpha -> exists l,  is_cnf_of alpha l.
 Proof.
  intros H;  case phi0_ordering.
- intros H0 [H1 [H2 H3]]; destruct (H2 alpha H) as [x [Hx Ex]].
+ intros H0 H1 H2 H3; destruct (H2 alpha H) as [x [Hx Ex]].
  subst alpha;  exists (cons  x nil); split.
  - constructor.
  - simpl; now  rewrite alpha_plus_zero. 

@@ -2,7 +2,6 @@
 
  Decidable, Total Pre-orders 
 
- Pierre Castéran, Univ. Bordeaux and LaBRI 
 *)
 
 From Coq Require Export Relations RelationClasses Setoid.
@@ -13,11 +12,13 @@ Class Total {A:Type}(R: relation A) :=
 (** Decision typeclasses following Spitters and van der Weegen *)
 
 Class Decision (P : Prop) := decide : {P} + {~P}.
+
 #[export] Hint Mode Decision ! : typeclass_instances.
 Arguments decide _ {_} : simpl never, assert.
 
 Class RelDecision {A B} (R : A -> B -> Prop) :=
   decide_rel x y :> Decision (R x y).
+
 #[export] Hint Mode RelDecision ! ! ! : typeclass_instances.
 Arguments decide_rel {_ _} _ {_} _ _ : simpl never, assert.
 
@@ -49,7 +50,8 @@ End Semibundled.
 (** when applied to a pre-order relation le, returns the equivalence and
     the strict order associated to le *)
 
-Definition preorder_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) :=
+Definition preorder_equiv {A:Type}{le:relation A}
+           `{P:@PreOrder A le }(a b : A) :=
   le a b /\ le b a.
 
 Definition lt {A:Type}{le:relation A} `{P:@PreOrder A le }(a b : A) :=

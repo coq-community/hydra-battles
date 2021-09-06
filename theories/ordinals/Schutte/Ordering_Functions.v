@@ -34,17 +34,18 @@ Definition proper_segment (A: Ensemble Ord) :=
 
 (* end snippet segmentDef *)
 
-(* to do : define it as a class *)
-
-
+(* TODO : use type classes *) 
 (* begin snippet orderingFunctionDef *)
 
-Definition ordering_function (f : Ord -> Ord)
-           (A B : Ensemble Ord) :=
- segment A /\
- (forall a, In A a -> In B (f a)) /\
- (forall b, In B b -> exists a, In A a /\ f a = b) /\
- forall a b, In A a -> In A b -> a < b ->  f a < f b.
+Class ordering_function (f : Ord -> Ord)
+           (A B : Ensemble Ord) : Prop :=
+  Build_OF {
+      OF_segment : segment A;
+      OF_total : forall a, In A a -> In B (f a);
+      OF_onto : forall b, In B b -> exists a, In A a /\ f a = b;
+      OF_mono : forall a b, In A a -> In A b -> a < b -> f a < f b
+    }. 
+
 
 Definition ordering_segment (A B : Ensemble Ord) :=
   exists f : Ord -> Ord, ordering_function f A B.
@@ -82,7 +83,7 @@ Lemma members_proper (alpha : Ord) :
 Proof with eauto with schutte.
   split.
  -  intros a b H H0; apply lt_trans with a ...
- -  intros [H0 H1];   destruct (@le_not_gt alpha (succ alpha)) ...
+ -  intros [H0 H1]; destruct (@le_not_gt alpha (succ alpha)) ...
    + apply  (H1 (succ alpha)) ...
 Qed.
 
@@ -130,7 +131,7 @@ Qed.
 
 Lemma ordering_function_In f A B a :
    ordering_function f A B -> In A a -> In B (f a).
-Proof.  destruct 1 as [_ [H _]]; auto. Qed.
+Proof.  destruct 1; auto.  Qed.
 
   
 Lemma ordering_function_mono (f : Ord -> Ord) (A B: Ensemble Ord) :
@@ -145,7 +146,7 @@ Lemma  ordering_function_mono_weak (f : Ord -> Ord) (A B: Ensemble Ord) :
  ordering_function f A B ->
    forall a b, In A a -> In A b -> a <= b -> f a <= f b.
 Proof.
- destruct 1 as [H [H0 [H1 H2]]].
+ destruct 1 as [H H0 H1 H2].
  destruct 3.
  -  subst b;  left; auto with schutte.
  -  right;auto.
@@ -156,7 +157,8 @@ Global Hint Resolve ordering_function_mono_weak : schutte.
 Lemma ordering_function_monoR : forall f A B, ordering_function f A B ->
    forall a b, In A a -> In A b -> f a < f b -> a < b.
 Proof.
-   destruct 1 as [H [H0 [H1 H2]]]. intros a b H3 H4 H5; tricho a b Ht; auto.
+  destruct 1 as [H H0 H1 H2];
+    intros a b H3 H4 H5; tricho a b Ht; auto.
   - subst b; now destruct (@lt_irrefl (f a)).
   - destruct (@lt_irrefl (f a)); apply lt_trans with (f b);auto.
 Qed.
@@ -167,7 +169,7 @@ Global Hint Resolve ordering_function_monoR : schutte.
 Lemma Ordering_bijection : forall f A B, ordering_function f A B ->
                                          fun_bijection A B f.
 Proof.
-  destruct 1 as [H [H0 [H1 H2]]].
+  destruct 1 as [H H0 H1 H2].
   split;red;auto; intros.
   tricho a a' H7; trivial.
   -  specialize  (H2 _ _ H3 H4 H7); rewrite H5 in H2;
@@ -182,11 +184,10 @@ Lemma  ordering_function_mono_weakR :
                 forall a b, In A a -> In A b ->  f a <= f b -> a <= b.
 Proof with auto with schutte.
   intros f A B H a b H0 H1 H2.
-  case H.
-  intros H3 H4; decompose [and] H4; clear H4.
+  case H; intros H3 H4 H5 H6.
   destruct H2 as [H2  | H2].
   case (Ordering_bijection H).
-  intros H10 H11 H12 ;  specialize (H8 a b H0 H1 )...
+  intros H10 H11 H12 ; specialize (H12 a b H0 H1 )...
   -  right; eapply ordering_function_monoR; eauto.
 Qed.
 
@@ -195,7 +196,7 @@ Global Hint Resolve ordering_function_mono_weakR : schutte.
 
 Lemma ordering_function_seg : forall A B, ordering_segment A B ->
                                           segment A.
-Proof.   now destruct 1 as [f [H _]]. Qed.
+Proof. now destruct 1 as [f [H _]]. Qed.
 
 Lemma empty_ordering : forall B, (forall b, ~ B b) ->
                                  ordering_function (fun o => o)
@@ -204,10 +205,9 @@ Lemma empty_ordering : forall B, (forall b, ~ B b) ->
 Proof.
   intros B H; split.
   -  intros a b H0 H1;  destruct (not_lt_zero H0);auto.
-  -  repeat split.
-     + intros b H0 ; now destruct (not_lt_zero H0).
-     + intros x Hx; now destruct (H x). 
-     +  intros a b Hb; case (@not_lt_zero a); assumption. 
+  - intros b H0 ; now destruct (not_lt_zero H0).
+  -  intros x Hx; now destruct (H x). 
+  -  intros a b Hb; case (@not_lt_zero a); assumption. 
 Qed.
 
 
@@ -232,12 +232,12 @@ Qed.
 
 Theorem ordering_le : forall f A B,
     ordering_function f A B ->
-    forall alpha, In A alpha -> alpha  <= f alpha. (* .no-out *)
+    forall alpha, In A alpha -> alpha <= f alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with schutte.
   intros f A B H alpha H0; generalize H0;
     pattern alpha; apply transfinite_induction.
-  - clear alpha H0; unfold ordering_function in H; decompose [and] H.   
+  - clear alpha H0; destruct H as [H1 H2 H3 H4].  
     unfold progressive;   intros alpha H6 H7 .
     tricho alpha (f alpha) H' ...
     +   assert (f (f alpha) < f alpha).
@@ -286,17 +286,17 @@ Section ordering_function_unicity_1.
        }
 
        assert (forall y, A2 y -> f1 y < f1 a).
-       {   intros y H4;  case O1;intros H5 H6;  decompose [and] H6.
-           apply H9 ... 
+       {   intros y H4;  case O1;intros H5 H6 H7 H8.  
+           apply H8 ... 
        }  
 
-       case O2;intros H5 H6; decompose [and] H6; clear H6;  case (H8 (f1 a)).
-       - case O1;intros H6 H10; decompose [and] H10;clear H10.
-         apply H7;  auto.
-       -  destruct 1;  generalize (H4 x H6).
+       case O2;intros H5 H6 H7 H8;  case (H7 (f1 a)).
+       - case O1;intros H9 H10 H11 H12. 
+         apply H10;  auto.
+       -  destruct 1.   generalize (H3 x H4).
           intro;  case (H0 x)...
-           + intros H13 H14;  specialize (H3 _ H6);  rewrite <- H7 in H3.
-            rewrite H14 in H3.
+           + intros H13 H14. specialize (H6 _ H4).   rewrite <- H9 in H10.
+            rewrite H14 in H10.
             case (@lt_irrefl (f2 x));auto.
      }
      {   split; trivial.
@@ -308,49 +308,49 @@ Section ordering_function_unicity_1.
 
          {  split.
             +  case O1;intros;  unfold In; intuition.
-               apply H3; auto.
-               specialize (H5 y a ).
-               assert (In A1 y) by (eapply H1 with a ; auto). 
-               specialize (H5 H7 Ha H4).
-               rewrite H6 in H5; now apply (@lt_irrefl (f1 a)).
-            + destruct 1;   destruct O1.
-              decompose [and] H4;   destruct (H7 x H1).
-              destruct H6; subst x;  tricho a x0 H9.
-              *  right;  apply H8;auto.
+               apply OF_total0; auto.
+               specialize (OF_mono0  y a ).
+               assert (In A1 y) by (eapply OF_segment0 with a ; auto). 
+               specialize (OF_mono0 H3  Ha H1).
+               rewrite H2 in OF_mono0; now apply (@lt_irrefl (f1 a)).
+            + destruct 1;   destruct O1 as [H3 H4 H5 H6].
+              destruct (H5 x H1).
+              destruct H7; subst x;  tricho a x0 H9.
+              *  right.   apply H6;auto.
               *  subst x0; now left.
-              * specialize (H2 _ H9); now destruct H2.
+              * now destruct  (H2  _ H9). 
          } 
 
          assert (H02 : least_member  lt
-                                        (fun x => B x /\ forall y, y < a ->
-                                                                   f2 y <> x)
-                                        (f2 a)).
+                                     (fun x => B x /\ forall y, y < a ->
+                                                                f2 y <> x)
+                                     (f2 a)).
          {
            split.
-           +  case O2;intros;  unfold In; intuition.
+           +  case O2;intros  H2 H3 H4 H5.   unfold In; intuition.
               apply H3; auto.
               specialize (H5 y a ).
-              assert (In A2 y) by ( eapply H1 with a ; auto). 
-              specialize (H5 H7 H H4).
+              assert (In A2 y)  by ( eapply H2 with a ; auto). 
+              specialize (H5 H7 H H1).
               rewrite H6 in H5; now apply (@lt_irrefl (f2 a)).
-           + destruct 1, O2.
-             decompose [and] H4;   destruct (H7 x H1).
-             destruct H6; subst x; tricho a x0 H9.
-             *  right;   apply H8;auto.
+           + destruct 1; case O2; intros  H3 H4 H5 H6.  
+            destruct (H5 x H1).
+             destruct H7; subst x; tricho a x0 H9.
+             *  right;   apply H6;auto.
              *  subst x0; now left.
-             * specialize (H2 _ H9);  now destruct H2.
+             * specialize (H2 _ H9); now destruct H2.
          } 
          refine (least_member_of_eq AX1 _ _ H01 H02).
 
          - intros x Hx; split.
            + red in Hx; tauto.
            + intros y H1; destruct (H0 _ H1).
-             * destruct O1;intros;   apply H2 with a; auto.
+             * case O1; intros  H2 H3 H4 H5.    apply H2 with a; auto.
              * rewrite <- H3;  destruct Hx;  auto.
          - intros x Hx;  split.
            + red in Hx; tauto.
            + intros y H1;   destruct (H0 _ H1).
-             destruct O1;intros;  apply H2 with a; auto.
+             case O1;intros H2 H3 H4 H5.   apply H2 with a; auto.
              rewrite  H3;    destruct Hx;  auto.
      }
    }
@@ -563,11 +563,12 @@ Proof with eauto with schutte.
    -  case (g_lemma H0). 
       intros H3 H4; decompose [and] H4; clear H4.
       replace beta1 with (_f beta2 alpha).
-      apply H8;auto.
+      intros.
+      apply OF_mono0; auto.
       +   red;  apply lt_trans with alpha;auto.
    -  destruct 1;  case (g_lemma H0).
       intros H4 H5;  decompose [and] H4;  clear H4;  decompose [and] H5.
-       case (H7 b). 
+       intros. case (OF_onto0 b). 
       + split;auto.
         split;auto.
         eapply lt_trans;eauto.
@@ -580,13 +581,13 @@ Proof with eauto with schutte.
            case (@lt_irrefl _ H33).
          *  assert (beta1 < b).
            { rewrite <- Ha3; rewrite <- Ha'.
-             case (g_lemma H0); intros;  decompose [and] H9.
-             apply H13;auto.
+             case (g_lemma H0); intros.   
+             apply OF_mono1; auto.
            }
            case (@lt_irrefl beta1);  apply lt_trans with b;auto.
            case H3;auto.
-   - intros; case (g_lemma H0); intros;  decompose [and] H6.
-     apply H10;auto.
+   - intros; case (g_lemma H0); intros.   
+     apply OF_mono0; auto.
      red;  apply lt_trans with alpha;auto.
     red;  red; apply lt_trans with alpha;auto.
  }
@@ -603,13 +604,12 @@ Lemma L3a : segment (image B g).
 Proof.
   intros gbeta alpha  (beta,(H1,H2)) H3;  subst gbeta. 
      generalize (g_lemma H1);intro.
-     case H; intros.
-     decompose [and] H2;clear H2.
+     case H; intros  H2 H4 H5 H6. 
      assert (exists beta0, In (proper_segment_of B beta) beta0 
                       /\ _f beta alpha=beta0).
      {  exists (_f beta alpha); split;auto.
      }
-     case H2;intros beta0 (H9,H10); clear H2.
+     case H0;intros beta0 (H9,H10); clear H0.
      assert (B5 : ordering_function (_f beta) (members alpha) 
                  (proper_segment_of B beta0)).
      { 
@@ -623,36 +623,36 @@ Proof.
          2:auto.
         red;  apply lt_trans with alpha; auto.
  
-       -  case (g_lemma H1); intros.   decompose [and] H8.
-        clear H8;  replace beta0 with (_f beta alpha).
-        apply H14;auto.
+       -  case (g_lemma H1); intros.  
+          replace beta0 with (_f beta alpha).
+        apply OF_mono0; auto.
         red;  red;  apply lt_trans with alpha;auto.
        -  case H9;  auto.
-       - destruct 1; case (g_lemma H1); intros;  decompose [and] H11.
-         clear H11;  case (H14 b).
+       - destruct 1; case (g_lemma H1); intros.  
+          case (OF_onto0 b).
          split;auto.
          split;auto.
          apply lt_trans with beta0;auto.
-         case H5;auto.
+         case H7;auto.
          case H9;auto.
          destruct 2; auto.
          intros a (Ha,Ha');exists a;split;auto.
          red; tricho  a alpha X.
          + auto.
         + subst a; rewrite H10 in Ha'.
-          subst b;case H5; intros H77 _.
+          subst b. case H7; intros H77 _.
           case (@lt_irrefl _ H77).
         + assert (beta0 < b) by (rewrite <- H10; rewrite <- Ha'; auto).
           case (@lt_irrefl beta0).
           apply lt_trans with b;auto.
-          case H5;auto.
-        - intros; case (g_lemma H1); intros;  decompose [and] H12.
-          apply H16;auto.
+          case H7;auto.
+        - intros; case (g_lemma H1); intros.  
+          apply OF_mono0; auto.
           red;  apply lt_trans with alpha;auto.
           red; red;  apply lt_trans with alpha;auto.
        }
      generalize (g_lemma (beta:=beta0));intros.
-     case H9;intros H5 H8;  generalize (H2 H5).
+     case H9;intros H7 H8.   generalize (H0 H7).
      intros H12; generalize (ordering_function_unicity B5 H12). 
      destruct 1;  generalize (Extensionality_Ensembles _ _ _ H11).
      intros H14; generalize (members_eq (alpha:=alpha)(beta:=g beta0)   H14 ).
@@ -690,17 +690,17 @@ Lemma g_1_of : ordering_function g_1 (image B g) B.
 Proof.
  split.
  -  apply L3a.
- - repeat split; auto.
-  +   destruct 1 as [x [H0 H1]]. rewrite <- H1.
+ - 
+   destruct 1 as [x [H0 H1]]. rewrite <- H1.
       replace (g_1 (g x)) with x;  auto.
       symmetry;unfold g_1;eapply inv_compose;eauto.
       auto with schutte.
- + intros b H;  exists (g b);  split;auto.
-   *  exists b;  split;auto.
-   *  unfold g_1;eapply inv_compose;eauto.
+ - intros b H;  exists (g b);  split;auto.
+   +  exists b;  split;auto.
+   +  unfold g_1;eapply inv_compose;eauto.
       auto with schutte.
- +  intros;  tricho (g_1 a) (g_1 b) Hab; auto with schutte.
-    * case g_1_bij; intros.
+  -  intros;  tricho (g_1 a) (g_1 b) Hab; auto with schutte.
+    + case g_1_bij; intros.
       generalize (H2 a H).
       case g_1_bij; intros.
       generalize (H2 b H0).
@@ -710,7 +710,7 @@ Proof.
       case (@lt_irrefl _ H1).
       unfold g_1;  apply inv_composeR;  auto with schutte.
       unfold g_1;  apply inv_composeR;  auto with schutte.
-    *  case (le_not_gt (a:=a)(b:= b));  auto with schutte.
+    +  case (le_not_gt (a:=a)(b:= b));  auto with schutte.
        replace a with (g (g_1 a));
          replace b with (g (g_1 b)) .
        apply g_mono;auto with schutte.
@@ -973,10 +973,10 @@ Section verso.
  Proof.
    apply  B_closed.
    -  red;red;  destruct 1.
-      case f_ord; intros _ (_,(H2,_)).
+      case f_ord. intros H0 H1 H2 H3. 
       case H;intros; subst x; destruct f_ord.
       decompose [and] H3.
-      apply H4; apply U_inc_A;auto. 
+      apply OF_total0. apply U_inc_A;auto. 
    -  case U_non_empty;intros x H;  exists (f x);auto.
       exists x;auto.
    - apply R1_aux.
@@ -984,16 +984,14 @@ Section verso.
 
 Remark R3: exists alpha, In A alpha /\ f alpha = |_|  (image U f).
 Proof.
- case f_ord.
- intros H H0;  decompose [and] H0.
-  case (H3 (|_|image U f)).
+ case f_ord; intros H H0 H1 H2.
+  case (H1 (|_|image U f)).
   -  apply R2.
   -  intros x; exists x;auto.
 Qed.
 
 Let alpha_ : Ord :=
   (epsilon inh_Ord (fun alpha =>  In A alpha /\ f alpha = sup(image U f))).
-
 
 
 Lemma alpha_A :   In A alpha_.
@@ -1027,12 +1025,12 @@ Proof with eauto with schutte.
     *  apply U_inc_A;auto.
     * apply alpha_A.
     *  case H0;auto.
- -  right; case f_ord; intros _ H1; decompose [and] H1.
+ -  right; case f_ord; intros _ H1 H2 H3.
     tricho khi alpha_ H7; auto.
    +    subst khi; case (@lt_irrefl _ H0).
    + case (@lt_irrefl (f alpha_));auto.
      apply lt_trans with (f khi); auto.
-     * apply H5; auto.
+     * apply H3; auto.
       apply alpha_A;  auto.
 Qed.
 
@@ -1042,10 +1040,6 @@ Local Hint Resolve  alpha_A : schutte.
 Remark R7 : |_| U <= alpha_ .
 Proof. 
  apply sup_least_upper_bound; trivial.
- (*-  intros y H;  destruct f_ord as [H0 H1].
-    destruct H0;  apply H0;  now apply U_inc_A.*)
- (*-  destruct f_ord as [H H0]; destruct H.
-    apply H, alpha_A. *)
  - intros;now apply R6.
 Qed.
  
@@ -1069,12 +1063,11 @@ Qed.
 
 Remark R4' : forall khi, In U khi -> f khi <= f (sup U).
 Proof.
- intros; case f_ord;intros. 
- decompose [and] H1.
- clear H1; case (R4 H).
+ intros khi H ; case f_ord;intros H0 H1 H2 H3 . 
+ case (R4 H).
  - intro;  subst khi;left;auto with schutte.
  -  right;auto.
-    apply H5;auto with schutte.
+    apply H3;auto with schutte.
     apply A_closed;auto.
 Qed.
 
@@ -1092,12 +1085,11 @@ Qed.
 Remark R42 : f (sup U) <= |_| (image U f).
 Proof.
  apply le_trans with (f alpha_).
- -  case f_ord;intros.
-    decompose [and] H0;clear H0.
+ -  case f_ord;intros H H0 H1 H2.
     case R7.
     +  intro H5; rewrite H5;auto with schutte.
     +  right;auto.
-       apply H4;auto with schutte.
+       apply H2;auto with schutte.
        apply A_closed;auto with schutte.
  -  unfold alpha_; apply epsilon_ind.
     + apply R3.
@@ -1186,11 +1178,11 @@ Lemma ordering_function_least_least :
  forall B f  , ordering_function f ordinal B ->
      least_member  lt B (f zero).
 Proof with auto with schutte.
- intros b f H; case H; intros H0 H1; decompose [and] H1; clear H1.
- case H; intros H8 (H9,H10); split.
+ intros b f H; case H; intros H0 H2 H3 H4 .
+ split.
  -  apply H2 ...
- -  intros x  H55;  decompose [and] H10.
-   case (H1 _ H55); intros x0 (Hx0,H'x0); subst x.
+ -  intros x  H55.
+   case (H3 _ H55); intros x0 (Hx0,H'x0); subst x.
    generalize (ordering_function_mono_weak H (a:=zero) (b:=x0)).
    intro H6;  apply H6 ...
 Qed.

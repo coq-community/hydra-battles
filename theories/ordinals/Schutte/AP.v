@@ -457,7 +457,7 @@ Qed.
 Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha). (* .no-out *)
 Proof. (* .no-out *)
   pattern phi0; apply phi0_elim.
-  destruct 1 as [H [H0 H1]];  apply H0;auto; split.
+  destruct 1 as [H H0 H1 H2];  apply H0;auto; split.
 Qed. 
 
 
@@ -540,7 +540,7 @@ Lemma plus_lt_phi0 : forall ksi alpha,
 Proof.
   intros ksi alpha ;  pattern (phi0 alpha);  apply phi0_elim.
   intros f Hf;  assert (AP (f alpha)).
-  {  destruct Hf as [H0 [H1 [H2 H3]]]. 
+  {  destruct Hf as [H0 H1 H2 H3]. 
      apply H1 ; split. }
   destruct H;  auto. 
 Qed.
@@ -596,7 +596,7 @@ Lemma AP_to_phi0 (alpha : Ord) :
 (*| .. coq:: none |*)
 Proof.
   intro H; pattern phi0;apply phi0_elim.
-  destruct 1 as [H0 [H1 [H2 H3]]].  
+  destruct 1 as [H0 H1 H2 H3].  
   case (H2 _ H); intros x [_ H4]; exists x; now rewrite H4.
 Qed.
 (*||*)

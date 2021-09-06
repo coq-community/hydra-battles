@@ -9,9 +9,27 @@
 
 From Coq Require Export  Ensembles  Logic.Epsilon.
 
+(* begin snippet EpsilonStatement  *)
+Print epsilon_statement.
+(* end snippet EpsilonStatement  *)
+
+(* begin snippet epsilonDef *)
+Print epsilon.
+
+Check constructive_indefinite_description.
+(* end snippet epsilonDef *)
+
+(* begin snippet iotaDef *)
+Check iota_statement. 
+
+Check constructive_definite_description.
+
+Print iota_spec.
+(* end snippet iotaDef *)
 
 Set Implicit Arguments.
 Arguments In {U} _ _.
+
 
  Lemma epsilon_ind {A:Type} (inh : inhabited A) (P Q : A -> Prop):
    (ex P ) -> (forall a, P a -> Q a) -> Q (epsilon inh P).
