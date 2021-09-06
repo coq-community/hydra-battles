@@ -5687,8 +5687,8 @@ how Hilbert's choice operator and Church's definite description allow us
 
 According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique. We would like to call this element  \texttt{zero}.
 
-\input{movies/snippets/Schutte_basics/iotaDemo}
-
+\input{movies/snippets/Schutte_basics/iotaDemoa}
+\input{movies/snippets/Schutte_basics/iotaDemob}
 
 
 
@@ -5699,50 +5699,18 @@ The reasons for this impossibility are explained in many documents~\cite{BC04, c
 
 Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom and lemmas.
 
+\input{movies/snippets/MoreEpsilonIota/EpsilonStatement}
 
-\begin{Coqsrc}
-Axiom epsilon_statement:
-  forall (A : Type) (P : A->Prop), inhabited A ->
-    {x : A | (exists x, P x) -> P x}.
-\end{Coqsrc}
 
 Hilbert's $\epsilon$ \emph{operator} is derived from this  axiom.
 
-\begin{Coqsrc}
-Definition epsilon (A : Type) (i:inhabited A) (P : A->Prop) : A
-  := proj1_sig (epsilon_statement P i).
-
-Lemma constructive_indefinite_description :
-  forall (A : Type) (P : A->Prop),
-    (exists x, P x) -> { x : A | P x }.
-\end{Coqsrc}
-
-
+\input{movies/snippets/MoreEpsilonIota/EpsilonDef}
 
 
 If we consider the \emph{unique existential} quantifier $\exists!$, we obtain
 Church's \emph{definite description operator}.
 
-\begin{Coqsrc}
-Definition iota (A : Type) (i:inhabited A) (P : A->Prop) : A
-  := proj1_sig (iota_statement P i).
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
- Lemma constructive_definite_description :
-  forall (A : Type) (P : A->Prop),
-    (exists! x, P x) -> { x : A | P x }.
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
-Definition iota_spec (A : Type) (i:inhabited A) (P : A->Prop) :
-  (exists! x:A, P x) -> P (iota i P)
-  := proj2_sig (iota_statement P i).
-\end{Coqsrc}
-
-
+\input{movies/snippets/MoreEpsilonIota/iotaDef}
 
 Indeed, the operators \texttt{epsilon} and \texttt{iota} allowed us to make our definitions 
 quite close to Schütte's text. Our libraries \href{../theories/html/hydras.Schutte.MoreEpsilonIota.html}%
