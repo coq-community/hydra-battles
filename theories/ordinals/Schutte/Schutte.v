@@ -79,17 +79,29 @@ Axiom inh_Ord : inhabited Ord.
 ]]
 **)
 
+(* begin snippet Ex42a:: no-out *)
 
-Example Ex42: omega + 42 + phi0 2 = phi0 2.
+Example Ex42: omega + 42 + phi0 2 = phi0 2. 
 Proof.
-  (** [phi0 2] is additive principal *)
-  assert (HAP:= AP_phi0 2); elim  HAP; intros  _ H0; apply H0.
-  assert (Hlt: omega < phi0 (F 2)) by
-      (rewrite omega_eqn; apply phi0_mono, finite_mono;
-      auto with arith).
-  (** [phi0 2] is closed under addition *)
-  apply (AP_plus_closed HAP Hlt).
-  apply lt_trans with omega; [apply finite_lt_omega | apply Hlt ].
+  (* end snippet Ex42a *)
+  
+  (* begin snippet Ex42b *)
+  assert (HAP: In AP (phi0 2)) by apply AP_phi0. (* .no-out *)
+  elim  (AP_phi0 2);  intros  _ H0; apply H0; clear H0. 
+   (* end snippet Ex42b *)
+
+   (* begin snippet Ex42c:: no-out *)
+    assert (Hlt: omega < phi0 (F 2)). 
+    {   rewrite omega_eqn; apply phi0_mono, finite_mono;
+          auto with arith.
+    }
+    (* end  snippet Ex42c *)
+    (* begin snippet  Ex42d *)
+   apply (AP_plus_closed); trivial.
+  (* ... *)
+    (* end snippet  Ex42d *)
+   -  apply lt_trans with omega; [| trivial]. 
+      apply finite_lt_omega. 
 Qed. 
 
 
