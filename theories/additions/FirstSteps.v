@@ -7,7 +7,7 @@ Require Import String.
   Polymorphic exponentiation functions 
  *)
 
-
+(* begin snippet Defs *)
 Section Definitions.
 
  Variables (A : Type)
@@ -17,6 +17,7 @@ Section Definitions.
 Local Infix "*" := mult.
 Local Notation "1" := one.
 
+(* end snippet Defs *)
 (**  Naive (linear) implementation *)
 
 Fixpoint power (x:A)(n:nat) : A :=

@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-export coq_root := ../../theories/ordinals
+export coq_root := ../../theories
 export snippets_root := ./snippets
 assets_root := $(snippets_root)/assets
 
@@ -11,7 +11,8 @@ targets.mk:
 
 include targets.mk
 
-coq_flags := -R $(coq_root) hydras
+coq_flags := -R $(coq_root)/ordinals hydras -R $(coq_root)/additions additions -R $(coq_root)/gaia gaia_hydras
+
 alectryon_flags := --frontend coq --backend snippets-hydras $(coq_flags)
 
 alectryon = $(PYTHON) ./driver.py $(alectryon_flags) --output-directory "$@"
