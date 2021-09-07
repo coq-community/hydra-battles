@@ -9,27 +9,36 @@ Set Implicit Arguments.
 
 Declare Scope M_scope.
 
+(* begin snippet MultOpClass *)
 Class Mult_op (A:Type) := mult_op : A -> A -> A.
+
+
 Print Mult_op.
-(*
-Mult_op = fun A : Type => A -> A -> A
-     : Type -> Type
-*)
+(* end snippet MultOpClass *)
 
 Print mult_op.
+
+(* begin snippet MultOpEq:: no-out *)
+
 Goal forall A (op: Mult_op A), @mult_op A op = op.
 reflexivity.
 Qed.
+(* end snippet MultOpEq *)
 
+(* begin snippet MultOpInfix *)
 Delimit Scope M_scope with M.
 Infix "*" := mult_op : M_scope.
 Open Scope M_scope.
+(* end snippet MultOpInfix *)
 
-(*
+(* begin snippet DemoNatMulta *)
+
 Module Demo.
   
-  Instance nat_mult_op : Mult_op nat := Nat.mul.
+  #[local] Instance nat_mult_op : Mult_op nat := Nat.mul.
+  (* end snippet DemoNatMulta *)
 
+(* begin snippet DemoNatMultb *)
   Set Printing All.
 
   Check 3 * 4.
@@ -39,13 +48,18 @@ Module Demo.
    Compute 3 * 4.
 
 End Demo.
- *)
+(* end snippet DemoNatMultb *)
+
+(* begin snippet DemoStringMult:: no-out *)
 
 Instance string_op : Mult_op string := append.
 Open Scope string_scope.
 
 Example ex_string : "ab" * "cde" = "abcde".
 Proof. reflexivity. Qed.
+
+(* end snippet DemoStringMult *)
+
 
 Instance bool_and_binop : Mult_op bool := andb.
 
@@ -62,14 +76,14 @@ Arguments A, Mult_op are implicit and maximally inserted
 (mult_op A op x y) where op : Mult_op A and x, y : A.
 *)
 
-
+(* begin snippet MonoidClass *)
 Class Monoid {A:Type}(op : Mult_op A)(one : A) : Prop :=
 {
     op_assoc : forall x y z, x * (y * z) = x * y * z;
     one_left : forall x, one * x = x;
     one_right : forall x, x * one = x
 }.
-
+(* end snippet MonoidClass *)
 
 (** *** Exercice
 

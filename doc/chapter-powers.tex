@@ -28,37 +28,6 @@ $n$ is a natural number and $x$ belongs to some type for which a multiplication 
 
 \inputsnippets{FirstSteps/Defs}
 
-
-\begin{Coqsrc}
-Fixpoint power (x:A)(n:nat) : A :=
-  match n with 
-   | 0%nat => 1
-   | S p =>   x * x ^ p
-  end
-where "x ^ n" := (power x n).
-
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Compute power Z.mul 1%Z 2%Z 10.  
-\end{Coqsrc}
-\begin{Coqanswer}
-   = 1024%Z
-     : Z
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Open Scope string_scope.
-Compute power append  "" "ab"  12.
-\end{Coqsrc}
- 
- 
-\begin{Coqanswer}
- = "abababababababababababab"
-     : string
-\end{Coqanswer}
-
-
 An application of this function for  computing $x^n$ needs $n$ multiplications.
  Despite this lack of efficiency, and thanks to its simplicity, we keep it as a specification for more efficient and complex exponentiation algorithms.
 A function will be considered a \emph{correct} exponentiation function if we can prove it is extensionally equivalent to \texttt{power}.
@@ -217,31 +186,7 @@ handy notations \texttt{\_ * \_} and \texttt{one}. Fortunately, \emph{operationa
 It is now possible to test our functions with various interpretations of
 $\times$ and $1$:
 
-\begin{Coqsrc}
-Compute N_bpow Z.mul 1%Z 2%Z 10. 
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = 1024%Z
-     : Z 
-\end{Coqanswer}
-
-
-\begin{Coqsrc}
-Require Import String.
-Open Scope string_scope.
-
-Compute N_bpow append "" "ab"  12.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = "abababababababababababab"
-     : string 
-\end{Coqanswer}
-    
-
-
-
+\inputsnippets{FirstSteps/PowerCompute}
 
 \subsubsection{Exponentiation on $2\times 2$ matrices}
 \label{naive-matrix}
@@ -254,43 +199,14 @@ over any ``scalar''  type $A$, assuming one can provide $A$ with a semi-ring str
 A $2\times 2$ matrix will be simply represented by a structure with four fields;
 each field \texttt{c$ij$} is associated with the $i$-th line and $j$-th column of the considered matrix.
 
-\begin{Coqsrc}
-Module M2.
-Section Definitions.
-  
-  Variables (A: Type) (zero one : A)  (plus mult  : A -> A -> A).
-  
-  Variable rt : semi_ring_theory  zero one plus mult   (@eq A).
-  Add Ring Aring : rt.
-
-  Notation "0" := zero.  
-  Notation "1" := one.
-  Notation "x + y" := (plus x y).  
-  Notation "x * y " := (mult x y).
-  
-  Structure t : Type := mat{c00 : A;  c01 : A;  c10 : A;  c11 : A}.
-\end{Coqsrc}
+\inputsnippets{FirstSteps/M2a}
 
 %\subsubsection{Matrix Multiplication}
 
 The structure type \texttt{M2.t} allows us to define the product
 of two matrices. 
 
-
-\begin{Coqsrc}
-Definition M2_mult (M M':t) : t := mat
-  (c00 M * c00 M' + c01 M * c10 M') (c00 M * c01 M' + c01 M * c11 M')
-  (c10 M * c00 M' + c11 M * c10 M') (c10 M * c01 M' + c11 M * c11 M').
-\end{Coqsrc}
-
-The neutral element for \texttt{M2\_mult} is the identity matrix.
-
-\begin{Coqsrc}
-Definition Id2 : t := mat 1 0 0 1.
-
-End M2_Definitions.
-End M2.
-\end{Coqsrc}
+\inputsnippets{FirstSteps/M2Mult}
 
 \subsection{Computing Fibonacci numbers}
 
@@ -308,19 +224,7 @@ In \coq{}, one can define this function by simple recursion.
 \emph{From Library
 \href{../theories/html/additions.Fib2.html}{additions.Fib2}}
 
-\begin{Coqsrc}
-Fixpoint fib (n:nat) : N :=
-  match n with
-    0%nat | 1%nat => 1%N
-  | S (S p as q) => fib p + fib q
-  end.
-
-Compute fib 20.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= 10946 : N
-\end{Coqanswer}
+\inputsnippets{Fib2/FibDef}
 
 In~\cite{BC04}, several exercises~\footnote{Exercises 9.8 (page 270), 9.10 (page 271), 9.15 (page 276), 9.17 (page 284), and 15.8 (page 418).}
 present ways to compute Fibonacci numbers, with the less number of recursive calls  as possible. Please note that these optimizations and the formal proof of their correctness are \emph{ad-hoc}, \emph{i.e.}, exclusively written for the
@@ -337,6 +241,7 @@ The following properties are well known. They are left as an exercise, since the
 \index{additions}{Exercises}
 
 \begin{exercise}
+  \label{exercise:fibmat}
   \begin{enumerate}
   \item 
 
@@ -437,32 +342,21 @@ So, let us define a binary operation, which makes $\mathbb{N}\times\mathbb{N}$ a
 \emph{The \texttt{Monoid} type class is defined 
 page~\pageref{sect:monoid-def}.}
 
-\begin{Coqsrc}
-Definition mul2 (p q : N * N) :=
-  match p, q with (a, b),(c,d) => (a*c + a*d + b*c, a*c + b*d) end.
+\inputsnippets{Fib2/mul2Def}
+\inputsnippets{Fib2/mul2Monoid}
 
-Instance Mul2 : Monoid  mul2 (0,1).
-(* Proof omitted *)
-\end{Coqsrc}
 
-The following lemma is a simplification of the equality~\vref{fibmat-eq1}.
+The following lemma is a simplification of the equality of Exercise~\ref{exercise:fibmat}.
 
-\begin{Coqsrc}
-Lemma next_fib (n:nat) : mul2 (1,0) (fib (S n), fib n) =
-                         (fib (S (S n)), fib (S n)).  
-\end{Coqsrc}
+\inputsnippets{Fib2/nextFib}
 
-By induction\footnote{Simple induction, since $n$ has type \texttt{nat}.}
- over $n$, we obtain a the following equalities.
+Let us consider a new definition of the Fibonacci function.
 
-\begin{Coqsrc}
-Definition fib_mul2 n := let (a,b) := power (M:=Mul2) (1,0) n   in (a+b).
+\inputsnippets{Fib2/fibMul2Def}
+\inputsnippets{Fib2/fibMul2OK0}
+\inputsnippets{Fib2/fibMul2OK}
+\inputsnippets{Fib2/TimeFibMul2}
 
-Lemma fib_mul2_OK_0 (n:nat) : power (M:=Mul2) (1,0) (S (S n)) =
-                              (fib (S n), fib n).
-
-Lemma fib_mul2_OK n : fib n = fib_mul2 n.
-\end{Coqsrc}
 
 Thus, any function able to compute more or less efficiently powers in a monoid will
 give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementioned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence
@@ -538,60 +432,19 @@ exponentiation function.
 
 First, we define a type for any such function.
 
-\begin{Coqsrc}
-Definition power_t := forall (A:Type)
-                             (mult : A -> A -> A)
-                             (one:A)
-                             (x:A)
-                             (n:N), A.
-\end{Coqsrc}
+\inputsnippets{FirstSteps/powerTDef}
 
 Then, we would say that a function \texttt{f:power\_t} is a correct exponentiation function if it
 is extensionally equal to \texttt{power}.
 
-\begin{Coqbad}
-Module Bad.
-
- Definition correct_expt_function (f : power_t) : Prop :=
-  forall A (mult : A -> A -> A) (one:A)
-            (x:A) (n:N), 
-            power mult one x (N.to_nat n) = f A mult one x n.
-\end{Coqbad}
-
+\inputsnippets{FirstSteps/Bada}
 
 Unfortunately, our definition of \texttt{correct\_expt} is too general. It suffices to build 
 an interpretation where the multiplication is not associative or \texttt{one} is not a neutral
 element to obtain different results through the two functions.
 
 
-
-\begin{Coqbad}
-Section CounterExample.
-    Let mul (n p : nat) := n + 2 * p.
-    Let one := 0.
-
-    Remark mul_not_associative :
-      exists  n p q,  mul n (mul p q) <> mul (mul n p) q.
-    Proof. 
-        exists 1, 1, 1; discriminate. 
-    Qed.
-
-    Remark one_not_neutral  :
-      exists n : nat, mul one n <> n.
-    Proof.
-      exists 1; discriminate.
-    Qed.
-
-    Lemma correct_expt_too_strong : 
-          ~ correct_expt_function (@N_bpow).
-    Proof.
-      intro H; specialize (H _ mul one 1  7%N).
-      discriminate H.    
-    Qed.
-
-End CounterExample.
-End Bad.
- \end{Coqbad}
+\inputsnippets{FirstSteps/Badb}
 
 
 So, we will have to improve our definition of correctness, by restricting  the universal quantification to associative operations and neutral elements, \emph{i.e.}, by considering \emph{monoids}.
@@ -641,24 +494,20 @@ on any type $A$.
 
 \emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions/Monoid\_def.v}.}
 
-\begin{Coqsrc}
-Class Mult_op (A:Type) := mult_op : A -> A -> A.  
-\end{Coqsrc}
+\inputsnippets{Monoid_def/MultOpClass}
 
 From the type theoretic point of view, the term (\texttt{Mult\_op $A$}) is 
 $\beta\delta$-reducible to \texttt{$A\arrow A \arrow A$}, and
 if \texttt{\it op} has type (\texttt{Mult\_op $A$}), then 
 (\texttt{@mult\_op A {\it op}}) is convertible with \texttt{\it op}.
 
+\inputsnippets{Monoid_def/MultOpEq}
+
 We are now ready to define a new notation scope, in which the notation
 \texttt{x * y} will be interpreted as an application of the function
 \texttt{mult\_op}.
 
-\begin{Coqsrc}
-Delimit Scope M_scope with M.
-Infix "*" := mult_op : M_scope.
-Open Scope M_scope.  
-\end{Coqsrc}
+\inputsnippets{Monoid_def/MultOpInfix}
 
  Let us show two examples of use of the
 notation scope \texttt{M\_scope}. Each example consists in declaring an 
@@ -682,9 +531,7 @@ Standard Library, has  type \linebreak \texttt{nat -> nat -> nat}, which is
 convertible  with \texttt{Mult\_op nat}. Thus the following definition is
 accepted:
 
-\begin{Coqsrc}
-Instance nat_mult_op : Mult_op nat  := Nat.mul.
-\end{Coqsrc}
+\inputsnippets{Monoid_def/DemoNatMulta}
 
 Inside \texttt{M\_scope}, the expression \texttt{3 * 4} is 
 correctly read as an application of \texttt{mult\_op}. Nevertheless 
@@ -693,21 +540,8 @@ interaction below.
 
 \emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
-\begin{Coqsrc}
-Set Printing All.
-Check  3 * 4. 
-\end{Coqsrc}
-\begin{Coqanswer}
-@mult_op nat nat_mult_op (S (S (S O))) (S (S (S (S O))))
-     : nat  
-\end{Coqanswer}
-\begin{Coqsrc}
-Unset Printing All.
-Compute 3 * 4.   
-\end{Coqsrc}
-\begin{Coqanswer}
- = 12  : nat  
-\end{Coqanswer}
+\inputsnippets{Monoid_def/DemoNatMultb}
+
 
 \subsubsection{String concatenation}
 We can use the notation \texttt{"\_ * \_ "} for other types than numbers.
@@ -718,15 +552,7 @@ as \linebreak \texttt{@mult\_op string  {\color{darkred}?X} "abc"  "def"}, then 
 
 \emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
-\begin{Coqsrc}
-Require Import String.
-
-Instance string_op : Mult_op string := append.
-Open Scope string_scope.
-
-Example ex_string : "ab" * "cde" = "abcde".
-Proof. reflexivity. Qed.
-\end{Coqsrc}
+\inputsnippets{Monoid_def/DemoStringMult}
 
 
 \subsubsection{Solving ambiguities}
@@ -753,14 +579,7 @@ $\mathds{1}$ (called \texttt{one} in the definition).
 
 \index{additions}{Type classes!Monoid}
 
-\begin{Coqsrc}
-Class Monoid {A:Type}(op : Mult_op A)(one : A) : Prop :=
-{
-    op_assoc : forall x y z:A, x * (y * z) = x * y * z;
-    one_left : forall x, one * x = x;
-    one_right : forall x, x * one = x
-}.
-\end{Coqsrc}
+\inputsnippets{Monoid_def/MonoidClass}
 
 
 \subsection{Building instances of \texttt{Monoid}}
@@ -779,30 +598,8 @@ File~\href{../theories/html/additions.Monoid_instances.html}{additions/Monoid\_i
 The following monoid allows us to compute powers of integers of arbitrary size, 
 using type \texttt{Z} from standard library:
 
-\begin{Coqsrc}
-Instance Z_mult_op : Mult_op Z := Z.mul.
 
-Instance ZMult : Monoid  Z_mult_op 1.
-Proof. 
-  split.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-3 subgoals, subgoal 1 (ID 8)
-  
-  ============================
-   forall x y z : Z, (x * (y * z))%M = (x * y * z)%M
-
-subgoal 2 (ID 9) is:
- forall x : Z, (1 * x)%M = x
-subgoal 3 (ID 10) is:
- forall x : Z, (x * 1)%M = x}
-\end{Coqanswer}
-
-\begin{Coqsrc}
-    all: unfold Z_mult_op, mult_op;intros;ring.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/ZMultDef}
 
 
 \subsubsection{Monoids on type \texttt{nat} and \texttt{N}}

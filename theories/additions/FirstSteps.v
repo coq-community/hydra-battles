@@ -17,7 +17,6 @@ Section Definitions.
 Local Infix "*" := mult.
 Local Notation "1" := one.
 
-(* end snippet Defs *)
 (**  Naive (linear) implementation *)
 
 Fixpoint power (x:A)(n:nat) : A :=
@@ -26,9 +25,12 @@ Fixpoint power (x:A)(n:nat) : A :=
     | S p =>   x * x ^ p
   end
 where "x ^ n" := (power x n).
+(* end snippet Defs *)
 
 
 (** Logarithmic implementation (with exponents in [N])  *)
+
+(* begin snippet bpowDef *)
 
 Fixpoint binary_power_mult (x a:A)(p:positive) : A 
   :=
@@ -52,28 +54,34 @@ Definition N_bpow  x (n:N) :=
   | Npos p => Pos_bpow x p
   end.
 
+(* end snippet bpowDef *)
+
+(* begin snippet EndDefs *)
 End Definitions.
 
 Arguments N_bpow  {A}.
 Arguments power  {A}.
+(* end snippet EndDefs *)
+
 
 
 (** **  Examples *)
 
-
+(* begin snippet PowerCompute *)
 Compute power Z.mul 1%Z 2%Z 10.
-
 
 Compute N_bpow Z.mul 1%Z 2%Z 10.
 
-
 Open Scope string_scope.
+
 Compute power append  "" "ab"  12.
 
 Compute N_bpow append  "" "ab"  12.
-
+(* end snippet PowerCompute *)
 
 (** Exponentiation on 2x2 matrices *)
+
+(* begin snippet M2a *)
 
 Module M2.
 Section M2_Definitions.
@@ -94,7 +102,10 @@ Section M2_Definitions.
                             c10 : A;  c11 : A}.
   
   Definition Id2 : t := mat 1 0 0 1.
-  
+
+(* end snippet M2a *)
+
+(* begin snippet M2Mult *)
   Definition M2_mult (M M':t) : t :=
     mat (c00 M * c00 M' + c01 M * c10 M')
         (c00 M * c01 M' + c01 M * c11 M')
@@ -109,6 +120,7 @@ Import M2.
 Arguments M2_mult {A} plus mult  _  _.
 Arguments mat {A} _ _ _ _.
 Arguments Id2 {A}  _ _.
+(* end snippet M2Mult *)
 
 Definition fibonacci (n:N) :=
  c00 N  (N_bpow  (M2_mult Nplus Nmult) (Id2  0%N 1%N)(mat  1 1 1 0)%N n).
@@ -116,22 +128,26 @@ Definition fibonacci (n:N) :=
  Compute fibonacci 20.
 
 
-
+(* begin snippet powerTDef *)
 Definition power_t := forall (A:Type)
                              (mult : A -> A -> A)
                              (one:A)
                              (x:A)
                              (n:N), A.
+(* end snippet powerTDef *)
 
 (** * A wrong definition of correctness *)
 
-
+(* begin snippet Bada *)
 Module Bad.
 
   Definition correct_expt_function (f : power_t) : Prop :=
     forall A (mult : A -> A -> A) (one:A)
-           (x:A) (n:N), power mult one x (N.to_nat n) = f A mult one x n.
-
+           (x:A) (n:N), power mult one x (N.to_nat n) =
+                        f A mult one x n.
+  (* end snippet Bada *)
+  
+(* begin snippet Badb:: no-out *)
   Section CounterExample.
     Let mul (n p : nat) := n + 2 * p.
     Let one := 0.
@@ -150,8 +166,6 @@ Module Bad.
       exists 1; discriminate.
     Qed.
 
-
-
     Lemma correct_exp_too_strong : ~ correct_expt_function (@N_bpow).
     Proof.
       intro H; specialize (H _ mul one 1  7%N).
@@ -161,7 +175,7 @@ Module Bad.
   End CounterExample.
 
 End Bad.
-
+(* end snippet Badb *)
 
 (** Fibonacci matrices *)
 (*

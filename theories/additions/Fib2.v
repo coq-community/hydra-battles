@@ -6,7 +6,7 @@ Import Addition_Chains.
 Open Scope N_scope.
 
 
-
+(* begin snippet FibDef *)
 Fixpoint fib (n:nat) : N :=
   match n with
     0%nat | 1%nat => 1
@@ -15,6 +15,7 @@ Fixpoint fib (n:nat) : N :=
 
 
 Compute fib 20.
+(* end snippet FibDef *)
 
 Lemma fib_ind (P:nat->Prop) :
   P 0%nat -> P 1%nat -> (forall n, P n -> P (S n) -> P(S (S n))) ->
@@ -36,10 +37,13 @@ Qed.
 
 (** Yves' encoding *)
 
-
+(* begin snippet mul2Def *)
 Definition mul2 (p q : N * N) :=
-  match p, q with (a, b),(c,d) => (a*c + a*d + b*c, a*c + b*d) end.
-  
+  match p, q with
+    (a, b),(c,d) => (a*c + a*d + b*c, a*c + b*d)
+  end.
+(* end snippet mul2Def *)
+
 Lemma neutral_l p : mul2 (0,1) p = p.
   unfold mul2. destruct p; f_equal; ring.
 Qed.
@@ -48,7 +52,10 @@ Lemma neutral_r p : mul2 p (0,1)  = p.
   unfold mul2.  destruct p; f_equal; ring.
 Qed.
 
+(* begin snippet mul2Monoid  *)
 Instance Mul2 : Monoid  mul2 (0,1).
+(* end snippet mul2Monoid  *)
+
 Proof.
   split.
   destruct x,y,z; unfold mul2;  cbn; f_equal; ring.
@@ -56,35 +63,46 @@ Proof.
   intro  x; now rewrite neutral_r.
 Qed.
 
+(* begin snippet nextFib:: no-out *)
 Lemma next_fib (n:nat) : mul2 (1,0) (fib (S n), fib n) =
                          (fib (S (S n)), fib (S n)).
+(* end snippet nextFib *)
 Proof.
   unfold mul2; f_equal; ring_simplify.
   -  rewrite fib_SSn. ring.
   - reflexivity.
 Qed.
 
+(* begin snippet fibMul2Def *)
 Definition fib_mul2 n := let (a,b) := power (M:=Mul2) (1,0) n
                          in (a+b).
 
-Lemma fib_mul2_OK_0 (n:nat) : power (M:=Mul2) (1,0) (S (S n)) =
-                              (fib (S n), fib n).
+Compute fib_mul2 20.
+(* end snippet fibMul2Def *)
 
+(* begin snippet fibMul2OK0:: no-out *)
+Lemma fib_mul2_OK_0 (n:nat) :
+  power (M:=Mul2) (1,0) (S (S n)) =
+  (fib (S n), fib n).
 Proof.
   induction n.
+  (* ... *)
+  (* end snippet fibMul2OK0 *)
   - reflexivity. 
   - now rewrite power_eq2, IHn, next_fib.
 Qed.
 
-
+(* begin snippet fibMul2OK:: no-out *)
 Lemma fib_mul2_OK n : fib n = fib_mul2 n.
+(* end snippet fibMul2OK *)
 Proof.
  unfold fib_mul2; pattern n;apply fib_ind; try reflexivity.
  - intros; rewrite fib_mul2_OK_0; now rewrite fib_SSn, N.add_comm.
 Qed.
 
+(* begin snippet TimeFibMul2 *)
 Time Compute fib_mul2 87.
-
+(* end snippet TimeFibMul2 *)
 
 Definition fib_pos n :=
   let (a,b) := Pos_bpow (M:= Mul2) (1,0) n in
