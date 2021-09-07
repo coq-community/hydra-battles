@@ -82,9 +82,9 @@ Axiom inh_Ord : inhabited Ord.
 (* begin snippet Ex42a:: no-out *)
 
 Example Ex42: omega + 42 + phi0 2 = phi0 2. 
-Proof.
   (* end snippet Ex42a *)
-  
+Proof.
+
   (* begin snippet Ex42b *)
   assert (HAP: In AP (phi0 2)) by apply AP_phi0. (* .no-out *)
   elim  (AP_phi0 2);  intros  _ H0; apply H0; clear H0. 
