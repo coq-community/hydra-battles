@@ -26,15 +26,8 @@ $n$ is a natural number and $x$ belongs to some type for which a multiplication 
 \href{../theories/html/additions.FirstSteps.html}{\texttt{additions.FirstSteps}}}
 \label{sect: power-definitions}
 
-\begin{Coqsrc}
-Section Definitions.
+\inputsnippets{FirstSteps/Defs}
 
-Variables (A: Type)
-           (mult: A -> A -> A)
-           (one: A).
-Local Infix "*" := mult.
-Local Notation "1" := one.
-\end{Coqsrc}
 
 \begin{Coqsrc}
 Fixpoint power (x:A)(n:nat) : A :=
