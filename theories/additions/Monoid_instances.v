@@ -16,13 +16,16 @@ Open Scope Z_scope.
 
 (** *** Multiplicative monoid on [Z] *)
 
+(* begin snippet ZMultDef *)
 Instance Z_mult_op : Mult_op Z := Z.mul.
 
-Instance ZMult : Monoid  Z_mult_op 1.
-Proof. 
+Instance ZMult : Monoid  Z_mult_op 1. (* .no-out *)
+Proof. (* .no-out *)
   split.
     all: unfold Z_mult_op, mult_op;intros;ring.
 Qed.
+(* end snippet ZMultDef *)
+
 
 Instance ZMult_Abelian : Abelian_Monoid ZMult.
 Proof.
