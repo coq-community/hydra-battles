@@ -697,74 +697,18 @@ For simplicity's sake, we represent such values using the \texttt{N} type,
 and consider ``equivalence modulo \texttt{$m$}'' instead of equality.
 Note that the law of associativity has been stated as Leibniz' equality.
 
-
-\begin{Coqsrc}
-Section Nmodulo.
-  Variable m : N.
-  Hypothesis m_gt_1 : 1 < m.
-    
-  Definition mult_mod ( x y : N) := (x * y) mod m.
-  Definition mod_eq ( x y: N) := x mod m = y mod m.
-  
-  Global Instance mod_equiv : Equiv N := mod_eq.
-
-  Global Instance mod_op : Mult_op N := mult_mod.
-  
-  Global Instance mod_Equiv : Equivalence mod_equiv.
-  (* Proof omitted *)
-  
-  Global Instance mult_mod_proper : 
-  Proper (mod_equiv ==> mod_equiv ==> mod_equiv)  mod_op.
-  (* Proof omitted *) 
-  
-  Local Open Scope M_Scope.
-
-  Lemma mult_mod_associative :  
-  forall x y z,  x * (y * z) = x * y * z.
-  (* Proof omitted *) 
-  
-  Lemma one_mod_neutral_l  : forall x, 1 * x ==  x.
-  (* Proof omitted *) 
-  
-  Lemma one_mod_neutral_r  : forall x, x * 1 == x.
-  (* Proof omitted *) 
-  
-  Global Instance Nmod_Monoid : EMonoid  mod_op 1 mod_equiv.
-  (* Proof omitted *) 
-
-End Nmodulo.
-
-\end{Coqsrc}
-
-\paragraph{Example}
-In the following interaction, we show how to instantiate the parameter \texttt{$m$} to a 
-concrete value, for instance \texttt{$256$}.
-
-\begin{Coqsrc}
-Section S256.
-Let mod256 :=  mod_op 256.
-Local Existing Instance mod256 | 1.
-
-Compute (211 * 67)
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= 57 : N  
-\end{Coqanswer}
-  
-\begin{Coqsrc}
-End S256.
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/Nmoduloa,
+  Monoid_instances/Nmodulob, Monoid_instances/Nmoduloc,
+  Monoid_instances/Nmodulod,
+  Monoid_instances/Nmoduloe,
+  Monoid_instances/Nmodulof,
+  Monoid_instances/Nmodulog}
+ 
 
 Outside the section \texttt{S256}, the term \texttt{(211 * 67)\%M} is interpreted as a plain multiplication in type \texttt{N}:
 
-\begin{Coqsrc}
-Compute (211 * 67)%M.
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/Nmoduloh}
 
-\begin{Coqanswer}
-= 14137 : N   
-\end{Coqanswer}
 
 \section{Computing powers in any EMonoid}
 

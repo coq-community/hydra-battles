@@ -226,10 +226,11 @@ For simplicity's sake, we represent such values using the type [N],
 and consider "equivalence modulo $m$" instead of equality.
 *)
 
-
+(* begin snippet Nmoduloa:: no-out *)
 Section Nmodulo.
   Variable m : N.
   Hypothesis m_gt_1 : 1 < m.
+  (* end snippet Nmoduloa *)
   
   Remark m_neq_0 : m <> 0.
     intro H;subst m. discriminate. 
@@ -237,14 +238,16 @@ Section Nmodulo.
   
   Local Hint Resolve m_neq_0 : chains.
   
+  (* begin snippet Nmodulob:: no-out *)
   Definition mult_mod ( x y : N) := (x * y) mod m.
   Definition mod_eq ( x y: N) := x mod m = y mod m.
   
-  Local Instance mod_equiv : Equiv N := mod_eq.
+  Instance mod_equiv : Equiv N := mod_eq.
 
-  Local Instance mod_op : Mult_op N := mult_mod.
+  Instance mod_op : Mult_op N := mult_mod.
   
-  Local Instance mod_Equiv : Equivalence mod_equiv.
+  Instance mod_Equiv : Equivalence mod_equiv.
+  (* end snippet Nmodulob *)
   Proof.
     split.
     - intros x; reflexivity.
@@ -252,9 +255,10 @@ Section Nmodulo.
     - intros x y z Hxy Hyz; transitivity (y mod m) ; auto.
   Qed.
   
-    
+  (* begin snippet Nmoduloc:: no-out *)
   Global Instance mult_mod_proper :
     Proper (mod_equiv ==> mod_equiv ==> mod_equiv) mod_op.
+  (* end snippet Nmoduloc *)
   Proof.
     unfold mod_equiv, mod_op, mult_mod, mod_eq.
     intros x y Hxy z t Hzt.
@@ -262,13 +266,14 @@ Section Nmodulo.
     rewrite (N.mul_mod x z);auto with chains.
     rewrite (N.mul_mod y t);auto with chains.
     rewrite Hxy, Hzt; reflexivity.
-   Qed.
+  Qed.
 
-
+  (* begin snippet Nmodulod:: no-out *)
   Local  Open Scope M_scope.
 
   Lemma mult_mod_associative :  forall x y z,
-                                  x * (y * z) = x * y * z.
+      x * (y * z) = x * y * z.
+  (* end snippet Nmodulod *)
   Proof.
     intros  x y z.
     unfold mod_op, mult_op, mult_mod.
@@ -277,21 +282,25 @@ Section Nmodulo.
     now rewrite  N.mul_assoc.
   Qed.
 
-  
+  (* begin snippet Nmoduloe:: no-out *)
   Lemma one_mod_neutral_l  : forall x, 1 * x == x.
+  (* end snippet Nmoduloe *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
     intro x; rewrite N.mul_1_l, N.mod_mod; auto with chains.
-   Qed.
-
+  Qed.
+  (* begin snippet Nmodulof:: no-out *)
   Lemma one_mod_neutral_r  : forall x, x * 1 == x.
+  (* end snippet Nmodulof *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
     intro x; rewrite N.mul_1_r, N.mod_mod; auto with chains.
-   Qed.
+  Qed.
+  
 
-
+  (* begin snippet Nmodulog:: no-out *)  
   Global Instance Nmod_Monoid : EMonoid  mod_op 1 mod_equiv.
+  (* end snippet Nmodulog *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
     split.
@@ -301,23 +310,27 @@ Section Nmodulo.
     - exact one_mod_neutral_l.
     - exact one_mod_neutral_r.
   Defined.
- 
-
+  
+  (* begin snippet Nmodulog *)
 End Nmodulo.
 
 Section S256.
 
-Let mod256 :=  mod_op 256.
+  Let mod256 :=  mod_op 256.
 
-Local Existing Instance mod256 | 1.
+  Local Existing Instance mod256 | 1.
 
-Compute (211 * 67)%M.
+  Compute (211 * 67)%M.
 
-(** = 57 : N *)
+  (* end snippet Nmodulog *)
+
+  (* begin snippet Nmoduloh *)
+
 End S256.
 
 Compute (211 * 67)%M.
-(** = 14137 : N *)
+
+(* end snippet Nmoduloh *)
 
 
 Close Scope N_scope.
