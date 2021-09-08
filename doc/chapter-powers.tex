@@ -119,44 +119,9 @@ section open in~\vref{sect: power-definitions}.
 \emph{From Module
 \href{../theories/html/additions.FirstSteps.html}{additions.FirstSteps}}
 
-
-\begin{Coqsrc}
-Fixpoint binary_power_mult (x a:A)(p:positive) : A 
-  :=
-  match p with
-    | xH =>  a * x
-    | xO q => binary_power_mult  (x * x) a q
-    | xI q =>  binary_power_mult  (x * x) (a * x) q
-  end.
-
-Fixpoint Pos_bpow (x:A)(p:positive) :=
- match p with
-  | xH => x
-  | xO q => Pos_bpow  (x * x) q
-  | xI q => binary_power_mult   (x * x) x q
-end.
-
-Definition N_bpow x (n:N) := 
-  match n with 
-  | 0%N => 1
-  | Npos p => Pos_bpow x p
-  end.
-
-End Definitions.
-\end{Coqsrc}
-
-
-
-
+\inputsnippets{FirstSteps/bpowDef}
 Let us  close the section \texttt{Definitions} and mark the argument \texttt{A} as implicit.
-
-\begin{Coqsrc}
-End Definitions.
-
-Arguments N_bpow {A}.
-Arguments power {A}.
-\end{Coqsrc}
-
+\inputsnippets{FirstSteps/EndDefs}
 
 \begin{remark}
 Our function \texttt{Pos\_bpow} can be considered as a tail recursive variant
@@ -188,25 +153,22 @@ $\times$ and $1$:
 
 \inputsnippets{FirstSteps/PowerCompute}
 
-\subsubsection{Exponentiation on $2\times 2$ matrices}
-\label{naive-matrix}
-Our second example is a definition of $M^n$ where $M$ is a $2\times 2$ matrix
-over any ``scalar''  type $A$, assuming one can provide $A$ with a semi-ring structure~\cite{Coq}.
+% \subsubsection{Exponentiation on $2\times 2$ matrices}
+% \label{naive-matrix}
+% Our second example is a definition of $M^n$ where $M$ is a $2\times 2$ matrix
+% over any ``scalar''  type $A$, assuming one can provide $A$ with a semi-ring structure~\cite{Coq}.
 
 
-%\subsubsection{Representation of $2\times 2$ matrices}
+% %\subsubsection{Representation of $2\times 2$ matrices}
 
-A $2\times 2$ matrix will be simply represented by a structure with four fields;
-each field \texttt{c$ij$} is associated with the $i$-th line and $j$-th column of the considered matrix.
+% A $2\times 2$ matrix will be simply represented by a structure with four fields;
+% each field \texttt{c$ij$} is associated with the $i$-th line and $j$-th column of the considered matrix.
 
-\inputsnippets{FirstSteps/M2a}
+
 
 %\subsubsection{Matrix Multiplication}
 
-The structure type \texttt{M2.t} allows us to define the product
-of two matrices. 
 
-\inputsnippets{FirstSteps/M2Mult}
 
 \subsection{Computing Fibonacci numbers}
 
@@ -610,27 +572,16 @@ using type \texttt{Z} from standard library:
 We define two monoids on type \texttt{nat}:
 \begin{itemize}
 \item The ``natural'' monoid $(\mathbb{N},\times, 1)$ :
+\inputsnippets{Monoid_instances/natMult}
 
-  \begin{Coqsrc}
-Instance nat_mult_op : Mult_op nat | 5 := Nat.mul.
 
-Instance  Natmult : Monoid nat_mult_op  1%nat | 5
-Proof.
-   split;unfold nat_mult_op, mult_op; intros; ring.
-Qed.
-\end{Coqsrc}
 
 \item The ``additive''  monoid $(\mathbb{N},+, 0)$.
 This monoid will play an important role in correctness proofs of complex
 exponentiation algorithms. Its most important property is that the $n$-th 
 power of $1$ is equal to $n$. See Sect.~\vref{correctness-for-free} for more details.
 
-\begin{Coqsrc}
-Instance nat_plus_op : Mult_op nat | 12 := Nat.add.
-
-Instance Natplus : Monoid nat_plus_op  0%nat | 12.
-(* Proof omitted *)
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/natPlus}
 \end{itemize}
 
 Similarly, instances \texttt{NMult} and  \texttt{NPlus}  are built for type \texttt{N}, and
@@ -645,82 +596,20 @@ The type \texttt{int31} is defined  in Module
 \textbf{Coq.Numbers.Cyclic.Int31.Int31} of \coq's standard library. The tactic \texttt{ring} works 
 with this type, and helps us to register an instance \texttt{Int31Mult} of class  \texttt{Monoid int31\_mult\_op 1}.
 
-\begin{Coqsrc}
-Instance int31_mult_op : Mult_op int31 := mul31.
-
-Instance  Int31mult : Monoid int31_mult_op  1.
-Proof.
-   split;unfold int31_mult_op, mult_op; intros; ring.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/int31}
 
 Beware that machine integers are not natural numbers! 
 
-\begin{Coqbad}
-Module Bad.
-
-Fixpoint int31_from_nat (n:nat) :=
-  match n with
-  | O => 1
-  | S p => 1 + int31_from_nat p
-  end.
-
-Coercion int31_from_nat : nat >-> int31.
-
-Fixpoint fact (n:nat) := 
-  match n with
-   | O => 1
-   | S p => n * fact p
-  end.
-
-Example fact_zero : exists n:nat, fact n = 0.
-Proof.  now exists 40%nat.  Qed.
-
-End Bad.
-\end{Coqbad}
+\inputsnippets{Monoid_instances/BadFact}
 
 \subsection{Matrices on a semi-ring}
 
-In Sect.\vref{naive-matrix}, we defined a function for computing powers of any $2\times 2$ 
-matrix over any semi-ring. For proving a simple property of matrix exponentiation, we had
- to prove that matrix multiplication is associative and admits the identity matrix as a neutral element. These properties are easily expressed within the type class framework, by defining a \emph{family} of monoids.
+Let $(A,+,\times)$ be a semi-ring. We define a multiplicative monoid on the set of \emph{e.g.} $2\times 2$-) square matrices over $A$.
 It suffices to define an instance of \texttt{Monoid} within the scope of a hypothesis
 of type \texttt{semi\_ring\_theory}.
 
-\begin{Coqsrc}
-Section M2_def.
-Variables (A:Type)
-           (zero one : A) 
-           (plus mult  : A -> A -> A).
+\inputsnippets{Monoid_instances/M2Defsa, Monoid_instances/M2Defsb}
 
- Variable rt : semi_ring_theory  zero one plus mult  (@eq A).
- Add  Ring Aring : rt.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Structure M2 : Type := {c00 : A;  c01 : A;
-                        c10 : A;  c11 : A}.
-
-Definition Id2 : M2 := Build_M2 1 0 0 1.
-
-Definition M2_mult (m m':M2) : M2 :=
- Build_M2 
-          (c00 m * c00 m' + c01 m * c10 m')
-          (c00 m * c01 m' + c01 m * c11 m')
-          (c10 m * c00 m' + c11 m * c10 m')
-          (c10 m * c01 m' + c11 m * c11 m').
-
-Global Instance M2_op : Mult_op M2 := M2_mult.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Global Instance M2_Monoid : Monoid   M2_op Id2.
-(* Proof omitted *)
-
-End M2_def.
-
-Arguments M2_Monoid {A zero one plus mult} rt.
-\end{Coqsrc}
 
 
 \subsection{Monoids and equivalence relations}
@@ -753,11 +642,7 @@ First, let us define an operational type class for equivalence relations:
 \noindent
 \emph{From Module \href{../theories/html/additions.Monoid_def.html}{additions.Monoid\_def}}
 
-\begin{Coqsrc}
-Class Equiv A := equiv : relation A.
-
-Infix "==" := equiv (at level 70) : type_scope.
-\end{Coqsrc}
+\inputsnippets{Monoid_def/EquivDef}
 
 The definition of class \texttt{EMonoid} looks like \texttt{Monoid}'s definition, 
 plus some constraints on \texttt{E\_eq}.
@@ -774,17 +659,7 @@ for understanding the use of  type classes \texttt{Equivalence}, \texttt{Reflexi
 
 \index{additions}{Type classes!EMonoid}
 
-\begin{Coqsrc}
-Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A) 
-      (E_eq: Equiv A): Prop :=
-  {
-    Eq_equiv :> Equivalence equiv;
-    Eop_proper :> Proper (equiv ==> equiv ==> equiv) E_op;
-    Eop_assoc : forall x y z, x * (y * z) == x * y * z;
-    Eone_left : forall x,  E_one * x == x;
-    Eone_right : forall x,  x * E_one ==  x
-  }.
-\end{Coqsrc}
+\inputsnippets{Monoid_def/EMonoidDef}
 
 \subsubsection{Coercion from Monoid to EMonoid} 
 Every instance of class  \texttt{Monoid} can be transformed into an instance of
@@ -795,20 +670,8 @@ much as possible within the more generic framework of \texttt{EMonoid}s.
 
 \index{coq}{Coercions}
 
-\begin{Coqsrc}
-Global Instance eq_equiv {A} : Equiv A := eq.
+\inputsnippets{Monoid_def/Coerciona}
 
-Global Instance Monoid_EMonoid `(M:@Monoid A op one) :
-        EMonoid  op one eq_equiv.
-Proof.
-split; unfold eq_equiv, equiv in *.
- - apply eq_equivalence.
- - intros x y H z t H0; now subst.
- - intros; now rewrite (op_assoc).
- - intro; now rewrite one_left.
- - intro; now rewrite one_right.
-Defined.
-\end{Coqsrc}
 
 \begin{remark}
 In the definition of \texttt{Monoid\_EMonoid}, the free variables  \texttt{A}, 
@@ -818,27 +681,12 @@ In the definition of \texttt{Monoid\_EMonoid}, the free variables  \texttt{A},
 Thanks to the following \emph{coercion}, every instance of \texttt{Monoid} can 
 now be considered as an instance of \texttt{EMonoid}. For more details, please look at the section \emph{Implicit Coercions} of \coq's reference manual~\cite{Coq}.
 
-
-
-
-
-
-\begin{Coqsrc}
-Coercion Monoid_EMonoid : Monoid >-> EMonoid.
-\end{Coqsrc}
-
-%ici% 
+\inputsnippets{Monoid_def/Coercionb}
 
 \emph{From Module \href{../theories/html/additions.Monoid_instances.html}{additions.Monoid\_instances}}
 
-\begin{Coqsrc}
-Check NMult : EMonoid  N.mul 1%N eq.
-\end{Coqsrc}
+\inputsnippets{Monoid_instances/CheckCoercion}
 
-\begin{Coqanswer}
-  NMult:EMonoid N.mul 1%N eq
-     : EMonoid N.mul 1%N eq
-\end{Coqanswer}
 
 \subsubsection{Example : Arithmetic  modulo $m$}
 

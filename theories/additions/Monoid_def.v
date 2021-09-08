@@ -118,13 +118,16 @@ The laws of associativity and neutral element
 are not expressed as Leibniz equalities but as equivalence statements:
 *)
 
-
+(* begin snippet EquivDef *)
 Class Equiv A := equiv : relation A.
 
 Infix "==" := equiv (at level 70) : type_scope.
+(* end snippet EquivDef *)
+
 (*
 equiv : forall A : Type, Equiv A -> relation A
 *)
+(* begin snippet EMonoidDef *)
 
 Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A): Prop :=
@@ -135,6 +138,7 @@ Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A)
     Eone_left : forall x,  E_one * x == x;
     Eone_right : forall x,  x * E_one ==  x
   }.
+(* end snippet EMonoidDef *)
 
 
 Instance Equiv_Equiv (A:Type)(E_op : Mult_op A)(E_one : A) 
@@ -173,6 +177,7 @@ Every instance of class  [Monoid] can be transformed into an instance of
 [EMonoid], considering Leibniz' equality [eq].
 *)
 
+(* begin snippet Coerciona:: no-out  *)
 Global Instance eq_equiv {A} : Equiv A := eq.
 
 Global Instance Monoid_EMonoid `(M:@Monoid A op one) :
@@ -185,13 +190,14 @@ split; unfold eq_equiv, equiv in *.
  - intro; now rewrite one_left.
  - intro;now rewrite one_right.
 Qed.
-
+(* end snippet Coerciona  *)
 
 (** We can now register [Monoid_EMonoid] as a _coercion_:
 *)
 
+(* begin snippet Coercionb:: no-out  *)
 Coercion Monoid_EMonoid : Monoid >-> EMonoid.
-
+(* end snippet Coercionb  *)
 
 (** *** Commutative Monoids 
 
