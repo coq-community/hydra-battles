@@ -35,17 +35,15 @@ Qed.
 
 (** *** Multiplicative monoid on [nat] *)
 
+(* begin snippet natMult:: no-out *)
 
 Instance nat_mult_op : Mult_op nat | 5 := Nat.mul.
-
-Set Printing All.
-
 
 Instance  Natmult : Monoid nat_mult_op  1%nat | 5.
 Proof.
    split;unfold nat_mult_op, mult_op; intros; ring.
 Qed.
-
+(* end snippet natMult *)
 
 (** *** Additive monoid on [nat] 
 
@@ -54,12 +52,16 @@ exponentiation algorithms. In effect, the $n$-th "power" of $1$ is
 equal to $n$. See Sect.%~\ref{chains-exponent}.
 *)
 
+(* begin snippet natPlus:: no-out *)
 Instance nat_plus_op : Mult_op nat | 12 := Nat.add.
 
 Instance Natplus : Monoid nat_plus_op  0%nat | 12.
 Proof.
    split;unfold nat_plus_op, mult_op; intros; ring.
 Qed.
+
+(* end snippet natPlus *)
+
 
 Open Scope N_scope.
 
@@ -69,6 +71,11 @@ Instance NMult : Monoid N_mult_op 1 | 5.
 Proof.
   split;unfold N_mult_op, mult_op; intros; ring.
 Qed.
+
+
+(* begin snippet CheckCoercion *)
+Check NMult : EMonoid  N.mul 1%N eq.
+(* end snippet CheckCoercion *)
 
 
 Instance N_plus_op  : Mult_op N | 12 := N.add.
@@ -106,36 +113,38 @@ The type [int31] is defined in Standard Library in Module
 [Coq.Numbers.Cyclic.Int31.Int31].
 *)
 
+(* begin snippet int31:: no-out *)
 Instance int31_mult_op : Mult_op int31 := mul31.
 
 Instance  Int31mult : Monoid int31_mult_op  1.
 Proof.
    split;unfold int31_mult_op, mult_op; intros; ring.
 Qed.
-
-
-Module Bad. 
-
-Fixpoint int31_from_nat (n:nat) :=
-  match n with
-  | O => 1
-  | S p => 1 + int31_from_nat p
-  end.
-
-Coercion int31_from_nat : nat >-> int31.
-
-Fixpoint fact (n:nat) := match n with
-                               O => 1
-                              | S p => n * fact p
-                              end.
-
-Example fact_zero : exists n:nat, fact n = 0.
-Proof.  now exists 40%nat.  Qed.
+(* end snippet int31 *)
 
 
 
+  (* begin snippet BadFact *)
+Module Bad.
+  
+  Fixpoint int31_from_nat (n:nat) :=
+    match n with
+    | O => 1
+    | S p => 1 + int31_from_nat p
+    end.
+  
+  Coercion int31_from_nat : nat >-> int31.
+  
+  Fixpoint fact (n:nat) := match n with
+                             O => 1
+                           | S p => n * fact p
+                           end.
+  Compute fact 40. 
 
 End Bad. 
+(* end snippet BadFact *)
+
+
 Close Scope int31_scope.
 
 
@@ -146,16 +155,19 @@ of $2\times 2$-matrices, the coefficients of which have type $A$.
 
 *)
 
+(* begin snippet M2Defsa *)
+
 Section M2_def.
 Variables (A:Type)
            (zero one : A) 
            (plus mult  : A -> A -> A).
+
  Notation "0" := zero.  
  Notation "1" := one.
  Notation "x + y" := (plus x y).  
  Notation "x * y " := (mult x y).
 
- Variable rt : semi_ring_theory  zero one plus mult  (@eq A).
+ Variable rt : semi_ring_theory  zero one plus mult (@eq A).
  Add  Ring Aring : rt.
 
 
@@ -170,6 +182,7 @@ Definition M2_mult (m m':M2) : M2 :=
           (c10 m * c00 m' + c11 m * c10 m')
           (c10 m * c01 m' + c11 m * c11 m').
 
+(* end snippet M2Defsa *)
 
 
 Lemma M2_eq_intros : forall a b c d a' b' c' d',
@@ -179,9 +192,13 @@ Proof.
  intros; now f_equal.
 Qed.
 
+(* begin snippet M2Defsb:: no-out *)
+
 Global Instance M2_op : Mult_op M2 := M2_mult.
 
 Global Instance M2_Monoid : Monoid   M2_op Id2.
+(* ... *)
+(* end snippet M2Defsb *)
 Proof. 
  unfold M2_op, mult_op; split.
  - destruct x;destruct y;destruct z;simpl.
