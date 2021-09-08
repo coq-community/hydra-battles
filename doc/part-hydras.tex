@@ -3245,7 +3245,13 @@ $i+\alpha=\alpha$.
     \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/ge_omega_iff.v}{exercises/ordinals/ge\_omega\_iff.v}.}
 \end{exercise}
 
+\subsection{A proof by computation}
+\label{Ex42-E0}
 
+It is interesting to compare the following proof of the equality
+$\omega+42+\omega^2$ with the more theoretical proof in Sect~\vref{Ex42-schutte}.
+
+\inputsnippets{E0/Ex42}
 
 \section{Well-foundedness and transfinite induction}
 
@@ -3386,6 +3392,8 @@ We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's 
 \input{movies/snippets/Correctness_E0/injectDef}
 
 \input{movies/snippets/Correctness_E0/Epsilon0Correct}
+
+
 
 \index{hydras}{Projects}
 \begin{project}
@@ -6053,6 +6061,7 @@ The set of additive principal ordinals is not empty: it contains at least the or
 \inputsnippets{AP/APOne,AP/APOne_least_AP,AP/APOne_AP_omega,AP/APOne_omega_second_AP}
 
 The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
+\label{lemma:AP-plus-closed}
 
 \input{movies/snippets/AP/APPlusClosed}
 
@@ -6082,7 +6091,25 @@ The following properties come from  the definition of $\phi_0$ as the ordering f
 
 \input{movies/snippets/AP/APPhi0}
 
+\subsection{A last example}
+\label{Ex42-schutte}
 
+Let us prove again the equality $\omega+42+\omega^2= \omega^2$.Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
+\emph{i.e} the third  additive principal ordinal.
+
+\inputsnippets{Schutte/Ex42a}
+
+
+Our proof is very different from the computational proof of Sect~\vref{Ex42-E0}.
+By definition of additive principal ordinals, 
+it suffices to prove the inequality $\omega+42< \phi_0(2)$ to get the equality we want to prove.
+
+\inputsnippets{Schutte/Ex42b}
+
+Since the set \texttt{AP} of additive principals  is closed under addition
+(by Lemma \texttt{AP\_plus\_closed}, page~\pageref{lemma:AP-plus-closed}) , it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
+
+\inputsnippets{Schutte/Ex42c, Schutte/Ex42d}
 
 \section{More about \texorpdfstring{$\epsilon_0$}{\texttt{epsilon0}}}
 
@@ -6135,7 +6162,7 @@ Module \href{../theories/html/hydras.Schutte.Critical.html}%
 
 \input{movies/snippets/Critical/CrDef}
 
-Lets us denote by $\varphi_\alpha$ the ordering function of the set $\textit{Cr}(\alpha)$ and by $A_\alpha$ its ordering segment.
+Lets us denote by $\phi_\alpha$ the ordering function of the set $\textit{Cr}(\alpha)$ and by $A_\alpha$ its ordering segment.
 
 \input{movies/snippets/Critical/phiDef}
 

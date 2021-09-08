@@ -831,9 +831,10 @@ Proof.
   now apply  T1.mult_plus_distr_l.
 Qed.
 
-
-Example Ex42: (omega + 42 + omega^ 2 = omega^  2)%e0.
-Proof. 
-  now rewrite <-  Comparable.compare_eq_iff.
+(* begin snippet Ex42 *)
+Example Ex42: (omega + 42 + omega^ 2 = omega^  2)%e0. (* .no-out *)
+Proof. (* .no-out *)
+  rewrite <-  Comparable.compare_eq_iff.
+  reflexivity.
 Qed.
-
+(* end snippet Ex42 *)
