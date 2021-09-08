@@ -1,0 +1,196 @@
+% easychair.tex,v 3.5 2017/03/15
+
+\documentclass{easychair}
+%\documentclass[EPiC]{easychair}
+%\documentclass[EPiCempty]{easychair}
+%\documentclass[debug]{easychair}
+%\documentclass[verbose]{easychair}
+%\documentclass[notimes]{easychair}
+%\documentclass[withtimes]{easychair}
+%\documentclass[a4paper]{easychair}
+%\documentclass[letterpaper]{easychair}
+
+\usepackage{doc}
+
+%%%% For Alectryon
+
+\usepackage{texments}
+%%% for movies by alectryon
+\usepackage{../movies/snippets/assets/alectryon}
+\usepackage{../movies/snippets/assets/pygments}
+%%% One hypothesis per line 
+\makeatletter
+\renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
+\makeatother
+
+%%% \snippets{A,B,C,…} inputs a series of snippets as one block (with \itemsep
+%%% between them).  A, B, C should be paths to files in movies/snippets/.
+\usepackage{etoolbox}
+\makeatletter
+\newcommand{\inputsnippets}[1]
+  {{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
+    \alectryon@copymacros\begin{io}
+      \forcsvlist{\item\@inputsnippet}{#1}
+    \end{io}}}
+\let\input@old\input % Save definition of \input
+\newcommand{\@inputsnippet}[1]
+  {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \input@old{../movies/snippets/#1}}}
+\makeatother
+
+% use this if you have a long article and want to create an index
+% \usepackage{makeidx}
+
+% In order to save space or manage large tables or figures in a
+% landcape-like text, you can use the rotating and pdflscape
+% packages. Uncomment the desired from the below.
+%
+% \usepackage{rotating}
+% \usepackage{pdflscape}
+
+% Some of our commands for this guide.
+%
+\newcommand{\easychair}{\textsf{easychair}}
+\newcommand{\miktex}{MiK{\TeX}}
+\newcommand{\texniccenter}{{\TeX}nicCenter}
+\newcommand{\makefile}{\texttt{Makefile}}
+\newcommand{\latexeditor}{LEd}
+
+%\makeindex
+
+%% Front Matter
+%%
+% Regular title as in the article class.
+%
+\title{Hydras and Cie \\
+  Variations on Kirby \& Paris' hydra battles and other entertaining math in Coq}
+ 
+
+
+\author{
+Pierre Castéran \inst{1}
+\and
+    Jérémy Damour \inst{2}
+\and
+Karl Palmskog \inst{3}
+\and Clément Pit-Claudel \inst{4}
+\and Théo Zimmermann \inst{5}
+}
+
+
+\institute{
+ LaBRI, Université Bordeaux \\
+  \email{pierre.casteran@labri.fr}
+\and
+   University of Miami,
+   Miami, Florida, U.S.A.\\
+   \email{geoff@cs.miami.edu}\\
+\and
+   University of Manchester,
+   Manchester, U.K.\\
+   \email{andrei@voronkov.com}\\
+\and
+   Chalmers University of Technology,
+   Gothenburg, Sweden
+\and
+   EasyChair
+ }
+
+
+
+\authorrunning{Castéran, Damour, Palmskog, Pit-Claudel and Zimmermann}
+
+% \titlerunning{} has to be set to either the main title or its shorter
+% version for the running heads. When processed by
+% EasyChair, this command is mandatory: a document without \titlerunning
+% will be rejected by EasyChair
+\titlerunning{Hydras and Cie}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+We present the current state of our library \dots
+\end{abstract}
+
+
+\setcounter{tocdepth}{2}
+{\small
+\tableofcontents}
+
+%\section{To mention}
+%
+%Processing in EasyChair - number of pages.
+%
+%Examples of how EasyChair processes papers. Caveats (replacement of EC
+%class, errors).
+
+%------------------------------------------------------------------------------
+\section{Introduction}
+\label{sect:introduction}
+
+
+\section{Documentation with Alectryon}
+
+We present two ~examples of the documentation generated with Alectryon: A simple proof by computation (Fig.~\ref{fig:Ex42E0}), and a longer proof where only the main steps are displayed, interleaved with plain text.
+
+  \begin{figure}[h]
+    \centering
+    \fbox{
+      \begin{minipage}[h]{1.0\linewidth}
+        \inputsnippets{E0/Ex42}
+      \end{minipage}}
+    \caption{A simple proof by computation}
+    \label{fig:Ex42E0}
+  \end{figure}
+\label{Ex42-E0}.
+
+
+
+\begin{figure}[h]
+  \centering
+  
+  
+\label{Ex42-schutte}
+\fbox{\begin{minipage}[h]{1.0\linewidth}
+  Let us prove again the equality $\omega+42+\omega^2= \omega^2$.Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
+\emph{i.e} the third  additive principal ordinal.
+
+\inputsnippets{Schutte/Ex42a}
+
+
+Our proof is very different from the computational proof of Fig\ref{fig:Ex42E0}.
+By definition of additive principal ordinals, 
+it suffices to prove the inequality $\omega+42< \phi_0(2)$ to get the equality we want to prove.
+
+\inputsnippets{Schutte/Ex42b}
+
+Since the set \texttt{AP} of additive principals  is closed under addition
+(by Lemma \texttt{AP\_plus\_closed}, page~\pageref{lemma:AP-plus-closed}) , it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
+
+\inputsnippets{Schutte/Ex42c, Schutte/Ex42d}
+
+\end{minipage}
+}
+\caption{A proof interleaved with text (from the book)}
+  \label{fig:Ex42b}
+\end{figure}
+
+
+\section{Acknowledgments}
+\label{sect:acks}
+
+
+
+\label{sect:bib}
+\bibliographystyle{plain}
+%\bibliographystyle{alpha}
+%\bibliographystyle{unsrt}
+%\bibliographystyle{abbrv}
+\bibliography{easychair}
+
+
+\end{document}
+
