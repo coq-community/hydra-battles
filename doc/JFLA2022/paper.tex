@@ -70,11 +70,11 @@
 \author{
 Pierre Castéran \inst{1}
 \and
-    Jérémy Damour \inst{2}
+    Jérémy Damour %\inst{2}
 \and
-Karl Palmskog \inst{3}
-\and Clément Pit-Claudel \inst{4}
-\and Théo Zimmermann \inst{5}
+Karl Palmskog %\inst{3}
+\and Clément Pit-Claudel %\inst{4}
+\and Théo Zimmermann %\inst{5}
 }
 
 
@@ -100,10 +100,6 @@ Karl Palmskog \inst{3}
 
 \authorrunning{Castéran, Damour, Palmskog, Pit-Claudel and Zimmermann}
 
-% \titlerunning{} has to be set to either the main title or its shorter
-% version for the running heads. When processed by
-% EasyChair, this command is mandatory: a document without \titlerunning
-% will be rejected by EasyChair
 \titlerunning{Hydras and Cie}
 
 \begin{document}
@@ -112,7 +108,8 @@ Karl Palmskog \inst{3}
 
 
 \begin{abstract}
-We present the current state of our library \dots
+  We present the evolution of our library \cite{HydraBattles}
+since \cite{JFLA2018paper}
 \end{abstract}
 
 
@@ -120,21 +117,27 @@ We present the current state of our library \dots
 {\small
 \tableofcontents}
 
-%\section{To mention}
-%
-%Processing in EasyChair - number of pages.
-%
-%Examples of how EasyChair processes papers. Caveats (replacement of EC
-%class, errors).
 
 %------------------------------------------------------------------------------
 \section{Introduction}
 \label{sect:introduction}
+Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
+L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}. 
+Although the mathematical contents of this 
+paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
+
+Hydra battles have already been presented in
+JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-community project, and documentation generated with Alectryon. 
+
+
+\section{New contents}
+Length of usually considered battles.
+They correspond to the notions of canonical sequences and large sets in \cite{KS81}.
 
 
 \section{Documentation with Alectryon}
 
-We present two ~examples of the documentation generated with Alectryon: A simple proof by computation (Fig.~\ref{fig:Ex42E0}), and a longer proof where only the main steps are displayed, interleaved with plain text.
+We present two ~examples of the documentation generated with Alectryon~\cite{alectryonpaper}: A simple proof by computation (Fig.~\ref{fig:Ex42E0}), and a longer proof where only the main steps are displayed, interleaved with plain text.
 
   \begin{figure}[h]
     \centering
@@ -149,7 +152,7 @@ We present two ~examples of the documentation generated with Alectryon: A simple
 
 
 
-\begin{figure}[h]
+\begin{figure}[ph]
   \centering
   
   
@@ -168,7 +171,7 @@ it suffices to prove the inequality $\omega+42< \phi_0(2)$ to get the equality w
 \inputsnippets{Schutte/Ex42b}
 
 Since the set \texttt{AP} of additive principals  is closed under addition
-(by Lemma \texttt{AP\_plus\_closed}, page~\pageref{lemma:AP-plus-closed}) , it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
+(by Lemma \texttt{AP\_plus\_closed}, it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
 
 \inputsnippets{Schutte/Ex42c, Schutte/Ex42d}
 
@@ -177,6 +180,17 @@ Since the set \texttt{AP} of additive principals  is closed under addition
 \caption{A proof interleaved with text (from the book)}
   \label{fig:Ex42b}
 \end{figure}
+
+\section{Perspectives}
+The Gaia project~\cite{Gaia}, also maintained on \texttt{Coq-community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementaion in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
+\texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
+It is interesting to note that both libraries \texttt{Gaia} and \texttt{hydra-battles} contain their own (isomorphic) definitions of
+\texttt{T1} and \texttt{T2}, originated in~\cite{CantorContrib}.
+The types --- defined in different modules --- cannot be considered as equal. Even more, some operations like addition, multiplication, etc. have now different definitions.
+
+It would be interesting to build a library which could be used as a gate giving access to both the combinatorial results of \texttt{hydra-battles} and the set-theoretic content of \texttt{Gaia}.
+For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \texttt{Gaia} could be tranferred ``for free'' to the data structures of \texttt{hydra-battles}, thanks to the isomorphism between both implementations.
+
 
 
 \section{Acknowledgments}
@@ -189,7 +203,7 @@ Since the set \texttt{AP} of additive principals  is closed under addition
 %\bibliographystyle{alpha}
 %\bibliographystyle{unsrt}
 %\bibliographystyle{abbrv}
-\bibliography{easychair}
+\bibliography{../thebib}
 
 
 \end{document}
