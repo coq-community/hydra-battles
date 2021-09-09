@@ -97,9 +97,9 @@ Proof.
     }
     (* end  snippet Ex42c *)
     (* begin snippet  Ex42d *)
-   About AP_plus_closed.
-
-   apply AP_plus_closed; trivial.
+    Show. (* no-out *)
+   Check AP_plus_closed. (* .unfold *)
+   apply AP_plus_closed; trivial. 
   (* ... *)
     (* end snippet  Ex42d *)
    -  apply lt_trans with omega; [| trivial]. 
