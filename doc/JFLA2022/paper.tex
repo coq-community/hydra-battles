@@ -56,6 +56,9 @@
 \newcommand{\makefile}{\texttt{Makefile}}
 \newcommand{\latexeditor}{LEd}
 
+\newtheorem{todo}{To do}
+
+
 %\makeindex
 
 %% Front Matter
@@ -134,6 +137,9 @@ JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: n
 Length of usually considered battles.
 They correspond to the notions of canonical sequences and large sets in \cite{KS81}.
 
+\begin{todo}
+  Relation with Russel's library (maintained in Coq-community).
+\end{todo}
 
 \section{Documentation with Alectryon}
 
@@ -170,8 +176,8 @@ it suffices to prove the inequality $\omega+42< \phi_0(2)$ to get the equality w
 
 \inputsnippets{Schutte/Ex42b}
 
-Since the set \texttt{AP} of additive principals  is closed under addition
-(by Lemma \texttt{AP\_plus\_closed}, it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
+Since the set \textit{AP} of additive principals  is closed under addition
+(by Lemma \textit{AP\_plus\_closed}, it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
 
 \inputsnippets{Schutte/Ex42c, Schutte/Ex42d}
 
@@ -182,19 +188,19 @@ Since the set \texttt{AP} of additive principals  is closed under addition
 \end{figure}
 
 \section{Perspectives}
-The Gaia project~\cite{Gaia}, also maintained on \texttt{Coq-community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementaion in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
+The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementaion in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
 \texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
-It is interesting to note that both libraries \texttt{Gaia} and \texttt{hydra-battles} contain their own (isomorphic) definitions of
+It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic) definitions of
 \texttt{T1} and \texttt{T2}, originated in~\cite{CantorContrib}.
 The types --- defined in different modules --- cannot be considered as equal. Even more, some operations like addition, multiplication, etc. have now different definitions.
 
-It would be interesting to build a library which could be used as a gate giving access to both the combinatorial results of \texttt{hydra-battles} and the set-theoretic content of \texttt{Gaia}.
-For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \texttt{Gaia} could be tranferred ``for free'' to the data structures of \texttt{hydra-battles}, thanks to the isomorphism between both implementations.
+It would be interesting to build a library which could be used as a gate giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}.
+For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \textit{Gaia} could be tranferred ``for free'' to the data structures of \textit{hydra-battles}, thanks to the isomorphism between both implementations.
 
 
 
-\section{Acknowledgments}
-\label{sect:acks}
+%\section{Acknowledgments}
+%\label{sect:acks}
 
 
 
