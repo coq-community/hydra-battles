@@ -12,6 +12,7 @@
 
 \usepackage{doc}
 
+% -------------------------------
 %%%% For Alectryon
 
 \usepackage{texments}
@@ -38,27 +39,16 @@
     \input@old{../movies/snippets/#1}}}
 \makeatother
 
-% use this if you have a long article and want to create an index
-% \usepackage{makeidx}
+%---------------------------- 
+\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+\newtheorem{todo}{To do}
+\usepackage{amsfonts}
 
-% In order to save space or manage large tables or figures in a
-% landcape-like text, you can use the rotating and pdflscape
-% packages. Uncomment the desired from the below.
-%
-% \usepackage{rotating}
-% \usepackage{pdflscape}
-
-% Some of our commands for this guide.
-%
 \newcommand{\easychair}{\textsf{easychair}}
 \newcommand{\miktex}{MiK{\TeX}}
 \newcommand{\texniccenter}{{\TeX}nicCenter}
 \newcommand{\makefile}{\texttt{Makefile}}
 \newcommand{\latexeditor}{LEd}
-\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
-
-
-\newtheorem{todo}{To do}
 
 
 %\makeindex
@@ -68,7 +58,7 @@
 % Regular title as in the article class.
 %
 \title{Hydras and Cie \\
-  Variations on Kirby \& Paris' hydra battles and other entertaining math in Coq}
+  Variations on Kirby \& Paris' hydra battles and ordinal numbers in Coq}
  
 
 
@@ -113,14 +103,16 @@ Karl Palmskog %\inst{3}
 
 
 \begin{abstract}
-  We present the evolution of our library \cite{HydraBattles}
+  \begin{todo}
+  We present the current state and evolution of a  library \cite{HydraBattles}
 since \cite{JFLA2018paper}
+  \end{todo}
 \end{abstract}
 
 
-\setcounter{tocdepth}{2}
-{\small
-\tableofcontents}
+% \setcounter{tocdepth}{2}
+% {\small
+% \tableofcontents}
 
 
 %------------------------------------------------------------------------------
@@ -152,17 +144,24 @@ JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: n
 \section{New contents}
 We are interested in a usual variant of hydra-battles, where the hydra grows $n$ copies at step $n$ of the game (see the examples presented in ~\cite{KP82, BauerHydra}).
 In terms of ordinals, this variant is described as a (finite) sequence $s_n\,(n\geq i)$ of ordinals strictly below $\epsilon_0$.
+This sequence is parameterized by an initial index $i\in\mathbb{N}$ and an ordinal $\alpha<\epsilon_0$.
+
 \begin{itemize}
+  \item $s_i=\alpha$
 \item If $s_n=0$, then the sequence is empty,
 \item if $s_n=\beta+1$, then $s_{n+1}=\beta$,
 \item Otherwise, $s_n$ is a \emph{limit ordinal} $\lambda$; then $s_{n+1}$ is $\canonseq{\lambda}{n+1}$, \emph{i.e.} the
     $n+1$-th element of the \emph{canonical sequence} associated with $\lambda$~\cite{KS81}.
 \end{itemize} 
 
-The length of such a sequence is $l-i$, where $s_l=0$. It depends both on the initial index $i$ and the initial term $\alpha=s_i$. Adapting to \emph{Coq} a few lemmas from~\cite{KS81}, we prove that this length is minored by a fast growing function.
-More precisely, the length  of the sequence associated with
+The length of such a sequence is $l-i$, where $l$ is the first --- and unique --- natural number such that $s_l=0$.
+For a given $\alpha$, this length is a function of 
+the initial index $i$.
+
+Adapting to \emph{Coq} a few lemmas from~\cite{KS81}, we prove that the length  of the sequence associated with
 $\omega^\alpha$ and initial index $i\geq 2$ is greater or equal than
 $F_{\omega^\alpha}(i-1)-(i-1)$, where $F_\alpha$ is a variant of the Wainer hierarchy of rapidly growing functions, defined and studied in~\cite{KS81}.
+
 From this minoration, we infer that the function which associates to $i$ the length of the considered sequence (for a given $\alpha$) is not primitive recursive in general (our counter-example is for $\alpha=\omega^\omega$).
 
 It is important to notice that, for proving this last result, we decided to host and maintain within \emph{Coq-Community} the formalization of primitive recursive function, part of Russel O'Connor work on G\"{o}del's first incompleteness theorem~\cite{OConnor05}.
