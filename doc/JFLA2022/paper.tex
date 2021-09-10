@@ -55,6 +55,8 @@
 \newcommand{\texniccenter}{{\TeX}nicCenter}
 \newcommand{\makefile}{\texttt{Makefile}}
 \newcommand{\latexeditor}{LEd}
+\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+
 
 \newtheorem{todo}{To do}
 
@@ -129,17 +131,47 @@ L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Pea
 Although the mathematical contents of this 
 paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
+Our project is to illustrate  this work by a library written in \emph{Coq} and an electronic book containing explanations of the mathematical content and its possible mechanized formalisations.
+
+
 Hydra battles have already been presented in
 JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-community project, and documentation generated with Alectryon. 
 
+\begin{todo}
+  Comment the multiple views of a same mathematical object:
+  \begin{itemize}
+  \item Ordinals notations: for $\omega$, $\omega^\omega$,
+    $\epsilon_0$, $\Gamma_0$. Proofs by computation whenever possible (see Fig.~\ref{Ex42-E0}.
+  \item (Axiomatic) model by Schütte. Less computations.
+    application of previously proven lemmas (see Fig~\ref{fig:Ex42b}).
+  \item Bridge lemmas (relative correctness of different representations).
+    \item The user/reader may compare  different proofs of the same result (For instance the equality $\omega+42+\omega^2= \omega^2$).
+  \end{itemize}
+\end{todo}
 
 \section{New contents}
-Length of usually considered battles.
-They correspond to the notions of canonical sequences and large sets in \cite{KS81}.
+We are interested in a usual variant of hydra-battles, where the hydra grows $n$ copies at step $n$ of the game (see the examples presented in ~\cite{KP82, BauerHydra}).
+In terms of ordinals, this variant is described as a (finite) sequence $s_n\,(n\geq i)$ of ordinals strictly below $\epsilon_0$.
+\begin{itemize}
+\item If $s_n=0$, then the sequence is empty,
+\item if $s_n=\beta+1$, then $s_{n+1}=\beta$,
+\item Otherwise, $s_n$ is a \emph{limit ordinal} $\lambda$; then $s_{n+1}$ is $\canonseq{\lambda}{n+1}$, \emph{i.e.} the
+    $n+1$-th element of the \emph{canonical sequence} associated with $\lambda$~\cite{KS81}.
+\end{itemize} 
 
-\begin{todo}
-  Relation with Russel's library (maintained in Coq-community).
-\end{todo}
+The length of such a sequence is $l-i$, where $s_l=0$. It depends both on the initial index $i$ and the initial term $\alpha=s_i$. Adapting to \emph{Coq} a few lemmas from~\cite{KS81}, we prove that this length is minored by a fast growing function.
+More precisely, the length  of the sequence associated with
+$\omega^\alpha$ and initial index $i\geq 2$ is greater or equal than
+$F_{\omega^\alpha}(i-1)-(i-1)$, where $F_\alpha$ is a variant of the Wainer hierarchy of rapidly growing functions, defined and studied in~\cite{KS81}.
+From this minoration, we infer that the function which associates to $i$ the length of the considered sequence (for a given $\alpha$) is not primitive recursive in general (our counter-example is for $\alpha=\omega^\omega$).
+
+It is important to notice that, for proving this last result, we decided to host and maintain within \emph{Coq-Community} the formalization of primitive recursive function, part of Russel O'Connor work on G\"{o}del's first incompleteness theorem~\cite{OConnor05}.
+
+Defining and studying families of rapidly growing arithmetic  functions indexed by ordinals below $\epsilon_0$ has been made possible by the plug-in \emph{coq-equations}~\cite{sozeau:hal-01671777}.
+
+
+\section{The Coq-community ecosystem}
+
 
 \section{Documentation with Alectryon}
 
@@ -164,7 +196,7 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
   
 \label{Ex42-schutte}
 \fbox{\begin{minipage}[h]{1.0\linewidth}
-  Let us prove again the equality $\omega+42+\omega^2= \omega^2$.Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
+  Let us prove again the equality $\omega+42+\omega^2= \omega^2$. Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
 \emph{i.e} the third  additive principal ordinal.
 
 \inputsnippets{Schutte/Ex42a}
@@ -187,7 +219,21 @@ Since the set \textit{AP} of additive principals  is closed under addition
   \label{fig:Ex42b}
 \end{figure}
 
-\section{Perspectives}
+\section{Conclusion and perspectives}
+
+\begin{todo}
+  \begin{itemize}
+  \item  Soundness (correction, maintenance) of the Alectryon generated doc.
+  \item Communications between co-maintained libraries
+          (Ackermann, Gaia, etc.)
+  \item Work destined both to Coq-users and people interested in discrete math ?
+  \end{itemize}
+\end{todo}
+
+
+\subsection{Perspectives}
+
+
 The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementaion in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
 \texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
 It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic) definitions of
