@@ -76,33 +76,32 @@ Axiom inh_Ord : inhabited Ord.
 
 ]]
 **)
-
-(* begin snippet Ex42a:: no-out *)
-
+  (* begin snippet Ex42a:: no-out *)
 Example Ex42: omega + 42 + phi0 2 = phi0 2. 
   (* end snippet Ex42a *)
 Proof.
 
   (* begin snippet Ex42b *)
   assert (HAP: In AP (phi0 2)) by apply AP_phi0. (* .no-out *)
-  elim HAP; intros  _ H0; apply H0; clear H0. 
+  elim  HAP; intros  _ H0; apply H0; clear H0. 
    (* end snippet Ex42b *)
 
    (* begin snippet Ex42c *)
-    assert (Hlt: omega < phi0 2) by 
-    (rewrite omega_eqn; apply phi0_mono, finite_mono;
+    assert (Hlt: omega < phi0 (F 2)) by 
+    ( rewrite omega_eqn; apply phi0_mono, finite_mono;
           auto with arith).
     (* end  snippet Ex42c *)
     (* begin snippet Ex42d *)
     Check AP_plus_closed. (* .unfold .no-goals *)
     (* end snippet Ex42d *)
-
-     (* begin snippet Ex42e:: no-out *)
+     (* begin snippet Ex42e *)
     apply AP_plus_closed; trivial. 
-  (* ... *)
+    (* ... *)
     (* end snippet Ex42e *)
    -  apply lt_trans with omega; [| trivial]. 
       apply finite_lt_omega. 
 Qed. 
+
+
 
 
