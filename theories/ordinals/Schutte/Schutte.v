@@ -97,7 +97,7 @@ Proof.
     Check AP_plus_closed. (* .unfold .no-goals *)
     (* end snippet Ex42d *)
 
-     (* begin snippet Ex42e:: no-out *)
+     (* begin snippet Ex42e *)
     apply AP_plus_closed; trivial. 
     (* ... *)
     (* end snippet Ex42e *)
