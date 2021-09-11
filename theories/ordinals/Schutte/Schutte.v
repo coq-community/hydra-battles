@@ -14,8 +14,6 @@
 From hydras Require Export Schutte_basics Ordering_Functions
         Addition AP CNF Critical Correctness_E0.
 
-
-
 (** * Warning
 
 
@@ -87,12 +85,12 @@ Proof.
 
   (* begin snippet Ex42b *)
   assert (HAP: In AP (phi0 2)) by apply AP_phi0. (* .no-out *)
-  elim  (AP_phi0 2);  intros  _ H0; apply H0; clear H0. 
+  elim HAP; intros  _ H0; apply H0; clear H0. 
    (* end snippet Ex42b *)
 
    (* begin snippet Ex42c *)
-    assert (Hlt: omega < phi0 (F 2)) by 
-    ( rewrite omega_eqn; apply phi0_mono, finite_mono;
+    assert (Hlt: omega < phi0 2) by 
+    (rewrite omega_eqn; apply phi0_mono, finite_mono;
           auto with arith).
     (* end  snippet Ex42c *)
     (* begin snippet Ex42d *)

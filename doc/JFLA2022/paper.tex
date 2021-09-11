@@ -42,7 +42,7 @@
 %---------------------------- 
 \newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
 \newtheorem{todo}{To do}
-\usepackage{amsfonts}
+\usepackage{amsfonts, afterpage}
 
 \newcommand{\easychair}{\textsf{easychair}}
 \newcommand{\miktex}{MiK{\TeX}}
@@ -104,8 +104,7 @@ Karl Palmskog %\inst{3}
 
 \begin{abstract}
   \begin{todo}
-  We present the current state and evolution of a  library \cite{HydraBattles}
-since \cite{JFLA2018paper}
+ \dots
   \end{todo}
 \end{abstract}
 
@@ -119,15 +118,22 @@ since \cite{JFLA2018paper}
 \section{Introduction}
 \label{sect:introduction}
 Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
-L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}. 
+L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
+This article presents a gameful interpretation of accessibility problem in the set of ordinals below $\epsilon_0$, and proves two theorems:
+\begin{quote}
+\begin{itemize}
+\item In the Hydra game, every strategy is a winning strategy for Hercules.
+  \item The theorem above cannot be proved in Peano Arithmettic.
+\end{itemize}
+\end{quote}
+
+Like Goodstein sequences, hydra battles may be considered as a simplified version of G\"{o}del-like theorems.
 Although the mathematical contents of this 
 paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
-Our project is to illustrate  this work by a library written in \emph{Coq} and an electronic book containing explanations of the mathematical content and its possible mechanized formalisations.
-
-
-Hydra battles have already been presented in
-JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-community project, and documentation generated with Alectryon. 
+Our project is to illustrate  this work by a library written in \emph{Coq}~\cite{HydraBattles} and an electronic book~\cite{HydraBook}  containing explanations of the mathematical content and its possible mechanized formalisations.
+This project has already been presented in
+JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}. 
 
 \begin{todo}
   Comment the multiple views of a same mathematical object:
@@ -188,8 +194,9 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
 \label{Ex42-E0}.
 
 
+%\afterpage{\clearpage}
 
-\begin{figure}[ph]
+\begin{figure}[th]
   \centering
   
   
