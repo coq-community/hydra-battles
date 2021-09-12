@@ -52,7 +52,7 @@ Fixpoint power `{M: @EMonoid A  E_op E_one E_eq}(x:A)(n:nat) :=
 where "x ^ n" := (power x n) : M_scope.
 (* end snippet powerDef *)
 
-(* begin snippet powerEqns *)
+(* begin snippet powerEqns:: no-out *)
 Lemma power_eq1 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
   x ^ 0 = E_one.
 Proof. reflexivity. Qed.
@@ -211,29 +211,29 @@ Proof.
   now rewrite Nat.mul_comm.
 Qed.
 
-
-Lemma sqr_def : forall x, x ^ 2 ==  x * x.
+(* begin snippet sqrEqn:: no-out *)
+Lemma sqr_eqn : forall x, x ^ 2 ==  x * x.
+(* end snippet sqrEqn *)
 Proof.
-  intros; cbn.
-  now monoid_simpl.
+  intros; cbn;  now monoid_simpl.
 Qed.
 
 
 Ltac factorize := repeat (
                 rewrite <- power_commute_with_x ||
                 rewrite  <- power_of_plus  ||
-                rewrite <- sqr_def ||
+                rewrite <- sqr_eqn ||
                 rewrite <- power_eq2 ||
                 rewrite power_of_power).
 
-Lemma power_of_square : forall x n, (x * x) ^ n ==  x ^ n * x ^ n.
+(* begin snippet powerOfSquare:: no-out *)
+Lemma power_of_square x n : (x * x) ^ n ==  x ^ n * x ^ n.
 Proof.
   induction n; cbn; monoid_simpl.
   - reflexivity.
-  - rewrite IHn.
-    now factorize.
+  - rewrite IHn; now factorize.
 Qed.
-
+(* end snippet powerOfSquare *)
 
 (** ** Correctness of the binary algorithm 
 
@@ -255,11 +255,11 @@ Proof.
     intros; cbn.
     rewrite Pos2Nat.inj_xI, IHq.
     rewrite power_eq2, Eop_assoc.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 2 * q *)
     intros; cbn.
     rewrite Pos2Nat.inj_xO, IHq.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 1 *)
     intros; cbn.
     simpl (x ^ Pos.to_nat 1).

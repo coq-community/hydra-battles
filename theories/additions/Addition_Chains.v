@@ -785,7 +785,7 @@ Proof.
     now rewrite ZL6.
   - simpl.
     intro a.  unfold computation_eval in *; simpl; rewrite IHp;  unfold mult_op.
-    generalize (sqr_def M a); unfold mult_op.
+    generalize (sqr_eqn M a); unfold mult_op.
     intro H; generalize (power_proper M);   intro H0;
     rewrite Pos2Nat.inj_xO.
     transitivity ((a^2) ^ Pos.to_nat p).

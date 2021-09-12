@@ -844,14 +844,8 @@ the operation~\texttt{*} to be commutative.
 
 The following two equalities are auxiliary lemmas for proving correctness of the binary exponentiation functions.
 
-\begin{Coqsrc}
-Lemma sqr_def : forall x, x ^ 2 ==  x * x.
-(* Proof omitted *) 
+\inputsnippets{Pow/sqrEqn, Pow/powerOfSquare}
 
-Lemma power_of_square : 
-  forall x n, (x * x) ^ n ==  x ^ n * x ^ n.
-(* Proof omitted *) 
-\end{Coqsrc}
 
 \subsection{Equivalence of the two exponentiation functions}
 
