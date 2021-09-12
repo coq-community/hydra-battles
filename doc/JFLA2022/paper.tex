@@ -12,6 +12,8 @@
 
 \usepackage{doc}
 
+\usepackage[firstpageonly=false, color={[gray]{0.5}},
+   scale=2.0, text=DRAFT]{draftwatermark}
 % -------------------------------
 %%%% For Alectryon
 
@@ -57,18 +59,18 @@
 %%
 % Regular title as in the article class.
 %
-\title{Hydras and Cie \\
+\title{Hydras and Cie (Draft) \\
   Variations on Kirby \& Paris' hydra battles and ordinal numbers in Coq}
- 
+
 
 
 \author{
 Pierre Castéran \inst{1}
 \and
-    Jérémy Damour %\inst{2}
+    Jérémy Damour \inst{2}
 \and
-Karl Palmskog %\inst{3}
-\and Clément Pit-Claudel %\inst{4}
+Karl Palmskog \inst{2}
+\and Clément Pit-Claudel \inst{2}
 \and Théo Zimmermann %\inst{5}
 }
 
@@ -77,18 +79,7 @@ Karl Palmskog %\inst{3}
  LaBRI, Université Bordeaux \\
   \email{pierre.casteran@labri.fr}
 \and
-   University of Miami,
-   Miami, Florida, U.S.A.\\
-   \email{geoff@cs.miami.edu}\\
-\and
-   University of Manchester,
-   Manchester, U.K.\\
-   \email{andrei@voronkov.com}\\
-\and
-   Chalmers University of Technology,
-   Gothenburg, Sweden
-\and
-   EasyChair
+   Ask for agreement !
  }
 
 
@@ -170,7 +161,7 @@ $F_{\omega^\alpha}(i-1)-(i-1)$, where $F_\alpha$ is a variant of the Wainer hier
 
 From this minoration, we infer that the function which associates to $i$ the length of the considered sequence (for a given $\alpha$) is not primitive recursive in general (our counter-example is for $\alpha=\omega^\omega$).
 
-It is important to notice that, for proving this last result, we decided to host and maintain within \emph{Coq-Community} the formalization of primitive recursive function, part of Russel O'Connor work on G\"{o}del's first incompleteness theorem~\cite{OConnor05}.
+It is important to notice that, for proving this last result, we decided to host and maintain within \emph{Coq-Community} the formalization of primitive recursive function, part of Russel O'Connor's work on G\"{o}del's first incompleteness theorem~\cite{OConnor05}.
 
 Defining and studying families of rapidly growing arithmetic  functions indexed by ordinals below $\epsilon_0$ has been made possible by the plug-in \emph{coq-equations}~\cite{sozeau:hal-01671777}.
 

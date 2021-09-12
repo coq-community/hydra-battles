@@ -724,15 +724,7 @@ are left implicit.
 \subsection{The naive (linear) algorithm}
 The new version of the linear exponentiation function is as follows:
 
-\begin{Coqsrc}
-Fixpoint power`{M: @EMonoid A  E_op E_one E_eq} 
-               (x:A) (n:nat) :=
-match n with 
-| 0%nat => E_one
-| S p =>   x * x ^ p
-end
-where "x ^ n" := (power x n) : M_scope.
-\end{Coqsrc}
+\inputsnippets{Pow/powerDef}
 
 The three following lemmas will be used by the \texttt{rewrite} tactic in further
 correctness proofs.
@@ -740,20 +732,9 @@ Note  that the first two lemmas are strong
 (\emph{i.e.}, Leibniz) equalities, whilst \texttt{power\_eq3}  is only an equivalence statement, because its proof uses one of the \texttt{EMonoid} laws, namely
 \texttt{Eone\_right}.
 
-\begin{Coqsrc}
-Lemma power_eq1 {A:Type} `{M: @EMonoid A  E_op E_one E_eq} 
-               (x:A) :  x ^ 0 = E_one.
-Proof. reflexivity. Qed.
+\inputsnippets{Pow/powerEqns}
 
-Lemma power_eq2 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}
-                (x:A) (n:nat) :
-                x ^ (S n)  = x * x ^ n.
-Proof. reflexivity. Qed.
 
-Lemma power_eq3 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}
-                (x:A) : x ^ 1 == x.
-Proof. cbn; rewrite Eone_right; reflexivity. Qed.
-\end{Coqsrc}
 
 \subsubsection{Examples of computation}
 
@@ -767,28 +748,7 @@ functions between types \texttt{Z} and \texttt{int31}, used for making it possib
 From Module~\href{../theories/html/additions.Demo_power.html}{additions.Demo\_power}
 
 
-
-\begin{Coqsrc}
-Open Scope M_scope.
-
-Compute 22%Z ^ 20.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= 705429498686404044207947776%Z
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Import Int31.
-Coercion phi_inv : Z >-> int31.
-
-Compute (22%int31 ^ 20).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-   = 2131755008%int31
-     : int31
-\end{Coqanswer}
+\inputsnippets{Demo_power/Demopower}
 
 \subsection{The binary exponentiation algorithm}
 
@@ -799,27 +759,12 @@ Please find below the implementation of binary exponentiation using type classes
 % It takes the form of an auxiliary function  \texttt{binary\_power\_mult}
 % associated with equalities \ref{binary-eq4} to \ref{binary-eq6} and a main function \texttt{Pos\_bpow} associated with equalities \ref{binary-eq1} to \ref{binary-eq3}.
 
-\vspace{4pt}
+\pagebreak
+
 \emph{From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}}
 
-\begin{Coqsrc}
-Fixpoint binary_power_mult `{M: @EMonoid A E_op E_one E_eq}
-             (x a:A)(p:positive) : A 
-  :=
-  match p with
-    | xH =>    a * x
-    | xO q => binary_power_mult  (x * x) a q
-    | xI q =>   binary_power_mult (x * x) (a * x) q
-  end.
+\inputsnippets{Pow/binaryPowerMult, Pow/PosBpow}
 
-Fixpoint Pos_bpow  `{M: @EMonoid A E_op E_one E_eq} 
-         (x:A)(p:positive) :=
- match p with
-  | xH => x
-  | xO q => Pos_bpow  (x * x) q
-  | xI q => binary_power_mult (x * x) x q
-end.
-\end{Coqsrc}
 
 
 It is easy to extend \texttt{Pos\_bpow}'s domain to the type of all 
@@ -828,15 +773,6 @@ natural numbers:
 \vspace{4pt}
 From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
-\begin{Coqsrc}
-Definition N_bpow {A} `{M: @EMonoid A E_op E_one E_eq} x (n:N) := 
-  match n with 
-  | 0%N => E_one
-  | Npos p => Pos_bpow x p
-  end.
-
-Infix "^b" := N_bpow (at level 30, right associativity): M_scope.
-\end{Coqsrc}
 
 \subsection{Refinement and correctness}
 We have got two functions for computing powers in any monoid. 
@@ -857,12 +793,7 @@ statement (in the context of an \texttt{EMonoid} on type \texttt{A}).
 \vspace{4pt}
 From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
-\begin{Coqsrc}
-Lemma N_bpow_ok : 
-forall (x:A) (n:N),   x ^b n  == x ^ N.to_nat n.
-(* Proof omitted *)
-\end{Coqsrc}
-
+\inputsnippets{Pow/NBpowOk}
 \end{itemize}
 
 

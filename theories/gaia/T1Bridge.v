@@ -76,7 +76,7 @@ move => Href y z; rewrite -{2}(iota_pi y) -{2}(iota_pi z);
           by rewrite Href pi_iota.
 Qed.
 
-Lemma phi0_ref x : refines0 (T1.phi0 x)  (CantorOrdinal.phi0 (iota x)).
+Lemma phi0_ref x : refines0 (T1.phi0 x) (CantorOrdinal.phi0 (iota x)).
 Proof. by []. Qed.
 
 Lemma one_ref : refines0 (T1.one) CantorOrdinal.one.
@@ -307,5 +307,6 @@ Proof.
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
     rewrite andbA; cbn; by rewrite Comparable_T1lt_eq.
 Qed.
+
 
  
