@@ -121,36 +121,44 @@ Infix "^b" := N_bpow (at level 30, right associativity) : M_scope.
 First, let us consider some [Emonoid] and define some useful notations and tactics:
 *)
 
+(* begin snippet MGiven *)
 Section M_given.
   
- Variables (A:Type) (E_op : Mult_op A)(E_one:A) (E_eq : Equiv A).
- Context (M:EMonoid  E_op E_one E_eq).
-
+  Variables (A:Type) (E_one:A) .
+  Context (E_op : Mult_op A) (E_eq : Equiv A)
+          (M:EMonoid  E_op E_one E_eq).
+(* end snippet MGiven *)
 
 Global Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
-apply  Eop_proper.
+Proof.
+  apply  Eop_proper.
 Qed.
 
+(* begin snippet monoidRw *)
 Ltac monoid_rw :=
     rewrite Eone_left  ||
     rewrite Eone_right  || 
-    rewrite Eop_assoc .
+    rewrite Eop_assoc.
 
 Ltac monoid_simpl := repeat monoid_rw.
-
+(* end snippet monoidRw *)
 
 (* *** Properties of the classical exponentiation  *)
 
-Section About_power.
-
-Global Instance power_proper : Proper (equiv ==> eq ==> equiv) power.
+(* begin snippet powerProper:: no-out *)
+Global Instance power_proper :
+  Proper (equiv ==> eq ==> equiv) power.
+(* end snippet powerProper *)
 Proof.
   intros x y Hxy n p Hnp;  subst p; induction n.
   - reflexivity.
   - cbn; now rewrite IHn, Hxy.
 Qed.
 
-Lemma power_of_plus : forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
+(* begin snippet powerOfPlus:: no-out *)
+Lemma power_of_plus :
+  forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
+(* end snippet powerOfPlus *)
 Proof.
   induction n; cbn; intro.
   - monoid_simpl; reflexivity.
@@ -158,8 +166,9 @@ Proof.
     monoid_simpl; reflexivity.
 Qed.
 
-
+(* begin snippet powerSimpl *)
 Ltac power_simpl := repeat (monoid_rw || rewrite <- power_of_plus).
+(* end snippet powerSimpl *)
 
 Lemma power_commute : forall x n p,  
                         x ^ n * x ^ p ==  x ^ p * x ^ n. 
@@ -295,7 +304,6 @@ Proof.
   intros; rewrite Pos_bpow_ok; now rewrite Nat2Pos.id.
 Qed.
 
-End About_power.
 
 Lemma N_bpow_commute : forall x n p,  
                         x ^b n *  x ^b p ==  
