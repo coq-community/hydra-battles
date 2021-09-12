@@ -773,6 +773,7 @@ natural numbers:
 \vspace{4pt}
 From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
+\inputsnippets{Pow/NBpow}
 
 \subsection{Refinement and correctness}
 We have got two functions for computing powers in any monoid. 
@@ -836,23 +837,10 @@ rewriting can be used  to write algebraic properties in a nice way.
 
 
 
-  Please note that the following two lemmas \emph{do not require} 
+  Please note that the following lemmas \emph{do not require} 
 the operation~\texttt{*} to be commutative.
 
-\begin{Coqsrc}
-Lemma power_commute : 
-    forall x n p, x ^ n * x ^ p ==  x ^ p * x ^ n. 
-(* Proof omitted *) 
-
-Lemma power_commute_with_x : 
-    forall x n,  x * x ^ n == x ^ n * x.
-(* Proof omitted *) 
-
-Lemma power_of_power : 
-   forall x n p,  (x ^ n) ^ p == x ^ (p * n).
-(* Proof omitted *) 
-
-\end{Coqsrc}
+\inputsnippets{Pow/powerCommute}
 
 The following two equalities are auxiliary lemmas for proving correctness of the binary exponentiation functions.
 

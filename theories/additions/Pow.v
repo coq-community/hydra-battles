@@ -43,14 +43,16 @@ Open Scope M_scope.
 (** *** The "naive" reference function *)
 Generalizable Variables  A E_op E_one E_eq.
 
+(* begin snippet powerDef *) 
+
 Fixpoint power `{M: @EMonoid A  E_op E_one E_eq}(x:A)(n:nat) :=
   match n with 0%nat => E_one
              | S p =>   x *  x ^ p
   end
 where "x ^ n" := (power x n) : M_scope.
+(* end snippet powerDef *)
 
-
-
+(* begin snippet powerEqns *)
 Lemma power_eq1 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
   x ^ 0 = E_one.
 Proof. reflexivity. Qed.
@@ -62,6 +64,7 @@ Proof. reflexivity. Qed.
 Lemma power_eq3 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
 Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
+(* end snippet powerEqns *)
 
 
 (** *** The binary exponentiation function (exponents in  [positive])  *)
@@ -73,6 +76,7 @@ the "accumulator" [acc] is intented to be an already computed power of [x]:
 
 *) 
 
+(* begin snippet binaryPowerMult *)
 Fixpoint binary_power_mult  `{M: @EMonoid A E_op E_one E_eq} 
          (x a:A)(p:positive) : A 
   :=
@@ -81,6 +85,7 @@ Fixpoint binary_power_mult  `{M: @EMonoid A E_op E_one E_eq}
     | xO q => binary_power_mult (x * x) a q
     | xI q =>  binary_power_mult  (x * x) (a * x) q
   end.
+(* end snippet binaryPowerMult *)
 
  (** *** 
 
@@ -90,6 +95,7 @@ The  following function decomposes the exponent [p]
 
 *)
 
+(* begin snippet PosBpow *)
 Fixpoint Pos_bpow  `{M: @EMonoid A E_op E_one E_eq}
          (x:A)(p:positive) :=
  match p with
@@ -97,12 +103,15 @@ Fixpoint Pos_bpow  `{M: @EMonoid A E_op E_one E_eq}
   | xO q => Pos_bpow  (x * x) q
   | xI q => binary_power_mult  (x * x) x q
 end.
+(* end snippet PosBpow *)
 
 (** ***
   It is straightforward to adapt [Pos_bpow]
  for accepting exponents of type [N] :
 *)
 
+
+(* begin snippet NBpow *)
 Definition N_bpow  `{M: @EMonoid A E_op E_one E_eq} x (n:N) := 
   match n with 
   | 0%N => E_one
@@ -110,6 +119,7 @@ Definition N_bpow  `{M: @EMonoid A E_op E_one E_eq} x (n:N) :=
   end.
 
 Infix "^b" := N_bpow (at level 30, right associativity) : M_scope.
+(* end snippet NBpow *)
 
 (** ** Properties of the power function 
 
@@ -170,28 +180,30 @@ Qed.
 Ltac power_simpl := repeat (monoid_rw || rewrite <- power_of_plus).
 (* end snippet powerSimpl *)
 
-Lemma power_commute : forall x n p,  
-                        x ^ n * x ^ p ==  x ^ p * x ^ n. 
+(* begin snippet powerCommute:: no-out *)
+Lemma power_commute x n p: 
+  x ^ n * x ^ p ==  x ^ p * x ^ n. 
 Proof.
-  intros x n p; power_simpl; rewrite (plus_comm n p); reflexivity.
+ power_simpl; now rewrite (plus_comm n p).
 Qed.
 
-Lemma power_commute_with_x : forall x n,  x * x ^ n == x ^ n * x.
+Lemma power_commute_with_x x n:
+  x * x ^ n == x ^ n * x.
 Proof.
   induction n; cbn.
   - now monoid_simpl.
-  - rewrite IHn at 1.
-    now monoid_simpl.
+  - rewrite IHn at 1; now monoid_simpl.
 Qed.
 
-
-Lemma power_of_power : forall x n p,  (x ^ n) ^ p == x ^ (p * n).
+Lemma power_of_power x n p:
+  (x ^ n) ^ p == x ^ (p * n).
 Proof.
   induction p; cbn.
   - reflexivity.
-  - rewrite IHp.
-    now power_simpl. 
+  - rewrite IHp; now power_simpl. 
 Qed.
+(* end snippet powerCommute *)
+
 
 Lemma power_of_power_comm x n p : (x ^ n) ^ p == (x ^ p) ^ n.
 Proof.
@@ -280,9 +292,10 @@ Proof.
   - apply IHp. now apply Eop_proper.
 Qed.
 
-
+(* begin snippet NBpowOk:: no-out *)
 Lemma N_bpow_ok : 
-forall n x,   x ^b n  == x ^ N.to_nat n.
+  forall n x,   x ^b n  == x ^ N.to_nat n.
+(* end snippet NBpowOk *)
 Proof.
   destruct n.
   - (* 0 *) reflexivity.
