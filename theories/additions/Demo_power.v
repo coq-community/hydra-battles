@@ -4,6 +4,8 @@ Require Import Monoid_def
 (* begin snippet Demopower *)
 Open Scope M_scope.
 
+(* begin snippet DemoPower *)
+
 Compute 22%Z ^ 20.
 
 Import Int31.
@@ -11,5 +13,8 @@ Import Int31.
 Coercion phi_inv : Z >-> int31.
 
 Compute 22%int31 ^ 20.
-(* end snippet Demopower *)
+
+(* end snippet DemoPower *)
+
+
 

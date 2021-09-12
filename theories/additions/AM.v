@@ -336,7 +336,7 @@ Lemma F2q_correct_0: forall `{M : @EMonoid A op one equ} (n:nat) x s,
   - intro x; simpl; intro s; rewrite IHn.
     right; split;auto.
     + cbn.   replace (2 ^ n + (2 ^ n + 0))%nat with (2 * ( 2 ^ n) )%nat.
-      * fold mult_op;  assert (x * x == x ^2) by (now rewrite  sqr_def).
+      * fold mult_op;  assert (x * x == x ^2) by (now rewrite  sqr_eqn).
         transitivity ((x ^ 2) ^2 ^ n).
         now apply power_proper.
         rewrite  power_of_power.

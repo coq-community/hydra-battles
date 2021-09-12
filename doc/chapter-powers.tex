@@ -774,6 +774,8 @@ natural numbers:
 From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}
 
 
+\inputsnippets{Pow/NBpow}
+
 \subsection{Refinement and correctness}
 We have got two functions for computing powers in any monoid. 
 So, it is interesting to ask oneself whether this duplication is useful, and which would be the respective role of \texttt{N\_bpow} and \texttt{power}.
@@ -812,25 +814,12 @@ Note that properties of \texttt{power} refer to the \emph{specification} of expo
 
 In this section, we consider an arbitrary instance  \texttt{M} of class \texttt{EMonoid}.
 
-\begin{Coqsrc}
-Section M_given.
- Variables (A:Type) (E_op : Mult_op A)(E_one:A) (E_eq : Equiv A).
- Context (M:EMonoid  E_op E_one E_eq).
-\end{Coqsrc}
+\inputsnippets{Pow/MGiven}
 
 \subsubsection{Properties of exponentiation}
 We establish a few well-known properties of exponentiation, and define some basic tactics for simplifying proof search.
 
-\begin{Coqsrc}
-Ltac monoid_rw :=
-    rewrite Eone_left  ||
-    rewrite Eone_right  || 
-    rewrite Eop_assoc .
-
-Ltac monoid_simpl := repeat monoid_rw.
-
-Section About_power.
-\end{Coqsrc}
+\inputsnippets{Pow/MonoidRw}
 
 In order to make possible proof by rewriting on expressions which contain
 the exponentiation operator, we have to prove that, whenever \texttt{$x$ == $y$},
@@ -839,51 +828,25 @@ For this purpose, we use the \texttt{Proper} class of module
 \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Classes.Morphisms.html}{Coq.Classes.Morphisms}
 \index{coq}{Type classes}
 \index{coq}{Type classes!Proper class}
-\begin{Coqsrc}
-Global Instance power_proper :
-     Proper (equiv ==> eq ==> equiv) power.
-(* Proof omitted *)
-\end{Coqsrc}
+
+\inputsnippets{Pow/powerProper}
 
 In the following proofs, we note how notations, type classes and generalized 
 rewriting can be used  to write algebraic properties in a nice way.
 
-\begin{Coqsrc}
-Lemma power_of_plus :   forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
-(* Proof omitted *)
+\inputsnippets{Pow/powerOfPlus, Pow/powerSimpl}
 
-Ltac power_simpl := 
-    repeat (monoid_rw || rewrite <- power_x_plus).
-\end{Coqsrc}
 
-  Please note that the following two lemmas \emph{do not require} 
+
+  Please note that the following lemmas \emph{do not require} 
 the operation~\texttt{*} to be commutative.
 
-\begin{Coqsrc}
-Lemma power_commute : 
-    forall x n p, x ^ n * x ^ p ==  x ^ p * x ^ n. 
-(* Proof omitted *) 
-
-Lemma power_commute_with_x : 
-    forall x n,  x * x ^ n == x ^ n * x.
-(* Proof omitted *) 
-
-Lemma power_of_power : 
-   forall x n p,  (x ^ n) ^ p == x ^ (p * n).
-(* Proof omitted *) 
-
-\end{Coqsrc}
+\inputsnippets{Pow/powerCommute}
 
 The following two equalities are auxiliary lemmas for proving correctness of the binary exponentiation functions.
 
-\begin{Coqsrc}
-Lemma sqr_def : forall x, x ^ 2 ==  x * x.
-(* Proof omitted *) 
+\inputsnippets{Pow/sqrEqn, Pow/powerOfSquare}
 
-Lemma power_of_square : 
-  forall x n, (x * x) ^ n ==  x ^ n * x ^ n.
-(* Proof omitted *) 
-\end{Coqsrc}
 
 \subsection{Equivalence of the two exponentiation functions}
 

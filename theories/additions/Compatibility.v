@@ -77,7 +77,7 @@ Proof.
      intros;  rewrite IHp.
      rewrite (IHp x acc).
      repeat rewrite (binary_power_mult_ok M).
-     rewrite <- (sqr_def M x).
+     rewrite <- (sqr_eqn M x).
      rewrite power_of_power.
      rewrite (mult_comm  (Pos.to_nat p) 2)%nat. 
      destruct H as [i e].
@@ -99,7 +99,7 @@ Proof.
 
   - simpl;  intros;   rewrite IHp.
     rewrite (IHp  x acc).
-    repeat rewrite (binary_power_mult_ok M); rewrite  <- (sqr_def M).
+    repeat rewrite (binary_power_mult_ok M); rewrite  <- (sqr_eqn M).
     repeat (rewrite (op_assoc (Monoid:=M))).
     rewrite power_of_power.
     rewrite (mult_comm  (Pos.to_nat p) 2)%nat. 

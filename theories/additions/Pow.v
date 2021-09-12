@@ -43,6 +43,7 @@ Open Scope M_scope.
 (** *** The "naive" reference function *)
 Generalizable Variables  A E_op E_one E_eq.
 
+
 (* begin snippet powerDef *)
 Fixpoint power `{M: @EMonoid A  E_op E_one E_eq}
          (x:A)(n:nat) :=
@@ -65,6 +66,7 @@ Proof. reflexivity. Qed.
 Lemma power_eq3 `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
 Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
+(* end snippet powerEqns *)
 
 (* end snippet powerEqns *)
 
@@ -131,36 +133,44 @@ Infix "^b" := N_bpow (at level 30, right associativity) : M_scope.
 First, let us consider some [Emonoid] and define some useful notations and tactics:
 *)
 
+(* begin snippet MGiven *)
 Section M_given.
   
- Variables (A:Type) (E_one:A).
- Context (E_op : Mult_op A) (E_eq : Equiv A) (M:EMonoid  E_op E_one E_eq).
-
+  Variables (A:Type) (E_one:A) .
+  Context (E_op : Mult_op A) (E_eq : Equiv A)
+          (M:EMonoid  E_op E_one E_eq).
+(* end snippet MGiven *)
 
 Global Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
-apply  Eop_proper.
+Proof.
+  apply  Eop_proper.
 Qed.
 
+(* begin snippet monoidRw *)
 Ltac monoid_rw :=
     rewrite Eone_left  ||
     rewrite Eone_right  || 
-    rewrite Eop_assoc .
+    rewrite Eop_assoc.
 
 Ltac monoid_simpl := repeat monoid_rw.
-
+(* end snippet monoidRw *)
 
 (* *** Properties of the classical exponentiation  *)
 
-Section About_power.
-
-Global Instance power_proper : Proper (equiv ==> eq ==> equiv) power.
+(* begin snippet powerProper:: no-out *)
+Global Instance power_proper :
+  Proper (equiv ==> eq ==> equiv) power.
+(* end snippet powerProper *)
 Proof.
   intros x y Hxy n p Hnp;  subst p; induction n.
   - reflexivity.
   - cbn; now rewrite IHn, Hxy.
 Qed.
 
-Lemma power_of_plus : forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
+(* begin snippet powerOfPlus:: no-out *)
+Lemma power_of_plus :
+  forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
+(* end snippet powerOfPlus *)
 Proof.
   induction n; cbn; intro.
   - monoid_simpl; reflexivity.
@@ -168,31 +178,34 @@ Proof.
     monoid_simpl; reflexivity.
 Qed.
 
-
+(* begin snippet powerSimpl *)
 Ltac power_simpl := repeat (monoid_rw || rewrite <- power_of_plus).
+(* end snippet powerSimpl *)
 
-Lemma power_commute : forall x n p,  
-                        x ^ n * x ^ p ==  x ^ p * x ^ n. 
+(* begin snippet powerCommute:: no-out *)
+Lemma power_commute x n p: 
+  x ^ n * x ^ p ==  x ^ p * x ^ n. 
 Proof.
-  intros x n p; power_simpl; rewrite (plus_comm n p); reflexivity.
+ power_simpl; now rewrite (plus_comm n p).
 Qed.
 
-Lemma power_commute_with_x : forall x n,  x * x ^ n == x ^ n * x.
+Lemma power_commute_with_x x n:
+  x * x ^ n == x ^ n * x.
 Proof.
   induction n; cbn.
   - now monoid_simpl.
-  - rewrite IHn at 1.
-    now monoid_simpl.
+  - rewrite IHn at 1; now monoid_simpl.
 Qed.
 
-
-Lemma power_of_power : forall x n p,  (x ^ n) ^ p == x ^ (p * n).
+Lemma power_of_power x n p:
+  (x ^ n) ^ p == x ^ (p * n).
 Proof.
   induction p; cbn.
   - reflexivity.
-  - rewrite IHp.
-    now power_simpl. 
+  - rewrite IHp; now power_simpl. 
 Qed.
+(* end snippet powerCommute *)
+
 
 Lemma power_of_power_comm x n p : (x ^ n) ^ p == (x ^ p) ^ n.
 Proof.
@@ -200,29 +213,29 @@ Proof.
   now rewrite Nat.mul_comm.
 Qed.
 
-
-Lemma sqr_def : forall x, x ^ 2 ==  x * x.
+(* begin snippet sqrEqn:: no-out *)
+Lemma sqr_eqn : forall x, x ^ 2 ==  x * x.
+(* end snippet sqrEqn *)
 Proof.
-  intros; cbn.
-  now monoid_simpl.
+  intros; cbn;  now monoid_simpl.
 Qed.
 
 
 Ltac factorize := repeat (
                 rewrite <- power_commute_with_x ||
                 rewrite  <- power_of_plus  ||
-                rewrite <- sqr_def ||
+                rewrite <- sqr_eqn ||
                 rewrite <- power_eq2 ||
                 rewrite power_of_power).
 
-Lemma power_of_square : forall x n, (x * x) ^ n ==  x ^ n * x ^ n.
+(* begin snippet powerOfSquare:: no-out *)
+Lemma power_of_square x n : (x * x) ^ n ==  x ^ n * x ^ n.
 Proof.
   induction n; cbn; monoid_simpl.
   - reflexivity.
-  - rewrite IHn.
-    now factorize.
+  - rewrite IHn; now factorize.
 Qed.
-
+(* end snippet powerOfSquare *)
 
 (** ** Correctness of the binary algorithm 
 
@@ -244,11 +257,11 @@ Proof.
     intros; cbn.
     rewrite Pos2Nat.inj_xI, IHq.
     rewrite power_eq2, Eop_assoc.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 2 * q *)
     intros; cbn.
     rewrite Pos2Nat.inj_xO, IHq.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 1 *)
     intros; cbn.
     simpl (x ^ Pos.to_nat 1).
@@ -306,7 +319,6 @@ Proof.
   intros; rewrite Pos_bpow_ok; now rewrite Nat2Pos.id.
 Qed.
 
-End About_power.
 
 Lemma N_bpow_commute : forall x n p,  
                         x ^b n *  x ^b p ==  

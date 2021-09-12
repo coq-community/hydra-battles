@@ -186,7 +186,7 @@ Qed.
 
 
 
-Lemma sqr_def : forall x, x ^ 2 ==  x * x.
+Lemma sqr_eqn : forall x, x ^ 2 ==  x * x.
 Proof.
   intros; cbn.
   now monoid_simpl.
@@ -195,7 +195,7 @@ Qed.
 Ltac factorize := repeat (
                 rewrite <- power_commute_with_x ||
                 rewrite  <- power_of_plus  ||
-                rewrite <- sqr_def ||
+                rewrite <- sqr_eqn ||
                 rewrite <- power_eq2 ||
                 rewrite power_of_power).
 
@@ -227,11 +227,11 @@ Proof.
     intros; cbn.
     rewrite Pos2Nat.inj_xI, IHq.
     rewrite power_eq2, Eop_assoc.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 2 * q *)
     intros; cbn.
     rewrite Pos2Nat.inj_xO, IHq.
-    rewrite <- power_of_power, sqr_def, power_of_square; reflexivity.
+    rewrite <- power_of_power, sqr_eqn, power_of_square; reflexivity.
   - (* 1 *)
     intros; cbn.
     simpl (x ^ Pos.to_nat 1).
