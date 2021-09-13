@@ -313,6 +313,7 @@ end.
 (* end snippet modelTac *)
 
 
+(* begin snippet monoidEqTac *)                      
 Ltac monoid_eq_A A op one E_eq M  :=
 match goal with 
 | [ |- E_eq  ?X ?Y ] =>
@@ -320,9 +321,10 @@ match goal with
       tY := model A op one Y in
       (change (E_eq (eval M tX) (eval M tY)))
 end.
+(* end snippet monoidEqTac *)                      
 
 
-
+(* begin snippet reflectionCorrectTac *)
 Ltac reflection_correct_tac :=
 match goal with
 [ |- chain_correct ?n ?c ] =>
@@ -340,14 +342,14 @@ match goal with
            apply flatten_valid_2;try reflexivity
         ]
 end. 
- 
+(* end snippet reflectionCorrectTac *) 
 
-
-Example C87_ok : chain_correct 87 C87.
-Proof.
+(* begin snippet reflectionDemo *) 
+Example C87_ok : chain_correct 87 C87. (* .no-out *)
+Proof. (* .no-out *)
   Time reflection_correct_tac.
-(** Finished transaction in 0.038 secs (0.038u,0.s) (successful) *)
 Qed. 
+(* end snippet reflectionDemo *)
 
 
 (** * Correctness and parametricity 
@@ -360,6 +362,7 @@ while proceeding to a lot of setoid rewritings
 First, we notice that any chain is able to compute its associated exponent:
 *)
 
+(* begin snippet theExponent *)
 Definition the_exponent_nat (c:chain) : nat :=
  chain_apply c (M:=Natplus) 1%nat.
 
@@ -367,7 +370,7 @@ Definition the_exponent (c:chain) : positive :=
   chain_execute c Pos.add  1%positive.
 
 Compute the_exponent C87.
-
+(* end snippet theExponent *)
 
 
 (** 
@@ -379,38 +382,11 @@ the corresponding variables of type A  and B are always bound to related
 *)
 
 
-
+(* begin snippet paramDemo *)
 Parametricity computation.
 
 Print computation_R.
-(* by plugin 
-
-Inductive
-computation_R (A₁ A₂ : Type) (A_R : A₁ -> A₂ -> Type)
-  : computation -> computation -> Type :=
-    computation_R_Return_R : forall (a₁ : A₁) (a₂ : A₂),
-                             A_R a₁ a₂ ->
-                             computation_R A₁ A₂ A_R (Return a₁) (Return a₂)
-  | computation_R_Mult_R : forall (x₁ : A₁) (x₂ : A₂),
-                           A_R x₁ x₂ ->
-                           forall (y₁ : A₁) (y₂ : A₂),
-                           A_R y₁ y₂ ->
-                           forall (k₁ : A₁ -> computation)
-                             (k₂ : A₂ -> computation),
-                           (forall (H : A₁) (H0 : A₂),
-                            A_R H H0 -> computation_R A₁ A₂ A_R (k₁ H) (k₂ H0)) ->
-                           computation_R A₁ A₂ A_R 
-                             (z <--- x₁ times y₁; k₁ z)
-                             (z <--- x₂ times y₂; k₂ z)
-
-For computation_R: Argument scopes are [type_scope type_scope function_scope _
-                     _]
-For computation_R_Return_R: Argument scopes are [type_scope type_scope
-                              function_scope _ _ _]
-For computation_R_Mult_R: Argument scopes are [type_scope type_scope
-                            function_scope _ _ _ _ _ _ function_scope
-                            function_scope function_scope]
-*)
+(* end snippet paramDemo *)
 
 
 (** We say that a chain [c] is _parametric_ if
@@ -419,10 +395,11 @@ For computation_R_Mult_R: Argument scopes are [type_scope type_scope
 *)
 
 
-
+(* begin snippet parametricDef *)
 Definition parametric (c:chain) :=
   forall A B (R: A -> B -> Type) (a:A) (b:B),
    R a b -> computation_R  A B R (c A a) (c B b).
+(* end snippet parametricDef *)
 
 (**  The following statement cannot be proven in Coq (AFAIK) *)
 
@@ -478,8 +455,10 @@ Section Refinement_proof.
 $a$ and $i\not=0$.
 *)
 
+(* begin snippet powerR *)
 Definition power_R  (a:A) :=
   fun (x:A)(n:nat) => n <> 0 /\ x == a ^ n.
+(* end snippet powerR *)
 
 Remark power_R_Mult : forall a x y i j, 
     power_R a x i  -> power_R a y j ->
@@ -498,12 +477,14 @@ Proof.
   - reflexivity.
 Qed.
 
+(* begin snippet powerRRef:: no-out *)
 Lemma  power_R_is_a_refinement (a:A) :
   forall(gamma : @computation A)
         (gamma_nat : @computation nat),
     computation_R _ _  (power_R a) gamma gamma_nat -> 
      power_R a (computation_eval gamma)
-               (computation_eval (M:= Natplus) gamma_nat).
+             (computation_eval (M:= Natplus) gamma_nat).
+(* end snippet powerRRef *)
 Proof.
   induction 1;simpl;[auto | ].
   apply H; destruct x_R, y_R;  split.
@@ -569,9 +550,11 @@ Proof.
  now rewrite Pos2Nat.id.
 Qed.
 
-
+(* begin snippet paramCorrectnessNat:: no-out *)
 Lemma param_correctness_nat (c: chain) :
-  parametric c ->  chain_correct_nat (the_exponent_nat c)  c.
+  parametric c ->
+  chain_correct_nat (the_exponent_nat c) c.
+(* end snippet paramCorrectnessNat *)
 Proof.
  intros Hc  ; split. 
  -  now apply  exponent_nat_neq_0.

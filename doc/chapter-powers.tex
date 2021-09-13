@@ -1399,15 +1399,7 @@ The tactic \texttt{monoid\_eq\_A} converts a goal of the form
 (\texttt{E\_eq (eval M  (model X)) (eval M  (model Y))}). This last goal is intended to be solved thanks 
 to the lemma \texttt{flatten\_valid\_2}.
 
-\begin{Coqsrc}
-Ltac monoid_eq_A A op one E_eq M  :=
-match goal with 
-| [ |- E_eq  ?X ?Y ] =>
-  let tX := model A op one X with
-      tY := model A op one Y in
-      (change (E_eq (eval M tX) (eval M tY)))
-end.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/monoidEqTac}
 
 \subsubsection{Main reflection tactic}
 
@@ -1416,43 +1408,13 @@ correctness by a comparison of two terms of type \texttt{Monoid\_Exp $A$}:
 one being obtained from the chain's definition, the other one by expansion
 of the naive exponentiation definition.
 
+\inputsnippets{Addition_Chains/reflectionCorrectTac}
 
-\begin{Coqsrc}
-Ltac reflection_correct_tac :=
-match goal with
-[ |- chain_correct ?n ?c ] =>
- split; [try discriminate |
-         let A := fresh "A"
-         in let op := fresh "op"
-         in let one := fresh "one" 
-         in let E_eq := fresh "eq" 
-         in let M := fresh "M"
-         in let x := fresh "x" 
-         in  (try unfold c); unfold chain_apply;
-           simpl; red; intros  A op one E_eq M x;
-           unfold computation_eval;simpl;
-           monoid_eq_A A op one E_eq M;
-           apply flatten_valid_2;try reflexivity
-        ]
-end. 
-\end{Coqsrc}
- 
 \subsubsection{Example}
 The following dialogue clearly shows the efficiency gain over naive setoid rewriting.
 
-\begin{Coqsrc}
-Example C87_ok : chain_correct 87 C87.
-Proof.
-  Time reflection_correct_tac.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/reflectionDemo}
 
-\begin{Coqanswer}
- Finished transaction in 0.038 secs (0.038u,0.s) (successful)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Qed. 
-\end{Coqsrc}
 
 This tactic is not adapted to much bigger exponents. In \linebreak
  Module~\href{../theories/html/additions.Euclidean_Chains.html}{Euclidean\_Chains},
@@ -1497,13 +1459,8 @@ polymorphic types.
 Let us look again at the definitions of type family \texttt{computation}
 and the type \texttt{chain}:
 
-\begin{Coqsrc}
-Inductive computation {A:Type}  : Type :=
-| Return (a : A)
-| Mult (x y : A) (k : A -> computation).
-
-Definition chain := forall A:Type, A -> @computation A.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/computationDef,
+  Addition_Chains/chainDef}
 
 Let $c$ be a closed term of type 
 \texttt{chain}; $c$ is  of the form \linebreak
@@ -1522,26 +1479,10 @@ Marc Lasson's \textbf{paramcoq} plug-in~(available as  \texttt{opam} package
 \texttt{coq-paramcoq}) generates  a family of binary relations definitions
 from \texttt{computation}'s definition.
 
-\begin{Coqanswer}
-Inductive
-computation_R (A B : Type) (R : A -> B -> Type)
-  : computation -> computation -> Type :=
- |    computation_R_Return_R : 
-       forall (a1 : A) (a2 : B),  R a1 a2 ->
-         computation_R A B R (Return a1) (Return a2)
-  | computation_R_Mult_R : forall (x1 : A) (x2 : B),
-         R x1 x2 ->
-          forall (y1 : A) (y2 : B),
-            R y1 y2 ->
-            forall (k1 : A -> computation)
-                   (k2 : B -> computation),
-                      (forall (H : A) (H0 : B),
-                          R H H0 -> 
-                          computation_R A B R (k1 H) (k2 H0)) ->
-                       computation_R A  B R 
-                          (z <--- x1 times y1; k1 z)
-                          (z <--- x2 times y2; k2 z)
-\end{Coqanswer}
+\pagebreak
+
+\inputsnippets{Addition_Chains/paramDemo}
+
 
 
 Let $A$ and $B$  be two types, and $R: A \arrow B \arrow \typesort$ 
@@ -1558,11 +1499,7 @@ pair of types $A$  and $B$, any relation $R$
 between  $A$ and $B$ and any $R$-related pair of 
 arguments $a$ and $b$:
 
-\begin{Coqsrc}
-Definition parametric (c:chain) :=
-  forall A B (R: A -> B -> Type) (a:A) (b:B),
-   R a b -> computation_R  R (c A a) (c B b).
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/parametricDef}
 
 \subsubsection{How to use these definitions?}
 Let us use parametricity for proving easily 
@@ -1575,21 +1512,7 @@ any value $a$ of type $A$ returns the value \texttt{$a^p$}.
 
 We first use \coq's computation facilities for ``guessing'' the exponent associated with any given chain. It suffices to instantiate ``monoid multiplication'' with addition on positive integers.
 
-
-\begin{Coqsrc}
-Definition the_exponent_nat (c:chain) : nat :=
- chain_apply c (M:=Natplus) 1%nat.
-
-Definition the_exponent (c:chain) : positive :=
-  chain_execute c Pos.add  1%positive.
-
-Compute the_exponent C87.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = 87%positive
-     : positive  
-\end{Coqanswer}
+\inputsnippets{Addition_Chains/theExponent}
 
 We show how to \emph{prove} that  a given  chain $c$,
 applied to any $a$, really computes $a^p$, where $p=\textrm{the\_exponent}\;c$.
@@ -1598,35 +1521,17 @@ with executions on \texttt{NatPlus}.
 Let us consider the following mathematical relation 
 $$\{(x,n)\in M\times\mathbb{N}\,|\, 0<n \wedge x=a^n\}$$
 
-\begin{Coqsrc}
-Definition power_R  (a:A) :=
-  fun (x:A)(n:nat) => n <> 0 /\ x == a ^ n.  
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/powerR}
 
 First, we prove the following lemma, that relates \texttt{computation\_R}
 with the result  of the  executions of the corresponding computations:
 
-\begin{Coqsrc}
-Lemma  power_R_is_a_refinemnt (a:A) :
-  forall(gamma : @computation A)
-        (gamma_nat : @computation nat),
-    computation_R  (power_R a) gamma gamma_nat -> 
-     power_R a (computation_eval gamma)
-               (computation_eval (M:= Natplus) gamma_nat).    
-(* Proof omitted *)
-\end{Coqsrc}
-
-
+\inputsnippets{Addition_Chains/powerRRef}
 
 Thus, if \texttt{$c$:chain} is parametric, this refinement lemma allows us
 to prove a correctness result:
 
-\begin{Coqsrc}
-Lemma param_correctness_nat :
- forall c:chain, parametric c ->  
-               chain_correct_nat (the_exponent_nat c)  c.
-(* Proof omitted *)
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/paramCorrectnessNat}
 
 A similar result can be proven with the exponent in \texttt{positive}.
 First we instantiate the parameter \texttt{R} of \texttt{computation\_R},
