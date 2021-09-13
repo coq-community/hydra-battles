@@ -112,10 +112,10 @@ Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982
 L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
 This article presents a gameful interpretation of accessibility problem in the set of ordinals below $\epsilon_0$, and proves two theorems:
 \begin{quote}
-\begin{itemize}
-\item In the Hydra game, every strategy is a winning strategy for Hercules.
-  \item The theorem above cannot be proved in Peano Arithmettic.
-\end{itemize}
+\begin{description}
+\item[$(1)$] In the Hydra game, every strategy is a winning strategy for Hercules.
+  \item[$(2)$] The theorem $(1)$ cannot be proved in Peano Arithmetic.
+\end{description}
 \end{quote}
 
 Like Goodstein sequences, hydra battles may be considered as a simplified version of G\"{o}del-like theorems.
@@ -125,6 +125,7 @@ paper are quite advanced, the rules of hydra battles are very easy to understand
 Our project is to illustrate  this work by a library written in \emph{Coq}~\cite{HydraBattles} and an electronic book~\cite{HydraBook}  containing explanations of the mathematical content and its possible mechanized formalisations.
 This project has already been presented in
 JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}. 
+
 
 \begin{todo}
   Comment the multiple views of a same mathematical object:
@@ -201,7 +202,7 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
 
 Our proof is very different from the computational proof of Fig\ref{fig:Ex42E0}.
 By definition of additive principal ordinals, 
-it suffices to prove the inequality $\omega+42< \phi_0(2)$ to  fprove our lemma.
+it suffices to prove the inequality $\omega+42< \phi_0(2)$.
 
 \inputsnippets{Schutte/Ex42b}
 
