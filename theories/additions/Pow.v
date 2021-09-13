@@ -53,15 +53,15 @@ where "x ^ n" := (power x n) : M_scope.
 (* end snippet powerDef *)
 
 (* begin snippet powerEqns:: no-out *)
-Lemma power_eq1 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
+Lemma power_eq1  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
   x ^ 0 = E_one.
 Proof. reflexivity. Qed.
 
-Lemma power_eq2 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) (n:nat) :
+Lemma power_eq2  `{M: @EMonoid A  E_op E_one E_eq}(x:A) (n:nat) :
  x ^ (S n)  = x * x ^ n.
 Proof. reflexivity. Qed.
 
-Lemma power_eq3 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
+Lemma power_eq3  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
 Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
 (* end snippet powerEqns *)

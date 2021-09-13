@@ -11,7 +11,7 @@ Import Int31.
 
 Coercion phi_inv : Z >-> int31.
 
-Compute (22%int31 ^ 20).
+Compute 22%int31 ^ 20.
 (* end snippet DemoPower *)
 
 
