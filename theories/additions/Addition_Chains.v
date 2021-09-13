@@ -403,14 +403,17 @@ Definition parametric (c:chain) :=
 
 (**  The following statement cannot be proven in Coq (AFAIK) *)
 
+(* begin snippet VeryBad:: no-out *)
 Definition any_chain_parametric : Type :=
  forall c:chain, parametric c.
 
-Goal any_chain_parametric.
-Proof.
-intros c A B R a b ; induction (c A a);  destruct (c B b).
+Goal any_chain_parametric. 
+Proof. 
+  (* end snippet VeryBad *)
+(* begin snippet VeryBad2:: -.g#* .g#1 *)
+intros c A B R a b ; induction (c A a);  destruct (c B b). 
 Abort.
-
+(* end snippet VeryBad2 *)
 
 
 (** 
@@ -419,16 +422,18 @@ Abort.
  is parametric. 
 *)
 
+(* begin snippet parametricTac *)
 Ltac parametric_tac  := 
  match goal with [ |- parametric ?c] =>
    red ; intros;
   repeat (right;[assumption | assumption | ]);  left; assumption
 end.
 
-Example P87 : parametric C87.
-Proof. Time parametric_tac.
- Qed. 
-
+Example P87 : parametric C87. 
+Proof. (* .no-out *)
+  Time parametric_tac.
+Qed. 
+(* end snippet parametricTac *)
 
 (** **  computation of $a^n$ compared to computation of $n$
 
@@ -528,9 +533,11 @@ Proof.
      + now destruct H. 
      +  discriminate.  
 Qed.
-
-Lemma exponent_pos2nat : forall c: chain,  parametric c -> 
-  the_exponent_nat c = Pos.to_nat (the_exponent c).
+(* begin snippet exponentPosToNat:: no-out *)
+Lemma exponent_pos2nat : forall c: chain,
+    parametric c -> 
+    the_exponent_nat c = Pos.to_nat (the_exponent c).
+(* end snippet exponentPosToNat:: no-out *)
 Proof.
  intros c X;
  generalize  (X nat positive
@@ -543,8 +550,11 @@ Proof.
     now subst.
 Qed.
 
-Lemma exponent_pos_of_nat : forall c: chain,  parametric c -> 
-  the_exponent c = Pos.of_nat (the_exponent_nat c).
+(* begin snippet exponentPosOfNat:: no-out *)
+Lemma exponent_pos_of_nat :
+  forall c: chain,  parametric c -> 
+                    the_exponent c = Pos.of_nat (the_exponent_nat c).
+(* end snippet exponentPosOfNat:: no-out *)
 Proof.
  intros c Hc; rewrite exponent_pos2nat;auto.
  now rewrite Pos2Nat.id.
@@ -565,9 +575,12 @@ Proof.
     +  simpl; rewrite (Eone_right (EMonoid:=M)); reflexivity. 
 Qed. 
 
+(* begin snippet paramCorrectness:: no-out *)
 Lemma param_correctness :
-  forall (p:positive) (c:chain), p = the_exponent c -> parametric c -> 
-      chain_correct p  c. 
+  forall (p:positive) (c:chain),
+    p = the_exponent c -> parametric c -> 
+    chain_correct p  c.
+(* end snippet paramCorrectness *)
 Proof.
   intros; subst p; rewrite  exponent_pos_of_nat; auto.
   red;  rewrite  exponent_pos2nat;auto.
@@ -602,19 +615,20 @@ using the "free refinement" method
 
 
 
-
+(* begin snippet paramChainCorrect *)
 Ltac param_chain_correct :=
-match goal with 
-  [|- chain_correct ?p ?c ] =>
-  let H := fresh "H" in assert (p = the_exponent c) by reflexivity;
-                        apply param_correctness;[trivial | parametric_tac]
-end.
+  match goal with 
+    [|- chain_correct ?p ?c ] =>
+    let H := fresh "H" in
+    assert (p = the_exponent c) by reflexivity;
+    apply param_correctness;[trivial | parametric_tac]
+  end.
 
 Lemma C87_ok' : chain_correct 87  C87.
  Time  param_chain_correct.
 (* Finished transaction in 0.005 secs (0.005u,0.s) (successful) *)
 Qed.
-
+(* end snippet paramChainCorrect *)
 
 Lemma L87'' : any_chain_parametric -> chain_correct 87 C87.
 Proof.

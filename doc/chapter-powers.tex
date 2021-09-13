@@ -1543,25 +1543,10 @@ considered chain is parametric. Please note how our approach is related with
 The reader may also consult a survey by D. Brown on the most important contributions to 
 the notion of parametricity~\cite{DanBrown-survey}.
 
+\inputsnippets{Addition_Chains/exponentPosToNat}
+\inputsnippets{Addition_Chains/exponentPosOfNat}
+\inputsnippets{Addition_Chains/paramCorrectness}
 
-
-\begin{Coqsrc}
-Lemma exponent_pos2nat : forall c: chain,  parametric c -> 
-  the_exponent_nat c = Pos.to_nat (the_exponent c).
-
-Lemma exponent_pos_of_nat : forall c: chain,  parametric c -> 
-  the_exponent c = Pos.of_nat (the_exponent_nat c).
-
-Lemma param_correctness (c:chain) :
-   parametric c -> 
-   chain_correct (the_exponent c) c. 
-Proof.
-  intros; rewrite  exponent_pos_of_nat; auto.
-  red;  rewrite  exponent_pos2nat;auto.
-  rewrite Pos2Nat.id,  <- exponent_pos2nat;auto.
-  apply param_correctness_nat; auto.
-Qed.
-\end{Coqsrc}
 
 Lemma \texttt{param\_correctness} suggests us a method for verifying 
 that a given chain $c$ is correct \emph{w.r.t.} some positive exponent $p$:
@@ -1598,27 +1583,7 @@ and the hypothesis \linebreak \texttt{Hz: R zA zB}, then crosses the terms \text
 
 The tactic itself is simpler than its explanation. 
 
-\begin{Coqsrc}
-Ltac parametric_tac  := 
-match goal with [ |- parametric ?c] =>
-   red ; intros;
-   repeat (right;[assumption | assumption | ]);  
-   left; assumption
-end.
-
-Example P87 : parametric C87.
-Proof. Time parametric_tac. 
-\end{Coqsrc}
-
-\begin{Coqanswer}
-Finished transaction in 0.005 secs (0.005u,0.s) (successful)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Qed. 
-\end{Coqsrc}
-
-
+\inputsnippets{Addition_Chains/parametricTac}
 
 \subsubsection{Proving a chain's correctness}
 \label{C87-param-ok}
@@ -1627,24 +1592,7 @@ to apply the lemma \texttt{param\_correctness}.
 The reader will note how this computation-less method is much more efficient
 than our reflection tactic.
 
-\begin{Coqsrc}
-Ltac param_chain_correct :=
-match goal with 
-[|- chain_correct ?p ?c ] => 
-apply param_correctness; parametric_tac
-end.
-
-Lemma C87_ok' : chain_correct 87 C87.
-Time param_chain_correct.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-Finished transaction in 0.005 secs (0.005u,0.s) (successful)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Qed.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/paramChainCorrect}
 
 \subsubsection{Remark}
 For the reasons exposed in Section~\vref{obvious-remark}, 
@@ -1653,37 +1601,7 @@ Unfortunately, we cannot prove this property  in \coq{},
 for instance by induction on \texttt{c}, 
 since \texttt{chain} is a product type and not an inductive type.
 
- 
-\begin{Coqbad}
-Definition any_chain_parametric : Type :=
- forall c:chain, parametric c.
-
-Goal any_chain_parametric.
-Proof.
-intros c A B R a b ; induction c.
-\end{Coqbad}
-
-\begin{Coqanswer}
- 2 subgoals, subgoal 1 (ID 556)
-  
-  c : chain
-  A : Type
-  B : Type
-  R : A -> B -> Type
-  a : A
-  b : B
-  a0 : A
-  ============================
-   R a b -> computation_R R (Return a0) (c B b)
-
-...
-\end{Coqanswer}
-
-
-\begin{Coqbad}
-Abort.
-\end{Coqbad}
-
+\inputsnippets{Addition_Chains/VeryBad,Addition_Chains/VeryBad2}
 
 Given this situation, we could  admit (as an axiom) that 
 any chain is parametric. Nevertheless, if a chain is under the form of a 
