@@ -856,51 +856,20 @@ along \texttt{positive}'s constructors.
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/additions.Pow.html}{additions.Pow}}
 
-\begin{Coqsrc}
-Lemma binary_power_mult_ok :
-  forall p a x,   binary_power_mult  x a p  ==  
-                  a * x ^ Pos.to_nat p.
-Proof.
-  induction p as [q IHq | q IHq| ].
- (* Rest of proof omitted *)
- \end{Coqsrc}
+\inputsnippets{Pow/binaryPowerMultOk}
 
- \begin{Coqsrc}
-Lemma Pos_bpow_ok : 
-  forall p x, Pos_bpow x p == x ^ Pos.to_nat p.
-(* Proof omitted *)
+\inputsnippets{Pow/PosBpowOk, Pow/PosBpowOkR,
+  Pow/NBpowOk,
+  Pow/NBpowOkR}
 
-Lemma N_bpow_ok : 
-  forall n x,  x ^b n  == x ^ N.to_nat n.
-(* Proof omitted *)
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma N_bpow_ok_R : 
-  forall n x, x ^b (N.of_nat n)   ==  x ^  n.
-(* Proof omitted *)
-
-Lemma Pos_bpow_ok_R : 
-   forall p x, p <> 0 ->
-                      Pos_bpow x  (Pos.of_nat p)   ==  x ^  p.
-(* Proof omitted *)
-
-End About_power.  
-\end{Coqsrc}
+ 
 
 \subsubsection{Remark}
 The preceding lemmas can be applied for deriving properties of the binary exponentiation 
 functions:
 
-\begin{Coqsrc}
-Lemma N_bpow_commute : forall x n p,  
-                        x ^b n *  x ^b p ==  
-                        x ^b p *  x ^b n.
-Proof.
- intros x n p; repeat rewrite N_bpow_ok.
- rewrite power_commute; reflexivity.
-Qed.  
-\end{Coqsrc}
+\inputsnippets{Pow/NBpowCommute}
+
 
 \subsection{Fibonacci, once again}
 \label{sect:fibonacci-pos-bpow}
@@ -908,20 +877,10 @@ Qed.
 We can use the function \texttt{Pos\_bpow} for computing Fibonacci numbers
 (see Section~\vref{sect:fibonacci-mul2}).
 
+\emph{From Module~\href{../theories/html/additions.Fib2.html}{additions.Fib2}}
 
-\begin{Coqsrc}
-Definition fib_pos n :=
-  let (a,b) := Pos_bpow (M:= Mul2) (1,0) n in
-  (a+b).
+\inputsnippets{Fib2/fibPos}
 
-Time Compute fib_pos 153%positive.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  68330027629092351019822533679447
-     : N 
-Finished transaction in 0.002 secs (0.002u,0.s) (successful)
-\end{Coqanswer}
 
 Fibonacci will come back in Sect.~\vref{sect:fibonacci-euclidean}.
 
@@ -932,37 +891,20 @@ It looks obvious that  the binary exponentiation algorithm is more efficient tha
 naive one. Can we study \emph{within \coq{}} the respective efficiency of both functions?
 Let us take a simple example with the exponent $17$,  in any \texttt{EMonoid}.
 
-\begin{Coqsrc}
-Eval simpl in   fun (x:A) => x ^b 17.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = fun x : A =>
-       x *
-       (x * x * (x * x) * (x * x * (x * x)) *
-        (x * x * (x * x) * (x * x * (x * x))))
-     : A -> A  
-\end{Coqanswer}
+\inputsnippets{Pow/bpow17}
 
 Therefore, we note that the term (\Verb|fun (x:A) =>x ^b 17|)  is
 convertible, --- \emph{thus logically indistinguishable} ---, with a function that performs 16 multiplications.
 
 Likewise, let us simplify the term (\Verb|fun (x:A) =>x ^ 17|):
 
-\begin{Coqsrc}
-Eval simpl in   fun x =>  x ^ 17.  
-\end{Coqsrc}
+\inputsnippets{Pow/naivePow17}
 
-\begin{Coqanswer}
-= fun x : A =>
-   x * (x *  (x *  (x *  (x *   (x *  (x *  (x *
-    (x * (x * (x * (x * (x * (x * (x * (x * (x * one)))))
-  )))))))))))  
-\end{Coqanswer}
+
 
 
 From these tests, we may infer that  representing exponentiation algorithms as \coq{}  functions hides
-information about the real structure of the computations, particularly the sharing on intermediate computations.
+information about the real structure of the computations, particularly about  sharing intermediate computations.
 
 Thus, we propose to define a data structure that makes explicit the sequence of multiplications that lead to the computation of $x^n$. For instance, the values of  
 \texttt{x * x} and
@@ -974,31 +916,16 @@ algorithms.
 It is well known that local variables can be used to store intermediate results.
 In an \texttt{ISWIM} - \texttt{ML} style, the function computing $x^{17}$ could be written as follows:
 
-\begin{Coqsrc}
-Definition pow_17  (x:A) :=
-  let x2 := x * x in
-  let x4 := x2 * x2 in
-  let x8 := x4 * x4 in
-  let x16 := x8 * x8 in
-  x16 * x.
-\end{Coqsrc}
+\inputsnippets{Pow/pow17LetIn}
+
 \label{pow-17-let-in}
 
 Unfortunately, \coq's \textbf{let-in} construct is useless for our purpose, since $\zeta$-conversion 
 would make the sharing of computations disappear.
 
-\begin{Coqsrc}
-Eval cbv  zeta beta delta [pow_17]  in  pow_17.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = fun x : A =>
-       x * x * (x * x) * (x * x * (x * x)) *
-       (x * x * (x * x) * (x * x * (x * x))) * x
-     : A -> A 
-\end{Coqanswer}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-In the next section, we propose to use a \emph{data structure} for representing 
+\inputsnippets{Pow/evalPow17LetIn}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+In the next section, we define a \emph{data structure} for representing 
 the computations that lead to the evaluation of some power $x^n$, where
 intermediary results are explicitly named for further use in the rest of the computation.
 
@@ -1181,11 +1108,9 @@ Let  \texttt{A} be some type;  a \emph{computation} on \texttt{A} is
 
 From Module~\href{../theories/html/additions.Addition_Chains.html}{additions.Addition\_Chains}
 
-\begin{Coqsrc}
-Inductive computation {A:Type}  : Type :=
-| Return (a : A)
-| Mult (x y : A) (k : A -> computation).    
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/computationDef}
+
+
 \subsubsection{Monadic notation}
 
 \index{additions}{Types!computation}
@@ -1196,22 +1121,11 @@ expressions of a small programming language dedicated to sequences of multiplica
 Please look at \emph{CPDT}~\cite{chlipalacpdt2011} for more details on monadic notations in \coq.
 \label{monadic-mult}
 
-\begin{Coqsrc}
-Notation "z '<---'  x 'times' y ';' e2 " :=
-  (Mult x y  (fun z => e2))
-    (right associativity, at level 60).
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/monadicComputation}
 
 The \texttt{computation} type family is able to express sharing of intermediate computations. For instance, the computation of $2^7$ depicted in Figure~\ref{fig:dag7} is described by  the following term:
 
-\begin{Coqsrc}
-Example comp7 : computation  :=
-  x <--- 2 times 2;
-  y <--- x times 2;
-  z <--- y times y ;
-  t <--- 2 times z ;
-  Return t.  
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/comp128}
 
 \begin{figure}[h]
   \centering
@@ -1256,9 +1170,8 @@ on \texttt{A}:
 
 \index{additions}{Types!chain@chain (addition chains)}
 
-\begin{Coqsrc}
-Definition chain := forall A:Type, A -> @computation A.   
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/chainDef}
+
 
 Thus, terms of type \texttt{chain} describe polymorphic 
 exponentiation algorithms. 
@@ -1269,21 +1182,8 @@ Note that, like in PHOAS, bound variables associated with the
 intermediary results are \coq{} variables of type $A$.
 \begin{figure}[h]
   \centering
-  \begin{Coqsrc}
-Example  C87 : chain :=
- fun A (x : A) =>
-  x2 <--- x times x ;
-  x3 <--- x2 times x ;
-  x6 <--- x3 times x3 ;
-  x7 <--- x6 times x ;
-  x10 <--- x7 times x3 ;
-  x20 <--- x10 times x10 ;
-  x40 <--- x20 times x20 ;
-  x80 <--- x40 times x40 ;  
-  x87 <--- x80 times x7 ;
-  Return x87.
- \end{Coqsrc}
-  \caption{A chain for raising x to its $87$-th power}
+  \inputsnippets{Addition_Chains/C87}
+   \caption{A chain for raising x to its $87$-th power}
   \label{fig:C87}
 \end{figure}
 
@@ -1306,23 +1206,8 @@ Any other type in \coq{} would have fitted our needs, but \texttt{unit} and
 its unique inhabitant \texttt{tt} was the simplest  solution.
 
 \label{C87-length}
-\begin{Coqsrc}
-Fixpoint computation_length {A} (a:A)(m : @computation A) 
-  : nat :=
-match m with
-  | Mult _ _ k => S (computation_length a (k a))
-  | _ => 0%nat
-end.
 
-Definition chain_length (c:chain) 
-   := computation_length tt (c _ tt).
-
-Compute chain_length C87.
-\end{Coqsrc}
-\begin{Coqanswer}
- = 9 : nat  
-\end{Coqanswer}
-   
+\inputsnippets{Addition_Chains/chainLength}
 
 \subsection{Chains as a (small) programming language}
 
@@ -1335,27 +1220,17 @@ The \texttt{chain} type can be considered as a tiny programming language dedicat
   then executes the computation \texttt{(c A x)}.
 \end{itemize}
 
+\inputsnippets{Addition_Chains/chainExecute}
 
-\begin{Coqsrc}
-Fixpoint computation_execute  {A:Type} (op: Mult_op A) 
-                              (c : computation) :=
-match c with 
-| Return x => x 
-| Mult x y k => computation_execute op (k (x * y))
-end.
 
-Definition chain_execute (c:chain) {A} op  (a:A) :=
-  computation_execute op (c A a).
-\end{Coqsrc}
 
-\begin{Coqsrc}
-Definition computation_eval `{M:@EMonoid A E_op E_one E_eq}
-           (c : computation) : A := computation_execute E_op c.
 
-Definition chain_apply (c:chain) 
-    {M:@EMonoid A E_op E_one E_eq} a : A :=
-    computation_eval (c A a).
-\end{Coqsrc}
+\subsubsection*{Examples:} 
+The following interactions show how to apply the chain \texttt{C87} 
+for exponentiation within two different monoids:
+
+
+\inputsnippets{Addition_Chains/C87Apply}
 
 \index{additions}{Projects}
 \begin{project}
@@ -1363,62 +1238,17 @@ Study how  to compile efficiently such data structures.
 
 \end{project}
 
-
-\subsubsection*{Examples:} 
-The following interactions show how to apply the chain \texttt{C87} 
-for exponentiation within two different monoids:
-
-\begin{Coqsrc}
-Compute  chain_apply C87 3%Z.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- =  323257909929174534292273980721360271853387%Z
-     : Z
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute chain_apply C87 (M:=M2N) (Build_M2 1 1 1 0)%N.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-  = {|
-      c00 := 1100087778366101931%N;
-      c01 := 679891637638612258%N;
-      c10 := 679891637638612258%N;
-      c11 := 420196140727489673%N |}
-     : M2 N
-\end{Coqanswer}
-
 \index{additions}{Projects}
 \begin{project}
 Define a function which returns the sequence of operations defined by a chain.
 For instance, the chain \texttt{C87} of Figure \ref{fig:C87} can be represented as a 
 list containing terms of the form \texttt{($i$, Add $j$ $k$)} whenever the associated computation contains the operation $x^i=x^j\times x^k$.
 
-
-\begin{Coqsrc}
-Compute chain_trace C87.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-(1, Init)
-       :: (2, Add 1 1)
-          :: (3, Add 2 1)
-             :: (6, Add 3 3)
-                :: (7, Add 6 1)
-                   :: (10, Add 7 3)
-                      :: (20, Add 10 10)
-                         :: (40, Add 20 20)
-                            :: (80, Add 40 40) :: (87, Add 80 7) :: nil
-     : list (positive * info)
-\end{Coqanswer}
-  
+\inputsnippets{Trace_exercise/traceC87}
 
 \textbf{Note} A first solution (in ~\href{../theories/html/additions.Trace_exercise.html}{additions.Trace\_exercise}) consists in the definition of 
 a (non-associative) multiplication over a type of trace, and apply the function
 \texttt{chain\_execute} as if it were computing a power of \texttt{(1,Init)}.
-
 
 \end{project}
 
@@ -1428,16 +1258,10 @@ A chain is said to be \emph{correct} with respect to a positive
 integer \texttt{p} if its execution in any monoid computes $p$-th powers.
 
 \label{chain-correct-def}
-\begin{Coqsrc}
-Definition chain_correct_nat (n:nat) (c: chain) := 
-  n <> 0 /\
-  forall `(M:@EMonoid  A E_op E_one E_eq) (x:A), 
-      chain_apply c x ==   x ^ n.
 
-Definition chain_correct (p:positive) (c: chain) :=
-  chain_correct_nat c (Pos.
-to_nat p). 
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/chainCorrect}
+
+
 
 \begin{definition}
 A chain $c$ is \emph{optimal} for a given exponent $p$ if its length is less 
@@ -1445,14 +1269,9 @@ than or equal to
 the length of any chain correct for $p$.  
 \end{definition}
 
+\inputsnippets{Addition_Chains/optimalDef}
 
- \begin{Coqsrc}
-Definition optimal (p:positive) (c : chain) :=
- forall c', chain_correct p c' -> 
-            (chain_length c <= chain_length c')%nat.
- \end{Coqsrc}
-
-\section{Proving a chain's correctness}
+ \section{Proving a chain's correctness}
 \label{chain-correctness-sect}
 In this section, we present various ways of proving that a given chain is 
 correct w.r.t. a given exponent. First, we just try to apply 
@@ -1463,45 +1282,11 @@ inefficient, even for small exponents. In a second step, we use more sophisticat
 Let us show how to prove  the correctness of some chains, using
 the \texttt{EMonoid} laws shown in Sect.~\vref{EMonoid-def}. 
 
-\begin{Coqsrc}
-Ltac slow_chain_correct_tac :=
-  match goal with 
-      [ |- chain_correct ?p ?c ] =>
-      let A := fresh "A" in
-      let op := fresh "op" in
-      let one := fresh "one" in
-      let eqv := fresh "eqv" in
-      let M := fresh "M" in
-      let x := fresh "x"
-      in  split;
-        [discriminate | 
-         unfold c, chain_apply, computation_eval; simpl;
-         intros A op one eq M x; monoid_simpl M; reflexivity]
-  end.
-
-
-Example C7_ok : chain_correct 7 C7.
-Proof.
-   slow_chain_correct_tac.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/slowTac}
 
 Unfortunately, this approach is terribly inefficient, even for quite small exponents:
 
-
-\begin{Coqsrc}
-Example C87_ok : chain_correct 87 C87.
-Proof.
- Time  slow_chain_correct_tac. 
-\end{Coqsrc}
-
-\begin{Coqanswer}
- Finished transaction in 62.808 secs (62.677u,0.085s) (successful)   
- \end{Coqanswer}
-
-\begin{Coqsrc}
-Qed.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/slowC87Correct}
 
 In addition to this big computation time, this approach 
 generates a huge proof term. Just try to execute the command 
@@ -1509,51 +1294,7 @@ generates a huge proof term. Just try to execute the command
 In order to understand this poor performance, let us consider an intermediate
 subgoal of the previous proof generated after a sequence of unfoldings and simplifications. This goal is presented below.
 
-
-
-\begin{Coqanswer}
-1 subgoal, subgoal 1 (ID 219)
-  
-  A : Type
-  E_op : Mult_op A
-  E_one : A
-  E_eq : Equiv A
-  M : EMonoid E_op E_one E_eq
-  x : A
-  ============================
-   x * x * x * (x * x * x) * x * (x * x * x) *
-   (x * x * x * (x * x * x) * x * (x * x * x)) *
-   (x * x * x * (x * x * x) * x * (x * x * x) *
-    (x * x * x * (x * x * x) * x * (x * x * x))) *
-   (x * x * x * (x * x * x) * x * (x * x * x) *
-    (x * x * x * (x * x * x) * x * (x * x * x)) *
-    (x * x * x * (x * x * x) * x * (x * x * x) *
-     (x * x * x * (x * x * x) * x * (x * x * x)))) *
-   (x * x * x * (x * x * x) * x) ==
-   x *
-   (x *
-    (x *
-     (x *
-      (x *
-       (x *
-        (x *
-         (x *
-          (x *
-           (x *
-            (x *
-             (x *
-              (x *
-               (x * (x * (x * (x * (x * (x * (x * (x * (x * (x * 
-                ..))))))))))))))))))))))
-\end{Coqanswer}
-\label{fig:big-goal}
-
-
-This goal is solved by the following tactic composition:
-
-\begin{Coqsrc}
-monoid_simpl M; reflexivity. 
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/WhySoSlow}
 
 
 This inefficiency certainly comes from the cost of setoid rewriting.
@@ -1587,19 +1328,7 @@ the associated normal forms are equal.
 Defining such a normalization function is possible on an inductive type.
 The following type describes expressions composed of monoid operations and inhabitants of a given type $A$.
 
-\begin{Coqsrc}
-(** Binary trees of multiplications over A *)
-
-Inductive Monoid_Exp (A:Type) : Type :=
- Mul_node (t t' : Monoid_Exp A) | One_node | A_node (a:A).
-
-Arguments Mul_node {A} _ _.
-Arguments One_node {A} .
-Arguments A_node {A} _ .
-\end{Coqsrc}
-
-
-
+\inputsnippets{Addition_Chains/MonoidExp}
 
 Thus, the main steps of a correctness proof of a given chain, \emph{e.g.},
 \texttt{C87} will be the following ones:
@@ -1621,56 +1350,24 @@ of terms of type \texttt{Monoid\_Exp $A$}.
 The following functions help to transform any term of type
 \texttt{Monoid\_Exp $A$} into a flat ``normal form''.
 
-\begin{Coqsrc}
-
-Fixpoint flatten_aux {A:Type} (t fin : Monoid_Exp A) 
-  : Monoid_Exp A :=
-match t with Mul_node  t t' =>
-              flatten_aux t (flatten_aux t' fin)
-           | One_node  => fin
-           |  x => Mul_node  x fin
-end.
-
-Fixpoint flatten {A:Type} (t: Monoid_Exp A) : Monoid_Exp A :=
-match t with
-| Mul_node t t' => flatten_aux t (flatten t')
-| One_node => One_node
-| X => Mul_node X One_node
-end.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/flattenDef}
 
 \subsubsection{Interpretation function}
 
 The function \texttt{eval} maps any term of type \texttt{Monoid\_Exp $A$}
 into a term of type \texttt{$A$}.
 
-\begin{Coqsrc}
-Function eval {A:Type} {op one eqv}
-         (M: @EMonoid A op one eqv)
-         (t: Monoid_Exp A) : A :=
- match t with 
-            | Mul_node t1 t2 => (eval M t1 * eval M t2)%M
-            | One_node => one
-            | A_node a => a
-end.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/evalDef}
+
 
 The following two lemmas relate the linearization function \texttt{flatten}
 with the interpretation function \texttt{eval}.
 
-\begin{Coqsrc}
-Lemma flatten_valid {A} `(M: @EMonoid A op one eqv):
-forall t , eval M t == eval M (flatten t).
-(* Proof omitted *) 
-
-Lemma flatten_valid_2 {A} `(M: @EMonoid A op one eqv):
-forall t t' , eval  M (flatten t) == eval M (flatten t')  ->
-     eval M t == eval M t'.
-(* Proof omitted *)
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/flattenValid}
+\inputsnippets{Addition_Chains/flattenValid2}
 
 \subsubsection{Transforming a multiplication into a tree}
-Let us now build a tool for building terms of type  \texttt{Monoid\_Exp $A$} out
+Let us now build a tool for building terms of type  (\texttt{Monoid\_Exp $A$}) out
 of terms of type \texttt{A} containing multiplications of the form 
 \Verb|(_ * _)%M| and the variable \texttt{one}. 
 In fact, what we want to  define is an inverse of the function \texttt{flatten}.
@@ -1680,21 +1377,7 @@ the transformation of
 a product of type \texttt{A} into a term of type \texttt{Monoid\_Exp A}
 is done with the help of a tactic:
 
-
-
-\begin{Coqsrc}
-(** "Quote" tactic *)
-
-Ltac model A  op one v :=
-match v with 
-| (?x  * ?y)%M => let r1 := model A op one x
-                  with r2 := model A op one y 
-                  in  constr:(@Mul_node A r1 r2)
-| one => constr:(@One_node A)
-| ?x => constr:(@A_node A x)
-end.
-\end{Coqsrc}
-
+\inputsnippets{Addition_Chains/modelTac}
 
 For instance, the term \texttt{(x * x * x * (x * x * x) * x)} is
 transformed by \texttt{model} in the following term of type \texttt{Monoid\_Exp $A$}

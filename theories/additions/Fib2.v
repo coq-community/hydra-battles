@@ -104,6 +104,7 @@ Qed.
 Time Compute fib_mul2 87.
 (* end snippet TimeFibMul2 *)
 
+(* begin snippet fibPos *)
 Definition fib_pos n :=
   let (a,b) := Pos_bpow (M:= Mul2) (1,0) n in
   (a+b).
@@ -112,6 +113,7 @@ Compute fib_pos xH.
 Compute fib_pos 10%positive. 
 
 Time Compute fib_pos 153%positive.
+(* end snippet fibPos *)
 
 Locate chain_apply.
 About chain_apply.

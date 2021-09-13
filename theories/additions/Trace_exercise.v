@@ -43,7 +43,9 @@ Definition chain_trace c :=
 
 Definition exponents c := List.map fst (chain_trace c).
 
+(* begin snippet traceC87 *)
 Compute chain_trace C87.
+(* end snippet  traceC87 *)
 Compute exponents C87.
 
 Compute chain_trace (binary_chain 87).

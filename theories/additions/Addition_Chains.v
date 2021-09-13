@@ -21,24 +21,30 @@ Generalizable All Variables.
 (** ** Computations composed of multiplications over type  A 
   (in Continuation Passing Style) *)
 
+(* begin snippet computationDef *)
 Inductive computation {A:Type}  : Type :=
 | Return (a : A)
 | Mult (x y : A) (k : A -> computation).
+(* end snippet computationDef *)
 
 
 (** *** Monadic Notation for computations 
 *)
 
+(* begin snippet monadicComputation *)
 Notation "z '<---'  x 'times' y ';' e2 " :=
   (Mult x y  (fun z => e2))
     (right associativity, at level 60).
+(* end snippet monadicComputation *)
 
-Example comp7 : computation  :=
+(* begin snippet comp128 *)
+Example comp128 : computation  :=
   x <--- 2 times 2;
   y <--- x times 2;
   z <--- y times y ;
   t <--- 2 times z ;
   Return t.
+(* end snippet comp128 *)
 
 (** *** Definition
 
@@ -46,8 +52,9 @@ An _addition chain_ (in short a _chain_) is a function that maps
  any type $A$ and any value $a$ of type $A$ into a computation on $A$.
 *)
 
+(* begin snippet chainDef *)
 Definition chain := forall A:Type, A -> @computation A.
-
+(* end snippet chainDef *)
 
 (** The chain associated with the empty computation 
    (raising to the first power) *)
@@ -69,6 +76,7 @@ Example C7 : chain :=
   The chain below is intented to compute 87-th power in any EMonoid.
 *)
 
+(* begin snippet C87 *)
 Example  C87 : chain :=
  fun A (x : A)=>
   x2 <--- x times x ;
@@ -81,11 +89,13 @@ Example  C87 : chain :=
   x80 <--- x40 times x40 ;  
   x87 <--- x80 times x7 ;
   Return x87.
+(* end snippet C87 *)
 
 (** *** Chain length (number of mutiplications)
 *)
 
-Fixpoint computation_length  {A} (a:A) (m : @computation A) : nat :=
+(* begin snippet chainLength *)
+Fixpoint computation_length {A} (a:A) (m : @computation A) : nat :=
 match m with
   | Mult _ _ k => S (computation_length a (k a))
   | _ => 0%nat
@@ -93,11 +103,9 @@ end.
 
 Definition chain_length (c:chain) := computation_length tt (c _ tt).
 
-(* begin show *)
 Compute chain_length C87. 
-(* end show *)
-(** [[ = 9 : nat ]]
-*)
+(* end snippet chainLength *)
+
 
 (** *** Execution of chains
 
@@ -107,7 +115,7 @@ First, we define recursively the _evaluation_  of a computation, then
 the _execution_ of a chain.
 *)
 
-
+(* begin snippet chainExecute *)
 Fixpoint computation_execute  {A:Type} (op: Mult_op A) 
          (c : computation) :=
   match c with 
@@ -115,49 +123,29 @@ Fixpoint computation_execute  {A:Type} (op: Mult_op A)
     | Mult x y k => computation_execute op (k (x * y))
   end.
 
-
 Definition computation_eval `{M:@EMonoid A E_op E_one E_eq}
            (c : computation) : A :=
   computation_execute E_op c.
-
 
 Definition chain_execute (c:chain) {A} op  (a:A) :=
   computation_execute op (c A a).
 
 
-
-Definition chain_apply (c:chain) `{M:@EMonoid A E_op E_one E_eq} a : A :=
+Definition chain_apply
+           (c:chain) `{M:@EMonoid A E_op E_one E_eq} a : A :=
    computation_eval (c A a).
-
+(* end snippet chainExecute *)
 
 Lemma computation_eval_rw `{M:@EMonoid A E_op E_one E_eq} c :
          computation_eval c  =  computation_execute E_op c.
 Proof. reflexivity. Qed.
 
-
-(* begin show *)
+(* begin snippet C87Apply *)
 Time Compute  chain_apply C87 3%Z.
-(* end show *)
 
-(** [[
- = 323257909929174534292273980721360271853387%Z
-     : Z
-]]
-*)
-
-(* begin show *)
 Time Compute chain_apply  (M:=M2N) C87  (Build_M2 1 1 1 0)%N.
-(* end show *)
+(* end snippet C87Apply *)
 
-(** [[
- = {|
-       c00 := 1100087778366101931%N;
-       c01 := 679891637638612258%N;
-       c10 := 679891637638612258%N;
-       c11 := 420196140727489673%N |}
-     : M2 N
-]]
-*)
 
 
 (** ** Chain correctness
@@ -169,18 +157,24 @@ given any positive integer $p$, returns a chain that is correct with respect to 
 
 *)
 
+(* begin snippet chainCorrect *)
 Definition chain_correct_nat (n:nat) (c: chain) := n <> 0 /\ 
 forall `(M:@EMonoid  A E_op E_one E_eq) (x:A), 
    chain_apply c x ==   x  ^  n.
 
 Definition chain_correct (p:positive) (c: chain) :=
   chain_correct_nat (Pos.to_nat p) c. 
+(* end snippet chainCorrect *)
 
+(* begin snippet optimalDef *)
 Definition optimal (p:positive) (c : chain) :=
- forall c', chain_correct p c' -> (chain_length c <= chain_length c')%nat.
+  forall c', chain_correct p c' ->
+             (chain_length c <= chain_length c')%nat.
+(* end snippet optimalDef *)
 
 (** A slow tactic for proving a chain's correctness *)
 
+(* begin snippet slowTac:: no-out *) 
 Ltac slow_chain_correct_tac :=
   match goal with 
       [ |- chain_correct ?p ?c ] =>
@@ -195,34 +189,41 @@ Ltac slow_chain_correct_tac :=
                  intros A op one eq M x; monoid_simpl M; reflexivity]
   end.
 
-Example C7_ok : chain_correct 7 C7.
+Example C7_ok : chain_correct 7 C7. 
 Proof.
  slow_chain_correct_tac.
 Qed.
+(* end snippet slowTac *)
 
 
 (** The following proof takes a very long time. Happily, C87's correctness 
 will be proved  more  efficiently, using  reflection or parametricity. 
 *)
 
-(** Remove the comment if you can wait ...
-
-Example C87_ok : chain_correct 87 C87.
-Proof.
+(** Remove the comment if you can wait ... *)
+(* begin snippet slowC87Correct *)
+Example C87_ok_slow : chain_correct 87 C87. (* .no-out *)
+Proof. (* .no-out *)
  Time  slow_chain_correct_tac. 
-(*
-Finished transaction in 62.808 secs (62.677u,0.085s) (successful)
-*)
 Qed.
+(* end snippet slowC87Correct *)
 
-Print C87_ok.
-*)
+(* begin snippet WhySoSlow *)
+Example C87_ok_slow' : chain_correct 87 C87. (* .none *)
+Proof. (* .none *)
+  split; unfold chain_correct, chain_correct_nat. (* .none *)
+  discriminate. (* .none *)
+  intros; red; cbn; unfold power; simpl. (* .no-in .unfold  *)
+  (* end snippet WhySoSlow *)
+Abort.      
 
 
 
 (** * Correctness Proof by Reflection
   See chap 16 of Coq'Art *)
 
+
+(* begin snippet MonoidExp *)
 (** Binary trees of multiplications over A *)
 
 Inductive Monoid_Exp (A:Type) : Type :=
@@ -231,34 +232,42 @@ Inductive Monoid_Exp (A:Type) : Type :=
 Arguments Mul_node {A} _ _.
 Arguments One_node {A} .
 Arguments A_node {A} _ .
+(* end snippet MonoidExp *)
 
-
+(* begin snippet flattenDef *)
 (** Linearization functions *)
 
-Fixpoint flatten_aux {A:Type}(t fin : Monoid_Exp A) : Monoid_Exp A :=
-match t with Mul_node  t t' => flatten_aux t (flatten_aux t' fin)
-           | One_node  => fin
-           |  x => Mul_node  x fin
-end.
+Fixpoint flatten_aux {A:Type}(t fin : Monoid_Exp A)
+  : Monoid_Exp A :=
+  match t with
+    Mul_node  t t' => flatten_aux t (flatten_aux t' fin)
+  | One_node  => fin
+  | x => Mul_node  x fin
+  end.
 
-Fixpoint flatten {A:Type} (t: Monoid_Exp A) : Monoid_Exp A :=
-match t with
-| Mul_node t t' => flatten_aux t (flatten t')
-| One_node => One_node
-| X => Mul_node X One_node
-end.
+Fixpoint flatten {A:Type} (t: Monoid_Exp A)
+  : Monoid_Exp A :=
+  match t with
+  | Mul_node t t' => flatten_aux t (flatten t')
+  | One_node => One_node
+  | X => Mul_node X One_node
+  end.
+(* end snippet flattenDef *)
 
 (** Interpretation function *)
 
-Function eval {A:Type} {op one eqv} (M: @EMonoid A op one eqv)
+(* begin snippet evalDef *)
+Function eval {A:Type} {op one eqv}
+         (M: @EMonoid A op one eqv)
          (t: Monoid_Exp A) : A :=
-match t with Mul_node t1 t2 => (eval M t1 * eval M t2)%M
-            | One_node => one
-            | A_node a => a
+  match t with
+    Mul_node t1 t2 => (eval M t1 * eval M t2)%M
+  | One_node => one
+  | A_node a => a
 end.
+(* end snippet evalDef *)
 
-
-Lemma flatten_aux_valid {A} `(M: @EMonoid A op one eqv):
+Lemma flatten_aux_valid `(M: @EMonoid A op one eqv):
 forall t t', (eval M t * eval M t')%M ==
              (eval M (flatten_aux t t')).
 Proof.
@@ -269,8 +278,11 @@ Proof.
  - reflexivity.
 Qed.
 
-Lemma flatten_valid {A} `(M: @EMonoid A op one eqv):
-forall t , eval M t == eval M (flatten t).
+(* begin snippet flattenValid:: no-out *)
+Lemma flatten_valid `(M: @EMonoid A op one eqv):
+  forall t , eval M t == eval M (flatten t).
+(* end snippet flattenValid *)
+
 Proof.
  add_op_proper M HM; induction t;simpl.
  - rewrite <- flatten_aux_valid, <- IHt2; reflexivity.
@@ -278,14 +290,17 @@ Proof.
  - monoid_simpl M;reflexivity.
 Qed.
 
-Lemma flatten_valid_2 {A} `(M: @EMonoid A op one eqv):
+(* begin snippet flattenValid2:: no-out  *)
+Lemma flatten_valid_2 `(M: @EMonoid A op one eqv):
 forall t t' , eval  M (flatten t) == eval M (flatten t')  ->
-     eval M t == eval M t'.
+              eval M t == eval M t'.
+(* end snippet flattenValid2  *)
 Proof.
   intros t t' H; now repeat  rewrite <- flatten_valid in H.  
 Qed.
 
 (** "Quote" tactic *)
+(* begin snippet modelTac *)
 
 Ltac model A  op one v :=
 match v with 
@@ -295,7 +310,7 @@ match v with
 | one => constr:(@One_node A)
 | ?x => constr:(@A_node A x)
 end.
-
+(* end snippet modelTac *)
 
 
 Ltac monoid_eq_A A op one E_eq M  :=
