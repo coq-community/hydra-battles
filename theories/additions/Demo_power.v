@@ -1,10 +1,8 @@
 Require Import Monoid_def 
                Monoid_instances
                Pow.
-(* begin snippet Demopower *)
-Open Scope M_scope.
-
 (* begin snippet DemoPower *)
+Open Scope M_scope.
 
 Compute 22%Z ^ 20.
 

@@ -69,8 +69,6 @@ Lemma power_eq3  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
 Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
 (* end snippet powerEqns *)
 
-(* end snippet powerEqns *)
-
 (** *** The binary exponentiation function (exponents in  [positive])  *)
 
   (**  *** 
