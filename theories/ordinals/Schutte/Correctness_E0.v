@@ -420,7 +420,7 @@ Proof with eauto with T1.
 
      + repeat rewrite inject_rw.
        simpl.
-       destruct (T1.compare alpha1 beta1) eqn:H1;
+       destruct (compare alpha1 beta1) eqn:H1;
        repeat rewrite inject_rw.
        * apply compare_eq_iff in H1 as <-.
           rewrite <- (case_Eq (inject alpha1) (inject alpha2)

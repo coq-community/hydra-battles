@@ -13,16 +13,16 @@ Coercion is_true: bool >-> Sortclass.
 Generalizable Variables A Lt comp.
 
 Section OA_given.
-  
+
   Context {A:Type}
           {Lt Le: relation A}
-          {compareA: A -> A -> comparison}
-          `(OA : ON A Lt compareA).
+          {cmpA: Compare A}
+          (OA : ON Lt cmpA).
 
 (** The type of ordinals less than [a] *)
 
 
-Definition t (a:A) := {b:A | compareA b a = Datatypes.Lt}.
+Definition t (a:A) := {b:A | compare b a = Datatypes.Lt}.
 
 Definition lt {a:A} : relation (t a) :=
   fun alpha beta => ON_lt (proj1_sig alpha) (proj1_sig beta).
@@ -30,22 +30,24 @@ Definition lt {a:A} : relation (t a) :=
 Definition le {a:A} : relation (t a) :=
   clos_refl (t a) lt.
 
-Definition compare {a:A} (alpha beta : t a) :=
-  compareA (proj1_sig alpha) (proj1_sig beta).
+#[global]
+Instance compare_t {a:A} : Compare (t a) :=
+fun (alpha beta : t a) =>
+  compare (proj1_sig alpha) (proj1_sig beta).
 
 Lemma compare_correct {a} (alpha beta : t a) :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
+  CompSpec eq lt alpha beta (compare alpha beta).
 Proof.
-  - destruct alpha, beta; unfold compare; cbn.
-    case_eq (compareA x x0); unfold lt; cbn.
+ unfold CompSpec, compare.
+  - destruct alpha, beta; unfold compare,compare_t; cbn.
+    case_eq (compare x x0); unfold lt; cbn.
     + constructor 1.
-      destruct (compare_correct x x0); try discriminate.
+      destruct (comparable_comp_spec x x0); try discriminate.
        subst; f_equal; apply eq_proofs_unicity_on.
        decide equality.
     + constructor 2.
-        destruct (compare_correct x x0); trivial; try discriminate.
-    + constructor 3; destruct (compare_correct x x0); trivial; discriminate.
+        destruct (comparable_comp_spec x x0); trivial; try discriminate.
+    + constructor 3; destruct (comparable_comp_spec x x0); trivial; discriminate.
 Qed.
 
 
@@ -64,14 +66,15 @@ Qed.
 Lemma lt_wf (a:A) : well_founded (@lt a).
 Proof.
   intro x;  unfold lt; apply Acc_inverse_image.
-   destruct x; cbn; apply wf.
+   destruct x; cbn; apply ON_wf.
 Qed.
 
 #[global] Instance sto a : StrictOrder (@lt a).
 Proof.
   destruct OA; split.
    - intro x; red;  unfold lt; destruct x; cbn.
-     intro; destruct sto; apply (StrictOrder_Irreflexive x); auto. 
+     destruct ON_comp.
+     intro; destruct comparable_sto; apply (StrictOrder_Irreflexive x); auto. 
    -   red; intros; unfold lt in *; destruct x,y,z; cbn in *.
        specialize (StrictOrder_Transitive x x0 x1).
        intro; auto.

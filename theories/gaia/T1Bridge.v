@@ -109,18 +109,18 @@ Proof.
 Qed.
 
 Lemma compare_ref x :
-  forall y, match T1.compare x y with
+  forall y, match T1.compare_T1 x y with
   | Lt => T1lt (iota x) (iota y)
   | Eq => iota x = iota y
   | Gt => T1lt (iota y) (iota x)
   end.
 Proof.
 elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
-case H: (T1.compare x1 y1).
+case H: (T1.compare_T1 x1 y1).
 - specialize (IHx1 y1); rewrite H in IHx1.
   case H0: (PeanoNat.Nat.compare n n0).
   + have ->: (n = n0) by apply Compare_dec.nat_compare_eq.
-    case H1: (T1.compare x2 y2).
+    case H1: (T1.compare_T1 x2 y2).
     * rewrite IHx1; f_equal.
       by specialize (IHx2 y2); now rewrite H1 in IHx2.
     * case (iota x1 < iota y1); [trivial|].
@@ -141,9 +141,10 @@ Qed.
 Lemma lt_ref (a b : hT1): T1.lt a b <-> (iota a < iota b).
 Proof.
   split.
-  - rewrite /T1.lt; move => Hab; generalize (compare_ref a b); now rewrite Hab.
+  - rewrite /T1.lt /Comparable.compare; move => Hab. 
+    generalize (compare_ref a b); now rewrite Hab.
   - move => Hab; red.
-    case_eq (T1.compare a b).
+    case_eq (T1.compare_T1 a b).
     + move => Heq; generalize (compare_ref a b); rewrite Heq.
       move => H0; move: Hab; rewrite H0;
                 move => Hb; by rewrite T1ltnn in Hb.
@@ -166,11 +167,12 @@ Qed.
 Lemma plus_ref : refines2 T1.plus T1add.
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
-  case Hx1y1: (T1.compare x1 y1); move: (compare_ref x1 y1); rewrite Hx1y1 => H.
-  - by rewrite H T1ltnn /=; f_equal.
-  - by rewrite H /=; f_equal.
+  case Hx1y1: (T1.compare_T1 x1 y1); move: (compare_ref x1 y1); rewrite Hx1y1 => H.
+  - rewrite /Comparable.compare H T1ltnn /=; f_equal.
+    by rewrite Hx1y1 -H /=.
+  - by rewrite /Comparable.compare H Hx1y1.
   - replace (iota x1 < iota y1) with false.
-    rewrite H /=; f_equal.
+    rewrite /Comparable.compare H /= Hx1y1; f_equal.
     change (cons (iota y1) n0 (iota y2)) with (iota (T1.ocons y1 n0 y2)).
       by rewrite IHx2.
         by apply T1lt_anti in H.
@@ -285,27 +287,34 @@ Proof.
 Qed.
 
 
-Lemma Comparable_T1lt_eq  a b:
-  Comparable.lt_b a b = (iota a < iota b).
+Lemma Comparable_T1lt_eq a b:
+  DecPreOrder.bool_decide (T1.lt a b) = (iota a < iota b).
 Proof.
-  rewrite /Comparable.lt_b; generalize (compare_ref a b). 
-  case_eq (T1.compare a b).    
-  - move => _ ->;  by rewrite T1ltnn.
-  - by []. 
-  - move => _ H; case_eq (iota a < iota b). 
-    + move => H0; have H1 : (iota b < iota b)  by
-                  apply T1lt_trans with (iota a).
-        by rewrite T1ltnn in H1. 
-    + by [].
+  rewrite /T1.lt; generalize (compare_ref a b);
+  rewrite /Comparable.compare /=.
+  destruct (DecPreOrder.decide (T1.compare_T1 a b = Lt)).
+  - pose proof e as bd.
+    apply T1.bool_decide_eq_true in bd.
+    by rewrite bd e.
+  - pose proof n as bd.
+    apply T1.bool_decide_eq_false in bd.
+    rewrite bd.
+    destruct (T1.compare_T1 a b).
+    * by move => ->; rewrite T1ltnn.
+    * by [].
+    * move => Hlt.
+      symmetry.
+      apply/negP => Hlt'.
+      have H1 : (iota b < iota b) by apply T1lt_trans with (iota a).
+      by rewrite T1ltnn in H1. 
 Qed.
-
 
 Lemma nf_ref a : T1.nf_b a = T1nf (iota a).
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
-    rewrite andbA; cbn; by rewrite Comparable_T1lt_eq.
+    by rewrite andbA Comparable_T1lt_eq.
 Qed.
 
  

@@ -6,7 +6,7 @@
  
 From Coq Require Import Arith Compare_dec Lia 
      Relation_Operators RelationClasses.
-From hydras Require Import Simple_LexProd ON_Generic.
+From hydras Require Import Comparable Simple_LexProd ON_Generic.
 
 Import Relations.
 Generalizable All Variables.
@@ -25,19 +25,20 @@ Coercion is_true: bool >-> Sortclass.
 Section Defs.
 
   Context `(ltA: relation A)
-          (compareA : A -> A -> comparison)
-          (NA: ON ltA compareA)
+          (cmpA : Compare A)
+          (NA: ON ltA cmpA)
           `(ltB : relation B) 
-          (compareB : B -> B -> comparison)
-          (NB: ON ltB compareB).
+          (cmpB : Compare B)
+          (NB: ON ltB cmpB).
 
   Definition t := (B * A)%type.
   Definition lt : relation t := lexico ltB ltA.
   Definition le := clos_refl _ lt. 
 
-  Definition compare (alpha beta: t) : comparison :=
-    match compareB (fst alpha) (fst beta) with
-    | Eq => compareA (snd alpha) (snd beta)
+  #[global] Instance compare_t : Compare t :=
+    fun (alpha beta: t) =>
+    match compare (fst alpha) (fst beta) with
+    | Eq => compare (snd alpha) (snd beta)
     | c => c
     end.
    (*||*)
@@ -55,8 +56,7 @@ Section Defs.
   
 
   Lemma lt_wf : well_founded lt.
-  Proof. apply wf_lexico; apply wf. Qed.
-
+  Proof. apply wf_lexico; apply ON_wf. Qed.
 
   Lemma compare_reflect alpha beta :
     match (compare alpha beta)
@@ -66,9 +66,9 @@ Section Defs.
     | Gt => lt beta  alpha
     end.
   Proof.
-    destruct alpha, beta; cbn. unfold compare; cbn.
-    destruct (compare_correct b b0).
-    - subst; destruct (compare_correct a a0).
+    destruct alpha, beta; cbn. unfold compare, compare_t; cbn.
+    destruct (comparable_comp_spec b b0).
+    - subst; destruct (comparable_comp_spec a a0).
       + now subst.
       + now constructor 2.
       + now constructor 2.
@@ -78,8 +78,7 @@ Section Defs.
 
 
   Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
+    CompSpec eq lt alpha beta (compare alpha beta).
   Proof.
     generalize (compare_reflect alpha beta);
       destruct (compare alpha beta); now constructor. 
@@ -87,7 +86,7 @@ Section Defs.
 
   (* begin snippet multComp:: no-out *)
 
-  #[global] Instance mult_comp:  Comparable lt compare. 
+  #[global] Instance mult_comp:  Comparable lt compare_t.
   (* end snippet multComp *)
 
   Proof.
@@ -97,7 +96,7 @@ Section Defs.
   Qed. 
 
   (* begin snippet ONMult:: no-out *)
-  #[global] Instance ON_mult: ON lt compare.
+  #[global] Instance ON_mult: ON lt compare_t.
   (* end snippet ONMult *)
 
   Proof.
@@ -124,9 +123,9 @@ End Defs.
 (* end snippet endDefs *)
 
 
-Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB compareB} _.
-Arguments ON_mult {A ltA  compareA} _ {B ltB compareB}.
-Arguments lt_strorder {A} {ltA} {compareA} _  {B} {ltB} {compareB} _.
+Arguments lt_eq_lt_dec {A ltA cmpA} _ {B ltB cmpB} _.
+Arguments ON_mult {A ltA cmpA} _ {B ltB cmpB}.
+Arguments lt_strorder {A} {ltA} {cmpA} _  {B} {ltB} {cmpB} _.
 
 
 

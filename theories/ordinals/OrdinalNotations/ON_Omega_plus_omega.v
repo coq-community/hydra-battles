@@ -3,7 +3,7 @@
 
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras Require Import Simple_LexProd ON_Generic
+From hydras Require Import Comparable Simple_LexProd ON_Generic
         ON_plus ON_Omega.
 
 Import Relations.
@@ -14,7 +14,11 @@ Open Scope opo_scope.
 
 (* begin snippet OmegaPlusOmegaDef *)
 
-Instance Omega_plus_Omega: ON _ _ :=  ON_plus Omega Omega.
+Instance compare_nat_nat : Compare t :=
+ compare_t compare_nat compare_nat.
+
+Instance Omega_plus_Omega: ON _ compare_nat_nat :=
+ ON_plus Omega Omega.
 
 Definition t := ON_t.
 
@@ -377,7 +381,7 @@ Lemma Omega_as_lub  :
    forall alpha, 
      (forall i,  fin i o< alpha) <-> omega o<= alpha.
  Proof.
-   intro alpha; destruct (Comparable.compare_correct  omega alpha).
+   intro alpha; destruct (comparable_comp_spec omega alpha).
    - subst;split.
      +  right.
      + intros; constructor.

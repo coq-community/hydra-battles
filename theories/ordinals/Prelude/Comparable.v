@@ -3,22 +3,22 @@ Require Export MoreOrders.
 
 
 (* begin snippet ComparableDef *)
-Class Comparable {A:Type} 
-  (lt: relation A)
-  (compare : A -> A -> comparison) :=
-  {
-  sto :> StrictOrder lt;
-  compare_correct: forall a b,
-      CompareSpec (a = b) (lt a b) (lt b a) (compare a b);
-  }.
+Class Compare (A:Type) := compare : A -> A -> comparison.
+#[export] Hint Mode Compare ! : typeclass_instances.
+Infix "<?>" := compare (at level 60).
+
+Class Comparable {A:Type} (lt: relation A) (cmp : Compare A) := {
+  comparable_sto :> StrictOrder lt;
+  comparable_comp_spec : forall a b : A, CompSpec eq lt a b (compare a b);
+}.
+#[export] Hint Mode Comparable ! - - : typeclass_instances.
 (* end snippet ComparableDef *)
 
 Section Comparable.
 
   Context {A: Type}
           {lt: relation A}
-          {compare : A -> A -> comparison}
-          {comparable : Comparable lt compare}.
+          {cmp: Compare A} `{!Comparable lt cmp}.
   #[local] Notation le := (leq lt). 
 
   #[deprecated(note="use StrictOrder_Transitive")]
@@ -43,44 +43,11 @@ Section Comparable.
     - now apply lt_not_gt in Hlt.
     - subst; now apply StrictOrder_Irreflexive in Hlt.
   Qed.
-
-  #[using="All"]
-  Definition lt_b (a b: A): bool :=
-    match compare a b with
-    | Lt => true
-    | _ => false
-    end.
-
-  Lemma lt_b_iff (a b: A):
-    lt_b a b = true <-> lt a b.
-  Proof.
-    unfold lt_b.
-    pose proof (compare_correct a b) as [Heq | H | H];
-    split; intro; subst; try easy.
-    - now apply StrictOrder_Irreflexive  in H.
-    - now apply lt_not_gt in H.
-  Qed.
-
-  Lemma lt_b_false_iff (a b: A):
-    lt_b a b = false  <-> ~ lt a b.
-  Proof.
-     unfold lt_b.
-    pose proof (compare_correct a b) as [Heq | H | H];
-    split; intro; subst; try easy.
-    - apply StrictOrder_Irreflexive.   
-    - now apply lt_not_gt.
-  Qed.
-
-  Lemma lt_b_irrefl (a :A) :
-    lt_b a a = false.
-  Proof. 
-   rewrite lt_b_false_iff; apply StrictOrder_Irreflexive.   
-  Qed.
   
   Lemma compare_lt_iff (a b: A):
     compare a b = Lt <-> lt a b.
   Proof.
-    pose proof (compare_correct a b) as [Heq | H | H];
+    pose proof (comparable_comp_spec a b) as [Heq | H | H];
     split; intro; subst; try easy.
     - now apply StrictOrder_Irreflexive  in H.
     - now apply lt_not_gt in H.
@@ -101,28 +68,10 @@ Section Comparable.
     now apply compare_lt_iff, StrictOrder_Irreflexive in H.
   Qed.
 
-  (* Relation Eq *)
-  #[using="All"]
-  Definition eq_b (a b: A): bool :=
-    match compare a b with
-    | Eq => true
-    | _ => false
-    end.
-
-
-  Lemma eq_b_iff (a b: A):
-    eq_b a b = true <-> a = b.
-  Proof.
-    unfold eq_b.
-    pose proof (compare_correct a b) as [Heq | H | H];
-    split; intro; subst; try easy;
-    now apply StrictOrder_Irreflexive in H.
-  Qed.
-
   Lemma compare_eq_iff (a b: A):
     compare a b = Eq <-> a = b.
   Proof.
-    pose proof (compare_correct a b) as [Heq | H | H];
+    pose proof (comparable_comp_spec a b) as [Heq | H | H];
     split; intro; subst; try easy;
     now apply StrictOrder_Irreflexive in H.
   Qed.
@@ -131,7 +80,7 @@ Section Comparable.
   Lemma compare_refl (a: A):
     compare a a = Eq.
   Proof.
-    pose proof (compare_correct a a) as [H | H | H].
+    pose proof (comparable_comp_spec a a) as [H | H | H].
     1: reflexivity.
     all: now apply StrictOrder_Irreflexive in H.
   Qed.
@@ -149,7 +98,7 @@ Section Comparable.
   Lemma compare_gt_iff (a b: A):
     compare a b = Gt <-> lt b a.
   Proof.
-    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
+    pose proof (comparable_comp_spec a b) as [Heq | Hlt | Hgt];
     split; intro; subst; try easy.
     - now apply StrictOrder_Irreflexive in H.
     - now apply lt_not_gt in H.
@@ -190,31 +139,6 @@ Section Comparable.
     apply compare_gt_iff in Hgt.
     now apply lt_not_gt in Hgt.
   Qed.
-
-  (* Relation Le *)
-  #[using="All"]
-  Definition le_b (a b: A): bool :=
-    negb (lt_b b a).
-
-  Lemma le_b_iff (a b: A):
-    le_b a b = true <-> le a b.
-  Proof.
-    unfold le_b, negb, lt_b.
-    pose proof (compare_correct a b) as [Heq | Hlt | Hgt];
-    split; intro; subst; try easy.
-    - apply le_lt_eq; now right.
-    - now rewrite compare_refl.
-    - apply le_lt_eq; now left.
-    - now apply compare_gt_iff in Hlt as ->.
-    - apply compare_lt_iff in Hgt.
-      rewrite Hgt in H.
-      congruence.
-    - exfalso.
-      apply le_lt_eq in H as [Hlt | Heq].
-      * now apply lt_not_gt in Hgt.
-      * rewrite Heq in Hgt; now apply StrictOrder_Irreflexive in Hgt.
-  Qed.
-
 
   Lemma le_refl (a: A): le a a.
   Proof.
@@ -305,15 +229,15 @@ Section Comparable.
     max a b = a \/ max a b = b.
   Proof.
     unfold max.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab]; tauto.
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab]; tauto.
   Qed.
 
   Lemma max_comm (a b: A):
     max a b = max b a.
   Proof.
     unfold max.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab];
-    pose proof (compare_correct b a) as [Hba | Hba | Hba].
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
+    pose proof (comparable_comp_spec b a) as [Hba | Hba | Hba].
     5,9: now apply lt_not_gt in Hab.
     all: easy.
   Qed.
@@ -327,7 +251,7 @@ Section Comparable.
     - apply compare_ge_iff in H as [Hlt | Heq].
       + now rewrite Hlt.
       + rewrite Heq. now apply compare_eq_iff in Heq.
-    - pose proof (compare_correct a b) as [Hab | Hab | Hab].
+    - pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab].
       + subst. apply le_refl.
       + exfalso.
         apply compare_lt_iff in Hab.
@@ -342,7 +266,7 @@ Section Comparable.
       rewrite le_lt_eq, <- compare_lt_iff, <- compare_eq_iff.
     split; intro H.
     - now destruct H as [-> | ->].
-    - pose proof (compare_correct a b) as [Hab | Hab | Hab].
+    - pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab].
       + now right.
       + now left.
       + exfalso.
@@ -361,7 +285,7 @@ Section Comparable.
   Lemma le_max_a (a b: A): le a (max a b).
   Proof.
     unfold max.
-    pose proof (compare_correct a b) as [Heq | Hlt | Hgt].
+    pose proof (comparable_comp_spec a b) as [Heq | Hlt | Hgt].
     1,3: subst; now apply le_refl.
     now apply lt_incl_le.
   Qed.
@@ -375,9 +299,9 @@ Section Comparable.
     max (max a b) c = max a (max b c).
   Proof.
     unfold max.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab];
-    pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
-    pose proof (compare_correct a c) as [Hac | Hac | Hac];
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
+    pose proof (comparable_comp_spec b c) as [Hbc | Hbc | Hbc];
+    pose proof (comparable_comp_spec a c) as [Hac | Hac | Hac];
     subst; try rewrite compare_refl; try easy.
     - now apply lt_not_gt in Hbc.
     - now apply lt_not_gt in Hab.
@@ -407,15 +331,15 @@ Section Comparable.
     min a b = a <-> max a b = b.
   Proof.
     unfold min, max.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab]; subst; easy.
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab]; subst; easy.
   Qed.
 
   Lemma min_comm (a b: A):
     min a b = min b a.
   Proof.
     unfold min.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab];
-        pose proof (compare_correct b a) as [Hba | Hba | Hba].
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
+        pose proof (comparable_comp_spec b a) as [Hba | Hba | Hba].
         5,9: now apply lt_not_gt in Hab.
         all: easy.
   Qed.
@@ -456,7 +380,7 @@ Section Comparable.
     le (min a b) a.
   Proof.
     unfold min.
-    pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; subst.
+    pose proof (comparable_comp_spec a b) as [Heq | Hlt | Hgt]; subst.
     1,2: now apply le_refl.
     now apply lt_incl_le.
   Qed.
@@ -473,9 +397,9 @@ Section Comparable.
   Proof.
     intros *.
     unfold min.
-    pose proof (compare_correct a b) as [Hab | Hab | Hab];
-    pose proof (compare_correct b c) as [Hbc | Hbc | Hbc];
-    pose proof (compare_correct a c) as [Hac | Hac | Hac];
+    pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
+    pose proof (comparable_comp_spec b c) as [Hbc | Hbc | Hbc];
+    pose proof (comparable_comp_spec a c) as [Hac | Hac | Hac];
     subst; try rewrite compare_refl; try easy.
     - now apply lt_not_gt in Hbc.
     - now apply lt_not_gt in Hab.
@@ -513,14 +437,14 @@ Section Comparable.
     | Gt => lt b a
     end.
   Proof.
-    pose proof (compare_correct a b) as [Heq | Hlt | Hgt]; assumption.
+    pose proof (comparable_comp_spec a b) as [Heq | Hlt | Hgt]; assumption.
   Qed.
 
 
   Lemma lt_eq_lt:
     forall alpha beta, lt alpha  beta \/ alpha = beta \/ lt beta alpha.
   Proof.
-    intros; destruct (compare_correct alpha beta); auto.
+    intros; destruct (comparable_comp_spec alpha beta); auto.
   Qed.
 
   Definition lt_eq_lt_dec 
@@ -572,7 +496,7 @@ Tactic Notation "compare" "trans" constr(H1) constr(H2) "as" simple_intropattern
   compare_trans H1 H2 intropattern.
 
 Ltac compare_destruct_eqn a b H :=
-  destruct (_ a b) eqn: H;
+  destruct (compare a b) eqn: H;
   [ apply compare_eq_iff in H as <-
   | apply compare_lt_iff in H
   | apply compare_gt_iff in H
@@ -580,7 +504,3 @@ Ltac compare_destruct_eqn a b H :=
 
 Tactic Notation "compare" "destruct" constr(a) constr(b) "as" ident(H) :=
   compare_destruct_eqn a b H.
-
-
-
-
