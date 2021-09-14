@@ -93,7 +93,8 @@ Module LO.
   Qed.
 
   (* begin snippet compareDef:: no-out  *)
-  Fixpoint compare (alpha beta:t):comparison :=
+  Instance compare_t : Compare t :=
+  fix cmp (alpha beta:t) :=
     match alpha, beta with
     | nil, nil => Eq
     | nil, ocons a' n' b' => Lt
@@ -103,14 +104,14 @@ Module LO.
        | Lt => Lt
        | Gt => Gt
        | Eq => (match Nat.compare n n' with
-                | Eq => compare b b'
+                | Eq => cmp b b'
                 | comp => comp
                 end)
        end)
     end.
   
   Lemma compare_ref (alpha beta:t) :
-    compare alpha beta = T1.compare (refine alpha) (refine beta).
+    compare alpha beta = compare (refine alpha) (refine beta).
  (* end snippet compareDef  *)  
   Proof.
     revert beta. induction alpha.
@@ -126,12 +127,12 @@ Module LO.
   Qed.
 
   (* begin snippet ltDef *)
-  Definition lt alpha beta : Prop :=
+  Definition lt (alpha beta : t) : Prop :=
     compare alpha beta = Lt.
   (* end snippet ltDef *)
   
   Lemma compare_rev :
-    forall alpha beta,
+    forall (alpha beta : t),
       compare beta alpha = CompOpp (compare alpha beta).
   Proof.
     induction alpha,  beta.
@@ -144,6 +145,7 @@ Module LO.
         destruct  (Nat.compare n2 n0) eqn:? ; now cbn.
   Qed.
 
+  
 
   Lemma compare_reflect :
     forall alpha beta,
@@ -166,18 +168,41 @@ Module LO.
             subst; try easy;
               apply Nat.compare_eq_iff in Heq as -> ;
               destruct (n ?= n0) eqn:Heqc; trivial.
-        * now apply Nat.compare_eq_iff in Heqc as ->.
+        * destruct (compare _ _) eqn: H.
+          apply Nat.compare_eq_iff in Heqc as ->.
+          rewrite IHalpha.
+          reflexivity.
+          reflexivity.
+          rewrite Nat.compare_antisym.
+          rewrite Heqc.
+          reflexivity.
         * destruct (n ?= n0) eqn:Heqn; trivial;
             now rewrite Nat.compare_antisym, Heqn.
-        * rewrite Nat.compare_antisym;   now rewrite Heqc.
+        * destruct (compare _ _) eqn: H.
+          apply Nat.compare_eq_iff in Heqc as ->.
+          rewrite IHalpha.
+          reflexivity.
+          reflexivity.
+          rewrite Nat.compare_antisym.
+          rewrite Heqc.
+          reflexivity.
         * destruct (n ?= n0) eqn:?; trivial; try discriminate.
           rewrite Nat.compare_antisym; now rewrite Heqc0.
-        *  rewrite Nat.compare_antisym; now rewrite Heqc.
+        * destruct (compare _ _) eqn: H.
+          apply Nat.compare_eq_iff in Heqc as ->.
+          rewrite IHalpha.
+          reflexivity.
+          reflexivity.
+          rewrite Nat.compare_antisym.
+          rewrite Heqc.
+          reflexivity.
+        * rewrite Nat.compare_antisym.
+          rewrite Heqc.
+          reflexivity.
   Qed.
 
   Lemma compare_correct (alpha beta: t):
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
+    CompSpec eq lt alpha beta (compare alpha beta).
   Proof.
     unfold lt;  generalize (compare_reflect alpha beta).
     destruct (compare alpha beta); now constructor.
@@ -479,7 +504,8 @@ Module OO.
 
   Definition lt (alpha beta: OO) := LO.lt (data alpha) (data beta).
   Definition le := leq lt.
-  Definition compare (alpha beta: OO):= LO.compare (data alpha) (data beta).
+  Instance compare_OO : Compare OO := 
+    fun (alpha beta: OO) => LO.compare_t (data alpha) (data beta).
   (*  end snippet OODef *)
 
   Instance Zero : OO := @mkord nil refl_equal.
@@ -577,11 +603,26 @@ Module OO.
   Proof.
     split.
     - apply oo_str.
-    - destruct a, b; unfold compare; cbn.
-      destruct (LO.compare_correct data0 data1).
-      + constructor; subst; apply OO_eq_intro; now cbn.
-      + constructor; red; now cbn.
-      + constructor; red; now cbn.
+    - destruct a, b; cbn.
+      destruct (comparable_comp_spec data0 data1).
+      + subst.
+        assert (compare_t data1 data1 = compare data1 data1) by reflexivity.
+        rewrite H.
+        rewrite compare_refl.
+        constructor.
+        apply OO_eq_intro; now cbn.
+      + apply compare_lt_iff in H.
+        unfold compare in H.
+        rewrite H.
+        constructor; red; now cbn.
+      + apply compare_gt_iff in H.
+        unfold compare in H.
+        rewrite H.
+        constructor; red.
+        apply compare_gt_iff.
+        unfold compare.
+        simpl.
+        assumption.
   Qed. 
 
   (* begin snippet ltWf:: no-out *)

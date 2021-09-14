@@ -16,11 +16,11 @@ Coercion is_true: bool >-> Sortclass.
 Section Defs.
 
   Context `(ltA: relation A)
-          (compareA : A -> A -> comparison)
-          (NA: ON ltA  compareA).
+          (cmpA : Compare A)
+          (NA: ON ltA cmpA).
   Context `(ltB: relation B)
-          (compareB : B -> B -> comparison)
-          (NB: ON ltB compareB).
+          (cmpB : Compare B)
+          (NB: ON ltB cmpB).
 
   Definition t := (A + B)%type.
   Arguments inl  {A B} _.
@@ -30,11 +30,12 @@ Section Defs.
 (* end snippet Defs *)
 
 (* begin snippet compareDef *)
-Definition compare (alpha beta: t) : comparison :=
+#[global] Instance compare_t : Compare t :=
+fun (alpha beta: t) =>
    match alpha, beta with
      inl _, inr _ => Lt
-   | inl a, inl a' => compareA a a'
-   | inr b, inr b' => compareB b b'
+   | inl a, inl a' => compare a a'
+   | inr b, inr b' => compare b b'
    | inr _, inl _ => Gt
   end.
 (* end snippet compareDef *)
@@ -69,15 +70,14 @@ Lemma compare_reflect alpha beta :
   | Gt => lt beta  alpha
   end.
   destruct alpha, beta; cbn; auto.
-  destruct (compare_correct a a0); (now subst || constructor; auto).
-   - destruct (compare_correct b b0); (now subst || constructor; auto).
+  destruct (comparable_comp_spec a a0); (now subst || constructor; auto).
+   - destruct (comparable_comp_spec b b0); (now subst || constructor; auto).
 Qed.
 
 (* begin snippet compareCorrect:: no-out  *)
 
 Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta). (* .no-out *)
+    CompSpec eq lt alpha beta (compare alpha beta). (* .no-out *)
 (* end snippet compareCorrect *)
 
 Proof.
@@ -88,7 +88,7 @@ Qed.
 
 (* begin snippet plusComp:: no-out *)
 
-#[global] Instance plus_comp : Comparable lt compare.
+#[global] Instance plus_comp : Comparable lt compare_t.
 Proof.
   split.
   - apply lt_strorder.
@@ -105,8 +105,9 @@ Qed.
 
 
 Lemma lt_wf : well_founded lt.
-Proof. destruct NA, NB.
-       apply wf_disjoint_sum; [apply wf | apply wf0].
+Proof.
+  destruct NA, NB.
+  apply wf_disjoint_sum; [apply ON_wf | apply ON_wf0].
 Qed.
 
 (*||*)
@@ -119,7 +120,7 @@ Qed.
 .. coq:: no-out 
 |*)
 
-#[global] Instance ON_plus : ON lt compare.
+#[global] Instance ON_plus : ON lt compare_t.
 Proof.
   split.
   - apply plus_comp.
@@ -144,8 +145,8 @@ Defined.
 
 End Defs.
 
-Arguments lt_eq_lt_dec {A ltA compareA} _ {B ltB  compareB} _.
-Arguments ON_plus {A ltA compareA} _ {B ltB  compareB}.
+Arguments lt_eq_lt_dec {A ltA cmpA} _ {B ltB  cmpB} _.
+Arguments ON_plus {A ltA cmpA} _ {B ltB cmpB}.
 
 
 

@@ -12,9 +12,13 @@ Import Relations ON_Generic.
 Open Scope ON_scope.
 
 (* begin snippet Omega2Def:: no-out *)
-Instance Omega2: ON _ _ := ON_mult Omega Omega.
 
-Definition t := ON_t.  
+Instance compare_nat_nat : Compare t :=
+ compare_t compare_nat compare_nat.
+
+Instance Omega2: ON _ compare_nat_nat := ON_mult Omega Omega.
+
+Definition t := ON_t.
 
 Example ex1 : (5,8) o< (5,10).
 Proof.
@@ -128,14 +132,21 @@ Lemma compare_reflect alpha beta :
   | Gt => beta o< alpha
   end.
 Proof.
-  destruct alpha, beta; cbn; unfold ON_compare.  
-  destruct (compare_correct (n,n0) (n1,n2)); auto.
+  destruct alpha, beta; cbn; unfold ON_compare.
+  destruct (comparable_comp_spec (n,n0) (n1,n2)).
+  - rewrite H, compare_refl; reflexivity.
+  - apply compare_lt_iff in H.
+    rewrite H.
+    apply compare_lt_iff.
+    assumption.
+  - apply compare_gt_iff in H.
+    rewrite H.
+    apply compare_gt_iff.
+    assumption.
 Qed.
 
-
 Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (ON_lt alpha beta) (ON_lt beta alpha)
-                (ON_compare alpha beta).
+    CompSpec eq ON_lt alpha beta (ON_compare alpha beta).
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (ON_compare alpha beta); now constructor. 

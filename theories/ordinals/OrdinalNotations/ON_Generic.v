@@ -21,26 +21,23 @@ Local Open Scope ON_scope.
 *)
 
 (* begin snippet ONDef *)
-Class ON {A:Type}(lt: relation A)
-      (compare: A -> A -> comparison) :=
+Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
   {
-  comp :> Comparable lt compare;
-  wf : well_founded lt;
+  ON_comp :> Comparable lt cmp;
+  ON_wf : well_founded lt;
   }.
 (* end snippet ONDef *)
 
 (* begin snippet ONDefsa:: no-out  *)
 Section Definitions.
-  
-  Context  {A:Type}{lt : relation A}
-           {compare : A -> A -> comparison}
-           {on : ON lt compare}.
+
+  Context {A:Type} {lt : relation A} {cmp : Compare A} {on: ON lt cmp}.
   
   #[using="All"]
    Definition ON_t := A.
 
   #[using="All"]
-   Definition ON_compare := compare.
+   Definition ON_compare : A -> A -> comparison := compare.
 
   #[using="All"]
    Definition ON_lt := lt.
@@ -60,7 +57,7 @@ Section Definitions.
   Proof.
     intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
     - intros y z H; apply H.
-    - eapply Acc_inverse_image, wf.
+    - eapply Acc_inverse_image, ON_wf.
   Qed.
 
   (* begin snippet ONDefsb *)
@@ -315,7 +312,7 @@ Section SubON_properties.
   Lemma SubON_least : forall a ,  Least a  <-> Least (f a).
   Proof.
     split; intro H.
-    - intros y; destruct (compare_correct (f a) y).
+    - intros y; destruct (comparable_comp_spec (f a) y).
       + subst y; right.
       + now  left.
       + exfalso.
@@ -329,7 +326,7 @@ Section SubON_properties.
           apply (StrictOrder_Irreflexive a).
           auto.
         }
-    - intro x; destruct (compare_correct a x).
+    - intro x; destruct (comparable_comp_spec a x).
       subst; right.
       + now left.
       + apply SubON_mono in H0; specialize (H (f x)).

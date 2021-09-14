@@ -27,6 +27,9 @@ Notation EqDecision A := (RelDecision (@eq A)).
 Definition bool_decide (P : Prop) {dec : Decision P} : bool :=
   if dec then true else false.
 
+Instance comparison_eq_dec : EqDecision comparison.
+Proof. intros c1 c2; unfold Decision; decide equality. Defined.
+
 Instance Total_Reflexive{A:Type}{R: relation A}(rt : Total R):
   Reflexive R.
 Proof. intros a ; now destruct (rt a a). Qed.

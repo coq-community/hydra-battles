@@ -21,7 +21,7 @@ Section Impossibility_Proof.
   
   Variable m : Hydra -> ON_Omega2.t.
   Context
-    (Hvar: @Hvariant _ _ (ON_Generic.wf (ON:=Omega2)) free m).
+    (Hvar: @Hvariant _ _ (ON_Generic.ON_wf (ON:=Omega2)) free m).
 
   (* end snippet Impossibilitya *)
 
@@ -172,7 +172,7 @@ Section Impossibility_Proof.
   Proof. (* .no-out *)
     unfold small_h;
     pattern (m big_h);
-      apply  well_founded_induction with (R := ON_lt) (1:= wf);
+      apply  well_founded_induction with (R := ON_lt) (1:= ON_wf);
       intros (i,j) IHij.
 
     (* end snippet mGe *)

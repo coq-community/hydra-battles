@@ -359,8 +359,9 @@ Proof.
   - intros; rewrite (oplus_eqn  (ocons a n b) (ocons x1 n0 x2)).
     apply nf_helper_phi0 in H1.
     destruct (lt_inv H1).
-    + unfold T1.lt, lt_b in H2; rewrite compare_rev. 
-      destruct (compare x1 a);auto; try discriminate. 
+    + unfold T1.lt in H2.
+      rewrite compare_rev, H2.
+      reflexivity.
     + decompose [or and] H2.
       *  inversion H5.
       * T1_inversion H6.
@@ -522,7 +523,7 @@ Section Proof_of_oplus_lt1.
     -  simpl; auto with T1.
     - rewrite oplus_eqn;case_eq (compare x1 a1).
       +  auto with T1 arith. 
-      +  intros H2; apply head_lt; unfold T1.lt, lt_b; now  rewrite H2. 
+      +  intros H2; apply head_lt. unfold T1.lt; now  rewrite H2. 
       + intro; apply tail_lt,  H1 ;  trivial.
         eapply nf_inv2, H.
         now  apply tail_lt_ocons.
@@ -619,7 +620,7 @@ Proof with eauto with T1.
        absurd  (T1.lt (ocons a1 n0 b2) (ocons c1 n1 c2)).
        - apply lt_not_gt.
          apply head_lt.
-         unfold T1.lt, lt_b;rewrite compare_rev. now   rewrite H2.
+         unfold T1.lt;rewrite compare_rev. now   rewrite H2.
        -   auto.
      }
      {
@@ -652,7 +653,7 @@ Proof with eauto with T1.
            case_eq (compare a1 c2_1).
            intro.
            apply coeff_lt;  auto with arith. 
-           intro H6; apply head_lt; unfold T1.lt, lt_b; now rewrite H6.
+           intro H6; apply head_lt; unfold T1.lt; now rewrite H6.
            intros; apply tail_lt. 
            apply oplus_lt1; trivial.
            T1_inversion H5.

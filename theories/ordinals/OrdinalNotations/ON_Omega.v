@@ -8,9 +8,12 @@ From hydras Require Import Schutte.
 
 Import Relations RelationClasses.
 
+#[global]
+Instance compare_nat : Compare nat := Nat.compare.
+
 (* begin snippet OmegaDefa:: no-out *)
 #[global]
- Instance Omega_comp : Comparable Peano.lt  Nat.compare.
+ Instance Omega_comp : Comparable Peano.lt compare_nat.
 Proof.
   split.
   - apply Nat.lt_strorder.
@@ -18,7 +21,7 @@ Proof.
 Qed.
 
 #[global]
- Instance Omega : ON Peano.lt Nat.compare.
+ Instance Omega : ON Peano.lt compare_nat.
 Proof.
  split.
  - apply Omega_comp.
@@ -67,7 +70,7 @@ Proof.
   - apply finite_lt_omega.
   - intros beta Hbeta; destruct (lt_omega_finite Hbeta) as [i Hi].
     exists i; now subst.
-  -  intros n p; destruct (Nat.compare_spec n p).
+  -  intros n p; unfold compare_nat; destruct (Nat.compare_spec n p).
      + now subst.
      + now apply finite_mono.
      + now apply finite_mono.
