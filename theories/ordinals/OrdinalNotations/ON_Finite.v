@@ -1,5 +1,5 @@
 (**  A notation system for finite ordinals *)
-(** Pierre Castéran, Unviv. Bordeaux and LaBRI *)
+(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 
 
@@ -17,13 +17,10 @@ Coercion is_true: bool >-> Sortclass.
 
 (* begin snippet Defs *)
 
-(** The type of ordinals less than [n] *)
-
 Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
 
 Definition lt {n:nat} : relation (t n) :=
   fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
-
 
 (* end snippet Defs *)
 
