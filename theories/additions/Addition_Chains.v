@@ -61,6 +61,14 @@ Definition chain := forall A:Type, A -> @computation A.
 
 Definition C1 : chain :=  (@Return).
 
+(* begin snippet C3Example *)
+Example C3 : chain :=
+  fun (A:Type) (x:A) =>
+     x2 <--- x times x;
+     x3 <--- x2 times x;
+     Return x3.
+(* end snippet C3Example *)
+
 (** Chain associated with the 7-th power *)
 
 Example C7 : chain :=
@@ -637,25 +645,26 @@ Qed.
 
 (** ** Correct by construction chains  *)
 
+(* begin snippet generatorDef *)
 Definition chain_generator := positive -> chain.
 
 Definition correct_generator (gen : positive -> chain) :=
  forall p, chain_correct p (gen p).
-
+(* end snippet generatorDef *)
 
 (** Computing $x^n$ using a chain generator *)
 
+(* begin snippet cpowerDef *)
 Definition cpower_pos (g : chain_generator)  p
            `{M:@EMonoid A E_op E_one E_eq} a :=
   chain_apply (g p) (M:=M) a.
-
 
 Definition cpower (g : chain_generator)  n
            `{M:@EMonoid A E_op E_one E_eq} a :=
   match n with 0%N => E_one 
              | Npos p => cpower_pos  g p a
   end.
-
+(* end snippet cpowerDef *)
 
 
 
@@ -665,9 +674,10 @@ A chain generator is _optimal_ if it returns chains whose length are less or
 equal than the chains returned by any correct generator.
  *)
 
+(* begin snippet optimalGenerator *)
 Definition optimal_generator (g : positive -> chain ) :=
  forall p:positive, optimal p (g p).
-
+(* end snippet optimalGenerator *)
 
 
 (** ** Some chain generators 
@@ -692,18 +702,15 @@ product of an accumulator $a$ with an arbitrary power of some value $x$
 
 *)
 
+(* begin snippet binaryChain *)
 Fixpoint axp_scheme  {A} p : A -> A -> @computation A   :=
- match p with
-   | xH =>  (fun a x => y <--- a  times x ; Return y)
-   | xO q => (fun a x => x2 <--- x times  x ; axp_scheme q a x2)
-   | xI q => (fun a x => ax <--- a times x ;
-                         x2 <--- x times x ;
-                         axp_scheme q ax x2)
-end.
-
-(** *** computation of $x^p$ 
-
-*)
+  match p with
+  | xH =>  (fun a x => y <--- a  times x ; Return y)
+  | xO q => (fun a x => x2 <--- x times  x ; axp_scheme q a x2)
+  | xI q => (fun a x => ax <--- a times x ;
+            x2 <--- x times x ;
+            axp_scheme q ax x2)
+  end.
 
 Fixpoint  bin_pow_scheme {A} (p:positive)  : A -> @computation A:=
   match p with  |  xH => fun x => Return x
@@ -711,32 +718,16 @@ Fixpoint  bin_pow_scheme {A} (p:positive)  : A -> @computation A:=
              | xO q => fun x => x2 <--- x times x ; bin_pow_scheme q x2
   end.
 
-(** *** Chain generator associated with the binary algorithm 
-
-*)
 
 Definition binary_chain (p:positive) : chain :=
   fun A => bin_pow_scheme p.
 
-
-(* begin show *)
 Compute binary_chain 87.
-(* end show *)
-(** [[
-fun (A : Type) (x : A) =>
-       x0 <--- x times x;
-       x1 <--- x0 times x0;
-       x2 <--- x0 times x1;
-       x3 <--- x1 times x1; x4 <--- x2 times x3; Return x4
-     : chain
-]]
-
-Notice that %\texttt{Coq}% does not respect our naming convention for bound variables .
-
-*)
+(* end snippet binaryChain *)
 
 (** ** Correctness of the binary method *)
 
+(* begin snippet binaryPowerProofa *)
 Section binary_power_proof.
 
 Variables (A: Type)
@@ -746,6 +737,9 @@ Variables (A: Type)
 
 Context (M : EMonoid  E_op E_one E_eq).
 
+Existing Instance Eop_proper.
+(* end snippet binaryPowerProofa *)
+
 
 
 
@@ -754,12 +748,15 @@ Context (M : EMonoid  E_op E_one E_eq).
   function [axp_scheme].
  *)
 
-Existing Instance Eop_proper.
 
+(* begin snippet binaryPowerProofb:: no-out *)
 Lemma axp_correct : forall p a x,
-    computation_eval (axp_scheme p a x) == a *  x ^ (Pos.to_nat p).
+    computation_eval (axp_scheme p a x) ==
+    a *  x ^ (Pos.to_nat p).
 Proof.
   induction p.
+  (* ... *)
+  (* end snippet binaryPowerProofb *) 
   -   intros a x; simpl axp_scheme.
       replace (Pos.to_nat p~1) with (S (Pos.to_nat p + Pos.to_nat p)%nat).
       cbn.   
@@ -778,13 +775,15 @@ Proof.
   - simpl; destruct M; intros; now rewrite  (Eone_right x).
 Qed.
 
-
-
-Lemma binary_correct : forall p x,
-                         computation_eval  (bin_pow_scheme p (A:=A) x) ==
-                          x ^ (Pos.to_nat p).
+(* begin snippet binaryPowerProofc:: no-out *)
+Lemma binary_correct :
+  forall p x,
+    computation_eval (bin_pow_scheme p (A:=A) x) ==
+    x ^ (Pos.to_nat p).
 Proof.
   intros p ; induction  p.
+  (* ... *)
+  (* end snippet binaryPowerProofc *)
   - simpl. intro a.
     unfold computation_eval in *;    simpl. 
     rewrite <- computation_eval_rw.
@@ -812,17 +811,17 @@ Proof.
     intros; now monoid_simpl M.
 Qed.
 
-
+(* begin snippet binaryPowerProofd *)
 End  binary_power_proof.
+(* end snippet binaryPowerProofd *)
 
-
-
+(* begin snippet binaryGeneratorOk:: no-out  *)
 Lemma binary_generator_correct : correct_generator binary_chain.
 Proof.
   red;unfold chain_correct; intros; unfold binary_chain, chain_apply;
   split;[auto with chains| intros;  apply  binary_correct].
 Qed.
-
+(* end snippet binaryGeneratorOk  *)
 
 (** ** The binary method is not optimal 
 
@@ -834,36 +833,22 @@ Qed.
    hypothesis that [binary_chain] is optimal.
 *)
 
+(* begin snippet nonOpt *)
 Section non_optimality_proof.
 
  Hypothesis binary_opt : optimal_generator binary_chain.
 
-(* begin show *)
-Compute chain_length (binary_chain 87).
-(* end show *)
+ Compute chain_length (binary_chain 87).
+ 
+ Compute chain_length C87.
 
-(** [[
-   = 10 : nat ]]
-*)
-
-
-
-(* begin show *)
-Compute chain_length (C87).
-(* end show *)
-
-(** [[
-   = 9 : nat ]]
-*)
-
-
-Lemma binary_generator_not_optimal : False.
-Proof.
-  generalize (binary_opt  _ _ C87_ok); compute; lia.
-Qed. 
-
+ Lemma binary_generator_not_optimal : False. (* .no-out *)
+ Proof. (* .no-out *)
+   generalize (binary_opt  _ _ C87_ok); compute; lia. (* .no-out *)
+ Qed. 
+ 
 End non_optimality_proof.
-
+(* end snippet nonOpt *)
 
 Open Scope nat_scope.
 Open Scope M_scope.

@@ -16,7 +16,7 @@ Require  Import Pow.
 Require Import Euclidean_Chains.
 
 (** basic instructions *)
-
+(* begin snippet AMDef *)
 Inductive instr : Set :=
 | MUL : instr
 | SQR : instr
@@ -24,6 +24,7 @@ Inductive instr : Set :=
 | SWAP : instr.       
 
 Definition code := list instr.
+(* end snippet AMDef *)
 
 (* statistics *)
 
@@ -39,7 +40,7 @@ Definition  mults_squares  c :=
                                  
 (* semantics *)
 (*************)
-
+(* begin snippet AMSem:: no-out  *)
 Section Semantics.
 
  Variable A : Type.
@@ -66,6 +67,7 @@ Section Semantics.
      | None => None
      | Some (y,s') => exec c' y s'
      end.
+ (* end snippet AMSem *)
  Proof.
    induction c; cbn.
    - trivial.
@@ -79,6 +81,8 @@ Section Semantics.
      + destruct s; auto.
        * destruct s; auto.
  Qed.
+
+ (* begin snippet AMSemb *)
  
 (** Main well-formed chains *)
 Definition F1 : code := nil.
@@ -115,24 +119,23 @@ Definition FK (fn: code) := PUSH::fn.
 
 End Semantics.
 
-
-Definition chain_apply c {A:Type}{op:A->A->A}{one:A}{equ: Equiv A}
-           (M: EMonoid op one equ) x := exec _ op c x nil.
+Definition chain_apply c {A:Type}
+           {op:A->A->A}{one:A}{equ: Equiv A}
+           (M: EMonoid op one equ) x
+  := exec _ op c x nil.
 
 
 (** Example code for 7 via 3 *)
 Example  M7_3 := PUSH::PUSH::SQR::MUL::PUSH::SQR::SWAP::MUL::nil.
 
-Compute chain_apply  M7_3   Natplus 1%nat .
+Compute chain_apply  M7_3 Natplus 1%nat .
 
 (** Example code for 31 via 7 *)
 Example C31_7 := KFF M7_3 (F2q 2).
 
 Compute chain_apply C31_7 Natplus 1%nat.
-(*
-     = Some (31, nil)
-     : option (config nat)
- *)
+
+(* end snippet AMSemb *)
 
 Require Import NArith.
 
@@ -684,8 +687,11 @@ Arguments chain_gen gamma {Hgamma} _.
 
 
 
-Compute chain_gen dicho (gen_F 24) .
-Compute chain_gen  dicho  (gen_F 87) .
+Compute chain_gen dicho (gen_F 24).
+
+(* begin snippet F87:: unfold *)
+Compute chain_gen dicho (gen_F 87).
+(* end snippet F87 *)
 
 Compute chain_apply (chain_gen  dicho (gen_F 87)) Natplus 1%nat.
 

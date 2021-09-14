@@ -9,11 +9,13 @@ Require Import Arith NArith Pow Compatibility More_on_positive.
 Open Scope positive_scope.
 
 Open Scope positive_scope.
+(* begin snippet StrategyDef *)
 Class Strategy (gamma : positive -> positive):=
-{
-gamma_lt :forall p:positive, 3 < p -> gamma  p < p;
-gamma_gt : forall p:positive, 3 < p -> 1 < gamma  p
-}.
+  {
+  gamma_lt :forall p:positive, 3 < p -> gamma  p < p;
+  gamma_gt : forall p:positive, 3 < p -> 1 < gamma  p
+  }.
+(* end snippet StrategyDef *)
 
 Ltac gamma_bounds gamma i H1 H2 :=
   assert (H1 : 1 < gamma i) by (apply gamma_gt;auto with chains);

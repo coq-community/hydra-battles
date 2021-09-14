@@ -18,25 +18,24 @@ Open Scope positive_scope.
 (** Computes $2^{\lfloor(\log_2{n})/2\rfloor} 
 *)
 
-
+(* begin snippet dichotomy *)
 Function dicho_aux (p:positive) {struct p} : positive :=
  match p with
    | 1%positive   =>  xH
-   | 2%positive |   3%positive  => 2 
+   | 2%positive | 3%positive  => 2 
    | xO (xO q) | xO (xI q) | xI (xO q) | xI (xI q) =>
                                          xO (dicho_aux q)
  end.
 
-Compute dicho_aux 15.
-
 Definition dicho  (p:positive) : positive :=
   N2pos (N.div (Npos p) (Npos (dicho_aux p))). 
 
+Compute dicho  87.
 
-Compute dicho_aux  87.
-Compute dicho_aux  130.
+Compute dicho  130.
 
 Compute dicho 128.
+(* end snippet dichotomy *)
 
 (* 
 = 10
@@ -186,8 +185,9 @@ intro H0; assert (2 <= N.pos p / (N.pos (dicho_aux p)) )%N.
 Qed.
 
 
-
+(* begin snippet DichoStrat:: no-out *)
 Instance Dicho_strat : Strategy dicho.
+(* end snippet DichoStrat *)
 Proof.
   split.
   - apply dicho_lt.

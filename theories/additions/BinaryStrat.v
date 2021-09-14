@@ -11,6 +11,7 @@ Require Export Strategies.
 
 Open Scope positive_scope.
 
+(* begin snippet BinaryStrats:: no-out *)
 Definition half (p:positive) :=
   match p with xH => xH
           |    xI q | xO q =>  q
@@ -22,7 +23,7 @@ Instance Binary_strat : Strategy half.
 Proof.
   split; destruct p; unfold half; try lia.
 Qed.
-
+(* end snippet BinaryStrats *)
 Instance Two_strat : Strategy two.
 Proof.
   split;unfold two; lia.

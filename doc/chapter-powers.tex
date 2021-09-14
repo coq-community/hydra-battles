@@ -1621,36 +1621,17 @@ We first define the notion of \emph{chain generator}, then present a certified g
 \subsection{Definitions}
 
 We call \emph{chain generator} any function that takes as argument 
-any positive integer and returns a chain. 
-
-\begin{Coqsrc}
-Definition chain_generator := positive -> chain.  
-\end{Coqsrc}
-
+any positive integer and returns a chain.
 A generator $g$  is \emph{correct} it it returns a correct chain
-for any exponent:
+for any exponent.
 
-\begin{Coqsrc}
-Definition correct_generator (g : positive -> chain) :=
- forall p, chain_correct (g p) p.
-\end{Coqsrc}
-
+\inputsnippets{Addition_Chains/generatorDef}
 
 Correct generators can be used for computing powers 
 on the fly, thanks to the following functions:
 
-\begin{Coqsrc}
-Definition cpower_pos (g : chain_generator)  p
-           `{M:@EMonoid A E_op E_one E_eq} a :=
-  chain_apply (g p) (M:=M) a.
+\inputsnippets{Addition_Chains/cpowerDef}
 
-
-Definition cpower (g : chain_generator)  n
-           `{M:@EMonoid A E_op E_one E_eq} a :=
-  match n with 0%N => E_one 
-             | Npos p => cpower_pos  g p a
-  end.  
-\end{Coqsrc}
 
 Note also that the use of chain generators is independent from  the techniques presented in Sect.~\ref{chain-correctness-sect}:
 Designing an efficient and correct chain generator may be a long and hard task.
@@ -1659,12 +1640,7 @@ all its outputs.
 Finally, we say that a generator $g$ is \emph{optimal} if it returns chains whose length are less than or
 equal to any chain returned by any correct generator:
 
-\begin{Coqsrc}
-
-Definition optimal_generator (g : positive -> chain) :=
- forall p:positive, optimal p (g p).
-\end{Coqsrc}
-
+\inputsnippets{Addition_Chains/optimalGenerator}
 
 \subsection{The binary chain generator}
 
@@ -1678,52 +1654,10 @@ functions, once the underlying monoid is fixed.
 As for the ``classical'' binary exponentiation algorithm,
 we define an auxiliary computation generator for  the
 product of an accumulator $a$ with an arbitrary power of some value $x$.
-Then, the main function builds a computation for any positive exponent:
 
-\begin{Coqsrc}
-Fixpoint axp_scheme  {A} p : A -> A -> @computation A   :=
- match p with
-   | xH =>  (fun a x => y <--- a  times x ; Return y)
-   | xO q => (fun a x => x2 <--- x times  x ; axp_scheme q a x2)
-   | xI q => (fun a x => ax <--- a times x ;
-                         x2 <--- x times x ;
-                         axp_scheme q ax x2)
-end.  
+\inputsnippets{Addition_Chains/binaryChain}
 
-Fixpoint  bin_pow_scheme {A} (p:positive)  
-: A -> @computation A:=
-  match p with 
-  |  xH => fun x => Return x
-  | xI q  => fun x => x2 <--- x times x; axp_scheme q x x2
-  | xO q => fun x => x2 <--- x times x ; bin_pow_scheme q x2
-  end.
 
-\end{Coqsrc}
-
-The following function associates  a chain to any positive exponent:
-
-\begin{Coqsrc}
-Definition binary_chain (p:positive) : chain :=
-  fun A => bin_pow_scheme p.
-
-Compute binary_chain 87.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-    = fun (A : Type) (x : A) =>
-       x0 <--- x times x;
-       x1 <--- x times x0;
-       x2 <--- x0 times x0;
-       x3 <--- x1 times x2;
-       x4 <--- x2 times x2;
-       x5 <--- x4 times x4;
-       x6 <--- x3 times x5;
-       x7 <--- x5 times x5;
-       x8 <--- x7 times x7; 
-       x9 <--- x6 times x8; 
-       Return x9
-     : chain
-\end{Coqanswer}
 
 
 \subsubsection{Proof of \texttt{binary\_chain}'s correctness}
@@ -1732,90 +1666,24 @@ Let us now prove that \texttt{binary\_chain} always returns correct chains.
 First, due to the structure of this generator's definition, we study the
 properties of the auxiliary functions that operate \emph{on a given monoid $M$}.
 
-\begin{Coqsrc}
-Section binary_power_proof.
-
-Variables (A: Type)
-         (E_op : Mult_op A)
-         (E_one : A)
-         (E_eq: Equiv A).
-
-Context (M : EMonoid  E_op E_one E_eq).
-
-Existing Instance Eop_proper.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma axp_correct : forall p a x,
- computation_eval (axp_scheme p a x) == a *  x ^ (Pos.to_nat p).
-(*  Proof by induction on p *)
-
-Lemma binary_correct : 
-  forall p x,
-        computation_eval  (bin_pow_scheme p (A:=A) x) ==
-        x ^ (Pos.to_nat p).
-(* Proof by induction on p *)
- 
-End  binary_power_proof.
-\end{Coqsrc}
-
-
-\begin{Coqsrc}
-Lemma binary_generator_correct : correct_generator binary_chain.
-Proof.
-  red;unfold chain_correct,  binary_chain, chain_apply;
-  split; [auto| intros A op one Eq M x; apply binary_correct].
-Qed.
-\end{Coqsrc}
-
+\inputsnippets{Addition_Chains/binaryPowerProofa}
+\inputsnippets{Addition_Chains/binaryPowerProofb}
+\inputsnippets{Addition_Chains/binaryPowerProofc}
+\inputsnippets{Addition_Chains/binaryPowerProofd}
+\inputsnippets{Addition_Chains/binaryGeneratorOk}
 
 \subsubsection{The binary method is not optimal}
 
 It is easy to prove by contradiction  that the binary method is not the most efficient 
 for computing powers. 
-    First, let us  assume that \texttt{binary\_chain} is optimal:
 
-\begin{Coqsrc}
-Section non_optimality_proof.
-
- Hypothesis binary_opt : optimal binary_chain.
-\end{Coqsrc}
-
-Then, let us consider for instance the binary chain generated for the exponent 87.
-
-\begin{Coqsrc}
-Compute chain_length (binary_chain 87).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-   = 10 : nat 
-\end{Coqanswer}
-  
-
-Let us recall that \texttt{C87}'s length has been evaluated to $9$ (Sect~\ref{C87-length},
-and that this chain is correct (Sect~\vref{C87-param-ok}). Thus, it is very easy
-to finish our proof:
-
-\begin{Coqsrc}
-Lemma binary_generator_not_optimal : False.
-Proof.
-  generalize (binary_opt gen _  _ C87_ok); 
-  compute; omega.
-Qed. 
-
-End non_optimality_proof.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/nonOpt}
 
 \index{additions}{Exercises}
 \begin{exercise}
 Prove that for any positive integer $p$,  the length of any optimal chain 
 for $p$ is less  than twice the number of digits of the binary representation of $p$.
 \end{exercise}
-
-
-
-
-
 
 
 \section{Euclidean Chains}
@@ -1850,13 +1718,8 @@ All the \coq{} material described in this section is available on
 
 Please consider the following small example:
 
-\begin{Coqsrc}
-Example C3 : chain :=
- fun A (x:A) =>
-  x2 <--- x times x;
-  x3 <--- x2 times x ;
-  Return x3.
-\end{Coqsrc}
+\inputsnippets{Addition_Chains/C3Example}
+
 
 The execution of this chain on  some value $x:A$ stops after 
 computing \texttt{$x^3$}, because of the \texttt{Return} ``statement''.
@@ -1902,60 +1765,28 @@ from chains to chains. So, we called their type \texttt{Fchain}.
 First, we define a type of \emph{continuations},
 \emph{i.e.},  functions  that wait for some value $x$, then 
 build  a computation for raising {$x$} to some  given exponent.
-
-\begin{Coqsrc}
-Definition Fkont (A:Type) := A -> @computation A.
-\end{Coqsrc}
-
 An \texttt{f-chain} is just a polymorphic function that combines  a 
-continuation and en element into a computation:
+continuation and an element into a computation.
 
-\begin{Coqsrc}
-Definition Fchain := forall A, Fkont A -> A -> @computation A.
-\end{Coqsrc}
-
+\inputsnippets{Euclidean_Chains/FchainDef}
 
 \subsubsection{Examples}
 
 Let us define a chain for computing the cube of some $x$, then sending 
 the result to a continuation $k$.
 
-\begin{Coqsrc}
-Definition F3 : Fchain := 
- fun  A k  (x:A) =>
-  y <--- x times x ;
-  z <--- y times x ;
-  k  z.
-\end{Coqsrc}
-
+\inputsnippets{Euclidean_Chains/F3Def}
 
 Any f-chain can be converted into a chain by the help of the following function:
 
-\begin{Coqsrc}
-Definition F2C (f : Fchain) : chain :=
- fun (A:Type) => f A Return.
-
-Compute the_exponent (F2C F3).
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= 3%nat  
-\end{Coqanswer}
+\inputsnippets{Euclidean_Chains/F2C}
 
 
 In the rest of this chapter, we will use two other f-chains, respectively associated with the exponents $1$ and $2$. Chains \texttt{F1}, \texttt{F2} and
 \texttt{F3} will form a basis to generate  chains for many exponents
 by \emph{composition of correct functions}.
 
-\begin{Coqsrc}
-Definition F1 : Fchain := 
- fun A k (x:A) => k x.
-
-Definition F2 : Fchain := 
-fun  A k  (x:A) =>
-  y <--- x times x ;
-  k  y.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/F1F2}
 
 
 \subsubsection{F-chain application and composition}
@@ -1964,26 +1795,17 @@ The following definition allows us to consider any value {$f$}
 of type 
 \texttt{Fchain} as a function of type \texttt{chain $\arrow$ chain}.
 
+\inputsnippets{Euclidean_Chains/Fapply}
 
-\begin{Coqsrc}
-Definition Fapply (f : Fchain) (c: chain) : chain  :=
- fun A  x =>  f  A (fun y => c A  y) x.
-\end{Coqsrc}
 
 In a similar way, \emph{composition} of \texttt{f-chain}s is easily defined
 (see Figure~\vref{fig:Fcompose}).
 
+\inputsnippets{Euclidean_Chains/Fcompose}
 
-\begin{Coqsrc}
-Definition Fcompose (f1 f2: Fchain) : Fchain  :=
- fun   A k x =>  f1  A (fun y => f2 A k y) x.
+\inputsnippets{Euclidean_Chains/F1Neutral}
 
-Lemma F1_neutral_l : forall f, Fcompose F1 f = f.
-Proof. reflexivity. Qed.
 
-Lemma F1_neutral_r : forall f, Fcompose f F1 = f.
-Proof. reflexivity. Qed.
-\end{Coqsrc}
 
 \begin{figure}[h]
   \centering
@@ -2010,27 +1832,9 @@ The following examples show that the apparent complexity of the previous
 definition is counterbalanced with the simplicity of using \texttt{Fapply}
 and \texttt{Fcompose}.
 
-\begin{Coqsrc}
-Example F9 := Fcompose F3 F3.
+\inputsnippets{Euclidean_Chains/F9Def}
+\inputsnippets{Euclidean_Chains/F9Ok}
 
-Compute F9.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= fun (A : Type) (x : Fkont A) (x0 : A) =>
-       x1 <--- x0 times x0;
-       x2 <--- x1 times x0; x3 <--- x2 times x2; 
-       x4 <--- x3 times x2; 
-       x x4
-     : Fchain  
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Remark F9_correct :chain_correct 9 (F2C F9).
-Proof.
-  apply param_correctness_pos;  lazy;  parametric_tac.
-Qed.
-\end{Coqsrc}
 
 \begin{figure}[h]
   \centering
@@ -2068,27 +1872,8 @@ Qed.
 Using structural recursion and the operator \texttt{FCompose},
 we build a chain for any exponent of the form $2^n$:
 
-\begin{Coqsrc}
- Fixpoint  Fexp2_of_nat (n:nat) : Fchain :=
- match n with O => F1
-            | S p => Fcompose F2 (Fexp2_of_nat p)
- end.
+\inputsnippets{Euclidean_Chains/Fexp2}
 
-
-Definition Fexp2 (p:positive) : Fchain :=
-  Fexp2_of_nat (Pos.to_nat p). 
-
-Compute Fexp2  4.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- = fun (A : Type) (x : Fkont A) (x0 : A) =>
-       x1 <--- x0 times x0;
-       x2 <--- x1 times x1; x3 <--- x2 times x2; 
-       x4 <--- x3 times x3; x x4
-     : Fchain
-\end{Coqanswer}
-%%% ICI
 
 \subsection{F-chain correctness}
 Let \texttt{f} be some term of type \texttt{Fchain}, and \texttt{n:nat}.
@@ -2107,31 +1892,8 @@ Definition Fchain_correct  (n:nat) (f : Fchain) :=
 
 Let us now try to prove that \texttt{F3} is correct \emph{w.r.t.} $3$.
 
-\begin{Coqbad}
-Theorem F3_correct : Fchain_correct 3 F3.
-Proof.  
-  intros    A op E_one E_equiv M k  a ; simpl.
-  monoid_simpl M.  
-\end{Coqbad}
-
-\begin{Coqanswer}
-  A : Type
-  op : Mult_op A
-  E_one : A
-  E_equiv : Equiv A
-  M : EMonoid op E_one E_equiv
-  k : Fkont A
-  a : A
-  H : Proper (equiv ==> equiv ==> equiv) op
-  ============================
-   computation_execute op (k (a * a * a)) ==
-   computation_execute op (k (a * (a * (a * E_one))))
-\end{Coqanswer}
-
-\begin{Coqbad}
-Abort.  
-End Bad.
-\end{Coqbad}
+\inputsnippets{Euclidean_Chains/BadDefa}
+\inputsnippets{Euclidean_Chains/BadDefb}
 
 This failure is due to a lack of an assumption that the continuation
 \texttt{k} is \emph{proper} with respect to the equivalence \texttt{equiv}.
@@ -2149,93 +1911,28 @@ A continuation \texttt{k:Fkont A} is \emph{proper}
 if, whenever \linebreak[3] \texttt{x == y} holds, the computations \texttt{k x} and 
 \texttt{k y} are equivalent.
 
+\inputsnippets{Euclidean_Chains/FkontProper}
 
-\begin{Coqsrc}
-Class Fkont_proper
-      `(M : @EMonoid A op E_one E_equiv) (k: Fkont A )  :=
-  Fkont_proper_prf:
-    Proper (equiv ==> computation_equiv op E_equiv) k.
-\end{Coqsrc}
 
 We are now able to improve our definition of correctness, taking only
 proper continuations into account.
 
-\begin{Coqsrc}
-Definition Fchain_correct_nat (n:nat) (f : Fchain) :=
- forall A `(M : @EMonoid A op E_one E_equiv) k
-        (Hk :Fkont_proper M k)
-        (a : A) ,
- computation_execute op (f A k  a) ==
- computation_execute op (k  (a ^ n)).
-
-
-Definition Fchain_correct (p:positive) (f : Fchain) :=
- Fchain_correct_nat (Pos.to_nat p) f.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/GoodFchainCorrect}
 
 \subsubsection{Examples}
 
-Let us show some manual correctness proofs for small f-chains:
+Let us show some manual correctness proofs of  small f-chains:
 
-\begin{Coqsrc}
-Lemma F1_correct : Fchain_correct 1 F1.
-Proof.
-  intros until M ; intros k Hk a ; unfold F1; simpl.
-  apply Hk; monoid_simpl M; reflexivity.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/F1Ok}
 
  While proving \texttt{F3}'s correctness, we will have to apply
  the properness hypothesis on \texttt{k}:
 
-
-\begin{Coqsrc}
-Theorem F3_correct : Fchain_correct 3 F3.
-Proof. 
-  intros until M; intros k Hk a; simpl.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- A : Type
-  op : Mult_op A
-  E_one : A
-  E_equiv : Equiv A
-  M : EMonoid op E_one E_equiv
-  k : Fkont A
-  Hk : Fkont_proper M k
-  a : A
-  ============================
-   computation_execute op (k (a * a * a)) ==
-   computation_execute op (k (a * (a * (a * E_one))))}
-\end{Coqanswer}
-
-\begin{Coqsrc}
-apply Hk. 
-\end{Coqsrc}
-  
-
-\begin{Coqanswer}
-...
-============================
-a * a * a == a * (a * (a * E_one))}
-
-\end{Coqanswer}
-
-\begin{Coqsrc}
-  monoid_simpl M; reflexivity.
-Qed.
-\end{Coqsrc}
-
+\inputsnippets{Euclidean_Chains/F3Ok}
 
 Correctness of \texttt{F2} is proved the same way:
 
-\begin{Coqsrc}
-Theorem F2_correct : Fchain_correct 2 F2.
-Proof. 
-  intros until M; intros k Hk a; simpl;
-  apply Hk;  monoid_simpl M;  reflexivity.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/F2Ok}
 
 \subsubsection{Composition of correct f-chains: a first attempt}
 
@@ -2243,64 +1940,27 @@ We are now looking for a way to generate correct chains for any positive
 number. It seems obvious that we could use \texttt{Fcompose} for building 
 a correct f-chain for $n\times p$ by composition of a correct f-chain for 
 $n$ and a correct f-chain for $p$.
-
 Let us try to certify this construction:
 
-\begin{Coqbad}
-Module Bad2.
+\inputsnippets{Euclidean_Chains/Bad2a, Euclidean_Chains/Bad2b}
 
-Lemma Fcompose_correct_attempt :
-  forall f1 f2 n1 n2, Fchain_correct n1 f1 ->
-                      Fchain_correct n2 f2 ->
-                      Fchain_correct (n1 * n2) (Fcompose f1 f2).
-
-(* Beginning of proof omitted *)
-\end{Coqbad}
-
-\begin{Coqanswer}
-  Hk : Fkont_proper M k
-  a, x, y : A
-  Hxy : x == y
-  ============================
-   computation_execute op (f2 A k x) == 
-   computation_execute op (f2 A k y) 
-\end{Coqanswer}
 
 No hypothesis guarantees us that the execution of \texttt{f2} respects the equivalence
 \texttt{x == y}.
 
-\begin{Coqbad}
-Abort.
-\end{Coqbad}
+\inputsnippets{Euclidean_Chains/Bad2c}
 
  Thus, we need to define also a  notion of properness for f-chains. 
 A first attempt would be :
 
+\inputsnippets{Euclidean_Chains/Bad3}
 
-\begin{Coqbad}
-Module Bad3.
 
-Class Fchain_proper_ (fc : Fchain) := Fchain_proper_prf : 
- forall  `(M : @EMonoid A op E_one E_equiv) k  ,
-    Fkont_proper M k 
-    forall x y, x == y ->
-        @computation_equiv _ op E_equiv (fc A k x) (fc A k y).
-\end{Coqbad}
 
 This definition is powerful enough for proving that properness is 
 preserved by composition:
 
-\begin{Coqbad}
-Instance Fcompose_proper_ (f1 f2 : Fchain)
-                             (_ : Fchain_proper_simple f1)
-                             (_ : Fchain_proper_simple f2) :
- Fchain_proper_ (Fcompose f1 f2).
-Proof. 
- intros until M;intros k Hk x y Hxy; unfold Fcompose;cbn. 
- apply (H _ _ _ _ M); auto.
- intros u v Huv;apply (H0 _ _ _ _ M);auto.
-Qed.
-\end{Coqbad}
+\inputsnippets{Euclidean_Chains/Bad3b}
 
 Nevertheless, we had to throw away  this definition of properness:
 In further 
@@ -2310,10 +1970,7 @@ where \texttt{x == y} and {$k_x$} and {$k_y$} are
 ``equivalent''
 but not \emph{convertible} continuations.
 
-
-\begin{Coqbad}
-End Bad3.
-\end{Coqbad}
+\inputsnippets{Euclidean_Chains/Bad3c}
 
 \subsubsection{A better definition of properness}
 
@@ -2321,121 +1978,32 @@ End Bad3.
 different (according to Leibniz equality) but lead to equivalent
 computations and results.
 
-\begin{Coqsrc}
-Definition Fkont_equiv  `(M : @EMonoid A op E_one E_equiv)
- (k k': Fkont A )  := 
- forall x y : A, x == y ->
-                 computation_equiv op E_equiv  (k x)  (k' y).
-
-Class Fchain_proper (fc : Fchain) := Fchain_proper_prf : 
- forall  `(M : @EMonoid A op E_one E_equiv) k k' ,
-    Fkont_proper M k -> Fkont_proper M k' ->    
-    Fkont_equiv M k k' ->
-    forall x y, x == y ->
-        @computation_equiv _ op E_equiv
-                           (fc A k x)
-                           (fc A k' y).
-\end{Coqsrc}
-
-
+\inputsnippets{Euclidean_Chains/correctProper}
 
 \subsubsection{Examples}
 The definition above allows us  to build simply several instances of the class \linebreak
 \texttt{Fchain\_proper}:
 
-\begin{Coqsrc}
-Instance F1_proper : Fchain_proper F1.
-Proof.
-  intros until M ; intros k k' Hk Hk' H a b H0; unfold F1; cbn;
-  now apply H.  
-Qed.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/F1proper}
+\inputsnippets{Euclidean_Chains/F2proper}
+\inputsnippets{Euclidean_Chains/F3proper}
 
-\begin{Coqsrc}
-Ltac add_op_proper M H := 
- let h := fresh H in
-   generalize (@Eop_proper _ _ _ _ M); intro h.
+\subsection{Correctness of chain composition}
 
+The \texttt{Fcompose} operator respects chain correctness and properness.
 
-Instance F3_proper : Fchain_proper F3.
-Proof.
-  intros  A op one equiv M  k k' Hk Hk'  Hkk' x y Hxy;  
-  apply Hkk'; add_op_proper M H; repeat rewrite Hxy;
-  reflexivity.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/FcomposeCorrect}
+\inputsnippets{Euclidean_Chains/FcomposeProper}
 
+Using chain composition, we get a correct and proper chain for any exponent of the form $2^n$.
 
-We are now able to prove  \texttt{Fexp2 $n$}'s correctness by induction 
-on $n$:
-
-\begin{Coqsrc}
-Instance Fexp2_nat_proper (n:nat) : 
-                           Fchain_proper (Fexp2_of_nat n).
-Proof.
- induction n; cbn.
-   - apply F1_proper.
-   - apply Fcompose_proper ; [apply F2_proper | apply IHn].
-Qed.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma  Fexp2_nat_correct (n:nat) : 
-         Fchain_correct_nat (2  ^ n) (Fexp2_of_nat n).
-Proof.
-  induction n; cbn.
- - apply F1_correct.
- -  rewrite Nat.add_0_r;
-   replace (2 ^ n + 2 ^ n)%nat with (2 * 2 ^n)%nat by  omega;
-   apply Fcompose_correct_nat;auto.
-   +  apply F2_correct.
-   +  apply  Fexp2_nat_proper.
-Qed.
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Lemma  Fexp2_correct (p:positive) : 
-                           Fchain_correct (2  ^ p) (Fexp2 p).
-(* Proof omitted *)
-
-Instance  Fexp2_proper (p:positive) : Fchain_proper (Fexp2 p).
-(* Proof omitted *)
-
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/Fexp2Correct}
+\inputsnippets{Euclidean_Chains/Fexp2Proper}
 
 We are now  able to build chains for any exponent of the form 
 $2^k\times 3^p$, using \texttt{Fcompose}. Les us look at a simple example:
 
-\begin{Coqsrc}
-Hint Resolve F1_correct F1_proper
-     F3_correct F3_proper Fcompose_correct Fcompose_proper
-     Fexp2_correct Fexp2_proper .
-
-Example F144:  {f : Fchain | Fchain_correct 144 f /\
-                                Fchain_proper f}.
-Proof.
- change 144 with ( (3 * 3) * (2 ^ 4))%positive.
- exists (Fcompose (Fcompose F3 F3) (Fexp2 4)); auto.
-Defined.
-
-
-Compute proj1_sig F144.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-= fun (A : Type) (x : Fkont A) (x0 : A) =>
-       x1 <--- x0 times x0;
-       x2 <--- x1 times x0;
-       x3 <--- x2 times x2;
-       x4 <--- x3 times x2;
-       x5 <--- x4 times x4;
-       x6 <--- x5 times x5; 
-       x7 <--- x6 times x6; 
-       x8 <--- x7 times x7; 
-       x x8
-     : Fchain  
-\end{Coqanswer}
-
+\inputsnippets{Euclidean_Chains/F144}
 
 
 \subsection{Building chains for two distinct exponents : k-chains  \label{Kkonts-section}}
@@ -2447,41 +2015,13 @@ Not every chain can be built efficiently  with \texttt{Fcompose}.
 One may attempt to define a new operator  for combining f-chains for 
 $n$ and $p$ into an f-chain for $n+p$.
 
-\begin{Coqbad}
-Definition Fplus (f1 f2 : Fchain) : Fchain :=
-  fun A k x => 
-   f1 A (fun y => 
-            f2 A (fun z => t <--- z times y; k t) x) 
-            x.
-\end{Coqbad}
-
-For instance, we can define a chain for $23$:
-
-\begin{Coqbad}
-Let F23 := Fplus F3 (Fplus (Fexp2 4) (Fexp2 2)).  
-\end{Coqbad}
+\inputsnippets{Euclidean_Chains/Fplus}
 
 Unfortunately, our construct is still very inefficient, since it results in 
 duplication of computations, as shown by the normal form of \texttt{F23}.
 
-\begin{Coqbad}
-Compute F23
-\end{Coqbad}
-
-\begin{Coqanswer}
- = fun (A : Type) (k : Fkont A) (x0 : A) =>
-       x1 <--- x0 times x0;
-       x2 <--- x1 times x0;
-       x3 <--- x0 times x0;
-       x4 <--- x3 times x3;
-       x5 <--- x4 times x4;
-       x6 <--- x5 times x5;
-       x7 <--- x0 times x0;
-       x8 <--- x7 times x7; 
-       x9 <--- x8 times x6; 
-       x10 <--- x9 times x2; 
-       k x10
-\end{Coqanswer}
+\pagebreak
+\inputsnippets{Euclidean_Chains/Fplusb}
 
 We observe that the variables \texttt{x3} and \texttt{x7} are 
 useless, since
@@ -2508,30 +2048,16 @@ different powers of their argument\footnote{The name \texttt{Kchain} comes from 
 
 \index{coq}{Continuation Passing Style (CPS)}
 
-\begin{Coqsrc}
-Definition Kkont A:=  A -> A -> @computation A.
-
-Definition Kchain :=  forall A, Kkont A -> A -> @computation A.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/KchainDef}
 
 \subsubsection{Examples}
 
 The chain \texttt{k3\_1} sends both values $x$ and $x^3$ to its continuation.
 Likewise, \texttt{k7\_3} ``returns''  $x^7$ and $x^3$. 
 
-\begin{Coqsrc}
-Example k3_1 : Kchain := fun A (k:Kkont A) (x:A) =>
-  x2 <--- x times x ;
-  x3 <--- x2 times x ;
-  k x3 x.
+\inputsnippets{Euclidean_Chains/K31}
+\inputsnippets{Euclidean_Chains/K73}
 
-Example k7_3 : Kchain := fun A (k:Kkont A)  (x:A) =>
-  x2 <--- x times x;
-  x3 <--- x2 times x ;
-  x6 <--- x3 times x3 ;
-  x7 <--- x6 times x ;
-  k  x7 x3.
-\end{Coqsrc}
 
 
 \begin{figure}[h]
@@ -2589,62 +2115,21 @@ Example k7_3 : Kchain := fun A (k:Kkont A)  (x:A) =>
 
 \subsubsection{Definitions}
 
-First, we have to adapt to k-chains our definitions of correctness and properness. 
-\begin{Coqsrc}
-Definition Kkont_proper `(M : @EMonoid A op E_one E_equiv)
-           (k : Kkont A) :=
- Proper (equiv ==> equiv ==> computation_equiv op E_equiv) k . 
+First, we have to adapt to k-chains our definitions of correctness and properness.
 
-Definition Kkont_equiv  `(M : @EMonoid A op E_one E_equiv)
-           (k k': Kkont A )  := 
- forall x y : A, x == y -> forall z t, z == t -> 
-         computation_equiv op E_equiv   (k  x z) (k' y t).
- \end{Coqsrc}
+\inputsnippets{Euclidean_Chains/KkontDefs}
+
+
 
 A k-chain is correct with respect to two exponents $n$ and $p$ 
   if it computes $x ^ n$ and $x ^ p$ for any $x$ in any monoid $M$.
 
- \begin{Coqsrc}
-Definition Kchain_correct_nat (n p : nat) (kc : Kchain) :=
-  forall `(M : @EMonoid A op E_one E_equiv)
-        (k : Kkont A), 
-        Kkont_proper M k ->
-        forall  (x : A) ,
-              computation_execute op (kc  A k  x) ==
-              computation_execute op (k  (x ^ n) (x ^ p)).
-
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Definition Kchain_correct (n p : positive) (kc : Kchain) :=
-  Kchain_correct_nat  (Pos.to_nat n) (Pos.to_nat p) kc.
-
-Class Kchain_proper (kc : Kchain) :=
-Kchain_proper_prf : 
- forall `(M : @EMonoid A op E_one E_equiv) k k' x y ,
-   Kkont_proper M k ->
-   Kkont_proper M k' -> 
-   Kkont_equiv M k k' ->
-   E_equiv x y ->
-   computation_equiv op E_equiv (kc A k x) (kc A k' y).
-\end{Coqsrc}
-
+\inputsnippets{Euclidean_Chains/KchainCorrectDef}
+  
 \subsubsection{Example}
 For instance, let us prove that \texttt{k7\_3} is proper and correct for the exponents  $7$ and $3$.
 
-\begin{Coqsrc}
-Instance k7_3_proper : Kchain_proper k7_3.
-Proof.
-  intros until M; intros; red; unfold k7_3; cbn;
-  add_op_proper M H3; apply H1;  rewrite H2;   reflexivity. 
-Qed.
-
-Lemma k7_3_correct : Kchain_correct 7 3 k7_3.
-Proof.
-  intros until M; intros; red; unfold k7_3; simpl.
-  apply H; monoid_simpl M;  reflexivity.
-Qed. 
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/K73Ok}
 
 \subsection{Systematic construction of  correct f-chains and k-chains}
 
@@ -2717,22 +2202,9 @@ ignores its second argument.
   \label{fig:K2F}
 \end{figure}
 
-
-
-\begin{Coqsrc}
-Definition K2F (knp : Kchain) : Fchain :=
-  fun A (k:Fkont A) => kc A (fun  y _ => k y).
-
-Lemma K2F_correct :
-  forall knp n p, Kchain_correct kc n p ->
-                 Fchain_correct (K2F n) knp.
-(* Proof omitted *)
-
-Instance K2F_proper (kc : Kchain)(_ : Kchain_proper kc) :
-                                  Fchain_proper (K2F kc).
-
-(* Proof omitted} *)
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/K2FDef}
+\inputsnippets{Euclidean_Chains/K2FCorrect}
+\inputsnippets{Euclidean_Chains/K2FProper}
 
 \subsubsection{Construction associated with Euclidean division with a positive rest}
 
@@ -2769,32 +2241,9 @@ any $y$ to its $q$-th power for obtaining a chain that computes $x^n$.
   \label{fig:KFK}
 \end{figure}
 
-\begin{Coqsrc}
-Definition KFK (kbr : Kchain) (fq : Fchain) : Kchain  :=
-  fun A k a =>
-    kbr A  (fun xb xr =>
-              fq A (fun y =>
-                      z <--- y times xr; k z xb) xb) a.
-
-Lemma KFK_correct :
-  forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-    Kchain_correct b r  kbr ->
-    Fchain_correct q fq ->
-    Kchain_proper kbr ->
-    Fchain_proper fq -> 
-    Kchain_correct  (b * q + r) b (KFK kbr fq).
-(* Proof omitted *)
-
-Instance KFK_proper :
-forall (kbr : Kchain) (fq : Fchain),
-  Kchain_proper kbr -> 
-  Fchain_proper fq -> 
-  Kchain_proper (KFK kbr fq)
-(* Proof omitted *)
-\end{Coqsrc}
-
-
-
+\inputsnippets{Euclidean_Chains/KFKDef}
+\inputsnippets{Euclidean_Chains/KFKCorrect}
+\inputsnippets{Euclidean_Chains/KFKProper}
 
 %\subsection{More certified operators on chains}
 
@@ -2834,47 +2283,18 @@ throwing away $x^b$.
 \end{figure}
 
 
-
-\begin{Coqsrc}
-Definition KFF (kbr : Kchain) (fq : Fchain) : Fchain :=
-  K2F (KFK kbr fq).
-
-Lemma KFF_correct :
-forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
-Kchain_correct  b r kbr ->
-Fchain_correct q fq ->
-Kchain_proper kbr ->
-Fchain_proper fq -> Fchain_correct (b * q + r) (KFF kbr fq).
-(* Proof omitted *)
-
-
-Instance KFF_proper :
-forall (kbr : Kchain) (fq : Fchain),
-Kchain_proper kbr -> Fchain_proper fq -> Fchain_proper (KFF kbr fq).
-(* Proof omitted *)
-\end{Coqsrc}
-
+\inputsnippets{Euclidean_Chains/KFFDef}
+\inputsnippets{Euclidean_Chains/KFFCorrect}
+\inputsnippets{Euclidean_Chains/KFFProper}
 
 \subsubsection{Conversion of an f-chain into a k-chain}
 The following conversion is useful when a chain generation algorithm
 needs to build a k-chain for exponents $p$ and $1$:
 
-\begin{Coqsrc}
-  
-Definition FK (f : Fchain) : Kchain :=
-  fun (A : Type) (k : Kkont A) (a : A) =>
-    f A (fun y => k y a) a.
+\inputsnippets{Euclidean_Chains/FKDef}
 
-Lemma FK_correct : forall (p: positive) (Fp : Fchain),
-                     Fchain_correct  p Fp ->
-                     Fchain_proper Fp ->
-                     Kchain_correct p 1 (FK Fp) .
-(* Proof omitted *)
+Like our other combinators, \texttt{FK} respects chain correctness and properness.
 
-Instance  FK_proper  (Fp : Fchain) (_ : Fchain_proper Fp):
-  Kchain_proper (FK Fp).
-(* Proof omitted *)
-\end{Coqsrc}
 
 \subsubsection{Computing $x^p$ \emph{and} $x^{pq}$}
 
@@ -2901,45 +2321,21 @@ Instance  FK_proper  (Fp : Fchain) (_ : Fchain_proper Fp):
   \label{fig:FFK}
 \end{figure}
 
-\begin{Coqsrc}
-Definition FFK (fp fq : Fchain) : Kchain :=
-  fun A k a =>  fp A (fun xb  => fq A (fun y => k y xb) xb) a. 
+Our last combinator composes a chain for computing $x^p$ with a chain for computing $x^q$ to build a chain for
+computing $x^p$ and $x^{pq}$.
 
-
-Lemma FFK_correct  (p q  : positive) (fp fq : Fchain):
-    Fchain_correct p fp  ->
-    Fchain_correct q fq ->
-    Fchain_proper fp ->
-    Fchain_proper fq -> Kchain_correct  (p * q ) p (FFK fp fq).
-(* Proof omitted *)
-
-Instance FFK_proper  (fp fq : Fchain)
-    (_ :   Fchain_proper fp)
-    (_ :  Fchain_proper fq) :  Kchain_proper (FFK fp fq) .
-(* Proof omitted *)
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/FFKDef}
+\inputsnippets{Euclidean_Chains/FFKCorrect}
+\inputsnippets{Euclidean_Chains/FFKProper}
 
 \subsubsection{A correct-by-construction chain}
 
 A simple example will show us how to build correct chains 
 for any positive exponent, using the operators above.
 
-\begin{Coqsrc}
-Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper.
-
-Definition F87 :=
- let k7_3 :=  KFK k3_1 (Fexp2 1) in
- let k10_7 := KFK k7_3 F1 in
- KFF k10_7 (Fexp2 3).
-
-Lemma OK87 : Fchain_correct 87 F87.
-Proof.
- unfold F87; change 87 with (10 * (2 ^ 3) + 7)%positive.
- apply KFF_correct;auto.
- change 10 with (7 * 1 + 3); apply KFK_correct;auto.
- change 7 with (3 * 2 ^ 1 + 1)%positive;  apply KFK_correct;auto.
-Qed.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/HintKchains}
+\inputsnippets{Euclidean_Chains/F87}
+\inputsnippets{Euclidean_Chains/F87Correct}
 
 Note that this method of construction still requires some  
 interaction from the user. 
@@ -2962,7 +2358,7 @@ Theorem make_chain_correct :
 
 
 In the previous section, we  considered two different kinds of objects:
-f-chains, associated with a single exponent, and k-chains, associated with two exponents. We would expect that the function \texttt{make\_chain} we want to build and certify is structured as a pair of mutually recursive functions.
+f-chains, associated with a single exponent, and k-chains, associated with two exponents. We would expect that the function \texttt{make\_chain} we want to define and certify is structured as a pair of mutually recursive functions.
  In \coq{} , various ways of building such functions are available:
  \begin{itemize}
  \item Structural [mutual] recursion with \texttt{Fixpoint}
@@ -2994,73 +2390,13 @@ We had two slight technical problems to consider:
 
 \end{itemize}
 
-\begin{Coqsrc}
-Inductive signature : Type :=
-|  (** Fchain for the exponent n *)
-     gen_F (n:positive) 
-| (** Kchain for the exponents p+d  and p *) 
-     gen_K (p d: positive).
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/signature}
 
 The following dependently-typed functions will help us to specify  formally
 any correct chain generator.
 \index{coq}{Dependently typed functions}
 
-\begin{Coqsrc}
-(** 
-  exponent associated with a signature:
-*)
-Definition signature_exponent (s:signature) : positive :=
- match s with 
-| gen_F n => n 
-| gen_K p d  =>  p + d
-end.
-\end{Coqsrc}
-
-
-
-\begin{Coqsrc}
-(**
-Type of the associated continuation 
-*)
-
-Definition kont_type (s: signature)(A:Type) : Type :=
-match s with 
-| gen_F _  => Fkont A 
-| gen_K _ _   => Kkont A
-end.
-
-Definition chain_type (s: signature) : Type :=
- match s with 
-| gen_F _   => Fchain
-|  gen_K _ _  => Kchain
-end.
-
-\end{Coqsrc}
-
-\begin{Coqsrc}
-Definition correctness_statement (s: signature) : 
-chain_type s -> Prop :=
-match s  with
-  | gen_F p => fun ch => Fchain_correct p ch
-  | gen_K p d   => fun ch => Kchain_correct (p + d) p ch
-end.
-
-Definition proper_statement (s: signature) : 
-chain_type s -> Prop :=
-match s  with
-  | gen_F p => fun ch => Fchain_proper ch 
-  | gen_K p d   => fun ch => Kchain_proper ch 
-end.
-
-(**  Full correctness *)
-
-Definition  OK (s: signature) 
-  := fun c: chain_type s => 
-       correctness_statement s c /\
-       proper_statement s c.
-
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/dependentlyTypedFuns}
 
 \subsection{Generation of chains using Euclidean Division}
 
@@ -3079,15 +2415,10 @@ is called a \emph{strategy}.
 
 \vspace{4pt}
 \noindent
-From ~\href{../theories/html/additions.Dichotomy.html}{additions.Dichotomy}.
-\begin{Coqsrc}
-Class Strategy (gamma : positive -> positive):=
-{
-gamma_lt :forall p:positive, 3 < p -> gamma  p < p;
-gamma_gt : forall p:positive, 3 < p -> 1 < gamma  p
-}.
+From ~\href{../theories/html/additions.Strategies.html}{additions.Strategies}.
 
-\end{Coqsrc}
+\inputsnippets{Strategies/StrategyDef}
+
 \subsection{The dichotomic strategy}
 
 
@@ -3106,46 +2437,15 @@ and a chain that raises its argument to its $8-th$ power.
 
 This strategy is defined in Module ~\href{../theories/html/additions.Dichotomy.html}{additions.Dichotomy}.
 
-
-\begin{Coqsrc}
-Function dicho_aux (p:positive) {struct p} : positive :=
- match p with
-   | 1%positive   =>  xH
-   | 2%positive |   3%positive  => 2 
-   | xO (xO q) | xO (xI q) | xI (xO q) | xI (xI q) =>
-                                         xO (dicho_aux q)
- end.
-
-Definition dicho  (p:positive) : positive :=
-  N2pos (N.div (Npos p) (Npos (dicho_aux p))). 
-
-Instance Dicho_strat : Strategy dicho.
-\end{Coqsrc}
-
+\inputsnippets{Dichotomy/dichotomy}
+\inputsnippets{Dichotomy/DichoStrat}
 
 \subsection{Other strategies}
 For comparison's sake, we define two other strategies, much simpler but statically less efficient than the dichotomic strategy.
 
 \emph{From Module~\href{../theories/html/additions.BinaryStrat.html}{additions.BinaryStrat}.}
 
-\begin{Coqsrc}
-Definition half (p:positive) :=
-  match p with xH => xH
-          |    xI q | xO q =>  q
-  end.
-
-Definition two (p:positive) := 2%positive.
-
-Instance Binary_strat : Strategy half.
-Proof.
-  split; destruct p; unfold half; try lia.
-Qed.
-
-Instance Two_strat : Strategy two.
-Proof.
-  split;unfold two; lia.
-Qed.
-\end{Coqsrc}
+\inputsnippets{BinaryStrat/BinaryStrats}
 
 Page.~\pageref{sect:test-strat}, we compare the three strategies with respect to the length of the built chains.
 
@@ -3154,97 +2454,24 @@ We are now able to define a function that generates a correct chain
 for any signature. We use the \texttt{Recdef} module of Standard Library,
 with an appropriate \emph{measure}.
 
-\begin{Coqsrc}
-Definition signature_measure (s : signature) : nat :=
-match s with
-  | gen_F n => 2 * Pos.to_nat n 
-  | gen_K p d => 2 * Pos.to_nat (p + d) +1
-end.
-\end{Coqsrc}
+\inputsnippets{Euclidean_Chains/GammaContext}
 
 
-The following function definition generates 9 subgoals,
+
+The following function definition generates 9 proof obligations subgoals,
 for proving that the measure on signatures is strictly decreasing along
 the recursive calls. They are solved with the help of Standard Library's lemmas 
 on arithmetic of \texttt{positive} numbers and Euclidean division.
 
-
-%\todo{Is Function (from Recdef) obsolete ? Use Equations instead ? }
-
-
-\begin{Coqsrc}
-Function chain_gen  (s:signature) {measure signature_measure}
-:  chain_type s :=
-  match s  return chain_type s with
-    | gen_F i =>
-      if pos_eq_dec i 1 then F1 else
-        if pos_eq_dec i 3
-        then F3
-        else 
-          match exact_log2 i with
-              Some p => Fexp2 p
-            | _ =>
-              match N.pos_div_eucl i (Npos (dicho i))
-              with
-                | (q, 0%N) => 
-                  Fcompose  (chain_gen (gen_F (dicho i)))
-                            (chain_gen (gen_F (N2Pos q)))
-                | (q,r)  => KFF (chain_gen
-                                   (gen_K (N2Pos r)
-                                          (dicho i - N2Pos r)))
-                                (chain_gen (gen_F (N2Pos q)))
-                                
-              end end
-\end{Coqsrc}
-
-\begin{Coqsrc}
-    | gen_K p d =>
-      if pos_eq_dec p 1 then FK (chain_gen (gen_F (1 + d)))
-      else
-        match N.pos_div_eucl (p + d)  (Npos p) with
-          | (q, 0%N) => FFK   (chain_gen (gen_F p))
-                              (chain_gen (gen_F (N2Pos q)))
-          | (q,r)  => KFK (chain_gen (gen_K (N2Pos r)
-                                            (p - N2Pos r)))
-                          (chain_gen (gen_F (N2Pos q)))
-        end
-  end.
-(* A lot of arithmetic proofs omitted *)
-Defined.
-
-Definition make_chain (n:positive) : chain :=
- F2C (chain_gen (gen_F n)).
-
-\end{Coqsrc}
-
-Thanks to the \texttt{Recdef} package, we are now able to get automatically 
-built chains using the dichotomic strategy.
-
-
-\begin{Coqsrc}
-Compute make_chain 87.
-\end{Coqsrc}
-
-\begin{Coqanswer}
- =  fun (A : Type) (x : A) =>
-       x0 <--- x times x;
-       x1 <--- x0 times x;
-       x2 <--- x1 times x1;
-       x3 <--- x2 times x;
-       x4 <--- x3 times x1;
-       x5 <--- x4 times x4;
-       x6 <--- x5 times x5;
-       x7 <--- x6 times x6; 
-       x8 <--- x7 times x3; 
-       Return x8
-     : chain 
-\end{Coqanswer}
-
+\pagebreak
+\inputsnippets{Euclidean_Chains/chainGen}
+\inputsnippets{Euclidean_Chains/makeChain}
+\inputsnippets{Euclidean_Chains/C87Dicho}
 
 \subsubsection{A few tests}
 \label{sect:test-strat}
 
-The following tests show various examples of chains for the same exponent, using different strategies. The dichotomic strategy seems clearly to be the winner (at least on this sample).
+The following tests show various examples of chains for the same exponent, using different strategies. The dichotomic strategy seems clearly to be the winner (at least on this sample)\footnote{For efficiency's sake, we commented out some (very) long computations. You may uncomment them freely in your own copy. For the same reason, we put a verbatim trace instead of \textit{Alectryon} output}.
 
 \begin{Coqsrc}
 Compute chain_length (make_chain two 56789).
@@ -3306,20 +2533,8 @@ Unfortunately, a lot of interaction is still needed for proving properties of
 Euclidean division and binary logarithm. 
 
 
+\inputsnippets{Euclidean_Chains/chainGenOK}
 
-\begin{Coqsrc}
-Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
-intro s; functional induction chain_gen s.
-Proof.
-(* A lot of arithmetic proofs omitted *)
-
-Theorem make_chain_correct :
-    forall p, chain_correct p (make_chain p).
-Proof.
- intro p; destruct (chain_gen_OK (gen_F p)).
- unfold make_chain; apply F2C_correct; apply H.
-Qed.
-\end{Coqsrc}
 
 \subsubsection{A last example}
 \label{ex45319}
@@ -3474,49 +2689,13 @@ In \coq{}, we define the instructions as the four constructors of an inductive t
 
 From Module~\href{../theories/html/additions.AM.html}{additions.AM}
 
-\begin{Coqsrc}
-(** basic instructions *)
-
-Inductive instr : Set :=
-  | MUL : instr
-  | SQR : instr
-  | PUSH : instr
-  | SWAP : instr.       
-
-Definition code := list instr.
-
-(* semantics *)
-(*************)
-
-Section Semantics.
-
- Variable A : Type.
- Variable mul : A -> A -> A.
- Variable one : A.
-
- Definition stack := list A.
- Definition config := (A * list A)%type.
-
- Fixpoint exec (c : code) (x:A) (s: stack) : option config :=
-   match c, s with
-     nil, _ => Some (x,s)
-   | MUL::c, y::s => exec c (mul x y) s
-   | SQR::c, s => exec c (mul x x) s
-   | PUSH::c, s => exec c x (x::s)
-   | SWAP::c, y::z::s => exec c x (z::y::s)
-   | _,_ => None
-   end.
-
-(* ... *)
-End Semantics.
-\end{Coqsrc}
+\inputsnippets{AM/AMDef}
+\inputsnippets{AM/AMSem}
+\inputsnippets{AM/AMSemb}
 
 For instance the chain of Fig.~\vref{fig:C87} can be represented with the following code:
 
-\begin{Coqsrc}
-  PUSH :: PUSH :: SQR  :: MUL :: PUSH :: SWAP :: SQR :: MUL :: PUSH
-            :: SWAP :: MUL :: SQR :: SQR :: SQR :: MUL :: nil 
-\end{Coqsrc}
+\inputsnippets{AM/F87}
 
 
 In the library~\href{../theories/html/additions.AM.html}{additions.AM},
