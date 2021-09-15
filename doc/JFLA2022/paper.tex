@@ -108,9 +108,10 @@ Karl Palmskog \inst{2}
 %------------------------------------------------------------------------------
 \section{Introduction}
 \label{sect:introduction}
-Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
-L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
-This article presents a gameful interpretation of accessibility problem in the set of ordinals below $\epsilon_0$, and proves two theorems:
+Hydra games (also know as \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians, 
+Laurie Kirby and Jeff Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
+This article describes a game between two players: Hercules and a hydra, and 
+and proves two theorems:
 \begin{quote}
 \begin{description}
 \item[$(1)$] In the Hydra game, every strategy is a winning strategy for Hercules.
@@ -118,7 +119,9 @@ This article presents a gameful interpretation of accessibility problem in the s
 \end{description}
 \end{quote}
 
-Like Goodstein sequences, hydra battles may be considered as a simplified version of G\"{o}del-like theorems.
+Indeed, like Goodstein sequences~\cite{goodstein_1944, Sladek07, KP82}, hydra battles are just 
+ a gameful presentation of accessibility problems in the set of ordinals below $\epsilon_0$. 
+
 Although the mathematical contents of this 
 paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
@@ -126,14 +129,47 @@ Our project is to illustrate  this work by a library written in \emph{Coq}~\cite
 This project has already been presented in
 JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}. 
 
+\section{Main features}
+\subsection{Multiple views}
+
+Whenever possible, we try to present several implementations of the same object, several proofs of the same statement.
+Let us take an example. Ordinal numbers (strictly below $\Gamma_0$) are represented with the help of \emph{ordinal notations}, \emph{i.e.} data types:
+\begin{itemize}
+\item natural numbers (ordinals below $\omega$),
+\item list of natural numbers (ordinals below $\omega^\omega$),
+\item ternary trees (ordinals below $\epsilon_0$ in Cantor normal form),
+\item quaternary trees (ordinals below $\Gamma_0$ in Veblen normal form).
+\end{itemize}
+Comparison and arithmetic operations are implemented by
+structurally recursive functions.
+Figure~\ref{fig:Ex42E0} shows a trivial (computational) proof of the equality \ref{eq:1}.
+
+\begin{eqnarray}
+  \label{eq:1}
+  \omega+42+\omega^2&=&\omega^2
+\end{eqnarray}
+
+
+We also implemented in \emph{Coq} the axiomatic definition of the set $\mathbb{O}$ of countable ordinals by Schütte~\cite{schutte, PCiota}.
+
+The proof of $\omega+42+\omega^2=\omega^2$ is no more computational, but use the following definitions and properties.
+
+\begin{itemize}
+\item Any set of countable ordinals can be enumerated by a function defined on a segment $[0, \alpha)$ of countable ordinals.
+\item Let $\alpha$ and $\beta$ be (countable) ordinals. Then $\alpha+\beta$ is the $\beta$-th element of the enumeration of the set of countable ordinals greater or equal than $\alpha$.
+\item Let $\phi_0$ be the enumeration of the set of \emph{additive principal ordinals}
+  $\{\alpha\in\mathbb{O}| \forall \beta\in \mathbb{O}, \beta+\alpha=\alpha\}$. Then $\omega^\alpha$ is just a notation for
+  $\phi_0(\alpha)$.
+\end{itemize}
+
+By definition, $\omega^2=\phi_0(2)$ is additive principal, thus
+satisfies the equality. Figure~\ref{fig:Ex42b} shows the mians steps of the proof.
+
 
 \begin{todo}
   Comment the multiple views of a same mathematical object:
   \begin{itemize}
-  \item Ordinals notations: for $\omega$, $\omega^\omega$,
-    $\epsilon_0$, $\Gamma_0$. Proofs by computation whenever possible (see Fig.~\ref{Ex42-E0}.
-  \item (Axiomatic) model by Schütte. Less computations.
-    application of previously proven lemmas (see Fig~\ref{fig:Ex42b}).
+ 
   \item Bridge lemmas (relative correctness of different representations).
     \item The user/reader may compare  different proofs of the same result (For instance the equality $\omega+42+\omega^2= \omega^2$).
   \end{itemize}
@@ -183,7 +219,7 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
     \caption{A simple proof by computation}
     \label{fig:Ex42E0}
   \end{figure}
-\label{Ex42-E0}.
+
 
 
 %\afterpage{\clearpage}
