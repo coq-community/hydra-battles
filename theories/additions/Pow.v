@@ -296,7 +296,7 @@ Qed.
 
 (* begin snippet NBpowOk:: no-out *)
 Lemma N_bpow_ok : 
-  forall n x,   x ^b n  == x ^ N.to_nat n.
+  forall n x, x ^b n  == x ^ N.to_nat n.
 (* end snippet NBpowOk *)
 Proof.
   destruct n.

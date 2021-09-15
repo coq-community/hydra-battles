@@ -23,8 +23,9 @@ Instance Binary_strat : Strategy half.
 Proof.
   split; destruct p; unfold half; try lia.
 Qed.
-(* end snippet BinaryStrats *)
+
 Instance Two_strat : Strategy two.
 Proof.
   split;unfold two; lia.
 Qed.
+(* end snippet BinaryStrats *)

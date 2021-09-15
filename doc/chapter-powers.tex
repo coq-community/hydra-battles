@@ -324,7 +324,7 @@ Thus, any function able to compute more or less efficiently powers in a monoid w
 give an algorithm for computing Fibonacci numbers. Unlike the \emph{ad-hoc} aforementioned proofs of~\cite{BC04}, the correctness of such an algorithm is a direct consequence
 of the correctness of the used powering function.
 Several examples will be presented in the rest of this document
-(in sections~\vref{sect:fibonacci-pos-bpow}).
+(in Section~\vref{sect:fibonacci-pos-bpow}).
 
 
 
@@ -465,7 +465,7 @@ if \texttt{\it op} has type (\texttt{Mult\_op $A$}), then
 
 \inputsnippets{Monoid_def/MultOpEq}
 
-We are now ready to define a new notation scope, in which the notation
+We are now ready to define a new notation scope, in which the notation \linebreak 
 \texttt{x * y} will be interpreted as an application of the function
 \texttt{mult\_op}.
 
@@ -695,7 +695,6 @@ The following instance of \texttt{EMonoid} describes the set of integers modulo
 $m$, where $m$ is any integer greater than or equal to $2$.
 For simplicity's sake, we represent such values using the \texttt{N} type,
 and consider ``equivalence modulo \texttt{$m$}'' instead of equality.
-Note that the law of associativity has been stated as Leibniz' equality.
 
 \inputsnippets{Monoid_instances/Nmoduloa,
   Monoid_instances/Nmodulob, Monoid_instances/Nmoduloc,
@@ -894,7 +893,7 @@ Let us take a simple example with the exponent $17$,  in any \texttt{EMonoid}.
 \inputsnippets{Pow/bpow17}
 
 Therefore, we note that the term (\Verb|fun (x:A) =>x ^b 17|)  is
-convertible, --- \emph{thus logically indistinguishable} ---, with a function that performs 16 multiplications.
+convertible --- \emph{thus logically indistinguishable} --- with a function that performs 16 multiplications.
 
 Likewise, let us simplify the term (\Verb|fun (x:A) =>x ^ 17|):
 
@@ -903,14 +902,15 @@ Likewise, let us simplify the term (\Verb|fun (x:A) =>x ^ 17|):
 
 
 
-From these tests, we may infer that  representing exponentiation algorithms as \coq{}  functions hides
+From these tests, we may infer that  representing exponentiation algorithms as plain arithmetic  functions hides
 information about the real structure of the computations, particularly about  sharing intermediate computations.
 
 Thus, we propose to define a data structure that makes explicit the sequence of multiplications that lead to the computation of $x^n$. For instance, the values of  
 \texttt{x * x} and
 \texttt{x * x * (x * x)}  are used
 twice in the  computation of $x^{17}$ with the binary algorithm. This information should 
-appear explicitly in the data structure chosen for representing exponentiation 
+appear explicitly in the data structure chosen for representing
+and comparing exponentiation 
 algorithms.
 
 It is well known that local variables can be used to store intermediate results.
@@ -1037,7 +1037,7 @@ This length is the number of multiplications needed for
 computing the $x^i$s by applying the following algorithm:
 
 \begin{quote}
-For any item $i$ of $c$, there exists $j$ and $k$ in $c$, where
+For any item $i$ of $c$ (but the first one), there exists $j$ and $k$ in $c$, where
 $i=j+k$, and $x^j$ and $x^k$ are already computed.
 
 Thus, compute $x^i = x^j \times x^k$.
@@ -1288,13 +1288,19 @@ Unfortunately, this approach is terribly inefficient, even for quite small expon
 
 \inputsnippets{Addition_Chains/slowC87Correct}
 
+
 In addition to this big computation time, this approach 
 generates a huge proof term. Just try to execute the command 
 ``\texttt{Print C87\_ok}'' to get a measure of its size.
 In order to understand this poor performance, let us consider an intermediate
 subgoal of the previous proof generated after a sequence of unfoldings and simplifications. This goal is presented below.
+\begin{figure}[h]
+  \centering
+\inputsnippets{Addition_Chains/WhySoSlow}  
+  \caption{A big goal}
+  \label{fig:big-goal}
+\end{figure}
 
-\inputsnippets{Addition_Chains/WhySoSlow}
 
 
 This inefficiency certainly comes from the cost of setoid rewriting.
@@ -1319,7 +1325,7 @@ in \coq's reference manual.
 
 
 \subsubsection{How does reflection work}
-Let us consider again the subgoal on page~\pageref{fig:big-goal}, the conclusion of which has the form \texttt{|$a_1\,==\,a_2$|}, where \texttt{|$a_1$|} and
+Let us consider again the subgoal on Fig.~\vref{fig:big-goal}, the conclusion of which has the form \texttt{|$a_1\,==\,a_2$|}, where \texttt{|$a_1$|} and
 \texttt{|$a_2$|} are terms of  type \texttt{A}.
 Instead of spending space and time in setoid rewritings, we would like to
 normalize the terms \texttt{|$a_1$|} and \texttt{|$a_2$|} and verify that 
@@ -1328,12 +1334,13 @@ the associated normal forms are equal.
 Defining such a normalization function is possible on an inductive type.
 The following type describes expressions composed of monoid operations and inhabitants of a given type $A$.
 
+\pagebreak
 \inputsnippets{Addition_Chains/MonoidExp}
 
 Thus, the main steps of a correctness proof of a given chain, \emph{e.g.},
 \texttt{C87} will be the following ones:
 \begin{enumerate}
-\item generate a subgoal as in page~\pageref{fig:big-goal},
+\item generate a subgoal as in Fig.~\vref{fig:big-goal},
 \item express each term of the equivalence as the image of a term
      of type \texttt{Monoid\_Exp $A$},
 \item normalize both terms and verify that their normal forms are equal.
@@ -1518,8 +1525,8 @@ We show how to \emph{prove} that  a given  chain $c$,
 applied to any $a$, really computes $a^p$, where $p=\textrm{the\_exponent}\;c$.
 Parametricity allows us to compare executions on any monoid $M$ 
 with executions on \texttt{NatPlus}.
-Let us consider the following mathematical relation 
-$$\{(x,n)\in M\times\mathbb{N}\,|\, 0<n \wedge x=a^n\}$$
+Let us consider the  mathematical relation 
+$\{(x,n)\in M\times\mathbb{N}\,|\, 0<n \wedge x=a^n\}$.
 
 \inputsnippets{Addition_Chains/powerR}
 
@@ -1899,7 +1906,7 @@ This failure is due to a lack of an assumption that the continuation
 \texttt{k} is \emph{proper} with respect to the equivalence \texttt{equiv}.
 Thus, \coq{} is unable to infer from the equivalence 
 \texttt{(a * a * a) == (a * (a * (a * E\_one)))} \linebreak that 
-\texttt{k (a * a * a)} and \texttt{k (a * (a * (a * E\_one)))} are 
+(\texttt{k (a * a * a)}) and (\texttt{k (a * (a * (a * E\_one)))}) are 
 equivalent computations.
 
 
@@ -1908,8 +1915,8 @@ equivalent computations.
 \index{coq}{Type classes}
 \index{coq}{Type classes!Proper class}
 A continuation \texttt{k:Fkont A} is \emph{proper}
-if, whenever \linebreak[3] \texttt{x == y} holds, the computations \texttt{k x} and 
-\texttt{k y} are equivalent.
+if, whenever \linebreak[3] \texttt{x == y} holds, the computations (\texttt{k x}) and 
+(\texttt{k y}) are equivalent.
 
 \inputsnippets{Euclidean_Chains/FkontProper}
 
@@ -1921,7 +1928,7 @@ proper continuations into account.
 
 \subsubsection{Examples}
 
-Let us show some manual correctness proofs of  small f-chains:
+Let us show manual correctness proofs of some small f-chains:
 
 \inputsnippets{Euclidean_Chains/F1Ok}
 
@@ -2015,12 +2022,13 @@ Not every chain can be built efficiently  with \texttt{Fcompose}.
 One may attempt to define a new operator  for combining f-chains for 
 $n$ and $p$ into an f-chain for $n+p$.
 
+\pagebreak
 \inputsnippets{Euclidean_Chains/Fplus}
 
 Unfortunately, our construct is still very inefficient, since it results in 
 duplication of computations, as shown by the normal form of \texttt{F23}.
 
-\pagebreak
+
 \inputsnippets{Euclidean_Chains/Fplusb}
 
 We observe that the variables \texttt{x3} and \texttt{x7} are 
@@ -2463,9 +2471,9 @@ for proving that the measure on signatures is strictly decreasing along
 the recursive calls. They are solved with the help of Standard Library's lemmas 
 on arithmetic of \texttt{positive} numbers and Euclidean division.
 
-\pagebreak
 \inputsnippets{Euclidean_Chains/chainGen}
 \inputsnippets{Euclidean_Chains/makeChain}
+\inputsnippets{Euclidean_Chains/makeChainCorrect}
 \inputsnippets{Euclidean_Chains/C87Dicho}
 
 \subsubsection{A few tests}

@@ -260,6 +260,11 @@ Fixpoint flatten {A:Type} (t: Monoid_Exp A)
   | One_node => One_node
   | X => Mul_node X One_node
   end.
+
+Compute
+  fun x y z t : nat =>
+    flatten (Mul_node (Mul_node (A_node x) (A_node y))
+                      (Mul_node (A_node z) (A_node t))). 
 (* end snippet flattenDef *)
 
 (** Interpretation function *)
@@ -437,7 +442,7 @@ Ltac parametric_tac  :=
   repeat (right;[assumption | assumption | ]);  left; assumption
 end.
 
-Example P87 : parametric C87. 
+Example P87 : parametric C87. (* .no-out *)
 Proof. (* .no-out *)
   Time parametric_tac.
 Qed. 
@@ -632,9 +637,8 @@ Ltac param_chain_correct :=
     apply param_correctness;[trivial | parametric_tac]
   end.
 
-Lemma C87_ok' : chain_correct 87  C87.
+Lemma C87_ok' : chain_correct 87  C87. (* .no-out *)
  Time  param_chain_correct.
-(* Finished transaction in 0.005 secs (0.005u,0.s) (successful) *)
 Qed.
 (* end snippet paramChainCorrect *)
 

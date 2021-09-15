@@ -558,7 +558,7 @@ End Bad4.
 
 Definition Kkont A:=  A -> A -> @computation A.
 
-(** CPS chain builder for  two exponents  *)
+(** CPS chain builders for  two exponents  *)
 
 Definition Kchain :=  forall A, Kkont A -> A -> @computation A.
 
@@ -1372,7 +1372,6 @@ Function chain_gen  (s:signature) {measure signature_measure}
                                    (gen_K (N2pos r)
                                           (gamma i - N2pos r)))
                                 (chain_gen (gen_F (N2pos q)))
-                                
               end end
     | gen_K p d =>
       if pos_eq_dec p 1 then FK (chain_gen (gen_F (1 + d)))
