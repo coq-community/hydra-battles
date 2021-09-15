@@ -181,15 +181,9 @@ This document is \emph{not} an introductory text for \coq{}, and there are many 
 \subsection{Documenting theories with Alectryon}
 
 Quotations of \coq{} source and answers are progressively replaced from copy-pasted \emph{verbatim} to automatically generated \emph{LaTeX} blocks, using Clément Pit-Claudel's \emph{Alectryon} tool~\cite{alectryonpaper, alectryongithub}.
-Many thanks to Jérémy Damour and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
+Many thanks to Jérémy Damour, Clément Pit-Claudel  and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
 
 Besides the guarantee of consistency between theories and documentation, we hope to give a corpus for experimenting new ways of documenting the implementation of non-trivial mathematics on a proof assistant.
-
-
-At present, this document is a hybrid version: Chapter~\vref{chapter:hydras} to \vref{chapter:primrec} are fully adapted to \emph{Alectryon}.  The rest of the document (Chapter \vref{chapter-powers} is still to be rewritten.
-
-
-
 
 \subsection{Trust in our proofs}
 \label{sect:trust-in-proofs}
@@ -252,7 +246,7 @@ Library~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_
 
 \subsubsection{Using Alectryon}
 
-Alectryon's \emph{LaTeX} mode cannot be mistaken for our hand-made quotations, particularly if you read a color-print.
+
 Here is an example from Chapter~\ref{chapter:primrec}.
 
 \vspace{4pt}
@@ -262,35 +256,22 @@ Here is an example from Chapter~\ref{chapter:primrec}.
 
 \subsubsection{Verbatim quotations}
 
-Quotations of \coq{} source and answers from Chapter~\ref{chapter-powers}, as well as definitions from Standard Library and
-other contributions are displayed as follows.
+Quotations of \coq{} source  from Standard Library and code which lead to compilation error or too long computations are displayed as follows.
 
+\begin{Coqsrc}
+Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
+  let c := make_chain gamma  n
+  in let r := chain_apply c (M:=Mul2) (1,0) in
+       fst r + snd r.
 
-  \begin{Coqsrc}
- Definition square (n:nat) := n * n.
+Compute fib_eucl dicho 153.
+\end{Coqsrc}
 
- Lemma square_double : exists n:nat, n + n = square n.
- Proof.
-    exists 2. 
-  \end{Coqsrc}
+\begin{Coqanswer}
+    = 68330027629092351019822533679447
+     : N
+\end{Coqanswer}
 
-Answers from \coq{} (including subgoals, error messages, etc.) are displayed in slanted style
-with a different background color.
-
-
-
- \begin{Coqanswer}
- 1 subgoal, subgoal 1 (ID 5)
-  
-  ============================
-   2 + 2 = square 2
-   
- \end{Coqanswer}
-
- \begin{Coqsrc}
-   reflexivity.
-Qed.
- \end{Coqsrc}
 
  \subsection{Remark}
  
