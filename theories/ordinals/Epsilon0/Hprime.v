@@ -903,7 +903,6 @@ Section Proof_of_H'_mono_l.
   
   Theorem H'_dom : dominates_strong (H'_ beta) (H'_ alpha). (* .no-out *)
   (* end snippet HprimeDom *)
-  
   Proof.
     destruct H'_mono_l as [x Hx]; exists (S x); red.
     intros p H; inversion_clear H; apply Hx; auto with arith.

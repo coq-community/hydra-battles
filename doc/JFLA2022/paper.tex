@@ -11,6 +11,9 @@
 %\documentclass[letterpaper]{easychair}
 
 \usepackage{doc}
+\usepackage{tikz}
+\usepackage{tikzsymbols}
+\usetikzlibrary{arrows}
 
 \usepackage[firstpageonly=false, color={[gray]{0.5}},
    scale=2.0, text=DRAFT]{draftwatermark}
@@ -43,6 +46,7 @@
 
 %---------------------------- 
 \newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+
 \newtheorem{todo}{To do}
 \usepackage{amsfonts, afterpage}
 
@@ -108,10 +112,23 @@ Karl Palmskog \inst{2}
 %------------------------------------------------------------------------------
 \section{Introduction}
 \label{sect:introduction}
-Hydra games (also know as \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians, 
+Hydra games (also known as \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians, 
 Laurie Kirby and Jeff Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
-This article describes a game between two players: Hercules and a hydra, and 
-and proves two theorems:
+This article describes a game between two players: Hercules and a hydra.
+A short description  can be found in Andrej Bauer's blogpost~\cite{bauer2008} as well as a simulator~\cite{BauerHydra}.
+
+In a few words:
+\begin{itemize}
+\item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}.
+\item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
+  then some sub-tree $h$ of the hydra is copied a certain amount $i$ of times. The number $i$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
+  or the time elapsed since the beginning of the fight.
+\end{itemize}
+
+
+Kirby and Paris prove the following theorems, applying
+combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
+
 \begin{quote}
 \begin{description}
 \item[$(1)$] In the Hydra game, every strategy is a winning strategy for Hercules.
@@ -119,51 +136,129 @@ and proves two theorems:
 \end{description}
 \end{quote}
 
-Indeed, like Goodstein sequences~\cite{goodstein_1944, Sladek07, KP82}, hydra battles are just 
- a gameful presentation of accessibility problems in the set of ordinals below $\epsilon_0$. 
+The contrast between the simplicity of the statements above and the complexity of the mathematical tools used to prove these theorems: ordinal numbers, rapidly growing hierarchies of fast growing functions, etc., convinced us that it is a good thema for a commented library of formal proofs.
 
-Although the mathematical contents of this 
-paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
+The benefits we would expect from this development are multiple.
+\begin{itemize}
+\item We present complete proof scripts which can be consulted and replayed by the reader.
+\item Complex formalisations and proofs are explained in an
+  electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives. Reciprocally, we provide ``concrete'' examples of several formaisation end proof techniques: operational type classes, functions defined by  equations, etc.
+\item It may be used as a library on ordinal numbers, for instance for proving termination properties.
+  \end{itemize}
 
-Our project is to illustrate  this work by a library written in \emph{Coq}~\cite{HydraBattles} and an electronic book~\cite{HydraBook}  containing explanations of the mathematical content and its possible mechanized formalisations.
-This project has already been presented in
-JFLA2018~\cite{JFLA2018paper}. We present the recent evolution of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}. 
+ Prior stages of this project have already been presented at
+ JFLA~\cite{JFLA2018paper}.
+We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
+\section{New results}
+In order to make evident how long a hydra battle can be,
+one may consider a deterministic variant of the game,
+``compute'' the number of steps of the battles, and thus obtain a minoration of the general case.
+
+The variant we consider is the same as 
+in~\cite{KP82, bauer2008, BauerHydra}. 
+
+
+ \begin{itemize}
+ \item The game starts at an arbitrary initial step $i\in\mathbb{N}$.
+   
+   \item The hydra grows $n$ copies at step $n$ of the game.
+ \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). 
+ \item Hercules always chops off the rightmost head of the hydra (which is always one of the lowest heads).
+ \end{itemize}
+ It mathematical terms, if at step $n$ the hydra is associated with the ordinal $\alpha$, at step $n+1$ it is associated with
+ $\canonseq{\alpha}{n+1}$, the $(n+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
+ 
+ 
+
+   \begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.3]
+\node (foot) at (10,0) {$\bullet$};
+\node (N1) at (2,2) {$\bullet$};
+\node (N2) at (10,2) {$\bullet$};
+\node (N22) at (7,2) {$\bullet$};
+\node (N3) at (14,2) {$\bullet$};
+\node (N4) at (18,2) {$\Smiley[2][green]$};
+\node (N5) at (0,4) {$\bullet$};
+\node (N6) at (2,5) {$\Smiley[2][green]$};
+\node (N7) at (4,6) {$\Smiley[2][green]$};
+\node (N88) at (7,4) {$\bullet$};
+\node (N8) at (10,4) {$\bullet$};
+\node (N9) at (14,6) {$\Smiley[2][green]$};
+\node (N10) at (0,8) {$\Smiley[2][green]$};
+\node (N11) at (10,7) {$\Smiley[2][green]$};
+\node (N111) at (7,7) {$\Smiley[2][green]$};
+\draw (foot) to [bend left=10] (N1);
+\draw (foot) -- (N2);
+\draw (foot) -- (N22);
+\draw (foot) -- (N3);
+\draw (foot) -- (N4);
+\draw (N1) to  (N5);
+\draw (N1) to   [bend left=10] (N6);
+\draw (N1) to   [bend right=20] (N7);
+\draw (N2) to  (N8);
+\draw (N22) to  (N88);
+\draw (N8) to  (N11);
+\draw (N88) to  (N111);
+\draw (N3) to  (N9);
+\draw (N5) to  (N10);
+\end{tikzpicture}
+\caption{The hydra associated with $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
+
+\end{figure}
+
+Let $\alpha<\epsilon_0$ be an ordinal.
+Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting at configuration $(i,\alpha)$ for  any $i\in\mathbb{N}$.
+We prove that this number is greater or equal than
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined in Fig.~\ref{fig:Hprime} and
+\ref{fig:HprimeCoq}.
+
+\begin{figure}[h]
+  \centering
+  \begin{itemize}
+\item If $\alpha=0$, then $H'_\alpha (k)= k$ for any natural number $k$.
+\item If $\alpha=\beta+1$, then 
+$H'_\alpha(k)=H'_\beta(k+1)$ for any $k \in \mathbb{N}$
+\item If $\alpha$ is a limit ordinal, then 
+$H'_\alpha(k) = H'_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
+\end{itemize}
+\caption{The rapidly growing hierarchy $H'$}
+\label{Hprime}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \inputsnippets{Hprime/HprimeDef}
+  \caption{$H'$: definition in \emph{Coq}}
+  \label{fig:HprimeCoq}
+\end{figure}
+
+From this result, we infer that, for a given $\alpha$, the considered function is not primitive recursive.
+
+
+ 
 \section{Main features}
-\subsection{Multiple views}
 
-Whenever possible, we try to present several implementations of the same object, several proofs of the same statement.
-Let us take an example. Ordinal numbers (strictly below $\Gamma_0$) are represented with the help of \emph{ordinal notations}, \emph{i.e.} data types:
-\begin{itemize}
-\item natural numbers (ordinals below $\omega$),
-\item list of natural numbers (ordinals below $\omega^\omega$),
-\item ternary trees (ordinals below $\epsilon_0$ in Cantor normal form),
-\item quaternary trees (ordinals below $\Gamma_0$ in Veblen normal form).
-\end{itemize}
-Comparison and arithmetic operations are implemented by
-structurally recursive functions.
-Figure~\ref{fig:Ex42E0} shows a trivial (computational) proof of the equality \ref{eq:1}.
-
-\begin{eqnarray}
-  \label{eq:1}
-  \omega+42+\omega^2&=&\omega^2
-\end{eqnarray}
+% \begin{eqnarray}
+%   \label{eq:1}
+%   \omega+42+\omega^2&=&\omega^2
+% \end{eqnarray}
 
 
-We also implemented in \emph{Coq} the axiomatic definition of the set $\mathbb{O}$ of countable ordinals by Schütte~\cite{schutte, PCiota}.
+% We also implemented in \emph{Coq} the axiomatic definition of the set $\mathbb{O}$ of countable ordinals by Schütte~\cite{schutte, PCiota}.
 
-The proof of $\omega+42+\omega^2=\omega^2$ is no more computational, but use the following definitions and properties.
+% The proof of $\omega+42+\omega^2=\omega^2$ is no more computational, but use the following definitions and properties.
 
-\begin{itemize}
-\item Any set of countable ordinals can be enumerated by a function defined on a segment $[0, \alpha)$ of countable ordinals.
-\item Let $\alpha$ and $\beta$ be (countable) ordinals. Then $\alpha+\beta$ is the $\beta$-th element of the enumeration of the set of countable ordinals greater or equal than $\alpha$.
-\item Let $\phi_0$ be the enumeration of the set of \emph{additive principal ordinals}
-  $\{\alpha\in\mathbb{O}| \forall \beta\in \mathbb{O}, \beta+\alpha=\alpha\}$. Then $\omega^\alpha$ is just a notation for
-  $\phi_0(\alpha)$.
-\end{itemize}
+% \begin{itemize}
+% \item Any set of countable ordinals can be enumerated by a function defined on a segment $[0, \alpha)$ of countable ordinals.
+% \item Let $\alpha$ and $\beta$ be (countable) ordinals. Then $\alpha+\beta$ is the $\beta$-th element of the enumeration of the set of countable ordinals greater or equal than $\alpha$.
+% \item Let $\phi_0$ be the enumeration of the set of \emph{additive principal ordinals}
+%   $\{\alpha\in\mathbb{O}| \forall \beta\in \mathbb{O}, \beta+\alpha=\alpha\}$. Then $\omega^\alpha$ is just a notation for
+%   $\phi_0(\alpha)$.
+% \end{itemize}
 
-By definition, $\omega^2=\phi_0(2)$ is additive principal, thus
-satisfies the equality. Figure~\ref{fig:Ex42b} shows the mians steps of the proof.
+
 
 
 \begin{todo}
@@ -171,36 +266,10 @@ satisfies the equality. Figure~\ref{fig:Ex42b} shows the mians steps of the proo
   \begin{itemize}
  
   \item Bridge lemmas (relative correctness of different representations).
-    \item The user/reader may compare  different proofs of the same result (For instance the equality $\omega+42+\omega^2= \omega^2$).
+    \item The user/reader may compare  different proofs of the same result (For instance the equality $\omega+42+\omega^2= \omega^2$). \emph{Example in Figures~\ref{fig:Ex42E0} and \ref{fig:Ex42-schutte}}.
   \end{itemize}
 \end{todo}
 
-\section{New contents}
-We are interested in a usual variant of hydra-battles, where the hydra grows $n$ copies at step $n$ of the game (see the examples presented in ~\cite{KP82, BauerHydra}).
-In terms of ordinals, this variant is described as a (finite) sequence $s_n\,(n\geq i)$ of ordinals strictly below $\epsilon_0$.
-This sequence is parameterized by an initial index $i\in\mathbb{N}$ and an ordinal $\alpha<\epsilon_0$.
-
-\begin{itemize}
-  \item $s_i=\alpha$
-\item If $s_n=0$, then the sequence is empty,
-\item if $s_n=\beta+1$, then $s_{n+1}=\beta$,
-\item Otherwise, $s_n$ is a \emph{limit ordinal} $\lambda$; then $s_{n+1}$ is $\canonseq{\lambda}{n+1}$, \emph{i.e.} the
-    $n+1$-th element of the \emph{canonical sequence} associated with $\lambda$~\cite{KS81}.
-\end{itemize} 
-
-The length of such a sequence is $l-i$, where $l$ is the first --- and unique --- natural number such that $s_l=0$.
-For a given $\alpha$, this length is a function of 
-the initial index $i$.
-
-Adapting to \emph{Coq} a few lemmas from~\cite{KS81}, we prove that the length  of the sequence associated with
-$\omega^\alpha$ and initial index $i\geq 2$ is greater or equal than
-$F_{\omega^\alpha}(i-1)-(i-1)$, where $F_\alpha$ is a variant of the Wainer hierarchy of rapidly growing functions, defined and studied in~\cite{KS81}.
-
-From this minoration, we infer that the function which associates to $i$ the length of the considered sequence (for a given $\alpha$) is not primitive recursive in general (our counter-example is for $\alpha=\omega^\omega$).
-
-It is important to notice that, for proving this last result, we decided to host and maintain within \emph{Coq-Community} the formalization of primitive recursive function, part of Russel O'Connor's work on G\"{o}del's first incompleteness theorem~\cite{OConnor05}.
-
-Defining and studying families of rapidly growing arithmetic  functions indexed by ordinals below $\epsilon_0$ has been made possible by the plug-in \emph{coq-equations}~\cite{sozeau:hal-01671777}.
 
 
 \section{The Coq-community ecosystem}
@@ -228,7 +297,7 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
   \centering
   
   
-\label{Ex42-schutte}
+\label{fig:Ex42-schutte}
 \fbox{\begin{minipage}[h]{1.0\linewidth}
   Let us prove again the equality $\omega+42+\omega^2= \omega^2$. Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
 \emph{i.e} the third  additive principal ordinal.
