@@ -34,7 +34,7 @@ Definition Cr_fun : forall alpha : Ord,
         (alpha = zero /\ AP x) \/
         (zero < alpha /\
          forall beta (H:beta < alpha), 
-           the_ordering_segment (Cr beta H) x /\
+           In (the_ordering_segment (Cr beta H)) x /\
            ord (Cr beta H) x = x)).
 
 Definition Cr (alpha : Ord) : Ensemble Ord := 
