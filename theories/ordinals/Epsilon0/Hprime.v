@@ -34,11 +34,11 @@ Instance Olt : WellFounded Lt := Lt_wf.
 
 Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   H'_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
+    { | left _zero =>  i ;
+      | right _nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ =>  H'_ (Canon alpha (S i))  i ;
-            | right notlimit =>  H'_ (Pred alpha) (S i)}}.
+          { | left _limit =>  H'_ (Canon alpha (S i))  i ;
+            | right _nonlimit =>  H'_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
 (* end snippet HprimeDef *)
