@@ -1,4 +1,3 @@
-
 (** *   Euclidean chains *)
 
 (** ** Introduction
@@ -38,20 +37,24 @@ Ltac add_op_proper M H :=
 
 (** Type of chain continuations *)
 
+(* begin snippet FchainDef *)
 Definition Fkont (A:Type) := A -> @computation A.
 
 Definition Fchain := forall A, Fkont A -> A -> @computation A.
+(* end snippet FchainDef *)
 
 (** [F3 k x] computes $z = x^3$, then executes the computation associated
    with [k z] *)
 
+(* begin snippet F3Def *)
 Definition F3 : Fchain := 
  fun  A k  (x:A) =>
   y <--- x times x ;
   z <--- y times x ;
   k  z.
+(* end snippet F3Def *)
 
-
+(* begin snippet F1F2 *)
 Definition F1 : Fchain := 
  fun A k (x:A) => k x.
 
@@ -59,27 +62,31 @@ Definition F2 : Fchain :=
 fun  A k  (x:A) =>
   y <--- x times x ;
   k  y.
-
+(* end snippet F1F2 *)
 
 
 (** An Fchain [f] can be considered as a function that takes as 
     argument another chain [c] for continueing the computation.
 *)
 
+(* begin snippet Fapply *)
 Definition Fapply (f : Fchain) (c: chain) : chain  :=
  fun (A:Type) (x: A)  =>  f A (c A) x.
+(* end snippet Fapply *)
 
+(* begin snippet Fcompose *)
 Definition Fcompose (f1 f2: Fchain) : Fchain  :=
  fun   A k x =>  f1  A (fun y => f2 A k y) x.
-
+(* end snippet Fcompose *)
 
 (** Any Fchain can be transformed into a plain chain *)
 
-
+(* begin snippet F2C *)
 Definition F2C (f : Fchain) : chain :=
  fun (A:Type) => f A Return .
 
 Compute the_exponent (F2C F3).
+(* end snippet F2C *)
 
 (** Composition of Fchains 
 
@@ -88,7 +95,11 @@ of correct components. So, we have to define composition of Fchains.
 
 *)
 
+(* begin snippet F9Def *)
 Example F9 := Fcompose F3 F3.
+
+Compute F9.
+(* end snippet F9Def *)
 
 (** Fchains associated with powers of 2 *)
 
@@ -99,14 +110,15 @@ Example F9 := Fcompose F3 F3.
 
 
 
+(* begin snippet F1Neutral:: no-out  *)
 Lemma F1_neutral_l : forall f, Fcompose F1 f = f.
 Proof. reflexivity. Qed.
 
 Lemma F1_neutral_r : forall f, Fcompose f F1 = f.
 Proof. reflexivity. Qed.
+(* end snippet F1Neutral *)
 
-
-
+(* begin snippet Fexp2 *)
 Fixpoint  Fexp2_of_nat (n:nat) : Fchain :=
  match n with O => F1
             | S p => Fcompose F2 (Fexp2_of_nat p)
@@ -118,7 +130,7 @@ Definition Fexp2 (p:positive) : Fchain :=
 Compute Fexp2 4.
 
 Compute the_exponent (F2C (Fexp2 4)).
-
+(* end snippet Fexp2 *)
 
 
 (*
@@ -131,10 +143,11 @@ Compute F9.
 
 *)
 
+(* begin snippet F9Ok:: no-out *)
 Remark F9_correct :chain_correct 9 (F2C F9).
 param_chain_correct.
 Qed.
-
+(* end snippet F9Ok *)
 
 
 Compute the_exponent (F2C F9).
@@ -151,39 +164,25 @@ Compute the_exponent (F2C F9).
 
 
 (** A first attempt to define Fchain correctness *)
+
+(* begin snippet BadDefa *)
 Module Bad.
   
 Definition Fchain_correct (n:nat) (fc : Fchain) :=
   forall A `(M : @EMonoid A op E_one E_equiv) k (a:A),
     computation_execute op (fc A k  a)==
     computation_execute op (k  (a ^ n)).
+(* end snippet BadDefa *)
 
-
-Theorem F3_correct : Fchain_correct 3 F3.
-Proof.  
-  intros    A op E_one E_equiv M k  a ; cbn.
-   monoid_simpl M. 
- 
-(*
- A : Type
-  op : Mult_op A
-  E_one : A
-  E_equiv : Equiv A
-  M : EMonoid op E_one E_equiv
-  k : Fkont A
-  a : A
-  H : Proper (equiv ==> equiv ==> equiv) op
-  ============================
-  computation_execute op (k (a * a * a)) ==
-   computation_execute op (k (a * (a * (a * E_one))))
-
-Unfortunately, we don't know wether [k] respects the equivalence
-associated with M
- *)
+(* begin snippet BadDefb *)
+Theorem F3_correct : Fchain_correct 3 F3. (* .no-out *)
+Proof.  (* .no-out *)
+  intros  A op E_one E_equiv M k  a ; cbn. (* .no-out *)
+  monoid_simpl M.
 Abort.
-
 End Bad.
 
+(* end snippet BadDefb *)
 
 (** Equivalence on computations *)
 
@@ -211,11 +210,12 @@ intro H; split; red in equiv.
 
 (** Fkonts that respect E_equiv *)
 
+(* begin snippet FkontProper *)
 Class Fkont_proper
       `(M : @EMonoid A op E_one E_equiv) (k: Fkont A )  :=
   Fkont_proper_prf:
     Proper (equiv ==> computation_equiv op E_equiv) k.
-
+(* end snippet FkontProper *)
 
 
 
@@ -229,6 +229,8 @@ Qed.
 
 (** Fchain correctness (for exponent of type [nat] *)
 
+
+(* begin snippet GoodFchainCorrect *)
 Definition Fchain_correct_nat (n:nat) (f : Fchain) :=
  forall A `(M : @EMonoid A op E_one E_equiv) k
         (Hk :Fkont_proper M k)
@@ -236,30 +238,34 @@ Definition Fchain_correct_nat (n:nat) (f : Fchain) :=
  computation_execute op (f A k  a) ==
  computation_execute op (k  (a ^ n)).
 
-(** Fchain correctness (for exponent of type [positive] *)
-
 Definition Fchain_correct (p:positive) (f : Fchain) :=
  Fchain_correct_nat (Pos.to_nat p) f.
+(* end snippet GoodFchainCorrect *)
 
-
+(* begin snippet F1Ok:: no-out *)
 Lemma F1_correct : Fchain_correct 1 F1.
 Proof.
   intros until M ; intros k Hk a ; unfold F1; simpl.
   apply Hk; monoid_simpl M; reflexivity.
 Qed.
+(* end snippet F1Ok:: no-out *)
 
-Theorem F3_correct : Fchain_correct 3 F3.
-Proof. 
-  intros until M; intros k Hk a; simpl. apply Hk.
+(* begin snippet F3Ok *)
+Lemma F3_correct : Fchain_correct 3 F3. (* .no-out *)
+Proof. (* .no-out *)
+  intros until M; intros k Hk a; simpl.
+  apply Hk.
   monoid_simpl M;  reflexivity.
 Qed.
+(* end snippet F3Ok *)
 
-Theorem F2_correct : Fchain_correct 2 F2.
+(* begin snippet F2Ok:: no-out *)
+Lemma F2_correct : Fchain_correct 2 F2.
 Proof. 
   intros until M; intros k Hk a; simpl;
   apply  Hk;  monoid_simpl M;  reflexivity.
 Qed.
-
+(* end snippet F2Ok *)
 
 (** F2C preserves correctness *)
 
@@ -273,15 +279,17 @@ Proof.
   apply H; apply Return_proper.
 Qed.
 
-
+(* begin snippet Bad2a:: no-out *)
 Module Bad2.
 
 Lemma Fcompose_correct :
-  forall f1 f2 n1 n2, Fchain_correct n1 f1 ->
-                        Fchain_correct n2 f2 ->
-                        Fchain_correct (n1 * n2)
-                                       (Fcompose f1 f2).
+  forall f1 f2 n1 n2,
+    Fchain_correct n1 f1 ->
+    Fchain_correct n2 f2 ->
+    Fchain_correct (n1 * n2) (Fcompose f1 f2).
 Proof.
+  (* ... *)
+(* end snippet Bad2a *) 
  unfold Fchain_correct, Fcompose, Fchain_correct_nat; intros.
  specialize (H _  _ _ _ M (fun y : A => f2 A k y) ).  
  specialize (H0 _ _ _ _ M).
@@ -291,22 +299,20 @@ Proof.
  rewrite Pos2Nat.inj_mul.
  rewrite power_of_power.  rewrite Nat.mul_comm;reflexivity.
  auto.
- intros x y Hxy .
- red.
+ (* begin snippet Bad2b:: -.h#* .h#Hk .h#a .h#x .h#y .h#Hxy  *)
+ intros x y Hxy;  red.
+ (* end snippet Bad2b *)
+ (* begin snippet Bad2c:: no-out *)
 Abort.
-
+ 
 End Bad2.
+(* end snippet Bad2c *)
 
-
-Definition Fkont_equiv  `(M : @EMonoid A op E_one E_equiv)
- (k k': Fkont A )  := 
- forall x y : A, x == y ->
-                 computation_equiv op E_equiv  (k x) (k' y).
 
 
 (** Fisrt attempt to define Fchain_proper *)
 
-
+(* begin snippet Bad3 *)
 Module Bad3.
   
 Class Fchain_proper (fc : Fchain) := Fchain_proper_bad_prf : 
@@ -317,6 +323,9 @@ Class Fchain_proper (fc : Fchain) := Fchain_proper_bad_prf :
                                   (fc A k x)
                                   (fc A k y).
 
+(* end snippet Bad3 *)
+
+(* begin snippet Bad3b:: no-out *)
 Instance Fcompose_proper (f1 f2 : Fchain)
          (_ : Fchain_proper f1)
          (_ : Fchain_proper f2) :
@@ -326,11 +335,20 @@ Proof.
  apply (H _ _ _ _ M); auto.
  intros u v Huv;apply (H0 _ _ _ _ M);auto.
 Qed.
+(* end snippet Bad3b *)
 
+(* begin snippet Bad3c *)
 End Bad3.
-
+(* end snippet Bad3c *)
 
 (** Correct definition *)
+
+(* begin snippet correctProper *)
+Definition Fkont_equiv  `(M : @EMonoid A op E_one E_equiv)
+ (k k': Fkont A )  := 
+ forall x y : A, x == y ->
+                 computation_equiv op E_equiv  (k x) (k' y).
+
 
 Class Fchain_proper (fc : Fchain) := Fchain_proper_prf : 
  forall  `(M : @EMonoid A op E_one E_equiv) k k' ,
@@ -340,22 +358,28 @@ Class Fchain_proper (fc : Fchain) := Fchain_proper_prf :
                @computation_equiv _ op E_equiv
                                   (fc A k x)
                                   (fc A k' y).
+(* end snippet correctProper *)
 
-
+(* begin snippet F1proper:: no-out *)
 Instance F1_proper : Fchain_proper F1.
 Proof.
   intros until M ; intros k k' Hk Hk' H a b H0; unfold F1; cbn;
   now apply H.  
 Qed.
+(* end snippet F1proper *)
 
+(* begin snippet F3proper:: no-out *)
 Instance F3_proper : Fchain_proper F3.
+(* end snippet F3proper *)
 Proof.
   intros  A op one equiv M  k k' Hk Hk'  Hkk' x y Hxy;  
   apply Hkk'; add_op_proper M H; repeat rewrite Hxy;
   reflexivity.
 Qed.
 
+(* begin snippet F2proper:: no-out *)
 Instance F2_proper : Fchain_proper F2.
+(* end snippet F2proper *)
 Proof.
   intros  A op one equiv M  k k' Hk Hk'  Hkk' x y Hxy;  
   apply Hkk'; add_op_proper M H; repeat rewrite Hxy;
@@ -384,24 +408,26 @@ Proof.
        rewrite Nat.mul_comm;reflexivity.
 Qed.
 
-
-Lemma Fcompose_correct : forall fc1 fc2 n1 n2,
-                           Fchain_correct n1 fc1 ->
-                           Fchain_correct n2 fc2 ->
-                           Fchain_proper fc2 -> 
-                           Fchain_correct (n1 * n2)
-                                          (Fcompose fc1 fc2).
+(* begin snippet FcomposeCorrect:: no-out *)
+Lemma Fcompose_correct :
+  forall fc1 fc2 n1 n2,
+    Fchain_correct n1 fc1 ->
+    Fchain_correct n2 fc2 ->
+    Fchain_proper fc2 -> 
+    Fchain_correct (n1 * n2) (Fcompose fc1 fc2).
+(* end snippet FcomposeCorrect *)
 Proof.
  unfold Fchain_correct; intros.
  rewrite Pos2Nat.inj_mul.
   apply Fcompose_correct_nat;auto.
 Qed.
 
-
+(* begin snippet FcomposeProper:: no-out *)
 Instance Fcompose_proper (fc1 fc2: Fchain)
                          (_ : Fchain_proper fc1)
                          (_ : Fchain_proper fc2) :
-                          Fchain_proper (Fcompose fc1 fc2).
+  Fchain_proper (Fcompose fc1 fc2).
+(* end snippet FcomposeProper *)
 Proof.
   unfold Fcompose; red;  intros. 
   apply   (H _  _ _ _ M);
@@ -431,9 +457,10 @@ Proof.
    +  apply  Fexp2_nat_proper.
 Qed.
 
-
+(* begin snippet Fexp2Correct:: no-out *)
 Lemma  Fexp2_correct (p:positive) : 
-                           Fchain_correct (2  ^ p) (Fexp2 p).
+  Fchain_correct (2 ^ p) (Fexp2 p).
+(* end snippet Fexp2Correct *)
 Proof.
  intros;red.
   rewrite Pos_pow_power, Pos2Nat_morph.
@@ -445,10 +472,14 @@ Proof.
  now rewrite nat_power_ok.
 Qed.
 
+(* begin snippet Fexp2Proper:: no-out *)
 Instance  Fexp2_proper (p:positive) : Fchain_proper (Fexp2 p).
+(* end snippet Fexp2Proper *)
 Proof.
   unfold  Fexp2; apply Fexp2_nat_proper.
 Qed.
+
+
 (** ** Remark
 
 
@@ -457,31 +488,21 @@ $2^k.3^p$, using Fcompose and previous lemmas.
 
 Let us look at a simple example *)
 
-
+(* begin snippet F144 *)
 Global Hint Resolve F1_correct F1_proper
      F3_correct F3_proper Fcompose_correct Fcompose_proper
      Fexp2_correct Fexp2_proper : chains.
 
 Example F144:  {f : Fchain | Fchain_correct 144 f /\
-                                Fchain_proper f}.
+                             Fchain_proper f}. (* .no-out *)
+Proof. (* .no-out *)
  change 144 with ( (3 * 3) * (2 ^ 4))%positive.
  exists (Fcompose (Fcompose F3 F3) (Fexp2 4)); auto with chains.
 Defined.
 
-(* 
+
 Compute proj1_sig F144.
-
-= fun (A : Type) (x : Fkont A) (x0 : A) =>
-       x1 <--- x0 times x0;
-       x2 <--- x1 times x0;
-       x3 <--- x2 times x2;
-       x4 <--- x3 times x2;
-       x5 <--- x4 times x4;
-       x6 <--- x5 times x5; x7 <--- x6 times x6; x8 <--- x7 times x7; x x8
-     : Fchain
-
-
-*)
+(* end snippet F144 *)
 
 (*** K chains 
 
@@ -507,8 +528,14 @@ Compute proj1_sig F144.
 
 (** Bad solution *)
 
+Module Bad4.
+
+(* begin snippet Fplus:: no-out *)
 Definition Fplus (f1 f2 : Fchain) : Fchain :=
-  fun A k x => f1 A (fun y => f2 A (fun z => t <--- z times y; k t) x) x.
+  fun A k x => f1 A
+                  (fun y =>
+                     f2 A
+                        (fun z => t <--- z times y; k t) x) x.
 
 Example F23 := Fplus F3 (Fplus (Fexp2 4) (Fexp2 2)).
 
@@ -518,34 +545,51 @@ Proof.
  param_chain_correct.
 Qed.
 
+(* end snippet Fplus *)
 
+(* begin snippet Fplusb *)
+Compute F23.
+(* end snippet Fplusb *)
+
+End Bad4.
+
+(* begin snippet KchainDef *)
 (** Continuations with two arguments *)
 
 Definition Kkont A:=  A -> A -> @computation A.
 
-(** CPS chain builder for  two exponents  *)
+(** CPS chain builders for  two exponents  *)
 
 Definition Kchain :=  forall A, Kkont A -> A -> @computation A.
 
+(* end snippet KchainDef *)
+
 (** Kchain for $x^3$ and $x$ *)
+(* begin snippet K31 *)
 
 Example k3_1 : Kchain := fun A (k:Kkont A) (x:A) =>
   x2 <--- x times x ;
   x3 <--- x2 times x ;
   k x3 x.
 
+(* end snippet K31 *)
+
 (** Kchain for $x^37$ and $x^3$ *)
 
+(* begin snippet K73 *)
 Example k7_3 : Kchain := fun A (k:Kkont A)   (x:A) =>
   x2 <--- x times x;
   x3 <--- x2 times x ;
   x6 <--- x3 times x3 ;
   x7 <--- x6 times x ;
   k  x7 x3.
+(* end snippet K73 *)
+
 
 (** The Definition of correct chains and proper chains and 
   continuations are adapted to Kchains *)
 
+(* begin snippet KkontDefs *)
 Definition Kkont_proper `(M : @EMonoid A op E_one E_equiv)
            (k : Kkont A) :=
  Proper (equiv ==> equiv ==> computation_equiv op E_equiv) k . 
@@ -554,7 +598,7 @@ Definition Kkont_equiv  `(M : @EMonoid A op E_one E_equiv)
            (k k': Kkont A )  := 
  forall x y : A, x == y -> forall z t, z == t -> 
          computation_equiv op E_equiv   (k  x z) (k' y t).
-
+(* end snippet KkontDefs *)
 
 
 (** A Kchain is correct with respect to two exponents $n$ and $p$ 
@@ -562,6 +606,7 @@ Definition Kkont_equiv  `(M : @EMonoid A op E_one E_equiv)
 
 About EMonoid.
 
+(* begin snippet KchainCorrectDef *)
 Definition Kchain_correct_nat (n p : nat) (kc : Kchain) :=
   forall  (A : Type) (op : Mult_op A) (E_one : A) (E_equiv : Equiv A)
           (M : EMonoid op E_one E_equiv)
@@ -583,8 +628,9 @@ Kchain_proper_prf :
    Kkont_equiv M k k' ->
    E_equiv x y ->
    computation_equiv op E_equiv (kc A k x) (kc A k' y).
+(* end snippet KchainCorrectDef *)
 
-
+(* begin snippet K73Ok:: no-out *)
 Instance k7_3_proper : Kchain_proper k7_3.
 Proof.
   intros until M; intros; red; unfold k7_3; cbn;
@@ -596,7 +642,7 @@ Proof.
 intros until M; intros; red; unfold k7_3; simpl.
   apply H;  monoid_simpl M;  reflexivity.
 Qed. 
-
+(* end snippet K73Ok *)
 
  (** conversion between several definitions of correctness *)
 
@@ -617,8 +663,10 @@ Qed.
 
 (** Conversion of Kchains into Fchains *)
 
+(* begin snippet K2FDef *)
 Definition K2F (knp : Kchain) : Fchain :=
   fun A (k:Fkont A) => knp A (fun  y _ => k y).
+(* end snippet K2FDef *)
 
 
 Lemma K2F_correct_nat :
@@ -630,17 +678,21 @@ Proof.
  intros x1 y1 H1 x2 y2 H2; apply Hk;  auto.
 Qed.
 
+(* begin snippet K2FCorrect:: no-out *)
 Lemma K2F_correct :
   forall kc n p, Kchain_correct n p kc ->
                  Fchain_correct n (K2F kc).
+(* end snippet K2FCorrect *)
 Proof.
  red;intros; unfold K2F, Fchain_correct. 
  apply K2F_correct_nat with (Pos.to_nat p);
  apply H.
 Qed.
 
+(* begin snippet K2FProper:: no-out *)
 Instance K2F_proper (kc : Kchain)(_ : Kchain_proper kc) :
-                               Fchain_proper (K2F kc).
+  Fchain_proper (K2F kc).
+(* end snippet K2FProper *)
 Proof.
  red;intros; unfold K2F;red.  
  apply (H _ _ _ _ M).  
@@ -657,23 +709,30 @@ Qed.
   computing $x^{bq}$, then sending $x^{bq+r}$ and $x^b$ to the continuation
 *)
 
+(* begin snippet KFKDef *)
 Definition KFK (kbr : Kchain) (fq : Fchain) : Kchain  :=
   fun A k a =>
     kbr A  (fun xb xr =>
               fq A (fun y =>
                       z <--- y times xr; k z xb) xb) a.
+(* end snippet KFKDef *)
 
 
+(* begin snippet KFFDef *)
 Definition KFF (kbr : Kchain) (fq : Fchain) : Fchain :=
   K2F (KFK kbr fq).
+(* end snippet KFFDef *)
 
-
+(* begin snippet FFKDef *)
 Definition FFK (fp fq : Fchain) : Kchain :=
   fun A k a =>  fp A (fun xb  => fq A (fun y => k y xb) xb) a. 
+(* end snippet FFKDef *)
 
+(* begin snippet FKDef *)
 Definition FK (f : Fchain) : Kchain :=
   fun (A : Type) (k : Kkont A) (a : A) =>
     f A (fun y => k y a) a.
+(* end snippet FKDef *)
 
 
 Example k17_7 := KFK k7_3 (Fexp2 1).
@@ -832,24 +891,38 @@ Global Instance KFF_proper : Fchain_proper (KFF kbr fq).
 Qed.
 
 End KFK_proof.  
-
+(* begin snippet KFKCorrect:: no-out *)
 Lemma KFK_correct :
   forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
     Kchain_correct  b r kbr ->
     Fchain_correct q fq ->
     Kchain_proper kbr ->
-    Fchain_proper fq -> Kchain_correct  (b * q + r) b (KFK kbr fq).
+    Fchain_proper fq ->
+    Kchain_correct  (b * q + r) b (KFK kbr fq).
+(* end snippet KFKCorrect *)
 Proof.
  red; intros; rewrite Pos2Nat.inj_add, Pos2Nat.inj_mul;
  apply KFK_correct_nat;assumption.
 Qed.
 
+(* begin snippet KFKProper *)
+Check  KFK_proper.
+(* end snippet KFKProper *)
+
+(* begin snippet KFFProper *)
+Check  KFK_proper.
+(* end snippet KFFProper *)
+
+
+(* begin snippet KFFCorrect:: no-out *)
 Lemma KFF_correct :
   forall (b q r : positive) (kbr : Kchain) (fq : Fchain),
     Kchain_correct b r kbr  ->
     Fchain_correct q fq ->
     Kchain_proper kbr ->
-    Fchain_proper fq -> Fchain_correct (b * q + r) (KFF kbr fq).
+    Fchain_proper fq ->
+    Fchain_correct (b * q + r) (KFF kbr fq).
+(* end snippet KFFCorrect *)
 Proof.
   red; intros;  rewrite Pos2Nat.inj_add, Pos2Nat.inj_mul;
   apply KFF_correct_nat;assumption.
@@ -895,21 +968,25 @@ red;intros.
        reflexivity.
 Qed.
 
-
+(* begin snippet FFKCorrect:: no-out *)
 Lemma FFK_correct  (p q  : positive) (fp fq : Fchain):
     Fchain_correct p fp  ->
     Fchain_correct q fq ->
     Fchain_proper fp ->
-    Fchain_proper fq -> Kchain_correct  (p * q ) p (FFK fp fq).
+    Fchain_proper fq ->
+    Kchain_correct  (p * q ) p (FFK fp fq).
+(* end snippet FFKCorrect *)
 Proof.
  intros;red; rewrite  Pos2Nat.inj_mul; now apply FFK_correct_nat. 
 Qed.
 
-
+(* begin snippet FFKProper:: no-out *)
 Instance FFK_proper 
          (fp fq : Fchain)
          (_ :   Fchain_proper fp)
-         (_ :  Fchain_proper fq) :  Kchain_proper (FFK fp fq).
+         (_ :  Fchain_proper fq)
+  :  Kchain_proper (FFK fp fq).
+(* end snippet FFKProper *)
 Proof.
  red;intros;
  specialize (H _ _ _ _ M); specialize (H0 _ _ _ _ M).
@@ -964,8 +1041,9 @@ Proof.
   -  assumption.
 Qed.
 
-
+(* begin snippet HintKchains *)
 Global Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
+(* end snippet HintKchains *)
 
 Lemma k3_1_correct : Kchain_correct 3 1 k3_1.
 Proof.
@@ -985,6 +1063,7 @@ Global Hint Resolve k3_1_correct k3_1_proper : chains.
 
 (** an example of correct chain construction  *)
 
+(* begin snippet F87 *)
 
 Definition F87 :=
  let k7_3 :=  KFK k3_1 (Fexp2 1) in
@@ -992,15 +1071,20 @@ Definition F87 :=
  KFF k10_7 (Fexp2 3).
 
 Compute the_exponent (F2C F87).
+(* end snippet F87 *)
 
+(* begin snippet F87Correct:: no-out *)
 
 Lemma OK87 : Fchain_correct 87 F87.
 Proof.
  unfold F87; change 87 with (10 * (2 ^ 3) + 7)%positive.
  apply KFF_correct;auto with chains.
- change 10 with (7 * 1 + 3); apply KFK_correct;auto with chains.
- change 7 with (3 * 2 ^ 1 + 1)%positive;  apply KFK_correct;auto with chains.
+ change 10 with (7 * 1 + 3);
+   apply KFK_correct;auto with chains.
+ change 7 with (3 * 2 ^ 1 + 1)%positive;
+   apply KFK_correct;auto with chains.
 Qed.
+(* end snippet F87Correct *)
 
 Ltac compute_chain ch := 
    let X := fresh "x" in 
@@ -1046,15 +1130,18 @@ thus avoiding to propagate the constraint $p<n$ in
 our definitions.
 *)
 
+(* begin snippet signature *)
 
 Inductive signature : Type :=
 | gen_F (n:positive) (** Fchain for the exponent n *)
-| gen_K (p d: positive) (** Kchain for the exponents p+d  and p *) . 
-
+| gen_K (p d: positive) (** Kchain for the exponents p+d  and p *). 
+(* end snippet signature *)
 
 
 
 (** Unifying  statements about chain generation *)
+
+(* begin snippet dependentlyTypedFuns *)
 
 Definition signature_exponent (s:signature) : positive :=
  match s with 
@@ -1089,17 +1176,19 @@ match s  with
   | gen_K _ _   => fun ch => Kchain_proper ch 
 end.
 
+
 (** ** Full correctness *)
 
 Definition  OK (s: signature) 
   := fun c: chain_type s => correctness_statement s c /\
                             proper_statement s c.
 
+(* end snippet dependentlyTypedFuns *)
 
 Global Hint Resolve pos_gt_3 : chains.
 
+(* begin snippet GammaContext *)
 Section Gamma.
-
 Variable gamma: positive -> positive.
 Context (Hgamma : Strategy gamma).
 
@@ -1108,6 +1197,7 @@ match s with
   | gen_F n => 2 * Pos.to_nat n 
   | gen_K  p d => 2 * Pos.to_nat (p + d) +1
 end.
+(* end snippet GammaContext *)
 
 (* Proof obligations for chain generation (generated by Function) *)
 (* These lemmas are also applied in AM *)
@@ -1261,7 +1351,7 @@ intros; unfold signature_measure.
       rewrite H2; cbn; unfold N.lt ; intro H5; red.
        simpl in H5; now rewrite Pos.compare_antisym, H5.
 Qed.
-
+(* begin snippet chainGen:: no-out *)
 Function chain_gen  (s:signature) {measure signature_measure}
 :  chain_type s :=
   match s  return chain_type s with
@@ -1282,7 +1372,6 @@ Function chain_gen  (s:signature) {measure signature_measure}
                                    (gen_K (N2pos r)
                                           (gamma i - N2pos r)))
                                 (chain_gen (gen_F (N2pos q)))
-                                
               end end
     | gen_K p d =>
       if pos_eq_dec p 1 then FK (chain_gen (gen_F (1 + d)))
@@ -1295,6 +1384,8 @@ Function chain_gen  (s:signature) {measure signature_measure}
                           (chain_gen (gen_F (N2pos q)))
         end
   end.
+(* 9 Proof Obligations generated *)
+(* end snippet chainGen *)
 Proof.
   - intros; eapply PO1; eauto. 
   - intros; eapply PO2; eauto. 
@@ -1307,96 +1398,101 @@ Proof.
   - intros; eapply PO9; eauto.
 Defined.
 
+(* begin snippet makeChain *)
 Definition make_chain (n:positive) : chain :=
  F2C (chain_gen (gen_F n)).
+(* end snippet makeChain *)
+
+(* begin snippet chainGenOK:: no-out *)
+Lemma chain_gen_OK : forall s:signature,
+    OK s (chain_gen  s).
+Proof.
+  intro s; functional induction chain_gen s.
+  (*  A lot of arithmetic sub-proofs ... *)
+  (* end snippet chainGenOK *) 
+  - split; [apply F1_correct | apply F1_proper].
+
+  - split; [apply F3_correct | apply F3_proper].
+
+  - generalize (exact_log2_spec _ _ e2);intro; subst i; split;
+      [apply Fexp2_correct | apply Fexp2_proper].
+
+  -  destruct IHc, IHc0.
+     generalize (N_pos_div_eucl_divides _ _ _ e3); intro eq_i.
+     split.
+     + cbn.   rewrite <- eq_i at 1 ; apply Fcompose_correct;auto.
+     +  pattern i at 1 ; rewrite <- eq_i at 1; apply Fcompose_proper;auto.
 
 
-Lemma chain_gen_OK : forall s:signature, OK  s (chain_gen  s).
-intro s; functional induction chain_gen s.
+  -  pattern i at 1;
+       replace i with (gamma i * (N2pos q) + N2pos r).
+     + destruct IHc, IHc0;split.
+       *  apply KFF_correct;auto.
+          simpl; simpl in H.
+          replace (gamma i) with  
+              (N2pos r + (gamma i - N2pos r)) at 1.
+          apply H.
+          rewrite Pplus_minus;auto with chains.
+          apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
+          generalize 
+            (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
+            rewrite e3;  simpl;auto with chains.
+          destruct r; [ contradiction | auto with chains].
+       *  apply KFF_proper;auto with chains.
 
- - split; [apply F1_correct | apply F1_proper].
-
- - split; [apply F3_correct | apply F3_proper].
-
-- generalize (exact_log2_spec _ _ e2);intro; subst i; split;
-  [apply Fexp2_correct | apply Fexp2_proper].
-
--  destruct IHc, IHc0.
-   generalize (N_pos_div_eucl_divides _ _ _ e3); intro eq_i.
-    split.
-   + cbn.   rewrite <- eq_i at 1 ; apply Fcompose_correct;auto.
-   +  pattern i at 1 ; rewrite <- eq_i at 1; apply Fcompose_proper;auto.
-
-
--  pattern i at 1;
-  replace i with (gamma i * (N2pos q) + N2pos r).
-   + destruct IHc, IHc0;split.
-     *  apply KFF_correct;auto.
-        simpl; simpl in H.
-        replace (gamma i) with  
-        (N2pos r + (gamma i - N2pos r)) at 1.
-        apply H.
-        rewrite Pplus_minus;auto with chains.
-        apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
-        generalize 
-          (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
-          rewrite e3;  simpl;auto with chains.
-        destruct r; [ contradiction | auto with chains].
-     *  apply KFF_proper;auto with chains.
-
-   + apply  N_pos_div_eucl_rest; auto with chains.
-     destruct r;try contradiction; auto with chains. 
-   apply (div_gamma_pos   _ _ _ e3); auto with chains.
-    apply pos_gt_3;auto with chains.
-    destruct (exact_log2 i); [contradiction | reflexivity].
+     + apply  N_pos_div_eucl_rest; auto with chains.
+       destruct r;try contradiction; auto with chains. 
+       apply (div_gamma_pos   _ _ _ e3); auto with chains.
+       apply pos_gt_3;auto with chains.
+       destruct (exact_log2 i); [contradiction | reflexivity].
 
 
-- destruct IHc; split.
-  +   apply FK_correct; auto with chains.
-  +  apply FK_proper; auto with chains.
-  
+  - destruct IHc; split.
+    +   apply FK_correct; auto with chains.
+    +  apply FK_proper; auto with chains.
+       
 
-- destruct IHc, IHc0;split.
-   +   red; replace (p + d)%positive with (p * N2pos q)%positive.
-       * apply FFK_correct; auto with chains.
-       *  generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
-         rewrite e1;    rewrite N.add_0_r ; intro  H3;
-         case_eq (q * N.pos p)%N.
-          intro H4;  rewrite H4 in H3 ; discriminate.
-          intros p0 H4; rewrite H4 in H3; injection H3;
-          intro H5;   rewrite H5.
-          N2pos_destruct q q.
-          injection H4;auto with chains.
-          rewrite  Pos.mul_comm;  auto with chains.
-   +   apply FFK_proper;auto with chains.
+  - destruct IHc, IHc0;split.
+    +   red; replace (p + d)%positive with (p * N2pos q)%positive.
+        * apply FFK_correct; auto with chains.
+        *  generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
+             rewrite e1;    rewrite N.add_0_r ; intro  H3;
+               case_eq (q * N.pos p)%N.
+           intro H4;  rewrite H4 in H3 ; discriminate.
+           intros p0 H4; rewrite H4 in H3; injection H3;
+             intro H5;   rewrite H5.
+           N2pos_destruct q q.
+           injection H4;auto with chains.
+           rewrite  Pos.mul_comm;  auto with chains.
+    +   apply FFK_proper;auto with chains.
 
--   destruct IHc, IHc0; split.
-    + red; replace (p+d) with (p * N2pos q + N2pos r).
-      * apply KFK_correct;auto with chains.
-        red in H;   replace (N2pos r + (p - N2pos r))%positive with p in H.
-        apply H.  
-        rewrite Pplus_minus;  auto.
-        generalize  (N.pos_div_eucl_remainder (p + d) (N.pos p));
-          rewrite e1; cbn;  intro H3.
-        apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
-        destruct r; [contradiction | auto with chains].
+  -   destruct IHc, IHc0; split.
+      + red; replace (p+d) with (p * N2pos q + N2pos r).
+        * apply KFK_correct;auto with chains.
+          red in H;   replace (N2pos r + (p - N2pos r))%positive with p in H.
+          apply H.  
+          rewrite Pplus_minus;  auto.
+          generalize  (N.pos_div_eucl_remainder (p + d) (N.pos p));
+            rewrite e1; cbn;  intro H3.
+          apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
+          destruct r; [contradiction | auto with chains].
 
-      *   generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
-        rewrite e1; intros H3; clear H H0 H1 H2.
-          case_eq q.
-          {intro;   generalize (pos_div_eucl_quotient_pos _ _ _ _ e1).
-            destruct 1;auto with chains.
-            rewrite pos2N_inj_add;  apply N.le_add_r.
-          }
-          {
-           intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
-           simpl;  simpl in H3;  injection H3.
-          rewrite Pos.mul_comm; auto with chains.
-          }
-    +   apply KFK_proper;  auto with chains.
+        *   generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
+              rewrite e1; intros H3; clear H H0 H1 H2.
+            case_eq q.
+            {intro;   generalize (pos_div_eucl_quotient_pos _ _ _ _ e1).
+             destruct 1;auto with chains.
+             rewrite pos2N_inj_add;  apply N.le_add_r.
+            }
+            {
+              intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
+              simpl;  simpl in H3;  injection H3.
+              rewrite Pos.mul_comm; auto with chains.
+            }
+      +   apply KFK_proper;  auto with chains.
 Qed. 
 
-
+(* begin snippet makeChainCorrect:: no-out *)
 Theorem make_chain_correct : forall p, chain_correct p (make_chain p).
 Proof.
   intro p; destruct (chain_gen_OK (gen_F p)).
@@ -1404,10 +1500,12 @@ Proof.
 Qed.
 
 End Gamma.
-
+(* end snippet makeChainCorrect *)
 Arguments make_chain gamma {_} _ _ _ .
-Compute the_exponent (make_chain  dicho 87).
 
+(* begin snippet C87Dicho *)
+Compute the_exponent (make_chain  dicho 87).
+(* end snippet C87Dicho *)
 
 (** cf Coq workshop 2014 by Jason Grosss *)
 
@@ -1431,7 +1529,7 @@ Int31.phi (N_bpow (snd (positive_to_int31 x)) n ).
 About make_chain.
 
 (** long computations ... *)
-
+(**
 Definition big_chain := ltac:(compute_chain  (make_chain dicho 6145319)).
 
 Print big_chain.
@@ -1591,7 +1689,7 @@ fun (A : Type) (x : A) =>
      : chain
 
  *)
-
+(** 
 Compute chain_length (make_chain two 56789).
 (* 25%nat *)
 
@@ -1604,9 +1702,9 @@ Compute chain_length (make_chain dicho 56789).
 Compute chain_length (make_chain two 3456789).
 (* 33%nat *)
 
-Compute chain_length (make_chain half 3456789).
+ Compute chain_length (make_chain half 3456789).
 (* 33%nat *)
-
+*)
 Compute chain_length (make_chain dicho 3456789).
 (* 29%nat *)
 
@@ -1620,8 +1718,9 @@ Extraction Language OCaml.
 Extraction "bigmod" Examples.exp56789.
 
 
+*)
 
-
-
+End Examples.
 Recursive Extraction cpower.
 Recursive Extraction make_chain.
+

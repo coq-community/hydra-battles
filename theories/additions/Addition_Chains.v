@@ -21,24 +21,30 @@ Generalizable All Variables.
 (** ** Computations composed of multiplications over type  A 
   (in Continuation Passing Style) *)
 
+(* begin snippet computationDef *)
 Inductive computation {A:Type}  : Type :=
 | Return (a : A)
 | Mult (x y : A) (k : A -> computation).
+(* end snippet computationDef *)
 
 
 (** *** Monadic Notation for computations 
 *)
 
+(* begin snippet monadicComputation *)
 Notation "z '<---'  x 'times' y ';' e2 " :=
   (Mult x y  (fun z => e2))
     (right associativity, at level 60).
+(* end snippet monadicComputation *)
 
-Example comp7 : computation  :=
+(* begin snippet comp128 *)
+Example comp128 : computation  :=
   x <--- 2 times 2;
   y <--- x times 2;
   z <--- y times y ;
   t <--- 2 times z ;
   Return t.
+(* end snippet comp128 *)
 
 (** *** Definition
 
@@ -46,13 +52,22 @@ An _addition chain_ (in short a _chain_) is a function that maps
  any type $A$ and any value $a$ of type $A$ into a computation on $A$.
 *)
 
+(* begin snippet chainDef *)
 Definition chain := forall A:Type, A -> @computation A.
-
+(* end snippet chainDef *)
 
 (** The chain associated with the empty computation 
    (raising to the first power) *)
 
 Definition C1 : chain :=  (@Return).
+
+(* begin snippet C3Example *)
+Example C3 : chain :=
+  fun (A:Type) (x:A) =>
+     x2 <--- x times x;
+     x3 <--- x2 times x;
+     Return x3.
+(* end snippet C3Example *)
 
 (** Chain associated with the 7-th power *)
 
@@ -69,6 +84,7 @@ Example C7 : chain :=
   The chain below is intented to compute 87-th power in any EMonoid.
 *)
 
+(* begin snippet C87 *)
 Example  C87 : chain :=
  fun A (x : A)=>
   x2 <--- x times x ;
@@ -81,11 +97,13 @@ Example  C87 : chain :=
   x80 <--- x40 times x40 ;  
   x87 <--- x80 times x7 ;
   Return x87.
+(* end snippet C87 *)
 
 (** *** Chain length (number of mutiplications)
 *)
 
-Fixpoint computation_length  {A} (a:A) (m : @computation A) : nat :=
+(* begin snippet chainLength *)
+Fixpoint computation_length {A} (a:A) (m : @computation A) : nat :=
 match m with
   | Mult _ _ k => S (computation_length a (k a))
   | _ => 0%nat
@@ -93,11 +111,9 @@ end.
 
 Definition chain_length (c:chain) := computation_length tt (c _ tt).
 
-(* begin show *)
 Compute chain_length C87. 
-(* end show *)
-(** [[ = 9 : nat ]]
-*)
+(* end snippet chainLength *)
+
 
 (** *** Execution of chains
 
@@ -107,7 +123,7 @@ First, we define recursively the _evaluation_  of a computation, then
 the _execution_ of a chain.
 *)
 
-
+(* begin snippet chainExecute *)
 Fixpoint computation_execute  {A:Type} (op: Mult_op A) 
          (c : computation) :=
   match c with 
@@ -115,49 +131,29 @@ Fixpoint computation_execute  {A:Type} (op: Mult_op A)
     | Mult x y k => computation_execute op (k (x * y))
   end.
 
-
 Definition computation_eval `{M:@EMonoid A E_op E_one E_eq}
            (c : computation) : A :=
   computation_execute E_op c.
-
 
 Definition chain_execute (c:chain) {A} op  (a:A) :=
   computation_execute op (c A a).
 
 
-
-Definition chain_apply (c:chain) `{M:@EMonoid A E_op E_one E_eq} a : A :=
+Definition chain_apply
+           (c:chain) `{M:@EMonoid A E_op E_one E_eq} a : A :=
    computation_eval (c A a).
-
+(* end snippet chainExecute *)
 
 Lemma computation_eval_rw `{M:@EMonoid A E_op E_one E_eq} c :
          computation_eval c  =  computation_execute E_op c.
 Proof. reflexivity. Qed.
 
-
-(* begin show *)
+(* begin snippet C87Apply *)
 Time Compute  chain_apply C87 3%Z.
-(* end show *)
 
-(** [[
- = 323257909929174534292273980721360271853387%Z
-     : Z
-]]
-*)
-
-(* begin show *)
 Time Compute chain_apply  (M:=M2N) C87  (Build_M2 1 1 1 0)%N.
-(* end show *)
+(* end snippet C87Apply *)
 
-(** [[
- = {|
-       c00 := 1100087778366101931%N;
-       c01 := 679891637638612258%N;
-       c10 := 679891637638612258%N;
-       c11 := 420196140727489673%N |}
-     : M2 N
-]]
-*)
 
 
 (** ** Chain correctness
@@ -169,18 +165,24 @@ given any positive integer $p$, returns a chain that is correct with respect to 
 
 *)
 
+(* begin snippet chainCorrect *)
 Definition chain_correct_nat (n:nat) (c: chain) := n <> 0 /\ 
 forall `(M:@EMonoid  A E_op E_one E_eq) (x:A), 
    chain_apply c x ==   x  ^  n.
 
 Definition chain_correct (p:positive) (c: chain) :=
   chain_correct_nat (Pos.to_nat p) c. 
+(* end snippet chainCorrect *)
 
+(* begin snippet optimalDef *)
 Definition optimal (p:positive) (c : chain) :=
- forall c', chain_correct p c' -> (chain_length c <= chain_length c')%nat.
+  forall c', chain_correct p c' ->
+             (chain_length c <= chain_length c')%nat.
+(* end snippet optimalDef *)
 
 (** A slow tactic for proving a chain's correctness *)
 
+(* begin snippet slowTac:: no-out *) 
 Ltac slow_chain_correct_tac :=
   match goal with 
       [ |- chain_correct ?p ?c ] =>
@@ -195,34 +197,41 @@ Ltac slow_chain_correct_tac :=
                  intros A op one eq M x; monoid_simpl M; reflexivity]
   end.
 
-Example C7_ok : chain_correct 7 C7.
+Example C7_ok : chain_correct 7 C7. 
 Proof.
  slow_chain_correct_tac.
 Qed.
+(* end snippet slowTac *)
 
 
 (** The following proof takes a very long time. Happily, C87's correctness 
 will be proved  more  efficiently, using  reflection or parametricity. 
 *)
 
-(** Remove the comment if you can wait ...
-
-Example C87_ok : chain_correct 87 C87.
-Proof.
+(** Remove the comment if you can wait ... *)
+(* begin snippet slowC87Correct *)
+Example C87_ok_slow : chain_correct 87 C87. (* .no-out *)
+Proof. (* .no-out *)
  Time  slow_chain_correct_tac. 
-(*
-Finished transaction in 62.808 secs (62.677u,0.085s) (successful)
-*)
 Qed.
+(* end snippet slowC87Correct *)
 
-Print C87_ok.
-*)
+(* begin snippet WhySoSlow *)
+Example C87_ok_slow' : chain_correct 87 C87. (* .none *)
+Proof. (* .none *)
+  split; unfold chain_correct, chain_correct_nat. (* .none *)
+  discriminate. (* .none *)
+  intros; red; cbn; unfold power; simpl. (* .no-in .unfold  *)
+  (* end snippet WhySoSlow *)
+Abort.      
 
 
 
 (** * Correctness Proof by Reflection
   See chap 16 of Coq'Art *)
 
+
+(* begin snippet MonoidExp *)
 (** Binary trees of multiplications over A *)
 
 Inductive Monoid_Exp (A:Type) : Type :=
@@ -231,34 +240,47 @@ Inductive Monoid_Exp (A:Type) : Type :=
 Arguments Mul_node {A} _ _.
 Arguments One_node {A} .
 Arguments A_node {A} _ .
+(* end snippet MonoidExp *)
 
-
+(* begin snippet flattenDef *)
 (** Linearization functions *)
 
-Fixpoint flatten_aux {A:Type}(t fin : Monoid_Exp A) : Monoid_Exp A :=
-match t with Mul_node  t t' => flatten_aux t (flatten_aux t' fin)
-           | One_node  => fin
-           |  x => Mul_node  x fin
-end.
+Fixpoint flatten_aux {A:Type}(t fin : Monoid_Exp A)
+  : Monoid_Exp A :=
+  match t with
+    Mul_node  t t' => flatten_aux t (flatten_aux t' fin)
+  | One_node  => fin
+  | x => Mul_node  x fin
+  end.
 
-Fixpoint flatten {A:Type} (t: Monoid_Exp A) : Monoid_Exp A :=
-match t with
-| Mul_node t t' => flatten_aux t (flatten t')
-| One_node => One_node
-| X => Mul_node X One_node
-end.
+Fixpoint flatten {A:Type} (t: Monoid_Exp A)
+  : Monoid_Exp A :=
+  match t with
+  | Mul_node t t' => flatten_aux t (flatten t')
+  | One_node => One_node
+  | X => Mul_node X One_node
+  end.
+
+Compute
+  fun x y z t : nat =>
+    flatten (Mul_node (Mul_node (A_node x) (A_node y))
+                      (Mul_node (A_node z) (A_node t))). 
+(* end snippet flattenDef *)
 
 (** Interpretation function *)
 
-Function eval {A:Type} {op one eqv} (M: @EMonoid A op one eqv)
+(* begin snippet evalDef *)
+Function eval {A:Type} {op one eqv}
+         (M: @EMonoid A op one eqv)
          (t: Monoid_Exp A) : A :=
-match t with Mul_node t1 t2 => (eval M t1 * eval M t2)%M
-            | One_node => one
-            | A_node a => a
+  match t with
+    Mul_node t1 t2 => (eval M t1 * eval M t2)%M
+  | One_node => one
+  | A_node a => a
 end.
+(* end snippet evalDef *)
 
-
-Lemma flatten_aux_valid {A} `(M: @EMonoid A op one eqv):
+Lemma flatten_aux_valid `(M: @EMonoid A op one eqv):
 forall t t', (eval M t * eval M t')%M ==
              (eval M (flatten_aux t t')).
 Proof.
@@ -269,8 +291,11 @@ Proof.
  - reflexivity.
 Qed.
 
-Lemma flatten_valid {A} `(M: @EMonoid A op one eqv):
-forall t , eval M t == eval M (flatten t).
+(* begin snippet flattenValid:: no-out *)
+Lemma flatten_valid `(M: @EMonoid A op one eqv):
+  forall t , eval M t == eval M (flatten t).
+(* end snippet flattenValid *)
+
 Proof.
  add_op_proper M HM; induction t;simpl.
  - rewrite <- flatten_aux_valid, <- IHt2; reflexivity.
@@ -278,14 +303,17 @@ Proof.
  - monoid_simpl M;reflexivity.
 Qed.
 
-Lemma flatten_valid_2 {A} `(M: @EMonoid A op one eqv):
+(* begin snippet flattenValid2:: no-out  *)
+Lemma flatten_valid_2 `(M: @EMonoid A op one eqv):
 forall t t' , eval  M (flatten t) == eval M (flatten t')  ->
-     eval M t == eval M t'.
+              eval M t == eval M t'.
+(* end snippet flattenValid2  *)
 Proof.
   intros t t' H; now repeat  rewrite <- flatten_valid in H.  
 Qed.
 
 (** "Quote" tactic *)
+(* begin snippet modelTac *)
 
 Ltac model A  op one v :=
 match v with 
@@ -295,9 +323,10 @@ match v with
 | one => constr:(@One_node A)
 | ?x => constr:(@A_node A x)
 end.
+(* end snippet modelTac *)
 
 
-
+(* begin snippet monoidEqTac *)                      
 Ltac monoid_eq_A A op one E_eq M  :=
 match goal with 
 | [ |- E_eq  ?X ?Y ] =>
@@ -305,9 +334,10 @@ match goal with
       tY := model A op one Y in
       (change (E_eq (eval M tX) (eval M tY)))
 end.
+(* end snippet monoidEqTac *)                      
 
 
-
+(* begin snippet reflectionCorrectTac *)
 Ltac reflection_correct_tac :=
 match goal with
 [ |- chain_correct ?n ?c ] =>
@@ -325,14 +355,14 @@ match goal with
            apply flatten_valid_2;try reflexivity
         ]
 end. 
- 
+(* end snippet reflectionCorrectTac *) 
 
-
-Example C87_ok : chain_correct 87 C87.
-Proof.
+(* begin snippet reflectionDemo *) 
+Example C87_ok : chain_correct 87 C87. (* .no-out *)
+Proof. (* .no-out *)
   Time reflection_correct_tac.
-(** Finished transaction in 0.038 secs (0.038u,0.s) (successful) *)
 Qed. 
+(* end snippet reflectionDemo *)
 
 
 (** * Correctness and parametricity 
@@ -345,6 +375,7 @@ while proceeding to a lot of setoid rewritings
 First, we notice that any chain is able to compute its associated exponent:
 *)
 
+(* begin snippet theExponent *)
 Definition the_exponent_nat (c:chain) : nat :=
  chain_apply c (M:=Natplus) 1%nat.
 
@@ -352,7 +383,7 @@ Definition the_exponent (c:chain) : positive :=
   chain_execute c Pos.add  1%positive.
 
 Compute the_exponent C87.
-
+(* end snippet theExponent *)
 
 
 (** 
@@ -364,38 +395,11 @@ the corresponding variables of type A  and B are always bound to related
 *)
 
 
-
+(* begin snippet paramDemo *)
 Parametricity computation.
 
 Print computation_R.
-(* by plugin 
-
-Inductive
-computation_R (A₁ A₂ : Type) (A_R : A₁ -> A₂ -> Type)
-  : computation -> computation -> Type :=
-    computation_R_Return_R : forall (a₁ : A₁) (a₂ : A₂),
-                             A_R a₁ a₂ ->
-                             computation_R A₁ A₂ A_R (Return a₁) (Return a₂)
-  | computation_R_Mult_R : forall (x₁ : A₁) (x₂ : A₂),
-                           A_R x₁ x₂ ->
-                           forall (y₁ : A₁) (y₂ : A₂),
-                           A_R y₁ y₂ ->
-                           forall (k₁ : A₁ -> computation)
-                             (k₂ : A₂ -> computation),
-                           (forall (H : A₁) (H0 : A₂),
-                            A_R H H0 -> computation_R A₁ A₂ A_R (k₁ H) (k₂ H0)) ->
-                           computation_R A₁ A₂ A_R 
-                             (z <--- x₁ times y₁; k₁ z)
-                             (z <--- x₂ times y₂; k₂ z)
-
-For computation_R: Argument scopes are [type_scope type_scope function_scope _
-                     _]
-For computation_R_Return_R: Argument scopes are [type_scope type_scope
-                              function_scope _ _ _]
-For computation_R_Mult_R: Argument scopes are [type_scope type_scope
-                            function_scope _ _ _ _ _ _ function_scope
-                            function_scope function_scope]
-*)
+(* end snippet paramDemo *)
 
 
 (** We say that a chain [c] is _parametric_ if
@@ -404,21 +408,25 @@ For computation_R_Mult_R: Argument scopes are [type_scope type_scope
 *)
 
 
-
+(* begin snippet parametricDef *)
 Definition parametric (c:chain) :=
   forall A B (R: A -> B -> Type) (a:A) (b:B),
    R a b -> computation_R  A B R (c A a) (c B b).
+(* end snippet parametricDef *)
 
 (**  The following statement cannot be proven in Coq (AFAIK) *)
 
+(* begin snippet VeryBad:: no-out *)
 Definition any_chain_parametric : Type :=
  forall c:chain, parametric c.
 
-Goal any_chain_parametric.
-Proof.
-intros c A B R a b ; induction (c A a);  destruct (c B b).
+Goal any_chain_parametric. 
+Proof. 
+  (* end snippet VeryBad *)
+(* begin snippet VeryBad2:: -.g#* .g#1 *)
+intros c A B R a b ; induction (c A a);  destruct (c B b). 
 Abort.
-
+(* end snippet VeryBad2 *)
 
 
 (** 
@@ -427,16 +435,18 @@ Abort.
  is parametric. 
 *)
 
+(* begin snippet parametricTac *)
 Ltac parametric_tac  := 
  match goal with [ |- parametric ?c] =>
    red ; intros;
   repeat (right;[assumption | assumption | ]);  left; assumption
 end.
 
-Example P87 : parametric C87.
-Proof. Time parametric_tac.
- Qed. 
-
+Example P87 : parametric C87. (* .no-out *)
+Proof. (* .no-out *)
+  Time parametric_tac.
+Qed. 
+(* end snippet parametricTac *)
 
 (** **  computation of $a^n$ compared to computation of $n$
 
@@ -463,8 +473,10 @@ Section Refinement_proof.
 $a$ and $i\not=0$.
 *)
 
+(* begin snippet powerR *)
 Definition power_R  (a:A) :=
   fun (x:A)(n:nat) => n <> 0 /\ x == a ^ n.
+(* end snippet powerR *)
 
 Remark power_R_Mult : forall a x y i j, 
     power_R a x i  -> power_R a y j ->
@@ -483,12 +495,14 @@ Proof.
   - reflexivity.
 Qed.
 
+(* begin snippet powerRRef:: no-out *)
 Lemma  power_R_is_a_refinement (a:A) :
   forall(gamma : @computation A)
         (gamma_nat : @computation nat),
     computation_R _ _  (power_R a) gamma gamma_nat -> 
      power_R a (computation_eval gamma)
-               (computation_eval (M:= Natplus) gamma_nat).
+             (computation_eval (M:= Natplus) gamma_nat).
+(* end snippet powerRRef *)
 Proof.
   induction 1;simpl;[auto | ].
   apply H; destruct x_R, y_R;  split.
@@ -532,9 +546,11 @@ Proof.
      + now destruct H. 
      +  discriminate.  
 Qed.
-
-Lemma exponent_pos2nat : forall c: chain,  parametric c -> 
-  the_exponent_nat c = Pos.to_nat (the_exponent c).
+(* begin snippet exponentPosToNat:: no-out *)
+Lemma exponent_pos2nat : forall c: chain,
+    parametric c -> 
+    the_exponent_nat c = Pos.to_nat (the_exponent c).
+(* end snippet exponentPosToNat:: no-out *)
 Proof.
  intros c X;
  generalize  (X nat positive
@@ -547,16 +563,21 @@ Proof.
     now subst.
 Qed.
 
-Lemma exponent_pos_of_nat : forall c: chain,  parametric c -> 
-  the_exponent c = Pos.of_nat (the_exponent_nat c).
+(* begin snippet exponentPosOfNat:: no-out *)
+Lemma exponent_pos_of_nat :
+  forall c: chain,  parametric c -> 
+                    the_exponent c = Pos.of_nat (the_exponent_nat c).
+(* end snippet exponentPosOfNat:: no-out *)
 Proof.
  intros c Hc; rewrite exponent_pos2nat;auto.
  now rewrite Pos2Nat.id.
 Qed.
 
-
+(* begin snippet paramCorrectnessNat:: no-out *)
 Lemma param_correctness_nat (c: chain) :
-  parametric c ->  chain_correct_nat (the_exponent_nat c)  c.
+  parametric c ->
+  chain_correct_nat (the_exponent_nat c) c.
+(* end snippet paramCorrectnessNat *)
 Proof.
  intros Hc  ; split. 
  -  now apply  exponent_nat_neq_0.
@@ -567,9 +588,12 @@ Proof.
     +  simpl; rewrite (Eone_right (EMonoid:=M)); reflexivity. 
 Qed. 
 
+(* begin snippet paramCorrectness:: no-out *)
 Lemma param_correctness :
-  forall (p:positive) (c:chain), p = the_exponent c -> parametric c -> 
-      chain_correct p  c. 
+  forall (p:positive) (c:chain),
+    p = the_exponent c -> parametric c -> 
+    chain_correct p  c.
+(* end snippet paramCorrectness *)
 Proof.
   intros; subst p; rewrite  exponent_pos_of_nat; auto.
   red;  rewrite  exponent_pos2nat;auto.
@@ -604,19 +628,19 @@ using the "free refinement" method
 
 
 
-
+(* begin snippet paramChainCorrect *)
 Ltac param_chain_correct :=
-match goal with 
-  [|- chain_correct ?p ?c ] =>
-  let H := fresh "H" in assert (p = the_exponent c) by reflexivity;
-                        apply param_correctness;[trivial | parametric_tac]
-end.
+  match goal with 
+    [|- chain_correct ?p ?c ] =>
+    let H := fresh "H" in
+    assert (p = the_exponent c) by reflexivity;
+    apply param_correctness;[trivial | parametric_tac]
+  end.
 
-Lemma C87_ok' : chain_correct 87  C87.
+Lemma C87_ok' : chain_correct 87  C87. (* .no-out *)
  Time  param_chain_correct.
-(* Finished transaction in 0.005 secs (0.005u,0.s) (successful) *)
 Qed.
-
+(* end snippet paramChainCorrect *)
 
 Lemma L87'' : any_chain_parametric -> chain_correct 87 C87.
 Proof.
@@ -625,25 +649,26 @@ Qed.
 
 (** ** Correct by construction chains  *)
 
+(* begin snippet generatorDef *)
 Definition chain_generator := positive -> chain.
 
 Definition correct_generator (gen : positive -> chain) :=
  forall p, chain_correct p (gen p).
-
+(* end snippet generatorDef *)
 
 (** Computing $x^n$ using a chain generator *)
 
+(* begin snippet cpowerDef *)
 Definition cpower_pos (g : chain_generator)  p
            `{M:@EMonoid A E_op E_one E_eq} a :=
   chain_apply (g p) (M:=M) a.
-
 
 Definition cpower (g : chain_generator)  n
            `{M:@EMonoid A E_op E_one E_eq} a :=
   match n with 0%N => E_one 
              | Npos p => cpower_pos  g p a
   end.
-
+(* end snippet cpowerDef *)
 
 
 
@@ -653,9 +678,10 @@ A chain generator is _optimal_ if it returns chains whose length are less or
 equal than the chains returned by any correct generator.
  *)
 
+(* begin snippet optimalGenerator *)
 Definition optimal_generator (g : positive -> chain ) :=
  forall p:positive, optimal p (g p).
-
+(* end snippet optimalGenerator *)
 
 
 (** ** Some chain generators 
@@ -680,18 +706,15 @@ product of an accumulator $a$ with an arbitrary power of some value $x$
 
 *)
 
+(* begin snippet binaryChain *)
 Fixpoint axp_scheme  {A} p : A -> A -> @computation A   :=
- match p with
-   | xH =>  (fun a x => y <--- a  times x ; Return y)
-   | xO q => (fun a x => x2 <--- x times  x ; axp_scheme q a x2)
-   | xI q => (fun a x => ax <--- a times x ;
-                         x2 <--- x times x ;
-                         axp_scheme q ax x2)
-end.
-
-(** *** computation of $x^p$ 
-
-*)
+  match p with
+  | xH =>  (fun a x => y <--- a  times x ; Return y)
+  | xO q => (fun a x => x2 <--- x times  x ; axp_scheme q a x2)
+  | xI q => (fun a x => ax <--- a times x ;
+            x2 <--- x times x ;
+            axp_scheme q ax x2)
+  end.
 
 Fixpoint  bin_pow_scheme {A} (p:positive)  : A -> @computation A:=
   match p with  |  xH => fun x => Return x
@@ -699,32 +722,16 @@ Fixpoint  bin_pow_scheme {A} (p:positive)  : A -> @computation A:=
              | xO q => fun x => x2 <--- x times x ; bin_pow_scheme q x2
   end.
 
-(** *** Chain generator associated with the binary algorithm 
-
-*)
 
 Definition binary_chain (p:positive) : chain :=
   fun A => bin_pow_scheme p.
 
-
-(* begin show *)
 Compute binary_chain 87.
-(* end show *)
-(** [[
-fun (A : Type) (x : A) =>
-       x0 <--- x times x;
-       x1 <--- x0 times x0;
-       x2 <--- x0 times x1;
-       x3 <--- x1 times x1; x4 <--- x2 times x3; Return x4
-     : chain
-]]
-
-Notice that %\texttt{Coq}% does not respect our naming convention for bound variables .
-
-*)
+(* end snippet binaryChain *)
 
 (** ** Correctness of the binary method *)
 
+(* begin snippet binaryPowerProofa *)
 Section binary_power_proof.
 
 Variables (A: Type)
@@ -734,6 +741,9 @@ Variables (A: Type)
 
 Context (M : EMonoid  E_op E_one E_eq).
 
+Existing Instance Eop_proper.
+(* end snippet binaryPowerProofa *)
+
 
 
 
@@ -742,12 +752,15 @@ Context (M : EMonoid  E_op E_one E_eq).
   function [axp_scheme].
  *)
 
-Existing Instance Eop_proper.
 
+(* begin snippet binaryPowerProofb:: no-out *)
 Lemma axp_correct : forall p a x,
-    computation_eval (axp_scheme p a x) == a *  x ^ (Pos.to_nat p).
+    computation_eval (axp_scheme p a x) ==
+    a *  x ^ (Pos.to_nat p).
 Proof.
   induction p.
+  (* ... *)
+  (* end snippet binaryPowerProofb *) 
   -   intros a x; simpl axp_scheme.
       replace (Pos.to_nat p~1) with (S (Pos.to_nat p + Pos.to_nat p)%nat).
       cbn.   
@@ -766,13 +779,15 @@ Proof.
   - simpl; destruct M; intros; now rewrite  (Eone_right x).
 Qed.
 
-
-
-Lemma binary_correct : forall p x,
-                         computation_eval  (bin_pow_scheme p (A:=A) x) ==
-                          x ^ (Pos.to_nat p).
+(* begin snippet binaryPowerProofc:: no-out *)
+Lemma binary_correct :
+  forall p x,
+    computation_eval (bin_pow_scheme p (A:=A) x) ==
+    x ^ (Pos.to_nat p).
 Proof.
   intros p ; induction  p.
+  (* ... *)
+  (* end snippet binaryPowerProofc *)
   - simpl. intro a.
     unfold computation_eval in *;    simpl. 
     rewrite <- computation_eval_rw.
@@ -800,17 +815,17 @@ Proof.
     intros; now monoid_simpl M.
 Qed.
 
-
+(* begin snippet binaryPowerProofd *)
 End  binary_power_proof.
+(* end snippet binaryPowerProofd *)
 
-
-
+(* begin snippet binaryGeneratorOk:: no-out  *)
 Lemma binary_generator_correct : correct_generator binary_chain.
 Proof.
   red;unfold chain_correct; intros; unfold binary_chain, chain_apply;
   split;[auto with chains| intros;  apply  binary_correct].
 Qed.
-
+(* end snippet binaryGeneratorOk  *)
 
 (** ** The binary method is not optimal 
 
@@ -822,36 +837,22 @@ Qed.
    hypothesis that [binary_chain] is optimal.
 *)
 
+(* begin snippet nonOpt *)
 Section non_optimality_proof.
 
  Hypothesis binary_opt : optimal_generator binary_chain.
 
-(* begin show *)
-Compute chain_length (binary_chain 87).
-(* end show *)
+ Compute chain_length (binary_chain 87).
+ 
+ Compute chain_length C87.
 
-(** [[
-   = 10 : nat ]]
-*)
-
-
-
-(* begin show *)
-Compute chain_length (C87).
-(* end show *)
-
-(** [[
-   = 9 : nat ]]
-*)
-
-
-Lemma binary_generator_not_optimal : False.
-Proof.
-  generalize (binary_opt  _ _ C87_ok); compute; lia.
-Qed. 
-
+ Lemma binary_generator_not_optimal : False. (* .no-out *)
+ Proof. (* .no-out *)
+   generalize (binary_opt  _ _ C87_ok); compute; lia. (* .no-out *)
+ Qed. 
+ 
 End non_optimality_proof.
-
+(* end snippet nonOpt *)
 
 Open Scope nat_scope.
 Open Scope M_scope.

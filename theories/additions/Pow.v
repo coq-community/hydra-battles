@@ -246,12 +246,13 @@ various representations of natural numbers.
 *)
 
 
-
+(* begin snippet binaryPowerMultOk:: no-out *)
 Lemma binary_power_mult_ok :
   forall p a x,   binary_power_mult  x a p  ==  a * x ^ Pos.to_nat p.
 Proof.
   induction p as [q IHq | q IHq|].
-  (**  %\textcolor{red}{\it rest of proof skipped}  *)
+  (* ... *)
+(* end snippet binaryPowerMultOk *)  
   - (* 2 * q + 1 *)
     intros; cbn.
     rewrite Pos2Nat.inj_xI, IHq.
@@ -267,9 +268,10 @@ Proof.
     now monoid_rw.
 Qed.
 
-
+(* begin snippet PosBpowOk:: no-out *)
 Lemma Pos_bpow_ok : 
   forall p x, Pos_bpow x p == x ^ Pos.to_nat p.
+(* end snippet PosBpowOk *)
 Proof.
   induction p; cbn; intros.
   - rewrite binary_power_mult_ok, Pos2Nat.inj_xI.
@@ -303,29 +305,32 @@ Proof.
   - apply Pos_bpow_ok.
 Qed.
 
-
+(* begin snippet NBpowOkR:: no-out *)
 Lemma N_bpow_ok_R : 
   forall n x, x ^b  (N.of_nat n) == x ^ n.
+(* end snippet NBpowOkR *)
 Proof.
   intros; rewrite N_bpow_ok; now rewrite Nnat.Nat2N.id.
 Qed.
 
-
+(* begin snippet PosBpowOkR:: no-out *)
 Lemma Pos_bpow_ok_R : 
   forall p x, p <> 0 ->
-              Pos_bpow x (Pos.of_nat p)   ==  x ^  p.
+              Pos_bpow x (Pos.of_nat p) == x ^ p.
+(* end snippet PosBpowOkR *)
 Proof.
   intros; rewrite Pos_bpow_ok; now rewrite Nat2Pos.id.
 Qed.
 
-
+(* begin snippet NBpowCommute:: no-out *)
 Lemma N_bpow_commute : forall x n p,  
                         x ^b n *  x ^b p ==  
                         x ^b p *  x ^b n.
 Proof.
-  intros x n p; repeat rewrite N_bpow_ok.
-  apply power_commute.
+  intros x n p; repeat rewrite N_bpow_ok;
+    apply power_commute.
 Qed.
+(* end snippet NBpowCommute *)
 
 Lemma Pos_bpow_of_plus : forall x n p, Pos_bpow x  (n + p)%positive ==
                                        Pos_bpow x  n *  Pos_bpow x  p.
@@ -353,28 +358,16 @@ hard to visualize why the binary method is more efficient than the naive one.
 
 
 *)
-(* begin show *)
 
-Eval simpl in     fun (x:A) => x ^b 17.
-(** [[ 
-  = fun x : A =>
-       x *
-       (x * x * (x * x) * (x * x * (x * x)) *
-        (x * x * (x * x) * (x * x * (x * x))))
-     : A -> A
-]]
-*)
-Eval simpl in   fun x => x ^ 17.
+(* begin snippet bpow17 *)
+Eval simpl in fun (x:A) => x ^b 17.
+(* end snippet bpow17 *)
 
-(** [[
-= fun x : A =>
-       x * (x *  (x *  (x *  (x *   (x *  (x *  (x *
-           (x * (x * (x * (x * (x * (x * (x * (x * (x * one))))))))))))))))
-     : A -> A
-]]
-*)
+(* begin snippet naivePow17 *)
+Eval simpl in  fun x => x ^ 17.
+(* end snippet naivePow17 *)
 
-(* end show *)
+(* begin snippet pow17LetIn *)
 
 Definition pow_17  (x:A) :=
   let x2 := x * x in
@@ -383,13 +376,19 @@ Definition pow_17  (x:A) :=
   let x16 := x8 * x8 in
   x16 * x.
 
+(* end snippet pow17LetIn *)
+
+(* begin snippet evalPow17LetIn *)
 Eval cbv  zeta beta delta [pow_17]  in  pow_17.
+(* end snippet evalPow17LetIn *)
+
 (**
  = fun x : A =>
        x * x * (x * x) * (x * x * (x * x)) *
        (x * x * (x * x) * (x * x * (x * x))) * x
      : A -> A
 *)
+
 
 (**
 In order to compare the real computations needed to raise some $x$ to its $n$-th

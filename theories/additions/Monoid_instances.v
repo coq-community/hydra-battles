@@ -239,8 +239,8 @@ Section Nmodulo.
   Local Hint Resolve m_neq_0 : chains.
   
   (* begin snippet Nmodulob:: no-out *)
-  Definition mult_mod ( x y : N) := (x * y) mod m.
-  Definition mod_eq ( x y: N) := x mod m = y mod m.
+  Definition mult_mod (x y : N) := (x * y) mod m.
+  Definition mod_eq (x y: N) := x mod m = y mod m.
   
   Instance mod_equiv : Equiv N := mod_eq.
 

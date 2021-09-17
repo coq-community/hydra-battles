@@ -68,11 +68,11 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
   F_star (alpha, 1) i
     with E0_eq_dec alpha Zero :=
-    { | left _ => S i ;
-      | right nonzero
+    { | left _zero => S i ;
+      | right _nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ => F_star (Canon alpha i,1) i ;
-            | right notlimit =>
+          { | left _limit => F_star (Canon alpha i,1) i ;
+            | right _notlimit =>
               F_star (Pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
     F_star (alpha, 1) (F_star (alpha, (S n)) i).
