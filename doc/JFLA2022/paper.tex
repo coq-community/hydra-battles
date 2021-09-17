@@ -47,6 +47,7 @@
 %---------------------------- 
 \newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
 
+\usepackage{varioref}
 \newtheorem{todo}{To do}
 \usepackage{amsfonts, afterpage}
 
@@ -98,9 +99,8 @@ Karl Palmskog \inst{2}
 
 
 \begin{abstract}
-  \begin{todo}
- \dots
-  \end{todo}
+  We present the current state of a \textit{Coq} library on ordinal numbers.
+ 
 \end{abstract}
 
 
@@ -116,10 +116,10 @@ Hydra games (also known as \emph{Hydra battles}) appear in an article published 
 Laurie Kirby and Jeff Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}.
 This article describes a game between two players: Hercules and a hydra.
 A short description  can be found in Andrej Bauer's blogpost~\cite{bauer2008} as well as a simulator~\cite{BauerHydra}.
-
 In a few words:
 \begin{itemize}
-\item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}.
+\item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}
+  (Fig~\vref{fig:iota-example}).
 \item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
   then some sub-tree $h$ of the hydra is copied a certain amount $i$ of times. The number $i$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
   or the time elapsed since the beginning of the fight.
@@ -136,18 +136,23 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
 \end{description}
 \end{quote}
 
-The contrast between the simplicity of the statements above and the complexity of the mathematical tools used to prove these theorems: ordinal numbers, rapidly growing hierarchies of fast growing functions, etc., convinced us that it is a good thema for a commented library of formal proofs.
+The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good thema for a commented library of formal proofs.
 
-The benefits we would expect from this development are multiple.
+
 \begin{itemize}
-\item We present complete proof scripts which can be consulted and replayed by the reader.
+\item We present complete proof scripts for the \textit{Coq} proof assistant~\cite{Coq}. These scripts may consulted and replayed by the reader.
 \item Complex formalisations and proofs are explained in an
-  electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives. Reciprocally, we provide ``concrete'' examples of several formaisation end proof techniques: operational type classes, functions defined by  equations, etc.
+  electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives.
+  For instance, Figures~\vref{fig:Ex42E0} and \vref{fig:Ex42-schutte} show two radically different proofs of the equality
+  $\omega+42+\omega^2=\omega^2$, the first one is a simple proof by computation, the second one shows how this equality
+  is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
+\item
+  Reciprocally, we provide ``concrete'' examples of several formalisation and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc.
 \item It may be used as a library on ordinal numbers, for instance for proving termination properties.
   \end{itemize}
 
  Prior stages of this project have already been presented at
- JFLA~\cite{JFLA2018paper}.
+ JFLA~\cite{PCiota, JFLA2018paper}.
 We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
 \section{New results}
@@ -163,7 +168,7 @@ in~\cite{KP82, bauer2008, BauerHydra}.
  \item The game starts at an arbitrary initial step $i\in\mathbb{N}$.
    
    \item The hydra grows $n$ copies at step $n$ of the game.
- \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). 
+   \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). This property is an invariant of the game.
  \item Hercules always chops off the rightmost head of the hydra (which is always one of the lowest heads).
  \end{itemize}
  It mathematical terms, if at step $n$ the hydra is associated with the ordinal $\alpha$, at step $n+1$ it is associated with
@@ -209,75 +214,59 @@ in~\cite{KP82, bauer2008, BauerHydra}.
 \end{figure}
 
 Let $\alpha<\epsilon_0$ be an ordinal.
-Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting at configuration $(i,\alpha)$ for  any $i\in\mathbb{N}$.
+Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$ for  any $i\in\mathbb{N}$.
 We prove that this number is greater or equal than
-$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined in Fig.~\ref{fig:Hprime} and
-\ref{fig:HprimeCoq}.
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
+
 
 \begin{figure}[h]
   \centering
   \begin{itemize}
-\item If $\alpha=0$, then $H'_\alpha (k)= k$ for any natural number $k$.
+\item If $\alpha=0$, then $H'_\alpha (i)= i$ for any natural number $i$.
 \item If $\alpha=\beta+1$, then 
-$H'_\alpha(k)=H'_\beta(k+1)$ for any $k \in \mathbb{N}$
+$H'_\alpha(i)=H'_\beta(i+1)$ for any $i \in \mathbb{N}$
 \item If $\alpha$ is a limit ordinal, then 
-$H'_\alpha(k) = H'_{(\canonseq{\alpha}{k+1})}(k)$ for any $k\in \mathbb{N}$.
+$H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(k)$ for any $i\in \mathbb{N}$.
 \end{itemize}
+\vspace{4pt}
+\inputsnippets{Hprime/HprimeDef}
 \caption{The rapidly growing hierarchy $H'$}
-\label{Hprime}
+\label{fig:Hprime}
 \end{figure}
 
-\begin{figure}[h]
-  \centering
-  \inputsnippets{Hprime/HprimeDef}
-  \caption{$H'$: definition in \emph{Coq}}
-  \label{fig:HprimeCoq}
-\end{figure}
-
-From this result, we infer that, for a given $\alpha$, the considered function is not primitive recursive.
+\label{sect:not-pr}
+From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 
  
 \section{Main features}
 
-% \begin{eqnarray}
-%   \label{eq:1}
-%   \omega+42+\omega^2&=&\omega^2
-% \end{eqnarray}
-
-
-% We also implemented in \emph{Coq} the axiomatic definition of the set $\mathbb{O}$ of countable ordinals by Schütte~\cite{schutte, PCiota}.
-
-% The proof of $\omega+42+\omega^2=\omega^2$ is no more computational, but use the following definitions and properties.
-
-% \begin{itemize}
-% \item Any set of countable ordinals can be enumerated by a function defined on a segment $[0, \alpha)$ of countable ordinals.
-% \item Let $\alpha$ and $\beta$ be (countable) ordinals. Then $\alpha+\beta$ is the $\beta$-th element of the enumeration of the set of countable ordinals greater or equal than $\alpha$.
-% \item Let $\phi_0$ be the enumeration of the set of \emph{additive principal ordinals}
-%   $\{\alpha\in\mathbb{O}| \forall \beta\in \mathbb{O}, \beta+\alpha=\alpha\}$. Then $\omega^\alpha$ is just a notation for
-%   $\phi_0(\alpha)$.
-% \end{itemize}
 
 
 
-
+\subsection{The Coq-community ecosystem}
 \begin{todo}
-  Comment the multiple views of a same mathematical object:
+Small presentation.
+\end{todo}
+
+In order to prove formally that the length of the considered
+kind of battles is not given by a primitive recursive function, weused the formalisation of primitive recursive functions, part
+of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem \cite{OConnor05}. We chose to host and maintain this work in Coq-community. The pedagogical interest of this formalisation led us to add new examples and exercises on primtive recursive functions.
+
+
+
+
+\subsection{Documentation with Alectryon}
+\begin{todo}
+  Interest of Alectryon:
   \begin{itemize}
- 
-  \item Bridge lemmas (relative correctness of different representations).
-    \item The user/reader may compare  different proofs of the same result (For instance the equality $\omega+42+\omega^2= \omega^2$). \emph{Example in Figures~\ref{fig:Ex42E0} and \ref{fig:Ex42-schutte}}.
+  \item Despite the frequent changes (improvements) in the Coq scripts, code inclusion (and \textit{Coq}'s anwers are up to date.
+
+  \item Presentation of the main steps of proofs, possibly interleaved with text (Figures \vref{fig:Ex42E0} and \vref{fig:Ex42-schutte},).
+    
   \end{itemize}
 \end{todo}
 
-
-
-\section{The Coq-community ecosystem}
-
-
-\section{Documentation with Alectryon}
-
-We present two ~examples of the documentation generated with Alectryon~\cite{alectryonpaper}: A simple proof by computation (Fig.~\ref{fig:Ex42E0}), and a longer proof where only the main steps are displayed, interleaved with plain text.
 
   \begin{figure}[h]
     \centering
@@ -297,7 +286,7 @@ We present two ~examples of the documentation generated with Alectryon~\cite{ale
   \centering
   
   
-\label{fig:Ex42-schutte}
+
 \fbox{\begin{minipage}[h]{1.0\linewidth}
   Let us prove again the equality $\omega+42+\omega^2= \omega^2$. Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
 \emph{i.e} the third  additive principal ordinal.
@@ -319,19 +308,14 @@ Since the set \textit{AP} of additive principals  is closed under addition
 \end{minipage}
 }
 \caption{A proof interleaved with text (from the book)}
-  \label{fig:Ex42b}
+  \label{fig:Ex42-schutte}
 \end{figure}
 
 \section{Conclusion and perspectives}
 
 \begin{todo}
-  \begin{itemize}
-  \item  Soundness (correction, maintenance) of the Alectryon generated doc.
-  \item Communications between co-maintained libraries
-          (Ackermann, Gaia, etc.)
-  \item Work destined both to Coq-users and people interested in discrete math ?
-  \end{itemize}
-\end{todo}
+  Work destined both to Coq-users and people interested in discrete math ?
+ \end{todo}
 
 
 \subsection{Perspectives}
@@ -344,7 +328,7 @@ It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-ba
 The types --- defined in different modules --- cannot be considered as equal. Even more, some operations like addition, multiplication, etc. have now different definitions.
 
 It would be interesting to build a library which could be used as a gate giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}.
-For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \textit{Gaia} could be tranferred ``for free'' to the data structures of \textit{hydra-battles}, thanks to the isomorphism between both implementations.
+For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \textit{Gaia} was tranferred ``for free'' to the data structures of \textit{hydra-battles}, thanks to the isomorphism between both implementations.
 
 
 
