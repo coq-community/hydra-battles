@@ -21,11 +21,11 @@ Global Hint Resolve Olt : E0.
 
 Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha Lt :=
   L_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
+    { | left _zero =>  i ;
+      | right _nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ =>  L_ (Canon alpha i)  (S i) ;
-            | right notlimit =>  L_ (Pred alpha) (S i)}}.
+          { | left _limit =>  L_ (Canon alpha i)  (S i) ;
+            | right _successor =>  L_ (Pred alpha) (S i)}}.
 
 (*| .. coq:: in messages |*)
 Solve All Obligations with auto with E0. 

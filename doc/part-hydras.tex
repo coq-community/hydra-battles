@@ -1,6 +1,6 @@
 \section*{Introduction}
 
-In this part, we present a development  for the \coq{} proof assistant, after the work of Kirby and Paris. This formalization contains the following main parts:
+In this part, we present a development  for the \coq{} proof assistant, after the work of Kirby and Paris~\cite{KP82}. This formalization contains the following main parts:
 
 \begin{itemize}
 \item Representation in \coq{} of hydras and hydra battles.
@@ -30,7 +30,7 @@ Since we are used to writing proofs in higher order logic, the restriction to PA
 
 \subsection*{State of the development}
 The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on  notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
-We added new material: axiomatic definitions of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, equations, etc.
+We added new material: axiomatic definitions of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, function derinition by equations, etc.
 
 We are now working in order to make clumsy proofs more readable, simplify definitions, and ``factorize'' proofs as much as possible. 
 Many possible improvements are suggested as ``todo''s or ``projects'' in this text.
@@ -48,7 +48,7 @@ The following extensions are planned, but help is needed:
 \begin{itemize}
 \item Semi automatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
 \item Extension to $\Gamma_0$ (in Veblen normal form)
-\item More lemmas about hierarchies of rapidly growing functions, and their relationship 
+\item More lemmas about hierarchies of rapidly growing functioit ns, and their relationship 
     with primitive recursive functions and provability in Peano arithmetic 
 (following~\cite{KS81, KP82}).
 \item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
@@ -1715,7 +1715,8 @@ The correctness of the comparison function is expressed through Stdlib's type
 
 
 \begin{Coqsrc}
-Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
+  Inductive CompareSpec (Peq Plt Pgt : Prop) :
+  comparison -> Prop :=
     CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
   | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.

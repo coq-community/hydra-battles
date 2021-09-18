@@ -91,9 +91,9 @@ Russel O'Connor\cite{OConnor05}.}}
 % \newpage
 % \mbox{~}
 \begin{quote}
- (Aprieta el bast\'on con las dos manos, se yergue un tanto,
-casi con entusiasmo) ¡Caramba! Claro... los n\'umeros
-transfinitos, Kantor...
+ \emph{(Aprieta el bast\'on con las dos manos, se yergue un tanto,
+casi con entusiasmo)} ¡Caramba! Claro \dots{} los n\'umeros
+transfinitos, Kantor \dots{}
 
 [ Jorge Luis Borges]
 \end{quote}
@@ -257,6 +257,14 @@ Here is an example from Chapter~\ref{chapter:primrec}.
 \subsubsection{Verbatim quotations}
 
 Quotations of \coq{} source  from Standard Library and code which lead to compilation error or too long computations are displayed as follows.
+
+\begin{Coqsrc}
+  Inductive CompareSpec (Peq Plt Pgt : Prop) :
+  comparison -> Prop :=
+    CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
+  | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
+  | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
+\end{Coqsrc}
 
 \begin{Coqsrc}
 Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=

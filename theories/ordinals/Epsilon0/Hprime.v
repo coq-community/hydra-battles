@@ -38,7 +38,7 @@ Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
       | right _nonzero
           with Utils.dec (Limitb alpha) :=
           { | left _limit =>  H'_ (Canon alpha (S i))  i ;
-            | right _nonlimit =>  H'_ (Pred alpha) (S i)}}.
+            | right _successor =>  H'_ (Pred alpha) (S i)}}.
 
 Solve All Obligations with auto with E0.
 (* end snippet HprimeDef *)

@@ -33,11 +33,11 @@ Instance Olt : WellFounded Lt := E0.Lt_wf.
 
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
-    { | left _ =>  i ;
-      | right nonzero
+    { | left _zero =>  i ;
+      | right _nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ =>  F_ (Canon alpha i)  i ;
-            | right notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
+          { | left _limit =>  F_ (Canon alpha i)  i ;
+            | right _notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
 
 (* end snippet FailDemo *)
 
@@ -816,11 +816,11 @@ Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   f_star (alpha, 0) i := i;
   f_star (alpha, 1) i
     with E0_eq_dec alpha Zero :=
-    { | left _ => S i ;
-      | right nonzero
+    { | left _zero => S i ;
+      | right _nonzero
           with Utils.dec (Limitb alpha) :=
-          { | left _ => f_star (Canon alpha i,1) i ;
-            | right notlimit =>
+          { | left _limit => f_star (Canon alpha i,1) i ;
+            | right _successor =>
               f_star (Pred alpha, i)  i}};
   f_star (alpha,(S (S n))) i :=
     f_star (alpha, 1) (f_star (alpha, (S n)) i).
