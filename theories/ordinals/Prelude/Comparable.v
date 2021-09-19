@@ -1,18 +1,17 @@
 From Coq Require Import Relations RelationClasses Setoid.
 Require Export MoreOrders.
 
-
 (* begin snippet ComparableDef *)
 Class Compare (A:Type) := compare : A -> A -> comparison.
-#[export] Hint Mode Compare ! : typeclass_instances.
-Infix "<?>" := compare (at level 60).
 
 Class Comparable {A:Type} (lt: relation A) (cmp : Compare A) := {
   comparable_sto :> StrictOrder lt;
-  comparable_comp_spec : forall a b : A, CompSpec eq lt a b (compare a b);
+  comparable_comp_spec : forall a b, CompSpec eq lt a b (compare a b);
 }.
-#[export] Hint Mode Comparable ! - - : typeclass_instances.
 (* end snippet ComparableDef *)
+
+#[export] Hint Mode Compare ! : typeclass_instances.
+#[export] Hint Mode Comparable ! - - : typeclass_instances.
 
 Section Comparable.
 

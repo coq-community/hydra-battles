@@ -2623,7 +2623,7 @@ Section Constant_to_standard_Proof.
 
   Instance P_dec i : Decision (P i).
   Proof.
-   destruct (standard_gnaw (S n) alpha i <?> beta) eqn:Hc.
+   destruct (compare (standard_gnaw (S n) alpha i) beta) eqn:Hc.
    - left; unfold P.
      rewrite Hc; discriminate.
    - right; unfold P.
