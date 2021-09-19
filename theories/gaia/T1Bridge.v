@@ -1,9 +1,7 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
  *)
 
-
-
-
+From hydras Require Import DecPreOrder.
 From hydras Require T1.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
@@ -286,18 +284,17 @@ Proof.
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
 
-
 Lemma Comparable_T1lt_eq a b:
-  DecPreOrder.bool_decide (T1.lt a b) = (iota a < iota b).
+  bool_decide (T1.lt a b) = (iota a < iota b).
 Proof.
   rewrite /T1.lt; generalize (compare_ref a b);
   rewrite /Comparable.compare /=.
-  destruct (DecPreOrder.decide (T1.compare_T1 a b = Lt)).
-  - pose proof e as bd.
-    apply T1.bool_decide_eq_true in bd.
+  destruct (decide (T1.compare_T1 a b = Lt)).
+  - have bd := e.
+    apply (bool_decide_eq_true _) in bd.
     by rewrite bd e.
-  - pose proof n as bd.
-    apply T1.bool_decide_eq_false in bd.
+  - have bd := n.
+    apply (bool_decide_eq_false _) in bd.
     rewrite bd.
     destruct (T1.compare_T1 a b).
     * by move => ->; rewrite T1ltnn.
@@ -306,7 +303,7 @@ Proof.
       symmetry.
       apply/negP => Hlt'.
       have H1 : (iota b < iota b) by apply T1lt_trans with (iota a).
-      by rewrite T1ltnn in H1. 
+      by rewrite T1ltnn in H1.
 Qed.
 
 Lemma nf_ref a : T1.nf_b a = T1nf (iota a).
@@ -316,5 +313,3 @@ Proof.
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
     by rewrite andbA Comparable_T1lt_eq.
 Qed.
-
- 

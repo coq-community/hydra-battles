@@ -679,18 +679,6 @@ Lemma single_nf :
   forall a n, nf a -> nf (ocons a n zero).
 Proof.   unfold nf; now cbn. Qed. 
 
-Lemma bool_decide_eq_true (P : Prop) `{Decision P} : bool_decide P = true <-> P.
-Proof.
-  unfold bool_decide.
-  destruct H; intuition discriminate.
-Qed.
-
-Lemma bool_decide_eq_false (P : Prop) `{Decision P} : bool_decide P = false <-> ~P.
-Proof. 
-  unfold bool_decide.
-  destruct H; intuition discriminate.
-Qed.
-
 Lemma ocons_nf :
   forall a n a' n' b, 
   lt a' a ->
@@ -700,9 +688,8 @@ Lemma ocons_nf :
 Proof.
   unfold nf.
   simpl.
-  intros a n a' n' b' Hlta Ha.  
-  apply bool_decide_eq_true in Hlta.
-  rewrite Hlta.
+  intros a n a' n' b' Hlta Ha.
+  apply (bool_decide_eq_true _) in Hlta.
   destruct b'.
   - intro Hnfa'.
     now rewrite Ha, Hnfa'.
@@ -739,7 +726,7 @@ Proof.
   unfold nf; cbn;
   destruct a, a', b'; try discriminate; auto with T1;
   intro H; red in H; repeat rewrite andb_true_iff in H; 
-  decompose [and] H; apply bool_decide_eq_true; auto.
+  decompose [and] H; apply (bool_decide_eq_true _); auto.
 Qed.
 
 
@@ -786,12 +773,12 @@ Proof.
     intro H; rewrite H.
   destruct (decide (lt b (phi0 a))) as [Hdec|Hdec].
   - pose proof Hdec as Heq.
-    rewrite <- bool_decide_eq_true in Heq.
+    rewrite <- (bool_decide_eq_true _) in Heq.
     split; case (nf_b a); case (nf_b b);
       cbn; auto with bool; intros H0;
         decompose [and] H0; try discriminate.
   - pose proof Hdec as Heq.
-    rewrite <- bool_decide_eq_false in Heq.
+    rewrite <- (bool_decide_eq_false _) in Heq.
     rewrite Heq.
     split; intro H0; repeat rewrite andb_true_iff in H0; 
        decompose [and] H0; [congruence|].
