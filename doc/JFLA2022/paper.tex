@@ -99,7 +99,7 @@ Karl Palmskog \inst{2}
 
 
 \begin{abstract}
-  We present the current state of a \textit{Coq} library on ordinal numbers.
+  \textbf{To do!} We present the current state of a \textit{Coq} library on ordinal numbers.
  
 \end{abstract}
 
@@ -124,7 +124,42 @@ In a few words:
   then some sub-tree $h$ of the hydra is copied a certain amount $i$ of times. The number $i$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
   or the time elapsed since the beginning of the fight.
 \end{itemize}
+   \begin{figure}[htb]
+\centering
+\begin{tikzpicture}[very thick, scale=0.3]
+\node (foot) at (10,0) {$\bullet$};
+\node (N1) at (2,2) {$\bullet$};
+\node (N2) at (10,2) {$\bullet$};
+\node (N22) at (7,2) {$\bullet$};
+\node (N3) at (14,2) {$\bullet$};
+\node (N4) at (18,2) {$\Smiley[2][green]$};
+\node (N5) at (0,4) {$\bullet$};
+\node (N6) at (2,5) {$\Smiley[2][green]$};
+\node (N7) at (4,6) {$\Smiley[2][green]$};
+\node (N88) at (7,4) {$\bullet$};
+\node (N8) at (10,4) {$\bullet$};
+\node (N9) at (14,6) {$\Smiley[2][green]$};
+\node (N10) at (0,8) {$\Smiley[2][green]$};
+\node (N11) at (10,7) {$\Smiley[2][green]$};
+\node (N111) at (7,7) {$\Smiley[2][green]$};
+\draw (foot) to [bend left=10] (N1);
+\draw (foot) -- (N2);
+\draw (foot) -- (N22);
+\draw (foot) -- (N3);
+\draw (foot) -- (N4);
+\draw (N1) to  (N5);
+\draw (N1) to   [bend left=10] (N6);
+\draw (N1) to   [bend right=20] (N7);
+\draw (N2) to  (N8);
+\draw (N22) to  (N88);
+\draw (N8) to  (N11);
+\draw (N88) to  (N111);
+\draw (N3) to  (N9);
+\draw (N5) to  (N10);
+\end{tikzpicture}
+\caption{The hydra associated with $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
 
+\end{figure}
 
 Kirby and Paris prove the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
@@ -176,42 +211,7 @@ in~\cite{KP82, bauer2008, BauerHydra}.
  
  
 
-   \begin{figure}[htb]
-\centering
-\begin{tikzpicture}[very thick, scale=0.3]
-\node (foot) at (10,0) {$\bullet$};
-\node (N1) at (2,2) {$\bullet$};
-\node (N2) at (10,2) {$\bullet$};
-\node (N22) at (7,2) {$\bullet$};
-\node (N3) at (14,2) {$\bullet$};
-\node (N4) at (18,2) {$\Smiley[2][green]$};
-\node (N5) at (0,4) {$\bullet$};
-\node (N6) at (2,5) {$\Smiley[2][green]$};
-\node (N7) at (4,6) {$\Smiley[2][green]$};
-\node (N88) at (7,4) {$\bullet$};
-\node (N8) at (10,4) {$\bullet$};
-\node (N9) at (14,6) {$\Smiley[2][green]$};
-\node (N10) at (0,8) {$\Smiley[2][green]$};
-\node (N11) at (10,7) {$\Smiley[2][green]$};
-\node (N111) at (7,7) {$\Smiley[2][green]$};
-\draw (foot) to [bend left=10] (N1);
-\draw (foot) -- (N2);
-\draw (foot) -- (N22);
-\draw (foot) -- (N3);
-\draw (foot) -- (N4);
-\draw (N1) to  (N5);
-\draw (N1) to   [bend left=10] (N6);
-\draw (N1) to   [bend right=20] (N7);
-\draw (N2) to  (N8);
-\draw (N22) to  (N88);
-\draw (N8) to  (N11);
-\draw (N88) to  (N111);
-\draw (N3) to  (N9);
-\draw (N5) to  (N10);
-\end{tikzpicture}
-\caption{The hydra associated with $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
 
-\end{figure}
 
 Let $\alpha<\epsilon_0$ be an ordinal.
 Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$ for  any $i\in\mathbb{N}$.
@@ -322,16 +322,12 @@ Since the set \textit{AP} of additive principals  is closed under addition
 \subsection{Perspectives}
 
 
-The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementaion in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
+The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
 \texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
-It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic) definitions of
-\texttt{T1} and \texttt{T2}, originated in~\cite{CantorContrib}.
-The types --- defined in different modules --- cannot be considered as equal. Even more, some operations like addition, multiplication, etc. have now different definitions.
+It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic but not identical) definitions of types \texttt{T1} and \texttt{T2}, both originated in~\cite{CantorContrib}.
+Our plan is to build a  ``gate'' giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
 
-It would be interesting to build a ``gate'' giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}.
-For instance, the associativity of multiplication of ordinals below $\epsilon_0$, already proven in \textit{Gaia} was tranferred ``for free'' to the data structures of \textit{hydra-battles}, thanks to the isomorphism between both implementations.
-
-Another direction would be to write in \textit{Coq} a formal proof of the statement of the second theorem of Kirby and Paris, using the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
+Another direction would be to write in \textit{Coq} a formal proof of the original statement of the second theorem of Kirby and Paris. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}. 
 
 %\section{Acknowledgments}
 %\label{sect:acks}
