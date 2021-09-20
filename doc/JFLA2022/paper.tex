@@ -314,12 +314,10 @@ Since the set \textit{AP} of additive principals  is closed under addition
 
 \section{Conclusion and perspectives}
 
-\begin{todo}
-  Work destined both to Coq-users and people interested in discrete math ?
- \end{todo}
 
 
-\subsection{Perspectives}
+
+%\subsection{Perspectives}
 
 
 The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
@@ -327,7 +325,11 @@ The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains
 It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic but not identical) definitions of types \texttt{T1} and \texttt{T2}, both originated in~\cite{CantorContrib}.
 Our plan is to build a  ``gate'' giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
 
-Another direction would be to write in \textit{Coq} a formal proof of the original statement of the second theorem of Kirby and Paris. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}. 
+Another direction would be to write in \textit{Coq} a formal proof of the original statement of the second theorem of Kirby and Paris. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
+
+The \emph{Hydra-battles} project is not limited to the study of ordinal numbers and applications, but aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. For instance, we are also developing 
+a module about efficient exponentiation algorithms, and hope
+to extend our priject to new topics.
 
 %\section{Acknowledgments}
 %\label{sect:acks}
