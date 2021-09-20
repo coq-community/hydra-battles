@@ -43,13 +43,11 @@ Abort.
 
 (* begin snippet compareDef:: no-out *)
 
-Definition compare {n:nat} (alpha beta : t n) :=
-  Nat.compare (proj1_sig alpha) (proj1_sig beta).
- 
+#[global] Instance compare_t {n:nat} : Compare (t n) :=
+  fun (alpha beta : t n) => Nat.compare (proj1_sig alpha) (proj1_sig beta).
 
 Lemma compare_correct {n} (alpha beta : t n) :
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
+  CompSpec eq lt alpha beta (compare alpha beta).
 (* end snippet compareDef *)
 
 Proof.
@@ -68,10 +66,10 @@ Proof.
       destruct y, (x0 <? S n); auto; right; discriminate.    
      (* ... *)
 (* end snippet compareCorrectd *)
-    +  rewrite Nat.compare_lt_iff;  constructor 2.
-       destruct x0; [  lia |  apply leb_correct; lia].
-    +   rewrite Nat.compare_gt_iff; constructor 3.
-        destruct x; [lia | apply leb_correct; lia].
+    + rewrite Nat.compare_lt_iff;  constructor 2.
+      simpl; destruct x0; [  lia |  apply leb_correct; lia].
+    + rewrite Nat.compare_gt_iff; constructor 3.
+      simpl; destruct x; [lia | apply leb_correct; lia].
 Qed.
 
 Lemma compare_reflect {n:nat} (alpha beta : t  n) :

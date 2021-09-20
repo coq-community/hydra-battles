@@ -146,24 +146,24 @@ Inductive ap : T1 -> Prop :=
  *)
 
 (* begin snippet compareDef *)
-
-Fixpoint compare (alpha beta:T1):comparison :=
+Instance compare_T1 : Compare T1 :=
+ fix cmp (alpha beta:T1) :=
   match alpha, beta with
   | zero, zero => Eq
   | zero, ocons a' n' b' => Lt
   | _   , zero => Gt
   | (ocons a n b),(ocons a' n' b') =>
-      (match compare a a' with 
+      (match cmp a a' with
        | Lt => Lt
        | Gt => Gt
-       | Eq => (match Nat.compare n n' with
-                | Eq => compare b b'
+       | Eq => (match n ?= n' with
+                | Eq => cmp b b'
                 | comp => comp
                 end)
        end)
   end.
 
-Definition lt alpha beta : Prop :=
+Definition lt (alpha beta : T1) : Prop :=
   compare alpha beta = Lt.
 (* end snippet compareDef *)
 
@@ -177,23 +177,37 @@ Proof. discriminate.  Qed.
 
 (** ** Properties of [compare] *)
 
+Lemma compare_ocons : 
+ forall a n b a' n' b',
+ compare (ocons a n b) (ocons a' n' b') =
+ match compare a a' with
+ | Lt => Lt
+ | Gt => Gt
+ | Eq => (match n ?= n' with
+        | Eq => compare b b'
+        | comp => comp
+        end)
+ end.
+Proof.
+intros; reflexivity.
+Qed.
+
 (* begin snippet compareRev *)
 
 Lemma compare_rev :
-  forall alpha beta,
+  forall (alpha beta : T1),
   compare beta alpha = CompOpp (compare alpha beta). (* .no-out *)
 Proof. (* .no-out *)
   induction alpha, beta. (* .unfold -.g#* .g#1 *)
   (* end snippet compareRev *)
-  
+
   1-3: easy.
-  simpl.
+  rewrite !compare_ocons.
   rewrite IHalpha1, Nat.compare_antisym.
-  destruct (compare alpha1 beta1).
+  destruct (compare alpha1 beta1); simpl.
   2-3: easy.
   now destruct (n ?= n0) eqn:?; simpl.
 Qed.
-
 
 Lemma compare_reflect :
   forall alpha beta,
@@ -205,9 +219,9 @@ Lemma compare_reflect :
 Proof.
   unfold lt; induction alpha, beta.
   1-3: easy.
-  simpl.
   specialize (IHalpha1 beta1).
   specialize (IHalpha2 beta2).
+  rewrite !compare_ocons.
   rewrite compare_rev with alpha1 beta1,
           compare_rev with alpha2 beta2,
           Nat.compare_antisym in *.
@@ -220,8 +234,7 @@ Proof.
 Qed.
 
 Lemma compare_correct (alpha beta: T1):
-  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-              (compare alpha beta).
+  CompSpec eq lt alpha beta (compare alpha beta).
 Proof.
   unfold lt.
   generalize (compare_reflect alpha beta).
@@ -231,14 +244,14 @@ Qed.
 (** ** Properties of Eq *)
 
 Lemma compare_refl :
-  forall alpha, compare alpha alpha = Eq.
+  forall alpha : T1, compare alpha alpha = Eq.
 Proof.
  induction alpha; cbn; auto.
  rewrite IHalpha1, IHalpha2.
  now rewrite Nat.compare_refl.
 Qed.
 
-Lemma compare_eq_iff a b : 
+Lemma compare_eq_iff (a b : T1) : 
   compare a b = Eq <-> a = b.
 Proof.
   split; intro H.
@@ -283,7 +296,7 @@ Lemma lt_inv_strong :
   lt_cases a b n a' b' n'.
 Proof.
   unfold lt.
-  intros; simpl in H.
+  intros; rewrite compare_ocons in H.
   destruct (compare a a') eqn:Ha.
   - apply compare_eq_iff in Ha as ->.
     destruct (n ?= n') eqn:?.
@@ -371,7 +384,7 @@ Lemma head_lt :
 Proof.
   unfold lt.
   intros * H.
-  simpl.
+  rewrite compare_ocons.
   now rewrite H.
 Qed.
 
@@ -381,7 +394,7 @@ Lemma coeff_lt :
 Proof.
   unfold lt.
   intros * H.
-  simpl.
+  rewrite compare_ocons.
   rewrite compare_refl.
   now apply Nat.compare_lt_iff in H as ->.
 Qed.
@@ -395,7 +408,7 @@ Lemma tail_lt :
 Proof.
   unfold lt.
   intros * H.
-  simpl.
+  rewrite compare_ocons.
   now rewrite compare_refl, Nat.compare_refl.
 Qed.
 
@@ -407,8 +420,8 @@ Lemma compare_fin_rw (n n1: nat) :
   - easy.
   - now cbn.
   - now cbn.
-  - cbn; case (n ?= n1); trivial.
-Qed. 
+  - cbn; unfold compare; case (n ?= n1); trivial.
+Qed.
 
 Lemma lt_fin_iff (i j : nat): lt (fin i) (fin j) <-> Nat.lt i j.
 Proof.
@@ -417,9 +430,11 @@ Proof.
   - split; [ auto with arith| cbn; constructor ].
   - split; inversion 1.
   - split; inversion 1.
-     + destruct (Nat.compare_spec i j); try discriminate.
-        auto with arith. 
-     +   apply coeff_lt; auto with arith.   
+     + unfold compare in H1.
+       simpl in H1.
+       destruct (Nat.compare_spec i j); try discriminate.
+       auto with arith. 
+     + apply coeff_lt; auto with arith.
      + apply coeff_lt; lia.
 Qed.
 
@@ -490,6 +505,9 @@ Qed.
 Cantor normal form needs the exponents of omega to be
    in strict decreasing order *)
 
+Instance lt_dec : RelDecision lt :=
+fun alpha beta => decide (compare alpha beta = Lt).
+
 (* begin snippet nfDef *)
 
 Fixpoint nf_b (alpha : T1) : bool :=
@@ -497,7 +515,7 @@ Fixpoint nf_b (alpha : T1) : bool :=
   | zero => true
   | ocons a n zero => nf_b a
   | ocons a n ((ocons a' n' b') as b) =>
-      (nf_b a && nf_b b && lt_b a' a)%bool
+      (nf_b a && nf_b b && (bool_decide (lt a' a)))%bool
   end.
 
 Definition nf alpha :Prop := 
@@ -671,7 +689,7 @@ Proof.
   unfold nf.
   simpl.
   intros a n a' n' b' Hlta Ha.
-  apply lt_b_iff in Hlta as ->.
+  apply (bool_decide_eq_true _) in Hlta.
   destruct b'.
   - intro Hnfa'.
     now rewrite Ha, Hnfa'.
@@ -708,7 +726,7 @@ Proof.
   unfold nf; cbn;
   destruct a, a', b'; try discriminate; auto with T1;
   intro H; red in H; repeat rewrite andb_true_iff in H; 
-  decompose [and] H; apply lt_b_iff; auto.
+  decompose [and] H; apply (bool_decide_eq_true _); auto.
 Qed.
 
 
@@ -719,7 +737,8 @@ Proof.
   -  repeat split; auto with T1.
   - intro H; red in H; repeat rewrite andb_true_iff in H;
    decompose [and]  H; repeat split; auto.
-   red; cbn; unfold lt_b in H1; destruct (compare b1 a); try discriminate. 
+   apply bool_decide_eq_true in H1; red in H1.
+   red; cbn; destruct (compare b1 a); try discriminate. 
    trivial. 
 Qed. 
 
@@ -747,26 +766,24 @@ Proof.
     assert (false)  by (now apply H0);  discriminate.
 Qed.
 
-
-Lemma lt_b_lt_iff a b : lt_b a b <-> lt a b.
-Proof.
-  split.
-  - intro H;red in H; now rewrite lt_b_iff in H.  
-  - intro; red; now rewrite  lt_b_iff.
-Qed.
-
-
 Lemma nf_b_cons_eq a n b : nf_b (ocons a n b) =
-                           nf_b a && nf_b b && lt_b b (phi0 a).
+                           nf_b a && nf_b b && bool_decide (lt b (phi0 a)).
 Proof.
   rewrite bool_eq_iff; generalize (nf_cons_iff a n b); unfold nf;
     intro H; rewrite H.
-  rewrite <- lt_b_lt_iff; split. 
-  -  case (nf_b a); case (nf_b b); case_eq (lt_b b (phi0 a));
-       cbn; auto with bool;
-         intros _ H0; decompose [and] H0; try discriminate.
-  -  intro H0;  red in H0; repeat rewrite andb_true_iff in H0; 
-       decompose [and] H0;  now rewrite H2, H3, H4.
+  destruct (decide (lt b (phi0 a))) as [Hdec|Hdec].
+  - pose proof Hdec as Heq.
+    rewrite <- (bool_decide_eq_true _) in Heq.
+    split; case (nf_b a); case (nf_b b);
+      cbn; auto with bool; intros H0;
+        decompose [and] H0; try discriminate.
+  - pose proof Hdec as Heq.
+    rewrite <- (bool_decide_eq_false _) in Heq.
+    rewrite Heq.
+    split; intro H0; repeat rewrite andb_true_iff in H0; 
+       decompose [and] H0; [congruence|].
+    rewrite andb_false_r in H0.
+    discriminate.
 Qed.
 
       
@@ -863,7 +880,7 @@ Proof.
   intros; simpl in H. unfold lt in H.
   destruct (compare _ _) eqn:?.
   1,3: easy.
-  simpl in *.
+  unfold compare in Heqc; simpl in Heqc.
   destruct (n ?= p) eqn:?.
   1,3: easy.
   now apply Nat.compare_lt_iff.
@@ -1141,7 +1158,7 @@ Proof.
   - red in H.
     repeat rewrite andb_true_iff in H. 
     destruct H as ((_, _), Hlt).
-    apply lt_b_iff in Hlt.
+    apply bool_decide_eq_true in Hlt.
     now right.
 Qed.
 
@@ -2035,6 +2052,7 @@ Proof.
     1-3: discriminate.
     simpl.
     intros * Hnf_1 Hnf_2.
+    rewrite compare_ocons.
     destruct (compare alpha0 alpha) eqn:?.
     2-3: easy.
     destruct (n2 ?= n1) eqn:?.
@@ -2707,7 +2725,7 @@ Proof.
     + assert (H0 :alpha2 = zero).
       { eapply nf_of_finite; eauto. }
       subst; rewrite plus_compat; f_equal;  ring.
-    + simpl; repeat rewrite compare_refl. rewrite Nat.compare_refl.
+    + simpl; repeat rewrite compare_refl. 
       f_equal; lia.
 Qed.
 
@@ -3882,26 +3900,33 @@ Section Proof_of_dist.
     destruct b1, a1; try destruct c1; simpl.
     5,7,9,11,13-16: now apply not_lt_zero in Hcomp_b1_c1.
     - f_equal; lia.
-    - rewrite Nat.compare_refl, !compare_refl.
+    - rewrite compare_ocons.
+      rewrite Nat.compare_refl, !compare_refl.
       f_equal; lia.
-    - now rewrite Nat.compare_refl, !compare_refl.
+    - rewrite compare_ocons.
+      now rewrite Nat.compare_refl, !compare_refl.
     - rewrite compare_refl.
       now destruct (compare a1_1 b1_1).
     - reflexivity.
     - compare destruct a1_1 c1_1 as Hcomp_a11_c11.
-      + rewrite compare_refl.
+      + rewrite compare_ocons.
+        rewrite compare_refl.
         enough (Nat.compare n2 (S (n2 + n3)) = Lt) as -> by reflexivity.
         apply Nat.compare_lt_iff; lia.
-
-      + now apply compare_lt_iff in Hcomp_a11_c11 as ->.
-      + rewrite compare_refl, Nat.compare_refl.
+      + rewrite compare_ocons.
+        now apply compare_lt_iff in Hcomp_a11_c11 as ->.
+      + rewrite compare_ocons.
+        rewrite compare_refl, Nat.compare_refl.
         eenough (compare a1_2 (a1_2 + _) = Lt) as -> by reflexivity.
         apply compare_lt_iff, lt_plus_l.
     - apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-      + now apply compare_lt_iff in Hlt as ->.
-      + rewrite Heqa, compare_refl.
+      + rewrite compare_ocons.
+        now apply compare_lt_iff in Hlt as ->.
+      + rewrite compare_ocons.
+        rewrite Heqa, compare_refl.
         now apply Nat.compare_lt_iff in Hlt as ->.
-      + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
+      + rewrite compare_ocons.
+        rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
         now apply compare_lt_iff in Hlt as ->.
     - compare destruct a1_1 c1_1 as Hcomp_a11_c11.
       + apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
@@ -3942,10 +3967,13 @@ Section Proof_of_dist.
     -  rewrite_ind Hind b2. 
     -  rewrite_ind Hind b2.
        apply lt_inv_strong in Hcomp_b1_c1 as [Hlt | Heqa  Hlt | Heqa Heqn Hlt].
-       + now apply compare_gt_iff in Hlt as ->. 
-       + rewrite Heqa, compare_refl.
+       + rewrite compare_ocons.
+         now apply compare_gt_iff in Hlt as ->. 
+       + rewrite compare_ocons.
+         rewrite Heqa, compare_refl.
          now apply Nat.compare_gt_iff in Hlt as ->.
-       + rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
+       + rewrite compare_ocons.
+         rewrite Heqa, Heqn, compare_refl, Nat.compare_refl.
          now apply compare_gt_iff in Hlt as ->.
     -  rewrite_ind Hind b2.
        compare destruct a1_1 b1_1 as Hcomp_a11_b11.

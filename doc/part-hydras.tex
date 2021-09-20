@@ -1701,18 +1701,16 @@ to Schütte's model.
 
 
 
-\subsection{A class for ordinal notations}
+\subsection{Classes for ordinal notations}
 
 From the \coq{} user's point of view, an ordinal notation is
 a structure allowing to compare two ordinals by computation, and proving by well-founded induction.
 
-\subsubsection{The \texttt{Comparable class}}
+\subsubsection{The \texttt{Comparison} and \texttt{Comparable} classes}
 
-The following class, contributed by Jérémy Damour and Théo Zimmermann, allows us to apply generic lemmas and tactics
-about decidable strict orders.
+We use the operational class \texttt{Comparison} of comparison functions to define the \texttt{Comparable} class, contributed by Jérémy Damour and Théo Zimmermann, which allows us to apply generic lemmas and tactics about decidable strict orders.
 The correctness of the comparison function is expressed through Stdlib's type 
-\texttt{Datatypes.CompareSpec}.
-
+\texttt{Datatypes.CompareSpec} as specialized by \texttt{Datatypes.CompSpec}.
 
 \begin{Coqsrc}
   Inductive CompareSpec (Peq Plt Pgt : Prop) :
@@ -1720,6 +1718,9 @@ The correctness of the comparison function is expressed through Stdlib's type
     CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
   | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
+
+Definition CompSpec {A} (eq lt : A->A->Prop)(x y:A) : comparison -> Prop :=
+ CompareSpec (eq x y) (lt x y) (lt y x).
 \end{Coqsrc}
 
 \emph{From Module~\href{../theories/html/hydras.Prelude/mparable.html\#Hvariant}{Prelude.Comparable}}

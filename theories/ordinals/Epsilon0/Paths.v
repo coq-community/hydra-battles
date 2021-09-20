@@ -14,7 +14,7 @@
 
 (** TODO: Check wether the predicates ...PathS... are still useful *)
 
-Require Import Canon  MoreLists First_toggle OrdNotations.
+From hydras Require Import DecPreOrder Canon MoreLists First_toggle OrdNotations.
 Import Relations Relation_Operators.
 From Coq Require Import Lia.
 
@@ -2592,23 +2592,22 @@ Section Constant_to_standard_Proof.
     unfold t; pattern (proj1_sig Rem2); apply proj2_sig.
   Qed. 
 
-  Let P (i:nat) := le_b beta (standard_gnaw (S n) alpha i).
+  Let P (i:nat) := compare (standard_gnaw (S n) alpha i) beta <> Datatypes.Lt.
 
   Remark Rem04 : P 0.
   Proof.
-    unfold P;red; simpl.  
-    unfold le_b, lt_b.
-    eenough (T1.compare alpha beta = Datatypes.Gt) as -> by auto.
+    unfold P;red; simpl.
+    enough (Hgt: (compare alpha beta = Datatypes.Gt)) by congruence.
     apply compare_gt_iff.
     generalize (const_pathS_LT Halpha Hpa).
     destruct 1; tauto.
-  Qed. 
+  Qed.
 
 
-  Remark Rem05 : P t = false.
+  Remark Rem05 : ~ P t.
   Proof.
-    unfold P, le_b, lt_b;
-    enough(T1.compare (standard_gnaw (S n) alpha t) beta = Datatypes.Lt) as -> by reflexivity.
+    unfold P.
+    enough (compare (standard_gnaw (S n) alpha t) beta = Datatypes.Lt) by congruence.
     apply compare_lt_iff.
     destruct Rem03; tauto.
   Qed.
@@ -2621,8 +2620,21 @@ Section Constant_to_standard_Proof.
        eapply const_pathS_LT; eauto.
     - auto with arith. 
   Qed.
+
+  Instance P_dec i : Decision (P i).
+  Proof.
+   destruct (compare (standard_gnaw (S n) alpha i) beta) eqn:Hc.
+   - left; unfold P.
+     rewrite Hc; discriminate.
+   - right; unfold P.
+     rewrite Hc.
+     intro H.
+     contradiction.
+   - left; unfold P.
+     rewrite Hc; discriminate.
+  Defined.
   
-  Let l_def :=  first_toggle P 0 t  Rem06 Rem04 Rem05.
+  Let l_def :=  first_toggle P P_dec 0 t  Rem06 Rem04 Rem05.
 
   Let l := proj1_sig l_def.
   
@@ -2633,7 +2645,7 @@ Section Constant_to_standard_Proof.
     (l < t)%nat /\
     (forall i : nat,
         (0 <= i)%nat ->
-        (i <= l)%nat -> P i = true) /\ P (S l) = false.
+        (i <= l)%nat -> P i) /\ ~ P (S l).
   Proof.
     unfold l; pattern (proj1_sig l_def); apply proj2_sig.
   Qed.
@@ -2641,13 +2653,13 @@ Section Constant_to_standard_Proof.
   Remark Rem09 : (l < t)%nat.
   Proof.   destruct Rem08; tauto. Qed.
 
-  Remark Rem10 : P l = true.
+  Remark Rem10 : P l.
   Proof.
     destruct Rem08 as [H H0];decompose [and] H0.
     apply H3; auto with arith.
   Qed.
   
-  Remark Rem11 : P (S l) = false.
+  Remark Rem11 : ~ P (S l).
   Proof.
     destruct Rem08 as [H H0]; now decompose [and] H0.  
   Qed.
@@ -2726,13 +2738,13 @@ Section Constant_to_standard_Proof.
 
   Remark R19 : beta t1<= gamma.
   Proof.
-    generalize Rem10; unfold P; fold gamma ;unfold le_b, lt_b.
+    generalize Rem10; unfold P; fold gamma.
     intro H.
-    destruct (T1.compare gamma beta) eqn: Hcomp.
+    destruct (compare gamma beta) eqn: Hcomp.
     - apply compare_eq_iff in Hcomp as ->.
       apply LE_refl.
       eapply LT_nf_r; eauto.
-    - intros; discriminate.
+    - contradiction.
     - apply LE_r.
       rewrite compare_gt_iff in Hcomp; repeat split; auto.
       + eapply LT_nf_r; eauto.
@@ -2787,15 +2799,14 @@ Section Constant_to_standard_Proof.
 
    Remark R25 : delta t1< beta.
   Proof.
-    rewrite R22; generalize Rem11;unfold P; intro H;
-      unfold le_b, lt_b in H.
-    destruct( T1.compare (standard_gnaw (S n) alpha (S l)) beta) eqn: H0.
-    - discriminate.
+    rewrite R22; generalize Rem11;unfold P; intro H.      
+    destruct(compare (standard_gnaw (S n) alpha (S l)) beta) eqn: H0.
+    - contradict H; congruence.
     - rewrite compare_lt_iff in H0.
        repeat split;auto.
        +  apply standard_gnaw_nf;auto.
        +  eapply LT_nf_r; eauto.
-    - discriminate.
+    - contradict H; congruence.
   Qed.
 
    Remark R26 : ~ const_pathS (n+l) gamma beta.
@@ -3021,7 +3032,7 @@ Proof.
      red in H0;unfold E0.cnf; simpl in *.
      destruct beta.
      + destruct H; now apply E0_eq_intro.
-     + destruct (T1.compare alpha beta1) eqn:H2.
+     + destruct (compare alpha beta1) eqn:H2.
          * unfold lt in H1; simpl in H1.
            rewrite compare_eq_iff in H2;  subst beta1.
            destruct (LT_inv H1).

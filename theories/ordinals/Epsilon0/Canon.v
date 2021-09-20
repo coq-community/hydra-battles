@@ -13,6 +13,7 @@ Pierre Casteran,
 From Coq Require Export Arith Lia.
 Import Relations Relation_Operators.
 
+From hydras.Prelude Require Import DecPreOrder.
 From hydras.Epsilon0 Require Export T1 E0.
 
 Set Implicit Arguments.
@@ -916,7 +917,7 @@ Fixpoint  approx alpha beta fuel i :=
           FO => None
         | Fuel.FS f =>
           let gamma := canonS alpha i in
-          if lt_b beta gamma
+          if decide (lt beta gamma)
           then Some (i,gamma)
           else approx alpha beta  (f tt) (S i)
         end.
@@ -924,12 +925,12 @@ Fixpoint  approx alpha beta fuel i :=
 
 Lemma approx_ok alpha beta :
   forall fuel i j gamma, approx alpha beta fuel i = Some (j,gamma) ->
-                         gamma = canonS alpha j /\ lt_b beta gamma.
+                         gamma = canonS alpha j /\ lt beta gamma.
 Proof.
   induction fuel as [| f IHfuel ].
   - cbn; discriminate. 
   - intros i j gamma H0;  cbn in H0.
-    case_eq (lt_b beta (canonS alpha i));intro H1; rewrite H1 in *.
+    destruct (decide (lt beta (canonS alpha i))) as [H1|H1].
     + injection H0; intros; subst; split;auto.
     + now specialize (IHfuel tt (S i) _ _ H0).
 Qed.
