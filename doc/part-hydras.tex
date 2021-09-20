@@ -1718,7 +1718,7 @@ Inductive CompareSpec (Peq Plt Pgt : Prop) : comparison -> Prop :=
   | CompLt : Plt -> CompareSpec Peq Plt Pgt Lt
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
 
-Definition CompSpec {A} (eq lt : A->A->Prop)(x y:A) : comparison -> Prop :=
+Definition CompSpec {A} (eq lt : A -> A -> Prop) (x y : A) :=
  CompareSpec (eq x y) (lt x y) (lt y x).
 \end{Coqsrc}
 

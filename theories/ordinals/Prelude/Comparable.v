@@ -4,9 +4,11 @@ Require Export MoreOrders.
 (* begin snippet ComparableDef *)
 Class Compare (A:Type) := compare : A -> A -> comparison.
 
-Class Comparable {A:Type} (lt: relation A) (cmp : Compare A) := {
+Class Comparable {A:Type} (lt: relation A) (cmp : Compare A) :=
+{
   comparable_sto :> StrictOrder lt;
-  comparable_comp_spec : forall a b, CompSpec eq lt a b (compare a b);
+  comparable_comp_spec :
+   forall (a b : A), CompSpec eq lt a b (compare a b);
 }.
 (* end snippet ComparableDef *)
 
