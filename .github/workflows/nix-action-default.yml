@@ -328,7 +328,7 @@ jobs:
         nix-shell --run "cachedMake"
         nix-shell --run "make -t"
     - name: Build Alectryon snippets
-      run: nix-shell --run "make -C doc/movies -j $(nproc) all"
+      run: nix-shell --run "make -C doc/movies -j $(nproc)"
     - name: Build coqdoc
       run: nix-shell --run "make -j $(nproc) html"
     - name: Compile LaTeX document
