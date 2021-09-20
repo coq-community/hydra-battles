@@ -5,8 +5,8 @@ Section Proofs_of_lt_succ_le.
   
 Context (A:Type)
         (lt  : relation A)
-        (compare : A -> A -> comparison)
-        (On : ON lt compare).
+        (cmp : Compare A)
+        (On : ON lt cmp).
 
 Section Proofs.
   Variables alpha beta : A.

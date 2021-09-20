@@ -7,28 +7,26 @@ Computes the first  [l]  between [n] and [p] (excluded) such that
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
-
 From Coq Require Import Arith Lia.
+From hydras Require Import DecPreOrder.
 
 Section Hypos.
-  Variables (P : nat -> bool)
-            (n p : nat).
+  Context (P : nat -> Prop) `{Pdec: forall n, Decision (P n)} (n p : nat).
  
-  Hypotheses (Hnp : n < p)
-             (Hn : P n = true) (Hp : P p = false).
+  Hypotheses (Hnp : n < p) (Hn : P n) (Hp : ~ P p).
 
 (* begin hide *)
   
   Let  search_toggle  (delta : nat)(H : 0 < delta /\ delta <= p - n)
-             (invar : forall i, n <= i -> i <= p - delta -> P i = true) :
+             (invar : forall i, n <= i -> i <= p - delta -> P i) :
     {l : nat | n <= l  /\ l < p /\
-               (forall i: nat, n <= i -> i <= l -> P i = true ) /\ 
-               (P (S l ) = false)}.
+               (forall i: nat, n <= i -> i <= l -> P i) /\ 
+               (~ P (S l ))}.
   
   Proof.
     generalize delta H invar.
     clear delta H invar.
-    intro delta; pattern delta; apply well_founded_induction with lt.
+    intro delta; pattern delta; apply well_founded_induction with Nat.lt.
     apply lt_wf.
     
     intros d Hd.
@@ -38,12 +36,11 @@ Section Hypos.
     destruct H.
     elimtype False. inversion H. intros; subst.
     
-    case_eq (P (p - n0)). 
-    intro.
+    destruct (decide (P (p - n0))) as [H|H].
     destruct (Hd n0).
     auto with arith.
     destruct n0.
-    replace (p - 0) with p in H. rewrite Hp in H; discriminate.
+    replace (p - 0) with p in H. congruence.
     auto with arith.
     split; auto with arith.
     destruct H0; auto with arith.
@@ -71,7 +68,7 @@ Section Hypos.
   Remark R1 : 0 < delta /\ delta <= p - n.
   Proof.   unfold delta.  clear search_toggle; abstract lia.  Qed.
 
-  Remark R2 :  forall i, n <= i -> i <= p - delta -> P i = true.
+  Remark R2 :  forall i, n <= i -> i <= p - delta -> P i.
   Proof.
     clear search_toggle; unfold delta; intros; replace i with n; [trivial | lia].
   Qed.
@@ -80,8 +77,8 @@ Section Hypos.
   
   Definition first_toggle :
   {l : nat |  n <= l /\ l < p /\
-              (forall i : nat, n <= i -> i <= l -> P i = true) /\
-              P (S l) = false}.
+              (forall i : nat, n <= i -> i <= l -> P i) /\
+              ~ P (S l)}.
   (* begin hide *)
   Proof.
     exact  (search_toggle  (p-n) R1 R2).

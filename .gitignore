@@ -35,3 +35,4 @@ doc/movies/snippets/
 doc/movies/targets.mk
 __pycache__
 alectryon-html/
+.envrc

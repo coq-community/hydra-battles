@@ -298,7 +298,8 @@ Defined.
 
 (* begin snippet compare *)
 
-Definition compare (t1 t2 : T2) : comparison := 
+Instance compare_T2 : Compare T2 := 
+fun (t1 t2 : T2) =>
   match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
   | inleft (right _) => Eq
@@ -787,7 +788,7 @@ Lemma compare_reflect alpha beta : match compare alpha beta with
                                      | Gt => beta t2< alpha
                                      end.
 Proof.
-  unfold compare.
+  unfold compare,compare_T2.
   intros; case (lt_eq_lt_dec alpha beta);auto.
   destruct s;auto with T2.
 Qed.
@@ -814,7 +815,7 @@ Qed.
 Example Ex6 : gcons 1 0 12 omega t2< [0,[2,1]].
 Proof. now apply compare_Lt. Qed.
 
-Lemma compare_Eq : forall alpha beta, compare alpha beta = Eq -> 
+Lemma compare_Eq : forall (alpha beta : T2), compare alpha beta = Eq -> 
                                          alpha = beta.
 Proof.
   intros alpha beta; destruct (compare_correct alpha beta); trivial;
@@ -845,7 +846,7 @@ Proof.
     eapply lt_trans;eauto with T2.
 Qed.
 
-Lemma compare_rw_eq  alpha beta:  alpha = beta ->
+Lemma compare_rw_eq (alpha beta : T2):  alpha = beta ->
                                   compare alpha beta = Eq.
   intros; subst beta; generalize (compare_reflect alpha alpha);
     case (compare alpha alpha); trivial.
@@ -3682,8 +3683,9 @@ Module G0.
   Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
 
   Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
-
-  Definition compare alpha beta := compare (@vnf alpha) (@vnf beta).
+  
+  Instance compare_G0 : Compare G0 :=
+    fun alpha beta => compare (@vnf alpha) (@vnf beta).
 
   (* end snippet G0b *)
 
@@ -3719,18 +3721,18 @@ Module G0.
   (*||*)
   (* end snippet ltWf *)
 
-  Lemma compare_correct alpha beta :
-    CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
-                (compare alpha beta).
-  Proof.
-    destruct alpha, beta; cbn.
-    destruct (compare_correct vnf0 vnf1);subst. 
-    unfold compare; simpl.
-    -  rewrite compare_rw_eq; auto.
-       + constructor 1; f_equal; apply nfb_proof_unicity.
-    - unfold compare; rewrite compare_rw_lt; auto.
-    - unfold compare; rewrite compare_rw_gt; auto.
-  Qed. 
+Lemma compare_correct alpha beta :
+  CompareSpec (alpha = beta) (lt alpha beta) (lt beta alpha)
+              (compare alpha beta).
+Proof.
+  destruct alpha, beta; cbn.
+  destruct (compare_correct vnf0 vnf1);subst. 
+  unfold compare,compare_G0; simpl.
+  -  rewrite compare_rw_eq; auto.
+   + constructor 1; f_equal; apply nfb_proof_unicity.
+  - unfold compare,compare_G0; rewrite compare_rw_lt; auto.
+  - unfold compare,compare_G0; rewrite compare_rw_gt; auto.
+Qed. 
 
   Instance zero : G0.
   Proof.

@@ -316,12 +316,11 @@ Proof.
     apply LT_trans.
  Qed.
 
-Definition compare (alpha beta:E0): comparison :=
-  T1.compare (cnf alpha) (cnf beta).
+Instance compare_E0 : Compare E0 :=
+ fun (alpha beta:E0) => compare (cnf alpha) (cnf beta).
 
-Lemma compare_correct alpha beta :
-  CompareSpec (alpha = beta) (alpha o< beta) (beta o< alpha)
-              (compare alpha beta).
+Lemma compare_correct (alpha beta : E0) :
+  CompSpec eq Lt alpha beta (compare alpha beta).
 Proof.
   destruct alpha, beta; unfold compare, Lt; cbn;
     destruct (T1.compare_correct cnf0 cnf1).
