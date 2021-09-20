@@ -99,8 +99,7 @@ Karl Palmskog \inst{2}
 
 
 \begin{abstract}
-  \textbf{To do!} We present the current state of a \textit{Coq} library on ordinal numbers.
- 
+  \textbf{To do!} 
 \end{abstract}
 
 
@@ -112,6 +111,9 @@ Karl Palmskog \inst{2}
 %------------------------------------------------------------------------------
 \section{Introduction}
 \label{sect:introduction}
+The \emph{Hydra-battles} project, part of \emph{Coq-Community}~\cite{CoqCommunity}  aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. 
+
+
 Hydra games (also known as \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians, 
 Laurie Kirby and Jeff Paris: \emph{Accessible Independence Results for Peano Arithmetic}~\cite{KP82}.
 This article describes a game between two players: Hercules and a hydra.
@@ -171,13 +173,13 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
 \end{description}
 \end{quote}
 
-The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good theme for a commented library of formal proofs.
+The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good thema for a commented library of formal proofs.
 
 
 \begin{itemize}
 \item We present complete proof scripts for the \textit{Coq} proof assistant~\cite{Coq}. These scripts may consulted and replayed by the reader.
 \item Complex formalisations and proofs are explained in an
-  electronic book~\cite{HydraBook} (PDF document of over 280 pages). Whenever various reasonable choices exist, we try to present and compare the alternatives.
+  electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives.
   For instance, Figures~\vref{fig:Ex42E0} and \vref{fig:Ex42-schutte} show two radically different proofs of the equality
   $\omega+42+\omega^2=\omega^2$, the first one is a simple proof by computation, the second one shows how this equality
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
@@ -250,7 +252,7 @@ Small presentation.
 \end{todo}
 
 In order to prove formally that the length of the considered
-kind of battles is not given by a primitive recursive function, we used the formalisation of primitive recursive functions, part
+kind of battles is not given by a primitive recursive function, weused the formalisation of primitive recursive functions, part
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem \cite{OConnor05, Goedel}.
 For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-Community}.
 
@@ -327,9 +329,10 @@ Our plan is to build a  ``gate'' giving access to both the combinatorial results
 
 Another direction would be to write in \textit{Coq} a formal proof of the original statement of the second theorem of Kirby and Paris. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
 
-The \emph{Hydra-battles} project is not limited to the study of ordinal numbers and applications, but aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. For instance, we are also developing 
+ \emph{Hydra-battles} is not limited to the study of ordinal numbers and applications.
+ For instance, we are also developing 
 a module about efficient exponentiation algorithms, and hope
-to extend our priject to new topics.
+to extend our project to new topics.
 
 %\section{Acknowledgments}
 %\label{sect:acks}
