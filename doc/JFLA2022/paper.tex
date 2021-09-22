@@ -77,7 +77,7 @@ Pierre Castéran \inst{1}
 \and
 Karl Palmskog \inst{2}
 \and Clément Pit-Claudel \inst{2}
-\and Théo Zimmermann %\inst{5}
+\and Théo Zimmermann \inst{2}
 }
 
 
@@ -100,7 +100,7 @@ Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France \\
 
 
 \begin{abstract}
-  \textbf{To do!} 
+ To do \dots
 \end{abstract}
 
 
@@ -118,14 +118,15 @@ The \emph{Hydra-battles} project, part of \emph{Coq-Community}~\cite{CoqCommunit
 Hydra games (also known as \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians, 
 Laurie Kirby and Jeff Paris: \emph{Accessible Independence Results for Peano Arithmetic}~\cite{KP82}.
 This article describes a game between two players: Hercules and a hydra.
-A short description  can be found in Andrej Bauer's blogpost~\cite{bauer2008} as well as a simulator~\cite{BauerHydra}.
+A short description of the game  can be found in~\cite{bauer2008, KP82, JFLA2018paper}. One can also play with
+Andrej Bauer's simulator~\cite{BauerHydra}.
 In a few words:
 \begin{itemize}
 \item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}
   (Fig~\ref{fig:iota-example}).
 \item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
-  then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
-  or the time elapsed since the beginning of the fight.
+  then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the sub-tree $h$ may depend of the considered variant of the game
+  or the time elapsed since the beginning of the fight. 
 \end{itemize}
    \begin{figure}[htb]
 \centering
@@ -160,7 +161,7 @@ In a few words:
 \draw (N3) to  (N9);
 \draw (N5) to  (N10);
 \end{tikzpicture}
-\caption{The hydra associated with $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
+\caption{The hydra associated with the ordinal $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
 
 \end{figure}
 
@@ -175,10 +176,7 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
   Theorem~\ref{kp:thm1} cannot be proved in Peano Arithmetic. \label{kp:thm2}
 \end{theorem}
 
-The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good thema for a commented library of formal proofs.
-
-
-We present complete proof scripts for the \textit{Coq} proof assistant~\cite{Coq}. These scripts may consulted and replayed by the reader.
+The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good thema for a commented library~\cite{HydraBattles} of formal proofs written for the \textit{Coq} proof assistant~\cite{Coq}. 
 
 Complex formalisations and proofs are explained in an
   electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives.
@@ -186,16 +184,15 @@ Complex formalisations and proofs are explained in an
   $\omega+42+\omega^2=\omega^2$, the first one is a simple proof by computation, the second one shows how this equality
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
 
-  Reciprocally, we provide ``concrete'' examples of several formalisation and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc.
-
-Our development may be used as a library on ordinal numbers, for instance for proving termination properties.
+This work is also an opportunity to 
+ provide ``concrete'' examples of several formalisation and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc. It may be also used as a library on ordinal numbers, for instance for proving termination properties.
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
 We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
 \section{Changes in the library}
-The 2018 article contains a formal proof of  a variant of Theorem~\ref{kp:thm2}:
+The 2018 article~\cite{JFLA2018paper} contains a formal proof of  a variant of Theorem~\ref{kp:thm2}:
 
 \begin{theorem}
   There is no termination measure mapping hydras to a segment $[0,\mu)$ where $\mu<\epsilon_0$ for proving the termination of  all hydra battles.\label{thm3}
