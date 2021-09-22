@@ -13,6 +13,7 @@
 \usepackage{doc}
 \usepackage{tikz}
 \usepackage{tikzsymbols}
+\newtheorem{theorem}{Theorem}
 \usetikzlibrary{arrows}
 
 \usepackage[firstpageonly=false, color={[gray]{0.5}},
@@ -121,9 +122,9 @@ A short description  can be found in Andrej Bauer's blogpost~\cite{bauer2008} as
 In a few words:
 \begin{itemize}
 \item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}
-  (Fig~\vref{fig:iota-example}).
+  (Fig~\ref{fig:iota-example}).
 \item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
-  then some sub-tree $h$ of the hydra is copied a certain amount $i$ of times. The number $i$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
+  then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the copied sub-hydra $h$ may depend of the considered variant of the game
   or the time elapsed since the beginning of the fight.
 \end{itemize}
    \begin{figure}[htb]
@@ -166,55 +167,62 @@ In a few words:
 Kirby and Paris prove the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
 
-\begin{quote}
-\begin{description}
-\item[$(1)$] In the Hydra game, every strategy is a winning strategy for Hercules.
-  \item[$(2)$] The theorem $(1)$ cannot be proved in Peano Arithmetic.
-\end{description}
-\end{quote}
+\begin{theorem}
+  In the Hydra game, every strategy is a winning strategy for Hercules. \label{kp:thm1}
+\end{theorem}
+
+\begin{theorem}
+  Theorem~\ref{kp:thm1} cannot be proved in Peano Arithmetic. \label{kp:thm2}
+\end{theorem}
 
 The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good thema for a commented library of formal proofs.
 
 
-\begin{itemize}
-\item We present complete proof scripts for the \textit{Coq} proof assistant~\cite{Coq}. These scripts may consulted and replayed by the reader.
-\item Complex formalisations and proofs are explained in an
+We present complete proof scripts for the \textit{Coq} proof assistant~\cite{Coq}. These scripts may consulted and replayed by the reader.
+
+Complex formalisations and proofs are explained in an
   electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives.
-  For instance, Figures~\vref{fig:Ex42E0} and \vref{fig:Ex42-schutte} show two radically different proofs of the equality
+  For instance, Figures~\ref{fig:Ex42E0} and \ref{fig:Ex42-schutte} show two radically different proofs of the equality
   $\omega+42+\omega^2=\omega^2$, the first one is a simple proof by computation, the second one shows how this equality
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
-\item
+
   Reciprocally, we provide ``concrete'' examples of several formalisation and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc.
-\item It may be used as a library on ordinal numbers, for instance for proving termination properties.
-  \end{itemize}
+
+Our development may be used as a library on ordinal numbers, for instance for proving termination properties.
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
 We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
-\section{New results}
-In order to make evident how long a hydra battle can be,
-one may consider a deterministic variant of the game,
-``compute'' the number of steps of the battles, and thus obtain a minoration of the general case.
+\section{Changes in the library}
+The 2018 article contains the proof of  a variant of Theorem~\ref{kp:thm2}:
 
-The variant we consider is the same as 
-in~\cite{KP82, bauer2008, BauerHydra}. 
+\begin{theorem}
+  There is no termination measure mapping hydras to a segment $[0,\mu)$ where $\mu<\epsilon_0$ for proving the termination of  all hydra battles.\label{thm3}
+\end{theorem}
 
+Indeed, the consideration of \emph{all} battles allowed us to
+consider battles where the hydra can make an arbitrary number of copies at any time, which make easier our proof by absurd.
+Unfortunately, the examples  most shown in the litterature
+(see for instance \cite{KP82, bauer2008, BauerHydra}) 
+assume that the hydra grows $n$ copies at step $n$ of the game, which is incompatible with our proof:
 
+\vspace{6pt}
+
+We prove now that Theorem~\ref{thm3} still holds with this ``usual'' kind of battles, by borrowing new combinatorial results from~\cite{KS81}.
+
+ Without loss of generality, we could consider the following restrictions:
+ 
  \begin{itemize}
- \item The game starts at an arbitrary initial step $i\in\mathbb{N}$.
-   
-   \item The hydra grows $n$ copies at step $n$ of the game.
-   \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). This property is an invariant of the game.
- \item Hercules always chops off the rightmost head of the hydra (which is always one of the lowest heads).
+   \item The game starts at an initial step $i\in\mathbb{N}$ (not necessariliy $0$).
+   \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). 
+ \item Hercules always chops off the rightmost head of the hydra.
  \end{itemize}
+ 
  It mathematical terms, if at step $n$ the hydra is associated with the ordinal $\alpha$, at step $n+1$ it is associated with
  $\canonseq{\alpha}{n+1}$, the $(n+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
  
  
-
-
-
 Let $\alpha<\epsilon_0$ be an ordinal.
 Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$ for  any $i\in\mathbb{N}$.
 We prove that this number is greater or equal than
@@ -265,7 +273,7 @@ Computability is a key topic in Computer Science teaching. Moreover O'Conor's li
   \begin{itemize}
   \item Despite the frequent changes (improvements) in the Coq scripts, code inclusion and \textit{Coq}'s answers are up to date.
 
-  \item Presentation of the main steps of proofs, possibly interleaved with text (Figures \vref{fig:Ex42E0} and \vref{fig:Ex42-schutte}).
+  \item Presentation of the main steps of proofs, possibly interleaved with text (Figures \ref{fig:Ex42E0} and \ref{fig:Ex42-schutte}).
     
   \end{itemize}
 \end{todo}
@@ -327,7 +335,7 @@ The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains
 It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic but not identical) definitions of types \texttt{T1} and \texttt{T2}, both originated in~\cite{CantorContrib}.
 Our plan is to build a  ``gate'' giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
 
-Another direction would be to write in \textit{Coq} a formal proof of the original statement of the second theorem of Kirby and Paris. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
+Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
 
  \emph{Hydra-battles} is not limited to the study of ordinal numbers and applications.
  For instance, we are also developing 
