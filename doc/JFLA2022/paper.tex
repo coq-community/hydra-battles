@@ -85,7 +85,7 @@ Karl Palmskog \inst{2}
 Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France \\
   \email{pierre.casteran@labri.fr}
 \and
-   Ask for agreement !
+   to fill!
  }
 
 
@@ -195,7 +195,7 @@ Our development may be used as a library on ordinal numbers, for instance for pr
 We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
 \section{Changes in the library}
-The 2018 article contains the proof of  a variant of Theorem~\ref{kp:thm2}:
+The 2018 article contains a formal proof of  a variant of Theorem~\ref{kp:thm2}:
 
 \begin{theorem}
   There is no termination measure mapping hydras to a segment $[0,\mu)$ where $\mu<\epsilon_0$ for proving the termination of  all hydra battles.\label{thm3}
@@ -210,8 +210,7 @@ assume that the hydra grows $n$ copies at step $n$ of the game, which is incompa
 \vspace{6pt}
 
 We prove now that Theorem~\ref{thm3} still holds with this ``usual'' kind of battles, by borrowing new combinatorial results from~\cite{KS81}.
-
- Without loss of generality, we could consider the following restrictions:
+Without loss of generality, we could consider the following restrictions:
  
  \begin{itemize}
    \item The game starts at an initial step $i\in\mathbb{N}$ (not necessariliy $0$).
@@ -227,7 +226,7 @@ Let $\alpha<\epsilon_0$ be an ordinal.
 Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$ for  any $i\in\mathbb{N}$.
 We prove that this number is greater or equal than
 $H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
-
+From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 \begin{figure}[h]
   \centering
@@ -245,7 +244,7 @@ $H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(k)$ for any $i\in \mathbb{N}$.
 \end{figure}
 
 \label{sect:not-pr}
-From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
+
 
 
  
