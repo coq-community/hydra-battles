@@ -278,17 +278,19 @@ Without loss of generality, we could consider the following restrictions:
  
  It mathematical terms, if at step $n$ the hydra is associated with the ordinal $\alpha$, at step $n+1$ it is associated with
  $\canonseq{\alpha}{n+1}$, the $(n+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
+
+ Our new proof of Theorem~\ref{thm3} is based on a systematic study of strictly decreasing sequences of ordinals below $\epsilon_0$, borrowed from~\cite{KS81}.
  
- 
+We also study the number of steps of a battle:
 Let $\alpha<\epsilon_0$ be an ordinal.
-Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$ for  any $i\in\mathbb{N}$.
+Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$, for  any $i$ in $\mathbb{N}$.
 We prove that this number is greater or equal than
 $H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
 From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 \begin{figure}[h]
  \noindent
- For any $i\in\mathbb{N}$,
+ For any $\alpha$ in $[0,\epsilon_0)$ and any $i$ in $\mathbb{N}$,
    \begin{itemize}
 \item If $\alpha=0$, then $H'_\alpha (i)= i$.
 \item If $\alpha=\beta+1$, then 
