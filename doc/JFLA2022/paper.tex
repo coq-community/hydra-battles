@@ -75,9 +75,9 @@ Pierre Castéran \inst{1}
 \and
     Jérémy Damour \inst{2}
 \and
-Karl Palmskog \inst{2}
-\and Clément Pit-Claudel \inst{2}
-\and Théo Zimmermann \inst{2}
+Karl Palmskog \inst{3}
+\and Clément Pit-Claudel \inst{4}
+\and Théo Zimmermann \inst{5}
 }
 
 
@@ -85,7 +85,13 @@ Karl Palmskog \inst{2}
 Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France \\
   \email{pierre.casteran@labri.fr}
 \and
-   to fill!
+to fill!
+\and
+to fill!
+\and
+to fill!
+\and
+to fill!
  }
 
 
@@ -100,7 +106,8 @@ Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France \\
 
 
 \begin{abstract}
- To do \dots
+  \emph{Hydra-battles} is a collaborative library of commented proofs, developped under the \emph{Coq-Community} project.
+  We present its evolution since a former presentation~\cite{JFLA2018paper} and how its structure is determined by other libraies and the \emph{Alectryon} literate proving tool.
 \end{abstract}
 
 
@@ -122,48 +129,99 @@ A short description of the game  can be found in~\cite{bauer2008, KP82, JFLA2018
 Andrej Bauer's simulator~\cite{BauerHydra}.
 In a few words:
 \begin{itemize}
-\item A hydra is a finite tree, traditionnaly presented with the root at the bottom, the leaves of which are called \emph{heads}
-  (Fig~\ref{fig:iota-example}).
+\item A hydra is a finite tree, traditionally presented with the root at the bottom, the leaves of which are called \emph{heads}
+  (Fig~\ref{fig:round}).
 \item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
   then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the sub-tree $h$ may depend of the considered variant of the game
-  or the time elapsed since the beginning of the fight. 
+  or the time elapsed since the beginning of the fight.
+  Figure~\ref{fig:round} shows an example of such a transformation with $n=2$.
 \end{itemize}
-   \begin{figure}[htb]
-\centering
-\begin{tikzpicture}[very thick, scale=0.3]
-\node (foot) at (10,0) {$\bullet$};
-\node (N1) at (2,2) {$\bullet$};
-\node (N2) at (10,2) {$\bullet$};
-\node (N22) at (7,2) {$\bullet$};
-\node (N3) at (14,2) {$\bullet$};
-\node (N4) at (18,2) {$\Smiley[2][green]$};
-\node (N5) at (0,4) {$\bullet$};
-\node (N6) at (2,5) {$\Smiley[2][green]$};
-\node (N7) at (4,6) {$\Smiley[2][green]$};
-\node (N88) at (7,4) {$\bullet$};
-\node (N8) at (10,4) {$\bullet$};
-\node (N9) at (14,6) {$\Smiley[2][green]$};
-\node (N10) at (0,8) {$\Smiley[2][green]$};
-\node (N11) at (10,7) {$\Smiley[2][green]$};
-\node (N111) at (7,7) {$\Smiley[2][green]$};
-\draw (foot) to [bend left=10] (N1);
-\draw (foot) -- (N2);
-\draw (foot) -- (N22);
-\draw (foot) -- (N3);
-\draw (foot) -- (N4);
-\draw (N1) to  (N5);
-\draw (N1) to   [bend left=10] (N6);
-\draw (N1) to   [bend right=20] (N7);
-\draw (N2) to  (N8);
-\draw (N22) to  (N88);
-\draw (N8) to  (N11);
-\draw (N88) to  (N111);
-\draw (N3) to  (N9);
-\draw (N5) to  (N10);
-\end{tikzpicture}
-\caption{The hydra associated with the ordinal $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
 
+
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[very thick, scale=0.3]
+  \node (h1) at (4,0){$\bullet$};
+  \node (h2) at (4,2){$\bullet$};
+  \node (h3) at (2,4){$\bullet$};
+  \node (h4) at (0,6){$\bullet$};
+  \node (h5) at (4,6){$\bullet$};
+  \node (h6) at (6,4){$\bullet$};
+  \draw (h1) -- (h2) ;
+  \draw (h2) -- (h3) ;
+  \draw (h2) -- (h6);
+  \draw (h3) -- (h4) ;
+  \draw (h3) -- (h5) ;
+ 
+\node (hn1) at (14,0){$\bullet$};
+\node (hn2) at (12,2) {$\bullet$};
+\node (hn3) at (12,4) {$\bullet$};
+\node (hn4) at (10,6){$\bullet$};
+  \node (hn5) at (12,6){$\bullet$};
+  \draw (hn1) -- (hn2) ;
+  \draw (hn2) -- (hn3) ;
+  \draw (hn3) -- (hn4) ;
+  \draw (hn3) -- (hn5) ;
+\node (hn2b) at (14,2) {$\bullet$};
+\node (hn3b) at (14,4) {$\bullet$};
+\node (hn4b) at (13.4,6){$\bullet$};
+  \node (hn5b) at (15,6){$\bullet$};
+  \draw (hn1) -- (hn2b) ;
+  \draw (hn2b) -- (hn3b) ;
+  \draw (hn3b) -- (hn4b) ;
+  \draw (hn3b) -- (hn5b) ;
+  \node (hn2c) at (16,2) {$\bullet$};
+\node (hn3c) at (16,4) {$\bullet$};
+\node (hn4c) at (17,6){$\bullet$};
+  \node (hn5c) at (18.5,6){$\bullet$};
+  \draw (hn1) -- (hn2c) ;
+  \draw (hn2c) -- (hn3c) ;
+  \draw (hn3c) -- (hn4c) ;
+  \draw (hn3c) -- (hn5c) ;
+\end{tikzpicture}
+
+  \caption{Two successive states of a hydra in a battle}
+  \label{fig:round}
 \end{figure}
+
+
+ %  \begin{figure}[htb]
+% \centering
+% \begin{tikzpicture}[very thick, scale=0.3]
+% \node (foot) at (10,0) {$\bullet$};
+% \node (N1) at (2,2) {$\bullet$};
+% \node (N2) at (10,2) {$\bullet$};
+% \node (N22) at (7,2) {$\bullet$};
+% \node (N3) at (14,2) {$\bullet$};
+% \node (N4) at (18,2) {$\Smiley[2][green]$};
+% \node (N5) at (0,4) {$\bullet$};
+% \node (N6) at (2,5) {$\Smiley[2][green]$};
+% \node (N7) at (4,6) {$\Smiley[2][green]$};
+% \node (N88) at (7,4) {$\bullet$};
+% \node (N8) at (10,4) {$\bullet$};
+% \node (N9) at (14,6) {$\Smiley[2][green]$};
+% \node (N10) at (0,8) {$\Smiley[2][green]$};
+% \node (N11) at (10,7) {$\Smiley[2][green]$};
+% \node (N111) at (7,7) {$\Smiley[2][green]$};
+% \draw (foot) to [bend left=10] (N1);
+% \draw (foot) -- (N2);
+% \draw (foot) -- (N22);
+% \draw (foot) -- (N3);
+% \draw (foot) -- (N4);
+% \draw (N1) to  (N5);
+% \draw (N1) to   [bend left=10] (N6);
+% \draw (N1) to   [bend right=20] (N7);
+% \draw (N2) to  (N8);
+% \draw (N22) to  (N88);
+% \draw (N8) to  (N11);
+% \draw (N88) to  (N111);
+% \draw (N3) to  (N9);
+% \draw (N5) to  (N10);
+% \end{tikzpicture}
+% \caption{The hydra associated with the ordinal $\omega^{\omega+2}+\omega^\omega \times 2 + \omega + 1$ \label{fig:iota-example}}
+
+% \end{figure}
 
 Kirby and Paris prove the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
@@ -185,7 +243,7 @@ Complex formalisations and proofs are explained in an
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
 
 This work is also an opportunity to 
- provide ``concrete'' examples of several formalisation and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc. It may be also used as a library on ordinal numbers, for instance for proving termination properties.
+ provide ``concrete'' examples of formalization and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc. It may be also used as a library on ordinal numbers, for instance for proving termination properties.
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
@@ -199,7 +257,7 @@ The 2018 article~\cite{JFLA2018paper} contains a formal proof of  a variant of T
 \end{theorem}
 
 Indeed, the consideration of \emph{all} battles allowed us to
-consider battles where the hydra can make an arbitrary number of copies at any time, which make easier our proof by absurd.
+consider battles where the hydra can make an arbitrary number of copies at any time, which made artificially easier our proof by absurd.
 Unfortunately, the examples  most shown in the litterature
 (see for instance \cite{KP82, bauer2008, BauerHydra}) 
 assume that the hydra grows $n$ copies at step $n$ of the game, which is incompatible with our proof.
@@ -210,8 +268,10 @@ We prove now that Theorem~\ref{thm3} still holds with this ``usual'' kind of bat
 Without loss of generality, we could consider the following restrictions:
  
  \begin{itemize}
-   \item The game starts at an initial step $i\in\mathbb{N}$ (not necessariliy $0$).
-   \item  The initial hydra is the graphical representation of an ordinal  $\alpha<\epsilon_0$  in Cantor normal form (See for instance Fig~\ref{fig:iota-example}). 
+   \item The game starts at an initial step $i\in\mathbb{N}$ (not necessarily $0$).
+   \item  The hydra is always the the graphical representation of some ordinal strictly below $\epsilon_0$ in Cantor normal
+     form. For instance, Fig~\ref{fig:round}) shows the hydras respectively associated with  $\omega^{\omega^2+1}$ and $\omega^{\omega^2}\times 3$.
+ 
  \item Hercules always chops off the rightmost head of the hydra.
  \end{itemize}
  
@@ -256,7 +316,7 @@ Small presentation.
 \end{todo}
 
 In order to prove formally that the length of the considered
-kind of battles is not given by a primitive recursive function, weused the formalisation of primitive recursive functions, part
+kind of battles is not given by a primitive recursive function, weused the formalization of primitive recursive functions, part
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem \cite{OConnor05, Goedel}.
 For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-Community}.
 
@@ -269,9 +329,11 @@ Computability is a key topic in Computer Science teaching. Moreover O'Conor's li
   \begin{itemize}
   \item Despite the frequent changes (improvements) in the Coq scripts, code inclusion and \textit{Coq}'s answers are up to date.
 
-  \item Presentation of the main steps of proofs, possibly interleaved with text (Figures \ref{fig:Ex42E0} and \ref{fig:Ex42-schutte}).
-    
+  \item Presentation of the main steps of proofs, possibly interleaved with text.
+      
   \end{itemize}
+
+   Figures~\ref{fig:Hprime} (code snippet), \ref{fig:Ex42E0} and \ref{fig:Ex42-schutte} have been generated with Alectryon.
 \end{todo}
 
 
