@@ -101,6 +101,8 @@ to fill!
 
 \titlerunning{Hydras and Cie}
 
+\newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
+
 \begin{document}
 
 \maketitle
@@ -133,7 +135,7 @@ In a few words:
 \begin{itemize}
 \item A hydra is a finite tree, traditionally presented with the root at the bottom, the leaves of which are called \emph{heads}
   (Fig~\ref{fig:round}).
-\item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater or equal than 2 from the root,
+\item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater than 1 from the root,
   then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the sub-tree $h$ may depend of the considered variant of the game
   or the time elapsed since the beginning of the fight.
   Figure~\ref{fig:round} shows an example with $n=2$.
@@ -228,6 +230,7 @@ In a few words:
 Kirby and Paris prove the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
 
+\TODO[Clément]{We haven't defined winning strategies}
 \begin{theorem}
   In the Hydra game, every strategy is a winning strategy for Hercules. \label{kp:thm1}
 \end{theorem}
@@ -241,7 +244,7 @@ The contrast between the simplicity of the statements above and the complexity o
 Complex formalisations and proofs are explained in an
   electronic book~\cite{HydraBook}. Whenever various reasonable choices exist, we try to present and compare the alternatives.
   For instance, Figures~\ref{fig:Ex42E0} and \ref{fig:Ex42-schutte} show two radically different proofs of the equality
-  $\omega+42+\omega^2=\omega^2$, the first one is a simple proof by computation, the second one shows how this equality
+  $\omega+42+\omega^2=\omega^2$. The first one is a simple proof by computation, the second one shows how this equality
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
 
 This work is also an opportunity to 
@@ -249,7 +252,7 @@ This work is also an opportunity to
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
-We present the recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
+We present recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
 \section{Changes in the library}
 The 2018 article~\cite{JFLA2018paper} contains a formal proof of  a variant of Theorem~\ref{kp:thm2}:
@@ -258,16 +261,17 @@ The 2018 article~\cite{JFLA2018paper} contains a formal proof of  a variant of T
   There is no termination measure mapping hydras to a segment $[0,\mu)$ where $\mu<\epsilon_0$ for proving the termination of  all hydra battles.\label{thm3}
 \end{theorem}
 
-Indeed, the consideration of \emph{all} battles allowed us to
-consider battles where the hydra can make an arbitrary number of copies at any time, which made artificially easier our proof by absurd.
-Unfortunately, the examples  most shown in the litterature
+\TODO[Clément]{Is there a word missing above?}
+Considering measures applicable to \emph{all} battles allowed us to
+focus on battles where the hydra can make an arbitrary number of copies at any time, which made our proof by contradiction artificially easier.
+Unfortunately, the examples  most commonly shown in the litterature
 (see for instance \cite{KP82, bauer2008, BauerHydra}) 
 assume that the hydra grows $n$ copies at step $n$ of the game, which is incompatible with our proof.
 
 \vspace{6pt}
 
-We prove now that Theorem~\ref{thm3} still holds with this ``usual'' kind of battles, by borrowing new combinatorial results from~\cite{KS81}.
-Without loss of generality, we could consider the following restrictions:
+We now prove that Theorem~\ref{thm3} still holds with these typical battles by borrowing new combinatorial results from~\cite{KS81}.
+Without loss of generality, we assume the following restrictions:
  
  \begin{itemize}
    \item The game starts at an initial step $i\in\mathbb{N}$ (not necessarily $0$).
@@ -286,7 +290,7 @@ We also study the number of steps of a battle:
 Let $\alpha<\epsilon_0$ be an ordinal.
 Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$, for  any $i$ in $\mathbb{N}$.
 We prove that this number is greater or equal than
-$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}. \TODO[Clément]{It seems that the term ``Wainer Hardy'' hierarchy only appears in his paper and the Hydra-battles book}
 From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 \begin{figure}[h]
@@ -307,7 +311,7 @@ $H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(i)$.
 
 \label{sect:not-pr}
 
-
+\TODO[Clément]{Highlight `Equations' and remove `omega' highlighting; change theme to something less garish}
 
  
 \section{Main features}
@@ -321,7 +325,7 @@ Small presentation.
 \end{todo}
 
 In order to prove formally that the length of the considered
-kind of battles is not given by a primitive recursive function, weused the formalization of primitive recursive functions, part
+kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem \cite{OConnor05, Goedel}.
 For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-Community}.
 
@@ -335,6 +339,8 @@ Computability is a key topic in Computer Science teaching. Moreover O'Conor's li
   \item Despite the frequent changes (improvements) in the Coq scripts, code inclusion and \textit{Coq}'s answers are up to date.
 
   \item Presentation of the main steps of proofs, possibly interleaved with text.
+  \item \TODO[Clément]{A good part of the LaTeX support in Alectryon was developed for hydra-battles, and this was the first real application with a custom driver, too.}
+  \item \TODO[Clément]{If you kept a trace of them, I would love to see a discussion of any errors that were caught by including the output systematically instead of copy-pasting it.}
       
   \end{itemize}
 
@@ -396,7 +402,7 @@ Since the set \textit{AP} of additive principals  is closed under addition
 The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
 \texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
 It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic but not identical) definitions of types \texttt{T1} and \texttt{T2}, both originated in~\cite{CantorContrib}.
-Our plan is to build a  ``gate'' giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
+Our plan is to build a  ``gate'' \TODO[Clément]{Bridge?} giving access to both the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
 
 Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
 
