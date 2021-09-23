@@ -13,6 +13,7 @@
 \usepackage{doc}
 \usepackage{tikz}
 \usepackage{tikzsymbols}
+\usepackage{pifont}
 \newtheorem{theorem}{Theorem}
 \usetikzlibrary{arrows}
 
@@ -144,22 +145,22 @@ In a few words:
   \centering
   \begin{tikzpicture}[very thick, scale=0.3]
   \node (h1) at (4,0){$\bullet$};
-  \node (h2) at (4,2){$\bullet$};
-  \node (h3) at (2,4){$\bullet$};
-  \node (h4) at (0,6){$\bullet$};
-  \node (h5) at (4,6){$\bullet$};
-  \node (h6) at (6,4){$\bullet$};
+  \node[blue] (h2) at (4,2){$\bullet$};
+  \node[blue] (h3) at (2,4){$\bullet$};
+  \node[blue] (h4) at (0,6){$\bullet$};
+  \node[blue] (h5) at (4,6){$\bullet$};
+  \node[red!90!black] (h6) at (6,4){$\bullet$};
   \draw (h1) -- (h2) ;
   \draw (h2) -- (h3) ;
-  \draw (h2) -- (h6);
+  \draw (h2) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (h6);
   \draw (h3) -- (h4) ;
   \draw (h3) -- (h5) ;
  
 \node (hn1) at (14,0){$\bullet$};
-\node (hn2) at (12,2) {$\bullet$};
-\node (hn3) at (12,4) {$\bullet$};
-\node (hn4) at (10,6){$\bullet$};
-  \node (hn5) at (12,6){$\bullet$};
+\node[blue] (hn2) at (12,2) {$\bullet$};
+\node[blue] (hn3) at (12,4) {$\bullet$};
+\node[blue] (hn4) at (10,6){$\bullet$};
+  \node[blue] (hn5) at (12,6){$\bullet$};
   \draw (hn1) -- (hn2) ;
   \draw (hn2) -- (hn3) ;
   \draw (hn3) -- (hn4) ;
@@ -182,7 +183,7 @@ In a few words:
   \draw (hn3c) -- (hn5c) ;
 \end{tikzpicture}
 
-  \caption{Two successive states of a hydra in a battle.  Hercules chopped off the rightmost head of the hydra, and the whole left tree except the root node was copied twice.}
+  \caption{Two successive states of a hydra in a battle.  Hercules chopped off the rightmost head of the hydra (red), and the whole left tree except the root node (blue) was copied twice.}
   \label{fig:round}
 \end{figure}
 
