@@ -287,13 +287,14 @@ $H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy o
 From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 \begin{figure}[h]
-  \centering
-  \begin{itemize}
-\item If $\alpha=0$, then $H'_\alpha (i)= i$ for any natural number $i$.
+ \noindent
+ For any $i\in\mathbb{N}$,
+   \begin{itemize}
+\item If $\alpha=0$, then $H'_\alpha (i)= i$.
 \item If $\alpha=\beta+1$, then 
-$H'_\alpha(i)=H'_\beta(i+1)$ for any $i \in \mathbb{N}$.
+$H'_\alpha(i)=H'_\beta(i+1)$.
 \item If $\alpha$ is a limit ordinal, then 
-$H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(k)$ for any $i\in \mathbb{N}$.
+$H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(i)$.
 \end{itemize}
 \vspace{4pt}
 \inputsnippets{HprimeDef}
