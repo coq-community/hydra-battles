@@ -91,8 +91,8 @@ Proof.
   Check AP_plus_closed. (* .unfold .no-goals *)
   (* end snippet Ex42d *)
   (* begin snippet Ex42c *)
-  assert (Hlt: omega < phi0 (F 2)) by 
-      ( rewrite omega_eqn; apply phi0_mono, finite_mono;
+  assert (Hlt: omega < phi0 2) by 
+      (rewrite omega_eqn; apply phi0_mono, finite_mono;
         auto with arith).
   (* end  snippet Ex42c *)
   
