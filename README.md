@@ -55,11 +55,17 @@ This contribution contains two parts:
 
 ## Installation
 
-- To get the required dependencies, the easiest way is to use opam. Run:
-  - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
-  - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
+- To get the required dependencies, you can use opam or Nix. With opam:
+  - `opam install coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
+  - `opam install coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
 
-- Building the PDF documentation also requires Alectryon 1.3.1 or later, and SerAPI.
+  With Nix, just run `nix-shell` to get all the dependencies
+  (including for building the documentation).  If you only want the
+  dependencies to build one or the other sub-package, you may run
+  `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
+  addition-chains`.
+
+- Building the PDF documentation also requires Alectryon 1.2 and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:
@@ -76,7 +82,8 @@ This contribution contains two parts:
  Documentation for the `master` branch is continuously deployed at:
  https://coq-community.org/hydra-battles/doc/hydras.pdf
 
- The command `make pdf` generates a local copy as `doc/hydras.pdf`. 
+ The command `make pdf` generates a local copy as `doc/hydras.pdf`.
+
 ## Contents
 
 ###  coqdoc html files
@@ -136,6 +143,12 @@ Any suggestion for improving the Coq scripts and/or the documentation will be ta
 
 - Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of "projects") as pull requests.
 - Of course, new topics are welcome !
+
+- If you wish to contribute without having to clone the project /
+  install the dependencies on your machine, you may use
+  [Gitpod](https://gitpod.io/#https://github.com/coq-community/hydra-battles/)
+  to get an editor and all the dependencies in your browser, with
+  support to open pull requests as well.
 
 - __Contact__ : pierre dot casteran at gmail dot com
 
