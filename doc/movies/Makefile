@@ -17,7 +17,7 @@ alectryon_flags := --frontend coq --backend snippets-hydras $(coq_flags)
 
 alectryon = $(PYTHON) ./driver.py $(alectryon_flags) --output-directory "$@"
 
-.PHONY: all clean targets.mk
+.PHONY: all clean
 
 all: $(targets)
 	@$(PYTHON) ./driver.py --frontend coq --backend assets --output-directory $(assets_root) -
