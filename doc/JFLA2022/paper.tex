@@ -230,9 +230,10 @@ In a few words:
 Kirby and Paris prove the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
 
-\TODO[Clément]{We haven't defined winning strategies}
 \begin{theorem}
-  In the Hydra game, every strategy is a winning strategy for Hercules. \label{kp:thm1}
+  n the Hydra game, Hercules eventually wins, whichever the strategy of both players :
+  choice of a head to chop off, choice of the number of copies. 
+ \label{kp:thm1}
 \end{theorem}
 
 \begin{theorem}
@@ -290,7 +291,7 @@ We also study the number of steps of a battle:
 Let $\alpha<\epsilon_0$ be an ordinal.
 Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$, for  any $i$ in $\mathbb{N}$.
 We prove that this number is greater or equal than
-$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Wainer Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}. \TODO[Clément]{It seems that the term ``Wainer Hardy'' hierarchy only appears in his paper and the Hydra-battles book}
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}. 
 From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
 \begin{figure}[h]
