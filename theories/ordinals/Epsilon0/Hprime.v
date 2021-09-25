@@ -457,7 +457,10 @@ Section H'_omega_cube_3.
       + discriminate.
   Qed.
 
-  
+  Fact F2 : H'_ (phi0 3 + 3) 0 = f (f N).
+  rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
+  Qed. 
+
 End H'_omega_cube_3.
 
 
