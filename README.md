@@ -2,7 +2,7 @@
 This file was generated from `meta.yml`, please do not edit manually.
 Follow the instructions on https://github.com/coq-community/templates to regenerate.
 --->
-# Hydras, Ordinals  & Co. (_work in progress_)
+# Hydras, Ordinals & Co. (_work in progress_)
 
 [![Docker CI][docker-action-shield]][docker-action-link]
 [![Contributing][contributing-shield]][contributing-link]
@@ -13,7 +13,7 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 [docker-action-link]: https://github.com/coq-community/hydra-battles/actions?query=workflow:"Docker%20CI"
 
 [contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
-[contributing-link]: https://github.com/coq-community/hydra-battles#contributions-are-welcome-
+[contributing-link]: https://github.com/coq-community/hydra-battles#contributions-are-welcome
 
 [conduct-shield]: https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-%23f15a24.svg
 [conduct-link]: https://github.com/coq-community/manifesto/blob/master/CODE_OF_CONDUCT.md
@@ -31,8 +31,8 @@ This contribution contains two parts:
   ordinal numbers, and a part of the so-called _Ketonen and Solovay
   machinery_ (combinatorial properties of epsilon0).
 
-  - This project also hosts the formalization by Russel O'Connor of
-    primitive recursive functions and Peano arithmetics (see
+  - This project also hosts the formalization by Russell O'Connor of
+    primitive recursive functions and Peano arithmetic (see
     https://github.com/coq-community/goedel)
 
 - Some algorithms for computing _x^n_ with as few multiplications as
@@ -42,6 +42,12 @@ This contribution contains two parts:
 
 - Author(s):
   - Pierre Castéran
+  - Évelyne Contejean
+  - Jeremy Damour
+  - Russell O'Connor
+  - Karl Palmskog
+  - Clément Pit-Claudel
+  - Théo Zimmermann
 - Coq-community maintainer(s):
   - Pierre Castéran ([**@Casteran**](https://github.com/Casteran))
 - License: [MIT License](LICENSE)
@@ -137,7 +143,7 @@ This contribution contains two parts:
 
 - directory exercises/
 
-## Contributions are welcome !
+## Contributions are welcome
 
 Any suggestion for improving the Coq scripts and/or the documentation will be taken into account.
 

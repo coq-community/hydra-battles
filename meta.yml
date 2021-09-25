@@ -1,5 +1,5 @@
 ---
-fullname: Hydra battles & Co. (_work in progress_)
+fullname: Hydras, Ordinals & Co. (_work in progress_)
 shortname: hydra-battles
 organization: coq-community
 community: true
@@ -16,8 +16,8 @@ description: |-
     ordinal numbers, and a part of the so-called _Ketonen and Solovay
     machinery_ (combinatorial properties of epsilon0).
 
-    - This project also hosts the formalization by Russel O'Connor of
-      primitive recursive functions and Peano arithmetics (see
+    - This project also hosts the formalization by Russell O'Connor of
+      primitive recursive functions and Peano arithmetic (see
       https://github.com/coq-community/goedel)
 
   - Some algorithms for computing _x^n_ with as few multiplications as
@@ -68,6 +68,12 @@ publications:
 
 authors:
 - name: Pierre Castéran
+- name: Évelyne Contejean
+- name: Jeremy Damour
+- name: Russell O'Connor
+- name: Karl Palmskog
+- name: Clément Pit-Claudel
+- name: Théo Zimmermann
 
 maintainers:
 - name: Pierre Castéran
@@ -83,23 +89,25 @@ license:
 
 supported_coq_versions:
   text: 8.13 or later
-  opam: '{(>= "8.13" & < "8.14~") | (= "dev")}'
+  opam: '{(>= "8.13" & < "8.15~") | (= "dev")}'
 
 tested_coq_opam_versions:
 - version: 'coq-dev'
   repo: 'mathcomp/mathcomp-dev'
+- version: '1.12.0-coq-8.14'
+  repo: 'mathcomp/mathcomp'
 - version: '1.12.0-coq-8.13'
   repo: 'mathcomp/mathcomp'
 
 dependencies:
 - opam:
     name: coq-equations
-    version: '{(>= "1.2" & < "1.3~") | (= "dev")}'
+    version: '{(>= "1.2" & < "1.4~") | (= "dev")}'
   description: |-
     [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
 - opam:
     name: coq-paramcoq
-    version: '{(>= "1.1.2" & < "1.2~") | (= "dev")}'
+    version: '{(>= "1.1.3" & < "1.2~") | (= "dev")}'
   description: |-
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.2 or later
 - opam:
@@ -173,7 +181,7 @@ documentation: |-
 
   - directory exercises/
 
-  ## Contributions are welcome !
+  ## Contributions are welcome
 
   Any suggestion for improving the Coq scripts and/or the documentation will be taken into account.
 
