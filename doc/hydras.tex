@@ -1,10 +1,11 @@
-\documentclass[a4paper]{book}
+\documentclass[twoside,a4paper]{book}
 \usepackage{alltt}
 \usepackage{multind}
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{xcolor,fancyvrb, mdframed}
+\usepackage{xcolor, fancyvrb, mdframed}
 \usepackage{amsmath}
+%\usepackage{fancyhdr}
 \usepackage{varioref}
 \usepackage{synttree, proof, centernot}
 \usepackage[firstpage]{draftwatermark}
@@ -73,7 +74,9 @@ Russel O'Connor\cite{OConnor05}.}}
 \date{\today}
 %\date{August 2021}
 
-\title{Hydras, Ordinals \& Co.}
+\title{Hydras, Ordinals \& Co.\\ A library in Coq of entertaining formal mathematics}
+%\pagestyle{fancy}
+%\fancyhead{Hydras, Ordinals, \& Co.}
 \makeindex{coq}
 \makeindex{maths}
 \makeindex{hydras}
