@@ -5337,6 +5337,33 @@ we obtain that, in base $2$, the number $H'_{\omega^3}(3)$ has at least
 $2^{10^{21}}$  digits. But it is still an under-approximation !
 
 
+Since $H'_{\omega^3}(3)= H'_{\omega^3+3}(0)$, this big number is
+the number of steps of the battle with the initial hydra of
+Figure~\ref{fig:start}, and  $0$ as initial replication factor.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[very thick, scale=0.3]
+  \node (h1) at (4,0){$\bullet$};
+  \node (h2) at (2,2){$\bullet$};
+  \node (h3) at (0,4){$\bullet$};
+  \node (h4) at (1,4){$\bullet$};
+  \node (h5) at (2,4){$\bullet$};
+  \node (h6) at (4.5,2){$\bullet$};
+  \node (h7) at (6.5,2){$\bullet$};
+  \node (h8) at (8.5,2){$\bullet$};
+    \draw (h1) -- (h2) ;
+    \draw (h2) -- (h3) ;
+    \draw (h2) -- (h4) ;
+    \draw (h2) -- (h5) ;
+    \draw (h1) -- (h6) ;
+    \draw (h1) -- (h7) ;
+    \draw (h1) -- (h8);
+ \end{tikzpicture}
+
+  \caption{The hydra corresponding to the ordinal $\omega^3+3$}
+  \label{fig:start}
+\end{figure}
 
 \subsubsection{A formula for \texorpdfstring{$H'_{\omega^\omega}$}{\texttt{H'(phi0(omega))}}}
     
