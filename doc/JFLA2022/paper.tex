@@ -325,28 +325,7 @@ We prove that this number is greater or equal than
 $H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
 From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
 
-\begin{figure}[h]
- \noindent
- For any $\alpha$ in $[0,\epsilon_0)$ and any $i$ in $\mathbb{N}$,
-   \begin{itemize}
-\item If $\alpha=0$, then $H'_\alpha (i)= i$.
-\item If $\alpha=\beta+1$, then 
-$H'_\alpha(i)=H'_\beta(i+1)$.
-\item If $\alpha$ is a limit ordinal, then 
-$H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(i)$.
-\end{itemize}
-\vspace{4pt}
-\inputsnippets{HprimeDef}
-\caption{The rapidly growing hierarchy $H'$ of arithmetic functions}
-\label{fig:Hprime}
-\end{figure}
-
-\label{sect:not-pr}
-
-\TODO[Clément]{Highlight `Equations' and remove `omega' highlighting; change theme to something less garish}
-
-
-Using $H'$ equations as rewrite rules, we can study a concrete example of hydra battle. Let us start with the hydra of figure~\ref{fig:start} and $0$ as initial step.
+Using $H'$s equations as rewrite rules, we can study a concrete example of hydra battle. Let us start with the hydra of figure~\ref{fig:start} and $0$ as initial step.
 By a combination of rewriting and induction, we prove that the number of steps of the considered battle has at least $2^{10^{21}}$ binary digits. 
 
 \begin{figure}[h]
@@ -369,9 +348,31 @@ By a combination of rewriting and induction, we prove that the number of steps o
     \draw (h1) -- (h8);
  \end{tikzpicture}
 
-  \caption{The hydra corresponding to the ordinal $\omega^3+3$}
+  \caption{The hydra associated with the ordinal $\omega^3+3$}
   \label{fig:start}
 \end{figure}
+
+
+\begin{figure}[h]
+ \noindent
+ For any $\alpha$ in $[0,\epsilon_0)$ and any $i$ in $\mathbb{N}$,
+   \begin{itemize}
+\item If $\alpha=0$, then $H'_\alpha (i)= i$.
+\item If $\alpha$ is a limit ordinal, then 
+  $H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(i)$.
+  \item If $\alpha=\beta+1$, then 
+$H'_\alpha(i)=H'_\beta(i+1)$.
+\end{itemize}
+\vspace{4pt}
+\inputsnippets{HprimeDef}
+\caption{The rapidly growing hierarchy $H'$ of arithmetic functions}
+\label{fig:Hprime}
+\end{figure}
+
+\label{sect:not-pr}
+
+\TODO[Clément]{Highlight `Equations' and remove `omega' highlighting; change theme to something less garish}
+
 
 
 
