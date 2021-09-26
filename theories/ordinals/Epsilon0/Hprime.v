@@ -410,7 +410,7 @@ Section H'_omega_cube_3.
   
 (* begin snippet HprimeOmegaCube3a:: no-out *)
 
-  Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
+  Let f k :=   (exp2 (S k) * (S k) - 1)%nat.
 
   Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k. 
    Proof.
@@ -423,14 +423,12 @@ Section H'_omega_cube_3.
   (* end snippet HprimeOmegaCube3a *)
 
   (* begin snippet HprimeOmegaCube3b:: no-out *)
-  
   Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). 
    Proof.  rewrite R0; reflexivity.   Qed.
  
   (* end snippet HprimeOmegaCube3b *)
   
   (* begin snippet HprimeOmegaCube3c:: no-out *)
-  
   Let N := (exp2 64 * 64 - 1)%nat.
   (* end snippet HprimeOmegaCube3c *)
 
@@ -456,8 +454,12 @@ Section H'_omega_cube_3.
       + apply  exp2_not_zero.
       + discriminate.
   Qed.
+  (* begin snippet  HprimeOmegaCube3de:: no-out *)
+  Fact F2 : H'_ (phi0 3 + 3) 0 = f (f N).
+  (* end snippet  HprimeOmegaCube3de *)
+  rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
+  Qed. 
 
-  
 End H'_omega_cube_3.
 
 
@@ -903,6 +905,7 @@ Section Proof_of_H'_mono_l.
   
   Theorem H'_dom : dominates_strong (H'_ beta) (H'_ alpha). (* .no-out *)
   (* end snippet HprimeDom *)
+  
   Proof.
     destruct H'_mono_l as [x Hx]; exists (S x); red.
     intros p H; inversion_clear H; apply Hx; auto with arith.
