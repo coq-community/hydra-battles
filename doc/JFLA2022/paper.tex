@@ -110,7 +110,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \begin{abstract}
   \emph{Hydra-battles} is a collaborative library of commented proofs, developped under the \emph{Coq-Community} project.
-  We present its evolution since a former presentation~\cite{JFLA2018paper} and how its structure is determined by other
+  We present its evolution since a former presentation and how its structure is determined by other
   libraries and the \emph{Alectryon} literate proving tool.
 \end{abstract}
 
@@ -319,14 +319,30 @@ Without loss of generality, we assume the following restrictions:
  Our new proof of Theorem~\ref{thm3} is based on a systematic study of strictly decreasing sequences of ordinals below $\epsilon_0$, borrowed from~\cite{KS81}.
  
 We also study the number of steps of a battle:
-Let $\alpha<\epsilon_0$ be an ordinal.
-Using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}, we define the function which returns the number of steps of the battle starting with $\alpha$ at step $i$, for  any $i$ in $\mathbb{N}$.
-We prove that this number is greater or equal than
-$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}, defined by transfinite recursion in Fig.~\ref{fig:Hprime}.
-From this result, we infer that the considered function is not primitive recursive in general (for $\alpha\geq\omega^\omega$).
+Let $\alpha<\epsilon_0$ be an ordinal. 
+We prove that  the number of steps of the battle starting with
+$\alpha$ at step $i$ is greater or equal than
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}.  The function $H'_\alpha$ is defined by transfinite recursion over $\alpha$:
 
-Using $H'$s equations as rewrite rules, we can study a concrete example of hydra battle. Let us start with the hydra of figure~\ref{fig:start} and $0$ as initial step.
-By a sequence of rewritings and induction proof steps, we prove that the number of steps of the considered battle is greater or equal than $2^{2^N}$, where $N=2^{70}-1$.
+\begin{align}
+  H'_0(i) & = i\\
+  H'_\alpha(i) &= H'_{(\canonseq{\alpha}{i+1})}(i)  \quad\textit{if $\alpha$ is a limit ordinal}\\
+  H'_{\alpha}(i) &=H'_\beta(i+1) \quad\textit{if $\alpha=\beta+1$}
+\end{align}
+
+Figure~\ref{fig:Hprime} 
+ shows the  definition of $H'$ with the \texttt{coq-equations}
+ plug-in~\cite{sozeau:hal-01671777}.
+
+ \begin{figure}[h]
+ \inputsnippets{HprimeDef}
+\caption{Coq Equations for $H'$}
+\label{fig:Hprime}
+\end{figure}
+
+
+Using $H'$s equations as rewrite rules, we can study a realistic example. We take the hydra of figure~\ref{fig:start} and $i=0$ as initial configuration. 
+By a sequence of rewritings and inductions, we prove that the number of steps of the considered battle is greater or equal than $2^{2^N}$, where $N=2^{70}-1$.
 
 \begin{figure}[h]
   \centering
@@ -353,25 +369,15 @@ By a sequence of rewritings and induction proof steps, we prove that the number 
 \end{figure}
 
 
-\begin{figure}[h]
- \noindent
- For any $\alpha$ in $[0,\epsilon_0)$ and any $i$ in $\mathbb{N}$,
-   \begin{itemize}
-\item If $\alpha=0$, then $H'_\alpha (i)= i$.
-\item If $\alpha$ is a limit ordinal, then 
-  $H'_\alpha(i) = H'_{(\canonseq{\alpha}{i+1})}(i)$.
-  \item If $\alpha=\beta+1$, then 
-$H'_\alpha(i)=H'_\beta(i+1)$.
-\end{itemize}
-\vspace{4pt}
-\inputsnippets{HprimeDef}
-\caption{The rapidly growing hierarchy $H'$ of arithmetic functions}
-\label{fig:Hprime}
-\end{figure}
+
 
 \label{sect:not-pr}
 
 \TODO[Clément]{Highlight `Equations' and remove `omega' highlighting; change theme to something less garish}
+
+
+More generally, we prove that, for $\alpha\geq\omega^\omega$
+the function computing the length of the battle starting with the configuration $(\alpha,i)$ is not primitive recursive.
 
 
 
@@ -391,7 +397,7 @@ kind of battles is not given by a primitive recursive function, we used the form
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem~\cite{OConnor05, Goedel}.
 For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-Community}.
 
-Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalisation, with comments on the definitions and proofs, [counter]-examples and exercises.
+Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises.
 
 
 \subsection{Documentation with Alectryon}
