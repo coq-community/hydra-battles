@@ -417,8 +417,22 @@ Section H'_omega_cube_3.
     ochange (phi0 3) (phi0 (Succ 2)); rewrite H'_Phi0_succ.
     unfold H'_succ_fun; apply iterate_ext.
     - intro x; now rewrite H'_omega_sqr.   
-  Qed.
- 
+   Qed.
+
+   Remark f_minoration n p : 0 < n -> n <= p -> exp2 n <= f p.
+   Proof.
+   intros ? ? ; unfold f; rewrite exp2S.
+    pose (x := exp2 n); pose(y := exp2 p); fold x; fold y.
+    assert (x <= y) by (now apply exp2_mono_weak).
+    assert (2 <= S p) by lia.
+    transitivity (2 * x * 2 - 1).
+    -  lia.
+    - apply Nat.sub_le_mono_r.
+      transitivity (2 * y * 2)%nat.
+    + lia.
+    + now apply Nat.mul_le_mono_l. 
+ Qed.
+
 
   (* end snippet HprimeOmegaCube3a *)
 
@@ -426,12 +440,12 @@ Section H'_omega_cube_3.
   
   Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). 
    Proof.  rewrite R0; reflexivity.   Qed.
- 
-  (* end snippet HprimeOmegaCube3b *)
+     
+ (* end snippet HprimeOmegaCube3b *)
   
   (* begin snippet HprimeOmegaCube3c:: no-out *)
   
-  Let N := (exp2 64 * 64 - 1)%nat.
+  Let N := (exp2 64 * 64 - 1)%nat. (* f (f 3)) *)
   (* end snippet HprimeOmegaCube3c *)
 
   (* begin snippet  HprimeOmegaCube3d:: no-out *)
@@ -459,6 +473,16 @@ Section H'_omega_cube_3.
 
   Fact F2 : H'_ (phi0 3 + 3) 0 = f (f N).
   rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
+  Qed.
+
+  Fact F3 : (exp2 (exp2 N) <= H'_ (phi0 3 + 3) 0).
+  Proof. 
+    rewrite F2; apply f_minoration. 
+    - apply exp2_positive. 
+    - apply f_minoration; unfold N.
+      assert (H0 := exp2_gt_id 64).
+      + pose (x:= exp2 64); fold x in H0; fold x; lia.
+      + left. 
   Qed. 
 
 End H'_omega_cube_3.

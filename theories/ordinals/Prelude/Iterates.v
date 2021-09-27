@@ -559,7 +559,14 @@ Proof.
   - generalize (exp2_positive n); generalize (exp2 n);intros; abstract lia.
   - generalize IHle, (exp2_positive m); generalize (exp2 n), (exp2 m);
       intros;abstract lia.
-Qed. 
+Qed.
+
+Lemma exp2_mono_weak : forall n p, n<= p -> exp2 n <= exp2 p.
+Proof.
+  intros n p H; elim H.
+  - left.
+  - intros ? ? ?; apply Nat.lt_le_incl, exp2_mono; auto with arith.
+Qed.
 
 Lemma exp2_as_iterate n : exp2 n = iterate (fun i => 2 * i)%nat n 1.
 Proof.
