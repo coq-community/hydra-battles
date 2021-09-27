@@ -34,3 +34,6 @@ Lemma exp2S : forall n, exp2 (S n) = 2 * exp2 n.
 Proof.
   unfold exp2;  intros; simpl; ring. 
 Qed. 
+
+
+ 

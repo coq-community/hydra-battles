@@ -5303,7 +5303,17 @@ Thus, the number $H_{\omega^3}(3)$ can be written as four nested applications of
  
 \input{movies/snippets/Hprime/HprimeOmegaCube3b}
 
-In order to make this statement more readable, we can introduce a local définition.
+
+In a more classical writing, this number is displayed as follows:
+
+{\Large
+$$
+H'_{\omega^3}(3) =  2 ^ {(2 ^ {N + 1} \, (N+1) )}   \,  (2 ^ {N+1} \, ( N +1) ) - 1
+$$
+}
+
+
+In order to make this statement more readable, we introduce a local definition.
 
 \input{movies/snippets/Hprime/HprimeOmegaCube3c}
 
@@ -5322,21 +5332,16 @@ This number looks quite big; let us compute an approximation with \texttt{Ocaml}
 \input{movies/snippets/Hprime/HprimeOmegaCube3d}
 
 
-
-In a more classical writing, this number is displayed as follows:
-
-{\Large
-$$
-H'_{\omega^3}(3) =  2 ^ {(2 ^ {N + 1} \, (N+1) )}   \,  (2 ^ {N+1} \, ( N +1) ) - 1
-$$
-}
-
-
 We leave as an exercise to determine the best approximation as possible of
  the size of this number (for instance its number of digits).  For instance, if
 we do not take into account the multiplications in the formula above,
 we obtain that, in base $2$, the number $H'_{\omega^3}(3)$ has at least
 $2^{10^{21}}$  digits. But it is still an under-approximation !
+
+\input{movies/snippets/Hprime/HprimeOmegaCube3e}
+
+
+
 
 
 \subsubsection{A formula for \texorpdfstring{$H'_{\omega^\omega}$}{\texttt{H'(phi0(omega))}}}
