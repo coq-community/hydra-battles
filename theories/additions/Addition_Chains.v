@@ -7,8 +7,9 @@ Pierre Casteran, LaBRI, University of Bordeaux
 Require Export Monoid_instances Pow Lia List.
 Require Import Relations RelationClasses.
 
-
-Declare ML Module "paramcoq".  
+(* TODO: use Require instead of Declare when paramcoq 1.1.3 packaged in Nix *)
+(*From Param Require Import Param.*)
+Declare ML Module "paramcoq".
  
 Require Import More_on_positive.
 Generalizable Variables A op one Aeq.
