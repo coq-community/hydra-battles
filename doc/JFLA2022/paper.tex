@@ -380,17 +380,16 @@ More generally, we prove that, for $\alpha\geq\omega^\omega$
 the function computing the length of the battle starting with the configuration $(\alpha,i)$ is not primitive recursive.
 
 
-
-
-\section{Main features}
-
+\section{Integration within Coq-Community}
 
 
 
-\subsection{The Coq-Community ecosystem}
-\begin{todo}
-Small presentation.
-\end{todo}
+
+
+\subsection{Presentation}
+
+
+\subsection{Interactions with other Coq-Community projects}
 
 In order to prove formally that the length of the considered
 kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
@@ -399,7 +398,10 @@ For this purpose, and above all by consideration of the scientific interest of t
 
 Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises.
 
+% We could already talk a bit of the monorepo structure here, and
+% defer some explanations on the tooling to the next section.
 
+\section{Modernizing the infrastructure}
 \subsection{Documentation with Alectryon}
 \begin{todo}
   Interest of Alectryon:
@@ -462,20 +464,22 @@ Since the set \textit{AP} of additive principals  is closed under addition
   \label{fig:Ex42-schutte}
 \end{figure}
 
+\subsection{Continuous integration and deployment, opam packaging, etc.}
 \section{Conclusion and perspectives}
 
+
+\TODO{General Conclusion}
 
 
 
 %\subsection{Perspectives}
 
+\subsection{Further extensions}
 
-The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library -- dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics --- contains a generalization of two types of ordinals (\texttt{T1} for the ordinal $\epsilon_0$ and
-\texttt{T2} for $\Gamma_0$) to a larger ordinal defined by Ackermann, and relates these data structures with Bourbaki's set theory.
-It is interesting to note that both libraries \textit{Gaia} and \textit{hydra-battles} contain their own (isomorphic but not identical) definitions of types \texttt{T1} and \texttt{T2}, both originated in~\cite{CantorContrib}.
-Our plan is to build a  bridge between  the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems from one of the two libraries to the other one.
-
-Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}. For this purpose, we plan to import  the formalization of Peano Arithmetic by O'Connor~\cite{Goedel}.
+We plan to extend our libraies in two main directions.
+The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library is dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics. It contains data structures which are compatible with our ordinal notations. 
+Our plan is to build a  bridge between  the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems between both libraries.
+Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
 
  \emph{Hydra-battles} is not limited to the study of ordinal numbers and applications.
  For instance, we are also developing 
