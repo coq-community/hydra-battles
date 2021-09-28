@@ -322,21 +322,25 @@ We also study the number of steps of a battle:
 Let $\alpha<\epsilon_0$ be an ordinal. 
 We prove that  the number of steps of the battle starting with
 $\alpha$ at step $i$ is greater or equal than
-$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}.  The function $H'_\alpha$ is defined by transfinite recursion over $\alpha$:
+$H'_\alpha(i)-i$, where $H'$ is a slight variant of the Hardy hierarchy of rapidly growing functions~\cite{BW85, KS81, Promel2013, Wainer1970}.  The function $H'_\alpha$ is defined by transfinite recursion over $\alpha$ on Figures~\ref{fig:hardy-math}
+and~\ref{fig:Hprime}.
 
+
+\begin{figure}[h]
 \begin{align}
   H'_0(i) & = i\\
   H'_\alpha(i) &= H'_{(\canonseq{\alpha}{i+1})}(i)  \quad\textit{if $\alpha$ is a limit ordinal}\\
   H'_{\alpha}(i) &=H'_\beta(i+1) \quad\textit{if $\alpha=\beta+1$}
-\end{align}
+\end{align}  
+  \caption{The $H'$ rapidly growing hierarchy of arithmetical functions}
+  \label{fig:hardy-math}
+\end{figure}
 
-Figure~\ref{fig:Hprime} 
- shows the  definition of $H'$ with the \texttt{coq-equations}
- plug-in~\cite{sozeau:hal-01671777}.
 
  \begin{figure}[h]
  \inputsnippets{HprimeDef}
-\caption{Coq Equations for $H'$}
+\caption{$H'$ definition with the \texttt{coq-equations}
+ plug-in~\cite{sozeau:hal-01671777}}
 \label{fig:Hprime}
 \end{figure}
 
@@ -476,7 +480,7 @@ Since the set \textit{AP} of additive principals  is closed under addition
 
 \subsection{Further extensions}
 
-We plan to extend our libraies in two main directions.
+We plan to extend our libraries in two main directions.
 The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library is dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics. It contains data structures which are compatible with our ordinal notations. 
 Our plan is to build a  bridge between  the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems between both libraries.
 Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
