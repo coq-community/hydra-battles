@@ -109,12 +109,12 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 
 \begin{abstract}
-  \emph{Hydra-battles} is a collaborative library on discrete math, written for the Coq proof assistant, and developped under the \emph{Coq-Community} project. The proof scripts are
+  \emph{Hydra-battles} is a collaborative library on discrete math, written for the Coq proof assistant, and developed under the \emph{Coq-community} project. The proof scripts are
   accompanied with an electronic book, made with the help of the \emph{Alectryon} litterate proving tool.
   We present the evolution of the mathematical contents since
   former presentations at JFLA meetings.
   Then, we show how the structure of the project is determined   by two  requirements which must continuously satisfied:
-   maintenance of the library with respect to several Coq-Community projects it requires and evolutions of Coq, and 
+   maintenance of the library with respect to several Coq-community projects it requires and evolutions of Coq, and 
   consistency of the book with respect to the library. 
 \end{abstract}
 
@@ -142,7 +142,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \end{itemize}
 
 \subsection{Vision}
-The \emph{Hydra-battles} project, part of \emph{Coq-Community}~\cite{CoqCommunity} aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \emph{Coq-Community} is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting Coq packages, and working collaboratively on documentation projects. The \emph{Hydra-battles} project demonstrates that these two goals are not independent: interesting Coq packages can become the basis for new documentation.
+The \emph{Hydra-battles} project, part of \emph{Coq-community}~\cite{CoqCommunity} aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \emph{Coq-community} is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting Coq packages, and working collaboratively on documentation projects. The \emph{Hydra-battles} project demonstrates that these two goals are not independent: interesting Coq packages can become the basis for new documentation.
 %
 This umbrella project now includes evolved versions of former \emph{contribs} Cantor and Additions (under the new names of Hydra-battles and Addition-chains), the Pocklington library, extracted from Russel O'Connor's Goedel \emph{contrib}~\cite{OConnor05, Goedel} and a bridge to the Gaia library (\emph{contrib} of José Grimm~\cite{Gaia,grimm:hal-00911710}).
 %
@@ -287,7 +287,7 @@ This work is also an opportunity to
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
-We present recent evolutions of the library: new results, interaction within the Coq-Community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
+We present recent evolutions of the library: new results, interaction within the Coq-community project~\cite{CoqCommunity}, and documentation generated with Alectryon~\cite{alectryonpaper, alectryongithub}.
 
 \section{Changes in the library}
 The 2018 article~\cite{JFLA2018paper} contains a formal proof of  a variant of Theorem~\ref{kp:thm2}:
@@ -388,7 +388,7 @@ More generally, we prove that, for $\alpha\geq\omega^\omega$
 the function computing the length of the battle starting with the configuration $(\alpha,i)$ is not primitive recursive.
 
 
-\section{Integration within Coq-Community}
+\section{Integration within Coq-community}
 
 
 
@@ -397,12 +397,12 @@ the function computing the length of the battle starting with the configuration 
 \subsection{Presentation}
 
 
-\subsection{Interactions with other Coq-Community projects}
+\subsection{Interactions with other Coq-community projects}
 
 In order to prove formally that the length of the considered
 kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem~\cite{OConnor05, Goedel}.
-For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-Community}.
+For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \textit{Coq-community}.
 
 Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises.
 
@@ -483,7 +483,7 @@ Since the set \textit{AP} of additive principals  is closed under addition
 \subsection{Further extensions}
 
 We plan to extend our libraries in two main directions.
-The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-Community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library is dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics. It contains data structures which are compatible with our ordinal notations. 
+The Gaia project~\cite{Gaia}, also maintained on \textit{Coq-community} contains a development by José Grimm~\cite{grimm:hal-00911710}. This library is dedicated  to the implementation in \textit{Coq (SSreflect)} of books from  Bourbaki's Elements of Mathematics. It contains data structures which are compatible with our ordinal notations. 
 Our plan is to build a  bridge between  the combinatorial results of \textit{hydra-battles} and the set-theoretic content of \textit{Gaia}, and make possible the transfer of theorems between both libraries.
 Another direction would be to write in \textit{Coq} a formal proof of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
 
