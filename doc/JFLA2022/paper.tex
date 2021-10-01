@@ -390,10 +390,6 @@ the function computing the length of the battle starting with the configuration 
 
 \section{Integration within Coq-community}
 
-
-
-
-
 \subsection{Presentation}
 
 \emph{Coq-community} is an informal organization run by volunteer Coq users with objectives to maintain interesting Coq projects in the long-term and help Coq users to collaborate on documentation, tooling, etc.
@@ -407,10 +403,24 @@ In the case of Coq, this problem may be even more prevalent as many packages are
 The authors are however generally very open to having someone else who expresses interest in their work continue the maintenance.
 %
 \emph{Coq-community} makes that easy by providing a process for transferring or forking an unmaintained package, tooling for setting up good maintenance practices (such as continuous integration) and by making it possible for someone to take over a package without committing in the long-term (as maintainers who drop out can easily be replaced by some other volunteers).
-%
+
 Today, \emph{Coq-community} hosts over 50 projects maintained by over 30 maintainers.
+%
+The hosted projects come from a variety of origins.
+%
+Some had been maintained in the past by the Coq development team on behalf of the authors, but this meant that only minimal changes required to make the project build with new Coq versions were conducted.
+%
+Some were still maintained by their authors but they wanted help to keep them up-to-date.
+%
+Others were simply left unmaintained and were revived by their adoption in \emph{Coq-community}.
 
 \subsection{Interactions with other Coq-community projects}
+
+Given the objectives of \emph{Coq-community}, it makes sense to propose a transfer anytime we encounter an interesting project that is insufficiently maintained.
+%
+After the project is adopted, large changes and refactorings are explicitly allowed.
+%
+This means, for instance, that we can consolidate libraries together or split them into several packages if it makes sense.
 
 In order to prove formally that the length of the considered
 kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
