@@ -39,9 +39,11 @@ Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
           with Utils.dec (Limitb alpha) :=
           { | left _limit =>  H'_ (Canon alpha (S i))  i ;
             | right _successor =>  H'_ (Pred alpha) (S i)}}.
-
-Solve All Obligations with auto with E0.
 (* end snippet HprimeDef *)
+
+(* begin snippet HprimeDefb *)
+Solve All Obligations with auto with E0.
+(* end snippet HprimeDefb *)
 
 (** Paraphrases of the equations for H'_ *)
 
@@ -433,6 +435,18 @@ Section H'_omega_cube_3.
 
   (* end snippet HprimeOmegaCube3c *)
 
+  Remark N_simpl: N = exp2 70 - 1.
+  Proof. 
+   change 70 with (64 + 6)%nat.
+    assert (forall n p,  (exp2 (n + p) = exp2 n * exp2 p)%nat).
+   { induction n; cbn.
+     intro p; now rewrite Nat.add_0_r.
+    intros p; rewrite !Nat.add_0_r.
+     repeat rewrite IHn; ring.
+   }
+  rewrite H; unfold N; reflexivity. 
+  Qed.
+  
   (* begin snippet  HprimeOmegaCube3d:: no-out *)
   
   Fact F1 : H'_ (phi0 3) 3 = f (f N).
