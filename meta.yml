@@ -27,8 +27,8 @@ build: |-
   ## Installation
 
   - To get the required dependencies, you can use opam or Nix. With opam:
-    - `opam install coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
-    - `opam install coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
+    - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
+    - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
 
     With Nix, just run `nix-shell` to get all the dependencies
     (including for building the documentation).  If you only want the
@@ -40,9 +40,9 @@ build: |-
     See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
   - The general Makefile is in the top directory:
-    - make : compilation of the Coq scripts
-    - make pdf : generation of the documentation
-    - make html : generation of coqdoc html files
+    - `make` : compilation of the Coq scripts
+    - `make pdf` : generation of the documentation
+    - `make html` : generation of coqdoc html files
 
   - You may also rely on `dune` to install just one part. Run:
     - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part;
