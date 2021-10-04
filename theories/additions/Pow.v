@@ -352,7 +352,7 @@ Qed.
 
 (** ** Remark
 
-Iw we normalize exponentiation functions with a given exponent, we notice
+If we normalize exponentiation functions with a given exponent, we notice
 that the obtained functions do not execute the same computations, but it is
 hard to visualize why the binary method is more efficient than the naive one.
 

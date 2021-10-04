@@ -52,6 +52,7 @@
 %%% between them).  A, B, C should be paths to files in movies/snippets/.
 \usepackage{etoolbox}
 \makeatletter
+\newcounter{snippets}
 \newcommand{\inputsnippets}[1]
   {{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
     \alectryon@copymacros\begin{io}
@@ -60,7 +61,9 @@
 \let\input@old\input % Save definition of \input
 \newcommand{\@inputsnippet}[1]
   {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \refstepcounter{snippets}%
     \input@old{movies/snippets/#1}}}
+\AtEndDocument{\message{Snippets: \thesnippets}}
 \makeatother
 
 \SetWatermarkLightness{0.8}
