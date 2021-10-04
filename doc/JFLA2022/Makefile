@@ -1,6 +1,6 @@
 snippets := \
 	Schutte/Ex42a Schutte/Ex42b Schutte/Ex42c Schutte/Ex42d Schutte/Ex42e \
-	Hprime/HprimeDef E0/Ex42
+	Hprime/HprimeDef E0/Ex42 Pow/evalPow17LetIn
 
 snippets_tex := $(patsubst %,snippets/%.tex,$(snippets))
 snippet_dirs := $(dir $(snippets_tex))
