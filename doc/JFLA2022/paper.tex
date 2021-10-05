@@ -59,9 +59,6 @@
 \newcommand{\texniccenter}{{\TeX}nicCenter}
 \newcommand{\makefile}{\texttt{Makefile}}
 \newcommand{\latexeditor}{LEd}
-\newcommand{\Hydras}{Hydras \& Co.\xspace}
-\newcommand{\Coqcommunity}{Coq-community\xspace}
-
 
 %\makeindex
 
@@ -69,7 +66,7 @@
 %%
 % Regular title as in the article class.
 %
-\title{Hydras, Ordinals \&  Co.  \\
+\title{\HydrasLib  \\
   A library in Coq of entertaining formal mathematics}
 
 
@@ -102,7 +99,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \authorrunning{Castéran, Damour, Palmskog, Pit-Claudel and Zimmermann}
 
-\titlerunning{Hydras, Ordinals \& Co.}
+\titlerunning{\HydrasLib}
 
 \newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
 \newcommand{\coq}{Coq\xspace}
@@ -110,7 +107,8 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \newcommand{\gaia}{Gaia\xspace}
 \newcommand{\alectr}{Alectryon\xspace}
 \newcommand{\equations}{Equations\xspace}
-\newcommand{\Hydras}{Hydras \& Co.\xspace}
+\newcommand{\HydrasBook}{Hydras \& Co.\xspace}
+\newcommand{\HydrasLib}{Hydra-battles\xspace}
 
 \begin{document}
 
@@ -118,7 +116,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 
 \begin{abstract}
-  \Hydras is a collaborative library on discrete math, written for the \coq  proof assistant, and developed under the \community project. The proof scripts are
+  \HydrasLib is a collaborative library on discrete math, written for the \coq  proof assistant, and developed under the \community project. The proof scripts are
   accompanied with an electronic book, made with the help of the \alectr litterate proving tool.
   We present the evolution of the mathematical contents since
   former presentations at JFLA meetings.
@@ -151,7 +149,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \end{itemize}
 
 \subsection{Vision}
-The \Hydras project, part of \community~\cite{CoqCommunity} aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \community is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
+The \HydrasLib project, part of \community~\cite{CoqCommunity} aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \community is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \HydrasLib project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
 %
 This umbrella project now includes evolved versions of the former Cantor and Additions libraries (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library, extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel} and a bridge to the \gaia library (by José Grimm~\cite{Gaia,grimm:hal-00911710}).
 %
@@ -398,11 +396,11 @@ the function computing the length of the battle starting with the configuration 
 
 
 
-\section{Integration within \Coqcommunity}
+\section{Integration within \community}
 
 \subsection{Presentation}
 
-\Coqcommunity is an informal organization run by volunteer Coq users with objectives to maintain interesting Coq projects in the long-term and help Coq users to collaborate on documentation, tooling, etc.
+\community is an informal organization run by volunteer Coq users with objectives to maintain interesting Coq projects in the long-term and help Coq users to collaborate on documentation, tooling, etc.
 
 It was created in 2018, inspired by the {Elm Community} organization~\cite{zimmermann:tel-02451322}.
 %
@@ -413,9 +411,9 @@ In the case of \coq, this problem may be even more prevalent as many packages ar
 The authors are however generally very open to having someone else who expresses interest in their work continue the maintenance.
 %
 
-\Coqcommunity makes that easy by providing a process for transferring or forking an unmaintained package, tooling for setting up good maintenance practices (such as continuous integration) and by making it possible for someone to take over a package without committing in the long-term (as maintainers who drop out can easily be replaced by some other volunteers).
+\community makes that easy by providing a process for transferring or forking an unmaintained package, tooling for setting up good maintenance practices (such as continuous integration) and by making it possible for someone to take over a package without committing in the long-term (as maintainers who drop out can easily be replaced by some other volunteers).
 
-Today, \Coqcommunity hosts over 50 projects maintained by over 30 maintainers.
+Today, \community hosts over 50 projects maintained by over 30 maintainers.
 %
 The hosted projects come from a variety of origins.
 %
@@ -423,11 +421,11 @@ Some had been maintained in the past by the \coq development team on behalf of t
 %
 Some were still maintained by their authors but they wanted help to keep them up-to-date.
 %
-Others were simply left unmaintained and were revived by their adoption in \Coqcommunity.
+Others were simply left unmaintained and were revived by their adoption in \community.
 
-\subsection{Interactions with other \Coqcommunity projects}
+\subsection{Interactions with other \community projects}
 
-Given the objectives of \Coqcommunity, it makes sense to propose a transfer anytime we encounter an interesting project that is insufficiently maintained.
+Given the objectives of \community, it makes sense to propose a transfer anytime we encounter an interesting project that is insufficiently maintained.
 %
 After the project is adopted, large changes and refactorings are explicitly allowed.
 %
@@ -436,9 +434,9 @@ This means, for instance, that we can consolidate libraries together or split th
 In order to prove formally that the length of the considered
 kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
 of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem~\cite{OConnor05, Goedel}.
-For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \Coqcommunity.
+For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \community.
 
-Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises, and  extract part of the Goedel library into a new sub-library of the \Hydras library: Ackermann.
+Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises, and  extract part of the Goedel library into a new sub-library of the \HydrasLib library: Ackermann.
 
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
@@ -448,14 +446,14 @@ Computability is a key topic in Computer Science teaching. Moreover O'Connor's l
 \subsection{Documentation with \alectr}
 
 
-The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), lemmas (Fig.~\ref{fig:Ex42E0}), proof scripts (Fig.~\ref{fig:Ex42-schutte}), and computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}). The order in which these references appear in the book is independent of the structure of our libraries. Thus, we chose not to include our textbook as comments in the libraries (solution \emph{à la} Coqdoc).
+The \HydrasBook book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), lemmas (Fig.~\ref{fig:Ex42E0}), proof scripts (Fig.~\ref{fig:Ex42-schutte}), and computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}). The order in which these references appear in the book is independent of the structure of our libraries. Thus, we chose not to include our textbook as comments in the libraries (solution \emph{à la} Coqdoc).
 %\TODO[Pierre]{is the preceding sentence OK?}
 
 Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged. %\TODO[Clément]{see FIXME cite alectryon for a discussion of various approaches to documentation of \coq developments}
  
 
 
-We solved this maintenance issue by moving to \alectr, a tool to automatically record \coq proofs.  Instead of copy-pasting fragments into LaTeX, we now embed small LaTeX files automatically generated by \alectr from our \coq development.  Our build system guarantees that these LaTeX snippets are always up-to-date and consistent with the code (and, by comparing these snippets across releases of \coq or versions of \Hydras, we can easily spot unexpected changes).
+We solved this maintenance issue by moving to \alectr, a tool to automatically record \coq proofs.  Instead of copy-pasting fragments into LaTeX, we now embed small LaTeX files automatically generated by \alectr from our \coq development.  Our build system guarantees that these LaTeX snippets are always up-to-date and consistent with the code (and, by comparing these snippets across releases of \coq or versions of \HydrasLib, we can easily spot unexpected changes).
 
 The transition happened gradually, over a few weeks: for each snippet of \coq code that was in the book, we had to take the following steps:
 
@@ -521,7 +519,7 @@ Since the set \textit{AP} of additive principals  is closed under addition
 \section{Conclusion and perspectives}
 
 
-\Hydras wants to be a bridge between scientific litterature (\emph{e.g.}~\cite{KP82, KS81, schutte} and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq user, it provides a consistent set of examples,
+\HydrasLib wants to be a bridge between scientific litterature (\emph{e.g.}~\cite{KP82, KS81, schutte} and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq user, it provides a consistent set of examples,
 allowing to present and compare various formalization and proving techniques. It may be also used as a library, through opam packages.
 
 It is also a medium sized library (more than 50K LOC), dependent on various tools and libraries of the \coq ecosystem. It may be also used to experiment new techniques of continuous maintenance of the code and its documentation.
@@ -541,11 +539,11 @@ It is also a medium sized library (more than 50K LOC), dependent on various tool
 We plan to extend our libraries in two main directions.
 
 The \gaia project~\cite{Gaia}, also maintained on \community, contains a development by José Grimm~\cite{grimm:hal-00911710}. This library is dedicated  to the implementation in \coq (SSreflect) of books from  Bourbaki's Elements of Mathematics. It contains data structures which are compatible with our ordinal notations. 
-Our plan is to build a  bridge between  the combinatorial results of \Hydras and the set-theoretic content of \gaia, and make possible the transfer of theorems between both libraries.
+Our plan is to build a  bridge between  the combinatorial results of \HydrasLib and the set-theoretic content of \gaia, and make possible the transfer of theorems between both libraries.
 
 Another direction would be to write in \coq a formal proof of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
 
- \Hydras is not limited to the study of ordinal numbers and applications.
+ \HydrasLib is not limited to the study of ordinal numbers and applications.
  For instance, we are also developing 
 a module about efficient exponentiation algorithms, and hope
 to extend our project to new topics.
