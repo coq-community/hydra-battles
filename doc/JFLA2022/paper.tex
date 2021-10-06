@@ -515,7 +515,36 @@ Since the set \textit{AP} of additive principals  is closed under addition
   \caption{\label{fig:Pow-evalPow17LetIn}Automatically capturing the output of computations}
 \end{figure}
 
-\subsection{Continuous integration and deployment, opam packaging, etc.}
+\subsection{Technologies supporting the monorepo structure}
+
+Monorepos (shorthand for monolithic repositories) are single repositories containing multiple independent or related packages.
+%
+They have gained increasing popularity following experiences in large companies such as Google, but are also used at a lesser scale for managing open source projects.
+%
+They are known to simplify the management of dependencies, making cross-packages changes and refactorings~\cite{brito2018monorepos}.
+
+In the context of Coq projects, they did not use to be well-supported.
+%
+One of the only monorepo in the Coq ecosystem was the math-comp repository, and it used a custom build infrastructure to make this possible.
+%
+However, recent improvements in tooling have made their use possible, and therefore we have used them more and more, for instance within \community.
+
+In the context of \Hydras, we rely on the following tools.
+
+\paragraph{The Dune build system}
+It allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
+
+In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
+
+\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}}
+We rely on this toolbox mainly because it can generate a Continuous Integration setup (relying on GitHub Actions) to test the various libraries contained in the project, but also their dependencies.
+%
+This has allowed us, for instance, to test the Goedel library with the current version of the Hydra-battles library when we have moved a subpart of Goedel to Hydra-battles (the Ackermann sub-library).
+
+The build artifacts are stored in the \community binary cache on Cachix~\cite{cachix}.
+%
+This means that a given version never has to be built twice and Continuous Integration can be almost instantaneous when no change has been made (e.g., after merging a pull request).
+
 \section{Conclusion and perspectives}
 
 
