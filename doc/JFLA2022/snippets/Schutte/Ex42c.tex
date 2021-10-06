@@ -3,7 +3,7 @@
   \sep
   \begin{sentence}
     \begin{input}
-      ~~\PY{n+nb}{assert}~\PY{o}{(}\PY{n}{Hlt}\PY{o}{:}~\PY{n}{omega}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{l+m+mi}{2}\PY{o}{)}~\PY{n+nb+bp}{by}~\nl
+      ~~\PY{n+nb}{assert}~\PY{o}{(}\PY{n}{Hlt}\PY{o}{:}~\PY{n+nb+bp}{omega}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{l+m+mi}{2}\PY{o}{)}~\PY{n+nb+bp}{by}~\nl
       ~~~~~~\PY{o}{(}\PY{n+nb}{rewrite}~\PY{n}{omega\PYZus{}eqn}\PY{o}{;}~\PY{n+nb}{apply}~\PY{n}{phi0\PYZus{}mono}\PY{o}{,}~\PY{n}{finite\PYZus{}mono}\PY{o}{;}\nl
       ~~~~~~~~\PY{n+nb}{auto~with}~\PY{n}{arith}\PY{o}{).}
     \end{input}
@@ -14,13 +14,13 @@
           \begin{hyps}
             \hyp{HAP}{\PY{n}{In}~\PY{n}{AP}~\PY{o}{(}\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{))}}
             \sep
-            \hyp{Hlt}{\PY{n}{omega}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{)}}
+            \hyp{Hlt}{\PY{n+nb+bp}{omega}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{)}}
           \end{hyps}
           \sep
           \infrule{}
           \sep
           \begin{conclusion}
-            \PY{n}{omega}~\PY{o}{+}~\PY{n}{F}~\PY{l+m+mi}{42}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{)}
+            \PY{n+nb+bp}{omega}~\PY{o}{+}~\PY{n}{F}~\PY{l+m+mi}{42}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{)}
           \end{conclusion}
         \end{goal}
       \end{goals}

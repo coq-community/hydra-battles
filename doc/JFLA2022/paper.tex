@@ -344,9 +344,13 @@ and~\ref{fig:Hprime}.
 \end{figure}
 
 
- \begin{figure}[h]
- \inputsnippets{Hprime/HprimeDef}
-\caption{$H'$ definition with the \texttt{coq-equations}
+\begin{figure}[h]
+  \centering
+  \fbox{
+    \begin{minipage}[h]{1.0\linewidth}
+ \inputsnippets{Hprime/HprimeDef}     
+    \end{minipage}}
+ \caption{$H'$ definition with the \texttt{coq-equations}
  plug-in~\cite{sozeau:hal-01671777}}
 \label{fig:Hprime}
 \end{figure}
@@ -461,8 +465,11 @@ The transition happened gradually, over a few weeks: for each snippet of \coq co
 Importing snippets into a LaTeX document was not one of the original use cases of \alectr, so we had to extend it: the original \alectr did not have support for exporting to LaTeX, and it was towards documenting individual source files (a style where code and prose are interleaved within the same file and code is documented in the same order as it is compiled).  We extended {alectr to support our needs by implementing a LaTeX backend, and by programming it to generate individual snippet files, one per \texttt{snippet} comment block.  The later part was straightforward: all it took was to build a custom \alectr \textit{driver}, a small (about 100 lines) Python program that leverages most of the \alectr toolchain but defines a custom frontend that understands our snippet annotations (and otherwise exposes the exact same command line as \alectr).
 
    \begin{figure}[h]
-  \centering
-  \inputsnippets{Pow/evalPow17LetIn}
+     \centering
+     \fbox{
+       \begin{minipage}[h]{1.0\linewidth}
+         \inputsnippets{Pow/evalPow17LetIn}
+       \end{minipage}}
   \caption{\label{fig:Pow-evalPow17LetIn}Automatically capturing the output of computations}
 \end{figure}
 
