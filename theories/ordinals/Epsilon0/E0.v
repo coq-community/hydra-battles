@@ -831,7 +831,7 @@ Proof.
 Qed.
 
 (* begin snippet Ex42 *)
-Example Ex42: (omega + 42 + omega^ 2 = omega^ 2)%e0. (* .no-out *)
+Example Ex42: omega + 42 + omega^2 = omega^2. (* .no-out *)
 Proof. (* .no-out *)
   rewrite <-  Comparable.compare_eq_iff.
   reflexivity.

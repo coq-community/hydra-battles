@@ -77,7 +77,7 @@ Axiom inh_Ord : inhabited Ord.
 ]]
 **)
 (* begin snippet Ex42a:: no-out *)
-Example Ex42: omega + 42 + phi0 2 = phi0 2. 
+Example Ex42: omega + 42 + omega^2 = omega^2. 
 (* end snippet Ex42a *)
 Proof.
 
@@ -89,7 +89,7 @@ Proof.
   Check AP_plus_closed. (* .unfold .no-goals *)
   (* end snippet Ex42d *)
   (* begin snippet Ex42c *)
-  assert (Hlt: omega < phi0 2) by 
+  assert (Hlt: omega < omega^2) by 
       (rewrite omega_eqn; apply phi0_mono, finite_mono;
         auto with arith).
   (* end  snippet Ex42c *)
