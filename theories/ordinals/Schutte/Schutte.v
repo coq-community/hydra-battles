@@ -84,8 +84,8 @@ Example Ex42: omega + 42 + phi0 2 = phi0 2.
 Proof.
 
   (* begin snippet Ex42b *)
-  assert (HAP: In AP (phi0 2)) by apply AP_phi0. (* .no-out *)
-  elim  HAP; intros  _ H0; apply H0; clear H0. 
+  assert (HAP:= AP_phi0 2). (* .no-out *)
+  elim  HAP; intros _ H0; apply H0; clear H0. 
   (* end snippet Ex42b *)
   (* begin snippet Ex42d *)
   Check AP_plus_closed. (* .unfold .no-goals *)
