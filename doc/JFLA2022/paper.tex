@@ -449,10 +449,9 @@ Computability is a key topic in Computer Science teaching. Moreover O'Connor's l
 \subsection{Documentation with \alectr}
 
 
-The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries. Thus, we chose not to include our textbook as comments in the libraries (solution \emph{à la} Coqdoc).
-%\TODO[Pierre]{is the preceding sentence OK?}
+The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This in contrast with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments is in \cite{alectryonpaper}).
 
-Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged. %\TODO[Clément]{see FIXME cite alectryon for a discussion of various approaches to documentation of \coq developments}
+Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged.
  
 
 
