@@ -290,7 +290,7 @@ Complex formalisations and proofs are explained in an
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
 
 This work is also an opportunity to 
- provide ``concrete'' examples of formalization and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc. It may be also used as a library on ordinal numbers, for instance for proving termination properties.
+ provide concrete examples of formalization and proof techniques: operational type classes, functions defined by  equations, dependently typed functions, etc. It may be also used as a library on ordinal numbers, for instance for proving termination properties.
 
  Prior stages of this project have already been presented at
  JFLA~\cite{PCiota, JFLA2018paper}.
@@ -301,16 +301,19 @@ The 2018 article~\cite{JFLA2018paper} presented a formal proof of  a variant of 
 
 \begin{theorem}
   Let $\mu$ be any ordinal strictly less than $\epsilon_0$.
-  There is no function mapping hydras to the segment $[0,\mu)$ that could be used as a measure for  proving the termination of  all hydra battles.\label{thm3}
+  There is no function mapping hydras to the segment $[0,\mu)$ that could be used as a measure for  proving the termination of  \emph{any} hydra battle.\label{thm3}
 \end{theorem}
 
-Considering measures applicable to \emph{all} battles allowed us to
-focus on battles where the hydra can make an arbitrary number of copies at any time, which made our proof by contradiction artificially easier.
+Our proof was based on the construction of a battle, where the
+number of copies at each round is given by the elimination of an existential quantifier. So, it was mandatory to consider the class of \emph{all} hydra battles.
+
 Unfortunately, the examples  most commonly shown in the litterature
 (see for instance~\cite{KP82, bauer2008, BauerHydra}) 
 assume that the hydra grows $n$ copies at step $n$ of the game, which is incompatible with our proof.
 We prove now that Theorem~\ref{thm3} still holds with these typical battles by borrowing new combinatorial results from~\cite{KS81}.
-Without loss of generality, we assume the following restrictions:
+Since we are looking  for a minoration of the length of such battles,
+we can work with the following hypotheses and invariants, 
+without any loss of generality.
  
  \begin{itemize}
    \item The game starts at an initial step $i\in\mathbb{N}$ (not necessarily $0$).
@@ -357,7 +360,7 @@ and~\ref{fig:Hprime}.
 \end{figure}
 
 
-Using $H'$s equations as rewrite rules, we can study a realistic example. We take the hydra of figure~\ref{fig:start} and $i=0$ as initial configuration. 
+Using $H'$s equations as rewrite rules, we can study a concrete example. We take the hydra of figure~\ref{fig:start} and $i=0$ as initial configuration. 
 By a sequence of rewritings and inductions, we prove that the number of steps of the considered battle is greater or equal than $2^{2^N}$, where $N=2^{70}-1$.
 More generally, we prove that, for $\alpha\geq\omega^\omega$, 
 the function computing the length of the battle starting with the configuration $(\alpha,i)$ is not primitive recursive.
