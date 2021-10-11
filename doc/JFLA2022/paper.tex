@@ -467,7 +467,7 @@ The transition happened gradually, over a few weeks: for each snippet of \coq co
 \item Replace the copy-pasted inputs and output in LaTeX with an \texttt{input} command.
 \end{enumerate}
 
-Importing snippets into a LaTeX document was not one of the original use cases of \alectr, so we had to extend it: the original \alectr did not have support for exporting to LaTeX, and it was towards documenting individual source files (a style where code and prose are interleaved within the same file and code is documented in the same order as it is compiled).  We extended {alectr to support our needs by implementing a LaTeX backend, and by programming it to generate individual snippet files, one per \texttt{snippet} comment block.  The later part was straightforward: all it took was to build a custom \alectr \textit{driver}, a small (about 100 lines) Python program that leverages most of the \alectr toolchain but defines a custom frontend that understands our snippet annotations (and otherwise exposes the exact same command line as \alectr).
+Importing snippets into a LaTeX document was not one of the original use cases of \alectr, so we had to extend it: the original \alectr did not have support for exporting to LaTeX, and it was towards documenting individual source files (a style where code and prose are interleaved within the same file and code is documented in the same order as it is compiled).  We extended \alectr to support our needs by implementing a LaTeX backend, and by programming it to generate individual snippet files, one per \texttt{snippet} comment block.  The later part was straightforward: all it took was to build a custom \alectr \textit{driver}, a small (about 100 lines) Python program that leverages most of the \alectr toolchain but defines a custom frontend that understands our snippet annotations (and otherwise exposes the exact same command line as \alectr).
 
    \begin{figure}[h]
      \centering
@@ -518,7 +518,8 @@ it suffices to prove the inequality $\omega+42< \phi_0(2)$.
 Since the set \textit{AP} of additive principals  is closed under addition
 (by Lemma \textit{AP\_plus\_closed}), it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
 
-\inputsnippets{Schutte/Ex42d, Schutte/Ex42c, Schutte/Ex42e}
+\inputsnippets{%Schutte/Ex42d,
+  Schutte/Ex42c, Schutte/Ex42e}
 
 \end{minipage}
 }
@@ -560,9 +561,9 @@ This means that a given version never has to be built twice and Continuous Integ
 \section{Conclusion and perspectives}
 
 
-\Hydras wants to be a bridge between scientific litterature (\emph{e.g.}~\cite{KP82, KS81, schutte} and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq user, it provides a consistent set of examples,
-allowing to present and compare various formalization and proving techniques. It may be also used as a library, through opam packages.
-It is also a medium sized library (more than 50K LOC), dependent on various tools and libraries of the \coq ecosystem. It may be also used to experiment new techniques of continuous maintenance of the code and its documentation.
+\Hydras wants to be a bridge between scientific litterature (\emph{e.g.}~\cite{KP82, KS81, schutte} and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
+allowing to present and compare various formalization and proving techniques. %It may be also used as a library, through opam packages.
+It is also a medium sized library (more than 50K LOC), dependent on various tools and libraries of the \coq ecosystem, which  may be also used to experiment new techniques of continuous maintenance of the code and its documentation.
 
 
 
