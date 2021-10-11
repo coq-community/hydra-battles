@@ -54,7 +54,7 @@ This contribution contains two parts:
 - Compatible Coq versions: 8.13 or later
 - Additional dependencies:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
-  - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.2 or later
+  - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - MathComp Algebra
 - Coq namespace: `hydras` + `additions`
