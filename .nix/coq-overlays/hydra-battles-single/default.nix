@@ -44,7 +44,7 @@ with lib; mkCoqDerivation rec {
 
   propagatedBuildInputs = [
     equations
-    gaia
+    #gaia
     mathcomp-ssreflect
     mathcomp-algebra
     mathcomp-zify

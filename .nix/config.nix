@@ -42,6 +42,17 @@
     ## You can override Coq and other Coq coqPackages
     ## through the following attribute
     coqPackages.coq.override.version = "8.13";
+  };
+
+  bundles.master = {
+    coqPackages.coq.override.version = "master";
+    coqPackages.mathcomp.override.version = "master";
+    coqPackages.equations.override.version = "master";
+    coqPackages.gaia.override.version = "master";
+    coqPackages.mathcomp-zify.override.version = "master";
+    coqPackages.paramcoq.override.version = "master";
+    coqPackages.hydra-battles-single.override.withMovies = false;
+    coqPackages.hydra-battles-single.override.withTex = false;
 
     ## In some cases, light overrides are not available/enough
     ## in which case you can use either
