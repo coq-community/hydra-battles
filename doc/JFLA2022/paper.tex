@@ -138,16 +138,12 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \subsection{Background}
 
-\begin{itemize}
-\item formalizations of mathematics in proof assistants, such as \coq, continually grow in size and scope
-\begin{itemize}
-\item the Mathematical Components library and the four-color theorem and the odd order theorem in \coq
-\item the Mathlib library for Lean
-\end{itemize}
-\item to continue to be useful as examples and reusable libraries, formalizations must be well \emph{documented} and \emph{maintained} to ensure they work with new proof assistant releases. %\TODO[Pierre]{add evolution of styles of proof and formalization (not limited to Coq litterature)? } 
-\item Lean and Mathematical Components have accompanying books, which are written mainly to onboard new library users
-\item book authors faced with several design choices: literate documents, using tools to keep the book and the proof assistant synchronized
-\end{itemize}
+Libraries of formalized mathematics based on proof assistants, such as \coq, Lean, and Isabelle/HOL, are continually growing in size and scope.
+For example, the core projects in the Mathematical Components family for Coq amount to more than 160,000 lines of code and 11,000 lemmas~\cite{Nie2020a}, while Lean's Mathlib consists of more than 140,000 lines of code and 34,000 declarations~\cite{Mathlib}. However, after a key mathematical definition or result is added to a library, it needs be well \emph{documented} and \emph{maintained}.
+
+Maintenance includes not only adaptation to changes in new proof assistant versions, but also reorganization to ease future maintenance effort and accommodate new contributions. Documentation is usually two-fold: \emph{source code comments} that describe specific definitions and results in-line and \emph{books} that carefully introduce the library and its idioms to beginners~\cite{MCB}. The former tends to be terse and dense, while the latter is more long-winded and exhaustive.
+
+As a library changes and expands, its documentation needs to be made consistent and complete. Authors use a wide range of techniques, including literate programming and custom tools, to check code snippets and generate output from the proof assistant.
 
 \subsection{Vision}
 The \Hydras project, part of \community~\cite{CoqCommunity} aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \community is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
