@@ -6,7 +6,7 @@ and
 #<a href="http://www.enseignement.polytechnique.fr/informatique/INF412/uploads/Main/pc-primrec-sujet2014.pdf"> Bruno Salvy's lecture</a>#.
  *)
 
-
+Set Apply With Renaming.
 
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
 Require Import Compare_dec Max.

@@ -1,6 +1,7 @@
 (**   Pierre Casteran 
       LaBRI, Université de Bordeaux
 *)
+Set Apply With Renaming.
 
 From Coq Require Import Arith Lia  List  Relation_Operators
      Operators_Properties Peano_dec Wellfounded.Inverse_Image
