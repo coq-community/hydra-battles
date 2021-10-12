@@ -408,49 +408,44 @@ the function computing the length of the battle starting with the configuration 
 %\TODO[Clément]{Could we use a font with ligatures?}
 
 
+\section{Integration with \community}
 
+\subsection{Background}
 
-\section{Integration within \community}
-
-\subsection{Presentation}
-
-\community is an informal organization run by volunteer Coq users with objectives to maintain interesting Coq projects in the long-term and help Coq users to collaborate on documentation, tooling, etc.
-
-It was created in 2018, inspired by the {Elm Community} organization~\cite{zimmermann:tel-02451322}.
+\community is an informal organization run by volunteer Coq users on GitHub that aims to maintain interesting Coq projects for the long term and facilitate collaboration among Coq users on documentation, tooling, etc. \community was created in 2018, inspired by the {Elm Community} organization~\cite{zimmermann:tel-02451322}.
 %
-Such ``Community Package Maintenance Organizations'' actually exist in many ecosystems as they avoid the very common problem of an important package becoming unmaintained as its author has moved on or disappeared~\cite{zimmermann2021grounded}.
+Such ``Community Package Maintenance Organizations'' exist in many software ecosystems, as they avoid the common problem of an important package becoming unmaintained after its author has moved on to other projects or has disappeared~\cite{zimmermann2021grounded}.
 
-In the case of \coq, this problem may be even more prevalent as many packages are created by PhD students, or by researchers for a specific paper, but their authors do not intend to maintain the package in the long-term.
+In the case of \coq, this problem is likely even more prevalent than in other ecosystems, as many packages are created by graduate students or researchers for a specific paper and not planned to be maintained for the long term by authors.
 %
-The authors are however generally very open to having someone else who expresses interest in their work continue the maintenance.
+However, authors are generally open to having someone else who expresses interest in their work take over package maintenance.
 %
 
-\community makes that easy by providing a process for transferring or forking an unmaintained package, tooling for setting up good maintenance practices (such as continuous integration) and by making it possible for someone to take over a package without committing in the long-term (as maintainers who drop out can easily be replaced by some other volunteers).
+\community makes it easy to change maintainers by defining a process for transferring or forking an unmaintained package, tooling for setting up good maintenance practices (such as continuous integration), and by making it possible for someone to take over a package without making a long-term commitment (as maintainers who drop out can easily be replaced by some other volunteers).
 
-Today, \community hosts over 50 projects maintained by over 30 maintainers.
+As of 2021, \community hosts over 50 projects maintained by over 30 volunteers.
 %
 The hosted projects come from a variety of origins.
 %
-Some had been maintained in the past by the \coq development team on behalf of the authors, but this meant that only minimal changes required to make the project build with new \coq versions were conducted.
+Some had been maintained in the past by the \coq development team on behalf of the authors, but this meant that only minimal changes required to make the project build with new \coq versions were performed.
 %
-Some were still maintained by their authors but they wanted help to keep them up-to-date.
+Some were still maintained by their original authors, but were transferred to enable other users to help out with maintenance and facilitate adoption of best practices on, e.g., continuous integration.
 %
-Others were simply left unmaintained and were revived by their adoption in \community.
+Others were simply unmaintained and were revived after their transfer to \community.
 
 \subsection{Interactions with other \community projects}
 
-Given the objectives of \community, it makes sense to propose a transfer anytime we encounter an interesting project that is insufficiently maintained.
+Given the objectives of \community, we believe it makes sense to propose a transfer anytime we encounter an interesting Coq project that is insufficiently maintained.
 %
-After the project is adopted, large changes and refactorings are explicitly allowed.
+After a transfer, the \community maintainers are explicitly allowed to perform large changes and refactorings.
 %
-This means, for instance, that we can consolidate libraries together or split them into several packages if it makes sense.
+This means, for instance, that we can consolidate libraries by merging them, or split them up into several packages.
 
-In order to prove formally that the length of the considered
-kind of battles is not given by a primitive recursive function, we used the formalization of primitive recursive functions, part
-of Russell O'Connor's contribution on G\"{o}del first incompleteness theorem~\cite{OConnor05, Goedel}.
-For this purpose, and above all by consideration of the scientific interest of this contribution, we chose to host and maintain this work within \community.
+In order to prove formally that the length of the
+kind of hydra battles we consider is not given by a primitive recursive function, we chose to use a formalization of the primitive recursive functions that was originally part of Russell O'Connor's statement and proof of G\"{o}del's first incompleteness theorem~\cite{OConnor05, Goedel}.
+For this purpose, and above all in consideration of the scientific interest of this contribution, we decided to host and maintain O'Connor's work in \community.
 
-Computability is a key topic in Computer Science teaching. Moreover O'Connor's library is a nice illustration of dependently typed programming, so we chose to devote a full chapter (chapter 9 of~\cite{HydraBook}) to this formalization, with comments on the definitions and proofs, [counter]-examples and exercises, and  extract part of the Goedel library into a new sub-library of the Hydra-battles library: Ackermann.
+Since computability is a key topic in computer science teaching and O'Connor's library is a nice illustration of dependently typed programming, we decided to devote a full chapter (chapter 9 of~\cite{HydraBook}) to the formalization of primitive recursive functions, with comments on the definitions and proofs and [counter-]examples and exercises. As part of the writing process, we made the formalization into a new sub-library of the Hydra-battles library, dubbed Ackermann.
 
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
@@ -458,7 +453,6 @@ Computability is a key topic in Computer Science teaching. Moreover O'Connor's l
 \section{Modernizing the infrastructure}
 
 \subsection{Documentation with \alectr}
-
 
 The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This in contrast with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments is in \cite{alectryonpaper}).
 
