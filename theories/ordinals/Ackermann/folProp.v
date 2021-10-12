@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 Require Import Wf_nat.
 Require Import Max.
 Require Import Arith.
