@@ -117,7 +117,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \begin{abstract}
   \Hydras is a collaborative library of discrete mathematics for the
-  \coq proof assistant, developed as part of the \community project
+  \coq proof assistant, developed as part of the \community organization
   on GitHub. The Coq code is accompanied
   by an electronic book, generated with the help of the \alectr
   literate proving tool. We present the evolution of the mathematical
@@ -148,18 +148,18 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \subsection{Background}
 
 Libraries of formalized mathematics based on proof assistants, such as \coq, Lean, and Isabelle/HOL, are continually growing in size and scope.
-For example, the core projects in the Mathematical Components family for Coq amount to more than 160,000 lines of code and 11,000 lemmas~\cite{Nie2020a}, while Lean's Mathlib consists of more than 140,000 lines of code and 34,000 declarations~\cite{Mathlib}. However, after a key mathematical definition or result is added to a library, it needs be \emph{documented} and \emph{maintained}~\cite{vanDoorn2020}.
+For example, the core projects in the Mathematical Components family for Coq amount to more than 160,000 lines of code and 11,000 lemmas~\cite{Nie2020a}, while Lean's Mathlib consists of more than 140,000 lines of code and 34,000 declarations~\cite{Mathlib}. However, after a key mathematical definition or result is added to a library, it needs be \emph{documented}~\cite{alectryonpaper} and \emph{maintained}~\cite{vanDoorn2020}.
 
 Maintenance includes not only adaptation to changes in new proof assistant versions, but also reorganization to ease future maintenance effort and accommodate new contributions. Documentation is usually two-fold: \emph{source code comments} that describe specific definitions and results in-line and \emph{books} that carefully introduce the library and its idioms~\cite{MCB}. The former tends to be terse and dense and serves experienced users, while the latter is more long-winded and exhaustive and serves beginners. As a library changes and expands, all its documentation needs to be made consistent and complete. Authors use a wide range of techniques, including literate programming~\cite{Knuth1984} and custom tools, to pretty-print and check source code snippets and generate proof assistant output.
 
 While books that document proof assistant libraries are valuable to beginners, the purpose of recently published books is mainly instrumental, i.e., to teach a certain topic or technique. We believe that books can instead become \emph{ends in themselves}---not just sources of learning, but also sources of inspiration and entertainment.
 
 \subsection{Vision}
-The \Hydras project, part of \community~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \community is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
+The \Hydras project, part of \community on GitHub~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of documented libraries of formal proofs. \community is a community organization that we founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
 %
-This umbrella project now includes evolved versions of the former Cantor and Additions libraries (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library, extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel} and a bridge to the \gaia library (by José Grimm~\cite{Gaia,grimm:hal-00911710}).
+This umbrella project now includes evolved versions of the former Cantor~\cite{CantorContrib} and Additions~\cite{AdditionsContrib} libraries (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library which was extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel}, and a bridge to the \gaia library by José Grimm~\cite{Gaia,grimm:hal-00911710}.
 %
-By following this approach of commenting interesting \coq packages, we provide new documentation content, that contributes to the diversity of the thriving \coq documentation ecosystem.
+By following this approach of commenting interesting \coq packages, we provide new documentation content that contributes to the diversity of the thriving \coq documentation ecosystem.
 
 We call on the \coq users in the JFLA community and beyond to come and join us in this effort, by bringing new interesting projects which are worth presenting to \coq learners, \emph{a.k.a.} \coq users, and guiding them in their exploration.
 %
