@@ -2,6 +2,7 @@
 
 (** Pierre Casteran, Univ. Bordeaux, LaBRI, UMR 5800 *)
 
+Set Apply With Renaming.
 
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
