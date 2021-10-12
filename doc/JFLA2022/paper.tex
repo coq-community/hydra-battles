@@ -107,7 +107,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \newcommand{\gaia}{Gaia\xspace}
 \newcommand{\alectr}{Alectryon\xspace}
 \newcommand{\equations}{Equations\xspace}
-\newcommand{\Hydras}{Hydras \& Co.\xspace}
+\newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
 %\newcommand{\Hydras}{Hydra-battles\xspace}
 
 \begin{document}
@@ -116,9 +116,9 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 
 \begin{abstract}
-  \Hydras is a collaborative library of discrete mathematics,
-  written for the \coq proof assistant and developed as part
-  of the \community project on GitHub. The Coq code is accompanied
+  \Hydras is a collaborative library of discrete mathematics for the
+  \coq proof assistant, developed as part of the \community project
+  on GitHub. The Coq code is accompanied
   by an electronic book, generated with the help of the \alectr
   literate proving tool. We present the evolution of the mathematical
   contents of the library since former presentations at JFLA meetings.
@@ -128,8 +128,11 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
   dependencies (the Coq proof assistant and several Coq packages both from
   inside and outside \community) and its reverse dependencies (\community
   projects that depend on it). Second, the book needs to be consistent
-  with the library Coq code, which undergoes frequent changes to improve
-  structure and include new definitions and results.
+  with the Coq code, which undergoes frequent changes to improve
+  structure and include new definitions and results. We believe \Hydras demonstrates
+  that books on formalized mathematics are not limited to
+  providing exposition of theories and reasoning techniques---they
+  can also provide inspiration and entertainment that transcends educational goals.
 \end{abstract}
 
 
@@ -149,7 +152,7 @@ For example, the core projects in the Mathematical Components family for Coq amo
 
 Maintenance includes not only adaptation to changes in new proof assistant versions, but also reorganization to ease future maintenance effort and accommodate new contributions. Documentation is usually two-fold: \emph{source code comments} that describe specific definitions and results in-line and \emph{books} that carefully introduce the library and its idioms~\cite{MCB}. The former tends to be terse and dense and serves experienced users, while the latter is more long-winded and exhaustive and serves beginners. As a library changes and expands, all its documentation needs to be made consistent and complete. Authors use a wide range of techniques, including literate programming~\cite{Knuth1984} and custom tools, to pretty-print and check source code snippets and generate proof assistant output.
 
-While books that document proof assistant libraries are valuable to beginners, the purpose of current books is mainly instrumental, i.e., to teach a certain topic or technique. We believe that such books can become \emph{ends in themselves}---not just sources of learning, but also sources of inspiration and entertainment.
+While books that document proof assistant libraries are valuable to beginners, the purpose of recently published books is mainly instrumental, i.e., to teach a certain topic or technique. We believe that books can instead become \emph{ends in themselves}---not just sources of learning, but also sources of inspiration and entertainment.
 
 \subsection{Vision}
 The \Hydras project, part of \community~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of commented libraries of formal proofs. \community is a community organization that we have founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
