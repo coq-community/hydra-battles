@@ -540,19 +540,42 @@ However, recent improvements in tooling have made their use easier, and therefor
 
 In the context of \Hydras, we rely on the following tools.
 
-\paragraph{The Dune build system}
-It allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
+\paragraph{The Dune build system~\cite{dune}}
+This build system, originally written for OCaml, but that was extended to support Coq projects, allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
 In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
 
-\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}}
-We rely on this toolbox mainly because it can generate a Continuous Integration setup (relying on GitHub Actions) to test the various libraries contained in the project, but also their dependencies.
+\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}}
+This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
 %
-This has allowed us, for instance, to test the Goedel library with the current version of the Hydra-battles library when we have moved a subpart of Goedel to Hydra-battles (the Ackermann sub-library).
+At the current time, we rely on it, together with the mathcomp Docker images~\cite{mathcompdocker}, to test our two main libraries, Hydra-battles and Addition-chains, with multiple versions of Coq.
 
-The built artifacts are stored in the \community binary cache on Cachix~\cite{cachix}.
+\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}}
+This toolbox, based on the Nix package manager, provides an alternative way of setting up CI for a Coq project (also relying on GitHub Actions).
+%
+We use this Nix-based CI for several things.
+
+\begin{enumerate}
+\item To test the build of the project (as a single unit) with coq\_makefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
+
+\item To generate the documentation of the project (book in PDF format and coqdoc HTML pages) by relying on the output of the coq\_makefile build.
+
+\item To test the bridge to the Gaia library, because the Nix-based CI supports out-of-the-box caching of build dependencies.
+%
+Given that Gaia takes more than 5 minutes to build, this build is only done once, then reused at each new run of the CI.
+
+\item To test compatibility with the Goedel library, which was made to depend on the Hydra-battles library since the Ackermann sub-library was moved from the former to the latter.
+%
+For this, we rely on the fact that the Coq Nix Toolbox has native support for generating a CI configuration that includes reverse dependency compatibility testing.
+\end{enumerate}
+
+The artifacts of the Nix builds are stored in the \community binary cache on Cachix~\cite{cachix}.
 %
 This means that a given version never has to be built twice and Continuous Integration can be almost instantaneous when no change has been made (e.g., after merging a pull request).
+
+By relying on two different technologies for CI, we are able to fit a larger range of use cases, while also providing more assurance that the project does build correctly in a variety of configurations.
+%
+Given that the two technologies are well maintained (within \community), relying on both does not incur a significant cost, compared to the benefits they provide.
 
 \section{Conclusion and perspectives}
 
