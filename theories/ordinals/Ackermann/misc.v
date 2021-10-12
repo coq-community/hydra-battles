@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 Require Import Eqdep_dec.
 
 Global Set Asymmetric Patterns.

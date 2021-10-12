@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 Require Import primRec.
 Require Import code.
 Require Import Arith.

@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 Require Import Arith.
 Require Import Ensembles.
 Require Import Coq.Lists.List.
