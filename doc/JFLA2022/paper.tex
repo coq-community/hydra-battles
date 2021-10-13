@@ -186,8 +186,8 @@ In a few words:
 \item A hydra is a finite tree, traditionally presented with the root at the bottom, the leaves of which are called \emph{heads}
   (Fig~\ref{fig:round}).
 \item At every round, Hercules chops off one head of the hydra. If the head is at a distance greater than 1 from the root,
-  then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the sub-tree $h$ may depend of the considered variant of the game
-  or the time elapsed since the beginning of the fight.
+  then some sub-tree $h$ of the hydra is copied a certain amount $n$ of times. The number $n$ of copies and the sub-tree $h$ may depend on the considered variant of the game
+  and the time elapsed since the beginning of the fight.
   Figure~\ref{fig:round} shows an example with $n=2$.
 \end{itemize}
 
@@ -293,8 +293,9 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
 
 The contrast between the simplicity of the statements above and the complexity of their proofs convinced us that it is a good theme for a commented library~\cite{HydraBattles} of formal proofs written for the \coq proof assistant~\cite{Coq}. 
 
-Complex formalisations and proofs are explained in an
-  electronic book~\cite{HydraBook} (PDF document of over 280 pages). Whenever various reasonable choices exist, we try to present and compare the alternatives.
+Complex formalisations and proofs are explained in the book.
+% an  electronic book~\cite{HydraBook} (PDF document of over 280 pages).
+Whenever various reasonable choices exist, we try to present and compare the alternatives.
   For instance, Figures~\ref{fig:Ex42E0} and \ref{fig:Ex42-schutte} show two radically different proofs of the equality
   $\omega+42+\omega^2=\omega^2$. The first one is a simple proof by computation, the second one shows how this equality
   is a consequence of the axioms of the set-theoretic model  by Kurt Schütte~\cite{schutte}. 
@@ -315,11 +316,11 @@ The 2018 article~\cite{JFLA2018paper} presented a formal proof of  a variant of 
 \end{theorem}
 
 Our proof was based on the construction of a battle, where the
-number of copies at each round is given by the elimination of an existential quantifier. So, it was mandatory to consider the class of \emph{all} hydra battles.
+number of copies at each round was given by the elimination of an existential quantifier. So, it was mandatory to consider the class of \emph{all} hydra battles, or, equivalently, the class of battles where the hydra choses arbitrarily  its number $n$ of copies at every round of the battle.
 
 Unfortunately, the examples  most commonly shown in the litterature
 (see for instance~\cite{KP82, bauer2008, BauerHydra}) 
-assume that the hydra grows $n$ copies at step $n$ of the game, which is incompatible with our proof.
+assume that the hydra grows $k$ copies at step $k$ of the game, which is incompatible with our proof.
 We prove now that Theorem~\ref{thm3} still holds with these typical battles.
 %by borrowing new combinatorial results from~\cite{KS81}.
 Since we are looking  for a minoration of the length of such battles,
@@ -327,16 +328,17 @@ we can work with the following hypotheses and invariants,
 without any loss of generality.
  
  \begin{itemize}
-   \item The game starts at an initial step $i\in\mathbb{N}$ (not necessarily $0$).
+   \item The game starts at an initial step $k=i$ where $i$ is any natural number.
    \item  The hydra is always the  representation as a tree of some ordinal strictly below $\epsilon_0$ in Cantor normal
      form (thus, the rightmost branch is also one of the shortest).
-     For instance, Fig~\ref{fig:round} shows the hydras respectively associated with  $\omega^{\omega^2+1}$ and $\omega^{\omega^2}\times 3$. 
+     For instance, Fig~\ref{fig:round} shows the hydras respectively associated with  $\omega^{\omega^2+1}$ and $\omega^{\omega^2}\times 3$.
+     In the following,  the expression  ``the hydra $\alpha$'' is an abbreviation of ``the hydra associated with the ordinal $\alpha$''.
  
  \item Hercules always chops off the rightmost head of the hydra.
  \end{itemize}
  
- In mathematical terms, if at step $n\geq i$, the hydra is associated with the ordinal $\alpha$, at step $n+1$ it is associated with
- $\canonseq{\alpha}{n+1}$, \emph{i.e.} the $(n+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
+ In mathematical terms, if at step $k\geq i$, the hydra is associated with the ordinal $\alpha$, at step $k+1$ it is associated with
+ $\canonseq{\alpha}{k+1}$, \emph{i.e.} the $(k+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
 
  Our new proof of Theorem~\ref{thm3} is based on a systematic study of strictly decreasing sequences of ordinals below $\epsilon_0$, borrowed from Ketonen and Solovay~\cite{KS81}, and the formalization of which is described  in chapters 5 and 6 of~\cite{HydraBook}.
  
@@ -373,8 +375,8 @@ and~\ref{fig:Hprime}.
 
 Using $H'$s equations as rewrite rules, we can study a concrete example. We take the hydra of figure~\ref{fig:start} and $i=0$ as initial configuration. 
 By a sequence of rewritings and inductions, we prove that the number of steps of the considered battle is greater or equal than $2^{2^N}$, where $N=2^{70}-1$.
-More generally, we prove that, for $\alpha\geq\omega^\omega$, 
-the function computing the length of the battle starting with the configuration $(\alpha,i)$ is not primitive recursive.
+By comparison with the diagonalized Ackermann function $\lambda\,i.\,A(i,i)$, we prove also that, for $\alpha\geq\omega^\omega$, 
+the function computing the length of the battle starting with the hydra $\alpha$ and the initial step $i$ is not primitive recursive.
 
 \begin{figure}[h]
   \centering
@@ -570,7 +572,7 @@ it suffices to prove the inequality $\omega+42< \phi_0(2)$.
 Since the set \textit{AP} of additive principals  is closed under addition
 (by Lemma \textit{AP\_plus\_closed}), it suffices to prove the inequalities $\omega<\omega^2$ and $42<\omega^2$.
 
-\inputsnippets{%Schutte/Ex42d,
+\inputsnippets{Schutte/Ex42d, %to remove if short paper
   Schutte/Ex42c, Schutte/Ex42e}
 
 \end{minipage}
