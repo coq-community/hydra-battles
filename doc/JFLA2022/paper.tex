@@ -469,20 +469,20 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
 \end{scope}
 
-\begin{scope}[yshift=-0.7cm,xshift=0.25cm]
+\begin{scope}[yshift=-1cm,xshift=0.45cm]
   \node[rectangle, draw=black,fill=gray!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.7cm] (equations) { Equations };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
 \end{scope}
 
-\begin{scope}[yshift=-1.8cm,xshift=-4cm]
+\begin{scope}[yshift=-2cm,xshift=-4cm]
 \node[rectangle, draw=black,fill=gray!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
 \node[rectangle, draw=black,fill=gray!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
 \node[rectangle, draw=black,fill=gray!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
 \node[rectangle, draw=black,fill=gray!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
 \end{scope}
 
-\begin{scope}[yshift=-2.8cm,xshift=-6cm]
+\begin{scope}[yshift=-3cm,xshift=-6cm]
  \node[rectangle, draw=black,fill=gray!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
  \node[rectangle, draw=black,fill=gray!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
 \end{scope}
@@ -490,7 +490,7 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 \draw[->,dotted] (additions.south) -- (chains.north) ;
 \draw[->,dotted] (goedel) -- (goedelcc) ;
 \draw[->,dotted] (goedel) -- (hydras.north west) ;
-\draw[->,dotted] (cantor) -- (hydras.north) ;
+\draw[->,dotted] (cantor) -- (hydras.north east) ;
 \draw[->,dotted] (cantor.south) -- (gaia.north west) ;
 \draw[->,dotted] (pock) -- (pockcc) ;
 
@@ -505,7 +505,7 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 \draw[->] (pockcc) -- (goedelcc) ;
 \end{tikzpicture}
 }
-\caption{Genealogy and dependencies for packages related to \Hydras.}
+\caption{Genealogy and dependencies for \Hydras packages. Dotted boxes represent historical Coq contributions, while straight-line boxes represent maintained Coq packages. Dark grey packages are maintained in the \Hydras GitHub repository, while light grey packages are maintained in other \community repositories.}
   \label{fig:round}
 \end{figure}
 
