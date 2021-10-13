@@ -565,17 +565,17 @@ However, recent improvements in tooling have made their use easier, and therefor
 
 In the context of \Hydras, we rely on the following tools.
 
-\paragraph{The Dune build system~\cite{dune}}
-This build system, originally written for OCaml, but that was extended to support Coq projects, allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
+\paragraph{The Dune build system~\cite{dune}.}
+Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
 In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
 
-\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}}
+\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
 %
 At the current time, we rely on it, together with the mathcomp Docker images~\cite{mathcompdocker}, to test our two main libraries, Hydra-battles and Addition-chains, with multiple versions of Coq.
 
-\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}}
+\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}.}
 This toolbox, based on the Nix package manager, provides an alternative way of setting up CI for a Coq project (also relying on GitHub Actions).
 %
 We use this Nix-based CI for several things.
