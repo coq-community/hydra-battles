@@ -463,26 +463,28 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 \begin{tikzpicture}[thick]
 
 \begin{scope}[xshift=-6cm]
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };    
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
 \end{scope}
 
 \begin{scope}[yshift=-0.7cm,xshift=0.25cm]
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (equations) { Equations };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=equations, node distance=2cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=equations, node distance=4.7cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.7cm] (equations) { Equations };
 \end{scope}
 
 \begin{scope}[yshift=-1.8cm,xshift=-4cm]
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
 \end{scope}
 
 \begin{scope}[yshift=-2.8cm,xshift=-6cm]
  \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
- \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=2.2cm] (gaiahydras) { Gaia-hydras };
+ \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
 \end{scope}
 
 \draw[->,dotted] (additions.south) -- (chains.north) ;
@@ -491,13 +493,15 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 \draw[->,dotted] (cantor) -- (hydras.north) ;
 \draw[->,dotted] (cantor.south) -- (gaia.north west) ;
 \draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south west) -- (goedelcc) ;
 \draw[->] (gaia.south west) -- (gaiahydras.east) ;
 
 \draw[->] (equations) -- (hydras) ;
 \draw[->] (mathcomp) -- (gaia) ;
 \draw[->] (mathcomp) -- (chains) ;
-\draw[->] (equations.south) -- (chains) ;
-\draw[->] (paramcoq.south) -- (hydras) ;
+\draw[->] (paramcoq.south) -- (chains) ;
+\draw[->] (pockcc) -- (goedelcc) ;
+\draw[->] (pock) -- (pockcc) ;
 \end{tikzpicture}
 }
 \caption{Genealogy and dependencies for \Hydras packages.}
@@ -509,7 +513,7 @@ In traditional software development, it is common for packages to continually de
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
 
-\section{Modernizing the building infrastructure}
+\section{Modernizing the build infrastructure}
 
 \subsection{Documentation with \alectr}
 
@@ -644,10 +648,10 @@ Given that the two technologies are well maintained (within \community), relying
 \section{Comparison of \Hydras with other Coq books}
 
 We believe that current Coq books can broadly be divided into two categories:
-\begin{itemize}
-\item \emph{Executable books} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
-\item \emph{Traditional books} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations.
-\end{itemize}
+\begin{enumerate}
+\item[a)] \emph{Executable textbooks} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
+\item[b)] \emph{Traditional textbooks} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations and/or code snippets.
+\end{enumerate}
 
 \section{Conclusion and perspectives}
 
