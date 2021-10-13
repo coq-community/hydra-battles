@@ -455,6 +455,18 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 
 \subsection{\Hydras Genealogy and Dependencies}
 
+\begin{center}
+{\footnotesize
+\begin{tikzpicture}[>=stealth',semithick]
+
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (cantor) { Cantor };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3cm] (additions) { Additions };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=3cm] (additions) { Goedel };
+
+\end{tikzpicture}
+}
+\end{center}
+
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
 
@@ -589,6 +601,8 @@ This means that a given version never has to be built twice and Continuous Integ
 By relying on two different technologies for CI, we are able to fit a larger range of use cases, while also providing more assurance that the project does build correctly in a variety of configurations.
 %
 Given that the two technologies are well maintained (within \community), relying on both does not incur a significant cost, compared to the benefits they provide.
+
+\section{Comparison of \Hydras with other Coq books}
 
 \section{Conclusion and perspectives}
 
