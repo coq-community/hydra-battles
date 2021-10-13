@@ -455,7 +455,7 @@ The Gaia project by Jos\'e Grimm aimed to formalize mathematics in the style of 
 
 In 2020, members of \community transferred the Gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which Gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 165,000 lines of code, Gaia is currently one of the largest maintained open source Coq projects~\cite{Gaia}.
 
-\subsection{\Hydras Genealogy and Dependencies}
+\subsection{\Hydras Genealogy, Dependencies, and Organization}
 
 \begin{figure}[h]
 \centering
@@ -464,14 +464,14 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
 
 \begin{scope}[xshift=-6cm]
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };    
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
 \end{scope}
 
 \begin{scope}[yshift=-0.7cm,xshift=0.25cm]
-\node[rectangle, draw=black,dashed,minimum height=0.5cm,minimum width=1.5cm] (equations) { Equations };
-\node[rectangle, draw=black,dashed,minimum height=0.5cm,minimum width=1.5cm,right of=equations, node distance=2cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,right of=mathcomp, node distance=2cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (equations) { Equations };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=equations, node distance=2cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=equations, node distance=4.7cm] (paramcoq) { Paramcoq };
 \end{scope}
 
 \begin{scope}[yshift=-1.8cm,xshift=-4cm]
@@ -485,20 +485,26 @@ In 2020, members of \community transferred the Gaia source code to GitHub and ad
  \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=2.2cm] (gaiahydras) { Gaia-hydras };
 \end{scope}
 
-\draw[->,dotted] (additions.south) -- (chains.north west) ;
-\draw[->] (goedel) -- (goedelcc) ;
-\draw[->] (goedel) -- (hydras.north west) ;
-\draw[->] (cantor) -- (hydras.north) ;
-\draw[->] (cantor.south) -- (gaia.north west) ;
+\draw[->,dotted] (additions.south) -- (chains.north) ;
+\draw[->,dotted] (goedel) -- (goedelcc) ;
+\draw[->,dotted] (goedel) -- (hydras.north west) ;
+\draw[->,dotted] (cantor) -- (hydras.north) ;
+\draw[->,dotted] (cantor.south) -- (gaia.north west) ;
 \draw[->] (hydras) -- (gaiahydras) ;
-\draw[->] (gaia.south west) -- (gaiahydras) ;
+\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+\draw[->] (equations) -- (hydras) ;
+\draw[->] (mathcomp) -- (gaia) ;
+\draw[->] (mathcomp) -- (chains) ;
+\draw[->] (equations.south) -- (chains) ;
+\draw[->] (paramcoq.south) -- (hydras) ;
 \end{tikzpicture}
 }
 \caption{Genealogy and dependencies for \Hydras packages.}
   \label{fig:round}
 \end{figure}
 
-In mainstream software, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
+In traditional software development, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
 
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
