@@ -449,13 +449,62 @@ For this purpose, and above all in consideration of the scientific interest of t
 
 Since computability is a key topic in computer science teaching and O'Connor's library is a nice illustration of dependently typed programming, we decided to devote a full chapter (chapter 9 of~\cite{HydraBook}) to the formalization of primitive recursive functions, with comments on the definitions and proofs and [counter-]examples and exercises. As part of the writing process, we made the formalization into a new sub-library of the Hydra-battles library, dubbed Ackermann.
 
-\subsection{Bridge to alternative ordinal formalization}
+\subsection{Bridge to ordinals in Gaia}
 
+The Gaia project by Jos\'e Grimm aimed to formalize mathematics in the style of N. Bourbaki in Coq. The formalization of the first book by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
+
+In 2020, members of \community transferred the Gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which Gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 165,000 lines of code, Gaia is currently one of the largest maintained open source Coq projects~\cite{Gaia}.
+
+\subsection{\Hydras Genealogy and Dependencies}
+
+
+\begin{figure}[h]
+\centering
+{\footnotesize
+\begin{tikzpicture}[thick]
+
+\begin{scope}[xshift=-6cm]
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };    
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
+\end{scope}
+
+\begin{scope}[yshift=-0.7cm,xshift=0.25cm]
+\node[rectangle, draw=black,dashed,minimum height=0.5cm,minimum width=1.5cm] (equations) { Equations };
+\node[rectangle, draw=black,dashed,minimum height=0.5cm,minimum width=1.5cm,right of=equations, node distance=2cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,right of=mathcomp, node distance=2cm] (paramcoq) { Paramcoq };
+\end{scope}
+
+\begin{scope}[yshift=-1.8cm,xshift=-4cm]
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
+\end{scope}
+
+\begin{scope}[yshift=-2.8cm,xshift=-6cm]
+ \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+ \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=2.2cm] (gaiahydras) { Gaia-hydras };
+\end{scope}
+
+\draw[->,dotted] (additions.south) -- (chains.north west) ;
+\draw[->] (goedel) -- (goedelcc) ;
+\draw[->] (goedel) -- (hydras.north west) ;
+\draw[->] (cantor) -- (hydras.north) ;
+\draw[->] (cantor.south) -- (gaia.north west) ;
+\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (gaia.south west) -- (gaiahydras) ;
+\end{tikzpicture}
+}
+\caption{Genealogy and dependencies for \Hydras packages.}
+  \label{fig:round}
+\end{figure}
+
+In mainstream software, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
 
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
 
-\section{Modernizing the infrastructure}
+\section{Modernizing the building infrastructure}
 
 \subsection{Documentation with \alectr}
 
@@ -550,17 +599,17 @@ However, recent improvements in tooling have made their use easier, and therefor
 
 In the context of \Hydras, we rely on the following tools.
 
-\paragraph{The Dune build system~\cite{dune}}
-This build system, originally written for OCaml, but that was extended to support Coq projects, allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
+\paragraph{The Dune build system~\cite{dune}.}
+Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
 In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
 
-\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}}
+\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
 %
 At the current time, we rely on it, together with the mathcomp Docker images~\cite{mathcompdocker}, to test our two main libraries, Hydra-battles and Addition-chains, with multiple versions of Coq.
 
-\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}}
+\paragraph{The Coq Nix Toolbox~\cite{cohen:hal-03366644}.}
 This toolbox, based on the Nix package manager, provides an alternative way of setting up CI for a Coq project (also relying on GitHub Actions).
 %
 We use this Nix-based CI for several things.
@@ -586,6 +635,8 @@ This means that a given version never has to be built twice and Continuous Integ
 By relying on two different technologies for CI, we are able to fit a larger range of use cases, while also providing more assurance that the project does build correctly in a variety of configurations.
 %
 Given that the two technologies are well maintained (within \community), relying on both does not incur a significant cost, compared to the benefits they provide.
+
+\section{Comparison of \Hydras with other Coq books}
 
 \section{Conclusion and perspectives}
 
@@ -619,8 +670,7 @@ to extend our project to new topics.
 
 \section{Acknowledgments}
 \label{sect:acks}
-We are grateful to the original authors and current maintainers of the Coq packages we use and depend on: José Grimm (Gaia), Russel O'Connor(Goedel), Matthieu Sozeau (Equations), the Mathematical Components team (ssreflect, algebra), Marc Lasson and Chantal Keller (Paramcoq), and the authors and maintainers
-of \coq and its associated tools.
+We are grateful to the original authors and current maintainers of the Coq packages we use and depend on: José Grimm (Gaia), Russell O'Connor (Goedel), Matthieu Sozeau (Equations), the Mathematical Components team, Marc Lasson and Chantal Keller (Paramcoq), and the authors and maintainers of \coq and its associated tools.
 
 
 \label{sect:bib}
