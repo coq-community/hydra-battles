@@ -148,7 +148,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \subsection{Background}
 
 Libraries of formalized mathematics based on proof assistants, such as \coq, Lean, and Isabelle/HOL, are continually growing in size and scope.
-For example, the core projects in the Mathematical Components family for Coq amount to more than 160,000 lines of code and 11,000 lemmas~\cite{Nie2020a}, while Lean's Mathlib consists of more than 140,000 lines of code and 34,000 declarations~\cite{Mathlib}. However, after a key mathematical definition or result is added to a library, it must be \emph{documented and maintained}~\cite{vanDoorn2020,alectryonpaper}.
+For example, the core projects in the Mathematical Components family for Coq amount to more than 160,000 lines of code (LOC) and 11,000 lemmas~\cite{Nie2020a}, while Lean's Mathlib consists of more than 140,000 LOC and 34,000 declarations~\cite{Mathlib}. However, after a key mathematical definition or result is added to a library, it must be \emph{documented and maintained}~\cite{vanDoorn2020,alectryonpaper}.
 
 Maintenance includes not only adaptation to changes in new proof assistant versions, but also reorganization to ease future maintenance effort and accommodate new contributions. Documentation is usually two-fold: \emph{source code comments} that describe specific definitions and results in-line and \emph{books} that carefully introduce the library and its idioms~\cite{MCB}. The former tends to be terse and dense and serves experienced users, while the latter is more long-winded and exhaustive and serves beginners. As a library changes and expands, all its documentation needs to be made consistent and complete. Authors use a wide range of techniques, including literate programming~\cite{Knuth1984} and custom tools, to pretty-print and check source code snippets and generate proof assistant output.
 
@@ -455,11 +455,13 @@ The Gaia project by Jos\'e Grimm aimed to formalize mathematics in the style of 
 
 In 2020, members of \community transferred the Gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which Gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 165,000 lines of code, Gaia is currently one of the largest maintained open source Coq projects~\cite{Gaia}.
 
-The data types for ordinals in Cantor and Veblen form are essentially defined the same way in Gaia and \Hydras, but they are not identical inside Coq, e.g., due to placement in different modules. Moreover, there are small differences in the implementation of ordinal arithmetic due to different evolutionary paths taken from the ancestral Cantor library.
+The data types for ordinals in Cantor and Veblen form are essentially defined the same way in Gaia and \Hydras, but they are not identical inside Coq, e.g., due to placement in different modules. Moreover, there are small differences in the implementation of ordinal arithmetic due to different evolutionary paths taken since divergence from the ancestral Cantor library.
 
 Nevertheless, we were able to establish a correspondence between both implementations of ordinals through rewriting lemmas. For instance, we proved that multiplication of ordinals in Cantor normal form in \Hydras refine Gaia's corresponding multiplicate, and could import Gaia's proof of associativity of this multiplication almost for free.
 
 \subsection{Project Genealogy, Dependencies, and Organization}
+
+Figure~\ref{fig:genealogy} illustrates the relationships between \Hydras packages.
 
 \begin{figure}[h]
 \centering
@@ -515,24 +517,26 @@ Nevertheless, we were able to establish a correspondence between both implementa
 
 In traditional software development, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
 
+Table~\ref{tbl:loc} lists the size of each \Hydras package.
+
 \begin{table}
 \centering
 \footnotesize
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Package} & \textbf{Repository} & \textbf{Spec LOC} & \textbf{Proof LOC}\\
+\textbf{Package} & \textbf{Repository} & \textbf{Commit} & \textbf{Spec LOC} & \textbf{Proof LOC}\\
 \hline
-Pocklington & \texttt{pocklington} & & \\
+Pocklington & \texttt{pocklington} & & & \\
 \hline
-Goedel & \texttt{goedel} & & \\
+Goedel & \texttt{goedel} & & & \\
 \hline
-Gaia & \texttt{gaia} & & \\
+Gaia & \texttt{gaia} & & & \\
 \hline
-Hydra-battles & \texttt{hydra-battles} & & \\
+Hydra-battles & \texttt{hydra-battles} & & & \\
 \hline
-Addition-chains & \texttt{hydra-battles} & & \\
+Addition-chains & \texttt{hydra-battles} & & & \\
 \hline
-Gaia-hydras & \texttt{hydra-battles} & & \\
+Gaia-hydras & \texttt{hydra-battles} & & & \\
 \hline
 \end{tabular}
 \caption{Current numbers of lines of code for \Hydras packages.}
@@ -685,7 +689,7 @@ We believe that current Coq books can broadly be divided into two categories:
 \section{Conclusion and perspectives}
 
 
-\Hydras wants to be a bridge between scientific literature (\emph{e.g.}~\cite{KP82, KS81, schutte} and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
+\Hydras wants to be a bridge between scientific literature (\emph{e.g.},~\cite{KP82, KS81, schutte}) and proof assistant technology. For the mathematician, it may give a concrete view of the mathematical content, not only through full proofs, but also through significative computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
 allowing to present and compare various formalization and proving techniques. %It may be also used as a library, through opam packages.
 It is also a medium sized library (more than 50K LOC), dependent on various tools and libraries of the \coq ecosystem, which  may be also used to experiment new techniques of continuous maintenance of the code and its documentation.
 
