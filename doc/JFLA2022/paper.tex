@@ -637,9 +637,9 @@ Monorepos have gained increasing popularity following experiences in large compa
 They are known to simplify the management of dependencies, making cross-packages changes, and refactorings~\cite{brito2018monorepos}.
 
 %
-One of the few early monorepos in the Coq ecosystem was the Mathematical Components (math-comp) repository, which used a custom build infrastructure to check multiple packages on each commit.
+One of the few early uses of monorepos in the Coq ecosystem was for the Mathematical Components library~\cite{MCB}, whose maintainers developed a custom build infrastructure to check multiple packages on each commit.
 %
-However, recent improvements in tooling have made their use easier, and therefore we have used them more and more, for instance within \community.
+In light of that recent tooling improvements have made monorepo use easier, we chose to use an explicit monorepo structure for \Hydras in \community. Other \community projects have since adopted a similar structure.
 
 In the context of \Hydras, we rely on the following tools.
 
@@ -710,7 +710,7 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
   \label{tbl:books}
 \end{table}
 
-We believe the \Hydras electronic book finds good tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. On one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
+We believe the \Hydras electronic book has found an attractive set of tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. On the one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
 
 \section{Conclusion and perspectives}
 
