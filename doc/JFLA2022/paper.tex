@@ -685,7 +685,7 @@ We believe that Coq books can broadly be divided into two categories:
 \item \emph{Executable textbooks} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
 \item \emph{Traditional textbooks} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations and/or code snippets.
 \end{itemize}
-Table~\ref{tbl:books} shows a category breakdown for what we believe are the most prominent Coq books in English.
+Table~\ref{tbl:books} shows a category breakdown for what we believe are the most prominent Coq books in English. Note that several traditional books, such as Coq'Art~\cite{BC04}, used custom tools during their writing process to keep code snippets synchronized with Coq. However, once a book is published, the accompanying code generally takes on a life of its own~\cite{CoqArtCommunity} and may come to substantially diverge from the book.
 
 \begin{table}
   \centering
@@ -708,9 +708,7 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
   \label{tbl:books}
 \end{table}
 
-Several traditional books, such as Coq'Art~\cite{BC04}, used custom tools during their writing process to keep code snippets synchronized with Coq. However, once a book is published, the accompanying code generally takes on a life of its own~\cite{CoqArtCommunity} and may come to substantially diverge from the book.
-
-We believe the \Hydras electronic book finds good tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. We follow executable books in providing ``continuous delivery'' of new revisions at a high pace, but we also aim to make regular timestamped versions compatible with specific versions of Coq.
+We believe the \Hydras electronic book finds good tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. On one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
 
 \section{Conclusion and perspectives}
 
