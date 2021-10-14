@@ -439,7 +439,7 @@ Given the objectives of \community, we believe it makes sense to propose a trans
 %
 After a transfer, the \community maintainers are explicitly allowed to perform large changes and refactorings.
 %
-This means, for instance, that we can consolidate libraries by merging them, or split them up into several packages.
+This means, for instance, that we can consolidate packages by merging them, or split up a single package into several packages.
 
 \subsection{Integration of primitive recursive functions}
 
@@ -697,7 +697,7 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
   \textbf{Title} & \textbf{Year} & \textbf{Category}\\
   \hline
   Coq'Art~\cite{BC04} & 2004 & Traditional\\
-  Software Foundations~\cite{Pierce2007} & 2007 & Executable\\
+  Software Foundations~\cite{SF} & 2007 & Executable\\
   Certified Programming with Dependent Types~\cite{chlipalacpdt2011} & 2011 &  Executable\\
   Program Logics for Certified Compilers~\cite{Appel2014} & 2014 & Traditional\\
   Programs and Proofs~\cite{Sergey:PnP} & 2014 & Executable\\
@@ -711,6 +711,8 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
 \end{table}
 
 We believe the \Hydras electronic book has found an attractive set of tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. On the one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
+
+Due to our reliance on LaTeX for writing the book, obtaining a book representation in HTML is more cumbersome than for executable books such as Software Foundations~\cite{SF} and Certified Programming with Dependent Types~\cite{chlipalacpdt2011}. Currently, we generate the Coq code documentation as HTML separately from the book.
 
 \section{Conclusion and perspectives}
 
