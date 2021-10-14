@@ -473,11 +473,13 @@ Figure~\ref{fig:genealogy} illustrates the relationships between \Hydras package
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
+
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
 \end{scope}
 
 \begin{scope}[yshift=-1cm,xshift=0.45cm]
   \node[rectangle, draw=black,fill=gray!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
 \end{scope}
 
@@ -499,6 +501,7 @@ Figure~\ref{fig:genealogy} illustrates the relationships between \Hydras package
 \draw[->,dotted] (cantor) -- (hydras.north east) ;
 \draw[->,dotted] (cantor.south) -- (gaia.north west) ;
 \draw[->,dotted] (pock) -- (pockcc) ;
+\draw[->,dotted] ([xshift=2.1cm]cats) -- (gaia) ;
 
 \draw[->] (hydras) -- (gaiahydras) ;
 \draw[->] (hydras.south west) -- (goedelcc) ;
@@ -511,7 +514,7 @@ Figure~\ref{fig:genealogy} illustrates the relationships between \Hydras package
 \draw[->] (pockcc) -- (goedelcc) ;
 \end{tikzpicture}
 }
-\caption{Genealogy and dependencies for \Hydras packages. Dotted boxes represent historical Coq contributions, while regular boxes represent maintained Coq packages. Dark grey packages are maintained in the \Hydras GitHub repository, while light grey packages are maintained in other \community repositories. Dotted lines represent Coq code ancestry, while regular lines represent direct code dependencies.}
+\caption{Genealogy and dependencies for \Hydras packages. Dotted boxes represent historical Coq contributions, while regular boxes represent maintained Coq packages. Dark gray packages are maintained in the \Hydras GitHub repository, while light gray packages are maintained in other \community repositories. Dotted lines represent Coq code ancestry, while regular lines represent direct code dependencies.}
   \label{fig:genealogy}
 \end{figure}
 
