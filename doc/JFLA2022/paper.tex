@@ -451,7 +451,7 @@ Since computability is a key topic in computer science teaching and O'Connor's l
 
 \subsection{Bridge to ordinals in Gaia}
 
-The Gaia project by Jos\'e Grimm aimed to formalize mathematics in the style of N. Bourbaki in Coq. The formalization of the first book by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
+The Gaia project by Jos\'e Grimm aimed to formalize mathematics in Coq in the style of Nicolas Bourbaki. The formalization of the first book in the Elements of Mathematics series by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
 
 In 2020, members of \community transferred the Gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which Gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 165,000 lines of code, Gaia is currently one of the largest maintained open source Coq projects~\cite{Gaia}.
 
@@ -681,12 +681,11 @@ Given that the two technologies are well maintained (within \community), relying
 \section{Comparison of \Hydras with other Coq books}
 
 We believe that Coq books can broadly be divided into two categories:
-\begin{enumerate}
-\item[a)] \emph{Executable textbooks} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
-\item[b)] \emph{Traditional textbooks} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations and/or code snippets.
-\end{enumerate}
-
-Table~\ref{tbl:books} shows a categorization of the Coq books in English we are aware of.
+\begin{itemize}
+\item \emph{Executable textbooks} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
+\item \emph{Traditional textbooks} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations and/or code snippets.
+\end{itemize}
+Table~\ref{tbl:books} shows a category breakdown for what we believe are the most prominent Coq books in English.
 
 \begin{table}
   \centering
@@ -711,7 +710,7 @@ Table~\ref{tbl:books} shows a categorization of the Coq books in English we are 
 
 Several traditional books, such as Coq'Art~\cite{BC04}, used custom tools during their writing process to keep code snippets synchronized with Coq. However, once a book is published, the accompanying code generally takes on a life of its own~\cite{CoqArtCommunity} and may come to substantially diverge from the book.
 
-We believe the \Hydras electronic book finds good tradeoffs between the advantages of executable books and traditional books.
+We believe the \Hydras electronic book finds good tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. We follow executable books in providing ``continuous delivery'' of new revisions at a high pace, but we also aim to make regular timestamped versions compatible with specific versions of Coq.
 
 \section{Conclusion and perspectives}
 
