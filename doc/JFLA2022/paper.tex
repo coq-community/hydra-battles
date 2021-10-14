@@ -451,7 +451,7 @@ Since computability is a key topic in computer science teaching and O'Connor's l
 
 \subsection{Bridge to ordinals in Gaia}
 
-The Gaia project by Jos\'e Grimm aimed to formalize mathematics in Coq in the style of Nicolas Bourbaki. The formalization of the first book in the Elements of Mathematics series by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
+The Gaia project by Jos\'e Grimm aimed to formalize mathematics in Coq in the style of Nicolas Bourbaki. The formalization of the first book in the Elements of Mathematics series by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. The set-theoretic axioms and basic definitions in \gaia were derived from an earlier development by Carlos Simpson~\cite{Simpson2004,CatsZFCContrib}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
 
 In 2020, members of \community transferred the Gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which Gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 165,000 lines of code, Gaia is currently one of the largest maintained open source Coq projects~\cite{Gaia}.
 
@@ -732,16 +732,11 @@ It is also a medium sized library (more than 50K LOC), dependent on various tool
 
 %\subsection{Further extensions}
 
-We plan to extend our libraries in two main directions.
+We plan to extend \Hydras in two main directions. Firstly, we plan to build a bridge between the combinatorial results of \Hydras and the set-theoretic content of \gaia, and make possible the transfer of many interesting theorems between the two packages. Secondly, we aim to write a formal proof in \coq of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
 
-The \gaia project~\cite{Gaia}, also maintained on \community, contains a development by José Grimm~\cite{grimm:hal-00911710},  dedicated  to the implementation in \coq (SSReflect) of books from  Bourbaki's Elements of Mathematics. The set theory underpinning \gaia is derived from an earlier development by Carlos Simpson~\cite{Simpson2004,CatsZFCContrib}. \gaia contains data structures which are compatible with our ordinal notations.
-Our plan is to build a  bridge between  the combinatorial results of \Hydras and the set-theoretic content of \gaia, and make possible the transfer of theorems between both libraries.
-We aim also to write in \coq a formal proof of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
-
- \Hydras is not limited to the study of ordinal numbers and applications.
- For instance, we are also developing 
-a module about efficient exponentiation algorithms, and hope
-to extend our project to new topics.
+\Hydras is not limited to the study of ordinal numbers and applications.
+For instance, we are also developing  a module about efficient exponentiation
+algorithms, and hope to extend our project to new topics.
 
 \section{Acknowledgments}
 \label{sect:acks}
