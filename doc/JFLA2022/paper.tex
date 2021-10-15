@@ -702,13 +702,13 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
   Mathematical Components~\cite{MCB} & 2018 & Traditional\\
   \hline
   \end{tabular}
-  \caption{Coq book comparison.}
+  \caption{Coq book categorization.}
   \label{tbl:books}
 \end{table}
 
 We believe the \Hydras electronic book has found an attractive set of tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another module verbatim, since the definition uses section variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional textbooks, we validate the consistency of code fragments during every build of the electronic book. On the one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
 
-Due to our reliance on LaTeX for writing the book, obtaining a book representation in HTML is more cumbersome than for executable books such as Software Foundations~\cite{SF} and Certified Programming with Dependent Types~\cite{chlipalacpdt2011}. Currently, we generate the Coq code documentation as HTML separately from the book.
+Due to our reliance on LaTeX for writing the book, obtaining a book representation in HTML is more cumbersome than for executable books such as Software Foundations~\cite{SF} and Certified Programming with Dependent Types~\cite{chlipalacpdt2011}. Currently, we generate the Coq code documentation in HTML form separately from the book.
 
 \section{Conclusion and perspectives}
 
