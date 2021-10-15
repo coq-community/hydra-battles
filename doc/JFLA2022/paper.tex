@@ -518,7 +518,7 @@ Both due to its prior stages~\cite{PCiota,JFLA2018paper} and the recent integrat
   \label{fig:genealogy}
 \end{figure}
 
-In traditional software development, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
+Before the Ackermann sublibrary was moved from the Goedel package repository to the \Hydras repository, the Goedel package had around 7,000 specification LOC and 38,000 proof LOC. Figure~\ref{fig:genealogy} and Table~\ref{tbl:loc} thus reveal that the seemingly large Coq formalization of G\"{o}del's incompleteness theorem can be considered as a modestly-sized proof on top of general libraries for, on the one hand, first-order logic, primitive recursive functions, and Peano arithmetic (Ackermann), and on the other hand, prime numbers and their properties (Pocklington).
 
 \begin{table}[ht]
 \centering
@@ -538,6 +538,8 @@ Gaia-hydras & \href{https://github.com/coq-community/hydra-battles}{\texttt{hydr
 \caption{Current numbers of lines of code for \Hydras packages.}
 \label{tbl:loc}
 \end{table}
+
+In traditional software development, it is common for packages to continually depend on a large number of packages. In contrast, projects in the Coq ecosystem are often subject to ``dependency aversion'', where maintainers eschew depending on useful packages because it may lead to work in adapting to upstream changes. With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.
 
 % We could already talk a bit of the monorepo structure here, and
 % defer some explanations on the tooling to the next section.
