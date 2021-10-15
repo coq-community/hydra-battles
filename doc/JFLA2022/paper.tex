@@ -313,8 +313,8 @@ In this paper, we present recent evolutions of the library: new results, interac
 The 2018 article~\cite{JFLA2018paper} presented a formal proof of  a variant of Theorem~\ref{kp:thm2}:
 
 \begin{theorem}
-  Let $\mu$ be any ordinal strictly less than $\epsilon_0$.
-  There is no function mapping hydras to the segment $[0,\mu)$ that could be used as a measure for  proving the termination of  \emph{any} hydra battle.\label{thm3}
+  Let $\mu$ be an ordinal strictly less than $\epsilon_0$.
+  There is no function mapping hydras to the segment $[0,\mu)$ that could be a measure used in proving the termination of  \emph{any} hydra battle.\label{thm3}
 \end{theorem}
 
 Our proof was based on the construction of a battle between Hercules and the hydra where the
@@ -330,17 +330,15 @@ we can work with the following hypotheses and invariants,
 without any loss of generality.
  
  \begin{itemize}
-   \item The game starts at an initial step $k=i$ where $i$ is any natural number.
-   \item  The hydra is always the  representation as a tree of some ordinal strictly below $\epsilon_0$ in Cantor normal
+   \item The game starts at an initial step $k=i$, where $i$ is any natural number.
+   \item Hercules always chops off the rightmost head of the hydra.
+   \item  The hydra is always the tree representation of some ordinal strictly below $\epsilon_0$ in Cantor normal
      form (thus, the rightmost branch is also one of the shortest).
-     For instance, Fig~\ref{fig:round} shows the hydras respectively associated with  $\omega^{\omega^2+1}$ and $\omega^{\omega^2}\times 3$.
-     In the following,  the expression  ``the hydra $\alpha$'' is an abbreviation of ``the hydra associated with the ordinal $\alpha$''.
- 
- \item Hercules always chops off the rightmost head of the hydra.
+     For instance, Figure~\ref{fig:round} shows the hydras respectively associated with  $\omega^{\omega^2+1}$ and $\omega^{\omega^2}\times 3$.
  \end{itemize}
  
  In mathematical terms, if at step $k\geq i$, the hydra is associated with the ordinal $\alpha$, at step $k+1$ it is associated with
- $\canonseq{\alpha}{k+1}$, \emph{i.e.} the $(k+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}.
+ $\canonseq{\alpha}{k+1}$, \emph{i.e.} the $(k+1)$th element of the canonical sequence of $\alpha$~\cite{KS81}. In the following,  the expression ``the hydra $\alpha$'' is an abbreviation of ``the hydra associated with the ordinal $\alpha$''.
 
  Our new proof of Theorem~\ref{thm3} is based on a systematic study of strictly decreasing sequences of ordinals below $\epsilon_0$, borrowed from Ketonen and Solovay~\cite{KS81}, and the formalization of which is described  in chapters 5 and 6 of~\cite{HydraBook}.
  
