@@ -75,7 +75,7 @@ This contribution contains two parts:
   `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
   addition-chains`.
 
-- Building the PDF documentation also requires Alectryon 1.2 and SerAPI.
+- Building the PDF documentation also requires Alectryon 1.4 and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:
