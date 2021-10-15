@@ -13,10 +13,10 @@ Open Scope ON_scope.
 
 (* begin snippet Omega2Def:: no-out *)
 
-Instance compare_nat_nat : Compare t :=
+#[ global ] Instance compare_nat_nat : Compare t :=
  compare_t compare_nat compare_nat.
 
-Instance Omega2: ON _ compare_nat_nat := ON_mult Omega Omega.
+#[ global ] Instance Omega2: ON _ compare_nat_nat := ON_mult Omega Omega.
 
 Definition t := ON_t.
 

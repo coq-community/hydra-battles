@@ -175,7 +175,7 @@ Qed.
 
 
 
-Instance WO_nat : WO Peano.lt.
+#[ global ] Instance WO_nat : WO Peano.lt.
 split.
 - red. intros; now  transitivity y.
 - intros; apply PeanoNat.Nat.lt_irrefl.

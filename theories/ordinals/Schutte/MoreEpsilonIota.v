@@ -113,7 +113,7 @@ Definition the {A:Type} {H : InH A} (P: A -> Prop)
 (* end snippet Defs *)
 
 
-Instance inhNat : InH nat.
+#[ global ] Instance inhNat : InH nat.
  split;  exact 42.
 Qed.
 

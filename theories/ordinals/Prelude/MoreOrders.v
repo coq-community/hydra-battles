@@ -91,7 +91,7 @@ Proof.
   - subst; now right.
 Qed.
 
-Instance leq_trans {A:Type}{lt: relation A}{sto: StrictOrder  lt}:
+#[ global ] Instance leq_trans {A:Type}{lt: relation A}{sto: StrictOrder  lt}:
   Transitive (leq lt).
 Proof.
   intros x y z Hxy Hyz.

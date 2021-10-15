@@ -5,10 +5,11 @@ This script has been tested with Python 3.7 or above and uses [Alectryon](https:
 to transform "coq+rst" to "latex" file.
 
 ## Requirements
-The script has been tested with a recent version of Alectryon v1.3.1 (Aug 28th, 2021). You can download it from
-[Alectryon's site](https://github.com/cpitclaudel/alectryon).
 
-you may also run `pip install -r requirements.txt`
+This script requires Alectryon 1.4.
+
+To get it, you may run `pip install -r requirements.txt` or
+`nix-shell` (at the root of the project).
 
 
 

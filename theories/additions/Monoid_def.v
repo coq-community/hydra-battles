@@ -52,7 +52,7 @@ End Demo.
 
 (* begin snippet DemoStringMult:: no-out *)
 
-Instance string_op : Mult_op string := append.
+#[ global ] Instance string_op : Mult_op string := append.
 Open Scope string_scope.
 
 Example ex_string : "ab" * "cde" = "abcde".
@@ -61,7 +61,7 @@ Proof. reflexivity. Qed.
 (* end snippet DemoStringMult *)
 
 
-Instance bool_and_binop : Mult_op bool := andb.
+#[ global ] Instance bool_and_binop : Mult_op bool := andb.
 
 Example ex_bool : true * false = false.
 Proof. reflexivity. Qed.
@@ -141,25 +141,25 @@ Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A)
 (* end snippet EMonoidDef *)
 
 
-Instance Equiv_Equiv (A:Type)(E_op : Mult_op A)(E_one : A) 
+#[ global ] Instance Equiv_Equiv (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
    Equivalence E_eq.
 destruct M;auto.
 Qed.
 
-Instance Equiv_Refl (A:Type)(E_op : Mult_op A)(E_one : A) 
+#[ global ] Instance Equiv_Refl (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
    Reflexive E_eq.
 destruct (Equiv_Equiv   M);auto.
 Qed.
 
-Instance Equiv_Sym (A:Type)(E_op : Mult_op A)(E_one : A) 
+#[ global ] Instance Equiv_Sym (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
    Symmetric E_eq.
 destruct (Equiv_Equiv   M);auto.
 Qed.
 
-Instance Equiv_Trans (A:Type)(E_op : Mult_op A)(E_one : A) 
+#[ global ] Instance Equiv_Trans (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
    Transitive E_eq.
 destruct (Equiv_Equiv   M);auto.

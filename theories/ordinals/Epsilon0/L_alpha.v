@@ -13,7 +13,7 @@ From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
 Import RelationClasses Relations.
 
-Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
 Global Hint Resolve Olt : E0.
 
 (** Using Coq-Equations for building a function which satisfies 

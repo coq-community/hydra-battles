@@ -192,11 +192,11 @@ Definition computation_equiv {A:Type} (op: Mult_op A)
    computation_execute op c == computation_execute op c'.
 
 
-Instance Comp_equiv {A:Type} (op: Mult_op A) (equiv : Equiv A):
+#[ global ] Instance Comp_equiv {A:Type} (op: Mult_op A) (equiv : Equiv A):
   Equiv (@computation A) :=
   @computation_equiv A op equiv.
 
-Instance comp_equiv_equivalence {A:Type} (op: Mult_op A)
+#[ global ] Instance comp_equiv_equivalence {A:Type} (op: Mult_op A)
            (equiv : Equiv A) : Equivalence  equiv ->
                                Equivalence (computation_equiv op equiv).   
 Proof.
@@ -219,7 +219,7 @@ Class Fkont_proper
 
 
 
-Instance Return_proper `(M : @EMonoid A op E_one E_equiv) :
+#[ global ] Instance Return_proper `(M : @EMonoid A op E_one E_equiv) :
   Fkont_proper M (@Return A).
 Proof.
  intros x y Hxy; assumption.
@@ -326,7 +326,7 @@ Class Fchain_proper (fc : Fchain) := Fchain_proper_bad_prf :
 (* end snippet Bad3 *)
 
 (* begin snippet Bad3b:: no-out *)
-Instance Fcompose_proper (f1 f2 : Fchain)
+#[ global ] Instance Fcompose_proper (f1 f2 : Fchain)
          (_ : Fchain_proper f1)
          (_ : Fchain_proper f2) :
   Fchain_proper (Fcompose f1 f2).
@@ -361,7 +361,7 @@ Class Fchain_proper (fc : Fchain) := Fchain_proper_prf :
 (* end snippet correctProper *)
 
 (* begin snippet F1proper:: no-out *)
-Instance F1_proper : Fchain_proper F1.
+#[ global ] Instance F1_proper : Fchain_proper F1.
 Proof.
   intros until M ; intros k k' Hk Hk' H a b H0; unfold F1; cbn;
   now apply H.  
@@ -369,7 +369,7 @@ Qed.
 (* end snippet F1proper *)
 
 (* begin snippet F3proper:: no-out *)
-Instance F3_proper : Fchain_proper F3.
+#[ global ] Instance F3_proper : Fchain_proper F3.
 (* end snippet F3proper *)
 Proof.
   intros  A op one equiv M  k k' Hk Hk'  Hkk' x y Hxy;  
@@ -378,7 +378,7 @@ Proof.
 Qed.
 
 (* begin snippet F2proper:: no-out *)
-Instance F2_proper : Fchain_proper F2.
+#[ global ] Instance F2_proper : Fchain_proper F2.
 (* end snippet F2proper *)
 Proof.
   intros  A op one equiv M  k k' Hk Hk'  Hkk' x y Hxy;  
@@ -423,7 +423,7 @@ Proof.
 Qed.
 
 (* begin snippet FcomposeProper:: no-out *)
-Instance Fcompose_proper (fc1 fc2: Fchain)
+#[ global ] Instance Fcompose_proper (fc1 fc2: Fchain)
                          (_ : Fchain_proper fc1)
                          (_ : Fchain_proper fc2) :
   Fchain_proper (Fcompose fc1 fc2).
@@ -436,7 +436,7 @@ Proof.
 Qed.
 
 
-Instance Fexp2_nat_proper (n:nat) : 
+#[ global ] Instance Fexp2_nat_proper (n:nat) : 
                            Fchain_proper (Fexp2_of_nat n).
 Proof.
   induction n; cbn.
@@ -473,7 +473,7 @@ Proof.
 Qed.
 
 (* begin snippet Fexp2Proper:: no-out *)
-Instance  Fexp2_proper (p:positive) : Fchain_proper (Fexp2 p).
+#[ global ] Instance  Fexp2_proper (p:positive) : Fchain_proper (Fexp2 p).
 (* end snippet Fexp2Proper *)
 Proof.
   unfold  Fexp2; apply Fexp2_nat_proper.
@@ -631,7 +631,7 @@ Kchain_proper_prf :
 (* end snippet KchainCorrectDef *)
 
 (* begin snippet K73Ok:: no-out *)
-Instance k7_3_proper : Kchain_proper k7_3.
+#[ global ] Instance k7_3_proper : Kchain_proper k7_3.
 Proof.
   intros until M; intros; red; unfold k7_3; cbn;
   add_op_proper M H3; apply H1;  rewrite H2;   reflexivity. 
@@ -690,7 +690,7 @@ Proof.
 Qed.
 
 (* begin snippet K2FProper:: no-out *)
-Instance K2F_proper (kc : Kchain)(_ : Kchain_proper kc) :
+#[ global ] Instance K2F_proper (kc : Kchain)(_ : Kchain_proper kc) :
   Fchain_proper (K2F kc).
 (* end snippet K2FProper *)
 Proof.
@@ -981,7 +981,7 @@ Proof.
 Qed.
 
 (* begin snippet FFKProper:: no-out *)
-Instance FFK_proper 
+#[ global ] Instance FFK_proper 
          (fp fq : Fchain)
          (_ :   Fchain_proper fp)
          (_ :  Fchain_proper fq)
@@ -1030,7 +1030,7 @@ Proof.
     + generalize (power_eq3 a);simpl;now symmetry.
 Qed.
 
-Instance  FK_proper  (Fp : Fchain) (_ : Fchain_proper Fp):
+#[ global ] Instance  FK_proper  (Fp : Fchain) (_ : Fchain_proper Fp):
   Kchain_proper (FK Fp).
 Proof.
   unfold FK; intros until M; intros k k' x y  H0 H1 H2 H3. 

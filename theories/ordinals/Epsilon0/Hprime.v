@@ -28,7 +28,7 @@ From Equations Require Import Equations.
 (** ** A variant of the Hardy Wainer hierarchy *)
 
 
-Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
 
 (* begin snippet HprimeDef *)
 

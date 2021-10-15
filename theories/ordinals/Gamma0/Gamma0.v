@@ -298,7 +298,7 @@ Defined.
 
 (* begin snippet compare *)
 
-Instance compare_T2 : Compare T2 := 
+#[ global ] Instance compare_T2 : Compare T2 := 
 fun (t1 t2 : T2) =>
   match lt_eq_lt_dec t1 t2 with
   | inleft (left _) => Lt
@@ -3684,7 +3684,7 @@ Module G0.
 
   Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
   
-  Instance compare_G0 : Compare G0 :=
+  #[ global ] Instance compare_G0 : Compare G0 :=
     fun alpha beta => compare (@vnf alpha) (@vnf beta).
 
   (* end snippet G0b *)
@@ -3697,7 +3697,7 @@ Module G0.
 
   (* begin snippet ltSto *)
 
-  Instance lt_sto : StrictOrder lt. (* .no-out *)
+  #[ global ] Instance lt_sto : StrictOrder lt. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     split.
@@ -3734,12 +3734,12 @@ Proof.
   - unfold compare,compare_G0; rewrite compare_rw_gt; auto.
 Qed. 
 
-  Instance zero : G0.
+  #[ global ] Instance zero : G0.
   Proof.
     refine (@mkg0 T2.zero _);  now compute. 
   Defined.
 
-  Instance Omega : G0.
+  #[ global ] Instance Omega : G0.
   Proof.
     exists omega. reflexivity. 
   Defined.
@@ -3750,7 +3750,7 @@ Qed.
 
   (* begin snippet ONGamma0 *)
 
-  Instance Gamma0_comp: Comparable lt compare. (* .no-out *)
+  #[ global ] Instance Gamma0_comp: Comparable lt compare. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     split. 
@@ -3759,7 +3759,7 @@ Qed.
   Qed. 
   (*||*)
 
-  Instance Gamma0: ON lt  compare. (* .no-out *)
+  #[ global ] Instance Gamma0: ON lt  compare. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     split.
@@ -3769,12 +3769,12 @@ Qed.
   (*||*)
   (* end snippet ONGamma0 *)
 
-  Instance Finite (n:nat) : G0.
+  #[ global ] Instance Finite (n:nat) : G0.
   Proof.
     exists (fin n);  red; rewrite nfb_equiv;  apply nf_fin.
   Defined.
 
-  Instance Plus (alpha beta : G0) : G0.
+  #[ global ] Instance Plus (alpha beta : G0) : G0.
   Proof.
     destruct alpha, beta. exists (vnf0 + vnf1).
     red in vnf_ok0, vnf_ok1. red. 
@@ -3784,7 +3784,7 @@ Qed.
 
   Infix "+" := Plus : g0_scope.
 
-  Instance Phi (alpha beta : G0) : G0.
+  #[ global ] Instance Phi (alpha beta : G0) : G0.
   Proof.
     destruct alpha, beta. exists (phi vnf0 vnf1).
     red in vnf_ok0, vnf_ok1. red. 
