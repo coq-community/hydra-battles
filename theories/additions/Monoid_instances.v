@@ -17,9 +17,9 @@ Open Scope Z_scope.
 (** *** Multiplicative monoid on [Z] *)
 
 (* begin snippet ZMultDef *)
-Instance Z_mult_op : Mult_op Z := Z.mul.
+#[ global ] Instance Z_mult_op : Mult_op Z := Z.mul.
 
-Instance ZMult : Monoid  Z_mult_op 1. (* .no-out *)
+#[ global ] Instance ZMult : Monoid  Z_mult_op 1. (* .no-out *)
 Proof. (* .no-out *)
   split.
     all: unfold Z_mult_op, mult_op;intros;ring.
@@ -27,7 +27,7 @@ Qed.
 (* end snippet ZMultDef *)
 
 
-Instance ZMult_Abelian : Abelian_Monoid ZMult.
+#[ global ] Instance ZMult_Abelian : Abelian_Monoid ZMult.
 Proof.
   split; exact Zmult_comm.
 Qed.
@@ -37,9 +37,9 @@ Qed.
 
 (* begin snippet natMult:: no-out *)
 
-Instance nat_mult_op : Mult_op nat | 5 := Nat.mul.
+#[ global ] Instance nat_mult_op : Mult_op nat | 5 := Nat.mul.
 
-Instance  Natmult : Monoid nat_mult_op  1%nat | 5.
+#[ global ] Instance  Natmult : Monoid nat_mult_op  1%nat | 5.
 Proof.
    split;unfold nat_mult_op, mult_op; intros; ring.
 Qed.
@@ -53,9 +53,9 @@ equal to $n$. See Sect.%~\ref{chains-exponent}.
 *)
 
 (* begin snippet natPlus:: no-out *)
-Instance nat_plus_op : Mult_op nat | 12 := Nat.add.
+#[ global ] Instance nat_plus_op : Mult_op nat | 12 := Nat.add.
 
-Instance Natplus : Monoid nat_plus_op  0%nat | 12.
+#[ global ] Instance Natplus : Monoid nat_plus_op  0%nat | 12.
 Proof.
    split;unfold nat_plus_op, mult_op; intros; ring.
 Qed.
@@ -65,9 +65,9 @@ Qed.
 
 Open Scope N_scope.
 
-Instance N_mult_op  : Mult_op N | 5 := N.mul.
+#[ global ] Instance N_mult_op  : Mult_op N | 5 := N.mul.
 
-Instance NMult : Monoid N_mult_op 1 | 5.
+#[ global ] Instance NMult : Monoid N_mult_op 1 | 5.
 Proof.
   split;unfold N_mult_op, mult_op; intros; ring.
 Qed.
@@ -78,9 +78,9 @@ Check NMult : EMonoid  N.mul 1%N eq.
 (* end snippet CheckCoercion *)
 
 
-Instance N_plus_op  : Mult_op N | 12 := N.add.
+#[ global ] Instance N_plus_op  : Mult_op N | 12 := N.add.
 
-Instance NPlus : Monoid N_plus_op 0 | 12.
+#[ global ] Instance NPlus : Monoid N_plus_op 0 | 12.
 Proof.
   split;unfold N_plus_op, mult_op; intros; ring.
 Qed.
@@ -89,9 +89,9 @@ Qed.
 (** Multiplicative Monoid on [positive] 
 *)
 
-Instance P_mult_op : Mult_op positive | 5  := Pos.mul .
+#[ global ] Instance P_mult_op : Mult_op positive | 5  := Pos.mul .
 
-Instance PMult : Monoid P_mult_op xH | 5.
+#[ global ] Instance PMult : Monoid P_mult_op xH | 5.
 Proof.
  split;unfold P_mult_op, Mult_op;intros.  
  -  now rewrite Pos.mul_assoc.
@@ -114,9 +114,9 @@ The type [int31] is defined in Standard Library in Module
 *)
 
 (* begin snippet int31:: no-out *)
-Instance int31_mult_op : Mult_op int31 := mul31.
+#[ global ] Instance int31_mult_op : Mult_op int31 := mul31.
 
-Instance  Int31mult : Monoid int31_mult_op  1.
+#[ global ] Instance  Int31mult : Monoid int31_mult_op  1.
 Proof.
    split;unfold int31_mult_op, mult_op; intros; ring.
 Qed.

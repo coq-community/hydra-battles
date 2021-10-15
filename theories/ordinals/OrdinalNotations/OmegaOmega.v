@@ -93,7 +93,7 @@ Module LO.
   Qed.
 
   (* begin snippet compareDef:: no-out  *)
-  Instance compare_t : Compare t :=
+  #[ global ] Instance compare_t : Compare t :=
   fix cmp (alpha beta:t) :=
     match alpha, beta with
     | nil, nil => Eq
@@ -504,33 +504,33 @@ Module OO.
 
   Definition lt (alpha beta: OO) := LO.lt (data alpha) (data beta).
   Definition le := leq lt.
-  Instance compare_OO : Compare OO := 
+  #[ global ] Instance compare_OO : Compare OO := 
     fun (alpha beta: OO) => LO.compare_t (data alpha) (data beta).
   (*  end snippet OODef *)
 
-  Instance Zero : OO := @mkord nil refl_equal.
+  #[ global ] Instance Zero : OO := @mkord nil refl_equal.
 
-  Instance _Omega : OO.
+  #[ global ] Instance _Omega : OO.
   Proof.
     now exists omega%lo.  
   Defined. 
 
 
-  Instance Fin (i:nat) : OO.
+  #[ global ] Instance Fin (i:nat) : OO.
   Proof.
     exists (LO.fin i); apply fin_nf.
   Defined.
   
   Notation omega  := _Omega.
 
-  Instance Succ (alpha : OO) : OO.
+  #[ global ] Instance Succ (alpha : OO) : OO.
   Proof.
     refine (@mkord (LO.succ (@data alpha)) _); 
       apply succ_nf, data_ok.
   Defined.
 
 
-  Instance plus (alpha beta : OO) : OO.
+  #[ global ] Instance plus (alpha beta : OO) : OO.
   Proof.
     refine (@mkord (LO.plus (@data alpha) (@data beta))_ );
       apply plus_nf; apply data_ok.
@@ -538,7 +538,7 @@ Module OO.
 
   Infix "+" := plus : OO_scope.
 
-  Instance mult (alpha beta : OO) : OO.
+  #[ global ] Instance mult (alpha beta : OO) : OO.
   Proof.
     refine (@mkord (LO.mult (@data alpha) (@data beta))_ );
       apply mult_nf; apply data_ok.
@@ -546,7 +546,7 @@ Module OO.
 
   Infix "*" := mult : OO_scope.
 
-  Instance phi0 (i : nat): OO.
+  #[ global ] Instance phi0 (i : nat): OO.
   Proof.
     refine (@mkord (LO.phi0 i) _). 
     apply phi0_nf; apply data_ok.
@@ -557,7 +557,7 @@ Module OO.
   Infix "*" := mult : OO_scope.
 
   (* begin snippet embedDef:: no-out *)
-  Instance embed (alpha: OO) : E0.E0.
+  #[ global ] Instance embed (alpha: OO) : E0.E0.
   Proof.
     destruct alpha as [data Hdata].
     refine (@E0.mkord (LO.refine data) _).
@@ -574,7 +574,7 @@ Module OO.
     - now apply nf_ref.
   Qed.
 
-  Instance oo_str : StrictOrder lt.
+  #[ global ] Instance oo_str : StrictOrder lt.
   split.
   - intros x H; destruct x.
     unfold lt in H; cbn; destruct (LO.lt_irrefl _ H).
@@ -599,7 +599,7 @@ Module OO.
   Qed.
 
 
-  Instance OO_comp : Comparable lt compare.
+  #[ global ] Instance OO_comp : Comparable lt compare.
   Proof.
     split.
     - apply oo_str.
@@ -637,7 +637,7 @@ Module OO.
   Import ON_Generic.
 
   (* begin snippet ONOO:: no-out *)
-  Instance ON_OO : ON lt compare.
+  #[ global ] Instance ON_OO : ON lt compare.
   (* end snippet ONOO *)
   Proof.
     split.  

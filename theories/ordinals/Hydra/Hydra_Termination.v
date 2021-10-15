@@ -192,7 +192,7 @@ Qed.
 (*||*)
 (* end snippet RoundDecr *)
 
-Instance var (h:Hydra) : E0.
+#[ global ] Instance var (h:Hydra) : E0.
 Proof.
   refine (@mkord (m h) _);  apply m_nf.
 Defined.

@@ -408,12 +408,12 @@ Arguments battle_rel : clear implicits.
 
 
 (* begin snippet freeDef *)
-Program Instance free : Battle 
+#[ global ] Program Instance free : Battle 
   := Build_Battle (fun _  h h' => round h h') _.
 (* end snippet freeDef *)
 
 (* begin snippet standardDef *)
-Program Instance standard : Battle := Build_Battle round_n _.
+#[ global ] Program Instance standard : Battle := Build_Battle round_n _.
 Next Obligation.
   now exists i.  
 Defined.

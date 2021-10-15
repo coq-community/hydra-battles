@@ -9,7 +9,7 @@ From Coq Require Import Compare_dec Lia Logic.Eqdep_dec.
 
 
 Definition O3O  :=  ON_plus (FinOrd 3) Omega.
-Existing Instance O3O.
+#[ global ] Existing Instance O3O.
 
 Arguments ON_t : clear implicits.
 Arguments ON_t {A lt cmp} _.
@@ -29,7 +29,7 @@ Next Obligation.
 Defined.
 
 
-Instance L_3_plus_omega :  ON_Iso _ _ f g.
+#[ global ] Instance L_3_plus_omega :  ON_Iso _ _ f g.
 Proof.
   split.
   - destruct x, y; cbn.

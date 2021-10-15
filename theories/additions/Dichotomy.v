@@ -186,7 +186,7 @@ Qed.
 
 
 (* begin snippet DichoStrat:: no-out *)
-Instance Dicho_strat : Strategy dicho.
+#[ global ] Instance Dicho_strat : Strategy dicho.
 (* end snippet DichoStrat *)
 Proof.
   split.

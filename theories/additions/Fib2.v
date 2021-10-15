@@ -53,7 +53,7 @@ Lemma neutral_r p : mul2 p (0,1)  = p.
 Qed.
 
 (* begin snippet mul2Monoid  *)
-Instance Mul2 : Monoid  mul2 (0,1).
+#[ global ] Instance Mul2 : Monoid  mul2 (0,1).
 (* end snippet mul2Monoid  *)
 
 Proof.

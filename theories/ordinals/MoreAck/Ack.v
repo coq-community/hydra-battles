@@ -141,7 +141,7 @@ End Alt2.
 
 From Equations Require Import Equations. 
 
-Instance Lex_nat_wf : WellFounded lex_nat.
+#[ global ] Instance Lex_nat_wf : WellFounded lex_nat.
   apply lex_nat_wf.
 Defined.
 

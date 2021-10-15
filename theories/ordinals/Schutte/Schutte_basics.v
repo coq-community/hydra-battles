@@ -72,19 +72,19 @@ Global Instance WO_ord : WO  lt := AX1.
 
 Axiom inh_Ord : inhabited Ord.
 
-Instance InH_Ord : InH Ord. (* .no-out *)
+#[ global ] Instance InH_Ord : InH Ord. (* .no-out *)
 Proof. (* .no-out *)
   exact inh_Ord. (* .no-out *)
 Qed. (* .no-out *)
 (* end snippet inhOrd *)  
 
 
-Instance Inh_OSets : InH (Ensemble Ord).
+#[ global ] Instance Inh_OSets : InH (Ensemble Ord).
 Proof.
   split; apply Empty_set.
 Qed.
 
-Instance Inh_Ord_Ord : InH (Ord -> Ord).
+#[ global ] Instance Inh_Ord_Ord : InH (Ord -> Ord).
 Proof.
   split;  exact (fun (alpha:Ord) => alpha).
 Qed.

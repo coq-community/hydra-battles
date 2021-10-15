@@ -195,7 +195,7 @@ end.
 
 
 
-Instance Stack_equiv_refl {A}`{M : @EMonoid A op one equ} :
+#[ global ] Instance Stack_equiv_refl {A}`{M : @EMonoid A op one equ} :
   Reflexive stack_equiv.
 Proof.
   red; intros. induction x.
@@ -203,7 +203,7 @@ Proof.
   - right; [reflexivity | assumption].
 Qed.
 
-Instance Stack_equiv_equiv {A}`{M : @EMonoid A op one equ}:
+#[ global ] Instance Stack_equiv_equiv {A}`{M : @EMonoid A op one equ}:
   Equivalence stack_equiv.
 Proof.
  split.
@@ -227,7 +227,7 @@ Proof.
            eapply IHx;eauto.
 Qed.
 
-Instance result_equiv_equiv `{M : @EMonoid A op one equ}:
+#[ global ] Instance result_equiv_equiv `{M : @EMonoid A op one equ}:
   Equivalence result_equiv.
 Proof.
   split.
@@ -298,7 +298,7 @@ Proof.
 Qed.
 
 
-Instance exec_Proper `{M : @EMonoid A op one equ} :
+#[ global ] Instance exec_Proper `{M : @EMonoid A op one equ} :
   Proper (Logic.eq ==> equiv ==> stack_equiv ==> result_equiv) (@exec A op) .
 Proof.
  intros c c' Hx x x' Hequiv s s' Hs; subst.

@@ -5,8 +5,9 @@
 
 -arg -w -arg -notation-overridden
 -arg -w -arg -ambiguous-paths
--arg -w -arg -deprecated-instance-without-locality
 -arg -w -arg -deprecated-hint-rewrite-without-locality
+-arg -w -arg -unknown-option
+-arg -w -arg -deprecated-option
 
 theories/ordinals/OrdinalNotations/ON_Omega.v
 theories/ordinals/OrdinalNotations/ON_Generic.v

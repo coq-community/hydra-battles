@@ -2,6 +2,6 @@
  (name additions)
  (package coq-addition-chains)
  (synopsis "Exponentiation algorithms following addition chains")
- (flags -w -notation-overridden -w -ambiguous-paths -w -deprecated-instance-without-locality))
+ (flags -w -notation-overridden -w -ambiguous-paths))
 
 (include_subdirs qualified)
