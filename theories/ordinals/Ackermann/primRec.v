@@ -1,5 +1,6 @@
 (** Primitive Recursive functions *)
 (** Russel O'Connor *)
+Set Apply With Renaming.
 
 Require Import Arith.
 Require Import Peano_dec.

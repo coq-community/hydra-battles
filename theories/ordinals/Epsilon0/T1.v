@@ -146,7 +146,7 @@ Inductive ap : T1 -> Prop :=
  *)
 
 (* begin snippet compareDef *)
-Instance compare_T1 : Compare T1 :=
+#[ global ] Instance compare_T1 : Compare T1 :=
  fix cmp (alpha beta:T1) :=
   match alpha, beta with
   | zero, zero => Eq
@@ -505,7 +505,7 @@ Qed.
 Cantor normal form needs the exponents of omega to be
    in strict decreasing order *)
 
-Instance lt_dec : RelDecision lt :=
+#[ global ] Instance lt_dec : RelDecision lt :=
 fun alpha beta => decide (compare alpha beta = Lt).
 
 (* begin snippet nfDef *)
@@ -1061,7 +1061,7 @@ Proof.
   - right; apply le_lt_eq ; now left. 
 Defined.
 
-Instance epsilon0_pre_order : TotalPreOrder (leq lt).
+#[ global ] Instance epsilon0_pre_order : TotalPreOrder (leq lt).
 Proof.
   split; [split|].
   - intro x; apply le_refl.
@@ -1072,7 +1072,7 @@ Proof.
     + now right.
 Defined.
 
-Instance epsilon0_dec : RelDecision (leq lt).
+#[ global ] Instance epsilon0_dec : RelDecision (leq lt).
 Proof.
   intros a b.
   destruct (lt_eq_lt_dec a b) as [[Hlt | Heq] | Hgt].
@@ -1404,7 +1404,7 @@ Proof. intros alpha [H [H0 H1]]; inversion H0.
        destruct (not_lt_zero H0).
 Qed. 
 
-Instance LT_St : StrictOrder LT.
+#[ global ] Instance LT_St : StrictOrder LT.
 Proof.
   split.
   - intros alpha H; apply (LT_irrefl H).

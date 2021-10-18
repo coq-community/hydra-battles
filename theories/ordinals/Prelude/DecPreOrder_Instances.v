@@ -3,18 +3,18 @@
 From hydras Require Export DecPreOrder.
 From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
 
-Instance Nat_le_dec : RelDecision le := le_dec.
+#[ global ] Instance Nat_le_dec : RelDecision le := le_dec.
 
-Instance Nat_le_TO : TotalPreOrder le.
+#[ global ] Instance Nat_le_TO : TotalPreOrder le.
 Proof.
  split.
  - apply Nat.le_preorder.
  - intros a b; apply Nat.le_ge_cases.
 Qed.
 
-Instance Z_le_dec : RelDecision Z.le := Z_le_dec.
+#[ global ] Instance Z_le_dec : RelDecision Z.le := Z_le_dec.
 
-Instance Z_le_TO : TotalPreOrder Z.le.
+#[ global ] Instance Z_le_TO : TotalPreOrder Z.le.
 split.
 - apply Z.le_preorder.
 - intros a b; destruct (Z_le_gt_dec a b).
@@ -26,7 +26,7 @@ Import DecPreOrder.
 
 (** Pre-order associated with an inverse function *)
 
-Instance Inverse_fun {A B:Type}{f : A -> B}
+#[ global ] Instance Inverse_fun {A B:Type}{f : A -> B}
          {leB: relation B}{PB: PreOrder leB}:
                      PreOrder (fun x y => leB (f x) (f y)).
 Proof.
@@ -36,7 +36,7 @@ Proof.
 Defined.
 
 
-Instance Total_Inverse_fun {A B:Type}{f : A -> B}
+#[ global ] Instance Total_Inverse_fun {A B:Type}{f : A -> B}
          {leB: relation B}{TB: TotalPreOrder leB} :
                      TotalPreOrder (fun x y => leB (f x) (f y)).
 Proof.
@@ -49,14 +49,14 @@ split.
   + now right.
 Defined.
 
-Instance RelDecision_Inverse_fun {A B:Type}{f : A -> B}
+#[ global ] Instance RelDecision_Inverse_fun {A B:Type}{f : A -> B}
  {leB: relation B} {RDB : RelDecision leB} :
   RelDecision (fun x y => leB (f x) (f y)) :=
   fun x y => decide_rel leB (f x) (f y).
 
 (** Pre-order associated with inclusion *)
 
-Instance PrO_Included {U:Type}: PreOrder (Included U).
+#[ global ] Instance PrO_Included {U:Type}: PreOrder (Included U).
 Proof.
 split;unfold Included;auto.
 Defined.
@@ -74,7 +74,7 @@ Infix "'<s'" := Included_s (at level 30).
 (** Example 
   Lists (pre-ordered by their length) *)
 
-Instance  List_length {A:Type}: 
+#[ global ] Instance  List_length {A:Type}: 
    TotalPreOrder (fun l l' : list A => List.length l <= List.length l')%nat.
 apply Total_Inverse_fun.
 Defined.

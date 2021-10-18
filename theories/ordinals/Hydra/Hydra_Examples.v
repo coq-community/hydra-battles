@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 From Coq Require Import  Lia  Max.
 From hydras Require Import Hydra_Lemmas More_Arith.
 Open Scope nat_scope.

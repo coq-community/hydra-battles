@@ -2,6 +2,7 @@
 
 (** Pierre Casteran, Univ. Bordeaux, LaBRI, UMR 5800 *)
 
+Set Apply With Renaming.
 
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
@@ -191,7 +192,7 @@ Qed.
 (*||*)
 (* end snippet RoundDecr *)
 
-Instance var (h:Hydra) : E0.
+#[ global ] Instance var (h:Hydra) : E0.
 Proof.
   refine (@mkord (m h) _);  apply m_nf.
 Defined.

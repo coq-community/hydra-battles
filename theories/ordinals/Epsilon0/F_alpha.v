@@ -27,7 +27,7 @@ The following definition is not accepted by the [equations] plug-in.
 
  *)
 
-Instance Olt : WellFounded Lt := E0.Lt_wf.
+#[ global ] Instance Olt : WellFounded Lt := E0.Lt_wf.
 
 (* begin snippet FailDemo *)
 
@@ -60,7 +60,7 @@ Lemma call_lt_wf : well_founded call_lt.
   -  unfold Peano.lt; apply Nat.lt_wf_0. 
 Qed.
 
-Instance WF : WellFounded call_lt := call_lt_wf.
+#[ global ] Instance WF : WellFounded call_lt := call_lt_wf.
 
 (*  F_star (alpha,i) is intended to be the i-th iterate of F_ alpha *)
 

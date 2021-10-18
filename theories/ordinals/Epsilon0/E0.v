@@ -127,7 +127,7 @@ Proof.
   refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
 Defined.
 
-Instance Fin (i:nat) : E0.
+#[ global ] Instance Fin (i:nat) : E0.
 Proof.
   destruct i as [|i]; [exact Zero | exact (FinS i)].
 Defined.
@@ -316,7 +316,7 @@ Proof.
     apply LT_trans.
  Qed.
 
-Instance compare_E0 : Compare E0 :=
+#[ global ] Instance compare_E0 : Compare E0 :=
  fun (alpha beta:E0) => compare (cnf alpha) (cnf beta).
 
 Lemma compare_correct (alpha beta : E0) :

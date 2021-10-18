@@ -1,3 +1,5 @@
+Set Apply With Renaming.
+
 Require Import folProof.
 Require Import Arith.
 Require Import folProp.

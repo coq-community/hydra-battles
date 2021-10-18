@@ -54,7 +54,7 @@ This contribution contains two parts:
 - Compatible Coq versions: 8.13 or later
 - Additional dependencies:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
-  - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.2 or later
+  - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - MathComp Algebra
 - Coq namespace: `hydras` + `additions`
@@ -75,7 +75,7 @@ This contribution contains two parts:
   `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
   addition-chains`.
 
-- Building the PDF documentation also requires Alectryon 1.2 and SerAPI.
+- Building the PDF documentation also requires Alectryon 1.4 and SerAPI.
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:

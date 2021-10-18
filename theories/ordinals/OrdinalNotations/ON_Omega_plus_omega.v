@@ -14,10 +14,10 @@ Open Scope opo_scope.
 
 (* begin snippet OmegaPlusOmegaDef *)
 
-Instance compare_nat_nat : Compare t :=
+#[ global ] Instance compare_nat_nat : Compare t :=
  compare_t compare_nat compare_nat.
 
-Instance Omega_plus_Omega: ON _ compare_nat_nat :=
+#[ global ] Instance Omega_plus_Omega: ON _ compare_nat_nat :=
  ON_plus Omega Omega.
 
 Definition t := ON_t.
@@ -402,7 +402,7 @@ Lemma Omega_as_lub  :
 
  (* begin snippet Incl *)
  
- Instance Incl : SubON Omega Omega_plus_Omega omega fin. (* .no-out *)
+ #[ global ] Instance Incl : SubON Omega Omega_plus_Omega omega fin. (* .no-out *)
 
  (* end snippet Incl *)
  Proof.

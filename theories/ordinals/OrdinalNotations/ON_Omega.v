@@ -64,7 +64,7 @@ Qed.
 
 
 
-Instance omega_ok : ON_correct Schutte_basics.omega Omega finite.
+#[ global ] Instance omega_ok : ON_correct Schutte_basics.omega Omega finite.
 Proof.
   split.
   - apply finite_lt_omega.

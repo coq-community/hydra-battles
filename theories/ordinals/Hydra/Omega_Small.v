@@ -8,7 +8,7 @@ Open Scope nat_scope.
 
 
 
-Instance height_var : @Hvariant  _ _ lt_wf free height.
+#[ global ] Instance height_var : @Hvariant  _ _ lt_wf free height.
 Proof.
   split;intros.
 (*

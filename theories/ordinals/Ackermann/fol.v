@@ -1,6 +1,8 @@
 (* Author: Russell O'Connor *)
 (* This file is Public Domain *)
 
+Set Apply With Renaming.
+
 Require Import Coq.Lists.List.
 Require Import Ensembles.
 Require Import Peano_dec.

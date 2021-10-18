@@ -39,10 +39,10 @@ Proof.
   destruct H; intuition discriminate.
 Qed.
 
-Instance comparison_eq_dec : EqDecision comparison.
+#[ global ] Instance comparison_eq_dec : EqDecision comparison.
 Proof. intros c1 c2; unfold Decision; decide equality. Defined.
 
-Instance Total_Reflexive{A:Type}{R: relation A}(rt : Total R):
+#[ global ] Instance Total_Reflexive{A:Type}{R: relation A}(rt : Total R):
   Reflexive R.
 Proof. intros a ; now destruct (rt a a). Qed.
 
@@ -142,7 +142,7 @@ Lemma le_lt_weak {A:Type}{le:relation A}{P:PreOrder le}:
 Proof.  now destruct 1. Qed.
 
 
-Instance  lt_transitive  {A:Type}{le:relation A}{P:PreOrder le}:
+#[ global ] Instance  lt_transitive  {A:Type}{le:relation A}{P:PreOrder le}:
   Transitive lt. 
 Proof.
  intros x y z [Hxy H'xy] [Hyz H'yz];  split.
@@ -150,7 +150,7 @@ Proof.
  -   intro H; destruct H'yz; now transitivity x.
  Qed.
 
-Instance equiv_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }: Equivalence preorder_equiv.
+#[ global ] Instance equiv_equiv {A:Type}{le:relation A} `{P:@PreOrder A le }: Equivalence preorder_equiv.
 Proof. 
 split.
 - intro x;split;reflexivity.

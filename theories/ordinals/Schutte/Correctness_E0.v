@@ -580,7 +580,7 @@ Qed.
 
 (* begin snippet Epsilon0Correct *)
 
-Instance Epsilon0_correct :
+#[ global ] Instance Epsilon0_correct :
   ON_correct epsilon0 Epsilon0  (fun alpha => inject (cnf alpha)). (* .no-out *)
 (* end snippet Epsilon0Correct *)
 
