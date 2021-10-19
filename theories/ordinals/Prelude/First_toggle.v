@@ -24,8 +24,7 @@ Section Hypos.
                (~ P (S l ))}.
   
   Proof.
-    generalize delta H invar.
-    clear delta H invar.
+    revert delta H invar.
     intro delta; pattern delta; apply well_founded_induction with Nat.lt.
     - apply lt_wf.
     - intros d Hd; case_eq d.
