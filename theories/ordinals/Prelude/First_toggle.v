@@ -7,7 +7,7 @@ Computes the first  [l]  between [n] and [p] (excluded) such that
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
-From Coq Require Import Arith Lia.
+From Coq Require Import Arith Lia Inclusion Inverse_Image.
 From hydras Require Import DecPreOrder.
 
 Section Hypos.
@@ -16,52 +16,44 @@ Section Hypos.
   Hypotheses (Hnp : n < p) (Hn : P n) (Hp : ~ P p).
 
 (* begin hide *)
-  
-  Let  search_toggle  (delta : nat)(H : 0 < delta /\ delta <= p - n)
-             (invar : forall i, n <= i -> i <= p - delta -> P i) :
+
+  Let R q' q := n<=q<q' /\ q' <= p.
+
+  Lemma Rwf : well_founded R.
+  Proof.
+    eapply wf_incl.
+    2: eapply wf_inverse_image with (f:= fun q =>  p - q).
+    2: apply lt_wf.
+    intros q q'; unfold R; lia. 
+  Defined. 
+
+  Let  search_toggle  (q:nat)(H : n <= q /\ q < p)
+       (invar : forall i, n <= i -> i <= q -> P i) :
     {l : nat | n <= l  /\ l < p /\
                (forall i: nat, n <= i -> i <= l -> P i) /\ 
                (~ P (S l ))}.
-  
   Proof.
-    revert delta H invar.
-    intro delta; pattern delta; apply well_founded_induction with Nat.lt.
-    - apply lt_wf.
-    - intros d Hd; case_eq d.
-      + intro;subst.
-        intros H invar; destruct H.
-        exfalso; inversion H.
-      + intros; subst.
-        destruct (decide (P (p - n0))) as [H|H].
-        * destruct (Hd n0).
-          -- auto with arith.
-          -- destruct n0.
-             ++ replace (p - 0) with p in H.
-                ** now apply Hp in H. 
-                ** auto with arith.
-             ++ split; auto with arith.
-                destruct H0; auto with arith.
-          -- intros i H1 H2; assert (H3: i <= p - S n0 \/ i = p - n0) by lia.
-             destruct H3.
-          ++ apply invar; auto.
-          ++ subst i; auto.
-          -- exists x; split; auto; tauto.
-        *  exists (p - S n0); repeat split.
-           1, 2: abstract lia. 
-           assumption.
-           replace (S (p - S n0)) with (p - n0); [assumption | abstract lia].
+    revert q H invar; 
+    intro q; pattern q; apply well_founded_induction with R.
+    - apply Rwf.
+    - intros x Hx H H0; destruct (decide (P (S x))) as [H1|H1].
+     +  assert (S x < p).
+        { assert (S x <= p) by (destruct H; auto). 
+          destruct (le_lt_or_eq _ _ H2); auto.
+          subst p; contradiction. 
+        }
+        destruct (Hx (S x)).
+        * unfold R; lia.
+        * lia.
+        * intros i H3 H4; destruct (le_lt_or_eq _ _ H4); auto.
+          apply H0; auto with arith. 
+          now subst. 
+        * exists x0; auto.
+    + exists x; repeat split; trivial;  try lia. 
   Defined.
 
-  Let delta := p - n.
 
-  Remark R1 : 0 < delta /\ delta <= p - n.
-  Proof.   unfold delta.  clear search_toggle; abstract lia.  Qed.
-
-  Remark R2 :  forall i, n <= i -> i <= p - delta -> P i.
-  Proof.
-    clear search_toggle; unfold delta; intros; replace i with n; [trivial | lia].
-  Qed.
-
+  
 (* end hide *)
   
   Definition first_toggle :
@@ -70,7 +62,10 @@ Section Hypos.
               ~ P (S l)}.
   (* begin hide *)
   Proof.
-    exact (search_toggle  (p-n) R1 R2).
+    apply (search_toggle n).
+    lia. 
+    clear search_toggle. 
+   intros; now replace n with i in *  by lia. 
   Defined.
   (* end hide *)
  
