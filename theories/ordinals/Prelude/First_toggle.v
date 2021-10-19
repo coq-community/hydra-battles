@@ -63,9 +63,9 @@ Section Hypos.
   (* begin hide *)
   Proof.
     apply (search_toggle n).
-    lia. 
-    clear search_toggle. 
-   intros; now replace n with i in *  by lia. 
+    - lia. 
+    - clear search_toggle;
+        intros; now replace n with i in *  by lia. 
   Defined.
   (* end hide *)
  
