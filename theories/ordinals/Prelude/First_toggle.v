@@ -27,40 +27,30 @@ Section Hypos.
     generalize delta H invar.
     clear delta H invar.
     intro delta; pattern delta; apply well_founded_induction with Nat.lt.
-    apply lt_wf.
-    
-    intros d Hd.
-    case_eq d.
-    intro;subst.
-    intros.
-    destruct H.
-    elimtype False. inversion H. intros; subst.
-    
-    destruct (decide (P (p - n0))) as [H|H].
-    destruct (Hd n0).
-    auto with arith.
-    destruct n0.
-    replace (p - 0) with p in H. congruence.
-    auto with arith.
-    split; auto with arith.
-    destruct H0; auto with arith.
-
-    intros.
-    assert (i <= p - S n0 \/ i = p - n0) by lia.
-    destruct H3.
-    apply invar; auto.
-    subst i; auto.
-    exists x; split; auto.
-    tauto.
-    tauto.
-    intros.
-    exists (p - S n0).
-    repeat split.
-    abstract lia.
-    abstract lia.
-    auto.
-    replace (S (p - S n0)) with (p - n0);auto.
-    abstract lia.
+    - apply lt_wf.
+    - intros d Hd; case_eq d.
+      + intro;subst.
+        intros H invar; destruct H.
+        exfalso; inversion H.
+      + intros; subst.
+        destruct (decide (P (p - n0))) as [H|H].
+        * destruct (Hd n0).
+          -- auto with arith.
+          -- destruct n0.
+             ++ replace (p - 0) with p in H.
+                ** now apply Hp in H. 
+                ** auto with arith.
+             ++ split; auto with arith.
+                destruct H0; auto with arith.
+          -- intros i H1 H2; assert (H3: i <= p - S n0 \/ i = p - n0) by lia.
+             destruct H3.
+          ++ apply invar; auto.
+          ++ subst i; auto.
+          -- exists x; split; auto; tauto.
+        *  exists (p - S n0); repeat split.
+           1, 2: abstract lia. 
+           assumption.
+           replace (S (p - S n0)) with (p - n0); [assumption | abstract lia].
   Defined.
 
   Let delta := p - n.
@@ -81,7 +71,7 @@ Section Hypos.
               ~ P (S l)}.
   (* begin hide *)
   Proof.
-    exact  (search_toggle  (p-n) R1 R2).
+    exact (search_toggle  (p-n) R1 R2).
   Defined.
   (* end hide *)
  
