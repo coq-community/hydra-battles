@@ -15,6 +15,9 @@ Section Hypos.
  
   Hypotheses (Hnp : n < p) (Hn : P n) (Hp : ~ P p).
 
+  Let spec  := {l : nat | n <= l  /\ l < p /\
+                          (forall i: nat, n <= i -> i <= l -> P i) /\ 
+               (~ P (S l ))}.
 (* begin hide *)
 
   Let R q' q := n <= q < q' /\ q' <= p.
@@ -28,10 +31,8 @@ Section Hypos.
   Defined. 
 
   Let  search_toggle  (q:nat)(H : n <= q /\ q < p)
-       (invar : forall i, n <= i -> i <= q -> P i) :
-    {l : nat | n <= l  /\ l < p /\
-               (forall i: nat, n <= i -> i <= l -> P i) /\ 
-               (~ P (S l ))}.
+       (invar : forall i, n <= i -> i <= q -> P i) : spec. 
+   
   Proof.
     revert q H invar; 
     intro q; pattern q; apply well_founded_induction with R.
@@ -56,10 +57,7 @@ Section Hypos.
   
 (* end hide *)
   
-  Definition first_toggle :
-  {l : nat |  n <= l /\ l < p /\
-              (forall i : nat, n <= i -> i <= l -> P i) /\
-              ~ P (S l)}.
+  Definition first_toggle : spec. 
   (* begin hide *)
   Proof.
     apply (search_toggle n).
