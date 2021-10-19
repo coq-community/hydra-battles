@@ -17,7 +17,7 @@ Section Hypos.
 
 (* begin hide *)
 
-  Let R q' q := n<=q<q' /\ q' <= p.
+  Let R q' q := n <= q < q' /\ q' <= p.
 
   Lemma Rwf : well_founded R.
   Proof.
