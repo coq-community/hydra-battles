@@ -19,6 +19,10 @@ Set Bullet Behavior "Strict Subproofs".
 Set Implicit Arguments.
 Unset Strict Implicit.
 
+(** From hydra to gaia and back *)
+
+(* begin snippet iotaPiDef *)
+
 Fixpoint iota (alpha : hT1) : gT1 :=
   match alpha with
     T1.zero => zero
@@ -31,20 +35,21 @@ Fixpoint pi (alpha : gT1) : hT1 :=
   | cons alpha n beta => T1.ocons (pi alpha) n (pi beta)
   end.
 
+(* end snippet iotaPiDef *)
 
-Lemma iota_pi alpha : iota (pi alpha) = alpha.
+Lemma iota_pi (alpha: gT1): iota (pi alpha) = alpha.
 Proof.
-elim: alpha => //=.
-move => t1 IHalpha1 n t2 IHalpha2.
-by rewrite IHalpha1 IHalpha2.
+  elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
+    by rewrite IHalpha1 IHalpha2.
 Qed.
 
-Lemma pi_iota alpha:  pi (iota alpha) = alpha.
+Lemma pi_iota (alpha : hT1): pi (iota alpha) = alpha.
 Proof.
-elim: alpha => //=.
-move => t1 IHalpha1 n t2 IHalpha2.
-by rewrite IHalpha1 IHalpha2.
+  elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
+    by rewrite IHalpha1 IHalpha2.
 Qed.
+
+(** refinements of constants, functions, etc. *)
 
 Definition refines0 (x:hT1)(y:gT1) :=
 y = iota x.
@@ -57,12 +62,19 @@ Definition refines2 (f:hT1 -> hT1 -> hT1)
  (f': gT1 -> gT1 -> gT1 ) :=
   forall x y : hT1, f' (iota x) (iota y) = iota (f x y).
 
+Definition refinesPred (hP: hT1 -> Prop) (gP: gT1 -> Prop) :=
+  forall x : hT1, hP x <-> gP (iota x).
+
+Definition refinesRel (hR: hT1 -> hT1 -> Prop)
+           (gR: gT1 -> gT1 -> Prop) :=
+  forall x y : hT1, hR x y <-> gR (iota x) (iota y).
+
 Lemma refines1_R f f' :
   refines1 f f' ->
   forall y: gT1, f (pi y) = pi (f' y).
 Proof.
-move => Href y; rewrite -{2}(iota_pi y).
-by rewrite Href pi_iota.
+  move => Href y; rewrite -{2}(iota_pi y).
+    by rewrite Href pi_iota.
 Qed.
 
 
