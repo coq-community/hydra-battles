@@ -2,6 +2,7 @@ DEP_FILES = hydras.tex          \
 	    part-hydras.tex     \
 	    chapter-powers.tex  \
 	    chapter-primrec.tex \
+	    gaia-chapter.tex    \
 	    thebib.bib          \
 	    coqmacros.tex       \
 	    epsilon0.jpg        \

@@ -6,13 +6,17 @@ From hydras Require T1.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
 
+(* begin snippet hT1gT1 *)
+
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
 #[global]Notation hT1 := T1.T1.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 
-#[global]Notation gT1 := CantorOrdinal.T1. 
+#[global]Notation gT1 := CantorOrdinal.T1.
+
+(* end snippet hT1gT1 *)
 
 Set Bullet Behavior "Strict Subproofs".
 
