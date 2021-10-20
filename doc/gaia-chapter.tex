@@ -5,6 +5,10 @@
 
 \section{Data refinement}
 
+\emph{The following definitions and lemmas are in
+\href{../theories/html/gaia_hydras.T1Bridge.html}%
+{\texttt{gaia\_hydras.T1Bridge}}}.
+
 Since both libraries \texttt{gaia} and \texttt{hydra-battles} have their own type \texttt{T1}, we will work with the following notations.
 
 \inputsnippets{T1Bridge/hT1gT1}
@@ -12,6 +16,13 @@ Since both libraries \texttt{gaia} and \texttt{hydra-battles} have their own typ
 The bridge between both libraries is made of two functions.
 
 \inputsnippets{T1Bridge/iotaPiDef}
+
+\inputsnippets{T1Bridge/iotaPiRw, T1Bridge/piIotaRw}
+
+The functions \texttt{iota} and \texttt{pi} allow us to define
+a notion of refinement for constants, functions, predicates and relations.
+
+\inputsnippets{T1Bridge/refineDefs}
 
 
 

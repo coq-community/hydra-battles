@@ -5,6 +5,8 @@ From hydras Require Import DecPreOrder.
 From hydras Require T1.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
+Set Bullet Behavior "Strict Subproofs".
+
 
 (* begin snippet hT1gT1 *)
 
@@ -17,8 +19,6 @@ From gaia Require Import ssete9.
 #[global]Notation gT1 := CantorOrdinal.T1.
 
 (* end snippet hT1gT1 *)
-
-Set Bullet Behavior "Strict Subproofs".
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -41,13 +41,17 @@ Fixpoint pi (alpha : gT1) : hT1 :=
 
 (* end snippet iotaPiDef *)
 
+(* begin snippet iotaPiRw:: no-out *)
 Lemma iota_pi (alpha: gT1): iota (pi alpha) = alpha.
+(* end snippet iotaPiRw *)
 Proof.
   elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
     by rewrite IHalpha1 IHalpha2.
 Qed.
 
+(* begin snippet piIotaRw:: no-out *)
 Lemma pi_iota (alpha : hT1): pi (iota alpha) = alpha.
+(* end snippet piIotaRw *)
 Proof.
   elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
     by rewrite IHalpha1 IHalpha2.
@@ -55,6 +59,8 @@ Qed.
 
 (** refinements of constants, functions, etc. *)
 
+(* begin snippet refineDefs *)
+   
 Definition refines0 (x:hT1)(y:gT1) :=
 y = iota x.
 
@@ -72,6 +78,11 @@ Definition refinesPred (hP: hT1 -> Prop) (gP: gT1 -> Prop) :=
 Definition refinesRel (hR: hT1 -> hT1 -> Prop)
            (gR: gT1 -> gT1 -> Prop) :=
   forall x y : hT1, hR x y <-> gR (iota x) (iota y).
+
+(* end snippet refineDefs *)
+
+
+
 
 Lemma refines1_R f f' :
   refines1 f f' ->

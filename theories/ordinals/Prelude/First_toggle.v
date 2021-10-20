@@ -20,7 +20,7 @@ Section Hypos.
                (~ P (S l ))}.
 (* begin hide *)
 
-  Let R q' q := n <= q < q' /\ q' <= p.
+  Let R q' q :=  q < q' <= p.
 
   Lemma Rwf : well_founded R.
   Proof.
@@ -30,7 +30,7 @@ Section Hypos.
     intros q q'; unfold R; lia. 
   Defined. 
 
-  Let  search_toggle  (q:nat)(H : n <= q /\ q < p)
+  Let  search_toggle  (q:nat)(H : n <= q < p)
        (invar : forall i, n <= i -> i <= q -> P i) : spec. 
    
   Proof.
