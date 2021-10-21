@@ -101,46 +101,58 @@ move => Href y z; rewrite -{2}(iota_pi y) -{2}(iota_pi z);
           by rewrite Href pi_iota.
 Qed.
 
-Lemma phi0_ref x : refines0 (T1.phi0 x)  (CantorOrdinal.phi0 (iota x)).
+
+(** Refinements of usual constants *)
+(* begin snippet constantRefs:: no-out *)
+Lemma zero_ref : refines0 T1.zero CantorOrdinal.zero.
 Proof. by []. Qed.
 
 Lemma one_ref : refines0 (T1.one) CantorOrdinal.one.
 Proof. by []. Qed.
 
-Lemma omega_ref : refines0 T1.omega T1omega.
-Proof. by []. Qed.
-
 Lemma Finite_ref (n:nat) : refines0 (T1.fin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma ap_ref alpha : T1.ap alpha <-> T1ap (iota alpha).
+Lemma omega_ref : refines0 T1.omega T1omega.
+Proof. by []. Qed.
+
+(* end snippet constantRefs *)
+
+(** unary functions *)
+
+Lemma phi0_ref x : refines0 (T1.phi0 x)  (CantorOrdinal.phi0 (iota x)).
+Proof. by []. Qed.
+
+
+Lemma ap_ref : refinesPred T1.ap T1ap. 
 Proof.
-split => Hap; first by case: Hap.
+move => alpha; split => Hap; first by case: Hap.
 move: Hap; case: alpha => //=.
 move => alpha n beta /andP [Hn Hz].
 move/eqP: Hn Hz =>->; move/eqP.
 by case: beta.
 Qed.
 
-Lemma T1eq_refl a : T1eq a a.
-Proof. by apply/T1eqP. Qed.
+
+Lemma T1eq_refl (a: gT1) : T1eq a a.
+Proof.  by apply/T1eqP. Qed.
 
 Lemma T1eq_rw a b: T1eq a b -> pi a = pi b.
 Proof. by  move => /T1eqP ->. Qed. 
 
-Lemma T1eq_iota_rw a b : T1eq (iota a) (iota b) -> a = b.
+Lemma T1eq_iota_rw (a b : hT1) : T1eq (iota a) (iota b) -> a = b.
 Proof.
   move => H; rewrite <- (pi_iota a), <- (pi_iota b); by apply T1eq_rw.
 Qed.
 
-Lemma compare_ref x :
-  forall y, match T1.compare_T1 x y with
+Lemma compare_ref (x y: hT1) :
+  match T1.compare_T1 x y with
   | Lt => T1lt (iota x) (iota y)
   | Eq => iota x = iota y
   | Gt => T1lt (iota y) (iota x)
   end.
 Proof.
-elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
+move: y; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
 case H: (T1.compare_T1 x1 y1).
 - specialize (IHx1 y1); rewrite H in IHx1.
   case H0: (PeanoNat.Nat.compare n n0).
@@ -163,9 +175,10 @@ case H: (T1.compare_T1 x1 y1).
 - specialize (IHx1 y1); rewrite H in IHx1; now rewrite IHx1.
 Qed.
 
-Lemma lt_ref (a b : hT1): T1.lt a b <-> (iota a < iota b).
+
+Lemma lt_ref : refinesRel T1.lt T1lt. 
 Proof.
-  split.
+  move=> a b; split.
   - rewrite /T1.lt /Comparable.compare; move => Hab. 
     generalize (compare_ref a b); now rewrite Hab.
   - move => Hab; red.
@@ -182,17 +195,26 @@ Qed.
 
 
 
-Lemma eqref (a b : hT1):  a = b <-> (iota a = iota b).
+Lemma eqref : refinesRel eq eq.  
 Proof.
-  split.
+  move => a b; split.
   - by move => ->.
-  -  move => Hab ;   apply T1eq_iota_rw; by rewrite Hab T1eq_refl.
+  - move => Hab; apply T1eq_iota_rw; by rewrite Hab T1eq_refl.
 Qed.
+
+Lemma succ_ref: refines1 T1.succ T1succ.
+Proof.
+  red.  elim => [//| //  x].
+  case: x => // x n y H p z H0 /=.
+ by rewrite H0.
+Qed.
+
 
 Lemma plus_ref : refines2 T1.plus T1add.
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
-  case Hx1y1: (T1.compare_T1 x1 y1); move: (compare_ref x1 y1); rewrite Hx1y1 => H.
+  case Hx1y1: (T1.compare_T1 x1 y1); move: (compare_ref x1 y1);
+    rewrite Hx1y1 => H.
   - rewrite /Comparable.compare H T1ltnn /=; f_equal.
     by rewrite Hx1y1 -H /=.
   - by rewrite /Comparable.compare H Hx1y1.
@@ -204,7 +226,8 @@ Proof.
 Qed.
 
 
-(** Equations for multiplication (helpers for proving [mult_ref]) *)
+
+Section Proof_of_mult_ref.
 
 Lemma T1mul_eqn1 (c : gT1) : c * zero = zero. 
 Proof. by []. Qed.
@@ -236,8 +259,9 @@ Proof.
 Qed.
 
 Lemma mult_eqn4 a n b n' b' :
-  a <> T1.zero -> T1.mult (T1.ocons a n b) (T1.ocons T1.zero n' b') =
-               T1.ocons a (n * n' + n + n') b.
+  a <> T1.zero ->
+  T1.mult (T1.ocons a n b) (T1.ocons T1.zero n' b') =
+  T1.ocons a (n * n' + n + n') b.
 Proof. 
   cbn.  case: a => [//|alpha n0 beta _ ].
   f_equal; nia. 
@@ -302,14 +326,20 @@ Proof.
                  **  case: y1 n2 IHy1 => //.
 Qed.
 
-Lemma mult_refR a b : T1.mult (pi a) (pi b) = pi (a * b).
+End Proof_of_mult_ref.
+
+Lemma mult_refR (a b : gT1) : T1.mult (pi a) (pi b) = pi (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
+
 
 Lemma multA : associative T1.mult.
 Proof. 
   move => a b c. 
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
+
+
+(** Order compatibility *)
 
 Lemma Comparable_T1lt_eq a b:
   bool_decide (T1.lt a b) = (iota a < iota b).
@@ -333,10 +363,13 @@ Proof.
       by rewrite T1ltnn in H1.
 Qed.
 
-Lemma nf_ref a : T1.nf_b a = T1nf (iota a).
+
+Lemma nf_ref (a: hT1)  : T1.nf_b a = T1nf (iota a).
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
     by rewrite andbA Comparable_T1lt_eq.
 Qed.
+
+
