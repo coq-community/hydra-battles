@@ -41,9 +41,16 @@ Notation h_succ := T1.succ.
 Notation g_succ := T1succ.
 
 Notation h_phi0 alpha := (T1.phi0 alpha).
-Notation g_phi0 := CantorOrdinal.phi0. 
+Notation g_phi0 := CantorOrdinal.phi0.
 
+Notation h_plus := T1.plus.
+Notation g_add := T1add.
 
+Notation h_mult := T1.mult.
+Notation g_mul := T1mul.
+
+Notation h_lt := T1.lt.
+Notation g_lt := T1lt.
 (* end snippet MoreNotations *)
 
 (* begin snippet iotaPiDef *)
@@ -154,8 +161,6 @@ Proof.
 Qed.
 (*||*)
 
-
-
 Lemma phi0_ref x: refines0 (h_phi0 x) (g_phi0 (iota x)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. by []. Qed.
@@ -183,12 +188,14 @@ Proof.
   move => H; rewrite <- (pi_iota a), <- (pi_iota b); by apply T1eq_rw.
 Qed.
 
+(* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
   | Lt => T1lt (iota x) (iota y)
   | Eq => iota x = iota y
   | Gt => T1lt (iota y) (iota x)
   end.
+(* end snippet compareRef *)
 Proof.
 move: y; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
 case H: (T1.compare_T1 x1 y1).
@@ -213,8 +220,9 @@ case H: (T1.compare_T1 x1 y1).
 - specialize (IHx1 y1); rewrite H in IHx1; now rewrite IHx1.
 Qed.
 
-
-Lemma lt_ref : refinesRel T1.lt T1lt. 
+(* begin snippet ltRef:: no-out *)
+Lemma lt_ref : refinesRel h_lt g_lt.
+(* end snippet ltRef *)
 Proof.
   move=> a b; split.
   - rewrite /T1.lt /Comparable.compare; move => Hab. 
@@ -242,8 +250,9 @@ Qed.
 
 
 
-
-Lemma plus_ref : refines2 T1.plus T1add.
+(* begin snippet plusRef:: no-out *)
+Lemma plus_ref : refines2 h_plus g_add.
+(* end snippet plusRef *)
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
   case Hx1y1: (T1.compare_T1 x1 y1); move: (compare_ref x1 y1);
@@ -324,7 +333,10 @@ Proof. by []. Qed.
 Lemma iota_zero_rw  : iota T1.zero = zero. 
 Proof. by []. Qed.
 
-Lemma mult_ref : refines2 T1.mult T1mul.
+(* begin snippet multRef:: no-out *)
+
+Lemma mult_ref : refines2 h_mult g_mul.
+(* end snippet multRef *)
 Proof.
   move => x y;  move: x; induction y. 
   -   move => x; simpl iota; rewrite T1mul_eqn1; case x => //.

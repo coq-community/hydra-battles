@@ -36,10 +36,24 @@ a notion of refinement for constants, functions, predicates and relations.
 Both libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove consistency of these definitions. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
 
 \subsubsection{A few constants}
-For each constant: $0$, $1$, \dots $n$,  $\omega$ we prove
-that the \texttt{hydras}' definition refines \texttt{gaia}'s 
+For each constant: $0$, $1$, \dots, $n$ and $\omega$ we prove
+that the \texttt{hydras}' definition refines \texttt{gaia}'s.
 \inputsnippets{T1Bridge/constantRefs}
 
 \subsubsection{Unary functions}
 
 \inputsnippets{T1Bridge/unaryRefs}
+
+\subsubsection{Binary operations}
+The binary operations $+$ and $\times$ are defined the same way in both libraries. Please note that they require comparison of ordinal terms. So, the proof of the following lemmas applies
+compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-compare-ref}).
+
+\inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
+
+
+\subsection{Order and comparison}
+
+\label{sect:gaia-compare-ref}
+\inputsnippets{T1Bridge/compareRef}
+
+\inputsnippets{T1Bridge/ltRef}
