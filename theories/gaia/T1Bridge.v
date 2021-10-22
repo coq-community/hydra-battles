@@ -25,6 +25,27 @@ Unset Strict Implicit.
 
 (** From hydra to gaia and back *)
 
+(* begin snippet MoreNotations *)
+Notation g_zero := CantorOrdinal.zero.
+Notation h_zero := T1.zero. 
+
+Notation g_one := CantorOrdinal.one.
+Notation h_one := T1.one.
+
+Notation h_fin := T1.fin.
+
+Notation h_omega := T1.omega.
+Notation g_omega := T1omega. 
+
+Notation h_succ := T1.succ.
+Notation g_succ := T1succ.
+
+Notation h_phi0 alpha := (T1.phi0 alpha).
+Notation g_phi0 := CantorOrdinal.phi0. 
+
+
+(* end snippet MoreNotations *)
+
 (* begin snippet iotaPiDef *)
 
 Fixpoint iota (alpha : hT1) : gT1 :=
@@ -50,7 +71,7 @@ Proof.
 Qed.
 
 (* begin snippet piIotaRw:: no-out *)
-Lemma pi_iota (alpha : hT1): pi (iota alpha) = alpha.
+Lemma pi_iota (alpha: hT1): pi (iota alpha) = alpha.
 (* end snippet piIotaRw *)
 Proof.
   elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
@@ -60,7 +81,7 @@ Qed.
 (** refinements of constants, functions, etc. *)
 
 (* begin snippet refineDefs *)
-   
+
 Definition refines0 (x:hT1)(y:gT1) :=
 y = iota x.
 
@@ -80,9 +101,6 @@ Definition refinesRel (hR: hT1 -> hT1 -> Prop)
   forall x y : hT1, hR x y <-> gR (iota x) (iota y).
 
 (* end snippet refineDefs *)
-
-
-
 
 Lemma refines1_R f f' :
   refines1 f f' ->
@@ -104,24 +122,44 @@ Qed.
 
 (** Refinements of usual constants *)
 (* begin snippet constantRefs:: no-out *)
-Lemma zero_ref : refines0 T1.zero CantorOrdinal.zero.
+
+
+Lemma zero_ref : refines0 h_zero g_zero.
 Proof. by []. Qed.
 
-Lemma one_ref : refines0 (T1.one) CantorOrdinal.one.
+
+Lemma one_ref : refines0 h_one g_one.
 Proof. by []. Qed.
 
-Lemma Finite_ref (n:nat) : refines0 (T1.fin n) (\F n).
+
+
+Lemma Finite_ref (n:nat) : refines0 (h_fin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma omega_ref : refines0 T1.omega T1omega.
+Lemma omega_ref : refines0 h_omega g_omega.
 Proof. by []. Qed.
 
 (* end snippet constantRefs *)
 
 (** unary functions *)
+(* begin snippet unaryRefs:: no-out *)
 
-Lemma phi0_ref x : refines0 (T1.phi0 x)  (CantorOrdinal.phi0 (iota x)).
+
+Lemma succ_ref: refines1 h_succ g_succ.
+(*| .. coq:: none |*)
+Proof.
+  red.  elim => [//|//  x].
+  case: x => // x n y H p z H0 /=.
+ by rewrite H0.
+Qed.
+(*||*)
+
+
+
+Lemma phi0_ref x: refines0 (h_phi0 x) (g_phi0 (iota x)). (* .no-out *)
+(*| .. coq:: none |*)
 Proof. by []. Qed.
+(* end snippet unaryRefs *)
 
 
 Lemma ap_ref : refinesPred T1.ap T1ap. 
@@ -135,10 +173,10 @@ Qed.
 
 
 Lemma T1eq_refl (a: gT1) : T1eq a a.
-Proof.  by apply/T1eqP. Qed.
+Proof. by apply/T1eqP. Qed.
 
 Lemma T1eq_rw a b: T1eq a b -> pi a = pi b.
-Proof. by  move => /T1eqP ->. Qed. 
+Proof. by move => /T1eqP ->. Qed. 
 
 Lemma T1eq_iota_rw (a b : hT1) : T1eq (iota a) (iota b) -> a = b.
 Proof.
@@ -202,12 +240,7 @@ Proof.
   - move => Hab; apply T1eq_iota_rw; by rewrite Hab T1eq_refl.
 Qed.
 
-Lemma succ_ref: refines1 T1.succ T1succ.
-Proof.
-  red.  elim => [//| //  x].
-  case: x => // x n y H p z H0 /=.
- by rewrite H0.
-Qed.
+
 
 
 Lemma plus_ref : refines2 T1.plus T1add.
