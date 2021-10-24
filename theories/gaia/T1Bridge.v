@@ -32,6 +32,9 @@ Notation h_zero := T1.zero.
 Notation g_one := CantorOrdinal.one.
 Notation h_one := T1.one.
 
+Notation h_cons := T1.ocons.
+Notation g_cons := CantorOrdinal.cons.
+
 Notation h_fin := T1.fin.
 
 Notation h_omega := T1.omega.
@@ -51,6 +54,10 @@ Notation g_mul := T1mul.
 
 Notation h_lt := T1.lt.
 Notation g_lt := T1lt.
+
+Notation h_nfb := T1.nf_b.
+Notation g_nfb := T1nf.
+
 (* end snippet MoreNotations *)
 
 (* begin snippet iotaPiDef *)
@@ -58,13 +65,13 @@ Notation g_lt := T1lt.
 Fixpoint iota (alpha : hT1) : gT1 :=
   match alpha with
     T1.zero => zero
-  | T1.ocons alpha n beta => cons (iota alpha) n (iota beta)
+  | h_cons alpha n beta => g_cons (iota alpha) n (iota beta)
   end.
 
 Fixpoint pi (alpha : gT1) : hT1 :=
   match alpha with
     zero => T1.zero
-  | cons alpha n beta => T1.ocons (pi alpha) n (pi beta)
+  | g_cons alpha n beta => h_cons (pi alpha) n (pi beta)
   end.
 
 (* end snippet iotaPiDef *)
@@ -262,7 +269,7 @@ Proof.
   - by rewrite /Comparable.compare H Hx1y1.
   - replace (iota x1 < iota y1) with false.
     rewrite /Comparable.compare H /= Hx1y1; f_equal.
-    change (cons (iota y1) n0 (iota y2)) with (iota (T1.ocons y1 n0 y2)).
+    change (g_cons (iota y1) n0 (iota y2)) with (iota (h_cons y1 n0 y2)).
       by rewrite IHx2.
         by apply T1lt_anti in H.
 Qed.
@@ -279,20 +286,20 @@ Proof. case: c; cbn => //; by case.
 Qed.
 
 
-Lemma T1mul_eqn3 n b n' b' : cons zero n b * cons zero n' b' =
-                     cons zero (n * n' + n + n') b'.      
+Lemma T1mul_eqn3 n b n' b' : g_cons zero n b * g_cons zero n' b' =
+                     g_cons zero (n * n' + n + n') b'.      
 Proof. by [].  Qed. 
 
 
 Lemma mult_eqn3 n b n' b' :
-  T1.mult (T1.ocons T1.zero n b) (T1.ocons T1.zero n' b') =
-                     T1.ocons T1.zero (n * n' + n + n') b'.      
+  T1.mult (h_cons T1.zero n b) (h_cons T1.zero n' b') =
+                     h_cons T1.zero (n * n' + n + n') b'.      
 Proof. cbn; f_equal; nia. Qed.
 
 
 Lemma T1mul_eqn4 a n b n' b' :
-  a != zero -> (cons a n b) * (cons zero n' b') =
-               cons a (n * n' + n + n') b.
+  a != zero -> (g_cons a n b) * (g_cons zero n' b') =
+               g_cons a (n * n' + n + n') b.
 Proof. 
   move => /T1eqP.  cbn.
   move =>  Ha'; have Heq: T1eq a zero = false.
@@ -302,8 +309,8 @@ Qed.
 
 Lemma mult_eqn4 a n b n' b' :
   a <> T1.zero ->
-  T1.mult (T1.ocons a n b) (T1.ocons T1.zero n' b') =
-  T1.ocons a (n * n' + n + n') b.
+  T1.mult (h_cons a n b) (h_cons T1.zero n' b') =
+  h_cons a (n * n' + n + n') b.
 Proof. 
   cbn.  case: a => [//|alpha n0 beta _ ].
   f_equal; nia. 
@@ -311,8 +318,8 @@ Qed.
 
 Lemma T1mul_eqn5 a n b a' n' b' :
    a' != zero ->
-  (cons a n b) * (cons a' n' b') =
-  cons (a + a') n' (T1mul (cons a n b) b').
+  (g_cons a n b) * (g_cons a' n' b') =
+  g_cons (a + a') n' (T1mul (g_cons a n b) b').
 Proof. 
   move => H /=;  cbn;  have Ha' : T1eq a' zero = false. 
    { move: a' H; case => //. }
@@ -321,13 +328,13 @@ Qed.
 
 Lemma mult_eqn5 a n b a' n' b' :
   a' <>  T1.zero ->
-  T1.mult (T1.ocons a n b)  (T1.ocons a' n' b') =
-  T1.ocons (T1.plus a  a') n' (T1.mult (T1.ocons a n b) b').
+  T1.mult (h_cons a n b)  (h_cons a' n' b') =
+  h_cons (T1.plus a  a') n' (T1.mult (h_cons a n b) b').
 Proof.
   move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
 Qed.
 
-Lemma iota_cons_rw a n b : iota (T1.ocons a n b)= cons (iota a) n (iota b). 
+Lemma iota_cons_rw a n b : iota (h_cons a n b)= g_cons (iota a) n (iota b). 
 Proof. by []. Qed.
 
 Lemma iota_zero_rw  : iota T1.zero = zero. 
@@ -353,8 +360,8 @@ Proof.
                 ** simpl iota; simpl T1add; f_equal.
                    destruct (T1.T1_eq_dec y2 T1.zero).
                    { subst; by cbn. }
-                   { change (cons zero n0 (iota beta)) with
-                         (iota (T1.ocons T1.zero n0 beta)); now rewrite IHy2.
+                   { change (g_cons zero n0 (iota beta)) with
+                         (iota (h_cons T1.zero n0 beta)); now rewrite IHy2.
                    }
              ++  destruct y1; [now destruct n1| now compute].
        * destruct (T1.T1_eq_dec y1 T1.zero).
@@ -366,8 +373,8 @@ Proof.
               ++ rewrite T1mul_eqn5.
                  ** rewrite  mult_eqn5 => //. 
                     simpl iota; rewrite plus_ref; f_equal. 
-                    change (cons (iota alpha) n0 (iota beta))
-                      with (iota (T1.ocons alpha n0 beta)); now rewrite IHy2.
+                    change (g_cons (iota alpha) n0 (iota beta))
+                      with (iota (h_cons alpha n0 beta)); now rewrite IHy2.
                  **  case: y1 n2 IHy1 => //.
 Qed.
 
@@ -409,7 +416,7 @@ Proof.
 Qed.
 
 
-Lemma nf_ref (a: hT1)  : T1.nf_b a = T1nf (iota a).
+Lemma nf_ref (a: hT1)  : h_nfb a = g_nfb (iota a).
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
