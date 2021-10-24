@@ -12,11 +12,11 @@ Set Bullet Behavior "Strict Subproofs".
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
-#[global]Notation hT1 := T1.T1.
+#[local] Notation hT1 := T1.T1.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 
-#[global]Notation gT1 := CantorOrdinal.T1.
+#[local]Notation gT1 := CantorOrdinal.T1.
 
 (* end snippet hT1gT1 *)
 
@@ -26,37 +26,37 @@ Unset Strict Implicit.
 (** From hydra to gaia and back *)
 
 (* begin snippet MoreNotations *)
-Notation g_zero := CantorOrdinal.zero.
-Notation h_zero := T1.zero. 
+#[local] Notation g_zero := CantorOrdinal.zero.
+#[local] Notation h_zero := T1.zero. 
 
-Notation g_one := CantorOrdinal.one.
-Notation h_one := T1.one.
+#[local] Notation g_one := CantorOrdinal.one.
+#[local] Notation h_one := T1.one.
 
-Notation h_cons := T1.ocons.
-Notation g_cons := CantorOrdinal.cons.
+#[local] Notation h_cons := T1.ocons.
+#[local] Notation g_cons := CantorOrdinal.cons.
 
-Notation h_fin := T1.fin.
+#[local] Notation h_fin := T1.fin.
 
-Notation h_omega := T1.omega.
-Notation g_omega := T1omega. 
+#[local] Notation h_omega := T1.omega.
+#[local] Notation g_omega := T1omega. 
 
-Notation h_succ := T1.succ.
-Notation g_succ := T1succ.
+#[local] Notation h_succ := T1.succ.
+#[local] Notation g_succ := T1succ.
 
-Notation h_phi0 alpha := (T1.phi0 alpha).
-Notation g_phi0 := CantorOrdinal.phi0.
+#[local] Notation h_phi0 alpha := (T1.phi0 alpha).
+#[local] Notation g_phi0 := CantorOrdinal.phi0.
 
-Notation h_plus := T1.plus.
-Notation g_add := T1add.
+#[local] Notation h_plus := T1.plus.
+#[local] Notation g_add := T1add.
 
-Notation h_mult := T1.mult.
-Notation g_mul := T1mul.
+#[local] Notation h_mult := T1.mult.
+#[local] Notation g_mul := T1mul.
 
-Notation h_lt := T1.lt.
-Notation g_lt := T1lt.
+#[local] Notation h_lt := T1.lt.
+#[local] Notation g_lt := T1lt.
 
-Notation h_nfb := T1.nf_b.
-Notation g_nfb := T1nf.
+#[local] Notation h_nfb := T1.nf_b.
+#[local] Notation g_nfb := T1nf.
 
 (* end snippet MoreNotations *)
 
