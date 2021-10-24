@@ -278,22 +278,22 @@ Qed.
 
 Section Proof_of_mult_ref.
 
-Lemma T1mul_eqn1 (c : gT1) : c * zero = zero. 
+Lemma T1mul_eqn1 (c : gT1) : c * g_zero = g_zero. 
 Proof. by []. Qed.
 
-Lemma mult_eqn1 c : T1.mult c T1.zero = T1.zero.
+Lemma mult_eqn1 c : h_mult c h_zero = h_zero.
 Proof. case: c; cbn => //; by case. 
 Qed.
 
 
-Lemma T1mul_eqn3 n b n' b' : g_cons zero n b * g_cons zero n' b' =
-                     g_cons zero (n * n' + n + n') b'.      
+Lemma T1mul_eqn3 n b n' b' : g_cons g_zero n b * g_cons g_zero n' b' =
+                     g_cons g_zero (n * n' + n + n') b'.      
 Proof. by [].  Qed. 
 
 
 Lemma mult_eqn3 n b n' b' :
-  T1.mult (h_cons T1.zero n b) (h_cons T1.zero n' b') =
-                     h_cons T1.zero (n * n' + n + n') b'.      
+  h_mult (h_cons h_zero n b) (h_cons h_zero n' b') =
+                     h_cons h_zero (n * n' + n + n') b'.      
 Proof. cbn; f_equal; nia. Qed.
 
 
@@ -302,7 +302,7 @@ Lemma T1mul_eqn4 a n b n' b' :
                g_cons a (n * n' + n + n') b.
 Proof. 
   move => /T1eqP.  cbn.
-  move =>  Ha'; have Heq: T1eq a zero = false.
+  move =>  Ha'; have Heq: T1eq a g_zero = false.
   { move: Ha'; case: a => //. }
   rewrite Heq; by cbn.        
 Qed.
@@ -317,9 +317,9 @@ Proof.
 Qed.
 
 Lemma T1mul_eqn5 a n b a' n' b' :
-   a' != zero ->
+   a' != g_zero ->
   (g_cons a n b) * (g_cons a' n' b') =
-  g_cons (a + a') n' (T1mul (g_cons a n b) b').
+  g_cons (a + a') n' (g_mul (g_cons a n b) b').
 Proof. 
   move => H /=;  cbn;  have Ha' : T1eq a' zero = false. 
    { move: a' H; case => //. }
@@ -327,9 +327,9 @@ Proof.
 Qed.
 
 Lemma mult_eqn5 a n b a' n' b' :
-  a' <>  T1.zero ->
+  a' <>  h_zero ->
   T1.mult (h_cons a n b)  (h_cons a' n' b') =
-  h_cons (T1.plus a  a') n' (T1.mult (h_cons a n b) b').
+  h_cons (h_plus a  a') n' (h_mult (h_cons a n b) b').
 Proof.
   move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
 Qed.
@@ -337,7 +337,7 @@ Qed.
 Lemma iota_cons_rw a n b : iota (h_cons a n b)= g_cons (iota a) n (iota b). 
 Proof. by []. Qed.
 
-Lemma iota_zero_rw  : iota T1.zero = zero. 
+Lemma iota_zero_rw  : iota h_zero = g_zero. 
 Proof. by []. Qed.
 
 (* begin snippet multRef:: no-out *)
@@ -380,11 +380,11 @@ Qed.
 
 End Proof_of_mult_ref.
 
-Lemma mult_refR (a b : gT1) : T1.mult (pi a) (pi b) = pi (a * b).
+Lemma mult_refR (a b : gT1) : h_mult (pi a) (pi b) = pi (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
 
 
-Lemma multA : associative T1.mult.
+Lemma multA : associative h_mult.
 Proof. 
   move => a b c. 
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
@@ -394,7 +394,7 @@ Qed.
 (** Order compatibility *)
 
 Lemma Comparable_T1lt_eq a b:
-  bool_decide (T1.lt a b) = (iota a < iota b).
+  bool_decide (h_lt a b) = (iota a < iota b).
 Proof.
   rewrite /T1.lt; generalize (compare_ref a b);
   rewrite /Comparable.compare /=.
