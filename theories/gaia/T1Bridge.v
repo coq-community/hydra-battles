@@ -198,9 +198,9 @@ Qed.
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
-  | Lt => T1lt (iota x) (iota y)
+  | Lt => g_lt (iota x) (iota y)
   | Eq => iota x = iota y
-  | Gt => T1lt (iota y) (iota x)
+  | Gt => g_lt (iota y) (iota x)
   end.
 (* end snippet compareRef *)
 Proof.
@@ -246,14 +246,40 @@ Proof.
       * by rewrite T1ltnn in H2. 
 Qed.
 
+(* begin snippet decideHLtRw:: no-out *)
+Lemma decide_hlt_rw (a b : hT1):
+  bool_decide (h_lt a b) = (iota a < iota b).
+(* end snippet decideHLtRw *)
+Proof.
+  rewrite /T1.lt; generalize (compare_ref a b);
+  rewrite /Comparable.compare /=.
+  destruct (decide (T1.compare_T1 a b = Lt)).
+  - have bd := e.
+    apply (bool_decide_eq_true _) in bd.
+    by rewrite bd e.
+  - have bd := n.
+    apply (bool_decide_eq_false _) in bd.
+    rewrite bd.
+    destruct (T1.compare_T1 a b).
+    * by move => ->; rewrite T1ltnn.
+    * by [].
+    * move => Hlt.
+      symmetry.
+      apply/negP => Hlt'.
+      have H1 : (iota b < iota b) by apply T1lt_trans with (iota a).
+      by rewrite T1ltnn in H1.
+Qed.
 
 
-Lemma eqref : refinesRel eq eq.  
+(* begin snippet eqRef:: no-out *)
+Lemma eqref : refinesRel eq eq.
+(* end snippet eqRef *)
 Proof.
   move => a b; split.
   - by move => ->.
   - move => Hab; apply T1eq_iota_rw; by rewrite Hab T1eq_refl.
 Qed.
+
 
 
 
@@ -380,6 +406,7 @@ Qed.
 
 End Proof_of_mult_ref.
 
+(* begin snippet multA:: no-out *)
 Lemma mult_refR (a b : gT1) : h_mult (pi a) (pi b) = pi (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
 
@@ -389,39 +416,17 @@ Proof.
   move => a b c. 
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
+(* end snippet multA *)
 
-
-(** Order compatibility *)
-
-Lemma Comparable_T1lt_eq a b:
-  bool_decide (h_lt a b) = (iota a < iota b).
-Proof.
-  rewrite /T1.lt; generalize (compare_ref a b);
-  rewrite /Comparable.compare /=.
-  destruct (decide (T1.compare_T1 a b = Lt)).
-  - have bd := e.
-    apply (bool_decide_eq_true _) in bd.
-    by rewrite bd e.
-  - have bd := n.
-    apply (bool_decide_eq_false _) in bd.
-    rewrite bd.
-    destruct (T1.compare_T1 a b).
-    * by move => ->; rewrite T1ltnn.
-    * by [].
-    * move => Hlt.
-      symmetry.
-      apply/negP => Hlt'.
-      have H1 : (iota b < iota b) by apply T1lt_trans with (iota a).
-      by rewrite T1ltnn in H1.
-Qed.
-
+(* begin snippet nfRef:: no-out *)
 
 Lemma nf_ref (a: hT1)  : h_nfb a = g_nfb (iota a).
+(* end snippet nfRef *)
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
-    by rewrite andbA Comparable_T1lt_eq.
+    by rewrite andbA decide_hlt_rw.
 Qed.
 
 

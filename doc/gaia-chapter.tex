@@ -50,10 +50,38 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
+\subsubsection{Porting a theorem}
+The \texttt{Gaia} library containsa proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
+
+\emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
+
+\begin{Coqsrc}
+Lemma mulA: associative T1mul.
+\end{Coqsrc}
+
+This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt this lemma to \texttt{hydra-battles}' ordinals, by a small sequence of rewritings.
+
+\inputsnippets{T1Bridge/multA}
+
+The module~\href{../theories/html/gaia_hydras.T1Bridge_use.html}%
+{\texttt{gaia\_hydras.T1Bridge\_use}} shows an example of
+application of \texttt{multA}.
+
+\inputsnippets{T1Bridge_use/T1BridgeUse}
 
 \subsection{Order and comparison}
+Leibniz equality and strict order on both libraries are
+compatible:
+\inputsnippets{T1Bridge/eqRef}
 
 \label{sect:gaia-compare-ref}
 \inputsnippets{T1Bridge/compareRef}
 
 \inputsnippets{T1Bridge/ltRef}
+
+\inputsnippets{T1Bridge/decideHLtRw}
+
+Hence, both definitions of ``being in Cantor normal form'' are
+compatible.
+
+\inputsnippets{T1Bridge/nfRef}
