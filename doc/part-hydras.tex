@@ -3260,6 +3260,7 @@ $\omega+42+\omega^2$ with the more theoretical proof in Sect~\vref{Ex42-schutte}
 \index{maths}{Transfinite induction}
 
 \subsection{About  well-foundedness}
+\label{sec:T1Wf}
 \label{sec:orgheadline82}
    In order to use \texttt{T1} for proving termination results,
 we need to prove that  our order \texttt{<} is well-founded. Then we will get \emph{transfinite induction} for free.
@@ -3307,6 +3308,8 @@ Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless
 
 \subsubsection{Using a stronger inductive predicate.}
 \label{sec:orgheadline78}
+\label{sec:strongly-accessible}
+
   Instead of trying to prove directly that any ordinal term \(\alpha\) in normal form is accessible
 through \texttt{LT}, we propose to show first that any well formed 
 term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a stronger result).

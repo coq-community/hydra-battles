@@ -64,8 +64,8 @@ This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt
 \inputsnippets{T1Bridge/multA}
 
 The module~\href{../theories/html/gaia_hydras.T1Bridge_use.html}%
-{\texttt{gaia\_hydras.T1Bridge\_use}} shows an example of
-application of \texttt{multA}.
+{\texttt{gaia\_hydras.T1Bridge\_use}} shows a small
+example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 \inputsnippets{T1Bridge_use/T1BridgeUse}
 
@@ -85,3 +85,41 @@ Hence, both definitions of ``being in Cantor normal form'' are
 compatible.
 
 \inputsnippets{T1Bridge/nfRef}
+
+
+\section{Gaia's proof of well-foundedness}
+The library \texttt{gaia-hydras} already contains two proofs
+of well-foundedness of the strict order on ordinal terms in
+Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
+\'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses  tools already present in~\cite{CantorContrib}.
+
+\subsection{Restricted recursion}
+As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
+But the \emph{restriction} of \texttt{T1lt} to terms in normal form \emph{is} well-founded. The following section introduces a  vocabulary in order to reason about statements of the form  ``the restriction of the relation $R$ to a subset $P$ of $A$ is well founded''.
+
+\inputsnippets{nfwfgaia/restrictedRecursion}
+
+The following induction principle is just a variant of \texttt{well\_founded\_induction\_type} for relations defined with \texttt{restrict}.
+
+\inputsnippets{nfwfgaia/restrictedRecursiona}
+
+With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfinite induction.
+
+\subsection{Main proof steps}
+
+\emph{Note: the abreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.}
+
+\inputsnippets{nfwfgaia/nfWfProofa}
+
+The following elimination on \texttt{a} pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
+
+\inputsnippets{nfwfgaia/nfWfProofb, nfwfgaia/nfWfProofc}
+
+Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
+
+There are three cases to consider:
+\begin{itemize}
+\item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}. Then, it is accessible (by hypothesis \texttt{Hb}).
+  \inputsnippets{nfwfgaia/nfWfProofd}
+  
+\end{itemize}

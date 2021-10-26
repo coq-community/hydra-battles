@@ -1,7 +1,10 @@
+(** Copy of gaia's ssete9.v (for experimenting Alectryon documentation) *)
+
 (** * Ordinals in Pure Coq 
   Copyright INRIA (2013-2013) Marelle Team (José Grimm).
   After a work of Castéran
 *)
+
 
 From mathcomp
 Require Import ssreflect ssrfun ssrbool eqtype ssrnat.
@@ -310,7 +313,7 @@ End Sequences.
 (** We show here an induction principle;  we could use it for ordinals in NF 
 form.  *)
 
-
+(* begin snippet restrictedRecursion:: no-out *)
 Section restricted_recursion.
 
 Variables (A:Type)(P:A->Prop)(R:A->A->Prop).
@@ -318,21 +321,24 @@ Variables (A:Type)(P:A->Prop)(R:A->A->Prop).
 Definition restrict a b := [/\ P a,  R a b & P b].
 
 Definition well_founded_P := forall a, P a -> Acc restrict a.
+(* end snippet restrictedRecursion *)
 
+(* begin snippet restrictedRecursiona:: no-out *)
 Lemma P_well_founded_induction_type :
        well_founded_P  ->
        forall Q : A -> Type,
-       (forall x : A, P x -> (forall y : A,P y-> R y x -> Q y) -> Q x) ->
+       (forall x : A, P x -> (forall y : A, P y -> R y x -> Q y) -> Q x) ->
        forall a : A, P a -> Q a.
+(*| .. coq:: none |*)
 Proof.
 move => W Q Ha a.
 have wfr: well_founded restrict by move => b; split => y [ra _ _]; apply: W.
 apply: (well_founded_induction_type wfr (fun x => P x -> Q x)).
 by move => x Hb px; apply: Ha => // y py ry; apply: Hb. 
 Qed.
-
+(*||*)
 End restricted_recursion.
- 
+(* end snippet restrictedRecursiona *)
 Module CantorOrdinal.
 
 
@@ -687,12 +693,23 @@ Lemma T1nfCE: ~~(T1nf T1bad).  Proof. by  []. Qed.
  NF [x] is accessible by the relation: [u<v], [u] and [v] NF.
  If [x] is not NF it is trivially accessible. The proof is a bit tricky *)
 
-
+(* begin snippet nfWfProofa:: no-out *)
 Lemma nf_Wf : well_founded (restrict T1nf T1lt).
 Proof. 
 have az: Acc (restrict T1nf T1lt) zero by split => y [_]; rewrite T1ltn0.
 elim;[ exact az | move => a Ha n b _].
+pose (LT:= (restrict (fun x : T1 => T1nf x) (fun x y : T1 => x < y))). 
+fold LT in az , Ha  |- . (* .goals *)
+(* end snippet nfWfProofa *)
+
+(* begin snippet nfWfProofb:: no-out  *)
 elim:{a} Ha n b => a Ha Hb n b.
+(* end snippet nfWfProofb *)
+
+(* begin snippet nfWfProofc:: no-in  unfold *)
+fold LT in Hb   |- *.
+(* end snippet nfWfProofc *)
+
 case nx: (T1nf (cons a n b)); last by split => y [_ _]; rewrite nx.
 move/and3P: (nx);rewrite -/T1nf; move => [na nb lba].
 have aca: Acc (restrict T1nf T1lt) a by split.
@@ -707,7 +724,11 @@ have Hc: forall b, Acc (restrict T1nf T1lt) b ->
 have Hd: forall b, T1nf b -> b < phi0 a -> Acc (restrict T1nf T1lt)  b.
   case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
   rewrite phi0_lt1 => aa'.
-  by apply: Hb; rewrite /restrict  (T1nf_consa nx') na aa'. 
+  (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#aa'   *)
+ fold LT in aca, Hc |- *.
+  (* end snippet nfWfProofd *)
+  
+  by apply: Hb; unfold LT; rewrite /restrict  (T1nf_consa nx') na aa'. 
 elim: n b {nb lba} (Hd _ nb lba) nx => [ // | n He b]; elim.
 move => c _ qb np; split; case; first by move => _; apply: az.
 move => a'' n'' b'' [sa /= sb _];move /and3P: (sa) =>  [ra rb rc].
