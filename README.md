@@ -2,7 +2,7 @@
 This file was generated from `meta.yml`, please do not edit manually.
 Follow the instructions on https://github.com/coq-community/templates to regenerate.
 --->
-# Hydras, Ordinals & Co. (_work in progress_)
+# Hydras & Co. (_work in progress_)
 
 [![Docker CI][docker-action-shield]][docker-action-link]
 [![Contributing][contributing-shield]][contributing-link]
@@ -23,24 +23,27 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 
 
 
-This contribution contains two parts:
+This Coq-based project has three parts:
 
 - An exploration of some properties of Kirby and Paris' hydra
-  battles, with the help of the **Coq** Proof assistant. This
-  development includes the study of several representations of
-  ordinal numbers, and a part of the so-called _Ketonen and Solovay
+  battles, including the study of several representations of
+  ordinal numbers and a part of the so-called _Ketonen and Solovay
   machinery_ (combinatorial properties of epsilon0).
 
-  - This project also hosts the formalization by Russell O'Connor of
-    primitive recursive functions and Peano arithmetic (see
-    https://github.com/coq-community/goedel)
+  This part also hosts the formalization by Russell O'Connor of
+  primitive recursive functions and Peano arithmetic (see
+  https://github.com/coq-community/goedel)
 
 - Some algorithms for computing _x^n_ with as few multiplications as
   possible (using _addition chains_).
 
+- A bridge to definitions and results in the Gaia project, in particular
+  on ordinals (see https://github.com/coq-community/gaia).
+
 ## Meta
 
 - Author(s):
+  - Yves Bertot
   - Pierre Castéran
   - Évelyne Contejean
   - Jeremy Damour
@@ -57,8 +60,9 @@ This contribution contains two parts:
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - MathComp Algebra
-- Coq namespace: `hydras` + `additions`
+- Coq namespaces: `hydras`, `additions`, `gaia_hydras`
 - Related publication(s):
+  - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
   - [Accessible Independence Results for Peano Arithmetic](https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf) doi:[10.1112/blms/14.4.285](https://doi.org/10.1112/blms/14.4.285)
   - [Rapidly Growing Ramsey Functions](https://www.jstor.org/stable/2006985) doi:[10.2307/2006985](https://doi.org/10.2307/2006985)
   - [Proof Theory](https://link.springer.com/book/10.1007/978-3-642-66473-1) doi:[10.1007/978-3-642-66473-1](https://doi.org/10.1007/978-3-642-66473-1)

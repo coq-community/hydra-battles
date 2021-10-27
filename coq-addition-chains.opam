@@ -7,10 +7,12 @@ dev-repo: "git+https://github.com/coq-community/hydra-battles.git"
 bug-reports: "https://github.com/coq-community/hydra-battles/issues"
 license: "MIT"
 
-synopsis: "Exponentiation algorithms following addition chains"
+synopsis: "Exponentiation algorithms following addition chains in Coq"
 description: """
 Addition chains are algorithms for computations of the p-th power of some x, 
-with the least number of multiplication as possible. We present a few implementations of addition chains, with proofs of their correctness"""
+with the least number of multiplications possible. This development provides
+a few implementations of addition chains in Coq, including proofs of their
+correctness."""
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [

@@ -7,10 +7,11 @@ dev-repo: "git+https://github.com/coq-community/hydra-battles.git"
 bug-reports: "https://github.com/coq-community/hydra-battles/issues"
 license: "MIT"
 
-synopsis: "Comparison between ordinals in Gaia and Hydra battles"
+synopsis: "Bridge in Coq between Gaia and Hydra battles"
 description: """
-The Gaia and Hydra battles projects develop different notions of ordinals.
-This development bridges the different notions."""
+The Gaia and Hydra battles projects develop different implementations
+of ordinals and other mathematical concepts in Coq. This development bridges
+similar concepts in the two projects."""
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
