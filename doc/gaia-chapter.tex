@@ -113,7 +113,7 @@ With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfin
 
 The following elimination on \texttt{a} pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
 
-\inputsnippets{nfwfgaia/nfWfProofb, nfwfgaia/nfWfProofc}
+\inputsnippets{nfwfgaia/nfWfProofb}
 
 Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
 
@@ -121,5 +121,14 @@ There are three cases to consider:
 \begin{itemize}
 \item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}. Then, it is accessible (by hypothesis \texttt{Hb}).
   \inputsnippets{nfwfgaia/nfWfProofd}
+
+  \item The term \texttt{(cons a n b)} is equal to
+    \texttt{(cons a n b'')}, where $b''<\omega^a$. Then we can apply the hypothess \texttt{Hd} and \texttt{He}.
+     \inputsnippets{nfwfgaia/nfWfProofg}
+\item
+  The term \texttt{(cons a n b)} is equal to
+  \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$. Then we can apply the hypothesis \texttt{He}.
+  
+ \inputsnippets{nfwfgaia/nfWfProofe}
   
 \end{itemize}

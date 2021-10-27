@@ -693,22 +693,23 @@ Lemma T1nfCE: ~~(T1nf T1bad).  Proof. by  []. Qed.
  NF [x] is accessible by the relation: [u<v], [u] and [v] NF.
  If [x] is not NF it is trivially accessible. The proof is a bit tricky *)
 
+(* addition to original file *)
+Section AddLocalNotation.
+#[local]  Notation LT :=
+    (@restrict T1 (fun x : T1 => is_true (T1nf x))
+               (fun x y : T1 => is_true (x < y))).
+
 (* begin snippet nfWfProofa:: no-out *)
 Lemma nf_Wf : well_founded (restrict T1nf T1lt).
 Proof. 
 have az: Acc (restrict T1nf T1lt) zero by split => y [_]; rewrite T1ltn0.
-elim;[ exact az | move => a Ha n b _].
-pose (LT:= (restrict (fun x : T1 => T1nf x) (fun x y : T1 => x < y))). 
-fold LT in az , Ha  |- . (* .goals *)
+elim;[ exact az | move => a Ha n b _]. (* .unfold *)
 (* end snippet nfWfProofa *)
 
-(* begin snippet nfWfProofb:: no-out  *)
+(* begin snippet nfWfProofb  *)
 elim:{a} Ha n b => a Ha Hb n b.
 (* end snippet nfWfProofb *)
 
-(* begin snippet nfWfProofc:: no-in  unfold *)
-fold LT in Hb   |- *.
-(* end snippet nfWfProofc *)
 
 case nx: (T1nf (cons a n b)); last by split => y [_ _]; rewrite nx.
 move/and3P: (nx);rewrite -/T1nf; move => [na nb lba].
@@ -723,9 +724,8 @@ have Hc: forall b, Acc (restrict T1nf T1lt) b ->
   - by move: ub sa; case ee:(n''==0); [rewrite ua (eqP ee) => ub; apply: qb | ].
 have Hd: forall b, T1nf b -> b < phi0 a -> Acc (restrict T1nf T1lt)  b.
   case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
-  rewrite phi0_lt1 => aa'.
   (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#aa'   *)
- fold LT in aca, Hc |- *.
+  rewrite phi0_lt1 => aa'.
   (* end snippet nfWfProofd *)
   
   by apply: Hb; unfold LT; rewrite /restrict  (T1nf_consa nx') na aa'. 
@@ -734,9 +734,14 @@ move => c _ qb np; split; case; first by move => _; apply: az.
 move => a'' n'' b'' [sa /= sb _];move /and3P: (sa) =>  [ra rb rc].
 move: sb; case: (T1ltgtP a'' a) => sc sb; [ by apply: Hb | by case sb |].
 move: sb; case: (ltngtP n'' n.+1); [rewrite ltnS leq_eqVlt | done | move ->].
-  rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
-    move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
-  move => qd qe.
+  (* begin snippet nfWfProofg:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#Hd .h#He *)
+rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
+  (* end snippet nfWfProofg *)
+move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
+
+ (* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe *)
+    move => qd qe.
+    (* end snippet nfWfProofe *)
   have nc0: T1nf (cons a n zero) by rewrite /= andbT. 
   apply: (acc_rec (And3 qe _ nc0) (He _ az nc0)). 
   by rewrite /= qd sc eqxx T1ltnn. 
@@ -786,6 +791,9 @@ move =>H0 Hfinite Hcons; elim => // a IH1 n t IH2;case: a IH1.
   by rewrite  T1nf_finite1; move => _ /eqP ->.
 move => a' n' c pa =>/and3P [pc pd pe]; auto.
 Qed.
+
+(* addition to original file *)
+End AddLocalNotation.
 
 (** ** Successor *)
 
