@@ -122,11 +122,11 @@ There are three cases to consider:
 \item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}. Then, it is accessible (by hypothesis \texttt{Hb}).
   \inputsnippets{nfwfgaia/nfWfProofd}
 
-  \item The term \texttt{(cons a n b)} is equal to
+  \item The considered term  is equal to
     \texttt{(cons a n b'')}, where $b''<\omega^a$. Then we can apply the hypothess \texttt{Hd} and \texttt{He}.
      \inputsnippets{nfwfgaia/nfWfProofg}
 \item
-  The term \texttt{(cons a n b)} is equal to
+  The term is equal to
   \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$. Then we can apply the hypothesis \texttt{He}.
   
  \inputsnippets{nfwfgaia/nfWfProofe}
