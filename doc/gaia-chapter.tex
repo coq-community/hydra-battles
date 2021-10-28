@@ -117,8 +117,8 @@ The following elimination on \texttt{a} pushes a new hypothesis \texttt{Hb} whic
 
 Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
 
-There are three cases to consider:
-\begin{itemize}
+There are three cases to consider.
+\begin{enumerate}
 \item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}. Then, it is accessible (by hypothesis \texttt{Hb}).
   \inputsnippets{nfwfgaia/nfWfProofd}
 
@@ -131,4 +131,6 @@ There are three cases to consider:
   
  \inputsnippets{nfwfgaia/nfWfProofe}
   
-\end{itemize}
+\end{enumerate}
+
+In every case, the considered ordinal is accessible.

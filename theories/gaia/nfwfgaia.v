@@ -1,4 +1,6 @@
 (** Copy of gaia's ssete9.v (for experimenting Alectryon documentation) *)
+(** Changes from original proof script are signaled as additions/changes or inside Alectryon snippets 
+ *)
 
 (** * Ordinals in Pure Coq 
   Copyright INRIA (2013-2013) Marelle Team (José Grimm).
@@ -693,7 +695,7 @@ Lemma T1nfCE: ~~(T1nf T1bad).  Proof. by  []. Qed.
  NF [x] is accessible by the relation: [u<v], [u] and [v] NF.
  If [x] is not NF it is trivially accessible. The proof is a bit tricky *)
 
-(* addition to original file *)
+(* Addition  to original file *)
 Section AddLocalNotation.
 #[local]  Notation LT :=
     (@restrict T1 (fun x : T1 => is_true (T1nf x))
@@ -703,7 +705,7 @@ Section AddLocalNotation.
 Lemma nf_Wf : well_founded (restrict T1nf T1lt).
 Proof. 
 have az: Acc (restrict T1nf T1lt) zero by split => y [_]; rewrite T1ltn0.
-elim;[ exact az | move => a Ha n b _]. (* .unfold *)
+elim;[ exact az | move => a Ha n b _]. (* .goals *)
 (* end snippet nfWfProofa *)
 
 (* begin snippet nfWfProofb  *)
@@ -739,7 +741,7 @@ rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
   (* end snippet nfWfProofg *)
 move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
 
- (* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe *)
+(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe *)
     move => qd qe.
     (* end snippet nfWfProofe *)
   have nc0: T1nf (cons a n zero) by rewrite /= andbT. 
