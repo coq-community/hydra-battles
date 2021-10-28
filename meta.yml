@@ -1,5 +1,5 @@
 ---
-fullname: Hydras, Ordinals & Co. (_work in progress_)
+fullname: Hydras & Co. (_work in progress_)
 shortname: hydra-battles
 organization: coq-community
 community: true
@@ -8,20 +8,22 @@ action: true
 synopsis: Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq
 
 description: |-
-  This contribution contains two parts:
+  This Coq-based project has three parts:
 
   - An exploration of some properties of Kirby and Paris' hydra
-    battles, with the help of the **Coq** Proof assistant. This
-    development includes the study of several representations of
-    ordinal numbers, and a part of the so-called _Ketonen and Solovay
+    battles, including the study of several representations of
+    ordinal numbers and a part of the so-called _Ketonen and Solovay
     machinery_ (combinatorial properties of epsilon0).
 
-    - This project also hosts the formalization by Russell O'Connor of
-      primitive recursive functions and Peano arithmetic (see
-      https://github.com/coq-community/goedel)
+    This part also hosts the formalization by Russell O'Connor of
+    primitive recursive functions and Peano arithmetic (see
+    https://github.com/coq-community/goedel)
 
   - Some algorithms for computing _x^n_ with as few multiplications as
     possible (using _addition chains_).
+
+  - A bridge to definitions and results in the Gaia project, in particular
+    on ordinals (see https://github.com/coq-community/gaia).
 
 build: |-
   ## Installation
@@ -56,6 +58,8 @@ build: |-
    The command `make pdf` generates a local copy as `doc/hydras.pdf`.
 
 publications:
+- pub_url: https://hal.archives-ouvertes.fr/hal-03404668
+  pub_title: 'Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment'
 - pub_url: https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf
   pub_title: Accessible Independence Results for Peano Arithmetic
   pub_doi: 10.1112/blms/14.4.285
@@ -67,6 +71,7 @@ publications:
   pub_doi: 10.1007/978-3-642-66473-1
 
 authors:
+- name: Yves Bertot
 - name: Pierre Castéran
 - name: Évelyne Contejean
 - name: Jeremy Damour

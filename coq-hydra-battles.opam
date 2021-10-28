@@ -10,8 +10,8 @@ license: "MIT"
 synopsis: "Exploration of some properties of Kirby and Paris' hydra battles, with the help of Coq"
 description: """
 An exploration of some properties of Kirby and Paris' hydra battles,
-with the help of the Coq Proof assistant. This development includes
-the study of several representations of ordinal numbers, and a part
+with the help of the Coq proof assistant. This includes the study of
+several representations of ordinal numbers, and a part
 of the so-called Ketonen and Solovay machinery (combinatorial
 properties of epsilon0)."""
 
