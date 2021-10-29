@@ -740,12 +740,12 @@ move => c _ qb np; split; case; first by move => _; apply: az.
 move => a'' n'' b'' [sa /= sb _];move /and3P: (sa) =>  [ra rb rc].
 move: sb; case: (T1ltgtP a'' a) => sc sb; [ by apply: Hb | by case sb |].
 move: sb; case: (ltngtP n'' n.+1); [rewrite ltnS leq_eqVlt | done | move ->].
-  (* begin snippet nfWfProofg:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#Hd .h#He *)
+  (* begin snippet nfWfProofg:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc  .h#Hd .h#He *)
 rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
   (* end snippet nfWfProofg *)
 move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
 
-(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe .h#aca *)
+(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe .h#aca  .h#Hd *)
     move => qd qe (* Changed *) ; subst a''. (* end of Changed *)
     (* end snippet nfWfProofe *)
   have nc0: T1nf (cons a n zero) by rewrite /= andbT. 

@@ -54,7 +54,7 @@
 \newcommand{\marginok}[1]{\marginpar{\raggedright OK:#1}}
 \newcommand{\tab}{{\null\hskip1cm}}
 \newcommand{\Ltac}{\mbox{{$\cal L$}tac}}
-\newcommand{\coq}{\mbox{{Coq}}}
+%\newcommand{\coq}{\mbox{{Coq}}}
 \newcommand{\compcert}{\mbox{{CompCert}}}
 
 \newcommand{\pcoq}{\mbox{{Pcoq}}}
@@ -95,9 +95,6 @@
  \newcommand{\coqand}{\mbox{\(\wedge\)}}
  \newcommand{\coqor}{\mbox{\(\vee\)}}
  \newcommand{\coqnot}{\mbox{\(\neg\)}}
-% \newcommand{\coqand}{\texttt{/\textbackslash}}
-% \newcommand{\coqor}{\texttt{\textbackslash/}}
-% \newcommand{\coqnot}{\mbox{\(\neg\)}}
 \newcommand{\hide}[1]{}
 \newcommand{\hidedots}[1]{...}
 \newcommand{\sig}[3]{\texttt{\{}#1\texttt{:}#2 \texttt{|} #3\texttt{\}}}
@@ -173,117 +170,33 @@
 %\newcommand{\ajuge}[2]{\mbox{$ \boldsymbol{\vdash} #1 : #2 $}}
 \newcommand{\ajuge}[2]{\mbox{$\these #1 \boldsymbol{:} #2 $}}
 
-%%% logique minimale
-\newcommand{\propzero}{\mbox{$P_0$}} % types de Fzero
-
-%%% logique propositionnelle classique
-\newcommand {\ff}{\boldsymbol{f}} % faux
-\newcommand {\vv}{\boldsymbol{t}} % vrai
-
-\newcommand{\verite}{\mbox{$\cal{B}$}} % {\ff,\vv}
-\newcommand{\sequ}[2]{\mbox{$#1 \vdash #2 $}} % sequent
-\newcommand{\strip}[1]{#1^o} % enlever les variables d'un contexte
-
-
-
-%%% tactiques
-\newcommand{\decomp}{\delta} % decomposition
-\newcommand{\recomp}{\rho} % recomposition
-
-%%% divers
-\newcommand{\cqfd}{\mbox{\textbf{cqfd}}}
-\newcommand{\fail}{\mbox{\textbf{F}}}
-\newcommand{\succes}{\mbox{$\blacksquare$}}
-%%% Environnements
-
-
-%% Fzero
-\newcommand{\con}{\mbox{$\cal C$}}
-\newcommand{\var}{\mbox{$\cal V$}}
-
-\newcommand{\atomzero}{\mbox{${\cal A}_0$}} % types de base de Fzero
-\newcommand{\typezero}{\mbox{${\cal T}_0$}} % types de Fzero
-\newcommand{\termzero}{\mbox{$\Lambda_0$}} % termes de Fzero 
-\newcommand{\conzero}{\mbox{$\cal C_0$}} % contextes de Fzero 
-
-\newcommand{\buts}{\mbox{$\cal B$}} % buts
-
-%%% for drawing terms
-% abstraction [x:t]e
-\newcommand{\PicAbst}[3]{\begin{bundle}{\bf abst}\chunk{#1}\chunk{#2}\chunk{#3}%
-                        \end{bundle}}
-
-% the same in DeBruijn form
-\newcommand{\PicDbj}[2]{\begin{bundle}{\bf abst}\chunk{#1}\chunk{#2}
-                       \end{bundle}}
-
-
-% applications
-\newcommand{\PicAppl}[2]{\begin{bundle}{\bf appl}\chunk{#1}\chunk{#2}%
-                         \end{bundle}}
-
-% variables
-\newcommand{\PicVar}[1]{\begin{bundle}{\bf var}\chunk{#1}
-                          \end{bundle}}
-
-% constantes
-\newcommand{\PicCon}[1]{\begin{bundle}{\bf const}\chunk{#1}\end{bundle}}
-
-% arrows
-\newcommand{\PicImpl}[2]{\begin{bundle}{\impl}\chunk{#1}\chunk{#2}%
-                         \end{bundle}}
-
-%\newcommand{\todo}[1]{\textbf{Todo: #1}}
-
-% %% texte Coq
-
-% %% réponses de Coq
-% \newenvironment{coqanswer}{\begin{mdframed}[topline=false, bottomline=false, leftline=false, rightline=false, skipabove=0pt, skipbelow=1pt, backgroundcolor=gray!20]\begin{alltt}\it}
-%{\end{alltt}\end{mdframed}}
 
 
 
 
-%%%% scripts coq
-\newcommand{\prompt}{\mbox{\sl Coq $<\;$}}
-\newcommand{\natquicksort}{\texttt{nat\_quicksort}}
 
-%% ajoute des parenthèses légères aux expressions de la forme "f x y"
 
-\newcommand{\coqparen}[1]{\mbox{\textcolor{gray}{(}\,\textbf{#1}\,\textcolor{gray}{)}}}
-
-%%% texte Coq déjà parenthésé; pas la peine dans rajouter
 \newcommand{\coqsimple}[1]{\mbox{\textbf{#1}}}
-\newcommand{\safeit}{\it}
-\newcommand{\byrule}[1]{\mbox{$\underset{\scriptstyle #1}{\longrightarrow}$}}
-\newcommand{\byrules}[1]{\mbox{$\underset{\scriptstyle #1}{\longrightarrow^*}$}}
-
-\newcommand{\backback}{\mbox{$\backslash\backslash$}}
 \newcommand{\cons}{\mbox{\tt\,::\,}}
 \newcommand{\nil}{\mbox{\tt\,[\,]\,}}
 
 
-
+%%% Colors 
 
 
 \definecolor{mintedbgcolor}{rgb}{0.95,0.95,1.0}
 \definecolor{badcoqcolor}{rgb}{0.8,0.8,0.8}
 \definecolor{altcoqcolor}{rgb}{0.7,1.0,0.8}
-
 \definecolor{mathcolor}{rgb}{0.95,0.90,0.85}
-
 \definecolor{vertfluo}{rgb}{0.623, 0.94, 0.886}
 \definecolor{lightred}{rgb}{1.0, 0.74, 0.7}
 \definecolor{lightgray}{rgb}{0.7, 0.7, 0.7}
+\definecolor{lookcolor}{rgb}{0.9,0.2,0.0}
+\definecolor{darkred}{rgb}{.3,.0,.0}
+\definecolor{sourcecolor}{rgb}{.07,.1,.7}
 
 
 
-%\usepackage{fontspec}
-
-
-% handling vref in both latex and html
-\newcommand{\myvref}[2]{\vref{#1}}
-% unicode stuff
 \newunicodechar{𝟙}{\ensuremath{\mathds{1}}}
 \newunicodechar{ℤ}{\ensuremath{\mathds{Z}}}
 
@@ -293,12 +206,19 @@
 \newcommand{\rounds}{\mbox{\,\texttt{-+->}\,}}
 \newcommand{\round}{\mbox{\,\texttt{-1->}\,}}
 \newcommand{\rplus}[1]{\mbox{$\,\underset{#1}{\longrightarrow}\,$}}
-\definecolor{lookcolor}{rgb}{0.9,0.2,0.0}
 \newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
 \newcommand{\showmath}[1]{\mathcolor{\mbox{$#1$}}}
 \newcommand{\bigmath}[1]{\textcolor{blue}{\mbox{\[#1\]}}}
 \newcommand{\myemph}[1]{\textcolor{lookcolor}{\,\it{#1}\,}}
 
+%%% Coq and libraries
+
+\newcommand{\coq}{Coq\xspace}
+\newcommand{\community}{Coq-community\xspace}
+\newcommand{\gaia}{Gaia\xspace}
+\newcommand{\alectr}{Alectryon\xspace}
+\newcommand{\equations}{Equations\xspace}
+\newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
 
 {\theorembodyfont{\upshape}
  \newtheorem{exercise}{Exercise}[chapter]
@@ -325,8 +245,6 @@
 
 %% KS eaters
 \newcommand{\gnaw}[2]{\mbox{$\{#1\}\langle #2 \rangle $}}
-\definecolor{darkred}{rgb}{.3,.0,.0}
-\definecolor{sourcecolor}{rgb}{.07,.1,.7}
 
 %\input{setup-latex}
 

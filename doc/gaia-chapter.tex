@@ -93,7 +93,7 @@ of well-foundedness of the strict order on ordinal terms in
 Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
 \'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
 
-This proof, as it appears in \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, is quite dense and qualified as ``a bit tricky''. We present here its main steps with the help of the alectryon tool.
+This proof, as it appears inw, is quite dense and qualified as ``a bit tricky''. We present here its main steps with the help of the \alectr tool.
 
 
 \subsection{Restricted recursion}
@@ -138,13 +138,15 @@ There are three cases to consider.
 \item
   The term is equal to
   \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$.
-  This term is less than the accessible \texttt{(cons a n b'')}.
+
   
   
   \inputsnippets{nfwfgaia/nfWfProofe}
-  
- Then we can apply the hypothesis \texttt{He}.
+
+  By \texttt{Hd} and \texttt{He}, and a few technical lemmas about normal forms,   the term  \texttt{(cons a n b'')} is accessible, and so is \texttt{(cons a n'' b'')}.
+
  
 \end{enumerate}
 
-In every case, the considered ordinal is accessible.
+In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
+the proof in Section~\ref{sec:strongly-accessible}.
