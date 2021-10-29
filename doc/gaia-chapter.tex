@@ -91,7 +91,10 @@ compatible.
 The library \texttt{gaia-hydras} already contains two proofs
 of well-foundedness of the strict order on ordinal terms in
 Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
-\'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses  tools already present in~\cite{CantorContrib}.
+\'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
+
+This proof, as it appears in \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, is quite dense and qualified as ``a bit tricky''. We present here its main steps with the help of the alectryon tool.
+
 
 \subsection{Restricted recursion}
 As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
@@ -110,8 +113,10 @@ With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfin
 \emph{Note: the abreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.}
 
 \inputsnippets{nfwfgaia/nfWfProofa}
+We start with classic structural induction on \texttt{a}.
 
-The following elimination on \texttt{a} pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
+\inputsnippets{nfwfgaia/nfWfProofaa}
+The following \texttt{ssreflect} tactic  pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
 
 \inputsnippets{nfwfgaia/nfWfProofb}
 
@@ -119,18 +124,27 @@ Now, let us consider any ordinal term which is (by \texttt{LT}) less than \textt
 
 There are three cases to consider.
 \begin{enumerate}
-\item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}. Then, it is accessible (by hypothesis \texttt{Hb}).
+\item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}.
   \inputsnippets{nfwfgaia/nfWfProofd}
-
+  
+  Then, it is accessible (by hypothesis \texttt{Hb}).
+  
   \item The considered term  is equal to
-    \texttt{(cons a n b'')}, where $b''<\omega^a$. Then we can apply the hypothess \texttt{Hd} and \texttt{He}.
-     \inputsnippets{nfwfgaia/nfWfProofg}
+    \texttt{(cons a n b'')}, where $b''<\omega^a$. 
+    \inputsnippets{nfwfgaia/nfWfProofg}
+    
+    Then we can replace \texttt{a''} with \texttt{a}, \texttt{n''} with \texttt{n}, and apply the hypotheses \texttt{Hd} and \texttt{He}.
+    
 \item
   The term is equal to
-  \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$. Then we can apply the hypothesis \texttt{He}.
+  \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$.
+  This term is less than the accessible \texttt{(cons a n b'')}.
   
- \inputsnippets{nfwfgaia/nfWfProofe}
   
+  \inputsnippets{nfwfgaia/nfWfProofe}
+  
+ Then we can apply the hypothesis \texttt{He}.
+ 
 \end{enumerate}
 
 In every case, the considered ordinal is accessible.

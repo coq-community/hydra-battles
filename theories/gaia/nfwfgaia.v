@@ -702,11 +702,15 @@ Section AddLocalNotation.
                (fun x y : T1 => is_true (x < y))).
 
 (* begin snippet nfWfProofa:: no-out *)
-Lemma nf_Wf : well_founded (restrict T1nf T1lt).
+Lemma nf_Wf : well_founded (restrict T1nf T1lt). 
 Proof. 
-have az: Acc (restrict T1nf T1lt) zero by split => y [_]; rewrite T1ltn0.
-elim;[ exact az | move => a Ha n b _]. (* .goals *)
-(* end snippet nfWfProofa *)
+  have az: Acc (restrict T1nf T1lt) zero
+    by split => y [_]; rewrite T1ltn0.
+  (* end snippet nfWfProofa *)
+  (* changed *) red. (* end of changed *)
+  (* begin snippet nfWfProofaa *)
+elim;[ exact az | move => a Ha n b _]. 
+(* end snippet nfWfProofaa *)
 
 (* begin snippet nfWfProofb  *)
 elim:{a} Ha n b => a Ha Hb n b.
@@ -741,12 +745,12 @@ rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
   (* end snippet nfWfProofg *)
 move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
 
-(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe *)
-    move => qd qe.
+(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe .h#aca *)
+    move => qd qe (* Changed *) ; subst a''. (* end of Changed *)
     (* end snippet nfWfProofe *)
   have nc0: T1nf (cons a n zero) by rewrite /= andbT. 
   apply: (acc_rec (And3 qe _ nc0) (He _ az nc0)). 
-  by rewrite /= qd sc eqxx T1ltnn. 
+  by rewrite /= qd (* Changed sc *) eqxx T1ltnn. 
 move => sb; move/and3P: np => [pa pb pc].
 rewrite sc;apply: (qb _ (And3 rb sb pb)); rewrite -sc //.
 Qed.
