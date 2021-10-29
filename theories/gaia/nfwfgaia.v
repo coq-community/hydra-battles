@@ -701,9 +701,9 @@ Section AddLocalNotation.
     (@restrict T1 (fun x : T1 => is_true (T1nf x))
                (fun x y : T1 => is_true (x < y))).
 
-(* begin snippet nfWfProofa:: no-out *)
-Lemma nf_Wf : well_founded (restrict T1nf T1lt). 
-Proof. 
+(* begin snippet nfWfProofa *)
+Lemma nf_Wf : well_founded (restrict T1nf T1lt). (* .no-out *)
+Proof. (* .no-out *)
   have az: Acc (restrict T1nf T1lt) zero
     by split => y [_]; rewrite T1ltn0.
   (* end snippet nfWfProofa *)
@@ -730,7 +730,7 @@ have Hc: forall b, Acc (restrict T1nf T1lt) b ->
   - by move: ub sa; case ee:(n''==0); [rewrite ua (eqP ee) => ub; apply: qb | ].
 have Hd: forall b, T1nf b -> b < phi0 a -> Acc (restrict T1nf T1lt)  b.
   case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
-  (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#aa'   *)
+  (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#aa'  .h#nx .h#nx' *)
   rewrite phi0_lt1 => aa'.
   (* end snippet nfWfProofd *)
   

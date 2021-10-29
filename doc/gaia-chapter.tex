@@ -110,10 +110,11 @@ With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfin
 
 \subsection{Main proof steps}
 
-\emph{Note: the abreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.}
+\emph{Notes: the abbreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.
+The infix notation \texttt{`` \_ < \_''}  is bound to the order \texttt{T1lt} in \gaia, while,  in \Hydras,  it is bound to its restriction \texttt{LT} to terms in normal form. }
 
 \inputsnippets{nfwfgaia/nfWfProofa}
-We start with classic structural induction on \texttt{a}.
+We start with a classic structural induction on the type \texttt{T1}.
 
 \inputsnippets{nfwfgaia/nfWfProofaa}
 The following \texttt{ssreflect} tactic  pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
