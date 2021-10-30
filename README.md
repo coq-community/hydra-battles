@@ -32,7 +32,7 @@ This Coq-based project has three parts:
 
   This part also hosts the formalization by Russell O'Connor of
   primitive recursive functions and Peano arithmetic (see
-  https://github.com/coq-community/goedel)
+  https://github.com/coq-community/goedel).
 
 - Some algorithms for computing _x^n_ with as few multiplications as
   possible (using _addition chains_).
@@ -60,6 +60,8 @@ This Coq-based project has three parts:
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - MathComp Algebra
+  - [Gaia](https://github.com/coq-community/gaia) 1.12 or later
+  - [Mczify](https://github.com/math-comp/mczify)
 - Coq namespaces: `hydras`, `additions`, `gaia_hydras`
 - Related publication(s):
   - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
@@ -69,17 +71,21 @@ This Coq-based project has three parts:
 
 ## Installation
 
-- To get the required dependencies, you can use opam or Nix. With opam:
+- To get the required dependencies, you can use [opam](https://opam.ocaml.org)
+  or [Nix](https://nixos.org). With opam:
   - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
   - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
+  - `opam install ./coq-gaia-hydras.opam --deps-only` to get the _gaia hydras_ dependencies.
 
   With Nix, just run `nix-shell` to get all the dependencies
   (including for building the documentation).  If you only want the
   dependencies to build one or the other sub-package, you may run
   `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
-  addition-chains`.
+  addition-chains` or `nix-shell --argstr job gaia-hydras`.
 
-- Building the PDF documentation also requires Alectryon 1.4 and SerAPI.
+- Building the PDF documentation also requires
+  [Alectryon](https://github.com/cpitclaudel/alectryon) 1.4
+  and [SerAPI](https://github.com/ejgallego/coq-serapi).
   See [`doc/movies/Readme.md`](doc/movies/Readme.md) for details.
 
 - The general Makefile is in the top directory:
@@ -88,8 +94,9 @@ This Coq-based project has three parts:
   - `make html` : generation of coqdoc html files
 
 - You may also rely on `dune` to install just one part. Run:
-  - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part;
-  - `dune build coq-addition-chains.install` to build only the _addition chains_ part;
+  - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part
+  - `dune build coq-addition-chains.install` to build only the _addition chains_ part
+  - `dune build coq-gaia-hydras.install` to build only the _gaia hydras_ part
 
  ### Documentation
 
@@ -142,6 +149,8 @@ This Coq-based project has three parts:
 - theories/additions/*.v  
   - Addition chains
 
+- theories/gaia/*.v
+  - Bridge to Gaia
 
 ### Exercises
 
