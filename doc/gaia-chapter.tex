@@ -93,8 +93,10 @@ of well-foundedness of the strict order on ordinal terms in
 Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
 \'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
 
-This proof, as it appears inw, is quite dense and qualified as ``a bit tricky''. We present here its main steps with the help of the \alectr tool.
+This proof is quite dense and qualified as ``a bit tricky''. We just present here its main steps with the help of the \alectr tool.
 
+The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
+the proof in Section~\ref{sec:strongly-accessible}.
 
 \subsection{Restricted recursion}
 As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
@@ -120,6 +122,18 @@ We start with a classic structural induction on the type \texttt{T1}.
 The following \texttt{ssreflect} tactic  pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
 
 \inputsnippets{nfwfgaia/nfWfProofb}
+
+The following sentence gives us the possibility of induct over \texttt{a}'s accessibility.
+
+\inputsnippets{nfwfgaia/nfWfProofbb}
+
+
+
+%\inputsnippets{nfwfgaia/haveHc}
+
+\inputsnippets{nfwfgaia/haveHd}
+
+\inputsnippets{nfwfgaia/hdProved}
 
 Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
 
@@ -149,5 +163,4 @@ There are three cases to consider.
  
 \end{enumerate}
 
-In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
-the proof in Section~\ref{sec:strongly-accessible}.
+In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. 

@@ -636,7 +636,7 @@ Proof. by rewrite /T1le /=; case (T1ltgtP a a'). Qed.
 
 Lemma T1le_cons_le a n b a' n' b': (cons a n b <= cons a' n' b') -> (a <= a').
 Proof.
-case /orP; [ by case /eqP => -> | apply:T1lt_cons_le ].
+  case /orP; [ by case /eqP => -> | apply:T1lt_cons_le ].
 Qed.
 
 Lemma phi0_lt a b: (phi0 a < phi0 b) = (a < b).
@@ -656,15 +656,15 @@ so the order is not well founded *)
 
 Theorem lt_not_wf : ~ (well_founded T1lt).
 Proof. 
-set f := (fix f i := if i is n.+1 then  cons zero  0 (f n) else T1omega).
-by case/not_decreasing; exists f; elim. 
+  set f := (fix f i := if i is n.+1 then  cons zero  0 (f n) else T1omega).
+    by case/not_decreasing; exists f; elim. 
 Qed.
 
 (** We say that [cons a n b] is NF if 
 $b<\phi_0(a$)#b &lt;&phi;<sub>0</sub>(a)#.
 If [b] is [cons a' n' b'], this says that [b] is less than [b']. 
 If [a] is zero,  this says that [b=0].
-*)
+ *)
 
 Fixpoint T1nf x :=
   if x is cons a _ b then [&& T1nf a, T1nf b & b < phi0 a ]
@@ -697,108 +697,117 @@ Lemma T1nfCE: ~~(T1nf T1bad).  Proof. by  []. Qed.
 
 (* Addition  to original file *)
 Section AddLocalNotation.
-#[local]  Notation LT :=
+  #[local]  Notation LT :=
     (@restrict T1 (fun x : T1 => is_true (T1nf x))
                (fun x y : T1 => is_true (x < y))).
 
-(* begin snippet nfWfProofa *)
-Lemma nf_Wf : well_founded (restrict T1nf T1lt). (* .no-out *)
-Proof. (* .no-out *)
-  have az: Acc (restrict T1nf T1lt) zero
-    by split => y [_]; rewrite T1ltn0.
-  (* end snippet nfWfProofa *)
-  (* changed *) red. (* end of changed *)
-  (* begin snippet nfWfProofaa *)
-elim;[ exact az | move => a Ha n b _]. 
-(* end snippet nfWfProofaa *)
+  (* begin snippet nfWfProofa *)
+  Lemma nf_Wf : well_founded (restrict T1nf T1lt). (* .no-out *)
+  Proof. (* .no-out *)
+    have az: Acc (restrict T1nf T1lt) zero
+      by split => y [_]; rewrite T1ltn0.
+    (* end snippet nfWfProofa *)
+    (* begin snippet nfWfProofaa *)
+    elim;[ exact az | move => a Ha n b _]. 
+    (* end snippet nfWfProofaa *)
 
-(* begin snippet nfWfProofb  *)
-elim:{a} Ha n b => a Ha Hb n b.
-(* end snippet nfWfProofb *)
+    (* begin snippet nfWfProofb  *)
+    elim:{a} Ha n b => a Ha Hb n b.
+    (* end snippet nfWfProofb *)
 
+    case nx: (T1nf (cons a n b)); last by split => y [_ _]; rewrite nx.
+    move/and3P: (nx);rewrite -/T1nf; move => [na nb lba].
+    (* begin snippet nfWfProofbb  *)
+    have aca: Acc LT  a by split.
+    (* end snippet nfWfProofbb  *)
+    
+    (* begin snippet haveHc:: no-out *)
+    have Hc: forall b, Acc LT b ->
+                       T1nf (cons a 0 b)-> Acc LT (cons a 0 b).
+     (* end snippet haveHc *)
+    { move => c; elim => {} c qa qb qc; split; case; first by move => _; apply: az.
+    move => a'' n'' b'' [] sa /= ua /and3P [_ nc _];move/and3P:(sa) => [ra rb _].
+    move: ua;case: (T1ltgtP a'' a) => ua ub.
+    - by apply: Hb.
+    - by case ub.
+    - by move: ub sa; case ee:(n''==0); [rewrite ua (eqP ee) => ub; apply: qb | ].
+    }
+    (* begin snippet haveHd:: no-out *)
+    have Hd: forall b, T1nf b -> b < phi0 a -> Acc LT  b.
+    (* end snippet haveHd *)
+    case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
+    
+    rewrite phi0_lt1 => aa'. 
+     
+      (* begin snippet HdProved:: no-in unfold -.h#Hc *)
+      by apply: Hb; unfold LT; rewrite /restrict  (T1nf_consa nx') na aa'. 
+      (* end snippet HdProved *)
+      elim: n b {nb lba} (Hd _ nb lba) nx => [ // | n He b]; elim.
+      move => c _ qb np; split; case; first by move => _; apply: az.
+      move => a'' n'' b'' [sa /= sb _];move /and3P: (sa) =>  [ra rb rc].
+      (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#na  .h#aca .h#np .h#sa .h#rc *)
+      move: sb; case: (T1ltgtP a'' a) => sc sb; [ by apply: Hb | by case sb |].
+      (* end snippet nfWfProofd *)
+      move: sb; case: (ltngtP n'' n.+1); [rewrite ltnS leq_eqVlt | done | move ->].
+      (* begin snippet nfWfProofg:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc  .h#Hd .h#He *)
+      rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
+      (* end snippet nfWfProofg *)
+      move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
+      
+      (* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe .h#aca  .h#Hd *)
+      move => qd qe (* Changed *) ; subst a''. (* end of Changed *)
+      (* end snippet nfWfProofe *)
+      have nc0: T1nf (cons a n zero) by rewrite /= andbT. 
+      apply: (acc_rec (And3 qe _ nc0) (He _ az nc0)). 
+        by rewrite /= qd (* Changed sc *) eqxx T1ltnn. 
+        move => sb; move/and3P: np => [pa pb pc].
+        rewrite sc;apply: (qb _ (And3 rb sb pb)); rewrite -sc //.
+  Qed.
 
-case nx: (T1nf (cons a n b)); last by split => y [_ _]; rewrite nx.
-move/and3P: (nx);rewrite -/T1nf; move => [na nb lba].
-have aca: Acc (restrict T1nf T1lt) a by split.
-have Hc: forall b, Acc (restrict T1nf T1lt) b ->
-  T1nf (cons a 0 b)-> Acc (restrict T1nf T1lt) (cons a 0 b).
-  move => c; elim => {} c qa qb qc; split; case; first by move => _; apply: az.
-  move => a'' n'' b'' [] sa /= ua /and3P [_ nc _];move/and3P:(sa) => [ra rb _].
-  move: ua;case: (T1ltgtP a'' a) => ua ub.
-  - by apply: Hb.
-  - by case ub.
-  - by move: ub sa; case ee:(n''==0); [rewrite ua (eqP ee) => ub; apply: qb | ].
-have Hd: forall b, T1nf b -> b < phi0 a -> Acc (restrict T1nf T1lt)  b.
-  case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
-  (* begin snippet nfWfProofd:: no-in unfold -.g#* .g#1 -.h#* .h#Ha .h#Ha .h#Hb  .h#aa'  .h#nx .h#nx' *)
-  rewrite phi0_lt1 => aa'.
-  (* end snippet nfWfProofd *)
-  
-  by apply: Hb; unfold LT; rewrite /restrict  (T1nf_consa nx') na aa'. 
-elim: n b {nb lba} (Hd _ nb lba) nx => [ // | n He b]; elim.
-move => c _ qb np; split; case; first by move => _; apply: az.
-move => a'' n'' b'' [sa /= sb _];move /and3P: (sa) =>  [ra rb rc].
-move: sb; case: (T1ltgtP a'' a) => sc sb; [ by apply: Hb | by case sb |].
-move: sb; case: (ltngtP n'' n.+1); [rewrite ltnS leq_eqVlt | done | move ->].
-  (* begin snippet nfWfProofg:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc  .h#Hd .h#He *)
-rewrite sc in rc; move => sb _; move: sa; case /orP: sb.
-  (* end snippet nfWfProofg *)
-move => /eqP ->; rewrite sc; apply: (He b'' (Hd _ rb rc)).
-
-(* begin snippet nfWfProofe:: no-in unfold -.g#* .g#1 -.h#* .h#sc .h#rc .h#He  .h#qd .h#qe .h#aca  .h#Hd *)
-    move => qd qe (* Changed *) ; subst a''. (* end of Changed *)
-    (* end snippet nfWfProofe *)
-  have nc0: T1nf (cons a n zero) by rewrite /= andbT. 
-  apply: (acc_rec (And3 qe _ nc0) (He _ az nc0)). 
-  by rewrite /= qd (* Changed sc *) eqxx T1ltnn. 
-move => sb; move/and3P: np => [pa pb pc].
-rewrite sc;apply: (qb _ (And3 rb sb pb)); rewrite -sc //.
-Qed.
-
-Lemma nf_Wf' : well_founded_P T1nf T1lt.
-Proof. move => x /= nx; apply: nf_Wf. Qed.
-
-
-Lemma T1transfinite_induction P:
-  (forall x, T1nf x -> (forall y, T1nf y ->  y < x -> P y) -> P x) ->
-  forall a, T1nf a -> P a.
-Proof.
-move => H; exact: (P_well_founded_induction_type nf_Wf' H).
-Qed.
-
-Lemma T1transfinite_induction_Q (P: T1 -> Type) (Q: T1 -> Prop):
-  (forall x:T1, Q x -> T1nf x ->
-                (forall y:T1, Q y -> T1nf y ->  y < x -> P y) -> P x) ->
-  forall a, T1nf a -> Q a -> P a.
-Proof.
-pose q a:=  T1nf a /\ Q a; pose lt x y :=  x < y.
-move => H a pa pb; move: {pa pb} a (conj pa pb).
-have wf1: well_founded_P q lt.
-  move => a qa; elim: (nf_Wf' (proj1 qa)). 
-  by move => b _ h2; split => c [ [na _] la [nb _]]; apply: h2. 
-have H': forall x, q x -> (forall y, q y -> lt y x -> P y) -> P x.
-  by move => x [pa pb] ha; apply: H => // y ya yb; apply: ha.
-exact: (P_well_founded_induction_type wf1 H').
-Qed.
+  Lemma nf_Wf' : well_founded_P T1nf T1lt.
+  Proof. move => x /= nx; apply: nf_Wf. Qed.
 
 
-Lemma T1nf_rect (P : T1 -> Type):
-   P zero ->
-   (forall n: nat,  P (cons zero n zero)) ->
-   (forall a n b n' b', T1nf (cons a n b) ->
-                        P (cons a n b) ->
-                        b' < phi0 (cons a n b) ->
-                        T1nf b' ->
-                        P b' ->
-                        P (cons (cons a n b) n' b')) ->
-   forall a, T1nf a -> P a.
-Proof.
-move =>H0 Hfinite Hcons; elim => // a IH1 n t IH2;case: a IH1.
-  by rewrite  T1nf_finite1; move => _ /eqP ->.
-move => a' n' c pa =>/and3P [pc pd pe]; auto.
-Qed.
+  Lemma T1transfinite_induction P:
+    (forall x, T1nf x -> (forall y, T1nf y ->  y < x -> P y) -> P x) ->
+    forall a, T1nf a -> P a.
+  Proof.
+    move => H; exact: (P_well_founded_induction_type nf_Wf' H).
+  Qed.
 
-(* addition to original file *)
+  Lemma T1transfinite_induction_Q (P: T1 -> Type) (Q: T1 -> Prop):
+    (forall x:T1, Q x -> T1nf x ->
+                  (forall y:T1, Q y -> T1nf y ->  y < x -> P y) -> P x) ->
+    forall a, T1nf a -> Q a -> P a.
+  Proof.
+    pose q a:=  T1nf a /\ Q a; pose lt x y :=  x < y.
+    move => H a pa pb; move: {pa pb} a (conj pa pb).
+    have wf1: well_founded_P q lt.
+    move => a qa; elim: (nf_Wf' (proj1 qa)). 
+      by move => b _ h2; split => c [ [na _] la [nb _]]; apply: h2. 
+      have H': forall x, q x -> (forall y, q y -> lt y x -> P y) -> P x.
+        by move => x [pa pb] ha; apply: H => // y ya yb; apply: ha.
+        exact: (P_well_founded_induction_type wf1 H').
+  Qed.
+
+
+  Lemma T1nf_rect (P : T1 -> Type):
+    P zero ->
+    (forall n: nat,  P (cons zero n zero)) ->
+    (forall a n b n' b', T1nf (cons a n b) ->
+                         P (cons a n b) ->
+                         b' < phi0 (cons a n b) ->
+                         T1nf b' ->
+                         P b' ->
+                         P (cons (cons a n b) n' b')) ->
+    forall a, T1nf a -> P a.
+  Proof.
+    move =>H0 Hfinite Hcons; elim => // a IH1 n t IH2;case: a IH1.
+      by rewrite  T1nf_finite1; move => _ /eqP ->.
+      move => a' n' c pa =>/and3P [pc pd pe]; auto.
+  Qed.
+
+  (* addition to original file *)
 End AddLocalNotation.
 
 (** ** Successor *)
@@ -827,65 +836,65 @@ Fixpoint T1is_succ x :=
 
 Fixpoint T1succ (c:T1) : T1 :=
   if c is cons a n b 
-     then if a == zero then cons zero n.+1 zero else cons a n (T1succ b)
+  then if a == zero then cons zero n.+1 zero else cons a n (T1succ b)
   else one.
 
 Fixpoint T1pred (c:T1) : T1 :=
   if c is cons a n b then
-     if (a==zero) then \F n else (cons a n (T1pred b)) 
+    if (a==zero) then \F n else (cons a n (T1pred b)) 
   else zero.
 
 Fixpoint T1split x:=
- if x is cons a n b then
-      if a==zero then (zero, n.+1) else
-     let: (x, y) := T1split b in (cons a n x,y)
-   else (zero,0).
+  if x is cons a n b then
+    if a==zero then (zero, n.+1) else
+      let: (x, y) := T1split b in (cons a n x,y)
+  else (zero,0).
 
 Lemma split_limit x: ((T1split x).2 == 0) = ((x==zero) || T1limit x). 
 Proof.  
-elim: x => // a _ n b Hb /=.
-case pa: (a==zero) => //; rewrite - Hb; by case: (T1split b).
+  elim: x => // a _ n b Hb /=.
+  case pa: (a==zero) => //; rewrite - Hb; by case: (T1split b).
 Qed.
 
 Lemma split_is_succ x: ((T1split x).2 != 0) = (T1is_succ x).
 Proof.  
-elim: x => // a _ n b Hb /=.
-case pa: (a==zero) => //; rewrite - Hb; by case: (T1split b).
+  elim: x => // a _ n b Hb /=.
+  case pa: (a==zero) => //; rewrite - Hb; by case: (T1split b).
 Qed.
 
 Lemma split_finite x: ((T1split x).1 == zero) = T1finite x.
 Proof.
-by case: x => // a n b /=; case pa: (a==zero) => //; case: (T1split b).
+    by case: x => // a n b /=; case pa: (a==zero) => //; case: (T1split b).
 Qed.
 
 Lemma split_succ x: let:(y,n):= T1split x in T1split (T1succ x) = (y,n.+1).
 Proof.  
-elim: x => // a _ n b /=.
-by case pa: (a==zero) => //=; rewrite pa /=; case: (T1split b) => u v ->.
+  elim: x => // a _ n b /=.
+    by case pa: (a==zero) => //=; rewrite pa /=; case: (T1split b) => u v ->.
 Qed.
 
 
 Lemma split_pred x: let:(y,n):= T1split x in T1split (T1pred x) = (y,n.-1).
 Proof.  
-elim: x => // a _ n b /=.
-case pa: (a==zero) => //=; first by case: n.
-by rewrite pa /=; case:(T1split b) => // u v ->.
+  elim: x => // a _ n b /=.
+  case pa: (a==zero) => //=; first by case: n.
+    by rewrite pa /=; case:(T1split b) => // u v ->.
 Qed.
 
 
 Lemma split_le x :  (T1split x).1 <= x.
 Proof.
-elim: x => // a _ n b Hb /=.
-case pa: (a==zero) => //; move: Hb; case: (T1split b) => y m /=.
-by rewrite T1le_consE !eqxx /= => ->; rewrite !if_same.
+  elim: x => // a _ n b Hb /=.
+  case pa: (a==zero) => //; move: Hb; case: (T1split b) => y m /=.
+    by rewrite T1le_consE !eqxx /= => ->; rewrite !if_same.
 Qed.
 
 Lemma nf_split x : T1nf x -> T1nf (T1split x).1.
 Proof.
-elim: x => // a _ n b Hb /=.
-case pa: (a==zero) => // /and3P [sa /Hb sb sc] /=.
-move: (T1le_lt_trans (split_le b) sc).
-by move: sb; case (T1split b) => y m /= -> ->; rewrite sa.
+  elim: x => // a _ n b Hb /=.
+  case pa: (a==zero) => // /and3P [sa /Hb sb sc] /=.
+  move: (T1le_lt_trans (split_le b) sc).
+    by move: sb; case (T1split b) => y m /= -> ->; rewrite sa.
 Qed.
 
 Lemma T1finite1 n: T1finite (\F n).  
@@ -915,72 +924,72 @@ the first component is zero or limit, the second is a natural number  *)
 
 Lemma limit_pr1 x: (x == zero) (+) (T1limit x (+) T1is_succ x).
 Proof.
-elim: x => //a _ n b Hb /=; case az: (a== zero) => //.
-by case bz: (b == zero); [ rewrite (eqP bz) | move: Hb; rewrite bz].
+  elim: x => //a _ n b Hb /=; case az: (a== zero) => //.
+    by case bz: (b == zero); [ rewrite (eqP bz) | move: Hb; rewrite bz].
 Qed.
 
 Lemma split_limit1 x (y:= (T1split x).1): (y == zero) || (T1limit y).
 Proof.
-rewrite /y;elim x => // a _ n b Hb /=.
-by case pa: (a==zero) => //; move: Hb; case (T1split b) => u v /=; rewrite pa.
+  rewrite /y;elim x => // a _ n b Hb /=.
+    by case pa: (a==zero) => //; move: Hb; case (T1split b) => u v /=; rewrite pa.
 Qed.
 
 (** If [x] is limit, if [y] is less than [x], so is the successor of [y] *)
 
 Lemma limit_pr x y: T1limit x -> y < x -> T1succ y < x.
 Proof.
-elim: x y; [ by [] |move => a _ n b Hb y /= H1].
-case: y; [ by move => _; move: H1; case: a |move => a' n' b' /=].
-have aux: b' < b -> T1succ b' < b.
-   case: (a==zero) H1 => // /orP []; first by move => /eqP ->; rewrite T1ltn0. 
-   by apply: Hb.
-case a'; first by rewrite /T1succ; move => _;move: H1; case: a. 
-move => a'' n'' b''; case: a H1;  [ done | move => u v w _ ].
-simpl; rewrite T1eqE;case: (a'' < u) => //; case: eqP => // _.
-case:(n'' < v)%N => //; case e2: (n'' == v) => //; case: (b'' < w) => //.
-by case: eqP => //= _; case: (n' <n)%N => //; case: eqP.
+  elim: x y; [ by [] |move => a _ n b Hb y /= H1].
+  case: y; [ by move => _; move: H1; case: a |move => a' n' b' /=].
+  have aux: b' < b -> T1succ b' < b.
+  case: (a==zero) H1 => // /orP []; first by move => /eqP ->; rewrite T1ltn0. 
+    by apply: Hb.
+    case a'; first by rewrite /T1succ; move => _;move: H1; case: a. 
+    move => a'' n'' b''; case: a H1;  [ done | move => u v w _ ].
+    simpl; rewrite T1eqE;case: (a'' < u) => //; case: eqP => // _.
+    case:(n'' < v)%N => //; case e2: (n'' == v) => //; case: (b'' < w) => //.
+      by case: eqP => //= _; case: (n' <n)%N => //; case: eqP.
 Qed.
 
 Lemma pred_le a: T1pred a <= a.
 Proof.
-elim: a => // a _ n b Hb /=; case az: (a==zero).
-  by rewrite (eqP az); case: n => // m /=; rewrite T1le_consE /= ltnS leqnn.
-by rewrite T1le_consE /= Hb !eqxx !if_same.
+  elim: a => // a _ n b Hb /=; case az: (a==zero).
+    by rewrite (eqP az); case: n => // m /=; rewrite T1le_consE /= ltnS leqnn.
+      by rewrite T1le_consE /= Hb !eqxx !if_same.
 Qed.
-  
+
 Lemma pred_lt a: T1is_succ a -> T1pred a < a.
 Proof.
-elim: a => // a _ n b Hb /=; case az: (a==zero).
-  by rewrite (eqP az); case: n => // m /=; rewrite ltnS leqnn.
-by move /Hb;rewrite /=T1ltnn ltnn !eqxx.
+  elim: a => // a _ n b Hb /=; case az: (a==zero).
+    by rewrite (eqP az); case: n => // m /=; rewrite ltnS leqnn.
+      by move /Hb;rewrite /=T1ltnn ltnn !eqxx.
 Qed.
 
 Lemma succ_lt a: a < T1succ a.
 Proof. 
-elim: a => // a asa n b bb;move: asa; case: a; first by rewrite /= ltnSn.
-by move => u v w h /=; rewrite bb ! eqxx !ltnn if_same.
+  elim: a => // a asa n b bb;move: asa; case: a; first by rewrite /= ltnSn.
+    by move => u v w h /=; rewrite bb ! eqxx !ltnn if_same.
 Qed.
 
 Lemma nf_succ a: T1nf a -> T1nf (T1succ a).
 Proof.
-elim:a => // a _ n b Hb /and3P [pa /Hb pb pc] /=.
-case az: (a== zero) => //; apply /and3P;split => //.
-by apply:limit_pr => //=; rewrite az.
+  elim:a => // a _ n b Hb /and3P [pa /Hb pb pc] /=.
+  case az: (a== zero) => //; apply /and3P;split => //.
+    by apply:limit_pr => //=; rewrite az.
 Qed.
 
 Lemma nf_pred a: T1nf a -> T1nf (T1pred a).
 Proof.
-elim:a => // a _ n b Hb /and3P [pa /Hb pb pc] /=.
-case az: (a== zero) => //; first by apply: nf_finite.
-by rewrite /= (T1le_lt_trans (pred_le b) pc) pb !andbT.
+  elim:a => // a _ n b Hb /and3P [pa /Hb pb pc] /=.
+  case az: (a== zero) => //; first by apply: nf_finite.
+    by rewrite /= (T1le_lt_trans (pred_le b) pc) pb !andbT.
 Qed.
 
 
 Lemma succ_pred x: T1nf x -> T1is_succ x -> x = T1succ (T1pred x).
 Proof.
-elim: x => // a _ n b Hb; case az: (a==zero).
-  by rewrite (eqP az) T1nf_finite1 => /eqP ->; case: n.
-by move => /T1nf_consb /Hb h /=;rewrite /= az /= az => h'; rewrite - h.
+  elim: x => // a _ n b Hb; case az: (a==zero).
+    by rewrite (eqP az) T1nf_finite1 => /eqP ->; case: n.
+      by move => /T1nf_consb /Hb h /=;rewrite /= az /= az => h'; rewrite - h.
 Qed.
 
 Lemma succ_predCE: T1is_succ T1bad /\ forall y, T1bad <> T1succ y.
@@ -988,14 +997,14 @@ Proof. by split => //; case => //; case. Qed.
 
 Lemma succ_p1 x: T1is_succ (T1succ x).
 Proof. 
-by elim: x => // a _ n b Hb /=; case pa: (a==zero) => //=; rewrite pa.
+    by elim: x => // a _ n b Hb /=; case pa: (a==zero) => //=; rewrite pa.
 Qed.
 
 Lemma pred_succ x: T1nf x -> T1pred (T1succ x) = x.
 Proof.
-elim: x => // a _ n b Hb nx /=; case az: (a==zero).
-  by move: nx; rewrite (eqP az) T1nf_finite1 => /eqP ->.
-by rewrite /= az (Hb (T1nf_consb nx)).
+  elim: x => // a _ n b Hb nx /=; case az: (a==zero).
+    by move: nx; rewrite (eqP az) T1nf_finite1 => /eqP ->.
+      by rewrite /= az (Hb (T1nf_consb nx)).
 Qed.
 
 Lemma pred_succ_CE: T1pred (T1succ T1bad) <>  T1bad.
@@ -1003,9 +1012,9 @@ Proof. discriminate. Qed.
 
 Lemma succ_inj x y: T1nf x -> T1nf y -> (T1succ x == T1succ y) = (x==y).
 Proof.
-move => nx ny;case h: (T1succ x == T1succ y).
-  by rewrite - (pred_succ nx) (eqP h) (pred_succ ny) eqxx.
-by case hh: (x==y) => //; rewrite -h (eqP hh) eqxx.
+  move => nx ny;case h: (T1succ x == T1succ y).
+    by rewrite - (pred_succ nx) (eqP h) (pred_succ ny) eqxx.
+      by case hh: (x==y) => //; rewrite -h (eqP hh) eqxx.
 Qed.
 
 Lemma succ_injCE: one  <> T1bad /\ (T1succ one = T1succ T1bad).
@@ -1014,12 +1023,12 @@ Proof. done. Qed.
 
 Lemma lt_succ_succ x y: T1succ x < T1succ y -> x < y. 
 Proof.
-elim: x y; first by case; [ rewrite T1ltnn | move => a n b _ ].
-move => a _ n b Hb; case; [ by case a | move => a' n' b']. 
-case a;case a' => //; first  by rewrite /= ltnS if_same; case: (n < n')%N.
-move => a'' n'' b'' a''' n''' b'''; rewrite /= T1eqE.
-case (T1ltgtP a''' a'') => //;case (ltngtP n''' n'') => //.
-case (T1ltgtP b''' b'') => //;case (ltngtP n n') => //= _ _ _ _; apply: Hb.
+  elim: x y; first by case; [ rewrite T1ltnn | move => a n b _ ].
+  move => a _ n b Hb; case; [ by case a | move => a' n' b']. 
+  case a;case a' => //; first  by rewrite /= ltnS if_same; case: (n < n')%N.
+  move => a'' n'' b'' a''' n''' b'''; rewrite /= T1eqE.
+  case (T1ltgtP a''' a'') => //;case (ltngtP n''' n'') => //.
+  case (T1ltgtP b''' b'') => //;case (ltngtP n n') => //= _ _ _ _; apply: Hb.
 Qed.
 
 Lemma le_succ_succ x y: x <= y -> T1succ x <= T1succ y.
@@ -1031,11 +1040,11 @@ Proof. done. Qed.
 Lemma lt_succ_succE x y:  
   T1nf x -> T1nf y ->  (T1succ x < T1succ y) = (x < y).
 Proof.
-move => nx ny.
-case (T1ltgtP (T1succ x) (T1succ y)).  
-+ by move/lt_succ_succ => ->.
-+ by move /lt_succ_succ => /T1lt_anti.
-+ by move /eqP; rewrite   (succ_inj nx ny) => /eqP ->; rewrite T1ltnn.
+  move => nx ny.
+  case (T1ltgtP (T1succ x) (T1succ y)).  
+  + by move/lt_succ_succ => ->.
+  + by move /lt_succ_succ => /T1lt_anti.
+  + by move /eqP; rewrite   (succ_inj nx ny) => /eqP ->; rewrite T1ltnn.
 Qed.
 
 (** Some properties of comparison and successor *)
@@ -1044,7 +1053,7 @@ Qed.
 Lemma le_succ_succE x y: 
   T1nf x -> T1nf y -> (T1succ x <= T1succ y) = (x <= y).
 Proof.
-by move => na nb; rewrite /T1le (succ_inj na nb) (lt_succ_succE na nb).
+    by move => na nb; rewrite /T1le (succ_inj na nb) (lt_succ_succE na nb).
 Qed.
 
 Lemma lt_succ_le_1 a b : T1succ a <= b ->  a < b.
@@ -1052,31 +1061,31 @@ Proof. apply: T1lt_le_trans (succ_lt a). Qed.
 
 Lemma lt_succ_le_2 a b:  T1nf a -> a < T1succ b ->  a <= b.
 Proof.
-elim: a b; first by move => b;rewrite T1le0n.
-move => a' _ n' b' Hb; case; first by rewrite /= ! T1ltn0 ! if_same.
-case.
-   case a' => // n b; move /T1nf_finite ->.
-   rewrite /= if_same if_simpl ltnS T1le_consE T1le0n T1ltnn eqxx leq_eqVlt.
-   case: (ltngtP n' n) => //.
-move => a'' n'' b'' n b /T1nf_consb H; rewrite T1le_consE /=. 
-case: (T1ltgtP a' (cons a'' n'' b'')) => //.
-by case: (ltngtP n' n) => //= _ _;  apply: Hb.
+  elim: a b; first by move => b;rewrite T1le0n.
+  move => a' _ n' b' Hb; case; first by rewrite /= ! T1ltn0 ! if_same.
+  case.
+  case a' => // n b; move /T1nf_finite ->.
+  rewrite /= if_same if_simpl ltnS T1le_consE T1le0n T1ltnn eqxx leq_eqVlt.
+  case: (ltngtP n' n) => //.
+  move => a'' n'' b'' n b /T1nf_consb H; rewrite T1le_consE /=. 
+  case: (T1ltgtP a' (cons a'' n'' b'')) => //.
+    by case: (ltngtP n' n) => //= _ _;  apply: Hb.
 Qed.
 
 Lemma lt_succ_le_3 a b:  T1nf a -> (a < T1succ b) = (a <= b).
 Proof.
-move => na; case h:(a < T1succ b). 
-  by rewrite (lt_succ_le_2 na  h).
-rewrite - h; case: (T1ltP b a) => // ab; exact: (T1le_lt_trans ab (succ_lt b)).
+  move => na; case h:(a < T1succ b). 
+    by rewrite (lt_succ_le_2 na  h).
+    rewrite - h; case: (T1ltP b a) => // ab; exact: (T1le_lt_trans ab (succ_lt b)).
 Qed.
 
 Lemma lt_succ_le_4 a b: T1nf b ->  (a < b) = (T1succ a <= b).
 Proof.
-move => nb.
-case: (T1ltP a b).
+  move => nb.
+  case: (T1ltP a b).
   rewrite T1leNgt T1ltNge; case h: (b < T1succ a) => //. 
-  by rewrite(lt_succ_le_2 nb h).
-by move /le_succ_succ => /(T1lt_le_trans  (succ_lt b)); rewrite T1leNgt => ->.
+    by rewrite(lt_succ_le_2 nb h).
+      by move /le_succ_succ => /(T1lt_le_trans  (succ_lt b)); rewrite T1leNgt => ->.
 Qed.
 
 
@@ -1086,8 +1095,8 @@ Proof. by case: a => // a n b /=; rewrite succ_lt. Qed.
 
 Lemma tail_lt_cons a n b: b < phi0 a -> b < cons a n b.
 Proof.
-case b => // a' n' b' /=.
-by case: (T1ltgtP a' a) => //; rewrite T1ltn0 if_same.
+  case b => // a' n' b' /=.
+    by case: (T1ltgtP a' a) => //; rewrite T1ltn0 if_same.
 Qed.
 
 
@@ -1099,23 +1108,23 @@ given our interpretation of [cons]*)
 Fixpoint T1add x y :=
   if x is cons a n b then
     if y is cons a' n' b' then 
-       if a < a' then  cons a' n' b'
-       else if a' < a then (cons a n (b +  (cons a' n' b')))
-       else  (cons a (n+n').+1 b')
+      if a < a' then  cons a' n' b'
+      else if a' < a then (cons a n (b +  (cons a' n' b')))
+           else  (cons a (n+n').+1 b')
     else x      
   else  y
 where "a + b" := (T1add a b) : cantor_scope.
 
 
 Fixpoint T1sub x y :=
- if x is cons a n b then
+  if x is cons a n b then
     if y is cons a' n' b' then 
       if  x < y then zero 
       else if a' < a then cons a n b 
-      else if (n < n')%N then zero
-      else if (a==zero) then
-         if (n ==n') then zero else cons zero ((n-n').-1) zero
-      else if (n == n') then b - b' else cons a (n-n').-1 b
+           else if (n < n')%N then zero
+                else if (a==zero) then
+                       if (n ==n') then zero else cons zero ((n-n').-1) zero
+                     else if (n == n') then b - b' else cons a (n-n').-1 b
     else x      
   else  zero
 where  "x - y" := (T1sub x y):cantor_scope.
@@ -1124,7 +1133,7 @@ where  "x - y" := (T1sub x y):cantor_scope.
 
 Lemma succ_is_add_one a: T1succ a = a + one.
 Proof.
-by elim:a => // a _ n b Hb /=; rewrite T1ltn0 addn0 Hb; case a. 
+    by elim:a => // a _ n b Hb /=; rewrite T1ltn0 addn0 Hb; case a. 
 Qed.
 
 Lemma add1Nfin a:  ~~ T1finite a  -> one + a = a.
@@ -1135,15 +1144,15 @@ Proof. by case: a => // u v w /=; case:u. Qed.
 
 Lemma sub1a x: x != zero -> T1nf x -> x = one + (x - one). 
 Proof.
-move => na nb;case fb:(T1finite x).
+  move => na nb;case fb:(T1finite x).
   move: na fb nb ; case: x => // a' n' b' /= _ /eqP ->.
-  by rewrite T1lt1 => /and3P [_ _ /eqP ->]; case: n'.
-rewrite sub1Nfin ?fb // add1Nfin // fb //.
+    by rewrite T1lt1 => /and3P [_ _ /eqP ->]; case: n'.
+    rewrite sub1Nfin ?fb // add1Nfin // fb //.
 Qed.
 
 Lemma sub1b x: T1nf x -> x = (one + x) - one. 
 Proof.
-case:x => // a n b; case: a => //; rewrite T1nf_finite1 => /eqP -> //.
+  case:x => // a n b; case: a => //; rewrite T1nf_finite1 => /eqP -> //.
 Qed.
 
 Lemma sub_1aCE (a:=  cons zero 0 T1bad) : one + (a - one) != a.
@@ -1160,47 +1169,47 @@ Proof. by case: x.  Qed.
 
 Lemma T1subnn x: x - x = zero.
 Proof. 
-by elim:x => // a _ n b Hb /=; rewrite !T1ltnn ltnn !eqxx Hb if_same.
+    by elim:x => // a _ n b Hb /=; rewrite !T1ltnn ltnn !eqxx Hb if_same.
 Qed.
 
 Lemma add_int n m : \F n + \F m = \F (n +m)%N.
 Proof.
-case: n m => // n; case; first by rewrite addn0 T1addn0.
-by move => m /=; rewrite - addnS.
+  case: n m => // n; case; first by rewrite addn0 T1addn0.
+    by move => m /=; rewrite - addnS.
 Qed.
 
 Lemma sub_int n m : \F n - \F m = \F (n -m)%N.
 Proof.
-case: n m => // n [] // m /=. 
-rewrite subSS /T1nat; case (ltngtP n m) => pa.
-- by rewrite (eqP (ltnW pa)).
-- by rewrite -(subnSK pa).
-- by rewrite pa subnn.
+  case: n m => // n [] // m /=. 
+  rewrite subSS /T1nat; case (ltngtP n m) => pa.
+  - by rewrite (eqP (ltnW pa)).
+  - by rewrite -(subnSK pa).
+  - by rewrite pa subnn.
 Qed.
 
 Lemma add_fin_omega n: \F n + T1omega = T1omega.
 Proof. by case: n. Qed.
 
 Lemma fooCE (x:= T1bad):
-   ~~T1limit x  /\(forall u v, T1limit u -> x <> u + \F v.+1).
+  ~~T1limit x  /\(forall u v, T1limit u -> x <> u + \F v.+1).
 Proof. by split => // u v; case u => // a n b; case a. Qed.
 
 
 Lemma split_add x: let: (y,n) :=T1split x in T1nf x ->
-   (x == y + \F n) && ((y==zero) || T1limit y ).
+                                             (x == y + \F n) && ((y==zero) || T1limit y ).
 Proof.
-elim: x => //a _ n b Hb /=.
-case pa: (a==zero).
-  by rewrite (eqP pa) T1lt1 => /and3P [_ _ /eqP ->]; rewrite !eqxx.
-move: Hb; case: (T1split b) => y s h /and3P [_ /h/andP [/eqP -> sb] _].
-rewrite orFb /T1limit pa sb andbT; case: {h} s => //=; first by rewrite T1addn0.
-by move => m; move: pa; case: a.
+  elim: x => //a _ n b Hb /=.
+  case pa: (a==zero).
+    by rewrite (eqP pa) T1lt1 => /and3P [_ _ /eqP ->]; rewrite !eqxx.
+    move: Hb; case: (T1split b) => y s h /and3P [_ /h/andP [/eqP -> sb] _].
+    rewrite orFb /T1limit pa sb andbT; case: {h} s => //=; first by rewrite T1addn0.
+      by move => m; move: pa; case: a.
 Qed.
 
 Lemma add_to_cons a n b: 
   b < phi0 a -> cons a n zero + b = cons  a n b.
 Proof.
-by case: b => // u v w; rewrite phi0_lt1 /= => h; rewrite h (T1lt_anti h).
+    by case: b => // u v w; rewrite phi0_lt1 /= => h; rewrite h (T1lt_anti h).
 Qed.
 
 
@@ -1212,133 +1221,133 @@ Proof. by split.  Qed.
 less than [x]. This conditionq holds if [x] has the form 
 $\phi_0(a$)#&phi;<sub>0</sub>(a)#; the converse is true when [x] is non-zero.
 We may also assume everything NF.
-*)
+ *)
 
 Lemma ap_pr0 a (x := phi0 a) b c:
-     b < x -> c < x -> b + c < x.
+  b < x -> c < x -> b + c < x.
 Proof.
-case: b c; [by move => c |move => a1 n b].
-case; [by move => H  _ | move => a' n' c'].
-by rewrite ! (fun_if  (fun z =>  z < x))  !phi0_lt1 if_same; case: (a1 < a'). 
+  case: b c; [by move => c |move => a1 n b].
+  case; [by move => H  _ | move => a' n' c'].
+    by rewrite ! (fun_if  (fun z =>  z < x))  !phi0_lt1 if_same; case: (a1 < a'). 
 Qed.
 
 Lemma ap_pr1 c: 
-   (forall a b,  a < c -> b < c -> a + b < c)  ->
-   (c== zero) || T1ap c.
+  (forall a b,  a < c -> b < c -> a + b < c)  ->
+  (c== zero) || T1ap c.
 Proof.
-case: c => // a n b.
-case: n b => [b H | n b H]; last first.
+  case: c => // a n b.
+  case: n b => [b H | n b H]; last first.
   have l2: (cons a n b) < (cons a n.+1 b) by rewrite /= eqxx ltnS leqnn if_same.
   move: (H _ _ l2 l2); rewrite /= !T1ltnn /= !T1ltnn eqxx if_same.
-  by rewrite ltnS -{3}(add0n n) ltn_add2r.
-case bz: (b == zero) => //.
-have pa: cons a 0 zero < cons a 0 b by move: bz;rewrite /= !T1ltnn eqxx; case b.
-by move: (H _ _ pa pa); rewrite /= T1ltnn /= T1ltnn if_same.
+    by rewrite ltnS -{3}(add0n n) ltn_add2r.
+    case bz: (b == zero) => //.
+    have pa: cons a 0 zero < cons a 0 b by move: bz;rewrite /= !T1ltnn eqxx; case b.
+      by move: (H _ _ pa pa); rewrite /= T1ltnn /= T1ltnn if_same.
 Qed.
 
 Lemma ap_pr2 c: 
-   T1nf c -> c <> zero ->
-   (forall a b, T1nf a -> T1nf b ->  a < c -> b < c -> a + b < c)  ->
-   T1ap c.
+  T1nf c -> c <> zero ->
+  (forall a b, T1nf a -> T1nf b ->  a < c -> b < c -> a + b < c)  ->
+  T1ap c.
 Proof.
-case: c => // a n b nc _ Hr.
-have {Hr} H: forall u, T1nf u -> u < cons a n b -> u + u < cons a n b.
-  by move => u ua ub; apply: Hr.
-case: n b H nc => [b H /T1nf_consa na | n b H nc].
-  have nc: T1nf (cons a 0 zero) by rewrite /= andbT.
-  move: (H _ nc); rewrite /= T1ltnn eqxx /= if_same T1ltnn.
- by case b => // u v w; apply.
-have l2: (cons a n b) < (cons a n.+1 b) by rewrite /= T1ltnn eqxx ltnSn.
-move: (H (cons a n b) nc l2). 
-by rewrite /= T1ltnn /= !T1ltnn /= eqxx if_same ltnS -{3}(add0n n) ltn_add2r.
+  case: c => // a n b nc _ Hr.
+  have {Hr} H: forall u, T1nf u -> u < cons a n b -> u + u < cons a n b.
+    by move => u ua ub; apply: Hr.
+    case: n b H nc => [b H /T1nf_consa na | n b H nc].
+    have nc: T1nf (cons a 0 zero) by rewrite /= andbT.
+    move: (H _ nc); rewrite /= T1ltnn eqxx /= if_same T1ltnn.
+      by case b => // u v w; apply.
+      have l2: (cons a n b) < (cons a n.+1 b) by rewrite /= T1ltnn eqxx ltnSn.
+      move: (H (cons a n b) nc l2). 
+        by rewrite /= T1ltnn /= !T1ltnn /= eqxx if_same ltnS -{3}(add0n n) ltn_add2r.
 Qed.
 
 
 Lemma ap_pr2CE (c := cons T1bad 1 zero):
-   (forall a b, T1nf a -> T1nf b ->  a < c -> b < c -> a + b < c).
+  (forall a b, T1nf a -> T1nf b ->  a < c -> b < c -> a + b < c).
 Proof.
-move => a b na nb; rewrite /c.
-move: na nb;case: a; first by rewrite T1add0n.
-move => a' n' b' HA; case: b; first by rewrite T1addn0.
-move => a'' n'' b'' HB.
-have pa: (a' == T1bad) = false.
-  by apply /negP => /eqP ba; move: HA; rewrite ba /=.
-have pb: (a'' == T1bad) = false.
-  by apply /negP => /eqP ba; move: HB; rewrite ba /=.
-rewrite /= !(fun_if (fun z =>  z < cons T1bad 1 zero)) /= pa pb => sa sb.
-by case (T1ltgtP a' a'').
+  move => a b na nb; rewrite /c.
+  move: na nb;case: a; first by rewrite T1add0n.
+  move => a' n' b' HA; case: b; first by rewrite T1addn0.
+  move => a'' n'' b'' HB.
+  have pa: (a' == T1bad) = false.
+    by apply /negP => /eqP ba; move: HA; rewrite ba /=.
+    have pb: (a'' == T1bad) = false.
+      by apply /negP => /eqP ba; move: HB; rewrite ba /=.
+      rewrite /= !(fun_if (fun z =>  z < cons T1bad 1 zero)) /= pa pb => sa sb.
+        by case (T1ltgtP a' a'').
 Qed.
 
 
 
 (** Alternate definition of an AP: if [a<x] then [a+x=x]. 
-*)
+ *)
 
 Lemma add_simpl1 a n b n' b': a != zero ->
-   cons a n b + cons zero n' b' =  cons  a n (b + cons zero n' b').
+                              cons a n b + cons zero n' b' =  cons  a n (b + cons zero n' b').
 Proof. by case: a. Qed.
 
 Lemma add_simpl2  n b a' n' b': a' != zero ->
-   cons zero n b + cons a' n' b' = cons a' n' b'.
+                                cons zero n b + cons a' n' b' = cons a' n' b'.
 Proof. by case: a'. Qed.
 
 
 Lemma ap_pr3 a b (x := phi0 a): b < x -> b + x = x.
 Proof.
-by rewrite /x /phi0; case: b => // a' n' b'; rewrite phi0_lt1 /= => ->.
+    by rewrite /x /phi0; case: b => // a' n' b'; rewrite phi0_lt1 /= => ->.
 Qed.
 
 Lemma ap_pr4 x: (forall b, b < x -> b + x = x) -> (x == zero) || T1ap x.
 Proof.
-case: x => // a; case; [ case => // a' n' b' H | move => n b H].
+  case: x => // a; case; [ case => // a' n' b' H | move => n b H].
   have: cons a 0 zero < cons a 0 (cons a' n' b') by rewrite /= T1ltnn eqxx.
   move /H;rewrite /= T1ltnn; discriminate.
-have: cons a n zero < cons a n.+1 b  by rewrite /= T1ltnn eqxx ltnSn.
-by move /H; rewrite /= T1ltnn - {3} (addn0 n); case => /eqP; rewrite eqn_add2l.
+  have: cons a n zero < cons a n.+1 b  by rewrite /= T1ltnn eqxx ltnSn.
+    by move /H; rewrite /= T1ltnn - {3} (addn0 n); case => /eqP; rewrite eqn_add2l.
 Qed.
 
 (** It follows tthat the sum of two NF ordinals is NF *)
 
 Lemma nf_add a b: T1nf a -> T1nf b -> T1nf (a + b).
 Proof.
-elim: a b => // a Ha n b Hb [] // a' n' b' ha hb /=.
-case (T1ltgtP a a') => //;last by move => ->; move: hb.
-rewrite -(phi0_lt1 _ n' b') => pb.
-by move: ha => /= /and3P [-> sb sc]; rewrite (Hb _ sb hb) ap_pr0.
+  elim: a b => // a Ha n b Hb [] // a' n' b' ha hb /=.
+  case (T1ltgtP a a') => //;last by move => ->; move: hb.
+  rewrite -(phi0_lt1 _ n' b') => pb.
+    by move: ha => /= /and3P [-> sb sc]; rewrite (Hb _ sb hb) ap_pr0.
 Qed.
 
 (** Results anbout addition subtraction comparison *)
 
 Lemma T1add_eq0 m n:  (m + n == zero) = (m == zero) && (n == zero).
 Proof. 
-case: m; [by rewrite T1add0n | move => a' n' b'; rewrite andFb].
-by case: n => // a n b /=; case (T1ltgtP a a').
+  case: m; [by rewrite T1add0n | move => a' n' b'; rewrite andFb].
+    by case: n => // a n b /=; case (T1ltgtP a a').
 Qed.
 
 Lemma add_le1 a b: a <= a + b.
 Proof.
-elim:a b; first by rewrite /T1le /=; case;[ rewrite eqxx | ].
-move => a' _ n' b' Hb [] // a n b /=.
-case: (T1ltgtP a' a) => h;rewrite T1le_consE ?h // ? ltnn T1ltnn !eqxx //=.
-by rewrite ltnS leq_addr. 
+  elim:a b; first by rewrite /T1le /=; case;[ rewrite eqxx | ].
+  move => a' _ n' b' Hb [] // a n b /=.
+  case: (T1ltgtP a' a) => h;rewrite T1le_consE ?h // ? ltnn T1ltnn !eqxx //=.
+    by rewrite ltnS leq_addr. 
 Qed.
 
 Lemma add_le2 a b: b <= a + b.
 Proof.
-case: a => // a' n' b'; case: b ; [done | move => a n b /=].
-case: (T1ltgtP a' a) => // h;rewrite T1le_consE ?h // ltnS leq_addl /= eqxx.
-by rewrite if_same.
+  case: a => // a' n' b'; case: b ; [done | move => a n b /=].
+  case: (T1ltgtP a' a) => // h;rewrite T1le_consE ?h // ltnS leq_addl /= eqxx.
+    by rewrite if_same.
 Qed.
 
 Lemma minus_lt a b: a < b -> a - b = zero.
 Proof.
-elim: a b => // a' _ n' b' Hb [] // a'' n'' b'' h.
-by rewrite /T1sub h.
+  elim: a b => // a' _ n' b' Hb [] // a'' n'' b'' h.
+    by rewrite /T1sub h.
 Qed.
 
 Lemma minus_le a b: a <= b -> a - b = zero.
 Proof.
-rewrite T1le_eqVlt;case /orP; [move /eqP ->; apply: T1subnn| apply: minus_lt].
+  rewrite T1le_eqVlt;case /orP; [move /eqP ->; apply: T1subnn| apply: minus_lt].
 Qed.
 
 Lemma T1sub0 a: a - zero = a.
@@ -1346,68 +1355,68 @@ Proof. by case: a => // a n b; case: a. Qed.
 
 Lemma nf_sub a b: T1nf a -> T1nf b -> T1nf (a - b).
 Proof.
-elim: a b => // a' _ n' b' Hb []; [ by rewrite T1sub0 | move => a n b /= sa sb].
-have sc: T1nf (b' - b).
-  by move/and3P: sa => [_ nb _]; move/and3P: sb => [_ nb' _];  apply: Hb.
-by rewrite 11!fun_if /= sa sc !if_same.
+  elim: a b => // a' _ n' b' Hb []; [ by rewrite T1sub0 | move => a n b /= sa sb].
+  have sc: T1nf (b' - b).
+    by move/and3P: sa => [_ nb _]; move/and3P: sb => [_ nb' _];  apply: Hb.
+      by rewrite 11!fun_if /= sa sc !if_same.
 Qed.
 
 Lemma sub_le1 a b : T1nf a -> (a - b) <= a. 
 Proof.
-elim: a b => [b // | a' _ n' b' Hb].
-case; [by rewrite T1sub0 T1lenn | move => a n b /and3P [_ /Hb la lb] /=].
-set u := if a' <a then _ else _; case: u => //.
-case: (a < a') => //; case: (ltngtP n' n) => // nn.
+  elim: a b => [b // | a' _ n' b' Hb].
+  case; [by rewrite T1sub0 T1lenn | move => a n b /and3P [_ /Hb la lb] /=].
+  set u := if a' <a then _ else _; case: u => //.
+  case: (a < a') => //; case: (ltngtP n' n) => // nn.
   have hh: ((n' - n).-1 < n')%N.
-    move: nn; by case: n' => // n' h; rewrite subSn // ltnS leq_subr.
+  move: nn; by case: n' => // n' h; rewrite subSn // ltnS leq_subr.
   rewrite (fun_if (fun z => (z <= _))) !T1le_consE T1ltnn hh eqxx (eq_sym _ a').
-  by case (T1ltgtP a' zero).
-case :eqP => // _.
-apply: (T1le_trans (la b));exact:(T1ltW (tail_lt_cons n' lb)).
+    by case (T1ltgtP a' zero).
+    case :eqP => // _.
+    apply: (T1le_trans (la b));exact:(T1ltW (tail_lt_cons n' lb)).
 Qed.
 
 
 Lemma sub_pr a b: T1nf b -> (a + b) - a = b.
 Proof.
-elim: a b; first by move => b _; rewrite T1sub0. 
-move => a' _ n' b' Hb; case; first by rewrite T1addn0 T1subnn.
-move => a n b nb /=.
-case (T1ltgtP a' a) => pa.
+  elim: a b; first by move => b _; rewrite T1sub0. 
+  move => a' _ n' b' Hb; case; first by rewrite T1addn0 T1subnn.
+  move => a n b nb /=.
+  case (T1ltgtP a' a) => pa.
     by rewrite /= pa (T1lt_anti pa) (T1lt_ne' pa).
-  have hh: a' == zero = false by move: pa; case a' => //; rewrite T1ltn0.
-  by rewrite /= !T1ltnn ltnn !eqxx /= T1ltNge add_le1 hh /= Hb.
-rewrite /= T1ltnn eqxx - addnS addKn  addnC eqn_simpl1 ltn_simpl1 pa.
-by move: nb; case: eqP => // -> nb; rewrite (T1nf_finite nb).
+    have hh: a' == zero = false by move: pa; case a' => //; rewrite T1ltn0.
+      by rewrite /= !T1ltnn ltnn !eqxx /= T1ltNge add_le1 hh /= Hb.
+      rewrite /= T1ltnn eqxx - addnS addKn  addnC eqn_simpl1 ltn_simpl1 pa.
+        by move: nb; case: eqP => // -> nb; rewrite (T1nf_finite nb).
 Qed.
 
 Lemma add_inj a b c : T1nf b -> T1nf c -> a + b = a + c -> b = c.
 Proof.
-move => sb sc h.
-by rewrite - (sub_pr a sb) - (sub_pr a sc) h.
+  move => sb sc h.
+    by rewrite - (sub_pr a sb) - (sub_pr a sc) h.
 Qed.
 
 Lemma sub_pr1 a b: T1nf b -> a <= b -> b = a + (b - a).
 Proof.
-move => nb; rewrite /T1le.
-case: (altP (a =P b)) => [-> | _ /=]; first by rewrite T1subnn T1addn0.
-move: nb; elim: a b; first by  move => b nb; rewrite T1sub0 //.
-move => a' _ n' b' Hb; case; [by rewrite T1ltn0 | move => a n b].
-case: a; [  move => hb hc | move => a'' n'' b''].
+  move => nb; rewrite /T1le.
+  case: (altP (a =P b)) => [-> | _ /=]; first by rewrite T1subnn T1addn0.
+  move: nb; elim: a b; first by  move => b nb; rewrite T1sub0 //.
+  move => a' _ n' b' Hb; case; [by rewrite T1ltn0 | move => a n b].
+  case: a; [  move => hb hc | move => a'' n'' b''].
   move: hb hc => /=;rewrite T1lt1 => /andP [_ /eqP ->].
   case a'=> //; rewrite !T1ltn0 eqxx if_same if_simpl => le1.
-  by rewrite (ltnNge) (ltnW le1) (gtn_eqF le1) /= - addSn - subnS (subnKC le1).
-move => /and3P [_ sb sc]. 
-move: (Hb _ sb) (T1le_lt_trans (sub_le1 b' sb) sc) => ha hb /=.
-case (T1ltgtP  a' (cons a'' n'' b'')) => //.
-   case a' => // a3 n3 b3 /=; rewrite T1eqE (eq_sym a'' a3) (eq_sym n'' n3).
-   case (T1ltgtP a3 a'') => //= pa; first by rewrite pa.
-   case (ltngtP n3 n'') => //= pb; first by rewrite pa T1ltnn eqxx pb.
-   by move => h; rewrite (T1lt_anti h) (T1lt_ne' h) pa pb T1ltnn ltnn ! eqxx h.
-move ->;rewrite !T1ltnn ltnn !eqxx (eq_sym n n');case (ltngtP  n' n) => //. 
-  by rewrite T1ltnn => le1; rewrite - addSn - subnS (subnKC le1).
-move => -> hw; rewrite (T1lt_anti hw); move: (ha hw) hb; clear hw.
-case (b - b'); first by rewrite T1addn0  => ->.
-by move => u v w; rewrite phi0_lt1 => <- ua; rewrite ua (T1lt_anti ua). 
+    by rewrite (ltnNge) (ltnW le1) (gtn_eqF le1) /= - addSn - subnS (subnKC le1).
+    move => /and3P [_ sb sc]. 
+    move: (Hb _ sb) (T1le_lt_trans (sub_le1 b' sb) sc) => ha hb /=.
+    case (T1ltgtP  a' (cons a'' n'' b'')) => //.
+    case a' => // a3 n3 b3 /=; rewrite T1eqE (eq_sym a'' a3) (eq_sym n'' n3).
+    case (T1ltgtP a3 a'') => //= pa; first by rewrite pa.
+    case (ltngtP n3 n'') => //= pb; first by rewrite pa T1ltnn eqxx pb.
+      by move => h; rewrite (T1lt_anti h) (T1lt_ne' h) pa pb T1ltnn ltnn ! eqxx h.
+      move ->;rewrite !T1ltnn ltnn !eqxx (eq_sym n n');case (ltngtP  n' n) => //. 
+        by rewrite T1ltnn => le1; rewrite - addSn - subnS (subnKC le1).
+        move => -> hw; rewrite (T1lt_anti hw); move: (ha hw) hb; clear hw.
+        case (b - b'); first by rewrite T1addn0  => ->.
+          by move => u v w; rewrite phi0_lt1 => <- ua; rewrite ua (T1lt_anti ua). 
 Qed.
 
 
@@ -1416,8 +1425,8 @@ Proof. done. Qed.
 
 Lemma sub_pr1r a b: T1nf a -> a - b = zero -> a <= b.
 Proof.
-move => nn h; case /orP: (T1le_total a b) => // h1.
-by move: (sub_pr1 nn h1); rewrite h T1addn0 => ->. 
+  move => nn h; case /orP: (T1le_total a b) => // h1.
+    by move: (sub_pr1 nn h1); rewrite h T1addn0 => ->. 
 Qed.
 
 
@@ -1426,13 +1435,13 @@ Proof. by []. Qed.
 
 Lemma sub_nz a b: T1nf b -> a < b -> (b - a) != zero.
 Proof.
-move => nb lab; apply/negP => h.
-by move: (sub_pr1r nb (eqP h)); rewrite T1leNgt lab.
+  move => nb lab; apply/negP => h.
+    by move: (sub_pr1r nb (eqP h)); rewrite T1leNgt lab.
 Qed.
 
 
 Lemma sub_nzCE (a := one) (b := (cons zero 0 one)):
-   (a < b) && (b-a == zero). 
+  (a < b) && (b-a == zero). 
 Proof. done. Qed.
 
 
@@ -1440,22 +1449,22 @@ Proof. done. Qed.
 
 Lemma T1addA c1 c2 c3: c1 + (c2 + c3) = (c1 + c2) + c3.
 Proof.
-elim: c1 c2 c3 => // a1 _ n1 b1 H; case.
-   by move => c3;rewrite !T1add0n T1addn0.
-move => a2 n2 b2; case;[ by rewrite ! T1addn0 | move => a3 n3 b3 /=].
-case (T1ltgtP a2 a3).
-+ case (T1ltgtP a1 a2) => pa pb /=.
-   - by rewrite (T1lt_trans pa pb) /= pb.
-   - by case (T1ltgtP a1 a3) => //; rewrite - H /= pb.
-   - by rewrite  pa pb.
-+ case (T1ltgtP a1 a2) => pa pb /=; move: (T1lt_anti pb) => pc.
-   - by rewrite pb pc.
-   - by move:(T1lt_trans pb pa) => h; rewrite h (T1lt_anti h) - H /= pb pc.
-   - by rewrite pa pb pc.
-+ move => <-; case (T1ltgtP a1 a2) => pb /=.
-   - by rewrite !T1ltnn. 
-   - by rewrite pb (T1lt_anti pb) - H /=  !T1ltnn.
-   - by rewrite pb !T1ltnn addSn addnS addnA.
+  elim: c1 c2 c3 => // a1 _ n1 b1 H; case.
+    by move => c3;rewrite !T1add0n T1addn0.
+    move => a2 n2 b2; case;[ by rewrite ! T1addn0 | move => a3 n3 b3 /=].
+    case (T1ltgtP a2 a3).
+  + case (T1ltgtP a1 a2) => pa pb /=.
+  - by rewrite (T1lt_trans pa pb) /= pb.
+  - by case (T1ltgtP a1 a3) => //; rewrite - H /= pb.
+  - by rewrite  pa pb.
+    + case (T1ltgtP a1 a2) => pa pb /=; move: (T1lt_anti pb) => pc.
+  - by rewrite pb pc.
+  - by move:(T1lt_trans pb pa) => h; rewrite h (T1lt_anti h) - H /= pb pc.
+  - by rewrite pa pb pc.
+    + move => <-; case (T1ltgtP a1 a2) => pb /=.
+  - by rewrite !T1ltnn. 
+  - by rewrite pb (T1lt_anti pb) - H /=  !T1ltnn.
+  - by rewrite pb !T1ltnn addSn addnS addnA.
 Qed.
 
 Lemma T1addS a b : (a + T1succ b) = T1succ (a+ b).
@@ -1463,26 +1472,26 @@ Proof. by rewrite ! succ_is_add_one T1addA. Qed.
 
 Lemma T1le_add2l  p m n : (p + m <= p + n) = (m <= n).
 Proof.
-elim:p m n => // a  Ha n b Hb.
-case; first by move => n1; rewrite T1addn0 T1le0n add_le1.
-move => a' n' b'; case.
-   rewrite T1addn0 /=; case (T1ltgtP a a').
-     move => h; rewrite T1le_consE (T1lt_ne' h) (T1lt_anti h) => //.
-   move: (Hb (cons a' n' b') zero).
-   by rewrite T1le_consE T1addn0 T1ltnn ltnn ! eqxx => ->.
-  by rewrite T1le_consE T1ltnn eqxx addnC ltn_simpl1 eqn_simpl1.
-move => a'' n'' b'' /=.
-case (T1ltgtP a a');case (T1ltgtP a a'') =>// pa pb; 
-  rewrite ? pa -? pa  !T1le_consE ? (T1lt_anti pb) ? eqxx ? T1ltnn.
-- move: (T1lt_trans pa pb) => pc.
-  by rewrite (T1lt_ne' pb) (T1lt_ne' pc) (T1lt_anti pc).
-- by rewrite (T1lt_ne' pb).
-- by rewrite pa (T1lt_trans pb pa).
-- by rewrite Hb ltnn T1le_consE. 
-- by rewrite pb ltnS leq_addr.
-- by rewrite -pb pa.
-- by rewrite -pb addnC ltn_simpl1 eqn_simpl1 (T1lt_anti pa) (T1lt_ne' pa).
-- by rewrite pb eqxx T1ltnn /= ltnS ltn_add2l - !addSn eqn_add2l. 
+  elim:p m n => // a  Ha n b Hb.
+  case; first by move => n1; rewrite T1addn0 T1le0n add_le1.
+  move => a' n' b'; case.
+  rewrite T1addn0 /=; case (T1ltgtP a a').
+  move => h; rewrite T1le_consE (T1lt_ne' h) (T1lt_anti h) => //.
+  move: (Hb (cons a' n' b') zero).
+    by rewrite T1le_consE T1addn0 T1ltnn ltnn ! eqxx => ->.
+      by rewrite T1le_consE T1ltnn eqxx addnC ltn_simpl1 eqn_simpl1.
+      move => a'' n'' b'' /=.
+      case (T1ltgtP a a');case (T1ltgtP a a'') =>// pa pb; 
+        rewrite ? pa -? pa  !T1le_consE ? (T1lt_anti pb) ? eqxx ? T1ltnn.
+  - move: (T1lt_trans pa pb) => pc.
+      by rewrite (T1lt_ne' pb) (T1lt_ne' pc) (T1lt_anti pc).
+  - by rewrite (T1lt_ne' pb).
+  - by rewrite pa (T1lt_trans pb pa).
+  - by rewrite Hb ltnn T1le_consE. 
+  - by rewrite pb ltnS leq_addr.
+  - by rewrite -pb pa.
+  - by rewrite -pb addnC ltn_simpl1 eqn_simpl1 (T1lt_anti pa) (T1lt_ne' pa).
+  - by rewrite pb eqxx T1ltnn /= ltnS ltn_add2l - !addSn eqn_add2l. 
 Qed.
 
 Lemma T1lt_add2l  p m n : (p + m < p + n) = (m < n).
@@ -1490,26 +1499,26 @@ Proof. by rewrite !T1ltNge T1le_add2l. Qed.
 
 Lemma T1lt_add2r  p m n : (m + p  < n + p ) ->  (m < n).
 Proof.
-elim: m p n. 
-  by move => p n; rewrite T1add0n; case: n => //;rewrite T1add0n T1ltnn.
-move => a Ha n b Hb; case; first by move => u; rewrite ! T1addn0.
-move => a' n' b'; case.
-  simpl;case (T1ltgtP a a') => pa /=.
+  elim: m p n. 
+    by move => p n; rewrite T1add0n; case: n => //;rewrite T1add0n T1ltnn.
+    move => a Ha n b Hb; case; first by move => u; rewrite ! T1addn0.
+    move => a' n' b'; case.
+    simpl;case (T1ltgtP a a') => pa /=.
   + by rewrite !T1ltnn ltnn !if_same.
   + by rewrite (T1lt_anti pa) (T1lt_ne' pa).
   + by rewrite pa T1ltnn eqxx ltn_simpl1 eqn_simpl1.
-move => a'' n'' b'' /=.
-case (T1ltgtP a a'); case (T1ltgtP a a'') => pa pb //.
-- by rewrite (T1lt_trans pa pb) T1ltnn.
-- by rewrite -pa pb T1ltnn.
-- case (T1ltgtP a'' a') => pc /=; rewrite ? pc.
-  + by rewrite (T1lt_anti pb) (T1lt_ne' pb).
-  + by rewrite (T1lt_anti pa) (T1lt_ne' pa).
-  + by rewrite (T1lt_anti pb) (T1lt_ne' pb).
-- rewrite - pa pb (T1lt_anti pb) /= T1ltnn  eqxx. 
-  by case (ltngtP n n'') => // _; apply: Hb.
-- by rewrite - pb pa /= T1ltnn eqxx ltn_simpl1 eqn_simpl1.
-- by rewrite -pa -pb /= !T1ltnn eqxx ltnS ltn_add2r if_same if_simpl=> ->.
+    move => a'' n'' b'' /=.
+    case (T1ltgtP a a'); case (T1ltgtP a a'') => pa pb //.
+  - by rewrite (T1lt_trans pa pb) T1ltnn.
+  - by rewrite -pa pb T1ltnn.
+  - case (T1ltgtP a'' a') => pc /=; rewrite ? pc.
+    + by rewrite (T1lt_anti pb) (T1lt_ne' pb).
+    + by rewrite (T1lt_anti pa) (T1lt_ne' pa).
+    + by rewrite (T1lt_anti pb) (T1lt_ne' pb).
+  - rewrite - pa pb (T1lt_anti pb) /= T1ltnn  eqxx. 
+      by case (ltngtP n n'') => // _; apply: Hb.
+  - by rewrite - pb pa /= T1ltnn eqxx ltn_simpl1 eqn_simpl1.
+  - by rewrite -pa -pb /= !T1ltnn eqxx ltnS ltn_add2r if_same if_simpl=> ->.
 Qed.
 
 Lemma T1le_add2r  p m n : (m <=n) -> (m + p  <= n + p).
@@ -1523,8 +1532,8 @@ Proof. move /eqP;rewrite -{1} (T1addn0 a) T1eq_add2l => /eqP -> //. Qed.
 
 Lemma add_le4 a b: b != zero -> a < a + b.
 Proof.
-move: (add_le1 a b); rewrite T1le_eqVlt.
-by case: (a<a+b); rewrite ? orbT // orbF => /eqP /add_le3 ->.
+  move: (add_le1 a b); rewrite T1le_eqVlt.
+    by case: (a<a+b); rewrite ? orbT // orbF => /eqP /add_le3 ->.
 Qed.
 
 
@@ -1550,9 +1559,9 @@ Proof. by elim: n ; [ | move => n H; rewrite /= andbT ]. Qed.
 
 Lemma omega_tower_unbounded x: ~ (forall n, (omega_tower n) < x).
 Proof.
-elim :x; first by  move => h; move: (h 0); rewrite T1ltn0.
-move => a Ha n b _ c; case Ha => m.
-move: (c m.+2); move /T1lt_cons_le;apply: T1lt_le_trans;apply: head_lt_cons.
+  elim :x; first by  move => h; move: (h 0); rewrite T1ltn0.
+  move => a Ha n b _ c; case Ha => m.
+  move: (c m.+2); move /T1lt_cons_le;apply: T1lt_le_trans;apply: head_lt_cons.
 Qed.
 
 
@@ -1561,25 +1570,25 @@ Definition ex_middle:=
   forall (P: T1 -> Prop),  let Q :=  exists x, (T1nf x /\ P x) in  Q \/ ~Q. 
 
 Lemma ex_middle_pick (P: T1 -> Prop):  ex_middle ->
-     (exists x, (T1nf x /\ P x))  \/ (forall x, T1nf x -> ~ (P x)).
+                                       (exists x, (T1nf x /\ P x))  \/ (forall x, T1nf x -> ~ (P x)).
 Proof.
-move => h. 
-by case (h P); [left |move => nq; right => x nx px; case nq; exists x ].
+  move => h. 
+    by case (h P); [left |move => nq; right => x nx px; case nq; exists x ].
 Qed.
 
 Lemma min_exists (P: T1 -> Prop) x: ex_middle ->
-   T1nf x -> (P x) -> 
-   exists y, T1nf y /\ P y /\ forall z, T1nf z -> P z -> y <= z.
+                                    T1nf x -> (P x) -> 
+                                    exists y, T1nf y /\ P y /\ forall z, T1nf z -> P z -> y <= z.
 Proof.
-move => EM;move: x; apply: T1transfinite_induction.
-move => x nx H px.
-case (ex_middle_pick (fun z => (P z /\ ~ (x <= z))) EM).
+  move => EM;move: x; apply: T1transfinite_induction.
+  move => x nx H px.
+  case (ex_middle_pick (fun z => (P z /\ ~ (x <= z))) EM).
   move =>  [z [pa [pb pc]]]. 
   have zx: z < x by rewrite (T1ltNge z x); apply /negP.
   exact: (H _ pa zx pb).
-move => qf.
-exists x; split => //; split => // z pa pb; case xz: (x <= z) => //.
-by case (qf _ pa); rewrite xz.
+  move => qf.
+  exists x; split => //; split => // z pa pb; case xz: (x <= z) => //.
+    by case (qf _ pa); rewrite xz.
 Qed.
 
 (** *** Definition *)
@@ -1591,31 +1600,31 @@ Note that [x] is then the least upper bound. The trouble is that each [f(i)]
 may be NF and [x] is not. Thus , we give an  alternate definition. 
 Trouble is: a function may have more then one limit (at most one of them 
 being NF).
-*)
+ *)
 
 Notation Tf := (nat -> T1).
 
 Definition limit_v1 (f: Tf) x := 
-    (forall n, f n < x) /\ (forall y, y < x -> (exists n, y <= f n)).
+  (forall n, f n < x) /\ (forall y, y < x -> (exists n, y <= f n)).
 Definition limit_v2 (f: Tf) x := 
-    (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
- 
+  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
+
 
 Lemma limit_unique1 (f: Tf) x x' :limit_v1 f x -> limit_v1 f x' ->
-  x = x'.
+                                  x = x'.
 Proof.
-move => [pa pb] [pc pd]; case: (T1ltgtP x x') => //.
-  by move /pd => [n]; rewrite T1leNgt (pa n).
-by move /pb => [n]; rewrite T1leNgt (pc n).
+  move => [pa pb] [pc pd]; case: (T1ltgtP x x') => //.
+    by move /pd => [n]; rewrite T1leNgt (pa n).
+      by move /pb => [n]; rewrite T1leNgt (pc n).
 Qed.
 
 
 Lemma limit_unique2 (f: Tf) x x' : limit_v2 f x -> limit_v2 f x' ->
-  T1nf x -> T1nf x'->  x = x'.
+                                   T1nf x -> T1nf x'->  x = x'.
 Proof.
-move => [pa pb] [pc pd] nx nx'; case: (T1ltgtP x x') => //.
-  by move /(pd _ nx) => [n]; rewrite T1leNgt (pa n).
-by move /(pb _ nx') => [n]; rewrite T1leNgt (pc n).
+  move => [pa pb] [pc pd] nx nx'; case: (T1ltgtP x x') => //.
+    by move /(pd _ nx) => [n]; rewrite T1leNgt (pa n).
+      by move /(pb _ nx') => [n]; rewrite T1leNgt (pc n).
 Qed.
 
 
@@ -1623,33 +1632,33 @@ Definition omega_plus_n n := cons one 0 (cons zero n zero).
 
 Lemma nf_omega_plus_n n : T1nf ( omega_plus_n n).
 Proof. by []. Qed.
- 
+
 
 Lemma limit_CE1: limit_v1 omega_plus_n (cons one 0 T1omega).
 Proof.
-split; first by move => n.
-move => y ;case: y => //; first by exists 0; rewrite T1le0n.
-move => a n b /=; case: (T1ltgtP a one) => //.
-  by rewrite T1lt1 => /eqP -> _; exists 0.
-move => ->; case: eqP => // ->; case: b => //; first by exists 0.
-move => a' n' b' /=; rewrite /phi0 T1lt1 T1ltn0 !if_same if_simpl.
-move /eqP ->; exists (n'.+1); rewrite T1le_consE T1ltnn !eqxx ltnn.
-by rewrite T1le_consE T1ltnn !eqxx ltnSn.
+  split; first by move => n.
+  move => y ;case: y => //; first by exists 0; rewrite T1le0n.
+                                            move => a n b /=; case: (T1ltgtP a one) => //.
+                                              by rewrite T1lt1 => /eqP -> _; exists 0.
+                                              move => ->; case: eqP => // ->; case: b => //; first by exists 0.
+                                                                                                             move => a' n' b' /=; rewrite /phi0 T1lt1 T1ltn0 !if_same if_simpl.
+                                                                                                             move /eqP ->; exists (n'.+1); rewrite T1le_consE T1ltnn !eqxx ltnn.
+                                                                                                                                    by rewrite T1le_consE T1ltnn !eqxx ltnSn.
 Qed.
 
 
 Lemma limit_CE2: limit_v2 omega_plus_n (cons one 1 zero).
 Proof.
-split; first by move => n.
-move => y;case: y => //; first by exists 0; rewrite T1le0n.
-move => a n b /=; case: (T1ltgtP a one) => //.
-  by rewrite T1lt1 => /eqP -> _ _; exists 0.
-move => ->; rewrite T1ltn0 if_same if_simpl; case n => // /and3P [_ nb ltb] _.
-move:nb ltb; case b => //; first by  move => _ _; exists 0. 
-move => a' n' b' /and3P [_ _ ltb] /=.
-rewrite T1lt1 T1ltn0 !if_same  if_simpl => /eqP az.
-move: ltb; rewrite az /phi0 T1lt1 => /eqP ->.
-by exists n'; rewrite   T1le_consE  T1ltnn ltnn ! eqxx T1lenn.
+  split; first by move => n.
+  move => y;case: y => //; first by exists 0; rewrite T1le0n.
+                                           move => a n b /=; case: (T1ltgtP a one) => //.
+                                             by rewrite T1lt1 => /eqP -> _ _; exists 0.
+                                             move => ->; rewrite T1ltn0 if_same if_simpl; case n => // /and3P [_ nb ltb] _.
+                                             move:nb ltb; case b => //; first by  move => _ _; exists 0. 
+                                             move => a' n' b' /and3P [_ _ ltb] /=.
+                                             rewrite T1lt1 T1ltn0 !if_same  if_simpl => /eqP az.
+                                             move: ltb; rewrite az /phi0 T1lt1 => /eqP ->.
+                                               by exists n'; rewrite   T1le_consE  T1ltnn ltnn ! eqxx T1lenn.
 Qed.
 
 Lemma limit_CE3: limit_v2 omega_plus_n (cons one 0 T1omega).
@@ -1665,34 +1674,34 @@ Fixpoint toNF x :=
 
 Lemma nf_toNF x: T1nf (toNF x).
 Proof. 
-by elim:x => //a Ha n b Hb; apply: nf_add => //=; rewrite -/toNF Ha.
+    by elim:x => //a Ha n b Hb; apply: nf_add => //=; rewrite -/toNF Ha.
 Qed.
 
 Lemma toNF_nz x : toNF x = zero -> x = zero. 
 Proof.
-case x => // a n b /=; case (toNF b) => // a' n' b'.
-by case (T1ltgtP (toNF a) a').
+  case x => // a n b /=; case (toNF b) => // a' n' b'.
+    by case (T1ltgtP (toNF a) a').
 Qed.
 
 
 Lemma toNF_nf x: T1nf x -> toNF x = x.
 Proof. 
-elim:x => //a Ha n b Hb /and3P [/Ha sa /Hb sb etc].
-by rewrite /toNF -/toNF sa sb add_to_cons.
+  elim:x => //a Ha n b Hb /and3P [/Ha sa /Hb sb etc].
+    by rewrite /toNF -/toNF sa sb add_to_cons.
 Qed.
 
 Lemma toNF_mon x : x <= toNF x.
 Proof.
-elim:x => //.
-move => a Ha n b Hb /=; rewrite -/toNF.
-have aux: if a < toNF a then true else if a == toNF a then true else false.
-  by case /orP: Ha => -> //; rewrite  if_same.
-move: Hb; case: (toNF b) => //.
-  by move => sa; rewrite T1le_consE ltnn eqxx sa aux.
-move => a' n' b' sa; case: (T1ltgtP (toNF a) a') => sb.
-+ by rewrite T1le_consE (T1le_lt_trans Ha sb).
-+ by rewrite T1le_consE ltnn eqxx sa aux.
-+ by rewrite T1le_consE ltnS leq_addr aux.
+  elim:x => //.
+  move => a Ha n b Hb /=; rewrite -/toNF.
+  have aux: if a < toNF a then true else if a == toNF a then true else false.
+    by case /orP: Ha => -> //; rewrite  if_same.
+    move: Hb; case: (toNF b) => //.
+      by move => sa; rewrite T1le_consE ltnn eqxx sa aux.
+      move => a' n' b' sa; case: (T1ltgtP (toNF a) a') => sb.
+  + by rewrite T1le_consE (T1le_lt_trans Ha sb).
+  + by rewrite T1le_consE ltnn eqxx sa aux.
+  + by rewrite T1le_consE ltnS leq_addr aux.
 Qed.
 
 Lemma toNF_ex1 x: toNF (cons zero 0 x) = one + toNF x.
@@ -1712,15 +1721,15 @@ Proof. by []. Qed.
 (** This is a simplification of the code given for the type T3 below.
 We define a function [F(x)]; so that for any limit ordinal [x], if [f= F(x)],
 then [f] is stictly increasing (of type [nat -> T1]), and its limit is [x].
-*)
+ *)
 
 Lemma fincP (f: Tf) :
   (forall n, f n < f n.+1) -> 
   (forall n m, (n < m)%N -> f n < f m).
 Proof.
-move => h n; elim => //.
-move => m Hm;rewrite ltnS leq_eqVlt; case /orP;first by move => /eqP ->.
-move /Hm => sa; exact: (T1lt_trans sa (h m)).
+  move => h n; elim => //.
+  move => m Hm;rewrite ltnS leq_eqVlt; case /orP;first by move => /eqP ->.
+  move /Hm => sa; exact: (T1lt_trans sa (h m)).
 Qed.
 
 Definition limit_of (f: Tf) x :=
@@ -1731,11 +1740,11 @@ Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
 
 
 Lemma limit_lub f x y: limit_of f x -> (forall n, f n <= y) -> T1nf y ->
-  x <= y.
+                       x <= y.
 Proof.
-move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
-move: (pc _ hb ha) => [n ny].
-by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
+  move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
+  move: (pc _ hb ha) => [n ny].
+    by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
 Qed.
 
 
@@ -1745,40 +1754,40 @@ Definition phi3 a:= fun n => cons a n zero.
 
 Lemma limit1 a b f: T1nf a -> limit_of f b -> limit_of (phi1 a f) (a + b).
 Proof.  
-move => na [sa [sb sc] nb].
-move: (nf_add na nb) => ns.
-split => //; first by move => n m / sa => h; rewrite T1lt_add2l.
-split; first by move => n; rewrite T1lt_add2l (sb n).
-move => y ny hy.
-case: (T1ltP a y) => cp; last first.
-  by exists 0; apply: (T1le_trans cp); rewrite add_le1.
-move: (sub_pr1 ny (T1ltW cp)) => yv.
-have ha: y - a < b by move: hy; rewrite {1} yv T1lt_add2l.
-have [n nv] := (sc _ (nf_sub ny na) ha).
-by exists n; rewrite yv  T1le_add2l nv.
+  move => na [sa [sb sc] nb].
+  move: (nf_add na nb) => ns.
+  split => //; first by move => n m / sa => h; rewrite T1lt_add2l.
+  split; first by move => n; rewrite T1lt_add2l (sb n).
+  move => y ny hy.
+  case: (T1ltP a y) => cp; last first.
+    by exists 0; apply: (T1le_trans cp); rewrite add_le1.
+              move: (sub_pr1 ny (T1ltW cp)) => yv.
+              have ha: y - a < b by move: hy; rewrite {1} yv T1lt_add2l.
+              have [n nv] := (sc _ (nf_sub ny na) ha).
+                by exists n; rewrite yv  T1le_add2l nv.
 Qed.
 
 Lemma limit2 b f: limit_of f b -> limit_of (phi2 f) (phi0 b).
 Proof. 
-move => [sa [sb sc] nb]; rewrite /limit_of nf_phi0.
-split => //; first by move => n m nm /=; rewrite  (sa _ _ nm).
-split => //; first by move => n; rewrite /= sb.
-case => //; first by exists 0; rewrite T1le0n.
-move => a' n' b' /and3P [na _ _] /=; rewrite T1ltn0 !if_same if_simpl => h.
-move: (sc _ na h) => [n yn].
-by exists n.+1; rewrite T1le_consE (T1le_lt_trans yn (sa _ _ (ltnSn n))).
+  move => [sa [sb sc] nb]; rewrite /limit_of nf_phi0.
+  split => //; first by move => n m nm /=; rewrite  (sa _ _ nm).
+  split => //; first by move => n; rewrite /= sb.
+  case => //; first by exists 0; rewrite T1le0n.
+                              move => a' n' b' /and3P [na _ _] /=; rewrite T1ltn0 !if_same if_simpl => h.
+                              move: (sc _ na h) => [n yn].
+                                by exists n.+1; rewrite T1le_consE (T1le_lt_trans yn (sa _ _ (ltnSn n))).
 Qed.
 
 Lemma limit3 a: T1nf a -> limit_of (phi3 a) (phi0 (T1succ a)).
 Proof.
-move => na.
-rewrite /limit_of nf_phi0 nf_succ //; split => //.
-  by move => n l nm /=; rewrite nm eqxx T1ltnn.
-split; first by move => n; rewrite /= succ_lt.
-case => //; first by  exists 0; rewrite T1le0n.
-move => a' n b /and3P [na' _ _] /=. 
-rewrite T1ltn0 !if_same if_simpl lt_succ_le_3 // T1le_eqVlt => aa.
-by exists n.+1; move: aa; rewrite T1le_consE ltnSn; case (T1ltgtP  a a').
+  move => na.
+  rewrite /limit_of nf_phi0 nf_succ //; split => //.
+    by move => n l nm /=; rewrite nm eqxx T1ltnn.
+    split; first by move => n; rewrite /= succ_lt.
+    case => //; first by  exists 0; rewrite T1le0n.
+                                 move => a' n b /and3P [na' _ _] /=. 
+                                 rewrite T1ltn0 !if_same if_simpl lt_succ_le_3 // T1le_eqVlt => aa.
+                                   by exists n.+1; move: aa; rewrite T1le_consE ltnSn; case (T1ltgtP  a a').
 Qed.
 
 (** *** Normal functions *)
@@ -1788,80 +1797,80 @@ Everything is assumed NF. *)
 
 
 Fixpoint limit_fct x :=
-if x is cons a n b then
-  if (b==zero) then 
-     if(a==zero) then phi3 a
-     else if (T1is_succ a) 
-        then if (n==0) then phi3 (T1pred a) else 
-         phi1 (cons a n.-1 zero) (phi3 (T1pred a))
-     else if(n==0) then (phi2 (limit_fct a)) 
-     else phi1 (cons a n.-1 zero)  (phi2 (limit_fct a))
-  else phi1 (cons a n zero) (limit_fct b)
-else phi3 zero.
+  if x is cons a n b then
+    if (b==zero) then 
+      if(a==zero) then phi3 a
+      else if (T1is_succ a) 
+           then if (n==0) then phi3 (T1pred a) else 
+                  phi1 (cons a n.-1 zero) (phi3 (T1pred a))
+           else if(n==0) then (phi2 (limit_fct a)) 
+                else phi1 (cons a n.-1 zero)  (phi2 (limit_fct a))
+    else phi1 (cons a n zero) (limit_fct b)
+  else phi3 zero.
 
 
 Lemma limit_prop x: T1nf x -> T1limit x -> limit_of (limit_fct x) x.
 Proof.
-elim:x => // a Ha n b Hb np /=.
-move/and3P: np => [sa sb sc].
-have nc: forall m, T1nf (cons a m zero) by move => m; rewrite /= andbT.
-have Hc: forall m, (cons a m.+1 zero) =  (cons a m zero) + phi0 a.
-   by move => m;  rewrite /phi0 /= T1ltnn addn0.
-case pa: (a==zero) => //; case bz: (b==zero); last first.
-  by move /(Hb sb) => sd; rewrite -(add_to_cons n sc); apply: limit1. 
-rewrite (eqP bz) => _.
-case isa: (T1is_succ a).
-  have aux: (limit_of (phi3 (T1pred a)) (phi0 a)).
-    by rewrite {2} (succ_pred sa isa); apply: limit3; apply: nf_pred.
-  by case n => //= m; rewrite Hc; apply:limit1. 
-move: (limit_pr1 a); rewrite pa isa /= addbF => la.
-have aux: (limit_of (phi2 (limit_fct a)) (phi0 a)) by apply: limit2; apply: Ha.
-by case n => //= m; rewrite Hc; apply:limit1. 
+  elim:x => // a Ha n b Hb np /=.
+  move/and3P: np => [sa sb sc].
+  have nc: forall m, T1nf (cons a m zero) by move => m; rewrite /= andbT.
+  have Hc: forall m, (cons a m.+1 zero) =  (cons a m zero) + phi0 a.
+    by move => m;  rewrite /phi0 /= T1ltnn addn0.
+    case pa: (a==zero) => //; case bz: (b==zero); last first.
+      by move /(Hb sb) => sd; rewrite -(add_to_cons n sc); apply: limit1. 
+      rewrite (eqP bz) => _.
+      case isa: (T1is_succ a).
+      have aux: (limit_of (phi3 (T1pred a)) (phi0 a)).
+        by rewrite {2} (succ_pred sa isa); apply: limit3; apply: nf_pred.
+          by case n => //= m; rewrite Hc; apply:limit1. 
+          move: (limit_pr1 a); rewrite pa isa /= addbF => la.
+          have aux: (limit_of (phi2 (limit_fct a)) (phi0 a)) by apply: limit2; apply: Ha.
+            by case n => //= m; rewrite Hc; apply:limit1. 
 Qed.
 
 
 Definition sup (f: T1-> T1) x z :=
   [/\ T1nf z,
-      (forall y, T1nf y -> y < x -> f y <= z) &
-      (forall z', T1nf z' -> z' < z -> exists y, 
-          [&& T1nf y, y < x & z' < f y])].
+   (forall y, T1nf y -> y < x -> f y <= z) &
+   (forall z', T1nf z' -> z' < z -> exists y, 
+                   [&& T1nf y, y < x & z' < f y])].
 
 
 Definition normal f:=
   [/\ forall x, T1nf x -> T1nf (f x),
-      (forall x y, T1nf x -> T1nf y -> x < y -> f x < f y)&
-      (forall x, T1nf x -> T1limit x -> sup f x (f x)) ].
+     (forall x y, T1nf x -> T1nf y -> x < y -> f x < f y)&
+     (forall x, T1nf x -> T1limit x -> sup f x (f x)) ].
 
 
 
 Lemma sup_unique f x z z': sup f x z -> sup f x z' -> z = z'.
 Proof. 
-move => [pa pb pc] [pa' pb' pc']; case (T1ltgtP z z') => //.
+  move => [pa pb pc] [pa' pb' pc']; case (T1ltgtP z z') => //.
   move/(pc' _ pa) => [y /and3P [qa qb qc]].
-  by move: (pb _ qa qb); rewrite T1leNgt qc.
-move/(pc _ pa') => [y /and3P [qa qb qc]].
-by move: (pb' _ qa qb); rewrite T1leNgt qc.
+    by move: (pb _ qa qb); rewrite T1leNgt qc.
+    move/(pc _ pa') => [y /and3P [qa qb qc]].
+      by move: (pb' _ qa qb); rewrite T1leNgt qc.
 Qed.
 
 
 Lemma sup_Oalpha_zero: sup id zero zero.
 Proof.
-by split; [ done | by move => y _; rewrite T1ltn0 | move => z; rewrite T1ltn0]. 
+    by split; [ done | by move => y _; rewrite T1ltn0 | move => z; rewrite T1ltn0]. 
 Qed.
 
 Lemma sup_Oalpha_succ x: T1nf x -> sup id (T1succ x) x.
 Proof.
-move => nx;split. 
-- done.
-- by move => y nf; rewrite lt_succ_le_3.
-- by move => z nz zx; exists x => //; rewrite nx zx succ_lt.
+  move => nx;split. 
+  - done.
+  - by move => y nf; rewrite lt_succ_le_3.
+  - by move => z nz zx; exists x => //; rewrite nx zx succ_lt.
 Qed.
 
 Lemma sup_Oalpha_limit x: T1nf x -> T1limit x -> sup id x x.
 Proof.
-move => nx lx ;split; [done | by move => y _ /T1ltW | ].
-move => z nz zx; move: (limit_pr lx zx) => h.
-by exists (T1succ z); rewrite h nf_succ // (succ_lt z).
+  move => nx lx ;split; [done | by move => y _ /T1ltW | ].
+  move => z nz zx; move: (limit_pr lx zx) => h.
+    by exists (T1succ z); rewrite h nf_succ // (succ_lt z).
 Qed.
 
 (**  Identity is normal, composition of normal functions is normal, 
@@ -1872,52 +1881,52 @@ Proof. split => //; apply: sup_Oalpha_limit. Qed.
 
 Lemma normal_limit f x: normal f -> T1nf x -> T1limit x -> T1limit (f x).
 Proof.
-move => [pa pb pc] nx lx.
-move: (pc _ nx lx) => [sa sb sc].
-move: (limit_pr1 (f x)); case fz: (f x == zero).
+  move => [pa pb pc] nx lx.
+  move: (pc _ nx lx) => [sa sb sc].
+  move: (limit_pr1 (f x)); case fz: (f x == zero).
   have zx:  zero < x by move: lx; case x. 
   have nz: T1nf zero by [].
-  by move: (pb zero x nz nx zx);  rewrite (eqP fz) T1ltn0.
-case: (T1limit (f x)) => //= sf.
-move:(succ_pred  (pa _ nx) sf) => eq1.
-move: (sc _ (nf_pred sa) (pred_lt sf)) => [y /and3P [ny yx]].
-by rewrite T1ltNge - (lt_succ_le_3 _ (pa _ ny)) - eq1 (pb _ _ ny nx yx).
+    by move: (pb zero x nz nx zx);  rewrite (eqP fz) T1ltn0.
+    case: (T1limit (f x)) => //= sf.
+    move:(succ_pred  (pa _ nx) sf) => eq1.
+    move: (sc _ (nf_pred sa) (pred_lt sf)) => [y /and3P [ny yx]].
+      by rewrite T1ltNge - (lt_succ_le_3 _ (pa _ ny)) - eq1 (pb _ _ ny nx yx).
 Qed.
 
 
 
 Lemma add_normal a:  T1nf a -> normal (T1add a).
 Proof.
-move => na;split.
+  move => na;split.
     by move => x nx; apply: nf_add.
-  by move => x y nx ny; rewrite T1lt_add2l. 
-move => x nx lx; split.
-    by apply: nf_add.
-  by move  => y _ /T1ltW; rewrite T1le_add2l.
-move => z nz zp; case: (T1ltP z a) => az.
-  by exists zero; move: lx;rewrite T1addn0 az T1lt0n; case x.
-move: (sub_pr1 nz az) => sa.
-move:zp; rewrite {1} sa T1lt_add2l => sb.
-exists (T1succ (z - a)).
-by rewrite (nf_succ (nf_sub nz na)) (limit_pr lx sb) {1} sa T1lt_add2l succ_lt.
+      by move => x y nx ny; rewrite T1lt_add2l. 
+      move => x nx lx; split.
+        by apply: nf_add.
+          by move  => y _ /T1ltW; rewrite T1le_add2l.
+          move => z nz zp; case: (T1ltP z a) => az.
+            by exists zero; move: lx;rewrite T1addn0 az T1lt0n; case x.
+                      move: (sub_pr1 nz az) => sa.
+                      move:zp; rewrite {1} sa T1lt_add2l => sb.
+                      exists (T1succ (z - a)).
+                        by rewrite (nf_succ (nf_sub nz na)) (limit_pr lx sb) {1} sa T1lt_add2l succ_lt.
 Qed.
 
 
 Lemma normal_compose f g: 
-   normal f -> normal g -> normal (f \o g).
+  normal f -> normal g -> normal (f \o g).
 Proof.
-move => [pa pb pc][pa' pb' pc']; split.
-- by move => x nx; apply: pa; apply: pa'.
-- by move => x y nx ny h; apply: pb; [ apply: pa' | apply: pa' | apply: pb'].
-- move => x nx lx. 
-  move: (pa' _ nx) => ny.
-  have lg: T1limit (g x) by  apply:normal_limit.
-  move:(pc _ ny lg) => [qa qb qc]; split => //.
+  move => [pa pb pc][pa' pb' pc']; split.
+  - by move => x nx; apply: pa; apply: pa'.
+  - by move => x y nx ny h; apply: pb; [ apply: pa' | apply: pa' | apply: pb'].
+  - move => x nx lx. 
+    move: (pa' _ nx) => ny.
+    have lg: T1limit (g x) by  apply:normal_limit.
+    move:(pc _ ny lg) => [qa qb qc]; split => //.
     move => y nu yx /=; apply:T1ltW;apply: pb; auto.
-  move: (pc' _ nx lx) => [qa' qb' qc'].
-  move => z' nz' h /=; move: (qc _ nz' h) => [y /and3P[ya yb yc]].
-  move: (qc' _ ya yb) => [z /and3P[za zb zc]]; exists z.
-  by rewrite za zb /=;  apply: (T1lt_trans yc); apply: pb => //; apply: pa'.
+    move: (pc' _ nx lx) => [qa' qb' qc'].
+    move => z' nz' h /=; move: (qc _ nz' h) => [y /and3P[ya yb yc]].
+    move: (qc' _ ya yb) => [z /and3P[za zb zc]]; exists z.
+      by rewrite za zb /=;  apply: (T1lt_trans yc); apply: pb => //; apply: pa'.
 Qed.
 
 
