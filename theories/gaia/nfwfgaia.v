@@ -731,14 +731,14 @@ Section AddLocalNotation.
     - by apply: Hb.
     - by case ub.
     - by move: ub sa; case ee:(n''==0); [rewrite ua (eqP ee) => ub; apply: qb | ].
-    }
+    } (* end of proof of Hc *)
     (* begin snippet haveHd:: no-out *)
     have Hd: forall b, T1nf b -> b < phi0 a -> Acc LT  b.
     (* end snippet haveHd *)
     case; [by move => _ _ ; apply: az | move => a' n' b' nx'].
-    
+
     rewrite phi0_lt1 => aa'. 
-     
+
       (* begin snippet HdProved:: no-in unfold -.h#Hc *)
       by apply: Hb; unfold LT; rewrite /restrict  (T1nf_consa nx') na aa'. 
       (* end snippet HdProved *)
