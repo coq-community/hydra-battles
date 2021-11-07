@@ -55,6 +55,9 @@ Unset Strict Implicit.
 #[local] Notation h_lt := T1.lt.
 #[local] Notation g_lt := T1lt.
 
+#[local] Notation h_LT := T1.LT.
+#[local] Notation g_LT := (restrict T1nf T1lt).
+
 #[local] Notation h_nfb := T1.nf_b.
 #[local] Notation g_nfb := T1nf.
 
@@ -428,5 +431,20 @@ Proof.
     rewrite IHa IHb;  change (phi0 (iota a)) with (iota (T1.phi0 a)).
     by rewrite andbA decide_hlt_rw.
 Qed.
+
+Lemma LT_ref : refinesRel  h_LT  g_LT.
+Proof.
+  split.   
+ - destruct 1 as [H [H0 H1]]; split. 
+    + now rewrite  <- nf_ref.
+    + now apply lt_ref. 
+    + now rewrite <- nf_ref. 
+  -  destruct 1 as [H H0 H1]; repeat  split. 
+     +  red; now rewrite -> nf_ref.
+     +  now apply lt_ref. 
+     +  red; now rewrite -> nf_ref.
+Qed. 
+
+
 
 
