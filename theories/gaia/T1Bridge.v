@@ -95,7 +95,8 @@ Proof.
     by rewrite IHalpha1 IHalpha2.
 Qed.
 
-(** refinements of constants, functions, etc. *)
+
+(** refinement of constants, functions, etc. *)
 
 (* begin snippet refineDefs *)
 
@@ -414,11 +415,14 @@ Lemma mult_refR (a b : gT1) : h_mult (pi a) (pi b) = pi (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
 
 
-Lemma multA : associative h_mult.
+Lemma h_multA : associative h_mult.
 Proof. 
   move => a b c. 
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
 Qed.
+
+
+
 (* end snippet multA *)
 
 (* begin snippet nfRef:: no-out *)
@@ -447,4 +451,19 @@ Qed.
 
 
 
+(** Well formed ordinals *)
+Require E0.
+
+Definition E0_iota (a: E0.E0):=
+  iota (E0.cnf a).
+
+Definition E0_pi (a:gT1) (H: g_nfb a): E0.E0.
+  refine (@E0.mkord (pi a) _); red.
+  rewrite -> nf_ref; now rewrite iota_pi.
+Defined.
+
+Lemma E0_iota_nf (a:E0.E0) : g_nfb (E0_iota a).
+Proof.
+  destruct a; cbn; now rewrite <- nf_ref.
+Qed.
 
