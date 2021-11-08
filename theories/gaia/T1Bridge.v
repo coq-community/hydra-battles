@@ -2,7 +2,7 @@
  *)
 
 From hydras Require Import DecPreOrder.
-From hydras Require T1.
+From hydras Require T1 E0.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
 Set Bullet Behavior "Strict Subproofs".
@@ -452,7 +452,7 @@ Qed.
 
 
 (** Well formed ordinals *)
-Require E0.
+
 
 Definition E0_iota (a: E0.E0):=
   iota (E0.cnf a).
