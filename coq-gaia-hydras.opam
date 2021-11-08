@@ -17,10 +17,10 @@ build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
   "coq" {(>= "8.13" & < "8.15~") | (= "dev")}
-  "coq-hydra-battles" {>= "0.4"}
-  "coq-mathcomp-ssreflect" {(>= "1.12.0" & < "1.13~") | (= "dev")}
+  "coq-hydra-battles" {= version}
+  "coq-mathcomp-ssreflect" {(>= "1.12.0" & < "1.14~") | (= "dev")}
   "coq-mathcomp-zify"
-  "coq-gaia" {(>= "1.12" & < "1.13~") | (= "dev")}
+  "coq-gaia" {(>= "1.12" & < "1.14~") | (= "dev")}
 ]
 
 tags: [
