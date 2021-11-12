@@ -24,8 +24,8 @@
 
 \usepackage{texments}
 %%% for movies by alectryon
-\usepackage{./assets/alectryon}
-\usepackage{./assets/pygments}
+\usepackage{alectryon}
+\usepackage{pygments}
 %%% One hypothesis per line 
 \makeatletter
 \renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
@@ -284,7 +284,7 @@ Kirby and Paris proved the following theorems, applying
 combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~\cite{KS81}.
 
 \begin{theorem}
-  In the Hydra game, Hercules eventually wins, whichever the strategy of both players :
+  In the Hydra game, Hercules eventually wins, whichever the strategy of both players:
   choice of a head to chop off, choice of the number of copies. 
  \label{kp:thm1}
 \end{theorem}
@@ -310,7 +310,7 @@ This work is also an opportunity to
 In this paper, we present recent evolutions of the library: new results, interaction with the \community project~\cite{CoqCommunity}, and documentation generated with \alectr~\cite{alectryonpaper, alectryongithub}.
 
 \section{Recent developments}
-The 2018 article~\cite{JFLA2018paper} presented a formal proof of  a variant of Theorem~\ref{kp:thm2}:
+The 2018 article~\cite{JFLA2018paper} presented a formal proof of the following theorem:
 
 \begin{theorem}
   Let $\mu$ be any ordinal strictly less than $\epsilon_0$.
@@ -548,7 +548,7 @@ In traditional software development, it is common for packages to continually de
 
 \subsection{Documentation with \alectr}
 
-The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This in contrast with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments is in \cite{alectryonpaper}).
+The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This  contrasts with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments can be found  in \cite{alectryonpaper}).
 
 Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged.
  
