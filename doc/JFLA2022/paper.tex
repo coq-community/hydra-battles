@@ -43,7 +43,7 @@
 \let\input@old\input % Save definition of \input
 \newcommand{\@inputsnippet}[1]
   {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
-    \input@old{snippets/#1}}}
+    \input@old{#1}}}
 \makeatother
 
 %---------------------------- 
@@ -365,7 +365,7 @@ and~\ref{fig:Hprime}.
   \centering
   \fbox{
     \begin{minipage}[h]{1.0\linewidth}
- \inputsnippets{Hprime/HprimeDef}     
+ \inputsnippets{Hprime_HprimeDef}     
     \end{minipage}}
  \caption{$H'$ definition with the \texttt{coq-equations}
  plug-in~\cite{sozeau:hal-01671777}}
@@ -569,7 +569,7 @@ Once the infrastructure was in place, the transition happened gradually, over a 
      \centering
      \fbox{
        \begin{minipage}[h]{1.0\linewidth}
-         \inputsnippets{Pow/evalPow17LetIn}
+         \inputsnippets{Pow_evalPow17LetIn}
        \end{minipage}}
   \caption{\label{fig:Pow-evalPow17LetIn}Automatically capturing the output of computations}
 \end{figure}
@@ -579,7 +579,7 @@ Once the infrastructure was in place, the transition happened gradually, over a 
     \centering
     \fbox{
       \begin{minipage}[h]{1.0\linewidth}
-        \inputsnippets{E0/Ex42}
+        \inputsnippets{E0_Ex42}
       \end{minipage}}
     \caption{A simple proof by computation}
     \label{fig:Ex42E0}
@@ -601,7 +601,7 @@ Once the infrastructure was in place, the transition happened gradually, over a 
   Let us prove again the equality $\omega+42+\omega^2= \omega^2$. We recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
 \emph{i.e} the third  additive principal ordinal, and that \texttt{F} is a notation for the coercion which maps natural numbers to ordinals.
 
-\inputsnippets{Schutte/Ex42a}
+\inputsnippets{Schutte_Ex42a}
 
 
 Our proof is very different from the computational proof of
@@ -609,13 +609,13 @@ Figure~\ref{fig:Ex42E0}.
 By definition of additive principal ordinals, 
 it suffices to prove the inequality $\omega+42< \phi_0(2)$.
 
-\inputsnippets{Schutte/Ex42b}
+\inputsnippets{Schutte_Ex42b}
 
 Since the set \textit{AP} of additive principals  is closed under addition
 (by Lemma \textit{AP\_plus\_closed}), it suffices to prove the inequalities $\omega<\omega^2$ and $42<\omega^2$.
 
-\inputsnippets{Schutte/Ex42d, %to remove if short paper
-  Schutte/Ex42c, Schutte/Ex42e}
+\inputsnippets{Schutte_Ex42d, %to remove if short paper
+  Schutte_Ex42c, Schutte_Ex42e}
 
 \end{minipage}
 }
