@@ -4004,7 +4004,8 @@ Section Proof_of_dist.
                           (ocons a1_1 _ _) = Gt) as -> by reflexivity.
          now apply compare_gt_iff, head_lt.
        + now apply compare_gt_iff in Hcomp_b1_c1 as ->.
-       + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as -> by reflexivity.
+       + eenough (compare (ocons b1_1 _ _) (ocons a1_1 _ _) = Gt) as ->
+             by reflexivity.
          now apply compare_gt_iff, head_lt.
        + now apply lt_inv_head, le_not_gt in Hcomp_b1_c1.
        + exfalso.
