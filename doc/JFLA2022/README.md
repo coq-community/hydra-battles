@@ -23,7 +23,7 @@
 
 - pygments.sty
 - alectryon.sty
-- easychair.tex
+- easychair.cls
 
 # Changes
 
