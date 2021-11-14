@@ -29,19 +29,23 @@
 
 ## Requested by reviewers
 
-- explain the motivation of a coq_makefile workflow
+- Clarify who exactly founded Coq-community in 1.2
 
-- Clarify the new mathematical stuff (Section 2) (cf. the third referee's remarks).
+- Explain the motivation of a coq_makefile workflow (both the general one and for generating pdf)
+
+- Clarify the new mathematical stuff (Section 2) (cf. the third referee's remarks)
+
+## Planned
+
+- Add a mention of the referees in the acknowledgments
 
 ## Nice to have
 
-- clarify contribution to include:
+- Clarify contribution to include:
   - extensions on top of Alectryon for snippet processing and inclusion in LaTeX documents
   - tooling and workflow based on Dune+Docker+Nix+GitHub to continually test and deploy code+book
 
-- link to book files more clearly (ideally not the continuously deployed version, which will change)
-
-
+- Link to book files (pdf/zip) more clearly, ideally not the continuously deployed version, which will change
 
 - Add some remarks about the "Gaia diamond": 
       -  Both libraries are quite big (even if we consider only the  `ssete9` module and its descendents)
@@ -49,9 +53,5 @@
       -  Many other lemmas belong to only one library
       -  So, it's highly desirable to give the Coq user interested in ordinals a way to search, get and apply the appropriate theorem, whichever the Coq dialect it was proven.
       - It won't be trivial, but it's a motivating goal. The fact that both libraries have a common ancestor will help a lot.
-      
-
-
-- Add a mention to the referees in the acknowledgments?
 
 - The last paragraph by the second referee is very interesting. Should we answer in the paper? 
