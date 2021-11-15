@@ -1,5 +1,5 @@
 ---
-fullname: Hydras & Co. (_work in progress_)
+fullname: Hydras & Co.
 shortname: hydra-battles
 organization: coq-community
 community: true
@@ -26,7 +26,7 @@ description: |-
     on ordinals (see https://github.com/coq-community/gaia).
 
 build: |-
-  ## Installation
+  ## Building and installation
 
   - To get the required dependencies, you can use [opam](https://opam.ocaml.org)
     or [Nix](https://nixos.org). With opam:
@@ -47,20 +47,17 @@ build: |-
 
   - The general Makefile is in the top directory:
     - `make` : compilation of the Coq scripts
-    - `make pdf` : generation of the documentation
-    - `make html` : generation of coqdoc html files
+    - `make pdf` : generation of PDF documentation as `doc/hydras.pdf`
+    - `make html` : generation of HTML documentation in `theories/html`
 
   - You may also rely on `dune` to install just one part. Run:
     - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part
     - `dune build coq-addition-chains.install` to build only the _addition chains_ part
     - `dune build coq-gaia-hydras.install` to build only the _gaia hydras_ part
 
-   ### Documentation
-
-   Documentation for the `master` branch is continuously deployed at:
-   https://coq-community.org/hydra-battles/doc/hydras.pdf
-
-   The command `make pdf` generates a local copy as `doc/hydras.pdf`.
+  - Documentation for the `master` branch is continuously deployed at:
+    - https://coq-community.org/hydra-battles/doc/hydras.pdf
+    - https://coq-community.org/hydra-battles/theories/html/toc.html
 
 publications:
 - pub_url: https://hal.archives-ouvertes.fr/hal-03404668
@@ -132,7 +129,7 @@ dependencies:
 - opam:
     name: coq-mathcomp-algebra
   description: |-
-    MathComp Algebra
+    [MathComp Algebra](https://github.com/math-comp/math-comp)
 - opam:
     name: coq-gaia
     version: '{(>= "1.12" & < "1.14~") | (= "dev")}'
@@ -157,10 +154,10 @@ categories:
 documentation: |-
   ## Contents
 
-  ###  coqdoc html files
-
-  - directory theories/html
-
+  Both the documentation and the Coq sources are _work continuously in progress_.
+  For more information on how the project is organized, maintained, and documented,
+  see [this paper](https://hal.archives-ouvertes.fr/hal-03404668), to be published
+  in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
   ### Coq sources (directory theories)
 
