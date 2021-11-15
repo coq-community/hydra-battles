@@ -2,7 +2,7 @@
 This file was generated from `meta.yml`, please do not edit manually.
 Follow the instructions on https://github.com/coq-community/templates to regenerate.
 --->
-# Hydras & Co. (_work in progress_)
+# Hydras & Co.
 
 [![Docker CI][docker-action-shield]][docker-action-link]
 [![Contributing][contributing-shield]][contributing-link]
@@ -59,7 +59,7 @@ This Coq-based project has three parts:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
-  - MathComp Algebra
+  - [MathComp Algebra](https://github.com/math-comp/math-comp)
   - [Gaia](https://github.com/coq-community/gaia) 1.12 or later
   - [Mczify](https://github.com/math-comp/mczify)
 - Coq namespaces: `hydras`, `additions`, `gaia_hydras`
@@ -69,7 +69,7 @@ This Coq-based project has three parts:
   - [Rapidly Growing Ramsey Functions](https://www.jstor.org/stable/2006985) doi:[10.2307/2006985](https://doi.org/10.2307/2006985)
   - [Proof Theory](https://link.springer.com/book/10.1007/978-3-642-66473-1) doi:[10.1007/978-3-642-66473-1](https://doi.org/10.1007/978-3-642-66473-1)
 
-## Installation
+## Building and installation
 
 - To get the required dependencies, you can use [opam](https://opam.ocaml.org)
   or [Nix](https://nixos.org). With opam:
@@ -90,27 +90,24 @@ This Coq-based project has three parts:
 
 - The general Makefile is in the top directory:
   - `make` : compilation of the Coq scripts
-  - `make pdf` : generation of the documentation
-  - `make html` : generation of coqdoc html files
+  - `make pdf` : generation of PDF documentation as `doc/hydras.pdf`
+  - `make html` : generation of HTML documentation in `theories/html`
 
 - You may also rely on `dune` to install just one part. Run:
   - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part
   - `dune build coq-addition-chains.install` to build only the _addition chains_ part
   - `dune build coq-gaia-hydras.install` to build only the _gaia hydras_ part
 
- ### Documentation
-
- Documentation for the `master` branch is continuously deployed at:
- https://coq-community.org/hydra-battles/doc/hydras.pdf
-
- The command `make pdf` generates a local copy as `doc/hydras.pdf`.
+- Documentation for the `master` branch is continuously deployed at:
+  - https://coq-community.org/hydra-battles/doc/hydras.pdf
+  - https://coq-community.org/hydra-battles/theories/html/toc.html
 
 ## Contents
 
-###  coqdoc html files
-
-- directory theories/html
-
+Both the documentation and the Coq sources are _work continuously in progress_.
+For more information on how the project is organized, maintained, and documented,
+see [this paper](https://hal.archives-ouvertes.fr/hal-03404668), to be published
+in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 ### Coq sources (directory theories)
 
