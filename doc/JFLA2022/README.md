@@ -55,3 +55,7 @@
       - It won't be trivial, but it's a motivating goal. The fact that both libraries have a common ancestor will help a lot.
 
 - The last paragraph by the second referee is very interesting. Should we answer in the paper? 
+
+- Canonical structures vs type classes discussion.
+
+- Discuss how portable our approach is.
