@@ -61,6 +61,12 @@ Unset Strict Implicit.
 #[local] Notation h_nfb := T1.nf_b.
 #[local] Notation g_nfb := T1nf.
 
+#[local] Notation h_limitb := T1.limitb.
+#[local] Notation g_limitb := T1limit.
+
+#[local] Notation h_is_succ := T1.succb.
+#[local] Notation g_is_succ := T1is_succ.
+
 (* end snippet MoreNotations *)
 
 (* begin snippet iotaPiDef *)
@@ -449,7 +455,24 @@ Proof.
      +  red; now rewrite -> nf_ref.
 Qed. 
 
+(** Limits, successors, etc *)
 
+Lemma limitb_ref (a:T1.T1) : h_limitb a = g_limitb (iota a).
+Proof.
+  induction a.
+ - reflexivity. 
+ - cbn; rewrite IHa2; destruct a1.
+   + now cbn. 
+   + destruct a2; reflexivity. 
+Qed.
+
+
+Lemma is_succ_ref (a:T1.T1) : h_is_succ a = g_is_succ (iota a).
+Proof. 
+  induction a.
+  - reflexivity. 
+  - cbn; rewrite IHa2; destruct a1; reflexivity. 
+Qed.
 
 (** Well formed ordinals *)
 
