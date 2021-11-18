@@ -29,15 +29,15 @@
 
 ## Requested by reviewers
 
-- Clarify who exactly founded Coq-community in 1.2
+- [x] Clarify who exactly founded Coq-community in 1.2
 
-- Explain the motivation of a coq_makefile workflow (both the general one and for generating pdf)
+- [x] Explain the motivation of a coq_makefile workflow (both the general one and for generating pdf)
 
-- Clarify the new mathematical stuff (Section 2) (cf. the third referee's remarks)
+- [ ] Clarify the new mathematical stuff (Section 2) (cf. the third referee's remarks)
 
 ## Planned
 
-- Add a mention of the referees in the acknowledgments
+- [x] Add a mention of the referees in the acknowledgments
 
 ## Nice to have
 
