@@ -645,7 +645,11 @@ In the context of \Hydras, we rely on the following tools.
 \paragraph{The Dune build system~\cite{dune}.}
 Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
-In practice, we still support building the whole project using \make via the \coqmakefile tool bundled with \coq, and we actually rely on this build system in our documentation generation pipeline. The main reason is that using \coqmakefile is currently more convenient than Dune for local IDE-based Coq code development, e.g., due to Dune placing generated files in a separate directory. We expect to migrate fully to Dune in the near future.
+However, Dune is still inconvenient for local IDE-based Coq code development and does not yet support building Coqdoc files.
+%
+Therefore, we still support building the whole project using \make via the \coqmakefile tool bundled with \coq, and we rely on this build system in our documentation generation pipeline.
+%
+We expect to migrate fully to Dune as soon as these limitations are lifted.
 
 \paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
