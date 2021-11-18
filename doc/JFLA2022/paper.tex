@@ -105,11 +105,14 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
 \newcommand{\coq}{Coq\xspace}
+\newcommand{\coqdoc}{Coqdoc\xspace}
+\newcommand{\coqmakefile}{\texttt{coq\_makefile}\xspace}
 \newcommand{\community}{Coq-community\xspace}
 \newcommand{\gaia}{Gaia\xspace}
 \newcommand{\alectr}{Alectryon\xspace}
 \newcommand{\equations}{Equations\xspace}
 \newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
+\newcommand{\make}{\texttt{make}\xspace}
 %\newcommand{\Hydras}{Hydra-battles\xspace}
 
 \begin{document}
@@ -157,7 +160,7 @@ Maintenance includes not only adaptation to changes in new proof assistant versi
 While books that document proof assistant libraries are valuable to beginners, the purpose of recently published books is mainly instrumental, i.e., to teach a certain topic or technique. We believe that books and libraries can instead become \emph{ends in themselves}---not just sources of exposition and learning, but also sources of inspiration and entertainment.
 
 \subsection{Vision}
-The \Hydras project, part of \community on GitHub~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of documented libraries of formal proofs. \community is a community organization that we founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
+The \Hydras project, part of \community on GitHub~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of documented libraries of formal proofs. \community is a community organization that the first and last authors founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting open source \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
 %
 This umbrella project now includes evolved versions of the former Cantor and Additions libraries~\cite{CantorContrib,AdditionsContrib} (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel}, and a bridge to the \gaia library by José Grimm~\cite{Gaia,grimm:hal-00911710}.
 %
@@ -285,7 +288,7 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
 
 \begin{theorem}
   In the Hydra game, Hercules eventually wins, whichever the strategy of both players:
-  choice of a head to chop off, choice of the number of copies. 
+  choice of a head to chop off, choice of the number of copies.
  \label{kp:thm1}
 \end{theorem}
 
@@ -414,7 +417,7 @@ the function computing the length of the battle starting with the hydra $\alpha$
 
 \subsection{Background}
 
-\community is an informal organization run by volunteer Coq users on GitHub that aims to maintain interesting Coq projects for the long term and facilitate collaboration among Coq users on documentation, tooling, etc. \community was created in 2018, inspired by the {Elm Community} organization~\cite{zimmermann:tel-02451322}.
+\community is an informal organization run by volunteer Coq users on GitHub that aims to maintain interesting open source Coq projects for the long term and facilitate collaboration among Coq users on documentation, tooling, etc. \community was created in 2018, inspired by the {Elm Community} organization~\cite{zimmermann:tel-02451322}.
 %
 Such ``Community Package Maintenance Organizations'' exist in many software ecosystems, as they avoid the common problem of an important package becoming unmaintained after its author has moved on to other projects or has disappeared~\cite{zimmermann2021grounded}.
 
@@ -518,7 +521,7 @@ Both due to its prior stages~\cite{PCiota,JFLA2018paper} and the recent integrat
   \label{fig:genealogy}
 \end{figure}
 
-Before the Ackermann sublibrary was moved from the Goedel package repository to the \Hydras repository, the Goedel package had around 7,000 specification LOC and 38,000 proof LOC. Figure~\ref{fig:genealogy} and Table~\ref{tbl:loc} thus reveal that the seemingly large Coq formalization of G\"{o}del's incompleteness theorem can be viewed as a modestly-sized proof on top of general libraries for, on the one hand, first-order logic, primitive recursive functions, and Peano Arithmetic (Ackermann), and on the other hand, prime numbers and their properties (Pocklington).
+Before the Ackermann sub-library was moved from the Goedel package repository to the \Hydras repository, the Goedel package had around 7,000 specification LOC and 38,000 proof LOC. Figure~\ref{fig:genealogy} and Table~\ref{tbl:loc} thus reveal that the seemingly large Coq formalization of G\"{o}del's incompleteness theorem can be viewed as a modestly-sized proof on top of general libraries for, on the one hand, first-order logic, primitive recursive functions, and Peano Arithmetic (Ackermann), and on the other hand, prime numbers and their properties (Pocklington).
 
 \begin{table}[ht]
 \centering
@@ -548,7 +551,7 @@ In traditional software development, it is common for packages to continually de
 
 \subsection{Documentation with \alectr}
 
-The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This  contrasts with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments can be found  in \cite{alectryonpaper}).
+The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This contrasts with the \coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of different approaches to documenting \coq developments can be found in \cite{alectryonpaper}).
 
 Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged.
  
@@ -642,7 +645,11 @@ In the context of \Hydras, we rely on the following tools.
 \paragraph{The Dune build system~\cite{dune}.}
 Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
-In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
+However, Dune is currently inconvenient for local IDE-based Coq code development and does not yet support building \coqdoc files.
+%
+Therefore, we still support building the whole project using \make via the \coqmakefile tool bundled with \coq, and we rely on this build system in our documentation generation pipeline.
+%
+We expect to migrate fully to Dune as soon as these limitations are lifted.
 
 \paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
@@ -655,9 +662,9 @@ This toolbox, based on the Nix package manager, provides an alternative way of s
 We use this Nix-based CI for several things.
 
 \begin{enumerate}
-\item To test the build of the project (as a single unit) with coq\_makefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
+\item To test the build of the project (as a single unit) with \coqmakefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
 
-\item To generate the documentation of the project (book in PDF format and coqdoc HTML pages) by relying on the output of the coq\_makefile build.
+\item To generate the documentation of the project (book in PDF format and \coqdoc HTML pages) by relying on the output of the \coqmakefile build.
 
 \item To test the bridge to the Gaia library, because the Nix-based CI supports out-of-the-box caching of build dependencies.
 %
@@ -715,7 +722,7 @@ Due to our reliance on LaTeX for writing the book, obtaining a book representati
 
 \Hydras wants to provide a connection between scientific literature (\emph{e.g.},~\cite{KP82, KS81, schutte}) and proof assistant technology. For the mathematician, it can give a concrete view of the mathematical content, not only through full proofs, but also through illuminating computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
 allowing to present and compare various formalization and proving techniques. %It may be also used as a library, through opam packages.
-It is also a medium sized library (more than 50,000 LOC), dependent on various tools and libraries of the \coq ecosystem, which may be also used to experiment with new maintenance techniques of the code and its documentation.
+It is also a medium sized library (more than 50,000 LOC), dependent on various tools and libraries of the \coq ecosystem, which may be also used to experiment with new maintenance techniques of the code and its documentation. To facilitate easy dissemination and reuse, all code and documentation is available under the permissive MIT license.
 
 
 
@@ -737,7 +744,7 @@ algorithms, and aim to eventually include new topics. We invite new collaborator
 
 \section*{Acknowledgments}
 \label{sect:acks}
-We are grateful to the original authors and current maintainers of the Coq packages we use and depend on: José Grimm (Gaia), Russell O'Connor (Goedel), Matthieu Sozeau (Equations), the Mathematical Components team, Marc Lasson and Chantal Keller (Paramcoq), and the authors and maintainers of \coq and its associated tools.
+We thank the anonymous reviewers for their comments, and we are grateful to the original authors and current maintainers of the Coq packages we use and depend on: José Grimm (Gaia), Russell O'Connor (Goedel), Matthieu Sozeau (Equations), the Mathematical Components team, Marc Lasson and Chantal Keller (Paramcoq), and the authors and maintainers of \coq and its associated tools.
 
 
 \label{sect:bib}
