@@ -106,6 +106,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
 \newcommand{\coq}{Coq\xspace}
 \newcommand{\coqdoc}{Coqdoc\xspace}
+\newcommand{\coqmakefile}{coq\_makefile\xspace}
 \newcommand{\community}{Coq-community\xspace}
 \newcommand{\gaia}{Gaia\xspace}
 \newcommand{\alectr}{Alectryon\xspace}
@@ -643,7 +644,7 @@ In the context of \Hydras, we rely on the following tools.
 \paragraph{The Dune build system~\cite{dune}.}
 Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
-In practice, we do still support building the whole project with coq\_makefile, and we actually rely on this build system in our documentation generation pipeline.
+In practice, we do still support building the whole project with \coqmakefile, and we actually rely on this build system in our documentation generation pipeline.
 
 \paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
@@ -656,9 +657,9 @@ This toolbox, based on the Nix package manager, provides an alternative way of s
 We use this Nix-based CI for several things.
 
 \begin{enumerate}
-\item To test the build of the project (as a single unit) with coq\_makefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
+\item To test the build of the project (as a single unit) with \coqmakefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
 
-\item To generate the documentation of the project (book in PDF format and \coqdoc HTML pages) by relying on the output of the coq\_makefile build.
+\item To generate the documentation of the project (book in PDF format and \coqdoc HTML pages) by relying on the output of the \coqmakefile build.
 
 \item To test the bridge to the Gaia library, because the Nix-based CI supports out-of-the-box caching of build dependencies.
 %
