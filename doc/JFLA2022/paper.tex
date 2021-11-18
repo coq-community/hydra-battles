@@ -105,6 +105,7 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 
 \newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
 \newcommand{\coq}{Coq\xspace}
+\newcommand{\coqdoc}{Coqdoc\xspace}
 \newcommand{\community}{Coq-community\xspace}
 \newcommand{\gaia}{Gaia\xspace}
 \newcommand{\alectr}{Alectryon\xspace}
@@ -285,7 +286,7 @@ combinatorial results about ordinal numbers by Jussi Ketonen and Robert Solovay~
 
 \begin{theorem}
   In the Hydra game, Hercules eventually wins, whichever the strategy of both players:
-  choice of a head to chop off, choice of the number of copies. 
+  choice of a head to chop off, choice of the number of copies.
  \label{kp:thm1}
 \end{theorem}
 
@@ -548,7 +549,7 @@ In traditional software development, it is common for packages to continually de
 
 \subsection{Documentation with \alectr}
 
-The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This  contrasts with the Coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of various approaches to the documentation of \coq developments can be found  in \cite{alectryonpaper}).
+The \Hydras book is written in LaTeX, but it makes very frequent references (about once per page, 274 snippets over 281 pages) to parts of the \coq development, showing definitions (Fig.~\ref{fig:Hprime}), computation results (Fig.~\ref{fig:Pow-evalPow17LetIn}), lemmas (Fig.~\ref{fig:Ex42E0}) and parts of  proof scripts (Fig.~\ref{fig:Ex42-schutte}). The order in which these references appear in the book is independent of the structure of our libraries, so we chose to maintain the book as a standalone document, separate from the \coq source code.  This contrasts with the \coqdoc approach, where explanatory prose is embedded within \coq source files (a detailed discussion of different approaches to documenting \coq developments can be found in \cite{alectryonpaper}).
 
 Originally, we copied snippets from \coq sources into LaTeX manually, and recorded and inserted the corresponding outputs manually as well.  This approach is common, but brittle: changes to \coq definitions or lemmas had to be reflected in the book's sources, and we found multiple instances where the book and the \coq development had diverged.
  
@@ -657,7 +658,7 @@ We use this Nix-based CI for several things.
 \begin{enumerate}
 \item To test the build of the project (as a single unit) with coq\_makefile (whereas the Docker-based CI relies on the opam packages, which use Dune to build the libraries contained in the project).
 
-\item To generate the documentation of the project (book in PDF format and coqdoc HTML pages) by relying on the output of the coq\_makefile build.
+\item To generate the documentation of the project (book in PDF format and \coqdoc HTML pages) by relying on the output of the coq\_makefile build.
 
 \item To test the bridge to the Gaia library, because the Nix-based CI supports out-of-the-box caching of build dependencies.
 %
