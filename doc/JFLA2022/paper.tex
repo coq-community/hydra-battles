@@ -645,7 +645,7 @@ In the context of \Hydras, we rely on the following tools.
 \paragraph{The Dune build system~\cite{dune}.}
 Dune was originally designed to build OCaml projects, but was recently extended to support Coq. Dune allows building packages contained in a single source tree separately, which is essential to be able to publish the different libraries contained in a single repository as separate (opam) packages to the Coq package index.
 
-However, Dune is still inconvenient for local IDE-based Coq code development and does not yet support building Coqdoc files.
+However, Dune is currently inconvenient for local IDE-based Coq code development and does not yet support building \coqdoc files.
 %
 Therefore, we still support building the whole project using \make via the \coqmakefile tool bundled with \coq, and we rely on this build system in our documentation generation pipeline.
 %
