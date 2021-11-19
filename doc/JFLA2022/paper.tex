@@ -162,7 +162,7 @@ While books that document proof assistant libraries are valuable to beginners, t
 \subsection{Vision}
 The \Hydras project, part of \community on GitHub~\cite{CoqCommunity}, aims to be an experimental platform for the collaborative development of documented libraries of formal proofs. \community is a community organization that the first and last authors founded in 2018 with two goals in mind: providing a solution for the long-term maintenance of interesting open source \coq packages, and working collaboratively on documentation projects. The \Hydras project demonstrates that these two goals are not independent: interesting \coq packages can become the basis for new documentation.
 %
-This umbrella project now includes evolved versions of the former Cantor and Additions libraries~\cite{CantorContrib,AdditionsContrib} (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel}, and a bridge to the \gaia library by José Grimm~\cite{Gaia,grimm:hal-00911710}.
+This umbrella project now includes evolved versions of the former Cantor and Additions libraries~\cite{CantorContrib,AdditionsContrib} (under the new names of Hydra-battles and Addition-chains), the Ackermann sub-library extracted from Russel O'Connor's Goedel library~\cite{OConnor05, Goedel}, and a preliminary bridge to the \gaia library by José Grimm~\cite{Gaia,grimm:hal-00911710}.
 %
 By following this approach of commenting interesting \coq packages, we provide new documentation content that contributes to the diversity of the thriving \coq ecosystem.
 
@@ -370,7 +370,7 @@ and~\ref{fig:Hprime}.
     \begin{minipage}[h]{1.0\linewidth}
  \inputsnippets{Hprime_HprimeDef}     
     \end{minipage}}
- \caption{$H'$ definition with the \texttt{coq-equations}
+ \caption{$H'$ definition with the \equations
  plug-in~\cite{sozeau:hal-01671777}}
 \label{fig:Hprime}
 \end{figure}
@@ -406,9 +406,11 @@ the function computing the length of the battle starting with the hydra $\alpha$
 \end{figure}
 
 
-
-
 \label{sect:not-pr}
+
+\paragraph{Proof engineering improvements.}
+%
+The original release of the Cantor library preceded support for type classes in \coq~\cite{MS08}. Changes over time before the move of \Hydras to \community have since then introduced type classes for some concepts in the Hydra-battles library related to ordinals. Most type classes initially used a \emph{semi bundled} approach~\cite{Mathlib}, but we have recently \emph{unbundled} some classes to enable more sharing during resolution~\cite{BS2011}. Due to the modest depth of our class hierarchy, we believe this will not lead to scalability issues. Orthogonally to type classes, we introduced additional automation for definitions via the \equations and Paramcoq plugins.
 
 %\TODO[Clément]{Could we use a font with ligatures?}
 
@@ -628,6 +630,8 @@ Since the set \textit{AP} of additive principals  is closed under addition
   \label{fig:Ex42-schutte}
 \end{figure}
 
+\paragraph{Applications in other proof assistants.}
+The Alectryon toolchain is intended to eventually support the languages of many proof assistants, and already has preliminary support for Lean~3. Our Alectryon extensions for snippet generation are in principle applicable to any language supported by Alectryon. However, snippet delimiters are language specific, and our tooling currently assumes Coq-compatible delimiters; we expect to lift this restriction in the near future. We view \Hydras as an incubator for experimental Alectryon features that, when deemed stable and useful, can be disseminated to a wider audience including users of other proof assistants.
 
 \subsection{Technologies supporting the monorepo structure}
 
@@ -653,7 +657,7 @@ Therefore, we still support building the whole project using \make via the \coqm
 %
 We expect to migrate fully to Dune as soon as these limitations are lifted.
 
-\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
+\paragraph{Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
 %
 At the current time, we rely on it, together with the mathcomp Docker images~\cite{mathcompdocker}, to test our two main libraries, Hydra-battles and Addition-chains, with multiple versions of Coq.
