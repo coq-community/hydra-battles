@@ -272,6 +272,21 @@ Matthieu Sozeau and Cyprien Mangin.
   2019.
 \newblock \url{https://hal.inria.fr/hal-01671777}.
 
+\bibitem{MS08}
+Matthieu Sozeau and Nicolas Oury.
+\newblock First-class type classes.
+\newblock In {\em International Conference on Theorem Proving in Higher Order
+  Logics}, pages 278--293, Berlin, Heidelberg, 2008. Springer.
+\newblock
+  \url{https://sozeau.gitlabpages.inria.fr/www/research/publications/First-Class_Type_Classes.pdf}.
+
+\bibitem{BS2011}
+Bas Spitters and Eelis van~der Weegen.
+\newblock Type classes for mathematics in type theory.
+\newblock {\em Mathematical Structures in Computer Science}, 21(4):795--825,
+  2011.
+\newblock \url{https://arxiv.org/abs/1102.1323}.
+
 \bibitem{dune}
 {The Dune authors}.
 \newblock Dune: A composable build system for {OCaml}, 2016--2021.
