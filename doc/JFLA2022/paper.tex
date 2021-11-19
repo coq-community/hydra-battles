@@ -628,6 +628,8 @@ Since the set \textit{AP} of additive principals  is closed under addition
   \label{fig:Ex42-schutte}
 \end{figure}
 
+\paragraph{Applications in other proof assistants.}
+The Alectryon toolchain is intended to eventually support the languages of many proof assistants, and already has preliminary support for Lean~3. Our Alectryon extensions for snippet generation are in principle applicable to any language supported by Alectryon. However, snippet delimiters are language specific, and our tooling currently assumes Coq-compatible delimiters; we expect to lift this restriction in the near future. We view \Hydras as an incubator for experimental Alectryon features that, when deemed stable and useful, can be disseminated to a wider audience including users of other proof assistants.
 
 \subsection{Technologies supporting the monorepo structure}
 
@@ -653,7 +655,7 @@ Therefore, we still support building the whole project using \make via the \coqm
 %
 We expect to migrate fully to Dune as soon as these limitations are lifted.
 
-\paragraph{The Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
+\paragraph{Docker-Coq-Action~\cite{martindorel2020dockercoq}.}
 This GitHub Action provides a very simple way of setting up Continuous Integration (CI) for a Coq project with an opam file.
 %
 At the current time, we rely on it, together with the mathcomp Docker images~\cite{mathcompdocker}, to test our two main libraries, Hydra-battles and Addition-chains, with multiple versions of Coq.
