@@ -452,15 +452,17 @@ For this purpose, and above all in consideration of the scientific interest of t
 
 Since computability is a key topic in computer science teaching and O'Connor's library is a nice illustration of dependently typed programming, we decided to devote a full chapter (chapter 9 of~\cite{HydraBook}) to the formalization of primitive recursive functions, with comments on the definitions and proofs and (counter-)examples and exercises. As part of the writing process, we made the formalization into a new sub-library of the Hydra-battles library, dubbed Ackermann.
 
-\subsection{First steps towards a bridge to \gaia}
+\subsection{Towards a bridge to \gaia}
 
 The \gaia project by Jos\'e Grimm aimed to formalize mathematics in \coq in the style of Nicolas Bourbaki. The formalization of the first book in the Elements of Mathematics series by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. The set-theoretic axioms and basic definitions in \gaia were derived from an earlier development by Carlos Simpson~\cite{Simpson2004,CatsZFCContrib}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
 
-In 2020, members of \community transferred the \gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which \gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 155,000 lines of code, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
+In 2020, members of \community transferred the \gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which \gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
 
-\gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way in \gaia and \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. Moreover, there are small differences in the implementation of ordinal arithmetic due to different evolutionary paths taken since divergence from the ancestral library.
-%
-Nevertheless, we were able to establish an initial correspondence between both implementations of ordinals through rewriting lemmas. For instance, we proved that multiplication of ordinals in Cantor normal form in \Hydras refine \gaia's corresponding multiplication operation, and were able to import \gaia's proof of associativity of the multiplication almost for free.
+\gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
+
+As an initial step in bridging \gaia and \Hydras, we were able to establish a correspondence between both implementations of ordinals through rewriting lemmas. For instance, we proved that multiplication of ordinals in Cantor normal form in \Hydras refine \gaia's corresponding multiplication operation, and then imported \gaia's proof of associativity of the multiplication almost for free.
+
+The initial draft bridge code mostly uses the SSReflect proof language and idioms from the Mathematical Components library. We made this design decision since we believe it is less challenging to reason about Hydra-battles code using SSReflect and MathComp than to reason about Gaia without SSReflect.
 
 \subsection{Package Genealogy, Dependencies, and Organization}
 
