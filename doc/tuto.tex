@@ -187,17 +187,17 @@ If \texttt{y=nil}, then \texttt{y} is clearly accessible.
 \inputsnippets{MultisetWf/case1}
 
 \subsubsection{Second case}
-Let us consider a well formed list \texttt{y} of the form \texttt{(b,p)::l'}, where \texttt{ltA b a}. By \texttt{IHa}, this list is accessible.
+Let us consider a well formed list \texttt{y} of the form \texttt{(b,p)::l''}, where \texttt{ltA b a}. By \texttt{IHa}, this list is accessible.
 
 \inputsnippets{MultisetWf/case2}
 
 \subsubsection{Third case}
-The list \texttt{y} may be of the form  \texttt{(a,n)::l'}, where \texttt{LT l' l}. By \texttt{H2},  \texttt{y} is accessible.
+The list \texttt{y} may be of the form  \texttt{(a,n)::l''}, where \texttt{LT l'' l}. By \texttt{H2},  \texttt{y} is accessible.
 
 \inputsnippets{MultisetWf/case3}
-
+  
 \subsubsection{Last case}
-The list \texttt{y} may be of the form  \texttt{(a,p)::l'}, where \texttt{p<n}. Thus, we may apply \texttt{Hn}.
+The list \texttt{y} may be of the form  \texttt{(a,p)::l''}, where \texttt{p<n}. Thus, we may apply \texttt{Hn}.
 
 
 \inputsnippets{MultisetWf/case4}
