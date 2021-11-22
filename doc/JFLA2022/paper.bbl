@@ -72,8 +72,9 @@ Pierre Cast{\'e}ran and \'Evelyne Contejean.
 
 \bibitem{HydraBook}
 Pierre Castéran.
-\newblock Hydras, {O}rdinals \& {Co.}
-\newblock \url{https://coq-community.org/hydra-battles/doc/hydras.pdf}.
+\newblock Hydras \& {Co.}
+\newblock
+  \url{https://github.com/coq-community/hydra-battles/releases/tag/v0.5}, 2021.
 
 \bibitem{CoqCommunity}
 The {C}oq community project.
@@ -149,6 +150,13 @@ Jos{\'e} Grimm, Alban Quadrat, and Carlos Simpson.
 Hydra battles.
 \newblock \url{https://github.com/coq-community/hydra-battles}.
 \newblock A {C}oq-community project.
+
+\bibitem{Keller2012}
+Chantal Keller and Marc Lasson.
+\newblock {Parametricity in an Impredicative Sort}.
+\newblock In {\em Computer Science Logic}, volume~16, pages 381--395. Schloss
+  Dagstuhl--Leibniz-Zentrum fuer Informatik, 2012.
+\newblock \url{http://drops.dagstuhl.de/opus/volltexte/2012/3685}.
 
 \bibitem{KS81}
 Jussi Ketonen and Robert Solovay.

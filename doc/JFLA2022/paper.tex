@@ -370,8 +370,7 @@ and~\ref{fig:Hprime}.
     \begin{minipage}[h]{1.0\linewidth}
  \inputsnippets{Hprime_HprimeDef}     
     \end{minipage}}
- \caption{$H'$ definition with the \equations
- plug-in~\cite{sozeau:hal-01671777}}
+ \caption{$H'$ definition using the \equations plug-in.}
 \label{fig:Hprime}
 \end{figure}
 
@@ -410,7 +409,11 @@ the function computing the length of the battle starting with the hydra $\alpha$
 
 \paragraph{Proof engineering improvements.}
 %
-The original release of the Cantor library preceded support for type classes in \coq~\cite{MS08}. Changes over time before the move of \Hydras to \community have since then introduced type classes for some concepts in the Hydra-battles library related to ordinals. Most type classes initially used a \emph{semi bundled} approach~\cite{Mathlib}, but we have recently \emph{unbundled} some classes to enable more sharing during resolution~\cite{BS2011}. Due to the modest depth of our class hierarchy, we believe this will not lead to scalability issues. Orthogonally to type classes, we introduced additional automation for definitions via the \equations and Paramcoq plugins.
+The original release of the Cantor library preceded support for type classes in \coq~\cite{MS08}.
+%
+Changes over time before the move of \Hydras to \community have since then introduced type classes for some concepts in the Hydra-battles library related to ordinals, e.g., to provide a uniform way to compare ordinals within different representation systems.
+%
+Most type classes initially used a \emph{semi bundled} approach~\cite{Mathlib}, but we have recently \emph{unbundled} classes to enable more sharing during resolution. For instance, we use the (single-field) \texttt{Decision} type class~\cite{BS2011}, that describes deciding a proposition, in parameters to other classes rather than in their fields. Due to the modest depth of our class hierarchy, we believe unbundling will not lead to scalability issues. Orthogonally to type classes, we introduced automation for definitions using the Paramcoq~\cite{Keller2012} and \equations~\cite{sozeau:hal-01671777} plug-ins, as illustrated in Figure~\ref{fig:Hprime}.
 
 %\TODO[Clément]{Could we use a font with ligatures?}
 
@@ -696,7 +699,7 @@ We believe that Coq books can broadly be divided into two categories:
 \item \emph{Executable textbooks} that are in effect large, well-commented Coq programs from which other representations of the material (HTML, PDF) are derived using tools.
 \item \emph{Traditional textbooks} generated from documentation languages such as LaTeX that are accompanied by standalone Coq formalizations and/or code snippets.
 \end{itemize}
-Table~\ref{tbl:books} shows a category breakdown for what we believe are the most prominent Coq books in English. Note that several traditional books, such as Coq'Art~\cite{BC04}, used custom tools during their writing process to keep code snippets synchronized with Coq. However, once a book is published, the accompanying code generally takes on a life of its own~\cite{CoqArtCommunity} and may come to substantially diverge from the book.
+Table~\ref{tbl:books} shows a category breakdown for what we believe are the most prominent Coq books in English. Note that several traditional books, such as Coq'Art, used custom tools during their writing process to keep code snippets synchronized with Coq. However, once a book is published, the accompanying code generally takes on a life of its own~\cite{CoqArtCommunity} and may come to substantially diverge from the book.
 
 \begin{table}
   \centering
@@ -719,14 +722,15 @@ Table~\ref{tbl:books} shows a category breakdown for what we believe are the mos
   \label{tbl:books}
 \end{table}
 
-We believe the \Hydras electronic book has found an attractive set of tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another file verbatim, since the definition uses variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional books, we validate the consistency of code fragments during every build of the electronic book. On the one hand, we follow executable books in providing ``continuous delivery'' of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
+We believe the \Hydras electronic book has found an attractive set of tradeoffs between the properties of executable books and traditional books. Specifically, in an executable book, the proof assistant language places limits on the structure. For example, Coq may not permit repeating a definition from another file verbatim, since the definition uses variables that are not present in the current context. Thanks to our \alectr based toolchain, the \Hydras book can include ``live'' code fragments at any point in the text. And in contrast to traditional books, we validate the consistency of code fragments during every build of the electronic book. On the one hand, we follow executable books in providing continuous delivery of new revisions at a high pace. But on the other hand, we also aim to make regular timestamped versions compatible with specific versions of Coq, akin to new editions of traditional books.
 
-Due to our reliance on LaTeX for writing the book, obtaining a book representation in HTML is more cumbersome than for executable books such as Software Foundations~\cite{SF} and Certified Programming with Dependent Types~\cite{chlipalacpdt2011}. Currently, we generate the Coq code documentation in HTML form separately from the book.
+The flip side of our approach is that we separate the Coq sources from the LaTeX sources that describe the code, and our use of snippet delimiters in the Coq source files may lower source readability. For books and libraries with small scope and specialized audiences, distributing knowledge representations between sources and documentation formats the way we do in \Hydras may introduce overhead without providing complementary benefits.
+%
+More specifically, we currently distribute the book as a PDF generated by LaTeX that links to corresponding HTML documentation of the Coq sources generated by \coqdoc. In contrast, executable books such as Software Foundations can provide a single uniform HTML representation of both book contents and code. We hope that future toolchain improvements can address all these issues.
 
 \section{Conclusion and perspectives}
 
-
-\Hydras wants to provide a connection between scientific literature (\emph{e.g.},~\cite{KP82, KS81, schutte}) and proof assistant technology. For the mathematician, it can give a concrete view of the mathematical content, not only through full proofs, but also through illuminating computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
+\Hydras wants to provide a connection between scientific literature (e.g.,~\cite{KP82, KS81, schutte}) and proof assistant technology. For the mathematician, it can give a concrete view of the mathematical content, not only through full proofs, but also through illuminating computations: examples, functions associated with constructive proofs, etc. For the \coq learner, it provides a consistent set of examples,
 allowing to present and compare various formalization and proving techniques. %It may be also used as a library, through opam packages.
 It is also a medium sized library (more than 50,000 LOC), dependent on various tools and libraries of the \coq ecosystem, which may be also used to experiment with new maintenance techniques of the code and its documentation. To facilitate easy dissemination and reuse, all code and documentation is available under the permissive MIT license.
 
@@ -744,7 +748,7 @@ It is also a medium sized library (more than 50,000 LOC), dependent on various t
 
 We plan to extend \Hydras in two main directions. Firstly, we plan to bridge the combinatorial results of \Hydras and the set-theoretic content of \gaia, enabling the transfer of many interesting theorems between the two packages. Secondly, we aim to write a formal proof in \coq of the original statement of Theorem~\ref{kp:thm2}, using O'Connor's formalization of Peano Arithmetic~\cite{Goedel}.
 %
-Moreover, \Hydras is not limited to the study of ordinal numbers and applications.
+Moreover, \Hydras is not limited to the study of ordinal numbers and their applications.
 We are also developing a package about efficient exponentiation
 algorithms, and aim to eventually include new topics. We invite new collaborators to join us in our efforts.
 
