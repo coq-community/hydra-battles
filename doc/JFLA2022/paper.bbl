@@ -150,6 +150,13 @@ Hydra battles.
 \newblock \url{https://github.com/coq-community/hydra-battles}.
 \newblock A {C}oq-community project.
 
+\bibitem{Keller2012}
+Chantal Keller and Marc Lasson.
+\newblock {Parametricity in an Impredicative Sort}.
+\newblock In {\em Computer Science Logic}, volume~16, pages 381--395. Schloss
+  Dagstuhl--Leibniz-Zentrum fuer Informatik, 2012.
+\newblock \url{http://drops.dagstuhl.de/opus/volltexte/2012/3685}.
+
 \bibitem{KS81}
 Jussi Ketonen and Robert Solovay.
 \newblock Rapidly growing {R}amsey functions.

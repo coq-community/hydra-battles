@@ -410,7 +410,7 @@ the function computing the length of the battle starting with the hydra $\alpha$
 
 \paragraph{Proof engineering improvements.}
 %
-The original release of the Cantor library preceded support for type classes in \coq~\cite{MS08}. Changes over time before the move of \Hydras to \community have since then introduced type classes for some concepts in the Hydra-battles library related to ordinals. Most type classes initially used a \emph{semi bundled} approach~\cite{Mathlib}, but we have recently \emph{unbundled} some classes to enable more sharing during resolution~\cite{BS2011}. Due to the modest depth of our class hierarchy, we believe this will not lead to scalability issues. Orthogonally to type classes, we introduced additional automation for definitions via the \equations and Paramcoq plugins.
+The original release of the Cantor library preceded support for type classes in \coq~\cite{MS08}. Changes over time before the move of \Hydras to \community have since then introduced type classes for some concepts in the Hydra-battles library related to ordinals. Most type classes initially used a \emph{semi bundled} approach~\cite{Mathlib}, but we have recently \emph{unbundled} classes to enable more sharing during resolution~\cite{BS2011}. For example, we use the (single-field) \texttt{Decision} type class~\cite{BS2011}, that describes deciding a proposition, in parameters to other classes rather than in fields. Due to the modest depth of our class hierarchy, we believe unbundling will not lead to scalability issues. Orthogonally to type classes, we introduced automation for definitions via the \equations~\cite{sozeau:hal-01671777} and Paramcoq~\cite{Keller2012} plug-ins.
 
 %\TODO[Clément]{Could we use a font with ligatures?}
 
