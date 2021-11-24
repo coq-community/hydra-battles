@@ -446,47 +446,47 @@ Lemma LT_ref : refinesRel  h_LT  g_LT.
 Proof.
   split.   
  - destruct 1 as [H [H0 H1]]; split. 
-    + now rewrite  <- nf_ref.
-    + now apply lt_ref. 
-    + now rewrite <- nf_ref. 
-  -  destruct 1 as [H H0 H1]; repeat  split. 
-     +  red; now rewrite -> nf_ref.
-     +  now apply lt_ref. 
-     +  red; now rewrite -> nf_ref.
+    + by rewrite  -nf_ref.
+    + by apply lt_ref. 
+    + by rewrite -nf_ref. 
+  -  case => H H0 H1; repeat  split. 
+     +  red; by rewrite nf_ref.
+     + by apply lt_ref. 
+     +  red; by rewrite nf_ref.
 Qed. 
 
 (** Limits, successors, etc *)
 
 Lemma limitb_ref (a:T1.T1) : h_limitb a = g_limitb (iota a).
 Proof.
-  induction a.
- - reflexivity. 
- - cbn; rewrite IHa2; destruct a1.
-   + now cbn. 
-   + destruct a2; reflexivity. 
+  elim: a => /= //.
+  move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta. 
+  move: IHalpha; case:alpha.
+    by [].
+    move => alpha n0 beta0 IH;  cbn.
+    move: IHbeta; case: beta;  reflexivity.
 Qed.
 
 
 Lemma is_succ_ref (a:T1.T1) : h_is_succ a = g_is_succ (iota a).
 Proof. 
-  induction a.
-  - reflexivity. 
-  - cbn; rewrite IHa2; destruct a1; reflexivity. 
+  elim: a => /= //.
+  move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta.
+  move: IHalpha; case:alpha => /= //. 
 Qed.
 
 (** Well formed ordinals *)
 
 
-Definition E0_iota (a: E0.E0):=
-  iota (E0.cnf a).
+Definition E0_iota (a: E0.E0):=  iota (E0.cnf a).
 
 Definition E0_pi (a:gT1) (H: g_nfb a): E0.E0.
   refine (@E0.mkord (pi a) _); red.
-  rewrite -> nf_ref; now rewrite iota_pi.
+  by rewrite nf_ref iota_pi. 
 Defined.
 
 Lemma E0_iota_nf (a:E0.E0) : g_nfb (E0_iota a).
 Proof.
-  destruct a; cbn; now rewrite <- nf_ref.
+  case: a => cnf Hnf; cbn; by rewrite -nf_ref. 
 Qed.
 
