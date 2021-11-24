@@ -1,0 +1,279 @@
+\documentclass[10pt]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% For Alectryon
+
+\usepackage{texments}
+%%% for movies by alectryon
+\usepackage{./movies/snippets/assets/alectryon}
+\usepackage{./movies/snippets/assets/pygments}
+
+% Prevent breaks in the middle of syntactic units
+\let\OldPY\PY
+\def\PY#1#2{\OldPY{#1}{\mbox{#2}}}
+
+
+%%% One hypothesis per line 
+\makeatletter
+\renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
+\makeatother
+
+%%% \snippets{A,B,C,…} inputs a series of snippets as one block (with \itemsep
+%%% between them).  A, B, C should be paths to files in snippets/.
+\usepackage{etoolbox}
+\makeatletter
+
+\newcommand{\pathtomovies}{./movies}
+
+\newcommand{\inputsnippets}[1]
+  {{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
+    \alectryon@copymacros\begin{io}
+      \forcsvlist{\item\@inputsnippet}{#1}
+    \end{io}}}
+\let\input@old\input % Save definition of \input
+\newcommand{\@inputsnippet}[1]
+  {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \input@old{{\pathtomovies}/snippets/#1}}}
+\makeatother
+
+% End of Alectryon stuff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Lexicographic exponentiation: An example of proof documentation with Alectryon}
+
+\author{Labri Coq working group}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \maketitle
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Introduction}
+  \begin{block}{}
+We show a small but non-trivial example of using Alectryon
+for writing a documentation (in pdf) of a proof written in Coq.    
+  \end{block}
+
+  \begin{block}{}
+    \begin{quote}
+      
+     `` If a   relation $<$ on a type $A$ is well founded,
+    then the lexicographic exponentiation of $<$  is well-founded too.''
+    \end{quote}
+
+ \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  
+  \inputsnippets{MultisetWf/tDef}
+
+Let us consider a relation over some type $A$. We define a lexicographic order on ($\texttt{t}\;A$).
+
+\begin{scriptsize}
+\inputsnippets{MultisetWf/AGiven, MultisetWf/lexpowerDef}  
+\end{scriptsize}
+
+\begin{footnotesize}
+\inputsnippets{MultisetWf/AGiven, MultisetWf/lexpowerDef}  
+\end{footnotesize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+     The current goal is universally quantified over \texttt{n}.
+Thus we may prove it by well founded induction over \texttt{nat}. 
+
+\begin{footnotesize}
+\inputsnippets{MultisetWf/LAccsc}
+  \end{footnotesize}
+\begin{footnotesize}
+  \inputsnippets{MultisetWf/LAccsd}
+\end{footnotesize}
+
+  Thanks to \texttt{Hl}, we know that \texttt{l} is accessible.
+Thus we can build an induction over \texttt{l}'s accessibility.
+
+\end{frame}
+\end{document}
+\maketitle
+
+
+Such sequences are represented in a compact way as multisets over $A$. 
+For instance, $\langle a,a,a,b,c,c,c,c,c \rangle $ where $a>b>c$ is represented by the list \texttt{(a,2)::(b,0)::(c,4)::nil}.
+
+
+Note that a factor $(a,n)$ is interpreted as $n+1$ copies of $a$.
+
+\inputsnippets{MultisetWf/tDef}
+
+Let us consider a relation over some type $A$. We define a lexicographic order on ($\texttt{t}\;A$).
+
+\inputsnippets{MultisetWf/AGiven, MultisetWf/lexpowerDef}
+
+\section{\texttt{lexpower}  is not well-founded in general}
+
+Let us build an infinite strictly decreasing (w.r.t. \texttt{lexpower lt}) sequence.
+
+
+\inputsnippets{MultisetWf/notWfa}
+
+Then, we prove that any element of the sequence \texttt{seq} is non-accessible.
+
+\inputsnippets{MultisetWf/notWfb}
+
+It's clearly a contradiction, since (\texttt{seq 0}) is an element of the sequence, and accessible (because of the hypothesis \texttt{Hwf}).
+
+\inputsnippets{MultisetWf/notWfc}
+\section{Lists in normal form}
+
+
+We say that a list $(a_1,n_1)::(a_2,n_2)::\dots::(a_p,n_p)::nil$  in  (\texttt{t A}) is in \emph{normal form} if  for any $1<=i<n$,
+we have $\texttt{ltA}\; a_{i+1}\; a_i$.
+
+\inputsnippets{MultisetWf/lexnfDef}
+
+The \emph{lexicographic exponentiation} of \texttt{ltA} is the restriction
+of \texttt{lexpower ltA} to the set of lists in normal form.
+In the next section, we prove that, if \texttt{ltA} is well-founded, then its lexicographic power is well-founded too.
+\inputsnippets{MultisetWf/lexltDef}
+
+\paragraph{Note:} The restriction of a binary relation to a set is defined in the file \texttt{Restriction.v}.
+
+\inputsnippets{Restriction/restrictionDef}
+
+
+\section{Proof of well-foundedness}
+It's time to prove that the lexicographic power of a well-founded relation is well-founded too. Let us open a work section.
+
+\inputsnippets{MultisetWf/bigProofa}
+
+We want to prove the following statement:
+
+\inputsnippets{MultisetWf/theStatement}
+
+
+
+\subsection{A first attempt}
+We may try to prove \texttt{lexwf} by (structural) induction on \texttt{l}.
+
+\inputsnippets{MultisetWf/BadProof,
+  MultisetWf/BadProofb}
+
+By the hypothesis \texttt{H0}, the list \texttt{y} may be
+equal to \texttt{(a,n)::l'}, where \texttt{LT l' l}. But the induction hypothesis \texttt{IHl} is useless for solving the current goal.
+\inputsnippets{MultisetWf/BadProofc}
+
+This is a classical issue. In a naive proof by induction, some variables are fixed too early: here, the variable \texttt{l} in \texttt{IHl}.
+
+\subsection{Introducing a new predicate}
+
+We can express the well-foundedness of \texttt{LT} in the following way :
+\begin{quote}
+  \begin{enumerate}
+    \item  ``The empty list is accessible''
+  \item   `` For any $a$ in $A$ and $n$ in \texttt{nat},  any well-formed list starting with $(a,n)$ is accessible. ''
+
+  \end{enumerate}
+ \end{quote}
+
+The first property is easy to prove by inversion.
+ 
+\inputsnippets{MultisetWf/AccNil}
+
+For the second one, we define a new predicate over $A$.
+ 
+\inputsnippets{MultisetWf/AccsDef}
+
+The new goal is to prove that any element of $A$ satisfies
+the predicate \texttt{Accs}.
+
+
+\subsection{Inversion lemmas}
+
+Before starting the proof, we  prove three useful inversion lemmas:
+
+\inputsnippets{MultisetWf/NFInv1}
+\inputsnippets{MultisetWf/NFInv2}
+\inputsnippets{MultisetWf/LTInv}
+
+\subsection{The proof by induction}
+Le us prove, by induction on $a:A$ that every element of $A$ satisfies \texttt{Accs}.
+
+\inputsnippets{MultisetWf/LAccsa}
+
+Let us note that, for any list \texttt{(a,n)::l} in normal form,
+the tail \texttt{l} is either empty or starts with some pair \texttt{(b,p)} where \texttt{ltA b a}, hence is accessible (thanks to \texttt{IHa}).
+
+\inputsnippets{MultisetWf/LAccsb}
+\inputsnippets{MultisetWf/LAccsg}
+
+The current goal is universally quantified over \texttt{n}.
+Thus we may prove it by well founded induction over \texttt{nat}. 
+
+\inputsnippets{MultisetWf/LAccsc, MultisetWf/LAccsd}
+
+Thanks to \texttt{Hl}, we know that \texttt{l} is accessible.
+Thus we can build an induction over \texttt{l}'s accessibility.
+
+
+
+
+\inputsnippets{MultisetWf/LAccse}
+
+In order to prove the accessibility of the list \texttt{((a, n) :: x0)}, we have to prove that any predecessor $y$ of this list is accessible, and consider every case (thanks to \texttt{LT\_inv}).
+
+\inputsnippets{MultisetWf/LAccsf}
+
+\subsubsection{First case}
+If \texttt{y=nil}, then \texttt{y} is clearly accessible. 
+
+
+\inputsnippets{MultisetWf/case1}
+
+\subsubsection{Second case}
+Let us consider a well formed list \texttt{y} of the form \texttt{(b,p)::l''}, where \texttt{ltA b a}. By \texttt{IHa}, this list is accessible.
+
+\inputsnippets{MultisetWf/case2}
+
+\subsubsection{Third case}
+The list \texttt{y} may be of the form  \texttt{(a,n)::l''}, where \texttt{LT l'' l}. By \texttt{H2},  \texttt{y} is accessible.
+
+\inputsnippets{MultisetWf/case3}
+  
+\subsubsection{Last case}
+The list \texttt{y} may be of the form  \texttt{(a,p)::l''}, where \texttt{p<n}. Thus, we may apply \texttt{Hn}.
+
+
+\inputsnippets{MultisetWf/case4}
+
+\subsection{At last!}
+
+
+\inputsnippets{MultisetWf/NFAcc}
+
+
+\inputsnippets{MultisetWf/lexwf}
+
+
+
+
+% \section{Examples}
+
+% \inputsnippets{MultisetWf/Examples}
+
+\section{Impossibility proofs}
+There is no function of type \texttt{t nat ->  nat} which could serve as a measure for proving \texttt{lexlt lt}'s well-foundedness.
+
+
+\inputsnippets{MultisetWf/Impossibility1}
+\inputsnippets{MultisetWf/Impossibility1a}
+\inputsnippets{MultisetWf/Impossibility1b}
+
+\emph{Same exercise with \texttt{nat*nat} (with the lexicographic square of \texttt{lt})}.
+
+\end{document}
