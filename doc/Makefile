@@ -6,6 +6,7 @@ DEP_FILES = hydras.tex          \
 	    thebib.bib          \
 	    coqmacros.tex       \
 	    epsilon0.jpg        \
+	tuto.tex
 
 .PHONY:all
 all: hydras.pdf
