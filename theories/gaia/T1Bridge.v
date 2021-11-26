@@ -464,7 +464,7 @@ Proof.
   move: IHalpha; case:alpha.
     by [].
     move => alpha n0 beta0 IH;  cbn.
-    move: IHbeta; case: beta;  reflexivity.
+    move: IHbeta; case: beta => //.
 Qed.
 
 
@@ -477,12 +477,18 @@ Qed.
 
 (** Well formed ordinals *)
 
+Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
 
-Definition E0_iota (a: E0.E0):=  iota (E0.cnf a).
 
-Definition E0_pi (a:gT1) (H: g_nfb a): E0.E0.
+Definition E0_iota (a: E0.E0): E0.
+  esplit with (iota (E0.cnf a)).
+  rewrite -nf_ref. case: a. intros. cbn. by rewrite cnf_ok.
+Defined.
+  
+
+Definition E0_pi (a: E0): E0.E0.
   refine (@E0.mkord (pi a) _); red.
-  by rewrite nf_ref iota_pi. 
+  case: a. cbn. move => cnf0 /eqP; by rewrite nf_ref iota_pi.  
 Defined.
 
 Lemma E0_iota_nf (a:E0.E0) : g_nfb (E0_iota a).
