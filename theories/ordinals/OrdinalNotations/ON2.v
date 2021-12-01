@@ -23,13 +23,10 @@ Delimit Scope ON_scope with on.
 Local Open Scope ON_scope.
 
 
-Class Comparable_alt {A:Type}(lt: relation A) : Type :=
-  { comparable_sto : StrictOrder lt;
-    comp : Compare  A ;
-    comparable_comp_spec : ∀ a b : A, CompSpec eq lt a b (compare a b) }.
+
 
 (* From TrichotomyT to compare *)
-Definition tr_comp_fun {A:Type} {lt: relation A} (tr: TrichotomyT lt)
+Definition comp_fun {A:Type} {lt: relation A} (tr: TrichotomyT lt)
            (a b:A)
   : comparison :=
    match  tr a b with 
@@ -41,31 +38,30 @@ Definition tr_comp_fun {A:Type} {lt: relation A} (tr: TrichotomyT lt)
 Instance Compare_of_Tricho {A:Type}
          {lt : relation A}
          (tr : TrichotomyT lt) :
-  Compare A := tr_comp_fun tr.
+  Compare A := comp_fun tr.
 
 Instance Comparable_of_Tricho {A:Type}
          {lt : relation A}
          (str : StrictOrder lt)
          (tr : TrichotomyT lt) :
-  Comparable_alt lt. 
+  Comparable lt (comp_fun tr). 
 Proof. 
-  exists ( Compare_of_Tricho tr).
-  assumption. 
- - intros a b; unfold compare, tr_comp_fun, Compare_of_Tricho, tr_comp_fun.  
+  split; auto. 
+ - intros a b; unfold compare, comp_fun, Compare_of_Tricho, comp_fun.  
    case_eq (tr a b); [intros [Hlt|Heq] |]; now constructor.
 Defined. 
 
-Instance Tricho_of_Comparable {A:Type}{lt: relation A}
-         (comp: Comparable_alt lt ) :  TrichotomyT lt .
+Instance Tricho_of_Comparable {A:Type}{lt: relation A}(f : Compare A)
+         (comp: Comparable lt f) :  TrichotomyT lt .
 Proof.
   destruct comp. 
   intros x y.
   unfold compare in *.
-  specialize (comparable_comp_spec0 x y). 
-  case_eq (comp0 x y).
-  left;right;   destruct comparable_comp_spec0; auto; try discriminate. 
-  left;left; destruct comparable_comp_spec0; auto; try discriminate. 
-  right; destruct comparable_comp_spec0; auto; try discriminate. 
+  specialize (comparable_comp_spec x y). 
+  case_eq (f x y).
+  left;right;   destruct comparable_comp_spec; auto; try discriminate. 
+  left;left; destruct comparable_comp_spec; auto; try discriminate. 
+  right; destruct comparable_comp_spec; auto; try discriminate. 
 Defined. 
 
 
@@ -82,21 +78,20 @@ Qed.
 
 
 
-Definition  natComp : Comparable_alt  lt:=
+Definition  natComp : Comparable  lt (comp_fun natTricho) :=
   Comparable_of_Tricho natStr natTricho.
 
 Existing Instance natComp. 
-
-
-About compare.
 
 Compute  compare  3 6.
 
 
 
 
-(*
-  Ordinal notation system on type [A] :
+
+
+
+(*   Ordinal notation system on type [A] :
 *)
 
 
@@ -107,6 +102,9 @@ Class ON {A:Type} (lt: relation A) (tr: TrichotomyT lt) :=
   ON_sto: StrictOrder lt;
   ON_wf : well_founded lt;
   }.
+
+
+
 
 (*
 
