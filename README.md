@@ -1,7 +1,3 @@
-<!---
-This file was generated from `meta.yml`, please do not edit manually.
-Follow the instructions on https://github.com/coq-community/templates to regenerate.
---->
 # Hydras & Co.
 
 [![Docker CI][docker-action-shield]][docker-action-link]
@@ -31,14 +27,21 @@ This Coq-based project has three parts:
   machinery_ (combinatorial properties of epsilon0).
 
   This part also hosts the formalization by Russell O'Connor of
-  primitive recursive functions and Peano arithmetic (see
-  https://github.com/coq-community/goedel).
+  primitive recursive functions and Peano arithmetic (see the
+  [Goedel project](https://github.com/coq-community/goedel)).
 
 - Some algorithms for computing _x^n_ with as few multiplications as
   possible (using _addition chains_).
 
-- A bridge to definitions and results in the Gaia project, in particular
-  on ordinals (see https://github.com/coq-community/gaia).
+- A bridge to definitions and results in the
+  [Gaia project](https://github.com/coq-community/gaia), in particular
+  on ordinals.
+
+Both the [documentation](https://coq-community.org/hydra-battles/doc/hydras.pdf)
+and the Coq sources are _work continuously in progress_. For more information on
+how the project is organized, maintained, and documented, see
+[this paper](https://hal.archives-ouvertes.fr/hal-03404668), to appear
+in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 ## Meta
 
@@ -78,10 +81,11 @@ This Coq-based project has three parts:
   - `opam install ./coq-gaia-hydras.opam --deps-only` to get the _gaia hydras_ dependencies.
 
   With Nix, just run `nix-shell` to get all the dependencies
-  (including for building the documentation).  If you only want the
-  dependencies to build one or the other sub-package, you may run
-  `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
-  addition-chains` or `nix-shell --argstr job gaia-hydras`.
+  (including for building the documentation). If you only want the
+  dependencies to build a sub-package, you can run one of:
+  - `nix-shell --argstr job hydra-battles`
+  - `nix-shell --argstr job addition-chains`
+  - `nix-shell --argstr job gaia-hydras`
 
 - Building the PDF documentation also requires
   [Alectryon](https://github.com/cpitclaudel/alectryon) 1.4
@@ -103,11 +107,6 @@ This Coq-based project has three parts:
   - https://coq-community.org/hydra-battles/theories/html/toc.html
 
 ## Contents
-
-Both the documentation and the Coq sources are _work continuously in progress_.
-For more information on how the project is organized, maintained, and documented,
-see [this paper](https://hal.archives-ouvertes.fr/hal-03404668), to be published
-in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 ### Coq sources (directory theories)
 
