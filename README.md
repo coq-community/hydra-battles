@@ -81,10 +81,11 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - `opam install ./coq-gaia-hydras.opam --deps-only` to get the _gaia hydras_ dependencies.
 
   With Nix, just run `nix-shell` to get all the dependencies
-  (including for building the documentation).  If you only want the
-  dependencies to build one or the other sub-package, you may run
-  `nix-shell --argstr job hydra-battles` or `nix-shell --argstr job
-  addition-chains` or `nix-shell --argstr job gaia-hydras`.
+  (including for building the documentation). If you only want the
+  dependencies to build a sub-package, you can run one of:
+  - `nix-shell --argstr job hydra-battles`
+  - `nix-shell --argstr job addition-chains`
+  - `nix-shell --argstr job gaia-hydras`
 
 - Building the PDF documentation also requires
   [Alectryon](https://github.com/cpitclaudel/alectryon) 1.4
