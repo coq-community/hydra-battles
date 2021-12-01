@@ -13,10 +13,6 @@ Import Relation_Definitions.
 From hydras Require Export MoreOrders.
 Require Export Comparable.
 
-
-
-
-  
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.
@@ -245,7 +241,7 @@ Definition SubON_same_cst `{OA : @ON A ltA  compareA}
        (a : A)
        (b : B)
   := iota a = b.
-
+  
 
 
 Definition SubON_same_fun `{OA : @ON A ltA  compareA}
