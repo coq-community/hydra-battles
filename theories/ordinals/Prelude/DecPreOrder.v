@@ -9,35 +9,8 @@ From Coq Require Export Relations RelationClasses Setoid.
 Class Total {A:Type}(R: relation A) :=
   totalness : forall a b:A, R a b \/ R b a.
 
-(** Decision typeclasses following Spitters and van der Weegen *)
+Require Export STDPP_compat.
 
-Class Decision (P : Prop) := decide : {P} + {~P}.
-
-#[export] Hint Mode Decision ! : typeclass_instances.
-Arguments decide _ {_} : simpl never, assert.
-
-Class RelDecision {A B} (R : A -> B -> Prop) :=
-  decide_rel x y :> Decision (R x y).
-
-#[export] Hint Mode RelDecision ! ! ! : typeclass_instances.
-Arguments decide_rel {_ _} _ {_} _ _ : simpl never, assert.
-
-Notation EqDecision A := (RelDecision (@eq A)).
-
-Definition bool_decide (P : Prop) {dec : Decision P} : bool :=
-  if dec then true else false.
-
-Lemma bool_decide_eq_true (P : Prop) `{Decision P} : bool_decide P = true <-> P.
-Proof.
-  unfold bool_decide.
-  destruct H; intuition discriminate.
-Qed.
-
-Lemma bool_decide_eq_false (P : Prop) `{Decision P} : bool_decide P = false <-> ~P.
-Proof.
-  unfold bool_decide.
-  destruct H; intuition discriminate.
-Qed.
 
 #[ global ] Instance comparison_eq_dec : EqDecision comparison.
 Proof. intros c1 c2; unfold Decision; decide equality. Defined.

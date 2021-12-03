@@ -502,9 +502,9 @@ Section Proof_of_oplus_assoc.
     all: apply le_lt_trans with (max alpha (max beta gamma));
       [| apply lt_succ] ...
     - apply le_max_a.
-    - rewrite (max_comm alpha (max beta gamma)), max_assoc.
+    - rewrite (max_comm alpha (max beta gamma)),  <- max_assoc.
       apply le_max_a.
-    - rewrite  <- max_assoc.
+    - rewrite   max_assoc.
       rewrite (max_comm (max alpha beta) gamma).
       apply le_max_a.
   Qed.
