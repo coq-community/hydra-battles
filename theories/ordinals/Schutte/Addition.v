@@ -3,7 +3,7 @@ From Coq Require Import Arith  Logic.Epsilon  Ensembles.
 From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable  MoreEpsilonIota.
 Set Implicit Arguments.
-
+Require Export STDPP_compat. 
 
 (** * Definitions *)
 
@@ -411,17 +411,11 @@ Section proof_of_associativity.
 End proof_of_associativity.
 
 (* begin snippet plusAssoc *)
-
-Theorem plus_assoc (alpha beta gamma : Ord) :
-  alpha + (beta + gamma) = (alpha + beta) + gamma. (* .no-out *)
+#[global] Instance plus_assoc: Assoc eq plus.
 (* end snippet plusAssoc *)
-
 Proof.
-  apply plus_assoc'; auto.
+  intros ? ? ?; apply plus_assoc'; auto.
 Qed.
-
-
-
 
 Lemma one_plus_infinite (alpha : Ord) :
   omega <= alpha ->  1 + alpha = alpha. 
