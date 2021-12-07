@@ -952,36 +952,37 @@ Record  Q (alpha:E0) : Prop :=
         QE : forall beta n, Canon_plus n alpha beta -> 
                             f_ beta n <= f_ alpha n}.
 
- Section The_induction.
-    
-    Lemma QA0 : strict_mono (f_ Zero).
-    Proof. 
-      intros n p H; repeat rewrite f_zero_eqn; auto with arith. 
-    Qed. 
+Section The_induction.
+  
+  Lemma QA0 : strict_mono (f_ Zero).
+  Proof. 
+    intros n p H; repeat rewrite f_zero_eqn; auto with arith. 
+  Qed. 
 
 
 
-    Lemma QD0 : dominates_from 2 (f_ (Succ Zero)) (f_ Zero).
-    Proof. 
-      intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
-      apply Lt.lt_le_trans with (iterate S p p).
-      - replace (iterate S p p) with (p + p).
-        + lia.
-        + clear Hp; generalize p at 2 4; induction p. 
-          * cbn; reflexivity.
-          * intro p0; cbn; now rewrite IHp. 
-      -  apply Nat.eq_le_incl, iterate_ext. intros ?; now rewrite f_zero_eqn.
-    Qed.
+  Lemma QD0 : dominates_from 2 (f_ (Succ Zero)) (f_ Zero).
+  Proof. 
+    intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
+    apply Lt.lt_le_trans with (iterate S p p).
+    - replace (iterate S p p) with (p + p).
+      + lia.
+      + clear Hp; generalize p at 2 4; induction p. 
+        * cbn; reflexivity.
+        * intro p0; cbn; now rewrite IHp. 
+    -  apply Nat.eq_le_incl, iterate_ext. intros ?; now rewrite f_zero_eqn.
+  Qed.
 
-    
-(** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
+  
+  (** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
 
 
-  End ind_step.
+  
 End The_induction.
 
- End Properties_of_f_alpha.
+End Properties_of_f_alpha.
 
+(* begin  snippet DemoAssumptions *)
 Print Assumptions F_zero_eqn.
 
 (* end snippet DemoAssumptions *)
