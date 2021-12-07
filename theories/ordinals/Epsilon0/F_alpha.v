@@ -924,6 +924,56 @@ Proof with auto with E0.
   -  now rewrite Pred_of_Succ.
 Qed.
 
+
+Lemma id_le_f_alpha (alpha: E0) : forall i, i <= f_ alpha i. 
+Proof.
+ pattern alpha; apply (well_founded_induction Lt_wf);
+   clear alpha; intros alpha IHalpha.
+ destruct (Zero_Limit_Succ_dec alpha) as [[HZero | Hlim] | Hsucc].
+   - subst; intros i ; rewrite !f_zero_eqn; auto with arith. 
+   - intros i.  rewrite !(f_lim_eqn alpha).
+     + apply IHalpha,  Canon_lt; now apply Limit_not_Zero.
+     + apply Hlim.
+   - destruct Hsucc as [beta Hbeta]; subst; intro i; rewrite f_succ_eqn. 
+     generalize i at 1 3; induction i. 
+     + intros; cbn; auto with arith.  
+     + intros; cbn; transitivity (iterate (f_ beta) i i0); auto. 
+     apply (IHalpha beta (Lt_Succ beta)). 
+Qed.
+
+
+Section Properties_of_f_alpha.
+
+Record  Q (alpha:E0) : Prop :=
+    mkQ {
+        QA : strict_mono (f_ alpha);
+        QD : dominates_from 2 (f_ (Succ alpha)) (f_ alpha);
+        QE : forall beta n, Canon_plus n alpha beta -> 
+                            f_ beta n <= f_ alpha n}.
+
+ Section The_induction.
+    
+    Lemma QA0 : strict_mono (f_ Zero).
+    Proof. 
+      intros n p H; repeat rewrite f_zero_eqn; auto with arith. 
+    Qed. 
+
+
+
+    Lemma QD0 : dominates_from 2 (f_ (Succ Zero)) (f_ Zero).
+    Proof. 
+      intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
+      apply Lt.lt_le_trans with (iterate S p p).
+      - replace (iterate S p p) with (p + p).
+        + lia.
+        + clear Hp; generalize p at 2 4; induction p. 
+          * cbn; reflexivity.
+          * intro p0; cbn; now rewrite IHp. 
+      -  apply Nat.eq_le_incl, iterate_ext. intros ?; now rewrite f_zero_eqn.
+    Qed.
+
+ End The_induction.
+    
 (** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
 
 
@@ -942,7 +992,8 @@ Abort.
 
 (* begin snippet DemoAssumptions *)
 
-About F_zero_eqn.
+ End Properties_of_f_alpha.
+
 
 Print Assumptions F_zero_eqn.
 
