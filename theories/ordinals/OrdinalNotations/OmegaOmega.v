@@ -474,8 +474,9 @@ Module LO.
   Qed.
 
 
-  Lemma plus_assoc (a b c: t) : a + (b + c) = a + b + c.
-  Proof. apply eq_ref; rewrite !plus_ref; apply T1.plus_assoc. Qed.
+  #[global] Instance plus_assoc: Assoc eq plus.
+  Proof. red; intros *; apply eq_ref; now rewrite !plus_ref, T1.plus_assoc.
+  Qed.
 
   Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
                                        a * (b + c) = a * b + a * c.

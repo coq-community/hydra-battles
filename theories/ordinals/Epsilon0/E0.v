@@ -675,15 +675,12 @@ Defined.
 
 Infix "O+" := Oplus (at level 50, left associativity): E0_scope.
 
-Lemma Oplus_assoc (alpha beta gamma : E0) :
-   (alpha O+ (beta O+ gamma) =  alpha O+ beta O+ gamma)%e0.
-Proof.
-  destruct alpha, beta, gamma. unfold Oplus.  cbn.
-  apply E0_eq_intro. cbn. now   rewrite oplus_assoc.
+Instance Oplus_assoc : Assoc eq Oplus.
+Proof. 
+ red;  destruct x,y, z. unfold Oplus.  cbn.
+  apply E0_eq_intro; cbn; now rewrite oplus_assoc.
 Qed.
-
-
-
+ 
 Lemma oPlus_rw (alpha beta : E0) :
   cnf (alpha O+ beta)%e0 = (cnf alpha o+ cnf beta)%t1.
 Proof.
@@ -815,10 +812,9 @@ Proof.
 Qed.
 
 
-Lemma plus_assoc (alpha beta gamma: E0): 
-  alpha + (beta + gamma) = alpha + beta + gamma.
+Instance plus_assoc : Assoc eq plus . 
 Proof.
-  destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
+  intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
   apply  T1.plus_assoc.
 Qed.
 

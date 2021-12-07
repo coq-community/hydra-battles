@@ -1,5 +1,5 @@
 From Coq Require Import Relations RelationClasses Setoid.
-Require Export MoreOrders.
+Require Export MoreOrders STDPP_compat.
 
 (* begin snippet ComparableDef *)
 Class Compare (A:Type) := compare : A -> A -> comparison.
@@ -296,10 +296,9 @@ Section Comparable.
     rewrite max_comm; apply le_max_a.
   Qed.
 
-  Lemma max_assoc (a b c: A):
-    max (max a b) c = max a (max b c).
+  #[global] Instance max_assoc : Assoc eq max. 
   Proof.
-    unfold max.
+    intros a b c; unfold max. 
     pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
     pose proof (comparable_comp_spec b c) as [Hbc | Hbc | Hbc];
     pose proof (comparable_comp_spec a c) as [Hac | Hac | Hac];
@@ -393,11 +392,9 @@ Section Comparable.
     apply le_min_a.
   Qed.
 
-  Lemma min_assoc (a b c: A):
-    min (min a b) c = min a (min b c).
+  #[global] Instance  min_assoc: Assoc eq min.
   Proof.
-    intros *.
-    unfold min.
+    red ; intros a b c;  unfold min.
     pose proof (comparable_comp_spec a b) as [Hab | Hab | Hab];
     pose proof (comparable_comp_spec b c) as [Hbc | Hbc | Hbc];
     pose proof (comparable_comp_spec a c) as [Hac | Hac | Hac];

@@ -430,9 +430,10 @@ Proof. reflexivity. Qed.
 
 (* end snippet multFinExamples *)
 
-Lemma plus_assoc alpha beta gamma :
-  alpha + (beta + gamma) = alpha + beta + gamma.
-  destruct alpha, beta, gamma.
+
+#[global] Instance plus_assoc: Assoc eq  plus. 
+Proof.
+  intros alpha beta gamma; destruct alpha, beta, gamma.
   destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; abstract lia.
 Qed.
 

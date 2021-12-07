@@ -14,6 +14,7 @@ From Coq Require PArith.
 From hydras  Require Import  More_Arith  Restriction   DecPreOrder.
 From hydras Require Import OrdNotations.
 From hydras Require Export Prelude.Comparable.
+From hydras Require Export STDPP_compat.
 
 Set Implicit Arguments.
 
@@ -3836,31 +3837,29 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
   end.
 Proof. reflexivity. Qed.
 
-
-Lemma plus_assoc : forall a b c: T1,  a + (b + c) = a + b + c.
+Instance plus_assoc : Assoc eq plus. 
 Proof.
-  induction a, b, c; only 1-6: easy.
+  red.  induction x,y,z; only 1-6: easy.
   - now rewrite !plus_zero_r.
   - rewrite !plus_cons_cons_eqn.
-    destruct (compare b1 c1) eqn:Hbc, (compare a1 b1) eqn:Hab;
+    destruct (compare y1 z1) eqn:Hyz, (compare x1 y1) eqn:Hxy;
     rewrite !plus_cons_cons_eqn.
-    2,8: now rewrite Hbc, Hab.
-    all: try compare trans Hab Hbc as ->.
-    + rewrite Hab.
-      f_equal; lia.
-    + now rewrite Hab, <- IHa2, plus_cons_cons_eqn, Hbc.
+    2,8: now rewrite Hyz, Hxy.
+    all: try compare trans Hxy Hyz as ->.
+    + rewrite Hxy; f_equal; lia.
+    + now rewrite Hxy, <- IHx2, plus_cons_cons_eqn, Hyz.
     + reflexivity.
-    + now rewrite Hbc.
-    + destruct (compare a1 c1) eqn:?.
+    + now rewrite Hyz.
+    + destruct (compare x1 z1) eqn:?.
       1-2: reflexivity.
       f_equal.
-      rewrite <- IHa2. 
+      rewrite <- IHx2. 
       simpl.
-      now rewrite Hbc.
-    + now rewrite Hab.
-    + rewrite Hab, <- IHa2.
+      now rewrite Hyz.
+    + now rewrite Hxy.
+    + rewrite Hxy, <- IHx2.
       simpl.
-      now rewrite Hbc.
+      now rewrite Hyz.
 Qed.
 
 

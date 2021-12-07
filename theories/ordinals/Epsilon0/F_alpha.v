@@ -27,7 +27,7 @@ The following definition is not accepted by the [equations] plug-in.
 
  *)
 
-#[ global ] Instance Olt : WellFounded Lt := E0.Lt_wf.
+#[ global] Instance Olt : WellFounded Lt := E0.Lt_wf.
 
 (* begin snippet FailDemo *)
 
@@ -809,10 +809,11 @@ Proof.
   Qed.
 
 
-(** * A variant (Lob-Wainer hierarchy) *)
+(** * A variant (Lob-Wainer hierarchy) 
+***************************************)
 
 
-Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
+Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
   f_star (alpha, 0) i := i;
   f_star (alpha, 1) i
     with E0_eq_dec alpha Zero :=
@@ -913,7 +914,7 @@ Proof.
   - now  destruct (Limit_not_Zero  H).
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + cbn; auto.
-    + red in H. rewrite e in H; discriminate.
+    + red in H; rewrite e in H; discriminate.
 Qed.
 
 
@@ -972,28 +973,14 @@ Record  Q (alpha:E0) : Prop :=
       -  apply Nat.eq_le_incl, iterate_ext. intros ?; now rewrite f_zero_eqn.
     Qed.
 
- End The_induction.
     
 (** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
 
 
-(*
-Goal forall alpha i, F_ alpha i = Nat.pred (f_ alpha (S i)).
-intro alpha.
-pattern alpha; apply well_founded_induction with Lt.
-- apply Lt_wf.
-- clear alpha; intros alpha IHalpha.
-  destruct (Zero_Limit_Succ_dec alpha) as [[HZero | HSucc] | Hlim].
-  + subst. intro i; now rewrite f_zero_eqn, F_zero_eqn.
-  + intro i. rewrite f_lim_eqn, F_lim_eqn.
-    rewrite IHalpha.
-Abort.
- *)
-
-(* begin snippet DemoAssumptions *)
+  End ind_step.
+End The_induction.
 
  End Properties_of_f_alpha.
-
 
 Print Assumptions F_zero_eqn.
 
