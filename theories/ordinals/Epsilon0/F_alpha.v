@@ -27,7 +27,7 @@ The following definition is not accepted by the [equations] plug-in.
 
  *)
 
-#[ global ] Instance Olt : WellFounded Lt := E0.Lt_wf.
+#[ global] Instance Olt : WellFounded Lt := E0.Lt_wf.
 
 (* begin snippet FailDemo *)
 
@@ -809,10 +809,11 @@ Proof.
   Qed.
 
 
-(** * A variant (Lob-Wainer hierarchy) *)
+(** * A variant (Lob-Wainer hierarchy) 
+***************************************)
 
 
-Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
+Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
   f_star (alpha, 0) i := i;
   f_star (alpha, 1) i
     with E0_eq_dec alpha Zero :=
@@ -913,7 +914,7 @@ Proof.
   - now  destruct (Limit_not_Zero  H).
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + cbn; auto.
-    + red in H. rewrite e in H; discriminate.
+    + red in H; rewrite e in H; discriminate.
 Qed.
 
 
@@ -924,9 +925,131 @@ Proof with auto with E0.
   -  now rewrite Pred_of_Succ.
 Qed.
 
+Lemma id_le_f_alpha (alpha: E0) : forall i, i <= f_ alpha i. 
+Proof.
+ pattern alpha; apply (well_founded_induction Lt_wf);
+   clear alpha; intros alpha IHalpha.
+ destruct (Zero_Limit_Succ_dec alpha) as [[HZero | Hlim] | Hsucc].
+   - subst; intros i ; rewrite !f_zero_eqn; auto with arith. 
+   - intros i.  rewrite !(f_lim_eqn alpha).
+     + apply IHalpha,  Canon_lt; now apply Limit_not_Zero.
+     + apply Hlim.
+   - destruct Hsucc as [beta Hbeta]; subst; intro i; rewrite f_succ_eqn. 
+     generalize i at 1 3; induction i. 
+     + intros; cbn; auto with arith.  
+     + intros; cbn; transitivity (iterate (f_ beta) i i0); auto. 
+     apply (IHalpha beta (Lt_Succ beta)). 
+ Qed. 
+
+Section Properties_of_f_alpha.
+
+Record  Q (alpha:E0) : Prop :=
+    mkQ {
+        QA : strict_mono (f_ alpha);
+        QD : dominates_from 2 (f_ (Succ alpha)) (f_ alpha);
+        QE : forall beta n, Canon_plus n alpha beta -> 
+                            f_ beta n <= f_ alpha n}.
+
+ Section The_induction.
+    
+    Lemma QA0 : strict_mono (f_ Zero).
+    Proof. 
+      intros n p H; repeat rewrite f_zero_eqn; auto with arith. 
+    Qed. 
+
+
+
+    Lemma QD0 : dominates_from 2 (f_ (Succ Zero)) (f_ Zero).
+    Proof. 
+      intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
+      apply Lt.lt_le_trans with (iterate S p p).
+      - replace (iterate S p p) with (p + p).
+        + lia.
+        + clear Hp; generalize p at 2 4; induction p. 
+          * cbn; reflexivity.
+          * intro p0; cbn; now rewrite IHp. 
+      -  apply Nat.eq_le_incl, iterate_ext. intros ?; now rewrite f_zero_eqn.
+    Qed.
+
+    Section ind_step.
+      Variable alpha: E0.
+      Hypothesis Halpha : forall beta, beta o< alpha -> Q beta.
+
+     Lemma QB : strict_mono (f_ alpha).
+     Proof.      
+
+  destruct (Zero_Limit_Succ_dec alpha) as [[HZero | Hlim] | Hsucc].
+    + subst. intros i j Hij. rewrite !f_zero_eqn. auto with arith. 
+    + intros i j Hij. rewrite !(f_lim_eqn alpha).
+      apply Lt.le_lt_trans with (f_ (Canon alpha j) i).
+     apply Halpha.
+ admit. (* easy *)
+ auto.
+admit. 
+auto.
+auto. 
+     Abort.
+(*      +  
+  intros i j IHi.
+  destruct Hsucc as [beta Hbeta]; subst. 
+   rewrite !f_succ_eqn.
+   Search iterate. 
+Admitted.
+     Abort.
+*)
+(* TODO : inductive step *)
+
+  End ind_step.
+End The_induction.
+
+ End Properties_of_f_alpha.
+
+     (*  TODO !!!!
+     
+Lemma f_alpha_mono alpha:  strict_mono (f_ alpha).
+
+
+
+
+Goal forall alpha i, f_ alpha i <= F_ alpha i.
+intro alpha.
+pattern alpha; apply well_founded_induction with Lt.
+ - apply Lt_wf.
+ - clear alpha; intros alpha IHalpha.
+  destruct (Zero_Limit_Succ_dec alpha) as [[HZero | Hlim] | Hsucc].
+ + subst. intro i; now rewrite f_zero_eqn, F_zero_eqn.
+ + intro i. rewrite f_lim_eqn, F_lim_eqn.
+      apply IHalpha.
+      Search (Canon ?a _ o< ?a).
+      apply Canon_lt. 
+      Search Limitb Zero.
+    now apply Limit_not_Zero. 
+    auto.
+    auto.
+ + destruct Hsucc as [i Heq]; subst.
+    intros; rewrite f_succ_eqn, F_succ_eqn. 
+
+transitivity (iterate (F_ i) i0 i0).
+   Search iterate.
+   apply iterate_mono_1 with 0.
+   Search  f_.    
+   admit.
+   admit. 
+intros;    apply IHalpha. 
+  Search (?i o< Succ ?i).
+ apply Lt_Succ. 
+   auto with arith. 
+   Search iterate le. 
+  apply iterate_le. 
+  Search strict_mono F_.
+  apply F_alpha_mono. 
+ auto with arith. 
+Admitted. 
+
+
 (** TODO : Study the equality F_ alpha i = Nat.pred (f_ alpha (S i)) *)
 
-
+*)
 (*
 Goal forall alpha i, F_ alpha i = Nat.pred (f_ alpha (S i)).
 intro alpha.
