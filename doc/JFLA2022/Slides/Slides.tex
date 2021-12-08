@@ -33,6 +33,10 @@
 \definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
 
+\usepackage{tikz}
+\usepackage{tikzsymbols}
+\usepackage{pifont}
+\usetikzlibrary{arrows}
 
 \usepackage{ifpdf}
 \ifpdf
@@ -212,7 +216,132 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \TODO{}{maintenance, CI, etc.   (several slides).}
+
+  \begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[very thick, scale=0.3]
+  \node (h1) at (4,0){$\bullet$};
+  \node[blue] (h2) at (4,2){$\bullet$};
+  \node[blue] (h3) at (2,4){$\bullet$};
+  \node[blue] (h4) at (0,6){$\bullet$};
+  \node[red!90!black] (h7) at (6,2){$\bullet$};
+  \node[blue] (h5) at (4,6){$\bullet$};
+  \node[blue] (h6) at (6,4){$\bullet$};
+  \draw (h1) -- (h2) ;
+  \draw (h2) -- (h3) ;
+  \draw (h1) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (h7);
+  \draw (h3) -- (h4) ;
+  \draw (h3) -- (h5) ;
+  \draw (h2) -- (h6);
+
+  \node (h11) at (14,0){$\bullet$};
+  \node[blue] (h12) at (14,2){$\bullet$};
+  \node[blue] (h13) at (12,4){$\bullet$};
+  \node[blue] (h14) at (10,6){$\bullet$};
+  \node[blue] (h15) at (14,6){$\bullet$};
+  \node[red!90!black] (h16) at (16,4){$\bullet$};
+  \draw (h11) -- (h12) ;
+  \draw (h12) -- (h13) ;
+  \draw (h12) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (h16);
+  \draw (h13) -- (h14) ;
+  \draw (h13) -- (h15) ;
+
+  
+ 
+\node (hn1) at (24,0){$\bullet$};
+\node[blue] (hn2) at (22,2) {$\bullet$};
+\node[blue] (hn3) at (22,4) {$\bullet$};
+\node[blue] (hn4) at (20,6){$\bullet$};
+  \node[blue] (hn5) at (22,6){$\bullet$};
+  \draw (hn1) -- (hn2) ;
+  \draw (hn2) -- (hn3) ;
+  \draw (hn3) -- (hn4) ;
+  \draw (hn3) -- (hn5) ;
+\node [blue](hn2b) at (24,2) {$\bullet$};
+\node[blue] (hn3b) at (24,4) {$\bullet$};
+\node [blue](hn4b) at (23.4,6){$\bullet$};
+  \node [blue](hn5b) at (24.6,6){$\bullet$};
+  \draw (hn1) -- (hn2b) ;
+  \draw (hn2b) -- (hn3b) ;
+  \draw (hn3b) -- (hn4b) ;
+  \draw (hn3b) -- (hn5b) ;
+  \node [blue](hn2c) at (26,2) {$\bullet$};
+\node [blue](hn3c) at (26,4) {$\bullet$};
+\node [blue](hn4c) at (26,6){$\bullet$};
+  \node [red!90!black] (hn5c) at (28,6){$\bullet$};
+  \draw (hn1) -- (hn2c) ;
+  \draw (hn2c) -- (hn3c) ;
+  \draw (hn3c) -- (hn4c) ;
+  \draw (hn3c) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (hn5c) ;
+\end{tikzpicture}
+
+\caption{Three successive states of a hydra in a battle,
+at time $t=0,1,2$}
+  \label{fig:round}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  
+ 
+\begin{tikzpicture}[very thick, scale=0.3]
+\node (hn1) at (4,0){$\bullet$};
+\node[blue] (hn2) at (2,2) {$\bullet$};
+\node[blue] (hn3) at (2,4) {$\bullet$};
+\node[blue] (hn4) at (0,6){$\bullet$};
+  \node[blue] (hn5) at (2,6){$\bullet$};
+  \draw (hn1) -- (hn2) ;
+  \draw (hn2) -- (hn3) ;
+  \draw (hn3) -- (hn4) ;
+  \draw (hn3) -- (hn5) ;
+\node [blue](hn2b) at (4,2) {$\bullet$};
+\node [blue](hn3b) at (4,4) {$\bullet$};
+\node [blue](hn4b) at (3.4,6){$\bullet$};
+  \node [blue] (hn5b) at (4.6,6){$\bullet$};
+  \draw (hn1) -- (hn2b) ;
+  \draw (hn2b) -- (hn3b) ;
+  \draw (hn3b) -- (hn4b) ;
+  \draw (hn3b) -- (hn5b) ;
+  \node [blue](hn2c) at (6,2) {$\bullet$};
+\node [blue](hn3c) at (6,4) {$\bullet$};
+\node [blue](hn4c) at (6,6){$\bullet$};
+ % \node (hn5c) at (8,6){$\bullet$};
+  \draw (hn1) -- (hn2c) ;
+  \draw (hn2c) -- (hn3c) ;
+  \draw (hn3c) -- (hn4c) ;
+  % \draw (hn3c) -- (hn5c) ;
+  \node [blue](hn3d) at (8,4) {$\bullet$};
+  \draw (hn2c) -- (hn3d) ;
+  \node [blue](hn4d) at (8,6) {$\bullet$};
+  \draw (hn3d) -- (hn4d) ;
+  
+ \node [blue](hn3e) at (10,4) {$\bullet$};
+  \draw (hn2c) -- (hn3e) ;
+  \node [blue](hn4e) at (10,6) {$\bullet$};
+  \draw (hn3e) -- (hn4e) ;
+
+  \node [blue](hn3f) at (12,4) {$\bullet$};
+  \draw (hn2c) -- (hn3f) ;
+  \node [red!90!black](hn4f) at (12,6) {$\bullet$};
+  \draw (hn3f) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (hn4f) ;
+
+  \node at (16,0) {$\dots$} ;
+
+ \node [black](hn4h) at (21,0) {$\bullet$};
+\node [red!90!black](hn4g) at (21,2) {$\bullet$};
+   \draw (hn4h) -- node[red!90!black,font=\small,sloped,shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (hn4g) ;
+
+  
+  \node [black](hn4f) at (24,0) {$\bullet$};
+\end{tikzpicture}
+ \caption{At $t=3,\dots,x^?-1,x^?$}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \TODO{}{maintenance, CI/CD,  etc.   (several slides).}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -239,6 +368,11 @@ Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 \end{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Old stuff 
+
+
+
 \begin{frame}
   \frametitle{Introduction}
   \begin{block}{}
