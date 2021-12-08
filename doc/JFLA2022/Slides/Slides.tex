@@ -1,5 +1,19 @@
 \documentclass[10pt]{beamer}
 
+\usepackage{xspace}
+
+\newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
+\newcommand{\coq}{Coq\xspace}
+\newcommand{\coqdoc}{Coqdoc\xspace}
+\newcommand{\coqmakefile}{\texttt{coq\_makefile}\xspace}
+\newcommand{\community}{Coq-community\xspace}
+\newcommand{\gaia}{Gaia\xspace}
+\newcommand{\alectr}{Alectryon\xspace}
+\newcommand{\equations}{Equations\xspace}
+\newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
+\newcommand{\make}{\texttt{make}\xspace}
+
+
 \definecolor{plugincolor}{rgb}{0.0,0.0,0.0}
 \definecolor{mathcolor}{rgb}{1.0,0.3,0.0}
 \definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
@@ -18,6 +32,16 @@
 \definecolor{pink}{rgb}{0.8,0.6,0.6}
 \definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+
+
+\usepackage{ifpdf}
+\ifpdf
+\usepackage{graphicx}
+%\usepackage{aeguill}
+\else
+\usepackage[dvips]{graphicx}
+\fi
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% For Alectryon
@@ -98,15 +122,44 @@ Karl Palmskog %\inst{3}
   \frametitle{Coq-community}
   \begin{block}{Objectives}
     \begin{itemize}
-    \item
-    \item
+    \item \TODO{}{}
+    \item\TODO{}{}
       \item Documentation on libraries
     \end{itemize}
   \end{block}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Yet another book on \coq?}
+  \begin{block}{Kinds of books}
+    \TODO{}{}
+  \end{block}
+
+   
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Example-driven books}
+  \begin{block}{Tsukuba Coq User's Group}
+    Regular languages, lambda-calculus, programming language semantics, \dots
+    
+   \includegraphics[height=35mm]{tsukubabooks.jpg}
+   %\includegraphics[height=45mm]{leaflet.jpg}
+     \end{block}
+     \begin{block}{\Hydras}
+       Kirby \& Paris'  hydra battles, exponentiation algorithms, \dots?
+     \end{block}
+
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{What hydras are talking about?}
+  \begin{block}{}
+    \Hydras presents a consistent set of examples, which allow us to formalize 
+    \textcolor{mathcolor}{Discrete math}, discuss
+    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and use  \textcolor{plugincolor}{a few plug-ins}.
+  \end{block}
   \begin{block}{Hydra battles}
     \begin{itemize}
 \item  \textcolor{mathcolor}{ordinals},
