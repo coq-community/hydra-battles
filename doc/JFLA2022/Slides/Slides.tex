@@ -14,7 +14,7 @@
 \newcommand{\make}{\texttt{make}\xspace}
 
 
-\definecolor{plugincolor}{rgb}{0.0,0.0,0.0}
+\definecolor{plugincolor}{rgb}{0.6,0.0,0.6}
 \definecolor{mathcolor}{rgb}{1.0,0.3,0.0}
 \definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
 
@@ -86,27 +86,27 @@
 }
 \date{JFLA, February 2022}
 \author{
-Pierre Castéran %\inst{1}
+Pierre Castéran \inst{1}
 \and
-    Jérémy Damour %\inst{2}
+    Jérémy Damour \inst{2}
 \and
-Karl Palmskog %\inst{3}
-\and Clément Pit-Claudel %\inst{4}
-\and Théo Zimmermann %\inst{5}
+Karl Palmskog \inst{3}
+\and Clément Pit-Claudel \inst{4}
+\and Théo Zimmermann \inst{5}
 }
 
-% \institute{
-% Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France  %\\
-%  % \email{pierre.casteran@labri.fr}
-% \and
-% Univ. de Paris, F-75013 Paris, France
-% \and
-% KTH Royal Institute of Technology, Stockholm, Sweden
-% \and
-% MIT CSAIL, Cambridge, Massachusetts, USA
-% \and
-% Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
-% }
+\institute{
+Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France  %\\
+ % \email{pierre.casteran@labri.fr}
+\and
+Univ. de Paris, F-75013 Paris, France
+\and
+KTH Royal Institute of Technology, Stockholm, Sweden
+\and
+MIT CSAIL, Cambridge, Massachusetts, USA
+\and
+Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
+}
 
 
 
@@ -134,12 +134,25 @@ Karl Palmskog %\inst{3}
   \begin{block}{Kinds of books}
     \TODO{}{}
   \end{block}
-
-   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Example-driven books}
+  \frametitle{Example-driven books (1)}
+  \begin{block}{}
+    \begin{itemize}
+    \item \TODO{}{Definition}
+    \item No need to be complete (there is already a reference manual)
+      \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
+    \item \coq patterns (formalization and proof) are presented  when they are needed.
+    \item Allow to compare several different formalizations of a given notion, and several proofs of the same theorem.
+    \item By definition, the authors choose topics they like to teach.
+      \item \TODO{}{topics adapted to the potential readers?}
+    \end{itemize}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Example-driven books (2)}
   \begin{block}{Tsukuba Coq User's Group}
     Regular languages, lambda-calculus, programming language semantics, \dots
     
@@ -147,7 +160,7 @@ Karl Palmskog %\inst{3}
    %\includegraphics[height=45mm]{leaflet.jpg}
      \end{block}
      \begin{block}{\Hydras}
-       Kirby \& Paris'  hydra battles, exponentiation algorithms, \dots?
+       Kirby \& Paris'  hydra battles, exponentiation algorithms, \dots
      \end{block}
 
 \end{frame}
@@ -157,8 +170,8 @@ Karl Palmskog %\inst{3}
   \frametitle{What hydras are talking about?}
   \begin{block}{}
     \Hydras presents a consistent set of examples, which allow us to formalize 
-    \textcolor{mathcolor}{Discrete math}, discuss
-    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and use  \textcolor{plugincolor}{a few plug-ins}.
+    some \textcolor{mathcolor}{discrete math}, discuss
+    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and use\footnote{and depend on!} \textcolor{plugincolor}{a few plug-ins}.
   \end{block}
   \begin{block}{Hydra battles}
     \begin{itemize}
@@ -194,14 +207,15 @@ Karl Palmskog %\inst{3}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-  \frametitle{Tests with Beamer(1)}
+  \frametitle{Tests with Alectryon(1)}
   \begin{footnotesize}
       \inputsnippets{Schutte_Ex42a}   
       \inputsnippets{Schutte_Ex42b, Schutte_Ex42c}   
     \end{footnotesize}
-\end{frame}
+  \end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{frame}[fragile]
-    \frametitle{Tests with Beamer(2)}
+    \frametitle{Tests with Alectryon(2)}
       
   
   \begin{footnotesize}
