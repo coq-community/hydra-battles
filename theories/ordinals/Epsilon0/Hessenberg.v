@@ -1,4 +1,4 @@
-(** *  Hessenberg sum of ordinals (commutative and strictly monotonous)
+(** *  Hessenberg sum of ordinals terms  (commutative and strictly monotonous)
 
 Pierre Castéran, Labri, University of  Bordeaux *)
 
