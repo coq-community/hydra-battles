@@ -284,17 +284,16 @@ Qed.
 
 Section Proof_of_oplus_comm.
   (* begin snippet oplusComm0:: no-out *)
-  Lemma oplus_comm_0 : forall gamma,
+  Lemma oplus_comm_0 (gamma: T1):
     nf gamma ->
     forall alpha beta,  nf alpha -> nf beta ->
                         T1.lt alpha gamma ->
                         T1.lt beta gamma ->
                         alpha o+ beta = beta o+ alpha.
   Proof.
-    intros gamma ; transfinite_induction gamma.
+    transfinite_induction gamma.
     (* ... *)
   (* end snippet oplusComm0 *)
-
     intros x H0 H; destruct alpha, beta; try reflexivity.
     rewrite oplus_eqn.
     rewrite (oplus_eqn  (ocons beta1 n0 beta2) (ocons alpha1 n alpha2)).
@@ -329,11 +328,10 @@ Section Proof_of_oplus_comm.
   Qed.
  
   (* begin snippet oplusComm:: no-out *)
-  Lemma oplus_comm :
-    forall alpha beta, nf alpha -> nf beta ->
-    alpha o+ beta =  beta o+ alpha.
+  Lemma oplus_comm (alpha beta: T1):
+   nf alpha -> nf beta -> alpha o+ beta =  beta o+ alpha.
   Proof.
-    intros; apply oplus_comm_0 with (T1.succ (max alpha beta));
+    intros ? ?; apply oplus_comm_0 with (T1.succ (max alpha beta));
       trivial.
     (* ... *)
   (* end snippet oplusComm *)
@@ -378,15 +376,14 @@ Section Proof_of_oplus_assoc.
     match goal with |- context Gamma [oplus (oplus ?a  ?b)  ?c] =>
                           erewrite <- Hrec with alpha  a b c end.
   (* begin snippet oplusAssoc0:: no-out *)
-  Lemma oplus_assoc_0 :
-    forall alpha,
+  Lemma oplus_assoc_0 (alpha: T1):
       nf alpha ->
       forall a b c,  nf a -> nf b -> nf c ->
                       T1.lt a alpha ->
                       T1.lt b alpha -> T1.lt c alpha ->
                       a o+ (b o+ c) = (a o+ b) o+ c.
   Proof.
-    intros alpha; transfinite_induction_lt alpha.
+    transfinite_induction_lt alpha.
   (* ... *)
 (* end snippet oplusAssoc0 *)      
     clear alpha ; intros alpha Hrec Halpha.
@@ -487,10 +484,10 @@ Section Proof_of_oplus_assoc.
 
 
   (* begin snippet oplusAssoc:: no-out *)
-  Lemma oplus_assoc : forall alpha beta gamma,
-                        nf alpha -> nf beta -> nf gamma ->
-                                    alpha o+ (beta o+ gamma) =
-                                    alpha o+ beta o+ gamma.
+  Lemma oplus_assoc (alpha beta gamma:T1) :
+    nf alpha -> nf beta -> nf gamma ->
+    alpha o+ (beta o+ gamma) =
+    alpha o+ beta o+ gamma.
   Proof with eauto with T1.
     intros.
     apply oplus_assoc_0 with (T1.succ (max alpha (max beta gamma)));
@@ -502,9 +499,9 @@ Section Proof_of_oplus_assoc.
     all: apply le_lt_trans with (max alpha (max beta gamma));
       [| apply lt_succ] ...
     - apply le_max_a.
-    - rewrite (max_comm alpha (max beta gamma)),  <- max_assoc.
+    - rewrite (max_comm alpha (max beta gamma)). rewrite <- max_assoc.
       apply le_max_a.
-    - rewrite   max_assoc.
+    - rewrite  max_assoc.
       rewrite (max_comm (max alpha beta) gamma).
       apply le_max_a.
   Qed.
