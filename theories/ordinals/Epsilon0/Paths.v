@@ -656,7 +656,7 @@ Proof. reflexivity. Qed.
 
 
 Lemma gnawS_lim1 (i:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> limitb lambda ->
+  nf lambda -> limitP lambda ->
   gnawS (ocons lambda 0 T1.zero) (i::s) =
   gnawS (ocons (canon lambda (S i)) 0 T1.zero) s.
 Proof.
@@ -666,7 +666,7 @@ Qed.
 
 
 Lemma gnawS_lim2 (i n:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> limitb  lambda->
+  nf lambda -> limitP  lambda->
   gnawS (ocons lambda (S n) T1.zero) (i::s) =
   gnawS (ocons lambda n (ocons (canon lambda (S i)) 0 T1.zero)) s.
 Proof.
@@ -821,8 +821,7 @@ Lemma acc_from_trans : forall alpha beta gamma,
 Proof.      
   destruct 1 as [s1 H1].
   destruct 1 as [s2 H2].
-  exists (s1 ++ s2).
-  now apply path_to_app with beta.
+  exists (s1 ++ s2);  now apply path_to_app with beta.
 Qed.
 
 
@@ -1274,7 +1273,7 @@ Qed.
 (*| .. coq:: no-out |*)
 Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
-   limitb lambda  ->
+   limitP lambda  ->
    forall i j, (i < j)%nat ->
                const_pathS 0 (canon lambda (S j))
                              (canon lambda (S i)).
@@ -2964,7 +2963,7 @@ Qed.
 
 Theorem KS_thm_2_4_E0 :
   forall lambda, 
-    Limitb lambda  ->
+    LimitP lambda  ->
     forall i j, (i < j)%nat ->
                 Canon_plus 1 (Canon lambda (S j))
                        (Canon lambda (S i)).
@@ -2991,7 +2990,7 @@ destruct alpha.
   - auto with T1.
 Qed.
 
-Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
+Lemma Canon_mono1 alpha i j : LimitP alpha -> (i< j)% nat ->
                               (Canon alpha i o< Canon alpha j)%e0.
 
   destruct alpha.
@@ -3091,7 +3090,7 @@ Proof.
 Qed.
 
 Lemma Canon_plus_first_step_lim:
-  forall i alpha beta, Limitb alpha ->
+  forall i alpha beta, LimitP alpha ->
                        Canon_plus (S i) alpha beta  ->
                        beta = CanonS alpha i \/
                        Canon_plus (S i) (CanonS alpha i) beta.

@@ -74,6 +74,9 @@ Definition Limitb (alpha : E0) : bool :=
 Definition Succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
+Notation LimitP alpha := (is_true (Limitb alpha)).
+Notation SuccP alpha := (is_true (Succb alpha)).
+
   
 #[global] Instance ord1 : E0.
 Proof. 
@@ -214,7 +217,7 @@ Qed.
 
 
 
-Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
+Lemma Succb_Succ alpha : SuccP alpha -> {beta : E0 | alpha = Succ beta}.
 Proof.
   destruct alpha; cbn.
   intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
@@ -263,7 +266,7 @@ Lemma cnf_Omega_term (alpha: E0) (n: nat) :
 Proof. reflexivity. Defined.
 
 Lemma Limitb_Omega_term alpha i : alpha <> Zero ->
-                                  Limitb (Omega_term alpha i).
+                                  LimitP (Omega_term alpha i).
 Proof.
   intro H; unfold Limitb; destruct alpha as [cnf0 H0]; cbn;
     destruct cnf0.
@@ -272,7 +275,7 @@ Proof.
 Qed.
 
 Lemma Limitb_phi0 alpha  : alpha <> Zero ->
-                           Limitb (phi0 alpha).
+                           LimitP (phi0 alpha).
 Proof.
   unfold phi0; apply Limitb_Omega_term.
 Qed.
@@ -394,7 +397,7 @@ Qed.
 Global Hint Resolve Pred_Lt : E0.
 
 
-Lemma Succ_Succb (alpha : E0) : Succb (Succ alpha).
+Lemma Succ_Succb (alpha : E0) : SuccP (Succ alpha).
 destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
 Qed.
 
@@ -420,14 +423,14 @@ Qed.
 
 Hint Rewrite FinS_Succ_eq : E0_rw.
 
-Lemma Limit_not_Zero alpha : Limitb alpha -> alpha <> Zero.
+Lemma Limit_not_Zero alpha : LimitP alpha -> alpha <> Zero.
 Proof.
   destruct alpha; unfold Limitb, Zero; cbn; intros H H0.
   injection H0;  intro ; subst cnf0; eapply T1.limitb_not_zero; eauto.
 Qed.
 
 
-Lemma Succ_not_Zero alpha:  Succb alpha -> alpha <> Zero.
+Lemma Succ_not_Zero alpha:  SuccP alpha -> alpha <> Zero.
 Proof.
   destruct alpha;unfold Succb, Zero; cbn.
   intros H H0; injection H0; intro;subst; discriminate H.
@@ -439,7 +442,7 @@ Proof.
 Qed.
 
 
-Lemma Succ_not_Limitb alpha : Succb alpha -> ~ Limitb alpha .
+Lemma Succ_not_Limitb alpha : SuccP alpha -> ~ LimitP alpha .
 Proof. 
   red; destruct alpha; unfold Succb, Limitb; cbn.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
@@ -465,7 +468,7 @@ Proof.
 Qed.
 
 Lemma Succ_lt_Limitb alpha beta:
-    Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
+    LimitP alpha ->  beta o< alpha -> Succ beta o< alpha.
 Proof.
   destruct alpha, beta;unfold Lt; cbn.
   intros; apply succ_lt_limit; auto. 
@@ -615,8 +618,8 @@ Proof.
 Defined.
 
 Lemma Limitb_plus alpha beta i:
-  (beta o< phi0 alpha)%e0 -> Limitb beta ->
-  Limitb (Omega_term alpha i + beta)%e0.
+  (beta o< phi0 alpha)%e0 -> LimitP beta ->
+  LimitP (Omega_term alpha i + beta)%e0.
 Proof.
   intros H H0;  assert (alpha <> Zero).
   { intro; subst. 
@@ -798,7 +801,7 @@ Proof.
   - right; now apply Lt_Le_incl.
 Qed.
 
-Lemma Limit_gt_Zero (alpha: E0) : Limitb alpha -> Zero o< alpha.
+Lemma Limit_gt_Zero (alpha: E0) : LimitP alpha -> Zero o< alpha.
 Proof.
   intro H; destruct (E0_lt_eq_lt alpha Zero) as [H0 | [H0 | H0]]; trivial.
   - destruct (E0_not_Lt_zero H0).

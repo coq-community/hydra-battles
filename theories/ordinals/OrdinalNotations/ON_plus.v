@@ -10,7 +10,7 @@ From hydras Require Import  ON_Generic MoreOrders.
 
 Import Relations.
 Generalizable All Variables.
-Coercion is_true: bool >-> Sortclass.
+(* Coercion is_true: bool >-> Sortclass. *)
 
 (* begin snippet Defs *)
 Section Defs.

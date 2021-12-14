@@ -115,7 +115,7 @@ Proof.
 Qed.
 
 Lemma F_eq2 : forall alpha i,
-    Succb alpha -> 
+    SuccP alpha -> 
     F_ alpha i = F_star (Pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
@@ -161,7 +161,7 @@ Qed.
 (*||*)
 
 Lemma F_lim_eqn : forall alpha i,
-    Limitb alpha ->
+    LimitP alpha ->
     F_ alpha i = F_ (Canon alpha i) i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
@@ -415,7 +415,7 @@ Section Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Limitb alpha.
+      Hypothesis Hlim : LimitP alpha.
 
 
       Remark RBlim : forall n, n < F_ alpha n.
@@ -735,7 +735,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
    - now apply E0_eq_intro.
  Qed.
 
- Lemma HFsucc : Succb alpha -> P alpha.
+ Lemma HFsucc : SuccP alpha -> P alpha.
  Proof.
    intro H; destruct (Succb_Succ _ H) as [beta Hbeta]; subst.
    intro n; rewrite H'_Phi0_succ.
@@ -754,7 +754,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
   (** The following proof is far from being trivial.
       It uses some lemmas from the Ketonen-Solovay machinery *)
  
-  Lemma HFLim : Limitb alpha -> P alpha.
+  Lemma HFLim : LimitP alpha -> P alpha.
   Proof.
     intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_Canon;
@@ -863,7 +863,7 @@ Proof.
 Qed.
 
 Lemma f_eq2 : forall alpha i,
-    Succb alpha -> 
+    SuccP alpha -> 
     f_ alpha i = f_star (Pred alpha,  i) i.
 Proof.
   unfold f_; intros; rewrite f_star_equation_2.
@@ -906,7 +906,7 @@ Proof.
 Qed.
 
 
-Lemma f_lim_eqn : forall alpha i,  Limitb alpha ->
+Lemma f_lim_eqn : forall alpha i,  LimitP alpha ->
                                    f_ alpha i = f_ (Canon alpha i) i.
 Proof.
   unfold f_; intros. rewrite f_star_equation_2.

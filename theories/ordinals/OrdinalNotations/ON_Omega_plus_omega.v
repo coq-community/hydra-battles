@@ -187,8 +187,10 @@ Definition succb (alpha: t) : bool
      | _ => false
      end.
 
+Notation succP alpha := (is_true (succb alpha)).
+
 Lemma succb_correct (alpha: t) :
-  succb alpha <-> exists beta: t, alpha = succ beta. (* .no-out *)
+  succP alpha <-> exists beta: t, alpha = succ beta. (* .no-out *)
 (*|
 .. coq:: none
 |*)

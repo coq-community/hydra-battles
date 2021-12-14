@@ -275,7 +275,7 @@ Section DS_iota.
   
   Lemma DS_iota_2 : forall lambda,
       nf lambda -> alpha = T1.phi0 lambda ->
-      limitb lambda ->
+      limitP lambda ->
       round_n i (iota alpha) (iota (canonS alpha i)).                             
   Proof. 
     intros;subst alpha.
@@ -305,7 +305,7 @@ Section DS_iota.
   Section Proof_case_4.
     Variable lambda: T1.
     Hypothesis Hlambda : nf lambda.
-    Hypothesis Hlim : limitb lambda.
+    Hypothesis Hlim : limitP lambda.
     Variable n : nat.
     Hypothesis Hn : alpha = ocons lambda (S n) zero.
 

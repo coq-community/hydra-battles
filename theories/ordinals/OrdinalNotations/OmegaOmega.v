@@ -7,7 +7,7 @@ Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec  List Bool
         Recdef Lia  Coq.Wellfounded.Inverse_Image
         Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
 
-Coercion is_true: bool >-> Sortclass.
+(* Coercion is_true: bool >-> Sortclass. *)
 Require Import Comparable.
 
 (** * Representation by lists of pairs of integers *)
@@ -73,14 +73,18 @@ Module LO.
     | ocons i n beta => limitb beta
     end.
 
-  Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
+  Notation succP a := (is_true (succb a)).
+  Notation limitP a := (is_true (limitb a)).
+
+  
+  Lemma succb_ref (a:t): succP a -> T1.succP (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
     - destruct a as [n n0]; now destruct n.
   Qed.
 
-  Lemma limitb_ref (a:t): limitb a -> T1.limitb (refine a).
+  Lemma limitb_ref (a:t): limitP a -> T1.limitP (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
@@ -269,7 +273,7 @@ Module LO.
     end.
 
   Definition nf alpha :Prop := 
-    nf_b alpha.
+    is_true (nf_b alpha).
 (* end snippet nfDef *)
   (** refinements of T1's lemmas *)
 

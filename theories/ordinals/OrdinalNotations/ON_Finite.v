@@ -12,15 +12,14 @@ Require Wf_nat.
 
 
 
-
-Coercion is_true: bool >-> Sortclass.
+(* Coercion is_true: bool >-> Sortclass.  *)
 
 (* begin snippet Defs *)
 
-Definition t (n:nat) := {i:nat | Nat.ltb i  n}.
+Definition t (n:nat) := {i:nat | is_true (Nat.ltb i  n)}.
 
 Definition lt {n:nat} : relation (t n) :=
-  fun alpha beta => Nat.ltb (proj1_sig alpha) (proj1_sig beta).
+  fun alpha beta => is_true (Nat.ltb (proj1_sig alpha) (proj1_sig beta)).
 
 (* end snippet Defs *)
 
@@ -184,7 +183,7 @@ Section Inclusion_ij.
   Variables i j : nat.
   Hypothesis Hij : i < j.
 
-  Remark Ltb_ij : Nat.ltb i j. 
+  Remark Ltb_ij : is_true (Nat.ltb i j). 
 (* end snippet InclIJ:: no-out *)
 
   Proof.

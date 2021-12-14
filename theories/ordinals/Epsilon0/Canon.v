@@ -99,7 +99,7 @@ Proof.
 Qed.
 
 
-Lemma canonS_lim1 : forall i lambda, nf lambda -> limitb lambda 
+Lemma canonS_lim1 : forall i lambda, nf lambda -> limitP lambda 
                                  -> canon (ocons lambda 0 zero) (S i) =
                                     T1.phi0 (canon lambda (S i)).
 Proof.
@@ -110,7 +110,7 @@ Proof.
      + rewrite pred_of_limit;auto.
 Qed.
 
-Lemma canon_lim1 : forall i lambda, nf lambda -> limitb lambda 
+Lemma canon_lim1 : forall i lambda, nf lambda -> limitP lambda 
                                     -> canon (ocons lambda 0 zero)  i =
                                        T1.phi0 (canon lambda i).
 Proof.
@@ -126,7 +126,7 @@ Qed.
 (** Here *)
 
 Lemma canonS_lim2  i n lambda: 
-    nf lambda -> limitb lambda 
+    nf lambda -> limitP lambda 
     -> canon (ocons lambda (S n) zero) (S i) =
        ocons  lambda n (T1.phi0 (canon lambda (S i))).
 Proof.
@@ -139,7 +139,7 @@ Proof.
 Qed.
 
 Lemma canon0_lim2   n lambda: 
-    nf lambda -> limitb lambda 
+    nf lambda -> limitP lambda 
     -> canon (ocons lambda (S n) zero) 0 =
        ocons  lambda n (T1.phi0 (canon lambda 0)).
 Proof.
@@ -150,7 +150,7 @@ Proof.
 Qed.
 
 Lemma canon_lim2  i  n lambda : 
-    nf lambda -> limitb lambda 
+    nf lambda -> limitP lambda 
     -> canon (ocons lambda (S n) zero) i =
        ocons  lambda n (T1.phi0 (canon lambda i)).
 Proof.
@@ -566,7 +566,7 @@ Qed.
 
 
 Lemma limitb_canonS_not_zero i lambda:
-  nf lambda -> limitb lambda  -> canon lambda (S i) <> zero.
+  nf lambda -> limitP lambda  -> canon lambda (S i) <> zero.
 Proof.
   destruct lambda as [ | alpha1 n alpha2].
   - discriminate.
@@ -599,7 +599,7 @@ limit of its  own canonical sequence
 (*| .. coq:: no-out *)
 Lemma canonS_limit_strong lambda : 
   nf lambda ->
-  limitb lambda  ->
+  limitP lambda  ->
   forall beta, beta t1< lambda ->
                {i:nat | beta t1< canon lambda (S i)}.
 Proof.
@@ -775,7 +775,7 @@ Defined.
 
 Lemma canon_limit_strong lambda : 
   nf lambda ->
-  limitb lambda  ->
+  limitP lambda  ->
   forall beta, beta t1< lambda ->
                 {i:nat | beta t1< canon lambda i}.
 Proof.
@@ -786,7 +786,7 @@ Defined.
 (* begin snippet canonSLimitLub *)
 
 Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> limitb lambda  ->
+  nf lambda -> limitP lambda  ->
   strict_lub (canonS lambda) lambda. (* .no-out *) (*| .. coq:: none |*)
 Proof.
   split.
@@ -813,7 +813,7 @@ Qed.
 (* end snippet canonSLimitLub *)
 
 
-Lemma canonS_limit_mono alpha i j : nf alpha -> limitb alpha  ->
+Lemma canonS_limit_mono alpha i j : nf alpha -> limitP alpha  ->
                                     i < j ->
                                     canonS alpha i t1< canonS alpha j.
 Proof. 
@@ -992,7 +992,7 @@ Proof.
       apply LT1; apply nf_phi0;auto with E0.
 Qed. 
 
-Lemma CanonS_phi0_lim alpha k : Limitb alpha ->
+Lemma CanonS_phi0_lim alpha k : LimitP alpha ->
                                 CanonS (phi0 alpha) k =
                                 phi0 (CanonS alpha k). 
 Proof.
@@ -1023,7 +1023,7 @@ Proof.
   -   apply CanonS_lt.
 Qed.
 
-Lemma Canon_of_limit_not_null : forall i alpha, Limitb alpha ->
+Lemma Canon_of_limit_not_null : forall i alpha, LimitP alpha ->
                                        Canon alpha (S i) <> Zero.
 Proof.
   destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.

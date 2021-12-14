@@ -329,7 +329,7 @@ End succ.
 Section lim.
   Variables (lambda : T1)
             (Hnf : nf lambda)
-            (Hlim : limitb lambda)
+            (Hlim : limitP lambda)
             (f : nat -> nat -> nat)
             (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
   
@@ -817,7 +817,7 @@ Definition largeb (alpha : T1) (s: list nat) :=
           with zero => true | _ => false end.
 
 Definition large (alpha : T1) (s : list nat) : Prop :=
-  largeb alpha s.
+  is_true (largeb alpha s).
 
 (* end snippet largeDef *)
 
@@ -829,7 +829,7 @@ Definition largeSb (alpha : T1) (s: list nat) :=
   end.
 
 Definition largeS (alpha : T1) (s : list nat) : Prop :=
-  largeSb alpha s.
+  is_true (largeSb alpha s).
 
 
 Definition Large alpha s := large (@cnf alpha) s.

@@ -265,26 +265,29 @@ Definition limitb (alpha : t): bool :=
   | _ => false
   end.
 
+Notation succP alpha := (is_true (succb alpha)).
+Notation limitP alpha := (is_true (limitb alpha)).
+
 
 Lemma Omega_limit_limitb alpha s : Omega_limit s alpha ->
-                                   limitb alpha.
+                                   limitP alpha.
 Proof.
-   destruct alpha.
-   destruct 1.
-   destruct n0.
-   - destruct n.
+  destruct alpha.
+  destruct 1.
+  destruct n0.
+  - destruct n.
     +   specialize (H 0).
-       inversion H; abstract lia.
+        inversion H; abstract lia.
     + now  cbn.
-   -   destruct (H0 (n, n0)).
-    + right; auto with arith. 
-    + specialize (H x).
-      assert ((n,n0) o< s x).
- apply H1.
-     rewrite  lt_succ_le in H2.
-     assert (s x o< s x) by(eapply lt_le_trans; eauto).
-     destruct (ON_mult.lt_strorder Omega  Omega) as [H4 H5].
-     destruct (H4 _ H3).
+  -   destruct (H0 (n, n0)).
+      + right; auto with arith. 
+      + specialize (H x).
+        assert ((n,n0) o< s x).
+        apply H1.
+        rewrite  lt_succ_le in H2.
+        assert (s x o< s x) by(eapply lt_le_trans; eauto).
+        destruct (ON_mult.lt_strorder Omega  Omega) as [H4 H5].
+        destruct (H4 _ H3).
 Qed.
 
 (** Canonical sequences *)
@@ -299,7 +302,7 @@ Definition canon  alpha i :=
 
 
 Lemma limitb_limit alpha :
-  limitb alpha -> Omega_limit (canon alpha) alpha.
+  limitP alpha -> Omega_limit (canon alpha) alpha.
 Proof.
   destruct alpha;  inversion 1.
   destruct n; [discriminate | unfold canon].
@@ -314,7 +317,7 @@ Proof.
      + abstract lia.    
 Qed.
 
- Example Ex1 : limitb omega.
+ Example Ex1 : limitP omega.
  Proof. reflexivity.  Qed.
 
 
@@ -343,7 +346,7 @@ Proof.
 Qed.
 
 Lemma limit_is_lub beta :
-  limitb beta -> forall alpha, 
+  limitP beta -> forall alpha, 
     (forall i,  canon beta i o< alpha) <-> beta o<= alpha.
 Proof.  
   destruct beta;intros H alpha;destruct n, n0; try discriminate.
@@ -354,7 +357,7 @@ Qed.
 
  Definition zero_limit_succ_dec :
   forall alpha, 
-                ({alpha = zero} + {limitb alpha }) + 
+                ({alpha = zero} + {limitP alpha }) + 
                 {beta : t |  alpha = succ beta} .
  Proof.
    destruct alpha as (n,p); destruct p.

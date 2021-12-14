@@ -126,7 +126,7 @@ Section S1.
   
   Section Limit.
     Variable lambda : E0.
-    Hypothesis Hlambda : Limitb lambda.
+    Hypothesis Hlambda : LimitP lambda.
     Hypothesis IHlambda :
       forall alpha, Fin 3 o<= alpha -> alpha o< lambda -> P alpha.
 
@@ -150,7 +150,7 @@ Section S1.
 
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
-          limitb beta ->
+          limitP beta ->
           forall n, leq lt  (fin (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.
@@ -192,7 +192,7 @@ Section S1.
       Qed. 
 
 
-      Lemma L04' : forall beta, Limitb beta ->
+      Lemma L04' : forall beta, LimitP beta ->
                                 forall n, (S n) o<= 
                                           (Canon.Canon beta (S n)).
       Proof.

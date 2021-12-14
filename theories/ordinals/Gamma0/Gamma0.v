@@ -320,7 +320,9 @@ Fixpoint nfb (alpha : T2) : bool :=
            Lt => andb (nfb a) (andb (nfb b) (nfb c))
            | _ => false
            end
-end.
+  end.
+
+Notation nfP alpha := (is_true (nfb alpha)).
 
 Compute nfb  (gcons 2 1 42 epsilon0).
 
@@ -3623,12 +3625,12 @@ Module G0.
 
   (** ** Temporary compatibility  nf/nfb *)
 
-  Lemma zero_nfb : nfb zero.
+  Lemma zero_nfb : nfP zero.
   Proof. reflexivity. Qed.
 
 
 
-  Lemma nfb_a a b n c: nfb (gcons a b n c) -> nfb a.
+  Lemma nfb_a a b n c: nfP (gcons a b n c) -> nfP a.
   Proof. 
     cbn.
     destruct c.
@@ -3670,7 +3672,7 @@ Module G0.
   Qed.
 
   Lemma nfb_proof_unicity :
-    forall (alpha:T2) (H H': nfb alpha), H = H'.
+    forall (alpha:T2) (H H': nfP alpha), H = H'.
   Proof.
     intros;  red in H, H';  apply Eqdep_dec.eq_proofs_unicity_on.
     destruct y. 
@@ -3680,7 +3682,7 @@ Module G0.
 
   (* begin snippet G0b *)
 
-  Class G0 := mkg0 {vnf : T2; vnf_ok : nfb vnf}.
+  Class G0 := mkg0 {vnf : T2; vnf_ok : nfP vnf}.
 
   Definition lt (alpha beta : G0) := T2.lt (@vnf alpha) (@vnf beta).
   
