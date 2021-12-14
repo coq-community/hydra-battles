@@ -7,7 +7,6 @@ Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec  List Bool
         Recdef Lia  Coq.Wellfounded.Inverse_Image
         Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
 
-(* Coercion is_true: bool >-> Sortclass. *)
 Require Import Comparable.
 
 (** * Representation by lists of pairs of integers *)

@@ -2,6 +2,8 @@
 
 From hydras Require Export DecPreOrder.
 From Coq Require Import Arith ZArith List  Sets.Finite_sets  Sets.Ensembles.
+Require Export STDPP_compat.
+
 
 #[ global ] Instance Nat_le_dec : RelDecision le := le_dec.
 

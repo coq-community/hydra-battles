@@ -22,8 +22,6 @@ Declare Scope t1_scope.
 Delimit Scope t1_scope with t1.
 Open Scope t1_scope.
 
-(* Coercion is_true: bool >-> Sortclass. *)
-
 
 (** *  Definitions 
 

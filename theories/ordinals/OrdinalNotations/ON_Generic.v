@@ -125,17 +125,19 @@ Class  ON_Iso
 
 (* begin snippet ONCorrect *)
 
+Notation olt := (Schutte_basics.lt). 
+
 Class ON_correct `(alpha : Ord)
      `(OA : @ON A ltA compareA)
       (iota : A -> Ord) :=
-  { ON_correct_inj : forall a, lt (iota a) alpha;
-    ON_correct_onto : forall beta, lt beta alpha ->
+  { ON_correct_inj : forall a, olt (iota a) alpha;
+    ON_correct_onto : forall beta, olt beta alpha ->
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
-          Datatypes.Lt => lt (iota a) (iota b)
+          Datatypes.Lt => olt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
-        | Datatypes.Gt => lt (iota b) (iota a)
+        | Datatypes.Gt => olt (iota b) (iota a)
         end
   }.
 

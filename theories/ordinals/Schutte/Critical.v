@@ -90,6 +90,8 @@ Proof.
            rewrite (H0 beta H2); case (H4 beta H2); auto.
 Qed.
 
+Notation olt := Schutte_basics.lt.
+Open Scope schutte_scope. 
 
 Lemma Cr_equation (alpha : Ord) :
   Cr  alpha =
@@ -97,7 +99,7 @@ Lemma Cr_equation (alpha : Ord) :
     (fun (y : Ord) (h : y < alpha) =>  Cr y).
 
 Proof.
-  generalize (@Fix_eq Ord  lt  all_ord_acc
+  generalize (@Fix_eq Ord  olt  all_ord_acc
                       (fun _ : Ord => Ensemble Ord));
     intros H; apply  (H Cr_fun Cr_extensional alpha).
 Qed.

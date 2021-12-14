@@ -5,11 +5,12 @@
 *)
 
 From Coq Require Export Relations RelationClasses Setoid.
+Require Import STDPP_compat.
 
 Class Total {A:Type}(R: relation A) :=
   totalness : forall a b:A, R a b \/ R b a.
 
-Require Export STDPP_compat.
+
 
 
 #[ global ] Instance comparison_eq_dec : EqDecision comparison.
@@ -68,8 +69,8 @@ Qed.
 Lemma not_le_ge {A} {le:relation A} {P0 : TotalPreOrder le} :
   forall a b, ~ le a b -> le b a.
 Proof.
-  intros a b H. destruct P0.
-  destruct (totalness a b).
+  intros a b H. destruct P0 as [H1 H2]. 
+  destruct (H2 a b). 
   - contradiction.
   - assumption.
 Qed.
@@ -131,20 +132,22 @@ split.
 - intros x y z Hxy Hyz; destruct Hxy, Hyz; split; transitivity y;auto.
 Qed.
 
-Lemma le_lt_equiv_dec  {A:Type} {le : relation A}
- {P0: TotalPreOrder le} {dec : RelDecision le} (a b:A) :
- le a b -> {lt a b}+{preorder_equiv a b}.
-Proof.
-  intro H; destruct (decide (le b a)).
-  - right;split;auto.
-  - left;split;auto.
-Defined.
-
 Lemma not_le_gt {A:Type}(le : relation A)
-      (P0: TotalPreOrder le) (a b:A) : ~ le a b -> lt b a.
+     `{P0: @TotalPreOrder A le} (a b:A) : ~ le a b -> lt b a.
 Proof.
-  intro H. destruct (totalness b a).
+  intro H. destruct P0 as [H1 H2]. destruct (H2 b a).
   - split; auto.   
   - contradiction.
 Qed.
+
+Lemma le_lt_equiv_dec  {A:Type} {le : relation A}
+`{P0: @TotalPreOrder A le} {dec : RelDecision le} (a b:A) :
+ le a b -> {lt a b}+{preorder_equiv (le:=le) a b}.
+Proof.
+  intro H; destruct (decide (le b a)).
+  -    right.   split;auto. 
+  -  left. destruct P0.  red. split; auto. 
+Defined.
+
+
 

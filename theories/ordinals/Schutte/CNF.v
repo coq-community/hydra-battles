@@ -95,7 +95,7 @@ Qed.
 
 
 Lemma cnf_of_ap (alpha : Ord) :
-  In AP alpha -> exists l,  is_cnf_of alpha l.
+  Ensembles.In AP alpha -> exists l,  is_cnf_of alpha l.
 Proof.
  intros H;  case phi0_ordering.
  intros H0 H1 H2 H3; destruct (H2 alpha H) as [x [Hx Ex]].
