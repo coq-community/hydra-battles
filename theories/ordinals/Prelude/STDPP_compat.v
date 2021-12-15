@@ -1,4 +1,7 @@
-(* From stdpp Require Export base. *)
+(** Warning Requiring base still results in errors *)
+(* From stdpp Require  base. *)
+
+
 
  Require Import Relations.
 
