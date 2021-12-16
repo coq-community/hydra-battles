@@ -1,5 +1,12 @@
 (** Warning Requiring base still results in errors *)
-(* From stdpp Require  base. *)
+(** This file contains some STDPP-like definitions,  but avoids 
+    notations and/or coercions which may break old hydra-battles proofs *)
+(**  Migration to stdpp should be done progressively and carefully *)
+
+
+(* Don't uncomment that !
+
+From stdpp Require  base. *)
 
 
 
