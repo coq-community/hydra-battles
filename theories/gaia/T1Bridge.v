@@ -1,7 +1,7 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
  *)
 
-Require Export STDPP_compat.
+From hydras Require Export STDPP_compat.
 From hydras Require Import DecPreOrder.
 From hydras Require T1 E0.
 From mathcomp Require Import all_ssreflect zify.
