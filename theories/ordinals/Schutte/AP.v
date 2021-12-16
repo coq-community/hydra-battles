@@ -23,6 +23,7 @@ From hydras Require Export Schutte.Addition  Well_Orders.
 
 
 Set Implicit Arguments.
+Open Scope schutte_scope. 
 
 (* end hide *)
 
@@ -79,7 +80,7 @@ Definition epsilon0 := omega_limit omega_tower.
 (** ** About additive principals *)
 
 (* begin snippet APOne:: no-out *)
-Lemma AP_one : In AP 1.
+Lemma AP_one : Ensembles.In AP 1.
 (* end snippet APOne *)
 Proof with auto with schutte.
   split.
@@ -90,8 +91,9 @@ Proof with auto with schutte.
      rewrite (le_alpha_zero H0), zero_plus_alpha...
 Qed.
 
+Notation olt := (Schutte_basics.lt).
 (* begin snippet APOne_least_AP:: no-out *)
-Lemma least_AP : least_member lt AP 1.
+Lemma least_AP : least_member olt AP 1.
 (* end snippet APOne_least_AP *)
 Proof with auto with schutte.
   repeat split ...
@@ -109,7 +111,7 @@ Proof with auto with schutte.
 Qed.
 
 (* begin snippet APOne_AP_omega:: no-out *)
-Lemma AP_omega : In AP omega.
+Lemma AP_omega : Ensembles.In AP omega.
 (* end snippet APOne_AP_omega *)
 Proof with auto with schutte.
   repeat split.
@@ -142,8 +144,8 @@ Qed.
 
 (* begin snippet APOne_omega_second_AP:: no-out *)
 Lemma omega_second_AP :
-  least_member lt
-               (fun alpha => 1 < alpha /\ In AP alpha)
+  least_member olt
+               (fun alpha => 1 < alpha /\ Ensembles.In AP alpha)
                omega.
 (* end snippet APOne_omega_second_AP *)
 Proof with auto with schutte.
@@ -151,7 +153,7 @@ Proof with auto with schutte.
   split ...
   - apply finite_lt_omega.
   -  apply AP_omega.
-  -  intros x  H0.  case (@trichotomy x omega).  
+  -  intros x  H0.  case (@Schutte_basics.trichotomy x omega).  
      intro H1.
      case (lt_omega_finite  H1).
      intros; subst x.
@@ -165,7 +167,7 @@ Qed.
 (* begin snippet APPlusClosed *)
 
 Lemma AP_plus_closed (alpha beta gamma : Ord): 
-  In AP alpha ->   beta < alpha -> gamma < alpha ->
+  Ensembles.In AP alpha ->   beta < alpha -> gamma < alpha ->
   beta + gamma < alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with schutte.
@@ -296,7 +298,7 @@ Section AP_Unbounded.
       unfold beta at 1; unfold omega_limit.
       rewrite alpha_plus_sup. 
       -  apply sup_least_upper_bound; eauto with schutte.
-         +  apply R1 with ordinal (ge ksi).
+         +  apply R1 with ordinal (oge ksi).
             * apply plus_ordering; auto.
             *  apply seq_range_countable;auto.
             *  intro; split.
@@ -351,7 +353,7 @@ Qed.
 Section AP_closed.
   Variable M : Ensemble Ord.
   Hypothesis OM : Included M AP.
-  Hypothesis inhM : Inhabited _ M.
+  Hypothesis inhM : Ensembles.Inhabited _ M.
   Hypothesis denM : countable M.
   
   Remark supM_gt0 : zero < |_| M.
@@ -361,7 +363,7 @@ Section AP_closed.
     -  apply sup_upper_bound; auto with schutte.
   Qed.
   
-  Lemma AP_sup : In AP (|_| M).
+  Lemma AP_sup : Ensembles.In AP (|_| M).
   Proof.
     split.
     - apply supM_gt0.
@@ -371,7 +373,7 @@ Section AP_closed.
        apply le_antisym.
        +  rewrite alpha_plus_sup; auto.
           *  apply sup_mono; auto.
-             { apply R1 with ordinal (ge ksi); auto.
+             { apply R1 with ordinal (oge ksi); auto.
                - apply plus_ordering; eauto with schutte.
                - split.
              }
@@ -454,7 +456,7 @@ Proof.
   intros P H; apply H, phi0_ordering.
 Qed.
 
-Lemma AP_phi0 (alpha : Ord) : In AP (phi0 alpha). (* .no-out *)
+Lemma AP_phi0 (alpha : Ord) : Ensembles.In AP (phi0 alpha). (* .no-out *)
 Proof. (* .no-out *)
   pattern phi0; apply phi0_elim.
   destruct 1 as [H H0 H1 H2];  apply H0;auto; split.
@@ -562,7 +564,7 @@ Qed.
 
 
 Lemma phi0_sup : forall U: Ensemble Ord,
-    Inhabited _ U ->
+    Ensembles.Inhabited _ U ->
     countable U ->
     phi0 (|_| U) = |_| (image U phi0). (* .no-out *)
 (*| .. coq:: none |*)
@@ -780,7 +782,7 @@ Qed.
 
 (* begin snippet epsilon0Lfp *)
 
-Theorem epsilon0_lfp : least_fixpoint lt phi0 epsilon0. (* .no-out *)
+Theorem epsilon0_lfp : least_fixpoint olt phi0 epsilon0. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   split.

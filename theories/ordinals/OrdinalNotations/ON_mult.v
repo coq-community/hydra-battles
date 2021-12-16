@@ -10,7 +10,6 @@ From hydras Require Import Comparable Simple_LexProd ON_Generic.
 
 Import Relations.
 Generalizable All Variables.
-Coercion is_true: bool >-> Sortclass.
 
 (** * Definitions *)
 
@@ -32,7 +31,7 @@ Section Defs.
           (NB: ON ltB cmpB).
 
   Definition t := (B * A)%type.
-  Definition lt : relation t := lexico ltB ltA.
+  Definition lt : relation t := Simple_LexProd.lexico ltB ltA.
   Definition le := clos_refl _ lt. 
 
   #[global] Instance compare_t : Compare t :=
@@ -44,7 +43,7 @@ Section Defs.
    (*||*)
   (* end snippet Defs *)
 
-  #[local] Hint Constructors clos_refl lexico: core.
+  #[local] Hint Constructors clos_refl Simple_LexProd.lexico: core.
   #[local] Hint Unfold  lt le : core.
 
   (** * Properties *)

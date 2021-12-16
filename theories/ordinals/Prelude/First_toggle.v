@@ -9,6 +9,7 @@ Computes the first  [l]  between [n] and [p] (excluded) such that
 
 From Coq Require Import Arith Lia Inclusion Inverse_Image.
 From hydras Require Import DecPreOrder.
+Require Export STDPP_compat. 
 
 Section Hypos.
   Context (P : nat -> Prop) `{Pdec: forall n, Decision (P n)} (n p : nat).

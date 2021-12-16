@@ -46,7 +46,7 @@ Lemma L_zero_eqn : forall i, L_ Zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  Succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+  SuccP alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.
@@ -72,7 +72,7 @@ Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 (* begin snippet Paraphrasesc:: no-out *)
 Lemma L_lim_eqn alpha i :
-  Limitb alpha ->
+  LimitP alpha ->
   L_ alpha i = L_ (Canon alpha i) (S i).
 (* end snippet Paraphrasesc *)
 
@@ -195,12 +195,12 @@ Section L_correct_proof.
 
   Lemma L_ok_lim  alpha  :
     (forall beta,  (beta o< alpha)%e0 -> P beta) ->
-    Limitb alpha -> P alpha.
+    LimitP alpha -> P alpha.
   Proof with eauto with E0.
     unfold P; intros.
     apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).
     -   generalize L_lim_ok; intro H1; unfold L_lim in H1.
-       assert (H2 : limitb (cnf alpha)) by (now destruct alpha). 
+       assert (H2 : limitP (cnf alpha)) by (now destruct alpha). 
        specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
        apply H1; intro k; specialize (H (Canon alpha  (S k))).
        assert  (H3: (Canon alpha (S k) o< alpha)%e0 ).

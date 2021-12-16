@@ -9,9 +9,6 @@ From Coq Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
 From hydras Require Import ON_Generic.
 
 
-Coercion is_true: bool >-> Sortclass.
-Generalizable Variables A Lt comp.
-
 Section OA_given.
 
   Context {A:Type}

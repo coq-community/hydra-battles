@@ -57,7 +57,7 @@ Qed.
 
 (* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2 alpha i :
-  Succb alpha ->
+  SuccP alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
 (* end snippet paraphrasesb *)
 
@@ -72,7 +72,7 @@ Qed.
 
 (* begin snippet paraphrasesc:: no-out  *)
 Lemma H'_eq3 alpha i :
-  Limitb alpha ->
+  LimitP alpha ->
   H'_ alpha i =  H'_ (Canon alpha (S i)) i.
 (* end snippet paraphrasesc *)
 
@@ -702,7 +702,7 @@ Section Proof_of_Abstract_Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Limitb alpha.
+      Hypothesis Hlim : LimitP alpha.
 
       Remark RBlim : forall n, (n < H'_ alpha n)%nat.
       Proof.
@@ -918,7 +918,7 @@ Section Proof_of_H'_mono_l.
   End Succ_case.
 
   Section Limit_case.
-    Hypothesis Hbeta: Limitb beta.
+    Hypothesis Hbeta: LimitP beta.
 
     Remark R4 : Succ alpha o< beta.
     Proof. now apply Succ_lt_Limitb. Qed.

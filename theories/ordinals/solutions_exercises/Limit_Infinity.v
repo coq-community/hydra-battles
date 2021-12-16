@@ -18,7 +18,7 @@ Section On_alpha.
   Hypothesis HnonZero : alpha <> zero.
 
   Section S1.
-    Hypothesis H : limitb  alpha.
+    Hypothesis H : limitP alpha.
 
     Variable beta : T1.
     Hypothesis Hbeta : beta t1< alpha.
@@ -73,7 +73,7 @@ Section On_alpha.
     Hypothesis H :  forall beta, beta t1< alpha ->
                                  exists gamma, beta t1< gamma t1< alpha.
 
-    Lemma L4 : limitb alpha.
+    Lemma L4 : limitP alpha.
     Proof.
       destruct (zero_limit_succ_dec Halpha) as [[Hzero | Hlim] | Hsucc].
       - now destruct HnonZero.
@@ -91,8 +91,10 @@ Section On_alpha.
 
   End S2.
 
-  Theorem Limit_Infinity : limitb alpha <-> (forall beta,
-                                                beta t1< alpha -> Infinite (fun gamma =>  beta t1< gamma t1< alpha)).
+  Theorem Limit_Infinity :
+    limitP alpha <->
+    (forall beta,
+        beta t1< alpha -> Infinite (fun gamma =>  beta t1< gamma t1< alpha)).
   Proof.
     split; intro H.
     - intros beta Hbeta.

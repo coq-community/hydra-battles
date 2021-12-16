@@ -1,4 +1,16 @@
-Require Import Relations.
+(** Warning Requiring base still results in errors *)
+(** This file contains some STDPP-like definitions,  but avoids 
+    notations and/or coercions which may break old hydra-battles proofs *)
+(**  Migration to stdpp should be done progressively and carefully *)
+
+
+(* Don't uncomment that !
+
+From stdpp Require  base. *)
+
+
+
+ Require Import Relations.
 
 Class Assoc {A} (R : relation A) (f : A -> A -> A) : Prop :=
   assoc x y z : R (f x (f y z)) (f (f x y) z).
@@ -33,3 +45,6 @@ Proof.
   unfold bool_decide.
   destruct H; intuition discriminate.
 Qed.
+
+
+

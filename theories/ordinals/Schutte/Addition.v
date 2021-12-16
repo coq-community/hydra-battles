@@ -5,14 +5,16 @@ From hydras Require Export Schutte_basics  Ordering_Functions
 Set Implicit Arguments.
 Require Export STDPP_compat. 
 
+ Open Scope schutte_scope.
 (** * Definitions *)
 
 
 (**  **  addition, multiplication by a positive integer *)
 
 (* begin snippet additionDef *)
+Notation oge := (Schutte_basics.ge). 
 
-Definition plus alpha := ord (ge alpha).
+Definition plus alpha := ord (oge alpha).
 Infix "+"  := plus : schutte_scope.
 
 (* end snippet additionDef *)
@@ -24,7 +26,7 @@ Infix "+"  := plus : schutte_scope.
 
 Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
  match n with 0 => alpha
-            | S p => mult_Sn alpha p + alpha
+            | S p => (mult_Sn alpha p + alpha)%sch
  end.
 
 
@@ -42,7 +44,7 @@ Infix "*" := mult_fin_r : schutte_scope.
 *)
 
 
-Lemma Unbounded_ge (alpha : Ord)  :   Unbounded (ge alpha).
+Lemma Unbounded_ge (alpha : Ord)  :   Unbounded (oge alpha).
 Proof with auto with schutte.
   red. intros   x ; tricho alpha x H3.
  -  exists (succ x);split ...
@@ -55,19 +57,19 @@ Proof with auto with schutte.
 Qed.
 
 Lemma ge_o_segment (alpha : Ord) :
- the_ordering_segment (ge alpha) = ordinal.
+ the_ordering_segment (oge alpha) = ordinal.
 Proof.
   intros;apply segment_unbounded.
-  - pattern  (the_ordering_segment (ge alpha)); apply iota_ind.
-    +  generalize  (ordering_segment_ex_unique (ge alpha));
+  - pattern  (the_ordering_segment (oge alpha)); apply iota_ind.
+    +  generalize  (ordering_segment_ex_unique (oge alpha));
          intros. destruct  H. 
        destruct H.
        exists x; split;auto.
     +  destruct 1;eapply ordering_function_seg;eauto.
   -     generalize 
           (ordering_unbounded_unbounded 
-             (A:=the_ordering_segment (ge alpha)) 
-             (B:=ge alpha) 
+             (A:=the_ordering_segment (oge alpha)) 
+             (B:=oge alpha) 
              (f:=plus alpha));  intros H.
         apply H.
         unfold plus; intros;  apply ord_ok. 
@@ -77,9 +79,9 @@ Qed.
 Lemma plus_ordering (alpha : Ord) :
   ordering_function (plus alpha)
                     ordinal
-                    (ge alpha).
+                    (oge alpha).
 Proof.
- unfold plus;  generalize (@ord_ok (ge alpha));
+ unfold plus;  generalize (@ord_ok (oge alpha));
     rewrite  ge_o_segment;auto.
 Qed.
 
@@ -87,7 +89,7 @@ Qed.
 Lemma plus_elim (alpha : Ord) :
   forall P : (Ord->Ord)->Prop,
     (forall f: Ord->Ord, 
-        ordering_function f ordinal (ge alpha)-> P f) ->
+        ordering_function f ordinal (oge alpha)-> P f) ->
     P (plus alpha).
 Proof.
  intros  P H0; now apply H0, plus_ordering.
@@ -95,9 +97,9 @@ Qed.
 (* end snippet plusElim *)
 
 Lemma normal_plus_alpha (alpha : Ord) : 
-  normal (plus alpha) (ge alpha).
+  normal (plus alpha) (oge alpha).
 Proof.
- unfold plus;pattern (ord (ge alpha)).
+ unfold plus;pattern (ord (oge alpha)).
  unfold ord, some;apply epsilon_ind. 
  -  rewrite ge_o_segment; trivial.
    +  exists (plus alpha);apply (plus_ordering alpha); auto.
@@ -114,7 +116,7 @@ Qed.
 
 (* begin snippet alphaPlusZero *)
 
-Lemma alpha_plus_zero (alpha: Ord):   alpha + zero = alpha. (* .no-out *)
+Lemma alpha_plus_zero (alpha: Ord):   (alpha + zero = alpha)%sch. (* .no-out *)
 Proof. (* .no-out *)
   pattern  (plus alpha); apply plus_elim;eauto.
   (* ... *)
@@ -129,18 +131,18 @@ Proof. (* .no-out *)
         apply lt_trans with (f zero);auto.
 Qed.
 
-Remark ge_zero : (ge zero : Ensemble Ord) = ordinal.
+Remark ge_zero : (oge zero : Ensemble Ord) = ordinal.
 Proof with eauto with schutte.
   apply Extensionality_Ensembles.
   split.
    +  red; split.  
-   + unfold ge ...
+   + unfold oge ...
 Qed.
 
 (* begin snippet bunchOfLemmas *)
 
 (*| .. coq:: no-out |*)
-Lemma zero_plus_alpha (alpha : Ord): zero + alpha = alpha.
+Lemma zero_plus_alpha (alpha : Ord): (zero + alpha = alpha)%sch.
 (*||*) (*| .. coq:: none |*)
 Proof with auto with schutte.
   pattern (plus zero);  apply plus_elim ...
@@ -155,7 +157,7 @@ Proof with auto with schutte.
 Qed.
 (*||*)
 
-Lemma le_plus_l (alpha beta : Ord) : alpha <= alpha + beta. (* .no-out *)
+Lemma le_plus_l (alpha beta : Ord) : (alpha <= alpha + beta)%sch. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof.
   pattern alpha at 1;  rewrite  <- alpha_plus_zero;auto.
@@ -164,7 +166,7 @@ Proof.
 Qed.
 (*||*)
 
-Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta. (* .no-out *)
+Lemma le_plus_r (alpha beta : Ord) :  (beta <= alpha + beta)%sch. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof.
  pattern (plus alpha);  apply plus_elim;auto.
@@ -174,7 +176,7 @@ Qed.
 (*||*)
 
 Lemma plus_mono_r (alpha beta gamma : Ord) : 
-  beta < gamma -> alpha + beta < alpha + gamma. (* .no-out *)
+  (beta < gamma -> alpha + beta < alpha + gamma)%sch. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof.
  intro  H; pattern (plus alpha); apply plus_elim;auto.
@@ -182,8 +184,10 @@ Proof.
 Qed.
 (*||*)
 
+
+
 Lemma plus_of_succ (alpha beta : Ord) :
-  alpha + (succ beta) = succ (alpha + beta). (* .no-out *)
+  (alpha + (succ beta) = succ (alpha + beta))%sch. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof with trivial.
  pattern (plus alpha); apply plus_elim ...
@@ -248,7 +252,7 @@ Qed.
 
 
 Lemma alpha_plus_sup (alpha : Ord) (A : Ensemble Ord) :
-    Inhabited _ A ->
+    Ensembles.Inhabited  _ A ->
     countable A ->
     alpha + |_| A = |_| (image A (plus alpha)).
 Proof.
@@ -299,7 +303,7 @@ Proof.
  rewrite plus_limit; auto with schutte.
  -  apply le_antisym; auto with schutte.
   +    unfold omega_limit;  apply sup_mono;auto with schutte.
-   *   apply Ordering_Functions.R1 with ordinal (ge (F 1)).
+   *   apply Ordering_Functions.R1 with ordinal (oge (F 1)).
        apply plus_ordering.  
        apply    countable_members;auto with schutte.
        red; split. 
@@ -313,7 +317,7 @@ Proof.
   + unfold omega_limit; apply sup_mono.
   *    apply seq_range_countable; auto with schutte.
   *  simpl; auto with schutte.
-     apply Ordering_Functions.R1 with ordinal (ge (succ zero)).
+     apply Ordering_Functions.R1 with ordinal (oge (succ zero)).
      apply plus_ordering; auto with schutte.
      apply countable_members; auto with schutte.
      red; split. 
@@ -373,7 +377,7 @@ Section proof_of_associativity.
 
   Let g_alpha_beta gamma := alpha + (beta + gamma).
 
-  Remark of_g : ordering_function g_alpha_beta ordinal (ge (alpha+beta)).
+  Remark of_g : ordering_function g_alpha_beta ordinal (oge (alpha+beta)).
   Proof.
     repeat split.
     - intros;red; red; unfold g_alpha_beta; now apply plus_assoc1.
