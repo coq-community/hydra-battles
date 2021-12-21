@@ -47,9 +47,11 @@ Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
 
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
   with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
-
-Check PrimRec_PrimRecs_ind.
 (* end snippet SchemePrimRecInd *)
+
+(* begin snippet SchemePrimRecInda *)
+Check PrimRec_PrimRecs_ind.
+(* end snippet SchemePrimRecInda *)
 
 
 (** ** Semantics *)
