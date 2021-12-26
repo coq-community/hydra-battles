@@ -14,7 +14,7 @@
 \newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
 \newcommand{\make}{\texttt{make}\xspace}
 
-
+\definecolor{orange}{rgb}{1.0,0.6,0.0}
 \definecolor{plugincolor}{rgb}{0.6,0.0,0.6}
 \definecolor{mathcolor}{rgb}{0.0,0.0,0.6}
 \definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
@@ -130,24 +130,38 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Introduction}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Coq-community}
-  \begin{block}{Objectives}
-    \begin{itemize}
-    \item \TODO{}{}
-    \item\TODO{}{}
-    \end{itemize}
-  \end{block}
+  \frametitle{Introduction}
+  \TODO{}{Develop the abstract and background of the paper}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{Yet another book on \coq?}
-  \begin{block}{Kinds of books (existing)}
-    \TODO{}{}
-  \end{block}
+  %\frametitle{Yet another book on \coq?}
+  \begin{table}
+  \centering
+  \footnotesize
+  \begin{tabular}{lll}
+  \hline
+  \textbf{Title} & \textbf{Year} & \textbf{Category}\\
+    \hline
+   \coq reference manual &  $\geq 1989$ & \\
+  Coq'Art & 2004 & Traditional\\
+  Software Foundations & 2007 & Executable\\
+  Certified Programming with Dependent Types & 2011 &  Executable\\
+  Program Logics for Certified Compilers & 2014 & Traditional\\
+  Programs and Proofs & 2014 & Executable\\
+  Formal Reasoning About Programs& 2017 & Traditional\\
+  Computer Arithmetic and Formal Proofs & 2017 & Traditional\\
+    Mathematical Components & 2018 & Traditional\\
+  \hline
+  \end{tabular}
+  \caption{Coq book categorization.}
+  \label{tbl:books}
+\end{table}
+  
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -350,7 +364,9 @@
     \item A round (at time $t\in\mathbb{N}$) of a battle transforms an hydra associated with \textcolor{mathcolor}{$\alpha$} into the hydra associated with \textcolor{mathcolor}{$\canonseq{\alpha}{t+1}$}, the $t+1$-st element of the \emph{canonical sequence} of \textcolor{mathcolor}{$\alpha$}.
     \item We want to ``compute'' the length of sequences of the form 
       \textcolor{mathcolor}{$\langle \alpha_k=\alpha,\dots,\alpha_{i+1}=\canonseq{\alpha_i}{i+1},\dots, 1,0\rangle$}, where \textcolor{mathcolor}{$k\in\mathbb{N}$}.
-      
+      \item Such sequences are studied
+      as \emph{$\alpha$-large sets of natural numbers}  in Ketonen \& Solovay's article
+      \emph{Rapidly Growing {R}amsey Functions (1981)}.
     \end{itemize}
   \end{block}
 \end{frame}
@@ -360,10 +376,6 @@
 \begin{frame}
   \begin{block}{}
     \begin{itemize}
-    \item Sequences associated with hydra battles are studied
-      as \emph{$\alpha$-large sets of natural numbers}  in Ketonen \& Solovay's article
-      \emph{Rapidly Growing {R}amsey Functions (1981)}.
-
     \item Let \textcolor{mathcolor}{$0<\alpha<\epsilon_0$}, and \textcolor{mathcolor}{$i\in\mathbb{N}$}.
       The least index \textcolor{mathcolor}{$k$} such that \textcolor{mathcolor}{$\alpha_k=0$} is  \textcolor{mathcolor}{$H'_\alpha(i)$} where \textcolor{mathcolor}{$H'_\alpha$} is defined by transfinite induction over \textcolor{mathcolor}{$\alpha$}.
 
@@ -405,7 +417,7 @@
 
 \begin{frame}
   \begin{block}{}
-    The functions $H'_\alpha$ are ``implemented'' with \textcolor{plugincolor}{coq-equations}.
+    The functions \textcolor{mathcolor}{$H'_\alpha$} are implemented with \textcolor{plugincolor}{coq-equations}.
     \vspace{5pt}
     \begin{footnotesize}
       \inputsnippets{../Hprime_HprimeDef}   
@@ -414,7 +426,7 @@
   \end{block}
 
   \begin{block}{}
-    Using combinatorial lemmas by  [K. \& S.], we prove (by transfinite induction on \textcolor{mathcolor}{$\alpha$}):
+    Using combinatorial lemmas by  K. \& S., we prove (by mutual  transfinite induction on \textcolor{mathcolor}{$\alpha$}):
     \begin{quote}
       \begin{itemize}
       \item \textcolor{mathcolor}{$H'_\alpha$} is strictly monotonous
@@ -484,6 +496,31 @@
     
   \end{block}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Project Organization}
+  \begin{frame}
+    \frametitle{Project  Organization}
+    \begin{itemize}
+    \item Documentation with \alectr
+     \item Integration with \community
+     \item Package dependencies
+       \item Continuous integration
+    \end{itemize}
+  \end{frame}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}
+    \frametitle{\community}
+    \begin{block}{}
+      \community is an informal organization that aims to maintain interesting open source \coq projects  andfacilitate collaboration among Coq users on documentation, tooling, etc.
+      \begin{itemize}
+      \item Created in 2018,  run by volunteer Coq users on GitHub
+      \item At present, over than 50 projects, maintained by over than 30 volunteers
+      \item Some packages were unmaintained before their integration to \community. According to their scientific or historical interest, we decided to revive them.
+        \item After their transfer, packages may be the object of large changes  and refactorings.
+      \end{itemize}
+    \end{block}
+  \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Presenting proofs with \alectr}
@@ -569,7 +606,88 @@ Proof.
     \end{itemize}
   \end{block}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}
+  \frametitle{Package organization and dependencies}
+  
+\begin{figure}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tikzpicture}[thick]
+
+\begin{scope}[xshift=-6cm]
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
+
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\end{scope}
+
+\begin{scope}[yshift=-1cm,xshift=0.45cm]
+  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
+\end{scope}
+
+\begin{scope}[yshift=-2cm,xshift=-4cm]
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
+\end{scope}
+
+\begin{scope}[yshift=-3cm,xshift=-6cm]
+ \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+ \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+\end{scope}
+
+\draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
+\draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
+\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
+\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
+\draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
+\draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
+\draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
+
+\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south west) -- (goedelcc) ;
+\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+\draw[->] (equations) -- (hydras) ;
+\draw[->] (mathcomp) -- (gaia) ;
+\draw[->] (mathcomp) -- (chains) ;
+\draw[->] (paramcoq.south) -- (chains) ;
+\draw[->] (pockcc) -- (goedelcc) ;
+\end{tikzpicture}
+}
+\caption{\textcolor{lookcolor}{Genealogy} and dependencies for \Hydras packages.}
+ %Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
+  \label{fig:genealogy}
+\end{figure}
+
+%%%% TODO : Resize  !
+{\scriptsize
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{llllrr}
+\hline
+\textbf{Package name} &  \textbf{Version} & \textbf{Spec LOC} & \textbf{Proof LOC}\\
+\hline
+Pocklington & \texttt{8.12.0} & 825 & 3,798 \\
+Goedel  & \texttt{8.13.0} & 2,799 & 10,762 \\
+Gaia &  \texttt{1.12} & 28,850 & 124,839 \\
+Hydra-battles & \texttt{0.5} & 14,368 & 48,385 \\
+Addition-chains & \texttt{0.5} & 1,961 & 2,210 \\
+Gaia-hydras &  \texttt{0.5} & 81 & 177 \\
+\hline
+\end{tabular}
+\caption{\scriptsize Current numbers of lines of code for packages in the \Hydras galaxy.}
+\label{tbl:loc}
+\end{table}}
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
