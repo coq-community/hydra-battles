@@ -34,7 +34,7 @@
 \definecolor{pink}{rgb}{0.8,0.6,0.6}
 \definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
-
+\definecolor{cyan}{rgb}{0.0,0.4,0.8}
 \usepackage{tikz}
 \usepackage{tikzsymbols}
 \usepackage{pifont}
@@ -117,7 +117,7 @@
   Inria, Univ. de Paris, CNRS, IRIF, UMR 8243, F-75013 Paris, France
 }
 
-\usepackage[firstpage]{draftwatermark} 
+%\usepackage[firstpage]{draftwatermark} 
 \setbeamercolor{background canvas}{bg=}%transparent canvas
 
 \begin{document}
@@ -751,7 +751,7 @@ allowing to present and compare various formalization and proving techniques.
   \begin{block}{Library on ordinals}
     There exist already \coq libraries which formalize ordinal numbers.
     \begin{itemize}
-    \item \gaia (José Grimm) : Formalization of Bourbaki's Elements of Mathematics. {\color{lookcolor}\emph{This library uses an ordinal representation compatible with ours. It is  written in SSReflect/Mathcomp, and is also maintained in \community}.}
+    \item \gaia (José Grimm) : Formalization of Bourbaki's Elements of Mathematics. {\color{lookcolor}\emph{This library uses an ordinal representation compatible with ours (from the \textcolor{plugincolor}{Cantor} contrib) . It is  written in SSReflect/Mathcomp, and is also maintained in \community}.}
     \item A formalization by Minki Cho, using a different representation.
 {\color{darkorange}
 \begin{verbatim}
@@ -783,7 +783,7 @@ Inductive Ord.t :=
   \end{block}
 
   \begin{block}{Call to contributors }
-  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. Please contribute!
+  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please contribute, reuse!}
       \begin{itemize}
       \item New chapters
       \item Any correction or improvement (text and/or proofs)
