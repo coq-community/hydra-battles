@@ -15,6 +15,7 @@
 \newcommand{\make}{\texttt{make}\xspace}
 
 \definecolor{orange}{rgb}{1.0,0.6,0.0}
+\definecolor{darkorange}{rgb}{0.7,0.25,0.0}
 \definecolor{plugincolor}{rgb}{0.6,0.0,0.6}
 \definecolor{mathcolor}{rgb}{0.0,0.0,0.6}
 \definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
@@ -132,14 +133,33 @@
 \section{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Introduction}
-  \TODO{}{Develop the abstract and background of the paper}
+  \frametitle{The \Hydras project}
+  \begin{block}{}
+    \begin{itemize}
+    \item Experimental platform for the  development of \textcolor{lookcolor}{maintained} and \textcolor{lookcolor}{documented} libraries of formal proofs.
+    \item A project of \community, developped on Github
+      \begin{itemize}
+      \item CI/CD
+        \item Tools for collaboration (issues, PR, etc.)
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+  \begin{block}{Contents}
+    \begin{itemize}
+    \item Evolved version  of two contributions: \textcolor{plugincolor}{Cantor} and \textcolor{plugincolor}{Additions}
+    \item Maintenance of \textcolor{plugincolor}{Ackermann}
+      (part of Russel O'Connor's \textcolor{plugincolor}{Goedel})
+    \item Preliminary bridge to \textcolor{plugincolor}{Gaia} (José Grimm)
+      \item Documentation in pdf (280p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
+    \end{itemize}
+  \end{block}
+ 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  %\frametitle{Yet another book on \coq?}
+  \frametitle{Yet another book on \coq?}
   \begin{table}
   \centering
   \footnotesize
@@ -167,8 +187,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{Example-driven books}
-  \begin{block}{}
+   \begin{block}{Example-driven books}
     \begin{itemize}
     \item The structure is determined by the presented topics (discrete math, algorithmics, etc.). \coq technology (formalization and proof patterns) is presented when needed.
     \item No need to be complete (there is already a reference manual)
@@ -390,6 +409,8 @@
 
   \begin{block}{}
     The \textcolor{mathcolor}{$H'_\alpha$} family,  is a variant of the  \emph{Hardy hierarchy of rapidly growing functions}. For instance, \textcolor{mathcolor}{$H'_{\omega^3+3}(0)\geq2^{2^N}$}, where \textcolor{mathcolor}{$N=2^{70}-1$}.
+
+    {\color{lookcolor} Such functions defy common programming intuition: no test is possible, only proofs!}
   \end{block}
   
 \end{frame}
@@ -400,7 +421,7 @@
   \frametitle{Ordinals in \coq}
   
   \begin{block}{}
-    Ordinals less than $\epsilon_0$ are represented as \emph{ordinal notations}: comparison, canonical sequences, partition limit/successors/zero ordinals are implemented by certified functions, allowing the user to write proofs by computation.
+    Ordinals less than {\color{mathcolor}$\omega^\omega, \epsilon_0,  \Gamma_0$} are represented as \emph{ordinal notations}: comparison, canonical sequences, partition limit/successors/zero ordinals are implemented by certified functions, allowing the user to write proofs by computation.
 
     \begin{footnotesize}
       \inputsnippets{./ONDef}
@@ -417,7 +438,7 @@
 
 \begin{frame}
   \begin{block}{}
-    The functions \textcolor{mathcolor}{$H'_\alpha$} are implemented with \textcolor{plugincolor}{coq-equations}.
+    The functions \textcolor{mathcolor}{$H'_\alpha\;(\alpha< \epsilon_0)$} are implemented with \textcolor{plugincolor}{coq-equations}.
     \vspace{5pt}
     \begin{footnotesize}
       \inputsnippets{../Hprime_HprimeDef}   
@@ -498,15 +519,15 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Organization}
-  \begin{frame}
-    \frametitle{Project  Organization}
-    \begin{itemize}
-    \item Documentation with \alectr
-     \item Integration with \community
-     \item Package dependencies
-       \item Continuous integration
-    \end{itemize}
-  \end{frame}
+\begin{frame}
+  \frametitle{Project  Organization}
+  \begin{itemize}
+  \item Integration with \community
+  \item Documentation with \alectr
+  \item Package dependencies
+  \item Continuous integration
+  \end{itemize}
+\end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{frame}
@@ -690,27 +711,25 @@ Gaia-hydras &  \texttt{0.5} & 81 & 177 \\
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \TODO{}{maintenance, CI/CD,  etc.   (several slides).}
-\end{frame}
+% \begin{frame}
+%   \TODO{}{maintenance, CI/CD,  etc.   (several slides).}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \begin{frame}
-  \frametitle{Conclusion}
+  \frametitle{Conclusion and perspectives}
   \begin{block}{}
     \begin{itemize}
-    \item Changes in definitions and proofs already happen
-      (\emph{e.g.} type class structure), without making the book's maintenance difficult.
-    \item \Hydras and \community are on github. Please contribute!
+    \item \Hydras wants to be a connection between scientific litterature and proof assistant technology:
       \begin{itemize}
-      \item New chapters
-      \item Any improvement (text and/or proofs)
+      \item For the mathematician, it gives a concrete view of the mathematical contents: full proofs, examples, computable functions whenever possible, etc.
+        \item  For the \coq learner, it provides a consistent set of examples,
+allowing to present and compare various formalization and proving techniques.
       \end{itemize}
     \end{itemize}
   \end{block}
-
-\end{frame}
+  \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -721,31 +740,44 @@ Gaia-hydras &  \texttt{0.5} & 81 & 177 \\
     \begin{itemize}
     \item \gaia (José Grimm) : Formalization of Bourbaki's Elements of Mathematics. {\color{lookcolor}\emph{This library uses an ordinal representation compatible with ours. It is  written in SSreflect/Mathcomp, and is also maintained on \community}.}
     \item A formalization by Minki Cho, using a different representation.
+{\color{darkorange}
 \begin{verbatim}
 Inductive Ord.t :=
 | Ord.build: 
     forall (A: Type), (A -> Ord.t) -> Ord.t.
 \end{verbatim}
-      
+}  
     \end{itemize}
 
     Both libraries contain set-theoretical results about larger ordinals than ours. Having a library containing both our combinatorial results (large sets and rapidly growing functions) and mathematical definitions of ordinals would be an interesting project.
   \end{block}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\begin{frame}
-  \frametitle{Perspectives(2)}
-  \begin{block}{CI/CD}
-    \TODO{}{}
-  \end{block}
-  \begin{block}{Alectryon}
-     \TODO{}{}
-  \end{block}
-\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{More TODOs}
+  \begin{block}{}
+    \begin{itemize}
+    \item More results about hyper-complexity and fast growing functions
+    \item New toolchain for \alectr
+    \item More proof and specification patterns
+    \item etc.
+    \item \Hydras and \community are on github. Please contribute!
+      \begin{itemize}
+      \item New chapters
+      \item Any correction or improvement (text and/or proofs)
+        
+      \end{itemize}
+    \end{itemize}
+    
+  \end{block}
+  
+\end{frame}
+
 
 \end{document}
 
