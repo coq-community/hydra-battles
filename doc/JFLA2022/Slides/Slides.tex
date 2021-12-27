@@ -711,9 +711,22 @@ Gaia-hydras &  \texttt{0.5} & 81 & 177 \\
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \begin{frame}
-%   \TODO{}{maintenance, CI/CD,  etc.   (several slides).}
-% \end{frame}
+\begin{frame}
+  \frametitle{Maintenance, CI/CD}
+  \begin{block}{CD}
+    The continuously evolving version of the book is continuously deployed from the master branch to the \community website.
+  \end{block}
+
+  \begin{block}{Reverse Dependencies Compatibility Testing}
+    Since we have extracted part of {\color{plugincolor}goedel}, now {\color{plugincolor}goedel} depends on {\color{plugincolor}\Hydras}, and thus we are checking in CI that we do not break it (thanks to the \textcolor{lookcolor}{Coq Nix Toolbox},
+    which can generate such CI workflows)
+  \end{block}
+
+  \begin{block}{}
+  {\color{lookcolor}  With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.}
+  \end{block}
+
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -766,15 +779,19 @@ Inductive Ord.t :=
     \item New toolchain for \alectr
     \item More proof and specification patterns
     \item etc.
-    \item \Hydras and \community are on GitHub. Please contribute!
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Call to contributors }
+  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. Please contribute!
       \begin{itemize}
       \item New chapters
       \item Any correction or improvement (text and/or proofs)
         
-      \end{itemize}
+  
     \end{itemize}
-    
-  \end{block}
+     \end{block}
+ 
   
 \end{frame}
 
