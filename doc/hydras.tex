@@ -64,7 +64,7 @@
 \makeatother
 
 % \SetWatermarkLightness{0.8}
-% \definecolor{lightorange}{rgb}{1,0.9,0.9}
+\definecolor{darkblue}{rgb}{0,0.1,0.7}
 % \SetWatermarkScale{0.35}
 % \SetWatermarkText{Work Continuously in Progress}
 % \SetWatermarkColor{lightorange}
@@ -83,19 +83,34 @@ Russel O'Connor\cite{OConnor05}.}}
 \makeindex{additions}
 \makeindex{primrec}
 \begin{document}
-\maketitle
+\begin{titlepage}
+   \begin{center}
+       \vspace*{1cm}
+
+       \textbf{\LARGE Hydras \& Co.}
+
+       \vspace{0.5cm}
+        Formalized mathematics in \coq for inspiration and entertainement
+            
+       \vspace{1.5cm}
+
+       \emph{Pierre Castéran, LaBRI, Univ. Bordeaux, CNRS UMR 5800, \\ With contributions by Yves Bertot, \'Evelyne Contejean,  Jérémy Damour, Florian Hatat, Pascal Manoury, Karl Palmskog, Clément Pit-Claudel, and Théo Zimmermann. \\ The formalization of primitive recursive functions was originally authored by Russel O'Connor\cite{OConnor05}.} 
+
+ \vfill
+        \today 
+   
+    
+            
+      \end{center}
+\vfill
+      \centering
+      \includegraphics[width=13cm]{epsilon0.jpg}
+      \centerline{\emph{\small {\color{darkblue}Ordinal numbers (less than $\Gamma_0$)}}}
+\end{titlepage}
 
 
-
-
-% \cleardoublepage
-
-
-\tableofcontents
-
-% \mbox{~}
 \clearpage
-% \newpage
+\newpage
 % \mbox{~}
 \begin{quote}
  \emph{(Aprieta el bast\'on con las dos manos, se yergue un tanto,
@@ -118,10 +133,14 @@ I start from one point and go as far as possible.
 [John Coltrane]
 \end{quote}
 
+  
 
 
 
- 
+
+
+ \tableofcontents
+
 
 %-------------------------------------------------------------------
 
