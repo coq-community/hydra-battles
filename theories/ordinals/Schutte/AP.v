@@ -172,7 +172,8 @@ Proof with auto with schutte.
   intros  H  H0 H1; case H;  intros H2 H3.
   generalize (@plus_mono_r  beta gamma alpha); intro H4.
   replace alpha with (beta+alpha) ...
-Qed.
+  Qed.
+    
 (*||*)
 
 (* end snippet APPlusClosed *)

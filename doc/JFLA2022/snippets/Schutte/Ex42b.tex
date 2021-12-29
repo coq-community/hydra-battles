@@ -1,0 +1,31 @@
+\begin{alectryon}
+  % Generator: Alectryon
+  \sep
+  \begin{sentence}
+    \begin{input}
+      ~~\PY{n+nb}{assert}~\PY{o}{(}\PY{n}{HAP}\PY{o}{:=}~\PY{n}{AP\PYZus{}phi0}~\PY{l+m+mi}{2}\PY{o}{).}\nl
+    \end{input}
+  \end{sentence}
+  \sep
+  \begin{sentence}
+    \begin{input}
+      ~~\PY{n+nb}{elim}~~\PY{n}{HAP}\PY{o}{;}~\PY{n+nb}{intros}~\PY{n}{\PYZus{}}~\PY{n}{H0}\PY{o}{;}~\PY{n+nb}{apply}~\PY{n}{H0}\PY{o}{;}~\PY{n+nb}{clear}~\PY{n}{H0}\PY{o}{.}
+    \end{input}
+    \sep
+    \begin{output}
+      \begin{goals}
+        \begin{goal}
+          \begin{hyps}
+            \hyp{HAP}{\PY{n}{In}~\PY{n}{AP}~\PY{o}{(}\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{))}}
+          \end{hyps}
+          \sep
+          \infrule{}
+          \sep
+          \begin{conclusion}
+            \PY{n}{omega}~\PY{o}{+}~\PY{n}{F}~\PY{l+m+mi}{42}~\PY{o}{\PYZlt{}}~\PY{n}{phi0}~\PY{o}{(}\PY{n}{F}~\PY{l+m+mi}{2}\PY{o}{)}
+          \end{conclusion}
+        \end{goal}
+      \end{goals}
+    \end{output}
+  \end{sentence}
+\end{alectryon}

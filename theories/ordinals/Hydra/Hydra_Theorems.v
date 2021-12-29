@@ -229,7 +229,6 @@ Section battle_lenght_notPR.
   Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False. (* .no-out *)
  (* end snippet SmNotPR *)
 
-  
   Proof.
     intro; eapply dom_AckNotPR; eauto.
     apply m_dominates_Ack; auto.

@@ -1,0 +1,340 @@
+\begin{thebibliography}{10}
+
+\bibitem{Appel2014}
+Andrew~W. Appel.
+\newblock {\em Program Logics for Certified Compilers}.
+\newblock Cambridge University Press, Cambridge, United Kingdom, 2014.
+\newblock \url{https://www.cs.princeton.edu/~appel/papers/plcc.pdf}.
+
+\bibitem{TheoremProvingLean4}
+Jeremy Avigad, Leonardo de~Moura, Soonho Kong, and Sebastian Ullrich.
+\newblock Theorem proving in {Lean 4}, 2021.
+\newblock \url{https://leanprover.github.io/theorem_proving_in_lean4/}.
+
+\bibitem{BauerHydra}
+Andrej Bauer.
+\newblock The hydra game.
+\newblock \url{http://math.andrej.com/2008/02/02/the-hydra-game}.
+
+\bibitem{bauer2008}
+Andrej Bauer.
+\newblock The hydra game source code.
+\newblock \url{https://github.com/andrejbauer/hydra}, 2008.
+
+\bibitem{CoqArtCommunity}
+Yves Bertot and Pierre Cast{\'e}ran.
+\newblock {Coq'Art} examples and exercises.
+\newblock \url{https://github.com/coq-community/coq-art}.
+
+\bibitem{BC04}
+Yves Bertot and Pierre Cast\'eran.
+\newblock {\em Interactive Theorem Proving and Program Development: {Coq'Art}:
+  The Calculus of Inductive Constructions}.
+\newblock Springer, Berlin, Heidelberg, 2004.
+\newblock \url{https://www.labri.fr/perso/casteran/CoqArt/}.
+
+\bibitem{Boldo2017}
+Sylvie Boldo and Guillaume Melquiond.
+\newblock {\em Computer Arithmetic and Formal Proofs}.
+\newblock ISTE Press - Elsevier, 2017.
+
+\bibitem{brito2018monorepos}
+Gleison Brito, Ricardo Terra, and Marco~Tulio Valente.
+\newblock Monorepos: a multivocal literature review.
+\newblock {\em CoRR}, 2018.
+\newblock \url{https://arxiv.org/abs/1810.09477}.
+
+\bibitem{AdditionsContrib}
+Pierre Cast\'eran.
+\newblock Additions.
+\newblock User Contributions to the {Coq} Proof Assistant, 2004.
+\newblock \url{https://github.com/coq-contribs/additions}.
+
+\bibitem{PCiota}
+Pierre Cast{\'e}ran.
+\newblock Utilisation en {C}oq de l'op{\'e}rateur de description.
+\newblock In {\em Actes des Journ{\'e}es Francophones des Langages
+  Applicatifs}, pages 30--44, 2007.
+\newblock \url{http://jfla.inria.fr/2007/actes/PDF/03_casteran.pdf}.
+
+\bibitem{JFLA2018paper}
+Pierre Cast\'eran.
+\newblock Hydra ludica, une preuve d’impossibilité de prouver simplement.
+\newblock In Sylvie Boldo and Nicolas Magaud, editors, {\em Journées
+  Francophones des Langages Applicatifs}, pages 91--104, 2018.
+\newblock \url{https://hal.inria.fr/hal-01707376/document}.
+
+\bibitem{CantorContrib}
+Pierre Cast{\'e}ran and \'Evelyne Contejean.
+\newblock On ordinal notations.
+\newblock User Contributions to the {Coq} Proof Assistant, 2006.
+\newblock \url{https://github.com/coq-contribs/cantor}.
+
+\bibitem{HydraBook}
+Pierre Castéran.
+\newblock Hydras \& {Co.}
+\newblock
+  \url{https://github.com/coq-community/hydra-battles/releases/tag/v0.5}, 2021.
+
+\bibitem{CoqCommunity}
+The {C}oq community project.
+\newblock \url{https://github.com/coq-community/}.
+
+\bibitem{chlipalacpdt2011}
+Adam Chlipala.
+\newblock {\em Certified Programming with Dependent Types}.
+\newblock MIT Press, 2011.
+\newblock \url{http://adam.chlipala.net/cpdt/}.
+
+\bibitem{Chlipala2017}
+Adam Chlipala.
+\newblock Formal reasoning about programs, 2017.
+\newblock \url{http://adam.chlipala.net/frap/}.
+
+\bibitem{cohen:hal-03366644}
+Cyril Cohen and Th{\'e}o Zimmermann.
+\newblock {A Nix toolbox for reproducible Coq environments, Continuous
+  Integration and artifact reuse}.
+\newblock {The Coq Workshop}, July 2021.
+
+\bibitem{CoqPackageIndex}
+{Coq Development Team}.
+\newblock {Coq opam package index}.
+\newblock \url{https://coq.inria.fr/opam/www/}.
+
+\bibitem{Coq}
+{Coq Development Team}.
+\newblock {The Coq Proof Assistant}.
+\newblock \url{https://coq.inria.fr}.
+
+\bibitem{Grimm2009a}
+Jos{\'e} Grimm.
+\newblock Implementation of {Bourbaki's Elements of Mathematics} in {Coq}: Part
+  one, theory of sets.
+\newblock Research Report RR-6999, {INRIA}, 2009.
+\newblock \url{https://hal.inria.fr/inria-00408143}.
+
+\bibitem{Grimm2009b}
+Jos{\'e} Grimm.
+\newblock Implementation of {Bourbaki's Elements of Mathematics} in {Coq}: Part
+  two; ordered sets, cardinals, integers.
+\newblock Research Report RR-7150, {INRIA}, 2009.
+\newblock \url{https://hal.inria.fr/inria-00440786}.
+
+\bibitem{grimm:hal-00911710}
+Jos{\'e} Grimm.
+\newblock Implementation of three types of ordinals in {Coq}.
+\newblock Research Report RR-8407, {INRIA}, 2013.
+\newblock \url{https://hal.inria.fr/hal-00911710}.
+
+\bibitem{Grimm2014}
+Jos{\'e} Grimm.
+\newblock Fibonacci numbers and the {Stern-Brocot} tree in {Coq}.
+\newblock Research Report RR-8654, {INRIA}, 2014.
+\newblock \url{https://hal.inria.fr/hal-01093589}.
+
+\bibitem{Grimm2016}
+Jos{\'e} Grimm.
+\newblock Implementation of {Bourbaki's Elements of Mathematics} in {Coq}: Part
+  three structures.
+\newblock Research Report RR-8997, {INRIA}, 2016.
+\newblock \url{https://hal.inria.fr/hal-01412037}.
+
+\bibitem{Gaia}
+Jos{\'e} Grimm, Alban Quadrat, and Carlos Simpson.
+\newblock Gaia.
+\newblock \url{https://github.com/coq-community/gaia}.
+\newblock A Coq-community project.
+
+\bibitem{HydraBattles}
+Hydra battles.
+\newblock \url{https://github.com/coq-community/hydra-battles}.
+\newblock A {C}oq-community project.
+
+\bibitem{Keller2012}
+Chantal Keller and Marc Lasson.
+\newblock {Parametricity in an Impredicative Sort}.
+\newblock In {\em Computer Science Logic}, volume~16, pages 381--395. Schloss
+  Dagstuhl--Leibniz-Zentrum fuer Informatik, 2012.
+\newblock \url{http://drops.dagstuhl.de/opus/volltexte/2012/3685}.
+
+\bibitem{KS81}
+Jussi Ketonen and Robert Solovay.
+\newblock Rapidly growing {R}amsey functions.
+\newblock {\em Annals of Mathematics}, 113(2):267--314, 1981.
+\newblock \url{http://www.jstor.org/stable/2006985}.
+
+\bibitem{KP82}
+Laurie Kirby and Jeff Paris.
+\newblock Accessible independence results for {Peano} arithmetic.
+\newblock {\em Bulletin of the London Mathematical Society}, 14(4):285--293,
+  1982.
+\newblock
+  \url{https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf}.
+
+\bibitem{Knuth1984}
+Donald~E. Knuth.
+\newblock {Literate Programming}.
+\newblock {\em The Computer Journal}, 27(2):97--111, 01 1984.
+
+\bibitem{cachix}
+Domen Kožar.
+\newblock Cachix, 2018--2021.
+\newblock \url{https://cachix.org}.
+
+\bibitem{MCB}
+Assia Mahboubi and Enrico Tassi.
+\newblock {Mathematical Components}.
+\newblock \url{https://doi.org/10.5281/zenodo.3999478}, 2018.
+\newblock With contributions by Yves Bertot and Georges Gonthier.
+
+\bibitem{mathcompdocker}
+Erik Martin-Dorel.
+\newblock Docker images of mathcomp, 2018--2021.
+\newblock \url{https://github.com/math-comp/docker-mathcomp}.
+
+\bibitem{martindorel2020dockercoq}
+Erik Martin-Dorel.
+\newblock A gentle introduction to container-based {CI} for {Coq} projects.
+\newblock {The Coq Workshop}, July 2020.
+
+\bibitem{Mathlib}
+The mathlib Community.
+\newblock The {L}ean {M}athematical {L}ibrary.
+\newblock In {\em Proceedings of the 9th ACM SIGPLAN International Conference
+  on Certified Programs and Proofs}, CPP 2020, pages 367--381, New York, NY,
+  USA, 2020. Association for Computing Machinery.
+
+\bibitem{Nie2020a}
+Pengyu Nie, Karl Palmskog, Junyi~Jessy Li, and Milos Gligoric.
+\newblock Deep generation of {Coq} lemma names using elaborated terms.
+\newblock In {\em International Joint Conference on Automated Reasoning}, pages
+  97--118, 7 2020.
+\newblock \url{https://arxiv.org/abs/2004.07761}.
+
+\bibitem{Goedel}
+Russel O'Connor.
+\newblock Goedel.
+\newblock \url{https://github.com/coq-community/goedel}.
+\newblock A {C}oq-community project.
+
+\bibitem{OConnor05}
+Russell O'Connor.
+\newblock Essential incompleteness of arithmetic verified by {Coq}.
+\newblock In {\em International Conference on Theorem Proving in Higher Order
+  Logics}, pages 245--260, Berlin, Heidelberg, 2005. Springer.
+\newblock \url{https://arxiv.org/abs/cs/0505034}.
+
+\bibitem{SF}
+Benjamin Pierce et~al.
+\newblock {Software Foundations}.
+\newblock \url{https://softwarefoundations.cis.upenn.edu}.
+
+\bibitem{alectryongithub}
+Cl\'{e}ment Pit-Claudel.
+\newblock Alectryon.
+\newblock \url{https://github.com/cpitclaudel/alectryon}.
+
+\bibitem{alectryonpaper}
+Cl\'{e}ment Pit-Claudel.
+\newblock Untangling mechanized proofs.
+\newblock In {\em International Conference on Software Language Engineering},
+  pages 155--174, New York, NY, USA, 2020. Association for Computing Machinery.
+\newblock \url{https://dl.acm.org/doi/pdf/10.1145/3426425.3426940}.
+
+\bibitem{Promel2013}
+Hans~J{\"u}rgen Pr{\"o}mel.
+\newblock Rapidly growing {R}amsey functions.
+\newblock In {\em Ramsey Theory for Discrete Structures}, pages 97--103.
+  Springer, Cham, 2013.
+\newblock \url{https://link.springer.com/chapter/10.1007/978-3-319-01315-2_8}.
+
+\bibitem{schutte}
+Kurt Sch\"utte.
+\newblock {\em Proof Theory}.
+\newblock Springer, 1977.
+\newblock \url{https://link.springer.com/book/10.1007%2F978-3-642-66473-1}.
+
+\bibitem{Sergey:PnP}
+Ilya Sergey.
+\newblock {Programs and Proofs: Mechanizing Mathematics with Dependent Types},
+  2014.
+\newblock \url{https://doi.org/10.5281/zenodo.4996238}.
+
+\bibitem{CatsZFCContrib}
+Carlos Simpson.
+\newblock Category theory in {ZFC}.
+\newblock User Contributions to the {Coq} Proof Assistant, 2004.
+\newblock \url{https://github.com/coq-contribs/cats-in-zfc}.
+
+\bibitem{Simpson2004}
+Carlos Simpson.
+\newblock Set-theoretical mathematics in {Coq}, 2004.
+\newblock \url{https://arxiv.org/abs/math/0402336}.
+
+\bibitem{sozeau:hal-01671777}
+Matthieu Sozeau and Cyprien Mangin.
+\newblock Equations reloaded: High-level dependently-typed functional
+  programming and proving in {Coq}.
+\newblock {\em Proceedings of the ACM on Programming Languages}, 3(ICFP), July
+  2019.
+\newblock \url{https://hal.inria.fr/hal-01671777}.
+
+\bibitem{MS08}
+Matthieu Sozeau and Nicolas Oury.
+\newblock First-class type classes.
+\newblock In {\em International Conference on Theorem Proving in Higher Order
+  Logics}, pages 278--293, Berlin, Heidelberg, 2008. Springer.
+\newblock
+  \url{https://sozeau.gitlabpages.inria.fr/www/research/publications/First-Class_Type_Classes.pdf}.
+
+\bibitem{BS2011}
+Bas Spitters and Eelis van~der Weegen.
+\newblock Type classes for mathematics in type theory.
+\newblock {\em Mathematical Structures in Computer Science}, 21(4):795--825,
+  2011.
+\newblock \url{https://arxiv.org/abs/1102.1323}.
+
+\bibitem{dune}
+{The Dune authors}.
+\newblock Dune: A composable build system for {OCaml}, 2016--2021.
+\newblock \url{https://dune.build}.
+
+\bibitem{vanDoorn2020}
+Floris van Doorn, Gabriel Ebner, and Robert~Y. Lewis.
+\newblock Maintaining a library of formal mathematics.
+\newblock In Christoph Benzm{\"u}ller and Bruce Miller, editors, {\em
+  Intelligent Computer Mathematics}, pages 251--267, Cham, 2020. Springer
+  International Publishing.
+
+\bibitem{Wainer1970}
+Stan Wainer.
+\newblock A classification of the ordinal recursive functions.
+\newblock {\em Archiv f{\"u}r mathematische Logik und Grundlagenforschung},
+  13(3):136--153, Dec 1970.
+\newblock \url{https://link.springer.com/article/10.1007%2FBF01973619}.
+
+\bibitem{BW85}
+Stan Wainer and Wilfried Buchholz.
+\newblock Provably computable functions and the fast growing hierarchy.
+\newblock In Stephen~G. Simpson, editor, {\em Contemporary Mathematics},
+  volume~65, pages 179--198. American Mathematical Society, Providence, RI,
+  USA, 1987.
+\newblock
+  \url{http://nbn-resolving.de/urn/resolver.pl?urn=nbn:de:bvb:19-epub-3843-7}.
+
+\bibitem{zimmermann:tel-02451322}
+Th{\'e}o Zimmermann.
+\newblock {\em {Challenges in the collaborative evolution of a proof language
+  and its ecosystem}}.
+\newblock PhD thesis, {Universit{\'e} de Paris}, 2019.
+\newblock \url{https://hal.inria.fr/tel-02451322}.
+
+\bibitem{zimmermann2021grounded}
+Th{\'e}o Zimmermann and Jean-R{\'e}my Falleri.
+\newblock A grounded theory of community package maintenance
+  organizations-registered report.
+\newblock In {\em ICSME 2021-37th International Conference on Software
+  Maintenance and Evolution}, 2021.
+
+\end{thebibliography}

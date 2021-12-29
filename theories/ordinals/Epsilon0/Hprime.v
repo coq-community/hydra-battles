@@ -412,7 +412,7 @@ Section H'_omega_cube_3.
   
 (* begin snippet HprimeOmegaCube3a:: no-out *)
 
-  Let f k :=   (exp2 (S k ) * (S k) - 1)%nat.
+  Let f k :=   (exp2 (S k) * (S k) - 1)%nat.
 
   Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k. 
    Proof.
@@ -424,7 +424,6 @@ Section H'_omega_cube_3.
   (* end snippet HprimeOmegaCube3a *)
 
   (* begin snippet HprimeOmegaCube3b:: no-out *)
-  
   Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). 
    Proof.  rewrite R0; reflexivity.   Qed.
      
@@ -433,6 +432,7 @@ Section H'_omega_cube_3.
   (* begin snippet HprimeOmegaCube3c:: no-out *)
   
   Let N := (exp2 64 * 64 - 1)%nat. (* f (f 3)) *)
+
   (* end snippet HprimeOmegaCube3c *)
 
   Remark N_simpl: N = exp2 70 - 1.
@@ -469,10 +469,11 @@ Section H'_omega_cube_3.
       + apply  exp2_not_zero.
       + discriminate.
   Qed.
-
+  (* begin snippet  HprimeOmegaCube3de:: no-out *)
   Fact F2 : H'_ (phi0 3 + 3) 0 = f (f N).
-    rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
-  Qed.
+  (* end snippet  HprimeOmegaCube3de *)
+  rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
+  Qed. 
 
   Remark f_minoration n p : 0 < n -> n <= p -> exp2 n <= f p.
   Proof.
@@ -499,10 +500,6 @@ Section H'_omega_cube_3.
       + pose (x:= exp2 64); fold x in H0; fold x; lia.
       + left. 
   Qed. 
-
-  
-
-
 
 End H'_omega_cube_3.
 
