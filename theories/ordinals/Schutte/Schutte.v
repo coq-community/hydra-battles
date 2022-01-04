@@ -14,8 +14,6 @@
 From hydras Require Export Schutte_basics Ordering_Functions
         Addition AP CNF Critical Correctness_E0.
 
-
-
 (** * Warning
 
 
@@ -97,7 +95,7 @@ Proof.
   (* end  snippet Ex42c *)
   
 
-  (* begin snippet Ex42e *)
+  (* begin snippet Ex42e:: no-hyps *)
   apply AP_plus_closed; trivial. 
   (* ... *)
   (* end snippet Ex42e *)

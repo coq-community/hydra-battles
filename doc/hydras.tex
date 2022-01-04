@@ -52,6 +52,7 @@
 %%% between them).  A, B, C should be paths to files in movies/snippets/.
 \usepackage{etoolbox}
 \makeatletter
+\newcounter{snippets}
 \newcommand{\inputsnippets}[1]
   {{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
     \alectryon@copymacros\begin{io}
@@ -60,7 +61,9 @@
 \let\input@old\input % Save definition of \input
 \newcommand{\@inputsnippet}[1]
   {{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \refstepcounter{snippets}%
     \input@old{movies/snippets/#1}}}
+\AtEndDocument{\message{Snippets: \thesnippets}}
 \makeatother
 
 % \SetWatermarkLightness{0.8}
@@ -69,7 +72,7 @@
 % \SetWatermarkText{Work Continuously in Progress}
 % \SetWatermarkColor{lightorange}
 
-\author{Pierre Castéran\\ LaBRI, Univ. Bordeaux, CNRS UMR 5800, \thanks{With contributions by Yves Bertot, \'Evelyne Contejean,  Jérémy Damour, Florian Hatat, Pascal Manoury, Karl Palmskog, Clément Pit-Claudel, and Théo Zimmermann. The formalization of primitive recursive functions was originally authored by 
+\author{Pierre Castéran\\ Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800, F-33400 Talence, France \thanks{With contributions by Yves Bertot, \'Evelyne Contejean,  Jérémy Damour, Florian Hatat, Pascal Manoury, Karl Palmskog, Clément Pit-Claudel, and Théo Zimmermann. The formalization of primitive recursive functions was originally authored by 
 Russel O'Connor\cite{OConnor05}.}}
 \date{\today}
 %\date{August 2021}
@@ -110,6 +113,10 @@ Russel O'Connor\cite{OConnor05}.}}
 
 
 \clearpage
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
 \newpage
 % \mbox{~}
 \begin{quote}

@@ -43,9 +43,10 @@ Open Scope M_scope.
 (** *** The "naive" reference function *)
 Generalizable Variables  A E_op E_one E_eq.
 
-(* begin snippet powerDef *) 
 
-Fixpoint power `{M: @EMonoid A  E_op E_one E_eq}(x:A)(n:nat) :=
+(* begin snippet powerDef *)
+Fixpoint power `{M: @EMonoid A  E_op E_one E_eq}
+         (x:A)(n:nat) :=
   match n with 0%nat => E_one
              | S p =>   x *  x ^ p
   end
@@ -53,9 +54,11 @@ where "x ^ n" := (power x n) : M_scope.
 (* end snippet powerDef *)
 
 (* begin snippet powerEqns:: no-out *)
+
 Lemma power_eq1  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
   x ^ 0 = E_one.
 Proof. reflexivity. Qed.
+
 
 Lemma power_eq2  `{M: @EMonoid A  E_op E_one E_eq}(x:A) (n:nat) :
  x ^ (S n)  = x * x ^ n.
@@ -65,7 +68,6 @@ Lemma power_eq3  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
 Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
 (* end snippet powerEqns *)
-
 
 (** *** The binary exponentiation function (exponents in  [positive])  *)
 
@@ -109,7 +111,6 @@ end.
   It is straightforward to adapt [Pos_bpow]
  for accepting exponents of type [N] :
 *)
-
 
 (* begin snippet NBpow *)
 Definition N_bpow  `{M: @EMonoid A E_op E_one E_eq} x (n:N) := 
@@ -296,7 +297,7 @@ Qed.
 
 (* begin snippet NBpowOk:: no-out *)
 Lemma N_bpow_ok : 
-  forall n x, x ^b n  == x ^ N.to_nat n.
+  forall n x, x ^b n == x ^ N.to_nat n.
 (* end snippet NBpowOk *)
 Proof.
   destruct n.
@@ -351,7 +352,7 @@ Qed.
 
 (** ** Remark
 
-Iw we normalize exponentiation functions with a given exponent, we notice
+If we normalize exponentiation functions with a given exponent, we notice
 that the obtained functions do not execute the same computations, but it is
 hard to visualize why the binary method is more efficient than the naive one.
 
