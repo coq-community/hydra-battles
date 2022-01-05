@@ -479,20 +479,28 @@ Qed.
 
 
 Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
+#[local] Notation g_E0 := E0.
+#[local] Notation h_E0 := E0.E0.
 
 
-Definition E0_iota (a: E0.E0): E0.
+Definition gE0_lt (alpha beta: g_E0) := g_lt (cnf alpha) (cnf beta).
+
+
+
+Definition E0_iota (a: h_E0): g_E0.
   esplit with (iota (E0.cnf a)).
-  rewrite -nf_ref. case: a. intros. cbn. by rewrite cnf_ok.
+  rewrite -nf_ref. case: a. intros; cbn; by rewrite cnf_ok.
 Defined.
-  
 
-Definition E0_pi (a: E0): E0.E0.
+
+
+
+Definition E0_pi (a: g_E0): h_E0.
   refine (@E0.mkord (pi a) _); red.
   case: a. cbn. move => cnf0 /eqP; by rewrite nf_ref iota_pi.  
 Defined.
 
-Lemma E0_iota_nf (a:E0.E0) : g_nfb (E0_iota a).
+Lemma E0_iota_nf (a:h_E0) : g_nfb (E0_iota a).
 Proof.
   case: a => cnf Hnf; cbn; by rewrite -nf_ref. 
 Qed.
