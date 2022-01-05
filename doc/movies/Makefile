@@ -1,21 +1,15 @@
-PYTHON ?= python3
-
 export coq_root := ../../theories
 export snippets_root := ./snippets
 assets_root := $(snippets_root)/assets
 
+include config.mk
+
 default: all
 
-targets.mk:
+targets.mk: gen_targets.py
 	@$(PYTHON) gen_targets.py "$(coq_root)" "$(snippets_root)" > "$@"
 
 include targets.mk
-
-coq_flags := -R $(coq_root)/ordinals hydras -R $(coq_root)/additions additions -R $(coq_root)/gaia gaia_hydras
-
-alectryon_flags := --frontend coq --backend snippets-hydras $(coq_flags)
-
-alectryon = $(PYTHON) ./driver.py $(alectryon_flags) --output-directory "$@"
 
 .PHONY: all clean
 

@@ -1,0 +1,17 @@
+snippets := \
+	Schutte_Ex42a.tex Schutte_Ex42b.tex Schutte_Ex42c.tex \
+	Schutte_Ex42d.tex Schutte_Ex42e.tex \
+	Hprime_HprimeDef.tex  E0_Ex42.tex Pow_evalPow17LetIn.tex
+
+
+default: paper.pdf
+
+style := --pygments-style alectryon
+alectryon += $(style)
+
+paper.pdf: paper.tex paper.bbl pygments.sty  alectryon.sty $(snippets_tex)
+	pdflatex paper;  pdflatex paper; pdflatex paper
+
+clean:
+	latexmk -c
+

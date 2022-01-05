@@ -477,6 +477,7 @@ Qed.
 
 (** Well formed ordinals *)
 
+
 Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
 
 

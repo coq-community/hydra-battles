@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
-from os import getenv, sep
+from os import getenv
 from pathlib import Path
 
-root, snippets = Path(getenv("coq_root")), Path(getenv("snippets_root"))
-
 RULE = """
-{}: {}
+{}: $(coq_root)/{}
 	$(alectryon) "$<"
 	@touch "$@"
 """
 
 targets = []
+root = Path(getenv("coq_root"))
 
 for coqfile in root.glob('**/*.v'):
-    pth = coqfile.relative_to(root)
-    target = str(snippets / pth.stem) + sep
+    relpath = coqfile.relative_to(root)
+    target = "$(snippets_root)/{}/".format(relpath.stem)
     targets.append(target)
-    print(RULE.format(target, coqfile))
+    print(RULE.format(target, relpath))
 
 print("targets := {}".format(" ".join(str(t) for t in targets)))

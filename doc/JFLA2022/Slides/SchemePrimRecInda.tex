@@ -1,0 +1,38 @@
+\begin{alectryon}
+  % Generator: Alectryon
+  \sep
+  \begin{sentence}
+    \begin{input}
+      \PY{k+kn}{Check}~\PY{n}{PrimRec\PYZus{}PrimRecs\PYZus{}ind}\PY{o}{.}
+    \end{input}
+    \sep
+    \begin{output}
+      \begin{messages}
+        \begin{message}
+          \PY{n}{PrimRec\PYZus{}PrimRecs\PYZus{}ind}\nl
+          ~~~~~\PY{o}{:}~\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{P}~\PY{o}{:}~\PY{k+kr}{forall}~\PY{n+nv}{n}~\PY{o}{:}~\PY{n}{nat}\PY{o}{,}~\PY{n}{PrimRec}~\PY{n}{n}~\PY{o}{\PYZhy{}\PYZgt{}}~\PY{k+kt}{Prop}\PY{o}{)}\nl
+          ~~~~~~~~~\PY{o}{(}\PY{n+nv}{P0}~\PY{o}{:}~\PY{k+kr}{forall}~\PY{n+nv}{n}~\PY{n+nv}{n0}~\PY{o}{:}~\PY{n}{nat}\PY{o}{,}\nl
+          ~~~~~~~~~~~~~~~\PY{n}{PrimRecs}~\PY{n}{n}~\PY{n}{n0}~\PY{o}{\PYZhy{}\PYZgt{}}~\PY{k+kt}{Prop}\PY{o}{),}\nl
+          ~~~~~~~\PY{n}{P}~\PY{l+m+mi}{1}~\PY{n}{succFunc}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{n}{P}~\PY{l+m+mi}{0}~\PY{n}{zeroFunc}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{o}{(}\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{n}~\PY{n+nv}{m}~\PY{o}{:}~\PY{n}{nat}\PY{o}{)}~\PY{o}{(}\PY{n+nv}{l}~\PY{o}{:}~\PY{n}{m}~\PY{o}{\PYZlt{}}~\PY{n}{n}\PY{o}{),}\nl
+          ~~~~~~~~\PY{n}{P}~\PY{n}{n}~\PY{o}{(}\PY{n}{projFunc}~\PY{n}{n}~\PY{n}{m}~\PY{n}{l}\PY{o}{))}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{o}{(}\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{n}~\PY{n+nv}{m}~\PY{o}{:}~\PY{n}{nat}\PY{o}{)}~\PY{o}{(}\PY{n+nv}{g}~\PY{o}{:}~\PY{n}{PrimRecs}~\PY{n}{n}~\PY{n}{m}\PY{o}{),}\nl
+          ~~~~~~~~\PY{n}{P0}~\PY{n}{n}~\PY{n}{m}~\PY{n}{g}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~~\PY{k+kr}{forall}~\PY{n+nv}{h}~\PY{o}{:}~\PY{n}{PrimRec}~\PY{n}{m}\PY{o}{,}\nl
+          ~~~~~~~~\PY{n}{P}~\PY{n}{m}~\PY{n}{h}~\PY{o}{\PYZhy{}\PYZgt{}}~\PY{n}{P}~\PY{n}{n}~\PY{o}{(}\PY{n}{composeFunc}~\PY{n}{n}~\PY{n}{m}~\PY{n}{g}~\PY{n}{h}\PY{o}{))}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{o}{(}\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{n}~\PY{o}{:}~\PY{n}{nat}\PY{o}{)}~\PY{o}{(}\PY{n+nv}{g}~\PY{o}{:}~\PY{n}{PrimRec}~\PY{n}{n}\PY{o}{),}\nl
+          ~~~~~~~~\PY{n}{P}~\PY{n}{n}~\PY{n}{g}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~~\PY{k+kr}{forall}~\PY{n+nv}{h}~\PY{o}{:}~\PY{n}{PrimRec}~\PY{o}{(}\PY{n}{S}~\PY{o}{(}\PY{n}{S}~\PY{n}{n}\PY{o}{)),}\nl
+          ~~~~~~~~\PY{n}{P}~\PY{o}{(}\PY{n}{S}~\PY{o}{(}\PY{n}{S}~\PY{n}{n}\PY{o}{))}~\PY{n}{h}~\PY{o}{\PYZhy{}\PYZgt{}}~\PY{n}{P}~\PY{o}{(}\PY{n}{S}~\PY{n}{n}\PY{o}{)}~\PY{o}{(}\PY{n}{primRecFunc}~\PY{n}{n}~\PY{n}{g}~\PY{n}{h}\PY{o}{))}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{o}{(}\PY{k+kr}{forall}~\PY{n+nv}{n}~\PY{o}{:}~\PY{n}{nat}\PY{o}{,}~\PY{n}{P0}~\PY{n}{n}~\PY{l+m+mi}{0}~\PY{o}{(}\PY{n}{PRnil}~\PY{n}{n}\PY{o}{))}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{o}{(}\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{n}~\PY{n+nv}{m}~\PY{o}{:}~\PY{n}{nat}\PY{o}{)}~\PY{o}{(}\PY{n+nv}{p}~\PY{o}{:}~\PY{n}{PrimRec}~\PY{n}{n}\PY{o}{),}\nl
+          ~~~~~~~~\PY{n}{P}~\PY{n}{n}~\PY{n}{p}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~~\PY{k+kr}{forall}~\PY{n+nv}{p0}~\PY{o}{:}~\PY{n}{PrimRecs}~\PY{n}{n}~\PY{n}{m}\PY{o}{,}\nl
+          ~~~~~~~~\PY{n}{P0}~\PY{n}{n}~\PY{n}{m}~\PY{n}{p0}~\PY{o}{\PYZhy{}\PYZgt{}}~\PY{n}{P0}~\PY{n}{n}~\PY{o}{(}\PY{n}{S}~\PY{n}{m}\PY{o}{)}~\PY{o}{(}\PY{n}{PRcons}~\PY{n}{n}~\PY{n}{m}~\PY{n}{p}~\PY{n}{p0}\PY{o}{))}~\PY{o}{\PYZhy{}\PYZgt{}}\nl
+          ~~~~~~~\PY{k+kr}{forall}~\PY{o}{(}\PY{n+nv}{n}~\PY{o}{:}~\PY{n}{nat}\PY{o}{)}~\PY{o}{(}\PY{n+nv}{p}~\PY{o}{:}~\PY{n}{PrimRec}~\PY{n}{n}\PY{o}{),}~\PY{n}{P}~\PY{n}{n}~\PY{n}{p}
+        \end{message}
+      \end{messages}
+    \end{output}
+  \end{sentence}
+\end{alectryon}

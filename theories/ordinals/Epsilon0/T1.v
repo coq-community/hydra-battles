@@ -3883,7 +3883,6 @@ Section Proof_of_dist.
     pose proof (Hind b) as ->; [ | try apply tail_LT_cons| | | ];
     eauto with T1.
 
-
  Lemma L0 : forall p, P p.
   Proof.
     apply well_founded_induction with LT.
@@ -4176,6 +4175,8 @@ Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
 Compute pp (3 * (omega + 5)).
 
 Compute pp (3 * (omega * 7 + 15)).
+
+
 
 (** * Examples *)
 
