@@ -46,9 +46,10 @@ First, there must be a lot of typos to correct, references and index items to ad
 The following extensions are planned, but help is needed:
 
 \begin{itemize}
-\item Semi automatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
+\item Semiautomatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
 \item Extension to $\Gamma_0$ (in Veblen normal form)
-\item More lemmas about hierarchies of rapidly growing functioit ns, and their relationship 
+\item More lemmas about hierarchies of rapidly growing
+  functions, and their relationship 
     with primitive recursive functions and provability in Peano arithmetic 
 (following~\cite{KS81, KP82}).
 \item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
@@ -455,9 +456,9 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 
 
 In order to describe trees where each node can have an arbitrary (but finite) number of sons, it is usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
-(see for instance Chapter 14, pages 400-406 of \cite{BC04}).
+(see for instance Chapter 14, pages 400-406 of \cite{BC04,BC04ch14}).
 
-For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydra.
+For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydras.
 \label{types:Hydra}
 \label{types:Hydrae}
 
@@ -487,7 +488,7 @@ type \texttt{Hydrae}:
 \input{movies/snippets/Hydra_Definitions/HydraAlt}
 
 Using this representation, re-define all the constructions of this chapter.
-You will probably have to use patterns described for instance in~\cite{BC04} or the archives of the Coq-club~\cite{Coq}.
+You will probably have to use patterns described for instance in~\cite{BC04} or the archives of the \coq communication channels (please consult~\url{https://coq.inria.fr/community.html}).
 
   
 \end{project}
