@@ -12,11 +12,11 @@ Set Bullet Behavior "Strict Subproofs".
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
-#[local] Notation hT1 := T1.T1.
+#[global] Notation hT1 := T1.T1.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 
-#[local]Notation gT1 := CantorOrdinal.T1.
+#[global]Notation gT1 := CantorOrdinal.T1.
 
 (* end snippet hT1gT1 *)
 
@@ -26,46 +26,46 @@ Unset Strict Implicit.
 (** From hydra to gaia and back *)
 
 (* begin snippet MoreNotations *)
-#[local] Notation g_zero := CantorOrdinal.zero.
-#[local] Notation h_zero := T1.zero. 
+#[global] Notation g_zero := CantorOrdinal.zero.
+#[global] Notation h_zero := T1.zero. 
 
-#[local] Notation g_one := CantorOrdinal.one.
-#[local] Notation h_one := T1.one.
+#[global] Notation g_one := CantorOrdinal.one.
+#[global] Notation h_one := T1.one.
 
-#[local] Notation h_cons := T1.ocons.
-#[local] Notation g_cons := CantorOrdinal.cons.
+#[global] Notation h_cons := T1.ocons.
+#[global] Notation g_cons := CantorOrdinal.cons.
 
-#[local] Notation h_fin := T1.fin.
+#[global] Notation h_fin := T1.fin.
 
-#[local] Notation h_omega := T1.omega.
-#[local] Notation g_omega := T1omega. 
+#[global] Notation h_omega := T1.omega.
+#[global] Notation g_omega := T1omega. 
 
-#[local] Notation h_succ := T1.succ.
-#[local] Notation g_succ := T1succ.
+#[global] Notation h_succ := T1.succ.
+#[global] Notation g_succ := T1succ.
 
-#[local] Notation h_phi0 alpha := (T1.phi0 alpha).
-#[local] Notation g_phi0 := CantorOrdinal.phi0.
+#[global] Notation h_phi0 alpha := (T1.phi0 alpha).
+#[global] Notation g_phi0 := CantorOrdinal.phi0.
 
-#[local] Notation h_plus := T1.plus.
-#[local] Notation g_add := T1add.
+#[global] Notation h_plus := T1.plus.
+#[global] Notation g_add := T1add.
 
-#[local] Notation h_mult := T1.mult.
-#[local] Notation g_mul := T1mul.
+#[global] Notation h_mult := T1.mult.
+#[global] Notation g_mul := T1mul.
 
-#[local] Notation h_lt := T1.lt.
-#[local] Notation g_lt := T1lt.
+#[global] Notation h_lt := T1.lt.
+#[global] Notation g_lt := T1lt.
 
-#[local] Notation h_LT := T1.LT.
-#[local] Notation g_LT := (restrict T1nf T1lt).
+#[global] Notation h_LT := T1.LT.
+#[global] Notation g_LT := (restrict T1nf T1lt).
 
-#[local] Notation h_nfb := T1.nf_b.
-#[local] Notation g_nfb := T1nf.
+#[global] Notation h_nfb := T1.nf_b.
+#[global] Notation g_nfb := T1nf.
 
-#[local] Notation h_limitb := T1.limitb.
-#[local] Notation g_limitb := T1limit.
+#[global] Notation h_limitb := T1.limitb.
+#[global] Notation g_limitb := T1limit.
 
-#[local] Notation h_is_succ := T1.succb.
-#[local] Notation g_is_succ := T1is_succ.
+#[global] Notation h_is_succ := T1.succb.
+#[global] Notation g_is_succ := T1is_succ.
 
 (* end snippet MoreNotations *)
 
@@ -475,15 +475,16 @@ Proof.
   move: IHalpha; case:alpha => /= //. 
 Qed.
 
-(** Well formed ordinals *)
+(** Well formed ordinals as a structure *)
 
 
 Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
-#[local] Notation g_E0 := E0.
-#[local] Notation h_E0 := E0.E0.
+#[global] Notation g_E0 := E0.
+#[global] Notation h_E0 := E0.E0.
+#[global] Notation h_cnf := E0.cnf.
+#[global] Notation g_cnf := cnf.
 
-
-Definition gE0_lt (alpha beta: g_E0) := g_lt (cnf alpha) (cnf beta).
+Definition gE0_lt (alpha beta: g_E0) := g_lt (g_cnf alpha) (g_cnf beta).
 
 
 
@@ -497,11 +498,41 @@ Defined.
 
 Definition E0_pi (a: g_E0): h_E0.
   refine (@E0.mkord (pi a) _); red.
-  case: a. cbn. move => cnf0 /eqP; by rewrite nf_ref iota_pi.  
+  case: a  => /= cnf0 /eqP; by rewrite nf_ref iota_pi.  
 Defined.
 
 Lemma E0_iota_nf (a:h_E0) : g_nfb (E0_iota a).
 Proof.
-  case: a => cnf Hnf; cbn; by rewrite -nf_ref. 
+  case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
 
+Definition E0_eqb (alpha beta: g_E0):=
+  g_cnf alpha == g_cnf beta.
+
+Require Import Logic.Eqdep_dec.
+
+Lemma E0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
+Proof.
+  case: alpha ; case: beta => x Hx y Hy /=. unfold E0_eqb => /= /eqP .
+   move =>Heq; subst.   
+   have  H0: Hx = Hy. 
+   apply eq_proofs_unicity_on.
+   intro y; destruct y, (g_nfb x); auto.
+   subst; auto.    
+Qed. 
+
+Lemma E0_eq_iff alpha beta : E0_eqb alpha beta <-> alpha = beta.
+Proof. 
+  split.
+  - apply E0_eq1.
+  - move => Heq; unfold E0_eqb; subst => //. 
+Qed.
+
+Lemma E0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
+Proof.
+  case_eq(E0_eqb alpha beta).
+  - constructor.  by rewrite -E0_eq_iff.
+  - constructor. move => H0; subst.
+    move : H => // /=; cbn .
+    by rewrite T1eq_refl.
+Qed.
