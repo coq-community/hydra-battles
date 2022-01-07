@@ -490,10 +490,8 @@ Definition gE0_lt (alpha beta: g_E0) := g_lt (g_cnf alpha) (g_cnf beta).
 
 Definition E0_iota (a: h_E0): g_E0.
   esplit with (iota (E0.cnf a)).
-  rewrite -nf_ref. case: a. intros; cbn; by rewrite cnf_ok.
+  rewrite -nf_ref. case: a => /= cnf cnf_ok.  by rewrite cnf_ok.
 Defined.
-
-
 
 
 Definition E0_pi (a: g_E0): h_E0.
@@ -513,26 +511,48 @@ Require Import Logic.Eqdep_dec.
 
 Lemma E0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
 Proof.
-  case: alpha ; case: beta => x Hx y Hy /=. unfold E0_eqb => /= /eqP .
+  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0_eqb => /= /eqP .
    move =>Heq; subst.   
-   have  H0: Hx = Hy. 
-   apply eq_proofs_unicity_on.
-   intro y; destruct y, (g_nfb x); auto.
-   subst; auto.    
+   have  H0: Hx = Hy; last first.
+   -   by rewrite H0.   
+   - apply eq_proofs_unicity_on; case; case (g_nfb x); auto.
 Qed. 
 
 Lemma E0_eq_iff alpha beta : E0_eqb alpha beta <-> alpha = beta.
 Proof. 
   split.
-  - apply E0_eq1.
-  - move => Heq; unfold E0_eqb; subst => //. 
+  - apply E0_eq1 => Heq.
+  - move => ?  ; subst; rewrite /E0_eqb => //. 
 Qed.
 
 Lemma E0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
 Proof.
   case_eq(E0_eqb alpha beta).
   - constructor.  by rewrite -E0_eq_iff.
-  - constructor. move => H0; subst.
+  - constructor => H0; subst.
     move : H => // /=; cbn .
     by rewrite T1eq_refl.
 Qed.
+
+
+From Coq Require Import Relations Basics
+     Wellfounded.Inverse_Image Wellfounded.Inclusion.
+
+(** TODO: simplify this proof !!! *)
+
+Lemma gE0_lt_wf : well_founded gE0_lt.
+Proof.
+   move => x; apply Acc_incl with (fun x y =>  E0.Lt (E0_pi x) (E0_pi y)).
+  - move => a b ; rewrite /gE0_lt => Hab. 
+    case: a Hab => cnf0 i0 Hb.
+    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
+     rewrite -(iota_pi cnf0) in Hlt i0.
+     rewrite -(iota_pi cnf1) in Hlt i1.
+     rewrite -decide_hlt_rw in Hlt.
+     repeat split. 
+     + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
+     + red in Hlt; rewrite bool_decide_eq_true in Hlt => //.
+     + rewrite /bool_decide -!nf_ref in  i1;  move: i1 => /eqP //.
+  -  apply Acc_inverse_image, E0.Lt_wf. 
+Qed. 
+
