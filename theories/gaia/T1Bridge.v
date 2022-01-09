@@ -7,7 +7,6 @@ From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
 Set Bullet Behavior "Strict Subproofs".
 
-
 (* begin snippet hT1gT1 *)
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
@@ -27,7 +26,7 @@ Unset Strict Implicit.
 
 (* begin snippet MoreNotations *)
 #[global] Notation g_zero := CantorOrdinal.zero.
-#[global] Notation h_zero := T1.zero. 
+#[global] Notation h_zero := T1.zero.
 
 #[global] Notation g_one := CantorOrdinal.one.
 #[global] Notation h_one := T1.one.
