@@ -488,7 +488,7 @@ Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
 Definition gE0_lt (alpha beta: g_E0) := g_lt (cnf alpha) (cnf beta).
 
 Definition gE0_eqb (alpha beta: g_E0):= cnf alpha == cnf beta.
-(* end snippet gE0Def *)
+(* end snippet E0Def *)
 
 
 
@@ -505,7 +505,7 @@ Definition E0_pi (a: g_E0): h_E0.
   refine (@E0.mkord (pi a) _); red.
   case: a  => /= cnf0 /eqP; by rewrite nf_ref iota_pi.  
 Defined.
-(* end snippet E0iotaPi *)
+(* end snippet gE0iotaPi *)
 
 Lemma E0_iota_nf (a:h_E0) : g_nfb (E0_iota a).
 Proof.
