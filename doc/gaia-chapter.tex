@@ -95,6 +95,20 @@ compatible.
 
 \inputsnippets{T1Bridge/nfRef}
 
+\section{Well formed ordinals}
+For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+
+\inputsnippets{T1Bridge/gE0Def}
+\inputsnippets{T1Bridge/E0EqP}
+
+In order to import definitions and lemmas
+from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
+
+\inputsnippets{T1Bridge/E0iotaPi}
+
+These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
+
+\inputsnippets{T1Bridge/gE0LtWf}
 
 \section{Gaia's proof of well-foundedness}
 The library \Hydras already contains two proofs
@@ -109,9 +123,18 @@ This proof is quite dense and qualified as ``a bit tricky''. We just present her
 The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
 the proof in Section~\ref{sec:strongly-accessible}.
 
+\begin{remark}
+  The following snippets have been generated, not from
+  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, but on a provisional copy:
+\url{../theories/gaia/nfgaia.v} we made in order to insert comments for \alectr.  This copy is planned to be removed when we are able to add \alectr directives to a \coq source we are not allowed to modify.
+\end{remark}
+
 \subsection{Restricted recursion}
 As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
 But the \emph{restriction} of \texttt{T1lt} to terms in normal form \emph{is} well-founded. The following section introduces a  vocabulary in order to reason about statements of the form  ``the restriction of the relation $R$ to a subset $P$ of $A$ is well founded''.
+
+
+
 
 \inputsnippets{nfwfgaia/restrictedRecursion}
 

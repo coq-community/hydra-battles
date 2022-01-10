@@ -170,3 +170,4 @@ theories/ordinals/solutions_exercises/MultisetWf.v
 theories/gaia/T1Bridge.v
 theories/gaia/T1Bridge_use.v
 theories/gaia/nfwfgaia.v
+theories/gaia/GCanon.v

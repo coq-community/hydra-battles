@@ -1,5 +1,3 @@
-(* begin snippet T1BridgeUse:: no-out *)
-
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 Require Import T1Bridge.
@@ -9,11 +7,17 @@ From gaia Require Import ssete9.
 Import ssete9.CantorOrdinal. 
 Set Bullet Behavior "Strict Subproofs".
 
+From hydras Require Import Canon.
+
+#[global] Notation hcanon := canon. 
+
+Definition gcanon (a: gT1) (i:nat) : gT1 :=
+  iota (hcanon (pi a) i).
 
 
-Lemma L1 (a: hT1):  (h_omega * (a * h_omega) = h_omega * a * h_omega)%t1.
-Proof. by rewrite h_multA. Qed.
-(* end snippet T1BridgeUse *)
+
+Compute gcanon (g_phi0 T1omega) 6 == (g_phi0 (\F 6))%brg.
+
 
 
 
