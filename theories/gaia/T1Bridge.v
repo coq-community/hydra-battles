@@ -37,7 +37,7 @@ Unset Strict Implicit.
 #[global] Notation h_fin := T1.fin.
 
 #[global] Notation h_omega := T1.omega.
-#[global] Notation g_omega := T1omega. 
+#[global] Notation ω := T1omega. 
 
 #[global] Notation h_succ := T1.succ.
 #[global] Notation g_succ := T1succ.
@@ -159,7 +159,7 @@ Proof. by []. Qed.
 Lemma Finite_ref (n:nat) : refines0 (h_fin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma omega_ref : refines0 h_omega g_omega.
+Lemma omega_ref : refines0 h_omega ω.
 Proof. by []. Qed.
 
 (* end snippet constantRefs *)
@@ -576,7 +576,11 @@ Delimit Scope BrGaia_scope with brg.
 
 Infix "*" := g_mul : BrGaia_scope.
 
-Lemma L1' (a: gT1) : (g_omega * (a * g_omega) = g_omega * a * g_omega)%brg.
+Lemma L1' (a: gT1) : (ω * (a * ω) = ω * a * ω)%brg.
 Proof. by  rewrite mulA. Qed. 
 
 Print T1mul.
+
+(* begin snippet utf8try *)
+Check ω.
+(* end snippet utf8try *)
