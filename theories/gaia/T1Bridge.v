@@ -582,5 +582,6 @@ Proof. by  rewrite mulA. Qed.
 Print T1mul.
 
 (* begin snippet utf8try *)
+(**  Try to print ω *)
 Check ω.
 (* end snippet utf8try *)
