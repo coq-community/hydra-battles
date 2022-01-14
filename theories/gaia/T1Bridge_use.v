@@ -11,8 +11,8 @@ Set Bullet Behavior "Strict Subproofs".
 
 
 
-Lemma L1 (a: hT1):  (h_omega * (a * h_omega) = h_omega * a * h_omega)%t1.
-Proof. by rewrite h_multA. Qed.
+Lemma L1 (a: hT1):  (homega * (a * homega) = homega * a * homega)%t1.
+Proof. by rewrite hmultA. Qed.
 (* end snippet T1BridgeUse *)
 
 

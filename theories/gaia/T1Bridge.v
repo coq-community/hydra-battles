@@ -25,46 +25,46 @@ Unset Strict Implicit.
 (** From hydra to gaia and back *)
 
 (* begin snippet MoreNotations *)
-#[global] Notation g_zero := CantorOrdinal.zero.
-#[global] Notation h_zero := T1.zero.
+#[global] Notation gzero := CantorOrdinal.zero.
+#[global] Notation hzero := T1.zero.
 
-#[global] Notation g_one := CantorOrdinal.one.
-#[global] Notation h_one := T1.one.
+#[global] Notation gone := CantorOrdinal.one.
+#[global] Notation hone := T1.one.
 
-#[global] Notation h_cons := T1.ocons.
-#[global] Notation g_cons := CantorOrdinal.cons.
+#[global] Notation hcons := T1.ocons.
+#[global] Notation gcons := CantorOrdinal.cons.
 
-#[global] Notation h_fin := T1.fin.
+#[global] Notation hfin := T1.fin.
 
-#[global] Notation h_omega := T1.omega.
-#[global] Notation g_omega := T1omega. 
+#[global] Notation homega := T1.omega.
+#[global] Notation gomega := T1omega. 
 
-#[global] Notation h_succ := T1.succ.
-#[global] Notation g_succ := T1succ.
+#[global] Notation hsucc := T1.succ.
+#[global] Notation gsucc := T1succ.
 
-#[global] Notation h_phi0 alpha := (T1.phi0 alpha).
-#[global] Notation g_phi0 := CantorOrdinal.phi0.
+#[global] Notation hphi0 alpha := (T1.phi0 alpha).
+#[global] Notation gphi0 := CantorOrdinal.phi0.
 
-#[global] Notation h_plus := T1.plus.
-#[global] Notation g_add := T1add.
+#[global] Notation hplus := T1.plus.
+#[global] Notation gadd := T1add.
 
-#[global] Notation h_mult := T1.mult.
-#[global] Notation g_mul := T1mul.
+#[global] Notation hmult := T1.mult.
+#[global] Notation gmul := T1mul.
 
-#[global] Notation h_lt := T1.lt.
-#[global] Notation g_lt := T1lt.
+#[global] Notation hlt := T1.lt.
+#[global] Notation glt := T1lt.
 
-#[global] Notation h_LT := T1.LT.
-#[global] Notation g_LT := (restrict T1nf T1lt).
+#[global] Notation hLT := T1.LT.
+#[global] Notation gLT := (restrict T1nf T1lt).
 
-#[global] Notation h_nfb := T1.nf_b.
-#[global] Notation g_nfb := T1nf.
+#[global] Notation hnfb := T1.nf_b.
+#[global] Notation gnfb := T1nf.
 
-#[global] Notation h_limitb := T1.limitb.
-#[global] Notation g_limitb := T1limit.
+#[global] Notation hlimitb := T1.limitb.
+#[global] Notation glimitb := T1limit.
 
-#[global] Notation h_is_succ := T1.succb.
-#[global] Notation g_is_succ := T1is_succ.
+#[global] Notation his_succ := T1.succb.
+#[global] Notation gis_succ := T1is_succ.
 
 (* end snippet MoreNotations *)
 
@@ -73,13 +73,13 @@ Unset Strict Implicit.
 Fixpoint iota (alpha : hT1) : gT1 :=
   match alpha with
     T1.zero => zero
-  | h_cons alpha n beta => g_cons (iota alpha) n (iota beta)
+  | hcons alpha n beta => gcons (iota alpha) n (iota beta)
   end.
 
 Fixpoint pi (alpha : gT1) : hT1 :=
   match alpha with
     zero => T1.zero
-  | g_cons alpha n beta => h_cons (pi alpha) n (pi beta)
+  | gcons alpha n beta => hcons (pi alpha) n (pi beta)
   end.
 
 (* end snippet iotaPiDef *)
@@ -147,19 +147,19 @@ Qed.
 (* begin snippet constantRefs:: no-out *)
 
 
-Lemma zero_ref : refines0 h_zero g_zero.
+Lemma zero_ref : refines0 hzero gzero.
 Proof. by []. Qed.
 
 
-Lemma one_ref : refines0 h_one g_one.
+Lemma one_ref : refines0 hone gone.
 Proof. by []. Qed.
 
 
 
-Lemma Finite_ref (n:nat) : refines0 (h_fin n) (\F n).
+Lemma Finite_ref (n:nat) : refines0 (hfin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma omega_ref : refines0 h_omega g_omega.
+Lemma omega_ref : refines0 homega gomega.
 Proof. by []. Qed.
 
 (* end snippet constantRefs *)
@@ -168,7 +168,7 @@ Proof. by []. Qed.
 (* begin snippet unaryRefs:: no-out *)
 
 
-Lemma succ_ref: refines1 h_succ g_succ.
+Lemma succ_ref: refines1 hsucc gsucc.
 (*| .. coq:: none |*)
 Proof.
   red.  elim => [//|//  x].
@@ -177,7 +177,7 @@ Proof.
 Qed.
 (*||*)
 
-Lemma phi0_ref x: refines0 (h_phi0 x) (g_phi0 (iota x)). (* .no-out *)
+Lemma phi0_ref x: refines0 (hphi0 x) (gphi0 (iota x)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. by []. Qed.
 (* end snippet unaryRefs *)
@@ -207,9 +207,9 @@ Qed.
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
-  | Lt => g_lt (iota x) (iota y)
+  | Lt => glt (iota x) (iota y)
   | Eq => iota x = iota y
-  | Gt => g_lt (iota y) (iota x)
+  | Gt => glt (iota y) (iota x)
   end.
 (* end snippet compareRef *)
 Proof.
@@ -237,7 +237,7 @@ Proof.
 Qed.
 
 (* begin snippet ltRef:: no-out *)
-Lemma lt_ref : refinesRel h_lt g_lt.
+Lemma lt_ref : refinesRel hlt glt.
 (* end snippet ltRef *)
 Proof.
   move=> a b; split.
@@ -257,7 +257,7 @@ Qed.
 
 (* begin snippet decideHLtRw:: no-out *)
 Lemma decide_hlt_rw (a b : hT1):
-  bool_decide (h_lt a b) = (iota a < iota b).
+  bool_decide (hlt a b) = (iota a < iota b).
 (* end snippet decideHLtRw *)
 Proof.
   rewrite /T1.lt; generalize (compare_ref a b);
@@ -293,7 +293,7 @@ Qed.
 
 
 (* begin snippet plusRef:: no-out *)
-Lemma plus_ref : refines2 h_plus g_add.
+Lemma plus_ref : refines2 hplus gadd.
 (* end snippet plusRef *)
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
@@ -304,7 +304,7 @@ Proof.
   - by rewrite /Comparable.compare H Hx1y1.
   - replace (iota x1 < iota y1) with false.
     rewrite /Comparable.compare H /= Hx1y1; f_equal.
-    change (g_cons (iota y1) n0 (iota y2)) with (iota (h_cons y1 n0 y2)).
+    change (gcons (iota y1) n0 (iota y2)) with (iota (hcons y1 n0 y2)).
     by rewrite IHx2.
     by apply T1lt_anti in H.
 Qed.
@@ -313,48 +313,48 @@ Qed.
 
 Section Proof_of_mult_ref.
 
-  Lemma T1mul_eqn1 (c : gT1) : c * g_zero = g_zero. 
+  Lemma T1mul_eqn1 (c : gT1) : c * gzero = gzero. 
   Proof. by []. Qed.
 
-  Lemma mult_eqn1 c : h_mult c h_zero = h_zero.
+  Lemma mult_eqn1 c : hmult c hzero = hzero.
   Proof. case: c; cbn => //; by case. 
   Qed.
 
 
-  Lemma T1mul_eqn3 n b n' b' : g_cons g_zero n b * g_cons g_zero n' b' =
-                                 g_cons g_zero (n * n' + n + n') b'.      
+  Lemma T1mul_eqn3 n b n' b' : gcons gzero n b * gcons gzero n' b' =
+                                 gcons gzero (n * n' + n + n') b'.      
   Proof. by [].  Qed. 
 
 
   Lemma mult_eqn3 n b n' b' :
-    h_mult (h_cons h_zero n b) (h_cons h_zero n' b') =
-      h_cons h_zero (n * n' + n + n') b'.      
+    hmult (hcons hzero n b) (hcons hzero n' b') =
+      hcons hzero (n * n' + n + n') b'.      
   Proof. cbn; f_equal; nia. Qed.
 
 
   Lemma T1mul_eqn4 a n b n' b' :
-    a != zero -> (g_cons a n b) * (g_cons zero n' b') =
-                   g_cons a (n * n' + n + n') b.
+    a != zero -> (gcons a n b) * (gcons zero n' b') =
+                   gcons a (n * n' + n + n') b.
   Proof. 
     move => /T1eqP.  cbn.
-    move =>  Ha'; have Heq: T1eq a g_zero = false.
+    move =>  Ha'; have Heq: T1eq a gzero = false.
     { move: Ha'; case: a => //. }
     rewrite Heq; by cbn.        
   Qed.
 
   Lemma mult_eqn4 a n b n' b' :
     a <> T1.zero ->
-    T1.mult (h_cons a n b) (h_cons T1.zero n' b') =
-      h_cons a (n * n' + n + n') b.
+    T1.mult (hcons a n b) (hcons T1.zero n' b') =
+      hcons a (n * n' + n + n') b.
   Proof. 
     cbn.  case: a => [//|alpha n0 beta _ ].
     f_equal; nia. 
   Qed.
 
   Lemma T1mul_eqn5 a n b a' n' b' :
-    a' != g_zero ->
-    (g_cons a n b) * (g_cons a' n' b') =
-      g_cons (a + a') n' (g_mul (g_cons a n b) b').
+    a' != gzero ->
+    (gcons a n b) * (gcons a' n' b') =
+      gcons (a + a') n' (gmul (gcons a n b) b').
   Proof. 
     move => H /=;  cbn;  have Ha' : T1eq a' zero = false. 
     { move: a' H; case => //. }
@@ -362,22 +362,22 @@ Section Proof_of_mult_ref.
   Qed.
 
   Lemma mult_eqn5 a n b a' n' b' :
-    a' <>  h_zero ->
-    T1.mult (h_cons a n b)  (h_cons a' n' b') =
-      h_cons (h_plus a  a') n' (h_mult (h_cons a n b) b').
+    a' <>  hzero ->
+    T1.mult (hcons a n b)  (hcons a' n' b') =
+      hcons (hplus a  a') n' (hmult (hcons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
   Qed.
 
-  Lemma iota_cons_rw a n b : iota (h_cons a n b)= g_cons (iota a) n (iota b). 
+  Lemma iota_cons_rw a n b : iota (hcons a n b)= gcons (iota a) n (iota b). 
   Proof. by []. Qed.
 
-  Lemma iota_zero_rw  : iota h_zero = g_zero. 
+  Lemma iota_zero_rw  : iota hzero = gzero. 
   Proof. by []. Qed.
 
   (* begin snippet multRef:: no-out *)
 
-  Lemma mult_ref : refines2 h_mult g_mul.
+  Lemma mult_ref : refines2 hmult gmul.
   (* end snippet multRef *)
   Proof.
     move => x y;  move: x; induction y. 
@@ -395,8 +395,8 @@ Section Proof_of_mult_ref.
                   ** simpl iota; simpl T1add; f_equal.
                      destruct (T1.T1_eq_dec y2 T1.zero).
                      { subst; by cbn. }
-                     { change (g_cons zero n0 (iota beta)) with
-                         (iota (h_cons T1.zero n0 beta)); now rewrite IHy2.
+                     { change (gcons zero n0 (iota beta)) with
+                         (iota (hcons T1.zero n0 beta)); now rewrite IHy2.
                      }
                ++  destruct y1; [now destruct n1| now compute].
          * destruct (T1.T1_eq_dec y1 T1.zero).
@@ -408,19 +408,19 @@ Section Proof_of_mult_ref.
                 ++ rewrite T1mul_eqn5.
                    ** rewrite  mult_eqn5 => //. 
                       simpl iota; rewrite plus_ref; f_equal. 
-                      change (g_cons (iota alpha) n0 (iota beta))
-                        with (iota (h_cons alpha n0 beta)); now rewrite IHy2.
+                      change (gcons (iota alpha) n0 (iota beta))
+                        with (iota (hcons alpha n0 beta)); now rewrite IHy2.
                    **  case: y1 n2 IHy1 => //.
   Qed.
 
 End Proof_of_mult_ref.
 
 (* begin snippet multA:: no-out *)
-Lemma mult_refR (a b : gT1) : h_mult (pi a) (pi b) = pi (a * b).
+Lemma mult_refR (a b : gT1) : hmult (pi a) (pi b) = pi (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
 
 
-Lemma h_multA : associative h_mult.
+Lemma hmultA : associative hmult.
 Proof. 
   move => a b c. 
   by rewrite -(pi_iota a) -(pi_iota b) -(pi_iota c) !mult_refR mulA. 
@@ -432,7 +432,7 @@ Qed.
 
 (* begin snippet nfRef:: no-out *)
 
-Lemma nf_ref (a: hT1)  : h_nfb a = g_nfb (iota a).
+Lemma nf_ref (a: hT1)  : hnfb a = gnfb (iota a).
 (* end snippet nfRef *)
 Proof.
   elim: a => //.
@@ -441,7 +441,7 @@ Proof.
     by rewrite andbA decide_hlt_rw.
 Qed.
 
-Lemma LT_ref : refinesRel  h_LT  g_LT.
+Lemma LT_ref : refinesRel  hLT  gLT.
 Proof.
   split.   
   - destruct 1 as [H [H0 H1]]; split. 
@@ -456,7 +456,7 @@ Qed.
 
 (** Limits, successors, etc *)
 
-Lemma limitb_ref (a:T1.T1) : h_limitb a = g_limitb (iota a).
+Lemma limitb_ref (a:T1.T1) : hlimitb a = glimitb (iota a).
 Proof.
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta. 
@@ -467,7 +467,7 @@ Proof.
 Qed.
 
 
-Lemma is_succ_ref (a:T1.T1) : h_is_succ a = g_is_succ (iota a).
+Lemma is_succ_ref (a:T1.T1) : his_succ a = gis_succ (iota a).
 Proof. 
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta.
@@ -477,17 +477,17 @@ Qed.
 (** Well formed ordinals as a structure *)
 
 (* begin snippet E0Def:: no-out *)
-Structure E0 := mkE0 { cnf :> gT1 ; _ : g_nfb cnf == true}.
+Structure E0 := mkE0 { cnf :> gT1 ; _ : gnfb cnf == true}.
 
-#[global] Notation g_E0 := E0.
-#[global] Notation h_E0 := E0.E0.
-#[global] Notation h_cnf := E0.cnf.
-#[global] Notation g_cnf := cnf.
+#[global] Notation gE0 := E0.
+#[global] Notation hE0 := E0.E0.
+#[global] Notation hcnf := E0.cnf.
+#[global] Notation gcnf := cnf.
 
 
-Definition gE0_lt (alpha beta: g_E0) := g_lt (cnf alpha) (cnf beta).
+Definition gE0_lt (alpha beta: gE0) := glt (cnf alpha) (cnf beta).
 
-Definition gE0_eqb (alpha beta: g_E0):= cnf alpha == cnf beta.
+Definition gE0_eqb (alpha beta: gE0):= cnf alpha == cnf beta.
 (* end snippet E0Def *)
 
 
@@ -495,19 +495,19 @@ Definition gE0_eqb (alpha beta: g_E0):= cnf alpha == cnf beta.
 
 
 (* begin snippet gE0iotaPi:: no-out *)
-Definition E0_iota (a: h_E0): g_E0.
+Definition E0_iota (a: hE0): gE0.
   esplit with (iota (E0.cnf a)).
   rewrite -nf_ref; case: a => /= cnf cnf_ok;  by rewrite cnf_ok.
 Defined.
 
 
-Definition E0_pi (a: g_E0): h_E0.
+Definition E0_pi (a: gE0): hE0.
   refine (@E0.mkord (pi a) _); red.
   case: a  => /= cnf0 /eqP; by rewrite nf_ref iota_pi.  
 Defined.
 (* end snippet gE0iotaPi *)
 
-Lemma E0_iota_nf (a:h_E0) : g_nfb (E0_iota a).
+Lemma E0_iota_nf (a:hE0) : gnfb (E0_iota a).
 Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
@@ -522,7 +522,7 @@ Proof.
   move =>Heq; subst.   
   have  H0: Hx = Hy; last first.
   -   by rewrite H0.   
-  - apply eq_proofs_unicity_on; case; case (g_nfb x); auto.
+  - apply eq_proofs_unicity_on; case; case (gnfb x); auto.
 Qed. 
 
 Lemma gE0_eq_iff alpha beta : gE0_eqb alpha beta <-> alpha = beta.
@@ -574,9 +574,9 @@ Declare Scope BrGaia_scope. (* Gaia to Bridge *)
 
 Delimit Scope BrGaia_scope with brg.
 
-Infix "*" := g_mul : BrGaia_scope.
+Infix "*" := gmul : BrGaia_scope.
 
-Lemma L1' (a: gT1) : (g_omega * (a * g_omega) = g_omega * a * g_omega)%brg.
+Lemma L1' (a: gT1) : (gomega * (a * gomega) = gomega * a * gomega)%brg.
 Proof. by  rewrite mulA. Qed. 
 
 Print T1mul.
