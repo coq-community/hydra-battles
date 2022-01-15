@@ -37,7 +37,7 @@ Unset Strict Implicit.
 #[global] Notation hfin := T1.fin.
 
 #[global] Notation homega := T1.omega.
-#[global] Notation gomega := T1omega. 
+#[global] Notation ω := T1omega. 
 
 #[global] Notation hsucc := T1.succ.
 #[global] Notation gsucc := T1succ.
@@ -159,7 +159,8 @@ Proof. by []. Qed.
 Lemma Finite_ref (n:nat) : refines0 (hfin n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma omega_ref : refines0 homega gomega.
+
+Lemma omega_ref : refines0 homega ω.
 Proof. by []. Qed.
 
 (* end snippet constantRefs *)
@@ -576,7 +577,13 @@ Delimit Scope BrGaia_scope with brg.
 
 Infix "*" := gmul : BrGaia_scope.
 
-Lemma L1' (a: gT1) : (gomega * (a * gomega) = gomega * a * gomega)%brg.
+
+Lemma L1' (a: gT1) : (ω * (a * ω) = ω * a * ω)%brg.
 Proof. by  rewrite mulA. Qed. 
 
 Print T1mul.
+
+(* begin snippet utf8try *)
+(**  Try to print ω *)
+Check ω.
+(* end snippet utf8try *)
