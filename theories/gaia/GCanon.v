@@ -12,33 +12,43 @@ From hydras Require Import Canon.
 #[global] Notation hcanon := canon. 
 
 Definition gcanon (a: gT1) (i:nat) : gT1 :=
-  iota (hcanon (pi a) i).
+  h2g (hcanon (g2h a) i).
 
 Compute gcanon (gphi0 T1omega) 6 == (gphi0 (\F 6))%brg.
 
 Lemma gcanon_zero i:  gcanon gzero i = gzero. 
 Proof.  unfold gcanon => //. Qed. 
 
-Lemma nf_gcanon alpha i : gnfb alpha -> gnfb (gcanon alpha i).
+Lemma nf_gcanon alpha i : gnf alpha -> gnf (gcanon alpha i).
 Proof.  
- unfold gcanon; rewrite -nf_ref => Halpha; rewrite -(iota_pi alpha)in Halpha.
+ unfold gcanon; rewrite -nf_ref => Halpha; rewrite -(h2g2h alpha)in Halpha.
  rewrite -nf_ref in Halpha; by  apply nf_canon. 
 Qed.
 
 
-Lemma gcanon_succ i alpha: gnfb alpha -> gcanon (gsucc alpha) i = alpha.
+Lemma gcanon_succ i alpha: gnf alpha -> gcanon (gsucc alpha) i = alpha.
 Proof.
-  rewrite -(iota_pi alpha). rewrite succ_ref. rewrite -nf_ref.
-  unfold gcanon. rewrite pi_iota.
+  rewrite -(h2g2h alpha). rewrite succ_ref. rewrite -nf_ref.
+  unfold gcanon. rewrite g2h2g.
   move => Halpha; rewrite canon_succ => //.
 Qed.
 
 
+
+Lemma GcanonS_LE alpha n:
+    gnf alpha -> gcanon alpha n.+1 <= gcanon alpha n.+2.
+Proof.
+  rewrite -(h2g2h alpha) -nf_ref. 
+  unfold gcanon; rewrite g2h2g =>  Hnf; by apply le_ref,  canonS_LE. 
+Qed.
+
+
+(* LE = Restriction.restrict nf (leq hlt)
+     : hT1 -> hT1 -> Prop
+ *)
+
 (* TODO : port the following lemmas 
 
-canonS_LE:
-  forall [alpha : hT1] (n : nat),
-  nf alpha -> hcanon alpha n.+1 t1<= hcanon alpha n.+2
 canon0_phi0_succ_eqn:
   forall [gamma : hT1], nf gamma -> hcanon (T1.phi0 (hsucc gamma)) 0 = hzero
 canon0_LT:
