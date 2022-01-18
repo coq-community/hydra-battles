@@ -42,6 +42,22 @@ Proof.
   unfold gcanon; rewrite g2h2g =>  Hnf; by apply le_ref,  canonS_LE. 
 Qed.
 
+Lemma gcanon0_phi0_succ_eqn alpha:
+  gnf alpha -> gcanon (gphi0 (gsucc alpha)) 0 = gzero.
+Proof.
+  rewrite -(h2g2h alpha) -nf_ref;unfold gcanon => Hnf. 
+  rewrite succ_ref phi0_ref g2h2g.
+  rewrite canon0_phi0_succ_eqn => //.
+Qed. 
+
+Lemma gcanon0_LT alpha:
+  gnf alpha -> alpha <> gzero -> glt (gcanon alpha 0) alpha.
+Proof. 
+  rewrite -(h2g2h alpha) -nf_ref;unfold gcanon => Hnf Hpos.  
+  rewrite g2h2g; apply lt_ref, canon0_LT => //.
+  move => H; apply Hpos; rewrite H => //.
+Qed. 
+
 
 (* LE = Restriction.restrict nf (leq hlt)
      : hT1 -> hT1 -> Prop
@@ -49,10 +65,6 @@ Qed.
 
 (* TODO : port the following lemmas 
 
-canon0_phi0_succ_eqn:
-  forall [gamma : hT1], nf gamma -> hcanon (T1.phi0 (hsucc gamma)) 0 = hzero
-canon0_LT:
-  forall [alpha : hT1], nf alpha -> alpha <> hzero -> hcanon alpha 0 t1< alpha
 canonS_lt:
   forall (i : nat) [alpha : hT1],
   nf alpha -> alpha <> hzero -> hlt (hcanon alpha i.+1) alpha
