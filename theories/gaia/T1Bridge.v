@@ -101,6 +101,19 @@ Proof.
   by rewrite IHalpha1 IHalpha2.
 Qed.
 
+Lemma g2h_eq_iff a b :  g2h a = g2h b <-> a = b.
+Proof. 
+    split.
+    - rewrite -(h2g2h a) -(h2g2h b)  !g2h2g => // Heq //; rewrite Heq => //.
+    - move => H; by subst. 
+Qed.
+
+Lemma h2g_eq_iff a b :  h2g a = h2g b <-> a = b.
+Proof. 
+    split.
+    - rewrite -(g2h2g a) -(g2h2g b) !h2g2h => // Heq //; rewrite Heq => //.
+    - move => H; by subst. 
+Qed.
 
 (** refinement of constants, functions, etc. *)
 
@@ -394,6 +407,9 @@ Section Proof_of_mult_ref.
   Lemma h2g_cons_rw a n b : h2g (hcons a n b)= gcons (h2g a) n (h2g b). 
   Proof. by []. Qed.
 
+  Lemma g2h_cons_rw a n b : g2h (gcons a n b) = hcons (g2h a) n (g2h b).
+  Proof. by []. Qed.
+  
   Lemma h2g_zero_rw  : h2g hzero = gzero. 
   Proof. by []. Qed.
 

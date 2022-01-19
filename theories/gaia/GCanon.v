@@ -59,26 +59,32 @@ Proof.
 Qed. 
 
 
-(* LE = Restriction.restrict nf (leq hlt)
-     : hT1 -> hT1 -> Prop
- *)
+Lemma gcanonS_lt  (i : nat) [alpha : gT1]:
+  gnf alpha -> alpha <> gzero -> glt (gcanon alpha i.+1) alpha.
+Proof.
+  rewrite -(h2g2h alpha) -nf_ref;unfold gcanon => Hnf Hpos.
+  rewrite g2h2g; apply lt_ref, canonS_LT => //.
+  move => H; apply Hpos; rewrite H => //.
+Qed. 
+
+
+Lemma gcanonS_cons_not_zero  (i : nat) (alpha : gT1) (n : nat) (beta : gT1):
+  alpha <> gzero -> gcanon (gcons alpha n beta) i.+1 <> gzero.
+Proof.
+  rewrite -(h2g2h alpha) => Hdiff; unfold gcanon.
+  rewrite g2h_cons_rw; change gzero with (h2g hzero) => Heq.
+  rewrite h2g_eq_iff in Heq.
+  apply canonS_cons_not_zero  in Heq => //.
+  move: Hdiff; rewrite zero_ref;  by rewrite g2h2g h2g_eq_iff. 
+Qed.
 
 (* TODO : port the following lemmas 
-
-canonS_lt:
-  forall (i : nat) [alpha : hT1],
-  nf alpha -> alpha <> hzero -> hlt (hcanon alpha i.+1) alpha
-canonS_LT:
-  forall (i : nat) [alpha : hT1],
-  nf alpha -> alpha <> hzero -> hcanon alpha i.+1 t1< alpha
 canon_limit_strong:
   forall [lambda : hT1],
   nf lambda ->
   hlimitb lambda ->
   forall beta : hT1, beta t1< lambda -> {i : nat | beta t1< hcanon lambda i}
-canonS_cons_not_zero:
-  forall (i : nat) [alpha : hT1] (n : nat) (beta : hT1),
-  alpha <> hzero -> hcanon (hcons alpha n beta) i.+1 <> hzero
+
 limitb_canonS_not_zero:
   forall (i : nat) [lambda : hT1],
   nf lambda -> hlimitb lambda -> hcanon lambda i.+1 <> hzero
