@@ -25,14 +25,14 @@ Unset Strict Implicit.
 (** From hydra to gaia and back *)
 
 (* begin snippet MoreNotations *)
-#[global] Notation gzero := CantorOrdinal.zero.
 #[global] Notation hzero := T1.zero.
 
-#[global] Notation gone := CantorOrdinal.one.
+
 #[global] Notation hone := T1.one.
 
 #[global] Notation hcons := T1.ocons.
-#[global] Notation gcons := CantorOrdinal.cons.
+
+#[global] Notation cons := CantorOrdinal.cons.
 
 #[global] Notation hfin := T1.fin.
 
@@ -40,20 +40,14 @@ Unset Strict Implicit.
 #[global] Notation ω := T1omega. 
 
 #[global] Notation hsucc := T1.succ.
-#[global] Notation gsucc := T1succ.
 
 #[global] Notation hphi0 alpha := (T1.phi0 alpha).
-#[global] Notation gphi0 := CantorOrdinal.phi0.
 
 #[global] Notation hplus := T1.plus.
-#[global] Notation gadd := T1add.
 
 #[global] Notation hmult := T1.mult.
-#[global] Notation gmul := T1mul.
 
 #[global] Notation hlt := T1.lt.
-#[global] Notation glt := T1lt.
-
 #[global] Notation hLT := T1.LT.
 #[global] Notation gLT := (restrict T1nf T1lt).
 
@@ -62,10 +56,9 @@ Unset Strict Implicit.
 #[global] Notation gnf := T1nf.
 
 #[global] Notation hlimitb := T1.limitb.
-#[global] Notation glimitb := T1limit.
 
 #[global] Notation his_succ := T1.succb.
-#[global] Notation gis_succ := T1is_succ.
+
 
 (* end snippet MoreNotations *)
 
@@ -74,13 +67,13 @@ Unset Strict Implicit.
 Fixpoint h2g (alpha : hT1) : gT1 :=
   match alpha with
     T1.zero => zero
-  | hcons alpha n beta => gcons (h2g alpha) n (h2g beta)
+  | hcons alpha n beta => cons (h2g alpha) n (h2g beta)
   end.
 
 Fixpoint g2h (alpha : gT1) : hT1 :=
   match alpha with
     zero => T1.zero
-  | gcons alpha n beta => hcons (g2h alpha) n (g2h beta)
+  | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
   end.
 
 (* end snippet h2gG2hDef *)
@@ -161,11 +154,11 @@ Qed.
 (* begin snippet constantRefs:: no-out *)
 
 
-Lemma zero_ref : refines0 hzero gzero.
+Lemma zero_ref : refines0 hzero zero.
 Proof. by []. Qed.
 
 
-Lemma one_ref : refines0 hone gone.
+Lemma one_ref : refines0 hone one.
 Proof. by []. Qed.
 
 
@@ -183,7 +176,7 @@ Proof. by []. Qed.
 (* begin snippet unaryRefs:: no-out *)
 
 
-Lemma succ_ref: refines1 hsucc gsucc.
+Lemma succ_ref: refines1 hsucc T1succ.
 (*| .. coq:: none |*)
 Proof.
   red.  elim => [//|//  x].
@@ -192,7 +185,7 @@ Proof.
 Qed.
 (*||*)
 
-Lemma phi0_ref x: refines0 (hphi0 x) (gphi0 (h2g x)). (* .no-out *)
+Lemma phi0_ref x: refines0 (hphi0 x) (phi0 (h2g x)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. by []. Qed.
 (* end snippet unaryRefs *)
@@ -222,9 +215,9 @@ Qed.
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
-  | Lt => glt (h2g x) (h2g y)
+  | Lt => T1lt (h2g x) (h2g y)
   | Eq => h2g x = h2g y
-  | Gt => glt (h2g y) (h2g x)
+  | Gt => T1lt (h2g y) (h2g x)
   end.
 (* end snippet compareRef *)
 Proof.
@@ -252,7 +245,7 @@ Proof.
 Qed.
 
 (* begin snippet ltRef:: no-out *)
-Lemma lt_ref : refinesRel hlt glt.
+Lemma lt_ref : refinesRel hlt T1lt.
 (* end snippet ltRef *)
 Proof.
   move=> a b; split.
@@ -328,7 +321,7 @@ Qed.
 
 
 (* begin snippet plusRef:: no-out *)
-Lemma plus_ref : refines2 hplus gadd.
+Lemma plus_ref : refines2 hplus T1add.
 (* end snippet plusRef *)
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
@@ -339,7 +332,7 @@ Proof.
   - by rewrite /Comparable.compare H Hx1y1.
   - replace (h2g x1 < h2g y1) with false.
     rewrite /Comparable.compare H /= Hx1y1; f_equal.
-    change (gcons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)).
+    change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)).
     by rewrite IHx2.
     by apply T1lt_anti in H.
 Qed.
@@ -348,7 +341,7 @@ Qed.
 
 Section Proof_of_mult_ref.
 
-  Lemma T1mul_eqn1 (c : gT1) : c * gzero = gzero. 
+  Lemma T1mul_eqn1 (c : gT1) : c * zero = zero. 
   Proof. by []. Qed.
 
   Lemma mult_eqn1 c : hmult c hzero = hzero.
@@ -356,8 +349,8 @@ Section Proof_of_mult_ref.
   Qed.
 
 
-  Lemma T1mul_eqn3 n b n' b' : gcons gzero n b * gcons gzero n' b' =
-                                 gcons gzero (n * n' + n + n') b'.      
+  Lemma T1mul_eqn3 n b n' b' : cons zero n b * cons zero n' b' =
+                                 cons zero (n * n' + n + n') b'.      
   Proof. by [].  Qed. 
 
 
@@ -368,11 +361,11 @@ Section Proof_of_mult_ref.
 
 
   Lemma T1mul_eqn4 a n b n' b' :
-    a != zero -> (gcons a n b) * (gcons zero n' b') =
-                   gcons a (n * n' + n + n') b.
+    a != zero -> (cons a n b) * (cons zero n' b') =
+                   cons a (n * n' + n + n') b.
   Proof. 
     move => /T1eqP.  cbn.
-    move =>  Ha'; have Heq: T1eq a gzero = false.
+    move =>  Ha'; have Heq: T1eq a zero = false.
     { move: Ha'; case: a => //. }
     rewrite Heq; by cbn.        
   Qed.
@@ -387,9 +380,9 @@ Section Proof_of_mult_ref.
   Qed.
 
   Lemma T1mul_eqn5 a n b a' n' b' :
-    a' != gzero ->
-    (gcons a n b) * (gcons a' n' b') =
-      gcons (a + a') n' (gmul (gcons a n b) b').
+    a' != zero ->
+    (cons a n b) * (cons a' n' b') =
+      cons (a + a') n' (T1mul (cons a n b) b').
   Proof. 
     move => H /=;  cbn;  have Ha' : T1eq a' zero = false. 
     { move: a' H; case => //. }
@@ -404,18 +397,18 @@ Section Proof_of_mult_ref.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
   Qed.
 
-  Lemma h2g_cons_rw a n b : h2g (hcons a n b)= gcons (h2g a) n (h2g b). 
+  Lemma h2g_cons_rw a n b : h2g (hcons a n b)= cons (h2g a) n (h2g b). 
   Proof. by []. Qed.
 
-  Lemma g2h_cons_rw a n b : g2h (gcons a n b) = hcons (g2h a) n (g2h b).
+  Lemma g2h_cons_rw a n b : g2h (cons a n b) = hcons (g2h a) n (g2h b).
   Proof. by []. Qed.
   
-  Lemma h2g_zero_rw  : h2g hzero = gzero. 
+  Lemma h2g_zero_rw  : h2g hzero = zero. 
   Proof. by []. Qed.
 
   (* begin snippet multRef:: no-out *)
 
-  Lemma mult_ref : refines2 hmult gmul.
+  Lemma mult_ref : refines2 hmult T1mul.
   (* end snippet multRef *)
   Proof.
     move => x y;  move: x; induction y. 
@@ -433,7 +426,7 @@ Section Proof_of_mult_ref.
                   ** simpl h2g; simpl T1add; f_equal.
                      destruct (T1.T1_eq_dec y2 T1.zero).
                      { subst; by cbn. }
-                     { change (gcons zero n0 (h2g beta)) with
+                     { change (cons zero n0 (h2g beta)) with
                          (h2g (hcons T1.zero n0 beta)); now rewrite IHy2.
                      }
                ++  destruct y1; [now destruct n1| now compute].
@@ -446,7 +439,7 @@ Section Proof_of_mult_ref.
                 ++ rewrite T1mul_eqn5.
                    ** rewrite  mult_eqn5 => //. 
                       simpl h2g; rewrite plus_ref; f_equal. 
-                      change (gcons (h2g alpha) n0 (h2g beta))
+                      change (cons (h2g alpha) n0 (h2g beta))
                         with (h2g (hcons alpha n0 beta)); now rewrite IHy2.
                    **  case: y1 n2 IHy1 => //.
   Qed.
@@ -470,7 +463,7 @@ Qed.
 
 (* begin snippet nfRef:: no-out *)
 
-Lemma nf_ref (a: hT1)  : hnfb a = gnf (h2g a).
+Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
 (* end snippet nfRef *)
 Proof.
   elim: a => //.
@@ -494,7 +487,7 @@ Qed.
 
 (** Limits, successors, etc *)
 
-Lemma limitb_ref (a:T1.T1) : hlimitb a = glimitb (h2g a).
+Lemma limitb_ref (a:T1.T1) : hlimitb a = T1limit (h2g a).
 Proof.
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta. 
@@ -505,7 +498,7 @@ Proof.
 Qed.
 
 
-Lemma is_succ_ref (a:T1.T1) : his_succ a = gis_succ (h2g a).
+Lemma is_succ_ref (a:T1.T1) : his_succ a = T1is_succ (h2g a).
 Proof. 
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta.
@@ -515,17 +508,17 @@ Qed.
 (** Well formed ordinals as a structure *)
 
 (* begin snippet E0Def:: no-out *)
-Structure E0 := mkE0 { cnf :> gT1 ; _ : gnf cnf == true}.
+Structure E0 := mkE0 { cnf :> gT1 ; _ : T1nf cnf == true}.
 
-#[global] Notation gE0 := E0.
+
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
-#[global] Notation gcnf := cnf.
 
 
-Definition gE0_lt (alpha beta: gE0) := glt (cnf alpha) (cnf beta).
 
-Definition gE0_eqb (alpha beta: gE0):= cnf alpha == cnf beta.
+Definition E0_lt (alpha beta: E0) := T1lt (cnf alpha) (cnf beta).
+
+Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 (* end snippet E0Def *)
 
 
@@ -533,19 +526,19 @@ Definition gE0_eqb (alpha beta: gE0):= cnf alpha == cnf beta.
 
 
 (* begin snippet gE0h2gG2h:: no-out *)
-Definition E0_h2g (a: hE0): gE0.
+Definition E0_h2g (a: hE0): E0.
   esplit with (h2g (E0.cnf a)).
   rewrite -nf_ref; case: a => /= cnf cnf_ok;  by rewrite cnf_ok.
 Defined.
 
 
-Definition E0_g2h (a: gE0): hE0.
+Definition E0_g2h (a: E0): hE0.
   refine (@E0.mkord (g2h a) _); red.
   case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g2h.  
 Defined.
 (* end snippet gE0h2gG2h *)
 
-Lemma E0_h2g_nf (a:hE0) : gnf (E0_h2g a).
+Lemma E0_h2g_nf (a:hE0) : T1nf (E0_h2g a).
 Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
@@ -554,27 +547,27 @@ Qed.
 
 Require Import Logic.Eqdep_dec.
 
-Lemma gE0_eq1 alpha beta : gE0_eqb alpha beta -> alpha = beta.
+Lemma gE0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
 Proof.
-  case: alpha ; case: beta => x Hx y Hy /=; rewrite /gE0_eqb => /= /eqP .
+  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0_eqb => /= /eqP .
   move =>Heq; subst.   
   have  H0: Hx = Hy; last first.
   -   by rewrite H0.   
-  - apply eq_proofs_unicity_on; case; case (gnf x); auto.
+  - apply eq_proofs_unicity_on; case; case (T1nf x); auto.
 Qed. 
 
-Lemma gE0_eq_iff alpha beta : gE0_eqb alpha beta <-> alpha = beta.
+Lemma gE0_eq_iff alpha beta : E0_eqb alpha beta <-> alpha = beta.
 Proof. 
   split.
   - apply gE0_eq1 => Heq.
-  - move => ?  ; subst; rewrite /gE0_eqb => //. 
+  - move => ?  ; subst; rewrite /E0_eqb => //. 
 Qed.
 
 (* begin snippet E0EqP:: no-out *)
-Lemma gE0_eqP alpha beta: reflect (alpha = beta) (gE0_eqb alpha beta).
+Lemma gE0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
 (* end snippet E0EqP *)
 Proof.
-  case_eq(gE0_eqb alpha beta).
+  case_eq(E0_eqb alpha beta).
   - constructor;  by rewrite -gE0_eq_iff.
   - constructor => H0; subst.
     move : H => // /=; cbn; by rewrite T1eq_refl.
@@ -587,13 +580,13 @@ From Coq Require Import Relations Basics
 (** TODO: simplify this proof !!! *)
 
 (* begin snippet gE0LtWf:: no-out *)
-Lemma gE0_lt_wf : well_founded gE0_lt.
+Lemma gE0_lt_wf : well_founded E0_lt.
 Proof.
   move => x; apply Acc_incl
             with (fun x y =>  E0.Lt (E0_g2h x) (E0_g2h y)).
   (* ... *)
   (* end snippet gE0LtWf *)
-  - move => a b ; rewrite /gE0_lt => Hab. 
+  - move => a b ; rewrite /E0_lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
     rewrite -(h2g2h cnf0) in Hlt i0;
@@ -612,7 +605,7 @@ Declare Scope BrGaia_scope. (* Gaia to Bridge *)
 
 Delimit Scope BrGaia_scope with brg.
 
-Infix "*" := gmul : BrGaia_scope.
+Infix "*" := T1mul : BrGaia_scope.
 
 
 Lemma L1' (a: gT1) : (ω * (a * ω) = ω * a * ω)%brg.
