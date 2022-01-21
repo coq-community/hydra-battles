@@ -2,7 +2,7 @@
  *)
 
 From hydras Require Import DecPreOrder.
-From hydras Require T1 E0.
+From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Import ssete9.
 Set Bullet Behavior "Strict Subproofs".
@@ -211,13 +211,13 @@ Lemma T1eq_h2g_rw (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
 Proof.
   move => H; rewrite <- (g2h2g a), <- (g2h2g b); by apply T1eq_rw.
 Qed.
-
+Locate Eq.
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
-  | Lt => T1lt (h2g x) (h2g y)
-  | Eq => h2g x = h2g y
-  | Gt => T1lt (h2g y) (h2g x)
+  | Datatypes.Lt => T1lt (h2g x) (h2g y)
+  |  Datatypes.Eq => h2g x = h2g y
+  |  Datatypes.Gt => T1lt (h2g y) (h2g x)
   end.
 (* end snippet compareRef *)
 Proof.
@@ -290,7 +290,7 @@ Lemma decide_hlt_rw (a b : hT1):
 Proof.
   rewrite /T1.lt; generalize (compare_ref a b);
     rewrite /Comparable.compare /=.
-  destruct (decide (T1.compare_T1 a b = Lt)).
+  destruct (decide (T1.compare_T1 a b = Datatypes.Lt)).
   - have bd := e.
     apply (bool_decide_eq_true _) in bd.
     by rewrite bd e.
@@ -505,6 +505,38 @@ Proof.
   move: IHalpha; case:alpha => /= //. 
 Qed.
 
+
+(* rewriting lemmas *)
+Notation nf := T1.nf.
+
+Lemma nf_g2h alpha : nf (g2h alpha) = T1nf alpha.
+Proof. unfold nf; by rewrite (nf_ref (g2h alpha)) h2g2h. Qed. 
+
+Lemma g2h_succ_rw alpha : g2h (T1succ alpha) = hsucc (g2h alpha).
+Proof. 
+  rewrite -(h2g2h alpha);  by rewrite succ_ref !g2h2g. 
+Qed.
+
+Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
+Proof. 
+  specialize (lt_ref a b) => H.
+  rewrite H => //.
+Qed.
+
+Lemma T1ltiff alpha beta: T1nf alpha -> T1nf beta ->
+                          alpha < beta <->  g2h alpha t1<  g2h beta.
+Proof.
+  move => Halpha Hbeta; split. 
+  rewrite -(h2g2h alpha) -(h2g2h beta).
+  split. 
+  rewrite g2h2g. Search nf gnf. by rewrite nf_g2h. 
+  split. rewrite !h2g2h. by rewrite hlt_iff.
+  rewrite g2h2g. by rewrite nf_g2h. 
+  destruct 1 as [H0 [H1 H2]].
+  apply lt_ref in H1. move: H1; by rewrite !h2g2h.
+Qed.
+
+
 (** Well formed ordinals as a structure *)
 
 (* begin snippet E0Def:: no-out *)
@@ -617,3 +649,5 @@ Print T1mul.
 (**  Try to print ω *)
 Check ω.
 (* end snippet utf8try *)
+
+

@@ -8,7 +8,9 @@ From hydras Require Import Canon.
 Import ssete9.CantorOrdinal. 
 Set Bullet Behavior "Strict Subproofs".
 
-
+(** Importation of Ketonen-Solovay's  machinery into gaia's world
+    (work in progress) 
+*)
 
 #[global] Notation hcanon := canon. 
 
@@ -17,22 +19,32 @@ Definition gcanon (a: gT1) (i:nat) : gT1 :=
 
 Compute gcanon (phi0 T1omega) 6 == (phi0 (\F 6))%brg.
 
+(** rewriting lemmas *)
+
+
+
 Lemma gcanon_zero i:  gcanon zero i = zero. 
 Proof.  unfold gcanon => //. Qed. 
 
+Lemma hcanon_g2h_rw alpha i: hcanon (g2h alpha) i = g2h (gcanon alpha i). 
+Proof.  by unfold gcanon;  rewrite g2h2g. Qed.
+
+
 Lemma nf_gcanon alpha i : T1nf alpha -> T1nf (gcanon alpha i).
 Proof.  
- unfold gcanon; rewrite -nf_ref => Halpha; rewrite -(h2g2h alpha)in Halpha.
- rewrite -nf_ref in Halpha; by  apply nf_canon. 
+  unfold gcanon => Halpha. rewrite -nf_ref. 
+  apply nf_canon. by rewrite nf_g2h. 
 Qed.
+
 
 
 Lemma gcanon_succ i alpha: T1nf alpha -> gcanon (T1succ alpha) i = alpha.
 Proof.
-  rewrite -(h2g2h alpha). rewrite succ_ref. rewrite -nf_ref.
-  unfold gcanon. rewrite g2h2g.
-  move => Halpha; rewrite canon_succ => //.
+  unfold gcanon => Halpha; rewrite g2h_succ_rw  canon_succ.
+  - by rewrite h2g2h.
+  - by rewrite nf_g2h. 
 Qed.
+
 
 Lemma gcanonS_LE alpha n:
     T1nf alpha -> gcanon alpha n.+1 <= gcanon alpha n.+2.
@@ -44,9 +56,8 @@ Qed.
 Lemma gcanon0_phi0_succ_eqn alpha:
   T1nf alpha -> gcanon (phi0 (T1succ alpha)) 0 = zero.
 Proof.
-  rewrite -(h2g2h alpha) -nf_ref;unfold gcanon => Hnf. 
-  rewrite succ_ref phi0_ref g2h2g.
-  rewrite canon0_phi0_succ_eqn => //.
+ rewrite -(h2g2h alpha) -nf_ref;unfold gcanon => Hnf. 
+  rewrite succ_ref phi0_ref g2h2g canon0_phi0_succ_eqn => //.
 Qed. 
 
 Lemma gcanon0_LT alpha:
@@ -56,7 +67,6 @@ Proof.
   rewrite g2h2g; apply lt_ref, canon0_LT => //.
   move => H; apply Hpos; rewrite H => //.
 Qed. 
-
 
 Lemma gcanonS_lt  (i : nat) [alpha : gT1]:
   T1nf alpha -> alpha <> zero -> T1lt (gcanon alpha i.+1) alpha.
@@ -87,67 +97,129 @@ Proof.
   - by rewrite limitb_ref h2g2h. 
 Qed.
 
-                                                           
-(* TODO : port the following lemmas 
-canon_limit_strong:
-  forall [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  forall beta : hT1, beta t1< lambda -> {i : nat | beta t1< hcanon lambda i}
-canonS_phi0_succ_eqn:
-  forall (i : nat) [gamma : hT1],
-  nf gamma -> hcanon (T1.phi0 (hsucc gamma)) i.+1 = hcons gamma i hzero
-canonS_zero_inv:
-  forall (alpha : hT1) (i : nat),
-  hcanon alpha i.+1 = hzero -> alpha = hzero \/ alpha = one
-canonS_limit_strong:
-  forall [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  forall beta : hT1,
-  beta t1< lambda -> {i : nat | beta t1< hcanon lambda i.+1}
-canon0_ocons_succ_eqn2:
-  forall (n : nat) [gamma : hT1],
-  nf gamma ->
-  hcanon (hcons (hsucc gamma) n.+1 hzero) 0 = hcons (hsucc gamma) n hzero
-canonSSn:
-  forall (i : nat) [alpha : hT1] (n : nat),
-  nf alpha ->
-  hcanon (hcons alpha n.+1 hzero) i = hcons alpha n (hcanon (T1.phi0 alpha) i)
-canon_lim1:
-  forall (i : nat) [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda -> hcanon (T1.phi0 lambda) i = T1.phi0 (hcanon lambda i)
-canonS_ocons_succ_eqn2:
-  forall (i n : nat) [gamma : hT1],
-  nf gamma ->
-  hcanon (hcons (hsucc gamma) n.+1 hzero) i.+1 =
-  hcons (hsucc gamma) n (hcons gamma i hzero)
-canonS_lim1:
-  forall (i : nat) [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  hcanon (T1.phi0 lambda) i.+1 = T1.phi0 (hcanon lambda i.+1)
-canon0_lim2:
-  forall (n : nat) [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  hcanon (hcons lambda n.+1 hzero) 0 =
-  hcons lambda n (T1.phi0 (hcanon lambda 0))
-canon_tail:
-  forall [alpha : hT1] [n : nat] [beta : hT1] (i : nat),
-  nf (hcons alpha n beta) ->
-  beta <> 0 -> hcanon (hcons alpha n beta) i = hcons alpha n (hcanon beta i)
-canon_lim2:
-  forall (i n : nat) [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  hcanon (hcons lambda n.+1 hzero) i =
-  hcons lambda n (T1.phi0 (hcanon lambda i))
-canonS_lim2:
-  forall (i n : nat) [lambda : hT1],
-  nf lambda ->
-  hlimitb lambda ->
-  hcanon (hcons lambda n.+1 hzero) i.+1 =
-  hcons lambda n (T1.phi0 (hcanon lambda i.+1))
- *)
+Lemma gcanonS_phi0_succ_eqn (i : nat) (gamma : T1): 
+  T1nf gamma -> gcanon (phi0 (T1succ gamma)) i.+1 = cons gamma i zero.
+Proof.                                                            
+  rewrite -(h2g2h gamma) => Hnf.
+  unfold gcanon; rewrite succ_ref phi0_ref  g2h2g. 
+  change zero with (h2g hzero); rewrite canonS_phi0_succ_eqn. 
+  -  by rewrite h2g_cons_rw. 
+  -  rewrite h2g2h in Hnf; unfold nf;  by rewrite nf_ref h2g2h.
+Qed.
+
+Lemma gcanonSSn (i : nat) (alpha : T1) (n : nat):
+  T1nf alpha ->
+  gcanon (cons alpha n.+1 zero) i = cons alpha n (gcanon (phi0 alpha) i).
+Proof.
+  rewrite -(h2g2h alpha) => Hnf;
+                            unfold gcanon;
+                            rewrite g2h_cons_rw g2h2g. 
+  rewrite -h2g_cons_rw h2g2h canonSSn; f_equal. 
+  by rewrite h2g2h -(h2g2h alpha) -nf_ref in Hnf.  
+Qed.
+
+
+Lemma gcanonS_zero_inv  (alpha : T1) (i : nat):
+  gcanon alpha i.+1 = zero -> alpha = zero \/ alpha = one.
+Proof.
+  move => Halpha; have H: hcanon (g2h alpha) i.+1 = hzero. 
+  {
+    unfold gcanon in Halpha.
+    change zero with (h2g hzero) in Halpha; by rewrite h2g_eq_iff in Halpha.    
+  }
+  case (canonS_zero_inv (g2h alpha) i) => // H0 .
+  left; rewrite -(h2g2h alpha) H0 //.
+  right; rewrite -(h2g2h alpha) H0 //.
+Qed.
+
+Lemma gcanon_lim1 i (lambda: T1) :
+  T1nf lambda ->
+  T1limit lambda -> gcanon (phi0 lambda) i = phi0 (gcanon lambda i).
+Proof.
+  move => Hnf Hlim.
+  have H: hcanon (hphi0 (g2h lambda)) i = hphi0 (hcanon (g2h lambda) i).
+  { rewrite -canon_lim1. 
+    - f_equal. 
+    - by rewrite -(h2g2h lambda) -nf_ref in Hnf. 
+    - by rewrite limitb_ref h2g2h.
+      }
+     unfold gcanon; by rewrite phi0_ref H.
+Qed. 
+
+
+Lemma gcanon_tail alpha (n : nat) beta (i : nat):
+  T1nf (cons alpha n beta) ->
+  beta <> zero -> gcanon (cons alpha n beta) i = cons alpha n (gcanon beta i).
+Proof.
+  move => Hnf Hpos.
+  rewrite -(h2g2h (T1Bridge.cons alpha n beta)).
+  have H: hcanon (hcons (g2h alpha) n (g2h beta)) i =
+            hcons (g2h alpha) n (hcanon (g2h beta) i).
+  {
+    rewrite -canon_tail => //. 
+    rewrite -(h2g2h alpha) -(h2g2h beta)  - h2g_cons_rw in Hnf. 
+    by rewrite -nf_ref in Hnf.
+    move: Hnf Hpos; case:  beta => //.     
+  }
+  - unfold gcanon; rewrite g2h2g  g2h_cons_rw. rewrite H. 
+    pattern alpha at 2. rewrite -(h2g2h alpha). 
+    rewrite h2g_cons_rw.
+    f_equal. 
+    by rewrite h2g2h.
+Qed.
+
+Lemma gcanonS_ocons_succ_eqn2 i n (gamma: T1) :
+  T1nf gamma ->
+  gcanon (cons (T1succ gamma) n.+1 zero) i.+1 =
+    cons (T1succ gamma) n (cons gamma i zero).
+Proof.
+move => Hnf; specialize  (@canonS_ocons_succ_eqn2 i n (g2h gamma)) => Hnf2. 
+unfold gcanon; rewrite g2h_cons_rw.
+- replace (g2h (T1succ gamma)) with (hsucc (g2h gamma)).
+  + replace (g2h zero)  with hzero. 
+    * rewrite Hnf2.
+      rewrite h2g_cons_rw; f_equal. 
+      specialize (succ_ref (g2h gamma)). 
+      rewrite h2g2h => Heq => //.
+      rewrite  h2g_cons_rw. 
+      f_equal.
+      by rewrite h2g2h.     
+      specialize (nf_ref (g2h gamma)). 
+      rewrite h2g2h  Hnf => //. 
+    *  by rewrite zero_ref g2h2g.
+  + specialize (succ_ref (g2h gamma)); rewrite h2g2h => Heq.
+    by rewrite Heq g2h2g. 
+Qed.
+
+Lemma gcanon_lim2 i n (lambda : T1):
+  T1nf lambda ->
+  T1limit lambda ->
+  gcanon (cons lambda n.+1 zero) i =
+    cons lambda n (phi0 (gcanon lambda i)).
+Proof. 
+  move => Hnf Hlim.
+  rewrite -g2h_eq_iff  -hcanon_g2h_rw  !g2h_cons_rw  canon_lim2.
+  f_equal. 
+  by rewrite -hcanon_g2h_rw. 
+  by rewrite nf_g2h. 
+  by rewrite limitb_ref h2g2h. 
+Qed.
+
+Lemma gcanon_limit_strong lambda :
+  T1nf lambda -> T1limit lambda ->
+  forall beta, T1nf beta ->
+               T1lt beta  lambda -> {i : nat | T1lt beta (gcanon lambda i)}.
+Proof.
+  rewrite -(h2g2h lambda)  -nf_ref. 
+  rewrite -limitb_ref => Hnf Hlim beta Hbeta Hbetalt.
+  rewrite -(h2g2h beta) in Hbetalt; apply hlt_iff in Hbetalt. 
+  destruct (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h beta)) as [x Hx].
+  split. 
+  - red;  by rewrite nf_ref h2g2h.
+  - split; auto.
+  - exists x; rewrite -(h2g2h beta). 
+  rewrite hcanon_g2h_rw in Hx;  rewrite !h2g2h.
+  rewrite -T1ltiff in Hx => //.
+  unfold gcanon; rewrite -nf_ref; apply nf_canon, Hnf. 
+Qed.
+
