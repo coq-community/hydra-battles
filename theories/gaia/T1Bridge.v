@@ -269,7 +269,7 @@ Proof.
   move=> a b; split.
   - rewrite /T1le /Comparable.compare; move => Hab;  elim: Hab. 
     + move => y Hy; generalize (lt_ref a y). 
-      red in Hy; unfold hlt; rewrite Hy. 
+      red in Hy; rewrite /hlt Hy. 
       move => H; apply /orP; right; by apply H. 
     + apply /orP; by left. 
   - rewrite T1le_eqVlt; move => /orP; destruct 1. 
@@ -510,30 +510,26 @@ Qed.
 Notation nf := T1.nf.
 
 Lemma nf_g2h alpha : nf (g2h alpha) = T1nf alpha.
-Proof. unfold nf; by rewrite (nf_ref (g2h alpha)) h2g2h. Qed. 
+Proof.  by rewrite /nf (nf_ref (g2h alpha)) h2g2h. Qed. 
 
-Lemma g2h_succ_rw alpha : g2h (T1succ alpha) = hsucc (g2h alpha).
-Proof. 
-  rewrite -(h2g2h alpha);  by rewrite succ_ref !g2h2g. 
-Qed.
+Lemma g2h_succ_rw (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
+Proof.   by rewrite -(h2g2h alpha) succ_ref !g2h2g. Qed.
 
 Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
 Proof. 
-  specialize (lt_ref a b) => H.
-  rewrite H => //.
+  specialize (lt_ref a b) => H;  rewrite H => //.
 Qed.
 
 Lemma T1ltiff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta.
 Proof.
   move => Halpha Hbeta; split. 
-  rewrite -(h2g2h alpha) -(h2g2h beta).
-  split. 
-  rewrite g2h2g. Search nf gnf. by rewrite nf_g2h. 
-  split. rewrite !h2g2h. by rewrite hlt_iff.
-  rewrite g2h2g. by rewrite nf_g2h. 
-  destruct 1 as [H0 [H1 H2]].
-  apply lt_ref in H1. move: H1; by rewrite !h2g2h.
+  - rewrite -(h2g2h alpha) -(h2g2h beta);  repeat split. 
+    + by rewrite g2h2g nf_g2h. 
+    + by rewrite !h2g2h hlt_iff.
+    + by rewrite g2h2g nf_g2h. 
+  -  destruct 1 as [H0 [H1 H2]].
+     apply lt_ref in H1; move: H1; by rewrite !h2g2h.
 Qed.
 
 
