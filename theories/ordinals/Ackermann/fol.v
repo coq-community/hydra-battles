@@ -34,17 +34,6 @@ Scheme Term_Terms_rec_full := Induction for Term
   Sort Set
     with Terms_Term_rec_full := Induction for Terms Sort Set.
 
-Arguments Term_Terms_ind P P0 : rename.
-Arguments Terms_Term_ind P P0 : rename.
-
-Arguments Term_Terms_rec P P0 : rename.
-Arguments Terms_Term_rec P P0 : rename.
-
-Arguments Term_Terms_rec_full P P0 : rename.
-Arguments Terms_Term_rec_full P P0 : rename.
-
-
-
 
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
@@ -801,3 +790,16 @@ Qed.
 End Formula_Depth_Induction.
 
 End First_Order_Logic.
+
+
+Arguments Term_Terms_ind  L P P0 : rename.
+Arguments Terms_Term_ind L P P0 : rename.
+
+Arguments Term_Terms_rec L P P0 : rename.
+Arguments Terms_Term_rec L P P0 : rename.
+
+Arguments Term_Terms_rec_full L P P0 : rename.
+Arguments Terms_Term_rec_full L P P0 : rename.
+
+
+
