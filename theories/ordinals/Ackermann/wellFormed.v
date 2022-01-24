@@ -1,4 +1,3 @@
-Set Apply With Renaming.
 
 Require Import primRec.
 Require Import cPair.
