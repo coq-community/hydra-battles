@@ -404,6 +404,9 @@ Section Proof_of_mult_ref.
   Lemma h2g_zero_rw  : h2g hzero = zero. 
   Proof. by []. Qed.
 
+  Lemma g2h_zero_rw : g2h zero = hzero.
+    Proof. by []. Qed. 
+
   (* begin snippet multRef:: no-out *)
 
   Lemma mult_ref : refines2 hmult T1mul.
@@ -518,7 +521,7 @@ Proof.
   specialize (lt_ref a b) => H;  rewrite H => //.
 Qed.
 
-Lemma T1ltiff alpha beta: T1nf alpha -> T1nf beta ->
+Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta.
 Proof.
   move => Halpha Hbeta; split. 
@@ -530,11 +533,17 @@ Proof.
      apply lt_ref in H1; move: H1; by rewrite !h2g_g2h_rw.
 Qed.
 
-Goal forall a b: T1, a = b <-> g2h a = g2h b. 
-Search g2h eq. 
-move => a b; rewrite -g2h_eq_iff => //.
-Qed. 
+Notation hle := (MoreOrders.leq hlt). 
 
+Lemma T1le_iff (alpha beta: T1):
+  alpha <= beta <->  hle (g2h alpha) (g2h beta).
+Proof.
+  split. 
+  -  rewrite T1le_eqVlt => /orP; case.
+     move =>  /eqP Heq; subst; right.
+     move => Hlt; left; by rewrite hlt_iff !h2g_g2h_rw.  
+  -   rewrite le_ref; by rewrite !h2g_g2h_rw.  
+Qed.
 
 (** Well formed ordinals as a structure *)
 
@@ -581,7 +590,7 @@ Require Import Logic.Eqdep_dec.
 Lemma gE0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
 Proof.
   case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0_eqb => /= /eqP .
-  move =>Heq; subst.   
+  move => Heq; subst.   
   have  H0: Hx = Hy; last first.
   -   by rewrite H0.   
   - apply eq_proofs_unicity_on; case; case (T1nf x); auto.
