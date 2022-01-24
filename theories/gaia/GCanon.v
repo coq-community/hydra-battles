@@ -1,3 +1,7 @@
+(** Import canonical sequences from hydra-battles *)
+
+
+
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 Require Import T1Bridge.
