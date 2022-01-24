@@ -132,6 +132,10 @@ simpl in H0.
 apply (H0 (refl_equal (S n))).
 Qed.
 
+About Term_Terms_rec_full.
+
+Arguments Term_Terms_rec_full P P0: rename.
+
 Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
 Proof.
 induction language_dec.
