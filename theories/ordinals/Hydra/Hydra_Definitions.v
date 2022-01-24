@@ -42,6 +42,10 @@ Scheme Hydra_rect2 := Induction for Hydra Sort Type
 with   Hydrae_rect2 := Induction for Hydrae Sort Type.
 (* end snippet HydraRect2 *)
 
+Arguments Hydra_rect2 P P0 : rename.
+Arguments Hydrae_rect2 P P0 : rename.
+
+
 (* begin snippet hForall *)
 (** All elements of s satisfy P *)
 Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=

@@ -34,7 +34,19 @@ Scheme Term_Terms_rec := Minimality for Term Sort Set
 
 Scheme Term_Terms_rec_full := Induction for Term
   Sort Set
-  with Terms_Term_rec_full := Induction for Terms Sort Set.
+    with Terms_Term_rec_full := Induction for Terms Sort Set.
+
+Arguments Term_Terms_ind P P0 : rename.
+Arguments Terms_Term_ind P P0 : rename.
+
+Arguments Term_Terms_rec P P0 : rename.
+Arguments Terms_Term_rec P P0 : rename.
+
+Arguments Term_Terms_rec_full P P0 : rename.
+Arguments Terms_Term_rec_full P P0 : rename.
+
+
+
 
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula

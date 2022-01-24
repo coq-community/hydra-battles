@@ -44,10 +44,16 @@ with PrimRecs : nat -> nat -> Set :=
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
   with PrimRecs_PrimRec_rec := Induction for PrimRecs  Sort Set.
 
+Arguments PrimRec_PrimRecs_rec P P0 : rename.
+Arguments PrimRecs_PrimRec_rec P P0 : rename.
+
 (* begin snippet SchemePrimRecInd *)
 
 Scheme PrimRec_PrimRecs_ind := Induction for PrimRec Sort Prop
-  with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
+    with PrimRecs_PrimRec_ind := Induction for PrimRecs  Sort Prop.
+
+Arguments PrimRec_PrimRecs_ind P P0 : rename.
+Arguments PrimRecs_PrimRec_ind P P0 : rename.
 (* end snippet SchemePrimRecInd *)
 
 (* begin snippet SchemePrimRecInda *)
