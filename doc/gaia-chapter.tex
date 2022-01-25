@@ -2,15 +2,37 @@
 \index{coq}{Plug-ins!Gaia}
 
 \section{Introduction}
-The \gaia project by Jos\'e Grimm aimed to formalize mathematics in \coq in the style of Nicolas Bourbaki. The formalization of the first book in the Elements of Mathematics series by Bourbaki, on the theory of sets, was initially described in a technical report in July 2009~\cite{Grimm2009a}. The set-theoretic axioms and basic definitions in \gaia were derived from an earlier development by Carlos Simpson~\cite{Simpson2004,CatsZFCContrib}. Grimm then wrote (and continually updated) technical reports describing the formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016} and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014}, before he passed away in 2019.
+The \gaia project by Jos\'e Grimm aimed to formalize mathematics in \coq in
+the style of Nicolas Bourbaki. The formalization of the first book in the
+Elements of Mathematics series by Bourbaki, on the theory of sets, was
+initially described in a technical report in July 2009~\cite{Grimm2009a}.
+The set-theoretic axioms and basic definitions in \gaia were derived
+from an earlier development by Carlos Simpson~\cite{Simpson2004,CatsZFCContrib}.
+Grimm then wrote (and continually updated) technical reports describing the
+formalization of Bourbaki's two subsequent books~\cite{Grimm2009b,Grimm2016}
+and additional topics in number theory~\cite{grimm:hal-00911710,Grimm2014},
+before he passed away in 2019.
 
-In 2020, members of \community transferred the \gaia source code to GitHub and adapted it for recent releases of the Mathematical Components library, which \gaia heavily relies on. Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
+In 2020, members of \community transferred the \gaia source code to
+GitHub and adapted it for recent releases of the Mathematical Components
+library, which \gaia heavily relies on.
+Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished
+the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
 
 \gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
 
-As an initial step in bridging \gaia and \Hydras, we were able to establish a correspondence between both implementations of ordinals through rewriting lemmas. For instance, we proved that multiplication of ordinals in Cantor normal form in \Hydras refine \gaia's corresponding multiplication operation, and then imported \gaia's proof of associativity of the multiplication almost for free.
+As an initial step in bridging \gaia and \Hydras, we were able to establish a
+correspondence between both implementations of ordinals through rewriting
+lemmas. For instance, we proved that multiplication of ordinals in Cantor
+normal form in \Hydras refine \gaia's corresponding multiplication operation,
+and then imported \gaia's proof of associativity of the multiplication
+almost for free.
 
-The initial draft bridge code mostly uses the SSReflect proof language and idioms from the Mathematical Components library. We made this design decision since we believe it is less challenging to reason about Hydra-battles code using SSReflect and MathComp than to reason about Gaia without SSReflect.
+The initial draft bridge code mostly uses the SSReflect proof language
+and idioms from the Mathematical Components library. We made this design
+decision since we believe it is less challenging to reason about
+Hydra-battles code using SSReflect and MathComp than to reason about
+Gaia without SSReflect.
 
 \section{Data refinement}
 
@@ -49,7 +71,7 @@ For each constant: $0$, $1$, \dots, $n$ and $\omega$, we prove
 that \texttt{hydras}' definition refines \texttt{gaia}'s.
 \inputsnippets{T1Bridge/constantRefs}
 
-\inputsnippets{T1Bridge/utf8try}
+%\inputsnippets{T1Bridge/utf8try}
 
 \subsubsection{Unary functions}
 
