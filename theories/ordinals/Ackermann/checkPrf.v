@@ -1,5 +1,3 @@
-Set Apply With Renaming.
-
 Require Import primRec.
 Require Import codeFreeVar.
 Require Import codeSubFormula.

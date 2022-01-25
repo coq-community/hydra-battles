@@ -111,6 +111,8 @@ Qed.
 Scheme R2_ind2 := Induction for R2 Sort Prop
                   with
                   S2_ind2 := Induction for S2 Sort Prop.
+Arguments  R2_ind2 n P P0 : rename.
+Arguments  S2_ind2 n P P0 : rename.
 
 Lemma S2_app : forall  n  s1 s2 ,
     S2 n s1 s2 ->

@@ -1,5 +1,3 @@
-Set Apply With Renaming.
-
 Require Import Arith.
 
 (* begin snippet naryFunc *)

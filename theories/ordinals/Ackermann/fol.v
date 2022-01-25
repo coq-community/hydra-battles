@@ -1,8 +1,6 @@
 (* Author: Russell O'Connor *)
 (* This file is Public Domain *)
 
-Set Apply With Renaming.
-
 Require Import Coq.Lists.List.
 Require Import Ensembles.
 Require Import Peano_dec.
@@ -34,7 +32,8 @@ Scheme Term_Terms_rec := Minimality for Term Sort Set
 
 Scheme Term_Terms_rec_full := Induction for Term
   Sort Set
-  with Terms_Term_rec_full := Induction for Terms Sort Set.
+    with Terms_Term_rec_full := Induction for Terms Sort Set.
+
 
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
@@ -132,6 +131,8 @@ apply H.
 simpl in H0.
 apply (H0 (refl_equal (S n))).
 Qed.
+
+Arguments Term_Terms_rec_full P P0: rename.
 
 Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
 Proof.
@@ -791,3 +792,16 @@ Qed.
 End Formula_Depth_Induction.
 
 End First_Order_Logic.
+
+
+Arguments Term_Terms_ind  L P P0 : rename.
+Arguments Terms_Term_ind L P P0 : rename.
+
+Arguments Term_Terms_rec L P P0 : rename.
+Arguments Terms_Term_rec L P P0 : rename.
+
+Arguments Term_Terms_rec_full L P P0 : rename.
+Arguments Terms_Term_rec_full L P P0 : rename.
+
+
+

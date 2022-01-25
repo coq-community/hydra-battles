@@ -1,5 +1,3 @@
-Set Apply With Renaming.
-
 Require Import Arith.
 Require Import Ensembles.
 

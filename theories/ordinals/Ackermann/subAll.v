@@ -1,4 +1,3 @@
-Set Apply With Renaming.
 
 Require Import Ensembles.
 Require Import Coq.Lists.List.

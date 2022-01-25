@@ -1,5 +1,3 @@
-Set Apply With Renaming.
-
 Require Import Coq.Lists.List.
 
 Section List_Remove.

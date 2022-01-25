@@ -1,5 +1,3 @@
-Set Apply With Renaming.
-
 Require Import primRec.
 Require Import cPair.
 Require Export Coq.Lists.List.
