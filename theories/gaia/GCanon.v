@@ -207,7 +207,34 @@ Proof.
   - move => Hnf2 ; rewrite hlt_iff; case; rewrite /canon => //.
 Qed. 
 
+Definition g2h_seq (s: nat-> T1) n := g2h (s n).
+Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
 
+
+Definition gstrict_lub 
+ (s : nat -> T1) (lambda : T1) :=
+(forall i : nat, gLT (s i) lambda) /\
+(forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
+
+
+Lemma strict_lub_ref (s:nat-> hT1) (lambda: hT1) :
+  strict_lub s lambda <-> gstrict_lub (h2g_seq s) (h2g lambda).
+Proof. 
+  rewrite /gstrict_lub; split. 
+  -  case => Ha Hb;  split. 
+     + move => i; rewrite -!LT_ref => //.
+     + move => alpha Halpha; rewrite -(h2g_g2h alpha) -LE_ref.
+       apply Hb => i.   destruct (Halpha i) as [H H0 H1]; split. 
+       * rewrite -hnf_g2h /h2g_seq g2h_h2g in H => //.
+       * split. 
+         --  rewrite T1le_iff /h2g_seq g2h_h2g in H0 => //.
+         --  by rewrite hnf_g2h.
+  -   destruct 1 as [H H0]; split. 
+      + move => i; specialize  (H i); rewrite LT_ref =>//.
+      +  move => alpha Halpha; rewrite LE_ref;  apply H0. 
+         move => i; rewrite -LE_ref;  apply Halpha. 
+Qed.
+   
 (* TODO:
 
 Hydras definition:
@@ -220,8 +247,13 @@ fun (s : nat -> hT1) (lambda : hT1) =>
 
 Gaia's :
 
-Definition limit_v2 (f: Tf) x := 
-  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
+limit_v2 = 
+fun (f : Tf) (x : T1) =>
+(forall n : nat, f n < x) /\
+(forall y : T1, T1nf y -> y < x -> exists n : nat, y <= f n)
+     : Tf -> T1 -> Prop
+
+Arguments limit_v2 _%function_scope _
 
 
 Definition limit_of (f: Tf) x :=

@@ -38,11 +38,13 @@ Unset Strict Implicit.
 
 #[global] Notation hlt := T1.lt.
 #[global] Notation hLT := T1.LT.
+#[global] Notation hLE := T1.LE.
 #[global] Notation hnfb := T1.nf_b.
 #[global] Notation hlimitb := T1.limitb.
 #[global] Notation his_succ := T1.succb.
 
 #[global] Notation gLT := (restrict T1nf T1lt).
+#[global] Notation gLE := (restrict T1nf T1le).
 
 
 (* end snippet MoreNotations *)
@@ -475,6 +477,50 @@ Proof.
      +  red; by rewrite nf_ref.
 Qed. 
 
+
+Lemma LE_ref : refinesRel hLE gLE.
+Proof. 
+split. 
+- case => a b.
+  split. 
+  Search T1nf h2g. 
+  rewrite -nf_ref => //.
+  case: b => c _.    
+  Print MoreOrders.leq.
+  destruct c. 
+  Search (_ <= _).
+ apply T1ltW.  Search hlt h2g. 
+   rewrite - decide_hlt_rw => //.
+Search bool_decide. 
+red;  rewrite bool_decide_eq_true => //.
+Search (?x <=?x).
+ apply T1lenn. 
+ case b => _ H.
+  Search T1nf h2g. rewrite - nf_ref => //. 
+- case.
+  rewrite /hLE. 
+  red. 
+ split. 
+  Search T1nf h2g.
+  rewrite -nf_ref in p p1 => //.
+  split => //.
+  Search (_ <= _).
+  rewrite T1le_eqVlt in p0. move : p0 => /orP.
+  case => /eqP Heq; subst. Search h2g eq. rewrite h2g_eq_iff in Heq; subst. 
+right. 
+left. 
+Search hlt h2g. 
+Search bool_decide.
+Search h2g lt. 
+rewrite -decide_hlt_rw in Heq => //.
+Search bool_decide. 
+move: Heq => /eqP H. rewrite bool_decide_eq_true in H => //.
+Search  T1nf h2g.
+ 
+rewrite -nf_ref in p1 => //.
+Qed.
+
+
 (** Limits, successors, etc *)
 
 Lemma limitb_ref (a:T1.T1) : hlimitb a = T1limit (h2g a).
@@ -641,4 +687,7 @@ Proof. by  rewrite mulA. Qed.
 Print T1mul.
 
 
-
+(* limitsin Gaia 
+Definition limit_v2 (f: Tf) x := 
+  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
+ *)
