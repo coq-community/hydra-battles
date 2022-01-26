@@ -26,34 +26,23 @@ Unset Strict Implicit.
 
 (* begin snippet MoreNotations *)
 #[global] Notation hzero := T1.zero.
-
-
 #[global] Notation hone := T1.one.
-
 #[global] Notation hcons := T1.ocons.
-
 #[global] Notation hfin := T1.fin.
 
 #[global] Notation homega := T1.omega.
-
 #[global] Notation hsucc := T1.succ.
-
 #[global] Notation hphi0 alpha := (T1.phi0 alpha).
-
 #[global] Notation hplus := T1.plus.
-
 #[global] Notation hmult := T1.mult.
 
 #[global] Notation hlt := T1.lt.
 #[global] Notation hLT := T1.LT.
-#[global] Notation gLT := (restrict T1nf T1lt).
-
-
 #[global] Notation hnfb := T1.nf_b.
-
 #[global] Notation hlimitb := T1.limitb.
-
 #[global] Notation his_succ := T1.succb.
+
+#[global] Notation gLT := (restrict T1nf T1lt).
 
 
 (* end snippet MoreNotations *)
@@ -75,7 +64,7 @@ Fixpoint g2h (alpha : T1) : hT1 :=
 (* end snippet h2gG2hDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
-Lemma h2g_g2h_rw (alpha: T1): h2g (g2h alpha) = alpha.
+Lemma h2g_g2h (alpha: T1): h2g (g2h alpha) = alpha.
 (* end snippet h2gG2hRw *)
 Proof.
   elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
@@ -83,7 +72,7 @@ Proof.
 Qed.
 
 (* begin snippet g2hH2gRw:: no-out *)
-Lemma g2h_h2g_rw (alpha: hT1): g2h (h2g alpha) = alpha.
+Lemma g2h_h2g (alpha: hT1): g2h (h2g alpha) = alpha.
 (* end snippet g2hH2gRw *)
 Proof.
   elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
@@ -94,14 +83,14 @@ Qed.
 Lemma g2h_eq_iff a b :  g2h a = g2h b <-> a = b.
 Proof. 
     split.
-    - rewrite -(h2g_g2h_rw a) -(h2g_g2h_rw b)  !g2h_h2g_rw => // Heq //; rewrite Heq => //.
+    - rewrite -(h2g_g2h a) -(h2g_g2h b)  !g2h_h2g => // Heq //; rewrite Heq => //.
     - move => H; by subst. 
 Qed.
 
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 Proof. 
     split.
-    - rewrite -(g2h_h2g_rw a) -(g2h_h2g_rw b) !h2g_g2h_rw  => Heq //.
+    - rewrite -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  => Heq //.
       rewrite Heq => //.
     - move => H; by subst. 
 Qed.
@@ -134,8 +123,8 @@ Lemma refines1_R f f' :
   refines1 f f' ->
   forall y: T1, f (g2h y) = g2h (f' y).
 Proof.
-  move => Href y; rewrite -{2}(h2g_g2h_rw y).
-  by rewrite Href g2h_h2g_rw.
+  move => Href y; rewrite -{2}(h2g_g2h y).
+  by rewrite Href g2h_h2g.
 Qed.
 
 
@@ -143,8 +132,8 @@ Lemma refines2_R f f' :
   refines2 f f' ->
   forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
 Proof.
-  move => Href y z; rewrite -{2}(h2g_g2h_rw y) -{2}(h2g_g2h_rw z);
-            by rewrite Href g2h_h2g_rw.
+  move => Href y z; rewrite -{2}(h2g_g2h y) -{2}(h2g_g2h z);
+            by rewrite Href g2h_h2g.
 Qed.
 
 
@@ -205,9 +194,9 @@ Proof. by apply/T1eqP. Qed.
 Lemma T1eq_rw a b: T1eq a b -> g2h a = g2h b.
 Proof. by move => /T1eqP ->. Qed. 
 
-Lemma T1eq_h2g_rw (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
+Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
 Proof.
-  move => H; rewrite <- (g2h_h2g_rw a), <- (g2h_h2g_rw b); by apply T1eq_rw.
+  move => H; rewrite <- (g2h_h2g a), <- (g2h_h2g b); by apply T1eq_rw.
 Qed.
 Locate Eq.
 (* begin snippet compareRef:: no-out *)
@@ -272,7 +261,7 @@ Proof.
     + apply /orP; by left. 
   - rewrite T1le_eqVlt; move => /orP; destruct 1. 
     have H0: a = b. 
-    { rewrite -(g2h_h2g_rw a) -(g2h_h2g_rw b). 
+    { rewrite -(g2h_h2g a) -(g2h_h2g b). 
       move: H => /eqP Heq. 
       by rewrite Heq.
     }
@@ -312,7 +301,7 @@ Lemma eqref : refinesRel eq eq.
 Proof.
   move => a b; split.
   - by move => ->.
-  - move => Hab; apply T1eq_h2g_rw; by rewrite Hab T1eq_refl.
+  - move => Hab; apply T1eq_h2g; by rewrite Hab T1eq_refl.
 Qed.
 
 
@@ -395,16 +384,16 @@ Section Proof_of_mult_ref.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
   Qed.
 
-  Lemma h2g_cons_rw a n b : h2g (hcons a n b)= cons (h2g a) n (h2g b). 
+  Lemma h2g_cons a n b : h2g (hcons a n b)= cons (h2g a) n (h2g b). 
   Proof. by []. Qed.
 
-  Lemma g2h_cons_rw a n b : g2h (cons a n b) = hcons (g2h a) n (g2h b).
+  Lemma g2h_cons a n b : g2h (cons a n b) = hcons (g2h a) n (g2h b).
   Proof. by []. Qed.
   
-  Lemma h2g_zero_rw  : h2g hzero = zero. 
+  Lemma h2g_zero  : h2g hzero = zero. 
   Proof. by []. Qed.
 
-  Lemma g2h_zero_rw : g2h zero = hzero.
+  Lemma g2h_zero : g2h zero = hzero.
     Proof. by []. Qed. 
 
   (* begin snippet multRef:: no-out *)
@@ -421,7 +410,7 @@ Section Proof_of_mult_ref.
          destruct (T1.T1_eq_dec  alpha T1.zero).
          *  subst; destruct (T1.T1_eq_dec y1 T1.zero).
             -- subst y1; simpl h2g; rewrite T1mul_eqn3; f_equal; nia.
-            -- repeat rewrite !h2g_cons_rw !h2g_zero_rw.
+            -- repeat rewrite !h2g_cons !h2g_zero.
                rewrite T1mul_eqn5.
                ++ rewrite mult_eqn5 => //.
                   ** simpl h2g; simpl T1add; f_equal.
@@ -432,11 +421,11 @@ Section Proof_of_mult_ref.
                      }
                ++  destruct y1; [now destruct n1| now compute].
          * destruct (T1.T1_eq_dec y1 T1.zero).
-           --   subst; rewrite !h2g_cons_rw !h2g_zero_rw;
+           --   subst; rewrite !h2g_cons !h2g_zero;
                   rewrite T1mul_eqn4.
                 ++ by rewrite mult_eqn4. 
                 ++ case :alpha n1 => //. 
-           --   rewrite !h2g_cons_rw. 
+           --   rewrite !h2g_cons. 
                 ++ rewrite T1mul_eqn5.
                    ** rewrite  mult_eqn5 => //. 
                       simpl h2g; rewrite plus_ref; f_equal. 
@@ -455,7 +444,7 @@ Proof. apply refines2_R,  mult_ref. Qed.
 Lemma hmultA : associative hmult.
 Proof. 
   move => a b c. 
-  by rewrite -(g2h_h2g_rw a) -(g2h_h2g_rw b) -(g2h_h2g_rw c) !mult_refR mulA. 
+  by rewrite -(g2h_h2g a) -(g2h_h2g b) -(g2h_h2g c) !mult_refR mulA. 
 Qed.
 
 
@@ -508,13 +497,14 @@ Qed.
 
 
 (* rewriting lemmas *)
-Notation nf := T1.nf.
+Notation hnf := T1.nf.
 
-Lemma nf_g2h alpha : nf (g2h alpha) = T1nf alpha.
-Proof.  by rewrite /nf (nf_ref (g2h alpha)) h2g_g2h_rw. Qed. 
 
-Lemma g2h_succ_rw (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
-Proof.   by rewrite -(h2g_g2h_rw alpha) succ_ref !g2h_h2g_rw. Qed.
+Lemma hnf_g2h alpha : hnf (g2h alpha) = T1nf alpha.
+Proof.  by rewrite /hnf (nf_ref (g2h alpha)) h2g_g2h. Qed. 
+
+Lemma g2h_succ (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
+Proof.   by rewrite -(h2g_g2h alpha) succ_ref !g2h_h2g. Qed.
 
 Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
 Proof. 
@@ -525,12 +515,12 @@ Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta.
 Proof.
   move => Halpha Hbeta; split. 
-  - rewrite -(h2g_g2h_rw alpha) -(h2g_g2h_rw beta);  repeat split. 
-    + by rewrite g2h_h2g_rw nf_g2h. 
-    + by rewrite !h2g_g2h_rw hlt_iff.
-    + by rewrite g2h_h2g_rw nf_g2h. 
+  - rewrite -(h2g_g2h alpha) -(h2g_g2h beta);  repeat split. 
+    + by rewrite g2h_h2g hnf_g2h. 
+    + by rewrite !h2g_g2h hlt_iff.
+    + by rewrite g2h_h2g hnf_g2h. 
   -  destruct 1 as [H0 [H1 H2]].
-     apply lt_ref in H1; move: H1; by rewrite !h2g_g2h_rw.
+     apply lt_ref in H1; move: H1; by rewrite !h2g_g2h.
 Qed.
 
 Notation hle := (MoreOrders.leq hlt). 
@@ -541,8 +531,8 @@ Proof.
   split. 
   -  rewrite T1le_eqVlt => /orP; case.
      move =>  /eqP Heq; subst; right.
-     move => Hlt; left; by rewrite hlt_iff !h2g_g2h_rw.  
-  -   rewrite le_ref; by rewrite !h2g_g2h_rw.  
+     move => Hlt; left; by rewrite hlt_iff !h2g_g2h.  
+  -   rewrite le_ref; by rewrite !h2g_g2h.  
 Qed.
 
 (** Well formed ordinals as a structure *)
@@ -550,11 +540,8 @@ Qed.
 (* begin snippet E0Def:: no-out *)
 Structure E0 := mkE0 { cnf :> T1 ; _ : T1nf cnf == true}.
 
-
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
-
-
 
 Definition E0_lt (alpha beta: E0) := T1lt (cnf alpha) (cnf beta).
 
@@ -574,7 +561,7 @@ Defined.
 
 Definition E0_g2h (a: E0): hE0.
   refine (@E0.mkord (g2h a) _); red.
-  case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2h_rw.  
+  case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2h.  
 Defined.
 (* end snippet gE0h2gG2h *)
 
@@ -629,8 +616,8 @@ Proof.
   - move => a b ; rewrite /E0_lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
-    rewrite -(h2g_g2h_rw cnf0) in Hlt i0;
-      rewrite -(h2g_g2h_rw cnf1) in Hlt i1;
+    rewrite -(h2g_g2h cnf0) in Hlt i0;
+      rewrite -(h2g_g2h cnf1) in Hlt i1;
       rewrite -decide_hlt_rw in Hlt;
       repeat split. 
     + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
