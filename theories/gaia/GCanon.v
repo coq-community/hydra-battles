@@ -191,4 +191,59 @@ Proof.
    rewrite /canon -nf_ref => ?; apply nf_canon; by rewrite nf_g2h. 
 Qed.
 
-Search canon.
+Lemma gcanonS_limit_mono (alpha : T1) i j :
+  T1nf alpha -> (i < j)%coq_nat -> T1limit alpha ->
+  T1lt (canon alpha (S i)) (canon alpha (S j)). 
+Proof.  rewrite /canon -!g2h_canon_rw !h2g_g2h_rw => Hnf Hij Hlim.
+        case (@canonS_limit_mono (g2h alpha) i j) => //.
+        - by rewrite nf_g2h.
+        - rewrite limitb_ref h2g_g2h_rw => //. 
+        - move => Hnf2 ; rewrite hlt_iff. case; rewrite /canon => //.
+Qed. 
+
+
+(* TODO:
+
+Hydras definition:
+
+strict_lub = 
+fun (s : nat -> hT1) (lambda : hT1) =>
+(forall i : nat, s i t1< lambda) /\
+(forall alpha : hT1, (forall i : nat, s i t1<= alpha) -> lambda t1<= alpha)
+     : (nat -> hT1) -> hT1 -> Prop
+
+Gaia's :
+
+Definition limit_v2 (f: Tf) x := 
+  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
+
+
+Definition limit_of (f: Tf) x :=
+  [/\ (forall n m, (n < m)%N -> f n < f m), limit_v2 f x & T1nf x].
+
+Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
+Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
+
+
+Lemma limit_lub f x y: limit_of f x -> (forall n, f n <= y) -> T1nf y ->
+                       x <= y.
+Proof.
+  move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
+  move: (pc _ hb ha) => [n ny].
+    by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
+Qed.
+
+
+canonS_limit_lub:
+  forall [lambda : hT1],
+  nf lambda -> hlimitb lambda -> strict_lub (canonS lambda) lambda
+
+
+approx_ok:
+  forall (alpha beta : hT1) (fuel : Fuel.fuel) (i : nat) 
+    [j : nat] [gamma : hT1],
+  approx alpha beta fuel i = Some (j, gamma) ->
+  gamma = canonS alpha j /\ hlt beta gamma
+
+
+*)
