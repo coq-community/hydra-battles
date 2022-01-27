@@ -57,9 +57,14 @@ Import T1.
 
 Compute pp (canon (omega ^ omega) 3).
 
+Compute pp (canon (omega ^ omega) 0).
+Compute pp (canon (omega ^omega) 1).
+
+
 Compute pp (canon (omega ^ omega * 3) 42).
 
 Compute canon (phi0 10) 0.
+Compute canon (phi0 10) 1.
 
 Goal canon (omega ^ omega) 10 = phi0 10. (* .no-out *)
 Proof. (* .no-out *) reflexivity. Qed. 
@@ -908,6 +913,9 @@ Lemma canonS_LE alpha n :
       apply LE_refl;auto. 
   Qed.
 
+
+ 
+  
   (** exercise  after Guillaume Melquiond   *)
   
   Require Import Fuel. 

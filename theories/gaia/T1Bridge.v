@@ -480,44 +480,32 @@ Qed.
 
 Lemma LE_ref : refinesRel hLE gLE.
 Proof. 
-split. 
-- case => a b.
   split. 
-  Search T1nf h2g. 
-  rewrite -nf_ref => //.
-  case: b => c _.    
-  Print MoreOrders.leq.
-  destruct c. 
-  Search (_ <= _).
- apply T1ltW.  Search hlt h2g. 
-   rewrite - decide_hlt_rw => //.
-Search bool_decide. 
-red;  rewrite bool_decide_eq_true => //.
-Search (?x <=?x).
- apply T1lenn. 
- case b => _ H.
-  Search T1nf h2g. rewrite - nf_ref => //. 
-- case.
-  rewrite /hLE. 
-  red. 
- split. 
-  Search T1nf h2g.
-  rewrite -nf_ref in p p1 => //.
-  split => //.
-  Search (_ <= _).
-  rewrite T1le_eqVlt in p0. move : p0 => /orP.
-  case => /eqP Heq; subst. Search h2g eq. rewrite h2g_eq_iff in Heq; subst. 
-right. 
-left. 
-Search hlt h2g. 
-Search bool_decide.
-Search h2g lt. 
-rewrite -decide_hlt_rw in Heq => //.
-Search bool_decide. 
-move: Heq => /eqP H. rewrite bool_decide_eq_true in H => //.
-Search  T1nf h2g.
- 
-rewrite -nf_ref in p1 => //.
+  - case => a b.
+    split. 
+    rewrite -nf_ref => //.
+    case: b => c _.    
+    destruct c. 
+    
+    apply T1ltW. 
+    rewrite - decide_hlt_rw => //.
+    red;  rewrite bool_decide_eq_true => //.
+    apply T1lenn. 
+    case b => _ H.
+    rewrite - nf_ref => //. 
+  - case.
+    rewrite /hLE. 
+    red. 
+    split. 
+    rewrite -nf_ref in p p1 => //.
+    split => //.
+    rewrite T1le_eqVlt in p0. move : p0 => /orP.
+    case => /eqP Heq; subst.  rewrite h2g_eq_iff in Heq; subst. 
+    right. 
+    left. 
+    rewrite -decide_hlt_rw in Heq => //.
+    move: Heq => /eqP H. rewrite bool_decide_eq_true in H => //.
+    rewrite -nf_ref in p1 => //.
 Qed.
 
 
@@ -686,8 +674,66 @@ Proof. by  rewrite mulA. Qed.
 
 Print T1mul.
 
+(** Sequences and limits *)
 
-(* limitsin Gaia 
-Definition limit_v2 (f: Tf) x := 
-  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
- *)
+Definition g2h_seq (s: nat-> T1) n := g2h (s n).
+Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
+
+
+Definition gstrict_lub 
+ (s : nat -> T1) (lambda : T1) :=
+(forall i : nat, gLT (s i) lambda) /\
+(forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
+
+
+Lemma strict_lub_ref (s:nat-> hT1) (lambda: hT1) :
+  strict_lub s lambda <-> gstrict_lub (h2g_seq s) (h2g lambda).
+Proof. 
+  rewrite /gstrict_lub; split. 
+  -  case => Ha Hb;  split. 
+     + move => i; rewrite -!LT_ref => //.
+     + move => alpha Halpha; rewrite -(h2g_g2h alpha) -LE_ref.
+       apply Hb => i; destruct (Halpha i) as [H H0 H1]; split. 
+       * rewrite -hnf_g2h /h2g_seq g2h_h2g in H => //.
+       * split. 
+         --  rewrite T1le_iff /h2g_seq g2h_h2g in H0 => //.
+         --  by rewrite hnf_g2h.
+  -   destruct 1 as [H H0]; split. 
+      + move => i; specialize  (H i); rewrite LT_ref =>//.
+      +  move => alpha Halpha; rewrite LE_ref;  apply H0. 
+         move => i; rewrite -LE_ref;  apply Halpha. 
+Qed.
+
+
+  
+(* TODO:
+
+Gaia's :
+
+limit_v2 = 
+fun (f : Tf) (x : T1) =>
+(forall n : nat, f n < x) /\
+(forall y : T1, T1nf y -> y < x -> exists n : nat, y <= f n)
+     : Tf -> T1 -> Prop
+
+Arguments limit_v2 _%function_scope _
+
+
+Definition limit_of (f: Tf) x :=
+  [/\ (forall n m, (n < m)%N -> f n < f m), limit_v2 f x & T1nf x].
+
+Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
+Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
+
+
+Lemma limit_lub f x y: limit_of f x -> (forall n, f n <= y) -> T1nf y ->
+                       x <= y.
+Proof.
+  move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
+  move: (pc _ hb ha) => [n ny].
+    by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
+Qed.
+
+
+
+*)
