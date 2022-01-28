@@ -218,30 +218,41 @@ Qed.
 
 
 
- Lemma canon_limit_v2   lambda: 
-    T1nf lambda -> T1limit lambda ->
-    limit_v2 (canon lambda) lambda.
- Proof.
-   move => Hnf Hlim; split.
-   - move => n; apply gcanon_lt => // H; subst; discriminate. 
-   -  move => y Hnfy Hlt; 
-              case (gcanon_limit_strong  lambda Hnf Hlim y Hnfy Hlt) => //.
-      move => i Hi; exists i => //; by apply T1ltW. 
- Qed.
- 
+Lemma gcanon_limit_v2   lambda: 
+  T1nf lambda -> T1limit lambda ->
+  limit_v2 (canon lambda) lambda.
+Proof.
+  move => Hnf Hlim; split.
+  - move => n; apply gcanon_lt => // H; subst; discriminate. 
+  -  move => y Hnfy Hlt; 
+             case (gcanon_limit_strong  lambda Hnf Hlim y Hnfy Hlt) => //.
+     move => i Hi; exists i => //; by apply T1ltW. 
+Qed.
 
- (*
-canonS_limit_lub:
-  forall [lambda : hT1],
-  hnf lambda -> hlimitb lambda -> strict_lub (canonS lambda) lambda
+ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
+        (Hlim : T1limit lambda) (Hij : (i < j)%N) :
+   T1lt (canon lambda i) (canon lambda j). 
+ Proof.      
+   rewrite /canon -hlt_iff. 
+   case (@canon_limit_mono (g2h lambda)  i j) => //.
+   - by rewrite hnf_g2h. 
+   - by  rewrite limitb_ref h2g_g2h.
+   - by apply /ltP . 
+   -  move => _; case => //.
+ Qed. 
+
+ Lemma gcanon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
+   limit_of (canon lambda) lambda.
+  Proof.
+    split => //.
+    move => n m Hnm; apply gcanon_limit_mono => //.
+   apply gcanon_limit_v2 => //.
+  Qed.    
 
 
-approx_ok:
-  forall (alpha beta : hT1) (fuel : Fuel.fuel) (i : nat) 
-    [j : nat] [gamma : hT1],
-  approx alpha beta fuel i = Some (j, gamma) ->
-  gamma = canonS alpha j /\ hlt beta gamma
-
+<<<<<<< HEAD
 
 *)
 
+=======
+>>>>>>> c900eaa5920e8c156c74a3eb36e051c77b5bddf8

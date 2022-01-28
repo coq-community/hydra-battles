@@ -200,7 +200,7 @@ Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
 Proof.
   move => H; rewrite <- (g2h_h2g a), <- (g2h_h2g b); by apply T1eq_rw.
 Qed.
-Locate Eq.
+
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
@@ -672,7 +672,54 @@ Infix "*" := T1mul : BrGaia_scope.
 Lemma L1' (a: T1) : (T1omega * (a * T1omega) = T1omega * a * T1omega)%brg.
 Proof. by  rewrite mulA. Qed. 
 
-Print T1mul.
+(** Sequences and limits *)
+
+Definition g2h_seq (s: nat-> T1) n := g2h (s n).
+Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
+
+
+Definition gstrict_lub 
+ (s : nat -> T1) (lambda : T1) :=
+(forall i : nat, gLT (s i) lambda) /\
+(forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
+
+
+Lemma strict_lub_ref (s:nat-> hT1) (lambda: hT1) :
+  strict_lub s lambda <-> gstrict_lub (h2g_seq s) (h2g lambda).
+Proof. 
+  rewrite /gstrict_lub; split. 
+  -  case => Ha Hb;  split. 
+     + move => i; rewrite -!LT_ref => //.
+     + move => alpha Halpha; rewrite -(h2g_g2h alpha) -LE_ref.
+       apply Hb => i; destruct (Halpha i) as [H H0 H1]; split. 
+       * rewrite -hnf_g2h /h2g_seq g2h_h2g in H => //.
+       * split. 
+         --  rewrite T1le_iff /h2g_seq g2h_h2g in H0 => //.
+         --  by rewrite hnf_g2h.
+  -   destruct 1 as [H H0]; split. 
+      + move => i; specialize  (H i); rewrite LT_ref =>//.
+      +  move => alpha Halpha; rewrite LE_ref;  apply H0. 
+         move => i; rewrite -LE_ref;  apply Halpha. 
+Qed.
+
+
+  
+(* TODO:
+
+Gaia's :
+
+
+Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
+Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
+
+
+Lemma limit_lub f x y: limit_of f x -> (forall n, f n <= y) -> T1nf y ->
+                       x <= y.
+Proof.
+  move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
+  move: (pc _ hb ha) => [n ny].
+    by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
+Qed.
 
 (** Sequences and limits *)
 
