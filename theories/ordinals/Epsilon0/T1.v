@@ -1514,8 +1514,6 @@ Proof.
      + case H1; right; auto.
 Qed.
 
-
-
 Lemma LE_phi0 :
   forall a n b,  nf (ocons a n b) -> phi0 a t1<= ocons a n b.
 Proof.
@@ -1523,6 +1521,37 @@ Proof.
   apply le_phi0.
 Qed.
 
+(* to move to a  better place ? *)
+Lemma nf_tail_lt alpha n beta gamma :
+  nf (ocons alpha n beta) ->  gamma t1< beta ->
+  nf (ocons alpha n gamma).
+Proof. 
+  destruct beta.
+   - intros H H0; destruct (not_LT_zero H0). 
+   - intros H H0; destruct gamma. 
+   +  apply single_nf;  eapply nf_inv1; eauto. 
+   + destruct (LT_inv_strong H0). 
+    * apply ocons_nf. 
+      -- specialize (nf_inv3 H); 
+         intros H2; destruct H1 as [H3 [H4 H5]].
+         apply lt_trans with beta1; auto. 
+      --  eapply nf_inv1; eauto. 
+      --  destruct H0 as [H2 [H3 H4]]; auto. 
+    *  subst; apply nf_ocons_LT.
+       --  repeat split. 
+           ++  eapply nf_inv1; eapply nf_inv2; eauto. 
+           ++  eapply nf_inv3; eauto. 
+           ++  eapply nf_inv1; eauto.
+       --  eapply nf_inv1; eauto. 
+       --  destruct H0; tauto. 
+    * subst;  apply nf_ocons_LT. 
+      -- repeat split. 
+         ++  eapply nf_inv1; eapply nf_inv2; eauto.
+         ++  eapply nf_inv3; eauto. 
+         ++  eapply nf_inv1; eauto.
+      --   eapply nf_inv1; eauto. 
+      -- destruct H0; tauto. 
+Qed.
 
 
 (** ** Well foundedness of [LT] *)

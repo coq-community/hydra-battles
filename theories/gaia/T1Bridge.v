@@ -200,7 +200,7 @@ Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
 Proof.
   move => H; rewrite <- (g2h_h2g a), <- (g2h_h2g b); by apply T1eq_rw.
 Qed.
-Locate Eq.
+
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match T1.compare_T1 x y with
@@ -672,8 +672,6 @@ Infix "*" := T1mul : BrGaia_scope.
 Lemma L1' (a: T1) : (T1omega * (a * T1omega) = T1omega * a * T1omega)%brg.
 Proof. by  rewrite mulA. Qed. 
 
-Print T1mul.
-
 (** Sequences and limits *)
 
 Definition g2h_seq (s: nat-> T1) n := g2h (s n).
@@ -710,17 +708,6 @@ Qed.
 
 Gaia's :
 
-limit_v2 = 
-fun (f : Tf) (x : T1) =>
-(forall n : nat, f n < x) /\
-(forall y : T1, T1nf y -> y < x -> exists n : nat, y <= f n)
-     : Tf -> T1 -> Prop
-
-Arguments limit_v2 _%function_scope _
-
-
-Definition limit_of (f: Tf) x :=
-  [/\ (forall n m, (n < m)%N -> f n < f m), limit_v2 f x & T1nf x].
 
 Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
 Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.

@@ -229,62 +229,24 @@ Qed.
       move => i Hi; exists i => //; by apply T1ltW. 
  Qed.
  
-
- (*
-canonS_limit_lub:
-  forall [lambda : hT1],
-  hnf lambda -> hlimitb lambda -> strict_lub (canonS lambda) lambda
-
-
-approx_ok:
-  forall (alpha beta : hT1) (fuel : Fuel.fuel) (i : nat) 
-    [j : nat] [gamma : hT1],
-  approx alpha beta fuel i = Some (j, gamma) ->
-  gamma = canonS alpha j /\ hlt beta gamma
-
-
-*)
-
-   Section TODO.
-
-    Hypothesis to_prove : forall lambda i, T1limit lambda ->
-                                         canon lambda 0 <= canon lambda i.
-
-    Lemma canon_mono_weak lambda i: forall j, T1nf lambda -> T1limit lambda -> 
-                                      (i <= j)%N -> canon lambda i <= canon lambda j. 
-  case i. 
-   - move => Hnf  Hlim Hle j; by apply to_prove. 
-   - move =>  n; case. 
-     cbn; discriminate. 
-        move =>  n0 Hnf Hlim Hlt. 
-        Search (_ < _)%N orb.
-        rewrite leq_eqVlt  in Hlt. 
-        move :Hlt => /orP. case => /eqP. injection 1; intro; subst.
-        Search (?x <= ?x).
-        apply T1lenn. 
-        move => H. Search T1le T1lt. 
-    apply T1ltW. 
-    apply gcanonS_limit_mono => //.
-    
-   cbn. lia. 
-    Qed.
-    
- 
-
+ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
+        (Hlim : T1limit lambda) (Hij : (i < j)%N) :
+   T1lt (canon lambda i) (canon lambda j). 
+ Proof.      
+   rewrite /canon -hlt_iff. 
+   case (@canon_limit_mono (g2h lambda)  i j) => //.
+   - by rewrite hnf_g2h. 
+   - by  rewrite limitb_ref h2g_g2h.
+   - by apply /ltP . 
+   -  move => _; case => //.
+ Qed. 
 
  Lemma canon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
    limit_of (canon lambda) lambda.
   Proof.
-    split.
-    Abort.
-  (* Search (canon ?x _ < canon ?x _).
-   About gcanonS_limit_mono.
-   move => n m H; apply gcanonS_limit_mono => //.
-   move : H => /ltP //.
+    split => //.
+    move => n m Hnm; apply gcanon_limit_mono => //.
+   apply canon_limit_v2 => //.
+  Qed.    
 
-
-   Abort. *)
-
-  (* TODO : a canon version of canonS monotony *)
-End TODO. 
 
