@@ -245,3 +245,46 @@ approx_ok:
 
 *)
 
+   Section TODO.
+
+    Hypothesis to_prove : forall lambda i, T1limit lambda ->
+                                         canon lambda 0 <= canon lambda i.
+
+    Lemma canon_mono_weak lambda i: forall j, T1nf lambda -> T1limit lambda -> 
+                                      (i <= j)%N -> canon lambda i <= canon lambda j. 
+  case i. 
+   - move => Hnf  Hlim Hle j; by apply to_prove. 
+   - move =>  n; case. 
+     cbn; discriminate. 
+        move =>  n0 Hnf Hlim Hlt. 
+        Search (_ < _)%N orb.
+        rewrite leq_eqVlt  in Hlt. 
+        move :Hlt => /orP. case => /eqP. injection 1; intro; subst.
+        Search (?x <= ?x).
+        apply T1lenn. 
+        move => H. Search T1le T1lt. 
+    apply T1ltW. 
+    apply gcanonS_limit_mono => //.
+    
+   cbn. lia. 
+    Qed.
+    
+ 
+
+
+ Lemma canon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
+   limit_of (canon lambda) lambda.
+  Proof.
+    split.
+    Abort.
+  (* Search (canon ?x _ < canon ?x _).
+   About gcanonS_limit_mono.
+   move => n m H; apply gcanonS_limit_mono => //.
+   move : H => /ltP //.
+
+
+   Abort. *)
+
+  (* TODO : a canon version of canonS monotony *)
+End TODO. 
+

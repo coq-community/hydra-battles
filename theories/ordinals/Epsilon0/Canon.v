@@ -62,6 +62,9 @@ Compute pp (canon (omega ^omega) 1).
 
 
 Compute pp (canon (omega ^ omega * 3) 42).
+Compute pp (canon (omega ^ omega * 3) 0).
+
+Compute pp (canon (omega ^ omega * 3) 1).
 
 Compute canon (phi0 10) 0.
 Compute canon (phi0 10) 1.
@@ -128,6 +131,8 @@ Proof.
   - intros; apply canonS_lim1; auto. 
 Qed.
 
+
+
 (** Here *)
 
 Lemma canonS_lim2  i n lambda: 
@@ -164,6 +169,29 @@ Proof.
  - now apply canonS_lim2.
 Qed.
 
+
+Lemma canon_lim3 i n alpha lambda :
+  nf alpha -> nf lambda -> limitb lambda ->
+  canon (ocons alpha n lambda) i = ocons alpha n (canon lambda i).
+  Proof. 
+  simpl (canon (ocons alpha n lambda)).
+  destruct alpha. 
+  - destruct n. 
+    + destruct lambda.
+      *  discriminate. 
+      * reflexivity. 
+    + destruct lambda.
+      * discriminate. 
+      * reflexivity.
+  - destruct n.
+    * destruct lambda.
+      -- discriminate.
+      -- reflexivity.
+    * destruct lambda.
+      -- discriminate. 
+      -- reflexivity. 
+  Qed.
+  
 (* begin snippet canonSucc  *)
 
 Lemma canon_succ i alpha :
@@ -544,8 +572,13 @@ Proof.
     destruct  (canonS_LT  i  Hnf); auto.
 Qed.
 
-
-
+Lemma canon_LT i alpha :  nf alpha -> alpha <> zero ->
+  canon alpha i t1<  alpha.
+Proof.
+ intros Hnf Hpos; destruct i. 
+ -  apply canon0_LT; auto. 
+ - apply canonS_LT; auto. 
+Qed. 
 Lemma canonS_lt : forall i alpha, nf alpha -> alpha <> zero ->
                               T1.lt (canon alpha (S i)) alpha.
 Proof.
@@ -818,85 +851,239 @@ Qed.
 (* end snippet canonSLimitLub *)
 
 
+
+ 
+
+(* to move once proven *)
+Lemma nf_tail_lt alpha n beta gamma :
+  nf (ocons alpha n beta) ->
+  gamma t1< beta ->
+  nf (ocons alpha n gamma).
+  destruct beta.
+  Search (_ t1< zero). 
+   intros H H0; destruct (not_LT_zero H0). 
+  intros H H0. 
+   destruct gamma. 
+   apply single_nf.
+  eapply nf_inv1; eauto. 
+   Search (ocons _ _ _ t1<  ocons _ _ _).
+  destruct (LT_inv_strong H0). 
+
+    Search (nf (ocons _ _ (ocons _ _ _))).
+apply ocons_nf. 
+   specialize (nf_inv3 H). 
+   intros. 
+   destruct H1 as [H3 [H4 H5]].
+   apply lt_trans with beta1; auto. 
+   eapply nf_inv1; eauto. 
+  destruct H0 as [H2 [H3 H4]]; auto. 
+  subst.
+  About nf_ocons_LT. 
+  apply nf_ocons_LT.
+  Search (nf (ocons _ _ (ocons _ _ _))).
+  split. 
+   eapply nf_inv1. 
+   eapply nf_inv2. 
+  eauto. 
+split. 
+ eapply nf_inv3; eauto. 
+ eapply nf_inv1; eauto.
+  eapply nf_inv1; eauto. 
+ destruct H0; tauto. 
+   subst. 
+
+  apply nf_ocons_LT. 
+    Search (nf (ocons _ _ (ocons _ _ _))).
+  split. 
+ eapply nf_inv1. 
+   eapply nf_inv2. 
+   eauto.
+   split.
+    Search (nf (ocons _ _ (ocons _ _ _))).
+   eapply nf_inv3; eauto. 
+ eapply nf_inv1; eauto.
+  eapply nf_inv1; eauto. 
+destruct H0; tauto. 
+Qed.
+
+
+Lemma canon_limit_mono alpha i j : nf alpha -> limitb alpha  ->
+                                    i < j ->
+                                    canon alpha i t1< canon alpha j.
+Proof. 
+  pattern alpha ; apply transfinite_recursor_lt.
+  clear alpha;  intros alpha Hrec alpha_nf Hlim Hij. 
+  About   T1.limitb_cases.
+  destruct alpha. 
+  - discriminate. 
+  -  destruct (@T1.limitb_cases _ _ _ alpha_nf Hlim) as [[H1 H2] | H3].
+     +  subst. 
+      destruct n. 
+        * case_eq (limitb alpha1). 
+          -- intro.   
+             repeat rewrite canon_lim1. Search (T1.phi0 _ t1< T1.phi0 _).
+             apply phi0_mono_strict_LT.
+            apply Hrec; auto.
+            Search (lt ?x (T1.phi0 ?x)).
+            apply lt_a_phi0_a.
+            Search (nf (ocons _ _ _)).
+            eapply nf_inv1; eauto.
+            auto. 
+            eapply nf_inv1; eauto.
+            auto. 
+          -- intro.
+             destruct (@zero_limit_succ_dec alpha1) ; trivial.
+             destruct s. 
+             contradiction. 
+      rewrite i0 in H; discriminate.
+             destruct s as [beta [Hbeta Hbeta']].
+             subst.
+             destruct i, j. 
+             ++ lia. 
+             ++ rewrite canon0_phi0_succ_eqn, canonS_phi0_succ_eqn. 
+                Search (zero t1< ocons _ _ _).
+                apply LT1. 
+                auto. 
+                auto. 
+                auto. 
+             ++ lia.
+             ++ repeat rewrite canonS_phi0_succ_eqn.
+ apply LT3. 
+    Search (nf (ocons _ _ zero)).
+   apply single_nf. 
+  auto. 
+ apply single_nf;  auto. 
+lia. 
+
+                auto.
+                auto. 
+        *  destruct (@zero_limit_succ_dec alpha1) ; trivial.
+       destruct s.
+       subst.
+       exfalso; now apply H1.
+    
+          repeat rewrite canon_lim2. 
+          apply LT4.
+          Search (nf (ocons _ _ (ocons _ _ _))).
+         apply nf_ocons_LT. 
+          Search (canon ?x _ t1< ?x).
+          apply canon_LT. 
+eapply nf_inv1; eauto. 
+auto.           
+eapply nf_inv1; eauto. 
+ Search nf (T1.phi0 _).
+apply nf_phi0. 
+apply nf_canon. 
+eapply nf_inv1; eauto. 
+ apply nf_ocons_LT. 
+   apply canon_LT. 
+ eapply nf_inv1; eauto. 
+ auto.
+ eapply nf_inv1; eauto.
+ apply nf_phi0. 
+apply nf_canon. 
+eapply nf_inv1; eauto.
+Search (T1.phi0 _ t1<  T1.phi0 _). 
+apply phi0_mono_strict_LT. 
+apply Hrec.
+Search (nf (ocons _ _ zero)). 
+apply alpha_nf. 
+eapply nf_inv1; eauto.
+Search (lt ?x (ocons ?x _ _)).
+apply head_lt_ocons. 
+eapply nf_inv1; eauto.
+auto. 
+auto. 
+eapply nf_inv1; eauto.
+auto. 
+eapply nf_inv1; eauto.
+auto. 
+
+
+      destruct s as [beta [H2 H3]]. subst. 
+     
+      destruct i, j.
+      lia. 
+      Search canon ocons succ.
+      rewrite canonS_ocons_succ_eqn2, canon0_ocons_succ_eqn2.
+        apply LT4.
+        Search "irrel".
+        eapply nf_coeff_irrelevance. eauto. 
+      apply nf_ocons_LT. 
+       Search (?x t1< succ ?x).
+      apply LT_succ. 
+ auto. 
+ Search (nf (succ _)).
+apply succ_nf; auto. 
+apply single_nf. 
+ auto. 
+  apply LT1. 
+apply single_nf. 
+ auto. 
+auto. 
+auto. 
+lia. 
+Search canon ocons succ.
+repeat rewrite canonS_ocons_succ_eqn2.
+apply LT4. 
+ apply nf_ocons_LT. 
+apply LT_succ.
+ auto. 
+apply succ_nf. 
+ auto. 
+Search (nf (ocons _ _ zero)). 
+apply single_nf. 
+auto. 
+  apply nf_ocons_LT. 
+apply LT_succ.
+auto. 
+  apply succ_nf. auto. 
+apply single_nf. 
+auto. 
+apply LT3. 
+apply single_nf. 
+auto. 
+apply single_nf. 
+auto. 
+lia. 
+auto. 
+auto. 
++    
+  destruct H3.
+  Search limitb canon ocons.
+  repeat rewrite canon_lim3; auto. 
+  apply LT4.
+  (** TODO: a lemma *)
+  apply nf_tail_lt with alpha2; auto. 
+  apply canon_LT. eapply nf_inv2; eassumption. 
+  Search limitb zero.
+   apply limitb_not_zero; auto. 
+   eapply nf_inv2; eassumption.
+  apply nf_tail_lt with alpha2; auto. 
+  apply canon_LT. eapply nf_inv2; eassumption. 
+  Search limitb zero.
+   apply limitb_not_zero; auto. 
+   eapply nf_inv2; eassumption.
+
+apply Hrec; auto. 
+eapply nf_inv2; eauto.
+Search (lt ?x (ocons _ _ ?x)).
+apply tail_lt_ocons; auto. 
+eapply nf_inv2; eauto.
+eapply nf_inv1; eauto.
+eapply nf_inv2; eauto.
+eapply nf_inv1; eauto.
+eapply nf_inv2; eauto.
+Qed. 
+
+
+
 Lemma canonS_limit_mono alpha i j : nf alpha -> limitb alpha  ->
                                     i < j ->
                                     canonS alpha i t1< canonS alpha j.
 Proof. 
-  pattern alpha ; apply transfinite_recursor_lt.
-  clear alpha;  intros alpha Hrec alpha_nf.
-  intros.  
-  destruct alpha.
-  - discriminate.
-  -  nf_decomp alpha_nf.
-     destruct (limitb_cases alpha_nf H).
-     +  destruct a;subst.
-        destruct (@zero_limit_succ_dec alpha1) ; trivial.
-        *   destruct s.   
-            { subst;   discriminate H. }
-            {   destruct n.
-                - unfold canonS; repeat rewrite canonS_lim1 ; trivial.
-                  {  apply LT2 ; trivial.
-                     apply single_nf. 
-                     apply nf_canon ; eauto with T1.
-                     apply single_nf. 
-                     apply nf_canon ; eauto with T1.
-                     apply Hrec ; trivial. 
-                     apply head_lt_ocons.
-                  }
-                - unfold canonS; repeat rewrite canonS_lim2 ; trivial. 
-                  {
-                    apply LT4 ; trivial.
-                    apply nf_ocons_LT ; trivial.
-                    apply canonS_LT ; trivial.
-                    apply single_nf. 
-                    apply nf_canon ; trivial.
-                    apply nf_ocons_LT; trivial.
-                    apply canonS_LT ; eauto with T1.
-                    apply single_nf; apply nf_canon ; eauto with T1.
-                    apply LT2 ; trivial.
-                    apply single_nf;
-                      apply nf_canon ; eauto with T1.
-                    apply single_nf;
-                      apply nf_canon ; eauto with T1.
-                    apply Hrec ; trivial.
-                    apply head_lt_ocons.
-                  }
-            }
-        * destruct s;subst.
-          destruct a.
-          subst alpha1.
-          destruct n.
-          { unfold canonS; repeat rewrite canonS_phi0_succ_eqn ;
-              eauto with T1. }
-          {
-            unfold canonS; repeat rewrite canonS_ocons_succ_eqn2 ; trivial. 
-            apply LT4 ; trivial.
-            apply nf_ocons_LT ; eauto with T1.
-            apply LT_succ ; eauto with T1.
-            apply nf_ocons_LT ; eauto with T1.
-            apply LT_succ ; eauto with T1.
-            auto with T1.
-          }
-     + destruct a. unfold canonS;
-       repeat rewrite canon_tail ; eauto with T1.
-       nf_decomp alpha_nf.
-       * apply  LT4 ; trivial.
-         apply nf_intro ; trivial. 
-         apply nf_canon ; eauto with T1.
-         apply nf_helper_phi0R ; trivial. 
-         apply T1.lt_trans with alpha2 ; trivial. 
-         apply canonS_lt ; eauto with T1.
-         apply nf_helper_phi0 ; eauto with T1.
-         apply nf_helper_intro with n ; eauto with T1.
-         apply nf_intro ; trivial. 
-         apply nf_canon ; eauto with T1.
-         apply nf_helper_phi0R ; trivial. 
-         apply T1.lt_trans with alpha2; trivial. 
-         apply canonS_lt ; eauto with T1.
-         apply nf_helper_phi0 ; eauto with T1.
-         apply nf_helper_intro with n ; eauto with T1.
-         apply Hrec ; eauto with T1.
-         apply tail_lt_ocons ; eauto with T1.
+  intros; unfold canonS; eapply canon_limit_mono; eauto.
+  auto with arith. 
 Qed.
 
 

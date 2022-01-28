@@ -675,7 +675,7 @@ Defined.
 
 Infix "O+" := Oplus (at level 50, left associativity): E0_scope.
 
-Instance Oplus_assoc : Assoc eq Oplus.
+#[global] Instance Oplus_assoc : Assoc eq Oplus.
 Proof. 
  red;  destruct x,y, z. unfold Oplus.  cbn.
   apply E0_eq_intro; cbn; now rewrite oplus_assoc.
@@ -812,7 +812,7 @@ Proof.
 Qed.
 
 
-Instance plus_assoc : Assoc eq plus . 
+#[global] Instance plus_assoc : Assoc eq plus . 
 Proof.
   intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
   apply  T1.plus_assoc.

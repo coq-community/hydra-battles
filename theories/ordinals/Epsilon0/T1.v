@@ -176,6 +176,10 @@ Example E2 : ~ lt (tower 3) (tower 3).
 Proof. discriminate.  Qed.
 (* end snippet ltExamples *)
 
+
+
+
+
 (** ** Properties of [compare] *)
 
 Lemma compare_ocons : 
