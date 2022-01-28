@@ -58,7 +58,7 @@ Proof.
   rewrite succ_ref phi0_ref g2h_h2g canon0_phi0_succ_eqn => //.
 Qed. 
 
-Lemma gcanon0_LT alpha:
+Lemma gcanon0_lt alpha:
   T1nf alpha -> alpha <> zero -> T1lt (canon alpha 0) alpha.
 Proof. 
   rewrite -(h2g_g2h alpha) -nf_ref /canon => Hnf Hpos.  
@@ -70,9 +70,18 @@ Lemma gcanonS_lt  (i : nat) [alpha : T1]:
   T1nf alpha -> alpha <> zero -> T1lt (canon alpha i.+1) alpha.
 Proof.
   rewrite -(h2g_g2h alpha) -nf_ref /canon => Hnf Hpos.
-  rewrite g2h_h2g; apply lt_ref, canonS_LT => //.
+  rewrite g2h_h2g; apply lt_ref, canonS_lt => //.
   move => H; apply Hpos; rewrite H => //.
 Qed. 
+
+Lemma gcanon_lt  (i : nat) [alpha : T1]:
+   T1nf alpha -> alpha <> zero -> T1lt (canon alpha i) alpha.
+Proof. 
+  case : i.   
+  - apply gcanon0_lt. 
+  - move => n Hnf Hpos; apply gcanonS_lt => //.
+Qed. 
+
 
 
 Lemma canonS_cons_not_zero  (i : nat) (alpha : T1) (n : nat) (beta : T1):
@@ -205,51 +214,39 @@ Proof.
   - by rewrite hnf_g2h.
   - rewrite limitb_ref h2g_g2h => //. 
   - move => Hnf2 ; rewrite hlt_iff; case; rewrite /canon => //.
-Qed. 
-
-
-(* TODO:
-
-Hydras definition:
-
-strict_lub = 
-fun (s : nat -> hT1) (lambda : hT1) =>
-(forall i : nat, s i t1< lambda) /\
-(forall alpha : hT1, (forall i : nat, s i t1<= alpha) -> lambda t1<= alpha)
-     : (nat -> hT1) -> hT1 -> Prop
-
-Gaia's :
-
-Definition limit_v2 (f: Tf) x := 
-  (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
-
-
-Definition limit_of (f: Tf) x :=
-  [/\ (forall n m, (n < m)%N -> f n < f m), limit_v2 f x & T1nf x].
-
-Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
-Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
-
-
-Lemma limit_lub f x y: limit_of f x -> (forall n, f n <= y) -> T1nf y ->
-                       x <= y.
-Proof.
-  move => [pa [pb pc] pd ] hy; case (T1ltP y x) => // ha hb.
-  move: (pc _ hb ha) => [n ny].
-    by move: (T1le_lt_trans ny (pa _ _ (ltnSn n))); rewrite T1ltNge (hy n.+1).
 Qed.
 
 
-canonS_limit_lub:
-  forall [lambda : hT1],
-  hnf lambda -> hlimitb lambda -> strict_lub (canonS lambda) lambda
+
+ Lemma canon_limit_v2   lambda: 
+    T1nf lambda -> T1limit lambda ->
+    limit_v2 (canon lambda) lambda.
+ Proof.
+   move => Hnf Hlim; split.
+   - move => n; apply gcanon_lt => // H; subst; discriminate. 
+   -  move => y Hnfy Hlt; 
+              case (gcanon_limit_strong  lambda Hnf Hlim y Hnfy Hlt) => //.
+      move => i Hi; exists i => //; by apply T1ltW. 
+ Qed.
+ 
+ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
+        (Hlim : T1limit lambda) (Hij : (i < j)%N) :
+   T1lt (canon lambda i) (canon lambda j). 
+ Proof.      
+   rewrite /canon -hlt_iff. 
+   case (@canon_limit_mono (g2h lambda)  i j) => //.
+   - by rewrite hnf_g2h. 
+   - by  rewrite limitb_ref h2g_g2h.
+   - by apply /ltP . 
+   -  move => _; case => //.
+ Qed. 
+
+ Lemma canon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
+   limit_of (canon lambda) lambda.
+  Proof.
+    split => //.
+    move => n m Hnm; apply gcanon_limit_mono => //.
+   apply canon_limit_v2 => //.
+  Qed.    
 
 
-approx_ok:
-  forall (alpha beta : hT1) (fuel : Fuel.fuel) (i : nat) 
-    [j : nat] [gamma : hT1],
-  approx alpha beta fuel i = Some (j, gamma) ->
-  gamma = canonS alpha j /\ hlt beta gamma
-
-
-*)
