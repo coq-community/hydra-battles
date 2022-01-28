@@ -205,18 +205,6 @@ Proof.
    rewrite /canon -nf_ref => ?; apply nf_canon; by rewrite hnf_g2h. 
 Qed.
 
-Lemma gcanonS_limit_mono (alpha : T1) i j :
-  T1nf alpha -> (i < j)%coq_nat -> T1limit alpha ->
-  T1lt (canon alpha (S i)) (canon alpha (S j)). 
-Proof.
-  rewrite /canon -!g2h_canon !h2g_g2h => Hnf Hij Hlim.
-  case (@canonS_limit_mono (g2h alpha) i j) => //.
-  - by rewrite hnf_g2h.
-  - rewrite limitb_ref h2g_g2h => //. 
-  - move => Hnf2 ; rewrite hlt_iff; case; rewrite /canon => //.
-Qed.
-
-
 
 Lemma gcanon_limit_v2   lambda: 
   T1nf lambda -> T1limit lambda ->
@@ -250,9 +238,3 @@ Qed.
   Qed.    
 
 
-<<<<<<< HEAD
-
-*)
-
-=======
->>>>>>> c900eaa5920e8c156c74a3eb36e051c77b5bddf8
