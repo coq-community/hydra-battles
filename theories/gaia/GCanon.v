@@ -16,10 +16,13 @@ Set Bullet Behavior "Strict Subproofs".
     (work in progress) 
 *)
 
+
+(* begin snippet canonDef *)
 #[global] Notation hcanon := canon. 
 
 Definition canon (a: T1) (i:nat) : T1 :=
   h2g (hcanon (g2h a) i).
+(* end snippet canonDef *)
 
 Notation canonS a  := (fun i =>  canon a (S i)).
 
@@ -229,12 +232,14 @@ Qed.
    -  move => _; case => //.
  Qed. 
 
+ (* begin snippet gcanonLimitOf:: no-out  *)
  Lemma gcanon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
    limit_of (canon lambda) lambda.
-  Proof.
-    split => //.
-    move => n m Hnm; apply gcanon_limit_mono => //.
+ Proof.
+   split => //.
+   move => n m Hnm; apply gcanon_limit_mono => //.
    apply gcanon_limit_v2 => //.
-  Qed.    
-
+ Qed.    
+ (* end snippet gcanonLimitOf *)
+ 
 
