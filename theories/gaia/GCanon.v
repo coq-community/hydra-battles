@@ -16,9 +16,10 @@ Set Bullet Behavior "Strict Subproofs".
     (work in progress) 
 *)
 
-#[global] Notation hcanon := canon. 
 
 (* begin snippet canonDef *)
+#[global] Notation hcanon := canon. 
+
 Definition canon (a: T1) (i:nat) : T1 :=
   h2g (hcanon (g2h a) i).
 (* end snippet canonDef *)

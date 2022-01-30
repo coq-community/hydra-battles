@@ -83,24 +83,6 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
-\subsubsection{Porting a theorem}
-The \texttt{Gaia} library containsa proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
-
-\emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
-
-\begin{Coqsrc}
-Lemma mulA: associative T1mul.
-\end{Coqsrc}
-
-This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt this lemma to \texttt{hydra-battles}' ordinals, by a small sequence of rewritings.
-
-\inputsnippets{T1Bridge/multA}
-
-The module~\href{../theories/html/gaia_hydras.T1Bridge_use.html}%
-{\texttt{gaia\_hydras.T1Bridge\_use}} shows a small
-example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
-
-\inputsnippets{T1Bridge_use/T1BridgeUse}
 
 \subsection{Order and comparison}
 Leibniz equality and strict order on both libraries are
@@ -133,6 +115,52 @@ from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a p
 These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
 
 \inputsnippets{T1Bridge/gE0LtWf}
+
+
+\section{Porting theorems without big effort}
+
+
+\subsection{Porting a theorem from \gaia}
+The \texttt{Gaia} library contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
+
+\emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
+
+\begin{Coqsrc}
+Lemma mulA: associative T1mul.
+\end{Coqsrc}
+
+This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt this lemma to \texttt{hydra-battles}' ordinals, by a small sequence of rewritings.
+
+\inputsnippets{T1Bridge/multA}
+
+The module~\href{../theories/html/gaia_hydras.T1Bridge_use.html}%
+{\texttt{gaia\_hydras.T1Bridge\_use}} shows a small
+example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
+
+\inputsnippets{T1Bridge_use/T1BridgeUse}
+
+\subsection{Porting theorems from \Hydras}
+
+\subsubsection{Canonical sequences}
+
+
+In~\href{../theories/html/gaia_hydras.GCanon.html}%
+{\texttt{gaia\_hydras.GCanon}}, canonical sequences are just imported from the library \linebreak
+\href{../theories/html/hydras.Epsilon0.Canon.html}%
+{\texttt{hydras.Epsilon0.Canon}}.
+
+First, we rename \Hydras's \texttt{canon} function into
+\texttt{hcanon}. Then we define a new function \emph{via} the
+translations \texttt{g2h} and \texttt{h2g}.
+
+\inputsnippets{GCanon/canonDef}
+
+\begin{todo}
+Explain the proof !
+\end{todo}
+
+\inputsnippets{GCanon/gcanonLimitOf}
+
 
 \section{Gaia's proof of well-foundedness}
 The library \Hydras already contains two proofs
