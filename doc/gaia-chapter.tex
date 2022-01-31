@@ -141,6 +141,14 @@ example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 \subsection{Porting theorems from \Hydras}
 
+Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
+similar statements on \gaia's type \texttt{T1}, we prove and
+apply rewriting rules of the following forms.
+
+\inputsnippets{T1Bridge/T1leIff}
+\inputsnippets{T1Bridge/rewritingRules}
+\inputsnippets{T1Bridge/limitbRef}
+
 \subsubsection{Canonical sequences}
 
 

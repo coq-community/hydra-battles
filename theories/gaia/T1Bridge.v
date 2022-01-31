@@ -42,11 +42,15 @@ Unset Strict Implicit.
 #[global] Notation hnfb := T1.nf_b.
 #[global] Notation hlimitb := T1.limitb.
 #[global] Notation his_succ := T1.succb.
+#[global] Notation hnf := T1.nf.
+
+
+
 
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
-
+#[global] Notation hle := (MoreOrders.leq hlt). 
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
@@ -398,10 +402,7 @@ Section Proof_of_mult_ref.
   Lemma g2h_zero : g2h zero = hzero.
     Proof. by []. Qed. 
 
-  (* begin snippet multRef:: no-out *)
-
-  Lemma mult_ref : refines2 hmult T1mul.
-  (* end snippet multRef *)
+  Lemma mult_ref0 : refines2 hmult T1mul.
   Proof.
     move => x y;  move: x; induction y. 
     -   move => x; simpl h2g; rewrite T1mul_eqn1; case x => //.
@@ -438,6 +439,10 @@ Section Proof_of_mult_ref.
 
 End Proof_of_mult_ref.
 
+(* begin snippet multRef:: no-out *)
+Lemma mult_ref : refines2 hmult T1mul.
+(* end snippet multRef *)
+Proof mult_ref0.
 (* begin snippet multA:: no-out *)
 Lemma mult_refR (a b : T1) : hmult (g2h a) (g2h b) = g2h (a * b).
 Proof. apply refines2_R,  mult_ref. Qed. 
@@ -510,7 +515,10 @@ Qed.
 
 (** Limits, successors, etc *)
 
+(* begin snippet limitbRef:: no-out *)
 Lemma limitb_ref (a:T1.T1) : hlimitb a = T1limit (h2g a).
+(* ... *)
+(* end snippet limitbRef *)
 Proof.
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta. 
@@ -530,9 +538,8 @@ Qed.
 
 
 (* rewriting lemmas *)
-Notation hnf := T1.nf.
 
-
+(* begin snippet rewritingRules:: no-out *) 
 Lemma hnf_g2h alpha : hnf (g2h alpha) = T1nf alpha.
 Proof.  by rewrite /hnf (nf_ref (g2h alpha)) h2g_g2h. Qed. 
 
@@ -546,20 +553,22 @@ Qed.
 
 Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta.
+(* ... *)
+(* end snippet rewritingRules *)
 Proof.
   move => Halpha Hbeta; split. 
   - rewrite -(h2g_g2h alpha) -(h2g_g2h beta);  repeat split. 
-    + by rewrite g2h_h2g hnf_g2h. 
+    1, 3:  by rewrite g2h_h2g hnf_g2h. 
     + by rewrite !h2g_g2h hlt_iff.
-    + by rewrite g2h_h2g hnf_g2h. 
-  -  destruct 1 as [H0 [H1 H2]].
+    -  destruct 1 as [H0 [H1 H2]].
      apply lt_ref in H1; move: H1; by rewrite !h2g_g2h.
 Qed.
 
-Notation hle := (MoreOrders.leq hlt). 
 
+(* begin snippet T1leIff:: no-out *)
 Lemma T1le_iff (alpha beta: T1):
   alpha <= beta <->  hle (g2h alpha) (g2h beta).
+(* end snippet T1leIff *)
 Proof.
   split. 
   -  rewrite T1le_eqVlt => /orP; case.
