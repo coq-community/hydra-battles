@@ -9,9 +9,7 @@ From gaia Require Import ssete9.
 Import ssete9.CantorOrdinal. 
 Set Bullet Behavior "Strict Subproofs".
 
-
-
-Lemma L1 (a: hT1):  (homega * (a * homega) = homega * a * homega)%t1.
+Example Ex1 (a: hT1):  (homega * (a * homega) = homega * a * homega)%t1.
 Proof. by rewrite hmultA. Qed.
 (* end snippet T1BridgeUse *)
 

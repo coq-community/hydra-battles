@@ -101,28 +101,11 @@ compatible.
 
 \inputsnippets{T1Bridge/nfRef}
 
-\section{Well formed ordinals}
-For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
 
-\inputsnippets{T1Bridge/E0Def}
-\inputsnippets{T1Bridge/E0EqP}
-
-In order to import definitions and lemmas
-from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
-
-\inputsnippets{T1Bridge/gE0h2gG2h}
-
-These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
-
-\inputsnippets{T1Bridge/gE0LtWf}
-
-
-\section{Porting theorems without big effort}
 
 
 \subsection{Porting a theorem from \gaia}
-The \texttt{Gaia} library contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
-
+The \texttt{Gaia} library already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
 \emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
 
 \begin{Coqsrc}
@@ -144,12 +127,18 @@ example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
 similar statements on \gaia's type \texttt{T1}, we prove and
-apply rewriting rules of the following forms.
+apply rewriting rules of the following forms:
+
+\vspace{4pt}
+
+\noindent\emph{From Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge}}
 
 \inputsnippets{T1Bridge/T1leIff}
 \inputsnippets{T1Bridge/rewritingRules}
 \inputsnippets{T1Bridge/limitbRef}
 
+Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{alpha < succ beta} should be interpreted as \texttt{T1lt alpha beta}, where \texttt{T1lt} is defined in \texttt{gaia.ssete9.v}. The corresponding statement is
+written \texttt{hlt (g2h alpha) (g2h beta)}.
 
 \subsubsection{Canonical sequences}
 
@@ -165,11 +154,15 @@ translations \texttt{g2h} and \texttt{h2g}.
 
 \inputsnippets{GCanon/canonDef}
 
-\begin{todo}
-Explain the proof !
-\end{todo}
+The following lemmas are proved by rewriting from corresponding statements proved in \Hydras.
 
+\inputsnippets{GCanon/g2hCanonRw}
+\inputsnippets{GCanon/gcanonLt}
+\inputsnippets{GCanon/glimitCanonSNotZero}
+\inputsnippets{GCanon/gcanonLimitV2}
+\inputsnippets{GCanon/gcanonLimitMono}
 \inputsnippets{GCanon/gcanonLimitOf}
+
 
 
 \section{Gaia's proof of well-foundedness}
@@ -261,3 +254,19 @@ There are three cases to consider.
 \end{enumerate}
 
 In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. 
+
+
+\section{Well formed ordinals}
+For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+
+\inputsnippets{T1Bridge/E0Def}
+\inputsnippets{T1Bridge/E0EqP}
+
+In order to import definitions and lemmas
+from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
+
+\inputsnippets{T1Bridge/gE0h2gG2h}
+
+These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
+
+\inputsnippets{T1Bridge/gE0LtWf}

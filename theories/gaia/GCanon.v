@@ -37,8 +37,10 @@ Proof. reflexivity. Qed.
 Lemma gcanon_zero i:  canon zero i = zero. 
 Proof.  rewrite /canon => //. Qed. 
 
+(* begin snippet g2hCanonRw:: no-out *)
 Lemma g2h_canon alpha i: g2h (canon alpha i) = hcanon (g2h alpha) i. 
 Proof. by rewrite /canon g2h_h2g. Qed.
+(* end snippet g2hCanonRw *)
 
 Lemma gcanon_succ i alpha (Halpha: T1nf alpha):
   canon (T1succ alpha) i = alpha.
@@ -53,6 +55,7 @@ Proof.
   rewrite -(h2g_g2h alpha) -nf_ref /canon g2h_h2g => Hnf. 
   by apply le_ref, canonS_LE. 
 Qed.
+
 
 Lemma gcanon0_phi0_succ_eqn alpha:
   T1nf alpha -> canon (phi0 (T1succ alpha)) 0 = zero.
@@ -77,15 +80,15 @@ Proof.
   move => H; apply Hpos; rewrite H => //.
 Qed. 
 
+(* begin snippet gcanonLt:: no-out *)
 Lemma gcanon_lt  (i : nat) [alpha : T1]:
-   T1nf alpha -> alpha <> zero -> T1lt (canon alpha i) alpha.
+   T1nf alpha -> alpha <> zero -> canon alpha i < alpha.
+(* end snippet gcanonLt *)
 Proof. 
-  case : i.   
+  case: i.   
   - apply gcanon0_lt. 
   - move => n Hnf Hpos; apply gcanonS_lt => //.
 Qed. 
-
-
 
 Lemma canonS_cons_not_zero  (i : nat) (alpha : T1) (n : nat) (beta : T1):
   alpha <> zero -> canon (cons alpha n beta) i.+1 <> zero.
@@ -97,6 +100,7 @@ Proof.
   move: Hdiff; rewrite zero_ref;  by rewrite g2h_h2g h2g_eq_iff. 
 Qed.
 
+(* begin snippet glimitCanonSNotZero:: no-out *)
 Lemma glimit_canonS_not_zero i lambda:
   T1nf lambda -> T1limit lambda -> canon lambda i.+1 <> zero.
 Proof.
@@ -106,6 +110,7 @@ Proof.
   - rewrite g2h_h2g; now rewrite -nf_ref in Hnf. 
   - by rewrite limitb_ref h2g_g2h. 
 Qed.
+(* end snippet glimitCanonSNotZero *)
 
 Lemma gcanonS_phi0_succ_eqn (i : nat) (gamma : T1): 
   T1nf gamma -> canon (phi0 (T1succ gamma)) i.+1 = cons gamma i zero.
@@ -208,10 +213,12 @@ Proof.
    rewrite /canon -nf_ref => ?; apply nf_canon; by rewrite hnf_g2h. 
 Qed.
 
-
+(* begin snippet gcanonLimitV2:: no-out *)
 Lemma gcanon_limit_v2   lambda: 
   T1nf lambda -> T1limit lambda ->
   limit_v2 (canon lambda) lambda.
+(* ... *)
+(* end snippet gcanonLimitV2 *)
 Proof.
   move => Hnf Hlim; split.
   - move => n; apply gcanon_lt => // H; subst; discriminate. 
@@ -220,9 +227,12 @@ Proof.
      move => i Hi; exists i => //; by apply T1ltW. 
 Qed.
 
- Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
+(* begin snippet gcanonLimitMono:: no-out *)
+Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
         (Hlim : T1limit lambda) (Hij : (i < j)%N) :
-   T1lt (canon lambda i) (canon lambda j). 
+  canon lambda i < canon lambda j.
+(* ... *)
+(* end snippet gcanonLimitMono *)
  Proof.      
    rewrite /canon -hlt_iff. 
    case (@canon_limit_mono (g2h lambda)  i j) => //.

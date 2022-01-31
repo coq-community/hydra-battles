@@ -444,13 +444,13 @@ Lemma mult_ref : refines2 hmult T1mul.
 (* end snippet multRef *)
 Proof mult_ref0.
 (* begin snippet multA:: no-out *)
-Lemma mult_refR (a b : T1) : hmult (g2h a) (g2h b) = g2h (a * b).
-Proof. apply refines2_R,  mult_ref. Qed. 
+Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = hmult (g2h a) (g2h b).
+Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
 Lemma hmultA : associative hmult.
 Proof. 
   move => a b c.
-  by rewrite -(g2h_h2g a) -(g2h_h2g b) -(g2h_h2g c) !mult_refR mulA. 
+   by rewrite -(g2h_h2g a) -(g2h_h2g b) -(g2h_h2g c) -!g2h_mult_rw mulA. 
 Qed.
 (* end snippet multA *)
 
