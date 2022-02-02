@@ -1,6 +1,8 @@
 (**  Iteration of a function (similar to [Nat.iter]) 
      Abstract Properties
 
+Experimental use of LibHyps 
+
 *)
 
 
