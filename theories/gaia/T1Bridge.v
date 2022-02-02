@@ -4,7 +4,7 @@
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
-From gaia Require Import ssete9.
+From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 
 (* begin snippet hT1gT1 *)
@@ -95,10 +95,10 @@ Qed.
 
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 Proof. 
-    split.
-    - rewrite -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  => Heq //.
-      rewrite Heq => //.
-    - move => H; by subst. 
+    split => Heq.
+    - move : Heq; rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  // Heq.
+     by rewrite Heq. 
+    - by subst. 
 Qed.
 
 (** refinement of constants, functions, etc. *)
@@ -138,8 +138,7 @@ Lemma refines2_R f f' :
   refines2 f f' ->
   forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
 Proof.
-  move => Href y z; rewrite -{2}(h2g_g2h y) -{2}(h2g_g2h z);
-            by rewrite Href g2h_h2g.
+  move => Href y z; by rewrite -{2}(h2g_g2h y) -{2}(h2g_g2h z) ?Href ?g2h_h2g. 
 Qed.
 
 
@@ -172,9 +171,8 @@ Proof. by []. Qed.
 Lemma succ_ref: refines1 hsucc T1succ.
 (*| .. coq:: none |*)
 Proof.
-  red.  elim => [//|//  x].
-  case: x => // x n y H p z H0 /=.
-  by rewrite H0.
+  elim => [//|//  x] => //.
+  case: x => // x n y H p z H0 /=; by rewrite H0.
 Qed.
 (*||*)
 
@@ -187,12 +185,9 @@ Proof. by []. Qed.
 Lemma ap_ref : refinesPred T1.ap T1ap. 
 Proof.
   move => alpha; split => Hap; first by case: Hap.
-  move: Hap; case: alpha => //=.
-  move => alpha n beta /andP [Hn Hz].
-  move/eqP: Hn Hz =>->; move/eqP.
-  by case: beta.
+  move: Hap; case: alpha => //= alpha n beta /andP [Hn Hz].
+  move/eqP: Hn Hz =>->; move/eqP; by case: beta.
 Qed.
-
 
 Lemma T1eq_refl (a: T1) : T1eq a a.
 Proof. by apply/T1eqP. Qed.
@@ -585,7 +580,7 @@ Structure E0 := mkE0 { cnf :> T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
 
-Definition E0_lt (alpha beta: E0) := T1lt (cnf alpha) (cnf beta).
+Definition E0_lt (alpha beta: E0) := cnf alpha < cnf beta.
 
 Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 (* end snippet E0Def *)

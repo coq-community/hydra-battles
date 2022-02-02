@@ -122,6 +122,10 @@ example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 \inputsnippets{T1Bridge_use/T1BridgeUse}
 
+From now on, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \Hydras's meaning.
+
+ \inputsnippets{ T1Bridge_use/LocateT1, T1Bridge_use/T1BridgeUseb}
+
 \subsection{Porting theorems from \Hydras}
 
 
@@ -137,7 +141,9 @@ apply rewriting rules of the following forms:
 \inputsnippets{T1Bridge/rewritingRules}
 \inputsnippets{T1Bridge/limitbRef}
 
-Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{alpha < succ beta} should be interpreted as \texttt{T1lt alpha beta}, where \texttt{T1lt} is defined in \texttt{gaia.ssete9.v}. The corresponding statement is
+Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{alpha < succ beta} should be interpreted as \texttt{T1lt alpha beta}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}.
+
+\texttt{gaia.ssete9.v}. The corresponding statement is
 written \texttt{hlt (g2h alpha) (g2h beta)}.
 
 \subsubsection{Canonical sequences}
@@ -155,6 +161,7 @@ translations \texttt{g2h} and \texttt{h2g}.
 \inputsnippets{GCanon/canonDef}
 
 The following lemmas are proved by rewriting from corresponding statements proved in \Hydras.
+\emph{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the scripts below.}
 
 \inputsnippets{GCanon/g2hCanonRw}
 \inputsnippets{GCanon/gcanonLt}
