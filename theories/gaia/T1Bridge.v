@@ -95,10 +95,8 @@ Qed.
 
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 Proof. 
-    split => Heq.
-    - move : Heq; rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  // Heq.
-     by rewrite Heq. 
-    - by subst. 
+    split; last by  move => ->. 
+    rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  -> //. 
 Qed.
 
 (** refinement of constants, functions, etc. *)
@@ -128,10 +126,7 @@ Definition refinesRel (hR: hT1 -> hT1 -> Prop)
 Lemma refines1_R f f' :
   refines1 f f' ->
   forall y: T1, f (g2h y) = g2h (f' y).
-Proof.
-  move => Href y; rewrite -{2}(h2g_g2h y).
-  by rewrite Href g2h_h2g.
-Qed.
+Proof. move => Href y; by rewrite -{2}(h2g_g2h y) Href g2h_h2g. Qed.
 
 
 Lemma refines2_R f f' :
@@ -145,10 +140,8 @@ Qed.
 (** Refinements of usual constants *)
 (* begin snippet constantRefs:: no-out *)
 
-
 Lemma zero_ref : refines0 hzero zero.
 Proof. by []. Qed.
-
 
 Lemma one_ref : refines0 hone one.
 Proof. by []. Qed.
@@ -318,11 +311,10 @@ Proof.
   - rewrite /Comparable.compare H T1ltnn /=; f_equal.
     by rewrite Hx1y1 -H /=.
   - by rewrite /Comparable.compare H Hx1y1.
-  - replace (h2g x1 < h2g y1) with false.
+  - replace (h2g x1 < h2g y1) with false; last  by apply T1lt_anti in H.
     rewrite /Comparable.compare H /= Hx1y1; f_equal.
-    change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)).
-    by rewrite IHx2.
-    by apply T1lt_anti in H.
+    change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2));
+      by rewrite IHx2.
 Qed.
 
 
@@ -459,8 +451,7 @@ Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
-    rewrite IHa IHb;  change (phi0 (h2g a)) with (h2g (T1.phi0 a)).
-    by rewrite andbA decide_hlt_rw.
+    by rewrite IHa IHb [phi0 (h2g a)]/(h2g (T1.phi0 a)) andbA decide_hlt_rw.
 Qed.
 
 Lemma LT_ref : refinesRel  hLT  gLT.
@@ -470,41 +461,30 @@ Proof.
     + by rewrite  -nf_ref.
     + by apply lt_ref. 
     + by rewrite -nf_ref. 
-  -  case => H H0 H1; repeat  split. 
-     +  red; by rewrite nf_ref.
-     + by apply lt_ref. 
-     +  red; by rewrite nf_ref.
+  -  case => H H0 H1; repeat  split; red; rewrite ?nf_ref ?lt_ref => // ;
+            by apply lt_ref. 
 Qed. 
 
 
 Lemma LE_ref : refinesRel hLE gLE.
 Proof. 
   split. 
-  - case => a b.
-    split. 
-    rewrite -nf_ref => //.
-    case: b => c _.    
-    destruct c. 
-    
-    apply T1ltW. 
-    rewrite - decide_hlt_rw => //.
-    red;  rewrite bool_decide_eq_true => //.
-    apply T1lenn. 
-    case b => _ H.
-    rewrite - nf_ref => //. 
-  - case.
-    rewrite /hLE. 
-    red. 
-    split. 
-    rewrite -nf_ref in p p1 => //.
-    split => //.
-    rewrite T1le_eqVlt in p0. move : p0 => /orP.
-    case => /eqP Heq; subst.  rewrite h2g_eq_iff in Heq; subst. 
-    right. 
-    left. 
-    rewrite -decide_hlt_rw in Heq => //.
-    move: Heq => /eqP H. rewrite bool_decide_eq_true in H => //.
-    rewrite -nf_ref in p1 => //.
+  - case => a b; split. 
+    + rewrite -nf_ref => //.
+    + case: b => c _; case :c => [y0 Hy0 |].
+      apply T1ltW. 
+      * rewrite - decide_hlt_rw => //.
+        red;  rewrite bool_decide_eq_true => //.
+      *  apply T1lenn. 
+    +  case b => _ ?; rewrite - nf_ref => //. 
+  - case; rewrite /hLE; repeat split => //.
+   +  rewrite -nf_ref in p p1 => //.
+   +  rewrite T1le_eqVlt in p0; move : p0 => /orP.
+      case => /eqP Heq; subst.
+      * rewrite h2g_eq_iff in Heq; subst; right. 
+      *    left; rewrite -decide_hlt_rw in Heq => //.
+           move: Heq => /eqP H;  rewrite bool_decide_eq_true in H => //.
+   + rewrite -nf_ref in p1 => //.
 Qed.
 
 

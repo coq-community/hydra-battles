@@ -8,6 +8,7 @@ Open Scope nat_scope.
 From Coq Require Import RelationClasses Relations Arith Max Lia.
 From hydras Require Import Exp2.
 
+From hydras Require Import MoreLibHyps.
 (* begin snippet iterateDef *)
 
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
@@ -151,9 +152,6 @@ Proof.
     eapply dominates_from_trans with g; eauto.
 Qed.
 
-
-
-
 (** ** Abstract properties of iterate *)
 
 
@@ -164,7 +162,7 @@ Proof. reflexivity. Qed.
 Lemma iterate_S_eqn2 {A:Type}(f : A -> A) (n: nat)(x:A):
   iterate f (S n) x =  (iterate f n (f x)).
 Proof.
-  induction n. 
+  induction n.
   - reflexivity.
   - rewrite (iterate_S_eqn f (S n)), IHn;  reflexivity. 
 Qed.
@@ -215,23 +213,22 @@ Lemma iterate_lt_from f k:
                        forall z : nat, k <= z ->
                                        iterate f i z < iterate f j z.
 Proof.
-  induction 3.
+  induction 3 /n.
  - intros; rewrite iterate_S_eqn; auto.
-   apply H0.
-   revert i; induction i.
+   apply h_all_lt_n_f_.
+   revert i; induction i /r
    +  cbn; auto. 
    +  transitivity (iterate f i z); auto.
       rewrite iterate_S_eqn.
       apply Lt.lt_le_weak.
-      apply H0; auto. 
- - intros; transitivity (iterate f m z); auto. 
-   rewrite iterate_S_eqn; apply H0.
+      apply h_all_lt_n_f_; auto. 
+ - intros /n; transitivity (iterate f m z); auto. 
+   rewrite iterate_S_eqn; apply h_all_lt_n_f_.
    transitivity z; auto.
-   clear i H1 IHle; induction m.
+   clear i h_le_S_i_m_ h_all_lt_iterate_iterate_; induction m.
    + cbn; auto.
    + cbn; transitivity (iterate f m z); auto.
-     apply Lt.lt_le_weak, H0.
-     lia.
+     apply Lt.lt_le_weak, h_all_lt_n_f_; lia. 
 Qed. 
 
 
@@ -244,9 +241,9 @@ Lemma iterate_le_n_Sn (f: nat -> nat):
 (* end snippet iterateLeNSN *)
 
 Proof.
-  induction n.
+  induction n /n.
   - cbn; auto with arith.
-  - cbn; intros; apply H.
+  - cbn; intros; apply  h_all_le_x_f_. 
 Qed.
 
 Lemma iterate_le_np_le (f: nat -> nat):
@@ -395,7 +392,7 @@ Proof.
   - intro H0; inversion H0.
   - destruct k.
     + simpl;  intros _ l Hl;  apply H; auto.
-    + intros _ l Hl; repeat rewrite iterate_S_eqn.
+    + intros _ l Hl; {autorename}.  repeat rewrite iterate_S_eqn.
       transitivity (g (f (iterate f k l))).
       * apply H; transitivity (f l).
         { transitivity l;  auto. 
