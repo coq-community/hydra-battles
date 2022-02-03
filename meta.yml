@@ -104,11 +104,13 @@ license:
 
 supported_coq_versions:
   text: 8.13 or later
-  opam: '{(>= "8.13" & < "8.15~") | (= "dev")}'
+  opam: '{(>= "8.13" & < "8.16~") | (= "dev")}'
 
 tested_coq_opam_versions:
 - version: 'coq-dev'
   repo: 'mathcomp/mathcomp-dev'
+- version: '1.14.0-coq-8.15'
+  repo: 'mathcomp/mathcomp'
 - version: '1.13.0-coq-8.14'
   repo: 'mathcomp/mathcomp'
 - version: '1.13.0-coq-8.13'
@@ -131,7 +133,7 @@ dependencies:
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.12.0" & < "1.14~") | (= "dev")}'
+    version: '{(>= "1.12.0" & < "1.15~") | (= "dev")}'
   description: |-
     [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
 - opam:
@@ -140,13 +142,17 @@ dependencies:
     [MathComp Algebra](https://github.com/math-comp/math-comp)
 - opam:
     name: coq-gaia
-    version: '{(>= "1.12" & < "1.14~") | (= "dev")}'
+    version: '{(>= "1.12" & < "1.15~") | (= "dev")}'
   description: |-
     [Gaia](https://github.com/coq-community/gaia) 1.12 or later
 - opam:
     name: coq-mathcomp-zify
   description: |-
     [Mczify](https://github.com/math-comp/mczify)
+- opam:
+    name: coq-libhyps
+  description: |-
+    [LibHyps](https://github.com/Matafou/LibHyps)
 
 namespace: hydras
 
