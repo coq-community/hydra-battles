@@ -16,11 +16,11 @@ similar concepts in the two projects."""
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
-  "coq" {(>= "8.13" & < "8.15~") | (= "dev")}
+  "coq" {(>= "8.13" & < "8.16~") | (= "dev")}
   "coq-hydra-battles" {= version}
-  "coq-mathcomp-ssreflect" {(>= "1.12.0" & < "1.14~") | (= "dev")}
+  "coq-mathcomp-ssreflect" {(>= "1.12.0" & < "1.15~") | (= "dev")}
   "coq-mathcomp-zify"
-  "coq-gaia" {(>= "1.12" & < "1.14~") | (= "dev")}
+  "coq-gaia" {(>= "1.12" & < "1.15~") | (= "dev")}
 ]
 
 tags: [

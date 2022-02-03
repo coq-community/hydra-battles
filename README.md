@@ -65,6 +65,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - [MathComp Algebra](https://github.com/math-comp/math-comp)
   - [Gaia](https://github.com/coq-community/gaia) 1.12 or later
   - [Mczify](https://github.com/math-comp/mczify)
+  - [LibHyps](https://github.com/Matafou/LibHyps)
 - Coq namespaces: `hydras`, `additions`, `gaia_hydras`
 - Related publication(s):
   - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
