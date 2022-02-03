@@ -215,22 +215,20 @@ Lemma iterate_lt_from f k:
                        forall z : nat, k <= z ->
                                        iterate f i z < iterate f j z.
 Proof.
-  induction 3 /n.
- - intros; rewrite iterate_S_eqn; auto.
-   apply h_all_lt_n_f_.
-   revert i; induction i /r
+  induction 3 /r.
+ - intros Hmono Hind * Hkz; rewrite iterate_S_eqn; auto.
+   apply Hind;  revert i; induction i /r. 
    +  cbn; auto. 
    +  transitivity (iterate f i z); auto.
-      rewrite iterate_S_eqn.
-      apply Lt.lt_le_weak.
-      apply h_all_lt_n_f_; auto. 
- - intros /n; transitivity (iterate f m z); auto. 
-   rewrite iterate_S_eqn; apply h_all_lt_n_f_.
+      rewrite iterate_S_eqn; apply Lt.lt_le_weak.
+      apply Hind; auto. 
+ - intros Hmono Hind * Hlt Hind2 * Kkz; transitivity (iterate f m z); auto. 
+   rewrite iterate_S_eqn; apply Hind. 
    transitivity z; auto.
-   clear i h_le_S_i_m_ h_all_lt_iterate_iterate_; induction m.
+   clear i Hlt Hind2; induction m.
    + cbn; auto.
-   + cbn; transitivity (iterate f m z); auto.
-     apply Lt.lt_le_weak, h_all_lt_n_f_; lia. 
+      + cbn; transitivity (iterate f m z); auto.
+     apply Lt.lt_le_weak, Hind;  lia. 
 Qed. 
 
 
@@ -297,36 +295,37 @@ Qed.
 Lemma iterate_ge' : forall f,  id <<= f ->
                                forall n j, 0 < n -> j <= iterate f n j.
 Proof.
-  induction n.
-  - inversion 1.
-  - intros j H0; destruct n.
-    + simpl; apply H.
-    +  transitivity (iterate f (S n) j).
-       * apply IHn; auto with arith.
-       * simpl; apply H.
+  induction n /r. 
+  - inversion 2.
+  - intros *  H0; destruct n /r. 
+    + simpl; intros /n. apply h_fun_le_id_nat_f_.
+    +  intros /n;  transitivity (iterate f (S n) j).
+       * auto with arith.
+       * simpl; apply h_fun_le_id_nat_f_.
 Qed.
+
 
 Lemma iterate_ge'' f : id <<= f -> strict_mono f -> forall i k,
       k <= Nat.pred (iterate (fun z => S (f z)) (S i) k).
 Proof.
-  induction i.
-  - intros; cbn; apply H.
-  - intros;  rewrite iterate_rw;
+  induction i /n.
+  - intros; cbn; apply h_fun_le_id_nat_f_.
+  - intros *;   rewrite iterate_rw;
     apply le_trans with
         (Nat.pred (iterate (fun z : nat => S (f z)) (S i) k)).
     + auto.
     + cbn;  assert (H1: strict_mono (fun z => S (f z))).
-      { intros x y Hlt; apply H0 in Hlt;  auto with arith. }
+      { intros x y Hlt.  apply h_strict_mono_f_ in Hlt;  auto with arith. }
       generalize  (iterate_mono _ H1).
       assert (H2: S <<= (fun z : nat => S (f z))).
       { intro x; auto with arith.
-        specialize (H x); auto with arith.
+        specialize (h_fun_le_id_nat_f_ x); auto with arith.
       }
       intros H3;  specialize (H3 H2 i).
       apply Nat.lt_le_incl.
       assert (H4: k < S (f k)).
       { apply le_lt_trans with (f k).
-        - apply H.                       
+        - apply h_fun_le_id_nat_f_.                       
         - auto with arith.
       }
    specialize (H3 _ _ H4); auto.
