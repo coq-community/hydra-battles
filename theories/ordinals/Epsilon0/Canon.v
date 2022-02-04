@@ -999,33 +999,23 @@ Qed.
 
 Open Scope E0_scope.
 
-(** This is a helper which should be deprecated later :
-    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
 
-
-Definition CanonS (alpha:E0)(i:nat): E0.
-  refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canon.
+Definition Canon (alpha:E0)(i:nat): E0.
+  refine (@mkord (@canon (cnf alpha) i) _);  apply nf_canon.
   destruct alpha;auto.
 Defined.
 
-Definition Canon0 (alpha:E0): E0.
-  refine (@mkord (@canon (cnf alpha) 0) _);  apply nf_canon.
-   destruct alpha;auto.
-Defined.
+(** This is a helper which should be deprecated later :
+    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
 
-Definition Canon (alpha:E0)(i:nat): E0 :=
-  match i with 0 => Canon0 alpha
-          | S j => CanonS alpha j
-  end.
+Notation CanonS alpha i := (Canon alpha (S i)).
+Notation Canon0 alpha := (Canon alpha 0).
 
-Lemma CanonS_Canon alpha i : Canon alpha (S i) = CanonS alpha i.
-Proof. reflexivity. Qed.
-  
 Lemma Canon_Succ beta n: Canon (Succ beta) (S n) = beta.
 Proof.
   destruct beta. simpl. unfold CanonS, Succ. simpl.
   apply E0_eq_intro. simpl.
-  now rewrite (canonS_succ).  
+  now rewrite (canon_succ).  
 Qed.
 
 Lemma Canon_Omega k : Canon omega k = Fin k.

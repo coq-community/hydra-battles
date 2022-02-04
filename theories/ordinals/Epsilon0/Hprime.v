@@ -253,7 +253,7 @@ Proof with auto with E0.
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
           unfold Limitb in e; rewrite H in e; discriminate e.
        }
-       rewrite H'_eq3, CanonS_Canon, H0.
+       rewrite H'_eq3, H0.
        specialize (Hbeta (CanonS beta k)).
        assert (CanonS beta k o< beta)%e0 by auto with E0.
        assert (CanonS beta k o< phi0 alpha)%e0 by (eapply Lt_trans; eauto).
@@ -283,7 +283,6 @@ Lemma H'_Omega_term_1 : alpha <> Zero -> forall  k,
 
 Proof with auto with E0.
   intros  H k;  rewrite H'_eq3 ...
-  rewrite CanonS_Canon.
   - ochange (CanonS (Omega_term alpha (S i)) k)
           (Ocons alpha i (CanonS  (phi0 alpha) k)).
   +  rewrite H'_cons ...
@@ -352,7 +351,7 @@ Lemma H'_Phi0_succ_1 alpha  : alpha <> Zero -> forall k,
       H'_ (phi0 (Succ alpha)) k = H'_succ_fun (H'_ (phi0 alpha)) k. 
 Proof with auto with E0.
   intros; unfold H'_succ_fun ;
-    rewrite H'_eq3, CanonS_Canon, CanonS_Phi0_Succ_eqn, H'_Omega_term ...
+    rewrite H'_eq3, CanonS_Phi0_Succ_eqn, H'_Omega_term ...
 Qed.
 
 Lemma H'_Phi0_succ_0 : forall k,
@@ -513,7 +512,7 @@ Lemma H'_Phi0_omega :
 (*| .. coq:: none |*)
 Proof with auto with E0.
   intro k; rewrite H'_eq3, <- H'_Phi0_Si ...
-  -  rewrite CanonS_Canon, CanonS_phi0_lim;  f_equal ...
+  -  rewrite CanonS_phi0_lim;  f_equal ...
 Qed.
 (*||*)
 (* end snippet HprimePhi0Omega *)
