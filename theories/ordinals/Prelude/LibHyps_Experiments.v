@@ -1,10 +1,5 @@
 From LibHyps Require Export LibHyps.
-
-Tactic Notation (at level 4) tactic4(Tac) "/" "dr" := Tac ; {< fun h
-=> try revert dependent h }.
-Tactic Notation (at level 4) tactic4(Tac) "/" "r?" :=
-  Tac ; {< fun h  => try revert h }.
-
+Require Export MoreLibHyps. 
 
 (*  move to experimental file (not to export *)
 
@@ -12,22 +7,18 @@ Require Import List.
 Import ListNotations. 
 Local Open Scope autonaming_scope.
 
-Ltac old_tac := rename_hyp_default.
-
-Ltac rename_hyp_default n th :=
-  match th with
-  
-  | (?f ?x ?y) => name ((f # 1) ++ (x # 1))                          
-  | (?f ?x) => name ((f # 1))
-  | _ => old_tac n th
-   end.
-
-Ltac rename_hyp n th ::= rename_hyp_default n th.
+Ltac rename_hyp n th ::= rename_short n th.
 
 Goal forall n p , n <= p -> forall q, p <= q -> n <= q.
 induction 1  /n.
 - intros; assumption.
 - intros /n.  apply h_all_le_n_; transitivity (S m); auto.
+Qed.
+
+Goal forall n p , n <= p -> forall q, p <= q -> n <= q.
+  intros * H; elim H.
+  - intros /n.  assumption.
+  - intros /n.  apply h_all_le_n_; transitivity (S m); auto.
 Qed.
 
 Require Import Arith. 
