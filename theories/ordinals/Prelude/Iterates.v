@@ -11,6 +11,8 @@ From Coq Require Import RelationClasses Relations Arith Max Lia.
 From hydras Require Import Exp2.
 
 From hydras Require Import MoreLibHyps.
+Ltac rename_hyp n th ::= rename_short n th.
+
 (* begin snippet iterateDef *)
 
 Fixpoint iterate {A:Type}(f : A -> A) (n: nat)(x:A) :=
@@ -243,7 +245,7 @@ Lemma iterate_le_n_Sn (f: nat -> nat):
 Proof.
   induction n /n.
   - cbn; auto with arith.
-  - cbn; intros; apply  h_all_le_x_f_. 
+  - cbn; intros; apply  h_all_le_x_. 
 Qed.
 
 Lemma iterate_le_np_le (f: nat -> nat):
@@ -298,10 +300,10 @@ Proof.
   induction n /r. 
   - inversion 2.
   - intros *  H0; destruct n /r. 
-    + simpl; intros /n. apply h_fun_le_id_nat_f_.
+    + simpl; intros /n. apply h_fun_le_id_.
     +  intros /n;  transitivity (iterate f (S n) j).
        * auto with arith.
-       * simpl; apply h_fun_le_id_nat_f_.
+       * simpl; apply h_fun_le_id_.
 Qed.
 
 
@@ -309,23 +311,23 @@ Lemma iterate_ge'' f : id <<= f -> strict_mono f -> forall i k,
       k <= Nat.pred (iterate (fun z => S (f z)) (S i) k).
 Proof.
   induction i /n.
-  - intros; cbn; apply h_fun_le_id_nat_f_.
+  - intros; cbn; apply h_fun_le_id_.
   - intros *;   rewrite iterate_rw;
     apply le_trans with
         (Nat.pred (iterate (fun z : nat => S (f z)) (S i) k)).
     + auto.
     + cbn;  assert (H1: strict_mono (fun z => S (f z))).
-      { intros x y Hlt.  apply h_strict_mono_f_ in Hlt;  auto with arith. }
+      { intros x y Hlt.  apply h_strict_mono_ in Hlt;  auto with arith. }
       generalize  (iterate_mono _ H1).
       assert (H2: S <<= (fun z : nat => S (f z))).
       { intro x; auto with arith.
-        specialize (h_fun_le_id_nat_f_ x); auto with arith.
+        specialize (h_fun_le_id_ x); auto with arith.
       }
       intros H3;  specialize (H3 H2 i).
       apply Nat.lt_le_incl.
       assert (H4: k < S (f k)).
       { apply le_lt_trans with (f k).
-        - apply h_fun_le_id_nat_f_.                       
+        - apply h_fun_le_id_.                       
         - auto with arith.
       }
    specialize (H3 _ _ H4); auto.
