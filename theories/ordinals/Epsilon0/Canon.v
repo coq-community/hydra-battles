@@ -1000,7 +1000,9 @@ Qed.
 Open Scope E0_scope.
 
 (** This is a helper which should be deprecated later :
-    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
+    [CanonS alpha i] should be replaced by [Canon alpha (S i)] 
+    [Canon0 alpha i] should be replaced by [Canon alpha 0]  
+*)
 
 
 Definition CanonS (alpha:E0)(i:nat): E0.
@@ -1012,6 +1014,9 @@ Definition Canon0 (alpha:E0): E0.
   refine (@mkord (@canon (cnf alpha) 0) _);  apply nf_canon.
    destruct alpha;auto.
 Defined.
+
+(** TODO Should be replaced with [refine (@canon (cnf alpha) i) _)] 
+*)
 
 Definition Canon (alpha:E0)(i:nat): E0 :=
   match i with 0 => Canon0 alpha
