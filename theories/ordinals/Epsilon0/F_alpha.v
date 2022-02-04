@@ -759,9 +759,8 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
   Lemma HFLim : Limitb alpha -> P alpha.
   Proof.
     intros Halpha n; rewrite H'_eq3.
-    - rewrite CanonS_Canon;
-      rewrite CanonS_phi0_lim; [| trivial].
-      rewrite F_lim_eqn, CanonS_Canon; auto.
+    - rewrite CanonS_phi0_lim; [| trivial].
+      rewrite F_lim_eqn; auto.
       + transitivity (H'_ (phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
