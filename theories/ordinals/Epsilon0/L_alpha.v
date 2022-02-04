@@ -123,7 +123,7 @@ Proof  with auto with E0.
    +   intros  k;  rewrite L_lim_eqn; auto.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
-        --  autorewrite with L_rw; auto.
+        --  autorewrite with L_rw; auto. auto with arith.
         -- transitivity (S (S k)); [lia | apply IHalpha ]...
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
         +  subst  beta alpha.
@@ -147,8 +147,9 @@ Proof  with auto with E0.
    +   intros H k;  rewrite L_lim_eqn; auto.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
-        --  autorewrite with L_rw; auto.
-        -- transitivity (S (S (S k))); [lia | apply IHalpha ]...
+        Search L_. 
+        apply L_ge_id.
+        apply L_ge_id. 
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
         +  subst  beta alpha.
            intros H k; autorewrite with L_rw; auto. 

@@ -1002,13 +1002,19 @@ Open Scope E0_scope.
 (** This is a helper which should be deprecated later :
     [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
 
+
 Definition CanonS (alpha:E0)(i:nat): E0.
   refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canon.
   destruct alpha;auto.
 Defined.
 
+Definition Canon0 (alpha:E0): E0.
+  refine (@mkord (@canon (cnf alpha) 0) _);  apply nf_canon.
+   destruct alpha;auto.
+Defined.
+
 Definition Canon (alpha:E0)(i:nat): E0 :=
-  match i with 0 => Zero 
+  match i with 0 => Canon0 alpha
           | S j => CanonS alpha j
   end.
 
@@ -1024,9 +1030,7 @@ Qed.
 
 Lemma Canon_Omega k : Canon omega k = Fin k.
 Proof.
-  destruct k.
-  - now cbn.
-  - apply E0_eq_intro; reflexivity.
+  destruct k; apply E0_eq_intro; reflexivity. 
 Qed.
 
 Hint Rewrite Canon_Omega : E0_rw.
@@ -1072,9 +1076,9 @@ Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i o< alpha.
 Proof.
   destruct i.
   - unfold Canon;  intros;  destruct alpha.
-    unfold Lt, Zero in *; simpl in *. 
-    apply T1.not_zero_lt; auto.
-    intro; subst cnf; apply H; f_equal;  eapply nf_proof_unicity.
+    unfold Lt, Zero in *; simpl in *. apply canon0_LT; auto. 
+    intro H0; subst; cbn in H. apply H. 
+    f_equal;  eapply nf_proof_unicity. 
   -   apply CanonS_lt.
 Qed.
 

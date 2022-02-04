@@ -253,3 +253,6 @@ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
  (* end snippet gcanonLimitOf *)
  
 
+ (** *  Adaptation of [canon] to type E0 *)
+
+ 

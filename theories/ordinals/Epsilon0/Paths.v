@@ -1,4 +1,4 @@
-(** *
+  (** *
 
    Transition systems associated with canonical sequences
  *)
@@ -3002,13 +3002,14 @@ Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
     intros. clear H0.
     split; auto.
     cbn. auto with T1.
-
+    now apply nf_canon.
     split; cbn. 
     specialize (limitb_canonS_not_zero j cnf_ok H).
-    intro. 
-    now apply not_zero_gt_0.
-    apply nf_canon. 
-    auto. 
+    intro.
+    
+    Search  canon. apply canon_limit_mono; auto. 
+    auto with arith. 
+    apply nf_canon; auto. 
 
   - intros; lia.
   -        
