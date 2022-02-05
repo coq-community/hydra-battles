@@ -4,11 +4,13 @@
 
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
+From hydras Require Import Canon.
 Require Import T1Bridge.
 Import ssete9.CantorOrdinal. 
 
+
 From gaia Require Import ssete9.
-From hydras Require Import Canon.
+
 Import ssete9.CantorOrdinal. 
 Set Bullet Behavior "Strict Subproofs".
 
@@ -255,4 +257,7 @@ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
 
  (** *  Adaptation of [canon] to type E0 *)
 
- 
+ Definition E0Canon (alpha: E0) (i: nat): E0.
+   refine (@mkE0 (cnf alpha) _); case: alpha => //. 
+ Defined.
+
