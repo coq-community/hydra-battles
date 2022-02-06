@@ -265,10 +265,9 @@ Defined.
 
  Lemma E0_canon_lt (alpha: E0) i:
    cnf alpha <> zero -> E0_lt (E0Canon alpha i) alpha.
-   move: i. case : alpha =>   cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
-   pattern cnf at 2; rewrite -(h2g_g2h cnf) - hlt_iff h2g_g2h. 
-   apply canon_lt. 
+   move: i; case : alpha =>  cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
+   pattern cnf at 2; rewrite -(h2g_g2h cnf) -hlt_iff h2g_g2h;  apply canon_lt. 
    - rewrite hnf_g2h;  by apply /eqP.
    - move => H0; apply Hpos; rewrite -h2g_eq_iff h2g_g2h  in H0; subst; 
-   rewrite -g2h_eq_iff => //.
+             rewrite -g2h_eq_iff => //.
  Qed. 
