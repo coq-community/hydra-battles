@@ -114,7 +114,7 @@ Section Impossibility_Proof.
        +   specialize (H (canon x (S i)) H0); 
              assert (nf (canon x (S i))) by (eapply nf_canon; eauto).
            assert (T1.lt (canon x (S i)) x).
-           { eapply canonS_lt; eauto. }
+           { eapply canon_lt; eauto. }
            specialize (H H2 H3 H2 (S (S i)) ).
            destruct H.
            *  auto with arith.

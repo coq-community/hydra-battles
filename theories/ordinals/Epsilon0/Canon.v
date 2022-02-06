@@ -579,6 +579,9 @@ Proof.
  -  apply canon0_LT; auto. 
  - apply canonS_LT; auto. 
 Qed. 
+(* to remove *)
+
+(*
 Lemma canonS_lt : forall i alpha, nf alpha -> alpha <> zero ->
                               T1.lt (canon alpha (S i)) alpha.
 Proof.
@@ -586,6 +589,17 @@ Proof.
   destruct (T1_eq_dec alpha zero).
   - subst. now destruct 1.
   - destruct  (canonS_LT i Hnf); tauto.
+Qed.
+ *)
+
+
+Lemma canon_lt : forall i alpha, nf alpha -> alpha <> zero ->
+                              T1.lt (canon alpha i) alpha.
+Proof.
+  intros i alpha Hnf.
+  destruct (T1_eq_dec alpha zero).
+  - subst. now destruct 1.
+  - destruct  (canon_LT i Hnf); tauto.
 Qed.
 
 Lemma canonS_cons_not_zero : forall i alpha n beta,
@@ -685,7 +699,7 @@ Proof.
               apply nf_intro; trivial.
               now apply nf_canon.
               apply nf_helper_phi0R.
-              apply canonS_lt.
+              apply canon_lt.
               eapply nf_coeff_irrelevance;eauto. 
               discriminate. 
            ++ eapply nf_inv1, Hlambda. 
@@ -700,7 +714,7 @@ Proof.
                apply nf_intro; trivial.
                apply nf_canon; trivial.
                apply nf_helper_phi0R.
-               apply canonS_lt.
+               apply canon_lt.
                eapply nf_coeff_irrelevance;eauto.     
                discriminate.  
              }
@@ -746,7 +760,7 @@ Proof.
                apply nf_intro; auto with T1.
                eauto with T1.
                apply nf_helper_phi0R.   
-               apply canonS_lt.
+               apply canon_lt.
                now apply nf_phi0. 
                intro; subst; discriminate.
              }
@@ -768,7 +782,7 @@ Proof.
             apply nf_canon; trivial; eauto with T1.
             apply nf_helper_phi0R.   
             apply T1.lt_trans with lambda2.
-            apply canonS_lt; eauto with T1.
+            apply canon_lt; eauto with T1.
             apply nf_helper_phi0.
             apply nf_helper_intro with n; eauto with T1.
           }
@@ -781,7 +795,7 @@ Proof.
                - apply nf_canon; eauto with T1.
                - apply nf_helper_phi0R.   
                  apply T1.lt_trans with lambda2.
-                 apply canonS_lt; eauto with T1.
+                 apply canon_lt; eauto with T1.
                  apply nf_helper_phi0.
                  apply nf_helper_intro with n; eauto with T1.
              }
@@ -800,7 +814,7 @@ Proof.
         apply nf_canon; eauto with T1.
         apply nf_helper_phi0R.   
         apply T1.lt_trans with lambda2.
-        apply canonS_lt; eauto with T1.
+        apply canon_lt; eauto with T1.
         apply nf_helper_phi0.
         apply nf_helper_intro with n; eauto with T1.
       }
@@ -831,7 +845,7 @@ Proof.
   - intros; split.
     + now  apply nf_canon.
     +    split; trivial.
-         * apply canonS_lt;    auto.
+         * apply canon_lt;    auto.
            intro H1;subst; discriminate.
   - intros l' Hl';  assert (nf l').
     {  specialize (Hl' 0). eauto with T1. }

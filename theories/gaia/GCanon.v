@@ -78,7 +78,7 @@ Lemma gcanonS_lt  (i : nat) [alpha : T1]:
   T1nf alpha -> alpha <> zero -> T1lt (canon alpha i.+1) alpha.
 Proof.
   rewrite -(h2g_g2h alpha) -nf_ref /canon => Hnf Hpos.
-  rewrite g2h_h2g; apply lt_ref, canonS_lt => //.
+  rewrite g2h_h2g; apply lt_ref, canon_lt => //.
   move => H; apply Hpos; rewrite H => //.
 Qed. 
 
@@ -258,6 +258,17 @@ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
  (** *  Adaptation of [canon] to type E0 *)
 
  Definition E0Canon (alpha: E0) (i: nat): E0.
-   refine (@mkE0 (cnf alpha) _); case: alpha => //. 
- Defined.
+   refine (@mkE0 (canon (cnf alpha) i)  _);
+     case: alpha => cnf i0;  rewrite T1nf_canon =>  //; 
+       by apply /eqP. 
+Defined.
 
+ Lemma E0_canon_lt (alpha: E0) i:
+   cnf alpha <> zero -> E0_lt (E0Canon alpha i) alpha.
+   move: i. case : alpha =>   cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
+   pattern cnf at 2; rewrite -(h2g_g2h cnf) - hlt_iff h2g_g2h. 
+   apply canon_lt. 
+   - rewrite hnf_g2h;  by apply /eqP.
+   - move => H0; apply Hpos; rewrite -h2g_eq_iff h2g_g2h  in H0; subst; 
+   rewrite -g2h_eq_iff => //.
+ Qed. 
