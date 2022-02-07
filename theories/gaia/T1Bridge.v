@@ -1,6 +1,7 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
  *)
 
+ From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
@@ -585,9 +586,19 @@ Definition E0_lt (alpha beta: E0) := cnf alpha < cnf beta.
 Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 (* end snippet E0Def *)
 
+Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
+Definition E0omega: E0. refine (@mkE0 T1omega _) => //. Defined. 
 
-
+Lemma E0eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
+Proof.
+  destruct alpha, beta; cbn. 
+  move => H; subst; f_equal; apply eq_proofs_unicity_on. 
+  case.
+  - left => //.
+  - right => //.
+     move => H; rewrite H in i => //.
+Qed.
 
 (* begin snippet gE0h2gG2h:: no-out *)
 Definition E0_h2g (a: hE0): E0.
@@ -681,10 +692,9 @@ Definition g2h_seq (s: nat-> T1) n := g2h (s n).
 Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
 
 
-Definition gstrict_lub 
- (s : nat -> T1) (lambda : T1) :=
-(forall i : nat, gLT (s i) lambda) /\
-(forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
+Definition gstrict_lub (s : nat -> T1) (lambda : T1) :=
+  (forall i : nat, gLT (s i) lambda) /\
+    (forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
 
 
 Lemma strict_lub_ref (s:nat-> hT1) (lambda: hT1) :
@@ -702,7 +712,7 @@ Proof.
   -   destruct 1 as [H H0]; split. 
       + move => i; specialize  (H i); rewrite LT_ref =>//.
       +  move => alpha Halpha; rewrite LE_ref;  apply H0. 
-         move => i; rewrite -LE_ref;  apply Halpha. 
+         move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
 
 

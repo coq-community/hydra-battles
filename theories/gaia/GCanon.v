@@ -1,17 +1,13 @@
 (** Import canonical sequences from hydra-battles *)
 
-
-
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import Canon.
 Require Import T1Bridge.
-Import ssete9.CantorOrdinal. 
-
 
 From gaia Require Import ssete9.
+Import CantorOrdinal. 
 
-Import ssete9.CantorOrdinal. 
 Set Bullet Behavior "Strict Subproofs".
 
 (** Importation of Ketonen-Solovay's  machinery into gaia's world
@@ -265,9 +261,12 @@ Defined.
 
  Lemma E0_canon_lt (alpha: E0) i:
    cnf alpha <> zero -> E0_lt (E0Canon alpha i) alpha.
-   move: i; case : alpha =>  cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
+ Proof. 
+   move: i; case : alpha => cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
    pattern cnf at 2; rewrite -(h2g_g2h cnf) -hlt_iff h2g_g2h;  apply canon_lt. 
    - rewrite hnf_g2h;  by apply /eqP.
-   - move => H0; apply Hpos; rewrite -h2g_eq_iff h2g_g2h  in H0; subst; 
-             rewrite -g2h_eq_iff => //.
- Qed. 
+   - rewrite /Hpos -h2g_eq_iff h2g_g2h => H0; 
+     apply Hpos; subst; rewrite -g2h_eq_iff => //.
+ Qed.
+
+
