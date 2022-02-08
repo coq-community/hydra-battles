@@ -1,7 +1,7 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
  *)
 
- From Coq Require Import Logic.Eqdep_dec.
+From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
@@ -22,6 +22,7 @@ Set Bullet Behavior "Strict Subproofs".
 
 Set Implicit Arguments.
 Unset Strict Implicit.
+(* Set Printing Coercions. *)
 
 (** From hydra to gaia and back *)
 
@@ -573,10 +574,10 @@ Proof.
   -   rewrite le_ref; by rewrite !h2g_g2h.  
 Qed.
 
-(** *  Well formed ordinals as a structure *)
+(** *  Well formed ordinals as a data type  *)
 
 (* begin snippet E0Def:: no-out *)
-Structure E0 := mkE0 { cnf :> T1 ; _ : T1nf cnf == true}.
+Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
@@ -589,7 +590,7 @@ Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
 Definition E0succ (alpha: E0): E0.
-  refine (@mkE0 (T1succ alpha) _).  rewrite nf_succ => //.
+  refine (@mkE0 (T1succ (cnf alpha)) _).  rewrite nf_succ => //.
   destruct alpha. cbn. move: i => /eqP //.
 Defined.
 
@@ -598,6 +599,8 @@ Fixpoint E0Fin (n:nat) : E0 :=
     0 => E0zero
   | p .+1 => E0succ (E0Fin p)
   end.
+
+
 
 Definition E0omega: E0.
 Proof. refine (@mkE0 T1omega _) => //. Defined.
@@ -611,6 +614,17 @@ Proof.
      move :i =>  H. rewrite H => //.
 Qed.
 
+
+Lemma E0Fin_cnf (n:nat) : cnf (E0Fin n) = \F n.
+Proof. 
+ elim: n => //.
+ move => n /= -> ; by rewrite T1succ_nat.
+Qed.
+
+
+
+
+
 (* begin snippet gE0h2gG2h:: no-out *)
 Definition E0_h2g (a: hE0): E0.
   esplit with (h2g (E0.cnf a)).
@@ -619,12 +633,12 @@ Defined.
 
 
 Definition E0_g2h (a: E0): hE0.
-  refine (@E0.mkord (g2h a) _); red.
+  refine (@E0.mkord (g2h (cnf a)) _); red.
   case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2h.  
 Defined.
 (* end snippet gE0h2gG2h *)
 
-Lemma E0_h2g_nf (a:hE0) : T1nf (E0_h2g a).
+Lemma E0_h2g_nf (a:hE0) : T1nf (cnf (E0_h2g a)).
 Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
@@ -658,6 +672,8 @@ Proof.
   - constructor => H0; subst.
     move : H => // /=; cbn; by rewrite T1eq_refl.
 Qed.
+
+
 
 
 From Coq Require Import Relations Basics
@@ -726,5 +742,25 @@ Proof.
          move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
 
+(*** Rapidly growing functions *)
 
-  
+From hydras Require Import F_alpha.
+
+Notation hF_ := F_.
+
+Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
+
+Definition T1F_ (alpha :T1)(Hnf : T1nf alpha) (n:nat) : nat.
+Proof. refine (F_ (@mkE0 alpha _) n); by rewrite Hnf.  Defined.
+
+
+Lemma F_alpha_ge_S: forall (alpha : E0) (n : nat), (n < F_ alpha n)%nat.
+Proof.
+  move => alpha n ; apply /ltP; apply F_alpha_ge_S.
+Qed.
+
+Lemma gF_alpha_ge_S (alpha : T1)(hnf: T1nf alpha) (n:nat):
+  (n < T1F_ hnf n)%nat.
+Proof.  by rewrite /F_ F_alpha_ge_S. Qed.
+
+
