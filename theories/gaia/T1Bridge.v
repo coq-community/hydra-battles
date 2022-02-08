@@ -71,18 +71,18 @@ Fixpoint g2h (alpha : T1) : hT1 :=
 (* end snippet h2gG2hDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
-Lemma h2g_g2h (alpha: T1): h2g (g2h alpha) = alpha.
+Lemma h2g_g2h : cancel g2h h2g.
 (* end snippet h2gG2hRw *)
 Proof.
-  elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
+  move => alpha; elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
   by rewrite IHalpha1 IHalpha2.
 Qed.
 
 (* begin snippet g2hH2gRw:: no-out *)
-Lemma g2h_h2g (alpha: hT1): g2h (h2g alpha) = alpha.
+Lemma g2h_h2g : cancel h2g g2h.
 (* end snippet g2hH2gRw *)
 Proof.
-  elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
+  move => alpha; elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
   by rewrite IHalpha1 IHalpha2.
 Qed.
 
@@ -573,7 +573,7 @@ Proof.
   -   rewrite le_ref; by rewrite !h2g_g2h.  
 Qed.
 
-(** Well formed ordinals as a structure *)
+(** *  Well formed ordinals as a structure *)
 
 (* begin snippet E0Def:: no-out *)
 Structure E0 := mkE0 { cnf :> T1 ; _ : T1nf cnf == true}.
@@ -588,16 +588,27 @@ Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
-Definition E0omega: E0. refine (@mkE0 T1omega _) => //. Defined. 
+Definition E0succ (alpha: E0): E0.
+  refine (@mkE0 (T1succ alpha) _).  rewrite nf_succ => //.
+  destruct alpha. cbn. move: i => /eqP //.
+Defined.
+
+Fixpoint E0Fin (n:nat) : E0 :=
+  match n with
+    0 => E0zero
+  | p .+1 => E0succ (E0Fin p)
+  end.
+
+Definition E0omega: E0.
+Proof. refine (@mkE0 T1omega _) => //. Defined.
+
 
 Lemma E0eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
 Proof.
   destruct alpha, beta; cbn. 
   move => H; subst; f_equal; apply eq_proofs_unicity_on. 
-  case.
-  - left => //.
-  - right => //.
-     move => H; rewrite H in i => //.
+  case ; [left | right] => //.
+     move :i =>  H. rewrite H => //.
 Qed.
 
 (* begin snippet gE0h2gG2h:: no-out *)
