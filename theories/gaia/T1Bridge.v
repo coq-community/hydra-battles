@@ -1,12 +1,14 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
  *)
 
+(* begin snippet Requirements:: no-out  *)
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
+(* end snippet Requirements *)
 
 (* begin snippet hT1gT1 *)
 
@@ -26,7 +28,7 @@ Unset Strict Implicit.
 
 (** From hydra to gaia and back *)
 
-(* begin snippet MoreNotations *)
+(* begin snippet MoreNotations:: no-out *)
 #[global] Notation hzero := T1.zero.
 #[global] Notation hone := T1.one.
 #[global] Notation hcons := T1.ocons.
@@ -45,9 +47,6 @@ Unset Strict Implicit.
 #[global] Notation hlimitb := T1.limitb.
 #[global] Notation his_succ := T1.succb.
 #[global] Notation hnf := T1.nf.
-
-
-
 
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
@@ -265,8 +264,7 @@ Proof.
   - rewrite T1le_eqVlt; move => /orP; destruct 1. 
     have H0: a = b. 
     { rewrite -(g2h_h2g a) -(g2h_h2g b). 
-      move: H => /eqP Heq. 
-      by rewrite Heq.
+      move: H => /eqP Heq; by rewrite Heq.
     }
     + subst; right.
     + left; by rewrite lt_ref. 
@@ -287,12 +285,9 @@ Proof.
   - have bd := n.
     apply (bool_decide_eq_false _) in bd.
     rewrite bd.
-    destruct (T1.compare_T1 a b).
+    destruct (T1.compare_T1 a b) => //.
     * by move => ->; rewrite T1ltnn.
-    * by [].
-    * move => Hlt.
-      symmetry.
-      apply/negP => Hlt'.
+    * move => Hlt; symmetry;  apply/negP => Hlt'.
       have H1 : (h2g b < h2g b) by apply T1lt_trans with (h2g a).
       by rewrite T1ltnn in H1.
 Qed.
@@ -495,9 +490,7 @@ Proof.
     case b => _ H.
     rewrite - nf_ref => //. 
   - case.
-    rewrite /hLE. 
-    red. 
-    split. 
+    rewrite /hLE; split. 
     rewrite -nf_ref in p p1 => //.
     split => //.
     rewrite T1le_eqVlt in p0. move : p0 => /orP.
@@ -709,9 +702,14 @@ Delimit Scope BrGaia_scope with brg.
 
 Infix "*" := T1mul : BrGaia_scope.
 
+Local Open Scope BrGaia_scope.
 
-Lemma L1' (a: T1) : (T1omega * (a * T1omega) = T1omega * a * T1omega)%brg.
+Lemma L1' (a: T1) : T1omega * (a * T1omega) = T1omega * a * T1omega.
 Proof. by  rewrite mulA. Qed. 
+
+Close Scope BrGaia_scope.
+
+
 
 (** Sequences and limits *)
 
@@ -762,5 +760,6 @@ Qed.
 Lemma gF_alpha_ge_S (alpha : T1)(hnf: T1nf alpha) (n:nat):
   (n < T1F_ hnf n)%nat.
 Proof.  by rewrite /F_ F_alpha_ge_S. Qed.
+
 
 

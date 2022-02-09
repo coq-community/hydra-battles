@@ -12,8 +12,12 @@ Locate T1.
 (* end snippet LocateT1 *)
 
 (* begin snippet T1BridgeUseb:: no-out *)
-Example Ex1 (a: T1):  (omega * (a * omega) = omega * a * omega)%t1.
+Local Open Scope t1_scope.
+
+Example Ex1 (a: T1):  omega * (a * omega) = omega * a * omega.
 Proof. by rewrite hmultA. Qed.
+
+Close Scope t1_scope.
 (* end snippet T1BridgeUseb *)
 
 

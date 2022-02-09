@@ -1,4 +1,4 @@
-\chapter{Gaia and the hydras (draft)}
+\chapter{Gaia and the hydras (experimental)}
 \index{coq}{Plug-ins!Gaia}
 
 \section{Introduction}
@@ -21,28 +21,75 @@ the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is curren
 
 \gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
 
-As an initial step in bridging \gaia and \Hydras, we were able to establish a
-correspondence between both implementations of ordinals through rewriting
-lemmas. For instance, we proved that multiplication of ordinals in Cantor
-normal form in \Hydras refine \gaia's corresponding multiplication operation,
-and then imported \gaia's proof of associativity of the multiplication
-almost for free.
 
-The initial draft bridge code mostly uses the SSReflect proof language
+
+The bridge we aim to build and cross is a two-way bridge:
+
+\begin{itemize}
+\item From \gaia, we import the proof of associativity of multiplication of ordinals strictly less than $\epsilon_0$, which was missing from \Hydras.
+  \item The other way, we started to import definitions and properties of canonical sequences and rapidly growing functions from \Hydras (see Chapter~\ref{chap:ketonen} and\ref{chap:alpha-large}~of this book).
+\end{itemize}
+
+Please note that by ``import'' we do not mean ``duplicate the proofs''.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. 
+
+
+
+This initial draft bridge code mostly uses the SSReflect proof language
 and idioms from the Mathematical Components library. We made this design
 decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
 Gaia without SSReflect.
 
-\section{Data refinement}
 
-\emph{The following definitions and lemmas are in
+
+\section{Library structure}
+The \gaiaHydras library is designed for use  by users of
+\gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of these libraries.
+
+In case of name clash, we often added a one-letter prefix to names : \texttt{g} or \texttt{G} for \gaia, \texttt{h} or \texttt{H}
+  for \HydrasLib.
+
+For instance, both \gaia and \HydrasLib have a type called \texttt{T1} (data type for Cantor normal forms).
+\begin{itemize}
+\item In
+  \href{../theories/html/gaia_hydras.T1Bridge_use.html}%
+  {\texttt{gaia\_hydras.T1Bridge\_use}}, we adopt \HydrasLib's point of view, and the name \texttt{T1} is by default bound to
+\HydrasLib' data structures.
+
+\inputsnippets{T1Bridge_use/T1BridgeUse,
+  T1Bridge_use/LocateT1}
+
+Associativity of multiplication over \HydrasLib' type \texttt{T1},
+although imported from \gaia, is expressed with \HydrasLib' notations.
+
+\inputsnippets{T1Bridge_use/T1BridgeUseb}
+
+\item The other way, the module \href{../theories/html/gaia_hydras.GCanon.html}%
+  {\texttt{gaia\_hydras.GCanon}} is an adaptation to \gaia of
+  \href{../theories/html/hydras.Epsilon0/Canon.html}%
+  {\texttt{hydras.Epsilon0/Canon}}.
+  In this module, the name \texttt{T1} is bound by default to \gaia's meaning. \HydrasLib' name \texttt{T1} is renamed into \texttt{hT1}.
+
+  The following lemmas are expressed in \gaia's vocabulary.
+  \inputsnippets{GCanon/gcanonLimitMono,
+    GCanon/gcanonLimitOf}
+  
+\end{itemize}
+
+The \gaiaHydras entry point is the file
 \href{../theories/html/gaia_hydras.T1Bridge.html}%
-{\texttt{gaia\_hydras.T1Bridge}}}.
+{\texttt{theories/gaia.T1Bridge.v}}, which requires modules both from \HydrasLib and \gaia. By default, we give priority to \gaia's notation and vocabulary.
 
-Since both libraries \texttt{gaia} and \texttt{hydra-battles} have their own type \texttt{T1}, we will work with the following notations.
+
+\inputsnippets{T1Bridge/Requirements}
 
 \inputsnippets{T1Bridge/hT1gT1}
+
+
+
+\subsection{Data refinement}
+
+
 
 Most used constants and functions will also get standardized
 non-ambiguous names.
@@ -122,11 +169,11 @@ example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 \inputsnippets{T1Bridge_use/T1BridgeUse}
 
-From now on, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \Hydras's meaning.
+From now on, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \HydrasLib' meaning.
 
  \inputsnippets{ T1Bridge_use/LocateT1, T1Bridge_use/T1BridgeUseb}
 
-\subsection{Porting theorems from \Hydras}
+\subsection{Porting theorems from \HydrasLib}
 
 
 Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
@@ -154,13 +201,13 @@ In~\href{../theories/html/gaia_hydras.GCanon.html}%
 \href{../theories/html/hydras.Epsilon0.Canon.html}%
 {\texttt{hydras.Epsilon0.Canon}}.
 
-First, we rename \Hydras's \texttt{canon} function into
+First, we rename \HydrasLib' \texttt{canon} function into
 \texttt{hcanon}. Then we define a new function \emph{via} the
 translations \texttt{g2h} and \texttt{h2g}.
 
 \inputsnippets{GCanon/canonDef}
 
-The following lemmas are proved by rewriting from corresponding statements proved in \Hydras.
+The following lemmas are proved by rewriting from corresponding statements proved in \HydrasLib.
 \emph{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the scripts below.}
 
 \inputsnippets{GCanon/g2hCanonRw}
@@ -173,7 +220,7 @@ The following lemmas are proved by rewriting from corresponding statements prove
 
 
 \section{Gaia's proof of well-foundedness}
-The library \Hydras already contains two proofs
+The library \HydrasLib already contains two proofs
 of well-foundedness of the strict order on ordinal terms in
 Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
 \'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
@@ -209,7 +256,7 @@ With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfin
 \subsection{Main proof steps}
 
 \emph{Notes: the abbreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.
-The infix notation \texttt{`` \_ < \_''}  is bound to the order \texttt{T1lt} in \gaia, while,  in \Hydras,  it is bound to its restriction \texttt{LT} to terms in normal form. }
+The infix notation \texttt{`` \_ < \_''}  is bound to the order \texttt{T1lt} in \gaia, while,  in \HydrasLib,  it is bound to its restriction \texttt{LT} to terms in normal form. }
 
 \inputsnippets{nfwfgaia/nfWfProofa}
 We start with a classic structural induction on the type \texttt{T1}.
