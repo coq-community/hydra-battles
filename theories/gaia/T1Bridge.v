@@ -14,7 +14,7 @@ Set Bullet Behavior "Strict Subproofs".
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
-#[global] Notation hT1 := T1.T1.
+#[global] Notation hT1 := Epsilon0.T1.T1.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 
@@ -29,42 +29,42 @@ Unset Strict Implicit.
 (** From hydra to gaia and back *)
 
 (* begin snippet MoreNotations:: no-out *)
-#[global] Notation hzero := T1.zero.
-#[global] Notation hone := T1.one.
-#[global] Notation hcons := T1.ocons.
-#[global] Notation hfin := T1.fin.
+#[global] Notation hzero := Epsilon0.T1.zero.
+#[global] Notation hone := Epsilon0.T1.one.
+#[global] Notation hcons := Epsilon0.T1.ocons.
+#[global] Notation hfin := Epsilon0.T1.fin.
 
-#[global] Notation homega := T1.omega.
-#[global] Notation hsucc := T1.succ.
-#[global] Notation hphi0 alpha := (T1.phi0 alpha).
-#[global] Notation hplus := T1.plus.
-#[global] Notation hmult := T1.mult.
+#[global] Notation homega := Epsilon0.T1.omega.
+#[global] Notation hsucc := Epsilon0.T1.succ.
+#[global] Notation hphi0 alpha := (Epsilon0.T1.phi0 alpha).
+#[global] Notation hplus := Epsilon0.T1.plus.
+#[global] Notation hmult := Epsilon0.T1.mult.
 
-#[global] Notation hlt := T1.lt.
-#[global] Notation hLT := T1.LT.
-#[global] Notation hLE := T1.LE.
-#[global] Notation hnfb := T1.nf_b.
-#[global] Notation hlimitb := T1.limitb.
-#[global] Notation his_succ := T1.succb.
-#[global] Notation hnf := T1.nf.
+#[global] Notation hlt := Epsilon0.T1.lt.
+#[global] Notation hle := (MoreOrders.leq hlt). 
+#[global] Notation hLT := Epsilon0.T1.LT.
+#[global] Notation hLE := Epsilon0.T1.LE.
+#[global] Notation hnfb := Epsilon0.T1.nf_b.
+#[global] Notation hlimitb := Epsilon0.T1.limitb.
+#[global] Notation his_succ := Epsilon0.T1.succb.
+#[global] Notation hnf := Epsilon0.T1.nf.
 
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
-#[global] Notation hle := (MoreOrders.leq hlt). 
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
 
 Fixpoint h2g (alpha : hT1) : T1 :=
   match alpha with
-    T1.zero => zero
+    Epsilon0.T1.zero => zero
   | hcons alpha n beta => cons (h2g alpha) n (h2g beta)
   end.
 
 Fixpoint g2h (alpha : T1) : hT1 :=
   match alpha with
-    zero => T1.zero
+    zero => Epsilon0.T1.zero
   | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
   end.
 
@@ -72,34 +72,37 @@ Fixpoint g2h (alpha : T1) : hT1 :=
 
 (* begin snippet h2gG2hRw:: no-out *)
 Lemma h2g_g2h : cancel g2h h2g.
-(* end snippet h2gG2hRw *)
 Proof.
-  move => alpha; elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
-  by rewrite IHalpha1 IHalpha2.
+  elim => // => alpha1 IH1 n t2 IH2 /=; by rewrite IH1 IH2. 
 Qed.
+(* end snippet h2gG2hRw *)
+
 
 (* begin snippet g2hH2gRw:: no-out *)
 Lemma g2h_h2g : cancel h2g g2h.
+(* ... *)
 (* end snippet g2hH2gRw *)
 Proof.
-  move => alpha; elim: alpha => //= t1 IHalpha1 n t2 IHalpha2.
-  by rewrite IHalpha1 IHalpha2.
+   elim => // => alpha1 IH1 n t2 IH2 /=; by rewrite IH1 IH2. 
 Qed.
 
-
-Lemma g2h_eq_iff a b :  g2h a = g2h b <-> a = b.
+(* begin snippet g2hEqIff:: no-out *)
+Lemma g2h_eq_iff (a b: T1) :  g2h a = g2h b <-> a = b.
+(* end snippet g2hEqIff *)
 Proof. 
     split.
-    - rewrite -(h2g_g2h a) -(h2g_g2h b)  !g2h_h2g => // Heq //; rewrite Heq => //.
-    - move => H; by subst. 
+    - rewrite -(h2g_g2h a) -(h2g_g2h b) !g2h_h2g
+              => // -> //.  
+    - by move => -> .
 Qed.
 
+(* begin snippet h2gEqIff:: no-out *)
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
+(* end snippet h2gEqIff *)
 Proof. 
-    split => Heq.
-    - move : Heq; rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  // Heq.
-     by rewrite Heq. 
-    - by subst. 
+    split.
+    -  rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  // -> //.
+    - move => -> //. 
 Qed.
 
 (** refinement of constants, functions, etc. *)
@@ -145,24 +148,17 @@ Qed.
 
 (** Refinements of usual constants *)
 (* begin snippet constantRefs:: no-out *)
-
-
 Lemma zero_ref : refines0 hzero zero.
 Proof. by []. Qed.
-
 
 Lemma one_ref : refines0 hone one.
 Proof. by []. Qed.
 
-
-
 Lemma Finite_ref (n:nat) : refines0 (hfin n) (\F n).
 Proof. by case: n. Qed.
 
-
 Lemma omega_ref : refines0 homega T1omega.
 Proof. by []. Qed.
-
 (* end snippet constantRefs *)
 
 (** unary functions *)
@@ -173,7 +169,7 @@ Lemma succ_ref: refines1 hsucc T1succ.
 (*| .. coq:: none |*)
 Proof.
   elim => [//|//  x] => //.
-  case: x => // x n y H p z H0 /=; by rewrite H0.
+  by case: x => // ? ? ? ? ? ? /= -> .
 Qed.
 (*||*)
 
@@ -183,7 +179,7 @@ Proof. by []. Qed.
 (* end snippet unaryRefs *)
 
 
-Lemma ap_ref : refinesPred T1.ap T1ap. 
+Lemma ap_ref : refinesPred Epsilon0.T1.ap T1ap. 
 Proof.
   move => alpha; split => Hap; first by case: Hap.
   move: Hap; case: alpha => //= alpha n beta /andP [Hn Hz].
@@ -203,19 +199,19 @@ Qed.
 
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
-  match T1.compare_T1 x y with
+  match Epsilon0.T1.compare_T1 x y with
   | Datatypes.Lt => T1lt (h2g x) (h2g y)
-  |  Datatypes.Eq => h2g x = h2g y
-  |  Datatypes.Gt => T1lt (h2g y) (h2g x)
+  | Datatypes.Eq => h2g x = h2g y
+  | Datatypes.Gt => T1lt (h2g y) (h2g x)
   end.
 (* end snippet compareRef *)
 Proof.
   move: y; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
-  case H: (T1.compare_T1 x1 y1).
+  case H: (Epsilon0.T1.compare_T1 x1 y1).
   - specialize (IHx1 y1); rewrite H in IHx1.
     case H0: (PeanoNat.Nat.compare n n0).
     + have ->: (n = n0) by apply Compare_dec.nat_compare_eq.
-      case H1: (T1.compare_T1 x2 y2).
+      case H1: (Epsilon0.T1.compare_T1 x2 y2).
       * rewrite IHx1; f_equal.
         by specialize (IHx2 y2); now rewrite H1 in IHx2.
       * case (h2g x1 < h2g y1); [trivial|].
@@ -238,10 +234,10 @@ Lemma lt_ref : refinesRel hlt T1lt.
 (* end snippet ltRef *)
 Proof.
   move=> a b; split.
-  - rewrite /T1.lt /Comparable.compare; move => Hab. 
+  - rewrite /Epsilon0.T1.lt /Comparable.compare; move => Hab. 
     generalize (compare_ref a b); now rewrite Hab.
   - move => Hab; red.
-    case_eq (T1.compare_T1 a b).
+    case_eq (Epsilon0.T1.compare_T1 a b).
     + move => Heq; generalize (compare_ref a b); rewrite Heq.
       move => H0; move: Hab; rewrite H0;
               move => Hb; by rewrite T1ltnn in Hb.
@@ -253,7 +249,9 @@ Proof.
 Qed.
 
 (* To simplify ! *)
+(* begin snippet leRef:: no-out *)
 Lemma le_ref : refinesRel (MoreOrders.leq hlt) T1le.
+(* end snippet leRef *)
 Proof.
   move=> a b; split.
   - rewrite /T1le /Comparable.compare; move => Hab;  elim: Hab. 
@@ -276,16 +274,16 @@ Lemma decide_hlt_rw (a b : hT1):
   bool_decide (hlt a b) = (h2g a < h2g b).
 (* end snippet decideHLtRw *)
 Proof.
-  rewrite /T1.lt; generalize (compare_ref a b);
+  rewrite /Epsilon0.T1.lt; generalize (compare_ref a b);
     rewrite /Comparable.compare /=.
-  destruct (decide (T1.compare_T1 a b = Datatypes.Lt)).
+  destruct (decide (Epsilon0.T1.compare_T1 a b = Datatypes.Lt)).
   - have bd := e.
     apply (bool_decide_eq_true _) in bd.
     by rewrite bd e.
   - have bd := n.
     apply (bool_decide_eq_false _) in bd.
     rewrite bd.
-    destruct (T1.compare_T1 a b) => //.
+    destruct (Epsilon0.T1.compare_T1 a b) => //.
     * by move => ->; rewrite T1ltnn.
     * move => Hlt; symmetry;  apply/negP => Hlt'.
       have H1 : (h2g b < h2g b) by apply T1lt_trans with (h2g a).
@@ -310,16 +308,16 @@ Lemma plus_ref : refines2 hplus T1add.
 (* end snippet plusRef *)
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
-  case Hx1y1: (T1.compare_T1 x1 y1); move: (compare_ref x1 y1);
+  case Hx1y1: (Epsilon0.T1.compare_T1 x1 y1); move: (compare_ref x1 y1);
     rewrite Hx1y1 => H.
   - rewrite /Comparable.compare H T1ltnn /=; f_equal.
     by rewrite Hx1y1 -H /=.
   - by rewrite /Comparable.compare H Hx1y1.
-  - replace (h2g x1 < h2g y1) with false.
-    rewrite /Comparable.compare H /= Hx1y1; f_equal.
-    change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)).
-    by rewrite IHx2.
-    by apply T1lt_anti in H.
+  - replace (h2g x1 < h2g y1) with false; last first.
+    + by apply T1lt_anti in H.
+    + rewrite /Comparable.compare H /= Hx1y1; f_equal.
+      change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)); 
+        by rewrite IHx2.
 Qed.
 
 
@@ -333,35 +331,31 @@ Section Proof_of_mult_ref.
   Proof. case: c; cbn => //; by case. 
   Qed.
 
-
   Lemma T1mul_eqn3 n b n' b' : cons zero n b * cons zero n' b' =
                                  cons zero (n * n' + n + n') b'.      
   Proof. by [].  Qed. 
-
 
   Lemma mult_eqn3 n b n' b' :
     hmult (hcons hzero n b) (hcons hzero n' b') =
       hcons hzero (n * n' + n + n') b'.      
   Proof. cbn; f_equal; nia. Qed.
 
-
   Lemma T1mul_eqn4 a n b n' b' :
     a != zero -> (cons a n b) * (cons zero n' b') =
                    cons a (n * n' + n + n') b.
   Proof. 
-    move => /T1eqP.  cbn.
-    move =>  Ha'; have Heq: T1eq a zero = false.
-    { move: Ha'; case: a => //. }
-    rewrite Heq; by cbn.        
+    move => /T1eqP;  cbn.
+    move =>  Ha'; have Heq: T1eq a zero = false by
+               move: Ha'; case: a => //.
+    rewrite Heq => //.
   Qed.
 
   Lemma mult_eqn4 a n b n' b' :
-    a <> T1.zero ->
-    T1.mult (hcons a n b) (hcons T1.zero n' b') =
+    a <> Epsilon0.T1.zero ->
+    Epsilon0.T1.mult (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
       hcons a (n * n' + n + n') b.
   Proof. 
-    cbn.  case: a => [//|alpha n0 beta _ ].
-    f_equal; nia. 
+    cbn.  case: a => [//|alpha n0 beta _ ]; f_equal; nia. 
   Qed.
 
   Lemma T1mul_eqn5 a n b a' n' b' :
@@ -376,7 +370,7 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn5 a n b a' n' b' :
     a' <>  hzero ->
-    T1.mult (hcons a n b)  (hcons a' n' b') =
+    Epsilon0.T1.mult (hcons a n b)  (hcons a' n' b') =
       hcons (hplus a  a') n' (hmult (hcons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
@@ -402,20 +396,20 @@ Section Proof_of_mult_ref.
     -  case.
        + simpl h2g => // /=.
        + move => alpha n0 beta.
-         destruct (T1.T1_eq_dec  alpha T1.zero).
-         *  subst; destruct (T1.T1_eq_dec y1 T1.zero).
+         destruct (Epsilon0.T1.T1_eq_dec  alpha Epsilon0.T1.zero).
+         *  subst; destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
             -- subst y1; simpl h2g; rewrite T1mul_eqn3; f_equal; nia.
             -- repeat rewrite !h2g_cons !h2g_zero.
                rewrite T1mul_eqn5.
                ++ rewrite mult_eqn5 => //.
                   ** simpl h2g; simpl T1add; f_equal.
-                     destruct (T1.T1_eq_dec y2 T1.zero).
+                     destruct (Epsilon0.T1.T1_eq_dec y2 Epsilon0.T1.zero).
                      { subst; by cbn. }
                      { change (cons zero n0 (h2g beta)) with
-                         (h2g (hcons T1.zero n0 beta)); now rewrite IHy2.
+                         (h2g (hcons Epsilon0.T1.zero n0 beta)); now rewrite IHy2.
                      }
                ++  destruct y1; [now destruct n1| now compute].
-         * destruct (T1.T1_eq_dec y1 T1.zero).
+         * destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
            --   subst; rewrite !h2g_cons !h2g_zero;
                   rewrite T1mul_eqn4.
                 ++ by rewrite mult_eqn4. 
@@ -455,8 +449,8 @@ Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
 (* end snippet nfRef *)
 Proof.
   elim: a => //.
-  - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
-    rewrite IHa IHb;  change (phi0 (h2g a)) with (h2g (T1.phi0 a)).
+  - move => a IHa n b IHb; rewrite Epsilon0.T1.nf_b_cons_eq; simpl T1nf. 
+    rewrite IHa IHb;  change (phi0 (h2g a)) with (h2g (Epsilon0.T1.phi0 a)).
     by rewrite andbA decide_hlt_rw.
 Qed.
 
@@ -506,20 +500,18 @@ Qed.
 (** Limits, successors, etc *)
 
 (* begin snippet limitbRef:: no-out *)
-Lemma limitb_ref (a:T1.T1) : hlimitb a = T1limit (h2g a).
-(* ... *)
+Lemma limitb_ref (a:Epsilon0.T1.T1) : hlimitb a = T1limit (h2g a).
 (* end snippet limitbRef *)
 Proof.
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta. 
-  move: IHalpha; case:alpha.
-  by [].
-  move => alpha n0 beta0 IH;  cbn.
-  move: IHbeta; case: beta => //.
+  move: IHalpha; case:alpha => //.
+  move => alpha n0 beta0 IH;  cbn; move: IHbeta; case: beta => //.
 Qed.
 
-
-Lemma is_succ_ref (a:T1.T1) : his_succ a = T1is_succ (h2g a).
+(* begin snippet isSuccRef:: no-out *)
+Lemma is_succ_ref (a:Epsilon0.T1.T1) : his_succ a = T1is_succ (h2g a).
+(* end snippet isSuccRef *)
 Proof. 
   elim: a => /= //.
   move => alpha IHalpha n beta IHbeta; cbn; rewrite IHbeta.
@@ -541,16 +533,18 @@ Proof.
   specialize (lt_ref a b) => H;  rewrite H => //.
 Qed.
 
-Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
-                          alpha < beta <->  g2h alpha t1<  g2h beta.
-(* ... *)
 (* end snippet rewritingRules *)
-Proof.
+(* begin snippet T1ltIff:: no-out *)
+Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
+                          alpha < beta <->  g2h alpha t1<  g2h beta. 
+Proof. 
   move => Halpha Hbeta; split. 
-  - rewrite -(h2g_g2h alpha) -(h2g_g2h beta);  repeat split. 
+  - rewrite -(h2g_g2h alpha) -(h2g_g2h beta);  repeat split.
+(* ... *)
+(*end snippet T1ltIff *)
     1, 3:  by rewrite g2h_h2g hnf_g2h. 
     + by rewrite !h2g_g2h hlt_iff.
-    -  destruct 1 as [H0 [H1 H2]].
+  -  destruct 1 as [H0 [H1 H2]].
      apply lt_ref in H1; move: H1; by rewrite !h2g_g2h.
 Qed.
 
