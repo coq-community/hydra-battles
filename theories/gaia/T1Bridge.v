@@ -21,14 +21,11 @@ Unset Strict Implicit.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 
-#[local] Notation T1 := CantorOrdinal.T1.
-
+#[global] Notation T1 := CantorOrdinal.T1.
 (* end snippet hT1gT1 *)
 
 
-(* Set Printing Coercions. *)
-
-(** From hydra to gaia and back *)
+(** * From hydra to gaia and back *)
 
 (* begin snippet MoreNotations:: no-out *)
 #[global] Notation hzero := Epsilon0.T1.zero.
@@ -48,11 +45,12 @@ Unset Strict Implicit.
 #[global] Notation hLE := Epsilon0.T1.LE.
 #[global] Notation hnfb := Epsilon0.T1.nf_b.
 #[global] Notation hlimitb := Epsilon0.T1.limitb.
-#[global] Notation his_succ := Epsilon0.T1.succb.
+#[global] Notation hsuccb := Epsilon0.T1.succb.
 #[global] Notation hnf := Epsilon0.T1.nf.
 
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
+
 
 (* end snippet MoreNotations *)
 
@@ -111,15 +109,12 @@ Qed.
 
 (* begin snippet refineDefs *)
 
-Definition refines0 (x:hT1)(y:T1) :=
-  y = h2g x.
+Definition refines0 (x:hT1)(y:T1) :=  y = h2g x.
 
-Definition refines1 (f:hT1 -> hT1)
-           (f': T1 -> T1) :=
+Definition refines1 (f:hT1 -> hT1) (f': T1 -> T1) :=
   forall x: hT1, f' (h2g x) = h2g (f x).
 
-Definition refines2 (f:hT1 -> hT1 -> hT1)
-           (f': T1 -> T1 -> T1 ) :=
+Definition refines2 (f:hT1 -> hT1 -> hT1) (f': T1 -> T1 -> T1 ) :=
   forall x y : hT1, f' (h2g x) (h2g y) = h2g (f x y).
 
 Definition refinesPred (hP: hT1 -> Prop) (gP: T1 -> Prop) :=
@@ -301,9 +296,6 @@ Proof.
   - by move => ->.
   - move => Hab; apply T1eq_h2g; by rewrite Hab T1eq_refl.
 Qed.
-
-
-
 
 (* begin snippet plusRef:: no-out *)
 Lemma plus_ref : refines2 hplus T1add.
@@ -512,7 +504,7 @@ Proof.
 Qed.
 
 (* begin snippet isSuccRef:: no-out *)
-Lemma is_succ_ref (a:Epsilon0.T1.T1) : his_succ a = T1is_succ (h2g a).
+Lemma succb_ref (a:Epsilon0.T1.T1) : hsuccb a = T1is_succ (h2g a).
 (* end snippet isSuccRef *)
 Proof. 
   elim: a => /= //.
@@ -589,13 +581,11 @@ Fixpoint E0Fin (n:nat) : E0 :=
   | p .+1 => E0succ (E0Fin p)
   end.
 
-
-
 Definition E0omega: E0.
 Proof. refine (@mkE0 T1omega _) => //. Defined.
 
 
-Lemma E0eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
+Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
 Proof.
   destruct alpha, beta; cbn. 
   move => H; subst; f_equal; apply eq_proofs_unicity_on. 
@@ -609,9 +599,6 @@ Proof.
  elim: n => //.
  move => n /= -> ; by rewrite T1succ_nat.
 Qed.
-
-
-
 
 
 (* begin snippet gE0h2gG2h:: no-out *)
@@ -634,7 +621,8 @@ Qed.
 
 
 
-Require Import Logic.Eqdep_dec.
+
+
 
 Lemma gE0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
 Proof.
@@ -663,7 +651,7 @@ Proof.
 Qed.
 
 Lemma E0_h2g_g2h : cancel E0_g2h E0_h2g.
-case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0eq_intro=> /=.
+case => a Ha /=; rewrite /E0_g2h /E0_h2g; f_equal; apply  gE0_eq_intro=> /=.
 by rewrite h2g_g2h.
 Qed.
 
@@ -671,6 +659,11 @@ Lemma E0_g2h_h2g : cancel E0_h2g E0_g2h.
 case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
 by rewrite g2h_h2g. 
 Qed.
+
+Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
+rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
+by rewrite g2h_succ. 
+Qed. 
 
 
 From Coq Require Import Relations Basics
@@ -744,65 +737,11 @@ Proof.
          move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
 
-(*** Rapidly growing functions *)
-
-From hydras Require Import F_alpha.
-
-Notation hF_ := F_.
-
-Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
-
-Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat.
-Proof. refine (F_ (@mkE0 alpha _) n); by rewrite Hnf.  Defined.
-
-Lemma T1F_eq alpha (Hnf : T1nf alpha == true) (n:nat) :
-  F_ (@mkE0 alpha Hnf) n = T1F_  Hnf n.
-rewrite /T1F_. f_equal. 
- Search "eq_intro".
-  apply E0eq_intro => //. 
-Qed.
-
-Lemma F_alpha_ge_S: forall (alpha : E0) (n : nat), (n < F_ alpha n)%nat.
-Proof.
-  move => alpha n ; apply /ltP; apply F_alpha_ge_S.
-Qed.
-
-
-
+(* begin snippet MonoDef *)
 Definition strict_mono (f: nat -> nat) :=
   forall n p, (n< p)%N -> (f n < f p)%N.
 
 Definition dominates_from := 
 fun (n : nat) (g f : nat -> nat) =>
-forall p : nat, (n <= p)%N -> (f p < g p)%N.
-
-
-
-
-Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
-Proof.
-  rewrite /strict_mono /F_ => n p Hnp; apply /ltP.
-  apply F_alpha_mono; move: Hnp => /ltP //.
-Qed.
-
-Search hF_ Iterates.dominates_from.
-(*
-F_alpha_dom:
-  forall alpha : hE0, Iterates.dominates_from 1 (hF_ (Succ alpha)) (hF_ alpha)
- *)
-
-Print E0succ.
-Search "Succ".
-
-Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
-rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
-by rewrite g2h_succ. 
-Qed. 
-
-Lemma GF_alpha_dom alpha:
-  dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
-Proof.
-  rewrite /dominates_from /F_ g2h_E0succ => p Hp.
-  apply /ltP; apply F_alpha_dom; by apply /leP.
-Qed. 
-
+  forall p : nat, (n <= p)%N -> (f p < g p)%N.
+(* end snippet MonoDef *)

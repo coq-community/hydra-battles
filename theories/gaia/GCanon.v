@@ -212,9 +212,8 @@ Proof.
 Qed.
 
 (* begin snippet gcanonLimitV2:: no-out *)
-Lemma gcanon_limit_v2   lambda: 
-  T1nf lambda -> T1limit lambda ->
-  limit_v2 (canon lambda) lambda.
+Lemma gcanon_limit_v2 (lambda: T1):
+  T1nf lambda -> T1limit lambda -> limit_v2 (canon lambda) lambda.
 (* ... *)
 (* end snippet gcanonLimitV2 *)
 Proof.
