@@ -2,7 +2,7 @@
 \index{coq}{Plug-ins!Gaia}
 
 \section{Introduction}
-The \gaia project by Jos\'e Grimm aimed to formalize mathematics in \coq in
+The \gaia project~\cite{Gaia} by Jos\'e Grimm aimed to formalize mathematics in \coq  in
 the style of Nicolas Bourbaki. The formalization of the first book in the
 Elements of Mathematics series by Bourbaki, on the theory of sets, was
 initially described in a technical report in July 2009~\cite{Grimm2009a}.
@@ -17,7 +17,7 @@ In 2020, members of \community transferred the \gaia source code to
 GitHub and adapted it for recent releases of the Mathematical Components
 library, which \gaia heavily relies on.
 Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished
-the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
+the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects.
 
 \gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
 
@@ -38,18 +38,21 @@ This initial draft bridge code mostly uses the SSReflect proof language
 and idioms from the Mathematical Components library. We made this design
 decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
-Gaia without SSReflect.
+Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}
 
 
 
 \section{Library structure}
 The \gaiaHydras library is designed for use  by users of
-\gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of these libraries.
+\gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of both libraries.
 
-In case of name clash, we often added a one-letter prefix to names : \texttt{g} or \texttt{G} for \gaia, \texttt{h} or \texttt{H}
-  for \HydrasLib.
+In case of name clash (for instance the type \texttt{T1} of ordinal terms below $\epsilon_0$), we often added a one-letter prefix to names : \texttt{g} or \texttt{G} for \gaia, \texttt{h} or \texttt{H}
+for \HydrasLib.
 
-For instance, both \gaia and \HydrasLib have a type called \texttt{T1} (data type for Cantor normal forms).
+In the following two examples, the bare name \texttt{T1} is given by default either  to \HydrasLib' world or \gaia's. 
+ 
+
+  
 \begin{itemize}
 \item In
   \href{../theories/html/gaia_hydras.T1Bridge_use.html}%
@@ -96,7 +99,7 @@ Most used constants and functions are also unambiguously renamed.
 
 \inputsnippets{T1Bridge/MoreNotations}
 
-Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{alpha < succ beta} should be interpreted as \texttt{T1lt alpha beta}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
+Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
 
 
 \subsubsection{Translation functions and data refinement}
@@ -122,7 +125,7 @@ constant, function, relation defined in \HydrasLib ``implements'' the same conce
 %%% ICI
 
 \subsection{Examples of refinements}
-Both libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove consistency of these definitions. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
+Both of our libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove consistency of these definitions. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
 
 \subsubsection{A few constants}
 For each constant: $0$, $1$, \dots, $n$ and $\omega$, we prove
@@ -165,7 +168,7 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
 
-\subsection{Importing a theorem from \gaia}
+\section{Importing a theorem from \gaia}
 The \texttt{Gaia} library already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
 \emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
 
@@ -187,7 +190,7 @@ In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  b
 
  \inputsnippets{ T1Bridge_use/LocateT1, T1Bridge_use/T1BridgeUseb}
 
-\subsection{Importing theorems from \HydrasLib}
+\section{Importing theorems from \HydrasLib}
 
 
 Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
@@ -208,14 +211,13 @@ apply rewriting rules of the following forms:
 
 
 
-\subsubsection{Canonical sequences}
+\subsection{Canonical sequences}
 
 
 In~\href{../theories/html/gaia_hydras.GCanon.html}%
 {\texttt{gaia\_hydras.GCanon}}, canonical sequences are just imported from the library \linebreak
 \href{../theories/html/hydras.Epsilon0.Canon.html}%
 {\texttt{hydras.Epsilon0.Canon}}.
-
 First, we rename \HydrasLib' \texttt{canon} function into
 \texttt{hcanon}. Then we define a new function \emph{via} the
 translations \texttt{g2h} and \texttt{h2g}.
@@ -223,7 +225,7 @@ translations \texttt{g2h} and \texttt{h2g}.
 \inputsnippets{GCanon/canonDef}
 
 The following lemmas are proved by rewriting from corresponding statements proved in \HydrasLib.
-\emph{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the scripts below.}
+
 
 \inputsnippets{GCanon/g2hCanonRw}
 \inputsnippets{GCanon/gcanonLt}
@@ -231,6 +233,37 @@ The following lemmas are proved by rewriting from corresponding statements prove
 \inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitMono}
 \inputsnippets{GCanon/gcanonLimitOf}
+
+\subsection{A family of rapidly growing functions}
+
+The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. The symbol \texttt{F\_} has type \texttt{E0 -> nat -> nat},
+where \texttt{E0} is the type of well formed ordinal terms less than $\epsilon_0$.
+\subsubsection{Well-formed ordinal terms}
+
+For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+
+\inputsnippets{T1Bridge/E0Def}
+\inputsnippets{T1Bridge/E0EqP}
+
+In order to import definitions and lemmas
+from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
+
+\inputsnippets{T1Bridge/gE0h2gG2h}
+
+These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
+
+\inputsnippets{T1Bridge/gE0LtWf}
+
+\subsubsection{Importing the \texttt{F\_alpha} family}
+
+We are now able to import \HydrasLib' $F_\alpha$ functions.
+
+\inputsnippets{GF_alpha/FAlphaDef}
+
+Mainly by rewriting, we import a few properties of the $F_\alpha$s.
+
+\inputsnippets{T1Bridge/MonoDef, GF_alpha/FAlphaProps}.
+
 
 
 
@@ -325,17 +358,3 @@ The following lemmas are proved by rewriting from corresponding statements prove
 % In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. 
 
 
-\section{Well formed ordinals}
-For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
-
-\inputsnippets{T1Bridge/E0Def}
-\inputsnippets{T1Bridge/E0EqP}
-
-In order to import definitions and lemmas
-from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
-
-\inputsnippets{T1Bridge/gE0h2gG2h}
-
-These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
-
-\inputsnippets{T1Bridge/gE0LtWf}
