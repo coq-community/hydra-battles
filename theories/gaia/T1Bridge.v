@@ -660,7 +660,15 @@ Proof.
     move : H => // /=; cbn; by rewrite T1eq_refl.
 Qed.
 
+Lemma E0_h2g_g2h : cancel E0_g2h E0_h2g.
+case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0eq_intro=> /=.
+by rewrite h2g_g2h.
+Qed.
 
+Lemma E0_g2h_h2g : cancel E0_h2g E0_g2h.
+case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
+by rewrite g2h_h2g. 
+Qed.
 
 
 From Coq Require Import Relations Basics
@@ -745,7 +753,6 @@ Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
 Definition T1F_ (alpha :T1)(Hnf : T1nf alpha) (n:nat) : nat.
 Proof. refine (F_ (@mkE0 alpha _) n); by rewrite Hnf.  Defined.
 
-
 Lemma F_alpha_ge_S: forall (alpha : E0) (n : nat), (n < F_ alpha n)%nat.
 Proof.
   move => alpha n ; apply /ltP; apply F_alpha_ge_S.
@@ -756,4 +763,11 @@ Lemma gF_alpha_ge_S (alpha : T1)(hnf: T1nf alpha) (n:nat):
 Proof.  by rewrite /F_ F_alpha_ge_S. Qed.
 
 
+Definition strict_mono (f: nat -> nat) :=
+  forall n p, (n< p)%N -> (f n < f p)%N.
 
+Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
+Proof.
+  rewrite /strict_mono /F_ => n p Hnp; apply /ltP.
+  apply F_alpha_mono; move: Hnp => /ltP //.
+Qed.
