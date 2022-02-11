@@ -10,6 +10,9 @@ From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 
+Set Implicit Arguments.
+Unset Strict Implicit.
+
 (* begin snippet hT1gT1 *)
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
@@ -22,8 +25,7 @@ Set Bullet Behavior "Strict Subproofs".
 
 (* end snippet hT1gT1 *)
 
-Set Implicit Arguments.
-Unset Strict Implicit.
+
 (* Set Printing Coercions. *)
 
 (** From hydra to gaia and back *)
@@ -750,24 +752,57 @@ Notation hF_ := F_.
 
 Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
 
-Definition T1F_ (alpha :T1)(Hnf : T1nf alpha) (n:nat) : nat.
+Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat.
 Proof. refine (F_ (@mkE0 alpha _) n); by rewrite Hnf.  Defined.
+
+Lemma T1F_eq alpha (Hnf : T1nf alpha == true) (n:nat) :
+  F_ (@mkE0 alpha Hnf) n = T1F_  Hnf n.
+rewrite /T1F_. f_equal. 
+ Search "eq_intro".
+  apply E0eq_intro => //. 
+Qed.
 
 Lemma F_alpha_ge_S: forall (alpha : E0) (n : nat), (n < F_ alpha n)%nat.
 Proof.
   move => alpha n ; apply /ltP; apply F_alpha_ge_S.
 Qed.
 
-Lemma gF_alpha_ge_S (alpha : T1)(hnf: T1nf alpha) (n:nat):
-  (n < T1F_ hnf n)%nat.
-Proof.  by rewrite /F_ F_alpha_ge_S. Qed.
 
 
 Definition strict_mono (f: nat -> nat) :=
   forall n p, (n< p)%N -> (f n < f p)%N.
+
+Definition dominates_from := 
+fun (n : nat) (g f : nat -> nat) =>
+forall p : nat, (n <= p)%N -> (f p < g p)%N.
+
+
+
 
 Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
 Proof.
   rewrite /strict_mono /F_ => n p Hnp; apply /ltP.
   apply F_alpha_mono; move: Hnp => /ltP //.
 Qed.
+
+Search hF_ Iterates.dominates_from.
+(*
+F_alpha_dom:
+  forall alpha : hE0, Iterates.dominates_from 1 (hF_ (Succ alpha)) (hF_ alpha)
+ *)
+
+Print E0succ.
+Search "Succ".
+
+Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
+rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
+by rewrite g2h_succ. 
+Qed. 
+
+Lemma GF_alpha_dom alpha:
+  dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
+Proof.
+  rewrite /dominates_from /F_ g2h_E0succ => p Hp.
+  apply /ltP; apply F_alpha_dom; by apply /leP.
+Qed. 
+
