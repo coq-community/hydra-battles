@@ -640,6 +640,19 @@ Proof.
   - move => ?  ; subst; rewrite /E0_eqb => //. 
 Qed.
 
+Lemma gE0_lt_iff alpha beta : E0_lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
+Proof. 
+  split. 
+    - rewrite /E0_lt;  destruct alpha, beta. 
+     rewrite /Lt /hLT => /=; repeat split. 
+      +  rewrite /hnf nf_ref h2g_g2h; by apply /eqP.
+      +  by rewrite hlt_iff !h2g_g2h.
+      + rewrite /hnf nf_ref h2g_g2h;  by apply /eqP.
+    - rewrite /E0_lt; destruct alpha, beta. 
+      rewrite /Lt /hLT; destruct 1 as [H [H0 H1]].
+       move: H0 ; by rewrite hlt_iff !h2g_g2h. 
+Qed.
+
 (* begin snippet E0EqP:: no-out *)
 Lemma gE0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
 (* end snippet E0EqP *)
@@ -738,10 +751,22 @@ Proof.
 Qed.
 
 (* begin snippet MonoDef *)
+
+
+
 Definition strict_mono (f: nat -> nat) :=
   forall n p, (n< p)%N -> (f n < f p)%N.
 
 Definition dominates_from := 
 fun (n : nat) (g f : nat -> nat) =>
   forall p : nat, (n <= p)%N -> (f p < g p)%N.
+
+Definition dominates g f := exists n : nat, dominates_from n g f .
+
+Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
+
+Definition fun_le  f g := forall n:nat, (f n <=  g n)%N.
+
 (* end snippet MonoDef *)
+
+
