@@ -8,7 +8,10 @@ From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 
-Require Import T1Bridge GCanon  F_omega  primRec PrimRecExamples. 
+From hydras Require Import primRec PrimRecExamples. 
+From hydras Require Import  F_alpha F_omega. 
+
+From gaia_hydras Require Import T1Bridge GCanon.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -16,7 +19,7 @@ Unset Strict Implicit.
 (** *  Rapidly growing functions *)
 
 (* begin snippet FAlphaDef *)
-From hydras Require Import F_alpha.
+
 
 Notation hF_ := F_.
 
@@ -159,7 +162,7 @@ Proof.
  - apply E0_eq_intro; rewrite /E0phi0 => //.
 Qed.
 
-Lemma gF_alpha_not_PR alpha:
+Lemma gF_alpha_not_PR_E0  alpha:
   E0_le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
 Proof. 
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
@@ -169,4 +172,13 @@ Proof.
   by rewrite -gE0_le_iff. 
   by apply E0_eq_intro. 
 Qed.
+
+
+Lemma gF_alpha_not_PR alpha (Hnf: T1nf alpha == true):
+  gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
+Proof. 
+  rewrite /T1F_ => Halpha.
+  apply gF_alpha_not_PR_E0; rewrite  /E0_le  => /=. 
+  by destruct Halpha. 
+Qed. 
 
