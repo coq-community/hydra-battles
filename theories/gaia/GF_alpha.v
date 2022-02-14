@@ -2,21 +2,18 @@
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
+From hydras Require Paths.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 
-Require Import T1Bridge.
+Require Import T1Bridge GCanon  F_omega  primRec PrimRecExamples. 
 
 Set Implicit Arguments.
 Unset Strict Implicit.
 
 (** *  Rapidly growing functions *)
-
-(* TODO: move to a specific file *)
-
-
 
 (* begin snippet FAlphaDef *)
 From hydras Require Import F_alpha.
@@ -37,16 +34,13 @@ Qed.
 
 (* begin snippet FAlphaProps:: no-out *)
 Lemma gF_alpha_ge_S (alpha : E0) (n : nat): (n < F_ alpha n)%N.
-Proof.
-   apply /ltP; apply F_alpha_ge_S.
-Qed.
+Proof. apply /ltP; apply F_alpha_ge_S. Qed.
 
 Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
 Proof.
   rewrite /strict_mono /F_ => n p Hnp; apply /ltP.
   apply F_alpha_mono; move: Hnp => /ltP //.
 Qed.
-
 
 Lemma gF_alpha_dom alpha:
   dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
@@ -60,8 +54,7 @@ Qed.
 Lemma gF_alpha_Succ_le alpha:
  fun_le (F_ alpha) (F_ (E0succ alpha)).
 Proof.
-  rewrite /fun_le /F_ g2h_E0succ => n.
-  apply /leP; apply F_alpha_Succ_le. 
+  rewrite /fun_le /F_ g2h_E0succ => n;  apply /leP; apply F_alpha_Succ_le. 
 Qed. 
 
 Lemma gF_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
@@ -72,69 +65,108 @@ Qed.
 
 Lemma gF_zero_eqn i: F_ E0zero i = i .+1.
 Proof.
-  rewrite /F_ . replace (E0_g2h E0zero) with Zero.
-  by rewrite F_zero_eqn. 
-  apply E0_eq_intro => //.
+  rewrite /F_; replace (E0_g2h E0zero) with Zero.
+  -  by rewrite F_zero_eqn. 
+  -  apply E0_eq_intro => //.
 Qed. 
 
 Lemma gF_mono_l alpha beta:
   E0_lt beta alpha -> dominates (F_ alpha) (F_ beta).
 Proof.
-  rewrite /dominates;
-    specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)).
+  rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
   move => H hbeta_alpha.
   have H' : E0_g2h beta o< E0_g2h alpha by rewrite gE0_lt_iff in hbeta_alpha.  
   case (H H') => x Hx; exists x;  rewrite /dominates_from /F_ => p Hp.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.
 
-
 Lemma gF_alpha_0_eq (alpha : E0): F_ alpha 0 = 1.
 Proof. by  rewrite /F_ F_alpha_0_eq. Qed.
 
+Lemma gF_succ_eqn alpha i :
+  F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
+Proof.
+  rewrite (Iterates.iterate_ext _  (hF_ (E0_g2h alpha))); last first.
+  by rewrite /F_. 
+  rewrite -F_succ_eqn /F_; f_equal;
+    apply E0_eq_intro => /= ;  by rewrite g2h_succ. 
+Qed.
 
-(*
+Lemma gF_lim_eqn alpha i:
+  T1limit (cnf alpha) -> F_ alpha i = F_ (E0Canon alpha i) i.
+Proof. 
+ move => Hlimit; rewrite /F_ F_lim_eqn.
+ -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
+ -  rewrite /Limitb limitb_ref.
+   destruct alpha; cbn.  
+   move: Hlimit; by rewrite /T1Bridge.cnf h2g_g2h.
+Qed.
 
-F_restricted_mono_l:
-  forall (alpha beta : hE0) (n : nat),
-  Paths.Canon_plus n alpha beta -> (hF_ beta n <= hF_ alpha n)%coq_nat
+(**  numerical examples *)
 
-H'_F:
-  forall (alpha : hE0) (n : nat),
-  (hF_ alpha n.+1 <= Hprime.H'_ (E0.phi0 alpha) n.+1)%coq_nat
+Lemma gLF1 i: F_ (E0Fin 1) i = ((2 * i) .+1)%N.
+Proof. 
+  replace (F_ (E0Fin 1) i) with (hF_ (Fin 1) i). 
+  - rewrite LF1 => //.
+  -  rewrite /F_; f_equal;  by apply E0_eq_intro .
+Qed.
 
-F_succ_eqn:
-  forall (alpha : hE0) (i : nat),
-  hF_ (Succ alpha) i = Iterates.iterate (hF_ alpha) i.+1 i
+Lemma gLF2 i:  (Exp2.exp2 i * i < F_ (E0Fin 2) i)%N.
+Proof. 
+  apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
+  - apply LF2. 
+  - rewrite /F_; f_equal;  by apply E0_eq_intro .
+Qed.
 
-LF2: forall i : nat, ((Exp2.exp2 i * i)%coq_nat < hF_ 2 i)%coq_nat
-LF1: forall i : nat, hF_ 1 i = (2 * i)%coq_nat.+1
-LF2_0:
-  Iterates.dominates_from 0 (hF_ 2) (fun i : nat => (Exp2.exp2 i * i)%coq_nat)
-F_lim_eqn:
-  forall (alpha : hE0) (i : nat),
-  Limitb alpha -> hF_ alpha i = hF_ (Canon.Canon alpha i) i
+Lemma gLF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0Fin 2) i)%N.
+Proof. 
+  move => Hi; apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
+  - apply LF2'  ; by apply /leP. 
+  - rewrite /F_; f_equal;  by apply E0_eq_intro .
+Qed. 
 
-HF0:
-  (fun alpha : hE0 =>
-   forall n : nat, (hF_ alpha n.+1 <= Hprime.H'_ (E0.phi0 alpha) n.+1)%coq_nat)
-    Zero
+Lemma gLF3_2:
+  Iterates.dominates_from 2 (F_ (E0Fin 3))
+    (fun n : nat => Iterates.iterate Exp2.exp2 n.+1 n).
+Proof.
+  rewrite /dominates_from /F_. 
+  replace (E0_g2h (E0Fin 3)) with (Fin 3); last first. 
+  - by apply E0_eq_intro.
+  - apply LF3_2.   
+Qed.
 
-F_star_iterate:
-  forall (alpha : hE0) (n i : nat),
-  F_star (alpha, n) i = Iterates.iterate (hF_ alpha) n i
-LF2': forall i : nat, (1 <= i)%coq_nat -> (Exp2.exp2 i < hF_ 2 i)%coq_nat
+Definition Canon_plus n alpha beta :=
+  Paths.Canon_plus n (E0_g2h alpha) (E0_g2h beta). 
 
+Lemma gF_restricted_mono_l alpha beta n:
+    Canon_plus n alpha beta -> (F_ beta n <= F_ alpha n)%N.
+Proof.
+  rewrite /Canon_plus /F_. move => HCanon; apply /leP. 
+  by apply F_restricted_mono_l.    
+Qed. 
 
-LF3_2:
-  Iterates.dominates_from 2 (hF_ 3)
-    (fun n : nat => Iterates.iterate Exp2.exp2 n.+1 n)
+(* TODO : move to a GH'_alpha.v file *)
 
-F_mono_l_0:
-  forall alpha beta : hE0,
-  beta o< alpha ->
-  forall n : nat,
-  Paths.Canon_plus n.+1 alpha beta ->
-  forall i : nat, (n.+1 < i)%coq_nat -> (hF_ beta i < hF_ alpha i)%coq_nat
+Notation hH'_ := Hprime.H'_. 
 
-*)
+Definition H'_ alpha i := hH'_ (E0_g2h alpha) i. 
+
+Lemma gH'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
+Proof. 
+ apply /leP; rewrite /F_ /H'_. 
+ replace (E0_g2h (E0phi0 alpha)) with (E0.phi0 (E0_g2h alpha)). 
+ - apply H'_F; apply E0_eq_intro; destruct alpha => /=.
+ - apply E0_eq_intro; rewrite /E0phi0 => //.
+Qed.
+
+Lemma gF_alpha_not_PR alpha:
+  E0_le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
+Proof. 
+  move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
+  eapply isPR_extEqual_trans with  (F_ alpha) => //.
+  eapply F_alpha_not_PR with (E0_g2h alpha) => //.
+  replace _Omega with (E0_g2h E0omega).
+  by rewrite -gE0_le_iff. 
+  by apply E0_eq_intro. 
+Qed.
+

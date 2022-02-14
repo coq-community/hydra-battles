@@ -268,4 +268,3 @@ Defined.
      apply Hpos; subst; rewrite -g2h_eq_iff => //.
  Qed.
 
-

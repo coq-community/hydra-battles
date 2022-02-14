@@ -564,6 +564,7 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hcnf := E0.cnf.
 
 Definition E0_lt (alpha beta: E0) := cnf alpha < cnf beta.
+Definition E0_le  (alpha beta: E0) := cnf alpha <= cnf beta.
 
 Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
 (* end snippet E0Def *)
@@ -583,6 +584,13 @@ Fixpoint E0Fin (n:nat) : E0 :=
 
 Definition E0omega: E0.
 Proof. refine (@mkE0 T1omega _) => //. Defined.
+
+Definition E0phi0 (alpha: E0) : E0.
+Proof.
+  refine (@mkE0 (phi0 (cnf alpha)) _); destruct alpha.  
+  apply /eqP => //.  cbn. apply /andP ; split =>  //.
+  by apply /eqP.
+Defined.
 
 
 Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
@@ -645,13 +653,43 @@ Proof.
   split. 
     - rewrite /E0_lt;  destruct alpha, beta. 
      rewrite /Lt /hLT => /=; repeat split. 
-      +  rewrite /hnf nf_ref h2g_g2h; by apply /eqP.
-      +  by rewrite hlt_iff !h2g_g2h.
+      + rewrite /hnf nf_ref h2g_g2h; by apply /eqP.
+      + by rewrite hlt_iff !h2g_g2h.
       + rewrite /hnf nf_ref h2g_g2h;  by apply /eqP.
     - rewrite /E0_lt; destruct alpha, beta. 
       rewrite /Lt /hLT; destruct 1 as [H [H0 H1]].
-       move: H0 ; by rewrite hlt_iff !h2g_g2h. 
+      move: H0 ; by rewrite hlt_iff !h2g_g2h. 
 Qed.
+
+
+Lemma gE0_le_iff alpha beta : E0_le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
+Proof. 
+  split. 
+  - rewrite /E0_le;  destruct alpha, beta. 
+    rewrite /Le /hLE => /=; repeat split.
+    rewrite T1le_eqVlt => Hle.
+    have Hor : (cnf0 =cnf1 \/ cnf0 < cnf1).
+    { apply Bool.orb_prop in Hle;  destruct Hle as [? | ?].
+      left;  apply /eqP => //.
+      right => //. 
+    }
+    destruct Hor as [? | Hneq].
+    * subst; replace i0 with i. 
+      -- right. 
+      -- apply eq_proofs_unicity_on;   destruct y, (T1nf cnf1) => //.
+      ++ left => //.   
+      ++ right => //.       
+    * left; apply gE0_lt_iff; rewrite /E0_lt => //.
+  - rewrite /E0_le; destruct alpha, beta; cbn => Hle. 
+    destruct (le_lt_eq_dec Hle) as [l | e].
+    + rewrite /Lt in l; cbn in l; rewrite -T1lt_iff in l. 
+     * by apply T1ltW.
+     * by apply /eqP. 
+     * by apply /eqP. 
+    + injection e; rewrite g2h_eq_iff. 
+      move => Heq; subst; apply T1lenn. 
+Qed.
+
 
 (* begin snippet E0EqP:: no-out *)
 Lemma gE0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
