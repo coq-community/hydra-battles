@@ -15,7 +15,7 @@ Unset Strict Implicit.
 
 (* begin snippet hT1gT1 *)
 
-Module GaiaPriority.
+
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
@@ -53,13 +53,15 @@ Module GaiaPriority.
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
-End GaiaPriority.
+
+
+
 
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
 
-Import GaiaPriority.
+
 
 Fixpoint h2g (alpha : hT1) : T1 :=
   match alpha with
@@ -434,6 +436,9 @@ Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
 (* end snippet multA *)
 
+Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = hplus (g2h a) (g2h b).
+Proof. apply symmetry, refines2_R, plus_ref. Qed.
+       
 
 
 

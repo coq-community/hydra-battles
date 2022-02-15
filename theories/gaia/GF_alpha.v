@@ -12,7 +12,7 @@ From hydras Require Import primRec PrimRecExamples.
 From hydras Require Import  F_alpha F_omega. 
 
 From gaia_hydras Require Import T1Bridge GCanon.
-Import GaiaPriority.
+
 
 Set Implicit Arguments.
 Unset Strict Implicit.

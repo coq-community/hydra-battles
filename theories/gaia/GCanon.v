@@ -4,7 +4,7 @@ From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import Canon.
 Require Import T1Bridge.
-Import GaiaPriority.
+
 
 
 From gaia Require Import ssete9.
