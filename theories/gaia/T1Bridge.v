@@ -15,6 +15,8 @@ Unset Strict Implicit.
 
 (* begin snippet hT1gT1 *)
 
+Module GaiaPriority.
+
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
 #[global] Notation hT1 := Epsilon0.T1.T1.
@@ -51,10 +53,13 @@ Unset Strict Implicit.
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
+End GaiaPriority.
 
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
+
+Import GaiaPriority.
 
 Fixpoint h2g (alpha : hT1) : T1 :=
   match alpha with
@@ -71,7 +76,7 @@ Fixpoint g2h (alpha : T1) : hT1 :=
 (* end snippet h2gG2hDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
-Lemma h2g_g2h : cancel g2h h2g.
+Lemma h2g_g2hK : cancel g2h h2g.
 Proof.
   elim => // => alpha1 IH1 n t2 IH2 /=; by rewrite IH1 IH2. 
 Qed.
@@ -79,7 +84,7 @@ Qed.
 
 
 (* begin snippet g2hH2gRw:: no-out *)
-Lemma g2h_h2g : cancel h2g g2h.
+Lemma g2h_h2gK : cancel h2g g2h.
 (* ... *)
 (* end snippet g2hH2gRw *)
 Proof.
@@ -91,7 +96,7 @@ Lemma g2h_eq_iff (a b: T1) :  g2h a = g2h b <-> a = b.
 (* end snippet g2hEqIff *)
 Proof. 
     split.
-    - rewrite -(h2g_g2h a) -(h2g_g2h b) !g2h_h2g
+    - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK
               => // -> //.  
     - by move => -> .
 Qed.
@@ -101,7 +106,7 @@ Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 (* end snippet h2gEqIff *)
 Proof. 
     split.
-    -  rewrite  -(g2h_h2g a) -(g2h_h2g b) !h2g_g2h  =>  // -> //.
+    -  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  =>  // -> //.
     - move => -> //. 
 Qed.
 
@@ -130,8 +135,8 @@ Lemma refines1_R f f' :
   refines1 f f' ->
   forall y: T1, f (g2h y) = g2h (f' y).
 Proof.
-  move => Href y; rewrite -{2}(h2g_g2h y).
-  by rewrite Href g2h_h2g.
+  move => Href y; rewrite -{2}(h2g_g2hK y).
+  by rewrite Href g2h_h2gK.
 Qed.
 
 
@@ -139,7 +144,7 @@ Lemma refines2_R f f' :
   refines2 f f' ->
   forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
 Proof.
-  move => Href y z; by rewrite -{2}(h2g_g2h y) -{2}(h2g_g2h z) ?Href ?g2h_h2g. 
+  move => Href y z; by rewrite -{2}(h2g_g2hK y) -{2}(h2g_g2hK z) ?Href ?g2h_h2gK. 
 Qed.
 
 
@@ -191,7 +196,7 @@ Proof. by move => /T1eqP ->. Qed.
 
 Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
 Proof.
-  move => H; rewrite <- (g2h_h2g a), <- (g2h_h2g b); by apply T1eq_rw.
+  move => H; rewrite <- (g2h_h2gK a), <- (g2h_h2gK b); by apply T1eq_rw.
 Qed.
 
 (* begin snippet compareRef:: no-out *)
@@ -258,7 +263,7 @@ Proof.
     + apply /orP; by left. 
   - rewrite T1le_eqVlt; move => /orP; destruct 1. 
     have H0: a = b. 
-    { rewrite -(g2h_h2g a) -(g2h_h2g b). 
+    { rewrite -(g2h_h2gK a) -(g2h_h2gK b). 
       move: H => /eqP Heq; by rewrite Heq.
     }
     + subst; right.
@@ -427,11 +432,6 @@ Proof mult_ref0.
 Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = hmult (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
-Lemma hmultA : associative hmult.
-Proof. 
-  move => a b c.
-   by rewrite -(g2h_h2g a) -(g2h_h2g b) -(g2h_h2g c) -!g2h_mult_rw mulA. 
-Qed.
 (* end snippet multA *)
 
 
@@ -517,10 +517,10 @@ Qed.
 
 (* begin snippet rewritingRules:: no-out *) 
 Lemma hnf_g2h alpha : hnf (g2h alpha) = T1nf alpha.
-Proof.  by rewrite /hnf (nf_ref (g2h alpha)) h2g_g2h. Qed. 
+Proof.  by rewrite /hnf (nf_ref (g2h alpha)) h2g_g2hK. Qed. 
 
 Lemma g2h_succ (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
-Proof.   by rewrite -(h2g_g2h alpha) succ_ref !g2h_h2g. Qed.
+Proof.   by rewrite -(h2g_g2hK alpha) succ_ref !g2h_h2gK. Qed.
 
 Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
 Proof. 
@@ -533,13 +533,13 @@ Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta. 
 Proof. 
   move => Halpha Hbeta; split. 
-  - rewrite -(h2g_g2h alpha) -(h2g_g2h beta);  repeat split.
+  - rewrite -(h2g_g2hK alpha) -(h2g_g2hK beta);  repeat split.
 (* ... *)
 (*end snippet T1ltIff *)
-    1, 3:  by rewrite g2h_h2g hnf_g2h. 
-    + by rewrite !h2g_g2h hlt_iff.
+    1, 3:  by rewrite g2h_h2gK hnf_g2h. 
+    + by rewrite !h2g_g2hK hlt_iff.
   -  destruct 1 as [H0 [H1 H2]].
-     apply lt_ref in H1; move: H1; by rewrite !h2g_g2h.
+     apply lt_ref in H1; move: H1; by rewrite !h2g_g2hK.
 Qed.
 
 
@@ -551,8 +551,8 @@ Proof.
   split. 
   -  rewrite T1le_eqVlt => /orP; case.
      move =>  /eqP Heq; subst; right.
-     move => Hlt; left; by rewrite hlt_iff !h2g_g2h.  
-  -   rewrite le_ref; by rewrite !h2g_g2h.  
+     move => Hlt; left; by rewrite hlt_iff !h2g_g2hK.  
+  -   rewrite le_ref; by rewrite !h2g_g2hK.  
 Qed.
 
 (** *  Well formed ordinals as a data type  *)
@@ -618,7 +618,7 @@ Defined.
 
 Definition E0_g2h (a: E0): hE0.
   refine (@E0.mkord (g2h (cnf a)) _); red.
-  case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2h.  
+  case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2hK.  
 Defined.
 (* end snippet gE0h2gG2h *)
 
@@ -648,12 +648,12 @@ Proof.
   split. 
     - rewrite /E0_lt;  destruct alpha, beta. 
      rewrite /Lt /hLT => /=; repeat split. 
-      + rewrite /hnf nf_ref h2g_g2h; by apply /eqP.
-      + by rewrite hlt_iff !h2g_g2h.
-      + rewrite /hnf nf_ref h2g_g2h;  by apply /eqP.
+      + rewrite /hnf nf_ref h2g_g2hK; by apply /eqP.
+      + by rewrite hlt_iff !h2g_g2hK.
+      + rewrite /hnf nf_ref h2g_g2hK;  by apply /eqP.
     - rewrite /E0_lt; destruct alpha, beta. 
       rewrite /Lt /hLT; destruct 1 as [H [H0 H1]].
-      move: H0 ; by rewrite hlt_iff !h2g_g2h. 
+      move: H0 ; by rewrite hlt_iff !h2g_g2hK. 
 Qed.
 
 
@@ -696,14 +696,14 @@ Proof.
     move : H => // /=; cbn; by rewrite T1eq_refl.
 Qed.
 
-Lemma E0_h2g_g2h : cancel E0_g2h E0_h2g.
+Lemma E0_h2g_g2hK : cancel E0_g2h E0_h2g.
 case => a Ha /=; rewrite /E0_g2h /E0_h2g; f_equal; apply  gE0_eq_intro=> /=.
-by rewrite h2g_g2h.
+by rewrite h2g_g2hK.
 Qed.
 
-Lemma E0_g2h_h2g : cancel E0_h2g E0_g2h.
+Lemma E0_g2h_h2gK : cancel E0_h2g E0_g2h.
 case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
-by rewrite g2h_h2g. 
+by rewrite g2h_h2gK. 
 Qed.
 
 Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
@@ -727,8 +727,8 @@ Proof.
   - move => a b ; rewrite /E0_lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
-    rewrite -(h2g_g2h cnf0) in Hlt i0;
-      rewrite -(h2g_g2h cnf1) in Hlt i1;
+    rewrite -(h2g_g2hK cnf0) in Hlt i0;
+      rewrite -(h2g_g2hK cnf1) in Hlt i1;
       rewrite -decide_hlt_rw in Hlt;
       repeat split. 
     + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
@@ -771,11 +771,11 @@ Proof.
   rewrite /gstrict_lub; split. 
   -  case => Ha Hb;  split. 
      + move => i; rewrite -!LT_ref => //.
-     + move => alpha Halpha; rewrite -(h2g_g2h alpha) -LE_ref.
+     + move => alpha Halpha; rewrite -(h2g_g2hK alpha) -LE_ref.
        apply Hb => i; destruct (Halpha i) as [H H0 H1]; split. 
-       * rewrite -hnf_g2h /h2g_seq g2h_h2g in H => //.
+       * rewrite -hnf_g2h /h2g_seq g2h_h2gK in H => //.
        * split. 
-         --  rewrite T1le_iff /h2g_seq g2h_h2g in H0 => //.
+         --  rewrite T1le_iff /h2g_seq g2h_h2gK in H0 => //.
          --  by rewrite hnf_g2h.
   -   destruct 1 as [H H0]; split. 
       + move => i; specialize  (H i); rewrite LT_ref =>//.

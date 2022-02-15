@@ -8,11 +8,18 @@ Import Epsilon0.T1.
 (* end snippet T1BridgeUse *)
 
 (* begin snippet LocateT1 *)
-Locate T1.
+
 (* end snippet LocateT1 *)
 
 (* begin snippet T1BridgeUseb:: no-out *)
-Local Open Scope t1_scope.
+
+
+Lemma hmultA : associative mult.
+Proof. 
+  move => a b c.
+   by rewrite -(g2h_h2gK a) -(g2h_h2gK b) -(g2h_h2gK c) -!g2h_mult_rw mulA. 
+Qed.
+
 
 Example Ex1 (a: T1):  omega * (a * omega) = omega * a * omega.
 Proof. by rewrite hmultA. Qed.

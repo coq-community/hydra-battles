@@ -12,6 +12,7 @@ From hydras Require Import primRec PrimRecExamples.
 From hydras Require Import  F_alpha F_omega. 
 
 From gaia_hydras Require Import T1Bridge GCanon.
+Import GaiaPriority.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -101,7 +102,7 @@ Proof.
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
  -  rewrite /Limitb limitb_ref.
-   move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2h. 
+   move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2hK. 
 Qed.
 
 (**  numerical examples *)
