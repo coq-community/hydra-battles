@@ -627,11 +627,6 @@ Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
 
-
-
-
-
-
 Lemma gE0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
 Proof.
   case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0_eqb => /= /eqP .

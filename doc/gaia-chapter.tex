@@ -26,10 +26,11 @@ the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is curren
 The bridge we aim to build and cross is a two-way bridge:
 
 \begin{itemize}
-\item From \gaia, we import the proof of associativity of multiplication of ordinals strictly less than $\epsilon_0$, which was missing from \Hydras.
-  \item The other way, we started to import definitions and properties of canonical sequences and rapidly growing functions from \Hydras (see Chapter~\ref{chap:ketonen} and\ref{chap:alpha-large}~of this book).
-\end{itemize}
-
+\item \gaia contains lemmas on ordinal arithmetic (\emph{e.g.} associativity of multiplication of ordinals strictly less than $\epsilon_0$), which were missing from \Hydras. 
+  \item The other way, \Hydras contains formal definitions and proofs of properties of canonical sequences and rapidly growing functions  (see Chapters~\ref{chap:ketonen} and~\ref{chap:alpha-large}~of this book).
+  \end{itemize}
+  
+  We plan to make accessible the first kind of lemmas to \HydrasLib' users and the second kind to \gaia's. For this purpose, we write modules dedicated to the importation of definitions and lemmas from each of both libraries into the other one.
 Please note that by ``import'' we do not mean ``duplicate the proofs''.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. 
 
 
@@ -38,7 +39,7 @@ This initial draft bridge code mostly uses the SSReflect proof language
 and idioms from the Mathematical Components library. We made this design
 decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
-Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}
+Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}.
 
 
 

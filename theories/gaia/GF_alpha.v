@@ -63,7 +63,7 @@ Qed.
 Lemma gF_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
 Proof.
   rewrite /F_. apply /ltP ; apply Lt.le_lt_trans with n;
-    [ auto with arith| apply F_alpha_ge_S].
+    [auto with arith| apply F_alpha_ge_S].
 Qed.
 
 Lemma gF_zero_eqn i: F_ E0zero i = i .+1.
@@ -79,7 +79,7 @@ Proof.
   rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
   move => H hbeta_alpha.
   have H' : E0_g2h beta o< E0_g2h alpha by rewrite gE0_lt_iff in hbeta_alpha.  
-  case (H H') => x Hx; exists x;  rewrite /dominates_from /F_ => p Hp.
+  case (H H') => x Hx; exists x; rewrite /dominates_from /F_ => p Hp.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.
 
@@ -101,8 +101,7 @@ Proof.
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
  -  rewrite /Limitb limitb_ref.
-   destruct alpha; cbn.  
-   move: Hlimit; by rewrite /T1Bridge.cnf h2g_g2h.
+   move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2h. 
 Qed.
 
 (**  numerical examples *)
@@ -111,7 +110,7 @@ Lemma gLF1 i: F_ (E0Fin 1) i = ((2 * i) .+1)%N.
 Proof. 
   replace (F_ (E0Fin 1) i) with (hF_ (Fin 1) i). 
   - rewrite LF1 => //.
-  -  rewrite /F_; f_equal;  by apply E0_eq_intro .
+  - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed.
 
 Lemma gLF2 i:  (Exp2.exp2 i * i < F_ (E0Fin 2) i)%N.
@@ -124,8 +123,8 @@ Qed.
 Lemma gLF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0Fin 2) i)%N.
 Proof. 
   move => Hi; apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
-  - apply LF2'  ; by apply /leP. 
-  - rewrite /F_; f_equal;  by apply E0_eq_intro .
+  - apply LF2'; by apply /leP. 
+  - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed. 
 
 Lemma gLF3_2:
@@ -168,17 +167,17 @@ Proof.
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
   eapply isPR_extEqual_trans with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
-  replace _Omega with (E0_g2h E0omega).
-  by rewrite -gE0_le_iff. 
-  by apply E0_eq_intro. 
+  replace _Omega with (E0_g2h E0omega); last first.
+  - by apply E0_eq_intro. 
+  - by rewrite -gE0_le_iff. 
 Qed.
 
 
 Lemma gF_alpha_not_PR alpha (Hnf: T1nf alpha == true):
   gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
 Proof. 
-  rewrite /T1F_ => Halpha.
-  apply gF_alpha_not_PR_E0; rewrite  /E0_le  => /=. 
+  rewrite /T1F_ => Halpha; 
+  apply gF_alpha_not_PR_E0; rewrite /E0_le  => /=. 
   by destruct Halpha. 
 Qed. 
 
