@@ -1606,9 +1606,11 @@ Notation Tf := (nat -> T1).
 
 Definition limit_v1 (f: Tf) x := 
   (forall n, f n < x) /\ (forall y, y < x -> (exists n, y <= f n)).
+
+(* begin snippet limitV2Def *)
 Definition limit_v2 (f: Tf) x := 
   (forall n, f n < x) /\ (forall y, T1nf y -> y < x -> (exists n, y <= f n)).
-
+(* end snippet limitV2Def *)
 
 Lemma limit_unique1 (f: Tf) x x' :limit_v1 f x -> limit_v1 f x' ->
                                   x = x'.
@@ -1732,8 +1734,10 @@ Proof.
   move /Hm => sa; exact: (T1lt_trans sa (h m)).
 Qed.
 
+(* begin snippet limitOfDef *)
 Definition limit_of (f: Tf) x :=
   [/\ (forall n m, (n < m)%N -> f n < f m), limit_v2 f x & T1nf x].
+(* end snippet limitOfDef *)
 
 Lemma limit_unique f x y: limit_of f x -> limit_of f y  -> x = y.
 Proof. by move => [_ pa pb] [_ pc pd]; apply: (limit_unique2 pa pc pb pd). Qed.
