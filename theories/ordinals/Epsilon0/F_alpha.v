@@ -240,8 +240,10 @@ Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
     destruct s.
     + subst alpha; now rewrite F_zero_eqn.
     +  rewrite F_lim_eqn;auto; unfold Canon. rewrite Halpha. auto.
-       now apply Limit_gt_Zero.
-+  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
+       Search (Canon ?a _ o< ?a).
+       apply  (@Canon_lt 0 alpha). 
+       intro Heq; subst. discriminate. 
+    +  destruct s; subst; rewrite F_succ_eqn; simpl; apply Halpha, Lt_Succ.
 Qed.
 
 (** Properties of [F_ alpha]  *)
@@ -757,9 +759,8 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
   Lemma HFLim : Limitb alpha -> P alpha.
   Proof.
     intros Halpha n; rewrite H'_eq3.
-    - rewrite CanonS_Canon;
-      rewrite CanonS_phi0_lim; [| trivial].
-      rewrite F_lim_eqn, CanonS_Canon; auto.
+    - rewrite CanonS_phi0_lim; [| trivial].
+      rewrite F_lim_eqn; auto.
       + transitivity (H'_ (phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.

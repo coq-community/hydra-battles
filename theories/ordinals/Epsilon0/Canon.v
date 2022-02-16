@@ -579,6 +579,9 @@ Proof.
  -  apply canon0_LT; auto. 
  - apply canonS_LT; auto. 
 Qed. 
+(* to remove *)
+
+(*
 Lemma canonS_lt : forall i alpha, nf alpha -> alpha <> zero ->
                               T1.lt (canon alpha (S i)) alpha.
 Proof.
@@ -586,6 +589,17 @@ Proof.
   destruct (T1_eq_dec alpha zero).
   - subst. now destruct 1.
   - destruct  (canonS_LT i Hnf); tauto.
+Qed.
+ *)
+
+
+Lemma canon_lt : forall i alpha, nf alpha -> alpha <> zero ->
+                              T1.lt (canon alpha i) alpha.
+Proof.
+  intros i alpha Hnf.
+  destruct (T1_eq_dec alpha zero).
+  - subst. now destruct 1.
+  - destruct  (canon_LT i Hnf); tauto.
 Qed.
 
 Lemma canonS_cons_not_zero : forall i alpha n beta,
@@ -685,7 +699,7 @@ Proof.
               apply nf_intro; trivial.
               now apply nf_canon.
               apply nf_helper_phi0R.
-              apply canonS_lt.
+              apply canon_lt.
               eapply nf_coeff_irrelevance;eauto. 
               discriminate. 
            ++ eapply nf_inv1, Hlambda. 
@@ -700,7 +714,7 @@ Proof.
                apply nf_intro; trivial.
                apply nf_canon; trivial.
                apply nf_helper_phi0R.
-               apply canonS_lt.
+               apply canon_lt.
                eapply nf_coeff_irrelevance;eauto.     
                discriminate.  
              }
@@ -746,7 +760,7 @@ Proof.
                apply nf_intro; auto with T1.
                eauto with T1.
                apply nf_helper_phi0R.   
-               apply canonS_lt.
+               apply canon_lt.
                now apply nf_phi0. 
                intro; subst; discriminate.
              }
@@ -768,7 +782,7 @@ Proof.
             apply nf_canon; trivial; eauto with T1.
             apply nf_helper_phi0R.   
             apply T1.lt_trans with lambda2.
-            apply canonS_lt; eauto with T1.
+            apply canon_lt; eauto with T1.
             apply nf_helper_phi0.
             apply nf_helper_intro with n; eauto with T1.
           }
@@ -781,7 +795,7 @@ Proof.
                - apply nf_canon; eauto with T1.
                - apply nf_helper_phi0R.   
                  apply T1.lt_trans with lambda2.
-                 apply canonS_lt; eauto with T1.
+                 apply canon_lt; eauto with T1.
                  apply nf_helper_phi0.
                  apply nf_helper_intro with n; eauto with T1.
              }
@@ -800,7 +814,7 @@ Proof.
         apply nf_canon; eauto with T1.
         apply nf_helper_phi0R.   
         apply T1.lt_trans with lambda2.
-        apply canonS_lt; eauto with T1.
+        apply canon_lt; eauto with T1.
         apply nf_helper_phi0.
         apply nf_helper_intro with n; eauto with T1.
       }
@@ -831,7 +845,7 @@ Proof.
   - intros; split.
     + now  apply nf_canon.
     +    split; trivial.
-         * apply canonS_lt;    auto.
+         * apply canon_lt;    auto.
            intro H1;subst; discriminate.
   - intros l' Hl';  assert (nf l').
     {  specialize (Hl' 0). eauto with T1. }
@@ -999,34 +1013,29 @@ Qed.
 
 Open Scope E0_scope.
 
-(** This is a helper which should be deprecated later :
-    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
 
-Definition CanonS (alpha:E0)(i:nat): E0.
-  refine (@mkord (@canonS (cnf alpha) i) _);  apply nf_canon.
+Definition Canon (alpha:E0)(i:nat): E0.
+  refine (@mkord (@canon (cnf alpha) i) _);  apply nf_canon.
   destruct alpha;auto.
 Defined.
 
-Definition Canon (alpha:E0)(i:nat): E0 :=
-  match i with 0 => Zero 
-          | S j => CanonS alpha j
-  end.
+(** This is a helper which should be deprecated later :
+    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
 
-Lemma CanonS_Canon alpha i : Canon alpha (S i) = CanonS alpha i.
-Proof. reflexivity. Qed.
-  
+
+Notation CanonS alpha i := (Canon alpha (S i)).
+Notation Canon0 alpha := (Canon alpha 0).
+
 Lemma Canon_Succ beta n: Canon (Succ beta) (S n) = beta.
 Proof.
   destruct beta. simpl. unfold CanonS, Succ. simpl.
   apply E0_eq_intro. simpl.
-  now rewrite (canonS_succ).  
+  now rewrite (canon_succ).  
 Qed.
 
 Lemma Canon_Omega k : Canon omega k = Fin k.
 Proof.
-  destruct k.
-  - now cbn.
-  - apply E0_eq_intro; reflexivity.
+  destruct k; apply E0_eq_intro; reflexivity. 
 Qed.
 
 Hint Rewrite Canon_Omega : E0_rw.
@@ -1072,9 +1081,9 @@ Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i o< alpha.
 Proof.
   destruct i.
   - unfold Canon;  intros;  destruct alpha.
-    unfold Lt, Zero in *; simpl in *. 
-    apply T1.not_zero_lt; auto.
-    intro; subst cnf; apply H; f_equal;  eapply nf_proof_unicity.
+    unfold Lt, Zero in *; simpl in *. apply canon0_LT; auto. 
+    intro H0; subst; cbn in H. apply H. 
+    f_equal;  eapply nf_proof_unicity. 
   -   apply CanonS_lt.
 Qed.
 

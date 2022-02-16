@@ -172,5 +172,9 @@ theories/gaia/T1Bridge_use.v
 theories/gaia/nfwfgaia.v
 theories/gaia/GCanon.v
 
+
 theories/ordinals/Prelude/MoreLibHyps.v
 theories/ordinals/Prelude/LibHyps_Experiments.v
+
+theories/gaia/GF_alpha.v
+

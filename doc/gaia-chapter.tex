@@ -1,8 +1,8 @@
-\chapter{Gaia and the hydras (draft)}
+\chapter{Gaia and the hydras (experimental)}
 \index{coq}{Plug-ins!Gaia}
 
 \section{Introduction}
-The \gaia project by Jos\'e Grimm aimed to formalize mathematics in \coq in
+The \gaia project~\cite{Gaia} by Jos\'e Grimm aimed to formalize mathematics in \coq  in
 the style of Nicolas Bourbaki. The formalization of the first book in the
 Elements of Mathematics series by Bourbaki, on the theory of sets, was
 initially described in a technical report in July 2009~\cite{Grimm2009a}.
@@ -17,54 +17,115 @@ In 2020, members of \community transferred the \gaia source code to
 GitHub and adapted it for recent releases of the Mathematical Components
 library, which \gaia heavily relies on.
 Anonymous volunteers (``collaborators of Nicolas Bourbaki'') then finished
-the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects~\cite{Gaia}.
+the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is currently one of the largest maintained open source \coq projects.
 
 \gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
 
-As an initial step in bridging \gaia and \Hydras, we were able to establish a
-correspondence between both implementations of ordinals through rewriting
-lemmas. For instance, we proved that multiplication of ordinals in Cantor
-normal form in \Hydras refine \gaia's corresponding multiplication operation,
-and then imported \gaia's proof of associativity of the multiplication
-almost for free.
 
-The initial draft bridge code mostly uses the SSReflect proof language
+
+The bridge we aim to build and cross is a two-way bridge:
+
+\begin{itemize}
+\item From \gaia, we import the proof of associativity of multiplication of ordinals strictly less than $\epsilon_0$, which was missing from \Hydras.
+  \item The other way, we started to import definitions and properties of canonical sequences and rapidly growing functions from \Hydras (see Chapter~\ref{chap:ketonen} and\ref{chap:alpha-large}~of this book).
+\end{itemize}
+
+Please note that by ``import'' we do not mean ``duplicate the proofs''.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. 
+
+
+
+This initial draft bridge code mostly uses the SSReflect proof language
 and idioms from the Mathematical Components library. We made this design
 decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
-Gaia without SSReflect.
+Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}
 
-\section{Data refinement}
 
-\emph{The following definitions and lemmas are in
+
+\section{Library structure}
+The \gaiaHydras library is designed for use  by users of
+\gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of both libraries.
+
+In case of name clash (for instance the type \texttt{T1} of ordinal terms below $\epsilon_0$), we often added a one-letter prefix to names : \texttt{g} or \texttt{G} for \gaia, \texttt{h} or \texttt{H}
+for \HydrasLib.
+
+In the following two examples, the bare name \texttt{T1} is given by default either  to \HydrasLib' world or \gaia's. 
+ 
+
+  
+\begin{itemize}
+\item In
+  \href{../theories/html/gaia_hydras.T1Bridge_use.html}%
+  {\texttt{gaia\_hydras.T1Bridge\_use}}, we adopt \HydrasLib's point of view, and the name \texttt{T1} is by default bound to
+\HydrasLib' data structures.
+
+\inputsnippets{T1Bridge_use/T1BridgeUse,
+  T1Bridge_use/LocateT1}
+
+Associativity of multiplication over \HydrasLib' type \texttt{T1},
+although imported from \gaia, is expressed with \HydrasLib' notations.
+
+\inputsnippets{T1Bridge_use/T1BridgeUseb}
+
+\item The other way, the module \href{../theories/html/gaia_hydras.GCanon.html}%
+  {\texttt{gaia\_hydras.GCanon}} is an adaptation to \gaia of
+  \href{../theories/html/hydras.Epsilon0/Canon.html}%
+  {\texttt{hydras.Epsilon0/Canon}}.
+  In this module, the name \texttt{T1} is bound by default to \gaia's meaning. \HydrasLib' name \texttt{T1} is renamed into \texttt{hT1}.
+
+  The following lemmas are expressed in \gaia's vocabulary.
+  \inputsnippets{GCanon/gcanonLimitMono,
+    GCanon/gcanonLimitOf}
+  
+\end{itemize}
+
+The \gaiaHydras entry point is the file
 \href{../theories/html/gaia_hydras.T1Bridge.html}%
-{\texttt{gaia\_hydras.T1Bridge}}}.
+{\texttt{theories/gaia.T1Bridge.v}}, which requires modules both from \HydrasLib and \gaia. By default, we give priority to \gaia's notation and vocabulary.
 
-Since both libraries \texttt{gaia} and \texttt{hydra-battles} have their own type \texttt{T1}, we will work with the following notations.
+
+\inputsnippets{T1Bridge/Requirements}
 
 \inputsnippets{T1Bridge/hT1gT1}
 
-Most used constants and functions will also get standardized
-non-ambiguous names.
+
+
+\subsection{Data refinement}
+
+\subsubsection{Renamings}
+
+Most used constants and functions are also unambiguously renamed.
 
 
 \inputsnippets{T1Bridge/MoreNotations}
 
+Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
 
+
+\subsubsection{Translation functions and data refinement}
 
 The bridge between both libraries is made of two functions.
 
 \inputsnippets{T1Bridge/h2gG2hDef}
 
+The following cancel lemmas will be often used in order to simplify sub-terms of the form \texttt{g2h (h2g {\it t})} and \texttt{h2g (g2h {\it t})} which appear in many proofs by rewriting.
+
 \inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
 
-The functions \texttt{iota} and \texttt{pi} allow us to define
-a notion of refinement for constants, functions, predicates and relations.
+\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
+
+
+
+Functions \texttt{h2g} and \texttt{g2h} allow us to define
+a notion of ``data-refinement''  for constants, functions, predicates and relations. The following definitions express that some
+constant, function, relation defined in \HydrasLib ``implements'' the same concept of \gaia.
 
 \inputsnippets{T1Bridge/refineDefs}
 
+%%% ICI
+
 \subsection{Examples of refinements}
-Both libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove consistency of these definitions. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
+Both of our libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove consistency of these definitions. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
 
 \subsubsection{A few constants}
 For each constant: $0$, $1$, \dots, $n$ and $\omega$, we prove
@@ -77,24 +138,21 @@ that \texttt{hydras}' definition refines \texttt{gaia}'s.
 
 \inputsnippets{T1Bridge/unaryRefs}
 
-\subsubsection{Binary operations}
-The binary operations $+$ and $\times$ are defined the same way in both libraries. Please note that they require comparison of ordinal terms. So, the proof of the following lemmas applies
-compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-compare-ref}).
-
-\inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
-
-
-\subsection{Order and comparison}
+\subsubsection{Order and comparison}
 Leibniz equality and strict order on both libraries are
 compatible:
+
+
 \inputsnippets{T1Bridge/eqRef}
 
 \label{sect:gaia-compare-ref}
 \inputsnippets{T1Bridge/compareRef}
 
-\inputsnippets{T1Bridge/ltRef}
+\inputsnippets{T1Bridge/ltRef, T1Bridge/leRef}
 
 \inputsnippets{T1Bridge/decideHLtRw}
+
+\subsubsection{Cantor normal form}
 
 Hence, both definitions of ``being in Cantor normal form'' are
 compatible.
@@ -102,9 +160,15 @@ compatible.
 \inputsnippets{T1Bridge/nfRef}
 
 
+\subsubsection{Addition and multiplication}
+
+The binary operations $+$ and $\times$ are defined the same way in both libraries. Please note that they require comparison of ordinal terms. So, the proof of the following lemmas applies
+compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-compare-ref}).
+
+\inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
 
-\subsection{Porting a theorem from \gaia}
+\section{Importing a theorem from \gaia}
 The \texttt{Gaia} library already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
 \emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
 
@@ -122,11 +186,11 @@ example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
 
 \inputsnippets{T1Bridge_use/T1BridgeUse}
 
-From now on, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \Hydras's meaning.
+In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \HydrasLib' meaning.
 
  \inputsnippets{ T1Bridge_use/LocateT1, T1Bridge_use/T1BridgeUseb}
 
-\subsection{Porting theorems from \Hydras}
+\section{Importing theorems from \HydrasLib}
 
 
 Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
@@ -139,29 +203,29 @@ apply rewriting rules of the following forms:
 
 \inputsnippets{T1Bridge/T1leIff}
 \inputsnippets{T1Bridge/rewritingRules}
-\inputsnippets{T1Bridge/limitbRef}
+\inputsnippets{T1Bridge/T1ltIff}
 
-Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{alpha < succ beta} should be interpreted as \texttt{T1lt alpha beta}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}.
 
-\texttt{gaia.ssete9.v}. The corresponding statement is
-written \texttt{hlt (g2h alpha) (g2h beta)}.
+\inputsnippets{T1Bridge/limitbRef, T1Bridge/isSuccRef}
 
-\subsubsection{Canonical sequences}
+
+
+
+\subsection{Canonical sequences}
 
 
 In~\href{../theories/html/gaia_hydras.GCanon.html}%
 {\texttt{gaia\_hydras.GCanon}}, canonical sequences are just imported from the library \linebreak
 \href{../theories/html/hydras.Epsilon0.Canon.html}%
 {\texttt{hydras.Epsilon0.Canon}}.
-
-First, we rename \Hydras's \texttt{canon} function into
+First, we rename \HydrasLib' \texttt{canon} function into
 \texttt{hcanon}. Then we define a new function \emph{via} the
 translations \texttt{g2h} and \texttt{h2g}.
 
 \inputsnippets{GCanon/canonDef}
 
-The following lemmas are proved by rewriting from corresponding statements proved in \Hydras.
-\emph{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the scripts below.}
+The following lemmas are proved by rewriting from corresponding statements proved in \HydrasLib.
+
 
 \inputsnippets{GCanon/g2hCanonRw}
 \inputsnippets{GCanon/gcanonLt}
@@ -170,100 +234,12 @@ The following lemmas are proved by rewriting from corresponding statements prove
 \inputsnippets{GCanon/gcanonLimitMono}
 \inputsnippets{GCanon/gcanonLimitOf}
 
+\subsection{A family of rapidly growing functions}
 
+The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. The symbol \texttt{F\_} has type \texttt{E0 -> nat -> nat},
+where \texttt{E0} is the type of well formed ordinal terms less than $\epsilon_0$.
+\subsubsection{Well-formed ordinal terms}
 
-\section{Gaia's proof of well-foundedness}
-The library \Hydras already contains two proofs
-of well-foundedness of the strict order on ordinal terms in
-Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
-\'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
-
-
-
-This proof is quite dense and qualified as ``a bit tricky''. We just present here its main steps with the help of the \alectr tool.
-
-The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
-the proof in Section~\ref{sec:strongly-accessible}.
-
-\begin{remark}
-  The following snippets have been generated, not from
-  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, but on a provisional copy:
-\url{../theories/gaia/nfgaia.v} we made in order to insert comments for \alectr.  This copy is planned to be removed when we are able to add \alectr directives to a \coq source we are not allowed to modify.
-\end{remark}
-
-\subsection{Restricted recursion}
-As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
-But the \emph{restriction} of \texttt{T1lt} to terms in normal form \emph{is} well-founded. The following section introduces a  vocabulary in order to reason about statements of the form  ``the restriction of the relation $R$ to a subset $P$ of $A$ is well founded''.
-
-
-
-
-\inputsnippets{nfwfgaia/restrictedRecursion}
-
-The following induction principle is just a variant of \texttt{well\_founded\_induction\_type} for relations defined with \texttt{restrict}.
-
-\inputsnippets{nfwfgaia/restrictedRecursiona}
-
-With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfinite induction.
-
-\subsection{Main proof steps}
-
-\emph{Notes: the abbreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.
-The infix notation \texttt{`` \_ < \_''}  is bound to the order \texttt{T1lt} in \gaia, while,  in \Hydras,  it is bound to its restriction \texttt{LT} to terms in normal form. }
-
-\inputsnippets{nfwfgaia/nfWfProofa}
-We start with a classic structural induction on the type \texttt{T1}.
-
-\inputsnippets{nfwfgaia/nfWfProofaa}
-The following \texttt{ssreflect} tactic  pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
-
-\inputsnippets{nfwfgaia/nfWfProofb}
-
-The following sentence gives us the possibility of induct over \texttt{a}'s accessibility.
-
-\inputsnippets{nfwfgaia/nfWfProofbb}
-
-
-By the following two forward steps, we show that $b$ is accessible, and will be able to prove properties by induction on $b$'s accessibility.
-
-\inputsnippets{nfwfgaia/haveHc}
-
-\inputsnippets{nfwfgaia/haveHd}
-
-\inputsnippets{nfwfgaia/hdProved}
-
-Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
-
-There are three cases to consider.
-\begin{enumerate}
-\item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}.
-  \inputsnippets{nfwfgaia/nfWfProofd}
-  
-  Then, it is accessible (by hypothesis \texttt{Hb}).
-  
-  \item The considered term  is equal to
-    \texttt{(cons a n b'')}, where $b''<\omega^a$. 
-    \inputsnippets{nfwfgaia/nfWfProofg}
-    
-    Then we can replace \texttt{a''} with \texttt{a}, \texttt{n''} with \texttt{n}, and apply the hypotheses \texttt{Hd} and \texttt{He}.
-    
-\item
-  The term is equal to
-  \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$.
-
-  
-  
-  \inputsnippets{nfwfgaia/nfWfProofe}
-
-  By \texttt{Hd} and \texttt{He}, and a few technical lemmas about normal forms,   the term  \texttt{(cons a n b'')} is accessible, and so is \texttt{(cons a n'' b'')}.
-
- 
-\end{enumerate}
-
-In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. 
-
-
-\section{Well formed ordinals}
 For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
 
 \inputsnippets{T1Bridge/E0Def}
@@ -277,3 +253,108 @@ from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a p
 These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
 
 \inputsnippets{T1Bridge/gE0LtWf}
+
+\subsubsection{Importing the \texttt{F\_alpha} family}
+
+We are now able to import \HydrasLib' $F_\alpha$ functions.
+
+\inputsnippets{GF_alpha/FAlphaDef}
+
+Mainly by rewriting, we import a few properties of the $F_\alpha$s.
+
+\inputsnippets{T1Bridge/MonoDef, GF_alpha/FAlphaProps}.
+
+
+
+
+% \section{Gaia's proof of well-foundedness}
+% The library \HydrasLib already contains two proofs
+% of well-foundedness of the strict order on ordinal terms in
+% Cantor normal form: a direct proof~\vref{sec:T1Wf} and a proof based on the recursive path ordering~\vref{remark:a3pat}, by
+% \'Evelyne Contejean. We found it interesting to comment Gaia's proof, which uses tools already present in~\cite{CantorContrib}.
+
+
+
+% This proof is quite dense and qualified as ``a bit tricky''. We just present here its main steps with the help of the \alectr tool.
+
+% The reader is invited to replay the full proof in  \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, and to compare with
+% the proof in Section~\ref{sec:strongly-accessible}.
+
+% \begin{remark}
+%   The following snippets have been generated, not from
+%   \href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}, but on a provisional copy:
+% \url{../theories/gaia/nfgaia.v} we made in order to insert comments for \alectr.  This copy is planned to be removed when we are able to add \alectr directives to a \coq source we are not allowed to modify.
+% \end{remark}
+
+% \subsection{Restricted recursion}
+% As remarked in~\vref{sec:T1Wf}, the order \texttt{T1lt} on \texttt{T1} is not well-founded, because of terms not in normal form.
+% But the \emph{restriction} of \texttt{T1lt} to terms in normal form \emph{is} well-founded. The following section introduces a  vocabulary in order to reason about statements of the form  ``the restriction of the relation $R$ to a subset $P$ of $A$ is well founded''.
+
+
+
+
+% \inputsnippets{nfwfgaia/restrictedRecursion}
+
+% The following induction principle is just a variant of \texttt{well\_founded\_induction\_type} for relations defined with \texttt{restrict}.
+
+% \inputsnippets{nfwfgaia/restrictedRecursiona}
+
+% With $P=\texttt{T1nf}$, this principle will allow us to write proofs by transfinite induction.
+
+% \subsection{Main proof steps}
+
+% \emph{Notes: the abbreviation \texttt{LT}, and the \texttt{fold LT} and \texttt{unfold LT} tactics,are not in \texttt{gaia}, but  have been added to make the goal display more readable.
+% The infix notation \texttt{`` \_ < \_''}  is bound to the order \texttt{T1lt} in \gaia, while,  in \HydrasLib,  it is bound to its restriction \texttt{LT} to terms in normal form. }
+
+% \inputsnippets{nfwfgaia/nfWfProofa}
+% We start with a classic structural induction on the type \texttt{T1}.
+
+% \inputsnippets{nfwfgaia/nfWfProofaa}
+% The following \texttt{ssreflect} tactic  pushes a new hypothesis \texttt{Hb} which --- in the same terms as in Section~\vref{sec:strongly-accessible} --- tells that any ordinal less than $a$ is ``strongly accessible''.
+
+% \inputsnippets{nfwfgaia/nfWfProofb}
+
+% The following sentence gives us the possibility of induct over \texttt{a}'s accessibility.
+
+% \inputsnippets{nfwfgaia/nfWfProofbb}
+
+
+% By the following two forward steps, we show that $b$ is accessible, and will be able to prove properties by induction on $b$'s accessibility.
+
+% \inputsnippets{nfwfgaia/haveHc}
+
+% \inputsnippets{nfwfgaia/haveHd}
+
+% \inputsnippets{nfwfgaia/hdProved}
+
+% Now, let us consider any ordinal term which is (by \texttt{LT}) less than \texttt{(cons a n b)}.
+
+% There are three cases to consider.
+% \begin{enumerate}
+% \item It is of the form \texttt{(cons a' n' b')} where \texttt{a'} is strictly less than \texttt{a}.
+%   \inputsnippets{nfwfgaia/nfWfProofd}
+  
+%   Then, it is accessible (by hypothesis \texttt{Hb}).
+  
+%   \item The considered term  is equal to
+%     \texttt{(cons a n b'')}, where $b''<\omega^a$. 
+%     \inputsnippets{nfwfgaia/nfWfProofg}
+    
+%     Then we can replace \texttt{a''} with \texttt{a}, \texttt{n''} with \texttt{n}, and apply the hypotheses \texttt{Hd} and \texttt{He}.
+    
+% \item
+%   The term is equal to
+%   \texttt{(cons a n'' b'')}, where $n''<n$ and $b''<\omega^a$.
+
+  
+  
+%   \inputsnippets{nfwfgaia/nfWfProofe}
+
+%   By \texttt{Hd} and \texttt{He}, and a few technical lemmas about normal forms,   the term  \texttt{(cons a n b'')} is accessible, and so is \texttt{(cons a n'' b'')}.
+
+ 
+% \end{enumerate}
+
+% In every case, the considered ordinal is accessible. By the definition of accessibility, the ordinal \texttt{(cons a n b)} is accessible, which ends the proof. 
+
+

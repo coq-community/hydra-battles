@@ -1,4 +1,4 @@
-(** *
+  (** *
 
    Transition systems associated with canonical sequences
  *)
@@ -732,7 +732,7 @@ Proof.
           apply nf_canon;auto.
           apply nf_helper_phi0R.
           apply T1.lt_trans with beta.
-          apply canonS_lt;auto.
+          apply canon_lt;auto.
           apply nf_helper_phi0.
           eapply nf_helper_intro; eauto.
         * destruct H3 as [s2 [H4 [H5 H6]]];  exists (a::x), s2.
@@ -1184,7 +1184,7 @@ Proof.
        * unfold canonS; rewrite canonS_lim2;auto.
          eapply KS_thm_2_4_lemma1; auto.
          -- apply ocons_nf; auto.
-            ++ apply canonS_lt; auto.
+            ++ apply canon_lt; auto.
                intro; subst; discriminate.
             ++ apply single_nf;  apply nf_canon; auto.
          -- discriminate.
@@ -1307,7 +1307,7 @@ Proof.
              - repeat rewrite canonS_lim2 ; eauto with T1.
                 apply KS_thm_2_4_lemma1 ; trivial. 
                 apply ocons_nf ; trivial. 
-                apply canonS_lt ; trivial.
+                apply canon_lt ; trivial.
                 apply single_nf.   
                 apply nf_canon ; eauto with T1.
                 discriminate.
@@ -1380,7 +1380,7 @@ Proof.
          - split ; auto.
          - apply Hrec with 0; auto.
            +  apply nf_canon;   auto. 
-           + apply canonS_lt; auto.
+           + apply canon_lt; auto.
            + apply  nf_canon; auto.
            + apply canonS_limit_mono; auto.
            + apply Nat.le_lt_trans with i;  auto with arith.
@@ -1392,7 +1392,7 @@ Proof.
         {
           apply Hrec with i;auto.
           apply nf_canon;   auto.
-          apply canonS_lt;auto.
+          apply canon_lt;auto.
           apply nf_canon; auto.
           eapply const_pathS_LT.
           apply nf_canon; auto.
@@ -1407,7 +1407,7 @@ Proof.
           rewrite  clos_trans_t1n_iff.
           apply Hrec with 0;eauto.
           now apply nf_canon.
-          apply canonS_lt; auto.
+          apply canon_lt; auto.
           apply nf_canon; auto.
           apply  canonS_limit_mono ;auto.
           apply Nat.le_lt_trans with i;auto.
@@ -3002,13 +3002,14 @@ Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
     intros. clear H0.
     split; auto.
     cbn. auto with T1.
-
+    now apply nf_canon.
     split; cbn. 
     specialize (limitb_canonS_not_zero j cnf_ok H).
-    intro. 
-    now apply not_zero_gt_0.
-    apply nf_canon. 
-    auto. 
+    intro.
+    
+    Search  canon. apply canon_limit_mono; auto. 
+    auto with arith. 
+    apply nf_canon; auto. 
 
   - intros; lia.
   -        
