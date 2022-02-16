@@ -1,5 +1,6 @@
 \chapter{Gaia and the hydras (experimental)}
 \index{coq}{Plug-ins!Gaia}
+\label{gaia-chapter}
 
 \section{Introduction}
 The \gaia project~\cite{Gaia} by Jos\'e Grimm aimed to formalize mathematics in \coq  in
@@ -170,7 +171,12 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 
 
 \section{Importing a theorem from \gaia}
-The \texttt{Gaia} library already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
+The \texttt{Gaia} library already contains many lemmas about
+ordinal arithmetic. In this section, we give two examples of
+porting such a lemma to \HydrasLib' vocabulary.
+
+\subsection{Associativity of ordinal multiplication (below \texorpdfstring{$\epsilon_0$}{epsilon\_0})}
+\gaia already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
 \emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
 
 \begin{Coqsrc}
@@ -191,6 +197,13 @@ In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  b
 
  \inputsnippets{GaiaToHydra/LocateT1, GaiaToHydra/T1BridgeUseb}
 
+ \subsection{Right Distributivity, etc.}
+ Likewise, we prove almost for free that ordinal multiplication is right distributive over addition (with \HydrasLib' definitions).
+
+ \inputsnippets{GaiaToHydra/distributivity}.
+
+We plan to automatize the most as possible this transfer of lemmas in this direction.
+ 
 \section{Importing theorems from \HydrasLib}
 
 
@@ -210,6 +223,21 @@ apply rewriting rules of the following forms:
 \inputsnippets{T1Bridge/limitbRef, T1Bridge/isSuccRef}
 
 
+\subsection{A type for well-formed ordinal terms}
+
+For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+
+\inputsnippets{T1Bridge/E0Def}
+\inputsnippets{T1Bridge/E0EqP}
+
+In order to import definitions and lemmas
+from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
+
+\inputsnippets{T1Bridge/gE0h2gG2h}
+
+These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
+
+\inputsnippets{T1Bridge/gE0LtWf}
 
 
 \subsection{Canonical sequences}
@@ -231,29 +259,23 @@ The following lemmas are proved by rewriting from corresponding statements prove
 \inputsnippets{GCanon/g2hCanonRw}
 \inputsnippets{GCanon/gcanonLt}
 \inputsnippets{GCanon/glimitCanonSNotZero}
-\inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitMono}
+
+Let us recall \gaia's definition of $\omega$-limit.
+
+\inputsnippets{nfwfgaia/LimitV2Def, nfwfgaia/LimitOFDef}
+
+We adapt theorems from \href{../theories/html/hydras.Epsilon0.Canon.html}%
+{\texttt{hydras.Epsilon0.Canon}} to \gaia's vocabulary.
+
+\inputsnippets{GCanon/gcanonLimitStrong}
+\inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitOf}
 
 \subsection{A family of rapidly growing functions}
 
 The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. The symbol \texttt{F\_} has type \texttt{E0 -> nat -> nat},
 where \texttt{E0} is the type of well formed ordinal terms less than $\epsilon_0$.
-\subsubsection{Well-formed ordinal terms}
-
-For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
-
-\inputsnippets{T1Bridge/E0Def}
-\inputsnippets{T1Bridge/E0EqP}
-
-In order to import definitions and lemmas
-from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
-
-\inputsnippets{T1Bridge/gE0h2gG2h}
-
-These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
-
-\inputsnippets{T1Bridge/gE0LtWf}
 
 \subsubsection{Importing the \texttt{F\_alpha} family}
 
@@ -261,9 +283,28 @@ We are now able to import \HydrasLib' $F_\alpha$ functions.
 
 \inputsnippets{GF_alpha/FAlphaDef}
 
-Mainly by rewriting, we import a few properties of the $F_\alpha$s.
 
-\inputsnippets{T1Bridge/MonoDef, GF_alpha/FAlphaProps}.
+
+
+
+The following definitions adapt \HydrasLib' to \ssreflect's 
+definitions of $<$ and $\leq$ on \texttt{nat}.
+
+\inputsnippets{T1Bridge/MonoDef}
+
+By rewriting, we import a few lemmas from
+~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}.
+
+
+
+\inputsnippets{GF_alpha/FAlphaProps}
+
+With the same technique, we prove that if
+$\alpha\geq\omega$, then $F_\alpha$ is not primitive recursive.
+
+\inputsnippets{GF_alpha/FAlphaNotPR}
+
+
 
 
 

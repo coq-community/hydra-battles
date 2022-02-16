@@ -75,6 +75,14 @@ Fixpoint g2h (alpha : T1) : hT1 :=
   | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
   end.
 
+(** Pretty printing *)
+Definition ppT1 (a:T1) := pp (g2h a).
+
+Example alpha1 := (T1omega + phi0 T1omega * \F 6) * T1omega + phi0 (\F 42).
+
+Compute ppT1 alpha1.
+
+Compute alpha1 == phi0 (T1omega + \F 1) + phi0 (\F 42). 
 (* end snippet h2gG2hDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
@@ -568,11 +576,12 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
 
-Definition E0_lt (alpha beta: E0) := cnf alpha < cnf beta.
-Definition E0_le  (alpha beta: E0) := cnf alpha <= cnf beta.
+Definition ppE0 (alpha: E0) := ppT1 (cnf alpha).
 
-Definition E0_eqb (alpha beta: E0):= cnf alpha == cnf beta.
-(* end snippet E0Def *)
+Definition E0lt (alpha beta: E0) := cnf alpha < cnf beta.
+Definition E0le  (alpha beta: E0) := cnf alpha <= cnf beta.
+
+Definition E0eqb (alpha beta: E0):= cnf alpha == cnf beta.
 
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
@@ -596,6 +605,7 @@ Proof.
   apply /eqP => //.  cbn. apply /andP ; split =>  //.
   by apply /eqP.
 Defined.
+(* end snippet E0Def *)
 
 
 Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
@@ -632,40 +642,40 @@ Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
 
-Lemma gE0_eq1 alpha beta : E0_eqb alpha beta -> alpha = beta.
+Lemma gE0_eq1 alpha beta : E0eqb alpha beta -> alpha = beta.
 Proof.
-  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0_eqb => /= /eqP .
+  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0eqb => /= /eqP .
   move => Heq; subst.   
   have  H0: Hx = Hy; last first.
   -   by rewrite H0.   
   - apply eq_proofs_unicity_on; case; case (T1nf x); auto.
 Qed. 
 
-Lemma gE0_eq_iff alpha beta : E0_eqb alpha beta <-> alpha = beta.
+Lemma gE0_eq_iff alpha beta : E0eqb alpha beta <-> alpha = beta.
 Proof. 
   split.
   - apply gE0_eq1 => Heq.
-  - move => ?  ; subst; rewrite /E0_eqb => //. 
+  - move => ?  ; subst; rewrite /E0eqb => //. 
 Qed.
 
-Lemma gE0_lt_iff alpha beta : E0_lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
+Lemma gE0lt_iff alpha beta : E0lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
 Proof. 
   split. 
-    - rewrite /E0_lt;  destruct alpha, beta. 
+    - rewrite /E0lt;  destruct alpha, beta. 
      rewrite /Lt /hLT => /=; repeat split. 
       + rewrite /hnf nf_ref h2g_g2hK; by apply /eqP.
       + by rewrite hlt_iff !h2g_g2hK.
       + rewrite /hnf nf_ref h2g_g2hK;  by apply /eqP.
-    - rewrite /E0_lt; destruct alpha, beta. 
+    - rewrite /E0lt; destruct alpha, beta. 
       rewrite /Lt /hLT; destruct 1 as [H [H0 H1]].
       move: H0 ; by rewrite hlt_iff !h2g_g2hK. 
 Qed.
 
 
-Lemma gE0_le_iff alpha beta : E0_le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
+Lemma gE0le_iff alpha beta : E0le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
 Proof. 
   split. 
-  - rewrite /E0_le;  destruct alpha, beta. 
+  - rewrite /E0le;  destruct alpha, beta. 
     rewrite /Le /hLE => /=; repeat split.
     rewrite T1le_eqVlt => Hle.
     have Hor : (cnf0 =cnf1 \/ cnf0 < cnf1).
@@ -679,8 +689,8 @@ Proof.
       -- apply eq_proofs_unicity_on;   destruct y, (T1nf cnf1) => //.
       ++ left => //.   
       ++ right => //.       
-    * left; apply gE0_lt_iff; rewrite /E0_lt => //.
-  - rewrite /E0_le; destruct alpha, beta; cbn => Hle. 
+    * left; apply gE0lt_iff; rewrite /E0lt => //.
+  - rewrite /E0le; destruct alpha, beta; cbn => Hle. 
     destruct (le_lt_eq_dec Hle) as [l | e].
     + rewrite /Lt in l; cbn in l; rewrite -T1lt_iff in l. 
      * by apply T1ltW.
@@ -692,10 +702,10 @@ Qed.
 
 
 (* begin snippet E0EqP:: no-out *)
-Lemma gE0_eqP alpha beta: reflect (alpha = beta) (E0_eqb alpha beta).
+Lemma E0eqP alpha beta: reflect (alpha = beta) (E0eqb alpha beta).
 (* end snippet E0EqP *)
 Proof.
-  case_eq(E0_eqb alpha beta).
+  case_eq(E0eqb alpha beta).
   - constructor;  by rewrite -gE0_eq_iff.
   - constructor => H0; subst.
     move : H => // /=; cbn; by rewrite T1eq_refl.
@@ -723,13 +733,13 @@ From Coq Require Import Relations Basics
 (** TODO: simplify this proof !!! *)
 
 (* begin snippet gE0LtWf:: no-out *)
-Lemma gE0_lt_wf : well_founded E0_lt.
+Lemma gE0lt_wf : well_founded E0lt.
 Proof.
   move => x; apply Acc_incl
             with (fun x y =>  E0.Lt (E0_g2h x) (E0_g2h y)).
   (* ... *)
   (* end snippet gE0LtWf *)
-  - move => a b ; rewrite /E0_lt => Hab. 
+  - move => a b ; rewrite /E0lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
     rewrite -(h2g_g2hK cnf0) in Hlt i0;

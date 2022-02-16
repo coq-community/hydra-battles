@@ -21,8 +21,9 @@ Qed.
 
 Example Ex1 (a: T1): omega * (a * omega) = omega * a * omega.
 Proof. by rewrite hmultA. Qed.
+(* end snippet T1BridgeUseb *)
 
-
+(* begin snippet distributivity:: no-out *)
 Lemma hmult_dist : right_distributive mult plus.
 Proof.
   move => a b c; specialize (mul_distr (h2g a) (h2g b) (h2g c)) => H.
@@ -30,10 +31,10 @@ Proof.
   rewrite -!g2h_plus_rw  -!g2h_mult_rw H.
   f_equal; by rewrite -g2h_plus_rw. 
 Qed. 
-
+(* end snippet distributivity:: no-out *)
 
 Close Scope t1_scope.
-(* end snippet T1BridgeUseb *)
+
 
 
 

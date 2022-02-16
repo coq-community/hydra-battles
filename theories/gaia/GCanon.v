@@ -190,14 +190,17 @@ Proof.
   - by rewrite limitb_ref h2g_g2hK. 
 Qed.
 
+(* begin snippet gcanonLimitStrong:: no-out *)
 Lemma gcanon_limit_strong lambda :
   T1nf lambda -> T1limit lambda ->
   forall beta, T1nf beta ->
                T1lt beta  lambda -> {i : nat | T1lt beta (canon lambda i)}.
+(* ... *)
+(* end snippet gcanonLimitStrong *)
 Proof.
   rewrite -(h2g_g2hK lambda)  -nf_ref
           -limitb_ref => Hnf Hlim beta Hbeta.
-  rewrite -(h2g_g2hK beta) =>Hbetalt; apply hlt_iff in Hbetalt.
+  rewrite -(h2g_g2hK beta) => Hbetalt; apply hlt_iff in Hbetalt.
   case (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h beta)).
   - split => //; rewrite hnf_g2h => //.
   - move => x Hx; exists x; rewrite -(h2g_g2hK beta). 
@@ -205,7 +208,8 @@ Proof.
     rewrite -T1lt_iff in Hx => //.   
   rewrite /canon  -nf_ref; change (hnf (hcanon (g2h lambda) x));
     apply nf_canon => //.
-Qed. 
+Qed.
+
 
 
 Lemma T1nf_canon alpha i : T1nf alpha -> T1nf (canon alpha i).
@@ -261,9 +265,9 @@ Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
 Defined.
 
  Lemma E0_canon_lt (alpha: E0) i:
-   cnf alpha <> zero -> E0_lt (E0Canon alpha i) alpha.
+   cnf alpha <> zero -> E0lt (E0Canon alpha i) alpha.
  Proof. 
-   move: i; case : alpha => cnf Heq i Hpos; rewrite /E0Canon /E0_lt => /=. 
+   move: i; case : alpha => cnf Heq i Hpos; rewrite /E0Canon /E0lt => /=. 
    pattern cnf at 2; rewrite -(h2g_g2hK cnf) -hlt_iff h2g_g2hK;
      apply canon_lt. 
    - rewrite hnf_g2h;  by apply /eqP.

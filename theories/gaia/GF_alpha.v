@@ -75,11 +75,11 @@ Proof.
 Qed. 
 
 Lemma gF_mono_l alpha beta:
-  E0_lt beta alpha -> dominates (F_ alpha) (F_ beta).
+  E0lt beta alpha -> dominates (F_ alpha) (F_ beta).
 Proof.
   rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
   move => H hbeta_alpha.
-  have H' : E0_g2h beta o< E0_g2h alpha by rewrite gE0_lt_iff in hbeta_alpha.  
+  have H' : E0_g2h beta o< E0_g2h alpha by rewrite gE0lt_iff in hbeta_alpha.  
   case (H H') => x Hx; exists x; rewrite /dominates_from /F_ => p Hp.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.
@@ -162,23 +162,24 @@ Proof.
  - apply E0_eq_intro; rewrite /E0phi0 => //.
 Qed.
 
+(* begin snippet FAlphaNotPR:: no-out *)
 Lemma gF_alpha_not_PR_E0  alpha:
-  E0_le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
+  E0le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
 Proof. 
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
   eapply isPR_extEqual_trans with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
   replace _Omega with (E0_g2h E0omega); last first.
   - by apply E0_eq_intro. 
-  - by rewrite -gE0_le_iff. 
+  - by rewrite -gE0le_iff. 
 Qed.
-
+(* end snippet FAlphaNotPR *)
 
 Lemma gF_alpha_not_PR alpha (Hnf: T1nf alpha == true):
   gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
 Proof. 
   rewrite /T1F_ => Halpha; 
-  apply gF_alpha_not_PR_E0; rewrite /E0_le  => /=. 
+  apply gF_alpha_not_PR_E0; rewrite /E0le  => /=. 
   by destruct Halpha. 
 Qed. 
 
