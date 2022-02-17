@@ -65,13 +65,13 @@ Unset Strict Implicit.
 
 Fixpoint h2g (alpha : hT1) : T1 :=
   match alpha with
-    Epsilon0.T1.zero => zero
+    hzero => zero
   | hcons alpha n beta => cons (h2g alpha) n (h2g beta)
   end.
 
 Fixpoint g2h (alpha : T1) : hT1 :=
   match alpha with
-    zero => Epsilon0.T1.zero
+    zero => hzero
   | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
   end.
 
@@ -817,4 +817,8 @@ Definition fun_le  f g := forall n:nat, (f n <=  g n)%N.
 
 (* end snippet MonoDef *)
 
+(* begin snippet SearchDemo *)
+Search ( _ * ?x = ?x)%ca.
 
+Search ( _ * ?x = ?x)%t1.
+(* end snippet SearchDemo *)
