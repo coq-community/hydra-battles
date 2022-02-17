@@ -115,7 +115,7 @@ Qed.
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 (* end snippet h2gEqIff *)
 Proof. 
-    split.
+  split.
     -  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  =>  // -> //.
     - move => -> //. 
 Qed.
@@ -149,7 +149,6 @@ Proof.
   by rewrite Href g2h_h2gK.
 Qed.
 
-
 Lemma refines2_R f f' :
   refines2 f f' ->
   forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
@@ -160,6 +159,7 @@ Qed.
 
 (** Refinements of usual constants *)
 (* begin snippet constantRefs:: no-out *)
+
 Lemma zero_ref : refines0 hzero zero.
 Proof. by []. Qed.
 
@@ -456,9 +456,8 @@ Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
 (* end snippet nfRef *)
 Proof.
   elim: a => //.
-  - move => a IHa n b IHb; rewrite Epsilon0.T1.nf_b_cons_eq; simpl T1nf. 
-    rewrite IHa IHb;  change (phi0 (h2g a)) with (h2g (Epsilon0.T1.phi0 a)).
-    by rewrite andbA decide_hlt_rw.
+  - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
+    by rewrite IHa IHb [phi0 (h2g a)]/(h2g (T1.phi0 a)) andbA decide_hlt_rw.
 Qed.
 
 Lemma LT_ref : refinesRel  hLT  gLT.
@@ -468,39 +467,30 @@ Proof.
     + by rewrite  -nf_ref.
     + by apply lt_ref. 
     + by rewrite -nf_ref. 
-  -  case => H H0 H1; repeat  split. 
-     +  red; by rewrite nf_ref.
-     + by apply lt_ref. 
-     +  red; by rewrite nf_ref.
+  -  case => H H0 H1; repeat  split; red; rewrite ?nf_ref ?lt_ref => // ;
+            by apply lt_ref. 
 Qed. 
 
 
 Lemma LE_ref : refinesRel hLE gLE.
 Proof. 
   split. 
-  - case => a b.
-    split. 
-    rewrite -nf_ref => //.
-    case: b => c _.    
-    destruct c. 
-    
-    apply T1ltW. 
-    rewrite - decide_hlt_rw => //.
-    red;  rewrite bool_decide_eq_true => //.
-    apply T1lenn. 
-    case b => _ H.
-    rewrite - nf_ref => //. 
-  - case.
-    rewrite /hLE; split. 
-    rewrite -nf_ref in p p1 => //.
-    split => //.
-    rewrite T1le_eqVlt in p0. move : p0 => /orP.
-    case => /eqP Heq; subst.  rewrite h2g_eq_iff in Heq; subst. 
-    right. 
-    left. 
-    rewrite -decide_hlt_rw in Heq => //.
-    move: Heq => /eqP H. rewrite bool_decide_eq_true in H => //.
-    rewrite -nf_ref in p1 => //.
+  - case => a b; split. 
+    + rewrite -nf_ref => //.
+    + case: b => c _; case :c => [y0 Hy0 |].
+      apply T1ltW. 
+      * rewrite - decide_hlt_rw => //.
+        red;  rewrite bool_decide_eq_true => //.
+      *  apply T1lenn. 
+    +  case b => _ ?; rewrite - nf_ref => //. 
+  - case; rewrite /hLE; repeat split => //.
+   +  rewrite -nf_ref in p p1 => //.
+   +  rewrite T1le_eqVlt in p0; move : p0 => /orP.
+      case => /eqP Heq; subst.
+      * rewrite h2g_eq_iff in Heq; subst; right. 
+      *    left; rewrite -decide_hlt_rw in Heq => //.
+           move: Heq => /eqP H;  rewrite bool_decide_eq_true in H => //.
+   + rewrite -nf_ref in p1 => //.
 Qed.
 
 
