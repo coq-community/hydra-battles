@@ -3,7 +3,7 @@
 
 (* begin snippet Requirements:: no-out  *)
 From Coq Require Import Logic.Eqdep_dec.
-From hydras Require Import DecPreOrder.
+From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
@@ -487,8 +487,8 @@ Proof.
    +  rewrite -nf_ref in p p1 => //.
    +  rewrite T1le_eqVlt in p0; move : p0 => /orP.
       case => /eqP Heq; subst.
-      * rewrite h2g_eq_iff in Heq; subst; right. 
-      *    left; rewrite -decide_hlt_rw in Heq => //.
+      * move: Heq; rewrite h2g_eq_iff => ?; subst; right.
+      * left; rewrite -decide_hlt_rw in Heq => //.
            move: Heq => /eqP H;  rewrite bool_decide_eq_true in H => //.
    + rewrite -nf_ref in p1 => //.
 Qed.
@@ -812,3 +812,88 @@ Search ( _ * ?x = ?x)%ca.
 
 Search ( _ * ?x = ?x)%t1.
 (* end snippet SearchDemo *)
+
+Search ON.
+Locate Epsilon0. 
+About Epsilon0.
+Print Lt. 
+
+Search (T1 -> T1 -> comparison).
+
+                                
+#[global] Instance  T1compare : Compare T1:=
+  fun alpha beta => compare (g2h alpha) (g2h beta). 
+
+Compute compare (\F 6 + T1omega) T1omega. 
+
+(** * Make E0 an ordinal notation *)
+
+Lemma T1compare_correct (alpha beta: T1):
+  CompSpec eq T1lt alpha beta (compare alpha beta). 
+Proof. 
+  rewrite /compare /T1compare.
+  case  (T1.compare_correct (g2h alpha) (g2h beta)) => Hcomp.
+  rewrite g2h_eq_iff in Hcomp; subst;  by constructor. 
+  all:  constructor;  by rewrite  lt_ref !h2g_g2hK  in Hcomp.
+Qed.
+
+#[global] Instance E0compare: Compare E0 :=
+  fun (alpha beta: E0) => T1compare (cnf alpha) (cnf beta).
+
+Lemma E0compare_correct (alpha beta : E0) :
+  CompSpec eq E0lt alpha beta (compare alpha beta).
+Proof.
+  destruct alpha, beta; rewrite /compare.
+  case  (T1compare_correct cnf0 cnf1) => Hcomp.
+  - subst; replace i0 with i. 
+    + rewrite /E0compare; cbn. 
+      replace (compare (g2h cnf1) (g2h cnf1)) with Datatypes.Eq => //.
+      * by constructor. 
+      * by rewrite compare_refl. 
+    + apply eq_proofs_unicity_on; destruct y, (T1nf cnf1) => //.
+      left => //.
+      right => //.
+  -  rewrite /E0compare; cbn. 
+     replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Lt.
+     + constructor; rewrite /E0lt => //.
+     + unfold compare; rewrite T1lt_iff in Hcomp. 
+       destruct Hcomp as [_ [Hcomp _]].
+       rewrite -compare_lt_iff in Hcomp => //.  
+       all: by apply /eqP. 
+  - rewrite /E0compare; cbn. 
+    replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Gt.
+    + constructor; rewrite /E0lt => //.
+    +  unfold compare; rewrite T1lt_iff in Hcomp. 
+       destruct Hcomp as [_ [Hcomp _]].
+       rewrite -compare_gt_iff in Hcomp => //.
+       all: by apply /eqP. 
+Qed.   
+
+(* Todo : instance of ON *)
+
+
+#[global] Instance E0_sto : StrictOrder E0lt.
+Proof.
+  split.
+  - move => x. case :x => x Hx. rewrite /complement /E0lt; cbn. 
+   Search (?x < ?x). rewrite T1ltnn => //.
+  - rewrite /Transitive. 
+    case=> x Hx. case => y Hy; case => z Hz. rewrite /E0lt; cbn.
+    Search (?x < ?y -> ?y < ?z -> ?x < ?z). 
+    apply T1lt_trans. 
+ Qed.
+
+#[global] Instance E0_comp : Comparable E0lt compare.
+Proof. 
+ split.
+ - apply E0_sto.
+ - apply E0compare_correct. 
+Qed.
+
+#[global] Instance gEpsilon0 : ON E0lt compare.
+Proof.
+ split.
+ - apply E0_comp.
+ - apply gE0lt_wf.
+Qed.
+
