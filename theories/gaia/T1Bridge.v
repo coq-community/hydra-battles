@@ -576,7 +576,7 @@ Definition E0eqb (alpha beta: E0):= cnf alpha == cnf beta.
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
 Definition E0succ (alpha: E0): E0.
-  refine (@mkE0 (T1succ (cnf alpha)) _).  rewrite nf_succ => //.
+  refine (@mkE0 (T1succ (cnf alpha)) _); rewrite nf_succ => //.
   destruct alpha. cbn. move: i => /eqP //.
 Defined.
 
@@ -596,6 +596,24 @@ Proof.
   by apply /eqP.
 Defined.
 (* end snippet E0Def *)
+
+(* begin snippet E0plusMultDef:: no-out *)
+Definition E0plus (alpha beta: E0) : E0.
+  refine (@mkE0 (T1add (cnf alpha) (cnf beta)) _).
+  rewrite nf_add => //.
+  case :alpha; cbn => t Ht; apply /eqP => //.
+  case :beta; cbn => t Ht; apply /eqP => //.
+Defined.
+
+Definition E0mul (alpha beta: E0) : E0.
+  refine (@mkE0 (T1mul (cnf alpha) (cnf beta)) _).
+  (* ... *)
+  (* end snippet E0plusMultDef *)  
+  rewrite nf_mul => //.
+  case :alpha; cbn => t Ht; apply /eqP => //.
+  case :beta; cbn => t Ht; apply /eqP => //.
+Defined.
+
 
 
 Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
@@ -813,10 +831,7 @@ Search ( _ * ?x = ?x)%ca.
 Search ( _ * ?x = ?x)%t1.
 (* end snippet SearchDemo *)
 
-Search ON.
-Locate Epsilon0. 
-About Epsilon0.
-Print Lt. 
+
 
 (* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=
@@ -902,3 +917,7 @@ Proof.
  - apply gE0lt_wf.
 Qed.
 (* end snippet gEpsilon0:: no-out *)
+
+(* begin snippet ExampleComp *)
+Compute compare (E0phi0 (E0Fin 2)) (E0mul (E0succ E0omega) E0omega).
+(* end snippet ExampleComp *)
