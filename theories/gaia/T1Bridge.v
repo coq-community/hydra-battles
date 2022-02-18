@@ -818,18 +818,19 @@ Locate Epsilon0.
 About Epsilon0.
 Print Lt. 
 
-Search (T1 -> T1 -> comparison).
-
-                                
+(* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=
   fun alpha beta => compare (g2h alpha) (g2h beta). 
 
 Compute compare (\F 6 + T1omega) T1omega. 
+(* end snippet T1compareDef *)                                
 
 (** * Make E0 an ordinal notation *)
 
+(* begin snippet T1compareCorrect:: no-out *)                                
 Lemma T1compare_correct (alpha beta: T1):
   CompSpec eq T1lt alpha beta (compare alpha beta). 
+(* end snippet T1compareCorrect *)                                
 Proof. 
   rewrite /compare /T1compare.
   case  (T1.compare_correct (g2h alpha) (g2h beta)) => Hcomp.
@@ -837,11 +838,14 @@ Proof.
   all:  constructor;  by rewrite  lt_ref !h2g_g2hK  in Hcomp.
 Qed.
 
+(* begin snippet E0compare:: no-out *)                                
 #[global] Instance E0compare: Compare E0 :=
   fun (alpha beta: E0) => T1compare (cnf alpha) (cnf beta).
 
 Lemma E0compare_correct (alpha beta : E0) :
   CompSpec eq E0lt alpha beta (compare alpha beta).
+(* ... *)
+(* end snippet E0compare *)                                
 Proof.
   destruct alpha, beta; rewrite /compare.
   case  (T1compare_correct cnf0 cnf1) => Hcomp.
@@ -869,20 +873,21 @@ Proof.
        all: by apply /eqP. 
 Qed.   
 
-(* Todo : instance of ON *)
 
 
+(* begin snippet E0Sto:: no-out *)                                
 #[global] Instance E0_sto : StrictOrder E0lt.
+(* end snippet E0Sto *)                                
 Proof.
   split.
   - move => x. case :x => x Hx. rewrite /complement /E0lt; cbn. 
-   Search (?x < ?x). rewrite T1ltnn => //.
+    rewrite T1ltnn => //.
   - rewrite /Transitive. 
     case=> x Hx. case => y Hy; case => z Hz. rewrite /E0lt; cbn.
-    Search (?x < ?y -> ?y < ?z -> ?x < ?z). 
     apply T1lt_trans. 
  Qed.
 
+(* begin snippet gEpsilon0:: no-out *)
 #[global] Instance E0_comp : Comparable E0lt compare.
 Proof. 
  split.
@@ -896,4 +901,4 @@ Proof.
  - apply E0_comp.
  - apply gE0lt_wf.
 Qed.
-
+(* end snippet gEpsilon0:: no-out *)

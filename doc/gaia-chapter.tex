@@ -207,7 +207,6 @@ In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  b
 We plan to automatize as soon as possible this kind of transfer of lemmas from \gaia to \HydrasLib.
 
 
-
 \section{Importing theorems from \HydrasLib}
 
 
@@ -243,6 +242,15 @@ These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
 
 \inputsnippets{T1Bridge/gE0LtWf}
 
+\subsection{E0 as an ordinal notation}
+The module \href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
+(see Chapter~\ref{chap:ON}).
+
+\inputsnippets{T1Bridge/T1compareDef}
+\inputsnippets{ T1Bridge/T1compareCorrect}
+\inputsnippets{T1Bridge/E0compare}
+\inputsnippets{T1Bridge/E0Sto}
+\inputsnippets{T1Bridge/gEpsilon0}
 
 \subsection{Canonical sequences}
 
