@@ -34,16 +34,20 @@ Proof. reflexivity. Qed.
 
 (** rewriting lemmas *)
 
+(* begin snippet gcanonZero:: no-out *)
 Lemma gcanon_zero i:  canon zero i = zero. 
 Proof.  rewrite /canon => //. Qed. 
+(* end snippet gcanonZero *)
 
 (* begin snippet g2hCanonRw:: no-out *)
 Lemma g2h_canon alpha i: g2h (canon alpha i) = hcanon (g2h alpha) i. 
 Proof. by rewrite /canon g2h_h2gK. Qed.
 (* end snippet g2hCanonRw *)
 
+(* begin snippet gcanonSucc:: no-out *)
 Lemma gcanon_succ i alpha (Halpha: T1nf alpha):
   canon (T1succ alpha) i = alpha.
+(* end snippet gcanonSucc *)
 Proof.
   rewrite -g2h_eq_iff g2h_canon g2h_succ canon_succ ?hnf_g2h => //.
 Qed.
@@ -103,6 +107,7 @@ Qed.
 (* begin snippet glimitCanonSNotZero:: no-out *)
 Lemma glimit_canonS_not_zero i lambda:
   T1nf lambda -> T1limit lambda -> canon lambda i.+1 <> zero.
+(* end snippet glimitCanonSNotZero *)
 Proof.
   rewrite -(h2g_g2hK lambda) /canon => Hnf Hlim .
   change zero with (h2g hzero); rewrite h2g_eq_iff. 
@@ -110,20 +115,24 @@ Proof.
   - rewrite g2h_h2gK; now rewrite -nf_ref in Hnf. 
   - by rewrite limitb_ref h2g_g2hK. 
 Qed.
-(* end snippet glimitCanonSNotZero *)
 
+
+(* begin snippet gcanonSPhi0Succ:: no-out *)
 Lemma gcanonS_phi0_succ_eqn (i : nat) (gamma : T1): 
   T1nf gamma -> canon (phi0 (T1succ gamma)) i.+1 = cons gamma i zero.
-Proof.                                                            
+(* end snippet gcanonSPhi0Succ *)
+Proof.
   rewrite -(h2g_g2hK gamma) /canon succ_ref phi0_ref  g2h_h2gK => Hnf.
   change zero with (h2g hzero); rewrite canonS_phi0_succ_eqn ?h2g_cons
   =>//. 
   - rewrite h2g_g2hK in Hnf;  by rewrite /hnf nf_ref h2g_g2hK.
 Qed.
 
+(* begin snippet gcanonSSn:: no-out *)
 Lemma gcanonSSn (i : nat) (alpha : T1) (n : nat):
   T1nf alpha ->
   canon (cons alpha n.+1 zero) i = cons alpha n (canon (phi0 alpha) i).
+(* end snippet gcanonSSn *)
 Proof.
   rewrite -(h2g_g2hK alpha) /canon g2h_cons g2h_h2gK => Hnf;
   rewrite -h2g_cons h2g_g2hK canonSSn; f_equal. 
@@ -142,9 +151,11 @@ Proof.
                                           rewrite -(h2g_g2hK alpha) H0 //.
 Qed.
 
+(* begin snippet gcanonLim1:: no-out *)
 Lemma gcanon_lim1 i (lambda: T1) :
   T1nf lambda ->
   T1limit lambda -> canon (phi0 lambda) i = phi0 (canon lambda i).
+(* end snippet gcanonLim1 *)
 Proof.
   move => Hnf Hlim; rewrite /canon.
   have H: hcanon (hphi0 (g2h lambda)) i = hphi0 (hcanon (g2h lambda) i).
@@ -177,11 +188,11 @@ Proof.
 Qed. 
 
 
+(* begin snippet gCanonLim2:: no-out *)
 Lemma gcanon_lim2 i n (lambda : T1):
-  T1nf lambda ->
-  T1limit lambda ->
-  canon (cons lambda n.+1 zero) i =
-    cons lambda n (phi0 (canon lambda i)).
+  T1nf lambda ->  T1limit lambda ->
+  canon (cons lambda n.+1 zero) i = cons lambda n (phi0 (canon lambda i)).
+(* end snippet gCanonLim2 *)
 Proof. 
   move => Hnf Hlim;
   rewrite -g2h_eq_iff g2h_canon  !g2h_cons  canon_lim2; f_equal. 
@@ -190,10 +201,11 @@ Proof.
   - by rewrite limitb_ref h2g_g2hK. 
 Qed.
 
-
+(* begin snippet gCanonLim3:: no-out *)
 Lemma gcanon_lim3 i n alpha lambda :
   T1nf alpha -> T1nf lambda -> T1limit lambda ->
   canon (cons alpha n lambda) i = cons alpha n (canon lambda i).
+(* end snippet gCanonLim3 *)
 Proof. 
   move => Halpha Hlamda Hlim.
   rewrite -g2h_eq_iff g2h_canon !g2h_cons canon_lim3. 
@@ -208,7 +220,6 @@ Lemma gcanon_limit_strong lambda :
   T1nf lambda -> T1limit lambda ->
   forall beta, T1nf beta ->
                T1lt beta  lambda -> {i : nat | T1lt beta (canon lambda i)}.
-(* ... *)
 (* end snippet gcanonLimitStrong *)
 Proof.
   rewrite -(h2g_g2hK lambda)  -nf_ref
@@ -233,7 +244,6 @@ Qed.
 (* begin snippet gcanonLimitV2:: no-out *)
 Lemma gcanon_limit_v2 (lambda: T1):
   T1nf lambda -> T1limit lambda -> limit_v2 (canon lambda) lambda.
-(* ... *)
 (* end snippet gcanonLimitV2 *)
 Proof.
   move => Hnf Hlim; split.
@@ -247,7 +257,6 @@ Qed.
 Lemma  gcanon_limit_mono lambda i j (Hnf : T1nf lambda)
         (Hlim : T1limit lambda) (Hij : (i < j)%N) :
   canon lambda i < canon lambda j.
-(* ... *)
 (* end snippet gcanonLimitMono *)
  Proof.      
    rewrite /canon -hlt_iff. 
