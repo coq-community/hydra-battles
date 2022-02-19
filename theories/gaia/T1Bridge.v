@@ -141,19 +141,22 @@ Definition refinesRel (hR: hT1 -> hT1 -> Prop)
 
 (* end snippet refineDefs *)
 
+(* begin snippet refines1R:: no-out *)
 Lemma refines1_R f f' :
-  refines1 f f' ->
-  forall y: T1, f (g2h y) = g2h (f' y).
+  refines1 f f' -> forall y: T1, f (g2h y) = g2h (f' y).
+(* end snippet refines1R *)
 Proof.
   move => Href y; rewrite -{2}(h2g_g2hK y).
   by rewrite Href g2h_h2gK.
 Qed.
 
+(* begin snippet refines2R:: no-out *)
 Lemma refines2_R f f' :
-  refines2 f f' ->
-  forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
+  refines2 f f' -> forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
+(* end snippet refines2R *)
 Proof.
-  move => Href y z; by rewrite -{2}(h2g_g2hK y) -{2}(h2g_g2hK z) ?Href ?g2h_h2gK. 
+  move => Href y z;
+            by rewrite -{2}(h2g_g2hK y) -{2}(h2g_g2hK z) ?Href ?g2h_h2gK. 
 Qed.
 
 

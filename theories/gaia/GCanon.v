@@ -190,6 +190,19 @@ Proof.
   - by rewrite limitb_ref h2g_g2hK. 
 Qed.
 
+
+Lemma gcanon_lim3 i n alpha lambda :
+  T1nf alpha -> T1nf lambda -> T1limit lambda ->
+  canon (cons alpha n lambda) i = cons alpha n (canon lambda i).
+Proof. 
+  move => Halpha Hlamda Hlim.
+  rewrite -g2h_eq_iff g2h_canon !g2h_cons canon_lim3. 
+  by rewrite -g2h_canon. 
+  1,2 : by rewrite hnf_g2h.   
+  by rewrite limitb_ref h2g_g2hK.
+Qed.
+
+
 (* begin snippet gcanonLimitStrong:: no-out *)
 Lemma gcanon_limit_strong lambda :
   T1nf lambda -> T1limit lambda ->
