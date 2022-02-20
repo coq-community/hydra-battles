@@ -37,8 +37,8 @@ Proof.
 Qed.
 
 (* begin snippet FAlphaProps:: no-out *)
-Lemma gF_alpha_ge_S (alpha : E0) (n : nat): (n < F_ alpha n)%N.
-Proof. apply /ltP; apply F_alpha_ge_S. Qed.
+Lemma gF_alpha_gt (alpha : E0) (n : nat): (n < F_ alpha n)%N.
+Proof. apply /ltP; apply Epsilon0.F_alpha.F_alpha_gt. Qed.
 
 Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
 Proof.
@@ -64,7 +64,7 @@ Qed.
 Lemma gF_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
 Proof.
   rewrite /F_. apply /ltP ; apply Lt.le_lt_trans with n;
-    [auto with arith| apply F_alpha_ge_S].
+    [auto with arith| apply F_alpha_gt].
 Qed.
 
 Lemma gF_zero_eqn i: F_ E0zero i = i .+1.

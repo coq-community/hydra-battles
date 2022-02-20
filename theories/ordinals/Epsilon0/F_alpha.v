@@ -556,16 +556,20 @@ Theorem F_alpha_mono alpha : strict_mono (F_ alpha). (* .no-out *)
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
 
-Theorem F_alpha_ge_S alpha : forall n, n < F_ alpha n. (* .no-out *)
+Theorem F_alpha_gt alpha : forall n, n < F_ alpha n. (* .no-out *)
 (*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
+
+ #[deprecated(note="use F_alpha_gt")]
+   Notation F_alpha_ge_S := StrictOrder_Transitive (only parsing).
+
 
 Corollary F_alpha_positive alpha :  forall n, 0 < F_ alpha n. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro n; apply Lt.le_lt_trans with n; auto with arith.
-  apply F_alpha_ge_S.
+  apply F_alpha_gt.
 Qed.
 
 
@@ -590,7 +594,7 @@ Theorem F_restricted_mono_l alpha :
   forall beta n, Canon_plus n alpha beta -> 
                  F_ beta n <= F_ alpha n. (* .no-out *)
 (*| .. coq:: none |*)
-Proof. now  destruct  (TH_packed alpha). Qed.
+Proof. now  destruct (TH_packed alpha). Qed.
 (*||*)
 
 (* end snippet FalphaThms *)
@@ -646,29 +650,25 @@ Section Compatibility_F_dominates.
     Hypothesis Hd : Canon_plus (S n) alpha beta.
 
     Fact F5 : Canon_plus (S (S n)) alpha (Succ beta).
-      destruct alpha, beta. simpl.
-      apply L2_6_2; auto.
+    Proof.
+      destruct alpha, beta; cbn;  now apply L2_6_2.  
     Qed.
 
     
     Fact F6 : forall i, (S n < i)%nat ->  Canon_plus i alpha (Succ beta).
     Proof.
       destruct alpha, beta; unfold lt, Canon_plus in *; simpl in *.
-      intros.
-      destruct i.
-      inversion H.
-      destruct i.
-      inversion H.
-      inversion H1.
-      apply Cor12_3 with (S (S n)); auto.
-      auto with arith.
-      apply L2_6_2; auto.
+      intros i H; destruct i.
+      - inversion H.
+      - destruct i.
+        + inversion H. lia. 
+        + apply Cor12_3 with (S (S n)); auto.
+          apply L2_6_2; auto.
     Qed.   
 
     Fact F7 : forall i, (S n < i -> F_ (Succ beta) i <= F_ alpha i)%nat.
     Proof.
-      intros; apply  F_restricted_mono_l.  
-      apply F6; auto.
+      intros; apply  F_restricted_mono_l; apply F6; auto.
     Qed.
 
     Fact F8 : forall i, (S n < i -> F_ beta i < F_ (Succ beta) i)%nat.
@@ -678,20 +678,22 @@ Section Compatibility_F_dominates.
 
     Fact F9 : forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
     Proof.
-      intros; eapply Nat.lt_le_trans.
-      eapply F8;eauto.
-      apply F7;auto.
+      intros ? ?; eapply Nat.lt_le_trans.
+      - eapply F8;eauto.
+      - apply F7;auto.
     Qed.
 
   End case_lt.
 
   (* end hide *)
   
-  Lemma F_mono_l_0 : forall n, Canon_plus (S n) alpha beta ->
-                               forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
+  Lemma F_mono_l_0 : forall n,
+      Canon_plus (S n) alpha beta ->
+      forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
-    assert (Le (Succ beta) alpha) by (now apply Lt_Succ_Le).
-    assert ({alpha = Succ beta}+{Lt (Succ beta) alpha}). {
+    assert (H: Le (Succ beta) alpha) by (now apply Lt_Succ_Le).
+    assert (H0: {alpha = Succ beta}+{Lt (Succ beta) alpha}).
+    {
       rewrite <- lt_Succ_inv in H.
       apply Lt_Succ_Le in H; destruct (E0.le_lt_eq_dec  H); auto.
     }
@@ -745,7 +747,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
    specialize (IHalpha beta (Lt_Succ beta));  unfold P in IHalpha.
    - apply iterate_mono_1 with 1.
      + apply F_alpha_mono.
-     + intro k; apply F_alpha_ge_S.
+     + intro k; apply F_alpha_gt.
      + intros; destruct n0.
        * lia.
        * apply IHalpha.
@@ -796,9 +798,7 @@ End H'_F.
 Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (phi0 alpha) (S n).
 Proof.
   pattern alpha; apply well_founded_induction with Lt.
-
 (* end snippet HprimeF *)
-  
   - apply Lt_wf.  
   -  clear alpha; intros alpha IHalpha.
      destruct (Zero_Limit_Succ_dec alpha) as [[Hzero | Hlim] | Hsucc].
@@ -846,7 +846,7 @@ Defined.
 
 (**  Finally, [f_ alpha] is defined as its first iterate  ! *)
 
-Definition f_  alpha i := f_star (alpha, 1) i.
+Definition f_ alpha i := f_star (alpha, 1) i.
 
 (** ** We get the "usual" equations for [F_]  *)
 

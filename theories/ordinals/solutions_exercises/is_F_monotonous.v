@@ -40,7 +40,7 @@ Section S1.
 
 
   Remark R6 : forall i, i < F_ 2 i.
-  apply F_alpha_ge_S.
+  apply F_alpha_gt.
  Qed.
 
   Lemma Fake_thm : False.

@@ -37,7 +37,7 @@ Section S1.
     -   apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
         apply iterate_mono; auto.
         + apply F_alpha_mono.
-        + intro n0; apply (F_alpha_ge_S (Fin 2) n0).
+        + intro n0; apply (F_alpha_gt (Fin 2) n0).
     -  specialize (LF2_0 (iterate (F_ 2) (S n) (S n))); intro H0.
        remember (iterate (F_ 2) (S n) (S n)) as N.
        transitivity ((fun i : nat => (exp2 i * i)%nat) N).
@@ -88,7 +88,7 @@ Section S1.
       Proof.
         rewrite F_succ_eqn; apply iterate_mono; auto with arith.
         - apply F_alpha_mono.
-        - intro; apply F_alpha_ge_S.
+        - intro; apply F_alpha_gt.
       Qed.
 
       Lemma L2 : exp2 (F_ (Succ alpha)  n) <= (F_ (Succ alpha) (S n)).
@@ -97,20 +97,20 @@ Section S1.
         {
           apply Lt.le_lt_trans with n.
           - lia.        
-          - apply F_alpha_ge_S.
+          - apply F_alpha_gt.
         }
         assert (H0: F_ (Succ alpha) n < iterate (F_ alpha) (S n) (S n)).
         {
           rewrite F_succ_eqn;  apply iterate_mono; auto.
           - apply F_alpha_mono.
-          - intro; apply F_alpha_ge_S.
+          - intro; apply F_alpha_gt.
         }
         generalize(R1 (F_ (Succ alpha) n) H
                       (iterate (F_ alpha) (S n) (S n)) H0); intro H1;
           rewrite <- R3 in H1.
         transitivity ( exp2 (F_ alpha (F_ (Succ alpha) n))); [| auto].
         -  apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
-           apply F_alpha_ge_S.
+           apply F_alpha_gt.
       Qed.
       
     End S2.
