@@ -275,7 +275,8 @@ Proof.
     case_eq (T1.succ gamma); trivial.
 Qed.
 
-Lemma canonSSn (i:nat) :
+
+Lemma canon_SSn_zero (i:nat) :
   forall alpha n  ,
     nf alpha -> 
     canon (ocons alpha (S n) zero) i =
@@ -292,7 +293,10 @@ Proof.
            rewrite canonS_ocons_succ_eqn2 , canonS_phi0_succ_eqn; auto.   
 Qed.
 
+ #[deprecated(note="use canon_SSn_zero")]
+  Notation canonSSn := canon_SSn_zero (only parsing).
 
+ 
 Lemma canonS_zero_inv (alpha:T1) (i:nat) : 
   canon alpha (S i) = zero -> alpha = zero \/ alpha = one.
 Proof.
@@ -694,7 +698,7 @@ Proof.
             ++ exists 0; rewrite canonS_phi0_succ_eqn;auto with T1.
             ++ subst; exists (S n0);  rewrite canonS_phi0_succ_eqn; auto. 
                apply LT3; auto with arith.
-        -- clear i; exists 0; rewrite canonSSn.
+        -- clear i; exists 0; rewrite canon_SSn_zero.
            ++ apply LT2; trivial.
               apply nf_intro; trivial.
               now apply nf_canon.
@@ -708,7 +712,7 @@ Proof.
               abstract lia.
               apply lt_n_Sm_le in H3.
               destruct (Compare_dec.le_lt_eq_dec _ _ H3).
-              exists 0; rewrite canonSSn. 
+              exists 0; rewrite canon_SSn_zero. 
              apply LT3; auto.
              {
                apply nf_intro; trivial.
@@ -754,7 +758,7 @@ Proof.
                   apply nf_helper_intro with n;auto with T1.
                  * eapply nf_coeff_irrelevance;eauto.   
              }
-             destruct H4;  exists x; rewrite canonSSn. 
+             destruct H4;  exists x; rewrite canon_SSn_zero. 
              apply LT4;auto.
              { 
                apply nf_intro; auto with T1.
@@ -1047,7 +1051,7 @@ Lemma CanonSSn (i:nat) :
 Proof.
   intros; apply E0_eq_intro;
   unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Ocons); auto.
-  - unfold canonS; rewrite canonSSn; auto with E0.
+  - unfold canonS; rewrite canon_SSn_zero; auto with E0.
   -  unfold lt, phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 

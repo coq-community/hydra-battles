@@ -129,13 +129,13 @@ Proof.
 Qed.
 
 (* begin snippet gcanonSSn:: no-out *)
-Lemma gcanonSSn (i : nat) (alpha : T1) (n : nat):
+Lemma gcanon_SSn_zero (i : nat) (alpha : T1) (n : nat):
   T1nf alpha ->
   canon (cons alpha n.+1 zero) i = cons alpha n (canon (phi0 alpha) i).
 (* end snippet gcanonSSn *)
 Proof.
   rewrite -(h2g_g2hK alpha) /canon g2h_cons g2h_h2gK => Hnf;
-  rewrite -h2g_cons h2g_g2hK canonSSn; f_equal. 
+  rewrite -h2g_cons h2g_g2hK canon_SSn_zero; f_equal. 
   by rewrite h2g_g2hK -(h2g_g2hK alpha) -nf_ref in Hnf.  
 Qed.
 

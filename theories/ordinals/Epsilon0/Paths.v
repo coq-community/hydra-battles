@@ -544,7 +544,7 @@ Proof.
   - subst; right with (ocons alpha i gamma).
     +  split.
      *    discriminate.
-     *   unfold canonS; rewrite canonSSn.  f_equal.
+     *   unfold canonS; rewrite canon_SSn_zero.  f_equal.
      --   destruct H1; auto.
      --  auto.
     + apply path_toS_tail; auto.
@@ -709,7 +709,7 @@ Lemma gnawS_SSn (i:nat) s :
     gnawS (ocons alpha (S n) T1.zero) (i::s) =
     gnawS (ocons alpha n (canon (ocons alpha 0 zero) (S i))) s.
 Proof.
-  intros.  rewrite gnaws_rw; auto.  rewrite canonSSn;  auto.
+  intros.  rewrite gnaws_rw; auto.  rewrite canon_SSn_zero;  auto.
 Qed.
 
 Lemma gnawS_cut1 : forall s alpha n beta,
@@ -751,12 +751,12 @@ Proof.
     discriminate H0.  
   -  intros.    
      rewrite gnaws_rw in H0.     
-     rewrite canonSSn in H0; auto.
+     rewrite canon_SSn_zero in H0; auto.
      destruct (T1_eq_dec alpha T1.zero).
      + subst; exists (n::nil), s;  split;auto.
      + destruct (@gnawS_cut1 s alpha n0 (canon (T1.phi0 alpha) (S n))).
        2 : auto.
-       rewrite <- canonSSn; auto.
+       rewrite <- canon_SSn_zero; auto.
          apply nf_canon;auto.
        * destruct H1 as [s2 [H2 [H3 H4]]];exists (n::x), s2;  split;auto.
          now subst.
@@ -1117,10 +1117,10 @@ Proof with auto with T1.
     +  now destruct H0.
     +  destruct (const_pathS_first_step H1).
        { rewrite  e; left;  split.
-         discriminate. rewrite canonSSn ; trivial. }
+         discriminate. rewrite canon_SSn_zero ; trivial. }
        { apply const_pathS_trans with
              (ocons alpha n (T1.phi0 (canon alpha (S i)))) ; trivial. 
-         { left;  rewrite canonSSn ; eauto with T1.
+         { left;  rewrite canon_SSn_zero ; eauto with T1.
            - split.
              + discriminate.
              + rewrite canonS_lim1 ; eauto with T1.
@@ -1775,7 +1775,7 @@ Proof.
           }
           destruct (T1_eq_dec alpha2 zero).
           { 
-            subst alpha2;  rewrite canonSSn in e.
+            subst alpha2;  rewrite canon_SSn_zero in e.
             destruct (T1_eq_dec alpha1 zero).
             {
               subst alpha1; simpl canonS in e;  subst beta;
