@@ -64,10 +64,7 @@ In the following two examples, the bare name \texttt{T1} is given by default eit
 \inputsnippets{GaiaToHydra/T1BridgeUse,
   GaiaToHydra/LocateT1}
 
-Associativity of multiplication over \HydrasLib' type \texttt{T1},
-although imported from \gaia, is expressed with \HydrasLib' notations.
-
-\inputsnippets{GaiaToHydra/T1BridgeUseb}
+Section~\ref{sect:gaia2hydra} shows how lemmas on arithmetic properties of ordinals strictly less than $\epsilon_0$ are  imported from \gaia , with \HydrasLib's notations.
 
 \item The other way, the module \href{../theories/html/gaia_hydras.GCanon.html}%
   {\texttt{gaia\_hydras.GCanon}} is an adaptation to \gaia of
@@ -175,6 +172,8 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 \inputsnippets{T1Bridge/SearchDemo}
 
 \section{Importing a theorem from \gaia}
+\label{sect:gaia2hydra}
+
 The \texttt{Gaia} library already contains many lemmas about
 ordinal arithmetic. In this section, we give two examples of
 porting such a lemma to \HydrasLib' vocabulary.

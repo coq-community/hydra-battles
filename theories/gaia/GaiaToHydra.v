@@ -8,7 +8,7 @@ Import Epsilon0.T1.
 (* end snippet T1BridgeUse *)
 
 (* begin snippet LocateT1 *)
-
+Locate T1.
 (* end snippet LocateT1 *)
 
 (* begin snippet T1BridgeUseb:: no-out *)
