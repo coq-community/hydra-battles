@@ -34,9 +34,7 @@ Proof.
   - move : H; rewrite /nat_of_ord /compare.
     destruct alpha, beta => ?; subst. 
     have Heq:i = i0. 
-    + apply eq_proofs_unicity_on; destruct y, (m0 < n)%N => //.
-      left => //.
-      right => //.
+    + apply eq_proofs_unicity_on. decide equality.  
     + subst; rewrite /finord_compare PeanoNat.Nat.compare_refl. 
       constructor; reflexivity. 
   - replace (compare alpha beta) with Datatypes.Lt.
@@ -71,11 +69,10 @@ Proof.
   move => x;  rewrite /finord_lt.
   apply Acc_incl with (fun x y => m _ x < m _ y)%N.
   - move => a b; by rewrite /m.
-  - apply (Acc_inverse_image ('I_n) nat (fun n p=> (n < p)%N) (@m n) x).
-    apply lt_wf. 
+  - apply (Acc_inverse_image ('I_n) nat (fun n p=> (n < p)%N) (@m n) x), lt_wf. 
 Qed. 
 
-#[global] Instance finord_ON n : ON (@finord_lt n)  (@finord_compare n).
+#[global] Instance finord_ON n : ON (@finord_lt n) (@finord_compare n).
 Proof.
  split.
  - apply finord__comp.

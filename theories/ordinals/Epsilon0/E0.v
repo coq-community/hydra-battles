@@ -165,8 +165,7 @@ Proof. reflexivity. Defined.
 Lemma nf_proof_unicity :
   forall (alpha:T1) (H H': nf alpha), H = H'.
 Proof.
-  intros; red in H, H'; apply eq_proofs_unicity_on.
-  intro y; destruct (bool_dec (nf_b alpha)  y); auto. (* .no-out *)
+  intros; red in H, H'; apply eq_proofs_unicity_on; decide equality.
 Qed.
 (* end snippet nfProofUnicity *)
 

@@ -3673,9 +3673,7 @@ Module G0.
     forall (alpha:T2) (H H': nfb alpha), H = H'.
   Proof.
     intros;  red in H, H';  apply Eqdep_dec.eq_proofs_unicity_on.
-    destruct y. 
-    - rewrite H; auto. 
-    - rewrite H; right; discriminate. 
+    decide equality.
   Qed.
 
   (* begin snippet G0b *)

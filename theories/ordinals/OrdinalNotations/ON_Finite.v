@@ -62,9 +62,8 @@ Proof.
       f_equal.
 (* end snippet compareCorrectc *)
 (* begin snippet compareCorrectd *)
-      apply eq_proofs_unicity_on.
-      destruct y, (x0 <? S n); auto; right; discriminate.    
-     (* ... *)
+      apply eq_proofs_unicity_on; decide equality.
+    (* ... *)
 (* end snippet compareCorrectd *)
     + rewrite Nat.compare_lt_iff;  constructor 2.
       simpl; destruct x0; [  lia |  apply leb_correct; lia].
@@ -152,8 +151,7 @@ Proof.
       * left;left;red; destruct y; destruct x.
        --  replace Hi with i.
         ++ right. 
-        ++ apply eq_proofs_unicity_on; 
-             destruct y, (0 <? S n); auto; right; discriminate.    
+        ++ apply eq_proofs_unicity_on; decide equality.
        -- left; red; cbn; trivial.
       * right; refine (exist _ (exist _ i _) _).
         split.

@@ -51,10 +51,7 @@ Proof.
       f_equal.
       f_equal.
       unfold g_obligation_1.
-      red in i; apply eq_proofs_unicity_on.
-      destruct y.
-      * left; auto.
-      * right; rewrite i; discriminate.
+      red in i; apply eq_proofs_unicity_on; decide equality.
     + cbn; unfold g; destruct (le_lt_dec 3 (S (S (S n)))).
       f_equal; lia.
       lia.

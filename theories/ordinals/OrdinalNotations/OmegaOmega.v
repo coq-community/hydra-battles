@@ -586,10 +586,7 @@ Module OO.
   Lemma nf_proof_unicity :
     forall (alpha:t) (H H': nf alpha), H = H'.
   Proof.
-    intros; red in H, H'; apply eq_proofs_unicity_on.
-    destruct y. 
-    - rewrite H; auto. 
-    - rewrite H; right; discriminate. 
+    intros; red in H, H'; apply eq_proofs_unicity_on; decide equality.
   Qed.
 
   Lemma OO_eq_intro : forall alpha beta : OO,

@@ -43,8 +43,8 @@ Proof.
     case_eq (compare x x0); unfold lt; cbn.
     + constructor 1.
       destruct (comparable_comp_spec x x0); try discriminate.
-       subst; f_equal; apply eq_proofs_unicity_on.
-       decide equality.
+      subst; f_equal; apply eq_proofs_unicity_on;
+        decide equality.
     + constructor 2.
         destruct (comparable_comp_spec x x0); trivial; try discriminate.
     + constructor 3; destruct (comparable_comp_spec x x0); trivial; discriminate.
