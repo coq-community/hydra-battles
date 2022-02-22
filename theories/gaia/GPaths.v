@@ -34,6 +34,24 @@ Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
 Notation path from s to :=
   (path_to to s from).
 
+Definition acc_from alpha beta := exists s,  path alpha s beta.
+
+
+#[global] Notation hpathS from s to := (path_toS to s from).
+
+Definition pathS (from: T1)(s: seq nat) (to: T1) : Prop :=
+  hpathS (g2h from) s (g2h to).
+
+
+#[global] Notation hgnawS := gnawS.
+#[global] Notation hgnaw := gnaw.
+
+Definition gnawS alpha s := h2g (hgnawS (g2h alpha) s).
+Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
+
+
+(** * Examples *)
+
 Example ex_path1 : path (T1omega * (\F 2)) [:: 2; 2; 2] T1omega.
 Proof. rewrite /path_to;  path_tac. Qed.
 
@@ -45,6 +63,29 @@ Proof. rewrite /path_to /index_iota => /=.  path_tac. Qed.
 
 Example ex_path4: path (T1omega * \F 2) (List.repeat 3 8) zero.
 Proof. rewrite /path_to => /=. path_tac. Qed.
+
+Example ex_path5: pathS (T1omega * \F 2) (List.repeat 2 8) zero.
+Proof.
+  rewrite /pathS path_toS_path_to => /=; path_tac.
+Qed.
+
+Compute ppT1 (gnaw (phi0 T1omega) [:: 2; 3; 4; 5]).
+
+Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 10)).
+
+Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 19)).
+
+Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 38)).
+
+Compute ppT1 (gnawS (phi0 T1omega) (index_iota 1 37)).
+
+
+
+
+
+
+
+
 
 
 
