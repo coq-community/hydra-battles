@@ -173,7 +173,7 @@ theories/gaia/nfwfgaia.v
 theories/gaia/GCanon.v
 theories/gaia/GF_alpha.v
 theories/gaia/ON_gfinite.v
-
+theories/gaia/GPaths.v
 
 theories/ordinals/Prelude/MoreLibHyps.v
 theories/ordinals/Prelude/LibHyps_Experiments.v
