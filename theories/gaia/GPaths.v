@@ -69,20 +69,21 @@ Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
 #[global] Notation hstandard_gnaw := standard_gnaw.
 Definition standard_gnaw i alpha l := h2g (hstandard_gnaw i (g2h alpha) l).
 
+(** SSreflect's iota was already defined in Prelude *)
 
 Lemma iota_adapt i l: iota i l = MoreLists.iota_from i l. 
-Proof.   elim: i => /= //. Qed. 
+Proof. elim: i => /= //. Qed. 
 
 
 Lemma standard_gnaw_iota_from i alpha l :
   i <> 0 -> standard_gnaw i alpha l = gnaw alpha (iota i l).
-  Proof. 
-   move: l i alpha ; elim => // /=. 
-   rewrite !/standard_gnaw => n Hn i alpha Hi.
-   specialize (Hn (S i) (canon alpha i)); rewrite /canon g2h_h2gK in Hn.
-    rewrite Hn /gnaw ?g2h_h2gK => // /=.  
-    move: Hi Hn; case :i => //.  
-  Qed. 
+Proof. 
+  move: l i alpha ; elim => // /=. 
+  rewrite !/standard_gnaw => n Hn i alpha Hi.
+  specialize (Hn (S i) (canon alpha i)); rewrite /canon g2h_h2gK in Hn.
+  rewrite Hn /gnaw ?g2h_h2gK => // /=.  
+  move: Hi Hn; case :i => //.  
+Qed. 
  
 
 
@@ -121,6 +122,34 @@ Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 37).
 Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 75).
  
 *)
+
+Theorem gKS_thm_2_4 (lambda : T1) :
+  T1nf lambda ->
+  T1limit lambda  ->
+  forall i j, (i < j)%N ->
+              const_pathS 0 (canon lambda (S j))
+                          (canon lambda (S i)).
+Proof. 
+  rewrite -hnf_g2h => Hlambda Hlim i j Hij. 
+  rewrite -(h2g_g2hK lambda) -limitb_ref in Hlim. 
+  have H'ij: (i < j)%coq_nat by apply /ltP. 
+  generalize (KS_thm_2_4 Hlambda Hlim H'ij). 
+  by rewrite /const_pathS !g2h_canon.
+Qed. 
+  
+Lemma gCor12 (alpha : T1) :
+  T1nf alpha ->
+  forall beta i n, T1nf beta -> beta  < alpha  ->
+                   (i < n)%N ->
+                   const_pathS i alpha beta ->
+                   const_pathS n alpha beta.
+Proof.
+  rewrite -hnf_g2h => Hnf beta i n Hbeta Hlt Hij; rewrite /const_pathS.
+  apply Cor12 => //.
+  rewrite -T1lt_iff => //.
+  by rewrite -hnf_g2h => //. 
+  by apply /ltP. 
+Qed.
 
 
 Lemma gLemma2_6_1 (alpha:T1) :
