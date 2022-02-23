@@ -4084,9 +4084,9 @@ Notation "alpha * n" := (PP_mult alpha n) : ppT1_scope.
 
 Notation "alpha ^ beta" := (PP_exp alpha beta) : ppT1_scope.
 
-Notation _omega := PP_omega.
+Notation ω := PP_omega.
 
-Check (_omega ^ _omega * 2 + PP_fin 1)%pT1.
+Check (ω ^ ω  * 2 + PP_fin 1)%pT1.
 
 (* end snippet ppT1Def *)
 
@@ -4095,14 +4095,14 @@ Fixpoint pp0 (alpha : T1) : ppT1 :=
   match alpha with
   | zero => PP_fin 0
   | ocons zero n zero => PP_fin (S n)
-  | ocons one 0 zero => _omega
-  | ocons one 0 beta => (_omega + pp0 beta)%pT1
-  | ocons one n zero => (_omega * (S n))%pT1
-  | ocons one n beta => (_omega * (S n) + pp0 beta)%pT1
-  | ocons alpha 0 zero => (_omega ^ pp0 alpha)%pT1
-  | ocons alpha 0 beta => (_omega ^ pp0 alpha + pp0 beta)%pT1
-  | ocons alpha n zero => (_omega ^ pp0 alpha * (S n))%pT1
-  | ocons alpha n beta => (_omega ^ pp0 alpha * (S n) + pp0 beta)%pT1
+  | ocons one 0 zero => ω
+  | ocons one 0 beta => (ω + pp0 beta)%pT1
+  | ocons one n zero => (ω * (S n))%pT1
+  | ocons one n beta => (ω * (S n) + pp0 beta)%pT1
+  | ocons alpha 0 zero => (ω ^ pp0 alpha)%pT1
+  | ocons alpha 0 beta => (ω ^ pp0 alpha + pp0 beta)%pT1
+  | ocons alpha n zero => (ω ^ pp0 alpha * (S n))%pT1
+  | ocons alpha n beta => (ω ^ pp0 alpha * (S n) + pp0 beta)%pT1
   end.
 
 Fixpoint eval_pp (e : ppT1) : T1 :=
@@ -4112,7 +4112,7 @@ Fixpoint eval_pp (e : ppT1) : T1 :=
   | PP_add e f => ( (eval_pp e) +  (eval_pp f))%t1
   | PP_mult e n => ( (eval_pp e) * (S n))%t1
   | PP_exp e f => ((eval_pp e) ^ (eval_pp f))%t1
-  | _omega   => omega
+  | ω   => omega
   end.
 
 Compute eval_pp (PP_fin 4).
