@@ -34,7 +34,7 @@ Definition transition i : relation T1 :=
 
 (* end snippet transitionDefs *)                             
 
-Definition bounded_transition (n:nat) alpha beta :=
+Definition bounded_transitionS (n:nat) alpha beta :=
   exists i:nat, (i <= n)%nat /\ transition_S i alpha beta. 
 
 (** ** Paths inside epsilon_0 
@@ -166,7 +166,7 @@ Fixpoint standard_gnaw (i:nat)(alpha : T1)(l:nat):  T1  :=
  *)
 
 
-Definition KP_arrow n := clos_trans_1n T1 (bounded_transition n).
+Definition KP_arrowS n := clos_trans_1n T1 (bounded_transitionS n).
 
 
 (** ** Paths with constant index *)
@@ -1960,7 +1960,7 @@ Proof.
 Qed. 
 
 
-Lemma KP_arrow_zero n beta : KP_arrow n zero beta -> beta = zero.
+Lemma KP_arrowS_zero n beta : KP_arrowS n zero beta -> beta = zero.
 Proof.  
   intros H;  red in H; rewrite <- clos_trans_t1n_iff in H. 
   rewrite clos_trans_tn1_iff in H.
@@ -1973,7 +1973,7 @@ Qed.
 
 Lemma KP_5_iii n alpha beta:  nf alpha ->  nf beta -> 
                               const_pathS n alpha beta <->
-                              KP_arrow n alpha beta.
+                              KP_arrowS n alpha beta.
 Proof.
   intros H H0; split.
   - induction 1.   (* should be more trivial *)
@@ -3007,7 +3007,7 @@ Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
     specialize (limitb_canonS_not_zero j cnf_ok H).
     intro.
     
-    Search  canon. apply canon_limit_mono; auto. 
+    apply canon_limit_mono; auto. 
     auto with arith. 
     apply nf_canon; auto. 
 
