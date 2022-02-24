@@ -1,3 +1,9 @@
+(** Gaia-compatible [F_ alpha] fast growing functions  
+
+(imported from [hydras.Epsilon0.F_alpha] )
+*)
+
+
 (* begin snippet Requirements:: no-out  *)
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
@@ -35,6 +41,8 @@ Lemma T1F_eq alpha (Hnf : T1nf alpha == true) (n:nat) :
 Proof.
   rewrite /T1F_; f_equal; apply gE0_eq_intro => //. 
 Qed.
+
+(** Please note thar a lemma [foo] may mask [F_alpha.Foo] *)
 
 (* begin snippet FAlphaProps:: no-out *)
 Lemma F_alpha_gt (alpha : E0) (n : nat): (n < F_ alpha n)%N.
@@ -107,28 +115,28 @@ Qed.
 
 (**  numerical examples *)
 
-Lemma gLF1 i: F_ (E0Fin 1) i = ((2 * i) .+1)%N.
+Lemma LF1 i: F_ (E0Fin 1) i = ((2 * i) .+1)%N.
 Proof. 
   replace (F_ (E0Fin 1) i) with (hF_ (Fin 1) i). 
   - rewrite LF1 => //.
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed.
 
-Lemma gLF2 i:  (Exp2.exp2 i * i < F_ (E0Fin 2) i)%N.
+Lemma LF2 i:  (Exp2.exp2 i * i < F_ (E0Fin 2) i)%N.
 Proof. 
   apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
   - apply LF2. 
   - rewrite /F_; f_equal;  by apply E0_eq_intro .
 Qed.
 
-Lemma gLF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0Fin 2) i)%N.
+Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0Fin 2) i)%N.
 Proof. 
   move => Hi; apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
   - apply LF2'; by apply /leP. 
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed. 
 
-Lemma gLF3_2:
+Lemma LF3_2:
   Iterates.dominates_from 2 (F_ (E0Fin 3))
     (fun n : nat => Iterates.iterate Exp2.exp2 n.+1 n).
 Proof.
@@ -141,7 +149,7 @@ Qed.
 Definition Canon_plus n alpha beta :=
   Paths.Canon_plus n (E0_g2h alpha) (E0_g2h beta). 
 
-Lemma gF_restricted_mono_l alpha beta n:
+Lemma F_restricted_mono_l alpha beta n:
     Canon_plus n alpha beta -> (F_ beta n <= F_ alpha n)%N.
 Proof.
   rewrite /Canon_plus /F_. move => HCanon; apply /leP. 
@@ -154,7 +162,7 @@ Notation hH'_ := Hprime.H'_.
 
 Definition H'_ alpha i := hH'_ (E0_g2h alpha) i. 
 
-Lemma gH'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
+Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
  replace (E0_g2h (E0phi0 alpha)) with (E0.phi0 (E0_g2h alpha)). 
@@ -163,7 +171,7 @@ Proof.
 Qed.
 
 (* begin snippet FAlphaNotPR:: no-out *)
-Lemma gF_alpha_not_PR_E0  alpha:
+Lemma F_alpha_not_PR_E0  alpha:
   E0le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
 Proof. 
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
@@ -175,11 +183,11 @@ Proof.
 Qed.
 (* end snippet FAlphaNotPR *)
 
-Lemma gF_alpha_not_PR alpha (Hnf: T1nf alpha == true):
+Lemma F_alpha_not_PR alpha (Hnf: T1nf alpha == true):
   gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
 Proof. 
   rewrite /T1F_ => Halpha; 
-  apply gF_alpha_not_PR_E0; rewrite /E0le  => /=. 
+  apply F_alpha_not_PR_E0; rewrite /E0le  => /=. 
   by destruct Halpha. 
 Qed. 
 

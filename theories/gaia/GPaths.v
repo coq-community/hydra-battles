@@ -1,4 +1,7 @@
-(** Import canonical sequences from hydra-battles *)
+(** Gaia-compatible accessibility in epsilon0  
+
+(imported from [hydras.Epsilon0.Paths]) *)
+
 
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.

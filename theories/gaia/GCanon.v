@@ -1,4 +1,6 @@
-(** Import canonical sequences from hydra-battles *)
+(** Gaia-compatible canonical sequences  
+
+(imported from [hydras.Epsilon0.Canon]) *)
 
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
@@ -14,6 +16,8 @@ Set Bullet Behavior "Strict Subproofs".
 
 (** Importation of Ketonen-Solovay's  machinery into gaia's world
     (work in progress) 
+    
+  Note that a lemma [Foo] may mask [Canon.Foo]  
 *)
 
 
@@ -45,7 +49,7 @@ Proof. by rewrite /canon g2h_h2gK. Qed.
 (* end snippet g2hCanonRw *)
 
 (* begin snippet gcanonSucc:: no-out *)
-Lemma gcanon_succ i alpha (Halpha: T1nf alpha):
+Lemma canon_succ i alpha (Halpha: T1nf alpha):
   canon (T1succ alpha) i = alpha.
 (* end snippet gcanonSucc *)
 Proof.
@@ -53,7 +57,7 @@ Proof.
 Qed.
 
 
-Lemma gcanonS_LE alpha n:
+Lemma canonS_LE alpha n:
     T1nf alpha -> canon alpha n.+1 <= canon alpha n.+2.
 Proof.
   rewrite -(h2g_g2hK alpha) -nf_ref /canon g2h_h2gK => Hnf. 

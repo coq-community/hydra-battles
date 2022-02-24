@@ -1,4 +1,7 @@
-(** Import canonical sequences from hydra-battles *)
+(** Gaia-compatible large sequences 
+
+(imported from [hydras.Epsilon0.Large_Sets] )
+*)
 
 From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
