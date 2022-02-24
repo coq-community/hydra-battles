@@ -38,7 +38,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
 | L_spec1 : forall alpha f,
     alpha <> zero ->
     (forall k,
-        mlarge alpha (interval (S k)(Nat.pred (f (S k))))) ->
+        mlarge alpha (interval (S k) (Nat.pred (f (S k))))) ->
     L_spec alpha f.
 
 (* end snippet LSpecDef *)

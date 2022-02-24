@@ -36,3 +36,8 @@ doc/movies/targets.mk
 __pycache__
 alectryon-html/
 .envrc
+/theories/ordinals/*/*.tex
+/theories/ordinals/*/*.pdf
+/theories/gaia/*.tex
+/theories/gaia/*.pdf
+

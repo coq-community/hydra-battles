@@ -137,7 +137,6 @@ Proof.
   by apply /ltP. 
 Qed.
 
-
 Lemma gLemma2_6_1 (alpha:T1) :
 T1nf alpha ->
   forall beta, T1nf beta -> 
@@ -153,6 +152,36 @@ Proof.
   case (Lemma2_6_1 Hnf H'lt) => x Hx; exists x. 
   by rewrite /const_pathS. 
 Qed. 
+
+Lemma gconstant_to_standard_path 
+  (alpha beta : T1) (i : nat):
+  T1nf alpha -> const_pathS i alpha beta -> zero  < alpha ->
+  {j:nat | standard_path (S i) alpha j beta}.
+Proof.  
+  rewrite    -hnf_g2h => nfalpha   Hpath Hpos.
+  case (@constant_to_standard_path (g2h alpha) (g2h beta) i) => //.
+   rewrite T1lt_iff -?hnf_g2h in Hpos =>  //.  
+  move => x Hx; exists x; by rewrite /standard_path. 
+Qed.
+
+Theorem  gLT_to_standard_path (alpha beta : T1) :
+  T1nf alpha -> T1nf beta -> beta < alpha ->
+  {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
+Proof.
+  rewrite    -!hnf_g2h => nfalpha nfbeta  Hlt.
+  case (@LT_to_standard_path (g2h alpha) (g2h beta)).  
+  rewrite -T1lt_iff -?hnf_g2h  => //.
+  move => x; case => j Hj.
+  exists x, j; by rewrite /standard_path. 
+Qed.
+
+(** * Adaptation to E0 *)
+
+Notation hCanon_plus := Canon_plus. 
+Definition Canon_plus i alpha beta :=
+  hCanon_plus i (E0_g2h alpha) (E0_g2h beta).
+
+
 
 
 (** * Examples *)
@@ -190,3 +219,6 @@ Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 37).
 Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 75).
  
 *)
+
+
+  

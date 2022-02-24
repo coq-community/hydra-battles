@@ -45,6 +45,6 @@ Theorem gTheorem_4_5 (alpha: T1)(Halpha : T1nf alpha)
         (HAB : List.incl A B) :
   largeS alpha A -> largeS alpha B.
 Proof.
-  rewrite /largeS; apply Theorem_4_5 =>  //; by rewrite hnf_g2h.
+  rewrite /largeS; apply Theorem_4_5 => //; by rewrite hnf_g2h.
 Qed.
 
