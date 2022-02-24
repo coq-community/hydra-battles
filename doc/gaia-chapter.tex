@@ -307,6 +307,55 @@ We adapt theorems from \href{../theories/html/hydras.Epsilon0.Canon.html}%
 \inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitOf}
 
+\subsection{Accessibility in \texorpdfstring{$\epsilon_0$}{epsilon\_0}}
+
+The library \href{../theories/html/gaia.GPaths.html}%
+{\texttt{gaia.GPaths}} imports definitions and lemmas from
+\href{../theories/html/hydras.Epsilon0.Paths.html}%
+{\texttt{hydras.Epsilon0.Paths}}.
+
+\subsubsection{Remark}
+\label{sect:gaia-masking}
+
+First, we import some definitions. When we import some constant \emph{Id} from {\texttt{hydras.Epsilon0.Paths}} the name
+\emph{Id} is given to {\texttt{gaia.GPaths}}. In order to get
+{\texttt{hydras.Epsilon0.Paths}}'s sense, please refer it as
+\emph{Paths.Id}.
+Sometimes, we rename \emph{Paths.Id} into \emph{{\bf h}Id}.
+
+\subsubsection{Transitions}
+  
+\inputsnippets{GPaths/importationsa}
+
+\subsubsection{Paths}
+
+\inputsnippets{GPaths/pathsDefs}
+
+\subsubsection{Main theorems about paths}
+
+If $\beta$ is (strictly) accessible from $\alpha$, then
+$\beta<\alpha$.
+
+\inputsnippets{GPaths/pathToLT}
+
+Constant index paths can be simulated with constant paths with larger index.
+
+\inputsnippets{GPaths/Cor12}
+
+
+If $\beta<\alpha$, then $\beta$ is accessible from $\alpha$
+through some constant-index path.
+
+\inputsnippets{GPaths/Lemma261}
+
+Any constant-index path can be simulated by a ``standard'' path (with index incremented by 1 at each step).
+
+\inputsnippets{GPaths/constantToStandard}
+
+As a corollary, we relate ordinal inequality to standard paths.
+
+\inputsnippets{GPaths/LTToStandard}
+
 \subsection{A family of rapidly growing functions}
 
 The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. The symbol \texttt{F\_} has type \texttt{E0 -> nat -> nat},

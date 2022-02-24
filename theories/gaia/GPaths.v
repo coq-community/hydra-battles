@@ -13,6 +13,8 @@ Import CantorOrdinal.
 
 Set Bullet Behavior "Strict Subproofs".
 
+(* begin snippet importationsa:: no-out *)
+
 (** Importation of Ketonen-Solovay's  machinery into gaia's world
     (work in progress) 
 *)
@@ -27,14 +29,53 @@ Definition transition i (alpha beta: T1) :=
 Definition bounded_transitionS n (alpha beta: T1) :=
   exists i, (i <= n)%N /\ transition (S i) alpha beta.
 
+(* end snippet importationsa *)
+
+(* begin snippet pathsDefs:: no-out *)
+
 #[global] Notation hpath_to := path_to. 
 (** [path_to beta s alpha] : [beta] is accessible from [alpha] with trace [s] *)
+
 Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
   hpath_to (g2h to) s (g2h from).
 
 #[global] Notation hpath := path. 
 
 Notation path from s to := (path_to to s from).
+
+Definition acc_from alpha beta := exists s,  path alpha s beta.
+
+#[global] Notation hpathS from s to := (path_toS to s from).
+
+Definition pathS (from: T1)(s: seq nat) (to: T1) : Prop :=
+  hpathS (g2h from) s (g2h to).
+
+#[global] Notation hKP_arrowS  := KP_arrowS.
+
+Definition KP_arrowS n := 
+  Relation_Operators.clos_trans_1n T1 (bounded_transitionS n).
+
+#[global] Notation hconst_pathS  := const_pathS.
+#[global] Notation hconst_path  := const_path.
+
+Definition const_pathS i alpha beta  :=
+  hconst_pathS i (g2h alpha) (g2h beta).
+
+Definition const_path i alpha beta :=
+  hconst_path i (g2h alpha) (g2h beta).
+
+#[global] Notation hgnawS := gnawS.
+#[global] Notation hgnaw := gnaw.
+
+Definition gnawS alpha s := h2g (hgnawS (g2h alpha) s).
+Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
+
+#[global] Notation hstandard_gnaw := standard_gnaw.
+Definition standard_gnaw i alpha l := h2g (hstandard_gnaw i (g2h alpha) l).
+
+(* end snippet pathsDefs *)
+
+(** SSreflect's iota was already defined in Prelude *)
 
 (** To simplify *)
 
@@ -60,42 +101,6 @@ Proof.
       by rewrite -g2h_eq_iff. 
     + by rewrite g2h_canon. 
 Qed. 
-
-
-Definition acc_from alpha beta := exists s,  path alpha s beta.
-
-
-#[global] Notation hpathS from s to := (path_toS to s from).
-
-
-Definition pathS (from: T1)(s: seq nat) (to: T1) : Prop :=
-  hpathS (g2h from) s (g2h to).
-
-
-#[global] Notation hKP_arrowS  := KP_arrowS.
-
-Definition KP_arrowS n :=
-  Relation_Operators.clos_trans_1n T1 (bounded_transitionS n).
-
-#[global] Notation hconst_pathS  := const_pathS.
-#[global] Notation hconst_path  := const_path.
-
-Definition const_pathS i alpha beta  :=
-  hconst_pathS i (g2h alpha) (g2h beta).
-
-Definition const_path i alpha beta :=
-  hconst_path i (g2h alpha) (g2h beta).
-
-#[global] Notation hgnawS := gnawS.
-#[global] Notation hgnaw := gnaw.
-
-Definition gnawS alpha s := h2g (hgnawS (g2h alpha) s).
-Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
-
-#[global] Notation hstandard_gnaw := standard_gnaw.
-Definition standard_gnaw i alpha l := h2g (hstandard_gnaw i (g2h alpha) l).
-
-(** SSreflect's iota was already defined in Prelude *)
 
 Lemma iota_adapt i l: iota i l = MoreLists.iota_from i l. 
 Proof. elim: i => /= //. Qed. 
@@ -123,7 +128,7 @@ Proof.
   by rewrite /index_iota /MoreLists.interval iota_adapt. 
 Qed.
 
-
+(* begin snippet pathToLT:: no-out *)
 Lemma path_to_LT beta s alpha :
   path_to beta s alpha -> T1nf alpha -> T1nf beta -> beta < alpha. 
 Proof.
@@ -131,14 +136,14 @@ Proof.
     generalize (path_to_LT Hpath Halpha).    
     rewrite T1lt_iff => //; by rewrite -hnf_g2h. 
 Qed.
-
+(* end snippet pathToLT *)
 
 Theorem KS_thm_2_4 (lambda : T1) :
   T1nf lambda ->
   T1limit lambda  ->
   forall i j, (i < j)%N ->
               const_pathS 0 (canon lambda (S j))
-                          (canon lambda (S i)).
+                            (canon lambda (S i)).
 Proof. 
   rewrite -hnf_g2h => Hlambda Hlim i j Hij. 
   rewrite -(h2g_g2hK lambda) -limitb_ref in Hlim. 
@@ -146,13 +151,15 @@ Proof.
   generalize (KS_thm_2_4 Hlambda Hlim H'ij). 
   by rewrite /const_pathS !g2h_canon.
 Qed. 
-  
+
+(* begin snippet Cor12:: no-out *)
 Lemma Cor12 (alpha : T1) :
   T1nf alpha ->
   forall beta i n, T1nf beta -> beta  < alpha  ->
                    (i < n)%N ->
                    const_pathS i alpha beta ->
                    const_pathS n alpha beta.
+(* end snippet Cor12 *)
 Proof.
   rewrite -hnf_g2h => Hnf beta i n Hbeta Hlt Hij; rewrite /const_pathS.
   apply Cor12 => //.
@@ -161,11 +168,13 @@ Proof.
   by apply /ltP. 
 Qed.
 
+(* begin snippet Lemma261:: no-out *)
 Lemma Lemma2_6_1 (alpha:T1) :
 T1nf alpha ->
   forall beta, T1nf beta -> 
     T1lt beta  alpha  ->
     {n:nat | const_pathS n alpha beta}.
+(* end snippet Lemma261 *)
 Proof.
   rewrite -hnf_g2h => Hnf beta Hbeta Hlt.
   have H: hnf (g2h beta) by rewrite hnf_g2h. 
@@ -177,10 +186,12 @@ Proof.
   by rewrite /const_pathS. 
 Qed. 
 
+(* begin snippet constantToStandard:: no-out *)
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
   T1nf alpha -> const_pathS i alpha beta -> zero  < alpha ->
   {j:nat | standard_path (S i) alpha j beta}.
+(* end snippet constantToStandard *)
 Proof.  
   rewrite -hnf_g2h => nfalpha Hpath Hpos.
   case (@constant_to_standard_path (g2h alpha) (g2h beta) i) => //.
@@ -188,10 +199,12 @@ Proof.
   move => x Hx; exists x; by rewrite /standard_path. 
 Qed.
 
+(* begin snippet LTToStandard:: no-out *)
 Theorem  LT_to_standard_path (alpha beta : T1) :
   T1nf alpha -> T1nf beta -> beta < alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
 Proof.
+  (* end snippet LTToStandard *)
   rewrite    -!hnf_g2h => nfalpha nfbeta  Hlt.
   case (@LT_to_standard_path (g2h alpha) (g2h beta)).  
   rewrite -T1lt_iff -?hnf_g2h  => //.

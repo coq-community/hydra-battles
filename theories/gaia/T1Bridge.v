@@ -15,8 +15,6 @@ Unset Strict Implicit.
 
 (* begin snippet hT1gT1 *)
 
-
-
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
 
 #[global] Notation hT1 := Epsilon0.T1.T1.
