@@ -37,16 +37,16 @@ Proof.
 Qed.
 
 (* begin snippet FAlphaProps:: no-out *)
-Lemma gF_alpha_gt (alpha : E0) (n : nat): (n < F_ alpha n)%N.
+Lemma F_alpha_gt (alpha : E0) (n : nat): (n < F_ alpha n)%N.
 Proof. apply /ltP; apply Epsilon0.F_alpha.F_alpha_gt. Qed.
 
-Lemma gF_alpha_mono (alpha: E0): strict_mono (F_ alpha).
+Lemma F_alpha_mono (alpha: E0): strict_mono (F_ alpha).
 Proof.
   rewrite /strict_mono /F_ => n p Hnp; apply /ltP.
   apply F_alpha_mono; move: Hnp => /ltP //.
 Qed.
 
-Lemma gF_alpha_dom alpha:
+Lemma F_alpha_dom alpha:
   dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
 Proof.
   rewrite /dominates_from /F_ g2h_E0succ => p Hp.
@@ -55,26 +55,26 @@ Qed.
 
 (* end snippet FAlphaProps *)
 
-Lemma gF_alpha_Succ_le alpha:
+Lemma F_alpha_Succ_le alpha:
  fun_le (F_ alpha) (F_ (E0succ alpha)).
 Proof.
   rewrite /fun_le /F_ g2h_E0succ => n;  apply /leP; apply F_alpha_Succ_le. 
 Qed. 
 
-Lemma gF_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
+Lemma F_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
 Proof.
   rewrite /F_. apply /ltP ; apply Lt.le_lt_trans with n;
-    [auto with arith| apply F_alpha_gt].
+    [auto with arith| apply F_alpha.F_alpha_gt].
 Qed.
 
-Lemma gF_zero_eqn i: F_ E0zero i = i .+1.
+Lemma F_zero_eqn i: F_ E0zero i = i .+1.
 Proof.
   rewrite /F_; replace (E0_g2h E0zero) with Zero.
   -  by rewrite F_zero_eqn. 
   -  apply E0_eq_intro => //.
 Qed. 
 
-Lemma gF_mono_l alpha beta:
+Lemma F_mono_l alpha beta:
   E0lt beta alpha -> dominates (F_ alpha) (F_ beta).
 Proof.
   rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
@@ -84,10 +84,10 @@ Proof.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.
 
-Lemma gF_alpha_0_eq (alpha : E0): F_ alpha 0 = 1.
+Lemma F_alpha_0_eq (alpha : E0): F_ alpha 0 = 1.
 Proof. by  rewrite /F_ F_alpha_0_eq. Qed.
 
-Lemma gF_succ_eqn alpha i :
+Lemma F_succ_eqn alpha i :
   F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
 Proof.
   rewrite (Iterates.iterate_ext _  (hF_ (E0_g2h alpha))); last first.
@@ -96,7 +96,7 @@ Proof.
     apply E0_eq_intro => /= ;  by rewrite g2h_succ. 
 Qed.
 
-Lemma gF_lim_eqn alpha i:
+Lemma F_lim_eqn alpha i:
   T1limit (cnf alpha) -> F_ alpha i = F_ (E0Canon alpha i) i.
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.

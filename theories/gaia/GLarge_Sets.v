@@ -24,7 +24,7 @@ Definition largeS alpha A := hlargeS (g2h alpha) A.
 Notation hL_spec := L_spec.
 Definition L_spec alpha f := L_spec (g2h alpha) f.
 
-Lemma gmlarge_unicity alpha k l l' : 
+Lemma mlarge_unicity alpha k l l' : 
   mlarge alpha (index_iota k.+1 l.+1) ->
   mlarge alpha (index_iota k.+1 l'.+1) ->
   l = l'.
@@ -33,12 +33,12 @@ Proof.
   by rewrite (mlarge_unicity _ _ _ _ Hl Hl').
 Qed.
 
-Lemma gL_fin_ok i : L_spec (\F i) (L_fin i).
+Lemma L_fin_ok i : L_spec (\F i) (L_fin i).
 Proof.
   rewrite /L_spec (Finite_ref i) g2h_h2gK; apply L_fin_ok.
 Qed.
 
-Theorem gTheorem_4_5 (alpha: T1)(Halpha : T1nf alpha)
+Theorem Theorem_4_5 (alpha: T1)(Halpha : T1nf alpha)
         (A B : seq nat)
         (HA : Sorted.Sorted Peano.lt A)
         (HB : Sorted.Sorted Peano.lt B)
@@ -47,4 +47,6 @@ Theorem gTheorem_4_5 (alpha: T1)(Halpha : T1nf alpha)
 Proof.
   rewrite /largeS; apply Theorem_4_5 => //; by rewrite hnf_g2h.
 Qed.
+
+
 

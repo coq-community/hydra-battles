@@ -100,7 +100,7 @@ Proof.
 Qed.
 
 
-Lemma gpath_to_LT beta s alpha :
+Lemma path_to_LT beta s alpha :
   path_to beta s alpha -> T1nf alpha -> T1nf beta -> beta < alpha. 
 Proof.
     rewrite -!hnf_g2h /path_to => Hpath Halpha Hbeta. 
@@ -109,7 +109,7 @@ Proof.
 Qed.
 
 
-Theorem gKS_thm_2_4 (lambda : T1) :
+Theorem KS_thm_2_4 (lambda : T1) :
   T1nf lambda ->
   T1limit lambda  ->
   forall i j, (i < j)%N ->
@@ -123,7 +123,7 @@ Proof.
   by rewrite /const_pathS !g2h_canon.
 Qed. 
   
-Lemma gCor12 (alpha : T1) :
+Lemma Cor12 (alpha : T1) :
   T1nf alpha ->
   forall beta i n, T1nf beta -> beta  < alpha  ->
                    (i < n)%N ->
@@ -137,7 +137,7 @@ Proof.
   by apply /ltP. 
 Qed.
 
-Lemma gLemma2_6_1 (alpha:T1) :
+Lemma Lemma2_6_1 (alpha:T1) :
 T1nf alpha ->
   forall beta, T1nf beta -> 
     T1lt beta  alpha  ->
@@ -153,7 +153,7 @@ Proof.
   by rewrite /const_pathS. 
 Qed. 
 
-Lemma gconstant_to_standard_path 
+Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
   T1nf alpha -> const_pathS i alpha beta -> zero  < alpha ->
   {j:nat | standard_path (S i) alpha j beta}.
@@ -164,7 +164,7 @@ Proof.
   move => x Hx; exists x; by rewrite /standard_path. 
 Qed.
 
-Theorem  gLT_to_standard_path (alpha beta : T1) :
+Theorem  LT_to_standard_path (alpha beta : T1) :
   T1nf alpha -> T1nf beta -> beta < alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
 Proof.
