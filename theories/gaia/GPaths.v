@@ -28,19 +28,45 @@ Definition bounded_transitionS n (alpha beta: T1) :=
   exists i, (i <= n)%N /\ transition (S i) alpha beta.
 
 #[global] Notation hpath_to := path_to. 
-
+(** [path_to beta s alpha] : [beta] is accessible from [alpha] with trace [s] *)
 Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
   hpath_to (g2h to) s (g2h from).
 
 #[global] Notation hpath := path. 
 
-Notation path from s to :=
-  (path_to to s from).
+Notation path from s to := (path_to to s from).
+
+(** To simplify *)
+
+Lemma path_to_iff1 to i from :
+  T1nf from -> i <> 0 -> from <> zero ->
+  path_to to [:: i] from <-> to = canon from i /\ T1nf from.
+Proof.
+  move => H H0 H1 ; split; rewrite /path_to.
+  -   move => H2; inversion H2 . split. subst. rewrite /htransition in H5.
+      destruct i.
+      + contradiction.
+      + rewrite /canon -(h2g_g2hK to); f_equal. 
+        rewrite /transition_S in H5 => //; case H5 => //.
+      + rewrite /transition_S in H5 => //.
+      + split.
+        * inversion H8. 
+        * by [].
+  - case => -> H2; left => //.      
+    rewrite /htransition;  destruct i.
+    by destruct H0. 
+    split. 
+    + move => H3; apply H1; rewrite -g2h_zero in H3. 
+      by rewrite -g2h_eq_iff. 
+    + by rewrite g2h_canon. 
+Qed. 
+
 
 Definition acc_from alpha beta := exists s,  path alpha s beta.
 
 
 #[global] Notation hpathS from s to := (path_toS to s from).
+
 
 Definition pathS (from: T1)(s: seq nat) (to: T1) : Prop :=
   hpathS (g2h from) s (g2h to).
@@ -57,13 +83,8 @@ Definition KP_arrowS n :=
 Definition const_pathS i alpha beta  :=
   hconst_pathS i (g2h alpha) (g2h beta).
 
-
-
 Definition const_path i alpha beta :=
   hconst_path i (g2h alpha) (g2h beta).
-
-
-
 
 #[global] Notation hgnawS := gnawS.
 #[global] Notation hgnaw := gnaw.
@@ -161,7 +182,7 @@ Lemma constant_to_standard_path
   T1nf alpha -> const_pathS i alpha beta -> zero  < alpha ->
   {j:nat | standard_path (S i) alpha j beta}.
 Proof.  
-  rewrite    -hnf_g2h => nfalpha   Hpath Hpos.
+  rewrite -hnf_g2h => nfalpha Hpath Hpos.
   case (@constant_to_standard_path (g2h alpha) (g2h beta) i) => //.
    rewrite T1lt_iff -?hnf_g2h in Hpos =>  //.  
   move => x Hx; exists x; by rewrite /standard_path. 
@@ -174,8 +195,7 @@ Proof.
   rewrite    -!hnf_g2h => nfalpha nfbeta  Hlt.
   case (@LT_to_standard_path (g2h alpha) (g2h beta)).  
   rewrite -T1lt_iff -?hnf_g2h  => //.
-  move => x; case => j Hj.
-  exists x, j; by rewrite /standard_path. 
+  move => x; case => j Hj; exists x, j; by rewrite /standard_path. 
 Qed.
 
 (** * Adaptation to E0 *)
