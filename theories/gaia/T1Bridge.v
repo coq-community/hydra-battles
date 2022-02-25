@@ -191,6 +191,9 @@ Lemma phi0_ref x: refines0 (hphi0 x) (phi0 (h2g x)). (* .no-out *)
 Proof. by []. Qed.
 (* end snippet unaryRefs *)
 
+Lemma g2h_phi0 a : g2h (phi0 a) = hphi0 (g2h a). 
+Proof. rewrite /phi0 => //. Qed.
+
 
 Lemma ap_ref : refinesPred Epsilon0.T1.ap T1ap. 
 Proof.

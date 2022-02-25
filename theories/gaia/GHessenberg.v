@@ -90,7 +90,7 @@ Qed.
                                b < b o+  a.
  Proof.
    move => a b Ha Hb Hlt; rewrite /oplus.
-   (* Todo : understand ccontext use in rewrite *)
+   (* Todo : understand contexts use in SSr rewrite *)
    replace b with (h2g (g2h b)) at 1 ; last first.
    by (rewrite h2g_g2hK). 
    rewrite -hlt_iff; apply oplus_lt1 => //; rewrite ?hnf_g2h //.
@@ -104,3 +104,37 @@ Proof.
     apply oplus_lt1;auto.
 Qed.
 
+Lemma oplus_strict_mono_l (a b c:T1):
+  T1nf a -> T1nf b -> T1nf c ->
+  a < b -> a o+ c < b  o+ c.
+  
+Proof.
+  rewrite /oplus => Ha Hb Hc.
+  rewrite <- hlt_iff => Hab.
+  apply oplus_strict_mono_l => //; rewrite  ?hnf_g2h => //.
+  by rewrite hlt_iff ?h2g_g2hK. 
+Qed.
+
+
+Lemma oplus_strict_mono_r (a b c:T1):
+  T1nf a -> T1nf b -> T1nf c ->
+  b < c -> a o+ b < a  o+ c.
+Proof.
+   rewrite /oplus => Ha Hb Hc.
+  rewrite <- hlt_iff => Hbc.
+  apply oplus_strict_mono_r => //; rewrite  ?hnf_g2h => //.
+  by rewrite hlt_iff ?h2g_g2hK.
+Qed.
+
+
+Lemma oplus_lt_phi0 a b c:  T1nf a -> T1nf b -> T1nf c ->
+                                      a < c ->  b < c ->
+                                     phi0 a o+ phi0 b < phi0 c.
+Proof.
+  move => Ha Hb Hc Hab Hbc; rewrite /oplus.
+    replace (phi0 c) with (h2g (hphi0 (g2h c))). 
+  rewrite -hlt_iff. 
+rewrite !g2h_phi0. 
+apply oplus_lt_phi0; rewrite ?hnf_g2h ?hlt_iff   ?h2g_g2hK  => //. 
+by rewrite -g2h_phi0 ?h2g_g2hK. 
+Qed.
