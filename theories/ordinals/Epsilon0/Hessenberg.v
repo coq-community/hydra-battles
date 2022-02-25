@@ -546,7 +546,7 @@ Proof.
 Qed.
 
 
-Lemma oplus_le : forall a b, nf a -> nf b -> leq lt a (a o+ b).
+Lemma oplus_le1 : forall a b, nf a -> nf b -> leq lt a (a o+ b).
 Proof.
   intros; destruct b.
   - now rewrite oplus_0_r. 
@@ -556,7 +556,7 @@ Qed.
 Lemma oplus_le2 : forall a b, nf a -> nf b -> leq lt  b (a o+ b).
 Proof.
   intros; rewrite (@oplus_comm a b);auto.
-  now apply oplus_le.
+  now apply oplus_le1.
 Qed.
 
 
