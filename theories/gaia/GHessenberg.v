@@ -4,7 +4,7 @@ From hydras Require Import T1 E0 Hessenberg.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
-(* end snippet Requirements *)
+
 Require Import T1Bridge. 
 Set Implicit Arguments.
 Unset Strict Implicit.
