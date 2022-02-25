@@ -210,6 +210,8 @@ Proof.
   move => H; rewrite <- (g2h_h2gK a), <- (g2h_h2gK b); by apply T1eq_rw.
 Qed.
 
+                                                                
+
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
   match Epsilon0.T1.compare_T1 x y with
@@ -833,6 +835,18 @@ Search ( _ * ?x = ?x)%t1.
 (* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=
   fun alpha beta => compare (g2h alpha) (g2h beta). 
+
+Lemma compare_g2h (alpha beta : T1):
+  compare (g2h alpha) (g2h beta) = compare alpha beta .
+ Proof.  by []. Qed. 
+
+ Lemma compare_h2g (alpha beta: hT1) :
+   compare (h2g alpha) (h2g beta) =compare alpha beta .
+Proof. 
+  rewrite -(g2h_h2gK alpha)  -(g2h_h2gK beta).
+   by rewrite compare_g2h !g2h_h2gK.
+Qed.   
+
 
 Compute compare (\F 6 + T1omega) T1omega. 
 (* end snippet T1compareDef *)                                
