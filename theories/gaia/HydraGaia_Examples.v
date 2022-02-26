@@ -9,20 +9,25 @@ Require Import T1Bridge GCanon GHessenberg GLarge_Sets.
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-
+(* begin snippet ExamplesG2H *)
 Example α : T1 :=
  T1omega +  phi0 T1omega * \F 3 + phi0 (\F 5) * \F 4 + T1omega * T1omega.
 
 Example β : T1 :=  phi0 (phi0 (\F 2)).
 
-Compute g2h β. 
-
 Compute g2h α.
 
+Compute α == h2g (g2h α). 
+(* end snippet ExamplesG2H *)
 
-(** pretty printing *)
+(* begin snippet T1pp *)
+Compute  β + α. 
 
-Compute ppT1 α. 
+Compute T1pp (β + α).
+(* end snippet T1pp *)
+
+
+
 
 Compute compare α β.
 
@@ -30,9 +35,9 @@ Compute compare α β.
 
 Print oplus. 
 
-Compute ppT1 (\F 5 + T1omega). 
+Compute T1pp (\F 5 + T1omega). 
 
-Compute ppT1 (\F 5 o+ T1omega).
+Compute T1pp (\F 5 o+ T1omega).
 
 Search (_ o+ ?x < _ o+ ?x).
 

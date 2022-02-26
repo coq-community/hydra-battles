@@ -176,6 +176,8 @@ theories/gaia/ON_gfinite.v
 theories/gaia/GPaths.v
 theories/gaia/GLarge_Sets.v
 theories/gaia/GHessenberg.v
+theories/gaia/HydraGaia_Examples.v
+
 
 theories/ordinals/Prelude/MoreLibHyps.v
 theories/ordinals/Prelude/LibHyps_Experiments.v

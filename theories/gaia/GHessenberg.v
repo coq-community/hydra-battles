@@ -23,9 +23,9 @@ match n with
   | S p =>  alpha o+ (o_finite_mult p alpha)
 end.
 
-Compute ppT1 (T1omega o+ T1omega).
+Compute T1pp (T1omega o+ T1omega).
 
-Compute ppT1 (o_finite_mult 5 (T1omega + \F 1)).
+Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 
 (** Equations for oplus *)
 

@@ -16,12 +16,10 @@ Unset Strict Implicit.
 (* begin snippet hT1gT1 *)
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
-
 #[global] Notation hT1 := Epsilon0.T1.T1.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
-
-#[global] Notation T1 := CantorOrdinal.T1.
+#[global] Notation T1 := ssete9.CantorOrdinal.T1.
 (* end snippet hT1gT1 *)
 
 
@@ -73,15 +71,12 @@ Fixpoint g2h (alpha : T1) : hT1 :=
   | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
   end.
 
-(** Pretty printing *)
-Definition ppT1 (a:T1) := pp (g2h a).
-
-Example alpha1 := (T1omega + phi0 T1omega * \F 6) * T1omega + phi0 (\F 42).
-
-Compute ppT1 alpha1.
-
-Compute alpha1 == phi0 (T1omega + \F 1) + phi0 (\F 42). 
 (* end snippet h2gG2hDef *)
+
+(** Pretty printing *)
+(* begin snippet T1ppDef *)
+Definition T1pp (a:T1) := pp (g2h a).
+(* end snippet T1ppDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
 Lemma h2g_g2hK : cancel g2h h2g.
@@ -572,7 +567,7 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
 
-Definition ppE0 (alpha: E0) := ppT1 (cnf alpha).
+Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 
 Definition E0lt (alpha beta: E0) := cnf alpha < cnf beta.
 Definition E0le  (alpha beta: E0) := cnf alpha <= cnf beta.

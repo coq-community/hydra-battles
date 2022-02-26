@@ -238,21 +238,21 @@ Example ex_path5: pathS (T1omega * \F 2) (List.repeat 2 8) zero.
 Proof. rewrite /pathS path_toS_path_to => /=; path_tac. Qed.
 
 (*
-Compute ppT1 (gnaw (phi0 T1omega) [:: 2; 3; 4; 5]).
+Compute T1pp (gnaw (phi0 T1omega) [:: 2; 3; 4; 5]).
 
-Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 10)).
+Compute T1pp (gnaw (phi0 T1omega) (index_iota 2 10)).
 
-Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 19)).
+Compute T1pp (gnaw (phi0 T1omega) (index_iota 2 19)).
 
-Compute ppT1 (gnaw (phi0 T1omega) (index_iota 2 38)).
+Compute T1pp (gnaw (phi0 T1omega) (index_iota 2 38)).
 
-Compute ppT1 (gnawS (phi0 T1omega) (index_iota 1 37)).
+Compute T1pp (gnawS (phi0 T1omega) (index_iota 1 37)).
 
-Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 22).
+Compute T1pp (standard_gnaw  2 (phi0 T1omega * \F 2) 22).
 
-Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 37).
+Compute T1pp (standard_gnaw  2 (phi0 T1omega * \F 2) 37).
 
-Compute ppT1 (standard_gnaw  2 (phi0 T1omega * \F 2) 75).
+Compute T1pp (standard_gnaw  2 (phi0 T1omega * \F 2) 75).
  
 *)
 

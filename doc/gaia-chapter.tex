@@ -42,14 +42,72 @@ decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
 Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}.
 
-
-
 \section{Library structure}
 The \gaiaHydras library is designed for users of
 \gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of both libraries.
 
-In case of name clash (for instance the type \texttt{T1} of ordinal terms below $\epsilon_0$), we often added a one-letter prefix to names : \texttt{g} or \texttt{G} for \gaia, \texttt{h} or \texttt{H}
-for \HydrasLib.
+The modules are located in {\texttt{theories/gaia/*.v}}.
+The main entry point is
+\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}, which requires both Gaia's \texttt{ssete9} and a few modules of \texttt{theories/ordinals/Epsilon0}.
+
+Other modules are dedicated to the adaptation of several notions of \HydrasLib to \mathcomp's and \gaia's vocabulary and structures.
+By default, we give priority to \gaia's notation and vocabulary.
+
+
+\subsection{The \texttt{T1Bridge} Module}
+
+\texttt{T1Bridge} starts with a few requirements.
+\inputsnippets{T1Bridge/Requirements}
+
+Because of the common origin of \HydrasLib and \gaia, both libraries share the common name \texttt{T1} (data type of ordinal terms below $\epsilon_0$). As mentionned before, the bare name \texttt{T1} is given by priority to \gaia, and we prefix this name with an \texttt{h} (for ``hydras'') to refer to
+\href{../theories/html/Epsilon0.T1.html}{hydras.Epsilon0.T1.T1}.
+
+\inputsnippets{T1Bridge/hT1gT1}
+
+Many constants are common to \HydrasLib and \gaia. The following notations allow us to get rid of possible ambiguities, still
+keeping with the prefix convention: ``h'' for \HydrasLib, ``g'' for \gaia. 
+
+\inputsnippets{T1Bridge/MoreNotations}
+
+
+\subsection{Translation functions and data refinement}
+
+The bridge between both libraries is made of two straightforward bijections.
+
+\inputsnippets{T1Bridge/h2gG2hDef}
+\inputsnippets{HydraGaia_Examples/ExamplesG2H}
+
+
+The following cancel lemmas will be often used in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}) which appear in many proofs by rewriting.
+
+\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
+
+\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
+
+The function \texttt{g2h} is also used to provide a ``pretty'' printing of Cantor normal forms (through \texttt{Epsilon0.T1.pp}).
+
+\inputsnippets{T1Bridge/T1ppDef}
+
+\inputsnippets{HydraGaia_Examples/T1pp}
+
+
+Functions \texttt{h2g} and \texttt{g2h} allow us to define
+a notion of ``data-refinement''  for constants, functions, predicates and relations. The following definitions express that some
+constant, function, relation defined in \HydrasLib ``implements'' the same concept of \gaia.
+
+
+
+
+
+
+
+
+\section{Importing Material from \Hydras}
+
+
+
+
+
 
 In the following two examples, the bare name \texttt{T1} is given by default either  to \HydrasLib' world or \gaia's. 
  
@@ -78,46 +136,14 @@ Section~\ref{sect:gaia2hydra} shows how lemmas on arithmetic properties of ordin
   
 \end{itemize}
 
-The \gaiaHydras entry point is the file
-\href{../theories/html/gaia_hydras.T1Bridge.html}%
-{\texttt{theories/gaia.T1Bridge.v}}, which requires modules both from \HydrasLib and \gaia. By default, we give priority to \gaia's notation and vocabulary.
-
-
-\inputsnippets{T1Bridge/Requirements}
-
-\inputsnippets{T1Bridge/hT1gT1}
-
-
 
 \subsection{Data refinement}
 
-\subsubsection{Renamings}
 
-Most used constants and functions are also unambiguously renamed.
-
-
-\inputsnippets{T1Bridge/MoreNotations}
 
 Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
 
 
-\subsubsection{Translation functions and data refinement}
-
-The bridge between both libraries is made of two functions.
-
-\inputsnippets{T1Bridge/h2gG2hDef}
-
-The following cancel lemmas will be often used in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}) which appear in many proofs by rewriting.
-
-\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
-
-\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
-
-
-
-Functions \texttt{h2g} and \texttt{g2h} allow us to define
-a notion of ``data-refinement''  for constants, functions, predicates and relations. The following definitions express that some
-constant, function, relation defined in \HydrasLib ``implements'' the same concept of \gaia.
 
 \inputsnippets{T1Bridge/refineDefs}
 
