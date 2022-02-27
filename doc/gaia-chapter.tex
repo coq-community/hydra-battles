@@ -49,7 +49,6 @@ The \gaiaHydras library is designed for users of
 The modules are located in {\texttt{theories/gaia/*.v}}.
 The main entry point is
 \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}, which requires both Gaia's \texttt{ssete9} and a few modules of \texttt{theories/ordinals/Epsilon0}.
-
 Other modules are dedicated to the adaptation of several notions of \HydrasLib to \mathcomp's and \gaia's vocabulary and structures.
 By default, we give priority to \gaia's notation and vocabulary.
 
@@ -69,6 +68,8 @@ keeping with the prefix convention: ``h'' for \HydrasLib, ``g'' for \gaia.
 
 \inputsnippets{T1Bridge/MoreNotations}
 
+Please keep in mind that, in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
+
 
 \subsection{Translation functions and data refinement}
 
@@ -78,17 +79,22 @@ The bridge between both libraries is made of two straightforward bijections.
 \inputsnippets{HydraGaia_Examples/ExamplesG2H}
 
 
-The following cancel lemmas will be often used in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}) which appear in many proofs by rewriting.
+The following cancel lemmas will be often applied in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}), which appear in many proofs by rewriting.
 
 \inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
 
 \inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
 
-The function \texttt{g2h} is also used to provide a ``pretty'' printing of Cantor normal forms (through \texttt{Epsilon0.T1.pp}).
+\subsubsection{Pretty printing Cantor normal forms}
+
+
+The function \texttt{g2h} is also used to provide a ``pretty'' printing of Cantor normal forms (please see Sect.~\vref{sect:ppT1}).
 
 \inputsnippets{T1Bridge/T1ppDef}
 
 \inputsnippets{HydraGaia_Examples/T1pp}
+
+\subsubsection{Kind of refinement}
 
 
 Functions \texttt{h2g} and \texttt{g2h} allow us to define
@@ -99,49 +105,6 @@ constant, function, relation defined in \HydrasLib ``implements'' the same conce
 
 
 
-
-
-
-\section{Importing Material from \Hydras}
-
-
-
-
-
-
-In the following two examples, the bare name \texttt{T1} is given by default either  to \HydrasLib' world or \gaia's. 
- 
-
-  
-\begin{itemize}
-\item In
-  \href{../theories/html/gaia_hydras.GaiaToHydra.html}%
-  {\texttt{gaia\_hydras.GaiaToHydra}}, we adopt \HydrasLib's point of view, and the name \texttt{T1} is by default bound to
-\HydrasLib' data structures.
-
-\inputsnippets{GaiaToHydra/T1BridgeUse,
-  GaiaToHydra/LocateT1}
-
-Section~\ref{sect:gaia2hydra} shows how lemmas on arithmetic properties of ordinals strictly less than $\epsilon_0$ are  imported from \gaia , with \HydrasLib's notations.
-
-\item The other way, the module \href{../theories/html/gaia_hydras.GCanon.html}%
-  {\texttt{gaia\_hydras.GCanon}} is an adaptation to \gaia of
-  \href{../theories/html/hydras.Epsilon0/Canon.html}%
-  {\texttt{hydras.Epsilon0/Canon}}.
-  In this module, the name \texttt{T1} is bound by default to \gaia's meaning. \HydrasLib' name \texttt{T1} is renamed into \texttt{hT1}.
-
-  The following lemmas are expressed in \gaia's vocabulary.
-  \inputsnippets{GCanon/gcanonLimitMono,
-    GCanon/gcanonLimitOf}
-  
-\end{itemize}
-
-
-\subsection{Data refinement}
-
-
-
-Please note that in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
 
 
 
@@ -194,44 +157,13 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 
 \subsection{Looking for a lemma}
 \coq's command \texttt{Search} and notation scopes allow you to explore both libraries.
+For instance, let us look for lemmas whose conclusion is
+$\alpha \times \beta=\beta$.
 
 \inputsnippets{T1Bridge/SearchDemo}
 
-\section{Importing a theorem from \gaia}
-\label{sect:gaia2hydra}
 
-The \texttt{Gaia} library already contains many lemmas about
-ordinal arithmetic. In this section, we give two examples of
-porting such a lemma to \HydrasLib' vocabulary.
 
-\subsection{Associativity of ordinal multiplication (below \texorpdfstring{$\epsilon_0$}{epsilon\_0})}
-\gaia already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
-\emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
-
-\begin{Coqsrc}
-Lemma mulA: associative T1mul.
-\end{Coqsrc}
-
-This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt this lemma to \texttt{hydra-battles}' ordinals, by a small sequence of rewritings.
-
-\inputsnippets{T1Bridge/multA}
-
-The module~\href{../theories/html/gaia_hydras.GaiaToHydra.html}%
-{\texttt{gaia\_hydras.GaiaToHydra}} shows a small
-example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
-
-\inputsnippets{GaiaToHydra/T1BridgeUse}
-
-In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \HydrasLib' meaning.
-
- \inputsnippets{GaiaToHydra/LocateT1, GaiaToHydra/T1BridgeUseb}
-
- \subsection{Right Distributivity, etc.}
- Likewise, we prove almost for free that ordinal multiplication is right distributive over addition (with \HydrasLib' definitions).
-
- \inputsnippets{GaiaToHydra/distributivity}
-
-We plan to automatize as soon as possible this kind of transfer of lemmas from \gaia to \HydrasLib.
 
 
 \section{Importing theorems from \HydrasLib}
@@ -418,6 +350,43 @@ $\alpha\geq\omega$, then $F_\alpha$ is not primitive recursive.
 
 \inputsnippets{GF_alpha/FAlphaNotPR}
 
+
+
+\section{Importing a theorem from \gaia}
+\label{sect:gaia2hydra}
+
+The \texttt{Gaia} library already contains many lemmas about
+ordinal arithmetic. In this section, we give two examples of
+porting such a lemma to \HydrasLib' vocabulary.
+
+\subsection{Associativity of ordinal multiplication (below \texorpdfstring{$\epsilon_0$}{epsilon\_0})}
+\gaia already contains a proof that the multiplication of ordinals less than $\epsilon_0$ is associative.
+\emph{From~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{gaia.ssete9.v}}
+
+\begin{Coqsrc}
+Lemma mulA: associative T1mul.
+\end{Coqsrc}
+
+This lemma was missing from \texttt{hydra-battles}. Nevertheless, we could adapt this lemma to \texttt{hydra-battles}' ordinals, by a small sequence of rewritings.
+
+\inputsnippets{T1Bridge/multA}
+
+The module~\href{../theories/html/gaia_hydras.GaiaToHydra.html}%
+{\texttt{gaia\_hydras.GaiaToHydra}} shows a small
+example of importation of \texttt{multA} into \texttt{hydra-battles}' world.
+
+\inputsnippets{GaiaToHydra/T1BridgeUse}
+
+In the rest of this module, names like  \texttt{T1}, \texttt{omega}, etc. are  bound to \HydrasLib' meaning.
+
+ \inputsnippets{GaiaToHydra/LocateT1, GaiaToHydra/T1BridgeUseb}
+
+ \subsection{Right Distributivity, etc.}
+ Likewise, we prove almost for free that ordinal multiplication is right distributive over addition (with \HydrasLib' definitions).
+
+ \inputsnippets{GaiaToHydra/distributivity}
+
+We plan to automatize as soon as possible this kind of transfer of lemmas from \gaia to \HydrasLib.
 
 
 

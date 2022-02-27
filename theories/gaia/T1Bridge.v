@@ -136,20 +136,24 @@ Definition refinesRel (hR: hT1 -> hT1 -> Prop)
 
 (* begin snippet refines1R:: no-out *)
 Lemma refines1_R f f' :
-  refines1 f f' -> forall y: T1, f (g2h y) = g2h (f' y).
+  refines1 f f' <-> forall y: T1, f (g2h y) = g2h (f' y).
 (* end snippet refines1R *)
 Proof.
-  move => Href y; rewrite -{2}(h2g_g2hK y).
-  by rewrite Href g2h_h2gK.
+  split. 
+  - move => Href y; rewrite -{2}(h2g_g2hK y); by rewrite Href g2h_h2gK.
+  - move => H x.   rewrite -{2}(g2h_h2gK x). by rewrite H h2g_g2hK.
 Qed.
 
 (* begin snippet refines2R:: no-out *)
 Lemma refines2_R f f' :
-  refines2 f f' -> forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
+  refines2 f f' <-> forall y z: T1, f (g2h y) (g2h z) = g2h (f' y z).
 (* end snippet refines2R *)
 Proof.
+  split. 
   move => Href y z;
             by rewrite -{2}(h2g_g2hK y) -{2}(h2g_g2hK z) ?Href ?g2h_h2gK. 
+  move => H x y; 
+ by rewrite -{2}(g2h_h2gK x)  -{2}(g2h_h2gK y) H h2g_g2hK. 
 Qed.
 
 
@@ -263,7 +267,7 @@ Qed.
 
 (* To simplify ! *)
 (* begin snippet leRef:: no-out *)
-Lemma le_ref : refinesRel (MoreOrders.leq hlt) T1le.
+Lemma le_ref : refinesRel hle T1le.
 (* end snippet leRef *)
 Proof.
   move=> a b; split.
@@ -759,19 +763,9 @@ Qed.
 
 
 
-Declare Scope BrGaia_scope. (* Gaia to Bridge *)
-
-Delimit Scope BrGaia_scope with brg.
-
-Infix "*" := T1mul : BrGaia_scope.
-
-Local Open Scope BrGaia_scope.
 
 Lemma L1' (a: T1) : T1omega * (a * T1omega) = T1omega * a * T1omega.
 Proof. by  rewrite mulA. Qed. 
-
-Close Scope BrGaia_scope.
-
 
 
 (** Sequences and limits *)
@@ -823,9 +817,9 @@ Definition fun_le  f g := forall n:nat, (f n <=  g n)%N.
 (* end snippet MonoDef *)
 
 (* begin snippet SearchDemo *)
-Search ( _ * ?x = ?x)%ca.
+Search ( _ * ?beta = ?beta)%ca.
 
-Search ( _ * ?x = ?x)%t1.
+Search ( _ * ?beta = ?beta)%t1.
 (* end snippet SearchDemo *)
 
 
