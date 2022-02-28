@@ -49,10 +49,6 @@ Unset Strict Implicit.
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
-
-
-
-
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
@@ -531,9 +527,7 @@ Lemma g2h_succ (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
 Proof.   by rewrite -(h2g_g2hK alpha) succ_ref !g2h_h2gK. Qed.
 
 Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
-Proof. 
-  specialize (lt_ref a b) => H;  rewrite H => //.
-Qed.
+Proof. by rewrite lt_ref. Qed.
 
 (* end snippet rewritingRules *)
 (* begin snippet T1ltIff:: no-out *)
@@ -824,7 +818,7 @@ Search ( _ * ?beta = ?beta)%t1.
 
 
 
-(* begin snippet T1compareDef *)                                
+(* begin snippet T1compareDef:: no-out *)                                
 #[global] Instance  T1compare : Compare T1:=
   fun alpha beta => compare (g2h alpha) (g2h beta). 
 
