@@ -1,4 +1,4 @@
-\chapter{Gaia and the hydras (experimental)}
+\chapter{Gaia and the hydras (draft)}
 \index{coq}{Plug-ins!Gaia}
 \label{gaia-chapter}
 
@@ -110,6 +110,8 @@ constant, function, relation defined in \HydrasLib ``implements'' the same conce
 
 \inputsnippets{T1Bridge/refineDefs}
 
+Refinement lemmas can be easily ``reversed''.
+
 \inputsnippets{T1Bridge/refines1R, T1Bridge/refines2R}
 
 \subsection{Examples of refinement}
@@ -140,12 +142,14 @@ compatible:
 
 \inputsnippets{T1Bridge/decideHLtRw}
 
-\subsubsection{Cantor normal form}
+\subsubsection{More rewriting lemmas}
 
-Hence, both definitions of ``being in Cantor normal form'' are
-compatible.
+\inputsnippets{T1Bridge/T1ltIff}
+\inputsnippets{T1Bridge/T1leIff}
 
-\inputsnippets{T1Bridge/nfRef}
+\inputsnippets{T1Bridge/rewritingRules}
+
+\inputsnippets{T1Bridge/limitbRef, T1Bridge/isSuccRef}
 
 
 \subsubsection{Addition and multiplication}
@@ -155,34 +159,23 @@ compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-com
 
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
+
+
+\subsubsection{Cantor normal form}
+
+Both definitions of ``being in Cantor normal form'' are
+compatible.
+
+\inputsnippets{T1Bridge/nfRef}
+
+
+
 \subsection{Looking for a lemma}
 \coq's command \texttt{Search} and notation scopes allow you to explore both libraries.
 For instance, let us look for lemmas whose conclusion is
 $\alpha \times \beta=\beta$.
 
 \inputsnippets{T1Bridge/SearchDemo}
-
-
-
-
-
-\section{Importing theorems from \HydrasLib}
-
-
-Many lemmas of the library \texttt{ordinals/Epsilon0/} are statements about inhabitants of type \texttt{hT1}. In order to get
-similar statements on \gaia's type \texttt{T1}, we prove and
-apply rewriting rules of the following forms:
-
-\vspace{4pt}
-
-\noindent\emph{From Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge}}
-
-\inputsnippets{T1Bridge/T1leIff}
-\inputsnippets{T1Bridge/rewritingRules}
-\inputsnippets{T1Bridge/T1ltIff}
-
-
-\inputsnippets{T1Bridge/limitbRef, T1Bridge/isSuccRef}
 
 
 \subsection{A type for well-formed ordinal terms}
@@ -200,12 +193,12 @@ from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a p
 
 \inputsnippets{T1Bridge/gE0h2gG2h}
 
-These tools allow us to import \texttt{E0.lt}'s  well-foundedness.
+These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundedness.
 
 \inputsnippets{T1Bridge/gE0LtWf}
 
-\subsection{E0 as an ordinal notation}
-The module \href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
+\section{E0 as an ordinal notation}
+The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
 (see Chapter~\ref{chap:ON}).
 
 \inputsnippets{T1Bridge/T1compareDef}
@@ -215,6 +208,66 @@ The module \href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} defines an 
 \inputsnippets{T1Bridge/gEpsilon0}
 
 \inputsnippets{T1Bridge/ExampleComp}
+
+
+
+
+
+\section{Importing Definitions and theorems from \HydrasLib}
+
+Some constructions of \HydrasLib were (to our knowledge) not implemented in \gaia yet. For instance, commutative (``Hessenberg'') addition, canonical sequences and Ketonen-Solovay machinery (Chapters~\ref{chap:T1}, \ref{chap:ketonen} and \ref{chap:alpha-large}). In order not to copy long proofs, we chose to
+\emph{derive} several constructions from \HydrasLib into \gaia's world, and rewrite \HydrasLib statements in order to make them \gaia-compatible.
+
+
+\subsubsection{Remark}
+\label{sect:gaia-masking}
+We try to respect the following ``protocol''.
+Let us assume we adapt some definitions and properties
+from a given module \texttt{hydras.Epsilon0.{\it XXX}}.
+\begin{enumerate}
+\item We create a module \texttt{gaia\_hydras.{\it GXXX}},
+\item When we import some constant \emph{Id} from
+ \texttt{hydras.Epsilon0.{\it XXX}}, the name 
+\emph{Id} is given to \texttt{gaia\_hydras.{\it GXXX.Id}}.
+In order to get
+\texttt{hydras.Epsilon0.{\it XXX}}'s sense, please refer it as
+  \emph{XXX.Id} or \emph{Epsilon0.XXX.Id}.
+  \item Sometimes, we rename \emph{XXX.Id} into \emph{{\bf h}Id} (for readability's sake).
+\end{enumerate}
+
+ 
+
+
+\subsection{Hessenberg sum}
+
+Natural sum  (a.k.a. Hessenberg's  sum) is defined in
+\href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} and is used for proving termination of all hydra battles (See Sect.~\ref{sect:hessenberg-def}).
+
+We define this function by delegation to \HydrasLib'.
+\vspace{4pt} 
+\noindent.
+
+From\href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg}
+
+\inputsnippets{GHessenberg/oplusDef}
+
+By simple rewriting, we import the following lemmas.
+
+
+\inputsnippets{GHessenberg/oplusEquations}
+
+Hessenberg sum is associative, commutative and strictly monotonous (on ordinal terms in normal form).
+
+\inputsnippets{GHessenberg/oplusLemmasa}
+\inputsnippets{GHessenberg/oplusLemmasb}
+\inputsnippets{GHessenberg/oplusLemmasc}
+\inputsnippets{GHessenberg/oplusLemmasd}
+\inputsnippets{GHessenberg/oplusLemmase}
+
+
+
+
+
 
 \subsection{Canonical sequences}
 
@@ -267,19 +320,11 @@ We adapt theorems from \href{../theories/html/hydras.Epsilon0.Canon.html}%
 
 \subsection{Accessibility in \texorpdfstring{$\epsilon_0$}{epsilon\_0}}
 
-The library \href{../theories/html/gaia.GPaths.html}%
-{\texttt{gaia.GPaths}} imports definitions and lemmas from
+The library \href{../theories/html/gaia_hydras.GPaths.html}%
+{\texttt{gaia\_hydras.GPaths}} imports definitions and lemmas from
 \href{../theories/html/hydras.Epsilon0.Paths.html}%
 {\texttt{hydras.Epsilon0.Paths}}.
 
-\subsubsection{Remark}
-\label{sect:gaia-masking}
-
-First, we import some definitions. When we import some constant \emph{Id} from {\texttt{hydras.Epsilon0.Paths}} the name
-\emph{Id} is given to {\texttt{gaia.GPaths}}. In order to get
-{\texttt{hydras.Epsilon0.Paths}}'s sense, please refer it as
-\emph{Paths.Id}.
-Sometimes, we rename \emph{Paths.Id} into \emph{{\bf h}Id}.
 
 \subsubsection{Transitions}
   
