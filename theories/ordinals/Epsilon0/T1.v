@@ -3870,7 +3870,7 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
   end.
 Proof. reflexivity. Qed.
 
-Instance plus_assoc : Assoc eq plus. 
+#[global] Instance plus_assoc : Assoc eq plus. 
 Proof.
   red.  induction x,y,z; only 1-6: easy.
   - now rewrite !plus_zero_r.

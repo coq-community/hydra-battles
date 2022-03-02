@@ -8,6 +8,12 @@ Set Bullet Behavior "Strict Subproofs".
 Require Import T1Bridge GCanon GHessenberg GLarge_Sets. 
 Set Implicit Arguments.
 Unset Strict Implicit.
+Unset Printing Implicit Defensive.
+
+(* begin snippet Demoa *)
+Check \F 42.
+(* end snippet Demoa *)
+
 
 (* begin snippet ExamplesG2H *)
 Example α : T1 :=

@@ -343,9 +343,10 @@ End restricted_recursion.
 (* end snippet restrictedRecursiona *)
 Module CantorOrdinal.
 
+  (* begin snippet T1def *)
 
 (** * The type T1 *)
-
+  
 (** This type represents all ordinals less that $\epsilon_0$ 
   #&epsilon; <sub>0</sub> #,
  via the 
@@ -357,7 +358,7 @@ Inductive T1 : Set :=
   zero : T1
 | cons : T1 -> nat -> T1 -> T1.
 
-
+(* end snippet T1def *)
 
 (** ** Equality *)
 
