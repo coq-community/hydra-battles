@@ -2833,16 +2833,16 @@ For instance, the ordinal  $\omega^\omega+\omega^3\times 5+2$ is represented by 
 \begin{tikzpicture}[very thick, scale=0.5, level 1/.style={sibling distance=6cm},
 level 2/.style={sibling distance=35mm},  
 level 3/.style={sibling distance=17mm}]
-\node  {ocons}
-  child {  node {ocons}
-            child { node {ocons} child {node {zero}} child {node{0}} child{node{zero}}}
+\node  {cons}
+  child {  node {cons}
+            child { node {cons} child {node {zero}} child {node{0}} child{node{zero}}}
          child {node {0}}
          child {node {zero}}}
     child {node {0}}
-   child {node {ocons} 
- child { node {ocons} child {node {zero}} child {node{2}} child{node{zero}}}
+   child {node {cons} 
+ child { node {cons} child {node {zero}} child {node{2}} child{node{zero}}}
   child {node {4}}
-         child {node {ocons} child {node {zero}} child {node{1}} child{node{zero}}}};
+         child {node {cons} child {node {zero}} child {node{1}} child{node{zero}}}};
 
 \end{tikzpicture}
 
@@ -2853,7 +2853,7 @@ level 3/.style={sibling distance=17mm}]
 
 
 \paragraph{Remark}
-For simplicity's sake, we chose to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the construction (\texttt{ocons $\alpha$ $n$ $\beta$}) is intended to represent the
+For simplicity's sake, we chose to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the construction (\texttt{cons $\alpha$ $n$ $\beta$}) is intended to represent the
 ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
 In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
 definition. But this replacement would take a lot of time \dots{}
@@ -3297,7 +3297,7 @@ It is natural to try to prove by structural induction over \texttt{T1}
 that every term in normal form is accessible through \texttt{LT}.
 
 Unfortunately, it won't work. Let us consider some well-formed term
- $\alpha=\texttt{ocons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are accessible
+ $\alpha=\texttt{cons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are accessible
  through \texttt{LT}. For proving the accessibility of $\alpha$, we have to consider
 any well formed term \(\delta\) such that \(\delta<\alpha\). 
 But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
@@ -3308,7 +3308,7 @@ But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\
 The problem comes from the hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
 \(\gamma\);
 for instance \(\delta\) may be of the form
-\texttt{ocons $\beta$ $p'$  $\gamma'$},
+\texttt{cons $\beta$ $p'$  $\gamma'$},
 where    \(p' < n\).
 Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless for finishing our proof.
 
@@ -3344,7 +3344,7 @@ is strongly accessible.
 
 First, we prove that, for  any \texttt{LT}-accessible term $\alpha$, $\alpha$ is 
 strongly accessible too (\emph{i.e.} any well formed
-term (\texttt{ocons $\alpha$ $n$ $\beta$})  is accessible).
+term (\texttt{cons $\alpha$ $n$ $\beta$})  is accessible).
 
 The proof is structured as an induction on $\alpha'$s accessibility. Let us consider
 any  accessible term $\alpha$.
@@ -3353,9 +3353,9 @@ any  accessible term $\alpha$.
 
 
 
-Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{ocons alpha n beta}) is in normal form. 
+Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{cons alpha n beta}) is in normal form. 
 We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
-and natural induction on \texttt{n}, that (\texttt{ocons alpha n beta}) is accessible.
+and natural induction on \texttt{n}, that (\texttt{cons alpha n beta}) is accessible.
 The proof, quite long, can be consulted in \href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}.
 
 \paragraph{Accessibility of any well-formed ordinal term}
@@ -3619,19 +3619,19 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     %         (forall a: T1, P a zero a) ->
     %         (forall a1 n1 b1 a2 n2 b2 o,
     %            compare a1 a2 = Gt ->
-    %            P b1 (ocons a2 n2 b2) o ->
-    %            P (ocons a1 n1 b1) (ocons a2 n2 b2)
-    %              (ocons a1 n1 o)) ->
+    %            P b1 (cons a2 n2 b2) o ->
+    %            P (cons a1 n1 b1) (cons a2 n2 b2)
+    %              (cons a1 n1 o)) ->
     %         (forall a1 n1 b1 a2 n2 b2 o,
     %            compare a1 a2 = Lt ->
-    %            P (ocons a1 n1 b1) b2 o ->
-    %            P (ocons a1 n1 b1) (ocons a2 n2 b2) 
-    %            (ocons a2 n2 o)) ->
+    %            P (cons a1 n1 b1) b2 o ->
+    %            P (cons a1 n1 b1) (cons a2 n2 b2) 
+    %            (cons a2 n2 o)) ->
     %         (forall a1 n1 b1 a2 n2 b2 o,
     %            compare a1 a2 = Eq ->
     %            P b1 b2 o ->
-    %           P (ocons a1 n1 b1) (ocons a2 n2 b2)
-    %             (ocons a1 (S (n1 + n2)%nat) o)) ->
+    %           P (cons a1 n1 b1) (cons a2 n2 b2)
+    %             (cons a1 (S (n1 + n2)%nat) o)) ->
     %          forall a b, P a b (oplus a b).
     % Proof with auto.
     %    induction a.

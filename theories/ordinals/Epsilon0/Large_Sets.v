@@ -471,7 +471,7 @@ Proof.
   destruct i.
   - simpl; apply mlarge_omega.
   -   path_decompose (S k).
-      instantiate (1:=ocons one i (S k)). 
+      instantiate (1:=T1.cons one i (S k)). 
       + simpl (T1.omega * S i). replace (i + 0)%nat with i.
         apply path_to_tail; auto with T1.
         *  assert (H := mlarge_FS k  (S k)). 
@@ -672,7 +672,7 @@ Section phi0_mult.
 
 (* begin snippet phi0MultOK:: no-out *)
 Lemma L_phi0_mult_ok i:
-  L_spec (ocons alpha i zero) (L_phi0_mult (S i)).
+  L_spec (T1.cons alpha i zero) (L_phi0_mult (S i)).
 (* end snippet phi0MultOK *)
 Proof.
   induction i.
@@ -681,7 +681,7 @@ Proof.
     + right.
       * discriminate.
       * intro k; red; path_decompose (Nat.pred (f (S k))).
-        instantiate (1:= (ocons alpha i zero)).
+        instantiate (1:= (T1.cons alpha i zero)).
             -- rewrite iterate_rw;  inversion_clear IHi.
                specialize (H0 (Nat.pred (f (S k)))).
                rewrite S_pred_rw in *; auto.
@@ -710,7 +710,7 @@ End phi0_mult.
 
 Definition L_omega_square_times i :=  iterate L_omega_square i.
 
-Lemma L_omega_square_times_ok i : L_spec (ocons 2 i zero)
+Lemma L_omega_square_times_ok i : L_spec (T1.cons 2 i zero)
                                          (L_omega_square_times (S i)).
 Proof.
   apply L_phi0_mult_ok.

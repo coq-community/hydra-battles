@@ -2731,7 +2731,7 @@ Proof.
   + inversion H;auto with T2.
   + intros c2 e2; case IHa3.
    * inversion H;auto with T2.
-   * intros c3 e3; exists (T1.ocons c2 n c3).
+   * intros c3 e3; exists (T1.cons c2 n c3).
      rewrite <- e3;rewrite <- e2.
      replace a1 with zero.
    --  simpl;auto with T2.

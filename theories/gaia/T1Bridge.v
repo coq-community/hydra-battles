@@ -12,6 +12,7 @@ Set Bullet Behavior "Strict Subproofs".
 
 Set Implicit Arguments.
 Unset Strict Implicit.
+Unset Printing Implicit Defensive. 
 
 (* begin snippet hT1gT1 *)
 
@@ -28,7 +29,7 @@ Unset Strict Implicit.
 (* begin snippet MoreNotations:: no-out *)
 #[global] Notation hzero := Epsilon0.T1.zero.
 #[global] Notation hone := Epsilon0.T1.one.
-#[global] Notation hcons := Epsilon0.T1.ocons.
+#[global] Notation hcons := Epsilon0.T1.cons.
 #[global] Notation hfin := Epsilon0.T1.fin.
 
 #[global] Notation homega := Epsilon0.T1.omega.
@@ -591,8 +592,7 @@ Proof. refine (@mkE0 T1omega _) => //. Defined.
 Definition E0phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkE0 (phi0 (cnf alpha)) _); destruct alpha.  
-  apply /eqP => //.  cbn. apply /andP ; split =>  //.
-  by apply /eqP.
+  apply /eqP => //.  cbn. apply /andP ; split =>  //;  by apply /eqP.
 Defined.
 (* end snippet E0Def *)
 
@@ -618,28 +618,28 @@ Defined.
 Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
 Proof.
   destruct alpha, beta; cbn. 
-  move => H; subst; f_equal; apply eq_proofs_unicity_on; decide equality. 
+  move => H; subst => //; f_equal; apply eq_proofs_unicity_on; decide equality. 
 Qed.
 
 
 Lemma E0Fin_cnf (n:nat) : cnf (E0Fin n) = \F n.
-Proof. 
- elim: n => //.
- move => n /= -> ; by rewrite T1succ_nat.
-Qed.
+Proof. elim: n => // n /= ->; by rewrite T1succ_nat. Qed.
 
 
 (* begin snippet gE0h2gG2h:: no-out *)
 Definition E0_h2g (a: hE0): E0.
-  esplit with (h2g (E0.cnf a)).
-  rewrite -nf_ref; case: a => /= cnf cnf_ok;  by rewrite cnf_ok.
+Proof. 
+  split with (h2g (E0.cnf a)).
+  rewrite -nf_ref; case: a => /= cnf cnf_ok; by rewrite cnf_ok.
 Defined.
 
 
 Definition E0_g2h (a: E0): hE0.
-  refine (@E0.mkord (g2h (cnf a)) _); red.
-  case: a  => /= cnf0 /eqP; by rewrite nf_ref h2g_g2hK.  
+Proof.
+  refine (@E0.mkord (g2h (cnf a)) _).  
+  case: a  => /= cnf0 /eqP; by rewrite hnf_g2h.    
 Defined.
+
 (* end snippet gE0h2gG2h *)
 
 Lemma E0_h2g_nf (a:hE0) : T1nf (cnf (E0_h2g a)).
@@ -649,18 +649,15 @@ Qed.
 
 Lemma gE0_eq1 alpha beta : E0eqb alpha beta -> alpha = beta.
 Proof.
-  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0eqb => /= /eqP .
-  move => Heq; subst.   
-  have  H0: Hx = Hy; last first.
-  -   by rewrite H0.   
+  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0eqb => /= /eqP Heq. 
+  subst; have  H0: Hx = Hy; last first.
+  - by rewrite H0.   
   - apply eq_proofs_unicity_on; decide equality.
 Qed. 
 
 Lemma gE0_eq_iff alpha beta : E0eqb alpha beta <-> alpha = beta.
 Proof. 
-  split.
-  - apply gE0_eq1 => Heq.
-  - move => ?  ; subst; rewrite /E0eqb => //. 
+  split; [apply  gE0_eq1 |  move => ?  ; subst; rewrite /E0eqb => //]. 
 Qed.
 
 Lemma gE0lt_iff alpha beta : E0lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
@@ -710,8 +707,7 @@ Lemma E0eqP alpha beta: reflect (alpha = beta) (E0eqb alpha beta).
 Proof.
   case_eq(E0eqb alpha beta).
   - constructor;  by rewrite -gE0_eq_iff.
-  - constructor => H0; subst.
-    move : H => // /=; cbn; by rewrite T1eq_refl.
+  - constructor => H0; subst;  move : H => // /=; cbn; by rewrite T1eq_refl.
 Qed.
 
 Lemma E0_h2g_g2hK : cancel E0_g2h E0_h2g.

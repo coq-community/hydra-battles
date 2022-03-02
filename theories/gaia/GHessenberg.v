@@ -61,7 +61,7 @@ Proof.
   cbn ; by rewrite h2g_g2hK.
   case: b.  move => ? ? ? ;by rewrite !h2g_g2hK. 
   move => t n t0 t1 n0 t2; rewrite !g2h_cons compare_g2h. 
-  case (compare t1 t); rewrite h2g_cons !h2g_g2hK; reflexivity. 
+  case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
 (* end snippet oplusEquations *)
 
@@ -73,11 +73,11 @@ Proof.
   apply oplus_nf ; by rewrite hnf_g2h.
 Qed.
 
- Lemma oplusC (alpha beta: T1):
-   T1nf alpha -> T1nf beta -> alpha o+ beta =  beta o+ alpha.
- Proof.
-   move => Halpha Hbeta; rewrite /oplus oplus_comm ?hnf_g2h //.
- Qed.
+Lemma oplusC (alpha beta: T1):
+  T1nf alpha -> T1nf beta -> alpha o+ beta =  beta o+ alpha.
+Proof.
+  move => Halpha Hbeta; rewrite /oplus oplus_comm ?hnf_g2h //.
+Qed.
 
 
  Lemma oplusA  (alpha beta gamma:T1) :
@@ -127,21 +127,19 @@ Lemma oplus_strict_mono_r (a b c:T1):
   T1nf a -> T1nf b -> T1nf c ->  b < c -> a o+ b < a  o+ c.
 (* end snippet oplusLemmasd  *)
 Proof.
-   rewrite /oplus => Ha Hb Hc.
-  rewrite <- hlt_iff => Hbc.
+  rewrite /oplus => Ha Hb Hc; rewrite <- hlt_iff => Hbc.
   apply oplus_strict_mono_r => //; rewrite  ?hnf_g2h => //.
   by rewrite hlt_iff ?h2g_g2hK.
 Qed.
 
 (* begin snippet oplusLemmase:: no-out  *)
 Lemma oplus_lt_phi0 a b c:  T1nf a -> T1nf b -> T1nf c ->
-  a < c ->  b < c ->  phi0 a o+ phi0 b < phi0 c.
+                            a < c ->  b < c ->  phi0 a o+ phi0 b < phi0 c.
 (* end snippet oplusLemmase  *)
 Proof.
   move => Ha Hb Hc Hab Hbc; rewrite /oplus.
-    replace (phi0 c) with (h2g (hphi0 (g2h c))). 
-  rewrite -hlt_iff. 
-rewrite !g2h_phi0. 
-apply oplus_lt_phi0; rewrite ?hnf_g2h ?hlt_iff   ?h2g_g2hK  => //. 
-by rewrite -g2h_phi0 ?h2g_g2hK. 
+  replace (phi0 c) with (h2g (hphi0 (g2h c))); last first.
+  by rewrite -g2h_phi0 ?h2g_g2hK. 
+  rewrite -hlt_iff !g2h_phi0. 
+  apply oplus_lt_phi0; rewrite ?hnf_g2h ?hlt_iff ?h2g_g2hK  => //. 
 Qed.

@@ -21,14 +21,14 @@ Import Hydra_Definitions.
 Fixpoint iota (alpha : T1) : Hydra :=
   match alpha with
   | zero => head
-  | ocons gamma n beta => node (hcons_mult (iota gamma) (S n)
+  | cons gamma n beta => node (hcons_mult (iota gamma) (S n)
                                            (iotas beta))
   end 
 with
 iotas (alpha : T1) :  Hydrae :=
   match alpha with
   | zero => hnil
-  | ocons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
+  | cons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
                                        (iotas beta)
   end.
 (* end snippet iotaDef *)
@@ -52,7 +52,7 @@ Proof.
   - cbn; trivial.
   - destruct alpha1; intros.
     + T1_inversion H.
-      subst alpha2;  replace (ocons zero n zero) with (FS  n).
+      subst alpha2;  replace (cons zero n zero) with (FS  n).
       * rewrite succ_compatS;   cbn;  clear  H;  induction n;simpl;auto.
         repeat f_equal;   injection IHn; auto.
       *  reflexivity.
@@ -96,7 +96,7 @@ Qed.
 
 Lemma iota_rw1 :
   forall i alpha,  nf alpha -> limitb alpha = true ->
-                   iota (canonS (ocons alpha 0 zero) i) =
+                   iota (canonS (cons alpha 0 zero) i) =
                    hyd1 (iota (canonS alpha i)).
 Proof.                        
   intros i alpha H H0; unfold canonS; rewrite  canonS_lim1; auto.
@@ -104,7 +104,7 @@ Qed.
 
 Lemma iota_rw2 :
   forall i n alpha,  nf alpha -> limitb alpha = true ->
-                     iota (canonS (ocons alpha (S n) zero) i) =
+                     iota (canonS (cons alpha (S n) zero) i) =
                      node (hcons_mult (iota alpha) (S n) 
                                       (hcons
                                          (iota (canonS alpha i)) hnil)).
@@ -115,7 +115,7 @@ Qed.
 
 Lemma iota_rw3 :
   forall i  alpha,  nf alpha -> 
-                    iota (canonS (ocons (T1.succ alpha) 0 zero) i) =
+                    iota (canonS (cons (T1.succ alpha) 0 zero) i) =
                     node (hcons_mult (iota alpha) (S i) hnil).
 Proof.                        
   intros i  alpha H; unfold canonS;  rewrite  canonS_phi0_succ_eqn; auto.
@@ -124,19 +124,19 @@ Qed.
 
 Lemma iota_rw4 :
   forall i n  alpha ,  nf alpha -> 
-                       iota (canonS (ocons (T1.succ alpha) (S n) zero) i) =
+                       iota (canonS (cons (T1.succ alpha) (S n) zero) i) =
                        node (hcons_mult (iota (T1.succ alpha)) (S n) 
                                         (hcons_mult (iota alpha) (S i) hnil)).
 Proof.
-  intros i  n alpha H; unfold canonS;  rewrite  canonS_ocons_succ_eqn2; auto.
+  intros i  n alpha H; unfold canonS;  rewrite  canonS_cons_succ_eqn2; auto.
 Qed.
 
 
 Lemma iota_tail :
   forall i   alpha n beta,
-    nf (ocons alpha n beta) ->
+    nf (cons alpha n beta) ->
     beta <> zero ->
-    iota (canonS (ocons alpha n beta) i) =
+    iota (canonS (cons alpha n beta) i) =
     node (hcons_mult (iota alpha) (S n) (iotas (canonS beta i)) ).
 Proof.                                  
   intros i   alpha n beta H H0; unfold canonS; rewrite  canon_tail; auto.
@@ -307,9 +307,9 @@ Section DS_iota.
     Hypothesis Hlambda : nf lambda.
     Hypothesis Hlim : limitb lambda.
     Variable n : nat.
-    Hypothesis Hn : alpha = ocons lambda (S n) zero.
+    Hypothesis Hn : alpha = cons lambda (S n) zero.
 
-    Remark rem1 : canonS alpha i = ocons lambda n (T1.phi0 (canonS lambda i)).
+    Remark rem1 : canonS alpha i = cons lambda n (T1.phi0 (canonS lambda i)).
     Proof.
       subst alpha;  unfold canonS; rewrite canonS_lim2; auto.
     Qed.
@@ -320,7 +320,7 @@ Section DS_iota.
       right;  right ;  right; rewrite <- hcons_mult_comm.
       apply hcons_mult_S2.  
       left;  specialize (Hrec lambda).
-      assert (lambda t1< ocons lambda (S n) zero)%t1.
+      assert (lambda t1< cons lambda (S n) zero)%t1.
       {  apply head_LT_cons; auto with T1. }
       specialize (Hrec (limitb_not_zero Hlambda Hlim)
                        H  (canonS lambda i) (refl_equal _)).
@@ -335,12 +335,12 @@ Section DS_iota.
     Variable gamma: T1.
     Hypothesis Hgamma : nf gamma.
     Variable n : nat.
-    Hypothesis Hn : alpha = ocons (T1.succ gamma) (S n) zero.
+    Hypothesis Hn : alpha = cons (T1.succ gamma) (S n) zero.
     
     Remark rem2 : canonS alpha i =
-                  ocons (T1.succ gamma)  n (ocons gamma i zero).
+                  cons (T1.succ gamma)  n (cons gamma i zero).
     Proof.
-      subst alpha;  unfold canonS; now rewrite canonS_ocons_succ_eqn2.
+      subst alpha;  unfold canonS; now rewrite canonS_cons_succ_eqn2.
     Qed.
     
     Remark rem3 : iota (canonS alpha i) =
@@ -357,7 +357,7 @@ Section DS_iota.
     Lemma canonS_iota_5 :  round_n i (iota alpha) (iota (canonS alpha i)).
     Proof.
       rewrite rem3;  subst alpha.
-      simpl (iota (ocons (T1.succ gamma) (S n) zero)); simpl hy_app.
+      simpl (iota (cons (T1.succ gamma) (S n) zero)); simpl hy_app.
       assert (R1 (iota (T1.succ gamma)) (iota  gamma)).
       {    apply iota_succ_R1; auto. }
       assert (S1 i (hcons (iota (T1.succ gamma)) hnil)
@@ -396,10 +396,10 @@ Section DS_iota.
     Hypothesis Hgamma : nf gamma.
     Hypothesis gamma_pos : gamma <> zero.
     Variable n : nat.
-    Hypothesis Hn : alpha = ocons  beta n gamma.
+    Hypothesis Hn : alpha = cons  beta n gamma.
     
     
-    Remark rem6 : canonS alpha i = ocons beta n (canonS gamma i).
+    Remark rem6 : canonS alpha i = cons beta n (canonS gamma i).
     Proof.
       subst alpha;  unfold canonS; rewrite canon_tail; auto with T1.    
     Qed.
@@ -457,7 +457,7 @@ Section DS_iota.
   End Proof_case_6.
 
   Remark all_cases : exists beta n gamma,
-      nf beta /\ nf gamma /\ alpha = ocons beta n gamma.
+      nf beta /\ nf gamma /\ alpha = cons beta n gamma.
   Proof.
     destruct alpha as [|  beta n gamma].
     - destruct nonzero; auto.

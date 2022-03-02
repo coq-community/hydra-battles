@@ -238,10 +238,10 @@ Variable alpha : E0.
 Variable i : nat.
  
 Lemma H'_cons : forall beta,  (beta o< phi0 alpha)%e0 ->
-                             forall k,  H'_ (Ocons alpha i beta) k=
+                             forall k,  H'_ (Cons alpha i beta) k=
                                         H'_ (Omega_term alpha i) (H'_ beta k).
 Proof with auto with E0.
-  unfold Ocons; intro beta; pattern beta; 
+  unfold Cons; intro beta; pattern beta; 
   apply well_founded_induction with Lt; clear beta.
   - exact E0.Lt_wf.
   -  intros beta Hbeta H;  destruct (Zero_Limit_Succ_dec beta).
@@ -284,16 +284,16 @@ Lemma H'_Omega_term_1 : alpha <> Zero -> forall  k,
 Proof with auto with E0.
   intros  H k;  rewrite H'_eq3 ...
   - ochange (CanonS (Omega_term alpha (S i)) k)
-          (Ocons alpha i (CanonS  (phi0 alpha) k)).
+          (Cons alpha i (CanonS  (phi0 alpha) k)).
   +  rewrite H'_cons ...
      *  f_equal; rewrite (H'_eq3 (phi0 alpha)) ...
-  +  rewrite cnf_Ocons ...
+  +  rewrite cnf_Cons ...
            * unfold CanonS.  repeat rewrite cnf_rw.
              unfold canonS.
              rewrite cnf_Omega_term, cnf_phi0.
              unfold Omega_term; simpl. unfold canonS.
              destruct (cnf alpha) ...
-             destruct (pred (ocons t1 n t2)) ...
+             destruct (pred (cons t1 n t2)) ...
 -   unfold canonS; apply Limitb_Omega_term ...
 Qed.
 
