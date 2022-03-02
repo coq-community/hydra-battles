@@ -186,7 +186,7 @@ Lemma canonS_ocons_succ_eqn2 i n (gamma: T1)(Hnf : T1nf gamma) :
     cons (T1succ gamma) n (cons gamma i zero).
 Proof.
   rewrite -g2h_eq_iff g2h_canon !g2h_cons  g2h_succ g2h_zero.
-  by rewrite  canonS_ocons_succ_eqn2 ?hnf_g2h.
+  by rewrite  canonS_cons_succ_eqn2 ?hnf_g2h.
 Qed. 
 
 

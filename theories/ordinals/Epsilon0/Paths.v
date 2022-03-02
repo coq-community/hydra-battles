@@ -493,8 +493,8 @@ Qed.
 
 Lemma path_toS_tail  alpha s beta :
     path_toS beta s alpha -> 
-    forall gamma n, nf (ocons gamma n alpha) ->
-                    path_toS (ocons gamma n beta) s (ocons gamma n alpha).
+    forall gamma n, nf (T1.cons gamma n alpha) ->
+                    path_toS (T1.cons gamma n beta) s (T1.cons gamma n alpha).
 Proof.
   induction 1.
   - subst; left; split.
@@ -502,7 +502,7 @@ Proof.
     + unfold canonS;rewrite canon_tail; auto.
      *  destruct H; now subst.
      *  now destruct H.
-  - intros; subst;  right with (ocons gamma0 n (canon alpha (S i))).
+  - intros; subst;  right with (T1.cons gamma0 n (canon alpha (S i))).
     + split.
       * discriminate.
       * rewrite canon_tail; auto.
@@ -516,8 +516,8 @@ Qed.
 
 Lemma path_to_tail  alpha s beta :
   path_to beta s alpha -> 
-  forall gamma n, nf (ocons gamma n alpha) ->
-                  path_to (ocons gamma n beta) s (ocons gamma n alpha).
+  forall gamma n, nf (T1.cons gamma n alpha) ->
+                  path_to (T1.cons gamma n beta) s (T1.cons gamma n alpha).
 Proof.
   intros H  gamma n Hnf; assert (H1:= path_to_not_In_zero H).
   rewrite path_to_path_toS_iff; auto.
@@ -528,7 +528,7 @@ Qed.
 
 Lemma path_toS_mult  alpha s  i : nf alpha -> 
     path_toS zero s (T1.phi0 alpha) -> 
-    path_toS (ocons alpha i zero) s (ocons alpha (S i) zero).
+    path_toS (T1.cons alpha i zero) s (T1.cons alpha (S i) zero).
 Proof.
   inversion 2.
   - subst;   inversion H1.
@@ -541,7 +541,7 @@ Proof.
      subst; left; split.
     + discriminate.
     + now   simpl.
-  - subst; right with (ocons alpha i gamma).
+  - subst; right with (T1.cons alpha i gamma).
     +  split.
      *    discriminate.
      *   unfold canonS; rewrite canon_SSn_zero.  f_equal.
@@ -562,7 +562,7 @@ Qed.
 Lemma path_to_mult  alpha s i :
   nf alpha ->
   path_to zero  s (T1.phi0 alpha) -> 
-  path_to (ocons alpha i zero) s (ocons alpha (S i) zero).
+  path_to (T1.cons alpha i zero) s (T1.cons alpha (S i) zero).
 Proof.
   intros Hnf H ; assert (H1:= path_to_not_In_zero H).
   rewrite path_to_path_toS_iff; auto.
@@ -657,8 +657,8 @@ Proof. reflexivity. Qed.
 
 Lemma gnawS_lim1 (i:nat)(s: list nat) (lambda : T1) :
   nf lambda -> limitb lambda ->
-  gnawS (ocons lambda 0 T1.zero) (i::s) =
-  gnawS (ocons (canon lambda (S i)) 0 T1.zero) s.
+  gnawS (T1.cons lambda 0 T1.zero) (i::s) =
+  gnawS (T1.cons (canon lambda (S i)) 0 T1.zero) s.
 Proof.
   intros;  rewrite gnaws_rw.
   unfold canonS;  rewrite canonS_lim1; auto.
@@ -667,8 +667,8 @@ Qed.
 
 Lemma gnawS_lim2 (i n:nat)(s: list nat) (lambda : T1) :
   nf lambda -> limitb  lambda->
-  gnawS (ocons lambda (S n) T1.zero) (i::s) =
-  gnawS (ocons lambda n (ocons (canon lambda (S i)) 0 T1.zero)) s.
+  gnawS (T1.cons lambda (S n) T1.zero) (i::s) =
+  gnawS (T1.cons lambda n (T1.cons (canon lambda (S i)) 0 T1.zero)) s.
 Proof.
   intros;   rewrite gnaws_rw. rewrite canonS_lim2; auto.
 Qed.
@@ -676,8 +676,8 @@ Qed.
 
 
 Lemma gnawS_succ_eqn1 i s gamma :
-  nf gamma -> gnawS (ocons (T1.succ gamma) 0 T1.zero) (i::s) =
-              gnawS (ocons gamma i T1.zero) s.
+  nf gamma -> gnawS (T1.cons (T1.succ gamma) 0 T1.zero) (i::s) =
+              gnawS (T1.cons gamma i T1.zero) s.
 Proof.
 intros;  rewrite gnaws_rw.    rewrite canonS_phi0_succ_eqn; auto.
 Qed.
@@ -685,19 +685,19 @@ Qed.
 
 Lemma gnawS_succ_eqn2 :
   forall i n s gamma, nf gamma -> 
-                      gnawS (ocons (T1.succ gamma) (S n) zero) (i::s) =
-                      gnawS  (ocons  (T1.succ gamma) n
-                                     (ocons gamma i T1.zero)) s.
+                      gnawS (T1.cons (T1.succ gamma) (S n) zero) (i::s) =
+                      gnawS  (T1.cons  (T1.succ gamma) n
+                                     (T1.cons gamma i T1.zero)) s.
 Proof.
-  intros; rewrite gnaws_rw.  rewrite canonS_ocons_succ_eqn2;  auto.
+  intros; rewrite gnaws_rw.  rewrite canonS_cons_succ_eqn2;  auto.
 Qed.
 
 Lemma gnawS_tail :
   forall i  s alpha n beta,
-                  nf (ocons alpha n beta) ->
+                  nf (T1.cons alpha n beta) ->
                   beta <> T1.zero -> 
-                  gnawS (ocons alpha n beta) (i::s) =
-                  gnawS (ocons alpha n (canon beta (S i))) s.
+                  gnawS (T1.cons alpha n beta) (i::s) =
+                  gnawS (T1.cons alpha n (canon beta (S i))) s.
 Proof.
   intros; rewrite gnaws_rw, canon_tail;  auto.
 Qed.
@@ -706,18 +706,18 @@ Qed.
 Lemma gnawS_SSn (i:nat) s :
   forall alpha n  ,
     nf alpha -> 
-    gnawS (ocons alpha (S n) T1.zero) (i::s) =
-    gnawS (ocons alpha n (canon (ocons alpha 0 zero) (S i))) s.
+    gnawS (T1.cons alpha (S n) T1.zero) (i::s) =
+    gnawS (T1.cons alpha n (canon (T1.cons alpha 0 zero) (S i))) s.
 Proof.
   intros.  rewrite gnaws_rw; auto.  rewrite canon_SSn_zero;  auto.
 Qed.
 
 Lemma gnawS_cut1 : forall s alpha n beta,
-                    nf (ocons alpha n beta) ->
-                    gnawS (ocons alpha n beta) s = T1.zero ->
+                    nf (T1.cons alpha n beta) ->
+                    gnawS (T1.cons alpha n beta) s = T1.zero ->
                     exists s1 s2, s = s1 ++ s2 /\
                                   gnawS beta s1 = zero /\
-                                  gnawS (ocons alpha n T1.zero) s2 = zero.
+                                  gnawS (T1.cons alpha n T1.zero) s2 = zero.
 Proof.
   induction s.
   -  intros.
@@ -741,10 +741,10 @@ Qed.
 
 Lemma gnawS_cut2 : forall s alpha n ,
                    nf alpha -> 
-                   gnawS (ocons alpha (S n) T1.zero) s = zero ->
+                   gnawS (T1.cons alpha (S n) T1.zero) s = zero ->
                    exists s1 s2, s = s1 ++ s2 /\
                                  gnawS (T1.phi0 alpha) s1 = zero /\
-                                 gnawS (ocons alpha n T1.zero) s2 = zero.
+                                 gnawS (T1.cons alpha n T1.zero) s2 = zero.
 Proof.
   destruct s. 
   - intros.
@@ -1075,17 +1075,17 @@ Proof.
 Qed.
 
 Lemma KS_thm_2_4_lemma1 : forall i alpha n beta beta',
-    nf (ocons alpha n beta) ->
+    nf (T1.cons alpha n beta) ->
     beta <> zero ->
     const_pathS i beta beta' ->
-    const_pathS i (ocons alpha n beta)
-            (ocons alpha n beta').
+    const_pathS i (T1.cons alpha n beta)
+            (T1.cons alpha n beta').
 Proof.
   induction 3.
   - destruct H1; subst; left; now  rewrite canon_tail.
   -  destruct H1; subst;  destruct (T1_eq_dec (canon x (S i)) zero).    
      { rewrite e in *; destruct (const_pathS_zero H2). }
-     { constructor 2 with (ocons alpha n (canon x (S i))).  
+     { constructor 2 with (T1.cons alpha n (canon x (S i))).  
        - now  rewrite canon_tail.
        - apply IHclos_trans_1n; auto. 
          + apply nf_LT_right with x;auto. 
@@ -1109,8 +1109,8 @@ Qed.
 Lemma KS_thm_2_4_lemma1' : forall i alpha n beta ,
     nf alpha ->  alpha <> zero ->
     const_pathS i (T1.phi0 alpha)  beta ->
-    const_pathS i (ocons alpha (S n) zero)
-                (ocons alpha n  beta).
+    const_pathS i (T1.cons alpha (S n) zero)
+                (T1.cons alpha n  beta).
 Proof with auto with T1.
   intros i alpha n beta H H0 H1;  destruct (zero_limit_succ_dec H). 
   - destruct s. 
@@ -1119,14 +1119,14 @@ Proof with auto with T1.
        { rewrite  e; left;  split.
          discriminate. rewrite canon_SSn_zero ; trivial. }
        { apply const_pathS_trans with
-             (ocons alpha n (T1.phi0 (canon alpha (S i)))) ; trivial. 
+             (T1.cons alpha n (T1.phi0 (canon alpha (S i)))) ; trivial. 
          { left;  rewrite canon_SSn_zero ; eauto with T1.
            - split.
              + discriminate.
              + rewrite canonS_lim1 ; eauto with T1.
          }
          apply KS_thm_2_4_lemma1. 
-         - apply nf_ocons_LT; trivial.
+         - apply nf_cons_LT; trivial.
            apply canonS_LT ; eauto with T1.
            apply single_nf ; trivial. 
            now apply nf_canon.
@@ -1137,12 +1137,12 @@ Proof with auto with T1.
     { 
       unfold canonS in e; rewrite e; left; subst alpha; (* unfold T1.phi0. *)
       repeat rewrite canonS_phi0_succ_eqn; trivial.
-       now rewrite canonS_ocons_succ_eqn2. 
+       now rewrite canonS_cons_succ_eqn2. 
     }
-    apply const_pathS_trans with (ocons alpha n (ocons gamma i zero)).
-    left; subst alpha; rewrite canonS_ocons_succ_eqn2 ; eauto with T1. 
+    apply const_pathS_trans with (T1.cons alpha n (T1.cons gamma i zero)).
+    left; subst alpha; rewrite canonS_cons_succ_eqn2 ; eauto with T1. 
     split; [discriminate |]. reflexivity. apply KS_thm_2_4_lemma1 ; trivial. 
-    apply nf_ocons_LT ; eauto with T1.
+    apply nf_cons_LT ; eauto with T1.
     + subst; apply LT_succ ; eauto with T1. 
     +   discriminate. 
     +  subst alpha. unfold canonS in c; rewrite  canonS_phi0_succ_eqn in c; auto. 
@@ -1173,17 +1173,17 @@ Qed.
 
 Lemma KS_thm_2_4_lemma3_0 : forall i alpha n,
     nf alpha ->
-    const_pathS i (ocons alpha (S n)  zero)
-            (ocons alpha n zero).
+    const_pathS i (T1.cons alpha (S n)  zero)
+            (T1.cons alpha n zero).
 Proof.
   intros i alpha n H;  destruct (zero_limit_succ_dec H).
   - destruct s.
     +  subst.   left.   split; [discriminate | reflexivity].
-    +  right with (canon (ocons alpha (S n) zero) (S i)).
+    +  right with (canon (T1.cons alpha (S n) zero) (S i)).
        *  split; [discriminate | reflexivity].
        * unfold canonS; rewrite canonS_lim2;auto.
          eapply KS_thm_2_4_lemma1; auto.
-         -- apply ocons_nf; auto.
+         -- apply cons_nf; auto.
             ++ apply canon_lt; auto.
                intro; subst; discriminate.
             ++ apply single_nf;  apply nf_canon; auto.
@@ -1193,11 +1193,11 @@ Proof.
             apply nf_canon; auto.
          ++ discriminate.
   - destruct s as [beta [Hbeta e]]; subst.
-    right with (canon (ocons (T1.succ beta) (S n) zero) (S i)).
+    right with (canon (T1.cons (T1.succ beta) (S n) zero) (S i)).
     +  split; [discriminate | reflexivity].
-    +  unfold canonS; rewrite canonS_ocons_succ_eqn2;auto.
+    +  unfold canonS; rewrite canonS_cons_succ_eqn2;auto.
        eapply KS_thm_2_4_lemma1; auto.
-       * apply ocons_nf; auto. 
+       * apply cons_nf; auto. 
          apply lt_succ; auto. 
        *  discriminate.
        *  apply KS_thm_2_4_lemma2;  auto with T1.
@@ -1208,12 +1208,12 @@ Qed.
 
 Lemma KS_thm_2_4_lemma3 : forall i n p alpha ,
     nf alpha -> n < p ->
-    const_pathS i (ocons alpha p zero)
-            (ocons alpha n zero).
+    const_pathS i (T1.cons alpha p zero)
+            (T1.cons alpha n zero).
 Proof.
   induction 2.
   - apply KS_thm_2_4_lemma3_0; auto.
-  - apply const_pathS_trans with  (ocons alpha  m zero); auto. 
+  - apply const_pathS_trans with  (T1.cons alpha  m zero); auto. 
     + apply KS_thm_2_4_lemma3_0; auto.   
 Qed.
 
@@ -1301,12 +1301,12 @@ Proof.
                apply Hrec ; trivial.
                split ; trivial. 
                split ; trivial.
-               apply head_lt_ocons ; trivial.
+               apply head_lt_cons ; trivial.
                apply nf_canon ; eauto with T1. 
                apply limitb_canonS_not_zero ; eauto with T1.
              - repeat rewrite canonS_lim2 ; eauto with T1.
                 apply KS_thm_2_4_lemma1 ; trivial. 
-                apply ocons_nf ; trivial. 
+                apply cons_nf ; trivial. 
                 apply canon_lt ; trivial.
                 apply single_nf.   
                 apply nf_canon ; eauto with T1.
@@ -1315,7 +1315,7 @@ Proof.
                 apply Hrec ; eauto with T1.
                 split ; eauto with T1.
                 split.
-                apply  head_lt_ocons ; eauto with T1.
+                apply  head_lt_cons ; eauto with T1.
                 apply single_nf ; eauto with T1.
                 apply nf_canon ; eauto with T1.
                 apply limitb_canonS_not_zero ; eauto with T1.
@@ -1326,9 +1326,9 @@ Proof.
              apply KS_thm_2_4_lemma3 ; eauto with T1.
            }
            { 
-             repeat rewrite  canonS_ocons_succ_eqn2 ; eauto with T1.
+             repeat rewrite  canonS_cons_succ_eqn2 ; eauto with T1.
              apply KS_thm_2_4_lemma1 ; trivial. 
-             apply ocons_nf ; trivial.
+             apply cons_nf ; trivial.
              apply lt_succ; auto.
              discriminate. 
              apply KS_thm_2_4_lemma3 ; eauto with T1.
@@ -1343,7 +1343,7 @@ Proof.
          apply Hrec ; eauto with T1.
          split ; eauto with T1.
          split ; eauto with T1.
-         apply  tail_lt_ocons; auto.
+         apply  tail_lt_cons; auto.
          all: intro; subst; discriminate.
   -  destruct s as [beta [H0 H1]]; 
        subst; destruct (@limitb_succ beta); auto.
@@ -1660,7 +1660,7 @@ Proof.
             apply canonS_LT;auto with T1. 
           }
           apply const_pathS_trans
-            with (ocons (T1.succ  (canon lambda (S p))) 0 zero); eauto with T1.
+            with (T1.cons (T1.succ  (canon lambda (S p))) 0 zero); eauto with T1.
           apply KS_thm_2_4_lemma5; trivial. auto with T1.
           apply HRecAlpha; trivial. 
           apply LT2.
@@ -1705,9 +1705,9 @@ Proof.
               split. discriminate. rewrite canonS_phi0_succ_eqn;    trivial.
               
             }
-            assert ( beta = ocons gamma p zero).
+            assert ( beta = T1.cons gamma p zero).
             { rewrite e, H2; now rewrite canonS_phi0_succ_eqn. }
-            apply const_pathS_trans with (ocons gamma (S p) zero).
+            apply const_pathS_trans with (T1.cons gamma (S p) zero).
             { left; rewrite H2; now rewrite canonS_phi0_succ_eqn. }
             apply HRecAlpha.
             - subst alpha1; apply LT2. 
@@ -1745,7 +1745,7 @@ Proof.
                 generalize (nf_of_finite Halpha); discriminate.
                 destruct (LT_irrefl H0).
               }
-              rewrite succ_ocons.
+              rewrite succ_cons.
               + apply KS_thm_2_4_lemma1; eauto with T1.
                 discriminate.
                 apply HRecAlpha; trivial.
@@ -1753,7 +1753,7 @@ Proof.
                 split; eauto with T1.
                 eapply nf_inv2, Halpha.
                 now left.
-                rewrite succ_ocons in H0.
+                rewrite succ_cons in H0.
                 apply remove_first_sumand in H0.
                 auto.
                 destruct alpha2_1.
@@ -1762,7 +1762,7 @@ Proof.
                          try discriminate.
                   all:  destruct (T1.pred alpha2_1_2); try discriminate.
                 }
-                apply nf_LT_right with (ocons alpha2_1 n alpha2_2).
+                apply nf_LT_right with (T1.cons alpha2_1 n alpha2_2).
                 eapply Halpha.
                 apply canonS_LT; trivial.  eauto with T1.
                 discriminate.
@@ -1782,7 +1782,7 @@ Proof.
                 simpl in H0.
               destruct (LT_irrefl H0).
             }
-            rewrite e,  succ_ocons.
+            rewrite e,  succ_cons.
             apply KS_thm_2_4_lemma1'.
             eauto with T1.
             auto. 
@@ -1799,7 +1799,7 @@ Proof.
             eauto with T1.
             apply nf_canon; eauto with T1.
             apply nf_helper_phi0R.
-            destruct (@canonS_LT p (ocons alpha1 0 zero)).
+            destruct (@canonS_LT p (T1.cons alpha1 0 zero)).
             eauto with T1.
             discriminate. 
             destruct H2;auto. 
@@ -2376,10 +2376,10 @@ Proof.
      * eapply standard_path_toS_le_inv;eauto.
 Qed.
 
-Lemma ocons_standard_pathS : forall alpha n beta , 
-    nf (ocons alpha n beta) -> forall gamma i j,
+Lemma cons_standard_pathS : forall alpha n beta , 
+    nf (T1.cons alpha n beta) -> forall gamma i j,
     standard_pathS  i beta j gamma -> gamma  <> 0 -> 
-    standard_pathS  i (ocons alpha n beta) j (ocons alpha n gamma).
+    standard_pathS  i (T1.cons alpha n beta) j (T1.cons alpha n gamma).
 Proof.
   unfold standard_pathS; induction 2.
   - left; auto.  
@@ -2399,10 +2399,10 @@ Proof.
         + intro;subst;  simpl in H0; apply standard_path_toS_zero in H0;auto.
 Qed.
 
-Lemma ocons_standard_path : forall alpha n beta , 
-    nf (ocons alpha n beta) -> forall gamma i j,
+Lemma cons_standard_path : forall alpha n beta , 
+    nf (T1.cons alpha n beta) -> forall gamma i j,
     standard_path i beta j gamma -> gamma  <> 0 -> i <> 0 ->
-    standard_path i (ocons alpha n beta) j (ocons alpha n gamma).
+    standard_path i (T1.cons alpha n beta) j (T1.cons alpha n gamma).
 Proof.
   unfold standard_path; induction 2.
   - left; destruct i; auto.
@@ -3050,7 +3050,7 @@ Proof.
              ++ inversion H3.
              ++ destruct H3 as [_ H4]; destruct (not_LT_zero H4).
          * unfold canonS; rewrite canon_tail; auto.
-           -- apply ocons_nf; auto with T1.
+           -- apply cons_nf; auto with T1.
               rewrite compare_gt_iff in H2; auto.
            --  discriminate.
   - apply Lt_trans with beta; auto.

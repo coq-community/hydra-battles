@@ -25,6 +25,9 @@ Inductive T2 : Set :=
 | zero : T2
 | gcons : T2 -> T2  -> nat -> T2 -> T2.
 
+(* end snippet T2Def *)
+
+(* begin snippet psiDef *)
 Notation "[ alpha , beta ]" := (gcons alpha beta 0 zero)
                                  (at level 0): T2_scope.
 
@@ -34,7 +37,7 @@ Definition psi_term alpha :=
   match alpha with zero => zero
                  | gcons a b n c => [a, b]
   end.
-(* end snippet T2Def *)
+(* end snippet psiDef *)
 
 Lemma psi_eq : forall a b, psi a b = [a,b].
 Proof.
@@ -80,7 +83,7 @@ Global Hint Constructors is_finite : T2.
 Fixpoint T1_to_T2 (alpha :T1) : T2 :=
   match alpha  with
   | T1.zero => zero
-  | T1.ocons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
+  | T1.cons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
   end.
 
 (* end snippet T1ToT2 *)

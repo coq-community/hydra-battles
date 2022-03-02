@@ -182,7 +182,7 @@ Section S1.
                               * destruct (pred beta1_1_2); cbn; auto with T1.
                           }                            
                -- intros;apply lt_incl_le.
-                  destruct (pred (ocons beta1_1 n1 beta1_2)).
+                  destruct (pred (cons beta1_1 n1 beta1_2)).
                   ++  apply head_lt; auto with T1.
                   ++ apply head_lt; auto with T1.
              * intros; apply lt_incl_le.

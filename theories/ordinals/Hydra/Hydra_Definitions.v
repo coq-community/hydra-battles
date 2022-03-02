@@ -369,7 +369,7 @@ Ltac forward :=
 (**  ** Traces *)
 
 Inductive trace_to  dest : list  nat -> Hydra -> Prop :=
-  trace_to1 : forall n h, round_n  n h dest -> trace_to dest (cons n nil) h
+  trace_to1 : forall n h, round_n  n h dest -> trace_to dest (n:: nil) h
 | trace_toS : forall n t h h',  round_n n  h h' -> trace_to dest t h' ->
                                  trace_to dest (n:: t) h.
 

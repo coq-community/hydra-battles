@@ -16,11 +16,11 @@ Fixpoint oplus (alpha beta : T1) : T1 :=
       match alpha, beta with
         | zero, _ => beta
         | _, zero => alpha
-        | ocons a1 n1 b1, ocons a2 n2 b2 =>
+        | cons a1 n1 b1, cons a2 n2 b2 =>
           match compare a1 a2 with
-            |  Gt => ocons a1 n1 (oplus b1 beta)
-            |  Lt => ocons a2 n2 (oplus_aux b2)
-            |  Eq => ocons a1 (S (n1 + n2)%nat) (oplus b1 b2)
+            |  Gt => cons a1 n1 (oplus b1 beta)
+            |  Lt => cons a2 n2 (oplus_aux b2)
+            |  Eq => cons a1 (S (n1 + n2)%nat) (oplus b1 b2)
           end
       end
   in oplus_aux beta.
@@ -64,7 +64,7 @@ Qed.
 Lemma oplus_compare_Lt:
   forall a n b a' n' b', 
   compare a  a' = Lt ->
-  ocons a n b o+ ocons a' n' b' = ocons a' n' (ocons a n b o+  b').
+  cons a n b o+ cons a' n' b' = cons a' n' (cons a n b o+  b').
 (* end snippet oplusCompareLt *)
 
 Proof.
@@ -73,8 +73,8 @@ Qed.
 
 Lemma oplus_lt_rw :
   forall a n b a' n' b', T1.lt a  a' ->
- 	                 ocons a n b o+ ocons a' n' b'=
-	                 ocons a' n' (ocons a n b o+ b').
+ 	                 cons a n b o+ cons a' n' b'=
+	                 cons a' n' (cons a n b o+ b').
 Proof.
   intros a n b a' n' b' H; cbn.
   now apply compare_lt_iff in H as ->.
@@ -82,8 +82,8 @@ Qed.
 
 Lemma oplus_eq_rw :
   forall a n b  n' b', 
-    ocons a n b o+ ocons a n' b'=
-    ocons a (S (n+n')%nat)  (b o+ b').
+    cons a n b o+ cons a n' b'=
+    cons a (S (n+n')%nat)  (b o+ b').
 Proof.
   intros a n b  n' b'; generalize (compare_refl a); intro H;
   cbn ; now rewrite H. 
@@ -93,7 +93,7 @@ Qed.
 Lemma oplus_gt_rw :
   forall a n b a' n' b',
   T1.lt a' a ->
-    ocons a n b o+ ocons a' n' b' = ocons a n  (b o+ ocons a' n' b').
+    cons a n b o+ cons a' n' b' = cons a n  (b o+ cons a' n' b').
 Proof.
   intros a n b a' n' b' H;  cbn; 
   now apply compare_gt_iff in H as ->.
@@ -102,8 +102,8 @@ Qed.
 
 Lemma oplus_compare_Gt :
   forall a n b a' n' b', compare a a' = Gt -> 
- 	                 ocons a n b o+ ocons a' n' b' =
-	                 ocons a n  (b o+ ocons a' n' b').
+ 	                 cons a n b o+ cons a' n' b' =
+	                 cons a n  (b o+ cons a' n' b').
 Proof.
   intros a n b a' n' b' H; cbn ; now rewrite H.
 Qed.
@@ -116,19 +116,19 @@ Lemma oplus_rect:
     (forall a: T1, P a T1.zero a) ->
     (forall a1 n1 b1 a2 n2 b2 o,
        compare a1 a2 = Gt -> 
-       P b1 (ocons a2 n2 b2) o ->
-       P (ocons a1 n1 b1) (ocons a2 n2 b2)
-         (ocons a1 n1 o)) ->
+       P b1 (cons a2 n2 b2) o ->
+       P (cons a1 n1 b1) (cons a2 n2 b2)
+         (cons a1 n1 o)) ->
     (forall a1 n1 b1 a2 n2 b2 o,
        compare a1 a2 = Lt ->
-       P (ocons a1 n1 b1) b2 o ->
-       P (ocons a1 n1 b1) (ocons a2 n2 b2) 
-         (ocons a2 n2 o)) ->
+       P (cons a1 n1 b1) b2 o ->
+       P (cons a1 n1 b1) (cons a2 n2 b2) 
+         (cons a2 n2 o)) ->
     (forall a1 n1 b1 a2 n2 b2 o,
        compare a1 a2 = Eq ->
        P b1 b2 o -> 
-       P (ocons a1 n1 b1) (ocons a2 n2 b2)
-         (ocons a1 (S (n1 + n2)%nat) o)) ->
+       P (cons a1 n1 b1) (cons a2 n2 b2)
+         (cons a1 (S (n1 + n2)%nat) o)) ->
     forall a b, P a b (a o+ b).
 Proof with auto.
   induction a.
@@ -154,11 +154,11 @@ Lemma oplus_eqn :
     match a, b with
         T1.zero, _ => b
       | _, T1.zero => a
-      | ocons a1 n1 b1, ocons a2 n2 b2 =>
+      | cons a1 n1 b1, cons a2 n2 b2 =>
         match compare  a1 a2 with
-            Gt => ocons a1 n1 (b1 o+ b)
-          | Eq => ocons a1 (S (n1 + n2)) (b1 o+ b2)
-          | Lt => ocons a2 n2 (a o+ b2)
+            Gt => cons a1 n1 (b1 o+ b)
+          | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
+          | Lt => cons a2 n2 (a o+ b2)
         end
     end.
 Proof.
@@ -169,11 +169,11 @@ Qed.
 
 Lemma oplus_cons_cons :
   forall a n b a' n' b',
-    (ocons a n b) o+ (ocons a' n' b') =
+    (cons a n b) o+ (cons a' n' b') =
     match compare a a' with
-          | Gt => ocons a n (b o+ (ocons a' n' b') )
-          | Eq => ocons a (S (n + n')%nat) (b o+ b')
-          | Lt => ocons a'  n' (ocons a n b o+  b')
+          | Gt => cons a n (b o+ (cons a' n' b') )
+          | Eq => cons a (S (n + n')%nat) (b o+ b')
+          | Lt => cons a'  n' (cons a n b o+  b')
     end.
 Proof.    
   intros; now rewrite oplus_eqn.  
@@ -231,7 +231,7 @@ Section Proof_of_plus_nf.
         intros; apply nf_intro; [apply nf1| | ].
         * eapply IHgamma; trivial.
           repeat split; auto with T1. 
-          -- apply le_lt_trans with (ocons alpha1 n alpha2); auto.
+          -- apply le_lt_trans with (cons alpha1 n alpha2); auto.
              now apply le_phi0.
           -- apply nf_helper_phi0, nf_helper_intro with n, Hnf_1.
           -- apply nf_helper_phi0, nf_helper_intro with n, Hnf_2.
@@ -239,7 +239,7 @@ Section Proof_of_plus_nf.
       + apply nf_intro; auto.
         * eapply IHgamma with (phi0 beta1); auto with T1.
           -- repeat split; auto with T1.
-             apply le_lt_trans with (ocons beta1 n0 beta2); auto.
+             apply le_lt_trans with (cons beta1 n0 beta2); auto.
              apply le_phi0.
           -- now apply nf_helper_phi0, nf_helper_intro with n.
         * apply nf_helper_oplus; auto.
@@ -248,7 +248,7 @@ Section Proof_of_plus_nf.
       + apply nf_intro; trivial.
         * eapply IHgamma with (phi0 alpha1); trivial.
           -- repeat split; auto with T1.
-             apply le_lt_trans with (ocons alpha1 n alpha2); auto.
+             apply le_lt_trans with (cons alpha1 n alpha2); auto.
              apply le_phi0; eauto with T1.
           -- apply  nf_helper_phi0.
              eapply nf_helper_intro; eauto.
@@ -296,7 +296,7 @@ Section Proof_of_oplus_comm.
   (* end snippet oplusComm0 *)
     intros x H0 H; destruct alpha, beta; try reflexivity.
     rewrite oplus_eqn.
-    rewrite (oplus_eqn  (ocons beta1 n0 beta2) (ocons alpha1 n alpha2)).
+    rewrite (oplus_eqn  (cons beta1 n0 beta2) (cons alpha1 n alpha2)).
     repeat rewrite (compare_rev alpha1 beta1).
     intros Hnf_1 Hnf_2 Hlt_1 Hlt_2.
     nf_decomp Hnf_1; nf_decomp Hnf_2.
@@ -305,14 +305,14 @@ Section Proof_of_oplus_comm.
       repeat rewrite (Nat.add_comm n n0); f_equal.
       + apply H0 with (phi0 alpha1); trivial.
         2-3: apply nf_helper_phi0, nf_helper_intro with n; eauto.
-        apply LE_LT_trans with (ocons alpha1 n0 beta2).
+        apply LE_LT_trans with (cons alpha1 n0 beta2).
         * now apply LE_phi0.
         * now repeat split.
     - rewrite <- oplus_compare_Lt; auto.
       rewrite oplus_compare_Lt; auto.
       f_equal.
       apply H0 with (phi0 beta1) ; trivial.
-      + apply LE_LT_trans with (ocons beta1 n0 beta2).
+      + apply LE_LT_trans with (cons beta1 n0 beta2).
         apply LE_phi0; auto.
         repeat split; trivial.
       + now apply head_lt, compare_lt_iff.
@@ -320,7 +320,7 @@ Section Proof_of_oplus_comm.
     - rewrite <- oplus_compare_Gt; auto.
       rewrite oplus_compare_Gt; auto.
       f_equal; apply H0 with (phi0 alpha1); trivial.
-      apply LE_LT_trans with (ocons alpha1 n alpha2); trivial.
+      apply LE_LT_trans with (cons alpha1 n alpha2); trivial.
       + now apply LE_phi0.
       + repeat split; eauto with T1; apply nf_helper_phi0.
       + apply nf_helper_phi0, nf_helper_intro with n; eauto.
@@ -347,14 +347,14 @@ Section Proof_of_oplus_comm.
   
 End Proof_of_oplus_comm.
 
-Lemma oplus_lt_rw2 : forall a n b x, nf (ocons a n b) -> nf x ->
+Lemma oplus_lt_rw2 : forall a n b x, nf (cons a n b) -> nf x ->
                                      nf_helper x a ->
-                                     ocons a n b o+  x  =
-                                     ocons a n (b o+ x).
+                                     cons a n b o+  x  =
+                                     cons a n (b o+ x).
 Proof.
   destruct x.
   - now (intros; repeat rewrite oplus_0_r).
-  - intros; rewrite (oplus_eqn  (ocons a n b) (ocons x1 n0 x2)).
+  - intros; rewrite (oplus_eqn  (cons a n b) (cons x1 n0 x2)).
     apply nf_helper_phi0 in H1.
     destruct (lt_inv H1).
     + unfold T1.lt in H2.
@@ -400,9 +400,9 @@ Section Proof_of_oplus_assoc.
         try rewrite Hbc;
         try rewrite Hac.
         - apply compare_eq_iff in Hbc as <-, Hac as <-.
-          ass_rw Hrec (ocons a1 n a2) a2 b2 c2; trivial. 
+          ass_rw Hrec (cons a1 n a2) a2 b2 c2; trivial. 
           + f_equal; abstract lia.
-          + apply tail_lt_ocons; auto.
+          + apply tail_lt_cons; auto.
           + apply lt_le_trans with (phi0 a1).
             * now apply nf_helper_phi0, nf_helper_intro with n0.
             * now apply le_phi0.
@@ -410,72 +410,72 @@ Section Proof_of_oplus_assoc.
             * now apply nf_helper_phi0, nf_helper_intro with n0.
             * now apply le_phi0.
         - apply compare_eq_iff in Hbc as <-.
-          ass_rw Hrec (ocons b1 n0 b2) (ocons a1 n a2) b2 c2; trivial.
+          ass_rw Hrec (cons b1 n0 b2) (cons a1 n a2) b2 c2; trivial.
           + now apply head_lt.
-          + now apply tail_lt_ocons.
+          + now apply tail_lt_cons.
           + apply lt_le_trans with (phi0 b1).
             * now apply nf_helper_phi0, nf_helper_intro with n1.
             * now apply le_phi0.
         - apply compare_eq_iff in Hbc as <-.
           f_equal.
-          ass_rw_rev Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2)
-                          (ocons b1 n1 c2) ; trivial.
+          ass_rw_rev Hrec (cons a1 n a2) a2 (cons b1 n0 b2)
+                          (cons b1 n1 c2) ; trivial.
           + f_equal.
             now rewrite oplus_cons_cons, compare_refl.
-          + now apply tail_lt_ocons.
+          + now apply tail_lt_cons.
           + now apply head_lt, compare_gt_iff.
           + now apply head_lt, compare_gt_iff.
         - f_equal.
-          ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                       (ocons a1 n0 b2) c2 ; trivial.
+          ass_rw  Hrec (cons c1 n1 c2) (cons a1 n a2)
+                       (cons a1 n0 b2) c2 ; trivial.
           + f_equal; now rewrite oplus_cons_cons, Hab.
           + now apply head_lt.
           + now apply head_lt.
-          + now apply tail_lt_ocons.
+          + now apply tail_lt_cons.
         - f_equal.
-          ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                       (ocons a1 n0 b2) c2 ; trivial.
+          ass_rw  Hrec (cons c1 n1 c2) (cons a1 n a2)
+                       (cons a1 n0 b2) c2 ; trivial.
           + f_equal; now rewrite oplus_cons_cons, Hab.
           + now apply head_lt.
           + now apply head_lt.
-          + now apply tail_lt_ocons.
+          + now apply tail_lt_cons.
         - destruct (compare a1 c1) eqn: Hac; f_equal.
-          + ass_rw  Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2) c2 ; trivial.
-            * now apply tail_lt_ocons.
+          + ass_rw  Hrec (cons a1 n a2) a2 (cons b1 n0 b2) c2 ; trivial.
+            * now apply tail_lt_cons.
             * now apply head_lt, compare_gt_iff.
             * apply lt_le_trans with (phi0 a1).
               -- apply compare_eq_iff in Hac as ->.
                  now apply nf_helper_phi0, nf_helper_intro with n1.
               -- now apply le_phi0.
-          + ass_rw  Hrec (ocons c1 n1 c2) (ocons a1 n a2)
-                         (ocons b1 n0 b2) c2 ; trivial.
+          + ass_rw  Hrec (cons c1 n1 c2) (cons a1 n a2)
+                         (cons b1 n0 b2) c2 ; trivial.
             * now rewrite oplus_cons_cons, Hab.
             * now apply head_lt, compare_lt_iff.
             * now apply head_lt, compare_lt_iff.
-            * now apply tail_lt_ocons.
-          + ass_rw_rev Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2)
-                            (ocons c1 n1 c2) ; trivial.
+            * now apply tail_lt_cons.
+          + ass_rw_rev Hrec (cons a1 n a2) a2 (cons b1 n0 b2)
+                            (cons c1 n1 c2) ; trivial.
             * now rewrite oplus_cons_cons, Hbc.
-            * now apply tail_lt_ocons.
+            * now apply tail_lt_cons.
             * now apply head_lt, compare_gt_iff.
             * now apply head_lt, compare_gt_iff.
-        - ass_rw_rev  Hrec (ocons a1 n a2)  a2 b2  (ocons c1 n1 c2); trivial.
-          + now apply tail_lt_ocons.
+        - ass_rw_rev  Hrec (cons a1 n a2)  a2 b2  (cons c1 n1 c2); trivial.
+          + now apply tail_lt_cons.
           + apply lt_le_trans with (phi0 a1).
             * apply compare_eq_iff in Hab as ->.
               now apply nf_helper_phi0, nf_helper_intro with n0.
             * now apply le_phi0.
           + now apply head_lt, compare_gt_iff.
-        - ass_rw_rev  Hrec (ocons b1 n0 b2) (ocons a1 n a2) b2
-                           (ocons c1 n1 c2) ; trivial.
+        - ass_rw_rev  Hrec (cons b1 n0 b2) (cons a1 n a2) b2
+                           (cons c1 n1 c2) ; trivial.
           + now apply head_lt, compare_lt_iff.
-          + now apply tail_lt_ocons.
+          + now apply tail_lt_cons.
           + now apply head_lt, compare_gt_iff.
         - f_equal.
-          ass_rw_rev Hrec (ocons a1 n a2) a2 (ocons b1 n0 b2)
-                          (ocons c1 n1 c2); trivial.
+          ass_rw_rev Hrec (cons a1 n a2) a2 (cons b1 n0 b2)
+                          (cons c1 n1 c2); trivial.
             * f_equal; now rewrite oplus_cons_cons, Hbc.
-            * now apply tail_lt_ocons.
+            * now apply tail_lt_cons.
             * now apply head_lt, compare_gt_iff.
             * now apply head_lt, compare_gt_iff.
       }
@@ -511,9 +511,9 @@ End Proof_of_oplus_assoc.
 Section Proof_of_oplus_lt1.
   Variables a1 a2: T1.  
   Variable n : nat.
-  Hypothesis H0 : nf (ocons a1 n a2).
+  Hypothesis H0 : nf (cons a1 n a2).
 
-  Lemma oplus_lt_0 : forall b, nf b -> T1.lt b (b o+ (ocons a1 n a2)).
+  Lemma oplus_lt_0 : forall b, nf b -> T1.lt b (b o+ (cons a1 n a2)).
   Proof with eauto with T1.
     intros b ; transfinite_induction_lt b.
     intros x H1 H;  destruct x.
@@ -523,7 +523,7 @@ Section Proof_of_oplus_lt1.
       +  intros H2; apply head_lt. unfold T1.lt; now  rewrite H2. 
       + intro; apply tail_lt,  H1 ;  trivial.
         eapply nf_inv2, H.
-        now  apply tail_lt_ocons.
+        now  apply tail_lt_cons.
         eapply nf_inv2, H.
   Qed.
 
@@ -578,8 +578,8 @@ Proof with eauto with T1.
     now apply oplus_lt1.
   - T1_inversion H1.
   -  nf_decomp Ha; nf_decomp Hb; nf_decomp Hc.
-     rewrite ( oplus_eqn (ocons a1 n a2) (ocons b1 n0 b2)).
-     rewrite ( oplus_eqn (ocons a1 n a2) (ocons c1 n1 c2)).
+     rewrite ( oplus_eqn (cons a1 n a2) (cons b1 n0 b2)).
+     rewrite ( oplus_eqn (cons a1 n a2) (cons c1 n1 c2)).
      case_eq (compare a1 b1).
      intro Ha1_b1; case_eq (compare a1 c1).
      {
@@ -598,7 +598,7 @@ Proof with eauto with T1.
        apply compare_eq_iff in Ha1_b1 as <-.
        apply Hrec with (phi0 a1); trivial.
        auto with T1.
-       apply le_lt_trans with (ocons a1 n a2) ; trivial.
+       apply le_lt_trans with (cons a1 n a2) ; trivial.
        apply le_phi0. 
        auto with T1.
        apply nf_helper_phi0.
@@ -614,7 +614,7 @@ Proof with eauto with T1.
      {
        apply compare_eq_iff in Ha1_b1 as <-.
        intro H2.
-       absurd  (T1.lt (ocons a1 n0 b2) (ocons c1 n1 c2)).
+       absurd  (T1.lt (cons a1 n0 b2) (cons c1 n1 c2)).
        - apply lt_not_gt.
          apply head_lt.
          unfold T1.lt;rewrite compare_rev. now   rewrite H2.
@@ -627,7 +627,7 @@ Proof with eauto with T1.
        { 
          intro.
          apply compare_eq_iff in H3 as <-.
-         absurd (T1.lt (ocons b1 n0 b2) (ocons a1 n1 c2));auto.
+         absurd (T1.lt (cons b1 n0 b2) (cons a1 n1 c2));auto.
          apply lt_not_gt.
          apply head_lt; auto. 
        }
@@ -643,8 +643,8 @@ Proof with eauto with T1.
            { apply coeff_lt; auto.  }
            destruct a; subst n1.
            apply tail_lt; auto. 
-           rewrite (oplus_eqn (ocons a1 n a2) b2).
-           rewrite (oplus_eqn (ocons a1 n a2) c2).
+           rewrite (oplus_eqn (cons a1 n a2) b2).
+           rewrite (oplus_eqn (cons a1 n a2) c2).
            destruct b2,c2.
            T1_inversion H5.
            case_eq (compare a1 c2_1).
@@ -662,7 +662,7 @@ Proof with eauto with T1.
              destruct a;subst;
                apply tail_lt.
              apply Hrec with (phi0 a1); trivial.
-             apply le_lt_trans with (ocons a1 n a2);eauto with T1.
+             apply le_lt_trans with (cons a1 n a2);eauto with T1.
              apply le_phi0.
              eapply nf_inv2, nf2.
              eapply nf_inv2, nf4.
@@ -695,14 +695,14 @@ Proof with eauto with T1.
              clear H7;  subst.
              apply tail_lt.
              apply Hrec with (phi0 b1) ; trivial. 
-             apply le_lt_trans with   (ocons b1 n0 (ocons c2_1 n2 c2_2)) ;
+             apply le_lt_trans with   (cons b1 n0 (cons c2_1 n2 c2_2)) ;
                trivial. 
              apply le_phi0.  
              eapply nf_inv2, nf2.
              eapply nf_inv2, nf4.
              auto with T1.
-             apply lt_trans with (ocons c2_1 n2 c2_2) ; trivial.
-             apply tail_lt_ocons; eauto with T1.
+             apply lt_trans with (cons c2_1 n2 c2_2) ; trivial.
+             apply tail_lt_cons; eauto with T1.
              eauto with T1.
            }
            {
@@ -716,7 +716,7 @@ Proof with eauto with T1.
            { now apply head_lt. }
            { apply tail_lt. 
              apply Hrec with (phi0 a1) ; trivial.
-             apply le_lt_trans with   (ocons a1 n a2).  
+             apply le_lt_trans with   (cons a1 n a2).  
              apply le_phi0; info_eauto with T1.
              auto with T1.
              apply nf_helper_phi0.
@@ -748,7 +748,7 @@ Proof with eauto with T1.
        intro H3; rewrite compare_gt_iff in H3.
        apply tail_lt.
        apply Hrec with (phi0 a1) ; trivial.
-       apply le_lt_trans with   (ocons a1 n a2) ; trivial. 
+       apply le_lt_trans with   (cons a1 n a2) ; trivial. 
        apply le_phi0 ; info_eauto with T1.
        apply nf_helper_phi0.
        eapply nf_helper_intro;eauto with T1.
@@ -832,9 +832,9 @@ Qed.
 Lemma oplus_of_phi0_0 : forall a b,
                           phi0 a o+ phi0 b =
                           match compare (phi0 a) (phi0 b)
-                          with Lt => ocons b 0 (ocons a 0 T1.zero)
-                            |  Eq => ocons a 1 T1.zero
-                            | Gt =>  ocons a 0 (ocons b 0 T1.zero)
+                          with Lt => cons b 0 (cons a 0 T1.zero)
+                            |  Eq => cons a 1 T1.zero
+                            | Gt =>  cons a 0 (cons b 0 T1.zero)
                           end.
 Proof.
   intros a b; rewrite oplus_eqn; cbn; now  destruct (compare a b).
@@ -844,9 +844,9 @@ Qed.
 Lemma oplus_of_phi0 : forall a b,
                         phi0 a o+ phi0 b =
                         match compare a b
-                        with Lt => ocons b 0 (ocons a 0 T1.zero)
-                          |  Eq => ocons a 1 T1.zero
-                          | Gt =>  ocons a 0 (ocons b 0 T1.zero)
+                        with Lt => cons b 0 (cons a 0 T1.zero)
+                          |  Eq => cons a 1 T1.zero
+                          | Gt =>  cons a 0 (cons b 0 T1.zero)
                         end.
 Proof.
   intros a b; now rewrite oplus_of_phi0_0, compare_of_phi0.
@@ -854,11 +854,11 @@ Qed.
 
 
 Lemma o_finite_mult_rw : forall a n, o_finite_mult (S n) (phi0 a) =
-                                     ocons a n T1.zero.
+                                     cons a n T1.zero.
 Proof.
   induction n.
   -  reflexivity.
-  -  change (phi0 a o+  (o_finite_mult (S n) (phi0 a)) = ocons a (S n) T1.zero).
+  -  change (phi0 a o+  (o_finite_mult (S n) (phi0 a)) = cons a (S n) T1.zero).
      rewrite IHn;  rewrite oplus_eqn.
      simpl; now rewrite compare_refl.
 Qed.
