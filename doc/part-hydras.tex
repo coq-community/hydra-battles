@@ -2809,16 +2809,6 @@ with the ways to build Cantor normal forms:
 
 \input{movies/snippets/T1/T1Def}
 
-
-
-\paragraph{Remark}
-The name \texttt{T1} we gave to this data-type  is proper to this development and refers
-to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
-\noindent
-
-\input{movies/snippets/T2/T2Def}
-
-
 \subsubsection{Example}
 
 \label{alpha0-def}
@@ -2858,6 +2848,26 @@ ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
 In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
 definition. But this replacement would take a lot of time \dots{}
 
+
+\paragraph{Remark}
+The name \texttt{T1} we gave to this data-type  is proper to this development and refers
+to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
+\noindent
+
+\input{movies/snippets/T2/T2Def}
+
+
+\subsection{About Gaia}
+Chapter~\vref{gaia-chapter} describes the present state of a
+project of making compatible the libraries \HydrasLib and \gaia. At present, both libraries contain a version of the inductive type \texttt{T1}, with the same base name for the constructors.
+
+\inputsnippets{nfwfgaia/T1def}
+
+Thus, many examples of this and following chapters can be run
+in \gaia's context. We will signal any difference (notation, name) which may appear.
+ A closer integration (same data type and functions) is still in project.
+
+
 \subsection{Abbreviations}
 
 Some abbreviations may help to write more concisely complex ordinal terms.
@@ -2871,6 +2881,23 @@ For representing finite ordinals, \emph{i.e.} natural numbers, we first introduc
 \label{sect:notation-F}
 
 \input{movies/snippets/T1/finiteOrds}
+
+\begin{gaiacompat}
+  
+  In \texttt{gaia.ssete9}, the $n$-th finite ordinal is written
+  \texttt{$\backslash${F}\,$n$}. There is no coercion in \gaia from \texttt{nat} to finite ordinals.
+
+  \vspace{4pt}
+  
+  From~\href{../theories/html/gaia_hydras.HydraGaia_Examples.html}{gaia\_hydras.HydraGaia\_Examples}.
+
+  
+  \inputsnippets{HydraGaia_Examples/Demoa}
+
+  
+\end{gaiacompat}
+
+
 
 % \index{Coq!Coercions}
 % \index{Functions!Coercions@Coercions (from nat to ordinal types)}
@@ -6507,7 +6534,7 @@ Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors
 \noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#T2}%
 {\texttt{Gamma0.T2}}}
 
-\input{movies/snippets/T2/T2Def}
+\inputsnippets{T2/T2Def, T2/psiDef}
 
 
 
