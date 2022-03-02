@@ -12,6 +12,8 @@ Unset Printing Implicit Defensive.
 
 (* begin snippet Demoa *)
 Check \F 42.
+
+Fail Check (42 : T1).
 (* end snippet Demoa *)
 
 
