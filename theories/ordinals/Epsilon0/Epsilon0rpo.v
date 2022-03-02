@@ -148,27 +148,27 @@ Qed.
 Fixpoint T1_2_term (a:T1) : term := 
 match a with
  zero => Term ord_zero nil
-|ocons a n b => Term ord_cons (T1_2_term a :: nat_2_term n ::T1_2_term b::nil)
+|cons a n b => Term ord_cons (T1_2_term a :: nat_2_term n ::T1_2_term b::nil)
 end.
 
 Fixpoint T1_size (o:T1):nat :=
  match o with zero => 0
-            | ocons a n b => S (T1_size a + n + T1_size b)%nat
+            | cons a n b => S (T1_size a + n + T1_size b)%nat
          end.
 
-Lemma T1_size1 : forall a n b, (T1_size zero < T1_size (ocons a n b))%nat.
+Lemma T1_size1 : forall a n b, (T1_size zero < T1_size (cons a n b))%nat.
 Proof.
  simpl.
  intros.
  auto with arith.
 Qed.
 
-Lemma T1_size2 : forall a n b , (T1_size a < T1_size (ocons a n b))%nat.
+Lemma T1_size2 : forall a n b , (T1_size a < T1_size (cons a n b))%nat.
 Proof.
  simpl; auto with arith.
 Qed.
 
-Lemma T1_size3 : forall a n b , (T1_size b < T1_size (ocons a n b))%nat.
+Lemma T1_size3 : forall a n b , (T1_size b < T1_size (cons a n b))%nat.
 Proof.
  simpl; auto with arith.
 Qed.
@@ -178,22 +178,22 @@ Global Hint Resolve T1_size2 T1_size3 : rpo.
 
 (** let us recall subterm properties on T1 *)
 Lemma lt_subterm1 : forall a a'  n'  b', lt a  a' ->
-                                         lt a  (ocons a' n' b').
+                                         lt a  (cons a' n' b').
 Proof.
  intros.
- apply lt_trans with (ocons a n' b');auto with T1.
- apply head_lt_ocons.
+ apply lt_trans with (cons a n' b');auto with T1.
+ apply head_lt_cons.
 Qed.
 
 Lemma lt_subterm2 : forall a a' n n' b b', lt a  a' ->
-                                           nf (ocons a n  b) ->
-                                           nf (ocons a' n' b') ->
-                                           lt b ( ocons a' n' b').
+                                           nf (cons a n  b) ->
+                                           nf (cons a' n' b') ->
+                                           lt b ( cons a' n' b').
 Proof.
  intros.
- apply le_lt_trans with (ocons a n b).
+ apply le_lt_trans with (cons a n b).
  apply lt_incl_le.
- apply tail_lt_ocons;auto.
+ apply tail_lt_cons;auto.
  auto with T1.
 Qed.
 
@@ -250,7 +250,7 @@ Proof.
        apply IHn.
        (* subst o;subst o'. *)
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
        simpl;
          auto with arith rpo.
        abstract lia.
@@ -262,10 +262,10 @@ Proof.
        simpl;auto with rpo.
        inversion_clear 1.
        subst s'.
-       change (rpo (T1_2_term o1) (T1_2_term (ocons o'1 n1 o'2))).
+       change (rpo (T1_2_term o1) (T1_2_term (cons o'1 n1 o'2))).
        apply IHn;auto with rpo.
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
        auto with arith rpo.
        auto with rpo.
        eauto with T1 rpo.
@@ -273,11 +273,11 @@ Proof.
        subst s'.
        apply nat_lt_cons.
        subst s'.
-       change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
+       change (rpo (T1_2_term o2) (T1_2_term (cons o'1 n1 o'2))).
        apply IHn;auto with rpo.
 
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
        auto with arith rpo.
        auto with rpo.
        eauto with rpo.
@@ -318,30 +318,30 @@ Proof.
 
        inversion_clear 1.
        subst s'.
-       change (rpo (T1_2_term o'1) (T1_2_term (ocons o'1 n1 o'2))).
+       change (rpo (T1_2_term o'1) (T1_2_term (cons o'1 n1 o'2))).
        apply IHn;auto.
 
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) +
-                                  T1_size (ocons o'1 n1 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o'1 n0 o2) +
+                                  T1_size (cons o'1 n1 o'2))%nat.
        
        auto with arith rpo.
        auto with rpo.
-       apply head_lt_ocons.
+       apply head_lt_cons.
        eauto with T1.
        destruct H4 as [|[|H8]].
        subst s'.
        apply nat_lt_cons.
        subst s'.
-       change (rpo (T1_2_term o2) (T1_2_term (ocons o'1 n1 o'2))).
+       change (rpo (T1_2_term o2) (T1_2_term (cons o'1 n1 o'2))).
        apply IHn;auto with rpo.
 
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o'1 n0 o2) + T1_size (ocons o'1 n1 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o'1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
        auto with arith rpo.
        auto with rpo.
 
-       apply lt_le_trans with (ocons o'1 0 zero).
+       apply lt_le_trans with (cons o'1 0 zero).
 
 
 
@@ -365,13 +365,13 @@ Proof.
 
        inversion_clear 1.
        subst. 
-       change (rpo (T1_2_term o1) (T1_2_term (ocons o1 n0 o'2))).
+       change (rpo (T1_2_term o1) (T1_2_term (cons o1 n0 o'2))).
        apply IHn; auto. 
        apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (ocons o1 n0 o2) + T1_size (ocons o1 n0 o'2))%nat.
+       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o1 n0 o'2))%nat.
        auto with arith rpo.
        auto with rpo.
-       apply head_lt_ocons. 
+       apply head_lt_cons. 
        eauto with T1 rpo.
        inversion_clear H4. subst s'.
 

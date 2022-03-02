@@ -21,23 +21,23 @@ Module LO.
 
   (** omega^ i * S n + alpha *)
 
-  Notation ocons i n alpha := ((i,n)::alpha).
+  Notation cons i n alpha := ((i,n)::alpha).
 
   (** Finite ordinals *)
   
-  Notation  FS n := (ocons 0 n zero: t).
+  Notation  FS n := (cons 0 n zero: t).
 
   Definition fin (n:nat): t := match n with 0 => zero | S p => FS p end.
   Coercion fin  : nat >-> t.
 
   (** [omega ^i ] *)
 
-  Notation phi0 i := (ocons i 0 nil).
+  Notation phi0 i := (cons i 0 nil).
 
   (** [omega ^i * (k+1)] *)
   
   Definition omega_term (i k: nat) : t :=
-    ocons i k zero.
+    cons i k zero.
 
   Notation omega := (phi0 1). 
 
@@ -49,7 +49,7 @@ Module LO.
   Fixpoint refine (a : t) : T1.T1 :=
     match a with
       nil => T1.zero
-    | ocons i n b => T1.ocons (T1.fin i) n (refine b)
+    | cons i n b => T1.cons (T1.fin i) n (refine b)
     end.
   (* end snippet refineDef *)
   
@@ -61,16 +61,16 @@ Module LO.
   Fixpoint succb (alpha:t) :=
     match alpha with
       nil => false
-    | ocons 0 _ _ => true
-    | ocons i n beta => succb beta
+    | cons 0 _ _ => true
+    | cons i n beta => succb beta
     end.
   
   Fixpoint limitb (alpha:t) :=
     match alpha with
       nil => false
-    | ocons 0 _ _ => false
-    | ocons i n nil => true
-    | ocons i n beta => limitb beta
+    | cons 0 _ _ => false
+    | cons i n nil => true
+    | cons i n beta => limitb beta
     end.
 
   Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
@@ -97,9 +97,9 @@ Module LO.
   fix cmp (alpha beta:t) :=
     match alpha, beta with
     | nil, nil => Eq
-    | nil, ocons a' n' b' => Lt
+    | nil, cons a' n' b' => Lt
     | _   , nil => Gt
-    | (ocons a n b),(ocons a' n' b') =>
+    | (cons a n b),(cons a' n' b') =>
       (match Nat.compare a a' with 
        | Lt => Lt
        | Gt => Gt
@@ -263,8 +263,8 @@ Module LO.
   Fixpoint nf_b (alpha : t) : bool :=
     match alpha with
     | nil => true
-    | ocons a n nil => true
-    | ocons a n ((ocons a' n' b') as b) =>
+    | cons a n nil => true
+    | cons a n ((cons a' n' b') as b) =>
       (nf_b b && Nat.ltb a' a)%bool
     end.
 
@@ -283,25 +283,25 @@ Module LO.
 
 
   Lemma single_nf :
-    forall i n, nf (ocons i n zero).
+    forall i n, nf (cons i n zero).
   Proof. unfold nf; now cbn. Qed. 
 
-  Lemma ocons_nf :
+  Lemma cons_nf :
     forall i n j n' b, 
       Nat.lt j i ->
-      nf(ocons j n' b)->
-      nf(ocons i n (ocons j n' b)).
+      nf(cons j n' b)->
+      nf(cons i n (cons j n' b)).
   Proof.
     unfold nf; simpl; intros i n j n' b' Hltji Ha.
     apply Nat.ltb_lt in Hltji as ->.
     destruct b'; auto with bool. 
   Qed.
 
-  #[local] Hint Resolve zero_nf  single_nf ocons_nf : core.
+  #[local] Hint Resolve zero_nf  single_nf cons_nf : core.
 
 
   Lemma nf_inv2 :
-    forall i n b, nf (ocons i n b) -> nf b.
+    forall i n b, nf (cons i n b) -> nf b.
   Proof.
     unfold nf; cbn; destruct i, b;  auto.
     destruct p; cbn; destruct b.
@@ -314,7 +314,7 @@ Module LO.
 
   Lemma nf_inv3 :
     forall i n  j n' b',
-      nf (ocons i n (ocons j n' b')) -> Nat.lt j i.
+      nf (cons i n (cons j n' b')) -> Nat.lt j i.
   Proof.
     unfold nf; cbn;
       destruct  b'; try discriminate; auto with T1;
@@ -336,12 +336,12 @@ Module LO.
       + intro H;  destruct alpha.
         * apply single_nf.
         * destruct p.
-          apply ocons_nf.
+          apply cons_nf.
           -- cbn in H; apply T1.nf_inv3 in H; now apply T1.lt_fin_iff. 
           -- cbn in H; apply IHalpha; apply T1.nf_inv2 in H; apply H.
       + intro H; destruct alpha.
         * apply T1.single_nf, T1.nf_fin.
-        * destruct p; cbn; apply T1.ocons_nf.
+        * destruct p; cbn; apply T1.cons_nf.
           --  apply nf_inv3 in H; now apply T1.lt_fin_iff.
           -- apply T1.nf_fin.
           -- apply nf_inv2 in H; now rewrite IHalpha.
@@ -357,19 +357,19 @@ Module LO.
   Fixpoint succ (alpha : t) : t :=
     match alpha with
       nil => fin 1
-    | ocons 0 n _  => ocons 0 (S n) nil
-    | ocons a n beta => ocons a n (succ beta)
+    | cons 0 n _  => cons 0 (S n) nil
+    | cons a n beta => cons a n (succ beta)
     end.
 
   Fixpoint plus (alpha beta : t) :t :=
     match alpha,beta with
     |  nil, y  => y
     |  x, nil  => x
-    |  ocons a n b, ocons a' n' b' =>
+    |  cons a n b, cons a' n' b' =>
        (match Nat.compare a a' with
-        | Lt => ocons a' n' b'
-        | Gt => (ocons a n (plus b (ocons a' n' b')))
-        | Eq  => (ocons a (S (n+n')) b')
+        | Lt => cons a' n' b'
+        | Gt => (cons a n (plus b (cons a' n' b')))
+        | Eq  => (cons a (S (n+n')) b')
         end)
     end
   where "alpha + beta" := (plus alpha beta) : lo_scope.
@@ -378,12 +378,12 @@ Module LO.
     match alpha,beta with
     |  nil, _  => zero
     |  _, nil => zero
-    |  ocons 0 n _, ocons 0 n' b' =>
-       ocons 0 (Peano.pred((S n) * (S n'))) b'
-    |  ocons a n b, ocons 0 n' _ =>
-       ocons a (Peano.pred ((S n) * (S n'))) b
-    |  ocons a n b, ocons a' n' b' =>
-       ocons (a + a')%nat n' ((ocons a n b) * b')
+    |  cons 0 n _, cons 0 n' b' =>
+       cons 0 (Peano.pred((S n) * (S n'))) b'
+    |  cons a n b, cons 0 n' _ =>
+       cons a (Peano.pred ((S n) * (S n'))) b
+    |  cons a n b, cons a' n' b' =>
+       cons (a + a')%nat n' ((cons a n b) * b')
     end
   where "alpha * beta" := (mult alpha beta) : lo_scope.
 

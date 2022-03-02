@@ -10,7 +10,7 @@ Section Proof_of_lt_not_wf.
   Fixpoint  s (i:nat) : T1 :=
     match i with
       0 => phi0 2
-    | S j => ocons 1 0 (s j)
+    | S j => cons 1 0 (s j)
     end.
 
   Lemma s_decr : forall i,  lt (s (S i)) (s i).

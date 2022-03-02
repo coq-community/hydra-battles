@@ -29,7 +29,7 @@ Unset Printing Implicit Defensive.
 (* begin snippet MoreNotations:: no-out *)
 #[global] Notation hzero := Epsilon0.T1.zero.
 #[global] Notation hone := Epsilon0.T1.one.
-#[global] Notation hcons := Epsilon0.T1.ocons.
+#[global] Notation hcons := Epsilon0.T1.cons.
 #[global] Notation hfin := Epsilon0.T1.fin.
 
 #[global] Notation homega := Epsilon0.T1.omega.

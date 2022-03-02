@@ -25,7 +25,7 @@ Import List  PartialFun Ensembles.
 
 Fixpoint inject (t:T1) : Ord :=
  match t with T1.zero => zero
-         | T1.ocons a n b =>
+         | T1.cons a n b =>
            AP._phi0 (inject a) * S n + inject b
  end.
 
@@ -196,19 +196,19 @@ Proof with eauto with T1.
   -   apply head_lt.    
       +  eapply IHbeta1 ...
 
-         * apply T1.lt_trans with  (T1.ocons gamma1 n0 gamma2) ...
-           apply T1.head_lt_ocons; auto.
+         * apply T1.lt_trans with  (T1.cons gamma1 n0 gamma2) ...
+           apply T1.head_lt_cons; auto.
       +  apply lt_trans with (inject (T1.phi0 beta1)). 
          *   eapply IHbeta2 ...
              apply T1.nf_helper_phi0.
              apply T1.nf_helper_intro with n; auto. 
-             apply Comparable.le_lt_trans with (T1.ocons beta1 n beta2); auto with T1.
+             apply Comparable.le_lt_trans with (T1.cons beta1 n beta2); auto with T1.
              apply T1.le_phi0 ; eauto with T1.
              eapply T1.lt_trans ...
          * simpl; rewrite alpha_plus_zero.
            apply phi0_mono,  IHbeta1; auto. 
-           apply T1.lt_trans with (T1.ocons gamma1 n0 gamma2) ...
-           apply T1.head_lt_ocons ...
+           apply T1.lt_trans with (T1.cons gamma1 n0 gamma2) ...
+           apply T1.head_lt_cons ...
            eauto with T1.
            eauto with T1.
   -     decompose [or and] H3.
@@ -217,7 +217,7 @@ Proof with eauto with T1.
           *  apply IHbeta2.
              apply T1.nf_helper_phi0.
              eapply T1.nf_helper_intro; eauto.
-             apply Comparable.le_lt_trans with (T1.ocons gamma1 n0 gamma2); auto. 
+             apply Comparable.le_lt_trans with (T1.cons gamma1 n0 gamma2); auto. 
              destruct n0.
              apply T1.le_tail ...
              apply Comparable.lt_incl_le.
@@ -231,7 +231,7 @@ Proof with eauto with T1.
            eapply T1.lt_trans.
            2: eapply H0.
            auto with T1.
-           apply T1.tail_lt_ocons; auto.
+           apply T1.tail_lt_cons; auto.
 Qed. 
 
 (* end hide *)
@@ -323,11 +323,11 @@ Section Equations_for_addition.
   match alpha,beta with
   |  zero, y  => y
  |  x, zero  => x
- |  ocons a n b, ocons c p d =>
+ |  cons a n b, cons c p d =>
     (match compare a c with
-     | Lt => ocons c p d
-     | Gt => (ocons a n (plus b (ocons c p d)))
-     | Eq  => (ocons a (S (n+p)) d)
+     | Lt => cons c p d
+     | Gt => (cons a n (plus b (cons c p d)))
+     | Eq  => (cons a (S (n+p)) d)
      end)
   end
 where "alpha + beta" := (plus alpha beta) : t1_scope.
@@ -400,7 +400,7 @@ End Equations_for_addition.
 
 (* end hide *)
 
-Lemma inject_rw (a b: T1) n : inject (ocons a n b) =
+Lemma inject_rw (a b: T1) n : inject (T1.cons a n b) =
                               mult_Sn (AP._phi0 (inject a)) n + inject b.
 Proof. reflexivity. Qed.
 
@@ -414,7 +414,7 @@ Proof with eauto with T1.
   induction alpha.
   - simpl;  now rewrite zero_plus_alpha.
   -  intros H H0;  destruct beta.
-     + simpl (inject (ocons alpha1 n alpha2));
+     + simpl (inject (T1.cons  alpha1 n alpha2));
          rewrite <- plus_assoc; simpl (inject T1.zero); 
            now rewrite alpha_plus_zero.
 

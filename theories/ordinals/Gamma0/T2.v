@@ -80,7 +80,7 @@ Global Hint Constructors is_finite : T2.
 Fixpoint T1_to_T2 (alpha :T1) : T2 :=
   match alpha  with
   | T1.zero => zero
-  | T1.ocons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
+  | T1.cons a n b => gcons zero (T1_to_T2 a) n (T1_to_T2 b)
   end.
 
 (* end snippet T1ToT2 *)

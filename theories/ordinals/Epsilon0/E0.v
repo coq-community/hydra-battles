@@ -115,11 +115,11 @@ Notation "'omega^'" := phi0 (only parsing) : E0_scope.
 
 #[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
-  refine (@mkord (ocons (cnf alpha) n zero) _).
+  refine (@mkord (cons (cnf alpha) n zero) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
 
-#[global] Instance Ocons (alpha : E0) (n: nat) (beta: E0) : E0
+#[global] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
 #[global] Instance FinS (i:nat) : E0.
@@ -591,7 +591,7 @@ Qed.
 
 Lemma Omega_term_plus alpha beta i :
   alpha <> Zero -> (beta o< phi0 alpha)%e0 ->
-  cnf (Omega_term alpha i + beta)%e0 = ocons (cnf alpha) i (cnf beta).
+  cnf (Omega_term alpha i + beta)%e0 = cons (cnf alpha) i (cnf beta).
 Proof.
   destruct alpha as [alpha Halpha]; destruct beta as [beta Hbeta].
   intros.
@@ -606,11 +606,11 @@ Proof.
 Qed.
 
 
-Lemma cnf_Ocons (alpha beta: E0) n : alpha <> Zero -> beta o< phi0 alpha ->
-                                     cnf (Ocons alpha n beta) =
-                                     ocons (cnf alpha) n (cnf beta).
+Lemma cnf_Cons (alpha beta: E0) n : alpha <> Zero -> beta o< phi0 alpha ->
+                                     cnf (Cons alpha n beta) =
+                                     cons (cnf alpha) n (cnf beta).
 Proof.
-  intros. unfold Ocons. rewrite Omega_term_plus; auto.
+  intros. unfold Cons. rewrite Omega_term_plus; auto.
 Defined.
 
 Lemma Limitb_plus alpha beta i:
@@ -643,7 +643,7 @@ Proof.
   rewrite Omega_term_plus; auto.
   rewrite Succ_rw.
   rewrite Omega_term_plus; auto.
-  rewrite succ_cons, Succ_rw; auto.
+  rewrite succ_cons', Succ_rw; auto.
   intro H1; apply H, E0_eq_intro.   assumption. 
   destruct H0.
   destruct H1.
