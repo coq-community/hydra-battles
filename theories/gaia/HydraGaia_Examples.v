@@ -16,6 +16,9 @@ Check \F 42.
 Fail Check (42 : T1).
 (* end snippet Demoa *)
 
+(* begin snippet Demob *)
+Compute (T1limit T1omega, T1is_succ (omega_tower 2), T1is_succ (\F 42)).
+(* end snippet Demob *)
 
 (* begin snippet ExamplesG2H *)
 Example α : T1 :=
@@ -54,6 +57,9 @@ Search (?x < ?x  o+ _)%ca.
 Search oplus.
 
 Search Hessenberg.oplus hlt.
+
+
+
 
 (** Canonical sequences *)
 
