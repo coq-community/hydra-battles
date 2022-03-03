@@ -3595,9 +3595,7 @@ Defined.
 
 (* begin snippet succbIff:: no-out *)
 Lemma succb_iff alpha (Halpha : nf alpha) :
-  succb alpha <->
-  exists beta : T1,
-    nf beta /\ alpha = succ  beta.
+  succb alpha <->  exists beta : T1,  nf beta /\ alpha = succ  beta.
 (* end snippet succbIff *)
 
 Proof.
