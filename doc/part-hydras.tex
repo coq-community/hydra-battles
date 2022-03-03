@@ -2917,8 +2917,12 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \input{movies/snippets/T1/omegaDef}
 
-
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
+
+\paragraph{\gaiacompat}
+In \texttt{gaia.ssete9}, the ordinal $\omega$ is bound to
+a \emph{constant} called \texttt{T1omega}.
+
 
 
 \subsubsection{The ordinal \(\omega^\alpha\), a.k.a. \(\phi_0(\alpha)\)}
@@ -2939,7 +2943,8 @@ The name \(\phi_0\)
 $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\phi_0(\alpha)$.  See also Chapter~\ref{chap:schutte} of this document.
 \end{remark}
 
-
+\paragraph{\gaiacompat}
+In \texttt{gaia.ssete9} the identifier\texttt{phi0} is bound to a constant (not a notation).
 
   
 \subsubsection{The hierarchy of \(\omega\)-towers:}
@@ -2986,6 +2991,9 @@ The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1
 
 \input{movies/snippets/T1/ppAlpha0}
 
+\paragraph{\gaiacompat}
+In ~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge},
+we define a variant of \texttt{pp} for pretty-printing terms of type \texttt{ssete9.CantorOrdinal.T1} (see Sect.~\vref{sect:gaia-ppT1}).
 
 \index{hydras}{Projects}
 \begin{project}
@@ -3028,7 +3036,12 @@ Links between the function \texttt{compare} and the relations
 
 \input{movies/snippets/T1/Instances}
 
+\paragraph{\gaiacompat}
+In \gaia, the strict order \texttt{T1lt} on ordinal terms is directly defined as a boolean function (in \ssreflect's style).
 
+\inputsnippets{nfwfgaia/T1ltDef}
+
+In section~\vref{sect:lt-compat-gaia}, we show that both definitions are mutually equivalent.
 
 \subsubsection{A Predicate for Characterizing Normal Forms}
 \label{sect:t1-nf}
@@ -3061,6 +3074,12 @@ the set of all well-formed ordinal terms:
 
 \input{movies/snippets/T1/nfBadTerm}
 
+\paragraph{\gaiacompat}
+In \gaia, the boolean function which characterizes ordinal terms in normal form is defined as follows:
+
+\inputsnippets{nfwfgaia/T1nfDef}
+
+In Sect.~\vref{nf-gaia-compat}, we show that \gaia's \texttt{T1nf} is extensionnaly equivalent with \HydrasLib'  \texttt{nf}.
 
 
 

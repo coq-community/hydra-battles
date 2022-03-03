@@ -440,7 +440,7 @@ Lemma T1ap_phi0 x: T1ap (phi0 x).          Proof. by []. Qed.
 Essentially, $\phi_0$ #&phi;<sub>0</sub>(x)# is strictly increasing, 
 *)
 
-
+(* begin snippet T1ltDef *)
 Fixpoint T1lt x y {struct x} :=
   if x is cons a n b then
     if y is cons a' n' b' then 
@@ -457,6 +457,8 @@ Definition T1le (x y :T1) := (x == y) || (x < y).
 Notation "x <= y" := (T1le x y) : cantor_scope.
 Notation "x >= y" := (y <= x) (only parsing) : cantor_scope.
 Notation "x > y"  := (y < x) (only parsing)  : cantor_scope.
+
+(* end snippet T1ltDef *)
 
 Lemma T1lenn x: x <= x.   
 Proof. by rewrite /T1le eqxx. Qed.
@@ -667,9 +669,11 @@ If [b] is [cons a' n' b'], this says that [b] is less than [b'].
 If [a] is zero,  this says that [b=0].
  *)
 
+(* begin snippet T1nfDef *)
 Fixpoint T1nf x :=
   if x is cons a _ b then [&& T1nf a, T1nf b & b < phi0 a ]
   else true.
+(* end snippet T1nfDef *)
 
 Lemma T1nf_cons0 a n: T1nf a -> T1nf (cons a n zero).
 Proof. by rewrite /= andbT. Qed.

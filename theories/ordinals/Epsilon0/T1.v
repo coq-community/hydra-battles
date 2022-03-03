@@ -126,13 +126,13 @@ Definition omega_term (alpha:T1)(k:nat) :=
 *)
 
 (* begin snippet towerDef *)
-Fixpoint tower (height:nat) : T1 := 
+Fixpoint omega_tower (height:nat) : T1 := 
   match height with 
   | 0 =>  FS 0 
-  | S h => phi0 (tower h)
+  | S h => phi0 (omega_tower h)
   end.
 
-Compute tower 7.
+Compute omega_tower 7.
 (* end snippet towerDef *)
 
 (** Additive principal ordinals
@@ -169,10 +169,10 @@ Definition lt (alpha beta : T1) : Prop :=
 (* end snippet compareDef *)
 
 (* begin snippet ltExamples:: no-out *)
-Example E1 : lt (cons omega 56 zero) (tower 3). 
+Example E1 : lt (cons omega 56 zero) (omega_tower 3). 
 Proof. reflexivity. Qed.
 
-Example E2 : ~ lt (tower 3) (tower 3).
+Example E2 : ~ lt (omega_tower 3) (omega_tower 3).
 Proof. discriminate.  Qed.
 (* end snippet ltExamples *)
 
@@ -514,7 +514,6 @@ Cantor normal form needs the exponents of omega to be
 fun alpha beta => decide (compare alpha beta = Lt).
 
 (* begin snippet nfDef *)
-
 Fixpoint nf_b (alpha : T1) : bool :=
   match alpha with
   | zero => true
@@ -523,10 +522,7 @@ Fixpoint nf_b (alpha : T1) : bool :=
       (nf_b a && nf_b b && (bool_decide (lt a' a)))%bool
   end.
 
-Definition nf alpha :Prop := 
-  nf_b alpha.
-
-
+Definition nf alpha :Prop := nf_b alpha.
 (* end snippet nfDef *)
 
 (* begin snippet badTerm *)
@@ -1199,7 +1195,7 @@ Proof.
   - intro; now apply nf_helper_intro with 0.
 Qed.
 
-Lemma nf_tower : forall n, nf (tower n).
+Lemma nf_omega_tower : forall n, nf (omega_tower n).
 Proof.  induction n; simpl; (* unfold phi0;*)  auto with T1.
 Qed.
 
