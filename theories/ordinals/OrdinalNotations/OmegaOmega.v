@@ -427,7 +427,7 @@ Module LO.
 
   (* begin snippet plusRef:: no-out  *)
   Lemma plus_ref : forall alpha beta: t,
-      refine (alpha + beta) = T1.plus (refine alpha) (refine beta).
+      refine (alpha + beta) = T1.T1add (refine alpha) (refine beta).
   (* end snippet plusRef *)
   Proof.
     induction alpha, beta.
@@ -449,7 +449,7 @@ Module LO.
   (* begin snippet multRef:: no-out   *)
   Lemma mult_ref : forall alpha beta: t,
       refine (alpha * beta) =
-      T1.mult (refine alpha) (refine beta).
+      T1.T1mul (refine alpha) (refine beta).
   (* end snippet multRef *)
   
   Proof.

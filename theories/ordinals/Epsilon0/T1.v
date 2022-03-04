@@ -592,7 +592,7 @@ where "alpha + beta" := (T1add alpha beta) : t1_scope.
 
 (* begin snippet multDef *)
 
-Fixpoint mult (alpha beta : T1) :T1 :=
+Fixpoint T1mul (alpha beta : T1) :T1 :=
   match alpha,beta with
   |  zero, _  => zero
   |  _, zero => zero
@@ -603,7 +603,10 @@ Fixpoint mult (alpha beta : T1) :T1 :=
   |  cons a n b, cons a' n' b' =>
       cons (a + a') n' ((cons a n b) * b')
   end
-where "alpha * beta" := (mult alpha beta) : t1_scope.
+where "alpha * beta" := (T1mul alpha beta) : t1_scope.
+
+#[deprecated(note="use T1mul")]
+  Notation mult := T1mul (only parsing).
 
 (* end snippet multDef *)
 
