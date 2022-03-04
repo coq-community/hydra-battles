@@ -8,6 +8,8 @@ Set Bullet Behavior "Strict Subproofs".
 Require Import T1Bridge. 
 Set Implicit Arguments.
 Unset Strict Implicit.
+
+
 Open Scope cantor_scope.
 
 (* begin snippet oplusDef *)
