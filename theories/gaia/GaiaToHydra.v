@@ -24,7 +24,7 @@ Proof. by rewrite hmultA. Qed.
 (* end snippet T1BridgeUseb *)
 
 (* begin snippet distributivity:: no-out *)
-Lemma hmult_dist : right_distributive mult plus.
+Lemma hmult_dist : right_distributive mult T1add.
 Proof.
   move => a b c; specialize (mul_distr (h2g a) (h2g b) (h2g c)) => H.
   rewrite -(g2h_h2gK a) -(g2h_h2gK b) -(g2h_h2gK c).

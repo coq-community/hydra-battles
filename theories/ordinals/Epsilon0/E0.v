@@ -88,7 +88,7 @@ Defined.
 
 #[global] Instance plus (alpha beta : E0) : E0.
 Proof.
-  refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
+  refine (@mkord (T1add (@cnf alpha) (@cnf beta))_ );
     apply plus_nf; apply cnf_ok.
 Defined.
 

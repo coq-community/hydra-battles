@@ -567,18 +567,23 @@ Fixpoint pred (c:T1) : option T1 :=
 
 (* begin snippet plusDef *)
 
-Fixpoint plus (alpha beta : T1) :T1 :=
+
+Fixpoint T1add (alpha beta : T1) :T1 :=
   match alpha,beta with
   |  zero, y  => y
   |  x, zero  => x
   |  cons a n b, cons a' n' b' =>
       (match compare a a' with
        | Lt => cons a' n' b'
-       | Gt => (cons a n (plus b (cons a' n' b')))
+       | Gt => (cons a n (T1add b (cons a' n' b')))
        | Eq  => (cons a (S (n+n')) b')
        end)
   end
-where "alpha + beta" := (plus alpha beta) : t1_scope.
+where "alpha + beta" := (T1add alpha beta) : t1_scope.
+
+#[deprecated(note="use T1add")]
+  Notation plus := T1add (only parsing).
+
 
 (* end snippet plusDef *)
 
@@ -3856,11 +3861,11 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
   match compare a a' with
   | Eq => cons a (S (n + n')) b'
   | Lt => cons a' n' b'
-  | Gt => cons a n (plus b (cons a' n' b'))
+  | Gt => cons a n (T1add b (cons a' n' b'))
   end.
 Proof. reflexivity. Qed.
 
-#[global] Instance plus_assoc : Assoc eq plus. 
+#[global] Instance plus_assoc : Assoc eq T1add. 
 Proof.
   red.  induction x,y,z; only 1-6: easy.
   - now rewrite !plus_zero_r.
