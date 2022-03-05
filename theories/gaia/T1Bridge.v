@@ -31,7 +31,7 @@ Unset Printing Implicit Defensive.
 #[global] Notation hzero := Epsilon0.T1.zero.
 #[global] Notation hone := Epsilon0.T1.one.
 #[global] Notation hcons := Epsilon0.T1.cons.
-#[global] Notation hfin := Epsilon0.T1.fin.
+#[global] Notation hfin := Epsilon0.T1.T1nat.
 
 #[global] Notation homega := Epsilon0.T1.T1omega.
 #[global] Notation hsucc := Epsilon0.T1.succ.
@@ -364,7 +364,7 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn4 a n b n' b' :
     a <> Epsilon0.T1.zero ->
-    Epsilon0.T1.mult (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
+    Epsilon0.T1.T1mul (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
       hcons a (n * n' + n + n') b.
   Proof. 
     cbn.  case: a => [//|alpha n0 beta _ ]; f_equal; nia. 
@@ -382,7 +382,7 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn5 a n b a' n' b' :
     a' <>  hzero ->
-    Epsilon0.T1.mult (hcons a n b)  (hcons a' n' b') =
+    Epsilon0.T1.T1mul (hcons a n b)  (hcons a' n' b') =
       hcons (hplus a  a') n' (hmult (hcons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.

@@ -301,7 +301,7 @@ Definition Pred (alpha: E0) : E0 :=
 
 Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
-#[global] Instance Two : E0 :=  ltac:(mko (fin 2)).
+#[global] Instance Two : E0 :=  ltac:(mko (\F 2)).
 
 #[global] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
 
