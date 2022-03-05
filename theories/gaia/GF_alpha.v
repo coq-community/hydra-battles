@@ -5,12 +5,13 @@
 
 
 (* begin snippet Requirements:: no-out  *)
+From mathcomp Require Import all_ssreflect zify.
+From gaia Require Export ssete9.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
-From mathcomp Require Import all_ssreflect zify.
-From gaia Require Export ssete9.
+
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 

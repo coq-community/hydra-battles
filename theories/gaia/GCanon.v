@@ -2,10 +2,10 @@
 
 (imported from [hydras.Epsilon0.Canon]) *)
 
-From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import Canon.
 Require Import T1Bridge.
+From hydras Require Import T1.
 
 
 

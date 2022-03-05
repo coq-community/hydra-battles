@@ -1,8 +1,9 @@
 (* begin snippet T1BridgeUse:: no-out *)
 
-From hydras Require Import T1. 
 From mathcomp Require Import all_ssreflect zify.
 Require Import T1Bridge . 
+From hydras Require Import T1. 
+
 From gaia Require Import ssete9.
 Import Epsilon0.T1.
 (* end snippet T1BridgeUse *)

@@ -31,7 +31,7 @@ Fixpoint inject (t:T1) : Ord :=
 
 (* end snippet injectDef *)
 
-Lemma inject_of_finite_pos : forall n, inject (T1.fin (S n)) = F (S n).
+Lemma inject_of_finite_pos : forall n, inject (\F (S n)) = F (S n).
 Proof.
  induction n;simpl.
  -  rewrite phi0_zero.
@@ -61,7 +61,7 @@ Proof. reflexivity. Qed.
 
 
 Theorem inject_of_finite (n : nat):
-  inject (T1.fin n) =  n.
+  inject (\F n) =  n.
 (*||*) (*| .. coq:: none |*)
 Proof.
   destruct n.

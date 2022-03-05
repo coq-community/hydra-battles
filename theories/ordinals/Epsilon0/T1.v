@@ -61,8 +61,18 @@ Notation FS n := (cons zero n zero).
 Notation one := (FS 0).
 
 (** the [n]-th (finite) ordinal  *)
-Definition fin (n:nat) := match n with 0 => zero | S p => FS p end.
-Coercion fin  : nat >-> T1.
+
+Definition T1nat (n:nat) := match n with 0 => zero | S p => FS p end.
+
+#[deprecated(note="use T1nat" )]
+ Notation fin := T1nat (only parsing).
+
+ Notation "\F n" := (T1nat n)  (at level 29): t1_scope.
+
+
+
+
+Coercion T1nat  : nat >-> T1.
 
 Example ten : T1 := 10.
 (* end snippet finiteOrds *)
@@ -423,7 +433,7 @@ Qed.
 
 
 Lemma compare_fin_rw (n n1: nat) :
-  compare (fin n) (fin n1) = (n ?= n1).
+  compare (T1nat n) (T1nat n1) = (n ?= n1).
   destruct n, n1.
   - easy.
   - now cbn.
@@ -431,7 +441,7 @@ Lemma compare_fin_rw (n n1: nat) :
   - cbn; unfold compare; case (n ?= n1); trivial.
 Qed.
 
-Lemma lt_fin_iff (i j : nat): lt (fin i) (fin j) <-> Nat.lt i j.
+Lemma lt_fin_iff (i j : nat): lt (T1nat i) (T1nat j) <-> Nat.lt i j.
 Proof.
   destruct i, j. 
   - split; [discriminate | lia]. 
@@ -546,7 +556,7 @@ Definition epsilon_0 : Ensemble T1 := nf.
 (* begin snippet succDef *)
 
 Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with zero => fin 1
+  match alpha with zero => T1nat 1
   | cons zero n _ => cons zero (S n) zero
   | cons beta n gamma => cons beta n (succ gamma)
   end.
@@ -854,7 +864,7 @@ Ltac decomp_exhib H a n b e:=
 Lemma nf_FS : forall n:nat, nf (FS n).
 Proof. auto with T1. Qed.
 
-Lemma nf_fin : forall n:nat, nf (fin n).
+Lemma nf_fin : forall n:nat, nf (T1nat n).
 Proof. destruct n; auto with T1. Qed.
 
 (** ** Successors, limits and zero *)
@@ -1882,8 +1892,8 @@ Proof.
        * simpl; replace (S (n + i)) with (n + S i)%nat; auto.
        *  simpl; assert (nf alpha2) by eauto with T1.
           generalize  (IHalpha2 H0 (S i)).
-          replace (fin (S i)) with (FS i); auto.
-          replace (fin (S (S  i))) with (FS (S i)).
+          replace (T1nat (S i)) with (FS i); auto.
+          replace (T1nat (S (S  i))) with (FS (S i)).
           {intro H1; now rewrite H1. }
           reflexivity.
 Qed.
@@ -2396,7 +2406,7 @@ Lemma succ_compatS :
 Proof.  reflexivity.  Qed.
 
 Lemma succ_compat (n:nat) :
-  succ (fin n) = FS n.
+  succ (T1nat n) = FS n.
 Proof.
   destruct n; reflexivity.
 Qed.
@@ -2502,7 +2512,7 @@ Proof.
 Qed.
 
 Lemma mult_nf_fin alpha n:
-  nf alpha -> nf (alpha * fin n).
+  nf alpha -> nf (alpha * T1nat n).
 Proof.
   revert n; induction n.
   -  now  rewrite mult_a_0.
@@ -3760,7 +3770,7 @@ Qed.
 
 
 
-Lemma  omega_limit : strict_lub fin T1omega.
+Lemma  omega_limit : strict_lub T1nat T1omega.
 Proof.
   split.
   - intro i;  destruct i; compute; auto.
@@ -4173,16 +4183,16 @@ Ltac pp0tac alpha   :=
   | zero => exact 0
   | cons zero ?n zero => exact (S n)
   | cons one 0 zero => exact omega%pT1
-  | cons one 0 ?beta => exact (omega + ltac :(pp0tac beta))%pT1
-  | cons one ?n zero => exact (omega * (S n))%pT1
-  | cons one ?n ?beta => exact (omega * (S n) + ltac: (pp0tac beta))%pT1
+  | cons one 0 ?beta => exact (T1omega + ltac :(pp0tac beta))%pT1
+  | cons one ?n zero => exact (T1omega * (S n))%pT1
+  | cons one ?n ?beta => exact (T1omega * (S n) + ltac: (pp0tac beta))%pT1
   | cons ?alpha 0 zero => exact (omega ^ ltac: (pp0tac alpha))%pT1
   | cons ?alpha 0 ?beta =>
-    exact (omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
+    exact (T1omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
   | cons ?alpha ?n zero =>
-    exact (omega ^ ltac: (pp0tac alpha) * (S n))%pT1
+    exact (T1omega ^ ltac: (pp0tac alpha) * (S n))%pT1
   | cons ?alpha ?n ?beta =>
-    exact (omega ^ ltac: (pp0tac alpha) * (S n) +
+    exact (T1omega ^ ltac: (pp0tac alpha) * (S n) +
                    ltac : (pp0tac beta)%pT1)
   end.
 

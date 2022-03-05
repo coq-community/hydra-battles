@@ -149,7 +149,7 @@ Proof.
     + repeat rewrite Plus_rw; simpl.
       destruct i; simpl.
       *  rewrite plus_zero_r;  now rewrite succ_is_plus_one.
-      *   simpl; replace (FS i) with (fin (S i)).
+      *   simpl; replace (FS i) with (\F (S i)).
           -- rewrite succ_of_plus_finite.
              ++ f_equal.
              ++ apply cnf_ok.

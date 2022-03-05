@@ -388,7 +388,7 @@ Proof. unfold L_succ, L_fin; intros; abstract lia.
 Qed.
 
 (* begin snippet LFinOk:: no-out *)
-Lemma L_fin_ok i : L_spec (fin i) (L_fin i). 
+Lemma L_fin_ok i : L_spec (\F i) (L_fin i). 
 Proof. 
   induction i.
   (* ... *)
@@ -396,7 +396,7 @@ Proof.
 
   - left; reflexivity.
   -  apply L_spec_compat with (L_succ (L_fin i)).
-     change (fin (S i)) with (FS i); rewrite <- succ_compat.
+     change (\F (S i)) with (FS i); rewrite <- succ_compat.
      destruct i.
      + simpl. unfold L_succ, L_fin; right.
        * discriminate.
