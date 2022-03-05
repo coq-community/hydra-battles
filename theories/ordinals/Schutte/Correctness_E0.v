@@ -72,7 +72,7 @@ Qed.
 
 
 Theorem inject_of_omega :
-  inject T1.omega = Schutte_basics._omega. (* .no-out *)
+  inject T1omega = Schutte_basics._omega. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
  simpl; repeat rewrite alpha_plus_zero.

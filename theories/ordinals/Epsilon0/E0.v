@@ -54,7 +54,7 @@ Infix "o<=" := Le : E0_scope.
 #[global] Instance Zero : E0 := @mkord zero refl_equal.
 
 #[global] Instance _Omega : E0. 
-Proof. now exists omega%t1. Defined. 
+Proof. now exists T1omega%t1. Defined. 
 
 Notation omega := _Omega.
 (* end snippet ZeroOmega *)
@@ -303,7 +303,7 @@ Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
 #[global] Instance Two : E0 :=  ltac:(mko (fin 2)).
 
-#[global] Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
+#[global] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
 
 
 #[global] Instance E0_sto : StrictOrder Lt.
@@ -773,7 +773,7 @@ Proof.
   destruct H.
   destruct H0.
   cbn in H0.
-  assert (H2 : cnf0 t1< T1.omega%t1).
+  assert (H2 : cnf0 t1< T1omega).
   {  split; cbn in H1; tauto. }
   destruct (lt_omega_inv H2).
   - exists 0; subst;  unfold Fin; apply E0_eq_intro;  reflexivity. 

@@ -69,7 +69,10 @@ Example ten : T1 := 10.
 
 (* begin snippet omegaDef *)
 
-Notation omega := (cons (cons zero 0 zero) 0 zero).
+
+Notation T1omega := (cons (cons zero 0 zero) 0 zero).
+#[deprecated(note="use T1omega")]
+  Notation omega := T1omega (only parsing).
 
 (* end snippet omegaDef *)
 
@@ -98,13 +101,13 @@ Fixpoint limitb alpha :=
     | cons alpha n beta => limitb beta
   end.
 
-Compute limitb omega.
+Compute limitb T1omega.
 
 Compute limitb 42.
 
 Compute succb 42.
 
-Compute succb omega.
+Compute succb T1omega.
 
 (* end snippet succbLimitb *)
 
@@ -169,7 +172,7 @@ Definition lt (alpha beta : T1) : Prop :=
 (* end snippet compareDef *)
 
 (* begin snippet ltExamples:: no-out *)
-Example E1 : lt (cons omega 56 zero) (omega_tower 3). 
+Example E1 : lt (cons T1omega 56 zero) (omega_tower 3). 
 Proof. reflexivity. Qed.
 
 Example E2 : ~ lt (omega_tower 3) (omega_tower 3).
@@ -527,7 +530,7 @@ Definition nf alpha :Prop := nf_b alpha.
 
 (* begin snippet badTerm *)
 
-Example bad_term: T1 := cons 1 1 (cons omega 2 zero).
+Example bad_term: T1 := cons 1 1 (cons T1omega 2 zero).
 
 (* end snippet badTerm *)
 
@@ -2104,14 +2107,14 @@ Lemma plus_not_monotonous_l :
   exists alpha beta gamma : T1,
     alpha t1< beta /\ alpha + gamma = beta + gamma.
 Proof.
-  exists 3, 5, omega; now compute.
+  exists 3, 5, T1omega; now compute.
 Qed.
 
 Lemma mult_not_monotonous :
   exists alpha beta gamma : T1,
       alpha t1< beta /\ alpha * gamma = beta * gamma.
 Proof.
-  exists 3, 5, omega; now compute.
+  exists 3, 5, T1omega; now compute.
 Qed.
 (* end snippet notMono *)
 
@@ -2446,7 +2449,7 @@ Proof. reflexivity. Qed.
 
 Lemma mult_fin_omega :
   forall n: nat,
-    FS n * omega = omega.
+    FS n * T1omega = T1omega.
 Proof. now cbn. Qed.
 
 Lemma phi0_plus_mult :
@@ -2564,7 +2567,7 @@ Qed.
 
 (** ** Exponential *)
 
-Lemma exp_fin_omega : forall n, FS (S n) ^ omega = omega.
+Lemma exp_fin_omega : forall n, FS (S n) ^ T1omega = T1omega.
 Proof.  reflexivity. Qed.
 
 (** ** Relations between [cons], [phi0] and [+]
@@ -2576,7 +2579,7 @@ Proof.  reflexivity. Qed.
      operations on ordinals which belong to epsilon0 *)
 
 
-Lemma phi0_eq_bad : forall alpha, omega ^ alpha = phi0 alpha.
+Lemma phi0_eq_bad : forall alpha, T1omega ^ alpha = phi0 alpha.
 Proof.
   intro alpha.
   Fail reflexivity.  
@@ -2584,12 +2587,12 @@ Proof.
 The command has indeed failed with message:
 In environment
 alpha : T1
-Unable to unify "phi0 alpha" with "omega ^ alpha".
+Unable to unify "phi0 alpha" with "T1omega ^ alpha".
  *)
 Abort.
 
 
-Lemma phi0_eq : forall alpha, nf alpha -> omega ^ alpha =  phi0 alpha.
+Lemma phi0_eq : forall alpha, nf alpha -> T1omega ^ alpha =  phi0 alpha.
 Proof.
   simple induction alpha; cbn.
   - reflexivity.
@@ -2613,7 +2616,7 @@ Qed.
 
 
 Lemma omega_term_def :
-  forall a n, nf a -> omega_term a n = omega ^ a *  FS n.
+  forall a n, nf a -> omega_term a n = T1omega ^ a *  FS n.
 Proof. 
   intros a n H; rewrite phi0_eq; auto.
   simpl; case a; simpl; unfold omega_term;
@@ -2623,7 +2626,7 @@ Qed.
 
 Lemma cons_def :
   forall a n b,
-  nf(cons a n b) -> cons a n b =  omega ^ a * FS n + b.
+  nf(cons a n b) -> cons a n b =  T1omega ^ a * FS n + b.
 Proof.
   intros; rewrite <- omega_term_plus_rw; auto.
   - rewrite omega_term_def; auto.
@@ -2633,8 +2636,8 @@ Qed.
 Theorem unique_decomposition :
   forall a n b a' n' b',
     nf (cons a n b) -> nf (cons a' n' b') ->
-    omega ^ a *  FS n + b =
-    omega ^ a' * FS n' + b' ->
+    T1omega ^ a *  FS n + b =
+    T1omega ^ a' * FS n' + b' ->
     a = a' /\ n = n' /\ b = b'.
 Proof.
   intros a n b a' n' b' N N'; rewrite <- (cons_def N);
@@ -2644,7 +2647,7 @@ Qed.
 Theorem Cantor_normal_form :
   forall o, lt zero  o -> nf o ->
             {a:T1 & {n: nat & {b : T1 |
-                                o = omega ^ a * FS n + b  /\
+                                o = T1omega ^ a * FS n + b  /\
                                 nf (cons a n b) }}}.
 Proof.
   intro ; case o.
@@ -2677,7 +2680,7 @@ Qed.
 
 Lemma lt_omega_inv :
   forall alpha,
-  alpha t1< omega -> alpha = zero \/ exists n, alpha = FS n.
+  alpha t1< T1omega -> alpha = zero \/ exists n, alpha = FS n.
 Proof.
   intros alpha [H1 [H2 _]]; destruct alpha; auto.
   destruct (lt_inv H2).
@@ -2731,7 +2734,7 @@ Qed.
 
 
 
-Lemma nf_omega : nf omega.
+Lemma nf_omega : nf T1omega.
 Proof.  auto with T1. Qed.
 
 (* About omega ^ omega *)
@@ -2743,7 +2746,7 @@ Proof. compute; auto with T1. Qed.
 
 Global Hint Resolve nf_phi0 : T1.
 
-Definition omega_omega := phi0 omega.
+Definition omega_omega := phi0 T1omega.
 
 Lemma nf_omega_omega : nf omega_omega.
 Proof.  repeat constructor. Qed.   
@@ -3757,7 +3760,7 @@ Qed.
 
 
 
-Lemma  omega_limit : strict_lub fin omega.
+Lemma  omega_limit : strict_lub fin T1omega.
 Proof.
   split.
   - intro i;  destruct i; compute; auto.
@@ -4110,7 +4113,7 @@ Fixpoint eval_pp (e : ppT1) : T1 :=
   | PP_add e f => ( (eval_pp e) +  (eval_pp f))%t1
   | PP_mult e n => ( (eval_pp e) * (S n))%t1
   | PP_exp e f => ((eval_pp e) ^ (eval_pp f))%t1
-  | ω   => omega
+  | ω   => T1omega
   end.
 
 Compute eval_pp (PP_fin 4).
@@ -4118,7 +4121,7 @@ Compute eval_pp (PP_fin 4).
 
 (* Coercion pp0 : T1 >-> ppT1. *)
 
-Compute (pp0 (omega ^ omega * 2 + 1))%t1.
+Compute (pp0 (T1omega ^ T1omega * 2 + 1))%t1.
 
 
 Fixpoint reassoc (exp : ppT1) (fuel :nat) : ppT1 :=
@@ -4146,14 +4149,14 @@ Definition pp (e: T1) : ppT1  := let t := pp0 e in reassoc t (pp_size t).
 
 
 
-Compute (pp (omega ^ omega * 2 + omega ^ 5 + omega + 1))%t1.
+Compute (pp (T1omega ^ T1omega * 2 + T1omega ^ 5 + T1omega + 1))%t1.
 
-Compute (pp (omega ^ (omega ^ omega * 2 + omega ^ 5 + omega + 1)))%t1 .
+Compute (pp (T1omega ^ (T1omega ^ T1omega * 2 + T1omega ^ 5 + T1omega + 1)))%t1 .
 
-Compute pp omega.
+Compute pp T1omega.
 
 Eval simpl in  fun n:nat =>
-                 (pp (omega ^ (omega ^ omega * n + omega ^ n + omega + 1)))%t1 .
+                 (pp (T1omega ^ (T1omega ^ T1omega * n + T1omega ^ n + T1omega + 1)))%t1 .
 
 
 Ltac is_closed alpha :=
@@ -4193,8 +4196,8 @@ Section essai.
 
   
   Compute  ltac: (pp0tac (cons (cons zero 0 zero) 3 zero)).
-  Compute ltac: (pptac (cons omega (S (S n)) (cons omega (S n) 4))%t1).
-  Compute ltac: (pptac (1 + omega * (S 6))).
+  Compute ltac: (pptac (cons T1omega (S (S n)) (cons T1omega (S n) 4))%t1).
+  Compute ltac: (pptac (1 + T1omega * (S 6))).
 
 End essai.
 
@@ -4203,9 +4206,9 @@ Check (phi0 (phi0 (FS 6))).
 
 Compute pp ((phi0 10 * 3) * (phi0 7 * 8)).
 
-Compute pp (3 * (omega + 5)).
+Compute pp (3 * (T1omega + 5)).
 
-Compute pp (3 * (omega * 7 + 15)).
+Compute pp (3 * (T1omega * 7 + 15)).
 
 
 
@@ -4219,23 +4222,23 @@ Compute pp (3 * (omega * 7 + 15)).
 |*)
 
 
-Example Ex1 :  42 + omega = omega.
+Example Ex1 :  42 + T1omega = T1omega.
 Proof. reflexivity. Qed.
 
-Example Ex2 : omega t1< omega + 42.
+Example Ex2 : T1omega t1< T1omega + 42.
 Proof. now compute. Qed.
 
-Example Ex3 : 5 * omega = omega.
+Example Ex3 : 5 * T1omega = T1omega.
 Proof. reflexivity. Qed.
 
-Example Ex4 : omega t1<  omega * 5.
+Example Ex4 : T1omega t1<  T1omega * 5.
 Proof. now compute. Qed.
 
 (*||*)
 (* end snippet plusMultExamples *)
 
 
-Example Ex5 : limitb (omega ^ (omega + 5)).
+Example Ex5 : limitb (T1omega ^ (T1omega + 5)).
 Proof. reflexivity. Qed.
 
 (* Demo *)
@@ -4278,6 +4281,6 @@ Compute nf_b bad_term.
 (* end snippet nfBadTerm *)
 
 
-Example alpha_0_eq : alpha_0 = phi0 omega  +
+Example alpha_0_eq : alpha_0 = phi0 T1omega  +
                                phi0 3 * 5 + 2.
 Proof. reflexivity. Qed.

@@ -32,11 +32,11 @@ Unset Printing Implicit Defensive.
 #[global] Notation hcons := Epsilon0.T1.cons.
 #[global] Notation hfin := Epsilon0.T1.fin.
 
-#[global] Notation homega := Epsilon0.T1.omega.
+#[global] Notation homega := Epsilon0.T1.T1omega.
 #[global] Notation hsucc := Epsilon0.T1.succ.
 #[global] Notation hphi0 alpha := (Epsilon0.T1.phi0 alpha).
 #[global] Notation hplus := Epsilon0.T1.T1add.
-#[global] Notation hmult := Epsilon0.T1.mult.
+#[global] Notation hmult := Epsilon0.T1.T1mul.
 
 #[global] Notation hlt := Epsilon0.T1.lt.
 #[global] Notation hle := (MoreOrders.leq hlt). 

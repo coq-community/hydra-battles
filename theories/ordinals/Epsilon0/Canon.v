@@ -55,21 +55,21 @@ end.
 Section Canon_examples.
 Import T1. 
 
-Compute pp (canon (omega ^ omega) 3).
+Compute pp (canon (T1omega ^ T1omega) 3).
 
-Compute pp (canon (omega ^ omega) 0).
-Compute pp (canon (omega ^omega) 1).
+Compute pp (canon (T1omega ^ T1omega) 0).
+Compute pp (canon (T1omega ^T1omega) 1).
 
 
-Compute pp (canon (omega ^ omega * 3) 42).
-Compute pp (canon (omega ^ omega * 3) 0).
+Compute pp (canon (T1omega ^ T1omega * 3) 42).
+Compute pp (canon (T1omega ^ T1omega * 3) 0).
 
-Compute pp (canon (omega ^ omega * 3) 1).
+Compute pp (canon (T1omega ^ T1omega * 3) 1).
 
 Compute canon (phi0 10) 0.
 Compute canon (phi0 10) 1.
 
-Goal canon (omega ^ omega) 10 = phi0 10. (* .no-out *)
+Goal canon (T1omega ^ T1omega) 10 = phi0 10. (* .no-out *)
 Proof. (* .no-out *) reflexivity. Qed. 
 
 End Canon_examples.
