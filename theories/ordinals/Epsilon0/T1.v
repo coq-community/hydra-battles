@@ -4182,11 +4182,11 @@ Ltac pp0tac alpha   :=
   match alpha with
   | zero => exact 0
   | cons zero ?n zero => exact (S n)
-  | cons one 0 zero => exact omega%pT1
+  | cons one 0 zero => exact T1omega
   | cons one 0 ?beta => exact (T1omega + ltac :(pp0tac beta))%pT1
   | cons one ?n zero => exact (T1omega * (S n))%pT1
   | cons one ?n ?beta => exact (T1omega * (S n) + ltac: (pp0tac beta))%pT1
-  | cons ?alpha 0 zero => exact (omega ^ ltac: (pp0tac alpha))%pT1
+  | cons ?alpha 0 zero => exact (T1omega ^ ltac: (pp0tac alpha))%pT1
   | cons ?alpha 0 ?beta =>
     exact (T1omega ^ ltac :(pp0tac alpha) + ltac: (pp0tac beta))%pT1
   | cons ?alpha ?n zero =>

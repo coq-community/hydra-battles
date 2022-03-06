@@ -182,7 +182,7 @@ Section L_correct_proof.
     intro H; red;  rewrite Succ_rw.
     destruct (E0_eq_dec beta Zero).
     -  subst; simpl; generalize (L_fin_ok 1); unfold L_fin.
-       replace one with (fin 1); [simpl | trivial].
+       replace one with (T1nat 1); [simpl | trivial].
        intro; eapply L_spec_compat;  eauto.
        intros; rewrite L_eq2; auto with E0.
        rewrite Pred_of_Succ, L_zero_eqn; trivial.
