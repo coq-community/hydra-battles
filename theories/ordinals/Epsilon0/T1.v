@@ -3881,7 +3881,8 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
   end.
 Proof. reflexivity. Qed.
 
-#[global] Instance plus_assoc : Assoc eq T1add. 
+
+#[global] Instance T1addA : Assoc eq T1add. 
 Proof.
   red.  induction x,y,z; only 1-6: easy.
   - now rewrite !plus_zero_r.

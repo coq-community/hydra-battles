@@ -475,7 +475,8 @@ Module LO.
 
 
   #[global] Instance plus_assoc: Assoc eq plus.
-  Proof. red; intros *; apply eq_ref; now rewrite !plus_ref, T1.plus_assoc.
+  Proof.
+    red; intros *; apply eq_ref; now rewrite !plus_ref, T1.T1addA.
   Qed.
 
   Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->

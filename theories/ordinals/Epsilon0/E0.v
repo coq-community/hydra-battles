@@ -814,7 +814,7 @@ Qed.
 #[global] Instance plus_assoc : Assoc eq plus . 
 Proof.
   intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
-  apply  T1.plus_assoc.
+  apply  T1.T1addA.
 Qed.
 
 

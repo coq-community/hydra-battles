@@ -474,7 +474,6 @@ Proof.
             by apply lt_ref. 
 Qed. 
 
-
 Lemma LE_ref : refinesRel hLE gLE.
 Proof. 
   split. 

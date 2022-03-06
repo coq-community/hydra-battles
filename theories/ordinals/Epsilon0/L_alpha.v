@@ -59,7 +59,7 @@ Qed.
 
 (* begin snippet Paraphrasesb:: no-out *)
 Lemma L_succ_eqn alpha i :
-  L_ (Succ alpha) i = L_  alpha (S i).
+  L_ (Succ alpha) i = L_ alpha (S i).
 (* end snippet Paraphrasesb *)
 
 Proof.
@@ -147,7 +147,6 @@ Proof  with auto with E0.
    +   intros H k;  rewrite L_lim_eqn; auto.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
-        Search L_. 
         apply L_ge_id.
         apply L_ge_id. 
      -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
