@@ -3881,10 +3881,8 @@ Lemma plus_cons_cons_eqn a n b a' n' b':
   end.
 Proof. reflexivity. Qed.
 
-
-#[global] Instance T1addA : Assoc eq T1add. 
-Proof.
-  red.  induction x,y,z; only 1-6: easy.
+Lemma T1addA (x y z :T1) : x + (y + z) = (x + y) + z.
+induction x,y,z; only 1-6: easy.
   - now rewrite !plus_zero_r.
   - rewrite !plus_cons_cons_eqn.
     destruct (compare y1 z1) eqn:Hyz, (compare x1 y1) eqn:Hxy;
@@ -3905,6 +3903,11 @@ Proof.
     + rewrite Hxy, <- IHx2.
       simpl.
       now rewrite Hyz.
+Qed.
+
+#[global] Instance T1addAssoc : Assoc eq T1add. 
+Proof.
+  red.  intros; now rewrite  T1addA.
 Qed.
 
 
