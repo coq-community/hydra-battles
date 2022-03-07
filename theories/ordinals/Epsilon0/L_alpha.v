@@ -46,7 +46,7 @@ Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  Succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+  E0succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.

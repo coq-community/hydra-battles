@@ -57,7 +57,7 @@ Qed.
 
 (* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2 alpha i :
-  Succb alpha ->
+  E0succb alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
 (* end snippet paraphrasesb *)
 

@@ -32,7 +32,7 @@ Section S1.
  
   Remark R4 : F_ 3 2 = F_ 2 (F_ 2 (F_ 2 2)).
   Proof.
-    ochange (Fin 3) (Succ 2).
+    ochange (Fin 3) (E0succ 2).
     rewrite F_succ_eqn.
     do 3 rewrite iterate_S_eqn.
     reflexivity. 

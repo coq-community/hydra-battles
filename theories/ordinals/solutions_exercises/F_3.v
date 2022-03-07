@@ -24,7 +24,7 @@ Section S1.
 
   Remark F_3_eqn : forall n, F_ 3  n = iterate (F_ 2) (S n) n.
   Proof.
-    intro n; ochange (Fin 3)  (Succ (Fin 2)); now rewrite F_succ_eqn.
+    intro n; ochange (Fin 3)  (E0succ (Fin 2)); now rewrite F_succ_eqn.
   Qed.
 
   (** ** Base case *)
@@ -74,48 +74,48 @@ Section S1.
       Hypothesis Hn : 2 <= n.
 
       Remark R3 :
-        F_ (Succ alpha) (S n)= F_ alpha (iterate (F_ alpha) (S n) (S n)).
+        F_ (E0succ alpha) (S n)= F_ alpha (iterate (F_ alpha) (S n) (S n)).
       Proof.
         rewrite F_succ_eqn; now rewrite iterate_S_eqn.
       Qed.
 
-      Remark R3' : F_ (Succ alpha) n = iterate (F_ alpha) (S n) n.
+      Remark R3' : F_ (E0succ alpha) n = iterate (F_ alpha) (S n) n.
       Proof.
         now rewrite F_succ_eqn.
       Qed.  
 
-      Remark R4 : F_ (Succ alpha) n < iterate (F_ alpha) (S n) (S n).
+      Remark R4 : F_ (E0succ alpha) n < iterate (F_ alpha) (S n) (S n).
       Proof.
         rewrite F_succ_eqn; apply iterate_mono; auto with arith.
         - apply F_alpha_mono.
         - intro; apply F_alpha_gt.
       Qed.
 
-      Lemma L2 : exp2 (F_ (Succ alpha)  n) <= (F_ (Succ alpha) (S n)).
+      Lemma L2 : exp2 (F_ (E0succ alpha)  n) <= (F_ (E0succ alpha) (S n)).
       Proof.
-        assert (H: 2 <= (F_ (Succ alpha) n)).
+        assert (H: 2 <= (F_ (E0succ alpha) n)).
         {
           apply Lt.le_lt_trans with n.
           - lia.        
           - apply F_alpha_gt.
         }
-        assert (H0: F_ (Succ alpha) n < iterate (F_ alpha) (S n) (S n)).
+        assert (H0: F_ (E0succ alpha) n < iterate (F_ alpha) (S n) (S n)).
         {
           rewrite F_succ_eqn;  apply iterate_mono; auto.
           - apply F_alpha_mono.
           - intro; apply F_alpha_gt.
         }
-        generalize(R1 (F_ (Succ alpha) n) H
+        generalize(R1 (F_ (E0succ alpha) n) H
                       (iterate (F_ alpha) (S n) (S n)) H0); intro H1;
           rewrite <- R3 in H1.
-        transitivity ( exp2 (F_ alpha (F_ (Succ alpha) n))); [| auto].
+        transitivity ( exp2 (F_ alpha (F_ (E0succ alpha) n))); [| auto].
         -  apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
            apply F_alpha_gt.
       Qed.
       
     End S2.
 
-    Lemma L3 : P (Succ alpha).
+    Lemma L3 : P (E0succ alpha).
     Proof.
       unfold P; intros;  now apply L2.
     Qed.
@@ -254,13 +254,13 @@ Section S1.
           - left; destruct (E0_Lt_Succ_inv e).
             + apply Lt_Le_incl; auto.
             + subst; apply Le_refl.
-          - right;  revert e; ochange (Fin 3) (Succ 2).
+          - right;  revert e; ochange (Fin 3) (E0succ 2).
             intro; symmetry ; now apply Succ_inj. 
         }
         destruct H.
         *   apply L3; apply IHalpha; auto.
             -- apply Lt_Succ; auto. 
-        * subst x; ochange (Succ 2) (Fin 3); apply P_3.
+        * subst x; ochange (E0succ 2) (Fin 3); apply P_3.
   Qed.
 
 End S1.
@@ -274,7 +274,7 @@ Proof. apply L. Qed.
 
 
 Goal  F_ 2 3 = 63.
-  ochange (Fin 2) (Succ (Fin 1)).
+  ochange (Fin 2) (E0succ (Fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -283,7 +283,7 @@ Goal  F_ 2 3 = 63.
   
 Goal  F_ 2 2 = 23.
 
-  ochange (Fin 2) (Succ (Fin 1)).
+  ochange (Fin 2) (E0succ (Fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -291,15 +291,14 @@ Goal  F_ 2 2 = 23.
 Qed.
 
 Goal  F_ 3 1 = 2047.
-
-ochange (Fin 3)   (Succ (Succ (Fin 1))).
- repeat rewrite F_succ_eqn.
- cbn.
- repeat rewrite F_succ_eqn. cbn.
- repeat rewrite LF1.
- rewrite iterate_S_eqn. cbn.
- repeat rewrite LF1.
- compute.
- reflexivity.
+  ochange (Fin 3) (E0succ (E0succ (Fin 1))).
+  repeat rewrite F_succ_eqn.
+  cbn.
+  repeat rewrite F_succ_eqn. cbn.
+  repeat rewrite LF1.
+  rewrite iterate_S_eqn. cbn.
+  repeat rewrite LF1.
+  compute.
+  reflexivity.
 Qed.
 

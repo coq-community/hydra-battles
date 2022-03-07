@@ -65,18 +65,20 @@ Proof. now exists T1omega%t1. Defined.
  Notation _Omega := E0omega (only parsing).
 
 (* begin snippet SuccOnE0:: no-out *)
-#[global] Instance Succ (alpha : E0) : E0.
+#[global] Instance E0succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
     apply succ_nf, cnf_ok.
 Defined.
 (* end snippet SuccOnE0 *)
 
+#[deprecated(note="use E0succ")]
+ Notation Succ := E0succ (only parsing).
 
 Definition Limitb (alpha : E0) : bool :=
   limitb (@cnf alpha).
 
-Definition Succb (alpha : E0) : bool :=
+Definition E0succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
   
@@ -218,7 +220,7 @@ Qed.
 
 
 
-Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
+Lemma Succb_Succ alpha : E0succb alpha -> {beta : E0 | alpha = E0succ beta}.
 Proof.
   destruct alpha; cbn.
   intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
@@ -257,9 +259,9 @@ Proof.
 Defined.
 
 Lemma cnf_Succ (alpha : E0) :
-  cnf (Succ alpha) = succ (cnf alpha).
+  cnf (E0succ alpha) = succ (cnf alpha).
 Proof.
- unfold Succ. now rewrite cnf_rw.
+ unfold E0succ. now rewrite cnf_rw.
 Defined.
 
 Lemma cnf_Omega_term (alpha: E0) (n: nat) :
@@ -285,7 +287,7 @@ Qed.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = E0zero} + {Limitb alpha = true} +
-  {beta : E0  | alpha = Succ beta}.
+  {beta : E0  | alpha = E0succ beta}.
   destruct alpha as [t Ht];  destruct (zero_limit_succ_dec  Ht).  
   -  destruct s. 
      + left; left. 
@@ -293,7 +295,7 @@ Definition Zero_Limit_Succ_dec (alpha : E0) :
        apply nf_proof_unicity.
      + left;right; unfold Limitb; now simpl. 
   -  destruct s as [beta [H0 H1]]; right;  eexists (@mkord beta H0).
-     subst t; unfold Succ; f_equal; apply nf_proof_unicity.
+     subst t; unfold E0succ; f_equal; apply nf_proof_unicity.
 Defined.
 
 
@@ -345,7 +347,7 @@ Defined.
 
 Global Hint Resolve E0lt_wf : E0.
 
-Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
+Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> E0succ beta o<= alpha.
 Proof.
   destruct alpha, beta;simpl in *.  unfold leq, E0lt; simpl.
   intro; rewrite Le_iff; split; auto.
@@ -357,17 +359,17 @@ Qed.
 
 
 
-Lemma Pred_of_Succ (alpha:E0) : Pred (Succ alpha) = alpha.
+Lemma Pred_of_Succ (alpha:E0) : Pred (E0succ alpha) = alpha.
 Proof.
-  unfold Pred; destruct (Zero_Limit_Succ_dec (Succ alpha)).
+  unfold Pred; destruct (Zero_Limit_Succ_dec (E0succ alpha)).
   destruct s.
-  - unfold Succ, E0zero in e; injection  e .
+  - unfold E0succ, E0zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
-  -  unfold limitb, Succ in e; simpl in e;
+  -  unfold limitb, E0succ in e; simpl in e;
        destruct (@T1.limitb_succ (cnf alpha)); auto.
         destruct alpha; simpl; auto. 
   -  destruct s.
-    { unfold Succ in e;  injection e.
+    { unfold E0succ in e;  injection e.
       destruct alpha, x;simpl; intros; apply T1.succ_injective in H; auto.
       -  subst; replace cnf_ok1 with cnf_ok0; trivial.
          eapply nf_proof_unicity.
@@ -376,10 +378,10 @@ Qed.
 
 Hint Rewrite Pred_of_Succ: E0_rw.
 
-Lemma Succ_inj alpha beta : Succ alpha = Succ beta -> alpha = beta.
+Lemma Succ_inj alpha beta : E0succ alpha = E0succ beta -> alpha = beta.
 Proof.
   destruct alpha, beta; intros;  apply E0_eq_intro. 
-  cbn;  unfold Succ in H; cbn in H; injection H. 
+  cbn;  unfold E0succ in H; cbn in H; injection H. 
   intro; apply succ_injective; auto.
 Qed.
 
@@ -398,8 +400,8 @@ Qed.
 Global Hint Resolve Pred_Lt : E0.
 
 
-Lemma Succ_Succb (alpha : E0) : Succb (Succ alpha).
-destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
+Lemma Succ_Succb (alpha : E0) : E0succb (E0succ alpha).
+destruct alpha; unfold E0succb, E0succ; cbn; apply T1.succ_succb.
 Qed.
 
 Global Hint Resolve Succ_Succb : E0.
@@ -417,7 +419,7 @@ Proof.
  Qed.
 
 
-Lemma FinS_Succ_eq : forall i, FinS i = Succ (Fin i).
+Lemma FinS_Succ_eq : forall i, FinS i = E0succ (Fin i).
 Proof.
   intro i; compute. orefl; now destruct i.
 Qed.
@@ -431,37 +433,37 @@ Proof.
 Qed.
 
 
-Lemma Succ_not_Zero alpha:  Succb alpha -> alpha <> E0zero.
+Lemma Succ_not_Zero alpha:  E0succb alpha -> alpha <> E0zero.
 Proof.
-  destruct alpha;unfold Succb, E0zero; cbn.
+  destruct alpha;unfold E0succb, E0zero; cbn.
   intros H H0; injection H0; intro;subst; discriminate H.
 Qed.
 
-Lemma Lt_Succ : forall alpha, E0lt alpha (Succ alpha).
+Lemma Lt_Succ : forall alpha, E0lt alpha (E0succ alpha).
 Proof.
-  destruct  alpha; unfold lt, Succ; cbn; apply LT_succ;auto.
+  destruct  alpha; unfold lt, E0succ; cbn; apply LT_succ;auto.
 Qed.
 
 
-Lemma Succ_not_Limitb alpha : Succb alpha -> ~ Limitb alpha .
+Lemma Succ_not_Limitb alpha : E0succb alpha -> ~ Limitb alpha .
 Proof. 
-  red; destruct alpha; unfold Succb, Limitb; cbn.
+  red; destruct alpha; unfold E0succb, Limitb; cbn.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
 Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
-                                       Succ beta o<= alpha.
+                                       E0succ beta o<= alpha.
 Proof.
-  destruct alpha, beta; unfold lt, leq , Succ; cbn; split.
+  destruct alpha, beta; unfold lt, leq , E0succ; cbn; split.
   -  rewrite Le_iff.
      intro; now  apply LT_succ_LE.
   - rewrite Le_iff. intro. now apply LT_succ_LE_R.  
 Qed.
 
 Lemma lt_Succ_le_2 (alpha beta: E0):
-    alpha o< Succ beta -> alpha o<= beta.
+    alpha o< E0succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
  red in H; red; rewrite  Le_iff.
@@ -469,7 +471,7 @@ Proof.
 Qed.
 
 Lemma Succ_lt_Limitb alpha beta:
-    Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
+    Limitb alpha ->  beta o< alpha -> E0succ beta o< alpha.
 Proof.
   destruct alpha, beta;unfold E0lt; cbn.
   intros; apply succ_lt_limit; auto. 
@@ -533,13 +535,13 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       auto.
 
       intros. 
-      exists (Succ y).
+      exists (E0succ y).
       split.
       apply Lt_Succ.
       destruct y as [y Hy]; split.
-      unfold E0lt, Succ; cbn.
+      unfold E0lt, E0succ; cbn.
       now apply LT_succ.
-      unfold E0lt, Succ in *.
+      unfold E0lt, E0succ in *.
       cbn in *.
       apply succ_lt_limit; auto.
 
@@ -551,7 +553,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       split.
       apply Lt_Succ.
 
-      destruct p, z. unfold E0lt, Succ; cbn in *; intros.
+      destruct p, z. unfold E0lt, E0succ; cbn in *; intros.
       destruct (@LT_irrefl cnf1).
       apply T1.LT_LE_trans with (succ cnf0); auto with T1.
       now apply LT_succ_LE.
@@ -563,7 +565,7 @@ Qed.
 
 (** ** Rewriting lemmas *)
 
-Lemma Succ_rw : forall alpha, cnf (Succ alpha) = T1.succ (cnf alpha).
+Lemma Succ_rw : forall alpha, cnf (E0succ alpha) = T1.succ (cnf alpha).
 Proof.
   now destruct alpha.
 Qed.
@@ -641,8 +643,8 @@ Qed.
 
 
 Lemma Succ_of_cons alpha gamma i : alpha <> E0zero -> gamma o< phi0 alpha ->
-                                cnf (Succ (Omega_term alpha i + gamma)%e0) =
-                                cnf (Omega_term alpha i + Succ gamma)%e0.
+                                cnf (E0succ (Omega_term alpha i + gamma)%e0) =
+                                cnf (Omega_term alpha i + E0succ gamma)%e0.
 Proof.
   intros.
   rewrite Omega_term_plus; auto.
@@ -726,7 +728,7 @@ Proof.
     destruct H1.
     + apply lt_succ_le in H1; auto.
       * destruct H1; auto.
-        specialize (H0 (Succ (mkord cnf_ok0))).
+        specialize (H0 (E0succ (mkord cnf_ok0))).
         cbn in H0; unfold LT in H0.
         exfalso.
         apply H0.
@@ -757,7 +759,7 @@ Proof.
 Qed.
 
 Lemma E0_Lt_Succ_inv (alpha beta: E0):
-  alpha o< Succ beta -> alpha o< beta \/ alpha = beta.
+  alpha o< E0succ beta -> alpha o< beta \/ alpha = beta.
 Proof.
   destruct alpha, beta; unfold E0lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].

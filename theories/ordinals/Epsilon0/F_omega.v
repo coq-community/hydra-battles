@@ -177,7 +177,7 @@ Section step.
   (*  in order to use primRec's lemmas *)
   Let F := fun a b =>  nat_rec (fun _ => nat) a (fun x y  => F_ n y) b.
   
-  Remark L00: forall i,  F_ (Succ n) i = F i (S i) .
+  Remark L00: forall i,  F_ (E0succ n) i = F i (S i) .
   Proof.
     unfold F; intro i; rewrite F_succ_eqn.  
     now  rewrite iterate_compat3.
@@ -202,7 +202,7 @@ Section step.
 
   Remark R03 : isPR 1 (F_ (S n)). 
   Proof.
-    apply isPR_trans with (F_ (Succ n)).
+    apply isPR_trans with (F_ (E0succ n)).
     -  eapply isPR_trans.
        +  apply R02.
        +  intro i; red; now rewrite L00.
