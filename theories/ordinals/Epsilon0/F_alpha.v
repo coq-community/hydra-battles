@@ -32,7 +32,7 @@ The following definition is not accepted by the [equations] plug-in.
 (* begin snippet FailDemo *)
 
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
-  F_ alpha  i with E0_eq_dec alpha Zero :=
+  F_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
           with Utils.dec (Limitb alpha) :=
@@ -67,7 +67,7 @@ Qed.
 Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
   F_star (alpha, 0) i := i;
   F_star (alpha, 1) i
-    with E0_eq_dec alpha Zero :=
+    with E0_eq_dec alpha E0zero :=
     { | left _zero => S i ;
       | right _nonzero
           with Utils.dec (Limitb alpha) :=
@@ -119,7 +119,7 @@ Lemma F_eq2 : forall alpha i,
     F_ alpha i = F_star (Pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst alpha; discriminate H.
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + assert (true=false) by 
@@ -150,11 +150,11 @@ Qed.
 
 (* begin snippet FEquations *)
 
-Lemma F_zero_eqn : forall i, F_ Zero i = S i.  (* .no-out *)
+Lemma F_zero_eqn : forall i, F_ E0zero i = S i.  (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro i. unfold F_; rewrite F_star_equation_2.
-  destruct (E0_eq_dec Zero Zero).
+  destruct (E0_eq_dec E0zero E0zero).
   - now cbn.
   - now destruct n.
 Qed.
@@ -166,7 +166,7 @@ Lemma F_lim_eqn : forall alpha i,
 (*| .. coq:: none |*)
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - now  destruct (Limit_not_Zero  H).
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + cbn; auto.
@@ -264,15 +264,15 @@ Section Properties.
 
     (** Base step : (sequential) proof of (P 0) *)
     
-    Lemma mono_F_Zero : strict_mono (F_ Zero).
+    Lemma mono_F_Zero : strict_mono (F_ E0zero).
     Proof. 
       intros n p H; repeat rewrite F_zero_eqn; auto with arith. 
     Qed. 
 
-    Lemma Lt_n_F_Zero_n : forall n:nat, n < F_ Zero n. 
+    Lemma Lt_n_F_Zero_n : forall n:nat, n < F_ E0zero n. 
     Proof. intros n ; rewrite F_zero_eqn; auto with arith. Qed.
 
-    Lemma F_One_Zero_dom : dominates_from 1 (F_ 1) (F_ Zero).
+    Lemma F_One_Zero_dom : dominates_from 1 (F_ 1) (F_ E0zero).
     Proof.
       red;intros.
       rewrite F_zero_eqn. rewrite LF1; abstract lia.
@@ -280,7 +280,7 @@ Section Properties.
 
     Local Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
 
-    Lemma F_One_Zero_ge :  F_ Zero <<= F_ 1.
+    Lemma F_One_Zero_ge :  F_ E0zero <<= F_ 1.
     Proof.
       intro n; destruct n;
         rewrite F_zero_eqn, LF1; abstract lia.  
@@ -288,12 +288,12 @@ Section Properties.
 
     Local Hint Resolve  F_One_Zero_ge : T1.
 
-    Lemma PZero : P Zero.
+    Lemma PZero : P E0zero.
     Proof. 
-      split; auto with T1; ord_eq  (Succ Zero) (Fin 1).
+      split; auto with T1; ord_eq  (Succ E0zero) (Fin 1).
       all: try (rewrite H;auto with T1).
       unfold Canon_plus; intros beta n H0;
-        unfold Zero in H0; simpl in H0.
+        unfold E0zero in H0; simpl in H0.
       destruct n.
       - inversion H0. 
       - destruct (const_pathS_zero  H0). 
@@ -731,10 +731,10 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
 
  Hypothesis IHalpha : forall  beta, beta o< alpha -> P beta.
 
- Lemma HF0 : P Zero.
+ Lemma HF0 : P E0zero.
  Proof.
    intro n; rewrite F_zero_eqn.
-   replace (phi0 Zero) with (Fin 1).
+   replace (phi0 E0zero) with (Fin 1).
    - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
@@ -817,7 +817,7 @@ Proof.
 Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
   f_star (alpha, 0) i := i;
   f_star (alpha, 1) i
-    with E0_eq_dec alpha Zero :=
+    with E0_eq_dec alpha E0zero :=
     { | left _zero => S i ;
       | right _nonzero
           with Utils.dec (Limitb alpha) :=
@@ -868,7 +868,7 @@ Lemma f_eq2 : forall alpha i,
     f_ alpha i = f_star (Pred alpha,  i) i.
 Proof.
   unfold f_; intros; rewrite f_star_equation_2.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst alpha; discriminate H.
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + assert (true=false) by 
@@ -898,10 +898,10 @@ Qed.
 
 (** *** Usual equations for [f_] *)
 
-Lemma f_zero_eqn : forall i, f_ Zero i = S i.
+Lemma f_zero_eqn : forall i, f_ E0zero i = S i.
 Proof.
   intro i. unfold f_; rewrite f_star_equation_2.
-  destruct (E0_eq_dec Zero Zero).
+  destruct (E0_eq_dec E0zero E0zero).
   - now cbn.
   - now destruct n.
 Qed.
@@ -911,7 +911,7 @@ Lemma f_lim_eqn : forall alpha i,  Limitb alpha ->
                                    f_ alpha i = f_ (Canon alpha i) i.
 Proof.
   unfold f_; intros. rewrite f_star_equation_2.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - now  destruct (Limit_not_Zero  H).
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     + cbn; auto.
@@ -955,14 +955,14 @@ Record  Q (alpha:E0) : Prop :=
 
 Section The_induction.
   
-  Lemma QA0 : strict_mono (f_ Zero).
+  Lemma QA0 : strict_mono (f_ E0zero).
   Proof. 
     intros n p H; repeat rewrite f_zero_eqn; auto with arith. 
   Qed. 
 
 
 
-  Lemma QD0 : dominates_from 2 (f_ (Succ Zero)) (f_ Zero).
+  Lemma QD0 : dominates_from 2 (f_ (Succ E0zero)) (f_ E0zero).
   Proof. 
     intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
     apply Lt.lt_le_trans with (iterate S p p).

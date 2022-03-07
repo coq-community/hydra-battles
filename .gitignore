@@ -42,6 +42,9 @@ alectryon-html/
 /theories/gaia/*.pdf
 /doc/JFLA2022/Slides/*.png
 /doc/JFLA2022/assets
-
+/litterature
+*.sty
+*.nav
+*.vrb
 
 

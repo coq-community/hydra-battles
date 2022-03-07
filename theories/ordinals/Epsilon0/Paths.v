@@ -3021,7 +3021,7 @@ Qed.
 
 
 Lemma CanonS_plus_1 alpha beta k i :
-  beta  <> Zero -> alpha <> Zero  ->
+  beta  <> E0zero -> alpha <> E0zero  ->
   (beta o< phi0 alpha)%e0 ->
   (CanonS (Omega_term alpha i + beta)%e0 k =
    (Omega_term alpha  i + (CanonS beta k))%e0).

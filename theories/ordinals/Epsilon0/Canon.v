@@ -1045,8 +1045,8 @@ Qed.
 Hint Rewrite Canon_Omega : E0_rw.
 
 Lemma CanonSSn (i:nat) :
-  forall alpha n  , alpha <> Zero ->
-                    CanonS (Cons alpha (S n) Zero) i =
+  forall alpha n  , alpha <> E0zero ->
+                    CanonS (Cons alpha (S n) E0zero) i =
                     Cons alpha n (CanonS (phi0 alpha) i).
 Proof.
   intros; apply E0_eq_intro;
@@ -1072,27 +1072,27 @@ Proof.
 Qed.
 
 
-Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i o< alpha.
+Lemma CanonS_lt : forall i alpha, alpha <> E0zero -> CanonS alpha i o< alpha.
 Proof.
   destruct alpha. unfold E0lt, CanonS. cbn.
   intro;apply canonS_LT; auto.
-  intro H0; subst. apply H. unfold Zero; f_equal.
+  intro H0; subst. apply H. unfold E0zero; f_equal.
   apply nf_proof_unicity.
 Qed.
 
 
-Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i o< alpha.
+Lemma Canon_lt : forall i alpha, alpha <> E0zero -> Canon alpha i o< alpha.
 Proof.
   destruct i.
   - unfold Canon;  intros;  destruct alpha.
-    unfold E0lt, Zero in *; simpl in *. apply canon0_LT; auto. 
+    unfold E0lt, E0zero in *; simpl in *. apply canon0_LT; auto. 
     intro H0; subst; cbn in H. apply H. 
     f_equal;  eapply nf_proof_unicity. 
   -   apply CanonS_lt.
 Qed.
 
 Lemma Canon_of_limit_not_null : forall i alpha, Limitb alpha ->
-                                       Canon alpha (S i) <> Zero.
+                                       Canon alpha (S i) <> E0zero.
 Proof.
   destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.
   simpl;   apply limitb_canonS_not_zero; auto.
