@@ -2973,7 +2973,7 @@ Proof.
 Qed.
 
 Corollary Cor12_E0 : forall alpha beta i n, 
-    Lt beta alpha -> (i <= n)%nat ->
+    E0lt beta alpha -> (i <= n)%nat ->
     Canon_plus (S i) alpha beta ->
     Canon_plus (S n) alpha beta.
 Proof.
@@ -3070,7 +3070,7 @@ Lemma Lemma2_6_1_E0 (alpha beta: E0) :
     (beta o< alpha)%e0  ->
     {n:nat | Canon_plus (S n) alpha beta}.
 Proof.
-  destruct alpha, beta; unfold Lt; simpl. simpl.
+  destruct alpha, beta; unfold E0lt; simpl. simpl.
  intro H; eapply Lemma2_6_1; eauto.
 Defined.
 

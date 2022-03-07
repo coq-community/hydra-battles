@@ -239,8 +239,8 @@ Section S1.
 
   Lemma L alpha :  3 o<= alpha -> P alpha.
   Proof.
-      pattern alpha; eapply well_founded_induction with Lt.
-    - apply Lt_wf.
+      pattern alpha; eapply well_founded_induction with E0lt.
+    - apply E0lt_wf.
     - clear alpha; intro alpha.  intros IHalpha Halpha.
       destruct (Zero_Limit_Succ_dec  alpha) as [[H1 | H1] | H1].
       +  subst; rewrite Le_iff in Halpha.
@@ -251,7 +251,7 @@ Section S1.
       + destruct H1; subst alpha.
         assert (H: 3 o<= x \/ x = Fin 2).
         { destruct (le_lt_eq_dec Halpha).
-          - left; destruct (E0_Lt_Succ_inv l).
+          - left; destruct (E0_Lt_Succ_inv e).
             + apply Lt_Le_incl; auto.
             + subst; apply Le_refl.
           - right;  revert e; ochange (Fin 3) (Succ 2).

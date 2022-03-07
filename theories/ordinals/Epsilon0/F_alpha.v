@@ -27,11 +27,11 @@ The following definition is not accepted by the [equations] plug-in.
 
  *)
 
-#[ global] Instance Olt : WellFounded Lt := E0.Lt_wf.
+#[global] Instance Olt : WellFounded E0lt := E0lt_wf.
 
 (* begin snippet FailDemo *)
 
-Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
+Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
   F_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _zero =>  i ;
       | right _nonzero
@@ -52,11 +52,11 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
 
 (* begin snippet goodDefa:: no-out *)
 Definition call_lt (c c' : E0 * nat) :=
-  lexico Lt (Peano.lt) c c'.
+  lexico E0lt (Peano.lt) c c'.
 
 Lemma call_lt_wf : well_founded call_lt.
   unfold call_lt; apply Inverse_Image.wf_inverse_image,  wf_lexico.
-  -  apply E0.Lt_wf.
+  -  apply E0lt_wf.
   -  unfold Peano.lt; apply Nat.lt_wf_0. 
 Qed.
 
@@ -233,8 +233,8 @@ Qed.
 
 
 Lemma F_alpha_0_eq : forall alpha: E0, F_ alpha 0 = 1.
-  intro alpha. pattern alpha; apply well_founded_induction with E0.Lt.
-  - apply E0.Lt_wf.
+  intro alpha. pattern alpha; apply well_founded_induction with E0lt.
+  - apply E0lt_wf.
   - clear alpha; intros alpha Halpha.
     destruct (Zero_Limit_Succ_dec alpha).
     destruct s.
@@ -300,7 +300,7 @@ Section Properties.
     Qed.   
 
     Variable alpha : E0.
-    Hypothesis Halpha : forall beta, Lt beta alpha -> P beta.
+    Hypothesis Halpha : forall beta, E0lt beta alpha -> P beta.
 
     Ltac hdecomp := destruct Halpha.
     Section alpha_Succ.
@@ -540,8 +540,8 @@ Section Properties.
 
   Theorem TH_packed : forall alpha, P alpha.
   Proof.
-    intro alpha; apply well_founded_induction with E0.Lt.
-    - exact E0.Lt_wf.
+    intro alpha; apply well_founded_induction with E0lt.
+    - exact E0lt_wf.
     - apply LL.
   Qed.
 
@@ -627,7 +627,7 @@ Qed.
 Section Compatibility_F_dominates.
 
   Variables alpha beta : E0.
-  Hypothesis H'_beta_alpha : Lt beta alpha.
+  Hypothesis H'_beta_alpha : E0lt beta alpha.
 
   (* end snippet FDomContext *)
   
@@ -645,7 +645,7 @@ Section Compatibility_F_dominates.
 
   Section case_lt.
     Variable n: nat.
-    Hypothesis Hlt :  Lt (Succ beta) alpha.
+    Hypothesis Hlt :  E0lt (Succ beta) alpha.
     
     Hypothesis Hd : Canon_plus (S n) alpha beta.
 
@@ -692,7 +692,7 @@ Section Compatibility_F_dominates.
       forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
     assert (H: Le (Succ beta) alpha) by (now apply Lt_Succ_Le).
-    assert (H0: {alpha = Succ beta}+{Lt (Succ beta) alpha}).
+    assert (H0: {alpha = Succ beta} + {E0lt (Succ  beta) alpha}).
     {
       rewrite <- lt_Succ_inv in H.
       apply Lt_Succ_Le in H; destruct (E0.le_lt_eq_dec  H); auto.
@@ -797,9 +797,9 @@ End H'_F.
 
 Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (phi0 alpha) (S n).
 Proof.
-  pattern alpha; apply well_founded_induction with Lt.
+  pattern alpha; apply well_founded_induction with E0lt.
 (* end snippet HprimeF *)
-  - apply Lt_wf.  
+  - apply E0lt_wf.  
   -  clear alpha; intros alpha IHalpha.
      destruct (Zero_Limit_Succ_dec alpha) as [[Hzero | Hlim] | Hsucc].
     + subst; apply HF0.
@@ -929,7 +929,7 @@ Qed.
 
 Lemma id_le_f_alpha (alpha: E0) : forall i, i <= f_ alpha i. 
 Proof.
- pattern alpha; apply (well_founded_induction Lt_wf);
+ pattern alpha; apply (well_founded_induction E0lt_wf);
    clear alpha; intros alpha IHalpha.
  destruct (Zero_Limit_Succ_dec alpha) as [[HZero | Hlim] | Hsucc].
    - subst; intros i ; rewrite !f_zero_eqn; auto with arith. 

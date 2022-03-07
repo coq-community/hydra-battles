@@ -41,10 +41,10 @@ Arguments cnf : clear implicits.
 
 (* begin snippet LtLeDef *)
 
-Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le := leq Lt.
+Definition E0lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
+Definition Le := leq E0lt.
 
-Infix "o<" := Lt : E0_scope.
+Infix "o<" := E0lt : E0_scope.
 Infix "o<=" := Le : E0_scope.
 
 (* end snippet LtLeDef *)
@@ -203,7 +203,7 @@ Proof.
   - cbn; destruct 1 as [_ [H _]]; rewrite le_lt_eq in H.
      destruct H. 
      + left; red;  cbn; repeat split; auto.
-     + subst; cbn; unfold Lt.
+     + subst; cbn; unfold E0lt.
        generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
                                 {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
        cbn; intro H; rewrite H.
@@ -306,12 +306,12 @@ Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 #[global] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
 
 
-#[global] Instance E0_sto : StrictOrder Lt.
+#[global] Instance E0_sto : StrictOrder E0lt.
 Proof.
   split.
-  - intro x ; destruct x; unfold Lt; red.
+  - intro x ; destruct x; unfold E0lt; red.
     cbn; intro; eapply LT_irrefl; eauto.
-  - intros [x Hx] [y Hy] [z Hz]; unfold Lt; cbn.
+  - intros [x Hx] [y Hy] [z Hz]; unfold E0lt; cbn.
     apply LT_trans.
  Qed.
 
@@ -319,9 +319,9 @@ Proof.
  fun (alpha beta:E0) => compare (cnf alpha) (cnf beta).
 
 Lemma compare_correct (alpha beta : E0) :
-  CompSpec eq Lt alpha beta (compare alpha beta).
+  CompSpec eq E0lt alpha beta (compare alpha beta).
 Proof.
-  destruct alpha, beta; unfold compare, Lt; cbn;
+  destruct alpha, beta; unfold compare, E0lt; cbn;
     destruct (T1.compare_correct cnf0 cnf1).
   -   constructor 1;  apply E0_eq_intro;  subst; reflexivity. 
   -   constructor; now split.
@@ -329,7 +329,7 @@ Proof.
 Qed.
 
 (* begin snippet E0LtWf:: no-out *)
-Lemma Lt_wf : well_founded Lt.
+Lemma E0lt_wf : well_founded E0lt.
 Proof.
   split; intros [t Ht] H;
     apply (Acc_inverse_image _ _ LT (@cnf) 
@@ -338,11 +338,11 @@ Proof.
 Defined.
 (* end snippet E0LtWf *)
 
-Global Hint Resolve Lt_wf : E0.
+Global Hint Resolve E0lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
 Proof.
-  destruct alpha, beta;simpl in *.  unfold leq , Lt;simpl.
+  destruct alpha, beta;simpl in *.  unfold leq, E0lt; simpl.
   intro; rewrite Le_iff; split; auto.
   - apply T1.succ_nf; auto.
   -  split; auto.
@@ -381,7 +381,7 @@ Qed.
 Lemma  Pred_Lt (alpha : E0) : alpha <> Zero  ->  Limitb alpha = false ->
                        Pred alpha o< alpha.
 Proof.
-  unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
+  unfold Limitb, Pred, E0lt; destruct alpha; intros. simpl.
   destruct (T1.zero_limit_succ_dec cnf_ok0 ).
   destruct s.
   - subst. unfold Zero in H. destruct H. f_equal;apply nf_proof_unicity.
@@ -432,7 +432,7 @@ Proof.
   intros H H0; injection H0; intro;subst; discriminate H.
 Qed.
 
-Lemma Lt_Succ : forall alpha, Lt alpha (Succ alpha).
+Lemma Lt_Succ : forall alpha, E0lt alpha (Succ alpha).
 Proof.
   destruct  alpha; unfold lt, Succ; cbn; apply LT_succ;auto.
 Qed.
@@ -466,7 +466,7 @@ Qed.
 Lemma Succ_lt_Limitb alpha beta:
     Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
 Proof.
-  destruct alpha, beta;unfold Lt; cbn.
+  destruct alpha, beta;unfold E0lt; cbn.
   intros; apply succ_lt_limit; auto. 
 Qed.
 
@@ -485,18 +485,18 @@ Qed.
 .. coq:: no-out
  *)
 
-#[global] Instance E0_comp: Comparable Lt compare.
+#[global] Instance E0_comp: Comparable E0lt compare.
 Proof.
   split.
   - apply E0_sto.
   - apply compare_correct. 
 Qed.
 
-#[global] Instance Epsilon0 : ON Lt compare.
+#[global] Instance Epsilon0 : ON E0lt compare.
 Proof.
  split.
  - apply E0_comp.
- - apply Lt_wf.
+ - apply E0lt_wf.
 Qed.
 
 (*||*)
@@ -510,7 +510,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       right.
       apply E0_eq_intro. reflexivity.
       left.
-      unfold Lt.
+      unfold E0lt.
       cbn.
       auto with T1.
     +
@@ -532,9 +532,9 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       split.
       apply Lt_Succ.
       destruct y as [y Hy]; split.
-      unfold Lt, Succ; cbn.
+      unfold E0lt, Succ; cbn.
       now apply LT_succ.
-      unfold Lt, Succ in *.
+      unfold E0lt, Succ in *.
       cbn in *.
       apply succ_lt_limit; auto.
 
@@ -546,7 +546,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       split.
       apply Lt_Succ.
 
-      destruct p, z. unfold Lt, Succ; cbn in *; intros.
+      destruct p, z. unfold E0lt, Succ; cbn in *; intros.
       destruct (@LT_irrefl cnf1).
       apply T1.LT_LE_trans with (succ cnf0); auto with T1.
       now apply LT_succ_LE.
@@ -703,7 +703,7 @@ Proof.
      split.
      +  unfold ON_lt; red; cbn; red; red; repeat split; auto.
         apply lt_succ.
-     +  destruct z;  unfold Lt; cbn; intros.
+     +  destruct z;  unfold E0lt; cbn; intros.
         assert (cnf1 t1< cnf1)%t1.
         { repeat split; auto.
           apply lt_le_trans with (succ cnf0).
@@ -716,7 +716,7 @@ Proof.
         destruct H2.
         eapply T1.lt_irrefl; eauto. 
   - destruct 1.
-    unfold Lt in H, H0. cbn in H, H0.
+    unfold E0lt in H, H0. cbn in H, H0.
     destruct H.
     destruct H1.
     + apply lt_succ_le in H1; auto.
@@ -741,20 +741,20 @@ Qed.
 
 Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
 Proof.
-  unfold Lt, Le.
+  unfold E0lt, Le.
   intro; rewrite le_lt_eq.
  destruct alpha, beta. left. auto. 
 Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
 Proof.
-  destruct alpha;unfold Lt;cbn;apply LT_irrefl.
+  destruct alpha;unfold E0lt;cbn;apply LT_irrefl.
 Qed.
 
 Lemma E0_Lt_Succ_inv (alpha beta: E0):
   alpha o< Succ beta -> alpha o< beta \/ alpha = beta.
 Proof.
-  destruct alpha, beta; unfold Lt; cbn; intros.
+  destruct alpha, beta; unfold E0lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
   destruct H1 as [H3 |].
   - left; split; auto.
@@ -763,7 +763,7 @@ Qed.
 
 Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.
 Proof.
-  destruct alpha; unfold Lt; cbn.
+  destruct alpha; unfold E0lt; cbn.
   intros [H [H0 H1]]; eapply not_lt_zero; eauto. 
 Qed.
 
@@ -807,7 +807,7 @@ Qed.
 
 Lemma phi0_mono alpha beta : alpha o< beta -> phi0 alpha o< phi0 beta.
 Proof.
-  destruct alpha, beta; unfold Lt; cbn;  auto with T1.
+  destruct alpha, beta; unfold E0lt; cbn;  auto with T1.
 Qed.
 
 

@@ -43,7 +43,7 @@ Qed.
 Theorem Variant_LT_free_0 :  @Hvariant  _ _ T1_wf free Hydra_Termination.m.
 Proof. split; intros; now apply round_decr. Qed.
 
-Theorem Variant_lt_free:  @Hvariant _ _ E0.Lt_wf free Hydra_Termination.var.
+Theorem Variant_lt_free:  @Hvariant _ _ E0lt_wf free Hydra_Termination.var.
 Proof. split; intros; now apply round_decr. Qed.
 
 
@@ -53,7 +53,7 @@ Proof.
 Qed.
 
 
-Theorem Variant_lt_standard : @Hvariant _ _ E0.Lt_wf standard Hydra_Termination.var.
+Theorem Variant_lt_standard : @Hvariant _ _ E0lt_wf standard Hydra_Termination.var.
 Proof.
   split; intros i h h' H H0;  apply round_decr; now exists i.
 Qed.

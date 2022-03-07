@@ -13,13 +13,13 @@ From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
 Import RelationClasses Relations.
 
-#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded E0lt := E0lt_wf.
 Global Hint Resolve Olt : E0.
 
 (** Using Coq-Equations for building a function which satisfies 
     [Large_sets.L_spec] *)
 
-Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha Lt :=
+Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha E0lt :=
   L_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _zero =>  i ;
       | right _nonzero
@@ -115,7 +115,7 @@ Qed.
 
 Lemma L_ge_id alpha : forall i,  i <= L_ alpha i.
 Proof  with auto with E0.
-     pattern alpha; apply well_founded_induction with Lt ...
+     pattern alpha; apply well_founded_induction with E0lt ...
    clear alpha; intros alpha IHalpha.
   destruct (Zero_Limit_Succ_dec alpha).
   -  destruct s.
@@ -139,7 +139,7 @@ Lemma L_ge_S alpha :
   alpha <> Zero -> S <<= L_ alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof  with auto with E0.
-     pattern alpha; apply well_founded_induction with Lt ...
+     pattern alpha; apply well_founded_induction with E0lt ...
    clear alpha; intros alpha IHalpha.
   destruct (Zero_Limit_Succ_dec alpha).
   -  destruct s.
@@ -213,7 +213,7 @@ Section L_correct_proof.
   
   Lemma L_ok (alpha: E0) : P alpha.
   Proof with eauto with E0.
-    apply well_founded_induction with Lt ...
+    apply well_founded_induction with E0lt ...
     clear alpha; intros alpha IHalpha.
     destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
     - subst; apply L_ok0.
@@ -242,7 +242,7 @@ Theorem H'_L_ alpha :
 (* end snippet HprimeL *)
 
 Proof with auto with E0.
-  pattern alpha ; apply well_founded_induction with Lt ...
+  pattern alpha ; apply well_founded_induction with E0lt ...
   clear alpha; intros alpha IHalpha i.
   destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
   - subst; rewrite H'_eq1, L_zero_eqn. abstract lia.

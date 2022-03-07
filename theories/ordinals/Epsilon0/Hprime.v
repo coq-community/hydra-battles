@@ -28,11 +28,11 @@ From Equations Require Import Equations.
 (** ** A variant of the Hardy Wainer hierarchy *)
 
 
-#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded E0lt := E0lt_wf.
 
 (* begin snippet HprimeDef *)
 
-Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
+Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
   H'_ alpha  i with E0_eq_dec alpha Zero :=
     { | left _zero =>  i ;
       | right _nonzero
@@ -242,8 +242,8 @@ Lemma H'_cons : forall beta,  (beta o< phi0 alpha)%e0 ->
                                         H'_ (Omega_term alpha i) (H'_ beta k).
 Proof with auto with E0.
   unfold Cons; intro beta; pattern beta; 
-  apply well_founded_induction with Lt; clear beta.
-  - exact E0.Lt_wf.
+  apply well_founded_induction with E0lt; clear beta.
+  - exact E0lt_wf.
   -  intros beta Hbeta H;  destruct (Zero_Limit_Succ_dec beta).
      destruct s.
      + subst; intro k. autorewrite with H'_rw E0_rw using trivial. 
@@ -626,7 +626,7 @@ Section Proof_of_Abstract_Properties.
     Qed.   
 
     Variable alpha : E0.
-    Hypothesis Halpha : forall beta, Lt beta alpha -> P beta.
+    Hypothesis Halpha : forall beta, E0lt beta alpha -> P beta.
 
     Section alpha_Succ.
       Variable beta: E0.
@@ -803,9 +803,9 @@ Section Proof_of_Abstract_Properties.
   
   Theorem P_alpha : forall alpha, P alpha. (* .no-out *)
   Proof. (* .no-out *)
-    intro alpha; apply well_founded_induction with Lt. 
+    intro alpha; apply well_founded_induction with E0lt. 
   (* ... *) (*| .. coq:: none |*)
-   - exact E0.Lt_wf.
+   - exact E0lt_wf.
    - apply P_alpha_0.
      (*||*)
   Qed.

@@ -1074,7 +1074,7 @@ Qed.
 
 Lemma CanonS_lt : forall i alpha, alpha <> Zero -> CanonS alpha i o< alpha.
 Proof.
-  destruct alpha. unfold Lt, CanonS. cbn.
+  destruct alpha. unfold E0lt, CanonS. cbn.
   intro;apply canonS_LT; auto.
   intro H0; subst. apply H. unfold Zero; f_equal.
   apply nf_proof_unicity.
@@ -1085,7 +1085,7 @@ Lemma Canon_lt : forall i alpha, alpha <> Zero -> Canon alpha i o< alpha.
 Proof.
   destruct i.
   - unfold Canon;  intros;  destruct alpha.
-    unfold Lt, Zero in *; simpl in *. apply canon0_LT; auto. 
+    unfold E0lt, Zero in *; simpl in *. apply canon0_LT; auto. 
     intro H0; subst; cbn in H. apply H. 
     f_equal;  eapply nf_proof_unicity. 
   -   apply CanonS_lt.

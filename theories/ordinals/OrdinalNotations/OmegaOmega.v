@@ -473,7 +473,7 @@ Module LO.
       now   apply T1.mult_nf.
   Qed.
 
-
+  
   #[global] Instance plus_assoc: Assoc eq plus.
   Proof.
     red; intros *; apply eq_ref; now rewrite !plus_ref, T1.T1addA.
@@ -568,9 +568,9 @@ Module OO.
   (* end snippet embedDef *)
   
   Lemma lt_embed (alpha beta : OO): lt alpha beta ->
-                                    E0.Lt (embed alpha) (embed beta).
+                                    E0lt (embed alpha) (embed beta).
   Proof.
-    destruct alpha, beta; unfold lt, E0.Lt, T1.LT; cbn; repeat split.
+    destruct alpha, beta; unfold lt, E0lt, T1.LT; cbn; repeat split.
     - now apply nf_ref.
     - now apply lt_ref.
     - now apply nf_ref.

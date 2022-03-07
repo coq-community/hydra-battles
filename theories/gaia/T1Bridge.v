@@ -565,6 +565,8 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
+#[global] Notation hE0lt := E0.E0lt.
+
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 
@@ -692,7 +694,7 @@ Proof.
     * left; apply gE0lt_iff; rewrite /E0lt => //.
   - rewrite /E0le; destruct alpha, beta; cbn => Hle. 
     destruct (le_lt_eq_dec Hle) as [l | e].
-    + rewrite /Lt in l; cbn in l; rewrite -T1lt_iff in l. 
+    + rewrite /hE0lt in l; cbn in l. rewrite -T1lt_iff in l. 
      * by apply T1ltW.
      * by apply /eqP. 
      * by apply /eqP. 
@@ -735,12 +737,12 @@ From Coq Require Import Relations Basics
 Lemma gE0lt_wf : well_founded E0lt.
 Proof.
   move => x; apply Acc_incl
-            with (fun x y =>  E0.Lt (E0_g2h x) (E0_g2h y)).
+            with (fun x y =>  hE0lt (E0_g2h x) (E0_g2h y)).
   (* ... *)
   (* end snippet gE0LtWf *)
   - move => a b ; rewrite /E0lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
-    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
+    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=. 
     rewrite -(h2g_g2hK cnf0) in Hlt i0;
       rewrite -(h2g_g2hK cnf1) in Hlt i1;
       rewrite -decide_hlt_rw in Hlt;
@@ -748,7 +750,7 @@ Proof.
     + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
     + red in Hlt; rewrite bool_decide_eq_true in Hlt => //.
     + rewrite /bool_decide -!nf_ref in  i1;  move: i1 => /eqP //.
-  -  apply Acc_inverse_image, E0.Lt_wf. 
+  -  apply Acc_inverse_image, E0lt_wf. 
 Qed. 
 
 
