@@ -42,10 +42,10 @@ Arguments cnf : clear implicits.
 (* begin snippet LtLeDef *)
 
 Definition E0lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le := leq E0lt.
+Definition E0le := leq E0lt.
 
 Infix "o<" := E0lt : E0_scope.
-Infix "o<=" := Le : E0_scope.
+Infix "o<=" := E0le : E0_scope.
 
 (* end snippet LtLeDef *)
 
@@ -191,9 +191,9 @@ Proof.
 Qed.
 
 Remark Le_iff : forall alpha beta,
-    Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
+    E0le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
 Proof.
-  intros *; unfold Le, T1.LE;  destruct alpha, beta; split.
+  intros *; unfold E0le, T1.LE;  destruct alpha, beta; split.
   - cbn; rewrite le_lt_eq; destruct 1.
    + red in H; cbn in H; repeat split; auto; apply LE_le; repeat split; auto.
      destruct H as [H [H0 _]].
@@ -741,7 +741,7 @@ Qed.
 
 Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
 Proof.
-  unfold E0lt, Le.
+  unfold E0lt, E0le.
   intro; rewrite le_lt_eq.
  destruct alpha, beta. left. auto. 
 Qed.

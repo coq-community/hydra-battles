@@ -691,7 +691,7 @@ Section Compatibility_F_dominates.
       Canon_plus (S n) alpha beta ->
       forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
-    assert (H: Le (Succ beta) alpha) by (now apply Lt_Succ_Le).
+    assert (H: E0le (Succ beta) alpha) by (now apply Lt_Succ_Le).
     assert (H0: {alpha = Succ beta} + {E0lt (Succ  beta) alpha}).
     {
       rewrite <- lt_Succ_inv in H.

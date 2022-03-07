@@ -566,6 +566,7 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
 #[global] Notation hE0lt := E0.E0lt.
+#[global] Notation hE0le := E0.E0le.
 
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
@@ -680,7 +681,7 @@ Lemma gE0le_iff alpha beta : E0le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
 Proof. 
   split. 
   - rewrite /E0le;  destruct alpha, beta. 
-    rewrite /Le /hLE => /=; repeat split.
+    rewrite /hE0le /hLE => /=; repeat split.
     rewrite T1le_eqVlt => Hle.
     have Hor : (cnf0 =cnf1 \/ cnf0 < cnf1).
     { apply Bool.orb_prop in Hle;  destruct Hle as [? | ?].
