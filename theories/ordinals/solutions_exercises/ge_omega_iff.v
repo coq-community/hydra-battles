@@ -4,7 +4,7 @@ From Coq Require Import Lia.
 Open Scope E0_scope.
 
 Lemma ge_omega_iff (alpha : E0):
-  omega o<= alpha <-> (forall i:nat, i + alpha = alpha).
+  E0omega o<= alpha <-> (forall i:nat, i + alpha = alpha).
 Proof.
   destruct alpha as [a Ha]; unfold E0le; cbn.
   destruct a; cbn; split; intros H.

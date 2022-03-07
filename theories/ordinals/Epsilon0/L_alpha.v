@@ -20,7 +20,7 @@ Global Hint Resolve Olt : E0.
     [Large_sets.L_spec] *)
 
 Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha E0lt :=
-  L_ alpha  i with E0_eq_dec alpha Zero :=
+  L_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
           with Utils.dec (Limitb alpha) :=
@@ -42,7 +42,7 @@ About L__equation_1.
 
 (* begin snippet Paraphrasesa:: no-out *)
 
-Lemma L_zero_eqn : forall i, L_ Zero i = i.
+Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
@@ -50,7 +50,7 @@ Lemma L_eq2 alpha i :
 (* end snippet Paraphrasesa *)
 
 Proof.
-  intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha Zero).
+  intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
   - cbn; destruct (Utils.dec (Limitb alpha)) .
     apply Succ_not_Limitb in H; destruct H; auto.
@@ -78,7 +78,7 @@ Lemma L_lim_eqn alpha i :
 
 Proof.
   intros;rewrite L__equation_1.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
   - cbn;  destruct (Utils.dec (Limitb alpha)) .
     + now cbn.    
@@ -99,11 +99,11 @@ Proof.
 Qed.
 (*||*)
 
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat. (* .no-out *)
+Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro k; rewrite L_lim_eqn.
-  - replace (Canon  omega%e0 k) with (Fin k).
+  - replace (Canon  E0omega  k) with (Fin k).
     + rewrite L_finite; abstract lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.
@@ -125,7 +125,7 @@ Proof  with auto with E0.
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto. auto with arith.
         -- transitivity (S (S k)); [lia | apply IHalpha ]...
-     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta E0zero).
         +  subst  beta alpha.
            intros  k; autorewrite with L_rw; auto. 
         +   subst alpha; intros k; autorewrite with L_rw ...
@@ -136,7 +136,7 @@ Qed.
 (* begin snippet LGeS *)
 
 Lemma L_ge_S alpha :
-  alpha <> Zero -> S <<= L_ alpha. (* .no-out *)
+  alpha <> E0zero -> S <<= L_ alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof  with auto with E0.
      pattern alpha; apply well_founded_induction with E0lt ...
@@ -149,7 +149,7 @@ Proof  with auto with E0.
         destruct k;  simpl Canon.
         apply L_ge_id.
         apply L_ge_id. 
-     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta E0zero).
         +  subst  beta alpha.
            intros H k; autorewrite with L_rw; auto. 
         +   subst alpha; intros H k; autorewrite with L_rw ...
@@ -173,13 +173,13 @@ Section L_correct_proof.
 
   Let P alpha :=  L_spec (cnf alpha) (L_ alpha).
 
-  Lemma L_ok0 : P Zero.
+  Lemma L_ok0 : P E0zero.
   Proof. red; simpl. left. intro k; now rewrite L_zero_eqn. Qed.
 
   Lemma L_ok_succ beta  : P beta -> P (Succ beta).
   Proof with auto with E0.
     intro H; red;  rewrite Succ_rw.
-    destruct (E0_eq_dec beta Zero).
+    destruct (E0_eq_dec beta E0zero).
     -  subst; simpl; generalize (L_fin_ok 1); unfold L_fin.
        replace one with (T1nat 1); [simpl | trivial].
        intro; eapply L_spec_compat;  eauto.

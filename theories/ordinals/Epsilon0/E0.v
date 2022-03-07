@@ -53,14 +53,16 @@ Infix "o<=" := E0le : E0_scope.
 (* begin snippet ZeroOmega:: no-out  *)
 #[global] Instance E0zero : E0 := @mkord zero refl_equal.
 
-#[deprecated(note="use E0zero")]
-  Notation Zero := E0zero (only parsing).
-
-#[global] Instance _Omega : E0. 
+#[global] Instance E0omega : E0. 
 Proof. now exists T1omega%t1. Defined. 
 
-Notation omega := _Omega.
 (* end snippet ZeroOmega *)
+
+#[deprecated(note="use E0zero")]
+ Notation Zero := E0zero (only parsing).
+
+#[deprecated(note="use E0omega")]
+ Notation _Omega := E0omega (only parsing).
 
 (* begin snippet SuccOnE0:: no-out *)
 #[global] Instance Succ (alpha : E0) : E0.
@@ -102,7 +104,7 @@ Infix "+" := plus : E0_scope.
 
 (* begin snippet CheckPlus *)
 
-Check omega + omega.
+Check E0omega + E0omega.
 
 (* end snippet CheckPlus *)
 
@@ -114,7 +116,7 @@ Proof.
 Defined.
 
 
-Notation "'omega^'" := phi0 (only parsing) : E0_scope.
+Notation "'E0omega^'" := phi0 (only parsing) : E0_scope.
 
 #[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
@@ -690,7 +692,7 @@ Proof.
 Qed.
 
 
-Example L_3_plus_omega :  3 + omega = omega.
+Example L_3_plus_omega :  3 + E0omega = E0omega.
 Proof.
   now  rewrite <- Comparable.compare_eq_iff.
 Qed.
@@ -770,9 +772,10 @@ Proof.
   intros [H [H0 H1]]; eapply not_lt_zero; eauto. 
 Qed.
 
-Lemma lt_omega_inv: forall alpha:E0,  alpha o< omega -> exists (i:nat),  alpha = Fin i.
+Lemma lt_omega_inv: forall alpha:E0,  alpha o< E0omega ->
+                                      exists (i:nat),  alpha = Fin i.
 Proof. 
-  destruct alpha;  unfold _Omega; cbn in *; intro.
+  destruct alpha;  unfold E0omega; cbn in *; intro.
   destruct H.
   destruct H0.
   cbn in H0.
@@ -829,7 +832,7 @@ Proof.
 Qed.
 
 (* begin snippet Ex42 *)
-Example Ex42: omega + 42 + omega^2 = omega^2. (* .no-out *)
+Example Ex42: E0omega + 42 + E0omega^2 = E0omega^2. (* .no-out *)
 Proof. (* .no-out *)
   rewrite <-  Comparable.compare_eq_iff.
   reflexivity.

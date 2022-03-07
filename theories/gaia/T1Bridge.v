@@ -567,6 +567,8 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hcnf := E0.cnf.
 #[global] Notation hE0lt := E0.E0lt.
 #[global] Notation hE0le := E0.E0le.
+#[global] Notation hE0zero := E0.E0zero.
+#[global] Notation hE0omega := E0.E0omega.
 
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).

@@ -18,7 +18,7 @@ Import E0 Large_Sets Hprime Paths MoreLists.
 Section Battle_length.
 
   Variable alpha : E0.
-  Hypothesis Halpha : alpha <> Zero.
+  Hypothesis Halpha : alpha <> E0zero.
   Variable k : nat.
   Hypothesis Hk : (1 <= k)%nat.
   Let l := L_ alpha (S k).
@@ -96,7 +96,7 @@ End Battle_length.
 Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
 
 Lemma l_std_ok : forall alpha : E0,
-    alpha <> Zero ->
+    alpha <> E0zero ->
     forall k : nat,
       1 <= k -> battle_length standard k (iota (cnf alpha))
                               (l_std alpha k). (* .no-out *)

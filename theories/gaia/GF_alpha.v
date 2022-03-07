@@ -78,7 +78,7 @@ Qed.
 
 Lemma F_zero_eqn i: F_ E0zero i = i .+1.
 Proof.
-  rewrite /F_; replace (E0_g2h E0zero) with Zero.
+  rewrite /F_; replace (E0_g2h E0zero) with E0.E0zero.
   -  by rewrite F_zero_eqn. 
   -  apply E0_eq_intro => //.
 Qed. 
@@ -178,7 +178,7 @@ Proof.
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
   eapply isPR_extEqual_trans with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
-  replace _Omega with (E0_g2h E0omega); last first.
+  replace E0.E0omega with (E0_g2h E0omega); last first.
   - by apply E0_eq_intro. 
   - by rewrite -gE0le_iff. 
 Qed.

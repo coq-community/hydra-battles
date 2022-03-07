@@ -97,7 +97,7 @@ Open Scope nat_scope.
 
 (*| .. coq:: no-out |*)
 Theorem battle_length_std_Hardy (alpha : E0) :
-  alpha <> Zero ->
+  alpha <> E0zero ->
   forall k , 1 <= k ->
              exists l: nat,
                H'_ alpha k - k <= l /\
@@ -135,7 +135,7 @@ Section battle_lenght_notPR.
 
   (* begin snippet battleLengthNotPRb *)
 
-  Let alpha := phi0 omega%e0.
+  Let alpha := phi0 E0omega.
   Let h := iota (cnf alpha).
 
    (* end snippet battleLengthNotPRb *)
@@ -183,7 +183,7 @@ Section battle_lenght_notPR.
 
   (* begin snippet mGeFOmega *)
   
-  Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k). (* .no-out *)
+  Remark m_ge_F_omega : forall k,  F_ E0omega (S k) <= m (S k). (* .no-out *)
   (* end snippet mGeFOmega *)
   
   Proof.
@@ -197,7 +197,7 @@ Section battle_lenght_notPR.
   
   Remark m_ge_Ack:  forall n, 2 <= n -> Ack (S n) (S n) <= m (S n).
   Proof.
-    intros n H0; transitivity (F_ omega (S n)).
+    intros n H0; transitivity (F_ E0omega (S n)).
     - apply F_vs_Ack; auto.
     - apply m_ge_F_omega.
   Qed.
