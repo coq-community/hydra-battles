@@ -81,8 +81,8 @@ Definition Limitb (alpha : E0) : bool :=
 Definition E0succb (alpha : E0) : bool :=
   succb (@cnf alpha).
 
-  
-#[global] Instance ord1 : E0.
+
+#[global] Instance E0one : E0.
 Proof. 
   refine (@mkord (T1.succ zero) _);now compute. 
 Defined.
@@ -93,16 +93,20 @@ Defined.
 .. coq:: no-out
 |*)
 
-#[global] Instance plus (alpha beta : E0) : E0.
+#[global] Instance E0add (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (T1add (@cnf alpha) (@cnf beta))_ );
     apply plus_nf; apply cnf_ok.
 Defined.
 
-Infix "+" := plus : E0_scope.
+Infix "+" := E0add : E0_scope.
 
 (*||*)
 (* end snippet plusE0 *)
+
+#[deprecated(note="use E0add")]
+ Notation plus := E0add (only parsing).
+
 
 (* begin snippet CheckPlus *)
 
@@ -604,7 +608,7 @@ Proof.
   intros.
   unfold lt in H0. simpl in H0.
   unfold  Omega_term. unfold cnf.
-  unfold plus.
+  unfold E0add.
   unfold cnf at 1 2.
   fold (omega_term alpha i ).
   rewrite omega_term_plus_rw.
@@ -819,7 +823,7 @@ Proof.
 Qed.
 
 
-#[global] Instance plus_assoc : Assoc eq plus . 
+#[global] Instance plus_assoc : Assoc eq E0add . 
 Proof.
   intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
   apply  T1.T1addA.

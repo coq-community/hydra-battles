@@ -3058,7 +3058,7 @@ Proof.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
-  CanonS (phi0 (Succ gamma)) i = Omega_term gamma i.
+  CanonS (phi0 (E0succ gamma)) i = Omega_term gamma i.
 Proof.
   apply E0_eq_intro;  unfold CanonS, canonS.
   rewrite cnf_rw, cnf_Omega_term, cnf_phi0, cnf_Succ.
@@ -3078,7 +3078,7 @@ Defined.
 (** Lemmas used by [F_alpha] *)
 
 Lemma Canon_plus_first_step: forall i alpha beta, 
-    Canon_plus (S i) (Succ alpha) beta ->
+    Canon_plus (S i) (E0succ alpha) beta ->
     alpha = beta \/ Canon_plus (S i) alpha beta.
 Proof.
   destruct alpha, beta.
