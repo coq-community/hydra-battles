@@ -59,7 +59,7 @@ Qed.
 
 (* begin snippet Paraphrasesb:: no-out *)
 Lemma L_succ_eqn alpha i :
-  L_ (Succ alpha) i = L_ alpha (S i).
+  L_ (E0succ alpha) i = L_ alpha (S i).
 (* end snippet Paraphrasesb *)
 
 Proof.
@@ -176,7 +176,7 @@ Section L_correct_proof.
   Lemma L_ok0 : P E0zero.
   Proof. red; simpl. left. intro k; now rewrite L_zero_eqn. Qed.
 
-  Lemma L_ok_succ beta  : P beta -> P (Succ beta).
+  Lemma L_ok_succ beta  : P beta -> P (E0succ beta).
   Proof with auto with E0.
     intro H; red;  rewrite Succ_rw.
     destruct (E0_eq_dec beta E0zero).

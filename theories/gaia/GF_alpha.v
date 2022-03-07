@@ -166,7 +166,7 @@ Definition H'_ alpha i := hH'_ (E0_g2h alpha) i.
 Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
- replace (E0_g2h (E0phi0 alpha)) with (E0.phi0 (E0_g2h alpha)). 
+ replace (E0_g2h (E0phi0 alpha)) with (hE0phi0 (E0_g2h alpha)). 
  - apply H'_F; apply E0_eq_intro; destruct alpha => /=.
  - apply E0_eq_intro; rewrite /E0phi0 => //.
 Qed.

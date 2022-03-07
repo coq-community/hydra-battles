@@ -1,4 +1,4 @@
-(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+  (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length Ack.
@@ -135,7 +135,7 @@ Section battle_lenght_notPR.
 
   (* begin snippet battleLengthNotPRb *)
 
-  Let alpha := phi0 E0omega.
+  Let alpha := E0phi0 E0omega.
   Let h := iota (cnf alpha).
 
    (* end snippet battleLengthNotPRb *)

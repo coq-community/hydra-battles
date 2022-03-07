@@ -725,7 +725,8 @@ End Compatibility_F_dominates.
 
 Section H'_F.
   
-Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
+  Let P (alpha: E0) :=
+        forall n,  (F_ alpha (S n) <= H'_ (E0phi0 alpha) (S n))%nat.
 
  Variable alpha: E0.
 
@@ -734,7 +735,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
  Lemma HF0 : P E0zero.
  Proof.
    intro n; rewrite F_zero_eqn.
-   replace (phi0 E0zero) with (Fin 1).
+   replace (E0phi0 E0zero) with (Fin 1).
    - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
@@ -763,7 +764,7 @@ Let P (alpha: E0) := forall n,  (F_ alpha (S n) <= H'_ (phi0 alpha) (S n))%nat.
     intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_phi0_lim; [| trivial].
       rewrite F_lim_eqn; auto.
-      + transitivity (H'_ (phi0 (Canon alpha (S n))) (S n)).
+      + transitivity (H'_ (E0phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.
@@ -795,7 +796,7 @@ End H'_F.
 
 (* begin snippet HprimeF:: no-out  *)
 
-Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (phi0 alpha) (S n).
+Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (E0phi0 alpha) (S n).
 Proof.
   pattern alpha; apply well_founded_induction with E0lt.
 (* end snippet HprimeF *)

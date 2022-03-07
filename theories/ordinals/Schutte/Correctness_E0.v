@@ -600,7 +600,7 @@ Qed.
 
 (** Correctness of E0.plus *)
 
-Theorem  E0_plus_correct :  ON_op_ok  E0.plus plus.
+Theorem  E0_plus_correct :  ON_op_ok  E0add plus.
 Proof.
   red; destruct x,y; cbn.
   rewrite inject_plus; auto.

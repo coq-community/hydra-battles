@@ -105,7 +105,7 @@ Infix "+" := E0add : E0_scope.
 (* end snippet plusE0 *)
 
 #[deprecated(note="use E0add")]
- Notation plus := E0add (only parsing).
+ Notation Plus := E0add (only parsing).
 
 
 (* begin snippet CheckPlus *)
@@ -115,14 +115,14 @@ Check E0omega + E0omega.
 (* end snippet CheckPlus *)
 
 
-#[global] Instance phi0 (alpha: E0) : E0.
+#[global] Instance E0phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkord (T1.phi0 (cnf alpha)) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
 
 
-Notation "'E0omega^'" := phi0 (only parsing) : E0_scope.
+Notation "'E0omega^'" := E0phi0 (only parsing) : E0_scope.
 
 #[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
@@ -145,13 +145,16 @@ Defined.
 
 Coercion Fin : nat >-> E0.
 
-#[global] Instance Mult (alpha beta : E0) : E0.
+#[global] Instance E0mul (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (cnf alpha * cnf beta)%t1 _); apply mult_nf; apply cnf_ok.
 Defined.
 
+#[deprecated(note="use E0mul")]
+ Notation Mult := E0mul (only parsing).
 
-Infix "*" := Mult : E0_scope.
+
+Infix "*" := E0mul : E0_scope.
 
 #[global] Instance Mult_i  (alpha: E0) (n: nat) : E0.
 Proof.
@@ -257,9 +260,9 @@ Qed.
 Hint Rewrite alpha_plus_zero : E0_rw.
 
 Lemma cnf_phi0 (alpha : E0) :
-  cnf (phi0 alpha) = T1.phi0 (cnf alpha).
+  cnf (E0phi0 alpha) = T1.phi0 (cnf alpha).
 Proof.
- unfold phi0. now rewrite cnf_rw.
+ unfold E0phi0. now rewrite cnf_rw.
 Defined.
 
 Lemma cnf_Succ (alpha : E0) :
@@ -282,9 +285,9 @@ Proof.
 Qed.
 
 Lemma Limitb_phi0 alpha  : alpha <> E0zero ->
-                           Limitb (phi0 alpha).
+                           Limitb (E0phi0 alpha).
 Proof.
-  unfold phi0; apply Limitb_Omega_term.
+  unfold E0phi0; apply Limitb_Omega_term.
 Qed.
 
 #[global] Hint Resolve Limitb_phi0 : E0.
@@ -601,7 +604,7 @@ Qed.
 
 
 Lemma Omega_term_plus alpha beta i :
-  alpha <> E0zero -> (beta o< phi0 alpha)%e0 ->
+  alpha <> E0zero -> (beta o< E0phi0 alpha)%e0 ->
   cnf (Omega_term alpha i + beta)%e0 = cons (cnf alpha) i (cnf beta).
 Proof.
   destruct alpha as [alpha Halpha]; destruct beta as [beta Hbeta].
@@ -617,7 +620,7 @@ Proof.
 Qed.
 
 
-Lemma cnf_Cons (alpha beta: E0) n : alpha <> E0zero -> beta o< phi0 alpha ->
+Lemma cnf_Cons (alpha beta: E0) n : alpha <> E0zero -> beta o< E0phi0 alpha ->
                                      cnf (Cons alpha n beta) =
                                      cons (cnf alpha) n (cnf beta).
 Proof.
@@ -625,7 +628,7 @@ Proof.
 Defined.
 
 Lemma Limitb_plus alpha beta i:
-  (beta o< phi0 alpha)%e0 -> Limitb beta ->
+  (beta o< E0phi0 alpha)%e0 -> Limitb beta ->
   Limitb (Omega_term alpha i + beta)%e0.
 Proof.
   intros H H0;  assert (alpha <> E0zero).
@@ -646,7 +649,7 @@ Proof.
 Qed.
 
 
-Lemma Succ_of_cons alpha gamma i : alpha <> E0zero -> gamma o< phi0 alpha ->
+Lemma Succ_of_cons alpha gamma i : alpha <> E0zero -> gamma o< E0phi0 alpha ->
                                 cnf (E0succ (Omega_term alpha i + gamma)%e0) =
                                 cnf (Omega_term alpha i + E0succ gamma)%e0.
 Proof.
@@ -817,7 +820,7 @@ Proof.
 Qed.
 
 
-Lemma phi0_mono alpha beta : alpha o< beta -> phi0 alpha o< phi0 beta.
+Lemma phi0_mono alpha beta : alpha o< beta -> E0phi0 alpha o< E0phi0 beta.
 Proof.
   destruct alpha, beta; unfold E0lt; cbn;  auto with T1.
 Qed.

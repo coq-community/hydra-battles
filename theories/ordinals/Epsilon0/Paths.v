@@ -3022,7 +3022,7 @@ Qed.
 
 Lemma CanonS_plus_1 alpha beta k i :
   beta  <> E0zero -> alpha <> E0zero  ->
-  (beta o< phi0 alpha)%e0 ->
+  (beta o< E0phi0 alpha)%e0 ->
   (CanonS (Omega_term alpha i + beta)%e0 k =
    (Omega_term alpha  i + (CanonS beta k))%e0).
 Proof.
@@ -3058,7 +3058,7 @@ Proof.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
-  CanonS (phi0 (E0succ gamma)) i = Omega_term gamma i.
+  CanonS (E0phi0 (E0succ gamma)) i = Omega_term gamma i.
 Proof.
   apply E0_eq_intro;  unfold CanonS, canonS.
   rewrite cnf_rw, cnf_Omega_term, cnf_phi0, cnf_Succ.
