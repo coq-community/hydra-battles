@@ -126,7 +126,7 @@ Section S1.
   
   Section Limit.
     Variable lambda : E0.
-    Hypothesis Hlambda : Limitb lambda.
+    Hypothesis Hlambda : E0limit lambda.
     Hypothesis IHlambda :
       forall alpha, Fin 3 o<= alpha -> alpha o< lambda -> P alpha.
 
@@ -192,11 +192,11 @@ Section S1.
       Qed. 
 
 
-      Lemma L04' : forall beta, Limitb beta ->
+      Lemma L04' : forall beta, E0limit beta ->
                                 forall n, (S n) o<= 
                                           (Canon.Canon beta (S n)).
       Proof.
-        destruct beta; unfold Limitb.
+        destruct beta; unfold E0limit.
         cbn;  intros; rewrite Le_iff; split. 
         - apply  (@E0.cnf_ok (FinS n0)).
         - cbn; split.

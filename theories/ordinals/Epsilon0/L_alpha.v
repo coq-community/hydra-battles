@@ -23,7 +23,7 @@ Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha E0lt :=
   L_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit =>  L_ (Canon alpha i)  (S i) ;
             | right _successor =>  L_ (Pred alpha) (S i)}}.
 
@@ -46,13 +46,13 @@ Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  E0succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+  E0is_succ alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.
   intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     apply Succ_not_Limitb in H; destruct H; auto.
     now cbn.
 Qed.
@@ -72,7 +72,7 @@ Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 (* begin snippet Paraphrasesc:: no-out *)
 Lemma L_lim_eqn alpha i :
-  Limitb alpha ->
+  E0limit alpha ->
   L_ alpha i = L_ (Canon alpha i) (S i).
 (* end snippet Paraphrasesc *)
 
@@ -80,7 +80,7 @@ Proof.
   intros;rewrite L__equation_1.
   destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+  - cbn;  destruct (Utils.dec (E0limit alpha)) .
     + now cbn.    
     + red in H; rewrite e in H; discriminate.
 Qed.
@@ -195,7 +195,7 @@ Section L_correct_proof.
 
   Lemma L_ok_lim  alpha  :
     (forall beta,  (beta o< alpha)%e0 -> P beta) ->
-    Limitb alpha -> P alpha.
+    E0limit alpha -> P alpha.
   Proof with eauto with E0.
     unfold P; intros.
     apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).

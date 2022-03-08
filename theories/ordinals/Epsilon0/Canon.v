@@ -1060,7 +1060,7 @@ Proof.
       apply LT1; apply nf_phi0;auto with E0.
 Qed. 
 
-Lemma CanonS_phi0_lim alpha k : Limitb alpha ->
+Lemma CanonS_phi0_lim alpha k : E0limit alpha ->
                                 CanonS (E0phi0 alpha) k =
                                 E0phi0 (CanonS alpha k). 
 Proof.
@@ -1091,7 +1091,7 @@ Proof.
   -   apply CanonS_lt.
 Qed.
 
-Lemma Canon_of_limit_not_null : forall i alpha, Limitb alpha ->
+Lemma Canon_of_limit_not_null : forall i alpha, E0limit alpha ->
                                        Canon alpha (S i) <> E0zero.
 Proof.
   destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.

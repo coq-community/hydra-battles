@@ -110,7 +110,7 @@ Lemma F_lim_eqn alpha i:
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
- -  rewrite /Limitb limitb_ref.
+ -  rewrite /E0limit limitb_ref.
    move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2hK. 
 Qed.
 

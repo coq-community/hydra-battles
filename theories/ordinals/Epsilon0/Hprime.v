@@ -36,7 +36,7 @@ Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
   H'_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit =>  H'_ (Canon alpha (S i))  i ;
             | right _successor =>  H'_ (Pred alpha) (S i)}}.
 (* end snippet HprimeDef *)
@@ -57,7 +57,7 @@ Qed.
 
 (* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2 alpha i :
-  E0succb alpha ->
+  E0is_succ alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
 (* end snippet paraphrasesb *)
 
@@ -65,14 +65,14 @@ Proof.
   intros;rewrite H'__equation_1.
   destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+  - cbn;  destruct (Utils.dec (E0limit alpha)) .
     destruct (Succ_not_Limitb _ H); auto.
     + now cbn.
 Qed.
 
 (* begin snippet paraphrasesc:: no-out  *)
 Lemma H'_eq3 alpha i :
-  Limitb alpha ->
+  E0limit alpha ->
   H'_ alpha i =  H'_ (Canon alpha (S i)) i.
 (* end snippet paraphrasesc *)
 
@@ -80,7 +80,7 @@ Proof.
   intros;rewrite H'__equation_1.
   destruct (E0_eq_dec alpha E0zero).
  - subst; discriminate.
- - cbn;  destruct (Utils.dec (Limitb alpha)) .
+ - cbn;  destruct (Utils.dec (E0limit alpha)) .
   + now cbn.    
   + red in H; rewrite e in H; discriminate.
 Qed.
@@ -98,7 +98,7 @@ Qed.
 
 Hint Rewrite H'_eq1  H'_succ_eqn : H'_rw.
 
-Ltac lim_rw alpha := (assert (Limitb alpha) by auto with E0);
+Ltac lim_rw alpha := (assert (E0limit  alpha) by auto with E0);
                      rewrite (H'_eq3 alpha); auto with E0.
 
 
@@ -251,7 +251,7 @@ Proof with auto with E0.
                           (Omega_term alpha  i + (CanonS beta k))%e0).
        {  rewrite CanonS_plus_1; auto with E0.           
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
-          unfold Limitb in e; rewrite H in e; discriminate e.
+          unfold E0limit in e; rewrite H in e; discriminate e.
        }
        rewrite H'_eq3, H0.
        specialize (Hbeta (CanonS beta k)).
@@ -698,7 +698,7 @@ Section Proof_of_Abstract_Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Limitb alpha.
+      Hypothesis Hlim : E0limit alpha.
 
       Remark RBlim : forall n, (n < H'_ alpha n)%nat.
       Proof.
@@ -914,7 +914,7 @@ Section Proof_of_H'_mono_l.
   End Succ_case.
 
   Section Limit_case.
-    Hypothesis Hbeta: Limitb beta.
+    Hypothesis Hbeta: E0limit beta.
 
     Remark R4 : E0succ alpha o< beta.
     Proof. now apply Succ_lt_Limitb. Qed.

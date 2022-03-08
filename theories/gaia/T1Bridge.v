@@ -726,7 +726,7 @@ case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
 by rewrite g2h_h2gK. 
 Qed.
 
-Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
+Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= E0.E0succ (E0_g2h alpha). 
 rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
 by rewrite g2h_succ. 
 Qed. 

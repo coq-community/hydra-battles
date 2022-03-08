@@ -35,7 +35,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
   F_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit =>  F_ (Canon alpha i)  i ;
             | right _notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
 
@@ -70,7 +70,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
     with E0_eq_dec alpha E0zero :=
     { | left _zero => S i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit => F_star (Canon alpha i,1) i ;
             | right _notlimit =>
               F_star (Pred alpha, S i)  i}};
@@ -115,13 +115,13 @@ Proof.
 Qed.
 
 Lemma F_eq2 : forall alpha i,
-    E0succb alpha -> 
+    E0is_succ alpha -> 
     F_ alpha i = F_star (Pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
   - subst alpha; discriminate H.
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     + assert (true=false) by 
           ( now  destruct (Succ_not_Limitb _ H)). 
       discriminate.
@@ -161,14 +161,14 @@ Qed.
 (*||*)
 
 Lemma F_lim_eqn : forall alpha i,
-    Limitb alpha ->
+    E0limit alpha ->
     F_ alpha i = F_ (Canon alpha i) i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   unfold F_; intros. rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
   - now  destruct (Limit_not_Zero  H).
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     + cbn; auto.
     + red in H. rewrite e in H; discriminate.
 Qed.
@@ -417,7 +417,7 @@ Section Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Limitb alpha.
+      Hypothesis Hlim : E0limit alpha.
 
 
       Remark RBlim : forall n, n < F_ alpha n.
@@ -740,7 +740,7 @@ Section H'_F.
    - now apply E0_eq_intro.
  Qed.
 
- Lemma HFsucc : E0succb alpha -> P alpha.
+ Lemma HFsucc : E0is_succ alpha -> P alpha.
  Proof.
    intro H; destruct (Succb_Succ _ H) as [beta Hbeta]; subst.
    intro n; rewrite H'_Phi0_succ.
@@ -759,7 +759,7 @@ Section H'_F.
   (** The following proof is far from being trivial.
       It uses some lemmas from the Ketonen-Solovay machinery *)
  
-  Lemma HFLim : Limitb alpha -> P alpha.
+  Lemma HFLim : E0limit alpha -> P alpha.
   Proof.
     intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_phi0_lim; [| trivial].
@@ -821,7 +821,7 @@ Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
     with E0_eq_dec alpha E0zero :=
     { | left _zero => S i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit => f_star (Canon alpha i,1) i ;
             | right _successor =>
               f_star (Pred alpha, i)  i}};
@@ -865,13 +865,13 @@ Proof.
 Qed.
 
 Lemma f_eq2 : forall alpha i,
-    E0succb alpha -> 
+    E0is_succ alpha -> 
     f_ alpha i = f_star (Pred alpha,  i) i.
 Proof.
   unfold f_; intros; rewrite f_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
   - subst alpha; discriminate H.
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     + assert (true=false) by 
           ( now  destruct (Succ_not_Limitb _ H)). 
       discriminate.
@@ -908,13 +908,13 @@ Proof.
 Qed.
 
 
-Lemma f_lim_eqn : forall alpha i,  Limitb alpha ->
+Lemma f_lim_eqn : forall alpha i,  E0limit alpha ->
                                    f_ alpha i = f_ (Canon alpha i) i.
 Proof.
   unfold f_; intros. rewrite f_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
   - now  destruct (Limit_not_Zero  H).
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     + cbn; auto.
     + red in H; rewrite e in H; discriminate.
 Qed.
