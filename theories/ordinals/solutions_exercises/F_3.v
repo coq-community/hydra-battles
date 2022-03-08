@@ -24,7 +24,7 @@ Section S1.
 
   Remark F_3_eqn : forall n, F_ 3  n = iterate (F_ 2) (S n) n.
   Proof.
-    intro n; ochange (Fin 3)  (E0succ (Fin 2)); now rewrite F_succ_eqn.
+    intro n; ochange (E0fin 3)  (E0succ (E0fin 2)); now rewrite F_succ_eqn.
   Qed.
 
   (** ** Base case *)
@@ -37,7 +37,7 @@ Section S1.
     -   apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
         apply iterate_mono; auto.
         + apply F_alpha_mono.
-        + intro n0; apply (F_alpha_gt (Fin 2) n0).
+        + intro n0; apply (F_alpha_gt (E0fin 2) n0).
     -  specialize (LF2_0 (iterate (F_ 2) (S n) (S n))); intro H0.
        remember (iterate (F_ 2) (S n) (S n)) as N.
        transitivity ((fun i : nat => (exp2 i * i)%nat) N).
@@ -128,7 +128,7 @@ Section S1.
     Variable lambda : E0.
     Hypothesis Hlambda : E0limit lambda.
     Hypothesis IHlambda :
-      forall alpha, Fin 3 o<= alpha -> alpha o< lambda -> P alpha.
+      forall alpha, E0fin 3 o<= alpha -> alpha o< lambda -> P alpha.
 
 
     Remark R5: forall beta, 3 o<= beta -> beta o< lambda ->
@@ -198,7 +198,7 @@ Section S1.
       Proof.
         destruct beta; unfold E0limit.
         cbn;  intros; rewrite Le_iff; split. 
-        - apply  (@E0.cnf_ok (FinS n0)).
+        - apply  (@E0.cnf_ok (E0finS n0)).
         - cbn; split.
           + apply L04; auto.
           + cbn; apply Canon.nf_canon; auto.
@@ -249,18 +249,18 @@ Section S1.
          rewrite le_lt_eq in H2; destruct H2; try discriminate.
       + red; intros;  eapply L4; auto.
       + destruct H1; subst alpha.
-        assert (H: 3 o<= x \/ x = Fin 2).
+        assert (H: 3 o<= x \/ x = E0fin 2).
         { destruct (le_lt_eq_dec Halpha).
           - left; destruct (E0_Lt_Succ_inv e).
             + apply Lt_Le_incl; auto.
             + subst; apply Le_refl.
-          - right;  revert e; ochange (Fin 3) (E0succ 2).
+          - right;  revert e; ochange (E0fin 3) (E0succ 2).
             intro; symmetry ; now apply Succ_inj. 
         }
         destruct H.
         *   apply L3; apply IHalpha; auto.
             -- apply Lt_Succ; auto. 
-        * subst x; ochange (E0succ 2) (Fin 3); apply P_3.
+        * subst x; ochange (E0succ 2) (E0fin 3); apply P_3.
   Qed.
 
 End S1.
@@ -274,7 +274,7 @@ Proof. apply L. Qed.
 
 
 Goal  F_ 2 3 = 63.
-  ochange (Fin 2) (E0succ (Fin 1)).
+  ochange (E0fin 2) (E0succ (E0fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -283,7 +283,7 @@ Goal  F_ 2 3 = 63.
   
 Goal  F_ 2 2 = 23.
 
-  ochange (Fin 2) (E0succ (Fin 1)).
+  ochange (E0fin 2) (E0succ (E0fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -291,7 +291,7 @@ Goal  F_ 2 2 = 23.
 Qed.
 
 Goal  F_ 3 1 = 2047.
-  ochange (Fin 3) (E0succ (E0succ (Fin 1))).
+  ochange (E0fin 3) (E0succ (E0succ (E0fin 1))).
   repeat rewrite F_succ_eqn.
   cbn.
   repeat rewrite F_succ_eqn. cbn.

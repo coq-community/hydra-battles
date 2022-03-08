@@ -139,17 +139,22 @@ Defined.
 #[global] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
-#[global] Instance FinS (i:nat) : E0.
+#[global] Instance E0finS (i:nat) : E0.
 Proof.
   refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
 Defined.
 
-#[ global ] Instance Fin (i:nat) : E0.
+
+
+#[ global] Instance E0fin (i:nat) : E0.
 Proof.
-  destruct i as [|i]; [exact E0zero | exact (FinS i)].
+  destruct i as [|i]; [exact E0zero | exact (E0finS i)].
 Defined.
 
-Coercion Fin : nat >-> E0.
+#[deprecated(note="use E0fin")]
+ Notation Fin := E0fin (only parsing).
+
+Coercion E0fin : nat >-> E0.
 
 #[global] Instance E0mul (alpha beta : E0) : E0.
 Proof.
@@ -423,7 +428,7 @@ Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
 
 
-Lemma FinS_eq i : FinS i = Fin (S i).
+Lemma FinS_eq i : E0finS i = E0fin (S i).
 Proof. reflexivity. Qed.
 
 Lemma mult_fin_rw alpha (i:nat) : alpha * i = Mult_i alpha i.
@@ -432,7 +437,7 @@ Proof.
  Qed.
 
 
-Lemma FinS_Succ_eq : forall i, FinS i = E0succ (Fin i).
+Lemma FinS_Succ_eq : forall i, E0finS i = E0succ (E0fin i).
 Proof.
   intro i; compute. orefl; now destruct i.
 Qed.
@@ -788,7 +793,7 @@ Proof.
 Qed.
 
 Lemma lt_omega_inv: forall alpha:E0,  alpha o< E0omega ->
-                                      exists (i:nat),  alpha = Fin i.
+                                      exists (i:nat),  alpha = E0fin i.
 Proof. 
   destruct alpha;  unfold E0omega; cbn in *; intro.
   destruct H.
@@ -797,7 +802,7 @@ Proof.
   assert (H2 : cnf0 t1< T1omega).
   {  split; cbn in H1; tauto. }
   destruct (lt_omega_inv H2).
-  - exists 0; subst;  unfold Fin; apply E0_eq_intro;  reflexivity. 
+  - exists 0; subst;  unfold E0fin; apply E0_eq_intro;  reflexivity. 
   -  destruct H3; subst;  exists (S x); apply E0_eq_intro; reflexivity.
 Qed.
 

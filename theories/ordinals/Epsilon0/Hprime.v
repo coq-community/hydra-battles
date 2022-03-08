@@ -108,10 +108,10 @@ Ltac lim_rw alpha := (assert (E0limit  alpha) by auto with E0);
 (* begin snippet HprimeFin *)
 
 (*| .. coq:: no-out |*)
-Lemma H'_Fin : forall i k : nat,  H'_  (Fin i) k = (i+k)%nat.
+Lemma H'_Fin : forall i k : nat,  H'_  (E0fin i) k = (i+k)%nat.
 Proof with eauto with E0.
   induction i.
-  - intros; simpl Fin; simpl; autorewrite with H'_rw E0_rw ... 
+  - intros; simpl E0fin; simpl; autorewrite with H'_rw E0_rw ... 
   - intros ;simpl; autorewrite with H'_rw E0_rw ... 
     rewrite IHi; abstract lia. 
 Qed.
@@ -124,7 +124,7 @@ Qed.
 Lemma H'_omega : forall k, H'_ E0omega k = S (2 * k)%nat.
 Proof with auto with E0.
   intro k; rewrite H'_eq3 ...
-  - replace (Canon E0omega (S k)) with (Fin (S k)).
+  - replace (Canon E0omega (S k)) with (E0fin (S k)).
     + rewrite H'_Fin; abstract lia.
     + now autorewrite with E0_rw.
 Qed.
@@ -162,7 +162,7 @@ Lemma H'_omega_double k :
   H'_ (E0omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
  rewrite H'_eq3; simpl Canon.
- - ochange  (CanonS  (E0omega * FinS 1)%e0 k)  (E0omega + (S k))%e0.
+ - ochange  (CanonS  (E0omega * E0finS 1)%e0 k)  (E0omega + (S k))%e0.
   + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
   - now compute.
 Qed.
@@ -173,7 +173,7 @@ Lemma H'_omega_3 k : H'_ (E0omega * 3)%e0 k = (8 * k + 7)%nat.
 (* end snippet HprimeExamplesb *)
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
-  ochange (Canon (E0omega * 3)%e0 (S k)) (E0omega * 2 + FinS k)%e0.
+  ochange (Canon (E0omega * 3)%e0 (S k)) (E0omega * 2 + E0finS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_double; abstract lia.  
 Qed.
 
@@ -183,7 +183,7 @@ Lemma H'_omega_4 k : H'_ (E0omega * 4)%e0 k = (16 * k + 15)%nat.
 
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
-  ochange (Canon  (E0omega * 4)%e0 (S k)) (E0omega * 3 + FinS k)%e0.
+  ochange (Canon  (E0omega * 4)%e0 (S k)) (E0omega * 3 + E0finS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_3; abstract lia.
 Qed.
 
@@ -310,7 +310,7 @@ Proof.
 Qed.
 
 Lemma H'_Fin_iterate : forall i k,
-    H'_ (Fin (S i)) k = iterate (H'_ (Fin 1)) (S i) k.
+    H'_ (E0fin (S i)) k = iterate (H'_ (E0fin 1)) (S i) k.
 Proof.
   intros; repeat rewrite H'_Fin.
   replace (iterate (H'_ 1) (S i) k) with (iterate S (S i) k).
@@ -334,8 +334,8 @@ Lemma H'_Omega_term (alpha : E0)  :
 Proof.
   destruct (E0_eq_dec alpha E0zero).
   - subst.
-    intros; replace (Omega_term E0zero i) with (Fin (S i)).
-    replace (E0phi0 E0zero) with (Fin 1).
+    intros; replace (Omega_term E0zero i) with (E0fin (S i)).
+    replace (E0phi0 E0zero) with (E0fin 1).
     now rewrite H'_Fin_iterate.
     compute. now apply E0_eq_intro.
     compute. now apply E0_eq_intro.
@@ -355,10 +355,10 @@ Proof with auto with E0.
 Qed.
 
 Lemma H'_Phi0_succ_0 : forall k,
-    H'_ (E0phi0 (E0succ Zero)) k = H'_succ_fun (H'_ (E0phi0 E0zero)) k.
+    H'_ (E0phi0 (E0succ E0zero)) k = H'_succ_fun (H'_ (E0phi0 E0zero)) k.
 Proof with auto with E0.
   intros k.    
-  replace (E0phi0 E0zero) with (Fin 1).
+  replace (E0phi0 E0zero) with (E0fin 1).
   replace (E0phi0 (E0succ E0zero)) with E0omega.
   rewrite H'_omega.
   unfold H'_succ_fun.
@@ -393,7 +393,7 @@ Lemma H'_Phi0_Si : forall i k,
 (* end snippet HprimePhi0SI *)
 Proof with auto with E0.
   induction i.
-  - simpl;  replace (E0phi0 (FinS 0)) with E0omega; auto;  orefl.   
+  - simpl;  replace (E0phi0 (E0finS 0)) with E0omega; auto;  orefl.   
   -  intro k;  rewrite <- FinS_eq, FinS_Succ_eq. (* lourd *)
      rewrite H'_Phi0_succ, iterate_S_eqn.
      apply iterate_ext; auto.

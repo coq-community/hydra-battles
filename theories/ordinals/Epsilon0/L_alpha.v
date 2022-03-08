@@ -92,7 +92,7 @@ Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   induction i.
-  - simpl Fin; intro; now rewrite L_zero_eqn.
+  - simpl E0fin; intro; now rewrite L_zero_eqn.
   - simpl; rewrite FinS_Succ_eq; intro k; autorewrite with E0_rw L_rw.
     rewrite IHi.
    + abstract lia.
@@ -103,7 +103,7 @@ Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro k; rewrite L_lim_eqn.
-  - replace (Canon  E0omega  k) with (Fin k).
+  - replace (Canon  E0omega  k) with (E0fin k).
     + rewrite L_finite; abstract lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.

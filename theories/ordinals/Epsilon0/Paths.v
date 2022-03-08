@@ -2964,7 +2964,7 @@ Qed.
 
 Theorem KS_thm_2_4_E0 :
   forall lambda, 
-    Limitb lambda  ->
+    E0limit lambda  ->
     forall i j, (i < j)%nat ->
                 Canon_plus 1 (Canon lambda (S j))
                        (Canon lambda (S i)).
@@ -2991,7 +2991,7 @@ destruct alpha.
   - auto with T1.
 Qed.
 
-Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
+Lemma Canon_mono1 alpha i j : E0limit  alpha -> (i< j)% nat ->
                               (Canon alpha i o< Canon alpha j)%e0.
 
   destruct alpha.
@@ -3092,7 +3092,7 @@ Proof.
 Qed.
 
 Lemma Canon_plus_first_step_lim:
-  forall i alpha beta, Limitb alpha ->
+  forall i alpha beta, E0limit alpha ->
                        Canon_plus (S i) alpha beta  ->
                        beta = CanonS alpha i \/
                        Canon_plus (S i) (CanonS alpha i) beta.

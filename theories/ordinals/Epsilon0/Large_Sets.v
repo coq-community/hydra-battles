@@ -1009,13 +1009,13 @@ Proof.
   unfold Gnaw, GnawS.  intros; apply gnaw_gnawS.
 Qed.
 
-Lemma GnawS_omega : forall i s, GnawS E0omega (i::s)  = GnawS (FinS i) s.
+Lemma GnawS_omega : forall i s, GnawS E0omega (i::s)  = GnawS (E0finS i) s.
 Proof.
   intros; cbn; now unfold GnawS.
 Qed.
 
 
-Lemma Gnaw_omega i s : Gnaw  E0omega (S i::s) = Gnaw (FinS i) s.
+Lemma Gnaw_omega i s : Gnaw  E0omega (S i::s) = Gnaw (E0finS i) s.
 Proof.
  reflexivity.
 Qed.

@@ -1037,7 +1037,7 @@ Proof.
   now rewrite (canon_succ).  
 Qed.
 
-Lemma Canon_Omega k : Canon E0omega k = Fin k.
+Lemma Canon_Omega k : Canon E0omega k = E0fin k.
 Proof.
   destruct k; apply E0_eq_intro; reflexivity. 
 Qed.

@@ -198,7 +198,7 @@ Tactic Notation "undiag2" constr(n) integer(occ1) integer(occ2) :=
 Lemma LF1 : forall i,  F_ 1 i = S (2 * i). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intro i; unfold Fin; rewrite FinS_Succ_eq, F_succ_eqn.
+  intro i; unfold E0fin; rewrite FinS_Succ_eq, F_succ_eqn.
   rewrite iterate_rw, F_zero_eqn.  
   simpl; rewrite iterate_ext with (g := S).
   - undiag2 i 1 3.
@@ -211,7 +211,7 @@ Qed.
 Lemma LF2 : forall i, exp2 i * i < F_ 2 i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intro i; ochange (Fin 2) (E0succ 1); rewrite F_succ_eqn.
+  intro i; ochange (E0fin 2) (E0succ 1); rewrite F_succ_eqn.
   undiag2 i 1 3.
   -  intros. cbn;  intros; cbn.  repeat rewrite LF1. abstract lia. 
   - intros; simpl exp2; ring_simplify. simpl (2+n)%nat.
@@ -290,7 +290,7 @@ Section Properties.
 
     Lemma PZero : P E0zero.
     Proof. 
-      split; auto with T1; ord_eq  (E0succ E0zero) (Fin 1).
+      split; auto with T1; ord_eq  (E0succ E0zero) (E0fin 1).
       all: try (rewrite H;auto with T1).
       unfold Canon_plus; intros beta n H0;
         unfold E0zero in H0; simpl in H0.
@@ -608,7 +608,7 @@ Qed.
 Lemma LF3_2  : dominates_from 2  (F_ 3) (fun  n => iterate exp2 (S n) n).
 Proof.  
   intros p H; assert (H0:= LF2_0).
-  ochange (Fin 3) (E0succ 2); rewrite F_succ_eqn.
+  ochange (E0fin 3) (E0succ 2); rewrite F_succ_eqn.
   eapply iterate_dom_prop; eauto with arith. 
   - apply exp2_ge_S.
   - apply exp2_mono.
@@ -735,7 +735,7 @@ Section H'_F.
  Lemma HF0 : P E0zero.
  Proof.
    intro n; rewrite F_zero_eqn.
-   replace (E0phi0 E0zero) with (Fin 1).
+   replace (E0phi0 E0zero) with (E0fin 1).
    - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
