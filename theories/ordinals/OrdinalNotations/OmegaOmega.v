@@ -2,12 +2,12 @@
 
 (** New implementation as a refinement of epsilon0 *)
 
-Require T1 E0.
+Require Import T1 E0.
 Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec  List Bool
         Recdef Lia  Coq.Wellfounded.Inverse_Image
         Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
 
-Coercion is_true: bool >-> Sortclass.
+
 Require Import Comparable.
 
 (** * Representation by lists of pairs of integers *)
@@ -49,7 +49,7 @@ Module LO.
   Fixpoint refine (a : t) : T1.T1 :=
     match a with
       nil => T1.zero
-    | cons i n b => T1.cons (T1.fin i) n (refine b)
+    | cons i n b => T1.cons (\F i)%t1 n (refine b)
     end.
   (* end snippet refineDef *)
   
@@ -97,11 +97,11 @@ Module LO.
   fix cmp (alpha beta:t) :=
     match alpha, beta with
     | nil, nil => Eq
-    | nil, cons a' n' b' => Lt
+    | nil, cons a' n' b' => Datatypes.Lt
     | _   , nil => Gt
     | (cons a n b),(cons a' n' b') =>
       (match Nat.compare a a' with 
-       | Lt => Lt
+       | Datatypes.Lt => Datatypes.Lt
        | Gt => Gt
        | Eq => (match Nat.compare n n' with
                 | Eq => cmp b b'
@@ -123,12 +123,12 @@ Module LO.
       + destruct  p; cbn.
         destruct (n ?= n1) eqn: cn_n1;
           destruct (n0 ?= n2) eqn: c_n0_n2;
-          rewrite  T1.compare_fin_rw; now rewrite cn_n1.
+          rewrite  compare_fin_rw; now rewrite cn_n1.
   Qed.
 
   (* begin snippet ltDef *)
   Definition lt (alpha beta : t) : Prop :=
-    compare alpha beta = Lt.
+    compare alpha beta = Datatypes.Lt.
   (* end snippet ltDef *)
   
   Lemma compare_rev :
@@ -150,7 +150,7 @@ Module LO.
   Lemma compare_reflect :
     forall alpha beta,
       match compare alpha beta with
-      | Lt => lt alpha beta
+      | Datatypes.Lt => lt alpha beta
       | Eq => alpha = beta
       | Gt => lt beta alpha
       end.
@@ -367,7 +367,7 @@ Module LO.
     |  x, nil  => x
     |  cons a n b, cons a' n' b' =>
        (match Nat.compare a a' with
-        | Lt => cons a' n' b'
+        | Datatypes.Lt => cons a' n' b'
         | Gt => (cons a n (plus b (cons a' n' b')))
         | Eq  => (cons a (S (n+n')) b')
         end)
@@ -395,7 +395,7 @@ Module LO.
   (* end snippet succPlusMult *)
   
   (* begin snippet phi0Ref:: no-out *)
-  Lemma phi0_ref (i:nat) : refine (phi0 i) = T1.phi0 (T1.fin i).
+  Lemma phi0_ref (i:nat) : refine (phi0 i) = T1.phi0 (\F i).
   Proof. reflexivity. Qed.
   (* end snippet phi0Ref *)
 
@@ -427,7 +427,7 @@ Module LO.
 
   (* begin snippet plusRef:: no-out  *)
   Lemma plus_ref : forall alpha beta: t,
-      refine (alpha + beta) = T1.plus (refine alpha) (refine beta).
+      refine (alpha + beta) = T1.T1add (refine alpha) (refine beta).
   (* end snippet plusRef *)
   Proof.
     induction alpha, beta.
@@ -449,7 +449,7 @@ Module LO.
   (* begin snippet multRef:: no-out   *)
   Lemma mult_ref : forall alpha beta: t,
       refine (alpha * beta) =
-      T1.mult (refine alpha) (refine beta).
+      T1.T1mul (refine alpha) (refine beta).
   (* end snippet multRef *)
   
   Proof.
@@ -473,9 +473,10 @@ Module LO.
       now   apply T1.mult_nf.
   Qed.
 
-
+  
   #[global] Instance plus_assoc: Assoc eq plus.
-  Proof. red; intros *; apply eq_ref; now rewrite !plus_ref, T1.plus_assoc.
+  Proof.
+    red; intros *; apply eq_ref; now rewrite !plus_ref, T1.T1addA.
   Qed.
 
   Lemma mult_plus_distr_l (a b c: t) : nf a -> nf b -> nf c ->
@@ -567,9 +568,9 @@ Module OO.
   (* end snippet embedDef *)
   
   Lemma lt_embed (alpha beta : OO): lt alpha beta ->
-                                    E0.Lt (embed alpha) (embed beta).
+                                    E0lt (embed alpha) (embed beta).
   Proof.
-    destruct alpha, beta; unfold lt, E0.Lt, T1.LT; cbn; repeat split.
+    destruct alpha, beta; unfold lt, E0lt, T1.LT; cbn; repeat split.
     - now apply nf_ref.
     - now apply lt_ref.
     - now apply nf_ref.

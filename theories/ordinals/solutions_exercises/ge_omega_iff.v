@@ -4,9 +4,9 @@ From Coq Require Import Lia.
 Open Scope E0_scope.
 
 Lemma ge_omega_iff (alpha : E0):
-  omega o<= alpha <-> (forall i:nat, i + alpha = alpha).
+  E0omega o<= alpha <-> (forall i:nat, i + alpha = alpha).
 Proof.
-  destruct alpha as [a Ha]; unfold Le; cbn.
+  destruct alpha as [a Ha]; unfold E0le; cbn.
   destruct a; cbn; split; intros H.
   - rewrite Le_iff in H; destruct H as (H, (Hle, Hnf)).
     now apply le_zero_inv in Hle.

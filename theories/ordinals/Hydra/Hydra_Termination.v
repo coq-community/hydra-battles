@@ -209,7 +209,7 @@ Qed.
 
 (*| .. coq:: no-out |*)
 
-#[global] Instance HVariant : @Hvariant _ _ E0.Lt_wf free var.
+#[global] Instance HVariant : @Hvariant _ _ E0lt_wf free var.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.

@@ -5,12 +5,13 @@
 
 
 (* begin snippet Requirements:: no-out  *)
+From mathcomp Require Import all_ssreflect zify.
+From gaia Require Export ssete9.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
-From mathcomp Require Import all_ssreflect zify.
-From gaia Require Export ssete9.
+
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 
@@ -77,7 +78,7 @@ Qed.
 
 Lemma F_zero_eqn i: F_ E0zero i = i .+1.
 Proof.
-  rewrite /F_; replace (E0_g2h E0zero) with Zero.
+  rewrite /F_; replace (E0_g2h E0zero) with E0.E0zero.
   -  by rewrite F_zero_eqn. 
   -  apply E0_eq_intro => //.
 Qed. 
@@ -109,7 +110,7 @@ Lemma F_lim_eqn alpha i:
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
- -  rewrite /Limitb limitb_ref.
+ -  rewrite /E0limit limitb_ref.
    move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2hK. 
 Qed.
 
@@ -165,7 +166,7 @@ Definition H'_ alpha i := hH'_ (E0_g2h alpha) i.
 Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
- replace (E0_g2h (E0phi0 alpha)) with (E0.phi0 (E0_g2h alpha)). 
+ replace (E0_g2h (E0phi0 alpha)) with (hE0phi0 (E0_g2h alpha)). 
  - apply H'_F; apply E0_eq_intro; destruct alpha => /=.
  - apply E0_eq_intro; rewrite /E0phi0 => //.
 Qed.
@@ -177,7 +178,7 @@ Proof.
   move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
   eapply isPR_extEqual_trans with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
-  replace _Omega with (E0_g2h E0omega); last first.
+  replace E0.E0omega with (E0_g2h E0omega); last first.
   - by apply E0_eq_intro. 
   - by rewrite -gE0le_iff. 
 Qed.

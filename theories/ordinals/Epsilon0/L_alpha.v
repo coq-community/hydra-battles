@@ -13,17 +13,17 @@ From Coq Require Import ArithRing Lia.
 From Equations Require Import Equations.
 Import RelationClasses Relations.
 
-#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded E0lt := E0lt_wf.
 Global Hint Resolve Olt : E0.
 
 (** Using Coq-Equations for building a function which satisfies 
     [Large_sets.L_spec] *)
 
-Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha Lt :=
-  L_ alpha  i with E0_eq_dec alpha Zero :=
+Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha E0lt :=
+  L_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit =>  L_ (Canon alpha i)  (S i) ;
             | right _successor =>  L_ (Pred alpha) (S i)}}.
 
@@ -42,24 +42,24 @@ About L__equation_1.
 
 (* begin snippet Paraphrasesa:: no-out *)
 
-Lemma L_zero_eqn : forall i, L_ Zero i = i.
+Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  Succb alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+  E0is_succ alpha -> L_ alpha i = L_ (Pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.
-  intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha Zero).
+  intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn; destruct (Utils.dec (Limitb alpha)) .
+  - cbn; destruct (Utils.dec (E0limit alpha)) .
     apply Succ_not_Limitb in H; destruct H; auto.
     now cbn.
 Qed.
 
 (* begin snippet Paraphrasesb:: no-out *)
 Lemma L_succ_eqn alpha i :
-  L_ (Succ alpha) i = L_  alpha (S i).
+  L_ (E0succ alpha) i = L_ alpha (S i).
 (* end snippet Paraphrasesb *)
 
 Proof.
@@ -72,15 +72,15 @@ Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 (* begin snippet Paraphrasesc:: no-out *)
 Lemma L_lim_eqn alpha i :
-  Limitb alpha ->
+  E0limit alpha ->
   L_ alpha i = L_ (Canon alpha i) (S i).
 (* end snippet Paraphrasesc *)
 
 Proof.
   intros;rewrite L__equation_1.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+  - cbn;  destruct (Utils.dec (E0limit alpha)) .
     + now cbn.    
     + red in H; rewrite e in H; discriminate.
 Qed.
@@ -92,18 +92,18 @@ Lemma L_finite : forall i k :nat,  L_ i k = (i+k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   induction i.
-  - simpl Fin; intro; now rewrite L_zero_eqn.
+  - simpl E0fin; intro; now rewrite L_zero_eqn.
   - simpl; rewrite FinS_Succ_eq; intro k; autorewrite with E0_rw L_rw.
     rewrite IHi.
    + abstract lia.
 Qed.
 (*||*)
 
-Lemma L_omega : forall k, L_ omega%e0 k = S (2 * k)%nat. (* .no-out *)
+Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro k; rewrite L_lim_eqn.
-  - replace (Canon  omega%e0 k) with (Fin k).
+  - replace (Canon  E0omega  k) with (E0fin k).
     + rewrite L_finite; abstract lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.
@@ -115,7 +115,7 @@ Qed.
 
 Lemma L_ge_id alpha : forall i,  i <= L_ alpha i.
 Proof  with auto with E0.
-     pattern alpha; apply well_founded_induction with Lt ...
+     pattern alpha; apply well_founded_induction with E0lt ...
    clear alpha; intros alpha IHalpha.
   destruct (Zero_Limit_Succ_dec alpha).
   -  destruct s.
@@ -125,7 +125,7 @@ Proof  with auto with E0.
         destruct k;  simpl Canon.
         --  autorewrite with L_rw; auto. auto with arith.
         -- transitivity (S (S k)); [lia | apply IHalpha ]...
-     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta E0zero).
         +  subst  beta alpha.
            intros  k; autorewrite with L_rw; auto. 
         +   subst alpha; intros k; autorewrite with L_rw ...
@@ -136,10 +136,10 @@ Qed.
 (* begin snippet LGeS *)
 
 Lemma L_ge_S alpha :
-  alpha <> Zero -> S <<= L_ alpha. (* .no-out *)
+  alpha <> E0zero -> S <<= L_ alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof  with auto with E0.
-     pattern alpha; apply well_founded_induction with Lt ...
+     pattern alpha; apply well_founded_induction with E0lt ...
    clear alpha; intros alpha IHalpha.
   destruct (Zero_Limit_Succ_dec alpha).
   -  destruct s.
@@ -147,10 +147,9 @@ Proof  with auto with E0.
    +   intros H k;  rewrite L_lim_eqn; auto.
      *  specialize (IHalpha (Canon alpha k)).
         destruct k;  simpl Canon.
-        Search L_. 
         apply L_ge_id.
         apply L_ge_id. 
-     -  destruct s as [beta e];  destruct (E0_eq_dec beta Zero).
+     -  destruct s as [beta e];  destruct (E0_eq_dec beta E0zero).
         +  subst  beta alpha.
            intros H k; autorewrite with L_rw; auto. 
         +   subst alpha; intros H k; autorewrite with L_rw ...
@@ -174,15 +173,15 @@ Section L_correct_proof.
 
   Let P alpha :=  L_spec (cnf alpha) (L_ alpha).
 
-  Lemma L_ok0 : P Zero.
+  Lemma L_ok0 : P E0zero.
   Proof. red; simpl. left. intro k; now rewrite L_zero_eqn. Qed.
 
-  Lemma L_ok_succ beta  : P beta -> P (Succ beta).
+  Lemma L_ok_succ beta  : P beta -> P (E0succ beta).
   Proof with auto with E0.
     intro H; red;  rewrite Succ_rw.
-    destruct (E0_eq_dec beta Zero).
+    destruct (E0_eq_dec beta E0zero).
     -  subst; simpl; generalize (L_fin_ok 1); unfold L_fin.
-       replace one with (fin 1); [simpl | trivial].
+       replace one with (T1nat 1); [simpl | trivial].
        intro; eapply L_spec_compat;  eauto.
        intros; rewrite L_eq2; auto with E0.
        rewrite Pred_of_Succ, L_zero_eqn; trivial.
@@ -196,7 +195,7 @@ Section L_correct_proof.
 
   Lemma L_ok_lim  alpha  :
     (forall beta,  (beta o< alpha)%e0 -> P beta) ->
-    Limitb alpha -> P alpha.
+    E0limit alpha -> P alpha.
   Proof with eauto with E0.
     unfold P; intros.
     apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).
@@ -214,7 +213,7 @@ Section L_correct_proof.
   
   Lemma L_ok (alpha: E0) : P alpha.
   Proof with eauto with E0.
-    apply well_founded_induction with Lt ...
+    apply well_founded_induction with E0lt ...
     clear alpha; intros alpha IHalpha.
     destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
     - subst; apply L_ok0.
@@ -243,7 +242,7 @@ Theorem H'_L_ alpha :
 (* end snippet HprimeL *)
 
 Proof with auto with E0.
-  pattern alpha ; apply well_founded_induction with Lt ...
+  pattern alpha ; apply well_founded_induction with E0lt ...
   clear alpha; intros alpha IHalpha i.
   destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | H].
   - subst; rewrite H'_eq1, L_zero_eqn. abstract lia.

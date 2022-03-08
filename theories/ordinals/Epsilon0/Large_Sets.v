@@ -54,7 +54,7 @@ Definition L_test (alpha:T1) f k :=
   gnaw alpha (interval k (f k - 2)%nat) = one.
 
 
-Compute L_test T1.omega (fun i => S (2 * i))%nat 23.
+Compute L_test T1omega (fun i => S (2 * i))%nat 23.
 
 
 (** ** Paths starting with a finite ordinal ([fin n])  *)
@@ -388,7 +388,7 @@ Proof. unfold L_succ, L_fin; intros; abstract lia.
 Qed.
 
 (* begin snippet LFinOk:: no-out *)
-Lemma L_fin_ok i : L_spec (fin i) (L_fin i). 
+Lemma L_fin_ok i : L_spec (\F i) (L_fin i). 
 Proof. 
   induction i.
   (* ... *)
@@ -396,7 +396,7 @@ Proof.
 
   - left; reflexivity.
   -  apply L_spec_compat with (L_succ (L_fin i)).
-     change (fin (S i)) with (FS i); rewrite <- succ_compat.
+     change (\F (S i)) with (FS i); rewrite <- succ_compat.
      destruct i.
      + simpl. unfold L_succ, L_fin; right.
        * discriminate.
@@ -439,9 +439,9 @@ Proof.
 Qed.
 
 
-Lemma mlarge_omega k : mlarge T1.omega (interval (S k) (2 * (S k))%nat).
+Lemma mlarge_omega k : mlarge T1omega (interval (S k) (2 * (S k))%nat).
 Proof.
-  specialize (L_lim_ok T1.omega nf_omega refl_equal L_fin
+  specialize (L_lim_ok T1omega nf_omega refl_equal L_fin
                        (fun i => L_fin_ok (S i))).
   intros.
   inversion H; auto.
@@ -450,10 +450,10 @@ Proof.
 Qed.
 
 (* begin snippet LOmegaOk:: no-out *)
-Lemma L_omega_ok : L_spec T1.omega L_omega.
+Lemma L_omega_ok : L_spec T1omega L_omega.
 Proof.
   specialize
-    (L_lim_ok T1.omega nf_omega refl_equal L_fin
+    (L_lim_ok T1omega nf_omega refl_equal L_fin
               (fun i => L_fin_ok (S i))); intro H.
    eapply L_spec_compat with (1:=H); 
    intro ; unfold L_lim, L_fin, L_omega; abstract lia.
@@ -463,16 +463,16 @@ Qed.
 (* begin snippet pathToOmegaMult *)
 
 Lemma path_to_omega_mult (i k:nat) :
-  path_to (T1.omega * i)
+  path_to (T1omega * i)
           (interval (S k) (2 * (S k))%nat)
-          (T1.omega * (S i)). (* .no-out *)
+          (T1omega * (S i)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   destruct i.
   - simpl; apply mlarge_omega.
   -   path_decompose (S k).
       instantiate (1:=T1.cons one i (S k)). 
-      + simpl (T1.omega * S i). replace (i + 0)%nat with i.
+      + simpl (T1omega * S i). replace (i + 0)%nat with i.
         apply path_to_tail; auto with T1.
         *  assert (H := mlarge_FS k  (S k)). 
            replace (2 * S k)%nat with (S (k + S k))%nat by lia; auto.
@@ -488,7 +488,7 @@ Qed.
 (* begin snippet omegaMultMlarge0 *)
 
 Lemma omega_mult_mlarge_0 i  : forall k,
-    mlarge  (T1.omega * (S i))
+    mlarge  (T1omega * (S i))
             (interval (S k)
                       (Nat.pred (iterate (fun p =>  S (2 * p)%nat)
                                          (S i)
@@ -500,7 +500,7 @@ Proof.
       replace (S (k + S (k + 0)))%nat with (2 * S k)%nat by abstract lia; 
       apply mlarge_omega.
   - intro k;  path_decompose (2 * (S k))%nat.
-    + instantiate (1:= T1.omega * S i).
+    + instantiate (1:= T1omega * S i).
       * specialize (IHi (2 * S k)%nat); rewrite iterate_rw; auto.
     +   apply path_to_omega_mult.
     + clear IHi; induction i.
@@ -533,7 +533,7 @@ Qed.
 (* begin snippet LOmegaMultOk *)
 
 Lemma L_omega_mult_ok (i: nat) :
-  L_spec (T1.omega * i) (L_omega_mult i). (* .no-out *)
+  L_spec (T1omega * i) (L_omega_mult i). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
  destruct i.
@@ -630,13 +630,13 @@ Qed.
 (* begin snippet LOmegaSquareOk *)
 
 Lemma L_omega_square_ok:
-  L_spec (T1.omega * T1.omega) L_omega_square. (* .no-out *)
+  L_spec (T1omega * T1omega) L_omega_square. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   right; [cbn; discriminate | ].
   intro k; rewrite L_omega_square_eqn1. 
   red; path_decompose (S k).
-  - instantiate (1 := T1.omega * S k).
+  - instantiate (1 := T1omega * S k).
     specialize (L_omega_mult_ok (S k)).
     inversion 1.
     apply (H1 (S k)).
@@ -1009,13 +1009,13 @@ Proof.
   unfold Gnaw, GnawS.  intros; apply gnaw_gnawS.
 Qed.
 
-Lemma GnawS_omega : forall i s, GnawS omega%e0 (i::s)  = GnawS (FinS i) s.
+Lemma GnawS_omega : forall i s, GnawS E0omega (i::s)  = GnawS (E0finS i) s.
 Proof.
   intros; cbn; now unfold GnawS.
 Qed.
 
 
-Lemma Gnaw_omega i s : Gnaw  omega%e0 (S i::s) = Gnaw (FinS i) s.
+Lemma Gnaw_omega i s : Gnaw  E0omega (S i::s) = Gnaw (E0finS i) s.
 Proof.
  reflexivity.
 Qed.
@@ -1101,7 +1101,7 @@ Qed.
 (** omega-large intervals *)
 
 Lemma gnaw_omega_n_SSn :
-  forall n, gnaw T1.omega (iota_from (S n) (S (S n))) = zero.
+  forall n, gnaw T1omega (iota_from (S n) (S (S n))) = zero.
 Proof. 
   intro n;  destruct n.  
   -  reflexivity. 
@@ -1110,7 +1110,7 @@ Qed.
 
 
 Lemma gnaw_omega_1 (n:nat) :
-  gnaw T1.omega (interval (S n) (S n + n)%nat) = 1.
+  gnaw T1omega (interval (S n) (S n + n)%nat) = 1.
 Proof.
   unfold interval.
   replace (S (S n + n) - S n)%nat with (S n).
@@ -1123,17 +1123,17 @@ Proof.
 Qed.
 
 
-Example omega_ex1 : gnaw T1.omega (interval 7 13) = 1.
+Example omega_ex1 : gnaw T1omega (interval 7 13) = 1.
 reflexivity.
 Qed.
 
-Example omega_ex2 : gnaw T1.omega (interval  1000 1999) = 1.
+Example omega_ex2 : gnaw T1omega (interval  1000 1999) = 1.
 change 1999 with (1000 + 999)%nat; apply gnaw_omega_1.
 Qed.
 
 
 Lemma large_omega_1 : forall s n,  ~ In 0 (n::s) -> 
-                                     gnaw T1.omega (n::s) = 0 ->
+                                     gnaw T1omega (n::s) = 0 ->
                                      (n <= List.length s)%nat.
 Proof. 
   intros s n; destruct n.
@@ -1151,7 +1151,7 @@ Qed.
 
 Lemma large_omega_2 : forall s n,   ~In 0 (n::s) -> 
                                     (n <=  List.length s)%nat ->
-                                    gnaw T1.omega (n::s)  = zero.
+                                    gnaw T1omega (n::s)  = zero.
 Proof. 
   intros;  cbn;  destruct n.
   destruct H; now left.
@@ -1160,7 +1160,7 @@ Proof.
 Qed.
 
 Lemma large_omega_iff : forall s n,  ~ In 0 (n::s) ->
-                                     large T1.omega (n::s) <->
+                                     large T1omega (n::s) <->
                                      (n <= List.length s)%nat.
                                      
 Proof.

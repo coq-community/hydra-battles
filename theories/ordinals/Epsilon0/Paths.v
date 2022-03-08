@@ -86,16 +86,16 @@ Ltac path_tac := (* ugly ! *)
                          
                  end).
 (* begin snippet exPathTac:: no-out *)
-Example ex_path1: path_to T1.omega (2::2::2::nil) (T1.omega * 2).
+Example ex_path1: path_to T1omega (2::2::2::nil) (T1omega * 2).
 Proof. path_tac. Qed.
 
-Example ex_path2: path_to T1.omega (3::4::5::6::nil) (T1.omega * 2).
+Example ex_path2: path_to T1omega (3::4::5::6::nil) (T1omega * 2).
 Proof. path_tac. Qed.
 
-Example ex_path3: path_to zero (interval 3 14) (T1.omega * 2).
+Example ex_path3: path_to zero (interval 3 14) (T1omega * 2).
 Proof. cbn;path_tac. Qed.
 
-Example ex_path4: path_to zero (List.repeat 3 8) (T1.omega * 2).
+Example ex_path4: path_to zero (List.repeat 3 8) (T1omega * 2).
 Proof. cbn; path_tac. Qed.
 (* end snippet exPathTac *)
 
@@ -2964,7 +2964,7 @@ Qed.
 
 Theorem KS_thm_2_4_E0 :
   forall lambda, 
-    Limitb lambda  ->
+    E0limit lambda  ->
     forall i j, (i < j)%nat ->
                 Canon_plus 1 (Canon lambda (S j))
                        (Canon lambda (S i)).
@@ -2973,7 +2973,7 @@ Proof.
 Qed.
 
 Corollary Cor12_E0 : forall alpha beta i n, 
-    Lt beta alpha -> (i <= n)%nat ->
+    E0lt beta alpha -> (i <= n)%nat ->
     Canon_plus (S i) alpha beta ->
     Canon_plus (S n) alpha beta.
 Proof.
@@ -2991,7 +2991,7 @@ destruct alpha.
   - auto with T1.
 Qed.
 
-Lemma Canon_mono1 alpha i j : Limitb alpha -> (i< j)% nat ->
+Lemma Canon_mono1 alpha i j : E0limit  alpha -> (i< j)% nat ->
                               (Canon alpha i o< Canon alpha j)%e0.
 
   destruct alpha.
@@ -3021,8 +3021,8 @@ Qed.
 
 
 Lemma CanonS_plus_1 alpha beta k i :
-  beta  <> Zero -> alpha <> Zero  ->
-  (beta o< phi0 alpha)%e0 ->
+  beta  <> E0zero -> alpha <> E0zero  ->
+  (beta o< E0phi0 alpha)%e0 ->
   (CanonS (Omega_term alpha i + beta)%e0 k =
    (Omega_term alpha  i + (CanonS beta k))%e0).
 Proof.
@@ -3058,7 +3058,7 @@ Proof.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
-  CanonS (phi0 (Succ gamma)) i = Omega_term gamma i.
+  CanonS (E0phi0 (E0succ gamma)) i = Omega_term gamma i.
 Proof.
   apply E0_eq_intro;  unfold CanonS, canonS.
   rewrite cnf_rw, cnf_Omega_term, cnf_phi0, cnf_Succ.
@@ -3070,7 +3070,7 @@ Lemma Lemma2_6_1_E0 (alpha beta: E0) :
     (beta o< alpha)%e0  ->
     {n:nat | Canon_plus (S n) alpha beta}.
 Proof.
-  destruct alpha, beta; unfold Lt; simpl. simpl.
+  destruct alpha, beta; unfold E0lt; simpl. simpl.
  intro H; eapply Lemma2_6_1; eauto.
 Defined.
 
@@ -3078,7 +3078,7 @@ Defined.
 (** Lemmas used by [F_alpha] *)
 
 Lemma Canon_plus_first_step: forall i alpha beta, 
-    Canon_plus (S i) (Succ alpha) beta ->
+    Canon_plus (S i) (E0succ alpha) beta ->
     alpha = beta \/ Canon_plus (S i) alpha beta.
 Proof.
   destruct alpha, beta.
@@ -3092,7 +3092,7 @@ Proof.
 Qed.
 
 Lemma Canon_plus_first_step_lim:
-  forall i alpha beta, Limitb alpha ->
+  forall i alpha beta, E0limit alpha ->
                        Canon_plus (S i) alpha beta  ->
                        beta = CanonS alpha i \/
                        Canon_plus (S i) (CanonS alpha i) beta.

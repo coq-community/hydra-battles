@@ -24,7 +24,7 @@ Section S1.
 
   Remark F_3_eqn : forall n, F_ 3  n = iterate (F_ 2) (S n) n.
   Proof.
-    intro n; ochange (Fin 3)  (Succ (Fin 2)); now rewrite F_succ_eqn.
+    intro n; ochange (E0fin 3)  (E0succ (E0fin 2)); now rewrite F_succ_eqn.
   Qed.
 
   (** ** Base case *)
@@ -37,7 +37,7 @@ Section S1.
     -   apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
         apply iterate_mono; auto.
         + apply F_alpha_mono.
-        + intro n0; apply (F_alpha_gt (Fin 2) n0).
+        + intro n0; apply (F_alpha_gt (E0fin 2) n0).
     -  specialize (LF2_0 (iterate (F_ 2) (S n) (S n))); intro H0.
        remember (iterate (F_ 2) (S n) (S n)) as N.
        transitivity ((fun i : nat => (exp2 i * i)%nat) N).
@@ -74,48 +74,48 @@ Section S1.
       Hypothesis Hn : 2 <= n.
 
       Remark R3 :
-        F_ (Succ alpha) (S n)= F_ alpha (iterate (F_ alpha) (S n) (S n)).
+        F_ (E0succ alpha) (S n)= F_ alpha (iterate (F_ alpha) (S n) (S n)).
       Proof.
         rewrite F_succ_eqn; now rewrite iterate_S_eqn.
       Qed.
 
-      Remark R3' : F_ (Succ alpha) n = iterate (F_ alpha) (S n) n.
+      Remark R3' : F_ (E0succ alpha) n = iterate (F_ alpha) (S n) n.
       Proof.
         now rewrite F_succ_eqn.
       Qed.  
 
-      Remark R4 : F_ (Succ alpha) n < iterate (F_ alpha) (S n) (S n).
+      Remark R4 : F_ (E0succ alpha) n < iterate (F_ alpha) (S n) (S n).
       Proof.
         rewrite F_succ_eqn; apply iterate_mono; auto with arith.
         - apply F_alpha_mono.
         - intro; apply F_alpha_gt.
       Qed.
 
-      Lemma L2 : exp2 (F_ (Succ alpha)  n) <= (F_ (Succ alpha) (S n)).
+      Lemma L2 : exp2 (F_ (E0succ alpha)  n) <= (F_ (E0succ alpha) (S n)).
       Proof.
-        assert (H: 2 <= (F_ (Succ alpha) n)).
+        assert (H: 2 <= (F_ (E0succ alpha) n)).
         {
           apply Lt.le_lt_trans with n.
           - lia.        
           - apply F_alpha_gt.
         }
-        assert (H0: F_ (Succ alpha) n < iterate (F_ alpha) (S n) (S n)).
+        assert (H0: F_ (E0succ alpha) n < iterate (F_ alpha) (S n) (S n)).
         {
           rewrite F_succ_eqn;  apply iterate_mono; auto.
           - apply F_alpha_mono.
           - intro; apply F_alpha_gt.
         }
-        generalize(R1 (F_ (Succ alpha) n) H
+        generalize(R1 (F_ (E0succ alpha) n) H
                       (iterate (F_ alpha) (S n) (S n)) H0); intro H1;
           rewrite <- R3 in H1.
-        transitivity ( exp2 (F_ alpha (F_ (Succ alpha) n))); [| auto].
+        transitivity ( exp2 (F_ alpha (F_ (E0succ alpha) n))); [| auto].
         -  apply PeanoNat.Nat.lt_le_incl; apply exp2_mono.
            apply F_alpha_gt.
       Qed.
       
     End S2.
 
-    Lemma L3 : P (Succ alpha).
+    Lemma L3 : P (E0succ alpha).
     Proof.
       unfold P; intros;  now apply L2.
     Qed.
@@ -126,9 +126,9 @@ Section S1.
   
   Section Limit.
     Variable lambda : E0.
-    Hypothesis Hlambda : Limitb lambda.
+    Hypothesis Hlambda : E0limit lambda.
     Hypothesis IHlambda :
-      forall alpha, Fin 3 o<= alpha -> alpha o< lambda -> P alpha.
+      forall alpha, E0fin 3 o<= alpha -> alpha o< lambda -> P alpha.
 
 
     Remark R5: forall beta, 3 o<= beta -> beta o< lambda ->
@@ -151,7 +151,7 @@ Section S1.
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
           limitb beta ->
-          forall n, leq lt  (fin (S n)) (Canon.canon beta (S n)).
+          forall n, leq lt  (\F (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.
         -  discriminate.
@@ -192,13 +192,13 @@ Section S1.
       Qed. 
 
 
-      Lemma L04' : forall beta, Limitb beta ->
+      Lemma L04' : forall beta, E0limit beta ->
                                 forall n, (S n) o<= 
                                           (Canon.Canon beta (S n)).
       Proof.
-        destruct beta; unfold Limitb.
+        destruct beta; unfold E0limit.
         cbn;  intros; rewrite Le_iff; split. 
-        - apply  (@E0.cnf_ok (FinS n0)).
+        - apply  (@E0.cnf_ok (E0finS n0)).
         - cbn; split.
           + apply L04; auto.
           + cbn; apply Canon.nf_canon; auto.
@@ -239,8 +239,8 @@ Section S1.
 
   Lemma L alpha :  3 o<= alpha -> P alpha.
   Proof.
-      pattern alpha; eapply well_founded_induction with Lt.
-    - apply Lt_wf.
+      pattern alpha; eapply well_founded_induction with E0lt.
+    - apply E0lt_wf.
     - clear alpha; intro alpha.  intros IHalpha Halpha.
       destruct (Zero_Limit_Succ_dec  alpha) as [[H1 | H1] | H1].
       +  subst; rewrite Le_iff in Halpha.
@@ -249,18 +249,18 @@ Section S1.
          rewrite le_lt_eq in H2; destruct H2; try discriminate.
       + red; intros;  eapply L4; auto.
       + destruct H1; subst alpha.
-        assert (H: 3 o<= x \/ x = Fin 2).
+        assert (H: 3 o<= x \/ x = E0fin 2).
         { destruct (le_lt_eq_dec Halpha).
-          - left; destruct (E0_Lt_Succ_inv l).
+          - left; destruct (E0_Lt_Succ_inv e).
             + apply Lt_Le_incl; auto.
             + subst; apply Le_refl.
-          - right;  revert e; ochange (Fin 3) (Succ 2).
+          - right;  revert e; ochange (E0fin 3) (E0succ 2).
             intro; symmetry ; now apply Succ_inj. 
         }
         destruct H.
         *   apply L3; apply IHalpha; auto.
             -- apply Lt_Succ; auto. 
-        * subst x; ochange (Succ 2) (Fin 3); apply P_3.
+        * subst x; ochange (E0succ 2) (E0fin 3); apply P_3.
   Qed.
 
 End S1.
@@ -274,7 +274,7 @@ Proof. apply L. Qed.
 
 
 Goal  F_ 2 3 = 63.
-  ochange (Fin 2) (Succ (Fin 1)).
+  ochange (E0fin 2) (E0succ (E0fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -283,7 +283,7 @@ Goal  F_ 2 3 = 63.
   
 Goal  F_ 2 2 = 23.
 
-  ochange (Fin 2) (Succ (Fin 1)).
+  ochange (E0fin 2) (E0succ (E0fin 1)).
   rewrite F_succ_eqn.
   cbn.
   repeat rewrite LF1.
@@ -291,15 +291,14 @@ Goal  F_ 2 2 = 23.
 Qed.
 
 Goal  F_ 3 1 = 2047.
-
-ochange (Fin 3)   (Succ (Succ (Fin 1))).
- repeat rewrite F_succ_eqn.
- cbn.
- repeat rewrite F_succ_eqn. cbn.
- repeat rewrite LF1.
- rewrite iterate_S_eqn. cbn.
- repeat rewrite LF1.
- compute.
- reflexivity.
+  ochange (E0fin 3) (E0succ (E0succ (E0fin 1))).
+  repeat rewrite F_succ_eqn.
+  cbn.
+  repeat rewrite F_succ_eqn. cbn.
+  repeat rewrite LF1.
+  rewrite iterate_S_eqn. cbn.
+  repeat rewrite LF1.
+  compute.
+  reflexivity.
 Qed.
 

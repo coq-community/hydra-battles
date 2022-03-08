@@ -1,13 +1,16 @@
+From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg.
-From mathcomp Require Import all_ssreflect zify.
+
 From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 
 Require Import T1Bridge. 
 Set Implicit Arguments.
 Unset Strict Implicit.
+
+
 Open Scope cantor_scope.
 
 (* begin snippet oplusDef *)

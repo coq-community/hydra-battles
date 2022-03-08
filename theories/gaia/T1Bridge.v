@@ -2,10 +2,11 @@
  *)
 
 (* begin snippet Requirements:: no-out  *)
+From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0.
-From mathcomp Require Import all_ssreflect zify.
+
 From gaia Require Export ssete9.
 Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
@@ -30,13 +31,13 @@ Unset Printing Implicit Defensive.
 #[global] Notation hzero := Epsilon0.T1.zero.
 #[global] Notation hone := Epsilon0.T1.one.
 #[global] Notation hcons := Epsilon0.T1.cons.
-#[global] Notation hfin := Epsilon0.T1.fin.
+#[global] Notation hfin := Epsilon0.T1.T1nat.
 
-#[global] Notation homega := Epsilon0.T1.omega.
+#[global] Notation homega := Epsilon0.T1.T1omega.
 #[global] Notation hsucc := Epsilon0.T1.succ.
 #[global] Notation hphi0 alpha := (Epsilon0.T1.phi0 alpha).
-#[global] Notation hplus := Epsilon0.T1.plus.
-#[global] Notation hmult := Epsilon0.T1.mult.
+#[global] Notation hplus := Epsilon0.T1.T1add.
+#[global] Notation hmult := Epsilon0.T1.T1mul.
 
 #[global] Notation hlt := Epsilon0.T1.lt.
 #[global] Notation hle := (MoreOrders.leq hlt). 
@@ -363,7 +364,7 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn4 a n b n' b' :
     a <> Epsilon0.T1.zero ->
-    Epsilon0.T1.mult (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
+    Epsilon0.T1.T1mul (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
       hcons a (n * n' + n + n') b.
   Proof. 
     cbn.  case: a => [//|alpha n0 beta _ ]; f_equal; nia. 
@@ -381,7 +382,7 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn5 a n b a' n' b' :
     a' <>  hzero ->
-    Epsilon0.T1.mult (hcons a n b)  (hcons a' n' b') =
+    Epsilon0.T1.T1mul (hcons a n b)  (hcons a' n' b') =
       hcons (hplus a  a') n' (hmult (hcons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
@@ -472,7 +473,6 @@ Proof.
   -  case => H H0 H1; repeat  split; red; rewrite ?nf_ref ?lt_ref => // ;
             by apply lt_ref. 
 Qed. 
-
 
 Lemma LE_ref : refinesRel hLE gLE.
 Proof. 
@@ -565,6 +565,12 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
+#[global] Notation hE0lt := E0.E0lt.
+#[global] Notation hE0le := E0.E0le.
+#[global] Notation hE0zero := E0.E0zero.
+#[global] Notation hE0omega := E0.E0omega.
+#[global] Notation hE0phi0 := E0.E0phi0.
+
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 
@@ -678,7 +684,7 @@ Lemma gE0le_iff alpha beta : E0le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
 Proof. 
   split. 
   - rewrite /E0le;  destruct alpha, beta. 
-    rewrite /Le /hLE => /=; repeat split.
+    rewrite /hE0le /hLE => /=; repeat split.
     rewrite T1le_eqVlt => Hle.
     have Hor : (cnf0 =cnf1 \/ cnf0 < cnf1).
     { apply Bool.orb_prop in Hle;  destruct Hle as [? | ?].
@@ -692,7 +698,7 @@ Proof.
     * left; apply gE0lt_iff; rewrite /E0lt => //.
   - rewrite /E0le; destruct alpha, beta; cbn => Hle. 
     destruct (le_lt_eq_dec Hle) as [l | e].
-    + rewrite /Lt in l; cbn in l; rewrite -T1lt_iff in l. 
+    + rewrite /hE0lt in l; cbn in l. rewrite -T1lt_iff in l. 
      * by apply T1ltW.
      * by apply /eqP. 
      * by apply /eqP. 
@@ -720,7 +726,7 @@ case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
 by rewrite g2h_h2gK. 
 Qed.
 
-Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= Succ (E0_g2h alpha). 
+Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= E0.E0succ (E0_g2h alpha). 
 rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
 by rewrite g2h_succ. 
 Qed. 
@@ -735,12 +741,12 @@ From Coq Require Import Relations Basics
 Lemma gE0lt_wf : well_founded E0lt.
 Proof.
   move => x; apply Acc_incl
-            with (fun x y =>  E0.Lt (E0_g2h x) (E0_g2h y)).
+            with (fun x y =>  hE0lt (E0_g2h x) (E0_g2h y)).
   (* ... *)
   (* end snippet gE0LtWf *)
   - move => a b ; rewrite /E0lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
-    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.Lt => /=. 
+    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=. 
     rewrite -(h2g_g2hK cnf0) in Hlt i0;
       rewrite -(h2g_g2hK cnf1) in Hlt i1;
       rewrite -decide_hlt_rw in Hlt;
@@ -748,7 +754,7 @@ Proof.
     + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
     + red in Hlt; rewrite bool_decide_eq_true in Hlt => //.
     + rewrite /bool_decide -!nf_ref in  i1;  move: i1 => /eqP //.
-  -  apply Acc_inverse_image, E0.Lt_wf. 
+  -  apply Acc_inverse_image, E0lt_wf. 
 Qed. 
 
 

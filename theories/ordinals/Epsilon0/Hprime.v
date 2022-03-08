@@ -28,15 +28,15 @@ From Equations Require Import Equations.
 (** ** A variant of the Hardy Wainer hierarchy *)
 
 
-#[ global ] Instance Olt : WellFounded Lt := Lt_wf.
+#[ global ] Instance Olt : WellFounded E0lt := E0lt_wf.
 
 (* begin snippet HprimeDef *)
 
-Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha Lt :=
-  H'_ alpha  i with E0_eq_dec alpha Zero :=
+Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
+  H'_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
-          with Utils.dec (Limitb alpha) :=
+          with Utils.dec (E0limit alpha) :=
           { | left _limit =>  H'_ (Canon alpha (S i))  i ;
             | right _successor =>  H'_ (Pred alpha) (S i)}}.
 (* end snippet HprimeDef *)
@@ -48,7 +48,7 @@ Solve All Obligations with auto with E0.
 (** Paraphrases of the equations for H'_ *)
 
 (* begin snippet paraphrasesa:: no-out  *)
-Lemma H'_eq1 : forall i, H'_ Zero i = i.
+Lemma H'_eq1 : forall i, H'_ E0zero i = i.
 Proof.
   intro i; now rewrite H'__equation_1. 
 Qed.
@@ -57,37 +57,37 @@ Qed.
 
 (* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2 alpha i :
-  Succb alpha ->
+  E0is_succ alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
 (* end snippet paraphrasesb *)
 
 Proof.
   intros;rewrite H'__equation_1.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
-  - cbn;  destruct (Utils.dec (Limitb alpha)) .
+  - cbn;  destruct (Utils.dec (E0limit alpha)) .
     destruct (Succ_not_Limitb _ H); auto.
     + now cbn.
 Qed.
 
 (* begin snippet paraphrasesc:: no-out  *)
 Lemma H'_eq3 alpha i :
-  Limitb alpha ->
+  E0limit alpha ->
   H'_ alpha i =  H'_ (Canon alpha (S i)) i.
 (* end snippet paraphrasesc *)
 
 Proof.
   intros;rewrite H'__equation_1.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
  - subst; discriminate.
- - cbn;  destruct (Utils.dec (Limitb alpha)) .
+ - cbn;  destruct (Utils.dec (E0limit alpha)) .
   + now cbn.    
   + red in H; rewrite e in H; discriminate.
 Qed.
 
 (* begin snippet paraphrasesd:: no-out  *)
 Lemma H'_succ_eqn  alpha i :
-  H'_ (Succ alpha) i = H'_ alpha (S i).
+  H'_ (E0succ alpha) i = H'_ alpha (S i).
 (* end snippet paraphrasesd  *)
 
 Proof.
@@ -98,7 +98,7 @@ Qed.
 
 Hint Rewrite H'_eq1  H'_succ_eqn : H'_rw.
 
-Ltac lim_rw alpha := (assert (Limitb alpha) by auto with E0);
+Ltac lim_rw alpha := (assert (E0limit  alpha) by auto with E0);
                      rewrite (H'_eq3 alpha); auto with E0.
 
 
@@ -108,10 +108,10 @@ Ltac lim_rw alpha := (assert (Limitb alpha) by auto with E0);
 (* begin snippet HprimeFin *)
 
 (*| .. coq:: no-out |*)
-Lemma H'_Fin : forall i k : nat,  H'_  (Fin i) k = (i+k)%nat.
+Lemma H'_Fin : forall i k : nat,  H'_  (E0fin i) k = (i+k)%nat.
 Proof with eauto with E0.
   induction i.
-  - intros; simpl Fin; simpl; autorewrite with H'_rw E0_rw ... 
+  - intros; simpl E0fin; simpl; autorewrite with H'_rw E0_rw ... 
   - intros ;simpl; autorewrite with H'_rw E0_rw ... 
     rewrite IHi; abstract lia. 
 Qed.
@@ -121,10 +121,10 @@ Qed.
 (* begin snippet HprimeOmega *)
 
 (*| .. coq:: no-out |*)
-Lemma H'_omega : forall k, H'_ omega k = S (2 * k)%nat.
+Lemma H'_omega : forall k, H'_ E0omega k = S (2 * k)%nat.
 Proof with auto with E0.
   intro k; rewrite H'_eq3 ...
-  - replace (Canon omega (S k)) with (Fin (S k)).
+  - replace (Canon E0omega (S k)) with (E0fin (S k)).
     + rewrite H'_Fin; abstract lia.
     + now autorewrite with E0_rw.
 Qed.
@@ -144,12 +144,12 @@ Proof.
     + now simpl.
     + rewrite Plus_rw; simpl; auto with T1.
       now rewrite plus_zero_r.
-  - intro k; ochange (alpha + (S i))%e0 (Succ (alpha + i))%e0.
+  - intro k; ochange (alpha + (S i))%e0 (E0succ (alpha + i))%e0.
     + rewrite H'_succ_eqn, IHi; f_equal; abstract lia.
     + repeat rewrite Plus_rw; simpl.
       destruct i; simpl.
       *  rewrite plus_zero_r;  now rewrite succ_is_plus_one.
-      *   simpl; replace (FS i) with (fin (S i)).
+      *   simpl; replace (FS i) with (\F (S i)).
           -- rewrite succ_of_plus_finite.
              ++ f_equal.
              ++ apply cnf_ok.
@@ -159,47 +159,47 @@ Qed.
 
 (* begin snippet HprimeExamplesa:: no-out  *)
 Lemma H'_omega_double k :
-  H'_ (omega * 2)%e0 k =  (4 * k + 3)%nat.
+  H'_ (E0omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
  rewrite H'_eq3; simpl Canon.
- - ochange  (CanonS  (omega * FinS 1)%e0 k)  (omega + (S k))%e0.
+ - ochange  (CanonS  (E0omega * E0finS 1)%e0 k)  (E0omega + (S k))%e0.
   + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
   - now compute.
 Qed.
 (* end snippet HprimeExamplesa:: no-out  *)
 
 (* begin snippet HprimeExamplesb:: no-out  *)
-Lemma H'_omega_3 k : H'_ (omega * 3)%e0 k = (8 * k + 7)%nat.
+Lemma H'_omega_3 k : H'_ (E0omega * 3)%e0 k = (8 * k + 7)%nat.
 (* end snippet HprimeExamplesb *)
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
-  ochange (Canon (omega * 3)%e0 (S k)) (omega * 2 + FinS k)%e0.
+  ochange (Canon (E0omega * 3)%e0 (S k)) (E0omega * 2 + E0finS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_double; abstract lia.  
 Qed.
 
 (* begin snippet HprimeExamplesc:: no-out  *)
-Lemma H'_omega_4 k : H'_ (omega * 4)%e0 k = (16 * k + 15)%nat.
+Lemma H'_omega_4 k : H'_ (E0omega * 4)%e0 k = (16 * k + 15)%nat.
 (* end snippet HprimeExamplesc *)
 
 Proof.
   rewrite H'_eq3 ; [| reflexivity].
-  ochange (Canon  (omega * 4)%e0 (S k)) (omega * 3 + FinS k)%e0.
+  ochange (Canon  (E0omega * 4)%e0 (S k)) (E0omega * 3 + E0finS k)%e0.
   rewrite FinS_eq,  H'_Plus_Fin, H'_omega_3; abstract lia.
 Qed.
 
 (* begin snippet HprimeExamplesd:: no-out  *)
 Lemma H'_omega_i (i:nat)  : forall k,
-    H'_ (omega * i)%e0 k =
+    H'_ (E0omega * i)%e0 k =
     (exp2 i * k + Nat.pred (exp2 i))%nat. 
 Proof.
   induction i.
   (* ... *)
   (* end snippet HprimeExamplesd  *)
   
-  - ochange (omega * 0)%e0 Zero; simpl.
+  - ochange (E0omega * 0)%e0 E0zero; simpl.
     intro k; rewrite H'_eq1; abstract lia.
   - intro k; rewrite H'_eq3.
-    +  ochange (Canon (omega * S i)%e0  (S k)) (omega * i + (S k))%e0.
+    +  ochange (Canon (E0omega * S i)%e0  (S k)) (E0omega * i + (S k))%e0.
        rewrite H'_Plus_Fin, IHi.
         simpl (exp2 (S i)); abstract lia.
         simpl Canon;  destruct i;reflexivity.
@@ -211,17 +211,17 @@ Qed.
     Phi0 function *)
 
 
-Remark Phi0_def : phi0 2 = ltac:(mko (T1.omega * T1.omega)%t1).
+Remark Phi0_def : E0phi0 2 = ltac:(mko (T1omega * T1omega)%t1).
 Proof. apply E0_eq_intro. reflexivity. Qed.
 
 (* begin snippet HprimeOmegaSqr *)
 
 Lemma H'_omega_sqr : forall k,
-    H'_ (phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat. (* .no-out *)
+    H'_ (E0phi0  2)%e0 k = (exp2 (S k ) * (S k) - 1)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro k; rewrite H'_eq3; auto with E0.
-  - ochange (Canon (phi0 2) (S k)) (E0.omega * (S k))%e0.
+  - ochange (Canon (E0phi0 2) (S k)) (E0omega * (S k))%e0.
     +  rewrite H'_omega_i; simpl (exp2 (S k)).
        *  rewrite Nat.add_pred_r.
           -- abstract lia. 
@@ -237,13 +237,13 @@ Section H'_cons.
 Variable alpha : E0.
 Variable i : nat.
  
-Lemma H'_cons : forall beta,  (beta o< phi0 alpha)%e0 ->
+Lemma H'_cons : forall beta,  (beta o< E0phi0 alpha)%e0 ->
                              forall k,  H'_ (Cons alpha i beta) k=
                                         H'_ (Omega_term alpha i) (H'_ beta k).
 Proof with auto with E0.
   unfold Cons; intro beta; pattern beta; 
-  apply well_founded_induction with Lt; clear beta.
-  - exact E0.Lt_wf.
+  apply well_founded_induction with E0lt; clear beta.
+  - exact E0lt_wf.
   -  intros beta Hbeta H;  destruct (Zero_Limit_Succ_dec beta).
      destruct s.
      + subst; intro k. autorewrite with H'_rw E0_rw using trivial. 
@@ -251,22 +251,22 @@ Proof with auto with E0.
                           (Omega_term alpha  i + (CanonS beta k))%e0).
        {  rewrite CanonS_plus_1; auto with E0.           
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
-          unfold Limitb in e; rewrite H in e; discriminate e.
+          unfold E0limit in e; rewrite H in e; discriminate e.
        }
        rewrite H'_eq3, H0.
        specialize (Hbeta (CanonS beta k)).
        assert (CanonS beta k o< beta)%e0 by auto with E0.
-       assert (CanonS beta k o< phi0 alpha)%e0 by (eapply Lt_trans; eauto).
+       assert (CanonS beta k o< E0phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H'_eq3 beta).
        apply Limitb_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
          specialize (Hbeta gamma).
-         assert (gamma o< Succ gamma)%e0 by (apply Lt_Succ; auto).
-         assert (gamma o< phi0 alpha)%e0 .
-         { apply Lt_trans with (Succ gamma); auto. }
+         assert (gamma o< E0succ gamma)%e0 by (apply Lt_Succ; auto).
+         assert (gamma o< E0phi0 alpha)%e0 .
+         { apply Lt_trans with (E0succ gamma); auto. }
          rewrite (H'_succ_eqn gamma);
-           replace (Omega_term alpha i + Succ gamma)%e0 with
-               (Succ (Omega_term alpha i + gamma)%e0).
+           replace (Omega_term alpha i + E0succ gamma)%e0 with
+               (E0succ (Omega_term alpha i + gamma)%e0).
          rewrite H'_succ_eqn, Hbeta;  auto.
          apply E0_eq_intro; rewrite Succ_of_cons; auto.
          intro; subst; red in H; simpl in H.
@@ -276,17 +276,17 @@ Qed.
 
 (* begin snippet HprimeOmegaTerm1 *)
 
-Lemma H'_Omega_term_1 : alpha <> Zero -> forall  k,  
+Lemma H'_Omega_term_1 : alpha <> E0zero -> forall  k,  
     H'_ (Omega_term alpha (S i)) k =
-    H'_ (Omega_term alpha i) (H'_ (phi0 alpha) k). (* .no-out *)
+    H'_ (Omega_term alpha i) (H'_ (E0phi0 alpha) k). (* .no-out *)
 (* end snippet HprimeOmegaTerm1 *)
 
 Proof with auto with E0.
   intros  H k;  rewrite H'_eq3 ...
   - ochange (CanonS (Omega_term alpha (S i)) k)
-          (Cons alpha i (CanonS  (phi0 alpha) k)).
+          (Cons alpha i (CanonS  (E0phi0 alpha) k)).
   +  rewrite H'_cons ...
-     *  f_equal; rewrite (H'_eq3 (phi0 alpha)) ...
+     *  f_equal; rewrite (H'_eq3 (E0phi0 alpha)) ...
   +  rewrite cnf_Cons ...
            * unfold CanonS.  repeat rewrite cnf_rw.
              unfold canonS.
@@ -301,8 +301,8 @@ End H'_cons.
 
 
 Lemma H'_Omega_term_0 (alpha : E0)  :
-alpha <> Zero ->  forall i k, 
-  H'_ (Omega_term alpha i) k = iterate  (H'_ (phi0 alpha)) (S i) k.
+alpha <> E0zero ->  forall i k, 
+  H'_ (Omega_term alpha i) k = iterate  (H'_ (E0phi0 alpha)) (S i) k.
 Proof.
   induction i.
   - reflexivity.                                       
@@ -310,7 +310,7 @@ Proof.
 Qed.
 
 Lemma H'_Fin_iterate : forall i k,
-    H'_ (Fin (S i)) k = iterate (H'_ (Fin 1)) (S i) k.
+    H'_ (E0fin (S i)) k = iterate (H'_ (E0fin 1)) (S i) k.
 Proof.
   intros; repeat rewrite H'_Fin.
   replace (iterate (H'_ 1) (S i) k) with (iterate S (S i) k).
@@ -328,14 +328,14 @@ Qed.
 Lemma H'_Omega_term (alpha : E0)  :
   forall i k, 
     H'_ (Omega_term alpha i) k =
-    iterate  (H'_ (phi0 alpha)) (S i) k. 
+    iterate  (H'_ (E0phi0 alpha)) (S i) k. 
 (* end snippet HprimeOmegaTerm *)
 
 Proof.
-  destruct (E0_eq_dec alpha Zero).
+  destruct (E0_eq_dec alpha E0zero).
   - subst.
-    intros; replace (Omega_term Zero i) with (Fin (S i)).
-    replace (phi0 Zero) with (Fin 1).
+    intros; replace (Omega_term E0zero i) with (E0fin (S i)).
+    replace (E0phi0 E0zero) with (E0fin 1).
     now rewrite H'_Fin_iterate.
     compute. now apply E0_eq_intro.
     compute. now apply E0_eq_intro.
@@ -347,19 +347,19 @@ Qed.
 Definition H'_succ_fun f k := iterate f (S k) k.
 (* end snippet HprimeSuccFun *)
 
-Lemma H'_Phi0_succ_1 alpha  : alpha <> Zero -> forall k,
-      H'_ (phi0 (Succ alpha)) k = H'_succ_fun (H'_ (phi0 alpha)) k. 
+Lemma H'_Phi0_succ_1 alpha  : alpha <> E0zero -> forall k,
+      H'_ (E0phi0 (E0succ alpha)) k = H'_succ_fun (H'_ (E0phi0 alpha)) k. 
 Proof with auto with E0.
   intros; unfold H'_succ_fun ;
     rewrite H'_eq3, CanonS_Phi0_Succ_eqn, H'_Omega_term ...
 Qed.
 
 Lemma H'_Phi0_succ_0 : forall k,
-    H'_ (phi0 (Succ Zero)) k = H'_succ_fun (H'_ (phi0 Zero)) k.
+    H'_ (E0phi0 (E0succ E0zero)) k = H'_succ_fun (H'_ (E0phi0 E0zero)) k.
 Proof with auto with E0.
   intros k.    
-  replace (phi0 Zero) with (Fin 1).
-  replace (phi0 (Succ Zero)) with omega.
+  replace (E0phi0 E0zero) with (E0fin 1).
+  replace (E0phi0 (E0succ E0zero)) with E0omega.
   rewrite H'_omega.
   unfold H'_succ_fun.
   transitivity (iterate S (S k) k).
@@ -379,9 +379,9 @@ Proof with auto with E0.
 Qed.
 
 Lemma H'_Phi0_succ alpha  : forall k,
-    H'_ (phi0 (Succ alpha)) k = H'_succ_fun (H'_ (phi0 alpha)) k.
+    H'_ (E0phi0 (E0succ alpha)) k = H'_succ_fun (H'_ (E0phi0 alpha)) k.
 Proof.
-  destruct (E0_eq_dec alpha Zero).  
+  destruct (E0_eq_dec alpha E0zero).  
   - subst; apply H'_Phi0_succ_0.
   - now apply H'_Phi0_succ_1.
 Qed.
@@ -389,11 +389,11 @@ Qed.
 (* begin snippet HprimePhi0SI:: no-out *)
 
 Lemma H'_Phi0_Si : forall i k,
-    H'_ (phi0 (S i)) k = iterate H'_succ_fun i (H'_ omega) k. 
+    H'_ (E0phi0 (S i)) k = iterate H'_succ_fun i (H'_ E0omega) k. 
 (* end snippet HprimePhi0SI *)
 Proof with auto with E0.
   induction i.
-  - simpl;  replace (phi0 (FinS 0)) with omega; auto;  orefl.   
+  - simpl;  replace (E0phi0 (E0finS 0)) with E0omega; auto;  orefl.   
   -  intro k;  rewrite <- FinS_eq, FinS_Succ_eq. (* lourd *)
      rewrite H'_Phi0_succ, iterate_S_eqn.
      apply iterate_ext; auto.
@@ -401,7 +401,7 @@ Qed.
 
 (* begin snippet HprimeOmegaCube:: no-out *)
 Lemma H'_omega_cube : forall k,
-    H'_ (phi0 3)%e0 k = iterate (H'_ (phi0 2)) (S k) k. 
+    H'_ (E0phi0 3)%e0 k = iterate (H'_ (E0phi0 2)) (S k) k. 
 (* end snippet HprimeOmegaCube *)
 Proof.
   intro k; rewrite <- FinS_eq, -> FinS_Succ_eq, H'_Phi0_succ; auto.
@@ -413,9 +413,9 @@ Section H'_omega_cube_3.
 
   Let f k :=   (exp2 (S k) * (S k) - 1)%nat.
 
-  Remark R0 k :  H'_ (phi0 3)%e0 k = iterate f (S k) k. 
+  Remark R0 k :  H'_ (E0phi0 3)%e0 k = iterate f (S k) k. 
    Proof.
-    ochange (phi0 3) (phi0 (Succ 2)); rewrite H'_Phi0_succ.
+    ochange (E0phi0 3) (E0phi0 (E0succ 2)); rewrite H'_Phi0_succ.
     unfold H'_succ_fun; apply iterate_ext.
     - intro x; now rewrite H'_omega_sqr.   
    Qed.
@@ -423,7 +423,7 @@ Section H'_omega_cube_3.
   (* end snippet HprimeOmegaCube3a *)
 
   (* begin snippet HprimeOmegaCube3b:: no-out *)
-  Fact F0 : H'_ (phi0 3) 3 = f (f (f (f 3))). 
+  Fact F0 : H'_ (E0phi0 3) 3 = f (f (f (f 3))). 
    Proof.  rewrite R0; reflexivity.   Qed.
      
  (* end snippet HprimeOmegaCube3b *)
@@ -448,13 +448,13 @@ Section H'_omega_cube_3.
   
   (* begin snippet  HprimeOmegaCube3d:: no-out *)
   
-  Fact F1 : H'_ (phi0 3) 3 = f (f N).
+  Fact F1 : H'_ (E0phi0 3) 3 = f (f N).
   Proof.
     rewrite F0; reflexivity. 
   Qed.
 
   Fact  F1_simpl :
-    H'_ (phi0 3) 3 =
+    H'_ (E0phi0 3) 3 =
     (exp2 (exp2 (S N) * S N) * (exp2 (S N) * S N) - 1)%nat.
   
  (* end snippet HprimeOmegaCube3d *)
@@ -469,7 +469,7 @@ Section H'_omega_cube_3.
       + discriminate.
   Qed.
   (* begin snippet  HprimeOmegaCube3de:: no-out *)
-  Fact F2 : H'_ (phi0 3 + 3) 0 = f (f N).
+  Fact F2 : H'_ (E0phi0 3 + 3) 0 = f (f N).
   (* end snippet  HprimeOmegaCube3de *)
   rewrite H'_Plus_Fin, Nat.add_0_r, F1; reflexivity. 
   Qed. 
@@ -489,7 +489,7 @@ Section H'_omega_cube_3.
   Qed.
 
   (* begin snippet HprimeOmegaCube3e:: no-out *)
-  Fact F3 : (exp2 (exp2 N) <= H'_ (phi0 3 + 3) 0).
+  Fact F3 : (exp2 (exp2 N) <= H'_ (E0phi0 3 + 3) 0).
   (* end snippet HprimeOmegaCube3e *)
   Proof. 
     rewrite F2; apply f_minoration. 
@@ -507,8 +507,8 @@ End H'_omega_cube_3.
 (* begin snippet HprimePhi0Omega *)
 
 Lemma H'_Phi0_omega :
-  forall k, H'_ (phi0 omega) k =
-            iterate H'_succ_fun  k (H'_ omega) k. (* .no-out *)
+  forall k, H'_ (E0phi0 E0omega) k =
+            iterate H'_succ_fun  k (H'_ E0omega) k. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with E0.
   intro k; rewrite H'_eq3, <- H'_Phi0_Si ...
@@ -520,7 +520,7 @@ Qed.
 (* begin snippet HprimePhi0OmegaClosed:: no-out *)
 
 Lemma H'_Phi0_omega_closed_formula k :
-  H'_ (phi0 omega) k =
+  H'_ (E0phi0 E0omega) k =
   iterate (fun (f: nat -> nat) (l : nat) =>
              iterate f (S l) l)
           k
@@ -534,7 +534,7 @@ Proof.
 Qed.
 
 Lemma H'_omega_sqr_min : forall k,  0 <> k ->
-                                    (exp2 (S k) <= H'_ (phi0 2) k)%nat.
+                                    (exp2 (S k) <= H'_ (E0phi0 2) k)%nat.
 Proof.
   intros k Hk; rewrite H'_omega_sqr.
   generalize (exp2 (S k));  intro n;  destruct n;  abstract lia.
@@ -542,7 +542,7 @@ Qed.
 
 
 Lemma H'_omega_cube_min k : 0 <> k ->
-                            (hyper_exp2 (1 + k) <= H'_ (phi0  3) k)%nat.
+                            (hyper_exp2 (1 + k) <= H'_ (E0phi0  3) k)%nat.
 Proof.
   intros H; rewrite H'_omega_cube; unfold hyper_exp2.
   transitivity (iterate exp2  (1+k) k).
@@ -563,10 +563,10 @@ Remark H'_non_mono1 :
         (alpha o<= beta)%e0 ->
         (H'_ alpha k <= H'_ beta k)%nat). 
 Proof. 
-  intros H ;specialize (H 42 omega 3). 
+  intros H ;specialize (H 42 E0omega 3). 
   (* ... *)
 (* end snippet HprimeNonMono1 *)
-  assert (H0 :(42 o<= omega)%e0).
+  assert (H0 :(42 o<= E0omega)%e0).
   { repeat split; auto.  
     compute. now left. }
   apply H in H0; rewrite H'_Fin, H'_omega  in H0; abstract lia.
@@ -580,9 +580,9 @@ Section Proof_of_Abstract_Properties.
   Record P (alpha:E0) : Prop :=
     mkP {
         PA : strict_mono (H'_ alpha);
-        PB : alpha <> Zero -> forall n,  (n < H'_ alpha n)%nat;
-        PC : H'_ alpha <<= H'_ (Succ alpha);
-        PD : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha);
+        PB : alpha <> E0zero -> forall n,  (n < H'_ alpha n)%nat;
+        PC : H'_ alpha <<= H'_ (E0succ alpha);
+        PD : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha);
         PE : forall beta n, Canon_plus n alpha beta -> 
                             (H'_ beta n <= H'_ alpha n)%nat}.
 
@@ -591,12 +591,12 @@ Section Proof_of_Abstract_Properties.
 
     (* Base step : (sequential) proof of (P 0) *)
     
-    Lemma PA_Zero : strict_mono (H'_ Zero).
+    Lemma PA_Zero : strict_mono (H'_ E0zero).
     Proof. 
       intros n p H; repeat rewrite H'_eq1; auto with arith. 
     Qed. 
     
-    Lemma PD_Zero : dominates_from 1 (H'_ (Succ Zero)) (H'_ Zero).
+    Lemma PD_Zero : dominates_from 1 (H'_ (E0succ E0zero)) (H'_ E0zero).
     Proof.
       red;intros; rewrite H'_eq1, H'_eq2, Pred_of_Succ, H'_eq1. 
       - abstract lia.
@@ -605,7 +605,7 @@ Section Proof_of_Abstract_Properties.
 
     Local Hint Resolve PD_Zero PA_Zero : E0.
 
-    Lemma PC_Zero :  H'_ Zero <<= H'_ (Succ Zero).
+    Lemma PC_Zero :  H'_ E0zero <<= H'_ (E0succ E0zero).
     Proof.
       intro n; destruct n;
         rewrite H'_eq1, H'_eq2;  auto with arith.
@@ -614,23 +614,23 @@ Section Proof_of_Abstract_Properties.
 
     Local Hint Resolve  PC_Zero : core.
 
-    Lemma PZero : P Zero.
+    Lemma PZero : P E0zero.
     Proof. 
       split; auto with E0.
       -  now destruct 1.
       - unfold Canon_plus ; intros.
-        unfold Zero in H; simpl in H.
+        unfold E0zero in H; simpl in H.
         destruct n.
         + inversion H. 
         + destruct (const_pathS_zero  H). 
     Qed.   
 
     Variable alpha : E0.
-    Hypothesis Halpha : forall beta, Lt beta alpha -> P beta.
+    Hypothesis Halpha : forall beta, E0lt beta alpha -> P beta.
 
     Section alpha_Succ.
       Variable beta: E0.
-      Hypothesis alpha_def : alpha = Succ beta.
+      Hypothesis alpha_def : alpha = E0succ beta.
 
       Remark PA_Succ : strict_mono (H'_ alpha).
       Proof.
@@ -640,20 +640,20 @@ Section Proof_of_Abstract_Properties.
             repeat rewrite H'_succ_eqn; apply PA0; auto with arith.
       Qed.
 
-      Remark RB : alpha <> Zero ->forall n, (n < H'_ alpha n)%nat.
+      Remark RB : alpha <> E0zero ->forall n, (n < H'_ alpha n)%nat.
       Proof.
         intros _  n; subst  alpha; rewrite H'_succ_eqn;
-          destruct (E0_eq_dec beta Zero).
+          destruct (E0_eq_dec beta E0zero).
         - subst; rewrite H'_eq1; auto with arith.
         - destruct (Halpha beta).
           + apply Lt_Succ.
           + transitivity (S n); auto with arith.
       Qed.
       
-      Remark RD : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
+      Remark RD : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha).
 
         generalize PA_Succ; subst alpha.
-        red; intros H k H0; rewrite (H'_succ_eqn (Succ beta));
+        red; intros H k H0; rewrite (H'_succ_eqn (E0succ beta));
           apply H; auto with arith.     
       Qed.
 
@@ -666,7 +666,7 @@ Section Proof_of_Abstract_Properties.
           + subst beta0;  destruct (Halpha beta).     
             * apply Lt_Succ.
             * rewrite Canon_Succ; apply PC0.
-          + replace (Canon (Succ beta) (S n)) with beta in H0.
+          + replace (Canon (E0succ beta) (S n)) with beta in H0.
             * transitivity (H'_ beta (S n)).
               -- destruct (Halpha beta).
                  ++ apply Lt_Succ.
@@ -677,7 +677,7 @@ Section Proof_of_Abstract_Properties.
             * now rewrite Canon_Succ.
       Qed.
 
-      Remark RC : H'_ alpha <<= H'_ (Succ alpha).
+      Remark RC : H'_ alpha <<= H'_ (E0succ alpha).
       Proof.
         subst alpha; intro n; repeat rewrite H'_succ_eqn.
         destruct (Halpha beta).
@@ -698,7 +698,7 @@ Section Proof_of_Abstract_Properties.
 
 
     Section alpha_limit.
-      Hypothesis Hlim : Limitb alpha.
+      Hypothesis Hlim : E0limit alpha.
 
       Remark RBlim : forall n, (n < H'_ alpha n)%nat.
       Proof.
@@ -706,7 +706,7 @@ Section Proof_of_Abstract_Properties.
         destruct (Halpha (Canon alpha (S n))).
         -  apply Canon_lt;  now apply Limit_not_Zero.
         -  eapply PB0; intro H.
-           assert (H0 :cnf (Canon alpha (S n)) = cnf Zero) by (f_equal; auto).
+           assert (H0 :cnf (Canon alpha (S n)) = cnf E0zero) by (f_equal; auto).
            simpl in H0;   apply (@limitb_canonS_not_zero n (cnf alpha)); auto.
            +  apply cnf_ok.
       Qed.
@@ -738,12 +738,12 @@ Section Proof_of_Abstract_Properties.
                        apply KS_thm_2_4_E0; auto.
       Qed.
 
-      Remark RClim : H'_ alpha <<= H'_ (Succ alpha).
+      Remark RClim : H'_ alpha <<= H'_ (E0succ alpha).
       Proof.
         intro n; rewrite H'_succ_eqn; apply Nat.lt_le_incl, RAlim; abstract lia.
       Qed.
 
-      Remark RDlim : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
+      Remark RDlim : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha).
       Proof.
         red;intros; rewrite H'_succ_eqn; apply RAlim; abstract lia.
       Qed.
@@ -803,9 +803,9 @@ Section Proof_of_Abstract_Properties.
   
   Theorem P_alpha : forall alpha, P alpha. (* .no-out *)
   Proof. (* .no-out *)
-    intro alpha; apply well_founded_induction with Lt. 
+    intro alpha; apply well_founded_induction with E0lt. 
   (* ... *) (*| .. coq:: none |*)
-   - exact E0.Lt_wf.
+   - exact E0lt_wf.
    - apply P_alpha_0.
      (*||*)
   Qed.
@@ -821,13 +821,13 @@ Section Abstract_Properties.
   Theorem H'_alpha_mono : strict_mono (H'_ alpha).
   Proof. now  destruct  (P_alpha alpha). Qed.
 
-  Theorem H'_alpha_gt : alpha <> Zero -> forall n, (n < H'_ alpha n)%nat.
+  Theorem H'_alpha_gt : alpha <> E0zero -> forall n, (n < H'_ alpha n)%nat.
   Proof. now  destruct  (P_alpha alpha). Qed.
 
-  Theorem H'_alpha_Succ_le : H'_ alpha <<= H'_ (Succ alpha).
+  Theorem H'_alpha_Succ_le : H'_ alpha <<= H'_ (E0succ alpha).
   Proof. now  destruct  (P_alpha alpha). Qed.
 
-  Theorem H'_alpha_dom : dominates_from 1 (H'_ (Succ alpha)) (H'_ alpha).
+  Theorem H'_alpha_dom : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha).
   Proof. now  destruct  (P_alpha alpha). Qed.
 
   (** [H'_] is not mononotonous in [alpha] in general. 
@@ -841,7 +841,7 @@ Section Abstract_Properties.
 
   Lemma H'_alpha_ge_id : id <<= H'_ alpha.
   Proof.
-    destruct (E0_eq_dec alpha Zero).
+    destruct (E0_eq_dec alpha E0zero).
     - subst alpha; intro k; rewrite H'_eq1; cbn;auto with arith.
     - intro k;unfold id; now apply Nat.lt_le_incl, H'_alpha_gt. 
   Qed.
@@ -894,7 +894,7 @@ Section Proof_of_H'_mono_l.
 
   Section Succ_case.
     Variable gamma: E0.  
-    Hypothesis Hgamma : beta = Succ gamma.
+    Hypothesis Hgamma : beta = E0succ gamma.
 
     Remark R1 : alpha o<= gamma.
     Proof. subst; now apply lt_Succ_le_2.  Qed.
@@ -914,18 +914,18 @@ Section Proof_of_H'_mono_l.
   End Succ_case.
 
   Section Limit_case.
-    Hypothesis Hbeta: Limitb beta.
+    Hypothesis Hbeta: E0limit beta.
 
-    Remark R4 : Succ alpha o< beta.
+    Remark R4 : E0succ alpha o< beta.
     Proof. now apply Succ_lt_Limitb. Qed.
 
     Remark R5 :  {n: nat | forall p, n <= p ->
                                      H'_ alpha (S p) < H'_ beta (S p)}.
     Proof.
-      assert (Succ alpha o<= beta) by (apply Lt_Le_incl; apply R4).
+      assert (E0succ alpha o<= beta) by (apply Lt_Le_incl; apply R4).
       destruct   (H'_mono_l_1 _ _ H) as [x Hx].
       exists x; intros.
-      apply Lt.lt_le_trans with (H'_ (Succ alpha) (S p)).
+      apply Lt.lt_le_trans with (H'_ (E0succ alpha) (S p)).
       -  apply (H'_alpha_dom alpha (S p)); auto with arith.
       - auto.
     Qed.
@@ -957,9 +957,9 @@ End Proof_of_H'_mono_l.
 (* To do : program tactics for a better interaction *)
 
 Goal 
-  (0 < H'_ (ltac:(mko (T1.omega * T1.omega * T1.omega)%t1)) 12)%nat.
-  ochange {| cnf := (T1.omega * T1.omega * T1.omega)%t1; cnf_ok := eq_refl |}
-          (phi0 3).
+  (0 < H'_ (ltac:(mko (T1omega * T1omega * T1omega)%t1)) 12)%nat.
+  ochange {| cnf := (T1omega * T1omega * T1omega)%t1; cnf_ok := eq_refl |}
+          (E0phi0 3).
   transitivity 11.
   - abstract lia.
   - apply H'_alpha_ge_id.

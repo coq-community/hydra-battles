@@ -3,8 +3,9 @@
 (imported from [hydras.Epsilon0.Large_Sets] )
 *)
 
-From hydras Require Import T1.
+
 From mathcomp Require Import all_ssreflect zify.
+From hydras Require Import T1.
 From hydras Require Import Canon Paths Large_Sets.
 Require Import T1Bridge GCanon GPaths.
 

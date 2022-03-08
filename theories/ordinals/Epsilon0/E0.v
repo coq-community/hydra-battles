@@ -41,41 +41,54 @@ Arguments cnf : clear implicits.
 
 (* begin snippet LtLeDef *)
 
-Definition Lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
-Definition Le := leq Lt.
+Definition E0lt (alpha beta : E0) := T1.LT (@cnf alpha) (@cnf beta).
+Definition E0le := leq E0lt.
 
-Infix "o<" := Lt : E0_scope.
-Infix "o<=" := Le : E0_scope.
+Infix "o<" := E0lt : E0_scope.
+Infix "o<=" := E0le : E0_scope.
 
 (* end snippet LtLeDef *)
 
 
 (* begin snippet ZeroOmega:: no-out  *)
-#[global] Instance Zero : E0 := @mkord zero refl_equal.
+#[global] Instance E0zero : E0 := @mkord zero refl_equal.
 
-#[global] Instance _Omega : E0. 
-Proof. now exists omega%t1. Defined. 
+#[global] Instance E0omega : E0. 
+Proof. now exists T1omega%t1. Defined. 
 
-Notation omega := _Omega.
 (* end snippet ZeroOmega *)
 
+#[deprecated(note="use E0zero")]
+ Notation Zero := E0zero (only parsing).
+
+#[deprecated(note="use E0omega")]
+ Notation _Omega := E0omega (only parsing).
+
 (* begin snippet SuccOnE0:: no-out *)
-#[global] Instance Succ (alpha : E0) : E0.
+#[global] Instance E0succ (alpha : E0) : E0.
 Proof.
   refine (@mkord (T1.succ (@cnf alpha)) _); 
     apply succ_nf, cnf_ok.
 Defined.
 (* end snippet SuccOnE0 *)
 
+#[deprecated(note="use E0succ")]
+ Notation Succ := E0succ (only parsing).
 
-Definition Limitb (alpha : E0) : bool :=
+Definition E0limit (alpha : E0) : bool :=
   limitb (@cnf alpha).
 
-Definition Succb (alpha : E0) : bool :=
+#[deprecated(note="use E0limit")]
+ Notation Limitb := E0limit (only parsing).
+
+
+Definition E0is_succ (alpha : E0) : bool :=
   succb (@cnf alpha).
 
-  
-#[global] Instance ord1 : E0.
+#[deprecated(note="use E0is_succ")]
+ Notation E0succb := E0is_succ (only parsing).
+
+#[global] Instance E0one : E0.
 Proof. 
   refine (@mkord (T1.succ zero) _);now compute. 
 Defined.
@@ -86,32 +99,36 @@ Defined.
 .. coq:: no-out
 |*)
 
-#[global] Instance plus (alpha beta : E0) : E0.
+#[global] Instance E0add (alpha beta : E0) : E0.
 Proof.
-  refine (@mkord (T1.plus (@cnf alpha) (@cnf beta))_ );
+  refine (@mkord (T1add (@cnf alpha) (@cnf beta))_ );
     apply plus_nf; apply cnf_ok.
 Defined.
 
-Infix "+" := plus : E0_scope.
+Infix "+" := E0add : E0_scope.
 
 (*||*)
 (* end snippet plusE0 *)
 
+#[deprecated(note="use E0add")]
+ Notation Plus := E0add (only parsing).
+
+
 (* begin snippet CheckPlus *)
 
-Check omega + omega.
+Check E0omega + E0omega.
 
 (* end snippet CheckPlus *)
 
 
-#[global] Instance phi0 (alpha: E0) : E0.
+#[global] Instance E0phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkord (T1.phi0 (cnf alpha)) _).
   apply nf_phi0; apply cnf_ok.
 Defined.
 
 
-Notation "'omega^'" := phi0 (only parsing) : E0_scope.
+Notation "'E0omega^'" := E0phi0 (only parsing) : E0_scope.
 
 #[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
 Proof.
@@ -122,25 +139,33 @@ Defined.
 #[global] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
-#[global] Instance FinS (i:nat) : E0.
+#[global] Instance E0finS (i:nat) : E0.
 Proof.
   refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
 Defined.
 
-#[ global ] Instance Fin (i:nat) : E0.
+
+
+#[ global] Instance E0fin (i:nat) : E0.
 Proof.
-  destruct i as [|i]; [exact Zero | exact (FinS i)].
+  destruct i as [|i]; [exact E0zero | exact (E0finS i)].
 Defined.
 
-Coercion Fin : nat >-> E0.
+#[deprecated(note="use E0fin")]
+ Notation Fin := E0fin (only parsing).
 
-#[global] Instance Mult (alpha beta : E0) : E0.
+Coercion E0fin : nat >-> E0.
+
+#[global] Instance E0mul (alpha beta : E0) : E0.
 Proof.
   refine (@mkord (cnf alpha * cnf beta)%t1 _); apply mult_nf; apply cnf_ok.
 Defined.
 
+#[deprecated(note="use E0mul")]
+ Notation Mult := E0mul (only parsing).
 
-Infix "*" := Mult : E0_scope.
+
+Infix "*" := E0mul : E0_scope.
 
 #[global] Instance Mult_i  (alpha: E0) (n: nat) : E0.
 Proof.
@@ -191,9 +216,9 @@ Proof.
 Qed.
 
 Remark Le_iff : forall alpha beta,
-    Le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
+    E0le alpha beta <-> T1.LE (@cnf alpha) (@cnf beta).
 Proof.
-  intros *; unfold Le, T1.LE;  destruct alpha, beta; split.
+  intros *; unfold E0le, T1.LE;  destruct alpha, beta; split.
   - cbn; rewrite le_lt_eq; destruct 1.
    + red in H; cbn in H; repeat split; auto; apply LE_le; repeat split; auto.
      destruct H as [H [H0 _]].
@@ -203,7 +228,7 @@ Proof.
   - cbn; destruct 1 as [_ [H _]]; rewrite le_lt_eq in H.
      destruct H. 
      + left; red;  cbn; repeat split; auto.
-     + subst; cbn; unfold Lt.
+     + subst; cbn; unfold E0lt.
        generalize (E0_eq_intro  {| cnf := cnf1; cnf_ok := cnf_ok0 |}
                                 {| cnf := cnf1; cnf_ok := cnf_ok1 |}).
        cbn; intro H; rewrite H.
@@ -213,7 +238,7 @@ Qed.
 
 
 
-Lemma Succb_Succ alpha : Succb alpha -> {beta : E0 | alpha = Succ beta}.
+Lemma Succb_Succ alpha : E0is_succ alpha -> {beta : E0 | alpha = E0succ beta}.
 Proof.
   destruct alpha; cbn.
   intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
@@ -238,7 +263,7 @@ Defined.
 
 (** ** Adaptation to [E0] of lemmas about [T1]  *)
 
-Lemma alpha_plus_zero alpha : alpha + Zero = alpha.
+Lemma alpha_plus_zero alpha : alpha + E0zero = alpha.
 Proof.
   apply E0_eq_intro; simpl; now rewrite plus_zero_r.
 Qed.
@@ -246,72 +271,72 @@ Qed.
 Hint Rewrite alpha_plus_zero : E0_rw.
 
 Lemma cnf_phi0 (alpha : E0) :
-  cnf (phi0 alpha) = T1.phi0 (cnf alpha).
+  cnf (E0phi0 alpha) = T1.phi0 (cnf alpha).
 Proof.
- unfold phi0. now rewrite cnf_rw.
+ unfold E0phi0. now rewrite cnf_rw.
 Defined.
 
 Lemma cnf_Succ (alpha : E0) :
-  cnf (Succ alpha) = succ (cnf alpha).
+  cnf (E0succ alpha) = succ (cnf alpha).
 Proof.
- unfold Succ. now rewrite cnf_rw.
+ unfold E0succ. now rewrite cnf_rw.
 Defined.
 
 Lemma cnf_Omega_term (alpha: E0) (n: nat) :
   cnf (Omega_term alpha n) = omega_term (cnf alpha) n.
 Proof. reflexivity. Defined.
 
-Lemma Limitb_Omega_term alpha i : alpha <> Zero ->
-                                  Limitb (Omega_term alpha i).
+Lemma Limitb_Omega_term alpha i : alpha <> E0zero ->
+                                  E0limit (Omega_term alpha i).
 Proof.
-  intro H; unfold Limitb; destruct alpha as [cnf0 H0]; cbn;
+  intro H; unfold E0limit; destruct alpha as [cnf0 H0]; cbn;
     destruct cnf0.
   - destruct H; auto with E0.  
   - red; trivial. 
 Qed.
 
-Lemma Limitb_phi0 alpha  : alpha <> Zero ->
-                           Limitb (phi0 alpha).
+Lemma Limitb_phi0 alpha  : alpha <> E0zero ->
+                           E0limit (E0phi0 alpha).
 Proof.
-  unfold phi0; apply Limitb_Omega_term.
+  unfold E0phi0; apply Limitb_Omega_term.
 Qed.
 
 #[global] Hint Resolve Limitb_phi0 : E0.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
-  {alpha = Zero} + {Limitb alpha = true} +
-  {beta : E0  | alpha = Succ beta}.
+  {alpha = E0zero} + {E0limit alpha = true} +
+  {beta : E0  | alpha = E0succ beta}.
   destruct alpha as [t Ht];  destruct (zero_limit_succ_dec  Ht).  
   -  destruct s. 
      + left; left. 
-       unfold Zero; subst t; f_equal.
+       unfold E0zero; subst t; f_equal.
        apply nf_proof_unicity.
-     + left;right; unfold Limitb; now simpl. 
+     + left;right; unfold E0limit; now simpl. 
   -  destruct s as [beta [H0 H1]]; right;  eexists (@mkord beta H0).
-     subst t; unfold Succ; f_equal; apply nf_proof_unicity.
+     subst t; unfold E0succ; f_equal; apply nf_proof_unicity.
 Defined.
 
 
 Definition Pred (alpha: E0) : E0 :=
   match Zero_Limit_Succ_dec  alpha with
-      inl _ => Zero
+      inl _ => E0zero
     | inr (exist _ beta _) => beta
   end.
 
 
 Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
-#[global] Instance Two : E0 :=  ltac:(mko (fin 2)).
+#[global] Instance Two : E0 :=  ltac:(mko (\F 2)).
 
-#[global] Instance Omega_2 : E0 :=ltac:(mko (T1.omega * T1.omega)%t1).
+#[global] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
 
 
-#[global] Instance E0_sto : StrictOrder Lt.
+#[global] Instance E0_sto : StrictOrder E0lt.
 Proof.
   split.
-  - intro x ; destruct x; unfold Lt; red.
+  - intro x ; destruct x; unfold E0lt; red.
     cbn; intro; eapply LT_irrefl; eauto.
-  - intros [x Hx] [y Hy] [z Hz]; unfold Lt; cbn.
+  - intros [x Hx] [y Hy] [z Hz]; unfold E0lt; cbn.
     apply LT_trans.
  Qed.
 
@@ -319,9 +344,9 @@ Proof.
  fun (alpha beta:E0) => compare (cnf alpha) (cnf beta).
 
 Lemma compare_correct (alpha beta : E0) :
-  CompSpec eq Lt alpha beta (compare alpha beta).
+  CompSpec eq E0lt alpha beta (compare alpha beta).
 Proof.
-  destruct alpha, beta; unfold compare, Lt; cbn;
+  destruct alpha, beta; unfold compare, E0lt; cbn;
     destruct (T1.compare_correct cnf0 cnf1).
   -   constructor 1;  apply E0_eq_intro;  subst; reflexivity. 
   -   constructor; now split.
@@ -329,7 +354,7 @@ Proof.
 Qed.
 
 (* begin snippet E0LtWf:: no-out *)
-Lemma Lt_wf : well_founded Lt.
+Lemma E0lt_wf : well_founded E0lt.
 Proof.
   split; intros [t Ht] H;
     apply (Acc_inverse_image _ _ LT (@cnf) 
@@ -338,11 +363,11 @@ Proof.
 Defined.
 (* end snippet E0LtWf *)
 
-Global Hint Resolve Lt_wf : E0.
+Global Hint Resolve E0lt_wf : E0.
 
-Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> Succ beta o<= alpha.
+Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> E0succ beta o<= alpha.
 Proof.
-  destruct alpha, beta;simpl in *.  unfold leq , Lt;simpl.
+  destruct alpha, beta;simpl in *.  unfold leq, E0lt; simpl.
   intro; rewrite Le_iff; split; auto.
   - apply T1.succ_nf; auto.
   -  split; auto.
@@ -352,17 +377,17 @@ Qed.
 
 
 
-Lemma Pred_of_Succ (alpha:E0) : Pred (Succ alpha) = alpha.
+Lemma Pred_of_Succ (alpha:E0) : Pred (E0succ alpha) = alpha.
 Proof.
-  unfold Pred; destruct (Zero_Limit_Succ_dec (Succ alpha)).
+  unfold Pred; destruct (Zero_Limit_Succ_dec (E0succ alpha)).
   destruct s.
-  - unfold Succ, Zero in e; injection  e .
+  - unfold E0succ, E0zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
-  -  unfold limitb, Succ in e; simpl in e;
+  -  unfold limitb, E0succ in e; simpl in e;
        destruct (@T1.limitb_succ (cnf alpha)); auto.
         destruct alpha; simpl; auto. 
   -  destruct s.
-    { unfold Succ in e;  injection e.
+    { unfold E0succ in e;  injection e.
       destruct alpha, x;simpl; intros; apply T1.succ_injective in H; auto.
       -  subst; replace cnf_ok1 with cnf_ok0; trivial.
          eapply nf_proof_unicity.
@@ -371,20 +396,20 @@ Qed.
 
 Hint Rewrite Pred_of_Succ: E0_rw.
 
-Lemma Succ_inj alpha beta : Succ alpha = Succ beta -> alpha = beta.
+Lemma Succ_inj alpha beta : E0succ alpha = E0succ beta -> alpha = beta.
 Proof.
   destruct alpha, beta; intros;  apply E0_eq_intro. 
-  cbn;  unfold Succ in H; cbn in H; injection H. 
+  cbn;  unfold E0succ in H; cbn in H; injection H. 
   intro; apply succ_injective; auto.
 Qed.
 
-Lemma  Pred_Lt (alpha : E0) : alpha <> Zero  ->  Limitb alpha = false ->
+Lemma  Pred_Lt (alpha : E0) : alpha <> E0zero  ->  E0limit alpha = false ->
                        Pred alpha o< alpha.
 Proof.
-  unfold Limitb, Pred, Lt; destruct alpha; intros. simpl.
+  unfold E0limit, Pred, E0lt; destruct alpha; intros. simpl.
   destruct (T1.zero_limit_succ_dec cnf_ok0 ).
   destruct s.
-  - subst. unfold Zero in H. destruct H. f_equal;apply nf_proof_unicity.
+  - subst. unfold E0zero in H. destruct H. f_equal;apply nf_proof_unicity.
   - simpl in H0; rewrite i in H0; discriminate.
   - destruct s. destruct a. simpl. subst cnf0.
     apply LT_succ;auto.
@@ -393,8 +418,8 @@ Qed.
 Global Hint Resolve Pred_Lt : E0.
 
 
-Lemma Succ_Succb (alpha : E0) : Succb (Succ alpha).
-destruct alpha; unfold Succb, Succ; cbn; apply T1.succ_succb.
+Lemma Succ_Succb (alpha : E0) : E0is_succ (E0succ alpha).
+destruct alpha; unfold E0is_succ, E0succ; cbn; apply T1.succ_succb.
 Qed.
 
 Global Hint Resolve Succ_Succb : E0.
@@ -403,7 +428,7 @@ Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
 
 
-Lemma FinS_eq i : FinS i = Fin (S i).
+Lemma FinS_eq i : E0finS i = E0fin (S i).
 Proof. reflexivity. Qed.
 
 Lemma mult_fin_rw alpha (i:nat) : alpha * i = Mult_i alpha i.
@@ -412,51 +437,51 @@ Proof.
  Qed.
 
 
-Lemma FinS_Succ_eq : forall i, FinS i = Succ (Fin i).
+Lemma FinS_Succ_eq : forall i, E0finS i = E0succ (E0fin i).
 Proof.
   intro i; compute. orefl; now destruct i.
 Qed.
 
 Hint Rewrite FinS_Succ_eq : E0_rw.
 
-Lemma Limit_not_Zero alpha : Limitb alpha -> alpha <> Zero.
+Lemma Limit_not_Zero alpha : E0limit alpha -> alpha <> E0zero.
 Proof.
-  destruct alpha; unfold Limitb, Zero; cbn; intros H H0.
+  destruct alpha; unfold E0limit, E0zero; cbn; intros H H0.
   injection H0;  intro ; subst cnf0; eapply T1.limitb_not_zero; eauto.
 Qed.
 
 
-Lemma Succ_not_Zero alpha:  Succb alpha -> alpha <> Zero.
+Lemma Succ_not_Zero alpha:  E0is_succ alpha -> alpha <> E0zero.
 Proof.
-  destruct alpha;unfold Succb, Zero; cbn.
+  destruct alpha;unfold E0is_succ, E0zero; cbn.
   intros H H0; injection H0; intro;subst; discriminate H.
 Qed.
 
-Lemma Lt_Succ : forall alpha, Lt alpha (Succ alpha).
+Lemma Lt_Succ : forall alpha, E0lt alpha (E0succ alpha).
 Proof.
-  destruct  alpha; unfold lt, Succ; cbn; apply LT_succ;auto.
+  destruct  alpha; unfold lt, E0succ; cbn; apply LT_succ;auto.
 Qed.
 
 
-Lemma Succ_not_Limitb alpha : Succb alpha -> ~ Limitb alpha .
+Lemma Succ_not_Limitb alpha : E0is_succ alpha -> ~ E0limit alpha .
 Proof. 
-  red; destruct alpha; unfold Succb, Limitb; cbn.
+  red; destruct alpha; unfold E0is_succ, E0limit; cbn.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
 Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
-                                       Succ beta o<= alpha.
+                                       E0succ beta o<= alpha.
 Proof.
-  destruct alpha, beta; unfold lt, leq , Succ; cbn; split.
+  destruct alpha, beta; unfold lt, leq , E0succ; cbn; split.
   -  rewrite Le_iff.
      intro; now  apply LT_succ_LE.
   - rewrite Le_iff. intro. now apply LT_succ_LE_R.  
 Qed.
 
 Lemma lt_Succ_le_2 (alpha beta: E0):
-    alpha o< Succ beta -> alpha o<= beta.
+    alpha o< E0succ beta -> alpha o<= beta.
 Proof.
  destruct alpha, beta; cbn; intros.
  red in H; red; rewrite  Le_iff.
@@ -464,9 +489,9 @@ Proof.
 Qed.
 
 Lemma Succ_lt_Limitb alpha beta:
-    Limitb alpha ->  beta o< alpha -> Succ beta o< alpha.
+    E0limit alpha ->  beta o< alpha -> E0succ beta o< alpha.
 Proof.
-  destruct alpha, beta;unfold Lt; cbn.
+  destruct alpha, beta;unfold E0lt; cbn.
   intros; apply succ_lt_limit; auto. 
 Qed.
 
@@ -485,18 +510,18 @@ Qed.
 .. coq:: no-out
  *)
 
-#[global] Instance E0_comp: Comparable Lt compare.
+#[global] Instance E0_comp: Comparable E0lt compare.
 Proof.
   split.
   - apply E0_sto.
   - apply compare_correct. 
 Qed.
 
-#[global] Instance Epsilon0 : ON Lt compare.
+#[global] Instance Epsilon0 : ON E0lt compare.
 Proof.
  split.
  - apply E0_comp.
- - apply Lt_wf.
+ - apply E0lt_wf.
 Qed.
 
 (*||*)
@@ -506,18 +531,18 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
   - intro alpha; destruct (Zero_Limit_Succ_dec alpha) as [[H | H] | [p Hp]].
     + subst alpha; left; left; intro beta. destruct beta as [cnf H].
       destruct cnf.
-      replace  {| cnf := zero; cnf_ok := H |} with Zero.
+      replace  {| cnf := zero; cnf_ok := H |} with E0zero.
       right.
       apply E0_eq_intro. reflexivity.
       left.
-      unfold Lt.
+      unfold E0lt.
       cbn.
       auto with T1.
     +
-      destruct alpha as [a Ha]. unfold Limitb in H. cbn in H.
+      destruct alpha as [a Ha]. unfold E0limit in H. cbn in H.
       left;right.
       split.  
-      exists Zero.
+      exists E0zero.
       destruct a;try discriminate.
       constructor. 
       destruct a2; try discriminate.
@@ -528,13 +553,13 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       auto.
 
       intros. 
-      exists (Succ y).
+      exists (E0succ y).
       split.
       apply Lt_Succ.
       destruct y as [y Hy]; split.
-      unfold Lt, Succ; cbn.
+      unfold E0lt, E0succ; cbn.
       now apply LT_succ.
-      unfold Lt, Succ in *.
+      unfold E0lt, E0succ in *.
       cbn in *.
       apply succ_lt_limit; auto.
 
@@ -546,7 +571,7 @@ Definition Zero_limit_succ_dec : ZeroLimitSucc_dec .
       split.
       apply Lt_Succ.
 
-      destruct p, z. unfold Lt, Succ; cbn in *; intros.
+      destruct p, z. unfold E0lt, E0succ; cbn in *; intros.
       destruct (@LT_irrefl cnf1).
       apply T1.LT_LE_trans with (succ cnf0); auto with T1.
       now apply LT_succ_LE.
@@ -558,7 +583,7 @@ Qed.
 
 (** ** Rewriting lemmas *)
 
-Lemma Succ_rw : forall alpha, cnf (Succ alpha) = T1.succ (cnf alpha).
+Lemma Succ_rw : forall alpha, cnf (E0succ alpha) = T1.succ (cnf alpha).
 Proof.
   now destruct alpha.
 Qed.
@@ -590,14 +615,14 @@ Qed.
 
 
 Lemma Omega_term_plus alpha beta i :
-  alpha <> Zero -> (beta o< phi0 alpha)%e0 ->
+  alpha <> E0zero -> (beta o< E0phi0 alpha)%e0 ->
   cnf (Omega_term alpha i + beta)%e0 = cons (cnf alpha) i (cnf beta).
 Proof.
   destruct alpha as [alpha Halpha]; destruct beta as [beta Hbeta].
   intros.
   unfold lt in H0. simpl in H0.
   unfold  Omega_term. unfold cnf.
-  unfold plus.
+  unfold E0add.
   unfold cnf at 1 2.
   fold (omega_term alpha i ).
   rewrite omega_term_plus_rw.
@@ -606,7 +631,7 @@ Proof.
 Qed.
 
 
-Lemma cnf_Cons (alpha beta: E0) n : alpha <> Zero -> beta o< phi0 alpha ->
+Lemma cnf_Cons (alpha beta: E0) n : alpha <> E0zero -> beta o< E0phi0 alpha ->
                                      cnf (Cons alpha n beta) =
                                      cons (cnf alpha) n (cnf beta).
 Proof.
@@ -614,10 +639,10 @@ Proof.
 Defined.
 
 Lemma Limitb_plus alpha beta i:
-  (beta o< phi0 alpha)%e0 -> Limitb beta ->
-  Limitb (Omega_term alpha i + beta)%e0.
+  (beta o< E0phi0 alpha)%e0 -> E0limit beta ->
+  E0limit  (Omega_term alpha i + beta)%e0.
 Proof.
-  intros H H0;  assert (alpha <> Zero).
+  intros H H0;  assert (alpha <> E0zero).
   { intro; subst. 
     apply (Limit_not_Zero H0).
     destruct beta.
@@ -625,19 +650,19 @@ Proof.
     apply LT_one in H. subst.
     now apply E0_eq_intro.
   }
-  unfold Limitb; rewrite Omega_term_plus; auto.
+  unfold E0limit; rewrite Omega_term_plus; auto.
   cbn;  case_eq (cnf alpha).
   -  intro H2; destruct H1.
      apply E0_eq_intro.
      apply H2.
   -  intros alpha0 n beta0 H2.
-     unfold Limitb in H0;    destruct (cnf beta); auto.
+     unfold E0limit in H0;    destruct (cnf beta); auto.
 Qed.
 
 
-Lemma Succ_of_cons alpha gamma i : alpha <> Zero -> gamma o< phi0 alpha ->
-                                cnf (Succ (Omega_term alpha i + gamma)%e0) =
-                                cnf (Omega_term alpha i + Succ gamma)%e0.
+Lemma Succ_of_cons alpha gamma i : alpha <> E0zero -> gamma o< E0phi0 alpha ->
+                                cnf (E0succ (Omega_term alpha i + gamma)%e0) =
+                                cnf (Omega_term alpha i + E0succ gamma)%e0.
 Proof.
   intros.
   rewrite Omega_term_plus; auto.
@@ -687,7 +712,7 @@ Proof.
 Qed.
 
 
-Example L_3_plus_omega :  3 + omega = omega.
+Example L_3_plus_omega :  3 + E0omega = E0omega.
 Proof.
   now  rewrite <- Comparable.compare_eq_iff.
 Qed.
@@ -703,7 +728,7 @@ Proof.
      split.
      +  unfold ON_lt; red; cbn; red; red; repeat split; auto.
         apply lt_succ.
-     +  destruct z;  unfold Lt; cbn; intros.
+     +  destruct z;  unfold E0lt; cbn; intros.
         assert (cnf1 t1< cnf1)%t1.
         { repeat split; auto.
           apply lt_le_trans with (succ cnf0).
@@ -716,12 +741,12 @@ Proof.
         destruct H2.
         eapply T1.lt_irrefl; eauto. 
   - destruct 1.
-    unfold Lt in H, H0. cbn in H, H0.
+    unfold E0lt in H, H0. cbn in H, H0.
     destruct H.
     destruct H1.
     + apply lt_succ_le in H1; auto.
       * destruct H1; auto.
-        specialize (H0 (Succ (mkord cnf_ok0))).
+        specialize (H0 (E0succ (mkord cnf_ok0))).
         cbn in H0; unfold LT in H0.
         exfalso.
         apply H0.
@@ -741,42 +766,43 @@ Qed.
 
 Lemma Lt_Le_incl alpha beta : alpha o< beta -> alpha o<= beta.
 Proof.
-  unfold Lt, Le.
+  unfold E0lt, E0le.
   intro; rewrite le_lt_eq.
  destruct alpha, beta. left. auto. 
 Qed.
 
 Lemma E0_Lt_irrefl (alpha : E0) : ~ alpha o< alpha.
 Proof.
-  destruct alpha;unfold Lt;cbn;apply LT_irrefl.
+  destruct alpha;unfold E0lt;cbn;apply LT_irrefl.
 Qed.
 
 Lemma E0_Lt_Succ_inv (alpha beta: E0):
-  alpha o< Succ beta -> alpha o< beta \/ alpha = beta.
+  alpha o< E0succ beta -> alpha o< beta \/ alpha = beta.
 Proof.
-  destruct alpha, beta; unfold Lt; cbn; intros.
+  destruct alpha, beta; unfold E0lt; cbn; intros.
   destruct (LT_succ_LE_2 cnf_ok1 H) as [H0 [H1 H2]].
   destruct H1 as [H3 |].
   - left; split; auto.
   - subst; right; now apply E0_eq_intro.
 Qed.
 
-Lemma E0_not_Lt_zero alpha : ~ alpha o< Zero.
+Lemma E0_not_Lt_zero alpha : ~ alpha o< E0zero.
 Proof.
-  destruct alpha; unfold Lt; cbn.
+  destruct alpha; unfold E0lt; cbn.
   intros [H [H0 H1]]; eapply not_lt_zero; eauto. 
 Qed.
 
-Lemma lt_omega_inv: forall alpha:E0,  alpha o< omega -> exists (i:nat),  alpha = Fin i.
+Lemma lt_omega_inv: forall alpha:E0,  alpha o< E0omega ->
+                                      exists (i:nat),  alpha = E0fin i.
 Proof. 
-  destruct alpha;  unfold _Omega; cbn in *; intro.
+  destruct alpha;  unfold E0omega; cbn in *; intro.
   destruct H.
   destruct H0.
   cbn in H0.
-  assert (H2 : cnf0 t1< T1.omega%t1).
+  assert (H2 : cnf0 t1< T1omega).
   {  split; cbn in H1; tauto. }
   destruct (lt_omega_inv H2).
-  - exists 0; subst;  unfold Fin; apply E0_eq_intro;  reflexivity. 
+  - exists 0; subst;  unfold E0fin; apply E0_eq_intro;  reflexivity. 
   -  destruct H3; subst;  exists (S x); apply E0_eq_intro; reflexivity.
 Qed.
 
@@ -797,24 +823,24 @@ Proof.
   - right; now apply Lt_Le_incl.
 Qed.
 
-Lemma Limit_gt_Zero (alpha: E0) : Limitb alpha -> Zero o< alpha.
+Lemma Limit_gt_Zero (alpha: E0) : E0limit alpha -> E0zero o< alpha.
 Proof.
-  intro H; destruct (E0_lt_eq_lt alpha Zero) as [H0 | [H0 | H0]]; trivial.
+  intro H; destruct (E0_lt_eq_lt alpha E0zero) as [H0 | [H0 | H0]]; trivial.
   - destruct (E0_not_Lt_zero H0).
   - subst; discriminate H.
 Qed.
 
 
-Lemma phi0_mono alpha beta : alpha o< beta -> phi0 alpha o< phi0 beta.
+Lemma phi0_mono alpha beta : alpha o< beta -> E0phi0 alpha o< E0phi0 beta.
 Proof.
-  destruct alpha, beta; unfold Lt; cbn;  auto with T1.
+  destruct alpha, beta; unfold E0lt; cbn;  auto with T1.
 Qed.
 
 
-#[global] Instance plus_assoc : Assoc eq plus . 
+#[global] Instance plus_assoc : Assoc eq E0add . 
 Proof.
   intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
-  apply  T1.plus_assoc.
+  apply  T1.T1addA.
 Qed.
 
 
@@ -826,7 +852,7 @@ Proof.
 Qed.
 
 (* begin snippet Ex42 *)
-Example Ex42: omega + 42 + omega^2 = omega^2. (* .no-out *)
+Example Ex42: E0omega + 42 + E0omega^2 = E0omega^2. (* .no-out *)
 Proof. (* .no-out *)
   rewrite <-  Comparable.compare_eq_iff.
   reflexivity.

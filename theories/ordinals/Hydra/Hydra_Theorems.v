@@ -1,9 +1,9 @@
-(** Pierre Castéran, Univ. Bordeaux and LaBRI *)
+  (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
      Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length Ack.
 Import E0 Large_Sets Hprime Paths MoreLists  O2H Hydra_Definitions Iterates.
-
+Export Hydra_Definitions.
 
 (** ** Liveness 
 
@@ -43,7 +43,7 @@ Qed.
 Theorem Variant_LT_free_0 :  @Hvariant  _ _ T1_wf free Hydra_Termination.m.
 Proof. split; intros; now apply round_decr. Qed.
 
-Theorem Variant_lt_free:  @Hvariant _ _ E0.Lt_wf free Hydra_Termination.var.
+Theorem Variant_lt_free:  @Hvariant _ _ E0lt_wf free Hydra_Termination.var.
 Proof. split; intros; now apply round_decr. Qed.
 
 
@@ -53,7 +53,7 @@ Proof.
 Qed.
 
 
-Theorem Variant_lt_standard : @Hvariant _ _ E0.Lt_wf standard Hydra_Termination.var.
+Theorem Variant_lt_standard : @Hvariant _ _ E0lt_wf standard Hydra_Termination.var.
 Proof.
   split; intros i h h' H H0;  apply round_decr; now exists i.
 Qed.
@@ -97,7 +97,7 @@ Open Scope nat_scope.
 
 (*| .. coq:: no-out |*)
 Theorem battle_length_std_Hardy (alpha : E0) :
-  alpha <> Zero ->
+  alpha <> E0zero ->
   forall k , 1 <= k ->
              exists l: nat,
                H'_ alpha k - k <= l /\
@@ -135,7 +135,7 @@ Section battle_lenght_notPR.
 
   (* begin snippet battleLengthNotPRb *)
 
-  Let alpha := phi0 omega%e0.
+  Let alpha := E0phi0 E0omega.
   Let h := iota (cnf alpha).
 
    (* end snippet battleLengthNotPRb *)
@@ -183,7 +183,7 @@ Section battle_lenght_notPR.
 
   (* begin snippet mGeFOmega *)
   
-  Remark m_ge_F_omega : forall k,  F_ omega (S k) <= m (S k). (* .no-out *)
+  Remark m_ge_F_omega : forall k,  F_ E0omega (S k) <= m (S k). (* .no-out *)
   (* end snippet mGeFOmega *)
   
   Proof.
@@ -197,7 +197,7 @@ Section battle_lenght_notPR.
   
   Remark m_ge_Ack:  forall n, 2 <= n -> Ack (S n) (S n) <= m (S n).
   Proof.
-    intros n H0; transitivity (F_ omega (S n)).
+    intros n H0; transitivity (F_ E0omega (S n)).
     - apply F_vs_Ack; auto.
     - apply m_ge_F_omega.
   Qed.

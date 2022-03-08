@@ -31,7 +31,7 @@ Fixpoint inject (t:T1) : Ord :=
 
 (* end snippet injectDef *)
 
-Lemma inject_of_finite_pos : forall n, inject (T1.fin (S n)) = F (S n).
+Lemma inject_of_finite_pos : forall n, inject (\F (S n)) = F (S n).
 Proof.
  induction n;simpl.
  -  rewrite phi0_zero.
@@ -61,7 +61,7 @@ Proof. reflexivity. Qed.
 
 
 Theorem inject_of_finite (n : nat):
-  inject (T1.fin n) =  n.
+  inject (\F n) =  n.
 (*||*) (*| .. coq:: none |*)
 Proof.
   destruct n.
@@ -72,7 +72,7 @@ Qed.
 
 
 Theorem inject_of_omega :
-  inject T1.omega = Schutte_basics._omega. (* .no-out *)
+  inject T1omega = Schutte_basics._omega. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
  simpl; repeat rewrite alpha_plus_zero.
@@ -600,7 +600,7 @@ Qed.
 
 (** Correctness of E0.plus *)
 
-Theorem  E0_plus_correct :  ON_op_ok  E0.plus plus.
+Theorem  E0_plus_correct :  ON_op_ok  E0add plus.
 Proof.
   red; destruct x,y; cbn.
   rewrite inject_plus; auto.

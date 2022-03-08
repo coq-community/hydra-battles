@@ -3,11 +3,12 @@
 (imported from [hydras.Epsilon0.Paths]) *)
 
 
-From hydras Require Import T1.
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import Canon Paths.
 Require Import T1Bridge GCanon.
 
+
+From hydras Require Import T1.
 From gaia Require Import ssete9.
 Import CantorOrdinal. 
 

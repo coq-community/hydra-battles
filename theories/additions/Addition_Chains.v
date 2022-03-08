@@ -363,6 +363,12 @@ Proof. (* .no-out *)
 Qed. 
 (* end snippet reflectionDemo *)
 
+Example C7_ok' : chain_correct 7 C7. 
+Proof. (* .no-out *)
+  Time reflection_correct_tac.
+Qed. 
+
+
 
 (** * Correctness and parametricity 
 
