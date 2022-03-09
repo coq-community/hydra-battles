@@ -32,7 +32,9 @@ The bridge we aim to build and cross is a two-way bridge:
   \end{itemize}
   
   We plan to make accessible the first kind of lemmas to \HydrasLib' users and the second kind to \gaia's. For this purpose, we write modules dedicated to the importation of definitions and lemmas from each of both libraries into the other one.
-Please note that by ``import'' we do not mean ``duplicate the proofs''.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. 
+  Please note that by ``import'' we do not mean ``duplicate''
+  nor ``repairing'' \HydrasLib' proofs.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. In a future version, it would be nice to have our proofs in the same context, after porting \HydrasLib' proofs under \gaia's
+  definition, following  proof repair  techniques~\cite{ringer2021}.
 
 
 
@@ -40,7 +42,7 @@ This initial draft bridge code mostly uses the SSReflect proof language
 and idioms from the Mathematical Components library. We made this design
 decision since we believe it is less challenging to reason about
 Hydra-battles code using SSReflect and MathComp than to reason about
-Gaia without SSReflect \footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}.
+Gaia without SSReflect\footnote{The author of these proof scripts is still a beginner in Ssreflect. Please forgive the clumsiness of the current proof scripts.}.
 
 \section{Library structure}
 The \gaiaHydras library is designed for users of
@@ -78,13 +80,6 @@ The bridge between both libraries is made of two straightforward bijections.
 \inputsnippets{T1Bridge/h2gG2hDef}
 \inputsnippets{HydraGaia_Examples/ExamplesG2H}
 
-
-The following cancel lemmas will be often applied in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}), which appear in many proofs by rewriting.
-
-\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
-
-\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
-
 \subsubsection{Pretty printing Cantor normal forms}
 \label{sect:gaia-ppT1}
 
@@ -94,7 +89,16 @@ The function \texttt{g2h} is also used to provide a ``pretty'' printing of Canto
 
 \inputsnippets{HydraGaia_Examples/T1pp}
 
-\subsubsection{Kind of refinement}
+\subsubsection{Cancel lemmas}
+
+The following cancel lemmas will be often applied in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}), which appear in many proofs by rewriting.
+
+\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
+
+\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
+
+
+\subsubsection{Refinements: Definitions}
 
 
 Functions \texttt{h2g} and \texttt{g2h} allow us to define
@@ -225,16 +229,14 @@ Some constructions of \HydrasLib were (to our knowledge) not implemented in \gai
 \label{sect:gaia-masking}
 We try to respect the following ``protocol''.
 Let us assume we adapt some definitions and properties
-from a given module \texttt{hydras.Epsilon0.{\it XXX}}.
+from a given module \texttt{hydras.Epsilon0.Foo}, and a constant \texttt{bar} of this module, whose absolute name is
+thus \texttt{hydras.Epsilon0.Foo.bar}.
 \begin{enumerate}
-\item We create a module \texttt{gaia\_hydras.{\it GXXX}},
-\item When we import some constant \emph{Id} from
- \texttt{hydras.Epsilon0.{\it XXX}}, the name 
-\emph{Id} is given to \texttt{gaia\_hydras.{\it GXXX.Id}}.
-In order to get
-\texttt{hydras.Epsilon0.{\it XXX}}'s sense, please refer it as
-  \emph{XXX.Id} or \emph{Epsilon0.XXX.Id}.
-  \item Sometimes, we rename \emph{XXX.Id} into \emph{{\bf h}Id} (for readability's sake).
+\item We create a module \texttt{gaia\_hydras.GFoo}
+  (``G'' for \gaia).
+\item Inside \texttt{GFoo}, the identifier \texttt{bar}
+  is reserved in priority to \gaia's version, and the notation
+  \texttt{hbar} is used for \texttt{hydras.Epsilon0.Foo.bar}.
 \end{enumerate}
 
  

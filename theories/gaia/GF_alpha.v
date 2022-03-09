@@ -116,33 +116,33 @@ Qed.
 
 (**  numerical examples *)
 
-Lemma LF1 i: F_ (E0Fin 1) i = ((2 * i) .+1)%N.
+Lemma LF1 i: F_ (E0fin 1) i = ((2 * i) .+1)%N.
 Proof. 
-  replace (F_ (E0Fin 1) i) with (hF_ (Fin 1) i). 
+  replace (F_ (E0fin 1) i) with (hF_ (hE0fin 1) i). 
   - rewrite LF1 => //.
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed.
 
-Lemma LF2 i:  (Exp2.exp2 i * i < F_ (E0Fin 2) i)%N.
+Lemma LF2 i:  (Exp2.exp2 i * i < F_ (E0fin 2) i)%N.
 Proof. 
-  apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
+  apply /ltP; replace (F_ (E0fin 2) i) with (hF_ (hE0fin 2) i). 
   - apply LF2. 
   - rewrite /F_; f_equal;  by apply E0_eq_intro .
 Qed.
 
-Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0Fin 2) i)%N.
+Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0fin 2) i)%N.
 Proof. 
-  move => Hi; apply /ltP; replace (F_ (E0Fin 2) i) with (hF_ (Fin 2) i). 
+  move => Hi; apply /ltP; replace (F_ (E0fin 2) i) with (hF_ (hE0fin 2) i). 
   - apply LF2'; by apply /leP. 
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed. 
 
 Lemma LF3_2:
-  Iterates.dominates_from 2 (F_ (E0Fin 3))
+  Iterates.dominates_from 2 (F_ (E0fin 3))
     (fun n : nat => Iterates.iterate Exp2.exp2 n.+1 n).
 Proof.
   rewrite /dominates_from /F_. 
-  replace (E0_g2h (E0Fin 3)) with (Fin 3); last first. 
+  replace (E0_g2h (E0fin 3)) with (hE0fin 3); last first. 
   - by apply E0_eq_intro.
   - apply LF3_2.   
 Qed.

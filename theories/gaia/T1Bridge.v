@@ -41,13 +41,15 @@ Unset Printing Implicit Defensive.
 
 #[global] Notation hlt := Epsilon0.T1.lt.
 #[global] Notation hle := (MoreOrders.leq hlt). 
-#[global] Notation hLT := Epsilon0.T1.LT.
-#[global] Notation hLE := Epsilon0.T1.LE.
 #[global] Notation hnfb := Epsilon0.T1.nf_b.
 #[global] Notation hlimitb := Epsilon0.T1.limitb.
 #[global] Notation hsuccb := Epsilon0.T1.succb.
 #[global] Notation hnf := Epsilon0.T1.nf.
 
+(** Restrictions to terms in normal form *)
+
+#[global] Notation hLT := Epsilon0.T1.LT.
+#[global] Notation hLE := Epsilon0.T1.LE.
 #[global] Notation gLT := (restrict T1nf T1lt).
 #[global] Notation gLE := (restrict T1nf T1le).
 
@@ -570,6 +572,8 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0zero := E0.E0zero.
 #[global] Notation hE0omega := E0.E0omega.
 #[global] Notation hE0phi0 := E0.E0phi0.
+#[global] Notation hE0fin := E0.E0fin.
+
 
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
@@ -586,10 +590,10 @@ Definition E0succ (alpha: E0): E0.
   destruct alpha. cbn. move: i => /eqP //.
 Defined.
 
-Fixpoint E0Fin (n:nat) : E0 :=
+Fixpoint E0fin (n:nat) : E0 :=
   match n with
     0 => E0zero
-  | p .+1 => E0succ (E0Fin p)
+  | p .+1 => E0succ (E0fin p)
   end.
 
 Definition E0omega: E0.
@@ -628,7 +632,7 @@ Proof.
 Qed.
 
 
-Lemma E0Fin_cnf (n:nat) : cnf (E0Fin n) = \F n.
+Lemma E0fin_cnf (n:nat) : cnf (E0fin n) = \F n.
 Proof. elim: n => // n /= ->; by rewrite T1succ_nat. Qed.
 
 
@@ -820,10 +824,14 @@ Search ( _ * ?beta = ?beta)%t1.
 
 
 
-(* begin snippet T1compareDef:: no-out *)                                
+(* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=
-  fun alpha beta => compare (g2h alpha) (g2h beta). 
+  fun alpha beta => compare (g2h alpha) (g2h beta).
 
+Compute compare (\F 6 + T1omega) T1omega. 
+(* end snippet T1compareDef *)                                
+
+(* begin snippet T1compareG2h:: no-out *)
 Lemma compare_g2h (alpha beta : T1):
   compare (g2h alpha) (g2h beta) = compare alpha beta .
  Proof.  by []. Qed. 
@@ -834,10 +842,8 @@ Proof.
   rewrite -(g2h_h2gK alpha)  -(g2h_h2gK beta).
    by rewrite compare_g2h !g2h_h2gK.
 Qed.   
+(* end snippet T1compareG2h *)
 
-
-Compute compare (\F 6 + T1omega) T1omega. 
-(* end snippet T1compareDef *)                                
 
 (** * Make E0 an ordinal notation *)
 
@@ -918,6 +924,6 @@ Qed.
 (* end snippet gEpsilon0:: no-out *)
 
 (* begin snippet ExampleComp *)
-Compute compare (E0phi0 (E0Fin 2)) (E0mul (E0succ E0omega) E0omega).
+Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
 
