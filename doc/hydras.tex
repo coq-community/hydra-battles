@@ -40,6 +40,8 @@
 \usepackage{theorem}
 \usepackage{xspace}
 \usepackage{texments}
+   
+
 %%% for movies by alectryon
 \usepackage{movies/snippets/assets/alectryon}
 \usepackage{movies/snippets/assets/pygments}
@@ -50,6 +52,12 @@
 
 \setcounter{tocdepth}{1}
 \input{coqmacros}
+
+\newcommand{\gaiacompat}{\textcolor{blue}{Gaia}}
+\newcommand{\gaiasign}{\texorpdfstring{\mycircled[cyan]{{\mbox{\color{blue}\scriptsize{GH}}}}}{Gaia-Hydra}}
+\newtheorem{gaiahydra}{\gaiasign}
+
+
 
 %%% One hypothesis per line 
 \makeatletter

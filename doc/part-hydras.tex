@@ -22,7 +22,7 @@ will show how \coq{} and its standard library are well fitted to help us to unde
 
 \subsection*{Compatibility with \gaia\cite{Gaia} (in progress)}
 The \gaia project~\cite{Gaia} by Jos\'e Grimm aimed to formalize mathematics in \coq  in
-the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa.
+the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa. Remarks about compatibility with \gaia signalled with the picture \gaiasign.
  
 
 %\section{Remarks}
@@ -2889,8 +2889,7 @@ For representing finite ordinals, \emph{i.e.} natural numbers, we first introduc
 
 \input{movies/snippets/T1/finiteOrds}
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
-  
+\paragraph*{\gaiasign}
   In \texttt{gaia.ssete9}, the $n$-th finite ordinal is written
   \texttt{$\backslash${F}\,$n$}. There is no coercion in \gaia from \texttt{nat} to finite ordinals.
 
@@ -2926,7 +2925,7 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
 
-\paragraph{\gaiacompat (cf. Remark ~\vref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In \texttt{gaia.ssete9}, the ordinal $\omega$ is also named as \emph{constant}  \texttt{T1omega}.
 
 
@@ -2949,7 +2948,7 @@ The name \(\phi_0\)
 $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emph{additive principal ordinals} \emph{i.e.} strictly positive ordinals $\alpha$ that verify $\forall \beta<\alpha, \beta+\alpha=\alpha$. For Schütte,  $\omega^\alpha$ is just a notation for $\phi_0(\alpha)$.  See also Chapter~\ref{chap:schutte} of this document.
 \end{remark}
 
-\paragraph{\gaiacompat (cf. Remark ~\vref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In \texttt{gaia.ssete9} the identifier\texttt{phi0} is bound to a constant (not a notation).
 
   
@@ -2997,7 +2996,7 @@ The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1
 
 \input{movies/snippets/T1/ppAlpha0}
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In ~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge},
 we define a variant of \texttt{pp} for pretty-printing terms of type \texttt{ssete9.CantorOrdinal.T1} (see Sect.~\vref{sect:gaia-ppT1}).
 
@@ -3042,7 +3041,7 @@ Links between the function \texttt{compare} and the relations
 
 \input{movies/snippets/T1/Instances}
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In \gaia, the strict order \texttt{T1lt} on ordinal terms is directly defined as a boolean function (in \ssreflect's style).
 
 \inputsnippets{nfwfgaia/T1ltDef}
@@ -3080,7 +3079,7 @@ the set of all well-formed ordinal terms:
 
 \input{movies/snippets/T1/nfBadTerm}
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In \gaia, the boolean function which characterizes ordinal terms in normal form is defined as follows:
 
 \inputsnippets{nfwfgaia/T1nfDef}
@@ -3205,7 +3204,7 @@ if $\alpha$ is (syntactically) a limit ordinal, then it is the least upper bound
 a strictly increasing sequence of ordinals.
 
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 In \gaia, the boolean functions associated with limit and successor ordinals are called \texttt{T1limit} and \texttt{T1is\_succ}.
 
  From~\href{../theories/html/gaia_hydras.HydraGaia_Examples.html}{gaia\_hydras.HydraGaia\_Examples}.
@@ -3275,7 +3274,7 @@ Ordinal addition and multiplication are also defined by structural recursion ove
 
 \input{movies/snippets/T1/multDef}
 
-\paragraph{\gaiacompat (cf. Remark ~\ref{remark:hydra-gaia-renaming})}
+\paragraph*{\gaiasign}
 We keep \gaia's base names for
 addition and multiplication of ordinal terms below $\epsilon_0$.
 Please refer to Sect.~\ref{sect:plus-mult-gaia-hydras} about compatibility of both arithmetics.

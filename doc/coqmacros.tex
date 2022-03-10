@@ -194,7 +194,7 @@
 \definecolor{lookcolor}{rgb}{0.9,0.2,0.0}
 \definecolor{darkred}{rgb}{.3,.0,.0}
 \definecolor{sourcecolor}{rgb}{.07,.1,.7}
-
+\definecolor{cyan}{rgb}{.0,1.0,1.0}
 
 
 \newunicodechar{𝟙}{\ensuremath{\mathds{1}}}
@@ -223,7 +223,11 @@
 \newcommand{\gaiaHydras}{Gaia-Hydras\xspace}
 \newcommand{\ssreflect}{SSReflect\xspace}
 \newcommand{\mathcomp}{MathComps\xspace}
-\newcommand{\gaiacompat}{\textcolor{lookcolor}{Compatibility with \gaia}\xspace}
+%%% Gaia sign
+
+\newcommand{\mycircled}[2][none]{%
+ \tikz[baseline=(a.base)]\node[draw,circle,inner sep=2pt, outer sep=0pt,fill=#1](a){\ensuremath #2\strut};
+ }
 
 {\theorembodyfont{\upshape}
  \newtheorem{exercise}{Exercise}[chapter]
