@@ -1307,10 +1307,46 @@ In addition to this big computation time, this approach
 generates a huge proof term. Just try to execute the command 
 ``\texttt{Print C87\_ok}'' to get a measure of its size.
 In order to understand this poor performance, let us consider an intermediate
-subgoal of the previous proof generated after a sequence of unfoldings and simplifications. This goal is presented below.
+subgoal of the previous proof generated after a sequence of unfoldings and simplifications. This goal is presented in Figure~\vref{fig:big-goal}.
+
 \begin{figure}[h]
   \centering
-\inputsnippets{Addition_Chains/WhySoSlow}  
+  \begin{Coqanswer}
+    1 goal (ID 506)
+  
+  A : Type
+  E_op : Mult_op A
+  E_one : A
+  E_eq : Equiv A
+  M : EMonoid E_op E_one E_eq
+  x : A
+  ============================
+  E_eq
+    (x * x * x * (x * x * x) * x * (x * x * x) *
+     (x * x * x * (x * x * x) * x * (x * x * x)) *
+     (x * x * x * (x * x * x) * x * (x * x * x) *
+      (x * x * x * (x * x * x) * x * (x * x * x))) *
+     (x * x * x * (x * x * x) * x * (x * x * x) *
+      (x * x * x * (x * x * x) * x * (x * x * x)) *
+      (x * x * x * (x * x * x) * x * (x * x * x) *
+       (x * x * x * (x * x * x) * x * (x * x * x)))) *
+     (x * x * x * (x * x * x) * x))
+    (x *
+     (x *
+      (x *
+       (x *
+        (x *
+         (x *
+          (x *
+           (x *
+            (x *
+             (x *
+              (x *
+               (x *
+                (x * (x * (x *  ...)))))))))))))))
+
+  \end{Coqanswer}
+%\inputsnippets{Addition_Chains/WhySoSlow}  
   \caption{A big goal}
   \label{fig:big-goal}
 \end{figure}

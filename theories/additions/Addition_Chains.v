@@ -208,8 +208,8 @@ will be proved  more  efficiently, using  reflection or parametricity.
 *)
 
 (** Remove the comment if you can wait ... *)
-(*
 
+(*
 Example C87_ok_slow : chain_correct 87 C87. (* .no-out *)
 Proof. (* .no-out *)
  Time  slow_chain_correct_tac. 
