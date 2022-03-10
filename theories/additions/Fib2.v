@@ -118,6 +118,7 @@ Time Compute fib_pos 153%positive.
 Locate chain_apply.
 About chain_apply.
 
+(* begin snippet fibEuclDemo *)
 Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
   let c := make_chain gamma  n
   in let r := chain_apply c (M:=Mul2) (1,0) in
@@ -126,6 +127,8 @@ Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
 Time Compute fib_eucl dicho  153.
 Time Compute fib_eucl two  153.
 Time Compute fib_eucl half 153.
+(* end snippet fibEuclDemo *)
+
 
 (*  68330027629092351019822533679447
      : N 

@@ -208,22 +208,21 @@ will be proved  more  efficiently, using  reflection or parametricity.
 *)
 
 (** Remove the comment if you can wait ... *)
-(* begin snippet slowC87Correct *)
+(*
+
 Example C87_ok_slow : chain_correct 87 C87. (* .no-out *)
 Proof. (* .no-out *)
  Time  slow_chain_correct_tac. 
 Qed.
-(* end snippet slowC87Correct *)
 
-(* begin snippet WhySoSlow *)
+
 Example C87_ok_slow' : chain_correct 87 C87. (* .none *)
 Proof. (* .none *)
   split; unfold chain_correct, chain_correct_nat. (* .none *)
   discriminate. (* .none *)
   intros; red; cbn; unfold power; simpl. (* .no-in .unfold  *)
-  (* end snippet WhySoSlow *)
 Abort.      
-
+*)
 
 
 (** * Correctness Proof by Reflection

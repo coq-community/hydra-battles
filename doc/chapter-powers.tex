@@ -1285,7 +1285,22 @@ the \texttt{EMonoid} laws shown in Sect.~\vref{EMonoid-def}.
 
 Unfortunately, this approach is terribly inefficient, even for quite small exponents:
 
-\inputsnippets{Addition_Chains/slowC87Correct}
+\begin{Coqbad}
+Example C87_ok_slow : chain_correct 87 C87.
+Proof.
+Time slow_chain_correct_tac.
+\end{Coqbad}
+
+\begin{Coqanswer}
+Finished transaction in 49.927 secs (49.445u,0.079s) (successful)
+\end{Coqanswer}
+
+\begin{Coqbad}
+Qed.
+\end{Coqbad}
+
+
+%\inputsnippets{Addition_Chains/slowC87Correct}
 
 
 In addition to this big computation time, this approach 
@@ -1887,18 +1902,14 @@ We would like to say that \texttt{f} is correct \emph{w.r.t.} \texttt{n:nat}
 if for any continuation \texttt{k} and \texttt{a}, the application of 
 \texttt{f} to \texttt{k} and \texttt{a} computes \texttt{$k(a^n)$}.
 
-\begin{Coqbad}
-Module Bad.
 
-Definition Fchain_correct  (n:nat) (f : Fchain) :=
-  forall A `(M : @EMonoid A op E_one E_equiv) k (a:A),
-    computation_execute op (f A k  a)==
-    computation_execute op (k  (a ^ n)).
-\end{Coqbad}
+
+
+
+\inputsnippets{Euclidean_Chains/BadDefa}
 
 Let us now try to prove that \texttt{F3} is correct \emph{w.r.t.} $3$.
 
-\inputsnippets{Euclidean_Chains/BadDefa}
 \inputsnippets{Euclidean_Chains/BadDefb}
 
 This failure is due to a lack of an assumption that the continuation
@@ -2614,40 +2625,7 @@ It is now possible to use Euclidean addition chains for computing Fibonacci numb
 
 The following function is parameterized by any strategy $\gamma$.
 
-\begin{Coqsrc}
-Definition fib_eucl gamma `{Hgamma: Strategy gamma} n :=
-  let c := make_chain gamma  n
-  in let r := chain_apply c (M:=Mul2) (1,0) in
-       fst r + snd r.
-
-Compute fib_eucl dicho 153.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-    = 68330027629092351019822533679447
-     : N
-Finished transaction in 0.002 secs (0.002u,0.s) (successful)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute fib_eucl two 153.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-    = 68330027629092351019822533679447
-     : N
-Finished transaction in 0.003 secs (0.003u,0.s) (successful)
-\end{Coqanswer}
-
-\begin{Coqsrc}
-Compute fib_eucl half 153.
-\end{Coqsrc}
-
-\begin{Coqanswer}
-    = 68330027629092351019822533679447
-     : N
-Finished transaction in 0.003 secs (0.003u,0.s) (successful)
-\end{Coqanswer}
+\inputsnippets{Fib2/fibEuclDemo}
 
 
 \section{Projects}
