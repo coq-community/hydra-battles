@@ -8,8 +8,9 @@ From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0.
 
 From gaia Require Export ssete9.
-Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
+Set Bullet Behavior "Strict Subproofs".
+
 
 Set Implicit Arguments.
 Unset Strict Implicit.

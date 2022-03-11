@@ -1,4 +1,4 @@
-\chapter{Gaia and the hydras (draft)}
+\chapter{Gaia and the hydra (draft)}
 \index{coq}{Plug-ins!Gaia}
 \label{gaia-chapter}
 
@@ -48,7 +48,7 @@ Gaia without SSReflect\footnote{The author of these proof scripts is still a beg
 The \gaiaHydras library is designed for users of
 \gaia and/or  \HydrasLib. Whenever possible, we managed to respect the notations and naming conventions of both libraries.
 
-The modules are located in {\texttt{theories/gaia/*.v}}.
+The modules are named {\texttt{theories/gaia/*.v}} and coqdocumented in {\texttt{theories/html/gaia\_hydras.*.html}}
 The main entry point is
 \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}, which requires both Gaia's \texttt{ssete9} and a few modules of \texttt{theories/ordinals/Epsilon0}.
 Other modules are dedicated to the adaptation of several notions of \HydrasLib to \mathcomp's and \gaia's vocabulary and structures.
@@ -83,7 +83,7 @@ The bridge between both libraries is made of two straightforward bijections.
 \subsubsection{Pretty printing Cantor normal forms}
 \label{sect:gaia-ppT1}
 
-The function \texttt{g2h} is also used to provide a ``pretty'' printing of Cantor normal forms (please see Sect.~\vref{sect:ppT1}).
+The following function provides us with a more readable  printing of Cantor normal forms (please see Sect.~\vref{sect:ppT1}).
 
 \inputsnippets{T1Bridge/T1ppDef}
 
@@ -186,7 +186,7 @@ $\alpha \times \beta=\beta$.
 
 \subsection{A type for well-formed ordinal terms}
 
-For sake of compatibility, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
 
 \inputsnippets{T1Bridge/E0Def}
 \inputsnippets{T1Bridge/E0plusMultDef}
@@ -306,7 +306,6 @@ The following lemmas are proved by rewriting from corresponding statements prove
 
 
 \inputsnippets{GCanon/gcanonLt}
-\inputsnippets{GCanon/glimitCanonSNotZero}
 \inputsnippets{GCanon/gcanonLimitMono}
 \inputsnippets{GCanon/glimitCanonSNotZero}
 
@@ -382,7 +381,7 @@ From~\href{../theories/html/gaia_hydras.G~F_alpha.html}%
 
 \begin{todo}
   Give equations for \texttt{F\_} (corresponding to the equation
-  in \HydrasLib.
+  in \HydrasLib).
 \end{todo}
 
 
