@@ -209,7 +209,7 @@ Qed.
 
 (*| .. coq:: no-out |*)
 
-#[global] Instance HVariant : @Hvariant _ _ E0lt_wf free var.
+#[global] Instance HVariant : Hvariant E0lt_wf free var.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.
@@ -218,8 +218,8 @@ Qed.
 Theorem every_battle_terminates : Termination.
 Proof. 
   red; apply Inclusion.wf_incl with (R2 := fun h h' =>  m h t1< m h').
-   red; intros;  now apply round_decr.
-   apply Inverse_Image.wf_inverse_image, T1_wf.
+  red; intros;  now apply round_decr.
+  apply Inverse_Image.wf_inverse_image, T1_wf.
 Qed.
 (*||*)
 (* end snippet FinalThm *)

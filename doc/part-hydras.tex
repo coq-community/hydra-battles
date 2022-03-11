@@ -2707,7 +2707,7 @@ in Veblen normal form (see
 
 
 \section{Ordinal Notations and \gaia's ordinals}
-Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} contains an instance of class \texttt{ON E0lt compare}, where \texttt{E0lt} is the order on the well-formed ordinal terms below $\epsilon_0$ defined in \gaia library (please see Chapter~\ref{gaia-chapter}).
+\gaiasign Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} contains an instance of class \texttt{ON E0lt compare}, where \texttt{E0lt} is the order on the well-formed ordinal terms below $\epsilon_0$ defined in \gaiaHydras library (please see Chapter~\ref{gaia-chapter}).
 
 
 
@@ -2858,7 +2858,7 @@ to a hierarchy of ordinal notations. For instance, in Library \href{../theories/
 
 
 \subsection{About Gaia}
-Chapter~\vref{gaia-chapter} describes the present state of a
+\gaiasign Chapter~\vref{gaia-chapter} describes the present state of a
 project of making compatible the libraries \HydrasLib and \gaia. At present, both libraries contain a version of the inductive type \texttt{T1}, with the same base name for the constructors.
 
 \inputsnippets{nfwfgaia/T1def}
@@ -3126,13 +3126,16 @@ For instance, in the following lemma, the condition that $\alpha$ is in normal f
 As we noticed in Sect.~\ref{sect:t1-nf}, the type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In certain contexts (for instance in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
 and \ref{sect:wainer}),  we need to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
  In order to define a type whose inhabitants represent just ordinals, we build a type gathering a term of type \texttt{T1} and a proof that this term is in normal form.
+
+ 
+
  
 
 \label{sect:E0-def}
 \label{types:E0}
 \index{hydras}{Library Epsilon0!Types!E0}
 
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
+\emph{From Module~w}
 
 \input{movies/snippets/E0/E0Def}
 
@@ -3179,7 +3182,8 @@ For instance, let us represent the ordinals $0$ and $\omega$   as instances of t
 
 %\index{Constants!zero:T1}
 
-
+\paragraph*{\gaiasign}
+ The library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines a \gaia-compatible type \texttt{E0}.
 
 
 
@@ -3809,6 +3813,11 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     \input{movies/snippets/Hydra_Termination/FinalThm}
 
+    \paragraph*{\gaiasign}
+    The module~\href{../theories/html/gaia_hydras.GHydra.html}{gaia\_hydras.GHydra} contains a proof of \gaiaHydras version of termination of all battles.
+
+    \inputsnippets{GHydra/mDef, GHydra/mVariant, GHydra/Termination}
+    
     \section*{Conclusion}
 
     Let us recall three results we have proved so far.
