@@ -213,6 +213,8 @@ L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Pea
 Although the mathematical contents of this 
 paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
+Let us underline the analogy between hydra battles and interactive theorem proving. Hercules is the user (you!), and hydra's heads are the subgoals: you may think that applying a tactic would solve a subgoal, but it results often in the multiplication of such tasks.
+
 
 
 Hydra battles, as well as Goodstein sequences~\cite{goodstein_1944, KP82}
@@ -222,7 +224,11 @@ based on ordinal numbers, as well as a proof that this termination is not
 provable in Peano arithmetic. In the book dedicated to 
 J.P. ~Jouannaud \cite{HommageJPJ}, N.~Dershowitz and G.~Moser  give a thorough survey on this topic~\cite{Dershowitz2007}.
 
-Let us underline the analogy between hydra battles and interactive theorem proving. Hercules is the user (you!), and hydra's heads are the subgoals: you may think that applying a tactic would solve a subgoal, but it results often in the multiplication of such tasks.
+We present a (still partial, under continuous development) implementation in \coq of the various techniques shown in
+Kirby \& Paris' and Ketonen \& Solovay's~\cite{KS81} article.
+
+Our library \gaiaHydras is dedicated to make compatible our lemmas with José Grimm's \gaia project (designed for \ssreflect/\mathcomp).
+
 
 \item In the second part, we are interested in computing $x^n$ with the least number of multiplications as possible. We use the notion of \emph{addition chains}~\cite{brauer1939,DBLP:journals/ipl/BerstelB87}, to generate efficient certified exponentiation functions.
 \end{itemize}
@@ -234,17 +240,74 @@ This document is \emph{not} an introductory text for \coq, and there are many as
 
  
  
- \subsection{Developing and maintaining the \coq code and documentation}
+ \subsection{Structure of \Hydras}
 
- \textbf{TODO} introductory text and link to \cite{jfla2022}
- 
- \subsubsection{Continuous Integration and Continuous Delivery}
-
- \textbf{TODO}
-
+ \Hydras is made of three main packages: \HydrasLib, \gaiaHydras, and \additions. Figure~\ref{fig:genealogy}  illustrates
+ the complex relationships: inheritance from historical contributions to \coq, and dependency with other \coq packages.
+ Many thanks to  Karl Palmskog and Théo Zimmermann for the CI/CD design of \Hydras and the automation of documentation maintenance.
+ Please look for a more detailed description in~\cite{jfla2022}.
  
  
-\subsubsection{Documenting theories with \alectr}
+ \begin{figure}[ht]
+\centering
+{\footnotesize
+\begin{tikzpicture}[thick]
+
+\begin{scope}[xshift=-6cm]
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
+
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\end{scope}
+
+\begin{scope}[yshift=-1cm,xshift=0.25cm]
+  \node[rectangle, draw=black,fill=blue!20,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=1.8cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=1.5cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
+\end{scope}
+
+\begin{scope}[yshift=-2cm,xshift=-4cm]
+\node[rectangle, draw=black,fill=orange!30,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,fill=blue!20,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
+\node[rectangle, draw=black,fill=orange!30,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+\node[rectangle, draw=black,fill=blue!20,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
+\end{scope}
+
+\begin{scope}[yshift=-3cm,xshift=-6cm]
+ \node[rectangle, draw=black,fill=blue!20,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+ \node[rectangle, draw=black,fill=orange!30,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+\end{scope}
+
+\draw[->,dotted] (additions.south) -- (chains.north) ;
+\draw[->,dotted] (goedel) -- (goedelcc) ;
+\draw[->,dotted] (goedel) -- (hydras.north west) ;
+\draw[->,dotted] (cantor) -- (hydras.north east) ;
+\draw[->,dotted] (cantor.south) -- (gaia.north west) ;
+\draw[->,dotted] (pock) -- (pockcc) ;
+\draw[->,dotted] ([xshift=2.1cm]cats) -- (gaia) ;
+
+\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south west) -- (goedelcc) ;
+\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+\draw[->] (equations) -- (hydras) ;
+\draw[->] (mathcomp) -- (gaia) ;
+\draw[->] (mathcomp) -- (chains) ;
+\draw[->] (paramcoq.south) -- (chains) ;
+\draw[->] (pockcc) -- (goedelcc) ;
+\end{tikzpicture}
+}
+\caption{Genealogy and dependencies for \Hydras packages. Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while light blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
+  \label{fig:genealogy}
+\end{figure}
+
+ 
+
+ 
+ 
+\subsection{Documenting theories with \alectr}
 
 Quotations of \coq source and answers are progressively replaced from copy-pasted \emph{verbatim} to automatically generated \emph{LaTeX} blocks, using Clément Pit-Claudel's \alectr  tool~\cite{alectryonpaper, alectryongithub}.
 Many thanks to Jérémy Damour, Clément Pit-Claudel  and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
@@ -274,7 +337,7 @@ It may also happen that some proof looks to be useless, because the proven theor
 For instance, let us consider the three following statements:
 \begin{enumerate}
 \item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
-\item There is no measure into the interval\footnote{We use the notation $[a,b)$ for denoting the set of ordinals greater or equal than $a$ and strictly less than $b$.}  $[0,\omega^2)$ for proving the termination of all hydra battles (Sect.~\vref{omega2-case}).
+\item There is no measure into the interval\,\footnote{We use the notation $[a,b)$ for denoting the set of ordinals greater or equal than $a$ and strictly less than $b$.}  $[0,\omega^2)$ for proving the termination of all hydra battles (Sect.~\vref{omega2-case}).
 \item There is no measure into $[0,\mu)$ for proving the termination of all hydra battles, for any $\mu<\epsilon_0$ (Sect.\vref{sec:free-battles-case}).
 \end{enumerate}
 
