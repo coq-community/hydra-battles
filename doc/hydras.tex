@@ -54,7 +54,7 @@
 \input{coqmacros}
 
 \newcommand{\gaiacompat}{\textcolor{blue}{Gaia}}
-\newcommand{\gaiasign}{\texorpdfstring{\mycircled[cyan]{{\mbox{\color{blue}{\scriptsize{G}}}}}}{Gaia-Hydra}}
+\newcommand{\gaiasign}{\texorpdfstring{\mycircled[cyan!40]{{\mbox{\color{blue}{\scriptsize{G}}}}}}{Gaia-Hydra}}
 \newtheorem{gaiahydra}{\gaiasign}
 
 
@@ -211,9 +211,9 @@ In this document, we present two examples which seem to have the above propertie
 \item Hydra games (a.k.a. \emph{Hydra battles}) appear in an article published in 1982 by two mathematicians:
 L. Kirby and J. Paris~\cite{KP82}: \emph{Accessible Independence Results for Peano Arithmetic}. 
 Although the mathematical contents of this 
-paper are quite advanced, the rules of hydra battles are very easy to understand. There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
+paper are quite advanced, the rules of hydra battles are very easy to understand\footnote{Let us underline the analogy between hydra battles and interactive theorem proving. Hercules is the user (you!), and hydra's heads are the subgoals: you may think that applying a tactic would solve a subgoal, but it results often in the multiplication of such tasks.}.
+There are now several sites on the Internet where you can find tutorials on hydra games, together with simulators you can play with. See, for instance, the blogpost and source code written by Andrej Bauer~\cite{bauer2008,BauerHydra}.
 
-Let us underline the analogy between hydra battles and interactive theorem proving. Hercules is the user (you!), and hydra's heads are the subgoals: you may think that applying a tactic would solve a subgoal, but it results often in the multiplication of such tasks.
 
 
 
@@ -253,18 +253,18 @@ This document is \emph{not} an introductory text for \coq, and there are many as
 {\footnotesize
 \begin{tikzpicture}[thick]
 
-\begin{scope}[xshift=-6cm]
+\begin{scope}[xshift=-6.5cm]
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=1.9cm] (pock) { Pocklington };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=1.8cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=1.8cm] (cantor) { Cantor };
 
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=2.2cm] (cats) { Categories in ZFC };
 \end{scope}
 
-\begin{scope}[yshift=-1cm,xshift=0.25cm]
+\begin{scope}[yshift=-1cm,xshift=-4.25cm]
   \node[rectangle, draw=black,fill=blue!20,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=1.8cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=5.8cm] (mathcomp) { MathComp };
 \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=1.5cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
 \end{scope}
 
@@ -388,7 +388,7 @@ and~\ref{chapter-powers}.
 
 \subsubsection{Verbatim quotations}
 
-Quotations of \coq{} source  from Standard Library and code which lead to compilation error or too long computations are displayed as follows.
+Quotations of \coq{} source  from others libraries (\coq's standard library, borrowed plug-ins)  are displayed as follows.
 
 \begin{Coqsrc}
   Inductive CompareSpec (Peq Plt Pgt : Prop) :
@@ -398,6 +398,7 @@ Quotations of \coq{} source  from Standard Library and code which lead to compil
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
 \end{Coqsrc}
 
+We use also verbatim code inclusions when the examples lead to very long computations.
 
 \begin{Coqbad}
 Example C87_ok_slow : chain_correct 87 C87.
