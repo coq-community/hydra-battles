@@ -73,9 +73,9 @@ Qed.
 Lemma canon0_lt alpha:
   T1nf alpha -> alpha <> zero -> T1lt (canon alpha 0) alpha.
 Proof. 
-  rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf Hpos.  
-  rewrite g2h_h2gK; apply lt_ref, Canon.canon0_LT => //.
-  move => H; apply Hpos; rewrite H => //.
+  rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf.  
+  rewrite g2h_h2gK => Hpos.
+  apply lt_ref, Canon.canon0_LT => // H; by rewrite H in Hpos. 
 Qed. 
 
 Lemma canonS_lt  (i : nat) [alpha : T1]:
@@ -268,8 +268,8 @@ Lemma  canon_limit_mono lambda i j (Hnf : T1nf lambda)
  Lemma canon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
    limit_of (canon lambda) lambda.
  Proof.
-   split => //.
-   move => n m Hnm; apply canon_limit_mono => //.
+   split => // [n m Hnm|].
+   apply canon_limit_mono => //.
    apply gcanon_limit_v2 => //.
  Qed.    
  (* end snippet gcanonLimitOf *)
@@ -291,6 +291,6 @@ Defined.
      apply Canon.canon_lt. 
    - rewrite hnf_g2h;  by apply /eqP.
    - rewrite /Hpos -h2g_eq_iff h2g_g2hK => H0; 
-     apply Hpos; subst; rewrite -g2h_eq_iff => //.
+     apply Hpos; subst; by rewrite -g2h_eq_iff.
  Qed.
 
