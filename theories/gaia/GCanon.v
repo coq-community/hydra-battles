@@ -12,8 +12,6 @@ From hydras Require Import T1.
 From gaia Require Import ssete9.
 Import CantorOrdinal. 
 
-Set Bullet Behavior "Strict Subproofs".
-
 (** Importation of Ketonen-Solovay's  machinery into gaia's world
     (work in progress) 
     

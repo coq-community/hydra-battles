@@ -11,8 +11,6 @@ From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
-
-Set Bullet Behavior "Strict Subproofs".
 (* end snippet Requirements *)
 
 From hydras Require Import primRec PrimRecExamples. 

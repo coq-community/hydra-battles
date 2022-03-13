@@ -9,8 +9,6 @@ From hydras Require Import T1 E0.
 
 From gaia Require Export ssete9.
 (* end snippet Requirements *)
-Set Bullet Behavior "Strict Subproofs".
-
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -868,9 +866,9 @@ Lemma E0compare_correct (alpha beta : E0) :
 (* ... *)
 (* end snippet E0compare *)                                
 Proof.
-  destruct alpha, beta; rewrite /compare.
+  destruct alpha, beta; rewrite /compare;
   case  (T1compare_correct cnf0 cnf1) => Hcomp.
-  - subst; replace i0 with i. 
+  { subst; replace i0 with i. 
     + rewrite /E0compare; cbn. 
       replace (compare (g2h cnf1) (g2h cnf1)) with Datatypes.Eq => //.
       * by constructor. 
@@ -878,14 +876,17 @@ Proof.
     + apply eq_proofs_unicity_on; destruct y, (T1nf cnf1) => //.
       left => //.
       right => //.
-  -  rewrite /E0compare; cbn. 
+  }
+  {
+    rewrite /E0compare; cbn. 
      replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Lt.
      + constructor; rewrite /E0lt => //.
      + unfold compare; rewrite T1lt_iff in Hcomp. 
        destruct Hcomp as [_ [Hcomp _]].
        rewrite -compare_lt_iff in Hcomp => //.  
-       all: by apply /eqP. 
-  - rewrite /E0compare; cbn. 
+       1, 2: by apply /eqP. 
+   }
+  rewrite /E0compare; cbn. 
     replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Gt.
     + constructor; rewrite /E0lt => //.
     +  unfold compare; rewrite T1lt_iff in Hcomp. 

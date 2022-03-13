@@ -4,7 +4,6 @@ From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg.
 From gaia Require Export ssete9.
-Set Bullet Behavior "Strict Subproofs".
 
 Require Import T1Bridge GCanon GHessenberg GLarge_Sets. 
 Set Implicit Arguments.

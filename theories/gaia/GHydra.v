@@ -5,7 +5,6 @@ From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg Hydra_Theorems Hydra_Definitions
      Hydra_Termination.
 From gaia Require Export ssete9.
-Set Bullet Behavior "Strict Subproofs".
 
 Require Import T1Bridge GHessenberg.
 Set Implicit Arguments.

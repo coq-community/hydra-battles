@@ -3,8 +3,6 @@ From hydras Require Import DecPreOrder ON_Generic.
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
 From Coq Require Import Logic.Eqdep_dec.
-Set Bullet Behavior "Strict Subproofs".
-
 
 Set Implicit Arguments.
 Unset Strict Implicit.

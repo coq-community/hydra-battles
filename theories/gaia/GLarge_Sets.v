@@ -12,8 +12,6 @@ Require Import T1Bridge GCanon GPaths.
 From gaia Require Import ssete9.
 Import CantorOrdinal. 
 
-Set Bullet Behavior "Strict Subproofs".
-
 Notation hmlarge  := mlarge.
 Notation hmlargeS  := mlargeS.
 Definition mlarge alpha s := hmlarge (g2h alpha) s.
