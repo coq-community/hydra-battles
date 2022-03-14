@@ -460,7 +460,7 @@ We leave it to the reader  to guess the following  rounds of the battle \dots
 
 
 In order to describe trees where each node can have an arbitrary (but finite) number of sons, it is usual to define a type where each node carries a \emph{forest}, \emph{i.e} a list of trees
-(see for instance Chapter 14, pages 400-406 of \cite{BC04,BC04ch14}).
+(see for instance Chapter 14, pages 400-406 of \cite{BC04}, also available as~\cite{BC04ch14}).
 
 For this purpose, we define two mutual \emph{ad-hoc}  inductive types, where \texttt{Hydra} is the main type, and \texttt{Hydrae} is a helper for describing finite sequences of hydras.
 \label{types:Hydra}
@@ -761,7 +761,7 @@ The rest of the definition is composed of two mutually inductive relations on hy
 \input{movies/snippets/Hydra_Definitions/R2Def}
 
 \subsubsection{Example}
-Let us prove the transformation of \texttt{Hy'} into \texttt{Hy''} (see Fig.~\vref{fig:Hy3}). We use an experimental set of tactics for specifying the place where the 
+Let us prove the transformation of \texttt{Hy'} into \texttt{Hy''} (see Fig.~\vref{fig:Hy3}). We use an experimental set of tactics\footnote{See the \texttt{Ltac} definitions in~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#R2}{Hydra.Hydra\_Definitions.}}  for specifying the place where the 
 interaction between Hercules and the hydra holds. 
 
 
@@ -847,7 +847,7 @@ The same remark also holds for reflexive and transitive closures.
 Define a restriction of \coqsimple{round},  where Hercules always chops off
 the leftmost among the lowest heads.
 
-Prove that, if $h$ is not a simple head, then there exists a unique $h'$ such that \texttt{h}  is transformed into \texttt{ h'} in one round, according to this restriction.
+Prove that, if $h$ is not a simple head, then there exists a unique $h'$ such that $h$  is transformed into $h'$ in one round, according to this restriction.
 
 
 \end{exercise}
@@ -892,7 +892,8 @@ goal \Verb@{h':Hydra | h -*-> h'}@ generates the subgoal \Verb|h -*-> ?h'|.
 
 In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transformation associated with the $i$-th round may depend on $i$. For instance, in these articles, the replication factor at the $i$-th round is equal to $i$. In other examples, one can allow the hydra to apply any replication factor at any time. In order to be the most general as possible, we define the type of predicates which relate the state of the hydra before and after the $i$-th round of a battle.
 
-\vspace{4pt}
+\vspace{6pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html}{Hydra.Hydra\_Definitions}}
 \label{types:Battle}
 \index{hydras}{Library Hydra!Type classes!Battle}
@@ -901,16 +902,18 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 
 The most general class of battles is \texttt{free}, which allows the hydra to chose any replication factor at every step:
 
-\vspace{4pt}
+\vspace{6pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#free}{Hydra.Hydra\_Definitions}}
 
 \input{movies/snippets/Hydra_Definitions/freeDef}
 
 We chose to call \emph{standard}\footnote{This appellation is ours. If there is a better one, we will change it.} the kind of battles which appear  most often in the literature and correspond to an arithmetic progression of the replication factor : $0,1,2,3, \dots$
 
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
 
+\vspace{6pt}
+\noindent
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#standard}{Hydra.Hydra\_Definitions}}
 \input{movies/snippets/Hydra_Definitions/standardDef}
 
 
@@ -919,8 +922,8 @@ We chose to call \emph{standard}\footnote{This appellation is ours. If there is 
 
 Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductively the relation between the $i$-th and the $j$-th steps of a battle of type $B$. 
 
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
+\vspace{6pt}
+\noindent\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#fight}{Hydra.Hydra\_Definitions}}
 
 \input{movies/snippets/Hydra_Definitions/battleRelDef}
 
@@ -928,9 +931,8 @@ The following property allows us to build battles by composition of smaller ones
 
 %% TODO display subgoals when fixed
 
-\vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
-
+\vspace{6pt}
+\noindent\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
 \noindent
 \input{movies/snippets/Hydra_Lemmas/battleTrans}
 
@@ -1004,7 +1006,7 @@ Thus, we can consider this development as a collaboration of proof with computat
 In the following lines, we show how we found experimentally the value of the number $N$.
 The complete proof is in file \url{../theories/html/hydras.Hydra.BigBattle.html}. 
 
-\subsection{The beginning of hostilities}
+\subsection{First rounds}
 During the two first rounds, our hydra loses its two rightmost heads.  Figure~\vref{fig:hinit-plus2} shows the state of the hydra   just before the third round.
 
 
@@ -1102,6 +1104,7 @@ With these notations, we get a formal description of the first three rounds.
 
 
 \subsection{Testing  \dots}
+\label{sect:testing}
 In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple data type for representing the states as tuples composed of
 the round number, and the respective number of daughters  \texttt{h2}, \texttt{h1}, and heads
 of the current hydra.
@@ -1164,7 +1167,7 @@ We are now able to reason about the sequence of transitions defined by our hydra
 between different configurations of the battle.
 
 Let us define a binary relation associated with every round of the battle.
-In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot.
+In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of occurrences of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot.
 
 \input{movies/snippets/BigBattle/oneStep}
 
@@ -1195,7 +1198,7 @@ Using the predicate \texttt{steps},  our study of the length of the considered b
 can  be decomposed into three parts:
 
 \begin{enumerate}
-\item  Characterization of regularities of some events
+\item  Characterization and proofs of regularities of some events (inspired by our experiments of Sect.~\ref{sect:testing}).
 \item Study of the beginning of the battle
 \item Computing the exact length of the battle.
 \end{enumerate}
@@ -1394,7 +1397,7 @@ The termination of \emph{any}  battle is naturally expressed by the predicate \t
 
 Let $B$ be an instance of class \texttt{Battle}. A \emph{variant} for $B$ consists
 in a well-founded relation $<$  on some type \texttt{A}, and a function
-(also called a \emph{measure}) \texttt{m:Hydra->A} such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $B$, the inequality $m(h')<m(h)$ holds.
+(also called a \emph{measure}) $m:\texttt{Hydra}\rightarrow A$ such that for any successive steps $(i,h)$ and $(1+i,h')$  of a battle in $B$, the inequality $m(h')<m(h)$ holds.
 
 
 \vspace{4pt}
@@ -1763,7 +1766,8 @@ We give  also a few handy definitions and lemmas for any ordinal notation.
 \label{sect:bigO-ON}
 
 
-\inputsnippets{ON_Generic/ONDefsa, ON_Generic/ONDefsb}
+\inputsnippets{ON_Generic/ONDefsa}
+\inputsnippets{ON_Generic/ONDefsb}
 
 \begin{remark}
 The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.

@@ -67,9 +67,7 @@ Qed.
 
 Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
 Proof.
-  eapply battle_trans.
-  - apply L_2_3.
-  - apply L_0_2.
+  apply battle_trans with (1:= L_2_3) (2:= L_0_2).  
 Qed.
 (*||*)
 (* end snippet L23L03 *)
@@ -175,20 +173,15 @@ Inductive one_step (i: nat) :
 
 Lemma step_battle : forall i a b c a' b' c',
     one_step i a b c a' b' c' ->
-    battle standard i (hyd  a b c)
-           (S i) (hyd a' b' c'). (* .no-out *)
+    battle standard i (hyd  a b c) (S i) (hyd a' b' c'). (* .no-out *)
 (*|
 .. coq:: none
 |*)
 Proof.
-  
   destruct 1.
   - left; trivial;  left;  split.
-    apply hcons_mult_S0.   
-    apply hcons_mult_S0. 
-    simpl; now left. 
-  - left; trivial; right.
-    left.       
+    do 2 apply hcons_mult_S0; now left. 
+  - left; trivial; right; left.       
     apply hcons_mult_S1; simpl.
     rewrite <- hcons_mult_comm.
     apply hcons_mult_S1.
@@ -199,7 +192,6 @@ Proof.
     simpl; rewrite  <- hcons_mult_comm;  apply hcons_mult_S1.
     left; split;  simpl;  right; constructor.
 Qed.
-
 (*||*)
 
 (* end snippet stepBattle *)
@@ -266,9 +258,8 @@ Qed.
 Lemma LS : forall c a b i,  steps i a b (S c) (i + S c) a b 0.
 Proof.
   induction c.
- -  intros;  replace (i + 1) with (S i).
-    + repeat constructor.
-    + ring.
+ -  intros;  replace (i + 1) with (S i) by ring. 
+    repeat constructor.
  -  intros; eapply  steps_S.
     +  eleft;   apply step1.
     + replace (i + S (S c)) with (S i + S c) by ring;  apply IHc.
@@ -302,14 +293,12 @@ Qed.
 
 Lemma L10 : reachable 10 2 3 0.
 Proof.
-  change 10 with (doubleS 4).
-  apply reachable_S, L4.
+  change 10 with (doubleS 4); apply reachable_S, L4.
 Qed.
 
 Lemma L22 : reachable 22 2 2 0.
 Proof.
-  change 22 with (doubleS 10).
-  apply reachable_S, L10.
+  change 22 with (doubleS 10); apply reachable_S, L10.
 Qed.
 
 
@@ -325,9 +314,7 @@ Qed.
 
 Lemma L95 : reachable 95 1 95 0.
 Proof.
-  eapply steps_S.
-  -  eexact L94.
-  -  repeat constructor.
+  eapply steps_S; [eapply L94|]; repeat constructor.
 Qed.
 
 (*||*)
@@ -335,10 +322,7 @@ Qed.
 (* end snippet L10To95 *)
 
 Lemma L0_95 : battle standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
-Proof.
-  apply steps_battle.
-  apply L95.
-Qed.
+Proof.   apply steps_battle, L95. Qed.
 
   
 (** No more tests ! we are going to build bigger transitions *)
@@ -372,10 +356,7 @@ Lemma Bigstep : forall b i a , reachable i a b 0 ->
 Definition M := iterate doubleS 95 95.
 
 Lemma L2_95 : reachable M 1 0 0. (* .no-out *)
-Proof. (* .no-out *)
-  apply Bigstep,  L95.
-Qed.
-
+Proof. (* .no-out *) apply Bigstep,  L95. Qed.
 (* end snippet MDef *)
 
 (** the next step creates (M+1) copies of h1 *)
@@ -388,9 +369,7 @@ Qed.
 
 Lemma L2_95_S : reachable (S M) 0 (S M) 0.
 Proof.
-  eright.
- - apply L2_95.
- -  left; constructor 3.
+  eright; [ apply L2_95 | left; constructor ]. 
 Qed.
 
 (*||*)
@@ -427,16 +406,12 @@ Qed.
 
 Lemma Almost_done :
   battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
-Proof. 
-  apply steps_battle, SuperbigStep.
-Qed.
+Proof.  apply steps_battle, SuperbigStep. Qed.
 
 Theorem Done :
   battle standard 0 hinit N head.
 Proof.
-  eapply battle_trans.
-  - apply Almost_done.
-  - apply L_0_3.
+  eapply battle_trans with (1:= Almost_done) (2:= L_0_3).
 Qed.
 
 (*||*)

@@ -61,6 +61,7 @@ Section Definitions.
   Qed.
 
   (* begin snippet ONDefsb *)
+  
   #[using="All"]
    Definition ZeroLimitSucc_dec :=
     forall alpha,

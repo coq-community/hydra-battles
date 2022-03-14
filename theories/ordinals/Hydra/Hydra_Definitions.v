@@ -396,9 +396,9 @@ Let us formalize this dependence through a relation linking the number of the cu
 (* begin snippet BattleDef *)
 Definition round_t := nat -> Hydra -> Hydra -> Prop.
 
-Class Battle :=  {battle_rel : round_t;
-                  battle_ok : forall i h h',
-                      battle_rel i h h' -> round h h'}.
+Class Battle :=
+  { battle_rel : round_t;
+    battle_ok : forall i h h', battle_rel i h h' -> round h h'}.
 
 Arguments battle_rel : clear implicits.
 (* end snippet BattleDef *)
