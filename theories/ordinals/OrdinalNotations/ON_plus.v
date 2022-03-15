@@ -78,8 +78,8 @@ Qed.
 
 Lemma compare_correct alpha beta :
     CompSpec eq lt alpha beta (compare alpha beta). (* .no-out *)
+(* ... *)
 (* end snippet compareCorrect *)
-
 Proof.
   generalize (compare_reflect alpha beta).
   destruct (compare alpha beta); now constructor. 
@@ -89,11 +89,7 @@ Qed.
 (* begin snippet plusComp:: no-out *)
 
 #[global] Instance plus_comp : Comparable lt compare_t.
-Proof.
-  split.
-  - apply lt_strorder.
-  - apply compare_correct. 
-Qed.
+Proof.  split; [apply lt_strorder | apply compare_correct]. Qed.
 (* end snippet plusComp *)
 
 
@@ -106,8 +102,7 @@ Qed.
 
 Lemma lt_wf : well_founded lt.
 Proof.
-  destruct NA, NB.
-  apply wf_disjoint_sum; [apply ON_wf | apply ON_wf0].
+  destruct NA, NB; apply wf_disjoint_sum; [apply ON_wf | apply ON_wf0].
 Qed.
 
 (*||*)
@@ -121,11 +116,7 @@ Qed.
 |*)
 
 #[global] Instance ON_plus : ON lt compare_t.
-Proof.
-  split.
-  - apply plus_comp.
-  - apply lt_wf.
-Qed.
+Proof. split; [apply plus_comp | apply lt_wf]. Qed.
 
 (*||*)
 

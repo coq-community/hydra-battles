@@ -19,11 +19,6 @@ Open Scope ON_scope.
 #[ global ] Instance Omega2: ON _ compare_nat_nat := ON_mult Omega Omega.
 
 Definition t := ON_t.
-
-Example ex1 : (5,8) o< (5,10).
-Proof.
-  right; auto with arith.
-Qed.
 (* end snippet Omega2Def *)
 
 Open Scope ON_scope.
@@ -37,6 +32,12 @@ Definition fin (i:nat) : t := (0,i).
 Coercion fin : nat >-> t.
 
 (* end snippet Defs *)
+
+(* begin snippet Ex1:: no-out *)
+Example ex1 : (5,8) o< (5,10).
+Proof. right; auto with arith. Qed.
+(* end snippet Ex1 *)
+
 
 Compute ON_compare omega (fin 42).
 
@@ -390,10 +391,12 @@ Qed.
 Compute 3 + omega.
 
 Compute omega + 3.
+(* end snippet plusExamples *)
+
 
 Example non_commutativity_of_plus :  omega + 3 <> 3 + omega. 
 Proof.  discriminate. Qed.
-(* end snippet plusExamples *)
+
 
 (* begin snippet multFinDef *)
 
@@ -404,7 +407,7 @@ Definition mult_fin_r  (alpha : t) (p : nat): t :=
   |  (0,0), _  => zero
   |  _, 0 => zero
   |  (0, n), p => (0, n * p)
-  |  (n, b),  n' => ( n *  n', b)
+  |  (n, b), n' => ( n *  n', b)
   end.
 Infix "*" := mult_fin_r : ON_scope.
 
@@ -414,7 +417,7 @@ Definition mult_fin_l (n:nat)(alpha : t) : t :=
   match n, alpha with
   |  0, _  => zero
   |  _, (0,0) => zero
-  |   n , (0,n') => (0, (n*n')%nat)
+  |  n , (0,n') => (0, (n*n')%nat)
   |  n, (n',p') => (n', (n * p')%nat)
   end.
 
@@ -578,6 +581,7 @@ Section Merge.
       if ltb x y then x :: merge  ltb (xs, (y :: ys))
       else y :: merge  ltb ((x :: xs), ys)
     end.
+  (* ... *)
 (* end snippet Merge *) 
   
   - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
@@ -588,9 +592,5 @@ Section Merge.
 
 (* begin snippet Mergeb:: no-out  *)  
 End Merge.
-
-Goal forall l, merge nat Nat.leb (nil, l) = l.
-  intro; now rewrite merge_equation.
-Qed.
 (* end snippet Mergeb *)
 

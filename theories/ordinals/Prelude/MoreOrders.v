@@ -10,7 +10,8 @@ Definition leq {A:Type}(lt : relation A): relation A :=
   clos_refl A lt.
 
 (* begin snippet Defs *)
-Section A_given.
+Section Defs.
+  
   Variables (A : Type)
             (lt: relation A).
   
@@ -81,7 +82,7 @@ Section A_given.
     now transitivity y.
   Qed.
 
-End A_given.
+End Defs.
 
 Lemma le_lt_eq  {A}{lt: relation A}:
   forall a b, leq lt a b <-> lt a b \/ a = b.

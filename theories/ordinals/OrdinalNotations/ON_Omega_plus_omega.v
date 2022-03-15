@@ -12,21 +12,18 @@ Delimit Scope opo_scope with opo.
 Open Scope ON_scope.
 Open Scope opo_scope.
 
-(* begin snippet OmegaPlusOmegaDef *)
+(* begin snippet OmegaPlusOmegaDef:: no-out *)
 
-#[ global ] Instance compare_nat_nat : Compare t :=
+#[ global] Instance compare_nat_nat : Compare t :=
  compare_t compare_nat compare_nat.
 
-#[ global ] Instance Omega_plus_Omega: ON _ compare_nat_nat :=
+#[ global] Instance Omega_plus_Omega: ON _ compare_nat_nat :=
  ON_plus Omega Omega.
 
 Definition t := ON_t.
 
-Example ex1 : inl 7 o< inr 0. (* .no-out *)
-Proof. (* .no-out *)
-  apply compare_lt_iff.
-  reflexivity.
-Qed.
+Example ex1 : inl 7 o< inr 0. 
+Proof. now apply compare_lt_iff. Qed.
 
 (* end snippet OmegaPlusOmegaDef *)
 
@@ -265,22 +262,21 @@ Proof.
 Defined.
 
 
-(* begin snippet ZeroLimitSuccDec *)
+(* begin snippet ZeroLimitSuccDec:: no-out *)
 
-Definition Zero_limit_succ_dec : ON_Generic.ZeroLimitSucc_dec. (* .no-out *)
-(*|
-.. coq:: none
-|*)
+Definition Zero_limit_succ_dec : ON_Generic.ZeroLimitSucc_dec. 
+(* ... *)
+(* end snippet ZeroLimitSuccDec *)
 Proof.
   intro alpha;  destruct (ZLS_dec alpha) as [[H | H] | H].
   - left; left; now rewrite  Least_is_0. 
   - left; now right.
   - now right.
 Defined.
-(*||*)
 
 
-(* end snippet ZeroLimitSuccDec *)
+
+
 
 
 Definition limitb (alpha: t) := match ON_compare alpha omega

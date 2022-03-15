@@ -18,7 +18,7 @@ Section S1.
   Remark R2 : 2 <= 2.
   Proof (le_n 2).
 
- Let instance_H := H (Fin 3) E0omega R1 _ R2.
+ Let instance_H := H (E0fin 3) E0omega R1 _ R2.
  
   Remark R3 : F_ E0omega 2 = F_ 2 2.
   Proof.
@@ -32,7 +32,7 @@ Section S1.
  
   Remark R4 : F_ 3 2 = F_ 2 (F_ 2 (F_ 2 2)).
   Proof.
-    ochange (Fin 3) (E0succ 2).
+    ochange (E0fin 3) (E0succ 2).
     rewrite F_succ_eqn.
     do 3 rewrite iterate_S_eqn.
     reflexivity. 

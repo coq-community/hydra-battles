@@ -1672,6 +1672,8 @@ Two kinds of representation of ordinals are defined in our development.
 
 \begin{itemize}
 \item A ``mathematical'' representation of the set of countable ordinal numbers, after Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
+  We are also progressively importing \gaia's~\cite{Gaia} definitions and theorems, based on Bourbaki's set theory~\cite{Grimm2016}. Chapter~\ref{gaia-chapter} is dedicated to the connexion between libraries \HydrasLib and \gaia.
+  
 \item A family of \emph{ordinal notations} (also called \emph{[ordinal] notation systems}), \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
 correctness of a given ordinal notation with respect to Schütte's model obviously use axioms.
 Please execute the \texttt{Print Assumptions} command in case of doubt.
@@ -1687,7 +1689,8 @@ Please execute the \texttt{Print Assumptions} command in case of doubt.
 % In our adaptation to \coq{}, we declare a type \texttt{Ord}, a binary relation \texttt{lt} (with infix notation \texttt{"\_<\_"}, and assume Schütte's axiom. In Chapter~\ref{chap:schutte},
 % we derive some interesting properties of countable ordinals from these axioms.
 
-It is interesting to compare proofs of a given property (for instance the associativity of addition) both in the computational framework of some ordinal notation, and in the axiomatic model of Schütte.
+It is interesting to compare proofs of a given property (for instance the associativity of addition) both in the computational framework of some ordinal notation, and in mathematical  models
+of Schütte or \gaia.
 
 \section{Ordinal Notations}
 
@@ -1704,8 +1707,7 @@ of:
 \end{itemize}
 
 
-Such a structure can be proved correct relatively to a bigger ordinal notation or
-to Schütte's model.
+Such a structure may be proved correct relatively to a bigger ordinal notation or to Schütte's or \gaia's model.
 
 
 
@@ -1830,7 +1832,7 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 | le_bb : forall x y : B, leB x y -> le_AsB A B leA leB (inr x) (inr y)
 \end{Coqanswer}
 
-\pagebreak
+%\pagebreak
 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_plus.html}{OrdinalNotations.ON\_plus}}
@@ -1840,12 +1842,12 @@ le_AsB (A B : Type) (leA : A -> A -> Prop) (leB : B -> B -> Prop)
 
 In order to build an instance of \texttt{Comparable}, we have to define a correct comparison function.
 
-\inputsnippets{ON_plus/compareDef,
-  ON_plus/compareCorrect, ON_plus/plusComp}
+\inputsnippets{ON_plus/compareDef, ON_plus/compareCorrect}
+\inputsnippets{ON_plus/plusComp}
 
 
-The Lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} of Standard Library
-helps us to prove that our order \texttt{lt} is well-founded, thenwe can build an instance of \texttt{ON}:
+Standard library's lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} 
+is applied  to prove that our order \texttt{lt} is well-founded, allowing us to build an instance of \texttt{ON}:
 
 \inputsnippets{ON_plus/ltWf, ON_plus/OnPlus}
 
@@ -2057,6 +2059,7 @@ The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), 
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Omega2.html}{OrdinalNotations.ON\_Omega2}}
 
 \inputsnippets{ON_Omega2/Omega2Def, ON_Omega2/Defs}
+\inputsnippets{ON_Omega2/Ex1}
 
 \subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
 
@@ -2099,7 +2102,7 @@ Multiplication with a finite ordinal and addition are related through the follow
   ON_Omega2/uniqueDecompositionz}
 
 \subsection{A proof of termination using \texorpdfstring{$\omega^2$}{omega^2}} 
-\label{sect:merge-example}.
+\label{sect:merge-example}
 
 Using the lemma of Sect.~\vref{sect:measure-ON}, we can define easily a total function which merges two lists (example contributed by Pascal Manoury).
 
@@ -4052,7 +4055,8 @@ Instead of using the \texttt{sig} type, define a simply typed function that, giv
 recursive function (\emph{cf} the post of Guillaume Melquiond on Coq-club (Dec 21, 2020)
 \url{https://sympa.inria.fr/sympa/arc/coq-club/2020-12/msg00069.html}).
 The type \texttt{fuel}, an alternative 
-to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}{Prelude.Fuel}).
+to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}{Prelude.Fuel})
+.
 %\index{coq}{Giving fuel to a long computation}
 
 \end{exercise}
