@@ -64,27 +64,25 @@ Notation one := (FS 0).
 
 Definition T1nat (n:nat) := match n with 0 => zero | S p => FS p end.
 
-#[deprecated(note="use T1nat" )]
- Notation fin := T1nat (only parsing).
-
- Notation "\F n" := (T1nat n)  (at level 29): t1_scope.
-
-
-
+Notation "\F n" := (T1nat n)  (at level 29): t1_scope.
 
 Coercion T1nat  : nat >-> T1.
 
 Example ten : T1 := 10.
 (* end snippet finiteOrds *)
 
+#[deprecated(note="use T1nat" )]
+ Notation fin := T1nat (only parsing).
+
+
 (* begin snippet omegaDef *)
 
-
 Notation T1omega := (cons (cons zero 0 zero) 0 zero).
-#[deprecated(note="use T1omega")]
-  Notation omega := T1omega (only parsing).
 
 (* end snippet omegaDef *)
+
+#[deprecated(note="use T1omega")]
+ Notation omega := T1omega (only parsing).
 
 (* begin hide *)
 Lemma FS_rw (n:nat) : FS n = S n.

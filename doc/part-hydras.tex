@@ -2755,15 +2755,19 @@ First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of t
 \section{The ordinal \texorpdfstring{\(\epsilon_0\)}{epsilon0}}
 \label{sec:epsilon0-intro}
 
+The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
+the equation \(\alpha = \omega^\alpha\), where \(\omega\) is 
+the least infinite ordinal.
+Thus, we can intuitively consider \(\epsilon_0\) as an
+\emph{infinite} \(\omega\)-tower.
+
+
 \subsection{Cantor normal form}
 \index{maths}{Cantor normal form}
 
-The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
-the equation \(\alpha = \omega^\alpha\), where \(\omega\) is 
-the least infinite ordinal. Thus, we can consider \(\epsilon_0\) as an
-\emph{infinite} \(\omega\)-tower.
-Nevertheless, 
-any ordinal strictly less that \(\epsilon_0\) 
+
+
+Any ordinal strictly less that \(\epsilon_0\) 
 can be finitely represented by a unique  \emph{Cantor normal form}, 
 that is, an expression  which is either  the ordinal \(0\) or 
 a sum  \(\omega^{\alpha_1} \times n_1 + \omega^{\alpha_2} \times n_2 + 
@@ -2874,7 +2878,7 @@ definition. But this replacement would take a lot of time \dots{}
 
 \paragraph{Remark}
 The name \texttt{T1} we gave to this data-type  is proper to this development and refers
-to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{schutte}).
+to a hierarchy of ordinal notations. For instance, in Library \href{../theories/html/hydras.Gamma0.T2.html}{Gamma0.T2},  the following type is used to represent ordinals strictly less than \(\Gamma_0\),  in Veblen normal form (see also~\cite{Gaia, schutte}).
 \noindent
 
 \input{movies/snippets/T2/T2Def}
@@ -2882,7 +2886,7 @@ to a hierarchy of ordinal notations. For instance, in Library \href{../theories/
 
 \subsection{About Gaia}
 \gaiasign Chapter~\vref{gaia-chapter} describes the present state of a
-project of making compatible the libraries \HydrasLib and \gaia. At present, both libraries contain a version of the inductive type \texttt{T1}, with the same base name for the constructors.
+project of making compatible the libraries \HydrasLib and \gaia. At present, both libraries contain their own version of the inductive type \texttt{T1}, with the same base name for the constructors.
 
 \inputsnippets{nfwfgaia/T1def}
 
@@ -2913,7 +2917,7 @@ For representing finite ordinals, \emph{i.e.} natural numbers, we first introduc
 \input{movies/snippets/T1/finiteOrds}
 
 \paragraph*{\gaiasign}
-  In \texttt{gaia.ssete9}, the $n$-th finite ordinal is written
+  In \texttt{gaia.ssete9}, the $n$-th finite ordinal is also written
   \texttt{$\backslash${F}\,$n$}. There is no coercion in \gaia from \texttt{nat} to finite ordinals.
 
   \vspace{4pt}
@@ -2946,10 +2950,10 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \input{movies/snippets/T1/omegaDef}
 
-Note that \texttt{omega} is not an identifier, thus any tactic like \texttt{unfold omega} would fail.
+Note that \texttt{omega} is not an identifier in \HydrasLib, thus any tactic like \texttt{unfold omega} would fail.
 
 \paragraph*{\gaiasign}
-In \texttt{gaia.ssete9}, the ordinal $\omega$ is also named as \emph{constant}  \texttt{T1omega}.
+In \texttt{gaia.ssete9}, the ordinal $\omega$ is bound to the \emph{constant}  \texttt{T1omega}.
 
 
 
@@ -2972,7 +2976,7 @@ $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emp
 \end{remark}
 
 \paragraph*{\gaiasign}
-In \texttt{gaia.ssete9} the identifier\texttt{phi0} is bound to a constant (not a notation).
+In \texttt{gaia.ssete9} the identifier \texttt{phi0} is bound to a plain constant (not a notation).
 
   
 \subsubsection{The hierarchy of \(\omega\)-towers:}
@@ -3002,12 +3006,12 @@ The $\omega$-tower of height 7}
 \label{sect:ppT1}
 \index{hydras}{Library Epsilon0!Types!ppT1}
 
-Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}
+Let us consider again the ordinal $\alpha_0$ defined in section~\vref{alpha0-def}. 
 If we ask \coq{} to print its  normal form, we get a hardly readable term of type \texttt{T1}.
 
 \input{movies/snippets/T1/alpha0Compute}
 
-The following data type defines an abstract syntax for more readable ordinals terms in Cantor normal form:
+The following data type defines a more readable abstract syntax for  ordinals terms in Cantor normal form:
 
 \label{types:ppT1}
 \index{hydras}{Library Epsilon0!Functions!pp@ pp (pretty printing terms in Cantor normal form)}
@@ -3107,7 +3111,7 @@ In \gaia, the boolean function which characterizes ordinal terms in normal form 
 
 \inputsnippets{nfwfgaia/T1nfDef}
 
-In Sect.~\vref{nf-gaia-compat}, we show that \gaia's \texttt{T1nf} is extensionnaly equivalent with \HydrasLib'  \texttt{nf}.
+In Sect.~\vref{nf-gaia-compat}, we show that \gaia's \texttt{T1nf} is extensionally equivalent with \HydrasLib'  \texttt{nf}.
 
 
 
