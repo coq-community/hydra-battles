@@ -183,7 +183,7 @@ Definition lt (alpha beta : T1) : Prop :=
 Example E1 : lt (cons T1omega 56 zero) (omega_tower 3). 
 Proof. reflexivity. Qed.
 
-Example E2 : ~ lt (omega_tower 3) (omega_tower 3).
+Example E2 : ~ lt (omega_tower 3) (cons T1omega 5 (omega_tower 3))%t1.
 Proof. discriminate.  Qed.
 (* end snippet ltExamples *)
 
@@ -4099,7 +4099,7 @@ Notation "alpha ^ beta" := (PP_exp alpha beta) : ppT1_scope.
 
 Notation ω := PP_omega.
 
-Check (ω ^ ω  * 2 + PP_fin 1)%pT1.
+Check (ω ^ ω  * 2 + 1)%pT1.
 
 (* end snippet ppT1Def *)
 
