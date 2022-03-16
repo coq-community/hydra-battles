@@ -212,9 +212,7 @@ Section Impossibility_Proof.
   Theorem Impossible : False.
   Proof.
     destruct (StrictOrder_Irreflexive (R:=ON_lt) (m big_h));
-      eapply le_lt_trans.
-    - apply m_ge.
-    - apply m_lt. 
+      eapply le_lt_trans; [apply m_ge | apply m_lt].
   Qed. 
 
 End Impossibility_Proof.

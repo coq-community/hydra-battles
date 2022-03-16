@@ -2145,7 +2145,7 @@ Let us assume there is a variant from \texttt{Hydra} into $\omega^2$  for provin
 
 
 We  follow the same pattern as in Sect.~\ref{omega-case}.
-First, we define an injection $\iota$ from type \texttt{t} into \texttt{Hydra}, by
+First, we define an injection $\iota$ from type \texttt{ON\_Omega2.t} into \texttt{Hydra}, by
  associating to  each ordinal $\omega\times i+ j = (i,j)$ the hydra with $i$ branches of length $2$ and
 $j$ branches of length $1$.
 
@@ -2221,7 +2221,7 @@ Like in Sect.~\ref{omega-case}, we build a hydra out of the range of \texttt{iot
 
 \vspace{4pt}
 
-Like in Sect.~\ref{omega-case}, we prove the double inequality \texttt{m big\_h o<= m small\_h o< m big\_h}, which is impossible.
+Like in Sect.~\ref{omega-case}, we prove the inequality $m\;\texttt{big\_h} \,\texttt{o<=}\, m\;\texttt{small\_h} \,\texttt{o<=}\, m\;\texttt{big\_h}$, which is obviously false.
 
 \subsubsection{Proof of the inequality \texttt{m small\_h o< m big\_h}}
 
@@ -2249,22 +2249,22 @@ $\iota(\alpha)$. Indeed, at any configuration $\iota(k,0)$, where $k>0$, the hyd
 all the possible battles issued from that hydra.
 Let us now give more technical details.
 
-The first steps of our proof prepare a well-founded induction on $\omega^2$.
+The first steps of our proof start a well-founded induction over $\omega^2$.
 
 
 \input{movies/snippets/Omega2_Small/mGe}
 
 
-Then a case analysis on $i$ and $j$ allows us to
+A case analysis on $i$ and $j$ allows us to
 consider three cases :
 
 \begin{itemize}
 \item $i=j=0$: the inequality is trivial.
 \item $i=1+l, j=0$ ($(i,j)$ is a limit ordinal): By the induction hypothesis \texttt{IHij},
-  $(l,k)\leq m(\iota(l,k))$ for any $k$. But (by the rules of the hydra game), $\iota(i,0)$ is transformed into any $\iota(l,k)$ in one round. Thus $m(\iota(l,k)) < m(\iota(i,0))$ for any $k$.
+  $(l,k)\texttt{o<=} m(\iota(l,k))$ for any $k$. But (by the rules of the hydra game), $\iota(i,0)$ is transformed into any $\iota(l,k)$ in one round. Thus $m(\iota(l,k)) < m(\iota(i,0))$ for any $k$.
   Therefore, $(l,k) <  m(\iota(i,0))$ for any $k$, thus
-  $(i,0) \leq m(\iota(i,0))$.
- \item $j= l+1$  ($(i,j)$ is a successor).  a similar, but simpler case: we apply the induction hypothesis to the pair $(i,l)$.
+  $(i,0)\,\texttt{o<=}\,m(\iota(i,0))$.
+ \item $j= l+1$  ($(i,j)$ is a successor). We apply the induction hypothesis to the pair $(i,l)$.
  \end{itemize}
 
  Please look at the proof script for more details.
@@ -2272,7 +2272,7 @@ consider three cases :
  \input{movies/snippets/Omega2_Small/mGeb}
 
 \subsubsection{End of the proof}
-From \texttt{m\_ge}, we get \texttt{m big\_h o<= m small\_h = m (iota (m big\_h)) }. 
+From \texttt{m\_ge}, we get \texttt{$m$\, big\_h o<= $m$\, small\_h = $m$\,(iota (m big\_h)) }. 
 Since $<$ is a strict order (irreflexive  and transitive), this inequality is incompatible with the strict inequality  \texttt{m small\_h o< m big\_h} (lemma \texttt{m\_lt}).
 
 
@@ -2293,7 +2293,7 @@ Prove that there exists no variant $m$ from \texttt{Hydra} into $\omega^2$ for p
 
 
 \begin{remark}
-In Chapter~\ref{ks-chapter}, we  prove a generalization of the impossibility lemmas of
+ We  prove in Chapter~\ref{ks-chapter} a generalization of the impossibility lemmas of
 Sect.~\ref{omega-case} and this section, with the same proof structure, but with much more 
 complex technical details.
  \end{remark}
@@ -2453,9 +2453,20 @@ In our formalization, the interpretation of an ordinal as a set is realized by t
  There is no interesting arithmetic on finite ordinals, since functions like successor, addition, etc.,  cannot be represented in \coq{} as \emph{total} functions.
 \end{remark}
 
-\begin{remark}
-Finite ordinals are also formalized in MathComp~\cite{MCB}.  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.  
-\end{remark}
+\section{See also \dots}
+
+Finite ordinals are also formalized in \ssreflect/\mathcomp~\cite{MCB}. In Module~\href{../theories/html/gaia_hydras.ON_gfinite.html}{gaia\_hydras.ON\_gfinite}, we build an instance of class \texttt{ON}.
+
+\inputsnippets{ON_gfinite/finordLtDef, ON_gfinite/finordON}
+
+\inputsnippets{ON_gfinite/Examples, ON_gfinite/Examplesb}
+
+
+
+
+
+  See also Adam Chlipala's \emph{CPDT}~\cite{chlipalacpdt2011} for a thorough study of the use of dependent types.  
+
 
 
 
@@ -2581,6 +2592,10 @@ For instance, the following theorem tells that \texttt{Epsilon0}, our notation s
 \index{hydras}{Projects}
 
 \begin{project}
+Same work, but replace Schütte's model with \gaia's.
+\end{project}
+
+\begin{project}
   When you have read Chapter~\ref{chap:schutte}, prove that the sum of two ordinal notations \texttt{ON\_plus} implements the addition of ordinals.
 \end{project}
 
@@ -2630,9 +2645,9 @@ Note that the elements of  (\texttt{ON\_mult (FinOrd 3) Omega}) are differently 
 \[(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(0,3),\dots\]
 
 
-Prove formally  that \texttt{ON\_mult (FinOrd $i$) Omega} is isomorphic to
+Prove formally  that (\texttt{ON\_mult (FinOrd $i$) Omega}) is isomorphic to
 \texttt{Omega}  whilst
-\texttt{Omega}  is a sub-notation of \texttt{ON\_mult Omega (FinOrd $i$)},
+\texttt{Omega}  is a sub-notation of (\texttt{ON\_mult Omega (FinOrd $i$)}),
 for any strictly positive $i$. 
 
 \textbf{Note:} Like Exercise~\ref{exo:i-plus-omega}, this project corresponds to the [in]equalities $i+\omega=\omega<\omega+i$, for any natural number $i$.

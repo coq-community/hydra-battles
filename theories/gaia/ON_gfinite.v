@@ -7,22 +7,15 @@ From Coq Require Import Logic.Eqdep_dec.
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-(** Examples *)
 
-Lemma L33_42 : (33 < 42)%N.
-Proof. by []. Qed.
-
-Example o_33_of_42: 'I_42 . 
-Proof. by refine (@Ordinal 42 33 _). Defined. 
-
-Example o_36_of_42: 'I_42.
-Proof. by refine (@Ordinal 42 36 _). Defined. 
-
+(* begin snippet finordLtDef *)
 Definition finord_lt (n:nat) (alpha beta: 'I_n): bool :=
   (alpha < beta)%N.
 
+
 #[global] Instance  finord_compare (n:nat) : Compare ('I_n) :=
   fun alpha beta => Nat.compare alpha beta. 
+(* end snippet finordLtDef *)
 
 
 Lemma finord_compare_correct (n:nat) (alpha beta : 'I_n) :
@@ -39,11 +32,10 @@ Proof.
     + constructor; rewrite /finord_lt;  by apply /ltP. 
     + symmetry; by rewrite /compare PeanoNat.Nat.compare_lt_iff. 
   - replace (compare alpha beta) with Datatypes.Gt. 
-    +  constructor; rewrite /finord_lt; by apply /ltP. 
+    + constructor; rewrite /finord_lt; by apply /ltP. 
     + symmetry; by rewrite /compare PeanoNat.Nat.compare_gt_iff. 
 Qed. 
 
-Compute compare  o_33_of_42  o_36_of_42.
 
 #[global] Instance finord__sto n : StrictOrder (@finord_lt n).
 Proof. 
@@ -70,15 +62,27 @@ Proof.
   - apply (Acc_inverse_image ('I_n) nat (fun n p=> (n < p)%N) (@m n) x), lt_wf. 
 Qed. 
 
+(* begin snippet finordON:: no-out *)
 #[global] Instance finord_ON n : ON (@finord_lt n) (@finord_compare n).
+(* end snippet finordON *)
 Proof.
  split.
  - apply finord__comp.
  - apply finord_lt_wf.
 Qed.
 
+(** Examples *)
 
+(* begin snippet Examples:: no-out *)
+Example o_33_of_42: 'I_42 . 
+Proof. by refine (@Ordinal 42 33 _). Defined. 
 
+Example o_36_of_42: 'I_42.
+Proof. by refine (@Ordinal 42 36 _). Defined. 
+(* end snippet Examples *)
+(* begin snippet Examplesb *)
+Compute compare  o_33_of_42  o_36_of_42.
+(* end snippet Examplesb *)
 
 
 
