@@ -70,6 +70,7 @@ Proof.
   rewrite succ_ref phi0_ref g2h_h2gK Canon.canon0_phi0_succ_eqn => //.
 Qed. 
 
+
 Lemma canon0_lt alpha:
   T1nf alpha -> alpha <> zero -> T1lt (canon alpha 0) alpha.
 Proof. 
@@ -267,12 +268,13 @@ Lemma  canon_limit_mono lambda i j (Hnf : T1nf lambda)
  (* begin snippet gcanonLimitOf:: no-out  *)
  Lemma canon_limit_of lambda (Hnf : T1nf lambda) (Hlim : T1limit lambda) :
    limit_of (canon lambda) lambda.
- Proof.
+ (* end snippet gcanonLimitOf *)
+Proof.
    split => // [n m Hnm|].
    apply canon_limit_mono => //.
    apply gcanon_limit_v2 => //.
  Qed.    
- (* end snippet gcanonLimitOf *)
+ 
  
 
  (** *  Adaptation of [canon] to type E0 *)

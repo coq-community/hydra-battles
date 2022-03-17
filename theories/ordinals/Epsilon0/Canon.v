@@ -50,18 +50,18 @@ Fixpoint canon alpha (i:nat) : T1 :=
 end.
 (* end snippet canonDef *)
 
-(* begin snippet canonExamples *)
+
 
 Section Canon_examples.
-Import T1. 
 
+(* begin snippet canonExamples *)
 Compute pp (canon (T1omega ^ T1omega) 3).
+
+Compute pp (canon (T1omega ^ T1omega * 3) 42).
+(* end snippet canonExamples *)
 
 Compute pp (canon (T1omega ^ T1omega) 0).
 Compute pp (canon (T1omega ^T1omega) 1).
-
-
-Compute pp (canon (T1omega ^ T1omega * 3) 42).
 Compute pp (canon (T1omega ^ T1omega * 3) 0).
 
 Compute pp (canon (T1omega ^ T1omega * 3) 1).
@@ -73,7 +73,7 @@ Goal canon (T1omega ^ T1omega) 10 = phi0 10. (* .no-out *)
 Proof. (* .no-out *) reflexivity. Qed. 
 
 End Canon_examples.
-(* end snippet canonExamples *)
+
 
 (* compatibility with older versions *)
 
@@ -575,14 +575,17 @@ Proof.
     destruct  (canon0_LT   Hnf); auto.
     destruct  (canonS_LT  i  Hnf); auto.
 Qed.
-
+(* begin snippet canonLT:: no-out *)
 Lemma canon_LT i alpha :  nf alpha -> alpha <> zero ->
-  canon alpha i t1<  alpha.
+                          canon alpha i t1<  alpha.
+(* end snippet canonLT *)
 Proof.
  intros Hnf Hpos; destruct i. 
  -  apply canon0_LT; auto. 
  - apply canonS_LT; auto. 
-Qed. 
+Qed.
+
+
 (* to remove *)
 
 (*

@@ -3888,8 +3888,7 @@ The reader may think that our proof of termination in the previous  chapter requ
 In their article~\cite{KP82}, Kirby and Paris show that this result cannot be proved in Peano arithmetic. Their proof uses some knowledge about model theory and non-standard models of Peano arithmetic. In this chapter, we focus on a specific class of proofs of termination of hydra battles: construction of some variant mapping the type \texttt{Hydra} into a given initial  segment of ordinals. Our proof relies only on the Calculus of Inductive Constructions and is a natural complement of the results proven in the previous chapters.
 
 \begin{itemize}
-\item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2)$ (section ~\vref{omega2-case}), and a fortiori 
-$[0,\omega)$ (section ~\vref{omega-case}).
+\item There is no variant mapping the type \texttt{Hydra} into the interval $[0,\omega^2)$ (section ~\vref{omega2-case}), and \emph{a fortiori} $[0,\omega)$ (section ~\vref{omega-case}).
 
 \item There exists a variant which maps the type \texttt{Hydra} into the
 interval $[0,\epsilon_0)$ (theorem \texttt{every\_battle\_terminates}, in section~\vref{thm:every-battle-terminates}).
@@ -3915,7 +3914,7 @@ Our proofs are  constructive and require no axioms: they are  closed terms of th
 They  share much theoretical material with Kirby and Paris', although they do not use any knowledge about Peano arithmetic nor model  theory.  The combinatorial arguments we use and implement
 come from 
  an article by J.~Ketonen and R.~Solovay~\cite{KS81}, already  cited in the work
- by L.~Kirby and J.~Paris.% on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
+ by L.~Kirby and J.~Paris. % on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
  Section $2$ of this article: ''A hierarchy of probably recursive functions'', contains a systematic study of \emph{canonical sequences}, which are closely related to
 rounds of hydra battles. 
 Nevertheless, they have the same global structure as the simple proofs described in
@@ -3990,7 +3989,7 @@ $\canonseq{\lambda}{i}=\omega^{\gamma}\times \beta + \omega^{\canonseq{\gamma}{i
 \end{itemize}
 \end{mathframe}
 
-\subsubsection{Canonical sequences in Coq}
+\subsubsection{Canonical sequences in \coq}
 \index{hydras}{Library Epsilon0!Functions!canon}
 \index{hydras}{Library Epsilon0!Functions!canonS}
 
@@ -3999,12 +3998,14 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 \coqsimple{cbn}, \coqsimple{simpl}, \coqsimple{compute}, etc., are applicable. 
 
 \vspace{4pt}
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canon}{Epsilon0.Canon}}
+\noindent\emph{From Module~\href{../theories/html/hydras.Epsilon0.Canon.html\#canon}{Epsilon0.Canon}}
 
 \label{Functions:canonS}
 \label{Functions:canon}
 
 \input{movies/snippets/Canon/canonDef}
+
+\paragraph*{\gaiasign} Our library~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon} transposes the  function \texttt{canon} into \gaia's type \texttt{T1}.
 
 In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. 
 
@@ -4033,8 +4034,7 @@ For instance \coq's computing facilities allow us to verify the equalities\lineb
 
 We did not  try to prove that our definition truly implements Ketonen and Solovay's  \cite{KS81}'s canonical sequences. The most important is that we were able to prove the 
 abstract properties  of canonical sequences that are really used in our proof. The complete proofs are in the module
-~\href{../theories/html/hydras.Epsilon0.Canon.html}{Epsilon0.Canon}
-
+~\href{../theories/html/hydras.Epsilon0.Canon.html}{Epsilon0.Canon}.
 For instance, the equality $\canonseq{\alpha+1}{i}=\alpha$  can be  proved by  structural induction on $\alpha$.
 
 \input{movies/snippets/Canon/canonSucc}
@@ -4044,11 +4044,17 @@ For instance, the equality $\canonseq{\alpha+1}{i}=\alpha$  can be  proved by  s
 
 \index{maths}{Transfinite induction}
 
-We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i+1}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivatives in function definitions by transfinite recursion.
+We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i}$ is an ordinal strictly less than $\alpha$ (assuming $\alpha\not=0$). This property allows us to use the function \texttt{canonS} and its derivatives in function definitions by transfinite recursion.
 
-\label{lemma:canonS_LT}
+\label{lemma:canon_LT}
 
-\input{movies/snippets/Canon/canonSLT}
+\inputsnippets{Canon/canonLT}
+
+\paragraph*{\gaiasign} This lemma is also available in
+Library ~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon}:
+
+\inputsnippets{GCanon/gcanonLt}
+
 
 \subsubsection{Limit ordinals are truly limits}
 The following theorem states that any limit ordinal $\lambda<\epsilon_0$ 
@@ -4069,6 +4075,10 @@ relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-typ
 We can also state directly that $\lambda$ is a (strict) least upper bound of the elements of its canonical sequence.
 
 \input{movies/snippets/Canon/canonSLimitLub}
+
+\paragraph*{\gaiasign}  In \gaiaHydras, the statement use a slightly different vocabulary:
+\inputsnippets{GCanon/gcanonLimitOf}
+
 
 \index{hydras}{Exercises}
 
@@ -4171,7 +4181,7 @@ one can build a path from $\alpha$ to $\beta$ (in other terms, $\beta$ is access
 
 
 \noindent 
-From the lemma \texttt{canonS\_LT}~\vref{lemma:canonS_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
+From the lemma \texttt{canon\_LT}~\vref{lemma:canon_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
 
 \input{movies/snippets/Paths/pathToLT}
 
