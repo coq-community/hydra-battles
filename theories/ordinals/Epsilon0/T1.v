@@ -591,12 +591,10 @@ Fixpoint T1add (alpha beta : T1) :T1 :=
        end)
   end
 where "alpha + beta" := (T1add alpha beta) : t1_scope.
+(* end snippet plusDef *)
 
 #[deprecated(note="use T1add")]
   Notation plus := T1add (only parsing).
-
-
-(* end snippet plusDef *)
 
 
 (** *** multiplication *)
@@ -616,10 +614,9 @@ Fixpoint T1mul (alpha beta : T1) :T1 :=
   end
 where "alpha * beta" := (T1mul alpha beta) : t1_scope.
 
+(* end snippet multDef *)
 #[deprecated(note="use T1mul")]
   Notation mult := T1mul (only parsing).
-
-(* end snippet multDef *)
 
 (**  *** Substraction  (used as a helper for exponentiation) *)
 

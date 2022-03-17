@@ -842,14 +842,13 @@ Defined.
 (* begin snippet canonSLimitLub *)
 
 Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> limitb lambda  ->
-  strict_lub (canonS lambda) lambda. (* .no-out *) (*| .. coq:: none |*)
+  nf lambda -> limitb lambda  -> strict_lub (canonS lambda) lambda. (* .no-out *) (*| .. coq:: none |*)
 Proof.
   split.
   - intros; split.
     + now  apply nf_canon.
-    +    split; trivial.
-         * apply canon_lt;    auto.
+    + split; trivial.
+      * apply canon_lt; auto.
            intro H1;subst; discriminate.
   - intros l' Hl';  assert (nf l').
     {  specialize (Hl' 0). eauto with T1. }

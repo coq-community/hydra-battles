@@ -3148,7 +3148,7 @@ For instance, in the following lemma, the condition that $\alpha$ is in normal f
 \input{movies/snippets/T1/LTOne}
 
 
-\subsubsection{A sigma-type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
+\subsubsection{\texttt{E0}: a sigma-type for \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
 As we noticed in Sect.~\ref{sect:t1-nf}, the type \texttt{T1} is not a correct ordinal notation, since it contains terms that are not in Cantor normal form. In certain contexts (for instance in Sections~\ref{sect:L-equations}, \ref{sect:hardy},
 and \ref{sect:wainer}),  we need to define total recursive functions on well-formed ordinal terms less  than $\epsilon_0$, using the \texttt{Equations} plug-in~\cite{sozeau:hal-01671777}.
@@ -3162,23 +3162,18 @@ and \ref{sect:wainer}),  we need to define total recursive functions on well-for
 \label{types:E0}
 \index{hydras}{Library Epsilon0!Types!E0}
 
-\emph{From Module~w}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html\#E0}{Epsilon0.E0}}
 
 \input{movies/snippets/E0/E0Def}
 
 
 Many constructs : types, predicates, functions, notations, etc., on type \texttt{T1} are adapted to \texttt{E0}.
 
-First, we declare a notation scope for \texttt{E0}.
+First, we declare a notation scope for \texttt{E0}, then we redefine the predicates of comparison.
 
 
 \input{movies/snippets/E0/E0Scope}
-
-
-Then we redefine the predicates of comparison.
-
 \label{Predicates:Lt-E0}
-
 \input{movies/snippets/E0/LtLeDef}
 
 
@@ -3270,7 +3265,7 @@ The following lemma establishes the connection between the  function
 
 \input{movies/snippets/T1/succbIff}
 
-\begin{exercise}[\gaia]
+\begin{exercise}[\gaiasign]
   Look for the \gaia-theorem which corresponds to \texttt{succb\_iff}.
 \end{exercise}
 

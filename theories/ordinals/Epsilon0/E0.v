@@ -53,8 +53,7 @@ Infix "o<=" := E0le : E0_scope.
 (* begin snippet ZeroOmega:: no-out  *)
 #[global] Instance E0zero : E0 := @mkord zero refl_equal.
 
-#[global] Instance E0omega : E0. 
-Proof. now exists T1omega%t1. Defined. 
+#[global] Instance E0omega : E0 := @mkord T1omega refl_equal.
 
 (* end snippet ZeroOmega *)
 
