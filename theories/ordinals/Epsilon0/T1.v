@@ -53,8 +53,6 @@ Inductive T1 : Set  :=
 
 (* begin snippet finiteOrds *)
 
-
-
 (** The [(S n)]-th ordinal *)
 Notation FS n := (cons zero n zero).
 
@@ -1204,7 +1202,7 @@ Qed.
 
 Lemma nf_helper_iff :
   forall a b, nf a -> nf b ->
-              (nf_helper b a <-> forall n, nf(cons a n b)).
+              (nf_helper b a <-> forall n, nf (cons a n b)).
 Proof.
   split.
   - intros; now apply nf_intro.
@@ -1603,11 +1601,8 @@ Module Direct_proof.
            (* end snippet wfLTBada *)
 
            (* begin snippet wfLTBadz *)
-           
       Abort.
-
     End First_attempt.
-
    (* end snippet wfLTBadz *)
 
     (** *** Strong accessibility (inspired by Tait's proof) *)

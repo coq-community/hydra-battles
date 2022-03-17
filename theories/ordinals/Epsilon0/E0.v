@@ -510,18 +510,10 @@ Qed.
  *)
 
 #[global] Instance E0_comp: Comparable E0lt compare.
-Proof.
-  split.
-  - apply E0_sto.
-  - apply compare_correct. 
-Qed.
+Proof. split; [apply E0_sto | apply compare_correct]. Qed.
 
 #[global] Instance Epsilon0 : ON E0lt compare.
-Proof.
- split.
- - apply E0_comp.
- - apply E0lt_wf.
-Qed.
+Proof. split; [apply E0_comp | apply E0lt_wf]. Qed.
 
 (*||*)
 (* end snippet InstanceEpsilon0 *)

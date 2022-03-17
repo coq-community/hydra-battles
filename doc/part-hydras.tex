@@ -3385,18 +3385,18 @@ which are not in Cantor normal form.
 %\index{coq}{Well-founded induction}
 
 It is natural to try to prove by structural induction over \texttt{T1} 
-that every term in normal form is accessible through \texttt{LT}.
+that every term in normal form is \texttt{LT}-accessible.
 
 Unfortunately, it won't work. Let us consider some well-formed term
- $\alpha=\texttt{cons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are accessible
- through \texttt{LT}. For proving the accessibility of $\alpha$, we have to consider
+ $\alpha=\texttt{cons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are \texttt{LT}-accessible.
+In order to prove the accessibility of $\alpha$, we have to consider
 any well formed term \(\delta\) such that \(\delta<\alpha\). 
 But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
 
 \input{movies/snippets/T1/wfLTBada}
 
 
-The problem comes from the hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
+The problem comes from the too weak hypothesis \texttt{Hdelta}. It does not prevent  \(\delta\) to be bigger that \(\beta\) or
 \(\gamma\);
 for instance \(\delta\) may be of the form
 \texttt{cons $\beta$ $p'$  $\gamma'$},
@@ -3410,8 +3410,7 @@ Thus, the induction hypotheses \texttt{IHbeta} and \texttt{IHgamma}  are useless
 \label{sec:strongly-accessible}
 
   Instead of trying to prove directly that any ordinal term \(\alpha\) in normal form is accessible
-through \texttt{LT}, we propose to show first that any well formed 
-term of the form \(\omega^\alpha\times(n+1)+\beta\) is accessible (which is a stronger result).
+through \texttt{LT}, we propose to consider the following (stronger) predicate:
 
 \input{movies/snippets/T1/AccStrongDef}
 
@@ -3466,9 +3465,9 @@ Traditionnally, well-founded induction on ordinals is called \emph{transfinite i
 
 \inputsnippets{T1/transfiniteRecursor, T1/transfiniteInduction}
 
-As a corollary, the order \texttt{Lt} on type \texttt{Ord} is well-founded too.
+As a corollary, the order \texttt{Lt} on type \texttt{E0} is well-founded too.
 
-\inputsnippets{E0/E0LtWf}.
+\inputsnippets{E0/E0LtWf}
 
 
 \begin{remark}
@@ -3482,7 +3481,7 @@ The alternate proof of well-foundedness using \'Evelyne Contejean's work on
 
 \subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's model.
+We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's model (see Chapter~\ref{chap:schutte}).
 
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
@@ -3568,6 +3567,12 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \inputsnippets{OmegaOmega/OODemo}
 
     \index{hydras}{Exercises}
+
+
+    \subsection{Related work}
+    The article~\cite{Manoury2016}  defines another representation of ordinals below $\omega^\omega$ based on lists of natural numbers.
+
+
     
 \begin{exercise}[not trivial]
   It may be interesting to write a \emph{direct} proof  of well-foundedness of the order in $\omega^\omega$ (\emph{i.e.}
@@ -3624,7 +3629,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
        is supposed to compute  \texttt{oplus alpha beta}.
     \end{itemize}
       
-  \pagebreak 
+%  \pagebreak 
   \vspace{4pt}
     \emph{From Module~\href{../theories/html/hydras.Epsilon0.Hessenberg.html\#oplus}{Epsilon0.Hessenberg}}
 
@@ -3785,7 +3790,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     
  
 
-    \subsubsection{Monotonicity}
+    \subsubsection{Monotony}
 
     At last, we prove that $\oplus$ is strictly monotonous in both of its arguments.
 
@@ -3799,6 +3804,11 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     Thanks!
     \end{project}
 
+
+    \paragraph*{\gaiasign} The module
+      \href{../theories/html/gaia_hydras.~GHessenberg.html}{gaia\_hydras.GHessenberg} defines a version of Hessenberg's sum
+      compatible with \gaia's type \texttt{T1}.
+      
     \subsection{A termination measure for hydra battles }
 
     \label{sec:hydra-measure}
@@ -6284,7 +6294,7 @@ The proof is as follows:
   \item If $i=0$, then the result is trivial (because $\alpha=0$)
  \item  Otherwise let $i=j+1$; 
           $\alpha$ is greater than or equal to the omega-tower of height $j$.
-         By monotonicity,  $\phi_0(\alpha)$ is greater than or equal to 
+         By monotony,  $\phi_0(\alpha)$ is greater than or equal to 
         the omega-tower of height $j+1$, thus strictly greater than $\alpha$
   \end{itemize}
  \end{enumerate}
