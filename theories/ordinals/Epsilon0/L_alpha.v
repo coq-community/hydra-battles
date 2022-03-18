@@ -19,9 +19,9 @@ Global Hint Resolve Olt : E0.
 (** Using Coq-Equations for building a function which satisfies 
     [Large_sets.L_spec] *)
 
-Equations  L_ (alpha: E0) (i:nat) :  nat  by wf alpha E0lt :=
+Equations  L_ (alpha: E0) (i:nat) : nat by wf alpha E0lt :=
   L_ alpha  i with E0_eq_dec alpha E0zero :=
-    { | left _zero =>  i ;
+    { | left _zero => i ;
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  L_ (Canon alpha i)  (S i) ;

@@ -241,8 +241,7 @@ Qed.
 (* begin snippet LSpecUnicity *)
 
 Lemma L_spec_unicity alpha f g :
-  L_spec alpha f -> L_spec alpha g ->
-  forall k, f (S k) = g (S k). (* .no-out *)
+  L_spec alpha f -> L_spec alpha g -> forall k, f (S k) = g (S k). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   inversion 1.

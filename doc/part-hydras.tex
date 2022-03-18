@@ -4940,7 +4940,7 @@ predicate \texttt{path\_to} (\vref{sect:path-to-def}) which already prohibits pa
 
 \index{hydras}{Library Epsilon0!Predicates!mlarge@mlarge (minimal large sequences)}
 
-\input{movies/snippets/Large_Sets/largeDef}
+\input{movies/snippets/Large_Sets/mlargeDef}
 
 
 Let us consider two integers $k$ and $l$, such that $0<k<l$. In order to check whether the interval $[k,l]$ is minimally large for $\alpha$, it is enough to
@@ -4963,19 +4963,11 @@ $\omega^2$-mlarge, since $[6,699]$ is also $\omega^2$-large.
 
 \input{movies/snippets/Large_Sets_Examples/gnawEx2}
 
-
-
-We may say that the interval $[6,700]$ is $\omega^2$-large, since it leads to $0$, but nothing assures us that the condition of minimality is satisfied.
-
 The following lemma relates minimal largeness with the
 function 
 \texttt{gnaw}. 
 
 \input{movies/snippets/Large_Sets/mlargeIff}
-
-
-
-For instance, we prove that the interval $[6,510]$ is $\omega^2$-mlarge.
 
 \vspace{4pt}
  \noindent
@@ -5064,7 +5056,7 @@ The properties we consider are defined in \href{../theories/html/hydras.Prelude.
 \input{movies/snippets/Iterates/funLeDef}
 
 
-Our exploration of the $L_\alpha$\,s  considers the usual cases of a proof by transfinite induction: zero, successors and limit ordinals. The lemmas we are going to proved will be applied in a big proof by induction in Sect~\vref{sect:L-correct-proof}.
+Our exploration of the $L_\alpha$\,s  considers the usual cases of a proof by transfinite induction: zero, successors and limit ordinals. The lemmas we are going to prove will be applied in a big proof by induction in Sect~\vref{sect:L-correct-proof}.
 
 \index{maths}{Transfinite induction}
 
@@ -5113,7 +5105,7 @@ we obtain a few  correct implementations of \texttt{(L\_spec $\alpha$)} for smal
 \subsubsection{Finite ordinals}
 
 By iterating the functional \texttt{L\_succ}, we get a realization of
-\texttt{(L\_spec (fin $i$))} for any natural number $i$. 
+\texttt{(L\_spec $i$)} for any natural number $i$. 
 
 \input{movies/snippets/Large_Sets/LFinDef}
 \vspace{-16pt}
@@ -5144,7 +5136,7 @@ Let us consider a path from  $\omega\times(i+1)$ to $0$ starting at $k+1$.
 A first ``big step'' will lead to $\omega\times i$ at $2(k+1)$. If $i>0$, the
 next jump leads to $\omega\times(i-1)$ at $2(2(k+1))+1$, etc.
 
-The following lemma expresses the length of the mlarge sequences associated with the finite multiples of $\omega$.
+The following lemma expresses the length of the mlarge sequences associated with any finite multiple of $\omega$.
 
 \input{movies/snippets/Large_Sets/omegaMultMlarge0}
 
@@ -5180,14 +5172,17 @@ By diagonalization, we obtain a simple formula for $L_{\omega^2}$.
 
 \subsubsection{Going further}
 Let us consider a last example, ``computing'' $L_{\omega^3}$.
-Since the canonical sequence associated with this ordinal is composed of the
-$\omega^2\times i\;(i\in\mathbb{N}_1)$, we have to study this sequence.
+Let us study the canonical sequence associated with $\omega^3$, the elements of which are 
+$\omega^2\times i\;(i\in\mathbb{N}_1)$.
 
 To this end, we prove a generic lemma, which expresses $L_{\omega^\alpha\times i}$ as an iterate of $L_{\omega^\alpha}$. Note that in this lemma, we assume that the function associated with $\alpha$ is strictly monotonous and
 greater or equal than the successor function, and prove that $L_{\omega^\alpha\times i}$ satisfies  the same properties.
 
 
-\inputsnippets{Large_Sets/phi0Mult, Large_Sets/phi0MultOk,
+\inputsnippets{Large_Sets/phi0Mult}
+
+
+\inputsnippets{Large_Sets/phi0MultOk,
 Large_Sets/Phi0MultSLe}
 
 Let us look now
