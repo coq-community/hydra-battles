@@ -4005,11 +4005,14 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 
 \input{movies/snippets/Canon/canonDef}
 
-\paragraph*{\gaiasign} Our library~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon} transposes the  function \texttt{canon} into \gaia's type \texttt{T1}.
+\paragraph*{\gaiasign} Our library~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon} transposes the  function \texttt{canon} into \gaia's type \texttt{T1}
+(please see Sect.\~ref{sect:gcanon}).
 
-In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. 
+\paragraph*{Remark}
+In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. They are planned to be deprecated.
 
 \input{movies/snippets/Canon/CanonS0}
+
 
 
 
@@ -4100,7 +4103,7 @@ to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}
 
 
 
-\section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0} : paths}
+\section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0}\,: paths}
 \index{maths}{Ordinal numbers!Accessibility inside epsilon0}
 \label{sect:pathes-intro}
 
@@ -4110,7 +4113,6 @@ such that $\gamma_{i+1}=\canonseq{\gamma}{s_i}$.
 
 Let $s$ be the sequence $\langle s_0,s_1,\dots, s_{l-1} \rangle$. We describe the
 existence of such a path with the notation $\alpha\xrightarrow [s]{}\beta$.
-
 We say also that the considered path from $\alpha$ to $\beta$ \emph{starts at [index] $s_0$ and ends at $s_l$}.
 
 For instance, we have $\omega*2 \xrightarrow[2,2,2,4,5]{}3$, through the 
@@ -4121,7 +4123,6 @@ path $\langle\omega\times 2, \omega+2,\omega+1,\omega,4,3\rangle$.
   
 
 Note that, given $\alpha$ and $\beta$, where $\beta < \alpha$, the sequence $s$ which leads from $\alpha$ to $\beta$ is not unique.
-
 Indeed, if $\alpha$ is a limit ordinal, the first element of $s$ can be any integer $i$ such that $\beta<\canonseq{\alpha}{i}$, and if $\alpha$ is a successor ordinal,
 then the sequence $s$ can start with any positive integer.
 
@@ -4156,6 +4157,11 @@ In the present version of our library, we use a variant \texttt{path\_toS} of
 (\texttt{path\_toS $\beta$ $s$ $\alpha$}) is equivalent to
 (\texttt{path\_to $\beta$ (List.map S $s$) $\alpha$}). This variant is scheduled to be deprecated.
 \end{remark}
+
+\paragraph*{\gaiasign}
+The library~\href{../theories/html/gaia_hydras.GPaths.html}{gaia\_hydras.GPaths} transposes the  notion of path into \gaia's type \texttt{T1}
+(please see Sect.\~ref{sect:gpath}).
+
 
 \index{hydras}{Exercises}
 
@@ -4272,7 +4278,9 @@ proofs described in  sections~\vref{omega-case} and \vref{omega2-case}.
 In the module
 \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Generic.html}{Hydra.Epsilon0\_Needed\_Generic}, we assume there exists some variant $m$ bounded by some ordinal $\mu<\epsilon_0$. This part of the development is parameterized by some class $B$ of battles, which will be instantiated later to \texttt{free} or \texttt{standard}.
 
-
+\vspace{4pt}
+\noindent
+From~\href{../theories/html/hydras.Hydra.~Hydra_Definitions.html}{Hydra.Hydra\_Definitions}:
 
 \input{movies/snippets/Hydra_Definitions/BoundedVariant}
 
@@ -4328,8 +4336,6 @@ The case $B=\texttt{standard}$ is studied in section~\vref{std-case}.
 \item The following lemma is an application of \texttt{m\_ge\_generic}, since \texttt{free}
 satisfies trivially the hypothesis \texttt{m\_decrease} (see page~\pageref{remark:m-decrease}).
 
-\pagebreak
-
 \inputsnippets{Epsilon0_Needed_Free/mGe}
 
 
@@ -4367,10 +4373,10 @@ Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}:
 \input{movies/snippets/Paths/LTPathTo}
 
 The sequence $s$, used to build the sequence of replication factors of the battle, depends on 
-$\beta$, so we cannot be sure that the generated battle is a genuine standard battle.
+$\alpha$ and $\beta$, so we cannot be sure that the generated battle is a genuine standard battle.
 
 
-The solution of this issue comes  once again from Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
+The solution to this issue comes  once again from Ketonen and Solovay's article~\cite{KS81}. Instead of considering plain paths, i.e. sequences 
 $\alpha_0=\alpha,\alpha_1,\dots,\alpha_k=\beta$ where $\alpha_{j+1}$ is equal
 to $\canonseq{\alpha_j}{i_j}$ where $i_j$ is \emph{any} natural number, 
 we consider various constraints on these sequences.
@@ -4467,6 +4473,8 @@ A most interesting property of $i$-paths is that we can ``upgrade'' their index,
 
 \index{maths}{Transfinite induction}
 
+\vspace{4pt}
+\noindent
 \emph{From
   Module~\href{../theories/html/hydras.Epsilon0.Paths.html}{Epsilon0.Paths}}
 
@@ -4555,7 +4563,10 @@ The following exercise will give an idea of this increase.
  \end{exercise}
 
 
-
+ \paragraph*{\gaiasign}
+ Corollary \texttt{Cor12} and Lemma \texttt{Lemma261} are also available in
+\href{../theories/html/gaia_hydras.GPaths.html}{gaia\_hydras.GPaths} 
+(please see Sect.\~ref{sect:gpath}).
 
 \subsection{Casting paths with a constant index into a standard path}
 
@@ -4567,7 +4578,7 @@ the following lemma, which allows us to simulate $i$-paths by $[i+1,j]$-paths, w
 
 \subsubsection{Sketch of proof of \texttt{constant\_to\_standard\_path}}
 
-Our proof follows the proof by Ketonen and Solovay, including its organization as a sequence of lemma.  Since it is a non-trivial proof, we will comment its main steps below.
+Our proof follows the proof by Ketonen and Solovay, including its organization as a sequence of lemma.  Since it is a non-trivial proof, we will comment its main steps below   (see Figure~\vref{fig:belle-preuve-1} to Figure~\vref{fig:fin-belle-preuve}).
 
 \subsubsection*{Preliminaries}
 
@@ -4592,7 +4603,7 @@ Now, let us consider two ordinals  $\beta<\alpha<\epsilon_0$.  Let $p$  be some 
 \input{movies/snippets/Paths/ConstantToStandardProof}
 
 
-Applying \texttt{standard\_path\_to\_zero}, $0$ is reachable from $\alpha$ by some standard path  (see figure~\vref{fig:belle-preuve-1}).
+Applying \texttt{standard\_path\_to\_zero}, $0$ is reachable from $\alpha$ by some standard path.
 
 \begin{figure}[h]
   \centering
@@ -4764,7 +4775,7 @@ Applying \texttt{Lemma2\_6\_1} and \texttt{constant\_to\_standard\_path}, we get
 We are now able to complete our proof that there exists no bounded variant for proving the termination of standard hydra battles. This proof can
 be consulted in the module 
 \href{../theories/html/hydras.Hydra.Epsilon0_Needed_Std.html}{Hydra.Epsilon0\_Needed\_Std}.
-Please note that it has the same global structure as in section\ref{sec:free-battles-case} 
+Please note that it has the same global structure as in section~\ref{sec:free-battles-case} 
 % ICI !
 Applying the  lemmas  \texttt{Lemma2\_6\_1} of the module 
 \href{../theories/html/hydras.Epsilon0.Paths.html\#Lemma2_6_1}%

@@ -137,6 +137,17 @@ Proof.
 Qed.
 (* end snippet pathToLT *)
 
+(* begin snippet LTPathTo:: no-out *)
+Lemma LT_path_to (alpha beta : T1) :
+  T1nf alpha -> T1nf beta -> beta < alpha ->
+  {s : list nat | path_to beta s alpha}.
+(* end snippet LTPathTo *)
+Proof. 
+  move => Halpha Hbeta Hlt;
+          generalize (@LT_path_to (g2h alpha) (g2h  beta)) => H.
+  rewrite /path_to; apply H, T1lt_iff => //.
+Qed. 
+
 Theorem KS_thm_2_4 (lambda : T1) :
   T1nf lambda ->
   T1limit lambda  ->
@@ -204,7 +215,7 @@ Theorem  LT_to_standard_path (alpha beta : T1) :
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
 Proof.
   (* end snippet LTToStandard *)
-  rewrite    -!hnf_g2h => nfalpha nfbeta  Hlt.
+  rewrite -!hnf_g2h => nfalpha nfbeta  Hlt.
   case (@LT_to_standard_path (g2h alpha) (g2h beta)).  
   rewrite -T1lt_iff -?hnf_g2h  => //.
   move => x; case => j Hj; exists x, j; by rewrite /standard_path. 

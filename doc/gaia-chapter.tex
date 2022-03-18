@@ -274,6 +274,7 @@ Hessenberg sum is associative, commutative and strictly monotonous (on ordinal t
 
 
 \subsection{Canonical sequences}
+\label{sect:gcanon}
 Canonical sequences are described in Chapter~\vref{chap:ketonen}, and implemented in
 \href{../theories/html/hydras.Epsilon0.Canon.html}%
 {\texttt{hydras.Epsilon0.Canon}}.
@@ -324,6 +325,7 @@ We adapt theorems from \href{../theories/html/hydras.Epsilon0.Canon.html}%
 \inputsnippets{GCanon/gcanonLimitOf}
 
 \subsection{Accessibility in \texorpdfstring{$\epsilon_0$}{epsilon\_0}}
+\label{sect:gpath}
 
 The library \href{../theories/html/gaia_hydras.GPaths.html}%
 {\texttt{gaia\_hydras.GPaths}} imports definitions and lemmas from
@@ -341,10 +343,11 @@ The library \href{../theories/html/gaia_hydras.GPaths.html}%
 
 \subsubsection{Main theorems about paths}
 
-If $\beta$ is (strictly) accessible from $\alpha$, then
+$\beta$ is (strictly) accessible from $\alpha$, if and only iff
 $\beta<\alpha$.
 
 \inputsnippets{GPaths/pathToLT}
+\inputsnippets{GPaths/LTPathTo}
 
 Constant index paths can be simulated with constant paths with larger index.
 

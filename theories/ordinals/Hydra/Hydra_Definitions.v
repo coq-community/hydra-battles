@@ -480,9 +480,7 @@ Class Hvariant {A:Type}{Lt:relation A}
 Class BoundedVariant {A:Type}{Lt:relation A}
       {Wf: well_founded Lt}{B : Battle}
       {m: Hydra -> A} (Var: Hvariant  Wf  B m)(mu:A):=
-  {
-  m_bounded: forall h, Lt (m h ) mu
-  }.
+  { m_bounded: forall h, Lt (m h ) mu }.
 
 (* end snippet BoundedVariant *)
 
