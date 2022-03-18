@@ -72,8 +72,7 @@ Qed.
 
 (* begin snippet paraphrasesc:: no-out  *)
 Lemma H'_eq3 alpha i :
-  E0limit alpha ->
-  H'_ alpha i =  H'_ (Canon alpha (S i)) i.
+  E0limit alpha ->  H'_ alpha i =  H'_ (Canon alpha (S i)) i.
 (* end snippet paraphrasesc *)
 
 Proof.
@@ -161,10 +160,9 @@ Qed.
 Lemma H'_omega_double k :
   H'_ (E0omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
- rewrite H'_eq3; simpl Canon.
- - ochange  (CanonS  (E0omega * E0finS 1)%e0 k)  (E0omega + (S k))%e0.
-  + rewrite H'_Plus_Fin, H'_omega;  abstract lia.
-  - now compute.
+  rewrite H'_eq3; simpl Canon; [ | now compute]. 
+  ochange  (CanonS  (E0omega * E0finS 1)%e0 k)  (E0omega + (S k))%e0;
+      rewrite H'_Plus_Fin, H'_omega;  abstract lia.
 Qed.
 (* end snippet HprimeExamplesa:: no-out  *)
 
@@ -189,8 +187,7 @@ Qed.
 
 (* begin snippet HprimeExamplesd:: no-out  *)
 Lemma H'_omega_i (i:nat)  : forall k,
-    H'_ (E0omega * i)%e0 k =
-    (exp2 i * k + Nat.pred (exp2 i))%nat. 
+    H'_ (E0omega * i)%e0 k =  (exp2 i * k + Nat.pred (exp2 i))%nat. 
 Proof.
   induction i.
   (* ... *)
@@ -941,11 +938,8 @@ Section Proof_of_H'_mono_l.
     -  eapply  R3; eauto.
   Qed.
 
-  (* begin snippet HprimeDom *)
   
   Theorem H'_dom : dominates_strong (H'_ beta) (H'_ alpha). (* .no-out *)
-  (* end snippet HprimeDom *)
-  
   Proof.
     destruct H'_mono_l as [x Hx]; exists (S x); red.
     intros p H; inversion_clear H; apply Hx; auto with arith.
@@ -953,6 +947,10 @@ Section Proof_of_H'_mono_l.
 
 End Proof_of_H'_mono_l.
 
+(* begin snippet HprimeDom *)
+About H'_dom.
+(* end snippet HprimeDom *)
+  
 
 (* To do : program tactics for a better interaction *)
 

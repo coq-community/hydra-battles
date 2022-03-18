@@ -5157,6 +5157,7 @@ Correctness of the function \texttt{L\_omega\_mult} is asserted through the foll
 
 By diagonalization, we obtain a simple formula for $L_{\omega^2}$.
 
+
 \input{movies/snippets/Large_Sets/LOmegaSquare}
 \input{movies/snippets/Large_Sets/LOmegaSquareEqn}
 \input{movies/snippets/Large_Sets/LOmegaSquareOk}
@@ -5191,7 +5192,7 @@ at the ordinal $\omega^2\times i$, using \texttt{L\_phi0\_mult}.
 \input{movies/snippets/Large_Sets/LOmegaSquareTimes}
 
 
-We are now ready to get an exact formula for $L_{\omega^3}$, by diagonalization upon $L_{\omega^2\times i}$.
+We are now ready to get an exact formula for $L_{\omega^3}$, by diagonalization over $L_{\omega^2\times i}$.
 
 \input{movies/snippets/Large_Sets/LOmegaCube}
 
@@ -5390,8 +5391,8 @@ Then, we get easily formulas for $H'_{\omega+i}$, and $H'_{\omega\times i}$ for 
 \input{movies/snippets/Hprime/HprimeExamplesd}
 
 
-Crossing a new limit, we prove the following equality: 
-$$H'_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1$$.
+Since $\omega^2$ is a limit ordinal, we prove the following equality: 
+\[H'_{\omega^2} (k) = 2 ^ {k+1} \times (k+1) - 1\]
 
 \input{movies/snippets/Hprime/HprimeOmegaSqr}
 
@@ -5552,8 +5553,11 @@ We let the reader look at the proof (Section \texttt{Proof\_of\_H'\_mono\_l} of 
 
 \subsection{Comparison between \texttt{L\_} and \texttt{H'\_} }
 
-By well-founded induction on $\alpha$, we prove a simple relation between $L_\alpha$ and $H'\_alpha$.
+By well-founded induction on $\alpha$, we prove that
+ $H'_\alpha(i) \leq L_\alpha(i+1)$ for any $i$.
 
+
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.L_alpha.html\#H'_L_}{Epsilon0.L\_alpha}}
 
 \input{movies/snippets/L_alpha/HprimeL}
