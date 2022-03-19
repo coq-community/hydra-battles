@@ -5622,7 +5622,7 @@ The functions $F_\alpha$ are defined by the following equations.
 
 \begin{remark}
 The difference with the ``classic'' Wainer hierarchy 
-$f\_\alpha\;(\alpha<\epsilon_0)$ lies in the second equation:
+$f_\alpha\;(\alpha<\epsilon_0)$ lies in the second equation:
 $f_{\beta+1}(i) = (f_\beta)^{(i)}(i)$ and not
 $f_{\beta+1}(i) = (f_\beta)^{(i+1)}(i)$.
 
@@ -5633,7 +5633,7 @@ Note also that \cite{KS81} defines also $F_{\epsilon_0}$ (by the third equation)
 
 \end{remark}
 
-A first attempt is to write a definition of $F_\alpha$ by equations, in the same way as for $H\_alpha$ (the functional \texttt{iterate} has already been used in Sect.\vref{Functions:iterate}).
+A first attempt is to write a definition of $F_\alpha$ by equations, in the same way as for $H_\alpha$ (the functional \texttt{iterate} has already been used in Sect.\vref{Functions:iterate}).
 
 
 
@@ -5741,7 +5741,7 @@ Prove or disprove this statement.
 
 Prove that for any $n\geq 2$, $\textrm{Ack}\,\,n\,n\leq  F_\omega(n)$, where \textrm{Ack} is the Ackermann function. Next, prove that $F_\alpha$ is not primitive recursive, for any $\alpha\geq\omega$  (please see Sect.~\vref{sect:ack-not-PR}).
 On the other hand, please show that for any natural number $n$, the function $F_n$ is primitive recursive.
-Thus $F\_alpha$ is primitive recursive if and only if $\alpha$ is finite.
+Thus $F_\alpha$ is primitive recursive if and only if $\alpha$ is finite.
 
 \emph{You may start this exercise with the file
     \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/F_omega.v}{exercises/ordinals/F\_Omega.v}.
@@ -5750,6 +5750,9 @@ Properties of the Ackermann function are studied in
     \href{https://github.com/coq-community/hydra-battles/tree/master/theories/ordinals/MoreAck/AckNotPR.v}{theories/ordinals/MoreAck/AckNotPR.v}
 .}
 \end{exercise} 
+
+\paragraph*{\gaiasign} Library~\href{../theories/html/gaia_hydras.GF_alpha.html}{gaia\_hydras.GF\_alpha}  defines the functions $F_\alpha$ for \gaia's world.
+
 
 \section{More about rapidly growing functions}
 

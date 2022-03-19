@@ -518,8 +518,7 @@ Qed.
 
 Lemma H'_Phi0_omega_closed_formula k :
   H'_ (E0phi0 E0omega) k =
-  iterate (fun (f: nat -> nat) (l : nat) =>
-             iterate f (S l) l)
+  iterate (fun (f: nat -> nat) (l : nat) => iterate f (S l) l)
           k
           (fun k : nat => S (2 * k)%nat)
           k. 

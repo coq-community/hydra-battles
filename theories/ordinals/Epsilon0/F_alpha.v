@@ -561,18 +561,12 @@ Theorem F_alpha_gt alpha : forall n, n < F_ alpha n. (* .no-out *)
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
 
- #[deprecated(note="use F_alpha_gt")]
-   Notation F_alpha_ge_S := StrictOrder_Transitive (only parsing).
-
-
 Corollary F_alpha_positive alpha :  forall n, 0 < F_ alpha n. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro n; apply Lt.le_lt_trans with n; auto with arith.
   apply F_alpha_gt.
 Qed.
-
-
 
 Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (E0succ alpha). 
 (*| .. coq:: none |*)
@@ -586,10 +580,6 @@ Theorem F_alpha_dom alpha :
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
 
-(** [F_] is not mononotonous in [alpha] in general. 
-      Nevertheless, this lemma may help (from [KS]) *)
-
-
 Theorem F_restricted_mono_l alpha :
   forall beta n, Canon_plus n alpha beta -> 
                  F_ beta n <= F_ alpha n. (* .no-out *)
@@ -598,6 +588,10 @@ Proof. now  destruct (TH_packed alpha). Qed.
 (*||*)
 
 (* end snippet FalphaThms *)
+ #[deprecated(note="use F_alpha_gt")]
+  Notation F_alpha_ge_S := StrictOrder_Transitive (only parsing).
+
+ 
 
 Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i).
 Proof.
@@ -624,7 +618,7 @@ Qed.
 
 (* begin snippet FDomContext *)
 
-Section Compatibility_F_dominates.
+Section F_monotony_l.
 
   Variables alpha beta : E0.
   Hypothesis H'_beta_alpha : E0lt beta alpha.
@@ -712,7 +706,7 @@ Section Compatibility_F_dominates.
   Qed.
   (*||*)
   
-End Compatibility_F_dominates.
+End  F_monotony_l.
 (* end snippet FDom *)
 
 
