@@ -4,9 +4,7 @@
 (* begin snippet Requirements:: no-out  *)
 From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
-From hydras Require Import DecPreOrder ON_Generic.
-From hydras Require Import T1 E0.
-
+From hydras Require Import DecPreOrder ON_Generic  T1 E0.
 From gaia Require Export ssete9.
 (* end snippet Requirements *)
 
@@ -523,14 +521,14 @@ Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
 Proof. by rewrite lt_ref. Qed.
 
 (* end snippet rewritingRules *)
+
 (* begin snippet T1ltIff:: no-out *)
 Lemma T1lt_iff alpha beta: T1nf alpha -> T1nf beta ->
                           alpha < beta <->  g2h alpha t1<  g2h beta. 
+(* end snippet T1ltIff *)
 Proof. 
   move => Halpha Hbeta; split. 
   - rewrite -(h2g_g2hK alpha) -(h2g_g2hK beta);  repeat split.
-(* ... *)
-(*end snippet T1ltIff *)
     1, 3:  by rewrite g2h_h2gK hnf_g2h. 
     + by rewrite !h2g_g2hK hlt_iff.
   -  destruct 1 as [H0 [H1 H2]].

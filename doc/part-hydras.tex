@@ -5963,7 +5963,7 @@ Let us consider an example:
 \input{movies/snippets/Schutte_basics/BadBottoma}
 
 Since we won't be able to prove the proposition
-\linebreak \Verb|{exists! a: Ord, least_member (Empty_set Ord) a|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
+\linebreak \Verb|(exists! a: Ord, least_member (Empty_set Ord) a)|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
 \emph{i.e.}, satisfied by \emph{any} element of type \texttt{Ord}, like for instance
 \texttt{bottom = bottom}, or \texttt{zero <= bottom}.
 
@@ -6557,6 +6557,9 @@ the \href{https://github.com/coq-community/hydra-battles/blob/master/theories/ga
 
 \emph{This chapter and the files it presents are still very incomplete, considering the impressive properties of $\Gamma_0$~\cite{Gallier91}.  We hope to add new material soon, and accept contributions!}
 
+\begin{todo}
+  Build a T2Bridge! (note: Gamma0's wellfoundedness is missing in \gaia (?).
+\end{todo}
 
 \section{Introduction}
 We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system for the ordinals $<\Gamma_0$''.
