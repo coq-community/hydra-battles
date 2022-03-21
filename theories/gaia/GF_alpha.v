@@ -16,8 +16,7 @@ From hydras Require Paths.
 From hydras Require Import primRec PrimRecExamples. 
 From hydras Require Import  F_alpha F_omega. 
 
-From gaia_hydras Require Import T1Bridge GCanon.
-
+From gaia_hydras Require Import T1Bridge GCanon GHprime.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -41,7 +40,7 @@ Proof.
   rewrite /T1F_; f_equal; apply gE0_eq_intro => //. 
 Qed.
 
-(** Please note thar a lemma [foo] may mask [F_alpha.Foo] *)
+(** Please note that a lemma [foo] may mask [F_alpha.Foo] *)
 
 (* begin snippet FAlphaProps:: no-out *)
 Lemma F_alpha_gt (alpha : E0) (n : nat): (n < F_ alpha n)%N.
@@ -155,12 +154,6 @@ Proof.
   by apply F_restricted_mono_l.    
 Qed. 
 
-(* TODO : move to a GH'_alpha.v file *)
-
-Notation hH'_ := Hprime.H'_. 
-
-Definition H'_ alpha i := hH'_ (E0_g2h alpha) i. 
-
 Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
@@ -186,7 +179,6 @@ Lemma F_alpha_not_PR alpha (Hnf: T1nf alpha == true):
   gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
 Proof. 
   rewrite /T1F_ => Halpha; 
-  apply F_alpha_not_PR_E0; rewrite /E0le  => /=. 
-  by destruct Halpha. 
+  apply F_alpha_not_PR_E0; rewrite /E0le  => /=; by destruct Halpha. 
 Qed. 
 

@@ -172,6 +172,8 @@ theories/gaia/GaiaToHydra.v
 theories/gaia/nfwfgaia.v
 theories/gaia/GCanon.v
 theories/gaia/GF_alpha.v
+theories/gaia/GL_alpha.v
+theories/gaia/GHprime.v
 theories/gaia/ON_gfinite.v
 theories/gaia/GPaths.v
 theories/gaia/GLarge_Sets.v
