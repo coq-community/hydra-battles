@@ -56,7 +56,7 @@ Qed.
 (* end snippet paraphrasesa *)
 
 (* begin snippet paraphrasesb:: no-out  *)
-Lemma H'_eq2 alpha i :
+Lemma H'_eq2_0 alpha i :
   E0is_succ alpha ->
   H'_ alpha i = H'_ (Pred alpha) (S i).
 (* end snippet paraphrasesb *)
@@ -85,17 +85,17 @@ Proof.
 Qed.
 
 (* begin snippet paraphrasesd:: no-out  *)
-Lemma H'_succ_eqn  alpha i :
+Lemma H'_eq2  alpha i :
   H'_ (E0succ alpha) i = H'_ alpha (S i).
 (* end snippet paraphrasesd  *)
 
 Proof.
-  rewrite H'_eq2.
+  rewrite H'_eq2_0.
   - now rewrite Pred_of_Succ.  
   - apply Succ_Succb.
 Qed.
 
-Hint Rewrite H'_eq1  H'_succ_eqn : H'_rw.
+Hint Rewrite H'_eq1  H'_eq2 : H'_rw.
 
 Ltac lim_rw alpha := (assert (E0limit  alpha) by auto with E0);
                      rewrite (H'_eq3 alpha); auto with E0.
@@ -144,7 +144,7 @@ Proof.
     + rewrite Plus_rw; simpl; auto with T1.
       now rewrite plus_zero_r.
   - intro k; ochange (alpha + (S i))%e0 (E0succ (alpha + i))%e0.
-    + rewrite H'_succ_eqn, IHi; f_equal; abstract lia.
+    + rewrite H'_eq2, IHi; f_equal; abstract lia.
     + repeat rewrite Plus_rw; simpl.
       destruct i; simpl.
       *  rewrite plus_zero_r;  now rewrite succ_is_plus_one.
@@ -261,10 +261,10 @@ Proof with auto with E0.
          assert (gamma o< E0succ gamma)%e0 by (apply Lt_Succ; auto).
          assert (gamma o< E0phi0 alpha)%e0 .
          { apply Lt_trans with (E0succ gamma); auto. }
-         rewrite (H'_succ_eqn gamma);
+         rewrite (H'_eq2 gamma);
            replace (Omega_term alpha i + E0succ gamma)%e0 with
                (E0succ (Omega_term alpha i + gamma)%e0).
-         rewrite H'_succ_eqn, Hbeta;  auto.
+         rewrite H'_eq2, Hbeta;  auto.
          apply E0_eq_intro; rewrite Succ_of_cons; auto.
          intro; subst; red in H; simpl in H.
          destruct H as [H [H2 H3]]; apply lt_one in H2.
@@ -594,7 +594,7 @@ Section Proof_of_Abstract_Properties.
     
     Lemma PD_Zero : dominates_from 1 (H'_ (E0succ E0zero)) (H'_ E0zero).
     Proof.
-      red;intros; rewrite H'_eq1, H'_eq2, Pred_of_Succ, H'_eq1. 
+      red;intros; rewrite H'_eq1, H'_eq2_0, Pred_of_Succ, H'_eq1. 
       - abstract lia.
       - apply Succ_Succb.
     Qed.
@@ -604,7 +604,7 @@ Section Proof_of_Abstract_Properties.
     Lemma PC_Zero :  H'_ E0zero <<= H'_ (E0succ E0zero).
     Proof.
       intro n; destruct n;
-        rewrite H'_eq1, H'_eq2;  auto with arith.
+        rewrite H'_eq1, H'_eq2_0;  auto with arith.
       rewrite Pred_of_Succ, H'_eq1; auto with arith.
     Qed. 
 
@@ -633,12 +633,12 @@ Section Proof_of_Abstract_Properties.
         destruct (Halpha beta).
         - subst alpha; apply Lt_Succ.
         - red; intros; subst alpha;
-            repeat rewrite H'_succ_eqn; apply PA0; auto with arith.
+            repeat rewrite H'_eq2; apply PA0; auto with arith.
       Qed.
 
       Remark RB : alpha <> E0zero ->forall n, (n < H'_ alpha n)%nat.
       Proof.
-        intros _  n; subst  alpha; rewrite H'_succ_eqn;
+        intros _  n; subst  alpha; rewrite H'_eq2;
           destruct (E0_eq_dec beta E0zero).
         - subst; rewrite H'_eq1; auto with arith.
         - destruct (Halpha beta).
@@ -649,7 +649,7 @@ Section Proof_of_Abstract_Properties.
       Remark RD : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha).
 
         generalize PA_Succ; subst alpha.
-        red; intros H k H0; rewrite (H'_succ_eqn (E0succ beta));
+        red; intros H k H0; rewrite (H'_eq2 (E0succ beta));
           apply H; auto with arith.     
       Qed.
 
@@ -675,7 +675,7 @@ Section Proof_of_Abstract_Properties.
 
       Remark RC : H'_ alpha <<= H'_ (E0succ alpha).
       Proof.
-        subst alpha; intro n; repeat rewrite H'_succ_eqn.
+        subst alpha; intro n; repeat rewrite H'_eq2.
         destruct (Halpha beta).
         -  apply Lt_Succ.
         - specialize (PA0 (S n) (S (S n))); abstract lia.
@@ -736,12 +736,12 @@ Section Proof_of_Abstract_Properties.
 
       Remark RClim : H'_ alpha <<= H'_ (E0succ alpha).
       Proof.
-        intro n; rewrite H'_succ_eqn; apply Nat.lt_le_incl, RAlim; abstract lia.
+        intro n; rewrite H'_eq2; apply Nat.lt_le_incl, RAlim; abstract lia.
       Qed.
 
       Remark RDlim : dominates_from 1 (H'_ (E0succ alpha)) (H'_ alpha).
       Proof.
-        red;intros; rewrite H'_succ_eqn; apply RAlim; abstract lia.
+        red;intros; rewrite H'_eq2; apply RAlim; abstract lia.
       Qed.
 
       Remark RElim : forall beta n, Canon_plus n alpha beta -> 

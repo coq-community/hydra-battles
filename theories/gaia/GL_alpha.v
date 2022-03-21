@@ -20,5 +20,4 @@ From gaia_hydras Require Import T1Bridge GCanon GPaths.
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-Locate L_.
 

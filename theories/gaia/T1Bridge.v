@@ -561,7 +561,8 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 #[global] Notation hE0omega := E0.E0omega.
 #[global] Notation hE0phi0 := E0.E0phi0.
 #[global] Notation hE0fin := E0.E0fin.
-
+#[global] Notation hE0limit := E0.E0limit.
+#[global] Notation hE0is_succ := E0.E0is_succ.
 
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
@@ -577,6 +578,7 @@ Definition E0succ (alpha: E0): E0.
   refine (@mkE0 (T1succ (cnf alpha)) _); rewrite nf_succ => //.
   destruct alpha. cbn. move: i => /eqP //.
 Defined.
+
 
 Fixpoint E0fin (n:nat) : E0 :=
   match n with
@@ -639,6 +641,11 @@ Proof.
 Defined.
 
 (* end snippet gE0h2gG2h *)
+
+Definition E0limit alpha := hE0limit (E0_g2h alpha).
+
+Definition E0is_succ alpha := hE0is_succ (E0_g2h alpha).
+
 
 Lemma E0_h2g_nf (a:hE0) : T1nf (cnf (E0_h2g a)).
 Proof.
@@ -709,19 +716,28 @@ Proof.
 Qed.
 
 Lemma E0_h2g_g2hK : cancel E0_g2h E0_h2g.
-case => a Ha /=; rewrite /E0_g2h /E0_h2g; f_equal; apply  gE0_eq_intro=> /=.
-by rewrite h2g_g2hK.
+Proof.
+  case => a Ha /=; rewrite /E0_g2h /E0_h2g; f_equal; apply  gE0_eq_intro=> /=.
+  by rewrite h2g_g2hK.
 Qed.
 
 Lemma E0_g2h_h2gK : cancel E0_h2g E0_g2h.
-case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
-by rewrite g2h_h2gK. 
+Proof.
+  case => a Ha /=. rewrite /E0_g2h /E0_h2g. f_equal. apply  E0_eq_intro=> /=.
+  by rewrite g2h_h2gK. 
 Qed.
 
 Lemma g2h_E0succ alpha : E0_g2h (E0succ alpha)= E0.E0succ (E0_g2h alpha). 
-rewrite /E0succ.   apply E0_eq_intro => /=. Search g2h T1succ. 
-by rewrite g2h_succ. 
-Qed. 
+Proof.
+  rewrite /E0succ;   apply E0_eq_intro => /=. 
+  by rewrite g2h_succ. 
+Qed.
+
+Lemma g2h_E0zero : E0_g2h E0zero = E0.E0zero.
+Proof.  rewrite /E0zero; by apply E0_eq_intro. Qed.
+
+
+
 
 
 From Coq Require Import Relations Basics
