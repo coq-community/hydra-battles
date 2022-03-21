@@ -88,7 +88,6 @@ Qed.
 Lemma H'_eq2  alpha i :
   H'_ (E0succ alpha) i = H'_ alpha (S i).
 (* end snippet paraphrasesd  *)
-
 Proof.
   rewrite H'_eq2_0.
   - now rewrite Pred_of_Succ.  

@@ -44,4 +44,14 @@ Proof.
   apply E0_eq_intro => /=;  by rewrite g2h_canon.
 Qed.
 
+(** **  Examples *)
+
+Lemma H'_omega : forall k, H'_ E0omega k = (2 * k).+1 %nat.
+Proof.
+  intro k; rewrite H'_eq3 ...
+  - replace (E0Canon E0omega (S k)) with (E0fin (S k)).
+    + rewrite /H'_ E0g2h_Fin H'_Fin; lia.
+    + apply gE0_eq_intro;  cbn; by rewrite E0fin_cnf T1succ_nat. 
+    + by rewrite /E0limit.
+Qed. 
 

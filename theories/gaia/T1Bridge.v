@@ -736,7 +736,8 @@ Qed.
 Lemma g2h_E0zero : E0_g2h E0zero = E0.E0zero.
 Proof.  rewrite /E0zero; by apply E0_eq_intro. Qed.
 
-
+Lemma E0g2h_Fin i: E0_g2h (E0fin i) = E0.E0fin i.
+Proof.  apply E0_eq_intro => /=; rewrite E0fin_cnf; by case: i. Qed. 
 
 
 
