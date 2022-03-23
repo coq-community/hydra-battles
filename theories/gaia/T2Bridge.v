@@ -4,7 +4,7 @@
 (* begin snippet Requirements:: no-out  *)
 From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
-From hydras Require Import DecPreOrder ON_Generic  T2.
+From hydras Require Import DecPreOrder ON_Generic  T2 Gamma0.
 
 From gaia Require Export ssete9.
 Import Gamma0. 
@@ -17,7 +17,9 @@ Unset Printing Implicit Defensive.
 (* begin snippet hT2gT2 *)
 
 (** Hydra-Battles' type for ordinal terms below [Gamma00] *)
-#[global] Notation hT2 := Gamma0.T2.T2.
+Check Gamma0.T2.T2. 
+Print Gamma0.T2.T2.
+#[global] Notation hT2 := hydras.Gamma0.T2.T2.
 
 (** Gaia's type for ordinal terms below [epsilon0] *)
 #[global] Notation T2 := ssete9.Gamma0.T2.
@@ -25,7 +27,7 @@ Unset Printing Implicit Defensive.
 
 
 #[global] Notation hcons := gcons. 
-#[global] Notation hzero := T2.zero. 
+#[global] Notation hzero := hydras.Gamma0.T2.zero. 
 
 (*
 #[global] Notation zero := Gamma0.zero. 
@@ -44,10 +46,35 @@ Fixpoint g2h (alpha : T2) : hT2 :=
   end.
 
 
-Lemma h2g_g2hK (a : T2): cancel g2h h2g.
+Lemma h2g_g2hK : cancel g2h h2g.
 Proof. elim => // => t Ht t0 Ht0 n t1 Ht1 /=; by rewrite Ht Ht0 Ht1.  Qed.
 
-Lemma g2h_h2gK (a : hT2): cancel h2g g2h.
+Lemma g2h_h2gK : cancel h2g g2h.
 Proof. elim => // => t Ht t0 Ht0 n t1 Ht1 /=; by rewrite Ht Ht0 Ht1.  Qed.
 
+
+Lemma g2h_eq_iff (a b: T2) :  g2h a = g2h b <-> a = b.
+Proof. 
+    split . 
+    - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK
+              => // -> //.  
+    - by move => -> .
+Qed. 
+
+
+Lemma h2g_eq_iff (a b :hT2) :  h2g a = h2g b <-> a = b.
+Proof. 
+  split.
+    -  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  =>  // -> //.
+    - move => -> //. 
+Qed.
+
+(* TODO 
+  Prove the equivalence of comparison and test for normal form in both 
+  libraries: import well-foundedness *)
+
+
+Check (fun a b : hT2 => compare a b).
+
+About T2lt.
 

@@ -96,8 +96,7 @@ Lemma g2h_eq_iff (a b: T1) :  g2h a = g2h b <-> a = b.
 (* end snippet g2hEqIff *)
 Proof. 
     split.
-    - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK
-              => // -> //.  
+    - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK => // -> //.  
     - by move => -> .
 Qed.
 
@@ -740,6 +739,18 @@ Lemma E0g2h_Fin i: E0_g2h (E0fin i) = E0.E0fin i.
 Proof.  apply E0_eq_intro => /=; rewrite E0fin_cnf; by case: i. Qed. 
 
 
+Lemma E0g2h_mulE (a b: E0): E0_g2h (E0mul a b)= E0.E0mul (E0_g2h a) (E0_g2h b).
+Proof. 
+  destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_mult_rw. 
+Qed.
+
+Lemma E0g2h_plusE (a b: E0): E0_g2h (E0plus a b)= E0.E0add (E0_g2h a) (E0_g2h b).
+Proof. 
+  destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_plus_rw. 
+Qed.
+
+Lemma E0g2h_omegaE : E0_g2h E0omega = hE0omega. 
+ Proof.  by  apply E0_eq_intro => /=.  Qed. 
 
 From Coq Require Import Relations Basics
      Wellfounded.Inverse_Image Wellfounded.Inclusion.

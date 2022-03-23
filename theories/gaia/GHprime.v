@@ -46,12 +46,19 @@ Qed.
 
 (** **  Examples *)
 
-Lemma H'_omega : forall k, H'_ E0omega k = (2 * k).+1 %nat.
+Lemma H'_omega k : H'_ E0omega k = (2 * k).+1 %nat.
 Proof.
-  intro k; rewrite H'_eq3 ...
-  - replace (E0Canon E0omega (S k)) with (E0fin (S k)).
-    + rewrite /H'_ E0g2h_Fin H'_Fin; lia.
-    + apply gE0_eq_intro;  cbn; by rewrite E0fin_cnf T1succ_nat. 
-    + by rewrite /E0limit.
+  rewrite H'_eq3. 
+  replace (E0Canon E0omega (S k)) with (E0fin (S k)).
+  + rewrite /H'_ E0g2h_Fin H'_Fin; lia.
+  + apply gE0_eq_intro;  cbn; by rewrite E0fin_cnf T1succ_nat. 
+  + by rewrite /E0limit.
 Qed. 
 
+
+
+Lemma H'_omega_double (k: nat) :
+  H'_ (E0mul E0omega  (E0fin 2)) k =  (4 * k + 3)%coq_nat.
+Proof.
+  by rewrite /H'_  -H'_omega_double E0g2h_mulE E0g2h_omegaE E0g2h_Fin. 
+Qed.
