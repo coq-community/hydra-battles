@@ -55,10 +55,31 @@ Proof.
   + by rewrite /E0limit.
 Qed. 
 
-
-
 Lemma H'_omega_double (k: nat) :
-  H'_ (E0mul E0omega  (E0fin 2)) k =  (4 * k + 3)%coq_nat.
+  H'_ (E0mul E0omega (E0fin 2)) k =  (4 * k + 3)%coq_nat.
 Proof.
   by rewrite /H'_  -H'_omega_double E0g2h_mulE E0g2h_omegaE E0g2h_Fin. 
 Qed.
+
+
+(** TODO
+    import more abstract properties of H'_ *)
+
+
+Lemma H'_dom alpha beta :
+  E0lt alpha beta -> dominates_strong (H'_ beta) (H'_ alpha).
+Proof.
+  move => H; have H' : (hE0lt (E0_g2h alpha) (E0_g2h beta)).
+  by rewrite -gE0lt_iff.
+  case (Epsilon0.Hprime.H'_dom _ _ H') => x Hx;  exists x;  rewrite  /H'_.
+  move => p Hp; apply /ltP.  apply Hx;  by apply /leP.
+Qed.
+
+Lemma H'_alpha_mono (alpha : E0) : strict_mono (H'_ alpha).
+Proof.
+  generalize (H'_alpha_mono (E0_g2h alpha)) => H.
+  move => x y Hxy. have H'xy: (x < y)%coq_nat by apply /ltP.
+  specialize (H x y H'xy).
+  rewrite /H'_.  by apply /ltP.
+Qed.
+
