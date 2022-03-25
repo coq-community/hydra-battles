@@ -4490,6 +4490,11 @@ We  also use a version of \texttt{Cor12} with large inequalities.
 \subsubsection{Sketch of proof of \texttt{Cor12}}
 \index{maths}{Transfinite induction}
 
+First, let us prove the following lemma (numbered \texttt{2.4} in Ketonen and Solovay's article).
+
+\input{movies/snippets/Paths/KSThm24}
+
+
 We prove this lemma by transfinite induction on $\alpha$.
 Let us consider a path $\alpha \xrightarrow [i]{} \beta$ $(i>0)$. Its first step is
 the pair $(\alpha,\canonseq{\alpha}{i})$, We have $\canonseq{\alpha}{i}<\alpha$ and
@@ -4500,13 +4505,13 @@ By the induction hypothesis, there exists a path $\canonseq{\alpha}{n} \xrightar
 \item  If $\alpha$ is a successor ordinal $\gamma+1$, then $\canonseq{\alpha}{n} =
 \canonseq{\alpha}{i}=\gamma$. Thus we have a path 
 $\alpha  \xrightarrow [n]{}  \gamma \xrightarrow [n]{} \beta$
-\item If $\alpha$ is a limit ordinal, we apply the following theorem (numbered \texttt{2.4} in Ketonen and Solovay's article). 
+\item If $\alpha$ is a limit ordinal, we apply Theorem \texttt{KS\_thm\_2\_4} (see above).
 
 %   \begin{theorem}
 % Let $\lambda$ be a limit ordinal, then for any pair of indices $0<i<j$, there is a path $\canonseq{\lambda}{j} \xrightarrow[1]{} \canonseq{\lambda}{i}$.    
 %   \end{theorem}
 
-\input{movies/snippets/Paths/KSThm24}
+
   
 
 The proof of the limit case, is decomposed into a sequence
@@ -4526,7 +4531,18 @@ of path constructions leading to $\alpha \xrightarrow[n]{} \beta$.
 \end{itemize}
 
 
+\begin{remark}
+ \texttt{Cor12} ``casts'' $i$-paths into $n$-paths for any $n>i$.
+But the obtained $n$-path can be much longer than the original $i$-path.
+The following exercise will give an idea of this increase. 
+\end{remark}
 
+\index{hydras}{Exercises}
+\begin{exercise}
+  Prove that  the length of the $i+1$-path from
+  $\omega^\omega$ to $\omega^i$ is $1 + (i+1)^{(i+1)}$, for any $i$. Note that the $i$-path from
+  $\omega^\omega$ to $\omega^i$ is only one step long.
+ \end{exercise}
 
 
 
@@ -4545,28 +4561,17 @@ where $n$ is the maximum of the indices $i$ met in the induction.
 \input{movies/snippets/Paths/Lemma261}
 
 
-Intuitively, lemma   \texttt{Lemma2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$, then there exists  a battle from $\iota(\alpha)$ to $\iota(\beta)$ where the replication factor is constant, although large enough. 
+Intuitively, Lemma~\texttt{2\_6\_1}  shows that if $\beta<\alpha<\epsilon_0$, then there exists  a battle from $\iota(\alpha)$ to $\iota(\beta)$ where the replication factor is constant, although large enough. 
 
 
 
-\begin{remark}
- \texttt{Cor12} ``casts'' $i$-paths into $n$-paths for any $n>i$.
-But the obtained $n$-path can be much longer than the original $i$-path.
-The following exercise will give an idea of this increase. 
-\end{remark}
 
-\index{hydras}{Exercises}
-\begin{exercise}
-  Prove that  the length of the $i+1$-path from
-  $\omega^\omega$ to $\omega^i$ is $1 + (i+1)^{(i+1)}$, for any $i$. Note that the $i$-path from
-  $\omega^\omega$ to $\omega^i$ is only one step long.
- \end{exercise}
 
 
  \paragraph*{\gaiasign}
- Corollary \texttt{Cor12} and Lemma \texttt{Lemma261} are also available in
+ Corollary \texttt{Cor12} and Lemma \texttt{Lemma2\_6\_1} are also available in
 \href{../theories/html/gaia_hydras.GPaths.html}{gaia\_hydras.GPaths} 
-(please see Sect.\~ref{sect:gpath}).
+(please see Sect.~\vref{sect:gpath}).
 
 \subsection{Casting paths with a constant index into a standard path}
 

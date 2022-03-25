@@ -13,7 +13,7 @@ From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
 From hydras Require Import primRec PrimRecExamples. 
-From hydras Require Import  Hprime.
+From hydras Require Import  Iterates Hprime.
 From gaia_hydras Require Import T1Bridge GCanon GPaths.
 (* end snippet Requirements *)
 
@@ -21,7 +21,6 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 
 Notation hH'_ := Hprime.H'_. 
-
 Definition H'_ alpha i := hH'_ (E0_g2h alpha) i.
 
 
@@ -47,12 +46,11 @@ Qed.
 (** **  Examples *)
 
 Lemma H'_omega k : H'_ E0omega k = (2 * k).+1 %nat.
-Proof.
-  rewrite H'_eq3. 
-  replace (E0Canon E0omega (S k)) with (E0fin (S k)).
-  + rewrite /H'_ E0g2h_Fin H'_Fin; lia.
-  + apply gE0_eq_intro;  cbn; by rewrite E0fin_cnf T1succ_nat. 
-  + by rewrite /E0limit.
+Proof. 
+  rewrite H'_eq3  ?/E0limit => //.
+  replace (E0Canon E0omega (S k)) with (E0fin (S k)); last first.
+  apply gE0_eq_intro => /=;  by rewrite E0fin_cnf T1succ_nat. 
+  rewrite /H'_ E0g2h_Fin H'_Fin; lia.
 Qed. 
 
 Lemma H'_omega_double (k: nat) :
@@ -69,17 +67,33 @@ Qed.
 Lemma H'_dom alpha beta :
   E0lt alpha beta -> dominates_strong (H'_ beta) (H'_ alpha).
 Proof.
-  move => H; have H' : (hE0lt (E0_g2h alpha) (E0_g2h beta)).
+  move => H; have H' : (hE0lt (E0_g2h alpha) (E0_g2h beta)) 
   by rewrite -gE0lt_iff.
   case (Epsilon0.Hprime.H'_dom _ _ H') => x Hx;  exists x;  rewrite  /H'_.
-  move => p Hp; apply /ltP.  apply Hx;  by apply /leP.
+  move => p Hp; apply /ltP; apply Hx;  by apply /leP.
 Qed.
 
 Lemma H'_alpha_mono (alpha : E0) : strict_mono (H'_ alpha).
 Proof.
   generalize (H'_alpha_mono (E0_g2h alpha)) => H.
   move => x y Hxy. have H'xy: (x < y)%coq_nat by apply /ltP.
-  specialize (H x y H'xy).
-  rewrite /H'_.  by apply /ltP.
+  specialize (H x y H'xy);  rewrite /H'_; by apply /ltP.
 Qed.
 
+Theorem H'_alpha_gt alpha (Halpha: alpha <> E0zero) n : (n < H'_ alpha n)%N.
+Proof.
+  generalize (H'_alpha_gt (E0_g2h alpha)) => H. 
+  rewrite /H'_; apply /ltP ; apply H => H0; apply Halpha. 
+  apply gE0_eq_intro; destruct alpha => /=. 
+  injection H0 =>  Heq; rewrite -g2h_eq_iff;  by rewrite Heq. 
+Qed.
+
+
+Lemma H'_omega_cube_min :
+forall k : nat,
+  0 <> k -> (hyper_exp2 k.+1  <= H'_ (E0phi0 (E0fin 3)) k)%N.
+Proof.
+  move => k Hk; apply /leP; transitivity (hH'_ (hE0phi0 3) k). 
+  - by apply H'_omega_cube_min.
+  - by rewrite /H'_  E0g2h_phi0 E0g2h_Fin. 
+Qed. 

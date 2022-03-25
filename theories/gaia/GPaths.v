@@ -57,9 +57,6 @@ Definition KP_arrowS n :=
 #[global] Notation hconst_pathS  := const_pathS.
 #[global] Notation hconst_path  := const_path.
 
-Definition const_pathS i alpha beta  :=
-  hconst_pathS i (g2h alpha) (g2h beta).
-
 Definition const_path i alpha beta :=
   hconst_path i (g2h alpha) (g2h beta).
 
@@ -152,14 +149,14 @@ Theorem KS_thm_2_4 (lambda : T1) :
   T1nf lambda ->
   T1limit lambda  ->
   forall i j, (i < j)%N ->
-              const_pathS 0 (canon lambda (S j))
-                            (canon lambda (S i)).
+              const_path 1 (canon lambda (S j))
+                         (canon lambda (S i)).
 Proof. 
   rewrite -hnf_g2h => Hlambda Hlim i j Hij. 
   rewrite -(h2g_g2hK lambda) -limitb_ref in Hlim. 
   have H'ij: (i < j)%coq_nat by apply /ltP. 
   generalize (KS_thm_2_4 Hlambda Hlim H'ij). 
-  by rewrite /const_pathS !g2h_canon.
+  by rewrite /const_path !g2h_canon.
 Qed. 
 
 (* begin snippet Cor12:: no-out *)
@@ -167,14 +164,12 @@ Lemma Cor12 (alpha : T1) :
   T1nf alpha ->
   forall beta i n, T1nf beta -> beta  < alpha  ->
                    (i < n)%N ->
-                   const_pathS i alpha beta ->
-                   const_pathS n alpha beta.
+                   const_path i.+1 alpha beta ->
+                   const_path n.+1 alpha beta.
 (* end snippet Cor12 *)
 Proof.
-  rewrite -hnf_g2h => Hnf beta i n Hbeta Hlt Hij; rewrite /const_pathS.
-  apply Cor12 => //.
-  rewrite -T1lt_iff => //.
-  by rewrite -hnf_g2h => //. 
+  rewrite -hnf_g2h => Hnf beta i n Hbeta Hlt Hij; apply Cor12 => //.
+  rewrite -T1lt_iff => //;  by rewrite -hnf_g2h.
   by apply /ltP. 
 Qed.
 
@@ -183,7 +178,7 @@ Lemma Lemma2_6_1 (alpha:T1) :
 T1nf alpha ->
   forall beta, T1nf beta -> 
     T1lt beta  alpha  ->
-    {n:nat | const_pathS n alpha beta}.
+    {n:nat | const_path n.+1 alpha beta}.
 (* end snippet Lemma261 *)
 Proof.
   rewrite -hnf_g2h => Hnf beta Hbeta Hlt.
@@ -199,8 +194,8 @@ Qed.
 (* begin snippet constantToStandard:: no-out *)
 Lemma constant_to_standard_path 
   (alpha beta : T1) (i : nat):
-  T1nf alpha -> const_pathS i alpha beta -> zero  < alpha ->
-  {j:nat | standard_path (S i) alpha j beta}.
+  T1nf alpha -> const_path i.+1 alpha beta -> zero  < alpha ->
+  {j:nat | standard_path i.+1 alpha j beta}.
 (* end snippet constantToStandard *)
 Proof.  
   rewrite -hnf_g2h => nfalpha Hpath Hpos.
@@ -212,7 +207,7 @@ Qed.
 (* begin snippet LTToStandard:: no-out *)
 Theorem  LT_to_standard_path (alpha beta : T1) :
   T1nf alpha -> T1nf beta -> beta < alpha ->
-  {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
+  {n : nat & {j:nat | standard_path n.+1 alpha j beta}}. 
 Proof.
   (* end snippet LTToStandard *)
   rewrite -!hnf_g2h => nfalpha nfbeta  Hlt.

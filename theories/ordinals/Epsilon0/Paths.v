@@ -1276,7 +1276,7 @@ Theorem KS_thm_2_4 (lambda : T1) :
    nf lambda ->
    limitb lambda  ->
    forall i j, (i < j)%nat ->
-               const_pathS 0 (canon lambda (S j))
+               const_path 1 (canon lambda (S j))
                              (canon lambda (S i)).
 Proof.
   transfinite_induction lambda.
@@ -1358,8 +1358,8 @@ Qed.
 Corollary Cor12 (alpha : T1) :  nf alpha ->
                 forall beta i n, beta  t1< alpha  ->
                                  i < n ->
-                                 const_pathS i alpha beta ->
-                                 const_pathS n alpha beta.
+                                 const_path (S i) alpha beta ->
+                                 const_path (S n) alpha beta.
 
 Proof. 
   transfinite_induction_lt alpha. 
@@ -1388,7 +1388,7 @@ Proof.
       {     
         (*   alpha -i->  y= canonS i alpha -i-+->  z *)
         destruct H1 as [H01 H1];
-          subst y;   assert (const_pathS n (canon alpha (S i)) z).
+          subst y;   assert (const_path (S n) (canon alpha (S i)) z).
         {
           apply Hrec with i;auto.
           apply nf_canon;   auto.
@@ -1398,8 +1398,8 @@ Proof.
           apply nf_canon; auto.
           eapply H2.
         }
-        {
-          red; rewrite <- clos_trans_t1n_iff.
+        { red. 
+          red. rewrite <- clos_trans_t1n_iff.
           apply t_trans with (canon alpha (S n)).
           left.
           auto.
@@ -1454,8 +1454,8 @@ Corollary Cor12_1 (alpha : T1) :
   nf alpha ->
   forall beta i n, beta t1< alpha ->
                    i <= n ->
-                   const_pathS i alpha beta ->
-                   const_pathS n alpha beta. (* .no-out *)
+                   const_path (S i) alpha beta ->
+                   const_path (S n) alpha beta. (* .no-out *)
 (* end snippet Cor121 *)
 
 Proof.
@@ -1513,7 +1513,7 @@ Lemma Lemma2_6_1 (alpha : T1) :
   nf alpha ->
   forall beta,
     beta t1< alpha  ->
-    {n:nat | const_pathS n alpha beta}.
+    {n:nat | const_path (S n) alpha beta}.
 Proof.
   transfinite_induction alpha.
   (* ... *) (*||*) (*| .. coq:: none |*)
@@ -1528,7 +1528,7 @@ Proof.
       {  eapply nf_canon;eauto. }
       destruct (H (canon x (S n1)) H2 H3 beta) as [n2 Hn2].
       * auto.
-      * exists (Nat.max n1 n2); red;rewrite  <- clos_trans_t1n_iff.
+      * exists (Nat.max n1 n2); red;red; rewrite  <- clos_trans_t1n_iff.
         constructor 2  with (canon x (S n1)).
        --  rewrite  clos_trans_t1n_iff.
            apply Cor12_1 with n1; auto.
