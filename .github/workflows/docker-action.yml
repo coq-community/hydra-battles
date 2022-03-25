@@ -18,19 +18,47 @@ jobs:
           - 'mathcomp/mathcomp-dev:coq-dev'
           - 'mathcomp/mathcomp:1.14.0-coq-8.15'
           - 'mathcomp/mathcomp:1.13.0-coq-8.14'
-          - 'mathcomp/mathcomp:1.13.0-coq-8.13'
-          - 'mathcomp/mathcomp:1.12.0-coq-8.14'
           - 'mathcomp/mathcomp:1.12.0-coq-8.13'
-        opam_file:
-          - 'coq-hydra-battles.opam'
-          - 'coq-addition-chains.opam'
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - uses: coq-community/docker-coq-action@v1
         with:
-          opam_file: ${{ matrix.opam_file }}
           custom_image: ${{ matrix.image }}
+          custom_script: |
+            {{before_install}}
+            startGroup "Build hydra-battles dependencies"
+              opam pin add -n -y -k path coq-hydra-battles .
+              opam update -y
+              opam install -y -j 2 coq-hydra-battles --deps-only
+            endGroup
+            startGroup "Build hydra-battles"
+              opam install -y -v -j 2 coq-hydra-battles
+              opam list
+            endGroup
+            startGroup "Build addition-chains dependencies"
+              opam pin add -n -y -k path coq-addition-chains .
+              opam update -y
+              opam install -y -j 2 coq-addition-chains --deps-only
+            endGroup
+            startGroup "Build addition-chains"
+              opam install -y -v -j 2 coq-addition-chains
+              opam list
+            endGroup
+            startGroup "Build gaia-hydras dependencies"
+              opam pin add -n -y -k path coq-gaia-hydras .
+              opam update -y
+              opam install -y -j 2 coq-gaia-hydras --deps-only
+            endGroup
+            startGroup "Build gaia-hydras"
+              opam install -y -v -j 2 coq-gaia-hydras
+              opam list
+            endGroup
+            startGroup "Uninstallation test"
+              opam remove -y coq-gaia-hydras
+              opam remove -y coq-addition-chains
+              opam remove -y coq-hydra-battles
+            endGroup
 
 # See also:
 # https://github.com/coq-community/docker-coq-action#readme
