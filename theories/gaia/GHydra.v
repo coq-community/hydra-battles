@@ -15,15 +15,9 @@ Import Hydra_Definitions.
 
 (* begin snippet mDef *)
 Fixpoint m (h:Hydra) : T1 :=
-  match h with
-  | head => zero
-  | node (hcons _ _ as hs) => ms hs
-  end
-    with ms (s : Hydrae) : T1 :=
-  match s with
-  | hnil => zero
-  | hcons h s' => phi0 (m h) o+ ms s'
-  end.
+  if h is  node (hcons _ _ as hs) then ms hs else zero
+with ms (s : Hydrae) : T1 :=
+  if s is hcons h s' then phi0 (m h) o+ ms s' else zero.
 (* end snippet mDef *)
 
 Lemma m_ref h : g2h (m h) = (Hydra_Termination.m h).

@@ -20,10 +20,9 @@ Definition oplus alpha beta := h2g (hoplus (g2h alpha) (g2h beta)).
 Infix "o+" := oplus: cantor_scope. 
 
 Fixpoint o_finite_mult n alpha :=
-match n with
-    0 => zero
-  | S p =>  alpha o+ (o_finite_mult p alpha)
-end.
+  if n is p.+1 then alpha o+ (o_finite_mult p alpha)
+  else zero. 
+ 
 
 Compute T1pp (T1omega o+ T1omega).
 

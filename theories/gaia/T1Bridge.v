@@ -53,21 +53,14 @@ Unset Printing Implicit Defensive.
 (* end snippet MoreNotations *)
 
 (* begin snippet h2gG2hDef *)
-
-
-
 Fixpoint h2g (alpha : hT1) : T1 :=
-  match alpha with
-    hzero => zero
-  | hcons alpha n beta => cons (h2g alpha) n (h2g beta)
-  end.
+  if alpha is  hcons alpha n beta
+  then cons (h2g alpha) n (h2g beta)
+  else zero.
 
 Fixpoint g2h (alpha : T1) : hT1 :=
-  match alpha with
-    zero => hzero
-  | cons alpha n beta => hcons (g2h alpha) n (g2h beta)
-  end.
-
+  if alpha is cons alpha n beta  then hcons (g2h alpha) n (g2h beta)
+  else hzero.
 (* end snippet h2gG2hDef *)
 
 (** Pretty printing *)

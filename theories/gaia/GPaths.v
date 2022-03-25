@@ -32,6 +32,7 @@ Definition bounded_transitionS n (alpha beta: T1) :=
 
 (* begin snippet pathsDefs:: no-out *)
 
+(** TODO : define [path_to] as a boolean function *)
 #[global] Notation hpath_to := path_to. 
 (** [path_to beta s alpha] : [beta] is accessible from [alpha] with trace [s] *)
 
@@ -74,28 +75,44 @@ Definition standard_gnaw i alpha l := h2g (hstandard_gnaw i (g2h alpha) l).
 (** SSreflect's iota was already defined in Prelude *)
 
 (** To simplify *)
+Print Paths.transition_S. 
+Lemma path_to_inv1 to i from : path_to to [:: i] from ->
+                               i <> 0 /\ transition i from to.
+  inversion 1.
+  Show 2. 
+split; trivial. 
+rewrite /transition.  
+rewrite /htransition in H2. 
+
+destruct i. 
+contradiction. 
+red in H2. decompose [and] H2. 
+repeat split. Search (?x != ?y) (?x <> ?y). 
+destruct from. 
+destruct H4. by []. 
+by [].
+rewrite /canon. 
+apply /eqP. 
+Search g2h eq. 
+by rewrite -g2h_eq_iff g2h_h2gK. 
+
+split; trivial. 
+inversion H5. 
+Qed. 
+
 
 Lemma path_to_iff1 to i from :
   T1nf from -> i <> 0 -> from <> zero ->
   path_to to [:: i] from <-> to = canon from i /\ T1nf from.
 Proof.
   move => H H0 H1 ; split; rewrite /path_to.
-  -   move => H2; inversion H2 . split. subst. rewrite /htransition in H5.
-      destruct i.
-      + contradiction.
-      + rewrite /canon -(h2g_g2hK to); f_equal. 
-        rewrite /transition_S in H5 => //; case H5 => //.
-      + rewrite /transition_S in H5 => //.
-      + split.
-        * inversion H8. 
-        * by [].
-  - case => -> H2; left => //.      
-    rewrite /htransition;  destruct i.
-    by destruct H0. 
-    split. 
-    + move => H3; apply H1; rewrite -g2h_zero in H3. 
-      by rewrite -g2h_eq_iff. 
-    + by rewrite g2h_canon. 
+  move => H2;  apply path_to_inv1 in H2. case: H2 => H2 H3. 
+  case: H3;  repeat split => //;  by apply /eqP. 
+  constructor => //.
+  destruct i => //.
+  case: H2 => H2 H3; constructor.
+   move => H4; apply H1; by rewrite -g2h_eq_iff. 
+   rewrite -g2h_eq_iff in H2; by rewrite -g2h_canon. 
 Qed. 
 
 Lemma iota_adapt i l: iota i l = MoreLists.iota_from i l. 
