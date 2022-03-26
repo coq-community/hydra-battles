@@ -101,10 +101,10 @@ Lemma canonS_cons_not_zero  (i : nat) (alpha : T1) (n : nat) (beta : T1):
   alpha <> zero -> canon (cons alpha n beta) i.+1 <> zero.
 Proof.
   rewrite -(h2g_g2hK alpha) /canon => Hdiff.  
-  rewrite g2h_cons; change zero with (h2g hzero) => Heq.
-  rewrite h2g_eq_iff in Heq.
-  apply canonS_cons_not_zero  in Heq => //.
-  move: Hdiff; rewrite zero_ref;  by rewrite g2h_h2gK h2g_eq_iff. 
+  rewrite g2h_cons; change zero with (h2g hzero). rewrite h2g_eq_iff.
+  apply canonS_cons_not_zero => H0; apply Hdiff. 
+  rewrite -(h2g_g2hK zero);  apply h2g_eq_iff. 
+  move: H0; by rewrite g2h_h2gK. 
 Qed.
 
 (* begin snippet glimitCanonSNotZero:: no-out *)
@@ -115,7 +115,7 @@ Proof.
   rewrite -(h2g_g2hK lambda) /canon => Hnf Hlim .
   change zero with (h2g hzero); rewrite h2g_eq_iff. 
   apply Canon.limitb_canonS_not_zero. 
-  - rewrite g2h_h2gK; now rewrite -nf_ref in Hnf. 
+  - move: Hnf; by rewrite g2h_h2gK -nf_ref.  
   - by rewrite limitb_ref h2g_g2hK. 
 Qed.
 
@@ -128,7 +128,7 @@ Proof.
   rewrite -(h2g_g2hK gamma) /canon succ_ref phi0_ref  g2h_h2gK => Hnf.
   change zero with (h2g hzero); rewrite Canon.canonS_phi0_succ_eqn ?h2g_cons
   =>//. 
-  - rewrite h2g_g2hK in Hnf;  by rewrite /hnf nf_ref h2g_g2hK.
+  - move: Hnf; rewrite h2g_g2hK;  by rewrite /hnf nf_ref h2g_g2hK.
 Qed.
 
 (* begin snippet gcanonSSn:: no-out *)
@@ -139,19 +139,17 @@ Lemma canon_SSn_zero (i : nat) (alpha : T1) (n : nat):
 Proof.
   rewrite -(h2g_g2hK alpha) /canon g2h_cons g2h_h2gK => Hnf;
   rewrite -h2g_cons h2g_g2hK canon_SSn_zero; f_equal. 
-  by rewrite h2g_g2hK -(h2g_g2hK alpha) -nf_ref in Hnf.  
+  move: Hnf; by rewrite h2g_g2hK hnf_g2h.  
 Qed.
 
 
 Lemma canonS_zero_inv  (alpha : T1) (i : nat):
   canon alpha i.+1 = zero -> alpha = zero \/ alpha = one.
 Proof.
-  move => Halpha; have H: hcanon (g2h alpha) i.+1 = hzero. 
-  {
-    change zero with (h2g hzero) in Halpha; by rewrite h2g_eq_iff in Halpha.    
-  }
+  move => Halpha; have H: hcanon (g2h alpha) i.+1 = hzero; last first.
   case (Canon.canonS_zero_inv (g2h alpha) i) => // H0 ; [left | right];
-                                          rewrite -(h2g_g2hK alpha) H0 //.
+                                                rewrite -(h2g_g2hK alpha) H0 //.
+   move: Halpha;change zero with (h2g hzero); by rewrite h2g_eq_iff.
 Qed.
 
 (* begin snippet gcanonLim1:: no-out *)
@@ -163,7 +161,7 @@ Proof.
   move => Hnf Hlim; rewrite /canon.
   have H: hcanon (hphi0 (g2h lambda)) i = hphi0 (hcanon (g2h lambda) i).
   { rewrite -Canon.canon_lim1 => //. 
-    - by rewrite -(h2g_g2hK lambda) -nf_ref in Hnf. 
+    - move: Hnf; by rewrite hnf_g2h.
     - by rewrite limitb_ref h2g_g2hK.
   }
   by rewrite phi0_ref H.
@@ -176,7 +174,7 @@ Lemma canon_tail alpha (n : nat) beta (i : nat):
 Proof.
   move => Hnf Hpos; rewrite -g2h_eq_iff g2h_canon !g2h_cons
                                         g2h_canon canon_tail //.
-  rewrite -hnf_g2h !g2h_cons in Hnf => //.
+  move: Hnf; rewrite -hnf_g2h !g2h_cons  => //.
   move: beta {Hnf} Hpos ; by case.  
 Qed.
 
@@ -226,8 +224,8 @@ Proof.
   case (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h beta)).
   - split => //; rewrite hnf_g2h => //.
   - move => x Hx; exists x; rewrite -(h2g_g2hK beta). 
-  rewrite -g2h_canon in Hx;  rewrite !h2g_g2hK;
-    rewrite -T1lt_iff in Hx => //.   
+  rewrite -g2h_canon in Hx;  rewrite !h2g_g2hK.
+  move: Hx;   rewrite -T1lt_iff => //.   
   rewrite /canon  -nf_ref; change (hnf (hcanon (g2h lambda) x));
     apply nf_canon => //.
 Qed.

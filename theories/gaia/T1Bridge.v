@@ -210,25 +210,27 @@ Lemma compare_ref (x y: hT1) :
 Proof.
   move: y; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
   case H: (Epsilon0.T1.compare_T1 x1 y1).
-  - specialize (IHx1 y1); rewrite H in IHx1.
+  - specialize (IHx1 y1);  move: IHx1; rewrite H => IHx1.
     case H0: (PeanoNat.Nat.compare n n0).
     + have ->: (n = n0) by apply Compare_dec.nat_compare_eq.
       case H1: (Epsilon0.T1.compare_T1 x2 y2).
       * rewrite IHx1; f_equal.
-        by specialize (IHx2 y2); now rewrite H1 in IHx2.
+        specialize (IHx2 y2); move: IHx2; rewrite H1 => IHx2.
       * case (h2g x1 < h2g y1); [trivial|].
+        by []. 
         rewrite IHx1 eqxx /= eqxx ltnn.
-        specialize (IHx2 y2); by rewrite H1 in IHx2.
-      * rewrite IHx1 T1ltnn eqxx ltnn eqxx.
-        specialize (IHx2 y2); by rewrite H1 in IHx2.
+        specialize (IHx2 y2); move: IHx2; rewrite H1 => IHx2.
+      * by rewrite T1ltnn.
+        rewrite -IHx1 T1ltnn eqxx  ltnn  eqxx.
+        specialize (IHx2 y2). move: IHx2;  by rewrite H1.  
     + rewrite IHx1 T1ltnn eqxx.
       apply Compare_dec.nat_compare_Lt_lt in H0.
       by move/ltP: H0 =>->.
     + rewrite IHx1 T1ltnn eqxx.
       apply Compare_dec.nat_compare_Gt_gt in H0.
-      by move/ltP: H0 =>->.
-  - specialize (IHx1 y1); rewrite H in IHx1; now rewrite IHx1.
-  - specialize (IHx1 y1); rewrite H in IHx1; now rewrite IHx1.
+      by move/ltP: H0 => ->.
+  - specialize (IHx1 y1);move: IHx1; rewrite H=> IHx1; by rewrite IHx1.
+  - specialize (IHx1 y1); move: IHx1; rewrite H=> IHx1; by rewrite IHx1.
 Qed.
 
 (* begin snippet ltRef:: no-out *)
@@ -242,11 +244,11 @@ Proof.
     case_eq (Epsilon0.T1.compare_T1 a b) => [Heq |//| Hgt].
     +  generalize (compare_ref a b); rewrite Heq.
       move => H0; move: Hab; rewrite H0;
-              move => Hb; by rewrite T1ltnn in Hb.
+              by rewrite T1ltnn.
     +  generalize (compare_ref a b); rewrite Hgt.
       move =>  H1; have H2: (h2g a < h2g a).
       * eapply T1lt_trans; eauto.
-      * by rewrite T1ltnn in H2. 
+      * move: H2; by rewrite T1ltnn.
 Qed.
 
 
@@ -284,7 +286,7 @@ Proof.
     * by move => ->; rewrite T1ltnn.
     * move => Hlt; symmetry;  apply/negP => Hlt'.
       have H1 : (h2g b < h2g b) by apply T1lt_trans with (h2g a).
-      by rewrite T1ltnn in H1.
+      move: H1; by rewrite T1ltnn.
 Qed.
 
 
@@ -468,13 +470,13 @@ Proof.
       *  apply T1lenn. 
     +  case b => _ ?; rewrite - nf_ref => //. 
   - case; rewrite /hLE; repeat split => //.
-   +  rewrite -nf_ref in p p1 => //.
-   +  rewrite T1le_eqVlt in p0; move : p0 => /orP.
+   +  move: p p1; rewrite -nf_ref => //.
+   +  move: p0; rewrite T1le_eqVlt => /orP.
       case => /eqP Heq; subst.
       * move: Heq; rewrite h2g_eq_iff => ?; subst; right.
-      * left; rewrite -decide_hlt_rw in Heq => //.
-           move: Heq => /eqP.   rewrite bool_decide_eq_true => //. 
-   + rewrite -nf_ref in p1 => //.
+      * left; move: Heq; rewrite -decide_hlt_rw => // Heq.
+           move: Heq => /eqP; rewrite bool_decide_eq_true => //. 
+   + move: p1 ; rewrite -nf_ref => //.
 Qed.
 
 
@@ -689,7 +691,7 @@ Proof.
     * left; apply gE0lt_iff; rewrite /E0lt => //.
   - rewrite /E0le; destruct alpha, beta; cbn => Hle. 
     destruct (le_lt_eq_dec Hle) as [l | e].
-    + rewrite /hE0lt in l; cbn in l. rewrite -T1lt_iff in l. 
+    + move: l; rewrite /hE0lt ; cbn;  rewrite -T1lt_iff.
      * by apply T1ltW.
      * by apply /eqP. 
      * by apply /eqP. 
@@ -762,14 +764,18 @@ Proof.
   (* end snippet gE0LtWf *)
   - move => a b ; rewrite /E0lt => Hab. 
     case: a Hab => cnf0 i0 Hb.
-    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=. 
-    rewrite -(h2g_g2hK cnf0) in Hlt i0;
-      rewrite -(h2g_g2hK cnf1) in Hlt i1;
-      rewrite -decide_hlt_rw in Hlt;
-      repeat split. 
-    + rewrite -!nf_ref in i0 i1;  move: i0 => /eqP //.
-    + red in Hlt; rewrite bool_decide_eq_true in Hlt => //.
-    + rewrite /bool_decide -!nf_ref in  i1;  move: i1 => /eqP //.
+    case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=.
+    move: Hlt i0 i1; rewrite -(h2g_g2hK cnf0).
+    
+    rewrite -(h2g_g2hK cnf1).
+    rewrite -decide_hlt_rw.  
+    repeat split. 
+    + move: i0 i1; rewrite -!nf_ref => i0 i1.  rewrite g2h_h2gK => //.
+      red. move: i0 => /eqP. by [].
+    + red in Hlt; move: Hlt;  rewrite bool_decide_eq_true  => //.
+      by rewrite !g2h_h2gK. 
+    + move: i1; rewrite -!nf_ref =>  i1.  rewrite g2h_h2gK => //.
+      red. move: i1 => /eqP. by [].
   -  apply Acc_inverse_image, E0lt_wf. 
 Qed. 
 
@@ -799,9 +805,9 @@ Proof.
      + move => i; rewrite -!LT_ref => //.
      + move => alpha Halpha; rewrite -(h2g_g2hK alpha) -LE_ref.
        apply Hb => i; destruct (Halpha i) as [H H0 H1]; split. 
-       * rewrite -hnf_g2h /h2g_seq g2h_h2gK in H => //.
+       * move: H; rewrite -hnf_g2h /h2g_seq g2h_h2gK => //.
        * split. 
-         --  rewrite T1le_iff /h2g_seq g2h_h2gK in H0 => //.
+         --  move: H0; rewrite T1le_iff /h2g_seq g2h_h2gK  => //.
          --  by rewrite hnf_g2h.
   -   destruct 1 as [H H0]; split. 
       + move => i; specialize  (H i); rewrite LT_ref =>//.
@@ -865,9 +871,9 @@ Lemma T1compare_correct (alpha beta: T1):
 (* end snippet T1compareCorrect *)                                
 Proof. 
   rewrite /compare /T1compare.
-  case  (T1.compare_correct (g2h alpha) (g2h beta)) => Hcomp.
-  rewrite g2h_eq_iff in Hcomp; subst;  by constructor. 
-  all:  constructor;  by rewrite  lt_ref !h2g_g2hK  in Hcomp.
+  case  (T1.compare_correct (g2h alpha) (g2h beta)). 
+  rewrite g2h_eq_iff => H; subst;  by constructor. 
+  all:  constructor;   move:H; by rewrite  lt_ref !h2g_g2hK .
 Qed.
 
 (* begin snippet E0compare:: no-out *)                                
@@ -880,7 +886,7 @@ Lemma E0compare_correct (alpha beta : E0) :
 (* end snippet E0compare *)                                
 Proof.
   destruct alpha, beta; rewrite /compare;
-  case  (T1compare_correct cnf0 cnf1) => Hcomp.
+    case  (T1compare_correct cnf0 cnf1) => Hcomp.
   { subst; replace i0 with i. 
     + rewrite /E0compare; cbn. 
       replace (compare (g2h cnf1) (g2h cnf1)) with Datatypes.Eq => //.
@@ -892,20 +898,19 @@ Proof.
   }
   {
     rewrite /E0compare; cbn. 
-     replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Lt.
-     + constructor; rewrite /E0lt => //.
-     + unfold compare; rewrite T1lt_iff in Hcomp. 
-       destruct Hcomp as [_ [Hcomp _]].
-       rewrite -compare_lt_iff in Hcomp => //.  
-       1, 2: by apply /eqP. 
-   }
-  rewrite /E0compare; cbn. 
-    replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Gt.
+    replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Lt.
     + constructor; rewrite /E0lt => //.
-    +  unfold compare; rewrite T1lt_iff in Hcomp. 
-       destruct Hcomp as [_ [Hcomp _]].
-       rewrite -compare_gt_iff in Hcomp => //.
-       all: by apply /eqP. 
+    + move: Hcomp; unfold compare; rewrite T1lt_iff. 
+      case ; rewrite -compare_lt_iff => _ [Hcomp _].
+      symmetry; by rewrite compare_lt_iff.  
+      1, 2: by apply /eqP. 
+  }
+  rewrite /E0compare; cbn. 
+  replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Gt.
+  + constructor; rewrite /E0lt => //.
+  +  move: Hcomp; unfold compare; rewrite T1lt_iff.
+     case ; rewrite -compare_gt_iff => // _ [Hcomp _] //. 
+     all: by apply /eqP. 
 Qed.   
 
 
@@ -919,7 +924,7 @@ Proof.
     by rewrite T1ltnn.
   -  rewrite /Transitive; case => x Hx; case => y Hy; case => z Hz.
      by rewrite /E0lt; cbn; apply T1lt_trans. 
- Qed.
+Qed.
 
 (* begin snippet gEpsilon0:: no-out *)
 #[global] Instance E0_comp : Comparable E0lt compare.

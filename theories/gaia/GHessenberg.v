@@ -95,7 +95,6 @@ Qed.
    (* end snippet oplusLemmasa *)
   Proof.
    move => a b Ha Hb Hlt; rewrite /oplus.
-   (* Todo : understand contexts use in SSr rewrite *)
    replace b with (h2g (g2h b)) at 1 ; last first.
    by (rewrite h2g_g2hK). 
    rewrite -hlt_iff; apply oplus_lt1 => //; rewrite ?hnf_g2h //.

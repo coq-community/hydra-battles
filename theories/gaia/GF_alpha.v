@@ -85,7 +85,8 @@ Lemma F_mono_l alpha beta:
 Proof.
   rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
   move => H hbeta_alpha.
-  have H' : E0_g2h beta o< E0_g2h alpha by rewrite gE0lt_iff in hbeta_alpha.  
+  have H' : E0_g2h beta o< E0_g2h alpha
+    by move: hbeta_alpha; rewrite gE0lt_iff.  
   case (H H') => x Hx; exists x; rewrite /dominates_from /F_ => p Hp.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.

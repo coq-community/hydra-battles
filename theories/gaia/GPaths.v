@@ -79,15 +79,14 @@ Print Paths.transition_S.
 Lemma path_to_inv1 to i from : path_to to [:: i] from ->
                                i <> 0 /\ transition i from to.
   inversion 1.
-  Show 2. 
-split; trivial. 
-rewrite /transition.  
-rewrite /htransition in H2. 
+  split; trivial. 
+move: H2; rewrite /transition; rewrite /htransition.
 
 destruct i. 
 contradiction. 
-red in H2. decompose [and] H2. 
-repeat split. Search (?x != ?y) (?x <> ?y). 
+rewrite /transition_S. 
+destruct 1. 
+repeat split. 
 destruct from. 
 destruct H4. by []. 
 by [].
@@ -106,26 +105,25 @@ Lemma path_to_iff1 to i from :
   path_to to [:: i] from <-> to = canon from i /\ T1nf from.
 Proof.
   move => H H0 H1 ; split; rewrite /path_to.
-  move => H2;  apply path_to_inv1 in H2. case: H2 => H2 H3. 
+  move => H2; case (path_to_inv1 _ _ _ H2) => {}H2 H3. 
   case: H3;  repeat split => //;  by apply /eqP. 
   constructor => //.
   destruct i => //.
   case: H2 => H2 H3; constructor.
    move => H4; apply H1; by rewrite -g2h_eq_iff. 
-   rewrite -g2h_eq_iff in H2; by rewrite -g2h_canon. 
+   move: H2; rewrite -g2h_eq_iff ; by rewrite -g2h_canon. 
 Qed. 
 
 Lemma iota_adapt i l: iota i l = MoreLists.iota_from i l. 
 Proof. elim: i => /= //. Qed. 
-
 
 Lemma standard_gnaw_iota_from i alpha l :
   i <> 0 -> standard_gnaw i alpha l = gnaw alpha (iota i l).
 Proof. 
   move: l i alpha ; elim => // /=. 
   rewrite !/standard_gnaw => n Hn i alpha Hi.
-  specialize (Hn (S i) (canon alpha i)); rewrite /canon g2h_h2gK in Hn.
-  rewrite Hn /gnaw ?g2h_h2gK => // /=.  
+  specialize (Hn (S i) (canon alpha i)); move: Hn; rewrite /canon g2h_h2gK.  
+  move => Hn; rewrite Hn /gnaw ?g2h_h2gK => // /=.  
   move: Hi Hn; case :i => //.  
 Qed.
 
@@ -170,10 +168,10 @@ Theorem KS_thm_2_4 (lambda : T1) :
                          (canon lambda (S i)).
 Proof. 
   rewrite -hnf_g2h => Hlambda Hlim i j Hij. 
-  rewrite -(h2g_g2hK lambda) -limitb_ref in Hlim. 
+  move: Hlim; rewrite -(h2g_g2hK lambda) -limitb_ref => Hlim. 
   have H'ij: (i < j)%coq_nat by apply /ltP. 
   generalize (KS_thm_2_4 Hlambda Hlim H'ij). 
-  by rewrite /const_path !g2h_canon.
+  by rewrite /const_path !g2h_canon !h2g_g2hK. 
 Qed. 
 
 (* begin snippet Cor12:: no-out *)
@@ -201,8 +199,8 @@ Proof.
   rewrite -hnf_g2h => Hnf beta Hbeta Hlt.
   have H: hnf (g2h beta) by rewrite hnf_g2h. 
   have H'lt : g2h beta t1< g2h alpha; repeat split => //.
-  rewrite T1lt_iff in Hlt => //.
-  case: Hlt => ? [? ?] //.  
+  move: Hlt; rewrite T1lt_iff => //.
+  case => ? [? ?] //.  
   by rewrite -hnf_g2h. 
   case (Lemma2_6_1 Hnf H'lt) => x Hx; exists x. 
   by rewrite /const_pathS. 
@@ -217,7 +215,7 @@ Lemma constant_to_standard_path
 Proof.  
   rewrite -hnf_g2h => nfalpha Hpath Hpos.
   case (@constant_to_standard_path (g2h alpha) (g2h beta) i) => //.
-   rewrite T1lt_iff -?hnf_g2h in Hpos =>  //.  
+   move: Hpos; rewrite T1lt_iff -?hnf_g2h  =>  //.  
   move => x Hx; exists x; by rewrite /standard_path. 
 Qed.
 
