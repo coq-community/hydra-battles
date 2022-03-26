@@ -63,10 +63,10 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
   - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
   - [MathComp Algebra](https://github.com/math-comp/math-comp)
-  - [Gaia](https://github.com/coq-community/gaia) 1.12 or later
+  - [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
   - [Mczify](https://github.com/math-comp/mczify)
   - [LibHyps](https://github.com/Matafou/LibHyps)
-- Coq namespaces: `hydras`, `additions`, `gaia_hydras`
+- Coq namespace: `hydras`, `additions`, `gaia_hydras`
 - Related publication(s):
   - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
   - [Accessible Independence Results for Peano Arithmetic](https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf) doi:[10.1112/blms/14.4.285](https://doi.org/10.1112/blms/14.4.285)
@@ -111,7 +111,8 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 ### Coq sources (directory theories)
 
-- theories/ordinals/
+- theories/ordinals
+
   - Hydra/*.v 
     - Representation in _Coq_ of hydras and hydra battles
     - A proof of termination of all hydra battles (using ordinal numbers below epsilon0)
@@ -139,7 +140,8 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
     - Primitive recursive functions, first-order logic, NN, and PA (from Goedel contrib)
 
   - MoreAck/*.v
-     -  Complements to the legacy **Ackermann** library
+     - Complements to the legacy **Ackermann** library
+
   - Prelude/*.v
     - Various auxiliary definitions and lemmas
 
@@ -147,11 +149,15 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - Addition chains
 
 - theories/gaia/*.v
-  - Bridge to Gaia
+  - Bridge to the ordinals in Gaia that are encoded following Schütte and Ackermann
 
 ### Exercises
 
-- directory exercises/
+- exercises/ordinals/*.v
+  - Exercises on ordinals
+
+- exercises/primrec/*.v
+  - Exercises on primitive recursive functions
 
 ## Contributions are welcome
 
@@ -161,7 +167,7 @@ Any suggestion for improving the Coq scripts and/or the documentation will be ta
 
 - Along the text, we propose several _projects_, the solution of which is planned to be integrated in the development.
 
-- Please do not hesitate to send your remarks as GitHub  issues and your suggestions of improvements (including solutions of "projects") as pull requests.
+- Please do not hesitate to send your remarks as GitHub issues and your suggestions of improvements (including solutions of "projects") as pull requests.
 - Of course, new topics are welcome !
 
 - If you wish to contribute without having to clone the project /
@@ -172,4 +178,4 @@ Any suggestion for improving the Coq scripts and/or the documentation will be ta
 
 - __Contact__ : pierre dot casteran at gmail dot com
 
-A bibliography is at the end of the documentation. Please feel free to suggest us more references.
+A bibliography is at the end of the documentation. Please feel free to suggest more references to us.
