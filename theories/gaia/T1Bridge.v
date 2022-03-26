@@ -473,7 +473,7 @@ Proof.
       case => /eqP Heq; subst.
       * move: Heq; rewrite h2g_eq_iff => ?; subst; right.
       * left; rewrite -decide_hlt_rw in Heq => //.
-           move: Heq => /eqP H;  rewrite bool_decide_eq_true in H => //.
+           move: Heq => /eqP.   rewrite bool_decide_eq_true => //. 
    + rewrite -nf_ref in p1 => //.
 Qed.
 
@@ -524,7 +524,7 @@ Proof.
     1, 3:  by rewrite g2h_h2gK hnf_g2h. 
     + by rewrite !h2g_g2hK hlt_iff.
   -  destruct 1 as [H0 [H1 H2]].
-     apply lt_ref in H1; move: H1; by rewrite !h2g_g2hK.
+     by rewrite -(h2g_g2hK alpha) -(h2g_g2hK beta) -hlt_iff. 
 Qed.
 
 

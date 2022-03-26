@@ -76,7 +76,7 @@ Lemma canon0_lt alpha:
 Proof. 
   rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf.  
   rewrite g2h_h2gK => Hpos.
-  apply lt_ref, Canon.canon0_LT => // H; by rewrite H in Hpos. 
+  apply lt_ref, Canon.canon0_LT => // H. apply Hpos; by rewrite H.  
 Qed. 
 
 Lemma canonS_lt  (i : nat) [alpha : T1]:
