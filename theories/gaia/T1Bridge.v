@@ -210,27 +210,24 @@ Lemma compare_ref (x y: hT1) :
 Proof.
   move: y; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
   case H: (Epsilon0.T1.compare_T1 x1 y1).
-  - specialize (IHx1 y1);  move: IHx1; rewrite H => IHx1.
+  - move: (IHx1 y1); rewrite H => {}IHx1. 
     case H0: (PeanoNat.Nat.compare n n0).
     + have ->: (n = n0) by apply Compare_dec.nat_compare_eq.
       case H1: (Epsilon0.T1.compare_T1 x2 y2).
       * rewrite IHx1; f_equal.
-        specialize (IHx2 y2); move: IHx2; rewrite H1 => IHx2.
-      * case (h2g x1 < h2g y1); [trivial|].
-        by []. 
+        move: (IHx2 y2); rewrite H1 => {}IHx2.
+        case (h2g x1 < h2g y1); [trivial|]; by []. 
         rewrite IHx1 eqxx /= eqxx ltnn.
-        specialize (IHx2 y2); move: IHx2; rewrite H1 => IHx2.
-      * by rewrite T1ltnn.
+        move: (IHx2 y2); rewrite H1 => {}IHx2; by rewrite T1ltnn.
         rewrite -IHx1 T1ltnn eqxx  ltnn  eqxx.
-        specialize (IHx2 y2). move: IHx2;  by rewrite H1.  
+        move: (IHx2 y2);  by rewrite H1.  
     + rewrite IHx1 T1ltnn eqxx.
       apply Compare_dec.nat_compare_Lt_lt in H0.
       by move/ltP: H0 =>->.
     + rewrite IHx1 T1ltnn eqxx.
       apply Compare_dec.nat_compare_Gt_gt in H0.
       by move/ltP: H0 => ->.
-  - specialize (IHx1 y1);move: IHx1; rewrite H=> IHx1; by rewrite IHx1.
-  - specialize (IHx1 y1); move: IHx1; rewrite H=> IHx1; by rewrite IHx1.
+  all:  move: (IHx1 y1); by rewrite H => ->. 
 Qed.
 
 (* begin snippet ltRef:: no-out *)
@@ -243,12 +240,11 @@ Proof.
   - move => Hab; rewrite /hlt.  
     case_eq (Epsilon0.T1.compare_T1 a b) => [Heq |//| Hgt].
     +  generalize (compare_ref a b); rewrite Heq.
-      move => H0; move: Hab; rewrite H0;
-              by rewrite T1ltnn.
+       move => H0; move: Hab; rewrite H0; by rewrite T1ltnn.
     +  generalize (compare_ref a b); rewrite Hgt.
-      move =>  H1; have H2: (h2g a < h2g a).
-      * eapply T1lt_trans; eauto.
-      * move: H2; by rewrite T1ltnn.
+       move =>  H1; have H2: (h2g a < h2g a).
+       * eapply T1lt_trans; eauto.
+       * move: H2; by rewrite T1ltnn.
 Qed.
 
 
@@ -892,9 +888,8 @@ Proof.
       replace (compare (g2h cnf1) (g2h cnf1)) with Datatypes.Eq => //.
       * by constructor. 
       * by rewrite compare_refl. 
-    + apply eq_proofs_unicity_on; destruct y, (T1nf cnf1) => //.
-      left => //.
-      right => //.
+    + apply eq_proofs_unicity_on;
+       by  destruct y, (T1nf cnf1) => //; [left | right] => //. 
   }
   {
     rewrite /E0compare; cbn. 
