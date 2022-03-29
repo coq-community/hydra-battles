@@ -10,7 +10,11 @@ From gaia Require Export ssete9.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
-Unset Printing Implicit Defensive. 
+Unset Printing Implicit Defensive.
+
+
+
+
 
 (* begin snippet hT1gT1 *)
 
