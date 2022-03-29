@@ -33,13 +33,13 @@ Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 (** Equations for oplus *)
 
 (* begin snippet oplusEquations:: no-out *)
-Lemma oplus_neutral_l beta : zero o+ beta = beta.
-Proof. rewrite /oplus ; case: beta => // /=.
+Lemma oplus0b:  left_id zero oplus.
+Proof. rewrite /oplus; case => // /=. 
        move => ? ? ? ;rewrite !h2g_g2hK => //.
 Qed.
 
-Lemma oplus_neutral_r alpha : alpha o+ zero = alpha.
-Proof. rewrite /oplus ; case: alpha => // /=.
+Lemma oplusa0: right_id zero oplus. 
+Proof. rewrite /oplus; case => // /=. 
        move => ? ? ? ;rewrite !h2g_g2hK => //.
 Qed.
 

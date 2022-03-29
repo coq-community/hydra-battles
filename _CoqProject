@@ -181,6 +181,8 @@ theories/gaia/GHessenberg.v
 theories/gaia/HydraGaia_Examples.v
 theories/gaia/GHydra.v
 theories/gaia/T2Bridge.v
+theories/gaia/GPrelude.v
+
 
 
 

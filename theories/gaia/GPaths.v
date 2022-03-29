@@ -21,7 +21,13 @@ Import CantorOrdinal.
 #[global] Notation htransition := transition.
 
 Definition transition i (alpha beta: T1) :=
-  [/\ i != 0 , alpha != zero & beta == canon alpha i]. 
+  [/\ i != 0 , alpha != zero & beta == canon alpha i].
+
+(* TO do *)
+
+Definition transitionb i (alpha beta: T1) :=
+  [&& i != 0 , alpha != zero & beta == canon alpha i]. 
+
 
 #[global] Notation hbounded_transitionS := bounded_transitionS.
 
@@ -40,6 +46,18 @@ Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
   hpath_to (g2h to) s (g2h from).
 
 #[global] Notation hpath := path. 
+
+(* todo *)
+
+Fixpoint path_tob (beta: T1) (s: seq nat) (alpha:T1): bool :=
+  match s with
+  | [::] => false
+  | [:: i] =>  (i != 0) && transitionb i alpha beta
+  | i :: s =>  (i != 0) && path_tob  beta s (canon alpha i)
+  end.
+
+
+
 
 Notation path from s to := (path_to to s from).
 
