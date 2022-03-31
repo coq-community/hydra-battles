@@ -12,10 +12,6 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-
-
-
-
 (* begin snippet hT1gT1 *)
 
 (** Hydra-Battles' type for ordinal terms below [epsilon0] *)
@@ -92,18 +88,16 @@ Qed.
 Lemma g2h_eq_iff (a b: T1) :  g2h a = g2h b <-> a = b.
 (* end snippet g2hEqIff *)
 Proof. 
-    split.
-    - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK => // -> //.  
-    - by move => -> .
+    split; [ | by move => ->].
+    rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK => -> //. 
 Qed.
 
 (* begin snippet h2gEqIff:: no-out *)
 Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
 (* end snippet h2gEqIff *)
 Proof. 
-  split.
-    -  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  =>  // -> //.
-    - move => -> //. 
+  split; [| by move => ->].
+  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  => ->  //.
 Qed.
 
 (** refinement of constants, functions, etc. *)
@@ -133,7 +127,7 @@ Lemma refines1_R f f' :
 (* end snippet refines1R *)
 Proof.
   split => [Href y | H x]. 
-  - rewrite -{2}(h2g_g2hK y); by rewrite Href g2h_h2gK.
+  - by rewrite -{2}(h2g_g2hK y)  Href g2h_h2gK. 
   - by rewrite -{2}(g2h_h2gK x) ?H ?h2g_g2hK.
 Qed.
 
@@ -192,15 +186,13 @@ Proof.
 Qed.
 
 Lemma T1eq_refl (a: T1) : T1eq a a.
-Proof. by apply/T1eqP. Qed.
+Proof. by apply  /T1eqP. Qed.
 
 Lemma T1eq_rw a b: T1eq a b -> g2h a = g2h b.
 Proof. by move => /T1eqP ->. Qed. 
 
 Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
-Proof.
-  move => H; rewrite <- (g2h_h2gK a), <- (g2h_h2gK b); by apply T1eq_rw.
-Qed.
+Proof.  move => /T1eq_rw; by rewrite !g2h_h2gK. Qed.
                                                                 
 
 (* begin snippet compareRef:: no-out *)
@@ -216,7 +208,7 @@ Proof.
   case H: (Epsilon0.T1.compare_T1 x1 y1).
   - move: (IHx1 y1); rewrite H => {}IHx1. 
     case H0: (PeanoNat.Nat.compare n n0).
-    + have ->: (n = n0) by apply Compare_dec.nat_compare_eq.
+    + have ->: (n = n0) by apply: Compare_dec.nat_compare_eq.
       case H1: (Epsilon0.T1.compare_T1 x2 y2).
       * rewrite IHx1; f_equal.
         move: (IHx2 y2); rewrite H1 => {}IHx2.
@@ -226,7 +218,7 @@ Proof.
         rewrite -IHx1 T1ltnn eqxx  ltnn  eqxx.
         move: (IHx2 y2);  by rewrite H1.  
     + rewrite IHx1 T1ltnn eqxx.
-      apply Compare_dec.nat_compare_Lt_lt in H0.
+      have {}H0 : (n < n0)%coq_nat by  apply: Compare_dec.nat_compare_Lt_lt.  
       by move/ltP: H0 =>->.
     + rewrite IHx1 T1ltnn eqxx.
       apply Compare_dec.nat_compare_Gt_gt in H0.
@@ -248,7 +240,7 @@ Proof.
     +  generalize (compare_ref a b); rewrite Hgt.
        move =>  H1; have H2: (h2g a < h2g a).
        * eapply T1lt_trans; eauto.
-       * move: H2; by rewrite T1ltnn.
+       *  move :H2; by rewrite T1ltnn. 
 Qed.
 
 
@@ -259,13 +251,12 @@ Lemma le_ref : refinesRel hle T1le.
 Proof.
   move=> a b; split.
   - rewrite /T1le /Comparable.compare => Hab;  elim: Hab. 
-    + move => y Hy; generalize (lt_ref a y). 
-       rewrite /hlt Hy => H. 
-       apply /orP; right; by apply H. 
-    + apply /orP; by left. 
+    + move => y Hy; have H: (h2g a < h2g y) by apply lt_ref. 
+      * by rewrite H orbT.
+      * by rewrite eq_refl. 
   - rewrite T1le_eqVlt; move => /orP; destruct 1; last first. 
     + left; by rewrite lt_ref. 
-    + move : H => /eqP; by rewrite h2g_eq_iff => ->; right. 
+    +  move: H => /eqP; by rewrite h2g_eq_iff => ->; right. 
 Qed. 
 
 (* begin snippet decideHLtRw:: no-out *)
@@ -276,11 +267,9 @@ Proof.
   rewrite /Epsilon0.T1.lt; generalize (compare_ref a b);
     rewrite /Comparable.compare /=.
   destruct (decide (Epsilon0.T1.compare_T1 a b = Datatypes.Lt)).
-  - have bd := e.
-    apply (bool_decide_eq_true _) in bd.
+  - have bd := e ; apply (bool_decide_eq_true _) in bd.
     by rewrite bd e.
-  - have bd := n.
-    apply (bool_decide_eq_false _) in bd.
+  - have bd := n; apply (bool_decide_eq_false _) in bd.
     rewrite bd.
     destruct (Epsilon0.T1.compare_T1 a b) => //.
     * by move => ->; rewrite T1ltnn.
@@ -294,9 +283,8 @@ Qed.
 Lemma eqref : refinesRel eq eq.
 (* end snippet eqRef *)
 Proof.
-  move => a b; split.
-  - by move => ->.
-  - move => Hab; apply T1eq_h2g; by rewrite Hab T1eq_refl.
+  move => a b; split; [by move =>  -> | move => Hab].
+  apply T1eq_h2g; by rewrite Hab T1eq_refl.
 Qed.
 
 (* begin snippet plusRef:: no-out *)
@@ -340,9 +328,8 @@ Section Proof_of_mult_ref.
     a != zero -> (cons a n b) * (cons zero n' b') =
                    cons a (n * n' + n + n') b.
   Proof. 
-    move => /T1eqP; cbn.
-    move =>  Ha'; have Heq: T1eq a zero = false by
-               move: Ha'; case: a => // /=.
+    move => /T1eqP ; cbn => Ha'.
+    have Heq: T1eq a zero = false by  case: a Ha' => // /=.
     by rewrite Heq.
   Qed.
 
@@ -351,7 +338,7 @@ Section Proof_of_mult_ref.
     Epsilon0.T1.T1mul (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
       hcons a (n * n' + n + n') b.
   Proof. 
-    cbn.  case: a => [// | alpha n0 beta _ ]; f_equal; nia. 
+    cbn; case: a => [// | alpha n0 beta _ ]; f_equal; nia. 
   Qed.
 
   Lemma T1mul_eqn5 a n b a' n' b' :
@@ -359,8 +346,8 @@ Section Proof_of_mult_ref.
     (cons a n b) * (cons a' n' b') =
       cons (a + a') n' (T1mul (cons a n b) b').
   Proof. 
-    move => H /=;  cbn;  have Ha' : T1eq a' zero = false. 
-    { move: a' H; case => //. }
+    move => H /=;  cbn;  have Ha' : T1eq a' zero = false
+              by ( move: a' H; case => //). 
     case (T1eq a zero); cbn; by rewrite Ha'. 
   Qed.
 
@@ -387,8 +374,7 @@ Section Proof_of_mult_ref.
   Lemma mult_ref0 : refines2 hmult T1mul.
   Proof.
     move => x y;  move: x; induction y. 
-    -   move => x; simpl h2g; rewrite T1mul_eqn1; case x => //.
-        case => //.
+    -   move => x; simpl h2g; rewrite T1mul_eqn1; case x => //; by case.
     -  case.
        + simpl h2g => // /=.
        + move => alpha n0 beta.
@@ -409,7 +395,7 @@ Section Proof_of_mult_ref.
            --   subst; rewrite !h2g_cons !h2g_zero;
                   rewrite T1mul_eqn4.
                 ++ by rewrite mult_eqn4. 
-                ++ case :alpha n1 => //. 
+                ++ by case :alpha n1 . 
            --   rewrite !h2g_cons. 
                 ++ rewrite T1mul_eqn5.
                    ** rewrite  mult_eqn5 => //. 
@@ -434,9 +420,6 @@ Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = hplus (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R, plus_ref. Qed.
        
-
-
-
 (* begin snippet nfRef:: no-out *)
 
 Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
@@ -566,6 +549,7 @@ Definition E0le  (alpha beta: E0) := cnf alpha <= cnf beta.
 
 Definition E0eqb (alpha beta: E0):= cnf alpha == cnf beta.
 
+
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
 Definition E0succ (alpha: E0): E0.
@@ -575,18 +559,16 @@ Defined.
 
 
 Fixpoint E0fin (n:nat) : E0 :=
-  match n with
-    0 => E0zero
-  | p .+1 => E0succ (E0fin p)
-  end.
+  if n is p.+1 then E0succ (E0fin p) else E0zero. 
 
 Definition E0omega: E0.
 Proof. refine (@mkE0 T1omega _) => //. Defined.
 
 Definition E0phi0 (alpha: E0) : E0.
 Proof.
-  refine (@mkE0 (phi0 (cnf alpha)) _); destruct alpha.  
-  apply /eqP => //.  cbn. apply /andP ; split =>  //;  by apply /eqP.
+  refine (@mkE0 (phi0 (cnf alpha)) _).
+  case : alpha => a  Ha. apply /eqP => //=. 
+    rewrite Bool.andb_true_r; by apply /eqP.  
 Defined.
 (* end snippet E0Def *)
 
@@ -614,6 +596,25 @@ Proof.
   destruct alpha, beta; cbn. 
   move => H; subst => //; f_equal; apply eq_proofs_unicity_on; decide equality. 
 Qed.
+
+(*  To fix ! *)
+
+About Equality.Pack. 
+
+Print Equality.mixin_of.
+
+Definition E0_eq_mixin :  Equality.mixin_of E0.
+Proof. 
+exists E0eqb; move  => [x Hx] [y Hy] => /=. 
+case E: (T1eq x y); cbn; rewrite E. 
+-  left; apply: gE0_eq_intro; by apply /eqP. 
+- right => H; injection H => /eqP; by rewrite /eq_op /= E. 
+Defined. 
+
+Definition E0_eqtype :=  Equality.Pack E0_eq_mixin.
+Canonical Structure E0_eqtype. 
+
+Compute E0fin 3 == E0fin 3. 
 
 
 Lemma E0fin_cnf (n:nat) : cnf (E0fin n) = \F n.
@@ -646,18 +647,6 @@ Proof.
   case: a => /= cnf Hnf; by rewrite -nf_ref. 
 Qed.
 
-Lemma gE0_eq1 alpha beta : E0eqb alpha beta -> alpha = beta.
-Proof.
-  case: alpha ; case: beta => x Hx y Hy /=; rewrite /E0eqb => /= /eqP Heq. 
-  subst; have  H0: Hx = Hy; last first.
-  - by rewrite H0.   
-  - apply eq_proofs_unicity_on; decide equality.
-Qed. 
-
-Lemma gE0_eq_iff alpha beta : E0eqb alpha beta <-> alpha = beta.
-Proof. 
-  split; [apply  gE0_eq1 |  move => ?  ; subst; rewrite /E0eqb => //]. 
-Qed.
 
 Lemma gE0lt_iff alpha beta : E0lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
 Proof. 
@@ -695,19 +684,9 @@ Proof.
      * by apply T1ltW.
      * by apply /eqP. 
      * by apply /eqP. 
-    + injection e; rewrite g2h_eq_iff. 
-      move => Heq; subst; apply T1lenn. 
+    + injection e; rewrite g2h_eq_iff =>  Heq; subst; apply T1lenn. 
 Qed.
 
-
-(* begin snippet E0EqP:: no-out *)
-Lemma E0eqP alpha beta: reflect (alpha = beta) (E0eqb alpha beta).
-(* end snippet E0EqP *)
-Proof.
-  case_eq(E0eqb alpha beta).
-  - constructor;  by rewrite -gE0_eq_iff.
-  - constructor => H0; subst;  move : H => // /=; cbn; by rewrite T1eq_refl.
-Qed.
 
 Lemma E0_h2g_g2hK : cancel E0_g2h E0_h2g.
 Proof.
@@ -919,7 +898,7 @@ Qed.
 (* end snippet E0Sto *)                                
 Proof.
   split.
-  - move => x. case :x => x Hx. rewrite /complement /E0lt; cbn. 
+  - move => x. case :x => x Hx.  rewrite /complement /E0lt=> /=.  
     by rewrite T1ltnn.
   -  rewrite /Transitive; case => x Hx; case => y Hy; case => z Hz.
      by rewrite /E0lt; cbn; apply T1lt_trans. 
@@ -930,10 +909,20 @@ Qed.
 Proof. split; [apply  E0_sto | apply E0compare_correct]. Qed.
 
 #[global] Instance gEpsilon0 : ON E0lt compare.
-Proof. split; [apply E0_comp | apply gE0lt_wf]. Qed.
+Proof. split; [apply: E0_comp | apply: gE0lt_wf]. Qed.
 (* end snippet gEpsilon0:: no-out *)
 
 (* begin snippet ExampleComp *)
 Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
+
+
+(* To move up *)
+
+Coercion cnf: E0 >-> T1.
+
+Search ppT1.
+
+Compute T1pp (E0fin 7).
+
 
