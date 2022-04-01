@@ -316,9 +316,9 @@ Definition Zero_Limit_Succ_dec (alpha : E0) :
 Defined.
 
 
-Definition Pred (alpha: E0) : E0 :=
+Definition E0pred (alpha: E0) : E0 :=
   match Zero_Limit_Succ_dec  alpha with
-      inl _ => E0zero
+      inl _ => alpha
     | inr (exist _ beta _) => beta
   end.
 
@@ -376,9 +376,9 @@ Qed.
 
 
 
-Lemma Pred_of_Succ (alpha:E0) : Pred (E0succ alpha) = alpha.
+Lemma E0pred_of_Succ (alpha:E0) : E0pred (E0succ alpha) = alpha.
 Proof.
-  unfold Pred; destruct (Zero_Limit_Succ_dec (E0succ alpha)).
+  unfold E0pred; destruct (Zero_Limit_Succ_dec (E0succ alpha)).
   destruct s.
   - unfold E0succ, E0zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
@@ -393,7 +393,7 @@ Proof.
     }
 Qed.
 
-Hint Rewrite Pred_of_Succ: E0_rw.
+Hint Rewrite E0pred_of_Succ: E0_rw.
 
 Lemma Succ_inj alpha beta : E0succ alpha = E0succ beta -> alpha = beta.
 Proof.
@@ -402,10 +402,10 @@ Proof.
   intro; apply succ_injective; auto.
 Qed.
 
-Lemma  Pred_Lt (alpha : E0) : alpha <> E0zero  ->  E0limit alpha = false ->
-                       Pred alpha o< alpha.
+Lemma  E0pred_Lt (alpha : E0) : alpha <> E0zero  ->  E0limit alpha = false ->
+                       E0pred alpha o< alpha.
 Proof.
-  unfold E0limit, Pred, E0lt; destruct alpha; intros. simpl.
+  unfold E0limit, E0pred, E0lt; destruct alpha; intros. simpl.
   destruct (T1.zero_limit_succ_dec cnf_ok0 ).
   destruct s.
   - subst. unfold E0zero in H. destruct H. f_equal;apply nf_proof_unicity.
@@ -414,7 +414,7 @@ Proof.
     apply LT_succ;auto.
 Qed.
 
-Global Hint Resolve Pred_Lt : E0.
+Global Hint Resolve E0pred_Lt : E0.
 
 
 Lemma Succ_Succb (alpha : E0) : E0is_succ (E0succ alpha).

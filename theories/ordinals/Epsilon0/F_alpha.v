@@ -37,7 +37,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  F_ (Canon alpha i)  i ;
-            | right _notlimit =>  iterate (F_ (Pred alpha)) (S i) i}}.
+            | right _notlimit =>  iterate (F_ (E0pred alpha)) (S i) i}}.
 
 (* end snippet FailDemo *)
 
@@ -73,7 +73,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
           with Utils.dec (E0limit alpha) :=
           { | left _limit => F_star (Canon alpha i,1) i ;
             | right _notlimit =>
-              F_star (Pred alpha, S i)  i}};
+              F_star (E0pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
     F_star (alpha, 1) (F_star (alpha, (S n)) i).
 (* end snippet goodDefa *)
@@ -116,7 +116,7 @@ Qed.
 
 Lemma F_eq2 : forall alpha i,
     E0is_succ alpha -> 
-    F_ alpha i = F_star (Pred alpha, S i) i.
+    F_ alpha i = F_star (E0pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
@@ -179,7 +179,7 @@ Lemma F_succ_eqn : forall alpha i,
 (*| .. coq:: none |*)
 Proof with auto with E0.
   intros;rewrite F_eq2,  F_star_iterate ...
-  -  now rewrite Pred_of_Succ.
+  -  now rewrite E0pred_of_Succ.
 Qed.
 (*||*)
 (* end snippet FEquations *)
@@ -818,7 +818,7 @@ Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
           with Utils.dec (E0limit alpha) :=
           { | left _limit => f_star (Canon alpha i,1) i ;
             | right _successor =>
-              f_star (Pred alpha, i)  i}};
+              f_star (E0pred alpha, i)  i}};
   f_star (alpha,(S (S n))) i :=
     f_star (alpha, 1) (f_star (alpha, (S n)) i).
 
@@ -860,7 +860,7 @@ Qed.
 
 Lemma f_eq2 : forall alpha i,
     E0is_succ alpha -> 
-    f_ alpha i = f_star (Pred alpha,  i) i.
+    f_ alpha i = f_star (E0pred alpha,  i) i.
 Proof.
   unfold f_; intros; rewrite f_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
@@ -918,7 +918,7 @@ Lemma f_succ_eqn : forall alpha i,
     f_ (E0succ alpha) i = iterate (f_ alpha) i i.
 Proof with auto with E0.
   intros;rewrite f_eq2,  f_star_iterate ...
-  -  now rewrite Pred_of_Succ.
+  -  now rewrite E0pred_of_Succ.
 Qed.
 
 

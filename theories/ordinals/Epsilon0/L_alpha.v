@@ -25,7 +25,7 @@ Equations  L_ (alpha: E0) (i:nat) : nat by wf alpha E0lt :=
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  L_ (Canon alpha i)  (S i) ;
-            | right _successor =>  L_ (Pred alpha) (S i)}}.
+            | right _successor =>  L_ (E0pred alpha) (S i)}}.
 
 (*| .. coq:: in messages |*)
 Solve All Obligations with auto with E0. 
@@ -46,7 +46,7 @@ Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  E0is_succ alpha -> L_ alpha i = L_ (Pred alpha) (S i).
+  E0is_succ alpha -> L_ alpha i = L_ (E0pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.
@@ -184,7 +184,7 @@ Section L_correct_proof.
        replace one with (T1nat 1); [simpl | trivial].
        intro; eapply L_spec_compat;  eauto.
        intros; rewrite L_eq2; auto with E0.
-       rewrite Pred_of_Succ, L_zero_eqn; trivial.
+       rewrite E0pred_of_Succ, L_zero_eqn; trivial.
     -  apply L_spec_compat  with (L_succ (L_ beta));
          auto.
        + apply L_succ_ok; auto.

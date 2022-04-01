@@ -38,7 +38,7 @@ Equations H'_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  H'_ (Canon alpha (S i))  i ;
-            | right _successor =>  H'_ (Pred alpha) (S i)}}.
+            | right _successor =>  H'_ (E0pred alpha) (S i)}}.
 (* end snippet HprimeDef *)
 
 (* begin snippet HprimeDefb *)
@@ -58,7 +58,7 @@ Qed.
 (* begin snippet paraphrasesb:: no-out  *)
 Lemma H'_eq2_0 alpha i :
   E0is_succ alpha ->
-  H'_ alpha i = H'_ (Pred alpha) (S i).
+  H'_ alpha i = H'_ (E0pred alpha) (S i).
 (* end snippet paraphrasesb *)
 
 Proof.
@@ -90,7 +90,7 @@ Lemma H'_eq2  alpha i :
 (* end snippet paraphrasesd  *)
 Proof.
   rewrite H'_eq2_0.
-  - now rewrite Pred_of_Succ.  
+  - now rewrite E0pred_of_Succ.  
   - apply Succ_Succb.
 Qed.
 
@@ -593,7 +593,7 @@ Section Proof_of_Abstract_Properties.
     
     Lemma PD_Zero : dominates_from 1 (H'_ (E0succ E0zero)) (H'_ E0zero).
     Proof.
-      red;intros; rewrite H'_eq1, H'_eq2_0, Pred_of_Succ, H'_eq1. 
+      red;intros; rewrite H'_eq1, H'_eq2_0, E0pred_of_Succ, H'_eq1. 
       - abstract lia.
       - apply Succ_Succb.
     Qed.
@@ -604,7 +604,7 @@ Section Proof_of_Abstract_Properties.
     Proof.
       intro n; destruct n;
         rewrite H'_eq1, H'_eq2_0;  auto with arith.
-      rewrite Pred_of_Succ, H'_eq1; auto with arith.
+      rewrite E0pred_of_Succ, H'_eq1; auto with arith.
     Qed. 
 
     Local Hint Resolve  PC_Zero : core.

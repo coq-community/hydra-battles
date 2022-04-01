@@ -7,7 +7,6 @@ From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic  T1 E0.
 From gaia Require Export ssete9.
 (* end snippet Requirements *)
-
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -168,6 +167,7 @@ Proof.
   elim => [// |//  x] => //;  by case: x => // ? ? ? ? ? ? /= -> .
 Qed.
 (*||*)
+
 
 Lemma phi0_ref x: refines0 (hphi0 x) (phi0 (h2g x)). (* .no-out *)
 (*| .. coq:: none |*)
@@ -529,6 +529,7 @@ Qed.
 
 (* begin snippet E0Def:: no-out *)
 Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
+Coercion cnf: E0 >-> T1.
 
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
@@ -556,6 +557,13 @@ Definition E0succ (alpha: E0): E0.
   refine (@mkE0 (T1succ (cnf alpha)) _); rewrite nf_succ => //.
   destruct alpha. cbn. move: i => /eqP //.
 Defined.
+
+
+Definition E0pred (alpha:E0) : E0.
+  refine (@mkE0 (T1pred (cnf alpha)) _). case: alpha.
+  move => cnf0 i.  rewrite nf_pred  => //= .
+  move :i => /eqP //.
+Defined. 
 
 
 Fixpoint E0fin (n:nat) : E0 :=
@@ -597,12 +605,6 @@ Proof.
   move => H; subst => //; f_equal; apply eq_proofs_unicity_on; decide equality. 
 Qed.
 
-(*  To fix ! *)
-
-About Equality.Pack. 
-
-Print Equality.mixin_of.
-
 Definition E0_eq_mixin :  Equality.mixin_of E0.
 Proof. 
 exists E0eqb; move  => [x Hx] [y Hy] => /=. 
@@ -614,12 +616,10 @@ Defined.
 Definition E0_eqtype :=  Equality.Pack E0_eq_mixin.
 Canonical Structure E0_eqtype. 
 
-Compute E0fin 3 == E0fin 3. 
 
 
 Lemma E0fin_cnf (n:nat) : cnf (E0fin n) = \F n.
 Proof. elim: n => // n /= ->; by rewrite T1succ_nat. Qed.
-
 
 (* begin snippet gE0h2gG2h:: no-out *)
 Definition E0_h2g (a: hE0): E0.
@@ -706,6 +706,36 @@ Proof.
   by rewrite g2h_succ. 
 Qed.
 
+(* To do : clean up ! *)
+
+Lemma E0is_succE alpha: E0is_succ alpha -> {beta: E0 | alpha = E0succ beta}.
+Proof. 
+ rewrite /E0is_succ => H. 
+ case (Succb_Succ _ H) => beta Hbeta; exists (E0_h2g beta).
+ rewrite -(E0_h2g_g2hK alpha) Hbeta.
+ have H0:= g2h_E0succ (E0_h2g beta).
+ move: H0; rewrite E0_g2h_h2gK.
+ move => H0;  rewrite -H0. 
+by rewrite E0_h2g_g2hK.
+Qed.
+
+Lemma E0_eq_iff (x y: E0) : x = y <-> (E0_g2h x = E0_g2h y). 
+  split.
+   move => Heq; by subst.   
+   move => H; by rewrite -(E0_h2g_g2hK x) -(E0_h2g_g2hK y) H. 
+Qed. 
+
+(* clean up!  *)
+
+Lemma E0pred_succK x : E0pred (E0succ x) = x. 
+Proof.
+  apply E0_eq_iff; rewrite /E0pred. 
+  apply E0_eq_intro => //=.
+  rewrite pred_succ => //.
+  case: x => c Hc //=.  by apply /eqP.
+Qed. 
+
+
 Lemma g2h_E0zero : E0_g2h E0zero = E0.E0zero.
 Proof.  rewrite /E0zero; by apply E0_eq_intro. Qed.
 
@@ -716,7 +746,7 @@ Proof.  apply E0_eq_intro => /=; rewrite E0fin_cnf; by case: i. Qed.
 Lemma E0g2h_phi0 a : E0_g2h (E0phi0 a) = E0.E0phi0 (E0_g2h a).
 Proof.  apply E0_eq_intro => //. Qed.
 
-Lemma E0g2h_mulE (a b: E0): E0_g2h (E0mul a b)= E0.E0mul (E0_g2h a) (E0_g2h b).
+Lemma E0g2h_mulE (a b: E0): E0_g2h (E0mul a b) = E0.E0mul (E0_g2h a) (E0_g2h b).
 Proof. 
   destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_mult_rw. 
 Qed.
@@ -758,18 +788,13 @@ Proof.
   -  apply Acc_inverse_image, E0lt_wf. 
 Qed. 
 
-
-
-
 Lemma L1' (a: T1) : T1omega * (a * T1omega) = T1omega * a * T1omega.
 Proof. by  rewrite mulA. Qed. 
-
 
 (** Sequences and limits *)
 
 Definition g2h_seq (s: nat-> T1) n := g2h (s n).
 Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
-
 
 Definition gstrict_lub (s : nat -> T1) (lambda : T1) :=
   (forall i : nat, gLT (s i) lambda) /\
@@ -819,8 +844,6 @@ Search ( _ * ?beta = ?beta)%ca.
 Search ( _ * ?beta = ?beta)%t1.
 (* end snippet SearchDemo *)
 
-
-
 (* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=
   fun alpha beta => compare (g2h alpha) (g2h beta).
@@ -852,7 +875,7 @@ Proof.
   rewrite /compare /T1compare.
   case  (T1.compare_correct (g2h alpha) (g2h beta)). 
   rewrite g2h_eq_iff => H; subst;  by constructor. 
-  all:  constructor;   move:H; by rewrite  lt_ref !h2g_g2hK .
+  all:  constructor; move:H; by rewrite  lt_ref !h2g_g2hK .
 Qed.
 
 (* begin snippet E0compare:: no-out *)                                
@@ -873,8 +896,7 @@ Proof.
       * by rewrite compare_refl. 
     + apply eq_proofs_unicity_on;
        by  destruct y, (T1nf cnf1) => //; [left | right] => //. 
-  }
-  {
+  } {
     rewrite /E0compare; cbn. 
     replace (compare (g2h cnf0) (g2h cnf1)) with Datatypes.Lt.
     + constructor; rewrite /E0lt => //.
@@ -917,12 +939,5 @@ Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
 
 
-(* To move up *)
-
-Coercion cnf: E0 >-> T1.
-
-Search ppT1.
-
-Compute T1pp (E0fin 7).
 
 
