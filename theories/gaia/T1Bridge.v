@@ -706,6 +706,11 @@ Proof.
   by rewrite g2h_succ. 
 Qed.
 
+Lemma  E0is_succ_succ alpha : E0is_succ  (E0succ alpha).
+Proof.
+ rewrite /E0is_succ g2h_E0succ; apply Succ_Succb. 
+Qed. 
+
 (* To do : clean up ! *)
 
 Lemma E0is_succE alpha: E0is_succ alpha -> {beta: E0 | alpha = E0succ beta}.
