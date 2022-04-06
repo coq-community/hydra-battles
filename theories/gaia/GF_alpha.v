@@ -177,7 +177,7 @@ Qed.
 (* end snippet FAlphaNotPR *)
 
 Lemma F_alpha_not_PR alpha (Hnf: T1nf alpha == true):
-  gLE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
+  LE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.
 Proof. 
   rewrite /T1F_ => Halpha; 
   apply F_alpha_not_PR_E0; rewrite /E0le  => /=; by destruct Halpha. 

@@ -65,8 +65,11 @@ Because of the common origin of \HydrasLib and \gaia, both libraries share the c
 
 \inputsnippets{T1Bridge/hT1gT1}
 
-Many constants are common to \HydrasLib and \gaia. The following notations allow us to get rid of possible ambiguities, still
-keeping with the prefix convention: ``h'' for \HydrasLib, ``g'' for \gaia. 
+Many constants are common to \HydrasLib and \gaia. For instance, the name \texttt{zero} may refer to \gaia's
+\texttt{gaia.ssete9.CantorOrdinal.zero}  and
+\HydrasLib' \texttt{hydras.Epsilon0.T1.zero}. By default, the former will be simply called \texttt{zero} and the latter \texttt{T1.zero}.
+
+There are a few exceptions to this convention.
 
 \inputsnippets{T1Bridge/MoreNotations}
 
@@ -439,6 +442,34 @@ Hydras & page & Gaia-Hydras& page& Description \\\hline
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+
+\begin{table}[H]
+  \centering
+  \begin{threeparttable}
+    \caption{Main constants}
+\begin{tabular}{|r | c|c|c|c|l|}
+\hline
+Hydras & page & Gaia-Hydras& page& Description \\\hline
+  \texttt{T1.zero}
+       &  \pageref{types:T1}
+              & \texttt{CantorOrdinal.zero \tnote{1}}
+                           &  & The ordinal $0$  \\
+  
+ 
+\hline
+\end{tabular}
+\begin{tablenotes}
+  \item[1] From \gaia library.
+   \item[2] From \ssreflect/\mathcomp libraries.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+
+
+
+
 
 
 \section{Importing a theorem from \gaia}

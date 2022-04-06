@@ -215,7 +215,7 @@ T1nf alpha ->
 (* end snippet Lemma261 *)
 Proof.
   rewrite -hnf_g2h => Hnf beta Hbeta Hlt.
-  have H: hnf (g2h beta) by rewrite hnf_g2h. 
+  have H: T1.nf (g2h beta) by rewrite hnf_g2h. 
   have H'lt : g2h beta t1< g2h alpha; repeat split => //.
   move: Hlt; rewrite T1lt_iff => //.
   case => ? [? ?] //.  

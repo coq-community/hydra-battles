@@ -138,7 +138,7 @@ Lemma oplus_lt_phi0 a b c:  T1nf a -> T1nf b -> T1nf c ->
 (* end snippet oplusLemmase  *)
 Proof.
   move => Ha Hb Hc Hab Hbc; rewrite /oplus.
-  replace (phi0 c) with (h2g (hphi0 (g2h c))); last first.
+  replace (phi0 c) with (h2g (T1.phi0 (g2h c))); last first.
   by rewrite -g2h_phi0 ?h2g_g2hK. 
   rewrite -hlt_iff !g2h_phi0. 
   apply oplus_lt_phi0; rewrite ?hnf_g2h ?hlt_iff ?h2g_g2hK  => //. 

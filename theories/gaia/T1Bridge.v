@@ -24,27 +24,12 @@ Unset Printing Implicit Defensive.
 (** * From hydra to gaia and back *)
 
 (* begin snippet MoreNotations:: no-out *)
-#[global] Notation hfin := Epsilon0.T1.T1nat.
-
-#[global] Notation homega := Epsilon0.T1.T1omega.
-#[global] Notation hsucc := Epsilon0.T1.succ.
-#[global] Notation hphi0 alpha := (Epsilon0.T1.phi0 alpha).
-#[global] Notation hplus := Epsilon0.T1.T1add.
-#[global] Notation hmult := Epsilon0.T1.T1mul.
-
-#[global] Notation hlt := Epsilon0.T1.lt.
-#[global] Notation hle := (MoreOrders.leq hlt). 
-#[global] Notation hnfb := Epsilon0.T1.nf_b.
-#[global] Notation hlimitb := Epsilon0.T1.limitb.
-#[global] Notation hsuccb := Epsilon0.T1.succb.
-#[global] Notation hnf := Epsilon0.T1.nf.
+#[global] Notation hle := (MoreOrders.leq T1.lt). 
 
 (** Restrictions to terms in normal form *)
 
-#[global] Notation hLT := Epsilon0.T1.LT.
-#[global] Notation hLE := Epsilon0.T1.LE.
-#[global] Notation gLT := (restrict T1nf T1lt).
-#[global] Notation gLE := (restrict T1nf T1le).
+#[global] Notation LT := (restrict T1nf T1lt).
+#[global] Notation LE := (restrict T1nf T1le).
 
 (* end snippet MoreNotations *)
 
@@ -147,10 +132,10 @@ Proof. by []. Qed.
 Lemma one_ref : refines0 T1.one one.
 Proof. by []. Qed.
 
-Lemma Finite_ref (n:nat) : refines0 (hfin n) (\F n).
+Lemma Finite_ref (n:nat) : refines0 (T1.T1nat n) (\F n).
 Proof. by case: n. Qed.
 
-Lemma omega_ref : refines0 homega T1omega.
+Lemma omega_ref : refines0 T1.T1omega T1omega.
 Proof. by []. Qed.
 (* end snippet constantRefs *)
 
@@ -158,7 +143,7 @@ Proof. by []. Qed.
 (* begin snippet unaryRefs:: no-out *)
 
 
-Lemma succ_ref: refines1 hsucc T1succ.
+Lemma succ_ref: refines1 T1.succ T1succ.
 (*| .. coq:: none |*)
 Proof.
   elim => [// |//  x] => //;  by case: x => // ? ? ? ? ? ? /= -> .
@@ -166,12 +151,12 @@ Qed.
 (*||*)
 
 
-Lemma phi0_ref x: refines0 (hphi0 x) (phi0 (h2g x)). (* .no-out *)
+Lemma phi0_ref x: refines0 (T1.phi0 x) (phi0 (h2g x)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. by []. Qed.
 (* end snippet unaryRefs *)
 
-Lemma g2h_phi0 a : g2h (phi0 a) = hphi0 (g2h a). 
+Lemma g2h_phi0 a : g2h (phi0 a) = T1.phi0 (g2h a). 
 Proof. rewrite /phi0 => //. Qed.
 
 
@@ -224,13 +209,13 @@ Proof.
 Qed.
 
 (* begin snippet ltRef:: no-out *)
-Lemma lt_ref : refinesRel hlt T1lt.
+Lemma lt_ref : refinesRel T1.lt T1lt.
 (* end snippet ltRef *)
 Proof.
   move=> a b; split.
   - rewrite /Epsilon0.T1.lt /Comparable.compare; move => Hab. 
     generalize (compare_ref a b); now rewrite Hab.
-  - move => Hab; rewrite /hlt.  
+  - move => Hab; rewrite /T1.lt.  
     case_eq (Epsilon0.T1.compare_T1 a b) => [Heq |//| Hgt].
     +  generalize (compare_ref a b); rewrite Heq.
        move => H0; move: Hab; rewrite H0; by rewrite T1ltnn.
@@ -258,7 +243,7 @@ Qed.
 
 (* begin snippet decideHLtRw:: no-out *)
 Lemma decide_hlt_rw (a b : hT1):
-  bool_decide (hlt a b) = (h2g a < h2g b).
+  bool_decide (T1.lt a b) = (h2g a < h2g b).
 (* end snippet decideHLtRw *)
 Proof.
   rewrite /Epsilon0.T1.lt; generalize (compare_ref a b);
@@ -285,7 +270,7 @@ Proof.
 Qed.
 
 (* begin snippet plusRef:: no-out *)
-Lemma plus_ref : refines2 hplus T1add.
+Lemma plus_ref : refines2 T1.T1add T1add.
 (* end snippet plusRef *)
 Proof.
   move => x; elim: x => [|x1 IHx1 n x2 IHx2]; case => //= y1 n0 y2.
@@ -308,7 +293,7 @@ Section Proof_of_mult_ref.
   Lemma T1mul_eqn1 (c : T1) : c * zero = zero. 
   Proof. by []. Qed.
 
-  Lemma mult_eqn1 c : hmult c T1.zero = T1.zero.
+  Lemma mult_eqn1 c : T1.T1mul c T1.zero = T1.zero.
   Proof. case: c; cbn => //; by case. 
   Qed.
 
@@ -317,7 +302,7 @@ Section Proof_of_mult_ref.
   Proof. by [].  Qed. 
 
   Lemma mult_eqn3 n b n' b' :
-    hmult (T1.cons T1.zero n b) (T1.cons T1.zero n' b') =
+    T1.T1mul (T1.cons T1.zero n b) (T1.cons T1.zero n' b') =
       T1.cons T1.zero (n * n' + n + n') b'.      
   Proof. cbn; f_equal; nia. Qed.
 
@@ -351,7 +336,7 @@ Section Proof_of_mult_ref.
   Lemma mult_eqn5 a n b a' n' b' :
     a' <>  T1.zero ->
     Epsilon0.T1.T1mul (T1.cons a n b)  (T1.cons a' n' b') =
-      T1.cons (hplus a  a') n' (hmult (T1.cons a n b) b').
+      T1.cons (T1.T1add a  a') n' (T1.T1mul (T1.cons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
   Qed.
@@ -368,7 +353,7 @@ Section Proof_of_mult_ref.
   Lemma g2h_zero : g2h zero = T1.zero.
     Proof. by []. Qed. 
 
-  Lemma mult_ref0 : refines2 hmult T1mul.
+  Lemma mult_ref0 : refines2 T1.T1mul T1mul.
   Proof.
     move => x y;  move: x; induction y. 
     -   move => x; simpl h2g; rewrite T1mul_eqn1; case x => //; by case.
@@ -405,21 +390,21 @@ Section Proof_of_mult_ref.
 End Proof_of_mult_ref.
 
 (* begin snippet multRef:: no-out *)
-Lemma mult_ref : refines2 hmult T1mul.
+Lemma mult_ref : refines2 T1.T1mul T1mul.
 (* end snippet multRef *)
 Proof mult_ref0.
 (* begin snippet multA:: no-out *)
-Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = hmult (g2h a) (g2h b).
+Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = T1.T1mul (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
 (* end snippet multA *)
 
-Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = hplus (g2h a) (g2h b).
+Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = T1.T1add (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R, plus_ref. Qed.
        
 (* begin snippet nfRef:: no-out *)
 
-Lemma nf_ref (a: hT1)  : hnfb a = T1nf (h2g a).
+Lemma nf_ref (a: hT1)  : T1.nf_b a = T1nf (h2g a).
 (* end snippet nfRef *)
 Proof.
   elim: a => //.
@@ -427,18 +412,18 @@ Proof.
     by rewrite IHa IHb [phi0 (h2g a)]/(h2g (T1.phi0 a)) andbA decide_hlt_rw.
 Qed.
 
-Lemma LT_ref : refinesRel  hLT  gLT.
+Lemma LT_ref : refinesRel  T1.LT  LT.
 Proof.
   split.   
   - destruct 1 as [H [H0 H1]]; split. 
-    + by rewrite  -nf_ref.
+    +  by rewrite  -nf_ref.
     + by apply lt_ref. 
     + by rewrite -nf_ref. 
   -  case => H H0 H1; repeat  split; red; rewrite ?nf_ref ?lt_ref => // ;
             by apply lt_ref. 
 Qed. 
 
-Lemma LE_ref : refinesRel hLE gLE.
+Lemma LE_ref : refinesRel T1.LE LE.
 Proof. 
   split. 
   - case => a b; split. 
@@ -449,7 +434,7 @@ Proof.
         red;  rewrite bool_decide_eq_true => //.
       *  apply T1lenn. 
     +  case b => _ ?; rewrite - nf_ref => //. 
-  - case; rewrite /hLE; repeat split => //.
+  - case; rewrite /T1.LE; repeat split => //.
    +  move: p p1; rewrite -nf_ref => //.
    +  move: p0; rewrite T1le_eqVlt => /orP.
       case => /eqP Heq; subst.
@@ -463,7 +448,7 @@ Qed.
 (** Limits, successors, etc *)
 
 (* begin snippet limitbRef:: no-out *)
-Lemma limitb_ref (a:Epsilon0.T1.T1) : hlimitb a = T1limit (h2g a).
+Lemma limitb_ref (a:Epsilon0.T1.T1) : T1.limitb a = T1limit (h2g a).
 (* end snippet limitbRef *)
 Proof.
   elim: a => /= //.
@@ -473,7 +458,7 @@ Proof.
 Qed.
 
 (* begin snippet isSuccRef:: no-out *)
-Lemma succb_ref (a:Epsilon0.T1.T1) : hsuccb a = T1is_succ (h2g a).
+Lemma succb_ref (a:Epsilon0.T1.T1) : T1.succb a = T1is_succ (h2g a).
 (* end snippet isSuccRef *)
 Proof. 
   elim: a => /= //.
@@ -485,13 +470,13 @@ Qed.
 (* rewriting lemmas *)
 
 (* begin snippet rewritingRules:: no-out *) 
-Lemma hnf_g2h alpha : hnf (g2h alpha) = T1nf alpha.
-Proof.  by rewrite /hnf (nf_ref (g2h alpha)) h2g_g2hK. Qed. 
+Lemma hnf_g2h alpha : T1.nf (g2h alpha) = T1nf alpha.
+Proof.  by rewrite /T1.nf (nf_ref (g2h alpha)) h2g_g2hK. Qed. 
 
-Lemma g2h_succ (alpha : T1) : g2h (T1succ alpha) = hsucc (g2h alpha).
+Lemma g2h_succ (alpha : T1) : g2h (T1succ alpha) = T1.succ (g2h alpha).
 Proof.   by rewrite -(h2g_g2hK alpha) succ_ref !g2h_h2gK. Qed.
 
-Lemma hlt_iff a b: hlt a b <-> h2g a < h2g b.
+Lemma hlt_iff a b: T1.lt a b <-> h2g a < h2g b.
 Proof. by rewrite lt_ref. Qed.
 
 (* end snippet rewritingRules *)
@@ -649,12 +634,12 @@ Lemma gE0lt_iff alpha beta : E0lt alpha beta <-> E0_g2h alpha o< E0_g2h beta.
 Proof. 
   split. 
     - rewrite /E0lt;  destruct alpha, beta. 
-     rewrite /Lt /hLT => /=; repeat split. 
-      + rewrite /hnf nf_ref h2g_g2hK; by apply /eqP.
+     rewrite /Lt /T1.LT => /=; repeat split. 
+      + rewrite /T1.nf nf_ref h2g_g2hK; by apply /eqP.
       + by rewrite hlt_iff !h2g_g2hK.
-      + rewrite /hnf nf_ref h2g_g2hK;  by apply /eqP.
+      + rewrite /T1.nf nf_ref h2g_g2hK;  by apply /eqP.
     - rewrite /E0lt; destruct alpha, beta. 
-      rewrite /Lt /hLT; destruct 1 as [H [H0 H1]].
+      rewrite /Lt /T1.LT; destruct 1 as [H [H0 H1]].
       move: H0 ; by rewrite hlt_iff !h2g_g2hK. 
 Qed.
 
@@ -663,7 +648,7 @@ Lemma gE0le_iff alpha beta : E0le alpha beta <-> E0_g2h alpha o<= E0_g2h beta.
 Proof. 
   split. 
   - rewrite /E0le;  destruct alpha, beta. 
-    rewrite /hE0le /hLE => /=; repeat split.
+    rewrite /hE0le /T1.LE => /=; repeat split.
     rewrite T1le_eqVlt => Hle.
     have Hor : (cnf0 =cnf1 \/ cnf0 < cnf1).
     { apply Bool.orb_prop in Hle;  destruct Hle as [? | ?].
@@ -799,8 +784,8 @@ Definition g2h_seq (s: nat-> T1) n := g2h (s n).
 Definition h2g_seq (s: nat -> hT1) n := h2g (s n).
 
 Definition gstrict_lub (s : nat -> T1) (lambda : T1) :=
-  (forall i : nat, gLT (s i) lambda) /\
-    (forall alpha : T1, (forall i : nat, gLE (s i) alpha) -> gLE lambda  alpha).
+  (forall i : nat, LT (s i) lambda) /\
+    (forall alpha : T1, (forall i : nat, LE (s i) alpha) -> LE lambda  alpha).
 
 
 Lemma strict_lub_ref (s:nat-> hT1) (lambda: hT1) :
@@ -941,5 +926,5 @@ Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
 
 
-
+Locate zero.
 

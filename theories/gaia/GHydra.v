@@ -48,7 +48,7 @@ Qed.
 Theorem every_battle_terminates : Termination.
 (* end snippet Termination *)
 Proof. 
-  red; apply Inclusion.wf_incl with (R2 := fun h h' =>  gLT (m h) (m h')).
+  red; apply Inclusion.wf_incl with (R2 := fun h h' =>  LT (m h) (m h')).
   - case mVariant => Hvar; rewrite /inclusion => x y Hstep.
     case: Hstep => x0 Hstep;  apply (Hvar x0 y x).
     move => Hhead; subst; apply (head_no_round_n _ _ Hstep).

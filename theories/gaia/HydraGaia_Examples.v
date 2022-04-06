@@ -56,7 +56,7 @@ Search (?x < ?x  o+ _)%ca.
 
 Search oplus.
 
-Search Hessenberg.oplus hlt.
+Search Hessenberg.oplus T1.lt.
 
 
 
