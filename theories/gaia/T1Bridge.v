@@ -24,9 +24,6 @@ Unset Printing Implicit Defensive.
 (** * From hydra to gaia and back *)
 
 (* begin snippet MoreNotations:: no-out *)
-#[global] Notation hzero := Epsilon0.T1.zero.
-#[global] Notation hone := Epsilon0.T1.one.
-#[global] Notation hcons := Epsilon0.T1.cons.
 #[global] Notation hfin := Epsilon0.T1.T1nat.
 
 #[global] Notation homega := Epsilon0.T1.T1omega.
@@ -53,13 +50,13 @@ Unset Printing Implicit Defensive.
 
 (* begin snippet h2gG2hDef *)
 Fixpoint h2g (alpha : hT1) : T1 :=
-  if alpha is  hcons alpha n beta
+  if alpha is  T1.cons alpha n beta
   then cons (h2g alpha) n (h2g beta)
   else zero.
 
 Fixpoint g2h (alpha : T1) : hT1 :=
-  if alpha is cons alpha n beta  then hcons (g2h alpha) n (g2h beta)
-  else hzero.
+  if alpha is cons alpha n beta  then T1.cons (g2h alpha) n (g2h beta)
+  else T1.zero.
 (* end snippet h2gG2hDef *)
 
 (** Pretty printing *)
@@ -144,10 +141,10 @@ Qed.
 (** Refinements of usual constants *)
 (* begin snippet constantRefs:: no-out *)
 
-Lemma zero_ref : refines0 hzero zero.
+Lemma zero_ref : refines0 T1.zero zero.
 Proof. by []. Qed.
 
-Lemma one_ref : refines0 hone one.
+Lemma one_ref : refines0 T1.one one.
 Proof. by []. Qed.
 
 Lemma Finite_ref (n:nat) : refines0 (hfin n) (\F n).
@@ -300,7 +297,7 @@ Proof.
   - replace (h2g x1 < h2g y1) with false; last first.
     + by apply T1lt_anti in H.
     + rewrite /Comparable.compare H /= Hx1y1; f_equal.
-      change (cons (h2g y1) n0 (h2g y2)) with (h2g (hcons y1 n0 y2)); 
+      change (cons (h2g y1) n0 (h2g y2)) with (h2g (T1.cons y1 n0 y2)); 
         by rewrite IHx2.
 Qed.
 
@@ -311,7 +308,7 @@ Section Proof_of_mult_ref.
   Lemma T1mul_eqn1 (c : T1) : c * zero = zero. 
   Proof. by []. Qed.
 
-  Lemma mult_eqn1 c : hmult c hzero = hzero.
+  Lemma mult_eqn1 c : hmult c T1.zero = T1.zero.
   Proof. case: c; cbn => //; by case. 
   Qed.
 
@@ -320,8 +317,8 @@ Section Proof_of_mult_ref.
   Proof. by [].  Qed. 
 
   Lemma mult_eqn3 n b n' b' :
-    hmult (hcons hzero n b) (hcons hzero n' b') =
-      hcons hzero (n * n' + n + n') b'.      
+    hmult (T1.cons T1.zero n b) (T1.cons T1.zero n' b') =
+      T1.cons T1.zero (n * n' + n + n') b'.      
   Proof. cbn; f_equal; nia. Qed.
 
   Lemma T1mul_eqn4 a n b n' b' :
@@ -335,8 +332,8 @@ Section Proof_of_mult_ref.
 
   Lemma mult_eqn4 a n b n' b' :
     a <> Epsilon0.T1.zero ->
-    Epsilon0.T1.T1mul (hcons a n b) (hcons Epsilon0.T1.zero n' b') =
-      hcons a (n * n' + n + n') b.
+    Epsilon0.T1.T1mul (T1.cons a n b) (T1.cons Epsilon0.T1.zero n' b') =
+      T1.cons a (n * n' + n + n') b.
   Proof. 
     cbn; case: a => [// | alpha n0 beta _ ]; f_equal; nia. 
   Qed.
@@ -352,23 +349,23 @@ Section Proof_of_mult_ref.
   Qed.
 
   Lemma mult_eqn5 a n b a' n' b' :
-    a' <>  hzero ->
-    Epsilon0.T1.T1mul (hcons a n b)  (hcons a' n' b') =
-      hcons (hplus a  a') n' (hmult (hcons a n b) b').
+    a' <>  T1.zero ->
+    Epsilon0.T1.T1mul (T1.cons a n b)  (T1.cons a' n' b') =
+      T1.cons (hplus a  a') n' (hmult (T1.cons a n b) b').
   Proof.
     move => Ha'; cbn; case: a; move: Ha'; case: a' => //.
   Qed.
 
-  Lemma h2g_cons a n b : h2g (hcons a n b)= cons (h2g a) n (h2g b). 
+  Lemma h2g_cons a n b : h2g (T1.cons a n b)= cons (h2g a) n (h2g b). 
   Proof. by []. Qed.
 
-  Lemma g2h_cons a n b : g2h (cons a n b) = hcons (g2h a) n (g2h b).
+  Lemma g2h_cons a n b : g2h (cons a n b) = T1.cons (g2h a) n (g2h b).
   Proof. by []. Qed.
   
-  Lemma h2g_zero  : h2g hzero = zero. 
+  Lemma h2g_zero  : h2g T1.zero = zero. 
   Proof. by []. Qed.
 
-  Lemma g2h_zero : g2h zero = hzero.
+  Lemma g2h_zero : g2h zero = T1.zero.
     Proof. by []. Qed. 
 
   Lemma mult_ref0 : refines2 hmult T1mul.
@@ -388,7 +385,7 @@ Section Proof_of_mult_ref.
                      destruct (Epsilon0.T1.T1_eq_dec y2 Epsilon0.T1.zero).
                      { subst; by cbn. }
                      { change (cons zero n0 (h2g beta)) with
-                         (h2g (hcons Epsilon0.T1.zero n0 beta)); now rewrite IHy2.
+                         (h2g (T1.cons Epsilon0.T1.zero n0 beta)); now rewrite IHy2.
                      }
                ++  destruct y1; [now destruct n1| now compute].
          * destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
@@ -401,7 +398,7 @@ Section Proof_of_mult_ref.
                    ** rewrite  mult_eqn5 => //. 
                       simpl h2g; rewrite plus_ref; f_equal. 
                       change (cons (h2g alpha) n0 (h2g beta))
-                        with (h2g (hcons alpha n0 beta)); now rewrite IHy2.
+                        with (h2g (T1.cons alpha n0 beta)); now rewrite IHy2.
                    **  case: y1 n2 IHy1 => //.
   Qed.
 

@@ -26,7 +26,7 @@ Unset Strict Implicit.
 (* begin snippet FAlphaDef *)
 
 
-Notation hF_ := F_.
+Notation hF_ := F_alpha.F_.
 
 Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
 (* end snippet FAlphaDef *)

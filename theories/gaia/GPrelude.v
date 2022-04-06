@@ -54,6 +54,13 @@ Proof.
     apply T1le_trans. 
 Defined.
 
+
+Set Printing All. 
+Check (3 <= 3)%N. 
+Search ssrnat.leq.
+Locate ssrnat.leq. 
+
+
 Print Order.POrder.class_of. 
 (*
 

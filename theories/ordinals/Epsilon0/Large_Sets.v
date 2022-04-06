@@ -44,6 +44,7 @@ Inductive L_spec : T1 -> (nat -> nat) -> Prop :=
 (* end snippet LSpecDef *)
 
 
+
 (** Test functions 
   - If f is correct w.r.t. [L_spec], "Compute L_test alpha f k" should return (one=one).
   - If f k is too small, returns (alpha = one) (with one < alpha)

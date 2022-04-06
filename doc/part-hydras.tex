@@ -20,7 +20,8 @@ will show how \coq{} and its standard library are well fitted to help us to unde
  We also hope to provide a little clarification on infinity (both potential and actual) through the notions of function, computation, limit,
  type and proof.
 
-\subsection*{Compatibility with \gaia (in progress)}
+ \subsection*{Compatibility with \gaia (in progress)}
+ \label{sect:gaia-first-intro}
 The \gaia project~\cite{Gaia} by Jos\'e Grimm, Alban Quadrat,  and Carlos Simpson,
 aims  to formalize mathematics in \coq  in
 the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa. Remarks about compatibility with \gaia are signalled with the picture \gaiasign.
@@ -2328,7 +2329,7 @@ One may represent the ordinal $n$ by a sigma type.
 \vspace{4pt}
 \noindent\emph{From Module~\href{../theories/html/hydras.OrdinalNotations.ON_Finite.html}{OrdinalNotations.ON\_Finite}}
 
-\label{def: Finite-ord-type}
+\label{def:Finite-ord-type}
 
 \input{movies/snippets/ON_Finite/Defs}
 
@@ -5281,6 +5282,11 @@ By  well-founded induction on $\alpha$, we prove the following properties:
 Please note that the proof of \texttt{L\_correct} applies the lemmas proven in Sections~\ref{sect:L-spec-zero}, ~\ref{sect:L-spec-succ} and ~\ref{sect:L-spec-lim}.
 Our previous study of \texttt{L\_spec} allowed us to pave the way for the definition by \texttt{Equations} and the correctness proof.
 
+\paragraph*{\gaiasign}
+The module
+\href{../theories/html/gaia_hydras.GL_alpha.html}{gaia\_hydras.GL\_alpha} contains an adaptation of
+\href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0/L\_alpha}.
+
 
 
 \subsubsection{Back to hydra battles}
@@ -5364,7 +5370,11 @@ We define a function \texttt{H'\_} of type \texttt{E0 -> nat -> nat} by transfin
 \subsection{First  steps of the H' hierarchy}
 Using rewrite rules from \texttt{H'\_eq1} to \texttt{H'\_succ\_eqn}, we can explore the functions $H'_\alpha$ for  small values of $\alpha$.
 
-%ICI
+\paragraph*{\gaiasign}
+The module
+\href{../theories/html/gaia_hydras.GHprime.html}{gaia\_hydras.GHprime} contains an adaptation of
+\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime}.
+
 
 \subsubsection{Finite ordinals} 
 
@@ -5556,6 +5566,8 @@ We let the reader look at the proof (Section \texttt{Proof\_of\_H'\_mono\_l} of 
 \noindent
 \input{movies/snippets/Hprime/HprimeDom}
 
+
+%ICI
 \subsection{Comparison between \texttt{L\_} and \texttt{H'\_} }
 
 By well-founded induction on $\alpha$, we prove that
