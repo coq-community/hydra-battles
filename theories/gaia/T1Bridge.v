@@ -1,4 +1,8 @@
 (**  * Bridge between Hydra-battle's and Gaia's [T1]  (Experimental) 
+
+This library introduces tools for making  definitions and lemmas from
+ #<a href="../ordinals/"> Hydra battles's ordinals</a>#  compatible with 
+ #<a href="https://github.com/coq-community/gaia/tree/master/theories/schutte">Gaia's ssete9 library</a>#.
  *)
 
 (* begin snippet Requirements:: no-out  *)
@@ -11,16 +15,16 @@ Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
+(**
+The name [T1] denotes Gaia's data type. We use [T1.T1] or [hT1] for Hydra battles ordinal terms.
+*)
+
 (* begin snippet hT1gT1 *)
-
-(** Hydra-Battles' type for ordinal terms below [epsilon0] *)
-#[global] Notation hT1 := Epsilon0.T1.T1.
-
-(** Gaia's type for ordinal terms below [epsilon0] *)
+#[global] Notation hT1 := T1.T1.
 #[global] Notation T1 := ssete9.CantorOrdinal.T1.
 (* end snippet hT1gT1 *)
 
-(** * From hydra to gaia and back *)
+(** We rename Hydra battle's total order on [hT1] *)
 
 (* begin snippet MoreNotations:: no-out *)
 #[global] Notation hle := (MoreOrders.leq T1.lt). 
@@ -31,6 +35,8 @@ Unset Printing Implicit Defensive.
 #[global] Notation LE := (restrict T1nf T1le).
 
 (* end snippet MoreNotations *)
+
+(** Translation functions *)
 
 (* begin snippet h2gG2hDef *)
 Fixpoint h2g (alpha : hT1) : T1 :=
@@ -43,10 +49,6 @@ Fixpoint g2h (alpha : T1) : hT1 :=
   else T1.zero.
 (* end snippet h2gG2hDef *)
 
-(** Pretty printing *)
-(* begin snippet T1ppDef *)
-Definition T1pp (a:T1) := pp (g2h a).
-(* end snippet T1ppDef *)
 
 (* begin snippet h2gG2hRw:: no-out *)
 Lemma h2g_g2hK : cancel g2h h2g.
@@ -94,7 +96,13 @@ Proof.
   - by apply  H, h2g_eqE. 
 Qed. 
 
-(** refinement of constants, functions, etc. *)
+(** Pretty printing *)
+(* begin snippet T1ppDef *)
+Definition T1pp (a:T1) := pp (g2h a).
+(* end snippet T1ppDef *)
+
+
+(** * refinement of constants, functions, etc. *)
 
 (* begin snippet refineDefs *)
 
@@ -136,7 +144,8 @@ Proof.
 Qed.
 
 
-(** Refinements of usual constants *)
+(** ** Refinements of usual constants *)
+
 (* begin snippet constantRefs:: no-out *)
 
 Lemma zero_ref : refines0 T1.zero zero.
@@ -152,7 +161,7 @@ Lemma omega_ref : refines0 T1.T1omega T1omega.
 Proof. by []. Qed.
 (* end snippet constantRefs *)
 
-(** unary functions *)
+(** ** unary functions and predicates  *)
 (* begin snippet unaryRefs:: no-out *)
 
 
@@ -180,6 +189,8 @@ Proof.
   move/eqP: Hn Hz =>->; move/eqP; by case: beta.
 Qed.
 
+(** ** Equality and comparison *)
+
 Lemma T1eq_refl (a: T1) : T1eq a a.
 Proof. by apply  /T1eqP. Qed.
 
@@ -192,7 +203,7 @@ Proof.  move => /T1eq_rw; by rewrite !g2h_h2gK. Qed.
 
 (* begin snippet compareRef:: no-out *)
 Lemma compare_ref (x y: hT1) :
-  match Epsilon0.T1.compare_T1 x y with
+  match T1.compare_T1 x y with
   | Datatypes.Lt => T1lt (h2g x) (h2g y)
   | Datatypes.Eq => h2g x = h2g y
   | Datatypes.Gt => T1lt (h2g y) (h2g x)
@@ -282,6 +293,8 @@ Proof.
   apply T1eq_h2g; by rewrite Hab T1eq_refl.
 Qed.
 
+(** ** Ordinal addition *)
+
 (* begin snippet plusRef:: no-out *)
 Lemma plus_ref : refines2 T1.T1add T1add.
 (* end snippet plusRef *)
@@ -300,6 +313,7 @@ Proof.
 Qed.
 
 
+(** ** Ordinal multiplication *)
 
 Section Proof_of_mult_ref.
 
@@ -407,6 +421,7 @@ Lemma mult_ref : refines2 T1.T1mul T1mul.
 (* end snippet multRef *)
 Proof mult_ref0.
 (* begin snippet multA:: no-out *)
+
 Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = T1.T1mul (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
@@ -415,6 +430,9 @@ Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = T1.T1add (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R, plus_ref. Qed.
        
+(** * Ordinal terms in normal form *)
+
+
 (* begin snippet nfRef:: no-out *)
 
 Lemma nf_ref (a: hT1)  : T1.nf_b a = T1nf (h2g a).
@@ -824,25 +842,6 @@ Proof.
          move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
 
-(* begin snippet MonoDef *)
-
-
-
-Definition strict_mono (f: nat -> nat) :=
-  forall n p, (n< p)%N -> (f n < f p)%N.
-
-Definition dominates_from := 
-fun (n : nat) (g f : nat -> nat) =>
-  forall p : nat, (n <= p)%N -> (f p < g p)%N.
-
-Definition dominates g f := exists n : nat, dominates_from n g f .
-
-Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
-
-Definition fun_le  f g := forall n:nat, (f n <=  g n)%N.
-
-(* end snippet MonoDef *)
-
 (* begin snippet SearchDemo *)
 Search ( _ * ?beta = ?beta)%ca.
 
@@ -946,3 +945,23 @@ Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* begin snippet LocateExample *)
 Locate T1omega.
 (* end snippet LocateExample *)
+
+
+(** * Abstract properties of arithmetic functions (with SSreflect inequalities)
+ *)
+
+(* begin snippet MonoDef *)
+Definition strict_mono (f: nat -> nat) :=
+  forall n p, (n< p)%N -> (f n < f p)%N.
+
+Definition dominates_from := 
+fun (n : nat) (g f : nat -> nat) =>
+  forall p : nat, (n <= p)%N -> (f p < g p)%N.
+
+Definition dominates g f := exists n : nat, dominates_from n g f .
+
+Definition dominates_strong g f  := {n : nat | dominates_from n g f}.
+
+Definition fun_le  f g := forall n:nat, (f n <=  g n)%N.
+
+(* end snippet MonoDef *)
