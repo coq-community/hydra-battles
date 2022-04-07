@@ -20,7 +20,6 @@ Unset Printing Implicit Defensive.
 #[global] Notation T1 := ssete9.CantorOrdinal.T1.
 (* end snippet hT1gT1 *)
 
-
 (** * From hydra to gaia and back *)
 
 (* begin snippet MoreNotations:: no-out *)
@@ -66,7 +65,7 @@ Proof.
 Qed.
 
 (* begin snippet g2hEqIff:: no-out *)
-Lemma g2h_eq_iff (a b: T1) :  g2h a = g2h b <-> a = b.
+Lemma g2h_eqE (a b: T1) :  g2h a = g2h b <-> a = b.
 (* end snippet g2hEqIff *)
 Proof. 
     split; [ | by move => ->].
@@ -74,12 +73,26 @@ Proof.
 Qed.
 
 (* begin snippet h2gEqIff:: no-out *)
-Lemma h2g_eq_iff (a b :hT1) :  h2g a = h2g b <-> a = b.
+Lemma h2g_eqE (a b :hT1) :  h2g a = h2g b <-> a = b.
 (* end snippet h2gEqIff *)
 Proof. 
   split; [| by move => ->].
   rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  => ->  //.
 Qed.
+
+Lemma g2h_diffE (a b : T1) : g2h a <> g2h b <-> a <> b.
+Proof.
+  split => H Heq.
+  - subst; by apply: H.   
+  - by apply  H , g2h_eqE. 
+Qed.
+
+Lemma h2g_diffE (a b : hT1) : h2g a <> h2g b <-> a <> b.
+Proof.
+  split => H Heq.
+  - subst; by apply: H.   
+  - by apply  H, h2g_eqE. 
+Qed. 
 
 (** refinement of constants, functions, etc. *)
 
@@ -238,7 +251,7 @@ Proof.
       * by rewrite eq_refl. 
   - rewrite T1le_eqVlt; move => /orP; destruct 1; last first. 
     + left; by rewrite lt_ref. 
-    +  move: H => /eqP; by rewrite h2g_eq_iff => ->; right. 
+    +  move: H => /eqP; by rewrite h2g_eqE => ->; right. 
 Qed. 
 
 (* begin snippet decideHLtRw:: no-out *)
@@ -438,7 +451,7 @@ Proof.
    +  move: p p1; rewrite -nf_ref => //.
    +  move: p0; rewrite T1le_eqVlt => /orP.
       case => /eqP Heq; subst.
-      * move: Heq; rewrite h2g_eq_iff => ?; subst; right.
+      * move: Heq; rewrite h2g_eqE => ?; subst; right.
       * left; move: Heq; rewrite -decide_hlt_rw => // Heq.
            move: Heq => /eqP; rewrite bool_decide_eq_true => //. 
    + move: p1 ; rewrite -nf_ref => //.
@@ -666,7 +679,7 @@ Proof.
      * by apply T1ltW.
      * by apply /eqP. 
      * by apply /eqP. 
-    + injection e; rewrite g2h_eq_iff =>  Heq; subst; apply T1lenn. 
+    + injection e; rewrite g2h_eqE =>  Heq; subst; apply T1lenn. 
 Qed.
 
 
@@ -706,17 +719,24 @@ Proof.
 by rewrite E0_h2g_g2hK.
 Qed.
 
-Lemma E0_eq_iff (x y: E0) : x = y <-> (E0_g2h x = E0_g2h y). 
+Lemma E0_eqE (x y: E0) : x = y <-> (E0_g2h x = E0_g2h y). 
   split.
    move => Heq; by subst.   
    move => H; by rewrite -(E0_h2g_g2hK x) -(E0_h2g_g2hK y) H. 
 Qed. 
 
+Lemma E0_diffE (x y: E0) : x <> y <-> (E0_g2h x <> E0_g2h y).
+Proof. 
+ split => Hdiff Heq.
+  - apply: Hdiff; by apply /E0_eqE. 
+  - subst; by apply: Hdiff. 
+Qed.
+
 (* clean up!  *)
 
 Lemma E0pred_succK x : E0pred (E0succ x) = x. 
 Proof.
-  apply E0_eq_iff; rewrite /E0pred. 
+  apply E0_eqE; rewrite /E0pred. 
   apply E0_eq_intro => //=.
   rewrite pred_succ => //.
   case: x => c Hc //=.  by apply /eqP.
@@ -861,7 +881,7 @@ Lemma T1compare_correct (alpha beta: T1):
 Proof. 
   rewrite /compare /T1compare.
   case  (T1.compare_correct (g2h alpha) (g2h beta)). 
-  rewrite g2h_eq_iff => H; subst;  by constructor. 
+  rewrite g2h_eqE => H; subst;  by constructor. 
   all:  constructor; move:H; by rewrite  lt_ref !h2g_g2hK .
 Qed.
 
@@ -926,5 +946,7 @@ Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
 
 
-Locate zero.
 
+(* begin snippet LocateExample *)
+Locate T1omega.
+(* end snippet LocateExample *)

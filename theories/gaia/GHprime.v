@@ -13,14 +13,15 @@ From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
 From hydras Require Import primRec PrimRecExamples. 
-From hydras Require Import  Iterates Hprime.
+From hydras Require Import  Iterates Hprime L_alpha.
 From gaia_hydras Require Import T1Bridge GCanon GPaths.
 (* end snippet Requirements *)
 
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-Notation hH'_ := Hprime.H'_. 
+Notation hH'_ := Hprime.H'_.
+
 Definition H'_ alpha i := hH'_ (E0_g2h alpha) i.
 
 
@@ -85,7 +86,7 @@ Proof.
   generalize (H'_alpha_gt (E0_g2h alpha)) => H. 
   rewrite /H'_; apply /ltP ; apply H => H0; apply Halpha. 
   apply gE0_eq_intro; destruct alpha => /=. 
-  injection H0 =>  Heq; rewrite -g2h_eq_iff;  by rewrite Heq. 
+  injection H0 =>  Heq; rewrite -g2h_eqE;  by rewrite Heq. 
 Qed.
 
 
@@ -97,3 +98,4 @@ Proof.
   - by apply H'_omega_cube_min.
   - by rewrite /H'_  E0g2h_phi0 E0g2h_Fin. 
 Qed. 
+

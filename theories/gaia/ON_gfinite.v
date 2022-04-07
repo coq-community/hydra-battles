@@ -7,11 +7,9 @@ From Coq Require Import Logic.Eqdep_dec.
 Set Implicit Arguments.
 Unset Strict Implicit.
 
-
 (* begin snippet finordLtDef *)
 Definition finord_lt (n:nat) (alpha beta: 'I_n): bool :=
   (alpha < beta)%N.
-
 
 #[global] Instance  finord_compare (n:nat) : Compare ('I_n) :=
   fun alpha beta => Nat.compare alpha beta. 

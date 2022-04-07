@@ -64,7 +64,7 @@ Lemma L_ge_S alpha i:
   alpha <> E0zero -> (i <  L_ alpha i)%N.
 Proof.
   move =>  Halpha. rewrite /L_; apply /ltP. apply L_alpha.L_ge_S.
-  move => H; apply Halpha, E0_eq_iff => //.
+  move => H; apply Halpha, E0_eqE => //.
   rewrite H;  by apply E0_eq_intro.
 Qed. 
 
@@ -92,11 +92,11 @@ Proof.
   rewrite /L_spec; split => H.
   inversion H as [f0 H0 H1 H2| alpha0 f0 H0 H1 H2 H3].
   {  suff Hzero: alpha = zero by contradiction. 
-  apply g2h_eq_iff.  by rewrite -H1.    }
+  apply g2h_eqE.  by rewrite -H1.    }
   move => k;  move: (H1 k).
   rewrite interval_def => //.
   right;  move => Hzero //.
-  apply Hdiff; apply g2h_eq_iff; by rewrite Hzero. 
+  apply Hdiff; apply g2h_eqE; by rewrite Hzero. 
 Qed. 
 
 Lemma L_pos_inv alpha f :
@@ -106,13 +106,14 @@ Proof.
   move => Halpha H k.
    have Hdiff : alpha <> zero.  move => H0; subst. by cbn in Halpha. 
    apply /ltP; apply Large_Sets.L_pos_inv with (g2h alpha) => //. 
-   move => H0; apply Hdiff,g2h_eq_iff, H0. 
+   move => H0; apply Hdiff,g2h_eqE, H0. 
 Qed.
 
 
 Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
 Proof.  apply (L_alpha.L_correct (E0_g2h alpha)). Qed. 
 
+(* begin snippet HprimeLAlpha:: no-out *)
 Theorem H'_L_ alpha i: (H'_ alpha i <= L_ alpha i.+1)%N.
 Proof.  rewrite /L_ /H'_; apply /leP; by apply L_alpha.H'_L_.  Qed.
-
+(* end snippet HprimeLAlpha *)

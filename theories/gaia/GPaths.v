@@ -111,7 +111,7 @@ by [].
 rewrite /canon. 
 apply /eqP. 
 Search g2h eq. 
-by rewrite -g2h_eq_iff g2h_h2gK. 
+by rewrite -g2h_eqE g2h_h2gK. 
 
 split; trivial. 
 inversion H5. 
@@ -128,8 +128,8 @@ Proof.
   constructor => //.
   destruct i => //.
   case: H2 => H2 H3; constructor.
-   move => H4; apply H1; by rewrite -g2h_eq_iff. 
-   move: H2; rewrite -g2h_eq_iff ; by rewrite -g2h_canon. 
+   move => H4; apply H1; by rewrite -g2h_eqE. 
+   move: H2; rewrite -g2h_eqE ; by rewrite -g2h_canon. 
 Qed. 
 
 Lemma iota_adapt i l: iota i l = MoreLists.iota_from i l. 

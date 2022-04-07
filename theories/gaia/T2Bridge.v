@@ -53,7 +53,7 @@ Lemma g2h_h2gK : cancel h2g g2h.
 Proof. elim => // => t Ht t0 Ht0 n t1 Ht1 /=; by rewrite Ht Ht0 Ht1.  Qed.
 
 
-Lemma g2h_eq_iff (a b: T2) :  g2h a = g2h b <-> a = b.
+Lemma g2h_eqE (a b: T2) :  g2h a = g2h b <-> a = b.
 Proof. 
     split . 
     - rewrite -(h2g_g2hK a) -(h2g_g2hK b) !g2h_h2gK
@@ -62,7 +62,7 @@ Proof.
 Qed. 
 
 
-Lemma h2g_eq_iff (a b :hT2) :  h2g a = h2g b <-> a = b.
+Lemma h2g_eqE (a b :hT2) :  h2g a = h2g b <-> a = b.
 Proof. 
   split.
     -  rewrite  -(g2h_h2gK a) -(g2h_h2gK b) !h2g_g2hK  =>  // -> //.

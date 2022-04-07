@@ -343,8 +343,7 @@ End restricted_recursion.
 (* end snippet restrictedRecursiona *)
 Module CantorOrdinal.
 
-  (* begin snippet T1def *)
-
+ 
 (** * The type T1 *)
   
 (** This type represents all ordinals less that $\epsilon_0$ 
@@ -353,6 +352,8 @@ Module CantorOrdinal.
 Cantor Normal Form. More exactly [cons a n b] represents 
  $\omega^ A * (n.+1) + B$ #&omega; <sup> A</sup> * (n.+1) + B#
  if [a] represents A and  [b] represents B. *)
+
+ (* begin snippet T1def *)
 
 Inductive T1 : Set :=
   zero : T1

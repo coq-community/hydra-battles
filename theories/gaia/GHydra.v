@@ -3,10 +3,9 @@ From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg Hydra_Theorems Hydra_Definitions
-     Hydra_Termination.
+     Hydra_Termination Battle_length.
 From gaia Require Export ssete9.
-
-Require Import T1Bridge GHessenberg.
+Require Import T1Bridge GHessenberg GL_alpha.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -56,3 +55,27 @@ Proof.
   - apply Inverse_Image.wf_inverse_image, nf_Wf. 
 Qed.
 (*||*)
+
+About battle_length.
+
+
+Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
+
+Lemma l_stdE alpha k : l_std alpha k = Battle_length.l_std (E0_g2h alpha) k. 
+Proof. reflexivity.  Qed.
+
+#[global] Notation T1toH  a := (O2H.iota (g2h a)).
+
+Lemma l_std_ok : forall alpha : E0,
+    alpha <> E0zero ->
+    forall k : nat,
+      (1 <= k)%N -> battle_length standard k (T1toH (cnf alpha))
+                                  (l_std alpha k). 
+Proof.
+  move => alpha Halpha k /leP Hk; rewrite  /l_std.
+  have H0: E0_g2h alpha <> hE0zero.
+  rewrite -g2h_E0zero; by apply /E0_diffE. 
+  specialize  (Battle_length.l_std_ok (E0_g2h alpha) H0 k Hk).
+  rewrite /L_ => He; apply He.
+Qed.
+
