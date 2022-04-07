@@ -78,7 +78,6 @@ Compute Ack 3 2.
       (a1 < a2) \/ ((a1 = a2) /\ (b1 < b2))
     end.
 
-   (* begin details : Transparent accessibility lemmas (details)  *)
    
   (** this is defined in stdlib, but unfortunately it is opaque *)
   Lemma lt_wf_ind :
@@ -96,7 +95,6 @@ Compute Ack 3 2.
     intros n H q. pattern q. apply lt_wf_ind. auto.
   Defined.
   
-  (* end details *)
   
   Lemma lex_nat_wf : well_founded lex_nat.
   Proof.
@@ -434,12 +432,10 @@ Section Proof_of_nested_Ack_bound.
   
   Proof.
       pose (x:= Nat.max k m).
-    (* begin details *)
     - fold x.
       assert (H: m <= x) by lia.
       assert (H0: k <= x) by lia.
-    (* end details *)
-    simpl (2 + x); transitivity (Ack x (Ack m n)). 
+      simpl (2 + x); transitivity (Ack x (Ack m n)). 
       +  apply Ack_mono_l; auto.
       +  transitivity (Ack x (Ack  x n)).
          *  apply Ack_mono_r.

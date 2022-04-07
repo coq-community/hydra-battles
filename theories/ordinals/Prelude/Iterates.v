@@ -578,8 +578,6 @@ Definition hyper_exp2 k := iterate exp2 k 1.
 Lemma hyper_exp2_S : forall n, hyper_exp2 (S n) = exp2 (hyper_exp2 n).
 Proof.  induction n; cbn; auto. Qed.
 
-(* begin details: old stuff, delete if useless *)
-
 Lemma iterate_ge_from : forall f i, dominates_from i f id -> 
                                forall  j, i <= j ->
                                           forall n,
@@ -670,4 +668,3 @@ Proof.
      eapply   iterate_ge_from with i; auto.
 Qed.
 
-(* end details *)
