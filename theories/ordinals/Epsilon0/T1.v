@@ -137,7 +137,7 @@ Definition omega_term (alpha:T1)(k:nat) :=
 (* begin snippet towerDef *)
 Fixpoint omega_tower (height:nat) : T1 := 
   match height with 
-  | 0 =>  FS 0 
+  | 0 =>  one
   | S h => phi0 (omega_tower h)
   end.
 
@@ -1618,7 +1618,7 @@ Module Direct_proof.
     Proof.
       intros H H0; revert a H; now destruct H0.
     Qed.
-
+    
     (* begin snippet AccStrongStronger *)
 
     (*|

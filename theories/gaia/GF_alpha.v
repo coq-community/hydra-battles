@@ -83,8 +83,8 @@ Qed.
 Lemma F_mono_l alpha beta:
   E0lt beta alpha -> dominates (F_ alpha) (F_ beta).
 Proof.
-  rewrite /dominates;  specialize (F_mono_l (E0_g2h alpha) (E0_g2h beta)); 
-  move => H hbeta_alpha.
+  rewrite /dominates;
+    move: (F_mono_l (E0_g2h alpha) (E0_g2h beta))  => H hbeta_alpha.
   have H' : E0_g2h beta o< E0_g2h alpha
     by move: hbeta_alpha; rewrite gE0lt_iff.  
   case (H H') => x Hx; exists x; rewrite /dominates_from /F_ => p Hp.

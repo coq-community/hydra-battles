@@ -760,7 +760,8 @@ Qed.
 
 Lemma E0g2h_plusE (a b: E0): E0_g2h (E0plus a b)= E0.E0add (E0_g2h a) (E0_g2h b).
 Proof. 
-  destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_plus_rw. 
+  case: a ; case: b => a ? b ?;  apply E0_eq_intro => /=;
+         by rewrite g2h_plus_rw. 
 Qed.
 
 Lemma E0g2h_omegaE : E0_g2h E0omega = hE0omega. 
@@ -782,16 +783,13 @@ Proof.
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=.
     move: Hlt i0 i1; rewrite -(h2g_g2hK cnf0).
-    
-    rewrite -(h2g_g2hK cnf1).
-    rewrite -decide_hlt_rw.  
-    repeat split. 
-    + move: i0 i1; rewrite -!nf_ref => i0 i1.  rewrite g2h_h2gK => //.
+    rewrite -(h2g_g2hK cnf1)  -decide_hlt_rw;  repeat split. 
+    + move: i0 i1; rewrite -!nf_ref => i0 i1; rewrite g2h_h2gK => //.
       red. move: i0 => /eqP. by [].
     + red in Hlt; move: Hlt;  rewrite bool_decide_eq_true  => //.
       by rewrite !g2h_h2gK. 
-    + move: i1; rewrite -!nf_ref =>  i1.  rewrite g2h_h2gK => //.
-      red. move: i1 => /eqP. by [].
+    + move: i1; rewrite -!nf_ref  g2h_h2gK /eqP => i1  //.  
+      by move: i1 => /eqP. 
   -  apply Acc_inverse_image, E0lt_wf. 
 Qed. 
 
@@ -821,7 +819,7 @@ Proof.
          --  move: H0; rewrite T1le_iff /h2g_seq g2h_h2gK  => //.
          --  by rewrite hnf_g2h.
   -   destruct 1 as [H H0]; split. 
-      + move => i; specialize  (H i); rewrite LT_ref =>//.
+      + move => i; move:  (H i); rewrite LT_ref =>//.
       +  move => alpha Halpha; rewrite LE_ref;  apply H0. 
          move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
@@ -944,8 +942,6 @@ Proof. split; [apply: E0_comp | apply: gE0lt_wf]. Qed.
 (* begin snippet ExampleComp *)
 Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
-
-
 
 (* begin snippet LocateExample *)
 Locate T1omega.

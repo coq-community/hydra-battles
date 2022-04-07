@@ -56,8 +56,6 @@ Proof.
 Qed.
 (*||*)
 
-About battle_length.
-
 
 Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
 
@@ -73,9 +71,8 @@ Lemma l_std_ok : forall alpha : E0,
                                   (l_std alpha k). 
 Proof.
   move => alpha Halpha k /leP Hk; rewrite  /l_std.
-  have H0: E0_g2h alpha <> hE0zero.
-  rewrite -g2h_E0zero; by apply /E0_diffE. 
-  specialize  (Battle_length.l_std_ok (E0_g2h alpha) H0 k Hk).
-  rewrite /L_ => He; apply He.
+  have H0: E0_g2h alpha <> hE0zero by (rewrite -g2h_E0zero; apply /E0_diffE).
+  move:  (Battle_length.l_std_ok (E0_g2h alpha) H0 k Hk);
+  rewrite /L_ => He; by apply He.
 Qed.
 

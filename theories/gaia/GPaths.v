@@ -140,9 +140,8 @@ Lemma standard_gnaw_iota_from i alpha l :
 Proof. 
   move: l i alpha ; elim => // /=. 
   rewrite !/standard_gnaw => n Hn i alpha Hi.
-  specialize (Hn (S i) (canon alpha i)); move: Hn; rewrite /canon g2h_h2gK.  
-  move => Hn; rewrite Hn /gnaw ?g2h_h2gK => // /=.  
-  move: Hi Hn; case :i => //.  
+  move: (Hn (S i) (canon alpha i)); rewrite /canon g2h_h2gK.  
+  move => {}Hn; rewrite Hn /gnaw ?g2h_h2gK => // /=; by  case :i Hn Hi. 
 Qed.
 
 

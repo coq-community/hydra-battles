@@ -78,7 +78,7 @@ Lemma H'_alpha_mono (alpha : E0) : strict_mono (H'_ alpha).
 Proof.
   generalize (H'_alpha_mono (E0_g2h alpha)) => H.
   move => x y Hxy. have H'xy: (x < y)%coq_nat by apply /ltP.
-  specialize (H x y H'xy);  rewrite /H'_; by apply /ltP.
+  move: (H x y H'xy);  rewrite /H'_ => ?; by apply /ltP.
 Qed.
 
 Theorem H'_alpha_gt alpha (Halpha: alpha <> E0zero) n : (n < H'_ alpha n)%N.
