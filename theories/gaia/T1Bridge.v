@@ -27,7 +27,6 @@ The name [T1] denotes Gaia's data type. We use [T1.T1] or [hT1] for Hydra battle
 (** We rename Hydra battle's total order on [hT1] *)
 
 (* begin snippet MoreNotations:: no-out *)
-#[global] Notation hle := (MoreOrders.leq T1.lt). 
 
 (** Restrictions to terms in normal form *)
 
@@ -252,7 +251,7 @@ Qed.
 
 (* To simplify ! *)
 (* begin snippet leRef:: no-out *)
-Lemma le_ref : refinesRel hle T1le.
+Lemma le_ref : refinesRel T1.le T1le.
 (* end snippet leRef *)
 Proof.
   move=> a b; split.
@@ -528,7 +527,7 @@ Qed.
 
 (* begin snippet T1leIff:: no-out *)
 Lemma T1le_iff (alpha beta: T1):
-  alpha <= beta <->  hle (g2h alpha) (g2h beta).
+  alpha <= beta <->  T1.le (g2h alpha) (g2h beta).
 (* end snippet T1leIff *)
 Proof.
   split. 

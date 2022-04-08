@@ -175,6 +175,8 @@ Inductive ap : T1 -> Prop :=
 
 Definition lt (alpha beta : T1) : Prop :=
   compare alpha beta = Lt.
+
+Notation le  := (leq lt).
 (* end snippet compareDef *)
 
 (* begin snippet ltExamples:: no-out *)
