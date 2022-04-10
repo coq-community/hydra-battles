@@ -183,10 +183,6 @@ theories/gaia/GHydra.v
 theories/gaia/T2Bridge.v
 theories/gaia/GPrelude.v
 
-
-
-
-
 theories/ordinals/Prelude/MoreLibHyps.v
 theories/ordinals/Prelude/LibHyps_Experiments.v
 

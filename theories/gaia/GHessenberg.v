@@ -37,41 +37,43 @@ Lemma oplus0b:  left_id zero oplus.
 Proof. rewrite /oplus; case => // /=. 
        move => ? ? ? ;rewrite !h2g_g2hK => //.
 Qed.
+(* end snippet oplusEquations *)
 
-Lemma oplusa0: right_id zero oplus. 
+(* begin snippet oplusEquationsb:: no-out *)
+Lemma oplusa0: right_id zero oplus.
+(* end snippet oplusEquationsb *)
 Proof. rewrite /oplus; case => // /=. 
        move => ? ? ? ;rewrite !h2g_g2hK => //.
 Qed.
 
-Lemma oplus_eqn :
-  forall a b, 
-    a o+ b =
-    match a, b with
-        zero, _ => b
-      | _, zero => a
-      | cons a1 n1 b1, cons a2 n2 b2 =>
-        match compare  a1 a2 with
-            Gt => cons a1 n1 (b1 o+ b)
-          | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
-          | Lt => cons a2 n2 (a o+ b2)
-        end
-    end.
+(* begin snippet oplusEquationsc:: no-out *)
+Lemma oplus_eqn a b :
+ a o+ b =
+   match a, b with
+     zero, _ => b
+   | _, zero => a
+   | cons a1 n1 b1, cons a2 n2 b2 =>
+       match compare  a1 a2 with
+         Gt => cons a1 n1 (b1 o+ b)
+       | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
+       | Lt => cons a2 n2 (a o+ b2)
+       end
+   end.
+(* end snippet oplusEquationsc *)
 Proof.
-  move => a b; rewrite /oplus oplus_eqn.
-  case: a.
+  rewrite /oplus oplus_eqn; case: a.
   cbn ; by rewrite h2g_g2hK.
   case: b.  move => ? ? ? ;by rewrite !h2g_g2hK. 
   move => t n t0 t1 n0 t2; rewrite !g2h_cons compare_g2h. 
   case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
-(* end snippet oplusEquations *)
+
 
 (* begin snippet oplusLemmasa:: no-out  *)
 Lemma  oplus_nf (alpha  beta : T1) :
   T1nf alpha ->  T1nf beta -> T1nf (alpha o+ beta).
 Proof.
-  rewrite /oplus -?nf_ref => Halpha Hbeta.
-  apply oplus_nf ; by rewrite hnf_g2h.
+  rewrite /oplus -?nf_ref => Halpha Hbeta; apply oplus_nf ; by rewrite hnf_g2h.
 Qed.
 
 Lemma oplusC (alpha beta: T1):
@@ -79,7 +81,6 @@ Lemma oplusC (alpha beta: T1):
 Proof.
   move => Halpha Hbeta; rewrite /oplus oplus_comm ?hnf_g2h //.
 Qed.
-
 
  Lemma oplusA  (alpha beta gamma:T1) :
     T1nf alpha -> T1nf beta -> T1nf gamma ->
