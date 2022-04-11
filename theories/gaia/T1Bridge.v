@@ -66,7 +66,7 @@ Proof.
 Qed.
 
 (* begin snippet g2hEqIff:: no-out *)
-Lemma g2h_eqE (a b: T1) :  g2h a = g2h b <-> a = b.
+Lemma g2h_eqE (a b: T1): g2h a = g2h b <-> a = b.
 (* end snippet g2hEqIff *)
 Proof. 
     split; [ | by move => ->].
@@ -74,7 +74,7 @@ Proof.
 Qed.
 
 (* begin snippet h2gEqIff:: no-out *)
-Lemma h2g_eqE (a b :hT1) :  h2g a = h2g b <-> a = b.
+Lemma h2g_eqE (a b :hT1): h2g a = h2g b <-> a = b.
 (* end snippet h2gEqIff *)
 Proof. 
   split; [| by move => ->].
@@ -231,6 +231,25 @@ Proof.
   all:  move: (IHx1 y1); by rewrite H => ->. 
 Qed.
 
+(* begin snippet decideHLtRw:: no-out *)
+Lemma decide_hlt_rw (a b : hT1):
+  bool_decide (T1.lt a b) = (h2g a < h2g b).
+(* end snippet decideHLtRw *)
+Proof.
+  rewrite /Epsilon0.T1.lt; generalize (compare_ref a b);
+    rewrite /Comparable.compare /=.
+  destruct (decide (Epsilon0.T1.compare_T1 a b = Datatypes.Lt)).
+  - have bd := e ; apply (bool_decide_eq_true _) in bd.
+    by rewrite bd e.
+  - have bd := n; apply (bool_decide_eq_false _) in bd.
+    rewrite bd.
+    destruct (Epsilon0.T1.compare_T1 a b) => //.
+    * by move => ->; rewrite T1ltnn.
+    * move => Hlt; symmetry;  apply/negP => Hlt'.
+      have H1 : (h2g b < h2g b) by apply T1lt_trans with (h2g a).
+      move: H1; by rewrite T1ltnn.
+Qed.
+
 (* begin snippet ltRef:: no-out *)
 Lemma lt_ref : refinesRel T1.lt T1lt.
 (* end snippet ltRef *)
@@ -264,33 +283,17 @@ Proof.
     +  move: H => /eqP; by rewrite h2g_eqE => ->; right. 
 Qed. 
 
-(* begin snippet decideHLtRw:: no-out *)
-Lemma decide_hlt_rw (a b : hT1):
-  bool_decide (T1.lt a b) = (h2g a < h2g b).
-(* end snippet decideHLtRw *)
-Proof.
-  rewrite /Epsilon0.T1.lt; generalize (compare_ref a b);
-    rewrite /Comparable.compare /=.
-  destruct (decide (Epsilon0.T1.compare_T1 a b = Datatypes.Lt)).
-  - have bd := e ; apply (bool_decide_eq_true _) in bd.
-    by rewrite bd e.
-  - have bd := n; apply (bool_decide_eq_false _) in bd.
-    rewrite bd.
-    destruct (Epsilon0.T1.compare_T1 a b) => //.
-    * by move => ->; rewrite T1ltnn.
-    * move => Hlt; symmetry;  apply/negP => Hlt'.
-      have H1 : (h2g b < h2g b) by apply T1lt_trans with (h2g a).
-      move: H1; by rewrite T1ltnn.
-Qed.
+
 
 
 (* begin snippet eqRef:: no-out *)
 Lemma eqref : refinesRel eq eq.
-(* end snippet eqRef *)
 Proof.
   move => a b; split; [by move =>  -> | move => Hab].
   apply T1eq_h2g; by rewrite Hab T1eq_refl.
 Qed.
+(* end snippet eqRef *)
+
 
 (** ** Ordinal addition *)
 
@@ -538,11 +541,6 @@ Proof.
 Qed.
 
 (** *  Well formed ordinals as a data type  *)
-
-(* begin snippet E0Def:: no-out *)
-Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
-Coercion cnf: E0 >-> T1.
-
 #[global] Notation hE0 := E0.E0.
 #[global] Notation hcnf := E0.cnf.
 #[global] Notation hE0lt := E0.E0lt.
@@ -554,6 +552,9 @@ Coercion cnf: E0 >-> T1.
 #[global] Notation hE0limit := E0.E0limit.
 #[global] Notation hE0is_succ := E0.E0is_succ.
 
+(* begin snippet E0Def:: no-out *)
+Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
+Coercion cnf: E0 >-> T1.
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 
@@ -841,11 +842,13 @@ Proof.
          move => i; rewrite -LE_ref; apply Halpha. 
 Qed.
 
-(* begin snippet SearchDemo *)
+(* begin snippet SearchDemoa *)
 Search ( _ * ?beta = ?beta)%ca.
+(* end snippet SearchDemoa *)
 
+(* begin snippet SearchDemob *)
 Search ( _ * ?beta = ?beta)%t1.
-(* end snippet SearchDemo *)
+(* end snippet SearchDemob *)
 
 (* begin snippet T1compareDef *)                                
 #[global] Instance  T1compare : Compare T1:=

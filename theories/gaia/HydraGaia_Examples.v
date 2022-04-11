@@ -58,8 +58,17 @@ Search oplus.
 
 Search Hessenberg.oplus T1.lt.
 
+(* begin snippet F42Omega:: no-out *)
+Check T1lt (\F 42) T1omega.
 
+Check (\F 42 < T1omega)%ca.
 
+Check \F 42 < T1omega.
+(* end snippet F42Omega *)
 
-(** Canonical sequences *)
+(* begin snippet F42Omegab:: no-out *)
 
+Check T1.lt (T1.T1nat 42) T1.T1omega.
+
+Check T1.lt (\F 42)%t1 T1.T1omega. 
+(* end snippet F42Omegab *)

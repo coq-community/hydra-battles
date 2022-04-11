@@ -22,7 +22,6 @@ Open Scope t1_scope.
 (** * Definitions *)
 
 (* begin snippet canonDef *)
-
 Fixpoint canon alpha (i:nat) : T1 :=
   match alpha with
     zero => zero

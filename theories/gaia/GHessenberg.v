@@ -34,9 +34,7 @@ Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 
 (* begin snippet oplusEquations:: no-out *)
 Lemma oplus0b:  left_id zero oplus.
-Proof. rewrite /oplus; case => // /=. 
-       move => ? ? ? ;rewrite !h2g_g2hK => //.
-Qed.
+Proof. rewrite /oplus; case => // /= ? ? ?; by rewrite !h2g_g2hK. Qed.
 (* end snippet oplusEquations *)
 
 (* begin snippet oplusEquationsb:: no-out *)
@@ -47,18 +45,18 @@ Proof. rewrite /oplus; case => // /=.
 Qed.
 
 (* begin snippet oplusEquationsc:: no-out *)
-Lemma oplus_eqn a b :
- a o+ b =
-   match a, b with
-     zero, _ => b
-   | _, zero => a
-   | cons a1 n1 b1, cons a2 n2 b2 =>
-       match compare  a1 a2 with
-         Gt => cons a1 n1 (b1 o+ b)
-       | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
-       | Lt => cons a2 n2 (a o+ b2)
-       end
-   end.
+Lemma oplus_eqn (a b :T1) :
+  a o+ b =
+    match a, b with
+      zero, _ => b
+    | _, zero => a
+    | cons a1 n1 b1, cons a2 n2 b2 =>
+        match compare  a1 a2 with
+          Gt => cons a1 n1 (b1 o+ b)
+        | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
+        | Lt => cons a2 n2 (a o+ b2)
+        end
+    end.
 (* end snippet oplusEquationsc *)
 Proof.
   rewrite /oplus oplus_eqn; case: a.
@@ -68,48 +66,49 @@ Proof.
   case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
 
-
-(* begin snippet oplusLemmasa:: no-out  *)
+(* begin snippet oplusNf:: no-out  *)
 Lemma  oplus_nf (alpha  beta : T1) :
   T1nf alpha ->  T1nf beta -> T1nf (alpha o+ beta).
 Proof.
   rewrite /oplus -?nf_ref => Halpha Hbeta; apply oplus_nf ; by rewrite hnf_g2h.
 Qed.
+(* end snippet oplusNf *)
 
+
+(* begin snippet oplusCoplusA:: no-out *)
 Lemma oplusC (alpha beta: T1):
   T1nf alpha -> T1nf beta -> alpha o+ beta =  beta o+ alpha.
 Proof.
-  move => Halpha Hbeta; rewrite /oplus oplus_comm ?hnf_g2h //.
+  move => ? ?; rewrite /oplus oplus_comm ?hnf_g2h //.
 Qed.
 
- Lemma oplusA  (alpha beta gamma:T1) :
-    T1nf alpha -> T1nf beta -> T1nf gamma ->
-    alpha o+ (beta o+ gamma) = alpha o+ beta o+ gamma.
- Proof.
-   move => Halpha Hbeta Hgamma;
-           rewrite /oplus !g2h_h2gK oplus_assoc ?hnf_g2h => //.
- Qed.
-
-
- Lemma oplus_lt1 : forall a b, T1nf a -> T1nf b ->  zero <  a ->
-                               b < b o+  a.
-   (* end snippet oplusLemmasa *)
-  Proof.
-   move => a b Ha Hb Hlt; rewrite /oplus.
-   replace b with (h2g (g2h b)) at 1 ; last first.
-   by (rewrite h2g_g2hK). 
-   rewrite -hlt_iff; apply oplus_lt1 => //; rewrite ?hnf_g2h //.
-   rewrite hlt_iff ?h2g_g2hK => //.
- Qed.
-
-  (* begin snippet oplusLemmasb:: no-out  *)
-  
- Lemma oplus_lt2 : forall a b, T1nf a -> T1nf b ->  zero < b ->
-                               a < b o+ a.
-  (* end snippet oplusLemmasb  *)
+Lemma oplusA  (alpha beta gamma:T1) :
+  T1nf alpha -> T1nf beta -> T1nf gamma ->
+  alpha o+ (beta o+ gamma) = alpha o+ beta o+ gamma.
 Proof.
-  intros a b Ha Hb  HD;  rewrite (oplusC Hb Ha); auto;
-    apply oplus_lt1;auto.
+  move => ? ? ?; rewrite /oplus !g2h_h2gK oplus_assoc ?hnf_g2h => //.
+Qed.
+(* end snippet oplusCoplusA *)
+
+(* begin snippet oplusLemmasa:: no-out  *)
+Lemma oplus_lt1 : forall a b, T1nf a -> T1nf b ->  zero <  a ->
+                              b < b o+  a.
+(* end snippet oplusLemmasa *)
+Proof.
+  move => a b Ha Hb Hlt; rewrite /oplus.
+  replace b with (h2g (g2h b)) at 1 ; last first.
+  by (rewrite h2g_g2hK). 
+  rewrite -hlt_iff; apply oplus_lt1 => //; rewrite ?hnf_g2h //.
+  rewrite hlt_iff ?h2g_g2hK => //.
+Qed.
+
+(* begin snippet oplusLemmasb:: no-out  *)
+
+Lemma oplus_lt2 a b:
+  T1nf a -> T1nf b -> zero < b -> a < b o+ a.
+(* end snippet oplusLemmasb  *)
+Proof.
+  move => Ha Hb  HD;  rewrite (oplusC Hb Ha); by  apply oplus_lt1.
 Qed.
 
 (* begin snippet oplusLemmasc:: no-out  *)

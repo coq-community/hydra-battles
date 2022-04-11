@@ -34,7 +34,7 @@ The bridge we aim to build and cross is a two-way bridge:
   We plan to make accessible the first kind of lemmas to \HydrasLib' users and the second kind to \gaia's. For this purpose, we write modules dedicated to the importation of definitions and lemmas from each of both libraries into the other one.
   Please note that by ``import'' we do not mean ``duplicate''
   nor ``repairing'' \HydrasLib' proofs.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. In a future version, it would be nice to have our proofs in the same context, after porting \HydrasLib' proofs under \gaia's
-  definition, following  proof repair  techniques~\cite{ringer2021}.
+  definition, following  proof re-use or repair  techniques~\cite{Barthe2001, Magaud03a, ringer2021}.
 
 
 
@@ -51,7 +51,7 @@ The \gaiaHydras library is designed for users of
 The modules are named {\texttt{theories/gaia/*.v}} and coqdocumented in \linebreak {\texttt{theories/html/gaia\_hydras.*.html}}
 The main entry point is
 \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}, which requires both Gaia's \texttt{ssete9} and a few modules of \texttt{theories/ordinals/Epsilon0}.
-Other modules are dedicated to the adaptation of several notions of \HydrasLib to \mathcomp's and \gaia's vocabulary and structures.
+Other modules are dedicated to the adaptation of several notions developped in \HydrasLib to \mathcomp's and \gaia's vocabulary and structures.
 By default, we give priority to \gaia's notation and vocabulary.
 
 
@@ -60,8 +60,10 @@ By default, we give priority to \gaia's notation and vocabulary.
 \texttt{T1Bridge} starts with a few requirements.
 \inputsnippets{T1Bridge/Requirements}
 
-Because of the common origin of \HydrasLib and \gaia, both libraries share the common name \texttt{T1} (data type of ordinal terms below $\epsilon_0$). As mentionned before, the bare name \texttt{T1} is given by priority to \gaia, and we prefix this name with an \texttt{h} (for ``hydras'') to refer to
-\href{../theories/html/Epsilon0.T1.html}{hydras.Epsilon0.T1.T1}.
+Because of the common origin of \HydrasLib and \gaia, both libraries share the common name \texttt{T1} (data type of ordinal terms below $\epsilon_0$). As mentionned before, the bare name \texttt{T1} is given by priority to \gaia.
+\HydrasLib' type \texttt{T1} may be called \texttt{hT1}
+(\texttt{h} for ``hydras'') or simply \texttt{T1.T1}, \texttt{Epsilon0.T1.T1}, etc.
+
 
 \inputsnippets{T1Bridge/hT1gT1}
 
@@ -69,12 +71,22 @@ Many constants are common to \HydrasLib and \gaia. For instance, the name \textt
 \texttt{gaia.ssete9.CantorOrdinal.zero}  and
 \HydrasLib' \texttt{hydras.Epsilon0.T1.zero}. By default, the former will be simply called \texttt{zero} and the latter \texttt{T1.zero}.
 
-There are a few exceptions to this convention.
+The following notations are not defined in \gaia; we add them to \texttt{T1Bridge} for simplicity's sake.
 
 \inputsnippets{T1Bridge/MoreNotations}
 
-Please keep in mind that, in this module, we favour \gaia's notations over hydra's. A snippet like \texttt{(alpha < succ beta)} should be interpreted as \texttt{(T1lt alpha beta)}, where \texttt{T1lt} is defined in ~\href{https://github.com/coq-community/gaia/blob/master/theories/ssete9.v}{\texttt{gaia.ssete9.v}}.
 
+\begin{remark}
+Please keep in mind that, in this module, we favour \gaia's notations over hydra's.
+For instance, the mathematical inequality $42<\omega$ is 
+expressed in \gaia's terms as follows:
+
+\inputsnippets{HydraGaia_Examples/F42Omega}
+
+The same inequality, with \HydrasLib vocabulary:
+
+\inputsnippets{HydraGaia_Examples/F42Omegab}
+\end{remark}
 
 \subsection{Translation functions and data refinement}
 
@@ -83,8 +95,18 @@ The bridge between both libraries is made of two straightforward bijections.
 \inputsnippets{T1Bridge/h2gG2hDef}
 \inputsnippets{HydraGaia_Examples/ExamplesG2H}
 
+
+The following cancel lemmas will be often applied in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}), which appear in many proofs by rewriting.
+
+\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
+
+\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
+
+
 \subsubsection{Pretty printing Cantor normal forms}
 \label{sect:gaia-ppT1}
+
+
 
 The following function provides us with a more readable  printing of Cantor normal forms (please see Sect.~\vref{sect:ppT1}).
 
@@ -92,13 +114,6 @@ The following function provides us with a more readable  printing of Cantor norm
 
 \inputsnippets{HydraGaia_Examples/T1pp}
 
-\subsubsection{Cancel lemmas}
-
-The following cancel lemmas will be often applied in order to simplify sub-terms of the form (\texttt{g2h (h2g {\it t})}) and (\texttt{h2g (g2h {\it t})}), which appear in many proofs by rewriting.
-
-\inputsnippets{T1Bridge/h2gG2hRw, T1Bridge/g2hH2gRw}
-
-\inputsnippets{T1Bridge/h2gEqIff, T1Bridge/g2hEqIff}
 
 
 \subsubsection{Refinements: Definitions}
@@ -142,15 +157,18 @@ compatible:
 
 
 \inputsnippets{T1Bridge/eqRef}
+Note that \HydrasLib' comparison on ordinal terms uses a
+\stdpp-like trichotomy, hence the first two lemmas below:
 
 \label{sect:gaia-compare-ref}
 \inputsnippets{T1Bridge/compareRef}
-
+\inputsnippets{T1Bridge/decideHLtRw}
 \inputsnippets{T1Bridge/ltRef, T1Bridge/leRef}
 
-\inputsnippets{T1Bridge/decideHLtRw}
+
 
 \subsubsection{More rewriting lemmas}
+
 
 \inputsnippets{T1Bridge/T1ltIff}
 \inputsnippets{T1Bridge/T1leIff}
@@ -185,39 +203,12 @@ compatible.
 For instance, let us look for lemmas whose conclusion is
 $\alpha \times \beta=\beta$.
 
-\inputsnippets{T1Bridge/SearchDemo}
+The following command lists us `gaia's lemmas (thanks to
+\gaia's  \texttt{cantor\_scope}.
+\inputsnippets{T1Bridge/SearchDemoa}
 
-
-\subsection{A type for well-formed ordinal terms}
-\label{sect:E0-gaia-hydras}
-For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
-
-\inputsnippets{T1Bridge/E0Def}
-\inputsnippets{T1Bridge/E0plusMultDef}
-
-In order to import definitions and lemmas
-from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
-
-\inputsnippets{T1Bridge/gE0h2gG2h}
-
-These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundedness.
-
-\inputsnippets{T1Bridge/gE0LtWf}
-
-\section{E0 as an ordinal notation}
-The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
-(see Chapter~\ref{chap:ON}).
-
-\inputsnippets{T1Bridge/T1compareDef}
-\inputsnippets{ T1Bridge/T1compareCorrect}
-\inputsnippets{T1Bridge/E0compare}
-\inputsnippets{T1Bridge/E0Sto}
-\inputsnippets{T1Bridge/gEpsilon0}
-
-\inputsnippets{T1Bridge/ExampleComp}
-
-
-
+With \texttt{t1\_scope}:
+\inputsnippets{T1Bridge/SearchDemob}
 
 
 \section{Importing Definitions and theorems from \HydrasLib}
@@ -240,19 +231,15 @@ thus \texttt{hydras.Epsilon0.Foo.bar}.
   \texttt{hbar} is used for \texttt{hydras.Epsilon0.Foo.bar}.
 \end{enumerate}
 
- 
-
-
 \subsection{Hessenberg sum}
 
 Natural sum  (a.k.a. Hessenberg's  sum) is defined in
 \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} and is used for proving termination of all hydra battles (See Sect.~\ref{sect:hessenberg-def}).
 
-We define this function by delegation to \HydrasLib'.
+We define this function in \href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg} by delegation to \HydrasLib'.
+
 \vspace{4pt} 
 \noindent.
-
-From\href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg}
 
 \inputsnippets{GHessenberg/oplusDef}
 
@@ -263,18 +250,16 @@ By simple rewriting, we import the following lemmas.
 \inputsnippets{GHessenberg/oplusEquationsb}
 \inputsnippets{GHessenberg/oplusEquationsc}
 
+\inputsnippets{GHessenberg/oplusNf}
+
 Hessenberg sum is associative, commutative and strictly monotonous (on ordinal terms in normal form).
 
+\inputsnippets{GHessenberg/oplusCoplusA}
 \inputsnippets{GHessenberg/oplusLemmasa}
 \inputsnippets{GHessenberg/oplusLemmasb}
 \inputsnippets{GHessenberg/oplusLemmasc}
 \inputsnippets{GHessenberg/oplusLemmasd}
 \inputsnippets{GHessenberg/oplusLemmase}
-
-
-
-
-
 
 \subsection{Canonical sequences}
 \label{sect:gcanon}
@@ -336,11 +321,14 @@ The library \href{../theories/html/gaia_hydras.GPaths.html}%
 {\texttt{hydras.Epsilon0.Paths}} (described in Sect.~\ref{sect:pathes-intro}).
 
 
-\subsubsection{Transitions}
-  
+\subsubsection{Transitions and paths}
+Let us consider a kind of transition system, the states of which are ordinals below $\epsilon_0$. The elementary transitions (``small steps'') are jumps from an ordinal $\alpha$ to $\canonseq{\alpha}{i}$, for some $i\not=0$.
+
 \inputsnippets{GPaths/importationsa}
 
-\subsubsection{Paths}
+Paths (sequences of transitions) are defined by delegation to
+\href{../theories/html/hydras.Epsilon0.Paths.html}%
+{\texttt{hydras.Epsilon0.Paths}}.
 
 \inputsnippets{GPaths/pathsDefs}
 
@@ -353,7 +341,8 @@ $\beta<\alpha$.
 \inputsnippets{GPaths/LTPathTo}
 
 Constant index paths can be simulated with constant paths with larger index.
-
+ 
+\inputsnippets{GPaths/KSThm24}
 \inputsnippets{GPaths/Cor12}
 
 
@@ -369,6 +358,50 @@ Any constant-index path can be simulated by a ``standard'' path (with index incr
 As a corollary, we relate ordinal inequality to standard paths.
 
 \inputsnippets{GPaths/LTToStandard}
+
+
+
+
+\section{Rapidly growing arithmetic functions}
+In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$. In \HydrasLib, these functions are defined by transfinite induction, using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}. For that purpose, we defined a sigma-type
+\texttt{hydras.Epsilon0.E0.E0} of ordinal-terms in Cantor normal form. 
+
+These families share some monotony properties, also re-defined in
+\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}:
+
+\inputsnippets{T1Bridge/MonoDef}
+\subsection{A type for well-formed ordinal terms}
+\label{sect:E0-gaia-hydras}
+For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+
+\inputsnippets{T1Bridge/E0Def}
+\inputsnippets{T1Bridge/E0plusMultDef}
+
+In order to import definitions and lemmas
+from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
+
+\inputsnippets{T1Bridge/gE0h2gG2h}
+
+These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundedness.
+
+\inputsnippets{T1Bridge/gE0LtWf}
+
+\subsection{E0 as an ordinal notation}
+The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
+(see Chapter~\ref{chap:ON}).
+
+\inputsnippets{T1Bridge/T1compareDef}
+\inputsnippets{ T1Bridge/T1compareCorrect}
+\inputsnippets{T1Bridge/E0compare}
+\inputsnippets{T1Bridge/E0Sto}
+\inputsnippets{T1Bridge/gEpsilon0}
+
+\inputsnippets{T1Bridge/ExampleComp}
+
+
+
+
+
 
 \subsection{A family of rapidly growing functions
 (Library \texttt{GF\_alpha})}
@@ -393,10 +426,7 @@ From~\href{../theories/html/gaia_hydras.G~F_alpha.html}%
 
 
 
-The following definitions adapt \HydrasLib' to \ssreflect's 
-definitions of $<$ and $\leq$ on \texttt{nat}.
 
-\inputsnippets{T1Bridge/MonoDef}
 
 By rewriting, we import a few lemmas from
 ~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}.
