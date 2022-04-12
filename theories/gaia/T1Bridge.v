@@ -555,27 +555,49 @@ Qed.
 (* begin snippet E0Def:: no-out *)
 Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 Coercion cnf: E0 >-> T1.
+(* end snippet E0Def *)
+
+Definition E0eqb (alpha beta: E0):= cnf alpha == cnf beta.
+
+Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
+Proof.
+  destruct alpha, beta; cbn. 
+  move => H; subst => //; f_equal; apply eq_proofs_unicity_on; decide equality. 
+Qed.
+
+(* begin snippet E0EqMixin:: no-out  *)
+Definition E0_eq_mixin :  Equality.mixin_of E0.
+(* end snippet E0EqMixin *)
+Proof. 
+exists E0eqb; move  => [x Hx] [y Hy] => /=. 
+case E: (T1eq x y); cbn; rewrite E. 
+-  left; apply: gE0_eq_intro; by apply /eqP. 
+- right => H; injection H => /eqP; by rewrite /eq_op /= E. 
+Defined. 
+
+(* begin snippet E0Eqtype *)
+Definition E0_eqtype :=  Equality.Pack E0_eq_mixin.
+Canonical Structure E0_eqtype. 
+(* end snippet E0Eqtype *)
+
+(* begin snippet E0Defb:: no-out *)
 
 Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 
 Definition E0lt (alpha beta: E0) := cnf alpha < cnf beta.
 Definition E0le  (alpha beta: E0) := cnf alpha <= cnf beta.
 
-Definition E0eqb (alpha beta: E0):= cnf alpha == cnf beta.
-
-
 Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
 
 Definition E0succ (alpha: E0): E0.
-  refine (@mkE0 (T1succ (cnf alpha)) _); rewrite nf_succ => //.
-  destruct alpha. cbn. move: i => /eqP //.
+  refine (@mkE0 (T1succ (cnf alpha)) _).
+  rewrite nf_succ => //; case: alpha => ? i //=; by apply /eqP. 
 Defined.
 
 
 Definition E0pred (alpha:E0) : E0.
-  refine (@mkE0 (T1pred (cnf alpha)) _). case: alpha.
-  move => cnf0 i.  rewrite nf_pred  => //= .
-  move :i => /eqP //.
+  refine (@mkE0 (T1pred (cnf alpha)) _).
+  case: alpha => ? ?; rewrite nf_pred  => //= ; by apply /eqP.
 Defined. 
 
 
@@ -588,10 +610,10 @@ Proof. refine (@mkE0 T1omega _) => //. Defined.
 Definition E0phi0 (alpha: E0) : E0.
 Proof.
   refine (@mkE0 (phi0 (cnf alpha)) _).
-  case : alpha => a  Ha. apply /eqP => //=. 
-    rewrite Bool.andb_true_r; by apply /eqP.  
+  case : alpha => ? ?; apply /eqP => //=. 
+  rewrite Bool.andb_true_r; by apply /eqP.  
 Defined.
-(* end snippet E0Def *)
+(* end snippet E0Defb *)
 
 (* begin snippet E0plusMultDef:: no-out *)
 Definition E0plus (alpha beta: E0) : E0.
@@ -609,26 +631,6 @@ Definition E0mul (alpha beta: E0) : E0.
   case :alpha; cbn => t Ht; apply /eqP => //.
   case :beta; cbn => t Ht; apply /eqP => //.
 Defined.
-
-
-
-Lemma gE0_eq_intro alpha beta : cnf alpha = cnf beta -> alpha = beta. 
-Proof.
-  destruct alpha, beta; cbn. 
-  move => H; subst => //; f_equal; apply eq_proofs_unicity_on; decide equality. 
-Qed.
-
-Definition E0_eq_mixin :  Equality.mixin_of E0.
-Proof. 
-exists E0eqb; move  => [x Hx] [y Hy] => /=. 
-case E: (T1eq x y); cbn; rewrite E. 
--  left; apply: gE0_eq_intro; by apply /eqP. 
-- right => H; injection H => /eqP; by rewrite /eq_op /= E. 
-Defined. 
-
-Definition E0_eqtype :=  Equality.Pack E0_eq_mixin.
-Canonical Structure E0_eqtype. 
-
 
 
 Lemma E0fin_cnf (n:nat) : cnf (E0fin n) = \F n.
@@ -793,8 +795,7 @@ From Coq Require Import Relations Basics
 (* begin snippet gE0LtWf:: no-out *)
 Lemma gE0lt_wf : well_founded E0lt.
 Proof.
-  move => x; apply Acc_incl
-            with (fun x y =>  hE0lt (E0_g2h x) (E0_g2h y)).
+  move => ?; apply Acc_incl with (fun x y =>  hE0lt (E0_g2h x) (E0_g2h y)).
   (* ... *)
   (* end snippet gE0LtWf *)
   - move => a b ; rewrite /E0lt => Hab. 

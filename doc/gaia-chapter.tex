@@ -227,30 +227,29 @@ thus \texttt{hydras.Epsilon0.Foo.bar}.
 \item We create a module \texttt{gaia\_hydras.GFoo}
   (``G'' for \gaia).
 \item Inside \texttt{GFoo}, the identifier \texttt{bar}
-  is reserved in priority to \gaia's version, and the notation
-  \texttt{hbar} is used for \texttt{hydras.Epsilon0.Foo.bar}.
+  is reserved in priority to \gaia's version.
+\HydrasLib' constructions are available through qualified names, like \texttt{Epsilon0.Foo.bar}, \texttt{Foo.bar}, or even a short notation like \texttt{hbar}  (``h'' for \HydrasLib).
 \end{enumerate}
 
 \subsection{Hessenberg sum}
 
 Natural sum  (a.k.a. Hessenberg's  sum) is defined in
 \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} and is used for proving termination of all hydra battles (See Sect.~\ref{sect:hessenberg-def}).
-
 We define this function in \href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg} by delegation to \HydrasLib'.
 
 \vspace{4pt} 
-\noindent.
+\noindent
 
 \inputsnippets{GHessenberg/oplusDef}
 
 By simple rewriting, we import the following lemmas.
 
-
+\inputsnippets{GHessenberg/oplusNf}
 \inputsnippets{GHessenberg/oplusEquations}
 \inputsnippets{GHessenberg/oplusEquationsb}
 \inputsnippets{GHessenberg/oplusEquationsc}
 
-\inputsnippets{GHessenberg/oplusNf}
+
 
 Hessenberg sum is associative, commutative and strictly monotonous (on ordinal terms in normal form).
 
@@ -270,14 +269,11 @@ Module~\href{../theories/html/gaia_hydras.GCanon.html}%
 {\texttt{gaia\_hydras.GCanon}}, imports definitions and results from that library.
 
 
-
-First, we rename \HydrasLib' \texttt{canon} function into
-\texttt{hcanon}. Then we define a new function \emph{via} the
+Like for Hessenberg's sum, we define a function \texttt{canon}
+\emph{via} the
 translations \texttt{g2h} and \texttt{h2g}.
 
 \inputsnippets{GCanon/canonDef}
-
-
 \inputsnippets{GCanon/g2hCanonRw}
 
 The following lemmas are proved by rewriting from corresponding statements proved in \HydrasLib. The first six lemmas correspond to rewriting rules derived from the body of the definition of \texttt{Epsilon0.Canon.canon}.
@@ -292,23 +288,22 @@ The following lemmas are proved by rewriting from corresponding statements prove
 \inputsnippets{GCanon/gcanonLim2}
 \inputsnippets{GCanon/gcanonLim3}
 
-
+\subsubsection{Canonical sequences and the order \texttt{T1lt}}
 
 \inputsnippets{GCanon/gcanonLt}
 \inputsnippets{GCanon/gcanonLimitMono}
-\inputsnippets{GCanon/glimitCanonSNotZero}
-
+%\inputsnippets{GCanon/glimitCanonSNotZero}
 \subsubsection{Canonical sequences and limits}
 
+The following lemma (borrowed from\href{../theories/html/hydras.Epsilon0.Canon.html}%
+{\texttt{hydras.Epsilon0.Canon}}) links limit ordinals to canonical sequences.
+
+\inputsnippets{GCanon/gcanonLimitStrong}
 
 Let us recall \gaia's definition of $\omega$-limit.
 
 \inputsnippets{nfwfgaia/LimitV2Def, nfwfgaia/LimitOFDef}
 
-We adapt theorems from \href{../theories/html/hydras.Epsilon0.Canon.html}%
-{\texttt{hydras.Epsilon0.Canon}} to \gaia's vocabulary.
-
-\inputsnippets{GCanon/gcanonLimitStrong}
 \inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitOf}
 
@@ -331,6 +326,10 @@ Paths (sequences of transitions) are defined by delegation to
 {\texttt{hydras.Epsilon0.Paths}}.
 
 \inputsnippets{GPaths/pathsDefs}
+
+ Paths with constant index and paths whose index is incremented by 1 at each step play an important role in the so-called Ketonen-Solovay machinery~\cite{KP81}.
+
+ \inputsnippets{GPaths/pathsDefsb}
 
 \subsubsection{Main theorems about paths}
 
@@ -363,19 +362,39 @@ As a corollary, we relate ordinal inequality to standard paths.
 
 
 \section{Rapidly growing arithmetic functions}
-In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$. In \HydrasLib, these functions are defined by transfinite induction, using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}. For that purpose, we defined a sigma-type
-\texttt{hydras.Epsilon0.E0.E0} of ordinal-terms in Cantor normal form. 
+In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$.
+The type of such families is \texttt{E0 -> nat -> nat} where
+\texttt{E0} is the type of ordinal terms in Cantor normal form, strictly below $\epsilon_0$.
+In order to compare such functions, we define a few abstract properties in
+\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} (adapted from 
+\href{../theories/html/hydras.Prelude.Iterates.html}{hydras.Prelude.Iterates}).
 
-These families share some monotony properties, also re-defined in
-\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}:
 
 \inputsnippets{T1Bridge/MonoDef}
+
+
+
+
+
+
+
+In \HydrasLib, these functions are defined by transfinite induction, using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}. For that purpose, we defined a sigma-type
+\texttt{hydras.Epsilon0.E0.E0} of ordinal-terms in Cantor normal form. 
+
+
 \subsection{A type for well-formed ordinal terms}
 \label{sect:E0-gaia-hydras}
 For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
 
 \inputsnippets{T1Bridge/E0Def}
+\inputsnippets{T1Bridge/E0EqMixin, T1Bridge/E0EqType}
+
+Many functions on type \texttt{T1} are ``lifted'' to \texttt{E0}.
+
+
+\inputsnippets{T1Bridge/E0Defb}
 \inputsnippets{T1Bridge/E0plusMultDef}
+\inputsnippets{GCanon/E0CanonDef, GCanon/E0CanonLt}
 
 In order to import definitions and lemmas
 from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
@@ -386,7 +405,8 @@ These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundednes
 
 \inputsnippets{T1Bridge/gE0LtWf}
 
-\subsection{E0 as an ordinal notation}
+
+\subsubsection{E0 as an ordinal notation}
 The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
 (see Chapter~\ref{chap:ON}).
 
@@ -399,33 +419,49 @@ The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Brid
 \inputsnippets{T1Bridge/ExampleComp}
 
 
+\subsection{The \texorpdfstring{$H'_\alpha$}{H'\_alpha} family}
 
+This variant of the Hardy hierarchy is described in Sect.~\vref{sect:hardy}, and adapted to \gaia in
+Module \href{../theories/html/gaia_hydras.GHprime.html}{gaia\_hydras.GHprime}.
 
+\inputsnippets{GHprime/Requirements, GHprime/Hprimedef}
 
+Here is a list of lemmas proved by rewriting from \HydrasLib version ( ~\href{../theories/html/hydras.Epsilon0.Hprime.html}{Epsilon0.Hprime} ).
 
-\subsection{A family of rapidly growing functions
-(Library \texttt{GF\_alpha})}
+\subsubsection{Equations for $H'$}
+In \HydrasLib', $H'_\alpha(i)$  is defined by transfinite induction over $\alpha$, using \texttt{coq-equations}. In the present module, equations for $H'$ are just imported as lemmas.
 
-The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. The symbol \texttt{F\_} has type \texttt{E0 -> nat -> nat},
-where \texttt{E0} is the type of well formed ordinal terms less than $\epsilon_0$.
+\inputsnippets{GHprime/HprimeEquations}
 
-\subsubsection{Importing the \texttt{F\_alpha} family}
+\subsubsection{Examples}
 
-We are now able to import \HydrasLib' $F_\alpha$ functions.
+\inputsnippets{GHprime/Examples}
+\inputsnippets{GHprime/Examplesb}
 
-From~\href{../theories/html/gaia_hydras.G~F_alpha.html}%
+\subsubsection{Order and monotony properties}
+
+\inputsnippets{GHprime/abstract}
+\inputsnippets{GHprime/abstractb}
+\inputsnippets{GHprime/abstractc}
+
+\subsection{The \texorpdfstring{$F_\alpha$}{\texttt{F\_alpha}} hierarchy (Library \texttt{GF\_alpha})}
+
+The functions $F_\alpha$ are described in Section~\vref{sect:wainer}. 
+
+%\subsubsection{Importing the \texttt{F\_alpha} family}
+
+From~\href{../theories/html/gaia_hydras.GF_alpha.html}%
 {\texttt{gaia\_hydras.GF\_alpha}}.
 
 \inputsnippets{GF_alpha/FAlphaDef}
 
-\begin{todo}
-  Give equations for \texttt{F\_} (corresponding to the equation
-  in \HydrasLib).
-\end{todo}
+The following equalities correspond to the equations of
+~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{Epsilon0.F\_alpha}
 
-
-
-
+\inputsnippets{GF_alpha/FZeroEqn}
+\inputsnippets{GF_alpha/FAlphaZeroEqn}
+\inputsnippets{GF_alpha/FSuccEqn}
+\inputsnippets{GF_alpha/FLimEqn}
 
 
 By rewriting, we import a few lemmas from
@@ -435,10 +471,18 @@ By rewriting, we import a few lemmas from
 
 \inputsnippets{GF_alpha/FAlphaProps}
 
+The $F_\alpha$ and $H'_\alpha$  hierarchies satisfy the inequality
+$F_\alpha(n)\leq H'_{\omega^\alpha}(n)$ for any $\alpha$ and $n>0$.
+
+\inputsnippets{GF_alpha/HprimeF}
+
 With the same technique, we prove that if
 $\alpha\geq\omega$, then $F_\alpha$ is not primitive recursive.
 
 \inputsnippets{GF_alpha/FAlphaNotPR}
+
+
+
 
 % \section{Already ported definitions and lemmas}
 

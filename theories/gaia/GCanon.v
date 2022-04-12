@@ -8,7 +8,6 @@ Require Import T1Bridge.
 From hydras Require Import T1.
 
 
-
 From gaia Require Import ssete9.
 Import CantorOrdinal. 
 
@@ -20,10 +19,9 @@ Import CantorOrdinal.
 
 
 (* begin snippet canonDef *)
-#[global] Notation hcanon := canon. 
+#[global] Notation hcanon := Epsilon0.Canon.canon. 
 
-Definition canon (a: T1) (i:nat) : T1 :=
-  h2g (hcanon (g2h a) i).
+Definition canon (a: T1) (i:nat) : T1 :=  h2g (hcanon (g2h a) i).
 (* end snippet canonDef *)
 
 Notation canonS a  := (fun i =>  canon a (S i)).
@@ -215,7 +213,7 @@ Qed.
 Lemma canon_limit_strong lambda :
   T1nf lambda -> T1limit lambda ->
   forall beta, T1nf beta ->
-               T1lt beta  lambda -> {i : nat | T1lt beta (canon lambda i)}.
+               T1lt beta  lambda -> {i : nat | beta < canon lambda i}.
 (* end snippet gcanonLimitStrong *)
 Proof.
   rewrite -(h2g_g2hK lambda)  -nf_ref
@@ -277,14 +275,21 @@ Proof.
 
  (** *  Adaptation of [canon] to type E0 *)
 
- Definition E0Canon (alpha: E0) (i: nat): E0.
-   refine (@mkE0 (canon (cnf alpha) i)  _);
+ (* begin snippet E0CanonDef:: no-out *)
+Definition E0Canon (alpha: E0) (i: nat): E0.
+Proof.
+  refine (@mkE0 (canon (cnf alpha) i)  _).
+  (* ... *)
+(* end snippet E0CanonDef:: no-out *)
      case: alpha => cnf i0;  rewrite T1nf_canon =>  //; 
        by apply /eqP. 
 Defined.
 
- Lemma E0_canon_lt (alpha: E0) i:
-   cnf alpha <> zero -> E0lt (E0Canon alpha i) alpha.
+(* begin snippet E0CanonLt:: no-out *)
+Lemma E0_canon_lt (alpha: E0) i:
+  cnf alpha <> zero -> E0lt (E0Canon alpha i) alpha.
+(* ... *)
+(* end snippet E0CanonLt:: no-out *)
  Proof. 
    move: i; case : alpha => cnf Heq i Hpos; rewrite /E0Canon /E0lt => /=. 
    pattern cnf at 2; rewrite -(h2g_g2hK cnf) -hlt_iff h2g_g2hK;

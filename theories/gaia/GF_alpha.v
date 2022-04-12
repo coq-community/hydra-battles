@@ -28,7 +28,7 @@ Unset Strict Implicit.
 
 Notation hF_ := F_alpha.F_.
 
-Definition F_ (alpha : E0)  := hF_ (E0_g2h alpha).
+Definition F_ (alpha : E0)  := F_alpha.F_ (E0_g2h alpha).
 (* end snippet FAlphaDef *)
 
 Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat.
@@ -67,13 +67,15 @@ Proof.
   rewrite /fun_le /F_ g2h_E0succ => n;  apply /leP; apply F_alpha_Succ_le. 
 Qed. 
 
-Lemma F_alpha_positive (alpha : hE0) (n : nat): (0 < hF_ alpha n)%N.
+Lemma F_alpha_positive (alpha : hE0) (n : nat): (0 < F_alpha.F_ alpha n)%N.
 Proof.
   rewrite /F_. apply /ltP ; apply Lt.le_lt_trans with n;
     [auto with arith| apply F_alpha.F_alpha_gt].
 Qed.
 
-Lemma F_zero_eqn i: F_ E0zero i = i .+1.
+(* begin snippet FZeroEqn:: no-out *)
+Lemma F_zero_eqn i: F_ E0zero i = i.+1.
+(* end snippet FZeroEqn *)
 Proof.
   rewrite /F_; replace (E0_g2h E0zero) with E0.E0zero.
   -  by rewrite F_zero_eqn. 
@@ -91,20 +93,26 @@ Proof.
   apply /ltP; apply : Hx; by apply /leP. 
 Qed.
 
+(* begin snippet FAlphaZeroEqn:: no-out *)
 Lemma F_alpha_0_eq (alpha : E0): F_ alpha 0 = 1.
+(* end snippet FAlphaZeroEqn *)
 Proof. by  rewrite /F_ F_alpha_0_eq. Qed.
 
+(* begin snippet FSuccEqn:: no-out *)
 Lemma F_succ_eqn alpha i :
   F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
+(* end snippet FSuccEqn *)
 Proof.
-  rewrite (Iterates.iterate_ext _  (hF_ (E0_g2h alpha))); last first.
+  rewrite (Iterates.iterate_ext _  (F_alpha.F_ (E0_g2h alpha))); last first.
   by rewrite /F_. 
   rewrite -F_succ_eqn /F_; f_equal;
     apply E0_eq_intro => /= ;  by rewrite g2h_succ. 
 Qed.
 
+(* begin snippet FLimEqn:: no-out *)
 Lemma F_lim_eqn alpha i:
   T1limit (cnf alpha) -> F_ alpha i = F_ (E0Canon alpha i) i.
+(* end snippet FLimEqn *)
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
@@ -116,21 +124,21 @@ Qed.
 
 Lemma LF1 i: F_ (E0fin 1) i = ((2 * i) .+1)%N.
 Proof. 
-  replace (F_ (E0fin 1) i) with (hF_ (hE0fin 1) i). 
+  replace (F_ (E0fin 1) i) with (F_alpha.F_ (hE0fin 1) i). 
   - rewrite LF1 => //.
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed.
 
 Lemma LF2 i:  (Exp2.exp2 i * i < F_ (E0fin 2) i)%N.
 Proof. 
-  apply /ltP; replace (F_ (E0fin 2) i) with (hF_ (hE0fin 2) i). 
+  apply /ltP; replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
   - apply LF2. 
   - rewrite /F_; f_equal;  by apply E0_eq_intro .
 Qed.
 
 Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0fin 2) i)%N.
 Proof. 
-  move => Hi; apply /ltP; replace (F_ (E0fin 2) i) with (hF_ (hE0fin 2) i). 
+  move => Hi; apply /ltP; replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
   - apply LF2'; by apply /leP. 
   - rewrite /F_; f_equal; by apply E0_eq_intro .
 Qed. 
@@ -154,8 +162,9 @@ Proof.
   rewrite /Canon_plus /F_. move => HCanon; apply /leP. 
   by apply F_restricted_mono_l.    
 Qed. 
-
+(* begin snippet HprimeF:: no-out *)
 Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
+(* end snippet HprimeF *)
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
  replace (E0_g2h (E0phi0 alpha)) with (hE0phi0 (E0_g2h alpha)). 
@@ -166,15 +175,16 @@ Qed.
 (* begin snippet FAlphaNotPR:: no-out *)
 Lemma F_alpha_not_PR_E0  alpha:
   E0le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
+(* end snippet FAlphaNotPR *)
 Proof. 
-  move => Halpha HPR;  have H0: isPR 1 (hF_ (E0_g2h alpha)).
+  move => Halpha HPR;  have H0: isPR 1 (F_alpha.F_ (E0_g2h alpha)).
   eapply isPR_extEqual_trans with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
   replace E0.E0omega with (E0_g2h E0omega); last first.
   - by apply E0_eq_intro. 
   - by rewrite -gE0le_iff. 
 Qed.
-(* end snippet FAlphaNotPR *)
+
 
 Lemma F_alpha_not_PR alpha (Hnf: T1nf alpha == true):
   LE T1omega alpha -> isPR 1 (@T1F_ alpha Hnf) -> False.

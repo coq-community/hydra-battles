@@ -36,7 +36,6 @@ Definition bounded_transitionS n (alpha beta: T1) :=
 #[global] Notation hpath_to := path_to.
 #[global] Notation hpath := path.
 #[global] Notation hpathS from s to := (path_toS to s from).
-#[global] Notation hKP_arrowS  := KP_arrowS.
 #[global] Notation hconst_pathS  := const_pathS.
 #[global] Notation hconst_path  := const_path.
 #[global] Notation hgnawS := gnawS.
@@ -47,27 +46,25 @@ Definition bounded_transitionS n (alpha beta: T1) :=
 
 (* begin snippet pathsDefs:: no-out *)
 (** [path_to beta s alpha] : [beta] is accessible from [alpha] with trace [s] *)
-
-
-
 Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
   hpath_to (g2h to) s (g2h from).
 
 Notation path from s to := (path_to to s from).
 
 Definition acc_from alpha beta := exists s, path alpha s beta.
+(* end snippet pathsDefs *)
 
-Definition KP_arrowS n := 
-  Relation_Operators.clos_trans_1n T1 (bounded_transitionS n).
+(* begin snippet pathsDefsb:: no-out *)
+Definition const_path i alpha beta :=  hconst_path i (g2h alpha) (g2h beta).
 
-Definition const_path i alpha beta :=
-  hconst_path i (g2h alpha) (g2h beta).
-
-Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
+Definition standard_path i alpha j beta :=
+   Paths.standard_path i (g2h alpha) j (g2h beta).
+(* end snippet pathsDefsb:: no-out *)
 
 Definition standard_gnaw i alpha l := h2g (hstandard_gnaw i (g2h alpha) l).
 
-(* end snippet pathsDefs *)
+
+Definition gnaw alpha s := h2g (hgnaw (g2h alpha) s).
 Definition gnawS alpha s := h2g (hgnawS (g2h alpha) s).
 
 Definition pathS (from: T1)(s: seq nat) (to: T1) : Prop :=
@@ -135,11 +132,6 @@ Proof.
 Qed.
 
 
-Notation hstandard_path i alpha j beta :=
-  (standard_path_to j beta i alpha). 
-
-Definition standard_path i alpha j beta :=
-  hstandard_path i (g2h alpha) j (g2h beta).
 
 Lemma interval_def i j: MoreLists.interval i j = index_iota i (S j).
 Proof.
@@ -198,9 +190,7 @@ Qed.
 
 (* begin snippet Lemma261:: no-out *)
 Lemma Lemma2_6_1 (alpha:T1) :
-T1nf alpha ->
-  forall beta, T1nf beta -> 
-    T1lt beta  alpha  ->
+T1nf alpha -> forall beta, T1nf beta ->  beta < alpha  ->
     {n:nat | const_path n.+1 alpha beta}.
 (* end snippet Lemma261 *)
 Proof.
