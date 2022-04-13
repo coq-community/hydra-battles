@@ -24,11 +24,9 @@ Set Program Cases.
 
 (** *  Rapidly growing functions *)
 
-(* begin snippet FAlphaDef *)
-
-
 Notation hF_ := F_alpha.F_.
 
+(* begin snippet FAlphaDef *)
 Definition F_ (alpha : E0)  := F_alpha.F_ (E0_g2h alpha).
 (* end snippet FAlphaDef *)
 

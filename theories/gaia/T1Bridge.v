@@ -587,16 +587,18 @@ Definition ppE0 (alpha: E0) := T1pp (cnf alpha).
 Definition E0lt (alpha beta: E0) := cnf alpha < cnf beta.
 Definition E0le  (alpha beta: E0) := cnf alpha <= cnf beta.
 
-Definition E0zero: E0. refine (@mkE0 zero _) => //. Defined.
+#[global, program] Definition E0zero: E0 := @mkE0 zero _. 
 
-Definition E0succ (alpha: E0): E0.
-  refine (@mkE0 (T1succ (cnf alpha)) _).
+#[global, program]
+ Definition E0succ (alpha: E0): E0 :=  @mkE0 (T1succ (cnf alpha)) _.
+Next Obligation.
   rewrite nf_succ => //; case: alpha => ? i //=; by apply /eqP. 
 Defined.
 
 
-Definition E0pred (alpha:E0) : E0.
-  refine (@mkE0 (T1pred (cnf alpha)) _).
+#[global, program]
+ Definition E0pred (alpha:E0) : E0:=  @mkE0 (T1pred (cnf alpha)) _.
+Next Obligation. 
   case: alpha => ? ?; rewrite nf_pred  => //= ; by apply /eqP.
 Defined. 
 
@@ -933,17 +935,21 @@ Proof.
      by rewrite /E0lt; cbn; apply T1lt_trans. 
 Qed.
 
-(* begin snippet gEpsilon0:: no-out *)
+(* begin snippet compEpsilon0:: no-out *)
 #[global] Instance E0_comp : Comparable E0lt compare.
 Proof. split; [apply  E0_sto | apply E0compare_correct]. Qed.
-
-#[global] Instance gEpsilon0 : ON E0lt compare.
-Proof. split; [apply: E0_comp | apply: gE0lt_wf]. Qed.
-(* end snippet gEpsilon0:: no-out *)
+(* end snippet compEpsilon0 *)
 
 (* begin snippet ExampleComp *)
 Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
+
+(* begin snippet gEpsilon0:: no-out *)
+#[global] Instance gEpsilon0 : ON E0lt compare.
+Proof. split; [apply: E0_comp | apply: gE0lt_wf]. Qed.
+(* end snippet gEpsilon0:: no-out *)
+
+
 
 (* begin snippet LocateExample *)
 Locate T1omega.

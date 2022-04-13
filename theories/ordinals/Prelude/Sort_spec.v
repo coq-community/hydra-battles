@@ -106,14 +106,13 @@ Qed.
       Proof.
         inversion_clear 1.
         -  constructor.
-        - intro.  refine (LSorted_consn  x   H0 _).
-          + now   transitivity a. 
+        - intro; refine (LSorted_consn  x   H0 _).
+          + now transitivity a. 
       Qed.
 
       
       Lemma LocallySorted_inv_In (Htrans : Transitive R):
-        forall l x, LocallySorted R (x::l) ->
-               forall y, In y l -> R x y. 
+        forall l x, LocallySorted R (x::l) ->  forall y, In y l -> R x y. 
       Proof.
         induction l.
         -  inversion 2.

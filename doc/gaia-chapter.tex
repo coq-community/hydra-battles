@@ -407,16 +407,23 @@ These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundednes
 
 
 \subsubsection{E0 as an ordinal notation}
-The module \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines an instance of class \texttt{ON E0lt compare}
-(see Chapter~\ref{chap:ON}).
+
+The notion of ordinal notation is defined in Chapter~\ref{chap:ON}. In \href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge}, we define an instance of class \texttt{ON E0lt compare}.
+
+First, we define an instance of (\texttt{Compare T1}):
 
 \inputsnippets{T1Bridge/T1compareDef}
 \inputsnippets{ T1Bridge/T1compareCorrect}
+
+Then, we build an instance of (\texttt{ON E0lt compare}).
+
+
 \inputsnippets{T1Bridge/E0compare}
 \inputsnippets{T1Bridge/E0Sto}
+\inputsnippets{T1Bridge/compEpsilon0}
+\inputsnippets{T1Bridge/ExampleComp}
 \inputsnippets{T1Bridge/gEpsilon0}
 
-\inputsnippets{T1Bridge/ExampleComp}
 
 
 \subsection{The \texorpdfstring{$H'_\alpha$}{H'\_alpha} family}
@@ -450,6 +457,9 @@ The functions $F_\alpha$ are described in Section~\vref{sect:wainer}.
 
 %\subsubsection{Importing the \texttt{F\_alpha} family}
 
+\vspace{4pt}
+
+\noindent
 From~\href{../theories/html/gaia_hydras.GF_alpha.html}%
 {\texttt{gaia\_hydras.GF\_alpha}}.
 
@@ -481,6 +491,27 @@ $\alpha\geq\omega$, then $F_\alpha$ is not primitive recursive.
 
 \inputsnippets{GF_alpha/FAlphaNotPR}
 
+\subsection{The \texorpdfstring{$L_\alpha$}{\texttt{L\_alpha}} hierarchy (Library \texttt{GL\_alpha})}
+
+
+
+The functions $L_\alpha$, described in Sect.~\vref{sect:lalpha-section}  allow us to ``compute'' the length of standard hydra battles. In the same way as for the hierarchies $F_\alpha$ and $H'_\alpha$, we import  definitions and lemmas from the module
+~\href{../theories/html/hydras.Epsilon0.L_alpha.html}{Epsilon0.L\_alpha}.
+
+
+\vspace{4pt}
+\noindent
+From\href{../theories/html/gaia_hydras.GF_alpha.html}%
+{\texttt{gaia\_hydras.GF\_alpha}}.
+
+\inputsnippets{GL_alpha/Ldef}
+\inputsnippets{GL_alpha/Leq2}
+\inputsnippets{GL_alpha/Leq3}
+\inputsnippets{GL_alpha/Leq4}
+
+The following theorem compares the $L_\alpha$ and $H'_\alpha$ hierarchies.
+
+\inputsnippets{GL_alpha/HprimeLAlpha}
 
 
 

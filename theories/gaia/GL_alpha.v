@@ -20,37 +20,42 @@ From gaia_hydras Require Import T1Bridge GCanon GPaths GHprime.
 Set Implicit Arguments.
 Unset Strict Implicit.
 
+(* begin snippet Ldef:: no-out *)
 Definition L_ (alpha:E0) (i:nat): nat :=
- L_alpha.L_  (E0_g2h alpha) i. 
+ L_alpha.L_ (E0_g2h alpha) i. 
 
 Lemma L_zero_eqn i :  L_ E0zero i = i.
 Proof. by rewrite /L_. Qed.
+(* end snippet Ldef *)
 
+(* begin snippet Leq2:: no-out *)
 Lemma L_eq2 alpha i :
   E0is_succ alpha -> L_ alpha i = L_ (E0pred alpha) (S i).
+(* end snippet Leq2 *)
 Proof.
   move => H;  case (E0is_succE H) => x Hx; subst.
   rewrite E0pred_succK /L_ L_alpha.L_eq2 => //. 
   f_equal; rewrite g2h_E0succ; by rewrite E0pred_of_Succ. 
 Qed. 
 
-Lemma L_succ_eqn alpha i :
-  L_ (E0succ alpha) i = L_ alpha i.+1.
+(* begin snippet Leq3:: no-out *)
+Lemma L_succ_eqn alpha i : L_ (E0succ alpha) i = L_ alpha i.+1.
+(* end snippet Leq3 *)
 Proof. 
   rewrite L_eq2 ?E0pred_succK => //; apply E0is_succ_succ.
 Qed.
 
-
+(* begin snippet Leq4:: no-out *)
 Lemma L_lim_eqn alpha i :
-  E0limit alpha ->
-  L_ alpha i = L_ (E0Canon alpha i) (S i).
+  E0limit alpha ->  L_ alpha i = L_ (E0Canon alpha i) (S i).
+(* end snippet Leq4 *)
 Proof.
   move => Halpha; rewrite /E0limit /L_  L_alpha.L_lim_eqn /E0Canon; f_equal.
   - apply E0_eq_intro; cbn; by rewrite g2h_canon.
   - move: Halpha ; by rewrite /E0limit.
 Qed.
 
-Lemma L_finite : forall i k :nat,  L_ (E0fin  i) k = (i+k)%nat.
+Lemma L_finite : forall i k :nat, L_ (E0fin  i) k = (i+k)%nat.
 Proof.  move => i k. by rewrite /L_ E0g2h_Fin L_alpha.L_finite. Qed.
 
 Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat.
