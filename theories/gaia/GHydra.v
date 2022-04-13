@@ -3,9 +3,9 @@ From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg Hydra_Theorems Hydra_Definitions
-     Hydra_Termination Battle_length.
+     Hydra_Termination Battle_length Hydra_Examples.
 From gaia Require Export ssete9.
-Require Import T1Bridge GHessenberg GL_alpha.
+Require Import T1Bridge GHessenberg GL_alpha GPrelude.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -17,7 +17,11 @@ Fixpoint m (h:Hydra) : T1 :=
   if h is  node (hcons _ _ as hs) then ms hs else zero
 with ms (s : Hydrae) : T1 :=
   if s is hcons h s' then phi0 (m h) o+ ms s' else zero.
+
+Compute T1pp (m Examples.Hy).
 (* end snippet mDef *)
+
+
 
 Lemma m_ref h : g2h (m h) = (Hydra_Termination.m h).
 Proof.
@@ -56,22 +60,27 @@ Proof.
 Qed.
 (*||*)
 
-
+(* begin snippet lDef *)
 Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
+(* end snippet lDef *)
 
 Lemma l_stdE alpha k : l_std alpha k = Battle_length.l_std (E0_g2h alpha) k. 
 Proof. reflexivity.  Qed.
 
-#[global] Notation T1toH  a := (O2H.iota (g2h a)).
+
+(* begin snippet lStdOk:: no-out *)
+Definition T1toH (a: T1) : Hydra := O2H.iota (g2h a).
 
 Lemma l_std_ok : forall alpha : E0,
-    alpha <> E0zero ->
+    alpha != E0zero ->
     forall k : nat,
       (1 <= k)%N -> battle_length standard k (T1toH (cnf alpha))
-                                  (l_std alpha k). 
+                                  (l_std alpha k).
+(* end snippet lStdOk *)
 Proof.
   move => alpha Halpha k /leP Hk; rewrite  /l_std.
-  have H0: E0_g2h alpha <> hE0zero by (rewrite -g2h_E0zero; apply /E0_diffE).
+  have H0: E0_g2h alpha <> hE0zero
+    by rewrite -g2h_E0zero; apply /E0_diffE; apply /diffP.
   move:  (Battle_length.l_std_ok (E0_g2h alpha) H0 k Hk);
   rewrite /L_ => He; by apply He.
 Qed.
