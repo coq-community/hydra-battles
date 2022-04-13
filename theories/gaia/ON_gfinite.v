@@ -6,6 +6,7 @@ From Coq Require Import Logic.Eqdep_dec.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
+Set Program Cases.
 
 (* begin snippet finordLtDef *)
 Definition finord_lt (n:nat) (alpha beta: 'I_n): bool :=
@@ -72,11 +73,10 @@ Qed.
 (** Examples *)
 
 (* begin snippet Examples:: no-out *)
-Example o_33_of_42: 'I_42 . 
-Proof. by refine (@Ordinal 42 33 _). Defined. 
+#[program] Example o_33_of_42: 'I_42 := @Ordinal 42 33 _.
 
-Example o_36_of_42: 'I_42.
-Proof. by refine (@Ordinal 42 36 _). Defined. 
+
+#[program] Example o_36_of_42: 'I_42 :=  @Ordinal 42 36 _.
 (* end snippet Examples *)
 (* begin snippet Examplesb *)
 Compute compare  o_33_of_42  o_36_of_42.

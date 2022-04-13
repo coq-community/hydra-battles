@@ -3,6 +3,7 @@
 (** Pierre Casteran, Univ. Bordeaux, LaBRI, UMR 5800 *)
 
 Set Apply With Renaming.
+Set Program Cases.
 
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
@@ -192,11 +193,8 @@ Qed.
 (*||*)
 (* end snippet RoundDecr *)
 
-#[ global ] Instance var (h:Hydra) : E0.
-Proof.
-  refine (@mkord (m h) _);  apply m_nf.
-Defined.
-
+#[ global, program ] Instance var (h:Hydra) : E0:= @mkord (m h) _.
+Next Obligation. apply m_nf. Defined.
 
 
 Global Instance HVariant_0 : @Hvariant _ _ T1_wf free m.

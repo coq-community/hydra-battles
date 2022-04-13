@@ -604,29 +604,31 @@ Defined.
 Fixpoint E0fin (n:nat) : E0 :=
   if n is p.+1 then E0succ (E0fin p) else E0zero. 
 
-Definition E0omega: E0.
-Proof. refine (@mkE0 T1omega _) => //. Defined.
+#[program] Definition E0omega: E0 := @mkE0 T1omega _. 
 
-Definition E0phi0 (alpha: E0) : E0.
-Proof.
-  refine (@mkE0 (phi0 (cnf alpha)) _).
+#[program]
+ Definition E0phi0 (alpha: E0) : E0 := @mkE0 (phi0 (cnf alpha)) _.
+(* end snippet E0Defb *)
+Next Obligation. 
   case : alpha => ? ?; apply /eqP => //=. 
   rewrite Bool.andb_true_r; by apply /eqP.  
 Defined.
-(* end snippet E0Defb *)
+
 
 (* begin snippet E0plusMultDef:: no-out *)
-Definition E0plus (alpha beta: E0) : E0.
-  refine (@mkE0 (T1add (cnf alpha) (cnf beta)) _).
+#[program] Definition E0plus (alpha beta: E0) : E0 :=
+  @mkE0 (T1add (cnf alpha) (cnf beta)) _.
+Next Obligation. 
   rewrite nf_add => //.
   case :alpha; cbn => t Ht; apply /eqP => //.
   case :beta; cbn => t Ht; apply /eqP => //.
 Defined.
 
-Definition E0mul (alpha beta: E0) : E0.
-  refine (@mkE0 (T1mul (cnf alpha) (cnf beta)) _).
+#[program] Definition E0mul (alpha beta: E0) : E0 :=
+  @mkE0 (T1mul (cnf alpha) (cnf beta)) _.
   (* ... *)
   (* end snippet E0plusMultDef *)  
+Next Obligation.
   rewrite nf_mul => //.
   case :alpha; cbn => t Ht; apply /eqP => //.
   case :beta; cbn => t Ht; apply /eqP => //.
@@ -637,16 +639,14 @@ Lemma E0fin_cnf (n:nat) : cnf (E0fin n) = \F n.
 Proof. elim: n => // n /= ->; by rewrite T1succ_nat. Qed.
 
 (* begin snippet gE0h2gG2h:: no-out *)
-Definition E0_h2g (a: hE0): E0.
-Proof. 
-  split with (h2g (E0.cnf a)).
+#[program] Definition E0_h2g (a: hE0): E0:= @mkE0 (h2g (E0.cnf a)) _. 
+Next Obligation.
   rewrite -nf_ref; case: a => /= cnf cnf_ok; by rewrite cnf_ok.
 Defined.
 
 
-Definition E0_g2h (a: E0): hE0.
-Proof.
-  refine (@E0.mkord (g2h (cnf a)) _).  
+#[program] Definition E0_g2h (a: E0): hE0 := @E0.mkord (g2h (cnf a)) _.  
+Next Obligation.
   case: a  => /= cnf0 /eqP; by rewrite hnf_g2h.    
 Defined.
 

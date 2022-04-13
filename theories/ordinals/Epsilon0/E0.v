@@ -64,22 +64,18 @@ Infix "o<=" := E0le : E0_scope.
  Notation _Omega := E0omega (only parsing).
 
 (* begin snippet SuccOnE0:: no-out *)
-#[global] Instance E0succ (alpha : E0) : E0.
-Proof.
-  refine (@mkord (T1.succ (@cnf alpha)) _); 
-    apply succ_nf, cnf_ok.
-Defined.
+#[global, program] Instance E0succ (alpha : E0) : E0 :=
+@mkord (T1.succ (@cnf alpha)) _. 
+Next Obligation.  apply succ_nf, cnf_ok. Defined.
 (* end snippet SuccOnE0 *)
 
 #[deprecated(note="use E0succ")]
  Notation Succ := E0succ (only parsing).
 
-Definition E0limit (alpha : E0) : bool :=
-  limitb (@cnf alpha).
+Definition E0limit (alpha : E0) : bool :=  limitb (@cnf alpha).
 
 #[deprecated(note="use E0limit")]
  Notation Limitb := E0limit (only parsing).
-
 
 Definition E0is_succ (alpha : E0) : bool :=
   succb (@cnf alpha).
@@ -87,10 +83,8 @@ Definition E0is_succ (alpha : E0) : bool :=
 #[deprecated(note="use E0is_succ")]
  Notation E0succb := E0is_succ (only parsing).
 
-#[global] Instance E0one : E0.
-Proof. 
-  refine (@mkord (T1.succ zero) _);now compute. 
-Defined.
+#[global, program] Instance E0one : E0:= @mkord (T1.succ zero) _.
+Next Obligation. now compute. Defined.
 
 (* begin snippet plusE0 *)
 
@@ -98,11 +92,9 @@ Defined.
 .. coq:: no-out
 |*)
 
-#[global] Instance E0add (alpha beta : E0) : E0.
-Proof.
-  refine (@mkord (T1add (@cnf alpha) (@cnf beta))_ );
-    apply plus_nf; apply cnf_ok.
-Defined.
+#[global, program] Instance E0add (alpha beta : E0) : E0 :=
+  @mkord (T1add (@cnf alpha) (@cnf beta))_ . 
+Next Obligation.  apply plus_nf; apply cnf_ok. Defined.
 
 Infix "+" := E0add : E0_scope.
 
@@ -120,57 +112,48 @@ Check E0omega + E0omega.
 (* end snippet CheckPlus *)
 
 
-#[global] Instance E0phi0 (alpha: E0) : E0.
-Proof.
-  refine (@mkord (T1.phi0 (cnf alpha)) _).
-  apply nf_phi0; apply cnf_ok.
-Defined.
-
+#[global, program] Instance E0phi0 (alpha: E0) : E0 :=
+ @mkord (T1.phi0 (cnf alpha)) _. 
+Next Obligation. apply nf_phi0; apply cnf_ok. Defined.
 
 Notation "'E0omega^'" := E0phi0 (only parsing) : E0_scope.
 
-#[global] Instance Omega_term (alpha: E0) (n: nat) : E0.
-Proof.
-  refine (@mkord (cons (cnf alpha) n zero) _).
-  apply nf_phi0; apply cnf_ok.
-Defined.
+#[global, program] Instance Omega_term (alpha: E0) (n: nat) : E0 :=
+   @mkord (cons (cnf alpha) n zero) _.
+Next Obligation.  apply nf_phi0; apply cnf_ok. Defined.
 
 #[global] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
-#[global] Instance E0finS (i:nat) : E0.
-Proof.
-  refine (@mkord (FS i)%t1 _);apply T1.nf_FS.
-Defined.
+#[global, program] Instance E0finS (i:nat) : E0:= @mkord (FS i)%t1 _.
+Next Obligation. apply T1.nf_FS. Defined.
 
 
 
-#[ global] Instance E0fin (i:nat) : E0.
-Proof.
-  destruct i as [|i]; [exact E0zero | exact (E0finS i)].
-Defined.
+#[global, program] Instance E0fin (i:nat) : E0:=
+  match i with
+    0 => E0zero
+  | S i => E0finS i
+  end.
+
 
 #[deprecated(note="use E0fin")]
  Notation Fin := E0fin (only parsing).
 
 Coercion E0fin : nat >-> E0.
 
-#[global] Instance E0mul (alpha beta : E0) : E0.
-Proof.
-  refine (@mkord (cnf alpha * cnf beta)%t1 _); apply mult_nf; apply cnf_ok.
-Defined.
+#[global, program] Instance E0mul (alpha beta : E0) : E0 :=
+  @mkord (cnf alpha * cnf beta)%t1 _.
+Next Obligation. apply mult_nf; apply cnf_ok. Defined.
 
 #[deprecated(note="use E0mul")]
  Notation Mult := E0mul (only parsing).
 
-
 Infix "*" := E0mul : E0_scope.
 
-#[global] Instance Mult_i  (alpha: E0) (n: nat) : E0.
-Proof.
-  refine (@mkord (cnf alpha * n)%t1  _).
-  apply mult_nf_fin, cnf_ok.
-Defined.
+#[global, program] Instance Mult_i  (alpha: E0) (n: nat) : E0 :=
+  @mkord (cnf alpha * n)%t1  _.
+Next Obligation.  apply mult_nf_fin, cnf_ok. Defined.
 
 (** ** Lemmas *)
 
@@ -682,11 +665,9 @@ Proof.
 Qed.
 
 
-#[global] Instance Oplus (alpha beta : E0) : E0.
-Proof.
-  refine (@mkord (oplus (cnf alpha) (cnf beta) )_).
-  apply oplus_nf; apply cnf_ok.
-Defined.
+#[global, program] Instance Oplus (alpha beta : E0) : E0 :=
+@mkord (oplus (cnf alpha) (cnf beta)) _.
+Next Obligation. apply oplus_nf; apply cnf_ok. Defined.
 
 Infix "O+" := Oplus (at level 50, left associativity): E0_scope.
 

@@ -17,6 +17,8 @@ From hydras.Prelude Require Import DecPreOrder.
 From hydras.Epsilon0 Require Export T1 E0.
 
 Set Implicit Arguments.
+Set Program Cases.
+
 Open Scope t1_scope.
 
 (** * Definitions *)
@@ -1018,10 +1020,10 @@ Qed.
 
 Open Scope E0_scope.
 
-
-Definition Canon (alpha:E0)(i:nat): E0.
-  refine (@mkord (@canon (cnf alpha) i) _);  apply nf_canon.
-  destruct alpha;auto.
+#[program] Definition Canon (alpha:E0)(i:nat): E0 :=
+  @mkord (@canon (cnf alpha) i) _.
+Next Obligation.
+  apply nf_canon; destruct alpha;auto.
 Defined.
 
 (** This is a helper which should be deprecated later :

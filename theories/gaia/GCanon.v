@@ -9,7 +9,14 @@ From hydras Require Import T1.
 
 
 From gaia Require Import ssete9.
-Import CantorOrdinal. 
+Import CantorOrdinal.
+Set Program Cases.
+Set Implicit Arguments.
+Unset Strict Implicit.
+Unset Printing Implicit Defensive.
+
+
+
 
 (** Importation of Ketonen-Solovay's  machinery into gaia's world
     (work in progress) 
@@ -243,7 +250,7 @@ Proof.
   move => Hnf Hlim; split.
   - move => n; apply canon_lt => // H; subst; discriminate. 
   -  move => y Hnfy Hlt; 
-             case (canon_limit_strong  lambda Hnf Hlim y Hnfy Hlt) => //.
+             case (canon_limit_strong  Hnf Hlim  Hnfy Hlt) => //.
      move => i Hi; exists i => //; by apply T1ltW. 
 Qed.
 
@@ -270,20 +277,19 @@ Proof.
    apply canon_limit_mono => //.
    apply gcanon_limit_v2 => //.
  Qed.    
- 
- 
 
- (** *  Adaptation of [canon] to type E0 *)
 
- (* begin snippet E0CanonDef:: no-out *)
-Definition E0Canon (alpha: E0) (i: nat): E0.
-Proof.
-  refine (@mkE0 (canon (cnf alpha) i)  _).
-  (* ... *)
+(** *  Adaptation of [canon] to type E0 *)
+
+(* begin snippet E0CanonDef:: no-out *)
+#[program]
+Definition E0Canon (alpha: E0) (i: nat): E0 :=
+   @mkE0 (canon (cnf alpha) i)  _.
 (* end snippet E0CanonDef:: no-out *)
-     case: alpha => cnf i0;  rewrite T1nf_canon =>  //; 
-       by apply /eqP. 
-Defined.
+Next Obligation.
+  case: alpha => cnf i0;  rewrite T1nf_canon =>  //; by apply /eqP. 
+Defined. 
+
 
 (* begin snippet E0CanonLt:: no-out *)
 Lemma E0_canon_lt (alpha: E0) i:

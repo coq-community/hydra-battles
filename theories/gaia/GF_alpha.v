@@ -20,6 +20,7 @@ From gaia_hydras Require Import T1Bridge GCanon GHprime.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
+Set Program Cases.
 
 (** *  Rapidly growing functions *)
 
@@ -31,14 +32,10 @@ Notation hF_ := F_alpha.F_.
 Definition F_ (alpha : E0)  := F_alpha.F_ (E0_g2h alpha).
 (* end snippet FAlphaDef *)
 
-Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat.
-Proof. refine (F_ (@mkE0 alpha _) n); by rewrite Hnf.  Defined.
+#[program]
+ Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat:=
+  (F_ (@mkE0 alpha _) n).
 
-Lemma T1F_eq alpha (Hnf : T1nf alpha == true) (n:nat) :
-  F_ (@mkE0 alpha Hnf) n = T1F_  Hnf n.
-Proof.
-  rewrite /T1F_; f_equal; apply gE0_eq_intro => //. 
-Qed.
 
 (** Please note that a lemma [foo] may mask [F_alpha.Foo] *)
 

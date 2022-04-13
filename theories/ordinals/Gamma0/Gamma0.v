@@ -8,7 +8,7 @@
 
 From Coq Require Import Arith List Lia  Compare_dec  Relations
      Wellfounded  Max RelationClasses.
-
+Set Program Cases.
 
 From hydras Require Import Epsilon0.
 From hydras Require Import More_Arith Restriction.
@@ -3732,15 +3732,9 @@ Proof.
   - unfold compare,compare_G0; rewrite compare_rw_gt; auto.
 Qed. 
 
-  #[ global ] Instance zero : G0.
-  Proof.
-    refine (@mkg0 T2.zero _);  now compute. 
-  Defined.
+  #[ global, program ] Instance zero : G0 := @mkg0 T2.zero _. 
 
-  #[ global ] Instance Omega : G0.
-  Proof.
-    exists omega. reflexivity. 
-  Defined.
+  #[ global, program] Instance Omega : G0 := @mkg0 omega _.
 
   Notation omega := Omega.
 
