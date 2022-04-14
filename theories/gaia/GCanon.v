@@ -282,8 +282,7 @@ Proof.
 (** *  Adaptation of [canon] to type E0 *)
 
 (* begin snippet E0CanonDef:: no-out *)
-#[program]
-Definition E0Canon (alpha: E0) (i: nat): E0 :=
+#[program] Definition E0Canon (alpha: E0) (i: nat): E0 :=
    @mkE0 (canon (cnf alpha) i)  _.
 (* end snippet E0CanonDef:: no-out *)
 Next Obligation.
