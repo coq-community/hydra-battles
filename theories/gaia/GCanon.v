@@ -183,7 +183,7 @@ Proof.
   move: beta {Hnf} Hpos ; by case.  
 Qed.
 
-Lemma canonS_ocons_succE2 i n (gamma: T1)(Hnf : T1nf gamma) :
+Lemma canonS_ocons_succE i n (gamma: T1)(Hnf : T1nf gamma) :
   canon (cons (T1succ gamma) n.+1 zero) i.+1 =
     cons (T1succ gamma) n (cons gamma i zero).
 Proof.

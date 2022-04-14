@@ -319,22 +319,14 @@ Qed.
 
 Section Proof_of_mult_ref.
 
-  Lemma T1mulE1 (c : T1) : c * zero = zero. 
+  Lemma T1mul_a0E (c : T1) : c * zero = zero. 
   Proof. by []. Qed.
 
-  Lemma multE1 c : T1.T1mul c T1.zero = T1.zero.
-  Proof. case: c; cbn => //; by case. 
-  Qed.
-
-  Lemma T1mulE3 n b n' b' : cons zero n b * cons zero n' b' =
+  Lemma T1mul_cons_cons_E n b n' b' : cons zero n b * cons zero n' b' =
                                  cons zero (n * n' + n + n') b'.      
   Proof. by [].  Qed. 
 
-  Lemma multE3 n b n' b' :
-    T1.T1mul (T1.cons T1.zero n b) (T1.cons T1.zero n' b') =
-      T1.cons T1.zero (n * n' + n + n') b'.      
-  Proof. cbn; f_equal; nia. Qed.
-
+ 
   Lemma T1mulE4 a n b n' b' :
     a != zero -> (cons a n b) * (cons zero n' b') =
                    cons a (n * n' + n + n') b.
@@ -385,13 +377,13 @@ Section Proof_of_mult_ref.
   Lemma mult_ref0 : refines2 T1.T1mul T1mul.
   Proof.
     move => x y;  move: x; induction y. 
-    -   move => x; simpl h2g; rewrite T1mulE1; case x => //; by case.
+    -   move => x; simpl h2g; rewrite T1mul_a0E; case x => //; by case.
     -  case.
        + simpl h2g => // /=.
        + move => alpha n0 beta.
          destruct (Epsilon0.T1.T1_eq_dec  alpha Epsilon0.T1.zero).
          *  subst; destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
-            -- subst y1; simpl h2g; rewrite T1mulE3; f_equal; nia.
+            -- subst y1; simpl h2g; rewrite T1mul_cons_cons_E; f_equal; nia.
             -- repeat rewrite !h2g_cons !h2g_zero.
                rewrite T1mulE5.
                ++ rewrite multE5 => //.
