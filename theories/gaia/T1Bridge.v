@@ -193,11 +193,11 @@ Qed.
 Lemma T1eq_refl (a: T1) : T1eq a a.
 Proof. by apply  /T1eqP. Qed.
 
-Lemma T1eq_rw a b: T1eq a b -> g2h a = g2h b.
+Lemma T1eqE a b: T1eq a b -> g2h a = g2h b.
 Proof. by move => /T1eqP ->. Qed. 
 
 Lemma T1eq_h2g (a b : hT1) : T1eq (h2g a) (h2g b) -> a = b.
-Proof.  move => /T1eq_rw; by rewrite !g2h_h2gK. Qed.
+Proof.  move => /T1eqE; by rewrite !g2h_h2gK. Qed.
                                                                 
 
 (* begin snippet compareRef:: no-out *)
@@ -232,7 +232,7 @@ Proof.
 Qed.
 
 (* begin snippet decideHLtRw:: no-out *)
-Lemma decide_hlt_rw (a b : hT1):
+Lemma decide_hltE (a b : hT1):
   bool_decide (T1.lt a b) = (h2g a < h2g b).
 (* end snippet decideHLtRw *)
 Proof.
@@ -319,23 +319,23 @@ Qed.
 
 Section Proof_of_mult_ref.
 
-  Lemma T1mul_eqn1 (c : T1) : c * zero = zero. 
+  Lemma T1mulE1 (c : T1) : c * zero = zero. 
   Proof. by []. Qed.
 
-  Lemma mult_eqn1 c : T1.T1mul c T1.zero = T1.zero.
+  Lemma multE1 c : T1.T1mul c T1.zero = T1.zero.
   Proof. case: c; cbn => //; by case. 
   Qed.
 
-  Lemma T1mul_eqn3 n b n' b' : cons zero n b * cons zero n' b' =
+  Lemma T1mulE3 n b n' b' : cons zero n b * cons zero n' b' =
                                  cons zero (n * n' + n + n') b'.      
   Proof. by [].  Qed. 
 
-  Lemma mult_eqn3 n b n' b' :
+  Lemma multE3 n b n' b' :
     T1.T1mul (T1.cons T1.zero n b) (T1.cons T1.zero n' b') =
       T1.cons T1.zero (n * n' + n + n') b'.      
   Proof. cbn; f_equal; nia. Qed.
 
-  Lemma T1mul_eqn4 a n b n' b' :
+  Lemma T1mulE4 a n b n' b' :
     a != zero -> (cons a n b) * (cons zero n' b') =
                    cons a (n * n' + n + n') b.
   Proof. 
@@ -344,7 +344,7 @@ Section Proof_of_mult_ref.
     by rewrite Heq.
   Qed.
 
-  Lemma mult_eqn4 a n b n' b' :
+  Lemma multE4 a n b n' b' :
     a <> Epsilon0.T1.zero ->
     Epsilon0.T1.T1mul (T1.cons a n b) (T1.cons Epsilon0.T1.zero n' b') =
       T1.cons a (n * n' + n + n') b.
@@ -352,7 +352,7 @@ Section Proof_of_mult_ref.
     cbn; case: a => [// | alpha n0 beta _ ]; f_equal; nia. 
   Qed.
 
-  Lemma T1mul_eqn5 a n b a' n' b' :
+  Lemma T1mulE5 a n b a' n' b' :
     a' != zero ->
     (cons a n b) * (cons a' n' b') =
       cons (a + a') n' (T1mul (cons a n b) b').
@@ -362,7 +362,7 @@ Section Proof_of_mult_ref.
     case (T1eq a zero); cbn; by rewrite Ha'. 
   Qed.
 
-  Lemma mult_eqn5 a n b a' n' b' :
+  Lemma multE5 a n b a' n' b' :
     a' <>  T1.zero ->
     Epsilon0.T1.T1mul (T1.cons a n b)  (T1.cons a' n' b') =
       T1.cons (T1.T1add a  a') n' (T1.T1mul (T1.cons a n b) b').
@@ -385,16 +385,16 @@ Section Proof_of_mult_ref.
   Lemma mult_ref0 : refines2 T1.T1mul T1mul.
   Proof.
     move => x y;  move: x; induction y. 
-    -   move => x; simpl h2g; rewrite T1mul_eqn1; case x => //; by case.
+    -   move => x; simpl h2g; rewrite T1mulE1; case x => //; by case.
     -  case.
        + simpl h2g => // /=.
        + move => alpha n0 beta.
          destruct (Epsilon0.T1.T1_eq_dec  alpha Epsilon0.T1.zero).
          *  subst; destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
-            -- subst y1; simpl h2g; rewrite T1mul_eqn3; f_equal; nia.
+            -- subst y1; simpl h2g; rewrite T1mulE3; f_equal; nia.
             -- repeat rewrite !h2g_cons !h2g_zero.
-               rewrite T1mul_eqn5.
-               ++ rewrite mult_eqn5 => //.
+               rewrite T1mulE5.
+               ++ rewrite multE5 => //.
                   ** simpl h2g; simpl T1add; f_equal.
                      destruct (Epsilon0.T1.T1_eq_dec y2 Epsilon0.T1.zero).
                      { subst; by cbn. }
@@ -404,12 +404,12 @@ Section Proof_of_mult_ref.
                ++  destruct y1; [now destruct n1| now compute].
          * destruct (Epsilon0.T1.T1_eq_dec y1 Epsilon0.T1.zero).
            --   subst; rewrite !h2g_cons !h2g_zero;
-                  rewrite T1mul_eqn4.
-                ++ by rewrite mult_eqn4. 
+                  rewrite T1mulE4.
+                ++ by rewrite multE4. 
                 ++ by case :alpha n1 . 
            --   rewrite !h2g_cons. 
-                ++ rewrite T1mul_eqn5.
-                   ** rewrite  mult_eqn5 => //. 
+                ++ rewrite T1mulE5.
+                   ** rewrite  multE5 => //. 
                       simpl h2g; rewrite plus_ref; f_equal. 
                       change (cons (h2g alpha) n0 (h2g beta))
                         with (h2g (T1.cons alpha n0 beta)); now rewrite IHy2.
@@ -424,12 +424,12 @@ Lemma mult_ref : refines2 T1.T1mul T1mul.
 Proof mult_ref0.
 (* begin snippet multA:: no-out *)
 
-Lemma g2h_mult_rw (a b : T1) : g2h (a * b) = T1.T1mul (g2h a) (g2h b).
+Lemma g2h_multE (a b : T1) : g2h (a * b) = T1.T1mul (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R,  mult_ref. Qed.
 
 (* end snippet multA *)
 
-Lemma g2h_plus_rw (a b: T1) : g2h (a + b) = T1.T1add (g2h a) (g2h b).
+Lemma g2h_plusE (a b: T1) : g2h (a + b) = T1.T1add (g2h a) (g2h b).
 Proof. apply symmetry, refines2_R, plus_ref. Qed.
        
 (** * Ordinal terms in normal form *)
@@ -442,7 +442,7 @@ Lemma nf_ref (a: hT1)  : T1.nf_b a = T1nf (h2g a).
 Proof.
   elim: a => //.
   - move => a IHa n b IHb; rewrite T1.nf_b_cons_eq; simpl T1nf. 
-    by rewrite IHa IHb [phi0 (h2g a)]/(h2g (T1.phi0 a)) andbA decide_hlt_rw.
+    by rewrite IHa IHb [phi0 (h2g a)]/(h2g (T1.phi0 a)) andbA decide_hltE.
 Qed.
 
 Lemma LT_ref : refinesRel  T1.LT  LT.
@@ -463,7 +463,7 @@ Proof.
     + rewrite -nf_ref => //.
     + case: b => c _; case :c => [y0 Hy0 |].
       apply T1ltW. 
-      * rewrite - decide_hlt_rw => //.
+      * rewrite - decide_hltE => //.
         red;  rewrite bool_decide_eq_true => //.
       *  apply T1lenn. 
     +  case b => _ ?; rewrite - nf_ref => //. 
@@ -472,7 +472,7 @@ Proof.
    +  move: p0; rewrite T1le_eqVlt => /orP.
       case => /eqP Heq; subst.
       * move: Heq; rewrite h2g_eqE => ?; subst; right.
-      * left; move: Heq; rewrite -decide_hlt_rw => // Heq.
+      * left; move: Heq; rewrite -decide_hltE => // Heq.
            move: Heq => /eqP; rewrite bool_decide_eq_true => //. 
    + move: p1 ; rewrite -nf_ref => //.
 Qed.
@@ -608,8 +608,7 @@ Fixpoint E0fin (n:nat) : E0 :=
 
 #[program] Definition E0omega: E0 := @mkE0 T1omega _. 
 
-#[program]
- Definition E0phi0 (alpha: E0) : E0 := @mkE0 (phi0 (cnf alpha)) _.
+#[program]  Definition E0phi0 (alpha: E0) : E0 := @mkE0 (phi0 (cnf alpha)) _.
 (* end snippet E0Defb *)
 Next Obligation. 
   case : alpha => ? ?; apply /eqP => //=. 
@@ -777,13 +776,13 @@ Proof.  apply E0_eq_intro => //. Qed.
 
 Lemma E0g2h_mulE (a b: E0): E0_g2h (E0mul a b) = E0.E0mul (E0_g2h a) (E0_g2h b).
 Proof. 
-  destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_mult_rw. 
+  destruct a, b; apply E0_eq_intro => /=;  by rewrite g2h_multE. 
 Qed.
 
 Lemma E0g2h_plusE (a b: E0): E0_g2h (E0plus a b)= E0.E0add (E0_g2h a) (E0_g2h b).
 Proof. 
   case: a ; case: b => a ? b ?;  apply E0_eq_intro => /=;
-         by rewrite g2h_plus_rw. 
+         by rewrite g2h_plusE. 
 Qed.
 
 Lemma E0g2h_omegaE : E0_g2h E0omega = hE0omega. 
@@ -804,7 +803,7 @@ Proof.
     case: a Hab => cnf0 i0 Hb.
     case: b Hb => cnf1 i1 /= Hlt ; rewrite /E0.E0lt => /=.
     move: Hlt i0 i1; rewrite -(h2g_g2hK cnf0).
-    rewrite -(h2g_g2hK cnf1)  -decide_hlt_rw;  repeat split. 
+    rewrite -(h2g_g2hK cnf1)  -decide_hltE;  repeat split. 
     + move: i0 i1; rewrite -!nf_ref => i0 i1; rewrite g2h_h2gK => //.
       red. move: i0 => /eqP. by [].
     + red in Hlt; move: Hlt;  rewrite bool_decide_eq_true  => //.

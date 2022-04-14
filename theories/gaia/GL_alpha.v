@@ -24,7 +24,7 @@ Unset Strict Implicit.
 Definition L_ (alpha:E0) (i:nat): nat :=
  L_alpha.L_ (E0_g2h alpha) i. 
 
-Lemma L_zero_eqn i :  L_ E0zero i = i.
+Lemma L_zeroE i :  L_ E0zero i = i.
 Proof. by rewrite /L_. Qed.
 (* end snippet Ldef *)
 
@@ -39,14 +39,14 @@ Proof.
 Qed. 
 
 (* begin snippet Leq3:: no-out *)
-Lemma L_succ_eqn alpha i : L_ (E0succ alpha) i = L_ alpha i.+1.
+Lemma L_succE alpha i : L_ (E0succ alpha) i = L_ alpha i.+1.
 (* end snippet Leq3 *)
 Proof. 
   rewrite L_eq2 ?E0pred_succK => //; apply E0is_succ_succ.
 Qed.
 
 (* begin snippet Leq4:: no-out *)
-Lemma L_lim_eqn alpha i :
+Lemma L_limE alpha i :
   E0limit alpha ->  L_ alpha i = L_ (E0Canon alpha i) (S i).
 (* end snippet Leq4 *)
 Proof.

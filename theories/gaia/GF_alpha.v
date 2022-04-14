@@ -69,7 +69,7 @@ Proof.
 Qed.
 
 (* begin snippet FZeroEqn:: no-out *)
-Lemma F_zero_eqn i: F_ E0zero i = i.+1.
+Lemma F_zeroE i: F_ E0zero i = i.+1.
 (* end snippet FZeroEqn *)
 Proof.
   rewrite /F_; replace (E0_g2h E0zero) with E0.E0zero.
@@ -94,7 +94,7 @@ Lemma F_alpha_0_eq (alpha : E0): F_ alpha 0 = 1.
 Proof. by  rewrite /F_ F_alpha_0_eq. Qed.
 
 (* begin snippet FSuccEqn:: no-out *)
-Lemma F_succ_eqn alpha i :
+Lemma F_succE alpha i :
   F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
 (* end snippet FSuccEqn *)
 Proof.
@@ -105,7 +105,7 @@ Proof.
 Qed.
 
 (* begin snippet FLimEqn:: no-out *)
-Lemma F_lim_eqn alpha i:
+Lemma F_limE alpha i:
   T1limit (cnf alpha) -> F_ alpha i = F_ (E0Canon alpha i) i.
 (* end snippet FLimEqn *)
 Proof. 

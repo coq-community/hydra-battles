@@ -68,7 +68,7 @@ Proof.
 Qed.
 
 
-Lemma canon0_phi0_succ_eqn alpha:
+Lemma canon0_phi0_succE alpha:
   T1nf alpha -> canon (phi0 (T1succ alpha)) 0 = zero.
 Proof.
  rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf. 
@@ -126,7 +126,7 @@ Qed.
 
 
 (* begin snippet gcanonSPhi0Succ:: no-out *)
-Lemma canonS_phi0_succ_eqn (i : nat) (gamma : T1): 
+Lemma canonS_phi0_succE (i : nat) (gamma : T1): 
   T1nf gamma -> canon (phi0 (T1succ gamma)) i.+1 = cons gamma i zero.
 (* end snippet gcanonSPhi0Succ *)
 Proof.
@@ -183,7 +183,7 @@ Proof.
   move: beta {Hnf} Hpos ; by case.  
 Qed.
 
-Lemma canonS_ocons_succ_eqn2 i n (gamma: T1)(Hnf : T1nf gamma) :
+Lemma canonS_ocons_succE2 i n (gamma: T1)(Hnf : T1nf gamma) :
   canon (cons (T1succ gamma) n.+1 zero) i.+1 =
     cons (T1succ gamma) n (cons gamma i zero).
 Proof.

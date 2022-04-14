@@ -52,7 +52,7 @@ Proof. rewrite /oplus; case => // /=.
 Qed.
 
 (* begin snippet oplusEquationsc:: no-out *)
-Lemma oplus_eqn (a b :T1) :
+Lemma oplusE (a b :T1) :
   a o+ b =
     match a, b with
       zero, _ => b
