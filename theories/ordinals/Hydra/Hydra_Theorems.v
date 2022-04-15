@@ -79,17 +79,7 @@ Impossibility_free
      : BoundedVariant free -> False
  *)
 
-
-(* Theorem battle_length_std (alpha : E0)  :
-  alpha <> Zero ->
-  forall k, (1 <= k)%nat ->
-            battle_length standard k (iota (cnf alpha))
-                         (L_ alpha (S k) - k).
-
-Proof.  apply battle_length_std.  Qed.
-
-Locate battle_length_std.
- *)
+About  battle_length_std.
 
 Open Scope nat_scope.
 
@@ -124,7 +114,7 @@ Import E0.
 
 (* begin snippet battleLengthNotPRa *)
 
-Section battle_lenght_notPR.
+Section battle_length_notPR.
 
   Hypothesis H: forall alpha, isPR 1 (l_std alpha).
 
@@ -248,9 +238,11 @@ Section battle_lenght_notPR.
     - apply succIsPR.
   Qed.
 
-End battle_lenght_notPR.
+End battle_length_notPR.
 
 (*||*)
 
 (* end snippet LNotPR *)
+
+
 

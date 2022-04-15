@@ -219,5 +219,6 @@ Section Impossibility_Proof.
 
 End Impossibility_Proof.
 (*||*)
+Check Impossibility_std.
  (* end snippet endOfProof *)
 

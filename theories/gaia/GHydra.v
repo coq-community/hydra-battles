@@ -85,3 +85,16 @@ Proof.
   rewrite /L_ => He; by apply He.
 Qed.
 
+
+
+
+(* TODO
+Import Epsilon0_Needed_Std.
+
+Lemma Impossibility_std
+     : forall mu : T1,
+       T1nf mu ->
+       forall (m : Hydra -> T1) (Var : Hvariant nf_Wf standard m),
+         BoundedVariant Var mu -> False.
+*)
+ 
