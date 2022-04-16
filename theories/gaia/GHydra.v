@@ -90,17 +90,16 @@ Qed.
 
 
 Section ImpossibilityProof.
+  Context (b: Battle). 
   Variable mu:T1.
   Hypothesis nfMu: T1nf mu.
   Variable m : Hydra -> T1.
-  Context  (Var : Hvariant nf_Wf standard m)
+  Let mh (h:Hydra) := g2h (m h).
+
+  Context  (Var : Hvariant nf_Wf b m)
            (BVar:  BoundedVariant Var mu).
 
-  Let mh (h:Hydra) := g2h (m h).
-  
-
-  
-  #[local] Instance hVar : Hvariant T1_wf standard mh.
+  #[local] Instance hVar : Hvariant T1_wf b mh.
   Proof.
     split => i h h' Hh Hrel; rewrite /mh.
     case :Var => Hvar; move:  (Hvar i h h' Hh Hrel) ; case => H1 H2 H3. 
@@ -114,18 +113,41 @@ Section ImpossibilityProof.
   case: (Hb h) => Hnf Hm Hnf'; repeat split.
   1,3:  rewrite /mh; by rewrite hnf_g2h.
   rewrite /mh; by rewrite hlt_iff !h2g_g2hK.
+  Qed.
+
+  End ImpossibilityProof.
+
+About bVar. 
+
+About Hydra.Epsilon0_Needed_Free.Impossibility_free.
+(*
+Epsilon0_Needed_Free.Impossibility_free :
+forall (mu : hT1) (m : Hydra -> hT1) (Var : Hvariant T1_wf free m),
+BoundedVariant Var mu -> False
+
+Epsilon0_Needed_Free.Impossibility_free is not universe polymorphic
+Arguments Epsilon0_Needed_Free.Impossibility_free _ _%function_scope _ _
+Epsilon0_Needed_Free.Impossibility_free is opaque
+Expands to: Constant hydras.Hydra.Epsilon0_Needed_Free.Impossibility_free
+
+ *)
+
+
+
+Lemma Impossibility_free mu m (Var: Hvariant nf_Wf free m):
+  ~ BoundedVariant Var mu.
+Proof. 
+  move => bvar;
+  refine (Hydra.Epsilon0_Needed_Free.Impossibility_free _  _ _ (bVar  bvar)). 
 Qed.
 
-  Lemma Impossibility_std_F : False.
-  Proof. 
-  refine (Hydra.Epsilon0_Needed_Std.Impossibility_std _ _ _ _ bVar);
-    by rewrite  hnf_g2h.
-  Qed.
-  
-End ImpossibilityProof.
-
-Lemma Impossibility_std mu (H :T1nf mu) m (Var : Hvariant nf_Wf standard m):
-  ~ BoundedVariant Var mu. 
+Lemma Impossibility_std mu  m (Var: Hvariant nf_Wf standard m):
+  ~ BoundedVariant Var mu.
 Proof. 
-  move =>  Hbound;  eapply  (Impossibility_std_F H Hbound).
-Qed. 
+  move => bvar;
+          refine (Hydra.Epsilon0_Needed_Std.Impossibility_std
+                    _ _ _ (bVar  bvar)).
+Qed.
+
+  
+

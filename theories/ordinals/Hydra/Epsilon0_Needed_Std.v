@@ -8,7 +8,7 @@
 
 From hydras Require Import Epsilon0_Needed_Generic.
 Import Hydra_Lemmas Epsilon0 Canon Paths Relation_Operators O2H.
-
+Import Hydra_Definitions.
 
 Open Scope t1_scope.
 (* begin snippet theContext *)
@@ -16,7 +16,6 @@ Open Scope t1_scope.
 Section Impossibility_Proof.
   
   Context (mu: T1)
-          (Hmu: nf mu)
           (m : Hydra -> T1)
           (Var : Hvariant  T1_wf standard m)
           (Hy : BoundedVariant Var mu).
@@ -183,8 +182,12 @@ Section Impossibility_Proof.
   
   Remark Rem4 : exists n i,
       battle  standard n (iota mu) i (iota (beta_h mu m)).
-  Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed. 
-  
+  Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed.
+
+  Remark Hmu : nf mu.
+    destruct Hy as [H]. now destruct (H head) as [_ [_ H1 ]].
+  Qed.
+       
   (* begin snippet mLt *)
   
   Lemma m_lt : m small_h  t1< m big_h. (* .no-out *)
