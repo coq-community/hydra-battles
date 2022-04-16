@@ -88,13 +88,44 @@ Qed.
 
 
 
-(* TODO
-Import Epsilon0_Needed_Std.
 
-Lemma Impossibility_std
-     : forall mu : T1,
-       T1nf mu ->
-       forall (m : Hydra -> T1) (Var : Hvariant nf_Wf standard m),
-         BoundedVariant Var mu -> False.
-*)
- 
+Section ImpossibilityProof.
+  Variable mu:T1.
+  Hypothesis nfMu: T1nf mu.
+  Variable m : Hydra -> T1.
+  Context  (Var : Hvariant nf_Wf standard m)
+           (BVar:  BoundedVariant Var mu).
+
+  Let mh (h:Hydra) := g2h (m h).
+  
+
+  
+  #[local] Instance hVar : Hvariant T1_wf standard mh.
+  Proof.
+    split => i h h' Hh Hrel; rewrite /mh.
+    case :Var => Hvar; move:  (Hvar i h h' Hh Hrel) ; case => H1 H2 H3. 
+    by rewrite -T1lt_iff. 
+  Qed.
+
+  #[local] Instance bVar : BoundedVariant hVar (g2h mu).
+  Proof. 
+  split. 
+  case: BVar => Hb h.
+  case: (Hb h) => Hnf Hm Hnf'; repeat split.
+  1,3:  rewrite /mh; by rewrite hnf_g2h.
+  rewrite /mh; by rewrite hlt_iff !h2g_g2hK.
+Qed.
+
+  Lemma Impossibility_std_F : False.
+  Proof. 
+  refine (Hydra.Epsilon0_Needed_Std.Impossibility_std _ _ _ _ bVar);
+    by rewrite  hnf_g2h.
+  Qed.
+  
+End ImpossibilityProof.
+
+Lemma Impossibility_std mu (H :T1nf mu) m (Var : Hvariant nf_Wf standard m):
+  ~ BoundedVariant Var mu. 
+Proof. 
+  move =>  Hbound;  eapply  (Impossibility_std_F H Hbound).
+Qed. 
