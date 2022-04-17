@@ -3,7 +3,8 @@ From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg Hydra_Theorems Hydra_Definitions
-     Hydra_Termination Battle_length Hydra_Examples.
+     Hydra_Termination Battle_length Hydra_Examples
+     Epsilon0_Needed_Free  Epsilon0_Needed_Std.
 From gaia Require Export ssete9.
 Require Import T1Bridge GHessenberg GL_alpha GPrelude.
 Set Implicit Arguments.
@@ -88,7 +89,6 @@ Qed.
 
 
 
-
 Section ImpossibilityProof.
   Context (b: Battle). 
   Variable mu:T1.
@@ -117,37 +117,19 @@ Section ImpossibilityProof.
 
   End ImpossibilityProof.
 
-About bVar. 
-
-About Hydra.Epsilon0_Needed_Free.Impossibility_free.
-(*
-Epsilon0_Needed_Free.Impossibility_free :
-forall (mu : hT1) (m : Hydra -> hT1) (Var : Hvariant T1_wf free m),
-BoundedVariant Var mu -> False
-
-Epsilon0_Needed_Free.Impossibility_free is not universe polymorphic
-Arguments Epsilon0_Needed_Free.Impossibility_free _ _%function_scope _ _
-Epsilon0_Needed_Free.Impossibility_free is opaque
-Expands to: Constant hydras.Hydra.Epsilon0_Needed_Free.Impossibility_free
-
- *)
-
-
+(* begin snippet impossibilityThms:: no-out *)
 
 Lemma Impossibility_free mu m (Var: Hvariant nf_Wf free m):
   ~ BoundedVariant Var mu.
 Proof. 
-  move => bvar;
-  refine (Hydra.Epsilon0_Needed_Free.Impossibility_free _  _ _ (bVar  bvar)). 
+  move => bvar; refine (Impossibility_free _ _ _ (bVar  bvar)). 
 Qed.
 
 Lemma Impossibility_std mu  m (Var: Hvariant nf_Wf standard m):
   ~ BoundedVariant Var mu.
 Proof. 
-  move => bvar;
-          refine (Hydra.Epsilon0_Needed_Std.Impossibility_std
-                    _ _ _ (bVar  bvar)).
+  move => bvar; refine (Impossibility_std _ _ _ (bVar  bvar)).
 Qed.
-
+(* end snippet impossibilityThms *)
   
 
