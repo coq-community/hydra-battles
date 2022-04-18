@@ -24,7 +24,9 @@ will show how \coq{} and its standard library are well fitted to help us to unde
  \label{sect:gaia-first-intro}
 The \gaia project~\cite{Gaia} by Jos\'e Grimm, Alban Quadrat,  and Carlos Simpson,
 aims  to formalize mathematics in \coq  in
-the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa. Remarks about compatibility with \gaia are signalled with the picture \gaiasign.
+\index{gaiabridge}{Introduction}
+
+the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa. Remarks about compatibility with \gaia are signalled with the picture \gaiasign. A special index is in construction (page~\pageref{gaia-index}).
  
 
 %\section{Remarks}
@@ -1673,6 +1675,9 @@ Two kinds of representation of ordinals are defined in our development.
 
 \begin{itemize}
 \item A ``mathematical'' representation of the set of countable ordinal numbers, after Kurt Schütte~\cite{schutte}. This representation uses several (hopefully harmless) axioms. We use it as a reference for proving the correctness of ordinal notations.
+
+  \index{gaiabridge}{Introduction}
+  \gaiasign
   We are also progressively importing \gaia's~\cite{Gaia} definitions and theorems, based on Bourbaki's set theory~\cite{Grimm2016}. Chapter~\ref{gaia-chapter} is dedicated to the connexion between libraries \HydrasLib and \gaia.
   
 \item A family of \emph{ordinal notations} (also called \emph{[ordinal] notation systems}), \emph{i.e.} data types used to represent segments $[0,\mu)$, where $\mu$ is some countable ordinal. Each ordinal notation is defined inside the Calculus of Inductive Constructions (without axioms). Many functions are defined, allowing proofs by computation. Note that proofs of 
@@ -2730,14 +2735,6 @@ in Veblen normal form (see
 \end{remark}
 
 
-\section{Ordinal Notations and \gaia's ordinals}
-\gaiasign Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} contains an instance of class \texttt{ON E0lt compare}, where \texttt{E0lt} is the order on the well-formed ordinal terms below $\epsilon_0$ defined in \gaiaHydras library (please see Chapter~\ref{gaia-chapter}).
-
-
-
-
-
-
 
 
 %------------------------------------------------------------------------
@@ -2886,6 +2883,7 @@ to a hierarchy of ordinal notations. For instance, in Library \href{../theories/
 
 
 \subsection{About Gaia}
+\index{gaiabridge}{Introduction}
 \gaiasign Chapter~\vref{gaia-chapter} describes the present state of a
 project of making compatible the libraries \HydrasLib and \gaia. At present, both libraries contain their own version of the inductive type \texttt{T1}, with the same base name for the constructors.
 
@@ -2916,7 +2914,7 @@ For representing finite ordinals, \emph{i.e.} natural numbers, we first introduc
 \label{sect:notation-F}
 
 \input{movies/snippets/T1/finiteOrds}
-
+\index{gaiabridge}{Finite ordinals}
 \paragraph*{\gaiasign}
   In \texttt{gaia.ssete9}, the $n$-th finite ordinal is also written
   \texttt{$\backslash${F}\,$n$}. There is no coercion in \gaia from \texttt{nat} to \texttt{T1}.
@@ -2953,6 +2951,7 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 Note that \texttt{omega} is not an identifier in \HydrasLib, thus any tactic like \texttt{unfold omega} would fail.
 
+\index{gaiabridge}{The ordinal $\omega$}
 \paragraph*{\gaiasign}
 In \texttt{gaia.ssete9}, the ordinal $\omega$ is bound to the \emph{constant}  \texttt{T1omega}.
 
@@ -2977,6 +2976,7 @@ $\phi_0$  as the ordering (\emph{i.e.} enumerating) function of the set  of \emp
 \end{remark}
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Exponential of base $\omega$}
 In \texttt{gaia.ssete9} the identifier \texttt{phi0} is bound to a plain constant (not a notation).
 
   
@@ -3025,6 +3025,7 @@ The function \texttt{pp: T1 -> ppT1} converts any closed term of type \texttt{T1
 \input{movies/snippets/T1/ppAlpha0}
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Pretty printing Cantor normal forms}
 In ~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge},
 we define a variant of \texttt{pp} for pretty-printing terms of type \texttt{ssete9.CantorOrdinal.T1} (see Sect.~\vref{sect:gaia-ppT1}).
 
@@ -3070,6 +3071,8 @@ Links between the function \texttt{compare} and the relations
 \input{movies/snippets/T1/Instances}
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Strict order on ordinals below $\epsilon_0$}
+
 In \gaia, the strict order \texttt{T1lt} on ordinal terms is directly defined as a boolean function (in \ssreflect's style).
 
 \inputsnippets{nfwfgaia/T1ltDef}
@@ -3108,6 +3111,7 @@ the set of all well-formed ordinal terms:
 \input{movies/snippets/T1/nfBadTerm}
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Ordinal terms in Cantor normal form}
 In \gaia, the boolean function which characterizes ordinal terms in normal form is defined as follows:
 
 \inputsnippets{nfwfgaia/T1nfDef}
@@ -3206,6 +3210,7 @@ For instance, let us represent the ordinals $0$ and $\omega$   as instances of t
 %\index{Constants!zero:T1}
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Type of well formed ordinal terms below $\epsilon_0$}
  The library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines a \gaia-compatible type \texttt{E0}.
 
 
@@ -3232,6 +3237,7 @@ a strictly increasing sequence of ordinals.
 
 
 \paragraph*{\gaiasign}
+\index{gaiabridge}{Limit and successor ordinals}
 In \gaia, the boolean functions associated with limit and successor ordinals are called \texttt{T1limit} and \texttt{T1is\_succ}.
 
  From~\href{../theories/html/gaia_hydras.HydraGaia_Examples.html}{gaia\_hydras.HydraGaia\_Examples}.
@@ -3498,6 +3504,15 @@ We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's 
 \input{movies/snippets/Correctness_E0/Epsilon0Correct}
 
 
+\subsection{An ordinal notation for  \gaia's ordinals}
+\index{gaiabridge}{Ordinal notations}
+
+\gaiasign Module~\href{../theories/html/gaia.T1Bridge.html}{gaia.T1Bridge} contains an instance of class \texttt{ON E0lt compare}, where \texttt{E0lt} is the order on the well-formed ordinal terms below $\epsilon_0$ defined in \gaiaHydras library (please see Chapter~\ref{gaia-chapter}).
+
+\inputsnippets{T1Bridge/gEpsilon0}
+
+
+
 
 \index{hydras}{Projects}
 \begin{project}
@@ -3594,7 +3609,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \label{hydra-variant}
     \label{sect:hessenberg-def}
     
-    Natural sum (Hessenberg's  sum) is a commutative and monotonous version of
+    Natural sum (Hessenberg  sum) is a commutative and monotonous version of
     addition. It is used as an auxiliary operation  for defining variants
     for hydra battles, where Hercules is allowed to chop off any  head of the hydra.
 
@@ -3759,8 +3774,8 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     Compare \texttt{oplus}'s definition (with inner fixpoint) with other possibilities
     (\texttt{coq-equations}, \texttt{Function}, etc.).
     \end{project}
-    \subsection{More theorems on Hessenberg's sum}
-
+    \subsection{More theorems on Hessenberg sum}
+\index{gaiabridge}{Hessenberg sum}
     We need to prove some properties of $\oplus$, particularly about 
     its relation with the order $<$ on \texttt{T1}.
 
@@ -3784,7 +3799,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 \input{movies/snippets/Hessenberg/oplusComm}
   
 
-    Associativity of Hessenberg's sum is proved the same way.
+    Associativity of Hessenberg sum is proved the same way.
 
     \input{movies/snippets/Hessenberg/oplusAssoc0}
     \input{movies/snippets/Hessenberg/oplusAssoc}
@@ -3808,9 +3823,9 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
 
     \paragraph*{\gaiasign} The module
-      \href{../theories/html/gaia_hydras.~GHessenberg.html}{gaia\_hydras.GHessenberg} defines a version of Hessenberg's sum
+      \href{../theories/html/gaia_hydras.~GHessenberg.html}{gaia\_hydras.GHessenberg} defines a version of Hessenberg sum
       compatible with \gaia's type \texttt{T1}.
-      
+      \index{gaiabridge}{Hessenberg sum}
     \subsection{A termination measure for hydra battles }
 
     \label{sec:hydra-measure}
@@ -3848,6 +3863,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
     \input{movies/snippets/Hydra_Termination/FinalThm}
 
     \paragraph*{\gaiasign}
+    \index{gaiabridge}{Termination of all hydra battles}
     The module~\href{../theories/html/gaia_hydras.GHydra.html}{gaia\_hydras.GHydra} contains a proof of \gaiaHydras version of termination of all battles.
 
     \inputsnippets{GHydra/mDef, GHydra/mVariant, GHydra/Termination}
@@ -4009,7 +4025,7 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 
 \paragraph*{\gaiasign} Our library~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon} transposes the  function \texttt{canon} into \gaia's type \texttt{T1}
 (please see Sect.\~ref{sect:gcanon}).
-
+\index{gaiabridge}{Canonical sequences}
 \paragraph*{Remark}
 In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. They are planned to be deprecated.
 
@@ -4057,7 +4073,7 @@ We prove by transfinite induction over $\alpha$ that $\canonseq{\alpha}{i}$ is a
 
 \paragraph*{\gaiasign} This lemma is also available in
 Library ~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon}:
-
+\index{gaiabridge}{Canonical sequences}
 \inputsnippets{GCanon/gcanonLt}
 
 
@@ -4080,6 +4096,7 @@ relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-typ
 We can also state directly that $\lambda$ is a (strict) least upper bound of the elements of its canonical sequence.
 
 \input{movies/snippets/Canon/canonSLimitLub}
+\index{gaiabridge}{Canonical sequences}
 
 \paragraph*{\gaiasign}  In \gaiaHydras, the statement use a slightly different vocabulary:
 \inputsnippets{GCanon/gcanonLimitOf}
@@ -4106,6 +4123,7 @@ to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}
 
 
 \section{Accessibility inside \texorpdfstring{$\epsilon_0$}{epsilon0}\,: paths}
+\index{gaiabridge}{Accessibility and paths inside $\epsilon_0$}
 \index{maths}{Ordinal numbers!Accessibility inside epsilon0}
 \label{sect:pathes-intro}
 
@@ -4161,6 +4179,7 @@ In the present version of our library, we use a variant \texttt{path\_toS} of
 \end{remark}
 
 \paragraph*{\gaiasign}
+
 The library~\href{../theories/html/gaia_hydras.GPaths.html}{gaia\_hydras.GPaths} transposes the  notion of path into \gaia's type \texttt{T1}
 (please see Sect.\~ref{sect:gpath}).
 
@@ -4364,7 +4383,7 @@ We have now proved there exists no bounded variant for the class of free battles
 
 
 \paragraph*{\gaiasign} Please look at the \gaia version of this theorem in Sect.~\vref{sect:impossibility-gaia-version}.
-
+\index{gaiabridge}{Impossibility theorems}
 \section{The case of standard battles}
 \label{sec:standard-intro}\label{std-case}
 One may wonder if our theorem holds also in the framework of standard battles. Unfortunately, its proof relies on the lemma \texttt{LT\_to\_round\_plus} of
@@ -4834,6 +4853,7 @@ Since $m$ is assumed to be a variant for standard battles, we get the inequality
 \input{movies/snippets/Epsilon0_Needed_Std/endOfProof}
 
 \paragraph*{\gaiasign} Please look at the \gaia version of this theorem in Sect.~\vref{sect:impossibility-gaia-version}.
+\index{gaiabridge}{Impossibility theorems}
 
 
 
@@ -5776,7 +5796,7 @@ Properties of the Ackermann function are studied in
 \end{exercise} 
 
 \paragraph*{\gaiasign} Library~\href{../theories/html/gaia_hydras.GF_alpha.html}{gaia\_hydras.GF\_alpha}  defines the functions $F_\alpha$ for \gaia's world.
-
+\index{gaiabridge}{Rapidly growing functions}
 
 \section{More about rapidly growing functions}
 

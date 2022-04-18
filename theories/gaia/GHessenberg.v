@@ -55,11 +55,11 @@ Qed.
 Lemma oplusE (a b :T1) :
   a o+ b =
     match a, b with
-      zero, _ => b
+    | zero, _ => b
     | _, zero => a
     | cons a1 n1 b1, cons a2 n2 b2 =>
         match compare  a1 a2 with
-          Gt => cons a1 n1 (b1 o+ b)
+        | Gt => cons a1 n1 (b1 o+ b)
         | Eq => cons a1 (S (n1 + n2)) (b1 o+ b2)
         | Lt => cons a2 n2 (a o+ b2)
         end
@@ -72,9 +72,6 @@ Proof.
   move => t n t0 t1 n0 t2; rewrite !g2h_cons compare_g2h. 
   case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
-
-
-
 
 (* begin snippet oplusCoplusA:: no-out *)
 Lemma oplusC (a b: T1):  T1nf a -> T1nf b -> a o+ b = b o+ a.

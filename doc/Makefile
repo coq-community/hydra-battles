@@ -16,6 +16,7 @@ hydras.pdf: ${DEP_FILES}
 	lualatex hydras.tex
 	bibtex hydras
 	lualatex hydras.tex
+	makeindex gaiabridge
 	makeindex coq
 	makeindex maths
 	makeindex hydras

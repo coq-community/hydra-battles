@@ -1,5 +1,6 @@
 \chapter{Gaia and the hydra (draft)}
 \index{coq}{Plug-ins!Gaia}
+\index{gaiabridge}{Introduction}
 \label{gaia-chapter}
 
 \section{Introduction}
@@ -232,8 +233,8 @@ thus \texttt{hydras.Epsilon0.Foo.bar}.
 \end{enumerate}
 
 \subsection{Hessenberg sum}
-
-Natural sum  (a.k.a. Hessenberg's  sum) is defined in
+\index{gaiabridge}{Hessenberg sum}
+Natural sum  (a.k.a. Hessenberg  sum) is defined in
 \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} and is used for proving termination of all hydra battles (See Sect.~\ref{sect:hessenberg-def}).
 We define this function in \href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg} by delegation to \HydrasLib'.
 
@@ -262,6 +263,8 @@ Hessenberg sum is associative, commutative and strictly monotonous (on ordinal t
 
 \subsection{Canonical sequences}
 \label{sect:gcanon}
+\index{gaiabridge}{Canonical sequences}
+
 Canonical sequences are described in Chapter~\vref{chap:ketonen}, and implemented in
 \href{../theories/html/hydras.Epsilon0.Canon.html}%
 {\texttt{hydras.Epsilon0.Canon}}.
@@ -269,7 +272,7 @@ Module~\href{../theories/html/gaia_hydras.GCanon.html}%
 {\texttt{gaia\_hydras.GCanon}}, imports definitions and results from that library.
 
 
-Like for Hessenberg's sum, we define a function \texttt{canon}
+Like for Hessenberg sum, we define a function \texttt{canon}
 \emph{via} the
 translations \texttt{g2h} and \texttt{h2g}.
 
@@ -309,6 +312,7 @@ Let us recall \gaia's definition of $\omega$-limit.
 
 \subsection{Accessibility in \texorpdfstring{$\epsilon_0$}{epsilon\_0}}
 \label{sect:gpath}
+\index{gaiabridge}{Accessibility and paths inside $\epsilon_0$}
 
 The library \href{../theories/html/gaia_hydras.GPaths.html}%
 {\texttt{gaia\_hydras.GPaths}} imports definitions and lemmas from
@@ -362,6 +366,8 @@ As a corollary, we relate ordinal inequality to standard paths.
 
 
 \section{Rapidly growing arithmetic functions}
+\index{gaiabridge}{Rapidly growing functions}
+
 In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$.
 The type of such families is \texttt{E0 -> nat -> nat} where
 \texttt{E0} is the type of ordinal terms in Cantor normal form, strictly below $\epsilon_0$.

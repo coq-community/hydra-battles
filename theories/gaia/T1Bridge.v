@@ -936,7 +936,7 @@ Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
 (* end snippet ExampleComp *)
 
 (* begin snippet gEpsilon0:: no-out *)
-#[global] Instance gEpsilon0 : ON E0lt compare.
+#[global] Instance Epsilon0 : ON E0lt compare.
 Proof. split; [apply: E0_comp | apply: gE0lt_wf]. Qed.
 (* end snippet gEpsilon0:: no-out *)
 
