@@ -35,7 +35,7 @@ Lemma L_eq2 alpha i :
 Proof.
   move => H;  case (E0is_succE H) => x Hx; subst.
   rewrite E0pred_succK /L_ L_alpha.L_eq2 => //. 
-  f_equal; rewrite g2h_E0succ; by rewrite E0pred_of_Succ. 
+  congr L_alpha.L_; rewrite g2h_E0succ; by rewrite E0pred_of_Succ. 
 Qed. 
 
 (* begin snippet Leq3:: no-out *)
@@ -50,8 +50,8 @@ Lemma L_limE alpha i :
   E0limit alpha ->  L_ alpha i = L_ (E0Canon alpha i) (S i).
 (* end snippet Leq4 *)
 Proof.
-  move => Halpha; rewrite /E0limit /L_  L_alpha.L_lim_eqn /E0Canon; f_equal.
-  - apply E0_eq_intro; cbn; by rewrite g2h_canon.
+  move => Halpha; rewrite /E0limit /L_  L_alpha.L_lim_eqn /E0Canon.
+  - congr L_alpha.L_;  apply E0_eq_intro; cbn; by rewrite g2h_canon.
   - move: Halpha ; by rewrite /E0limit.
 Qed.
 

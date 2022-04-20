@@ -143,7 +143,7 @@ Lemma canon_SSn_zero (i : nat) (alpha : T1) (n : nat):
 (* end snippet gcanonSSn *)
 Proof.
   rewrite -(h2g_g2hK alpha) /canon g2h_cons g2h_h2gK => Hnf;
-  rewrite -h2g_cons h2g_g2hK canon_SSn_zero; f_equal. 
+  rewrite -h2g_cons h2g_g2hK canon_SSn_zero. congr h2g.  
   move: Hnf; by rewrite h2g_g2hK hnf_g2h.  
 Qed.
 
@@ -197,7 +197,8 @@ Lemma canon_lim2 i n (lambda : T1) (Hnf: T1nf lambda) (Hlim: T1limit lambda):
   canon (cons lambda n.+1 zero) i = cons lambda n (phi0 (canon lambda i)).
 (* end snippet gCanonLim2 *)
 Proof. 
-  rewrite -g2h_eqE g2h_canon  !g2h_cons  canon_lim2; f_equal. 
+  rewrite -g2h_eqE g2h_canon  !g2h_cons  canon_lim2.
+  -  congr T1.cons.
   - by rewrite -g2h_canon. 
   - by rewrite hnf_g2h. 
   - by rewrite limitb_ref h2g_g2hK. 

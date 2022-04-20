@@ -29,8 +29,7 @@ Lemma hmult_dist : right_distributive T1mul T1add.
 Proof.
   move => a b c; move :(mul_distr (h2g a) (h2g b) (h2g c)) => H.
   rewrite -(g2h_h2gK a) -(g2h_h2gK b) -(g2h_h2gK c).
-  rewrite -!g2h_plusE  -!g2h_multE H.
-  f_equal; by rewrite -g2h_plusE. 
+  by rewrite -!g2h_plusE  -!g2h_multE H -g2h_plusE. 
 Qed. 
 (* end snippet distributivity:: no-out *)
 

@@ -100,7 +100,7 @@ Lemma F_succE alpha i :
 Proof.
   rewrite (Iterates.iterate_ext _  (F_alpha.F_ (E0_g2h alpha))); last first.
   by rewrite /F_. 
-  rewrite -F_succ_eqn /F_; f_equal;
+  rewrite -F_succ_eqn /F_. congr hF_;
     apply E0_eq_intro => /= ;  by rewrite g2h_succ. 
 Qed.
 
@@ -110,7 +110,7 @@ Lemma F_limE alpha i:
 (* end snippet FLimEqn *)
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.
- -  f_equal; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
+ -  congr hF_; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
  -  rewrite /hE0limit limitb_ref.
    move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2hK. 
 Qed.
@@ -121,21 +121,21 @@ Lemma LF1 i: F_ (E0fin 1) i = ((2 * i) .+1)%N.
 Proof. 
   replace (F_ (E0fin 1) i) with (F_alpha.F_ (hE0fin 1) i). 
   - rewrite LF1 => //.
-  - rewrite /F_; f_equal; by apply E0_eq_intro .
+  - rewrite /F_; congr hF_; by apply E0_eq_intro .
 Qed.
 
 Lemma LF2 i:  (Exp2.exp2 i * i < F_ (E0fin 2) i)%N.
 Proof. 
   apply /ltP; replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
   - apply LF2. 
-  - rewrite /F_; f_equal;  by apply E0_eq_intro .
+  - rewrite /F_; congr hF_ ; by apply E0_eq_intro .
 Qed.
 
 Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0fin 2) i)%N.
 Proof. 
   move => Hi; apply /ltP; replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
   - apply LF2'; by apply /leP. 
-  - rewrite /F_; f_equal; by apply E0_eq_intro .
+  - rewrite /F_; congr hF_; by apply E0_eq_intro .
 Qed. 
 
 Lemma LF3_2:
