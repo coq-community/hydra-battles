@@ -499,13 +499,12 @@ Proof.
 Qed.
 (*||*)
 
-Lemma phi0_mono_R_weak : forall alpha beta, 
+Lemma phi0_mono_R_weak (alpha beta: Ord): 
     phi0 alpha <= phi0 beta -> alpha <= beta. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intros alpha beta;  pattern phi0; apply phi0_elim.
-  intros.
-  eapply ordering_function_mono_weakR;eauto.
+  pattern phi0; apply phi0_elim.
+  intros f Hf; eapply ordering_function_mono_weakR;eauto.
   all : split.
 Qed.
 (*||*)
@@ -522,36 +521,28 @@ Qed.
 Lemma phi0_positive (alpha : Ord):  zero < phi0 alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intros.
-  apply lt_le_trans with (phi0 zero).
-  rewrite phi0_zero.
-  eauto with schutte arith.
-  
+  intros;  apply lt_le_trans with (phi0 zero).
+  rewrite phi0_zero; eauto with schutte arith.
   pattern phi0 ; apply phi0_elim.
-  intros.
-  eapply ordering_function_mono_weak; eauto with schutte.
+  intros; eapply ordering_function_mono_weak; eauto with schutte.
 Qed.
 (*||*)
 
 
-Lemma plus_lt_phi0 : forall ksi alpha,
-    ksi < phi0 alpha ->
-    ksi + phi0 alpha = phi0 alpha. (* .no-out *)
+Lemma plus_lt_phi0 (ksi alpha: Ord):
+    ksi < phi0 alpha ->  ksi + phi0 alpha = phi0 alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intros ksi alpha ;  pattern (phi0 alpha);  apply phi0_elim.
-  intros f Hf;  assert (AP (f alpha)).
+  pattern (phi0 alpha);  apply phi0_elim;  intros f Hf;
+    assert (H: AP (f alpha)).
   {  destruct Hf as [H0 H1 H2 H3]. 
      apply H1 ; split. }
   destruct H;  auto. 
 Qed.
 (*||*)
 
-
-Lemma phi0_alpha_phi0_beta :
-  forall alpha beta, alpha < beta ->
-                     phi0 alpha + phi0 beta =
-                     phi0 beta. (* .no-out *)
+Lemma phi0_alpha_phi0_beta (alpha beta: Ord) :
+  alpha < beta ->  phi0 alpha + phi0 beta = phi0 beta. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intros.
@@ -686,7 +677,7 @@ Proof.
      specialize (lt_omega_finite H0);intros [i Hi].
      specialize (@is_limit_phi0 (F 1));  intro H2.
      rewrite Hi in H2;   destruct (finite_not_limit i).
-     apply H2,  lt_succ.
+     apply H2, lt_succ.
 Qed.
 (*||*)
 

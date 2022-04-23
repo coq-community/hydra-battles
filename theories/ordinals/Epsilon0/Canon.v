@@ -55,11 +55,17 @@ end.
 
 Section Canon_examples.
 
+#[local] Open Scope ppT1_scope.
 (* begin snippet canonExamples *)
-Compute pp (canon (T1omega ^ T1omega) 3).
-
-Compute pp (canon (T1omega ^ T1omega * 3) 42).
+Compute pp (canon (phi0  T1omega) 3).
 (* end snippet canonExamples *)
+
+(* begin snippet canonExamplesb *)
+Compute pp (canon (T1mul (phi0 T1omega) 3) 42).
+(* end snippet canonExamplesb *)
+
+
+Close Scope ppT1_scope.
 
 Compute pp (canon (T1omega ^ T1omega) 0).
 Compute pp (canon (T1omega ^T1omega) 1).

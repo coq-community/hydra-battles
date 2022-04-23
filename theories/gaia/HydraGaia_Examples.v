@@ -63,7 +63,7 @@ Check T1lt (\F 42) T1omega.
 
 Check (\F 42 < T1omega)%ca.
 
-Check \F 42 < T1omega.
+Check \F 42 < T1omega. (* within cantor_scope *)
 (* end snippet F42Omega *)
 
 (* begin snippet F42Omegab:: no-out *)

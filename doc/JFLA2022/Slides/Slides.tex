@@ -1,7 +1,12 @@
 \documentclass[10pt]{beamer}
 \usetheme{Montpellier}
-
 \usepackage{xspace, alltt}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{fontspec}
+%\setmainfont{DejaVu Serif}
+
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
 
 \newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
 \newcommand{\coq}{Coq\xspace}
@@ -88,12 +93,15 @@
 %%%%%%% Specific macros
 
 \newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+\newcommand{\rounds}{\mbox{\,\texttt{-+->}\,}}
+\newcommand{\round}{\mbox{\,\texttt{-1->}\,}}
+\newcommand{\rplus}[1]{\mbox{$\,\underset{#1}{\xrightarrow{\textcolor{white}{\,#1\,}}}\,$}}
 
 
 \title{Hydras \& Co.: Formalized mathematics in Coq\\
   for inspiration and entertainment
 }
-\date{JFLA, February 2022}
+\date{JFLA, June 2022}
 \author{
   Pierre Castéran \inst{1}
   \and
@@ -141,7 +149,8 @@
       \begin{itemize}
       \item CI/CD
         \item Tools for collaboration (issues, PR, etc.)
-      \end{itemize}
+        \end{itemize}
+           \item book in pdf (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
     \end{itemize}
   \end{block}
   \begin{block}{Contents}
@@ -149,8 +158,8 @@
     \item Evolved version  of two contributions: \textcolor{plugincolor}{Cantor} and \textcolor{plugincolor}{Additions}
     \item Maintenance of \textcolor{plugincolor}{Ackermann}
       (part of Russel O'Connor's \textcolor{plugincolor}{Goedel})
-    \item Preliminary bridge to \textcolor{plugincolor}{Gaia} (José Grimm)
-      \item Documentation in pdf (280p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
+    \item Bridge to \textcolor{plugincolor}{Gaia} (José Grimm) (\emph{in construction})
+   
     \end{itemize}
   \end{block}
  
@@ -210,7 +219,7 @@
   \begin{block}{}
     \Hydras presents a consistent set of examples, which allow us to formalize 
     some \textcolor{mathcolor}{discrete math}, discuss
-    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and use\footnote{and depend on!} \textcolor{plugincolor}{a few plug-ins}.
+    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and depend on \textcolor{plugincolor}{a few plug-ins}.
   \end{block}
   \begin{block}{}
     \begin{description}
@@ -309,7 +318,7 @@
     \end{tikzpicture}
 
     \caption{Three successive states of a hydra in a battle,
-      at time $t=0,1,2$\label{life1}}
+      at time $t=1,2,3$\label{life1}}
     \label{fig:round}
   \end{figure}
 
@@ -368,7 +377,7 @@
       \node [black](hn4f) at (24,0) {$\bullet$};
       
     \end{tikzpicture}
-    \caption{At $t=3,\dots,\textcolor{red}{x}-1,\textcolor{red}{x=?}$
+    \caption{At $t=4,\dots,\textcolor{red}{x}-1,\textcolor{red}{x=?}$
       \label{life2}}
   \end{figure}
 \end{frame}
@@ -376,19 +385,50 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-    \begin{block}{Mathematical formalization}
+  \frametitle{The Ketonen-Solovay machinery\footnote{Rapidly Growing {R}amsey Functions (1981)}}
+    \begin{block}{Formalization}
+
+      $$\omega^{\omega^2+1}+1 \rplus{1} \omega^{\omega^2+1}
+      \rplus{2} \omega^{\omega^2}\times 3 
+      \rplus{3} \omega^{\omega^2}\times 2 +
+      \omega ^ {\omega \times 4}, \dots,2,1,0$$
+
+      \vspace{6pt}
+      
+      $$ \omega^{\omega^2+1}+1 \rplus{1,2,3,4,\dots,x} 0$$
+    \end{block}
     
-    \begin{itemize}
-    \item   We associate a hydra to each ordinal \textcolor{mathcolor}{$\alpha<\epsilon_0$} (in Cantor normal form). For instance, the first hydra of our example is the image of \textcolor{mathcolor}{$\omega^{\omega^2+1}+1$}.
-    \item A round (at time $t\in\mathbb{N}$) of a battle transforms an hydra associated with \textcolor{mathcolor}{$\alpha$} into the hydra associated with \textcolor{mathcolor}{$\canonseq{\alpha}{t+1}$}, the $t+1$-st element of the \emph{canonical sequence} of \textcolor{mathcolor}{$\alpha$}.
-    \item We want to ``compute'' the length of sequences of the form 
-      \textcolor{mathcolor}{$\langle \alpha_k=\alpha,\dots,\alpha_{i+1}=\canonseq{\alpha_i}{i+1},\dots, 1,0\rangle$}, where \textcolor{mathcolor}{$k\in\mathbb{N}$}.
-      \item Such sequences are studied
-      as \emph{$\alpha$-large sets of natural numbers}  in Ketonen \& Solovay's article
-      \emph{Rapidly Growing {R}amsey Functions (1981)}.
-    \end{itemize}
-  \end{block}
+      \begin{block}{Small steps}
+        At time $i$, 
+           $\alpha \rplus{i} \canonseq{\alpha}{i}$,
+        where $\canonseq{\alpha}{\_}$ is the \emph{canonical sequence} of $\alpha$.
+        \begin{itemize}
+        \item $\canonseq{0}{i}=0$
+        \item $\canonseq{\beta+1}{i}=\beta$
+         \item If $\lambda$ is a limit ordinal, then $\lambda$ is the $\omega$-limit of $\canonseq{\lambda}{\_}$.
+        \end{itemize}
+    \end{block}
+  
+    
+      % We associate a hydra to each ordinal \textcolor{mathcolor}{$\alpha<\epsilon_0$} (in Cantor normal form). For instance, the first hydra of our example is the image of \textcolor{mathcolor}{$\omega^{\omega^2+1}+1$}.
+    
+    % \item We want to ``compute'' the length of sequences of the form 
+    %   \textcolor{mathcolor}{$\langle \alpha_k=\alpha,\dots,\alpha_{i+1}=\canonseq{\alpha_i}{i+1},\dots, 1,0\rangle$}, where \textcolor{mathcolor}{$k\in\mathbb{N}$}.
+   
+ 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+   
+     \begin{block}{}
+       \begin{itemize}
+       \item In Coq, canonical sequences are defined by structural recursion on ordinal terms in Cantor normal form.
+         \input{../../movies/snippets/Canon/canonExamplesb}
+       \item Not the same definition as in K. \& S.'s article, but same abstract properties (monotony, limits, \dots).
+       \end{itemize}
+     \end{block}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -720,7 +760,7 @@ Goedel  & \texttt{8.13.0} & 2,799 & 10,762 \\
 Gaia &  \texttt{1.12} & 28,850 & 124,839 \\
 Hydra-battles & \texttt{0.5} & 14,368 & 48,385 \\
 Addition-chains & \texttt{0.5} & 1,961 & 2,210 \\
-Gaia-hydras &  \texttt{0.5} & 81 & 177 \\
+Gaia-hydras &  \texttt{0.8} & 677 & 2,023 \\
 \hline
 \end{tabular}
 \caption{\scriptsize Current numbers of lines of code for packages in the \Hydras galaxy.}
