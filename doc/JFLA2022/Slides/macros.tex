@@ -1,0 +1,96 @@
+\usepackage{xspace, alltt}
+\usepackage[utf8x]{inputenc}
+
+\usepackage{fontspec}
+%\setmainfont{DejaVu Serif}
+
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+
+\newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
+\newcommand{\coq}{Coq\xspace}
+\newcommand{\coqdoc}{Coqdoc\xspace}
+\newcommand{\coqmakefile}{\texttt{coq\_makefile}\xspace}
+\newcommand{\community}{Coq-community\xspace}
+\newcommand{\gaia}{Gaia\xspace}
+\newcommand{\alectr}{Alectryon\xspace}
+\newcommand{\equations}{Equations\xspace}
+\newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
+\newcommand{\make}{\texttt{make}\xspace}
+
+\definecolor{orange}{rgb}{1.0,0.6,0.0}
+\definecolor{darkorange}{rgb}{0.7,0.25,0.0}
+\definecolor{plugincolor}{rgb}{0.6,0.0,0.6}
+\definecolor{mathcolor}{rgb}{0.0,0.0,0.6}
+\definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
+\definecolor{lightblue}{rgb}{0.2,0.2,1.0}
+\definecolor{metavarcolor}{rgb}{0.5,0.0,1.0}
+\definecolor{darkgreen}{rgb}{0.1,0.7,0.1}
+\definecolor{answercolor}{rgb}{.08,.15,.8}
+\definecolor{normalcolor}{rgb}{0.0,0.0,0.0}
+\definecolor{exbluecolor}{rgb}{0.1,0.1,0.9}
+\definecolor{dontlookcolor}{rgb}{0.5,0.5,0.5}
+\definecolor{termcolor}{rgb}{0.0,0.1,0.9}
+\definecolor{lookcolor}{rgb}{0.5,0.1,0.0}
+\definecolor{prooftermcolor}{rgb}{0.3,0.1,1.0}
+\definecolor{typecolor}{rgb}{1.0,0.6,0.0}
+\definecolor{taccolor}{rgb}{0.70,0.10,0.0}
+\definecolor{pink}{rgb}{0.8,0.6,0.6}
+\definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.4,0.8}
+\usepackage{tikz}
+\usepackage{tikzsymbols}
+\usepackage{pifont}
+\usetikzlibrary{arrows}
+
+\usepackage{ifpdf}
+\ifpdf
+\usepackage{graphicx}
+\else
+\usepackage[dvips]{graphicx}
+\fi
+
+%%%% For Alectryon
+
+\usepackage{texments}
+\usepackage{./alectryon}
+\usepackage{../pygments}
+
+% Prevent breaks in the middle of syntactic units
+\let\OldPY\PY
+\def\PY#1#2{\OldPY{#1}{\mbox{#2}}}
+
+
+%%% One hypothesis per line 
+\makeatletter
+\renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
+\makeatother
+
+%%% \snippets{A,B,C,…} inputs a series of snippets as one block (with \itemsep
+%%% between them).  A, B, C should be paths to files in snippets/.
+
+\usepackage{etoolbox}
+\makeatletter
+
+\newcommand{\pathtomovies}{.}
+
+\newcommand{\inputsnippets}[1]
+{{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
+    \alectryon@copymacros\begin{io}
+      \forcsvlist{\item\@inputsnippet}{#1}
+    \end{io}}}
+\let\input@old\input % Save definition of \input
+\newcommand{\@inputsnippet}[1]
+{{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
+    \input@old{{\pathtomovies}/#1}}}
+\makeatother
+
+% End of Alectryon stuff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%% Specific macros
+
+\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
+\newcommand{\rounds}{\mbox{\,\texttt{-+->}\,}}
+\newcommand{\round}{\mbox{\,\texttt{-1->}\,}}
+\newcommand{\rplus}[1]{\mbox{$\,\underset{#1}{\xrightarrow{\textcolor{white}{\,#1\,}}}\,$}}

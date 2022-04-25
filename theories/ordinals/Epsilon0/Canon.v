@@ -61,7 +61,7 @@ Compute pp (canon (phi0  T1omega) 3).
 (* end snippet canonExamples *)
 
 (* begin snippet canonExamplesb *)
-Compute pp (canon (T1mul (phi0 T1omega) 3) 42).
+Compute pp (canon (phi0 (succ (phi0 (succ T1omega)))) 42).
 (* end snippet canonExamplesb *)
 
 

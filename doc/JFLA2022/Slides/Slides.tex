@@ -1,102 +1,7 @@
 \documentclass[10pt]{beamer}
 \usetheme{Montpellier}
-\usepackage{xspace, alltt}
-\usepackage[utf8x]{inputenc}
 
-\usepackage{fontspec}
-%\setmainfont{DejaVu Serif}
-
-\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
-
-\newcommand{\TODO}[2][]{[\textcolor{red}{TODO (#1):} \emph{#2}]}
-\newcommand{\coq}{Coq\xspace}
-\newcommand{\coqdoc}{Coqdoc\xspace}
-\newcommand{\coqmakefile}{\texttt{coq\_makefile}\xspace}
-\newcommand{\community}{Coq-community\xspace}
-\newcommand{\gaia}{Gaia\xspace}
-\newcommand{\alectr}{Alectryon\xspace}
-\newcommand{\equations}{Equations\xspace}
-\newcommand{\Hydras}{Hydras \& Co$\text.$\xspace}
-\newcommand{\make}{\texttt{make}\xspace}
-
-\definecolor{orange}{rgb}{1.0,0.6,0.0}
-\definecolor{darkorange}{rgb}{0.7,0.25,0.0}
-\definecolor{plugincolor}{rgb}{0.6,0.0,0.6}
-\definecolor{mathcolor}{rgb}{0.0,0.0,0.6}
-\definecolor{coqstylecolor}{rgb}{0.0,0.0,01.0}
-\definecolor{lightblue}{rgb}{0.2,0.2,1.0}
-\definecolor{metavarcolor}{rgb}{0.5,0.0,1.0}
-\definecolor{darkgreen}{rgb}{0.1,0.7,0.1}
-\definecolor{answercolor}{rgb}{.08,.15,.8}
-\definecolor{normalcolor}{rgb}{0.0,0.0,0.0}
-\definecolor{exbluecolor}{rgb}{0.1,0.1,0.9}
-\definecolor{dontlookcolor}{rgb}{0.5,0.5,0.5}
-\definecolor{termcolor}{rgb}{0.0,0.1,0.9}
-\definecolor{lookcolor}{rgb}{0.5,0.1,0.0}
-\definecolor{prooftermcolor}{rgb}{0.3,0.1,1.0}
-\definecolor{typecolor}{rgb}{1.0,0.6,0.0}
-\definecolor{taccolor}{rgb}{0.70,0.10,0.0}
-\definecolor{pink}{rgb}{0.8,0.6,0.6}
-\definecolor{darkmagenta}{rgb}{0.4,0.0,0.6}
-\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
-\definecolor{cyan}{rgb}{0.0,0.4,0.8}
-\usepackage{tikz}
-\usepackage{tikzsymbols}
-\usepackage{pifont}
-\usetikzlibrary{arrows}
-
-\usepackage{ifpdf}
-\ifpdf
-\usepackage{graphicx}
-\else
-\usepackage[dvips]{graphicx}
-\fi
-
-%%%% For Alectryon
-
-\usepackage{texments}
-\usepackage{./alectryon}
-\usepackage{../pygments}
-
-% Prevent breaks in the middle of syntactic units
-\let\OldPY\PY
-\def\PY#1#2{\OldPY{#1}{\mbox{#2}}}
-
-
-%%% One hypothesis per line 
-\makeatletter
-\renewcommand{\alectryon@hyps@sep}{\alectryon@nl}
-\makeatother
-
-%%% \snippets{A,B,C,…} inputs a series of snippets as one block (with \itemsep
-%%% between them).  A, B, C should be paths to files in snippets/.
-
-\usepackage{etoolbox}
-\makeatletter
-
-\newcommand{\pathtomovies}{.}
-
-\newcommand{\inputsnippets}[1]
-{{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}% Adjust spacing
-    \alectryon@copymacros\begin{io}
-      \forcsvlist{\item\@inputsnippet}{#1}
-    \end{io}}}
-\let\input@old\input % Save definition of \input
-\newcommand{\@inputsnippet}[1]
-{{\renewenvironment{alectryon}{}{}% Skip \begin{alectryon} included in snippet
-    \input@old{{\pathtomovies}/#1}}}
-\makeatother
-
-% End of Alectryon stuff
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-%%%%%%% Specific macros
-
-\newcommand{\canonseq}[2]{\mbox{$\{#1\}(#2)$}}
-\newcommand{\rounds}{\mbox{\,\texttt{-+->}\,}}
-\newcommand{\round}{\mbox{\,\texttt{-1->}\,}}
-\newcommand{\rplus}[1]{\mbox{$\,\underset{#1}{\xrightarrow{\textcolor{white}{\,#1\,}}}\,$}}
-
+\input{macros}
 
 \title{Hydras \& Co.: Formalized mathematics in Coq\\
   for inspiration and entertainment
@@ -137,8 +42,27 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
+\begin{frame}
+  \tableofcontents
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+    \frametitle{\community}
+    \begin{block}{}
+      \community is an informal organization that aims to maintain interesting open source \coq projects and facilitate collaboration among Coq users on documentation, tooling, etc.
+      \begin{itemize}
+      \item Created in 2018,  run by volunteer Coq users on GitHub
+      \item At present, over than 50 projects, maintained by over than 30 volunteers
+      \item Some packages were unmaintained before their integration to \community. According to their scientific or historical interest, we decided to revive them.
+        \item After their transfer, packages may be the object of large changes  and refactorings.
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{The \Hydras project}
@@ -202,14 +126,15 @@
     \item No need to be complete (there is already a reference manual)
     \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
     \item Allow to compare several different formalizations of a given notion, and several proofs of the same theorem.
+      \item Show also interesting dead ends (formalization, tactics, proof structure).
     \end{itemize}
   \end{block}
-  \begin{block}{Examples}
-    \begin{itemize}
-    \item Tsukuba Coq Users's Group: regular languages, $\lambda$-calculus, arithmetic, ... (in Japanese + ssreflect)
-    \item Software Foundations (B. Pierce \emph{et al.})
-    \end{itemize}
-  \end{block}
+  % \begin{block}{Examples}
+  %   \begin{itemize}
+  %   \item Tsukuba Coq Users's Group: regular languages, $\lambda$-calculus, arithmetic, ... (in Japanese + ssreflect)
+  %   \item Software Foundations (B. Pierce \emph{et al.})
+  %   \end{itemize}
+  % \end{block}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -412,11 +337,11 @@
     
       % We associate a hydra to each ordinal \textcolor{mathcolor}{$\alpha<\epsilon_0$} (in Cantor normal form). For instance, the first hydra of our example is the image of \textcolor{mathcolor}{$\omega^{\omega^2+1}+1$}.
     
-    % \item We want to ``compute'' the length of sequences of the form 
-    %   \textcolor{mathcolor}{$\langle \alpha_k=\alpha,\dots,\alpha_{i+1}=\canonseq{\alpha_i}{i+1},\dots, 1,0\rangle$}, where \textcolor{mathcolor}{$k\in\mathbb{N}$}.
+ 
    
  
-\end{frame}
+  \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
    
@@ -429,6 +354,49 @@
      \end{block}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}
+    \frametitle{Paths and accessibility}
+    \begin{block}{Theorem (K. \& S., 1981) }
+      % If $\beta<\alpha<\epsilon_0$, there exists $i$ and $l$ in $\mathbb{N}$ such that $ \alpha \rplus{i, i+1, i+2, \dots,l} \beta$.
+
+      \vspace{6pt}
+
+
+
+    \begin{tikzpicture}[very thick, scale=0.25]
+\node (alpha) at (0,0) {$\alpha$};
+    \node (beta) at (40, 0){$\beta$};
+  
+
+  \draw[->, very thick,black] (alpha)--  node [above]{$>$} (beta);
+
+  \node (alpha1) at (5,5) {};
+  \node (alpha2) at (13,5) {};
+    \node (alpha3) at (20,5) {};
+  \node (alpha4) at (25,5) {};
+  \draw [->, dashed,very thick,red] (alpha)-- node [below, rotate=40]{$i$}  (alpha1);
+  \draw [->, dashed,very thick,red] (alpha1)-- node [below]{$i+1$}  (alpha2);
+   \draw [->, dashed,very thick,red] (alpha2)-- node [below]{$i+2$}  (alpha3);
+    \draw [->, dashed,very thick,red] (alpha3)-- node [below]{$i+3$}  (alpha4);
+  \node (dots) at (30,5) {$\dots$};
+  \node (search) at (32,5){};
+ \draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);
+\end{tikzpicture}
+
+\pause
+\textbf{Remark:} The proof is not trivial. The built path could miss $\beta$!
+
+\vspace{4pt}
+
+\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles.
+
+\end{block}
+
+
+    
+  \end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -436,7 +404,7 @@
   \begin{block}{}
     \begin{itemize}
     \item Let \textcolor{mathcolor}{$0<\alpha<\epsilon_0$}, and \textcolor{mathcolor}{$i\in\mathbb{N}$}.
-      The least index \textcolor{mathcolor}{$k$} such that \textcolor{mathcolor}{$\alpha_k=0$} is  \textcolor{mathcolor}{$H'_\alpha(i)$} where \textcolor{mathcolor}{$H'_\alpha$} is defined by transfinite induction over \textcolor{mathcolor}{$\alpha$}.
+      The least index \textcolor{mathcolor}{$l$} such that \textcolor{mathcolor}{$\alpha_l=0$} is  \textcolor{mathcolor}{$H'_\alpha(i)$} where \textcolor{mathcolor}{$H'_\alpha$} is defined by transfinite induction over \textcolor{mathcolor}{$\alpha$}.
 
       \begin{align}
         H'_0(i) & = i\\
@@ -588,18 +556,7 @@
 \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \begin{frame}
-    \frametitle{\community}
-    \begin{block}{}
-      \community is an informal organization that aims to maintain interesting open source \coq projects and facilitate collaboration among Coq users on documentation, tooling, etc.
-      \begin{itemize}
-      \item Created in 2018,  run by volunteer Coq users on GitHub
-      \item At present, over than 50 projects, maintained by over than 30 volunteers
-      \item Some packages were unmaintained before their integration to \community. According to their scientific or historical interest, we decided to revive them.
-        \item After their transfer, packages may be the object of large changes  and refactorings.
-      \end{itemize}
-    \end{block}
-  \end{frame}
+  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Presenting proofs with \alectr}
