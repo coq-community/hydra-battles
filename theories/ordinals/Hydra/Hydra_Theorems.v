@@ -233,7 +233,7 @@ Section battle_length_notPR.
   
   Theorem LNotPR : False.
   Proof.
-    apply SmNotPR,  compose1_1IsPR.
+    apply SmNotPR, compose1_1IsPR.
     - apply mIsPR.
     - apply succIsPR.
   Qed.
@@ -241,7 +241,11 @@ Section battle_length_notPR.
 End battle_length_notPR.
 
 (*||*)
+Check l_std_ok.
 
+Check LNotPR.
+
+Search L_ F_.
 (* end snippet LNotPR *)
 
 

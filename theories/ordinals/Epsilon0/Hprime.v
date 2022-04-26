@@ -419,14 +419,15 @@ Section H'_omega_cube_3.
   (* end snippet HprimeOmegaCube3a *)
 
   (* begin snippet HprimeOmegaCube3b:: no-out *)
-  Fact F0 : H'_ (E0phi0 3) 3 = f (f (f (f 3))). 
+   Fact F0 : H'_ (E0phi0 3) 3 = f (f (f (f 3))). 
    Proof.  rewrite R0; reflexivity.   Qed.
      
- (* end snippet HprimeOmegaCube3b *)
+   (* end snippet HprimeOmegaCube3b *)
+
+   (** f (f 3)) *)
+   (* begin snippet HprimeOmegaCube3c:: no-out *)
   
-  (* begin snippet HprimeOmegaCube3c:: no-out *)
-  
-  Let N := (exp2 64 * 64 - 1)%nat. (* f (f 3)) *)
+  Let N := (exp2 64 * 64 - 1)%nat. 
 
   (* end snippet HprimeOmegaCube3c *)
 
@@ -515,12 +516,11 @@ Qed.
 
 (* begin snippet HprimePhi0OmegaClosed:: no-out *)
 
-Lemma H'_Phi0_omega_closed_formula k :
+Lemma H'_Phi0_omega_exact_formula k :
   H'_ (E0phi0 E0omega) k =
-  iterate (fun (f: nat -> nat) (l : nat) => iterate f (S l) l)
-          k
-          (fun k : nat => S (2 * k)%nat)
-          k. 
+    let F f i := iterate f (S i) i
+    in let g k := S (2 * k)%nat
+       in iterate F k g k. 
 (* end snippet HprimePhi0OmegaClosed *)
 Proof. 
   rewrite H'_Phi0_omega; unfold H'_succ_fun; apply iterate_ext2.
@@ -535,9 +535,10 @@ Proof.
   generalize (exp2 (S k));  intro n;  destruct n;  abstract lia.
 Qed.
 
-
-Lemma H'_omega_cube_min k : 0 <> k ->
-                            (hyper_exp2 (1 + k) <= H'_ (E0phi0  3) k)%nat.
+(* begin snippet HprimeHexp2:: no-out *)
+Lemma H'_omega_cube_min k :
+  0 <> k -> (hyper_exp2 (1 + k) <= H'_ (E0phi0 3) k)%nat.
+(* end snippet HprimeHexp2 *)
 Proof.
   intros H; rewrite H'_omega_cube; unfold hyper_exp2.
   transitivity (iterate exp2  (1+k) k).

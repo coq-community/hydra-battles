@@ -62,7 +62,6 @@ Proof.
 Qed.
 
 (* begin snippet FVsAck *)
-
 Lemma F_vs_Ack n : 2 <= n -> Ack n n <= F_ E0omega n. (* .no-out *)
 (* end snippet FVsAck *)
 
@@ -238,3 +237,9 @@ Proof.
   destruct (lt_omega_inv  H0) as [i Hi]; subst alpha.
   destruct H; apply F_n_PR.
 Qed.
+
+
+(* begin snippet lemmas *)
+Check F_alpha_not_PR.
+(* end snippet lemmas *)
+Check F_alpha_PR_inv.
