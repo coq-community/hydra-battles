@@ -17,7 +17,8 @@ Locate T1.
 Lemma hmultA : associative T1mul.
 Proof. 
   move => a b c.
-   by rewrite -(g2h_h2gK a) -(g2h_h2gK b) -(g2h_h2gK c) -!g2h_multE mulA. 
+  by rewrite -(g2h_h2gK a) -(g2h_h2gK b) -(g2h_h2gK c)
+                                            -!g2h_multE mulA. 
 Qed.
 
 Example Ex1 (a: T1): T1omega * (a * T1omega) = T1omega * a * T1omega.

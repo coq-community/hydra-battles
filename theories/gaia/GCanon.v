@@ -47,54 +47,53 @@ Proof.  rewrite /canon => //. Qed.
 (* end snippet gcanonZero *)
 
 (* begin snippet g2hCanonRw:: no-out *)
-Lemma g2h_canon alpha i: g2h (canon alpha i) = hcanon (g2h alpha) i. 
+Lemma g2h_canon a i: g2h (canon a i) = hcanon (g2h a) i. 
 Proof. by rewrite /canon g2h_h2gK. Qed.
 (* end snippet g2hCanonRw *)
 
 (* begin snippet gcanonSucc:: no-out *)
-Lemma canon_succ i alpha (Halpha: T1nf alpha):
-  canon (T1succ alpha) i = alpha.
+Lemma canon_succ i a (Ha: T1nf a):
+  canon (T1succ a) i = a.
 (* end snippet gcanonSucc *)
 Proof.
-  rewrite -g2h_eqE g2h_canon g2h_succ canon_succ ?hnf_g2h => //.
+  rewrite -g2h_eqE g2h_canon g2h_succ Canon.canon_succ ?hnf_g2h => //.
 Qed.
 
-
-Lemma canonS_LE alpha n:
-    T1nf alpha -> canon alpha n.+1 <= canon alpha n.+2.
+Lemma canonS_LE a n:
+    T1nf a -> canon a n.+1 <= canon a n.+2.
 Proof.
-  rewrite -(h2g_g2hK alpha) -nf_ref /canon g2h_h2gK => Hnf. 
+  rewrite -(h2g_g2hK a) -nf_ref /canon g2h_h2gK => Hnf. 
   by apply le_ref, canonS_LE. 
 Qed.
 
 
-Lemma canon0_phi0_succE alpha:
-  T1nf alpha -> canon (phi0 (T1succ alpha)) 0 = zero.
+Lemma canon0_phi0_succE a:
+  T1nf a -> canon (phi0 (T1succ a)) 0 = zero.
 Proof.
- rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf. 
+ rewrite -(h2g_g2hK a) -nf_ref /canon => Hnf. 
   rewrite succ_ref phi0_ref g2h_h2gK Canon.canon0_phi0_succ_eqn => //.
 Qed. 
 
 
-Lemma canon0_lt alpha:
-  T1nf alpha -> alpha <> zero -> T1lt (canon alpha 0) alpha.
+Lemma canon0_lt a:
+  T1nf a -> a <> zero -> T1lt (canon a 0) a.
 Proof. 
-  rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf.  
+  rewrite -(h2g_g2hK a) -nf_ref /canon => Hnf.  
   rewrite g2h_h2gK => Hpos.
   apply lt_ref, Canon.canon0_LT => // H. apply Hpos; by rewrite H.  
 Qed. 
 
-Lemma canonS_lt  (i : nat) [alpha : T1]:
-  T1nf alpha -> alpha <> zero -> T1lt (canon alpha i.+1) alpha.
+Lemma canonS_lt  (i : nat) [a : T1]:
+  T1nf a -> a <> zero -> T1lt (canon a i.+1) a.
 Proof.
-  rewrite -(h2g_g2hK alpha) -nf_ref /canon => Hnf Hpos.
+  rewrite -(h2g_g2hK a) -nf_ref /canon => Hnf Hpos.
   rewrite g2h_h2gK; apply lt_ref, Canon.canon_lt => //.
   move => H; apply Hpos; rewrite H => //.
 Qed. 
 
 (* begin snippet gcanonLt:: no-out *)
-Lemma canon_lt  (i : nat) [alpha : T1]:
-   T1nf alpha -> alpha <> zero -> canon alpha i < alpha.
+Lemma canon_lt  (i : nat) [a : T1]:
+   T1nf a -> a <> zero -> canon a i < a.
 (* end snippet gcanonLt *)
 Proof. 
   case: i => [| n Hnf Hpos].  
@@ -102,10 +101,10 @@ Proof.
   - apply canonS_lt => //.
 Qed. 
 
-Lemma canonS_cons_not_zero  (i : nat) (alpha : T1) (n : nat) (beta : T1):
-  alpha <> zero -> canon (cons alpha n beta) i.+1 <> zero.
+Lemma canonS_cons_not_zero  (i : nat) (a : T1) (n : nat) (b : T1):
+  a <> zero -> canon (cons a n b) i.+1 <> zero.
 Proof.
-  rewrite -(h2g_g2hK alpha) /canon => Hdiff.  
+  rewrite -(h2g_g2hK a) /canon => Hdiff.  
   rewrite g2h_cons; change zero with (h2g T1.zero). rewrite h2g_eqE.
   apply canonS_cons_not_zero => H0; apply Hdiff. 
   rewrite -(h2g_g2hK zero);  apply h2g_eqE. 
@@ -137,24 +136,23 @@ Proof.
 Qed.
 
 (* begin snippet gcanonSSn:: no-out *)
-Lemma canon_SSn_zero (i : nat) (alpha : T1) (n : nat):
-  T1nf alpha ->
-  canon (cons alpha n.+1 zero) i = cons alpha n (canon (phi0 alpha) i).
+Lemma canon_SSn_zero (i : nat) (a : T1) (n : nat):
+  T1nf a ->
+  canon (cons a n.+1 zero) i = cons a n (canon (phi0 a) i).
 (* end snippet gcanonSSn *)
 Proof.
-  rewrite -(h2g_g2hK alpha) /canon g2h_cons g2h_h2gK => Hnf;
+  rewrite -(h2g_g2hK a) /canon g2h_cons g2h_h2gK => Hnf;
   rewrite -h2g_cons h2g_g2hK canon_SSn_zero. congr h2g.  
   move: Hnf; by rewrite h2g_g2hK hnf_g2h.  
 Qed.
 
-
-Lemma canonS_zero_inv  (alpha : T1) (i : nat):
-  canon alpha i.+1 = zero -> alpha = zero \/ alpha = one.
+Lemma canonS_zero_inv  (a : T1) (i : nat):
+  canon a i.+1 = zero -> a = zero \/ a = one.
 Proof.
-  move => Halpha; have H: hcanon (g2h alpha) i.+1 = T1.zero; last first.
-  case (Canon.canonS_zero_inv (g2h alpha) i) => // H0 ; [left | right];
-                                                rewrite -(h2g_g2hK alpha) H0 //.
-   move: Halpha;change zero with (h2g T1.zero); by rewrite h2g_eqE.
+  move => Ha; have H: hcanon (g2h a) i.+1 = T1.zero; last first.
+  case (Canon.canonS_zero_inv (g2h a) i) => // H0 ; [left | right];
+                                                rewrite -(h2g_g2hK a) H0 //.
+   move: Ha;change zero with (h2g T1.zero); by rewrite h2g_eqE.
 Qed.
 
 (* begin snippet gcanonLim1:: no-out *)
@@ -173,14 +171,14 @@ Proof.
 Qed. 
 
 
-Lemma canon_tail alpha (n : nat) beta (i : nat):
-  T1nf (cons alpha n beta) ->
-  beta <> zero -> canon (cons alpha n beta) i = cons alpha n (canon beta i).
+Lemma canon_tail a (n : nat) b (i : nat):
+  T1nf (cons a n b) ->
+  b <> zero -> canon (cons a n b) i = cons a n (canon b i).
 Proof.
   move => Hnf Hpos; rewrite -g2h_eqE g2h_canon !g2h_cons
                                         g2h_canon canon_tail //.
   move: Hnf; rewrite -hnf_g2h !g2h_cons  => //.
-  move: beta {Hnf} Hpos ; by case.  
+  move: b {Hnf} Hpos ; by case.  
 Qed.
 
 Lemma canonS_ocons_succE i n (gamma: T1)(Hnf : T1nf gamma) :
@@ -205,9 +203,9 @@ Proof.
 Qed.
 
 (* begin snippet gCanonLim3:: no-out *)
-Lemma canon_lim3 i n alpha lambda (Halpha: T1nf alpha)
+Lemma canon_lim3 i n a lambda (Ha: T1nf a)
       (Hlambda: T1nf lambda) (Hlim :T1limit lambda) :
-  canon (cons alpha n lambda) i = cons alpha n (canon lambda i).
+  canon (cons a n lambda) i = cons a n (canon lambda i).
 (* end snippet gCanonLim3 *)
 Proof. 
   rewrite -g2h_eqE g2h_canon !g2h_cons canon_lim3. 
@@ -220,16 +218,16 @@ Qed.
 (* begin snippet gcanonLimitStrong:: no-out *)
 Lemma canon_limit_strong lambda :
   T1nf lambda -> T1limit lambda ->
-  forall beta, T1nf beta ->
-               T1lt beta  lambda -> {i : nat | beta < canon lambda i}.
+  forall b, T1nf b ->
+               T1lt b  lambda -> {i : nat | b < canon lambda i}.
 (* end snippet gcanonLimitStrong *)
 Proof.
   rewrite -(h2g_g2hK lambda)  -nf_ref
-          -limitb_ref => Hnf Hlim beta Hbeta.
-  rewrite -(h2g_g2hK beta) => Hbetalt; apply hlt_iff in Hbetalt.
-  case (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h beta)).
+          -limitb_ref => Hnf Hlim b Hb.
+  rewrite -(h2g_g2hK b) => Hblt; apply hlt_iff in Hblt.
+  case (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h b)).
   - split => //; rewrite hnf_g2h => //.
-  - move => x Hx; exists x; rewrite -(h2g_g2hK beta). 
+  - move => x Hx; exists x; rewrite -(h2g_g2hK b). 
   rewrite -g2h_canon in Hx;  rewrite !h2g_g2hK.
   move: Hx;   rewrite -T1lt_iff => //.   
   rewrite /canon  -nf_ref; change (T1.nf (hcanon (g2h lambda) x));
@@ -238,7 +236,7 @@ Qed.
 
 
 
-Lemma T1nf_canon alpha i : T1nf alpha -> T1nf (canon alpha i).
+Lemma T1nf_canon a i : T1nf a -> T1nf (canon a i).
 Proof.  
    rewrite /canon -nf_ref => ?; apply nf_canon; by rewrite hnf_g2h. 
 Qed.
@@ -283,21 +281,21 @@ Proof.
 (** *  Adaptation of [canon] to type E0 *)
 
 (* begin snippet E0CanonDef:: no-out *)
-#[program] Definition E0Canon (alpha: E0) (i: nat): E0 :=
-   @mkE0 (canon (cnf alpha) i)  _.
+#[program] Definition E0Canon (a: E0) (i: nat): E0 :=
+   @mkE0 (canon (cnf a) i)  _.
 (* end snippet E0CanonDef:: no-out *)
 Next Obligation.
-  case: alpha => cnf i0;  rewrite T1nf_canon =>  //; by apply /eqP. 
+  case: a => cnf i0;  rewrite T1nf_canon =>  //; by apply /eqP. 
 Defined. 
 
 
 (* begin snippet E0CanonLt:: no-out *)
-Lemma E0_canon_lt (alpha: E0) i:
-  cnf alpha <> zero -> E0lt (E0Canon alpha i) alpha.
+Lemma E0_canon_lt (a: E0) i:
+  cnf a <> zero -> E0lt (E0Canon a i) a.
 (* ... *)
 (* end snippet E0CanonLt:: no-out *)
  Proof. 
-   move: i; case : alpha => cnf Heq i Hpos; rewrite /E0Canon /E0lt => /=. 
+   move: i; case : a => cnf Heq i Hpos; rewrite /E0Canon /E0lt => /=. 
    pattern cnf at 2; rewrite -(h2g_g2hK cnf) -hlt_iff h2g_g2hK;
      apply Canon.canon_lt. 
    - rewrite hnf_g2h;  by apply /eqP.

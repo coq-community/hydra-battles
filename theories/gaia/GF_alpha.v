@@ -31,8 +31,8 @@ Definition F_ (alpha : E0)  := F_alpha.F_ (E0_g2h alpha).
 (* end snippet FAlphaDef *)
 
 #[program]
- Definition T1F_ (alpha :T1)(Hnf : T1nf alpha == true) (n:nat) : nat:=
-  (F_ (@mkE0 alpha _) n).
+ Definition T1F_ (a : T1)(Hnf : T1nf a == true) (n:nat) : nat:=
+  (F_ (@mkE0 a _) n).
 
 
 (** Please note that a lemma [foo] may mask [F_alpha.Foo] *)
@@ -133,7 +133,8 @@ Qed.
 
 Lemma LF2' i:  (1 <= i)%N -> (Exp2.exp2 i < F_ (E0fin 2) i)%N.
 Proof. 
-  move => Hi; apply /ltP; replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
+  move => Hi; apply /ltP;
+          replace (F_ (E0fin 2) i) with (F_alpha.F_ (hE0fin 2) i). 
   - apply LF2'; by apply /leP. 
   - rewrite /F_; congr hF_; by apply E0_eq_intro .
 Qed. 
@@ -156,7 +157,9 @@ Lemma F_restricted_mono_l alpha beta n:
 Proof.
   rewrite /Canon_plus /F_. move => HCanon; apply /leP. 
   by apply F_restricted_mono_l.    
-Qed. 
+Qed.
+
+
 (* begin snippet HprimeF:: no-out *)
 Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
 (* end snippet HprimeF *)

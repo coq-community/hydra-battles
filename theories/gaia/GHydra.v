@@ -22,8 +22,6 @@ with ms (s : Hydrae) : T1 :=
 Compute T1pp (m Examples.Hy).
 (* end snippet mDef *)
 
-
-
 Lemma m_ref h : g2h (m h) = (Hydra_Termination.m h).
 Proof.
   induction h using   Hydra_rect2 with
@@ -52,7 +50,8 @@ Qed.
 Theorem every_battle_terminates : Termination.
 (* end snippet Termination *)
 Proof. 
-  red; apply Inclusion.wf_incl with (R2 := fun h h' =>  LT (m h) (m h')).
+  red; apply Inclusion.wf_incl with
+    (R2 := fun h h' =>  LT (m h) (m h')).
   - case mVariant => Hvar; rewrite /inclusion => x y Hstep.
     case: Hstep => x0 Hstep;  apply (Hvar x0 y x).
     move => Hhead; subst; apply (head_no_round_n _ _ Hstep).
@@ -86,9 +85,6 @@ Proof.
   rewrite /L_ => He; by apply He.
 Qed.
 
-
-
-
 Section ImpossibilityProof.
   Context (b: Battle). 
   Variable mu:T1.
@@ -102,15 +98,14 @@ Section ImpossibilityProof.
   #[local] Instance hVar : Hvariant T1_wf b mh.
   Proof.
     split => i h h' Hh Hrel; rewrite /mh.
-    case :Var => Hvar; move:  (Hvar i h h' Hh Hrel) ; case => H1 H2 H3. 
-    by rewrite -T1lt_iff. 
+    case :Var => Hvar; move:  (Hvar i h h' Hh Hrel) .
+    case => ? ? ?; by rewrite -T1lt_iff. 
   Qed.
 
   #[local] Instance bVar : BoundedVariant hVar (g2h mu).
   Proof. 
   split. 
-  case: BVar => Hb h.
-  case: (Hb h) => Hnf Hm Hnf'; repeat split.
+  case: BVar => Hb h; case: (Hb h) => Hnf Hm Hnf'; repeat split.
   1,3:  rewrite /mh; by rewrite hnf_g2h.
   rewrite /mh; by rewrite hlt_iff !h2g_g2hK.
   Qed.
@@ -131,5 +126,5 @@ Proof.
   move => bvar; refine (Impossibility_std _ _ _ (bVar  bvar)).
 Qed.
 (* end snippet impossibilityThms *)
-  
+
 

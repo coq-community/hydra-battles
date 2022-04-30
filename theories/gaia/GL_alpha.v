@@ -84,19 +84,19 @@ Proof.
 Qed.
 
 
-Lemma L_spec1 (alpha:T1) (f:nat -> nat) :
-  alpha != zero ->
-  L_spec alpha f <->
+Lemma L_spec1 (a:T1) (f:nat -> nat) :
+  a != zero ->
+  L_spec a f <->
     (forall k,
-        Large_Sets.mlarge (g2h alpha)
+        Large_Sets.mlarge (g2h a)
                           ( MoreLists.interval (S k)
                                                (Nat.pred (f (S k))))) .
 Proof. 
-  move => Halpha. 
-  have Hdiff : alpha <> zero.  move => H0; subst. by cbn in Halpha. 
+  move => Ha. 
+  have Hdiff : a <> zero.  move => H0; subst. by cbn in Ha. 
   rewrite /L_spec; split => H.
-  inversion H as [f0 H0 H1 H2| alpha0 f0 H0 H1 H2 H3].
-  {  suff Hzero: alpha = zero by contradiction. 
+  inversion H as [f0 H0 H1 H2| a0 f0 H0 H1 H2 H3].
+  {  suff Hzero: a = zero by contradiction. 
   apply g2h_eqE.  by rewrite -H1.    }
   move => k;  move: (H1 k).
   rewrite interval_def => //.
@@ -104,21 +104,20 @@ Proof.
   apply Hdiff; apply g2h_eqE; by rewrite Hzero. 
 Qed. 
 
-Lemma L_pos_inv alpha f :
- alpha != zero -> L_spec alpha f ->
+Lemma L_pos_inv a f :
+ a != zero -> L_spec a f ->
                         forall k, (S k < f (S k))%N.
 Proof.
-  move => Halpha H k.
-   have Hdiff : alpha <> zero.  move => H0; subst. by cbn in Halpha. 
-   apply /ltP; apply Large_Sets.L_pos_inv with (g2h alpha) => //. 
+  move => Ha H k.
+   have Hdiff : a <> zero.  move => H0; subst. by cbn in Ha. 
+   apply /ltP; apply Large_Sets.L_pos_inv with (g2h a) => //. 
    move => H0; apply Hdiff,g2h_eqE, H0. 
 Qed.
 
-
-Theorem L_correct alpha : L_spec (cnf alpha) (L_ alpha).
-Proof.  apply (L_alpha.L_correct (E0_g2h alpha)). Qed. 
+Theorem L_correct a : L_spec (cnf a) (L_ a).
+Proof.  apply (L_alpha.L_correct (E0_g2h a)). Qed. 
 
 (* begin snippet HprimeLAlpha:: no-out *)
-Theorem H'_L_ alpha i: (H'_ alpha i <= L_ alpha i.+1)%N.
+Theorem H'_L_ a i: (H'_ a i <= L_ a i.+1)%N.
 Proof.  rewrite /L_ /H'_; apply /leP; by apply L_alpha.H'_L_.  Qed.
 (* end snippet HprimeLAlpha *)

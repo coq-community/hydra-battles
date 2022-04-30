@@ -1,3 +1,5 @@
+(** Hessenberg (commutative) sum *)
+
 From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic.
@@ -23,17 +25,17 @@ Fixpoint o_finite_mult n alpha :=
   if n is p.+1 then alpha o+ (o_finite_mult p alpha)
   else zero. 
  
-
 Compute T1pp (T1omega o+ T1omega).
 
 Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 (* end snippet oplusDef *)
 
 (* begin snippet oplusNf:: no-out  *)
-Lemma  oplus_nf (alpha  beta : T1) :
-  T1nf alpha ->  T1nf beta -> T1nf (alpha o+ beta).
+Lemma  oplus_nf (a  b : T1) :
+  T1nf a ->  T1nf b -> T1nf (a o+ b).
 Proof.
-  rewrite /oplus -?nf_ref => Halpha Hbeta; apply oplus_nf ; by rewrite hnf_g2h.
+  rewrite /oplus -?nf_ref => Ha Hb; apply oplus_nf ;
+                               by rewrite hnf_g2h.
 Qed.
 (* end snippet oplusNf *)
 

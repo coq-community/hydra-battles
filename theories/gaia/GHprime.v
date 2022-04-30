@@ -42,8 +42,7 @@ Lemma H'_eq3 alpha i :
 (* ... *)
 (* end snippet HprimeEquations *)
 Proof. 
-  rewrite /E0limit /H'_ => H; rewrite H'_eq3 => //; congr Hprime.H'_.  
-  apply E0_eq_intro => /=;  by rewrite g2h_canon.
+  rewrite /E0limit /H'_ => H; rewrite H'_eq3 => //; congr Hprime.H'_.    apply E0_eq_intro => /=;  by rewrite g2h_canon.
 Qed.
 
 (** **  Examples *)
