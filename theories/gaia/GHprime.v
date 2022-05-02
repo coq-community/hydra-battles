@@ -83,21 +83,20 @@ Qed.
 (* begin snippet abstractb:: no-out  *)
 Lemma H'_alpha_mono (alpha : E0) : strict_mono (H'_ alpha).
 Proof.
-  generalize (Hprime.H'_alpha_mono (E0_g2h alpha)) => H.
-  move => x y Hxy; have H'xy: (x < y)%coq_nat by apply /ltP.
-  move: (H x y H'xy);  rewrite /H'_ => ?; by apply /ltP.
+  generalize (Hprime.H'_alpha_mono (E0_g2h alpha)) => H x y /ltP.
+  move /H;  by rewrite /H'_ => /ltP. 
 Qed.
 (* end snippet abstractb  *)
 
 (* begin snippet abstractc:: no-out  *)
-Theorem H'_alpha_gt alpha (Halpha: alpha <> E0zero) n : (n < H'_ alpha n)%N.
+Theorem H'_alpha_gt alpha (Halpha: alpha <> E0zero) n :
+  (n < H'_ alpha n)%N.
 Proof.
-  generalize (H'_alpha_gt (E0_g2h alpha)) => H. 
-  rewrite /H'_; apply /ltP ; apply H => H0; apply Halpha. 
-  apply gE0_eq_intro; destruct alpha => /=. 
-  injection H0 =>  Heq; rewrite -g2h_eqE;  by rewrite Heq. 
+  move: (H'_alpha_gt (E0_g2h alpha)) => H.
+  rewrite /H'_ ; apply /ltP; apply H => H0; apply Halpha.  
+  apply gE0_eq_intro; case: alpha H H0 Halpha => // ? ? ? H0 ?. 
+  injection H0 => Heq; by rewrite -g2h_eqE ?Heq. 
 Qed.
-
 
 Lemma H'_omega_cube_min :
 forall k : nat,

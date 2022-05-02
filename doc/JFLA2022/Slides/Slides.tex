@@ -505,9 +505,27 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
     (according to the initial index) is not primitive recursive
     (for $\alpha\geq \omega^\omega$).
     \vspace{4pt}
-    
-\emph{We use   Russel O'Connor's formalization of PR functions.}
   \end{block}
+  
+  \begin{block}{Sketch of proof}
+
+    We prove and apply a famous lemma:
+    
+       \begin{quote}
+   
+      {\color{mathcolor}
+        \[
+          \exists q, \forall x_1,\dots,x_n, 
+          f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))
+        \]}
+    \end{quote}
+
+    \end{block}
+ 
+
+
+
+
   
 \end{frame}
 
@@ -532,7 +550,7 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{Proof sketch}
+  \frametitle{}
   \begin{scriptsize}
     \inputsnippets{./SchemePrimRecInda}
   \end{scriptsize}
@@ -544,33 +562,19 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
   \begin{block}{}
     Using  \texttt{PrimRec\_PrimRecs\_ind}, we prove the following lemma:
     
-    \begin{quote}
-      For any \textcolor{mathcolor}{$n$}, and any primitive recursive function \textcolor{mathcolor}{$f$} of  arity \textcolor{mathcolor}{$n$}, there exists some natural number \textcolor{mathcolor}{$q$} such that the following inequality holds:
-      {\color{mathcolor}
-        \[
-          \forall x_1,\dots,x_n, 
-          f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))
-        \]}
-    \end{quote}
+  
   
 Comparison of the length of hydra-battles (w.r.t to the initial replication factor) with the diagonalized Ackermann function proves the theorem.
   \end{block}
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \frametitle{Compatibility with Gaia (José Grimm)}
-  \begin{block}{From \Hydras to \gaia}
-    {\footnotesize
-      \inputsnippets{./canonDef}
-      \inputsnippets{./gcanonLimitOf}}
-  \end{block}
-\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Organization}
 \begin{frame}
   \frametitle{Project  Organization}
   \begin{itemize}
+   \item Compatibility with \gaia
   \item Integration with \community
   \item Documentation with \alectr
   \item Package dependencies
@@ -579,7 +583,98 @@ Comparison of the length of hydra-battles (w.r.t to the initial replication fact
 \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \begin{figure}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tikzpicture}[thick]
+
+  \begin{scope}[yshift=1.5cm, xshift=-1.5cm]
+\node[ellipse, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};
+\end{scope}
+
+\begin{scope}[xshift=-6cm]
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel\footnote{R. O'Connor} };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor\footnote{C. \& E. Contejean} };
+
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\end{scope}
+
+\begin{scope}[yshift=-1cm,xshift=0.45cm]
+  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
+\end{scope}
+
+\begin{scope}[yshift=-2cm,xshift=-4cm]
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia\footnote{J. Grimm} };
+\end{scope}
+
+\begin{scope}[yshift=-3cm,xshift=-6cm]
+ \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+ \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+\end{scope}
+
+
+
+\draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
+\draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
+\draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
+\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
+\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
+\draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
+\draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
+\draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
+
+\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south west) -- (goedelcc) ;
+\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+\draw[->] (equations) -- (hydras) ;
+\draw[->] (mathcomp) -- (gaia) ;
+\draw[->] (mathcomp) -- (chains) ;
+\draw[->] (paramcoq.south) -- (chains) ;
+\draw[->] (pockcc) -- (goedelcc) ;
+\end{tikzpicture}
+}
+\caption{Genealogy and dependencies for \Hydras packages.}
+% Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
+
+  \label{fig:genealogy}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Compatibility with Gaia}
+  \begin{block}{From \Hydras to \gaia}
+    {\footnotesize
+      \inputsnippets{./canonDef}
+      \inputsnippets{./gcanonLimitOf}}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Maintenance, CI/CD}
+ 
+
+  \begin{block}{Reverse Dependencies Compatibility Testing}
+    Since we have extracted part of {\color{plugincolor}goedel}, now {\color{plugincolor}goedel} depends on {\color{plugincolor}\Hydras}, and thus we are checking in CI that we do not break it (thanks to the \textcolor{lookcolor}{Coq Nix Toolbox},
+    which can generate such CI workflows)
+  \end{block}
+
+  \begin{block}{}
+  {\color{lookcolor}  With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.}
+  \end{block}
+
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Presenting proofs with \alectr}
@@ -587,11 +682,14 @@ Comparison of the length of hydra-battles (w.r.t to the initial replication fact
   \frametitle{Presenting proofs with \alectr}
   \begin{block}{}
     \begin{itemize}
-    \item The order in which \coq code, goals and answers are presented in the book is determined by the difficulty of the mathematical examples, or the assumed level in \coq of the reader, not by the structure of the libraries.
-    \item
-      \emph{\coq libraries contain \emph{snippet declarations} which are converted during the compilation of the book into \LaTeX\xspace blocks which are inserted into the book.}
+ \item     The continuously evolving version of the book is continuously deployed from the master branch to the \community website.
 
-    \item {\color{lookcolor} \emph{Note that our build system guarantees that the accompanying book is always up-to-date and consistent with the \coq code.}}
+     \item
+      \coq libraries contain \emph{snippet declarations} which are converted during the compilation of the book into \LaTeX\xspace blocks which are inserted into the book.
+
+    \item The order in which \coq code, goals and answers are presented in the book is determined by the difficulty of the mathematical examples, or the assumed level in \coq of the reader, not by the structure of the libraries.
+  
+  
     \end{itemize}
   \end{block}
 \end{frame}
@@ -654,105 +752,95 @@ Proof.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \frametitle{Package organization and dependencies}
-  
-\begin{figure}[ht]
-\centering
-\scalebox{0.7}{
-\begin{tikzpicture}[thick]
 
-\begin{scope}[xshift=-6cm]
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
-
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
-\end{scope}
-
-\begin{scope}[yshift=-1cm,xshift=0.45cm]
-  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
-\end{scope}
-
-\begin{scope}[yshift=-2cm,xshift=-4cm]
-\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
-\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
-\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
-\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
-\end{scope}
-
-\begin{scope}[yshift=-3cm,xshift=-6cm]
- \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
- \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
-\end{scope}
-
-\draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
-\draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
-\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
-\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
-\draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
-\draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
-\draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
-
-\draw[->] (hydras) -- (gaiahydras) ;
-\draw[->] (hydras.south west) -- (goedelcc) ;
-\draw[->] (gaia.south west) -- (gaiahydras.east) ;
-
-\draw[->] (equations) -- (hydras) ;
-\draw[->] (mathcomp) -- (gaia) ;
-\draw[->] (mathcomp) -- (chains) ;
-\draw[->] (paramcoq.south) -- (chains) ;
-\draw[->] (pockcc) -- (goedelcc) ;
-\end{tikzpicture}
-}
-\caption{\textcolor{lookcolor}{Genealogy} and dependencies for \Hydras packages.}
-% Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
-
-  \label{fig:genealogy}
-\end{figure}
-
-%%%% TODO : Resize  !
-{\scriptsize
-\begin{table}[ht]
-\centering
-\scriptsize
-\begin{tabular}{llllrr}
-\hline
-\textbf{Package name} &  \textbf{Version} & \textbf{Spec LOC} & \textbf{Proof LOC}\\
-\hline
-Pocklington & \texttt{8.12.0} & 825 & 3,798 \\
-Goedel  & \texttt{8.13.0} & 2,799 & 10,762 \\
-Gaia &  \texttt{1.12} & 28,850 & 124,839 \\
-Hydra-battles & \texttt{0.5} & 14,368 & 48,385 \\
-Addition-chains & \texttt{0.5} & 1,961 & 2,210 \\
-Gaia-hydras &  \texttt{0.8} & 677 & 2,023 \\
-\hline
-\end{tabular}
-\caption{\scriptsize Current numbers of lines of code for packages in the \Hydras galaxy.}
-\label{tbl:loc}
-\end{table}}
-\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \frametitle{Maintenance, CI/CD}
-  \begin{block}{CD}
-    The continuously evolving version of the book is continuously deployed from the master branch to the \community website.
-  \end{block}
 
-  \begin{block}{Reverse Dependencies Compatibility Testing}
-    Since we have extracted part of {\color{plugincolor}goedel}, now {\color{plugincolor}goedel} depends on {\color{plugincolor}\Hydras}, and thus we are checking in CI that we do not break it (thanks to the \textcolor{lookcolor}{Coq Nix Toolbox},
-    which can generate such CI workflows)
-  \end{block}
+% \begin{frame}
+%   \frametitle{Package organization and dependencies}
+  
+% \begin{figure}[ht]
+% \centering
+% \scalebox{0.7}{
+% \begin{tikzpicture}[thick]
 
-  \begin{block}{}
-  {\color{lookcolor}  With \Hydras, we hope to demonstrate that projects with complex dependencies are feasible to manage using recent advances in build management and infrastructure.}
-  \end{block}
+% \begin{scope}[xshift=-6cm]
+% \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel };
+% \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
+% \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
+% \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor };
 
-\end{frame}
+% \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+% \end{scope}
+
+% \begin{scope}[yshift=-1cm,xshift=0.45cm]
+%   \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+% \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
+% \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
+% \end{scope}
+
+% \begin{scope}[yshift=-2cm,xshift=-4cm]
+% \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+% \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
+% \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+% \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia };
+% \end{scope}
+
+% \begin{scope}[yshift=-3cm,xshift=-6cm]
+%  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+%  \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+% \end{scope}
+
+
+% \draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
+% \draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
+% \draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
+% \draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
+% \draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
+% \draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
+% \draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
+
+% \draw[->] (hydras) -- (gaiahydras) ;
+% \draw[->] (hydras.south west) -- (goedelcc) ;
+% \draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+% \draw[->] (equations) -- (hydras) ;
+% \draw[->] (mathcomp) -- (gaia) ;
+% \draw[->] (mathcomp) -- (chains) ;
+% \draw[->] (paramcoq.south) -- (chains) ;
+% \draw[->] (pockcc) -- (goedelcc) ;
+% \end{tikzpicture}
+% }
+% \caption{\textcolor{lookcolor}{Genealogy} and dependencies for \Hydras packages.}
+% Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
+
+%   \label{fig:genealogy}
+% \end{figure}
+
+% %%%% TODO : Resize  !
+% {\scriptsize
+% \begin{table}[ht]
+% \centering
+% \scriptsize
+% \begin{tabular}{llllrr}
+% \hline
+% \textbf{Package name} &  \textbf{Version} & \textbf{Spec LOC} & \textbf{Proof LOC}\\
+% \hline
+% Pocklington & \texttt{8.12.0} & 825 & 3,798 \\
+% Goedel  & \texttt{8.13.0} & 2,799 & 10,762 \\
+% Gaia &  \texttt{1.12} & 28,850 & 124,839 \\
+% Hydra-battles & \texttt{0.5} & 14,368 & 48,385 \\
+% Addition-chains & \texttt{0.5} & 1,961 & 2,210 \\
+% Gaia-hydras &  \texttt{0.8} & 677 & 2,023 \\
+% \hline
+% \end{tabular}
+% \caption{\scriptsize Current numbers of lines of code for packages in the \Hydras galaxy.}
+% \label{tbl:loc}
+% \end{table}}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -775,10 +863,16 @@ allowing to present and compare various formalization and proving techniques.
 \begin{frame}[fragile]
   \frametitle{Perspectives}
   \begin{block}{Library on ordinals}
-    There exist already \coq libraries which formalize ordinal numbers.
+      \begin{itemize}
+  \item \gaiahydra:
     \begin{itemize}
-    \item \gaia (José Grimm) : Formalization of Bourbaki's Elements of Mathematics. {\color{lookcolor}\emph{This library uses an ordinal representation compatible with ours (from the \textcolor{plugincolor}{Cantor} contrib) . It is  written in SSReflect/Mathcomp, and is also maintained in \community}.}
-    \item A formalization by Minki Cho, using a different representation.
+    \item Remove definition duplicates
+     \item types \texttt{T2}, \texttt{T3}, connection between 
+    Schütte's model with \texttt{ssete10} (Bourbaki' set theory).
+    \end{itemize}
+    
+  
+    \item Formalization by Minki Cho, using a different representation.
 {\color{darkorange}
 \begin{verbatim}
 Inductive Ord.t :=
@@ -788,7 +882,6 @@ Inductive Ord.t :=
 }  
     \end{itemize}
 
-    Both libraries contain set-theoretical results about larger ordinals than ours. Having a library containing both our combinatorial results (large sets and rapidly growing functions) and mathematical definitions of ordinals would be an interesting project.
   \end{block}
 \end{frame}
 
@@ -798,17 +891,20 @@ Inductive Ord.t :=
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{More TODOs}
   \begin{block}{}
     \begin{itemize}
-    \item More results about hyper-complexity and fast growing functions
+      \item More results about hyper-complexity and fast growing functions
     \item New toolchain for \alectr
     \item More proof and specification patterns
+    \item More examples and exercises
     \item etc.
     \end{itemize}
   \end{block}
+\end{frame}
 
-  \begin{block}{Call to contributors }
+  \begin{frame}
+\frametitle{Call to contributors}
+  \begin{block}{}
   {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please contribute, reuse!}
       \begin{itemize}
       \item New chapters
