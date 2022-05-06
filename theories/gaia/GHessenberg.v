@@ -30,29 +30,6 @@ Compute T1pp (T1omega o+ T1omega).
 Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 (* end snippet oplusDef *)
 
-(* begin snippet oplusNf:: no-out  *)
-Lemma  oplus_nf (a  b : T1) :
-  T1nf a ->  T1nf b -> T1nf (a o+ b).
-Proof.
-  rewrite /oplus -?nf_ref => Ha Hb; apply oplus_nf ;
-                               by rewrite hnf_g2h.
-Qed.
-(* end snippet oplusNf *)
-
-(** Equations for oplus *)
-
-(* begin snippet oplusEquations:: no-out *)
-Lemma oplus0b:  left_id zero oplus.
-Proof. rewrite /oplus; case => // /= ? ? ?; by rewrite !h2g_g2hK. Qed.
-(* end snippet oplusEquations *)
-
-(* begin snippet oplusEquationsb:: no-out *)
-Lemma oplusa0: right_id zero oplus.
-(* end snippet oplusEquationsb *)
-Proof. rewrite /oplus; case => // /=. 
-       move => ? ? ? ;rewrite !h2g_g2hK => //.
-Qed.
-
 (* begin snippet oplusEquationsc:: no-out *)
 Lemma oplusE (a b :T1) :
   a o+ b =
@@ -74,6 +51,32 @@ Proof.
   move => t n t0 t1 n0 t2; rewrite !g2h_cons compare_g2h. 
   case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
+
+
+
+(** Equations for oplus *)
+
+(* begin snippet oplusEquations:: no-out *)
+Lemma oplus0b:  left_id zero oplus.
+Proof. rewrite /oplus; case => // /= ? ? ?; by rewrite !h2g_g2hK. Qed.
+(* end snippet oplusEquations *)
+
+(* begin snippet oplusEquationsb:: no-out *)
+Lemma oplusa0: right_id zero oplus.
+(* end snippet oplusEquationsb *)
+Proof. rewrite /oplus; case => // /=. 
+       move => ? ? ? ;rewrite !h2g_g2hK => //.
+Qed.
+
+
+(* begin snippet oplusNf:: no-out  *)
+Lemma  oplus_nf (a  b : T1) :
+  T1nf a ->  T1nf b -> T1nf (a o+ b).
+Proof.
+  rewrite /oplus -?nf_ref => Ha Hb; apply oplus_nf; by rewrite hnf_g2h.
+Qed.
+
+(* end snippet oplusNf *)
 
 (* begin snippet oplusCoplusA:: no-out *)
 Lemma oplusC (a b: T1):  T1nf a -> T1nf b -> a o+ b = b o+ a.

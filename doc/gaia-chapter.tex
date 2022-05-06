@@ -24,15 +24,12 @@ the only in-progress proof left by Grimm. At around 155,000 LOC, \gaia is curren
 \gaia contains definitions of ordinals in Cantor and Veblen normal form~\cite{grimm:hal-00911710}, adapted from the historical Cantor contribution~\cite{CantorContrib}. The data types for ordinals are essentially defined the same way as in \Hydras, but they are not identical inside \coq, e.g., due to residing in different modules. There are also minor differences in how ordinal arithmetic is implemented, due to the different evolutionary paths taken since divergence from the ancestor library.
 
 
+The main objective of the \texttt{theories/gaia/*.v} files is
+to provide \gaia's users definitions and lemmas on
+some combinatorial aspects of ordinal numbers less than $\epsilon_0$ \cite{KS81}, already proven in \Hydras: canonical sequences, accessibility properties, large sets and rapidly growing arithmetical functions.
+We may also complete \Hydras with some lemmas proven in \gaia.
 
-The bridge we aim to build and cross is a two-way bridge:
-
-\begin{itemize}
-\item \gaia contains lemmas on ordinal arithmetic (\emph{e.g.} associativity of multiplication of ordinals strictly less than $\epsilon_0$), which were missing from \Hydras. 
-  \item The other way, \Hydras contains formal definitions and proofs of properties of canonical sequences and rapidly growing functions  (see Chapters~\ref{chap:ketonen} and~\ref{chap:alpha-large}~of this book).
-  \end{itemize}
-  
-  We plan to make accessible the first kind of lemmas to \HydrasLib' users and the second kind to \gaia's. For this purpose, we write modules dedicated to the importation of definitions and lemmas from each of both libraries into the other one.
+For these purposes, we write modules dedicated to the importation of definitions and lemmas from each of both libraries into the other one.
   Please note that by ``import'' we do not mean ``duplicate''
   nor ``repairing'' \HydrasLib' proofs.  Whenever possible, we proceed by rewriting steps over the statements and not the proofs. In a future version, it would be nice to have our proofs in the same context, after porting \HydrasLib' proofs under \gaia's
   definition, following  proof re-use or repair  techniques~\cite{Barthe2001, Magaud03a, ringer2021}.
@@ -68,9 +65,11 @@ Because of the common origin of \HydrasLib and \gaia, both libraries share the c
 
 \inputsnippets{T1Bridge/hT1gT1}
 
-Many constants are common to \HydrasLib and \gaia. For instance, the name \texttt{zero} may refer to \gaia's
+Likewise, many constants are common to \HydrasLib and \gaia. For instance, the name \texttt{zero} may refer to \gaia's
 \texttt{gaia.ssete9.CantorOrdinal.zero}  and
 \HydrasLib' \texttt{hydras.Epsilon0.T1.zero}. By default, the former will be simply called \texttt{zero} and the latter \texttt{T1.zero}.
+
+
 
 The following notations are not defined in \gaia; we add them to \texttt{T1Bridge} for simplicity's sake.
 
@@ -88,6 +87,7 @@ The same inequality, with \HydrasLib vocabulary:
 
 \inputsnippets{HydraGaia_Examples/F42Omegab}
 \end{remark}
+
 
 \subsection{Translation functions and data refinement}
 
@@ -141,7 +141,7 @@ Refinement lemmas can be easily ``reversed''.
 Both of our libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove that these definitions are mutually consistent. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
 
 \subsubsection{A few constants}
-For each constant: $0$, $1$, \dots, $n$ and $\omega$, we prove
+For each constant: $0$, $1$,\dots, $n$ and $\omega$, we prove
 that \texttt{hydras}' definition refines \texttt{gaia}'s.
 \inputsnippets{T1Bridge/constantRefs}
 
@@ -153,7 +153,7 @@ that \texttt{hydras}' definition refines \texttt{gaia}'s.
 
 \subsubsection{Order and comparison}
 \label{sect:lt-compat-gaia}
-Leibniz equality and strict order on both libraries are
+The  strict order on both types \texttt{T1} are
 compatible:
 
 
@@ -183,14 +183,15 @@ Note that \HydrasLib' comparison on ordinal terms uses a
 \subsubsection{Addition and multiplication}
 \label{sect:plus-mult-gaia-hydras}
 
-The binary operations $+$ and $\times$ are defined the same way in both libraries. Please note that they require comparison of ordinal terms. So, the proof of the following lemmas applies
+The definition of the binary operations $+$ and $\times$
+requires the comparison of ordinal terms, which is not implemented the same way in both libraries. Thus, the proof of the following lemmas applies applies
 compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-compare-ref}).
 
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
 
 
 
-\subsubsection{Cantor normal form}
+\subsubsection{Well formed ordinal terms (Cantor normal form)}
 \label{nf-gaia-compat}
 Both definitions of ``being in Cantor normal form'' are
 compatible.
@@ -210,7 +211,6 @@ The following command lists us `gaia's lemmas (thanks to
 
 With \texttt{t1\_scope}:
 \inputsnippets{T1Bridge/SearchDemob}
-
 
 \section{Importing Definitions and theorems from \HydrasLib}
 
@@ -236,19 +236,24 @@ thus \texttt{hydras.Epsilon0.Foo.bar}.
 \index{gaiabridge}{Hessenberg sum}
 Natural sum  (a.k.a. Hessenberg  sum) is defined in
 \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} and is used for proving termination of all hydra battles (See Sect.~\ref{sect:hessenberg-def}).
-We define this function in \href{../theories/html/gaia\_hydras.GHessenberg.html}{gaia\_hydras.GHessenberg} by delegation to \HydrasLib'.
+
+Instead of defining this operation \emph{ex nihilo} in \texttt{theories/gaia}, we chose to \emph{import} the definition
+from \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} as follows:
 
 \vspace{4pt} 
 \noindent
 
 \inputsnippets{GHessenberg/oplusDef}
 
+
+
 By simple rewriting, we import the following lemmas.
 
-\inputsnippets{GHessenberg/oplusNf}
+
+\inputsnippets{GHessenberg/oplusEquationsc}
 \inputsnippets{GHessenberg/oplusEquations}
 \inputsnippets{GHessenberg/oplusEquationsb}
-\inputsnippets{GHessenberg/oplusEquationsc}
+\inputsnippets{GHessenberg/oplusNf}
 
 
 
@@ -345,7 +350,7 @@ $\beta<\alpha$.
 
 Constant index paths can be simulated with constant paths with larger index.
  
-\inputsnippets{GPaths/KSThm24}
+%\inputsnippets{GPaths/KSThm24}
 \inputsnippets{GPaths/Cor12}
 
 

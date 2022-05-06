@@ -39,14 +39,10 @@ The name [T1] denotes Gaia's data type. We use [T1.T1] or [hT1] for Hydra battle
 
 (* begin snippet h2gG2hDef *)
 Fixpoint h2g (a : hT1) : T1 :=
-  if a is T1.cons a n b
-  then cons (h2g a) n (h2g b)
-  else zero.
+  if a is T1.cons a n b then cons (h2g a) n (h2g b) else zero.
 
 Fixpoint g2h (a : T1) : hT1 :=
-  if a is cons a n b
-  then T1.cons (g2h a) n (g2h b)
-  else T1.zero.
+  if a is cons a n b then T1.cons (g2h a) n (g2h b) else T1.zero.
 (* end snippet h2gG2hDef *)
 
 
@@ -273,15 +269,6 @@ Proof.
     + left; by rewrite lt_ref. 
     +  move: H => /eqP; by rewrite h2g_eqE => ->; right. 
 Qed. 
-
-(* begin snippet eqRef:: no-out *)
-Lemma eqref : refinesRel eq eq.
-Proof.
-  move => a b; split; [congruence|].
-  move => H; apply T1eq_h2g.    rewrite H. by apply /eqP. 
-Qed.
-(* end snippet eqRef *)
-
 
 (** ** Ordinal addition *)
 
@@ -948,8 +935,7 @@ Locate T1omega.
 Definition strict_mono (f: nat -> nat) :=
   forall n p, (n< p)%N -> (f n < f p)%N.
 
-Definition dominates_from := 
-fun (n : nat) (g f : nat -> nat) =>
+Definition dominates_from (n : nat) (g f : nat -> nat) :=
   forall p : nat, (n <= p)%N -> (f p < g p)%N.
 
 Definition dominates g f := exists n : nat, dominates_from n g f .

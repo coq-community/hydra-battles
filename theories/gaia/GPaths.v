@@ -142,7 +142,7 @@ Qed.
 
 (* begin snippet pathToLT:: no-out *)
 Lemma path_to_LT b s a:
-  path_to b s a-> T1nf a-> T1nf b -> b < a. 
+  path_to b s a -> T1nf a -> T1nf b -> b < a. 
 (* end snippet pathToLT *)
 Proof.
     rewrite -!hnf_g2h /path_to => Hpath Ha Hb. 
@@ -153,7 +153,7 @@ Qed.
 
 (* begin snippet LTPathTo:: no-out *)
 Lemma LT_path_to (a b : T1) :
-  T1nf a-> T1nf b -> b < a->
+  T1nf a -> T1nf b -> b < a ->
   {s : list nat | path_to b s a}.
 (* end snippet LTPathTo *)
 Proof. 
@@ -179,8 +179,8 @@ Qed.
 
 (* begin snippet Cor12:: no-out *)
 Lemma Cor12 (a: T1) :
-  T1nf a->
-  forall b i n, T1nf b -> b < a-> (i < n)%N ->
+  T1nf a ->
+  forall b i n, T1nf b -> b < a -> (i < n)%N ->
                    const_path i.+1 a b ->
                    const_path n.+1 a b.
 (* end snippet Cor12 *)
@@ -192,8 +192,7 @@ Qed.
 
 (* begin snippet Lemma261:: no-out *)
 Lemma Lemma2_6_1 (a:T1) :
-T1nf a-> forall b, T1nf b ->  b < a ->
-    {n:nat | const_path n.+1 a b}.
+T1nf a -> forall b, T1nf b -> b < a -> {n:nat | const_path n.+1 a b}.
 (* end snippet Lemma261 *)
 Proof.
   rewrite -hnf_g2h => Hnf b Hb Hlt.
@@ -207,9 +206,8 @@ Proof.
 Qed. 
 
 (* begin snippet constantToStandard:: no-out *)
-Lemma constant_to_standard_path 
-  (a b : T1) (i : nat):
-  T1nf a-> const_path i.+1 a b -> zero  < a->
+Lemma constant_to_standard_path (a b : T1) (i : nat):
+  T1nf a -> const_path i.+1 a b -> zero  < a ->
   {j:nat | standard_path i.+1 a j b}.
 (* end snippet constantToStandard *)
 Proof.  
@@ -221,7 +219,7 @@ Qed.
 
 (* begin snippet LTToStandard:: no-out *)
 Theorem  LT_to_standard_path (a b : T1) :
-  T1nf a-> T1nf b -> b < a->
+  T1nf a -> T1nf b -> b < a ->
   {n : nat & {j:nat | standard_path n.+1 a j b}}. 
 Proof.
   (* end snippet LTToStandard *)
