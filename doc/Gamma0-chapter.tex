@@ -1,0 +1,262 @@
+\chapter{The Ordinal \texorpdfstring{$\Gamma_0$}{Gamma0} (first draft)}
+
+
+\emph{This chapter and the files it presents are still very incomplete, considering the impressive properties of $\Gamma_0$~\cite{Gallier91}.  We hope to add new material soon, and accept contributions!}
+
+\begin{todo}
+  Build a T2Bridge! (note: Gamma0's wellfoundedness is missing in \gaia (?).
+\end{todo}
+
+\section{Introduction}
+We present a notation system for the ordinal $\Gamma_0$, following Chapter V, Section 14 of~\cite{schutte}: ``A notation system for the ordinals $<\Gamma_0$''.
+We try to be as close as possible to Schütte's text and usual practices of \coq{} developments.
+
+The ordinal $\Gamma_0$ is defined in Section 13 of ~\cite{schutte} as the least \emph{strongly critical ordinal}. It is widely known as the \emph{Feferman-Schütte ordinal}.
+
+
+Section V, 13 of~\cite{schutte} defines \emph{strongly critical} and
+\emph{maximal $\alpha$-critical} ordinals: 
+
+\begin{itemize}
+\item $\alpha$ is strongly critical if
+$\alpha$ is $\alpha$-critical,
+\item $\gamma$ is maximal $\alpha$-critical if $\gamma$ is $\alpha$-critical, and, for all $\xi>\alpha$, $\gamma$ is not $\xi$-critical.
+
+\end{itemize}
+
+
+
+
+
+\vspace{4pt}
+
+\noindent\emph{From \href{../theories/html/hydras.Schutte.Critical.html\#strongly_critical}%
+{\texttt{Schutte.Critical}}}
+
+\input{movies/snippets/Critical/Gamma0Def}
+
+
+\index{hydras}{Projects}
+\begin{project}
+Prove that a (countable)  ordinal $\alpha$ is strongly critical iff 
+$\phi_\alpha(0)=\alpha$ (Theorem 13.13 of~\cite{schutte} ). 
+\end{project}
+
+
+\index{hydras}{Projects}
+\begin{project}
+Prove that the set of strongly critical ordinals is unbounded and closed (Theorem 13.14 of~\cite{schutte} ). Thus this set is not empty,  hence has a least element. Otherwise, the definition of $\Gamma_0$ above would be useless.
+\end{project}
+
+
+
+
+In the present version of this development, we  only study $\Gamma_0$ as a notation system, much more powerful than the ordinal notation for $\epsilon_0$.
+
+%\index{Projects}
+%
+%\begin{project}
+% Schûtte's section 13 of~\cite{schutte} contain several definitions and lemmas which give another view on $\Gamma_0$.  We leave it as a project to implement them in \coq{}.  
+%\end{project}
+
+
+
+
+\section{The type \texttt{T2} of ordinal terms}
+
+The notation system for ordinals less than $\gamma_0$ comes from the following theorem of~\cite{schutte}, where $\psi\,\alpha$ is the ordering function 
+of the set of maximal $\alpha$-critical ordinals.
+
+\index{hydras}{Library Gamma0!Types!T2}
+
+\begin{quote}
+  Any ordinal $\not= 0$ which is not strongly critical can be expressed in terms of $+$ and $\psi$.
+\end{quote}
+
+\index{hydras}{Projects}
+\begin{project}
+This theorem is not formally proved in this development yet. It should be!
+\end{project}
+
+
+Like in Chapter~\ref{chap:T1}, we define an inductive type with two constructors, one for $0$, the other for the construction $\psi(\alpha,\beta)\times(n+1)+\gamma$, adapting a Manolios-Vroon-like notation~\cite{Manolios2005} to
+\emph{Veblen normal forms}.
+\label{types:T2}
+
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#T2}%
+{\texttt{Gamma0.T2}}}
+
+\inputsnippets{T2/T2Def, T2/psiDef}
+
+
+
+Like in chapter~\ref{chap:T1}, we get familiar with the type \texttt{T2} by recognizing simple constructs like finite ordinals, $\omega$, etc., as inhabitants of \texttt{T2}.
+
+\input{movies/snippets/T2/Notations}
+
+\section{A strict order on T2}
+
+Let us define a strict order on type \texttt{T2}. The following definition is 
+an adaptation of Schütte's, taking into account the multiplications by a natural number (inspired by~\cite{Manolios2005}, and also present in \texttt{T1}).
+
+\label{sect:t2-lt-def}
+
+\input{movies/snippets/T2/ltDef}
+
+
+Seven constructors! In order to get accustomed with this definition, let us look at a small set of examples, covering all the constructors of \texttt{lt}.
+
+
+\input{movies/snippets/T2/ltExamples}
+
+
+\index{hydras}{Projects}
+\begin{project}
+Write a tactic that solves automatically goals of the form (\texttt{$\alpha$ t2< $\beta$}), where $\alpha$ and $\beta$ are closed terms of type \texttt{T2}.
+\end{project}
+
+\section{Veblen normal form}
+\begin{definition}
+  A term of the form $\psi(\alpha_1,\beta_1)\times n_1+ \psi(\alpha_2,\beta_2)\times n_2+\dots+\psi(\alpha_k,\beta_k)\times n_k$ is said to be in
+ \emph{[Veblen] normal form} if for every $i<n$, $\psi(\alpha_i,\beta_i)<\psi(\alpha_{i+1},\beta_{i+1})$, all the $\alpha_i$ and $\beta_i$ are in normal form, and all the $n_i$ are strictly positive integers.
+\end{definition}
+
+\input{movies/snippets/T2/nfDef}
+
+
+
+Let us look at some positive examples (we have to prove some inversion lemmas before proving counter-examples).
+
+\input{movies/snippets/T2/nfExamples}
+
+
+\subsection{Length of a term}
+
+The notion of \emph{term length} is introduced by Schütte as a helper for proving (at least) the \emph{trichotomy} property and transitivity of the strict order \texttt{lt} on \texttt{T2}. These properties are proved by induction on length.
+
+
+\subsection{Trichotomy}
+
+\emph{Trichotomy} is another name for the well-known property of decidable total ordering (like Standard Library's \texttt{Compare\_dec.lt\_eq\_lt\_dec}).
+
+We first prove by induction on $l$ the following lemma:
+
+\vspace{4pt}
+
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.Gamma0\#tricho_aux}%
+{\texttt{Gamma0.Gamma0}}}
+
+\input{movies/snippets/Gamma0/tricho}
+
+\input{movies/snippets/Gamma0/compare}
+
+
+With the help of \texttt{compare}, we get a boolean version of \texttt{nf}
+(being in Veblen normal form).
+
+\input{movies/snippets/Gamma0/nfb}
+
+
+
+
+
+\section{Main functions on \texttt{T2}}
+
+\subsection{Successor}
+The successor function is defined by structural recursion.
+
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#succ}%
+{\texttt{Gamma0.T2}}}
+
+\input{movies/snippets/T2/succDef}
+
+
+\subsection{Addition}
+
+Like for Cantor normal forms (see Sect.~\ref{sect:infix-plus-T1}),  the definition of addition in \texttt{T2}  requires comparison between ordinal terms.
+
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.Gamma0T2.html\#succ}%
+  {\texttt{Gamma0.Gamma0}}}
+
+\input{movies/snippets/Gamma0/plusDef}
+
+
+
+\subsection{The Veblen function \texorpdfstring{$\phi$}{\texttt{phi}}}
+
+The enumeration function of critical ordinals, presented in Sect.~\vref{sect:phi-schutte}, is recursively defined in type \texttt{T2}.
+
+\input{movies/snippets/Gamma0/phiDef}
+
+Despite its complexity, the function \texttt{phi} is well adapted to proofs by simplification or computation.
+
+
+The relation between the constructor $\psi$ and the function $\phi$ is
+studied in~\cite{schutte}, and partially implemented in this development.
+\emph{Please contribute!}
+ 
+For instance, the following theorem states that, if $\gamma$ is the sum of a limit ordinal $\beta$ and a finite ordinal $n$, and $\beta$ is a fixpoint of
+$\phi(\alpha)$, then $\psi(\alpha,\gamma)=\phi_\alpha(\gamma+1)$.
+
+\input{movies/snippets/Gamma0/phiPsi}
+\input{movies/snippets/Gamma0/Ex9}
+
+
+
+
+On the other hand, $\phi$ can be expressed in terms of $\psi$.
+
+\input{movies/snippets/Gamma0/phiOfPsi}
+\input{movies/snippets/Gamma0/Ex10}
+
+\index{hydras}{Projects}
+\begin{project}
+Please study a way to pretty print ordinal terms in Veblen normal form (see Section~\vref{sect:ppT1}).
+\end{project}
+
+\section{An ordinal notation for \texorpdfstring{$\Gamma_0$}{\texttt{Gamma0}}}
+
+In order to consider type \texttt{T2} as an ordinal notation, we have to build an instance of class \texttt{ON} (See Definition page~\pageref{types:ON}).
+
+First, we define a type that contains only terms in Veblen normal form, and redefine \texttt{lt} and \texttt{compare} by delegation (see for comparison the construction of type \texttt{E0} in Sect.~\vref{sect:E0-def}).
+
+\input{movies/snippets/Gamma0/G0a}
+\input{movies/snippets/Gamma0/G0b}
+
+
+Then, we buils an instance of class \texttt{ON}. 
+function \texttt{compare} is correct.
+
+\input{movies/snippets/Gamma0/ltSto}
+\input{movies/snippets/Gamma0/ltWf}
+\input{movies/snippets/Gamma0/ONGamma0}
+\input{movies/snippets/Gamma0/G0z}
+
+
+\begin{remark}
+The proof of \texttt{lt\_wf} has been written by \'Evelyne Contejean, using her library on the recursive path ordering (see also remark~\vref{remark:a3pat}).
+\end{remark}
+
+\index{hydras}{Projects}
+\begin{project}
+Prove that \texttt{Epsilon0} (page~\pageref{instance-epsilon0})
+is a sub-notation system of \texttt{Gamma0}.
+
+Prove that the implementations of \texttt{succ}, \texttt{+}, $\phi_0$, etc.
+are compatible in both notation systems.
+
+Note that a function \texttt{T1\_inj} from \texttt{T1} to \texttt{T2} has already been defined. It may help to complete the task.
+
+
+
+\noindent\emph{From \href{../theories/html/hydras.Gamma0.T2.html\#T1_to_T2}%
+{\texttt{Gamma0.T2}}}
+
+\input{movies/snippets/T2/T1ToT2}
+
+\end{project}
+
+\begin{project}
+Prove that the notation system \texttt{Gamma0} is a correct implementation 
+of the segment $[0,\Gamma_0)$ of the set of countable ordinals.
+\end{project}

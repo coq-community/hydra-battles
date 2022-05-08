@@ -1,5 +1,12 @@
 DEP_FILES = hydras.tex          \
-	    part-hydras.tex     \
+	    part-hydras-intro.tex     \
+	    hydra-chapter.tex   \
+	    ordinal-chapter.tex \
+	    epsilon0-chapter.tex \
+	    ks-chapter.tex \
+	    large-sets-chapter.tex \
+	    schutte-chapter.tex \
+	    Gamma0-chapter.tex  \
 	    chapter-powers.tex  \
 	    chapter-primrec.tex \
 	    gaia-chapter.tex    \

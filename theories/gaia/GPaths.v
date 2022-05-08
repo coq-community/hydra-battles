@@ -19,21 +19,26 @@ Import CantorOrdinal.
 (** small transition step associated with canonical sequences *)
 (* begin snippet importationsa:: no-out *)
 
-#[global] Notation htransition := transition.
+#[global] Notation htransition := Epsilon0.Paths.transition.
+#[global] Notation hbounded_transitionS := Paths.bounded_transitionS.
+
 
 Definition transition i (a b: T1) :=
   [/\ i != 0 , a!= zero & b == canon a i].
-
-Definition transitionb i (a b: T1) :=
-  [&& i != 0 , a!= zero & b == canon a i]. 
 
 Definition bounded_transitionS n (a b: T1) :=
   exists i, (i <= n)%N /\ transition (S i) a b.
 (* end snippet importationsa *)
 
+Definition transitionb i (a b: T1) :=
+  [&& i != 0 , a!= zero & b == canon a i]. 
+
+Lemma transitionP i a b : reflect (transition i a b )
+                                  (transitionb i a b). 
+Proof. rewrite /transition /transitionb => //; by apply and3P. Qed. 
+
 
 (** TODO : define [path_to] as a boolean function *)
-#[global] Notation hbounded_transitionS := bounded_transitionS.
 #[global] Notation hpath_to := path_to.
 #[global] Notation hpath := path.
 #[global] Notation hpathS from s to := (path_toS to s from).
@@ -54,7 +59,10 @@ Definition path_to (to: T1)(s: seq nat) (from:T1) : Prop :=
 Notation path from s to := (path_to to s from).
 
 Definition acc_from a b := exists s, path a s b.
+
 (* end snippet pathsDefs *)
+
+
 
 (* begin snippet pathsDefsb:: no-out *)
 Definition const_path i a b :=  hconst_path i (g2h a) (g2h b).
@@ -130,7 +138,7 @@ Proof.
   move: l i a; elim => // /=. 
   rewrite !/standard_gnaw => n Hn i a Hi.
   move: (Hn (S i) (canon a i)); rewrite /canon g2h_h2gK.  
-  move => {}Hn; rewrite Hn /gnaw ?g2h_h2gK => // /=; by  case :i Hn Hi. 
+  move => {}Hn; rewrite Hn /gnaw ?g2h_h2gK => // /=; by case :i Hn Hi. 
 Qed.
 
 
@@ -239,19 +247,19 @@ Definition Canon_plus i a b :=
 
 
 (** * Examples *)
-
+(* begin snippet pathExamples:: no-out *)
 Example ex_path1 : path (T1omega * (\F 2)) [:: 2; 2; 2] T1omega.
-Proof. rewrite /path_to;  path_tac. Qed.
+Proof. rewrite /path_to;  Epsilon0.Paths.path_tac. Qed.
 
 Example ex_path2: path (T1omega * \F 2) [:: 3; 4; 5; 6] T1omega.
 Proof. rewrite /path_to;  path_tac. Qed.
 
 Example ex_path3: path (T1omega * \F 2) (index_iota 3 15) zero.
-Proof. rewrite /path_to /index_iota => /=.  path_tac. Qed.
+Proof. rewrite /path_to /index_iota => /=; path_tac. Qed.
 
 Example ex_path4: path (T1omega * \F 2) (List.repeat 3 8) zero.
-Proof. rewrite /path_to => /=. path_tac. Qed.
-
+Proof. rewrite /path_to => /=;  path_tac. Qed.
+(* end snippet pathExamples *)
 
 (*
 Compute T1pp (gnaw (phi0 T1omega) [:: 2; 3; 4; 5]).

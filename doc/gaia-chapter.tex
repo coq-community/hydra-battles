@@ -243,9 +243,27 @@ from \href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hes
 
 \inputsnippets{GHessenberg/oplusDef}
 
+\index{hydras}{Exercises}
+
+\begin{exercise}
+  
+  We could also have defined \texttt{oplus} by a structurally
+  recursive definition, as in 
+  \vref{sec:oplusdefT1}.
+  
+\inputsnippets{GHessenberg/FixOplus}
+
+Prove that \texttt{Hessenberg.oplus} refines
+the new function. 
+\end{exercise}
 
 
-By simple rewriting, we import the following lemmas.
+
+
+\subsubsection{A few lemmas}
+
+Many properties of Hessenberg's sum can be obtained from
+\href{../theories/html/hydras.Epsilon0.Hessenberg.html}{hydras.Epsilon0.Hessenberg} just by sequences of rewritings.
 
 
 \inputsnippets{GHessenberg/oplusEquationsc}
@@ -296,19 +314,23 @@ The following lemmas are proved by rewriting from corresponding statements prove
 
 \subsubsection{Canonical sequences and the order \texttt{T1lt}}
 
+
+The following lemmas are also borrowed from\href{../theories/html/hydras.Epsilon0.Canon.html}%
+{\texttt{hydras.Epsilon0.Canon}}.
+
+
 \inputsnippets{GCanon/gcanonLt}
 \inputsnippets{GCanon/gcanonLimitMono}
 %\inputsnippets{GCanon/glimitCanonSNotZero}
-\subsubsection{Canonical sequences and limits}
-
-The following lemma (borrowed from\href{../theories/html/hydras.Epsilon0.Canon.html}%
-{\texttt{hydras.Epsilon0.Canon}}) links limit ordinals to canonical sequences.
+%\subsubsection{Canonical sequences and limits}
 
 \inputsnippets{GCanon/gcanonLimitStrong}
 
 Let us recall \gaia's definition of $\omega$-limit.
 
 \inputsnippets{nfwfgaia/LimitV2Def, nfwfgaia/LimitOFDef}
+
+We can prove the following statements, in \gaia's  style.
 
 \inputsnippets{GCanon/gcanonLimitV2}
 \inputsnippets{GCanon/gcanonLimitOf}
@@ -338,6 +360,10 @@ Paths (sequences of transitions) are defined by delegation to
 
  \inputsnippets{GPaths/pathsDefsb}
 
+The following examples are proved using the \texttt{Epsilon0.Paths.path\_tac} tactic.
+
+\inputsnippets{GPaths/pathExamples}
+ 
 \subsubsection{Main theorems about paths}
 
 $\beta$ is (strictly) accessible from $\alpha$, if and only iff

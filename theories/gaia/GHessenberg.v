@@ -30,6 +30,24 @@ Compute T1pp (T1omega o+ T1omega).
 Compute T1pp (o_finite_mult 5 (T1omega + \F 1)).
 (* end snippet oplusDef *)
 
+Module FixpointDef.
+(* begin snippet fixOplus *)  
+Fixpoint oplus (alpha beta : T1) : T1 :=
+  let fix oplus_aux beta {struct beta} :=
+      match alpha, beta with
+        | zero, _ => beta
+        | _, zero => alpha
+        | cons a1 n1 b1, cons a2 n2 b2 =>
+          match compare a1 a2 with
+            |  Gt => cons a1 n1 (oplus b1 beta)
+            |  Lt => cons a2 n2 (oplus_aux b2)
+            |  Eq => cons a1 (S (n1 + n2)%nat) (oplus b1 b2)
+          end
+      end
+  in oplus_aux beta.
+(* end snippet fixOplus *)
+End FixpointDef.
+  
 (* begin snippet oplusEquationsc:: no-out *)
 Lemma oplusE (a b :T1) :
   a o+ b =
@@ -43,7 +61,6 @@ Lemma oplusE (a b :T1) :
         | Lt => cons a2 n2 (a o+ b2)
         end
     end.
-(* end snippet oplusEquationsc *)
 Proof.
   rewrite /oplus oplus_eqn; case: a.
   cbn ; by rewrite h2g_g2hK.
@@ -51,6 +68,7 @@ Proof.
   move => t n t0 t1 n0 t2; rewrite !g2h_cons compare_g2h. 
   case (compare t1 t); by rewrite h2g_cons !h2g_g2hK.
 Qed.
+(* end snippet oplusEquationsc *)
 
 
 
@@ -70,22 +88,23 @@ Qed.
 
 
 (* begin snippet oplusNf:: no-out  *)
-Lemma  oplus_nf (a  b : T1) :
-  T1nf a ->  T1nf b -> T1nf (a o+ b).
+Lemma  oplus_nf (a  b : T1) : T1nf a ->  T1nf b -> T1nf (a o+ b).
+(* end snippet oplusNf *)
 Proof.
-  rewrite /oplus -?nf_ref => Ha Hb; apply oplus_nf; by rewrite hnf_g2h.
+  rewrite /oplus -?nf_ref => Ha Hb; apply oplus_nf;
+                               by rewrite hnf_g2h.
 Qed.
 
-(* end snippet oplusNf *)
+
 
 (* begin snippet oplusCoplusA:: no-out *)
 Lemma oplusC (a b: T1):  T1nf a -> T1nf b -> a o+ b = b o+ a.
-Proof.  move => ? ?; rewrite /oplus oplus_comm ?hnf_g2h //. Qed.
+Proof.  move => ? ?; by rewrite /oplus oplus_comm ?hnf_g2h. Qed.
 
 Lemma oplusA  (a b c: T1) :
   T1nf a -> T1nf b -> T1nf c ->  a o+ (b o+ c) = a o+ b o+ c.
 Proof.
-  move => ? ? ?; rewrite /oplus !g2h_h2gK oplus_assoc ?hnf_g2h => //.
+  move => ? ? ?; by rewrite /oplus !g2h_h2gK oplus_assoc ?hnf_g2h.
 Qed.
 (* end snippet oplusCoplusA *)
 

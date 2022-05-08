@@ -1,0 +1,80 @@
+\section*{Introduction}
+
+In this part, we present a development  for the \coq{} proof assistant, after the work of Kirby and Paris~\cite{KP82}. This formalization contains the following main parts:
+
+\begin{itemize}
+\item Representation in \coq{} of hydras and hydra battles.
+\item A proof that every battle is finite and won by Hercules. This proof is based on a \emph{variant} which maps any hydra to an ordinal strictly less than $\epsilon_0$ and is strictly decreasing along any battle.
+
+\item Using a combinatorial toolkit designed by J.~Ketonen and R.~Solovay~\cite{KS81}, we prove that, for any ordinal $\mu<\epsilon_0$, there exists no such variant mapping any hydra to an ordinal strictly less than $\mu$. Thus, the complexity of $\epsilon_0$ is really needed in the previous proof.
+
+\item We prove a relation between the length of a ``classic''  kind of  battles \footnote{This class is also called \emph{standard} in this document (text and proofs). The \emph{replication factor} of the hydra is exactly $i$ at the $i$-th round of the battle (see Sect~\vref{sect:replication-def}).}
+and the Wainer-Hardy hierarchy of ``rapidly growing functions'' $H_\alpha$~\cite{Wainer1970}. The considered class of battles, which we call \emph{standard},  is the most considered one in the scientific  literature (including popularization).
+\end{itemize}
+
+
+Simply put, this document tries to combine the scientific interest of two articles~\cite{KP82, KS81} and a book~\cite{schutte} with the playful activity of truly proving theorems.
+We hope  that such a work, besides exploring a nice piece of discrete mathematics,
+will show how \coq{} and its standard library are well fitted to help us to understand some non-trivial mathematical developments, and also to experiment the constructive parts of  the proof through functional programming.
+
+ We also hope to provide a little clarification on infinity (both potential and actual) through the notions of function, computation, limit,
+ type and proof.
+
+ \subsection*{Compatibility with \gaia (in progress)}
+ \label{sect:gaia-first-intro}
+The \gaia project~\cite{Gaia} by Jos\'e Grimm, Alban Quadrat,  and Carlos Simpson,
+aims  to formalize mathematics in \coq  in
+\index{gaiabridge}{Introduction}
+
+the style of Nicolas Bourbaki. It contains many definitions and results about ordinal numbers. In Chapter~\ref{gaia-chapter}, we present some modules which allow \HydrasLib' users to apply lemmas proven in \gaia, and vice versa. Remarks about compatibility with \gaia are signalled with the picture \gaiasign. A special index is in construction (page~\pageref{gaia-index}).
+ 
+
+%\section{Remarks}
+
+\subsection*{Difference from Kirby and Paris's work}
+In~\cite{KP82}, Kirby and Paris show  that there is no proof of termination of all hydra battles in Peano Arithmetic (PA).
+Since we are used to writing proofs in higher order logic, the restriction to PA was quite unnatural for us. So we chose to prove another statement without any reference to PA, by considering a class of proofs indexed by ordinal numbers up to $\epsilon_0$.
+
+\subsection*{State of the development}
+The \coq{} scripts herein are in constant development since our contribution~\cite{CantorContrib} on  notations for the ordinals $\epsilon_0$ and $\Gamma_0$.
+We added new material: axiomatic definitions of countable ordinals after Schütte~\cite{schutte}, combinatorial aspects of $\epsilon_0$, after Ketonen and Solovay~\cite{KS81} and Kirby and Paris~\cite{KP82}, recent \coq{} technology: type classes, function derinition by equations, etc.
+
+We are now working in order to make clumsy proofs more readable, simplify definitions, and ``factorize'' proofs as much as possible. 
+Many possible improvements are suggested as ``todo''s or ``projects'' in this text.
+
+
+\section*{Future work (projects)}
+\index{hydras}{Projects}
+
+This document and the proof scripts are far from being complete.
+
+First, there must be a lot of typos to correct, references and index items to add. Many proofs are too complex and should be simplified, etc.
+
+The following extensions are planned, but help is needed:
+
+\begin{itemize}
+\item Semiautomatic tactics for proving inequalities $\alpha < \beta$, even when $\alpha$ and $\beta$ are not closed terms.
+%\item Extension to $\Gamma_0$ (in Veblen normal form)
+\item More lemmas about hierarchies of rapidly growing
+  functions, and their relationship 
+    with primitive recursive functions and provability in Peano arithmetic 
+(following~\cite{KS81, KP82}).
+\item From \coq's point of view, this development could be used as an illustration of the evolution of the software, every time new libraries and sets of tactics could help to simplify the proofs.
+\end{itemize}
+
+\subsection*{Main references}
+
+In our development, we adapt the definitions and prove many theorems which
+we found in the following articles. 
+\begin{itemize}
+\item ``Accessible independence results for Peano arithmetic''  by Laurie Kirby and Jeff Paris~\cite{KP82}
+\item ''Rapidly growing Ramsey Functions'' by Jussi Ketonen and Robert Solovay~\cite{KS81}
+\item ``The Termite and the Tower'', by Will Sladek~\cite{Sladek07thetermite}
+\item Chapter V of ``Proof Theory'' by Kurt Schütte~\cite{schutte}
+\end{itemize}
+
+
+
+
+
+

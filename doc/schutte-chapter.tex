@@ -1,0 +1,778 @@
+\chapter[Countable ordinals (after Sch\"{u}tte)]{Kurt Schütte's axiomatic definition of countable ordinals}
+
+\label{chap:schutte} 
+%ON
+
+In the present chapter, we  compare our implementation of the segment $[0,\epsilon_0)$ with a mathematical text in order to ``validate'' our constructions.
+Our reference here is the axiomatic definition of the set of countable ordinals,
+in chapter V of Kurt Schütte's book `` Proof Theory ''~\cite{schutte}.
+
+\begin{remark}
+\emph{In all this chapter, the word ``ordinal'' will be considered as a synonymous of
+``countable ordinal''}  
+\end{remark}
+
+
+
+Schütte's definition of countable ordinals relies on the following three axioms:
+
+There  exists a strictly ordered set , such that
+\begin{enumerate}
+\item  $(\mathbb{O},<)$ is well-ordered
+\item Every bounded subset of $\mathbb{O}$  is countable
+\item Every countable subset of $\mathbb{O}$  is bounded.
+\end{enumerate}
+
+Starting with these three axioms, Schütte re-defines the vocabulary about ordinal numbers: the null ordinal $0$, limits and successors, the addition of ordinals, the infinite ordinals $\omega$, $\epsilon_0$, $\Gamma_0$, etc.
+
+This chapter describes an adaptation to \coq{} of Schütte's axiomatization. 
+ Unlike the rest of our libraries, our library
+\href{../theories/html/hydras.Schutte.Schutte.html}{hydras.Schutte}
+is not constructive, and relies on several axioms.
+
+\begin{itemize}
+\item First, please keep in mind  that the set of countable ordinals is not countable. Thus, we cannot hope to represent all countable ordinals as finite terms of an inductive type, which was possible with  the set of ordinals strictly less than $\epsilon_0$ (resp. $\Gamma_0$)
+\item We tried to be as close as possible to K. Schütte's text, which uses ``classical'' mathematics : excluded middle, Hilbert's $\epsilon$ (choice) and Russel's $\iota$ (definite description) operators. Both operators allow us to write definitions close to the natural mathematical language, such as ``$\textrm{succ}$ is \emph{the} least ordinal strictly greater than $\alpha$''
+\item Please note that only the library \href{../theories/html/hydras.Schutte.Schutte.html}{Schutte/*.v} is ``contaminated'' by axioms, and that the rest of our libraries remain constructive.
+\end{itemize}
+
+\section{Declarations and axioms}
+
+Let us declare a type 
+\texttt{Ord} for representing countable ordinals, and a binary relation
+ \texttt{lt}. Note that, in our development, \texttt{Ord} is a type, while the \emph{set} of countable ordinals (called $\mathbb{O}$ by Schütte) 
+is the full set over the type \texttt{Ord}.
+
+\label{types:Ord} 
+
+We use Florian Hatat's library on countable sets, written as he was a student of  \emph{\'Ecole Normale Supérieure de Lyon}. A set $A$ is countable if there is an injective function from $A$ to $\mathbb{N}$ (see 
+Library \href{../theories/html/hydras.Schutte.Countable.html}%
+{\texttt{Schutte.Countable}}).
+
+
+\vspace{6pt}
+
+\emph{From Module\href{../theories/html/hydras.Schutte.Schutte_basics.html}%
+{\texttt{Schutte.Schutte\_basics}}}
+
+\index{hydras}{Library Schutte!Types!Ord}
+
+\input{movies/snippets/Schutte_basics/OrdDecl}
+
+
+Schütte's first axiom tells that \texttt{lt} is a well order on the set 
+\texttt{ordinal} (The  class \texttt{WO} is defined in
+Module~\href{../theories/html/hydras.Schutte.Well_Orders.html}{Schutte.Well\_Orders.v}).
+
+\index{hydras}{Library Schutte!Type classes!WO@ WO (well order)}
+
+\label{types:WO}
+
+\input{movies/snippets/Well_Orders/Mdecl}
+
+\input{movies/snippets/Well_Orders/WODef}
+
+\input{movies/snippets/Schutte_basics/AX1}
+
+The second and third axioms say that a subset $X$ of $\mathbb{O}$ is
+(strictly) bounded if and only if it is countable. 
+
+\input{movies/snippets/Schutte_basics/AX23}
+
+
+\texttt{AX2} and \texttt{AX3} could have been replaced by a single axiom (using the \texttt{iff} connector), but we decided to respect as most as possible the structure of Schütte's definitions.
+
+\section{Additional  axioms}
+
+The adaptation of Schütte's mathematical discourse to \coq{} led us to
+import a few axioms from the standard library. We encourage the reader to consult \coq{}'s FAQ about the safe use of axioms
+ \url{https://github.com/coq/coq/wiki/The-Logic-of-Coq#axioms}.
+
+\subsubsection{Classical logic}
+
+In order to work with classical logic, we import the module
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Classical.html}{Coq.Logic.Classical}  of \coq{}'s standard library, specifically the following axiom:
+
+\begin{Coqsrc}
+ Axiom classic : forall P:Prop, P \/ ~P.
+\end{Coqsrc}
+
+
+\subsubsection{Description operators}
+
+In order to respect Schütte's style, we imported also the library 
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.Epsilon.html}{\texttt{Coq.Logic.Epsilon}}.  The rest of this section presents a few examples of
+how Hilbert's choice operator and Church's definite description allow us
+ to write understandable definitions (close to the mathematical natural language).
+
+\subsubsection{The definition of zero}
+
+According to the  definition of a well order, every non-empty subset of \texttt{Ord} has a least element. Furthermore, this least element is unique. We would like to call this element  \texttt{zero}.
+
+\input{movies/snippets/Schutte_basics/iotaDemoa}
+\input{movies/snippets/Schutte_basics/iotaDemob}
+
+
+
+
+Indeed, the basic logic of  \coq{} does not allow us to eliminate a proof of a proposition 
+$\exists!\,x:A,\,P(x)$ for building a term whose type lies in the sort \texttt{Type}. 
+The reasons for this impossibility are explained in many documents~\cite{BC04, chlipalacpdt2011, Coq}.
+
+Let us import the library \texttt{Coq.Logic.Epsilon}, which contains the following axiom and lemmas.
+
+\input{movies/snippets/MoreEpsilonIota/EpsilonStatement}
+
+
+Hilbert's $\epsilon$ \emph{operator} is derived from this  axiom.
+
+\input{movies/snippets/MoreEpsilonIota/EpsilonDef}
+
+
+If we consider the \emph{unique existential} quantifier $\exists!$, we obtain
+Church's \emph{definite description operator}.
+
+\input{movies/snippets/MoreEpsilonIota/iotaDef}
+
+Indeed, the operators \texttt{epsilon} and \texttt{iota} allowed us to make our definitions 
+quite close to Schütte's text. Our libraries \href{../theories/html/hydras.Schutte.MoreEpsilonIota.html}%
+{\texttt{Schutte.MoreEpsilonIota}}
+and
+\href{../theories/html/hydras.Schutte.PartialFun.html}%
+{\texttt{Schutte.PartialFun}} are extensions of \texttt{Coq.logic.Epsilon} for making easier 
+such definitions. See also an article in french~\cite{PCiota}. 
+
+
+\input{movies/snippets/MoreEpsilonIota/Defs}
+
+
+In order to use these tools,  we have to tell \coq{}  that the declared type \texttt{Ord} is not empty:
+
+\input{movies/snippets/Schutte_basics/inhOrd}
+
+
+
+
+We are now able to define \texttt{zero} as the least ordinal. For this purpose,
+we define a function returning the least element of any [non-empty]  subset.
+
+
+\emph{From Module\href{../theories/html/hydras.Schutte.Well_Orders.html}%
+  {\texttt{Schutte.Well\_Orders}}}
+
+\input{movies/snippets/Well_Orders/MDecl}
+\input{movies/snippets/Well_Orders/theLeast}
+
+
+
+\vspace{4pt}
+
+From Module \href{../theories/html/hydras.Schutte.Schutte_basics.html}%
+{\texttt{~Schutte.Schutte\_basics}}
+
+\label{Constants:zero:Ord}
+\index{hydras}{Library Schutte!Constants!zero}
+
+\input{movies/snippets/Schutte_basics/zeroDef}
+
+We want to prove now that zero is less than or equal to any ordinal number.
+
+\input{movies/snippets/Schutte_basics/zeroLe}
+
+
+\subsubsection{Remarks on \texttt{epsilon} and \texttt{iota}}
+
+ What would happen in case of a misuse of \texttt{epsilon} or \texttt{iota} ?
+For instance, one could give a unsatisfiable specification to \texttt{epsilon} or 
+a specification for \texttt{iota} that admits several realizations.
+
+Let us consider an example:
+
+\input{movies/snippets/Schutte_basics/BadBottoma}
+
+Since we won't be able to prove the proposition
+\linebreak \Verb|(exists! a: Ord, least_member (Empty_set Ord) a)|, the only properties we would be able to prove about \texttt{bottom} would be \emph{trivial} properties, 
+\emph{i.e.}, satisfied by \emph{any} element of type \texttt{Ord}, like for instance
+\texttt{bottom = bottom}, or \texttt{zero <= bottom}.
+
+\input{movies/snippets/Schutte_basics/trivialProps}
+
+On the other hand, the following attempt fails, because of the unprovable first subgoal (please notice that the second subgoal is easy to solve !).
+
+\input{movies/snippets/Schutte_basics/Failure}
+
+
+In short, using \texttt{epsilon} and \texttt{iota} in our implementation of countable ordinals after Schütte has two main advantages.
+
+
+\begin{itemize}
+\item It allows us to give a \emph{name} (using \texttt{Definition}) two witnesses 
+of existential quantifiers (let us recall that, in classical logic, one may consider non-constructive proofs of existential statements)
+\item By separating definitions from proofs of [unique] existence, one may make definitions  more concise and readable. Look for instance at 
+the definitions of  \texttt{zero}, \texttt{succ}, \texttt{plus}, etc. in the rest of this chapter.
+\end{itemize}
+%%%% ICI ICI 
+
+\section{The  successor function}
+
+The definition of the function \texttt{succ:Ord -> Ord} is very concise. The successor of any ordinal $\alpha$ is the smallest ordinal strictly greater than $\alpha$.
+
+\label{Functions:succ-sch}
+\index{hydras}{Library Schutte!Functions!succ}
+
+\input{movies/snippets/Schutte_basics/succDef}
+
+Using \texttt{succ}, we define the following predicates.
+
+\input{movies/snippets/Schutte_basics/isSuccIsLimit}
+
+
+
+
+% \begin{remark}
+% Please look at remark~\vref{warning:coercions}.
+
+How do we prove properties of the successor function?
+First, we make its specification explicit.
+
+\input{movies/snippets/Schutte_basics/succSpec}
+
+Then, we prove that our function \texttt{succ} meets this specification. 
+
+\input{movies/snippets/Schutte_basics/succOka}
+
+
+We have now to prove that the set of all ordinals strictly greater than $\alpha$ has a unique least element. But the singleton set $\{\alpha\}$ is countable, hence  bounded (by the axiom \texttt{AX3}). Hence; the set $\{\beta\in\mathbb{O}|\alpha < \beta\}$ is not empty
+and therefore has a unique least element.
+
+The rest of the \coq{} proof script is quite short.
+
+\input{movies/snippets/Schutte_basics/succOkb}
+
+We can ``uncap'' the description operator for proving properties of the
+\texttt{succ} function.
+
+\input{movies/snippets/Schutte_basics/succProps}
+
+
+
+\section{Finite ordinals}
+
+Using \texttt{succ}, it is now easy to define recursively all the finite ordinals.
+
+\label{sect:notation-F-sch}
+
+\input{movies/snippets/Schutte_basics/finiteDef}
+
+\section{The definition of \texttt{omega}}
+In order to define $\omega$, the first infinite ordinal, we use an operator which
+``returns'' the least upper bound (if it exists) of a subset $X\subseteq \mathbb{O}$.
+For that purpose, we first use a predicate:
+(\texttt{is\_lub $D$ \textit{lt} $X$ $a$}) if $a$ belongs to $D$ and is the least 
+upper bound  of $X$ (with respect to \textit{lt}).
+
+
+\input{movies/snippets/Lub/isLubDef}
+
+\input{movies/snippets/Schutte_basics/supDef}
+
+
+Then, we define the function \texttt{omega\_limit} which returns the least upper bound 
+of the  (denumerable) range of any sequence \texttt{s: nat -> Ord}. 
+By \texttt{AX3} this range is bounded, hence the set of its upper bounds is not empty and has a least element.
+Then we define \texttt{omega} as the limit of the sequence of finite ordinals.
+
+\input{movies/snippets/Schutte_basics/omegaDef}
+
+\label{sect:notation-omega}
+
+
+
+
+Among the numerous properties of the ordinal $\omega$, let us quote the following ones
+(proved in Module 
+\href{../theories/html/hydras.Schutte.Schutte_basics.html\#finite_lt_omega}{\texttt{Schutte.Schutte\_basics}})
+
+\input{movies/snippets/Schutte_basics/omegaPropsa}
+\input{movies/snippets/Schutte_basics/omegaPropsb}
+\input{movies/snippets/Schutte_basics/omegaPropsc}
+\input{movies/snippets/Schutte_basics/omegaPropsd}
+
+
+
+\subsection{Ordering functions and ordinal addition}
+
+After having defined the finite ordinals and the infinite ordinal $\omega$, we  define the sum $\alpha+\beta$ of two countable ordinals.
+Schütte's definition looks like the following one:
+
+\begin{quote}
+``$\alpha+\beta$ is the $\beta$-th ordinal greater than or equal to $\alpha$''
+\end{quote}
+
+
+The purpose of this section is to give a meaning to the construction
+``the $\alpha$-th element of $X$''  where $X$ is any non-empty subset of $\mathbb{O}$.
+We follow Schütte's approach, by defining the notion of \emph{ordering functions},
+a way to associate a unique ordinal to each element of $X$.
+Complete definitions and proofs can be found in Module
+ \href{../theories/html/hydras.Schutte.Ordering_Functions.html}%
+{\texttt{Schutte.Ordering\_Functions}} ).
+
+\subsection{Definitions}
+
+A \emph{segment} is a set $A$ of ordinals such that, whenever  $\alpha\in A$ and
+$\beta<\alpha$, then $\beta\in A$; a segment is  \emph{proper} if it strictly included in $\mathbb{O}$.
+
+\input{movies/snippets/Ordering_Functions/segmentDef}
+
+
+Let  $A$ be a segment, and $B$ a subset of $\mathbb{O}$ : an \emph{ordering function for $A$ and  $B$} is a strictly increasing bijection from $A$ to $B$.
+The set $B$ is said to be an \emph{ordering segment} of $A$.
+Our definition in \coq{} is a direct translation of the mathematical text of~\cite{schutte}.
+
+\index{maths}{Ordinal numbers!Ordering functions}
+\index{hydras}{Library Schutte!Predicates!ordering function@ordering\_function}
+
+\input{movies/snippets/Ordering_Functions/orderingFunctionDef}
+
+We are now able to associate with any subset $B$ of $\mathbb{O}$ its ordering segment and ordering function.
+
+\input{movies/snippets/Ordering_Functions/ordDef}
+
+
+Thus (\texttt{ord $B \;\alpha$}) is the $\alpha$-th element of $B$.
+Please note that the last definition uses the epsilon-based operator \texttt{some} and
+not \texttt{the}. This is due to the fact that we cannot prove the unicity (w.r.t. Leibniz' equality) of the ordering function of a given set. 
+By contrast, we admit the axiom  \texttt{Extensionality\_Ensembles}, from the library 
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Sets.Ensembles.html}{Coq.Sets.Ensembles}, so we use the operator \texttt{the} in the definition of
+\texttt{the\_ordering\_segment}.
+
+One of the main theorems of
+\href{../theories/html/hydras.Schutte.Ordering_Functions.html\#ordering_function_ex}%
+{\texttt{Ordering\_Functions}} 
+associates a unique segment and a unique (up to extensionality) ordering function to every subset $B$ of $\mathbb{O}$.
+
+\input{movies/snippets/Ordering_Functions/orderingFunctionEx}
+
+Thus,  our function \texttt{ord}  which enumerates the elements of $B$ is defined in a non-ambiguous way.
+Let us quote the following theorems (see Library \linebreak
+\href{../theories/html/hydras.Schutte.Ordering_Functions.html}%
+{\texttt{Schutte.Ordering\_Functions}} for more details).
+ 
+\input{movies/snippets/Ordering_Functions/orderingLe}
+\input{movies/snippets/Ordering_Functions/Th1352}
+
+
+\subsection{Ordinal addition}
+
+We are now ready to define and study addition on the type \texttt{Ord}.
+The following definitions and proofs can be consulted in Module
+\href{../theories/html/hydras.Schutte.Addition.html}%
+{\texttt{Schutte.Addition.v}}.
+
+\index{hydras}{Library Schutte!Functions!plus}
+
+\input{movies/snippets/Addition/additionDef}
+
+In other words,  $\alpha + \beta$ is the  $\beta$-th ordinal greater than or equal to $\alpha$. 
+Thanks to generic properties of ordering functions, we can show the following 
+properties of addition on $\mathbb{O}$. First, we prove a useful lemma:
+
+\input{movies/snippets/Addition/plusElim}
+
+As a use-case, let us prove that $0$ is a right neutral element of $+$.
+
+\input{movies/snippets/Addition/alphaPlusZero}
+
+
+The following lemmas are proved the same way.
+
+\input{movies/snippets/Addition/bunchOfLemmas}
+
+
+The following lemmas are not direct applications of \texttt{plus\_elim}.
+
+\input{movies/snippets/Addition/plusAssoc}
+\input{movies/snippets/Addition/finitePlusInfinite}
+  
+
+
+It is interesting to compare the proof of these lemmas with the
+computational proofs of the corresponding statements in Module
+\href{../theories/html/hydras.Epsilon0.T1.html}%
+{\texttt{Epsilon0.T1}}. 
+For instance, the proof of the lemma 
+\texttt{one\_plus\_omega} uses the continuity of ordering functions (applied to  \texttt{(plus 1)}) and compares the limit of the $\omega$-sequences $i_{(i \in \mathbb{N})}$ and
+$(1+i)i_{(i \in \mathbb{N})}$, whereas in the library  \texttt{Epsilon0/T1}, the equality 
+$1+\omega=\omega$ is just proved with \texttt{reflexivity}!
+
+
+
+\subsubsection{Multiplication by a natural number}
+
+The multiplication of an ordinal by a natural number is defined in terms of addition.
+This operation is useful for the study of Cantor normal forms.
+
+\input{movies/snippets/Addition/multFin}
+
+\section{The exponential of basis \texorpdfstring{$\omega$}{omega}}
+
+In this section, we define the function which maps any $\alpha\in\mathbb{O}$ to
+the ordinal  $\omega^\alpha$, also written 
+$\phi_0(\alpha)$. 
+It is an opportunity to apply the definitions and results of the preceding section. 
+Indeed,  Schütte first defines a subset of $\mathbb{O}$: the set of additive principal ordinals, and $\phi_0$  is just defined as the ordering function of this set.
+
+\subsection{Additive principal ordinals}
+
+\index{maths}{Ordinal numbers!Additive principal ordinals}
+\index{hydras}{Library Schutte!Predicates!AP@AP (additive principal ordinals)}
+
+\begin{definition}
+A non-zero ordinal  $\alpha$ is said to be \emph{additive principal} if, for all  $\beta<\alpha$, $\beta+\alpha$ is equal to  $\alpha$.
+We call \texttt{AP} the set of additive principal ordinals.
+
+\end{definition}
+
+
+
+\noindent\emph{From Module \href{../theories/html/hydras.Schutte.AP.html}%
+{\texttt{Schutte.AP}}}
+
+\input{movies/snippets/AP/APDef}
+
+\subsection{The function \texttt{phi0}}
+
+Let us call  $\phi_0$ the ordering function of \texttt{AP}.
+In the mathematical text, we shall use indifferently the notations  $\omega^\alpha$ and$\phi_0(\alpha)$. 
+
+\index{hydras}{Library Schutte!Functions!phi0}
+
+\input{movies/snippets/AP/phi0Def}
+
+
+\subsection{Omega-towers and the ordinal \texorpdfstring{$\epsilon_0$}{epsilon0}}
+
+
+Using $\phi_0$, we can define recursively the set of finite omega-towers.
+
+\input{movies/snippets/AP/omegaTower}
+
+
+
+\label{sect:epsilon0-as-limit}
+Then, the ordinal  $\epsilon_0$ is defined as the limit of the sequence of all finite towers (a kind of infinite tower).
+
+\input{movies/snippets/AP/epsilon0Def}
+
+
+The rest of our library \texttt{AP} is devoted to the proof of properties of additive principal ordinals, hence of the ordering function  $\phi0$ and the ordinal $\epsilon_0$ (which we could not express within the type \texttt{T1}).
+
+\subsection{Properties of the set  \texttt{AP}}
+
+The set of additive principal ordinals is not empty: it contains at least the ordinals  $1$ and  $\omega$. 
+
+\inputsnippets{AP/APOne,AP/APOne_least_AP,AP/APOne_AP_omega,AP/APOne_omega_second_AP}
+
+The set  \texttt{AP} is  \emph{closed} under addition, and unbounded.
+\label{lemma:AP-plus-closed}
+
+\input{movies/snippets/AP/APPlusClosed}
+
+\input{movies/snippets/AP/APUnbounded}
+
+Finally, \texttt{AP} is (topologically) \emph{closed} and ordered by the segment of all countable ordinals.
+
+\index{hydras}{Library Schutte!Predicates!Closed}
+
+From Module \href{../theories/html/hydras.Schutte.Schutte_basics.html}%
+{\texttt{~Schutte.Schutte\_basics}}
+
+
+\input{movies/snippets/Schutte_basics/ClosedDef}
+\input{movies/snippets/AP/APClosed}
+
+
+\subsubsection{Properties of the function \texorpdfstring{$\phi_0$}{phi0}}
+ 
+The ordering function $\phi_0$ of the set \texttt{AP} is defined on the full set $\mathbb{O}$ and is continuous (Schütte calls such a  function  \emph{normal}).
+
+\begin{Coqsrc}
+Theorem normal_phi0 : normal phi0 AP.
+\end{Coqsrc}
+
+The following properties come from  the definition of $\phi_0$ as the ordering function of \texttt{AP}. It may be interesting to compare these proofs with the computational ones described in Chapter ~\ref{chap:T1}.
+
+\input{movies/snippets/AP/APPhi0}
+
+\subsection{A last example}
+\label{Ex42-schutte}
+
+Let us prove again the equality $\omega+42+\omega^2= \omega^2$.Let us recall that $\omega^2$ is an abbreviation of $\phi_0(2)$,
+\emph{i.e} the third  additive principal ordinal.
+
+\inputsnippets{Schutte/Ex42a}
+
+
+Our proof is very different from the computational proof of Sect~\vref{Ex42-E0}.
+By definition of additive principal ordinals, 
+it suffices to prove the inequality $\omega+42< \phi_0(2)$.
+
+\inputsnippets{Schutte/Ex42b}
+
+Since the set \texttt{AP} of additive principals  is closed under addition
+(by Lemma \texttt{AP\_plus\_closed}, page~\pageref{lemma:AP-plus-closed}) , it suffices to prove the inequalities $\omega<\phi_0(2)$ and $42<\phi_0(2)$.
+
+\inputsnippets{Schutte/Ex42d, Schutte/Ex42c, Schutte/Ex42e}
+
+\section{More about \texorpdfstring{$\epsilon_0$}{\texttt{epsilon0}}}
+
+Let us recall that the limit ordinal  $\epsilon_0$ cannot be written within the type \texttt{T1}. Since we are now considering the set of all countable ordinals, we can now prove some properties of this ordinal.
+
+
+We prove the inequality  $\alpha<\omega^\alpha$ whenever $\alpha < \epsilon_0$.
+\emph{Note that this condition was implicit in Module
+\href{../theories/html/hydras.Epsilon0.T1.html\#lt_phi0}{Epsilon0.T1}.}
+
+\input{movies/snippets/AP/ltPhi0}
+
+
+The proof is as follows:
+\begin{enumerate}
+\item Since $\alpha<\epsilon_0$, consider the least $i$ such that $\alpha$ is strictly less than the omega-tower of height $i$.
+\item
+  \begin{itemize}
+  \item If $i=0$, then the result is trivial (because $\alpha=0$)
+ \item  Otherwise let $i=j+1$; 
+          $\alpha$ is greater than or equal to the omega-tower of height $j$.
+         By monotony,  $\phi_0(\alpha)$ is greater than or equal to 
+        the omega-tower of height $j+1$, thus strictly greater than $\alpha$
+  \end{itemize}
+ \end{enumerate}
+
+Moreover,  $\epsilon_0$ is the least ordinal $\alpha$ that verifies the equality 
+$\alpha = \omega^\alpha$, in other words, the least fixpoint of the function  $\phi_0$.
+
+\input{movies/snippets/AP/epsilon0Lfp}
+
+\section{Critical ordinals}
+
+\index{maths}{Ordinal numbers!Critical ordinals}
+\index{hydras}{Library Schutte!Predicates!Cr@Cr (critical ordinals)}
+
+For any  (countable) ordinal $\alpha$, the set $\textit{Cr}(\alpha)$ is inductively defined 
+as follows by Schütte (p.81 of~\cite{schutte}).
+
+\begin{quote}
+  \begin{itemize}
+  \item $\textit{Cr}(0)$ is the set \textit{AP} of additive principal ordinals.
+  \item If $0<\alpha$, then $\textit{Cr}(\alpha)$ is the intersection of all the sets of fixpoints of the $\textit{Cr}(\beta)$ for $\beta<\alpha$.
+  \end{itemize}
+\end{quote}
+
+This definition is translated in \coq{} in 
+Module \href{../theories/html/hydras.Schutte.Critical.html}%
+{\texttt{Schutte.Critical}}, as the least fixpoint of a functional. 
+
+\input{movies/snippets/Critical/CrDef}
+
+Lets us denote by $\phi_\alpha$ the ordering function of the set $\textit{Cr}(\alpha)$ and by $A_\alpha$ its ordering segment.
+
+\input{movies/snippets/Critical/phiDef}
+
+\label{sect:phi-schutte}
+
+
+
+For instance,  we prove that $\textit{Cr}(0)$ is the set of additive principals and that $\epsilon_0$
+belongs to $\textit{Cr}(1)$.
+
+
+\inputsnippets{Critical/CrZeroAP,
+  Critical/epsilon0Cr1}
+
+
+\index{hydras}{Exercises}
+
+\begin{exercise}
+ Prove that $\epsilon_0$ is the least element of $\textit{Cr}(1)$.
+\end{exercise}
+
+
+\subsection{A flavor of infinity}
+
+
+
+The family of the $\textit{Cr}(\alpha)$s is made of infinitely many unbounded (hence infinite) sets.
+Let us quote Lemma 5, p. 82  of~\cite{schutte}:
+\begin{quote}
+  For all $\alpha$, the set $\textit{Cr}(\alpha)$ is closed (for the least upper bound of non-empty countable sets) and unbounded.
+\end{quote}
+
+We prove this result by a transfinite induction on $\alpha$ of the conjunction of  both properties.
+
+
+
+
+\index{maths}{Transfinite induction}
+
+\input{movies/snippets/Critical/Lemma5}
+
+
+
+\section{Cantor normal form}
+
+The notion of Cantor normal form is defined for all countable ordinals.
+Nevertheless, note that, contrary to the implementation based on type \texttt{T1},
+the Cantor normal form of an ordinal $\alpha$ may contain $\alpha$ as a 
+sub-term\footnote{This would prevent us from trying to represent Cantor normal forms as finite trees (like in Sect.~\ref{sec:T1-inductive-def})}.
+
+\index{maths}{Ordinal numbers!Cantor normal form}
+\index{hydras}{Library Schutte!Predicates!is\_cnf\_of@is\_cnf\_of (to be a Cantor normal form of}
+
+We represent  Cantor normal forms as lists of ordinals.
+A  list $l$ is a Cantor normal form of a given ordinal $\alpha$ if it satisfies two conditions:
+
+
+
+\begin{itemize}
+\item The list  $l$ is sorted (in decreasing order) w.r.t. the order $\leq$
+\item The sum of all the  $\omega^{\beta_i}$ where the $\beta_i$ are the terms of $l$ (in this order) is equal to $\alpha$.
+\end{itemize}
+
+
+
+\vspace{4pt}
+
+\noindent\emph{From \href{../theories/html/hydras.Schutte.CNF.html\#cnf_t}%
+{\texttt{Schutte.CNF}}}
+
+\input{movies/snippets/CNF/Defs}
+
+
+
+\index{maths}{Transfinite induction}
+
+By transfinite induction on $\alpha$, we prove that every countable ordinal $\alpha$ 
+ has at least a Cantor normal form.
+
+\input{movies/snippets/CNF/cnfExists}
+
+By structural induction on lists, we prove that this normal form is unique.
+
+
+\inputsnippets{CNF/cnfUnicity,CNF/cnfExUnique}
+
+
+
+Finally, the following two lemmas relate  $\epsilon_0$ with Cantor normal forms.
+
+If $\alpha<\epsilon_0$, then the Cantor normal form of $\alpha$ is made of ordinals strictly less than $\alpha$.
+
+\input{movies/snippets/CNF/cnfLtEpsilon0}
+
+
+
+\index{hydras}{Exercises}
+
+\begin{exercise}
+Please consider the following statement :
+
+\begin{Coqsrc}
+Lemma cnf_lt_epsilon0_iff : 
+ forall l alpha, 
+   is_cnf_of alpha l ->  
+   (alpha < epsilon0 <->  Forall (fun beta =>  beta < alpha) l).
+\end{Coqsrc}
+
+Is it true ?
+
+\emph{You may start this exercise with the file
+    \href{https://github.com/coq-community/hydra-battles/tree/master/exercises/ordinals/schutte_cnf_counter_example.v}{exercises/ordinals/schutte\_cnf\_counter\_example.v}.}
+\end{exercise}
+
+Finally, the Cantor normal form of $\epsilon_0$ is just $\omega^{\epsilon_0}$.
+
+\input{movies/snippets/CNF/cnfOfEpsilon0}
+
+\index{hydras}{Projects}
+
+\begin{project}
+Implement pages 82 to 85 of~\cite{schutte} (critical, strongly critical, maximal critical ordinals, Feferman's ordinal $\Gamma_0$).
+\end{project}
+
+\begin{remark}
+The sub-directory
+    \href{https://github.com/coq-community/hydra-battles/tree/master/theories/ordinals/Gamma0}{theories/oridinals/Gamma0} contains an (incomplete, still undocumented) implementation of the set of ordinals below $\Gamma_0$, represented in Veblen normal form. 
+\end{remark}
+
+\section{An embedding of \texttt{T1} into \texttt{Ord}}
+
+
+Our library 
+\href{../theories/html/hydras.Schutte.Correctness_E0.html}%
+{\texttt{Schutte.Correctness\_E0}} establishes the link between two very different modelizations of ordinal numbers. In other words, it ``validates'' a data structure in terms of
+a classical mathematical discourse considered as a model. 
+First, we define a function from \texttt{T1} into  \texttt{Ord} by structural recursion.
+
+\input{movies/snippets/Correctness_E0/injectDef}
+
+
+This function enjoys good commutation properties with respect to the main operations which
+allow us to build Cantor normal forms.
+
+\input{movies/snippets/Correctness_E0/commutationLemmas}
+\input{movies/snippets/Correctness_E0/injectPlus}
+\input{movies/snippets/Correctness_E0/injectMultFinR}
+
+% \begin{Coqsrc}
+% Theorem inject_mono (beta gamma : T1) :
+%   T1.lt  beta gamma -> 
+%   T1.nf beta -> T1.nf gamma -> 
+%   inject beta < inject gamma.
+
+% Theorem inject_injective (beta gamma : T1) : nf beta -> nf gamma ->
+%   inject beta = inject gamma -> beta = gamma.
+% \end{Coqsrc}
+
+Finally, we prove that \texttt{inject} is a bijection from the set of all terms of \texttt{T1} in normal form to the set 
+\texttt{members epsilon0} of the elements of \texttt{Ord} strictly less than  $\epsilon_0$.
+
+\input{movies/snippets/Correctness_E0/injectLtEpsilon0}
+\input{movies/snippets/Correctness_E0/embedding}
+
+
+
+\subsection{Remarks}
+Let us recall that the library \href{../theories/html/hydras.Schutte.Schutte.html}%
+{\texttt{Schutte}} depends on five \emph{axioms} and lies explicitly in the  
+framework of classical logic with a weak version of the axiom of choice
+(please look at the documentation of
+\href{https://coq.inria.fr/distrib/current/stdlib/Coq.Logic.ChoiceFacts.html}{\texttt{Coq.Logic.ChoiceFacts}}).
+Nevertheless, the other modules:
+\href{../theories/html/hydras.Epsilon0.Epsilon0.html}%
+{\texttt{Epsilon0}},
+\href{../theories/html/hydras.Hydra.Hydra.html}%
+{\texttt{Hydra}}, et 
+\href{../theories/html/hydras.Gamma0.Gamma0.html}%
+{\texttt{Gamma0}}
+do not import any axioms and are really constructive.
+
+\index{hydras}{Projects}
+\begin{project}
+There is no construction of ordinal multiplication in~\cite{schutte}. 
+It would be interesting to derive this operation from Schütte's axioms,
+and prove its consistence with multiplication in ordinal notations for 
+$\epsilon_0$ and $\Gamma_0$.
+\end{project}
+
+\section{Related work}
+
+In~\cite{grimm:hal-00911710}, José Grimm establishes the consistency between our ordinal notations \texttt{T1} and \texttt{T2} (Veblen normal form) and his implementation
+of ordinal numbers after Bourbaki's set theory.
+
+The Gaia project ~\url{https://github.com/coq-community/gaia} maintains Grimm's  theory of ordinals as part of coq-community on GitHub. Integration
+of the present ordinal theory with Gaia, i.e., relating the different notions of ordinals
+and transferring relevant results, is an interesting project.
+First experiments in that direction are developped in
+the \href{https://github.com/coq-community/hydra-battles/blob/master/theories/gaia/}{theories/gaia/} directory.
