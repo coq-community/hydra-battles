@@ -74,7 +74,7 @@
       \item CI/CD
         \item Tools for collaboration (issues, PR, etc.)
         \end{itemize}
-           \item book in pdf (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
+           \item A book in pdf (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
     \end{itemize}
   \end{block}
   \begin{block}{Contents}
@@ -98,11 +98,12 @@
 
   \begin{scope}[yshift=2.0cm, xshift=1.7cm] 
      \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm] (settheory) { Set theory\footnote{N. Bourbaki}};
-      \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=8.4cm] (prooftheory) { Proof theory\footnote{K. Schutte, J. Ketonen, R. Solovay, L. Kirby \& J. Paris}};
+     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=8.4cm] (prooftheory) { Proof theory\footnote{K. Schutte, J. Ketonen, R. Solovay, L. Kirby \& J. Paris}};
+  \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=4.8cm] (algo) { Algorithmics\footnote{S. Brlek \emph{et. al}}};
 \end{scope}
 
 \begin{scope}[yshift=1.0cm, xshift=-1.5cm]
-   \node[ellipse, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};   
+   \node[rectangle, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};   
 \end{scope}
 
 
@@ -155,7 +156,8 @@
 \draw[->] (pockcc) -- (goedelcc) ;
 \draw[dotted, ->] (prooftheory) -- (hydras);
 \draw[dotted, ->] (settheory) -- (cats);
-
+\draw[dotted, ->] (prooftheory) -- (goedel);
+\draw[dotted, ->] (algo) -- (additions);
 \end{tikzpicture}
 }
 \caption{Genealogy and dependencies for \Hydras packages.}
@@ -204,8 +206,8 @@
     \begin{itemize}
     \item The structure is determined by the presented topics (discrete math, algorithmics, etc.). \coq technology (formalization and proof patterns) is presented when needed.
     \item No need to be complete (there is already a reference manual)
-    \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
-    \item Allow to compare several different formalizations of a given notion, and several proofs of the same theorem.
+ %   \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
+    \item Comparison of  different formalizations of a given notion, and several proofs of the same theorem.
       \item Show also interesting dead ends (formalization, tactics, proof structure).
     \end{itemize}
   \end{block}
@@ -257,7 +259,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Example: Kirby \& Paris' hydras}
+\section{Kirby \& Paris' hydras}
 
 \begin{frame}
   \frametitle{Example: Kirby \& Paris' hydras}
