@@ -89,38 +89,118 @@
  
 \end{frame}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \begin{figure}[ht]
+\centering
+\scalebox{0.7}{
+\begin{tikzpicture}[thick]
+
+  \begin{scope}[yshift=2.0cm, xshift=1.7cm] 
+     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm] (settheory) { Set theory\footnote{N. Bourbaki}};
+      \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=8.4cm] (prooftheory) { Proof theory\footnote{K. Schutte, J. Ketonen, R. Solovay, L. Kirby \& J. Paris}};
+\end{scope}
+
+\begin{scope}[yshift=1.0cm, xshift=-1.5cm]
+   \node[ellipse, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};   
+\end{scope}
+
+
+\begin{scope}[xshift=-6.1cm]
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel\footnote{R. O'Connor} };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor\footnote{C. \& E. Contejean} };
+
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\end{scope}
+
+\begin{scope}[yshift=-1cm,xshift=0.45cm]
+  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.1cm] (equations) { Equations };
+\end{scope}
+
+\begin{scope}[yshift=-2cm,xshift=-4cm]
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia\footnote{J. Grimm} };
+\end{scope}
+
+\begin{scope}[yshift=-3cm,xshift=-6cm]
+ \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
+ \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+\end{scope}
+
+
+
+\draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
+\draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
+\draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
+\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
+\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
+\draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
+\draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
+\draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
+
+\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south west) -- (goedelcc) ;
+\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+
+\draw[->] (equations) -- (hydras) ;
+\draw[->] (mathcomp) -- (gaia) ;
+\draw[->] (mathcomp) -- (chains) ;
+\draw[->] (paramcoq.south) -- (chains) ;
+\draw[->] (pockcc) -- (goedelcc) ;
+\draw[dotted, ->] (prooftheory) -- (hydras);
+\draw[dotted, ->] (settheory) -- (cats);
+
+\end{tikzpicture}
+}
+\caption{Genealogy and dependencies for \Hydras packages.}
+  \label{fig:genealogy}
+\end{figure}
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \frametitle{Yet another book on \coq?}
-  \begin{table}
-  \centering
-  \footnotesize
-  \begin{tabular}{lll}
-  \hline
-  \textbf{Title} & \textbf{Year} & \textbf{Category}\\
-    \hline
-   \coq reference manual &  $\geq 1989$ & \\
-  Coq'Art & 2004 & Traditional\\
-  Software Foundations & 2007 & Executable\\
-  Certified Programming with Dependent Types & 2011 &  Executable\\
-  Program Logics for Certified Compilers & 2014 & Traditional\\
-  Programs and Proofs & 2014 & Executable\\
-  Formal Reasoning About Programs& 2017 & Traditional\\
-  Computer Arithmetic and Formal Proofs & 2017 & Traditional\\
-    Mathematical Components & 2018 & Traditional\\
-  \hline
-  \end{tabular}
-  \caption{Coq book categorization.}
-  \label{tbl:books}
-\end{table}
+
+
+
+
+
+% \begin{frame}
+%   \frametitle{Yet another book on \coq?}
+%   \begin{table}
+%   \centering
+%   \footnotesize
+%   \begin{tabular}{lll}
+%   \hline
+%   \textbf{Title} & \textbf{Year} & \textbf{Category}\\
+%     \hline
+%    \coq reference manual &  $\geq 1989$ & \\
+%   Coq'Art & 2004 & Traditional\\
+%   Software Foundations & 2007 & Executable\\
+%   Certified Programming with Dependent Types & 2011 &  Executable\\
+%   Program Logics for Certified Compilers & 2014 & Traditional\\
+%   Programs and Proofs & 2014 & Executable\\
+%   Formal Reasoning About Programs& 2017 & Traditional\\
+%   Computer Arithmetic and Formal Proofs & 2017 & Traditional\\
+%     Mathematical Components & 2018 & Traditional\\
+%   \hline
+%   \end{tabular}
+%   \caption{Coq book categorization.}
+%   \label{tbl:books}
+% \end{table}
   
-\end{frame}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-   \begin{block}{Example-driven books}
+   \begin{block}{An example-driven book}
     \begin{itemize}
     \item The structure is determined by the presented topics (discrete math, algorithmics, etc.). \coq technology (formalization and proof patterns) is presented when needed.
     \item No need to be complete (there is already a reference manual)
@@ -583,72 +663,6 @@ Comparison of the length of hydra-battles (w.r.t to the initial replication fact
 \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \begin{figure}[ht]
-\centering
-\scalebox{0.7}{
-\begin{tikzpicture}[thick]
-
-  \begin{scope}[yshift=1.5cm, xshift=-1.5cm]
-\node[ellipse, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};
-\end{scope}
-
-\begin{scope}[xshift=-6cm]
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel\footnote{R. O'Connor} };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor\footnote{C. \& E. Contejean} };
-
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
-\end{scope}
-
-\begin{scope}[yshift=-1cm,xshift=0.45cm]
-  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.5cm] (equations) { Equations };
-\end{scope}
-
-\begin{scope}[yshift=-2cm,xshift=-4cm]
-\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
-\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
-\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
-\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia\footnote{J. Grimm} };
-\end{scope}
-
-\begin{scope}[yshift=-3cm,xshift=-6cm]
- \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
- \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
-\end{scope}
-
-
-
-\draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
-\draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
-\draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
-\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
-\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
-\draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
-\draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
-\draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
-
-\draw[->] (hydras) -- (gaiahydras) ;
-\draw[->] (hydras.south west) -- (goedelcc) ;
-\draw[->] (gaia.south west) -- (gaiahydras.east) ;
-
-\draw[->] (equations) -- (hydras) ;
-\draw[->] (mathcomp) -- (gaia) ;
-\draw[->] (mathcomp) -- (chains) ;
-\draw[->] (paramcoq.south) -- (chains) ;
-\draw[->] (pockcc) -- (goedelcc) ;
-\end{tikzpicture}
-}
-\caption{Genealogy and dependencies for \Hydras packages.}
-% Dotted boxes represent historical Coq contributions, while regular boxes represent maintained \coq packages. Orange packages are maintained in the \Hydras GitHub repository, while blue packages are maintained in other \community repositories. Dotted lines represent \coq code ancestry, while regular lines represent direct code dependencies.}
-
-  \label{fig:genealogy}
-\end{figure}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
