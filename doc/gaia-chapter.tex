@@ -145,8 +145,6 @@ For each constant: $0$, $1$,\dots, $n$ and $\omega$, we prove
 that \texttt{hydras}' definition refines \texttt{gaia}'s.
 \inputsnippets{T1Bridge/constantRefs}
 
-%\inputsnippets{T1Bridge/utf8try}
-
 \subsubsection{Unary functions}
 
 \inputsnippets{T1Bridge/unaryRefs}
@@ -182,7 +180,7 @@ Note that \HydrasLib' comparison on ordinal terms uses a
 \label{sect:plus-mult-gaia-hydras}
 
 The definition of the binary operations $+$ and $\times$
-requires the comparison of ordinal terms, which is not implemented the same way in both libraries. Thus, the proof of the following lemmas applies applies
+requires the comparison of ordinal terms, which is not implemented in \gaiaHydras  the same way as in \HydrasLib. Thus, the proof of the following lemmas applies applies
 compatibility lemmas like \texttt{compare\_ref} (see Section~\vref{sect:gaia-compare-ref}).
 
 \inputsnippets{T1Bridge/plusRef, T1Bridge/multRef}
@@ -218,18 +216,17 @@ Some constructions of \HydrasLib were (to our knowledge) not implemented in \gai
 
 \subsubsection{Remark}
 \label{sect:gaia-masking}
-We try to respect the following ``protocol''.
-Let us assume we adapt some definitions and properties
-from a given module \texttt{hydras.Epsilon0.Foo}, and a constant \texttt{bar} of this module, whose absolute name is
-thus \texttt{hydras.Epsilon0.Foo.bar}.
-\begin{enumerate}
-\item We create a module \texttt{gaia\_hydras.GFoo}
-  (``G'' for \gaia).
-\item Inside \texttt{GFoo}, the identifier \texttt{bar}
-  is reserved in priority to \gaia's version.
-\HydrasLib' constructions are available through qualified names, like \texttt{Epsilon0.Foo.bar}, \texttt{Foo.bar}, or even a short notation like \texttt{hbar}  (``h'' for \HydrasLib).
-\end{enumerate}
+We try to respect the following convention:
+Let us consider  some module \texttt{hydras.Epsilon0.Foo}.
+Its adaptation to \gaia will be a new module called \linebreak
+\texttt{gaia\_hydras.GFoo} (``G'' for \gaia).
 
+Let \texttt{bar} be a symbol defined in \texttt{Foo}.
+Inside \texttt{GFoo}, the identifier \texttt{bar}
+  is reserved in priority to \gaia's adaptation.
+  \HydrasLib' definition is still available through qualified names, like \texttt{Epsilon0.Foo.bar}, \texttt{Foo.bar}, or even a short notation like \texttt{hbar}  (``h'' for \HydrasLib).
+
+  
 \subsection{Hessenberg sum}
 \index{gaiabridge}{Hessenberg sum}
 Natural sum  (a.k.a. Hessenberg  sum) is defined in

@@ -151,17 +151,14 @@ Proof. done. Qed.
 (* end snippet constantRefs *)
 
 (** ** unary functions and predicates  *)
+
 (* begin snippet unaryRefs:: no-out *)
-
-
 Lemma succ_ref: refines1 T1.succ T1succ.
 (*| .. coq:: none |*)
 Proof.
   elim => [// |//  x] => //;  by case: x => // ? ? ? ? ? ? /= -> .
 Qed.
 (*||*)
-
-
 Lemma phi0_ref x: refines0 (T1.phi0 x) (phi0 (h2g x)). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. done. Qed.

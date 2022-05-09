@@ -88,66 +88,119 @@
   \end{block}
  
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{What hydras are talking about?}
+  \begin{block}{}
+    \Hydras presents a consistent set of examples, which allow us to formalize 
+    some \textcolor{mathcolor}{discrete math}, discuss
+    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and depend on \textcolor{plugincolor}{a few plug-ins}.
+  \end{block}
+  \begin{block}{}
+    \begin{description}
+    \item[hydra battles:]
+      
+      \textcolor{mathcolor}{ordinals},
+      \textcolor{mathcolor}{rapidly growing functions},
+      \textcolor{mathcolor}{primitive recursive functions}, 
+      \textcolor{coqstylecolor}{dependently typed functions},
+      \textcolor{coqstylecolor}{operational type classes},
+      \textcolor{coqstylecolor}{proofs of well-foundedness},
+      \textcolor{coqstylecolor}{impossibility proofs},
+      \textcolor{coqstylecolor}{uniqueness of identity proofs (UIP)},
+      \textcolor{coqstylecolor}{indefinite description (Hilbert's epsilon operator)}, 
+      \textcolor{plugincolor}{equations},
+      \textcolor{plugincolor}{ackermann (goedel)},
+      \textcolor{plugincolor}{gaia}
+      
+    \item[addition chains (exponentiation algorithms):]
+      \textcolor{mathcolor}{algorithmics},
+      \textcolor{mathcolor}{arithmetic},
+      \textcolor{coqstylecolor}{operational type classes},
+      \textcolor{coqstylecolor}{monadic notations},
+      \textcolor{coqstylecolor}{PHOAS},
+      \textcolor{coqstylecolor}{parametricity}, 
+      \textcolor{plugincolor}{paramcoq}
+    \end{description}
+  \end{block}
+\end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \begin{figure}[ht]
 \centering
 \scalebox{0.7}{
 \begin{tikzpicture}[thick]
 
-  \begin{scope}[yshift=2.0cm, xshift=1.7cm] 
-     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm] (settheory) { Set theory\footnote{N. Bourbaki}};
-     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=8.4cm] (prooftheory) { Proof theory\footnote{K. Schutte, J. Ketonen, R. Solovay, L. Kirby \& J. Paris}};
-  \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=4.8cm] (algo) { Algorithmics\footnote{S. Brlek \emph{et. al}}};
+  %%%%%%%%%%%% First line %%%%%%%%%%%%%%%%
+  \begin{scope}[yshift=2.0cm, xshift=3cm]
+     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm] (algo) { Algorithmics};
+     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=algo, node distance=6cm] (settheory) { Set theory};
+     \node[ellipse, dotted, fill=orange!20, minimum height=0.5cm,minimum width=1.5cm, left of=settheory, node distance=6cm] (prooftheory) {Proof theory};
+  
 \end{scope}
 
-\begin{scope}[yshift=1.0cm, xshift=-1.5cm]
+%%%%%% ACL2   %%%%%%%
+
+\begin{scope}[yshift=1.0cm, xshift=-3.7cm]
    \node[rectangle, dotted, draw= black!20,fill=green!20,minimum height=0.5cm,minimum width=1.5cm] (acl2) { [ACL2]\footnote{P. Manolios \&  D. Vroon}};   
 \end{scope}
 
+%%%%%%% Contribs %%%%%%%%%%%%%%%%%%%%
 
-\begin{scope}[xshift=-6.1cm]
+\begin{scope}[xshift=-5.7cm]
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel\footnote{R. O'Connor} };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (additions) { Additions };
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=additions, node distance=2cm] (cantor) { Cantor\footnote{C. \& E. Contejean} };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (cantor) { Cantor\footnote{C. \& E. Contejean}};
 
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.2cm] (cats) { Categories in ZFC };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.6cm] (cats) { Categories in ZFC };
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cats, node distance=3.2cm] (additions) {Additions};
+
 \end{scope}
 
-\begin{scope}[yshift=-1cm,xshift=0.45cm]
-  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (paramcoq) { Paramcoq };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=paramcoq, node distance=2.5cm] (mathcomp) { MathComp };
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=paramcoq, node distance=4.1cm] (equations) { Equations };
+%%%%%%%%%%%%%%%%% Plug-ins %%%%%%%%%%%%%%
+
+\begin{scope}[yshift=-0.8cm,xshift=-1.45cm]
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm] (mathcomp) { MathComp };
+
+  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm, right of=mathcomp, node distance=5.4cm] (paramcoq) { Paramcoq};
+
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=mathcomp, node distance=7.7cm] (equations) { Equations };
 \end{scope}
 
-\begin{scope}[yshift=-2cm,xshift=-4cm]
+\begin{scope}[yshift=-2cm,xshift=-4.2cm]
 \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (hydras) { Hydra-battles };
 \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,left of=hydras, node distance=3.5cm] (pockcc) { Pocklington };
-\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=hydras, node distance=2.5cm] (chains) { Addition-chains };
-\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm,right of=chains, node distance=2.2cm] (gaia) { Gaia\footnote{J. Grimm} };
+\node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm, right of=hydras, node distance=3.5cm] (gaia) { Gaia\footnote{J. Grimm} };
+
+
+\node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=gaia, node distance=3.5cm] (chains) { Addition-chains };
+
 \end{scope}
 
-\begin{scope}[yshift=-3cm,xshift=-6cm]
+%%%%%%%%%%%%%%%%% goedel, etc . %%%%%%%%%%%%%%%
+\begin{scope}[yshift=-3.7cm,xshift=-6cm]
  \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm] (goedelcc) { Goedel };
  \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm,right of=goedelcc, node distance=3cm] (gaiahydras) { Gaia-hydras };
+\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=gaiahydras, node distance=5.1cm] (alectryon) { Alectryon};
+ 
 \end{scope}
 
-
+\begin{scope}[yshift=-5cm,xshift=4cm]
+\node[rectangle, draw=black,fill=red!80,minimum height=0.5cm,minimum width=1.5cm] (book) { \Hydras};  
+\end{scope}
 
 \draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
 \draw[lookcolor,->,dashed] (additions.south) -- (chains.north) ;
 \draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
-\draw[lookcolor,->,dashed] (goedel) -- (hydras.north west) ;
+\draw[lookcolor,->,dashed] (goedel) -- (hydras.north) ;
 \draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
 \draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
 \draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
 \draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
 
-\draw[->] (hydras) -- (gaiahydras) ;
+\draw[->] (hydras.south) -- (gaiahydras) ;
 \draw[->] (hydras.south west) -- (goedelcc) ;
-\draw[->] (gaia.south west) -- (gaiahydras.east) ;
+\draw[->] (gaia.south west) -- (gaiahydras.north) ;
 
 \draw[->] (equations) -- (hydras) ;
 \draw[->] (mathcomp) -- (gaia) ;
@@ -158,11 +211,16 @@
 \draw[dotted, ->] (settheory) -- (cats);
 \draw[dotted, ->] (prooftheory) -- (goedel);
 \draw[dotted, ->] (algo) -- (additions);
+\draw[->, red] (alectryon) -- (book) ;
+\draw[->, red] (chains) -- (book) ;
+\draw[->, red] (gaiahydras) -- (book) ;
+\draw[->, red] (hydras.south) -- (book) ;
+
 \end{tikzpicture}
 }
-\caption{Genealogy and dependencies for \Hydras packages.}
-  \label{fig:genealogy}
-\end{figure}
+% \caption{Genealogy and dependencies for \Hydras.}
+%   \label{fig:genealogy}
+% \end{figure}
 \end{frame}
 
 
@@ -201,68 +259,33 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-   \begin{block}{An example-driven book}
-    \begin{itemize}
-    \item The structure is determined by the presented topics (discrete math, algorithmics, etc.). \coq technology (formalization and proof patterns) is presented when needed.
-    \item No need to be complete (there is already a reference manual)
- %   \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
-    \item Comparison of  different formalizations of a given notion, and several proofs of the same theorem.
-      \item Show also interesting dead ends (formalization, tactics, proof structure).
-    \end{itemize}
-  \end{block}
-  % \begin{block}{Examples}
-  %   \begin{itemize}
-  %   \item Tsukuba Coq Users's Group: regular languages, $\lambda$-calculus, arithmetic, ... (in Japanese + ssreflect)
-  %   \item Software Foundations (B. Pierce \emph{et al.})
-  %   \end{itemize}
-  % \end{block}
-\end{frame}
+% \begin{frame}
+%    \begin{block}{An example-driven book}
+%     \begin{itemize}
+%     \item The structure is determined by the presented topics (discrete math, algorithmics, etc.). \coq technology (formalization and proof patterns) is presented when needed.
+%     \item No need to be complete (there is already a reference manual)
+%  %   \item No need to introduce \coq (there are already a lot of initiation books and tutorials)
+%     \item Comparison of  different formalizations of a given notion, and several proofs of the same theorem.
+%       \item Show also interesting dead ends (formalization, tactics, proof structure).
+%     \end{itemize}
+%   \end{block}
+%   % \begin{block}{Examples}
+%   %   \begin{itemize}
+%   %   \item Tsukuba Coq Users's Group: regular languages, $\lambda$-calculus, arithmetic, ... (in Japanese + ssreflect)
+%   %   \item Software Foundations (B. Pierce \emph{et al.})
+%   %   \end{itemize}
+%   % \end{block}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\begin{frame}
-  \frametitle{What hydras are talking about?}
-  \begin{block}{}
-    \Hydras presents a consistent set of examples, which allow us to formalize 
-    some \textcolor{mathcolor}{discrete math}, discuss
-    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and depend on \textcolor{plugincolor}{a few plug-ins}.
-  \end{block}
-  \begin{block}{}
-    \begin{description}
-    \item[hydra battles:]
-      
-      \textcolor{mathcolor}{ordinals},
-      \textcolor{mathcolor}{rapidly growing functions},
-      \textcolor{mathcolor}{primitive recursive functions}, 
-      \textcolor{coqstylecolor}{dependently typed functions},
-      \textcolor{coqstylecolor}{operational type classes},
-      \textcolor{coqstylecolor}{proofs of well-foundedness},
-      \textcolor{coqstylecolor}{impossibility proofs},
-      \textcolor{coqstylecolor}{uniqueness of identity proofs (UIP)},
-      \textcolor{coqstylecolor}{indefinite description (Hilbert's epsilon operator)}, 
-      \textcolor{plugincolor}{equations},
-      \textcolor{plugincolor}{ackermann (goedel)},
-      \textcolor{plugincolor}{gaia}
-      
-    \item[addition chains (exponentiation algorithms):]
-      \textcolor{mathcolor}{algorithmics},
-      \textcolor{mathcolor}{arithmetic},
-      \textcolor{coqstylecolor}{operational type classes},
-      \textcolor{coqstylecolor}{monadic notations},
-      \textcolor{coqstylecolor}{PHOAS},
-      \textcolor{coqstylecolor}{parametricity}, 
-      \textcolor{plugincolor}{paramcoq}
-    \end{description}
-  \end{block}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Kirby \& Paris' hydras}
 
 \begin{frame}
-  \frametitle{Example: Kirby \& Paris' hydras}
+  \frametitle{Kirby \& Paris' hydras}
   \begin{figure}[h]
     \centering
     \begin{tikzpicture}[very thick, scale=0.25]
@@ -640,15 +663,6 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  \begin{block}{}
-    Using  \texttt{PrimRec\_PrimRecs\_ind}, we prove the following lemma:
-    
-  
-  
-Comparison of the length of hydra-battles (w.r.t to the initial replication factor) with the diagonalized Ackermann function proves the theorem.
-  \end{block}
-\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
