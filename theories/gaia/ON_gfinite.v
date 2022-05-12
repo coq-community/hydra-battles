@@ -26,7 +26,7 @@ Proof.
     have Heq:i = i0. 
     + apply eq_proofs_unicity_on. decide equality.  
     + subst; rewrite /finord_compare PeanoNat.Nat.compare_refl. 
-      constructor; reflexivity. 
+      by constructor.  
   - replace (compare alpha beta) with Datatypes.Lt.
     + constructor; rewrite /finord_lt;  by apply /ltP. 
     + symmetry; by rewrite /compare PeanoNat.Nat.compare_lt_iff. 
@@ -36,20 +36,17 @@ Proof.
 Qed. 
 
 
-#[global] Instance finord__sto n : StrictOrder (@finord_lt n).
+#[global] Instance finord_sto n : StrictOrder (@finord_lt n).
 Proof. 
- split.
- - move => x; by rewrite /complement /finord_lt ltnn. 
- - move => x y z; rewrite /finord_lt; apply ltn_trans.   
+ split => [x | x y z].
+ - by rewrite /complement /finord_lt ltnn. 
+ - by rewrite /finord_lt; apply ltn_trans.   
 Qed.
 
-
-#[global] Instance finord__comp n :
+#[global] Instance finord_comp n :
   Comparable (@finord_lt n) (@finord_compare n).
 Proof. 
- split.
- - apply finord__sto.
- - apply finord_compare_correct. 
+ split; [apply: finord_sto | apply: finord_compare_correct].
 Qed.
 
 Lemma finord_lt_wf n : well_founded (@finord_lt n).
@@ -58,17 +55,14 @@ Proof.
   move => x;  rewrite /finord_lt.
   apply Acc_incl with (fun x y => m _ x < m _ y)%N.
   - move => a b; by rewrite /m.
-  - apply (Acc_inverse_image ('I_n) nat (fun n p=> (n < p)%N) (@m n) x), lt_wf. 
+  - apply (Acc_inverse_image ('I_n) nat
+             (fun n p => (n < p)%N) (@m n) x), lt_wf. 
 Qed. 
 
 (* begin snippet finordON:: no-out *)
 #[global] Instance finord_ON n : ON (@finord_lt n) (@finord_compare n).
 (* end snippet finordON *)
-Proof.
- split.
- - apply finord__comp.
- - apply finord_lt_wf.
-Qed.
+Proof. split; [apply: finord_comp | apply: finord_lt_wf]. Qed.
 
 (** Examples *)
 

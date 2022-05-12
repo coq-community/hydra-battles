@@ -80,7 +80,7 @@ Lemma l_std_ok : forall alpha : E0,
 Proof.
   move => alpha Halpha k /leP Hk; rewrite  /l_std.
   have H0: E0_g2h alpha <> hE0zero
-    by rewrite -g2h_E0zero; apply /E0_diffE; apply /diffP.
+     by rewrite -g2h_E0zero; apply /E0_diffE /diffP. 
   move:  (Battle_length.l_std_ok (E0_g2h alpha) H0 k Hk);
   rewrite /L_ => He; by apply He.
 Qed.

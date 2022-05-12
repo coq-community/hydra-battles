@@ -391,27 +391,6 @@ As a corollary, we relate ordinal inequality to standard paths.
 
 
 
-\section{Rapidly growing arithmetic functions}
-\index{gaiabridge}{Rapidly growing functions}
-
-In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$.
-The type of such families is \texttt{E0 -> nat -> nat} where
-\texttt{E0} is the type of ordinal terms in Cantor normal form, strictly below $\epsilon_0$.
-In order to compare such functions, we define a few abstract properties in
-\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} (adapted from 
-\href{../theories/html/hydras.Prelude.Iterates.html}{hydras.Prelude.Iterates}).
-
-
-\inputsnippets{T1Bridge/MonoDef}
-
-
-
-
-
-
-
-In \HydrasLib, these functions are defined by transfinite induction, using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}. For that purpose, we defined a sigma-type
-\texttt{hydras.Epsilon0.E0.E0} of ordinal-terms in Cantor normal form. 
 
 
 \subsection{A type for well-formed ordinal terms}
@@ -420,6 +399,8 @@ For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt
 
 \inputsnippets{T1Bridge/E0Def}
 \inputsnippets{T1Bridge/E0EqMixin, T1Bridge/E0EqType}
+
+\subsubsection{Definitions}
 
 Many functions on type \texttt{T1} are ``lifted'' to \texttt{E0}.
 
@@ -438,6 +419,8 @@ In order to import definitions and lemmas
 from~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}, we define a pair of translations.
 
 \inputsnippets{T1Bridge/gE0h2gG2h}
+
+\subsubsection{Main lemmas about \texttt{E0}}
 
 These tools allow us, for instance,  to import \texttt{E0.lt}'s  well-foundedness.
 
@@ -462,6 +445,21 @@ Then, we build an instance of (\texttt{ON E0lt compare}).
 \inputsnippets{T1Bridge/ExampleComp}
 \inputsnippets{T1Bridge/gEpsilon0}
 
+\section{Rapidly growing arithmetic functions}
+\index{gaiabridge}{Rapidly growing functions}
+
+In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$.
+The type of such families is \texttt{E0 -> nat -> nat} where
+\texttt{E0} is the type of ordinal terms in Cantor normal form, strictly below $\epsilon_0$.
+In order to compare such functions, we define a few abstract properties in
+\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} (adapted from 
+\href{../theories/html/hydras.Prelude.Iterates.html}{hydras.Prelude.Iterates}).
+
+
+\inputsnippets{T1Bridge/MonoDef}
+
+In \HydrasLib, these functions are defined by transfinite induction, using the \texttt{coq-equations} plug-in~\cite{sozeau:hal-01671777}. For that purpose, we defined a sigma-type
+\texttt{hydras.Epsilon0.E0.E0} of ordinal-terms in Cantor normal form. 
 
 
 \subsection{The \texorpdfstring{$H'_\alpha$}{H'\_alpha} family}
