@@ -13,7 +13,7 @@ From hydras Require Import T1 Epsilon0.
 (* begin snippet HydraDef *)
 
 Inductive Hydra : Set :=
-|  node :  Hydrae -> Hydra
+| node :  Hydrae -> Hydra
 with Hydrae : Set :=
 | hnil : Hydrae
 | hcons : Hydra -> Hydrae -> Hydrae.
@@ -25,10 +25,8 @@ with Hydrae : Set :=
 (* begin snippet HydraAlt *)
 
 Module Alt.
-
   Inductive Hydra : Set :=
-    hnode (daughters : list Hydra).
-
+  | hnode (daughters : list Hydra).
 End Alt.
 
 (* end snippet HydraAlt *)
@@ -68,12 +66,14 @@ Defined.
 
 (* begin snippet hsize *)
 Fixpoint hsize (h:Hydra) : nat :=
-  match h with node l => S (lhsize l) end
+  match h with
+  | node l => S (lhsize l)
+  end
 with lhsize l : nat :=
        match l with
-         | hnil => 0
-         | hcons h hs => hsize h + lhsize hs
-  end.
+       | hnil => 0
+       | hcons h hs => hsize h + lhsize hs
+       end.
 (* end snippet hsize *)
 
 (** ***  height (length of longest branch) 
@@ -81,12 +81,14 @@ with lhsize l : nat :=
 
 (* begin snippet height *)
 Fixpoint height  (h:Hydra) : nat :=
-  match h with node l => lheight l  end
-with
-lheight l : nat :=
-  match l with hnil => 0
-          | hcons h hs => Max.max (S (height h)) (lheight hs)
-  end.
+  match h with
+  | node l => lheight l
+  end
+with lheight l : nat :=
+       match l with
+       | hnil => 0
+       | hcons h hs => Max.max (S (height h)) (lheight hs)
+       end.
 (* end snippet height *)
 
 (** ** Abbreviations 
@@ -96,16 +98,12 @@ lheight l : nat :=
 *)
 
 (* begin snippet headsEtc *)
+(** *** Hydra with 0, 1, 2 or 3 daughters *)
 
 Notation head := (node hnil).
-
-(** *** Hydra with 1, 2 or 3 daughters 
- *)
-
 Notation hyd1 h := (node (hcons h hnil)).
 Notation hyd2 h h' := (node (hcons h (hcons h' hnil))).
 Notation hyd3 h h' h'' := (node (hcons h (hcons h' (hcons h'' hnil)))).
-
 (* end snippet headsEtc *)
 
 (** *** Adds n copies of the same hydra h at the right of  s 

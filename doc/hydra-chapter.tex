@@ -424,8 +424,8 @@ You will probably have to use patterns described for instance in~\cite{BC04} or 
 \index{hydras}{Projects}
 
 \begin{project}
-The type \texttt{Hydra} above describes hydras as \emph{plane trees}, i.e., as drawn on a sheet of paper or computer screen. Thus, hydras are \emph{oriented},
-and it is appropriate to consider a \emph{leftmost} or \emph{rightmost} head of
+  Our type \texttt{Hydra} describes hydras as
+  \emph{plane oriented trees}, i.e., as drawn on a sheet of paper or computer screen. Thus, it is appropriate to consider a \emph{leftmost} or \emph{rightmost} head of
 the beast. It could be interesting to consider another representation, in which
 every non-leaf node has a \emph{multi-set} -- not an ordered list -- of daughters.
 \end{project}
@@ -441,7 +441,7 @@ We provide several notations for hydra patterns  which occur often in our develo
 
 \input{movies/snippets/Hydra_Definitions/headsEtc}
 
-For instance, the hydra \texttt{Hy}  of Figure~\vref{fig:Hy} is defined in \emph{Gallina} as follows:
+For instance, the hydra \texttt{Hy}  of Figure~\vref{fig:Hy} is defined as follows:
 
 \vspace{4mm}
 \noindent
@@ -464,9 +464,7 @@ will help us to describe and reason about replications in hydra battles.
 
 \vspace{4mm}
 
-
-
-For instance, the hydra \texttt{Hy''} of Fig~\vref{fig:Hy3}  can be defined in \coq{} as follows:
+Let us consider for instance the hydra \texttt{Hy''} of Fig~\vref{fig:Hy3}.
 
 \vspace{4pt}
 \noindent
@@ -550,11 +548,11 @@ The first subgoal is trivial.
 
 \input{movies/snippets/Hydra_Examples/BadInductionc}
 
-Let us look at the second subgoal of the induction.
+Let us look now at the second subgoal of the induction.
 
 \input{movies/snippets/Hydra_Examples/BadInductiond}
 
-We notice that this subgoal does not contain any hypothesis
+We notice that this sub-goal does not contain any hypothesis
 on the height and size of the hydra \texttt{h}. So, it looks hard to prove the conclusion. Let's stop.
 
 \input{movies/snippets/Hydra_Examples/BadInductione}

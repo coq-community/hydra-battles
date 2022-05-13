@@ -155,9 +155,7 @@ Check Hydra_ind.
 
 (* begin snippet BadInductiona *)
 Module Bad.
-
-  Lemma  height_lt_size (h:Hydra) :
-    height h < hsize h. (* .no-out *)
+  Lemma  height_lt_size (h:Hydra) : height h < hsize h. (* .no-out *)
   Proof. (* .no-out *)
     induction h as [s].
     (* end snippet BadInductiona *)
@@ -176,6 +174,7 @@ Module Bad.
       (* begin snippet BadInductione *)
   Abort.  
 End Bad.
+
 (* end snippet BadInductione *)
 
 (* begin snippet heightLtSizea *) (*| .. coq:: no-out |*)
