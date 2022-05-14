@@ -27,9 +27,9 @@ the first steps of a standard battle (Hercules chops off the rightmost head)
 
 (* begin snippet L02 *)
 (*| .. coq:: no-out |*)
-Lemma L_0_2 : battle standard 0 hinit 2 (hyd1 h3). 
+Lemma L_0_2 : rounds standard 0 hinit 2 (hyd1 h3). 
 Proof. 
-  eapply battle_trans with (h := hyd2 h3 head) (i:=1).
+  eapply rounds_trans with (h := hyd2 h3 head) (i:=1).
   (* ... *) (*| .. coq:: none |*)
   - left; trivial.
     red. cbn. chop_off 1.
@@ -59,15 +59,15 @@ Notation hyd a b c :=
 
 (* begin snippet L23L03 *)
 (*| .. coq:: no-out |*)
-Lemma L_2_3 : battle standard 2 (hyd1 h3)  3 (hyd 3 0 0).
+Lemma L_2_3 : rounds standard 2 (hyd1 h3)  3 (hyd 3 0 0).
 Proof.  
   left; trivial; right ;  simpl;  left; left.
   split; right; right; left.
 Qed.
 
-Lemma L_0_3 : battle standard 0 hinit 3 (hyd 3 0 0).
+Lemma L_0_3 : rounds standard 0 hinit 3 (hyd 3 0 0).
 Proof.
-  apply battle_trans with (1:= L_2_3) (2:= L_0_2).  
+  apply rounds_trans with (1:= L_2_3) (2:= L_0_2).  
 Qed.
 (*||*)
 (* end snippet L23L03 *)
@@ -171,9 +171,9 @@ Inductive one_step (i: nat) :
 
 (* begin snippet stepBattle *)
 
-Lemma step_battle : forall i a b c a' b' c',
+Lemma step_rounds : forall i a b c a' b' c',
     one_step i a b c a' b' c' ->
-    battle standard i (hyd  a b c) (S i) (hyd a' b' c'). (* .no-out *)
+    rounds standard i (hyd  a b c) (S i) (hyd a' b' c'). (* .no-out *)
 (*|
 .. coq:: none
 |*)
@@ -216,16 +216,16 @@ Definition reachable (i a b c : nat) : Prop :=
 
 (* begin snippet stepsBattle *)
 
-Lemma steps_battle : forall i a b c j  a' b' c',
+Lemma steps_rounds : forall i a b c j  a' b' c',
     steps i a b c j a' b' c' ->
-    battle standard i (hyd  a b c) j (hyd a' b' c'). (* .no-out *)
+    rounds standard i (hyd  a b c) j (hyd a' b' c'). (* .no-out *)
 (*|
 .. coq:: none 
 |*)
 Proof.
   induction 1.
-  - now apply step_battle.
-  - eapply battle_trans.
+  - now apply step_rounds.
+  - eapply rounds_trans.
    +   apply IHsteps2.
    +  assumption.
 Qed.
@@ -321,8 +321,8 @@ Qed.
 
 (* end snippet L10To95 *)
 
-Lemma L0_95 : battle standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
-Proof.   apply steps_battle, L95. Qed.
+Lemma L0_95 : rounds standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
+Proof.   apply steps_rounds, L95. Qed.
 
   
 (** No more tests ! we are going to build bigger transitions *)
@@ -405,13 +405,13 @@ Qed.
 |*)
 
 Lemma Almost_done :
-  battle standard 3 (hyd 3 0 0) N (hyd 0 0 0).
-Proof.  apply steps_battle, SuperbigStep. Qed.
+  rounds standard 3 (hyd 3 0 0) N (hyd 0 0 0).
+Proof.  apply steps_rounds, SuperbigStep. Qed.
 
 Theorem Done :
-  battle standard 0 hinit N head.
+  rounds standard 0 hinit N head.
 Proof.
-  eapply battle_trans with (1:= Almost_done) (2:= L_0_3).
+  eapply rounds_trans with (1:= Almost_done) (2:= L_0_3).
 Qed.
 
 (*||*)

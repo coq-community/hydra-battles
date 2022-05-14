@@ -77,7 +77,7 @@ Proof.
   r2_d2 0 0.
 Qed.
 
-Lemma battle_example : battle standard 1 h0 4 h3.
+Lemma battle_example : rounds standard 1 h0 4 h3.
 Proof.
   eright.
   eapply h0_h1.

@@ -859,25 +859,6 @@ The following property allows us to build battles by composition of smaller ones
 \input{movies/snippets/Hydra_Lemmas/battleTrans}
 
 
-% \begin{remark}
-%  The class \texttt{free} is strongly related with the transitive closure  \texttt{round\_plus}, as expressed by the following lemmas.
-
-% \vspace{4pt}
-% \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html}{Hydra.Hydra\_Lemmas}}
-
-%  \begin{Coqsrc}
-%  Lemma battle_free_equiv1 : forall i j h h',  
-%              battle free i h j h' ->   h -+-> h'.
- 
-%  Lemma battle_free_equiv2 : forall h h',
-%      h -+-> h' ->
-%     forall i, exists j,  battle free i h j h'.
-%  \end{Coqsrc}
-
-% \end{remark}
-
-
-
 \section{A long battle}
 \label{sect:big-battle}
 
@@ -951,8 +932,7 @@ During the two first rounds, our hydra loses its two rightmost heads.  Figure~\v
   \label{fig:hinit-plus2}
 \end{figure}
 
-The following lemma  is a formal description of these first rounds, in terms of the
-\texttt{battle} predicate.
+The following lemma  is a formal description of these first rounds, in terms of the \texttt{rounds} predicate.
 
 
 \input{movies/snippets/BigBattle/L02}
@@ -1038,7 +1018,7 @@ of the current hydra.
 
 The following function returns the next configuration of the game.
 Note that this function is defined only for making experiments and is not  ``certified''.  Formal proofs about our battle only start with the lemma
-\texttt{step\_battle}, page~\pageref{lemma:step-battle}.
+\texttt{step\_rounds}, page~\pageref{lemma:step-battle}.
 
 \input{movies/snippets/BigBattle/nextDef}
 

@@ -68,7 +68,7 @@ Section Battle_length.
   Remark R6 : S (Nat.pred (Nat.pred l)) = (l-1)%nat.
   Proof.  generalize R0; abstract lia. Qed.
 
-  Lemma L06:  battle standard k (iota (cnf alpha)) (l-1)%nat
+  Lemma L06:  rounds standard k (iota (cnf alpha)) (l-1)%nat
                      (iota zero).
   Proof.
     rewrite <- R6; apply trace_to_std.

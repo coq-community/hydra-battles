@@ -41,8 +41,9 @@ Section Impossibility_Proof.
 
   (**  The measure is strictly decreasing along any round *)
 
-  Lemma Lvar : forall h h0 i,  h <> head -> 
-                                battle_rel standard i h h0 -> m h0 t1< m h.
+  Lemma Lvar : forall h h0 i,
+      h <> head -> 
+      battle_rel standard i h h0 -> m h0 t1< m h.
   Proof.   
     intros h h0 i H  H1;  apply Var with  i; auto.
   Qed.
@@ -50,7 +51,7 @@ Section Impossibility_Proof.
   (** Application to standard battles *)
   
   Lemma m_decrease : forall j h0 i h,
-      h <> head -> battle standard i  h j h0  -> m h0 t1< m h.
+      h <> head -> rounds standard i  h j h0  -> m h0 t1< m h.
   Proof.
     induction 2.  
     -  apply Lvar with i; auto. 
@@ -68,7 +69,7 @@ Section Impossibility_Proof.
   Lemma o2iota_0 : forall j beta i alpha,
       standard_path_to j beta i alpha -> (0 < i)%nat ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
-      battle standard (Nat.pred i) (iota alpha) j (iota beta) .
+      rounds standard (Nat.pred i) (iota alpha) j (iota beta) .
   Proof.
     induction 1.
     - intros; subst j; destruct i.
@@ -77,7 +78,7 @@ Section Impossibility_Proof.
          * subst beta;   apply canonS_iota_i; trivial.
     -  intros  H0 H1 H2 H3;   destruct i.
        + inversion H0.
-       +  eapply battle_trans with  (S i) (iota (canon alpha (S i)));
+       +  eapply rounds_trans with  (S i) (iota (canon alpha (S i)));
             trivial.
           2:(left; simpl); trivial.
           replace (S i) with (Nat.pred (S (S i))).
@@ -93,7 +94,7 @@ Section Impossibility_Proof.
   Lemma o2iota_1 : forall j beta i alpha,
       standard_path_to j beta (S i) alpha ->  nf alpha ->
       nf beta ->  beta <> T1.zero -> 
-      battle standard  i (iota alpha) j (iota beta) .
+      rounds standard  i (iota alpha) j (iota beta) .
   Proof.
     intros; change i with (Nat.pred (S i)); apply o2iota_0; trivial. 
     auto with arith.
@@ -103,7 +104,7 @@ Section Impossibility_Proof.
       nf alpha -> forall i, 
         (0 < i)%nat -> alpha = T1.zero \/ 
                        exists k : nat, 
-                         battle standard (Nat.pred i) (iota alpha) k head .
+                         rounds standard (Nat.pred i) (iota alpha) k head .
   Proof.
     intros alpha; transfinite_induction_lt alpha.
     intros x H H0 i H1;  destruct (T1_eq_dec x T1.zero).
@@ -123,7 +124,7 @@ Section Impossibility_Proof.
               { left;  split; now left.
               }
            *  simpl;  destruct H; exists x0.
-              eapply battle_trans with (S i) (iota (canon x (S i))).
+              eapply rounds_trans with (S i) (iota (canon x (S i))).
               { simpl; simpl in H; trivial. }
               { left.
                 eapply canonS_iota_i; auto.
@@ -137,7 +138,7 @@ Section Impossibility_Proof.
   Lemma LT_to_standard_battle :
     forall alpha beta,
       beta t1< alpha ->
-      exists n i,  battle standard n (iota alpha) i (iota beta). (* .no-out *)
+      exists n i,  rounds standard n (iota alpha) i (iota beta). (* .no-out *)
   (* end snippet LTToStandardBattle *)
   
   Proof.
@@ -181,7 +182,7 @@ Section Impossibility_Proof.
   Proof. unfold beta_h; auto. destruct Hy; auto. Qed. 
   
   Remark Rem4 : exists n i,
-      battle  standard n (iota mu) i (iota (beta_h mu m)).
+      rounds  standard n (iota mu) i (iota (beta_h mu m)).
   Proof. apply (LT_to_standard_battle  _ _ Rem3).  Qed.
 
   Remark Hmu : nf mu.
