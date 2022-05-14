@@ -101,9 +101,7 @@ Module Examples.
   (* begin snippet Hy1 *)
   
   Example Hy_1 : R1 Hy Hy'. (* .no-out *)
-  Proof. (* .no-out *)
-    repeat constructor. (* .no-out *)
-  Qed.
+  Proof. (* .no-out *) repeat constructor. (* .no-out *) Qed.
   
   (* end snippet Hy1 *)
 

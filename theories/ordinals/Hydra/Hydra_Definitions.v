@@ -48,7 +48,7 @@ Arguments Hydrae_rect2 P P0 : rename.
 (** All elements of s satisfy P *)
 Fixpoint h_forall (P: Hydra -> Prop) (s: Hydrae) :=
   match s with
-    hnil => True
+  | hnil => True
   | hcons h s' => P h /\ h_forall P s'
   end.
 (* end snippet hForall *)
@@ -189,9 +189,8 @@ Before giving the definition in Coq of [round_n], we need to define several  aux
 
 (* begin snippet S0Def *)
 Inductive S0 :  relation Hydrae :=
-| S0_first : forall s, S0  (hcons head s) s
-| S0_rest : forall  h s s',
-    S0  s s' ->  S0  (hcons h s) (hcons h s').
+| S0_first : forall s, S0 (hcons head s) s
+| S0_rest : forall  h s s', S0  s s' -> S0 (hcons h s) (hcons h s').
 (* end snippet S0Def *)
 
 (** *** R1
@@ -414,11 +413,14 @@ Arguments battle_rel : clear implicits.
   := Build_Battle (fun _  h h' => round h h') _.
 (* end snippet freeDef *)
 
+  
 (* begin snippet standardDef *)
-#[ global ] Program Instance standard : Battle := Build_Battle round_n _.
+#[ global ] Program Instance standard : Battle :=
+  Build_Battle round_n  _. 
 Next Obligation.
   now exists i.  
 Defined.
+
 (* end snippet standardDef *)
 
 (**  The following relation allows us to consider sequences of rounds in a given  class  of battles 

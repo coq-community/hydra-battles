@@ -602,7 +602,7 @@ almost trivial. We let the reader look at the source.
 \begin{exercise}
 It happens very often that, in the proof of  a proposition of the form 
 (\texttt{$\forall\,$ h:Hydra, $P$ h}), the predicate \texttt{P0}
-is  (\texttt{h\_forall $P$}).  Design a tactic for induction on hydras that frees the user from binding explicitly \texttt{P0},  and solves trivial subgoals. Apply it for writing  a shorter proof of \texttt{height\_lt\_size}.
+is  (\texttt{h\_forall $P$}).  Design a tactic for induction on hydras that frees the user from binding explicitly \texttt{P0},  and solves trivial subgoals. Apply it for writing  a shorter proof script of \texttt{height\_lt\_size}.
 \end{exercise}
  
 
@@ -635,7 +635,7 @@ The mutually exclusive cases we consider are the following:
 
 \subsection{Chopping off a head at distance 1 from the foot (relation  R1)}
 
-If Hercules chops off a head near the floor, there is no replication at all. We use an auxiliary 
+If Hercules chops off a head close to the root, there is no replication at all. We use an auxiliary 
 predicate \texttt{S0}, associated with the removing of one head from a sequence of hydras.
 
 
@@ -697,22 +697,23 @@ The reader is encouraged to look at all the successive subgoals of this example.
 
 \subsection{Binary relation associated with a round}
 
-We combine the two cases above into a single relation.
+Let us merge \texttt{R1} and \texttt{R1}  into a single relation.
 First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is the expected number of  replications (irrelevant in the case of an \texttt{R1}-transformation).
+Then, we define a \emph{round} (small step) of a battle
+by abstraction over \texttt{n}, 
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Definitions.html\#round_n}{Hydra.Hydra\_Definitions}}
 
 \index{hydras}{Library Hydra!Predicates!round\_n}
-
-\input{movies/snippets/Hydra_Definitions/roundNDef}
-
-By abstraction over \texttt{n}, we define a \emph{round} (small step) of a battle:
-
 \index{hydras}{Library Hydra!Predicates!round}
 \label{sect:infix-round}
 
-\input{movies/snippets/Hydra_Definitions/roundDef}
+\inputsnippets{Hydra_Definitions/roundNDef, Hydra_Definitions/roundDef}
+
+
+
+
 
 \index{hydras}{Projects}
 
@@ -749,10 +750,10 @@ Each definition generates an associated induction principle.
  According to the form of statement one would like to prove, there is a ``best choice'':
 
 \begin{itemize}
-\item For proving $\forall y, x\,R^+\,y \;\arrow\; P\,y$, prefer 
+\item To prove $\forall y, x\,R^+\,y \;\arrow\; P\,y$, prefer 
 \texttt{clos\_trans\_n1}
-\item For proving $\forall x,\,x\,R^+\,y \;\arrow\; P\,x$, prefer \texttt{clos\_trans\_1n}
-\item For proving $\forall x\,y, \,x\,R^+\,y \;\arrow\;P\,x\,y$,  
+\item To prove proving $\forall x,\,x\,R^+\,y \;\arrow\; P\,x$, prefer \texttt{clos\_trans\_1n}
+\item To prove $\forall x\,y, \,x\,R^+\,y \;\arrow\;P\,x\,y$,  
 prefer \texttt{clos\_trans},
 \end{itemize}
 But there is no ``wrong choice'' at all: the equivalence lemmas in \linebreak 
@@ -782,8 +783,8 @@ Given a hydra \texttt{h}, the specification of a hydra battle for \texttt{h} is 
 \texttt{right}, design a set of dedicated tactics for the interactive building of a battle.
 Your tactics will have the following functionalities:
 \begin{itemize}
-\item  Chose to stop a battle, or continue
-\item Chose an expected number of replications
+\item  Choose to stop a battle, or continue
+\item Choose an expected number of replications
 \item Navigate in a hydra, looking for a head to chop off.
 \end{itemize}
 
@@ -821,7 +822,7 @@ In some presentations of hydra battles, e.g.~\cite{KP82, bauer2008}, the transfo
 
 \input{movies/snippets/Hydra_Definitions/BattleDef}
 
-The most general class of battles is \texttt{free}, which allows the hydra to chose any replication factor at every step:
+The most general class of battles is \texttt{free}, which allows the hydra to choose any replication factor at every step:
 
 \vspace{6pt}
 \noindent
