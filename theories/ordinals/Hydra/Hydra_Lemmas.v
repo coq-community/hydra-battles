@@ -8,7 +8,7 @@ From Coq Require Import Arith Lia  List  Relation_Operators
      Wellfounded.Inclusion.
      
 From hydras Require Import More_Arith Epsilon0  Hessenberg
-     Simple_LexProd.
+     Simple_LexProd MoreLibHyps.
 
 From hydras Require Export Hydra_Definitions.
 Import Relations.
@@ -212,9 +212,9 @@ Lemma rounds_trans {b:Battle} :
                                  rounds b k h0 j h'. (* .no-out *)
 (*| .. coq:: no-out |*)
 Proof. 
-  induction 2. 
-  - now right with h'0.
-  - right with h'';auto.
+   intros i h j h' H k h0. induction 1 /dr. 
+  - intros h'0 ? ?; now right with h'0. 
+  - intros ? ? ? h'' ? ? ? ; right with h'';auto.
 Qed.
 (*||*)
 (* end snippet battleTrans *)

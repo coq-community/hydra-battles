@@ -849,7 +849,7 @@ Let $B$ be any instance of class \texttt{Battle}. It is easy to define inductive
 
 \input{movies/snippets/Hydra_Definitions/battleRelDef}
 
-The following property allows us to build battles by composition of smaller ones.
+The following property allows us to build battle rounds by composition of smaller ones.
 
 %% TODO display subgoals when fixed
 
@@ -868,7 +868,7 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 \begin{itemize}
 \item At each round, Hercules chops off the rightmost head of the hydra.
-\item The battle is {standard}: at the round number $i$, the expected replication is $i$.
+\item The battle is {standard}: at the round number $i$, the expected replication factor is $i$.
 \end{itemize}
 
 
@@ -902,11 +902,11 @@ shown on figure~\vref{fig:hinit}, with a simple strategy for both players:
 
 
 The lemma we would like to prove is ``The considered battle lasts exactly $N$ rounds'',
-with $N$ being a natural number we gave to guess.
+with $N$ being a natural number we have to guess.
 
-But the  battle is so long that no \emph{test} can give us any estimation of its length, and we do need the expressive power of logic to compute this length. However, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
+But the  battle is so long that no \emph{test} can give us any estimation of its length. Nevertheless, in order to  guess this length, we made some experiments, computing with \gallina{}, \coq{}'s  functional programming language.
 Thus, we can consider this development as a collaboration of proof with computation.
-In the following lines, we show how we found experimentally the value of the number $N$.
+In the rest of this section, we show how we found experimentally the value of the number $N$.
 The complete proof is in file \url{../theories/html/hydras.Hydra.BigBattle.html}. 
 
 \subsection{First rounds}
@@ -1065,11 +1065,10 @@ It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-
 
 
 \subsection{Proving \dots}
-We are now able to reason about the sequence of transitions defined by our hydra battle. Instead of using the data-type \texttt{state} we study the relationship
-between different configurations of the battle.
+We are now able to reason about the sequence of transitions defined by our hydra battle. 
 
 Let us define a binary relation associated with every round of the battle.
-In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of occurrences of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot.
+In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of occurrences of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot. For convenience, we do not use the type \texttt{state} of the preceeding section, but consider the round numbers and the number of hydras \texttt{h2}, \texttt{h1} and heads as separate arguments of the relation (which is no more ---formally--- ``binary'').
 
 \input{movies/snippets/BigBattle/oneStep}
 

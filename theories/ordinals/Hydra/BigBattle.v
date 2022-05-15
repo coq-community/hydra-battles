@@ -12,7 +12,7 @@ From hydras Require Import Hydra_Definitions Hydra_Lemmas Iterates Exp2.
 (** Let us consider a small hydra [hinit] *)
 
 (* begin snippet hinitDef *)
-Notation  h3 := (hyd_mult head 3).
+#[local] Notation  h3 := (hyd_mult head 3).
 Definition hinit := hyd3 h3  head head.
 (* end snippet hinitDef *)
 
@@ -241,9 +241,7 @@ Qed.
 .. coq:: no-out 
 |*)
 Lemma L4 : reachable 4 2 4 0.
-Proof.
-  left; constructor.
-Qed.
+Proof. left; constructor. Qed.
 (*||*)
 (* end snippet L4 *)
 
@@ -261,7 +259,7 @@ Proof.
  -  intros;  replace (i + 1) with (S i) by ring. 
     repeat constructor.
  -  intros; eapply  steps_S.
-    +  eleft;   apply step1.
+    + eleft; apply step1.
     + replace (i + S (S c)) with (S i + S c) by ring;  apply IHc.
 Qed.
 
@@ -272,16 +270,14 @@ Qed.
 Lemma doubleS_law : forall  a b i, steps i a (S b) 0 (doubleS i) a b 0.
 Proof.
   intros;  eapply steps_S.
-  +   eleft;   apply step2.
-  +   unfold doubleS; replace (2 * S i) with (S i + S i) by ring; 
-        apply LS.
+  + eleft;   apply step2.
+  + unfold doubleS; replace (2 * S i) with (S i + S i) by ring; 
+      apply LS.
 Qed.
 
 Lemma reachable_S  : forall i a b, reachable i a (S b) 0 ->
                                    reachable (doubleS i) a b 0.
-Proof.
-  intros; right with  (1 := H); apply doubleS_law.
-Qed.
+Proof. intros; right with  (1 := H); apply doubleS_law. Qed.
 
 (* end snippet LS *)
 
@@ -292,37 +288,27 @@ Qed.
 |*)
 
 Lemma L10 : reachable 10 2 3 0.
-Proof.
-  change 10 with (doubleS 4); apply reachable_S, L4.
-Qed.
+Proof.   change 10 with (doubleS 4); apply reachable_S, L4. Qed.
 
 Lemma L22 : reachable 22 2 2 0.
-Proof.
-  change 22 with (doubleS 10); apply reachable_S, L10.
-Qed.
+Proof. change 22 with (doubleS 10); apply reachable_S, L10. Qed.
 
 
 Lemma L46 : reachable 46 2 1 0.
-Proof.
-  change 46 with (doubleS 22); apply  reachable_S, L22.
-Qed.
+Proof. change 46 with (doubleS 22); apply  reachable_S, L22. Qed.
 
 Lemma L94 : reachable 94 2 0 0.
-Proof.
-  change 94 with (doubleS 46); apply reachable_S, L46.
-Qed.
+Proof. change 94 with (doubleS 46); apply reachable_S, L46. Qed.
 
 Lemma L95 : reachable 95 1 95 0.
-Proof.
-  eapply steps_S; [eapply L94|]; repeat constructor.
-Qed.
+Proof. eapply steps_S; [eapply L94|]; repeat constructor. Qed.
 
 (*||*)
 
 (* end snippet L10To95 *)
 
 Lemma L0_95 : rounds standard 3 (hyd 3 0 0) 95 (hyd 1 95 0).
-Proof.   apply steps_rounds, L95. Qed.
+Proof. apply steps_rounds, L95. Qed.
 
   
 (** No more tests ! we are going to build bigger transitions *)
@@ -368,10 +354,7 @@ Proof. (* .no-out *) apply Bigstep,  L95. Qed.
 |*)
 
 Lemma L2_95_S : reachable (S M) 0 (S M) 0.
-Proof.
-  eright; [ apply L2_95 | left; constructor ]. 
-Qed.
-
+Proof. eright; [ apply L2_95 | left; constructor ]. Qed.
 (*||*)
 
 (* end snippet L295S  *)
@@ -381,9 +364,7 @@ Qed.
 Definition N :=   iterate doubleS (S M) (S M).
 
 Theorem   SuperbigStep : reachable N  0 0 0. (* .no-out *)
-Proof.  (* .no-out *)
-  apply Bigstep, L2_95_S.
-Qed.
+Proof. (* .no-out *) apply Bigstep, L2_95_S. Qed.
 
 (* end snippet NDef *)
 
@@ -410,9 +391,7 @@ Proof.  apply steps_rounds, SuperbigStep. Qed.
 
 Theorem Done :
   rounds standard 0 hinit N head.
-Proof.
-  eapply rounds_trans with (1:= Almost_done) (2:= L_0_3).
-Qed.
+Proof. eapply rounds_trans with (1:= Almost_done) (2:= L_0_3). Qed.
 
 (*||*)
 
@@ -427,9 +406,7 @@ Qed.
 (* begin snippet minorationLemmas *)
 Lemma minoration_0 : forall n,  2 * n <= doubleS n. (* .no-out *)
 (*| .. coq:: none |*)
-Proof.
-  unfold doubleS;intros; abstract lia.
-Qed.
+Proof. unfold doubleS;intros; abstract lia. Qed.
 (*||*)
 
 Lemma minoration_1 : forall n x, exp2 n * x <= iterate doubleS n x. (* .no-out *)
@@ -457,9 +434,7 @@ Proof. apply minoration_1.  Qed.
 (*| .. coq:: none |*)
 Lemma exp2_mono1 : forall n p,  n <= p ->  exp2 n  <= exp2 p .
 Proof.
-  induction 1.
-  - reflexivity.   
-  -  rewrite exp2S;  abstract lia.
+  induction 1; [reflexivity | rewrite exp2S;  abstract lia].
 Qed.
 (*||*)
 
