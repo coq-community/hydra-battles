@@ -212,7 +212,7 @@ Lemma rounds_trans {b:Battle} :
                                  rounds b k h0 j h'. (* .no-out *)
 (*| .. coq:: no-out |*)
 Proof. 
-   intros i h j h' H k h0. induction 1 /dr. 
+  intros i h j h' H k h0. induction 1 /dr. 
   - intros h'0 ? ?; now right with h'0. 
   - intros ? ? ? h'' ? ? ? ; right with h'';auto.
 Qed.

@@ -134,9 +134,7 @@ Section Impossibility_Proof.
   
 (* begin snippet omegaSmallz:: no-out *)
   Theorem Contradiction : False. 
-  Proof. 
-   generalize m_lt,  m_ge; intros; lia.
-  Qed. 
+  Proof. generalize m_lt, m_ge; intros; lia. Qed. 
 
 End Impossibility_Proof.
 (* end snippet omegaSmallz *)

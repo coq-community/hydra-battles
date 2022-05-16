@@ -12,7 +12,7 @@ Export Hydra_Definitions.
  *)
 
 (* begin snippet AliveThms *)
-Theorem Alive_free :   Alive free. (* .no-out *)
+Corollary Alive_free : Alive free. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   red;intros.
@@ -22,7 +22,7 @@ Proof.
 Qed.
 (*||*)
 
-Theorem Alive_standard : Alive standard. (* .no-out *)
+Corollary Alive_standard : Alive standard. (* .no-out *)
 (*|
 .. coq:: none 
 |*)

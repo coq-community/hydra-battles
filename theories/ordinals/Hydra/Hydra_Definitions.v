@@ -470,8 +470,7 @@ Class Hvariant {A:Type}{Lt:relation A}
       (Wf: well_founded Lt)(B : Battle)
       (m: Hydra -> A): Prop :=
   {variant_decr: forall i h h',
-      h <> head ->
-      battle_rel  B i  h h' -> Lt (m h') (m h)}.
+      h <> head -> battle_rel B i  h h' -> Lt (m h') (m h)}.
 
 (* end snippet HvariantDef *)
 
@@ -496,10 +495,6 @@ Class BoundedVariant {A:Type}{Lt:relation A}
  *)
 
 (* begin snippet AliveDef *)
-
 Definition Alive (B : Battle) :=
-  forall i h,
-     h <> head ->
-    {h' : Hydra |  battle_rel  B i h h'}.
-
+  forall i h, h <> head -> {h' : Hydra |  battle_rel  B i h h'}.
 (* end snippet AliveDef *)

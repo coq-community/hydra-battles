@@ -1274,16 +1274,16 @@ for any configuration $(i,h)$, where $h$ is not a head, there exists a further s
 The theorems \texttt{Alive\_free} and \texttt{Alive\_standard} of the module 
 \href{../theories/html/hydras.Hydra.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} show that the classes \texttt{free} and \texttt{standard} satisfy this property.
 
-
-\input{movies/snippets/Hydra_Theorems/AliveThms}
-
-
-Both theorems are proved with the help of the  following strongly specified function:
-
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Lemmas.html\#next_round_dec}{Hydra.Hydra\_Lemmas}}
 
 \input{movies/snippets/Hydra_Lemmas/nextRoundDec}
+
+\emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Theorems}{Hydra.Hydra\_Theorems}}
+
+\input{movies/snippets/Hydra_Theorems/AliveThms}
+
+
 
 \subsection{Termination}
 
@@ -1328,7 +1328,7 @@ in a well-founded relation $<$  on some type \texttt{A}, and a function
 \label{omega-case}
 
 When one wants to prove a termination theorem with the help of a variant, 
-one has to consider first a well-founded set $(A,<)$, then a strictly decreasing measure on this set.  The following two lemmas show that if  the order structure $(A,<)$ is too simple, it is useless to look for a convenient measure, which simply no exists. Such kind of result is useful, because it saves you time and effort.
+one has to consider first a well-founded set $(A,<)$, then a strictly decreasing measure on this set.  The following  lemma shows that,  if  the order structure $(A,<)$ is too simple, it is useless to look for a convenient measure, which simply no exists. Such kind of result is useful, because it saves you time and effort.
 
 
 The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
@@ -1343,7 +1343,7 @@ Let us present the main steps of that proof, the script of which  is in the modu
 %\subsubsection{Preliminaries}
 
 
-Let us assume there exists some variant $m$ from \texttt{Hydra} into \texttt{nat} for proving
+Let us assume there exists some variant $m$ from \texttt{Hydra} into (\texttt{nat},$<$)  for proving
     the  termination of all hydra battles.
 
 \input{movies/snippets/Omega_Small/omegaSmalla}
