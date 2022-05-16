@@ -575,7 +575,7 @@ Section Merge.
             {wf (measure_lt m) xys} :
     list A :=
     match xys with
-      (nil, ys) => ys
+    | (nil, ys) => ys
     | (xs, nil) => xs
     | (x :: xs, y :: ys) =>
       if ltb x y then x :: merge  ltb (xs, (y :: ys))

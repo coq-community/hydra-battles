@@ -12,16 +12,14 @@ Import Relations RelationClasses.
 Instance compare_nat : Compare nat := Nat.compare.
 
 (* begin snippet OmegaDefa:: no-out *)
-#[global]
- Instance Omega_comp : Comparable Peano.lt compare_nat.
+#[global] Instance Omega_comp : Comparable Peano.lt compare_nat.
 Proof.
   split.
   - apply Nat.lt_strorder.
   - apply Nat.compare_spec.
 Qed.
 
-#[global]
- Instance Omega : ON Peano.lt compare_nat.
+#[global] Instance Omega : ON Peano.lt compare_nat.
 Proof.
  split.
  - apply Omega_comp.

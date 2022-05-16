@@ -33,27 +33,22 @@ Section Definitions.
 
   Context {A:Type} {lt : relation A} {cmp : Compare A} {on: ON lt cmp}.
   
-  #[using="All"]
-   Definition ON_t := A.
+  #[using="All"] Definition ON_t := A.
+
+  #[using="All"] Definition ON_compare : A -> A -> comparison := compare.
+
+  #[using="All"] Definition ON_lt := lt.
+
+  #[using="All"] Definition ON_le:  relation A := leq lt.
 
   #[using="All"]
-   Definition ON_compare : A -> A -> comparison := compare.
-
-  #[using="All"]
-   Definition ON_lt := lt.
-
-  #[using="All"]
-   Definition ON_le:  relation A := leq lt.
-
-  #[using="All"]
-   Definition measure_lt {B : Type} (m : B -> A) : relation B :=
+    Definition measure_lt {B : Type} (m : B -> A) : relation B :=
     fun x y =>  ON_lt (m x) (m y).
 
   #[using="All"]
-   Lemma wf_measure {B : Type} (m : B -> A) :
+    Lemma wf_measure {B : Type} (m : B -> A) :
     well_founded (measure_lt m).
 (* end snippet ONDefsa *)
-  
   Proof.
     intro x; eapply Acc_incl  with (fun x y =>  ON_lt (m x) (m  y)).
     - intros y z H; apply H.
@@ -96,11 +91,9 @@ Class  SubON
        (iota: A -> B):=
   {
   SubON_compare: forall x y : A,
-      compareB (iota x) (iota y) =
-      compareA x y;
+      compareB (iota x) (iota y) = compareA x y;
   SubON_incl : forall x, ltB (iota x) alpha;
-  SubON_onto : forall y,
-      ltB y alpha  -> exists x:A, iota x = y}.
+  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 (* end snippet SubONDef *)
 
@@ -134,7 +127,7 @@ Class ON_correct `(alpha : Ord)
                                 exists b, iota b = beta;
     On_compare_spec : forall a b:A,
         match compareA a b with
-          Datatypes.Lt => lt (iota a) (iota b)
+        | Datatypes.Lt => lt (iota a) (iota b)
         | Datatypes.Eq => iota a = iota b
         | Datatypes.Gt => lt (iota b) (iota a)
         end

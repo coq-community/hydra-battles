@@ -103,9 +103,7 @@ Section Impossibility_Proof.
 |*)
   
   Corollary m_lt : m small_h o< m big_h.
-  Proof.
-    apply m_strict_mono with (1:=Hvar) (2:=big_to_small) .  
-  Qed.
+  Proof. apply m_strict_mono with (1:=Hvar) (2:=big_to_small). Qed.
   (*||*)
 
   (* end snippet mLt *)

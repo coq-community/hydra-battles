@@ -148,7 +148,7 @@ of:
 \end{itemize}
 
 
-Such a structure may be proved correct relatively to a bigger ordinal notation or to Schütte's or \gaia's model.
+Such a structure should be proved correct relatively to a bigger ordinal notation or to Schütte's or \gaia's model.
 
 
 
@@ -159,9 +159,9 @@ Such a structure may be proved correct relatively to a bigger ordinal notation o
 From the \coq{} user's point of view, an ordinal notation is
 a structure allowing to compare two ordinals by computation, and proving by well-founded induction.
 
-\subsubsection{The \texttt{Comparison} and \texttt{Comparable} classes}
+\subsubsection{The \texttt{Comparable} class}
 
-We use the operational class \texttt{Comparison} of comparison functions to define the \texttt{Comparable} class, contributed by Jérémy Damour and Théo Zimmermann, which allows us to apply generic lemmas and tactics about decidable strict orders.
+The \texttt{Comparable} class, contributed by Jérémy Damour and Théo Zimmermann, allows us to apply generic lemmas and tactics about decidable strict orders.
 The correctness of the comparison function is expressed through Stdlib's type 
 \texttt{Datatypes.CompareSpec} as specialized by \texttt{Datatypes.CompSpec}.
 
@@ -213,7 +213,7 @@ We give  also a few handy definitions and lemmas for any ordinal notation.
 \inputsnippets{ON_Generic/ONDefsb}
 
 \begin{remark}
-The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In the mathematical formulas, however, we still use $<$ and $\leq$ for comparing ordinals.
+The infix notations \texttt{o<} and \texttt{o<=} are defined in order to make apparent the distinction between the various notation scopes that may co-exist in a same statement. So the infix \texttt{<} and \texttt{<=} are reserved to the natural numbers. In mathematical formulas, however, we still use $<$ and $\leq$ for inequalities between ordinals.
 \end{remark}
 
 
@@ -250,7 +250,8 @@ The simplest example of ordinal notation is built over the type \texttt{nat} of 
 \vspace{4pt}
 \noindent\emph{From Library~\href{../theories/html/hydras.OrdinalNotations.ON_Omega.html}{OrdinalNotations.ON\_Omega}}
 
-\inputsnippets{ON_Omega/OmegaDefa, ON_Omega/OmegaDefb}
+\inputsnippets{ON_Omega/OmegaDefa}
+\inputsnippets{ON_Omega/OmegaDefb}
 
 
 \section{Sum of  two ordinal notations}
@@ -409,7 +410,7 @@ It would be interesting to specify at the most generic level, what is a zero, a 
 \begin{itemize}
 \item A \emph{least} element is a minorant (in the large sense) of the full set  on $A$,
 \item $y$ is a \emph{successor} of $x$ if $x<y$ and there is no element between $x$ and $y$. We will also say that $x$ is a \emph{predecessor} of $y$.
-\item $x$ is a \emph{limit} if $x$ is not a least element, and for any $y$ such that $yo<x$,
+\item $x$ is a \emph{limit} if $x$ is not a least element, and for any $y$ such that $y<x$,
  there exists some $z$ such that $y<z<x$.
 \end{itemize}
 
@@ -502,7 +503,7 @@ The ordinal $\omega^2$ (also called $\phi_0(2)$, see Chap.~\ref{chap:schutte}), 
 \inputsnippets{ON_Omega2/Omega2Def, ON_Omega2/Defs}
 \inputsnippets{ON_Omega2/Ex1}
 
-\subsection{Arithmetic of \texorpdfstring{$\omega^2$}{omega^2}} 
+\subsection{Arithmetic on \texorpdfstring{$\omega^2$}{omega^2}} 
 
 \subsubsection{Successor}
 
@@ -525,7 +526,7 @@ We can define on \texttt{Omega2} an addition which extends the addition on \text
 \inputsnippets{ON_Omega2/plusDef, ON_Omega2/plusExamples}
 
 
-\subsubsection{Multiplication}
+\subsubsection{Finite multiplication}
 
 The restriction of ordinal multiplication to the segment $[0,\omega^2)$ is not a total function.
 For instance $\omega\times\omega= \omega^2$ is outside the set of represented values.
@@ -696,7 +697,7 @@ The first steps of our proof start a well-founded induction over $\omega^2$.
 \input{movies/snippets/Omega2_Small/mGe}
 
 
-A case analysis on $i$ and $j$ allows us to
+A case analysis on $i$ and $j$ leads  us to
 consider three cases :
 
 \begin{itemize}
@@ -817,7 +818,7 @@ Note that the type (\texttt{t 0}) is empty, and that, for any natural number
 
 \subsubsection{Comparison function}
 
-In order to build an instance of \texttt{ON}, we define a comparison function,  and prove its correctiness.
+In order to build an instance of \texttt{ON}, we define a comparison function, then prove its correctness.
 
 \vspace{4pt}
 
@@ -852,7 +853,7 @@ forall (y : A) (p1 p2 : x = y), p1 = p2
 
 Thus unicity of proofs of \texttt{Nat.ltb x0 (S n)}  comes from the decidability of
 equality on type \texttt{bool}.
-This is why we used the boolean function \texttt{Nat.ltb} instead of the inductive predicate \texttt{Nat.lt} in the definition of type \texttt{t $n$} (see page~\pageref{def: Finite-ord-type}).
+This is why we used the boolean function \texttt{Nat.ltb} instead of the inductive predicate \texttt{Nat.lt} in the definition of type \texttt{t $n$} (see page~\pageref{def:Finite-ord-type}).
 For more information about this pattern, please look at the numerous mailing lists and 
 FAQs on \coq{}).
 
@@ -896,7 +897,7 @@ In our formalization, the interpretation of an ordinal as a set is realized by t
 
 \section{See also \dots}
 
-Finite ordinals are also formalized in \ssreflect/\mathcomp~\cite{MCB}. In Module~\href{../theories/html/gaia_hydras.ON_gfinite.html}{gaia\_hydras.ON\_gfinite}, we build an instance of class \texttt{ON}.
+\gaiasign Finite ordinals are also formalized in \ssreflect/\mathcomp~\cite{MCB}. In Module~\href{../theories/html/gaia_hydras.ON_gfinite.html}{gaia\_hydras.ON\_gfinite}, we build an instance of class \texttt{ON}.
 
 \inputsnippets{ON_gfinite/finordLtDef, ON_gfinite/finordON}
 
@@ -918,20 +919,20 @@ Finite ordinals are also formalized in \ssreflect/\mathcomp~\cite{MCB}. In Modul
 It is sometimes useful to compare two ordinal notations with respect to expressive power
 (the segment of ordinals  they represent). 
 
-The following class specifies a strict inclusion of segments. The notation \texttt{OA} describes a segment $[0,\alpha)$, and \texttt{OB} is a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}). We require also  that the comparison functions of the two notation systems are compatible.
+The following class specifies a strict inclusion of segments. The ordinal notation \texttt{OA} describes a segment $[0,\alpha)$, and \texttt{OB}  a larger segment (which contains a notation for $\alpha$, whilst $\alpha$ is not represented in \texttt{OA}) (like in Fig.~\ref{fig:subsegment}). We require also the comparison functions of the two notation systems to be compatible.
 
 \begin{figure}[h]
    \centering
    \begin{tikzpicture}[very thick, scale=0.6]
 \begin{scope}[color=blue]
-\node (A) at (0,0) {$A$};
+\node (A) at (0,0) {$\omega$};
 \node(A0) at (2,0)[label=below:$0$]{$\bullet$};
 \node(A1) at (3,0)[label=below:$1$]{$\bullet$};
 \node(A2) at (4,0)[label=below:$2$]{$\bullet$};
 \node (Adots) at (6,0) {$\ldots$};
 \end{scope}
 \begin{scope}[color=red]
-\node (B) at (0,2) {$B$};
+\node (B)  at (0,2) {$\omega+\omega$};
 \node(B0) at (2,2)[label=above:$0$]{$\bullet$};
 \node(B1) at (3,2)[label=above:$1$]{$\bullet$};
 \node(B2) at (4,2)[label=above:$2$]{$\bullet$};
@@ -947,7 +948,7 @@ The following class specifies a strict inclusion of segments. The notation \text
 \draw [->,thin] (Adots) -- node [auto] {$\iota$} (Bdots);
 \end{scope}
 \end{tikzpicture}
-   \caption{\textcolor{blue}{$A$} is a sub-segment  of \textcolor{red}{$B$}}
+   \caption{\textcolor{blue}{$\omega$} is a sub-segment  of \textcolor{red}{$\omega+\omega$}}
    \label{fig:subsegment}
  \end{figure}
 

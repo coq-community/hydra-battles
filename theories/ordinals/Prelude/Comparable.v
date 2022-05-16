@@ -28,15 +28,13 @@ Section Comparable.
    Notation lt_irrefl := StrictOrder_Irreflexive (only parsing).
   
   (* Relation Lt *)
-  Lemma lt_not_gt (a b: A):
-    lt a b -> ~lt b a.
+  Lemma lt_not_gt (a b: A): lt a b -> ~lt b a.
   Proof.
     intros Hlt Hgt.
     apply StrictOrder_Irreflexive with a; now transitivity b.
   Qed.
 
-  Lemma lt_not_ge (a b: A):
-    lt a b -> ~ le b a.
+  Lemma lt_not_ge (a b: A): lt a b -> ~ le b a.
   Proof.
     intros Hlt Hle.
     apply le_lt_eq in Hle as [Hgt | Heq].
@@ -61,15 +59,13 @@ Section Comparable.
     now transitivity b. 
   Qed.
 
-  Lemma compare_lt_irrefl (a: A):
-    ~compare a a = Lt.
+  Lemma compare_lt_irrefl (a: A): ~compare a a = Lt.
   Proof.
     intro H.
     now apply compare_lt_iff, StrictOrder_Irreflexive in H.
   Qed.
 
-  Lemma compare_eq_iff (a b: A):
-    compare a b = Eq <-> a = b.
+  Lemma compare_eq_iff (a b: A): compare a b = Eq <-> a = b.
   Proof.
     pose proof (comparable_comp_spec a b) as [Heq | H | H];
     split; intro; subst; try easy;
