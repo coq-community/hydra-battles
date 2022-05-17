@@ -583,9 +583,10 @@ Section Merge.
     end.
   (* ... *)
 (* end snippet Merge *) 
-  
-  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
-  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
+  - intros; unfold m, measure_lt; cbn; destruct xs0 ;simpl;left;
+      abstract lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right;
+      abstract lia.
   - apply wf_measure. 
   Defined.
 

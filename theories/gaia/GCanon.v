@@ -118,9 +118,9 @@ Lemma limit_canonS_not_zero i lambda:
 Proof.
   rewrite -(h2g_g2hK lambda) /canon => Hnf Hlim .
   change zero with (h2g T1.zero); rewrite h2g_eqE. 
-  apply Canon.limitb_canonS_not_zero. 
+  apply Canon.T1limit_canonS_not_zero. 
   - move: Hnf; by rewrite g2h_h2gK -nf_ref.  
-  - by rewrite limitb_ref h2g_g2hK. 
+  - by rewrite T1limit_ref h2g_g2hK. 
 Qed.
 
 
@@ -165,7 +165,7 @@ Proof.
   have H: hcanon (T1.phi0 (g2h lambda)) i = T1.phi0 (hcanon (g2h lambda) i).
   { rewrite -Canon.canon_lim1 => //. 
     - move: Hnf; by rewrite hnf_g2h.
-    - by rewrite limitb_ref h2g_g2hK.
+    - by rewrite T1limit_ref h2g_g2hK.
   }
   by rewrite phi0_ref H.
 Qed. 
@@ -199,7 +199,7 @@ Proof.
   -  congr T1.cons.
   - by rewrite -g2h_canon. 
   - by rewrite hnf_g2h. 
-  - by rewrite limitb_ref h2g_g2hK. 
+  - by rewrite T1limit_ref h2g_g2hK. 
 Qed.
 
 (* begin snippet gCanonLim3:: no-out *)
@@ -211,7 +211,7 @@ Proof.
   rewrite -g2h_eqE g2h_canon !g2h_cons canon_lim3. 
   by rewrite -g2h_canon. 
   1,2 : by rewrite hnf_g2h.   
-  by rewrite limitb_ref h2g_g2hK.
+  by rewrite T1limit_ref h2g_g2hK.
 Qed.
 
 
@@ -223,7 +223,7 @@ Lemma canon_limit_strong lambda :
 (* end snippet gcanonLimitStrong *)
 Proof.
   rewrite -(h2g_g2hK lambda)  -nf_ref
-          -limitb_ref => Hnf Hlim b Hb.
+          -T1limit_ref => Hnf Hlim b Hb.
   rewrite -(h2g_g2hK b) => Hblt; apply hlt_iff in Hblt.
   case (@canon_limit_strong (g2h lambda) Hnf Hlim (g2h b)).
   - split => //; rewrite hnf_g2h => //.
@@ -262,7 +262,7 @@ Lemma  canon_limit_mono lambda i j (Hnf : T1nf lambda)
    rewrite /canon -hlt_iff. 
    case (@canon_limit_mono (g2h lambda)  i j) => //.
    - by rewrite hnf_g2h. 
-   - by  rewrite limitb_ref h2g_g2hK.
+   - by  rewrite T1limit_ref h2g_g2hK.
    - by apply /ltP . 
    -  move => _; case => //.
  Qed. 

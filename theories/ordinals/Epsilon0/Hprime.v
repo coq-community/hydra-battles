@@ -66,7 +66,7 @@ Proof.
   destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
   - cbn;  destruct (Utils.dec (E0limit alpha)) .
-    destruct (Succ_not_Limitb _ H); auto.
+    destruct (Succ_not_T1limit _ H); auto.
     + now cbn.
 Qed.
 
@@ -254,7 +254,7 @@ Proof with auto with E0.
        assert (CanonS beta k o< beta)%e0 by auto with E0.
        assert (CanonS beta k o< E0phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H'_eq3 beta).
-       apply Limitb_plus; auto.
+       apply T1limit_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
          specialize (Hbeta gamma).
          assert (gamma o< E0succ gamma)%e0 by (apply Lt_Succ; auto).
@@ -290,7 +290,7 @@ Proof with auto with E0.
              unfold Omega_term; simpl. unfold canonS.
              destruct (cnf alpha) ...
              destruct (pred (cons t1 n t2)) ...
--   unfold canonS; apply Limitb_Omega_term ...
+-   unfold canonS; apply T1limit_Omega_term ...
 Qed.
 
 End H'_cons.
@@ -703,7 +703,7 @@ Section Proof_of_Abstract_Properties.
         -  apply Canon_lt;  now apply Limit_not_Zero.
         -  eapply PB0; intro H.
            assert (H0 :cnf (Canon alpha (S n)) = cnf E0zero) by (f_equal; auto).
-           simpl in H0;   apply (@limitb_canonS_not_zero n (cnf alpha)); auto.
+           simpl in H0;   apply (@T1limit_canonS_not_zero n (cnf alpha)); auto.
            +  apply cnf_ok.
       Qed.
 
@@ -913,7 +913,7 @@ Section Proof_of_H'_mono_l.
     Hypothesis Hbeta: E0limit beta.
 
     Remark R4 : E0succ alpha o< beta.
-    Proof. now apply Succ_lt_Limitb. Qed.
+    Proof. now apply Succ_lt_T1limit. Qed.
 
     Remark R5 :  {n: nat | forall p, n <= p ->
                                      H'_ alpha (S p) < H'_ beta (S p)}.

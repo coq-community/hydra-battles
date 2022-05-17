@@ -454,7 +454,7 @@ Qed.
 (** Limits, successors, etc *)
 
 (* begin snippet limitbRef:: no-out *)
-Lemma limitb_ref (a:Epsilon0.T1.T1) : T1.limitb a = T1limit (h2g a).
+Lemma T1limit_ref (a:Epsilon0.T1.T1) : T1.T1limit a = T1limit (h2g a).
 (* end snippet limitbRef *)
 Proof.
   elim: a => /= //.
@@ -464,7 +464,7 @@ Proof.
 Qed.
 
 (* begin snippet isSuccRef:: no-out *)
-Lemma succb_ref (a:Epsilon0.T1.T1) : T1.succb a = T1is_succ (h2g a).
+Lemma T1is_succ_ref (a:Epsilon0.T1.T1): T1.T1is_succ a = T1is_succ (h2g a).
 (* end snippet isSuccRef *)
 Proof. 
   elim: a => /= //.

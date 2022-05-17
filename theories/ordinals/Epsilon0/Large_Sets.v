@@ -329,14 +329,14 @@ End succ.
 Section lim.
   Variables (lambda : T1)
             (Hnf : nf lambda)
-            (Hlim : limitb lambda)
+            (Hlim : T1limit lambda)
             (f : nat -> nat -> nat)
             (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
   
   Remark canon_not_null : forall k,  canon lambda (S k) <> zero.
   (*| .. coq:: none |*)
   Proof.
-   intro; apply limitb_canonS_not_zero; auto.  
+   intro; apply T1limit_canonS_not_zero; auto.  
   Qed.
   (*||*)
   
@@ -346,7 +346,7 @@ Section lim.
   (*| .. coq:: none |*)
   Proof.
     right.
-    - apply limitb_not_zero; auto.
+    - apply T1limit_not_zero; auto.
     - intro k;  unfold L_lim.  red; path_decompose (S k).
       instantiate (1:= canon lambda (S k)).
       *  specialize (H k); inversion H.
@@ -355,7 +355,7 @@ Section lim.
       * rewrite interval_singleton; left.
        --    discriminate.
        -- split.
-        ++  apply limitb_not_zero; auto.
+        ++  apply T1limit_not_zero; auto.
         ++  reflexivity.
      *  specialize (L_pos_inv (canon lambda (S k)) (f (S k))
                               (canon_not_null k) (H k) (S k));  abstract lia.       

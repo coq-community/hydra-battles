@@ -353,9 +353,7 @@ For instance, consider the following term of type  \texttt{T1}.
 \input{movies/snippets/T1/badTerm}
 
 
-This term would have been written \(\omega^1\times 2 + \omega^\omega \times 3\) in the usual mathematical notation. We note that the exponents of $\omega$ are not in the right (strictly decreasing) order.
-Nevertheless, with the help of the order \texttt{lt} on \texttt{T1}, we are now able to characterize
-the set of all well-formed ordinal terms:
+This term would have been written \(\omega^1\times 2 + \omega^\omega \times 3\) in the usual mathematical notation. We note that the exponents of $\omega$ are not in the right (strictly decreasing) order. The following boolean function determines whether a given ordinal term is well formed.
 
 
 \vspace{4pt}
@@ -472,7 +470,7 @@ For instance, let us represent the ordinals $0$ and $\omega$   as instances of t
 
 \paragraph*{\gaiasign}
 \index{gaiabridge}{Type of well formed ordinal terms below $\epsilon_0$}
- The library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines a \gaia-compatible type \texttt{E0}.
+ Our library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines also a type \texttt{E0} (which doesn't exist in \gaia-\texttt{ssete9}). 
 
 
 
@@ -483,7 +481,7 @@ Pattern matching and structural recursion allow us to define boolean characteriz
 
 \vspace{4pt}
 \noindent
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#T1is_succ}{Epsilon0.T1}}
 
 
 
@@ -499,7 +497,7 @@ a strictly increasing sequence of ordinals.
 
 \paragraph*{\gaiasign}
 \index{gaiabridge}{Limit and successor ordinals}
-In \gaia, the boolean functions associated with limit and successor ordinals are called \texttt{T1limit} and \texttt{T1is\_succ}.
+In \gaia, the boolean functions associated with limit and successor ordinals are also called \texttt{T1limit} and \texttt{T1is\_succ}.
 
  From~\href{../theories/html/gaia_hydras.HydraGaia_Examples.html}{gaia\_hydras.HydraGaia\_Examples}.
 
@@ -527,14 +525,14 @@ recursion on its Cantor normal form.
 \input{movies/snippets/T1/succDef}
 
 The following lemma establishes the connection between the  function
-\texttt{succ} and the Boolean predicate \texttt{succb}.
+\texttt{succ} and the Boolean predicate \texttt{T1is\_succ}.
 
 \vspace{4pt}
 
 \input{movies/snippets/T1/succbIff}
 
 \begin{exercise}[\gaiasign]
-  Look for the \gaia-theorem which corresponds to \texttt{succb\_iff}.
+  Look for the \gaia-theorem which corresponds to \texttt{T1is\_succ\_iff}.
 \end{exercise}
 
 \subsubsection{Successor function on \texttt{E0}}

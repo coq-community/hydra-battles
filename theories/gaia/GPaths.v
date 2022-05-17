@@ -179,7 +179,7 @@ Theorem KS_thm_2_4 (lambda : T1) :
 (* end snippet KSThm24 *)
 Proof. 
   rewrite -hnf_g2h => Hlambda Hlim i j Hij. 
-  move: Hlim; rewrite -(h2g_g2hK lambda) -limitb_ref => Hlim. 
+  move: Hlim; rewrite -(h2g_g2hK lambda) -T1limit_ref => Hlim. 
   have H'ij: (i < j)%coq_nat by apply /ltP. 
   generalize (KS_thm_2_4 Hlambda Hlim H'ij). 
   by rewrite /const_path !g2h_canon !h2g_g2hK. 

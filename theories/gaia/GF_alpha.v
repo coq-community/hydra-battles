@@ -111,7 +111,7 @@ Lemma F_limE alpha i:
 Proof. 
  move => Hlimit; rewrite /F_ F_lim_eqn.
  -  congr hF_; apply E0_eq_intro; cbn; by rewrite g2h_canon. 
- -  rewrite /hE0limit limitb_ref.
+ -  rewrite /hE0limit T1limit_ref.
    move: alpha Hlimit ;case => /= x Hx H'x;  by rewrite h2g_g2hK. 
 Qed.
 

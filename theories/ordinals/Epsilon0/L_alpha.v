@@ -53,7 +53,7 @@ Proof.
   intros; rewrite L__equation_1;  destruct (E0_eq_dec alpha E0zero).
   - subst; discriminate.
   - cbn; destruct (Utils.dec (E0limit alpha)) .
-    apply Succ_not_Limitb in H; destruct H; auto.
+    apply Succ_not_T1limit in H; destruct H; auto.
     now cbn.
 Qed.
 
@@ -200,7 +200,7 @@ Section L_correct_proof.
     unfold P; intros.
     apply L_spec_compat with (fun k =>  L_ (Canon alpha k) (S k)).
     -   generalize L_lim_ok; intro H1; unfold L_lim in H1.
-       assert (H2 : limitb (cnf alpha)) by (now destruct alpha). 
+       assert (H2 : T1limit (cnf alpha)) by (now destruct alpha). 
        specialize (H1 (cnf alpha) cnf_ok H2 (fun k i => L_ (Canon alpha k) i)).
        apply H1; intro k; specialize (H (Canon alpha  (S k))).
        assert  (H3: (Canon alpha (S k) o< alpha)%e0 ).

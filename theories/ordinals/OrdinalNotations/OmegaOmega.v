@@ -73,21 +73,21 @@ Module LO.
     | cons i n beta => limitb beta
     end.
 
-  Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
+  Lemma succb_ref (a:t): succb a -> T1is_succ (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
     - destruct a as [n n0]; now destruct n.
   Qed.
 
-  Lemma limitb_ref (a:t): limitb a -> T1.limitb (refine a).
+  Lemma limitb_ref (a:t): limitb a -> T1limit (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
     -  destruct a as [n n0].
        destruct n.
        + discriminate.
-       + simpl T1.limitb; destruct l. 
+       + simpl T1limit; destruct l. 
          * trivial.
          * intro H; rewrite IHl; case (refine (p::l)); auto.
   Qed.
