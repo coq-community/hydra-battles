@@ -159,13 +159,11 @@ Definition SubON_same_fun `{OA : @ON A ltA  compareA}
 
 Definition SubON_same_op `{OA : @ON A ltA compareA}
        `{OB : @ON B ltB  compareB}
-       {iota : A -> B} 
-       {alpha: B}
+       {iota : A -> B} {alpha: B}
        {_ : SubON OA OB alpha iota}
        (f : A -> A -> A)
        (g : B -> B -> B)
-  :=
-  forall x y,  iota (f x y) = g (iota x) (iota y).
+  := forall x y,  iota (f x y) = g (iota x) (iota y).
 
 (* end snippet SubONSameOp *)
 

@@ -99,8 +99,7 @@ Fixpoint T1is_succ alpha :=
     | cons zero _ _ => true
     | cons alpha n beta => T1is_succ beta
   end.
-#[deprecated(note="use T1is_succ")]
- Notation succb := T1is_succ (only parsing).
+
 
 
 Fixpoint T1limit alpha :=
@@ -111,9 +110,6 @@ Fixpoint T1limit alpha :=
     | cons alpha n beta => T1limit beta
   end.
 
-#[deprecated(note="use T1limit")]
-  Notation limitb := T1limit (only parsing).
-
 Compute T1limit T1omega.
 
 Compute T1limit 42.
@@ -123,6 +119,11 @@ Compute T1is_succ 42.
 Compute T1is_succ T1omega.
 
 (* end snippet succbLimitb *)
+#[deprecated(note="use T1is_succ")]
+  Notation succb := T1is_succ (only parsing).
+
+#[deprecated(note="use T1limit")]
+  Notation limitb := T1limit (only parsing).
 
 (** Exponential of base [omega] *)
 
@@ -559,13 +560,12 @@ Definition epsilon_0 : Ensemble T1 := nf.
 (** *** Successor *)
 
 (* begin snippet succDef *)
-
-Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with zero => T1nat 1
+Fixpoint succ (a: T1) : T1 :=
+  match a with
+  | zero => T1nat 1
   | cons zero n _ => cons zero (S n) zero
-  | cons beta n gamma => cons beta n (succ gamma)
+  | cons b n c => cons b n (succ c)
   end.
-
 (* end snippet succDef *)
 
 (** *** Predecessor (partial function *)
@@ -586,8 +586,8 @@ Fixpoint pred (c:T1) : option T1 :=
 (* begin snippet plusDef *)
 
 
-Fixpoint T1add (alpha beta : T1) :T1 :=
-  match alpha,beta with
+Fixpoint T1add (a b : T1) :T1 :=
+  match a, b with
   |  zero, y  => y
   |  x, zero  => x
   |  cons a n b, cons a' n' b' =>
@@ -603,13 +603,12 @@ where "alpha + beta" := (T1add alpha beta) : t1_scope.
 #[deprecated(note="use T1add")]
   Notation plus := T1add (only parsing).
 
-
 (** *** multiplication *)
 
 (* begin snippet multDef *)
 
-Fixpoint T1mul (alpha beta : T1) :T1 :=
-  match alpha,beta with
+Fixpoint T1mul (a b : T1) :T1 :=
+  match a, b with
   |  zero, _  => zero
   |  _, zero => zero
   |  cons zero n _, cons zero n' b' =>
@@ -619,7 +618,7 @@ Fixpoint T1mul (alpha beta : T1) :T1 :=
   |  cons a n b, cons a' n' b' =>
       cons (a + a') n' ((cons a n b) * b')
   end
-where "alpha * beta" := (T1mul alpha beta) : t1_scope.
+where "a * b" := (T1mul a b) : t1_scope.
 
 (* end snippet multDef *)
 #[deprecated(note="use T1mul")]
@@ -1598,9 +1597,8 @@ Module Direct_proof.
       Lemma wf_LT : forall alpha: T1,  nf alpha -> Acc LT alpha. 
       Proof.
         induction alpha as [| beta IHbeta n gamma IHgamma].
-        - split.
-          inversion 1.
-          destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
+        - split. intros y H0; inversion H0 as [_ [H3 _]];
+            destruct (not_lt_zero H3). 
         (*||*)
         (*|
 .. coq:: -.h#beta -.h#n -.h#gamma -.h#H 
@@ -1863,9 +1861,9 @@ Qed.
 
 (* begin snippet succIsPlusOne:: no-out *)
 
-Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
+Lemma succ_is_plus_one (a : T1) :  succ a = a + 1.
 Proof. 
-  induction alpha as [ |a IHa n b IHb]; [trivial |]. 
+  induction a as [ |a IHa n b IHb]; [trivial |]. 
   (* ... *)
   (* end snippet succIsPlusOne *)
    - destruct  a; cbn.
@@ -1876,21 +1874,21 @@ Qed.
 (* end snippet succIsPlusOnez *)
 
 Lemma succ_of_plus_finite :
-  forall alpha (H: nf alpha) (i:nat) , succ (alpha + i) = alpha + S i.
+  forall a (H: nf a) (i:nat) , succ (a + i) = a + S i.
 Proof.
-  induction  alpha; cbn.
+  induction  a; cbn.
   -  destruct i; reflexivity.
   -  destruct i.
      + simpl.
-       destruct alpha1.
+       destruct a1.
        * simpl; replace (n + 0)%nat with n.
          { auto. }
          { abstract lia. }
        * simpl; rewrite succ_is_plus_one; auto.
-     + simpl; destruct alpha1.
+     + simpl; destruct a1.
        * simpl; replace (S (n + i)) with (n + S i)%nat; auto.
-       *  simpl; assert (nf alpha2) by eauto with T1.
-          generalize  (IHalpha2 H0 (S i)).
+       *  simpl; assert (nf a2) by eauto with T1.
+          generalize  (IHa2 H0 (S i)).
           replace (T1nat (S i)) with (FS i); auto.
           replace (T1nat (S (S  i))) with (FS (S i)).
           {intro H1; now rewrite H1. }
@@ -2112,19 +2110,13 @@ Qed.
 
 (* begin snippet notMono:: no-out  *)
 
-Lemma plus_not_monotonous_l :
-  exists alpha beta gamma : T1,
-    alpha t1< beta /\ alpha + gamma = beta + gamma.
-Proof.
-  exists 3, 5, T1omega; now compute.
-Qed.
+Lemma T1add_not_monotonous_l :
+  exists a b c : T1, a t1< b /\ a + c = b + c.
+Proof. exists 3, 5, T1omega; now compute. Qed.
 
-Lemma mult_not_monotonous :
-  exists alpha beta gamma : T1,
-      alpha t1< beta /\ alpha * gamma = beta * gamma.
-Proof.
-  exists 3, 5, T1omega; now compute.
-Qed.
+Lemma T1mul_not_monotonous :
+  exists a b c : T1, c <> zero /\ a t1< b /\ a * c = b * c.
+Proof. exists 3, 5, T1omega; split; [discriminate| now compute]. Qed.
 (* end snippet notMono *)
 
 
