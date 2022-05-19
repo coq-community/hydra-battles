@@ -26,17 +26,17 @@ Open Scope t1_scope.
 (* begin snippet canonDef *)
 Fixpoint canon alpha (i:nat) : T1 :=
   match alpha with
-    zero => zero
+  | zero => zero
   | cons zero 0 zero  => zero
   | cons zero (S k) zero  => FS k
   | cons gamma 0 zero => (match T1.pred gamma with
                             Some gamma' =>
-                            match i with 0 => zero
-                                    |   S j => cons gamma' j zero
-                            end
-                          | None =>
-                            cons (canon gamma i) 0 zero
-                           end)
+                              match i with
+                              | 0 => zero
+                              | S j => cons gamma' j zero
+                              end
+                          | None => cons (canon gamma i) 0 zero
+                          end)
   
   |  cons gamma (S n) zero =>
      (match T1.pred gamma with
@@ -86,11 +86,9 @@ End Canon_examples.
 
 (* begin snippet canonS0 *)
 
-Definition  canonS alpha (i:nat) : T1 :=
-  canon alpha (S i).
+Definition  canonS alpha (i:nat) : T1 := canon alpha (S i).
 
-Definition  canon0 alpha  : T1 :=
-  canon alpha 0.
+Definition  canon0 alpha  : T1 := canon alpha 0.
 
 (* end snippet canonS0 *)
 
@@ -665,10 +663,8 @@ limit of its  own canonical sequence
 
 (*| .. coq:: no-out *)
 Lemma canonS_limit_strong lambda : 
-  nf lambda ->
-  T1limit lambda  ->
-  forall beta, beta t1< lambda ->
-               {i:nat | beta t1< canon lambda (S i)}.
+  nf lambda -> T1limit lambda  ->
+  forall beta, beta t1< lambda -> {i:nat | beta t1< canon lambda (S i)}.
 Proof.
   transfinite_induction lambda.
   (* ... *) (*||*) (*| .. coq:: none |*)

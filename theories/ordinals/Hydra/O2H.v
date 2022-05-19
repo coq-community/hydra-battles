@@ -18,19 +18,16 @@ Import Hydra_Definitions.
 
 (* begin snippet iotaDef *)
 
-Fixpoint iota (alpha : T1) : Hydra :=
-  match alpha with
+Fixpoint iota (a : T1) : Hydra :=
+  match a with
   | zero => head
-  | cons gamma n beta => node (hcons_mult (iota gamma) (S n)
-                                           (iotas beta))
+  | cons c n b => node (hcons_mult (iota c) (S n) (iotas b))
   end 
-with
-iotas (alpha : T1) :  Hydrae :=
-  match alpha with
-  | zero => hnil
-  | cons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
-                                       (iotas beta)
-  end.
+with iotas (a : T1) :  Hydrae :=
+       match a with
+       | zero => hnil
+       | cons a0 n b  => hcons_mult (iota a0) (S n) (iotas b)
+       end.
 (* end snippet iotaDef *)
 
 (**  We now prove  a lot of technical lemmas that relate Hydras and 
@@ -532,15 +529,14 @@ Qed.
 
 (* begin snippet canonSIota *)
 
-Lemma canonS_iota i alpha :
-    nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canon alpha (S i)). (* .no-out *)
+Lemma canonS_iota i a :
+  nf a -> a <> 0 -> iota a -1-> iota (canon a (S i)). (* .no-out *)
 (*| .. coq:: none |*)
-  Proof.
-    intros;  destruct (canonS_iota_i i alpha  H H0).
-    - exists 0; now left.
-    - exists i; now right.
-  Qed.
+Proof.
+  intros;  destruct (canonS_iota_i i a  H H0).
+  - exists 0; now left.
+  - exists i; now right.
+Qed.
   (*||*)
   (* end snippet canonSIota *)
   
@@ -631,9 +627,8 @@ Qed.
 
   (* begin snippet pathToRoundPlus *)
   
-  Lemma path_to_round_plus alpha s beta :
-    path_to beta s alpha -> nf alpha ->
-    iota alpha -+-> iota beta. (* .no-out *)
+  Lemma path_to_round_plus a s b :
+    path_to b s a -> nf a -> iota a -+-> iota b. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     intros H H0; apply path_to_path_toS in H.
@@ -657,8 +652,7 @@ Qed.
 
   (* begin snippet LTToRoundPlus *)
   
-  Lemma LT_to_round_plus alpha beta :
-    beta t1< alpha ->  iota alpha -+-> iota beta. (* .no-out *)
+  Lemma LT_to_round_plus a b : b t1< a ->  iota a -+-> iota b. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     intros H; apply acc_from_to_round_plus; eauto with T1.

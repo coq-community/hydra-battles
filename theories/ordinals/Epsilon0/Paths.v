@@ -57,15 +57,11 @@ associated with   the [canonS i] functions. In module [O2H] we show how pathes a
 (* begin snippet pathDef *)
 
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
-  path_to_1 : forall (i:nat) alpha , 
-    i <> 0 ->
-    transition i alpha beta ->
-    path_to beta (i::nil) alpha
+| path_to_1 : forall (i:nat) alpha , 
+    i <> 0 -> transition i alpha beta -> path_to beta (i::nil) alpha
 | path_to_cons : forall i alpha s gamma,
-    i <> 0 ->
-    transition i alpha gamma ->
-    path_to beta  s gamma ->
-    path_to beta  (i::s) alpha.
+    i <> 0 -> transition i alpha gamma ->
+    path_to beta  s gamma -> path_to beta  (i::s) alpha.
 
 Definition path alpha s beta := path_to beta s alpha.
 
@@ -206,9 +202,8 @@ Definition standard_pathS  i alpha j beta :=
 
 (* begin snippet standardPathR *)
 
-Inductive standard_path_to (j:nat)(beta : T1)
-  : nat -> T1 -> Prop :=
-  std_1 : forall i alpha,
+Inductive standard_path_to (j:nat)(beta : T1): nat -> T1 -> Prop :=
+| std_1 : forall i alpha,
     alpha <> zero ->
     beta = canon alpha i -> j = i -> i <> 0 ->
     standard_path_to j beta i  alpha
@@ -1273,11 +1268,9 @@ Qed.
 
 (*| .. coq:: no-out |*)
 Theorem KS_thm_2_4 (lambda : T1) :
-   nf lambda ->
-   T1limit lambda  ->
-   forall i j, (i < j)%nat ->
-               const_path 1 (canon lambda (S j))
-                             (canon lambda (S i)).
+  nf lambda -> T1limit lambda  ->
+  forall i j, (i < j)%nat ->
+              const_path 1 (canon lambda (S j)) (canon lambda (S i)).
 Proof.
   transfinite_induction lambda.
   (* ... *)

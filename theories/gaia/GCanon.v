@@ -92,8 +92,7 @@ Proof.
 Qed. 
 
 (* begin snippet gcanonLt:: no-out *)
-Lemma canon_lt  (i : nat) [a : T1]:
-   T1nf a -> a <> zero -> canon a i < a.
+Lemma canon_lt (i : nat) [a : T1]: T1nf a -> a <> zero -> canon a i < a.
 (* end snippet gcanonLt *)
 Proof. 
   case: i => [| n Hnf Hpos].  

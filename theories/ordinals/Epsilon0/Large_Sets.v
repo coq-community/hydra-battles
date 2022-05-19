@@ -452,9 +452,8 @@ Qed.
 (* begin snippet LOmegaOk:: no-out *)
 Lemma L_omega_ok : L_spec T1omega L_omega.
 Proof.
-  specialize
-    (L_lim_ok T1omega nf_omega refl_equal L_fin
-              (fun i => L_fin_ok (S i))); intro H.
+  pose (H:= L_lim_ok T1omega nf_omega refl_equal L_fin
+              (fun i => L_fin_ok (S i))).  
    eapply L_spec_compat with (1:=H); 
    intro ; unfold L_lim, L_fin, L_omega; abstract lia.
 Qed.
@@ -531,13 +530,12 @@ Qed.
 
 
 (* begin snippet LOmegaMultOk *)
-
 Lemma L_omega_mult_ok (i: nat) :
   L_spec (T1omega * i) (L_omega_mult i). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
  destruct i.
- - left;  intro k. reflexivity. 
+ - left; intro k; reflexivity. 
  - right.
    + cbn; discriminate.
    + intros k; unfold L_omega_mult, L_omega;
@@ -551,8 +549,7 @@ Qed.
 
 Lemma L_omega_mult_eqn (i : nat) :
   forall (k : nat),
-    (0 < k)%nat  ->
-    L_omega_mult i k = (exp2 i * S k - 1)%nat. (* .no-out *)
+    (0 < k)%nat  -> L_omega_mult i k = (exp2 i * S k - 1)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   induction i.

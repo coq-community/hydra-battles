@@ -21,14 +21,11 @@ Section Bounded.
           (Var : Hvariant  T1_wf B m)
           (Hy : BoundedVariant  Var mu).
 
-  Hypothesis m_decrease : forall  i h h',
-      round_n i h h'-> m h' t1< m h.
+  Hypothesis m_decrease : forall  i h h', round_n i h h'-> m h' t1< m h.
   (* end snippet theContext *)
   
   Lemma  nf_m : forall h, nf (m h).
-  Proof.
-    intro h0; now destruct (m_bounded h0).
-  Qed.
+  Proof. intro h0; now destruct (m_bounded h0). Qed.
 
   Local Hint Resolve Rem0 : hydra.
   
@@ -38,7 +35,6 @@ Section Bounded.
   Lemma mu_positive : mu <> T1.zero.
   Proof. 
     intro H; subst;  specialize (m_bounded (hyd1 head)).
-    
     intro H0;  destruct (not_LT_zero H0). 
   Qed.
 
@@ -92,14 +88,10 @@ Section Bounded.
  Definition small_h := iota beta_h.
 
  Lemma mu_beta_h : acc_from mu beta_h.
- Proof.
-   apply LT_acc_from,  m_bounded. 
- Qed.
+ Proof. apply LT_acc_from, m_bounded.  Qed.
  
  Corollary m_ge_generic : m big_h t1<= m small_h.
- Proof.      
-   apply m_ge_0, nf_m.
- Qed.
+ Proof. apply m_ge_0, nf_m. Qed.
 
 End Bounded.
 (* end snippet mGeGeneric *)
