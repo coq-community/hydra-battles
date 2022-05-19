@@ -398,7 +398,7 @@ Lemma Omega_as_lub  :
 
  (* begin snippet Incl *)
  
- #[ global] Instance Incl : SubON Omega Omega_plus_Omega omega fin. (* .no-out *)
+ #[global] Instance Incl : SubON Omega Omega_plus_Omega omega fin. (* .no-out *)
 
  (* end snippet Incl *)
  Proof.
