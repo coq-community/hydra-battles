@@ -1,8 +1,8 @@
 
 (* Robert Krebbers's trick  *)
 
-Require Import Div2.
 Require Import FunInd Recdef Wf_nat Lia.
+Import Nat.
 
 Function zero (n:nat)  {wf lt n} : nat :=
   match n with

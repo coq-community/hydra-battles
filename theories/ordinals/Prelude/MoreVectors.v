@@ -1,5 +1,6 @@
-Require Export Bool Arith Vector Max Lia.
-Import VectorNotations.
+Require Export Bool Arith Vector Lia.
+Import PeanoNat.Nat. 
+Import Vector VectorNotations.
 
 (** generalities on vectors *)
 
