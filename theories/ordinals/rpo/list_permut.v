@@ -98,8 +98,8 @@ Proof.
 unfold list_permut, meq; intros; apply sym_eq; trivial.
 Qed.
 
-Global Hint Immediate list_permut_refl : core.
-Global Hint Resolve list_permut_sym : core.
+#[global] Hint Immediate list_permut_refl : core.
+#[global] Hint Resolve list_permut_sym : core.
 
 (** Transitivity. *)
 Theorem list_permut_trans :

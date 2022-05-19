@@ -127,7 +127,7 @@ Section M_given.
  Context (M:EMonoid  E_op E_one E_eq).
 
 
-Global Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
+#[global] Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
 apply  Eop_proper.
 Qed.
 
@@ -143,7 +143,7 @@ Ltac monoid_simpl := repeat monoid_rw.
 
 Section About_power.
 
-Global Instance power_proper : Proper (equiv ==> eq ==> equiv) power.
+#[global] Instance power_proper : Proper (equiv ==> eq ==> equiv) power.
 Proof.
   intros x y Hxy n p Hnp;  subst p; induction n.
   - reflexivity.

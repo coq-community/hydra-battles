@@ -23,7 +23,7 @@ Proof.
   discriminate.
 Qed.
 
-Global Hint Resolve Pos_to_nat_neq_0 : chains.
+#[global] Hint Resolve Pos_to_nat_neq_0 : chains.
 
 
 (** ** Relationship with [nat] and [N] 
@@ -34,7 +34,7 @@ Proof. discriminate. Qed.
 Lemma Npos_gt_0 : forall p, (0 < N.pos p)%N.
 Proof. reflexivity. Qed.
 
-Global Hint Resolve Npos_diff_zero  Npos_gt_0 : chains.
+#[global] Hint Resolve Npos_diff_zero  Npos_gt_0 : chains.
 
 
 Lemma pos2N_inj_lt : forall n p, (n < p)%positive <-> (N.pos n < N.pos p)%N.
@@ -87,7 +87,7 @@ Proof.
  apply Pos2Nat.inj_le; apply pos_le_mul.
 Qed.
 
-Global Hint Resolve Pos2Nat_le_1_p : chains.
+#[global] Hint Resolve Pos2Nat_le_1_p : chains.
 
 (** ** Surjection from [N] into [positive] 
 *)
@@ -239,7 +239,7 @@ Proof.
  -  split; intros; now compute.
 Qed.
 
-Global Hint Resolve pos_gt_3 : chains.
+#[global] Hint Resolve pos_gt_3 : chains.
 
 (** ** Lemmas on Euclidean division 
     N.pos_div_eucl (a:positive) (b:N) : N * N 

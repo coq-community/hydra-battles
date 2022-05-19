@@ -47,7 +47,7 @@ Definition sort_correct  (f: list A -> list A) : Prop :=
 Definition equiv (x y : A) := R x  y /\ R y  x.
 
 
-Global Instance equiv_equiv (P: PreOrder R): Equivalence equiv.
+#[global] Instance equiv_equiv (P: PreOrder R): Equivalence equiv.
 Proof. 
 split.
 - intro x;split;reflexivity.
@@ -126,7 +126,7 @@ End R_given.
 
 
 Arguments LocallySorted {A} _ _.
-Global Hint Constructors LocallySorted : lists.
+#[global] Hint Constructors LocallySorted : lists.
 
 (** A sort must work on any decidable total pre-order *)
 

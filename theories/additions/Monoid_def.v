@@ -178,9 +178,9 @@ Every instance of class  [Monoid] can be transformed into an instance of
 *)
 
 (* begin snippet Coerciona:: no-out  *)
-Global Instance eq_equiv {A} : Equiv A := eq.
+#[global] Instance eq_equiv {A} : Equiv A := eq.
 
-Global Instance Monoid_EMonoid `(M:@Monoid A op one) :
+#[global] Instance Monoid_EMonoid `(M:@Monoid A op one) :
         EMonoid  op one eq_equiv.
 Proof.
 split; unfold eq_equiv, equiv in *.

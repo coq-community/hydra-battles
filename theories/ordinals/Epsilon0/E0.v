@@ -345,7 +345,7 @@ Proof.
 Defined.
 (* end snippet E0LtWf *)
 
-Global Hint Resolve E0lt_wf : E0.
+#[global] Hint Resolve E0lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> E0succ beta o<= alpha.
 Proof.
@@ -397,14 +397,14 @@ Proof.
     apply LT_succ;auto.
 Qed.
 
-Global Hint Resolve E0pred_Lt : E0.
+#[global] Hint Resolve E0pred_Lt : E0.
 
 
 Lemma Succ_Succb (alpha : E0) : E0is_succ (E0succ alpha).
 destruct alpha; unfold E0is_succ, E0succ; cbn; apply T1.succ_is_succ.
 Qed.
 
-Global Hint Resolve Succ_Succb : E0.
+#[global] Hint Resolve Succ_Succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -451,7 +451,8 @@ Proof.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
-Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_T1limit : E0.
+#[global]
+  Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_T1limit : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
                                        E0succ beta o<= alpha.

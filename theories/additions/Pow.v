@@ -140,7 +140,7 @@ Section M_given.
           (M:EMonoid  E_op E_one E_eq).
 (* end snippet MGiven *)
 
-Global Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
+#[global] Instance Eop_proper : Proper (equiv ==> equiv ==> equiv) E_op.
 Proof.
   apply  Eop_proper.
 Qed.
@@ -157,7 +157,7 @@ Ltac monoid_simpl := repeat monoid_rw.
 (* *** Properties of the classical exponentiation  *)
 
 (* begin snippet powerProper:: no-out *)
-Global Instance power_proper :
+#[global] Instance power_proper :
   Proper (equiv ==> eq ==> equiv) power.
 (* end snippet powerProper *)
 Proof.
@@ -284,7 +284,7 @@ Proof.
     now monoid_rw.
 Qed.
 
-Global Instance Pos_bpow_proper :
+#[global] Instance Pos_bpow_proper :
   Proper  (equiv ==> eq ==> equiv) Pos_bpow.
 Proof.
   intros x y Hxy n p Hnp. subst n. revert  x y Hxy.

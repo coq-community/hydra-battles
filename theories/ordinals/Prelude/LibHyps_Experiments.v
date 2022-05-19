@@ -5,7 +5,7 @@ Require Export MoreLibHyps.
 
 Require Import List.
 Import ListNotations. 
-Local Open Scope autonaming_scope.
+#[local] Open Scope autonaming_scope.
 
 Ltac rename_hyp n th ::= rename_short n th.
 

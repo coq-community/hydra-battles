@@ -109,7 +109,7 @@ Inductive lex_prod (p p':A*B): Prop :=
 Notation "x '<=lex' y" := (lex_prod x y) (at level 70, no associativity).
 Notation "x '<lex' y" := (@lt (A*B)  lex_prod _ x y) (at level 70, no associativity).
 
- Global Instance PO_lex_prod : PreOrder lex_prod.
+ #[global] Instance PO_lex_prod : PreOrder lex_prod.
  Proof.
  split.
  -   intro x; right;  reflexivity.
@@ -179,7 +179,7 @@ Proof.
   apply (lex_inv_left _ _ _ _ H0).
 Qed.
 
-Global Instance To_lex_prod : TotalPreOrder lex_prod.
+#[global] Instance To_lex_prod : TotalPreOrder lex_prod.
 Proof.
   split.
   - apply PO_lex_prod.
@@ -199,7 +199,7 @@ Proof.
         { left;  right;[ now symmetry | assumption]. }
 Qed.
 
-Global Instance lex_prod_dec : RelDecision lex_prod.
+#[global] Instance lex_prod_dec : RelDecision lex_prod.
 Proof.
 intros x y; destruct x, y.
 destruct (decide (leA a a0)) as [HAle|Hale].

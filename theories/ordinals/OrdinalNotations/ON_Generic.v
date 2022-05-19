@@ -14,7 +14,7 @@ Require Export Comparable.
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.
-Local Open Scope ON_scope.
+#[local] Open Scope ON_scope.
 
 (**
   Ordinal notation system on type [A] :
@@ -77,7 +77,7 @@ Infix "o?=" := ON_compare (at level 70) : ON_scope.
 
 (* end snippet ONDefsb *)
 
-Global Hint Resolve wf_measure : core.
+#[global] Hint Resolve wf_measure : core.
 
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)

@@ -27,7 +27,7 @@ Section Bounded.
   Lemma  nf_m : forall h, nf (m h).
   Proof. intro h0; now destruct (m_bounded h0). Qed.
 
-  Local Hint Resolve Rem0 : hydra.
+  #[local] Hint Resolve Rem0 : hydra.
   
 
 

@@ -290,7 +290,7 @@ Qed.
 Theorem not_lt_zero alpha : ~ lt alpha  zero.
 Proof.  destruct alpha; compute; discriminate. Qed.
 
-Global Hint Resolve not_lt_zero : T1.
+#[global] Hint Resolve not_lt_zero : T1.
 
 Lemma compare_lt_impl a b :
   compare a b = Lt -> lt a b.
@@ -690,7 +690,7 @@ Qed.
 Lemma zero_lt : forall alpha n beta, lt zero (cons alpha n beta).
 Proof. reflexivity. Qed. 
 
-Global Hint Resolve zero_lt head_lt coeff_lt tail_lt : T1.
+#[global] Hint Resolve zero_lt head_lt coeff_lt tail_lt : T1.
 
 Open Scope t1_scope.
 
@@ -721,7 +721,7 @@ Proof.
     destruct b'2; intro H; now rewrite H.
 Qed.
 
-Global Hint Resolve zero_nf single_nf cons_nf: T1.
+#[global] Hint Resolve zero_nf single_nf cons_nf: T1.
 
 
 Lemma nf_inv1 :
@@ -834,7 +834,7 @@ Inductive nf_helper : T1 -> T1 -> Prop :=
                   nf_helper (cons alpha' n' beta') alpha.
 
 
-Global Hint Constructors nf_helper : T1.
+#[global] Hint Constructors nf_helper : T1.
 
 
 (* A tactic for decomposing a non zero ordinal *)
@@ -1032,7 +1032,7 @@ Proof.
 Qed.
 
 
-Global Hint Resolve zero_le le_tail : T1.
+#[global] Hint Resolve zero_le le_tail : T1.
 
 Theorem le_phi0 :
   forall a n b, leq lt  (phi0 a) (cons a n b).
@@ -1319,7 +1319,7 @@ Proof. now  destruct 1. Qed.
 Lemma LE_le alpha beta : alpha t1<= beta -> leq lt  alpha beta.
 Proof. now destruct 1. Qed.
 
-Global Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
+#[global] Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
 
 Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero t1< alpha.
 Proof.
@@ -1394,7 +1394,7 @@ Lemma LT4 : forall alpha  n  beta beta',
     cons alpha n beta t1< cons alpha n beta'.
 Proof.   repeat split; auto; apply tail_lt.  destruct H1; tauto. Qed.
 
-Global Hint Resolve LT1 LT2 LT3 LT4: T1.
+#[global] Hint Resolve LT1 LT2 LT3 LT4: T1.
 
 
 Lemma LT_irrefl (alpha : T1) :
@@ -1443,9 +1443,9 @@ Proof.
   intros; apply cons_nf; auto; destruct H;tauto.
 Qed.
 
-Global Hint Resolve nf_cons_LT: T1.
+#[global] Hint Resolve nf_cons_LT: T1.
 
-Global Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
+#[global] Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
 
 Lemma head_LT_cons :
   forall alpha n beta,
@@ -1578,7 +1578,7 @@ Qed.
 
 Module Direct_proof.
   Section well_foundedness_proof.
-    Local Hint Unfold restrict LT: T1.
+    #[local] Hint Unfold restrict LT: T1.
 
     Lemma Acc_zero : Acc LT  zero.
     Proof.
@@ -2745,7 +2745,7 @@ Proof. compute; auto with T1. Qed.
 
 
 
-Global Hint Resolve nf_phi0 : T1.
+#[global] Hint Resolve nf_phi0 : T1.
 
 Definition omega_omega := phi0 T1omega.
 
@@ -3568,7 +3568,7 @@ Proof.
 Qed.
 
 
-Global Hint Resolve T1limit_not_zero : T1.
+#[global] Hint Resolve T1limit_not_zero : T1.
 
 
 Lemma T1limit_succ_tail :

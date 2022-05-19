@@ -1104,7 +1104,8 @@ Proof.
   simpl;   apply T1limit_canonS_not_zero; auto.
 Qed.
 
-Global Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
+#[global]
+  Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
 Lemma CanonS_phi0_Succ alpha i : CanonS (E0phi0 (E0succ alpha)) i =
                                  Omega_term alpha i.

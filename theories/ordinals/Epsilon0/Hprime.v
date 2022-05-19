@@ -599,7 +599,7 @@ Section Proof_of_Abstract_Properties.
       - apply Succ_Succb.
     Qed.
 
-    Local Hint Resolve PD_Zero PA_Zero : E0.
+    #[local] Hint Resolve PD_Zero PA_Zero : E0.
 
     Lemma PC_Zero :  H'_ E0zero <<= H'_ (E0succ E0zero).
     Proof.
@@ -608,7 +608,7 @@ Section Proof_of_Abstract_Properties.
       rewrite E0pred_of_Succ, H'_eq1; auto with arith.
     Qed. 
 
-    Local Hint Resolve  PC_Zero : core.
+    #[local] Hint Resolve  PC_Zero : core.
 
     Lemma PZero : P E0zero.
     Proof. 

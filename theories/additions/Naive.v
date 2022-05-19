@@ -64,7 +64,7 @@ is still of type [nat].
 *)
 
 Module N_mod.
-Local Open Scope N_scope.
+#[local] Open Scope N_scope.
 
 Section m_fixed.
 

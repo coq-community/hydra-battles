@@ -467,7 +467,7 @@ Section Comparable.
 
 End Comparable.
 
-Local Ltac compare_trans H1 H2 intropattern :=
+#[local] Ltac compare_trans H1 H2 intropattern :=
   lazymatch type of (H1, H2) with
   | ((?compare ?a ?b = ?comp_res) * (?compare ?b ?c = ?comp_res))%type =>
     assert (compare a c = comp_res) as intropattern by

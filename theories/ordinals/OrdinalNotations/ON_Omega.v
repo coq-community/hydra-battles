@@ -47,9 +47,8 @@ Defined.
 
 
 
-Global Instance FinOrd_Omega (i:nat) :
-  SubON (FinOrd i) Omega i 
-             (fun alpha =>  proj1_sig alpha).
+#[global] Instance FinOrd_Omega (i:nat) :
+  SubON (FinOrd i) Omega i (fun alpha =>  proj1_sig alpha).
 Proof.
   split.
   - reflexivity.
