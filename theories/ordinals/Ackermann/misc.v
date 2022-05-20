@@ -1,6 +1,6 @@
 Require Import Eqdep_dec.
 
-Global Set Asymmetric Patterns.
+#[global] Set Asymmetric Patterns.
 
 Lemma inj_right_pair2 :
  forall A : Set,

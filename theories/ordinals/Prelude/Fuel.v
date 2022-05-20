@@ -1,13 +1,12 @@
 
 (* Robert Krebbers's trick  *)
 
-Require Import Div2.
 Require Import FunInd Recdef Wf_nat Lia.
 
 Function zero (n:nat)  {wf lt n} : nat :=
   match n with
     0 => 0
-  | p => zero (div2 p)
+  | p => zero (Nat.div2 p)
   end.
 Proof.
   intros; apply PeanoNat.Nat.lt_div2; auto with arith.
@@ -35,7 +34,7 @@ Qed.
   Function zero (n:nat)  {wf lt n} : nat :=
     match n with
       0 => 0
-    | p => zero (div2 p)
+    | p => zero (Nat.div2 p)
     end.
   Proof.
     intros;  apply PeanoNat.Nat.lt_div2; auto with arith.
@@ -71,7 +70,7 @@ Compute Acc_intro_generator 2 lt_wf  42.
 Function zero' (n:nat)  {wf lt n} : nat :=
   match n with
     0 => 0
-  | p => zero' (div2 p)
+  | p => zero' (Nat.div2 p)
   end.
 Proof.
   intros; apply PeanoNat.Nat.lt_div2;  auto with arith.

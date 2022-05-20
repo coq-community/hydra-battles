@@ -1,4 +1,4 @@
-From LibHyps Require Export LibHyps.
+From LibHyps Require Import LibHyps.
 
 Require Import List.
 Import ListNotations. 

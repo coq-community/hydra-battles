@@ -119,8 +119,8 @@ Qed.
 
 (* end snippet succLemmas *)
 
-Global Hint Constructors clos_refl lexico : O2.
-Global Hint Unfold lt le : O2.
+#[global] Hint Constructors clos_refl lexico : O2.
+#[global] Hint Unfold lt le : O2.
 
 
 
@@ -567,7 +567,7 @@ Section Merge.
 
   Variable A: Type.
 
-  Local Definition m (p : list A * list A) :=
+  #[local] Definition m (p : list A * list A) :=
     omega * length (fst p) + length (snd p).
 
   Function  merge  (ltb: A -> A -> bool)
@@ -583,9 +583,10 @@ Section Merge.
     end.
   (* ... *)
 (* end snippet Merge *) 
-  
-  - intros; unfold m, measure_lt; cbn; destruct xs0; simpl; left; abstract lia.
-  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right; abstract lia.
+  - intros; unfold m, measure_lt; cbn; destruct xs0 ;simpl;left;
+      abstract lia.
+  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right;
+      abstract lia.
   - apply wf_measure. 
   Defined.
 

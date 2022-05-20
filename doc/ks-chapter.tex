@@ -31,7 +31,7 @@ The same impossibility holds even if we consider only standard battles (with the
 \end{quote}
 
 Our proofs are  constructive and require no axioms: they are  closed terms of the CIC, and are mainly composed on function definitions and proofs of properties of these functions. 
-They  share much theoretical material with Kirby and Paris', although they do not use any knowledge about Peano arithmetic nor model  theory.  The combinatorial arguments we use and implement
+They  borrow much theoretical material from Kirby and Paris, although they do not use any knowledge about Peano arithmetic nor about model  theory.  The combinatorial arguments we use and implement
 come from 
  an article by J.~Ketonen and R.~Solovay~\cite{KS81}, already  cited in the work
  by L.~Kirby and J.~Paris. % on the termination of Goodstein sequences and hydra battles~\cite{KP82}.
@@ -49,31 +49,33 @@ Canonical sequences are functions that associate an ordinal $\canonseq{\alpha}{i
 
 \index{maths}{Transfinite induction}
 \begin{itemize}
-\item If $\alpha\not=0$, then $\canonseq{\alpha}{i}<\alpha$. Thus canonical sequences can be used for proofs by transfinite induction or function definition by transfinite recursion
+\item If $\alpha\not=0$, then $\canonseq{\alpha}{i}<\alpha$. Thus canonical sequences can be used in proofs by transfinite induction or function definition by transfinite recursion
 \item If $\lambda$ is a limit ordinal, then $\lambda$ is the least upper bound of the set 
 $\{\canonseq{\lambda}{i}\;|\,i\in\mathbb{N}_1\}$
 
 
 \item If $\beta<\alpha<\epsilon_0$, then there is a ``path'' from $\alpha$ to $\beta$, \emph{i.e.} a
 sequence $\alpha_0=\alpha, \alpha_1, \dots, \alpha_n=\beta$, where for every $k<n$, there exists some $i_k$ such that $\alpha_{k+1}=\canonseq{\alpha_k}{i_k}$
-\item Canonical sequences correspond tightly to rounds of hydra battles: if $\alpha\not=0$,
-then $\iota(\alpha)$ is transformed into $\iota(\canonseq{\alpha}{i+1})$ in one round with
-the replication factor $i$ (Lemma \href{../theories/html/hydras.Hydra.O2H.html\#canonS_iota_i}{Hydra.O2H.canonS\_iota\_i}).
-\item From the two previous properties, we infer that whenever $\beta<\alpha<\epsilon_0$, there exists a (free) battle from $\iota(\alpha)$ to $\iota(\beta)$.
 \end{itemize}
 
 \begin{remark}
-  In~\cite{KS81}, canonical sequences are defined for any ordinal $\alpha <\epsilon_0$,
+  Canonical sequences are defined for any ordinal $\alpha <\epsilon_0$,
 by stating that if $\alpha$ is a successor ordinal $\beta+1$,  the sequence associated with 
 $\alpha$ is simply the constant sequence whose terms are equal to $\beta$.
 Likewise, the canonical sequence of $0$ maps any natural number to $0$.
 
-This convention allows us to make total the function that maps any ordinal $\alpha$ and natural number $i$ to the ordinal $\canonseq{\alpha}{i}$.
-
+Thus, the function that maps any ordinal $\alpha$ and natural number $i$ to the ordinal $\canonseq{\alpha}{i}$ is total.
 \end{remark}
 
+\subsection{Canonical sequences and hydra battles}
 
-First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs\footnote{With a small difference: the $0$-th term of the canonical sequence is not the same in our development as in~\cite{KS81}.}.
+Canonical sequences correspond tightly to rounds of hydra battles: if $\alpha\not=0$,
+then $\iota(\alpha)$ is transformed into $\iota(\canonseq{\alpha}{i+1})$ in one round with
+the replication factor $i$ (Lemma \href{../theories/html/hydras.Hydra.O2H.html\#canonS_iota_i}{Hydra.O2H.canonS\_iota\_i}).
+Thus, whenever $\beta<\alpha<\epsilon_0$, there exists a (free) battle from $\iota(\alpha)$ to $\iota(\beta)$.
+
+\subsection{Definitions}
+First, let us recall how canonical sequences are defined in~\cite{KS81}. For efficiency's sake, we decided not to implement directly K.\&S's definitions, but to define in \gallina{} simply typed structurally recursive functions which share the abstract properties which are used in the mathematical proofs.
 
 
 
@@ -125,8 +127,10 @@ uses plain structural recursion over the type \coqsimple{T1}. Thus, tactics like
 
 \input{movies/snippets/Canon/canonDef}
 
-\paragraph*{\gaiasign} Our library~\href{../theories/html/gaia_hydras.GCanon.html}{gaia\_hydras.GCanon} transposes the  function \texttt{canon} into \gaia's type \texttt{T1}
-(please see Sect.\~ref{sect:gcanon}).
+\paragraph*{\gaiasign}
+The translation of \texttt{canon} compatible with \gaia's data-types is
+defined in ~\href{../theories/html/gaia_hydras.GCanon.html\#canon}{gaia\_hydras.GCanon} (please see Sect.~\ref{sect:gcanon}).
+
 \index{gaiabridge}{Canonical sequences}
 \paragraph*{Remark}
 In the present state of this library, the following specializations of \texttt{canon} are still used in some proofs or lemma statements. They are planned to be deprecated.
@@ -195,8 +199,7 @@ is the limit of the sequence $\canonseq{\lambda}{i}\;(1\le i)$.
 \label{lemma:canonS-limit}
 
 
-Note the use of \coq's \texttt{sig} type in the theorem's statement, which
-relates the boolean function \texttt{limitb} defined on the \texttt{T1} data-type with a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
+Note the use of \coq's \texttt{sig} type in the theorem's statement, which expresses a constructive view of the limit of a sequence: for any $\beta<\lambda$, we can compute an item of the canonical sequence of $\lambda$ which is greater than $\beta$.
 We can also state directly that $\lambda$ is a (strict) least upper bound of the elements of its canonical sequence.
 
 \input{movies/snippets/Canon/canonSLimitLub}
@@ -232,7 +235,8 @@ to \texttt{nat} is available on \href{../theories/html/hydras.Prelude.Fuel.html}
 \label{sect:pathes-intro}
 
 Let us consider a kind of accessibility problem inside $\epsilon_0$: given two ordinals $\alpha$ and $\beta$, where $\beta<\alpha<\epsilon_0$, find a \emph{path} consisting of a finite sequence $\gamma_0=\alpha,\dots,\gamma_l=\beta$,
-where, for every $i<l$, $\gamma_i \not= 0$ \footnote{This condition allows us to ignore paths which end by a lot of useless $0$s.} and there exists some strictly positive integer $s_i$
+where, for every $i<l$, $\gamma_i \not= 0$
+and there exists some strictly positive integer $s_i$
 such that $\gamma_{i+1}=\canonseq{\gamma}{s_i}$.
 
 Let $s$ be the sequence $\langle s_0,s_1,\dots, s_{l-1} \rangle$. We describe the
@@ -247,15 +251,15 @@ path $\langle\omega\times 2, \omega+2,\omega+1,\omega,4,3\rangle$.
   
 
 Note that, given $\alpha$ and $\beta$, where $\beta < \alpha$, the sequence $s$ which leads from $\alpha$ to $\beta$ is not unique.
-Indeed, if $\alpha$ is a limit ordinal, the first element of $s$ can be any integer $i$ such that $\beta<\canonseq{\alpha}{i}$, and if $\alpha$ is a successor ordinal,
-then the sequence $s$ can start with any positive integer.
 
 
-For instance, we have also 
-$\omega*2 \xrightarrow[3,4,5,6]{}\omega$. 
+
+For instance, we have 
+$\omega\times 2 \xrightarrow[2]{}\omega$ and
+$\omega\times 2 \xrightarrow[3,4,5,6]{}\omega$. 
 Likewise,
-$\omega*2 \xrightarrow[1,2,1,4]{} 0$ and
-$\omega*2 \xrightarrow[3,3,3,3,3,3,3,3]{} 0$.
+$\omega\times 2 \xrightarrow[1,2,1,4]{} 0$ and
+$\omega\times 2 \xrightarrow[3,3,3,3,3,3,3,3]{} 0$.
 \end{remark}
 
 \subsection{Formal definition}
@@ -285,7 +289,7 @@ In the present version of our library, we use a variant \texttt{path\_toS} of
 \paragraph*{\gaiasign}
 
 The library~\href{../theories/html/gaia_hydras.GPaths.html}{gaia\_hydras.GPaths} transposes the  notion of path into \gaia's type \texttt{T1}
-(please see Sect.\~ref{sect:gpath}).
+(please see Sect.~\ref{sect:gpath}).
 
 
 \index{hydras}{Exercises}
@@ -312,7 +316,7 @@ one can build a path from $\alpha$ to $\beta$ (in other terms, $\beta$ is access
 
 
 \noindent 
-From the lemma \texttt{canon\_LT}~\vref{lemma:canon_LT}, we can convert any path into an inequality on ordinals (by induction on paths).
+By the lemma \texttt{canon\_LT}~(Sct.\vref{lemma:canon_LT}), we can convert any path into an inequality on ordinals (by induction on paths).
 
 \input{movies/snippets/Paths/pathToLT}
 
@@ -532,12 +536,13 @@ the proposition  $\exists j, i<j \wedge \alpha \xrightarrow[i,j]{} \beta$.
 
 
 
-Our goal is now  to transform any inequality $\beta<\alpha<\epsilon_0$ into a standard path $\alpha \xrightarrow[i,j]{} \beta$ for some $i$ and $j$, then into a standard battle
-from $\iota(\alpha+i)$ to $\iota(\beta)$. 
+Our goal is now  to transform any inequality $\beta<\alpha<\epsilon_0$ into a standard path $\alpha \xrightarrow[i,j]{} \beta$ for some $i$ and $j$, which corresponds to a standard battle
+from $\iota(\alpha)$ (at time $i$)  to $\iota(\beta)$
+(at time $j$) .
 Following~\cite{KS81}, we proceed in two stages:
 \begin{enumerate}
 \item we simulate plain (free) paths from $\alpha$ to $\beta$ with
-paths made of steps $(\gamma,\canonseq{\gamma}{n})$, \emph{with the same $n$ all along the path}
+paths made of steps $(\gamma,\canonseq{\gamma}{n})$, \emph{with the same $n$ all along the path}.
 \item we simulate any such path by a standard path.
 \end{enumerate}
 

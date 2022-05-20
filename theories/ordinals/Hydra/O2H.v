@@ -18,19 +18,16 @@ Import Hydra_Definitions.
 
 (* begin snippet iotaDef *)
 
-Fixpoint iota (alpha : T1) : Hydra :=
-  match alpha with
+Fixpoint iota (a : T1) : Hydra :=
+  match a with
   | zero => head
-  | cons gamma n beta => node (hcons_mult (iota gamma) (S n)
-                                           (iotas beta))
+  | cons c n b => node (hcons_mult (iota c) (S n) (iotas b))
   end 
-with
-iotas (alpha : T1) :  Hydrae :=
-  match alpha with
-  | zero => hnil
-  | cons alpha0 n beta  => hcons_mult (iota alpha0) (S n)
-                                       (iotas beta)
-  end.
+with iotas (a : T1) :  Hydrae :=
+       match a with
+       | zero => hnil
+       | cons a0 n b  => hcons_mult (iota a0) (S n) (iotas b)
+       end.
 (* end snippet iotaDef *)
 
 (**  We now prove  a lot of technical lemmas that relate Hydras and 
@@ -95,7 +92,7 @@ Proof.
 Qed.
 
 Lemma iota_rw1 :
-  forall i alpha,  nf alpha -> limitb alpha = true ->
+  forall i alpha,  nf alpha -> T1limit alpha = true ->
                    iota (canonS (cons alpha 0 zero) i) =
                    hyd1 (iota (canonS alpha i)).
 Proof.                        
@@ -103,7 +100,7 @@ Proof.
 Qed.
 
 Lemma iota_rw2 :
-  forall i n alpha,  nf alpha -> limitb alpha = true ->
+  forall i n alpha,  nf alpha -> T1limit alpha = true ->
                      iota (canonS (cons alpha (S n) zero) i) =
                      node (hcons_mult (iota alpha) (S n) 
                                       (hcons
@@ -188,12 +185,12 @@ Proof.
   inversion 1;   eapply S0_mem_head; eauto.
 Qed.
 
-Lemma limit_no_head : forall alpha, nf alpha -> limitb alpha = true ->
+Lemma limit_no_head : forall alpha, nf alpha -> T1limit alpha = true ->
                                     ~ mem_head (iotas alpha).
 Proof. 
   induction alpha.
   - discriminate.
-  - intros; simpl;  destruct (limitb_cases H).
+  - intros; simpl;  destruct (T1limit_cases H).
     +  auto.
     +  destruct a;  subst; intro H2;  inversion H2.
        destruct alpha1.
@@ -219,7 +216,7 @@ Qed.
 
 
 Lemma limit_no_R1 : forall alpha, nf alpha ->
-                                  limitb alpha = true ->
+                                  T1limit alpha = true ->
                                   forall h', ~ R1 (iota alpha) h'.
 Proof.
   intros alpha H H0 h' H1; generalize ( limit_no_head _ H H0).
@@ -275,13 +272,13 @@ Section DS_iota.
   
   Lemma DS_iota_2 : forall lambda,
       nf lambda -> alpha = T1.phi0 lambda ->
-      limitb lambda ->
+      T1limit lambda ->
       round_n i (iota alpha) (iota (canonS alpha i)).                             
   Proof. 
     intros;subst alpha.
     repeat rewrite iota_phi0; trivial.
     assert (nz : lambda <> zero).
-    { eapply limitb_not_zero; eauto. }
+    { eapply T1limit_not_zero; eauto. }
     right;  specialize (Hrec lambda nz (head_LT_cons  Halpha)).
     (* unfold T1.phi0; *) rewrite iota_rw1; trivial.
     right; left;  destruct (Hrec (canonS lambda i)); auto.
@@ -305,7 +302,7 @@ Section DS_iota.
   Section Proof_case_4.
     Variable lambda: T1.
     Hypothesis Hlambda : nf lambda.
-    Hypothesis Hlim : limitb lambda.
+    Hypothesis Hlim : T1limit lambda.
     Variable n : nat.
     Hypothesis Hn : alpha = cons lambda (S n) zero.
 
@@ -322,7 +319,7 @@ Section DS_iota.
       left;  specialize (Hrec lambda).
       assert (lambda t1< cons lambda (S n) zero)%t1.
       {  apply head_LT_cons; auto with T1. }
-      specialize (Hrec (limitb_not_zero Hlambda Hlim)
+      specialize (Hrec (T1limit_not_zero Hlambda Hlim)
                        H  (canonS lambda i) (refl_equal _)).
       destruct Hrec; [| trivial];
         elimtype False;
@@ -532,15 +529,14 @@ Qed.
 
 (* begin snippet canonSIota *)
 
-Lemma canonS_iota i alpha :
-    nf alpha -> alpha <> 0 ->
-    iota alpha -1-> iota (canon alpha (S i)). (* .no-out *)
+Lemma canonS_iota i a :
+  nf a -> a <> 0 -> iota a -1-> iota (canon a (S i)). (* .no-out *)
 (*| .. coq:: none |*)
-  Proof.
-    intros;  destruct (canonS_iota_i i alpha  H H0).
-    - exists 0; now left.
-    - exists i; now right.
-  Qed.
+Proof.
+  intros;  destruct (canonS_iota_i i a  H H0).
+  - exists 0; now left.
+  - exists i; now right.
+Qed.
   (*||*)
   (* end snippet canonSIota *)
   
@@ -631,9 +627,8 @@ Qed.
 
   (* begin snippet pathToRoundPlus *)
   
-  Lemma path_to_round_plus alpha s beta :
-    path_to beta s alpha -> nf alpha ->
-    iota alpha -+-> iota beta. (* .no-out *)
+  Lemma path_to_round_plus a s b :
+    path_to b s a -> nf a -> iota a -+-> iota b. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     intros H H0; apply path_to_path_toS in H.
@@ -657,8 +652,7 @@ Qed.
 
   (* begin snippet LTToRoundPlus *)
   
-  Lemma LT_to_round_plus alpha beta :
-    beta t1< alpha ->  iota alpha -+-> iota beta. (* .no-out *)
+  Lemma LT_to_round_plus a b : b t1< a ->  iota a -+-> iota b. (* .no-out *)
   (*| .. coq:: none |*)
   Proof.
     intros H; apply acc_from_to_round_plus; eauto with T1.

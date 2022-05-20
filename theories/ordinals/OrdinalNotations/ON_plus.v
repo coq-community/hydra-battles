@@ -42,8 +42,8 @@ fun (alpha beta: t) =>
 
 Definition le := clos_refl _ lt.
 
-Local Hint Unfold lt le : core.
-Local Hint Constructors le_AsB: core.
+#[local] Hint Unfold lt le : core.
+#[local] Hint Constructors le_AsB: core.
 
 Instance lt_strorder : StrictOrder lt.
 Proof.

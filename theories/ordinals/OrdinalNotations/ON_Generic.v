@@ -14,7 +14,7 @@ Require Export Comparable.
 Generalizable All Variables.
 Declare Scope ON_scope.
 Delimit Scope ON_scope with on.
-Local Open Scope ON_scope.
+#[local] Open Scope ON_scope.
 
 (**
   Ordinal notation system on type [A] :
@@ -77,7 +77,7 @@ Infix "o?=" := ON_compare (at level 70) : ON_scope.
 
 (* end snippet ONDefsb *)
 
-Global Hint Resolve wf_measure : core.
+#[global] Hint Resolve wf_measure : core.
 
 (** The segment associated with nA is isomorphic to
     the segment of ordinals strictly less than b *)
@@ -87,10 +87,9 @@ Global Hint Resolve wf_measure : core.
 Class  SubON 
        `(OA: @ON A ltA compareA)
        `(OB: @ON B ltB compareB)
-       (alpha:  B)
-       (iota: A -> B):=
+       (alpha:  B) (iota: A -> B):=
   {
-  SubON_compare: forall x y : A,
+    SubON_compare: forall x y : A,
       compareB (iota x) (iota y) = compareA x y;
   SubON_incl : forall x, ltB (iota x) alpha;
   SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
@@ -104,11 +103,10 @@ Class  SubON
 Class  ON_Iso 
        `(OA : @ON A ltA compareA)
        `(OB : @ON B ltB compareB)
-       (f : A -> B)
-       (g : B -> A):=
+       (f : A -> B) (g : B -> A):=
   {
-  iso_compare :forall x y : A,  compareB (f x) (f y) =
-                                compareA x y;
+    iso_compare :forall x y : A,
+      compareB (f x) (f y) = compareA x y;
   iso_inv1 : forall a, g (f a)= a;
   iso_inv2 : forall b, f (g b) = b
   }.
@@ -161,13 +159,11 @@ Definition SubON_same_fun `{OA : @ON A ltA  compareA}
 
 Definition SubON_same_op `{OA : @ON A ltA compareA}
        `{OB : @ON B ltB  compareB}
-       {iota : A -> B} 
-       {alpha: B}
+       {iota : A -> B} {alpha: B}
        {_ : SubON OA OB alpha iota}
        (f : A -> A -> A)
        (g : B -> B -> B)
-  :=
-  forall x y,  iota (f x y) = g (iota x) (iota y).
+  := forall x y,  iota (f x y) = g (iota x) (iota y).
 
 (* end snippet SubONSameOp *)
 

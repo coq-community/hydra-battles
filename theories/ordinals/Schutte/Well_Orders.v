@@ -13,7 +13,7 @@ Arguments In [U].
 Arguments Included [U].
 
 Set Implicit Arguments.
-Global Hint Unfold In : core.
+#[global] Hint Unfold In : core.
 
 
 Section the_context.
@@ -72,7 +72,7 @@ Section the_context.
       - intros;case (Lt_irreflexive (a:=a)); eapply (Lt_trans );eauto. 
     Qed.
 
-    Global Instance  Le_trans : Transitive  Le. 
+    #[global] Instance  Le_trans : Transitive  Le. 
     Proof.
       unfold Transitive, Le;intros.
       case H;case H0.

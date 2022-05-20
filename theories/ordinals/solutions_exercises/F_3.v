@@ -150,7 +150,7 @@ Section S1.
 
       (* TODO: simplify this proof ! *)
       Lemma L04 : forall beta:T1,
-          limitb beta ->
+          T1limit beta ->
           forall n, leq lt  (\F (S n)) (Canon.canon beta (S n)).
       Proof.
         destruct beta.

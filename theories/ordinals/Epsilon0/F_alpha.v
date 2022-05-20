@@ -123,7 +123,7 @@ Proof.
   - subst alpha; discriminate H.
   - cbn; destruct (Utils.dec (E0limit alpha)) .
     + assert (true=false) by 
-          ( now  destruct (Succ_not_Limitb _ H)). 
+          ( now  destruct (Succ_not_T1limit _ H)). 
       discriminate.
     + now cbn.
 Qed.
@@ -278,7 +278,7 @@ Section Properties.
       rewrite F_zero_eqn. rewrite LF1; abstract lia.
     Qed.
 
-    Local Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
+    #[local] Hint Resolve F_One_Zero_dom mono_F_Zero Lt_n_F_Zero_n : T1.
 
     Lemma F_One_Zero_ge :  F_ E0zero <<= F_ 1.
     Proof.
@@ -286,7 +286,7 @@ Section Properties.
         rewrite F_zero_eqn, LF1; abstract lia.  
     Qed. 
 
-    Local Hint Resolve  F_One_Zero_ge : T1.
+    #[local] Hint Resolve  F_One_Zero_ge : T1.
 
     Lemma PZero : P E0zero.
     Proof. 
@@ -779,10 +779,10 @@ Section H'_F.
               ** destruct alpha; auto.
               ** auto with arith. 
           --  apply nf_canon, cnf_ok.
-          --  apply limitb_canonS_not_zero.
+          --  apply T1limit_canonS_not_zero.
               ++ apply cnf_ok.
               ++ now destruct alpha.
-    - apply Limitb_phi0.
+    - apply T1limit_phi0.
       apply Limit_not_Zero; auto. 
 Qed.
 
@@ -867,7 +867,7 @@ Proof.
   - subst alpha; discriminate H.
   - cbn; destruct (Utils.dec (E0limit alpha)) .
     + assert (true=false) by 
-          ( now  destruct (Succ_not_Limitb _ H)). 
+          ( now  destruct (Succ_not_T1limit _ H)). 
       discriminate.
     + now cbn.
 Qed.

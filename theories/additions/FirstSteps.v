@@ -14,8 +14,8 @@ Section Definitions.
            (mult : A -> A -> A)
            (one : A).
 
-Local Infix "*" := mult.
-Local Notation "1" := one.
+#[local] Infix "*" := mult.
+#[local] Notation "1" := one.
 
 (**  Naive (linear) implementation *)
 

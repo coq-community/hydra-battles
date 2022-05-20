@@ -3,9 +3,10 @@
 (** New implementation as a refinement of epsilon0 *)
 
 Require Import T1 E0.
-Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec  List Bool
-        Recdef Lia  Coq.Wellfounded.Inverse_Image
-        Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
+Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec
+  List Bool
+  Recdef Lia  Coq.Wellfounded.Inverse_Image
+  Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
 
 
 Require Import Comparable.
@@ -17,7 +18,7 @@ Module LO.
   
   Definition t := list (nat*nat).
 
-  Definition zero : t := (@nil (nat * nat): t).
+  Definition zero : t := nil. 
 
   (** omega^ i * S n + alpha *)
 
@@ -33,11 +34,6 @@ Module LO.
   (** [omega ^i ] *)
 
   Notation phi0 i := (cons i 0 nil).
-
-  (** [omega ^i * (k+1)] *)
-  
-  Definition omega_term (i k: nat) : t :=
-    cons i k zero.
 
   Notation omega := (phi0 1). 
 
@@ -58,44 +54,44 @@ Module LO.
 
   (** Successor and limits (syntactic definitions) *)
 
-  Fixpoint succb (alpha:t) :=
-    match alpha with
+  Fixpoint succb (a : t) :=
+    match a with
       nil => false
     | cons 0 _ _ => true
-    | cons i n beta => succb beta
+    | cons i n b => succb b
     end.
   
-  Fixpoint limitb (alpha:t) :=
-    match alpha with
+  Fixpoint limitb (a : t) :=
+    match a with
       nil => false
     | cons 0 _ _ => false
     | cons i n nil => true
-    | cons i n beta => limitb beta
+    | cons i n b => limitb b
     end.
 
-  Lemma succb_ref (a:t): succb a -> T1.succb (refine a).
+  Lemma succb_ref (a:t): succb a -> T1is_succ (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
     - destruct a as [n n0]; now destruct n.
   Qed.
 
-  Lemma limitb_ref (a:t): limitb a -> T1.limitb (refine a).
+  Lemma limitb_ref (a:t): limitb a -> T1limit (refine a).
   Proof.
     induction a as [| a l]; cbn.
     - trivial.
     -  destruct a as [n n0].
        destruct n.
        + discriminate.
-       + simpl T1.limitb; destruct l. 
+       + simpl T1limit; destruct l. 
          * trivial.
          * intro H; rewrite IHl; case (refine (p::l)); auto.
   Qed.
 
   (* begin snippet compareDef:: no-out  *)
   #[ global ] Instance compare_t : Compare t :=
-  fix cmp (alpha beta:t) :=
-    match alpha, beta with
+  fix cmp (a b : t) :=
+    match a, b with
     | nil, nil => Eq
     | nil, cons a' n' b' => Datatypes.Lt
     | _   , nil => Gt
@@ -110,15 +106,15 @@ Module LO.
        end)
     end.
   
-  Lemma compare_ref (alpha beta:t) :
-    compare alpha beta = compare (refine alpha) (refine beta).
+  Lemma compare_ref (a b : t) :
+    compare a b = compare (refine a) (refine b).
  (* end snippet compareDef  *)  
   Proof.
-    revert beta. induction alpha.
-    - destruct beta.
+    revert b; induction a.
+    - destruct b.
       + easy.
       + cbn. now destruct p.
-    - destruct a, beta.
+    - destruct a, b.
       + now cbn.
       + destruct  p; cbn.
         destruct (n ?= n1) eqn: cn_n1;
@@ -127,19 +123,19 @@ Module LO.
   Qed.
 
   (* begin snippet ltDef *)
-  Definition lt (alpha beta : t) : Prop :=
-    compare alpha beta = Datatypes.Lt.
+  Definition lt (a b : t) : Prop :=
+    compare a b = Datatypes.Lt.
   (* end snippet ltDef *)
   
   Lemma compare_rev :
-    forall (alpha beta : t),
-      compare beta alpha = CompOpp (compare alpha beta).
+    forall (a b : t),
+      compare b a = CompOpp (compare a b).
   Proof.
-    induction alpha,  beta.
+    induction a, b.
     - easy.
     - cbn; destruct p; cbn; trivial. 
     - cbn; destruct a; reflexivity. 
-    - cbn; rewrite IHalpha. destruct p, a;  rewrite Nat.compare_antisym.
+    - cbn; rewrite IHa. destruct p, a;  rewrite Nat.compare_antisym.
       destruct (Nat.compare n1 n) eqn:? ; cbn; trivial.
       rewrite Nat.compare_antisym;
         destruct  (Nat.compare n2 n0) eqn:? ; now cbn.
@@ -148,29 +144,29 @@ Module LO.
   
 
   Lemma compare_reflect :
-    forall alpha beta,
-      match compare alpha beta with
-      | Datatypes.Lt => lt alpha beta
-      | Eq => alpha = beta
-      | Gt => lt beta alpha
+    forall a b,
+      match compare a b with
+      | Datatypes.Lt => lt a b
+      | Eq => a = b
+      | Gt => lt b a
       end.
   Proof.
-    unfold lt; induction alpha  as [ | [p n]].
-    - destruct beta.
+    unfold lt; induction a  as [ | [p n]].
+    - destruct b.
       + easy.
       + cbn; now destruct p.
-    - destruct beta as [ | [p0 n0] beta]. 
+    - destruct b as [ | [p0 n0] b]. 
       + cbn; trivial.
-      + cbn; specialize (IHalpha beta);
-          rewrite compare_rev with alpha beta; 
+      + cbn; specialize (IHa b);
+          rewrite compare_rev with a b;
           rewrite Nat.compare_antisym in * ;
-          destruct (compare alpha beta), (p0 ?= p) eqn:Heq; simpl in *;
+          destruct (compare a b), (p0 ?= p) eqn:Heq; simpl in *;
             subst; try easy;
               apply Nat.compare_eq_iff in Heq as -> ;
               destruct (n ?= n0) eqn:Heqc; trivial.
         * destruct (compare _ _) eqn: H.
           apply Nat.compare_eq_iff in Heqc as ->.
-          rewrite IHalpha.
+          rewrite IHa.
           reflexivity.
           reflexivity.
           rewrite Nat.compare_antisym.
@@ -180,7 +176,7 @@ Module LO.
             now rewrite Nat.compare_antisym, Heqn.
         * destruct (compare _ _) eqn: H.
           apply Nat.compare_eq_iff in Heqc as ->.
-          rewrite IHalpha.
+          rewrite IHa.
           reflexivity.
           reflexivity.
           rewrite Nat.compare_antisym.
@@ -190,7 +186,7 @@ Module LO.
           rewrite Nat.compare_antisym; now rewrite Heqc0.
         * destruct (compare _ _) eqn: H.
           apply Nat.compare_eq_iff in Heqc as ->.
-          rewrite IHalpha.
+          rewrite IHa.
           reflexivity.
           reflexivity.
           rewrite Nat.compare_antisym.
@@ -201,11 +197,11 @@ Module LO.
           reflexivity.
   Qed.
 
-  Lemma compare_correct (alpha beta: t):
-    CompSpec eq lt alpha beta (compare alpha beta).
+  Lemma compare_correct (a b: t):
+    CompSpec eq lt a b (compare a b).
   Proof.
-    unfold lt;  generalize (compare_reflect alpha beta).
-    destruct (compare alpha beta); now constructor.
+    unfold lt;  generalize (compare_reflect a b).
+    destruct (compare a b); now constructor.
   Qed.
 
   (* begin snippet ltRef:: no-out *)
@@ -233,14 +229,13 @@ Module LO.
          destruct (T1.lt_irrefl H).
   Qed.
 
-  Lemma lt_irrefl (alpha: t): ~ lt alpha alpha.
+  Lemma lt_irrefl (a : t): ~ lt a a.
   Proof.
     rewrite lt_ref; now apply T1.lt_irrefl.
   Qed.
 
 
-  Lemma lt_trans (alpha beta gamma : t):
-    lt alpha beta -> lt beta gamma -> lt alpha gamma.
+  Lemma lt_trans (a b c : t): lt a b -> lt b c -> lt a c.
   Proof.
     rewrite !lt_ref; apply T1.lt_trans.
   Qed.
@@ -268,8 +263,7 @@ Module LO.
       (nf_b b && Nat.ltb a' a)%bool
     end.
 
-  Definition nf alpha :Prop := 
-    nf_b alpha.
+  Definition nf alpha :Prop := nf_b alpha.
 (* end snippet nfDef *)
   (** refinements of T1's lemmas *)
 
@@ -280,7 +274,6 @@ Module LO.
   Proof.
     destruct i; red; now cbn.
   Qed. 
-
 
   Lemma single_nf :
     forall i n, nf (cons i n zero).
@@ -328,23 +321,23 @@ Module LO.
   Qed.
 
 
-  Lemma nf_ref: forall alpha, T1.nf (refine alpha) <-> nf alpha.
+  Lemma nf_ref: forall a, T1.nf (refine a) <-> nf a.
   Proof.
-    induction alpha.
+    induction a.
     - cbn; split; trivial.
     - destruct a as [i n];  split.
-      + intro H;  destruct alpha.
+      + intro H;  destruct a0.
         * apply single_nf.
         * destruct p.
           apply cons_nf.
           -- cbn in H; apply T1.nf_inv3 in H; now apply T1.lt_fin_iff. 
-          -- cbn in H; apply IHalpha; apply T1.nf_inv2 in H; apply H.
-      + intro H; destruct alpha.
+          -- cbn in H; apply IHa; apply T1.nf_inv2 in H; apply H.
+      + intro H; destruct a0.
         * apply T1.single_nf, T1.nf_fin.
         * destruct p; cbn; apply T1.cons_nf.
           --  apply nf_inv3 in H; now apply T1.lt_fin_iff.
           -- apply T1.nf_fin.
-          -- apply nf_inv2 in H; now rewrite IHalpha.
+          -- apply nf_inv2 in H; now rewrite IHa.
   Qed.
 
 
@@ -354,15 +347,15 @@ Module LO.
 
   (* begin snippet succPlusMult *)
   
-  Fixpoint succ (alpha : t) : t :=
-    match alpha with
-      nil => fin 1
+  Fixpoint succ (a : t) : t :=
+    match a with
+    | nil => fin 1
     | cons 0 n _  => cons 0 (S n) nil
-    | cons a n beta => cons a n (succ beta)
+    | cons a n b => cons a n (succ b)
     end.
 
-  Fixpoint plus (alpha beta : t) :t :=
-    match alpha,beta with
+  Fixpoint plus (a b : t) :t :=
+    match a, b with
     |  nil, y  => y
     |  x, nil  => x
     |  cons a n b, cons a' n' b' =>
@@ -372,10 +365,10 @@ Module LO.
         | Eq  => (cons a (S (n+n')) b')
         end)
     end
-  where "alpha + beta" := (plus alpha beta) : lo_scope.
+  where "a + b" := (plus a b) : lo_scope.
 
-  Fixpoint mult (alpha beta : t) : t :=
-    match alpha,beta with
+  Fixpoint mult (a b : t) : t :=
+    match a, b with
     |  nil, _  => zero
     |  _, nil => zero
     |  cons 0 n _, cons 0 n' b' =>
@@ -385,7 +378,7 @@ Module LO.
     |  cons a n b, cons a' n' b' =>
        cons (a + a')%nat n' ((cons a n b) * b')
     end
-  where "alpha * beta" := (mult alpha beta) : lo_scope.
+  where "a * b" := (mult a b) : lo_scope.
 
 
   Compute omega * omega.
@@ -422,7 +415,8 @@ Module LO.
 
   Lemma succ_nf alpha : nf alpha -> nf (succ alpha).
   Proof.
-    intro H; rewrite <- nf_ref in *; rewrite succ_ref; now apply T1.succ_nf.
+    intro H; rewrite <- nf_ref in *; rewrite succ_ref;
+      now apply T1.succ_nf.
   Qed.
 
   (* begin snippet plusRef:: no-out  *)
@@ -436,7 +430,8 @@ Module LO.
     - cbn; destruct a. now cbn.
     - destruct a, p; cbn;  destruct (n ?= n1) eqn:cn_n1.
       1,2:   rewrite T1.compare_fin_rw in *; rewrite cn_n1; now cbn.
-      rewrite T1.compare_fin_rw in *; cbn;rewrite cn_n1, IHalpha; now cbn.
+      rewrite T1.compare_fin_rw in *; cbn;rewrite cn_n1, IHalpha;
+        now cbn.
   Qed.
 
 
@@ -459,7 +454,8 @@ Module LO.
        + cbn; destruct p; now cbn.
     - induction beta.
       +  destruct a; cbn. destruct n; now cbn.
-      +  destruct a, a0; cbn. destruct n; cbn. destruct n1; cbn; trivial.
+      +  destruct a, a0; cbn. destruct n; cbn.
+         destruct n1; cbn; trivial.
          * f_equal; rewrite IHbeta; f_equal.
          * cbn. destruct n1. cbn. reflexivity.
            cbn. f_equal. f_equal. lia.
@@ -654,7 +650,7 @@ Import OO.
 
 Check phi0  7.
 
-#[local] Coercion Fin : nat >-> OO.
+#[global] Coercion Fin : nat >-> OO.
 
 Example Ex42: omega + 42 + omega^ 2 = omega^ 2. (* .no-out *)
 rewrite <- Comparable.compare_eq_iff.

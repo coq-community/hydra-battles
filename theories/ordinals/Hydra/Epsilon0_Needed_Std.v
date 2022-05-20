@@ -212,11 +212,8 @@ Section Impossibility_Proof.
   
   Fact self_lt_standard : m big_h t1< m big_h.
   Proof. 
-    apply LE_LT_trans with (m small_h).
-    - apply m_ge. 
-    - apply m_lt.
+    apply LE_LT_trans with (m small_h);[apply m_ge | apply m_lt].
   Qed. 
-
 
   Theorem Impossibility_std: False.
   Proof.  apply (LT_irrefl self_lt_standard).  Qed.

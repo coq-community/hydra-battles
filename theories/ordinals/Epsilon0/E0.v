@@ -72,13 +72,13 @@ Next Obligation.  apply succ_nf, cnf_ok. Defined.
 #[deprecated(note="use E0succ")]
  Notation Succ := E0succ (only parsing).
 
-Definition E0limit (alpha : E0) : bool :=  limitb (@cnf alpha).
+Definition E0limit (alpha : E0) : bool :=  T1limit (@cnf alpha).
 
 #[deprecated(note="use E0limit")]
  Notation Limitb := E0limit (only parsing).
 
 Definition E0is_succ (alpha : E0) : bool :=
-  succb (@cnf alpha).
+  T1is_succ (@cnf alpha).
 
 #[deprecated(note="use E0is_succ")]
  Notation E0succb := E0is_succ (only parsing).
@@ -223,7 +223,7 @@ Qed.
 Lemma Succb_Succ alpha : E0is_succ alpha -> {beta : E0 | alpha = E0succ beta}.
 Proof.
   destruct alpha; cbn.
-  intro H; destruct (succb_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
+  intro H; destruct (T1is_succ_def cnf_ok0 H) as [beta [Hbeta Hbeta']]; subst.
   assert (nf (succ beta)) by eauto with T1.
   exists (@mkord  beta Hbeta); apply E0_eq_intro; now cbn.
 Defined.
@@ -268,7 +268,7 @@ Lemma cnf_Omega_term (alpha: E0) (n: nat) :
   cnf (Omega_term alpha n) = omega_term (cnf alpha) n.
 Proof. reflexivity. Defined.
 
-Lemma Limitb_Omega_term alpha i : alpha <> E0zero ->
+Lemma T1limit_Omega_term alpha i : alpha <> E0zero ->
                                   E0limit (Omega_term alpha i).
 Proof.
   intro H; unfold E0limit; destruct alpha as [cnf0 H0]; cbn;
@@ -277,13 +277,13 @@ Proof.
   - red; trivial. 
 Qed.
 
-Lemma Limitb_phi0 alpha  : alpha <> E0zero ->
+Lemma T1limit_phi0 alpha  : alpha <> E0zero ->
                            E0limit (E0phi0 alpha).
 Proof.
-  unfold E0phi0; apply Limitb_Omega_term.
+  unfold E0phi0; apply T1limit_Omega_term.
 Qed.
 
-#[global] Hint Resolve Limitb_phi0 : E0.
+#[global] Hint Resolve T1limit_phi0 : E0.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = E0zero} + {E0limit alpha = true} +
@@ -345,7 +345,7 @@ Proof.
 Defined.
 (* end snippet E0LtWf *)
 
-Global Hint Resolve E0lt_wf : E0.
+#[global] Hint Resolve E0lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> E0succ beta o<= alpha.
 Proof.
@@ -365,8 +365,8 @@ Proof.
   destruct s.
   - unfold E0succ, E0zero in e; injection  e .
     intro H; now   destruct (T1.succ_not_zero (cnf alpha)).
-  -  unfold limitb, E0succ in e; simpl in e;
-       destruct (@T1.limitb_succ (cnf alpha)); auto.
+  -  unfold T1limit, E0succ in e; simpl in e;
+       destruct (@T1.T1limit_succ (cnf alpha)); auto.
         destruct alpha; simpl; auto. 
   -  destruct s.
     { unfold E0succ in e;  injection e.
@@ -397,14 +397,14 @@ Proof.
     apply LT_succ;auto.
 Qed.
 
-Global Hint Resolve E0pred_Lt : E0.
+#[global] Hint Resolve E0pred_Lt : E0.
 
 
 Lemma Succ_Succb (alpha : E0) : E0is_succ (E0succ alpha).
-destruct alpha; unfold E0is_succ, E0succ; cbn; apply T1.succ_succb.
+destruct alpha; unfold E0is_succ, E0succ; cbn; apply T1.succ_is_succ.
 Qed.
 
-Global Hint Resolve Succ_Succb : E0.
+#[global] Hint Resolve Succ_Succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -429,7 +429,7 @@ Hint Rewrite FinS_Succ_eq : E0_rw.
 Lemma Limit_not_Zero alpha : E0limit alpha -> alpha <> E0zero.
 Proof.
   destruct alpha; unfold E0limit, E0zero; cbn; intros H H0.
-  injection H0;  intro ; subst cnf0; eapply T1.limitb_not_zero; eauto.
+  injection H0;  intro ; subst cnf0; eapply T1.T1limit_not_zero; eauto.
 Qed.
 
 
@@ -445,13 +445,14 @@ Proof.
 Qed.
 
 
-Lemma Succ_not_Limitb alpha : E0is_succ alpha -> ~ E0limit alpha .
+Lemma Succ_not_T1limit alpha : E0is_succ alpha -> ~ E0limit alpha .
 Proof. 
   red; destruct alpha; unfold E0is_succ, E0limit; cbn.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
-Global Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_Limitb : E0.
+#[global]
+  Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_T1limit : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
                                        E0succ beta o<= alpha.
@@ -470,7 +471,7 @@ Proof.
  cbn;  apply LT_succ_LE_2; auto.
 Qed.
 
-Lemma Succ_lt_Limitb alpha beta:
+Lemma Succ_lt_T1limit alpha beta:
     E0limit alpha ->  beta o< alpha -> E0succ beta o< alpha.
 Proof.
   destruct alpha, beta;unfold E0lt; cbn.
@@ -612,7 +613,7 @@ Proof.
   intros. unfold Cons. rewrite Omega_term_plus; auto.
 Defined.
 
-Lemma Limitb_plus alpha beta i:
+Lemma T1limit_plus alpha beta i:
   (beta o< E0phi0 alpha)%e0 -> E0limit beta ->
   E0limit  (Omega_term alpha i + beta)%e0.
 Proof.

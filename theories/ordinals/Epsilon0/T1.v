@@ -92,30 +92,38 @@ Proof. reflexivity. Qed.
 
 (* begin snippet succbLimitb *)
 
-Fixpoint succb alpha :=
+
+Fixpoint T1is_succ alpha :=
   match alpha with
-      zero => false
+    | zero => false
     | cons zero _ _ => true
-    | cons alpha n beta => succb beta
+    | cons alpha n beta => T1is_succ beta
   end.
 
-Fixpoint limitb alpha :=
+
+
+Fixpoint T1limit alpha :=
   match alpha with
-      zero => false
+    | zero => false
     | cons zero _ _ => false
     | cons alpha n zero => true
-    | cons alpha n beta => limitb beta
+    | cons alpha n beta => T1limit beta
   end.
 
-Compute limitb T1omega.
+Compute T1limit T1omega.
 
-Compute limitb 42.
+Compute T1limit 42.
 
-Compute succb 42.
+Compute T1is_succ 42.
 
-Compute succb T1omega.
+Compute T1is_succ T1omega.
 
 (* end snippet succbLimitb *)
+#[deprecated(note="use T1is_succ")]
+  Notation succb := T1is_succ (only parsing).
+
+#[deprecated(note="use T1limit")]
+  Notation limitb := T1limit (only parsing).
 
 (** Exponential of base [omega] *)
 
@@ -156,7 +164,7 @@ Inductive ap : T1 -> Prop :=
  *)
 
 (* begin snippet compareDef *)
-#[ global ] Instance compare_T1 : Compare T1 :=
+#[global] Instance compare_T1 : Compare T1 :=
  fix cmp (alpha beta:T1) :=
   match alpha, beta with
   | zero, zero => Eq
@@ -282,7 +290,7 @@ Qed.
 Theorem not_lt_zero alpha : ~ lt alpha  zero.
 Proof.  destruct alpha; compute; discriminate. Qed.
 
-Global Hint Resolve not_lt_zero : T1.
+#[global] Hint Resolve not_lt_zero : T1.
 
 Lemma compare_lt_impl a b :
   compare a b = Lt -> lt a b.
@@ -552,13 +560,12 @@ Definition epsilon_0 : Ensemble T1 := nf.
 (** *** Successor *)
 
 (* begin snippet succDef *)
-
-Fixpoint succ (alpha:T1) : T1 :=
-  match alpha with zero => T1nat 1
+Fixpoint succ (a: T1) : T1 :=
+  match a with
+  | zero => T1nat 1
   | cons zero n _ => cons zero (S n) zero
-  | cons beta n gamma => cons beta n (succ gamma)
+  | cons b n c => cons b n (succ c)
   end.
-
 (* end snippet succDef *)
 
 (** *** Predecessor (partial function *)
@@ -579,8 +586,8 @@ Fixpoint pred (c:T1) : option T1 :=
 (* begin snippet plusDef *)
 
 
-Fixpoint T1add (alpha beta : T1) :T1 :=
-  match alpha,beta with
+Fixpoint T1add (a b : T1) :T1 :=
+  match a, b with
   |  zero, y  => y
   |  x, zero  => x
   |  cons a n b, cons a' n' b' =>
@@ -596,13 +603,12 @@ where "alpha + beta" := (T1add alpha beta) : t1_scope.
 #[deprecated(note="use T1add")]
   Notation plus := T1add (only parsing).
 
-
 (** *** multiplication *)
 
 (* begin snippet multDef *)
 
-Fixpoint T1mul (alpha beta : T1) :T1 :=
-  match alpha,beta with
+Fixpoint T1mul (a b : T1) :T1 :=
+  match a, b with
   |  zero, _  => zero
   |  _, zero => zero
   |  cons zero n _, cons zero n' b' =>
@@ -612,7 +618,7 @@ Fixpoint T1mul (alpha beta : T1) :T1 :=
   |  cons a n b, cons a' n' b' =>
       cons (a + a') n' ((cons a n b) * b')
   end
-where "alpha * beta" := (T1mul alpha beta) : t1_scope.
+where "a * b" := (T1mul a b) : t1_scope.
 
 (* end snippet multDef *)
 #[deprecated(note="use T1mul")]
@@ -684,7 +690,7 @@ Qed.
 Lemma zero_lt : forall alpha n beta, lt zero (cons alpha n beta).
 Proof. reflexivity. Qed. 
 
-Global Hint Resolve zero_lt head_lt coeff_lt tail_lt : T1.
+#[global] Hint Resolve zero_lt head_lt coeff_lt tail_lt : T1.
 
 Open Scope t1_scope.
 
@@ -715,7 +721,7 @@ Proof.
     destruct b'2; intro H; now rewrite H.
 Qed.
 
-Global Hint Resolve zero_nf single_nf cons_nf: T1.
+#[global] Hint Resolve zero_nf single_nf cons_nf: T1.
 
 
 Lemma nf_inv1 :
@@ -828,7 +834,7 @@ Inductive nf_helper : T1 -> T1 -> Prop :=
                   nf_helper (cons alpha' n' beta') alpha.
 
 
-Global Hint Constructors nf_helper : T1.
+#[global] Hint Constructors nf_helper : T1.
 
 
 (* A tactic for decomposing a non zero ordinal *)
@@ -871,7 +877,7 @@ Proof.
   - cbn; destruct alpha1; discriminate.
 Qed.
 
-Lemma succ_succb : forall alpha, succb (succ alpha).
+Lemma succ_is_succ : forall alpha, T1is_succ (succ alpha).
 Proof.
   induction  alpha.
    - reflexivity.
@@ -1026,7 +1032,7 @@ Proof.
 Qed.
 
 
-Global Hint Resolve zero_le le_tail : T1.
+#[global] Hint Resolve zero_le le_tail : T1.
 
 Theorem le_phi0 :
   forall a n b, leq lt  (phi0 a) (cons a n b).
@@ -1313,7 +1319,7 @@ Proof. now  destruct 1. Qed.
 Lemma LE_le alpha beta : alpha t1<= beta -> leq lt  alpha beta.
 Proof. now destruct 1. Qed.
 
-Global Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
+#[global] Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
 
 Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero t1< alpha.
 Proof.
@@ -1388,7 +1394,7 @@ Lemma LT4 : forall alpha  n  beta beta',
     cons alpha n beta t1< cons alpha n beta'.
 Proof.   repeat split; auto; apply tail_lt.  destruct H1; tauto. Qed.
 
-Global Hint Resolve LT1 LT2 LT3 LT4: T1.
+#[global] Hint Resolve LT1 LT2 LT3 LT4: T1.
 
 
 Lemma LT_irrefl (alpha : T1) :
@@ -1437,9 +1443,9 @@ Proof.
   intros; apply cons_nf; auto; destruct H;tauto.
 Qed.
 
-Global Hint Resolve nf_cons_LT: T1.
+#[global] Hint Resolve nf_cons_LT: T1.
 
-Global Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
+#[global] Hint Resolve nf_inv1 nf_inv2 nf_inv3 : T1.
 
 Lemma head_LT_cons :
   forall alpha n beta,
@@ -1572,7 +1578,7 @@ Qed.
 
 Module Direct_proof.
   Section well_foundedness_proof.
-    Local Hint Unfold restrict LT: T1.
+    #[local] Hint Unfold restrict LT: T1.
 
     Lemma Acc_zero : Acc LT  zero.
     Proof.
@@ -1591,9 +1597,8 @@ Module Direct_proof.
       Lemma wf_LT : forall alpha: T1,  nf alpha -> Acc LT alpha. 
       Proof.
         induction alpha as [| beta IHbeta n gamma IHgamma].
-        - split.
-          inversion 1.
-          destruct H2 as [H3 _]. destruct (not_lt_zero H3). 
+        - split. intros y H0; inversion H0 as [_ [H3 _]];
+            destruct (not_lt_zero H3). 
         (*||*)
         (*|
 .. coq:: -.h#beta -.h#n -.h#gamma -.h#H 
@@ -1856,9 +1861,9 @@ Qed.
 
 (* begin snippet succIsPlusOne:: no-out *)
 
-Lemma succ_is_plus_one (alpha : T1) :  succ alpha = alpha + 1.
+Lemma succ_is_plus_one (a : T1) :  succ a = a + 1.
 Proof. 
-  induction alpha as [ |a IHa n b IHb]; [trivial |]. 
+  induction a as [ |a IHa n b IHb]; [trivial |]. 
   (* ... *)
   (* end snippet succIsPlusOne *)
    - destruct  a; cbn.
@@ -1869,21 +1874,21 @@ Qed.
 (* end snippet succIsPlusOnez *)
 
 Lemma succ_of_plus_finite :
-  forall alpha (H: nf alpha) (i:nat) , succ (alpha + i) = alpha + S i.
+  forall a (H: nf a) (i:nat) , succ (a + i) = a + S i.
 Proof.
-  induction  alpha; cbn.
+  induction  a; cbn.
   -  destruct i; reflexivity.
   -  destruct i.
      + simpl.
-       destruct alpha1.
+       destruct a1.
        * simpl; replace (n + 0)%nat with n.
          { auto. }
          { abstract lia. }
        * simpl; rewrite succ_is_plus_one; auto.
-     + simpl; destruct alpha1.
+     + simpl; destruct a1.
        * simpl; replace (S (n + i)) with (n + S i)%nat; auto.
-       *  simpl; assert (nf alpha2) by eauto with T1.
-          generalize  (IHalpha2 H0 (S i)).
+       *  simpl; assert (nf a2) by eauto with T1.
+          generalize  (IHa2 H0 (S i)).
           replace (T1nat (S i)) with (FS i); auto.
           replace (T1nat (S (S  i))) with (FS (S i)).
           {intro H1; now rewrite H1. }
@@ -2105,19 +2110,13 @@ Qed.
 
 (* begin snippet notMono:: no-out  *)
 
-Lemma plus_not_monotonous_l :
-  exists alpha beta gamma : T1,
-    alpha t1< beta /\ alpha + gamma = beta + gamma.
-Proof.
-  exists 3, 5, T1omega; now compute.
-Qed.
+Lemma T1add_not_monotonous_l :
+  exists a b c : T1, a t1< b /\ a + c = b + c.
+Proof. exists 3, 5, T1omega; now compute. Qed.
 
-Lemma mult_not_monotonous :
-  exists alpha beta gamma : T1,
-      alpha t1< beta /\ alpha * gamma = beta * gamma.
-Proof.
-  exists 3, 5, T1omega; now compute.
-Qed.
+Lemma T1mul_not_monotonous :
+  exists a b c : T1, c <> zero /\ a t1< b /\ a * c = b * c.
+Proof. exists 3, 5, T1omega; split; [discriminate| now compute]. Qed.
 (* end snippet notMono *)
 
 
@@ -2746,7 +2745,7 @@ Proof. compute; auto with T1. Qed.
 
 
 
-Global Hint Resolve nf_phi0 : T1.
+#[global] Hint Resolve nf_phi0 : T1.
 
 Definition omega_omega := phi0 T1omega.
 
@@ -3398,11 +3397,11 @@ Qed.
 
 
 
-Lemma limitb_cases : forall alpha n beta,
+Lemma T1limit_cases : forall alpha n beta,
     nf (cons alpha n beta) ->
-    limitb (cons alpha n beta)  ->
+    T1limit (cons alpha n beta)  ->
     { alpha <> zero /\ beta = zero} +
-    {alpha <> zero /\ limitb beta }.
+    {alpha <> zero /\ T1limit beta }.
 Proof.
   intros alpha n beta H;  simpl;  destruct alpha.
   - discriminate.
@@ -3447,14 +3446,14 @@ Qed.
 
 
 Lemma pred_of_limit : forall alpha, nf alpha ->
-                                    limitb alpha ->
+                                    T1limit alpha ->
                                     pred alpha = None.
 Proof.
   intros; induction alpha.
   - reflexivity. 
   -    simpl; destruct alpha1.
        +   destruct n;  simpl in H0; discriminate.
-       +   destruct (limitb_cases  H H0).
+       +   destruct (T1limit_cases  H H0).
            *  destruct a.    
               subst.
               reflexivity.
@@ -3465,7 +3464,7 @@ Qed.
 
 Definition zero_limit_succ_dec :
   forall alpha, nf alpha ->
-                ({alpha = zero} + {limitb alpha }) + 
+                ({alpha = zero} + {T1limit alpha }) + 
                 {beta : T1 |  nf beta /\ alpha = succ beta} .
 Proof with eauto with T1.
   induction alpha as [| gamma Hgamma n beta Hbeta].
@@ -3505,7 +3504,7 @@ Defined.
 
 
 Lemma pred_of_limitR : forall alpha, nf alpha -> alpha <> zero ->
-                                     pred alpha = None -> limitb alpha.
+                                     pred alpha = None -> T1limit alpha.
 Proof.
   intros alpha Halpha; destruct (zero_limit_succ_dec Halpha).
   - destruct s; auto.
@@ -3545,7 +3544,7 @@ Qed.
 
 
 
-Lemma limitb_succ : forall alpha, nf alpha ->  ~ limitb (succ alpha) .
+Lemma T1limit_succ : forall alpha, nf alpha ->  ~ T1limit (succ alpha) .
   induction alpha.
   - discriminate.
   - intros;  simpl;  destruct alpha1.
@@ -3562,28 +3561,28 @@ Proof.
   -  now apply succ_nf.
 Qed.
 
-Lemma limitb_not_zero : forall alpha, nf alpha -> limitb alpha  ->
+Lemma T1limit_not_zero : forall alpha, nf alpha -> T1limit alpha  ->
                                         alpha <> zero.
 Proof.
   unfold not; intros; subst;discriminate.
 Qed.
 
 
-Global Hint Resolve limitb_not_zero : T1.
+#[global] Hint Resolve T1limit_not_zero : T1.
 
 
-Lemma limitb_succ_tail :
-  forall alpha n beta, nf beta ->  ~ limitb (cons alpha n (succ beta)).
+Lemma T1limit_succ_tail :
+  forall alpha n beta, nf beta ->  ~ T1limit (cons alpha n (succ beta)).
 Proof.  
   simpl;intros; destruct alpha.
   - discriminate.
   -  case_eq (succ beta).
      + intro; now destruct (succ_not_zero beta).
-     +  intros gamma p delta H0;  rewrite <- H0; now  apply limitb_succ.
+     +  intros gamma p delta H0;  rewrite <- H0; now  apply T1limit_succ.
 Qed.
 
 
-Lemma succ_not_limit : forall alpha:T1, succb alpha -> limitb alpha = false.
+Lemma succ_not_limit : forall alpha:T1, T1is_succ alpha -> T1limit alpha = false.
 Proof.
   induction  alpha. 
   intro; discriminate.
@@ -3596,8 +3595,8 @@ Proof.
 Qed.
 
 
-Lemma succb_def alpha (Halpha : nf alpha) :
-  succb alpha -> {beta | nf beta /\ alpha = succ  beta}.
+Lemma T1is_succ_def alpha (Halpha : nf alpha) :
+  T1is_succ alpha -> {beta | nf beta /\ alpha = succ  beta}.
 Proof.
   intro H; destruct   (zero_limit_succ_dec Halpha) as [[H0 | H0] | H0].
   - subst alpha; discriminate.
@@ -3607,16 +3606,16 @@ Proof.
 Defined.
 
 (* begin snippet succbIff:: no-out *)
-Lemma succb_iff alpha (Halpha : nf alpha) :
-  succb alpha <->  exists beta : T1,  nf beta /\ alpha = succ  beta.
+Lemma T1is_succ_iff alpha (Halpha : nf alpha) :
+  T1is_succ alpha <->  exists beta : T1,  nf beta /\ alpha = succ  beta.
 (* end snippet succbIff *)
 
 Proof.
   split.
-  - intro H; destruct (succb_def Halpha); [trivial | ].  
+  - intro H; destruct (T1is_succ_def Halpha); [trivial | ].  
      exists x; assumption.
   - destruct 1 as [beta [Hbeta  H'beta]]; subst;   
-      now apply succ_succb.
+      now apply succ_is_succ.
 Qed.
 
 
@@ -3722,8 +3721,8 @@ Qed.
 
 
 
-Lemma strict_lub_limitb : forall (alpha :T1)(s : nat -> T1),
-    nf alpha -> strict_lub s alpha -> limitb alpha.
+Lemma strict_lub_T1limit : forall (alpha :T1)(s : nat -> T1),
+    nf alpha -> strict_lub s alpha -> T1limit alpha.
 Proof.
   destruct 2.
   destruct (zero_limit_succ_dec H).
@@ -3822,13 +3821,13 @@ Qed.
 
 
 
-Lemma succ_lt_limit alpha (Halpha : nf alpha)(H : limitb alpha ):
+Lemma succ_lt_limit alpha (Halpha : nf alpha)(H : T1limit alpha ):
   forall beta, beta t1< alpha -> succ beta t1< alpha.
 Proof. 
   intros beta H0;  assert (H1 :succ beta t1<= alpha) by 
       (apply  LT_succ_LE; auto).
   destruct (LE_LT_eq_dec H1); auto.
-  subst alpha; destruct  (@limitb_succ beta ); eauto with T1. 
+  subst alpha; destruct  (@T1limit_succ beta ); eauto with T1. 
 Qed. 
 
 
@@ -4244,7 +4243,7 @@ Proof. now compute. Qed.
 (* end snippet plusMultExamples *)
 
 
-Example Ex5 : limitb (T1omega ^ (T1omega + 5)).
+Example Ex5 : T1limit (T1omega ^ (T1omega + 5)).
 Proof. reflexivity. Qed.
 
 (* Demo *)

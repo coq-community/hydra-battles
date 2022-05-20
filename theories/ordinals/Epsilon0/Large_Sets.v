@@ -329,14 +329,14 @@ End succ.
 Section lim.
   Variables (lambda : T1)
             (Hnf : nf lambda)
-            (Hlim : limitb lambda)
+            (Hlim : T1limit lambda)
             (f : nat -> nat -> nat)
             (H : forall k, L_spec (canon lambda (S k)) (f (S k))).
   
   Remark canon_not_null : forall k,  canon lambda (S k) <> zero.
   (*| .. coq:: none |*)
   Proof.
-   intro; apply limitb_canonS_not_zero; auto.  
+   intro; apply T1limit_canonS_not_zero; auto.  
   Qed.
   (*||*)
   
@@ -346,7 +346,7 @@ Section lim.
   (*| .. coq:: none |*)
   Proof.
     right.
-    - apply limitb_not_zero; auto.
+    - apply T1limit_not_zero; auto.
     - intro k;  unfold L_lim.  red; path_decompose (S k).
       instantiate (1:= canon lambda (S k)).
       *  specialize (H k); inversion H.
@@ -355,7 +355,7 @@ Section lim.
       * rewrite interval_singleton; left.
        --    discriminate.
        -- split.
-        ++  apply limitb_not_zero; auto.
+        ++  apply T1limit_not_zero; auto.
         ++  reflexivity.
      *  specialize (L_pos_inv (canon lambda (S k)) (f (S k))
                               (canon_not_null k) (H k) (S k));  abstract lia.       
@@ -452,9 +452,8 @@ Qed.
 (* begin snippet LOmegaOk:: no-out *)
 Lemma L_omega_ok : L_spec T1omega L_omega.
 Proof.
-  specialize
-    (L_lim_ok T1omega nf_omega refl_equal L_fin
-              (fun i => L_fin_ok (S i))); intro H.
+  pose (H:= L_lim_ok T1omega nf_omega refl_equal L_fin
+              (fun i => L_fin_ok (S i))).  
    eapply L_spec_compat with (1:=H); 
    intro ; unfold L_lim, L_fin, L_omega; abstract lia.
 Qed.
@@ -531,13 +530,12 @@ Qed.
 
 
 (* begin snippet LOmegaMultOk *)
-
 Lemma L_omega_mult_ok (i: nat) :
   L_spec (T1omega * i) (L_omega_mult i). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
  destruct i.
- - left;  intro k. reflexivity. 
+ - left; intro k; reflexivity. 
  - right.
    + cbn; discriminate.
    + intros k; unfold L_omega_mult, L_omega;
@@ -551,8 +549,7 @@ Qed.
 
 Lemma L_omega_mult_eqn (i : nat) :
   forall (k : nat),
-    (0 < k)%nat  ->
-    L_omega_mult i k = (exp2 i * S k - 1)%nat. (* .no-out *)
+    (0 < k)%nat  -> L_omega_mult i k = (exp2 i * S k - 1)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   induction i.

@@ -57,15 +57,11 @@ associated with   the [canonS i] functions. In module [O2H] we show how pathes a
 (* begin snippet pathDef *)
 
 Inductive path_to (beta: T1) : list nat -> T1 -> Prop :=
-  path_to_1 : forall (i:nat) alpha , 
-    i <> 0 ->
-    transition i alpha beta ->
-    path_to beta (i::nil) alpha
+| path_to_1 : forall (i:nat) alpha , 
+    i <> 0 -> transition i alpha beta -> path_to beta (i::nil) alpha
 | path_to_cons : forall i alpha s gamma,
-    i <> 0 ->
-    transition i alpha gamma ->
-    path_to beta  s gamma ->
-    path_to beta  (i::s) alpha.
+    i <> 0 -> transition i alpha gamma ->
+    path_to beta  s gamma -> path_to beta  (i::s) alpha.
 
 Definition path alpha s beta := path_to beta s alpha.
 
@@ -206,9 +202,8 @@ Definition standard_pathS  i alpha j beta :=
 
 (* begin snippet standardPathR *)
 
-Inductive standard_path_to (j:nat)(beta : T1)
-  : nat -> T1 -> Prop :=
-  std_1 : forall i alpha,
+Inductive standard_path_to (j:nat)(beta : T1): nat -> T1 -> Prop :=
+| std_1 : forall i alpha,
     alpha <> zero ->
     beta = canon alpha i -> j = i -> i <> 0 ->
     standard_path_to j beta i  alpha
@@ -656,7 +651,7 @@ Proof. reflexivity. Qed.
 
 
 Lemma gnawS_lim1 (i:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> limitb lambda ->
+  nf lambda -> T1limit lambda ->
   gnawS (T1.cons lambda 0 T1.zero) (i::s) =
   gnawS (T1.cons (canon lambda (S i)) 0 T1.zero) s.
 Proof.
@@ -666,7 +661,7 @@ Qed.
 
 
 Lemma gnawS_lim2 (i n:nat)(s: list nat) (lambda : T1) :
-  nf lambda -> limitb  lambda->
+  nf lambda -> T1limit  lambda->
   gnawS (T1.cons lambda (S n) T1.zero) (i::s) =
   gnawS (T1.cons lambda n (T1.cons (canon lambda (S i)) 0 T1.zero)) s.
 Proof.
@@ -840,7 +835,7 @@ Proof with eauto with T1.
     destruct  (canonS_limit_strong H1 Hlimit H) as [j Hj].
     destruct (IHalpha (canon alpha (S j))) as [x p]; auto.
     apply canonS_LT; auto.
-    apply limitb_not_zero;auto.
+    apply T1limit_not_zero;auto.
     exists (j::x); eright.
     {split. intro;  subst.
      - inversion  Hlimit.
@@ -1161,7 +1156,7 @@ Proof.
         *  apply hrec.
             -- apply canonS_LT;auto.
             -- eapply nf_canon; eauto. 
-            -- now apply limitb_canonS_not_zero.
+            -- now apply T1limit_canonS_not_zero.
   - destruct s as [beta [Hbeta e]]; subst.
     destruct (T1_eq_dec beta zero).
    + subst;    left; split; auto.  
@@ -1259,7 +1254,7 @@ Proof.
             split;[discriminate | trivial].
           *   apply IHclos_trans_1n.
               apply nf_canon;auto.
-              apply limitb_canonS_not_zero; auto.
+              apply T1limit_canonS_not_zero; auto.
       -  destruct s as [beta [H3 e]]; subst x.
          destruct (T1_eq_dec beta zero).
          { subst beta; destruct (const_pathS_zero H0). }
@@ -1273,11 +1268,9 @@ Qed.
 
 (*| .. coq:: no-out |*)
 Theorem KS_thm_2_4 (lambda : T1) :
-   nf lambda ->
-   limitb lambda  ->
-   forall i j, (i < j)%nat ->
-               const_path 1 (canon lambda (S j))
-                             (canon lambda (S i)).
+  nf lambda -> T1limit lambda  ->
+  forall i j, (i < j)%nat ->
+              const_path 1 (canon lambda (S j)) (canon lambda (S i)).
 Proof.
   transfinite_induction lambda.
   (* ... *)
@@ -1289,7 +1282,7 @@ Proof.
     + destruct alpha.
       * discriminate.
       *  nf_decomp Halpha.
-         destruct (limitb_cases Halpha  H).
+         destruct (T1limit_cases Halpha  H).
          { destruct a; subst alpha2.
            intros i0 j H1;  destruct (@zero_limit_succ_dec alpha1) ;
              trivial.
@@ -1303,7 +1296,7 @@ Proof.
                split ; trivial.
                apply head_lt_cons ; trivial.
                apply nf_canon ; eauto with T1. 
-               apply limitb_canonS_not_zero ; eauto with T1.
+               apply T1limit_canonS_not_zero ; eauto with T1.
              - repeat rewrite canonS_lim2 ; eauto with T1.
                 apply KS_thm_2_4_lemma1 ; trivial. 
                 apply cons_nf ; trivial. 
@@ -1318,7 +1311,7 @@ Proof.
                 apply  head_lt_cons ; eauto with T1.
                 apply single_nf ; eauto with T1.
                 apply nf_canon ; eauto with T1.
-                apply limitb_canonS_not_zero ; eauto with T1.
+                apply T1limit_canonS_not_zero ; eauto with T1.
            }
            destruct s as [beta [H2 H3]];  subst; clear H i; induction n.
            {
@@ -1339,14 +1332,14 @@ Proof.
          apply KS_thm_2_4_lemma1 ; trivial. 
          apply nf_LT_right with alpha2 ; eauto with T1.
          apply canonS_LT ; eauto with T1.
-         apply limitb_canonS_not_zero ; eauto with T1.
+         apply T1limit_canonS_not_zero ; eauto with T1.
          apply Hrec ; eauto with T1.
          split ; eauto with T1.
          split ; eauto with T1.
          apply  tail_lt_cons; auto.
          all: intro; subst; discriminate.
   -  destruct s as [beta [H0 H1]]; 
-       subst; destruct (@limitb_succ beta); auto.
+       subst; destruct (@T1limit_succ beta); auto.
      (*||*)
 Qed.
 
@@ -1536,7 +1529,7 @@ Proof.
            left.
            split.
            ++ intro e;subst. 
-              destruct (@limitb_not_zero zero) ; auto.
+              destruct (@T1limit_not_zero zero) ; auto.
            ++ reflexivity. 
        -- rewrite  clos_trans_t1n_iff;  apply Cor12_1 with n2; auto.
           auto with arith.  
@@ -1650,7 +1643,7 @@ Proof.
           left.
             split.
             intro;subst.
-           destruct (@limitb_not_zero zero); trivial. 
+           destruct (@T1limit_not_zero zero); trivial. 
            trivial.
           assert (const_pathS  (S p) lambda (T1.succ (canon  lambda (S p)))).
           {
@@ -1696,7 +1689,7 @@ Proof.
           eauto with T1.
           auto.
           
-          (* end of the limitb case *)
+          (* end of the T1limit case *)
           {
             destruct s as [gamma [H1 H2]];destruct (T1_eq_dec gamma zero).
             {
@@ -3004,7 +2997,7 @@ Lemma Canon_mono1 alpha i j : E0limit  alpha -> (i< j)% nat ->
     cbn. auto with T1.
     now apply nf_canon.
     split; cbn. 
-    specialize (limitb_canonS_not_zero j cnf_ok H).
+    specialize (T1limit_canonS_not_zero j cnf_ok H).
     intro.
     
     apply canon_limit_mono; auto. 

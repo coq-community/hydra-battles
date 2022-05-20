@@ -36,7 +36,7 @@ Proof.
   inversion_clear 1;auto with T2.
 Qed.
 
-Global Hint Resolve nf_a nf_b nf_c : T2.
+#[global] Hint Resolve nf_a nf_b nf_c : T2.
 
 Ltac nf_inv := ((eapply nf_a; eassumption)|| 
                 (eapply nf_b; eassumption)|| 
@@ -93,7 +93,7 @@ Proof.
   case gamma;auto with arith T2.
 Qed.
 
-Global Hint Resolve psi_le_cons le_zero_alpha: T2.
+#[global] Hint Resolve psi_le_cons le_zero_alpha: T2.
 
 Lemma le_psi_term_le alpha beta:  alpha t2<= beta ->
                                           psi_term alpha t2<= psi_term beta.
@@ -209,7 +209,7 @@ Section lemmas_on_length.
 
 End lemmas_on_length.
 
-Global Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3 tricho_lt_2 tricho_lt_2 : T2.
+#[global] Hint Resolve tricho_lt_7 tricho_lt_5 tricho_lt_4 tricho_lt_4' tricho_lt_3 tricho_lt_2 tricho_lt_2 : T2.
 
 Open Scope T2_scope.
 
@@ -643,7 +643,7 @@ Proof.
   - eapply psi_le_cons.
 Qed.
 
-Global Hint Resolve lt_beta_cons lt_alpha_cons : T2.
+#[global] Hint Resolve lt_beta_cons lt_alpha_cons : T2.
 
 Lemma le_cons_tail alpha beta n gamma gamma':
   gamma t2<= gamma' -> 
@@ -690,7 +690,7 @@ Proof.
   case a; case b; auto with T2.
 Qed.
 
-Global Hint Resolve le_one_cons : T2.
+#[global] Hint Resolve le_one_cons : T2.
 
 Lemma fin_lt_omega : forall n, fin  n t2<  omega.
 Proof.
@@ -834,7 +834,7 @@ Arguments compare_Lt [alpha beta].
 Arguments compare_Eq [alpha beta].
 
 
-Global Hint Resolve compare_Eq compare_Lt compare_Gt : T2.
+#[global] Hint Resolve compare_Eq compare_Lt compare_Gt : T2.
 
 Lemma compare_rw_lt  alpha beta : alpha t2< beta ->
                                   compare alpha beta = Lt.
@@ -1204,7 +1204,7 @@ Qed.
 
 
 
-Global Hint Resolve T2_size1 T2_size2 T2_size3 T2_size4 : T2.
+#[global] Hint Resolve T2_size1 T2_size2 T2_size3 T2_size4 : T2.
 
 
 (** let us recall subterm properties on T2 *)
@@ -1216,7 +1216,7 @@ Proof.
   intros; apply lt_trans with (gcons a b' n' c');auto with T2 .
 Qed.
 
-Global Hint Resolve nat_lt_cons lt_subterm1 : T2.
+#[global] Hint Resolve nat_lt_cons lt_subterm1 : T2.
 
 
 Lemma nat_2_term_mono : forall n n', (n < n')%nat -> 
@@ -1607,7 +1607,7 @@ Section lt_incl_rpo.
   Remark nf_b2 : nf b2.
   Proof. nf_inv. Qed.
 
-  Local Hint Resolve nf1 nf2 nf_a1 nf_a2 nf_b1 nf_b2 : T2.
+  #[local] Hint Resolve nf1 nf2 nf_a1 nf_a2 nf_b1 nf_b2 : T2.
 
   Remark nf_c1 : nf c1.
   Proof.  nf_inv.  Qed.
@@ -1615,7 +1615,7 @@ Section lt_incl_rpo.
   Remark nf_c2 : nf c2.
   Proof. nf_inv.  Qed.
 
-  Local Hint Resolve nf_c1 nf_c2 : T2.
+  #[local] Hint Resolve nf_c1 nf_c2 : T2.
 
   Hypothesis H : gcons a1 b1 n1 c1 t2< gcons a2 b2 n2 c2.
 
@@ -1903,14 +1903,14 @@ Proof.
   split; destruct y; try contradiction.
 Qed.
 
-Global Hint Resolve R1 : T2.
+#[global] Hint Resolve R1 : T2.
 
 Remark R2 : Acc P.prec ord_zero.
 Proof.
   split; destruct y; try contradiction; auto with T2.
 Qed.
 
-Global Hint Resolve R2 : T2.
+#[global] Hint Resolve R2 : T2.
 
 Remark R3 : Acc P.prec nat_S.
 Proof.
@@ -1918,21 +1918,21 @@ Proof.
 Qed.
 
 
-Global Hint Resolve R3 : T2.
+#[global] Hint Resolve R3 : T2.
 
 Remark R4 : Acc P.prec ord_cons.
 Proof.
   split; destruct y; try contradiction;auto with T2.
 Qed.
 
-Global Hint Resolve R4 : T2.
+#[global] Hint Resolve R4 : T2.
 
 Remark R5 : Acc P.prec ord_psi.
 Proof.
   split; destruct y; try contradiction;auto with T2.
 Qed.
 
-Global Hint Resolve R5 : T2.
+#[global] Hint Resolve R5 : T2.
 
 Theorem well_founded_rpo : well_founded rpo.
 Proof.
@@ -1944,7 +1944,7 @@ Section  well_founded.
   
   Let R := restrict  nf lt.
 
-  Local Hint Unfold restrict R : T2.
+  #[local] Hint Unfold restrict R : T2.
 
   Lemma R_inc_rpo : forall o o', R o o' -> rpo (T2_2_term o) (T2_2_term o').
   Proof.
@@ -3790,7 +3790,7 @@ Qed.
 
   Coercion Finite : nat >-> G0.
 
-  Local Open Scope g0_scope.
+  #[local] Open Scope g0_scope.
 
   Example Ex42 : omega + 42 + omega^ 2 = omega^ 2.
   Proof.

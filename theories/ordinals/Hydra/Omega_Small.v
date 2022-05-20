@@ -80,7 +80,7 @@ Section Impossibility_Proof.
 
 (* end snippet smallHDef *)
 
-  Local Hint Resolve big_to_small : hydra.
+  #[local] Hint Resolve big_to_small : hydra.
 
 
   (* begin snippet mLt *)

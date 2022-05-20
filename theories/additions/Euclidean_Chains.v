@@ -489,7 +489,7 @@ $2^k.3^p$, using Fcompose and previous lemmas.
 Let us look at a simple example *)
 
 (* begin snippet F144 *)
-Global Hint Resolve F1_correct F1_proper
+#[global] Hint Resolve F1_correct F1_proper
      F3_correct F3_proper Fcompose_correct Fcompose_proper
      Fexp2_correct Fexp2_proper : chains.
 
@@ -858,7 +858,7 @@ Lemma KFK_proper : Kchain_proper (KFK kbr fq).
          * rewrite H2, H3;reflexivity. 
 Qed.
 
-Global Instance KFF_proper : Fchain_proper (KFF kbr fq).
+#[global] Instance KFF_proper : Fchain_proper (KFF kbr fq).
  Proof.
    intros until M; intros k k' Hk Hk' H x y Hxy;
    unfold KFF;   simpl.
@@ -1042,7 +1042,7 @@ Proof.
 Qed.
 
 (* begin snippet HintKchains *)
-Global Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
+#[global] Hint Resolve KFF_correct KFF_proper KFK_correct KFK_proper : chains.
 (* end snippet HintKchains *)
 
 Lemma k3_1_correct : Kchain_correct 3 1 k3_1.
@@ -1059,7 +1059,7 @@ Proof.
   add_op_proper M H3; rewrite H2; reflexivity.
 Qed.
 
-Global Hint Resolve k3_1_correct k3_1_proper : chains.
+#[global] Hint Resolve k3_1_correct k3_1_proper : chains.
 
 (** an example of correct chain construction  *)
 
@@ -1185,7 +1185,7 @@ Definition  OK (s: signature)
 
 (* end snippet dependentlyTypedFuns *)
 
-Global Hint Resolve pos_gt_3 : chains.
+#[global] Hint Resolve pos_gt_3 : chains.
 
 (* begin snippet GammaContext *)
 Section Gamma.

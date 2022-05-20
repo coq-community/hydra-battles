@@ -24,10 +24,10 @@ Import List  PartialFun Ensembles.
 (* begin snippet injectDef *)
 
 Fixpoint inject (t:T1) : Ord :=
- match t with T1.zero => zero
-         | T1.cons a n b =>
-           AP._phi0 (inject a) * S n + inject b
- end.
+  match t with
+  | T1.zero => zero
+  | T1.cons a n b => AP._phi0 (inject a) * S n + inject b
+  end.
 
 (* end snippet injectDef *)
 

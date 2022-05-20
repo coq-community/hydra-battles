@@ -10,7 +10,8 @@ Open Scope nat_scope.
 From Coq Require Import RelationClasses Relations Arith Max Lia.
 From hydras Require Import Exp2.
 
-From hydras Require Import MoreLibHyps.
+From LibHyps Require Import LibHyps.
+From hydras  Require Import MoreLibHyps.
 Ltac rename_hyp n th ::= rename_short n th.
 
 (* begin snippet iterateDef *)

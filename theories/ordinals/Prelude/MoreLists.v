@@ -274,7 +274,7 @@ Qed.
 
 
 
-Global Hint Constructors sorted_ge : lists.
+#[global] Hint Constructors sorted_ge : lists.
 
 
 Lemma sorted_inv_gt : forall n p s, sorted_ge n (p::s) ->

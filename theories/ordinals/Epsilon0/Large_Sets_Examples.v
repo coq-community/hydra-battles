@@ -56,7 +56,7 @@ Compute  (gnaw (T1omega * T1omega) (interval 6 699)).
 
 Compute pp (  gnaw (T1omega * T1omega) (interval 6 509)).
 
-Global Hint Resolve iota_from_lt_not_In: core.
+#[global] Hint Resolve iota_from_lt_not_In: core.
 
 (* begin snippet Ex1Lemma:: no-out *)
 Example Ex1 : mlarge (T1omega * T1omega) (interval 6 510).

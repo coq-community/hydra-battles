@@ -197,7 +197,7 @@ Qed.
 Next Obligation. apply m_nf. Defined.
 
 
-Global Instance HVariant_0 : @Hvariant _ _ T1_wf free m.
+#[global] Instance HVariant_0 : @Hvariant _ _ T1_wf free m.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.

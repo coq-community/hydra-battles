@@ -69,7 +69,7 @@ Inductive is_finite:  T2 ->  Set :=
  zero_finite : is_finite zero
 |succ_finite : forall n, is_finite (gcons zero zero n zero).
 
-Global Hint Constructors is_finite : T2.
+#[global] Hint Constructors is_finite : T2.
 
 
 
@@ -235,7 +235,7 @@ Inductive nf : T2 -> Prop :=
     nf(gcons a' b' n' c')-> 
     nf(gcons a b n (gcons a' b' n' c')).
 
-Global Hint Constructors nf : T2. 
+#[global] Hint Constructors nf : T2. 
 
 (* end snippet nfDef *)
 

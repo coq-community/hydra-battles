@@ -353,9 +353,7 @@ For instance, consider the following term of type  \texttt{T1}.
 \input{movies/snippets/T1/badTerm}
 
 
-This term would have been written \(\omega^1\times 2 + \omega^\omega \times 3\) in the usual mathematical notation. We note that the exponents of $\omega$ are not in the right (strictly decreasing) order.
-Nevertheless, with the help of the order \texttt{lt} on \texttt{T1}, we are now able to characterize
-the set of all well-formed ordinal terms:
+This term would have been written \(\omega^1\times 2 + \omega^\omega \times 3\) in the usual mathematical notation. We note that the exponents of $\omega$ are not in the right (strictly decreasing) order. The following boolean function determines whether a given ordinal term is well formed.
 
 
 \vspace{4pt}
@@ -472,7 +470,7 @@ For instance, let us represent the ordinals $0$ and $\omega$   as instances of t
 
 \paragraph*{\gaiasign}
 \index{gaiabridge}{Type of well formed ordinal terms below $\epsilon_0$}
- The library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} defines a \gaia-compatible type \texttt{E0}.
+ Our library~\href{../theories/html/gaia_hydras.T1Bridge.html}{gaia\_hydras.T1Bridge} also defines a type \texttt{E0} (which doesn't exist in \gaia-\texttt{ssete9}). 
 
 
 
@@ -483,7 +481,7 @@ Pattern matching and structural recursion allow us to define boolean characteriz
 
 \vspace{4pt}
 \noindent
-\emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succb}{Epsilon0.T1}}
+\emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#T1is_succ}{Epsilon0.T1}}
 
 
 
@@ -499,7 +497,7 @@ a strictly increasing sequence of ordinals.
 
 \paragraph*{\gaiasign}
 \index{gaiabridge}{Limit and successor ordinals}
-In \gaia, the boolean functions associated with limit and successor ordinals are called \texttt{T1limit} and \texttt{T1is\_succ}.
+In \gaia, the boolean functions associated with limit and successor ordinals are also called \texttt{T1limit} and \texttt{T1is\_succ}.
 
  From~\href{../theories/html/gaia_hydras.HydraGaia_Examples.html}{gaia\_hydras.HydraGaia\_Examples}.
 
@@ -521,20 +519,21 @@ recursion on its Cantor normal form.
 \label{Functions:succ-T1}
 
 \vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.T1.html\#succ}{Epsilon0.T1}}
 
 
 \input{movies/snippets/T1/succDef}
 
 The following lemma establishes the connection between the  function
-\texttt{succ} and the Boolean predicate \texttt{succb}.
+\texttt{succ} and the Boolean predicate \texttt{T1is\_succ}.
 
 \vspace{4pt}
 
 \input{movies/snippets/T1/succbIff}
 
-\begin{exercise}[\gaiasign]
-  Look for the \gaia-theorem which corresponds to \texttt{succb\_iff}.
+\begin{exercise}
+  \gaiasign Look for the \gaia-theorem which corresponds to \texttt{T1is\_succ\_iff}.
 \end{exercise}
 
 \subsubsection{Successor function on \texttt{E0}}
@@ -738,25 +737,35 @@ As a corollary, the order \texttt{Lt} on type \texttt{E0} is well-founded too.
 \inputsnippets{E0/E0LtWf}
 
 
-\begin{remark}
+\begin{remark}[Related work]
 \label{remark:a3pat}
-The alternate proof of well-foundedness using \'Evelyne Contejean's work on
-    recursive path ordering~\cite{DershowitzRPO, a3pat} is available in the
+A proof of well-foundedness using \'Evelyne Contejean's work on
+    recursive path ordering~\cite{DershowitzRPO, a3pat} is also available in the
     library \href{../theories/html/hydras.Epsilon0.Epsilon0rpo.html}{Epsilon0.Epsilon0rpo}.
+
+    In~\cite{Manolios2005}, Manolios and Vroom prove the well-foundedness of ordinal terms below $\epsilon_0$ by reduction to the natural order on the set of natural numbers.
  \end{remark}
 
 
 
 \subsection{An ordinal notation for  \texorpdfstring{$\epsilon_0$}{epsilon0}}
 
-We build an instance of \texttt{ON}, and prove its correctness w.r.t. Schutte's model (see Chapter~\ref{chap:schutte}).
 
+We are now able to build an instance of \texttt{ON}.
+
+\vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}}
 
 \input{movies/snippets/E0/InstanceEpsilon0}
 
 \label{instance-epsilon0}
 
+
+We prove also that this notation is correct w.r.t. Schutte's model (see Chapter~\ref{chap:schutte}).
+
+\vspace{4pt}
+\noindent
 \emph{From Module~\href{../theories/html/hydras.Schutte.Correctness_E0.html}{Schutte.Correctness\_E0}}
 
 
@@ -801,7 +810,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
  
 
-    \section{A refinement of \texttt{E0} : an ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
+    \section{An ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
 
     In Module   \href{https://github.com/coq-community/hydra-battles/blob/master/theories/
       ordinals/OrdinalNotations/OmegaOmega.v}{theories/ordinals/OrdinalNotations/OmegaOmega.v},
@@ -852,7 +861,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
 
     
-\begin{exercise}[not trivial]
+\begin{exercise}
   It may be interesting to write a \emph{direct} proof  of well-foundedness of the order in $\omega^\omega$ (\emph{i.e.}
   without using properties of $\epsilon_0$). This exercise may
   help to understand better the proof structure of Sect.~\vref{sec:strongly-accessible}.
@@ -1045,7 +1054,7 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     We prove  the commutativity of $\oplus$ in two steps. 
     First, we prove by transfinite induction on $\alpha$ that the restriction of $\oplus$ to the
-    interval $[0..\alpha)$ is commutative.
+    interval $[0,\alpha)$ is commutative.
 
     \index{maths}{Transfinite induction}
 
@@ -1130,18 +1139,18 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
 
     \inputsnippets{GHydra/mDef, GHydra/mVariant, GHydra/Termination}
     
-    \section*{Conclusion}
+    % \section*{Conclusion}
 
-    Let us recall three results we have proved so far.
-    \begin{itemize}
-    \item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
-    the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
-    \item There exists \emph{no} such variant from \texttt{Hydra} into 
-    $[0,\omega^2)$, \emph{a fortiori} into $[0,\omega)$.
-    \end{itemize}
+    % Let us recall three results we have proved so far.
+    % \begin{itemize}
+    % \item There exists a strictly decreasing variant which maps \texttt{Hydra} into 
+    % the segment $[0,\epsilon_0)$ for proving the termination of any hydra battle
+    % \item There exists \emph{no} such variant from \texttt{Hydra} into 
+    % $[0,\omega^2)$, \emph{a fortiori} into $[0,\omega)$.
+    % \end{itemize}
 
-    So, a  natural question is `` Does there exist any strictly decreasing variant mapping
-    type \texttt{Hydra} into some interval $[0,\alpha)$ (where $\alpha <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\alpha$, even if we consider a restriction to the set of ``standard'' battles.
+    % So, a  natural question is `` Does there exist any strictly decreasing variant mapping
+    % type \texttt{Hydra} into some interval $[0,\mu)$ (where $\mu <\epsilon_0$) for proving the termination of all hydra battles''. The next chapter is dedicated to a formal proof that there exists no such $\mu$, even if we consider a restriction to the set of ``standard'' battles.
 
 
 

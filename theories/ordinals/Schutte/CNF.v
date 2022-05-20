@@ -52,8 +52,8 @@ Definition exponents_le (alpha : Ord) :=
 
 (* begin hide *)
 
-Global Hint Constructors LocallySorted : schutte.
-Global Hint Unfold sorted : schutte.
+#[global] Hint Constructors LocallySorted : schutte.
+#[global] Hint Unfold sorted : schutte.
 
 (* end hide *)
 

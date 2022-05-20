@@ -194,9 +194,9 @@ Qed.
 
 (* begin snippet M2Defsb:: no-out *)
 
-Global Instance M2_op : Mult_op M2 := M2_mult.
+#[global] Instance M2_op : Mult_op M2 := M2_mult.
 
-Global Instance M2_Monoid : Monoid   M2_op Id2.
+#[global] Instance M2_Monoid : Monoid   M2_op Id2.
 (* ... *)
 (* end snippet M2Defsb *)
 Proof. 
@@ -236,7 +236,7 @@ Section Nmodulo.
     intro H;subst m. discriminate. 
   Qed.
   
-  Local Hint Resolve m_neq_0 : chains.
+  #[local] Hint Resolve m_neq_0 : chains.
   
   (* begin snippet Nmodulob:: no-out *)
   Definition mult_mod (x y : N) := (x * y) mod m.
@@ -256,7 +256,7 @@ Section Nmodulo.
   Qed.
   
   (* begin snippet Nmoduloc:: no-out *)
-  Global Instance mult_mod_proper :
+  #[global] Instance mult_mod_proper :
     Proper (mod_equiv ==> mod_equiv ==> mod_equiv) mod_op.
   (* end snippet Nmoduloc *)
   Proof.
@@ -269,7 +269,7 @@ Section Nmodulo.
   Qed.
 
   (* begin snippet Nmodulod:: no-out *)
-  Local  Open Scope M_scope.
+  #[local]  Open Scope M_scope.
 
   Lemma mult_mod_associative :  forall x y z,
       x * (y * z) = x * y * z.
@@ -299,7 +299,7 @@ Section Nmodulo.
   
 
   (* begin snippet Nmodulog:: no-out *)  
-  Global Instance Nmod_Monoid : EMonoid  mod_op 1 mod_equiv.
+  #[global] Instance Nmod_Monoid : EMonoid  mod_op 1 mod_equiv.
   (* end snippet Nmodulog *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
@@ -318,7 +318,7 @@ Section S256.
 
   Let mod256 :=  mod_op 256.
 
-  Local Existing Instance mod256 | 1.
+  #[local] Existing Instance mod256 | 1.
 
   Compute (211 * 67)%M.
 

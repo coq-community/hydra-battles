@@ -36,13 +36,15 @@ Section Impossibility_Proof.
   
   Lemma m_ge : m big_h t1<= m small_h.
   Proof.
-    apply m_ge_generic with (1 := Hy). 
-    intros i h h' H; generalize Var; destruct 1.
+    apply m_ge_generic with (1 := Hy).
+    (* ... *)
+  (* end snippet mGe *)
+   intros i h h' H; generalize Var; destruct 1.
     apply variant_decr with i. 
     intro H0; subst; now apply (head_no_round_n _  _ H).
     exists i; apply H.      
   Qed.
-  (* end snippet mGe *)
+ 
   
   (** ** Proof of the inequality m small_h t1< m big_h 
    *)
