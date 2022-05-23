@@ -165,7 +165,9 @@
 
   \node[rectangle, draw=black,fill=blue!30,minimum height=0.5cm,minimum width=1.5cm, right of=mathcomp, node distance=5.4cm] (paramcoq) { Paramcoq};
 
-\node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=mathcomp, node distance=7.7cm] (equations) { Equations };
+  \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=mathcomp, node distance=7.7cm] (equations) { Equations };
+
+   \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm,node distance=2cm,left of=equations, node distance=3cm] (libhyps) { LibHyps };
 \end{scope}
 
 \begin{scope}[yshift=-2cm,xshift=-4.2cm]
@@ -204,6 +206,8 @@
 \draw[->] (gaia.south west) -- (gaiahydras.north) ;
 
 \draw[->] (equations) -- (hydras) ;
+\draw[->] (libhyps) -- (hydras) ;
+
 \draw[->] (mathcomp) -- (gaia) ;
 \draw[->] (mathcomp) -- (chains) ;
 \draw[->] (paramcoq.south) -- (chains) ;
