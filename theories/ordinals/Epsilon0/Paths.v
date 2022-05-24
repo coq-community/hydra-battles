@@ -1504,9 +1504,8 @@ Qed.
 (*| .. coq:: no-out |*)
 Lemma Lemma2_6_1 (alpha : T1) :
   nf alpha ->
-  forall beta,
-    beta t1< alpha  ->
-    {n:nat | const_path (S n) alpha beta}.
+  forall beta, beta t1< alpha ->
+               {n:nat | const_path (S n) alpha beta}.
 Proof.
   transfinite_induction alpha.
   (* ... *) (*||*) (*| .. coq:: none |*)
@@ -2913,8 +2912,7 @@ Qed.
 (* end snippet constantToStandardPath *)
 
 (* begin snippet LTToStandardPath:: no-out *)
-Corollary  LT_to_standard_path 
-      (alpha beta : T1) :
+Corollary  LT_to_standard_path (alpha beta : T1) :
   beta t1< alpha ->
   {n : nat & {j:nat | standard_path (S n) alpha j beta}}. 
 (* end snippet LTToStandardPath *)

@@ -620,16 +620,19 @@ We  also use a version of \texttt{Cor12} with large inequalities.
 \input{movies/snippets/Paths/Cor121}
 
 
+\texttt{Cor12} is a consequence of the following theorem (numbered \texttt{2.4} in Ketonen and Solovay's article), proven by transfinite induction on $\alpha$.
+
+\input{movies/snippets/Paths/KSThm24}
+
+\vspace{4pt}
 
 \subsubsection{Sketch of proof of \texttt{Cor12}}
 \index{maths}{Transfinite induction}
 
-First, let us prove the following lemma (numbered \texttt{2.4} in Ketonen and Solovay's article).
+\texttt{Cor12} is also proved by transfinite induction on $\alpha$.  Let us give  a sketch of its proof \footnote{This proof sketch is a slight simplification of the formal proof script:
+  The strictly positive indexes $i$ and $n$ stand for the
+  terms \texttt{(S i)} and \texttt{(S n)}. We do not explicit  the (simpler) case where the considered path is made of only one step.}
 
-\input{movies/snippets/Paths/KSThm24}
-
-
-We prove this lemma by transfinite induction on $\alpha$.
 Let us consider a path $\alpha \xrightarrow [i]{} \beta$ $(i>0)$. Its first step is
 the pair $(\alpha,\canonseq{\alpha}{i})$, We have $\canonseq{\alpha}{i}<\alpha$ and
 $\canonseq{\alpha}{i} \xrightarrow [i]{} \beta$. 
@@ -683,7 +686,7 @@ The following exercise will give an idea of this increase.
 
 Why is \texttt{Cor12} so useful? 
 Let us  consider two ordinals  $\beta<\alpha<\epsilon_0$. By induction on $\alpha$,
-we decompose any inequality $\beta<\alpha$ into $\beta < \canonseq{\alpha}{i}< \alpha$, where $i$ is some integer. Applying corollary \texttt{Cor12'} we build a $n$-path from $\beta$ to $\alpha$,
+we decompose any inequality $\beta<\alpha$ into $\beta < \canonseq{\alpha}{i}< \alpha$, where $i$ is some natural number. Applying corollary \texttt{Cor12'} we build a $n$-path from $\beta$ to $\alpha$,
 where $n$ is the maximum of the indices $i$ met in the induction.
 
  Lemma 1, Section 2.6 of~\cite{KS81} is naturally expressed in terms of \coq's
@@ -779,7 +782,7 @@ Applying \texttt{standard\_path\_to\_zero}, $0$ is reachable from $\alpha$ by so
 
 Since comparison on \texttt{T1} is decidable, one can compute the last step $\gamma$ of the standard path from $(\alpha,n+1)$  such that $\beta\leq \gamma$.
 Let $l$ be the length of the path from $\alpha$ to $\gamma$.  
-This step of the proof is illustrated in figure~\vref{fig:belle-preuve-2}.
+This step of the proof is illustrated in figure~\vref{fig:belle-preuve-2} \footnote{Please note that in these figures, smaller ordinals are represented on the right side!}.
 
 
 
