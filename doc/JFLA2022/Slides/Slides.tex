@@ -42,9 +42,9 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\begin{frame}
-  \tableofcontents
-\end{frame}
+% \begin{frame}
+%   \tableofcontents
+% \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -785,7 +785,8 @@ Proof.
       \begin{itemize}
       \item For the mathematician, it gives a concrete view of the mathematical contents: full proofs, examples, computable functions whenever possible, etc.
         \item  For the \coq learner, it provides a consistent set of examples,
-allowing to present and compare various formalization and proving techniques.
+          allowing to present and compare various formalization and proving techniques.
+          \item It allows the development team to experiment various techniques of CI/CD and project organization and maintenance.
       \end{itemize}
     \end{itemize}
   \end{block}
@@ -806,7 +807,7 @@ allowing to present and compare various formalization and proving techniques.
     
   
     \item Formalization by Minki Cho, using a different representation.
-{\color{darkorange}
+{\color{blue}
 \begin{verbatim}
 Inductive Ord.t :=
 | Ord.build: 
@@ -833,15 +834,12 @@ Inductive Ord.t :=
     \item etc.
     \end{itemize}
   \end{block}
-\end{frame}
 
-  \begin{frame}
-\frametitle{Call to contributors}
   \begin{block}{}
   {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please contribute, reuse!}
       \begin{itemize}
       \item New chapters
-      \item Any correction or improvement (text and/or proofs)
+      \item Any correction or suggestion of improvement (text and/or proofs)
         
   
     \end{itemize}
@@ -853,19 +851,3 @@ Inductive Ord.t :=
 
 \end{document}
 
-\begin{frame}
-  \frametitle{Ordinals in \coq}
-  
-  \begin{block}{}
-    Ordinals less than {\color{mathcolor}$\omega^\omega, \epsilon_0,  \Gamma_0$} are represented as \emph{ordinal notations}: comparison, canonical sequences, partition limit/successors/zero ordinals are implemented by certified functions, allowing the user to write proofs by computation.
-
-    \begin{footnotesize}
-      \inputsnippets{./ONDef}
-
-      \inputsnippets{../E0_Ex42}
-    \end{footnotesize}
-
-    
-    
-  \end{block}
-\end{frame}
