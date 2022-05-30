@@ -15,11 +15,36 @@ Fixpoint T12Tree (a: T1): GenTree.tree nat :=
   then GenTree.Node n [:: T12Tree b; T12Tree c]
   else GenTree.Leaf 0.                                        
 
-Lemma  T12Tree_inj: injective T12Tree.
+Fixpoint Tree2T1 (t: GenTree.tree nat): option T1 :=
+  match t with
+  | GenTree.Leaf 0 => Some zero
+  | GenTree.Node n [:: t1; t2] =>
+      match Tree2T1 t1, Tree2T1 t2 with
+      | Some b, Some c => Some (cons b n c)
+      | _, _ => None
+      end
+  | _ => None
+  end.
+
+About pcancel. 
+
+Lemma TreeT1K : pcancel T12Tree Tree2T1. 
+Proof. 
+  elim => //.
+  move => t Ht n t0 Ht0 /=; by rewrite Ht0 Ht. 
+Qed.                                              
+
+ 
+Lemma  T12Tree_inj: injective T12Tree.   
 Proof.
-  rewrite /injective; elim; first by case.
-  move => t Ht n t0 Ht0 ; case => //=. 
-  move => t1 n0 t2 /= H; injection H; clear H. 
-  move /Ht0 => ->; by move /Ht => -> ->.
+  move => t1 t2 Heq.
+  have H: Some t1 = Some t2 by rewrite -!TreeT1K Heq. 
+  by injection H. 
 Qed.
 
+Check tree_countType nat_countType. 
+
+Check @PcanCountMixin (tree_countType nat_countType) T1
+                      T12Tree _ TreeT1K. 
+
+Check PcanCountMixin TreeT1K. 
