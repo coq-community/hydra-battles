@@ -5,7 +5,7 @@ From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic  T1 E0.
 From gaia Require Export ssete9.
 Require Import T1Bridge.
-(* end snippet Requirements *)
+
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -47,4 +47,6 @@ Check tree_countType nat_countType.
 Check @PcanCountMixin (tree_countType nat_countType) T1
                       T12Tree _ TreeT1K. 
 
-Check PcanCountMixin TreeT1K. 
+Check PcanCountMixin TreeT1K.
+Compute  (Choice.class_of T1). 
+
