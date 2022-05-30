@@ -395,7 +395,8 @@ As a corollary, we relate ordinal inequality to standard paths.
 
 \subsection{A type for well-formed ordinal terms}
 \label{sect:E0-gaia-hydras}
-For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}.
+For compatibility's sake, we add a clone of \texttt{hydra-battles}' type \texttt{E0} defined in \href{../theories/html/hydras.Epsilon0.E0.html}{Epsilon0.E0}. This type is mainly used in
+the definition with \texttt{Equations} of rapidly growing functions indexed by ordinals (see Sect.~\vref{sect:gaia-rapidly-growing}).
 
 \inputsnippets{T1Bridge/E0Def}
 \inputsnippets{T1Bridge/E0EqMixin, T1Bridge/E0EqType}
@@ -447,6 +448,7 @@ Then, we build an instance of (\texttt{ON E0lt compare}).
 
 \section{Rapidly growing arithmetic functions}
 \index{gaiabridge}{Rapidly growing functions}
+\label{sect:gaia-rapidly-growing}
 
 In this section, we consider a few families of arithmetic functions, indexed by ordinal numbers below $\epsilon_0$.
 The type of such families is \texttt{E0 -> nat -> nat} where

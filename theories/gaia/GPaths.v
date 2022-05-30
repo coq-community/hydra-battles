@@ -161,8 +161,7 @@ Qed.
 
 (* begin snippet LTPathTo:: no-out *)
 Lemma LT_path_to (a b : T1) :
-  T1nf a -> T1nf b -> b < a ->
-  {s : list nat | path_to b s a}.
+  T1nf a -> T1nf b -> b < a -> {s : list nat | path_to b s a}.
 (* end snippet LTPathTo *)
 Proof. 
   move => Ha Hb Hlt;
@@ -186,11 +185,9 @@ Proof.
 Qed. 
 
 (* begin snippet Cor12:: no-out *)
-Lemma Cor12 (a: T1) :
-  T1nf a ->
+Lemma Cor12 (a: T1) : T1nf a ->
   forall b i n, T1nf b -> b < a -> (i < n)%N ->
-                   const_path i.+1 a b ->
-                   const_path n.+1 a b.
+                const_path i.+1 a b -> const_path n.+1 a b.
 (* end snippet Cor12 *)
 Proof.
   rewrite -hnf_g2h => Hnf b i n Hb Hlt Hij; apply Cor12 => //.
