@@ -473,20 +473,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{frame}
     \frametitle{Paths and accessibility}
-    \begin{block}{Theorem (K. \& S., 1981) }
+    \begin{block}{ }
       % If $\beta<\alpha<\epsilon_0$, there exists $i$ and $l$ in $\mathbb{N}$ such that $ \alpha \rplus{i, i+1, i+2, \dots,l} \beta$.
 
-      \vspace{6pt}
 
 
           \label{fig:accessibility}
         \begin{tikzpicture}[very thick, scale=0.25]
 \node (alpha) at (0,0) {$\alpha$};
-    \node (beta) at (40, 0){$\beta$};
-  
+    \node (beta) at (35, 0){\textcolor{red}{$\beta$}};
+   \node (zero) at (40, 0){$0$};
 
   \draw[->, very thick,black] (alpha)--  node [above]{$>$} (beta);
-
+ \draw[->, very thick,black] (beta)--  node [above]{$>$} (zero);
   \node (alpha1) at (5,5) {};
   \node (alpha2) at (13,5) {};
     \node (alpha3) at (20,5) {};
@@ -495,17 +494,21 @@
   \draw [->, dashed,very thick,red] (alpha1)-- node [below]{$i+1$}  (alpha2);
    \draw [->, dashed,very thick,red] (alpha2)-- node [below]{$i+2$}  (alpha3);
     \draw [->, dashed,very thick,red] (alpha3)-- node [below]{$i+3$}  (alpha4);
-  \node (dots) at (30,5) {$\dots$};
+    \only<1>{\node (dots) at (26,5) {$\;\dots\;?$};}
+     \only<2>{\node (dots) at (26,5) {\textcolor{red}{$\;\dots\;$}};}
   \node (search) at (32,5){};
- \draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);
+ \only<2>{\draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);}
 \end{tikzpicture}
 
+\only<2>{OK for large enough $i$ (K. \& S., 1981);}
+\vspace{6pt}
+
 %\pause
-\textbf{Remark:} The proof is not trivial. The built path could miss $\beta$!
+\only<2>{\textbf{Remark:} The proof is not trivial. The built path could miss $\beta$!}
 
 \vspace{4pt}
 
-\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles.
+\only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles.}
 
 \end{block}
 
