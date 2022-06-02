@@ -272,10 +272,9 @@ Lemma  canon_limit_mono lambda i j (Hnf : T1nf lambda)
    limit_of (canon lambda) lambda.
  (* end snippet gcanonLimitOf *)
 Proof.
-   split => // [n m Hnm|].
-   apply canon_limit_mono => //.
-   apply gcanon_limit_v2 => //.
- Qed.    
+  split => // [n m Hnm|];
+           [apply canon_limit_mono | apply gcanon_limit_v2]; done.
+Qed.    
 
 
 (** *  Adaptation of [canon] to type E0 *)

@@ -189,14 +189,15 @@
 \end{scope}
 
 \begin{scope}[yshift=-5cm,xshift=4cm]
-\node[rectangle, draw=black,fill=red!80,minimum height=0.5cm,minimum width=1.5cm] (book) { \Hydras};  
+  \node[rectangle, draw=black,fill=red!60,minimum height=0.5cm,minimum width=1.5cm] (book) {hydras.pdf};
+    \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm, left of=book, node distance=6cm] (latex) {hydras.tex};
 \end{scope}
 
 \draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
 \draw[lookcolor,->,dashed] (additions.south west) -- (chains.north) ;
 \draw[lookcolor,->,dashed] (goedel) -- (goedelcc) ;
 \draw[lookcolor,->,dashed] (goedel) -- (hydras.north) ;
-\draw[lookcolor,->,dashed] (cantor) -- (hydras.north east) ;
+\draw[lookcolor,->,dashed] (cantor) -- (hydras.north) ;
 \draw[lookcolor,->,dashed] (cantor.south) -- (gaia.north west) ;
 \draw[lookcolor,->,dashed] (pock) -- (pockcc) ;
 \draw[lookcolor,->,dashed] ([xshift=2.1cm]cats) -- (gaia) ;
@@ -220,7 +221,7 @@
 \draw[->, red] (chains) -- (book) ;
 \draw[->, red] (gaiahydras) -- (book) ;
 \draw[->, red] (hydras.south) -- (book) ;
-
+\draw[->, red] (latex) -- (book) ;
 \end{tikzpicture}
 }
 % \caption{Genealogy and dependencies for \Hydras.}
