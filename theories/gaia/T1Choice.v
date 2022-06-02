@@ -66,3 +66,27 @@ Check @PcanCountMixin (tree_countType nat_countType) T1
 Check PcanCountMixin TreeT1K.
 Compute  (Choice.class_of T1). 
 *)
+
+
+About leOrderMixin. 
+About mathcomp.ssreflect.order.Order.LeOrderMixin.Exports.leOrderMixin.
+Print Order.LeOrderMixin.of_. 
+
+Definition T1_le_Mixin := leOrderMixin T1Choice.
+
+Check  @T1_le_Mixin.
+
+Search (T1 -> T1 -> T1).
+
+Definition T1min a b := if T1le a b then a else b. 
+Definition T1max a b := if T1le a b then b else a. 
+Goal T1_le_Mixin.
+  rewrite /T1_le_Mixin. 
+  esplit  with T1le T1lt T1min T1max.
+  Search T1lt T1le. 
+  move => x y; rewrite T1lt_neAle.
+Locate "_ != _". 
+  Search ((?x == ?y) =  (?y == ?x)).
+ by rewrite eq_sym. 
+Abort. (* To do *)
+
