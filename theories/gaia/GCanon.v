@@ -59,13 +59,14 @@ Proof.
   rewrite -g2h_eqE g2h_canon g2h_succ Canon.canon_succ ?hnf_g2h => //.
 Qed.
 
+(* begin snippet gcanonSLE:: no-out *)
 Lemma canonS_LE a n:
     T1nf a -> canon a n.+1 <= canon a n.+2.
 Proof.
-  rewrite -(h2g_g2hK a) -nf_ref /canon g2h_h2gK => Hnf. 
+  rewrite -(h2g_g2hK a) -nf_ref /canon g2h_h2gK => Hnf;
   by apply le_ref, canonS_LE. 
 Qed.
-
+(* end snippet gcanonSLE *)
 
 Lemma canon0_phi0_succE a:
   T1nf a -> canon (phi0 (T1succ a)) 0 = zero.
