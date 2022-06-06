@@ -74,7 +74,8 @@
       \item CI/CD
         \item Tools for collaboration (issues, PR, etc.)
         \end{itemize}
-           \item A book in PDF (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
+      \item A book in PDF (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
+  \item          When appropriate, we present various proofs of the same statement, and interesting false starts.
     \end{itemize}
   \end{block}
   \begin{block}{Contents}
@@ -92,9 +93,13 @@
 \begin{frame}
   \frametitle{What hydras are talking about?}
   \begin{block}{}
-    \Hydras presents a consistent set of examples, which allows us to formalize
+   
+ \Hydras presents a consistent set of examples, which allows us to formalize
     some \textcolor{mathcolor}{discrete math}, discuss
-    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}, and depend on \textcolor{plugincolor}{a few plug-ins}.
+    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}.
+
+    %, and depend on \textcolor{plugincolor}{a few plug-ins}.
+  
   \end{block}
   \begin{block}{}
     \begin{description}
@@ -151,7 +156,8 @@
 \begin{scope}[xshift=-5.7cm]
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm] (goedel) { Goedel\footnote{R. O'Connor} };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,left of=goedel, node distance=2.2cm] (pock) { Pocklington\footnote{O. Caprotti \& M. Oostdijk}};
-\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (cantor) { Cantor\footnote{C. \& E. Contejean}};
+\node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=goedel, node distance=2.5cm] (cantor) { Cantor\footnote{C. \& E. Contejean
+    \textcolor{pauillac}{(Pauillac 2006)}}};
 
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cantor, node distance=3.6cm] (cats) { Categories in ZFC\footnote{C. Simpson} };
 \node[rectangle, dotted,draw=black,minimum height=0.5cm,minimum width=1.5cm,right of=cats, node distance=3.2cm] (additions) {Additions};
@@ -509,7 +515,8 @@
 
 \vspace{4pt}
 
-\only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles.}
+\only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles
+  (extends \textcolor{banyuls}{Banyuls 2018}).}
 
 \end{block}
 
