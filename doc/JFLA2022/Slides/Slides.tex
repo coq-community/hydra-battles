@@ -90,45 +90,45 @@
  
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{What hydras are talking about?}
-  \begin{block}{}
+% \begin{frame}
+%   \frametitle{What hydras are talking about?}
+%   \begin{block}{}
    
- \Hydras presents a consistent set of examples, which allows us to formalize
-    some \textcolor{mathcolor}{discrete math}, discuss
-    \textcolor{coqstylecolor}{\coq style, specification and proof patterns}.
+%  \Hydras presents a consistent set of examples, which allows us to formalize
+%     some \textcolor{mathcolor}{discrete math}, discuss
+%     \textcolor{coqstylecolor}{\coq style, specification and proof patterns}.
 
-    %, and depend on \textcolor{plugincolor}{a few plug-ins}.
+%     %, and depend on \textcolor{plugincolor}{a few plug-ins}.
   
-  \end{block}
-  \begin{block}{}
-    \begin{description}
-    \item[hydra battles:]
+%   \end{block}
+%   \begin{block}{}
+%     \begin{description}
+%     \item[hydra battles:]
       
-      \textcolor{mathcolor}{ordinals},
-      \textcolor{mathcolor}{rapidly growing functions},
-      \textcolor{mathcolor}{primitive recursive functions}, 
-      \textcolor{coqstylecolor}{dependently typed functions},
-      \textcolor{coqstylecolor}{operational type classes},
-      \textcolor{coqstylecolor}{proofs of well-foundedness},
-      \textcolor{coqstylecolor}{impossibility proofs},
-      \textcolor{coqstylecolor}{uniqueness of identity proofs (UIP)},
-      \textcolor{coqstylecolor}{indefinite description (Hilbert's epsilon operator)}, 
-      \textcolor{plugincolor}{equations},
-      \textcolor{plugincolor}{ackermann (goedel)},
-      \textcolor{plugincolor}{gaia}
+%       \textcolor{mathcolor}{ordinals},
+%       \textcolor{mathcolor}{rapidly growing functions},
+%       \textcolor{mathcolor}{primitive recursive functions}, 
+%       \textcolor{coqstylecolor}{dependently typed functions},
+%       \textcolor{coqstylecolor}{operational type classes},
+%       \textcolor{coqstylecolor}{proofs of well-foundedness},
+%       \textcolor{coqstylecolor}{impossibility proofs},
+%       \textcolor{coqstylecolor}{uniqueness of identity proofs (UIP)},
+%       \textcolor{coqstylecolor}{indefinite description (Hilbert's epsilon operator)}, 
+%       \textcolor{plugincolor}{equations},
+%       \textcolor{plugincolor}{ackermann/goedel},
+%       \textcolor{plugincolor}{gaia}
       
-    \item[addition chains (exponentiation algorithms):]
-      \textcolor{mathcolor}{algorithmics},
-      \textcolor{mathcolor}{arithmetic},
-      \textcolor{coqstylecolor}{operational type classes},
-      \textcolor{coqstylecolor}{monadic notations},
-      \textcolor{coqstylecolor}{PHOAS},
-      \textcolor{coqstylecolor}{parametricity}, 
-      \textcolor{plugincolor}{paramcoq}
-    \end{description}
-  \end{block}
-\end{frame}
+%     \item[addition chains (exponentiation algorithms):]
+%       \textcolor{mathcolor}{algorithmics},
+%       \textcolor{mathcolor}{arithmetic},
+%       \textcolor{coqstylecolor}{operational type classes},
+%       \textcolor{coqstylecolor}{monadic notations},
+%       \textcolor{coqstylecolor}{PHOAS},
+%       \textcolor{coqstylecolor}{parametricity}, 
+%       \textcolor{plugincolor}{paramcoq}
+%     \end{description}
+%   \end{block}
+% \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -298,9 +298,9 @@
 
 \begin{frame}
   \frametitle{Kirby \& Paris' hydras}
-  \begin{figure}[h]
+ \begin{figure}[h]
     \centering
-    \begin{tikzpicture}[very thick, scale=0.25]
+    \begin{tikzpicture}[very thick, scale=0.20]
       \node (h1) at (4,0){$\bullet$};
       \node[blue] (h2) at (4,2){$\bullet$};
       \node[blue] (h3) at (2,4){$\bullet$};
@@ -361,12 +361,12 @@
 
     \caption{Three successive states of a hydra in a battle,
       at time $t=1,2,3$\label{life1}}
-    \label{fig:round}
-  \end{figure}
+ \label{fig:round}
+ \end{figure}
 
   \begin{figure}[h]
     \centering
-    \begin{tikzpicture}[very thick, scale=0.25]
+    \begin{tikzpicture}[very thick, scale=0.2]
       \node (hn1) at (4,0){$\bullet$};
       \node[blue] (hn2) at (2,2) {$\bullet$};
       \node[blue] (hn3) at (2,4) {$\bullet$};
@@ -422,6 +422,8 @@
     \caption{At $t=4,\dots,\textcolor{red}{x}-1,\textcolor{red}{x=?}$
       \label{life2}}
   \end{figure}
+
+ Cf.  \textcolor{pauillac}{Pauillac 2006} and \textcolor{banyuls}{Banyuls 2018}. Today, let us focus on some combinatorial aspects (number of rounds of a battle).
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -447,7 +449,7 @@
         \begin{itemize}
         \item $\canonseq{0}{i}=0$
         \item $\canonseq{\beta+1}{i}=\beta$
-         \item If $\lambda$ is a limit ordinal, then $\lambda$ is the $\omega$-limit of $\canonseq{\lambda}{\_}$.
+        \item If $\lambda$ is a limit ordinal, then $\lambda$ is the $\omega$-limit of $\canonseq{\lambda}{\_}$.
         \end{itemize}
     \end{block}
   
@@ -482,7 +484,7 @@
     \frametitle{Paths and accessibility}
     \begin{block}{ }
       % If $\beta<\alpha<\epsilon_0$, there exists $i$ and $l$ in $\mathbb{N}$ such that $ \alpha \rplus{i, i+1, i+2, \dots,l} \beta$.
-
+   
 
 
           \label{fig:accessibility}
@@ -507,16 +509,17 @@
  \only<2>{\draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);}
 \end{tikzpicture}
 
-\only<2>{OK for large enough $i$ (K. \& S., 1981);}
+\only<2>{OK for large enough $i$ (K. \& S., 1981)}
 \vspace{6pt}
 
-%\pause
-\only<2>{\textbf{Remark:} The proof is not trivial. The built path could miss $\beta$!}
+% \pause
+\only<1>{Goal: reach \textcolor{red}{$\beta$} from $\alpha$.}
+\only<2>{\textbf{Remark:} The proof is not trivial. The deterministic red path could miss $\beta$!}
 
 \vspace{4pt}
 
 \only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles
-  (extends \textcolor{banyuls}{Banyuls 2018}).}
+  (stronger than \textcolor{banyuls}{Banyuls 2018}).}
 
 \end{block}
 
@@ -549,9 +552,6 @@
 \vspace{4pt}
 
 \textbf{Wainer hierarchy (variant)}
-
-
-We use also the following family in our proofs.
 
 {\color{mathcolor}
 \begin{align}
@@ -645,7 +645,7 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
          \[\forall\,x_1,\dots,x_n,  
           f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))\]}
     \end{quote}
-    (Proof by induction on any primitive recursive function of any arity.)
+  %  (Proof by induction on any primitive recursive function of any arity.)
   \end{block}
   
   \end{block}
@@ -685,16 +685,16 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
 
 \begin{frame}
   \frametitle{Compatibility with Gaia}
-  \begin{block}{From \Hydras to \gaia}
+  \begin{block}{}
     {\footnotesize
       \inputsnippets{./canonDef}
       \inputsnippets{./gcanonSLE}
       \inputsnippets{./gcanonLimitOf}}
     
   \end{block}
-  \begin{block}{}
-    We experiment also the other direction (importing \texttt{ssete9} lemmas to \Hydras).
-  \end{block}
+  % \begin{block}{}
+  %   We experiment also the other direction (importing \texttt{ssete9} lemmas to \Hydras).
+  % \end{block}
 \end{frame}
 
 \begin{frame}
@@ -714,25 +714,25 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Presenting proofs with \alectr}
-\begin{frame}
-  \frametitle{Presenting proofs with \alectr}
-  \begin{block}{}
-    \begin{itemize}
- \item     The continuously evolving version of the book is continuously deployed from the master branch to the \community website.
-
-     \item
-      \coq libraries contain \emph{snippet declarations} which are converted during the compilation of the book into \LaTeX\xspace blocks which are inserted into the book.
-
-    \item The order in which \coq code, goals and answers are presented in the book is determined by the difficulty of the mathematical examples, or the assumed level in \coq of the reader, not by the structure of the libraries.
-  
-  
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
 \begin{frame}[fragile]
+  \frametitle{Presenting proofs with \alectr}
+ %  \begin{block}{}
+%     \begin{itemize}
+%  \item     The continuously evolving version of the book is continuously deployed from the master branch to the \community website.
+
+%      \item
+%       \coq libraries contain \emph{snippet declarations} which are converted during the compilation of the book into \LaTeX\xspace blocks which are inserted into the book.
+
+%     \item The order in which \coq code, goals and answers are presented in the book is determined by the difficulty of the mathematical examples, or the assumed level in \coq of the reader, not by the structure of the libraries.
+  
+  
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% \begin{frame}[fragile]
 \begin{alltt}
 {\color{lightblue}{(* begin snippet Ex42a:: no-out *)}}
 Example Ex42: omega + 42 + omega^2 = omega^2. 
@@ -805,47 +805,32 @@ Proof.
   \end{block}
   \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[fragile]
-  \frametitle{Perspectives}
-  \begin{block}{Library on ordinals}
-      \begin{itemize}
-  \item \gaiahydra:
-    \begin{itemize}
-    \item Remove definition duplicates
-     \item types \texttt{T2}, \texttt{T3}, connection between 
-    Schütte's model with \texttt{ssete10} (Bourbaki' set theory).
-    \end{itemize}
-    
-  
-    \item Formalization by Minki Cho, using a different representation.
-{\color{blue}
-\begin{verbatim}
-Inductive Ord.t :=
-| Ord.build: 
-    forall (A: Type), (A -> Ord.t) -> Ord.t.
-\end{verbatim}
-}  
-    \end{itemize}
-
-  \end{block}
-\end{frame}
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
+\begin{frame}[fragile]
+  \frametitle{Perspectives}
   \begin{block}{}
     \begin{itemize}
+
+    \item  Links with other representations of ordinals:
+      
+      \noindent
+         Example (Minki Cho):
+  \begin{scriptsize}
+    {\color{blue}
+\begin{verbatim}
+Inductive Ord.t :=
+| Ord.build: forall (A: Type), (A -> Ord.t) -> Ord.t.
+\end{verbatim}
+      }
+ \end{scriptsize}
+      
       \item More results about hyper-complexity and fast growing functions
     \item New toolchain for \alectr
     \item More proof and specification patterns
     \item More examples and exercises
-    \item etc.
-    \end{itemize}
+     \end{itemize}
   \end{block}
 
   \begin{block}{}
