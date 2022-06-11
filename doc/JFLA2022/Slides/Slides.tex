@@ -68,14 +68,14 @@
   \frametitle{The \Hydras project}
   \begin{block}{}
     \begin{itemize}
-   \item Experimental platform for the  development of \textcolor{lookcolor}{maintained} and \textcolor{lookcolor}{documented} libraries of formal proofs.
-    \item A project of \community, developped on GitHub
-      \begin{itemize}
-      \item CI/CD
-        \item Tools for collaboration (issues, PR, etc.)
-        \end{itemize}
-      \item A book in PDF (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed
-  \item          When appropriate, we present various proofs of the same statement, and interesting false starts.
+    \item A project of \community:  experimental platform for the  development of
+      \textcolor{lookcolor}{documented} and \textcolor{lookcolor}{maintained} libraries of formal proofs: 
+    CI/CD,  Tools for collaboration (issues, PR, etc.)
+   
+  \item A book in PDF (300p), generated  with \textcolor{lookcolor}{\alectr} and \LaTeX, continuously updated and deployed.
+
+    This book is structured around a few examples (algorithmics, ordinal numbers).
+        When appropriate, various proofs of the same statement, and interesting false starts are presented.
     \end{itemize}
   \end{block}
   \begin{block}{Contents}
@@ -423,7 +423,7 @@
       \label{life2}}
   \end{figure}
 
- Cf.  \textcolor{pauillac}{Pauillac 2006} and \textcolor{banyuls}{Banyuls 2018}. Today, let us focus on some combinatorial aspects (number of rounds of a battle).
+ Cf.  \textcolor{pauillac}{Pauillac 2006} and \textcolor{banyuls}{Banyuls 2018}. Today, let us focus on some combinatorial aspects (\emph{e.g.} number of rounds of a battle).
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -509,7 +509,7 @@
  \only<2>{\draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);}
 \end{tikzpicture}
 
-\only<2>{OK for large enough $i$ (K. \& S., 1981)}
+\only<2>{{\color{lookcolor}OK for large enough $i$ (K. \& S., 1981)}}
 \vspace{6pt}
 
 % \pause
@@ -540,16 +540,17 @@
   {\small
 \textbf{Hardy Hierarchy (variant)}
     
- Let us define \textcolor{mathcolor}{$H'_\alpha(i)$} as the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (Figure page.~\pageref{fig:accessibility}). 
+ 
  {\color{mathcolor}
 \begin{align}
   H'_0(i) & = i\\
   H'_{\beta+1}(i) &=H'_\beta(i+1) \\
   H'_\lambda(i) &= H'_{(\canonseq{\lambda}{i+1})}(i)  \quad\textit{($\lambda$ limit ordinal)} 
 \end{align}}
- 
 
-\vspace{4pt}
+\textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide)). 
+
+\vspace{6pt}
 
 \textbf{Wainer hierarchy (variant)}
 
@@ -813,18 +814,16 @@ Proof.
   \begin{block}{}
     \begin{itemize}
 
-    \item  Links with other representations of ordinals:
-      
-      \noindent
-         Example (Minki Cho):
-  \begin{scriptsize}
+    \item  Links with other representations of ordinals, \emph{e.g.}:
+  \begin{footnotesize}
     {\color{blue}
 \begin{verbatim}
+(* Minki Cho *)
 Inductive Ord.t :=
 | Ord.build: forall (A: Type), (A -> Ord.t) -> Ord.t.
 \end{verbatim}
       }
- \end{scriptsize}
+ \end{footnotesize}
       
       \item More results about hyper-complexity and fast growing functions
     \item New toolchain for \alectr
@@ -834,10 +833,10 @@ Inductive Ord.t :=
   \end{block}
 
   \begin{block}{}
-  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please contribute, reuse!}
+  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please clone, fork, contribute!}
       \begin{itemize}
       \item New chapters
-      \item Any correction or suggestion of improvement (text and/or proofs)
+      \item Any correction or suggestion of improvement (text and/or proofs).
         
   
     \end{itemize}
