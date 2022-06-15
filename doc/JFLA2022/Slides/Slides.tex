@@ -542,15 +542,16 @@
   {\small
 \textbf{Hardy Hierarchy (variant)}
     
+ \textbf{Definition:} \textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide). 
+
  
  {\color{mathcolor}
 \begin{align}
   H'_0(i) & = i\\
   H'_{\beta+1}(i) &=H'_\beta(i+1) \\
-  H'_\lambda(i) &= H'_{(\canonseq{\lambda}{i+1})}(i)  \quad\textit{($\lambda$ limit ordinal)} 
+  H'_\alpha(i) &= H'_{(\canonseq{\alpha}{i+1})}(i)  \quad\textit{($\alpha$ limit ordinal)} 
 \end{align}}
 
-\textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide)). 
 
 \vspace{6pt}
 
@@ -560,7 +561,7 @@
 \begin{align}
 F_0(i)& =i+1\\
 F_{\beta+1}(i)&= (F_\beta)^{(i+1)}(i)\\
-F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit ordinal)}
+F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordinal)}
 \end{align}}}
 \end{block}
 \end{frame}
@@ -628,12 +629,11 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
   
   \begin{block}{Theorems}
     \begin{itemize}
-    \item $F_\alpha$ is primitive recursive iff $\alpha<\omega$.
+    \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
      \item  
     The function which computes the length of hydra battles
-    for $\alpha$ (according to the initial index) is not primitive recursive
-    (for $\alpha\geq \omega^\omega$).
-
+    for \textcolor{mathcolor}{$\alpha$} (according to the initial index) is not primitive recursive
+    (for $\textcolor{mathcolor}{\alpha\geq \omega^\omega}$).
     \end{itemize}
     
     
