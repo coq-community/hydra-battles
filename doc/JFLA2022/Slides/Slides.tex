@@ -431,7 +431,7 @@
 \begin{frame}
   \frametitle{The Ketonen-Solovay machinery\footnote{Rapidly Growing {R}amsey Functions (1981)}}
     \begin{block}{Formalization}
-
+      {\color{mathcolor}
       $$\omega^{\omega^2+1}+1 \rplus{1} \omega^{\omega^2+1}
       \rplus{2} \omega^{\omega^2}\times 3 
       \rplus{3} \omega^{\omega^2}\times 2 +
@@ -439,19 +439,21 @@
 
       \vspace{6pt}
       
-      $$ \omega^{\omega^2+1}+1 \rplus{1,2,3,4,\dots,x} 0$$
+      $$ \omega^{\omega^2+1}+1 \rplus{1,2,3,4,\dots,x} 0$$}
     \end{block}
     
       \begin{block}{Small steps}
-        At time $i$, 
-           $\alpha \rplus{i} \canonseq{\alpha}{i}$,
-        where $\canonseq{\alpha}{\_}$ is the \emph{canonical sequence} of $\alpha$.
-        \begin{itemize}
-        \item $\canonseq{0}{i}=0$
-        \item $\canonseq{\beta+1}{i}=\beta$
-        \item If $\lambda$ is a limit ordinal, then $\lambda$ is the $\omega$-limit of $\canonseq{\lambda}{\_}$.
-        \end{itemize}
-    \end{block}
+        At the $i$-th round, 
+           \textcolor{mathcolor}{$\alpha \rplus{i} \canonseq{\alpha}{i}$},
+           where \textcolor{mathcolor}{$\canonseq{\alpha}{\_}$} is the \emph{canonical sequence} of \textcolor{mathcolor}{$\alpha$}.
+          
+             \begin{itemize}
+             \item  \textcolor{mathcolor}{$\canonseq{0}{i}=0$}
+             \item \textcolor{mathcolor}{$\canonseq{\beta+1}{i}=\beta$}
+             \item If \textcolor{mathcolor}{$\alpha$} is a limit ordinal, then \textcolor{mathcolor}{$\alpha$} is the limit of the sequence
+               \textcolor{mathcolor}{$\canonseq{\alpha}{i}_{ (i\in\mathbb{N})}$}.
+             \end{itemize}
+           \end{block}
   
     
       % We associate a hydra to each ordinal \textcolor{mathcolor}{$\alpha<\epsilon_0$} (in Cantor normal form). For instance, the first hydra of our example is the image of \textcolor{mathcolor}{$\omega^{\omega^2+1}+1$}.
@@ -583,20 +585,9 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
 
 
 \begin{frame}[fragile]
-  \begin{block}{Examples}
-         
-      {\color{mathcolor}
-      
-    \begin{align*}
-      H'_{\omega^3}(k) \geq\, & \textit{hyper\_exp2}(k+1) \\
-      H'_{\omega^\omega}(k)=\,& \textbf{let}\,F\;f\;i := f^{(i+1)}(i)\,
-                      \textbf{in}\, F^{(k)}(\lambda k.\,2k+1)\,k\\
-    \end{align*}
-       }%mathcolor
-  \end{block}
   
 
-\begin{block}{Lemmas (after K.\& S.)}
+\begin{block}{Lemmas (after K.\,\&\,S.)}
    \begin{itemize} 
     \item \textcolor{mathcolor}{$H'_\alpha$} is strictly monotonous
     
@@ -610,6 +601,19 @@ F_\lambda(i) &= F_{(\canonseq{\lambda}{i})} (i) \quad \textit{($\lambda$ limit o
        \end{itemize}
        (Proof by mutual transfinite induction)
  \end{block}  
+
+ \begin{block}{Examples}
+         
+      {\color{mathcolor}
+      
+        \begin{align*}
+        H'_{\omega^\omega}(k)=\,& \textbf{let}\,F\;f\;i := f^{(i+1)}(i)\,
+                                  \textbf{in}\, F^{(k)}(\lambda k.\,2k+1)\,k\\
+      H'_{\omega^3}(k) \geq\, & \textit{hyper\_exp2}(k+1) \\
+      H'_{\omega^\alpha}(k)\geq\,& F_\alpha(k)\; (k>0)\\
+    \end{align*}
+       }%mathcolor
+  \end{block}
   
     
 \end{frame}
