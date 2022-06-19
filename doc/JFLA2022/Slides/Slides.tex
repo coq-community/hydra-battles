@@ -482,7 +482,8 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \begin{frame}
+\begin{frame}[label={accessibility}]
+  
     \frametitle{Paths and accessibility}
     \begin{block}{ }
       % If $\beta<\alpha<\epsilon_0$, there exists $i$ and $l$ in $\mathbb{N}$ such that $ \alpha \rplus{i, i+1, i+2, \dots,l} \beta$.
@@ -521,7 +522,9 @@
 \vspace{4pt}
 
 \only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles
-  (stronger than \textcolor{banyuls}{Banyuls 2018}).}
+  (stronger than \textcolor{banyuls}{Banyuls 2018}).
+}
+
 
 \end{block}
 
@@ -585,8 +588,7 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
 % \end{frame}
 
 
-\begin{frame}[fragile]
-  
+\begin{frame}[fragile, label={fgflemmas}]
 
 \begin{block}{Lemmas (after K.\,\&\,S.)}
    \begin{itemize} 
@@ -625,8 +627,8 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}
-  
+\begin{frame}[label={fgftheorems}]
+\label{thms-fastgrowing}
   \begin{block}{Theorems}
     \begin{itemize}
     \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
@@ -697,6 +699,7 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
       \inputsnippets{./gcanonLimitOf}}
     
   \end{block}
+  The lemmas mentionned in previous slides (accessibility, fast growing functions) are ``ported'' this way from \texttt{Hydra-battles}   into \texttt{Gaia-Hydras}.
   % \begin{block}{}
   %   We experiment also the other direction (importing \texttt{ssete9} lemmas to \Hydras).
   % \end{block}

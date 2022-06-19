@@ -10,9 +10,9 @@ https://github.com/math-comp/math-comp/blob/master/mathcomp/ssreflect/order.v
 
 From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
-From hydras Require Import DecPreOrder ON_Generic  T1 E0.
-From gaia Require Export ssete9.
-Require Import T1Bridge.
+Require Import Wellfounded.Inclusion Wf_nat. 
+
+
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -25,8 +25,10 @@ Definition restrict {A} (p: A -> bool)
 
 Module ONDef.
 
-  Section Defs. 
-  Variable T: orderType tt.
+  Section Defs.
+    Variable disp: unit.
+    Variable T: orderType disp. (* TO do : a plain type for T *)
+    
   Variable nf : ssrbool.pred T.
 
   Definition limit_v2 (f: nat -> T)(x: T) :=
@@ -43,30 +45,28 @@ Module ONDef.
     restrict nf <%O x y /\
       (forall z,  nf z -> (x < z)%O ->  (z <  y)%O -> False).
 
+  Check fun (cmp: T -> T -> comparison) (a b: T) =>
+          @CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b).
+
   End Defs. 
-  Record mixin_of (T: orderType tt)  :=
+  Record mixin_of disp (T: orderType disp)  :=
     Mixin {
         nf : T -> bool;
         wf : well_founded (restrict nf <%O);
-        limitb : T -> bool;
-        succb : T -> bool;
-        zerob : T -> bool;
+        cmp: T -> T -> comparison;
+        zerob : T -> bool; 
         _ : forall z, zerob z -> nf z;
         _ : forall z, zerob z <-> forall a, nf a -> (z <= a)%O;
-        _ : forall a, nf a -> reflect (exists f, limit_of nf f a)
-                                (limitb a);
-        _ : forall a , nf a ->
-                       reflect  (exists b, is_successor_of nf a b)
-                         (succb a)
-      }.
+        _ : forall a b : T,
+          nf a -> nf b ->
+          CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b);
+                                                            
+       }.
   
-  (* to complete *)
-
-
-  About mixin_of.
-  Section Packing.
+    Section Packing.
+    Variable disp: unit. 
     Structure pack_type : Type :=
-      Pack{ type: orderType tt; _ : mixin_of type}.
+      Pack{ type: orderType disp; _ : mixin_of type}.
 
      Local Coercion type : pack_type >-> orderType .
 
@@ -80,30 +80,112 @@ Module ONDef.
 
   Module Exports. 
 
-  Notation on := pack_type. 
+  Notation on := (pack_type ).
   Notation ONMixin := Mixin. 
   Notation ON T m := (@Pack T m).
   Notation nf := (nf (on_struct _)).
   Notation zerob := is_zero.
+  Notation cmp := (cmp (on_struct _)).
   Coercion type : pack_type >-> orderType.
   
   Section Lemmas.
+    Variable disp: unit.
+    Variable U: @on disp.
 
-    Variable U: on.
+    Lemma nf_zero (a: U) : zerob a -> nf a.
+    Proof.
+      case: U a => t r a. rewrite /zerob. rewrite /nf => //=.
+      move: r a; case => //=. 
+    Qed. 
 
-Lemma nf_zero (a: U) : zerob a -> nf a.
-  case: U a => t r a. rewrite /zerob. rewrite /nf => //=.
-  move: r a; case => //=. 
-Qed. 
+    Lemma zeroE (a: U) : zerob a <-> forall b, nf b -> (a <= b)%O.
+    Proof.     
+     case: U a =>  t [nf w l i i0 i1] a.  apply: i1. 
+    Qed. 
 
-About restrict. 
-Lemma wf : @well_founded U (restrict (nf )  <%O). 
-Proof. case: U => t [h w *] a; apply: w. Qed. 
+    Lemma compareP (a b: U) :
+       nf a -> nf b ->
+       CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b).
+    Proof. 
+     case: U a b => t [nf w l i i0 i1 i2] a b;  apply: i2. 
+    Qed.
+
+ 
+    Lemma wf : @well_founded U (restrict (nf )  <%O). 
+    Proof. case: U => t [h w *] a; apply: w. Qed. 
 
   End Lemmas. 
   End Exports.
   End ONDef.
 
+Export ONDef.Exports.
 
+
+
+About ONDef.limit_v2.
+
+Notation omegaType := Order.NatOrder.orderType. 
+
+Section NatON. 
+
+  Definition nf (x: omegaType) := true. 
+  Check fun s => ONDef.limit_v2 nf s. 
+  Definition limitb (x:omegaType) := false.   
+  Definition succb (x: omegaType) := x != 0.
+  Definition zerob (x: omegaType) := x == 0.
+  Definition cmp (x y: omegaType) := Nat.compare x y. 
+  
+  Lemma nf_zero (z:omegaType): zerob z -> nf z. 
+  Proof. by rewrite  /nf. Qed.
+
+  Lemma OmegazerobP: forall z, zerob z <-> forall a, nf a -> (z <= a)%O. 
+  Proof. move => z; rewrite /zerob /nf /le => //=; split. 
+         move /eqP => -> //=.  
+         move => H. move: (H 0) => {H}. case :z => //=. 
+         move => n; cbn => //=. 
+         move => H; by apply H. 
+  Qed. 
+
+  Lemma OmegacmpP (a b: omegaType):
+    nf a -> nf b ->
+    CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b).
+    case_eq (cmp a b) => H; constructor.
+    - apply /eqP; by apply Compare_dec.nat_compare_eq. 
+    - apply /ltP; by apply Compare_dec.nat_compare_lt. 
+    - apply /ltP; by apply Compare_dec.nat_compare_gt. 
+Qed. 
+
+   Lemma OmegaWf: well_founded (restrict nf <%O). 
+   
+    move => x. eapply Acc_incl with lt.
+     move => a b. rewrite /restrict => /andP.
+     case => _ .  move /andP . case => _ H2. by apply :ltP.
+     apply lt_wf. 
+Qed. 
 
   
+  Definition OmegaMixin := ONMixin OmegaWf nf_zero OmegazerobP OmegacmpP.
+
+  Canonical onOmegaType := ON Order.NatOrder.nat_display omegaType  OmegaMixin. 
+
+Check @Order.SeqLexiOrder.orderType  Order.NatOrder.nat_display tt
+Order.NatOrder.orderType. 
+
+End NatON.
+
+Compute cmp 7 9. 
+
+
+
+
+(*   Lemma limitP (a:U) : nf a -> reflect (exists f, limit_of nf f a)
+                                (limitb a).
+    Proof.       
+      case: U a => t [nf w l s z Hz Hz' Hl r a *];  by apply: (Hl a).    Qed.
+
+    Lemma succP (a:U) :
+      nf a ->
+      reflect  (exists b, is_successor_of nf a b) (succb a).
+      Proof.       
+        case: U a => t [nf w l s z Hz Hz' Hl r a *]. by apply: (r a).    Qed. 
+*)

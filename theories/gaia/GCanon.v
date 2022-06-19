@@ -60,8 +60,7 @@ Proof.
 Qed.
 
 (* begin snippet gcanonSLE:: no-out *)
-Lemma canonS_LE a n:
-    T1nf a -> canon a n.+1 <= canon a n.+2.
+Lemma canonS_LE a n: T1nf a -> canon a n.+1 <= canon a n.+2.
 Proof.
   rewrite -(h2g_g2hK a) -nf_ref /canon g2h_h2gK => Hnf;
   by apply le_ref, canonS_LE. 
