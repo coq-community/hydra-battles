@@ -919,18 +919,19 @@ Qed.
 (** ** Paths with constant index: lemmas *)
 
 Lemma const_pathS_repeat i : forall alpha  beta,
-    const_pathS i alpha beta ->
+    const_path (S i) alpha beta ->
     exists n:nat, path_toS beta (repeat i (S n)) alpha.
 Proof.  
   induction 1.
   - exists 0;  now left.
-  - destruct IHclos_trans_1n as [n Hn]; exists (S n); now right with y.
+  - destruct IHclos_trans_1n as [n Hn]; exists (S n);
+      now right with y.
 Qed.      
 
 
 Lemma const_pathS_repeatR i : forall n  alpha beta,
     path_toS beta (repeat i (S n)) alpha -> 
-    const_pathS i alpha beta.
+    const_path (S i) alpha beta.
 Proof.  
   induction n.
   - left; now inversion_clear H.
@@ -948,9 +949,9 @@ Proof.
     destruct H. subst; apply nf_canon;auto.
 Qed.
 
-Lemma const_pathS_zero n alpha : ~ const_pathS n zero alpha.
+Lemma const_pathS_zero n alpha : ~ const_path (S n) zero alpha.
 Proof.
-  intros  H; red in H. rewrite <- clos_trans_t1n_iff in H;
+  intros  H;  repeat red in H. rewrite <- clos_trans_t1n_iff in H;
       rewrite clos_trans_tn1_iff in H;
       induction H;  now subst.
 Qed.
@@ -958,7 +959,7 @@ Qed.
 
 Lemma const_pathS_LT i  alpha beta:  (* alpha <> zero -> *)
                                      nf alpha ->
-                                     const_pathS i alpha beta ->
+                                     const_path (S i) alpha beta ->
                                      beta t1< alpha.
 Proof.
   intros  H0 H1; apply acc_from_LT;auto.
