@@ -181,6 +181,11 @@ Definition const_path i alpha beta :=
 
 (* end snippet constPathDef *)
 
+(* to remove when const_pathS is deprecated *)
+
+Lemma const_pathE i alpha beta: const_pathS i alpha beta <->
+                                  const_path (S i) alpha beta.
+Proof. split; trivial. Qed.
 
 Definition const_pathS_eps i := clos_refl _ (const_pathS i).
 
@@ -997,11 +1002,12 @@ Proof.
 Qed.
 
 Lemma const_pathS_inv_strong : forall n alpha beta,
-    const_pathS n alpha beta ->
+    const_path (S n) alpha beta ->
     {beta = canon alpha (S n)} +
-    {const_pathS n (canon alpha (S n)) beta}.
+    {const_path (S n) (canon alpha (S n)) beta}.
 Proof.
-  intros n alpha beta H; destruct (T1_eq_dec beta (canon alpha (S n))).
+  intros n alpha beta H;
+    destruct (T1_eq_dec beta (canon alpha (S n))).
   - left;auto.
   - right;  destruct (const_pathS_inv H).
     +  contradiction.
@@ -1009,9 +1015,9 @@ Proof.
 Qed.
 
 Lemma const_pathS_trans : forall n alpha beta gamma,
-    const_pathS n alpha beta ->
-    const_pathS n beta gamma ->
-    const_pathS n alpha gamma.
+    const_pathS  n alpha beta ->
+    const_pathS  n beta gamma ->
+    const_pathS  n alpha gamma.
 Proof.                    
   unfold const_pathS; intros n alpha beta gamma H H0;                       
     rewrite <-  clos_trans_t1n_iff in *;
@@ -2973,13 +2979,6 @@ Proof.
   eapply Cor12;eauto.
   destruct alpha; auto.
   now subst.
-Qed.
-
-(** To move to T1 !!! *)
-Lemma not_zero_gt_0 (alpha:T1) : alpha <> zero -> lt zero  alpha.
-destruct alpha.
-  - now destruct 1.
-  - auto with T1.
 Qed.
 
 Lemma Canon_mono1 alpha i j : E0limit  alpha -> (i< j)% nat ->
