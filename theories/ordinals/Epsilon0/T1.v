@@ -1321,15 +1321,23 @@ Proof. now destruct 1. Qed.
 
 #[global] Hint Resolve LT_nf_r LT_nf_l LT_lt LE_nf_r LE_nf_l LE_le : T1.
 
-Lemma not_zero_lt : forall alpha, nf alpha -> alpha <> zero -> zero t1< alpha.
+Lemma not_zero_gt_0 (alpha:T1) : alpha <> zero -> lt zero  alpha.
+destruct alpha.
+  - now destruct 1.
+  - auto with T1.
+Qed.
+
+
+Lemma not_zero_lt (alpha: T1): nf alpha -> alpha <> zero ->
+                               zero t1< alpha.
 Proof.
   split.
   - constructor. 
    - split;auto. 
-     destruct alpha.
-     + destruct H0;auto.
-     + constructor. 
+    now apply not_zero_gt_0.
 Qed.
+
+
 
 Lemma LE_zero : forall alpha, nf alpha -> zero t1<= alpha.
 Proof. split; auto with  T1. Qed. 

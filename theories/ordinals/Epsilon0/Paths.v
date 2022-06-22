@@ -980,17 +980,16 @@ Qed.
 
 
 Lemma const_pathS_LE i : forall alpha beta, 
-    nf alpha -> const_pathS i alpha beta ->
-    beta  t1<= alpha.
+    nf alpha -> const_path (S i) alpha beta -> beta  t1<= alpha.
 Proof.
   intros; apply LE_r; eapply const_pathS_LT; eauto.
 Qed.
 
 
 Lemma const_pathS_inv : forall n alpha beta,
-    const_pathS n alpha beta ->
+    const_path (S n) alpha beta ->
     beta = canon alpha (S n) \/
-    const_pathS n (canon alpha (S n)) beta.
+    const_path (S n) (canon alpha (S n)) beta.
 Proof.
   inversion 1; destruct H0.
   - left; congruence.
