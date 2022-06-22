@@ -476,7 +476,7 @@
          }
          
          \input{../../movies/snippets/Canon/canonExamplesb}
-       \item Not the same definition as in K. \& S.'s article, but same abstract properties (monotony, limits, \dots).
+       \item Not the same definition as in K. \& S.'s article, but same abstract properties (monotony, limits, \dots). Sounds to be extentionally the same function.
        \end{itemize}
      \end{block}
 \end{frame}
@@ -484,7 +484,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[label={accessibility}]
   
-    \frametitle{Paths and accessibility}
+    \frametitle{Example: Paths and accessibility}
     \begin{block}{ }
       % If $\beta<\alpha<\epsilon_0$, there exists $i$ and $l$ in $\mathbb{N}$ such that $ \alpha \rplus{i, i+1, i+2, \dots,l} \beta$.
    
@@ -512,7 +512,7 @@
  \only<2>{\draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);}
 \end{tikzpicture}
 
-\only<2>{{\color{lookcolor}OK for large enough $i$ (K. \& S., 1981)}}
+\only<2>{{\color{lookcolor}OK for large enough $i$ ! (K. \& S., 1981)}}
 \vspace{6pt}
 
 % \pause
@@ -521,7 +521,7 @@
 
 \vspace{4pt}
 
-\only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of the considered kind of hydra battles
+\only<2>{\textbf{Cor:} There is no decreasing measure mapping hydras to  $[0, \mu)$ (for any $\mu<\epsilon_0$)  for proving the termination of \textcolor{lookcolor}{\emph{the considered kind of}} hydra battles
   (stronger than \textcolor{banyuls}{Banyuls 2018}).
 }
 
@@ -818,36 +818,39 @@ Proof.
 
 \begin{frame}[fragile]
   \frametitle{Perspectives}
-  \begin{block}{}
-    \begin{itemize}
 
-    \item  Links with other representations of ordinals, \emph{e.g.}:
+  \begin{block}{}
+  
+    \begin{itemize}
+      
+ \item Relation text/formalization,  new toolchain for \alectr
+ \item More illustrations of proof and specification patterns,  new exercises
+       \item New chapters (algorithmics, geometry ?)
+ \end{itemize}
+
+ \vspace{8pt}
+ 
+   \begin{itemize}
+ \item Develop the \texttt{Hydra-Gaia} part (more integration).
+ \item More results about hyper-complexity and fast growing functions
+ \item  Links with other representations of ordinals, \emph{e.g.}:
   \begin{footnotesize}
     {\color{blue}
 \begin{verbatim}
-(* Minki Cho *)
+(** By Minki Cho **)
 Inductive Ord.t :=
 | Ord.build: forall (A: Type), (A -> Ord.t) -> Ord.t.
 \end{verbatim}
       }
- \end{footnotesize}
-      
-      \item More results about hyper-complexity and fast growing functions
-    \item New toolchain for \alectr
-    \item More proof and specification patterns
-    \item More examples and exercises
+    \end{footnotesize}
+   
+
      \end{itemize}
   \end{block}
 
   \begin{block}{}
-  {\color{plugincolor}\Hydras} and  {\color{plugincolor}\community} are on GitHub. {\color{cyan}Please clone, fork, contribute!}
-      \begin{itemize}
-      \item New chapters
-      \item Any correction or suggestion of improvement (text and/or proofs).
-        
-  
-    \end{itemize}
-     \end{block}
+  {\it \Hydras and  \community are on GitHub. Please clone, fork, comment, raise issues, contribute!}
+\end{block}
  
   
 \end{frame}
