@@ -183,7 +183,7 @@ Definition const_path i alpha beta :=
 
 (* to remove when const_pathS is deprecated *)
 
-Lemma const_pathE i alpha beta: const_pathS i alpha beta <->
+Lemma const_pathSE i alpha beta: const_pathS i alpha beta <->
                                   const_path (S i) alpha beta.
 Proof. split; trivial. Qed.
 
@@ -1015,11 +1015,12 @@ Proof.
 Qed.
 
 Lemma const_pathS_trans : forall n alpha beta gamma,
-    const_pathS  n alpha beta ->
-    const_pathS  n beta gamma ->
-    const_pathS  n alpha gamma.
+    const_path (S n) alpha beta ->
+    const_path (S n) beta gamma ->
+    const_path (S n) alpha gamma.
 Proof.                    
-  unfold const_pathS; intros n alpha beta gamma H H0;                       
+  intros *; repeat rewrite  <- const_pathSE;
+    unfold const_pathS; intros H H0;                       
     rewrite <-  clos_trans_t1n_iff in *;
     constructor 2 with beta; assumption.
 Qed.
@@ -1266,7 +1267,8 @@ Proof.
          { subst beta; destruct (const_pathS_zero H0). }
            rewrite canon_succ in IHclos_trans_1n; auto. 
            apply const_pathS_trans with (T1.phi0 beta); auto.
-           + apply KS_thm_2_4_lemma4; auto. 
+         + apply KS_thm_2_4_lemma4; auto.
+         + rewrite <- const_pathSE.  auto. 
   }
 Qed.
 
