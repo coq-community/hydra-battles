@@ -187,7 +187,7 @@ Lemma const_pathSE i alpha beta: const_pathS i alpha beta <->
                                   const_path (S i) alpha beta.
 Proof. split; trivial. Qed.
 
-Definition const_pathS_eps i := clos_refl _ (const_pathS i).
+Definition const_pathS_eps i := clos_refl _ (const_path (S i)).
 
 (** ** standard paths *)
 
@@ -2933,13 +2933,6 @@ Proof.
   apply LE_zero; eauto with T1.
 Qed.
 
-Lemma const_path_const_pathS_equiv : forall alpha i beta ,
-    const_path (S i) alpha beta <->
-    const_pathS i alpha beta.
-Proof.
-  intros; split; intro; assumption.
-Qed.
-
 
 (** * Adaptation to [E0] *)
 
@@ -2954,8 +2947,7 @@ Lemma Canon_plus_inv n alpha beta :
   beta = Canon alpha (S n) \/
   Canon_plus (S n) (Canon alpha (S n)) beta.
 Proof.
-  unfold Canon_plus, Canon; repeat rewrite const_path_const_pathS_equiv. 
-  intro H; destruct (const_pathS_inv H).
+  unfold Canon_plus, Canon; intro H; destruct (const_pathS_inv H).
   -  left; apply E0_eq_intro, H0.  
   - right; apply H0.
 Qed.
@@ -3086,13 +3078,13 @@ Qed.
 Lemma Canon_plus_first_step_lim:
   forall i alpha beta, E0limit alpha ->
                        Canon_plus (S i) alpha beta  ->
-                       beta = CanonS alpha i \/
-                       Canon_plus (S i) (CanonS alpha i) beta.
+                       beta = Canon alpha (S i)  \/
+                       Canon_plus (S i) (Canon alpha (S i)) beta.
 Proof.
   destruct alpha, beta.
   unfold Canon_plus, const_path; simpl.
   intros H H0; destruct (const_pathS_first_step H0).
-  -  left;  unfold CanonS;   f_equal;  f_equal. simpl; subst cnf0.
+  -  left;  unfold CanonS; f_equal; f_equal; simpl; subst cnf0.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
