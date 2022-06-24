@@ -293,138 +293,139 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Uncomment if there's time enough
 
-\section{Kirby \& Paris' hydras}
+% \section{Kirby \& Paris' hydras}
 
-\begin{frame}
-  \frametitle{Kirby \& Paris' hydras}
- \begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[very thick, scale=0.20]
-      \node (h1) at (4,0){$\bullet$};
-      \node[blue] (h2) at (4,2){$\bullet$};
-      \node[blue] (h3) at (2,4){$\bullet$};
-      \node[blue] (h4) at (0,6){$\bullet$};
-      \node[red!90!black] (h7) at (6,2){$\bullet$};
-      \node[blue] (h5) at (4,6){$\bullet$};
-      \node[blue] (h6) at (6,4){$\bullet$};
-      \draw (h1) -- (h2) ;
-      \draw (h2) -- (h3) ;
-      \draw (h1) -- node[red!90!black,font=\small,sloped,
-      shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (h7);
-      \draw (h3) -- (h4) ;
-      \draw (h3) -- (h5) ;
-      \draw (h2) -- (h6);
+% \begin{frame}
+%   \frametitle{Kirby \& Paris' hydras}
+%  \begin{figure}[h]
+%     \centering
+%     \begin{tikzpicture}[very thick, scale=0.20]
+%       \node (h1) at (4,0){$\bullet$};
+%       \node[blue] (h2) at (4,2){$\bullet$};
+%       \node[blue] (h3) at (2,4){$\bullet$};
+%       \node[blue] (h4) at (0,6){$\bullet$};
+%       \node[red!90!black] (h7) at (6,2){$\bullet$};
+%       \node[blue] (h5) at (4,6){$\bullet$};
+%       \node[blue] (h6) at (6,4){$\bullet$};
+%       \draw (h1) -- (h2) ;
+%       \draw (h2) -- (h3) ;
+%       \draw (h1) -- node[red!90!black,font=\small,sloped,
+%       shift={(0.01,-0.075)},rotate=90]{\textbf{\ding{34}}} (h7);
+%       \draw (h3) -- (h4) ;
+%       \draw (h3) -- (h5) ;
+%       \draw (h2) -- (h6);
 
-      \node (h11) at (14,0){$\bullet$};
-      \node[blue] (h12) at (14,2){$\bullet$};
-      \node[blue] (h13) at (12,4){$\bullet$};
-      \node[blue] (h14) at (10,6){$\bullet$};
-      \node[blue] (h15) at (14,6){$\bullet$};
-      \node[red!90!black] (h16) at (16,4){$\bullet$};
-      \draw (h11) -- (h12) ;
-      \draw (h12) -- (h13) ;
-      \draw (h12) -- node[red!90!black,
-      font=\small,sloped,shift={(0.01,-0.075)},
-      rotate=90]{\textbf{\ding{34}}} (h16);
-      \draw (h13) -- (h14) ;
-      \draw (h13) -- (h15) ;
+%       \node (h11) at (14,0){$\bullet$};
+%       \node[blue] (h12) at (14,2){$\bullet$};
+%       \node[blue] (h13) at (12,4){$\bullet$};
+%       \node[blue] (h14) at (10,6){$\bullet$};
+%       \node[blue] (h15) at (14,6){$\bullet$};
+%       \node[red!90!black] (h16) at (16,4){$\bullet$};
+%       \draw (h11) -- (h12) ;
+%       \draw (h12) -- (h13) ;
+%       \draw (h12) -- node[red!90!black,
+%       font=\small,sloped,shift={(0.01,-0.075)},
+%       rotate=90]{\textbf{\ding{34}}} (h16);
+%       \draw (h13) -- (h14) ;
+%       \draw (h13) -- (h15) ;
       
-      \node (hn1) at (24,0){$\bullet$};
-      \node[blue] (hn2) at (22,2) {$\bullet$};
-      \node[blue] (hn3) at (22,4) {$\bullet$};
-      \node[blue] (hn4) at (20,6){$\bullet$};
-      \node[blue] (hn5) at (22,6){$\bullet$};
-      \draw (hn1) -- (hn2) ;
-      \draw (hn2) -- (hn3) ;
-      \draw (hn3) -- (hn4) ;
-      \draw (hn3) -- (hn5) ;
-      \node [blue](hn2b) at (24,2) {$\bullet$};
-      \node[blue] (hn3b) at (24,4) {$\bullet$};
-      \node [blue](hn4b) at (23.4,6){$\bullet$};
-      \node [blue](hn5b) at (24.6,6){$\bullet$};
-      \draw (hn1) -- (hn2b) ;
-      \draw (hn2b) -- (hn3b) ;
-      \draw (hn3b) -- (hn4b) ;
-      \draw (hn3b) -- (hn5b) ;
-      \node [blue](hn2c) at (26,2) {$\bullet$};
-      \node [blue](hn3c) at (26,4) {$\bullet$};
-      \node [blue](hn4c) at (26,6){$\bullet$};
-      \node [red!90!black] (hn5c) at (28,6){$\bullet$};
-      \draw (hn1) -- (hn2c) ;
-      \draw (hn2c) -- (hn3c) ;
-      \draw (hn3c) -- (hn4c) ;
-      \draw (hn3c) -- node[red!90!black,
-      font=\small,sloped,shift={(0.01,-0.075)},
-      rotate=90]{\textbf{\ding{34}}} (hn5c) ;
-    \end{tikzpicture}
+%       \node (hn1) at (24,0){$\bullet$};
+%       \node[blue] (hn2) at (22,2) {$\bullet$};
+%       \node[blue] (hn3) at (22,4) {$\bullet$};
+%       \node[blue] (hn4) at (20,6){$\bullet$};
+%       \node[blue] (hn5) at (22,6){$\bullet$};
+%       \draw (hn1) -- (hn2) ;
+%       \draw (hn2) -- (hn3) ;
+%       \draw (hn3) -- (hn4) ;
+%       \draw (hn3) -- (hn5) ;
+%       \node [blue](hn2b) at (24,2) {$\bullet$};
+%       \node[blue] (hn3b) at (24,4) {$\bullet$};
+%       \node [blue](hn4b) at (23.4,6){$\bullet$};
+%       \node [blue](hn5b) at (24.6,6){$\bullet$};
+%       \draw (hn1) -- (hn2b) ;
+%       \draw (hn2b) -- (hn3b) ;
+%       \draw (hn3b) -- (hn4b) ;
+%       \draw (hn3b) -- (hn5b) ;
+%       \node [blue](hn2c) at (26,2) {$\bullet$};
+%       \node [blue](hn3c) at (26,4) {$\bullet$};
+%       \node [blue](hn4c) at (26,6){$\bullet$};
+%       \node [red!90!black] (hn5c) at (28,6){$\bullet$};
+%       \draw (hn1) -- (hn2c) ;
+%       \draw (hn2c) -- (hn3c) ;
+%       \draw (hn3c) -- (hn4c) ;
+%       \draw (hn3c) -- node[red!90!black,
+%       font=\small,sloped,shift={(0.01,-0.075)},
+%       rotate=90]{\textbf{\ding{34}}} (hn5c) ;
+%     \end{tikzpicture}
 
-    \caption{Three successive states of a hydra in a battle,
-      at time $t=1,2,3$\label{life1}}
- \label{fig:round}
- \end{figure}
+%     \caption{Three successive states of a hydra in a battle,
+%       at time $t=1,2,3$\label{life1}}
+%  \label{fig:round}
+%  \end{figure}
 
-  \begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[very thick, scale=0.2]
-      \node (hn1) at (4,0){$\bullet$};
-      \node[blue] (hn2) at (2,2) {$\bullet$};
-      \node[blue] (hn3) at (2,4) {$\bullet$};
-      \node[blue] (hn4) at (0,6){$\bullet$};
-      \node[blue] (hn5) at (2,6){$\bullet$};
-      \draw (hn1) -- (hn2) ;
-      \draw (hn2) -- (hn3) ;
-      \draw (hn3) -- (hn4) ;
-      \draw (hn3) -- (hn5) ;
-      \node [blue](hn2b) at (4,2) {$\bullet$};
-      \node [blue](hn3b) at (4,4) {$\bullet$};
-      \node [blue](hn4b) at (3.4,6){$\bullet$};
-      \node [blue] (hn5b) at (4.6,6){$\bullet$};
-      \draw (hn1) -- (hn2b) ;
-      \draw (hn2b) -- (hn3b) ;
-      \draw (hn3b) -- (hn4b) ;
-      \draw (hn3b) -- (hn5b) ;
-      \node [blue](hn2c) at (6,2) {$\bullet$};
-      \node [blue](hn3c) at (6,4) {$\bullet$};
-      \node [blue](hn4c) at (6,6){$\bullet$};
-      \draw (hn1) -- (hn2c) ;
-      \draw (hn2c) -- (hn3c) ;
-      \draw (hn3c) -- (hn4c) ;
-      \node [blue](hn3d) at (8,4) {$\bullet$};
-      \draw (hn2c) -- (hn3d) ;
-      \node [blue](hn4d) at (8,6) {$\bullet$};
-      \draw (hn3d) -- (hn4d) ;
+%   \begin{figure}[h]
+%     \centering
+%     \begin{tikzpicture}[very thick, scale=0.2]
+%       \node (hn1) at (4,0){$\bullet$};
+%       \node[blue] (hn2) at (2,2) {$\bullet$};
+%       \node[blue] (hn3) at (2,4) {$\bullet$};
+%       \node[blue] (hn4) at (0,6){$\bullet$};
+%       \node[blue] (hn5) at (2,6){$\bullet$};
+%       \draw (hn1) -- (hn2) ;
+%       \draw (hn2) -- (hn3) ;
+%       \draw (hn3) -- (hn4) ;
+%       \draw (hn3) -- (hn5) ;
+%       \node [blue](hn2b) at (4,2) {$\bullet$};
+%       \node [blue](hn3b) at (4,4) {$\bullet$};
+%       \node [blue](hn4b) at (3.4,6){$\bullet$};
+%       \node [blue] (hn5b) at (4.6,6){$\bullet$};
+%       \draw (hn1) -- (hn2b) ;
+%       \draw (hn2b) -- (hn3b) ;
+%       \draw (hn3b) -- (hn4b) ;
+%       \draw (hn3b) -- (hn5b) ;
+%       \node [blue](hn2c) at (6,2) {$\bullet$};
+%       \node [blue](hn3c) at (6,4) {$\bullet$};
+%       \node [blue](hn4c) at (6,6){$\bullet$};
+%       \draw (hn1) -- (hn2c) ;
+%       \draw (hn2c) -- (hn3c) ;
+%       \draw (hn3c) -- (hn4c) ;
+%       \node [blue](hn3d) at (8,4) {$\bullet$};
+%       \draw (hn2c) -- (hn3d) ;
+%       \node [blue](hn4d) at (8,6) {$\bullet$};
+%       \draw (hn3d) -- (hn4d) ;
       
-      \node [blue](hn3e) at (10,4) {$\bullet$};
-      \draw (hn2c) -- (hn3e) ;
-      \node [blue](hn4e) at (10,6) {$\bullet$};
-      \draw (hn3e) -- (hn4e) ;
+%       \node [blue](hn3e) at (10,4) {$\bullet$};
+%       \draw (hn2c) -- (hn3e) ;
+%       \node [blue](hn4e) at (10,6) {$\bullet$};
+%       \draw (hn3e) -- (hn4e) ;
 
-      \node [blue](hn3f) at (12,4) {$\bullet$};
-      \draw (hn2c) -- (hn3f) ;
-      \node [red!90!black](hn4f) at (12,6) {$\bullet$};
-      \draw (hn3f) -- node[red!90!black,
-      font=\small,sloped,shift={(0.01,-0.075)},
-      rotate=90]{\textbf{\ding{34}}} (hn4f) ;
+%       \node [blue](hn3f) at (12,4) {$\bullet$};
+%       \draw (hn2c) -- (hn3f) ;
+%       \node [red!90!black](hn4f) at (12,6) {$\bullet$};
+%       \draw (hn3f) -- node[red!90!black,
+%       font=\small,sloped,shift={(0.01,-0.075)},
+%       rotate=90]{\textbf{\ding{34}}} (hn4f) ;
 
-      \node at (16,0) {$\dots$} ;
+%       \node at (16,0) {$\dots$} ;
 
-      \node [black](hn4h) at (21,0) {$\bullet$};
-      \node [red!90!black](hn4g) at (21,2) {$\bullet$};
-      \draw (hn4h) -- node[red!90!black,
-      font=\small,sloped,shift={(0.01,-0.075)},
-      rotate=90]{\textbf{\ding{34}}} (hn4g) ;
+%       \node [black](hn4h) at (21,0) {$\bullet$};
+%       \node [red!90!black](hn4g) at (21,2) {$\bullet$};
+%       \draw (hn4h) -- node[red!90!black,
+%       font=\small,sloped,shift={(0.01,-0.075)},
+%       rotate=90]{\textbf{\ding{34}}} (hn4g) ;
 
       
-      \node [black](hn4f) at (24,0) {$\bullet$};
+%       \node [black](hn4f) at (24,0) {$\bullet$};
       
-    \end{tikzpicture}
-    \caption{At $t=4,\dots,\textcolor{red}{x}-1,\textcolor{red}{x=?}$
-      \label{life2}}
-  \end{figure}
+%     \end{tikzpicture}
+%     \caption{At $t=4,\dots,\textcolor{red}{x}-1,\textcolor{red}{x=?}$
+%       \label{life2}}
+%   \end{figure}
 
- Cf.  \textcolor{pauillac}{Pauillac 2006} and \textcolor{banyuls}{Banyuls 2018}. Today, let us focus on some combinatorial aspects (\emph{e.g.} number of rounds of a battle).
-\end{frame}
+%  Cf.  \textcolor{pauillac}{Pauillac 2006} and \textcolor{banyuls}{Banyuls 2018}. Today, let us focus on some combinatorial aspects (\emph{e.g.} number of rounds of a battle).
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -442,10 +443,10 @@
 &\textcolor{red}{\omega^2},\ldots, \textcolor{red}{\omega^2\times 42},\ldots,\textcolor{red}{\omega^3},\ldots, \textcolor{red}{\omega^4},\omega^4+1,\ldots\\
 &\textcolor{red}{\omega^\omega},\ldots, \textcolor{red}{\omega^\omega+\omega^7\times 8},\ldots,\textcolor{red}{\omega^\omega\times 2},\omega^\omega\times 2+1, \ldots\\
 &\textcolor{red}{\omega^{\omega^\omega}},\ldots, \textcolor{red}{\omega^{\omega^\omega}+\omega^\omega\times 42+ \omega^{55}+\omega}, \ldots, \textcolor{red}{\omega^{\omega^{\omega+1}}}, \omega^{\omega^{\omega+1}}+1,\dots\\
-     & \textcolor{red!50}{\epsilon_0 (= \omega^{\epsilon_0)}},
-       \textcolor{black!50}{\epsilon_0+1}, \textcolor{black!50}{\epsilon_0+2}, \textcolor{black!50}{\epsilon_0+3}, \ldots\\
-& \textcolor{red!50}{\epsilon_1}, \ldots, \textcolor{red!50}{\epsilon_2}, \ldots, \textcolor{red!50}{\epsilon_\omega},\ldots \\
-& \textcolor{red!50}{\Gamma_0}, \textcolor{black!50}{\Gamma_0+1}, \textcolor{black!50}{\Gamma_0+2}, \textcolor{black!50}{\Gamma_0+3},\ldots, \textcolor{red!50}{\Gamma_0+\omega}, \ldots\\
+     & \textcolor{red!55}{\epsilon_0 (= \omega^{\epsilon_0)}},
+       \textcolor{black!55}{\epsilon_0+1}, \textcolor{black!55}{\epsilon_0+2}, \textcolor{black!55}{\epsilon_0+3}, \ldots\\
+& \textcolor{red!45}{\epsilon_1}, \ldots, \textcolor{red!45}{\epsilon_2}, \ldots, \textcolor{red!45}{\epsilon_\omega},\ldots \\
+& \textcolor{red!40}{\Gamma_0}, \textcolor{black!40}{\Gamma_0+1}, \textcolor{black!40}{\Gamma_0+2}, \textcolor{black!40}{\Gamma_0+3},\ldots, \textcolor{red!40}{\Gamma_0+\omega}, \ldots\\
 &\ldots
   \end{align*}   
   \end{minipage}}}
@@ -496,18 +497,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
    
-     \begin{block}{}
-       \begin{itemize}
-       \item In Coq, canonical sequences are defined by structural recursion on ordinal terms in Cantor normal form.
-         
-   {\color{mathcolor}
-         $$\canonseq{\omega^{\omega^{\omega+1}+1}}{42}=
-         \omega^{\omega^{\omega+1}}\times 42$$
-         }
-         
-         \input{../../movies/snippets/Canon/canonExamplesb}
-       \item Not the same definition as in K. \& S.'s article, but same abstract properties (monotony, limits, \dots). Sounds to be extentionally the same function.
-       \end{itemize}
+  \begin{block}{}
+   
+    Canonical sequences are implemented by a structurally recursive function on terms in Cantor normal form.
+    
+\vspace{5pt}
+    
+    Example: $$\textcolor{mathcolor}{\canonseq{\omega^{\omega^{\omega+1}+1}}{42}}$$
+
+    
+      {\footnotesize
+    \input{../../movies/snippets/Canon/canonExamplesb}
+  }
+  
+   %   
+    For efficiency's sake, our definition in \coq is sligthly different from Ketonen and Solovay's article (based on the decomposition on any ordinal \textcolor{mathcolor}{$\alpha$} into  \textcolor{mathcolor}{$\beta(\gamma+1)$}).
+    
+We \emph{believe} that both definitions are extentionally equivalent.
+    
+  
+     %  \end{itemize}
      \end{block}
 \end{frame}
 
@@ -543,12 +552,11 @@
  \only<2>{\draw [->, dashed, very thick,red] (search)-- node [below, rotate=-26]{$l$}  (beta);}
 \end{tikzpicture}
 
-\only<2>{{\color{lookcolor}OK for large enough $i$ ! (K. \& S., 1981)}}
+\only<2>{{\color{lookcolor}If $i$ is large enough, we are sure to reach $\beta$ (K. \& S., 1981)}}
 \vspace{6pt}
 
 % \pause
-\only<1>{Goal: reach \textcolor{red}{$\beta$} from $\alpha$.}
-\only<2>{\textbf{Remark:} The proof is not trivial. The deterministic red path could miss $\beta$!}
+\only<1>{Can we  reach \textcolor{red}{$\beta$} from $\alpha$? Under which condition? }
 
 \vspace{4pt}
 
@@ -573,8 +581,8 @@
 
 \begin{block}{}
  
-  {\small
-\textbf{Hardy Hierarchy (variant)}
+  {
+
     
  \textbf{Definition:} \textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide). 
 
@@ -584,19 +592,19 @@
   H'_0(i) & = i\\
   H'_{\beta+1}(i) &=H'_\beta(i+1) \\
   H'_\alpha(i) &= H'_{(\canonseq{\alpha}{i+1})}(i)  \quad\textit{($\alpha$ limit ordinal)} 
-\end{align}}
-
-
-\vspace{6pt}
-
-\textbf{Wainer hierarchy (variant)}
-
-{\color{mathcolor}
-\begin{align}
-F_0(i)& =i+1\\
-F_{\beta+1}(i)&= (F_\beta)^{(i+1)}(i)\\
-F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordinal)}
 \end{align}}}
+
+{$H'$ is a slight variant of the \emph{Hardy Hierarchy}. In \coq, we implement it with the \texttt{equations} plug-in.}
+%\vspace{6pt}
+
+% \textbf{Wainer hierarchy (variant)}
+
+% {\color{mathcolor}
+% \begin{align}
+% F_0(i)& =i+1\\
+% F_{\beta+1}(i)&= (F_\beta)^{(i+1)}(i)\\
+% F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordinal)}
+% \end{align}}}
 \end{block}
 \end{frame}
 
@@ -644,7 +652,7 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
         H'_{\omega^\omega}(k)=\,& \textbf{let}\,F\;f\;i := f^{(i+1)}(i)\,
                                   \textbf{in}\, F^{(k)}(\lambda k.\,2k+1)\,k\\
       H'_{\omega^3}(k) \geq\, & \textit{hyper\_exp2}(k+1) \\
-      H'_{\omega^\alpha}(k)\geq\,& F_\alpha(k)\; (k>0)\\
+ %     H'_{\omega^\alpha}(k)\geq\,& F_\alpha(k)\; (k>0)\\
     \end{align*}
        }%mathcolor
   \end{block}
@@ -660,14 +668,14 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
 
 \begin{frame}[label={fgftheorems}]
 \label{thms-fastgrowing}
-  \begin{block}{Theorems}
-    \begin{itemize}
-    \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
-     \item  
+  \begin{block}{Theorem}
+    % \begin{itemize}
+    % \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
+    %  \item  
     The function which computes the length of hydra battles
     for \textcolor{mathcolor}{$\alpha$} (according to the initial index) is not primitive recursive
     (for $\textcolor{mathcolor}{\alpha\geq \omega^\omega}$).
-    \end{itemize}
+  %  \end{itemize}
     
     
   
@@ -693,12 +701,12 @@ F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordi
 
 
 
-\begin{frame}
-  \frametitle{}
-  \begin{scriptsize}
-    \inputsnippets{./SchemePrimRecInda}
-  \end{scriptsize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{}
+%   \begin{scriptsize}
+%     \inputsnippets{./SchemePrimRecInda}
+%   \end{scriptsize}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
