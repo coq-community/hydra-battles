@@ -579,12 +579,8 @@ We \emph{believe} that both definitions are extentionally equivalent.
 
 
 
-\begin{block}{}
- 
-  {
-
-    
- \textbf{Definition:} \textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide). 
+\begin{block}{Definition:}
+  \textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide). 
 
  
  {\color{mathcolor}
@@ -592,9 +588,23 @@ We \emph{believe} that both definitions are extentionally equivalent.
   H'_0(i) & = i\\
   H'_{\beta+1}(i) &=H'_\beta(i+1) \\
   H'_\alpha(i) &= H'_{(\canonseq{\alpha}{i+1})}(i)  \quad\textit{($\alpha$ limit ordinal)} 
-\end{align}}}
+\end{align}}
 
-{$H'$ is a slight variant of the \emph{Hardy Hierarchy}. In \coq, we implement it with the \texttt{equations} plug-in.}
+
+$H'$ is a slight variant of the \emph{Hardy Hierarchy}. In \coq, we implement it with the \texttt{equations} plug-in.
+\end{block}
+ 
+\begin{block}{Example:}
+  {\color{mathcolor}
+  $$      H'_{\omega^\omega}(i)=\, \textbf{let}\,F\;f\;k := f^{(k+1)}(k)\,
+                                  \textbf{in}\, F^{(i)}(\lambda k.\,2k+1)\,i$$
+}
+\end{block}
+ 
+
+ 
+
+
 %\vspace{6pt}
 
 % \textbf{Wainer hierarchy (variant)}
@@ -605,7 +615,7 @@ We \emph{believe} that both definitions are extentionally equivalent.
 % F_{\beta+1}(i)&= (F_\beta)^{(i+1)}(i)\\
 % F_\alpha(i) &= F_{(\canonseq{\alpha}{i})} (i) \quad \textit{($\alpha$ limit ordinal)}
 % \end{align}}}
-\end{block}
+
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -637,24 +647,23 @@ We \emph{believe} that both definitions are extentionally equivalent.
     
     \item   $H'_\alpha(i) < H'_{\alpha+1}(i) \; (i \not=0)$
     
-       \item     If \textcolor{mathcolor}{$\alpha \rplus{i,i,\dots,i} \beta$} then \textcolor{mathcolor}{$H'_\beta(i)\leq H'_\alpha(i)$}.
+       \item     If \textcolor{mathcolor}{$\alpha \rplus{i,i,\dots,i} \beta$} then \textcolor{mathcolor}{$H'_\alpha(i)\geq H'_\beta(i)$}.
          
 
        \end{itemize}
        (Proof by mutual transfinite induction)
  \end{block}  
 
- \begin{block}{Examples}
+ \begin{block}{Examples:}
          
       {\color{mathcolor}
       
         \begin{align*}
-        H'_{\omega^\omega}(k)=\,& \textbf{let}\,F\;f\;i := f^{(i+1)}(i)\,
-                                  \textbf{in}\, F^{(k)}(\lambda k.\,2k+1)\,k\\
-      H'_{\omega^3}(k) \geq\, & \textit{hyper\_exp2}(k+1) \\
- %     H'_{\omega^\alpha}(k)\geq\,& F_\alpha(k)\; (k>0)\\
+      H'_{\omega^3}(i) \geq\, & \textit{hyper\_exp2}(i+1) \\
+      H'_{\omega^\omega}(i)\geq\,& \textit{Ack}(i,i)\; (i\geq 2)\\
     \end{align*}
-       }%mathcolor
+  }%mathcolor
+ Thus, for any \textcolor{mathcolor}{$\alpha\geq\omega^\omega$}, \textcolor{mathcolor}{$H'_\alpha$} is not primitive recursive.
   \end{block}
   
     
@@ -666,36 +675,36 @@ We \emph{believe} that both definitions are extentionally equivalent.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[label={fgftheorems}]
-\label{thms-fastgrowing}
-  \begin{block}{Theorem}
-    % \begin{itemize}
-    % \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
-    %  \item  
-    The function which computes the length of hydra battles
-    for \textcolor{mathcolor}{$\alpha$} (according to the initial index) is not primitive recursive
-    (for $\textcolor{mathcolor}{\alpha\geq \omega^\omega}$).
-  %  \end{itemize}
+% \begin{frame}[label={fgftheorems}]
+% \label{thms-fastgrowing}
+%   \begin{block}{Theorem}
+%     % \begin{itemize}
+%     % \item \textcolor{mathcolor}{$F_\alpha$} is primitive recursive iff \textcolor{mathcolor}{$\alpha<\omega$}.
+%     %  \item  
+%     The function which computes the length of hydra battles
+%     for \textcolor{mathcolor}{$\alpha$} (according to the initial index) is not primitive recursive
+%     (for $\textcolor{mathcolor}{\alpha\geq \omega^\omega}$).
+%   %  \end{itemize}
     
     
   
-  \begin{block}{Sketch of proof:}
+%   \begin{block}{Sketch of proof:}
 
-   We apply monotony properties and the famous lemma:
-    \vspace{5pt}
+%    We apply monotony properties and the famous lemma:
+%     \vspace{5pt}
     
-       \begin{quote}
-      {\color{mathcolor}
-        For any $n$-ary primitive recursive  function $f$, 
-        there exists some $q$ such that the following inequality holds:
-         \[\forall\,x_1,\dots,x_n,  
-          f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))\]}
-    \end{quote}
-  %  (Proof by induction on any primitive recursive function of any arity.)
-  \end{block}
+%        \begin{quote}
+%       {\color{mathcolor}
+%         For any $n$-ary primitive recursive  function $f$, 
+%         there exists some $q$ such that the following inequality holds:
+%          \[\forall\,x_1,\dots,x_n,  
+%           f(x_1,\dots,\,x_n)\leq\textrm{Ack}(q,\textrm{max}(x_1,\dots,x_n))\]}
+%     \end{quote}
+%   %  (Proof by induction on any primitive recursive function of any arity.)
+%   \end{block}
   
-  \end{block}
-\end{frame}
+%   \end{block}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
