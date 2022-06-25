@@ -195,8 +195,8 @@
 \end{scope}
 
 \begin{scope}[yshift=-5cm,xshift=4cm]
-  \node[rectangle, draw=black,fill=red!60,minimum height=0.5cm,minimum width=1.5cm] (book) {hydras.pdf};
-    \node[rectangle, draw=black,minimum height=0.5cm,minimum width=1.5cm, left of=book, node distance=6cm] (latex) {hydras.tex};
+  \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm] (book) {hydras.pdf};
+    \node[rectangle, draw=black,fill=orange!80,minimum height=0.5cm,minimum width=1.5cm, left of=book, node distance=6cm] (latex) {hydras.tex};
 \end{scope}
 
 \draw[lookcolor,->,dotted] (acl2.south) -- (cantor.north) ;
@@ -461,7 +461,7 @@
 
 \begin{frame}
   \frametitle{The Ketonen-Solovay machinery\footnote{Rapidly Growing {R}amsey Functions (1981)}}
-    \begin{block}{Formalization}
+    \begin{block}{Paths associated with hydra battles}
       {\color{mathcolor}
       $$\omega^{\omega^2+1}+1 \rplus{1} \omega^{\omega^2+1}
       \rplus{2} \omega^{\omega^2}\times 3 
@@ -473,7 +473,7 @@
       $$ \omega^{\omega^2+1}+1 \rplus{1,2,3,4,\dots,x} 0$$}
     \end{block}
     
-      \begin{block}{Small steps}
+      \begin{block}{}
         At the $i$-th round, 
            \textcolor{mathcolor}{$\alpha \rplus{i} \canonseq{\alpha}{i}$},
            where \textcolor{mathcolor}{$\canonseq{\alpha}{\_}$} is the \emph{canonical sequence} of \textcolor{mathcolor}{$\alpha$}.
@@ -499,7 +499,7 @@
    
   \begin{block}{}
    
-    Canonical sequences are implemented by a structurally recursive function on terms in Cantor normal form.
+    Canonical sequences are implemented by a structurally recursive function on ordinal terms in Cantor normal form.
     
 \vspace{5pt}
     
@@ -637,7 +637,7 @@ We \emph{believe} that both definitions are extentionally equivalent.
     
     \item   $H'_\alpha(i) < H'_{\alpha+1}(i) \; (i \not=0)$
     
-       \item     If \textcolor{mathcolor}{$\alpha \rplus{n,n,\dots,n} \beta$} then \textcolor{mathcolor}{$H'_\beta(n)\leq H'_\alpha(n)$} 
+       \item     If \textcolor{mathcolor}{$\alpha \rplus{i,i,\dots,i} \beta$} then \textcolor{mathcolor}{$H'_\beta(i)\leq H'_\alpha(i)$}.
          
 
        \end{itemize}
