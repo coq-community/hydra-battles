@@ -58,7 +58,8 @@ Section MoreOrderType.
       move => n; case Hlim => H _ _.
       move: (H _ _  (ltnSn n));
         rewrite /restrict; move /andP; by case. 
-    Qed. 
+    Qed.
+    
     Remark R0 : nf x. 
     Proof. case Hsucc ;rewrite /restrict => /andP; by case. Qed. 
 
@@ -229,6 +230,7 @@ Section OmegaON.
 
 End OmegaON.
 
+Locate cmp. 
 Compute cmp 7 9. 
 
 
