@@ -579,7 +579,7 @@ We \emph{believe} that both definitions are extentionally equivalent.
 
 
 
-\begin{block}{Definition:}
+\textbf{Definition: }
   \textcolor{mathcolor}{$H'_\alpha(i)$} is the least $l$ such that \textcolor{mathcolor}{$\alpha_l=0$} (cf. previous slide). 
 
  
@@ -591,19 +591,11 @@ We \emph{believe} that both definitions are extentionally equivalent.
 \end{align}}
 
 
-$H'$ is a slight variant of the \emph{Hardy Hierarchy}. In \coq, we implement it with the \texttt{equations} plug-in.
-\end{block}
- 
-\begin{block}{Example:}
-  {\color{mathcolor}
-  $$      H'_{\omega^\omega}(i)=\, \textbf{let}\,F\;f\;k := f^{(k+1)}(k)\,
-                                  \textbf{in}\, F^{(i)}(\lambda k.\,2k+1)\,i$$
-}
-\end{block}
- 
+\textcolor{mathcolor}{$H'$} is a slight variant of the \emph{Hardy Hierarchy} (defined by transfinite recursion with \texttt{equations}).
+ We can prove exact, but not always very readable, formulas for small values of \textcolor{mathcolor}{$\alpha$} (\emph{e.g.} \textcolor{mathcolor}{$\omega^\omega$}).
 
- 
-
+\inputsnippets{./HprimePhi0OmegaClosed}
+  
 
 %\vspace{6pt}
 
