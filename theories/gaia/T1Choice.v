@@ -39,8 +39,7 @@ Fixpoint Tree2T1 (t: GenTree.tree nat): option T1 :=
 
 Lemma TreeT1K : pcancel T12Tree Tree2T1. 
 Proof. 
-  elim => //.
-  move => t Ht n t0 Ht0 /=; by rewrite Ht0 Ht. 
+  elim => // t Ht n t0 Ht0 /=; by rewrite Ht0 Ht. 
 Qed.                                              
 
 (** to remove (useless) *)
