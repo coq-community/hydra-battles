@@ -529,6 +529,28 @@ Record E0 := mkE0 { cnf : T1 ; _ : T1nf cnf == true}.
 Coercion cnf: E0 >-> T1.
 (* end snippet E0Def *)
 
+Canonical e0Sub := [subType for cnf].
+
+Check fun (x:E0) => val x. 
+
+
+Remark omeganf : T1nf T1omega == true. 
+  by reflexivity. Qed.
+
+Check (Sub T1omega). 
+
+Check (Sub T1omega omeganf : e0Sub).
+
+
+Check (Sub T1omega omeganf : E0).
+
+
+
+
+
+
+
+
 Definition E0eqb (a b: E0):= cnf a == cnf b.
 
 Lemma gE0_eq_intro a b : cnf a = cnf b -> a = b. 

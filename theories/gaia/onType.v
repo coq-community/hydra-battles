@@ -1,5 +1,5 @@
-(** Experimental !!!! *)
-(** This file is a draft !!! *)
+(** Ordinal Notations (Experimental !!!!) *)
+(** Warning:  This file is a draft !!! *)
 
 (*
 https://math-comp.github.io/htmldoc_1_14_0/mathcomp.ssreflect.choice.html
@@ -9,119 +9,85 @@ https://github.com/math-comp/math-comp/blob/master/mathcomp/ssreflect/order.v
 
 
 From mathcomp Require Import all_ssreflect zify.
+From mathcomp Require Import fintype. 
 From Coq Require Import Logic.Eqdep_dec.
 Require Import Wellfounded.Inclusion Wf_nat. 
-
-
 
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
-Definition restrict {A} (p: A -> bool)
-  (r: A -> A -> bool):=
+(** * Preliminaries *)
+(** restriction of a decidable relation *)
+
+Definition restrict {A} (p: A -> bool) (r: A -> A -> bool):=
   fun x y => [&& (p x), (p y) & r x y].
 
-
-(** An Ordinal  Notation is just a well-founded ordered type, with 
-    a trichotomic comparison 
-
-    Notions of successor and limits shold be defined in substructures *)
+(** ** Complements on orderType *)
 
 Section MoreOrderType.
   Variable disp: unit.
   Variable T: orderType disp. 
   
-  Variable nf : ssrbool.pred T.
-
+  (* adapted from gaia's ssete9 *)
+  
   Definition limit_v2 (f: nat -> T)(x: T) :=
     (forall (n:nat), (f n < x)%O) /\
-      (forall y : T, nf y -> (y < x)%O ->
-                     exists n : nat, (y <= f n)%O).
+      (forall y : T,  (y < x)%O -> exists n : nat, (y <= f n)%O).
 
+  (* adapted from gaia's ssete9 *)
+  
   Definition limit_of (f: nat -> T) x := 
-    [/\ forall n m : nat, (n < m)%nat -> restrict nf <%O (f n) (f m),
-       limit_v2 f x & nf x].
+    (forall n m : nat, (n < m)%nat -> (f n < f m)%O) /\ limit_v2 f x.
   
-  Definition is_successor_of  (x y: T):=
-    restrict nf <%O x y /\
-      (forall z,  nf z -> (x < z)%O ->  (z <  y)%O -> False).
+  Definition is_successor_of  (x y: T):= 
+    (x < y)%O /\ forall z,  (x < z)%O ->  ~~ (z <  y)%O. 
 
-  
   Section Succ_no_limit.
     Variables (x y: T) (s: nat -> T).
     Hypothesis Hsucc : is_successor_of x y.
     Hypothesis Hlim : limit_of s  y.
 
-    Lemma nf_s : forall n, nf (s n).
+    Remark R0: exists (n:nat), (x <= (s n))%O. 
+    Proof. case Hlim => _ [H H']; apply H'; by case Hsucc. Qed. 
+
+    Remark R1: exists z, (x < z < y)%O.
     Proof. 
-      move => n; case Hlim => H _ _.
-      move: (H _ _  (ltnSn n));
-        rewrite /restrict; move /andP; by case. 
-    Qed.
-    
-    Remark R0 : nf x. 
-    Proof. case Hsucc ;rewrite /restrict => /andP; by case. Qed. 
-
-    Remark R1 : nf y. 
-    Proof.
-      case Hsucc ; rewrite /restrict => /andP;
-                                        case => _ /andP;
-                                                  by case.
-    Qed. 
-
-    Remark R2: exists (n:nat), (x <= (s n))%O. 
-    Proof.
-      case Hlim => H1 [H2 H3] _ . 
-      apply H3 .  apply R0. case Hsucc. rewrite /restrict.
-      move /andP.  case => _; move /andP. by case.
-    Qed. 
-
-    Remark R3: exists z, (x < z < y)%O /\ nf z. 
-    Proof. 
-      case R2 => n Hn. exists (s (S n)). split. 
+      case R0 => n Hn. exists (s (S n)). 
       apply /andP; split.
       apply Order.POrderTheory.le_lt_trans with (s n) => //.
-      case: Hlim => H H0 _.
-      move: (H _ _  (ltnSn n));
-        rewrite /restrict; move /andP; case => _; move /andP. 
-      by case. 
-      case: Hlim => _.  case => H H0  _. by apply: H.
-      apply nf_s. 
+      case: Hlim => H H0.  apply: H => //.
+      case: Hlim => _ [H'' _]  //.
     Qed. 
 
-
     Lemma F: False.
-      case Hsucc => _ H. case R3 => n [Hn Hn'] => //.
-      apply H with n. 
-      done. 
-      move: Hn => /andP. by case. 
-      move: Hn => /andP. by case. 
+      case Hsucc => _ H. move: R1 ;case => x0 Hx0.
+      move: (H x0) => //; move: Hx0.
+      move /andP => //. 
+      case; move => H' H'' => H'''.
+      by move: (H''' H') => // /negP.  
     Qed. 
     
   End Succ_no_limit.
 
-
-
-
 End MoreOrderType.
 
 
+(** An Ordinal  Notation is just a well-founded ordered type, with 
+    a trichotomic comparison 
+
+    Notions of successor and limits should be defined in substructures
+ *)
+
+
+
+
+
+
 Module ONDef.
-
-
   Record mixin_of disp (T: orderType disp)  :=
     Mixin {
-        nf : T -> bool;
-        wf : well_founded (restrict nf <%O);
-        cmp: T -> T -> comparison;
-        zerob : T -> bool; 
-        _ : forall z, zerob z -> nf z;
-        _ : forall z, zerob z <-> forall a, nf a -> (z <= a)%O;
-        _ : forall a b : T,
-          nf a -> nf b ->
-          CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b);
-        
+        _ : @well_founded T <%O;
       }.
   
   Section Packing.
@@ -136,115 +102,132 @@ Module ONDef.
     Definition on_struct: mixin_of cT :=
       let: Pack _ c := cT return mixin_of cT in c.
 
-    Definition is_zero := zerob on_struct. 
   End Packing.    
 
-  Module Exports. 
+  Module Exports.
 
     Notation on := (pack_type ).
     Notation ONMixin := Mixin. 
     Notation ON T m := (@Pack T m).
-    Notation nf := (nf (on_struct _)).
-    Notation zerob := is_zero.
-    Notation cmp := (cmp (on_struct _)).
     Coercion type : pack_type >-> orderType.
     
     Section Lemmas.
-      Variable disp: unit.
-      Variable U: @on disp.
+      Variable disp: unit. 
+      Variable U: @on  disp.
 
-      Lemma nf_zero (a: U) : zerob a -> nf a.
-      Proof.
-        case: U a => t r a. rewrite /zerob. rewrite /nf => //=.
-        move: r a; case => //=. 
-      Qed. 
-
-      Lemma zeroE (a: U) : zerob a <-> forall b, nf b -> (a <= b)%O.
-      Proof.     
-        case: U a =>  t [nf w l i i0 i1] a.  apply: i1. 
-      Qed. 
-
-      Lemma compareP (a b: U) :
-        nf a -> nf b ->
-        CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b).
+      Definition tricho (a b: U) := if (a == b)%O then Eq
+                                    else if (a < b)%O then Lt
+                                         else Gt.
+  
+      Lemma trichoP (a b: U) :
+        CompareSpec (a == b) (a < b)%O (b < a)%O (tricho a b).
       Proof. 
-        case: U a b => t [nf w l i i0 i1 i2] a b;  apply: i2. 
+        rewrite /tricho; case Hab:  (a == b) => //.
+        by constructor.
+        case H'ab: (a < b)%O; constructor => //. 
+        rewrite Order.POrderTheory.lt_def. 
+        apply /andP; split.
+        by rewrite /negb Hab.
+        have diff : a != b by rewrite Hab.  move: diff. 
+        rewrite Order.TotalTheory.neq_lt H'ab Bool.orb_false_l.
+        by apply: Order.POrderTheory.ltW. 
       Qed.
 
       
-      Lemma wf : @well_founded U (restrict (nf )  <%O). 
-      Proof. case: U => t [h w *] a; apply: w. Qed. 
+      Lemma wf : @well_founded U <%O. 
+      Proof. case: U => t [  w *] a.  apply: w. Qed. 
 
     End Lemmas. 
   End Exports.
 End ONDef.
 
-Export ONDef.Exports.
+Export ONDef.Exports. 
 
-Notation omegaType := Order.NatOrder.orderType. 
+(* The Ordinal notation for 'I_i *)
+Require Import Inverse_Image.
 
-Section OmegaON. 
 
-  Definition nf (x: omegaType) := true. 
-  Definition zerob (x: omegaType) := x == 0.
-  Definition cmp (x y: omegaType) := Nat.compare x y. 
+Lemma wf_ltn: well_founded (fun n => [eta ltn n]).
+move => n; apply Acc_incl with lt. 
+- by move => i j /ltP.
+- apply lt_wf. 
+Qed.
+
+
+Section onFiniteDef. 
+
+  Variable i: nat. 
+
+  Definition  ordinal_proj1 (m: 'I_i): nat :=
+    match m with @Ordinal _ k Hk => k end.
   
-  Lemma nf_zero (z:omegaType): zerob z -> nf z. 
-  Proof. by rewrite  /nf. Qed.
-
-  Lemma OmegazerobP:
-    forall z, zerob z <-> forall a, nf a -> (z <= a)%O. 
+ 
+  Lemma I_i_wf: @well_founded 'I_i <%O.
   Proof.
-    move => z; rewrite /zerob /nf /le => //=; split. 
-    - move /eqP => -> //=.  
-    - move => H. move: (H 0) => {H}; case :z => //=. 
-      move => n; cbn => //= H; by apply H. 
+    case => m Hm; 
+            apply Acc_incl with
+              (fun x y: 'I_i => (ordinal_proj1 x < ordinal_proj1 y)). 
+    move =>  [m0 i0] [m1 i1] //=.
+    apply:  (@Acc_inverse_image ('I_ i) nat
+              (fun n => [eta ltn n])ordinal_proj1
+              (Ordinal Hm) (wf_ltn (ordinal_proj1 (Ordinal Hm)))). 
   Qed. 
 
-  Lemma OmegacmpP (a b: omegaType):
-    nf a -> nf b ->
-    CompareSpec (a == b) (a < b)%O (b < a)%O (cmp a b).
-  Proof.
-    case_eq (cmp a b) => H; constructor.
-    - apply /eqP; by apply Compare_dec.nat_compare_eq. 
-    - apply /ltP; by apply Compare_dec.nat_compare_lt. 
-    - apply /ltP; by apply Compare_dec.nat_compare_gt. 
-  Qed. 
+Definition onFiniteMixin := ONMixin I_i_wf.
+Definition onFiniteType := ON _ _ onFiniteMixin. 
 
-  Lemma OmegaWf: well_founded (restrict nf <%O). 
-  Proof.  
-    move => x; apply Acc_incl with (2:= lt_wf x). 
-    move => a b; rewrite /restrict => /andP.
-    case => _ ;move /andP ; case => _ ?; by apply :ltP.
-  Qed. 
+Canonical onFiniteType. 
 
+End onFiniteDef.
+
+Definition O12_33: onFiniteType 33. 
+by exists 12.
+Defined. 
+
+Compute tricho O12_33 O12_33.
+
+
+Goal (O12_33 <= O12_33)%O. 
+by [].
+Qed. 
+
+
+Definition L11: 'I_33. 
+Proof. by exists 11. Defined. 
+
+Compute tricho L11 O12_33.
+
+
+
+
+
+Section onOmegaDef.
+
+ Lemma omega_lt_wf : @well_founded Order.NatOrder.orderType <%O. 
+ Proof. 
+   exact: wf_ltn.    
+ Qed.
+
+ 
+Definition onOmegaMixin := ONMixin omega_lt_wf.
+Definition onOmegaType := ON _ _ onOmegaMixin. 
+Canonical onOmegaType. 
+
+End onOmegaDef.
+
+Definition om12 : onOmegaType := 12. 
+Definition om67 : onOmegaType := 67. 
+
+Compute tricho om67 om12. 
+
+Require Import T1Bridge.
+
+Section ONEpsilon0Def. 
+
+ (*
+ Search E0.
+  *)
   
-  Definition OmegaMixin :=
-    ONMixin OmegaWf nf_zero OmegazerobP OmegacmpP.
+  (* Todo: Build an orderType over E0 *)
 
-  Canonical onOmegaType :=
-    ON _ omegaType  OmegaMixin. 
-
-  Check @Order.SeqLexiOrder.orderType  Order.NatOrder.nat_display tt
-    Order.NatOrder.orderType. 
-
-End OmegaON.
-
-Locate cmp. 
-Compute cmp 7 9. 
-
-
-(** To move elsewhere ??? *)
-
-
-(*   Lemma limitP (a:U) : nf a -> reflect (exists f, limit_of nf f a)
-                                (limitb a).
-    Proof.       
-      case: U a => t [nf w l s z Hz Hz' Hl r a *];  by apply: (Hl a).    Qed.
-
-    Lemma succP (a:U) :
-      nf a ->
-      reflect  (exists b, is_successor_of nf a b) (succb a).
-      Proof.       
-        case: U a => t [nf w l s z Hz Hz' Hl r a *]. by apply: (r a).    Qed. 
- *)
+End ONEpsilon0Def.
