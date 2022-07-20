@@ -162,7 +162,7 @@ Section onFiniteDef.
     match m with @Ordinal _ k Hk => k end.
   
  
-  Lemma I_i_wf: @well_founded 'I_i (fun alpha => [eta <%O alpha]).
+  Lemma I_i_wf: @well_founded 'I_i (fun alpha beta => (alpha < beta)%O).
   Proof.
     case => m Hm; 
             apply Acc_incl with
