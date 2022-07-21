@@ -1,17 +1,19 @@
 (** Ordinal Notations (Experimental !!!!) *)
 (** Warning:  This file is a draft !!! *)
+(**  We try to adapt to Gaia the ON class of ordinal notations 
+   (defined as a naïve (pre Stdpp) type class).
 
-(*
-https://math-comp.github.io/htmldoc_1_14_0/mathcomp.ssreflect.choice.html
+ An Ordinal  Notation is just a well-founded ordered type, with 
+    a trichotomic comparison 
 
-https://github.com/math-comp/math-comp/blob/master/mathcomp/ssreflect/order.v
+    Notions of ordinal arithmetics should be defined in substructures
  *)
 
 
 From mathcomp Require Import all_ssreflect zify.
 From mathcomp Require Import fintype. 
 From Coq Require Import Logic.Eqdep_dec.
-Require Import Wellfounded.Inclusion Wf_nat. 
+From Coq Require Import Wellfounded.Inclusion Wf_nat  Inverse_Image.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -63,8 +65,7 @@ Section MoreOrderType.
     Lemma F: False.
       case Hsucc => _ H. move: R1 ;case => x0 Hx0.
       move: (H x0) => //; move: Hx0.
-      move /andP => //. 
-      case; move => H' H'' => H'''.
+      move /andP => // [H' H''] H'''. 
       by move: (H''' H') => // /negP.  
     Qed. 
     
@@ -72,17 +73,7 @@ Section MoreOrderType.
 
 End MoreOrderType.
 
-
-(** An Ordinal  Notation is just a well-founded ordered type, with 
-    a trichotomic comparison 
-
-    Notions of successor and limits should be defined in substructures
- *)
-
-
-
-
-
+(** Type for ordinal notations *)
 
 Module ONDef.
   Record mixin_of disp (T: orderType disp)  :=
@@ -122,15 +113,14 @@ Module ONDef.
       Lemma trichoP (a b: U) :
         CompareSpec (a == b) (a < b)%O (b < a)%O (tricho a b).
       Proof. 
-        rewrite /tricho; case Hab:  (a == b) => //.
-        by constructor.
+        rewrite /tricho; case Hab:  (a == b) => //; [by constructor|].
         case H'ab: (a < b)%O; constructor => //. 
-        rewrite Order.POrderTheory.lt_def. 
-        apply /andP; split.
-        by rewrite /negb Hab.
-        have diff : a != b by rewrite Hab.  move: diff. 
-        rewrite Order.TotalTheory.neq_lt H'ab Bool.orb_false_l.
-        by apply: Order.POrderTheory.ltW. 
+        rewrite Order.POrderTheory.lt_def; apply /andP; split.
+        - by rewrite /negb Hab.
+        - have diff : a != b by rewrite Hab . 
+          move: diff;
+            rewrite Order.TotalTheory.neq_lt H'ab Bool.orb_false_l;
+            by apply: Order.POrderTheory.ltW. 
       Qed.
 
       
@@ -143,9 +133,9 @@ End ONDef.
 
 Export ONDef.Exports. 
 
-(* The Ordinal notation for 'I_i *)
-Require Import Inverse_Image.
+(** *  First instances of ON *)
 
+(** **  The Ordinal notation for 'I_i *)
 
 Lemma wf_ltn: well_founded (fun n => [eta ltn n]).
   move => n; apply Acc_incl with lt. 
@@ -153,37 +143,18 @@ Lemma wf_ltn: well_founded (fun n => [eta ltn n]).
   - apply lt_wf. 
 Qed.
 
-
 Section onFiniteDef. 
-
   Variable i: nat. 
-
  
- (* Error in  (mathcomp/mathcomp:1.12.0-coq-8.13) 
-          and build (mathcomp/mathcomp:1.12.0-coq-8.14) 
-
-    Works : build (mathcomp/mathcomp:1.13.0-coq-8.14) 
-            build (coqorg/coq:dev-ocaml-4.13.1-flambda) 
-            build (mathcomp/mathcomp:1.14.0-coq-8.15) 
-            build (mathcomp/mathcomp:1.13.0-coq-8.13) 
-
-*)
-
-(* The term "alpha" has type "'I_i" while it is expected to have type
+ (* Failed with mathcomp/mathcomp:1.12 
+The term "alpha" has type "'I_i" while it is expected to have type
   -  "Order.POrder.sort ?T".
-
  *)
-  
-    (** possibly useless ???? *)
-  
-  Definition rel2Rel {T} (r: rel T) := (fun x y => r x y: Prop).
-  Coercion rel2Rel : rel >-> Funclass.
-  
   
   Lemma I_i_wf: @well_founded 'I_i (<%O).
   Proof.
     case => m Hm; rewrite ltEord.
-    apply (Acc_inverse_image 'I_i nat (rel2Rel ltn)
+    apply (Acc_inverse_image 'I_i nat _ 
              (nat_of_ord (n:=i))  _ (wf_ltn (Ordinal Hm))).
   Qed. 
 
@@ -213,7 +184,7 @@ Compute tricho L11 O12_33.
 
 *)
 
-
+(** ** An ordinal notation for omega *)
 
 Section onOmegaDef.
 
@@ -231,6 +202,8 @@ Example om12 : onOmegaType := 12.
 Example om67 : onOmegaType := 67. 
 
 Compute tricho om67 om12. 
+
+(** To do :  Notation for epsilon0 *)
 
 Require Import T1Bridge.
 
