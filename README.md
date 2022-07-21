@@ -61,7 +61,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 - Additional dependencies:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
-  - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.12 or later
+  - [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.13 or later
   - [MathComp Algebra](https://github.com/math-comp/math-comp)
   - [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
   - [Mczify](https://github.com/math-comp/mczify)
