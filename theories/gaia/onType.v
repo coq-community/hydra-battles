@@ -148,9 +148,9 @@ Require Import Inverse_Image.
 
 
 Lemma wf_ltn: well_founded (fun n => [eta ltn n]).
-move => n; apply Acc_incl with lt. 
-- by move => i j /ltP.
-- apply lt_wf. 
+  move => n; apply Acc_incl with lt. 
+  - by move => i j /ltP.
+  - apply lt_wf. 
 Qed.
 
 
@@ -158,28 +158,42 @@ Section onFiniteDef.
 
   Variable i: nat. 
 
-  Definition  ordinal_proj1 (m: 'I_i): nat :=
-    match m with @Ordinal _ k Hk => k end.
-  
  
-  Lemma I_i_wf: @well_founded 'I_i (fun alpha beta => (alpha < beta)%O).
+ (* Error in  (mathcomp/mathcomp:1.12.0-coq-8.13) 
+          and build (mathcomp/mathcomp:1.12.0-coq-8.14) 
+
+    Works : build (mathcomp/mathcomp:1.13.0-coq-8.14) 
+            build (coqorg/coq:dev-ocaml-4.13.1-flambda) 
+            build (mathcomp/mathcomp:1.14.0-coq-8.15) 
+            build (mathcomp/mathcomp:1.13.0-coq-8.13) 
+
+*)
+
+(* The term "alpha" has type "'I_i" while it is expected to have type
+  -  "Order.POrder.sort ?T".
+
+ *)
+  
+    (** possibly useless ???? *)
+  
+  Definition rel2Rel {T} (r: rel T) := (fun x y => r x y: Prop).
+  Coercion rel2Rel : rel >-> Funclass.
+  
+  
+  Lemma I_i_wf: @well_founded 'I_i (<%O).
   Proof.
-    case => m Hm; 
-            apply Acc_incl with
-              (fun x y: 'I_i => (ordinal_proj1 x < ordinal_proj1 y)). 
-    move =>  [m0 i0] [m1 i1] //=.
-    apply:  (@Acc_inverse_image ('I_ i) nat
-              (fun n => [eta ltn n])ordinal_proj1
-              (Ordinal Hm) (wf_ltn (ordinal_proj1 (Ordinal Hm)))). 
+    case => m Hm; rewrite ltEord.
+    apply (Acc_inverse_image 'I_i nat (rel2Rel ltn)
+             (nat_of_ord (n:=i))  _ (wf_ltn (Ordinal Hm))).
   Qed. 
 
 Definition onFiniteMixin := ONMixin I_i_wf.
-Definition onFiniteType := ON _ _ onFiniteMixin. 
+Canonical onFiniteType := ON _ _ onFiniteMixin.
 
-Canonical onFiniteType. 
 
 End onFiniteDef.
 
+(** Tests 
 Definition O12_33: onFiniteType 33. 
 by exists 12.
 Defined. 
@@ -197,26 +211,24 @@ Proof. by exists 11. Defined.
 
 Compute tricho L11 O12_33.
 
-
+*)
 
 
 
 Section onOmegaDef.
 
  Lemma omega_lt_wf : @well_founded Order.NatOrder.orderType <%O. 
- Proof. 
-   exact: wf_ltn.    
- Qed.
+ Proof. exact: wf_ltn. Qed.
 
  
 Definition onOmegaMixin := ONMixin omega_lt_wf.
-Definition onOmegaType := ON _ _ onOmegaMixin. 
-Canonical onOmegaType. 
+Canonical onOmegaType := ON _ _ onOmegaMixin. 
+
 
 End onOmegaDef.
 
-Definition om12 : onOmegaType := 12. 
-Definition om67 : onOmegaType := 67. 
+Example om12 : onOmegaType := 12. 
+Example om67 : onOmegaType := 67. 
 
 Compute tricho om67 om12. 
 
