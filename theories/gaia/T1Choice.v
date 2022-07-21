@@ -19,6 +19,7 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
 
+
 (**  Type [T1] vs generic trees *)
 
 Fixpoint T12Tree (a: T1): GenTree.tree nat :=
@@ -39,8 +40,7 @@ Fixpoint Tree2T1 (t: GenTree.tree nat): option T1 :=
 
 Lemma TreeT1K : pcancel T12Tree Tree2T1. 
 Proof. 
-  elim => //.
-  move => t Ht n t0 Ht0 /=; by rewrite Ht0 Ht. 
+  elim => // t Ht n t0 Ht0 /=; by rewrite Ht0 Ht. 
 Qed.                                              
 
 (** to remove (useless) *)
@@ -53,6 +53,8 @@ Qed.
 
 Definition T1mixin :
   Countable.mixin_of T1 := PcanCountMixin TreeT1K.
+
+
 
 Canonical T1Choice :=
   Eval hnf in ChoiceType T1 (CountChoiceMixin T1mixin).
@@ -114,6 +116,13 @@ Goal @Order.le tt T1orderType T1omega T1omega.
 by rewrite Order.POrderTheory.lexx.
 Qed.
 
+Check T1omega: T1orderType. 
+
+Goal ((T1omega:T1orderType) <= (T1omega:T1orderType))%O. 
+done.
+Qed. 
+
+
 
 Notation "x <= y" := (@Order.le _ T1orderType  x y).
 
@@ -151,7 +160,6 @@ Qed.
 
 Compute Order.POrder.sort T1orderType. 
 Goal ~~ @Order.lt tt (T1orderType) T1omega T1omega.
-Search (~~ _).
 by cbn. 
 Qed. 
 
@@ -166,4 +174,8 @@ Check T1omega: T1Choice.
 
 Check T1omega: T1orderType.
 
+
+Print E0.
+
+(* Check [subCountType of T1]. *)
 
