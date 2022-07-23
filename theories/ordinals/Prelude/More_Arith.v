@@ -113,23 +113,23 @@ Proof.
   assert (Hle: b <= r).
   {  
    -  apply le_trans with (r - r').
-   +   rewrite <- mult_1_l with b.
+   +   rewrite <- Nat.mul_1_l with b.
        replace (r - r') with ((q' - q) * b).
        * apply mul_le_mono_r; abstract lia.
        *   transitivity (q' * b - q * b).
-         {  apply mult_minus_distr_r. }
-            apply plus_minus.
-         rewrite minus_semi_assoc with r' (q' * b) (q * b).
-         apply plus_minus.
-         transitivity a.
-         { rewrite plus_comm with r' (q' * b); symmetry; assumption. }
-         {  assumption. } 
-         
+           {  apply Nat.mul_sub_distr_r. }
+           symmetry; apply Nat.add_sub_eq_l. 
+           rewrite minus_semi_assoc with r' (q' * b) (q * b).
+            apply Nat.add_sub_eq_l. 
+            transitivity a.
+            now symmetry.
+          
+         { now rewrite Nat.add_comm with r' (q' * b).   }
          unfold gt; apply mult_lt_compat_r.
          assumption.
          apply le_lt_trans with r; auto with arith.
    + apply le_minus.
-}
+  }
   rewrite   (Nat.lt_nge  r b ) in Hrem; contradiction.
 Qed.
 

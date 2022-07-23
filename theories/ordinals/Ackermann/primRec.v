@@ -854,7 +854,7 @@ Proof.
   exists x; cbn  in |- *.
   intros;rewrite p;induction c as [| c Hrecc].
   - auto.
-  - simpl in |- *; rewrite Hrecc; apply plus_comm.
+  - simpl in |- *; rewrite Hrecc; apply Nat.add_comm.
 Qed.
 
 Lemma predIsPR : isPR 1 pred.
@@ -994,7 +994,7 @@ Proof.
       * symmetry  in |- *;now  apply le_plus_minus.
       * assumption.
     + rewrite not_le_minus_0.
-      * rewrite plus_comm, max_l.
+      * rewrite Nat.add_comm, max_l.
         -- reflexivity.
         -- now apply lt_le_weak.
       * now apply lt_not_le.
@@ -1442,9 +1442,9 @@ Section Ignore_Params.
     exists (composeFunc (m + n) n (projectionListPR _ _ (le_plus_r _ _)) x).
     apply extEqualSym.
     assert (H0: m + n - n + n = m + n).
-    { rewrite (plus_comm m n).
+    { rewrite (Nat.add_comm m n).
       rewrite minus_plus.
-      apply plus_comm.
+      apply Nat.add_comm.
     }
     assert
     (H1: extEqual (m + n)
@@ -1485,7 +1485,7 @@ Section Ignore_Params.
         *  apply eq_nat_dec.
         * cbn in |- *.
           reflexivity.
-      + rewrite plus_comm.
+      + rewrite Nat.add_comm.
         now rewrite minus_plus.
   Qed.
 

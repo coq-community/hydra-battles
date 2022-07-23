@@ -106,15 +106,15 @@ Lemma natPlus :
 Proof.
 intros.
 induction b as [| b Hrecb].
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
 apply nn3.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
 apply eqTrans with (Succ (Plus (natToTerm a) (natToTerm b))).
 apply nn4.
 apply eqSucc.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply Hrecb.
 Qed.
 
@@ -131,7 +131,7 @@ rewrite Nat.mul_comm.
 simpl in |- *.
 eapply eqTrans.
 apply nn6.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply eqTrans with (Plus (natToTerm (b * a)) (natToTerm a)).
 apply eqPlus.
 rewrite Nat.mul_comm.

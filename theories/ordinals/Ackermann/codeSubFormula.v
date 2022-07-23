@@ -1161,7 +1161,7 @@ induction
 rewrite <- a1 in H1.
 rewrite <- beq_nat_refl in H1.
 simpl in H1.
-rewrite plus_comm in H1; simpl in H1.
+rewrite Nat.add_comm in H1; simpl in H1.
 decompose record (mult_lemma1 _ _ H1).
 rewrite <- (cTripleProj (cPairPi1 m)) in H2.
 rewrite <- (cTripleProj (cPairPi2 m)) in H3.
@@ -1240,7 +1240,7 @@ induction
 rewrite <- a0 in H0.
 rewrite <- beq_nat_refl in H0.
 simpl in H0.
-rewrite plus_comm in H0; simpl in H0.
+rewrite Nat.add_comm in H0; simpl in H0.
 rewrite <- (cTripleProj m) in H0.
 rewrite <- a0 in H0; clear a0.
 rewrite <- (H _ _ _ _ H0) in a.
@@ -1340,7 +1340,7 @@ induction
 rewrite a3 in H0.
 rewrite <- beq_nat_refl in H0.
 simpl in H0.
-rewrite plus_comm in H0.
+rewrite Nat.add_comm in H0.
 simpl in H0.
 decompose record (mult_lemma1 _ _ H0).
 rewrite <- (cTripleProj (cPairPi1 m)) in H1.
@@ -1447,7 +1447,7 @@ induction
 rewrite <- a1 in H0.
 rewrite <- beq_nat_refl in H0.
 simpl in H0.
-rewrite plus_comm in H0.
+rewrite Nat.add_comm in H0.
 simpl in H0.
 assert (lt_depth L a (forallH L v a)).
 apply depthForall.
@@ -5040,7 +5040,7 @@ apply
     (s := var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a0))).
 apply depthForall.
 rewrite
- (plus_comm (pow3 (depth L a))
+ (Nat.add_comm (pow3 (depth L a))
     (pow3 (depth L a) + pow3 (depth L a) + pow3 (depth L a)))
  .
 repeat rewrite (plus_assoc_reverse (pow3 (depth L a) + pow3 (depth L a))).

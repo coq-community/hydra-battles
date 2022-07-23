@@ -176,12 +176,12 @@ Proof.
 intros a l1 l2 l3 l4; unfold list_permut, meq; simpl;
 intros H b; generalize (H b); clear H;
 repeat rewrite multiplicity_app; simpl;
-intro H; rewrite plus_comm; rewrite <- plus_assoc; apply sym_eq;
-rewrite plus_comm; rewrite <- plus_assoc; 
+intro H; rewrite Nat.add_comm; rewrite <- plus_assoc; apply sym_eq;
+rewrite Nat.add_comm; rewrite <- plus_assoc; 
 apply (f_equal (fun n => match eq_elt_dec a b with 
                          | left _ => 1 
                          | right _ => 0 end + n));
-rewrite plus_comm; rewrite <- H; apply plus_comm.
+rewrite Nat.add_comm; rewrite <- H; apply Nat.add_comm.
 Qed.
 
 Lemma list_permut_add_cons_inside :
@@ -231,7 +231,7 @@ Proof.
 intros l1 l2;
 unfold list_permut, meq; 
 intro a; rewrite multiplicity_app; rewrite multiplicity_app;
-apply plus_comm.
+apply Nat.add_comm.
 Qed.
 
 (** Permutation is compatible with removal of common elements *)
@@ -250,7 +250,7 @@ intros H a; generalize (H a);
 rewrite (multiplicity_app l1 l);
 rewrite (multiplicity_app l2 l); 
 intros; apply plus_reg_l with (multiplicity (list_to_multiset l) a).
-rewrite plus_comm; rewrite H0; rewrite plus_comm.
+rewrite Nat.add_comm; rewrite H0; rewrite Nat.add_comm.
 trivial.
 Qed.
 
@@ -264,7 +264,7 @@ simpl; intro H1;
 apply plus_reg_l with (match eq_elt_dec a a0 with left _ => 1 | right _ => 0 end);
 rewrite H1; repeat rewrite plus_assoc;
 apply (f_equal (fun n => n + multiplicity (list_to_multiset l2) a0));
-apply plus_comm.
+apply Nat.add_comm.
 Qed.
 
 (** Permutation is compatible with length. *)
@@ -304,9 +304,9 @@ destruct (split_list eq_elt_dec l2 a); intro; subst l2;
 rewrite list_size_app; simpl;
 rewrite (IHl1 _ (list_permut_remove_hd _ _ P));
 rewrite list_size_app;
-rewrite plus_comm; rewrite <- plus_assoc;
+rewrite Nat.add_comm; rewrite <- plus_assoc;
 apply (f_equal (fun n => list_size size l + n));
-apply plus_comm.
+apply Nat.add_comm.
 Qed.
 
 Add Parametric Morphism size : (@list_size elt size) with signature (list_permut ==> @eq nat) as list_size_morph.
