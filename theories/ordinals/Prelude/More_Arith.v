@@ -219,7 +219,7 @@ Lemma pred_of_power : forall b e, pred (power (S b) (S e)) =
  intros;generalize ((S b) ^e).
  destruct n.
  simpl.
- rewrite mult_0_r.
+ rewrite Nat.mul_0_r.
  simpl;auto.
  rewrite (Nat.mul_comm b (S n)).
 simpl.
@@ -258,11 +258,11 @@ destruct 1.
 assert (S q <= q').
 auto with arith.
 assert ((S q)*b + r <= q' *b + r).
-apply plus_le_compat_r. 
-apply mult_le_compat_r.
+apply Nat.add_le_mono_r. 
+apply Nat.mul_le_mono_r.
 auto.
 simpl in H4.
-rewrite <- plus_assoc in H4.
+rewrite <- Nat.add_assoc in H4.
 rewrite H0 in H4.
 lia.
 auto.
@@ -270,48 +270,15 @@ intro.
 assert (S q' <= q).
 auto with arith.
 assert ((S q')*b + r <= q *b + r).
-apply plus_le_compat_r. 
-apply mult_le_compat_r.
+apply Nat.add_le_mono_r. 
+apply Nat.mul_le_mono_r.
 auto.
 simpl in H4.
-rewrite <- plus_assoc in H4.
+rewrite <- add_assoc in H4.
 rewrite H0 in H4.
 lia.
 Qed.
-(*
-Lemma Euc2 : forall b q  q' r r', 0 < b -> 
-               q*b+r = q'*b+r' -> r < b -> r' < b -> r =r'.
- intros.
- rewrite (Euc1  q q' H H0 H1 H2) in H0.
- omega.
-Qed.
 
-*)
-
-(*Lemma max_le_regR : forall n p q, p <= q -> max p n <= max q n.
-  intros; case (max_dec p n).
- intro e;rewrite e.
- apply le_trans with q.
- auto.
-  apply le_max_l.
- intro e;rewrite e.
- apply le_max_r.
-Qed.
-*)
-(*Lemma max_le_regL :  forall n p q, p <= q -> max n p <= max n q.
-  intros; rewrite (max_comm n p);rewrite (max_comm n q).
-  apply max_le_regR.
-  auto.
-Qed.
-
-
-
-
-Lemma lt_lt_Sn : forall a b c, a < b -> b < S c -> a < c.
- eauto with arith.
-Qed.
-
-*)
 
 
  
