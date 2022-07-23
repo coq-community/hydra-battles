@@ -255,7 +255,7 @@ simpl in |- *.
 reflexivity.
 assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
 intros.
-rewrite mult_comm in H.
+rewrite Nat.mul_comm in H.
 eapply multLemma1.
 apply H.
 assert
@@ -704,7 +704,7 @@ simpl in |- *.
 reflexivity.
 assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
 intros.
-rewrite mult_comm in H.
+rewrite Nat.mul_comm in H.
 eapply multLemma1.
 apply H.
 assert

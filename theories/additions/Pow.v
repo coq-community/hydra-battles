@@ -185,7 +185,7 @@ Ltac power_simpl := repeat (monoid_rw || rewrite <- power_of_plus).
 Lemma power_commute x n p: 
   x ^ n * x ^ p ==  x ^ p * x ^ n. 
 Proof.
- power_simpl; now rewrite (plus_comm n p).
+ power_simpl; now rewrite (Nat.add_comm n p).
 Qed.
 
 Lemma power_commute_with_x x n:

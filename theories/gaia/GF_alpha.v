@@ -7,7 +7,7 @@
 (* begin snippet Requirements:: no-out  *)
 From mathcomp Require Import all_ssreflect zify.
 From gaia Require Export ssete9.
-From Coq Require Import Logic.Eqdep_dec.
+From Coq Require Import Logic.Eqdep_dec Arith.
 From hydras Require Import DecPreOrder.
 From hydras Require Import T1 E0.
 From hydras Require Paths.
@@ -64,7 +64,7 @@ Qed.
 
 Lemma F_alpha_positive (alpha : hE0) (n : nat): (0 < F_alpha.F_ alpha n)%N.
 Proof.
-  rewrite /F_. apply /ltP ; apply Lt.le_lt_trans with n;
+  rewrite /F_. apply /ltP ; apply Nat.le_lt_trans with n;
     [auto with arith| apply F_alpha.F_alpha_gt].
 Qed.
 

@@ -1,8 +1,8 @@
 (**  About [F_ omega] *)
 
 
-Require Import Iterates F_alpha E0.
-Require Import ArithRing Lia   Max Ack AckNotPR Mult.
+From hydras Require Import Iterates F_alpha E0 Ack AckNotPR.
+From Coq Require Import ArithRing Lia   Arith.
 Import Exp2.
 Open Scope nat_scope.
 
@@ -26,7 +26,7 @@ Proof.
   - compute; auto with arith. 
   - cbn; rewrite PeanoNat.Nat.mul_succ_r; ring_simplify.
     remember (exp2 m) as X.
-    rewrite (Mult.mult_comm X m)in IHle.
+    rewrite (Nat.mul_comm X m)in IHle.
     rewrite <-  (Mult.mult_assoc); lia.
 Qed.
 

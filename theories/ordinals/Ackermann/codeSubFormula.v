@@ -942,7 +942,7 @@ induction H as [H| H].
 rewrite H.
 simpl in |- *.
 reflexivity.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 rewrite H.
 reflexivity.
 intros.

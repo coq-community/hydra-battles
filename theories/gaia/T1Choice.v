@@ -150,7 +150,6 @@ Qed.
 
 Compute Order.POrder.sort T1orderType. 
 Goal ~~ @Order.lt tt (T1orderType) T1omega T1omega.
-Search (~~ _).
 by cbn. 
 Qed. 
 
@@ -161,8 +160,5 @@ Qed.
 
 Fail Goal Order.max T1omega T1omega == T1omega.
 
-Check T1omega: T1Choice. 
-
-Check T1omega: T1orderType.
 
 

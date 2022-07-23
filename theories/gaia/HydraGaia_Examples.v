@@ -50,13 +50,6 @@ Compute T1pp (\F 5 + T1omega).
 
 Compute T1pp (\F 5 o+ T1omega).
 
-Search (_ o+ ?x < _ o+ ?x).
-
-Search (?x < ?x  o+ _)%ca. 
-
-Search oplus.
-
-Search Hessenberg.oplus T1.lt.
 
 (* begin snippet F42Omega:: no-out *)
 Check T1lt (\F 42) T1omega.

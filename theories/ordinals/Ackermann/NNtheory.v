@@ -124,17 +124,17 @@ Lemma natTimes :
 Proof.
 intros.
 induction b as [| b Hrecb].
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 simpl in |- *.
 apply nn5.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 simpl in |- *.
 eapply eqTrans.
 apply nn6.
 rewrite plus_comm.
 apply eqTrans with (Plus (natToTerm (b * a)) (natToTerm a)).
 apply eqPlus.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 apply Hrecb.
 apply eqRefl.
 apply natPlus.
