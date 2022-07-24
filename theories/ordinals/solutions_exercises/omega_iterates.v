@@ -3,7 +3,8 @@
 (** Old stuff 
 *)
 
-Require Import ArithRing Lia   Max.
+Require Import ArithRing Lia Arith.
+Import Nat.
 
 Definition id_nat (n:nat) := n.
 
@@ -25,7 +26,7 @@ Lemma mono_le f (Hf : mono f) :
   forall n, n <= f n.
   induction n.
   auto with arith.   
-  apply Lt.le_lt_trans with (f n).
+  apply Nat.le_lt_trans with (f n).
   auto. 
   apply Hf.
   auto with arith. 
@@ -163,7 +164,7 @@ Lemma mono_f_gt_0 f : mono f -> 0 < f 0 ->
   intros H H0 i _.
   induction i.
   assumption. 
-  apply Lt.le_lt_trans with (f i).
+  apply le_lt_trans with (f i).
    unfold id_nat; auto with arith.
    apply H. auto with arith.
 Qed.
@@ -197,10 +198,10 @@ Proof.
   auto with arith.
   apply PeanoNat.Nat.lt_le_incl.
   rewrite iterate_S_eqn.
-  apply Lt.le_lt_trans with (iterate f n j).
+  apply Nat.le_lt_trans with (iterate f n j).
   auto.
   apply H.
-  apply Le.le_trans with j.
+  apply Nat.le_trans with j.
   auto.
   auto.
 Qed.  
@@ -222,14 +223,14 @@ Lemma dominates_iterate :
   intros k Hk.
   unfold id_nat.
   rewrite iterate_S_eqn.
-  apply Lt.le_lt_trans with (f (iterate f n k)).
-  apply Le.le_trans with  (iterate f n k).
+  apply Nat.le_lt_trans with (f (iterate f n k)).
+  apply Nat.le_trans with  (iterate f n k).
   apply iterate_ge with i.
   auto.
   eauto with arith.
   apply PeanoNat.Nat.lt_le_incl.
   apply H.
-  apply Le.le_trans with k. eauto with arith.
+  apply Nat.le_trans with k. eauto with arith.
   apply iterate_ge with i.
   auto. 
   eauto with arith. 
@@ -237,7 +238,7 @@ Lemma dominates_iterate :
   rewrite iterate_S_eqn.
   apply H.
   
-  apply Le.le_trans with  k.
+  apply Nat.le_trans with  k.
   eauto with arith. 
   apply iterate_ge with i.
   auto. 
@@ -281,7 +282,7 @@ Proof.
   unfold id_nat in H2, H.
   rewrite iterate_S_eqn.   
   apply PeanoNat.Nat.lt_le_incl.
-  apply Lt.lt_le_trans with (f k).
+  apply Nat.lt_le_trans with (f k).
   auto.
   apply mono_weak.
   auto.
@@ -382,8 +383,8 @@ Proof.
     simpl (2+i).
     rewrite iterate_S_eqn.
     rewrite LF1.
-    specialize (IHi j).
-    rewrite Mult.mult_assoc_reverse.
+    specialize (IHi j). 
+    rewrite <- Nat.mul_assoc.
     generalize IHi; generalize  (exp2 i * j);
     generalize  (iterate (F_ 1) (S i) j).  
     clear IHi. intros. lia.
@@ -407,7 +408,7 @@ Lemma minoration : F_ 2 >>s exp2.
   simpl. 
   rewrite <- mult_n_Sm.
   ring_simplify.
-  rewrite Mult.mult_assoc_reverse.
+  rewrite <- Nat.mul_assoc.
   generalize IHle; generalize  (exp2 m * m); generalize (exp2 m).
 
   clear IHle.
@@ -439,7 +440,7 @@ Section step.
     
     cbn.
     apply Hi'.
-    apply Lt.lt_le_trans with (F_ i (S n)).
+    apply Nat.lt_le_trans with (F_ i (S n)).
     apply R.
     auto with arith.
 
@@ -454,7 +455,7 @@ Section step.
     rewrite (iterate_S_eqn).
     apply Hi'.
     rewrite (iterate_S_eqn).
-    apply Lt.le_lt_trans with (iterate (F_ i) m (S m)).
+    apply Nat.le_lt_trans with (iterate (F_ i) m (S m)).
     apply iterate_ge with n.
     pattern n; apply proj2_sig.
     auto with arith.
@@ -476,7 +477,7 @@ Section step.
     intro. 
     red in H.
     specialize (H x y Hxy).
-    apply Lt.lt_le_trans with (iterate (F_ i) (S x) y).
+    apply Nat.lt_le_trans with (iterate (F_ i) (S x) y).
     auto. 
     clear H.
     apply iterate_le.
@@ -602,7 +603,7 @@ Lemma LF3 : F_ 3 >>s (fun  n => iterate exp2 n n).
   assert (0 < j) by   eauto with arith.
   specialize (H2 H3).
   rewrite F_S_rw.
-  apply Lt.le_lt_trans with ( iterate (F_ 2)  j j).
+  apply Nat.le_lt_trans with ( iterate (F_ 2)  j j).
   generalize  (iterate_dom_prop  exp2 (F_ 2) j);  intro.
   assert (f_gt_from j (F_ 2)).
   {   apply  f_gt_from_le with x0;  eauto with arith.

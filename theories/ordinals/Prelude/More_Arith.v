@@ -125,10 +125,10 @@ Proof.
             now symmetry.
           
          { now rewrite Nat.add_comm with r' (q' * b).   }
-         unfold gt; apply mult_lt_compat_r.
-         assumption.
-         apply le_lt_trans with r; auto with arith.
-   + apply le_minus.
+         unfold gt; apply Nat.mul_lt_mono_pos_r.
+         lia.
+         assumption. 
+   + apply Nat.le_sub_l.
   }
   rewrite   (Nat.lt_nge  r b ) in Hrem; contradiction.
 Qed.
@@ -151,7 +151,7 @@ Proof.
     case div_not_qlt with a b q' q r' r; assumption.
   }
   split; try assumption.
-  apply plus_reg_l with (q * b).
+  apply Nat.add_cancel_l  with (q * b).
   transitivity a; congruence.
 Qed.
 

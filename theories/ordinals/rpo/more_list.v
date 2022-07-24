@@ -92,7 +92,7 @@ Lemma list_size_tl_compat :
   forall (A : Set) (size : A -> nat) a b l, size a < size b -> 
     list_size size (a :: l) < list_size size (b :: l).
 Proof.
-intros A size a b l H; simpl; apply plus_lt_compat_r; trivial.
+intros A size a b l H; simpl; apply Nat.add_lt_mono_r; trivial.
 Qed.
 
 Lemma list_size_app:
@@ -109,7 +109,7 @@ Lemma list_size_fold :
   n + list_size size l.
 Proof.
 intros A size l; induction l; trivial.
-intro n; simpl; rewrite plus_assoc; apply IHl.
+intro n; simpl; rewrite Nat.add_assoc; apply IHl.
 Qed.
 
 Lemma list_size_size_eq :
@@ -146,7 +146,7 @@ intros l; pattern l; apply list_rec2; clear l;
 induction n; intro l; destruct l; intros H; trivial.
 simpl in H; absurd (S (length l) <= 0); trivial; auto with arith.
 apply Acc_intro; intros l' H'; apply IHn;
-apply le_trans with (length l);
+apply Nat.le_trans with (length l);
 simpl in H; simpl in H'; auto with arith.
 Defined.
 
@@ -337,7 +337,7 @@ exists ((a',b') :: l1); exists l2; subst; trivial.
 elim In_a1'; intros l1 [l2 H]; exists ((a1,b1) :: l1 ++ l2); split.
 intro a; generalize (H1 a); subst l'; rewrite nb_occ_app; 
 simpl; destruct (eqA a a1) as [a_eq_a1 | _]; subst; rewrite nb_occ_app;
-[ rewrite plus_comm; simpl; rewrite plus_comm | idtac ]; trivial.
+[ rewrite Nat.add_comm; simpl; rewrite Nat.add_comm | idtac ]; trivial.
 intro a; simpl; destruct (eqA a a1) as [a_eq_a1 | a_diff_a1]; trivial.
 rewrite H2; subst l'; clear H1 H2 In_a1 In_a1'; 
 induction l1 as [ | [a1' b1'] l1]; simpl.

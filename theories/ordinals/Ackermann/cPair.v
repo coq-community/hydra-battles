@@ -169,7 +169,7 @@ apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
 rewrite H1.
 induction (nat_total_order _ _ b0).
 elim (lt_not_le _ _ H2).
-apply le_trans with (sumToN a).
+apply Nat.le_trans with (sumToN a).
 apply sumToN1.
 auto.
 auto.
@@ -326,7 +326,7 @@ Qed.
 
 Lemma cPairLe1A : forall a : nat, cPairPi1 a <= a.
 intros.
-apply le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
+apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
 apply cPairLe1.
 rewrite cPairProjections.
 apply le_n.
@@ -336,17 +336,17 @@ Lemma cPairLe2 : forall a b : nat, b <= cPair a b.
 Proof.
 intros.
 unfold cPair in |- *.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_r.
 apply plus_le_compat_l.
-apply le_trans with (a + b).
+apply Nat.le_trans with (a + b).
 apply le_plus_r.
 apply sumToN1.
 Qed.
 
 Lemma cPairLe2A : forall a : nat, cPairPi2 a <= a.
 intros.
-apply le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
+apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
@@ -357,10 +357,10 @@ Lemma cPairLe3 :
 Proof.
 intros.
 unfold cPair in |- *.
-apply le_trans with (a + sumToN (b + d)).
+apply Nat.le_trans with (a + sumToN (b + d)).
 apply plus_le_compat_l.
 apply sumToN2.
-apply le_trans with (a + d).
+apply Nat.le_trans with (a + d).
 apply plus_le_compat_l.
 auto.
 apply plus_le_compat_r.
@@ -390,11 +390,11 @@ unfold cPair in |- *.
 simpl in |- *.
 unfold lt in |- *.
 apply le_n_S.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_r.
 apply plus_le_compat_l.
 apply le_S.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_l.
 rewrite Nat.add_comm.
 apply le_plus_l.
