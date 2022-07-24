@@ -1217,7 +1217,7 @@ apply subAllFormula_ext.
 intros.
 induction (le_lt_dec 0 m0).
 auto.
-elim (lt_n_O _ b).
+elim (Nat.nlt_0_r _ b).
 apply (impE L) with (fol.forallH L n (closeFrom 0 n f)).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
@@ -1631,7 +1631,7 @@ clear H T f.
 induction n as [| n Hrecn].
 exists 0.
 intros.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 induction Hrecn as (x, H).
 exists (max (newVar (freeVarTerm L (m n))) x).
 intros.

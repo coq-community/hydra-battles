@@ -452,8 +452,6 @@ intros.
 apply H.
 intros.
 unfold lt_depth in H1.
-Check le_n_0_eq. 
-Check Nat.le_0_r. 
 rewrite Nat.le_0_r in H0. rewrite H0 in H1. 
 apply Nat.nlt_0_r in H1. elim H1.
 intros.
@@ -470,6 +468,13 @@ Definition Formula_depth_rec (P : Formula -> Set)
   (rec : forall a : Formula, (forall b : Formula, lt_depth b a -> P b) -> P a)
   (a : Formula) : P a :=
   Formula_depth_rec_rec P rec (depth a) a (le_n (depth a)).
+
+
+
+(* solves a compatibility issue *)
+
+Lemma compat815_le_n_0_eq : forall n : nat, n <= 0 -> 0 = n.
+Proof. intros n Hn;  symmetry; now rewrite <- Nat.le_0_r. Qed. 
 
 Lemma Formula_depth_rec_indep :
  forall (Q P : Formula -> Set)
@@ -500,7 +505,8 @@ apply H.
 intros.
 induction  (* Warning to fix *)
  (Nat.nlt_0_r (depth b0)
-    (eq_ind_r (fun n0 : nat => depth b0 < n0) p (le_n_0_eq (depth b) l1))).
+    (eq_ind_r (fun n0 : nat => depth b0 < n0) p
+       (compat815_le_n_0_eq (depth b) l1))).
 intros.
 simpl in |- *.
 apply H.
@@ -515,7 +521,8 @@ apply H.
 intros.
 induction (*warning to fix *)
  (Nat.nlt_0_r  (depth b0)
-    (eq_ind_r (fun n1 : nat => depth b0 < n1) p (le_n_O_eq (depth b) l2))).
+    (eq_ind_r (fun n1 : nat => depth b0 < n1) p
+       (compat815_le_n_0_eq (depth b) l2))).
 intros.
 simpl in |- *.
 apply H.

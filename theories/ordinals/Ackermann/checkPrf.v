@@ -2398,7 +2398,7 @@ assert
 intro.
 induction m as [| m Hrecm].
 intros.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 intros.
 induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H)).
 apply Hrecm; assumption.

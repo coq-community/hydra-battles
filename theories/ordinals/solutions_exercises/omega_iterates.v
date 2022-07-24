@@ -462,7 +462,7 @@ Section step.
     assert (forall l, n <= l -> l < F_ i l).  
     pattern n; apply proj2_sig.
     apply H.
-    apply Le.le_trans with (S m).
+    apply Nat.le_trans with (S m).
     auto with arith.
     apply iterate_ge with n.
     pattern n; apply proj2_sig.

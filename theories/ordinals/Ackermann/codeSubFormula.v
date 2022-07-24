@@ -3143,7 +3143,7 @@ set
              (cPairPi2 (codeNth (t - S (cPairPi2 (pred t))) recs)))) 0)) 
  in *.
 induction a as [| a Hreca]; simpl in |- *; intros.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 assert
  (forall n m : nat,
   m < n ->
@@ -4199,7 +4199,7 @@ assumption.
 simpl in H.
 simple induction a.
 intros.
-elim (lt_n_O _ H0).
+elim (Nat.nlt_0_r _ H0).
 intros.
 induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H1)).
 apply H0.

@@ -73,7 +73,7 @@ Section CPair_Injectivity.
     {
       simple induction b.
       - intros.
-      elim (lt_n_O _ H).
+      elim (Nat.nlt_0_r _ H).
       -  intros.
          simpl in |- *.
          assert (H1: a <= n).
@@ -202,7 +202,7 @@ assert
 intros.
 induction a as [| a Hreca].
 simpl in H.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 induction (le_or_lt (sumToN a) b).
 assert (searchXY b = a).
 apply cPairProjectionsHelp; auto.
@@ -707,7 +707,7 @@ intros.
 rewrite H.
 rewrite codeNthCorrect.
 induction n as [| n Hrecn].
-elim (lt_n_O _ H0).
+elim (Nat.nlt_0_r _ H0).
 induction (le_lt_or_eq _ _ H0).
 rewrite <- minus_Sn_m.
 simpl in |- *.
