@@ -7,8 +7,9 @@ Require Import Peano_dec.
 Require Import Eqdep_dec.
 Require Import Arith.
 Require Import Compare_dec.
-Require Import Max.
+Require Import Max. 
 Require Import misc.
+(* Import Nat. *)
 
 Record Language : Type := language
   {Relations : Set; Functions : Set; arity : Relations + Functions -> nat}.
@@ -395,7 +396,7 @@ Fixpoint depth (A : Formula) : nat :=
   match A with
   | equal _ _ => 0
   | atomic _ _ => 0
-  | impH A B => S (max (depth A) (depth B))
+  | impH A B => S (Nat.max (depth A) (depth B))
   | notH A => S (depth A)
   | forallH _ A => S (depth A)
   end.
@@ -407,8 +408,8 @@ Proof.
 unfold lt_depth in |- *.
 simpl in |- *.
 intros.
-apply le_lt_n_Sm.
-apply le_max_l.
+apply Nat.lt_succ_r.
+apply Nat.le_max_l.
 Qed.
 
 Lemma depthImp2 : forall A B : Formula, lt_depth B (impH A B).
@@ -416,8 +417,8 @@ Proof.
 unfold lt_depth in |- *.
 simpl in |- *.
 intros.
-apply le_lt_n_Sm.
-apply le_max_r.
+apply Nat.lt_succ_r.
+apply Nat.le_max_r.
 Qed.
 
 Lemma depthNot : forall A : Formula, lt_depth A (notH A).
@@ -451,14 +452,14 @@ intros.
 apply H.
 intros.
 unfold lt_depth in H1.
-rewrite <- (le_n_O_eq _ H0) in H1.
-elim (lt_n_O _ H1).
+rewrite Nat.le_0_r in H0. rewrite H0 in H1. 
+apply Nat.nlt_0_r in H1. elim H1.
 intros.
 apply H.
 intros.
 apply Hrecn.
-apply lt_n_Sm_le.
-apply lt_le_trans with (depth b).
+apply Nat.lt_succ_r .
+apply Nat.lt_le_trans with (depth b).
 apply H1.
 apply H0.
 Defined.
@@ -467,6 +468,13 @@ Definition Formula_depth_rec (P : Formula -> Set)
   (rec : forall a : Formula, (forall b : Formula, lt_depth b a -> P b) -> P a)
   (a : Formula) : P a :=
   Formula_depth_rec_rec P rec (depth a) a (le_n (depth a)).
+
+
+
+(* solves a compatibility issue *)
+
+Lemma compat815_le_n_0_eq : forall n : nat, n <= 0 -> 0 = n.
+Proof. intros n Hn;  symmetry; now rewrite <- Nat.le_0_r. Qed. 
 
 Lemma Formula_depth_rec_indep :
  forall (Q P : Formula -> Set)
@@ -495,24 +503,27 @@ induction m as [| m Hrecm].
 simpl in |- *.
 apply H.
 intros.
-induction
- (lt_n_O (depth b0)
-    (eq_ind_r (fun n0 : nat => depth b0 < n0) p (le_n_O_eq (depth b) l1))).
+induction  (* Warning to fix *)
+ (Nat.nlt_0_r (depth b0)
+    (eq_ind_r (fun n0 : nat => depth b0 < n0) p
+       (compat815_le_n_0_eq (depth b) l1))).
 intros.
 simpl in |- *.
 apply H.
 intros.
-induction
- (lt_n_O (depth b0)
-    (eq_ind_r (fun n0 : nat => depth b0 < n0) p (le_n_O_eq (depth b) l1))).
+induction (* warning to fix *)
+ (Nat.nlt_0_r (depth b0)
+    (eq_ind_r (fun n0 : nat => depth b0 < n0) p
+       (compat815_le_n_0_eq (depth b) l1))).
 simple induction m.
 intros.
 simpl in |- *.
 apply H.
 intros.
-induction
- (lt_n_O (depth b0)
-    (eq_ind_r (fun n1 : nat => depth b0 < n1) p (le_n_O_eq (depth b) l2))).
+induction (*warning to fix *)
+ (Nat.nlt_0_r  (depth b0)
+    (eq_ind_r (fun n1 : nat => depth b0 < n1) p
+       (compat815_le_n_0_eq (depth b) l2))).
 intros.
 simpl in |- *.
 apply H.
@@ -520,7 +531,7 @@ intros.
 apply H1.
 intros.
 replace (H0 (depth a) a (le_n (depth a)) q) with
- (H0 (S (depth a)) a (le_n_Sn (depth a)) q).
+ (H0 (S (depth a)) a (Nat.le_succ_diag_r (depth a)) q).
 simpl in |- *.
 apply H.
 intros.
@@ -749,14 +760,14 @@ intros.
 apply H.
 intros.
 unfold lt_depth in H1.
-rewrite <- (le_n_O_eq _ H0) in H1.
-elim (lt_n_O _ H1).
+rewrite  (Nat.le_0_r) in H0; rewrite H0 in H1.
+elim (Nat.nlt_0_r _ H1).
 intros.
 apply H.
 intros.
 apply Hrecn.
-apply lt_n_Sm_le.
-apply lt_le_trans with (depth b).
+apply Nat.lt_succ_r.
+apply Nat.lt_le_trans with (depth b).
 apply H1.
 apply H0.
 eapply H0.

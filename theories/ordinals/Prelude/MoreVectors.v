@@ -247,7 +247,7 @@ Lemma max_v_2 : forall x y,  max_v (x::y::nil) = max x y. (* .no-out *)
 (* end snippet maxvLemmasa *)
 
 Proof.
-  intros; cbn. now rewrite Max.max_0_r.
+  intros; cbn. now rewrite Nat.max_0_r.
 Qed.
 
 (* begin snippet maxvLemmasb *)
@@ -264,7 +264,7 @@ Proof.
      intros; auto with arith.
   -   intros v; rewrite (decomp _ _ v); cbn.
       intros;  destruct (Forall_inv _ _ _  _ H).
-      apply Max.max_lub; auto. 
+      apply Nat.max_lub; auto. 
 Qed.
 
 (* begin snippet maxvLemmasc *)
@@ -278,7 +278,7 @@ Proof.
   induction n.  
   -  intros v; rewrite (t_0_nil _ v); cbn; inversion 1.
   -  intros v; rewrite (decomp _ _ v); cbn; intros; destruct (In_cases _ _ H).
-     +  cbn in H0; subst; apply Max.le_max_l. 
+     +  cbn in H0; subst; apply Nat.le_max_l. 
      + cbn in H0; specialize (IHn _ _ H0); lia.
 Qed.
 
@@ -286,7 +286,7 @@ Qed.
 Lemma max_v_tl {n:nat}(v:  Vector.t nat (S n)) :
   max_v (Vector.tl v) <= max_v v.
 Proof.
-  rewrite (decomp _ _ v);  cbn;  apply Max.le_max_r.
+  rewrite (decomp _ _ v);  cbn;  apply Nat.le_max_r.
 Qed.
 
 (*

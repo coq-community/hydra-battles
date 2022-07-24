@@ -15,7 +15,7 @@ assert
 intro.
 induction a as [| a Hreca]; intros.
 destruct b as [| n].
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 simpl in |- *.
 apply impE with (notH (equal (Succ (natToTerm n)) Zero)).
 apply cp2.
@@ -24,7 +24,7 @@ apply eqSym.
 apply Axm; right; constructor.
 apply nn1.
 destruct b as [| n].
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 simpl in |- *.
 apply impE with (notH (equal (natToTerm a) (natToTerm n))).
 apply cp2.
@@ -106,15 +106,15 @@ Lemma natPlus :
 Proof.
 intros.
 induction b as [| b Hrecb].
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
 apply nn3.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
 apply eqTrans with (Succ (Plus (natToTerm a) (natToTerm b))).
 apply nn4.
 apply eqSucc.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply Hrecb.
 Qed.
 
@@ -124,17 +124,17 @@ Lemma natTimes :
 Proof.
 intros.
 induction b as [| b Hrecb].
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 simpl in |- *.
 apply nn5.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 simpl in |- *.
 eapply eqTrans.
 apply nn6.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply eqTrans with (Plus (natToTerm (b * a)) (natToTerm a)).
 apply eqPlus.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 apply Hrecb.
 apply eqRefl.
 apply natPlus.

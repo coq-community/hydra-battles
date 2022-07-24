@@ -1217,7 +1217,7 @@ apply subAllFormula_ext.
 intros.
 induction (le_lt_dec 0 m0).
 auto.
-elim (lt_n_O _ b).
+elim (Nat.nlt_0_r _ b).
 apply (impE L) with (fol.forallH L n (closeFrom 0 n f)).
 apply sysExtend with (Empty_set (fol.Formula L)).
 unfold Included in |- *.
@@ -1554,7 +1554,7 @@ rewrite H2 in a0.
 apply (le_not_lt _ _ a0).
 apply lt_n_Sn.
 elim (le_not_lt (S (m + n)) (m + n)).
-eapply le_trans.
+eapply Nat.le_trans.
 apply a0.
 apply lt_le_weak.
 auto.
@@ -1631,7 +1631,7 @@ clear H T f.
 induction n as [| n Hrecn].
 exists 0.
 intros.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 induction Hrecn as (x, H).
 exists (max (newVar (freeVarTerm L (m n))) x).
 intros.
@@ -1639,7 +1639,7 @@ assert (v <= n).
 apply lt_n_Sm_le.
 auto.
 induction (le_lt_or_eq _ _ H1).
-apply le_trans with x.
+apply Nat.le_trans with x.
 apply H; auto.
 apply le_max_r.
 rewrite H2.
@@ -1720,7 +1720,7 @@ apply lt_le_trans with (newVar (freeVarFormula L f)).
 apply newVar2.
 auto.
 unfold r in |- *.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_max_r.
 apply le_max_l.
 auto.
@@ -1741,7 +1741,7 @@ apply newVar2.
 unfold m' in H2.
 rewrite minus_plus in H2.
 auto.
-apply le_trans with x.
+apply Nat.le_trans with x.
 apply H0.
 auto.
 unfold r in |- *.
@@ -1754,11 +1754,11 @@ apply lt_le_trans with (newVar (freeVarFormula L f)).
 apply newVar2.
 auto.
 unfold r in |- *.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_max_r.
 apply le_max_l.
 unfold r in |- *.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_max_l.
 apply le_max_l.
 apply H.

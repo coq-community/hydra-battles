@@ -814,7 +814,7 @@ Proof.
     symmetry;auto.
     reflexivity. 
     rewrite   (power_of_power M).
-    now rewrite mult_comm.
+    now rewrite Nat.mul_comm.
   - simpl.
     intros; now monoid_simpl M.
 Qed.

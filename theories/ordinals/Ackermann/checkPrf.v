@@ -2383,7 +2383,7 @@ simpl in |- *.
 reflexivity.
 assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
 intros.
-rewrite mult_comm in H.
+rewrite Nat.mul_comm in H.
 eapply multLemma1.
 apply H.
 assert
@@ -2398,7 +2398,7 @@ assert
 intro.
 induction m as [| m Hrecm].
 intros.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 intros.
 induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H)).
 apply Hrecm; assumption.
@@ -2606,9 +2606,9 @@ replace
  with (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n)))).
 rewrite cPairProjections.
 destruct (evalStrongRec 0 A (cPairPi1 (cPairPi2 (cPairPi2 n)))).
-rewrite mult_comm in H0.
+rewrite Nat.mul_comm in H0.
 rewrite
- (mult_comm
+ (Nat.mul_comm
     (charFunction 2 beq_nat (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
        (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 n)))) (cPairPi1 n))))
   in H0.
@@ -2629,13 +2629,13 @@ fold A in |- *.
 rewrite H8.
 rewrite cPairProjections.
 destruct (evalStrongRec 0 A (cPairPi2 (cPairPi2 (cPairPi2 n)))).
-rewrite mult_comm in H0.
+rewrite Nat.mul_comm in H0.
 rewrite
- (mult_comm
+ (Nat.mul_comm
     (charFunction 2 beq_nat (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
        (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 n)))) (cPairPi1 n))))
   in H0.
-rewrite (mult_comm (evalStrongRec 0 A (cPairPi1 (cPairPi2 (cPairPi2 n)))))
+rewrite (Nat.mul_comm (evalStrongRec 0 A (cPairPi1 (cPairPi2 (cPairPi2 n)))))
   in H0.
 simpl in H0.
 assumption.
@@ -2691,7 +2691,7 @@ reflexivity.
 assumption.
 unfold charFunction in H0.
 rewrite beq_nat_not_refl in H0.
-rewrite mult_comm in H0.
+rewrite Nat.mul_comm in H0.
 simpl in H0.
 elim H0.
 reflexivity.
@@ -2748,7 +2748,7 @@ fold A in |- *.
 rewrite H6.
 rewrite cPairProjections.
 destruct (evalStrongRec 0 A (cPairPi2 (cPairPi2 (cPairPi2 n)))).
-rewrite mult_comm in H0.
+rewrite Nat.mul_comm in H0.
 simpl in H0.
 assumption.
 discriminate.
@@ -2779,8 +2779,8 @@ unfold pred in H0.
 rewrite codeFreeVarListFormulaCorrect in H0.
 rewrite codeInCorrect in H0.
 induction (In_dec eq_nat_dec n1 (freeVarListFormula L x0)).
-rewrite (mult_comm (S (codeList (map (codeFormula L codeF codeR) x0)))) in H0.
-rewrite mult_comm in H0.
+rewrite (Nat.mul_comm (S (codeList (map (codeFormula L codeF codeR) x0)))) in H0.
+rewrite Nat.mul_comm in H0.
 simpl in H0.
 elim H0; reflexivity.
 rewrite <- H9 in H6.
@@ -3082,7 +3082,7 @@ assumption.
 elim H0.
 unfold charFunction in |- *.
 rewrite beq_nat_not_refl.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 reflexivity.
 assumption.
 destruct n1.
@@ -3146,7 +3146,7 @@ transitivity (cPairPi1 (cPairPi2 (cPairPi2 n)));
 elim H0.
 unfold charFunction in |- *.
 rewrite beq_nat_not_refl.
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 reflexivity.
 assumption.
 destruct n1.
@@ -3258,7 +3258,7 @@ rewrite
  (beq_nat_not_refl
     (codeFormula L codeF codeR (fol.equal L (fol.var L 0) (fol.var L 0))))
  .
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 reflexivity.
 rewrite cPairProjections1.
 assumption.
@@ -3300,7 +3300,7 @@ rewrite
        (fol.impH L (fol.equal L (fol.var L 0) (fol.var L 1))
           (fol.equal L (fol.var L 1) (fol.var L 0)))))
  .
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 reflexivity.
 rewrite cPairProjections1.
 assumption.
@@ -3356,7 +3356,7 @@ rewrite
           (fol.impH L (fol.equal L (fol.var L 1) (fol.var L 2))
              (fol.equal L (fol.var L 0) (fol.var L 2))))))
  .
-rewrite mult_comm.
+rewrite Nat.mul_comm.
 reflexivity.
 rewrite cPairProjections1.
 assumption.

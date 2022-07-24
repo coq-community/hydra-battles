@@ -79,7 +79,7 @@ Proof.
      repeat rewrite (binary_power_mult_ok M).
      rewrite <- (sqr_eqn M x).
      rewrite power_of_power.
-     rewrite (mult_comm  (Pos.to_nat p) 2)%nat. 
+     rewrite (Nat.mul_comm  (Pos.to_nat p) 2)%nat. 
      destruct H as [i e].
      repeat rewrite  (op_assoc (Monoid:=M)). 
      subst acc.
@@ -102,7 +102,7 @@ Proof.
     repeat rewrite (binary_power_mult_ok M); rewrite  <- (sqr_eqn M).
     repeat (rewrite (op_assoc (Monoid:=M))).
     rewrite power_of_power.
-    rewrite (mult_comm  (Pos.to_nat p) 2)%nat. 
+    rewrite (Nat.mul_comm  (Pos.to_nat p) 2)%nat. 
     replace (2* Pos.to_nat p)%nat with (Pos.to_nat p + Pos.to_nat p)%nat.  
     + rewrite power_of_plus;now  rewrite op_assoc.
     + ring.

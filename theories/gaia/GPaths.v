@@ -107,7 +107,6 @@ destruct H4. by [].
 by [].
 rewrite /canon. 
 apply /eqP. 
-Search g2h eq. 
 by rewrite -g2h_eqE g2h_h2gK. 
 
 split; trivial. 

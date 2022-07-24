@@ -280,13 +280,13 @@ auto.
 induction H0 as [H0| H0].
 rewrite H0.
 rewrite H0 in Hrecl.
-elim (lt_n_O n).
+elim (Nat.nlt_0_r n).
 apply Hrecl.
 auto.
 induction H0 as (x, H0).
 rewrite H0.
 rewrite H0 in Hrecl.
-apply lt_le_trans with (S x).
+apply Nat.lt_le_trans with (S x).
 apply Hrecl.
 auto.
 apply le_n_S.

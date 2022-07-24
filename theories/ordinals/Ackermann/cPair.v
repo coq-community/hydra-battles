@@ -73,7 +73,7 @@ Section CPair_Injectivity.
     {
       simple induction b.
       - intros.
-      elim (lt_n_O _ H).
+      elim (Nat.nlt_0_r _ H).
       -  intros.
          simpl in |- *.
          assert (H1: a <= n).
@@ -122,8 +122,8 @@ Section CPair_Injectivity.
     intros; assert (a + b = c + d) by (apply cPairInjHelp; auto). 
     eapply plus_reg_l.
     unfold cPair in H.
-    rewrite (plus_comm a) in H.
-    rewrite (plus_comm c) in H.
+    rewrite (Nat.add_comm a) in H.
+    rewrite (Nat.add_comm c) in H.
     rewrite H0 in H. apply H.
   Qed.
 
@@ -169,7 +169,7 @@ apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
 rewrite H1.
 induction (nat_total_order _ _ b0).
 elim (lt_not_le _ _ H2).
-apply le_trans with (sumToN a).
+apply Nat.le_trans with (sumToN a).
 apply sumToN1.
 auto.
 auto.
@@ -202,7 +202,7 @@ assert
 intros.
 induction a as [| a Hreca].
 simpl in H.
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 induction (le_or_lt (sumToN a) b).
 assert (searchXY b = a).
 apply cPairProjectionsHelp; auto.
@@ -210,7 +210,7 @@ unfold cPair in |- *.
 replace (cPairPi1 b + cPairPi2 b) with a.
 unfold cPairPi1 in |- *.
 rewrite H1.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 rewrite <- le_plus_minus.
 reflexivity.
 auto.
@@ -222,7 +222,7 @@ rewrite H1.
 simpl in H.
 apply (fun p n m : nat => plus_le_reg_l n m p) with (sumToN a).
 rewrite <- le_plus_minus.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply lt_n_Sm_le.
 auto.
 auto.
@@ -285,7 +285,7 @@ intros.
 unfold cPair in |- *.
 unfold cPairPi1 in |- *.
 replace (searchXY (a + sumToN (a + b))) with (a + b).
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply minus_plus.
 symmetry  in |- *.
 apply cPairProjectionsHelp.
@@ -326,7 +326,7 @@ Qed.
 
 Lemma cPairLe1A : forall a : nat, cPairPi1 a <= a.
 intros.
-apply le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
+apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
 apply cPairLe1.
 rewrite cPairProjections.
 apply le_n.
@@ -336,17 +336,17 @@ Lemma cPairLe2 : forall a b : nat, b <= cPair a b.
 Proof.
 intros.
 unfold cPair in |- *.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_r.
 apply plus_le_compat_l.
-apply le_trans with (a + b).
+apply Nat.le_trans with (a + b).
 apply le_plus_r.
 apply sumToN1.
 Qed.
 
 Lemma cPairLe2A : forall a : nat, cPairPi2 a <= a.
 intros.
-apply le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
+apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
@@ -357,10 +357,10 @@ Lemma cPairLe3 :
 Proof.
 intros.
 unfold cPair in |- *.
-apply le_trans with (a + sumToN (b + d)).
+apply Nat.le_trans with (a + sumToN (b + d)).
 apply plus_le_compat_l.
 apply sumToN2.
-apply le_trans with (a + d).
+apply Nat.le_trans with (a + d).
 apply plus_le_compat_l.
 auto.
 apply plus_le_compat_r.
@@ -373,11 +373,11 @@ Lemma cPairLt1 : forall a b : nat, a < cPair a (S b).
 Proof.
 intros.
 unfold cPair in |- *.
-rewrite (plus_comm a (S b)).
+rewrite (Nat.add_comm a (S b)).
 simpl in |- *.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 unfold lt in |- *.
 apply le_n_S.
 apply le_plus_l.
@@ -390,13 +390,13 @@ unfold cPair in |- *.
 simpl in |- *.
 unfold lt in |- *.
 apply le_n_S.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_r.
 apply plus_le_compat_l.
 apply le_S.
-eapply le_trans.
+eapply Nat.le_trans.
 apply le_plus_l.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 apply le_plus_l.
 Qed.
 
@@ -707,7 +707,7 @@ intros.
 rewrite H.
 rewrite codeNthCorrect.
 induction n as [| n Hrecn].
-elim (lt_n_O _ H0).
+elim (Nat.nlt_0_r _ H0).
 induction (le_lt_or_eq _ _ H0).
 rewrite <- minus_Sn_m.
 simpl in |- *.

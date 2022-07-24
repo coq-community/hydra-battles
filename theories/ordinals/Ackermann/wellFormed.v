@@ -71,7 +71,7 @@ generalize (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)).
 simpl in |- *.
 intros.
 apply le_lt_n_Sm.
-apply le_trans with (cPair (cPairPi1 n0) (cPairPi2 n0)).
+apply Nat.le_trans with (cPair (cPairPi1 n0) (cPairPi2 n0)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
@@ -255,7 +255,7 @@ simpl in |- *.
 reflexivity.
 assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
 intros.
-rewrite mult_comm in H.
+rewrite Nat.mul_comm in H.
 eapply multLemma1.
 apply H.
 assert
@@ -368,14 +368,14 @@ intros.
 assert (cPairPi1 n < m).
 rewrite <- H0.
 apply le_lt_n_Sm.
-apply le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
+apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe1.
 rewrite cPairProjections.
 apply le_n.
 assert (cPairPi2 n < m).
 rewrite <- H0.
 apply le_lt_n_Sm.
-apply le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
+apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
@@ -400,12 +400,12 @@ rewrite <- H9.
 reflexivity.
 simpl in |- *.
 apply le_lt_n_Sm.
-apply le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
+apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
 apply le_lt_n_Sm.
-apply le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
+apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe1.
 rewrite cPairProjections.
 apply le_n.
@@ -704,7 +704,7 @@ simpl in |- *.
 reflexivity.
 assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
 intros.
-rewrite mult_comm in H.
+rewrite Nat.mul_comm in H.
 eapply multLemma1.
 apply H.
 assert

@@ -76,7 +76,7 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
 
 Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
   match n return (forall m : nat, m < n -> naryFunc n) with
-  | O => fun (m : nat) (l : m < 0) => False_rec _ (lt_n_O _ l)
+  | O => fun (m : nat) (l : m < 0) => False_rec _ (Nat.nlt_0_r _ l)
   | S n' =>
       fun (m : nat) (l : m < S n') =>
       match eq_nat_dec m n' with
@@ -93,12 +93,14 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
 
 (** Irrelevance of the proof that [m < n] *)
 
+
+
 Lemma evalProjFuncInd :
  forall (n m : nat) (p1 p2 : m < n),
  evalProjFunc n m p1 = evalProjFunc n m p2.
 Proof.
 induction n as [| n Hrecn].
-- intros; destruct (lt_n_O _ p1).
+- intros; destruct (Nat.nlt_0_r _ p1).
 - intros; cbn in |- *; destruct (eq_nat_dec m n) as [e|ne].
   + reflexivity.
   + rewrite
@@ -854,7 +856,7 @@ Proof.
   exists x; cbn  in |- *.
   intros;rewrite p;induction c as [| c Hrecc].
   - auto.
-  - simpl in |- *; rewrite Hrecc; apply plus_comm.
+  - simpl in |- *; rewrite Hrecc; apply Nat.add_comm.
 Qed.
 
 Lemma predIsPR : isPR 1 pred.
@@ -965,7 +967,7 @@ Proof.
       clear c b.
       induction c0 as [| c0 Hrecc0].
       * intros.
-        elim (lt_n_O _ H).
+        elim (Nat.nlt_0_r _ H).
       * intros.
         induction c as [| c Hrecc].
         -- simpl in |- *.
@@ -994,7 +996,7 @@ Proof.
       * symmetry  in |- *;now  apply le_plus_minus.
       * assumption.
     + rewrite not_le_minus_0.
-      * rewrite plus_comm, max_l.
+      * rewrite Nat.add_comm, max_l.
         -- reflexivity.
         -- now apply lt_le_weak.
       * now apply lt_not_le.
@@ -1442,9 +1444,9 @@ Section Ignore_Params.
     exists (composeFunc (m + n) n (projectionListPR _ _ (le_plus_r _ _)) x).
     apply extEqualSym.
     assert (H0: m + n - n + n = m + n).
-    { rewrite (plus_comm m n).
+    { rewrite (Nat.add_comm m n).
       rewrite minus_plus.
-      apply plus_comm.
+      apply Nat.add_comm.
     }
     assert
     (H1: extEqual (m + n)
@@ -1485,7 +1487,7 @@ Section Ignore_Params.
         *  apply eq_nat_dec.
         * cbn in |- *.
           reflexivity.
-      + rewrite plus_comm.
+      + rewrite Nat.add_comm.
         now rewrite minus_plus.
   Qed.
 
@@ -1709,7 +1711,7 @@ Proof.
   generalize (P b).
   intros b0 x H.
   clear P; induction b as [| b Hrecb].
-  - cbn in H; elim (lt_n_O _ H).
+  - cbn in H; elim (Nat.nlt_0_r _ H).
   - cbn in H.
     induction (eq_nat_dec (boundedSearchHelp b0 b) b).
     + rewrite a in Hrecb.

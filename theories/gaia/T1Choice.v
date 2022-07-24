@@ -170,9 +170,6 @@ Qed.
 
 Fail Goal Order.max T1omega T1omega == T1omega.
 
-Check T1omega: T1Choice. 
-
-Check T1omega: T1orderType.
 
 
 Print E0.

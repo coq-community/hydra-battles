@@ -43,7 +43,7 @@ simpl in |- *.
 apply le_lt_n_Sm.
 generalize (cPair a (codeList l)).
 intro.
-apply le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
+apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.

@@ -2,13 +2,14 @@
 (** by Florian Hatat, ENS-Lyon *)
 
 
-From Coq Require Import Ensembles  Arith ArithRing Even Div2
+From Coq Require Import Ensembles  Arith ArithRing (* Even Div2 *)
      Wellfounded Relations  Wf_nat  Finite_sets
      Logic.Epsilon  Sets.Image Lia.
 
 From hydras Require Import MoreEpsilonIota PartialFun  GRelations
      Prelude.More_Arith.
 
+Import Nat.
 
 Set Implicit Arguments.
 
@@ -259,7 +260,7 @@ Section Countable.
         unfold R_K;
         apply wf_inverse_image with
             (R := lexprod _ (fun _ => nat) lt (fun _ => lt)).
-        apply wf_lexprod; intros; apply lt_wf.
+        apply wf_lexprod; intros; apply Wf_nat.lt_wf.  
       Qed.
 
       Lemma K_rel_wf :  well_founded K_rel.
@@ -281,11 +282,12 @@ Section Countable.
       Remark double_K_1 :
         forall p q, double (K_1 (p, q)) = ((p+q+1)*(p+q)) + double q.
       Proof.
-        intros p q; unfold K_1.
-        rewrite (double_plus (div2 ((p + q + 1) * (p + q)))).
-        rewrite <- (even_double ((p + q + 1) * (p + q))); trivial.
-        apply even_prod.
-      Qed.
+        intros p q; unfold K_1. (* Here *)
+
+        rewrite double_plus.  f_equal.
+        rewrite div2_of_Even; trivial. 
+        apply even_prod. 
+      Qed. 
 
       Lemma K_bij :
         forall p q, K (K_1 (p, q)) = (p, q).

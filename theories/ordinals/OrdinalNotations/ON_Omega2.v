@@ -560,38 +560,5 @@ Proof.
 Qed.
 
 
-Require Import List.
 
-(* begin snippet Merge:: no-out  *)
-Section Merge.
-
-  Variable A: Type.
-
-  #[local] Definition m (p : list A * list A) :=
-    omega * length (fst p) + length (snd p).
-
-  Function  merge  (ltb: A -> A -> bool)
-            (xys: list A * list A)
-            {wf (measure_lt m) xys} :
-    list A :=
-    match xys with
-    | (nil, ys) => ys
-    | (xs, nil) => xs
-    | (x :: xs, y :: ys) =>
-      if ltb x y then x :: merge  ltb (xs, (y :: ys))
-      else y :: merge  ltb ((x :: xs), ys)
-    end.
-  (* ... *)
-(* end snippet Merge *) 
-  - intros; unfold m, measure_lt; cbn; destruct xs0 ;simpl;left;
-      abstract lia.
-  - intros; unfold m, measure_lt; cbn; destruct ys0; simpl; right;
-      abstract lia.
-  - apply wf_measure. 
-  Defined.
-
-
-(* begin snippet Mergeb:: no-out  *)  
-End Merge.
-(* end snippet Mergeb *)
 

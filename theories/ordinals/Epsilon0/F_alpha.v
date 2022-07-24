@@ -225,7 +225,7 @@ Proof.
   intros;  apply Lt.le_lt_trans with (exp2 i * i).
   - destruct (mult_O_le (exp2 i) i).
     + lia.
-    + now rewrite mult_comm.
+    + now rewrite Nat.mul_comm.
   -  apply LF2.
 Qed.
 
