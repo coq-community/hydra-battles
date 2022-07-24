@@ -15,7 +15,7 @@ assert
 intro.
 induction a as [| a Hreca]; intros.
 destruct b as [| n].
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 simpl in |- *.
 apply impE with (notH (equal (Succ (natToTerm n)) Zero)).
 apply cp2.
@@ -24,7 +24,7 @@ apply eqSym.
 apply Axm; right; constructor.
 apply nn1.
 destruct b as [| n].
-elim (lt_n_O _ H).
+elim (Nat.nlt_0_r _ H).
 simpl in |- *.
 apply impE with (notH (equal (natToTerm a) (natToTerm n))).
 apply cp2.

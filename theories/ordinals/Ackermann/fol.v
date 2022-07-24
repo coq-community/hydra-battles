@@ -513,7 +513,8 @@ apply H.
 intros.
 induction (* warning to fix *)
  (Nat.nlt_0_r (depth b0)
-    (eq_ind_r (fun n0 : nat => depth b0 < n0) p (le_n_O_eq (depth b) l1))).
+    (eq_ind_r (fun n0 : nat => depth b0 < n0) p
+       (compat815_le_n_0_eq (depth b) l1))).
 simple induction m.
 intros.
 simpl in |- *.
