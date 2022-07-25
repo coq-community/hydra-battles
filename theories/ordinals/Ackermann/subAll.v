@@ -1344,7 +1344,7 @@ induction (le_lt_dec (S n) m0).
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 elim (lt_not_le m0 (S m0)).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 rewrite H1 in a0.
 auto.
 induction (le_lt_or_eq _ _ a).
@@ -1391,7 +1391,7 @@ simpl in H0.
 rewrite <- H1 in H0.
 elim (le_not_lt (S p) p).
 auto.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 contradiction.
 apply (impI L).
 apply (forallI L).
@@ -1552,13 +1552,13 @@ apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite H2 in a0.
 apply (le_not_lt _ _ a0).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 elim (le_not_lt (S (m + n)) (m + n)).
 eapply Nat.le_trans.
 apply a0.
-apply lt_le_weak.
+apply Nat.lt_le_incl.
 auto.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 induction (le_lt_dec (m + n) m0).
 replace (m + n) with m0.
 apply (subTermVar1 L).

@@ -25,7 +25,7 @@ Definition codeSubTermTerms : nat -> nat -> nat -> nat :=
      cPair
        (switchPR (cPairPi1 t)
           (cPair (cPairPi1 t) (cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)))
-          (switchPR (charFunction 2 beq_nat (cPairPi2 t) v) s t))
+          (switchPR (charFunction 2 Nat.eqb (cPairPi2 t) v) s t))
        (switchPR t
           (S
              (cPair (cPairPi1 (codeNth (t - S (cPairPi1 (pred t))) recs))
@@ -48,7 +48,7 @@ set
   cPair
     (switchPR (cPairPi1 t0)
        (cPair (cPairPi1 t0) (cPairPi2 (codeNth (t0 - S (cPairPi2 t0)) recs)))
-       (switchPR (charFunction 2 beq_nat (cPairPi2 t0) v0) s0 t0))
+       (switchPR (charFunction 2 Nat.eqb (cPairPi2 t0) v0) s0 t0))
     (switchPR t0
        (S
           (cPair (cPairPi1 (codeNth (t0 - S (cPairPi1 (pred t0))) recs))
@@ -195,7 +195,7 @@ set
   cPair
     (switchPR (cPairPi1 t0)
        (cPair (cPairPi1 t0) (cPairPi2 (codeNth (t0 - S (cPairPi2 t0)) recs)))
-       (switchPR (charFunction 2 beq_nat (cPairPi2 t0) v0) s0 t0))
+       (switchPR (charFunction 2 Nat.eqb (cPairPi2 t0) v0) s0 t0))
     (switchPR t0
        (S
           (cPair (cPairPi1 (codeNth (t0 - S (cPairPi1 (pred t0))) recs))
@@ -278,7 +278,7 @@ apply
            switchPR (cPairPi1 t)
              (cPair (cPairPi1 t)
                 (cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)))
-             (switchPR (charFunction 2 beq_nat (cPairPi2 t) v) s t))
+             (switchPR (charFunction 2 Nat.eqb (cPairPi2 t) v) s t))
     (f2 := fun t recs v s : nat =>
            switchPR t
              (S
@@ -291,7 +291,7 @@ apply
     (f2 := fun t recs v s : nat =>
            cPair (cPairPi1 t) (cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)))
     (f3 := fun t recs v s : nat =>
-           switchPR (charFunction 2 beq_nat (cPairPi2 t) v) s t).
+           switchPR (charFunction 2 Nat.eqb (cPairPi2 t) v) s t).
 apply filter1000IsPR with (g := cPairPi1).
 apply cPairPi1IsPR.
 apply
@@ -331,16 +331,16 @@ apply
  filter1011IsPR
   with
     (g := fun t v s : nat =>
-          switchPR (charFunction 2 beq_nat (cPairPi2 t) v) s t).
+          switchPR (charFunction 2 Nat.eqb (cPairPi2 t) v) s t).
 apply
  compose3_3IsPR
   with
-    (f1 := fun t v s : nat => charFunction 2 beq_nat (cPairPi2 t) v)
+    (f1 := fun t v s : nat => charFunction 2 Nat.eqb (cPairPi2 t) v)
     (f2 := fun t v s : nat => s)
     (f3 := fun t v s : nat => t).
 apply
  filter110IsPR
-  with (g := fun t v : nat => charFunction 2 beq_nat (cPairPi2 t) v).
+  with (g := fun t v : nat => charFunction 2 Nat.eqb (cPairPi2 t) v).
 apply
  compose2_2IsPR
   with (f := fun t v : nat => cPairPi2 t) (g := fun t v : nat => v).

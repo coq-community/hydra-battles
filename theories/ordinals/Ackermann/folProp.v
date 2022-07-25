@@ -263,7 +263,7 @@ rewrite H.
 unfold newVar in |- *.
 simpl in |- *.
 induction (fold_right max 0 (map S l)).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 apply le_lt_n_Sm.
 apply le_max_l.
 unfold newVar in |- *.

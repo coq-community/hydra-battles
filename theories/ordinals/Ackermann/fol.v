@@ -9,6 +9,9 @@ Require Import Arith.
 Require Import Compare_dec.
 Require Import Max. 
 Require Import misc.
+
+Require Import Compat815.
+
 (* Import Nat. *)
 
 Record Language : Type := language
@@ -473,8 +476,7 @@ Definition Formula_depth_rec (P : Formula -> Set)
 
 (* solves a compatibility issue *)
 
-Lemma compat815_le_n_0_eq : forall n : nat, n <= 0 -> 0 = n.
-Proof. intros n Hn;  symmetry; now rewrite <- Nat.le_0_r. Qed. 
+
 
 Lemma Formula_depth_rec_indep :
  forall (Q P : Formula -> Set)
@@ -506,7 +508,7 @@ intros.
 induction  (* Warning to fix *)
  (Nat.nlt_0_r (depth b0)
     (eq_ind_r (fun n0 : nat => depth b0 < n0) p
-       (compat815_le_n_0_eq (depth b) l1))).
+       (Compat815.le_n_0_eq (depth b) l1))).
 intros.
 simpl in |- *.
 apply H.
@@ -514,7 +516,7 @@ intros.
 induction (* warning to fix *)
  (Nat.nlt_0_r (depth b0)
     (eq_ind_r (fun n0 : nat => depth b0 < n0) p
-       (compat815_le_n_0_eq (depth b) l1))).
+       (Compat815.le_n_0_eq (depth b) l1))).
 simple induction m.
 intros.
 simpl in |- *.
@@ -523,7 +525,7 @@ intros.
 induction (*warning to fix *)
  (Nat.nlt_0_r  (depth b0)
     (eq_ind_r (fun n1 : nat => depth b0 < n1) p
-       (compat815_le_n_0_eq (depth b) l2))).
+       (Compat815.le_n_0_eq (depth b) l2))).
 intros.
 simpl in |- *.
 apply H.

@@ -11,8 +11,8 @@ Require Vector.
 Require Import misc.
 Require Export Bool.
 Require Export EqNat.
-Require Import Even.
-Require Import Max.
+Require Import Lia. 
+Require Import Compat815.
 
 (** * Definitions *)
 
@@ -76,9 +76,7 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
 
 
 
-Lemma compat815_le_lt_or_eq :
-    forall n m : nat, n <= m -> n < m \/ n = m.
-Proof. intros n m; now rewrite Nat.lt_eq_cases. Qed.
+
 
 Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
   match n return (forall m : nat, m < n -> naryFunc n) with
@@ -90,7 +88,7 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
       | right l1 =>
           fun _ =>
           evalProjFunc n' m
-            match compat815_le_lt_or_eq _ _ (lt_n_Sm_le m  n' l) with
+            match Compat815.le_lt_or_eq _ _ (lt_n_Sm_le m  n' l) with
             | or_introl l2 => l2
             | or_intror l2 => False_ind _ (l1 l2)
             end
@@ -111,11 +109,11 @@ induction n as [| n Hrecn].
   + reflexivity.
   + rewrite
       (Hrecn _
-             match compat815_le_lt_or_eq m n (lt_n_Sm_le m n p1) with
+             match Compat815.le_lt_or_eq m n (lt_n_Sm_le m n p1) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end
-             match compat815_le_lt_or_eq m n (lt_n_Sm_le m n p2) with
+             match Compat815.le_lt_or_eq m n (lt_n_Sm_le m n p2) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end);
@@ -938,7 +936,7 @@ Lemma ltBoolFalse : forall a b : nat, ltBool a b = false -> ~ a < b.
 Proof. 
   intros a b H; unfold ltBool in H.
   destruct  (le_lt_dec b a).
-  - unfold not in |- *; intros; now destruct  (le_not_lt _ _ l).
+  - unfold not in |- *; intros; lia.
   - discriminate.
 Qed.
 
@@ -998,14 +996,14 @@ Proof.
   destruct H as [x p]; exists x; eapply extEqualTrans.
   - apply p.
   - clear x p; cbn in |- *;  intros c c0; destruct (le_or_lt c c0).
-    + rewrite max_r.
+    + rewrite Nat.max_r.
       * symmetry  in |- *;now  apply le_plus_minus.
       * assumption.
     + rewrite not_le_minus_0.
       * rewrite Nat.add_comm, max_l.
         -- reflexivity.
-        -- now apply lt_le_weak.
-      * now apply lt_not_le.
+        -- now apply Nat.lt_le_incl.
+      * now apply Nat.lt_nge.
 Qed.
 
 
@@ -1180,7 +1178,7 @@ Qed.
 
 (** To do: rename this lemma ????  *)
 
-Lemma beq_nat_not_refl : forall a b : nat, a <> b -> beq_nat a b = false.
+Lemma beq_nat_not_refl : forall a b : nat, a <> b -> Nat.eqb a b = false.
 Proof.
   induction a; destruct b.
   - now destruct 1.
@@ -1189,7 +1187,7 @@ Proof.
   - cbn; intro; auto. 
 Qed.
 
-Lemma neqIsPR : isPRrel 2 (fun a b : nat => negb (beq_nat a b)).
+Lemma neqIsPR : isPRrel 2 (fun a b : nat => negb (Nat.eqb a b)).
 Proof.
   intros.
   assert (H: isPRrel 2 (orRel 2 ltBool (fun a b : nat => ltBool b a))).
@@ -1217,15 +1215,15 @@ Proof.
     + assumption.
 Qed.
 
-Lemma eqIsPR : isPRrel 2 beq_nat.
+Lemma eqIsPR : isPRrel 2 Nat.eqb.
 Proof.
-  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (beq_nat a b)))).
+  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (Nat.eqb a b)))).
   { apply notRelPR.
     apply neqIsPR.
   }
   cbn in H; destruct H as [x  p].
   exists x; cbn in *.
-  intros c c0; rewrite p; clear p; destruct (beq_nat c c0); auto.
+  intros c c0; rewrite p; clear p; destruct (Nat.eqb c c0); auto.
 Qed.
 
 Definition leBool (a b : nat) : bool.
@@ -1237,7 +1235,7 @@ Defined.
 
 Lemma leIsPR : isPRrel 2 leBool.
 Proof.
-  assert (H: isPRrel 2 (orRel 2 ltBool beq_nat)).
+  assert (H: isPRrel 2 (orRel 2 ltBool Nat.eqb)).
   { apply orRelPR.
     - apply ltIsPR.
     - apply eqIsPR.
@@ -1314,13 +1312,13 @@ Section Ignore_Params.
     - intros; simpl  in |- *.
       destruct (eq_nat_dec n n0).
       + elim (lt_not_le n (S n)).
-        apply lt_n_Sn.
+        apply Nat.lt_succ_diag_r .
         rewrite <- e in p1; auto.
       + split.
         rewrite
           (evalProjFuncInd _ _ (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
                            match
-                             compat815_le_lt_or_eq n n0
+                             Compat815.le_lt_or_eq n n0
                                          (lt_n_Sm_le n n0 (lt_S_n n (S n0)
                                                                   (le_lt_n_Sm
                                                                      (S n)
@@ -1615,7 +1613,9 @@ Proof.
     (composeFunc (S n) (S n)
                  (PRcons _ _
                          (composeFunc (S n) 1
-                                      (PRcons _ _ (projFunc (S n) n (lt_n_Sn n)) (PRnil _)) x0)
+                            (PRcons _ _ (projFunc (S n) n
+                                           (Nat.lt_succ_diag_r n))
+                               (PRnil _)) x0)
                          (projectionListPR (S n) n (le_n_Sn n))) x).
   cbn in |- *.
   fold (naryFunc n) in |- *.
@@ -1794,19 +1794,19 @@ Proof.
       assert
         (H0: isPR 3
                   (fun b0 Hrecb c : nat =>
-                     switchPR (charFunction 2 beq_nat Hrecb b0)
+                     switchPR (charFunction 2 Nat.eqb Hrecb b0)
                               (bool_rec (fun _ : bool => nat) b0 (S b0)
                                         (P c b0)) Hrecb)).
       { apply
           compose3_3IsPR
           with
             (g := switchPR)
-            (f1 := fun b0 Hrecb c : nat => charFunction 2 beq_nat Hrecb b0)
+            (f1 := fun b0 Hrecb c : nat => charFunction 2 Nat.eqb Hrecb b0)
             (f2 := fun b0 Hrecb c : nat =>
                      bool_rec (fun _ : bool => nat) b0 (S b0) (P c b0))
             (f3 := fun b0 Hrecb c : nat => Hrecb).
         - apply filter110IsPR
-            with (g := fun b0 Hrecb : nat => charFunction 2 beq_nat Hrecb b0).
+            with (g := fun b0 Hrecb : nat => charFunction 2 Nat.eqb Hrecb b0).
           apply swapIsPR.
           apply eqIsPR.
         - apply
@@ -1851,7 +1851,7 @@ Proof.
         extEqualTrans
         with
           (fun b0 Hrecb c : nat =>
-             switchPR (charFunction 2 beq_nat Hrecb b0)
+             switchPR (charFunction 2 Nat.eqb Hrecb b0)
                       (bool_rec (fun _ : bool => nat) b0 (S b0)
                                 (P c b0)) Hrecb).
       * auto.

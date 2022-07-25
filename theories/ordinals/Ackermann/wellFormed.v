@@ -30,7 +30,7 @@ Definition wellFormedTermTerms : nat -> nat :=
     (fun t recs : nat =>
      cPair
        (switchPR (cPairPi1 t)
-          (charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+          (charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
              (S (codeLength (cPairPi2 t))) *
            cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)) 1)
        (switchPR t
@@ -86,7 +86,7 @@ set
   fun t recs : nat =>
   cPair
     (switchPR (cPairPi1 t)
-       (charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+       (charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
           (S (codeLength (cPairPi2 t))) *
         cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)) 1)
     (switchPR t
@@ -188,7 +188,7 @@ set
   fun t recs : nat =>
   cPair
     (switchPR (cPairPi1 t)
-       (charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+       (charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
           (S (codeLength (cPairPi2 t))) *
         cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)) 1)
     (switchPR t
@@ -280,7 +280,7 @@ set
   fun t recs : nat =>
   cPair
     (switchPR (cPairPi1 t)
-       (charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+       (charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
           (S (codeLength (cPairPi2 t))) *
         cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)) 1)
     (switchPR t
@@ -411,7 +411,7 @@ rewrite cPairProjections.
 apply le_n.
 intros.
 eapply H.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 Qed.
 
 Lemma wellFormedTermCorrect2 :
@@ -442,7 +442,7 @@ apply
   with
     (f := fun t recs : nat =>
           switchPR (cPairPi1 t)
-            (charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+            (charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
                (S (codeLength (cPairPi2 t))) *
              cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)) 1)
     (g := fun t recs : nat =>
@@ -454,7 +454,7 @@ apply
   with
     (f1 := fun t recs : nat => cPairPi1 t)
     (f2 := fun t recs : nat =>
-           charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+           charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
              (S (codeLength (cPairPi2 t))) *
            cPairPi2 (codeNth (t - S (cPairPi2 t)) recs))
     (f3 := fun t recs : nat => 1).
@@ -464,14 +464,14 @@ apply
  compose2_2IsPR
   with
     (f := fun t recs : nat =>
-          charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+          charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
             (S (codeLength (cPairPi2 t))))
     (g := fun t recs : nat => cPairPi2 (codeNth (t - S (cPairPi2 t)) recs)).
 apply
  filter10IsPR
   with
     (g := fun t : nat =>
-          charFunction 2 beq_nat (codeArityF (pred (cPairPi1 t)))
+          charFunction 2 Nat.eqb (codeArityF (pred (cPairPi1 t)))
             (S (codeLength (cPairPi2 t)))).
 apply
  compose1_2IsPR
@@ -622,7 +622,7 @@ Definition wellFormedFormula : nat -> nat :=
        (switchPR (pred (cPairPi1 f))
           (switchPR (pred (pred (cPairPi1 f)))
              (switchPR (pred (pred (pred (cPairPi1 f))))
-                (charFunction 2 beq_nat
+                (charFunction 2 Nat.eqb
                    (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                    (S (codeLength (cPairPi2 f))) *
                  wellFormedTerms (cPairPi2 f))
@@ -644,7 +644,7 @@ set
     (switchPR (pred (cPairPi1 f))
        (switchPR (pred (pred (cPairPi1 f)))
           (switchPR (pred (pred (pred (cPairPi1 f))))
-             (charFunction 2 beq_nat
+             (charFunction 2 Nat.eqb
                 (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                 (S (codeLength (cPairPi2 f))) * wellFormedTerms (cPairPi2 f))
              (codeNth (f - S (cPairPi2 (cPairPi2 f))) recs))
@@ -728,7 +728,7 @@ set
     (switchPR (pred (cPairPi1 f))
        (switchPR (pred (pred (cPairPi1 f)))
           (switchPR (pred (pred (pred (cPairPi1 f))))
-             (charFunction 2 beq_nat
+             (charFunction 2 Nat.eqb
                 (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                 (S (codeLength (cPairPi2 f))) * wellFormedTerms (cPairPi2 f))
              (codeNth (f - S (cPairPi2 (cPairPi2 f))) recs))
@@ -890,7 +890,7 @@ reflexivity.
 assumption.
 intros.
 eapply H.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 assumption.
 Qed.
 
@@ -938,7 +938,7 @@ apply
            switchPR (pred (cPairPi1 f))
              (switchPR (pred (pred (cPairPi1 f)))
                 (switchPR (pred (pred (pred (cPairPi1 f))))
-                   (charFunction 2 beq_nat
+                   (charFunction 2 Nat.eqb
                       (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                       (S (codeLength (cPairPi2 f))) *
                     wellFormedTerms (cPairPi2 f))
@@ -957,7 +957,7 @@ apply
     (f2 := fun f recs : nat =>
            switchPR (pred (pred (cPairPi1 f)))
              (switchPR (pred (pred (pred (cPairPi1 f))))
-                (charFunction 2 beq_nat
+                (charFunction 2 Nat.eqb
                    (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                    (S (codeLength (cPairPi2 f))) *
                  wellFormedTerms (cPairPi2 f))
@@ -973,7 +973,7 @@ apply
     (f1 := fun f recs : nat => pred (pred (cPairPi1 f)))
     (f2 := fun f recs : nat =>
            switchPR (pred (pred (pred (cPairPi1 f))))
-             (charFunction 2 beq_nat
+             (charFunction 2 Nat.eqb
                 (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
                 (S (codeLength (cPairPi2 f))) * wellFormedTerms (cPairPi2 f))
              (codeNth (f - S (cPairPi2 (cPairPi2 f))) recs))
@@ -984,7 +984,7 @@ apply
   with
     (f1 := fun f recs : nat => pred (pred (pred (cPairPi1 f))))
     (f2 := fun f recs : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
              (S (codeLength (cPairPi2 f))) * wellFormedTerms (cPairPi2 f))
     (f3 := fun f recs : nat => codeNth (f - S (cPairPi2 (cPairPi2 f))) recs).
@@ -993,14 +993,14 @@ apply
  filter10IsPR
   with
     (g := fun f : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
             (S (codeLength (cPairPi2 f))) * wellFormedTerms (cPairPi2 f)).
 apply
  compose1_2IsPR
   with
     (f := fun f : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (codeArityR (pred (pred (pred (pred (cPairPi1 f))))))
             (S (codeLength (cPairPi2 f))))
     (f' := fun f : nat => wellFormedTerms (cPairPi2 f)).

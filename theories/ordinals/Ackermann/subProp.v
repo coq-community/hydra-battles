@@ -139,12 +139,12 @@ apply H.
 unfold lt_depth in |- *.
 rewrite subFormulaDepth.
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 auto.
 apply H.
 unfold lt_depth in |- *.
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 unfold not in |- *; intros.
 simpl in H1.
 elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
@@ -166,7 +166,7 @@ apply In_list_remove3.
 apply H; auto.
 unfold lt_depth in |- *.
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 eapply In_list_remove1.
 apply H1.
 unfold not in |- *; intros.
@@ -290,7 +290,7 @@ apply H.
 unfold lt_depth in |- *.
 rewrite subFormulaDepth.
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 assumption.
 apply freeVarSubFormula1.
 assumption.

@@ -211,7 +211,7 @@ Definition codeListRemove (a l : nat) : nat :=
   evalStrongRec 1
     (fun n Hrecs p1 : nat =>
      switchPR n
-       (switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1)
+       (switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1)
           (codeNth (n - S (cPairPi2 (pred n))) Hrecs)
           (S
              (cPair (cPairPi1 (pred n))
@@ -228,7 +228,7 @@ set
  (f :=
   fun n Hrecs p1 : nat =>
   switchPR n
-    (switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1)
+    (switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1)
        (codeNth (n - S (cPairPi2 (pred n))) Hrecs)
        (S
           (cPair (cPairPi1 (pred n))
@@ -295,7 +295,7 @@ apply
     (g := switchPR)
     (f1 := fun n Hrecs p1 : nat => n)
     (f2 := fun n Hrecs p1 : nat =>
-           switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1)
+           switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1)
              (codeNth (n - S (cPairPi2 (pred n))) Hrecs)
              (S
                 (cPair (cPairPi1 (pred n))
@@ -334,7 +334,7 @@ apply
   with
     (g := switchPR)
     (f1 := fun n Hrecs p1 : nat =>
-           charFunction 2 beq_nat (cPairPi1 (pred n)) p1)
+           charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1)
     (f2 := fun n Hrecs p1 : nat => codeNth (n - S (cPairPi2 (pred n))) Hrecs)
     (f3 := fun n Hrecs p1 : nat =>
            S
@@ -342,7 +342,7 @@ apply
                 (codeNth (n - S (cPairPi2 (pred n))) Hrecs))).
 apply
  filter101IsPR
-  with (g := fun n p1 : nat => charFunction 2 beq_nat (cPairPi1 (pred n)) p1).
+  with (g := fun n p1 : nat => charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1).
 apply
  compose2_2IsPR
   with (f := fun n p1 : nat => cPairPi1 (pred n)) (g := fun n p1 : nat => p1).
@@ -384,7 +384,7 @@ Definition codeIn (a l : nat) : nat :=
   evalStrongRec 1
     (fun n Hrecs p1 : nat =>
      switchPR n
-       (switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1) 1
+       (switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1) 1
           (codeNth (n - S (cPairPi2 (pred n))) Hrecs)) 0) l a.
 
 Lemma codeInCorrect :
@@ -410,7 +410,7 @@ set
  (f :=
   fun n Hrecs p1 : nat =>
   switchPR n
-    (switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1) 1
+    (switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1) 1
        (codeNth (n - S (cPairPi2 (pred n))) Hrecs)) 0) 
  in *.
 set (m := cPairPi2 (pred (S (cPair a0 (codeList l))))) in *.
@@ -469,7 +469,7 @@ apply
     (g := switchPR)
     (f1 := fun n Hrecs p1 : nat => n)
     (f2 := fun n Hrecs p1 : nat =>
-           switchPR (charFunction 2 beq_nat (cPairPi1 (pred n)) p1) 1
+           switchPR (charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1) 1
              (codeNth (n - S (cPairPi2 (pred n))) Hrecs))
     (f3 := fun n Hrecs p1 : nat => 0).
 apply pi1_3IsPR.
@@ -478,16 +478,16 @@ apply
   with
     (g := switchPR)
     (f1 := fun n Hrecs p1 : nat =>
-           charFunction 2 beq_nat (cPairPi1 (pred n)) p1)
+           charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1)
     (f2 := fun n Hrecs p1 : nat => 1)
     (f3 := fun n Hrecs p1 : nat => codeNth (n - S (cPairPi2 (pred n))) Hrecs).
 apply
  filter101IsPR
-  with (g := fun n p1 : nat => charFunction 2 beq_nat (cPairPi1 (pred n)) p1).
+  with (g := fun n p1 : nat => charFunction 2 Nat.eqb (cPairPi1 (pred n)) p1).
 apply
  compose2_2IsPR
   with
-    (h := charFunction 2 beq_nat)
+    (h := charFunction 2 Nat.eqb)
     (f := fun n p1 : nat => cPairPi1 (pred n))
     (g := fun n p1 : nat => p1).
 apply filter10IsPR with (g := fun n : nat => cPairPi1 (pred n)).

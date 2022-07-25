@@ -85,7 +85,7 @@ Section CPair_Injectivity.
             * apply le_lt_n_Sm.
               apply le_plus_r.
             +  rewrite H2.
-               apply lt_n_Sn.
+               apply Nat.lt_succ_diag_r .
     }
     unfold cPair in |- *.
     assert
@@ -231,7 +231,7 @@ auto.
 intros.
 apply H with (S a).
 apply lt_le_trans with (S a).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 apply sumToN1.
 Qed.
 
@@ -546,7 +546,7 @@ Definition evalStrongRecHelp (n : nat) (f : naryFunc (S (S n))) :
   evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) (codeList nil))
     (evalComposeFunc (S (S n)) 2
        (Vector.cons _ f _
-          (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S _ _ (lt_n_Sn _))) _
+          (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S _ _ (Nat.lt_succ_diag_r  _))) _
              (Vector.nil _))) (fun a b : nat => S (cPair a b))).
 
 Definition evalStrongRec (n : nat) (f : naryFunc (S (S n))) :
@@ -568,7 +568,7 @@ set
     (evalComposeFunc (S (S n)) 2
        (Vector.cons (naryFunc (S (S n))) f 1
           (Vector.cons (naryFunc (S (S n)))
-             (evalProjFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n))) 0
+             (evalProjFunc (S (S n)) n (lt_S n (S n) (Nat.lt_succ_diag_r  n))) 0
              (Vector.nil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
  in *.
 assert (isPR (S n) A).
@@ -588,7 +588,7 @@ exists
  (primRecFunc n (composeFunc n 0 (PRnil _) zeroFunc)
     (composeFunc (S (S n)) 2
        (PRcons _ _ x
-          (PRcons _ _ (projFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n)))
+          (PRcons _ _ (projFunc (S (S n)) n (lt_S n (S n) (Nat.lt_succ_diag_r  n)))
              (PRnil _))) x0)).
 apply
  extEqualTrans
@@ -596,7 +596,7 @@ apply
     (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) 0)
        (evalComposeFunc (S (S n)) 2
           (Vector.cons _ (evalPrimRec _ x) _
-             (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S n (S n) (lt_n_Sn n))) _
+             (Vector.cons _ (evalProjFunc (S (S n)) n (lt_S n (S n) (Nat.lt_succ_diag_r  n))) _
                 (Vector.nil _))) (evalPrimRec _ x0))).
 apply extEqualRefl.
 apply extEqualPrimRec.
@@ -646,7 +646,7 @@ simpl in |- *.
 fold (naryFunc n) in |- *.
 induction (eq_nat_dec n (S n)).
 elim (lt_not_le n (S n)).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 rewrite <- a.
 auto.
 induction (eq_nat_dec n n).
@@ -743,7 +743,7 @@ assert
           (Vector.cons (naryFunc (S (S (S a)))) f 1
              (Vector.cons (naryFunc (S (S (S a))))
                 (evalProjFunc (S (S (S a))) (S a)
-                   (lt_S (S a) (S (S a)) (lt_n_Sn (S a)))) 0
+                   (lt_S (S a) (S (S a)) (Nat.lt_succ_diag_r  (S a)))) 0
                 (Vector.nil (naryFunc (S (S (S a)))))))
           (fun a0 b : nat => S (cPair a0 b)) x y c))
     (evalPrimRecFunc a
@@ -751,7 +751,7 @@ assert
        (evalComposeFunc (S (S a)) 2
           (Vector.cons (naryFunc (S (S a))) (fun x y : nat => f x y c) 1
              (Vector.cons (naryFunc (S (S a)))
-                (evalProjFunc (S (S a)) a (lt_S a (S a) (lt_n_Sn a))) 0
+                (evalProjFunc (S (S a)) a (lt_S a (S a) (Nat.lt_succ_diag_r  a))) 0
                 (Vector.nil (naryFunc (S (S a))))))
           (fun a0 b : nat => S (cPair a0 b))))).
 apply
@@ -768,7 +768,7 @@ induction
     (fun b : a <> S a => right (S a = S (S a)) (not_eq_S a (S a) b))
     (eq_nat_dec a (S a))).
 elim (lt_not_le (S a) (S (S a))).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 rewrite <- a0.
 auto.
 induction
@@ -778,7 +778,7 @@ induction
     (eq_nat_dec a a)).
 induction (eq_nat_dec a (S a)).
 elim (lt_not_le a (S a)).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 rewrite <- a1.
 auto.
 induction (eq_nat_dec a a).

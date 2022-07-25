@@ -298,7 +298,7 @@ Definition codeInductionSchema (f : nat) : bool :=
   let g :=
     cPairPi2
       (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 (codeOpen f)))))) in
-  beq_nat
+  Nat.eqb
     (codeClose
        (codeImp (codeSubFormula g n (codeTerm Zero))
           (codeImp
@@ -664,7 +664,7 @@ assert
     (fun f : nat =>
      let n := cPairPi1 (A f) in
      let g := cPairPi2 (A f) in
-     beq_nat
+     Nat.eqb
        (codeClose
           (codeImp (codeSubFormula g n (codeTerm Zero))
              (codeImp
@@ -675,7 +675,7 @@ unfold isPRrel in |- *.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f' := fun f : nat => f)
     (f := fun f : nat =>
           codeClose
@@ -829,12 +829,12 @@ apply H0.
 Qed.
 
 Definition codePA : nat -> bool :=
-  orRel 1 (beq_nat (codeFormula PA6))
-    (orRel 1 (beq_nat (codeFormula PA5))
-       (orRel 1 (beq_nat (codeFormula PA4))
-          (orRel 1 (beq_nat (codeFormula PA3))
-             (orRel 1 (beq_nat (codeFormula PA2))
-                (orRel 1 (beq_nat (codeFormula PA1)) codeInductionSchema))))).
+  orRel 1 (Nat.eqb (codeFormula PA6))
+    (orRel 1 (Nat.eqb (codeFormula PA5))
+       (orRel 1 (Nat.eqb (codeFormula PA4))
+          (orRel 1 (Nat.eqb (codeFormula PA3))
+             (orRel 1 (Nat.eqb (codeFormula PA2))
+                (orRel 1 (Nat.eqb (codeFormula PA1)) codeInductionSchema))))).
 
 Lemma codePAcorrect1 :
  forall f : Formula,
@@ -972,14 +972,14 @@ Qed.
 Lemma codePAIsPR : isPRrel 1 codePA.
 Proof.
 unfold codePA in |- *.
-assert (forall n : nat, isPRrel 1 (beq_nat n)).
+assert (forall n : nat, isPRrel 1 (Nat.eqb n)).
 intros.
 apply
  compose1_2IsPR
   with
     (f := fun f : nat => n)
     (f' := fun f : nat => f)
-    (g := charFunction 2 beq_nat).
+    (g := charFunction 2 Nat.eqb).
 apply const1_NIsPR.
 apply idIsPR.
 apply eqIsPR.

@@ -206,14 +206,14 @@ rewrite <- H.
 rewrite <- plus_Snm_nSm.
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 rewrite <- plus_Snm_nSm.
 apply lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 simpl in |- *.
 induction (consTerms L a ts).
 induction x as (a0, b).
@@ -276,14 +276,14 @@ induction H as [H| H].
 rewrite <- H.
 rewrite <- plus_Snm_nSm.
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 rewrite <- plus_Snm_nSm.
 apply lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 simpl in |- *.
 induction (consTerms L a ts).
 induction x as (a0, b).
@@ -383,17 +383,17 @@ induction (eq_nat_dec (S (n + n)) (n + n)).
 elim (le_not_lt (S (n + n)) (n + n)).
 rewrite a2.
 auto.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 induction (eq_nat_dec (S (n + n)) (S (n + n))).
 apply H.
 elim b2; auto.
 elim b1; auto.
 simpl in |- *.
 apply lt_n_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 Qed.
 
 Lemma equalRelation :
@@ -477,12 +477,12 @@ rewrite a2 in a.
 elim (le_not_lt _ _ a).
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 induction (eq_nat_dec m0 (S (n + n))).
 rewrite a2 in a.
 elim (le_not_lt _ _ a).
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 apply Hrecn.
 do 2 apply le_S_n.
 repeat apply le_S.
@@ -571,12 +571,12 @@ rewrite a2 in a.
 elim (le_not_lt _ _ a).
 simpl in |- *.
 apply lt_S.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 induction (eq_nat_dec m0 (S (n + n))).
 rewrite a2 in a.
 elim (le_not_lt _ _ a).
 simpl in |- *.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 apply Hrecn.
 do 2 apply le_S_n.
 repeat apply le_S.

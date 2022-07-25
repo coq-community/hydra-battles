@@ -100,5 +100,5 @@ apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
 apply H0.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 Qed.

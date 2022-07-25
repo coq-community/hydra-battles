@@ -59,7 +59,7 @@ However making this assumption makes the proof easier *)
 (* p is (cPair (formula) (proof of the Formula)) *)
 
 Definition checkPrfAXM (p recs : nat) :=
-  switchPR (charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
+  switchPR (charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
     (S (S (cPair (cPairPi1 p) 0))) 0.
 
 Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
@@ -70,13 +70,13 @@ apply
   with
     (g := fun p : nat =>
           switchPR
-            (charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
+            (charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
             (S (S (cPair (cPairPi1 p) 0))) 0).
 apply
  compose1_3IsPR
   with
     (f1 := fun p : nat =>
-           charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
+           charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
     (f2 := fun p : nat => S (S (cPair (cPairPi1 p) 0)))
     (f3 := fun p : nat => 0).
 apply compose1_2IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
@@ -100,7 +100,7 @@ Qed.
 Definition checkPrfMP (p recs : nat) :=
   switchPR
     (wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) *
-     (charFunction 2 beq_nat (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+     (charFunction 2 Nat.eqb (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
         (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) (cPairPi1 p)) *
       (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
        codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)))
@@ -118,7 +118,7 @@ apply
   with
     (f1 := fun p recs : nat =>
            wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) *
-           (charFunction 2 beq_nat
+           (charFunction 2 Nat.eqb
               (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
               (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
                  (cPairPi1 p)) *
@@ -138,7 +138,7 @@ apply
     (f := fun p recs : nat =>
           wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
     (g := fun p recs : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
                (cPairPi1 p)) *
@@ -166,7 +166,7 @@ apply
  compose2_2IsPR
   with
     (f := fun p recs : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
                (cPairPi1 p)))
@@ -177,7 +177,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
                (cPairPi1 p))).
@@ -266,7 +266,7 @@ Qed.
 
 Definition checkPrfGEN (p recs : nat) :=
   switchPR
-    (charFunction 2 beq_nat
+    (charFunction 2 Nat.eqb
        (cPair 3
           (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
              (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))) 
@@ -285,7 +285,7 @@ apply
  compose2_3IsPR
   with
     (f1 := fun p recs : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (cPair 3
                 (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                    (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
@@ -303,7 +303,7 @@ apply
  compose2_2IsPR
   with
     (f := fun p recs : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 3
                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                   (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
@@ -319,7 +319,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 3
                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                   (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
@@ -428,7 +428,7 @@ Qed.
 Definition checkPrfIMP1 (p recs : nat) :=
   let A := cPairPi1 (cPairPi2 (cPairPi2 p)) in
   let B := cPairPi2 (cPairPi2 (cPairPi2 p)) in
-  charFunction 2 beq_nat (cPair 1 (cPair A (cPair 1 (cPair B A))))
+  charFunction 2 Nat.eqb (cPair 1 (cPair A (cPair 1 (cPair B A))))
     (cPairPi1 p).
 
 Lemma checkPrfIMP1IsPR : isPR 2 checkPrfIMP1.
@@ -438,7 +438,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                   (cPair 1
@@ -508,7 +508,7 @@ Definition checkPrfIMP2 (p recs : nat) :=
   let A := cPairPi1 (cPairPi2 (cPairPi2 p)) in
   let B := cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
   let C := cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb
     (cPair 1
        (cPair (cPair 1 (cPair A (cPair 1 (cPair B C))))
           (cPair 1 (cPair (cPair 1 (cPair A B)) (cPair 1 (cPair A C))))))
@@ -521,7 +521,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair
                   (cPair 1
@@ -668,7 +668,7 @@ Qed.
 Definition checkPrfCP (p recs : nat) :=
   let A := cPairPi1 (cPairPi2 (cPairPi2 p)) in
   let B := cPairPi2 (cPairPi2 (cPairPi2 p)) in
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb
     (cPair 1
        (cPair (cPair 1 (cPair (cPair 2 A) (cPair 2 B))) (cPair 1 (cPair B A))))
     (cPairPi1 p).
@@ -680,7 +680,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair
                   (cPair 1
@@ -767,7 +767,7 @@ Definition checkPrfFA1 (p recs : nat) :=
   let v := cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
   let t := cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
   wellFormedTerm t *
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb
     (cPair 1 (cPair (cPair 3 (cPair v A)) (codeSubFormula A v t)))
     (cPairPi1 p).
 
@@ -779,7 +779,7 @@ apply
   with
     (g := fun p : nat =>
           wellFormedTerm (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))) *
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair
                   (cPair 3
@@ -813,7 +813,7 @@ apply
     (f := fun p : nat =>
           wellFormedTerm (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
     (f' := fun p : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (cPair 1
                 (cPair
                    (cPair 3
@@ -899,7 +899,7 @@ Definition checkPrfFA2 (p recs : nat) :=
   let A := cPairPi1 (cPairPi2 (cPairPi2 p)) in
   let v := cPairPi2 (cPairPi2 (cPairPi2 p)) in
   (1 - codeIn v (codeFreeVarFormula A)) *
-  charFunction 2 beq_nat (cPair 1 (cPair A (cPair 3 (cPair v A))))
+  charFunction 2 Nat.eqb (cPair 1 (cPair A (cPair 3 (cPair v A))))
     (cPairPi1 p).
 
 Lemma checkPrfFA2IsPR : isPR 2 checkPrfFA2.
@@ -912,7 +912,7 @@ apply
           (1 -
            codeIn (cPairPi2 (cPairPi2 (cPairPi2 p)))
              (codeFreeVarFormula (cPairPi1 (cPairPi2 (cPairPi2 p))))) *
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                   (cPair 3
@@ -935,7 +935,7 @@ apply
           codeIn (cPairPi2 (cPairPi2 (cPairPi2 p)))
             (codeFreeVarFormula (cPairPi1 (cPairPi2 (cPairPi2 p)))))
     (f' := fun p : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (cPair 1
                 (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
                    (cPair 3
@@ -1012,7 +1012,7 @@ Definition checkPrfFA3 (p recs : nat) :=
   let A := cPairPi1 (cPairPi2 (cPairPi2 p)) in
   let B := cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
   let v := cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))) in
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb
     (cPair 1
        (cPair (cPair 3 (cPair v (cPair 1 (cPair A B))))
           (cPair 1 (cPair (cPair 3 (cPair v A)) (cPair 3 (cPair v B))))))
@@ -1025,7 +1025,7 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (cPair 1
                (cPair
                   (cPair 3
@@ -1182,8 +1182,8 @@ apply eqIsPR.
 Qed.
 
 Definition checkPrfEQ1 (p recs : nat) :=
-  charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0 *
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0 *
+  charFunction 2 Nat.eqb
     (codeFormula L codeF codeR (fol.equal L (fol.var L 0) (fol.var L 0)))
     (cPairPi1 p).
 
@@ -1191,8 +1191,8 @@ Lemma checkPrfEQnIsPR :
  forall n : nat,
  isPR 2
    (fun p recs : nat =>
-    charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0 *
-    charFunction 2 beq_nat n (cPairPi1 p)).
+    charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0 *
+    charFunction 2 Nat.eqb n (cPairPi1 p)).
 Proof.
 unfold checkPrfEQ1 in |- *.
 intros.
@@ -1200,13 +1200,13 @@ apply
  filter10IsPR
   with
     (g := fun p : nat =>
-          charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0 *
-          charFunction 2 beq_nat n (cPairPi1 p)).
+          charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0 *
+          charFunction 2 Nat.eqb n (cPairPi1 p)).
 apply
  compose1_2IsPR
   with
-    (f := fun p : nat => charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0)
-    (f' := fun p : nat => charFunction 2 beq_nat n (cPairPi1 p)).
+    (f := fun p : nat => charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0)
+    (f' := fun p : nat => charFunction 2 Nat.eqb n (cPairPi1 p)).
 apply
  compose1_2IsPR
   with (f := fun p : nat => cPairPi2 (cPairPi2 p)) (f' := fun p : nat => 0).
@@ -1227,8 +1227,8 @@ apply checkPrfEQnIsPR.
 Qed.
 
 Definition checkPrfEQ2 (p recs : nat) :=
-  charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0 *
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0 *
+  charFunction 2 Nat.eqb
     (codeFormula L codeF codeR
        (fol.impH L (fol.equal L (fol.var L 0) (fol.var L 1))
           (fol.equal L (fol.var L 1) (fol.var L 0)))) 
@@ -1241,8 +1241,8 @@ apply checkPrfEQnIsPR.
 Qed.
 
 Definition checkPrfEQ3 (p recs : nat) :=
-  charFunction 2 beq_nat (cPairPi2 (cPairPi2 p)) 0 *
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) 0 *
+  charFunction 2 Nat.eqb
     (codeFormula L codeF codeR
        (fol.impH L (fol.equal L (fol.var L 0) (fol.var L 1))
           (fol.impH L (fol.equal L (fol.var L 1) (fol.var L 2))
@@ -1414,7 +1414,7 @@ Definition checkPrfEQ4 (p recs : nat) :=
   let A := cPair (S (S (S (S r)))) (codeNVars1 (pred (codeArityR r))) in
   let B := cPair (S (S (S (S r)))) (codeNVars2 (pred (codeArityR r))) in
   notZero (codeArityR r) *
-  charFunction 2 beq_nat (codeAxmEqHelp (pred (codeArityR r)) (codeIff A B))
+  charFunction 2 Nat.eqb (codeAxmEqHelp (pred (codeArityR r)) (codeIff A B))
     (cPairPi1 p).
 
 Lemma codeOrIsPR : isPR 2 codeOr.
@@ -1463,7 +1463,7 @@ apply
   with
     (g := fun p : nat =>
           notZero (codeArityR (cPairPi2 (cPairPi2 p))) *
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (codeAxmEqHelp (pred (codeArityR (cPairPi2 (cPairPi2 p))))
                (codeIff
                   (cPair (S (S (S (S (cPairPi2 (cPairPi2 p))))))
@@ -1478,7 +1478,7 @@ apply
   with
     (f := fun p : nat => notZero (codeArityR (cPairPi2 (cPairPi2 p))))
     (f' := fun p : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (codeAxmEqHelp (pred (codeArityR (cPairPi2 (cPairPi2 p))))
                 (codeIff
                    (cPair (S (S (S (S (cPairPi2 (cPairPi2 p))))))
@@ -1583,7 +1583,7 @@ Qed.
 Definition checkPrfEQ5 (p recs : nat) :=
   let f := cPairPi2 (cPairPi2 p) in
   notZero (codeArityF f) *
-  charFunction 2 beq_nat
+  charFunction 2 Nat.eqb
     (codeAxmEqHelp (pred (codeArityF f))
        (cPair 0
           (cPair (cPair (S f) (codeNVars1 (pred (codeArityF f))))
@@ -1598,7 +1598,7 @@ apply
   with
     (g := fun p : nat =>
           notZero (codeArityF (cPairPi2 (cPairPi2 p))) *
-          charFunction 2 beq_nat
+          charFunction 2 Nat.eqb
             (codeAxmEqHelp (pred (codeArityF (cPairPi2 (cPairPi2 p))))
                (cPair 0
                   (cPair
@@ -1616,7 +1616,7 @@ apply
   with
     (f := fun p : nat => notZero (codeArityF (cPairPi2 (cPairPi2 p))))
     (f' := fun p : nat =>
-           charFunction 2 beq_nat
+           charFunction 2 Nat.eqb
              (codeAxmEqHelp (pred (codeArityF (cPairPi2 (cPairPi2 p))))
                 (cPair 0
                    (cPair
@@ -2088,7 +2088,7 @@ induction (In_dec eq_nat_dec v (freeVarListFormula L Axm)).
 elim n.
 assumption.
 replace
- (charFunction 2 beq_nat (cPair 3 (cPair v (codeFormula L codeF codeR A0)))
+ (charFunction 2 Nat.eqb (cPair 3 (cPair v (codeFormula L codeF codeR A0)))
     (cPair 3 (cPair v (codeFormula L codeF codeR A0)))) with 1.
 simpl in |- *.
 reflexivity.
@@ -2609,7 +2609,7 @@ destruct (evalStrongRec 0 A (cPairPi1 (cPairPi2 (cPairPi2 n)))).
 rewrite Nat.mul_comm in H0.
 rewrite
  (Nat.mul_comm
-    (charFunction 2 beq_nat (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
+    (charFunction 2 Nat.eqb (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
        (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 n)))) (cPairPi1 n))))
   in H0.
 simpl in H0.
@@ -2632,7 +2632,7 @@ destruct (evalStrongRec 0 A (cPairPi2 (cPairPi2 (cPairPi2 n)))).
 rewrite Nat.mul_comm in H0.
 rewrite
  (Nat.mul_comm
-    (charFunction 2 beq_nat (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
+    (charFunction 2 Nat.eqb (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 n))))
        (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 n)))) (cPairPi1 n))))
   in H0.
 rewrite (Nat.mul_comm (evalStrongRec 0 A (cPairPi1 (cPairPi2 (cPairPi2 n)))))
@@ -3406,7 +3406,7 @@ induction (nVars L (arity L (inl (Functions L) x0))).
 simpl in |- *.
 unfold fst, snd in H0.
 cut
- ((if beq_nat
+ ((if Nat.eqb
         (codeAxmEqHelp (arity L (inl (Functions L) x0))
            (codeFormula L codeF codeR (iffH L (atomic x0 a) (atomic x0 b))))
         (codeFormula L codeF codeR x)
@@ -3530,7 +3530,7 @@ induction (nVars L (arity L (inr (Relations L) x0))).
 simpl in |- *.
 unfold fst, snd in H0.
 cut
- ((if beq_nat
+ ((if Nat.eqb
         (codeAxmEqHelp (arity L (inr (Relations L) x0))
            (codeFormula L codeF codeR (equal (apply x0 a) (apply x0 b))))
         (codeFormula L codeF codeR x)
@@ -3620,7 +3620,7 @@ assert
           cPair (codeFormula L codeF codeR f) (codePrf L codeF codeR l f p) =
           cPair n m))).
 eapply H.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 rewrite cPairProjections1.
 rewrite cPairProjections2.
 assumption.

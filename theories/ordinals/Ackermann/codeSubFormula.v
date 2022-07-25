@@ -216,11 +216,11 @@ Definition checkSubFormulaTrace : nat -> nat :=
        (switchPR (pred type)
           (switchPR (pred (pred type))
              (switchPR (pred (pred (pred type)))
-                (charFunction 2 beq_nat output
+                (charFunction 2 Nat.eqb output
                    (cPair type (codeSubTerms (cPairPi2 input) v s)))
                 (switchPR
-                   (charFunction 2 beq_nat v (cPairPi1 (cPairPi2 input)))
-                   (charFunction 2 beq_nat input output)
+                   (charFunction 2 Nat.eqb v (cPairPi1 (cPairPi2 input)))
+                   (charFunction 2 Nat.eqb input output)
                    (switchPR
                       (codeIn (cPairPi1 (cPairPi2 input)) (codeFreeVarTerm s))
                       (let nv :=
@@ -231,40 +231,40 @@ Definition checkSubFormulaTrace : nat -> nat :=
                                     (codeFreeVarFormula
                                        (cPairPi2 (cPairPi2 input)))))) in
                        charFunction 0
-                         (beq_nat output
+                         (Nat.eqb output
                             (cPair 3 (cPair nv (cTriplePi2 (cPairPi2 rest)))) &&
-                          (beq_nat (cTriple v s (cTriplePi2 (cPairPi1 rest)))
+                          (Nat.eqb (cTriple v s (cTriplePi2 (cPairPi1 rest)))
                              (cTriplePi1 (cPairPi2 rest)) &&
-                           beq_nat
+                           Nat.eqb
                              (cTriple (cPairPi1 (cPairPi2 input))
                                 (cPair 0 nv) (cPairPi2 (cPairPi2 input)))
                              (cTriplePi1 (cPairPi1 rest)))) *
                        (codeNth (trace - S (cPairPi1 rest)) recs *
                         codeNth (trace - S (cPairPi2 rest)) recs))
                       (charFunction 0
-                         (beq_nat output
+                         (Nat.eqb output
                             (cPair 3
                                (cPair (cPairPi1 (cPairPi2 input))
                                   (cTriplePi2 rest))) &&
-                          beq_nat (cTriple v s (cPairPi2 (cPairPi2 input)))
+                          Nat.eqb (cTriple v s (cPairPi2 (cPairPi2 input)))
                             (cTriplePi1 rest)) *
                        codeNth (trace - S rest) recs))))
              (charFunction 0
-                (beq_nat output (cPair 2 (cTriplePi2 rest)) &&
-                 beq_nat (cTriple v s (cPairPi2 input)) (cTriplePi1 rest)) *
+                (Nat.eqb output (cPair 2 (cTriplePi2 rest)) &&
+                 Nat.eqb (cTriple v s (cPairPi2 input)) (cTriplePi1 rest)) *
               codeNth (trace - S rest) recs))
           (charFunction 0
-             (beq_nat output
+             (Nat.eqb output
                 (cPair 1
                    (cPair (cTriplePi2 (cPairPi1 rest))
                       (cTriplePi2 (cPairPi2 rest)))) &&
-              (beq_nat (cTriple v s (cPairPi1 (cPairPi2 input)))
+              (Nat.eqb (cTriple v s (cPairPi1 (cPairPi2 input)))
                  (cTriplePi1 (cPairPi1 rest)) &&
-               beq_nat (cTriple v s (cPairPi2 (cPairPi2 input)))
+               Nat.eqb (cTriple v s (cPairPi2 (cPairPi2 input)))
                  (cTriplePi1 (cPairPi2 rest)))) *
            (codeNth (trace - S (cPairPi1 rest)) recs *
             codeNth (trace - S (cPairPi2 rest)) recs)))
-       (charFunction 2 beq_nat output
+       (charFunction 2 Nat.eqb output
           (cPair 0
              (cPair (codeSubTerm (cPairPi1 (cPairPi2 input)) v s)
                 (codeSubTerm (cPairPi2 (cPairPi2 input)) v s))))).
@@ -421,22 +421,22 @@ set
        (switchPR (pred (pred (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))))
           (switchPR
              (pred (pred (pred (cPairPi1 (cTriplePi3 (cTriplePi1 trace))))))
-             (charFunction 2 beq_nat (cTriplePi2 trace)
+             (charFunction 2 Nat.eqb (cTriplePi2 trace)
                 (cPair (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))
                    (codeSubTerms (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))
                       (cTriplePi1 (cTriplePi1 trace))
                       (cTriplePi2 (cTriplePi1 trace)))))
              (switchPR
-                (charFunction 2 beq_nat (cTriplePi1 (cTriplePi1 trace))
+                (charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
-                (charFunction 2 beq_nat (cTriplePi3 (cTriplePi1 trace))
+                (charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
                    (cTriplePi2 trace))
                 (switchPR
                    (codeIn
                       (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                       (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
                    (charFunction 0
-                      (beq_nat (cTriplePi2 trace)
+                      (Nat.eqb (cTriplePi2 trace)
                          (cPair 3
                             (cPair
                                (codeNewVar
@@ -451,12 +451,12 @@ set
                                                   (cTriplePi3
                                                   (cTriplePi1 trace)))))))))
                                (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-                       (beq_nat
+                       (Nat.eqb
                           (cTriple (cTriplePi1 (cTriplePi1 trace))
                              (cTriplePi2 (cTriplePi1 trace))
                              (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                           (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-                        beq_nat
+                        Nat.eqb
                           (cTriple
                              (cPairPi1
                                 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -478,13 +478,13 @@ set
                     (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
                      codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
                    (charFunction 0
-                      (beq_nat (cTriplePi2 trace)
+                      (Nat.eqb (cTriplePi2 trace)
                          (cPair 3
                             (cPair
                                (cPairPi1
                                   (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                                (cTriplePi2 (cTriplePi3 trace)))) &&
-                       beq_nat
+                       Nat.eqb
                          (cTriple (cTriplePi1 (cTriplePi1 trace))
                             (cTriplePi2 (cTriplePi1 trace))
                             (cPairPi2
@@ -492,32 +492,32 @@ set
                          (cTriplePi1 (cTriplePi3 trace))) *
                     codeNth (trace - S (cTriplePi3 trace)) recs))))
           (charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                 (cTriplePi1 (cTriplePi3 trace))) *
            codeNth (trace - S (cTriplePi3 trace)) recs))
        (charFunction 0
-          (beq_nat (cTriplePi2 trace)
+          (Nat.eqb (cTriplePi2 trace)
              (cPair 1
                 (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                    (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-           (beq_nat
+           (Nat.eqb
               (cTriple (cTriplePi1 (cTriplePi1 trace))
                  (cTriplePi2 (cTriplePi1 trace))
                  (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
               (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-            beq_nat
+            Nat.eqb
               (cTriple (cTriplePi1 (cTriplePi1 trace))
                  (cTriplePi2 (cTriplePi1 trace))
                  (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
               (cTriplePi1 (cPairPi2 (cTriplePi3 trace))))) *
         (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
          codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs)))
-    (charFunction 2 beq_nat (cTriplePi2 trace)
+    (charFunction 2 Nat.eqb (cTriplePi2 trace)
        (cPair 0
           (cPair
              (codeSubTerm
@@ -754,7 +754,7 @@ unfold A at 1 in |- *;
   | rewrite cTripleProj3
   | rewrite cPairProjections1
   | rewrite cPairProjections2 ].
-replace (charFunction 2 beq_nat v0 v) with 1.
+replace (charFunction 2 Nat.eqb v0 v) with 1.
 simpl in |- *.
 rewrite <- beq_nat_refl.
 reflexivity.
@@ -771,7 +771,7 @@ unfold A at 1 in |- *;
   | rewrite cTripleProj3
   | rewrite cPairProjections1
   | rewrite cPairProjections2 ].
-replace (charFunction 2 beq_nat v0 v) with 0.
+replace (charFunction 2 Nat.eqb v0 v) with 0.
 replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 1.
 rewrite
  evalStrongRecHelp1
@@ -883,7 +883,7 @@ unfold A at 1 in |- *;
   | rewrite cTripleProj3
   | rewrite cPairProjections1
   | rewrite cPairProjections2 ].
-replace (charFunction 2 beq_nat v0 v) with 0.
+replace (charFunction 2 Nat.eqb v0 v) with 0.
 replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 0.
 rewrite evalStrongRecHelp1 with (m := makeTrace a (v0, s)).
 simpl in |- *.
@@ -965,22 +965,22 @@ set
        (switchPR (pred (pred (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))))
           (switchPR
              (pred (pred (pred (cPairPi1 (cTriplePi3 (cTriplePi1 trace))))))
-             (charFunction 2 beq_nat (cTriplePi2 trace)
+             (charFunction 2 Nat.eqb (cTriplePi2 trace)
                 (cPair (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))
                    (codeSubTerms (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))
                       (cTriplePi1 (cTriplePi1 trace))
                       (cTriplePi2 (cTriplePi1 trace)))))
              (switchPR
-                (charFunction 2 beq_nat (cTriplePi1 (cTriplePi1 trace))
+                (charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
-                (charFunction 2 beq_nat (cTriplePi3 (cTriplePi1 trace))
+                (charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
                    (cTriplePi2 trace))
                 (switchPR
                    (codeIn
                       (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                       (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
                    (charFunction 0
-                      (beq_nat (cTriplePi2 trace)
+                      (Nat.eqb (cTriplePi2 trace)
                          (cPair 3
                             (cPair
                                (codeNewVar
@@ -995,12 +995,12 @@ set
                                                   (cTriplePi3
                                                   (cTriplePi1 trace)))))))))
                                (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-                       (beq_nat
+                       (Nat.eqb
                           (cTriple (cTriplePi1 (cTriplePi1 trace))
                              (cTriplePi2 (cTriplePi1 trace))
                              (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                           (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-                        beq_nat
+                        Nat.eqb
                           (cTriple
                              (cPairPi1
                                 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -1022,13 +1022,13 @@ set
                     (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
                      codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
                    (charFunction 0
-                      (beq_nat (cTriplePi2 trace)
+                      (Nat.eqb (cTriplePi2 trace)
                          (cPair 3
                             (cPair
                                (cPairPi1
                                   (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                                (cTriplePi2 (cTriplePi3 trace)))) &&
-                       beq_nat
+                       Nat.eqb
                          (cTriple (cTriplePi1 (cTriplePi1 trace))
                             (cTriplePi2 (cTriplePi1 trace))
                             (cPairPi2
@@ -1036,32 +1036,32 @@ set
                          (cTriplePi1 (cTriplePi3 trace))) *
                     codeNth (trace - S (cTriplePi3 trace)) recs))))
           (charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                 (cTriplePi1 (cTriplePi3 trace))) *
            codeNth (trace - S (cTriplePi3 trace)) recs))
        (charFunction 0
-          (beq_nat (cTriplePi2 trace)
+          (Nat.eqb (cTriplePi2 trace)
              (cPair 1
                 (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                    (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-           (beq_nat
+           (Nat.eqb
               (cTriple (cTriplePi1 (cTriplePi1 trace))
                  (cTriplePi2 (cTriplePi1 trace))
                  (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
               (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-            beq_nat
+            Nat.eqb
               (cTriple (cTriplePi1 (cTriplePi1 trace))
                  (cTriplePi2 (cTriplePi1 trace))
                  (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
               (cTriplePi1 (cPairPi2 (cTriplePi3 trace))))) *
         (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
          codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs)))
-    (charFunction 2 beq_nat (cTriplePi2 trace)
+    (charFunction 2 Nat.eqb (cTriplePi2 trace)
        (cPair 0
           (cPair
              (codeSubTerm
@@ -1281,14 +1281,14 @@ unfold A at 1 in H0;
   | rewrite cPairProjections2 in H0 ].
 induction (eq_nat_dec v v0).
 rewrite a0 in H0.
-assert (charFunction 2 beq_nat v0 v0 = 1).
+assert (charFunction 2 Nat.eqb v0 v0 = 1).
 simpl in |- *.
 rewrite <- beq_nat_refl.
 reflexivity.
 rewrite H1 in H0.
 induction (eq_nat_dec (codeFormula (forallH L v a)) n).
 assumption.
-assert (charFunction 2 beq_nat (cPair 3 (cPair v0 (codeFormula a))) n = 0).
+assert (charFunction 2 Nat.eqb (cPair 3 (cPair v0 (codeFormula a))) n = 0).
 unfold charFunction in |- *.
 rewrite beq_nat_not_refl.
 reflexivity.
@@ -1297,7 +1297,7 @@ apply b.
 rewrite H2 in H0.
 simpl in H0.
 elim H0; reflexivity.
-assert (charFunction 2 beq_nat v0 v = 0).
+assert (charFunction 2 Nat.eqb v0 v = 0).
 simpl in |- *.
 rewrite beq_nat_not_refl.
 reflexivity.
@@ -1613,22 +1613,22 @@ apply
  H0
   with
     (f1 := fun trace recs : nat =>
-           charFunction 2 beq_nat (cTriplePi2 trace)
+           charFunction 2 Nat.eqb (cTriplePi2 trace)
              (cPair (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))
                 (codeSubTerms (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))
                    (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace)))))
     (f2 := fun trace recs : nat =>
            switchPR
-             (charFunction 2 beq_nat (cTriplePi1 (cTriplePi1 trace))
+             (charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
                 (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
-             (charFunction 2 beq_nat (cTriplePi3 (cTriplePi1 trace))
+             (charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
                 (cTriplePi2 trace))
              (switchPR
                 (codeIn (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                    (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
                 (charFunction 0
-                   (beq_nat (cTriplePi2 trace)
+                   (Nat.eqb (cTriplePi2 trace)
                       (cPair 3
                          (cPair
                             (codeNewVar
@@ -1643,12 +1643,12 @@ apply
                                                  (cTriplePi3
                                                   (cTriplePi1 trace)))))))))
                             (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-                    (beq_nat
+                    (Nat.eqb
                        (cTriple (cTriplePi1 (cTriplePi1 trace))
                           (cTriplePi2 (cTriplePi1 trace))
                           (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                        (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-                     beq_nat
+                     Nat.eqb
                        (cTriple
                           (cPairPi1
                              (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -1670,13 +1670,13 @@ apply
                  (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
                   codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
                 (charFunction 0
-                   (beq_nat (cTriplePi2 trace)
+                   (Nat.eqb (cTriplePi2 trace)
                       (cPair 3
                          (cPair
                             (cPairPi1
                                (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                             (cTriplePi2 (cTriplePi3 trace)))) &&
-                    beq_nat
+                    Nat.eqb
                       (cTriple (cTriplePi1 (cTriplePi1 trace))
                          (cTriplePi2 (cTriplePi1 trace))
                          (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -1684,9 +1684,9 @@ apply
                  codeNth (trace - S (cTriplePi3 trace)) recs)))
     (f3 := fun trace recs : nat =>
            charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -1694,16 +1694,16 @@ apply
            codeNth (trace - S (cTriplePi3 trace)) recs)
     (f4 := fun trace recs : nat =>
            charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 1
                    (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                       (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-              (beq_nat
+              (Nat.eqb
                  (cTriple (cTriplePi1 (cTriplePi1 trace))
                     (cTriplePi2 (cTriplePi1 trace))
                     (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
                  (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-               beq_nat
+               Nat.eqb
                  (cTriple (cTriplePi1 (cTriplePi1 trace))
                     (cTriplePi2 (cTriplePi1 trace))
                     (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -1711,7 +1711,7 @@ apply
            (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
             codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
     (f5 := fun trace recs : nat =>
-           charFunction 2 beq_nat (cTriplePi2 trace)
+           charFunction 2 Nat.eqb (cTriplePi2 trace)
              (cPair 0
                 (cPair
                    (codeSubTerm
@@ -1727,7 +1727,7 @@ apply
  filter10IsPR
   with
     (g := fun trace : nat =>
-          charFunction 2 beq_nat (cTriplePi2 trace)
+          charFunction 2 Nat.eqb (cTriplePi2 trace)
             (cPair (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))
                (codeSubTerms (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))
                   (cTriplePi1 (cTriplePi1 trace))
@@ -1735,7 +1735,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi2 trace)
     (f' := fun trace : nat =>
            cPair (cPairPi1 (cTriplePi3 (cTriplePi1 trace)))
@@ -1770,17 +1770,17 @@ apply
  compose2_3IsPR
   with
     (f1 := fun trace recs : nat =>
-           charFunction 2 beq_nat (cTriplePi1 (cTriplePi1 trace))
+           charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
              (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
     (f2 := fun trace recs : nat =>
-           charFunction 2 beq_nat (cTriplePi3 (cTriplePi1 trace))
+           charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
              (cTriplePi2 trace))
     (f3 := fun trace recs : nat =>
            switchPR
              (codeIn (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                 (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
              (charFunction 0
-                (beq_nat (cTriplePi2 trace)
+                (Nat.eqb (cTriplePi2 trace)
                    (cPair 3
                       (cPair
                          (codeNewVar
@@ -1794,12 +1794,12 @@ apply
                                            (cPairPi2
                                               (cTriplePi3 (cTriplePi1 trace)))))))))
                          (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-                 (beq_nat
+                 (Nat.eqb
                     (cTriple (cTriplePi1 (cTriplePi1 trace))
                        (cTriplePi2 (cTriplePi1 trace))
                        (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                     (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-                  beq_nat
+                  Nat.eqb
                     (cTriple
                        (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                        (cPair 0
@@ -1818,12 +1818,12 @@ apply
               (codeNth (trace - S (cPairPi1 (cTriplePi3 trace))) recs *
                codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
              (charFunction 0
-                (beq_nat (cTriplePi2 trace)
+                (Nat.eqb (cTriplePi2 trace)
                    (cPair 3
                       (cPair
                          (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                          (cTriplePi2 (cTriplePi3 trace)))) &&
-                 beq_nat
+                 Nat.eqb
                    (cTriple (cTriplePi1 (cTriplePi1 trace))
                       (cTriplePi2 (cTriplePi1 trace))
                       (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -1833,12 +1833,12 @@ apply
  filter10IsPR
   with
     (g := fun trace : nat =>
-          charFunction 2 beq_nat (cTriplePi1 (cTriplePi1 trace))
+          charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
             (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))).
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi1 (cTriplePi1 trace))
     (f' := fun trace : nat =>
            cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))).
@@ -1856,12 +1856,12 @@ apply
  filter10IsPR
   with
     (g := fun trace : nat =>
-          charFunction 2 beq_nat (cTriplePi3 (cTriplePi1 trace))
+          charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
             (cTriplePi2 trace)).
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi3 (cTriplePi1 trace))
     (f' := cTriplePi2).
 assumption.
@@ -1875,7 +1875,7 @@ apply
              (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
     (f2 := fun trace recs : nat =>
            charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 3
                    (cPair
                       (codeNewVar
@@ -1889,12 +1889,12 @@ apply
                                         (cPairPi2
                                            (cTriplePi3 (cTriplePi1 trace)))))))))
                       (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-              (beq_nat
+              (Nat.eqb
                  (cTriple (cTriplePi1 (cTriplePi1 trace))
                     (cTriplePi2 (cTriplePi1 trace))
                     (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                  (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-               beq_nat
+               Nat.eqb
                  (cTriple
                     (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                     (cPair 0
@@ -1914,12 +1914,12 @@ apply
             codeNth (trace - S (cPairPi2 (cTriplePi3 trace))) recs))
     (f3 := fun trace recs : nat =>
            charFunction 0
-             (beq_nat (cTriplePi2 trace)
+             (Nat.eqb (cTriplePi2 trace)
                 (cPair 3
                    (cPair
                       (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                       (cTriplePi2 (cTriplePi3 trace)))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2019,7 +2019,7 @@ apply
   with
     (f := fun trace recs : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 3
                   (cPair
                      (codeNewVar
@@ -2033,12 +2033,12 @@ apply
                                        (cPairPi2
                                           (cTriplePi3 (cTriplePi1 trace)))))))))
                      (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-             (beq_nat
+             (Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                 (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                    (cPair 0
@@ -2062,7 +2062,7 @@ apply
   with
     (g := fun trace : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 3
                   (cPair
                      (codeNewVar
@@ -2076,12 +2076,12 @@ apply
                                        (cPairPi2
                                           (cTriplePi3 (cTriplePi1 trace)))))))))
                      (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-             (beq_nat
+             (Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
                 (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                    (cPair 0
@@ -2101,7 +2101,7 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat (cTriplePi2 trace)
+          Nat.eqb (cTriplePi2 trace)
             (cPair 3
                (cPair
                   (codeNewVar
@@ -2115,12 +2115,12 @@ apply
                                     (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))))))
                   (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
              (cTriplePi1 (cPairPi2 (cTriplePi3 trace))) &&
-           beq_nat
+           Nat.eqb
              (cTriple (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                 (cPair 0
                    (codeNewVar
@@ -2139,7 +2139,7 @@ unfold isPRrel in |- *.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi2 trace)
     (f' := fun trace : nat =>
            cPair 3
@@ -2195,13 +2195,13 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat
+          Nat.eqb
             (cTriple (cTriplePi1 (cTriplePi1 trace))
                (cTriplePi2 (cTriplePi1 trace))
                (cTriplePi2 (cPairPi1 (cTriplePi3 trace))))
             (cTriplePi1 (cPairPi2 (cTriplePi3 trace))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                 (cPair 0
                    (codeNewVar
@@ -2219,7 +2219,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cTriplePi1 (cTriplePi1 trace))
             (cTriplePi2 (cTriplePi1 trace))
@@ -2250,7 +2250,7 @@ apply eqIsPR.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
             (cPair 0
@@ -2379,12 +2379,12 @@ apply
   with
     (f := fun trace recs : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 3
                   (cPair
                      (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                      (cTriplePi2 (cTriplePi3 trace)))) &&
-             beq_nat
+             Nat.eqb
                (cTriple (cTriplePi1 (cTriplePi1 trace))
                   (cTriplePi2 (cTriplePi1 trace))
                   (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2395,12 +2395,12 @@ apply
   with
     (g := fun trace : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 3
                   (cPair
                      (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                      (cTriplePi2 (cTriplePi3 trace)))) &&
-             beq_nat
+             Nat.eqb
                (cTriple (cTriplePi1 (cTriplePi1 trace))
                   (cTriplePi2 (cTriplePi1 trace))
                   (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2409,12 +2409,12 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat (cTriplePi2 trace)
+          Nat.eqb (cTriplePi2 trace)
             (cPair 3
                (cPair (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
                   (cTriplePi2 (cTriplePi3 trace)))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2422,7 +2422,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := cTriplePi2)
     (f' := fun trace : nat =>
            cPair 3
@@ -2460,7 +2460,7 @@ apply eqIsPR.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cTriplePi1 (cTriplePi1 trace))
             (cTriplePi2 (cTriplePi1 trace))
@@ -2515,9 +2515,9 @@ apply
   with
     (f := fun trace recs : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-             beq_nat
+             Nat.eqb
                (cTriple (cTriplePi1 (cTriplePi1 trace))
                   (cTriplePi2 (cTriplePi1 trace))
                   (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -2528,9 +2528,9 @@ apply
   with
     (g := fun trace : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-             beq_nat
+             Nat.eqb
                (cTriple (cTriplePi1 (cTriplePi1 trace))
                   (cTriplePi2 (cTriplePi1 trace))
                   (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -2539,10 +2539,10 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat (cTriplePi2 trace)
+          Nat.eqb (cTriplePi2 trace)
             (cPair 2 (cTriplePi2 (cTriplePi3 trace))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cPairPi2 (cTriplePi3 (cTriplePi1 trace))))
@@ -2550,7 +2550,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi2 trace)
     (f' := fun trace : nat => cPair 2 (cTriplePi2 (cTriplePi3 trace))).
 apply cTriplePi2IsPR.
@@ -2568,7 +2568,7 @@ apply eqIsPR.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cTriplePi1 (cTriplePi1 trace))
             (cTriplePi2 (cTriplePi1 trace))
@@ -2616,16 +2616,16 @@ apply
   with
     (f := fun trace recs : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 1
                   (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                      (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-             (beq_nat
+             (Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
                 (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2638,16 +2638,16 @@ apply
   with
     (g := fun trace : nat =>
           charFunction 0
-            (beq_nat (cTriplePi2 trace)
+            (Nat.eqb (cTriplePi2 trace)
                (cPair 1
                   (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                      (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))) &&
-             (beq_nat
+             (Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
                 (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-              beq_nat
+              Nat.eqb
                 (cTriple (cTriplePi1 (cTriplePi1 trace))
                    (cTriplePi2 (cTriplePi1 trace))
                    (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2656,17 +2656,17 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat (cTriplePi2 trace)
+          Nat.eqb (cTriplePi2 trace)
             (cPair 1
                (cPair (cTriplePi2 (cPairPi1 (cTriplePi3 trace)))
                   (cTriplePi2 (cPairPi2 (cTriplePi3 trace))))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
              (cTriplePi1 (cPairPi1 (cTriplePi3 trace))) &&
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2674,7 +2674,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat => cTriplePi2 trace)
     (f' := fun trace : nat =>
            cPair 1
@@ -2713,13 +2713,13 @@ apply
  (andRelPR 1)
   with
     (R := fun trace : nat =>
-          beq_nat
+          Nat.eqb
             (cTriple (cTriplePi1 (cTriplePi1 trace))
                (cTriplePi2 (cTriplePi1 trace))
                (cPairPi1 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
             (cTriplePi1 (cPairPi1 (cTriplePi3 trace))))
     (R' := fun trace : nat =>
-           beq_nat
+           Nat.eqb
              (cTriple (cTriplePi1 (cTriplePi1 trace))
                 (cTriplePi2 (cTriplePi1 trace))
                 (cPairPi2 (cPairPi2 (cTriplePi3 (cTriplePi1 trace)))))
@@ -2727,7 +2727,7 @@ apply
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cTriplePi1 (cTriplePi1 trace))
             (cTriplePi2 (cTriplePi1 trace))
@@ -2761,7 +2761,7 @@ apply eqIsPR.
 apply
  compose1_2IsPR
   with
-    (g := charFunction 2 beq_nat)
+    (g := charFunction 2 Nat.eqb)
     (f := fun trace : nat =>
           cTriple (cTriplePi1 (cTriplePi1 trace))
             (cTriplePi2 (cTriplePi1 trace))
@@ -2851,7 +2851,7 @@ apply
  filter10IsPR
   with
     (g := fun trace : nat =>
-          charFunction 2 beq_nat (cTriplePi2 trace)
+          charFunction 2 Nat.eqb (cTriplePi2 trace)
             (cPair 0
                (cPair
                   (codeSubTerm
@@ -3232,7 +3232,7 @@ assumption.
 assumption.
 intros.
 apply H with (S a).
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 assumption.
 Qed.
 

@@ -71,7 +71,7 @@ apply natNE.
 unfold not in |- *; intros.
 apply (le_not_lt _ _ H).
 rewrite H0.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 Qed.
 
 Lemma natLT :
@@ -85,7 +85,7 @@ apply contradiction with (LT (natToTerm b) (natToTerm a)).
 apply Axm; right; constructor.
 apply sysWeaken.
 apply natLE.
-apply lt_le_weak.
+apply Nat.lt_le_incl.
 auto.
 apply impI.
 apply orSys.
@@ -96,7 +96,7 @@ apply natNE.
 unfold not in |- *; intros.
 apply (le_not_lt _ _ H).
 rewrite H0.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 apply Axm; right; constructor.
 Qed.
 
@@ -174,7 +174,7 @@ apply eqSym.
 apply Axm; right; constructor.
 apply sysWeaken.
 apply H0.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r .
 Qed.
 
 Lemma nnPlusNotNeeded :
@@ -245,7 +245,7 @@ replace
  (substituteFormula LNN (LT (var 1) (Succ (Succ (natToTerm n)))) 1
     (Succ (natToTerm n))) with (LT (natToTerm (S n)) (natToTerm (S (S n)))).
 apply natLT.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 unfold LT in |- *.
 rewrite (subFormulaRelation LNN).
 simpl in |- *.
