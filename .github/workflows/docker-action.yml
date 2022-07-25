@@ -15,12 +15,11 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'coqorg/coq:dev-ocaml-4.13.1-flambda'
+          - 'mathcomp/mathcomp-dev:coq-dev'
+          - 'mathcomp/mathcomp:1.15.0-coq-8.16'
           - 'mathcomp/mathcomp:1.14.0-coq-8.15'
           - 'mathcomp/mathcomp:1.13.0-coq-8.14'
           - 'mathcomp/mathcomp:1.13.0-coq-8.13'
-          - 'mathcomp/mathcomp:1.12.0-coq-8.14'
-          - 'mathcomp/mathcomp:1.12.0-coq-8.13'
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
