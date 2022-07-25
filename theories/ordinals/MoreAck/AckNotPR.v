@@ -92,7 +92,7 @@ Section evalList.
            --   transitivity (max_v (tl v));  auto. 
                 apply max_v_tl. 
            --  symmetry; apply decomp. 
-        *  destruct( n0 e).
+        *  now destruct n0. 
   Qed. 
 
 

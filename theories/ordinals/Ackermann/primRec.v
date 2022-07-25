@@ -74,6 +74,12 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
    The parameters are number in opposite order.
    So proj(2,0)(a,b) = b. *)
 
+
+
+Lemma compat815_le_lt_or_eq :
+    forall n m : nat, n <= m -> n < m \/ n = m.
+Proof. intros n m; now rewrite Nat.lt_eq_cases. Qed.
+
 Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
   match n return (forall m : nat, m < n -> naryFunc n) with
   | O => fun (m : nat) (l : m < 0) => False_rec _ (Nat.nlt_0_r _ l)
@@ -84,7 +90,7 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
       | right l1 =>
           fun _ =>
           evalProjFunc n' m
-            match le_lt_or_eq _ _ (lt_n_Sm_le _ _ l) with
+            match compat815_le_lt_or_eq _ _ (lt_n_Sm_le m  n' l) with
             | or_introl l2 => l2
             | or_intror l2 => False_ind _ (l1 l2)
             end
@@ -105,11 +111,11 @@ induction n as [| n Hrecn].
   + reflexivity.
   + rewrite
       (Hrecn _
-             match le_lt_or_eq m n (lt_n_Sm_le m n p1) with
+             match compat815_le_lt_or_eq m n (lt_n_Sm_le m n p1) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end
-             match le_lt_or_eq m n (lt_n_Sm_le m n p2) with
+             match compat815_le_lt_or_eq m n (lt_n_Sm_le m n p2) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end);
@@ -1314,7 +1320,7 @@ Section Ignore_Params.
         rewrite
           (evalProjFuncInd _ _ (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
                            match
-                             le_lt_or_eq n n0
+                             compat815_le_lt_or_eq n n0
                                          (lt_n_Sm_le n n0 (lt_S_n n (S n0)
                                                                   (le_lt_n_Sm
                                                                      (S n)
