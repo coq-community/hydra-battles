@@ -3,7 +3,8 @@ Require Import Coq.Lists.List.
 Require Import extEqualNat.
 Require Import primRec.
 Require Vector.
-Require Import Div2.
+Require Import Compat815.
+Import Nat.
 
 (**  * Bijection from [nat * nat] to [nat] *)
 
@@ -27,7 +28,7 @@ Proof.
   - destruct (le_lt_or_eq _ _ H).
     + transitivity (sumToN b).
       * apply Hrecb; auto.
-        apply lt_n_Sm_le; auto.
+        apply Compat815.lt_n_Sm_le; auto.
       * cbn in |- *; apply le_S, le_plus_r.
     + subst a; auto.
 Qed.
@@ -77,7 +78,7 @@ Section CPair_Injectivity.
       -  intros.
          simpl in |- *.
          assert (H1: a <= n).
-         { apply lt_n_Sm_le; assumption.
+         { apply Compat815.lt_n_Sm_le; assumption.
          }
          induction (le_lt_or_eq a n H1).
         +   apply lt_trans with (sumToN n).
@@ -186,7 +187,7 @@ apply lt_le_trans with (sumToN (S c)).
 apply ltBoolTrue.
 auto.
 assert (S c <= a).
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 auto.
 apply sumToN2.
@@ -223,7 +224,7 @@ simpl in H.
 apply (fun p n m : nat => plus_le_reg_l n m p) with (sumToN a).
 rewrite <- le_plus_minus.
 rewrite Nat.add_comm.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 auto.
 auto.
 apply Hreca.
@@ -715,7 +716,7 @@ rewrite Hrecn.
 reflexivity.
 apply lt_S_n.
 auto.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 auto.
 inversion H1.
 rewrite <- minus_n_n.
@@ -928,8 +929,8 @@ set
  (f :=
   fun n recs : nat =>
   switchPR n (switchPR (pred n) (S (codeNth (n - S (pred (pred n))) recs)) 0)
-    0) in *.
-elim c using ind_0_1_SS.
+    0) in *. 
+elim c using Compat815.ind_0_1_SS.
 unfold evalStrongRec in |- *.
 simpl in |- *.
 auto.

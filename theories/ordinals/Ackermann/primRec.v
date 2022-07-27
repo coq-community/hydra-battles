@@ -88,7 +88,8 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
       | right l1 =>
           fun _ =>
           evalProjFunc n' m
-            match Compat815.le_lt_or_eq _ _ (lt_n_Sm_le m  n' l) with
+            match Compat815.le_lt_or_eq _ _
+                    (Compat815.lt_n_Sm_le _ _ l) with
             | or_introl l2 => l2
             | or_intror l2 => False_ind _ (l1 l2)
             end
@@ -109,11 +110,11 @@ induction n as [| n Hrecn].
   + reflexivity.
   + rewrite
       (Hrecn _
-             match Compat815.le_lt_or_eq m n (lt_n_Sm_le m n p1) with
+             match Compat815.le_lt_or_eq m n (Compat815.lt_n_Sm_le m n p1) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end
-             match Compat815.le_lt_or_eq m n (lt_n_Sm_le m n p2) with
+             match Compat815.le_lt_or_eq m n (Compat815.lt_n_Sm_le m n p2) with
              | or_introl l2 => l2
              | or_intror l2 => False_ind (m < n) (ne l2)
              end);
@@ -1319,7 +1320,7 @@ Section Ignore_Params.
           (evalProjFuncInd _ _ (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
                            match
                              Compat815.le_lt_or_eq n n0
-                                         (lt_n_Sm_le n n0 (lt_S_n n (S n0)
+                                         (Compat815.lt_n_Sm_le n n0 (lt_S_n n (S n0)
                                                                   (le_lt_n_Sm
                                                                      (S n)
                                                                      (S n0)
@@ -1398,7 +1399,7 @@ Section Ignore_Params.
           * reflexivity.
         + elim (le_Sn_O _ pr).
       - induction (le_lt_or_eq _ _ pr).
-        + assert (H0: m <= n) by (apply lt_n_Sm_le; auto).
+        + assert (H0: m <= n) by (apply Compat815.lt_n_Sm_le; auto).
           generalize p; rewrite <- minus_Sn_m; clear p.
           * intros.
             cbn in |- *.
@@ -1732,7 +1733,7 @@ Proof.
         induction (b0 b).
         -- auto.
         -- assert (H0:x <= b).
-           { apply lt_n_Sm_le; auto. }
+           { apply Compat815.lt_n_Sm_le; auto. }
            induction (le_lt_or_eq _ _ H0).
            ++ auto.
            ++ elim b1.

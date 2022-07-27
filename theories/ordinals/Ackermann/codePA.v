@@ -10,6 +10,7 @@ Require Import codeFreeVar.
 Require Import extEqualNat.
 Require Vector.
 Require Import prLogic.
+Require Import Compat815.
 
 Section close.
 
@@ -561,7 +562,7 @@ reflexivity.
 intros.
 induction (le_lt_or_eq _ _ H1).
 apply IHn1.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 rewrite H2.
 unfold codeCloseList in |- *.

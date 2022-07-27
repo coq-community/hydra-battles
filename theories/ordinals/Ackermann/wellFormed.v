@@ -6,7 +6,7 @@ Require Import code.
 Require Import folProp.
 Require Import extEqualNat.
 Require Import codeList.
-
+Require Import Compat815.
 Section Well_Formed_Term.
 
 Variable L : Language.
@@ -270,7 +270,7 @@ intros.
 elim (lt_not_le _ _ H).
 apply le_O_n.
 intros.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H)).
+induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
 apply Hrecm; auto.
 unfold wellFormedTerm in |- *.
 unfold wellFormedTerms in |- *.
@@ -718,7 +718,7 @@ intros n H.
 elim (lt_not_le _ _ H).
 apply le_O_n.
 intros n H.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H)).
+induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
 apply Hrecm; auto.
 unfold wellFormedFormula in |- *.
 set

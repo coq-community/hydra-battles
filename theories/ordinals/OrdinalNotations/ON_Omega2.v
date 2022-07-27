@@ -559,6 +559,34 @@ Proof.
   now  apply Comparable.compare_eq_iff.
 Qed.
 
+(* begin snippet AckOmega2:: no-out *)
 
+From Equations Require Import Equations.
+Section A_def. 
 
+Let m (x : nat * nat): t := omega * fst x + snd x.
 
+#[ local ] Instance WF : WellFounded (measure_lt m):=
+  wf_measure m.
+
+Equations A (p : nat * nat) : nat by wf p (measure_lt m):=
+    A (0, j) := S j;
+    A (S i, 0) := A(i, 1);
+    A (S i, S j) := A(i, A(S i, j)).
+
+Next Obligation.
+  (* ... *)
+(* end snippet AckOmega2 *)
+unfold m, measure_lt; cbn; destruct i; left; auto with arith.
+Defined.
+Next Obligation.
+  unfold m, measure_lt; cbn; destruct j; right; auto with arith.
+Defined.
+Next Obligation.
+  unfold m, measure_lt; cbn; destruct i; cbn. 
+  - left; auto with arith.
+  - case (A (S (S i), j) (A_obligations_obligation_2 (S i) j A));
+        left; auto with arith.
+Defined.
+
+End A_def.

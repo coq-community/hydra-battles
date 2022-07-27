@@ -8,6 +8,7 @@ Require Vector.
 Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Max.
+Require Import Compat815.
 
 Section Code_Substitute_Formula.
 
@@ -3184,7 +3185,7 @@ eapply proj2.
 apply Hreca.
 apply lt_le_trans with n.
 apply H3.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 assumption.
 assumption.
@@ -3213,7 +3214,7 @@ apply cPairLe3.
 eapply proj1.
 apply Hreca.
 apply le_lt_trans with n.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 apply lt_S_n.
 assumption.
@@ -3221,7 +3222,7 @@ assumption.
 eapply proj2.
 apply Hreca.
 apply le_lt_trans with n.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 apply lt_S_n.
 assumption.
@@ -4201,7 +4202,7 @@ simple induction a.
 intros.
 elim (Nat.nlt_0_r _ H0).
 intros.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H1)).
+induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H1)).
 apply H0.
 assumption.
 assumption.
@@ -4706,7 +4707,7 @@ simpl in |- *.
 induction (le_lt_or_eq _ _ H).
 apply Nat.le_trans with (pow3 b).
 apply Hrecb.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 apply le_plus_l.
 rewrite H0.
@@ -5603,7 +5604,7 @@ apply le_n.
 induction (le_lt_or_eq _ _ H).
 eapply Nat.le_trans.
 apply (Hreca2 a1 b1 b2 c1 c2); try assumption.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 assumption.
 unfold cTriple at 3 in |- *.
 eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
@@ -6369,7 +6370,7 @@ induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
  simpl in |- *.
 apply le_O_n.
 apply le_O_n.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 eapply le_lt_trans; [ idtac | apply cPairLt2 ].
 apply max_case2.
@@ -6379,11 +6380,11 @@ apply cPairLe1.
 eapply Nat.le_trans.
 apply Hrecf0.
 apply cPairLe2.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 eapply le_lt_trans; [ idtac | apply cPairLt2 ].
 assumption.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 eapply le_lt_trans; [ idtac | apply cPairLt2 ].
 eapply Nat.le_trans.

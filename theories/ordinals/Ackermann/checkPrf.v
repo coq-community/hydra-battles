@@ -9,6 +9,7 @@ Require Import extEqualNat.
 Require Import wellFormed.
 Require Import folProof.
 Require Import prLogic.
+Require Import Compat815.
 
 Section Check_Proof.
 
@@ -2400,7 +2401,7 @@ induction m as [| m Hrecm].
 intros.
 elim (Nat.nlt_0_r _ H).
 intros.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H)).
+induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
 apply Hrecm; assumption.
 unfold checkPrf in H0.
 assert (wellFormedFormula (cPairPi1 n) <> 0).

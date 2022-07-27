@@ -4,13 +4,13 @@ Require Import Coq.Lists.List.
 Require Import Arith.
 Require Import Peano_dec.
 Require Import ListExt.
-Require Import Max.
 
 Require Import folProof.
 Require Import folLogic2.
 Require Import folProp.
 Require Import folReplace.
 Require Import subProp.
+Require Import Compat815.
 
 Section SubAllVars.
 
@@ -1350,7 +1350,7 @@ auto.
 induction (le_lt_or_eq _ _ a).
 elim (lt_not_le m0 (S n)).
 auto.
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 auto.
 rewrite H1.
@@ -1565,7 +1565,7 @@ apply (subTermVar1 L).
 simpl in b.
 induction (le_lt_or_eq _ _ a0).
 elim (lt_not_le _ _ H2).
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 auto.
 auto.
 apply (subTermNil L).
@@ -1636,14 +1636,14 @@ induction Hrecn as (x, H).
 exists (max (newVar (freeVarTerm L (m n))) x).
 intros.
 assert (v <= n).
-apply lt_n_Sm_le.
+apply Compat815.lt_n_Sm_le.
 auto.
 induction (le_lt_or_eq _ _ H1).
 apply Nat.le_trans with x.
 apply H; auto.
-apply le_max_r.
+apply Nat.le_max_r.
 rewrite H2.
-apply le_max_l.
+apply Nat.le_max_l.
 induction H0 as (x, H0).
 set (r := max (max n (newVar (freeVarFormula L f))) x) in *.
 set
@@ -1721,8 +1721,8 @@ apply newVar2.
 auto.
 unfold r in |- *.
 eapply Nat.le_trans.
-apply le_max_r.
-apply le_max_l.
+apply Nat.le_max_r.
+apply Nat.le_max_l.
 auto.
 simpl in |- *.
 induction (le_lt_dec r (r + m0)).
@@ -1745,7 +1745,7 @@ apply Nat.le_trans with x.
 apply H0.
 auto.
 unfold r in |- *.
-apply le_max_r.
+apply Nat.le_max_r.
 unfold f' in |- *.
 clear f'.
 apply liftCloseFrom.
@@ -1755,12 +1755,12 @@ apply newVar2.
 auto.
 unfold r in |- *.
 eapply Nat.le_trans.
-apply le_max_r.
-apply le_max_l.
+apply Nat.le_max_r.
+apply Nat.le_max_l.
 unfold r in |- *.
 eapply Nat.le_trans.
-apply le_max_l.
-apply le_max_l.
+apply Nat.le_max_l.
+apply Nat.le_max_l.
 apply H.
 Qed.
 
