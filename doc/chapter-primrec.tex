@@ -233,7 +233,7 @@ of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but gi
 how they may be applied.
 
 \begin{remark}
-In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}. Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page~\pageref{sect:bigfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
+In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}). Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page~\pageref{sect:bigfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
 \texttt{Defined}s.
 
 If it does not cause compatibility problems (with 
@@ -244,9 +244,8 @@ If it does not cause compatibility problems (with
 
 The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of type
 \texttt{PrimRec} allows us to write trivial proofs of primitive recursivity. 
-Although  the following lemmas are already proven in 
-\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec},
-we wrote alternate proofs in 
+Some of   the following lemmas are already proven in 
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. More examples are given in 
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
 {Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
 
@@ -255,7 +254,7 @@ we wrote alternate proofs in
 
 Likewise, we prove that the successor function on \texttt{nat} is primitive recursive too.
 
-\input{movies/snippets/PrimRecExamples/SuccIsPR}
+\input{movies/snippets/primRec/SuccIsPR}
 
 
 

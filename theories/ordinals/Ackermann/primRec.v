@@ -74,11 +74,8 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
    The parameters are number in opposite order.
    So proj(2,0)(a,b) = b. *)
 
-
-
-
-
-Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
+Fixpoint evalProjFunc (n : nat) :
+  forall m : nat, m < n -> naryFunc n :=
   match n return (forall m : nat, m < n -> naryFunc n) with
   | O => fun (m : nat) (l : m < 0) => False_rec _ (Nat.nlt_0_r _ l)
   | S n' =>
@@ -97,8 +94,6 @@ Fixpoint evalProjFunc (n : nat) : forall m : nat, m < n -> naryFunc n :=
   end.
 
 (** Irrelevance of the proof that [m < n] *)
-
-
 
 Lemma evalProjFuncInd :
  forall (n m : nat) (p1 p2 : m < n),
@@ -140,31 +135,35 @@ Fixpoint evalOneParamList (n m a : nat) (l : Vector.t (naryFunc (S n)) m)
  {struct l} : Vector.t (naryFunc n) m :=
   match l in (Vector.t _ m) return (Vector.t (naryFunc n) m) with
   | Vector.nil  => Vector.nil  (naryFunc n)
-  | Vector.cons f m' l' => Vector.cons _ (f a) m' (evalOneParamList n m' a l')
+  | Vector.cons f m' l' =>
+      Vector.cons _ (f a) m' (evalOneParamList n m' a l')
   end.
 
 (** *** Function composition *)
 
 Fixpoint evalComposeFunc (n : nat) :
- forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
+  forall m : nat,
+    Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n :=
   match
     n
     return
-      (forall m : nat, Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n)
+    (forall m : nat,
+        Vector.t (naryFunc n) m -> naryFunc m -> naryFunc n)
   with
   | O => evalList
   | S n' =>
       fun (m : nat) (l : Vector.t (naryFunc (S n')) m) 
-        (f : naryFunc m) (a : nat) =>
-      evalComposeFunc n' m (evalOneParamList _ _ a l) f
+          (f : naryFunc m) (a : nat) =>
+        evalComposeFunc n' m (evalOneParamList _ _ a l) f
   end.
 
-Fixpoint compose2 (n : nat) : naryFunc n -> naryFunc (S n) -> naryFunc n :=
+Fixpoint compose2 (n : nat) :
+  naryFunc n -> naryFunc (S n) -> naryFunc n :=
   match n return (naryFunc n -> naryFunc (S n) -> naryFunc n) with
   | O => fun (a : nat) (g : nat -> nat) => g a
   | S n' =>
       fun (f : naryFunc (S n')) (g : naryFunc (S (S n'))) (a : nat) =>
-      compose2 n' (f a) (fun x : nat => g x a)
+        compose2 n' (f a) (fun x : nat => g x a)
   end.
 
 (** *** Primitive recursion *)
@@ -205,59 +204,54 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
 Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
   forall (m' : nat) (l' : Vector.t (naryFunc n) m'), Prop.
   induction l as [| a n0 l Hrecl].
-  - intros.
-    destruct l' as [| a n0 v].
-    + exact True.
-    + exact False.
-  - intros;destruct l' as [| a0 n1 v].
+  - intros  m' [| a n0 v]; [exact True | exact False].
+  - intros m' [| a0 n1 v]. 
     + exact False.
     + exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
-Definition extEqualVector n: forall m (l l' : Vector.t (naryFunc n) m), Prop.
+Definition extEqualVector n:
+  forall m (l l' : Vector.t (naryFunc n) m), Prop.
+Proof.
   refine (@Vector.rect2 _ _ _ _ _); intros.
-  - apply True.
-  - apply (extEqual n a b /\ X).
+  - exact True.
+  - exact (extEqual n a b /\ X).
 Defined.
 
-Lemma extEqualVectorRefl :
-  forall (n m : nat) (l : Vector.t (naryFunc n) m), extEqualVector n m l l.
+Lemma extEqualVectorRefl (n m: nat):
+  forall (l : Vector.t (naryFunc n) m), extEqualVector n m l l.
 Proof.
   induction l as [| a n0 l Hrecl].
   - now simpl.
-  - split.
-    apply extEqualRefl.
-    auto.
+  - split; [apply extEqualRefl | apply Hrecl].
 Qed.
 
 Lemma extEqualOneParamList :
   forall (n m : nat) (l1 l2 : Vector.t (naryFunc (S n)) m) (c : nat),
     extEqualVector (S n) m l1 l2 ->
-    extEqualVector n m (evalOneParamList n m c l1) (evalOneParamList n m c l2).
+    extEqualVector n m (evalOneParamList n m c l1)
+      (evalOneParamList n m c l2).
 Proof.
-  intro; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
-  - assumption. 
-  - destruct H0.
-    split; auto.
+  intro n; refine (@Vector.rect2 _ _ _ _ _); simpl; [trivial|].   
+  - intros ? ? ? H ? ? ?  [H0 H1]; split; [apply H0 | now apply H].
 Qed.
 
 Lemma extEqualCompose :
-  forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m) (f1 f2 : naryFunc m),
+  forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m)
+         (f1 f2 : naryFunc m),
     extEqualVector n m l1 l2 ->
     extEqual m f1 f2 ->
-    extEqual n (evalComposeFunc n m l1 f1) (evalComposeFunc n m l2 f2).
+    extEqual n (evalComposeFunc n m l1 f1)
+      (evalComposeFunc n m l2 f2).
 Proof.
   induction n; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
   - assumption.
   - destruct H0; now (apply H; [|subst a]). 
-  - rewrite H0.
-    apply extEqualRefl.
+  - rewrite H0; apply extEqualRefl.
   - destruct H0 as (Hi, Hj).
-    + apply IHn.
-      *   split.
-          -- apply Hi.
-          -- now apply extEqualOneParamList.
-      * auto.
+    + apply IHn; [split | auto]. 
+      * apply Hi.
+      * now apply extEqualOneParamList.
 Qed.
 
 Lemma extEqualCompose2 :
@@ -308,28 +302,24 @@ Definition isPR (n : nat) (f : naryFunc n) : Set :=
 Definition isPRrel (n : nat) (R : naryRel n) : Set :=
   isPR n (charFunction n R).
 
+(* begin snippet SuccIsPR:: no-out *)
 Lemma succIsPR : isPR 1 S.
-Proof.
-  exists succFunc; simpl in |- *; auto.
-Qed.
+Proof. exists succFunc; cbn; reflexivity. Qed.
+(* end snippet SuccIsPR *)
 
 Lemma const0_NIsPR : forall n : nat, isPR 0 n.
 Proof.
-  simple induction n.
-  - exists zeroFunc.
-    reflexivity. 
-  - intros; destruct H as (x, p).
-    exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) succFunc).
-    simpl in |- *. now rewrite p.
+  induction n as [|n [x Hx]].
+  - exists zeroFunc; reflexivity. 
+  - exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) succFunc);
+      cbn; now rewrite Hx.
 Qed.
 
-Lemma const1_NIsPR : forall n : nat, isPR 1 (fun _ => n).
+Lemma const1_NIsPR n: isPR 1 (fun _ => n).
 Proof.
-  intros; assert (H: isPR 0 n) by apply const0_NIsPR.
-  destruct H as (x, p).
+  destruct (const0_NIsPR n) as [x Hx]. 
   exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
 Qed.
-
 
 (** ** Usual projections (in curried form) are primitive recursive *)
 

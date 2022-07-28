@@ -254,7 +254,7 @@ Qed.
 .. coq:: no-out
 |*)
 
-Lemma SuccIsPR : isPR 1 S.
+Lemma succIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
