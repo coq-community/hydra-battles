@@ -1590,7 +1590,8 @@ Qed.
 Lemma compose1_NIsPR :
   forall (n : nat) (g : naryFunc (S n)),
     isPR (S n) g ->
-    forall f : naryFunc 1, isPR 1 f -> isPR (S n) (fun x : nat => g (f x)).
+    forall f : naryFunc 1, isPR 1 f ->
+                           isPR (S n) (fun x : nat => g (f x)).
 Proof.
   intros n g [x p] f [x0 p0].
   exists
@@ -1708,6 +1709,7 @@ Proof.
     induction (eq_nat_dec (boundedSearchHelp b0 b) b).
     + rewrite a in Hrecb.
       induction (eq_nat_dec x b).
+
       * rewrite a0.
         induction (b0 b).
         -- elim (lt_irrefl b).

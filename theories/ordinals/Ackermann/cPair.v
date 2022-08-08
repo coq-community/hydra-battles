@@ -955,8 +955,10 @@ apply evalStrongRecHelp1.
 auto.
 Qed.
 
-(* Compatibility with Stdlib's Cantor pairing function *)
+(** Fails with 8.13 *)
 
+(* Compatibility with Stdlib's Cantor pairing function *)
+(*
 From Coq Require  Cantor.
 
 Lemma cPair_compat (a b : nat) : cPair a b = Cantor.to_nat (b,a). 
@@ -969,4 +971,5 @@ Proof.
     now rewrite cPair_compat,  Cantor.cancel_of_to.
 Qed.
 
+ *)
 

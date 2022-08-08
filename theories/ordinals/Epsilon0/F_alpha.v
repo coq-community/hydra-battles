@@ -30,15 +30,15 @@ The following definition is not accepted by the [equations] plug-in.
 #[global] Instance Olt : WellFounded E0lt := E0lt_wf.
 
 (* begin snippet FailDemo *)
-
+(*  Works with Dev
 Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
   F_ alpha  i with E0_eq_dec alpha E0zero :=
     { | left _zero =>  i ;
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  F_ (Canon alpha i)  i ;
-            | right _notlimit =>  iterate (F_ (E0pred alpha)) (S i) i}}.
-
+          | right _notlimit =>  iterate (F_ (E0pred alpha)) (S i) i}}.
+*)
 (* end snippet FailDemo *)
 
 (**
