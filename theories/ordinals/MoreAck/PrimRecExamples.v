@@ -412,12 +412,11 @@ Proof. (* .no-out *)
   unfold double; apply compose1_2IsPR. 
   (* end snippet doubleIsPRa *)
   
-(* begin snippet doubleIsPRb *)  
-  - (* .no-out *) apply const1_NIsPR.
-  - (* .no-out *) apply idIsPR.
-  - (* .no-out *) apply multIsPR.
+(* begin snippet doubleIsPRb:: no-out *)  
+  - apply const1_NIsPR.
+  - apply idIsPR.
+  - apply multIsPR.
 Qed.
-
 (* end snippet doubleIsPRb *)
 
 

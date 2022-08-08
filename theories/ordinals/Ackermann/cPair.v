@@ -6,6 +6,7 @@ Require Vector.
 Require Import Compat815.
 Import Nat.
 
+
 (**  * Bijection from [nat * nat] to [nat] *)
 
 (** ** Preliminary definitions *)
@@ -44,6 +45,7 @@ Proof.
   - apply pi2_2IsPR.
   - apply plusIsPR.
 Qed.
+
 
 (** ** Properties of [cPair] *)
 
@@ -952,3 +954,19 @@ unfold A in |- *.
 apply evalStrongRecHelp1.
 auto.
 Qed.
+
+(* Compatibility with Stdlib's Cantor pairing function *)
+
+From Coq Require  Cantor.
+
+Lemma cPair_compat (a b : nat) : cPair a b = Cantor.to_nat (b,a). 
+Proof. unfold cPair, Cantor.to_nat; f_equal. Qed.
+
+Lemma proj_compat (n: nat) : (cPairPi2 n, cPairPi1 n) =
+                               Cantor.of_nat n. 
+Proof. 
+  rewrite <- (cPairProjections n)at 3;
+    now rewrite cPair_compat,  Cantor.cancel_of_to.
+Qed.
+
+
