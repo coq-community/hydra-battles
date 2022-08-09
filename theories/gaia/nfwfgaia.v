@@ -2259,7 +2259,7 @@ Qed.
 
 Lemma nf_revCE u v: T1bad <> T1omega * u  + \F v.
 Proof.
-case: (altP (u=Pzero)); first by move => ->; case v.
+case: (altP (u =P zero)); first by move => ->; case v.
 move/mul_omega_limit;set w:=  (T1omega * u).
 case: v; first by rewrite T1addn0 => sa sb; move: sa; rewrite - sb.
 by move => v; case w => // a n b; case a.
