@@ -2067,8 +2067,8 @@ reflexivity.
 simpl in |- *.
 rewrite HrecAxm1.
 reflexivity.
-eapply lt_le_trans; [ idtac | apply cPairLe2 ].
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 unfold C in |- *.
 apply cPairLe2.
 eapply lt_le_trans; [ idtac | apply cPairLe2 ].
@@ -2096,8 +2096,8 @@ reflexivity.
 simpl in |- *.
 rewrite <- beq_nat_refl.
 reflexivity.
-eapply lt_le_trans; [ idtac | apply cPairLe2 ].
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 unfold A at 1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2565,11 +2565,11 @@ apply lt_le_trans with (cPair 1 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].
 apply cPairLt2.
 assert (cPairPi1 (cPairPi2 (cPairPi2 n)) < n).
-apply le_lt_trans with (cPairPi2 (cPairPi2 n)).
+apply Nat.le_lt_trans with (cPairPi2 (cPairPi2 n)).
 apply cPairLe1A.
 assumption.
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < n).
-apply le_lt_trans with (cPairPi2 (cPairPi2 n)).
+apply Nat.le_lt_trans with (cPairPi2 (cPairPi2 n)).
 apply cPairLe2A.
 assumption.
 rewrite evalStrongRecHelp1 in H0.
@@ -2707,7 +2707,7 @@ unfold checkPrfGEN in H0.
 repeat first
  [ rewrite cPairProjections1 in H0 | rewrite cPairProjections2 in H0 ].
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < n).
-eapply le_lt_trans.
+eapply Nat.le_lt_trans.
 apply cPairLe2A.
 apply lt_le_trans with (cPair 2 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].

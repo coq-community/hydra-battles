@@ -676,9 +676,9 @@ simpl in |- *.
 rewrite Hrecf1.
 rewrite Hrecf0.
 reflexivity.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe1.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 rewrite evalStrongRecHelp1 with (m := codeFormula L codeF codeR f).
 simpl in |- *.
@@ -687,7 +687,7 @@ apply cPairLt2.
 rewrite evalStrongRecHelp1 with (m := codeFormula L codeF codeR f).
 simpl in |- *.
 assumption.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 Qed.
 
@@ -771,14 +771,14 @@ rewrite H1.
 rewrite H0.
 apply le_n.
 assert (cPairPi1 (cPairPi2 n) < m).
-apply
- le_lt_trans with (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
+apply Nat.le_lt_trans with
+  (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
 apply cPairLe1.
 rewrite cPairProjections.
 assumption.
 assert (cPairPi2 (cPairPi2 n) < m).
-apply
- le_lt_trans with (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
+apply Nat.le_lt_trans with
+  (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
 apply cPairLe2.
 rewrite cPairProjections.
 assumption.
@@ -834,8 +834,8 @@ rewrite H1.
 rewrite H0.
 apply le_n.
 assert (cPairPi2 (cPairPi2 n) < m).
-apply
- le_lt_trans with (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
+apply Nat.le_lt_trans with
+  (cPair (cPairPi1 (cPairPi2 n)) (cPairPi2 (cPairPi2 n))).
 apply cPairLe2.
 rewrite cPairProjections.
 assumption.

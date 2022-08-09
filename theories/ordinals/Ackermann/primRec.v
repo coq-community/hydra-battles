@@ -878,13 +878,13 @@ Proof.
   exists x; cbn in *.
   intros c c0; rewrite p.
   induction c0 as [| c0 Hrecc0].
-  - cbn  in |- *; apply minus_n_O.
+  - cbn  in |- *; now rewrite Nat.sub_0_r.
   - cbn in |- *; rewrite Hrecc0.
     generalize c c0.
     intro c1; induction c1 as [| c1 Hrecc1].
     + auto.
     + intros; cbn in *; induction c2 as [| c2 Hrecc2].
-      * cbn in |- *; apply minus_n_O.
+      * cbn in |- *; now rewrite <- minus_n_O.
       * apply Hrecc1.
 Qed.
 
@@ -935,32 +935,18 @@ Proof.
   exists x; cbn in *; intros.
   rewrite p; unfold ltBool in |- *.
   destruct (le_lt_dec c0 c) as [a | b].
-  - cut (c0 <= c).
-    + generalize c.
-      clear c a.
+  - revert c a. 
       induction c0 as [| c0 Hrecc0].
-      * intros; reflexivity.
+      + intros; reflexivity.
+      + intros; induction c as [| c Hrecc].
+       * elim (Nat.nle_succ_0 _ a).
+       * cbn  in |- *; apply Hrecc0; apply le_S_n; auto.
+  - revert c b; induction c0 as [| c0 Hrecc0].
+      * intros; elim (Nat.nlt_0_r _ b).
       * intros; induction c as [| c Hrecc].
-        -- elim (le_Sn_O _ H).
-        -- cbn  in |- *.
-           apply Hrecc0.
-           apply le_S_n.
-           auto.
-    + auto.
-  - cut (c < c0).
-    + generalize c.
-      clear c b.
-      induction c0 as [| c0 Hrecc0].
-      * intros.
-        elim (Nat.nlt_0_r _ H).
-      * intros.
-        induction c as [| c Hrecc].
+        -- simpl in |- *; reflexivity.
         -- simpl in |- *.
-           reflexivity.
-        -- simpl in |- *.
-           apply Hrecc0.
-           apply lt_S_n; auto.
-    + auto.
+           apply Hrecc0; now rewrite Nat.succ_lt_mono.
 Qed.
 
 
@@ -976,15 +962,14 @@ Proof.
   }
   destruct H as [x p]; exists x; eapply extEqualTrans.
   - apply p.
-  - clear x p; cbn in |- *;  intros c c0; destruct (le_or_lt c c0).
-    + rewrite Nat.max_r.
-      * symmetry  in |- *;now  apply le_plus_minus.
-      * assumption.
-    + rewrite not_le_minus_0.
+  - clear x p; cbn in |- *;  intros c c0;
+      destruct (Nat.le_gt_cases c c0).
+    + rewrite Nat.max_r; [| trivial].
+      * symmetry  in |- *; now rewrite Nat.add_comm, Nat.sub_add. 
+    +   replace (c0 - c) with 0 by lia. 
       * rewrite Nat.add_comm, max_l.
         -- reflexivity.
         -- now apply Nat.lt_le_incl.
-      * now apply Nat.lt_nge.
 Qed.
 
 
@@ -1192,30 +1177,22 @@ Proof.
     destruct  (le_lt_dec c0 c).
     + destruct (le_lt_dec c c0).
       destruct (nat_total_order _ _ b).
-      * elim (lt_not_le _ _ H); auto.
-      * elim (lt_not_le _ _ H); auto.
-      * auto.
+      * exfalso; lia. 
+      * exfalso; lia.
+      * reflexivity. 
     + reflexivity.
     + assumption.
 Qed.
 
 Lemma eqIsPR : isPRrel 2 Nat.eqb.
 Proof.
-  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (Nat.eqb a b)))).
-  { apply notRelPR.
-    apply neqIsPR.
-  }
-  cbn in H; destruct H as [x  p].
-  exists x; cbn in *.
+  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (Nat.eqb a b)))) by (apply notRelPR, neqIsPR).
+  cbn in H; destruct H as [x  p]; exists x; cbn in *.
   intros c c0; rewrite p; clear p; destruct (Nat.eqb c c0); auto.
 Qed.
 
-Definition leBool (a b : nat) : bool.
-destruct (le_lt_dec a b).
-- exact true.
-- exact false.
-Defined.
-
+Definition leBool (a b : nat) : bool :=
+  if le_lt_dec a b then true else false.
 
 Lemma leIsPR : isPRrel 2 leBool.
 Proof.
@@ -1244,7 +1221,7 @@ Proof.
   + cbn in |- *;  destruct  (le_lt_dec c c0).
     * reflexivity.
     * elim (lt_irrefl c).
-      apply lt_trans with c0; auto.
+      apply Nat.lt_trans with c0; auto.
 Qed.
 
 
@@ -1279,10 +1256,9 @@ Section Ignore_Params.
     - simpl in |- *.
       rewrite (Hrecm (le_S_n m n (le_S (S m) n p1))
                      (le_S_n m n (le_S (S m) n p2))).
-      rewrite
+      now rewrite
         (evalProjFuncInd _ _ (lt_S_n m n (le_lt_n_Sm (S m) n p1))
-                         (lt_S_n m n (le_lt_n_Sm (S m) n p2)));
-        reflexivity.
+                         (lt_S_n m n (le_lt_n_Sm (S m) n p2))).
   Qed.
 
   Lemma projectionListApplyParam :

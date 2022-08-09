@@ -208,7 +208,7 @@ simpl in |- *.
 apply lt_S.
 apply Nat.lt_succ_diag_r .
 rewrite <- plus_Snm_nSm.
-apply lt_trans with (a + a).
+apply Nat.lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.
@@ -278,7 +278,7 @@ rewrite <- plus_Snm_nSm.
 simpl in |- *.
 apply Nat.lt_succ_diag_r .
 rewrite <- plus_Snm_nSm.
-apply lt_trans with (a + a).
+apply Nat.lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.

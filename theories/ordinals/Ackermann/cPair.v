@@ -83,7 +83,7 @@ Section CPair_Injectivity.
          { apply Compat815.lt_n_Sm_le; assumption.
          }
          induction (le_lt_or_eq a n H1).
-        +   apply lt_trans with (sumToN n).
+        +   apply Nat.lt_trans with (sumToN n).
             * auto.
             * apply le_lt_n_Sm.
               apply le_plus_r.
@@ -98,7 +98,7 @@ Section CPair_Injectivity.
       induction (le_or_lt c d).
       - induction (le_lt_or_eq _ _ H3).
         + assert (H5: a + sumToN c < sumToN d).
-          { apply le_lt_trans with (c + sumToN c).
+          { apply Nat.le_lt_trans with (c + sumToN c).
             apply plus_le_compat_r; auto.
             auto.
           }
@@ -107,7 +107,7 @@ Section CPair_Injectivity.
       apply le_plus_r.
       + auto.
       - assert (H4: b + sumToN d < sumToN c).
-      { apply le_lt_trans with (d + sumToN d).
+      { apply Nat.le_lt_trans with (d + sumToN d).
         - apply plus_le_compat_r;  auto.
         - auto.
       }

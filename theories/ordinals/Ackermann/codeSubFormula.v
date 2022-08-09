@@ -606,11 +606,10 @@ rewrite H0.
 simpl in |- *.
 repeat rewrite <- beq_nat_refl.
 reflexivity.
-apply le_lt_trans with (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
+apply Nat.le_lt_trans with (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
 apply cPairLe2.
 unfold cTriple in |- *.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
        (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
@@ -632,11 +631,10 @@ apply
 apply cPairLe2.
 apply cPairLe2.
 apply le_n.
-apply le_lt_trans with (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
+apply Nat.le_lt_trans with (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
 apply cPairLe1.
 unfold cTriple in |- *.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
        (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
@@ -699,8 +697,7 @@ rewrite H.
 simpl in |- *.
 repeat rewrite <- beq_nat_refl.
 reflexivity.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (codeFormula (substituteFormula L (notH L f0) v s))
        (makeTrace f0 (v, s))).
@@ -832,7 +829,7 @@ generalize
                 (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) v0 s)))
  (cTriple v0 (codeTerm s) (cPair 3 (cPair v (codeFormula a)))).
 intros.
-apply le_lt_trans with (cPair n0 n).
+apply Nat.le_lt_trans with (cPair n0 n).
 apply cPairLe2.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 3 (cPair n0 n)).
@@ -856,7 +853,7 @@ generalize
                 (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) v0 s)))
  (cTriple v0 (codeTerm s) (cPair 3 (cPair v (codeFormula a)))).
 intros.
-apply le_lt_trans with (cPair n0 n).
+apply Nat.le_lt_trans with (cPair n0 n).
 apply cPairLe1.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 3 (cPair n0 n)).
@@ -1181,12 +1178,12 @@ assumption.
 rewrite beq_nat_not_refl in H1.
 elim H1; reflexivity.
 assumption.
-apply le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
+apply Nat.le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
 apply cPairLe2.
 rewrite cPairProjections.
 unfold cTriple in |- *.
-apply lt_le_trans with (cPair 1 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.lt_le_trans with (cPair 1 (cPair n m)).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -1199,12 +1196,12 @@ apply
 apply cPairLe2.
 apply cPairLe2.
 apply le_n.
-apply le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
+apply Nat.le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
 apply cPairLe1.
 rewrite cPairProjections.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 1 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -1255,7 +1252,7 @@ elim H0; reflexivity.
 assumption.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 2 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -1403,12 +1400,12 @@ rewrite beq_nat_not_refl in H0.
 elim H0.
 reflexivity.
 assumption.
-apply le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
+apply Nat.le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
 apply cPairLe2.
 rewrite cPairProjections.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 3 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -1420,12 +1417,12 @@ apply
 apply cPairLe2.
 apply cPairLe2.
 apply le_n.
-apply le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
+apply Nat.le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
 apply cPairLe1.
 rewrite cPairProjections.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 3 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -1467,7 +1464,7 @@ reflexivity.
 assumption.
 unfold cTriple in |- *.
 apply lt_le_trans with (cPair 3 (cPair n m)).
-apply le_lt_trans with (cPair n m).
+apply Nat.le_lt_trans with (cPair n m).
 apply cPairLe2.
 apply cPairLt2.
 apply cPairLe3.
@@ -3213,7 +3210,7 @@ apply le_n_S.
 apply cPairLe3.
 eapply proj1.
 apply Hreca.
-apply le_lt_trans with n.
+apply Nat.le_lt_trans with n.
 apply Compat815.lt_n_Sm_le.
 assumption.
 apply lt_S_n.
@@ -3221,7 +3218,7 @@ assumption.
 assumption.
 eapply proj2.
 apply Hreca.
-apply le_lt_trans with n.
+apply Nat.le_lt_trans with n.
 apply Compat815.lt_n_Sm_le.
 assumption.
 apply lt_S_n.
@@ -4232,7 +4229,7 @@ apply cPairLt2.
 rewrite H4.
 apply le_n.
 assert (cPairPi1 (cPairPi2 (S n0)) < S n0).
-apply le_lt_trans with (cPairPi2 (S n0)).
+apply Nat.le_lt_trans with (cPairPi2 (S n0)).
 apply
  Nat.le_trans
   with (cPair (cPairPi1 (cPairPi2 (S n0))) (cPairPi2 (cPairPi2 (S n0)))).
@@ -4241,7 +4238,7 @@ rewrite cPairProjections.
 apply le_n.
 assumption.
 assert (cPairPi2 (cPairPi2 (S n0)) < S n0).
-apply le_lt_trans with (cPairPi2 (S n0)).
+apply Nat.le_lt_trans with (cPairPi2 (S n0)).
 apply
  Nat.le_trans
   with (cPair (cPairPi1 (cPairPi2 (S n0))) (cPairPi2 (cPairPi2 (S n0)))).
@@ -4384,21 +4381,19 @@ simpl in |- *.
 rewrite H0.
 rewrite H1.
 reflexivity.
-apply le_lt_trans with (cPair (codeFormula f) (codeFormula f0)).
+apply Nat.le_lt_trans with (cPair (codeFormula f) (codeFormula f0)).
 apply cPairLe2.
 apply cPairLt2.
-apply le_lt_trans with (cPair (codeFormula f) (codeFormula f0)).
+apply Nat.le_lt_trans with (cPair (codeFormula f) (codeFormula f0)).
 apply cPairLe1.
 apply cPairLt2.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (codeFormula (substituteFormula L f v (var w)))
        (codeFormula (substituteFormula L f0 v (var w)))).
 apply cPairLe2.
 apply cPairLt2.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (codeFormula (substituteFormula L f v (var w)))
        (codeFormula (substituteFormula L f0 v (var w)))).
@@ -4458,11 +4453,10 @@ apply eqDepth with a.
 symmetry  in |- *.
 apply subFormulaDepth.
 apply depthForall.
-apply le_lt_trans with (cPair v (codeFormula a)).
+apply Nat.le_lt_trans with (cPair v (codeFormula a)).
 apply cPairLe2.
 apply cPairLt2.
-apply
- le_lt_trans
+apply Nat.le_lt_trans
   with
     (cPair (newVar (v0 :: freeVarTerm L (var w) ++ freeVarFormula L a))
        (codeFormula
@@ -4491,11 +4485,11 @@ simpl in |- *.
 rewrite H0.
 reflexivity.
 apply depthForall.
-apply le_lt_trans with (cPair v (codeFormula a)).
+apply Nat.le_lt_trans with (cPair v (codeFormula a)).
 apply cPairLe2.
 apply cPairLt2.
-apply
- le_lt_trans with (cPair v (codeFormula (substituteFormula L a v0 (var w)))).
+apply Nat.le_lt_trans with
+  (cPair v (codeFormula (substituteFormula L a v0 (var w)))).
 apply cPairLe2.
 apply cPairLt2.
 Qed.
@@ -5319,9 +5313,9 @@ apply maxLemma2.
 rewrite b.
 eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
 apply maxLemma3.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe1.
 rewrite subFormulaNot.
 set
@@ -5537,7 +5531,7 @@ rewrite b1.
 eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
 simpl in |- *.
 apply le_max_r.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 Qed.
 
@@ -5811,7 +5805,7 @@ eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_trans; [ idtac | apply cPairLe1 ].
 apply ReplaceFormulaTermMonotone.
 apply H3.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe1.
 apply boundComputationMonotone.
 apply le_max_l.
@@ -5871,7 +5865,7 @@ eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 apply ReplaceFormulaTermMonotone.
 apply H3.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 apply boundComputationMonotone.
 apply le_max_r.
@@ -6098,7 +6092,7 @@ eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 apply ReplaceFormulaTermMonotone.
 simpl in H2.
 apply H2.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 apply boundComputationMonotone.
 apply le_n.
@@ -6195,7 +6189,7 @@ eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 rewrite ReplaceFormulaTermSub.
 apply ReplaceFormulaTermMonotone.
 apply H2.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 apply boundComputationMonotone.
 apply le_n.
@@ -6265,7 +6259,7 @@ eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 apply ReplaceFormulaTermMonotone.
 apply H2.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 eapply Nat.le_trans; [ idtac | apply cPairLe1 ].
 apply boundComputationMonotone.
@@ -6372,7 +6366,7 @@ apply le_O_n.
 apply le_O_n.
 apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply max_case2.
 eapply Nat.le_trans.
 apply Hrecf1.
@@ -6382,11 +6376,11 @@ apply Hrecf0.
 apply cPairLe2.
 apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 assumption.
 apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 eapply Nat.le_trans.
 apply Hrecf.
 apply cPairLe2.

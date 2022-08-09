@@ -217,7 +217,7 @@ unfold pred in |- *.
 repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 simpl in |- *.
 apply Hrecf.
-eapply le_lt_trans.
+eapply Nat.le_lt_trans.
 apply cPairLe2A.
 rewrite cPairProjections2.
 apply cPairLt2.
@@ -622,7 +622,7 @@ move g1 after IHn1; fold g1 in IHn1.
 apply IHn1.
 apply cPairLe2A.
 repeat rewrite cPairProjections2.
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 simpl in |- *.
 apply le_lt_n_Sm.
