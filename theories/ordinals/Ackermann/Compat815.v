@@ -33,7 +33,20 @@ fix ind_0_1_SS (n : nat) : P n :=
        | 0 => H1
        | S n2 => (fun n3 : nat => H2 n3 (ind_0_1_SS n3)) n2
        end) n0
-  end. 
+  end.
+
+  Lemma lt_S_n (n m :nat) : S n < S m -> n < m.
+  Proof. now rewrite <- Nat.succ_lt_mono. Qed. 
+
+  
+ Lemma  le_lt_n_Sm : forall n m : nat, n <= m -> n < S m.
+ Proof. intros n m; now rewrite Nat.lt_succ_r. Qed.
+
+ Lemma lt_not_le : forall n m : nat, n < m -> ~ m <= n.
+ Proof. intros n m ; now rewrite Nat.lt_nge. Qed.
+
+ Lemma le_plus_r : forall n m : nat, m <= n + m.
+ Proof. intros n m; rewrite Nat.add_comm.  apply Nat.le_add_r. Qed.
 
 End Compat815.
 

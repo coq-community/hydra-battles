@@ -884,7 +884,7 @@ Proof.
     intro c1; induction c1 as [| c1 Hrecc1].
     + auto.
     + intros; cbn in *; induction c2 as [| c2 Hrecc2].
-      * cbn in |- *; now rewrite <- minus_n_O.
+      * cbn in |- *; now rewrite  Nat.sub_0_r.
       * apply Hrecc1.
 Qed.
 
@@ -1168,25 +1168,23 @@ Proof.
   exists x; cbn in *. 
   intros;rewrite p;clear p.
   unfold ltBool; destruct  (eq_nat_dec c c0) as [a | b].
-  - rewrite a; rewrite <- beq_nat_refl; cbn in |- *.
+  - rewrite a; rewrite  Nat.eqb_refl; cbn in |- *.
     destruct (le_lt_dec c0 c0).
     + reflexivity.
-    + elim (lt_irrefl _ l).
-  - rewrite beq_nat_not_refl.
-    cbn in |- *.
+    + elim (Nat.lt_irrefl _ l).
+  - rewrite beq_nat_not_refl; cbn in |- *.
     destruct  (le_lt_dec c0 c).
-    + destruct (le_lt_dec c c0).
-      destruct (nat_total_order _ _ b).
-      * exfalso; lia. 
-      * exfalso; lia.
-      * reflexivity. 
+    + destruct (le_lt_dec c c0); [ | reflexivity].
+      * rewrite Nat.lt_gt_cases  in b; destruct b; exfalso; lia. 
     + reflexivity.
     + assumption.
 Qed.
 
 Lemma eqIsPR : isPRrel 2 Nat.eqb.
 Proof.
-  assert (H: isPRrel 2 (notRel 2 (fun a b : nat => negb (Nat.eqb a b)))) by (apply notRelPR, neqIsPR).
+  assert (H: isPRrel 2
+               (notRel 2 (fun a b : nat => negb (Nat.eqb a b))))
+    by (apply notRelPR, neqIsPR).
   cbn in H; destruct H as [x  p]; exists x; cbn in *.
   intros c c0; rewrite p; clear p; destruct (Nat.eqb c c0); auto.
 Qed.
@@ -1208,19 +1206,18 @@ Proof.
   + destruct (le_lt_dec c c0).
     * simpl in |- *.
       replace c0 with c.
-      --  now rewrite <- beq_nat_refl.
+      --  now rewrite Nat.eqb_refl.
       -- destruct (eq_nat_dec c c0).
          ++ auto.
-         ++ destruct (nat_total_order _ _ n).
-            ** now elim (lt_not_le _ _ H).
-            ** now elim (lt_not_le _ _ H).
+         ++ rewrite Nat.lt_gt_cases in n; destruct n;
+             rewrite  Nat.lt_nge in H; contradiction.
     * rewrite beq_nat_not_refl; cbn in |- *.
       -- reflexivity.
       -- unfold not in |- *; intros H; rewrite H in l.
-         elim (lt_irrefl _ l).
+         elim (Nat.lt_irrefl _ l).
   + cbn in |- *;  destruct  (le_lt_dec c c0).
     * reflexivity.
-    * elim (lt_irrefl c).
+    * elim (Nat.lt_irrefl c).
       apply Nat.lt_trans with c0; auto.
 Qed.
 
@@ -1238,7 +1235,8 @@ Section Ignore_Params.
   Definition projectionListPR (n m : nat) (p : m <= n) : PrimRecs n m.
     induction m as [| m Hrecm].
     - exact (PRnil n).
-    - assert (H: m < n) by apply lt_S_n,  le_lt_n_Sm,  p.
+    - assert (H: m < n) by
+        apply Compat815.lt_S_n,  Compat815.le_lt_n_Sm,  p.
       apply (PRcons _ m (projFunc _ _ H)).
       apply Hrecm,  le_S_n, le_S,  p.
   Defined.
@@ -1254,11 +1252,14 @@ Section Ignore_Params.
     induction m as [| m Hrecm].
     - reflexivity.
     - simpl in |- *.
-      rewrite (Hrecm (le_S_n m n (le_S (S m) n p1))
+      rewrite (Hrecm (le_S_n m n
+                        (le_S (S m) n p1))
                      (le_S_n m n (le_S (S m) n p2))).
       now rewrite
-        (evalProjFuncInd _ _ (lt_S_n m n (le_lt_n_Sm (S m) n p1))
-                         (lt_S_n m n (le_lt_n_Sm (S m) n p2))).
+        (evalProjFuncInd _ _
+           (Compat815.lt_S_n m n
+              (Compat815.le_lt_n_Sm (S m) n p1))
+           (Compat815.lt_S_n m n (Compat815.le_lt_n_Sm (S m) n p2))).
   Qed.
 
   Lemma projectionListApplyParam :
@@ -1271,16 +1272,16 @@ Section Ignore_Params.
     - simpl in |- *; auto.
     - intros; simpl  in |- *.
       destruct (eq_nat_dec n n0).
-      + elim (lt_not_le n (S n)).
+      + elim (Compat815.lt_not_le n (S n)).
         apply Nat.lt_succ_diag_r .
         rewrite <- e in p1; auto.
       + split.
         rewrite
-          (evalProjFuncInd _ _ (lt_S_n n n0 (le_lt_n_Sm (S n) n0 p1))
+          (evalProjFuncInd _ _ (Compat815.lt_S_n n n0 (Compat815.le_lt_n_Sm (S n) n0 p1))
                            match
                              Compat815.le_lt_or_eq n n0
-                                         (Compat815.lt_n_Sm_le n n0 (lt_S_n n (S n0)
-                                                                  (le_lt_n_Sm
+                                         (Compat815.lt_n_Sm_le n n0 (Compat815.lt_S_n n (S n0)
+                                                                  (Compat815.le_lt_n_Sm
                                                                      (S n)
                                                                      (S n0)
                                                                      p2)))
@@ -1356,10 +1357,10 @@ Section Ignore_Params.
           elim p using K_dec_set.
           * apply eq_nat_dec.
           * reflexivity.
-        + elim (le_Sn_O _ pr).
-      - induction (le_lt_or_eq _ _ pr).
+        + elim (Nat.nle_succ_0 _ pr).
+      - induction (Compat815.le_lt_or_eq _ _ pr).
         + assert (H0: m <= n) by (apply Compat815.lt_n_Sm_le; auto).
-          generalize p; rewrite <- minus_Sn_m; clear p.
+          generalize p; rewrite Nat.sub_succ_l; clear p.
           * intros.
             cbn in |- *.
             intros.
@@ -1400,18 +1401,14 @@ Section Ignore_Params.
             -- cbn in |- *.
                clear p pr.
                apply (projectionListId m f pr0).
-          * apply minus_n_n.
+          * now rewrite Nat.sub_diag. 
     }
     intros.
     unfold projectionList in H.
     destruct H0 as [x p].
-    exists (composeFunc (m + n) n (projectionListPR _ _ (le_plus_r _ _)) x).
+    exists (composeFunc (m + n) n (projectionListPR _ _ (Compat815.le_plus_r _ _)) x).
     apply extEqualSym.
-    assert (H0: m + n - n + n = m + n).
-    { rewrite (Nat.add_comm m n).
-      rewrite minus_plus.
-      apply Nat.add_comm.
-    }
+    assert (H0: m + n - n + n = m + n) by (now rewrite Nat.add_sub).
     assert
     (H1: extEqual (m + n)
                   (eq_rec (m + n - n + n) naryFunc
@@ -1421,7 +1418,7 @@ Section Ignore_Params.
                                    (evalPrimRecs (m + n) n
                                                  (projectionListPR
                                                     (m + n) n
-                                                    (le_plus_r m n)))
+                                                    (Compat815.le_plus_r m n)))
                                    f)).
     { apply H. }
     replace (ignoreParams n m f) with
@@ -1434,12 +1431,12 @@ Section Ignore_Params.
           (evalComposeFunc (m + n) _
                            (evalPrimRecs (m + n) n
                                          (projectionListPR
-                                            (m + n) n (le_plus_r m n)))
+                                            (m + n) n (Compat815.le_plus_r m n)))
                            f).
       + apply H1.
       + apply extEqualCompose.
         * generalize
-            (evalPrimRecs (m + n) n (projectionListPR (m + n) n (le_plus_r m n))).
+            (evalPrimRecs (m + n) n (projectionListPR (m + n) n (Compat815.le_plus_r m n))).
           generalize (m + n).
           intros.
           apply extEqualVectorRefl.
@@ -1449,10 +1446,8 @@ Section Ignore_Params.
       + intros.
         elim H2 using K_dec_set.
         *  apply eq_nat_dec.
-        * cbn in |- *.
-          reflexivity.
-      + rewrite Nat.add_comm.
-        now rewrite minus_plus.
+        * cbn in |- *;  reflexivity.
+      + now rewrite Nat.add_sub. 
   Qed.
 
 End Ignore_Params.
@@ -1577,7 +1572,7 @@ Proof.
                             (PRcons _ _ (projFunc (S n) n
                                            (Nat.lt_succ_diag_r n))
                                (PRnil _)) x0)
-                         (projectionListPR (S n) n (le_n_Sn n))) x).
+                         (projectionListPR (S n) n (Nat.le_succ_diag_r n))) x).
   cbn in |- *.
   fold (naryFunc n) in |- *.
   induction (eq_nat_dec n n).
@@ -1609,7 +1604,7 @@ Proof.
               ** cbn in |- *.
                  intros.
                  apply Hrecn.
-        -- apply (projectionListApplyParam n n c (le_n n) (le_n_Sn n)).
+        -- apply (projectionListApplyParam n n c (le_n n) (Nat.le_succ_diag_r n)).
       *  apply extEqualSym.
          auto.
     + clear p0 x0 p x a.
@@ -1688,7 +1683,7 @@ Proof.
 
       * rewrite a0.
         induction (b0 b).
-        -- elim (lt_irrefl b).
+        -- elim (Nat.lt_irrefl b).
            rewrite a0 in H.
            auto.
         -- auto.
@@ -1697,7 +1692,7 @@ Proof.
         -- auto.
         -- assert (H0:x <= b).
            { apply Compat815.lt_n_Sm_le; auto. }
-           induction (le_lt_or_eq _ _ H0).
+           induction (Compat815.le_lt_or_eq _ _ H0).
            ++ auto.
            ++ elim b1.
               ** auto.
@@ -1824,7 +1819,7 @@ Proof.
         induction (eq_nat_dec c0 c).
         -- cbn in |- *.
            rewrite <- a.
-           rewrite <- beq_nat_refl.
+           rewrite  Nat.eqb_refl.
            cbn in |- *.
            reflexivity.
         -- rewrite beq_nat_not_refl.
