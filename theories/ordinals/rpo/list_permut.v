@@ -176,8 +176,8 @@ Proof.
 intros a l1 l2 l3 l4; unfold list_permut, meq; simpl;
 intros H b; generalize (H b); clear H;
 repeat rewrite multiplicity_app; simpl;
-intro H; rewrite Nat.add_comm; rewrite <- plus_assoc; apply sym_eq;
-rewrite Nat.add_comm; rewrite <- plus_assoc; 
+intro H; rewrite Nat.add_comm; rewrite <- Nat.add_assoc; apply sym_eq;
+rewrite Nat.add_comm; rewrite <- Nat.add_assoc; 
 apply (f_equal (fun n => match eq_elt_dec a b with 
                          | left _ => 1 
                          | right _ => 0 end + n));
@@ -239,7 +239,7 @@ Lemma remove_context_list_permut_cons :
   forall e l1 l2, list_permut (e :: l1) (e :: l2) -> list_permut l1 l2.
 Proof.
 intros e l1 l2; unfold list_permut, meq; simpl; intros H a;
-generalize (H a); apply plus_reg_l.
+generalize (H a); apply Nat.add_cancel_l . 
 Qed.
 
 Lemma remove_context_list_permut_app2 :
@@ -249,9 +249,8 @@ intros l l1 l2; unfold list_permut, meq; simpl;
 intros H a; generalize (H a);
 rewrite (multiplicity_app l1 l);
 rewrite (multiplicity_app l2 l); 
-intros; apply plus_reg_l with (multiplicity (list_to_multiset l) a).
-rewrite Nat.add_comm; rewrite H0; rewrite Nat.add_comm.
-trivial.
+intros; apply Nat.add_cancel_l with (multiplicity (list_to_multiset l) a).
+rewrite Nat.add_comm; rewrite H0; now rewrite Nat.add_comm.
 Qed.
 
 Lemma list_permut_remove_hd :
@@ -261,8 +260,8 @@ Proof.
 intros l l1 l2 a; unfold list_permut, meq; simpl; intros H a0; generalize (H a0);
 rewrite multiplicity_app; rewrite multiplicity_app;
 simpl; intro H1; 
-apply plus_reg_l with (match eq_elt_dec a a0 with left _ => 1 | right _ => 0 end);
-rewrite H1; repeat rewrite plus_assoc;
+apply Nat.add_cancel_l with (match eq_elt_dec a a0 with left _ => 1 | right _ => 0 end);
+rewrite H1; repeat rewrite Nat.add_assoc;
 apply (f_equal (fun n => n + multiplicity (list_to_multiset l2) a0));
 apply Nat.add_comm.
 Qed.
@@ -304,7 +303,7 @@ destruct (split_list eq_elt_dec l2 a); intro; subst l2;
 rewrite list_size_app; simpl;
 rewrite (IHl1 _ (list_permut_remove_hd _ _ P));
 rewrite list_size_app;
-rewrite Nat.add_comm; rewrite <- plus_assoc;
+rewrite Nat.add_comm; rewrite <- Nat.add_assoc;
 apply (f_equal (fun n => list_size size l + n));
 apply Nat.add_comm.
 Qed.

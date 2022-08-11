@@ -1,5 +1,4 @@
 Require Import Wf_nat.
-Require Import Max.
 Require Import Arith.
 Require Import Coq.Lists.List.
 Require Import ListExt.
@@ -249,7 +248,7 @@ intros.
 reflexivity.
 Qed.
 
-Definition newVar (l : list nat) : nat := fold_right max 0 (map S l).
+Definition newVar (l : list nat) : nat := fold_right Nat.max 0 (map S l).
 
 Lemma newVar2 : forall (l : list nat) (n : nat), In n l -> n < newVar l.
 Proof.
@@ -262,17 +261,17 @@ induction H as [H| H].
 rewrite H.
 unfold newVar in |- *.
 simpl in |- *.
-induction (fold_right max 0 (map S l)).
+induction (fold_right Nat.max 0 (map S l)).
 apply Nat.lt_succ_diag_r .
 apply le_lt_n_Sm.
-apply le_max_l.
+apply Nat.le_max_l.
 unfold newVar in |- *.
 unfold newVar in Hrecl.
 simpl in |- *.
 assert
- (fold_right max 0 (map S l) = 0 \/
-  (exists n : nat, fold_right max 0 (map S l) = S n)).
-induction (fold_right max 0 (map S l)).
+ (fold_right Nat.max 0 (map S l) = 0 \/
+  (exists n : nat, fold_right Nat.max 0 (map S l) = S n)).
+induction (fold_right Nat.max 0 (map S l)).
 auto.
 right.
 exists n0.
@@ -290,7 +289,7 @@ apply Nat.lt_le_trans with (S x).
 apply Hrecl.
 auto.
 apply le_n_S.
-apply le_max_r.
+apply Nat.le_max_r.
 Qed.
 
 Lemma newVar1 : forall l : list nat, ~ In (newVar l) l.
@@ -313,15 +312,15 @@ Definition substituteFormulaImp (f : fol.Formula L)
       | exist g' prf2 =>
           exist
             (fun y : fol.Formula L =>
-             depth L y = S (max (depth L f) (depth L g))) 
+             depth L y = S (Nat.max (depth L f) (depth L g))) 
             (impH f' g')
             (eq_ind_r
                (fun n : nat =>
-                S (max n (depth L g')) = S (max (depth L f) (depth L g)))
+                S (Nat.max n (depth L g')) = S (Nat.max (depth L f) (depth L g)))
                (eq_ind_r
                   (fun n : nat =>
-                   S (max (depth L f) n) = S (max (depth L f) (depth L g)))
-                  (refl_equal (S (max (depth L f) (depth L g)))) prf2) prf1)
+                   S (Nat.max (depth L f) n) = S (Nat.max (depth L f) (depth L g)))
+                  (refl_equal (S (Nat.max  (depth L f) (depth L g)))) prf2) prf1)
       end
   end.
 
