@@ -851,7 +851,7 @@ injection L; clear L; intro L; generalize (IHn _ L wr2'); clear IHn; intro IHn; 
 assert (subset s1 (mk_set l2 wr2')).
 intros e e_in_s1; destruct (s1_in_e2_l2 e e_in_s1) as [e_eq_e2 | e_in_l2]; trivial.
 absurd (mem e2 s1); subst; trivial.
-apply le_lt_trans with (cardinal (mk_set l2 wr2')).
+apply Nat.le_lt_trans with (cardinal (mk_set l2 wr2')).
 apply cardinal_subset; trivial.
 unfold cardinal; simpl; apply lt_n_Sn.
 generalize (split_list_app_cons eq_elt_dec _ _ e_in_l2).
@@ -871,7 +871,7 @@ simpl; right; apply in_or_app; left; trivial.
 destruct e'_in_e_l2'' as [e'_eq_e | e'_in_l2''].
 subst e'; absurd (mem e s1); trivial.
 simpl; right; apply in_or_app; right; trivial.
-apply le_lt_trans with (cardinal (mk_set _ wr2')).
+apply Nat.le_lt_trans with (cardinal (mk_set _ wr2')).
 apply cardinal_subset; trivial.
 unfold cardinal; simpl; apply lt_n_S.
 do 2 rewrite list_app_length; apply plus_lt_compat_l; simpl; apply lt_n_Sn.

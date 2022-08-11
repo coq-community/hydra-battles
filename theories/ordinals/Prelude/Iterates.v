@@ -107,7 +107,7 @@ Lemma mono_le f (Hf : strict_mono f) :  forall n, n <= f n.
 Proof.
   induction n.
   - auto with arith. 
-  - apply Lt.le_lt_trans with (f n); auto with arith.  
+  - apply Nat.le_lt_trans with (f n); auto with arith.  
 Qed.
 
 
@@ -279,8 +279,8 @@ Lemma iterate_ge : forall f , S  <<= f ->
 Proof.
   induction n.
   - cbn; auto with arith.
-   -  apply PeanoNat.Nat.lt_le_incl;rewrite iterate_S_eqn;
-        apply PeanoNat.Nat.le_lt_trans with (iterate f n j); auto.
+   -  apply Nat.lt_le_incl;rewrite iterate_S_eqn;
+        apply Nat.le_lt_trans with (iterate f n j); auto.
 Qed.
 
 
@@ -324,7 +324,7 @@ Proof.
       intros H3;  specialize (H3 H2 i).
       apply Nat.lt_le_incl.
       assert (H4: k < S (f k)).
-      { apply le_lt_trans with (f k).
+      { apply Nat.le_lt_trans with (f k).
         - apply h_fun_le_id_.                       
         - auto with arith.
       }
@@ -422,7 +422,7 @@ Proof.
   - destruct (f 0).
     + now destruct H.
     + auto with arith.
-  - apply le_lt_trans with (f x).
+  - apply Nat.le_lt_trans with (f x).
     + auto.
     + apply H0; auto with arith.
 Qed.
@@ -589,7 +589,7 @@ Proof.
   auto with arith.
   apply PeanoNat.Nat.lt_le_incl.
   rewrite iterate_S_eqn.
-  apply Lt.le_lt_trans with (iterate f n j).
+  apply Nat.le_lt_trans with (iterate f n j).
   auto.
   apply H.
   apply Le.le_trans with j.
@@ -615,8 +615,8 @@ Lemma dominates_iterate :
   intros k Hk.
   unfold id.
   rewrite iterate_S_eqn.
-  apply Lt.le_lt_trans with (f (iterate f n k)).
-  apply Le.le_trans with  (iterate f n k).
+  apply Nat.le_lt_trans with (f (iterate f n k)).
+  apply Nat.le_trans with  (iterate f n k).
   apply iterate_ge_from with i.
   auto.
   eauto with arith.

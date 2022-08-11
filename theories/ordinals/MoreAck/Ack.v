@@ -457,7 +457,7 @@ Proof.
        {
          destruct (Ack_properties (S n)) as [H [H0 H1]];  apply H0.
        }
-       eapply Lt.le_lt_trans with (2:= H).
+       eapply Nat.le_lt_trans with (2:= H).
        replace (S (S n) + S p) with (S (S (S n) + p)) by lia.
        apply IHp.
 Qed.
@@ -469,7 +469,7 @@ Qed.
 Remark R5 m n :  Ack m (S n) < Ack (S m) (S n).
 Proof.
   rewrite Ack_S_S; apply Ack_strict_mono.
-  apply Lt.le_lt_trans with (S m + n).
+  apply Nat.le_lt_trans with (S m + n).
   - lia.
   - apply Ack_Sn_plus.
 Qed.

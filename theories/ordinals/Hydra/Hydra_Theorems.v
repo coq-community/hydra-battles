@@ -209,7 +209,7 @@ Section battle_length_notPR.
 
   Proof.     
     exists 3; red; intros.
-    apply Lt.le_lt_trans with (m p).
+    apply Nat.le_lt_trans with (m p).
     - apply m_dominates_Ack_from_3; auto.
     - auto with arith.
   Qed.

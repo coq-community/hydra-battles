@@ -695,7 +695,7 @@ Proof with eauto with T1.
              clear H7;  subst.
              apply tail_lt.
              apply Hrec with (phi0 b1) ; trivial. 
-             apply le_lt_trans with   (cons b1 n0 (cons c2_1 n2 c2_2)) ;
+             apply le_lt_trans with (cons b1 n0 (cons c2_1 n2 c2_2));
                trivial. 
              apply le_phi0.  
              eapply nf_inv2, nf2.
