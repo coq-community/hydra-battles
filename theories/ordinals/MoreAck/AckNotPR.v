@@ -225,7 +225,7 @@ Proof.
     intro v; simpl evalPrimRec; rewrite evalListComp.
     generalize 
       (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
-      intro H00; eapply Le.le_trans.
+      intro H00; eapply Nat.le_trans.
     +  auto.
     + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.

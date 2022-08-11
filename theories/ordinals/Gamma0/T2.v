@@ -365,7 +365,7 @@ Proof.
   match goal with 
     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
   apply le_plus_trans, le_plus_trans.
-  eapply Le.le_trans.
+  eapply Nat.le_trans.
   2:eapply le_max_r.
   apply le_max_l.
 Qed.
@@ -387,7 +387,7 @@ Proof.
     intro n1; simpl;  apply le_n_S,  plus_le_compat_l.
     repeat rewrite plus_0_r.
     apply plus_le_compat;
-    apply Le.le_trans with (Max.max (t2_length b) n1);
+    apply Nat.le_trans with (Max.max (t2_length b) n1);
     apply le_max_r.
   }
   abstract lia.
@@ -440,7 +440,7 @@ Qed.
 Lemma length_abnc : forall a b n c, 
    t2_length a + t2_length b <= t2_length (gcons a b n c).
 Proof.
- intros; eapply Le.le_trans.
+ intros; eapply Nat.le_trans.
  -  eapply length_ab.
  - apply length_psi.
 Qed.

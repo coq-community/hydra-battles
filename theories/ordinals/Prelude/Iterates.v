@@ -592,7 +592,7 @@ Proof.
   apply Nat.le_lt_trans with (iterate f n j).
   auto.
   apply H.
-  apply Le.le_trans with j.
+  apply Nat.le_trans with j.
   auto.
   auto.
 Qed.  
@@ -622,7 +622,7 @@ Lemma dominates_iterate :
   eauto with arith.
   apply PeanoNat.Nat.lt_le_incl.
   apply H.
-  apply Le.le_trans with k. eauto with arith.
+  apply Nat.le_trans with k. eauto with arith.
   apply iterate_ge_from with i.
   auto. 
   eauto with arith. 
@@ -630,7 +630,7 @@ Lemma dominates_iterate :
   rewrite iterate_S_eqn.
   apply H.
   
-  apply Le.le_trans with  k.
+  apply Nat.le_trans with  k.
   eauto with arith. 
   apply iterate_ge_from with i.
   auto. 
