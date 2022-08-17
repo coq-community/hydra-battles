@@ -3,7 +3,7 @@
    (ordinals below Gamma0)   *)
 
 
-From Coq Require Import Arith  Compare_dec Relations Wellfounded Max Lia.
+From Coq Require Import Arith  Compare_dec Relations Wellfounded Lia.
 From hydras Require Import More_Arith  Restriction T1 OrdNotations.
 
 Set Implicit Arguments.
@@ -336,13 +336,13 @@ Fixpoint t2_length (t:T2) : nat :=
   match t  with zero => 0
              | gcons a b n v => 
                  nbterms (gcons a b n v) + 
-                 2 * (Max.max (t2_length a)
-                              (Max.max (t2_length b) (t2_length_aux v)))
+                 2 * (Nat.max (t2_length a)
+                              (Nat.max (t2_length b) (t2_length_aux v)))
   end
 with t2_length_aux (t:T2) : nat :=
  match t with zero => 0
             | gcons a b n v =>
-               Max.max (t2_length a) (Max.max (t2_length b) (t2_length_aux v))
+               Nat.max (t2_length a) (Nat.max (t2_length b) (t2_length_aux v))
  end.
 
 Compute t2_length (gcons 2 1 42 epsilon0).
@@ -355,7 +355,7 @@ Proof.
  simpl; intros; apply le_lt_n_Sm.
  match goal with
      [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
- apply le_plus_trans, le_plus_trans, le_max_l.
+ apply le_plus_trans, le_plus_trans, Nat.le_max_l.
 Qed.
 
 Lemma length_b : forall a b n v, t2_length b < 
@@ -366,8 +366,8 @@ Proof.
     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
   apply le_plus_trans, le_plus_trans.
   eapply Nat.le_trans.
-  2:eapply le_max_r.
-  apply le_max_l.
+  2:eapply Nat.le_max_r.
+  apply Nat.le_max_l.
 Qed.
 
 Lemma length_c : forall a b n v, t2_length v < 
@@ -381,14 +381,14 @@ Proof.
     [ |- ?a <= ?b + ?c + ?d] => rewrite <- (Arith.Plus.plus_assoc b c d) end.
   simpl (t2_length_aux (gcons t t0 n0 t1)).
   match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
-  { pattern (Max.max (t2_length t) (Max.max (t2_length t0) (t2_length_aux t1))).
-    generalize (Max.max (t2_length t)
-                      (Max.max (t2_length t0) (t2_length_aux t1))).
+  { pattern (Nat.max (t2_length t) (Nat.max (t2_length t0) (t2_length_aux t1))).
+    generalize (Nat.max (t2_length t)
+                      (Nat.max (t2_length t0) (t2_length_aux t1))).
     intro n1; simpl;  apply le_n_S,  plus_le_compat_l.
     repeat rewrite plus_0_r.
     apply plus_le_compat;
-    apply Nat.le_trans with (Max.max (t2_length b) n1);
-    apply le_max_r.
+    apply Nat.le_trans with (Nat.max (t2_length b) n1);
+    apply Nat.le_max_r.
   }
   abstract lia.
 Qed.
@@ -415,11 +415,11 @@ Proof.
  match goal with 
     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
  apply le_plus_trans.
- replace (Max.max (t2_length b) 0) with (t2_length b).
+ replace (Nat.max (t2_length b) 0) with (t2_length b).
  -  repeat  rewrite plus_0_r;  apply plus_le_compat. 
-   +  apply max_le_regL,  le_max_l; auto.
+   +  apply max_le_regL,  Nat.le_max_l; auto.
    +  apply Nat.max_le_compat; auto.
-      apply le_max_l.
+      apply Nat.le_max_l.
  - rewrite max_l;auto with arith.
 Qed.
 
