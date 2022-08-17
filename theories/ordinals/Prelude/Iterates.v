@@ -115,9 +115,11 @@ Lemma mono_injective f (Hf : strict_mono f) :
   forall n p , f n = f p -> n = p.
 Proof.
   intros n p H; destruct (PeanoNat.Nat.lt_total n p).
-  - specialize (Hf _ _ H0); rewrite H in Hf; destruct (Lt.lt_irrefl _ Hf).
+  - specialize (Hf _ _ H0); rewrite H in Hf;
+      destruct (Nat.lt_irrefl _ Hf).
   -  destruct H0; trivial. 
-     + specialize (Hf _ _ H0); rewrite H in Hf; destruct (Lt.lt_irrefl _ Hf).
+     + specialize (Hf _ _ H0); rewrite H in Hf;
+         destruct (Nat.lt_irrefl _ Hf).
 Qed.
 
 Lemma mono_weak f (H: strict_mono f) :
@@ -220,7 +222,7 @@ Proof.
    apply Hind;  revert i; induction i /r. 
    +  cbn; auto. 
    +  transitivity (iterate f i z); auto.
-      rewrite iterate_S_eqn; apply Lt.lt_le_weak.
+      rewrite iterate_S_eqn; apply Nat.lt_le_incl.
       apply Hind; auto. 
  - intros Hmono Hind * Hlt Hind2 * Kkz; transitivity (iterate f m z); auto. 
    rewrite iterate_S_eqn; apply Hind. 
@@ -228,7 +230,7 @@ Proof.
    clear i Hlt Hind2; induction m.
    + cbn; auto.
       + cbn; transitivity (iterate f m z); auto.
-     apply Lt.lt_le_weak, Hind;  lia. 
+     apply Nat.lt_le_incl, Hind;  lia. 
 Qed. 
 
 
@@ -311,7 +313,7 @@ Proof.
   induction i /n.
   - intros; cbn; apply h_fun_le_id_.
   - intros *;   rewrite iterate_rw;
-    apply le_trans with
+    apply Nat.le_trans with
         (Nat.pred (iterate (fun z : nat => S (f z)) (S i) k)).
     + auto.
     + cbn;  assert (H1: strict_mono (fun z => S (f z))).
@@ -461,9 +463,10 @@ Lemma iterate2_mono_weak (f : (nat->nat)->(nat->nat)):
                      (x <= y)%nat ->
                      (iterate f k g x <= iterate f k g y)%nat.
 Proof.
-  intros; destruct (le_lt_or_eq x y H3).
-  -  apply Nat.lt_le_incl.
-     apply iterate2_mono; auto.
+  intros g Hg k g0 x y  Hmono ? Hxy.
+  destruct (Nat.lt_eq_cases x y) as [H4 H5]; apply H4 in Hxy.
+  destruct Hxy. 
+  -  apply Nat.lt_le_incl,  iterate2_mono; auto.
   - now subst.
 Qed.
 
@@ -529,7 +532,9 @@ Lemma iterate2_mono2 (phi psi : (nat->nat)->(nat->nat)):
                     (iterate phi k g x <= iterate psi k g y)%nat.
 Proof.
   induction k.
-  -  simpl;  intros;  destruct (le_lt_or_eq _ _ H7).
+  -  simpl;  intros g x y H5 H6 H7;
+       destruct (Nat.lt_eq_cases x y) as [H8 H9].
+      destruct (H8 H7).
      + apply Nat.lt_le_incl.
        apply H5; auto.
      + subst; auto.
@@ -663,9 +668,9 @@ Proof.
      intros.
      generalize  (H k H1); intros.
      unfold id in H2, H; rewrite iterate_S_eqn.   
-     apply PeanoNat.Nat.lt_le_incl.
-     apply Lt.lt_le_trans with (f k);  auto.
+     apply Nat.lt_le_incl.
+     apply Nat.lt_le_trans with (f k);  auto.
      apply mono_weak; auto.
-     eapply   iterate_ge_from with i; auto.
+     eapply iterate_ge_from with i; auto.
 Qed.
 

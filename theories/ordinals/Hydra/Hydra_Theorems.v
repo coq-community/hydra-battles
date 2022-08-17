@@ -164,7 +164,7 @@ Section battle_length_notPR.
     - intro k; unfold m, l_std; assert (k <=  L_ alpha (S k))%nat.
       transitivity (S k). 
       + auto with arith.
-      + apply Lt.lt_le_weak.
+      + apply Nat.lt_le_incl.
         apply L_ge_S.
         unfold alpha; intro H0; injection H0; discriminate.
       + replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
