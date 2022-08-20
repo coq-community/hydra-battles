@@ -4705,7 +4705,7 @@ apply Nat.le_trans with (pow3 b).
 apply Hrecb.
 apply Compat815.lt_n_Sm_le.
 assumption.
-apply le_plus_l.
+apply Nat.le_add_r.
 rewrite H0.
 simpl in |- *.
 apply le_n.
@@ -4720,7 +4720,7 @@ apply le_n.
 simpl in |- *.
 eapply Nat.le_trans.
 apply Hreca.
-apply le_plus_l.
+apply Nat.le_add_r.
 Qed.
 
 Remark mapListLemma :
@@ -4848,13 +4848,13 @@ rewrite a0.
 eapply Nat.le_trans.
 apply (H a v0 v s).
 apply plus_le_compat.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assert (pow3 (depth L f) <= pow3 (Nat.max (depth L f) (depth L f0))).
 apply pow3Monotone.
 apply Nat.le_max_l.
 apply plus_le_compat.
 assumption.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assumption.
 repeat apply maxLemma; try apply le_n.
 apply maxLemma2.
@@ -4862,13 +4862,13 @@ rewrite b0.
 eapply Nat.le_trans.
 apply (H0 a v0 v s).
 apply plus_le_compat.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assert (pow3 (depth L f0) <= pow3 (Nat.max (depth L f) (depth L f0))).
 apply pow3Monotone.
 apply Nat.le_max_r.
 apply plus_le_compat.
 assumption.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assumption.
 repeat apply maxLemma; try apply le_n.
 apply maxLemma3.
@@ -4877,7 +4877,7 @@ eapply Nat.le_trans.
 apply (H a v0 v s).
 apply plus_le_compat.
 simpl in |- *.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 apply le_plus_r.
 apply le_n.
 clear nv.
@@ -5122,7 +5122,7 @@ apply plus_le_compat.
 eapply Nat.le_trans; [ idtac | apply le_plus_r ].
 apply plus_le_compat.
 apply le_n.
-apply le_plus_l.
+apply Nat.le_add_r.
 repeat apply maxLemma; try apply le_n.
 apply Nat.le_max_r.
 Qed.
@@ -5443,7 +5443,7 @@ simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
 apply maxVarFreeVar.
 apply plus_le_compat.
-eapply Nat.le_trans; [ idtac | apply le_plus_l ].
+eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 apply pow3Min.
 apply le_n.
 set (B := substituteFormula L a v (fol.var L nv)) in *.
@@ -5524,7 +5524,7 @@ apply maxLemma.
 apply le_n.
 apply plus_le_compat.
 simpl in |- *.
-apply le_plus_l.
+apply Nat.le_add_r.
 simpl in |- *.
 apply maxLemma.
 apply le_n.
@@ -5920,7 +5920,7 @@ apply le_n.
 apply cPairLe3.
 apply le_n.
 apply plus_le_compat.
-apply le_plus_l.
+apply Nat.le_add_r.
 apply le_n.
 assert
  (ReplaceFormulaTerm (codeFormula f0)
@@ -6043,7 +6043,7 @@ eapply Nat.le_trans.
 apply H2.
 apply plus_le_compat_r.
 simpl in |- *.
-apply le_plus_l.
+apply Nat.le_add_r.
 unfold C in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
 apply cPairLe3.
@@ -6229,7 +6229,7 @@ apply cPairLe3.
 apply le_n.
 apply plus_le_compat.
 simpl in |- *.
-apply le_plus_l.
+apply Nat.le_add_r.
 simpl in |- *.
 apply maxLemma.
 apply le_n.
@@ -6398,7 +6398,7 @@ apply Nat.max_case.
 eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_trans; [ idtac | apply le_plus_r ].
 eapply Nat.le_trans; [ idtac | apply le_plus_r ].
-apply le_plus_l.
+apply Nat.le_add_r.
 apply cPairLe3.
 apply le_n.
 apply plus_le_compat.
@@ -6406,13 +6406,13 @@ apply pow3Monotone.
 assumption.
 simpl in |- *.
 apply Nat.max_case.
-apply le_plus_l.
+apply Nat.le_add_r.
 eapply Nat.le_trans; [ idtac | apply le_plus_r ].
 induction (maxApp (freeVarTerm L s) (varFormula f)).
 rewrite a.
 eapply Nat.le_trans.
 apply codeTermFreeVar.
-apply le_plus_l.
+apply Nat.le_add_r.
 rewrite b0.
 eapply Nat.le_trans with (codeFormula f).
 clear b0 H1 H0 H b P s v.

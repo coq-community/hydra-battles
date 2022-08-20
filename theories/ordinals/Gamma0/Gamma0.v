@@ -187,7 +187,7 @@ Section lemmas_on_length.
   Proof.
     intros; apply plus_le_lt_compat.
     - case n1; auto.
-      intros;apply lt_le_weak;apply length_n; auto with arith.
+      intros;apply Nat.lt_le_incl;apply length_n; auto with arith.
     -  apply length_b.
   Qed.
 

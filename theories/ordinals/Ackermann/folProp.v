@@ -263,7 +263,7 @@ unfold newVar in |- *.
 simpl in |- *.
 induction (fold_right Nat.max 0 (map S l)).
 apply Nat.lt_succ_diag_r .
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_max_l.
 unfold newVar in |- *.
 unfold newVar in Hrecl.
@@ -295,7 +295,7 @@ Qed.
 Lemma newVar1 : forall l : list nat, ~ In (newVar l) l.
 Proof.
 unfold not in |- *; intros.
-elim (lt_irrefl (newVar l)).
+elim (Nat.lt_irrefl (newVar l)).
 apply newVar2.
 auto.
 Qed.
