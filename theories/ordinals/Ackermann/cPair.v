@@ -25,12 +25,13 @@ Qed.
 Lemma sumToN2 : forall b a : nat, a <= b -> sumToN a <= sumToN b.
 Proof.
   induction b as [| b Hrecb]; intros.
-  - simpl in |- *. rewrite  (Nat.le_0_r a) in H; now subst. 
-  - destruct (le_lt_or_eq _ _ H).
+  - simpl in |- *; rewrite  (Nat.le_0_r a) in H; now subst. 
+  - rewrite  Nat.lt_eq_cases in H; destruct H as [H | H].
     + transitivity (sumToN b).
       * apply Hrecb; auto.
         apply Compat815.lt_n_Sm_le; auto.
-      * cbn in |- *; apply le_S, le_plus_r.
+      * cbn in |- *; apply le_S; rewrite Nat.add_comm.
+        apply le_add_r.
     + subst a; auto.
 Qed.
 
@@ -82,12 +83,12 @@ Section CPair_Injectivity.
          assert (H1: a <= n).
          { apply Compat815.lt_n_Sm_le; assumption.
          }
-         induction (le_lt_or_eq a n H1).
+         rewrite Nat.lt_eq_cases in H1. destruct H1. 
         +   apply Nat.lt_trans with (sumToN n).
             * auto.
             * apply le_lt_n_Sm.
               apply le_plus_r.
-            +  rewrite H2.
+            +  rewrite H1.
                apply Nat.lt_succ_diag_r .
     }
     unfold cPair in |- *.
@@ -112,7 +113,7 @@ Section CPair_Injectivity.
         - auto.
       }
       rewrite <- H2 in H4;  elim (lt_not_le _ _ H4).
-      apply le_plus_r.
+      rewrite add_comm; apply le_add_r.
     }
     intros; eapply H0.
     - apply Nat.le_add_r.
