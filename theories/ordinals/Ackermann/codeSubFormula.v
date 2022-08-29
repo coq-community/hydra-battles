@@ -6041,7 +6041,7 @@ apply cPairLe3.
 apply le_n.
 eapply Nat.le_trans.
 apply H2.
-apply plus_le_compat_r.
+apply Nat.add_le_mono_r.
 simpl in |- *.
 apply Nat.le_add_r.
 unfold C in |- *.

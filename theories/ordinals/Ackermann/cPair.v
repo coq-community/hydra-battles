@@ -86,7 +86,7 @@ Section CPair_Injectivity.
          rewrite Nat.lt_eq_cases in H1. destruct H1. 
         +   apply Nat.lt_trans with (sumToN n).
             * auto.
-            * apply le_lt_n_Sm.
+            * apply Compat815.le_lt_n_Sm.
               apply le_plus_r.
             +  rewrite H1.
                apply Nat.lt_succ_diag_r .
@@ -100,8 +100,8 @@ Section CPair_Injectivity.
       - induction (le_lt_or_eq _ _ H3).
         + assert (H5: a + sumToN c < sumToN d).
           { apply Nat.le_lt_trans with (c + sumToN c).
-            apply plus_le_compat_r; auto.
-            auto.
+            now apply Nat.add_le_mono_r.
+            auto. 
           }
           rewrite H2 in H5.
       elim (lt_not_le _ _ H5).
@@ -109,7 +109,7 @@ Section CPair_Injectivity.
       + auto.
       - assert (H4: b + sumToN d < sumToN c).
       { apply Nat.le_lt_trans with (d + sumToN d).
-        - apply plus_le_compat_r;  auto.
+        - apply Nat.add_le_mono_r; auto.
         - auto.
       }
       rewrite <- H2 in H4;  elim (lt_not_le _ _ H4).
@@ -295,7 +295,7 @@ symmetry  in |- *.
 apply cPairProjectionsHelp.
 simpl in |- *.
 apply le_lt_n_Sm.
-apply plus_le_compat_r.
+apply Nat.add_le_mono_r.
 apply Nat.le_add_r.
 apply le_plus_r.
 Qed.
@@ -312,7 +312,7 @@ symmetry  in |- *.
 apply cPairProjectionsHelp.
 simpl in |- *.
 apply le_lt_n_Sm.
-apply plus_le_compat_r.
+apply Nat.add_le_mono_r.
 apply Nat.le_add_r.
 apply le_plus_r.
 Qed.
@@ -365,12 +365,10 @@ apply Nat.le_trans with (a + sumToN (b + d)).
 apply plus_le_compat_l.
 apply sumToN2.
 apply Nat.le_trans with (a + d).
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 auto.
-apply plus_le_compat_r.
-auto.
-apply plus_le_compat_r.
-auto.
+apply Nat.add_le_mono_r; auto.
+apply  Nat.add_le_mono_r; auto.
 Qed.
 
 Lemma cPairLt1 : forall a b : nat, a < cPair a (S b).

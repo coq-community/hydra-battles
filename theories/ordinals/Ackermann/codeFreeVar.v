@@ -6,6 +6,7 @@ Require Import Arith.
 Require Export codeList.
 Require Import folProp.
 Require Import code.
+Require Import Compat815.
 
 Section Code_Free_Vars.
 
@@ -154,11 +155,11 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 reflexivity.
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe1.
 Qed.
 
@@ -219,7 +220,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 reflexivity.
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in |- *.
 rewrite cPairProjections1.
@@ -751,7 +752,7 @@ rewrite Hrecl.
 rewrite codeFreeVarFormulaCorrect.
 apply codeAppCorrect.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2A.
 Qed.
 

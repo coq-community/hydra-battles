@@ -4,7 +4,7 @@
 
 
 From Coq Require Import Arith  Compare_dec Relations Wellfounded Lia.
-From hydras Require Import More_Arith  Restriction T1 OrdNotations.
+From hydras Require Import More_Arith  Restriction T1 OrdNotations Compat815.
 
 Set Implicit Arguments.
 
@@ -352,7 +352,7 @@ Compute t2_length (gcons 2 1 42 epsilon0).
 Lemma length_a : forall a b n v, t2_length a < 
                                  t2_length (gcons a b n v).
 Proof.
- simpl; intros; apply le_lt_n_Sm.
+ simpl; intros; apply Compat815.le_lt_n_Sm.
  match goal with
      [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
  apply le_plus_trans, le_plus_trans, Nat.le_max_l.
@@ -361,7 +361,7 @@ Qed.
 Lemma length_b : forall a b n v, t2_length b < 
                                  t2_length (gcons a b n v).
 Proof.
-  simpl; intros; apply le_lt_n_Sm.
+  simpl; intros; apply Compat815.le_lt_n_Sm.
   match goal with 
     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
   apply le_plus_trans, le_plus_trans.
@@ -373,7 +373,7 @@ Qed.
 Lemma length_c : forall a b n v, t2_length v < 
                                  t2_length (gcons a b n v).
 Proof.
-  simpl; intros; apply le_lt_n_Sm; case v.
+  simpl; intros; apply Compat815.le_lt_n_Sm; case v.
   - simpl; auto with arith.
   - intros; simpl (t2_length (gcons t t0 n0 t1)).
     simpl (nbterms (gcons t t0 n0 t1)).
@@ -411,7 +411,7 @@ Lemma length_psi : forall a b n c,
                       t2_length [a, b] <= t2_length (gcons a b n c).
 Proof.
  simpl.
- intros; apply le_lt_n_Sm.
+ intros; apply Compat815.le_lt_n_Sm.
  match goal with 
     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
  apply le_plus_trans.

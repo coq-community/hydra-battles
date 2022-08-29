@@ -73,7 +73,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 rewrite <- Hrecl.
 reflexivity.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2A.
 Qed.
 
@@ -625,7 +625,7 @@ repeat rewrite cPairProjections2.
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply cPairLe2.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2A.
 apply H1.
 apply le_n.

@@ -5,6 +5,7 @@ Require Import folProp.
 Require Import code.
 Require Import extEqualNat.
 Require Vector.
+Require Import Compat815.
 
 Section Code_Substitute_Term.
 
@@ -161,7 +162,7 @@ assert
        (fun b : nat => codeNth (S (cPair n n0) - S n) b))
     (evalStrongRec 2 g n)).
 apply (evalStrongRecHelp2 2).
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe1.
 simpl in H.
 rewrite H.
@@ -173,7 +174,7 @@ assert
        (fun b : nat => codeNth (S (cPair n n0) - S n0) b))
     (evalStrongRec 2 g n0)).
 apply (evalStrongRecHelp2 2).
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in H.
 rewrite H.
@@ -244,7 +245,7 @@ assert
        (fun b : nat => codeNth (S (cPair n n0) - S n) b))
     (evalStrongRec 2 g n)).
 apply (evalStrongRecHelp2 2).
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe1.
 simpl in H.
 rewrite H.
@@ -256,7 +257,7 @@ assert
        (fun b : nat => codeNth (S (cPair n n0) - S n0) b))
     (evalStrongRec 2 g n0)).
 apply (evalStrongRecHelp2 2).
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in H.
 rewrite H.

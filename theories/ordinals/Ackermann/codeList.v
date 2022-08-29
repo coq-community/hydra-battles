@@ -5,6 +5,7 @@ Require Import ListExt.
 Require Import Arith.
 Require Vector.
 Require Import extEqualNat.
+Require Import Compat815.
 
 Definition codeLength : nat -> nat :=
   evalStrongRec 0
@@ -40,7 +41,7 @@ apply eq_S.
 rewrite cPairProjections2.
 apply Hrecl.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 generalize (cPair a (codeList l)).
 intro.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
@@ -134,7 +135,7 @@ assert
     (evalStrongRec 1 f (codeList l1))).
 apply (evalStrongRecHelp2 1).
 unfold n in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in H.
 rewrite H.
@@ -259,7 +260,7 @@ simpl in |- *.
 unfold n in |- *.
 rewrite cPairProjections2.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in H.
 induction (eq_nat_dec a0 a).
@@ -433,7 +434,7 @@ unfold m in |- *.
 unfold n in |- *.
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in H.
 rewrite H.
@@ -581,7 +582,7 @@ induction (In_dec eq_nat_dec a (no_dup nat eq_nat_dec l)).
 reflexivity.
 reflexivity.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 apply cPairLe2A.
 Qed.
 
