@@ -141,8 +141,8 @@ Proof.
  -  apply phi0_positive;auto.
  - apply le_trans with ( mult_Sn (AP._phi0 alpha) n).
   induction n; simpl; auto with schutte.
-  +  apply le_plus_r;auto.
-  +  apply  le_plus_l;auto with schutte.
+   +  apply le_plus_r;auto.
+   +  apply  le_plus_l;auto with schutte.
 Qed.
  
 

@@ -87,7 +87,7 @@ Section CPair_Injectivity.
         +   apply Nat.lt_trans with (sumToN n).
             * auto.
             * apply Compat815.le_lt_n_Sm.
-              apply le_plus_r.
+              rewrite Nat.add_comm; apply le_add_r.
             +  rewrite H1.
                apply Nat.lt_succ_diag_r .
     }
@@ -105,7 +105,7 @@ Section CPair_Injectivity.
           }
           rewrite H2 in H5.
       elim (lt_not_le _ _ H5).
-      apply le_plus_r.
+      rewrite Nat.add_comm;apply le_add_r.
       + auto.
       - assert (H4: b + sumToN d < sumToN c).
       { apply Nat.le_lt_trans with (d + sumToN d).
@@ -297,7 +297,7 @@ simpl in |- *.
 apply le_lt_n_Sm.
 apply Nat.add_le_mono_r.
 apply Nat.le_add_r.
-apply le_plus_r.
+rewrite (Nat.add_comm a (sumToN (a + b)));apply le_add_r.
 Qed.
 
 Lemma cPairProjections2 : forall a b : nat, cPairPi2 (cPair a b) = b.
@@ -314,7 +314,7 @@ simpl in |- *.
 apply le_lt_n_Sm.
 apply Nat.add_le_mono_r.
 apply Nat.le_add_r.
-apply le_plus_r.
+rewrite (Nat.add_comm a (sumToN (a + b)));apply le_add_r.
 Qed.
 
 End CPair_projections.
@@ -340,12 +340,12 @@ Lemma cPairLe2 : forall a b : nat, b <= cPair a b.
 Proof.
 intros.
 unfold cPair in |- *.
-eapply Nat.le_trans.
-apply le_plus_r.
-apply plus_le_compat_l.
-apply Nat.le_trans with (a + b).
-apply le_plus_r.
+eapply Nat.le_trans with (b + a). 
+apply Nat.le_add_r.
+rewrite (Nat.add_comm b a).
+transitivity (sumToN (a + b)).
 apply sumToN1.
+rewrite (Nat.add_comm _ (sumToN (a + b))); apply le_add_r.
 Qed.
 
 Lemma cPairLe2A : forall a : nat, cPairPi2 a <= a.
@@ -393,7 +393,8 @@ simpl in |- *.
 unfold lt in |- *.
 apply le_n_S.
 eapply Nat.le_trans.
-apply le_plus_r.
+apply Nat.le_add_r. 
+rewrite Nat.add_comm at 1. 
 apply plus_le_compat_l.
 apply le_S.
 eapply Nat.le_trans.

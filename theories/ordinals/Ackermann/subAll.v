@@ -1251,7 +1251,7 @@ simpl in |- *.
 eapply In_list_remove1.
 apply H3.
 apply H3 with (q := m + n).
-apply le_plus_r.
+apply Compat815.le_plus_r.
 apply Nat.le_add_r.
 apply H2.
 apply
