@@ -96,7 +96,7 @@ Section CPair_Injectivity.
       (H0: forall a b c d : nat,
           a <= c -> b <= d -> a + sumToN c = b + sumToN d -> c = d).
     { intros.
-      induction (le_or_lt c d).
+      induction (le_gt_cases c d).
       - induction (le_lt_or_eq _ _ H3).
         + assert (H5: a + sumToN c < sumToN d).
           { apply Nat.le_lt_trans with (c + sumToN c).
@@ -207,7 +207,7 @@ intros.
 induction a as [| a Hreca].
 simpl in H.
 elim (Nat.nlt_0_r _ H).
-induction (le_or_lt (sumToN a) b).
+induction (Nat.le_gt_cases (sumToN a) b).
 assert (searchXY b = a).
 apply cPairProjectionsHelp; auto.
 unfold cPair in |- *.

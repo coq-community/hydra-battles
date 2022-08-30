@@ -283,7 +283,7 @@ Section AP_Unbounded.
 
     Lemma ksi_plus_seq_n' : forall (m:nat), ksi + seq m <= beta.  
     Proof.
-      intro m ; destruct  (le_or_lt n m) as [H | H].
+      intro m ; destruct  (Nat.le_gt_cases n m) as [H | H].
       -  apply ksi_plus_seq_n;auto.
       -   apply le_trans with (ksi + seq n).
           +  apply plus_mono_r_weak;auto.
