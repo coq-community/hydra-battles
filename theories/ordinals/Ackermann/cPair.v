@@ -19,18 +19,19 @@ Lemma sumToN1 : forall n : nat, n <= sumToN n.
 Proof.
   induction n as [| n Hrecn].
   - auto.
-  - simpl in |- *; apply le_n_S, le_plus_l.
+  - simpl in |- *; apply le_n_S, Nat.le_add_r.
 Qed.
 
 Lemma sumToN2 : forall b a : nat, a <= b -> sumToN a <= sumToN b.
 Proof.
   induction b as [| b Hrecb]; intros.
-  - simpl in |- *; rewrite <- (le_n_O_eq _ H); cbn; auto.
-  - destruct (le_lt_or_eq _ _ H).
+  - simpl in |- *; rewrite  (Nat.le_0_r a) in H; now subst. 
+  - rewrite  Nat.lt_eq_cases in H; destruct H as [H | H].
     + transitivity (sumToN b).
       * apply Hrecb; auto.
         apply Compat815.lt_n_Sm_le; auto.
-      * cbn in |- *; apply le_S, le_plus_r.
+      * cbn in |- *; apply le_S; rewrite Nat.add_comm.
+        apply le_add_r.
     + subst a; auto.
 Qed.
 
@@ -82,12 +83,12 @@ Section CPair_Injectivity.
          assert (H1: a <= n).
          { apply Compat815.lt_n_Sm_le; assumption.
          }
-         induction (le_lt_or_eq a n H1).
+         rewrite Nat.lt_eq_cases in H1. destruct H1. 
         +   apply Nat.lt_trans with (sumToN n).
             * auto.
-            * apply le_lt_n_Sm.
-              apply le_plus_r.
-            +  rewrite H2.
+            * apply Compat815.le_lt_n_Sm.
+              rewrite Nat.add_comm; apply le_add_r.
+            +  rewrite H1.
                apply Nat.lt_succ_diag_r .
     }
     unfold cPair in |- *.
@@ -95,28 +96,28 @@ Section CPair_Injectivity.
       (H0: forall a b c d : nat,
           a <= c -> b <= d -> a + sumToN c = b + sumToN d -> c = d).
     { intros.
-      induction (le_or_lt c d).
+      induction (le_gt_cases c d).
       - induction (le_lt_or_eq _ _ H3).
         + assert (H5: a + sumToN c < sumToN d).
           { apply Nat.le_lt_trans with (c + sumToN c).
-            apply plus_le_compat_r; auto.
-            auto.
+            now apply Nat.add_le_mono_r.
+            auto. 
           }
           rewrite H2 in H5.
       elim (lt_not_le _ _ H5).
-      apply le_plus_r.
+      rewrite Nat.add_comm;apply le_add_r.
       + auto.
       - assert (H4: b + sumToN d < sumToN c).
       { apply Nat.le_lt_trans with (d + sumToN d).
-        - apply plus_le_compat_r;  auto.
+        - apply Nat.add_le_mono_r; auto.
         - auto.
       }
       rewrite <- H2 in H4;  elim (lt_not_le _ _ H4).
-      apply le_plus_r.
+      rewrite add_comm; apply le_add_r.
     }
     intros; eapply H0.
-    - apply le_plus_l.
-    - apply le_plus_l.
+    - apply Nat.le_add_r.
+    - apply Nat.le_add_r.
     - auto.
   Qed.
 
@@ -206,7 +207,7 @@ intros.
 induction a as [| a Hreca].
 simpl in H.
 elim (Nat.nlt_0_r _ H).
-induction (le_or_lt (sumToN a) b).
+induction (Nat.le_gt_cases (sumToN a) b).
 assert (searchXY b = a).
 apply cPairProjectionsHelp; auto.
 unfold cPair in |- *.
@@ -294,9 +295,9 @@ symmetry  in |- *.
 apply cPairProjectionsHelp.
 simpl in |- *.
 apply le_lt_n_Sm.
-apply plus_le_compat_r.
-apply le_plus_l.
-apply le_plus_r.
+apply Nat.add_le_mono_r.
+apply Nat.le_add_r.
+rewrite (Nat.add_comm a (sumToN (a + b)));apply le_add_r.
 Qed.
 
 Lemma cPairProjections2 : forall a b : nat, cPairPi2 (cPair a b) = b.
@@ -311,9 +312,9 @@ symmetry  in |- *.
 apply cPairProjectionsHelp.
 simpl in |- *.
 apply le_lt_n_Sm.
-apply plus_le_compat_r.
-apply le_plus_l.
-apply le_plus_r.
+apply Nat.add_le_mono_r.
+apply Nat.le_add_r.
+rewrite (Nat.add_comm a (sumToN (a + b)));apply le_add_r.
 Qed.
 
 End CPair_projections.
@@ -324,7 +325,7 @@ Lemma cPairLe1 : forall a b : nat, a <= cPair a b.
 Proof.
 intros.
 unfold cPair in |- *.
-apply le_plus_l.
+apply Nat.le_add_r.
 Qed.
 
 Lemma cPairLe1A : forall a : nat, cPairPi1 a <= a.
@@ -339,12 +340,12 @@ Lemma cPairLe2 : forall a b : nat, b <= cPair a b.
 Proof.
 intros.
 unfold cPair in |- *.
-eapply Nat.le_trans.
-apply le_plus_r.
-apply plus_le_compat_l.
-apply Nat.le_trans with (a + b).
-apply le_plus_r.
+eapply Nat.le_trans with (b + a). 
+apply Nat.le_add_r.
+rewrite (Nat.add_comm b a).
+transitivity (sumToN (a + b)).
 apply sumToN1.
+rewrite (Nat.add_comm _ (sumToN (a + b))); apply le_add_r.
 Qed.
 
 Lemma cPairLe2A : forall a : nat, cPairPi2 a <= a.
@@ -364,12 +365,10 @@ apply Nat.le_trans with (a + sumToN (b + d)).
 apply plus_le_compat_l.
 apply sumToN2.
 apply Nat.le_trans with (a + d).
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 auto.
-apply plus_le_compat_r.
-auto.
-apply plus_le_compat_r.
-auto.
+apply Nat.add_le_mono_r; auto.
+apply  Nat.add_le_mono_r; auto.
 Qed.
 
 Lemma cPairLt1 : forall a b : nat, a < cPair a (S b).
@@ -383,7 +382,7 @@ simpl in |- *.
 rewrite Nat.add_comm.
 unfold lt in |- *.
 apply le_n_S.
-apply le_plus_l.
+apply Nat.le_add_r.
 Qed.
 
 Lemma cPairLt2 : forall a b : nat, b < cPair (S a) b.
@@ -394,13 +393,14 @@ simpl in |- *.
 unfold lt in |- *.
 apply le_n_S.
 eapply Nat.le_trans.
-apply le_plus_r.
+apply Nat.le_add_r. 
+rewrite Nat.add_comm at 1. 
 apply plus_le_compat_l.
 apply le_S.
 eapply Nat.le_trans.
-apply le_plus_l.
+apply Nat.le_add_r.
 rewrite Nat.add_comm.
-apply le_plus_l.
+apply Nat.le_add_r.
 Qed.
 
 End CPair_Order.

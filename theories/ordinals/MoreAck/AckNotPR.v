@@ -225,7 +225,7 @@ Proof.
     intro v; simpl evalPrimRec; rewrite evalListComp.
     generalize 
       (H0  (map (fun g0 : naryFunc n => evalList n v g0) (evalPrimRecs n m g)));
-      intro H00; eapply Le.le_trans.
+      intro H00; eapply Nat.le_trans.
     +  auto.
     + generalize (H v); intro HH; transitivity (Ack x1 (Ack x0 (max_v v))).
       * apply Ack_mono_r; apply max_v_lub.
@@ -382,7 +382,7 @@ Lemma majorPR2_strict (f: naryFunc 2)(Hf : isPR 2 f):
 Proof.
    destruct (majorPR2 _ Hf) as [m Hm].
    exists (S (max 2 m)); intros x y; destruct x, y; try lia.
-     intros _ _;  apply Lt.le_lt_trans with (Ack m (S (Nat.max x y))).
+     intros _ _;  apply Nat.le_lt_trans with (Ack m (S (Nat.max x y))).
    - rewrite succ_max_distr; auto.
    - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
  Qed.

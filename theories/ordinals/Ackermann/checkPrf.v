@@ -2071,8 +2071,8 @@ eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 unfold C in |- *.
 apply cPairLe2.
-eapply lt_le_trans; [ idtac | apply cPairLe2 ].
-eapply le_lt_trans; [ idtac | apply cPairLt2 ].
+eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
+eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 unfold C in |- *.
 apply cPairLe1.
 unfold A at 1 in |- *.

@@ -222,7 +222,7 @@ Qed.
 
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
 Proof.
-  intros;  apply Lt.le_lt_trans with (exp2 i * i).
+  intros;  apply Nat.le_lt_trans with (exp2 i * i).
   - destruct (mult_O_le (exp2 i) i).
     + lia.
     + now rewrite Nat.mul_comm.
@@ -564,7 +564,7 @@ Proof. now  destruct  (TH_packed alpha). Qed.
 Corollary F_alpha_positive alpha :  forall n, 0 < F_ alpha n. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intro n; apply Lt.le_lt_trans with n; auto with arith.
+  intro n; apply Nat.le_lt_trans with n; auto with arith.
   apply F_alpha_gt.
 Qed.
 

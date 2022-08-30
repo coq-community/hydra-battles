@@ -15,7 +15,7 @@ From hydras Require Import More_Arith Restriction.
 From hydras Require Import ON_Generic. 
 From hydras Require Import rpo.term  rpo.rpo.
 From hydras Require Import T2.
-
+From hydras Require Import Compat815.
 Import Datatypes.
 
 Set Implicit Arguments.
@@ -149,7 +149,7 @@ Section lemmas_on_length.
     Proof.
     intros;apply plus_lt_le_compat.
     -  apply length_b.
-    - cbn; intros; apply le_lt_n_Sm.
+    - cbn; intros; apply Compat815.le_lt_n_Sm.
     match goal with 
       [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
     apply le_plus_trans.
@@ -187,7 +187,7 @@ Section lemmas_on_length.
   Proof.
     intros; apply plus_le_lt_compat.
     - case n1; auto.
-      intros;apply lt_le_weak;apply length_n; auto with arith.
+      intros;apply Nat.lt_le_incl;apply length_n; auto with arith.
     -  apply length_b.
   Qed.
 

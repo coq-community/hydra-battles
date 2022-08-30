@@ -1,7 +1,7 @@
 (** by Evelyne Contejean, LRI *)
 
 
-From Coq Require Import List Relations Wellfounded Arith  Wf_nat.
+From Coq Require Import List Relations Wellfounded Arith  Wf_nat Lia.
 From hydras Require Import more_list list_permut dickson term.
 
 (** A non-dependant version of lexicographic extension. *)
@@ -196,13 +196,13 @@ Proof.
 intros a f l t1 u1 t2 u2; unfold o_size3, size3, size2, lex;
 elim (eq_nat_dec (size (Term f l)) (size (Term f (a :: l)))); intro eq1.
 do 2 rewrite size_unfold in eq1; injection eq1; clear eq1; intro eq1;
-absurd (list_size size l < list_size size l); auto with arith;
-generalize (plus_le_compat_r _ _ (list_size size l) (size_ge_one a));
-rewrite <- eq1; trivial.
+absurd (list_size size l < list_size size l); auto with arith.
+assert (Ha: 1 <= size a) by apply size_ge_one.
+exfalso; lia.
 do 2 rewrite size_unfold;
 simpl; apply lt_n_S; apply lt_le_trans with (1 + list_size size l);
 auto with arith; 
-apply plus_le_compat_r; apply size_ge_one.
+apply Nat.add_le_mono_r; apply size_ge_one.
 Qed.
 
 Lemma lex2 :

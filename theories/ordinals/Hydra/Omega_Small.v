@@ -121,7 +121,7 @@ Section Impossibility_Proof.
   (* begin snippet mGeb:: no-out *)
     induction i.
     - auto with arith.
-    - apply Lt.le_lt_trans with (m (iota i)). 
+    - apply Nat.le_lt_trans with (m (iota i)). 
       (* ... *) 
      (* end snippet mGeb *)  
        + assumption.

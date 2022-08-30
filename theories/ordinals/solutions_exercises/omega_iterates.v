@@ -164,7 +164,7 @@ Lemma mono_f_gt_0 f : mono f -> 0 < f 0 ->
   intros H H0 i _.
   induction i.
   assumption. 
-  apply le_lt_trans with (f i).
+  apply Nat.le_lt_trans with (f i).
    unfold id_nat; auto with arith.
    apply H. auto with arith.
 Qed.

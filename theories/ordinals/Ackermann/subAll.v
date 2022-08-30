@@ -1251,8 +1251,8 @@ simpl in |- *.
 eapply In_list_remove1.
 apply H3.
 apply H3 with (q := m + n).
-apply le_plus_r.
-apply le_plus_l.
+apply Compat815.le_plus_r.
+apply Nat.le_add_r.
 apply H2.
 apply
  (impE L)
@@ -1366,7 +1366,7 @@ rewrite H1 in H0.
 apply (le_not_lt (S (m + m0)) m).
 apply H0.
 apply le_lt_n_Sm.
-apply le_plus_l.
+apply Nat.le_add_r.
 assert
  (forall (f : fol.Formula L) (s r m p : nat),
   m < s ->
@@ -1382,7 +1382,7 @@ rewrite (subFormulaForall L).
 induction (eq_nat_dec (s + n) m).
 rewrite <- a in H.
 elim (le_not_lt s (s + n)).
-apply le_plus_l.
+apply Nat.le_add_r.
 auto.
 induction (In_dec eq_nat_dec (s + n) (freeVarTerm L (fol.var L p))).
 induction a as [H1| H1].
@@ -1581,12 +1581,12 @@ rewrite <- plus_Snm_nSm.
 apply b.
 rewrite H3.
 apply H2.
-apply le_plus_l.
+apply Nat.le_add_r.
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite <- H2 in b.
 elim (lt_not_le _ _ b).
-apply le_plus_l.
+apply Nat.le_add_r.
 apply (forallE L).
 apply (impE L) with (fol.forallH L (m + n) (closeFrom m n f)).
 apply sysExtend with (Empty_set (fol.Formula L)).
@@ -1733,7 +1733,7 @@ apply a0.
 rewrite minus_plus.
 auto.
 elim (lt_not_le _ _ b0).
-apply le_plus_l.
+apply Nat.le_add_r.
 apply subAllCloseFrom1.
 intros.
 apply lt_le_trans with (newVar (freeVarTerm L (m v))).

@@ -120,7 +120,7 @@ Section F_alpha_notPR.
     Proof.
       destruct (F_mono_l alpha E0omega Halpha) as [N HN];
         exists (Nat.max N 2);  intros p Hp.
-      apply Lt.le_lt_trans with (F_ E0omega p).    
+      apply Nat.le_lt_trans with (F_ E0omega p).    
       - apply F_vs_Ack; auto; lia.
       - apply HN; lia.
     Qed.
