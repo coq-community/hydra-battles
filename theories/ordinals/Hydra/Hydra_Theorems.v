@@ -167,18 +167,17 @@ Section battle_length_notPR.
       + apply Nat.lt_le_incl.
         apply L_ge_S.
         unfold alpha; intro H0; injection H0; discriminate.
-      + replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k)) by lia.
-        now red.
+      + now replace (L_ alpha ( S k) -k + k)%nat with (L_ alpha (S k))
+          by lia.
   Qed.
 
   (* begin snippet mGeFOmega *)
   
-  Remark m_ge_F_omega : forall k,  F_ E0omega (S k) <= m (S k). (* .no-out *)
+  Remark m_ge_F_omega k: F_ E0omega (S k) <= m (S k). (* .no-out *)
   (* end snippet mGeFOmega *)
   
   Proof.
-    intro k; rewrite m_eqn.
-    transitivity (H'_ alpha (S k)).
+    rewrite m_eqn; transitivity (H'_ alpha (S k)).
     - apply H'_F.
     - unfold l_std;  generalize (H'_L_ alpha (S k)); lia.
   Qed.

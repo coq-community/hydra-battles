@@ -290,10 +290,9 @@ Fact compose_01 :
     forall (x:PrimRec 0) (t : PrimRec 1),
     let c := evalPrimRec 0 x in
     let f := evalPrimRec 1 t in
-    evalPrimRec 0 (composeFunc 0 1
-                               (PRcons 0 0 x (PRnil 0))
-                               t)  =
-     f c. 
+    evalPrimRec 0
+      (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) t)
+    = f c. 
 Proof. reflexivity. Qed.
 (*||*)
 
