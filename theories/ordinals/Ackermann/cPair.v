@@ -97,14 +97,14 @@ Section CPair_Injectivity.
           a <= c -> b <= d -> a + sumToN c = b + sumToN d -> c = d).
     { intros.
       induction (le_gt_cases c d).
-      - induction (le_lt_or_eq _ _ H3).
+      - induction (Compat815.le_lt_or_eq _ _ H3).
         + assert (H5: a + sumToN c < sumToN d).
           { apply Nat.le_lt_trans with (c + sumToN c).
             now apply Nat.add_le_mono_r.
             auto. 
           }
           rewrite H2 in H5.
-      elim (lt_not_le _ _ H5).
+      elim (Compat815.lt_not_le _ _ H5).
       rewrite Nat.add_comm;apply le_add_r.
       + auto.
       - assert (H4: b + sumToN d < sumToN c).
@@ -112,7 +112,7 @@ Section CPair_Injectivity.
         - apply Nat.add_le_mono_r; auto.
         - auto.
       }
-      rewrite <- H2 in H4;  elim (lt_not_le _ _ H4).
+      rewrite <- H2 in H4;  elim (Compat815.lt_not_le _ _ H4).
       rewrite add_comm; apply le_add_r.
     }
     intros; eapply H0.
@@ -121,28 +121,20 @@ Section CPair_Injectivity.
     - auto.
   Qed.
 
-  Lemma cPairInj1 : forall a b c d : nat, cPair a b = cPair c d -> a = c.
+  Lemma cPairInj1 a b c d: cPair a b = cPair c d -> a = c.
   Proof.
-    intros; assert (a + b = c + d) by (apply cPairInjHelp; auto). 
-    eapply plus_reg_l.
-    unfold cPair in H.
-    rewrite (Nat.add_comm a) in H.
+    intro H; assert (H0: a + b = c + d) by (apply cPairInjHelp; auto).
+    unfold cPair in H; rewrite (Nat.add_comm a) in H; 
     rewrite (Nat.add_comm c) in H.
-    rewrite H0 in H. apply H.
+    rewrite H0 in H; now rewrite Nat.add_cancel_l in H. 
   Qed.
 
-  Lemma cPairInj2 : forall a b c d : nat, cPair a b = cPair c d -> b = d.
+  Lemma cPairInj2  a b c d : cPair a b = cPair c d -> b = d.
   Proof.
-    intros.
-    assert (a + b = c + d).
-    {
-      apply cPairInjHelp; auto.
-    }
-    assert (a = c).
-    { eapply cPairInj1; apply H.
-    }
-    eapply plus_reg_l.
-    rewrite H1 in H0;  apply H0.
+    intro H;  assert (H0: a + b = c + d) by
+      ( apply cPairInjHelp; auto ).
+    assert (H1: a = c) by (eapply cPairInj1; apply H).
+    rewrite H1 in H0; now rewrite Nat.add_cancel_l in H0. 
   Qed.
 
 
@@ -172,7 +164,8 @@ elim (ltBoolFalse b (sumToN (S a))).
 apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
 rewrite H1.
 induction (nat_total_order _ _ b0).
-elim (lt_not_le _ _ H2).
+rewrite Nat.lt_nge in H2. destruct H2. 
+
 apply Nat.le_trans with (sumToN a).
 apply sumToN1.
 auto.
@@ -184,59 +177,59 @@ auto.
 elim (ltBoolFalse b (sumToN (S a))).
 apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
 fold c in |- *.
-induction (nat_total_order _ _ b0).
+rewrite lt_gt_cases in b0; destruct b0 as [H2 | H2]; [trivial|].
 elim (le_not_lt _ _ H0).
 apply lt_le_trans with (sumToN (S c)).
 apply ltBoolTrue.
 auto.
 assert (S c <= a).
 apply Compat815.lt_n_Sm_le.
-apply lt_n_S.
-auto.
-apply sumToN2.
-auto.
-auto.
-auto.
+apply lt_n_S; auto.
+apply sumToN2; auto.
+assumption.
+assumption.
 Qed.
 
-Lemma cPairProjections : forall a : nat, cPair (cPairPi1 a) (cPairPi2 a) = a.
+Lemma cPairProjections a: cPair (cPairPi1 a) (cPairPi2 a) = a.
 Proof.
-assert
- (forall a b : nat, b < sumToN a -> cPair (cPairPi1 b) (cPairPi2 b) = b).
-intros.
-induction a as [| a Hreca].
-simpl in H.
-elim (Nat.nlt_0_r _ H).
-induction (Nat.le_gt_cases (sumToN a) b).
-assert (searchXY b = a).
-apply cPairProjectionsHelp; auto.
-unfold cPair in |- *.
-replace (cPairPi1 b + cPairPi2 b) with a.
-unfold cPairPi1 in |- *.
-rewrite H1.
-rewrite Nat.add_comm.
-rewrite <- le_plus_minus.
-reflexivity.
-auto.
-unfold cPairPi2 in |- *.
-rewrite <- le_plus_minus.
-auto.
-unfold cPairPi1 in |- *.
-rewrite H1.
-simpl in H.
-apply (fun p n m : nat => plus_le_reg_l n m p) with (sumToN a).
-rewrite <- le_plus_minus.
-rewrite Nat.add_comm.
-apply Compat815.lt_n_Sm_le.
-auto.
-auto.
-apply Hreca.
-auto.
-intros.
-apply H with (S a).
-apply lt_le_trans with (S a).
-apply Nat.lt_succ_diag_r .
-apply sumToN1.
+  revert a;
+    assert (H: 
+        forall a b : nat, b < sumToN a ->
+                          cPair (cPairPi1 b) (cPairPi2 b) = b).
+  { intros a b H.
+    induction a as [| a Hreca].
+    simpl in H.
+    elim (Nat.nlt_0_r _ H).
+    induction (Nat.le_gt_cases (sumToN a) b).
+    assert (searchXY b = a)
+     by (apply cPairProjectionsHelp; auto).
+      unfold cPair in |- *.
+      replace (cPairPi1 b + cPairPi2 b) with a.
+      unfold cPairPi1 in |- *.
+      rewrite H1.
+      rewrite Nat.add_comm.
+      now rewrite <- le_plus_minus.
+      auto.
+      unfold cPairPi2 in |- *.
+      rewrite <- le_plus_minus.
+      auto.
+      unfold cPairPi1 in |- *.
+      rewrite H1.
+      simpl in H.
+      apply (fun p n m : nat => plus_le_reg_l n m p) with (sumToN a).
+      rewrite <- le_plus_minus.
+      rewrite Nat.add_comm.
+      apply Compat815.lt_n_Sm_le.
+      auto.
+      auto.
+      apply Hreca.
+      auto.
+  }
+  intros.
+  apply H with (S a).
+  apply lt_le_trans with (S a).
+  apply Nat.lt_succ_diag_r .
+  apply sumToN1.
 Qed.
 
 Remark searchXYIsPR : isPR 1 searchXY.
