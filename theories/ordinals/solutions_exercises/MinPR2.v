@@ -3,11 +3,12 @@
 
 
 From hydras Require Import  primRec extEqualNat.
-From Coq Require Import Min ArithRing Lia Compare_dec.
+From Coq Require Import ArithRing Lia Compare_dec.
 
 (** Define an n-ary if-then-else *)
 
-Fixpoint naryIf (n:nat) : naryRel n -> naryFunc n -> naryFunc n -> naryFunc n
+Fixpoint naryIf (n:nat) :
+  naryRel n -> naryFunc n -> naryFunc n -> naryFunc n
   :=
     match n return (naryRel n -> naryFunc n -> naryFunc n -> naryFunc n) with
       0 => (fun b x y =>  if b then x else y)
@@ -55,7 +56,7 @@ Section Proof_of_MinIsPR.
            (fun x _ => x)
            (fun _ y => y).
 
-  Lemma minPR_correct : extEqual 2 minPR min.
+  Lemma minPR_correct : extEqual 2 minPR PeanoNat.Nat.min.
   Proof.
     intros a b; unfold minPR, naryIf, leBool.
     destruct  (le_lt_dec a b).

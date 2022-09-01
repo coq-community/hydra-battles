@@ -158,6 +158,7 @@ theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
 
 theories/ordinals/solutions_exercises/MinPR.v
+theories/ordinals/solutions_exercises/MinPR2.v
 theories/ordinals/solutions_exercises/FibonacciPR.v
 theories/ordinals/solutions_exercises/MorePRExamples.v
 theories/ordinals/solutions_exercises/isqrt.v

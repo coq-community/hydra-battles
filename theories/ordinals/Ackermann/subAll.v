@@ -1571,7 +1571,8 @@ auto.
 apply (subTermNil L).
 unfold not in |- *; intros.
 assert (m + (m0 - m) = m0).
-apply le_plus_minus_r.
+About le_plus_minus_r. 
+rewrite Nat.add_comm; apply Nat.sub_add.
 auto.
 elim (lt_not_le (m + n) m).
 apply H with (m0 - m).

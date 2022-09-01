@@ -206,23 +206,20 @@ Proof.
       unfold cPair in |- *.
       replace (cPairPi1 b + cPairPi2 b) with a.
       unfold cPairPi1 in |- *.
-      rewrite H1.
-      rewrite Nat.add_comm.
-      now rewrite <- le_plus_minus.
-      auto.
+      rewrite H1; now rewrite Nat.sub_add.
       unfold cPairPi2 in |- *.
-      rewrite <- le_plus_minus.
+      rewrite H1.  rewrite Nat.add_comm,  Nat.sub_add.
       auto.
       unfold cPairPi1 in |- *.
       rewrite H1.
       simpl in H.
       apply (fun p n m : nat => plus_le_reg_l n m p) with (sumToN a).
-      rewrite <- le_plus_minus.
-      rewrite Nat.add_comm.
+         rewrite Nat.add_comm, sub_add. 
+
       apply Compat815.lt_n_Sm_le.
       auto.
-      auto.
-      apply Hreca.
+      auto. auto. rewrite add_comm;  apply H. 
+      auto. apply Hreca.
       auto.
   }
   intros.

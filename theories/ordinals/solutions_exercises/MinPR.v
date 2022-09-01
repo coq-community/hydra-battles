@@ -2,8 +2,8 @@
 
 
 From hydras Require Import  primRec extEqualNat.
-From Coq Require Import Min Compare_dec Lia ArithRing.
-
+From Coq Require Import Compare_dec Lia ArithRing.
+Import PeanoNat.Nat.
 
 Section Proof_of_MinIsPR.
 
