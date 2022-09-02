@@ -33,7 +33,8 @@ apply Hreca.
 apply lt_S_n.
 auto.
 intros.
-induction (nat_total_order _ _ H0).
+ destruct (Nat.lt_gt_cases a b) as [H1 _]; specialize (H1 H0);
+          destruct H1 as [H1 | H1]. 
 apply H.
 auto.
 apply impE with (notH (equal (natToTerm b) (natToTerm a))).

@@ -152,42 +152,43 @@ Definition cPairPi1 (a : nat) := a - sumToN (searchXY a).
 Definition cPairPi2 (a : nat) := searchXY a - cPairPi1 a.
 
 Lemma cPairProjectionsHelp :
- forall a b : nat, b < sumToN (S a) -> sumToN a <= b -> searchXY b = a.
+  forall a b : nat, b < sumToN (S a) -> sumToN a <= b -> searchXY b = a.
 Proof.
-intros.
-unfold searchXY in |- *.
-induction (boundedSearch2 (fun b y : nat => ltBool b (sumToN (S y))) b).
-rewrite H1.
-induction (eq_nat_dec b a).
-auto.
-elim (ltBoolFalse b (sumToN (S a))).
-apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
-rewrite H1.
-induction (nat_total_order _ _ b0).
-rewrite Nat.lt_nge in H2. destruct H2. 
-
-apply Nat.le_trans with (sumToN a).
-apply sumToN1.
-auto.
-auto.
-auto.
-set (c := boundedSearch (fun b y : nat => ltBool b (sumToN (S y))) b) in *.
-induction (eq_nat_dec c a).
-auto.
-elim (ltBoolFalse b (sumToN (S a))).
-apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
-fold c in |- *.
-rewrite lt_gt_cases in b0; destruct b0 as [H2 | H2]; [trivial|].
-elim (le_not_lt _ _ H0).
-apply lt_le_trans with (sumToN (S c)).
-apply ltBoolTrue.
-auto.
-assert (S c <= a).
-apply Compat815.lt_n_Sm_le.
-apply lt_n_S; auto.
-apply sumToN2; auto.
-assumption.
-assumption.
+  intros.
+  unfold searchXY in |- *.
+  induction (boundedSearch2 (fun b y : nat => ltBool b (sumToN (S y))) b).
+  - rewrite H1.
+    induction (eq_nat_dec b a).
+    + auto.
+    + elim (ltBoolFalse b (sumToN (S a))).
+      * apply (boundedSearch1
+                 (fun b y : nat => ltBool b (sumToN (S y))) b).
+        rewrite H1.
+        destruct (Nat.lt_gt_cases b a) as [H2 _]; specialize (H2 b0);
+          destruct H2 as [H2 | H2]. 
+        -- rewrite Nat.lt_nge in H2. destruct H2. 
+           apply Nat.le_trans with (sumToN a).
+           apply sumToN1.
+           auto.
+        -- auto.
+      * auto.
+  - set (c := boundedSearch (fun b y : nat => ltBool b (sumToN (S y))) b) in *.
+    induction (eq_nat_dec c a).
+    + auto.
+    + elim (ltBoolFalse b (sumToN (S a))).
+      apply (boundedSearch1 (fun b y : nat => ltBool b (sumToN (S y))) b).
+      fold c in |- *.
+      rewrite lt_gt_cases in b0; destruct b0 as [H2 | H2]; [trivial|].
+      elim (le_not_lt _ _ H0).
+      * apply lt_le_trans with (sumToN (S c)).
+        -- apply ltBoolTrue.
+           auto.
+        -- assert (S c <= a).
+           { apply Compat815.lt_n_Sm_le.
+             apply lt_n_S; auto.
+           } apply sumToN2; auto.
+      * assumption.
+      * assumption.
 Qed.
 
 Lemma cPairProjections a: cPair (cPairPi1 a) (cPairPi2 a) = a.
