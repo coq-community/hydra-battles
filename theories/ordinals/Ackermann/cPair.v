@@ -407,10 +407,8 @@ Proof.
                            end) in *.
   assert (H: forall l : list nat,
              cPairPi2 (pred (codeList l)) = codeList (A l)).
-  { destruct l.
-    simpl in |- *.
+  { destruct l; simpl in |- *.
     apply (cPairProjections2 0 0).
-    simpl in |- *.
     apply cPairProjections2.
   }
   assert
@@ -419,50 +417,34 @@ Proof.
           (fun _ Hrecn : nat => cPairPi2 (pred Hrecn)) n = 
           codeList (drop n l)).
   {
-    simple induction n.
-    simpl in |- *.
+    simple induction n; simpl in |- *.
     reflexivity.
-    simpl in |- *.
-    intros.
-    rewrite H0.
-    rewrite H.
-    unfold A in |- *.
-    clear H0.
-    generalize l.
-    clear l.
+    intros n0 H0 l; rewrite H0, H. 
+    unfold A in |- *; clear H0; revert l. 
     induction n0 as [| n0 Hrecn0]; simpl in |- *; intros.
-    reflexivity.
-    destruct l.
-    apply (Hrecn0 nil).
-    apply Hrecn0.
+    - reflexivity.
+    - destruct l.
+      + apply (Hrecn0 nil).
+      + apply Hrecn0.
   }
-  intros.
+  intros n l.
   replace (nth n l 0) with match drop n l with
                            | nil => 0
                            | a :: _ => a
                            end.
-  rewrite H0.
-  destruct (drop n l).
-  simpl in |- *.
-  apply (cPairProjections1 0 0).
-  simpl in |- *.
-  apply cPairProjections1.
-  generalize l.
-  clear l.
-  induction n as [| n Hrecn].
-  destruct l; reflexivity.
-  destruct l.
-  simpl in Hrecn.
-  destruct n; apply (Hrecn nil).
-  simpl in |- *.
-  auto.
+  rewrite H0; destruct (drop n l).
+  + simpl in |- *; apply (cPairProjections1 0 0).
+  + simpl in |- *;  apply cPairProjections1.
+  + revert l; induction n as [| n Hrecn].
+   * destruct l; reflexivity.
+   * destruct l.
+    -- simpl in Hrecn; destruct n; apply (Hrecn nil).
+    -- simpl in |- *; auto.
 Qed.
 
 Lemma codeNthIsPR : isPR 2 codeNth.
 Proof.
-  unfold codeNth in |- *.
-  apply
-    compose2_1IsPR
+  unfold codeNth in |- *; apply compose2_1IsPR
     with
     (g := fun x : nat => cPairPi1 (pred x))
     (f := fun n m : nat =>
@@ -491,88 +473,96 @@ Definition evalStrongRecHelp (n : nat) (f : naryFunc (S (S n))) :
   evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) (codeList nil))
     (evalComposeFunc (S (S n)) 2
        (Vector.cons _ f _
-          (Vector.cons _ (evalProjFunc (S (S n)) n (Nat.lt_lt_succ_r _ _ (Nat.lt_succ_diag_r  _))) _
-             (Vector.nil _))) (fun a b : nat => S (cPair a b))).
+          (Vector.cons _ (evalProjFunc (S (S n)) n
+                            (Nat.lt_lt_succ_r _ _
+                               (Nat.lt_succ_diag_r  _))) _
+             (Vector.nil _))) 
+       (fun a b : nat => S (cPair a b))).
 
 Definition evalStrongRec (n : nat) (f : naryFunc (S (S n))) :
   naryFunc (S n) :=
   evalComposeFunc (S n) 1
-    (Vector.cons _ (fun z : nat => evalStrongRecHelp n f (S z)) _ (Vector.nil _))
+    (Vector.cons _
+       (fun z : nat => evalStrongRecHelp n f (S z)) _ (Vector.nil _))
     (fun z : nat => cPairPi1 (pred z)).
 
-Lemma evalStrongRecIsPR :
- forall (n : nat) (f : naryFunc (S (S n))),
- isPR _ f -> isPR _ (evalStrongRec n f).
+Lemma evalStrongRecIsPR (n : nat) (f : naryFunc (S (S n))) :
+ isPR (S (S n))  f -> isPR (S n) (evalStrongRec n f).
 Proof.
-intros.
-unfold evalStrongRec, evalStrongRecHelp in |- *.
-fold (naryFunc (S n)) in |- *.
-set
- (A :=
-  evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil (naryFunc n)) (codeList nil))
-    (evalComposeFunc (S (S n)) 2
-       (Vector.cons (naryFunc (S (S n))) f 1
-          (Vector.cons (naryFunc (S (S n)))
-             (evalProjFunc (S (S n)) n (Nat.lt_lt_succ_r n (S n) (Nat.lt_succ_diag_r  n))) 0
-             (Vector.nil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
- in *.
-assert (isPR (S n) A).
-unfold A in |- *.
-assert (isPR 2 (fun a b : nat => S (cPair a b))).
-apply compose2_1IsPR.
-apply cPairIsPR.
-apply succIsPR.
-assert (isPR 1 (fun z : nat => cPairPi1 (pred z))).
-apply compose1_1IsPR.
-apply predIsPR.
-apply cPairPi1IsPR.
-induction H as (x, p).
-induction H0 as (x0, p0).
-induction H1 as (x1, p1).
-exists
- (primRecFunc n (composeFunc n 0 (PRnil _) zeroFunc)
-    (composeFunc (S (S n)) 2
-       (PRcons _ _ x
-          (PRcons _ _ (projFunc (S (S n)) n (Nat.lt_lt_succ_r n (S n) (Nat.lt_succ_diag_r  n)))
-             (PRnil _))) x0)).
-apply
- extEqualTrans
-  with
-    (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) 0)
-       (evalComposeFunc (S (S n)) 2
-          (Vector.cons _ (evalPrimRec _ x) _
-             (Vector.cons _ (evalProjFunc (S (S n)) n (Nat.lt_lt_succ_r n (S n) (Nat.lt_succ_diag_r  n))) _
-                (Vector.nil _))) (evalPrimRec _ x0))).
-apply extEqualRefl.
-apply extEqualPrimRec.
-simpl in |- *.
-apply extEqualRefl.
-apply extEqualCompose.
-unfold extEqualVector, extEqualVectorGeneral, Vector.t_rect in |- *.
-repeat split; auto.
-apply extEqualRefl.
-auto.
-assert (isPR (S n) (fun z : nat => A (S z))).
-apply compose1_NIsPR.
-auto.
-apply succIsPR.
-clear H0.
-assert (isPR 1 (fun z : nat => cPairPi1 (pred z))).
-apply compose1_1IsPR.
-apply predIsPR.
-apply cPairPi1IsPR.
-induction H0 as (x, p).
-induction H1 as (x0, p0).
-exists (composeFunc (S n) 1 (PRcons _ _ x0 (PRnil _)) x).
-simpl in |- *.
-fold (naryFunc n) in |- *.
-intros.
-apply extEqualCompose.
-unfold extEqualVector in |- *.
-simpl in |- *.
-repeat split.
-apply (p0 c).
-auto.
+  intros; unfold evalStrongRec, evalStrongRecHelp in |- *.
+  fold (naryFunc (S n)) in |- *.
+  set
+    (A :=
+       evalPrimRecFunc n
+         (evalComposeFunc n 0 (Vector.nil (naryFunc n)) (codeList nil))
+         (evalComposeFunc (S (S n)) 2
+            (Vector.cons (naryFunc (S (S n))) f 1
+               (Vector.cons (naryFunc (S (S n)))
+                  (evalProjFunc (S (S n)) n (Nat.lt_lt_succ_r n (S n) (Nat.lt_succ_diag_r  n))) 0
+                  (Vector.nil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
+    in *.
+  assert (H0: isPR (S n) A).
+  { unfold A in |- *.
+    assert (isPR 2 (fun a b : nat => S (cPair a b))).
+    { apply compose2_1IsPR.
+      apply cPairIsPR.
+      apply succIsPR.
+    }
+    assert (H1: isPR 1 (fun z : nat => cPairPi1 (pred z))).
+    { apply compose1_1IsPR.
+      apply predIsPR.
+      apply cPairPi1IsPR.
+    }
+    induction H as (x, p).
+    induction H0 as (x0, p0).
+    induction H1 as (x1, p1).
+    exists
+      (primRecFunc n (composeFunc n 0 (PRnil _) zeroFunc)
+         (composeFunc (S (S n)) 2
+            (PRcons _ _ x
+               (PRcons _ _ (projFunc (S (S n)) n
+                              (Nat.lt_lt_succ_r n (S n)
+                                 (Nat.lt_succ_diag_r  n)))
+                  (PRnil _))) x0)).
+    apply
+      extEqualTrans
+      with
+      (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) 0)
+         (evalComposeFunc (S (S n)) 2
+            (Vector.cons _ (evalPrimRec _ x) _
+               (Vector.cons _ (evalProjFunc (S (S n)) n
+                                 (Nat.lt_lt_succ_r n (S n)
+                                    (Nat.lt_succ_diag_r  n))) _
+                  (Vector.nil _))) (evalPrimRec _ x0))).
+    apply extEqualRefl.
+    apply extEqualPrimRec.
+    simpl in |- *.
+    apply extEqualRefl.
+    apply extEqualCompose.
+    unfold extEqualVector, extEqualVectorGeneral, Vector.t_rect in |- *.
+    repeat split; auto.
+    apply extEqualRefl.
+    auto.
+  }
+  assert (H1: isPR (S n) (fun z : nat => A (S z))).
+  { apply compose1_NIsPR; auto.
+    apply succIsPR.
+  }
+  clear H0; assert (H0: isPR 1 (fun z : nat => cPairPi1 (pred z))).
+  { apply compose1_1IsPR.
+    apply predIsPR.
+    apply cPairPi1IsPR.
+  }
+  induction H0 as (x, p).
+  induction H1 as (x0, p0).
+  exists (composeFunc (S n) 1 (PRcons _ _ x0 (PRnil _)) x).
+  simpl in |- *.
+  fold (naryFunc n) in |- *.
+  intros c; apply extEqualCompose.
+  unfold extEqualVector in |- *.
+  simpl in |- *; repeat split.
+  - apply (p0 c).
+  -  trivial.
 Qed.
 
 Lemma computeEvalStrongRecHelp :
@@ -582,319 +572,284 @@ Lemma computeEvalStrongRecHelp :
    (fun a0 : nat =>
     evalComposeFunc n 2
       (Vector.cons (naryFunc n) (f c a0) 1
-         (Vector.cons (naryFunc n) (evalConstFunc n a0) 0 (Vector.nil (naryFunc n))))
+         (Vector.cons (naryFunc n) (evalConstFunc n a0) 0
+            (Vector.nil (naryFunc n))))
       (fun a1 b0 : nat => S (cPair a1 b0))).
 Proof.
-intros.
-unfold evalStrongRecHelp at 1 in |- *.
-simpl in |- *.
-fold (naryFunc n) in |- *.
-induction (eq_nat_dec n (S n)).
-
-destruct (neq_succ_diag_r n a).
-
-induction (eq_nat_dec n n).
-replace
- (evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil (naryFunc n)) 0)
-    (fun a0 a1 : nat =>
-     evalComposeFunc n 2
-       (Vector.cons (naryFunc n) (f a0 a1) 1
-          (Vector.cons (naryFunc n) (evalConstFunc n a1) 0 (Vector.nil (naryFunc n))))
-       (fun a2 b0 : nat => S (cPair a2 b0))) c) with
- (evalStrongRecHelp n f c).
-reflexivity.
-unfold evalStrongRecHelp at 1 in |- *.
-simpl in |- *.
-fold (naryFunc n) in |- *.
-induction (eq_nat_dec n (S n)).
-elim b.
-auto.
-induction (eq_nat_dec n n).
-reflexivity.
-elim b1.
-auto.
-elim b0.
-auto.
+  intros n f c; unfold evalStrongRecHelp at 1 in |- *; simpl in |- *.
+  fold (naryFunc n) in |- *.
+  induction (eq_nat_dec n (S n)).
+  - destruct (neq_succ_diag_r n a).
+  - induction (eq_nat_dec n n).
+    + replace
+        (evalPrimRecFunc n
+           (evalComposeFunc n 0 (Vector.nil (naryFunc n)) 0)
+           (fun a0 a1 : nat =>
+              evalComposeFunc n 2
+                (Vector.cons (naryFunc n) (f a0 a1) 1
+                   (Vector.cons (naryFunc n)
+                      (evalConstFunc n a1) 0 (Vector.nil (naryFunc n))))
+                (fun a2 b0 : nat => S (cPair a2 b0))) c)
+        with
+        (evalStrongRecHelp n f c).
+      reflexivity.
+      unfold evalStrongRecHelp at 1 in |- *.
+      simpl in |- *.
+      fold (naryFunc n) in |- *.
+      induction (eq_nat_dec n (S n)).
+      elim b; auto.
+      induction (eq_nat_dec n n).
+      * reflexivity.
+      * elim b1; auto.
+    + elim b0; auto.
 Qed.
 
 Let listValues (f : naryFunc 2) (n : nat) : list nat.
-intros.
-induction n as [| n Hrecn].
-exact nil.
-exact (evalStrongRec _ f n :: Hrecn).
+Proof.
+  induction n as [| n Hrecn].
+  - exact nil.
+  - exact (evalStrongRec _ f n :: Hrecn).
 Defined.
 
 Lemma evalStrongRecHelp1 :
  forall (f : naryFunc 2) (n m : nat),
- m < n -> codeNth (n - S m) (evalStrongRecHelp _ f n) = evalStrongRec _ f m.
+   m < n ->
+   codeNth (n - S m) (evalStrongRecHelp _ f n) = evalStrongRec _ f m.
 Proof.
-assert
- (forall (f : naryFunc 2) (n : nat),
-  evalStrongRecHelp _ f n = codeList (listValues f n)).
-intros.
-induction n as [| n Hrecn].
-simpl in |- *.
-unfold evalStrongRecHelp in |- *.
-simpl in |- *.
-reflexivity.
-unfold evalStrongRecHelp in |- *.
-simpl in |- *.
-unfold evalStrongRecHelp in Hrecn.
-simpl in Hrecn.
-rewrite Hrecn.
-unfold evalStrongRec in |- *.
-simpl in |- *.
-rewrite cPairProjections1.
-rewrite Hrecn.
-reflexivity.
-intros.
-rewrite H.
-rewrite codeNthCorrect.
-induction n as [| n Hrecn].
-elim (Nat.nlt_0_r _ H0).
-induction (Compat815.le_lt_or_eq _ _ H0).
-rewrite Nat.sub_succ_l.
-
-simpl in |- *.
-rewrite Hrecn.
-reflexivity.
-apply Nat.succ_lt_mono. 
-auto.
-apply Compat815.lt_n_Sm_le.
-auto.
-inversion H1.
-rewrite  Nat.sub_diag. 
-clear H3 H1 Hrecn H0 m.
-simpl in |- *.
-reflexivity.
+  assert
+    (H: forall (f : naryFunc 2) (n : nat),
+        evalStrongRecHelp _ f n = codeList (listValues f n)).
+  {
+    intros f n; induction n as [| n Hrecn].
+    - simpl in |- *; unfold evalStrongRecHelp in |- *; simpl in |- *.
+      reflexivity.
+    - unfold evalStrongRecHelp in |- *; simpl in |- *; 
+        unfold evalStrongRecHelp in Hrecn; simpl in Hrecn; rewrite Hrecn.
+      unfold evalStrongRec in |- *; simpl in |- *.
+      now rewrite cPairProjections1, Hrecn.
+  }
+  intros f n m H0; rewrite H, codeNthCorrect.
+  induction n as [| n Hrecn].
+   - elim (Nat.nlt_0_r _ H0).
+   - induction (Compat815.le_lt_or_eq _ _ H0).
+     rewrite Nat.sub_succ_l; simpl in |- *.
+     rewrite Hrecn.
+     reflexivity.
+     apply Nat.succ_lt_mono; auto.
+     apply Compat815.lt_n_Sm_le; auto.
+     inversion H1.
+     rewrite  Nat.sub_diag; reflexivity. 
 Qed.
 
 Lemma evalStrongRecHelpParam :
- forall (a n c : nat) (f : naryFunc (S (S (S a)))),
- extEqual a (evalStrongRecHelp (S a) f n c)
-   (evalStrongRecHelp a (fun x y : nat => f x y c) n).
+  forall (a n c : nat) (f : naryFunc (S (S (S a)))),
+    extEqual a (evalStrongRecHelp (S a) f n c)
+      (evalStrongRecHelp a (fun x y : nat => f x y c) n).
 Proof.
-intros.
-unfold evalStrongRecHelp in |- *.
-eapply extEqualTrans.
-apply extEqualSym.
-apply evalPrimRecParam.
-assert
- (extEqual (S a)
-    (evalPrimRecFunc a
-       (evalComposeFunc (S a) 0 (Vector.nil (naryFunc (S a))) (codeList nil) c)
-       (fun x y : nat =>
-        evalComposeFunc (S (S (S a))) 2
-          (Vector.cons (naryFunc (S (S (S a)))) f 1
-             (Vector.cons (naryFunc (S (S (S a))))
-                (evalProjFunc (S (S (S a))) (S a)
-                   (Nat.lt_lt_succ_r (S a) (S (S a)) (Nat.lt_succ_diag_r  (S a)))) 0
-                (Vector.nil (naryFunc (S (S (S a)))))))
-          (fun a0 b : nat => S (cPair a0 b)) x y c))
-    (evalPrimRecFunc a
-       (evalComposeFunc a 0 (Vector.nil (naryFunc a)) (codeList nil))
-       (evalComposeFunc (S (S a)) 2
-          (Vector.cons (naryFunc (S (S a))) (fun x y : nat => f x y c) 1
-             (Vector.cons (naryFunc (S (S a)))
-                (evalProjFunc (S (S a)) a (Nat.lt_lt_succ_r a (S a) (Nat.lt_succ_diag_r  a))) 0
-                (Vector.nil (naryFunc (S (S a))))))
-          (fun a0 b : nat => S (cPair a0 b))))).
-apply
- (extEqualPrimRec a
-    (evalComposeFunc (S a) 0 (Vector.nil (naryFunc (S a))) (codeList nil) c)).
-simpl in |- *.
-apply extEqualRefl.
-simpl in |- *.
-fold (naryFunc a) in |- *.
-induction
- (sumbool_rec
-    (fun _ : {a = S a} + {a <> S a} => {S a = S (S a)} + {S a <> S (S a)})
-    (fun a0 : a = S a => left (S a <> S (S a)) (f_equal S a0))
-    (fun b : a <> S a => right (S a = S (S a)) (not_eq_S a (S a) b))
-    (eq_nat_dec a (S a))).
-elim (Compat815.lt_not_le (S a) (S (S a))).
-apply Nat.lt_succ_diag_r.
-rewrite <- a0.
-auto.
-induction
- (sumbool_rec (fun _ : {a = a} + {a <> a} => {S a = S a} + {S a <> S a})
-    (fun a0 : a = a => left (S a <> S a) (f_equal S a0))
-    (fun b0 : a <> a => right (S a = S a) (not_eq_S a a b0)) 
-    (eq_nat_dec a a)).
-induction (eq_nat_dec a (S a)).
-elim (Compat815.lt_not_le a (S a)).
-apply Nat.lt_succ_diag_r.
-rewrite <- a1.
-auto.
-induction (eq_nat_dec a a).
-intros.
-apply extEqualRefl.
-elim b1.
-auto.
-elim b0.
-auto.
-apply (H n).
+  intros a n c f; unfold evalStrongRecHelp in |- *.
+  eapply extEqualTrans.
+  - apply extEqualSym.
+    apply evalPrimRecParam.
+  - assert
+    (H: extEqual (S a)
+       (evalPrimRecFunc a
+          (evalComposeFunc (S a) 0
+             (Vector.nil (naryFunc (S a))) (codeList nil) c)
+          (fun x y : nat =>
+             evalComposeFunc (S (S (S a))) 2
+               (Vector.cons (naryFunc (S (S (S a)))) f 1
+                  (Vector.cons (naryFunc (S (S (S a))))
+                     (evalProjFunc (S (S (S a))) (S a)
+                        (Nat.lt_lt_succ_r (S a) (S (S a))
+                           (Nat.lt_succ_diag_r  (S a)))) 0
+                     (Vector.nil (naryFunc (S (S (S a)))))))
+               (fun a0 b : nat => S (cPair a0 b)) x y c))
+       (evalPrimRecFunc a
+          (evalComposeFunc a 0 (Vector.nil (naryFunc a)) (codeList nil))
+          (evalComposeFunc (S (S a)) 2
+             (Vector.cons (naryFunc (S (S a))) (fun x y : nat => f x y c) 1
+                (Vector.cons (naryFunc (S (S a)))
+                   (evalProjFunc (S (S a)) a (Nat.lt_lt_succ_r a (S a)
+                                                (Nat.lt_succ_diag_r  a))) 0
+                   (Vector.nil (naryFunc (S (S a))))))
+             (fun a0 b : nat => S (cPair a0 b))))).
+    { apply
+        (extEqualPrimRec a
+           (evalComposeFunc (S a) 0
+              (Vector.nil (naryFunc (S a)))
+              (codeList nil) c)).
+      simpl in |- *; apply extEqualRefl.
+      - simpl in |- *; fold (naryFunc a) in |- *.
+        induction
+          (sumbool_rec
+             (fun _ : {a = S a} + {a <> S a} =>
+                {S a = S (S a)} + {S a <> S (S a)})
+             (fun a0 : a = S a => left (S a <> S (S a)) (f_equal S a0))
+             (fun b : a <> S a => right (S a = S (S a)) (not_eq_S a (S a) b))
+             (eq_nat_dec a (S a))).
+        + elim (Compat815.lt_not_le (S a) (S (S a))).
+          * apply Nat.lt_succ_diag_r.
+          * rewrite <- a0; auto.
+        + induction
+            (sumbool_rec (fun _ : {a = a} + {a <> a} =>
+                            {S a = S a} + {S a <> S a})
+               (fun a0 : a = a => left (S a <> S a) (f_equal S a0))
+               (fun b0 : a <> a => right (S a = S a) (not_eq_S a a b0)) 
+               (eq_nat_dec a a)).
+            induction (eq_nat_dec a (S a)).
+          * elim (Compat815.lt_not_le a (S a)).
+            -- apply Nat.lt_succ_diag_r.
+            -- rewrite <- a1; auto.
+          * induction (eq_nat_dec a a).
+            -- intros;  apply extEqualRefl.
+            -- elim b1; auto.
+          * elim b0; auto.
+    }
+    apply (H n).
 Qed.
 
 Lemma evalStrongRecHelp2 :
- forall (a : nat) (f : naryFunc (S (S a))) (n m : nat),
- m < n ->
- extEqual _
-   (evalComposeFunc _ 1 (Vector.cons _ (evalStrongRecHelp _ f n) 0 (Vector.nil _))
-      (fun b : nat => codeNth (n - S m) b)) (evalStrongRec _ f m).
+  forall (a : nat) (f : naryFunc (S (S a))) (n m : nat),
+    m < n ->
+    extEqual _
+      (evalComposeFunc _ 1
+         (Vector.cons _ (evalStrongRecHelp _ f n) 0 (Vector.nil _))
+         (fun b : nat => codeNth (n - S m) b)) (evalStrongRec _ f m).
 Proof.
-intro.
-fold (naryFunc a) in |- *.
-induction a as [| a Hreca].
-simpl in |- *.
-apply evalStrongRecHelp1.
-simpl in |- *.
-intros.
-fold (naryFunc a) in |- *.
-set (g := fun x y : nat => f x y c) in *.
-assert
- (extEqual a
+  intro a; fold (naryFunc a) in |- *.
+  induction a as [| a Hreca].
+  - simpl in |- *.
+    apply evalStrongRecHelp1.
+  - simpl in |- *.
+  intros f n m H c; fold (naryFunc a) in |- *.
+  set (g := fun x y : nat => f x y c) in *.
+  assert
+    (H0: extEqual a
+       (evalComposeFunc a 1
+          (Vector.cons (naryFunc a)
+             (evalStrongRecHelp a g n) 0 (Vector.nil (naryFunc a)))
+          (fun b : nat => codeNth (n - S m) b)) (evalStrongRec a g m))
+      by (apply Hreca; auto).
+  unfold g in H0; clear g Hreca.
+  apply extEqualTrans with (evalStrongRec a (fun x y : nat => f x y c) m).
+  + apply
+    extEqualTrans
+    with
     (evalComposeFunc a 1
-       (Vector.cons (naryFunc a) (evalStrongRecHelp a g n) 0 (Vector.nil (naryFunc a)))
-       (fun b : nat => codeNth (n - S m) b)) (evalStrongRec a g m)).
-apply Hreca.
-auto.
-unfold g in H0.
-clear g Hreca.
-apply extEqualTrans with (evalStrongRec a (fun x y : nat => f x y c) m).
-apply
- extEqualTrans
-  with
-    (evalComposeFunc a 1
-       (Vector.cons (naryFunc a) (evalStrongRecHelp a (fun x y : nat => f x y c) n)
-          0 (Vector.nil (naryFunc a))) (fun b : nat => codeNth (n - S m) b)).
-apply extEqualCompose.
-unfold extEqualVector in |- *.
-simpl in |- *.
-repeat split.
-apply evalStrongRecHelpParam.
-apply extEqualRefl.
-apply H0.
-unfold evalStrongRec in |- *.
-simpl in |- *.
-fold (naryFunc a) in |- *.
-apply extEqualCompose.
-unfold extEqualVector in |- *.
-simpl in |- *.
-repeat split.
-apply extEqualSym.
-apply evalStrongRecHelpParam.
-apply extEqualRefl.
+       (Vector.cons (naryFunc a)
+          (evalStrongRecHelp a (fun x y : nat => f x y c) n)
+          0 (Vector.nil (naryFunc a)))
+       (fun b : nat => codeNth (n - S m) b)).
+    * apply extEqualCompose; unfold extEqualVector in |- *.
+      simpl in |- *; repeat split.
+      apply evalStrongRecHelpParam.
+      apply extEqualRefl.
+    * apply H0.
+  + unfold evalStrongRec in |- *; simpl in |- *.
+    fold (naryFunc a) in |- *; apply extEqualCompose.
+    unfold extEqualVector in |- *; simpl in |- *; repeat split.
+    * apply extEqualSym.
+      apply evalStrongRecHelpParam.
+    * apply extEqualRefl.
 Qed.
 
-Lemma callIsPR :
- forall g : nat -> nat,
+Lemma callIsPR (g : nat -> nat) :
  isPR 1 g -> isPR 2 (fun a recs : nat => codeNth (a - S (g a)) recs).
 Proof.
-intros.
-apply
- compose2_2IsPR
-  with (f := fun a recs : nat => a - S (g a)) (g := fun a recs : nat => recs).
-apply filter10IsPR with (g := fun a : nat => a - S (g a)).
-apply
- compose1_2IsPR with (f := fun a : nat => a) (f' := fun a : nat => S (g a)).
-apply idIsPR.
-apply compose1_1IsPR.
-assumption.
-apply succIsPR.
-apply minusIsPR.
-apply pi2_2IsPR.
-apply codeNthIsPR.
+  intros H; apply  compose2_2IsPR
+    with (f := fun a recs : nat => a - S (g a))
+         (g := fun a recs : nat => recs).
+  - apply filter10IsPR with (g := fun a : nat => a - S (g a)).
+    apply compose1_2IsPR with
+      (f := fun a : nat => a)
+      (f' := fun a : nat => S (g a)).
+    + apply idIsPR.
+    + apply compose1_1IsPR.
+      * assumption.
+      * apply succIsPR.
+    + apply minusIsPR.
+  - apply pi2_2IsPR.
+  - apply codeNthIsPR.
 Qed.
 
 End Strong_Recursion.
 
 Lemma div2IsPR : isPR 1 div2.
 Proof.
-assert
- (isPR 1
-    (evalStrongRec 0
-       (fun n recs : nat =>
-        switchPR n
-          (switchPR (pred n) (S (codeNth (n - S (pred (pred n))) recs)) 0) 0))).
-apply evalStrongRecIsPR.
-assert (isPR 2 (fun n recs : nat => 0)).
-exists (composeFunc 2 0 (PRnil _) zeroFunc).
-simpl in |- *.
-auto.
-apply
- compose2_3IsPR
-  with
+  assert
+    (H: isPR 1
+          (evalStrongRec 0
+             (fun n recs : nat =>
+                switchPR n
+                  (switchPR (pred n)
+                     (S (codeNth (n - S (pred (pred n))) recs))
+                     0)
+                  0))).
+  { apply evalStrongRecIsPR.
+    assert (H : isPR 2 (fun n recs : nat => 0)).
+    { exists (composeFunc 2 0 (PRnil _) zeroFunc).
+      simpl in |- *; auto.
+    }
+    apply compose2_3IsPR with
     (f1 := fun n recs : nat => n)
     (f2 := fun n recs : nat =>
-           switchPR (pred n) (S (codeNth (n - S (pred (pred n))) recs)) 0)
+             switchPR (pred n)
+               (S (codeNth (n - S (pred (pred n))) recs)) 0)
     (f3 := fun n recs : nat => 0).
-apply pi1_2IsPR.
-apply
- compose2_3IsPR
-  with
-    (f1 := fun n recs : nat => pred n)
-    (f2 := fun n recs : nat => S (codeNth (n - S (pred (pred n))) recs))
-    (f3 := fun n recs : nat => 0).
-apply filter10IsPR.
-apply predIsPR.
-apply
- compose2_1IsPR
-  with (f := fun n recs : nat => codeNth (n - S (pred (pred n))) recs).
-apply
- compose2_2IsPR
-  with
-    (f := fun n recs : nat => n - S (pred (pred n)))
-    (g := fun n recs : nat => recs).
-apply filter10IsPR with (g := fun n : nat => n - S (pred (pred n))).
-apply
- compose1_2IsPR
-  with (f := fun n : nat => n) (f' := fun n : nat => S (pred (pred n))).
-apply idIsPR.
-apply compose1_1IsPR with (f := fun n : nat => pred (pred n)).
-apply compose1_1IsPR; apply predIsPR.
-apply succIsPR.
-apply minusIsPR.
-apply pi2_2IsPR.
-apply codeNthIsPR.
-apply succIsPR.
-auto.
-apply switchIsPR.
-auto.
-apply switchIsPR.
-induction H as (x, p).
-exists x.
-eapply extEqualTrans.
-apply p.
-clear p x.
-simpl in |- *.
-intros.
-set
- (f :=
-  fun n recs : nat =>
-  switchPR n (switchPR (pred n) (S (codeNth (n - S (pred (pred n))) recs)) 0)
-    0) in *. 
-elim c using Compat815.ind_0_1_SS.
-unfold evalStrongRec in |- *.
-simpl in |- *.
-auto.
-unfold evalStrongRec in |- *.
-simpl in |- *.
-apply cPairProjections1.
-intros.
-unfold evalStrongRec in |- *.
-unfold evalComposeFunc in |- *.
-unfold evalOneParamList in |- *.
-rewrite computeEvalStrongRecHelp.
-unfold f at 2 in |- *.
-set (A := S (S n) - S (pred (pred (S (S n))))) in *.
-simpl in |- *.
-rewrite cPairProjections1.
-apply eq_S.
-rewrite <- H.
-unfold A in |- *.
-apply evalStrongRecHelp1.
-auto.
+    - apply pi1_2IsPR.
+    - apply compose2_3IsPR with
+        (f1 := fun n recs : nat => pred n)
+        (f2 := fun n recs : nat =>
+                 S (codeNth (n - S (pred (pred n))) recs))
+        (f3 := fun n recs : nat => 0).
+      + apply filter10IsPR.
+        apply predIsPR.
+      + apply compose2_1IsPR with
+            (f := fun n recs : nat =>
+                    codeNth (n - S (pred (pred n))) recs).
+        * apply compose2_2IsPR with
+            (f := fun n recs : nat => n - S (pred (pred n)))
+            (g := fun n recs : nat => recs).
+          apply filter10IsPR with
+            (g := fun n : nat => n - S (pred (pred n))).
+          apply compose1_2IsPR with
+            (f := fun n : nat => n)
+            (f' := fun n : nat => S (pred (pred n))).
+          apply idIsPR.
+          apply compose1_1IsPR with
+            (f := fun n : nat => pred (pred n)).
+          apply compose1_1IsPR; apply predIsPR.
+          apply succIsPR.
+          apply minusIsPR.
+          apply pi2_2IsPR.
+          apply codeNthIsPR.
+        * apply succIsPR.
+      + auto.
+      + apply switchIsPR.
+    - auto.
+    - apply switchIsPR.
+  }
+  destruct H as [x p]; exists x.
+  eapply extEqualTrans.
+  - apply p.
+  - clear p x; simpl in |- *; intro c.
+    set  (f := fun n recs : nat =>
+                 switchPR n (switchPR (pred n)
+                               (S (codeNth (n - S (pred (pred n)))
+                                     recs)) 0)  0) in *. 
+    elim c using Compat815.ind_0_1_SS.
+    + unfold evalStrongRec in |- *; simpl in |- *; auto.
+    + unfold evalStrongRec in |- *; simpl in |- *;
+        apply cPairProjections1.
+    + intros n H; unfold evalStrongRec, evalComposeFunc,
+        evalOneParamList 
+        in |- *.
+      rewrite computeEvalStrongRecHelp.
+      unfold f at 2 in |- *;
+        set (A := S (S n) - S (pred (pred (S (S n))))) in *.
+      simpl in |- *; rewrite cPairProjections1; apply eq_S.
+      rewrite <- H; unfold A in |- *; apply evalStrongRecHelp1.
+      auto.
 Qed.
 
 (** Fails with 8.13 *)
