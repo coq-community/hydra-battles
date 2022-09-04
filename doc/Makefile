@@ -9,6 +9,7 @@ DEP_FILES = hydras.tex          \
 	    Gamma0-chapter.tex  \
 	    chapter-powers.tex  \
 	    chapter-primrec.tex \
+	    chapter-encoding.tex \
 	    gaia-chapter.tex    \
 	    thebib.bib          \
 	    coqmacros.tex       \

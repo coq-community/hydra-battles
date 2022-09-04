@@ -1949,7 +1949,7 @@ Qed.
 Lemma ap_plus : forall a,
     ap a ->
     forall b c,
-      nf b -> nf c -> lt b  a -> lt c  a -> lt (b + c)  a.
+      nf b -> nf c -> lt b  a -> lt c  a -> lt (b + c) a.
 Proof.
   destruct 1. 
   intro b; elim b. 
