@@ -1,2 +1,64 @@
 \chapter{G\"{o}del's Encoding (in construction)}
 \label{chap:encoding}
+
+
+\section{Cantor pairing function}
+
+The library \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair} defines and study Cantor's bijection from
+$\mathbb{N}\times\mathbb{N}$ into $\mathbb{N}$.
+Indeed the \texttt{cPair} function used in this library
+ is slightly different 
+     from the "usual" Cantor pairing function shown in  a big part 
+     of the litterature (and Coq's standard library). 
+      Since both versions are equivalent upto a swap of the 
+      rguments [a] and [b], we still use  Russel O'Connors definitions and statements, mainly in order to not have to modify the order of sub-goals in long proofs.
+
+
+      \subsection{A helper function}
+
+      The following function computes the sum of all natural numbers between $1$ and $n$: $\Sigma_{i=1}^{i=n}\,i$.
+
+      
+      \inputsnippets{cPair/sumToNDef}
+
+      \inputsnippets{cPair/sumToN1, cPair/sumToN1}
+
+      The tools presented in Chapter~\ref{chapter:primrec} allow us to prove that \texttt{cPair} is primitive recursive.
+
+      \inputsnippets{cPair/sumToNPR}
+      
+      \subsection{Cantor's pairing function}
+
+      In the Ackermann/G\"{o}del projects, the Cantor pairing function is defined as below:
+
+      $$\textrm{cPair}\,a\,b = a+ \Sigma_{i=1}^{i=a+b}\,i$$
+
+      \inputsnippets{cPair/cPairDef}
+
+      Figure~\ref{fig:cpair} shows a few values of
+      \texttt{cPair\,$a$\,$b$ }, where $a$ is the line number and $b$ the column number.
+
+      \begin{figure}[h]
+        \centering
+
+         \[
+        \begin{array}[h]{c|cccccc}
+          &0&1&2&3&4&\dots \\
+          \hline 
+          0&0&1&3& 6 & 10&\dots \\
+          1&2&4&7&11& \dots& \\
+          2&5&8 & 12& \dots&& \\
+            3&9&13&\dots & && \\
+          4&14&\dots&&&&\\
+          \dots&\dots&&&&&\\
+        \end{array}
+        \]
+        
+        \caption{Cantor pairing function (first values)\label{fig:cpair}}
+      \end{figure}
+
+
+      \begin{remark}
+        Compatibility with Standard lib's pairing function is stated
+        by the equality \texttt{cPair $a$ $b$ = Cantor.to\_nat $(b,a)$} for any $a$ and $b$. Obviously, this swap and uncurrying of $a$ and $b$ doesn't change the fundamental properties of Cantor's pairing function.
+      \end{remark}

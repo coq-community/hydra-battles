@@ -1,5 +1,5 @@
 (** Cantor's pairing function 
-    (after Russel O'Connors [goedel] contrib  *)
+    (Originally  Russel O'Connors [goedel] contrib  *)
 
 
 Require Import Arith Coq.Lists.List .
@@ -12,17 +12,24 @@ Import Nat.
 
 (** ** Preliminary definitions *)
 
+(** Sum of all natural numbers upto [n] *)
 
+(* begin snippet sumToNDef:: no-out *)
 Definition sumToN (n : nat) :=
   nat_rec (fun _ => nat) 0 (fun x y : nat => S x + y) n.
+(* end snippet sumToNDef *)
 
+(* begin snippet sumToN1:: no-out *)
 Lemma sumToN1 n : n <= sumToN n.
+(* end snippet sumToN1 *)
 Proof.
   induction n as [| n Hrecn]; [trivial |];
     simpl in |- *; apply le_n_S, Nat.le_add_r.
 Qed.
 
+(* begin snippet sumToN2:: no-out *)
 Lemma sumToN2 b a :  a <= b -> sumToN a <= sumToN b.
+(* end snippet sumToN2 *)
 Proof.
   revert a; induction b as [| b Hrecb]; intros.
   - simpl in |- *; rewrite  (Nat.le_0_r a) in H; now subst. 
@@ -35,6 +42,7 @@ Proof.
     + subst a; reflexivity.  
 Qed.
 
+(* begin snippet sumToNPR:: no-out *)
 Lemma sumToNIsPR : isPR 1 sumToN.
 Proof.
   unfold sumToN in |- *.
@@ -47,7 +55,7 @@ Proof.
   - apply pi2_2IsPR.
   - apply plusIsPR.
 Qed.
-
+(* end snippet sumToNPR *)
 
 (** ** Definition and properties of [cPair] *)
 
@@ -57,7 +65,12 @@ Qed.
       Since both versions are equivalent upto a swap of the 
       rguments [a] and [b], we still use  Russel O'Connors notations *)
 
+(* begin snippet cPairDef *)
 Definition cPair (a b : nat) := a + sumToN (a + b).
+
+Compute cPair 4 0. 
+(* end snippet cPairDef *)
+
 
 Lemma cPairIsPR : isPR 2 cPair.
 Proof.
