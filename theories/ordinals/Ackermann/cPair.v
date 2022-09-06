@@ -71,22 +71,19 @@ Definition cPair (a b : nat) := a + sumToN (a + b).
 Compute cPair 4 0. 
 (* end snippet cPairDef *)
 
-
+(* begin snippet cPairIsPR:: no-out *)
 Lemma cPairIsPR : isPR 2 cPair.
 Proof.
-  unfold cPair;
-    apply
-      compose2_2IsPR
-      with
-        (f := fun x y : nat => x)
-        (g := fun x y : nat => sumToN (x + y))
-        (h := plus).
+  unfold cPair; apply compose2_2IsPR
+    with
+    (f := fun x y : nat => x)
+    (g := fun x y : nat => sumToN (x + y))
+    (h := plus).
   - apply pi1_2IsPR.
-  - apply compose2_1IsPR.
-    + apply plusIsPR.
-    + apply sumToNIsPR.
+  - apply compose2_1IsPR; [apply plusIsPR | apply sumToNIsPR].
   - apply plusIsPR.
 Qed.
+(* end snippet cPairIsPR *)
 
 Section CPair_Injectivity.
 
@@ -135,16 +132,20 @@ Section CPair_Injectivity.
     - auto.
   Qed.
 
+  (* begin snippet cPairInj1:: no-out *)
   Lemma cPairInj1 a b c d: cPair a b = cPair c d -> a = c.
+  (* end snippet cPairInj1 *)
   Proof.
     intro H; assert (H0: a + b = c + d)
       by (apply cPairInjHelp; auto).
     unfold cPair in H; rewrite (Nat.add_comm a) in H; 
-    rewrite (Nat.add_comm c) in H.
+      rewrite (Nat.add_comm c) in H.
     rewrite H0 in H; now rewrite Nat.add_cancel_l in H. 
   Qed.
 
+  (* begin snippet cPairInj2:: no-out *)
   Lemma cPairInj2  a b c d : cPair a b = cPair c d -> b = d.
+  (* end snippet cPairInj2 *)
   Proof.
     intro H;  assert (H0: a + b = c + d) by
       ( apply cPairInjHelp; auto ).
@@ -157,12 +158,16 @@ End CPair_Injectivity.
 Section CPair_projections.
 
   (* @todo document boundedSearch *)
-  
-Let searchXY (a : nat) :=
-  boundedSearch (fun a y : nat => ltBool a (sumToN (S y))) a.
 
-Definition cPairPi1 (a : nat) := a - sumToN (searchXY a).
-Definition cPairPi2 (a : nat) := searchXY a - cPairPi1 a.
+  (* begin snippet searchXY *)
+  Let searchXY (a : nat) :=
+        boundedSearch (fun a y : nat => ltBool a (sumToN (S y))) a.
+  (* end snippet searchXY *)
+
+  (* begin snippet cPairPi12 *)
+  Definition cPairPi1 (a : nat) := a - sumToN (searchXY a).
+  Definition cPairPi2 (a : nat) := searchXY a - cPairPi1 a.
+  (* end snippet cPairPi12 *)
 
 Lemma cPairProjectionsHelp (a b: nat):
   b < sumToN (S a) -> sumToN a <= b -> searchXY b = a.
@@ -203,7 +208,9 @@ Proof.
       * assumption.
 Qed.
 
+(* begin snippet cPairProjections:: no-out *)
 Lemma cPairProjections a: cPair (cPairPi1 a) (cPairPi2 a) = a.
+(* end snippet cPairProjections *)
 Proof.
   revert a; assert (H: 
         forall a b : nat, b < sumToN a ->
@@ -257,7 +264,9 @@ Proof.
  - apply ltIsPR.
 Qed.
 
+(* begin snippet  cPairPi1IsPR:: no-out *)
 Lemma cPairPi1IsPR : isPR 1 cPairPi1.
+(* end snippet  cPairPi1IsPR *)
 Proof.
   unfold cPairPi1 in |- *.
   apply compose1_2IsPR 
@@ -272,16 +281,9 @@ Proof.
   - apply minusIsPR.
 Qed.
 
-Lemma cPairPi2IsPR : isPR 1 cPairPi2.
-Proof.
-  unfold cPairPi2 in |- *.
-  apply compose1_2IsPR with (g := minus) (f := searchXY) (f' := cPairPi1).
-  - apply searchXYIsPR.
-  - apply cPairPi1IsPR.
-  - apply minusIsPR.
-Qed.
-
+(* begin snippet  cPairProjections1:: no-out *)
 Lemma cPairProjections1 (a b : nat): cPairPi1 (cPair a b) = a.
+(* end snippet  cPairProjections1 *)
 Proof.
   unfold cPair, cPairPi1  in |- *.
   replace (searchXY (a + sumToN (a + b))) with (a + b).
@@ -292,7 +294,9 @@ Proof.
   - rewrite (Nat.add_comm a (sumToN (a + b))); apply le_add_r.
 Qed.
 
+(* begin snippet  cPairProjections2:: no-out *)
 Lemma cPairProjections2 (a b : nat): cPairPi2 (cPair a b) = b.
+(* end snippet  cPairProjections2 *)
 Proof.
   unfold cPairPi2 in |- *; rewrite cPairProjections1; unfold cPair in |- *.
   replace (searchXY (a + sumToN (a + b))) with (a + b).
@@ -302,66 +306,95 @@ Proof.
     + rewrite (Nat.add_comm a (sumToN (a + b)));apply le_add_r.
 Qed.
 
+
+(* begin snippet  cPairPi2IsPR:: no-out *)
+Lemma cPairPi2IsPR : isPR 1 cPairPi2.
+(* end snippet  cPairPi2IsPR *)
+Proof.
+  unfold cPairPi2 in |- *.
+  apply compose1_2IsPR with (g := minus) (f := searchXY) (f' := cPairPi1).
+  - apply searchXYIsPR.
+  - apply cPairPi1IsPR.
+  - apply minusIsPR.
+Qed.
+
+
 End CPair_projections.
 
 Section CPair_Order.
 
-Lemma cPairLe1 (a b : nat) : a <= cPair a b.
-Proof. unfold cPair in |- *; apply Nat.le_add_r. Qed.
+  (* begin snippet cPairLe1:: no-out *)
+  Lemma cPairLe1 (a b : nat) : a <= cPair a b.
+  (* end snippet cPairLe1 *)
+  Proof. unfold cPair in |- *; apply Nat.le_add_r. Qed.
 
-Lemma cPairLe1A (a : nat) : cPairPi1 a <= a.
-Proof. 
-  transitivity (cPair (cPairPi1 a) (cPairPi2 a)).
-  - apply cPairLe1.
-  - rewrite cPairProjections; apply le_n.
-Qed.
 
-Lemma cPairLe2 ( a b : nat) : b <= cPair a b.
-Proof.
-  unfold cPair in |- *; eapply Nat.le_trans with (b + a). 
-  - apply Nat.le_add_r.
-  - rewrite (Nat.add_comm b a); transitivity (sumToN (a + b)).
-    + apply sumToN1.
-    + rewrite (Nat.add_comm _ (sumToN (a + b))); apply le_add_r.
-Qed.
+  (* begin snippet cPairLe1A:: no-out *)
+  Lemma cPairLe1A (a : nat) : cPairPi1 a <= a.
+  (* end snippet cPairLe1A *)
+  Proof. 
+    transitivity (cPair (cPairPi1 a) (cPairPi2 a)).
+    - apply cPairLe1.
+    - rewrite cPairProjections; apply le_n.
+  Qed.
 
-Lemma cPairLe2A (a: nat): cPairPi2 a <= a.
-Proof.
-  transitivity (cPair (cPairPi1 a) (cPairPi2 a)).
-  - apply cPairLe2.
-  - rewrite cPairProjections; apply le_n.
-Qed.
+  (* begin snippet cPairLe2:: no-out *)
+  Lemma cPairLe2 ( a b : nat) : b <= cPair a b.
+  (* end snippet cPairLe2 *)
+  Proof.
+    unfold cPair in |- *; eapply Nat.le_trans with (b + a). 
+    - apply Nat.le_add_r.
+    - rewrite (Nat.add_comm b a); transitivity (sumToN (a + b)).
+      + apply sumToN1.
+      + rewrite (Nat.add_comm _ (sumToN (a + b))); apply le_add_r.
+  Qed.
 
-Lemma cPairLe3 ( a b c d : nat) :
-  a <= b -> c <= d -> cPair a c <= cPair b d.
-Proof.
-  intros H H0; unfold cPair in |- *; transitivity (a + sumToN (b + d)).
-  - apply Nat.add_le_mono_l, sumToN2; transitivity (a + d).
-    + now apply Nat.add_le_mono_l.
-    + now apply Nat.add_le_mono_r.
-  - now apply Nat.add_le_mono_r.
-Qed.
+  (* begin snippet cPairLe2A:: no-out *)
+  Lemma cPairLe2A (a: nat): cPairPi2 a <= a.
+  (* end snippet cPairLe2A *)
+  Proof.
+    transitivity (cPair (cPairPi1 a) (cPairPi2 a)).
+    - apply cPairLe2.
+    - rewrite cPairProjections; apply le_n.
+  Qed.
 
-Lemma cPairLt1 (a b : nat) : a < cPair a (S b).
-Proof.
-  unfold cPair in |- *.
-  rewrite (Nat.add_comm a (S b)); simpl in |- *.
-  rewrite Nat.add_comm; simpl in |- *; rewrite Nat.add_comm.
-  apply le_n_S, Nat.le_add_r.
-Qed.
+  (* begin snippet cPairLe3:: no-out *)
+  Lemma cPairLe3 (a b c d : nat): a <= b -> c <= d -> cPair a c <= cPair b d.
+  (* end snippet cPairLe3 *)
+  Proof.
+    intros H H0; unfold cPair in |- *;
+      transitivity (a + sumToN (b + d)).
+    - apply Nat.add_le_mono_l, sumToN2; transitivity (a + d).
+      + now apply Nat.add_le_mono_l.
+      + now apply Nat.add_le_mono_r.
+    - now apply Nat.add_le_mono_r.
+  Qed.
 
-Lemma cPairLt2 (a b : nat): b < cPair (S a) b.
-Proof.
-  unfold cPair in |- *; simpl in |- *; unfold lt in |- *; apply le_n_S.
-  eapply Nat.le_trans.
-  - apply Nat.le_add_r. 
-  - rewrite Nat.add_comm at 1. 
-    apply Nat.add_le_mono_l.
-    apply le_S.
+  (* begin snippet cPairLt1:: no-out *)
+  Lemma cPairLt1 (a b : nat): a < cPair a (S b).
+  (* end snippet cPairLt1 *)
+  Proof.
+    unfold cPair in |- *.
+    rewrite (Nat.add_comm a (S b)); simpl in |- *.
+    rewrite Nat.add_comm; simpl in |- *; rewrite Nat.add_comm.
+    apply le_n_S, Nat.le_add_r.
+  Qed.
+
+  (* begin snippet cPairLt2:: no-out *)
+  Lemma cPairLt2 (a b : nat): b < cPair (S a) b.
+  (* end snippet cPairLt2 *)
+  Proof.
+    unfold cPair in |- *; simpl in |- *;
+      unfold lt in |- *; apply le_n_S.
     eapply Nat.le_trans.
-    + apply Nat.le_add_r.
-    + rewrite Nat.add_comm; apply Nat.le_add_r.
-Qed.
+    - apply Nat.le_add_r. 
+    - rewrite Nat.add_comm at 1. 
+      apply Nat.add_le_mono_l.
+      apply le_S.
+      eapply Nat.le_trans.
+      + apply Nat.le_add_r.
+      + rewrite Nat.add_comm; apply Nat.le_add_r.
+  Qed.
 
 End CPair_Order.
 

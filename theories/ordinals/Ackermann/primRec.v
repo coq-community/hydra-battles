@@ -1648,27 +1648,48 @@ Proof.
       induction c; reflexivity.
 Qed.
 
-(** Returns smallest value of x less or equal than b such that (P b x). 
-    Otherwise returns b  *)
+
 
 Fixpoint boundedSearchHelp (P : naryRel 1) (b : nat) {struct b} : nat :=
   match b with
   | O => 0
-  | S b' =>
-      match eq_nat_dec (boundedSearchHelp P b') b' with
+  | S b' => let q := boundedSearchHelp P b'
+            in 
+      match eq_nat_dec q  b' with
       | left _ => match P b' with
                   | true => b'
                   | false => S b'
                   end
-      | right _ => boundedSearchHelp P b'
+      | right _ => q 
       end
   end.
-   
+
+(** If there exists some [x <= b] such that [(P b x)], returns [x]
+    Otherwise, returns [b]
+*)
+ 
 Definition boundedSearch (P : naryRel 2) (b : nat) : nat :=
   boundedSearchHelp (P b) b.
 
-Lemma boundedSearch1 :
-  forall (P : naryRel 2) (b x : nat), x < boundedSearch P b -> P b x = false.
+Module Examples.
+
+  Definition sqrtHelp (n: nat) :=
+    boundedSearch (fun _ x => Nat.eqb (x * x) n) (S (n / 2)).
+
+  Definition exact_sqrt  (n: nat) :=
+    let q := sqrtHelp n
+    in if  Nat.eqb (q * q) n then Some q else None.
+
+  Compute exact_sqrt 36.
+  Compute exact_sqrt 35.  
+  Compute exact_sqrt 0.
+  Compute exact_sqrt 2.
+
+  End Examples.
+
+  Lemma boundedSearch1 :
+    forall (P : naryRel 2) (b x : nat), x < boundedSearch P b ->
+                                        P b x = false.
 Proof.
   unfold boundedSearch in |- *.
   intros P b.
@@ -1724,7 +1745,7 @@ Qed.
 
 Lemma boundSearchIsPR :
   forall P : naryRel 2,
-    isPRrel 2 P -> isPR 1 (fun b : nat => boundedSearch P b).
+    isPRrel 2 P -> isPR 1 (boundedSearch P).
 Proof.
   intros; unfold boundedSearch in |- *.
   assert

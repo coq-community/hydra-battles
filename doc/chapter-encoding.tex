@@ -64,3 +64,42 @@ Indeed the \texttt{cPair} function used in this library
         is stated
         by the equality \texttt{cPair $a$ $b$ = Cantor.to\_nat $(b,a)$} for any $a$ and $b$. Obviously, this swap and uncurrying of $a$ and $b$ doesn't change the fundamental properties of Cantor's pairing function (being a primitive recursive bijection, monotony properties).
       \end{remark}
+
+      \subsubsection{Main properties}
+
+      In order to prove that the function \texttt{cPair} is primitive recursive, we express it as a composition of already proven primitive recursive functions.
+
+      \inputsnippets{cPair/cPairIsPR}
+
+      \texttt{cPair}'s injectivity is stated by two lemmas:
+
+      \inputsnippets{cPair/cPairInj1, cPair/cPairInj2}
+
+      \subsection{Projections}
+
+      Let $a$ be some natural number, we look for two natural numbers $x$ and $y$ such that $\texttt{cPair}\,x\,y=a$. More we want to prove that the function which compute $x$ [resp. $y$] out of $a$ are primitive recursive.
+
+      Let us show on a small example how these projections are defined. Let's take for instance $a=11$. Please look at the diagram of Fig.~\ref{fig:cpair}.
+
+      The following function looks for the anti-diagonal $\{(x,y)|x+y=k\}$ the number $11$ belongs to, and returns $k$.
+
+      \inputsnippets{cPair/searchXY}
+      
+      In our example, $11$ belongs to the anti-diagonal $\{(x,y)|x+y=4\}$, which contains values from $10$ to $14$.
+      Thus the line containing $11$ is the line $x=11-10=1$, and the column is $y=4-1= 3$. Finally, we get  $11=\texttt{cPair}\,1\,3$.
+
+       \inputsnippets{cPair/cPairPI12}
+
+       The following lemmas (still from \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair}) prove the correctness of these projections.
+
+       \inputsnippets{cPair/cPairProjections,
+         cPair/cPairProjections1, cPair/cPairProjections2,
+         cPair/cPairPi1IsPR, cPair/cPairPi2IsPR}
+       
+       Finally, let us show a few inequalities.
+
+       \inputsnippets{cPair/cPairLe1, cPair/cPairLe1A,
+         cPair/cPairLe2, cPair/cPairLe2A, cPair/cPairLe3,
+         cPair/cPairLt1,cPair/cPairLt2}
+
+      
