@@ -102,4 +102,40 @@ Indeed the \texttt{cPair} function used in this library
          cPair/cPairLe2, cPair/cPairLe2A, cPair/cPairLe3,
          cPair/cPairLt1,cPair/cPairLt2}
 
+       \subsection{List encoding}
+
+       The encoding of a list of natural numbers is based
+       on \texttt{cPair}, through a structural recursion.
+
+         
+       \inputsnippets{cPair/codeListDef}
+
       
+       Let us look at the main step of the proof that \texttt{codeList} is injective.
+       
+  \inputsnippets{cPair/codeListInj}
+  \inputsnippets{cPair/codeListInja}
+
+  Applying \texttt{cPair}'s injectivity  and the induction hypothesis allows us to complete the proof.
+
+  \subsubsection{Encoding the \texttt{nth} function}
+
+  The following function allows us to compute the $n$-th element of a list of natural numbers, \emph{directly on the encoding of the considered list}.
+
+  In the current version of the Ackermann Library, this function is defined \emph{via} an interactive proof. Its specification and
+  correctness are proved by  separate lemmas. 
+  
+
+  \inputsnippets{cPair/codeNthDef}
+  \inputsnippets{cPair/codeNthCorrect}
+   \inputsnippets{cPair/codeNthIsPR}
+
+  \begin{exercise}
+  Give a new equivalent definition of \texttt{codeNth}, without using tactics like \texttt{assert}.  You may define an help function for this purpose, in which case, please specify what your helper computes.
+  \end{exercise}
+
+
+
+  
+
+       

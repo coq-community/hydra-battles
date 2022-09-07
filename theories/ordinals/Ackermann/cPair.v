@@ -400,26 +400,38 @@ End CPair_Order.
 
 Section code_nat_list.
 
+(* begin snippet codeListDef:: no-out *)
 Fixpoint codeList (l : list nat) : nat :=
   match l with
   | nil => 0
   | n :: l' => S (cPair n (codeList l'))
   end.
+Compute codeList (3::1::nil). 
+Compute codeList (2::3::1::nil). 
+(* end snippet codeListDef *)
 
-Lemma codeListInj ( l m : list nat) : codeList l = codeList m -> l = m.
+(* begin snippet codeListInj:: no-out *)
+Lemma codeListInj (l m : list nat): codeList l = codeList m -> l = m.
 Proof.
+  (* ... *)
+(* end snippet codeListInj *)
+
   revert m; induction l as [| a l Hrecl].
   - intros m H; destruct m as [| n l].
-   +   reflexivity.
+   + reflexivity.
    + discriminate H.
   - intros m H; destruct m as [| n l0].
     + discriminate H.
-    + simpl in H; replace n with a.
+    + (* begin snippet codeListInja:: no-in unfold *)
+      simpl in H.
+      (* end snippet codeListInja *) replace n with a.
       * rewrite (Hrecl l0); [reflexivity |].
         eapply cPairInj2; apply eq_add_S, H. 
       * eapply cPairInj1; apply eq_add_S, H.
 Qed.
 
+
+(* begin snippet codeNthDef:: no-out  *)
 Definition codeNth (n m : nat) : nat.
 Proof.
   assert  (X: nat).
@@ -429,6 +441,9 @@ Proof.
   }
   exact (cPairPi1 (pred X)).
 Defined.
+(* end snippet codeNthDef *)
+
+
 
 (* @todo specify ! *)
 
@@ -441,8 +456,10 @@ Proof.
    + exact l.
 Defined.
 
+(* begin snippet codeNthCorrect:: no-out *)
 Lemma codeNthCorrect :
- forall (n : nat) (l : list nat), codeNth n (codeList l) = nth n l 0.
+  forall (n : nat) (l : list nat), codeNth n (codeList l) = nth n l 0.
+(* end snippet codeNthCorrect *)
 Proof.
   unfold codeNth in |- *.
   set
@@ -488,7 +505,9 @@ Proof.
     -- simpl in |- *; auto.
 Qed.
 
+(* begin snippet codeNthIsPR:: no-out *)
 Lemma codeNthIsPR : isPR 2 codeNth.
+(* end snippet codeNthIsPR *)
 Proof.
   unfold codeNth in |- *; apply compose2_1IsPR
     with
@@ -511,6 +530,8 @@ Proof.
 Qed.
 
 End code_nat_list.
+
+
 
 Section Strong_Recursion.
 
