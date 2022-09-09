@@ -398,6 +398,7 @@ Section CPair_Order.
 
 End CPair_Order.
 
+Require Import Extraction. 
 Section code_nat_list.
 
 (* begin snippet codeListDef:: no-out *)
@@ -432,16 +433,17 @@ Qed.
 
 
 (* begin snippet codeNthDef:: no-out  *)
-Definition codeNth (n m : nat) : nat.
-Proof.
-  assert  (X: nat).
-  { induction n as [| n Hrecn].
-    - exact m.
-    - exact (cPairPi2 (pred Hrecn)).
-  }
-  exact (cPairPi1 (pred X)).
-Defined.
+
+
+Definition codeNth (n m:nat) : nat :=
+  let X := nat_rec (fun _ : nat => nat)
+             m
+             (fun _ Hrecn : nat => cPairPi2 (pred Hrecn)) n
+  in cPairPi1 (pred X).
+
+
 (* end snippet codeNthDef *)
+
 
 
 
@@ -494,7 +496,7 @@ Proof.
   replace (nth n l 0) with match drop n l with
                            | nil => 0
                            | a :: _ => a
-                           end.
+                           end.  
   rewrite H0; destruct (drop n l).
   + simpl in |- *; apply (cPairProjections1 0 0).
   + simpl in |- *;  apply cPairProjections1.
@@ -531,7 +533,8 @@ Qed.
 
 End code_nat_list.
 
-
+Extraction codeNth.
+Print codeNth.
 
 Section Strong_Recursion.
 
@@ -565,8 +568,11 @@ Proof.
          (evalComposeFunc (S (S n)) 2
             (Vector.cons (naryFunc (S (S n))) f 1
                (Vector.cons (naryFunc (S (S n)))
-                  (evalProjFunc (S (S n)) n (Nat.lt_lt_succ_r n (S n) (Nat.lt_succ_diag_r  n))) 0
-                  (Vector.nil (naryFunc (S (S n)))))) (fun a b : nat => S (cPair a b))))
+                  (evalProjFunc (S (S n)) n
+                     (Nat.lt_lt_succ_r n (S n)
+                        (Nat.lt_succ_diag_r  n))) 0
+                  (Vector.nil (naryFunc (S (S n))))))
+            (fun a b : nat => S (cPair a b))))
     in *.
   assert (H0: isPR (S n) A).
   { unfold A in |- *.
@@ -633,15 +639,15 @@ Proof.
 Qed.
 
 Lemma computeEvalStrongRecHelp :
- forall (n : nat) (f : naryFunc (S (S n))) (c : nat),
- evalStrongRecHelp n f (S c) =
- compose2 n (evalStrongRecHelp n f c)
-   (fun a0 : nat =>
-    evalComposeFunc n 2
-      (Vector.cons (naryFunc n) (f c a0) 1
-         (Vector.cons (naryFunc n) (evalConstFunc n a0) 0
-            (Vector.nil (naryFunc n))))
-      (fun a1 b0 : nat => S (cPair a1 b0))).
+  forall (n : nat) (f : naryFunc (S (S n))) (c : nat),
+    evalStrongRecHelp n f (S c) =
+      compose2 n (evalStrongRecHelp n f c)
+        (fun a0 : nat =>
+           evalComposeFunc n 2
+             (Vector.cons (naryFunc n) (f c a0) 1
+                (Vector.cons (naryFunc n) (evalConstFunc n a0) 0
+                   (Vector.nil (naryFunc n))))
+             (fun a1 b0 : nat => S (cPair a1 b0))).
 Proof.
   intros n f c; unfold evalStrongRecHelp at 1 in |- *; simpl in |- *.
   fold (naryFunc n) in |- *.
@@ -671,12 +677,13 @@ Proof.
     + elim b0; auto.
 Qed.
 
-Let listValues (f : naryFunc 2) (n : nat) : list nat.
-Proof.
-  induction n as [| n Hrecn].
-  - exact nil.
-  - exact (evalStrongRec _ f n :: Hrecn).
-Defined.
+
+Fixpoint listValues  (f : naryFunc 2) (n : nat) : list nat :=
+  match n with
+    0 => nil
+  | S m => evalStrongRec _ f m :: listValues f m
+  end.
+
 
 Lemma evalStrongRecHelp1 :
  forall (f : naryFunc 2) (n m : nat),
@@ -919,7 +926,7 @@ Proof.
       auto.
 Qed.
 
-(** Fails with 8.13 *)
+(* Fails with 8.13 *)
 
 (* Compatibility with Stdlib's Cantor pairing function *)
 (*

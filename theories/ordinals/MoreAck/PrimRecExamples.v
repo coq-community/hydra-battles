@@ -4,7 +4,7 @@ Import VectorNotations.
 
 (* begin snippet naryFunc3 *)
 
-Require Import primRec.
+Require Import primRec cPair.
 Import extEqualNat.
 
 Compute naryFunc 3.
@@ -168,7 +168,6 @@ Proof.   reflexivity. Qed.
 Remark compose2_1 (f: nat -> nat) (g : nat -> nat -> nat) x
   : compose2 1 f g x = g (f x) x.
 Proof. reflexivity. Qed.
-
 
 Remark compose2_2  (f: naryFunc 2) (g : naryFunc 3) x y
   : compose2 2 f g x y = g (f x y) x y.
@@ -418,5 +417,39 @@ Proof. (* .no-out *)
 Qed.
 (* end snippet doubleIsPRb *)
 
+(** using cPair *)
 
+(* Move to MoreAck *)
+
+Section Exs. (* Todo: exercise *)Let f: naryFunc 2 := fun x y => x + pred (cPairPi1 y).
+
+  (* To prove !!! *)
+  
+  Let ffib : naryFunc 2 :=
+        fun c A =>
+          match c with
+            0 | 1 => 1
+          | _ => codeNth 0 A + codeNth 1 A
+          end.
+  Let fdiv2 : naryFunc 2 :=
+        fun (n acc: nat) =>
+          match n with
+            0 | 1 => 0
+          | _ => S (codeNth 1 acc)
+          end.
+
+  Compute evalStrongRec _ fdiv2 0.
+  Compute evalStrongRec _ fdiv2 2.
+  Compute evalStrongRec _ fdiv2 3.
+  Compute evalStrongRec _ fdiv2 4.
+  
+  
+  Compute evalStrongRec _ ffib 1.
+  Compute evalStrongRec _ ffib 2.
+  Compute evalStrongRec _ ffib 3.
+  
+  
+  Compute  listValues ffib 4.
+   
+End Exs.
 
