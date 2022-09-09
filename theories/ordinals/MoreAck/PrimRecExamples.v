@@ -431,18 +431,21 @@ Section Exs. (* Todo: exercise *)Let f: naryFunc 2 := fun x y => x + pred (cPair
             0 | 1 => 1
           | _ => codeNth 0 A + codeNth 1 A
           end.
+  (* begin snippet fdiv2Def *)
   Let fdiv2 : naryFunc 2 :=
         fun (n acc: nat) =>
           match n with
             0 | 1 => 0
           | _ => S (codeNth 1 acc)
           end.
+    (* end snippet fdiv2Def *)
 
+  (* begin snippet fdiv2Examples *)
   Compute evalStrongRec _ fdiv2 0.
   Compute evalStrongRec _ fdiv2 2.
   Compute evalStrongRec _ fdiv2 3.
   Compute evalStrongRec _ fdiv2 4.
-  
+  (* end snippet fdiv2Examples *)
   
   Compute evalStrongRec _ ffib 1.
   Compute evalStrongRec _ ffib 2.

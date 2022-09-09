@@ -537,7 +537,7 @@ Extraction codeNth.
 Print codeNth.
 
 Section Strong_Recursion.
-
+(* begin snippet evalStrongRecDef *)
 Definition evalStrongRecHelp (n : nat) (f : naryFunc (S (S n))) :
   naryFunc (S n) :=
   evalPrimRecFunc n (evalComposeFunc n 0 (Vector.nil _) (codeList nil))
@@ -555,9 +555,12 @@ Definition evalStrongRec (n : nat) (f : naryFunc (S (S n))) :
     (Vector.cons _
        (fun z : nat => evalStrongRecHelp n f (S z)) _ (Vector.nil _))
     (fun z : nat => cPairPi1 (pred z)).
+(* end snippet evalStrongRecDef *)
 
+(* begin snippet evalStrongRecPR:: no-out *)
 Lemma evalStrongRecIsPR (n : nat) (f : naryFunc (S (S n))) :
- isPR (S (S n))  f -> isPR (S n) (evalStrongRec n f).
+  isPR (S (S n))  f -> isPR (S n) (evalStrongRec n f).
+(* end snippet evalStrongRecPR *)
 Proof.
   intros; unfold evalStrongRec, evalStrongRecHelp in |- *.
   fold (naryFunc (S n)) in |- *.
@@ -638,6 +641,7 @@ Proof.
   -  trivial.
 Qed.
 
+(* begin snippet computeEvalStrongRecHelp:: no-out *)
 Lemma computeEvalStrongRecHelp :
   forall (n : nat) (f : naryFunc (S (S n))) (c : nat),
     evalStrongRecHelp n f (S c) =
@@ -648,6 +652,7 @@ Lemma computeEvalStrongRecHelp :
                 (Vector.cons (naryFunc n) (evalConstFunc n a0) 0
                    (Vector.nil (naryFunc n))))
              (fun a1 b0 : nat => S (cPair a1 b0))).
+(* end snippet computeEvalStrongRecHelp:: no-out *)
 Proof.
   intros n f c; unfold evalStrongRecHelp at 1 in |- *; simpl in |- *.
   fold (naryFunc n) in |- *.

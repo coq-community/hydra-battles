@@ -135,6 +135,7 @@ Indeed the \texttt{cPair} function used in this library
   Give a new equivalent definition of \texttt{codeNth}, without using tactics like \texttt{assert}.  You may define an help function for this purpose, in which case, please specify what your helper computes.
   \end{exercise}
 
+  
      \index{hydras}{Exercises}
   \begin{exercise}
     Please consider the following definition:
@@ -143,9 +144,55 @@ Indeed the \texttt{cPair} function used in this library
     
 
    
-
+    \noindent
+    
     Prove that the functions \texttt{codeList} and \texttt{members} are inverse of each other.
   \end{exercise}
+
+  \subsection{Strong recursion}
+
+  List encoding helps us to define primitive recursive functions
+  where the computation of $f\;n$ may  depend of
+  [part of] the values $f\;0$, $f\;1$, \dots, $f\;(n-1)$.
+
+  A simple example is the \texttt{div2} function
+  defined by
+  \begin{align*}
+    \texttt{div2}\;0&=0\\
+    \texttt{div2}\;1&=1\\
+    \texttt{div2}\;(n+2)&=S(\texttt{div2}\;n)\\
+  \end{align*}
+
+  The trick is to define a helper $h$ where
+  $h\;n\;a$ is the natural number which represents
+  the sequence $\langle \texttt{div2}(n-1),
+  \texttt{div2}(n-2),\dots,\texttt{div2}\;1, \texttt{div2}\;0\rangle$.
+
+  In \coq, the helper associated with \texttt{div2} is defined in
+  \href{../theories/html/hydras.MoreAck/PrimRecExamples}{MoreAck.PrimRecExamples}.
+  
+
+  \inputsnippets{PrimRecExamples/fdiv2Def}
+  
+  
+  The function \texttt{(evalStrongRec\;$n$\;$h$\;$c$)} computes
+  $(f\;c)$ if $h$ is the helper associated with $f$.
+
+  \inputsnippets{PrimRecExamples/fdiv2Examples}
+
+  
+  This function is defined in
+  \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair}.
+   Definitions and related lemmas are quite tricky, but look easy to apply. 
+
+   \inputsnippets{cPair/evalStrongRecDef}
+
+   \inputsnippets{cPair/evalStrongRecPR}
+    \inputsnippets{cPair/computeEvalStrongRecHelp}
+  
+  
+ 
+
 
 
   
