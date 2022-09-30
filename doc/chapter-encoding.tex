@@ -164,7 +164,7 @@ Indeed the \texttt{cPair} function used in this library
   \end{align*}
 
   The trick is to define a helper $h$ where
-  $h\;n\;a$ is the natural number which represents
+  $h\;n\;a$ is the natural number which encodes
   the sequence $\langle \texttt{div2}(n-1),
   \texttt{div2}(n-2),\dots,\texttt{div2}\;1, \texttt{div2}\;0\rangle$.
 
@@ -177,12 +177,16 @@ Indeed the \texttt{cPair} function used in this library
   
   The function \texttt{(evalStrongRec\;$n$\;$h$\;$c$)} computes
   $(f\;c)$ if $h$ is the helper associated with $f$.
+  This function is defined in
+  \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair}.
 
   \inputsnippets{PrimRecExamples/fdiv2Examples}
 
+  Trying to compute the half of $5$ this way resulted in unbearably long computation times \dots.
   
-  This function is defined in
-  \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair}.
+
+  
+  
    Definitions and related lemmas are quite tricky, but look easy to apply. 
 
    \inputsnippets{cPair/evalStrongRecDef}
@@ -190,11 +194,15 @@ Indeed the \texttt{cPair} function used in this library
    \inputsnippets{cPair/evalStrongRecPR}
     \inputsnippets{cPair/computeEvalStrongRecHelp}
   
-  
- 
+  \index{ordinals}{Exercises}
+    \begin{exercise}
+      Prove formally that this implementation of \texttt{div2} is correct.
+    \end{exercise}
 
 
-
-  
+   \index{ordinals}{Exercises}
+    \begin{exercise}
+     Define a function for computing the Fibonacci numbers by strong recursion.
+    \end{exercise}
 
        

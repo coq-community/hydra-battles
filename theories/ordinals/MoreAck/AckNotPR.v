@@ -10,7 +10,8 @@ Set Apply With Renaming.
 
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
 Require Import Compare_dec Max.
-Import extEqualNat  VectorNotations. 
+Import extEqualNat  VectorNotations.
+
 
 
 
