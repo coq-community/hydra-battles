@@ -633,7 +633,7 @@ Proof.
   - intro H0; case (@lt_irrefl zero).
     apply lt_le_trans with alpha;auto.
     rewrite <- H0;  pattern phi0; apply phi0_elim.
-    intros f H1; eapply ordering_le;eauto.
+    intros f H1; eapply ordering_le; [ eauto |].
     split. 
   - intro H0; destruct H0 as [x H0].
     generalize (@AP_phi0 alpha).
