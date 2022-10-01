@@ -93,31 +93,32 @@ Qed.
 (* begin snippet APOne_least_AP:: no-out *)
 Lemma least_AP : least_member lt AP 1.
 (* end snippet APOne_least_AP *)
-Proof with auto with schutte.
-  repeat split ...
-  - simpl (F 1) ...
+Proof.
+  repeat split.
+  - simpl (F 1). auto with schutte. 
   - intros beta H;  assert (beta = zero).
-    { simpl (F 1) in H; apply le_alpha_zero,  lt_succ_le_2 ...
+    { simpl (F 1) in H; apply le_alpha_zero,  lt_succ_le_2.
+      assumption.
     }
-    subst beta; rewrite zero_plus_alpha ...
-  - intros x  H0; tricho x (F 1) H3 ...
-    simpl (F 1) in H3; assert (x = zero).
-    { apply le_alpha_zero, lt_succ_le_2 ... }
-    subst x; destruct H0; case (@lt_irrefl zero) ...
-    subst x; left; trivial.
-    right; auto.
+    subst beta; rewrite zero_plus_alpha; reflexivity.
+  - intros x  H0; tricho x (F 1) H3.
+    + simpl (F 1) in H3; assert (x = zero).
+    { now apply le_alpha_zero, lt_succ_le_2. }
+     subst x; destruct H0; now case (@lt_irrefl zero). 
+    + subst x; now left.  
+    + right; auto.
 Qed.
 
 (* begin snippet APOne_AP_omega:: no-out *)
 Lemma AP_omega : In AP omega.
 (* end snippet APOne_AP_omega *)
-Proof with auto with schutte.
+Proof.
   repeat split.
   - apply lt_trans with (F 1).
-    +  simpl (F 1) ...
+    +  simpl (F 1) ; auto with schutte.
     + apply finite_lt_omega.
   - intros beta H; case (@lt_omega_finite _  H).
-    intros;subst beta;apply finite_plus_infinite ...
+    intros;subst beta;apply finite_plus_infinite; auto with schutte. 
 Qed.
 
 
@@ -125,16 +126,18 @@ Qed.
 #[global] Hint Resolve zero_lt_omega : schutte.
 
 Lemma AP_finite_eq_one : forall n: nat, AP n -> n = 1.
-Proof with auto with schutte.
+Proof.
   intro n;  case n.
   -  inversion 1.
      simpl in H0; case (@lt_irrefl zero);auto.
   -  intro n0;case n0; trivial.
      inversion_clear 1.
-     generalize (H1 (F 1)); intros; absurd (F 1 + F (S (S n1)) = F (S (S n1))).
+     generalize (H1 (F 1)); intros;
+       absurd (F 1 + F (S (S n1)) = F (S (S n1))).
      +  rewrite <- plus_FF;simpl; intro H2.
         case (@lt_irrefl (succ (succ (F n1)))).
-        pattern (succ (succ (F n1))) at 2; rewrite <- H2 ...
+        pattern (succ (succ (F n1))) at 2;
+          rewrite <- H2; auto with schutte.
      + apply H, finite_mono; auto with arith.
 Qed.
 
@@ -147,25 +150,22 @@ Lemma omega_second_AP :
                omega.
 (* end snippet APOne_omega_second_AP *)
 Proof with auto with schutte.
-  split  ...
-  split ...
-  - apply finite_lt_omega.
-  -  apply AP_omega.
-  -  intros x  H0.  case (@trichotomy x omega).  
-     intro H1.
-     case (lt_omega_finite  H1).
-     intros; subst x.
-     destruct  H0 as [H2 H3];     generalize (AP_finite_eq_one _ H3).
-     intro;subst x0;now destruct  (@lt_irrefl (F 1)).
-     auto.
-     red.
-     intuition.
+  split.
+  - split.
+    +  apply finite_lt_omega.
+    + apply AP_omega.
+  -  intros x  H0; case (@trichotomy x omega).  
+     + intro H1; case (lt_omega_finite  H1).
+       intros; subst x.
+       destruct  H0 as [H2 H3]; generalize (AP_finite_eq_one _ H3).
+       intro;subst x0;now destruct  (@lt_irrefl (F 1)).
+     + red; intuition.
 Qed.
 
 (* begin snippet APPlusClosed *)
 
 Lemma AP_plus_closed (alpha beta gamma : Ord): 
-  In AP alpha ->   beta < alpha -> gamma < alpha ->
+  In AP alpha -> beta < alpha -> gamma < alpha ->
   beta + gamma < alpha. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with schutte.
@@ -184,6 +184,8 @@ Lemma AP_mult_Sn_closed (alpha beta: Ord)  :
   - now simpl.
   -   simpl. now  apply AP_plus_closed.
 Qed.
+
+
 
 Lemma AP_mult_fin_r_closed  (alpha beta: Ord)  :
   AP alpha -> beta < alpha -> forall n,  beta * n  < alpha.
@@ -209,11 +211,10 @@ Section AP_Unbounded.
   Remark mono_seq : forall i, seq i < seq (S i).
   Proof with eauto with schutte.
     induction i.
-    - simpl;  pattern (succ alpha) at 1 ...
-      rewrite <- alpha_plus_zero ...
-      apply plus_mono_r ...
+    - simpl;  pattern (succ alpha) at 1.
+      rewrite <- alpha_plus_zero; apply plus_mono_r ...
     -   simpl in *.
-        pattern (seq i + seq i) at 1; rewrite <- alpha_plus_zero ...
+        pattern (seq i + seq i) at 1; rewrite <- alpha_plus_zero;
         apply plus_mono_r ...
   Qed.
 
@@ -222,7 +223,8 @@ Section AP_Unbounded.
   Proof with auto.
     induction  1.
     - apply mono_seq ...
-    - apply lt_trans with (seq m) ...
+    - apply lt_trans with (seq m).
+      apply IHle.
       apply mono_seq ...
   Qed.
 
