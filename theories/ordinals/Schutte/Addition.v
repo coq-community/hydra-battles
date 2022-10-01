@@ -150,8 +150,7 @@ Proof with auto with schutte.
      -  eauto with schutte.
  }
  rewrite ge_zero in H0.
- generalize (ordering_function_unicity H0 H1); destruct 1; auto.
- apply H2; split.
+ generalize (ordering_function_unicity H0 H1); destruct 1; auto; apply H2; split. 
 Qed.
 (*||*)
 
