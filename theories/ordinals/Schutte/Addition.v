@@ -190,8 +190,9 @@ Proof with trivial.
  pattern (plus alpha); apply plus_elim ...
  intros plus_alpha Hp;
    assert (H1 :plus_alpha beta < plus_alpha (succ beta)).
- {  eapply ordering_function_mono;eauto.
-    red;auto with schutte.
+ {  eapply ordering_function_mono.
+    apply Hp. 
+    split.
     split.
     apply lt_succ; auto.
  }
