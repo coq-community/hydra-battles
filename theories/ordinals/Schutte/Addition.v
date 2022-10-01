@@ -202,20 +202,24 @@ Proof with trivial.
  intro H6;case Hp;intros H H3 H4 H7.
  case (H4 (succ (plus_alpha beta))).
  -  red; apply le_trans with (plus_alpha  beta).
-   +  generalize (H beta );  unfold In,  ge;  auto.
-      intro H9. apply H3. auto.  split.
-   +  right; apply lt_succ;  auto.
+   +  generalize (H beta );  unfold In,  ge.
+      intro H9; apply H3. split.
+   +  right; apply lt_succ. 
  -  intros x [Hx Ex].  absurd ( beta < x /\ x < succ beta).
     + intro H8; decompose [and] H8;clear H8.
       assert (H8: succ beta <= x) by (apply lt_succ_le; eauto with schutte).
       case (@lt_irrefl (succ beta)).
-      eapply le_lt_trans;eauto.
+      eapply le_lt_trans. apply H8. assumption.
     +  split.
-   *  eapply ordering_function_monoR;eauto.
+   *  eapply ordering_function_monoR. apply Hp. 
       split.
-      rewrite Ex; auto with schutte.
-   *  rewrite <- Ex in H6; eapply ordering_function_monoR;eauto.
-     auto with schutte.
+      assumption. 
+      rewrite Ex.  auto with schutte.
+   *  rewrite <- Ex in H6; eapply ordering_function_monoR.
+      apply Hp. 
+      assumption.
+      split.
+      assumption. 
 Qed.
 (*||*)
 
