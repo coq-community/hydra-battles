@@ -385,8 +385,9 @@ Section proof_of_associativity.
     - intros;red; red; unfold g_alpha_beta; now apply plus_assoc1.
     -   intros b H;
           case (plus_assoc2  H). intros x H'x;  exists x.
-        unfold g_alpha_beta;split;auto.
+        unfold g_alpha_beta;split.
         split.
+        symmetry; assumption.
     -  unfold g_alpha_beta;intros.
        + apply plus_mono_r;auto with schutte.
          apply plus_mono_r;auto with schutte.
@@ -403,7 +404,7 @@ Section proof_of_associativity.
   Lemma plus_assoc3 (gamma : Ord) :
     f_alpha_beta  gamma =  g_alpha_beta gamma.
   Proof.
-    case of_u; intros H0 H1; apply H1; auto.
+    case of_u; intros H0 H1; apply H1.  auto.
     split.
   Qed.
 
@@ -427,8 +428,7 @@ Lemma one_plus_infinite (alpha : Ord) :
   omega <= alpha ->  1 + alpha = alpha. 
 Proof.
  intros  H.
- generalize (minus_exists H); intros [gamma e];  subst alpha ;
-  auto with schutte.
+ generalize (minus_exists H); intros [gamma e];  subst alpha .
  rewrite plus_assoc;auto with schutte; now rewrite one_plus_omega.
 Qed.
 
