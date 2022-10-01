@@ -404,7 +404,7 @@ Section proof_of_associativity.
   Lemma plus_assoc3 (gamma : Ord) :
     f_alpha_beta  gamma =  g_alpha_beta gamma.
   Proof.
-    case of_u; intros H0 H1; apply H1.  auto.
+    case of_u; intros H0 H1; apply H1. 
     split.
   Qed.
 
@@ -429,7 +429,7 @@ Lemma one_plus_infinite (alpha : Ord) :
 Proof.
  intros  H.
  generalize (minus_exists H); intros [gamma e];  subst alpha .
- rewrite plus_assoc;auto with schutte; now rewrite one_plus_omega.
+ rewrite plus_assoc. now rewrite one_plus_omega.
 Qed.
 
 (* begin snippet finitePlusInfinite *)
@@ -439,11 +439,12 @@ Lemma finite_plus_infinite (n : nat) (alpha : Ord) :
 (*| .. coq:: none |*)
 Proof.
  induction n.
- - simpl; intros;rewrite zero_plus_alpha;trivial; eauto with schutte.
+ - simpl; intros;rewrite zero_plus_alpha;trivial.
  -  intros; simpl; replace (succ (F n)) with (F 1 + F n).
-    + rewrite <- plus_assoc; eauto with schutte.
-      rewrite IHn;auto.
-      apply one_plus_infinite;eauto with schutte.
+    + rewrite <- plus_assoc.
+      rewrite IHn. 
+      * apply one_plus_infinite; assumption. 
+      * assumption.
   + now   rewrite <- plus_FF.
 Qed.
 (*||*)
@@ -457,41 +458,40 @@ Qed.
 
 Lemma plus_mono_weak_l : forall alpha beta gamma,
                           alpha <= beta -> alpha + gamma <= beta + gamma.
-Proof with  eauto with schutte.
+Proof.
  intros alpha beta gamma  H0;
  assert (H1 : ordinal alpha) by ( eauto with schutte).
  assert (H2 :ordinal beta) by ( eauto with schutte).
  case (minus_exists H0); intros  khi  ekhi;  subst beta.
- rewrite <- plus_assoc ... 
- apply plus_mono_r_weak ... 
- apply le_plus_r ...
+ rewrite <- plus_assoc.
+ apply plus_mono_r_weak.
+ apply le_plus_r.
 Qed.
 
 Lemma plus_mono_bi : forall alpha beta gamma delta, 
                         alpha <= gamma ->
                         beta < delta -> 
                         alpha + beta < gamma + delta.
-Proof with eauto with schutte.
+Proof.
  intros alpha beta gamma delta H H0; apply le_lt_trans with (gamma+beta).
- apply plus_mono_weak_l ...
- apply plus_mono_r ...
+ now apply plus_mono_weak_l.
+ now apply plus_mono_r. 
 Qed.
 
 Lemma mult_fin_r_one : forall n, (F 1) * S n = F (S n).
  Proof.
   induction n.
   -   trivial.
-  -   simpl in *; rewrite IHn; rewrite plus_of_succ; auto with schutte.   
+  -   simpl in *; rewrite IHn; rewrite plus_of_succ.
       rewrite alpha_plus_zero;auto with schutte.
  Qed.
 
  
 Lemma mult_fin_r_mono : forall alpha beta , alpha < beta -> 
    forall n,  alpha * S n <  beta * S n.
-Proof with auto.
- induction n; simpl ...
- apply plus_mono_bi ...
- right ...
+Proof.
+ induction n; simpl; [assumption|].  
+ apply plus_mono_bi; [ right; assumption | assumption].
 Qed.
  
 Lemma le_a_mult_Sn_a : forall alpha n, ordinal alpha -> 
@@ -505,12 +505,13 @@ Qed.
 Lemma mult_Sn_mono2 : forall a, zero < a ->
                          forall n p, (n < p)%nat -> a * S n <  a * S p.
 Proof with auto with schutte.
- intros a Ha; induction 1.
- - simpl; intros; pattern ( mult_Sn a n) at 1; rewrite <- alpha_plus_zero ...
-  +   apply plus_mono_r ...
- -  simpl;apply lt_trans with (mult_Sn a m);auto.
-    pattern (mult_Sn a m) at 1; rewrite <- alpha_plus_zero ...
-    apply plus_mono_r ...
+  intros a Ha; induction 1.
+  - simpl; intros; pattern ( mult_Sn a n) at 1;
+      rewrite <- alpha_plus_zero ...
+    +   apply plus_mono_r ...
+  -  simpl;apply lt_trans with (mult_Sn a m);auto.
+     pattern (mult_Sn a m) at 1; rewrite <- alpha_plus_zero.
+     apply plus_mono_r ...
 Qed.
 
 Lemma mult_Sn_mono3 : forall alpha, zero < alpha ->
@@ -519,9 +520,8 @@ Lemma mult_Sn_mono3 : forall alpha, zero < alpha ->
 Proof with auto with schutte.
  intros a Ha; induction 1 .
  - simpl; apply eq_le ...
- - simpl; apply plus_mono_weak_l ...
-   apply lt_le ...
-   apply  mult_Sn_mono2 ...
+ - simpl; apply plus_mono_weak_l.
+   apply lt_le; apply  mult_Sn_mono2 ...
 Qed.
 
 
