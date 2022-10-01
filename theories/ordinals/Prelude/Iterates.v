@@ -254,8 +254,9 @@ Lemma iterate_le_np_le (f: nat -> nat):
 Proof.
   induction 2.
   - reflexivity.
-  - transitivity (iterate f m x); auto.
-    apply iterate_le_n_Sn; auto.
+  - transitivity (iterate f m x).
+    + assumption.
+    + apply iterate_le_n_Sn, H. 
 Qed.
 
 Lemma iterate_mono2 (f: nat -> nat):

@@ -243,8 +243,9 @@ Lemma gnaw_gnawS s alpha :
   gnaw alpha s = gnawS alpha (unshift s).
 Proof.
   revert alpha; induction s; cbn; auto.
-  destruct  a as [|i]; auto.
-  intros; rewrite IHs; auto.  
+  destruct  a as [|i].
+  - apply IHs.
+  - intros; rewrite IHs. reflexivity. 
 Qed.
 
 Lemma path_toS_path_to  alpha s beta :

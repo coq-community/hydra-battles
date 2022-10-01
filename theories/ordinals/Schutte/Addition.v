@@ -150,7 +150,8 @@ Proof with auto with schutte.
      -  eauto with schutte.
  }
  rewrite ge_zero in H0.
- generalize (ordering_function_unicity H0 H1); destruct 1; auto; apply H2; split. 
+ generalize (ordering_function_unicity H0 H1); destruct 1.
+ apply H2; split. 
 Qed.
 (*||*)
 
@@ -167,8 +168,9 @@ Lemma le_plus_r (alpha beta : Ord) :  beta <= alpha + beta. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof.
  pattern (plus alpha);  apply plus_elim;auto.
- intros; eapply ordering_le; eauto.  
- split.
+ intros; eapply ordering_le.
+ + apply H.
+ + split.
 Qed.
 (*||*)
 
