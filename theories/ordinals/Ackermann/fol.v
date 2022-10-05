@@ -78,34 +78,34 @@ Definition language_decideable :=
 Hypothesis language_dec : language_decideable.
 
 Let nilTermsHelp : forall n : nat, n = 0 -> Terms n.
-intros.
-induction n as [| n Hrecn].
-apply Tnil.
-discriminate H.
+Proof. 
+  intros n H; induction n as [| n Hrecn].
+  - apply Tnil.
+  - discriminate H.
 Defined.
 
 Lemma nilTerms : forall x : Terms 0, Tnil = x.
 Proof.
-assert (forall (n : nat) (p : n = 0) (x : Terms n), nilTermsHelp n p = x).
-intros.
-induction x as [| n t x Hrecx].
-reflexivity.
-discriminate p.
-replace Tnil with (nilTermsHelp 0 (refl_equal 0)).
-apply H.
-auto.
+  assert (H: forall (n : nat) (p : n = 0) (x : Terms n), nilTermsHelp n p = x).
+  { intros n p x; induction x as [| n t x Hrecx].
+    - reflexivity.
+    - discriminate p.
+  }
+  replace Tnil with (nilTermsHelp 0 (refl_equal 0)).
+  - apply H.
+  - auto.
 Qed.
 
 Let consTermsHelp : forall n : nat, Terms n -> Set.
-intros.
-case n.
-exact
- (forall p : 0 = n, {foo : unit | eq_rec _ (fun z => Terms z) Tnil _ p = H}).
-intros.
-exact
- (forall p : S n0 = n,
-  {t : Term * Terms n0 |
-  eq_rec _ (fun z => Terms z) (Tcons n0 (fst t) (snd t)) _ p = H}).
+Proof. 
+  intros n H; case n.
+  - exact
+      (forall p : 0 = n, {foo : unit | eq_rec _ (fun z => Terms z) Tnil _ p = H}).
+  - intros n0;
+      exact
+        (forall p : S n0 = n,
+            {t : Term * Terms n0 |
+              eq_rec _ (fun z => Terms z) (Tcons n0 (fst t) (snd t)) _ p = H}).
 Defined.
 
 Lemma consTerms :
