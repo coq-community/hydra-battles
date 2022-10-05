@@ -398,27 +398,22 @@ Section Fol_Properties.
       forall (t1 t2 : fol.Term L) (v : nat) (s : fol.Term L),
         substituteFormula (equal t1 t2) v s =
           equal (substituteTerm t1 v s) (substituteTerm t2 v s).
-    Proof.
-      auto.
-    Qed.
+    Proof. auto. Qed.
 
     Lemma subFormulaRelation :
       forall (r : Relations L) (ts : fol.Terms L (arity L (inl _ r))) 
              (v : nat) (s : fol.Term L),
         substituteFormula (atomic r ts) v s =
           atomic r (substituteTerms (arity L (inl _ r)) ts v s).
-    Proof.
-      auto.
-    Qed.
+    Proof. auto. Qed.
 
     Lemma subFormulaImp :
       forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
         substituteFormula (impH f1 f2) v s =
           impH (substituteFormula f1 v s) (substituteFormula f2 v s).
     Proof.
-      intros.
-      unfold substituteFormula in |- *.
-      unfold substituteFormulaHelp in |- *.
+      intros f1 f2 v s.
+      unfold substituteFormula, substituteFormulaHelp in |- *.
       rewrite
         (Formula_depth_rec2_imp L)
         with
@@ -429,7 +424,7 @@ Section Fol_Properties.
            fun x : fol.Formula L =>
              {y : fol.Formula L | depth L y = depth L x}).
       unfold substituteFormulaImp at 1 in |- *.
-      induction
+      - induction
         (Formula_depth_rec2 L
            (fun x : fol.Formula L =>
               nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x})
@@ -451,7 +446,8 @@ Section Fol_Properties.
                    exist
                      (fun y : fol.Formula L => depth L y = depth L (fol.atomic L r t))
                      (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a b))
-                     (refl_equal (depth L (fol.atomic L r t)))) H) substituteFormulaImp
+                     (refl_equal (depth L (fol.atomic L r t)))) H)
+           substituteFormulaImp
            substituteFormulaNot substituteFormulaForall f1 
            (v, s)).
       induction
@@ -479,11 +475,10 @@ Section Fol_Properties.
                      (refl_equal (depth L (fol.atomic L r t)))) H) substituteFormulaImp
            substituteFormulaNot substituteFormulaForall f2 
            (v, s)).
-      simpl in |- *.
       reflexivity.
-      apply substituteFormulaImpNice.
-      apply substituteFormulaNotNice.
-      apply substituteFormulaForallNice.
+      - apply substituteFormulaImpNice.
+      - apply substituteFormulaNotNice.
+      - apply substituteFormulaForallNice.
     Qed.
 
     Lemma subFormulaNot :
@@ -502,38 +497,40 @@ Section Fol_Properties.
         (P := 
            fun x : fol.Formula L =>
              {y : fol.Formula L | depth L y = depth L x}).
-      unfold substituteFormulaNot at 1 in |- *.
-      induction
-        (Formula_depth_rec2 L
-           (fun x : fol.Formula L =>
-              nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x})
-           (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L =>
-                   {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
-                (fun (a : nat) (b : fol.Term L) =>
-                   exist
-                     (fun y : fol.Formula L => depth L y = depth L (fol.equal L t t0))
-                     (equal (substituteTerm t a b) (substituteTerm t0 a b))
-                     (refl_equal (depth L (fol.equal L t t0)))) H)
-           (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
-                (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L =>
-                   {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
-                (fun (a : nat) (b : fol.Term L) =>
-                   exist
-                     (fun y : fol.Formula L => depth L y = depth L (fol.atomic L r t))
-                     (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a b))
-                     (refl_equal (depth L (fol.atomic L r t)))) H) substituteFormulaImp
-           substituteFormulaNot substituteFormulaForall f 
-           (v, s)).
-      simpl in |- *.
-      reflexivity.
-      apply substituteFormulaImpNice.
-      apply substituteFormulaNotNice.
-      apply substituteFormulaForallNice.
+      - unfold substituteFormulaNot at 1 in |- *.
+        induction
+          (Formula_depth_rec2 L
+             (fun x : fol.Formula L =>
+                nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x})
+             (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
+                prod_rec
+                  (fun _ : nat * fol.Term L =>
+                     {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
+                  (fun (a : nat) (b : fol.Term L) =>
+                     exist
+                       (fun y : fol.Formula L => depth L y = depth L (fol.equal L t t0))
+                       (equal (substituteTerm t a b) (substituteTerm t0 a b))
+                       (refl_equal (depth L (fol.equal L t t0)))) H)
+             (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
+                  (H : nat * fol.Term L) =>
+                prod_rec
+                  (fun _ : nat * fol.Term L =>
+                     {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
+                  (fun (a : nat) (b : fol.Term L) =>
+                     exist
+                       (fun y : fol.Formula L =>
+                          depth L y = depth L (fol.atomic L r t))
+                       (atomic r
+                          (substituteTerms (arity L (inl (Functions L) r)) t a b))
+                       (refl_equal (depth L (fol.atomic L r t)))) H)
+             substituteFormulaImp
+             substituteFormulaNot substituteFormulaForall f 
+             (v, s)); reflexivity.
+       - apply substituteFormulaImpNice.
+       - apply substituteFormulaNotNice.
+       - apply substituteFormulaForallNice.
     Qed.
+    
 
     Lemma subFormulaForall :
       forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
@@ -549,7 +546,7 @@ Section Fol_Properties.
               end
           end.
     Proof.
-      intros.
+      intros f x v s nv.
       unfold substituteFormula at 1 in |- *.
       unfold substituteFormulaHelp in |- *.
       rewrite
@@ -561,34 +558,36 @@ Section Fol_Properties.
         (P := 
            fun x : fol.Formula L =>
              {y : fol.Formula L | depth L y = depth L x}).
-      simpl in |- *.
-      induction (eq_nat_dec x v); simpl in |- *.
-      reflexivity.
-      induction (In_dec eq_nat_dec x (freeVarTerm s)); simpl in |- *.
-      fold nv in |- *.
-      unfold substituteFormula at 2 in |- *; unfold substituteFormulaHelp in |- *;
-        simpl in |- *.
-      induction
-        (Formula_depth_rec2 L
-           (fun x0 : fol.Formula L =>
-              nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x0})
-           (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
-                (fun (a0 : nat) (b0 : fol.Term L) =>
-                   exist (fun y : fol.Formula L => depth L y = 0)
-                     (equal (substituteTerm t a0 b0) (substituteTerm t0 a0 b0))
-                     (refl_equal 0)) H)
-           (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
-                (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
-                (fun (a0 : nat) (b0 : fol.Term L) =>
-                   exist (fun y : fol.Formula L => depth L y = 0)
-                     (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a0 b0))
-                     (refl_equal 0)) H) substituteFormulaImp substituteFormulaNot
-           substituteFormulaForall f (x, var nv)).
-      unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
+      - simpl in |- *.
+        induction (eq_nat_dec x v); simpl in |- *.
+        + reflexivity.
+        + induction (In_dec eq_nat_dec x (freeVarTerm s)); simpl in |- *.
+          fold nv in |- *.
+          unfold substituteFormula at 2 in |- *; unfold substituteFormulaHelp in |- *;
+            simpl in |- *.
+          * induction
+              (Formula_depth_rec2 L
+                 (fun x0 : fol.Formula L =>
+                    nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x0})
+                 (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
+                    prod_rec
+                      (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
+                      (fun (a0 : nat) (b0 : fol.Term L) =>
+                         exist (fun y : fol.Formula L => depth L y = 0)
+                           (equal (substituteTerm t a0 b0) (substituteTerm t0 a0 b0))
+                           (refl_equal 0)) H)
+                 (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
+                      (H : nat * fol.Term L) =>
+                    prod_rec
+                      (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
+                      (fun (a0 : nat) (b0 : fol.Term L) =>
+                         exist (fun y : fol.Formula L => depth L y = 0)
+                           (atomic r (substituteTerms
+                                        (arity L (inl (Functions L) r)) t a0 b0))
+                           (refl_equal 0)) H) substituteFormulaImp
+                 substituteFormulaNot
+                 substituteFormulaForall f (x, var nv)).
+            unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
         simpl in |- *.
       induction
         (Formula_depth_rec2 L
@@ -610,35 +609,35 @@ Section Fol_Properties.
                      (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a0 b0))
                      (refl_equal 0)) H) substituteFormulaImp substituteFormulaNot
            substituteFormulaForall x0 (v, s)).
-      simpl in |- *.
-      reflexivity.
-      unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
-        simpl in |- *.
-      induction
-        (Formula_depth_rec2 L
-           (fun x0 : fol.Formula L =>
-              nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x0})
-           (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
-                (fun (a : nat) (b1 : fol.Term L) =>
-                   exist (fun y : fol.Formula L => depth L y = 0)
-                     (equal (substituteTerm t a b1) (substituteTerm t0 a b1))
-                     (refl_equal 0)) H)
-           (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
-                (H : nat * fol.Term L) =>
-              prod_rec
-                (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
-                (fun (a : nat) (b1 : fol.Term L) =>
-                   exist (fun y : fol.Formula L => depth L y = 0)
-                     (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a b1))
-                     (refl_equal 0)) H) substituteFormulaImp substituteFormulaNot
-           substituteFormulaForall f (v, s)).
-      simpl in |- *.
-      reflexivity.
-      apply substituteFormulaImpNice.
-      apply substituteFormulaNotNice.
-      apply substituteFormulaForallNice.
+      simpl in |- *; reflexivity.
+          * unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
+              simpl in |- *.
+            induction
+              (Formula_depth_rec2 L
+                 (fun x0 : fol.Formula L =>
+                    nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x0})
+                 (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
+                    prod_rec
+                      (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
+                      (fun (a : nat) (b1 : fol.Term L) =>
+                         exist (fun y : fol.Formula L => depth L y = 0)
+                           (equal (substituteTerm t a b1) (substituteTerm t0 a b1))
+                           (refl_equal 0)) H)
+                 (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
+                      (H : nat * fol.Term L) =>
+                    prod_rec
+                      (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
+                      (fun (a : nat) (b1 : fol.Term L) =>
+                         exist (fun y : fol.Formula L => depth L y = 0)
+                           (atomic r (substituteTerms
+                                        (arity L (inl (Functions L) r)) t a b1))
+                           (refl_equal 0)) H) substituteFormulaImp
+                 substituteFormulaNot
+                 substituteFormulaForall f (v, s)).
+            simpl in |- *; reflexivity.
+      - apply substituteFormulaImpNice.
+      - apply substituteFormulaNotNice.
+      - apply substituteFormulaForallNice.
     Qed.
 
     Section Extensions.
@@ -653,23 +652,18 @@ Section Fol_Properties.
         forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
           substituteFormula (orH f1 f2) v s =
             orH (substituteFormula f1 v s) (substituteFormula f2 v s).
-        intros.
-        unfold orH, fol.orH in |- *.
-        rewrite subFormulaImp.
-        rewrite subFormulaNot.
-        reflexivity.
+      Proof.
+        intros f1 f2 v s; unfold orH, fol.orH in |- *.
+        now rewrite subFormulaImp, subFormulaNot.
       Qed.
 
       Lemma subFormulaAnd :
         forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
           substituteFormula (andH f1 f2) v s =
             andH (substituteFormula f1 v s) (substituteFormula f2 v s).
-        intros.
-        unfold andH, fol.andH in |- *.
-        rewrite subFormulaNot.
-        rewrite subFormulaOr.
-        repeat rewrite subFormulaNot.
-        reflexivity.
+        intros ? ? ? ?; unfold andH, fol.andH in |- *.
+        rewrite subFormulaNot, subFormulaOr.
+        now repeat rewrite subFormulaNot.
       Qed.
 
       Lemma subFormulaExist :
@@ -686,28 +680,21 @@ Section Fol_Properties.
                 end
             end.
       Proof.
-        intros.
-        unfold existH, fol.existH in |- *.
-        rewrite subFormulaNot.
-        rewrite subFormulaForall.
+        intros ? ? ? ? nv; unfold existH, fol.existH in |- *.
+        rewrite subFormulaNot, subFormulaForall.
         induction (eq_nat_dec x v).
-        reflexivity.
-        induction (In_dec eq_nat_dec x (freeVarTerm s)).
-        repeat rewrite subFormulaNot.
-        reflexivity.
-        rewrite subFormulaNot.
-        reflexivity.
+        - reflexivity.
+        - induction (In_dec eq_nat_dec x (freeVarTerm s));
+            now repeat rewrite subFormulaNot.
       Qed.
 
       Lemma subFormulaIff :
         forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
           substituteFormula (iffH f1 f2) v s =
             iffH (substituteFormula f1 v s) (substituteFormula f2 v s).
-        intros.
-        unfold iffH, fol.iffH in |- *.
-        rewrite subFormulaAnd.
-        repeat rewrite subFormulaImp.
-        reflexivity.
+        Proof.
+        intros ? ? v s; unfold iffH, fol.iffH in |- *.
+        rewrite subFormulaAnd; now repeat rewrite subFormulaImp.
       Qed.
 
       Lemma subFormulaIfThenElse :
@@ -715,13 +702,10 @@ Section Fol_Properties.
           substituteFormula (ifThenElseH f1 f2 f3) v s =
             ifThenElseH (substituteFormula f1 v s) (substituteFormula f2 v s)
               (substituteFormula f3 v s).
-        intros.
-        unfold ifThenElseH, fol.ifThenElseH in |- *.
-        rewrite subFormulaAnd.
-        repeat rewrite subFormulaImp.
-        rewrite subFormulaNot.
-        reflexivity.
-      Qed.
+        Proof.
+          intros ? ? ? ? ?; unfold ifThenElseH, fol.ifThenElseH in |- *.
+          now rewrite subFormulaAnd, !subFormulaImp,  subFormulaNot.
+        Qed.
 
     End Extensions.
 
@@ -729,11 +713,8 @@ Section Fol_Properties.
       forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
         depth L (substituteFormula f v s) = depth L f.
     Proof.
-      intros.
-      unfold substituteFormula in |- *.
-      induction (substituteFormulaHelp f v s).
-      simpl in |- *.
-      auto.
+      intros f v s; unfold substituteFormula in |- *.
+      induction (substituteFormulaHelp f v s) as [x p]; now simpl. 
     Qed.
 
     Section Substitution_Properties.
@@ -741,73 +722,46 @@ Section Fol_Properties.
       Lemma subTermId :
         forall (t : fol.Term L) (v : nat), substituteTerm t v (var v) = t.
       Proof.
-        intros.
+        intros ? ?; 
         elim t using
           Term_Terms_ind
           with
           (P0 := fun (n : nat) (ts : fol.Terms L n) =>
                    substituteTerms n ts v (var v) = ts).
-        simpl in |- *.
-        intros.
-        induction (eq_nat_dec v n).
-        rewrite a.
-        reflexivity.
-        reflexivity.
-        intros.
-        simpl in |- *.
-        rewrite H.
-        reflexivity.
-        simpl in |- *.
-        reflexivity.
-        intros.
-        simpl in |- *.
-        rewrite H.
-        rewrite H0.
-        reflexivity.
+        - simpl in |- *; intros n.
+        induction (eq_nat_dec v n) as [a | b].
+        + now rewrite a.
+        + reflexivity.
+      -  intros f t0 H; simpl in |- *; now rewrite H.
+      -  reflexivity.
+       -  intros ? ? H t1 H0; simpl in |- *; now rewrite H, H0. 
       Qed.
 
       Lemma subTermsId :
         forall (n : nat) (ts : fol.Terms L n) (v : nat),
           substituteTerms n ts v (var v) = ts.
       Proof.
-        intros.
-        induction ts as [| n t ts Hrects].
-        reflexivity. 
-        simpl in |- *.
-        rewrite Hrects.
-        rewrite subTermId.
-        reflexivity.
+        intros n ts v; induction ts as [| n t ts Hrects].
+        - reflexivity. 
+        - simpl in |- *;  now rewrite Hrects,  subTermId.
       Qed.
 
       Lemma subFormulaId :
         forall (f : fol.Formula L) (v : nat), substituteFormula f v (var v) = f.
       Proof.
-        intros.
+        intros f v.
         induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf].
-        rewrite subFormulaEqual.
-        repeat rewrite subTermId.
-        reflexivity.
-        rewrite subFormulaRelation.
-        rewrite subTermsId.
-        reflexivity.
-        rewrite subFormulaImp.
-        rewrite Hrecf1.
-        rewrite Hrecf0.
-        reflexivity.
-        rewrite subFormulaNot.
-        rewrite Hrecf.
-        reflexivity.
-        rewrite subFormulaForall.
-        induction (eq_nat_dec n v).
-        reflexivity.
-        induction (In_dec eq_nat_dec n (freeVarTerm (var v))).
-        elim b.
-        simpl in a.
-        induction a as [H| H].
-        auto.
-        contradiction.
-        rewrite Hrecf.
-        reflexivity.
+        - now rewrite subFormulaEqual, !subTermId.
+        - now rewrite subFormulaRelation, subTermsId.
+        - now rewrite subFormulaImp, Hrecf1,  Hrecf0.
+        - now rewrite subFormulaNot, Hrecf.
+        - rewrite subFormulaForall; destruct  (eq_nat_dec n v) as [e|ne].
+          + reflexivity.
+          + induction (In_dec eq_nat_dec n (freeVarTerm (var v))) as [a|b].
+            * elim ne; destruct a as [H| H].
+              -- now subst.
+              -- destruct H.
+            * now rewrite Hrecf.
       Qed.
 
       Lemma subFormulaForall2 :
@@ -823,53 +777,32 @@ Section Fol_Properties.
                   forallH nv (substituteFormula (substituteFormula f x (var nv)) v s)
               end.
       Proof.
-        intros.
-        rewrite subFormulaForall.
-        induction (eq_nat_dec x v). 
-        set
+        intros f x v s; rewrite subFormulaForall.
+        induction (eq_nat_dec x v) as [a | b].
+        - set
           (A1 :=
              v :: freeVarTerm s ++ list_remove nat eq_nat_dec x (freeVarFormula f)) 
           in *.
-        exists (newVar A1).
-        repeat split.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        unfold A1 in |- *.
-        right.
-        apply in_or_app.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        rewrite H.
-        left.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        auto.
-        induction (In_dec eq_nat_dec x (freeVarTerm s)).
-        set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
-        exists (newVar A1).
-        repeat split.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        rewrite H.
-        left.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        right.
-        eapply In_list_remove1.
-        apply H.
-        exists x.
-        repeat split; auto.
-        unfold not in |- *; intros.
-        eapply (In_list_remove2 _ _ _ _ _ H).
-        auto.
-        rewrite subFormulaId.
-        auto.
+        exists (newVar A1); repeat split.
+        + unfold not in |- *; intros; elim (newVar1 A1).
+          unfold A1 in |- *; right.
+          apply in_or_app; auto.
+        + unfold not in |- *; intros; elim (newVar1 A1).
+          rewrite H; left; auto.
+        + unfold not in |- *; intros; elim (newVar1 A1).
+          right; apply in_or_app; auto.
+        - induction (In_dec eq_nat_dec x (freeVarTerm s)) as [a | b0].
+          + set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
+            exists (newVar A1); repeat split.
+            * unfold not in |- *; intros; elim (newVar1 A1); right.
+              apply in_or_app; auto.
+            * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
+        * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
+          right; eapply In_list_remove1; apply H.
+          + exists x; repeat split; auto.
+            intro H; eapply (In_list_remove2 _ _ _ _ _ H).
+           * reflexivity.
+           * now rewrite subFormulaId.
       Qed.
 
       Let existH := existH L.
@@ -887,53 +820,28 @@ Section Fol_Properties.
                   existH nv (substituteFormula (substituteFormula f x (var nv)) v s)
               end.
       Proof.
-        intros.
-        rewrite subFormulaExist.
-        induction (eq_nat_dec x v). 
-        set
+        intros f x v s; rewrite subFormulaExist.
+        induction (eq_nat_dec x v) as [a | b].
+        - set
           (A1 :=
              v :: freeVarTerm s ++ list_remove nat eq_nat_dec x (freeVarFormula f)) 
           in *.
-        exists (newVar A1).
-        repeat split.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        unfold A1 in |- *.
-        right.
-        apply in_or_app.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        rewrite H.
-        left.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        auto.
-        induction (In_dec eq_nat_dec x (freeVarTerm s)).
-        set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
-        exists (newVar A1).
-        repeat split.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        rewrite H.
-        left.
-        auto.
-        unfold not in |- *; intros; elim (newVar1 A1).
-        right.
-        apply in_or_app.
-        right.
-        eapply In_list_remove1.
-        apply H.
-        exists x.
-        repeat split; auto.
-        unfold not in |- *; intros.
-        eapply (In_list_remove2 _ _ _ _ _ H).
-        auto.
-        rewrite subFormulaId.
-        auto.
+          exists (newVar A1); repeat split.
+          + unfold not in |- *; intros; elim (newVar1 A1).
+            unfold A1 in |- *; right; apply in_or_app; auto.
+          + unfold not in |- *; intros; elim (newVar1 A1); rewrite H; now left.
+        + unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; auto.
+        - induction (In_dec eq_nat_dec x (freeVarTerm s)) as [a | b0].
+          + set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
+            exists (newVar A1);  repeat split.
+        * unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; auto.
+        * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
+        * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
+          right; eapply In_list_remove1; apply H.
+       + exists x; repeat split; auto.
+         intros H; eapply (In_list_remove2 _ _ _ _ _ H).
+        * reflexivity.
+        * rewrite subFormulaId; auto.
       Qed.
 
     End Substitution_Properties.
