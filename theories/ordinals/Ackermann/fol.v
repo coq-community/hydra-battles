@@ -112,28 +112,19 @@ Lemma consTerms :
  forall (n : nat) (x : Terms (S n)),
  {t : Term * Terms n | Tcons n (fst t) (snd t) = x}.
 Proof.
-assert (forall (n : nat) (x : Terms n), consTermsHelp n x).
-intros.
-induction x as [| n t x Hrecx].
-simpl in |- *.
-intros.
-exists tt.
-elim p using K_dec_set.
-apply eq_nat_dec.
-simpl in |- *.
-reflexivity.
-simpl in |- *.
-intros.
-exists (t, x).
-elim p using K_dec_set.
-apply eq_nat_dec.
-simpl in |- *.
-reflexivity.
-intros.
-assert (consTermsHelp _ x).
-apply H.
-simpl in H0.
-apply (H0 (refl_equal (S n))).
+  assert (H: forall (n : nat) (x : Terms n), consTermsHelp n x).
+  { intros n x; induction x as [| n t x Hrecx].
+    - simpl in |- *; intros p; exists tt.
+      elim p using K_dec_set.
+      + apply eq_nat_dec.
+      + reflexivity.
+    - simpl in |- *; intro p; exists (t, x).
+      elim p using K_dec_set.
+      + apply eq_nat_dec.
+      + simpl in |- *; reflexivity.
+  }
+  intros n x; assert (H0: consTermsHelp _ x) by apply H.
+  simpl in H0; apply (H0 (refl_equal (S n))).
 Qed.
 
 Arguments Term_Terms_rec_full P P0: rename.
