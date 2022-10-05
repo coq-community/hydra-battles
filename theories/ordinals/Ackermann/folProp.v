@@ -280,8 +280,7 @@ Section Fol_Properties.
             substituteFormulaImp f z1 g z3 q =
               substituteFormulaImp f z2 g z4 q.
     Proof.
-      intros f g z1 z2 H z3 z4 H0 q.       
-      unfold substituteFormulaImp in |- *.
+      intros f g z1 z2 H z3 z4 H0 q; unfold substituteFormulaImp in |- *.
       rewrite H, H0; reflexivity. 
     Qed.
 
@@ -355,8 +354,7 @@ Section Fol_Properties.
 
     Remark substituteFormulaForallNice :
       forall (v : nat) (a : fol.Formula L)
-             (z1
-                z2 : forall b : fol.Formula L,
+             (z1 z2 : forall b : fol.Formula L,
                  lt_depth b (forallH v a) ->
                  nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L b}),
         (forall (b : fol.Formula L) (q : lt_depth b (forallH v a))
@@ -364,41 +362,33 @@ Section Fol_Properties.
         forall q : nat * fol.Term L,
           substituteFormulaForall v a z1 q = substituteFormulaForall v a z2 q.
     Proof.
-      intros.
-      unfold substituteFormulaForall in |- *.
-      induction q as (a0, b).
+      intros v a z1 z2 H [a0 b]; unfold substituteFormulaForall in |- *.
       induction (eq_nat_dec v a0); simpl in |- *.
-      reflexivity.
-      induction (In_dec eq_nat_dec v (freeVarTerm b)); simpl in |- *.
-      rewrite H.
-      induction
-        (z2 a (depthForall L a v)
-           (v, var (newVar (a0 :: freeVarTerm b ++ freeVarFormula a)))).
-      rewrite H.
-      reflexivity.
-      rewrite H.
-      reflexivity.
+      - reflexivity.
+      - induction (In_dec eq_nat_dec v (freeVarTerm b)); simpl in |- *.
+        + rewrite H; destruct
+          (z2 a (depthForall L a v)
+             (v, var (newVar (a0 :: freeVarTerm b ++ freeVarFormula a))));
+            rewrite H; reflexivity.
+        + rewrite H; reflexivity.
     Qed.
+    
 
     Definition substituteFormulaHelp (f : fol.Formula L) 
       (v : nat) (s : fol.Term L) : {y : fol.Formula L | depth L y = depth L f}.
-      intros.
+      Proof.
       apply
         (Formula_depth_rec2 L
            (fun f : fol.Formula L =>
               nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L f})).
-      intros.
-      induction H as (a, b).
-      exists (equal (substituteTerm t a b) (substituteTerm t0 a b)).
-      auto.
-      intros.
-      induction H as (a, b).
-      exists (atomic r (substituteTerms _ t a b)).
-      auto.
-      exact substituteFormulaImp.
-      exact substituteFormulaNot.
-      exact substituteFormulaForall.
-      exact (v, s).
+      - intros t t0 H; induction H as (a, b).
+        exists (equal (substituteTerm t a b) (substituteTerm t0 a b)); auto.
+      - intros r t H; induction H as (a, b).
+        exists (atomic r (substituteTerms _ t a b)); auto.
+      - exact substituteFormulaImp.
+      - exact substituteFormulaNot.
+      - exact substituteFormulaForall.
+      - exact (v, s).
     Defined.
 
     Definition substituteFormula (f : fol.Formula L) (v : nat) 
