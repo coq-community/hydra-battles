@@ -107,8 +107,7 @@ supported_coq_versions:
   opam: '{(>= "8.13" & < "8.17~") | (= "dev")}'
 
 tested_coq_opam_versions:
-- version: 'coq-dev'
-  repo: 'mathcomp/mathcomp-dev'
+- version: 'dev'
 - version: '1.15.0-coq-8.16'
   repo: 'mathcomp/mathcomp'
 - version: '1.14.0-coq-8.15'
