@@ -30,13 +30,13 @@ Fixpoint freeVarTerm (s : fol.Term L) : list nat :=
   | fol.var v => v :: nil
   | fol.apply f ts => freeVarTerms (arity L (inr _ f)) ts
   end
-      
- with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : 
-   list nat :=
-        match ss with
-        | Tnil => nil (A:=nat)
-        | Tcons m t ts => freeVarTerm t ++ freeVarTerms m ts
-        end.
+    
+with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : 
+list nat :=
+       match ss with
+       | Tnil => nil (A:=nat)
+       | Tcons m t ts => freeVarTerm t ++ freeVarTerms m ts
+       end.
 
 Lemma freeVarTermApply :
   forall (f : Functions L) (ts : fol.Terms L _),
