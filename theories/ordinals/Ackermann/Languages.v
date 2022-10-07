@@ -4,6 +4,7 @@ Require Import fol.
 Require Import primRec.
 Require Import Coq.Lists.List.
 
+(* begin snippet LNTDef1 *)
 Inductive LNTFunction : Set :=
   | Plus : LNTFunction
   | Times : LNTFunction
@@ -20,12 +21,15 @@ Definition LNTFunctionArity (x : LNTFunction) : nat :=
   | Succ => 1
   | Zero => 0
   end.
+(* end snippet LNTDef1 *)
 
+(* begin snippet LNTDef2 *)
 Definition LNTArity (x : Empty_set + LNTFunction) : nat :=
   match x return nat with
   | inl bot => Empty_set_rec (fun _ => nat) bot
   | inr y => LNTFunctionArity y
   end.
+
 
 Definition LNNArity (x : LNNRelation + LNTFunction) : nat :=
   match x return nat with
@@ -38,6 +42,9 @@ Definition LNNArity (x : LNNRelation + LNTFunction) : nat :=
 Definition LNT : Language := language Empty_set LNTFunction LNTArity.
 
 Definition LNN : Language := language LNNRelation LNTFunction LNNArity.
+(* end snippet LNTDef2 *)
+
+
 
 Definition codeLNTFunction (f : LNTFunction) : nat :=
   match f with

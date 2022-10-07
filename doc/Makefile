@@ -10,6 +10,7 @@ DEP_FILES = hydras.tex          \
 	    chapter-powers.tex  \
 	    chapter-primrec.tex \
 	    chapter-encoding.tex \
+	    chapter-fol.tex \
 	    gaia-chapter.tex    \
 	    thebib.bib          \
 	    coqmacros.tex       \

@@ -133,9 +133,10 @@ theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
 
-
 theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
+theories/ordinals/MoreAck/fol_Examples.v
+
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
 theories/additions/BinaryStrat.v
