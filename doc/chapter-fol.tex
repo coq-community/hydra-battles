@@ -1,0 +1,51 @@
+\chapter{First Order Logic (in construction)}
+\label{chap:fol}
+
+\section{Data types}
+
+\subsection{Languages}
+
+A \emph{language} is a structure composed of relation and function symbols, each symbol is given an \emph{arity} (number of arguments).
+
+From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+\inputsnippets{fol/LanguageDef} 
+
+In ~\href{../theories/html/hydras.Ackermann.Languages.html}{Ackermann.Languages}, we can find two examples of languages built with the usual symbols of arithmetic.
+
+The first language, \texttt{LNT} (\emph{Language of Number Theory}) has just function symbols for $+$, $\times$, $0$ and successor.
+
+
+
+
+The second language, LNN, is the language of NN (\emph{Natural Numbers}) and has
+the same function symbols as LNT plus one relation symbol for less than, LT.
+
+First, we declare two ranked alphabets. 
+\inputsnippets{Languages/LNTDef1} 
+
+In a second time, we build \texttt{LNT} and \texttt{LNN} by filling \texttt{Language}'s \texttt{arity} field.
+
+
+\inputsnippets{Languages/LNTDef2} 
+
+
+Let us show a few examples (from ~\href{../theories/html/hydras.MoreAck.fol_Examples.html}{MoreAck.fol\_Examples}).
+
+\inputsnippets{fol_Examples/arityTest} 
+
+
+\subsection{Terms}
+
+Given a language $L$, we define the set of \emph{terms} and
+$n$-\emph{tuples} of terms.
+
+\inputsnippets{fol/TermDef} 
+
+For instance the term $v_1+0$, where $v_1$ is a variable,
+is represented by a term of type (\texttt{Term LNN}).
+
+\inputsnippets{fol_Examples/v1Plus0} 
+
+
+
+

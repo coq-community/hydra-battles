@@ -11,12 +11,16 @@ Require Import Max.
 Require Import misc.
 
 Require Import Compat815.
-
 (* Import Nat. *)
 
+(* begin snippet LanguageDef *)
 Record Language : Type := language
-  {Relations : Set; Functions : Set; arity : Relations + Functions -> nat}.
+ { Relations : Set; 
+   Functions : Set; 
+   arity : Relations + Functions -> nat}.
+(* end snippet LanguageDef *)
 
+(* begin snippet TermDef *)
 Section First_Order_Logic.
 
 Variable L : Language.
@@ -27,7 +31,8 @@ Inductive Term : Set :=
 with Terms : nat -> Set :=
   | Tnil : Terms 0
   | Tcons : forall n : nat, Term -> Terms n -> Terms (S n).
- 
+ (* end snippet TermDef *)
+
 Scheme Term_Terms_ind := Induction for Term Sort Prop
   with Terms_Term_ind := Induction for Terms Sort Prop.
 
