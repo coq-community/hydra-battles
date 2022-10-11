@@ -37,9 +37,9 @@ Definition Succ (x : Term) : Term :=
 
 Definition Zero : Term := apply LNT Zero (Tnil LNT).
 
-Lemma LNT_dec : language_decideable LNT.
+Lemma LNT_dec : language_decidable LNT.
 Proof.
-unfold language_decideable in |- *.
+unfold language_decidable in |- *.
 split; decide equality.
 Qed.
 

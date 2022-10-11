@@ -41,11 +41,82 @@ $n$-\emph{tuples} of terms.
 
 \inputsnippets{fol/TermDef} 
 
+
 For instance the term $v_1+0$, where $v_1$ is a variable,
 is represented by a term of type (\texttt{Term LNN}).
 
 \inputsnippets{fol_Examples/v1Plus0} 
 
+\subsection{Formulas}
 
 
 
+The type of first order formulas over $L$ is defined 
+in~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} as an inductive data type.
+
+\inputsnippets{fol/FormulaDef}
+
+The full abstract syntax of first-order formulas is completed 
+with a few more notations. Note that we are studying \emph{classical} first-order logic, so the existential quantifier is derived from the universal one through negation. 
+
+\inputsnippets{fol/FolFull, fol/folPlus}
+
+\subsection{Examples}
+
+In order to get more readable terms and formulas, we can define a few notations in ~\href{../theories/html/hydras.MoreAck.fol_Examples.html}{MoreAck.fol\_Examples}
+
+
+\inputsnippets{fol_Examples/instantiations}
+
+For instance, the term $v_1+0$ is written as below.
+
+\inputsnippets{fol_Examples/v1Plus01}
+
+Let us give two examples of first-order formulas.
+
+\begin{itemize}
+\item $\forall\,v_0\;v_1,\, v_0<v_1\, \longrightarrow\, v_0<v_1 + v_0$
+\inputsnippets{fol_Examples/f1Example}
+\item $\forall\,v_0,\,\exists\,v_1,\,v_0<v_1$
+\inputsnippets{fol_Examples/f2Example}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Decidability of equality}
+
+Under the assumption that equality is decidable on 
+function and relation symbols of any language $L$,
+we get decidability of equality on terms and formulas.
+Because of dependent types, the proofs are quite long and technical. The reader may consult them in \href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+
+\begin{todo}
+  Should we talk about the decomposition lemmas
+\texttt{nilTerms} and \texttt{consTerms} ?
+\end{todo}
+
+\inputsnippets{fol/formDec1, fol/formDec2,
+fol/formDec3,fol/formDec4,fol/formDec5}
+
+\subsection{Induction principles on formula depth}
+
+\subsubsection{Depth of a formula}
+
+\inputsnippets{fol/depthDef}
+
+\inputsnippets{fol_Examples/ltdepth1}
+
+\begin{todo}
+Motivate the induction principles based on depth. Compatible with term substitution and universal quantifier elimination.
+\end{todo}
+
+
+
+
+\begin{todo}
+ Look for the principles which are really used in Ackermann or/and Goedel libraries, and comment them.
+ Maybe skip the helpers (unused in other files)
+\end{todo}

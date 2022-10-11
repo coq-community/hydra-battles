@@ -33,8 +33,11 @@ with Terms : nat -> Set :=
   | Tcons : forall n : nat, Term -> Terms n -> Terms (S n).
  (* end snippet TermDef *)
 
+
+
 Scheme Term_Terms_ind := Induction for Term Sort Prop
   with Terms_Term_ind := Induction for Terms Sort Prop.
+
 
 Scheme Term_Terms_rec := Minimality for Term Sort Set
   with Terms_Term_rec := Minimality for Terms Sort Set.
@@ -43,21 +46,26 @@ Scheme Term_Terms_rec_full := Induction for Term
   Sort Set
     with Terms_Term_rec_full := Induction for Terms Sort Set.
 
-
+(* begin snippet FormulaDef *)
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
-  | atomic : forall r : Relations L, Terms (arity L (inl _ r)) -> Formula
+  | atomic : forall r : Relations L, 
+      Terms (arity L (inl _ r)) -> Formula
   | impH : Formula -> Formula -> Formula
   | notH : Formula -> Formula
   | forallH : nat -> Formula -> Formula.
+(* end snippet FormulaDef *)
+
 
 Definition Formulas := list Formula.
 
 Definition System := Ensemble Formula.
 Definition mem := Ensembles.In.
 
+
 Section Fol_Full.
 
+(* begin snippet FolFull *)
 Definition orH (A B : Formula) := impH (notH A) B.
 
 Definition andH (A B : Formula) := notH (orH (notH A) (notH B)).
@@ -66,21 +74,25 @@ Definition iffH (A B : Formula) := andH (impH A B) (impH B A).
 
 Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
 
+(* end snippet FolFull *)
 End Fol_Full.
 
 Section Fol_Plus.
 
+(* begin snippet FolPlus *)
 Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
-
+(* end snippet FolPlus *)
 End Fol_Plus.
 
-Section Formula_Decideability.
+(* begin snippet formDec1:: no-out *)
+Section Formula_Decidability.
 
-Definition language_decideable :=
+Definition language_decidable :=
   ((forall x y : Functions L, {x = y} + {x <> y}) *
    (forall x y : Relations L, {x = y} + {x <> y}))%type.
 
-Hypothesis language_dec : language_decideable.
+Hypothesis language_dec : language_decidable.
+(* end snippet formDec1 *)
 
 Let nilTermsHelp : forall n : nat, n = 0 -> Terms n.
 Proof. 
@@ -137,9 +149,11 @@ Qed.
 Arguments Term_Terms_rec_full P P0: rename.
 
 (* TODO --> term_eqdec *)
+(* begin snippet formDec2:: no-out *)
 Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
+(* end snippet formDec2 *)
 Proof.
-  induction language_dec.
+  destruct language_dec as [a b].
   assert
     (H: forall (f g : Functions L) (p : f = g) 
                (ts : Terms (arity L (inr _ f)))
@@ -213,7 +227,7 @@ Proof.
   + intros n t H0 t0 H1 ss.
     induction (consTerms _ ss).
     induction x0 as (a0, b0); simpl in p.
-    induction (H1 b0).
+    induction (H1 b0)  as [a1 | b1].
     * induction (H0 a0).
       -- left; rewrite a1, a2; assumption.
       -- right; intro H2.
@@ -227,7 +241,9 @@ Proof.
 Qed.
 
 (* TODO -> terms_eqdec *)
+(* begin snippet formDec3:: no-out *)
 Lemma terms_dec n  (x y : Terms n): {x = y} + {x <> y}.
+(* end snippet formDec3 *)
 Proof.
   induction x as [| n t x Hrecx].
   - left; apply nilTerms.
@@ -249,7 +265,9 @@ Qed.
 
 (*  -> formula_eqdec *)
 
+(* begin snippet formDec4:: no-out *)
 Lemma formula_dec : forall x y : Formula, {x = y} + {x <> y}.
+(* end snippet formDec4 *)
 Proof.
   induction language_dec as [a b].
   simple induction x; simple induction y;
@@ -267,7 +285,8 @@ Proof.
             (ts : Terms (arity L (inl _ f)))
             (ss : Terms (arity L (inl _ g)))
             (q : arity L (inl _ f) = arity L (inl _ g)),
-     eq_rec _ (fun x => Terms x) ts _ q = ss <-> atomic f ts = atomic g ss).
+     eq_rec _ (fun x => Terms x) ts _ q = ss <-> 
+       atomic f ts = atomic g ss).
     { intros f g p; eapply eq_ind with
         (x := g)
         (P := 
@@ -290,7 +309,8 @@ Proof.
             -- assumption.
       - auto.
     } 
-    assert (H0: arity L (inl (Functions L) r) = arity L (inl (Functions L) r0))
+    assert (H0: arity L (inl (Functions L) r) =
+                  arity L (inl (Functions L) r0))
     by (rewrite a0; reflexivity). 
     induction
       (terms_dec _
@@ -314,10 +334,13 @@ Proof.
     + right; inversion 1; auto.
 Qed.
 
-End Formula_Decideability.
+(* begin snippet formDec5:: no-out *)
+End Formula_Decidability.
+(* end snippet formDec5 *)
 
 Section Formula_Depth_Induction.
 
+(* begin snippet depthDef *)
 Fixpoint depth (A : Formula) : nat :=
   match A with
   | equal _ _ => 0
@@ -328,6 +351,7 @@ Fixpoint depth (A : Formula) : nat :=
   end.
 
 Definition lt_depth (A B : Formula) : Prop := depth A < depth B.
+(* end snippet depthDef *)
 
 Lemma depthImp1 : forall A B : Formula, lt_depth A (impH A B).
 Proof.
@@ -342,11 +366,13 @@ Qed.
 Lemma depthNot : forall A : Formula, lt_depth A (notH A).
 Proof. intro A; red; auto. Qed.
 
-Lemma depthForall : forall (A : Formula) (v : nat), lt_depth A (forallH v A).
+Lemma depthForall : forall (A : Formula) (v : nat), 
+    lt_depth A (forallH v A).
 Proof. intros A v; red; auto. Qed.
 
 Lemma eqDepth :
- forall A B C : Formula, depth B = depth A -> lt_depth B C -> lt_depth A C.
+ forall A B C : Formula, depth B = depth A ->
+                         lt_depth B C -> lt_depth A C.
 Proof. intros A B C H; red; now rewrite <- H. Qed.
 
 Definition Formula_depth_rec_rec :
@@ -463,7 +489,8 @@ Definition Formula_depth_rec2 (P : Formula -> Set)
 Remark Formula_depth_rec2rec_nice :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
+   (f2 : forall (r : Relations L) 
+                (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -583,6 +610,12 @@ Proof.
   - reflexivity.
   - apply Formula_depth_rec2rec_nice; auto.
 Qed.
+
+(* Formula_depth_rec2_forall is used in
+codeSubFormula.v:917: (Formula_depth_rec2_forall L) (in a Proof) 
+codeSubFormula.v:6279: (Formula_depth_rec2_forall L)
+folProp.v:558: (Formula_depth_rec2_forall L)
+*)
 
 Lemma Formula_depth_rec2_forall :
  forall (Q P : Formula -> Set)
