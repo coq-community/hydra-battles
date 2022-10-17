@@ -1,6 +1,7 @@
+(******************************************************************************)
 From Coq Require Import Wf_nat Arith Lists.List Peano_dec. 
-Require Import ListExt.
 
+Require Import ListExt. (* todo: use stdlib? *)
 
 Require Export fol.
 
@@ -30,9 +31,7 @@ Fixpoint freeVarTerm (s : fol.Term L) : list nat :=
   | fol.var v => v :: nil
   | fol.apply f ts => freeVarTerms (arity L (inr _ f)) ts
   end
-    
-with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : 
-list nat :=
+with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : list nat :=
        match ss with
        | Tnil => nil (A:=nat)
        | Tcons m t ts => freeVarTerm t ++ freeVarTerms m ts
@@ -56,10 +55,12 @@ Definition ClosedSystem (T : fol.System L) :=
   forall (v : nat) (f : fol.Formula L),
     mem _ T f -> ~ In v (freeVarFormula f).
 
-Definition closeList (l : list nat) (x : fol.Formula L) : 
-  fol.Formula L :=
-  list_rec (fun _ => fol.Formula L) x
-    (fun (a : nat) _ (rec : fol.Formula L) => forallH a rec) l.
+Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
+ match l with
+   nil => a
+|  cons v l =>  (forallH v (closeList l a))
+end.
+(* Todo : use stdlib's nodup *)
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
   closeList (no_dup _ eq_nat_dec (freeVarFormula x)) x.
@@ -73,15 +74,9 @@ Lemma freeVarClosedList1 :
     + simpl in |- *; rewrite H.
       unfold not in |- *; intros H0;
         elim (In_list_remove2 _ _ _ _ _ H0); reflexivity.
-    + simpl in |- *; intro H0. 
-      assert
-        (H1: In v
-               (freeVarFormula
-                  (list_rec (fun _ => fol.Formula L) x
-                     (fun (a : nat) (_ : list nat) (rec : fol.Formula L)
-                      =>
-                        forallH a rec) l))).
-      { eapply In_list_remove1; apply H0. }
+    + simpl in |- *.  intro H0. 
+      assert (H1: In v (freeVarFormula (closeList l x))).
+      { eapply In_list_remove1.   apply H0. }
       apply (Hrecl _ _ H H1).
 Qed.
 
@@ -101,16 +96,14 @@ Lemma freeVarClosed :
     ~ In v (freeVarFormula (close x)).
 Proof.
   intros x v; unfold close in |- *.
-  destruct (In_dec eq_nat_dec v
-              (no_dup _ eq_nat_dec (freeVarFormula x)))
+  destruct (In_dec eq_nat_dec v (no_dup _ eq_nat_dec (freeVarFormula x)))
     as [i | n]. 
   - apply freeVarClosedList1; assumption.
   - intro H; elim n; apply no_dup1.
     eapply freeVarClosedList2; apply H.
 Qed.
 
-Fixpoint freeVarListFormula (l : fol.Formulas L) : 
-  list nat :=
+Fixpoint freeVarListFormula (l : fol.Formulas L) : list nat :=
   match l with
   | nil => nil (A:=nat)
   | f :: l => freeVarFormula f ++ freeVarListFormula l
@@ -146,18 +139,17 @@ Proof.
   - destruct H.
   - destruct (in_app_or _ _ _ H) as [H0 | H0].
     + exists a; simpl in |- *; auto.
-    + induction (HrecF H0) as [x Hx].
-      exists x; simpl in |- *; tauto.
+    + destruct (HrecF H0) as [x Hx]; exists x; cbn; tauto.
 Qed.
 
 Definition In_freeVarSys (v : nat) (T : fol.System L) :=
-  exists f : fol.Formula L, In v (freeVarFormula f) /\ mem _ T f.
+  exists f : fol.Formula L, List.In v (freeVarFormula f) /\ mem _ T f.
 
 Lemma notInFreeVarSys :
   forall x, ~ In_freeVarSys x (Ensembles.Empty_set (fol.Formula L)).
 Proof.
-  intros x;  unfold In_freeVarSys in |- *.
-  intros H; induction H as (x0, (H, H0)); destruct H0. 
+  intros x; unfold In_freeVarSys in |- *.
+  intros [? [? H0]]; destruct H0. 
 Qed.
 
 End Free_Variables.
@@ -403,21 +395,21 @@ Lemma subFormulaEqual :
   forall (t1 t2 : fol.Term L) (v : nat) (s : fol.Term L),
     substituteFormula (equal t1 t2) v s =
       equal (substituteTerm t1 v s) (substituteTerm t2 v s).
-Proof. auto. Qed.
+Proof. reflexivity. Qed.
 
 Lemma subFormulaRelation :
   forall (r : Relations L) (ts : fol.Terms L (arity L (inl _ r))) 
          (v : nat) (s : fol.Term L),
     substituteFormula (atomic r ts) v s =
       atomic r (substituteTerms (arity L (inl _ r)) ts v s).
-Proof. auto. Qed.
+Proof. reflexivity. Qed.
 
 Lemma subFormulaImp :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
     substituteFormula (impH f1 f2) v s =
       impH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
-  intros f1 f2 v s.
+  intros f1 f2 v s. 
   unfold substituteFormula, substituteFormulaHelp in |- *.
   rewrite
     (Formula_depth_rec2_imp L)
@@ -439,17 +431,20 @@ Proof.
                  {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
-                   (fun y : fol.Formula L => depth L y = depth L (fol.equal L t t0))
+                   (fun y : fol.Formula L => 
+                      depth L y = depth L (fol.equal L t t0))
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
                    (refl_equal (depth L (fol.equal L t t0)))) H)
-         (fun (r : Relations L) (t : fol.Terms L (arity L (inl (Functions L) r)))
+         (fun (r : Relations L) 
+              (t : fol.Terms L (arity L (inl (Functions L) r)))
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
                  {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
-                   (fun y : fol.Formula L => depth L y = depth L (fol.atomic L r t))
+                   (fun y : fol.Formula L => depth L y = 
+                                               depth L (fol.atomic L r t))
                    (atomic r (substituteTerms (arity L (inl (Functions L) r)) t a b))
                    (refl_equal (depth L (fol.atomic L r t)))) H)
          substituteFormulaImp

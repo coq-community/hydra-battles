@@ -1,17 +1,12 @@
+(******************************************************************************)
+
 (* Author: Russell O'Connor *)
 (* This file is Public Domain *)
 
-Require Import Coq.Lists.List.
-Require Import Ensembles.
-Require Import Peano_dec.
-Require Import Eqdep_dec.
-Require Import Arith.
-Require Import Compare_dec.
-Require Import Max. 
-Require Import misc.
+From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
+  Arith Compare_dec.
 
-Require Import Compat815.
-(* Import Nat. *)
+Require Import misc  Compat815 (* provisional *).
 
 (* begin snippet LanguageDef *)
 Record Language : Type := language
@@ -38,13 +33,11 @@ with Terms : nat -> Set :=
 Scheme Term_Terms_ind := Induction for Term Sort Prop
   with Terms_Term_ind := Induction for Terms Sort Prop.
 
-
 Scheme Term_Terms_rec := Minimality for Term Sort Set
   with Terms_Term_rec := Minimality for Terms Sort Set.
 
-Scheme Term_Terms_rec_full := Induction for Term
-  Sort Set
-    with Terms_Term_rec_full := Induction for Terms Sort Set.
+Scheme Term_Terms_rec_full := Induction for Term  Sort Set
+  with Terms_Term_rec_full := Induction for Terms Sort Set.
 
 (* begin snippet FormulaDef *)
 Inductive Formula : Set :=
@@ -56,33 +49,24 @@ Inductive Formula : Set :=
   | forallH : nat -> Formula -> Formula.
 (* end snippet FormulaDef *)
 
-
+(* begin snippet SystemDef *)
 Definition Formulas := list Formula.
-
 Definition System := Ensemble Formula.
 Definition mem := Ensembles.In.
-
-
-Section Fol_Full.
+(* end snippet SystemDef *)
 
 (* begin snippet FolFull *)
 Definition orH (A B : Formula) := impH (notH A) B.
-
 Definition andH (A B : Formula) := notH (orH (notH A) (notH B)).
-
 Definition iffH (A B : Formula) := andH (impH A B) (impH B A).
-
 Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
 
 (* end snippet FolFull *)
-End Fol_Full.
-
-Section Fol_Plus.
 
 (* begin snippet FolPlus *)
 Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
 (* end snippet FolPlus *)
-End Fol_Plus.
+
 
 (* begin snippet formDec1:: no-out *)
 Section Formula_Decidability.
@@ -375,6 +359,7 @@ Lemma eqDepth :
                          lt_depth B C -> lt_depth A C.
 Proof. intros A B C H; red; now rewrite <- H. Qed.
 
+(* Todo: upgrade to Type/rect  *)
 Definition Formula_depth_rec_rec :
   forall P : Formula -> Set,
   (forall a : Formula, (forall b : Formula, lt_depth b a -> P b) -> P a) ->
@@ -392,6 +377,7 @@ Proof.
    + apply H0.
 Defined.
 
+(* Todo: upgrade to Type/rect  *)
 Definition Formula_depth_rec (P : Formula -> Set)
   (rec : forall a : Formula, 
       (forall b : Formula, lt_depth b a -> P b) -> P a)
@@ -400,6 +386,7 @@ Definition Formula_depth_rec (P : Formula -> Set)
 
 (* solves a compatibility issue *)
 
+(* Todo: upgrade to Type/rect  *)
 Lemma Formula_depth_rec_indep :
  forall (Q P : Formula -> Set)
    (rec : forall a : Formula,
@@ -455,6 +442,7 @@ Proof.
   - apply H1.
 Qed.
 
+(* Todo: upgrade to Type/rect  *)
 Definition Formula_depth_rec2rec (P : Formula -> Set)
   (f1 : forall t t0 : Term, P (equal t t0))
   (f2 : forall (r : Relations L) 
@@ -475,6 +463,7 @@ Definition Formula_depth_rec2rec (P : Formula -> Set)
   | forallH n f => fun hyp => f5 n f hyp
   end.
 
+(* Todo: upgrade to Type/rect  *)
 Definition Formula_depth_rec2 (P : Formula -> Set)
   (f1 : forall t t0 : Term, P (equal t t0))
   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
@@ -486,6 +475,7 @@ Definition Formula_depth_rec2 (P : Formula -> Set)
         P (forallH v a)) (a : Formula) : P a :=
   Formula_depth_rec P (Formula_depth_rec2rec P f1 f2 f3 f4 f5) a.
 
+(* Todo: upgrade to Type/rect  *)
 Remark Formula_depth_rec2rec_nice :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
@@ -532,6 +522,7 @@ Proof.
   - simpl in |- *; apply H1, H2.
 Qed.
 
+(* Todo: upgrade to Type/rect  *)
 Lemma Formula_depth_rec2_imp :
   forall (Q P : Formula -> Set)
          (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
@@ -573,6 +564,7 @@ Proof.
   - intros; apply Formula_depth_rec2rec_nice; auto.
 Qed.
 
+(* Todo: upgrade to Type/rect  *)
 Lemma Formula_depth_rec2_not :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
@@ -617,6 +609,7 @@ codeSubFormula.v:6279: (Formula_depth_rec2_forall L)
 folProp.v:558: (Formula_depth_rec2_forall L)
 *)
 
+(* Todo: upgrade to Type/rect  *)
 Lemma Formula_depth_rec2_forall :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
@@ -657,6 +650,7 @@ Proof.
   - apply Formula_depth_rec2rec_nice; auto.
 Qed.
 
+(* Todo: use the Type version (when done)  *)
 Definition Formula_depth_ind :
   forall P : Formula -> Prop,
   (forall a : Formula, (forall b : Formula, lt_depth b a -> P b) -> P a) ->
@@ -688,14 +682,14 @@ Lemma Formula_depth_ind2 :
  (forall f : Formula, P f -> P (notH f)) ->
  (forall (v : nat) (a : Formula),
   (forall b : Formula, lt_depth b (forallH v a) -> P b) -> P (forallH v a)) ->
- forall f4 : Formula, P f4.
+ forall f : Formula, P f.
 Proof.
-  intros P H H0 H1 H2 H3 f4; apply Formula_depth_ind.
+  intros P H H0 H1 H2 H3 f; apply Formula_depth_ind.
   simple induction a; auto.
-  - intros f H4 f0 H5 H6; apply H1.
+  - intros f0 H4 f1 H5 H6; apply H1.
     + apply H6, depthImp1.
     + apply H6, depthImp2.
-  - intros f H4 H5; apply H2, H5.
+  - intros f0 H4 H5; apply H2, H5.
     apply depthNot.
 Qed.
 
