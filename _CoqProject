@@ -1,6 +1,7 @@
 -R theories/ordinals hydras
 -R theories/additions additions
 -R theories/gaia gaia_hydras
+-R theories/goedel Goedel
 -R exercises hydra_exercises
 
 -arg -w -arg -notation-overridden
@@ -19,7 +20,6 @@ theories/ordinals/OrdinalNotations/ON_O.v
 theories/ordinals/OrdinalNotations/ON_Omega2.v
 theories/ordinals/OrdinalNotations/Example_3PlusOmega.v
 theories/ordinals/OrdinalNotations/OmegaOmega.v
-
 theories/ordinals/Prelude/STDPP_compat.v
 theories/ordinals/Prelude/Comparable.v
 theories/ordinals/Prelude/First_toggle.v
@@ -39,7 +39,8 @@ theories/ordinals/Prelude/Restriction.v
 theories/ordinals/Prelude/MoreOrders.v
 theories/ordinals/Prelude/MoreVectors.v
 theories/ordinals/Prelude/Compat815.v
-
+theories/ordinals/Prelude/MoreLibHyps.v
+theories/ordinals/Prelude/LibHyps_Experiments.v
 theories/ordinals/Epsilon0/Hessenberg.v
 theories/ordinals/Epsilon0/Large_Sets.v
 theories/ordinals/Epsilon0/Epsilon0rpo.v
@@ -132,10 +133,24 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
-
 theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
 theories/ordinals/MoreAck/fol_Examples.v
+theories/ordinals/solutions_exercises/MinPR.v
+theories/ordinals/solutions_exercises/MinPR2.v
+theories/ordinals/solutions_exercises/FibonacciPR.v
+theories/ordinals/solutions_exercises/MorePRExamples.v
+theories/ordinals/solutions_exercises/isqrt.v
+theories/ordinals/solutions_exercises/T1_ltNotWf.v
+theories/ordinals/solutions_exercises/predSuccUnicity.v
+theories/ordinals/solutions_exercises/lt_succ_le.v
+theories/ordinals/solutions_exercises/Limit_Infinity.v
+theories/ordinals/solutions_exercises/ge_omega_iff.v
+theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
+theories/ordinals/solutions_exercises/F_3.v
+theories/ordinals/solutions_exercises/is_F_monotonous.v
+theories/ordinals/solutions_exercises/MultisetWf.v
+theories/ordinals/solutions_exercises/OnCodeList.v
 
 theories/additions/AM.v
 theories/additions/Addition_Chains.v
@@ -158,22 +173,6 @@ theories/additions/Strategies.v
 theories/additions/Trace_exercise.v
 theories/additions/Wf_transparent.v
 
-theories/ordinals/solutions_exercises/MinPR.v
-theories/ordinals/solutions_exercises/MinPR2.v
-theories/ordinals/solutions_exercises/FibonacciPR.v
-theories/ordinals/solutions_exercises/MorePRExamples.v
-theories/ordinals/solutions_exercises/isqrt.v
-theories/ordinals/solutions_exercises/T1_ltNotWf.v
-theories/ordinals/solutions_exercises/predSuccUnicity.v
-theories/ordinals/solutions_exercises/lt_succ_le.v
-theories/ordinals/solutions_exercises/Limit_Infinity.v
-theories/ordinals/solutions_exercises/ge_omega_iff.v
-theories/ordinals/solutions_exercises/schutte_cnf_counter_example.v
-theories/ordinals/solutions_exercises/F_3.v
-theories/ordinals/solutions_exercises/is_F_monotonous.v
-theories/ordinals/solutions_exercises/MultisetWf.v
-theories/ordinals/solutions_exercises/OnCodeList.v
-
 theories/gaia/T1Bridge.v
 theories/gaia/GaiaToHydra.v
 theories/gaia/nfwfgaia.v
@@ -192,8 +191,10 @@ theories/gaia/GPrelude.v
 theories/gaia/T1Choice.v
 theories/gaia/onType.v
 
-theories/ordinals/Prelude/MoreLibHyps.v
-theories/ordinals/Prelude/LibHyps_Experiments.v
-
-
-
+theories/goedel/rosser.v
+theories/goedel/goedel1.v
+theories/goedel/PRrepresentable.v
+theories/goedel/fixPoint.v
+theories/goedel/codeSysPrf.v
+theories/goedel/rosserPA.v
+theories/goedel/goedel2.v
