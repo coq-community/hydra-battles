@@ -43,7 +43,7 @@
     ## through the following attribute
     coqPackages.coq.override.version = "8.14";
     coqPackages.gaia-hydras.override.version = ../.;
-    coqPackages.goedel.override.version = "master";
+    coqPackages.goedel.override.version = ../.;
     coqPackages.coqprime.override.version = "master";
 
     ## In some cases, light overrides are not available/enough

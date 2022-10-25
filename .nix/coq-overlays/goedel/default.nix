@@ -1,6 +1,8 @@
 { lib, mkCoqDerivation, coq, hydra-battles, pocklington, coqprime, version ? null }:
 with lib;
 
+let monorepo_version = version: versions.isGe "8.13.0" version || version == "dev"; in
+
 (mkCoqDerivation {
   pname = "goedel";
   owner = "coq-community";
@@ -17,15 +19,20 @@ with lib;
 
   propagatedBuildInputs = [ hydra-battles ];
 
+  useDune2ifVersion = monorepo_version;
+
   meta = {
     description = "The Gödel-Rosser 1st incompleteness theorem in Coq";
     maintainers = with maintainers; [ siraben ];
     license = licenses.mit;
     platforms = platforms.unix;
   };
-}).overrideAttrs(o: {
-  propagatedBuildInputs =
-    if versions.isGt "8.13.0" o.version || o.version == "dev"
-    then o.propagatedBuildInputs ++ [ coqprime ]
-    else o.propagatedBuildInputs ++ [ pocklington ];
-})
+}).overrideAttrs(o:
+  if monorepo_version o.version then {
+    repo = "hydra-battles";
+    propagatedBuildInputs = o.propagatedBuildInputs ++ [ coqprime ];
+  }
+  else {
+    propagatedBuildInputs = o.propagatedBuildInputs ++ [ pocklington ];
+  }
+)
