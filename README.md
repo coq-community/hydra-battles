@@ -19,16 +19,15 @@
 
 
 
-This Coq-based project has three parts:
+This Coq-based project has four parts:
 
 - An exploration of some properties of Kirby and Paris' hydra
   battles, including the study of several representations of
   ordinal numbers and a part of the so-called _Ketonen and Solovay
   machinery_ (combinatorial properties of epsilon0).
 
-  This part also hosts the formalization by Russell O'Connor of
-  primitive recursive functions and Peano arithmetic (see the
-  [Goedel project](https://github.com/coq-community/goedel)).
+  This part also hosts a formalization by Russell O'Connor of
+  primitive recursive functions and Peano Arithmetic (PA).
 
 - Some algorithms for computing _x^n_ with as few multiplications as
   possible (using _addition chains_).
@@ -37,11 +36,16 @@ This Coq-based project has three parts:
   [Gaia project](https://github.com/coq-community/gaia), in particular
   on ordinals.
 
+ - A proof originally by Russell O'Connor of the Gödel-Rosser 1st
+   incompleteness theorem, which says that any first order theory
+   extending NN (which is PA without induction) that is complete is
+   inconsistent.
+
 Both the [documentation](https://coq-community.org/hydra-battles/doc/hydras.pdf)
 and the Coq sources are _work continuously in progress_. For more information on
 how the project is organized, maintained, and documented, see
-[this paper](https://hal.archives-ouvertes.fr/hal-03404668), to appear
-in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
+[this paper](https://hal.archives-ouvertes.fr/hal-03404668) from
+the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 ## Meta
 
@@ -66,9 +70,11 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
   - [Mczify](https://github.com/math-comp/mczify)
   - [LibHyps](https://github.com/Matafou/LibHyps)
-- Coq namespace: `hydras`, `additions`, `gaia_hydras`
+  - [CoqPrime](https://github.com/thery/coqprime)
+- Coq namespace: `hydras`, `additions`, `gaia_hydras`, `Goedel`
 - Related publication(s):
   - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
+  - [Essential Incompleteness of Arithmetic Verified by Coq](https://arxiv.org/abs/cs/0505034) doi:[10.1007/11541868_16](https://doi.org/10.1007/11541868_16)
   - [Accessible Independence Results for Peano Arithmetic](https://faculty.baruch.cuny.edu/lkirby/accessible_independence_results.pdf) doi:[10.1112/blms/14.4.285](https://doi.org/10.1112/blms/14.4.285)
   - [Rapidly Growing Ramsey Functions](https://www.jstor.org/stable/2006985) doi:[10.2307/2006985](https://doi.org/10.2307/2006985)
   - [Proof Theory](https://link.springer.com/book/10.1007/978-3-642-66473-1) doi:[10.1007/978-3-642-66473-1](https://doi.org/10.1007/978-3-642-66473-1)
@@ -80,6 +86,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - `opam install ./coq-hydra-battles.opam --deps-only` to get the _hydra battles_ dependencies;
   - `opam install ./coq-addition-chains.opam --deps-only` to get the _addition chains_ dependencies.
   - `opam install ./coq-gaia-hydras.opam --deps-only` to get the _gaia hydras_ dependencies.
+  - `opam install ./coq-goedel.opam --deps-only` to get the _Goedel_ dependencies.
 
   With Nix, just run `nix-shell` to get all the dependencies
   (including for building the documentation). If you only want the
@@ -87,6 +94,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - `nix-shell --argstr job hydra-battles`
   - `nix-shell --argstr job addition-chains`
   - `nix-shell --argstr job gaia-hydras`
+  - `nix-shell --argstr job goedel`
 
 - Building the PDF documentation also requires
   [Alectryon](https://github.com/cpitclaudel/alectryon) 1.4
@@ -102,6 +110,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - `dune build coq-hydra-battles.install` to build only the _hydra battles_ part
   - `dune build coq-addition-chains.install` to build only the _addition chains_ part
   - `dune build coq-gaia-hydras.install` to build only the _gaia hydras_ part
+  - `dune build coq-goedel.install` to build only the _goedel_ part
 
 - Documentation for the `master` branch is continuously deployed at:
   - https://coq-community.org/hydra-battles/doc/hydras.pdf
@@ -137,7 +146,7 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
     - A contribution on _recursive path orderings_ by Evelyne Contejean.
 
   - Ackermann/*.v
-    - Primitive recursive functions, first-order logic, NN, and PA (from Goedel contrib)
+    - Primitive recursive functions, first-order logic, NN, and PA
 
   - MoreAck/*.v
      - Complements to the legacy **Ackermann** library
@@ -150,6 +159,9 @@ in the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 
 - theories/gaia/*.v
   - Bridge to the ordinals in Gaia that are encoded following Schütte and Ackermann
+
+- theories/goedel/*.v
+  - Gödel's 1st incompleteness theorem and its variations
 
 ### Exercises
 

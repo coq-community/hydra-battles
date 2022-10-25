@@ -237,6 +237,7 @@ jobs:
   hydra-battles-single:
     needs:
     - coq
+    - coqprime
     runs-on: ubuntu-latest
     steps:
     - name: Determine which commit to test
@@ -275,6 +276,10 @@ jobs:
       name: 'Building/fetching previous CI target: serapi'
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
         --argstr job "serapi"
+    - if: steps.stepCheck.outputs.status == 'built'
+      name: 'Building/fetching previous CI target: coqprime'
+      run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
+        --argstr job "coqprime"
     - if: steps.stepCheck.outputs.status == 'built'
       name: 'Building/fetching previous CI target: equations'
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
