@@ -13,13 +13,11 @@ Hypothesis closedT1: (ClosedSystem LNN T).
 
 Lemma closedT : forall v : nat, ~ In_freeVarSys LNN v T.
 Proof.
-unfold not in |- *; intros.
-unfold In_freeVarSys in H.
-induction H as (x, H).
-elim closedT1 with v x; tauto.
+  intros v [x H]; elim closedT1 with v x; tauto.
 Qed.
 
-Fixpoint RepresentableHalf1 (n : nat) : naryFunc n -> Formula -> Prop :=
+Fixpoint RepresentableHalf1 (n : nat) :
+  naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>

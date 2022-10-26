@@ -2,15 +2,19 @@ From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages.
 Require Import primRec.
 
+Locate arity. 
+
 (* begin snippet arityTest *)
-Compute arity LNT (inr Plus). 
-Compute arity LNN (inr Succ). 
-Compute arity LNN (inl LT). 
-Fail Compute arity LNT (inl LT).
+Compute arity LNT (inr Languages.Plus). 
+Compute arity LNN (inr Languages.Succ). 
+Compute arity LNN (inl Languages.LT). 
+Fail Compute arity LNT (inl Languages.LT).
 (* end snippet arityTest *)
 
-Check var _ 1: Term LNT.
-Check  apply LNT Zero (Tnil _) : Term LNT. 
+Check var _ 1: Term LNN.
+
+
+Check  @apply LNT Languages.Zero (Tnil _) : fol.Term LNT. 
 
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
@@ -21,62 +25,53 @@ Example t1_0: Term LNN :=
 (* end snippet v1Plus0 *)
 
 (* begin snippet instantiations *)
+Require Import LNN.
 
-Module InLNN.
+Check t1_0. 
+Goal t1_0 = Plus (var 1) Zero. 
+reflexivity. 
+Qed. 
 
-Notation Tcons := (Tcons LNN _). 
-Notation Tnil := (Tnil LNN). 
-Notation var := (var LNN).
-Notation apply := (apply LNN). 
-Notation forallH := (forallH LNN).
-Notation atomic := (atomic LNN). 
-Notation inpH := (impH LNN).
-Notation notH := (notH LNN).
-Notation equal t1 t2 := (equal LNN t1 t2).
-
-Notation orH := (orH LNN).
-Notation andH := (andH LNN).
-Notation iffH := (iffH LNN).
-Notation existH := (existH LNN).
-
-
-Notation plusH t1 t2:= (apply Plus (Tcons t1 (Tcons t2 Tnil))).
-Notation timesH t1 t2:= (apply Times (Tcons t1 (Tcons t2 Tnil))).
-Notation ltH t1 t2 := (atomic LT (Tcons t1 (Tcons t2 Tnil))). 
-Notation zeroH := (apply Zero Tnil).
-Notation succH t := (apply Succ (Tcons t Tnil)).
-Fixpoint termOfNat n :=
-  match n with 
-    0 => zeroH
-  | S p => succH (termOfNat p)
-  end.
-(* end snippet instantiations *)
+Print t1_0.
+(*
+t1_0 = 
+apply LNN Languages.Plus
+  (Tcons LNN 1 (fol.var LNN 1)
+     (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
+     : fol.Term LNN
+*)
+Compute t1_0. 
+(*
+apply LNN Languages.Plus
+         (Tcons LNN 1 (fol.var LNN 1)
+            (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
+*)
 
 Section Examples.
 
 (* begin snippet v1Plus01 *)
-Let t1: Term LNN := (plusH (var 1) zeroH). 
+Let t1: Term  := Plus (var 1) Zero. 
 (* end snippet v1Plus01 *)
 
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
-Let f1 : Formula LNN :=
+Let f1 : Formula  :=
   forallH 0 
-    (orH (equal (var 0) zeroH)
-          (existH 1 (equal (var 0) (succH (var 1))))).
+    (orH (equal (var 0) Zero)
+          (existH 1 (equal (var 0) (Succ (var 1))))).
 (* end snippet f1Example *)
 
 (* begin snippet f2Example *)
-Let f2 : Formula LNN :=
-   (existH 2 (andH (ltH zeroH (var 2))
-                 (equal (termOfNat 4) (plusH (var 2) (var 2))))).
+Let f2 : Formula :=
+   (existH 2 (andH (LT Zero (var 2))
+                 (equal (natToTerm 4) (Plus (var 2) (var 2))))).
 
-Let f3 := (orH (equal (var 0) zeroH)
-             (existH 1 (equal (var 0) (succH (var 1))))).
+Let f3 := (orH (equal (var 0) Zero)
+             (existH 1 (equal (var 0) (Succ (var 1))))).
 
-Let f4 := (iffH (equal (var 0) (plusH (var 1) (var 1)))
-                (equal (var 0) (timesH (var 1) (termOfNat 2)))).
+Let f4 := (iffH (equal (var 0) (Plus (var 1) (var 1)))
+                (equal (var 0) (Times (var 1) (natToTerm 2)))).
 (* end snippet f2Example *)
 
 (* begin snippet depthCompute *)
@@ -104,16 +99,17 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f4).
 
-Compute substituteFormula LNN f4 0 (termOfNat 0).
+Compute substituteFormula LNN f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)
 
+
 End Examples. 
-End InLNN.
+
 
 Section depth_rec_demo. 
 Variable L: Language.
-Variable P: Formula L -> Prop. 
-Variable a: Formula L. 
+Variable P: fol.Formula L -> Prop. 
+Variable a: fol.Formula L. 
 Goal P a. 
   eapply  Formula_depth_rec_rec with (depth L a); [| apply le_n].
   (* begin snippet depthRecDemo:: unfold no-in *)
