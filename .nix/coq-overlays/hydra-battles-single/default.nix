@@ -1,5 +1,5 @@
 { lib, mkCoqDerivation, coq, version ? null
-, equations, gaia, LibHyps, mathcomp-ssreflect, mathcomp-algebra, mathcomp-zify, paramcoq
+, coqprime, equations, gaia, LibHyps, mathcomp-ssreflect, mathcomp-algebra, mathcomp-zify, paramcoq
 , python3Packages, serapi, texlive, withMovies ? true, withTex ? true }:
 
 with lib; mkCoqDerivation rec {
@@ -43,6 +43,7 @@ with lib; mkCoqDerivation rec {
      else []);
 
   propagatedBuildInputs = [
+    coqprime
     equations
     gaia
     LibHyps

@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'coqorg/coq:dev'
+          - 'mathcomp/mathcomp-dev:coq-dev'
           - 'mathcomp/mathcomp:1.15.0-coq-8.16'
           - 'mathcomp/mathcomp:1.14.0-coq-8.15'
           - 'mathcomp/mathcomp:1.13.0-coq-8.14'
@@ -27,7 +27,10 @@ jobs:
         with:
           custom_image: ${{ matrix.image }}
           custom_script: |
-            {{before_install}}
+            startGroup "Setup and print opam config"
+              opam repo -a --set-default add coq-extra-dev https://coq.inria.fr/opam/extra-dev
+              opam config list; opam repo list; opam list
+            endGroup
             startGroup "Build hydra-battles dependencies"
               opam pin add -n -y -k path coq-hydra-battles .
               opam update -y
@@ -55,7 +58,17 @@ jobs:
               opam install -y -v -j 2 coq-gaia-hydras
               opam list
             endGroup
+            startGroup "Build goedel dependencies"
+              opam pin add -n -y -k path coq-goedel .
+              opam update -y
+              opam install -y -j 2 coq-goedel --deps-only
+            endGroup
+            startGroup "Build goedel"
+              opam install -y -v -j 2 coq-goedel
+              opam list
+            endGroup
             startGroup "Uninstallation test"
+              opam remove -y coq-goedel
               opam remove -y coq-gaia-hydras
               opam remove -y coq-addition-chains
               opam remove -y coq-hydra-battles
