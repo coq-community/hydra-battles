@@ -136,6 +136,8 @@ theories/ordinals/Ackermann/wConsistent.v
 theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
 theories/ordinals/MoreAck/fol_Examples.v
+theories/ordinals/MoreAck/LNN_Examples.v
+
 theories/ordinals/solutions_exercises/MinPR.v
 theories/ordinals/solutions_exercises/MinPR2.v
 theories/ordinals/solutions_exercises/FibonacciPR.v

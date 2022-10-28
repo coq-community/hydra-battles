@@ -8,6 +8,7 @@ Require Import folProof.
 Require Import folProp.
 Require Import folLogic3.
 
+(* begin snippet Instantiations *)
 Definition Formula := Formula LNN.
 Definition Formulas := Formulas LNN.
 Definition System := System LNN.
@@ -39,6 +40,7 @@ Definition Zero : Term := apply LNN Zero (Tnil LNN).
 
 Definition LT (x y : Term) : Formula :=
   atomic LNN LT (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))). 
+(* end snippet Instantiations *)
 
 Lemma LNN_dec : language_decidable LNN.
 Proof.
