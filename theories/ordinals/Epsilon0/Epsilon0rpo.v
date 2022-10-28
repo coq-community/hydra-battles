@@ -21,31 +21,26 @@ Module Alt.
   
 Module  Eps0_sig <: Signature.
 
+  Inductive symb0 : Set := nat_0 | nat_S | ord_zero | ord_cons.
+  Definition symb := symb0.
 
-Inductive symb0 : Set := nat_0 | nat_S | ord_zero | ord_cons.
-
-Definition symb := symb0.
-
-Lemma eq_symbol_dec : forall f1 f2 : symb, {f1 = f2} + {f1 <> f2}.
-Proof.
-intros; decide equality.
-Qed.
+  Lemma eq_symbol_dec : forall f1 f2 : symb, {f1 = f2} + {f1 <> f2}.
+  Proof. intros; decide equality. Qed.
 
 (** The arity of a symbol contains also the information about built-in theories as in CiME *)
 
-Inductive arity_type : Set :=
+  Inductive arity_type : Set :=
   | AC : arity_type
   | C : arity_type
   | Free : nat -> arity_type.
 
-Definition arity : symb -> arity_type :=
-  fun f => match f with
-                  | nat_0 => Free 0
-                  | ord_zero => Free 0
-                  | nat_S => Free 1
-                  | ord_cons => Free 3
-                  end.
-
+  Definition arity : symb -> arity_type :=
+    fun f => match f with
+             | nat_0 => Free 0
+             | ord_zero => Free 0
+             | nat_S => Free 1
+             | ord_cons => Free 3
+             end.
 End Eps0_sig.
 
 (** * Module Type Variables. 
@@ -53,88 +48,81 @@ End Eps0_sig.
 
 Module Vars <: Variables.
 
-Inductive empty_set : Set := .
-Definition var := empty_set.
+  Inductive empty_set : Set := .
+  Definition var := empty_set.
 
-Lemma eq_variable_dec : forall v1 v2 : var, {v1 = v2} + {v1 <> v2}.
-Proof.
-intros; decide equality.
-Qed.
+  Lemma eq_variable_dec : forall v1 v2 : var, {v1 = v2} + {v1 <> v2}.
+  Proof.
+    intros; decide equality.
+  Qed.
 
 End Vars.
 
 Module  Eps0_prec <: Precedence.
 
-Definition A : Set := Eps0_sig.symb.
-Import Eps0_sig.
+  Definition A : Set := Eps0_sig.symb.
+  Import Eps0_sig.
+  
+  Definition prec : relation A :=
+    fun f g => match f, g with
+               | nat_0, nat_S => True
+               | nat_0, ord_zero => True
+               | nat_0, ord_cons => True
+               | ord_zero, nat_S => True
+               | ord_zero, ord_cons => True
+               | nat_S, ord_cons => True
+               | _, _ => False
+               end.
 
-Definition prec : relation A :=
-   fun f g => match f, g with
-                      | nat_0, nat_S => True
-                      | nat_0, ord_zero => True
-                      | nat_0, ord_cons => True
-                      | ord_zero, nat_S => True
-                      | ord_zero, ord_cons => True
-                      | nat_S, ord_cons => True
-                      | _, _ => False
-                      end.
-
-
-Inductive status_type : Set :=
+  Inductive status_type : Set :=
   | Lex : status_type
   | Mul : status_type.
 
-Definition status : A -> status_type := fun f => Lex.
+  Definition status : A -> status_type := fun f => Lex.
 
-Lemma prec_dec : forall a1 a2 : A, {prec a1 a2} + {~ prec a1 a2}.
-Proof.
-  intros a1 a2; destruct a1; destruct a2;
-    ((right; intro; contradiction)||(left;simpl;trivial)).
-Qed.
+  Lemma prec_dec : forall a1 a2 : A, {prec a1 a2} + {~ prec a1 a2}.
+  Proof.
+    intros a1 a2; destruct a1; destruct a2;
+      ((right; intro; contradiction)||(left;simpl;trivial)).
+  Qed.
 
-Lemma prec_antisym : forall s, prec s s -> False.
-Proof.
-  intros s; destruct s; simpl; trivial.
-Qed.
+  Lemma prec_antisym : forall s, prec s s -> False.
+  Proof. destruct s; simpl; trivial. Qed.
 
-Lemma prec_transitive : transitive A prec.
-Proof.
-  intros s1 s2 s3; destruct s1; destruct s2; destruct s3; simpl; intros;
-    trivial; contradiction.
-Qed.
+  Lemma prec_transitive : transitive A prec.
+  Proof.
+    intros s1 s2 s3;destruct s1, s2, s3; simpl; 
+      intros; trivial; contradiction.
+  Qed.
 
 End Eps0_prec.
 
 Module Eps0_alg <: Term := term.Make (Eps0_sig) (Vars).
 Module Eps0_rpo <: RPO := rpo.Make (Eps0_alg) (Eps0_prec).
 
-Import Eps0_alg.
-Import Eps0_rpo.
-Import Eps0_sig.
-
+Import Eps0_alg  Eps0_rpo  Eps0_sig.
 
 Fixpoint nat_2_term (n:nat) : term :=
   match n with 0 => (Term nat_0 nil)
              | S p => Term nat_S ((nat_2_term p)::nil)
   end.
 
-
-
 (** * 
 Every (representation of a) natural number is less than
- a non zero ordinal *)
+ any non zero ordinal *)
 
 Lemma nat_lt_cons : forall (n:nat) a p  b , rpo (nat_2_term n) 
                                      (Term ord_cons (a::p::b::nil)).
+Proof. 
  induction n;simpl.
- constructor 2.
- simpl; trivial.
- destruct 1.
- constructor 2.
- simpl; trivial.
- inversion_clear 1.
- subst s';apply IHn.
- case H0.
+  - constructor 2.
+    + simpl; trivial.
+    +  destruct 1.
+  -  constructor 2.
+     + simpl; trivial.
+     +  inversion_clear 1.
+        * subst s';apply IHn.
+        * case H0.
 Qed.
 
 
@@ -180,8 +168,8 @@ Qed.
 Lemma lt_subterm1 : forall a a'  n'  b', lt a  a' ->
                                          lt a  (cons a' n' b').
 Proof.
- intros.
- apply lt_trans with (cons a n' b');auto with T1.
+ intros a a' n' b' H; 
+   apply lt_trans with (cons a n' b');auto with T1.
  apply head_lt_cons.
 Qed.
 
@@ -190,11 +178,9 @@ Lemma lt_subterm2 : forall a a' n n' b b', lt a  a' ->
                                            nf (cons a' n' b') ->
                                            lt b ( cons a' n' b').
 Proof.
- intros.
- apply le_lt_trans with (cons a n b).
- apply lt_incl_le.
- apply tail_lt_cons;auto.
- auto with T1.
+ intros a a' n n' b b' H H0 H1; apply le_lt_trans with (cons a n b).
+ - apply lt_incl_le, tail_lt_cons;auto.
+ - auto with T1.
 Qed.
 
 
@@ -203,21 +189,16 @@ Qed.
 #[global] Hint Resolve T1_size3 T1_size2 T1_size1 : rpo.
 
 
-Lemma nat_2_term_mono : forall n n', (n < n')%nat -> 
-                                      rpo (nat_2_term n) (nat_2_term n').
+Lemma nat_2_term_mono (n n': nat):
+  (n < n')%nat -> rpo (nat_2_term n) (nat_2_term n').
 Proof.
- induction 1.
- simpl.
- eapply Subterm.
- eleft.
- esplit.
- constructor.
- simpl.
- eapply Subterm.
- eleft.
- esplit.
- constructor.
- auto.
+  induction 1.
+  - simpl; eapply Subterm with (nat_2_term n). 
+    +  left; reflexivity. 
+    +  constructor.
+  - simpl; eapply Subterm with  (nat_2_term m). 
+    + left; reflexivity. 
+    +  now constructor.
 Qed.
 
                        
@@ -228,173 +209,143 @@ Theorem lt_inc_rpo_0 : forall n,
 Proof.
   induction n.
   - destruct o'.
-    +   intros; destruct (not_lt_zero H0). 
-    + 
-      destruct o.
-      *  simpl.
-         inversion 1.
-      *  simpl;inversion 1.
-  -  intros.
-     destruct o, o'.
+    + intros; destruct (not_lt_zero H0). 
+    + destruct o; simpl; inversion 1.
+  -  intros o' o H H0 H1 H2; destruct o, o'.
      + now apply not_lt_zero in H0.
-     +  simpl. apply Top_gt.
-        simpl.       trivial.
-        inversion 1.        
-     + 
-       destruct (not_lt_zero H0).
-     + 
-       destruct (lt_inv H0).
-       simpl; intros; apply Top_eq_lex.
-       simpl;trivial.
-       left.
-       apply IHn.
-       (* subst o;subst o'. *)
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
-       simpl;
-         auto with arith rpo.
-       abstract lia.
-       auto.
-       auto.
-       eauto with T1.
-       eauto with T1. 
-
-       simpl;auto with rpo.
-       inversion_clear 1.
-       subst s'.
-       change (rpo (T1_2_term o1) (T1_2_term (cons o'1 n1 o'2))).
-       apply IHn;auto with rpo.
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
-       auto with arith rpo.
-       auto with rpo.
-       eauto with T1 rpo.
-       destruct H5 as [|[|H8]].
-       subst s'.
-       apply nat_lt_cons.
-       subst s'.
-       change (rpo (T1_2_term o2) (T1_2_term (cons o'1 n1 o'2))).
-       apply IHn;auto with rpo.
-
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
-       auto with arith rpo.
-       auto with rpo.
-       eauto with rpo.
-       eauto with T1.
-       case H8.
-       intros.
-       simpl;apply Top_eq_lex.
-       decompose [or and] H3.
-       auto with rpo.
-       subst. 
-       auto.
-       decompose [or and] H3.
-       subst. 
-       constructor 2.
-       constructor 1.
-       apply nat_2_term_mono.
-       auto.
-       auto.
-       subst.
-       decompose [or and] H3.
-
-       destruct (Nat.lt_irrefl _ H6).
-       subst. 
-
-       apply List_eq.
-       apply List_eq.
-       apply List_gt.
-       eapply IHn; eauto. 
-       simpl in H.
-       ring_simplify in H.
-       clear IHn. 
-       simpl in H; abstract lia. 
-       eauto with T1.
-       eauto with T1.
-       trivial.
-       decompose [or and] H3.
-       clear H3. subst.  
-
-       inversion_clear 1.
-       subst s'.
-       change (rpo (T1_2_term o'1) (T1_2_term (cons o'1 n1 o'2))).
-       apply IHn;auto.
-
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o'1 n0 o2) +
-                                  T1_size (cons o'1 n1 o'2))%nat.
-       
-       auto with arith rpo.
-       auto with rpo.
-       apply head_lt_cons.
-       eauto with T1.
-       destruct H4 as [|[|H8]].
-       subst s'.
-       apply nat_lt_cons.
-       subst s'.
-       change (rpo (T1_2_term o2) (T1_2_term (cons o'1 n1 o'2))).
-       apply IHn;auto with rpo.
-
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o'1 n0 o2) + T1_size (cons o'1 n1 o'2))%nat.
-       auto with arith rpo.
-       auto with rpo.
-
-       apply lt_le_trans with (cons o'1 0 zero).
-
-
-
-       apply nf_helper_phi0.
-
-       eapply nf_helper_intro. 
-       eauto. 
-
-
-       auto with T1 rpo.
-       auto with T1 rpo.
-       apply lt_incl_le.
-       apply LT3.
-       eauto with T1.
-       eauto with T1.
-       eauto with arith.
-       eauto with T1. 
-       inversion H8. 
-       subst o'1 n1.
-       clear H3.
-
-       inversion_clear 1.
-       subst. 
-       change (rpo (T1_2_term o1) (T1_2_term (cons o1 n0 o'2))).
-       apply IHn; auto. 
-       apply  lt_n_Sm_le .
-       apply Lt.lt_le_trans with (T1_size (cons o1 n0 o2) + T1_size (cons o1 n0 o'2))%nat.
-       auto with arith rpo.
-       auto with rpo.
-       apply head_lt_cons. 
-       eauto with T1 rpo.
-       inversion_clear H4. subst s'.
-
-       apply nat_lt_cons.
-       inversion_clear H3.
-       subst s'.
-
-
-
-       apply Eps0_rpo.rpo_trans with (T1_2_term o'2).
-
-       apply Subterm with (T1_2_term o'2).
-       simpl. 
-       right. 
-       right. 
-       now left.
-
-       apply Eq.
-       apply IHn; eauto with T1 rpo.
-       simpl in H. 
-       clear IHn. 
-       abstract lia. 
-       inversion H4. 
+     +  simpl; apply Top_gt.
+       * simpl; trivial.
+       * inversion 1.        
+     + destruct (not_lt_zero H0).
+     + destruct (lt_inv H0) as [H3 | H3].
+       * simpl; intros; apply Top_eq_lex.
+         -- simpl;trivial.
+         -- left.  
+            ++ apply IHn.
+               apply  lt_n_Sm_le .
+               apply Lt.lt_le_trans with
+                 (T1_size (cons o1 n0 o2) + 
+                    T1_size (cons o'1 n1 o'2))%nat.
+               simpl; auto with arith rpo.
+               abstract lia.
+               auto.
+               auto.
+               eauto with T1.
+               eauto with T1. 
+            ++ simpl;auto with rpo.
+         -- inversion_clear 1.
+         ** subst s'.
+            change (rpo (T1_2_term o1) (T1_2_term (cons o'1 n1 o'2))).
+            apply IHn;auto with rpo.
+            apply  lt_n_Sm_le .
+            apply Lt.lt_le_trans with
+              (T1_size (cons o1 n0 o2) + 
+                 T1_size (cons o'1 n1 o'2))%nat.
+            auto with arith rpo.
+            auto with rpo.
+            eauto with T1 rpo.
+         ** destruct H5 as [|[|H8]].
+            subst s'; apply nat_lt_cons.
+            subst s';
+              change (rpo (T1_2_term o2) 
+                        (T1_2_term (cons o'1 n1 o'2))).
+            apply IHn;auto with rpo.
+            apply  lt_n_Sm_le .
+            apply Lt.lt_le_trans with
+              (T1_size (cons o1 n0 o2) + 
+                 T1_size (cons o'1 n1 o'2))%nat.
+            auto with arith rpo.
+            auto with rpo.
+            eauto with rpo.
+            eauto with T1.
+            case H8.
+       *  simpl;apply Top_eq_lex.
+          decompose [or and] H3.
+          -- auto with rpo.
+          -- subst; auto.
+          -- decompose [or and] H3.
+             ++ subst; constructor 2.
+                constructor 1.
+                apply nat_2_term_mono.
+                auto.
+                auto.
+             ++ subst; decompose [or and] H3.
+                destruct (Nat.lt_irrefl _ H6).
+                subst; apply List_eq.
+                apply List_eq.
+                apply List_gt.
+                eapply IHn; eauto. 
+                simpl in H; ring_simplify in H.
+                clear IHn; simpl in H; abstract lia. 
+                eauto with T1.
+                eauto with T1.
+                reflexivity.
+          -- decompose [or and] H3.
+             ++ clear H3; subst; inversion_clear 1.
+                subst s'.
+                change (rpo (T1_2_term o'1) 
+                          (T1_2_term (cons o'1 n1 o'2))).
+                apply IHn;auto.
+                apply  lt_n_Sm_le .
+                apply Lt.lt_le_trans with 
+                  (T1_size (cons o'1 n0 o2) +
+                     T1_size (cons o'1 n1 o'2))%nat.
+                auto with arith rpo.
+                auto with rpo.
+                apply head_lt_cons.
+                eauto with T1.
+                destruct H4 as [|[|H8]].
+                subst s'; apply nat_lt_cons.
+                ** subst s'.
+                   change (rpo (T1_2_term o2)
+                             (T1_2_term (cons o'1 n1 o'2))).
+                   apply IHn;auto with rpo.
+                   apply  lt_n_Sm_le .
+                   apply Lt.lt_le_trans with
+                     (T1_size (cons o'1 n0 o2) +
+                        T1_size (cons o'1 n1 o'2))%nat.
+                   auto with arith rpo.
+                   auto with rpo.
+                   apply lt_le_trans with (cons o'1 0 zero).
+                   apply nf_helper_phi0.
+                   eapply nf_helper_intro. 
+                   eauto. 
+                   auto with T1 rpo.
+                   auto with T1 rpo.
+                   apply lt_incl_le.
+                   apply LT3.
+                   eauto with T1.
+                   eauto with T1.
+                   eauto with arith.
+                   eauto with T1. 
+                ** inversion H8. 
+             ++ subst o'1 n1; clear H3.
+                inversion_clear 1.
+                subst. 
+                change (rpo (T1_2_term o1) 
+                          (T1_2_term (cons o1 n0 o'2))).
+                apply IHn; auto. 
+                apply  lt_n_Sm_le .
+                apply Lt.lt_le_trans with
+                  (T1_size (cons o1 n0 o2) + 
+                     T1_size (cons o1 n0 o'2))%nat.
+                auto with arith rpo.
+                auto with rpo.
+                apply head_lt_cons. 
+                eauto with T1 rpo.
+                inversion_clear H4. 
+                subst s'.
+                apply nat_lt_cons.
+                inversion_clear H3.
+                subst s'; 
+                  apply Eps0_rpo.rpo_trans with (T1_2_term o'2).
+                apply Subterm with (T1_2_term o'2).
+                simpl. 
+                right; right; now left.
+                apply Eq.
+                apply IHn; eauto with T1 rpo.
+                simpl in H; clear IHn; abstract lia. 
+                inversion H4. 
 Qed. 
 
 
@@ -430,9 +381,8 @@ Qed.
 
 Theorem well_founded_rpo : well_founded rpo.
 Proof.
-  apply wf_rpo.
-  red.
-  destruct a;auto with rpo.
+  apply wf_rpo. 
+  intro a; destruct a;auto with rpo.
 Qed.
 
 Section  well_founded.
@@ -441,32 +391,28 @@ Section  well_founded.
 
   #[local] Hint Unfold restrict R : rpo.
 
-  Lemma R_inc_rpo : forall o o', R o o' -> rpo (T1_2_term o) (T1_2_term o').
+  Lemma R_inc_rpo (o o':T1) :
+    R o o' -> rpo (T1_2_term o) (T1_2_term o').
   Proof.
-    intros o o' (H,(H1,H2)).
-    eapply lt_inc_rpo_0;auto.
+    intros (H,(H1,H2)); eapply lt_inc_rpo_0;auto.
   Qed. 
 
   
   Lemma nf_Wf : well_founded_restriction _ nf lt.
   Proof.
-    unfold well_founded_restriction.
-    intros.
-    unfold restrict.
-    generalize (Acc_inverse_image _ _ rpo T1_2_term a (well_founded_rpo (T1_2_term a))).
-    intro.
-    eapply  Acc_incl  with  (fun x y : T1 => rpo (T1_2_term x) (T1_2_term y)). 
-    red.
-    apply R_inc_rpo.
-    auto.
+    intros a Ha;  unfold restrict.
+    generalize (Acc_inverse_image _ _ rpo T1_2_term a 
+                  (well_founded_rpo (T1_2_term a))) ; intro H.
+    eapply  Acc_incl  with 
+      (fun x y : T1 => rpo (T1_2_term x) (T1_2_term y)). 
+    -  red; apply R_inc_rpo.
+    -  apply H.
   Qed.
 
 
   (** For compatibility with T1 *)
   Lemma nf_Acc : forall alpha, nf alpha -> Acc LT alpha.
   Proof nf_Wf.
-
-
 
 End well_founded.
 
