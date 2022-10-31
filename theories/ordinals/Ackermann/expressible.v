@@ -199,58 +199,51 @@ Proof.
      apply H2.
    + elim H2.
   - clear H.
-    cut (RepresentableHelp n (charFunction n R) A).
-    { generalize A.
-      clear H0 A.
+    generalize H0 as H.
+    generalize A; clear H0 A.
       induction n as [| n Hrecn]; intros.
-      - simpl in H |- *.
+      + simpl in H |- *.
         induction R.
-        + simpl in H.
+        * simpl in H.
           apply impE with
             (substituteFormula LNN (equal (var 0) (Succ Zero))
                0 (Succ Zero)).
-          * apply iffE2.
+          -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
             apply forallE.
             apply forallI.
-            -- apply closedT.
-            -- apply H.
-          * rewrite (subFormulaEqual LNN).
-            simpl in |- *.
-            apply eqRefl.
-        + simpl in H.
+            ++ apply closedT.
+            ++  apply H.
+          -- rewrite (subFormulaEqual LNN).
+             simpl in |- *.
+             apply eqRefl.
+        * simpl in H.
           apply  impE with
             (notH (substituteFormula LNN (equal (var 0) Zero) 
           0 (Succ Zero))).
-          * apply cp2.
-            apply iffE1.
-            rewrite <- (subFormulaIff LNN).
-            apply forallE.
-            apply forallI.
-            -- apply closedT.
-            -- apply H.
-          * rewrite (subFormulaEqual LNN).
-            simpl in |- *.
-            replace (apply LNN Languages.Zero (Tnil LNN)) with
-              (natToTerm 0).
-            -- replace (Succ Zero) with (natToTerm 1).
-               ++ simpl.
-               apply nn1.
-               ++ reflexivity.
-            -- reflexivity.
-      - simpl in H |- *.
+          -- apply cp2.
+             apply iffE1.
+             rewrite <- (subFormulaIff LNN).
+             apply forallE.
+             apply forallI.
+            ++ apply closedT.
+            ++ apply H.
+          -- rewrite (subFormulaEqual LNN); simpl in |- *.
+             replace (apply LNN Languages.Zero (Tnil LNN)) with
+              (natToTerm 0) by reflexivity. 
+            replace (Succ Zero) with (natToTerm 1) by reflexivity.
+            simpl; apply nn1.
+      + simpl in H |- *.
         intros a; 
           apply expressibleAlternate with
           (substituteFormula LNN 
              (substituteFormula LNN A (S n) (natToTerm a)) 0
              (Succ Zero)).
-        apply (subFormulaExch LNN).
-        discriminate.
-        apply closedNatToTerm.
-        auto.
-        apply Hrecn.
-        apply H.
-    } apply H0.
+        * apply (subFormulaExch LNN).
+          -- discriminate.
+          -- apply closedNatToTerm.
+          -- auto.
+        * apply Hrecn; apply H.
 Qed.
 
 End RepresentableExpressible.
