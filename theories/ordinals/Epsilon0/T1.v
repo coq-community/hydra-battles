@@ -16,6 +16,8 @@ From hydras Require Import OrdNotations.
 From hydras Require Export Prelude.Comparable.
 From hydras Require Export STDPP_compat.
 
+Create HintDb T1.
+
 Set Implicit Arguments.
 
 Declare Scope t1_scope.
@@ -1047,10 +1049,9 @@ Qed.
 
 Lemma head_lt_cons :
   forall a n b, lt a  (cons a n b).
-Proof.
- induction a; auto with T1.
-Qed.
+Proof. induction a; auto with T1. Qed.
 
+#[export] Hint Resolve head_lt_cons: T1.
 
 Definition T1_eq_dec  (alpha beta : T1):
 {alpha = beta} + {alpha <> beta}.
@@ -1461,9 +1462,6 @@ Lemma head_LT_cons :
   alpha t1< cons alpha n beta.
 Proof.
   split; eauto with T1.
-  split.
-  - apply head_lt_cons.
-  - auto.
 Qed.
 
 Lemma tail_LT_cons :

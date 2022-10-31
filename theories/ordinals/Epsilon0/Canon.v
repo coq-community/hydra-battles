@@ -355,8 +355,6 @@ Proof.
                  destruct (Hrec alpha1) ; trivial. 
                  apply head_lt_cons ;  auto.
                  -- split; auto with T1.
-                  ++   apply head_lt; apply Hrec ; trivial.
-                       apply head_lt_cons; auto.
                     * auto with T1.
                     * trivial.
                  -  destruct s.
@@ -378,8 +376,6 @@ Proof.
                  + split.
                   { apply cons_nf ; trivial.
                     - destruct (Hrec alpha1) ; eauto with T1.
-                      + apply head_lt_cons.
-                      + tauto.
                     -  apply single_nf. 
                       destruct (Hrec alpha1); trivial. 
                       apply head_lt_cons.
@@ -485,8 +481,6 @@ Proof.
                  destruct (Hrec alpha1) ; trivial. 
                  apply head_lt_cons ;  auto.
                  -- split; auto with T1.
-                  ++   apply head_lt; apply Hrec ; trivial.
-                       apply head_lt_cons; auto.
                     * auto with T1.
                     * trivial.
                  -  destruct s.
@@ -507,8 +501,6 @@ Proof.
                  + split.
                   { apply cons_nf ; trivial.
                     - destruct (Hrec alpha1) ; eauto with T1.
-                      + apply head_lt_cons.
-                      + tauto.
                     -  apply single_nf. 
                       destruct (Hrec alpha1); trivial. 
                       apply head_lt_cons.

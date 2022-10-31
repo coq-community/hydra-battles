@@ -1316,9 +1316,6 @@ Proof.
                 apply KS_thm_2_4_lemma5 ; trivial.
                 apply Hrec ; eauto with T1.
                 split ; eauto with T1.
-                split.
-                apply  head_lt_cons ; eauto with T1.
-                apply single_nf ; eauto with T1.
                 apply nf_canon ; eauto with T1.
                 apply T1limit_canonS_not_zero ; eauto with T1.
            }

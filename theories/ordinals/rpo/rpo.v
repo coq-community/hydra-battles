@@ -4,55 +4,63 @@
 From Coq Require Import List Relations Wellfounded Arith  Wf_nat Lia.
 From hydras Require Import more_list list_permut dickson term.
 
-(** A non-dependant version of lexicographic extension. *)
-Definition lex (A B : Set) (eq_A_dec : forall a1 a2, {a1=a2}+{a1<>a2}) 
-(o1 : relation A) (o2 : relation B) (s t : _ * _) :=
-  match s with
-  | (s1,s2) =>
-    match t with
-    | (t1,t2) => 
-       if eq_A_dec s1 t1
-       then o2 s2 t2
-       else o1 s1 t1
-     end
-   end.
 
-(** Transitivity of  lexicographic extension. *)
+(** A non-dependent version of lexicographic extension. 
+*)
+
+Definition lex (A B : Set) 
+  (eq_A_dec : forall a1 a2, {a1=a2}+{a1<>a2}) 
+  (o1 : relation A) (o2 : relation B) (s t : _ * _) :=
+  match s, t  with (s1,s2), (t1,t2) =>
+   if eq_A_dec s1 t1 then o2 s2 t2 else o1 s1 t1
+  end. 
+ 
+(** Transitivity of  lexicographic extension. 
+*)
+
 Lemma lex_trans :
  forall (A B : Set) eq_A_dec o1 o2, 
  antisymmetric A o1 -> transitive A o1 -> transitive B o2 ->
  transitive _ (lex _ _ eq_A_dec o1 o2).
 Proof.
-unfold transitive, lex; 
-intros A B eq_A_dec o1 o2 A1 T1 T2 p1 p2 p3; 
-destruct p1 as [a1 b1]; destruct p2 as [a2 b2]; destruct p3 as [a3 b3];
-elim (eq_A_dec a1 a2); intro eq1.
-subst a2; elim (eq_A_dec a1 a3); intro eq2; trivial; apply T2.
-intro lt1; elim (eq_A_dec a1 a3); intro eq3.
-subst a3; elim (eq_A_dec a2 a1); intro eq2.
-subst a2; absurd (a1=a1); trivial.
-intro lt2; generalize (A1 _ _ lt1 lt2); contradiction.
-elim (eq_A_dec a2 a3); intro eq4.
-subst a3; trivial.
-intro lt2; apply T1 with a2; trivial.
+  unfold transitive, lex; 
+    intros A B eq_A_dec o1 o2 A1 T1 T2 p1 p2 p3; 
+    destruct p1 as [a1 b1]; destruct p2 as [a2 b2]; 
+    destruct p3 as [a3 b3];
+    elim (eq_A_dec a1 a2); intro eq1.
+  subst a2; elim (eq_A_dec a1 a3); intro eq2; trivial; apply T2.
+  intro lt1; elim (eq_A_dec a1 a3); intro eq3.
+  subst a3; elim (eq_A_dec a2 a1); intro eq2.
+  subst a2; absurd (a1=a1); trivial.
+  intro lt2; generalize (A1 _ _ lt1 lt2); contradiction.
+  elim (eq_A_dec a2 a3); intro eq4.
+  subst a3; trivial.
+  intro lt2; apply T1 with a2; trivial.
 Qed.
 
-(** Well-foundedness of  lexicographic extension. *)
+(** Well-foundedness of  lexicographic extension. 
+*)
+
 Lemma wf_lex :
   forall A B eq_A_dec o1 o2, well_founded o1 -> well_founded o2 ->
-  well_founded (lex A B eq_A_dec o1 o2).
+                             well_founded (lex A B eq_A_dec o1 o2).
 Proof.
-intros A B eq_A_dec o1 o2 W1 W2; unfold well_founded in *; destruct a.
-generalize b; clear b; pattern a; refine (well_founded_ind W1 _ _ a);
-clear a; intros a IH1 b; pattern b; refine (well_founded_ind W2 _ _ b).
-clear b; intros b IH2; apply Acc_intro.
-destruct y; simpl; elim (eq_A_dec a0 a); intro a0_eq_a.
-subst a0; apply IH2.
-intro; apply IH1; trivial.
+  intros A B eq_A_dec o1 o2 W1 W2; unfold well_founded in *; 
+    destruct a.
+  generalize b; clear b; pattern a; 
+    refine (well_founded_ind W1 _ _ a);
+    clear a; intros a IH1 b; pattern b; 
+    refine (well_founded_ind W2 _ _ b).
+  clear b; intros b IH2; apply Acc_intro.
+  destruct y; simpl; elim (eq_A_dec a0 a); intro a0_eq_a.
+  subst a0; apply IH2.
+  intro; apply IH1; trivial.
 Qed.
 
 (** ** Module Type Precedence, 
-** Definition of a precedence. *)
+** Definition of a precedence. 
+*)
+
 Module Type Precedence.
 Parameter A : Set.
 Parameter prec : relation A.
@@ -70,7 +78,8 @@ Axiom prec_transitive : transitive A prec.
 End Precedence.
 
 (** ** Module Type RPO, 
-** Definition of RPO from a precedence on symbols. *)
+** Definition of RPO from a precedence on symbols. 
+*)
 
 Module Type RPO.
 
@@ -82,7 +91,9 @@ Import P.
 Declare Module LP : list_permut.Permut with Definition DS.A:=term.
 Import LP.
 
-(** ** Definition of rpo.*)
+(** ** Definition of rpo.
+
+*)
 Inductive rpo : term -> term -> Prop :=
   | Subterm : forall f l t s, In s l -> rpo_eq t s -> rpo t (Term f l)
   | Top_gt : 
@@ -106,7 +117,8 @@ with rpo_lex : list term -> list term -> Prop :=
   | List_gt : 
       forall s t l l', rpo s t -> length l = length l' -> 
       rpo_lex (s :: l) (t :: l')
-  | List_eq : forall s l l', rpo_lex l l' -> rpo_lex (s :: l) (s :: l')
+  | List_eq : forall s l l', rpo_lex l l' -> 
+                             rpo_lex (s :: l) (s :: l')
 
 with rpo_mul : list term -> list term -> Prop :=
   | List_mul : 
@@ -116,7 +128,9 @@ with rpo_mul : list term -> list term -> Prop :=
        (forall b, In b ls -> exists a', In a' (a :: lg) /\ rpo b a') ->
        rpo_mul l' l.
 
-(** ** rpo is a preorder, and its reflexive closure is an ordering. *)
+(** ** rpo is a preorder, and its reflexive closure is an ordering. 
+*)
+
 Axiom rpo_closure :
   forall s t u, 
   (rpo t s -> rpo u t -> rpo u s) /\
@@ -126,15 +140,21 @@ Axiom rpo_closure :
 
 Axiom rpo_trans : forall s t u, rpo t s -> rpo u t -> rpo u s.
 
-(** ** Main theorem: when the precedence is well-founded, so is the rpo. *)
+(** ** Main theorem: when the precedence is well-founded, so is the rpo. 
+
+*)
 Axiom wf_rpo : well_founded prec -> well_founded rpo.
 
-(** ** RPO is compatible with the instanciation by a substitution. *)
+(** ** RPO is compatible with the instanciation by a substitution. 
+*)
+
 Axiom rpo_subst :
   forall t s, rpo s t -> 
   forall sigma, rpo (apply_subst sigma s) (apply_subst sigma t).
 
-(** ** RPO is compatible with adding context. *)
+(** ** RPO is compatible with adding context. 
+*)
+
 Axiom rpo_add_context :
  forall p ctx s t, rpo s t -> is_a_pos ctx p = true -> 
   rpo (replace_at_pos ctx s p) (replace_at_pos ctx t p).
@@ -154,7 +174,9 @@ Import P.
 Module LP := list_permut.Make (Term_eq_dec).
 Import LP.
 
-(** ** Definition of size-based well-founded orderings for induction.*)
+(** ** Definition of size-based well-founded orderings for induction.
+*)
+
 Definition o_size s t := size s < size t.
 
 Lemma wf_size :  well_founded o_size.
@@ -248,7 +270,8 @@ unfold transitive; apply lt_trans.
 unfold transitive; apply lt_trans.
 Qed.
 
-(** ** Definition of rpo.*)
+(** ** Definition of rpo.
+*)
 
 Inductive rpo : term -> term -> Prop :=
   | Subterm : forall f l t s, In s l -> rpo_eq t s -> rpo t (Term f l)
@@ -333,7 +356,9 @@ apply in_or_app; right
 | apply Eq ]; trivial.
 Qed.
 
-(** ** rpo is a preorder, and its reflexive closure is an ordering. *)
+(** ** rpo is a preorder, and its reflexive closure is an ordering. 
+*)
+
 Lemma rpo_closure :
   forall s t u, 
   (rpo t s -> rpo u t -> rpo u s) /\
@@ -634,7 +659,9 @@ Record SN_term : Set :=
 
 (** ** Well-foundedness of rpo. 
 How to build a built a list of pairs (terms, proof of accessibility) from
-a global of accessibility on the list. *)
+a global of accessibility on the list. 
+*)
+
 Definition build_list_of_SN_terms :
  forall l (proof : forall t, In t l -> Acc rpo t), list SN_term.  
 Proof.
@@ -648,7 +675,9 @@ exact ((mk_sn a H) :: (IHl H0)).
 Defined.
 
 (** Projection on the first element of the pairs after building the
-pairs as above is the identity. *)
+pairs as above is the identity. 
+*)
+
 Lemma projection_list_of_SN_terms :
   forall l proof, map tt (build_list_of_SN_terms l proof) = l.
 Proof.
@@ -666,10 +695,14 @@ subst s; destruct a; trivial.
 apply IHl; trivial.
 Qed.
 
-(** Definition of rpo on accessible terms. *)
+(** Definition of rpo on accessible terms. 
+*)
+
 Definition rpo_rest := fun s t => rpo (tt s) (tt t).
 
-(** Extension of [rpo_lex] to the accessible terms. *)
+(** Extension of [rpo_lex] to the accessible terms. 
+*)
+
 Inductive rpo_lex_rest : list SN_term -> list SN_term -> Prop :=
   | List_gt_rest : 
        forall s t l l', rpo_rest s t -> length l = length l' -> 
@@ -677,7 +710,9 @@ Inductive rpo_lex_rest : list SN_term -> list SN_term -> Prop :=
   | List_eq_rest : forall s t l l', tt s = tt t -> rpo_lex_rest l l' -> 
         rpo_lex_rest (s :: l) (t :: l').
 
-(** A triviality: rpo on accessible terms is well-founded. *)
+(** A triviality: rpo on accessible terms is well-founded.
+
+ *)
 Lemma wf_on_rest : well_founded rpo_rest.
 Proof.
 unfold well_founded, rpo_rest; intro s;
@@ -693,8 +728,10 @@ simpl; rewrite H3; trivial.
 simpl; rewrite (IHl l'0); trivial.
 Qed.
 
-(** Proof of accessibility does not actually matter, provided at least 
-one exists. *)
+(** Proof of accessibility does not actually matter, provided at 
+  least one exists. 
+*)
+
 Lemma acc_lex_drop_proof :
   forall s t l, tt s = tt t -> Acc rpo_lex_rest (s::l) -> Acc rpo_lex_rest (t::l).
 Proof.
@@ -709,7 +746,9 @@ subst l' t0 l'0; apply List_eq_rest; trivial;
 rewrite s_eq_t; trivial.
 Qed.
 
-(** Lexicographic extension of rpo on accessible terms lists is well-founded. *)
+(** Lexicographic extension of rpo on accessible terms lists is well-founded. 
+*)
+
 Lemma wf_on_lex_rest : well_founded rpo_lex_rest.
 Proof.
 unfold well_founded; intro a; pattern a; apply list_rec2; clear a; 
@@ -730,7 +769,9 @@ apply sym_eq; trivial.
 apply H0; trivial; rewrite (rpo_lex_rest_same_length _ _ H5); trivial.
 Qed.
 
-(** Extension of [rpo_mul] to the accessible terms. *)
+(** Extension of [rpo_mul] to the accessible terms. 
+*)
+
 Inductive rpo_mul_rest : list SN_term -> list SN_term -> Prop :=
   | List_mul_rest : 
        forall a lg ls lc l l', 
@@ -739,7 +780,9 @@ Inductive rpo_mul_rest : list SN_term -> list SN_term -> Prop :=
        (forall b, In b ls -> exists a', In a' (a :: lg) /\ rpo_rest b a') ->
        rpo_mul_rest l' l.
 
-(** Definition of a finer grain for multiset extension. *)
+(** Definition of a finer grain for multiset extension. 
+*)
+
 Inductive rpo_mul_rest_step : list SN_term -> list SN_term -> Prop :=
   | List_mul_rest_step : 
        forall a ls lc l l', 
@@ -749,7 +792,9 @@ Inductive rpo_mul_rest_step : list SN_term -> list SN_term -> Prop :=
        rpo_mul_rest_step l' l.
 
 (** The plain multiset extension is in the transitive closure of
-the finer grain extension. *)
+the finer grain extension. 
+*)
+
 Lemma rpo_mul_trans_clos :
   inclusion _ rpo_mul_rest (clos_trans _ rpo_mul_rest_step).
 Proof.
@@ -807,7 +852,9 @@ apply list_permut_refl.
 intuition.
 Qed.
 
-(** Splitting in two disjoint cases. *)
+(** Splitting in two disjoint cases. 
+*)
+
 Lemma two_cases_rpo :
  forall a m n, 
  rpo_mul_rest_step n (a :: m) ->
@@ -871,7 +918,9 @@ subst l'0 l0; apply (List_mul_rest_step a ls lc); trivial.
 apply list_permut_trans with (map tt l'); trivial.
 Qed.
 
-(** Multiset extension of rpo on accessible terms lists is well-founded. *)
+(** Multiset extension of rpo on accessible terms lists is well-founded. 
+*)
+
 Lemma wf_on_mul_rest : well_founded rpo_mul_rest.
 Proof.
 apply wf_incl with (clos_trans _ rpo_mul_rest_step).
@@ -912,7 +961,9 @@ apply wf_on_rest.
 apply wf_on_rest.
 Qed.
 
-(** Another definition of rpo, only on scheme of accessible terms. *)
+(** Another definition of rpo, only on scheme of accessible terms. 
+*)
+
 Definition rpo_term : relation (symbol * list SN_term) :=
  fun f_l g_l' => 
   match f_l with
@@ -1040,7 +1091,9 @@ elim In_b; clear In_b; intro In_b;
 absurd (f=f); trivial.
 Qed.
 
-(** ** Main theorem: when the precedence is well-founded, so is the rpo. *)
+(** ** Main theorem: when the precedence is well-founded, so is the rpo. 
+*)
+
 Lemma wf_rpo : well_founded prec -> well_founded rpo.
 Proof.
 intro wf_prec;
@@ -1051,7 +1104,9 @@ rewrite <- (projection_list_of_SN_terms l Acc_subterm).
 apply acc_build; trivial.
 Qed.
 
-(** ** RPO is compatible with the instanciation by a substitution. *)
+(** ** RPO is compatible with the instanciation by a substitution. 
+*)
+
 Lemma rpo_subst :
   forall t s, rpo s t -> 
   forall sigma, rpo (apply_subst sigma s) (apply_subst sigma t).
@@ -1111,7 +1166,9 @@ right; apply in_or_app; left; trivial.
 apply list_permut_sym; trivial.
 Qed.
 
-(** ** RPO is compatible with adding context. *)
+(** ** RPO is compatible with adding context. 
+*)
+
 Lemma rpo_add_context :
  forall p ctx s t, rpo s t -> is_a_pos ctx p = true -> 
   rpo (replace_at_pos ctx s p) (replace_at_pos ctx t p).

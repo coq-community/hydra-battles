@@ -9,13 +9,15 @@
 (** Cantor "pre" Normal form
  After Manolios and Vroon work on ACL2 *)
 
-From Coq Require Import Arith  Lia  Compare_dec  Relations  Wellfounded
-     Wf_nat  List Bool Eqdep_dec Ensembles ArithRing Logic.
+From Coq Require Import Arith  Lia  Compare_dec  Relations  
+  Wellfounded Wf_nat  List Bool Eqdep_dec Ensembles ArithRing Logic.
 
 From hydras Require Import More_Arith Restriction   
      DecPreOrder  rpo.term  rpo.rpo Epsilon0.T1.
 
 Set Implicit Arguments.
+
+Create HintDb rpo.
 
 Module Alt.
   
@@ -111,8 +113,8 @@ Fixpoint nat_2_term (n:nat) : term :=
 Every (representation of a) natural number is less than
  any non zero ordinal *)
 
-Lemma nat_lt_cons : forall (n:nat) a p  b , rpo (nat_2_term n) 
-                                     (Term ord_cons (a::p::b::nil)).
+Lemma nat_lt_cons : forall (n:nat) a p b , 
+    rpo (nat_2_term n) (Term ord_cons (a::p::b::nil)).
 Proof. 
  induction n;simpl.
   - constructor 2.
@@ -125,18 +127,16 @@ Proof.
         * case H0.
 Qed.
 
-
-
-Theorem rpo_trans : forall t t1 t2, rpo t t1 -> rpo t1 t2 -> rpo t t2.
- intros.
- case (rpo_closure t2 t1 t);eauto.
+Theorem rpo_trans (t t1 t2: term): rpo t t1 -> rpo t1 t2 -> rpo t t2.
+Proof. 
+ intros; case (rpo_closure t2 t1 t);eauto.
 Qed.
-
 
 Fixpoint T1_2_term (a:T1) : term := 
 match a with
- zero => Term ord_zero nil
-|cons a n b => Term ord_cons (T1_2_term a :: nat_2_term n ::T1_2_term b::nil)
+| zero => Term ord_zero nil
+| cons a n b => 
+    Term ord_cons (T1_2_term a :: nat_2_term n ::T1_2_term b::nil)
 end.
 
 Fixpoint T1_size (o:T1):nat :=
@@ -144,41 +144,33 @@ Fixpoint T1_size (o:T1):nat :=
             | cons a n b => S (T1_size a + n + T1_size b)%nat
          end.
 
-Lemma T1_size1 : forall a n b, (T1_size zero < T1_size (cons a n b))%nat.
-Proof.
- simpl.
- intros.
- auto with arith.
-Qed.
+Lemma T1_size1 a n b: T1_size zero < T1_size (cons a n b).
+Proof. simpl; auto with arith. Qed.
 
-Lemma T1_size2 : forall a n b , (T1_size a < T1_size (cons a n b))%nat.
-Proof.
- simpl; auto with arith.
-Qed.
+Lemma T1_size2 a n b: T1_size a < T1_size (cons a n b).
+Proof. simpl; auto with arith. Qed.
 
-Lemma T1_size3 : forall a n b , (T1_size b < T1_size (cons a n b))%nat.
-Proof.
- simpl; auto with arith.
-Qed.
+Lemma T1_size3  a n b: T1_size b < T1_size (cons a n b).
+Proof. simpl; auto with arith. Qed.
 
 #[global] Hint Resolve T1_size2 T1_size3 : rpo.
 
 
 (** let us recall subterm properties on T1 *)
-Lemma lt_subterm1 : forall a a'  n'  b', lt a  a' ->
-                                         lt a  (cons a' n' b').
+
+Lemma lt_subterm1 a a'  n'  b': lt a  a' -> lt a  (cons a' n' b').
 Proof.
- intros a a' n' b' H; 
-   apply lt_trans with (cons a n' b');auto with T1.
- apply head_lt_cons.
+ intro H; apply lt_trans with (cons a n' b'); 
+  auto with T1.
 Qed.
 
-Lemma lt_subterm2 : forall a a' n n' b b', lt a  a' ->
-                                           nf (cons a n  b) ->
-                                           nf (cons a' n' b') ->
-                                           lt b ( cons a' n' b').
+Lemma lt_subterm2  a a' n n' b b': 
+  lt a  a' ->
+  nf (cons a n  b) ->
+  nf (cons a' n' b') ->
+  lt b (cons a' n' b').
 Proof.
- intros a a' n n' b b' H H0 H1; apply le_lt_trans with (cons a n b).
+ intros  H H0 H1; apply le_lt_trans with (cons a n b).
  - apply lt_incl_le, tail_lt_cons;auto.
  - auto with T1.
 Qed.
@@ -190,7 +182,7 @@ Qed.
 
 
 Lemma nat_2_term_mono (n n': nat):
-  (n < n')%nat -> rpo (nat_2_term n) (nat_2_term n').
+  n < n' -> rpo (nat_2_term n) (nat_2_term n').
 Proof.
   induction 1.
   - simpl; eapply Subterm with (nat_2_term n). 

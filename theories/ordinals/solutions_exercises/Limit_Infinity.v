@@ -47,10 +47,6 @@ Section On_alpha.
     Proof.
       unfold s; intro i;
         apply plus_smono_LT_r; eauto with T1.
-      change (\F (S i)) with (FS i);
-        change (\F (S (S i))) with (FS (S i)).
-      rewrite  <- succ_compatS; eauto with T1.
-      apply LT_succ; eauto with T1.
     Qed.
 
     
@@ -64,7 +60,8 @@ Section On_alpha.
       }
       intros i j;
         destruct (lt_eq_lt_dec i j) as [[H0 | Heq] | H0]; [|auto|];
-          intro e; apply mono in H0; rewrite e in H0; destruct (LT_irrefl H0).  
+          intro e; apply mono in H0; rewrite e in H0; 
+        destruct (LT_irrefl H0).  
     Qed.
     
   End S1.
