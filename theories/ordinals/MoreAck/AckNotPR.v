@@ -9,7 +9,7 @@ and
 Set Apply With Renaming.
 
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
-Require Import Compare_dec Max.
+Require Import Compare_dec.
 Import extEqualNat  VectorNotations.
 
 
@@ -87,8 +87,9 @@ Section evalList.
     - intros; specialize (IHn (tl v));  cbn.
       destruct (Nat.eq_dec k n).
       +  cbn;  rewrite (decomp _ _ v);  cbn; rewrite  evalList_Const;
-           apply le_max_l.
-      + destruct (le_lt_or_eq k n (lt_n_Sm_le k n H)).
+           apply Nat.le_max_l.
+      + assert (H0: k <= n) by lia; rewrite Nat.lt_eq_cases in H0. 
+       destruct H0. 
         *  replace v with (cons (hd v) (tl v)) at 1; cbn.
            --   transitivity (max_v (tl v));  auto. 
                 apply max_v_tl. 
@@ -173,7 +174,7 @@ Lemma majorSucc : majorizedPR  succFunc Ack. (* .no-out *)
 
 Proof.
   exists 1; intro v; rewrite (decomp1 v).
-  simpl evalList; simpl max_v; rewrite max_0_r.
+  simpl evalList; simpl max_v; rewrite Nat.max_0_r.
   rewrite Ack_1_n; auto with arith.
 Qed.
 
@@ -219,7 +220,7 @@ Proof.
   - apply majorProjection.
 (*||*)
     
-  - (* .no-out *) destruct IHx, IHx0; red; exists (2 + max x0 x1). 
+  - (* .no-out *) destruct IHx, IHx0; red; exists (2 + Nat.max x0 x1). 
 
     (* end snippet majorAnyPRa *)
     
@@ -235,7 +236,7 @@ Proof.
         generalize ( max_v_ge m (map (fun g : naryFunc n => evalList n v g)
                                      (evalPrimRecs n m g)) a H1).
         intro H2;lia.
-      * rewrite max_comm; apply nested_Ack_bound.
+      * rewrite Nat.max_comm; apply nested_Ack_bound.
  
   (* begin snippet majorAnyPRb *)
   (*||*)
@@ -308,7 +309,7 @@ Proof.
       * transitivity (Ack q (Ack 2 z)).
         -- rewrite Ack_2_n; apply Ack_mono_r; lia.
         -- simpl max_v; fold z; transitivity (Ack (2 + max 2 q) z).
-           ++ rewrite max_comm; apply nested_Ack_bound.
+           ++ rewrite Nat.max_comm; apply nested_Ack_bound.
            ++ apply Ack_mono_l;  lia.
 
   (*||*)
@@ -328,9 +329,9 @@ Proof.
     pose (Y := v_apply (evalPrimRec n x) v).
     fold Y; fold Y in H;  apply Nat.max_lub.
     + transitivity (Ack x0 (max_v v)); auto.
-      *  apply Ack_mono_l; apply le_max_l.
+      *  apply Ack_mono_l; apply Nat.le_max_l.
     + transitivity (Ack x1 (max_v v)); auto.
-      * apply Ack_mono_l; apply le_max_r.
+      * apply Ack_mono_l; apply Nat.le_max_r.
 Qed.
 
 
@@ -369,7 +370,7 @@ Proof.
   red in H;red in H.  destruct H as [N HN];  exists N.
   intros; specialize (HN [x0; y]);  cbn in HN.
   replace (evalPrimRec 2 x x0 y) with (f x0 y) in HN.
-  - rewrite max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
+  - rewrite Nat.max_0_r in HN; transitivity  (Ack N (Nat.max x0 y)); auto.
   - symmetry; apply Hx.
 Qed.
 
@@ -384,8 +385,8 @@ Proof.
    destruct (majorPR2 _ Hf) as [m Hm].
    exists (S (max 2 m)); intros x y; destruct x, y; try lia.
      intros _ _;  apply Nat.le_lt_trans with (Ack m (S (Nat.max x y))).
-   - rewrite succ_max_distr; auto.
-   - rewrite succ_max_distr; apply Ack_strict_mono_l; lia.
+   - rewrite Nat.succ_max_distr; auto.
+   - rewrite Nat.succ_max_distr; apply Ack_strict_mono_l; lia.
  Qed.
 
 
@@ -404,7 +405,7 @@ Section Impossibility_Proof.
   Proof. 
     destruct (majorPR2_strict Ack HAck) as [m Hm].
     pose (X := max 2 m); specialize (Hm X X).
-    rewrite max_idempotent in Hm;
+    rewrite Nat.max_idempotent in Hm;
       assert (H0: Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
     lia.
   Qed.

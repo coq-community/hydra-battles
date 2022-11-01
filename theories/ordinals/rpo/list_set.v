@@ -6,7 +6,8 @@
 
 Set Implicit Arguments. 
 
-From Coq Require Import List Arith.
+From Coq Require Import List Arith Lia.
+
 From hydras Require Import more_list list_permut.
 
 
@@ -824,7 +825,8 @@ Lemma cardinal_union:
   forall s1 s2, cardinal (union s1 s2) = cardinal s1 + cardinal s2 -cardinal (inter s1 s2).
 Proof.
 intros s1 s2; assert (H := cardinal_union_inter_12 s1 s2).
-apply plus_minus; apply sym_eq; rewrite Nat.add_comm; trivial.
+symmetry;apply Nat.add_sub_eq_l.
+ rewrite <- H; now rewrite Nat.add_comm.
 Qed.
 
 Lemma cardinal_eq_set : forall s1 s2, eq_set s1 s2 -> cardinal s1 = cardinal s2.
@@ -832,6 +834,7 @@ Proof.
 intros s1 s2 s1_eq_s2; apply Nat.le_antisymm; apply cardinal_subset;
 intros e e_in_si; generalize (s1_eq_s2 e); intuition.
 Qed.
+
 
 Lemma subset_cardinal_not_eq_not_eq_set  :
  forall s1 s2 e, subset s1 s2 -> ~mem e s1 -> mem e s2  -> 
@@ -875,8 +878,8 @@ subst e'; absurd (mem e s1); trivial.
 simpl; right; apply in_or_app; right; trivial.
 apply Nat.le_lt_trans with (cardinal (mk_set _ wr2')).
 apply cardinal_subset; trivial.
-unfold cardinal; simpl; apply lt_n_S.
-do 2 rewrite list_app_length. apply Nat.add_lt_mono_l; simpl; apply Nat.lt_succ_diag_r.
+unfold cardinal; simpl; apply Nat.succ_lt_mono. 
+do 2 rewrite list_app_length. simpl.  lia. 
 Qed.
 
 Lemma eq_set_list_permut_support :

@@ -274,7 +274,7 @@ Section Countable.
             case (le_lt_dec q' q).
             * intros Hqin; case (lt_irrefl (p + q)).
               pattern (p + q) at 1; rewrite Hdiag.
-              apply plus_lt_le_compat; assumption.
+              apply Nat.add_lt_le_mono ; assumption.
             * trivial.
         - apply lexof_wf.
       Qed.
@@ -350,7 +350,8 @@ Section Countable.
           intros Hlt; repeat right; split; [symmetry |]; assumption.
           intros Heqp; left; right; apply injective_projections; compute.
           assumption.
-          apply plus_reg_l with p'; rewrite Heqp in Heq; assumption.
+          erewrite <- (Nat.add_cancel_l _ _ p').  
+          rewrite Heqp in Heq; assumption.
           intros Hlt; left; left; right; split; assumption.
 
         (* p' + q' < p + q *)
