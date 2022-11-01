@@ -1,6 +1,8 @@
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages.
 Require Import primRec.
+Require Import FOL_notations.
+Import FOL_notations. 
 
 Locate arity. 
 
@@ -44,6 +46,7 @@ Let f3 := (orH LNN (equal _ (var _ 0) (apply LNN Zero (Tnil _)))
              (existH _ 1 (equal _ (var _ 0) (apply LNN Succ 
                              (Tcons _ _ (var _ 1) (Tnil _)))))).
 (* end snippet f1Example *)
+Print f3.
 
 (* begin snippet FormulaRect *)
 About Formula_rect.
