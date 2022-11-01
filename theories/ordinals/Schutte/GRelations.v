@@ -4,7 +4,7 @@
 
 
 
-From Coq Require Import Ensembles Le  Classical  Lia.
+From Coq Require Import Ensembles Classical  Lia Arith.
 From hydras Require Import PartialFun.
 
       
@@ -119,9 +119,9 @@ Section General_Relations.
       Proof.
         intros a b b' aInDA a_Re_b a_Re_b'.
         destruct a_Re_b; destruct a_Re_b'.
-        apply le_antisym.
-        apply (H0 b'); assumption.
-        apply (H2 b); assumption.
+        apply Nat.le_antisymm.
+        now apply (H0 b').
+        now apply (H2 b).
       Qed.
 
 

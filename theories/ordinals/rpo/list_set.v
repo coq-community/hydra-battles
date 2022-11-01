@@ -737,12 +737,13 @@ Lemma cardinal_subset :
 Proof.
 intros [l1 wr1]; induction l1 as [ | e le];
 intros s2 H; unfold cardinal; simpl.
-apply le_O_n.
+apply Nat.le_0_l.
 assert (In_e_s2 : In e s2.(support)). apply H; left; trivial.
 generalize (split_list_app_cons eq_elt_dec _ _ In_e_s2).
 destruct (split_list eq_elt_dec (support s2) e) as [l2' l2'']; clear In_e_s2;
 destruct s2 as [ l2 wr2]; simpl; intro; subst l2.
-rewrite list_app_length; rewrite plus_comm; simpl; rewrite plus_comm;
+rewrite list_app_length; rewrite Nat.add_comm; simpl; 
+  rewrite Nat.add_comm;
 rewrite <- list_app_length; apply le_n_S.
 assert (wr1' := without_red_remove e nil le wr1); simpl in wr1'.
 assert (wr2' := without_red_remove e l2' l2'' wr2).
@@ -784,7 +785,8 @@ intros acc l1 l2; generalize acc l1; clear acc l1;
 induction l2 as [ | e2 l2]; intros acc l1; trivial.
 simpl; destruct (In_dec eq_elt_dec e2 l1) as [ e2_in_l1 | e2_not_in_l1 ].
 rewrite (IHl2 (e2 :: acc) l1); rewrite (IHl2 (e2 :: nil) l1);
-simpl; apply sym_eq; rewrite plus_comm; simpl; rewrite plus_comm; trivial.
+simpl; apply sym_eq; rewrite Nat.add_comm; 
+simpl; rewrite Nat.add_comm; trivial.
 apply IHl2.
 
 assert (H' : forall acc l1 l2 e, ~In e l1 -> ~ In e l2 ->
@@ -806,7 +808,7 @@ induction l2 as [ | e2 l2];
 intros l1 wr1; trivial; 
 simpl; destruct (In_dec eq_elt_dec e2 l1) as [ e2_in_l1 | e2_not_in_l1 ].
 rewrite H; simpl;
-rewrite plus_comm; simpl; rewrite plus_comm; rewrite IHl2; trivial.
+rewrite Nat.add_comm; simpl; rewrite Nat.add_comm; rewrite IHl2; trivial.
 apply (without_red_remove e2 nil l2); trivial.
 assert (wr1' : without_red (e2 :: l1)).
 simpl; destruct (In_dec eq_elt_dec e2 l1) as [ e2_in_l1 | _ ]; trivial.
@@ -814,7 +816,7 @@ absurd (In e2 l1); trivial.
 assert (wr2' := without_red_remove e2 nil l2 wr2); simpl in wr2'.
 assert (H'' := IHl2 wr2' _ wr1').
 rewrite H' in H''; trivial.
-rewrite H''; apply sym_eq; rewrite plus_comm; simpl; rewrite plus_comm; trivial.
+rewrite H''; apply sym_eq; rewrite Nat.add_comm; simpl; rewrite Nat.add_comm; trivial.
 simpl in wr2; destruct (In_dec eq_elt_dec e2 l2); trivial; contradiction.
 Qed.
 
@@ -822,12 +824,12 @@ Lemma cardinal_union:
   forall s1 s2, cardinal (union s1 s2) = cardinal s1 + cardinal s2 -cardinal (inter s1 s2).
 Proof.
 intros s1 s2; assert (H := cardinal_union_inter_12 s1 s2).
-apply plus_minus; apply sym_eq; rewrite plus_comm; trivial.
+apply plus_minus; apply sym_eq; rewrite Nat.add_comm; trivial.
 Qed.
 
 Lemma cardinal_eq_set : forall s1 s2, eq_set s1 s2 -> cardinal s1 = cardinal s2.
 Proof.
-intros s1 s2 s1_eq_s2; apply le_antisym; apply cardinal_subset;
+intros s1 s2 s1_eq_s2; apply Nat.le_antisymm; apply cardinal_subset;
 intros e e_in_si; generalize (s1_eq_s2 e); intuition.
 Qed.
 
@@ -853,14 +855,14 @@ intros e e_in_s1; destruct (s1_in_e2_l2 e e_in_s1) as [e_eq_e2 | e_in_l2]; trivi
 absurd (mem e2 s1); subst; trivial.
 apply Nat.le_lt_trans with (cardinal (mk_set l2 wr2')).
 apply cardinal_subset; trivial.
-unfold cardinal; simpl; apply lt_n_Sn.
+unfold cardinal; simpl; apply Nat.lt_succ_diag_r.
 generalize (split_list_app_cons eq_elt_dec _ _ e_in_l2).
 destruct (split_list eq_elt_dec l2 e) as [l2' l2'']; clear e_in_l2.
 intro; subst l2; assert (wr2' := without_red_remove e (e2 :: l2') l2'' wr2).
 
 assert (L' : length (e2 :: l2' ++ l2'') = n).
 simpl in L; injection L; clear L;
-rewrite list_app_length; rewrite plus_comm; simpl; rewrite plus_comm;
+rewrite list_app_length; rewrite Nat.add_comm; simpl; rewrite Nat.add_comm;
 rewrite <- list_app_length; trivial.
 generalize (IHn _ L' wr2'); clear IHn; intro IHn.
 assert (subset s1 (mk_set _ wr2')).
@@ -874,11 +876,12 @@ simpl; right; apply in_or_app; right; trivial.
 apply Nat.le_lt_trans with (cardinal (mk_set _ wr2')).
 apply cardinal_subset; trivial.
 unfold cardinal; simpl; apply lt_n_S.
-do 2 rewrite list_app_length; apply plus_lt_compat_l; simpl; apply lt_n_Sn.
+do 2 rewrite list_app_length. apply Nat.add_lt_mono_l; simpl; apply Nat.lt_succ_diag_r.
 Qed.
 
 Lemma eq_set_list_permut_support :
-  forall s1 s2,  eq_set s1 s2 -> LP.list_permut s1.(support) s2.(support).
+  forall s1 s2,  eq_set s1 s2 -> 
+                 LP.list_permut s1.(support) s2.(support).
 Proof.
 intros [l1 wr1]; induction l1 as [ | e1 l1].
 intros [[ | e2 l2] wr2].
