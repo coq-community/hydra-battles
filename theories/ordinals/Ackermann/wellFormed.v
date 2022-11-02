@@ -1,7 +1,7 @@
 
 Require Import primRec.
 Require Import cPair.
-Require Import Arith.
+Require Import Arith Lia.
 Require Import code.
 Require Import folProp.
 Require Import extEqualNat.
@@ -70,7 +70,7 @@ assumption.
 generalize (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)).
 simpl in |- *.
 intros.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n0) (cPairPi2 n0)).
 apply cPairLe2.
 rewrite cPairProjections.
@@ -128,9 +128,9 @@ rewrite codeArityFIsCorrect1.
 rewrite cPairProjections2.
 simpl in |- *.
 rewrite lengthTerms.
-rewrite <- beq_nat_refl.
+rewrite  Nat.eqb_refl.
 simpl in |- *.
-rewrite plus_comm.
+rewrite Nat.add_comm.
 simpl in |- *.
 apply H.
 rewrite cPairProjections2.
@@ -170,11 +170,11 @@ rewrite H0.
 reflexivity.
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -267,10 +267,12 @@ assert
 intro.
 induction m as [| m Hrecm].
 intros.
-elim (lt_not_le _ _ H).
-apply le_O_n.
+inversion H.
 intros.
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
+assert (H': n <= m) by lia.
+rewrite Nat.lt_eq_cases in H'; destruct H'.
+(*Check (Compat815.lt_n_Sm_le _ _ H).
+induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)). *)
 apply Hrecm; auto.
 unfold wellFormedTerm in |- *.
 unfold wellFormedTerms in |- *.
@@ -312,7 +314,7 @@ assert (wellFormedTerms (cPairPi2 n) <> 0).
 eapply multLemma2.
 apply H2.
 assert (cPairPi2 n < m).
-apply lt_le_trans with (cPair (S n0) (cPairPi2 n)).
+apply Nat.lt_le_trans with (cPair (S n0) (cPairPi2 n)).
 apply cPairLt2.
 rewrite H1.
 rewrite H0.
@@ -350,7 +352,7 @@ rewrite beq_nat_not_refl in H2.
 elim H2.
 reflexivity.
 assumption.
-apply lt_le_trans with (cPair (S n0) (cPairPi2 n)).
+apply Nat.lt_le_trans with (cPair (S n0) (cPairPi2 n)).
 apply cPairLt2.
 rewrite H1.
 apply le_n.
@@ -367,14 +369,14 @@ simpl in |- *.
 intros.
 assert (cPairPi1 n < m).
 rewrite <- H0.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r. 
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe1.
 rewrite cPairProjections.
 apply le_n.
 assert (cPairPi2 n < m).
 rewrite <- H0.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
@@ -399,12 +401,12 @@ rewrite <- H8.
 rewrite <- H9.
 reflexivity.
 simpl in |- *.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe1.
 rewrite cPairProjections.
@@ -714,11 +716,10 @@ assert
   exists f : Formula, codeFormula L codeF codeR f = n).
 intro.
 induction m as [| m Hrecm].
+intros n H. lia.
 intros n H.
-elim (lt_not_le _ _ H).
-apply le_O_n.
-intros n H.
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
+assert (H': n <= m) by lia.
+rewrite Nat.lt_eq_cases in H'. destruct H'. 
 apply Hrecm; auto.
 unfold wellFormedFormula in |- *.
 set
@@ -765,7 +766,7 @@ assumption.
 destruct n0.
 simpl in |- *.
 assert (cPairPi2 n < m).
-apply lt_le_trans with (cPair 1 (cPairPi2 n)).
+apply Nat.lt_le_trans with (cPair 1 (cPairPi2 n)).
 apply cPairLt2.
 rewrite H1.
 rewrite H0.
@@ -798,18 +799,18 @@ rewrite H8.
 rewrite H9.
 rewrite cPairProjections.
 assumption.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply H4.
 rewrite H0.
 apply le_n.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply H3.
 rewrite H0.
 apply le_n.
 destruct n0.
 simpl in |- *.
 assert (cPairPi2 n < m).
-apply lt_le_trans with (cPair 2 (cPairPi2 n)).
+apply Nat.lt_le_trans with (cPair 2 (cPairPi2 n)).
 apply cPairLt2.
 rewrite H1.
 rewrite H0.
@@ -821,14 +822,14 @@ exists (notH x).
 simpl in |- *.
 rewrite H4.
 assumption.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply H2.
 rewrite H0.
 apply le_n.
 destruct n0.
 simpl in |- *.
 assert (cPairPi2 n < m).
-apply lt_le_trans with (cPair 3 (cPairPi2 n)).
+apply Nat.lt_le_trans with (cPair 3 (cPairPi2 n)).
 apply cPairLt2.
 rewrite H1.
 rewrite H0.
@@ -847,7 +848,7 @@ simpl in |- *.
 rewrite H5.
 rewrite cPairProjections.
 assumption.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply H3.
 rewrite H0.
 apply le_n.

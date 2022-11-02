@@ -222,7 +222,8 @@ absurd (list_size size l < list_size size l); auto with arith.
 assert (Ha: 1 <= size a) by apply size_ge_one.
 exfalso; lia.
 do 2 rewrite size_unfold;
-simpl; apply lt_n_S; apply lt_le_trans with (1 + list_size size l);
+simpl; rewrite <- Nat.succ_lt_mono; 
+apply Nat.lt_le_trans with (1 + list_size size l);
 auto with arith; 
 apply Nat.add_le_mono_r; apply size_ge_one.
 Qed.
@@ -261,13 +262,13 @@ destruct y; destruct p; rename t into y1; rename t0 into y2; rename t1 into y3;
 destruct z; destruct p; rename t into z1; rename t0 into z2; rename z1 into z3.
 apply H with (size y1, size2 (y2,y3)); trivial.
 unfold antisymmetric; 
-intros n m lt' lt''; generalize (lt_asym n m lt' lt''); contradiction.
+intros n m lt' lt''; generalize (Nat.lt_asymm n m lt' lt''); contradiction.
 apply lt_trans.
 fold transitive; apply lex_trans.
 unfold antisymmetric; 
-intros n m lt' lt''; generalize (lt_asym n m lt' lt''); contradiction.
-unfold transitive; apply lt_trans.
-unfold transitive; apply lt_trans.
+intros n m lt' lt''; generalize (Nat.lt_asymm n m lt' lt''); contradiction.
+unfold transitive; apply Nat.lt_trans.
+unfold transitive; apply Nat.lt_trans.
 Qed.
 
 (** ** Definition of rpo.
