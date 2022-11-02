@@ -2561,7 +2561,7 @@ unfold checkPrfMP in H0.
 repeat first
  [ rewrite cPairProjections1 in H0 | rewrite cPairProjections2 in H0 ].
 assert (cPairPi2 (cPairPi2 n) < n).
-apply lt_le_trans with (cPair 1 (cPairPi2 (cPairPi2 n)));
+apply Nat.lt_le_trans with (cPair 1 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].
 apply cPairLt2.
 assert (cPairPi1 (cPairPi2 (cPairPi2 n)) < n).
@@ -2642,12 +2642,12 @@ simpl in H0.
 assumption.
 discriminate.
 assert (cPairPi1 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.
@@ -2709,7 +2709,7 @@ repeat first
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < n).
 eapply Nat.le_lt_trans.
 apply cPairLe2A.
-apply lt_le_trans with (cPair 2 (cPairPi2 (cPairPi2 n)));
+apply Nat.lt_le_trans with (cPair 2 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].
 apply cPairLt2.
 rewrite evalStrongRecHelp1 in H0.
@@ -2754,7 +2754,7 @@ simpl in H0.
 assumption.
 discriminate.
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.

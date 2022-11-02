@@ -317,7 +317,7 @@ Section Properties.
         induction H.
         
         rewrite (iterate_S_eqn (F_ beta) (S n)).
-        apply Lt.lt_le_trans with (F_ beta
+        apply Nat.lt_le_trans with (F_ beta
                                       (iterate (F_ beta) (S n) n)).
         auto. 
         apply mono_weak; auto.
@@ -330,7 +330,7 @@ Section Properties.
         
         transitivity (iterate (F_ beta) (S m) m);auto.
         rewrite (iterate_S_eqn (F_ beta) (S m)).
-        apply Lt.lt_le_trans with (F_ beta (iterate (F_ beta) (S m) m)).
+        apply Nat.lt_le_trans with (F_ beta (iterate (F_ beta) (S m) m)).
         auto.
         apply mono_weak; auto.
         apply Nat.lt_le_incl.
@@ -960,7 +960,7 @@ Section The_induction.
   Lemma QD0 : dominates_from 2 (f_ (E0succ E0zero)) (f_ E0zero).
   Proof. 
     intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
-    apply Lt.lt_le_trans with (iterate S p p).
+    apply Nat.lt_le_trans with (iterate S p p).
     - replace (iterate S p p) with (p + p).
       + lia.
       + clear Hp; generalize p at 2 4; induction p. 

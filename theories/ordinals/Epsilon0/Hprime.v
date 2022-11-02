@@ -921,7 +921,7 @@ Section Proof_of_H'_mono_l.
       assert (E0succ alpha o<= beta) by (apply Lt_Le_incl; apply R4).
       destruct   (H'_mono_l_1 _ _ H) as [x Hx].
       exists x; intros.
-      apply Lt.lt_le_trans with (H'_ (E0succ alpha) (S p)).
+      apply Nat.lt_le_trans with (H'_ (E0succ alpha) (S p)).
       -  apply (H'_alpha_dom alpha (S p)); auto with arith.
       - auto.
     Qed.

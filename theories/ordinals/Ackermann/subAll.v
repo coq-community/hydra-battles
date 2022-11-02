@@ -1717,7 +1717,7 @@ induction (le_lt_dec n m0).
 simpl in |- *.
 induction (le_lt_dec r m0).
 elim (le_not_lt _ _ a0).
-apply lt_le_trans with (newVar (freeVarFormula L f)).
+apply Nat.lt_le_trans with (newVar (freeVarFormula L f)).
 apply newVar2.
 auto.
 unfold r in |- *.
@@ -1737,7 +1737,7 @@ elim (lt_not_le _ _ b0).
 apply Nat.le_add_r.
 apply subAllCloseFrom1.
 intros.
-apply lt_le_trans with (newVar (freeVarTerm L (m v))).
+apply Nat.lt_le_trans with (newVar (freeVarTerm L (m v))).
 apply newVar2.
 unfold m' in H2.
 rewrite minus_plus in H2.
@@ -1751,7 +1751,7 @@ unfold f' in |- *.
 clear f'.
 apply liftCloseFrom.
 intros.
-apply lt_le_trans with (newVar (freeVarFormula L f)).
+apply Nat.lt_le_trans with (newVar (freeVarFormula L f)).
 apply newVar2.
 auto.
 unfold r in |- *.

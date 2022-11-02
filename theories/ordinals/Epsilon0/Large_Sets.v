@@ -612,7 +612,7 @@ Proof.
   generalize (iterate_mono (fun z : nat => S (2 * z))
                            L_omega_smono L_omega_Sle).
   intros H x y Hxy.
-  apply lt_le_trans with (iterate (fun z : nat => S (2 * z)) x (S y)).
+  apply Nat.lt_le_trans with (iterate (fun z : nat => S (2 * z)) x (S y)).
   - apply iterate_mono.
    + apply L_omega_smono.
    + apply L_omega_Sle.

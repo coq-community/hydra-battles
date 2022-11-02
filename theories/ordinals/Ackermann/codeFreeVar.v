@@ -224,7 +224,7 @@ apply Compat815.le_lt_n_Sm.
 apply cPairLe2.
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -462,12 +462,12 @@ unfold evalOneParamList in |- *.
 simpl in |- *.
 repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 reflexivity.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply cPairLt2.
 apply cPairLe3.
 apply le_n.
 apply cPairLe2.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply cPairLt2.
 apply cPairLe3.
 apply le_n.
@@ -518,7 +518,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 rewrite (evalStrongRecHelp1 g (cPair 3 (cPair n n0)) n0).
 simpl in |- *.
 reflexivity.
-eapply lt_le_trans.
+eapply Nat.lt_le_trans.
 apply cPairLt2.
 apply cPairLe3.
 apply le_n.

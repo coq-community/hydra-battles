@@ -197,7 +197,7 @@ Proof.
       fold c in |- *.
       rewrite lt_gt_cases in b0; destruct b0 as [H2 | H2]; [trivial|].
       rewrite Nat.le_ngt in H0; destruct H0.
-      * apply lt_le_trans with (sumToN (S c)).
+      * apply Nat.lt_le_trans with (sumToN (S c)).
         -- apply ltBoolTrue.
            auto.
         -- assert (S c <= a).
