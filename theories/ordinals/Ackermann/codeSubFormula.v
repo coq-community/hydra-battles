@@ -8,6 +8,7 @@ Require Vector.
 Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Compat815.
+From Coq Require Import Lia.
 
 Section Code_Substitute_Formula.
 
@@ -139,7 +140,7 @@ repeat rewrite cPairProjections2.
 reflexivity.
 simpl in |- *.
 repeat rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply  Nat.lt_succ_r. 
 apply cPairLe2.
 Qed.
 
@@ -551,7 +552,7 @@ unfold A at 1 in |- *;
 simpl in |- *.
 unfold codeTerm in |- *.
 repeat rewrite codeSubTermCorrect.
-rewrite <- beq_nat_refl.
+rewrite  Nat.eqb_refl. 
 reflexivity.
 unfold makeTrace in |- *.
 unfold Formula_depth_rec2 in |- *.
@@ -574,7 +575,7 @@ unfold A at 1 in |- *;
 unfold codeTerm in |- *.
 rewrite codeSubTermsCorrect.
 simpl in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 replace (makeTrace (impH L f0 f1) (v, s)) with
  (cTriple (cTriple v (codeTerm s) (codeFormula (impH L f0 f1)))
@@ -603,7 +604,7 @@ rewrite subFormulaImp.
 rewrite H.
 rewrite H0.
 simpl in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 apply Nat.le_lt_trans with (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
 apply cPairLe2.
@@ -694,7 +695,7 @@ repeat rewrite makeTrace2.
 rewrite subFormulaNot.
 rewrite H.
 simpl in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 apply Nat.le_lt_trans
   with
@@ -753,11 +754,11 @@ unfold A at 1 in |- *;
   | rewrite cPairProjections2 ].
 replace (charFunction 2 Nat.eqb v0 v) with 1.
 simpl in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 simpl in |- *.
 rewrite a0.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 induction (In_dec eq_nat_dec v (freeVarTerm L s)).
 simpl in |- *.
@@ -799,7 +800,7 @@ replace
 simpl in |- *.
 repeat rewrite makeTrace1.
 repeat rewrite makeTrace2.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 repeat rewrite H.
 reflexivity.
 eapply eqDepth.
@@ -886,7 +887,7 @@ rewrite evalStrongRecHelp1 with (m := makeTrace a (v0, s)).
 simpl in |- *.
 repeat rewrite makeTrace1.
 repeat rewrite makeTrace2.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 repeat rewrite H.
 reflexivity.
 apply depthForall.
@@ -1146,17 +1147,17 @@ induction
  (eq_nat_dec n
     (cPair 1 (cPair (cTriplePi2 (cPairPi1 m)) (cTriplePi2 (cPairPi2 m))))).
 rewrite <- a in H1.
-rewrite <- beq_nat_refl in H1.
+rewrite Nat.eqb_refl in H1.
 induction
  (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0))
     (cTriplePi1 (cPairPi1 m))).
 rewrite <- a0 in H1.
-rewrite <- beq_nat_refl in H1.
+rewrite Nat.eqb_refl in H1.
 induction
  (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f1))
     (cTriplePi1 (cPairPi2 m))).
 rewrite <- a1 in H1.
-rewrite <- beq_nat_refl in H1.
+rewrite Nat.eqb_refl in H1.
 simpl in H1.
 rewrite Nat.add_comm in H1; simpl in H1.
 decompose record (mult_lemma1 _ _ H1).
@@ -1231,11 +1232,11 @@ rewrite evalStrongRecHelp1 with (m := m) in H0.
 simpl in H0.
 induction (eq_nat_dec n (cPair 2 (cTriplePi2 m))).
 rewrite <- a in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 induction
  (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0)) (cTriplePi1 m)).
 rewrite <- a0 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 simpl in H0.
 rewrite Nat.add_comm in H0; simpl in H0.
 rewrite <- (cTripleProj m) in H0.
@@ -1280,7 +1281,7 @@ induction (eq_nat_dec v v0).
 rewrite a0 in H0.
 assert (charFunction 2 Nat.eqb v0 v0 = 1).
 simpl in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl. 
 reflexivity.
 rewrite H1 in H0.
 induction (eq_nat_dec (codeFormula (forallH L v a)) n).
@@ -1318,12 +1319,12 @@ induction
                       (codeFreeVarFormula (codeFormula a))))))
           (cTriplePi2 (cPairPi2 m))))).
 rewrite <- a1 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 induction
  (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (cTriplePi2 (cPairPi1 m)))
     (cTriplePi1 (cPairPi2 m))).
 rewrite a2 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 induction
  (eq_nat_dec
     (cTriple v
@@ -1335,7 +1336,7 @@ induction
                       (codeFreeVarFormula (codeFormula a)))))))
        (codeFormula a)) (cTriplePi1 (cPairPi1 m))).
 rewrite a3 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 simpl in H0.
 rewrite Nat.add_comm in H0.
 simpl in H0.
@@ -1437,12 +1438,12 @@ rewrite evalStrongRecHelp1 with (m := m) in H0.
 simpl in H0.
 induction (eq_nat_dec n (cPair 3 (cPair v (cTriplePi2 m)))).
 rewrite <- a0 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 induction
  (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (codeFormula a))
     (cTriplePi1 m)).
 rewrite <- a1 in H0.
-rewrite <- beq_nat_refl in H0.
+rewrite Nat.eqb_refl in H0.
 simpl in H0.
 rewrite Nat.add_comm in H0.
 simpl in H0.
@@ -3192,13 +3193,13 @@ destruct n.
 simpl in |- *.
 apply le_n.
 assert (cPairPi2 n < S n).
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe2.
 rewrite cPairProjections.
 apply le_n.
 assert (cPairPi1 n < S n).
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply Nat.le_trans with (cPair (cPairPi1 n) (cPairPi2 n)).
 apply cPairLe1.
 rewrite cPairProjections.
@@ -3209,18 +3210,14 @@ apply le_n_S.
 apply cPairLe3.
 eapply proj1.
 apply Hreca.
-apply Nat.le_lt_trans with n.
-apply Compat815.lt_n_Sm_le.
-assumption.
-apply lt_S_n.
+apply Nat.le_lt_trans with n. lia.
+apply Nat.succ_lt_mono.
 assumption.
 assumption.
 eapply proj2.
 apply Hreca.
-apply Nat.le_lt_trans with n.
-apply Compat815.lt_n_Sm_le.
-assumption.
-apply lt_S_n.
+apply Nat.le_lt_trans with n. lia.
+apply Nat.lt_succ_r.
 assumption.
 assumption.
 assumption.
@@ -3272,7 +3269,7 @@ Remark maxLemma2 :
 Proof.
 intros.
 induction a as [| a a0 Hreca].
-apply le_O_n.
+apply Nat.le_0_l.
 simpl in |- *.
 apply maxLemma.
 apply le_n.
@@ -3412,7 +3409,7 @@ repeat rewrite cPairProjections2.
 apply (H0 v s).
 repeat rewrite cPairProjections2.
 apply cPairLt2.
-apply le_O_n.
+apply Nat.le_0_l.
 replace
  (codeTerms L codeF (S n)
     (Tcons L n (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) with
@@ -3480,7 +3477,7 @@ replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 repeat rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r. 
 apply cPairLe1.
 Qed.
 
@@ -3517,7 +3514,7 @@ apply (evalStrongRecHelp2 1).
 assumption.
 simpl in H.
 induction ts as [| n t ts Hrects]; simpl in |- *; intros.
-apply le_O_n.
+apply Nat.le_0_l.
 replace
  (codeTerms L codeF (S n)
     (Tcons L n (substituteTerm L t v s) (substituteTerms L n ts v s))) with
@@ -3570,14 +3567,14 @@ replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 repeat rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
  (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
  [ idtac | reflexivity ].
 simpl in |- *.
 repeat rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -3725,7 +3722,7 @@ replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 replace
  (codeTerms L codeF (S n)
@@ -3737,7 +3734,7 @@ replace
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 replace
  (codeTerms L codeF (S n)
@@ -3749,7 +3746,7 @@ replace
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -3829,14 +3826,14 @@ replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
  (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 replace
  (codeTerms L codeF (S n)
@@ -3848,7 +3845,7 @@ replace
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 replace
  (codeTerms L codeF (S n)
@@ -3860,7 +3857,7 @@ replace
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -4200,7 +4197,8 @@ simple induction a.
 intros.
 elim (Nat.nlt_0_r _ H0).
 intros.
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H1)).
+assert (H1': n0 <= n) by lia.
+rewrite  Nat.lt_eq_cases in H1'; destruct H1'.
 apply H0.
 assumption.
 assumption.
@@ -4509,13 +4507,13 @@ apply Nat.max_case.
 unfold codeTerm in |- *.
 unfold code.codeTerm in |- *.
 apply cPairLe2.
-apply le_O_n.
+apply Nat.le_0_l.
 apply Nat.le_trans with (codeTerms L codeF (arity L (inr (Relations L) f)) t).
 assumption.
 unfold codeTerm in |- *.
 unfold code.codeTerm in |- *.
 apply cPairLe2.
-apply le_O_n.
+apply Nat.le_0_l. 
 replace (freeVarTerms L (S n) (Tcons L n t t0)) with
  (freeVarTerm L t ++ freeVarTerms L n t0); [ idtac | reflexivity ].
 replace (codeTerms L codeF (S n) (Tcons L n t t0)) with
@@ -4558,7 +4556,7 @@ apply Nat.le_trans with (fold_right Nat.max 0 (freeVarFormula L f)).
 clear Hrecf.
 induction (freeVarFormula L f).
 simpl in |- *.
-apply le_O_n.
+apply Nat.le_0_l.
 simpl in |- *.
 induction (eq_nat_dec a n).
 eapply Nat.le_trans.
@@ -4590,7 +4588,7 @@ induction (eq_nat_dec v n).
 apply maxLemma2.
 apply maxLemma3.
 apply H.
-apply le_O_n.
+apply Nat.le_0_l.
 replace
  (freeVarTerms L (S n)
     (Tcons L n (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) with
@@ -4634,7 +4632,7 @@ Remark maxSubTerms :
 Proof.
 intros.
 induction ts as [| n t ts Hrects]; simpl in |- *; intros.
-apply le_O_n.
+apply Nat.le_0_l.
 replace
  (freeVarTerms L (S n)
     (Tcons L n (substituteTerm L t v s) (substituteTerms L n ts v s))) with
@@ -4695,12 +4693,12 @@ Lemma pow3Monotone : forall a b : nat, a <= b -> pow3 a <= pow3 b.
 Proof.
 intros.
 induction b as [| b Hrecb].
-simpl in |- *.
-rewrite <- (le_n_O_eq _ H).
+simpl in |- *. replace a with 0 by lia.
 simpl in |- *.
 apply le_n.
 simpl in |- *.
-induction (le_lt_or_eq _ _ H).
+ rewrite Nat.lt_eq_cases in H. case H; intro.  
+
 apply Nat.le_trans with (pow3 b).
 apply Hrecb.
 apply Compat815.lt_n_Sm_le.
@@ -4847,12 +4845,12 @@ induction
 rewrite a0.
 eapply Nat.le_trans.
 apply (H a v0 v s).
-apply plus_le_compat.
+apply Nat.add_le_mono. 
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assert (pow3 (depth L f) <= pow3 (Nat.max (depth L f) (depth L f0))).
 apply pow3Monotone.
 apply Nat.le_max_l.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 assumption.
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assumption.
@@ -4861,12 +4859,12 @@ apply maxLemma2.
 rewrite b0.
 eapply Nat.le_trans.
 apply (H0 a v0 v s).
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assert (pow3 (depth L f0) <= pow3 (Nat.max (depth L f) (depth L f0))).
 apply pow3Monotone.
 apply Nat.le_max_r.
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 assumption.
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 assumption.
@@ -4875,7 +4873,7 @@ apply maxLemma3.
 rewrite subFormulaNot.
 eapply Nat.le_trans.
 apply (H a v0 v s).
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 apply Compat815.le_plus_r.
@@ -4946,9 +4944,9 @@ eapply Nat.le_trans; [ idtac | apply Nat.le_max_l ].
 eapply Nat.le_trans.
 apply maxVarFreeVar.
 apply Nat.le_max_r.
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 apply pow3Min.
 simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
@@ -4964,7 +4962,7 @@ rewrite subFormulaDepth.
 rewrite (Nat.add_assoc (pow3 (depth L a)) (pow3 (depth L a)) (pow3 (depth L a))).
 repeat rewrite <- (Nat.add_assoc  (pow3 (depth L a) + pow3 (depth L a))).
 
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 apply le_n.
 apply
  (Nat.max_case v0
@@ -5043,7 +5041,7 @@ rewrite
     (pow3 (depth L a) + pow3 (depth L a) + pow3 (depth L a)))
  .
 repeat rewrite <- (Nat.add_assoc (pow3 (depth L a) + pow3 (depth L a))).
-apply plus_le_compat.
+apply  Nat.add_le_mono.
 apply le_n.
 apply
  (Nat.max_case v1
@@ -5083,11 +5081,11 @@ apply le_n_S.
 repeat apply maxLemma; try apply le_n.
 repeat (eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ]).
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
 apply pow3Min.
 apply le_n.
-apply le_O_n.
+apply Nat.le_0_l.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
 do 3 (eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ]).
 apply
@@ -5118,9 +5116,9 @@ apply Nat.le_max_l.
 eapply Nat.le_trans.
 apply H.
 apply depthForall.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply le_n.
 apply Nat.le_add_r.
 repeat apply maxLemma; try apply le_n.
@@ -5281,7 +5279,7 @@ apply ReplaceFormulaTermMonotone.
 unfold C in |- *.
 apply maxLemma.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
 apply le_S.
@@ -5303,7 +5301,7 @@ apply ReplaceFormulaTermMonotone.
 unfold C in |- *.
 apply maxLemma.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
 apply le_S.
@@ -5353,10 +5351,10 @@ apply ReplaceFormulaTermMonotone.
 unfold C in |- *.
 apply maxLemma.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
-apply le_n_Sn.
+apply Nat.le_succ_diag_r.
 apply le_n.
 apply cPairLt2.
 set
@@ -5403,11 +5401,11 @@ apply depthForall.
 apply ReplaceFormulaTermMonotone.
 unfold C in |- *.
 apply maxLemma.
-apply le_O_n.
-apply plus_le_compat.
+apply Nat.le_0_l.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
-apply le_n_Sn.
+apply Nat.le_succ_diag_r.
 simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
 eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
@@ -5442,7 +5440,7 @@ eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
 simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
 apply maxVarFreeVar.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
 apply pow3Min.
 apply le_n.
@@ -5471,7 +5469,7 @@ simpl in |- *.
 apply maxLemma.
 apply le_n.
 rewrite <- Nat.add_assoc.
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 apply
  (Nat.max_case v0
     (fold_right Nat.max 0
@@ -5492,7 +5490,7 @@ unfold nv in |- *.
 clear nv.
 eapply Nat.le_trans.
 apply boundSubFormulaHelp1.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply le_n.
 repeat apply maxLemma.
 apply le_n.
@@ -5522,7 +5520,7 @@ apply ReplaceFormulaTermMonotone.
 unfold C in |- *.
 apply maxLemma.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 simpl in |- *.
 apply Nat.le_add_r.
 simpl in |- *.
@@ -5591,7 +5589,7 @@ generalize a1.
 clear a1.
 unfold boundComputation in |- *.
 induction a2 as [| a2 Hreca2]; simpl in |- *; intros.
-rewrite <- (le_n_O_eq _ H).
+rewrite Nat.le_0_r in H. rewrite H. 
 simpl in |- *.
 unfold cTriple in |- *.
 apply cPairLe3.
@@ -5599,7 +5597,9 @@ assumption.
 apply cPairLe3.
 assumption.
 apply le_n.
-induction (le_lt_or_eq _ _ H).
+Check le_lt_or_eq. 
+ generalize H ; intro  H'; rewrite Nat.lt_eq_cases in H'. 
+ destruct H'. 
 eapply Nat.le_trans.
 apply (Hreca2 a1 b1 b2 c1 c2); try assumption.
 apply Compat815.lt_n_Sm_le.
@@ -5698,10 +5698,10 @@ eapply Nat.le_trans.
 apply E.
 apply ReplaceFormulaTermMonotone.
 apply maxLemma.
-apply le_O_n.
+apply Nat.le_0_l.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply le_n.
 simpl in |- *.
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
@@ -5771,7 +5771,7 @@ apply maxLemma.
 apply le_n.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
 apply le_S.
@@ -5831,7 +5831,7 @@ apply maxLemma.
 apply le_n.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 simpl in |- *.
 apply le_S.
@@ -5919,7 +5919,7 @@ apply maxLemma.
 apply le_n.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply Nat.le_add_r.
 apply le_n.
 assert
@@ -5983,7 +5983,7 @@ unfold C in |- *; simpl in |- *.
 apply Nat.le_max_l.
 apply (H0 (forallH L v a) v0 s).
 apply (E (forallH L v a) v0 s).
-apply le_O_n.
+apply Nat.le_0_l.
 induction (In_dec eq_nat_dec v (freeVarTerm L s)); simpl in |- *.
 unfold cTriple in |- *.
 repeat apply cPairLe3.
@@ -6019,7 +6019,7 @@ apply
      fold_right Nat.max 0
        (v0 :: fold_right Nat.max 0 (freeVarTerm L s) :: varFormula a)).
 apply boundSubFormulaHelp2 with (a := a) (v0 := v0) (s := s).
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Min.
 simpl in |- *.
 apply Nat.max_case.
@@ -6050,7 +6050,7 @@ apply cPairLe3.
 apply le_n.
 simpl in |- *.
 rewrite <- Nat.add_assoc.
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 apply Nat.max_case.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
 eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
@@ -6132,7 +6132,7 @@ apply cPairLe3.
 apply le_n.
 simpl in |- *.
 rewrite <- Nat.add_assoc.
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 apply Nat.max_case.
 eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
 apply Nat.le_max_l.
@@ -6149,7 +6149,7 @@ rewrite b0.
 clear b0.
 eapply Nat.le_trans.
 apply boundSubFormulaHelp1.
-apply plus_le_compat_l.
+apply Nat.add_le_mono_l.
 apply maxLemma.
 apply le_n.
 apply Nat.max_case.
@@ -6227,7 +6227,7 @@ apply maxLemma.
 apply le_n.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 simpl in |- *.
 apply Nat.le_add_r.
 simpl in |- *.
@@ -6239,7 +6239,7 @@ apply maxLemma2.
 rewrite b1.
 eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
 simpl in |- *.
-apply Max.le_max_r.
+apply Nat.le_max_r.
 assert
  (ReplaceFormulaTerm (codeFormula a)
     (Nat.max (codeTerm s)
@@ -6336,9 +6336,8 @@ replace
 rewrite makeTraceCorrect.
 unfold ltBool in |- *.
 induction (le_lt_dec 1 0).
-elim (lt_not_le _ _ a).
-apply le_n.
-reflexivity.
+ now lia. 
+ reflexivity.
 transitivity
  (cPair (cPairPi1 (makeTrace f (v, s))) (cPairPi2 (makeTrace f (v, s)))).
 symmetry  in |- *.
@@ -6351,7 +6350,7 @@ assert
 apply boundedSearch1.
 rewrite H.
 eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 eapply
  Nat.le_trans
           with
@@ -6366,10 +6365,10 @@ assert (depth L f <= codeFormula f).
 clear H0 H b P s v.
 induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
  simpl in |- *.
-apply le_O_n.
-apply le_O_n.
+apply Nat.le_0_l.
+apply Nat.le_0_l.
 apply Compat815.lt_n_Sm_le.
-apply lt_n_S.
+rewrite <-  Nat.succ_lt_mono.
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 apply Nat.max_case.
 eapply Nat.le_trans.
@@ -6379,11 +6378,11 @@ eapply Nat.le_trans.
 apply Hrecf0.
 apply cPairLe2.
 apply Compat815.lt_n_Sm_le.
-apply lt_n_S.
+rewrite <-  Nat.succ_lt_mono.
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 assumption.
 apply Compat815.lt_n_Sm_le.
-apply lt_n_S.
+rewrite <- Nat.succ_lt_mono. 
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
 eapply Nat.le_trans.
 apply Hrecf.
@@ -6401,7 +6400,7 @@ eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
 apply Nat.le_add_r.
 apply cPairLe3.
 apply le_n.
-apply plus_le_compat.
+apply Nat.add_le_mono.
 apply pow3Monotone.
 assumption.
 simpl in |- *.
@@ -6431,7 +6430,7 @@ apply cPairLe2.
 eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
 induction t as [| n t t0 Hrect].
 simpl in |- *.
-apply le_O_n.
+apply Nat.le_0_l.
 replace (freeVarTerms L (S n) (Tcons L n t t0)) with
  (freeVarTerm L t ++ freeVarTerms L n t0); [ idtac | reflexivity ].
 replace (codeTerms L codeF (S n) (Tcons L n t t0)) with
@@ -6466,7 +6465,8 @@ apply cPairLe1.
 eapply Nat.le_trans.
 apply Hrecf.
 apply cPairLe2.
-apply le_plus_r.
+rewrite Nat.add_comm. 
+apply Nat.le_add_r.
 apply boundComputationMonotone.
 assumption.
 unfold cTriple in |- *.
@@ -6491,11 +6491,7 @@ apply
 unfold not in |- *; intros.
 unfold cTriple at 1 in H0.
 rewrite cPairProjections in H0.
-rewrite H0 in H.
-elim (lt_not_le 0 0).
-apply ltBoolTrue.
-assumption.
-apply le_n.
+rewrite H0 in H. cbn in H. discriminate.
 Qed.
 
 Lemma codeSubFormulaIsPR : isPR 3 codeSubFormula.
@@ -6646,3 +6642,4 @@ apply cPairPi1IsPR.
 Qed.
 
 End Code_Substitute_Formula.
+ 

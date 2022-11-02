@@ -214,7 +214,7 @@ Proof.
          -- simpl;trivial.
          -- left.  
             ++ apply IHn.
-               apply  lt_n_Sm_le .
+               apply Nat.lt_succ_r.
                apply Nat.lt_le_trans with
                  (T1_size (cons o1 n0 o2) + 
                     T1_size (cons o'1 n1 o'2))%nat.
@@ -229,7 +229,7 @@ Proof.
          ** subst s'.
             change (rpo (T1_2_term o1) (T1_2_term (cons o'1 n1 o'2))).
             apply IHn;auto with rpo.
-            apply  lt_n_Sm_le .
+            apply  Nat.lt_succ_r.
             apply Nat.lt_le_trans with
               (T1_size (cons o1 n0 o2) + 
                  T1_size (cons o'1 n1 o'2))%nat.
@@ -242,7 +242,7 @@ Proof.
               change (rpo (T1_2_term o2) 
                         (T1_2_term (cons o'1 n1 o'2))).
             apply IHn;auto with rpo.
-            apply  lt_n_Sm_le .
+            apply  Nat.lt_succ_r.
             apply Nat.lt_le_trans with
               (T1_size (cons o1 n0 o2) + 
                  T1_size (cons o'1 n1 o'2))%nat.
@@ -278,7 +278,7 @@ Proof.
                 change (rpo (T1_2_term o'1) 
                           (T1_2_term (cons o'1 n1 o'2))).
                 apply IHn;auto.
-                apply  lt_n_Sm_le .
+                apply   Nat.lt_succ_r.
                 apply Nat.lt_le_trans with 
                   (T1_size (cons o'1 n0 o2) +
                      T1_size (cons o'1 n1 o'2))%nat.
@@ -292,7 +292,7 @@ Proof.
                    change (rpo (T1_2_term o2)
                              (T1_2_term (cons o'1 n1 o'2))).
                    apply IHn;auto with rpo.
-                   apply  lt_n_Sm_le .
+                   apply   Nat.lt_succ_r.
                    apply Nat.lt_le_trans with
                      (T1_size (cons o'1 n0 o2) +
                         T1_size (cons o'1 n1 o'2))%nat.
@@ -317,7 +317,7 @@ Proof.
                 change (rpo (T1_2_term o1) 
                           (T1_2_term (cons o1 n0 o'2))).
                 apply IHn; auto. 
-                apply  lt_n_Sm_le .
+                apply   Nat.lt_succ_r.
                 apply Nat.lt_le_trans with
                   (T1_size (cons o1 n0 o2) + 
                      T1_size (cons o1 n0 o'2))%nat.
