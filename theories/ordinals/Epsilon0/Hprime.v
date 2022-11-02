@@ -901,7 +901,7 @@ Section Proof_of_H'_mono_l.
     Remark R3 : {n: nat | forall p, n <= p ->
                                     H'_ alpha (S p) < H'_ beta (S p)}.
     Proof.
-      destruct R2 as [n Hn]; exists (Max.max n 1).
+      destruct R2 as [n Hn]; exists (Nat.max n 1).
       intros p H;  apply Nat.le_lt_trans with (H'_ gamma (S p)).
       - apply Hn; lia.
       - subst beta; apply (H'_alpha_dom gamma (S p)); auto with arith.

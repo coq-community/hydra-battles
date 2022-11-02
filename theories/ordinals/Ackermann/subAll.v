@@ -1353,18 +1353,11 @@ apply lt_n_S.
 auto.
 rewrite H1.
 apply (subTermVar1 L).
-induction (le_lt_dec (S n) m0).
-elim (le_not_lt (S n) m0).
-auto.
-apply lt_S.
-auto.
+induction (le_lt_dec (S n) m0). lia. 
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite H1 in H0.
-apply (le_not_lt (S (m + m0)) m).
-apply H0.
-apply le_lt_n_Sm.
-apply Nat.le_add_r.
+rewrite Nat.le_ngt in H0.  lia. 
 assert
  (forall (f : fol.Formula L) (s r m p : nat),
   m < s ->
@@ -1378,19 +1371,14 @@ induction n as [| n Hrecn]; simpl in |- *; intros.
 apply (impRefl L).
 rewrite (subFormulaForall L).
 induction (eq_nat_dec (s + n) m).
-rewrite <- a in H.
-elim (le_not_lt s (s + n)).
-apply Nat.le_add_r.
-auto.
+rewrite <- a in H. lia.
+
 induction (In_dec eq_nat_dec (s + n) (freeVarTerm L (fol.var L p))).
 induction a as [H1| H1].
 rewrite <- plus_Snm_nSm in H0.
 simpl in H0.
-rewrite <- H1 in H0.
-elim (le_not_lt (S p) p).
-auto.
-apply Nat.lt_succ_diag_r .
-contradiction.
+rewrite <- H1 in H0. lia. 
+ contradiction.
 apply (impI L).
 apply (forallI L).
 unfold not in |- *; intros.
@@ -1403,9 +1391,7 @@ apply sysWeaken.
 apply Hrecn.
 auto.
 apply le_S_n.
-apply le_S.
-rewrite <- plus_Snm_nSm in H0.
-auto.
+apply le_S. lia.
 eapply (forallSimp L).
 apply Axm; right; constructor.
 apply
@@ -1548,31 +1534,24 @@ simpl in a0.
 induction (le_lt_dec (m + n) m0).
 apply (subTermVar2 L).
 unfold not in |- *; intros.
-rewrite H2 in a0.
-apply (le_not_lt _ _ a0).
-apply Nat.lt_succ_diag_r .
-elim (le_not_lt (S (m + n)) (m + n)).
-eapply Nat.le_trans.
-apply a0.
-apply Nat.lt_le_incl.
-auto.
-apply Nat.lt_succ_diag_r .
+rewrite H2 in a0. lia.
+ lia.
+
 induction (le_lt_dec (m + n) m0).
 replace (m + n) with m0.
 apply (subTermVar1 L).
 simpl in b.
-induction (le_lt_or_eq _ _ a0).
-elim (lt_not_le _ _ H2).
-apply Compat815.lt_n_Sm_le.
-auto.
+rewrite Nat.lt_eq_cases in a0. 
+destruct a0. lia. 
 auto.
 apply (subTermNil L).
 unfold not in |- *; intros.
 assert (m + (m0 - m) = m0).
-About le_plus_minus_r. 
 rewrite Nat.add_comm; apply Nat.sub_add.
 auto.
-elim (lt_not_le (m + n) m).
+
+(* elim (lt_not_le (m + n) m).  *)
+assert ( m + n < m). {
 apply H with (m0 - m).
 apply plus_lt_reg_l with m.
 rewrite H3.
@@ -1580,7 +1559,7 @@ rewrite <- plus_Snm_nSm.
 apply b.
 rewrite H3.
 apply H2.
-apply Nat.le_add_r.
+} lia. 
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite <- H2 in b.

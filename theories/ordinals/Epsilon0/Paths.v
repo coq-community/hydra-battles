@@ -2672,7 +2672,7 @@ Section Constant_to_standard_Proof.
                standard_path (S n) alpha ((l + n)) gamma. 
   Proof.                                    
     destruct l.
-    - intro H; destruct (Lt.lt_irrefl _ H).
+    - intro H; destruct (Nat.lt_irrefl _ H).
     - intros H Hg; replace ((S n0) + n)%nat with ( n0 + S n)%nat.
       + unfold gamma;  apply standard_gnaw_to_path.
         * apply Rem02.

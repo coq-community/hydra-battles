@@ -68,7 +68,7 @@ Proof.
      + case (IHalpha2 H0).
      + case (IHalpha1 H0).
      + case (IHalpha1 H0).
-     + case (Arith.Lt.lt_irrefl _ H0).
+     + case (Nat.lt_irrefl _ H0).
      + case IHalpha3; auto.
 Qed.
 

@@ -363,7 +363,7 @@ rewrite H1.
 unfold m in |- *.
 induction (eq_nat_dec q (n + n)).
 rewrite <- a1 in H3.
-elim (lt_irrefl _ H3).
+elim (Nat.lt_irrefl _ H3).
 induction (eq_nat_dec q (S (n + n))).
 elim (lt_not_le _ _ H3).
 rewrite a1.
