@@ -263,7 +263,7 @@ destruct z; destruct p; rename t into z1; rename t0 into z2; rename z1 into z3.
 apply H with (size y1, size2 (y2,y3)); trivial.
 unfold antisymmetric; 
 intros n m lt' lt''; generalize (Nat.lt_asymm n m lt' lt''); contradiction.
-apply lt_trans.
+apply Nat.lt_trans.
 fold transitive; apply lex_trans.
 unfold antisymmetric; 
 intros n m lt' lt''; generalize (Nat.lt_asymm n m lt' lt''); contradiction.

@@ -112,8 +112,8 @@ Section Generic.
       + intros; unfold split'; rewrite H.
         apply Nat.le_lt_trans with (m:=Nat.div2(length (a::b::l2))).
         rewrite split'_aux_length_fst.
-        apply Min.le_min_l.
-        simpl; apply lt_n_S.
+        apply Nat.le_min_l.
+        simpl; rewrite <-  Nat.succ_lt_mono.
         destruct (length l2); auto.
         apply Nat.lt_trans with (m:=S n); auto.
         apply Nat.lt_div2; abstract lia.

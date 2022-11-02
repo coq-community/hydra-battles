@@ -385,7 +385,7 @@ replace
              (forallH x0
                 (impH x (substituteFormula LNT x x0 (Succ (var x0)))))
              (forallH x0 x))))).
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 simpl in |- *.
 unfold codeTerm in |- *.
@@ -849,7 +849,7 @@ unfold orRel, nat_rec, nat_rect in H.
 unfold PA in |- *.
 induction (eq_nat_dec (codeFormula PA6) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA6.
 right; constructor.
 eapply codeFormulaInj.
@@ -859,7 +859,7 @@ rewrite beq_nat_not_refl in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA5) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA5.
 right; constructor.
 eapply codeFormulaInj.
@@ -869,7 +869,7 @@ rewrite beq_nat_not_refl in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA4) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA4.
 right; constructor.
 eapply codeFormulaInj.
@@ -879,7 +879,7 @@ rewrite beq_nat_not_refl in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA3) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA3.
 right; constructor.
 eapply codeFormulaInj.
@@ -889,7 +889,7 @@ rewrite beq_nat_not_refl in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA2) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA2.
 right; constructor.
 eapply codeFormulaInj.
@@ -899,7 +899,7 @@ rewrite beq_nat_not_refl in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA1) (codeFormula f)).
 rewrite a in H.
-rewrite <- beq_nat_refl in H.
+rewrite Nat.eqb_refl in H.
 replace f with PA1.
 right; constructor.
 eapply codeFormulaInj.
@@ -948,25 +948,25 @@ repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 induction H.
 generalize (codeFormula PA1).
 intros.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 generalize (codeFormula PA2).
 intros.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 generalize (codeFormula PA3).
 intros.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 generalize (codeFormula PA4).
 intros.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 generalize (codeFormula PA5).
 intros.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 Qed.
 

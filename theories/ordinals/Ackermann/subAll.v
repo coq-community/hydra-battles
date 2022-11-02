@@ -11,6 +11,7 @@ Require Import folProp.
 Require Import folReplace.
 Require Import subProp.
 Require Import Compat815.
+From Coq Require Import Lia.
 
 Section SubAllVars.
 
@@ -1234,11 +1235,8 @@ assert
   m <= q -> ~ In q (freeVarFormula L (fol.forallH L n (closeFrom 0 n f)))).
 clear H2 H1 T Hrecn.
 induction n as [| n Hrecn]; simpl in |- *; unfold not in |- *; intros.
-elim (lt_not_le q m).
-apply H.
-eapply In_list_remove1.
-apply H3.
-auto.
+assert (H': q < m). 
+  apply H. eapply In_list_remove1. apply H3. lia. 
 elim Hrecn with (q := q).
 apply le_S_n.
 apply le_S.
@@ -1910,3 +1908,4 @@ auto.
 Qed.
 
 End SubAllVars.
+

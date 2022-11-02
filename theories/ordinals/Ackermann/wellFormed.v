@@ -233,11 +233,11 @@ reflexivity.
 reflexivity.
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 simpl in |- *.
 rewrite cPairProjections1.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe1.
 Qed.
 
@@ -670,7 +670,7 @@ simpl in |- *.
 rewrite wellFormedTermsCorrect1.
 rewrite codeArityRIsCorrect1.
 rewrite lengthTerms.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 rewrite evalStrongRecHelp1 with (m := codeFormula L codeF codeR f0).
 rewrite evalStrongRecHelp1 with (m := codeFormula L codeF codeR f1).
