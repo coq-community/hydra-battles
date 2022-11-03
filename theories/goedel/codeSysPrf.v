@@ -20,6 +20,7 @@ From hydras.Ackermann Require Import cPair.
 From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
 From hydras Require Import Compat815.
+
 Ltac SimplFreeVar :=
   repeat
    match goal with
@@ -650,7 +651,7 @@ destruct n0.
 elim H1; reflexivity.
 destruct n0.
 elim H2; reflexivity.
-repeat apply lt_n_S.
+repeat apply Compat815.lt_n_S.
 apply lt_O_Sn.
 simpl in H14.
 decompose sum H14.
@@ -1637,7 +1638,7 @@ elim (le_not_lt (S (S n)) 1).
 apply freeVarCodeSysPrf.
 eapply In_list_remove1.
 apply H.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 Qed.
 
@@ -1763,7 +1764,7 @@ elim (le_not_lt 2 1).
 apply freeVarCodeSysPrf.
 eapply In_list_remove1.
 apply H0.
-eapply lt_n_S.
+eapply Compat815.lt_n_S.
 apply lt_O_Sn.
 apply codeSysPrfCorrect1.
 assumption.
@@ -1844,7 +1845,7 @@ apply (le_not_lt 2 1).
 apply H3.
 eapply In_list_remove1.
 apply H2.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 apply (closedNatToTerm _ _ H2).
 induction rep as (H0, H1).
@@ -1920,7 +1921,7 @@ SimplFreeVar.
 elim (le_not_lt 2 1).
 apply freeVarCodeSysPrf.
 apply H1.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 repeat rewrite (subFormulaAnd LNN).
 apply nAnd.
 apply orSym.

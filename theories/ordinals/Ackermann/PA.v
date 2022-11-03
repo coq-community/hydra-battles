@@ -1,5 +1,5 @@
-Require Import Arith.
-Require Import Ensembles.
+From Coq Require Import Arith Lia.
+From Coq Require Import Ensembles.
 
 Require Import folProp.
 Require Import subAll.
@@ -269,12 +269,9 @@ apply (subAllCloseFrom LNT).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
-induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+induction (le_lt_dec 2 0). lia. 
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 
@@ -309,11 +306,9 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 
@@ -349,11 +344,9 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 

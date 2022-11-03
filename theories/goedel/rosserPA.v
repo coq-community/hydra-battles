@@ -738,7 +738,7 @@ apply H7.
 reflexivity.
 apply (le_not_lt (S (S n)) 1).
 assumption.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 assert (v <= 1).
 apply freeVarCodeSysPrfN.
@@ -751,7 +751,7 @@ apply H7.
 reflexivity.
 apply (le_not_lt (S (S n)) 1).
 assumption.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 eapply In_list_remove3.
 apply LNN2LNT_freeVarFormula1.
@@ -1062,7 +1062,7 @@ destruct x2 as [| n0].
 elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 rewrite <- LNT2LNN_natToTerm in H4.
 rewrite LNT2LNN_freeVarTerm in H4.
@@ -1127,8 +1127,8 @@ SimplFreeVar.
 apply (le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
 apply LNN2LNT_freeVarFormula1.
-apply H7.
-apply lt_n_Sn.
+apply H7. 
+apply Nat.lt_succ_diag_r.
 unfold E in |- *.
 clear E H4 H3.
 apply impI.
@@ -1344,7 +1344,7 @@ destruct x2 as [| n0].
 elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 rewrite <- LNT2LNN_natToTerm in H3.
 rewrite LNT2LNN_freeVarTerm in H3.
@@ -1820,7 +1820,7 @@ destruct n.
 reflexivity.
 induction H2 as (H2, H3).
 elim (le_not_lt _ _ H2).
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply lt_O_Sn.
 intros.
 rewrite <- LNN2LNT_natToTerm.

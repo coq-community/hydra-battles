@@ -1344,10 +1344,10 @@ unfold not in |- *; intros. lia.
 rewrite Nat.lt_eq_cases in a.
 destruct a.
 (* induction (le_lt_or_eq _ _ a). *)
-{ elim (lt_not_le m0 (S n)).
+{ elim (Compat815.lt_not_le m0 (S n)).
 auto.
 apply Compat815.lt_n_Sm_le.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 auto.
 }
 rewrite H1.
@@ -1562,7 +1562,7 @@ apply H2.
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite <- H2 in b.
-elim (lt_not_le _ _ b).
+elim (Compat815.lt_not_le _ _ b).
 apply Nat.le_add_r.
 apply (forallE L).
 apply (impE L) with (fol.forallH L (m + n) (closeFrom m n f)).
@@ -1704,12 +1704,12 @@ auto.
 simpl in |- *.
 induction (le_lt_dec r (r + m0)).
 induction (le_lt_dec (r + n) (r + m0)).
-elim (lt_not_le _ _ b).
+elim (Compat815.lt_not_le _ _ b).
 eapply (fun p n m : nat => plus_le_reg_l n m p).
 apply a0.
 rewrite minus_plus.
 auto.
-elim (lt_not_le _ _ b0).
+elim (Compat815.lt_not_le _ _ b0).
 apply Nat.le_add_r.
 apply subAllCloseFrom1.
 intros.

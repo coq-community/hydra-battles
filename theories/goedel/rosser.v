@@ -635,7 +635,7 @@ destruct x2 as [| n0].
 elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply Nat.lt_0_succ.
 apply (IHn _ H3).
 apply impE with E.

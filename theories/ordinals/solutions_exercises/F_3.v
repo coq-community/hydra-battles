@@ -26,6 +26,7 @@ Section S1.
     intro n; ochange (E0fin 3)  (E0succ (E0fin 2)); now rewrite F_succ_eqn.
   Qed.
 
+
   (** ** Base case *)
   
   Lemma P_3 : P 3. 
@@ -42,10 +43,14 @@ Section S1.
        transitivity ((fun i : nat => (exp2 i * i)%nat) N).
        +   assert (0 < N).
            {  rewrite HeqN; cbn; apply F_alpha_positive. }
-           rewrite PeanoNat.Nat.mul_comm; destruct (mult_O_le (exp2 N) N);
+    
+           rewrite PeanoNat.Nat.mul_comm.  
+           (** deprecated, not replaced yet *)
+           destruct (Compat815.mult_O_le (exp2 N) N).
              auto.
            * lia.
-       +  apply PeanoNat.Nat.lt_le_incl,  LF2.
+       * apply H2. 
+       + apply PeanoNat.Nat.lt_le_incl,  LF2.
   Qed.
 
   (** Successor case *)

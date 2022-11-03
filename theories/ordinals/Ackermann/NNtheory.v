@@ -1,9 +1,10 @@
-Require Import Arith.
+Require Import Arith Lia.
 
 Require Import folLogic3.
 Require Import folProp.
 Require Import subProp.
 Require Export NN.
+ From hydras Require Import Compat815.
 
 Lemma natNE :
  forall a b : nat,
@@ -70,9 +71,7 @@ apply le_S.
 auto.
 apply natNE.
 unfold not in |- *; intros.
-apply (le_not_lt _ _ H).
-rewrite H0.
-apply Nat.lt_succ_diag_r .
+lia. 
 Qed.
 
 Lemma natLT :
@@ -95,9 +94,7 @@ apply Axm; right; constructor.
 apply sysWeaken.
 apply natNE.
 unfold not in |- *; intros.
-apply (le_not_lt _ _ H).
-rewrite H0.
-apply Nat.lt_succ_diag_r .
+lia.
 apply Axm; right; constructor.
 Qed.
 

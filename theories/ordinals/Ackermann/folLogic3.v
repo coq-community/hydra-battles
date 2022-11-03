@@ -12,6 +12,8 @@ Require Import subAll.
 Require Import misc.
 From Coq Require Import Lia.
 
+Require Import Compat815.
+
 Section Equality_Logic_Rules.
 
 Variable L : Language.
@@ -239,11 +241,11 @@ reflexivity.
 apply subAllTerms_ext.
 intros.
 induction (eq_nat_dec m (a + a)).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a4; auto.
 induction (eq_nat_dec m (S (a + a))).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a4; apply Nat.le_succ_diag_r.
 auto.
@@ -311,11 +313,11 @@ auto.
 apply subAllTerms_ext.
 intros.
 induction (eq_nat_dec m (a + a)).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a3; auto.
 induction (eq_nat_dec m (S (a + a))).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a3; apply Nat.le_succ_diag_r.
 auto.
@@ -361,7 +363,7 @@ induction (eq_nat_dec q (n + n)).
 rewrite <- a1 in H3.
 elim (Nat.lt_irrefl _ H3).
 induction (eq_nat_dec q (S (n + n))).
-elim (lt_not_le _ _ H3).
+elim (Compat815.lt_not_le _ _ H3).
 rewrite a1.
 apply Nat.le_succ_diag_r.
 reflexivity.
@@ -382,7 +384,7 @@ apply H.
 elim b2; auto.
 elim b1; auto.
 simpl in |- *.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply Nat.lt_succ_diag_r .
 simpl in |- *.
 apply Nat.lt_lt_succ_r.
