@@ -30,8 +30,8 @@ simpl in |- *.
 apply impE with (notH (equal (natToTerm a) (natToTerm n))).
 apply cp2.
 apply nn2.
-apply Hreca.
-apply lt_S_n.
+apply Hreca. 
+apply Compat815.lt_S_n.
 auto.
 intros.
  destruct (Nat.lt_gt_cases a b) as [H1 _]; specialize (H1 H0);

@@ -177,7 +177,7 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a2 b2 n2 c2).
   Proof.
-    intros; apply plus_le_lt_compat.
+    intros; apply Nat.add_le_lt_mono.
     - case n1; auto.
       intros;apply Nat.lt_le_incl;apply length_n; auto with arith.
     -  apply length_b.
@@ -276,7 +276,7 @@ Defined.
 Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}. 
 Proof.
   eapply tricho_aux.
-  eapply lt_n_Sn.
+  eapply Nat.lt_succ_diag_r.
 Defined.
 (*||*)
 

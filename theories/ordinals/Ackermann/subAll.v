@@ -1518,10 +1518,12 @@ apply
 apply subAllFormula_ext.
 intros.
 induction (le_lt_dec m m0).
-rewrite <- plus_Snm_nSm.
+
+rewrite  <-  Compat815.plus_Snm_nSm. (* Nat.add_succ_r . *)
 induction (le_lt_dec (S m + n) m0).
 simpl in a0.
 induction (le_lt_dec (m + n) m0).
+
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite H2 in a0. lia.

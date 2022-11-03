@@ -60,5 +60,12 @@ Proof.
     +  apply mul_le_mono_r; lia.
     + cbn; lia.
  Qed.
+
+
+Check plus_Snm_nSm.
+
+Lemma plus_Snm_nSm
+     : forall n m : nat, S n + m = n + S m.
+Proof. intros; lia. Qed.
 End Compat815.
 
