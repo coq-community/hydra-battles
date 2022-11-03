@@ -271,8 +271,6 @@ inversion H.
 intros.
 assert (H': n <= m) by lia.
 rewrite Nat.lt_eq_cases in H'; destruct H'.
-(*Check (Compat815.lt_n_Sm_le _ _ H).
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)). *)
 apply Hrecm; auto.
 unfold wellFormedTerm in |- *.
 unfold wellFormedTerms in |- *.

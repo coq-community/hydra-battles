@@ -17,6 +17,7 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
+From hydras Require Import Compat815.
 
 Section Rosser's_Incompleteness.
 
@@ -330,7 +331,7 @@ induction
        (codeFormula b) n) 0).
 right.
 intros.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H1)).
+induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H1)).
 eauto.
 rewrite <- H2 in a0.
 rewrite
@@ -358,7 +359,7 @@ rewrite H3.
 auto.
 right.
 intros.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
 rewrite <- H1 in H0.
 eauto.
 assert (B = x0).
@@ -1148,7 +1149,7 @@ set
                      (natToTermLNN (codeFormula x))) 1 
                   (natToTermLNN n3))) rec) n2 (F n2)
      end) n0) in *.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
 apply impE with (LNN2LNT_formula Q).
 apply sysWeaken.
 apply impI.
@@ -1504,7 +1505,7 @@ apply impI.
 clear H3 H4.
 induction (S (codePrf x0 (notH x) x1)).
 elim (lt_n_O _ H5).
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
 unfold E in |- *.
 apply
  impE

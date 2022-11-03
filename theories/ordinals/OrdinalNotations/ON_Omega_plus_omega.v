@@ -4,7 +4,7 @@
 
 From Coq Require Import Arith Compare_dec Lia.
 From hydras Require Import Comparable Simple_LexProd ON_Generic
-        ON_plus ON_Omega.
+        ON_plus ON_Omega Compat815.
 
 Import Relations.
 Declare Scope opo_scope.
@@ -292,7 +292,7 @@ Defined.
 Lemma le_introl :
   forall i j :nat, (i<= j)%nat -> inl i  o<= inl j.
 Proof.
-  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto .
+  intros i j  H; destruct (Compat815.le_lt_or_eq _ _ H); auto .
   - left; now constructor.
   - subst; now right. 
 Qed.
@@ -300,7 +300,7 @@ Qed.
 Lemma le_intror :
   forall i j :nat, (i<= j)%nat -> inr i  o<= inr j.
 Proof.
-  intros i j  H; destruct (Lt.le_lt_or_eq _ _ H); auto.
+  intros i j  H; destruct (Compat815.le_lt_or_eq _ _ H); auto.
   - left; now constructor.
   - subst; now right. 
 Qed.

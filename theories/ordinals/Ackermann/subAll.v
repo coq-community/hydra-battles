@@ -1615,7 +1615,7 @@ intros.
 assert (v <= n).
 apply Compat815.lt_n_Sm_le.
 auto.
-induction (le_lt_or_eq _ _ H1).
+induction (Compat815.le_lt_or_eq _ _ H1).
 apply Nat.le_trans with x.
 apply H; auto.
 apply Nat.le_max_r.

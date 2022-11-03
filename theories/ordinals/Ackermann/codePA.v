@@ -560,7 +560,7 @@ simpl in |- *.
 repeat rewrite cPairProjections1.
 reflexivity.
 intros.
-induction (le_lt_or_eq _ _ H1).
+induction (Compat815.le_lt_or_eq _ _ H1).
 apply IHn1.
 apply Compat815.lt_n_Sm_le.
 assumption.

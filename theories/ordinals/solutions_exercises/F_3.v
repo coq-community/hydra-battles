@@ -2,7 +2,7 @@ Require Import Arith.
 Require Import Iterates F_alpha E0.
 Require Import ArithRing Lia   Max.
 Import Exp2.
-Require Import Mult.
+Require Import Compat815.
 Open Scope nat_scope.
 
 Lemma LF3 : dominates_from 2 (F_ 3) (fun  n => iterate exp2 n n).
@@ -223,7 +223,7 @@ Section S1.
             * rewrite Le_iff. split. 
               -- now compute.
               -- split.
-                 ++ cbn; destruct (le_lt_or_eq _ _ Hn).
+                 ++ cbn; destruct (Compat815.le_lt_or_eq _ _ Hn).
                     **  apply lt_incl_le;  now apply finite_lt.
                     **  subst n;  apply Comparable.le_refl.
                  ++   cbn; apply nf_FS.

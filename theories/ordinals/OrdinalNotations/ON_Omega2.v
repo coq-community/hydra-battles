@@ -5,7 +5,7 @@
 
 From Coq Require Import Arith Compare_dec Lia.
 From hydras Require Import Simple_LexProd ON_Generic
-        ON_mult  ON_Omega.
+        ON_mult  ON_Omega Compat815.
 
 Import Relations ON_Generic.
 
@@ -73,7 +73,7 @@ Defined.
 Lemma le_intror :
   forall i j k:nat, (j <= k)%nat -> (i,j) o<= (i,k).
 Proof.
-  intros i j k H; destruct (Lt.le_lt_or_eq j k H).
+  intros i j k H; destruct (Compat815.le_lt_or_eq j k H).
   - left; now constructor 2.    
   - subst k; now right.
 Qed.
@@ -220,7 +220,7 @@ Proof.
   - destruct  (H0 (i, (S j))).
     constructor 2; auto.
     constructor 1;auto.
-  -  subst; destruct (le_lt_or_eq _ _ H2); auto.
+  -  subst; destruct (Compat815.le_lt_or_eq _ _ H2); auto.
       destruct (H0 (k, S j));  constructor 2; auto.
 Qed. 
 

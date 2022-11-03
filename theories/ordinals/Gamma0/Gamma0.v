@@ -155,10 +155,11 @@ Section lemmas_on_length.
     apply le_plus_trans.
     replace (Nat.max (t2_length b2) 0) with (t2_length b2).
     + destruct (Nat.max_dec (t2_length a2) (t2_length b2)).   
-      rewrite  e; repeat rewrite plus_0_r.
-      *  apply plus_le_compat; apply Nat.le_max_l.
-      * repeat rewrite plus_0_r.
-         apply plus_le_compat;apply  max_le_regL;  apply Nat.le_max_l.
+      rewrite  e; repeat rewrite Nat.add_0_r.
+      *  apply Nat.add_le_mono; apply Nat.le_max_l.
+      * repeat rewrite Nat.add_0_r.
+         apply Nat.add_le_mono;apply  max_le_regL;  
+           apply Nat.le_max_l.
     + rewrite Nat.max_l; auto with arith.
   Qed.
 
@@ -1891,7 +1892,7 @@ Proof.
       simpl;apply Top_gt.
       simpl;auto with T2.
       destruct 1.
-   * intros; case (Lt.le_lt_or_eq _ _ H).
+   * intros; case (Compat815.le_lt_or_eq _ _ H).
      -- intros;apply IHn;auto with arith T2.
      --  intros;
     eapply lt_rpo_cons_cons;eauto with T2.
@@ -2865,7 +2866,7 @@ Proof.
   intro alpha;elim alpha.
   - cbn;auto with T2.
   -  cbn; intros;  case t; case t0.
-     +  cbn; rewrite plus_0_r;auto with T2.
+     +  cbn; rewrite Nat.add_0_r;auto with T2.
      +  cbn; rewrite <- H1;  cbn;auto with T2.
         inversion H2;auto with T2.
      +  cbn; rewrite <- H1; cbn;auto with T2.

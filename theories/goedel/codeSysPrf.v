@@ -19,7 +19,7 @@ From hydras.Ackermann Require Import ListExt.
 From hydras.Ackermann Require Import cPair.
 From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
-
+From hydras Require Import Compat815.
 Ltac SimplFreeVar :=
   repeat
    match goal with
@@ -1603,7 +1603,7 @@ assert
 apply primRecRepresentable.
 induction H0 as (H0, H4).
 clear H4.
-induction (le_lt_or_eq _ _ (H0 _ H)).
+induction (Compat815.le_lt_or_eq _ _ (H0 _ H)).
 apply le_S_n.
 apply H4.
 elim H2; assumption.
@@ -1612,7 +1612,7 @@ auto.
 assert (Representable NN 2 codeIn (primRecFormula 2 (proj1_sig codeInIsPR))).
 apply primRecRepresentable.
 induction H0 as (H0, H6).
-induction (le_lt_or_eq _ _ (H0 _ H)).
+induction (Compat815.le_lt_or_eq _ _ (H0 _ H)).
 apply le_S_n.
 apply H7.
 elim H5; assumption.
