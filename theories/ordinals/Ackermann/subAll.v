@@ -1342,14 +1342,7 @@ induction (le_lt_dec (S n) m0).
 apply (subTermVar2 L).
 unfold not in |- *; intros. lia.
 rewrite Nat.lt_eq_cases in a.
-destruct a.
-(* induction (le_lt_or_eq _ _ a). *)
-{ elim (Compat815.lt_not_le m0 (S n)).
-auto.
-apply Compat815.lt_n_Sm_le.
-apply Compat815.lt_n_S.
-auto.
-}
+destruct a. elimtype False.  lia.
 rewrite H1.
 apply (subTermVar1 L).
 induction (le_lt_dec (S n) m0). lia. 
@@ -1374,7 +1367,7 @@ rewrite <- a in H. lia.
 
 induction (In_dec eq_nat_dec (s + n) (freeVarTerm L (fol.var L p))).
 induction a as [H1| H1].
-rewrite <- plus_Snm_nSm in H0.
+rewrite Nat.add_succ_r in H0.
 simpl in H0.
 rewrite <- H1 in H0. lia. 
  contradiction.
@@ -1405,9 +1398,7 @@ apply
               | right _ => fol.var L (m + x)
               end))) n (fol.var L (m + n))).
 apply sysWeaken.
-apply H2.
-apply lt_S_n.
-apply le_lt_n_Sm.
+apply H2. apply H0. 
 auto.
 auto.
 apply (forallE L).
@@ -1548,17 +1539,18 @@ unfold not in |- *; intros.
 assert (m + (m0 - m) = m0).
 rewrite Nat.add_comm; apply Nat.sub_add.
 auto.
-
-(* elim (lt_not_le (m + n) m).  *)
-assert ( m + n < m). {
+assert (H4: m + n < m). {
 apply H with (m0 - m).
-apply plus_lt_reg_l with m.
+apply Nat.add_lt_mono_l with m. 
+(* apply plus_lt_reg_l with m. *)
 rewrite H3.
-rewrite <- plus_Snm_nSm.
+(* rewrite <- plus_Snm_nSm. *)
+rewrite Nat.add_succ_r .
 apply b.
 rewrite H3.
 apply H2.
-} lia. 
+} 
+lia. 
 apply (subTermVar2 L).
 unfold not in |- *; intros.
 rewrite <- H2 in b.
@@ -1692,7 +1684,8 @@ apply subAllFormula_ext; intros.
 induction (le_lt_dec n m0).
 simpl in |- *.
 induction (le_lt_dec r m0).
-elim (le_not_lt _ _ a0).
+rewrite  Nat.le_ngt in a0. destruct a0.
+
 apply Nat.lt_le_trans with (newVar (freeVarFormula L f)).
 apply newVar2.
 auto.
@@ -1705,9 +1698,8 @@ simpl in |- *.
 induction (le_lt_dec r (r + m0)).
 induction (le_lt_dec (r + n) (r + m0)).
 elim (Compat815.lt_not_le _ _ b).
-eapply (fun p n m : nat => plus_le_reg_l n m p).
-apply a0.
-rewrite minus_plus.
+lia.
+rewrite Nat.add_comm; rewrite Nat.add_sub.
 auto.
 elim (Compat815.lt_not_le _ _ b0).
 apply Nat.le_add_r.
@@ -1716,7 +1708,7 @@ intros.
 apply Nat.lt_le_trans with (newVar (freeVarTerm L (m v))).
 apply newVar2.
 unfold m' in H2.
-rewrite minus_plus in H2.
+rewrite Nat.add_comm in H2; rewrite Nat.add_sub in H2.
 auto.
 apply Nat.le_trans with x.
 apply H0.
@@ -1776,7 +1768,7 @@ auto.
 apply subAllFormula_ext.
 intros.
 induction (le_lt_dec n m).
-elim (le_not_lt _ _ a).
+rewrite Nat.le_ngt in a; destruct a. 
 unfold n in |- *.
 apply newVar2.
 auto.

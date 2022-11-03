@@ -10,6 +10,7 @@ From hydras Require Import  E0 Canon Paths primRec Hprime.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.
+Require Import Compat815.
 
 From Equations Require Import Equations.
 
@@ -223,7 +224,7 @@ Qed.
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
 Proof.
   intros;  apply Nat.le_lt_trans with (exp2 i * i).
-  - destruct (mult_O_le (exp2 i) i).
+  - destruct (Compat815.mult_O_le (exp2 i) i).
     + lia.
     + now rewrite Nat.mul_comm.
   -  apply LF2.
