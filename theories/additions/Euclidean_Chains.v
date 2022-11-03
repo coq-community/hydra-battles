@@ -1245,7 +1245,7 @@ end.
            (signature_measure (gen_F (gamma i)) < signature_measure (gen_F i))%nat.
  Proof.
    intros; unfold signature_measure.
-   apply mult_lt_compat_l ;
+   rewrite <- Nat.mul_lt_mono_pos_l;
      [ apply Pos2Nat.inj_lt; apply gamma_lt|] ;  auto with chains.
  Qed.
 
@@ -1264,7 +1264,7 @@ end.
  Proof.
     intros; unfold signature_measure.
     gamma_bounds gamma i H12 H14.  quotient_small H4  H5.
-    apply mult_lt_compat_l; [ | auto with arith chains].
+    rewrite <- Nat.mul_lt_mono_pos_l ; [ | auto with arith chains].
     apply Pos2Nat.inj_lt.
       destruct q; simpl in *.
       transitivity (gamma i);auto.
@@ -1344,7 +1344,9 @@ Qed.
    signature_measure (gen_K p d))%nat.
 Proof.
 intros; unfold signature_measure.
-    apply Nat.add_lt_mono_r; apply mult_S_lt_compat_l;auto with chains.
+    apply Nat.add_lt_mono_r.  
+    rewrite <- (Nat.mul_lt_mono_pos_l (S _)); [| auto with arith].
+
     rewrite Pplus_minus.
     +  apply Pos2Nat.inj_lt; apply Pos.lt_add_diag_r; cbn.
     +  generalize (N.pos_div_eucl_remainder (p + d) (N.pos p) );
