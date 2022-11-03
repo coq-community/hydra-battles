@@ -3470,7 +3470,7 @@ replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 repeat rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r. 
 apply cPairLe2.
 replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
@@ -3715,7 +3715,7 @@ replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  [ idtac | reflexivity ].
 simpl in |- *.
 rewrite cPairProjections2.
-apply le_lt_n_Sm.
+apply Nat.lt_succ_r.
 apply cPairLe2.
 replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
  (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
@@ -5199,7 +5199,7 @@ eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
 eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
 apply maxLemma2.
 apply
- le_trans
+ Nat.le_trans
   with
     (ReplaceTermTerm (codeTerm t0)
        (fold_right Nat.max 0 (codeTerm s :: freeVarTerm L t0))).
@@ -5597,7 +5597,6 @@ assumption.
 apply cPairLe3.
 assumption.
 apply le_n.
-Check le_lt_or_eq. 
  generalize H ; intro  H'; rewrite Nat.lt_eq_cases in H'. 
  destruct H'. 
 eapply Nat.le_trans.

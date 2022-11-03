@@ -1237,14 +1237,14 @@ intros.
 apply T'prf2Tprf.
 apply codeSysPrfNCorrect2.
 eapply H3.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 rewrite <- H6.
 apply lt_n_Sn.
 assumption.
 apply IHn.
 intros.
 eapply H3.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply H4.
 unfold Inconsistent in |- *.
 intros.
@@ -1760,7 +1760,7 @@ apply lt_n_Sn.
 apply IHn.
 intros.
 eapply H3.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply H4.
 reflexivity.
 apply impE with (notH x).

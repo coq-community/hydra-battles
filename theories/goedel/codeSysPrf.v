@@ -334,7 +334,7 @@ unfold not in |- *; intros.
 elim (le_not_lt (S nv) 1).
 rewrite H4.
 apply le_n.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
@@ -343,7 +343,7 @@ unfold not in |- *; intros.
 elim (le_not_lt (S nv) 2).
 rewrite H5.
 apply le_n.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
@@ -516,7 +516,7 @@ unfold not in |- *; intros.
 elim (le_not_lt (S nv) v0).
 rewrite H12.
 apply le_n.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
@@ -1021,7 +1021,7 @@ unfold not in |- *; intros.
 elim (le_not_lt (S nv) 1).
 rewrite H8.
 apply le_n.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
@@ -1030,7 +1030,7 @@ unfold not in |- *; intros.
 elim (le_not_lt (S nv) 2).
 rewrite H9.
 apply le_n.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.

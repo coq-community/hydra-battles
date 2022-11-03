@@ -443,7 +443,7 @@ Lemma minoration : exp2 (exp2 95 * 95) <= N. (* .no-out *)
 Proof.
   transitivity (exp2 (S M) * S M).
   -   replace (exp2 (exp2 95 * 95)) with ((exp2 (exp2 95 * 95) * 1)).
-      apply mult_le_compat.
+      apply Nat.mul_le_mono.
       +   apply exp2_mono1.
           transitivity M.
           * apply minoration_2.

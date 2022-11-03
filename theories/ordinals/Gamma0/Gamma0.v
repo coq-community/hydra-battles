@@ -7,7 +7,7 @@
 
 
 From Coq Require Import Arith List Lia  Compare_dec  Relations
-     Wellfounded  Max RelationClasses.
+     Wellfounded  RelationClasses.
 Set Program Cases.
 
 From hydras Require Import Epsilon0.
@@ -151,15 +151,15 @@ Section lemmas_on_length.
     -  apply length_b.
     - cbn; intros; apply Compat815.le_lt_n_Sm.
     match goal with 
-      [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
+      [ |- ?a <= ?b + ?c + ?d] => rewrite (Nat.add_comm (b + c) d) end.
     apply le_plus_trans.
-    replace (Max.max (t2_length b2) 0) with (t2_length b2).
-    + destruct (Max.max_dec (t2_length a2) (t2_length b2)).   
+    replace (Nat.max (t2_length b2) 0) with (t2_length b2).
+    + destruct (Nat.max_dec (t2_length a2) (t2_length b2)).   
       rewrite  e; repeat rewrite plus_0_r.
-      *  apply plus_le_compat; apply le_max_l.
+      *  apply plus_le_compat; apply Nat.le_max_l.
       * repeat rewrite plus_0_r.
-         apply plus_le_compat;apply  max_le_regL;  apply le_max_l.
-    + rewrite max_l; auto with arith.
+         apply plus_le_compat;apply  max_le_regL;  apply Nat.le_max_l.
+    + rewrite Nat.max_l; auto with arith.
   Qed.
 
 
@@ -177,7 +177,8 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 r1) +
       t2_length (gcons a2 b2 n2 r2).
   Proof.
-    intros; rewrite plus_comm;  apply plus_lt_compat; apply length_a. 
+    intros; rewrite Nat.add_comm;
+      apply plus_lt_compat; apply length_a. 
   Qed.
 
   Lemma tricho_lt_4' : forall a1 a2 b1 b2 n1 n2 c1 c2,
@@ -195,7 +196,7 @@ Section lemmas_on_length.
       t2_length a2 + t2_length a1  < 
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a2 (gcons a1 b1 0 zero)  n2 c2).
-    intros; rewrite plus_comm;apply plus_lt_compat; apply length_a.
+    intros; rewrite Nat.add_comm;apply plus_lt_compat; apply length_a.
   Qed.
 
   Lemma tricho_lt_7 : forall a1 b1  n1  c1 c2,
@@ -271,7 +272,7 @@ Proof.
             assert (H2:(t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
           --  eapply lt_lt_Sn.
               ++  eapply tricho_lt_2'.
-              ++  rewrite plus_comm;  eauto with T2.
+              ++  rewrite Nat.add_comm;  eauto with T2.
           --  case (IHl _ _ H2).
               ++ destruct 1.
                  ** right;  constructor 2;auto with T2.

@@ -164,7 +164,7 @@ apply sysWeaken.
 apply H.
 intros.
 apply H0.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 auto.
 apply sysWeaken.
 apply impI.
@@ -220,7 +220,7 @@ replace
  (substituteFormula LNN (LT (var 1) (Succ (Succ (natToTerm n)))) 1
     (natToTerm n0)) with (LT (natToTerm n0) (natToTerm (S (S n)))).
 apply natLT.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 assumption.
 unfold LT in |- *.
 rewrite (subFormulaRelation LNN).

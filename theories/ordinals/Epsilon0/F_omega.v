@@ -27,7 +27,7 @@ Proof.
   - cbn; rewrite PeanoNat.Nat.mul_succ_r; ring_simplify.
     remember (exp2 m) as X.
     rewrite (Nat.mul_comm X m)in IHle.
-    rewrite <-  (Mult.mult_assoc); lia.
+    rewrite <-  (Nat.mul_assoc); lia.
 Qed.
 
 Section inductive_step.

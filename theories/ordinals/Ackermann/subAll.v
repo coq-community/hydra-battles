@@ -1340,17 +1340,16 @@ intros.
 induction (le_lt_dec n m0).
 induction (le_lt_dec (S n) m0).
 apply (subTermVar2 L).
-unfold not in |- *; intros.
-elim (lt_not_le m0 (S m0)).
-apply Nat.lt_succ_diag_r .
-rewrite H1 in a0.
-auto.
-induction (le_lt_or_eq _ _ a).
-elim (lt_not_le m0 (S n)).
+unfold not in |- *; intros. lia.
+rewrite Nat.lt_eq_cases in a.
+destruct a.
+(* induction (le_lt_or_eq _ _ a). *)
+{ elim (lt_not_le m0 (S n)).
 auto.
 apply Compat815.lt_n_Sm_le.
 apply lt_n_S.
 auto.
+}
 rewrite H1.
 apply (subTermVar1 L).
 induction (le_lt_dec (S n) m0). lia. 
@@ -1581,7 +1580,7 @@ auto.
 apply Hrecn.
 intros.
 eapply H.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply H1.
 auto.
 eapply (forallSimp L).

@@ -2,7 +2,7 @@ Require Import primRec.
 Require Import codeFreeVar.
 Require Import codeSubFormula.
 Require Import cPair.
-Require Import Arith.
+From Coq Require Import Arith.
 Require Import code.
 Require Import folProp.
 Require Import extEqualNat.
@@ -10,7 +10,7 @@ Require Import wellFormed.
 Require Import folProof.
 Require Import prLogic.
 Require Import Compat815.
-
+From Coq Require Import Lia.
 Section Check_Proof.
 
 Variable L : Language.
@@ -2400,8 +2400,8 @@ intro.
 induction m as [| m Hrecm].
 intros.
 elim (Nat.nlt_0_r _ H).
-intros.
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
+intros. assert (H': n <= m) by lia.
+rewrite Nat.lt_eq_cases in H'; destruct H'.
 apply Hrecm; assumption.
 unfold checkPrf in H0.
 assert (wellFormedFormula (cPairPi1 n) <> 0).

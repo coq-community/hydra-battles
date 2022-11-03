@@ -1458,9 +1458,10 @@ Corollary Cor12_1 (alpha : T1) :
 (* end snippet Cor121 *)
 
 Proof.
-  intros H beta i n H0 H1 H2; destruct (Lt.le_lt_or_eq _ _ H1).
-  -   eapply Cor12;eauto.
-  -   now subst.
+  intros H beta i n H0 H1 H2; rewrite Nat.lt_eq_cases in H1; 
+    destruct H1.
+  - eapply Cor12;eauto.
+  - now subst.
 Qed.
 
 Corollary Cor12_2 (alpha : T1) : 
@@ -2967,8 +2968,8 @@ Corollary Cor12_E0 : forall alpha beta i n,
     Canon_plus (S n) alpha beta.
 Proof.
   intros.
-  destruct (Lt.le_lt_or_eq _ _ H0).
-  eapply Cor12;eauto.
+  rewrite Nat.lt_eq_cases in H0; destruct H0.
+   eapply Cor12;eauto.
   destruct alpha; auto.
   now subst.
 Qed.
