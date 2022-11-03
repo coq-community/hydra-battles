@@ -17,6 +17,7 @@ From hydras.Ackermann Require Import ListExt.
 From hydras.Ackermann Require Import cPair.
 From Coq Require Import Decidable.
 From Coq Require Import Lia.
+From hydras Require Import Compat815.
 
 Section Primitive_Recursive_Representable.
 
@@ -2545,6 +2546,11 @@ Proof.
   + tauto.
 Qed.
 
+
+
+
+
+
 Ltac PRsolveFV A B n :=
   unfold existH, forallH, not in |- *; intros;
    repeat
@@ -2554,13 +2560,13 @@ Ltac PRsolveFV A B n :=
     | H:(?X1 = S ?X1) |- _ => elim (n_Sn _ H)
     | H:(S ?X1 = ?X1) |- _ =>
         elim (n_Sn X1); symmetry  in |- *; apply H
-    | H:(?X1 = S (S ?X1)) |- _ => elim (n_SSn _ H)
+    | H:(?X1 = S (S ?X1)) |- _ => elim (Compat815.n_SSn _ H)
     | H:(S (S ?X1) = ?X1) |- _ =>
-        elim (n_SSn X1); symmetry  in |- *; apply H
+        elim (Compat815.n_SSn X1); symmetry  in |- *; apply H
     | H:(?X1 = S (S (S ?X1))) |- _ =>
-        elim (n_SSSn _ H)
+        elim (Compat815.n_SSSn _ H)
     | H:(S (S (S ?X1)) = ?X1) |- _ =>
-        elim (n_SSSn X1); symmetry  in |- *; apply H
+        elim (Compat815.n_SSSn X1); symmetry  in |- *; apply H
     | H:(In ?X3
            (freeVarFormula LNN
               (substituteFormula LNN
@@ -2767,7 +2773,7 @@ Proof.
                                               { apply (subFormulaNil LNN). intro H4. elim (proj1 (Nat.le_ngt 1 0)).
                                                 + apply H; auto.
                                                 + auto. }
-                                              { apply (subFormulaNil LNN). intro H4. elim (le_not_lt 2 0).
+                                              { apply (subFormulaNil LNN). intro H4. elim (proj1 (Nat.le_ngt 2 0)).
                                                 + apply H; auto.
                                                 + auto. }
                                     ---- apply

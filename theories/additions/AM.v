@@ -455,7 +455,7 @@ Section CompositionProofs.
         rewrite power_of_power.
       apply power_proper; auto.  
       + reflexivity.
-      + rewrite Pos2Nat.inj_mul; now rewrite mult_comm.
+      + rewrite Pos2Nat.inj_mul; now rewrite Nat.mul_comm.
     - transitivity s1;auto.
       + inversion H5;auto.
         now  symmetry.

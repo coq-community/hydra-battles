@@ -10,7 +10,7 @@ From hydras.Ackermann Require Import folReplace.
 From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import primRec.
-From Coq Require Import Arith.
+From Coq Require Import Arith Lia.
 From hydras.Ackermann Require Import PA.
 From hydras.Ackermann Require Import NNtheory.
 From hydras.Ackermann Require Import codeList.
@@ -331,27 +331,10 @@ elim b.
 reflexivity.
 apply closedNatToTerm.
 assert (S nv <> 1).
-unfold not in |- *; intros.
-elim (le_not_lt (S nv) 1).
-rewrite H4.
-apply le_n.
-apply Nat.lt_lt_succ_r.
-unfold nv in |- *.
-apply newVar2.
-unfold nvl in |- *; simpl in |- *; auto.
+unfold not in |- *; intros. lia.
 assert (S nv <> 2).
-unfold not in |- *; intros.
-elim (le_not_lt (S nv) 2).
-rewrite H5.
-apply le_n.
-apply Nat.lt_lt_succ_r.
-unfold nv in |- *.
-apply newVar2.
-unfold nvl in |- *; simpl in |- *; auto.
-assert (S nv <> nv).
-unfold not in |- *; intros.
-eapply (n_Sn nv).
-symmetry  in |- *; assumption.
+unfold not in |- *; intros. lia.
+assert (S nv <> nv) by lia.
 rewrite (subFormulaForall LNN).
 induction (eq_nat_dec (S nv) 0).
 discriminate a.
@@ -513,14 +496,16 @@ apply H6; assumption.
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
 absurd (S nv = v0).
-unfold not in |- *; intros.
-elim (le_not_lt (S nv) v0).
+unfold not in |- *; intros. 
+{elim (Compat815.le_not_lt (S nv) v0).
 rewrite H12.
 apply le_n.
 apply Nat.lt_lt_succ_r.
 unfold nv in |- *.
 apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
+}
+
 apply freeVarfU.
 eapply In_list_remove1.
 apply H11.
@@ -641,7 +626,7 @@ assert (In nv (freeVarFormula LNN (substituteFormula LNN J 2 (var (S nv))))).
 eapply In_list_remove1.
 apply H12.
 induction (freeVarSubFormula3 _ _ _ _ _ H13).
-apply (le_not_lt nv 2).
+apply (Compat815.le_not_lt nv 2).
 apply H10.
 eapply In_list_remove1.
 apply H14.
@@ -652,7 +637,7 @@ elim H1; reflexivity.
 destruct n0.
 elim H2; reflexivity.
 repeat apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 simpl in H14.
 decompose sum H14.
 apply H6; assumption.
@@ -684,7 +669,7 @@ apply closedNatToTerm.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
-apply (le_not_lt (S nv) 2).
+apply (Compat815.le_not_lt (S nv) 2).
 apply H10.
 eapply In_list_remove1.
 apply H12.
@@ -694,7 +679,7 @@ elim H0; reflexivity.
 destruct n0.
 elim H1; reflexivity.
 repeat apply le_n_S.
-apply le_O_n.
+apply Nat.le_0_l.
 apply
  impE
   with
@@ -1019,7 +1004,7 @@ apply Axm; right; constructor.
 apply sysWeaken.
 assert (S nv <> 1).
 unfold not in |- *; intros.
-elim (le_not_lt (S nv) 1).
+elim (Compat815.le_not_lt (S nv) 1).
 rewrite H8.
 apply le_n.
 apply Nat.lt_lt_succ_r.
@@ -1028,7 +1013,7 @@ apply newVar2.
 unfold nvl in |- *; simpl in |- *; auto.
 assert (S nv <> 2).
 unfold not in |- *; intros.
-elim (le_not_lt (S nv) 2).
+elim (Compat815.le_not_lt (S nv) 2).
 rewrite H9.
 apply le_n.
 apply Nat.lt_lt_succ_r.
@@ -1089,10 +1074,10 @@ induction A0 as [| a A0 HrecA0].
 elim H12.
 induction H12 as [H12| H12].
 rewrite H12.
-simpl in |- *.
-apply le_lt_n_Sm.
+simpl in |- *. 
+apply Compat815.le_lt_n_Sm.
 apply cPairLe1.
-apply lt_le_trans with (codeList (map (codeFormula L codeF codeR) A0)).
+apply Nat.lt_le_trans with (codeList (map (codeFormula L codeF codeR) A0)).
 auto.
 simpl in |- *.
 apply le_S.
@@ -1211,7 +1196,7 @@ assert (In nv (freeVarFormula LNN (substituteFormula LNN J 2 (var (S nv))))).
 eapply In_list_remove1.
 apply H13.
 induction (freeVarSubFormula3 _ _ _ _ _ H14).
-apply (le_not_lt nv 2).
+apply (Compat815.le_not_lt nv 2).
 apply H11.
 eapply In_list_remove1.
 apply H15.
@@ -1220,9 +1205,7 @@ elim H0; reflexivity.
 destruct n0.
 elim H1; reflexivity.
 destruct n0.
-elim H2; reflexivity.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+elim H2; reflexivity. lia.
 simpl in H15.
 decompose sum H15.
 apply H10; assumption.
@@ -1256,7 +1239,7 @@ apply closedNatToTerm.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
-apply (le_not_lt (S nv) 2).
+apply (Compat815.le_not_lt (S nv) 2).
 apply H11.
 eapply In_list_remove1.
 apply H13.
@@ -1264,8 +1247,8 @@ destruct nv as [| n0].
 elim H8; reflexivity.
 destruct n0.
 elim H9; reflexivity.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+repeat apply Compat815.lt_n_S.
+apply Nat.lt_0_succ.
 simpl in H12.
 apply
  impE
@@ -1634,12 +1617,12 @@ reflexivity.
 destruct n.
 elim (In_list_remove2 _ _ _ _ _ H).
 reflexivity.
-elim (le_not_lt (S (S n)) 1).
+elim (Compat815.le_not_lt (S (S n)) 1).
 apply freeVarCodeSysPrf.
 eapply In_list_remove1.
 apply H.
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 Qed.
 
 Lemma codeSysPfCorrect :
@@ -1687,7 +1670,7 @@ clear H4.
 apply H0.
 assumption.
 rewrite <- H.
-apply le_O_n.
+apply Nat.le_0_l.
 Qed.
 
 Lemma codeSysPrfNCorrect1 :
@@ -1760,12 +1743,12 @@ apply closedNatToTerm.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
-elim (le_not_lt 2 1).
+elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
 eapply In_list_remove1.
 apply H0.
 eapply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 apply codeSysPrfCorrect1.
 assumption.
 apply sysExtend with NN.
@@ -1841,12 +1824,12 @@ eapply In_list_remove1.
 apply H0.
 induction (freeVarSubFormula3 _ _ _ _ _ H1).
 induction rep as (H3, H4).
-apply (le_not_lt 2 1).
+apply (Compat815.le_not_lt 2 1).
 apply H3.
 eapply In_list_remove1.
 apply H2.
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 apply (closedNatToTerm _ _ H2).
 induction rep as (H0, H1).
 unfold RepresentableHelp in H1.
@@ -1918,7 +1901,7 @@ auto.
 induction H1.
 (*Fold notH in H0.*)
 SimplFreeVar.
-elim (le_not_lt 2 1).
+elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
 apply H1.
 apply Nat.lt_succ_diag_r.
@@ -2054,10 +2037,9 @@ apply closedNatToTerm.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros; SimplFreeVar.
-elim (le_not_lt 2 1).
+elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
-apply H3.
-apply lt_n_Sn.
+apply H3. auto with arith. 
 apply Axm; right; constructor.
 apply closedNatToTerm.
 apply codeSysPrfCorrect2.
@@ -2113,10 +2095,9 @@ auto.
 induction H1.
 fold notH in H0.
 SimplFreeVar.
-elim (le_not_lt 2 1).
+elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
-apply H1.
-apply lt_n_Sn.
+apply H1. auto with arith. 
 repeat rewrite (subFormulaAnd LNN).
 apply nAnd.
 apply orSym.
@@ -2248,10 +2229,9 @@ apply closedNatToTerm.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros; SimplFreeVar.
-elim (le_not_lt 2 1).
+elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
-apply H3.
-apply lt_n_Sn.
+apply H3. auto with arith. 
 apply Axm; right; constructor.
 apply closedNatToTerm.
 fold notH in |- *.

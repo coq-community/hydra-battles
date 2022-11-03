@@ -95,7 +95,7 @@ elim H1; auto.
 destruct n.
 elim H2; auto.
 repeat apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 set
  (Theta :=
   existH v
@@ -318,7 +318,7 @@ repeat
  | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
      simpl in H; decompose sum H; clear H
  end.
-elim (le_not_lt _ _ (H5 _ H4)).
+elim (Compat815.le_not_lt _ _ (H5 _ H4)).
 destruct x as [| n].
 elim H10; auto.
 destruct n.
@@ -328,7 +328,7 @@ elim H12; auto.
 destruct n.
 elim H13; auto.
 repeat apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 apply In_list_remove3; auto.
 intro.
 assert (In x (freeVarFormula LNN A));
@@ -420,7 +420,7 @@ elim H1; auto.
 destruct n.
 elim H2; auto.
 repeat apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 set
  (Theta :=
   existH v
@@ -705,7 +705,7 @@ repeat
  | H:(In _ (freeVarTerm LNT (fol.var LNT _))) |- _ =>
      simpl in H; decompose sum H; clear H
  end.
-elim (le_not_lt x 3).
+elim (Compat815.le_not_lt x 3).
 apply H5.
 apply LNN2LNT_freeVarFormula1.
 assumption.
@@ -718,7 +718,7 @@ elim H12; auto.
 destruct n.
 elim H13; auto.
 repeat apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 apply In_list_remove3; auto.
 intro.
 assert (In x (freeVarFormula LNT A));

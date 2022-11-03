@@ -62,10 +62,20 @@ Proof.
  Qed.
 
 
-Check plus_Snm_nSm.
-
 Lemma plus_Snm_nSm
      : forall n m : nat, S n + m = n + S m.
 Proof. intros; lia. Qed.
+
+Lemma n_SSSn : forall n : nat, n <> S (S (S n)).
+Proof. intro n; apply (Nat.succ_add_discr 2) . Qed.
+
+Lemma n_SSn : forall n : nat, n <> S (S n).
+Proof. intro n; apply (Nat.succ_add_discr 1) . Qed.
+
+
+Lemma le_not_lt : forall n m : nat, n <= m -> ~ m < n.
+Proof. intros; now rewrite <- Nat.le_ngt. Qed.
+
+
 End Compat815.
 

@@ -331,7 +331,7 @@ induction
        (codeFormula b) n) 0).
 right.
 intros.
-induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H1)).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H1)).
 eauto.
 rewrite <- H2 in a0.
 rewrite
@@ -359,7 +359,7 @@ rewrite H3.
 auto.
 right.
 intros.
-induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H5)).
 rewrite <- H1 in H0.
 eauto.
 assert (B = x0).
@@ -736,10 +736,9 @@ reflexivity.
 destruct n.
 apply H7.
 reflexivity.
-apply (le_not_lt (S (S n)) 1).
+apply (Compat815.le_not_lt (S (S n)) 1).
 assumption.
-apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Compat815.lt_n_S. auto with arith. 
 assert (v <= 1).
 apply freeVarCodeSysPrfN.
 assumption.
@@ -749,10 +748,10 @@ reflexivity.
 destruct n.
 apply H7.
 reflexivity.
-apply (le_not_lt (S (S n)) 1).
+apply (Compat815.le_not_lt (S (S n)) 1).
 assumption.
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 eapply In_list_remove3.
 apply LNN2LNT_freeVarFormula1.
 eapply In_list_remove1.
@@ -1055,7 +1054,7 @@ apply LNN2LNT_freeVarFormula1.
 assumption.
 clear H3.
 SimplFreeVar.
-apply (le_not_lt x2 1).
+apply (Compat815.le_not_lt x2 1).
 apply freeVarCodeSysPrfN.
 assumption.
 destruct x2 as [| n0].
@@ -1063,7 +1062,7 @@ elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 rewrite <- LNT2LNN_natToTerm in H4.
 rewrite LNT2LNN_freeVarTerm in H4.
 apply (closedNatToTerm _ _ H4).
@@ -1124,7 +1123,7 @@ apply (reduceNot LNT).
 apply (subFormulaTrans LNT).
 unfold not in |- *; intros.
 SimplFreeVar.
-apply (le_not_lt 2 1).
+apply (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
 apply LNN2LNT_freeVarFormula1.
 apply H7. 
@@ -1133,7 +1132,7 @@ unfold E in |- *.
 clear E H4 H3.
 apply impI.
 induction (codePrf x0 x x1).
-elim (lt_n_O _ H5).
+elim (Nat.nlt_0_r _ H5).
 unfold nat_rec, nat_rect in |- *.
 set
  (Q :=
@@ -1149,7 +1148,7 @@ set
                      (natToTermLNN (codeFormula x))) 1 
                   (natToTermLNN n3))) rec) n2 (F n2)
      end) n0) in *.
-induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H5)).
 apply impE with (LNN2LNT_formula Q).
 apply sysWeaken.
 apply impI.
@@ -1240,7 +1239,7 @@ apply codeSysPrfNCorrect2.
 eapply H3.
 apply Nat.lt_lt_succ_r.
 rewrite <- H6.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 assumption.
 apply IHn.
 intros.
@@ -1334,7 +1333,7 @@ cut
 clear H3.
 intros.
 SimplFreeVar.
-apply (le_not_lt x2 1).
+apply (Compat815.le_not_lt x2 1).
 apply
  (freeVarCodeSysPrf LNT codeLNTFunction codeLNTRelation codeArityLNTF
     codeArityLNTR codeArityLNTFIsPR codeArityLNTRIsPR 
@@ -1345,7 +1344,7 @@ elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 rewrite <- LNT2LNN_natToTerm in H3.
 rewrite LNT2LNN_freeVarTerm in H3.
 apply (closedNatToTerm _ _ H3).
@@ -1504,8 +1503,8 @@ repeat simple apply sysWeaken.
 apply impI.
 clear H3 H4.
 induction (S (codePrf x0 (notH x) x1)).
-elim (lt_n_O _ H5).
-induction (Compat815.le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+elim (Nat.nlt_0_r _ H5).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H5)).
 unfold E in |- *.
 apply
  impE
@@ -1684,11 +1683,11 @@ discriminate H6.
 apply closedNatToTerm.
 apply (subFormulaTrans LNT).
 unfold not in |- *; intros; SimplFreeVar.
-apply (le_not_lt 2 1).
+apply (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
 apply LNN2LNT_freeVarFormula1.
 assumption.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 apply Axm; right; constructor.
 unfold G in |- *.
 apply
@@ -1757,7 +1756,7 @@ apply codeSysPrfCorrect2.
 rewrite <- H4 in H3.
 apply H3 with x4.
 rewrite <- H6.
-apply lt_n_Sn.
+apply Nat.lt_succ_diag_r.
 apply IHn.
 intros.
 eapply H3.
@@ -1819,9 +1818,9 @@ reflexivity.
 destruct n.
 reflexivity.
 induction H2 as (H2, H3).
-elim (le_not_lt _ _ H2).
+elim (Compat815.le_not_lt _ _ H2).
 apply Compat815.lt_n_S.
-apply lt_O_Sn.
+apply Nat.lt_0_succ.
 intros.
 rewrite <- LNN2LNT_natToTerm.
 eapply impE.
