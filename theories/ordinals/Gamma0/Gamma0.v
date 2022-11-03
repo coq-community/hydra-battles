@@ -75,7 +75,7 @@ Qed.
 Ltac lt_clean := 
   try (match goal with 
          [ineq : lt ?a zero |- _ ] => case (not_lt_zero ineq);auto
-       |[ineq : Peano.lt ?a 0 |- _ ] => case (lt_n_O a);auto
+       |[ineq : Peano.lt ?a 0 |- _ ] => case (Nat.nlt_0_r a);auto
        |[ref : lt ?a ?a |- _] => case (lt_irr ref);auto
        |[ref : Peano.lt ?a ?a |- _] => case (lt_irr ref);auto
        end).
@@ -138,7 +138,7 @@ Section lemmas_on_length.
       t2_length (gcons a2 b2 n2 r2).
   Proof.
     intros.
-    apply plus_lt_compat; apply length_a. 
+    apply Nat.add_lt_mono; apply length_a. 
   Qed.
 
 
@@ -147,29 +147,19 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 r1) +
       t2_length (gcons a2 b2 n2 r2).
     Proof.
-    intros;apply plus_lt_le_compat.
+    intros;apply Nat.add_lt_le_mono.
     -  apply length_b.
     - cbn; intros; apply Compat815.le_lt_n_Sm.
     match goal with 
       [ |- ?a <= ?b + ?c + ?d] => rewrite (Nat.add_comm (b + c) d) end.
-    apply le_plus_trans.
-    replace (Nat.max (t2_length b2) 0) with (t2_length b2).
-    + destruct (Nat.max_dec (t2_length a2) (t2_length b2)).   
-      rewrite  e; repeat rewrite Nat.add_0_r.
-      *  apply Nat.add_le_mono; apply Nat.le_max_l.
-      * repeat rewrite Nat.add_0_r.
-         apply Nat.add_le_mono;apply  max_le_regL;  
-           apply Nat.le_max_l.
-    + rewrite Nat.max_l; auto with arith.
+    lia. 
   Qed.
-
-
 
   Lemma tricho_lt_3 : forall a1 a2 b1 b2 n1 n2 r1 r2,
       t2_length b1 + t2_length b2  <   
       t2_length (gcons a1 b1 n1 r1) +  t2_length (gcons a2 b2 n2 r2).
   Proof.
-    intros;apply plus_lt_compat; apply length_b.
+    intros;apply Nat.add_lt_mono; apply length_b.
   Qed.
 
 
@@ -179,7 +169,7 @@ Section lemmas_on_length.
       t2_length (gcons a2 b2 n2 r2).
   Proof.
     intros; rewrite Nat.add_comm;
-      apply plus_lt_compat; apply length_a. 
+      apply Nat.add_lt_mono; apply length_a. 
   Qed.
 
   Lemma tricho_lt_4' : forall a1 a2 b1 b2 n1 n2 c1 c2,
@@ -197,7 +187,7 @@ Section lemmas_on_length.
       t2_length a2 + t2_length a1  < 
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a2 (gcons a1 b1 0 zero)  n2 c2).
-    intros; rewrite Nat.add_comm;apply plus_lt_compat; apply length_a.
+    intros; rewrite Nat.add_comm;apply Nat.add_lt_mono; apply length_a.
   Qed.
 
   Lemma tricho_lt_7 : forall a1 b1  n1  c1 c2,
@@ -205,7 +195,7 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a1 b1 n1 c2).
   Proof.
-    intros;    apply plus_lt_compat;  apply length_c. 
+    intros;    apply Nat.add_lt_mono;  apply length_c. 
   Qed.
 
 

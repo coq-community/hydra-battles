@@ -1,6 +1,6 @@
 Require Import Ensembles.
 Require Import Coq.Lists.List.
-Require Import Arith.
+Require Import Arith Lia.
 
 Require Import subAll.
 Require Import folReplace.
@@ -226,11 +226,9 @@ simpl in |- *.
 apply H.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia. 
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia. 
 reflexivity.
 Qed.
 

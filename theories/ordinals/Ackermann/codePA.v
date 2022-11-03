@@ -11,6 +11,7 @@ Require Import extEqualNat.
 Require Vector.
 Require Import prLogic.
 Require Import Compat815.
+From Coq Require Import Lia.
 
 Section close.
 
@@ -542,8 +543,8 @@ assert
   m <= codeNoDup (codeFreeVarFormula (cPair 1 n0)) ->
   cPair 1 n0 = codeOpen (codeCloseList m (cPair 1 n0))).
 induction (codeNoDup (codeFreeVarFormula (cPair 1 n0))).
-intros.
-rewrite <- (le_n_O_eq _ H1).
+intros. replace m with 0 by lia.
+(*rewrite <- (le_n_O_eq _ H1). *)
 unfold codeCloseList in |- *.
 unfold evalStrongRec in |- *.
 unfold evalComposeFunc, evalOneParamList, evalList in |- *.
