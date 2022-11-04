@@ -66,6 +66,7 @@ Lemma plus_Snm_nSm
      : forall n m : nat, S n + m = n + S m.
 Proof. intros; lia. Qed.
 
+
 Lemma n_SSSn : forall n : nat, n <> S (S (S n)).
 Proof. intro n; apply (Nat.succ_add_discr 2) . Qed.
 
