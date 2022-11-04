@@ -673,7 +673,7 @@ apply (Compat815.le_not_lt (S nv) 2).
 apply H10.
 eapply In_list_remove1.
 apply H12.
-apply le_lt_n_Sm.
+apply Compat815.le_lt_n_Sm.
 destruct nv as [| n0].
 elim H0; reflexivity.
 destruct n0.

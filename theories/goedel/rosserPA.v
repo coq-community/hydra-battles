@@ -318,7 +318,7 @@ intros.
 induction (S (codePrf A a p)).
 right.
 intros.
-elim (lt_n_O _ H0).
+elim (Nat.nlt_0_r _ H0).
 induction IHn as [H0| H0].
 left.
 decompose record H0.
