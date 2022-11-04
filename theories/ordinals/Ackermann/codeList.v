@@ -265,7 +265,7 @@ apply cPairLe2.
 simpl in H.
 induction (eq_nat_dec a0 a).
 rewrite a1.
-rewrite <- beq_nat_refl.
+rewrite  Nat.eqb_refl.
 simpl in |- *.
 unfold A in |- *.
 rewrite H.
@@ -420,7 +420,7 @@ simpl in |- *.
 repeat rewrite cPairProjections1.
 induction (eq_nat_dec a0 a).
 rewrite a1.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 simpl in |- *.
 reflexivity.
 rewrite beq_nat_not_refl.

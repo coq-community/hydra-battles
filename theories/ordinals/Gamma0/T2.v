@@ -354,41 +354,29 @@ Lemma length_a : forall a b n v, t2_length a <
 Proof.
  simpl; intros; apply Compat815.le_lt_n_Sm.
  match goal with
-     [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
- apply le_plus_trans, le_plus_trans, Nat.le_max_l.
+     [ |- ?a <= ?b + ?c + ?d] => rewrite (Nat.add_comm (b + c) d) end.
+ lia. 
 Qed.
 
 Lemma length_b : forall a b n v, t2_length b < 
                                  t2_length (gcons a b n v).
-Proof.
-  simpl; intros; apply Compat815.le_lt_n_Sm.
-  match goal with 
-    [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
-  apply le_plus_trans, le_plus_trans.
-  eapply Nat.le_trans.
-  2:eapply Nat.le_max_r.
-  apply Nat.le_max_l.
-Qed.
+Proof. simpl; lia. Qed.
 
 Lemma length_c : forall a b n v, t2_length v < 
                                  t2_length (gcons a b n v).
 Proof.
-  simpl; intros; apply Compat815.le_lt_n_Sm; case v.
-  - simpl; auto with arith.
+  simpl; intros;   apply Compat815.le_lt_n_Sm; case v.
+  - simpl; lia. 
   - intros; simpl (t2_length (gcons t t0 n0 t1)).
-    simpl (nbterms (gcons t t0 n0 t1)).
+    simpl (nbterms (gcons t t0 n0 t1)). 
   match goal with  
-    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (Arith.Plus.plus_assoc b c d) end.
+    [ |- ?a <= ?b + ?c + ?d] => rewrite <- (Nat.add_assoc b c d) end.
   simpl (t2_length_aux (gcons t t0 n0 t1)).
   match goal with [ |- ?a <= ?b + ?c ] => assert (a <= c) end.
   { pattern (Nat.max (t2_length t) (Nat.max (t2_length t0) (t2_length_aux t1))).
     generalize (Nat.max (t2_length t)
                       (Nat.max (t2_length t0) (t2_length_aux t1))).
-    intro n1; simpl;  apply le_n_S,  plus_le_compat_l.
-    repeat rewrite plus_0_r.
-    apply plus_le_compat;
-    apply Nat.le_trans with (Nat.max (t2_length b) n1);
-    apply Nat.le_max_r.
+    intro n1; simpl; lia.
   }
   abstract lia.
 Qed.
@@ -410,17 +398,7 @@ Qed.
 Lemma length_psi : forall a b n c,
                       t2_length [a, b] <= t2_length (gcons a b n c).
 Proof.
- simpl.
- intros; apply Compat815.le_lt_n_Sm.
- match goal with 
-    [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
- apply le_plus_trans.
- replace (Nat.max (t2_length b) 0) with (t2_length b).
- -  repeat  rewrite plus_0_r;  apply plus_le_compat. 
-   +  apply max_le_regL,  Nat.le_max_l; auto.
-   +  apply Nat.max_le_compat; auto.
-      apply Nat.le_max_l.
- - rewrite max_l;auto with arith.
+ simpl; intros; apply Compat815.le_lt_n_Sm ; lia.
 Qed.
 
 

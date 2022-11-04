@@ -15,7 +15,7 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
-
+From hydras Require Import Compat815.
 Section Rosser's_Incompleteness.
 
 
@@ -520,7 +520,7 @@ set
                      (natToTerm (codeFormula x))) 1 
                   (natToTerm n3))) rec) n2 (F n2)
      end) n0) in *.
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H5)).
 apply impE with Q.
 apply sysWeaken.
 apply impI.
@@ -626,7 +626,7 @@ intros.
 unfold nat_rec, nat_rect in |- *.
 unfold not in |- *; intros.
 SimplFreeVar.
-apply (le_not_lt x2 1).
+apply (Compat815.le_not_lt x2 1).
 apply
  (freeVarCodeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF
     codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR repT v0 freeVarRepT).
@@ -635,7 +635,7 @@ destruct x2 as [| n0].
 elim H6; reflexivity.
 destruct n0.
 elim H5; reflexivity.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply Nat.lt_0_succ.
 apply (IHn _ H3).
 apply impE with E.
@@ -727,7 +727,7 @@ clear H3.
 clear H4.
 induction (S (codePrf x0 (notH x) x1)).
 elim (Nat.nlt_0_r _ H5).
-induction (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H5)).
+induction (Compat815.le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H5)).
 unfold E in |- *.
 apply
  impE
@@ -803,7 +803,7 @@ discriminate H6.
 apply closedNatToTerm.
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros; SimplFreeVar.
-apply (le_not_lt 2 1).
+apply (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrfN.
 assumption.
 apply Nat.lt_succ_diag_r.

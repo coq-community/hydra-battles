@@ -73,7 +73,7 @@ repeat rewrite cPairProjections1 || rewrite cPairProjections2.
 simpl in |- *.
 induction (eq_nat_dec v n).
 rewrite a.
-rewrite <- beq_nat_refl.
+rewrite  Nat.eqb_refl.
 simpl in |- *.
 reflexivity.
 rewrite beq_nat_not_refl.

@@ -32,7 +32,8 @@ Lemma height_bad :  ~ @Hvariant _ _ lt_wf free height.
 Proof.
   intros [H];
   specialize (H 1 (hyd1 (hyd2 head head))  (hyd1 (hyd1 head)));
-     apply (lt_irrefl 2), H.
+     apply (Nat.lt_irrefl 2), H.
+
   -  discriminate.
   -  exists 0; right; repeat constructor. 
 Qed.

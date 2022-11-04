@@ -1,6 +1,6 @@
 (** provisionally fixes some compatibilty issues 8.15 -> 8.16 *)
 
-Require Import Arith.
+Require Import Arith Lia.
 Import Nat.
 
 
@@ -39,14 +39,44 @@ fix ind_0_1_SS (n : nat) : P n :=
   Proof. now rewrite <- Nat.succ_lt_mono. Qed. 
 
   
- Lemma  le_lt_n_Sm : forall n m : nat, n <= m -> n < S m.
- Proof. intros n m; now rewrite Nat.lt_succ_r. Qed.
+  Lemma lt_n_S : forall n m : nat, n < m -> S n < S m.
+  Proof. intros; auto with arith. Qed.
+
+  Lemma  le_lt_n_Sm : forall n m : nat, n <= m -> n < S m.
+  Proof. intros n m; now rewrite Nat.lt_succ_r. Qed.
 
  Lemma lt_not_le : forall n m : nat, n < m -> ~ m <= n.
  Proof. intros n m ; now rewrite Nat.lt_nge. Qed.
 
  Lemma le_plus_r : forall n m : nat, m <= n + m.
  Proof. intros n m; rewrite Nat.add_comm.  apply Nat.le_add_r. Qed.
+
+Lemma mult_O_le : forall n m : nat, m = 0 \/ n <= m * n.
+Proof. 
+  intros n m; assert (H : m=0 \/ 0 <m) by lia.  
+  destruct H.
+   - now left. 
+   - right; replace n with (1 * n) at 1.
+    +  apply mul_le_mono_r; lia.
+    + cbn; lia.
+ Qed.
+
+
+Lemma plus_Snm_nSm
+     : forall n m : nat, S n + m = n + S m.
+Proof. intros; lia. Qed.
+
+
+Lemma n_SSSn : forall n : nat, n <> S (S (S n)).
+Proof. intro n; apply (Nat.succ_add_discr 2) . Qed.
+
+Lemma n_SSn : forall n : nat, n <> S (S n).
+Proof. intro n; apply (Nat.succ_add_discr 1) . Qed.
+
+
+Lemma le_not_lt : forall n m : nat, n <= m -> ~ m < n.
+Proof. intros; now rewrite <- Nat.le_ngt. Qed.
+
 
 End Compat815.
 

@@ -394,7 +394,7 @@ Arity is not taken into account, and terms may be ill-formed. *)
     rewrite (size_unfold (Term f l)).
     induction l as [ | t l]; simpl; intuition.
     subst; auto with arith.
-    apply lt_le_trans with (1 + list_size size l); trivial;
+    apply Nat.lt_le_trans with (1 + list_size size l); trivial;
       simpl; auto with arith.
   Qed.
 
@@ -413,11 +413,10 @@ Arity is not taken into account, and terms may be ill-formed. *)
     Proof.
       intros Hvar Hterm; apply term_rec2; induction n; intros t Size_t.
       absurd (1 <= 0); auto with arith; 
-        apply le_trans with (size t); trivial; apply size_ge_one.
+        apply Nat.le_trans with (size t); trivial; apply size_ge_one.
       destruct t as [ x | f l ]; trivial;
-        apply Hterm; intros; apply IHn;
-          apply lt_n_Sm_le;
-          apply lt_le_trans with (size (Term f l)); trivial;
+        apply Hterm; intros; apply IHn. apply Nat.lt_succ_r. 
+          apply Nat.lt_le_trans with (size (Term f l)); trivial;
             apply size_direct_subterm; trivial.
     Qed.
 
@@ -428,11 +427,11 @@ Arity is not taken into account, and terms may be ill-formed. *)
       intros Hvar Hterm Hlist; apply term_rec2; 
         induction n; intros t Size_t.
       absurd (1<=0); auto with arith;
-        apply le_trans with (size t); trivial; apply size_ge_one.
+        apply Nat.le_trans with (size t); trivial; apply size_ge_one.
       destruct t as [ x | f l ]; trivial;
         apply Hterm; apply Hlist; intros t In_t; apply IHn;
-          apply lt_n_Sm_le;
-          apply lt_le_trans with (size (Term f l)); trivial;
+          apply Nat.lt_succ_r;
+          apply Nat.lt_le_trans with (size (Term f l)); trivial;
             apply size_direct_subterm; trivial.
     Qed.
   End Recursion.
@@ -453,12 +452,12 @@ Arity is not taken into account, and terms may be ill-formed. *)
       intro t1; pattern t1; apply term_rec2; induction n; clear t1;
         intros t1 Size_t1.
       absurd (1<=0); auto with arith;
-        apply le_trans with (size t1); trivial; apply size_ge_one.
+        apply Nat.le_trans with (size t1); trivial; apply size_ge_one.
       destruct t1 as [ x1 | f1 l1 ]; trivial. 
       destruct t2 as [ x2 | f2 l2 ]; trivial.
       apply Hterm; apply Hlist; intros t1 t2 In_t1 In_t2; apply IHn;
-        apply lt_n_Sm_le;
-        apply lt_le_trans with (size (Term f1 l1)); trivial;
+        apply Nat.lt_succ_r;
+        apply Nat.lt_le_trans with (size (Term f1 l1)); trivial;
           apply size_direct_subterm; trivial.
     Qed.
 
@@ -740,7 +739,7 @@ Arity is not taken into account, and terms may be ill-formed. *)
       destruct ti as [vi | fi li]; trivial.
     generalize (nth_error_ok_in j li); destruct (nth_error li j) as [tij | ]; [idtac | trivial].
     intro tij_in_li; destruct (subterm_at_pos tij p) as [ u | ]; trivial.
-    intro H; apply lt_trans with (size (Term fi li)); trivial.
+    intro H; apply Nat.lt_trans with (size (Term fi li)); trivial.
     apply size_direct_subterm; simpl; apply ti_in_l; trivial.
   Qed.
 

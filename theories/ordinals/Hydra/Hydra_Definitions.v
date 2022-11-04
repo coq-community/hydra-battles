@@ -7,7 +7,7 @@
  representing finite sequences  of hydras.
  *)
 
-From Coq Require Export Relations Max.
+From Coq Require Export Relations.
 From hydras Require Import T1 Epsilon0.
 
 (* begin snippet HydraDef *)
@@ -87,7 +87,7 @@ Fixpoint height  (h:Hydra) : nat :=
 with lheight l : nat :=
        match l with
        | hnil => 0
-       | hcons h hs => Max.max (S (height h)) (lheight hs)
+       | hcons h hs => Nat.max (S (height h)) (lheight hs)
        end.
 (* end snippet height *)
 

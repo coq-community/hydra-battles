@@ -1,5 +1,5 @@
 
-Require Import Arith.
+Require Import Arith Lia.
 Require Import Ensembles.
 Require Import Coq.Lists.List.
 
@@ -8,6 +8,7 @@ Require Import subAll.
 Require Import folLogic3.
 Require Export Languages.
 Require Export LNN.
+From hydras Require Import Compat815.
 
 Section NN.
 
@@ -98,13 +99,12 @@ apply (subAllCloseFrom LNN).
 simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
-induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+induction (le_lt_dec 2 0). lia. 
+(* elim (Compat815.le_not_lt _ _ a0).
+auto. *)
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
+lia. 
 auto.
-reflexivity.
 Qed.
 
 Lemma nn3 : forall a : Term, SysPrf NN (equal (Plus a Zero) a).
@@ -138,12 +138,10 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
+lia. 
 auto.
-reflexivity.
 Qed.
 
 Lemma nn5 : forall a : Term, SysPrf NN (equal (Times a Zero) Zero).
@@ -178,11 +176,9 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 
@@ -219,11 +215,9 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 
@@ -249,11 +243,9 @@ simpl in |- *.
 apply Axm; repeat (try right; constructor) || left.
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 reflexivity.
 Qed.
 

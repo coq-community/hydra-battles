@@ -17,6 +17,7 @@ From hydras.Ackermann Require Import ListExt.
 From Coq Require Import List.
 From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import expressible.
+From hydras Require Import Compat815.
 
 Definition subStar (a v n : nat) := codeSubFormula a v (codeNatToTerm n).
 
@@ -93,8 +94,8 @@ destruct n.
 elim H1; auto.
 destruct n.
 elim H2; auto.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+repeat apply Compat815.lt_n_S.
+apply Nat.lt_0_succ.
 set
  (Theta :=
   existH v
@@ -174,7 +175,7 @@ assert (In nv (freeVarFormula LNN subStarFormula)).
 eapply In_list_remove1.
 apply H4.
 induction represent as (H6, H7).
-elim (lt_not_le _ _ H3).
+elim (Compat815.lt_not_le _ _ H3).
 auto.
 apply (subFormulaNil LNN).
 unfold not in |- *; intros.
@@ -317,7 +318,7 @@ repeat
  | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
      simpl in H; decompose sum H; clear H
  end.
-elim (le_not_lt _ _ (H5 _ H4)).
+elim (Compat815.le_not_lt _ _ (H5 _ H4)).
 destruct x as [| n].
 elim H10; auto.
 destruct n.
@@ -326,8 +327,8 @@ destruct n.
 elim H12; auto.
 destruct n.
 elim H13; auto.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+repeat apply Compat815.lt_n_S.
+apply Nat.lt_0_succ.
 apply In_list_remove3; auto.
 intro.
 assert (In x (freeVarFormula LNN A));
@@ -418,8 +419,8 @@ destruct n.
 elim H1; auto.
 destruct n.
 elim H2; auto.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+repeat apply Compat815.lt_n_S.
+apply Nat.lt_0_succ.
 set
  (Theta :=
   existH v
@@ -499,7 +500,7 @@ assert (In nv (freeVarFormula LNT (LNN2LNT_formula subStarFormula))).
 eapply In_list_remove1.
 apply H4.
 induction represent as (H6, H7).
-elim (lt_not_le _ _ H3).
+elim (Compat815.lt_not_le _ _ H3).
 apply H6.
 apply LNN2LNT_freeVarFormula1.
 assumption.
@@ -704,7 +705,7 @@ repeat
  | H:(In _ (freeVarTerm LNT (fol.var LNT _))) |- _ =>
      simpl in H; decompose sum H; clear H
  end.
-elim (le_not_lt x 3).
+elim (Compat815.le_not_lt x 3).
 apply H5.
 apply LNN2LNT_freeVarFormula1.
 assumption.
@@ -716,8 +717,8 @@ destruct n.
 elim H12; auto.
 destruct n.
 elim H13; auto.
-repeat apply lt_n_S.
-apply lt_O_Sn.
+repeat apply Compat815.lt_n_S.
+apply Nat.lt_0_succ.
 apply In_list_remove3; auto.
 intro.
 assert (In x (freeVarFormula LNT A));

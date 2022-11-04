@@ -10,6 +10,7 @@ From hydras Require Import  E0 Canon Paths primRec Hprime.
 Import RelationClasses Relations.
 
 From Coq Require Import ArithRing Lia.
+Require Import Compat815.
 
 From Equations Require Import Equations.
 
@@ -223,7 +224,7 @@ Qed.
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
 Proof.
   intros;  apply Nat.le_lt_trans with (exp2 i * i).
-  - destruct (mult_O_le (exp2 i) i).
+  - destruct (Compat815.mult_O_le (exp2 i) i).
     + lia.
     + now rewrite Nat.mul_comm.
   -  apply LF2.
@@ -317,7 +318,7 @@ Section Properties.
         induction H.
         
         rewrite (iterate_S_eqn (F_ beta) (S n)).
-        apply Lt.lt_le_trans with (F_ beta
+        apply Nat.lt_le_trans with (F_ beta
                                       (iterate (F_ beta) (S n) n)).
         auto. 
         apply mono_weak; auto.
@@ -330,7 +331,7 @@ Section Properties.
         
         transitivity (iterate (F_ beta) (S m) m);auto.
         rewrite (iterate_S_eqn (F_ beta) (S m)).
-        apply Lt.lt_le_trans with (F_ beta (iterate (F_ beta) (S m) m)).
+        apply Nat.lt_le_trans with (F_ beta (iterate (F_ beta) (S m) m)).
         auto.
         apply mono_weak; auto.
         apply Nat.lt_le_incl.
@@ -960,7 +961,7 @@ Section The_induction.
   Lemma QD0 : dominates_from 2 (f_ (E0succ E0zero)) (f_ E0zero).
   Proof. 
     intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
-    apply Lt.lt_le_trans with (iterate S p p).
+    apply Nat.lt_le_trans with (iterate S p p).
     - replace (iterate S p p) with (p + p).
       + lia.
       + clear Hp; generalize p at 2 4; induction p. 

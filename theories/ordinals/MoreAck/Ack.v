@@ -307,10 +307,11 @@ Section Ack_Properties.
     Remark Ack_m_mono_weak : forall n p, n <= p ->
                                          Ack m n <= Ack m p.
     Proof.
-      intros x y H; destruct (Lt.le_lt_or_eq _ _ H).
-      apply PeanoNat.Nat.lt_le_incl; auto.
-      - destruct Hm as [H1 _]; apply H1; auto.
-      - rewrite H0;auto.
+      intros x y H; rewrite ->  (Nat.lt_eq_cases x y) in H; 
+        destruct H as [H0 | H0].
+      - apply PeanoNat.Nat.lt_le_incl; auto.
+        destruct Hm as [Hmono _]; now apply Hmono. 
+      - subst; now left. 
     Qed.
 
     Remark Rem3 : forall n, Ack (S m) n <= Ack (S (S m)) n.

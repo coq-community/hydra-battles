@@ -120,8 +120,6 @@ theories/ordinals/Ackermann/folProp.v
 theories/ordinals/Ackermann/ListExt.v
 theories/ordinals/Ackermann/misc.v
 theories/ordinals/Ackermann/NN.v
-theories/ordinals/MoreAck/Iterate_compat.v
-theories/ordinals/MoreAck/PrimRecExamples.v
 theories/ordinals/Ackermann/subProp.v
 theories/ordinals/Ackermann/codeList.v
 theories/ordinals/Ackermann/codeSubTerm.v
@@ -137,6 +135,9 @@ theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
 theories/ordinals/MoreAck/fol_Examples.v
 theories/ordinals/MoreAck/LNN_Examples.v
+theories/ordinals/MoreAck/Iterate_compat.v
+theories/ordinals/MoreAck/PrimRecExamples.v
+
 
 theories/ordinals/solutions_exercises/MinPR.v
 theories/ordinals/solutions_exercises/MinPR2.v

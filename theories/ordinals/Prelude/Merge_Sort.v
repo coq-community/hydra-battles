@@ -4,7 +4,7 @@
 
 
 From Coq Require Import List  Wf_nat  Recdef  Compare_dec  Arith  Peano_dec
-     Lia  RelationClasses  Div2  Sorting.Sorted Sorting.Permutation.
+     Lia  RelationClasses   Sorting.Sorted Sorting.Permutation.
 
 
 From hydras Require Import DecPreOrder DecPreOrder_Instances
@@ -86,10 +86,10 @@ Section Generic.
       + trivial.
     Qed.
 
-
     Lemma split'_aux_length_fst:
       forall l l',
-        length(fst(split'_aux l l')) = min (div2(length l')) (length l).
+        length(fst(split'_aux l l')) =
+ min (Nat.div2(length l')) (length l).
     Proof.
       intros; functional induction (split'_aux l l'); simpl.
       + rewrite e1 in IHp; simpl in IHp.
@@ -101,7 +101,7 @@ Section Generic.
     Qed.
 
     
-    
+   
     
     Lemma split'_decr:
       forall l1 l2 a b, l1 = a::b::l2 ->
@@ -110,13 +110,13 @@ Section Generic.
     Proof.
       split.
       + intros; unfold split'; rewrite H.
-        apply Nat.le_lt_trans with (m:=div2(length (a::b::l2))).
+        apply Nat.le_lt_trans with (m:=Nat.div2(length (a::b::l2))).
         rewrite split'_aux_length_fst.
-        apply Min.le_min_l.
-        simpl; apply lt_n_S.
+        apply Nat.le_min_l.
+        simpl; rewrite <-  Nat.succ_lt_mono.
         destruct (length l2); auto.
-        apply lt_trans with (m:=S n); auto.
-        apply lt_div2; abstract lia.
+        apply Nat.lt_trans with (m:=S n); auto.
+        apply Nat.lt_div2; abstract lia.
       + intros.
         rewrite <- (split'_aux_length_preserve l1 l1).
         assert(0<length (fst (split'_aux l1 l1)) ).

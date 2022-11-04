@@ -11,6 +11,7 @@ From hydras.Ackermann Require Import wConsistent.
 From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import code.
 From hydras.Ackermann Require Import checkPrf.
+From hydras Require Import Compat815.
 
 Section Goedel's_1st_Incompleteness.
 
@@ -140,11 +141,11 @@ Proof.
       + reflexivity.
       + destruct n as [|n ].
         * reflexivity.
-        * elim (le_not_lt (S (S n)) 1).
+        * elim (Compat815.le_not_lt (S (S n)) 1).
           assert (H6: In (S (S n)) (freeVarFormula LNN codeSysPrf)).
           { eapply In_list_remove1; apply H5. }
           apply (freeVarCodeSysPrf _ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
-          apply lt_n_S; apply lt_O_Sn.
+          apply Compat815.lt_n_S; apply Nat.lt_0_succ.
     - elim (closedNatToTerm _ _ H5).
   }
   induction (H _ _ H3) as [x0 H4].

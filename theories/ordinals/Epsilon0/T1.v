@@ -2300,49 +2300,46 @@ Proof.
         now left.
       * intros; simpl. left. compute; tauto.
   - destruct b.
-    intros H0 H1; destruct (not_lt_zero H1).
-    intros H0 H1; destruct (lt_inv H1).
-    destruct a1; simpl.
-    apply lt_incl_le.
-    auto with T1.
-    apply lt_incl_le.
-    auto with T1.
-    destruct H2.
-    destruct H2; subst b1.
-    simpl succ. 
-    destruct a1.
-    generalize (nf_of_finite H0).
-    intro; subst. 
-    generalize (lt_le_S _ _ H3).
+   + intros H0 H1; destruct (not_lt_zero H1).
+   + intros H0 H1; destruct (lt_inv H1).
+    * destruct a1; simpl.
+      apply lt_incl_le.
+      auto with T1.
+      apply lt_incl_le.
+      auto with T1.
+    * destruct H2.
+      destruct H2; subst b1.
+      simpl succ. 
+      destruct a1.
+      generalize (nf_of_finite H0).
+      intro; subst.
+      red in H3.  
+      generalize H3;
+      rewrite Nat.lt_eq_cases.
+      destruct 1 as [H2 | H2].
 
-    intro H2; destruct (Lt.le_lt_or_eq _ _ H2).
-    auto with T1.
-    subst; auto with T1.
-    auto with T1.
-    decompose [and] H2; subst.
-    clear H2.
-    simpl succ.
-    left.  now apply finite_lt.
-    rewrite H4. right.
-    destruct (lt_inv H1). left.
-    now apply coeff_lt.
-
-    destruct H2.
-    destruct H2.
-    left; now apply coeff_lt.
-    decompose [and] H2; subst.
-    apply le_tail.
-    eauto with T1.
-    decompose [and] H2; subst.
-    auto.
-    cbn.
-    destruct b1.
-    generalize (nf_of_finite H0). 
-    intro; subst.
-    decompose [and] H2.
-    destruct (not_lt_zero H7).
-    apply le_tail.
-    apply IHa2; eauto with T1.
+      --  decompose [and] H3; subst.
+          clear H3.
+          simpl succ.
+          left.  now apply finite_lt.
+      -- rewrite H2. right.
+      -- destruct (lt_inv H1). left.
+         now apply coeff_lt.
+         destruct H2 as [H2 | H2].
+         left; now apply coeff_lt.
+         decompose [and] H2; subst.
+         apply le_tail.
+         eauto with T1.
+    --  decompose [and] H2; subst.
+        auto.
+        cbn.
+        destruct b1.
+        ++ generalize (nf_of_finite H0). 
+           intro; subst.
+           decompose [and] H2.
+           destruct (not_lt_zero H7).
+        ++  apply le_tail.
+            apply IHa2; eauto with T1.
 Qed.
 
 Lemma LT_succ_LE :
@@ -2503,13 +2500,12 @@ Proof.
   - reflexivity.
   - cbn;  simpl in IHa2.
     intro H;  case_eq a1.
-    intro; subst a1; rewrite mult_1_r.
+    intro; subst a1; rewrite Nat.mul_1_r.
     now rewrite (nf_of_finite H).
-    intros; subst a1; now  rewrite mult_1_r.
+    intros; subst a1; now  rewrite Nat.mul_1_r.
 Qed.
 
-Lemma mult_nf_fin alpha n:
-  nf alpha -> nf (alpha * T1nat n).
+Lemma mult_nf_fin alpha n: nf alpha -> nf (alpha * T1nat n).
 Proof.
   revert n; induction n.
   -  now  rewrite mult_a_0.
@@ -2712,7 +2708,7 @@ Qed.
 Ltac T1_inversion H :=
   match type of H with lt _ zero => destruct (not_lt_zero H)
                   | Nat.lt _ 0 => destruct (Nat.nlt_0_r _ H)
-                  | Nat.lt ?x ?x => destruct (Lt.lt_irrefl _ H)
+                  | Nat.lt ?x ?x => destruct (Nat.lt_irrefl _ H)
                   | lt ?x ?x => destruct (lt_irrefl  H)
                   | lt (cons _ _ _) (cons _ _ _) =>
                     destruct (lt_inv H)
@@ -2984,7 +2980,7 @@ Section Proof_of_mult_nf.
         + subst; rewrite mult_a_0; eauto with T1.
         +  destruct H0 as [p0 [H2 H3]]; subst; simpl.
            apply LT3; eauto with T1.
-           apply Plus.plus_lt_le_compat; auto.
+           apply Nat.add_lt_le_mono;auto.
            apply PeanoNat.Nat.mul_le_mono_l; abstract lia.
     Qed. 
 
@@ -3004,7 +3000,7 @@ Section Proof_of_mult_nf.
          + destruct H0 as [p0 [H5 H6]]; subst; simpl.
            assert (p0 + n * S p0 < p + n * S p)%nat.
            { 
-             apply Plus.plus_lt_le_compat; auto.
+             apply Nat.add_lt_le_mono; auto.
              apply PeanoNat.Nat.mul_le_mono_l;  abstract lia.
            }
            destruct a.

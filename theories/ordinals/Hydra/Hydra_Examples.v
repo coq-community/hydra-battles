@@ -1,6 +1,6 @@
 Set Apply With Renaming.
 
-From Coq Require Import  Lia  Max.
+From Coq Require Import  Arith Lia.
 From hydras Require Import Hydra_Lemmas More_Arith.
 Open Scope nat_scope.
 
@@ -192,9 +192,9 @@ Proof. (*||*)
                   auto with arith. 
                 + cbn in H0; destruct H0. 
                   apply IHs' in H0.    clear IHs'.            
-                  rewrite succ_max_distr; 
+                  rewrite Nat.succ_max_distr; 
                     transitivity (S (height h0) + (S n)).
-                  apply max_le_plus; auto.
+                  lia.
                   cbn; lia.
         }
         clear H0; cbn; destruct (lheight s').

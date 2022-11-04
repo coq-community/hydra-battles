@@ -7,7 +7,7 @@
 
 
 From Coq Require Import Arith List Lia  Compare_dec  Relations
-     Wellfounded  Max RelationClasses.
+     Wellfounded  RelationClasses.
 Set Program Cases.
 
 From hydras Require Import Epsilon0.
@@ -68,14 +68,14 @@ Proof.
      + case (IHalpha2 H0).
      + case (IHalpha1 H0).
      + case (IHalpha1 H0).
-     + case (Arith.Lt.lt_irrefl _ H0).
+     + case (Nat.lt_irrefl _ H0).
      + case IHalpha3; auto.
 Qed.
 
 Ltac lt_clean := 
   try (match goal with 
          [ineq : lt ?a zero |- _ ] => case (not_lt_zero ineq);auto
-       |[ineq : Peano.lt ?a 0 |- _ ] => case (lt_n_O a);auto
+       |[ineq : Peano.lt ?a 0 |- _ ] => case (Nat.nlt_0_r a);auto
        |[ref : lt ?a ?a |- _] => case (lt_irr ref);auto
        |[ref : Peano.lt ?a ?a |- _] => case (lt_irr ref);auto
        end).
@@ -138,7 +138,7 @@ Section lemmas_on_length.
       t2_length (gcons a2 b2 n2 r2).
   Proof.
     intros.
-    apply plus_lt_compat; apply length_a. 
+    apply Nat.add_lt_mono; apply length_a. 
   Qed.
 
 
@@ -147,28 +147,19 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 r1) +
       t2_length (gcons a2 b2 n2 r2).
     Proof.
-    intros;apply plus_lt_le_compat.
+    intros;apply Nat.add_lt_le_mono.
     -  apply length_b.
     - cbn; intros; apply Compat815.le_lt_n_Sm.
     match goal with 
-      [ |- ?a <= ?b + ?c + ?d] => rewrite (plus_comm (b + c) d) end.
-    apply le_plus_trans.
-    replace (Max.max (t2_length b2) 0) with (t2_length b2).
-    + destruct (Max.max_dec (t2_length a2) (t2_length b2)).   
-      rewrite  e; repeat rewrite plus_0_r.
-      *  apply plus_le_compat; apply le_max_l.
-      * repeat rewrite plus_0_r.
-         apply plus_le_compat;apply  max_le_regL;  apply le_max_l.
-    + rewrite max_l; auto with arith.
+      [ |- ?a <= ?b + ?c + ?d] => rewrite (Nat.add_comm (b + c) d) end.
+    lia. 
   Qed.
-
-
 
   Lemma tricho_lt_3 : forall a1 a2 b1 b2 n1 n2 r1 r2,
       t2_length b1 + t2_length b2  <   
       t2_length (gcons a1 b1 n1 r1) +  t2_length (gcons a2 b2 n2 r2).
   Proof.
-    intros;apply plus_lt_compat; apply length_b.
+    intros;apply Nat.add_lt_mono; apply length_b.
   Qed.
 
 
@@ -177,7 +168,8 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 r1) +
       t2_length (gcons a2 b2 n2 r2).
   Proof.
-    intros; rewrite plus_comm;  apply plus_lt_compat; apply length_a. 
+    intros; rewrite Nat.add_comm;
+      apply Nat.add_lt_mono; apply length_a. 
   Qed.
 
   Lemma tricho_lt_4' : forall a1 a2 b1 b2 n1 n2 c1 c2,
@@ -185,7 +177,7 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a2 b2 n2 c2).
   Proof.
-    intros; apply plus_le_lt_compat.
+    intros; apply Nat.add_le_lt_mono.
     - case n1; auto.
       intros;apply Nat.lt_le_incl;apply length_n; auto with arith.
     -  apply length_b.
@@ -195,7 +187,7 @@ Section lemmas_on_length.
       t2_length a2 + t2_length a1  < 
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a2 (gcons a1 b1 0 zero)  n2 c2).
-    intros; rewrite plus_comm;apply plus_lt_compat; apply length_a.
+    intros; rewrite Nat.add_comm;apply Nat.add_lt_mono; apply length_a.
   Qed.
 
   Lemma tricho_lt_7 : forall a1 b1  n1  c1 c2,
@@ -203,7 +195,7 @@ Section lemmas_on_length.
       t2_length (gcons a1 b1 n1 c1) +
       t2_length (gcons a1 b1 n1 c2).
   Proof.
-    intros;    apply plus_lt_compat;  apply length_c. 
+    intros;    apply Nat.add_lt_mono;  apply length_c. 
   Qed.
 
 
@@ -271,7 +263,7 @@ Proof.
             assert (H2:(t2_length t1 + t2_length (gcons t3 t4 0 zero) < l)%nat).
           --  eapply lt_lt_Sn.
               ++  eapply tricho_lt_2'.
-              ++  rewrite plus_comm;  eauto with T2.
+              ++  rewrite Nat.add_comm;  eauto with T2.
           --  case (IHl _ _ H2).
               ++ destruct 1.
                  ** right;  constructor 2;auto with T2.
@@ -284,7 +276,7 @@ Defined.
 Definition lt_eq_lt_dec (t t': T2) : {t t2< t'}+{t = t'}+{t' t2<  t}. 
 Proof.
   eapply tricho_aux.
-  eapply lt_n_Sn.
+  eapply Nat.lt_succ_diag_r.
 Defined.
 (*||*)
 
@@ -1890,7 +1882,7 @@ Proof.
       simpl;apply Top_gt.
       simpl;auto with T2.
       destruct 1.
-   * intros; case (Lt.le_lt_or_eq _ _ H).
+   * intros; case (Compat815.le_lt_or_eq _ _ H).
      -- intros;apply IHn;auto with arith T2.
      --  intros;
     eapply lt_rpo_cons_cons;eauto with T2.
@@ -2864,7 +2856,7 @@ Proof.
   intro alpha;elim alpha.
   - cbn;auto with T2.
   -  cbn; intros;  case t; case t0.
-     +  cbn; rewrite plus_0_r;auto with T2.
+     +  cbn; rewrite Nat.add_0_r;auto with T2.
      +  cbn; rewrite <- H1;  cbn;auto with T2.
         inversion H2;auto with T2.
      +  cbn; rewrite <- H1; cbn;auto with T2.

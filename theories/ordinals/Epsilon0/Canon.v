@@ -709,7 +709,7 @@ Proof.
         *  subst.
            -- destruct n.
               abstract lia.
-              apply lt_n_Sm_le in H3.
+              rewrite Nat.lt_succ_r in H3. 
               destruct (Compare_dec.le_lt_eq_dec _ _ H3).
               exists 0; rewrite canon_SSn_zero. 
              apply LT3; auto.

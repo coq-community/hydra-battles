@@ -40,15 +40,16 @@ Section Hypos.
     - intros x Hx H H0; destruct (decide (P (S x))) as [H1|H1].
      +  assert (S x < p).
         { assert (S x <= p) by (destruct H; auto). 
-          destruct (le_lt_or_eq _ _ H2); auto.
-          subst p; contradiction. 
+          rewrite Nat.lt_eq_cases in H2. destruct H2 as [H2 | H2];
+            [easy|subst p; contradiction]. 
         }
         destruct (Hx (S x)).
         * unfold R; lia.
         * lia.
-        * intros i H3 H4; destruct (le_lt_or_eq _ _ H4); auto.
-          apply H0; auto with arith. 
-          now subst. 
+        * intros i H3 H4; rewrite Nat.lt_eq_cases in H4. 
+          destruct H4 as [H4 | H4].
+          -- apply H0; auto with arith. 
+          -- now subst. 
         * exists x0; auto.
     + exists x; repeat split; trivial;  try lia. 
   Defined.

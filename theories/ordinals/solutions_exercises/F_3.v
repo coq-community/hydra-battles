@@ -2,7 +2,7 @@ Require Import Arith.
 Require Import Iterates F_alpha E0.
 Require Import ArithRing Lia   Max.
 Import Exp2.
-Require Import Mult.
+Require Import Compat815.
 Open Scope nat_scope.
 
 Lemma LF3 : dominates_from 2 (F_ 3) (fun  n => iterate exp2 n n).
@@ -26,6 +26,7 @@ Section S1.
     intro n; ochange (E0fin 3)  (E0succ (E0fin 2)); now rewrite F_succ_eqn.
   Qed.
 
+
   (** ** Base case *)
   
   Lemma P_3 : P 3. 
@@ -42,10 +43,14 @@ Section S1.
        transitivity ((fun i : nat => (exp2 i * i)%nat) N).
        +   assert (0 < N).
            {  rewrite HeqN; cbn; apply F_alpha_positive. }
-           rewrite PeanoNat.Nat.mul_comm; destruct (mult_O_le (exp2 N) N);
+    
+           rewrite PeanoNat.Nat.mul_comm.  
+           (** deprecated, not replaced yet *)
+           destruct (Compat815.mult_O_le (exp2 N) N).
              auto.
            * lia.
-       +  apply PeanoNat.Nat.lt_le_incl,  LF2.
+       * apply H2. 
+       + apply PeanoNat.Nat.lt_le_incl,  LF2.
   Qed.
 
   (** Successor case *)
@@ -223,7 +228,7 @@ Section S1.
             * rewrite Le_iff. split. 
               -- now compute.
               -- split.
-                 ++ cbn; destruct (le_lt_or_eq _ _ Hn).
+                 ++ cbn; destruct (Compat815.le_lt_or_eq _ _ Hn).
                     **  apply lt_incl_le;  now apply finite_lt.
                     **  subst n;  apply Comparable.le_refl.
                  ++   cbn; apply nf_FS.

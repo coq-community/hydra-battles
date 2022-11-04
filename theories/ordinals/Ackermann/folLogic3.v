@@ -10,6 +10,9 @@ Require Import folReplace.
 Require Import Arith.
 Require Import subAll.
 Require Import misc.
+From Coq Require Import Lia.
+
+Require Import Compat815.
 
 Section Equality_Logic_Rules.
 
@@ -75,11 +78,9 @@ apply
         end)).
 simpl in |- *.
 induction (le_lt_dec 2 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 2 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 apply (impRefl L).
 apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
@@ -127,14 +128,11 @@ apply
         end)).
 simpl in |- *.
 induction (le_lt_dec 3 0).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 induction (le_lt_dec 3 1).
-elim (le_not_lt _ _ a0).
-auto.
+lia. 
 induction (le_lt_dec 3 2).
-elim (le_not_lt _ _ a0).
-auto.
+lia.
 apply (impRefl L).
 apply (subAllCloseFrom L).
 apply sysExtend with (Empty_set (fol.Formula L)).
@@ -203,16 +201,17 @@ induction (nVars L a).
 simpl in H.
 induction H as [H| H].
 rewrite <- H.
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 simpl in |- *.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply Nat.lt_succ_diag_r .
-rewrite <- plus_Snm_nSm.
+
+rewrite Nat.add_succ_r.
 apply Nat.lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply Nat.lt_succ_diag_r .
 simpl in |- *.
 induction (consTerms L a ts).
@@ -243,13 +242,13 @@ reflexivity.
 apply subAllTerms_ext.
 intros.
 induction (eq_nat_dec m (a + a)).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a4; auto.
 induction (eq_nat_dec m (S (a + a))).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
-rewrite a4; apply le_n_Sn.
+rewrite a4; apply Nat.le_succ_diag_r.
 auto.
 elim b2; auto.
 Qed.
@@ -274,15 +273,15 @@ induction (nVars L a).
 simpl in H.
 induction H as [H| H].
 rewrite <- H.
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 simpl in |- *.
 apply Nat.lt_succ_diag_r .
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 apply Nat.lt_trans with (a + a).
 apply Hreca.
 apply H.
 simpl in |- *.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply Nat.lt_succ_diag_r .
 simpl in |- *.
 induction (consTerms L a ts).
@@ -315,13 +314,13 @@ auto.
 apply subAllTerms_ext.
 intros.
 induction (eq_nat_dec m (a + a)).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
 rewrite a3; auto.
 induction (eq_nat_dec m (S (a + a))).
-elim (lt_not_le m (a + a)).
+elim (Compat815.lt_not_le m (a + a)).
 apply H; auto.
-rewrite a3; apply le_n_Sn.
+rewrite a3; apply Nat.le_succ_diag_r.
 auto.
 elim n0; auto.
 Qed.
@@ -363,36 +362,33 @@ rewrite H1.
 unfold m in |- *.
 induction (eq_nat_dec q (n + n)).
 rewrite <- a1 in H3.
-elim (lt_irrefl _ H3).
+elim (Nat.lt_irrefl _ H3).
 induction (eq_nat_dec q (S (n + n))).
-elim (lt_not_le _ _ H3).
+elim (Compat815.lt_not_le _ _ H3).
 rewrite a1.
-apply le_n_Sn.
+apply Nat.le_succ_diag_r.
 reflexivity.
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 simpl in |- *.
-repeat apply lt_S.
+repeat apply Nat.lt_lt_succ_r.
 auto.
 apply (impE L) with (fol.equal L (m0 (n + n)) (m0 (S (n + n)))).
 apply H2.
-rewrite <- plus_Snm_nSm in H1.
+rewrite Nat.add_succ_r in H1.
 repeat rewrite H1.
 unfold m in |- *.
 induction (eq_nat_dec (n + n) (n + n)).
 induction (eq_nat_dec (S (n + n)) (n + n)).
-elim (le_not_lt (S (n + n)) (n + n)).
-rewrite a2.
-auto.
-apply Nat.lt_succ_diag_r .
+lia.
 induction (eq_nat_dec (S (n + n)) (S (n + n))).
 apply H.
 elim b2; auto.
 elim b1; auto.
 simpl in |- *.
-apply lt_n_S.
+apply Compat815.lt_n_S.
 apply Nat.lt_succ_diag_r .
 simpl in |- *.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 apply Nat.lt_succ_diag_r .
 Qed.
 
@@ -452,7 +448,7 @@ contradiction.
 simpl in |- *.
 apply (forallI L).
 apply (notInFreeVarSys L).
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 simpl in |- *.
 apply (forallI L).
 apply (notInFreeVarSys L).
@@ -471,22 +467,14 @@ induction x as (a0, b).
 induction (consTerms L n ss).
 induction x as (a1, b0).
 simpl in |- *.
-rewrite <- plus_Snm_nSm in a.
+rewrite Nat.add_succ_r in a.
 induction (eq_nat_dec m0 (n + n)).
 rewrite a2 in a.
-elim (le_not_lt _ _ a).
-simpl in |- *.
-apply lt_S.
-apply Nat.lt_succ_diag_r .
+lia.
 induction (eq_nat_dec m0 (S (n + n))).
-rewrite a2 in a.
-elim (le_not_lt _ _ a).
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
+rewrite a2 in a; lia.
 apply Hrecn.
-do 2 apply le_S_n.
-repeat apply le_S.
-apply a.
+lia. 
 reflexivity.
 Qed.
 
@@ -546,7 +534,7 @@ contradiction.
 simpl in |- *.
 apply (forallI L).
 apply (notInFreeVarSys L).
-rewrite <- plus_Snm_nSm.
+rewrite Nat.add_succ_r.
 simpl in |- *.
 apply (forallI L).
 apply (notInFreeVarSys L).
@@ -565,22 +553,14 @@ induction x as (a0, b).
 induction (consTerms L n ss).
 induction x as (a1, b0).
 simpl in |- *.
-rewrite <- plus_Snm_nSm in a.
+rewrite Nat.add_succ_r in a.
 induction (eq_nat_dec m0 (n + n)).
-rewrite a2 in a.
-elim (le_not_lt _ _ a).
-simpl in |- *.
-apply lt_S.
-apply Nat.lt_succ_diag_r .
+lia.
+
 induction (eq_nat_dec m0 (S (n + n))).
 rewrite a2 in a.
-elim (le_not_lt _ _ a).
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
-apply Hrecn.
-do 2 apply le_S_n.
-repeat apply le_S.
-apply a.
+lia.
+apply Hrecn. lia.
 reflexivity.
 Qed.
 

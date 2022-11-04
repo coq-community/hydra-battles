@@ -1,9 +1,10 @@
-Require Import Arith.
+Require Import Arith Lia.
 
 Require Import folLogic3.
 Require Import folProp.
 Require Import subProp.
 Require Export NN.
+ From hydras Require Import Compat815.
 
 Lemma natNE :
  forall a b : nat,
@@ -29,8 +30,8 @@ simpl in |- *.
 apply impE with (notH (equal (natToTerm a) (natToTerm n))).
 apply cp2.
 apply nn2.
-apply Hreca.
-apply lt_S_n.
+apply Hreca. 
+apply Compat815.lt_S_n.
 auto.
 intros.
  destruct (Nat.lt_gt_cases a b) as [H1 _]; specialize (H1 H0);
@@ -70,9 +71,7 @@ apply le_S.
 auto.
 apply natNE.
 unfold not in |- *; intros.
-apply (le_not_lt _ _ H).
-rewrite H0.
-apply Nat.lt_succ_diag_r .
+lia. 
 Qed.
 
 Lemma natLT :
@@ -95,9 +94,7 @@ apply Axm; right; constructor.
 apply sysWeaken.
 apply natNE.
 unfold not in |- *; intros.
-apply (le_not_lt _ _ H).
-rewrite H0.
-apply Nat.lt_succ_diag_r .
+lia.
 apply Axm; right; constructor.
 Qed.
 
@@ -164,7 +161,7 @@ apply sysWeaken.
 apply H.
 intros.
 apply H0.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 auto.
 apply sysWeaken.
 apply impI.
@@ -220,7 +217,7 @@ replace
  (substituteFormula LNN (LT (var 1) (Succ (Succ (natToTerm n)))) 1
     (natToTerm n0)) with (LT (natToTerm n0) (natToTerm (S (S n)))).
 apply natLT.
-apply lt_S.
+apply Nat.lt_lt_succ_r.
 assumption.
 unfold LT in |- *.
 rewrite (subFormulaRelation LNN).

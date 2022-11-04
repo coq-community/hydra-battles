@@ -20,7 +20,7 @@ From Coq Require Import ArithRing Lia.
 From hydras Require Import  E0    Canon Paths.
 From hydras Require Import Exp2 Iterates Simple_LexProd.
 Import RelationClasses Relations.
-
+Require Import Compat815. 
 From Equations Require Import Equations.
 
  Open Scope E0_scope.
@@ -718,7 +718,7 @@ Section Proof_of_Abstract_Properties.
                    ++ apply CanonS_lt;  now  apply Limit_not_Zero.
                    ++   apply PA1; abstract lia.
                 -- apply Nat.le_trans with  (H'_ (Canon alpha (S m)) n).
-                   destruct  (Lt.le_lt_or_eq _ _ H).
+                   destruct  (Compat815.le_lt_or_eq _ _ H).
                    ++ destruct (Halpha (Canon alpha (S m))).
                       apply CanonS_lt; now  apply Limit_not_Zero.
                       specialize (PA1 (S m) n H0); abstract lia.
@@ -846,7 +846,7 @@ Section Abstract_Properties.
                                          H'_ alpha k <= H'_ alpha l.
   Proof.
     intros.
-    destruct (Lt.le_lt_or_eq k l H).
+    destruct (Compat815.le_lt_or_eq k l H).
     - now apply Nat.lt_le_incl, H'_alpha_mono.
     - subst; auto.
   Qed.
@@ -901,7 +901,7 @@ Section Proof_of_H'_mono_l.
     Remark R3 : {n: nat | forall p, n <= p ->
                                     H'_ alpha (S p) < H'_ beta (S p)}.
     Proof.
-      destruct R2 as [n Hn]; exists (Max.max n 1).
+      destruct R2 as [n Hn]; exists (Nat.max n 1).
       intros p H;  apply Nat.le_lt_trans with (H'_ gamma (S p)).
       - apply Hn; lia.
       - subst beta; apply (H'_alpha_dom gamma (S p)); auto with arith.
@@ -921,7 +921,7 @@ Section Proof_of_H'_mono_l.
       assert (E0succ alpha o<= beta) by (apply Lt_Le_incl; apply R4).
       destruct   (H'_mono_l_1 _ _ H) as [x Hx].
       exists x; intros.
-      apply Lt.lt_le_trans with (H'_ (E0succ alpha) (S p)).
+      apply Nat.lt_le_trans with (H'_ (E0succ alpha) (S p)).
       -  apply (H'_alpha_dom alpha (S p)); auto with arith.
       - auto.
     Qed.

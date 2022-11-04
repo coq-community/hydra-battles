@@ -2,7 +2,7 @@ Require Import primRec.
 Require Import codeFreeVar.
 Require Import codeSubFormula.
 Require Import cPair.
-Require Import Arith.
+From Coq Require Import Arith.
 Require Import code.
 Require Import folProp.
 Require Import extEqualNat.
@@ -10,7 +10,7 @@ Require Import wellFormed.
 Require Import folProof.
 Require Import prLogic.
 Require Import Compat815.
-
+From Coq Require Import Lia.
 Section Check_Proof.
 
 Variable L : Language.
@@ -2024,7 +2024,7 @@ repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ];
 unfold checkPrfAXM in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ];
  simpl in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl. 
 reflexivity.
 set
  (C :=
@@ -2043,7 +2043,7 @@ unfold checkPrfMP in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 simpl in |- *.
 repeat rewrite evalStrongRecHelp1.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 rewrite Hrecp0.
 replace
  (cPair 1
@@ -2094,7 +2094,7 @@ replace
 simpl in |- *.
 reflexivity.
 simpl in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 eapply Nat.lt_le_trans; [ idtac | apply cPairLe2 ].
 eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
@@ -2105,7 +2105,7 @@ simpl in |- *.
 unfold checkPrfIMP1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 unfold A at 1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2113,7 +2113,7 @@ simpl in |- *.
 unfold checkPrfIMP2 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 unfold A at 1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2121,7 +2121,7 @@ simpl in |- *.
 unfold checkPrfCP in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 unfold A at 1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2130,7 +2130,7 @@ unfold checkPrfFA1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 rewrite codeSubFormulaCorrect.
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 rewrite (wellFormedTermCorrect1 L codeF codeArityF codeArityFIsCorrect1).
 reflexivity.
 unfold A at 1 in |- *.
@@ -2144,7 +2144,7 @@ induction (In_dec eq_nat_dec v (freeVarFormula L A0)).
 elim n.
 assumption.
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 unfold A at 1 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2152,7 +2152,7 @@ simpl in |- *.
 unfold checkPrfFA3 in |- *.
 repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 reflexivity.
 set
  (C :=
@@ -2179,7 +2179,7 @@ rewrite (cPairProjections2 9 0).
 (**)
 unfold C in |- *.
 unfold charFunction in |- *.
-rewrite <- beq_nat_refl.
+rewrite Nat.eqb_refl.
 simpl in |- *.
 reflexivity.
 (* Conversion was short in V7.3 but is very long in V8...
@@ -2222,7 +2222,7 @@ rewrite (cPairProjections2 10 0).
 rewrite (cPairProjections1 C0 (cPair 10 0)).
 (**)
 unfold charFunction in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 (* Conversion was short in V7.3 but is very long in V8...
 Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
@@ -2271,7 +2271,7 @@ rewrite (cPairProjections1 C0 (cPair 11 0)).
 rewrite (cPairProjections2 11 0).
 (**)
 unfold charFunction in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 (* Conversion was short in V7.3 but is very long in V8...
 Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
@@ -2296,7 +2296,7 @@ replace
           (codeNVars2 (pred (S (arity L (inl (Functions L) R)))))))) with
  (codeFormula L codeF codeR (AxmEq4 L R)).
 unfold charFunction in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 unfold AxmEq4 in |- *.
 clear A.
@@ -2339,7 +2339,7 @@ replace
              (codeNVars2 (pred (S (arity L (inr (Relations L) f))))))))) with
  (codeFormula L codeF codeR (AxmEq5 L f)).
 unfold charFunction in |- *.
-repeat rewrite <- beq_nat_refl.
+repeat rewrite Nat.eqb_refl.
 reflexivity.
 unfold AxmEq5 in |- *.
 clear A.
@@ -2400,8 +2400,8 @@ intro.
 induction m as [| m Hrecm].
 intros.
 elim (Nat.nlt_0_r _ H).
-intros.
-induction (le_lt_or_eq _ _ (Compat815.lt_n_Sm_le _ _ H)).
+intros. assert (H': n <= m) by lia.
+rewrite Nat.lt_eq_cases in H'; destruct H'.
 apply Hrecm; assumption.
 unfold checkPrf in H0.
 assert (wellFormedFormula (cPairPi1 n) <> 0).
@@ -2561,7 +2561,7 @@ unfold checkPrfMP in H0.
 repeat first
  [ rewrite cPairProjections1 in H0 | rewrite cPairProjections2 in H0 ].
 assert (cPairPi2 (cPairPi2 n) < n).
-apply lt_le_trans with (cPair 1 (cPairPi2 (cPairPi2 n)));
+apply Nat.lt_le_trans with (cPair 1 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].
 apply cPairLt2.
 assert (cPairPi1 (cPairPi2 (cPairPi2 n)) < n).
@@ -2642,12 +2642,12 @@ simpl in H0.
 assumption.
 discriminate.
 assert (cPairPi1 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.
@@ -2709,7 +2709,7 @@ repeat first
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < n).
 eapply Nat.le_lt_trans.
 apply cPairLe2A.
-apply lt_le_trans with (cPair 2 (cPairPi2 (cPairPi2 n)));
+apply Nat.lt_le_trans with (cPair 2 (cPairPi2 (cPairPi2 n)));
  [ idtac | rewrite H2; apply cPairLe2A ].
 apply cPairLt2.
 rewrite evalStrongRecHelp1 in H0.
@@ -2754,7 +2754,7 @@ simpl in H0.
 assumption.
 discriminate.
 assert (cPairPi2 (cPairPi2 (cPairPi2 n)) < m).
-apply lt_le_trans with n.
+apply Nat.lt_le_trans with n.
 assumption.
 rewrite H1.
 apply le_n.

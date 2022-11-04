@@ -27,6 +27,7 @@ Example t1_0: Term LNN :=
    (Tcons LNN _ (var LNN  1)
      (Tcons LNN _ (apply LNN Zero (Tnil _)) (Tnil _))). 
 (* end snippet v1Plus0 *)
+Print t1_0. 
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
@@ -46,6 +47,7 @@ Let f3 := (orH LNN (equal _ (var _ 0) (apply LNN Zero (Tnil _)))
              (existH _ 1 (equal _ (var _ 0) (apply LNN Succ 
                              (Tcons _ _ (var _ 1) (Tnil _)))))).
 (* end snippet f1Example *)
+
 Print f3.
 
 (* begin snippet FormulaRect *)

@@ -612,7 +612,7 @@ Proof.
   generalize (iterate_mono (fun z : nat => S (2 * z))
                            L_omega_smono L_omega_Sle).
   intros H x y Hxy.
-  apply lt_le_trans with (iterate (fun z : nat => S (2 * z)) x (S y)).
+  apply Nat.lt_le_trans with (iterate (fun z : nat => S (2 * z)) x (S y)).
   - apply iterate_mono.
    + apply L_omega_smono.
    + apply L_omega_Sle.
@@ -736,7 +736,7 @@ Proof. reflexivity. Qed.
 Lemma exp2_k_mult_pos k:
   (0 < k -> 4 <= exp2 k * (k + 2))%nat.
 Proof.
-  change 4 with (2 * 2)%nat; intro Hk; apply mult_le_compat; auto.
+  change 4 with (2 * 2)%nat; intro Hk; apply Nat.mul_le_mono; auto.
   - generalize (exp2_ge_S k);  abstract lia.
   - abstract lia. 
 Qed.
@@ -757,7 +757,7 @@ Proof.
   repeat rewrite L_omega_square_eqn; auto; try lia.
   assert (1 * 4 <=
           exp2 (exp2 k * (k + 2) - 1) * (exp2 k * (k + 2) - 1 + 2))%nat
-  by (apply mult_le_compat; [apply exp2_positive | lia]); lia.
+  by (apply Nat.mul_le_mono; [apply exp2_positive | lia]); lia.
 Qed.
 
 
