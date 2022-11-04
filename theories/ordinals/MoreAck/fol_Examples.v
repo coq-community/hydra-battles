@@ -1,8 +1,10 @@
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages.
 Require Import primRec.
+
 Require Import FOL_notations.
 Import FOL_notations. 
+
 
 Locate arity. 
 
