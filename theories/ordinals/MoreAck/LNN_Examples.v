@@ -2,6 +2,9 @@ From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN.
 Require Import fol_Examples.
 
+Import FOL_notations.
+Import FOL_notations.
+
 Require Import LNN.
 
 Check t1_0. 
@@ -34,9 +37,9 @@ Let t1: Term  := Plus (var 1) Zero.
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
 Let f1 : Formula  :=
-  forallH 0 
-    (orH (equal (var 0) Zero)
-          (existH 1 (equal (var 0) (Succ (var 1))))).
+  (allH 0 
+    (v_ 0 = Zero \/
+          exH 1 (v_ 0 = Succ (v_ 1))))%fol.
 (* end snippet f1Example *)
 
 (* begin snippet f2Example *)
