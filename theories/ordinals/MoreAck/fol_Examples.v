@@ -1,5 +1,5 @@
 From Coq Require Import Arith Lists.List.
-Require Import fol folProp Languages.
+Require Import fol folProp folProof  Languages.
 Require Import primRec.
 
 Locate arity. 
@@ -75,6 +75,10 @@ Compute freeVarFormula _ (close _ f3).
 Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil _)) . 
 (* end snippet freeVarExamples *)
 
+
+Compute nVars LNN 3.
+
+Compute AxmEq4 LNN LT. 
 
 End Examples. 
 
