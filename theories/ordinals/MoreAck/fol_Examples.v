@@ -1,5 +1,4 @@
 From Coq Require Import Arith Lists.List.
-
 Require Import fol folProp folProof  Languages.
 Require Import primRec.
 
@@ -227,6 +226,10 @@ Check Sentence.
 Compute nVars LNN 3.
 
 Import CFOL_notations. 
+Compute AxmEq4 LNN LT. 
+
+Compute nVars LNN 3.
+
 Compute AxmEq4 LNN LT. 
 
 End Examples. 
