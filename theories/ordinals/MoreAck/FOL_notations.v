@@ -5,18 +5,25 @@ Module FOL_notations.
 Declare Scope fol_scope.
 Delimit Scope fol_scope with fol.
 
-Infix "=" := (equal _): fol_scope.
-Infix "\/" := (orH _): fol_scope.
-Infix "/\" := (andH _):fol_scope.
-Infix "->" := (impH _): fol_scope.
-Notation "~" := (notH _): fol_scope. 
-Notation atH := (atomic _).
-Notation app1 f arg := (apply _ f (Tcons _ _ arg (Tnil _))).
+Infix "=" := (fol.equal _): fol_scope.
+Infix "\/" := (fol.orH _): fol_scope.
+Infix "/\" := (fol.andH _):fol_scope.
+Infix "->" := (fol.impH _): fol_scope.
+Notation "~" := (fol.notH _): fol_scope. 
+Notation atH := (fol.atomic _).
+
+Notation k_ t := (fol.apply _ (t:Functions _)  (fol.Tnil _)).
+
+Notation app1 f arg := 
+  (fol.apply _ (f: Functions _)  (fol.Tcons _ _ arg (fol.Tnil _))).
+
 Notation app2 f arg1 arg2 := 
-  (apply _ f (Tcons _ _ arg2 (Tcons _ _ arg2 (Tnil _)))).
-Notation allH := (forallH _).
-Notation exH := (forallH _).
-Notation v_ := (var _).
+  (fol.apply  _ (f: Functions _) 
+     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
+
+Notation allH := (fol.forallH _).
+Notation exH := (fol.existH _).
+Notation v_ := (fol.var _).
 End FOL_notations.
 
 Import FOL_notations. 
