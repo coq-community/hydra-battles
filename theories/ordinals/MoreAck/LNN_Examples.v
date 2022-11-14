@@ -1,58 +1,55 @@
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN.
-Require Import fol_Examples.
+Require Import LNN_notations. 
 
-Import FOL_notations.
-Import FOL_notations.
+Import LNN_notations.
 
 Require Import LNN.
 
+Example t1_0 := (v_ 1 + zero)%lnn. 
 Check t1_0. 
 Goal t1_0 = Plus (var 1) Zero. 
 reflexivity. 
 Qed. 
 
 Print t1_0.
-(*
-t1_0 = 
-apply LNN Languages.Plus
-  (Tcons LNN 1 (fol.var LNN 1)
-     (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
-     : fol.Term LNN
-*)
-Compute t1_0. 
-(*
-apply LNN Languages.Plus
-         (Tcons LNN 1 (fol.var LNN 1)
-            (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
-*)
+Unset Printing Notations.  
 
+Compute t1_0. 
+Set Printing Notations.  
 Section Examples.
 
 (* begin snippet v1Plus01 *)
 Let t1: Term  := Plus (var 1) Zero. 
 (* end snippet v1Plus01 *)
 
+Compute t1. 
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
 Let f1 : Formula  :=
   (allH 0 
-    (v_ 0 = Zero \/
-          exH 1 (v_ 0 = Succ (v_ 1))))%fol.
+    (v_ 0 = zero \/
+          exH 1 (v_ 0 = S_ (v_ 1))))%lnn.
 (* end snippet f1Example *)
+
+Compute f1. 
+Import LNN_notations CLNN_notations. 
+
+Compute f1. 
 
 (* begin snippet f2Example *)
 Let f2 : Formula :=
-   (existH 2 (andH (LT Zero (var 2))
-                 (equal (natToTerm 4) (Plus (var 2) (var 2))))).
+   (exH 2 (zero < v_ 2 /\ natToTerm 4 = v_ 2 + v_ 2))%lnn.
 
-Let f3 := (orH (equal (var 0) Zero)
-             (existH 1 (equal (var 0) (Succ (var 1))))).
+Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = S_ (v_ 1)))%lnn.
 
-Let f4 := (iffH (equal (var 0) (Plus (var 1) (var 1)))
-                (equal (var 0) (Times (var 1) (natToTerm 2)))).
+
+Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%lnn.
 (* end snippet f2Example *)
+
+Compute f4. 
+Print f4.
 
 (* begin snippet depthCompute *)
 Compute (depth _ f1, depth _ f2).

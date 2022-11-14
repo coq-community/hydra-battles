@@ -1,30 +1,13 @@
 From Coq Require Import Arith Lists.List.
-Require Import fol folProp .
+
+Require Import fol folProp folProof  Languages.
+Require Import primRec.
+
 
 
 Require Import FOL_notations.
 Import FOL_notations. 
 
-
-Declare Scope Cfol. 
-Delimit Scope Cfol with cfol. 
-Module CFOL_notations.
-Notation " A -> B" := (@fol.impH _ A B)%fol : Cfol.
-Notation " A \/ B" := ((@fol.notH _  A) -> B)%cfol : Cfol.
-Notation " A /\ B" := (@fol.notH _ (@fol.notH _  A \/ @fol.notH _ B))%cfol: Cfol.
-Notation "~ A" := (@fol.notH _ A): Cfol.
-Notation exH v A := (@fol.notH _ (@fol.forallH _ v (~ A)%cfol)).
-
-Goal forall L (A B: Formula L), (A \/ B)%cfol = (A \/ B)%fol.
-reflexivity. 
-Qed.
-
-Goal forall L (A B: Formula L), (A /\ B)%cfol = (A /\ B)%fol.
-reflexivity. 
-Qed.
-
-
-End CFOL_notations.
 Import CFOL_notations.
 
 Module Toy.
@@ -44,21 +27,24 @@ Definition arity (x: Rel + Fun): nat :=
 
 Definition L := language Rel Fun arity.
 
-Notation f x := (app1 (_f: Functions L) x).
-Notation g x := (app1 (_g: Functions L) x).
-Notation h  x y := (app2 (_h: Functions L) x y).
-Notation a := (k_ (_a : Functions L)).
-Notation b := (k_ (_b : Functions L)).
+Notation f x := (app1 (_f: Functions L) x)%fol.
+Notation g x := (app1 (_g: Functions L) x)%fol.
+Notation h  x y := (app2 (_h: Functions L) x y)%fol.
+Notation a := (k_ (_a : Functions L))%fol.
+Notation b := (k_ (_b : Functions L))%fol.
 
 Notation P t := (fol.atomic L (_P: Relations L) (Tcons _ _ t (Tnil _))).
 Notation R t1 t2 :=
   (fol.atomic L (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
 
-Notation S t1 t2 :=
-  (fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+#[local] Notation S t1 t2 :=
+  (@fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
 
 
 
+Compute nVars L 3.
+
+Compute AxmEq4 L _S.
 
 Check f (v_ 1).
 Check a. 
@@ -85,14 +71,23 @@ Goal ~ Sentence L (allH  0 (v_ 1 = v_ 1))%fol.
 intro H. specialize (H 1). cbn in H; tauto. 
 Qed. 
 
-Let f1 : Formula L :=
+Example f1 : Formula L :=
       (allH 0 (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1))))%fol.
 
-Let f2 : Formula L :=
+Example f2 : Formula L :=
       (exH  1 (v_ 0 = f (v_ 1)))%fol. 
 
-Let f3 := (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1)))%fol.
+Example f3 := (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1)))%fol.
 
+
+Compute f3.
+
+Compute a : Term L. 
+
+Goal a= (k_ (_a : Functions L)). 
+Print a. 
+reflexivity. 
+Qed. 
 
 Module MyModule. 
 #[local] Notation f x := (app1 (_f: Functions L) x)%fol.
@@ -194,6 +189,16 @@ Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil _)) .
 Check Sentence. 
 
 
+Compute nVars LNN 3.
+
+Import CFOL_notations. 
+Compute AxmEq4 LNN LT. 
+
+Notation "t < u" := (@fol.atomic LNN LT 
+                       (Tcons LNN 1 t  (Tcons LNN 0 u (Tnil LNN)))): Cfol_scope. 
+
+Compute AxmEq4 LNN LT. 
+Compute (v_ 1 < v_ 2)%cfol. 
 End Examples. 
 
 
@@ -217,6 +222,5 @@ Abort.
 
 
 End depth_rec_demo. 
-
 
 

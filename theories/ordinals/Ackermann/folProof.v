@@ -30,7 +30,6 @@ Fixpoint nVars (n: nat) : Terms n * Terms n:=
   end.
 
 
-
 Definition AxmEq4 (R : Relations L) : Formula.
 Proof. 
   assert (X: forall (f : Formula) (n : nat), Formula).
@@ -43,6 +42,7 @@ Proof.
     apply (iffH (atomic R a) (atomic R b)).
   - apply (arity L (inl _ R)).
 Defined.
+
 
 Definition AxmEq5 (f : Functions L) : Formula.
 Proof. 
