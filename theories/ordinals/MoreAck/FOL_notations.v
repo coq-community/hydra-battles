@@ -11,8 +11,6 @@ Infix "/\" := (fol.andH _):fol_scope.
 Infix "->" := (fol.impH _): fol_scope.
 Notation "~" := (fol.notH _): fol_scope. 
 Notation atH := (fol.atomic _).
-(*Notation "A \/ B" := (fol.impH _ (fol.notH _ A) B) (only printing) : fol_scope. *)
-
 Notation k_ t := (fol.apply _ (t:Functions _)  (fol.Tnil _)).
 
 Notation app1 f arg := 
@@ -27,41 +25,52 @@ Notation exH := (fol.existH _).
 Notation v_ := (fol.var _).
 End FOL_notations.
 
-Import FOL_notations.
 
-Declare Scope Cfol_scope. 
-Delimit Scope Cfol_scope with cfol. 
+
+Declare Scope cfol_scope. 
+Delimit Scope cfol_scope with cfol. 
 
 Module CFOL_notations.
-Notation " A -> B" := (@fol.impH _ A B) : Cfol_scope.
-Notation " A \/ B" := ((@fol.notH _  A) -> B)%cfol : Cfol_scope.
-Notation " A /\ B" := (@fol.notH _ (@fol.notH _  A \/ @fol.notH _ B))%cfol: Cfol_scope.
-Notation "~ A" := (@fol.notH _ A): Cfol_scope.
-Notation exH v A := (@fol.notH _ (@fol.forallH _ v (@fol.notH _ A))).
-Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol: Cfol_scope.
-Notation "t = u" := (@fol.equal _ t u): Cfol_scope.
 
-Notation atH := (fol.atomic _).
+Notation "~ A" := (@fol.notH _ A): cfol_scope.
 
-Notation k_ t := (fol.apply _ (t:Functions _)  (fol.Tnil _)).
+Notation " A -> B" := (@fol.impH _ A B) : cfol_scope.
+Notation " A \/ B" := ((@fol.notH _  A) -> B)%cfol : cfol_scope.
+Notation " A /\ B" := 
+     (@fol.notH _ (@fol.notH _  A \/ @fol.notH _ B))%cfol 
+ : cfol_scope.
+
+Notation exH v A := 
+  (@fol.notH _ (@fol.forallH _ v (@fol.notH _ A))).
+
+Notation allH := (fol.forallH _).
+
+Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
+
+Notation "t = u" := (@fol.equal _ t u): cfol_scope.
 
 Notation app1 f arg := 
-  (fol.apply _ (f: Functions _)  (fol.Tcons _ _ arg (fol.Tnil _))).
+  (fol.apply _ (f: Functions _) 
+     (fol.Tcons _ _ arg (fol.Tnil _))).
 
 Notation app2 f arg1 arg2 := 
   (fol.apply  _ (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
-Goal forall L (A B: Formula L), (A \/ B)%cfol = (A \/ B)%fol.
-reflexivity. 
-Qed.
+Notation v_ := (fol.var _).
 
-Goal forall L (A B: Formula L), (A /\ B)%cfol = (A /\ B)%fol.
-reflexivity. 
-Qed.
+ Section Consistance. 
+  Goal forall L A B, @orH L A B = (A \/ B)%cfol. 
+   reflexivity. Qed. 
+  
+  Goal forall L A B, andH  L A B = (A /\ B)%cfol. 
+    reflexivity. Qed.  
+  
 
+ End Consistance. 
 
 End CFOL_notations.
+
 
 Import FOL_notations. 
 Section JustTry.
@@ -81,7 +90,7 @@ Open Scope fol_scope.
 
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
-Open Scope Cfol_scope.
+Open Scope cfol_scope.
 
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.

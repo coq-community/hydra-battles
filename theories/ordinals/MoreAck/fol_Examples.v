@@ -194,11 +194,6 @@ Compute nVars LNN 3.
 Import CFOL_notations. 
 Compute AxmEq4 LNN LT. 
 
-Notation "t < u" := (@fol.atomic LNN LT 
-                       (Tcons LNN 1 t  (Tcons LNN 0 u (Tnil LNN)))): Cfol_scope. 
-
-Compute AxmEq4 LNN LT. 
-Compute (v_ 1 < v_ 2)%cfol. 
 End Examples. 
 
 

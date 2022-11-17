@@ -64,7 +64,8 @@ Inductive Prf : Formulas -> Formula -> Set :=
     Prf Axm1 (impH A B) -> Prf Axm2 A -> Prf (Axm1 ++ Axm2) B
 | GEN :
   forall (Axm : Formulas) (A : Formula) (v : nat),
-    ~ In v (freeVarListFormula L Axm) -> Prf Axm A -> Prf Axm (forallH v A)
+    ~ In v (freeVarListFormula L Axm) -> Prf Axm A ->
+    Prf Axm  (forallH v A)
 | IMP1 : forall A B : Formula, Prf nil (impH A (impH B A))
 | IMP2 :
   forall A B C : Formula,

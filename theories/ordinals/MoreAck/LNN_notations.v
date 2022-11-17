@@ -10,12 +10,13 @@ Delimit Scope lnn_scope with lnn.
 Infix "=" := (fol.equal LNN): lnn_scope.
 Infix "\/" := (fol.orH LNN): lnn_scope.
 Infix "/\" := (fol.andH LNN):lnn_scope.
-Infix "->" := (fol.impH LNN): lnn_scope.
+Infix "->" := (@fol.impH LNN): lnn_scope.
 Infix "<->" := (fol.iffH LNN): lnn_scope.
 Notation "~" := (fol.notH LNN): lnn_scope. 
 
 
 Notation zero := LNN.Zero.
+
 
 Notation app1 f arg := 
   (fol.apply LNN (f: Functions _) 
@@ -27,7 +28,7 @@ Notation app2 f arg1 arg2 :=
 
 Notation allH := (fol.forallH LNN).
 Notation exH := (fol.existH LNN).
-Notation v_ := (fol.var LNN).
+Notation v_ := (@fol.var LNN).
 
 Notation "t1 + t2" := 
   (fol.apply  LNN Languages.Plus 
@@ -57,11 +58,13 @@ Module CLNN_notations.
 
 Notation "~ A" := (@fol.notH LNN A): cnn_scope.
 
-Notation " A -> B" := (@fol.impH _ A B) : cnn_scope.
+Notation " A -> B" := (@fol.impH LNN A B) : cnn_scope.
 Notation " A \/ B" := ((@fol.notH LNN  A) -> B)%cnn : cnn_scope.
 Notation " A /\ B" := 
      (@fol.notH LNN (@fol.notH LNN  A \/ @fol.notH _ B))%cnn 
  : cnn_scope.
+
+Notation allH := (@fol.forallH LNN).
 
 Notation exH v A := 
   (@fol.notH _ (@fol.forallH _ v (@fol.notH _ A))).
@@ -69,6 +72,8 @@ Notation exH v A :=
 Notation "A <-> B" := (( A -> B) /\ (B -> A))%cnn:  cnn_scope.
 
 Notation "t = u" := (@fol.equal LNN t u): cnn_scope.
+
+Notation v_ := (@fol.var LNN).
 
 Notation app1 f arg := 
   (fol.apply LNN (f: Functions _) 
@@ -78,14 +83,14 @@ Notation app2 f arg1 arg2 :=
   (fol.apply  LNN (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
-Notation "t1 + t2" := (fol.apply  LNN Plus 
+Notation "t1 + t2" := (@fol.apply  LNN Languages.Plus 
      (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil _)))): cnn_scope.
 
-Notation "t1 * t2" := (fol.apply  LNN Times 
+Notation "t1 * t2" := (@fol.apply  LNN Languages.Times 
      (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil _)))): cnn_scope.
 
 Notation S_ t  := 
-   (fol.apply  LNN Languages.Succ 
+   (@fol.apply  LNN Languages.Succ 
      (fol.Tcons _ _ t (fol.Tnil _))).
 
 About fol.atomic. 
@@ -112,7 +117,7 @@ Notation zero := (fol.apply LNN Languages.Zero (fol.Tnil _)).
 End CLNN_notations.
 
 
-
+(*
 
 Import LNN_notations.
 
@@ -170,3 +175,4 @@ Unset Printing All.
 Check (forallH  1 (v_ 0 = v_ 0 + zero))%lnn.
 
 
+*)
