@@ -20,6 +20,8 @@ Notation app2 f arg1 arg2 :=
   (fol.apply  _ (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
+Notation "t = u" := (@fol.equal _ t u): fol_scope.
+
 Notation allH := (fol.forallH _).
 Notation exH := (fol.existH _).
 Notation v_ := (fol.var _).

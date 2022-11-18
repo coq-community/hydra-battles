@@ -106,6 +106,44 @@ End MyModule.
 End Toy. 
 
 
+(* move to FOL_Examples *)
+
+Import FOL_notations. 
+
+(* begin snippet eqRefl:: no-out *)
+Lemma eq_refl : forall L (t:Term L), Prf L nil (t = t)%fol.
+(* end snippet eqRefl *)
+Proof. 
+  intros L t.
+  assert (H: Prf L nil (allH 0 (v_ 0 = v_ 0))%fol). 
+  {
+    apply GEN.
+    - cbn; auto. 
+    - apply EQ1.
+  }
+  change (nil:(list (Formula L))) with (nil++nil: list(Formula L)).
+  eapply MP.
+  2: apply H.
+  generalize (FA1 _ (v_ 0 = v_ 0)%fol 0 t).
+  intro; assumption.   
+Qed. 
+
+(* begin snippet MPDiag:: no-out *)
+Lemma MPdiag L (G: System L) (A B: Formula L) : 
+  SysPrf L G (A -> B)%cfol ->
+  SysPrf L G A ->
+  SysPrf L G B.
+(* end snippet MPDiag *)
+Proof.
+  destruct 1 as [x [HAB Hx]]. 
+  destruct 1 as [y [HA Hy]]. 
+  exists (x ++ y). eexists. 
+  refine (MP L x y A B _ _). 
+  apply HAB. 
+  apply HA. 
+  intros g Hg; destruct (in_app_or _ _ _ Hg); auto. 
+Qed. 
+
 
 
 
@@ -129,7 +167,7 @@ Section Examples.
 
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
-Example t1_0: Term LNN :=
+Example t1_0: Term LNN := 
  apply LNN Plus 
    (Tcons LNN _ (var LNN  1)
      (Tcons LNN _ (apply LNN Zero (Tnil _)) (Tnil _))). 

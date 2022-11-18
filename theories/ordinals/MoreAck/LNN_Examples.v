@@ -101,25 +101,6 @@ intro H1; apply H1. auto.
 Qed.
 
 
-Goal forall L (t:Term L), Prf L nil (equal L t t).
-Proof. 
-  intros L t.
-  assert (H: Prf L nil (forallH L 0 (equal _ (var _ 0) (var _ 0)))).
-  {
-    apply GEN.
-    cbn.  auto. 
-    apply EQ1.
-  }
-  change (@nil (Formula L)) with ((@nil (Formula L) ++ nil)).
-  eapply MP.
-  2: apply H.
-  generalize (FA1 _ (equal L (var L 0) (var L 0)) 0 t).
-  intro; assumption.   
-Qed. 
-
-
-
-
 
 
 
