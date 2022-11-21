@@ -1,7 +1,30 @@
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
 Require Import LNN_notations. 
-Import (* LNN_notations *) CLNN_notations. 
+
+Section bare_syntax. 
+(* begin snippet uglyF0 *)
+Definition  f0 : Formula LNN :=
+      forallH _ 0 
+        (orH _ 
+           (equal _ (var _ 0) 
+              (apply LNN Languages.Zero (Tnil _)))
+           (existH _ 1 (equal _ (var _ 0)
+                          (apply LNN Languages.Succ 
+                             (Tcons _ 0 (var _ 1) (Tnil _)))))).
+(* end snippet uglyF0 *)
+
+
+(* begin snippet uglyF0a *)
+Compute f0. 
+(* end snippet uglyF0a *)
+End bare_syntax.
+ 
+(* begin snippet CNNF0 *)
+Import  CLNN_notations. 
+Print  f0. 
+Compute f0. 
+(* end snippet CNNF0 *)
 
 
 Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
@@ -23,6 +46,8 @@ Let t1: Term LNN := Plus (var _ 1) Zero.
 
 Compute t1. 
 
+
+
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
@@ -31,10 +56,16 @@ Let f1 : Formula LNN :=
           exH 1 (v_ 0 = S_ (v_ 1))))%cnn.
 (* end snippet f1Example *)
 
-Compute f1. 
-Import  CLNN_notations. 
+Locate orH. 
 
-Compute f1. 
+
+Compute f0. 
+
+
+
+Import  CLNN_notations. 
+Print f0. 
+Compute f0. 
 
 (* begin snippet f2Example *)
 Let f2 : Formula LNN :=

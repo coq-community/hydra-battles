@@ -145,9 +145,6 @@ Proof.
 Qed. 
 
 
-
-
-
 Require Import Languages.
 Locate arity. 
 

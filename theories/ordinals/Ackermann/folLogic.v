@@ -29,66 +29,42 @@ Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
-Lemma Axm :
- forall (T : System) (f : Formula), mem _ T f -> SysPrf T f.
+Lemma Axm T f: mem _ T f -> SysPrf T f.
 Proof.
-intros.
-exists (f :: nil).
-exists (AXM L f).
-intros.
-induction H0 as [H0| H0].
-rewrite H0 in H.
-assumption.
-elim H0.
+  exists (f :: nil); exists (AXM L f).
+  intros g [H0 | H0].
+  - rewrite H0 in H; assumption.
+  - elim H0.
 Qed.
 
-Lemma sysExtend :
- forall (T U : System) (f : Formula),
+Lemma sysExtend  (T U : System) (f : Formula): 
  Included _ T U -> SysPrf T f -> SysPrf U f.
 Proof.
-intros.
-induction H0 as (x, (x0, H0)).
-exists x.
-exists x0.
-intros.
-apply H.
-apply H0.
-auto.
+  intros H [x [p H0]]; exists x, p.
+  intros g H1.
+  apply H, H0, H1. 
 Qed.
 
-Lemma sysWeaken :
- forall (T : System) (f g : Formula), SysPrf T f -> SysPrf (Ensembles.Add _ T g) f.
+Lemma sysWeaken  (T : System) (f g : Formula):
+  SysPrf T f -> SysPrf (Ensembles.Add _ T g) f.
 Proof.
-intros.
-apply sysExtend with T.
-unfold Included in |- *.
-intros.
-left.
-auto.
-auto.
+  intros H; apply sysExtend with T.
+  - unfold Included in |- *.
+    intros f0 Hf0;  now left. 
+  - assumption.
 Qed.
 
-Lemma impI :
- forall (T : System) (f g : Formula),
+Lemma impI (T : System) (f g : Formula):
  SysPrf (Ensembles.Add _ T g) f -> SysPrf T (impH g f).
-Proof.
-intros.
-apply (DeductionTheorem L).
-assumption.
-Qed.
+Proof. intros ?; now apply (DeductionTheorem L). Qed.
 
-Lemma impE :
- forall (T : System) (f g : Formula),
+Lemma impE (T : System) (f g : Formula):
  SysPrf T (impH g f) -> SysPrf T g -> SysPrf T f.
-Proof.
-intros.
-induction H as (x, (x0, H)).
-induction H0 as (x1, (x2, H0)).
-set (A1 := MP L _ _ _ _ x0 x2) in *.
-exists (x ++ x1).
-exists A1.
-intros.
-induction (in_app_or _ _ _ H1); auto.
+Proof. 
+  intros (x, (px, Hx)) (x1, (px1, Hx1)).
+  set (A1 := MP L _ _ _ _ px px1) in *.
+  exists (x ++ x1), A1.
+  intros g0 H; case (in_app_or _ _ _ H); auto.
 Qed.
 
 Lemma contradiction :
