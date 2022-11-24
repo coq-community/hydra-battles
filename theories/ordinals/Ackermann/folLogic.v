@@ -67,261 +67,190 @@ Proof.
   intros g0 H; case (in_app_or _ _ _ H); auto.
 Qed.
 
-Lemma contradiction :
- forall (T : System) (f g : Formula),
+Lemma contradiction (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T (notH f) -> SysPrf T g.
 Proof.
-intros.
-eapply impE with f.
-eapply impE with (impH (notH g) (notH f)).
-exists (nil (A:=Formula)).
-exists (CP L g f).
-contradiction.
-apply impI.
-apply sysWeaken.
-assumption.
-assumption.
+  intros H H0; eapply impE with f.
+  - eapply impE with (impH (notH g) (notH f)).
+    + exists (nil (A:=Formula)).
+      exists (CP L g f).
+      contradiction.
+    + apply impI; apply sysWeaken.
+      assumption.
+  - assumption.
 Qed.
 
-Lemma nnE :
- forall (T : System) (f : Formula), SysPrf T (notH (notH f)) -> SysPrf T f.
+Lemma nnE (T : System) (f : Formula):
+  SysPrf T (notH (notH f)) -> SysPrf T f.
 Proof.
-intros.
-apply impE with (notH (notH f)).
-apply impE with (impH (notH f) (notH (notH (notH f)))).
-exists (nil (A:=Formula)).
-exists (CP L f (notH (notH f))).
-contradiction.
-apply impI.
-apply contradiction with (notH f).
-apply Axm.
-right; constructor.
-apply sysWeaken.
-assumption.
-assumption.
+  intros H; apply impE with (notH (notH f)).
+  - apply impE with (impH (notH f) (notH (notH (notH f)))).
+    + exists (nil (A:=Formula)).
+      exists (CP L f (notH (notH f))).
+      contradiction.
+    + apply impI.
+      apply contradiction with (notH f).
+      apply Axm.
+      right; constructor.
+      apply sysWeaken; assumption.
+  - assumption.
 Qed.
 
-Lemma noMiddle : forall (T : System) (f : Formula), SysPrf T (orH (notH f) f).
+Lemma noMiddle  (T : System) (f : Formula):
+  SysPrf T (orH (notH f) f).
 Proof.
-intros.
-unfold orH, fol.orH in |- *.
-apply impI.
-apply nnE.
-apply Axm; right; constructor.
+  unfold orH, fol.orH in |- *.
+  apply impI, nnE, Axm; right; constructor.
 Qed.
 
-Lemma nnI :
- forall (T : System) (f : Formula), SysPrf T f -> SysPrf T (notH (notH f)).
+Lemma nnI (T : System) (f : Formula):
+  SysPrf T f -> SysPrf T (notH (notH f)).
 Proof.
-intros.
-apply impE with f.
-apply impE with (impH (notH (notH (notH f))) (notH f)).
-exists (nil (A:=Formula)).
-exists (CP L (notH (notH f)) f).
-contradiction.
-apply impI.
-apply contradiction with f.
-apply sysWeaken.
-assumption.
-apply nnE.
-apply Axm; right; constructor.
-assumption.
+  intros H; apply impE with f; [ | apply H].
+  apply impE with (impH (notH (notH (notH f))) (notH f)).
+  - exists (nil (A:=Formula)).
+    exists (CP L (notH (notH f)) f); contradiction.
+  - apply impI; apply contradiction with f.
+    + apply sysWeaken; assumption.
+    + apply nnE, Axm; right; constructor.
 Qed.
 
-Lemma cp1 :
- forall (T : System) (f g : Formula),
+(* contraposition *)
+Lemma cp1 (T : System) (f g : Formula) :
  SysPrf T (impH (notH f) (notH g)) -> SysPrf T (impH g f).
 Proof.
-intros.
-apply impE with (impH (notH f) (notH g)).
-exists (nil (A:=Formula)).
-exists (CP L f g).
-contradiction.
-assumption.
+  intros H; apply impE with (impH (notH f) (notH g)).
+  - exists (nil (A:=Formula)).
+    exists (CP L f g); contradiction.
+  - assumption.
 Qed.
 
-Lemma cp2 :
- forall (T : System) (f g : Formula),
+Lemma cp2 (T : System) (f g : Formula):
  SysPrf T (impH g f) -> SysPrf T (impH (notH f) (notH g)).
 Proof.
-intros.
-apply impE with (impH (notH (notH g)) (notH (notH f))).
-exists (nil (A:=Formula)).
-exists (CP L (notH g) (notH f)).
-contradiction.
-apply impI.
-apply nnI.
-apply impE with g.
-apply sysWeaken.
-assumption.
-apply nnE.
-apply Axm; right; constructor.
+  intros H.
+  apply impE with (impH (notH (notH g)) (notH (notH f))).
+  - exists (nil (A:=Formula)).
+    exists (CP L (notH g) (notH f)); contradiction.
+  - apply impI, nnI. 
+    apply impE with g.
+    + apply sysWeaken; assumption.
+    + apply nnE, Axm; right; constructor.
 Qed.
 
-Lemma orI1 :
- forall (T : System) (f g : Formula), SysPrf T f -> SysPrf T (orH f g).
+Lemma orI1 (T : System) (f g : Formula):
+  SysPrf T f -> SysPrf T (orH f g).
 Proof.
-intros.
-unfold orH, fol.orH in |- *.
-apply impI.
-apply contradiction with f.
-apply sysWeaken.
-assumption.
-apply Axm; right; constructor.
+  intros H; unfold orH, fol.orH in |- *.
+  apply impI.
+  apply contradiction with f.
+  apply sysWeaken; assumption.
+  apply Axm; right; constructor.
 Qed.
 
-Lemma orI2 :
- forall (T : System) (f g : Formula), SysPrf T g -> SysPrf T (orH f g).
+Lemma orI2 (T : System) (f g : Formula):
+  SysPrf T g -> SysPrf T (orH f g).
 Proof.
-intros.
-unfold orH, fol.orH in |- *.
-apply impI.
-apply sysWeaken.
-assumption.
+  intros h; unfold orH, fol.orH in |- *.
+  apply impI, sysWeaken; assumption.
 Qed.
 
-Lemma orE :
- forall (T : System) (f g h : Formula),
+Lemma orE (T : System) (f g h : Formula):
  SysPrf T (orH f g) ->
  SysPrf T (impH f h) -> SysPrf T (impH g h) -> SysPrf T h.
 Proof.
-intros.
-unfold orH, fol.orH in H.
-apply impE with (impH h h).
-apply cp1.
-apply impE with (impH (notH h) h).
-apply impI.
-apply impI.
-apply contradiction with h.
-apply impE with (notH h).
-apply Axm; left; right; constructor.
-apply Axm; right; constructor.
-apply Axm; right; constructor.
-apply impI.
-apply impE with g.
-apply sysWeaken; assumption.
-apply impE with (notH f).
-apply sysWeaken; assumption.
-apply impE with (notH h).
-apply cp2.
-apply sysWeaken; assumption.
-apply Axm; right; constructor.
-apply impI.
-apply Axm; right; constructor.
+  intros H H0 H1; unfold orH, fol.orH in H.
+  apply impE with (impH h h).
+  - apply cp1.
+    apply impE with (impH (notH h) h).
+    + apply impI.
+      apply impI.
+      apply contradiction with h.
+      apply impE with (notH h).
+      apply Axm; left; right; constructor.
+      apply Axm; right; constructor.
+      apply Axm; right; constructor.
+    + apply impI.
+      apply impE with g.
+      apply sysWeaken; assumption.
+      apply impE with (notH f).
+      apply sysWeaken; assumption.
+      apply impE with (notH h).
+      * apply cp2.
+        apply sysWeaken; assumption.
+      * apply Axm; right; constructor.
+  - apply impI, Axm; right; constructor.
 Qed.
 
-Lemma orSys :
- forall (T : System) (f g h : Formula),
- SysPrf (Ensembles.Add _ T f) h -> SysPrf (Ensembles.Add _ T g) h -> SysPrf (Ensembles.Add _ T (orH f g)) h.
+Lemma orSys (T : System) (f g h : Formula):
+ SysPrf (Ensembles.Add _ T f) h -> SysPrf (Ensembles.Add _ T g) h -> 
+ SysPrf (Ensembles.Add _ T (orH f g)) h.
 Proof.
-intros.
-eapply orE.
-apply Axm; right; constructor.
-apply sysWeaken.
-apply impI.
-assumption.
-apply sysWeaken.
-apply impI.
-assumption.
+  intros H H0; eapply orE.
+   - apply Axm; right; constructor.
+   - apply sysWeaken, impI; assumption.
+   - apply sysWeaken, impI; assumption. 
 Qed.
 
-Lemma andI :
- forall (T : System) (f g : Formula),
+Lemma andI (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T g -> SysPrf T (andH f g).
 Proof.
-intros.
-unfold andH, fol.andH in |- *.
-apply orE with (notH (orH (notH f) (notH g))) (orH (notH f) (notH g)).
-apply noMiddle.
-apply impI.
-apply Axm; right; constructor.
-apply impI.
-apply orE with (notH f) (notH g).
-apply Axm; right; constructor.
-apply cp2.
-apply impI.
-repeat apply sysWeaken.
-assumption.
-apply cp2.
-apply impI.
-repeat apply sysWeaken.
-assumption.
+  intros H H0; unfold andH, fol.andH in |- *.
+  apply orE with (notH (orH (notH f) (notH g))) (orH (notH f) (notH g)).
+  - apply noMiddle.
+  - apply impI, Axm; right; constructor.
+  - apply impI; apply orE with (notH f) (notH g).
+    + apply Axm; right; constructor.
+    + apply cp2; apply impI.
+      repeat apply sysWeaken; assumption.
+    + apply cp2; apply impI.
+      repeat apply sysWeaken; assumption.
 Qed.
 
-Lemma andE1 :
- forall (T : System) (f g : Formula), SysPrf T (andH f g) -> SysPrf T f.
+Lemma andE1 (T : System) (f g : Formula):
+  SysPrf T (andH f g) -> SysPrf T f.
 Proof.
-intros.
-apply nnE.
-apply impE with (andH f g).
-unfold andH, fol.andH in |- *.
-apply cp2.
-apply impI.
-apply orI1.
-apply Axm; right; constructor.
-assumption.
+  intros H; apply nnE.
+  apply impE with (andH f g).
+  unfold andH, fol.andH in |- *; apply cp2.
+  apply impI, orI1. 
+  apply Axm; right; constructor.
+  assumption.
 Qed.
 
-Lemma andE2 :
- forall (T : System) (f g : Formula), SysPrf T (andH f g) -> SysPrf T g.
+Lemma andE2  (T : System) (f g : Formula):
+  SysPrf T (andH f g) -> SysPrf T g.
 Proof.
-intros.
-apply nnE.
-apply impE with (andH f g).
-unfold andH, fol.andH in |- *.
-apply cp2.
-apply impI.
-apply orI2.
-apply Axm; right; constructor.
-assumption.
+  intros H; apply nnE.
+  apply impE with (andH f g).
+  - apply cp2, impI, orI2, Axm; right; constructor.
+  - assumption.
 Qed.
 
-Lemma iffI :
- forall (T : System) (f g : Formula),
+Lemma iffI  (T : System) (f g : Formula) :
  SysPrf T (impH f g) -> SysPrf T (impH g f) -> SysPrf T (iffH f g).
-Proof.
-intros.
-unfold iffH, fol.iffH in |- *.
-apply andI; auto.
-Qed.
+Proof. intros H H0; apply andI; auto. Qed.
 
-Lemma iffE1 :
- forall (T : System) (f g : Formula),
- SysPrf T (iffH f g) -> SysPrf T (impH f g).
-Proof.
-intros.
-unfold iffH, fol.iffH in H.
-eapply andE1.
-apply H.
-Qed.
+Lemma iffE1 (T : System) (f g : Formula):
+  SysPrf T (iffH f g) -> SysPrf T (impH f g).
+Proof. intros H; eapply andE1. eexact H. Qed.
 
-Lemma iffE2 :
- forall (T : System) (f g : Formula),
- SysPrf T (iffH f g) -> SysPrf T (impH g f).
-Proof.
-intros.
-unfold iffH, fol.iffH in H.
-eapply andE2.
-apply H.
-Qed.
+Lemma iffE2  (T : System) (f g : Formula):
+  SysPrf T (iffH f g) -> SysPrf T (impH g f).
+Proof. intros H; eapply andE2, H. Qed.
 
-Lemma forallI :
- forall (T : System) (f : Formula) (v : nat),
+Lemma forallI (T : System) (f : Formula) (v : nat):
  ~ In_freeVarSys L v T -> SysPrf T f -> SysPrf T (forallH v f).
 Proof.
-intros.
-induction H0 as (x, H0); induction H0 as (x0, H0).
-exists x.
-assert (~ In v (freeVarListFormula L x)).
-unfold not in |- *; intros; elim H.
-induction (In_freeVarListFormulaE _ _ _ H1).
-exists x1.
-split.
-tauto.
-apply H0.
-tauto.
-exists (GEN L _ _ _ H1 x0).
-auto.
+  intros H [x [x0 H0]]; exists x. 
+  assert (~ In v (freeVarListFormula L x)).
+  { intro H1; apply H. 
+    destruct  (In_freeVarListFormulaE _ _ _ H1) as [x1 H2].
+    exists x1; split. 
+    - tauto.
+    - apply H0; tauto.
+  }
+  exists (GEN L _ _ _ H1 x0); apply H0.
 Qed.
 
 Lemma forallE :
