@@ -244,3 +244,41 @@ Prove the following lemma:
 \inputsnippets{fol_Examples/MPdiag}
 
 \end{exercise}
+
+
+\section{Derived rules and natural deduction}
+
+
+ The library 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+\subsection{Example}
+
+For instance, let us prove Peirce's rule.
+ (in  ~\href{../theories/html/hydras.MoreAck.folPeirce.html}{MoreAck.folPeirce} ).
+
+\subsubsection{Prelude}
+
+\inputsnippets{folPeirce/prelude}
+
+
+\subsection{Proof of Pierce's law}
+
+
+\inputsnippets{folPeirce/PeirceProof}
+
+Let us try to do an implication introduction.
+
+\inputsnippets{folPeirce/step1}
+
+Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+
+\inputsnippets{folPeirce/step2}
+
+The rest of the proof is composed of basic proof steps, 
+and bookkeeping steps (about \texttt{Ensembles.In}).
+
+\inputsnippets{folPeirce/step3, folPeirce/step4}
+
+
+
