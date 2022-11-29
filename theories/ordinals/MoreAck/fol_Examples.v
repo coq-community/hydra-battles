@@ -130,7 +130,7 @@ Qed.
 
 (* begin snippet MPDiag:: no-out *)
 Lemma MPdiag L (G: System L) (A B: Formula L) : 
-  SysPrf L G (A -> B)%cfol ->
+  SysPrf L G (A -> B)%fol ->
   SysPrf L G A ->
   SysPrf L G B.
 (* end snippet MPDiag *)

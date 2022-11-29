@@ -59,3 +59,5 @@ Qed.
 End PeirceProof.
 
 About peirce.
+
+
