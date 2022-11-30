@@ -1,3 +1,5 @@
+(* draft draft draft draft draft draft draft draft draft draft draft draft *)
+
 (* To do: share this prelude *)
 
 From Coq Require Import Arith Lists.List.
@@ -67,3 +69,98 @@ Qed.
 
 
 End Proofs.
+
+Module Drinkers. 
+
+  Inductive Rel: Set := _D.
+  Inductive Fun : Set := . 
+
+  Definition arity (x : Rel + Fun): nat :=
+    match x with
+      inl _D => 1
+    | inr _ => 0
+    end. 
+
+  Definition L := language Rel Fun arity.
+
+  Notation D t := 
+    (fol.atomic L (_D: Relations L) (Tcons _ _ t (Tnil _))). 
+
+  Arguments Empty_set {U}. 
+  Arguments Add {U} _ _. 
+ 
+Section Drinkers_theorem. 
+
+ Lemma D0 : forall i, 
+      SysPrf _ Empty_set 
+        ( ~ allH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
+Proof.
+    intro i; apply cp2, impI, forallI. 
+    - intros [f [H H0]]; inversion H0. 
+      subst; inversion H1; subst. 
+      inversion H1; subst; simpl in H. 
+      destruct (Nat.eq_dec i i). 
+      + inversion H. 
+      + now destruct n. 
+    - apply nnE; 
+        assert (H:(~ ~ (D (v_ i)))%fol = (* clumsy *)
+                  (substituteFormula _ (~ ~ (D (v_ i))) i (v_ i))%fol). 
+      { cbn; destruct (Nat.eq_dec i) as [_ | n].
+        auto. 
+        now destruct n. 
+      } 
+    rewrite H; apply forallE; rewrite <- H; apply Axm.  
+    right; split. 
+  Qed. 
+  
+  Lemma D01 T i : SysPrf _ T
+                    ( ~ allH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
+  Proof. 
+    apply sysExtend with Empty_set. 
+    - red; destruct 1.   
+    - intros; apply D0. 
+  Qed. 
+
+  Let f : Formula L :=
+        (exH 0 (D (v_ 0) -> allH 1 (D (v_ 1))))%fol. 
+
+  Theorem drinkers_thm : SysPrf L Empty_set f. 
+  Proof with auto with sets.  
+    pose (F := allH 1 (D (v_ 1))%fol).
+    unfold f; eapply orE with (notH _ F) F; [apply noMiddle | | ].
+    - apply impI;
+      assert (SysPrf L (Add Empty_set (~ F)%fol) 
+                (exH 1 (~ (D (v_ 1))))%fol).  
+      { replace (exH 1 (~ (D (v_ 1))))%fol  
+          with (~ (allH 1 (~ (~  (D (v_ 1))))))%fol. 
+        - unfold F; eapply impE. 
+          + eapply D01. 
+          + apply Axm; right; split. 
+        - auto. 
+      }      
+      + eapply existE with (v:=1). 
+        * unfold F; intro H0; destruct H0. 
+          destruct H0 as [H0 H1]; inversion H1. 
+          --  inversion H2. 
+          -- subst. 
+             inversion H2. 
+             subst; now simpl in H0. 
+        * cbn; auto. 
+        * eapply H. 
+        * apply impI; eapply existI with (v_ 1)%fol.
+          cbn; apply impI. 
+          eapply contradiction with (D (v_ 1))%fol.  
+          -- apply Axm; red ...
+          -- apply Axm; red ...   
+    - apply impI; apply existI with (v_ 0)%nat. 
+      cbn;  apply impI. 
+      apply Axm; red; auto with sets. 
+  Qed. 
+
+
+End Drinkers_theorem. 
+
+Import CFOL_notations. 
+About drinkers_thm.
+
+End Drinkers. 
