@@ -32,128 +32,94 @@ Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
-Lemma rebindForall :
- forall (T : System) (a b : nat) (f : Formula),
- ~ In b (freeVarFormula L (forallH a f)) ->
- SysPrf T (iffH (forallH a f) (forallH b (substituteFormula L f a (var b)))).
+Lemma rebindForall (T : System) (a b : nat) (f : Formula):
+  ~ In b (freeVarFormula L (forallH a f)) ->
+  SysPrf T (iffH (forallH a f) 
+              (forallH b (substituteFormula L f a (var b)))).
 Proof.
-intros.
-eapply (sysExtend L) with (Empty_set Formula).
-unfold Included in |- *.
-intros.
-induction H0.
-apply (iffI L).
-apply (impI L).
-apply (forallI L).
-unfold not in |- *; intros.
-induction H0 as (x, H0); induction H0 as (H0, H1).
-induction H1 as [x H1| x H1]; [ induction H1 | induction H1 ].
-auto.
-apply forallE.
-apply Axm; right; constructor.
-apply (impI L).
-apply (forallI L).
-unfold not in |- *; intros.
-induction H0 as (x, H0); induction H0 as (H0, H1).
-induction H1 as [x H1| x H1]; [ induction H1 | induction H1 ].
-assert (In a (freeVarFormula L (substituteFormula L f a (var b)))).
-eapply In_list_remove1.
-apply H0.
-induction (freeVarSubFormula3 _ _ _ _ _ H1).
-elim (In_list_remove2 _ _ _ _ _ H2).
-auto.
-elim (In_list_remove2 _ _ _ _ _ H0).
-induction H2 as [H2| H2].
-auto.
-elim H2.
-set (A1 := forallH b (substituteFormula L f a (var b))) in *.
-rewrite <- (subFormulaId L f a).
-apply
- (impE L)
-  with
-    (substituteFormula L (substituteFormula L f a (var b)) b (fol.var L a)).
-apply (iffE1 L).
-apply (subFormulaTrans L).
-apply H.
-apply forallE.
-apply Axm; right; constructor.
+  intros H; eapply (sysExtend L) with (Empty_set Formula).
+  - intros x H0; destruct H0.
+  - apply (iffI L).
+    + apply (impI L), (forallI L).
+      intros [x [H0 H1]].
+      destruct H1 as [x H1| x H1]; [ induction H1 | induction H1 ].
+      * auto.
+      * apply forallE; apply Axm; right; constructor.
+    + apply (impI L), (forallI L).
+      intros [x [H0 H1]] ; destruct H1 as [x H1| x H1]; 
+        [induction H1 | induction H1].
+     * assert (H1: In a (freeVarFormula L (substituteFormula L f a (var b))))
+       by (eapply In_list_remove1; apply H0).
+       induction (freeVarSubFormula3 _ _ _ _ _ H1).
+       elim (In_list_remove2 _ _ _ _ _ H2).
+       -- auto.
+       -- elim (In_list_remove2 _ _ _ _ _ H0).
+          destruct H2 as [H2| H2].
+          auto.
+          elim H2.
+     * set (A1 := forallH b (substituteFormula L f a (var b))) in *.
+       rewrite <- (subFormulaId L f a).
+       apply (impE L) with
+         (substituteFormula L (substituteFormula L f a (var b)) b 
+            (fol.var L a)).
+       -- apply (iffE1 L).
+          apply (subFormulaTrans L); apply H.
+       -- apply forallE, Axm; right; constructor.
 Qed.
 
-Lemma rebindExist :
- forall (T : System) (a b : nat) (f : Formula),
- ~ In b (freeVarFormula L (existH a f)) ->
- SysPrf T (iffH (existH a f) (existH b (substituteFormula L f a (var b)))).
+Lemma rebindExist (T : System) (a b : nat) (f : Formula):
+  ~ In b (freeVarFormula L (existH a f)) ->
+  SysPrf T (iffH (existH a f) (existH b (substituteFormula L f a (var b)))).
 Proof.
-intros.
-unfold existH in |- *.
-unfold fol.existH in |- *.
-apply (reduceNot L).
-eapply (iffTrans L).
-apply (rebindForall T a b (notH f)).
-apply H.
-rewrite (subFormulaNot L).
-apply (iffRefl L).
+  intro H; unfold existH, fol.existH.  
+  apply (reduceNot L); eapply (iffTrans L).
+  - apply (rebindForall T a b (notH f)), H. 
+  - rewrite (subFormulaNot L); apply (iffRefl L).
 Qed.
 
-Lemma subSubTerm :
- forall (t : Term) (v1 v2 : nat) (s1 s2 : Term),
- v1 <> v2 ->
- ~ In v1 (freeVarTerm L s2) ->
- substituteTerm L (substituteTerm L t v1 s1) v2 s2 =
- substituteTerm L (substituteTerm L t v2 s2) v1 (substituteTerm L s1 v2 s2).
+Lemma subSubTerm (t : Term) (v1 v2 : nat) (s1 s2 : Term):
+  v1 <> v2 ->
+  ~ In v1 (freeVarTerm L s2) ->
+  substituteTerm L (substituteTerm L t v1 s1) v2 s2 =
+    substituteTerm L 
+      (substituteTerm L t v2 s2) v1 (substituteTerm L s1 v2 s2).
 Proof.
-intros.
-elim t using
- Term_Terms_ind
-  with
+  intros H H0. 
+  elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-           substituteTerms L n (substituteTerms L n ts v2 s2) v1
-             (substituteTerm L s1 v2 s2)); simpl in |- *; 
- intros.
-induction (eq_nat_dec v1 n).
-induction (eq_nat_dec v2 n).
-elim H.
-transitivity n; auto.
-simpl in |- *.
-induction (eq_nat_dec v1 n).
-reflexivity.
-elim b0.
-auto.
-simpl in |- *.
-induction (eq_nat_dec v2 n).
-rewrite subTermNil.
-reflexivity.
-auto.
-simpl in |- *.
-induction (eq_nat_dec v1 n).
-elim b; auto.
-reflexivity.
-rewrite H1.
-reflexivity.
-reflexivity.
-rewrite H1.
-rewrite H2.
-reflexivity.
+             substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
+               substituteTerms L n (substituteTerms L n ts v2 s2) v1
+                 (substituteTerm L s1 v2 s2)); simpl in |- *.
+  - intros n. 
+    destruct (eq_nat_dec v1 n)  as [ e | n0].
+    + destruct (eq_nat_dec v2 n)  as [e0 | n0].
+      * elim H; transitivity n; auto.
+      * simpl in |- *; destruct (eq_nat_dec v1 n)as [e0 | n1].
+        -- reflexivity.
+        -- elim n1;auto.
+    + simpl in |- *; destruct (eq_nat_dec v2 n) as [e | n1].
+      * rewrite subTermNil; easy. 
+      * simpl in |- *; destruct (eq_nat_dec v1 n) as [e | ].
+        --  elim n0; auto.
+        -- reflexivity.
+  - intros f t0 H1;  rewrite H1; reflexivity.
+  - reflexivity.
+  - intros  n t0 H1 t1 H2; rewrite H1, H2; easy. 
 Qed.
 
-Lemma subSubTerms :
- forall (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term),
- v1 <> v2 ->
- ~ In v1 (freeVarTerm L s2) ->
- substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
- substituteTerms L n (substituteTerms L n ts v2 s2) v1
-   (substituteTerm L s1 v2 s2).
+Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
+  v1 <> v2 ->
+  ~ In v1 (freeVarTerm L s2) ->
+  substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
+    substituteTerms L n (substituteTerms L n ts v2 s2) v1
+      (substituteTerm L s1 v2 s2).
 Proof.
-intros.
-induction ts as [| n t ts Hrects].
-reflexivity.
-simpl in |- *.
-rewrite Hrects.
-rewrite subSubTerm.
-reflexivity.
-auto.
-auto.
+  intros H H0; induction ts as [| n t ts Hrects].
+  - reflexivity.
+  - simpl in |- *; rewrite Hrects, subSubTerm.
+    + reflexivity.
+    + assumption. 
+    + assumption.
 Qed.
 
 Lemma subSubFormula :
