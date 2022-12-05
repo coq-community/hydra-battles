@@ -122,8 +122,7 @@ Proof.
     + assumption.
 Qed.
 
-Lemma subSubFormula :
- forall (f : Formula) (v1 v2 : nat) (s1 s2 : Term),
+Lemma subSubFormula (f : Formula) (v1 v2 : nat) (s1 s2 : Term):
  v1 <> v2 ->
  ~ In v1 (freeVarTerm L s2) ->
  forall T : System,
@@ -132,137 +131,121 @@ Lemma subSubFormula :
       (substituteFormula L (substituteFormula L f v2 s2) v1
          (substituteTerm L s1 v2 s2))).
 Proof.
-intros.
-apply (sysExtend L) with (Empty_set Formula).
-unfold Included in |- *.
-intros.
-induction H1.
-elim f using Formula_depth_ind2; intros.
-repeat rewrite (subFormulaEqual L).
-rewrite subSubTerm; auto.
-rewrite (subSubTerm t0); auto.
-apply (iffRefl L).
-repeat rewrite (subFormulaRelation L).
-rewrite subSubTerms; auto.
-apply (iffRefl L).
-repeat rewrite (subFormulaImp L).
-apply (reduceImp L); auto.
-repeat rewrite (subFormulaNot L).
-apply (reduceNot L); auto.
-set
- (v' :=
-  newVar
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)) in *.
-assert (v' <> v1).
-unfold not in |- *; intros.
-elim
- (newVar1
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)).
-fold v' in |- *.
-simpl in |- *.
-auto.
-assert (v' <> v2).
-unfold not in |- *; intros.
-elim
- (newVar1
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)).
-fold v' in |- *.
-simpl in |- *.
-auto.
-assert (~ In v' (freeVarFormula L (fol.forallH L v a))).
-unfold not in |- *; intros.
-elim
- (newVar1
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)).
-fold v' in |- *.
-simpl in |- *.
-auto with datatypes.
-assert (~ In v' (freeVarTerm L s1)).
-unfold not in |- *; intros.
-elim
- (newVar1
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)).
-fold v' in |- *.
-simpl in |- *.
-repeat right.
-auto with datatypes.
-assert (~ In v' (freeVarTerm L s2)).
-unfold not in |- *; intros.
-elim
- (newVar1
-    (v1
-     :: v2
-        :: freeVarFormula L (fol.forallH L v a) ++
-           freeVarTerm L s1 ++ freeVarTerm L s2)).
-fold v' in |- *.
-simpl in |- *.
-repeat right.
-auto with datatypes.
-apply
- impE
-  with
-    (iffH
-       (substituteFormula L
+  intros H H0 T; apply (sysExtend L) with (Empty_set Formula).
+  - intros x H1; destruct H1.
+  - elim f using Formula_depth_ind2; intros.
+    + repeat rewrite (subFormulaEqual L).
+      rewrite subSubTerm; auto.
+      rewrite (subSubTerm t0); auto.
+      apply (iffRefl L).
+    + repeat rewrite (subFormulaRelation L).
+      rewrite subSubTerms; auto.
+      apply (iffRefl L).
+    + repeat rewrite (subFormulaImp L).
+      apply (reduceImp L); auto.
+    + repeat rewrite (subFormulaNot L).
+      apply (reduceNot L); auto.
+    + set (v' :=
+             newVar
+               (v1
+                  :: v2
+                  :: freeVarFormula L (fol.forallH L v a) ++
+                  freeVarTerm L s1 ++ freeVarTerm L s2)) in *.
+      assert (H2: v' <> v1).
+      { intro H2;
+        elim
+          (newVar1
+             (v1
+                :: v2
+                :: freeVarFormula L (fol.forallH L v a) ++
+                freeVarTerm L s1 ++ freeVarTerm L s2)).
+        fold v' ; simpl; auto.
+      } 
+      assert (H3: v' <> v2).
+      { intro H3; 
+        elim
+          (newVar1
+             (v1
+                :: v2
+                :: freeVarFormula L (fol.forallH L v a) ++
+                freeVarTerm L s1 ++ freeVarTerm L s2)).
+        fold v'; simpl; auto.
+      } 
+      assert (H4: ~ In v' (freeVarFormula L (fol.forallH L v a))).
+      { intro H4; 
+        elim
+          (newVar1
+             (v1
+                :: v2
+                :: freeVarFormula L (fol.forallH L v a) ++
+                freeVarTerm L s1 ++ freeVarTerm L s2)).
+        fold v' ;simpl; auto with datatypes.
+      } 
+      assert (H5: ~ In v' (freeVarTerm L s1)).
+      { intro H5; 
+        elim
+          (newVar1
+             (v1
+                :: v2
+                :: freeVarFormula L (fol.forallH L v a) ++
+                freeVarTerm L s1 ++ freeVarTerm L s2)).
+        fold v' ;  simpl; repeat right; auto with datatypes.
+      } 
+      assert (H6: ~ In v' (freeVarTerm L s2)).
+      { intro H6; 
+          elim
+            (newVar1
+               (v1
+                  :: v2
+                  :: freeVarFormula L (fol.forallH L v a) ++
+                  freeVarTerm L s1 ++ freeVarTerm L s2)).
+       fold v' ; simpl;  repeat right; auto with datatypes.
+     }
+     apply impE with
+       (iffH
           (substituteFormula L
-             (fol.forallH L v' (substituteFormula L a v (var v'))) v1 s1) v2
-          s2)
-       (substituteFormula L
+             (substituteFormula L
+                (fol.forallH L v' (substituteFormula L a v (var v'))) v1 s1) v2
+             s2)
           (substituteFormula L
-             (fol.forallH L v' (substituteFormula L a v (var v'))) v2 s2) v1
-          (substituteTerm L s1 v2 s2))).
-apply (iffE2 L).
-assert
- (folProof.SysPrf L (Empty_set Formula)
-    (iffH (fol.forallH L v a)
-       (fol.forallH L v' (substituteFormula L a v (var v'))))).
-apply rebindForall.
-auto.
-repeat first
- [ apply (reduceIff L)
- | apply (reduceSub L)
- | apply (notInFreeVarSys L) ]; auto.
-assert
- (forall (f : Formula) (x v : nat) (s : Term),
-  x <> v ->
-  ~ In x (freeVarTerm L s) ->
-  substituteFormula L (forallH x f) v s =
-  forallH x (substituteFormula L f v s)). 
-intros.
-rewrite (subFormulaForall L).
-induction (eq_nat_dec x v0).
-elim H7; auto.
-induction (In_dec eq_nat_dec x (freeVarTerm L s)).
-elim H8; auto.
-reflexivity.
-repeat rewrite H7; auto.
-apply (reduceForall L).
-apply (notInFreeVarSys L).
-apply H1.
-apply eqDepth with a.
-symmetry  in |- *.
-apply subFormulaDepth.
-apply depthForall.
-unfold not in |- *; intros.
-induction (freeVarSubTerm3 _ _ _ _ _ H8).
-elim H5.
-eapply In_list_remove1.
-apply H9.
-auto.
+             (substituteFormula L
+                (fol.forallH L v' (substituteFormula L a v (var v'))) v2 s2) v1
+             (substituteTerm L s1 v2 s2))).
+     apply (iffE2 L).
+      * assert
+          (H7: folProof.SysPrf L (Empty_set Formula)
+                 (iffH (fol.forallH L v a)
+                    (fol.forallH L v' (substituteFormula L a v (var v')))))
+          by (apply rebindForall; auto).
+       repeat first
+       [ apply (reduceIff L)
+       | apply (reduceSub L)
+       | apply (notInFreeVarSys L) ]; auto.
+       * assert (H7: 
+                  forall (f : Formula) (x v : nat) (s : Term),
+                    x <> v ->
+                    ~ In x (freeVarTerm L s) ->
+                    substituteFormula L (forallH x f) v s =
+                      forallH x (substituteFormula L f v s)). 
+         { intros f0 x v0 s H7; rewrite (subFormulaForall L).
+           destruct (eq_nat_dec x v0) as [e | n0].
+           - elim H7; auto.
+           - destruct (In_dec eq_nat_dec x (freeVarTerm L s)) as [i | n1]. 
+         + intro H8; elim H8; auto.
+         + reflexivity.
+     }
+     repeat rewrite H7; try easy. 
+     --  apply (reduceForall L).
+         apply (notInFreeVarSys L).
+         apply H1.
+         apply eqDepth with a.
+         symmetry  in |- *.
+         apply subFormulaDepth.
+         apply depthForall.
+     --  intro H8; induction (freeVarSubTerm3 _ _ _ _ _ H8).
+         elim H5; eapply In_list_remove1.
+         apply H9.
+         now apply H6. 
 Qed.
 
 End More_Logic_Rules.

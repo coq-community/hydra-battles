@@ -37,87 +37,57 @@ Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
-Lemma eqRefl :
- forall (T : fol.System L) (a : fol.Term L), SysPrf T (equal a a).
+Lemma eqRefl (T : fol.System L) (a : fol.Term L): SysPrf T (equal a a).
 Proof.
-intros.
-replace (equal a a) with (substituteFormula L (equal (var 0) (var 0)) 0 a).
-apply (forallE L).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *.
-intros.
-induction H.
-apply forallI.
-apply (notInFreeVarSys L).
-exists (nil (A:=fol.Formula L)).
-exists (EQ1 L).
-contradiction.
-rewrite (subFormulaEqual L).
-simpl in |- *.
-reflexivity.
+  replace (equal a a) with (substituteFormula L (equal (var 0) (var 0)) 0 a).
+  apply (forallE L).
+  - apply sysExtend with (Empty_set (fol.Formula L)).
+    + intros f H; destruct H.
+    + apply forallI.
+     * apply (notInFreeVarSys L).
+     * exists (nil (A:=fol.Formula L)).
+       exists (EQ1 L); contradiction.
+  - rewrite (subFormulaEqual L); reflexivity.
 Qed.
 
-Lemma eqSym :
- forall (T : fol.System L) (a b : fol.Term L),
- SysPrf T (equal a b) -> SysPrf T (equal b a).
+Lemma eqSym (T : fol.System L) (a b : fol.Term L):
+  SysPrf T (equal a b) -> SysPrf T (equal b a).
 Proof.
-intros.
-apply (impE L) with (equal a b); auto.
-set (m := fun x : nat => match x with
+  intros H;apply (impE L) with (equal a b); [ | easy].
+  set (m := fun x : nat => match x with
                          | O => a
                          | S _ => b
                          end) in *.
-apply
- (impE L)
-  with
+  apply (impE L) with
     (subAllFormula L (impH (equal (var 0) (var 1)) (equal (var 1) (var 0)))
        (fun x : nat =>
         match le_lt_dec 2 x with
         | left _ => var x
         | right _ => m x
         end)).
-simpl in |- *.
-induction (le_lt_dec 2 0).
-lia.
-induction (le_lt_dec 2 1).
-lia.
-apply (impRefl L).
-apply (subAllCloseFrom L).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *.
-intros.
-induction H0.
-simpl in |- *.
-apply forallI.
-apply (notInFreeVarSys L).
-apply forallI.
-apply (notInFreeVarSys L).
-exists (nil (A:=fol.Formula L)).
-exists (EQ2 L).
-contradiction.
+  + simpl; destruct (le_lt_dec 2 0) as [l | l].
+    * lia.
+    * destruct (le_lt_dec 2 1) as [l0 | l0].
+      -- lia.
+      -- apply (impRefl L).
+  + apply (subAllCloseFrom L).
+    apply sysExtend with (Empty_set (fol.Formula L)).
+    * intros x H0; destruct H0. 
+    * simpl; apply forallI.
+      -- apply (notInFreeVarSys L).
+      -- apply forallI.
+         ++ apply (notInFreeVarSys L).
+         ++ exists (nil (A:=fol.Formula L)).
+            exists (EQ2 L); contradiction.
 Qed.
 
-Lemma eqTrans :
- forall (T : fol.System L) (a b c : fol.Term L),
+Lemma eqTrans  (T : fol.System L) (a b c : fol.Term L):
  SysPrf T (equal a b) -> SysPrf T (equal b c) -> SysPrf T (equal a c).
 Proof.
-intros.
-apply (impE L) with (equal b c); auto.
-apply (impE L) with (equal a b); auto.
-clear H0 H.
-set
- (m :=
-  fun x : nat =>
-  match x with
-  | O => a
-  | S y => match y with
-           | O => b
-           | S _ => c
-           end
-  end) in *.
-apply
- (impE L)
-  with
+  intros H H0; apply (impE L) with (equal b c); [ | easy].
+  apply (impE L) with (equal a b);  [ | easy];  clear H0 H.
+  set (m x:= match x with | O => a | 1 => b  | _ => c  end) in *.
+  apply (impE L) with
     (subAllFormula L
        (impH (equal (var 0) (var 1))
           (impH (equal (var 1) (var 2)) (equal (var 0) (var 2))))
@@ -126,29 +96,19 @@ apply
         | left _ => var x
         | right _ => m x
         end)).
-simpl in |- *.
-induction (le_lt_dec 3 0).
-lia.
-induction (le_lt_dec 3 1).
-lia. 
-induction (le_lt_dec 3 2).
-lia.
-apply (impRefl L).
-apply (subAllCloseFrom L).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *.
-intros.
-induction H.
-simpl in |- *.
-apply forallI.
-apply (notInFreeVarSys L).
-apply forallI.
-apply (notInFreeVarSys L).
-apply forallI.
-apply (notInFreeVarSys L).
-exists (nil (A:=fol.Formula L)).
-exists (EQ3 L).
-contradiction.
+  - simpl in |- *; induction (le_lt_dec 3 0) as [a0 | b0]; [lia | ].
+    destruct (le_lt_dec 3 1)as [? | l]; [lia | ].
+    destruct  (le_lt_dec 3 2) as [? | l0]; [lia | ].
+    apply (impRefl L).
+  - apply (subAllCloseFrom L); apply sysExtend with (Empty_set (fol.Formula L)).
+    + intros f H; destruct H. 
+    + simpl in |- *; apply forallI.
+      * apply (notInFreeVarSys L).
+      * apply forallI.
+        -- apply (notInFreeVarSys L).
+        -- apply forallI.
+           ++ apply (notInFreeVarSys L).
+           ++ exists nil,  (EQ3 L); contradiction.
 Qed.
 
 Fixpoint PairwiseEqual (T : fol.System L) (n : nat) {struct n} :
@@ -162,691 +122,581 @@ Fixpoint PairwiseEqual (T : fol.System L) (n : nat) {struct n} :
       SysPrf T (equal a c) /\ PairwiseEqual T x b d
   end.
 
+(* TODO : specify and document *)
+
 Let termsMap (m : nat) (ts ss : fol.Terms L m) : nat -> fol.Term L.
-induction m as [| m Hrecm].
-exact (fun n : nat => var n).
-induction (consTerms L _ ts).
-induction x as (a, b).
-induction (consTerms L _ ss).
-induction x as (a0, b0).
-exact
- (fun n : nat =>
-  match eq_nat_dec n (m + m) with
-  | left _ => a
-  | right _ =>
-      match eq_nat_dec n (S (m + m)) with
-      | left _ => a0
-      | right _ => Hrecm b b0 n
-      end
-  end).
+Proof. 
+  induction m as [| m Hrecm].
+  - exact (fun n : nat => var n).
+  - destruct (consTerms L _ ts)as [[a b] p].
+    destruct  (consTerms L _ ss) as [[a0 b0] e].
+    exact
+      (fun n : nat =>
+         match eq_nat_dec n (m + m) with
+         | left _ => a
+         | right _ =>
+             match eq_nat_dec n (S (m + m)) with
+             | left _ => a0
+             | right _ => Hrecm b b0 n
+             end
+         end).
 Defined.
 
-Remark subAllnVars1 :
- forall (a : nat) (ts ss : fol.Terms L a),
+
+Remark subAllnVars1 (a : nat) (ts ss : fol.Terms L a):
  ts = subAllTerms L _ (fst (nVars L a)) (termsMap a ts ss).
 Proof.
-intros.
-induction a as [| a Hreca].
-simpl in |- *.
-symmetry  in |- *.
-apply (nilTerms L).
-assert
- (forall v : nat, In v (freeVarTerms L _ (fst (nVars L a))) -> v < a + a).
-intros.
-clear Hreca ss ts.
-induction a as [| a Hreca].
-elim H.
-simpl in H.
-induction (nVars L a).
-simpl in H.
-induction H as [H| H].
-rewrite <- H.
-rewrite Nat.add_succ_r.
-simpl in |- *.
-apply Nat.lt_lt_succ_r.
-apply Nat.lt_succ_diag_r .
+  induction a as [| a Hreca].
+  - simpl; symmetry; apply (nilTerms L).
+  - assert
+      (H: forall v : nat, In v (freeVarTerms L _ (fst (nVars L a))) -> v < a + a).
+    {  intros v H; clear Hreca ss ts.
+       induction a as [| a Hreca].
+       - elim H.
+       - simpl in H.
+         induction (nVars L a).
+         simpl in H.
+         induction H as [H| H].
+         rewrite <- H.
+         rewrite Nat.add_succ_r.
+         simpl in |- *.
+         apply Nat.lt_lt_succ_r.
+         apply Nat.lt_succ_diag_r .
 
-rewrite Nat.add_succ_r.
-apply Nat.lt_trans with (a + a).
-apply Hreca.
-apply H.
-simpl in |- *.
-apply Nat.lt_lt_succ_r.
-apply Nat.lt_succ_diag_r .
-simpl in |- *.
-induction (consTerms L a ts).
-induction x as (a0, b).
-induction (consTerms L a ss).
-induction x as (a1, b0).
-simpl in |- *.
-simpl in H.
-induction (nVars L a).
-simpl in |- *.
-simpl in Hreca.
-induction (eq_nat_dec (a + a) (a + a)).
-simpl in p.
-rewrite <- p.
-replace
- (subAllTerms L a a2
-    (fun n : nat =>
-     match eq_nat_dec n (a + a) with
-     | left _ => a0
-     | right _ =>
-         match eq_nat_dec n (S (a + a)) with
-         | left _ => a1
-         | right _ => termsMap a b b0 n
-         end
-     end)) with (subAllTerms L a a2 (termsMap a b b0)).
-rewrite <- Hreca.
-reflexivity.
-apply subAllTerms_ext.
-intros.
-induction (eq_nat_dec m (a + a)).
-elim (Compat815.lt_not_le m (a + a)).
-apply H; auto.
-rewrite a4; auto.
-induction (eq_nat_dec m (S (a + a))).
-elim (Compat815.lt_not_le m (a + a)).
-apply H; auto.
-rewrite a4; apply Nat.le_succ_diag_r.
-auto.
-elim b2; auto.
+         rewrite Nat.add_succ_r.
+         apply Nat.lt_trans with (a + a).
+         apply Hreca.
+         apply H.
+         simpl in |- *.
+         apply Nat.lt_lt_succ_r.
+         apply Nat.lt_succ_diag_r .
+    } 
+    simpl in |- *.
+    induction (consTerms L a ts) as [(a0,b) p].
+   
+    induction (consTerms L a ss) as [ (a1, b0) p0].
+    simpl in |- *.
+    simpl in H.
+    induction (nVars L a) as [a2 b1].
+    simpl in |- *.
+    simpl in Hreca.
+    destruct  (eq_nat_dec (a + a) (a + a)) as [e | n].
+    { simpl in p.
+      rewrite <- p.
+      replace
+        (subAllTerms L a a2
+           (fun n : nat =>
+              match eq_nat_dec n (a + a) with
+              | left _ => a0
+              | right _ =>
+                  match eq_nat_dec n (S (a + a)) with
+                  | left _ => a1
+                  | right _ => termsMap a b b0 n
+                  end
+              end)) with (subAllTerms L a a2 (termsMap a b b0)).
+      + now rewrite <- Hreca.
+      + apply subAllTerms_ext.
+        intros m H0.  destruct  (eq_nat_dec m (a + a)) as [e0 | n].
+        * elim (Compat815.lt_not_le m (a + a)).
+          -- apply H; auto.
+          -- lia. 
+        * destruct (eq_nat_dec m (S (a + a))) as [a4 | _].
+          -- elim (Compat815.lt_not_le m (a + a)).
+             apply H; auto.
+             rewrite a4; apply Nat.le_succ_diag_r.
+          -- reflexivity.
+    }   
+    + elim n; auto.
 Qed.
 
-Remark subAllnVars2 :
- forall (a : nat) (ts ss : fol.Terms L a),
+
+
+Remark subAllnVars2 (a : nat) (ts ss : fol.Terms L a):
  ss = subAllTerms L _ (snd (nVars L a)) (termsMap a ts ss).
 Proof.
-intros.
-induction a as [| a Hreca].
-simpl in |- *.
-symmetry  in |- *.
-apply (nilTerms L).
-assert
- (forall v : nat, In v (freeVarTerms L _ (snd (nVars L a))) -> v < a + a).
-intros.
-clear Hreca ss ts.
-induction a as [| a Hreca].
-elim H.
-simpl in H.
-induction (nVars L a).
-simpl in H.
-induction H as [H| H].
-rewrite <- H.
-rewrite Nat.add_succ_r.
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
-rewrite Nat.add_succ_r.
-apply Nat.lt_trans with (a + a).
-apply Hreca.
-apply H.
-simpl in |- *.
-apply Nat.lt_lt_succ_r.
-apply Nat.lt_succ_diag_r .
-simpl in |- *.
-induction (consTerms L a ts).
-induction x as (a0, b).
-induction (consTerms L a ss).
-induction x as (a1, b0).
-simpl in |- *.
-simpl in H.
-induction (nVars L a).
-Opaque eq_nat_dec.
-simpl.
-Transparent eq_nat_dec.
-destruct (eq_nat_dec (S (a+a)) (a + a)).
-elim (n_Sn (a+a)).
-auto.
-destruct (eq_nat_dec (S (a + a)) (S (a+a))).
-replace
- (subAllTerms L a b1
-    (fun n : nat =>
-     match eq_nat_dec n (a + a) with
-     | left _ => a0
-     | right _ =>
-         match eq_nat_dec n (S (a + a)) with
-         | left _ => a1
-         | right _ => termsMap a b b0 n
-         end
-     end)) with (subAllTerms L a b1 (termsMap a b b0)).
-rewrite <- Hreca.
-auto.
-apply subAllTerms_ext.
-intros.
-induction (eq_nat_dec m (a + a)).
-elim (Compat815.lt_not_le m (a + a)).
-apply H; auto.
-rewrite a3; auto.
-induction (eq_nat_dec m (S (a + a))).
-elim (Compat815.lt_not_le m (a + a)).
-apply H; auto.
-rewrite a3; apply Nat.le_succ_diag_r.
-auto.
-elim n0; auto.
+  induction a as [| a Hreca].
+  - simpl; symmetry; apply (nilTerms L).
+  - assert
+      (H: forall v : nat, In v (freeVarTerms L _ (snd (nVars L a))) -> v < a + a).
+    { intros v H; clear Hreca ss ts; induction a as [| a Hreca].
+      - elim H.
+      - simpl in H; induction (nVars L a) as [a0 b].
+        simpl in H; destruct H as [H| H].
+        subst. lia. 
+        rewrite Nat.add_succ_r.
+        simpl in |- *.
+        apply Nat.lt_trans with (a + a).
+        + apply Hreca, H. 
+        + lia.
+    }
+    simpl in |- *; destruct (consTerms L a ts) as [[a0 b] e];
+      destruct (consTerms L a ss) as [[a1 b0] p].
+    simpl in |- *; simpl in H.
+    induction (nVars L a) as [a2 b1].
+    Opaque eq_nat_dec.
+    simpl.
+    Transparent eq_nat_dec.
+    destruct (eq_nat_dec (S (a+a)) (a + a)) as [e0 | n]. 
+    + lia. 
+    + destruct (eq_nat_dec (S (a + a)) (S (a+a))) as [e0 | n0].
+      * replace
+          (subAllTerms L a b1
+             (fun n : nat =>
+                match eq_nat_dec n (a + a) with
+                | left _ => a0
+                | right _ =>
+                    match eq_nat_dec n (S (a + a)) with
+                    | left _ => a1
+                    | right _ => termsMap a b b0 n
+                    end
+                end)) 
+          with (subAllTerms L a b1 (termsMap a b b0)).
+        rewrite <- Hreca; now rewrite <- p. 
+        apply subAllTerms_ext.
+        intros m H0.
+        destruct (eq_nat_dec m (a + a)) as [e1 | n1].
+      --  elim (Compat815.lt_not_le m (a + a)).
+          apply H; auto.
+          rewrite e1; auto.
+      -- destruct (eq_nat_dec m (S (a + a))) as [e1 | n2].
+         ++ elim (Compat815.lt_not_le m (a + a)).
+            apply H; auto.
+            lia. 
+         ++ easy. 
+      * elim n0; auto.
 Qed.
 
-Remark addPairwiseEquals :
- forall (T : fol.System L) (n : nat) (ts ss : fol.Terms L n),
- PairwiseEqual T n ts ss ->
- forall m0 : nat -> fol.Term L,
- (forall q : nat, q < n + n -> m0 q = termsMap n ts ss q) ->
- forall f0 : fol.Formula L,
- SysPrf T
-   (subAllFormula L
-      (nat_rec (fun _ : nat => fol.Formula L) f0
-         (fun (n : nat) (Hrecn : fol.Formula L) =>
-          fol.impH L
-            (fol.equal L (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
-         n) m0) -> SysPrf T (subAllFormula L f0 m0).
+Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
+  PairwiseEqual T n ts ss ->
+  forall m0 : nat -> fol.Term L,
+    (forall q : nat, q < n + n -> m0 q = termsMap n ts ss q) ->
+    forall f0 : fol.Formula L,
+      SysPrf T
+        (subAllFormula L
+           (nat_rec (fun _ : nat => fol.Formula L) f0
+              (fun (n : nat) (Hrecn : fol.Formula L) =>
+                 fol.impH L
+                   (fol.equal L (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
+              n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.
-intros T n ts ss H.
-set (m := termsMap n ts ss) in *.
-induction n as [| n Hrecn].
-simpl in |- *.
-auto.
-simpl in (value of m).
-simpl in H.
-induction (consTerms L n ts).
-induction x as (a, b).
-induction (consTerms L n ss).
-induction x as (a0, b0).
-simpl in H.
-simpl in (value of m).
-induction H as (H, H0).
-simpl in |- *.
-intros.
-apply (Hrecn b b0).
-auto.
-intros.
-rewrite H1.
-unfold m in |- *.
-induction (eq_nat_dec q (n + n)).
-rewrite <- a1 in H3.
-elim (Nat.lt_irrefl _ H3).
-induction (eq_nat_dec q (S (n + n))).
-elim (Compat815.lt_not_le _ _ H3).
-rewrite a1.
-apply Nat.le_succ_diag_r.
-reflexivity.
-rewrite Nat.add_succ_r.
-simpl in |- *.
-repeat apply Nat.lt_lt_succ_r.
-auto.
-apply (impE L) with (fol.equal L (m0 (n + n)) (m0 (S (n + n)))).
-apply H2.
-rewrite Nat.add_succ_r in H1.
-repeat rewrite H1.
-unfold m in |- *.
-induction (eq_nat_dec (n + n) (n + n)).
-induction (eq_nat_dec (S (n + n)) (n + n)).
-lia.
-induction (eq_nat_dec (S (n + n)) (S (n + n))).
-apply H.
-elim b2; auto.
-elim b1; auto.
-simpl in |- *.
-apply Compat815.lt_n_S.
-apply Nat.lt_succ_diag_r .
-simpl in |- *.
-apply Nat.lt_lt_succ_r.
-apply Nat.lt_succ_diag_r .
+  intros H.
+  set (m := termsMap n ts ss) in *.
+  induction n as [| n Hrecn].
+  - simpl in |- *; auto.
+  - simpl in (value of m); simpl in H.
+    destruct (consTerms L n ts) as [[a b] p].
+    induction (consTerms L n ss) as [[a0 b0] p0].
+    simpl in H; simpl in (value of m).
+    destruct H as (H, H0); simpl in |- *.
+    intros m0 H1 f0 H2; apply (Hrecn b b0).
+    + auto.
+    + intros q H3; rewrite H1. 
+      * unfold m in |- *.
+        destruct (eq_nat_dec q (n + n))as [e | n0].
+      -- subst; lia.
+     -- induction (eq_nat_dec q (S (n + n))).
+        ++ elim (Compat815.lt_not_le _ _ H3).
+           rewrite a1.
+           apply Nat.le_succ_diag_r.
+        ++  reflexivity.
+      * rewrite Nat.add_succ_r.
+        simpl in |- *.
+        repeat apply Nat.lt_lt_succ_r.
+        auto.
+    + apply (impE L) with (fol.equal L (m0 (n + n)) (m0 (S (n + n)))).
+      * apply H2.
+      * rewrite Nat.add_succ_r in H1.
+        repeat rewrite H1.
+        unfold m in |- *.
+        destruct (eq_nat_dec (n + n) (n + n)) as [a1 | b1].
+        -- destruct (eq_nat_dec (S (n + n)) (n + n)) as [e | n0].
+           ++ lia.
+           ++ induction (eq_nat_dec (S (n + n)) (S (n + n))) as [a2 | b2].
+              apply H.
+              elim b2; auto.
+        -- elim b1; auto.
+        -- simpl in |- *. lia. 
+        -- simpl in |- *; lia. 
 Qed.
 
-Lemma equalRelation :
- forall (T : fol.System L) (r : Relations L) (ts ss : fol.Terms L _),
+Lemma equalRelation (T : fol.System L) (r : Relations L) (ts ss : fol.Terms L _):
  PairwiseEqual T _ ts ss -> SysPrf T (iffH (atomic r ts) (atomic r ss)).
 Proof.
-intros.
-set (n := arity L (inl (Functions L) r)) in *.
-set (m := termsMap n ts ss) in *.
-rewrite (subAllnVars1 _ ts ss).
-fold m in |- *.
-rewrite (subAllnVars2 _ ts ss).
-fold m in |- *.
-replace
- (iffH (atomic r (subAllTerms L n (fst (nVars L n)) m))
-    (atomic r (subAllTerms L n (snd (nVars L n)) m))) with
- (subAllFormula L
-    (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))) m);
- [ idtac | reflexivity ].
-cut (SysPrf T (subAllFormula L (AxmEq4 L r) m)).
-unfold AxmEq4 in |- *.
-fold n in |- *.
-replace
- (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
-    (fun a b : fol.Terms L n =>
-     fol.iffH L (fol.atomic L r a) (fol.atomic L r b)) 
-    (nVars L n)) with
- (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
-generalize (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
-intros.
-apply (addPairwiseEquals T n ts ss).
-auto.
-unfold m in |- *; auto.
-auto.
-induction (nVars L n).
-simpl in |- *.
-reflexivity.
-replace (subAllFormula L (AxmEq4 L r) m) with
- (subAllFormula L (AxmEq4 L r)
-    (fun x : nat =>
-     match le_lt_dec (n + n) x with
-     | left _ => fol.var L x
-     | right _ => m x
-     end)).
-apply (subAllCloseFrom L).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *.
-intros.
-induction H0.
-clear m H ts ss T.
-induction n as [| n Hrecn].
-simpl in |- *.
-exists (nil (A:=fol.Formula L)).
-exists (EQ4 L r).
-contradiction.
-simpl in |- *.
-apply (forallI L).
-apply (notInFreeVarSys L).
-rewrite Nat.add_succ_r.
-simpl in |- *.
-apply (forallI L).
-apply (notInFreeVarSys L).
-apply Hrecn.
-apply subAllFormula_ext.
-intros.
-clear H0 H.
-induction (le_lt_dec (n + n) m0).
-unfold m in |- *.
-induction n as [| n Hrecn].
-simpl in |- *.
-reflexivity.
-simpl in |- *.
-induction (consTerms L n ts).
-induction x as (a0, b).
-induction (consTerms L n ss).
-induction x as (a1, b0).
-simpl in |- *.
-rewrite Nat.add_succ_r in a.
-induction (eq_nat_dec m0 (n + n)).
-rewrite a2 in a.
-lia.
-induction (eq_nat_dec m0 (S (n + n))).
-rewrite a2 in a; lia.
-apply Hrecn.
-lia. 
-reflexivity.
+  intros H.
+  set (n := arity L (inl (Functions L) r)) in *.
+  set (m := termsMap n ts ss) in *.
+  rewrite (subAllnVars1 _ ts ss).
+  fold m in |- *; rewrite (subAllnVars2 _ ts ss); fold m in |- *.
+  replace
+    (iffH (atomic r (subAllTerms L n (fst (nVars L n)) m))
+       (atomic r (subAllTerms L n (snd (nVars L n)) m))) with
+    (subAllFormula L
+       (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))) m);
+    [ idtac | reflexivity ].
+  cut (SysPrf T (subAllFormula L (AxmEq4 L r) m)).
+  - unfold AxmEq4 in |- *; fold n in |- *.
+    replace
+      (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
+         (fun a b : fol.Terms L n =>
+            fol.iffH L (fol.atomic L r a) (fol.atomic L r b)) 
+         (nVars L n)) with
+      (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
+   + generalize (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
+     intros f H0; apply (addPairwiseEquals T n ts ss).
+     * auto.
+     * unfold m in |- *; auto.
+     * auto.
+   + destruct (nVars L n) as [a b].
+     reflexivity.
+  - replace (subAllFormula L (AxmEq4 L r) m) with
+      (subAllFormula L (AxmEq4 L r)
+         (fun x : nat =>
+            match le_lt_dec (n + n) x with
+            | left _ => fol.var L x
+            | right _ => m x
+            end)).
+    + apply (subAllCloseFrom L).
+      apply sysExtend with (Empty_set (fol.Formula L)).
+      intros f H0; destruct H0.
+      clear m H ts ss T.
+      induction n as [| n Hrecn].
+      * simpl in |- *; exists (nil (A:=fol.Formula L)).
+        exists (EQ4 L r); contradiction.
+      * simpl in |- *; apply (forallI L).
+        apply (notInFreeVarSys L).
+        rewrite Nat.add_succ_r.
+        simpl in |- *.
+        apply (forallI L).
+        apply (notInFreeVarSys L).
+        apply Hrecn.
+    + apply subAllFormula_ext.
+      intros m0 H0;clear H0 H.
+      destruct (le_lt_dec (n + n) m0) as [l | l].
+      * unfold m in |- *.
+        induction n as [| n Hrecn].
+        -- reflexivity.
+        -- simpl in |- *.
+           destruct (consTerms L n ts) as [[a0 b] p]. 
+           destruct (consTerms L n ss) as [[a b0] p0]. 
+           simpl in |- *.
+           induction (eq_nat_dec m0 (n + n)) as [a1 | b1].
+           ** subst; lia.
+           ** destruct  (eq_nat_dec m0 (S (n + n))).
+            lia.
+            apply Hrecn; lia.
+      * reflexivity.
 Qed.
 
-Lemma equalFunction :
- forall (T : fol.System L) (f : Functions L) (ts ss : fol.Terms L _),
+Lemma equalFunction (T : fol.System L) (f : Functions L) (ts ss : fol.Terms L _):
  PairwiseEqual T _ ts ss -> SysPrf T (equal (apply f ts) (apply f ss)).
 Proof.
-intros.
-set (n := arity L (inr (Relations L) f)) in *.
-set (m := termsMap n ts ss) in *.
-rewrite (subAllnVars1 _ ts ss).
-fold m in |- *.
-rewrite (subAllnVars2 _ ts ss).
-fold m in |- *.
-replace
- (equal (apply f (subAllTerms L n (fst (nVars L n)) m))
-    (apply f (subAllTerms L n (snd (nVars L n)) m))) with
- (subAllFormula L
-    (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))) m);
- [ idtac | reflexivity ].
-cut (SysPrf T (subAllFormula L (AxmEq5 L f) m)).
-unfold AxmEq5 in |- *.
-fold n in |- *.
-replace
- (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
-    (fun a b : fol.Terms L n =>
-     fol.equal L (fol.apply L f a) (fol.apply L f b)) 
-    (nVars L n)) with
- (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).
-generalize (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).
-intros.
-apply (addPairwiseEquals T n ts ss).
-auto.
-unfold m in |- *; auto.
-auto.
-induction (nVars L n).
-simpl in |- *.
-reflexivity.
-replace (subAllFormula L (AxmEq5 L f) m) with
- (subAllFormula L (AxmEq5 L f)
-    (fun x : nat =>
-     match le_lt_dec (n + n) x with
-     | left _ => fol.var L x
-     | right _ => m x
-     end)).
-apply (subAllCloseFrom L).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *.
-intros.
-induction H0.
-clear m H ts ss T.
-induction n as [| n Hrecn].
-simpl in |- *.
-exists (nil (A:=fol.Formula L)).
-exists (EQ5 L f).
-contradiction.
-simpl in |- *.
-apply (forallI L).
-apply (notInFreeVarSys L).
-rewrite Nat.add_succ_r.
-simpl in |- *.
-apply (forallI L).
-apply (notInFreeVarSys L).
-apply Hrecn.
-apply subAllFormula_ext.
-intros.
-clear H0 H.
-induction (le_lt_dec (n + n) m0).
-unfold m in |- *.
-induction n as [| n Hrecn].
-simpl in |- *.
-reflexivity.
-simpl in |- *.
-induction (consTerms L n ts).
-induction x as (a0, b).
-induction (consTerms L n ss).
-induction x as (a1, b0).
-simpl in |- *.
-rewrite Nat.add_succ_r in a.
-induction (eq_nat_dec m0 (n + n)).
-lia.
-
-induction (eq_nat_dec m0 (S (n + n))).
-rewrite a2 in a.
-lia.
-apply Hrecn. lia.
-reflexivity.
+  intros H.
+  set (n := arity L (inr (Relations L) f)) in *.
+  set (m := termsMap n ts ss) in *.
+  rewrite (subAllnVars1 _ ts ss).
+  fold m in |- *.
+  rewrite (subAllnVars2 _ ts ss).
+  fold m in |- *.
+  replace
+    (equal (apply f (subAllTerms L n (fst (nVars L n)) m))
+       (apply f (subAllTerms L n (snd (nVars L n)) m))) with
+    (subAllFormula L
+       (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))) m);
+    [ idtac | reflexivity ].
+  cut (SysPrf T (subAllFormula L (AxmEq5 L f) m)).
+  - unfold AxmEq5 in |- *; fold n in |- *.
+    replace
+      (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
+         (fun a b : fol.Terms L n =>
+            fol.equal L (fol.apply L f a) (fol.apply L f b)) 
+         (nVars L n)) 
+      with
+      (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).
+    + generalize (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).
+      intros f0 H0; apply (addPairwiseEquals T n ts ss).
+      auto.
+      unfold m in |- *; auto.
+      auto.
+    + induction (nVars L n) as [a b].
+      reflexivity.
+  - replace (subAllFormula L (AxmEq5 L f) m) with
+      (subAllFormula L (AxmEq5 L f)
+         (fun x : nat =>
+            match le_lt_dec (n + n) x with
+            | left _ => fol.var L x
+            | right _ => m x
+            end)).
+    + apply (subAllCloseFrom L).
+      apply sysExtend with (Empty_set (fol.Formula L)).
+      red; destruct 1. 
+      clear m H ts ss T; induction n as [| n Hrecn].
+      * simpl in |- *.
+        exists (nil (A:=fol.Formula L)).
+        exists (EQ5 L f).
+        contradiction.
+      * simpl in |- *; apply (forallI L).
+        apply (notInFreeVarSys L).
+        rewrite Nat.add_succ_r.
+        simpl in |- *.
+        apply (forallI L).
+        apply (notInFreeVarSys L).
+        apply Hrecn.
+    + apply subAllFormula_ext.
+      intros m0 H0; clear H0 H.
+      destruct (le_lt_dec (n + n) m0) as [l | l].
+      * unfold m in |- *.
+        induction n as [| n Hrecn].
+        -- reflexivity.
+        -- simpl in |- *.
+           destruct (consTerms L n ts) as [(a0, b) p].
+           induction (consTerms L n ss) as [(a1, b0) p0]. 
+           simpl in |- *.
+           induction (eq_nat_dec m0 (n + n)).
+           ++ lia.
+           ++ induction (eq_nat_dec m0 (S (n + n))).
+             subst; lia. 
+             apply Hrecn. lia.
+      * reflexivity.
 Qed.
 
-Lemma subWithEqualsTerm :
- forall (a b t : fol.Term L) (v : nat) (T : fol.System L),
+Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) (T : fol.System L):
  SysPrf T (equal a b) ->
  SysPrf T (equal (substituteTerm L t v a) (substituteTerm L t v b)).
 Proof.
-intros.
-elim t using
- Term_Terms_ind
-  with
+  intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           PairwiseEqual T _ (substituteTerms L _ ts v a)
-             (substituteTerms L _ ts v b)); simpl in |- *; 
- intros.
-induction (eq_nat_dec v n).
-auto.
-apply eqRefl.
-apply equalFunction.
-apply H0.
-auto.
-induction
- (consTerms L n
-    (Tcons L n (substituteTerm L t0 v a) (substituteTerms L n t1 v a))).
-induction x as (a0, b0).
-induction
- (consTerms L n
-    (Tcons L n (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).
-induction x as (a1, b1).
-simpl in |- *.
-simpl in p.
-simpl in p0.
-inversion p.
-inversion p0.
-split.
-auto.
-rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
-rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H6).
-auto.
+             PairwiseEqual T _ (substituteTerms L _ ts v a)
+               (substituteTerms L _ ts v b)); simpl in |- *. 
+    - intros n; induction (eq_nat_dec v n); [easy | apply eqRefl].
+    - intros f t0 H0; apply equalFunction.
+      apply H0.
+    - auto.
+    - intros.  
+      destruct
+        (consTerms L n
+           (Tcons L n (substituteTerm L t0 v a) (substituteTerms L n t1 v a))). 
+      destruct x as [a0 b0].
+      destruct
+        (consTerms L n
+           (Tcons L n (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).  
+      destruct x as [a1 b1]. 
+      simpl in |- *.  simpl in e0; simpl in e.
+      inversion e0.
+      inversion e. 
+      auto.
+      rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
+      rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H6).
+      auto.
 Qed.
 
-Lemma subWithEqualsTerms :
- forall (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
-   (v : nat) (T : fol.System L),
- SysPrf T (equal a b) ->
- PairwiseEqual T _ (substituteTerms L _ ts v a) (substituteTerms L _ ts v b).
+Lemma subWithEqualsTerms (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
+  (v : nat) (T : fol.System L):
+  SysPrf T (equal a b) ->
+  PairwiseEqual T _ (substituteTerms L _ ts v a) (substituteTerms L _ ts v b).
 Proof.
-intros.
-induction ts as [| n t ts Hrects]; simpl in |- *.
-auto.
-induction
- (consTerms L n
-    (Tcons L n (substituteTerm L t v a) (substituteTerms L n ts v a))).
-induction x as (a0, b0).
-induction
- (consTerms L n
-    (Tcons L n (substituteTerm L t v b) (substituteTerms L n ts v b))).
-induction x as (a1, b1).
-simpl in |- *.
-simpl in p.
-simpl in p0.
-inversion p.
-inversion p0.
-split.
-apply subWithEqualsTerm.
-auto.
-rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H2).
-rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
-auto.
+  intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
+  - auto.
+  - destruct
+      (consTerms L n
+         (Tcons L n (substituteTerm L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
+    destruct
+      (consTerms L n
+         (Tcons L n (substituteTerm L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
+    simpl in |- *; simpl in p,  e.
+    inversion p.
+    inversion e.
+    split.
+    + apply subWithEqualsTerm; auto.
+    + rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H2).
+      now rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
 Qed.
 
 Lemma subWithEquals :
- forall (f : fol.Formula L) (v : nat) (a b : fol.Term L) (T : fol.System L),
- SysPrf T (equal a b) ->
- SysPrf T (impH (substituteFormula L f v a) (substituteFormula L f v b)).
+  forall (f : fol.Formula L) (v : nat) (a b : fol.Term L) (T : fol.System L),
+    SysPrf T (equal a b) ->
+    SysPrf T (impH (substituteFormula L f v a) (substituteFormula L f v b)).
 Proof.
-intro.
-elim f using Formula_depth_ind2; intros.
-repeat rewrite subFormulaEqual.
-apply (impI L).
-apply eqTrans with (substituteTerm L t v a).
-apply subWithEqualsTerm.
-apply (sysWeaken L).
-apply eqSym.
-auto.
-apply eqTrans with (substituteTerm L t0 v a).
-apply (Axm L); right; constructor.
-apply subWithEqualsTerm.
-apply (sysWeaken L).
-auto.
-apply (iffE1 L).
-repeat rewrite subFormulaRelation.
-apply equalRelation.
-apply subWithEqualsTerms.
-auto.
-repeat rewrite subFormulaImp.
-repeat apply (impI L).
-apply impE with (substituteFormula L f1 v a).
-apply H0.
-repeat apply (sysWeaken L).
-auto.
-apply impE with (substituteFormula L f0 v a).
-apply (Axm L); left; right; constructor.
-apply impE with (substituteFormula L f0 v b).
-apply H.
-repeat apply (sysWeaken L).
-apply eqSym.
-auto.
-apply (Axm L); right; constructor.
-repeat rewrite subFormulaNot.
-apply (cp2 L).
-apply H.
-apply eqSym.
-auto.
-decompose record (subFormulaForall2 L a v v0 a0).
-rewrite H5; clear H5.
-decompose record (subFormulaForall2 L a v v0 b).
-rewrite H8; clear H8.
-induction (eq_nat_dec v v0).
-apply (impRefl L).
-set
- (nv :=
-  v0
-  :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
-     freeVarTerm L a0 ++ freeVarTerm L b) in *.
-apply
- (impTrans L)
-  with
-    (fol.forallH L (newVar nv)
-       (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
-          v0 a0)).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *; intros.
-induction H7.
-apply
- (impTrans L)
-  with
-    (fol.forallH L (newVar nv)
-       (substituteFormula L
-          (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)
-          x (var (newVar nv)))).
-apply (iffE1 L).
-apply (rebindForall L).
-unfold not in |- *; intros.
-elim (newVar1 nv).
-unfold nv at 2 in |- *.
-assert
- (In (newVar nv)
-    (freeVarFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0))).
-eapply In_list_remove1.
-apply H7.
-induction (freeVarSubFormula3 _ _ _ _ _ H8).
-assert
- (In (newVar nv) (freeVarFormula L (substituteFormula L a v (fol.var L x)))).
-eapply In_list_remove1.
-apply H9.
-induction (freeVarSubFormula3 _ _ _ _ _ H10).
-right.
-apply in_or_app.
-auto.
-elim (In_list_remove2 _ _ _ _ _ H7).
-induction H11 as [H11| H11].
-auto.
-contradiction.
-right.
-auto with datatypes.
-apply (iffE1 L).
-apply (reduceForall L).
-apply (notInFreeVarSys L).
-apply
- (iffTrans L)
-  with
-    (substituteFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L x)) x
-          (var (newVar nv))) v0 a0).
-apply (subFormulaExch L); auto.
-unfold not in |- *; intros.
-elim (newVar1 nv).
-unfold nv at 2 in |- *.
-simpl in |- *.
-left.
-induction H7 as [H7| H7].
-auto.
-contradiction.
-apply (reduceSub L).
-apply (notInFreeVarSys L).
-apply (subFormulaTrans L).
-auto.
-apply
- (impTrans L)
-  with
-    (fol.forallH L (newVar nv)
-       (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
-          v0 b)).
-apply impE with (equal a0 b).
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *; intros.
-induction H7.
-repeat apply (impI L).
-apply forallI.
-unfold not in |- *; intros.
-induction H7 as (x1, H7); induction H7 as (H7, H8).
-induction H8 as [x1 H8| x1 H8];
- [ induction H8 as [x1 H8| x1 H8] | induction H8 ]. 
-induction H8; simple induction H8.
-induction H8.
-simpl in H7.
-elim (newVar1 nv).
-unfold nv at 2 in |- *.
-right.
-auto with datatypes.
-elim (In_list_remove2 _ _ _ _ _ H7).
-reflexivity.
-apply
- impE
-  with
-    (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv))) v0
-       a0).
-apply H.
-eapply eqDepth.
-symmetry  in |- *.
-apply (subFormulaDepth L).
-apply depthForall.
-apply (Axm L); left; right; constructor.
-eapply forallSimp.
-apply (Axm L); right; constructor.
-apply H0.
-apply sysExtend with (Empty_set (fol.Formula L)).
-unfold Included in |- *; intros.
-induction H7.
-apply (iffE2 L).
-apply
- (iffTrans L)
-  with
-    (fol.forallH L (newVar nv)
-       (substituteFormula L
-          (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)
-          x0 (var (newVar nv)))).
-apply (rebindForall L).
-unfold not in |- *; intros.
-elim (newVar1 nv).
-unfold nv at 2 in |- *.
-assert
- (In (newVar nv)
-    (freeVarFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b))).
-eapply In_list_remove1.
-apply H7.
-induction (freeVarSubFormula3 _ _ _ _ _ H8).
-assert
- (In (newVar nv) (freeVarFormula L (substituteFormula L a v (fol.var L x0)))).
-eapply In_list_remove1.
-apply H9.
-induction (freeVarSubFormula3 _ _ _ _ _ H10).
-right.
-apply in_or_app.
-auto.
-elim (In_list_remove2 _ _ _ _ _ H7).
-induction H11 as [H11| H11].
-auto.
-contradiction.
-right.
-auto with datatypes.
-apply (reduceForall L).
-apply (notInFreeVarSys L).
-apply
- (iffTrans L)
-  with
-    (substituteFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
-          (var (newVar nv))) v0 b).
-apply (subFormulaExch L); auto.
-unfold not in |- *; intros.
-elim (newVar1 nv).
-unfold nv at 2 in |- *.
-simpl in |- *.
-left.
-induction H7 as [H7| H7].
-auto.
-contradiction.
-apply (reduceSub L).
-apply (notInFreeVarSys L).
-apply (subFormulaTrans L).
-auto.
+  intro f; elim f using Formula_depth_ind2; intros.
+  - repeat rewrite subFormulaEqual.
+    apply (impI L).
+    apply eqTrans with (substituteTerm L t v a).
+    + apply subWithEqualsTerm.
+      apply (sysWeaken L).
+      now apply eqSym.
+    + apply eqTrans with (substituteTerm L t0 v a).
+      * apply (Axm L); right; constructor.
+      * apply subWithEqualsTerm.
+        now apply (sysWeaken L).
+  - apply (iffE1 L).
+    repeat rewrite subFormulaRelation.
+    apply equalRelation.
+    now apply subWithEqualsTerms.
+  - repeat rewrite subFormulaImp.
+    repeat apply (impI L).
+    apply impE with (substituteFormula L f1 v a).
+    + apply H0.
+      now repeat apply (sysWeaken L).
+    + apply impE with (substituteFormula L f0 v a).
+      * apply (Axm L); left; right; constructor.
+      * apply impE with (substituteFormula L f0 v b).
+        -- apply H.
+           repeat apply (sysWeaken L).
+           now apply eqSym.
+        -- apply (Axm L); right; constructor.
+  - repeat rewrite subFormulaNot.
+    apply (cp2 L), H; now apply eqSym.
+  - decompose record (subFormulaForall2 L a v v0 a0).
+    rewrite H5; clear H5.
+    decompose record (subFormulaForall2 L a v v0 b).
+    rewrite H8; clear H8.
+    destruct  (eq_nat_dec v v0) as [e | n].
+    + apply (impRefl L).
+    + set
+        (nv :=
+           v0
+             :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
+             freeVarTerm L a0 ++ freeVarTerm L b) in *.
+      apply  (impTrans L) with
+        (fol.forallH L (newVar nv)
+           (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
+              v0 a0)).
+      * apply sysExtend with (Empty_set (fol.Formula L)).
+        intros g H7; destruct H7. 
+        apply
+          (impTrans L)
+          with
+          (fol.forallH L (newVar nv)
+             (substituteFormula L
+                (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)
+                x (var (newVar nv)))).
+        apply (iffE1 L).
+        apply (rebindForall L).
+        unfold not in |- *.  intros H7.
+        elim (newVar1 nv).
+        unfold nv at 2 in |- *.
+        assert
+          (H8: In (newVar nv)
+                 (freeVarFormula L
+                    (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)))
+          by (eapply In_list_remove1; apply H7).
+        induction (freeVarSubFormula3 _ _ _ _ _ H8).
+        -- assert
+          (In (newVar nv) (freeVarFormula L (substituteFormula L a v (fol.var L x)))) by
+          (eapply In_list_remove1; apply H9). 
+        induction (freeVarSubFormula3 _ _ _ _ _ H10).
+           ++ right.
+              apply in_or_app.
+              auto.
+           ++ elim (In_list_remove2 _ _ _ _ _ H7).
+              induction H11 as [H11| H11].
+              auto.
+              contradiction.
+        -- right.
+           auto with datatypes.
+        -- apply (iffE1 L).
+           apply (reduceForall L).
+           apply (notInFreeVarSys L).
+           apply
+             (iffTrans L)
+             with
+             (substituteFormula L
+                (substituteFormula L (substituteFormula L a v (fol.var L x)) x
+                   (var (newVar nv))) v0 a0).
+           ++ apply (subFormulaExch L); auto.
+              unfold not in |- *; intros.
+              elim (newVar1 nv).
+              unfold nv at 2 in |- *.
+              simpl in |- *.
+              left.
+              induction H7 as [H7| H7].
+              auto.
+              contradiction.
+           ++ apply (reduceSub L).
+              apply (notInFreeVarSys L).
+              now apply (subFormulaTrans L).
+      * apply
+          (impTrans L)
+          with
+          (fol.forallH L (newVar nv)
+             (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
+                v0 b)).
+        -- apply impE with (equal a0 b).
+           ++ apply sysExtend with (Empty_set (fol.Formula L)).
+              intros f0 H7; destruct H7.
+              repeat apply (impI L).
+              ** apply forallI.
+                 unfold not in |- *; intros.
+                 destruct H7 as (x1, (H7, H8)).
+                 destruct H8 as [x1 H8| x1 H8];
+                   [ induction H8 as [x1 H8| x1 H8] | induction H8 ]. 
+                 induction H8; simple induction H8.
+                 induction H8.
+                 simpl in H7.
+                 elim (newVar1 nv).
+                 unfold nv at 2 in |- *.
+                 right.
+                 auto with datatypes.
+                 elim (In_list_remove2 _ _ _ _ _ H7).
+                 reflexivity.
+                 apply impE with
+                   (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv))) v0
+                      a0).
+                 apply H.
+                 eapply eqDepth.
+                 symmetry  in |- *.
+                 apply (subFormulaDepth L).
+                 apply depthForall.
+                 apply (Axm L); left; right; constructor.
+                 eapply forallSimp.
+                 apply (Axm L); right; constructor.
+           ++ apply H0.
+        -- apply sysExtend with (Empty_set (fol.Formula L)).
+           intros g H7; induction H7.
+           apply (iffE2 L); apply (iffTrans L) with
+             (fol.forallH L (newVar nv)
+                (substituteFormula L
+                   (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)
+                   x0 (var (newVar nv)))).
+           apply (rebindForall L).
+           intros H7; elim (newVar1 nv).
+           unfold nv at 2 in |- *.
+           assert
+             (H8: In (newVar nv)
+                    (freeVarFormula L
+                       (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)))
+             by (eapply In_list_remove1; apply H7).
+           induction (freeVarSubFormula3 _ _ _ _ _ H8).
+           assert
+             ( H10:In (newVar nv) 
+                     (freeVarFormula L (substituteFormula L a v (fol.var L x0)))) by
+             (eapply In_list_remove1; apply H9).
+           induction (freeVarSubFormula3 _ _ _ _ _ H10).
+           right; apply in_or_app.
+           now left. 
+           elim (In_list_remove2 _ _ _ _ _ H7).
+           induction H11 as [H11| H11].
+           ++ auto.
+           ++ contradiction.
+           ++ right; auto with datatypes.
+           ++ apply (reduceForall L).  
+             ** apply (notInFreeVarSys L).
+             ** apply (iffTrans L) with
+                  (substituteFormula L
+                     (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
+                        (var (newVar nv))) v0 b).
+                apply (subFormulaExch L); auto.
+                intros H7. 
+                elim (newVar1 nv).
+                unfold nv at 2 in |- *.
+                simpl in |- *.
+                left.
+                induction H7 as [H7| H7].
+                auto.
+                contradiction.
+                apply (reduceSub L).
+                apply (notInFreeVarSys L).
+                apply (subFormulaTrans L).
+                auto.
 Qed.
 
 End Equality_Logic_Rules.
