@@ -30,7 +30,6 @@ Fixpoint nVars (n: nat) : Terms n * Terms n:=
   end.
 
 
-
 Definition AxmEq4 (R : Relations L) : Formula.
 Proof. 
   assert (X: forall (f : Formula) (n : nat), Formula).
@@ -43,6 +42,7 @@ Proof.
     apply (iffH (atomic R a) (atomic R b)).
   - apply (arity L (inl _ R)).
 Defined.
+
 
 Definition AxmEq5 (f : Functions L) : Formula.
 Proof. 
@@ -64,7 +64,8 @@ Inductive Prf : Formulas -> Formula -> Set :=
     Prf Axm1 (impH A B) -> Prf Axm2 A -> Prf (Axm1 ++ Axm2) B
 | GEN :
   forall (Axm : Formulas) (A : Formula) (v : nat),
-    ~ In v (freeVarListFormula L Axm) -> Prf Axm A -> Prf Axm (forallH v A)
+    ~ In v (freeVarListFormula L Axm) -> Prf Axm A ->
+    Prf Axm  (forallH v A)
 | IMP1 : forall A B : Formula, Prf nil (impH A (impH B A))
 | IMP2 :
   forall A B C : Formula,

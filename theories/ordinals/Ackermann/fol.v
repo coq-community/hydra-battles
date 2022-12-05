@@ -98,6 +98,7 @@ Proof.
   - auto.
 Qed.
 
+(** Decomposition Lemma for [Terms] *)
 Let consTermsHelp : forall n : nat, Terms n -> Set.
 Proof. 
   intros n H; case n.
@@ -568,7 +569,8 @@ Qed.
 Lemma Formula_depth_rec2_not :
  forall (Q P : Formula -> Set)
    (f1 : forall t t0 : Term, Q (equal t t0) -> P (equal t t0))
-   (f2 : forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
+   (f2 : forall (r : Relations L) 
+                (t : Terms (arity L (inl (Functions L) r))),
          Q (atomic r t) -> P (atomic r t))
    (f3 : forall f : Formula,
          (Q f -> P f) ->
@@ -645,7 +647,8 @@ Lemma Formula_depth_rec2_forall :
     Formula_depth_rec2 (fun x : Formula => Q x -> P x) f1 f2 f3 f4 f5 b q) q.
 Proof. 
   intros Q P f1 f2 f3 H f4 H0 f5 H1 v a q. 
-  unfold Formula_depth_rec2 at 1 in |- *; rewrite Formula_depth_rec_indep.
+  unfold Formula_depth_rec2 at 1 in |- *; 
+    rewrite Formula_depth_rec_indep.
   - simpl in |- *; apply H1; reflexivity. 
   - apply Formula_depth_rec2rec_nice; auto.
 Qed.
@@ -676,8 +679,9 @@ Qed.
 Lemma Formula_depth_ind2 :
  forall P : Formula -> Prop,
  (forall t t0 : Term, P (equal t t0)) ->
- (forall (r : Relations L) (t : Terms (arity L (inl (Functions L) r))),
-  P (atomic r t)) ->
+ (forall (r : Relations L) 
+         (t : Terms (arity L (inl (Functions L) r))),
+     P (atomic r t)) ->
  (forall f : Formula, P f -> forall f0 : Formula, P f0 -> P (impH f f0)) ->
  (forall f : Formula, P f -> P (notH f)) ->
  (forall (v : nat) (a : Formula),

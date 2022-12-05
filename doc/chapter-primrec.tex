@@ -75,7 +75,7 @@ The  \texttt{primRec} library allows us to consider primitive functions on \text
 curried form. This is made possible in 
 \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
 
-\index{primrec}{Types!naryFunc}
+\index{ackermann}{Types!naryFunc}
 \input{movies/snippets/extEqualNat/naryFunc.tex}
 
 For instance (\texttt{naryFunc 1}) is convertible to \texttt{nat -> nat} and (\texttt{naryFunc 3})
@@ -103,7 +103,7 @@ The magic of dependent types makes it possible to define recursively extensional
 \noindent
 \emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
 
-\index{primrec}{Predicates!extEqual}
+\index{ackermann}{Predicates!extEqual}
 
 \input{movies/snippets/extEqualNat/extEqualDef}
 
@@ -126,8 +126,8 @@ These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$
 \index{coq}{Dependent types}
 \index{coq}{Mutually inductive types}
 
-\index{primrec}{Types!PrimRec}
-\index{primrec}{Types!PrimRecs}
+\index{ackermann}{Types!PrimRec}
+\index{ackermann}{Types!PrimRecs}
 \label{def:Primrec}
 \vspace{4pt}
 \noindent
@@ -155,8 +155,8 @@ This function is defined by mutual recursion,  together with the  function
 (\texttt{evalprimRecS $n$ $m$}) of type 
 $\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
 
-\index{primrec}{Functions!evalPrimRec}
-\index{primrec}{Functions!evalPrimRecs}
+\index{ackermann}{Functions!evalPrimRec}
+\index{ackermann}{Functions!evalPrimRecs}
 
 \index{coq}{Dependent pattern matching}
 Both functions are mutually defined through dependent pattern matching. We advise the readers who 
@@ -216,7 +216,7 @@ Thus, the proof that a function, like \texttt{factorial}, is primitive recursive
 
 \subsection{The predicate \texttt{isPR}}
 
-\index{primrec}{Predicates!isPR}
+\index{ackermann}{Predicates!isPR}
 %\index{coq}{Extensionally equal functions}
 
 Let $f$ be an arithmetic function of arity $n$. We say that $f$ is primitive recursive if $f$ is \textbf{extensionally}
@@ -351,13 +351,13 @@ is just an application of already proven lemmas.
 Comment more examples from   \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.
 \end{todo}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 \begin{exercise}
 There is a lot of lemmas similar to \texttt{filter010IsPR} in the \texttt{primRec} library, useful to control the arity of functions.
 Thus, the reader may look at them, and invent simple examples of application for each lemma.
 \end{exercise}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 \begin{exercise}
 Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
 \end{exercise}
@@ -373,7 +373,7 @@ multiplication with the identity and the constant function which returns $2$.
 
 \input{movies/snippets/PrimRecExamples/doubleIsPRb}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 \begin{exercise}
 Prove that the following functions are primitive recursive. 
 
@@ -392,7 +392,7 @@ You may start this exercise with the file
 
 
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 \begin{exercise}
 Show that the function \texttt{min: naryFunc\,2} is primitive
 recursive.
@@ -402,7 +402,7 @@ recursive.
 
 \end{exercise}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 
 \begin{exercise}
 Write a simple and readable proof that the Fibonacci function is primitive recursive.
@@ -424,7 +424,7 @@ the associated constructor and projections are primitive recursive.
 
 \end{exercise}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 \begin{exercise}
 
 Prove the following lemmas (which may help to solve the next  exercise).
@@ -435,7 +435,7 @@ Prove the following lemmas (which may help to solve the next  exercise).
 in Library \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. 
 \end{exercise}
 
-\index{primrec}{Exercises}
+\index{ackermann}{Exercises}
 
 \begin{exercise}
 Prove that the function which returns the  integer square root of any natural number  is primitive recursive.
@@ -498,7 +498,7 @@ Thus, our definition of the Ackermann function is as follows:
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}}.
 \index{maths}{Ackermann function}
-\index{primrec}{Ackermann function}
+\index{ackermann}{Ackermann function}
 
 \input{movies/snippets/Ack/AckFixpointIterate.tex}
 

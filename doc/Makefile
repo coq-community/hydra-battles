@@ -29,7 +29,7 @@ hydras.pdf: ${DEP_FILES}
 	makeindex coq
 	makeindex maths
 	makeindex hydras
-	makeindex primrec
+	makeindex ackermann
 	makeindex additions
 	lualatex hydras.tex
 	lualatex hydras.tex

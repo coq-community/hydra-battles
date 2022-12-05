@@ -1,55 +1,84 @@
 From Coq Require Import Arith Lists.List.
-Require Import fol folProp Languages LNN.
-Require Import fol_Examples.
+Require Import fol folProp Languages LNN folProof.
+Require Import LNN_notations. 
 
-Require Import LNN.
+Section bare_syntax. 
+(* begin snippet uglyF0 *)
+Definition  f0 : Formula LNN :=
+      forallH _ 0 
+        (orH _ 
+           (equal _ (var _ 0) 
+              (apply LNN Languages.Zero (Tnil _)))
+           (existH _ 1 (equal _ (var _ 0)
+                          (apply LNN Languages.Succ 
+                             (Tcons _ 0 (var _ 1) (Tnil _)))))).
+(* end snippet uglyF0 *)
 
+
+(* begin snippet uglyF0a *)
+Compute f0. 
+(* end snippet uglyF0a *)
+End bare_syntax.
+ 
+(* begin snippet CNNF0 *)
+Import  CLNN_notations. 
+Print  f0. 
+Compute f0. 
+(* end snippet CNNF0 *)
+
+
+Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
 Check t1_0. 
-Goal t1_0 = Plus (var 1) Zero. 
+Goal t1_0 = LNN.Plus (var _ 1) Zero. 
 reflexivity. 
 Qed. 
 
 Print t1_0.
-(*
-t1_0 = 
-apply LNN Languages.Plus
-  (Tcons LNN 1 (fol.var LNN 1)
-     (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
-     : fol.Term LNN
-*)
-Compute t1_0. 
-(*
-apply LNN Languages.Plus
-         (Tcons LNN 1 (fol.var LNN 1)
-            (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN)) (Tnil LNN)))
-*)
+Unset Printing Notations.  
 
+Compute t1_0. 
+Set Printing Notations.  
 Section Examples.
 
 (* begin snippet v1Plus01 *)
-Let t1: Term  := Plus (var 1) Zero. 
+Let t1: Term LNN := Plus (var _ 1) Zero. 
 (* end snippet v1Plus01 *)
+
+Compute t1. 
+
 
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
-Let f1 : Formula  :=
-  forallH 0 
-    (orH (equal (var 0) Zero)
-          (existH 1 (equal (var 0) (Succ (var 1))))).
+Let f1 : Formula LNN :=
+  (allH 0 
+    (v_ 0 = zero \/
+          exH 1 (v_ 0 = S_ (v_ 1))))%cnn.
 (* end snippet f1Example *)
 
+Locate orH. 
+
+
+Compute f0. 
+
+
+
+Import  CLNN_notations. 
+Print f0. 
+Compute f0. 
+
 (* begin snippet f2Example *)
-Let f2 : Formula :=
-   (existH 2 (andH (LT Zero (var 2))
-                 (equal (natToTerm 4) (Plus (var 2) (var 2))))).
+Let f2 : Formula LNN :=
+   (exH 2 (zero < v_ 2 /\ natToTerm 4 = v_ 2 + v_ 2))%cnn.
 
-Let f3 := (orH (equal (var 0) Zero)
-             (existH 1 (equal (var 0) (Succ (var 1))))).
+Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = S_ (v_ 1)))%cnn.
 
-Let f4 := (iffH (equal (var 0) (Plus (var 1) (var 1)))
-                (equal (var 0) (Times (var 1) (natToTerm 2)))).
+
+Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%cnn.
 (* end snippet f2Example *)
+
+Compute f4. 
+Print f4.
 
 (* begin snippet depthCompute *)
 Compute (depth _ f1, depth _ f2).
@@ -68,8 +97,41 @@ Compute freeVarFormula _ (close _ f4).
 Compute substituteFormula LNN f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)
 
+Locate LT.
 
-End Examples. 
+End Examples.
+
+Require Import FOL_notations. 
+Import CFOL_notations. 
+Compute AxmEq4 LNN Languages.LT. 
+
+Compute AxmEq5 LNN Languages.Plus. 
+
+Compute AxmEq5 LNN Languages.Succ. 
+
+Compute EQ3 LNN. 
+
+
+Check GEN LNN nil (v_ 0 = v_ 0)%cnn 1. 
+
+Compute FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn. 
+Import CLNN_notations. 
+
+Compute FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn. 
+
+Compute substituteFormula LNN (v_ 0 = v_ 0)%cnn 0 zero.
+
+Goal Prf LNN nil
+         (allH 0 (v_ 0 = v_ 0))%cnn  -> 
+       Prf LNN nil (zero = zero)%cnn.
+intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn). 
+intro H0.
+unfold substituteFormula in H0. simpl in H0.    
+generalize (MP LNN nil nil _ _ H0). 
+intro H1; apply H1. auto. 
+Qed.
+
+
 
 
 

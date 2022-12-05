@@ -192,7 +192,101 @@ binds all the free variables of a formula with universal quantifiers.
 
 
 
-In order to get more readable terms and formulas, we can define a few notations in ~\href{../theories/html/hydras.Ackermann.LNN.html}{Ackermann.LNN\_Examples}
 
 
 \inputsnippets{LNN/instantiations}
+
+\section{Notations for Formulas (experimental)}
+
+In order to get more readable terms and formulas, we can define a few notations in ~\href{../theories/html/hydras.MoreAck.FOL_notations.html}{MoreAck.FOL\_notations} and
+~\href{../theories/html/hydras.MoreAck.LNN_notations.html}{MoreAck.LNN\_notations}.
+Please note that these notation scopes are experimental: We are going to use them in examples and exercises before using them in large original proof scripts (in the \texttt{ordinals/Ackermann/} sub-directory).
+
+We try to define notation scopes as close as possible to \coq's syntax for propositions.
+
+Let us take for instance the following proposition (in math form):
+
+$$\forall\, v_0,\, v_0=0\vee \exists\,v_1,\,v_1=1+v_0$$
+
+Here is a definition, using directly the \texttt{goedel/Ackermann}'s project syntax.
+
+\inputsnippets{LNN_Examples/uglyF0}
+
+Note that, because of redefinitions, the disjonction \texttt{orH}
+can be expanded in terms of  implication and negation (for instance when we use \texttt{Compute}).
+
+\inputsnippets{LNN_Examples/uglyF0a}
+
+
+
+\inputsnippets{LNN_Examples/CNNF0}
+
+
+
+
+\section{Proofs}
+
+\subsection{Contexts as lists}
+
+
+\begin{exercise}
+
+Prove the following lemma:
+\inputsnippets{fol_Examples/eqRefl}
+
+\end{exercise}
+
+\subsection{Contexts as sets}
+
+\begin{exercise}
+
+Prove the following lemma:
+\inputsnippets{fol_Examples/MPdiag}
+
+\end{exercise}
+
+
+\section{Derived rules and natural deduction}
+
+
+ The library 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+\subsection{Example}
+
+For instance, let us prove Peirce's rule.
+ (in  ~\href{../theories/html/hydras.MoreAck.folPeirce.html}{MoreAck.folPeirce} ).
+
+\subsubsection{Prelude}
+
+\inputsnippets{folPeirce/prelude}
+
+
+\subsection{Proof of Peirce's law}
+
+
+\inputsnippets{folPeirce/PeirceProof}
+
+Let us try to do an implication introduction.
+
+\inputsnippets{folPeirce/step1}
+
+Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+
+\inputsnippets{folPeirce/step2}
+
+The rest of the proof is composed of basic proof steps, 
+and bookkeeping steps (about \texttt{Ensembles.In}).
+
+\inputsnippets{folPeirce/step3, folPeirce/step4}
+
+\index{ackermann}{Exercises}
+\begin{exercise}
+Prove, using the rules described in 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic}, the famous \emph{drinkers theorem}:
+
+$$\exists\,x,\; (D(x)\Longrightarrow \forall\,y,\; D(y))$$
+\end{exercise}
+
+where $D$ (for ``drinks'') is some predicate symbol of arity $1$.
+
