@@ -2,8 +2,6 @@
      Provisionally, we still export original names 
  *)
 
-
-
 Require Import Coq.Lists.List.
 
 Section List_Remove.
@@ -11,13 +9,16 @@ Section List_Remove.
 Variable A : Set.
 Hypothesis Aeq_dec : forall a b : A, {a = b} + {a <> b}.
 
-Definition list_remove (x : A) (l : list A) : list A :=
-  list_rec (fun _ => list A) nil
-    (fun (a : A) _ (recl : list A) =>
-     match Aeq_dec a x with
-     | left _ => recl
-     | right _ => a :: recl
-     end) l.
+Fixpoint list_remove (x : A) (l : list A) : list A :=
+  match l with
+    nil => l
+  | a::l => match Aeq_dec a x with
+            | left _ => list_remove x l
+            | right _ => a :: list_remove x l
+            end
+  end.
+
+Print List.remove. 
 
 Lemma list_remove_compat x l  :
   list_remove x l = List.remove Aeq_dec x l.
@@ -62,16 +63,15 @@ Section No_Duplicate.
 Variable A : Set.
 Hypothesis Aeq_dec : forall a b : A, {a = b} + {a <> b}.
 
-Definition no_dup (l : list A) : list A :=
-  list_rec (fun _ => list A) nil
+Definition  no_dup (l:list A) : list A:=
+ list_rec (fun _ => list A) nil
     (fun (a : A) _ (rec : list A) =>
      match In_dec Aeq_dec a rec with
      | left _ => rec
      | right _ => a :: rec
      end) l.
 
-Lemma nodup_compat (l: list A) :
-  no_dup l = nodup Aeq_dec l.
+Lemma nodup_compat (l: list A) : no_dup l = nodup Aeq_dec l.
 Proof. 
   induction l. 
   - reflexivity. 
@@ -87,11 +87,8 @@ Proof.
      * reflexivity.
 Qed. 
 
-
-
 Lemma no_dup1 : forall (a : A) (l : list A),
     In a l -> In a (no_dup l).
-
 Proof.
  intros a l H; rewrite nodup_compat; now rewrite  nodup_In.
 Qed. 

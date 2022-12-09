@@ -346,7 +346,7 @@ rewrite <- H5.
 reflexivity.
 assumption.
 assumption.
-rewrite beq_nat_not_refl in H2.
+rewrite nat_eqb_false in H2.
 elim H2.
 reflexivity.
 assumption.
@@ -881,7 +881,7 @@ rewrite H7.
 rewrite H3.
 assumption.
 assumption.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 intros.
 simpl in H2.
 elim H2.

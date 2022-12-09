@@ -447,8 +447,7 @@ Definition codeNth (n m:nat) : nat :=
 
 
 
-(* @todo specify ! *)
-
+(** drops [n] first elements from [l] *)
 Let drop (n : nat) : forall (l : list nat), list nat.
 Proof.
   induction n as [| n Hrecn].

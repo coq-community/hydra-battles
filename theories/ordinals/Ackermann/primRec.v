@@ -7,13 +7,11 @@ Require Import Compare_dec.
 Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
 From hydras Require Import extEqualNat misc Compat815.
-
 Require Vector.
 
 Require Export Bool.
 Require Export EqNat.
 Require Import Lia. 
-
 
 (** * Definitions *)
 
@@ -599,9 +597,9 @@ Proof.
     cbn in p, p0, p1, p2.
   exists
     (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0
-                                           (PRcons _ _ x1 (PRnil _)))) x2);
+                                      (PRcons _ _ x1 (PRnil _)))) x2);
     cbn in |- *.
-  intros; now rewrite <- p,p0,p1,p2.
+  intros; now rewrite <- p, p0, p1, p2.
 Qed.
 
 Lemma compose2_1IsPR :
@@ -759,7 +757,8 @@ Lemma indIsPR :
     isPR 2 f ->
     forall g : nat,
       isPR 1
-           (fun a : nat => nat_rec (fun n : nat => nat) g (fun x y : nat => f x y) a).
+           (fun a : nat => nat_rec (fun _ : nat => nat) g 
+                             (fun x y : nat => f x y) a).
 Proof.
   intros f [x p] g; cbn in p.
   destruct  (const0_NIsPR g) as [x0 p0]; cbn in p0.
@@ -787,44 +786,41 @@ Proof.
 Qed.
 
 Lemma ind2ParamIsPR :
- forall f : nat -> nat -> nat -> nat -> nat,
- isPR 4 f ->
- forall g : nat -> nat -> nat,
- isPR 2 g ->
- isPR 3
-   (fun a b c : nat =>
-    nat_rec (fun n : nat => nat) (g b c) (fun x y : nat => f x y b c) a).
+  forall f : nat -> nat -> nat -> nat -> nat,
+    isPR 4 f ->
+    forall g : nat -> nat -> nat,
+      isPR 2 g ->
+      isPR 3
+        (fun a b c : nat =>
+           nat_rec (fun n : nat => nat) (g b c) (fun x y : nat => f x y b c) a).
 Proof.
-intros f [x p] g [x0 p0]; cbn in p, p0.
-exists (primRecFunc _ x0 x); cbn in *.
-simple induction c.
-- intros; cbn; now rewrite p0.
-- intros; cbn in *; now rewrite p, H.
+  intros f [x p] g [x0 p0]; cbn in p, p0.
+  exists (primRecFunc _ x0 x); cbn in *.
+  simple induction c.
+  - intros; cbn; now rewrite p0.
+  - intros; cbn in *; now rewrite p, H.
 Qed.
 
 Lemma plusIndIsPR : isPR 3 (fun n fn b : nat => S fn).
-apply (filter010IsPR _ succIsPR).
-Qed.
+Proof. apply (filter010IsPR _ succIsPR). Qed.
 
 Lemma plusIsPR : isPR 2 plus.
 Proof.
-assert
- (H: isPR 2
+  assert
+    (H: isPR 2
           (fun a b : nat =>
              nat_rec (fun n : nat => nat) b (fun x y : nat => S y) a))
- by  apply (ind1ParamIsPR _ plusIndIsPR _ idIsPR).
- destruct H as [x  p]; cbn in p.
- exists x; cbn  in *.
- intros; rewrite p.
- induction c as [| c Hrecc].
- - auto.
- - cbn in *; now rewrite Hrecc.
+    by  apply (ind1ParamIsPR _ plusIndIsPR _ idIsPR).
+  destruct H as [x  p]; cbn in p.
+  exists x; cbn  in *.
+  intros c c0; rewrite p.
+  induction c as [| c Hrecc].
+  - auto.
+  - cbn in *; now rewrite Hrecc.
 Qed.
 
 Lemma multIndIsPR : isPR 3 (fun n fn b : nat => fn + b).
-Proof.
-  apply (filter011IsPR _ plusIsPR).
-Qed.
+Proof. apply (filter011IsPR _ plusIsPR). Qed.
 
 Lemma multIsPR : isPR 2 mult.
 Proof.
@@ -853,13 +849,12 @@ Proof.
     by apply (indIsPR _ pi1_2IsPR 0).
   destruct  H as [x p]; cbn  in p.
   exists x; cbn in |- *.
-  intros;rewrite p.
+  intros c; rewrite p.
   induction c as [| c Hrecc]; trivial.
 Qed.
 
 Lemma minusIndIsPR : isPR 3 (fun n fn b : nat => pred fn).
-apply (filter010IsPR _ predIsPR).
-Qed.
+Proof. apply (filter010IsPR _ predIsPR). Qed.
 
 Lemma minusIsPR : isPR 2 minus.
 Proof.
@@ -893,34 +888,28 @@ Definition notZero (a : nat) :=
 
 Lemma notZeroIsPR : isPR 1 notZero.
 Proof.
-unfold notZero in |- *.
-apply indIsPR with (f := fun _ _ : nat => 1).
-apply filter10IsPR with (g := fun _ : nat => 1).
-apply const1_NIsPR.
+  unfold notZero; apply indIsPR with (f := fun _ _ : nat => 1).
+  apply filter10IsPR with (g := fun _ : nat => 1).
+  apply const1_NIsPR.
 Qed.
 
-Definition ltBool (a b : nat) : bool.
-  destruct (le_lt_dec b a).
-  - exact false.
-  - exact true.
-Defined.
+Definition ltBool (a b : nat) : bool :=
+  if le_lt_dec b a then false else true. 
+
 
 Lemma ltBoolTrue : forall a b : nat, ltBool a b = true -> a < b.
 Proof.
   intros a b H; unfold ltBool in H.
-  destruct  (le_lt_dec b a).
-  - discriminate.
-  - auto.
+  destruct  (le_lt_dec b a); [discriminate | assumption].
 Qed.
 
 Lemma ltBoolFalse : forall a b : nat, ltBool a b = false -> ~ a < b.
 Proof. 
   intros a b H; unfold ltBool in H.
   destruct  (le_lt_dec b a).
-  - unfold not in |- *; intros; lia.
+  - unfold not ; intros; lia.
   - discriminate.
 Qed.
-
 
 Lemma ltIsPR : isPRrel 2 ltBool.
 Proof.
@@ -956,7 +945,7 @@ Proof.
   { apply
       compose2_2IsPR
       with (h := plus) (f := fun a b : nat => a) (g := fun a b : nat => b - a).
-    -  apply pi1_2IsPR.
+    - apply pi1_2IsPR.
     - apply swapIsPR,  minusIsPR.
     - apply plusIsPR.
   }
@@ -976,7 +965,7 @@ Qed.
 Lemma gtIsPR : isPRrel 2 (fun a b : nat => ltBool b a).
 Proof.
   unfold isPRrel in |- *; cbn.
-  apply swapIsPR with (f := fun a0 a : nat => if ltBool a0 a then 1 else 0).
+  apply swapIsPR with (f := fun a0 a : nat => if ltBool a0 a then 1 else 0);
   apply ltIsPR.
 Qed.
 
@@ -997,16 +986,17 @@ Remark replaceCompose2 :
                                  (Vector.cons _ b' _
                                               (Vector.nil  (naryFunc n)))) c').
 Proof.
-intros;apply extEqualCompose; auto.
-- unfold extEqualVector in |- *; cbn; auto.
+  intros;apply extEqualCompose; auto;
+    unfold extEqualVector in |- *; cbn; auto.
 Qed.
 
 Definition orRel (n : nat) (R S : naryRel n) : naryRel n.
-induction n as [| n Hrecn].
-- apply (R || S).
-- cbn in |- *;intros; apply Hrecn.
-  + apply (R H).
-  + apply (S H).
+Proof. 
+  induction n as [| n Hrecn].
+  - apply (R || S).
+  - cbn in |- *;intros H; apply Hrecn.
+    + apply (R H).
+    + apply (S H).
 Defined.
 
 Lemma orRelPR :
@@ -1020,35 +1010,36 @@ Proof.
     - apply plusIsPR.
     - apply notZeroIsPR.
   }
-  destruct  H as (x1, p1).
+  destruct  H as (x1, p1);
   exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
   cbn in |- *.
   apply
     extEqualTrans
     with
-      (evalComposeFunc n 2
-                       (Vector.cons (naryFunc n) (charFunction n R) 1
-                                    (Vector.cons (naryFunc n) (charFunction n R') 0
-                                                 (Vector.nil  (naryFunc n))))
-                       (fun a b : nat => notZero (a + b))).
+    (evalComposeFunc n 2
+       (Vector.cons (naryFunc n) (charFunction n R) 1
+          (Vector.cons (naryFunc n) 
+             (charFunction n R') 0
+             (Vector.nil  (naryFunc n))))
+       (fun a b : nat => notZero (a + b))).
   - apply replaceCompose2; auto.
-  -   clear x p x0 p0 x1 p1.
-      induction n as [| n Hrecn].
-      + simpl in |- *; destruct  R.
-        * reflexivity.
-        * destruct  R'; reflexivity.
-      + cbn in |- *; fold (naryFunc n) in |- *.
-        intros;  apply (Hrecn (R c) (R' c)).
+  - clear x p x0 p0 x1 p1; induction n as [| n Hrecn].
+    + simpl in |- *; destruct  R.
+      * reflexivity.
+      * destruct  R'; reflexivity.
+    + cbn in |- *; fold (naryFunc n) in |- *.
+      intro c; apply (Hrecn (R c) (R' c)).
 Qed.
 
 
 
 Definition andRel (n : nat) (R S : naryRel n) : naryRel n.
-induction n as [| n Hrecn].
-- exact (R && S).
-- simpl in |- *; intros; apply Hrecn.
- + apply (R H).
- + apply (S H).
+Proof. 
+  induction n as [| n Hrecn].
+  - exact (R && S).
+  - simpl in |- *; intros; apply Hrecn.
+    + apply (R H).
+    + apply (S H).
 Defined.
 
 Lemma andRelPR :
@@ -1072,55 +1063,43 @@ Proof.
   - apply replaceCompose2; auto.
   - clear x p x0 p0 x1 p1;induction n as [| n Hrecn].
     + simpl in |- *; induction R.
-      * induction R'.
-        -- reflexivity.
-        -- reflexivity.
+      * induction R'; reflexivity.
       * reflexivity.
-    + simpl in |- *;fold (naryFunc n) in |- *; intros.
+    + simpl in |- *; fold (naryFunc n) in |- *; intros c;
       apply (Hrecn (R c) (R' c)).
 Qed.
 
 
 Definition notRel (n : nat) (R : naryRel n) : naryRel n.
-induction n as [| n Hrecn].
-- exact (negb R).
- - cbn in |- *.  intros p; apply Hrecn.
-   apply (R p).
+Proof. 
+  induction n as [| n Hrecn].
+  - exact (negb R).
+  - cbn in |- *; intros p; apply Hrecn, (R p).
 Defined.
 
 Lemma notRelPR  (n : nat) (R : naryRel n):
   isPRrel n R -> isPRrel n (notRel n R).
 Proof.
- intros [x p];
+  intros [x p];
     assert (H: isPR 1 (fun x : nat => 1 - x)).
- {
-   apply compose1_2IsPR with (f := fun x : nat => 1)
-                             (f' := fun x : nat => x).
+  {
+    apply compose1_2IsPR with (f := fun x : nat => 1)
+                              (f' := fun x : nat => x).
     - apply const1_NIsPR.
     - apply idIsPR.
     - apply minusIsPR.
   }
-  destruct H as [x0 p0].
-  exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
-  cbn in |- *.
-  apply
-    extEqualTrans
-    with
-      (evalComposeFunc n 1 (Vector.cons _ (charFunction n R) _ (Vector.nil  _))
-                       (fun x : nat => 1 - x)).
+  destruct H as [x0 p0];
+    exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
+  cbn in |- *; apply extEqualTrans with
+    (evalComposeFunc n 1 (Vector.cons _ (charFunction n R) _ (Vector.nil  _))
+       (fun x : nat => 1 - x)).
   - apply extEqualCompose.
-    
-    + unfold extEqualVector in |- *.
-      simpl in |- *.
-      auto.
+    + unfold extEqualVector; simpl; auto.
     + auto.
-  - clear p0 x0 p x.
-    induction n as [| n Hrecn].
-    + simpl in |- *.
-      induction R; reflexivity.
-    + simpl in |- *.
-      intros; fold (naryFunc n) in |- *.
-      apply Hrecn.
+  - clear p0 x0 p x; induction n as [| n Hrecn].
+    + simpl in |- *; induction R; reflexivity.
+    + simpl; intros c; fold (naryFunc n) in |- *; apply Hrecn.
 Qed.
 
 Fixpoint bodd (n : nat) : bool :=
@@ -1145,9 +1124,7 @@ Proof.
     clear Hrecc; induction (bodd c); reflexivity.
 Qed.
 
-(** To do: rename this lemma ????  *)
-
-Lemma beq_nat_not_refl : forall a b : nat, a <> b -> Nat.eqb a b = false.
+Lemma nat_eqb_false : forall a b : nat, a <> b -> Nat.eqb a b = false.
 Proof.
   induction a; destruct b.
   - now destruct 1.
@@ -1172,13 +1149,14 @@ Proof.
     destruct (le_lt_dec c0 c0).
     + reflexivity.
     + elim (Nat.lt_irrefl _ l).
-  - rewrite beq_nat_not_refl; cbn in |- *.
+  - rewrite nat_eqb_false; cbn in |- *.
     destruct  (le_lt_dec c0 c).
     + destruct (le_lt_dec c c0); [ | reflexivity].
       * rewrite Nat.lt_gt_cases  in b; destruct b; exfalso; lia. 
     + reflexivity.
     + assumption.
 Qed.
+
 
 Lemma eqIsPR : isPRrel 2 Nat.eqb.
 Proof.
@@ -1211,7 +1189,7 @@ Proof.
          ++ auto.
          ++ rewrite Nat.lt_gt_cases in n; destruct n;
              rewrite  Nat.lt_nge in H; contradiction.
-    * rewrite beq_nat_not_refl; cbn in |- *.
+    * rewrite nat_eqb_false; cbn in |- *.
       -- reflexivity.
       -- unfold not in |- *; intros H; rewrite H in l.
          elim (Nat.lt_irrefl _ l).
@@ -1220,8 +1198,6 @@ Proof.
     * elim (Nat.lt_irrefl c).
       apply Nat.lt_trans with c0; auto.
 Qed.
-
-
 
 Section Ignore_Params.
 
@@ -1233,7 +1209,8 @@ Section Ignore_Params.
     end.
 
   Definition projectionListPR (n m : nat) (p : m <= n) : PrimRecs n m.
-    induction m as [| m Hrecm].
+  Proof.
+  induction m as [| m Hrecm].
     - exact (PRnil n).
     - assert (H: m < n) by
         apply Compat815.lt_S_n,  Compat815.le_lt_n_Sm,  p.
@@ -1277,20 +1254,21 @@ Section Ignore_Params.
         rewrite <- e in p1; auto.
       + split.
         rewrite
-          (evalProjFuncInd _ _ (Compat815.lt_S_n n n0 (Compat815.le_lt_n_Sm (S n) n0 p1))
-                           match
-                             Compat815.le_lt_or_eq n n0
-                                         (Compat815.lt_n_Sm_le n n0 (Compat815.lt_S_n n (S n0)
-                                                                  (Compat815.le_lt_n_Sm
-                                                                     (S n)
-                                                                     (S n0)
-                                                                     p2)))
-                           with
-                           | or_introl l2 => l2
-                           | or_intror l2 => False_ind (n < n0) (n1 l2)
-                           end).
-        apply extEqualRefl.
-        apply H.
+          (evalProjFuncInd _ _ 
+             (Compat815.lt_S_n n n0 (Compat815.le_lt_n_Sm (S n) n0 p1))
+             match
+               Compat815.le_lt_or_eq n n0
+                 (Compat815.lt_n_Sm_le n n0 (Compat815.lt_S_n n (S n0)
+                                               (Compat815.le_lt_n_Sm
+                                                  (S n)
+                                                  (S n0)
+                                                  p2)))
+             with
+             | or_introl l2 => l2
+             | or_intror l2 => False_ind (n < n0) (n1 l2)
+             end).
+        * apply extEqualRefl.
+        * apply H.
   Qed.
 
 
@@ -1306,11 +1284,10 @@ Section Ignore_Params.
           extEqualTrans
           with
             (evalComposeFunc n (S n)
-                             (Vector.cons (naryFunc n) (evalConstFunc n c) n
-                                          (projectionList n n (le_n n))) f).
-        *  apply
-             extEqualTrans
-             with (evalComposeFunc n n (projectionList n n (le_n n)) (f c)).
+               (Vector.cons (naryFunc n) (evalConstFunc n c) n
+                  (projectionList n n (le_n n))) f).
+        *  apply extEqualTrans with
+             (evalComposeFunc n n (projectionList n n (le_n n)) (f c)).
            -- apply Hrecn.
            -- clear Hrecn a p; generalize (projectionList n n (le_n n)).
               generalize f c; clear f c.
@@ -1318,10 +1295,10 @@ Section Ignore_Params.
                 (H: forall (m : nat) (f : naryFunc (S m)) (c : nat)
                            (v : Vector.t (naryFunc n) m),
                     extEqual n (evalComposeFunc n m v (f c))
-                             (evalComposeFunc n (S m)
-                                              (Vector.cons
-                                                 (naryFunc n)
-                                                 (evalConstFunc n c) m v) f)).
+                      (evalComposeFunc n (S m)
+                         (Vector.cons
+                            (naryFunc n)
+                            (evalConstFunc n c) m v) f)).
               ++ intros; induction n as [| n Hrecn].
                  ** cbn in |- *; reflexivity.
                  ** cbn in |- *; intros; fold (naryFunc n) in |- *.
@@ -1329,27 +1306,26 @@ Section Ignore_Params.
               ++ apply H.
         *   apply extEqualCompose.
             -- unfold extEqualVector in |- *.
-               cbn in |- *.
-               split.
+               cbn; split.
                ++ apply extEqualRefl.
                ++ apply
-                    (projectionListApplyParam n n c (le_n n)
-                                              (le_S_n n (S n) (le_S (S n)
-                                                                    (S n) p))).
+                    (projectionListApplyParam n n c 
+                       (le_n n)
+                       (le_S_n n (S n) (le_S (S n) (S n) p))).
             -- apply extEqualRefl.
       + now destruct b.
   Qed.
-  
-  
-  
+    
   Lemma ignoreParamsIsPR :
     forall (n m : nat) (f : naryFunc n),
       isPR _ f -> isPR _ (ignoreParams n m f).
   Proof.
     assert
-      (H: forall (n m : nat) (pr : m <= n) (f : naryFunc m) (p : n - m + m = n),
-          extEqual _ (eq_rec (n - m + m) naryFunc (ignoreParams m (n - m) f) _ p)
-                   (evalComposeFunc _ _ (projectionList n m pr) f)).
+      (H: forall (n m : nat) (pr : m <= n) (f : naryFunc m) 
+                 (p : n - m + m = n),
+          extEqual _ (eq_rec (n - m + m) naryFunc 
+                        (ignoreParams m (n - m) f) _ p)
+            (evalComposeFunc _ _ (projectionList n m pr) f)).
     { unfold projectionList in |- *.
       induction n as [| n Hrecn]; intros.
       - destruct m as [| n].
@@ -1371,8 +1347,9 @@ Section Ignore_Params.
             replace
             (eq_rec (S (n - m + m)) naryFunc
                     (fun _ : nat => ignoreParams m (n - m) f)
-                    (S n) p c) with
-                (eq_rec (n - m + m) naryFunc (ignoreParams m (n - m) f) n H1).
+                    (S n) p c)
+              with
+              (eq_rec (n - m + m) naryFunc (ignoreParams m (n - m) f) n H1).
             -- apply extEqualTrans
                  with (evalComposeFunc n m (projectionList n m H0) f).
                ++ unfold projectionList in |- *.
@@ -1406,40 +1383,39 @@ Section Ignore_Params.
     intros.
     unfold projectionList in H.
     destruct H0 as [x p].
-    exists (composeFunc (m + n) n (projectionListPR _ _ (Compat815.le_plus_r _ _)) x).
+    exists (composeFunc (m + n) n 
+              (projectionListPR _ _ (Compat815.le_plus_r _ _)) x).
     apply extEqualSym.
     assert (H0: m + n - n + n = m + n) by (now rewrite Nat.add_sub).
     assert
-    (H1: extEqual (m + n)
-                  (eq_rec (m + n - n + n) naryFunc
-                          (ignoreParams n (m + n - n) f) 
-                          (m + n) H0)
-                  (evalComposeFunc (m + n) _
-                                   (evalPrimRecs (m + n) n
-                                                 (projectionListPR
-                                                    (m + n) n
-                                                    (Compat815.le_plus_r m n)))
-                                   f)).
-    { apply H. }
+    (H1: 
+      extEqual (m + n)
+        (eq_rec (m + n - n + n) naryFunc
+           (ignoreParams n (m + n - n) f) 
+           (m + n) H0)
+        (evalComposeFunc (m + n) _
+           (evalPrimRecs (m + n) n
+              (projectionListPR
+                 (m + n) n
+                 (Compat815.le_plus_r m n)))
+           f)) by apply H. 
     replace (ignoreParams n m f) with
-        (eq_rec (m + n - n + n)
-                naryFunc (ignoreParams n (m + n - n) f) (m + n) H0).
+      (eq_rec (m + n - n + n)
+         naryFunc (ignoreParams n (m + n - n) f) (m + n) H0).
     - cbn in |- *.
-      apply
-        extEqualTrans
-        with
-          (evalComposeFunc (m + n) _
-                           (evalPrimRecs (m + n) n
-                                         (projectionListPR
-                                            (m + n) n (Compat815.le_plus_r m n)))
+      apply extEqualTrans with
+        (evalComposeFunc (m + n) _
+           (evalPrimRecs (m + n) n
+              (projectionListPR
+                 (m + n) n (Compat815.le_plus_r m n)))
                            f).
       + apply H1.
       + apply extEqualCompose.
         * generalize
-            (evalPrimRecs (m + n) n (projectionListPR (m + n) n (Compat815.le_plus_r m n))).
+            (evalPrimRecs (m + n) n 
+               (projectionListPR (m + n) n (Compat815.le_plus_r m n))).
           generalize (m + n).
-          intros.
-          apply extEqualVectorRefl.
+          intros n0 t; apply extEqualVectorRefl.
         * apply extEqualSym.
           auto.
     - generalize H0; replace (m + n - n) with m.
@@ -1455,9 +1431,9 @@ End Ignore_Params.
 Lemma reduce1stCompose :
   forall (c n m : nat) (v : Vector.t (naryFunc n) m) (g : naryFunc (S m)),
     extEqual n
-             (evalComposeFunc n _ (Vector.cons (naryFunc n)
-                                               (evalConstFunc n c) _ v) g)
-             (evalComposeFunc n _ v (g c)).
+      (evalComposeFunc n _ (Vector.cons (naryFunc n)
+                              (evalConstFunc n c) _ v) g)
+      (evalComposeFunc n _ v (g c)).
 Proof.
   induction n as [| n Hrecn].
   - cbn in |- *; auto.
@@ -1465,27 +1441,27 @@ Proof.
 Qed.
 
 Lemma reduce2ndCompose :
- forall (c n m : nat) (v : Vector.t (naryFunc n) m) (n0 : naryFunc n)
-   (g : naryFunc (S (S m))),
- extEqual n
-   (evalComposeFunc n _
-                    (Vector.cons
-                       (naryFunc n) n0 _
-                       (Vector.cons (naryFunc n)
-                                    (evalConstFunc n c) _ v))
-      g)
-   (evalComposeFunc n _ (Vector.cons (naryFunc n) n0 _ v)
-                    (fun x : nat => g x c)).
+  forall (c n m : nat) (v : Vector.t (naryFunc n) m) (n0 : naryFunc n)
+         (g : naryFunc (S (S m))),
+    extEqual n
+      (evalComposeFunc n _
+         (Vector.cons
+            (naryFunc n) n0 _
+            (Vector.cons (naryFunc n)
+               (evalConstFunc n c) _ v))
+         g)
+      (evalComposeFunc n _ (Vector.cons (naryFunc n) n0 _ v)
+         (fun x : nat => g x c)).
 Proof.
-induction n as [| n Hrecn].
-- cbn in |- *; auto.
-- cbn in |- *; fold (naryFunc n) in |- *; intros; apply Hrecn.
+  induction n as [| n Hrecn].
+  - cbn in |- *; auto.
+  - cbn in |- *; fold (naryFunc n) in |- *; intros; apply Hrecn.
 Qed.
 
 Lemma evalPrimRecParam :
- forall (n c d : nat) (g : naryFunc (S n)) (h : naryFunc (S (S (S n)))),
- extEqual _ (evalPrimRecFunc n (g d) (fun x y : nat => h x y d) c)
-   (evalPrimRecFunc (S n) g h c d).
+  forall (n c d : nat) (g : naryFunc (S n)) (h : naryFunc (S (S (S n)))),
+    extEqual _ (evalPrimRecFunc n (g d) (fun x y : nat => h x y d) c)
+      (evalPrimRecFunc (S n) g h c d).
 Proof.
 induction c as [| c Hrecc].
 - intros; cbn in |- *; apply extEqualRefl.
@@ -1499,8 +1475,8 @@ Lemma compose2IsPR :
          (q : isPR (S n) g), isPR n (compose2 n f g).
 Proof.
   intros.
-  induction p as (x, p).
-  induction q as (x0, p0).
+  destruct p as (x, p).
+  destruct q as (x0, p0).
   exists (composeFunc _ _ (PRcons _ _ x (projectionListPR n n (le_n n))) x0).
   simpl in |- *.
   apply
@@ -1508,11 +1484,10 @@ Proof.
     with
       (evalComposeFunc n (S n)
                        (Vector.cons (naryFunc n) f n
-                                    (evalPrimRecs n n (projectionListPR n n (le_n n)))) g).
+                                    (evalPrimRecs n n (projectionListPR n n
+                                                         (le_n n)))) g).
   - apply extEqualCompose.
-    + unfold extEqualVector in |- *.
-      simpl in |- *.
-      split.
+    + unfold extEqualVector; simpl; split.
       * auto.
       * apply extEqualVectorRefl.
     + auto.
@@ -1522,12 +1497,11 @@ Proof.
     * simpl in |- *.
       fold (naryFunc n) in |- *.
       induction (eq_nat_dec n n).
-      -- intros; apply  extEqualTrans
-                   with
-                     (evalComposeFunc n (S (S n))
-                                      (Vector.cons (naryFunc n) (f c) (S n)
-                                                   (Vector.cons (naryFunc n) (evalConstFunc n c) n
-                                                                (projectionList n n (le_n n)))) g).
+      -- intros; apply  extEqualTrans with
+           (evalComposeFunc n (S (S n))
+              (Vector.cons (naryFunc n) (f c) (S n)
+                 (Vector.cons (naryFunc n) (evalConstFunc n c) n
+                    (projectionList n n (le_n n)))) g).
          ++ apply extEqualSym.
             apply extEqualCompose.
             unfold extEqualVector in |- *.
@@ -1536,26 +1510,24 @@ Proof.
             ** apply extEqualRefl.
             ** apply extEqualRefl.
             ** apply
-                 (projectionListApplyParam n n c (le_n n)
-                                           (le_S_n n (S n) (le_S (S n) (S n) (le_n (S n))))).
+                 (projectionListApplyParam 
+                    n n c (le_n n)
+                    (le_S_n n (S n) (le_S (S n) (S n) (le_n (S n))))).
             ** apply extEqualRefl.
-         ++ apply
-              extEqualTrans
-              with
-                (evalComposeFunc n (S n)
-                                 (Vector.cons (naryFunc n) (f c) n
-                                              (evalPrimRecs n n (projectionListPR n n (le_n n))))
-                                 (fun x : nat => g x c)).
+         ++ apply extEqualTrans with
+              (evalComposeFunc n (S n)
+                 (Vector.cons (naryFunc n) (f c) n
+                    (evalPrimRecs n n (projectionListPR n n (le_n n))))
+                 (fun x : nat => g x c)).
             ** clear a Hrecn.
                generalize (f c).
                fold (naryFunc n) in |- *.
                fold (projectionList n n (le_n n)) in |- *.
                generalize (projectionList n n (le_n n)).
-               intros.
+               intros t n0;
                apply (reduce2ndCompose c n n t n0).
             ** apply Hrecn.
-      -- elim b.
-         auto.
+      -- elim b; auto.
 Qed.
 
 Lemma compose1_NIsPR :
@@ -1567,22 +1539,20 @@ Proof.
   intros n g [x p] f [x0 p0].
   exists
     (composeFunc (S n) (S n)
-                 (PRcons _ _
-                         (composeFunc (S n) 1
-                            (PRcons _ _ (projFunc (S n) n
-                                           (Nat.lt_succ_diag_r n))
-                               (PRnil _)) x0)
-                         (projectionListPR (S n) n (Nat.le_succ_diag_r n))) x).
-  cbn in |- *.
-  fold (naryFunc n) in |- *.
-  induction (eq_nat_dec n n).
+       (PRcons _ _
+          (composeFunc (S n) 1
+             (PRcons _ _ (projFunc (S n) n
+                            (Nat.lt_succ_diag_r n))
+                (PRnil _)) x0)
+          (projectionListPR (S n) n (Nat.le_succ_diag_r n))) x).
+  cbn in |- *; fold (naryFunc n) in |- *; destruct (eq_nat_dec n n).
   - intros.
     apply
       extEqualTrans
       with
-        (evalComposeFunc n (S n)
-                         (Vector.cons (naryFunc n) (evalConstFunc n (f c)) n
-                                      (projectionList n n (le_n n))) g).
+      (evalComposeFunc n (S n)
+         (Vector.cons (naryFunc n) (evalConstFunc n (f c)) n
+            (projectionList n n (le_n n))) g).
     + apply extEqualSym.
       apply extEqualCompose.
       * unfold extEqualVector in |- *.
@@ -1592,39 +1562,34 @@ Proof.
            apply
              extEqualTrans
              with
-               (evalComposeFunc n 1
-                                (Vector.cons (naryFunc n) (evalConstFunc n c) 0 (Vector.nil  (naryFunc n))) f).
+             (evalComposeFunc n 1
+                (Vector.cons (naryFunc n) (evalConstFunc n c) 0 
+                   (Vector.nil  (naryFunc n))) f).
            ++ apply extEqualCompose.
               ** apply extEqualVectorRefl.
               ** auto.
-           ++ clear a p0 x0 p x g.
+           ++ clear  p0 x0 p x g.
               induction n as [| n Hrecn].
               ** cbn in |- *.
                  reflexivity.
               ** cbn in |- *.
                  intros.
                  apply Hrecn.
+                 reflexivity. 
         -- apply (projectionListApplyParam n n c (le_n n) (Nat.le_succ_diag_r n)).
       *  apply extEqualSym.
          auto.
-    + clear p0 x0 p x a.
+    + clear p0 x0 p x .
       eapply extEqualTrans.
       * apply reduce1stCompose.
       * apply extEqualSym.
         apply (projectionListId n (g (f c)) (le_n n)).
-  - elim b; auto.
+  - elim n0; auto.
 Qed.
 
 Definition switchPR : naryFunc 3 :=
   fun n x y => match n with 0 => y | _ => x end.
-(*  
-cbn in |- *.
-intros.
-destruct H as [| n].
-- apply H1.
-- apply H0.
-Defined.
-*)
+
 Lemma switchIsPR : isPR 3 switchPR.
 Proof.
   assert (H: isPR 3
@@ -1633,10 +1598,11 @@ Proof.
                              (fun (n : nat)
                                   (_ : (fun _ : nat => nat) n) => b) a)).
   - apply
-      ind2ParamIsPR with (f := fun _ _ b c : nat => b) (g := fun b c : nat => c).
+      ind2ParamIsPR with (f := fun _ _ b c : nat => b) 
+                         (g := fun b c : nat => c).
     + apply pi3_4IsPR.
     + apply pi2_2IsPR.
-  - induction H as (x, p).
+  - destruct H as (x, p).
     exists x.
     apply
       extEqualTrans  with
@@ -1836,17 +1802,13 @@ Proof.
                                 (P c b0)) Hrecb).
       * auto.
       * cbn in |- *.
-        intros.
-        induction (eq_nat_dec c0 c).
-        -- cbn in |- *.
-           rewrite <- a.
-           rewrite  Nat.eqb_refl.
-           cbn in |- *.
-           reflexivity.
-        -- rewrite beq_nat_not_refl.
-           cbn in |- *.
+        intros c c0 c1;
+        destruct (eq_nat_dec c0 c) as [a| b ].
+        -- cbn; rewrite <- a.
+           rewrite  Nat.eqb_refl; reflexivity.
+        -- rewrite nat_eqb_false.
            ++ reflexivity.
-           ++ auto.
+           ++ assumption.
     - apply const1_NIsPR.
   }
   assert
@@ -1899,16 +1861,12 @@ Proof.
   auto.
   clear H x p.
   cbn in |- *.
-  intros.
-  generalize (P c).
-  intros b.
-  clear P.
+  intros c;  generalize (P c).
+  intros b; clear P.
   induction c as [| c Hrecc].
-  - cbn in |- *.
-    auto.
-  - cbn in |- *.
-    rewrite Hrecc.
-    induction (eq_nat_dec (boundedSearchHelp b c) c).
+  - cbn in |- *; easy. 
+  - cbn in |- *; rewrite Hrecc.
+    destruct (eq_nat_dec (boundedSearchHelp b c) c) as [e | n ].
     + cbn in |- *.
       induction (b c);  auto.
     + cbn in |- *; reflexivity.
@@ -1925,8 +1883,8 @@ Lemma iterateIsPR :
 Proof.
   intros g Hg.
   induction n as [| n Hrecn]; cbn  in |- *.
-  apply idIsPR.
-  apply compose1_1IsPR; assumption.
+  - apply idIsPR.
+  - apply compose1_1IsPR; assumption.
 Qed.
 
 Lemma isPRTrans (n:nat) (f g : naryFunc n):

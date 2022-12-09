@@ -870,7 +870,7 @@ induction (In_dec eq_nat_dec v (freeVarTerm L s)).
 reflexivity.
 elim b0; assumption.
 simpl in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 auto.
 simpl in |- *.
@@ -910,7 +910,7 @@ induction (In_dec eq_nat_dec v (freeVarTerm L s)).
 elim b0; assumption.
 reflexivity.
 simpl in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 auto.
 unfold makeTrace in |- *.
@@ -1096,7 +1096,7 @@ induction
           (code.codeTerm L codeF (substituteTerm L t0 v s))))).
 rewrite a.
 reflexivity.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 elim H; reflexivity.
 assumption.
 unfold evalStrongRec in H.
@@ -1123,7 +1123,7 @@ induction
           (substituteTerms L (arity L (inl (Functions L) r)) t v s)))).
 rewrite a.
 reflexivity.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 elim H; reflexivity.
 assumption.
 unfold evalStrongRec in H1.
@@ -1169,13 +1169,13 @@ rewrite <- (H _ _ _ _ H2) in a.
 rewrite <- (H0 _ _ _ _ H3) in a.
 rewrite subFormulaImp.
 rewrite a; reflexivity.
-rewrite beq_nat_not_refl in H1.
+rewrite nat_eqb_false in H1.
 elim H1; reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H1.
+rewrite nat_eqb_false in H1.
 elim H1; reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H1.
+rewrite nat_eqb_false in H1.
 elim H1; reflexivity.
 assumption.
 apply Nat.le_lt_trans with (cPair (cPairPi1 m) (cPairPi2 m)).
@@ -1244,10 +1244,10 @@ rewrite <- a0 in H0; clear a0.
 rewrite <- (H _ _ _ _ H0) in a.
 rewrite subFormulaNot.
 rewrite a; reflexivity.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0; reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0; reflexivity.
 assumption.
 unfold cTriple in |- *.
@@ -1288,7 +1288,7 @@ induction (eq_nat_dec (codeFormula (forallH L v a)) n).
 assumption.
 assert (charFunction 2 Nat.eqb (cPair 3 (cPair v0 (codeFormula a))) n = 0).
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 rewrite <- a0.
 apply b.
@@ -1297,7 +1297,7 @@ simpl in H0.
 elim H0; reflexivity.
 assert (charFunction 2 Nat.eqb v0 v = 0).
 simpl in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 auto.
 rewrite H1 in H0; clear H1.
@@ -1388,15 +1388,15 @@ replace (S (cPair v0 (codeList (freeVarTerm L s ++ freeVarFormula L a))))
  [ idtac | reflexivity ].
 rewrite codeNewVarCorrect.
 reflexivity.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 reflexivity.
 assumption.
@@ -1454,11 +1454,11 @@ rewrite <- a1 in H0; clear a1.
 rewrite <- (H _ H1 _ _ _ _ H0) in a0.
 rewrite a0.
 reflexivity.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 reflexivity.
 assumption.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 reflexivity.
 assumption.

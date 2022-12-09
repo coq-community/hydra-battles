@@ -517,12 +517,12 @@ symmetry  in |- *.
 unfold n, g in H0.
 repeat rewrite cPairProjections1 in H0 || rewrite cPairProjections2 in H0.
 apply H0.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 discriminate H.
 unfold not in |- *; intros; apply b.
 apply codeFormulaInj.
 apply H0.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 discriminate H.
 unfold not in |- *; intros; apply b.
 rewrite <- codeOpenCorrect.
@@ -855,7 +855,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA5) (codeFormula f)).
 rewrite a in H.
@@ -865,7 +865,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA4) (codeFormula f)).
 rewrite a in H.
@@ -875,7 +875,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA3) (codeFormula f)).
 rewrite a in H.
@@ -885,7 +885,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA2) (codeFormula f)).
 rewrite a in H.
@@ -895,7 +895,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 clear b.
 induction (eq_nat_dec (codeFormula PA1) (codeFormula f)).
 rewrite a in H.
@@ -905,7 +905,7 @@ right; constructor.
 eapply codeFormulaInj.
 apply a.
 left.
-rewrite beq_nat_not_refl in H.
+rewrite nat_eqb_false in H.
 apply codeInductionSchemaCorrect2.
 simpl in H.
 assumption.

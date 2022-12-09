@@ -2552,7 +2552,7 @@ rewrite H2.
 apply cPairProjections.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 destruct n1.
@@ -2691,7 +2691,7 @@ rewrite cPairProjections.
 reflexivity.
 assumption.
 unfold charFunction in H0.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 rewrite Nat.mul_comm in H0.
 simpl in H0.
 elim H0.
@@ -2806,7 +2806,7 @@ apply (codeFormulaInj L codeF codeR codeFInj codeRInj).
 assumption.
 assumption.
 unfold charFunction in H0.
-rewrite beq_nat_not_refl in H0.
+rewrite nat_eqb_false in H0.
 elim H0.
 simpl in |- *.
 reflexivity.
@@ -2878,7 +2878,7 @@ rewrite H2.
 apply cPairProjections.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 destruct n1.
@@ -2953,7 +2953,7 @@ transitivity (cPairPi1 (cPairPi2 (cPairPi2 n)));
  [ symmetry  in |- *; assumption | assumption ].
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 destruct n1.
@@ -3013,7 +3013,7 @@ transitivity (cPairPi1 (cPairPi2 (cPairPi2 n)));
  [ symmetry  in |- *; assumption | assumption ].
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 destruct n1.
@@ -3082,7 +3082,7 @@ apply (codeFormulaInj L codeF codeR codeFInj codeRInj).
 assumption.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 rewrite Nat.mul_comm.
 reflexivity.
 assumption.
@@ -3146,7 +3146,7 @@ transitivity (cPairPi1 (cPairPi2 (cPairPi2 n)));
  [ symmetry  in |- *; assumption | assumption ].
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 rewrite Nat.mul_comm.
 reflexivity.
 assumption.
@@ -3224,7 +3224,7 @@ transitivity (cPairPi1 (cPairPi2 (cPairPi2 n)));
  [ symmetry  in |- *; assumption | assumption ].
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 destruct n1.
@@ -3247,7 +3247,7 @@ rewrite H2.
 apply cPairProjections.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 rewrite cPairProjections2.
 assumption.
@@ -3256,7 +3256,7 @@ assumption.
 elim H0.
 unfold charFunction in |- *.
 rewrite
- (beq_nat_not_refl
+ (nat_eqb_false
     (codeFormula L codeF codeR (fol.equal L (fol.var L 0) (fol.var L 0))))
  .
 rewrite Nat.mul_comm.
@@ -3287,7 +3287,7 @@ rewrite H2.
 apply cPairProjections.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 rewrite cPairProjections2.
 assumption.
@@ -3296,7 +3296,7 @@ assumption.
 elim H0.
 unfold charFunction in |- *.
 rewrite
- (beq_nat_not_refl
+ (nat_eqb_false
     (codeFormula L codeF codeR
        (fol.impH L (fol.equal L (fol.var L 0) (fol.var L 1))
           (fol.equal L (fol.var L 1) (fol.var L 0)))))
@@ -3343,7 +3343,7 @@ rewrite H2.
 apply cPairProjections.
 elim H0.
 unfold charFunction in |- *.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 apply (codeFormulaInj L codeF codeR codeFInj codeRInj).
@@ -3351,7 +3351,7 @@ assumption.
 elim H0.
 unfold charFunction in |- *.
 rewrite
- (beq_nat_not_refl
+ (nat_eqb_false
     (codeFormula L codeF codeR
        (fol.impH L (fol.equal L (fol.var L 0) (fol.var L 1))
           (fol.impH L (fol.equal L (fol.var L 1) (fol.var L 2))
@@ -3476,7 +3476,7 @@ induction
        (codeFormula L codeF codeR f)) (codeFormula L codeF codeR x)).
 assumption.
 elim H5.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 assumption.
@@ -3599,7 +3599,7 @@ induction
        (codeFormula L codeF codeR f)) (codeFormula L codeF codeR x)).
 assumption.
 elim H5.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 reflexivity.
 assumption.
 assumption.

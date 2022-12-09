@@ -271,7 +271,7 @@ unfold A in |- *.
 rewrite H.
 rewrite cPairProjections2.
 auto.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 simpl in |- *.
 replace (codeList (list_remove nat eq_nat_dec a l)) with
  (codeNth A (evalStrongRecHelp 1 f n a)).
@@ -423,7 +423,7 @@ rewrite a1.
 rewrite Nat.eqb_refl.
 simpl in |- *.
 reflexivity.
-rewrite beq_nat_not_refl.
+rewrite nat_eqb_false.
 simpl in |- *.
 assert
  (extEqual _
