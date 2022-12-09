@@ -1,3 +1,5 @@
+(** * FOL's deduction Lemma *)
+
 
 Require Import Ensembles.
 Require Import Coq.Lists.List.
@@ -31,16 +33,15 @@ Proof.
          Prf nil z ->
          SysPrf (fun x : fol.Formula L => In x nil /\ mem (fol.Formula L) T x)
                 (impH g z)).
-  { intros.
+  { intros g z H.
     set (A1 := IMP1 L z g) in *.
     set (A2 := MP L _ _ _ _ A1 H) in *.
     exists (nil:list Formula).
     exists A2.
-    intros.
-    elim H0.
+    intros g0 H0; elim H0.
   }
   intros f g [F [H HF]].
-  assert (SysPrf (fun x => In x F /\ mem _ T x) (impH g f)).
+  assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (impH g f)).
   { induction  H
       as
         [A
@@ -63,11 +64,10 @@ Proof.
         set (A3 := MP L _ _ _ _ A2 A1) in *.
         exists (x :: nil).
         exists A3.
-        intros.
-        split.
-        * auto.
-        * destruct H0.
-          -- destruct H0; assumption.
+        intros g0 H0; split.
+        * apply H0.
+        * destruct H0 as [H0 | H0].
+          -- now subst.
           -- contradiction.
       + destruct H.
         set (A1 := IMP2 L g (impH g g) g) in *.
@@ -75,9 +75,7 @@ Proof.
         set (A3 := MP L _ _ _ _ A1 A2) in *.
         set (A4 := IMP1 L g g) in *.
         set (A5 := MP L _ _ _ _ A3 A4) in *.
-        exists (nil:list Formula).
-        exists A5.
-        contradiction.
+        exists (nil:list Formula); exists A5; contradiction.
     - induction  HrecH0 as (x, H).
       + induction  H as (x0, H).
         induction  HrecH1 as (x1, H2).
@@ -89,10 +87,8 @@ Proof.
           exists A3.
           simpl in |- *.
           clear - H H2.
-          intros.
-          split.
-          -- change (In g (Axm1++Axm2)).
-             apply in_or_app.
+          intros g H0; split.
+          -- change (In g (Axm1++Axm2)); apply in_or_app.
              destruct (in_app_or _ _ _ H0); firstorder.
           -- destruct (in_app_or _ _ _ H0); firstorder.
         * firstorder auto with datatypes.
@@ -104,9 +100,11 @@ Proof.
           induction Axm.
           - firstorder.
           - elim (HF a (or_introl _ (refl_equal a))).
-            assert (forall g0 : fol.Formula L,
-                       In g0 Axm -> mem (fol.Formula L) (Ensembles.Add (fol.Formula L) T g) g0) .
-            { firstorder. }
+            assert (H :forall g0 : fol.Formula L,
+                       In g0 Axm -> 
+                       mem (fol.Formula L) 
+                         (Ensembles.Add (fol.Formula L) T g) g0)
+              by firstorder.
             + destruct (IHAxm H).
               * firstorder.
               * intros; right.
@@ -151,18 +149,17 @@ Proof.
         exists A9.
         clear A9 A8 A7 A6 A5 A4 A3 A2 A1.
         simpl in |- *.
-        intros.
-        apply H0.
+        intros g0 H3; apply H0.
         induction (in_app_or _ _ _ H3).
         -- auto.
         -- elim H4.
         *
           set (A1 := GEN L _ _ _ n H) in *.
-           set (A2 := IMP1 L (forallH v A) g) in *.
-           set (A3 := MP L _ _ _ _ A2 A1) in *.
-           exists (Axm).
-           exists A3.
-           firstorder.
+          set (A2 := IMP1 L (forallH v A) g) in *.
+          set (A3 := MP L _ _ _ _ A2 A1) in *.
+          exists (Axm).
+          exists A3.
+          firstorder.
       + firstorder.
     - apply EasyCase, (IMP1 L).
     - apply EasyCase, (IMP2 L).

@@ -60,6 +60,7 @@ Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
    nil => a
 |  cons v l =>  (forallH v (closeList l a))
 end.
+
 (* Todo : use stdlib's nodup *)
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
@@ -87,16 +88,14 @@ Lemma freeVarClosedList2 :
     In v (freeVarFormula x).
 Proof.
   intro l; induction l as [| a l Hrecl].
-  - simpl in |- *; intros; assumption.
-  - simpl in |- *; intros v x H;  apply Hrecl.
-    eapply In_list_remove1;  apply H.
+  - simpl; intros v x H; apply H.
+  - simpl; intros v x H; apply Hrecl; eapply In_list_remove1;  apply H.
 Qed.
 
 Lemma freeVarClosed :
-  forall (x : fol.Formula L) (v : nat),
-    ~ In v (freeVarFormula (close x)).
+  forall (x : fol.Formula L) (v : nat), ~ In v (freeVarFormula (close x)).
 Proof.
-  intros x v; unfold close in |- *.
+  intros x v; unfold close;
   destruct (In_dec eq_nat_dec v (no_dup _ eq_nat_dec (freeVarFormula x)))
     as [i | n]. 
   - apply freeVarClosedList1; assumption.
@@ -224,9 +223,8 @@ Proof.
         elim (Nat.nlt_0_r n (Hrecl _ H)).
       * rewrite H0; rewrite H0 in Hrecl.
         -- apply Nat.lt_le_trans with (S x0).
-           now apply Hrecl.
-           apply le_n_S.
-           apply Nat.le_max_r.
+           ++ now apply Hrecl.
+           ++ apply le_n_S, Nat.le_max_r.
 Qed.
 
 Lemma newVar1 : forall l : list nat, ~ In (newVar l) l.
@@ -358,18 +356,17 @@ Remark substituteFormulaForallNice :
       substituteFormulaForall v a z1 q = substituteFormulaForall v a z2 q.
 Proof.
   intros v a z1 z2 H [a0 b]; unfold substituteFormulaForall in |- *.
-  induction (eq_nat_dec v a0); simpl in |- *.
+  destruct (eq_nat_dec v a0) as [e | n] ; simpl in |- *.
   - reflexivity.
   - induction (In_dec eq_nat_dec v (freeVarTerm b)); simpl in |- *.
     + rewrite H;
         destruct
           (z2 a (depthForall L a v)
              (v, var (newVar
-                        (a0 :: freeVarTerm b ++ freeVarFormula a))));
-        rewrite H; reflexivity.
-    + rewrite H; reflexivity.
+                        (a0 :: freeVarTerm b ++ freeVarFormula a)))). 
+         now rewrite H.  
+    + now rewrite H.
 Qed.
-
 
 Definition substituteFormulaHelp (f : fol.Formula L) 
   (v : nat) (s : fol.Term L) : {y : fol.Formula L | depth L y = depth L f}.
@@ -492,8 +489,8 @@ Lemma subFormulaNot :
   forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
     substituteFormula (notH f) v s = notH (substituteFormula f v s).
 Proof.
-  intros f v s.
-  unfold substituteFormula, substituteFormulaHelp in |- *.
+  intros f v s; 
+  unfold substituteFormula, substituteFormulaHelp.
   rewrite (Formula_depth_rec2_not L) with
     (Q := fun _ : fol.Formula L => (nat * fol.Term L)%type)
     (P := fun x : fol.Formula L =>
@@ -579,7 +576,8 @@ Proof.
                      {y : fol.Formula L | depth L y = 0})
                   (fun (a0 : nat) (b0 : fol.Term L) =>
                      exist (fun y : fol.Formula L => depth L y = 0)
-                       (equal (substituteTerm t a0 b0) (substituteTerm t0 a0 b0))
+                       (equal (substituteTerm t a0 b0) 
+                          (substituteTerm t0 a0 b0))
                        (refl_equal 0)) H)
              (fun (r : Relations L) 
                   (t : fol.Terms L (arity L (inl (Functions L) r)))
@@ -599,7 +597,8 @@ Proof.
         induction
           (Formula_depth_rec2 L
              (fun x1 : fol.Formula L =>
-                nat * fol.Term L -> {y : fol.Formula L | depth L y = depth L x1})
+                nat * fol.Term L -> 
+                {y : fol.Formula L | depth L y = depth L x1})
              (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
                 prod_rec
                   (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
@@ -668,8 +667,8 @@ Lemma subFormulaOr :
     substituteFormula (orH f1 f2) v s =
       orH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
-  intros f1 f2 v s; unfold orH, fol.orH in |- *.
-  now rewrite subFormulaImp, subFormulaNot.
+  intros f1 f2 v s; unfold orH, fol.orH; 
+    now rewrite subFormulaImp, subFormulaNot.
 Qed.
 
 Lemma subFormulaAnd :
@@ -678,8 +677,7 @@ Lemma subFormulaAnd :
       andH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
   intros ? ? ? ?; unfold andH, fol.andH in |- *.
-  rewrite subFormulaNot, subFormulaOr.
-  now repeat rewrite subFormulaNot.
+  rewrite subFormulaNot, subFormulaOr; now repeat rewrite subFormulaNot.
 Qed.
 
 Lemma subFormulaExist :
@@ -699,7 +697,7 @@ Lemma subFormulaExist :
 Proof.
   intros ? ? ? ? nv; unfold existH, fol.existH in |- *.
   rewrite subFormulaNot, subFormulaForall.
-  induction (eq_nat_dec x v).
+  destruct (eq_nat_dec x v).
   - reflexivity.
   - induction (In_dec eq_nat_dec x (freeVarTerm s));
       now repeat rewrite subFormulaNot.
