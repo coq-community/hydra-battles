@@ -12,51 +12,47 @@ Definition natToTermLNN := LNN.natToTerm.
 
 Definition natToTermLNT := LNT.natToTerm.
 
-Definition codeNatToTerm : nat -> nat :=
-  nat_rec (fun _ => nat) (cPair 4 0)
-    (fun _ rec : nat => cPair 3 (S (cPair rec 0))).
+Fixpoint codeNatToTerm (n: nat) : nat :=
+ match n with
+  0 => cPair 4 0
+| S p => cPair 3 (S (cPair (codeNatToTerm p) 0))
+end. 
 
-Lemma codeNatToTermCorrectLNN :
- forall n : nat,
+Lemma codeNatToTermCorrectLNN n :
  codeNatToTerm n = codeTerm LNN codeLNTFunction (natToTermLNN n).
 Proof.
-intro.
-induction n as [| n Hrecn].
-reflexivity.
-simpl in |- *.
-rewrite Hrecn.
-reflexivity.
+  induction n as [| n Hrecn].
+  - reflexivity.
+  - simpl; now rewrite Hrecn.
 Qed.
 
-Lemma codeNatToTermCorrectLNT :
- forall n : nat,
+Lemma codeNatToTermCorrectLNT n :
  codeNatToTerm n = codeTerm LNT codeLNTFunction (natToTermLNT n).
 Proof.
-intro.
-induction n as [| n Hrecn].
-reflexivity.
-simpl in |- *.
-rewrite Hrecn.
-reflexivity.
+  induction n as [| n Hrecn].
+  - reflexivity.
+  - simpl; now rewrite Hrecn.
 Qed.
 
 Lemma codeNatToTermIsPR : isPR 1 codeNatToTerm.
 Proof.
-unfold codeNatToTerm in |- *.
-apply
- indIsPR
-  with (f := fun _ rec : nat => cPair 3 (S (cPair rec 0))) (g := cPair 4 0).
-apply filter01IsPR with (g := fun rec : nat => cPair 3 (S (cPair rec 0))).
-apply
- compose1_2IsPR
-  with (f := fun _ : nat => 3) (f' := fun rec : nat => S (cPair rec 0)).
-apply const1_NIsPR.
-apply compose1_1IsPR with (f := fun rec : nat => cPair rec 0).
-apply
- compose1_2IsPR with (f := fun rec : nat => rec) (f' := fun _ : nat => 0).
-apply idIsPR.
-apply const1_NIsPR.
-apply cPairIsPR.
-apply succIsPR.
-apply cPairIsPR.
+  unfold codeNatToTerm in |- *.
+  apply indIsPR with 
+    (f := fun _ rec : nat => cPair 3 (S (cPair rec 0))) 
+    (g := cPair 4 0).
+  apply filter01IsPR with 
+    (g := fun rec : nat => cPair 3 (S (cPair rec 0))).
+  apply compose1_2IsPR with 
+    (f := fun _ : nat => 3)
+    (f' := fun rec : nat => S (cPair rec 0)).
+  - apply const1_NIsPR.
+  - apply compose1_1IsPR with (f := fun rec : nat => cPair rec 0).
+    + apply compose1_2IsPR with 
+        (f := fun rec : nat => rec) 
+        (f' := fun _ : nat => 0).
+      * apply idIsPR.
+      * apply const1_NIsPR.
+      * apply cPairIsPR.
+    + apply succIsPR.
+  - apply cPairIsPR.
 Qed.
