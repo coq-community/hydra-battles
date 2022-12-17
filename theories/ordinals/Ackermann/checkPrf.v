@@ -18,22 +18,29 @@ Variable codeF : Functions L -> nat.
 Variable codeR : Relations L -> nat.
 Variable codeArityF : nat -> nat.
 Variable codeArityR : nat -> nat.
+
 Hypothesis codeArityFIsPR : isPR 1 codeArityF.
+
 Hypothesis
   codeArityFIsCorrect1 :
     forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
+
 Hypothesis
   codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> exists f : Functions L, codeF f = n.
+
 Hypothesis codeArityRIsPR : isPR 1 codeArityR.
+
 Hypothesis
   codeArityRIsCorrect1 :
     forall r : Relations L, codeArityR (codeR r) = S (arity L (inl _ r)).
+
 Hypothesis
   codeArityRIsCorrect2 :
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.
 
 Hypothesis codeFInj : forall f g : Functions L, codeF f = codeF g -> f = g.
+
 Hypothesis codeRInj : forall R S : Relations L, codeR R = codeR S -> R = S.
 
 Let Term := Term L.
@@ -65,37 +72,37 @@ Definition checkPrfAXM (p recs : nat) :=
 
 Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
 Proof.
-unfold checkPrfAXM in |- *.
-apply
- filter10IsPR
-  with
+  unfold checkPrfAXM.
+  apply
+    filter10IsPR
+    with
     (g := fun p : nat =>
-          switchPR
-            (charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
-            (S (S (cPair (cPairPi1 p) 0))) 0).
-apply
- compose1_3IsPR
-  with
+            switchPR
+              (charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
+              (S (S (cPair (cPairPi1 p) 0))) 0).
+  apply
+    compose1_3IsPR
+    with
     (f1 := fun p : nat =>
-           charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
+             charFunction 2 Nat.eqb (cPairPi2 (cPairPi2 p)) (cPairPi1 p))
     (f2 := fun p : nat => S (S (cPair (cPairPi1 p) 0)))
     (f3 := fun p : nat => 0).
-apply compose1_2IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR.
-apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply eqIsPR.
-apply compose1_1IsPR with (f := fun p : nat => S (cPair (cPairPi1 p) 0)).
-apply compose1_1IsPR with (f := fun p : nat => cPair (cPairPi1 p) 0).
-apply compose1_2IsPR with (f' := fun p : nat => 0).
-apply cPairPi1IsPR.
-apply const1_NIsPR.
-apply cPairIsPR.
-apply succIsPR.
-apply succIsPR.
-apply const1_NIsPR.
-apply switchIsPR.
+  - apply compose1_2IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    + apply compose1_1IsPR.
+      * apply cPairPi2IsPR.
+      * apply cPairPi2IsPR.
+    + apply cPairPi1IsPR.
+    + apply eqIsPR.
+  - apply compose1_1IsPR with (f := fun p : nat => S (cPair (cPairPi1 p) 0)).
+    + apply compose1_1IsPR with (f := fun p : nat => cPair (cPairPi1 p) 0).
+      * apply compose1_2IsPR with (f' := fun p : nat => 0).
+        -- apply cPairPi1IsPR.
+        -- apply const1_NIsPR.
+        -- apply cPairIsPR.
+      * apply succIsPR.
+    + apply succIsPR.
+  - apply const1_NIsPR.
+  - apply switchIsPR.
 Qed.
 
 Definition checkPrfMP (p recs : nat) :=
@@ -113,29 +120,25 @@ Definition checkPrfMP (p recs : nat) :=
 
 Lemma checkPrfMPIsPR : isPR 2 checkPrfMP.
 Proof.
-unfold checkPrfMP in |- *.
-apply
- compose2_3IsPR
-  with
+  unfold checkPrfMP in |- *.
+  apply compose2_3IsPR with
     (f1 := fun p recs : nat =>
-           wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) *
-           (charFunction 2 Nat.eqb
-              (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-              (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-                 (cPairPi1 p)) *
-            (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
-             codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)))
+             wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) *
+               (charFunction 2 Nat.eqb
+                  (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                  (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                     (cPairPi1 p)) *
+                  (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
+                     codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)))
     (f2 := fun p recs : nat =>
-           S
-             (codeApp
-                (pred
-                   (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
-                (pred
-                   (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))))
+          S
+            (codeApp
+               (pred
+                  (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
+               (pred
+                  (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))))
     (f3 := fun p recs : nat => 0).
-apply
- compose2_2IsPR
-  with
+  - apply compose2_2IsPR with
     (f := fun p recs : nat =>
           wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
     (g := fun p recs : nat =>
@@ -145,124 +148,122 @@ apply
                (cPairPi1 p)) *
           (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
            codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)).
-apply
- filter10IsPR
-  with
-    (g := fun p : nat =>
-          wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-apply
- compose1_1IsPR
-  with (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-unfold wellFormedFormula in |- *.
-apply wellFormedFormulaIsPR.
-apply codeArityFIsPR.
-apply codeArityRIsPR.
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat =>
-          charFunction 2 Nat.eqb
-            (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-            (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-               (cPairPi1 p)))
-    (g := fun p recs : nat =>
-          codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
-apply
- filter10IsPR
-  with
-    (g := fun p : nat =>
-          charFunction 2 Nat.eqb
-            (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-            (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-               (cPairPi1 p))).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-    (f' := fun p : nat =>
-           codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) (cPairPi1 p)).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply cPairPi1IsPR.
-apply
- compose1_2IsPR
-  with (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply cPairPi1IsPR.
-apply codeImpIsPR.
-apply eqIsPR.
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat =>
-          codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs)
-    (g := fun p recs : nat =>
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
-apply callIsPR with (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply callIsPR with (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply multIsPR.
-apply multIsPR.
-apply multIsPR.
-apply
- compose2_1IsPR
-  with
-    (f := fun p recs : nat =>
-          codeApp
-            (pred (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
-            (pred (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))).
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat =>
-          pred (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
-    (g := fun p recs : nat =>
+    + apply filter10IsPR with
+        (g := 
+           fun p : nat =>
+             wellFormedFormula (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+      apply
+        compose1_1IsPR
+        with (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+      * apply compose1_1IsPR with
+          (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+        -- apply compose1_1IsPR with 
+             (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+           ++ apply compose1_1IsPR; apply cPairPi2IsPR.
+           ++ apply cPairPi2IsPR.
+        -- apply cPairPi1IsPR.
+      * unfold wellFormedFormula in |- *.
+        apply wellFormedFormulaIsPR.
+        apply codeArityFIsPR.
+        apply codeArityRIsPR.
+    + apply compose2_2IsPR with
+        (f := fun p recs : nat =>
+                charFunction 2 Nat.eqb
+                  (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                  (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                     (cPairPi1 p)))
+        (g := fun p recs : nat =>
+                codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs *
+                  codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
+      apply
+        filter10IsPR
+        with
+        (g := fun p : nat =>
+                charFunction 2 Nat.eqb
+                  (cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                  (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                     (cPairPi1 p))).
+      * apply compose1_2IsPR with
+          (f := fun p : nat => cPairPi1 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+          (f' := fun p : nat =>
+                   codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))) 
+                     (cPairPi1 p)).
+        -- apply compose1_1IsPR with
+             (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+           ++ apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+              ** apply compose1_1IsPR; apply cPairPi2IsPR.
+              ** apply cPairPi1IsPR.
+           ++ apply cPairPi1IsPR.
+        -- apply compose1_2IsPR with 
+             (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+           ++ apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+              ** apply compose1_1IsPR with
+                   (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+                 apply compose1_1IsPR; apply cPairPi2IsPR.
+                 apply cPairPi2IsPR.
+              ** apply cPairPi1IsPR.
+           ++ apply cPairPi1IsPR.
+           ++ apply codeImpIsPR.
+        -- apply eqIsPR.
+      * apply compose2_2IsPR with
+          (f := fun p recs : nat =>
+                  codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs)
+          (g := fun p recs : nat =>
+                  codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
+        -- apply callIsPR with 
+             (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+           apply compose1_1IsPR with 
+             (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+           ++ apply compose1_1IsPR; apply cPairPi2IsPR.
+           ++ apply cPairPi1IsPR.
+        -- apply callIsPR with 
+             (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+           apply compose1_1IsPR with 
+             (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+           ++ apply compose1_1IsPR; apply cPairPi2IsPR.
+           ++ apply cPairPi2IsPR.
+        -- apply multIsPR.
+      * apply multIsPR.
+    + apply multIsPR.
+  - apply compose2_1IsPR with
+      (f := fun p recs : nat =>
+            codeApp
+              (pred (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
+              (pred (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))).
+    apply
+      compose2_2IsPR
+      with
+      (f := fun p recs : nat =>
+              pred (codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs))
+      (g := fun p recs : nat =>
           pred (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)).
-apply
- compose2_1IsPR
-  with
-    (f := fun p recs : nat =>
-          codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs).
-apply callIsPR with (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply predIsPR.
-apply
- compose2_1IsPR
-  with
-    (f := fun p recs : nat =>
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
-apply callIsPR with (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply predIsPR.
-apply codeAppIsPR.
-apply succIsPR.
-apply filter10IsPR with (g := fun _ : nat => 0).
-apply const1_NIsPR.
-apply switchIsPR.
+    + apply
+      compose2_1IsPR
+      with
+      (f := fun p recs : nat =>
+              codeNth (p - S (cPairPi1 (cPairPi2 (cPairPi2 p)))) recs).
+      * apply callIsPR with
+          (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+        apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+        -- apply compose1_1IsPR; apply cPairPi2IsPR.
+        -- apply cPairPi1IsPR.
+      * apply predIsPR.
+    + apply compose2_1IsPR with
+        (f := fun p recs : nat =>
+                codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
+      * apply callIsPR with 
+          (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+        apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+        -- apply compose1_1IsPR; apply cPairPi2IsPR.
+        -- apply cPairPi2IsPR.
+      * apply predIsPR.
+    + apply codeAppIsPR.
+    + apply succIsPR.
+  - apply filter10IsPR with (g := fun _ : nat => 0).
+    apply const1_NIsPR.
+  - apply switchIsPR.
 Qed.
 
 Definition checkPrfGEN (p recs : nat) :=
@@ -281,149 +282,147 @@ Definition checkPrfGEN (p recs : nat) :=
 
 Lemma checkPrfGENIsPR : isPR 2 checkPrfGEN.
 Proof.
-unfold checkPrfGEN in |- *.
-apply
- compose2_3IsPR
-  with
+  unfold checkPrfGEN;
+    apply compose2_3IsPR with
     (f1 := fun p recs : nat =>
-           charFunction 2 Nat.eqb
-             (cPair 3
-                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                   (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-             (cPairPi1 p) *
-           (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs *
-            (1 -
-             codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
-               (codeFreeVarListFormula
-                  (pred
-                     (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))))))
+             charFunction 2 Nat.eqb
+               (cPair 3
+                  (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                     (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+               (cPairPi1 p) *
+               (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs *
+                  (1 -
+                     codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                       (codeFreeVarListFormula
+                          (pred
+                             (codeNth (p - S (cPairPi2 
+                                                (cPairPi2 (cPairPi2 p))))
+                                recs))))))
     (f2 := fun p recs : nat =>
-           codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)
+             codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)
     (f3 := fun p recs : nat => 0).
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat =>
-          charFunction 2 Nat.eqb
-            (cPair 3
-               (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                  (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-            (cPairPi1 p))
-    (g := fun p recs : nat =>
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs *
-          (1 -
-           codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
-             (codeFreeVarListFormula
-                (pred
-                   (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))))).
-apply
- filter10IsPR
-  with
-    (g := fun p : nat =>
-          charFunction 2 Nat.eqb
-            (cPair 3
-               (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                  (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-            (cPairPi1 p)).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          cPair 3
-            (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-               (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-    (f' := fun p : nat => cPairPi1 p).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => 3)
-    (f' := fun p : nat =>
-           cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-             (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-apply const1_NIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply cPairIsPR.
-apply cPairIsPR.
-apply cPairPi1IsPR.
-apply eqIsPR.
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat =>
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)
-    (g := fun p recs : nat =>
-          1 -
-          codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
-            (codeFreeVarListFormula
-               (pred
-                  (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)))).
-apply callIsPR with (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat => 1)
-    (g := fun p recs : nat =>
-          codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
-            (codeFreeVarListFormula
-               (pred
-                  (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)))).
-apply filter10IsPR with (g := fun _ : nat => 1).
-apply const1_NIsPR.
-apply
- compose2_2IsPR
-  with
-    (f := fun p recs : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (g := fun p recs : nat =>
-          codeFreeVarListFormula
-            (pred (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs))).
-apply
- filter10IsPR with (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-apply
- compose2_1IsPR
-  with
-    (f := fun p recs : nat =>
-          pred (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)).
-apply
- compose2_1IsPR
-  with
-    (f := fun p recs : nat =>
-          codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs).
-apply callIsPR with (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply predIsPR.
-apply codeFreeVarListFormulaIsPR.
-apply codeInIsPR.
-apply minusIsPR.
-apply multIsPR.
-apply multIsPR.
-apply callIsPR with (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply filter10IsPR with (g := fun _ : nat => 0).
-apply const1_NIsPR.
-apply switchIsPR.
+  - apply compose2_2IsPR with
+      (f := fun p recs : nat =>
+              charFunction 2 Nat.eqb
+                (cPair 3
+                   (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                      (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                (cPairPi1 p))
+      (g := fun p recs : nat =>
+              codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs *
+                (1 -
+                   codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                     (codeFreeVarListFormula
+                        (pred
+                           (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) 
+                              recs))))).
+    + apply filter10IsPR with
+        (g := fun p : nat =>
+                charFunction 2 Nat.eqb
+                  (cPair 3
+                     (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                        (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                  (cPairPi1 p)).
+      apply
+        compose1_2IsPR
+        with
+        (f := fun p : nat =>
+                cPair 3
+                  (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                     (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+        (f' := fun p : nat => cPairPi1 p).
+      * apply compose1_2IsPR with
+          (f := fun p : nat => 3)
+          (f' := fun p : nat =>
+                   cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                     (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+        -- apply const1_NIsPR.
+        -- apply compose1_2IsPR with
+             (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+             (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+           ++ apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+              apply compose1_1IsPR; apply cPairPi2IsPR.
+              apply cPairPi1IsPR.
+           ++ apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+              apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+              apply compose1_1IsPR; apply cPairPi2IsPR.
+              apply cPairPi2IsPR.
+              apply cPairPi1IsPR.
+           ++ apply cPairIsPR.
+        -- apply cPairIsPR.
+      * apply cPairPi1IsPR.
+      * apply eqIsPR.
+    + apply compose2_2IsPR with
+        (f := fun p recs : nat =>
+                codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) recs)
+        (g := fun p recs : nat =>
+                1 -
+                  codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                    (codeFreeVarListFormula
+                       (pred
+                          (codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) 
+                             recs)))).
+      * apply callIsPR with 
+          (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+        apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+        -- apply compose1_1IsPR; apply cPairPi2IsPR.
+        -- apply cPairPi2IsPR.
+      * apply compose2_2IsPR with
+          (f := fun p recs : nat => 1)
+          (g := fun p recs : nat =>
+                  codeIn (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                    (codeFreeVarListFormula
+                       (pred
+                          (codeNth (p - S (cPairPi2 
+                                             (cPairPi2 (cPairPi2 p)))) 
+                             recs)))).
+        -- apply filter10IsPR with (g := fun _ : nat => 1).
+           apply const1_NIsPR.
+        -- apply compose2_2IsPR with
+             (f := fun p recs : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+             (g := fun p recs : nat =>
+                     codeFreeVarListFormula
+                       (pred (codeNth 
+                                (p - S (cPairPi2 
+                                          (cPairPi2 (cPairPi2 p)))) recs))).
+           apply filter10IsPR with
+             (g := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+           ++ apply compose1_1IsPR with 
+                (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+              ** apply compose1_1IsPR; apply cPairPi2IsPR.
+              ** apply cPairPi1IsPR.
+           ++ apply compose2_1IsPR with
+                (f := fun p recs : nat =>
+                        pred (codeNth (p - S (cPairPi2 
+                                                (cPairPi2 (cPairPi2 p)))) 
+                                recs)).
+              ** apply compose2_1IsPR with
+                   (f := fun p recs : nat =>
+                           codeNth (p - S (cPairPi2 (cPairPi2 (cPairPi2 p)))) 
+                             recs).
+                 apply callIsPR with 
+                   (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+                 apply compose1_1IsPR with
+                   (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+                 apply compose1_1IsPR; apply cPairPi2IsPR.
+                 apply cPairPi2IsPR.
+                 apply predIsPR.
+              ** apply codeFreeVarListFormulaIsPR.
+           ++ apply codeInIsPR.
+        -- apply minusIsPR.
+      * apply multIsPR.
+    + apply multIsPR.
+  - apply callIsPR with 
+      (g := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+    apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    + apply compose1_1IsPR; apply cPairPi2IsPR.
+    + apply cPairPi2IsPR.
+  - apply filter10IsPR with (g := fun _ : nat => 0).
+    apply const1_NIsPR.
+  - apply switchIsPR.
 Qed.
 
 Definition checkPrfIMP1 (p recs : nat) :=
@@ -434,10 +433,7 @@ Definition checkPrfIMP1 (p recs : nat) :=
 
 Lemma checkPrfIMP1IsPR : isPR 2 checkPrfIMP1.
 Proof.
-unfold checkPrfIMP1 in |- *.
-apply
- filter10IsPR
-  with
+  unfold checkPrfIMP1; apply filter10IsPR with
     (g := fun p : nat =>
           charFunction 2 Nat.eqb
             (cPair 1
@@ -446,63 +442,55 @@ apply
                      (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
                         (cPairPi1 (cPairPi2 (cPairPi2 p))))))) 
             (cPairPi1 p)).
-assert (isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-assert (isPR 1 (fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply
- compose1_2IsPR
-  with
+  assert (H: isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
+  { apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    - apply compose1_1IsPR; apply cPairPi2IsPR.
+    - apply cPairPi1IsPR.
+  } 
+  assert (H0: isPR 1 (fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))).
+  { apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    - apply compose1_1IsPR; apply cPairPi2IsPR.
+    - apply cPairPi2IsPR.
+  }
+  apply compose1_2IsPR with
     (f := fun p : nat =>
-          cPair 1
-            (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-               (cPair 1
-                  (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-                     (cPairPi1 (cPairPi2 (cPairPi2 p))))))).
-apply
- compose1_2IsPR
-  with
+            cPair 1
+              (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                 (cPair 1
+                    (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                       (cPairPi1 (cPairPi2 (cPairPi2 p))))))).
+  apply compose1_2IsPR with
     (f := fun p : nat => 1)
     (f' := fun p : nat =>
-           cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-             (cPair 1
-                (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-                   (cPairPi1 (cPairPi2 (cPairPi2 p)))))).
-apply const1_NIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat =>
-           cPair 1
-             (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-                (cPairPi1 (cPairPi2 (cPairPi2 p))))).
-assumption.
-apply
- compose1_2IsPR
-  with
+             cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+               (cPair 1
+                  (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                     (cPairPi1 (cPairPi2 (cPairPi2 p)))))).
+  - apply const1_NIsPR.
+  - apply compose1_2IsPR
+      with
+      (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+      (f' := fun p : nat =>
+               cPair 1
+                 (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                    (cPairPi1 (cPairPi2 (cPairPi2 p))))); [assumption | |].
+    + apply compose1_2IsPR with
     (f := fun p : nat => 1)
     (f' := fun p : nat =>
            cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
              (cPairPi1 (cPairPi2 (cPairPi2 p)))).
-apply const1_NIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-assumption.
-assumption.
-apply cPairIsPR.
-apply cPairIsPR.
-apply cPairIsPR.
-apply cPairIsPR.
-apply cPairPi1IsPR.
-apply eqIsPR.
+      * apply const1_NIsPR.
+      * apply compose1_2IsPR with
+          (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))
+          (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+        -- assumption.
+        -- assumption.
+        -- apply cPairIsPR.
+      * apply cPairIsPR.
+    + apply cPairIsPR.
+  - apply cPairIsPR.
+  - apply cPairPi1IsPR.
+- apply eqIsPR.
 Qed.
 
 Definition checkPrfIMP2 (p recs : nat) :=
@@ -515,155 +503,158 @@ Definition checkPrfIMP2 (p recs : nat) :=
           (cPair 1 (cPair (cPair 1 (cPair A B)) (cPair 1 (cPair A C))))))
     (cPairPi1 p).
 
+
 Lemma checkPrfIMP2IsPR : isPR 2 checkPrfIMP2.
 Proof.
-unfold checkPrfIMP2 in |- *.
-apply
- filter10IsPR
-  with
+  unfold checkPrfIMP2; apply filter10IsPR with
     (g := fun p : nat =>
-          charFunction 2 Nat.eqb
+            charFunction 2 Nat.eqb
+              (cPair 1
+                 (cPair
+                    (cPair 1
+                       (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                          (cPair 1
+                             (cPair
+                                (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                                (cPairPi2 (cPairPi2 (cPairPi2 
+                                                       (cPairPi2 p))))))))
+                    (cPair 1
+                       (cPair
+                          (cPair 1
+                             (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                                (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                          (cPair 1
+                             (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                                (cPairPi2
+                                   (cPairPi2 (cPairPi2 (cPairPi2 p))))))))))
+              (cPairPi1 p)).
+  assert (H: isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
+  { apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    apply compose1_1IsPR; apply cPairPi2IsPR.
+    apply cPairPi1IsPR.
+  } 
+  assert (H0: isPR 1 (fun p : nat => 
+                        cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+  { apply compose1_1IsPR with
+      (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+    apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    apply compose1_1IsPR; apply cPairPi2IsPR.
+    apply cPairPi2IsPR.
+    apply cPairPi1IsPR.
+  } 
+  assert (H1: isPR 1 (fun p : nat => 
+                        cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+  { apply compose1_1IsPR with 
+      (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+    apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    apply compose1_1IsPR; apply cPairPi2IsPR.
+    apply cPairPi2IsPR.
+    apply cPairPi2IsPR.
+  } 
+  apply compose1_2IsPR with
+    (f := fun p : nat =>
+            cPair 1
+              (cPair
+                 (cPair 1
+                    (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                       (cPair 1
+                          (cPair (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                             (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))
+                 (cPair 1
+                    (cPair
+                       (cPair 1
+                          (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                             (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                       (cPair 1
+                          (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                             (cPairPi2 (cPairPi2 (cPairPi2 
+                                                    (cPairPi2 p)))))))))).
+  replace
+    (fun p : nat =>
+       cPair 1
+         (cPair
+            (cPair 1
+               (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                  (cPair 1
+                     (cPair (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                        (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))
             (cPair 1
                (cPair
                   (cPair 1
                      (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                        (cPair 1
-                           (cPair
-                              (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-                              (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))
+                        (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
                   (cPair 1
-                     (cPair
-                        (cPair 1
-                           (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                              (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-                        (cPair 1
-                           (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                              (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))))
-            (cPairPi1 p)).
-assert (isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-assert (isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-assert (isPR 1 (fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          cPair 1
-            (cPair
-               (cPair 1
-                  (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                     (cPair 1
-                        (cPair (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-                           (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))
-               (cPair 1
-                  (cPair
-                     (cPair 1
-                        (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                           (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-                     (cPair 1
-                        (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                           (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))))))).
-replace
- (fun p : nat =>
-  cPair 1
-    (cPair
-       (cPair 1
-          (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-             (cPair 1
-                (cPair (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-                   (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))))
-       (cPair 1
-          (cPair
-             (cPair 1
-                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                   (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-             (cPair 1
-                (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                   (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))))))) with
- (fun p : nat =>
-  codeImp
-    (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-       (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-          (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-    (codeImp
-       (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-          (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
-       (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-          (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))));
- [ idtac | reflexivity ].
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                     (cPair (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                        (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))))))) 
+    with
+    (fun p : nat =>
+       codeImp
+         (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
                (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-    (f' := fun p : nat =>
-           codeImp
-             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
-             (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-                (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat =>
-           codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-             (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-assumption.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
-    (f' := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-assumption.
-assumption.
-apply codeImpIsPR.
-apply codeImpIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-            (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
-    (f' := fun p : nat =>
-           codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
-             (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-assumption.
-assumption.
-apply codeImpIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-assumption.
-assumption.
-apply codeImpIsPR.
-apply codeImpIsPR.
-apply codeImpIsPR.
-apply cPairPi1IsPR.
-apply eqIsPR.
+         (codeImp
+            (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+               (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
+            (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+               (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))));
+    [ idtac | reflexivity ].
+  - apply
+      compose1_2IsPR
+      with
+      (f := fun p : nat =>
+              codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                (codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                   (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+      (f' := fun p : nat =>
+               codeImp
+                 (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                    (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
+                 (codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                    (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))))).
+    + apply compose1_2IsPR with
+        (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+        (f' := fun p : nat =>
+                 codeImp (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+                   (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+      * assumption.
+      * apply
+          compose1_2IsPR
+          with
+          (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p))))
+          (f' := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+        assumption.
+        assumption.
+        apply codeImpIsPR.
+      * apply codeImpIsPR.
+    + apply
+        compose1_2IsPR
+        with
+        (f := fun p : nat =>
+                codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                  (cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))))
+        (f' := fun p : nat =>
+                 codeImp (cPairPi1 (cPairPi2 (cPairPi2 p)))
+                   (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p))))).
+      apply
+        compose1_2IsPR
+        with
+        (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+        (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+      assumption.
+      assumption.
+      apply codeImpIsPR.
+      apply
+        compose1_2IsPR
+        with
+        (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))
+        (f' := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+      assumption.
+      assumption.
+      apply codeImpIsPR.
+      apply codeImpIsPR.
+    + apply codeImpIsPR.
+  - apply cPairPi1IsPR.
+  - apply eqIsPR.
 Qed.
 
 Definition checkPrfCP (p recs : nat) :=
@@ -676,91 +667,83 @@ Definition checkPrfCP (p recs : nat) :=
 
 Lemma checkPrfCPIsPR : isPR 2 checkPrfCP.
 Proof.
-unfold checkPrfCP in |- *.
-apply
- filter10IsPR
-  with
+  unfold checkPrfCP; apply filter10IsPR with
     (g := fun p : nat =>
-          charFunction 2 Nat.eqb
+            charFunction 2 Nat.eqb
+              (cPair 1
+                 (cPair
+                    (cPair 1
+                       (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                          (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                    (cPair 1
+                       (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                          (cPairPi1 (cPairPi2 (cPairPi2 p))))))) 
+              (cPairPi1 p)).
+  assert (H: isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
+  { apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    apply compose1_1IsPR; apply cPairPi2IsPR.
+    apply cPairPi1IsPR.
+  } 
+  assert (H0: isPR 1 (fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))).
+  { apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
+    apply compose1_1IsPR; apply cPairPi2IsPR.
+    apply cPairPi2IsPR.
+  } 
+  apply compose1_2IsPR with
+    (f := fun p : nat =>
+            cPair 1
+              (cPair
+                 (cPair 1
+                    (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                       (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+                 (cPair 1
+                    (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                       (cPairPi1 (cPairPi2 (cPairPi2 p))))))).
+  replace
+    (fun p : nat =>
+       cPair 1
+         (cPair
             (cPair 1
-               (cPair
-                  (cPair 1
-                     (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-                        (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-                  (cPair 1
-                     (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-                        (cPairPi1 (cPairPi2 (cPairPi2 p))))))) 
-            (cPairPi1 p)).
-assert (isPR 1 (fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi1IsPR.
-assert (isPR 1 (fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 p)).
-apply compose1_1IsPR; apply cPairPi2IsPR.
-apply cPairPi2IsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          cPair 1
-            (cPair
-               (cPair 1
-                  (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-                     (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-               (cPair 1
-                  (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-                     (cPairPi1 (cPairPi2 (cPairPi2 p))))))).
-replace
- (fun p : nat =>
-  cPair 1
-    (cPair
-       (cPair 1
-          (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
-             (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
-       (cPair 1
-          (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
-             (cPairPi1 (cPairPi2 (cPairPi2 p))))))) with
- (fun p : nat =>
-  codeImp
-    (codeImp (codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
-       (codeNot (cPairPi2 (cPairPi2 (cPairPi2 p)))))
-    (codeImp (cPairPi2 (cPairPi2 (cPairPi2 p)))
-       (cPairPi1 (cPairPi2 (cPairPi2 p))))); [ idtac | reflexivity ].
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat =>
-          codeImp (codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
+               (cPair (cPair 2 (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                  (cPair 2 (cPairPi2 (cPairPi2 (cPairPi2 p))))))
+            (cPair 1
+               (cPair (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                  (cPairPi1 (cPairPi2 (cPairPi2 p))))))) 
+    with
+    (fun p : nat =>
+       codeImp
+         (codeImp (codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
             (codeNot (cPairPi2 (cPairPi2 (cPairPi2 p)))))
-    (f' := fun p : nat =>
-           codeImp (cPairPi2 (cPairPi2 (cPairPi2 p)))
-             (cPairPi1 (cPairPi2 (cPairPi2 p)))).
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
-    (f' := fun p : nat => codeNot (cPairPi2 (cPairPi2 (cPairPi2 p)))).
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-assumption.
-apply codeNotIsPR.
-apply
- compose1_1IsPR with (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
-assumption.
-apply codeNotIsPR.
-apply codeImpIsPR.
-apply
- compose1_2IsPR
-  with
-    (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))
-    (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
-assumption.
-assumption.
-apply codeImpIsPR.
-apply codeImpIsPR.
-apply cPairPi1IsPR.
-apply eqIsPR.
+         (codeImp (cPairPi2 (cPairPi2 (cPairPi2 p)))
+            (cPairPi1 (cPairPi2 (cPairPi2 p))))); [ idtac | reflexivity ].
+  - apply compose1_2IsPR with
+      (f := fun p : nat =>
+              codeImp (codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
+                (codeNot (cPairPi2 (cPairPi2 (cPairPi2 p)))))
+      (f' := fun p : nat =>
+               codeImp (cPairPi2 (cPairPi2 (cPairPi2 p)))
+                 (cPairPi1 (cPairPi2 (cPairPi2 p)))).
+    + apply compose1_2IsPR with
+        (f := fun p : nat => codeNot (cPairPi1 (cPairPi2 (cPairPi2 p))))
+        (f' := fun p : nat => codeNot (cPairPi2 (cPairPi2 (cPairPi2 p)))).
+      * apply compose1_1IsPR with 
+          (f := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+        -- assumption.
+        -- apply codeNotIsPR.
+      * apply compose1_1IsPR with
+          (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p))).
+        -- assumption.
+        -- apply codeNotIsPR.
+      * apply codeImpIsPR.
+    + apply compose1_2IsPR with
+        (f := fun p : nat => cPairPi2 (cPairPi2 (cPairPi2 p)))
+        (f' := fun p : nat => cPairPi1 (cPairPi2 (cPairPi2 p))).
+      * assumption.
+      * assumption.
+      * apply codeImpIsPR.
+    + apply codeImpIsPR.
+- apply cPairPi1IsPR.
+- apply eqIsPR.
 Qed.
 
 Definition checkPrfFA1 (p recs : nat) :=
