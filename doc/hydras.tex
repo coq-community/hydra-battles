@@ -545,9 +545,29 @@ consult regularly.
 
 Some changes are made to the aforementionned libraries, mainly because of the recent evolution of coq and its libraries. Nevertheless, the definitions, lemmas and theorems of the original contribution have been kept in this new release.
 
-\emph{\color{red!80}This maintenance job has just started, and will probably be long to complete. Help is welcome!}
+\emph{\color{red!80}These maintenance and documentation 
+jobs have just started, and will probably be long to complete. Help is welcome!}
 
-\include{chapter-primrec}
+\section{File contents}
+
+All Russel O'Connor's files have been stored in two directories, in order to simplify packages maintenance. 
+
+\begin{itemize}
+\item \texttt{theories/goedel/}: Proofs which depend on 
+\texttt{CoqPrime} package.
+\item  \texttt{theories/ordinals/Ackermann/} : all the rest:
+ definition of primitive recursive functions, first-order  logic,
+Peano Arithmetics, G\"{o}del's encoding.
+\item Some additions we made: examples, exercices, new notations, etc.,  are stored in a specific directory \texttt{theories/ordinal/MoreAck/}.
+\end{itemize}
+
+
+
+\section{Warning}
+Russel O'Connors contribution contains more than 42 KLoc.
+Since its construction, \coq{},  its libraries and recommended style have evolved a lot. We have just started to ``modernize'' this code. We apologize for provisional inconsistencies of presentation (code and documentation).
+
+\include{chapter-primrec} 
 \include{chapter-fol}
 
 \include{chapter-encoding}

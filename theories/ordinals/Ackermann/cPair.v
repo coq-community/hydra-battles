@@ -930,6 +930,20 @@ Proof.
       auto.
 Qed.
 
+(** abbrviations a la Lisp (to improve) *)
+
+Module LispAbbreviations.
+  #[global] Notation car n := (cPairPi1 n). 
+  #[global] Notation caar n := (cPairPi1 (cPairPi1 n)). 
+
+  #[global] Notation cdr n := (cPairPi2 n). 
+  #[global] Notation cddr n := (cPairPi2 (cPairPi2 n)). 
+  #[global] Notation cdddr n := (cPairPi2 (cPairPi2 (cPairPi2 n))). 
+  #[global] Notation cddddr n := 
+    (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 n)))).
+
+End LispAbbreviations. 
+
 (* Fails with 8.13 *)
 
 (* Compatibility with Stdlib's Cantor pairing function *)

@@ -12,14 +12,9 @@ Require Import prLogic.
 Require Import Compat815.
 From Coq Require Import Lia.
 
-Module Abbreviations.
+Import LispAbbreviations. 
 
-#[global] Notation cdr n := (cPairPi2 n). 
-#[global] Notation car n := (cPairPi1 n). 
-
-End Abbreviations. 
-
-Import Abbreviations. 
+(* begin snippet context1 *)
 Section Check_Proof.
 
 Variable L : Language.
@@ -28,29 +23,38 @@ Variable codeR : Relations L -> nat.
 Variable codeArityF : nat -> nat.
 Variable codeArityR : nat -> nat.
 
+(* end snippet context1 *)
+
+(* begin snippet context2 *)
+
 Hypothesis codeArityFIsPR : isPR 1 codeArityF.
 
-Hypothesis
-  codeArityFIsCorrect1 :
-    forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
+Hypothesis codeArityFIsCorrect1 :
+  forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
 
-Hypothesis
-  codeArityFIsCorrect2 :
-    forall n : nat, codeArityF n <> 0 -> exists f : Functions L, codeF f = n.
+Hypothesis codeArityFIsCorrect2 :
+    forall n : nat, codeArityF n <> 0 -> 
+                    exists f : Functions L, codeF f = n.
 
 Hypothesis codeArityRIsPR : isPR 1 codeArityR.
 
 Hypothesis
   codeArityRIsCorrect1 :
-    forall r : Relations L, codeArityR (codeR r) = S (arity L (inl _ r)).
+    forall r : Relations L, codeArityR (codeR r) = 
+                              S (arity L (inl _ r)).
 
 Hypothesis
   codeArityRIsCorrect2 :
-    forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.
+    forall n : nat, codeArityR n <> 0 -> 
+                    exists r : Relations L, codeR r = n.
 
-Hypothesis codeFInj : forall f g : Functions L, codeF f = codeF g -> f = g.
+Hypothesis codeFInj : forall f g : Functions L, 
+    codeF f = codeF g -> f = g.
 
-Hypothesis codeRInj : forall R S : Relations L, codeR R = codeR S -> R = S.
+Hypothesis codeRInj : 
+  forall R S : Relations L, codeR R = codeR S -> R = S.
+
+(* end snippet context2 *)
 
 Let Term := Term L.
 Let Terms := Terms L.
@@ -76,7 +80,7 @@ However making this assumption makes the proof easier *)
 (* p is (cPair (formula) (proof of the Formula)) *)
 
 Definition checkPrfAXM (p recs : nat) :=
-  switchPR (charFunction 2 Nat.eqb (cdr (cdr p)) (car p))
+  switchPR (charFunction 2 Nat.eqb (cddr p) (car p))
     (S (S (cPair (car p) 0))) 0.
 
 Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
@@ -87,22 +91,23 @@ Proof.
     with
     (g := fun p : nat =>
             switchPR
-              (charFunction 2 Nat.eqb (cdr (cdr p)) (car p))
+              (charFunction 2 Nat.eqb (cddr p) (car p))
               (S (S (cPair (car p) 0))) 0).
   apply
     compose1_3IsPR
     with
     (f1 := fun p : nat =>
-             charFunction 2 Nat.eqb (cdr (cdr p)) (car p))
+             charFunction 2 Nat.eqb (cddr p) (car p))
     (f2 := fun p : nat => S (S (cPair (car p) 0)))
     (f3 := fun p : nat => 0).
-  - apply compose1_2IsPR with (f := fun p : nat => cdr (cdr p)).
+  - apply compose1_2IsPR with (f := fun p : nat => cddr p).
     + apply compose1_1IsPR.
       * apply cPairPi2IsPR.
       * apply cPairPi2IsPR.
     + apply cPairPi1IsPR.
     + apply eqIsPR.
-  - apply compose1_1IsPR with (f := fun p : nat => S (cPair (car p) 0)).
+  - apply compose1_1IsPR with 
+      (f := fun p : nat => S (cPair (car p) 0)).
     + apply compose1_1IsPR with (f := fun p : nat => cPair (car p) 0).
       * apply compose1_2IsPR with (f' := fun p : nat => 0).
         -- apply cPairPi1IsPR.
@@ -120,7 +125,7 @@ Definition checkPrfMP (p recs : nat) :=
      (charFunction 2 Nat.eqb (car (car (cdr (cdr p))))
         (codeImp (car (cdr (cdr (cdr p)))) (car p)) *
       (codeNth (p - S (car (cdr (cdr p)))) recs *
-       codeNth (p - S (cdr (cdr (cdr p)))) recs)))
+       codeNth (p - S (cdddr p)) recs)))
     (S
        (codeApp
           (pred (codeNth (p - S (car (cdr (cdr p)))) recs))
@@ -149,7 +154,7 @@ Proof.
     (f3 := fun p recs : nat => 0).
   - apply compose2_2IsPR with
     (f := fun p recs : nat =>
-          wellFormedFormula (car (cdr (cdr (cdr p)))))
+          wellFormedFormula (car (cdddr p)))
     (g := fun p recs : nat =>
           charFunction 2 Nat.eqb
             (car (car (cdr (cdr p))))
@@ -160,14 +165,14 @@ Proof.
     + apply filter10IsPR with
         (g := 
            fun p : nat =>
-             wellFormedFormula (car (cdr (cdr (cdr p))))).
+             wellFormedFormula (car (cdddr p))).
       apply
         compose1_1IsPR
         with (f := fun p : nat => car (cdr (cdr (cdr p)))).
       * apply compose1_1IsPR with
-          (f := fun p : nat => cdr (cdr (cdr p))).
+          (f := fun p : nat => cdddr p).
         -- apply compose1_1IsPR with 
-             (f := fun p : nat => cdr (cdr p)).
+             (f := fun p : nat => cddr p).
            ++ apply compose1_1IsPR; apply cPairPi2IsPR.
            ++ apply cPairPi2IsPR.
         -- apply cPairPi1IsPR.
@@ -1807,7 +1812,9 @@ Qed.
 Definition checkPrf (f p : nat) : nat :=
   switchPR (wellFormedFormula f) (checkPrfHelp (cPair f p)) 0.
 
+(* begin snippet checkPrfIsPR:: no-out *)
 Lemma checkPrfIsPR : isPR 2 checkPrf.
+(* end snippet checkPrfIsPR *)
 Proof.
   unfold checkPrf; apply compose2_3IsPR with
     (f1 := fun f p : nat => wellFormedFormula f)
@@ -1825,9 +1832,11 @@ Proof.
   - apply switchIsPR.
 Qed.
 
+(* begin snippet checkPrfCorrect1:: no-out *)
 Lemma checkPrfCorrect1 (l : list Formula) (f : Formula) (p : Prf l f):
- checkPrf (codeFormula L codeF codeR f) (codePrf L codeF codeR l f p) =
- S (codeList (map (codeFormula L codeF codeR) l)).
+ checkPrf (codeFormula L codeF codeR f) (codePrf L codeF codeR l f p) 
+ =  S (codeList (map (codeFormula L codeF codeR) l)).
+(* end snippet checkPrfCorrect1 *)
 Proof.
   unfold checkPrf;
     rewrite
@@ -2262,14 +2271,16 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
       * reflexivity.
 Qed.
 
-Lemma checkPrfCorrect2 :
- forall n m : nat,
+(* begin snippet checkPrfCorrect2:: no-out *)
+Lemma checkPrfCorrect2 (n m : nat):
  checkPrf n m <> 0 ->
  exists f : Formula,
    codeFormula L codeF codeR f = n /\
    (exists l : list Formula,
       (exists p : Prf l f, codePrf L codeF codeR l f p = m)).
+(* end snippet checkPrfCorrect2:: no-out *)
 Proof.
+  revert n m;
   assert (multLemma1 : forall a b : nat, a * b <> 0 -> a <> 0).
   { intros a b H H0; apply H; rewrite H0;  reflexivity. }
   assert (multLemma2 : forall a b : nat, a * b <> 0 -> b <> 0).
