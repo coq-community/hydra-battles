@@ -141,6 +141,7 @@ theories/ordinals/MoreAck/LNN_notations.v
 theories/ordinals/MoreAck/FOL_notations.v
 theories/ordinals/MoreAck/folPeirce.v
 theories/ordinals/MoreAck/drinkers.v
+theories/ordinals/MoreAck/folExample2.v
 
 theories/ordinals/solutions_exercises/MinPR.v
 theories/ordinals/solutions_exercises/MinPR2.v

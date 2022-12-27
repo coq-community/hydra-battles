@@ -1,6 +1,8 @@
 \chapter{First Order Logic (in construction)}
 \label{chap:fol}
 
+\section{Introduction}
+
 \section{Data types}
 
 \subsection{Languages}
@@ -9,6 +11,19 @@ A \emph{language} is a structure composed of relation and function symbols, each
 
 From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 \inputsnippets{fol/LanguageDef} 
+
+\subsubsection{A toy language}
+In order to show a few simple examples of statements and proofs, we define a small language with very few symbols:
+two constant symbols: $a$ and $b$, a function symbol $f$ (of arity 1), three propositional symbols $A$, $B$ and $C$, a one-place predicate symbol $P$, and a binary relational symbol $R$.
+
+\inputsnippets{folExample2/ToyDef}
+
+\subsubsection{Languages for Arithmetic}
+
+
+
+
+
 
 In ~\href{../theories/html/hydras.Ackermann.Languages.html}{Ackermann.Languages}, we can find two examples of languages built with the usual symbols of arithmetic.
 
@@ -36,9 +51,40 @@ Let us show a few examples (from ~\href{../theories/html/hydras.MoreAck.fol_Exam
 \subsection{Terms}
 
 Given a language $L$, we define the set of \emph{terms} and
-$n$-\emph{tuples} of terms.
+$n$-\emph{tuples} of terms. 
+
+
 
 \inputsnippets{fol/TermDef} 
+
+
+\begin{remark}[Variables]
+In O'Connor's formalization of first-order logic, the variables are \gallina terms of the form \texttt{var $L$ $i$}, where $L$ is
+ a language and $i$ a natural number. 
+Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scipts which use this representation (please look at \cite{OConnor05} for a related discussion).
+  
+\end{remark}
+\subsubsection{Examples}
+
+With our toy language, we can build the following terms, respectively written $a$, $f(a)$ and $f(f(v_1))$ in usual mathematical notation. 
+
+Writing these terms in bare \gallina syntax would result in quite clumsy scripts. Thus, we may use a still experimental notation scope which allows us to write/print terms and formulas in a 
+notation similar to \coq's.
+
+
+
+
+
+We put both the associated \coq{} terms, in bare \gallina{} syntax, and with a still experimental and provisional notation, defined in
+~\href{../theories/html/hydras.MoreAck.FOL_notations.html}{MoreAck.FOL\_notations}).
+
+
+
+\inputsnippets{folExample2/toyNotation}
+
+\inputsnippets{folExample2/smallTerms}
+
+
 
 
 For instance the term $v_1+0$, where $v_1$ is a variable,
@@ -78,6 +124,10 @@ Let us give a few examples of first-order formulas.
 \end{enumerate}
 \inputsnippets{fol_Examples/f1Example}
 
+
+\begin{remark}[bound variables]
+\inputsnippets{folExample2/boundVars}  
+\end{remark}
 
 
 \begin{todo}
