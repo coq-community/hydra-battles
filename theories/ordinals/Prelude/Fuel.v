@@ -34,7 +34,7 @@ Qed.
   Function zero (n:nat)  {wf lt n} : nat :=
     match n with
       0 => 0
-    | p => zero (Nat.div2 p)
+    | _ => zero (Nat.div2 n)
     end.
   Proof.
     intros;  apply PeanoNat.Nat.lt_div2; auto with arith.
@@ -70,7 +70,7 @@ Compute Acc_intro_generator 2 lt_wf  42.
 Function zero' (n:nat)  {wf lt n} : nat :=
   match n with
     0 => 0
-  | p => zero' (Nat.div2 p)
+  | _ => zero' (Nat.div2 n)
   end.
 Proof.
   intros; apply PeanoNat.Nat.lt_div2;  auto with arith.
