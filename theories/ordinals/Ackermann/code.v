@@ -1,3 +1,5 @@
+(** * Encoding terms, formulas and proofs *)
+
 Require Import Arith.
 Require Import fol.
 Require Import folProof.
@@ -8,8 +10,10 @@ Section Code_Term_Formula_Proof.
 Variable L : Language.
 Variable codeF : Functions L -> nat.
 Variable codeR : Relations L -> nat.
-Hypothesis codeFInj : forall f g : Functions L, codeF f = codeF g -> f = g.
-Hypothesis codeRInj : forall R S : Relations L, codeR R = codeR S -> R = S.
+Hypothesis codeFInj : 
+  forall f g : Functions L, codeF f = codeF g -> f = g.
+Hypothesis codeRInj :
+  forall R S : Relations L, codeR R = codeR S -> R = S.
 
 Let Formula := Formula L.
 Let Formulas := Formulas L.
@@ -43,98 +47,62 @@ Fixpoint codeTerm (t : Term) : nat :=
   | Tcons n t ss => S (cPair (codeTerm t) (codeTerms n ss))
   end.
 
-Lemma codeTermInj : forall t s : Term, codeTerm t = codeTerm s -> t = s.
+Lemma codeTermInj : 
+  forall t s : Term, codeTerm t = codeTerm s -> t = s.
 Proof.
-intro.
-elim t using
- Term_Terms_ind
-  with
-    (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           forall ss : Terms n, codeTerms n ts = codeTerms n ss -> ts = ss).
-intros.
-destruct s.
-simpl in H.
-replace n with n0.
-auto.
-eapply cPairInj2.
-symmetry  in |- *.
-apply H.
-simpl in H.
-assert (0 = S (codeF f)).
-eapply cPairInj1.
-apply H.
-discriminate H0.
-intros.
-destruct s.
-simpl in H0.
-assert (S (codeF f) = 0).
-eapply cPairInj1.
-apply H0.
-discriminate H1.
-simpl in H0.
-assert (f = f0).
-apply codeFInj.
-apply eq_add_S.
-eapply cPairInj1.
-apply H0.
-cut
- (cPair (S (codeF f)) (codeTerms (arity L (inr (Relations L) f)) t0) =
-  cPair (S (codeF f0)) (codeTerms (arity L (inr (Relations L) f0)) t1)).
-generalize t1.
-rewrite <- H1.
-clear H1 H0 t1.
-intros.
-rewrite (H t1).
-reflexivity.
-eapply cPairInj2.
-apply H0.
-apply H0.
-intros.
-rewrite <- nilTerms.
-reflexivity.
-intros.
-induction (consTerms L n ss).
-induction x as (a, b).
-simpl in p.
-rewrite <- p.
-rewrite <- p in H1.
-simpl in H1.
-rewrite (H a).
-rewrite (H0 b).
-reflexivity.
-eapply cPairInj2.
-apply eq_add_S.
-apply H1.
-eapply cPairInj1.
-apply eq_add_S.
-apply H1.
+  intro t; elim t using Term_Terms_ind
+    with (P0 := fun (n : nat) (ts : fol.Terms L n) =>
+                  forall ss : Terms n, 
+                    codeTerms n ts = codeTerms n ss -> ts = ss).
+  - (* variables *) intros n s H; destruct s.
+    + simpl in H; apply cPairInj2 in H; now subst. 
+    + simpl in H.
+      assert (H0: 0 = S (codeF f)) by (eapply cPairInj1; apply H). 
+      discriminate H0.
+  - (* applications *) intros f t0 H s H0; destruct s.
+    + simpl in H0.
+      assert (H1: S (codeF f) = 0) by (eapply cPairInj1; apply H0).
+      discriminate H1.
+    + simpl in H0; assert (H1: f = f0). 
+       { apply codeFInj, eq_add_S; eapply cPairInj1; apply H0. }
+       cut
+         (cPair (S (codeF f)) (codeTerms (arity L (inr (Relations L) f)) t0) =
+            cPair (S (codeF f0)) 
+              (codeTerms (arity L (inr (Relations L) f0)) t1)).
+       * generalize t1; rewrite <- H1; clear H1 H0 t1.
+         intros t1 H0; rewrite (H t1).
+         -- reflexivity.
+         -- eapply cPairInj2.
+            apply H0.
+       * apply H0.
+  - (* empty sequence *)  intros ss H; rewrite <- nilTerms; reflexivity.
+  - (* non-empty sequence *)
+    intros n t0 H t1 H0 ss H1; induction (consTerms L n ss).
+    destruct x as (a, b); simpl in p; rewrite <- p.
+    rewrite <- p in H1; simpl in H1; rewrite (H a).
+    + rewrite (H0 b).
+      * reflexivity.
+      * eapply cPairInj2; apply eq_add_S, H1. 
+    + eapply cPairInj1.
+      apply eq_add_S, H1.
 Qed.
 
 Lemma codeTermsInj :
  forall (n : nat) (ts ss : Terms n),
  codeTerms n ts = codeTerms n ss -> ts = ss.
 Proof.
-intros n ts.
-induction ts as [| n t ts Hrects].
-intros.
-rewrite <- (nilTerms L ss).
-reflexivity.
-intros.
-induction (consTerms L n ss).
-induction x as (a, b).
-simpl in p.
-rewrite <- p.
-rewrite <- p in H.
-simpl in H.
-rewrite (Hrects b).
-rewrite (codeTermInj t a).
-reflexivity.
-eapply cPairInj1.
-apply eq_add_S.
-apply H.
-eapply cPairInj2.
-apply eq_add_S.
-apply H.
+  intros n ts; induction ts as [| n t ts Hrects].
+  - intros ss H; now rewrite <- (nilTerms L ss).
+  - intros ss H.
+    destruct (consTerms L n ss) as [(a,b) p].
+    simpl in p; rewrite <- p in H |- *. 
+    rewrite (Hrects b).
+    + rewrite (codeTermInj t a).
+      * reflexivity.
+      * eapply cPairInj1.
+        apply eq_add_S, H. 
+    + eapply cPairInj2.
+      apply eq_add_S, H. 
 Qed.
 
 Fixpoint codeFormula (f : Formula) : nat :=
@@ -146,73 +114,72 @@ Fixpoint codeFormula (f : Formula) : nat :=
   | fol.atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
   end.
 
+
 Lemma codeFormulaInj :
- forall f g : Formula, codeFormula f = codeFormula g -> f = g.
+  forall f g : Formula, codeFormula f = codeFormula g -> f = g.
 Proof.
-intro.
-induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
- [ destruct g as [t1 t2| r t1| f f0| f| n f]
- | destruct g as [t0 t1| r0 t0| f f0| f| n f]
- | destruct g as [t t0| r t| f f2| f| n f]
- | destruct g as [t t0| r t| f0 f1| f0| n f0]
- | destruct g as [t t0| r t| f0 f1| f0| n0 f0] ];
- (simpl in H;
-   try
-    match goal with
-    | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-        elimtype False; cut (X1 = X3);
-         [ discriminate | eapply cPairInj1; apply h ]
-    end).
-rewrite (codeTermInj t t1).
-rewrite (codeTermInj t0 t2).
-reflexivity.
-eapply cPairInj2.
-eapply cPairInj2.
-apply H.
-eapply cPairInj1.
-eapply cPairInj2.
-apply H.
-assert (r = r0).
-apply codeRInj.
-do 4 apply eq_add_S.
-eapply cPairInj1.
-apply H.
-cut
- (cPair (S (S (S (S (codeR r)))))
-    (codeTerms (arity L (inl (Functions L) r)) t) =
-  cPair (S (S (S (S (codeR r0)))))
-    (codeTerms (arity L (inl (Functions L) r0)) t0)).
-generalize t0.
-rewrite <- H0.
-clear H0 H t0.
-intros.
-rewrite (codeTermsInj _ t t0).
-reflexivity.
-eapply cPairInj2.
-apply H.
-apply H.
-rewrite (Hrecf1 f).
-rewrite (Hrecf0 f2).
-reflexivity.
-eapply cPairInj2.
-eapply cPairInj2.
-apply H.
-eapply cPairInj1.
-eapply cPairInj2.
-apply H.
-rewrite (Hrecf f0).
-reflexivity.
-eapply cPairInj2.
-apply H.
-rewrite (Hrecf f0).
-replace n0 with n.
-reflexivity.
-eapply cPairInj1.
-eapply cPairInj2.
-apply H.
-eapply cPairInj2.
-eapply cPairInj2.
-apply H.
+  intro f; 
+    induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
+    [ destruct g as [t1 t2| r t1| f f0| f| n f]
+    | destruct g as [t0 t1| r0 t0| f f0| f| n f]
+    | destruct g as [t t0| r t| f f2| f| n f]
+    | destruct g as [t t0| r t| f0 f1| f0| n f0]
+    | destruct g as [t t0| r t| f0 f1| f0| n0 f0] ];
+    (simpl in H;
+     try
+       match goal with
+       | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
+           elimtype False; cut (X1 = X3);
+           [ discriminate | eapply cPairInj1; apply h ]
+       end).
+  - (* equality between terms *) 
+    rewrite (codeTermInj t t1).
+    + rewrite (codeTermInj t0 t2).
+      * reflexivity.
+      * eapply cPairInj2.
+        eapply cPairInj2.
+        apply H.
+    + eapply cPairInj1.
+      eapply cPairInj2.
+      apply H.
+  - (* atomic formulas *) assert (r = r0).
+    { apply codeRInj.
+      do 4 apply eq_add_S.
+      eapply cPairInj1.
+      apply H.
+    } 
+    cut  (cPair (S (S (S (S (codeR r)))))
+            (codeTerms (arity L (inl (Functions L) r)) t) =
+            cPair (S (S (S (S (codeR r0)))))
+              (codeTerms (arity L (inl (Functions L) r0)) t0)).
+    + generalize t0; rewrite <- H0; clear H0 H t0.
+      intros t0 H; rewrite (codeTermsInj _ t t0).
+      * reflexivity.
+      * eapply cPairInj2; apply H.
+    + apply H.
+  - (* implication *)
+    rewrite (Hrecf1 f).
+    + rewrite (Hrecf0 f2).
+      * reflexivity.
+      * eapply cPairInj2.
+        eapply cPairInj2.
+        apply H.
+    + eapply cPairInj1.
+      eapply cPairInj2; apply H.
+  - (* negation *) rewrite (Hrecf f0).
+    reflexivity.
+    eapply cPairInj2.
+    apply H.
+  - (* universal quantification *) 
+    rewrite (Hrecf f0).
+    + replace n0 with n.
+      * reflexivity.
+      * eapply cPairInj1.
+        eapply cPairInj2.
+        apply H.
+    + eapply cPairInj2.
+      eapply cPairInj2.
+      apply H.
 Qed.
 
 Fixpoint codePrf (Z : Formulas) (f : Formula) (prf : Prf Z f) {struct prf} :
@@ -244,275 +211,273 @@ Lemma codePrfInjAxm :
  forall (a b : Formula) (A B : Formulas) (p : Prf A a) (q : Prf B b),
  codePrf A a p = codePrf B b q -> A = B.
 Proof.
-intros a b A B p.
-generalize B b.
-clear B b.
-induction p
- as
-  [A|
-   Axm1 Axm2 A B p1 Hrecp1 p0 Hrecp0|
-   Axm A v n p Hrecp|
-   A B|
-   A B C|
-   A B|
-   A v t|
-   A v n|
-   A B v|
-   |
-   |
-   |
-   R|
-   f]; intros;
- [ destruct q
+  intros a b A B p; generalize B b; clear B b.
+  induction p
     as
-     [A0|
-      Axm1 Axm2 A0 B p p0|
-      Axm A0 v n p|
-      A0 B|
-      A0 B C|
-      A0 B|
-      A0 v t|
-      A0 v n|
-      A0 B v|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm0 Axm3 A0 B0 p p2|
-      Axm A0 v n p|
-      A0 B0|
-      A0 B0 C|
-      A0 B0|
-      A0 v t|
-      A0 v n|
-      A0 B0 v|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B p0 p1|
-      Axm0 A0 v0 n0 p0|
-      A0 B|
-      A0 B C|
-      A0 B|
-      A0 v0 t|
-      A0 v0 n0|
-      A0 B v0|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B0 p p0|
-      Axm A0 v n p|
-      A0 B0|
-      A0 B0 C|
-      A0 B0|
-      A0 v t|
-      A0 v n|
-      A0 B0 v|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B0 p p0|
-      Axm A0 v n p|
-      A0 B0|
-      A0 B0 C0|
-      A0 B0|
-      A0 v t|
-      A0 v n|
-      A0 B0 v|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B0 p p0|
-      Axm A0 v n p|
-      A0 B0|
-      A0 B0 C|
-      A0 B0|
-      A0 v t|
-      A0 v n|
-      A0 B0 v|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B p p0|
-      Axm A0 v0 n p|
-      A0 B|
-      A0 B C|
-      A0 B|
-      A0 v0 t0|
-      A0 v0 n|
-      A0 B v0|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B p p0|
-      Axm A0 v0 n0 p|
-      A0 B|
-      A0 B C|
-      A0 B|
-      A0 v0 t|
-      A0 v0 n0|
-      A0 B v0|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A0|
-      Axm1 Axm2 A0 B0 p p0|
-      Axm A0 v0 n p|
-      A0 B0|
-      A0 B0 C|
-      A0 B0|
-      A0 v0 t|
-      A0 v0 n|
-      A0 B0 v0|
-      |
-      |
-      |
-      R|
-      f]
- | destruct q
-    as
-     [A|
-      Axm1 Axm2 A B p p0|
-      Axm A v n p|
+    [A|
+      Axm1 Axm2 A B p1 Hrecp1 p0 Hrecp0|
+      Axm A v n p Hrecp|
       A B|
       A B C|
       A B|
       A v t|
       A v n|
       A B v|
-      |
-      |
-      |
+    |
+    |
+    |
       R|
-      f]
- | destruct q
-    as
-     [A|
-      Axm1 Axm2 A B p p0|
-      Axm A v n p|
-      A B|
-      A B C|
-      A B|
-      A v t|
-      A v n|
-      A B v|
+      f]; intros;
+    [ destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B p p0|
+        Axm A0 v n p|
+        A0 B|
+        A0 B C|
+        A0 B|
+        A0 v t|
+        A0 v n|
+        A0 B v|
       |
       |
       |
-      R|
-      f]
- | destruct q
-    as
-     [A|
-      Axm1 Axm2 A B p p0|
-      Axm A v n p|
-      A B|
-      A B C|
-      A B|
-      A v t|
-      A v n|
-      A B v|
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm0 Axm3 A0 B0 p p2|
+        Axm A0 v n p|
+        A0 B0|
+        A0 B0 C|
+        A0 B0|
+        A0 v t|
+        A0 v n|
+        A0 B0 v|
       |
       |
       |
-      R|
-      f]
- | destruct q
-    as
-     [A|
-      Axm1 Axm2 A B p p0|
-      Axm A v n p|
-      A B|
-      A B C|
-      A B|
-      A v t|
-      A v n|
-      A B v|
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B p0 p1|
+        Axm0 A0 v0 n0 p0|
+        A0 B|
+        A0 B C|
+        A0 B|
+        A0 v0 t|
+        A0 v0 n0|
+        A0 B v0|
       |
       |
       |
-      R0|
-      f]
- | destruct q
-    as
-     [A|
-      Axm1 Axm2 A B p p0|
-      Axm A v n p|
-      A B|
-      A B C|
-      A B|
-      A v t|
-      A v n|
-      A B v|
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B0 p p0|
+        Axm A0 v n p|
+        A0 B0|
+        A0 B0 C|
+        A0 B0|
+        A0 v t|
+        A0 v n|
+        A0 B0 v|
       |
       |
       |
-      R|
-      f0] ];
- (simpl in H;
-   try
-    match goal with
-    | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-        elimtype False; cut (X1 = X3);
-         [ discriminate | eapply cPairInj1; apply h ]
-    end); try reflexivity.
-replace A0 with A.
-reflexivity.
-apply codeFormulaInj.
-eapply cPairInj2.
-apply H.
-replace Axm0 with Axm1.
-replace Axm3 with Axm2.
-reflexivity.
-eapply Hrecp0 with A0 p2.
-do 3 eapply cPairInj2.
-apply H.
-eapply Hrecp1 with (fol.impH L A0 B0) p.
-eapply cPairInj2.
-eapply cPairInj1.
-eapply cPairInj2.
-apply H.
-eapply Hrecp with A0 p0.
-do 3 eapply cPairInj2.
-apply H.
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B0 p p0|
+        Axm A0 v n p|
+        A0 B0|
+        A0 B0 C0|
+        A0 B0|
+        A0 v t|
+        A0 v n|
+        A0 B0 v|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B0 p p0|
+        Axm A0 v n p|
+        A0 B0|
+        A0 B0 C|
+        A0 B0|
+        A0 v t|
+        A0 v n|
+        A0 B0 v|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B p p0|
+        Axm A0 v0 n p|
+        A0 B|
+        A0 B C|
+        A0 B|
+        A0 v0 t0|
+        A0 v0 n|
+        A0 B v0|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B p p0|
+        Axm A0 v0 n0 p|
+        A0 B|
+        A0 B C|
+        A0 B|
+        A0 v0 t|
+        A0 v0 n0|
+        A0 B v0|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A0|
+        Axm1 Axm2 A0 B0 p p0|
+        Axm A0 v0 n p|
+        A0 B0|
+        A0 B0 C|
+        A0 B0|
+        A0 v0 t|
+        A0 v0 n|
+        A0 B0 v0|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A|
+        Axm1 Axm2 A B p p0|
+        Axm A v n p|
+        A B|
+        A B C|
+        A B|
+        A v t|
+        A v n|
+        A B v|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A|
+        Axm1 Axm2 A B p p0|
+        Axm A v n p|
+        A B|
+        A B C|
+        A B|
+        A v t|
+        A v n|
+        A B v|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A|
+        Axm1 Axm2 A B p p0|
+        Axm A v n p|
+        A B|
+        A B C|
+        A B|
+        A v t|
+        A v n|
+        A B v|
+      |
+      |
+      |
+        R|
+        f]
+    | destruct q
+      as
+      [A|
+        Axm1 Axm2 A B p p0|
+        Axm A v n p|
+        A B|
+        A B C|
+        A B|
+        A v t|
+        A v n|
+        A B v|
+      |
+      |
+      |
+        R0|
+        f]
+    | destruct q
+      as
+      [A|
+        Axm1 Axm2 A B p p0|
+        Axm A v n p|
+        A B|
+        A B C|
+        A B|
+        A v t|
+        A v n|
+        A B v|
+      |
+      |
+      |
+        R|
+        f0] ];
+    (simpl in H;
+     try
+       match goal with
+       | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
+           elimtype False; cut (X1 = X3);
+           [ discriminate | eapply cPairInj1; apply h ]
+       end); try reflexivity.
+  replace A0 with A.
+  reflexivity.
+  apply codeFormulaInj.
+  eapply cPairInj2.
+  apply H.
+  replace Axm0 with Axm1.
+  replace Axm3 with Axm2.
+  reflexivity.
+  eapply Hrecp0 with A0 p2.
+  do 3 eapply cPairInj2.
+  apply H.
+  eapply Hrecp1 with (fol.impH L A0 B0) p.
+  eapply cPairInj2.
+  eapply cPairInj1.
+  eapply cPairInj2.
+  apply H.
+  eapply Hrecp with A0 p0.
+  do 3 eapply cPairInj2.
+  apply H.
 Qed.
 
 Definition codeImp (a b : nat) := cPair 1 (cPair a b).
@@ -520,17 +485,13 @@ Definition codeImp (a b : nat) := cPair 1 (cPair a b).
 Lemma codeImpCorrect :
  forall a b : Formula,
  codeImp (codeFormula a) (codeFormula b) = codeFormula (impH a b).
-Proof.
-auto.
-Qed.
+Proof. intros; reflexivity. Qed.
 
 Definition codeNot (a : nat) := cPair 2 a.
 
 Lemma codeNotCorrect :
  forall a : Formula, codeNot (codeFormula a) = codeFormula (notH a).
-Proof.
-auto.
-Qed.
+Proof. intros; reflexivity. Qed.
 
 Definition codeForall (n a : nat) := cPair 3 (cPair n a).
 
@@ -538,34 +499,27 @@ Lemma codeForallCorrect :
  forall (n : nat) (a : Formula),
  codeForall n (codeFormula a) = codeFormula (forallH n a).
 Proof.
-auto.
-Qed.
+ intros; reflexivity. Qed.
 
 Definition codeOr (a b : nat) := codeImp (codeNot a) b.
 
 Lemma codeOrCorrect :
  forall a b : Formula,
  codeOr (codeFormula a) (codeFormula b) = codeFormula (orH a b).
-Proof.
-auto.
-Qed.
+Proof. intros; reflexivity. Qed. 
 
 Definition codeAnd (a b : nat) := codeNot (codeOr (codeNot a) (codeNot b)).
 
 Lemma codeAndCorrect :
  forall a b : Formula,
  codeAnd (codeFormula a) (codeFormula b) = codeFormula (andH a b).
-Proof.
-auto.
-Qed.
+Proof. intros; reflexivity. Qed. 
 
 Definition codeIff (a b : nat) := codeAnd (codeImp a b) (codeImp b a).
 
 Lemma codeIffCorrect :
  forall a b : Formula,
  codeIff (codeFormula a) (codeFormula b) = codeFormula (iffH a b).
-Proof.
-auto.
-Qed.
+Proof. intros; reflexivity. Qed.
 
 End Code_Term_Formula_Proof.

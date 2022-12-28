@@ -935,6 +935,7 @@ Qed.
 Module LispAbbreviations.
   #[global] Notation car n := (cPairPi1 n). 
   #[global] Notation caar n := (cPairPi1 (cPairPi1 n)). 
+  #[global] Notation cadr n := (cPairPi1 (cPairPi2 n)). 
 
   #[global] Notation cdr n := (cPairPi2 n). 
   #[global] Notation cddr n := (cPairPi2 (cPairPi2 n)). 
