@@ -30,7 +30,7 @@ Proof.  left; auto with sets. Qed.
 Module Toy. 
   Inductive Rel: Set := _A | _B | _C | _P | _R.
   Inductive Fun : Set := _a | _b | _f. 
-
+ 
   Definition arity (x : Rel + Fun): nat := 
     match x with 
       inl _P => 1
