@@ -930,7 +930,7 @@ Proof.
       auto.
 Qed.
 
-(** abbrviations a la Lisp (to improve) *)
+(** abbreviations a la Lisp (to improve) *)
 
 Module LispAbbreviations.
   #[global] Notation car n := (cPairPi1 n). 
