@@ -39,12 +39,25 @@
   ## will be created per bundle
   bundles.default = {
 
-    ## You can override Coq and other Coq coqPackages
-    ## through the following attribute
-    coqPackages.coq.override.version = "8.14";
+    ## We build with Coq master, so for compatibility we also have to use
+    # the master branch of all the dependencies and transitive dependencies:
+    # bignums, coqprime, equations, gaia, LibHyps, mathcomp-algebra,
+    # mathcomp-ssreflect, mathcomp-zify, paramcoq, serapi
+    coqPackages.coq.override.version = "master";
+    coqPackages.bignums.override.version = "master";
+    coqPackages.coqprime.override.version = "master";
+    coqPackages.equations.override.version = "master";
+    coqPackages.gaia.override.version = "master";
+    coqPackages.LibHyps.override.version = "master";
+    coqPackages.mathcomp.override.version = "master";
+    coqPackages.mathcomp.job = false;
+    coqPackages.mathcomp-algebra.job = "mathcomp-algebra";
+    coqPackages.mathcomp-ssreflect.job = "mathcomp-ssreflect";
+    coqPackages.mathcomp-zify.override.version = "master";
+    coqPackages.paramcoq.override.version = "master";
+    coqPackages.serapi.override.version = "master";
     coqPackages.gaia-hydras.override.version = ../.;
     coqPackages.goedel.override.version = ../.;
-    coqPackages.coqprime.override.version = "master";
 
     ## In some cases, light overrides are not available/enough
     ## in which case you can use either
