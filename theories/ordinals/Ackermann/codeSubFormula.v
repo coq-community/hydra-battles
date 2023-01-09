@@ -519,273 +519,252 @@ elim f using Formula_depth_ind2.
                   apply cPairLe2.
                   apply cPairLe2.
                   apply le_n.
-  + symmetry  in |- *.
+  + symmetry;
     unfold makeTrace; rewrite (Formula_depth_rec2_imp L)
       with
       (Q := 
          fun _ : fol.Formula L =>
            (nat * fol.Term L)%type)
       (P := fun _ : fol.Formula L => nat).
-    unfold makeTraceImp at 1; reflexivity.
-    apply makeTraceImpNice.
-    apply makeTraceNotNice.
-    apply makeTraceForallNice.
+    * unfold makeTraceImp at 1; reflexivity.
+    * apply makeTraceImpNice.
+    * apply makeTraceNotNice.
+    * apply makeTraceForallNice.
 - intros f0 H v s; replace (makeTrace (notH L f0) (v, s)) with
     (cTriple (cTriple v (codeTerm s) (codeFormula (notH L f0)))
        (codeFormula (substituteFormula L (notH L f0) v s)) 
        (makeTrace f0 (v, s))).
-  unfold evalStrongRec in |- *.
-  unfold evalComposeFunc, evalOneParamList, evalList in |- *.
-  rewrite computeEvalStrongRecHelp.
-  unfold compose2 in |- *.
-  unfold evalComposeFunc, evalOneParamList, evalList in |- *.
-  simpl in |- *.
-  rewrite cPairProjections1.
-  unfold A at 1 in |- *;
+  + unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
+    rewrite computeEvalStrongRecHelp.
+    unfold compose2, evalComposeFunc, evalOneParamList, evalList.
+    simpl; rewrite cPairProjections1.
+    unfold A at 1 in |- *;
     repeat first
       [ rewrite cTripleProj1
       | rewrite cTripleProj2
       | rewrite cTripleProj3
       | rewrite cPairProjections1
       | rewrite cPairProjections2 ].
-  rewrite evalStrongRecHelp1 with (m := makeTrace f0 (v, s)).
-  simpl in |- *.
-  repeat rewrite makeTrace1.
-  repeat rewrite makeTrace2.
-  rewrite subFormulaNot.
-  rewrite H.
-  simpl in |- *.
-  repeat rewrite Nat.eqb_refl.
-  reflexivity.
-  apply Nat.le_lt_trans
+    rewrite evalStrongRecHelp1 with (m := makeTrace f0 (v, s)).
+    * simpl; repeat rewrite makeTrace1; repeat rewrite makeTrace2.
+      rewrite subFormulaNot, H; simpl; repeat rewrite Nat.eqb_refl; reflexivity.
+    * apply Nat.le_lt_trans with
+         (cPair (codeFormula (substituteFormula L (notH L f0) v s))
+            (makeTrace f0 (v, s))).
+      -- apply cPairLe2.
+      -- apply Nat.lt_le_trans with
+           (cPair 2
+              (cPair (codeFormula (substituteFormula L (notH L f0) v s))
+                 (makeTrace f0 (v, s)))).
+         ++ apply cPairLt2.
+         ++ unfold cTriple in |- *.
+            apply cPairLe3.
+            apply Nat.le_trans with (cPair 2 (codeFormula f0)).
+            ** apply cPairLe1.
+            ** apply Nat.le_trans with 
+                 (cPair (codeTerm s) (cPair 2 (codeFormula f0)));
+                 apply cPairLe2.
+            ** apply le_n.
+  +  symmetry; unfold makeTrace.
+     rewrite (Formula_depth_rec2_not L)  with
+       (Q := 
+          fun _ : fol.Formula L =>
+            (nat * fol.Term L)%type)
+       (P := fun _ : fol.Formula L => nat).
+     *  unfold makeTraceNot at 1 in |- *; reflexivity.
+     *  apply makeTraceImpNice.
+     *  apply makeTraceNotNice.
+     *  apply makeTraceForallNice.
+- intros v a H v0 s; replace (makeTrace (forallH L v a) (v0, s)) 
     with
-    (cPair (codeFormula (substituteFormula L (notH L f0) v s))
-       (makeTrace f0 (v, s))).
-  apply cPairLe2.
-  apply
-    Nat.lt_le_trans
-    with
-    (cPair 2
-       (cPair (codeFormula (substituteFormula L (notH L f0) v s))
-          (makeTrace f0 (v, s)))).
-  apply cPairLt2.
-  unfold cTriple in |- *.
-  apply cPairLe3.
-  apply Nat.le_trans with (cPair 2 (codeFormula f0)).
-  apply cPairLe1.
-  apply Nat.le_trans with (cPair (codeTerm s) (cPair 2 (codeFormula f0))).
-  apply cPairLe2.
-  apply cPairLe2.
-  apply le_n.
-  symmetry  in |- *.
-  unfold makeTrace in |- *.
-  rewrite
-    (Formula_depth_rec2_not L)
-    with
-    (Q := 
-       fun _ : fol.Formula L =>
-         (nat * fol.Term L)%type)
-    (P := fun _ : fol.Formula L => nat).
-  unfold makeTraceNot at 1 in |- *.
-  reflexivity.
-  apply makeTraceImpNice.
-  apply makeTraceNotNice.
-  apply makeTraceForallNice.
-- intros v a H v0 s; replace (makeTrace (forallH L v a) (v0, s)) with
     (makeTraceForall v a (fun (b : fol.Formula L) _ => makeTrace b) (v0, s)).
-  unfold evalStrongRec in |- *.
-  unfold evalComposeFunc, evalOneParamList, evalList in |- *.
-  rewrite computeEvalStrongRecHelp.
-  unfold compose2 in |- *.
-  unfold evalComposeFunc, evalOneParamList, evalList in |- *.
-  simpl in |- *.
-  rewrite cPairProjections1.
-  unfold makeTraceForall in |- *.
-  simpl in |- *.
-  rewrite (subFormulaForall L).
-  induction (eq_nat_dec v v0).
-  simpl in |- *.
-  unfold A at 1 in |- *;
-    repeat first
-      [ rewrite cTripleProj1
-      | rewrite cTripleProj2
-      | rewrite cTripleProj3
-      | rewrite cPairProjections1
-      | rewrite cPairProjections2 ].
-  replace (charFunction 2 Nat.eqb v0 v) with 1.
-  simpl in |- *.
-  rewrite Nat.eqb_refl.
-  reflexivity.
-  simpl in |- *.
-  rewrite a0.
-  rewrite Nat.eqb_refl.
-  reflexivity.
-  induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-  simpl in |- *.
-  unfold A at 1 in |- *;
-    repeat first
-      [ rewrite cTripleProj1
-      | rewrite cTripleProj2
-      | rewrite cTripleProj3
-      | rewrite cPairProjections1
-      | rewrite cPairProjections2 ].
-  replace (charFunction 2 Nat.eqb v0 v) with 0.
-  replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 1.
-  rewrite
-    evalStrongRecHelp1
-    with
-    (m := 
-       makeTrace a
-         (v,
-           var
-             (newVar
-                (v0 :: freeVarTerm L s ++ freeVarFormula L a)))).
-  rewrite
-    evalStrongRecHelp1
-    with
-    (m := 
-       makeTrace
-         (substituteFormula L a v
-            (var
-               (newVar
-                  (v0 :: freeVarTerm L s ++ freeVarFormula L a))))
-         (v0, s)).
-  replace
-    (codeNewVar
-       (S
-          (cPair v0
-             (codeApp (codeFreeVarTerm (codeTerm s))
-                (codeFreeVarFormula (codeFormula a)))))) with
-    (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
-  simpl in |- *.
-  repeat rewrite makeTrace1.
-  repeat rewrite makeTrace2.
-  repeat rewrite Nat.eqb_refl.
-  repeat rewrite H.
-  reflexivity.
-  eapply eqDepth.
-  symmetry  in |- *.
-  apply subFormulaDepth.
-  apply depthForall.
-  apply depthForall.
-  unfold codeTerm in |- *.
-  rewrite codeFreeVarTermCorrect.
-  unfold codeFormula in |- *.
-  rewrite codeFreeVarFormulaCorrect.
-  rewrite codeAppCorrect.
-  rewrite <- codeNewVarCorrect.
-  reflexivity.
-  generalize
-    (makeTrace
-       (substituteFormula L a v
-          (var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) 
-       (v0, s))
-      (makeTrace a (v, var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a))))
-      (cPair (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a))
-         (codeFormula
-            (substituteFormula L
-               (substituteFormula L a v
-                  (fol.var L
-                     (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) v0 s)))
-      (cTriple v0 (codeTerm s) (cPair 3 (cPair v (codeFormula a)))).
-  intros.
-  apply Nat.le_lt_trans with (cPair n0 n).
-  apply cPairLe2.
-  unfold cTriple in |- *.
-  apply Nat.lt_le_trans with (cPair 3 (cPair n0 n)).
-  apply cPairLt2.
-  apply Nat.le_trans with (cPair (cPair 3 n1) (cPair n0 n)).
-  apply cPairLe3.
-  apply cPairLe1.
-  apply le_n.
-  apply cPairLe2.
-  generalize
-    (makeTrace
-       (substituteFormula L a v
-          (var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) 
-       (v0, s))
-      (makeTrace a (v, var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a))))
-      (cPair (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a))
-         (codeFormula
-            (substituteFormula L
-               (substituteFormula L a v
-                  (fol.var L
-                     (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)))) v0 s)))
-      (cTriple v0 (codeTerm s) (cPair 3 (cPair v (codeFormula a)))).
-  intros n n0 n1 n2.
-  apply Nat.le_lt_trans with (cPair n0 n).
-  apply cPairLe1.
-  unfold cTriple in |- *.
-  apply Nat.lt_le_trans with (cPair 3 (cPair n0 n)).
-  apply cPairLt2.
-  apply Nat.le_trans with (cPair (cPair 3 n1) (cPair n0 n)).
-  apply cPairLe3.
-  apply cPairLe1.
-  apply le_n.
-  apply cPairLe2.
-  unfold codeTerm in |- *.
-  rewrite codeFreeVarTermCorrect.
-  rewrite codeInCorrect.
-  induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-  reflexivity.
-  elim b0; assumption.
-  simpl in |- *.
-  rewrite nat_eqb_false.
-  reflexivity.
-  auto.
-  simpl in |- *.
-  unfold A at 1 in |- *;
-    repeat first
-      [ rewrite cTripleProj1
-      | rewrite cTripleProj2
-      | rewrite cTripleProj3
-      | rewrite cPairProjections1
-      | rewrite cPairProjections2 ].
-  replace (charFunction 2 Nat.eqb v0 v) with 0.
-  replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 0.
-  rewrite evalStrongRecHelp1 with (m := makeTrace a (v0, s)).
-  simpl in |- *.
-  repeat rewrite makeTrace1.
-  repeat rewrite makeTrace2.
-  repeat rewrite Nat.eqb_refl.
-  repeat rewrite H.
-  reflexivity.
-  apply depthForall.
-  generalize (makeTrace a (v0, s))
-    (cPair v (codeFormula (substituteFormula L a v0 s)))
-    (cTriple v0 (codeTerm s) (cPair 3 (cPair v (codeFormula a)))).
-  intros n n0 n1.
-  unfold cTriple in |- *.
-  apply Nat.lt_le_trans with (cPair 3 n).
-  apply cPairLt2.
-  apply Nat.le_trans with (cPair (cPair 3 n0) n).
-  apply cPairLe3.
-  apply cPairLe1.
-  apply le_n.
-  apply cPairLe2.
-  unfold codeTerm in |- *.
-  rewrite codeFreeVarTermCorrect.
-  rewrite codeInCorrect.
-  induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-  elim b0; assumption.
-  reflexivity.
-  simpl in |- *.
-  rewrite nat_eqb_false.
-  reflexivity.
-  auto.
-  unfold makeTrace in |- *.
-  rewrite
-    (Formula_depth_rec2_forall L)
-    with
-    (Q := 
-       fun _ : fol.Formula L =>
-         (nat * fol.Term L)%type)
-    (P := fun _ : fol.Formula L => nat).
-  unfold makeTraceForall at 1 in |- *.
-  reflexivity.
-  apply makeTraceImpNice.
-  apply makeTraceNotNice.
-  apply makeTraceForallNice.
+  +  unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
+     rewrite computeEvalStrongRecHelp.
+     unfold compose2, evalComposeFunc, evalOneParamList, evalList;
+       simpl.
+     rewrite cPairProjections1;  unfold makeTraceForall; simpl.
+     rewrite (subFormulaForall L).
+     destruct (eq_nat_dec v v0) as [a0 | b].
+     * simpl; unfold A at 1;
+         repeat first
+           [ rewrite cTripleProj1
+           | rewrite cTripleProj2
+           | rewrite cTripleProj3
+           | rewrite cPairProjections1
+           | rewrite cPairProjections2 ].
+       replace (charFunction 2 Nat.eqb v0 v) with 1.
+       -- simpl; rewrite Nat.eqb_refl; reflexivity.
+       -- simpl; now rewrite a0, Nat.eqb_refl.
+     *   induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | b0].
+         -- simpl; unfold A at 1;
+              repeat first
+                [ rewrite cTripleProj1
+                | rewrite cTripleProj2
+                | rewrite cTripleProj3
+                | rewrite cPairProjections1
+                | rewrite cPairProjections2 ].
+            replace (charFunction 2 Nat.eqb v0 v) with 0.
+            replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 1.
+            ++  rewrite evalStrongRecHelp1 with
+                  (m := 
+                     makeTrace a
+                       (v,
+                         var
+                           (newVar
+                              (v0 :: freeVarTerm L s ++ freeVarFormula L a)))).
+                ** rewrite evalStrongRecHelp1 with
+                     (m := 
+                        makeTrace
+                          (substituteFormula L a v
+                             (var
+                                (newVar
+                                   (v0 :: freeVarTerm L s ++ 
+                                      freeVarFormula L a))))
+                          (v0, s)).
+                   replace
+                     (codeNewVar
+                        (S
+                           (cPair v0
+                              (codeApp (codeFreeVarTerm (codeTerm s))
+                                 (codeFreeVarFormula (codeFormula a)))))) 
+                     with
+                     (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+                   simpl; repeat rewrite makeTrace1.
+                   repeat rewrite makeTrace2.
+                   repeat rewrite Nat.eqb_refl.
+                   repeat rewrite H.
+                   reflexivity.
+                   eapply eqDepth.
+                   symmetry  in |- *.
+                   apply subFormulaDepth.
+                   apply depthForall.
+                   apply depthForall.
+                   unfold codeTerm; rewrite codeFreeVarTermCorrect.
+                   unfold codeFormula in |- *.
+                   rewrite codeFreeVarFormulaCorrect.
+                   rewrite codeAppCorrect.
+                   rewrite <- codeNewVarCorrect.
+                   reflexivity.
+                   generalize
+                     (makeTrace
+                        (substituteFormula L a v
+                           (var (newVar (v0 :: freeVarTerm L s ++ 
+                                           freeVarFormula L a)))) 
+                        (v0, s))
+                       (makeTrace a (v, var (newVar 
+                                               (v0 :: freeVarTerm L s ++ 
+                                                  freeVarFormula L a))))
+                       (cPair (newVar (v0 :: freeVarTerm L s ++ 
+                                         freeVarFormula L a))
+                          (codeFormula
+                             (substituteFormula L
+                                (substituteFormula L a v
+                                   (fol.var L
+                                      (newVar (v0 :: freeVarTerm L s ++ 
+                                                 freeVarFormula L a)))) v0 s)))
+                       (cTriple v0 (codeTerm s) 
+                          (cPair 3 (cPair v (codeFormula a)))).
+                   intros n n0 n1 n2.
+                   apply Nat.le_lt_trans with (cPair n0 n).
+                   apply cPairLe2.
+                   unfold cTriple in |- *.
+                   apply Nat.lt_le_trans with (cPair 3 (cPair n0 n)).
+                   apply cPairLt2.
+                   apply Nat.le_trans with (cPair (cPair 3 n1) (cPair n0 n)).
+                   apply cPairLe3.
+                   apply cPairLe1.
+                   apply le_n.
+                   apply cPairLe2.
+                ** generalize
+                    (makeTrace
+                       (substituteFormula L a v
+                          (var (newVar (v0 :: freeVarTerm L s ++ 
+                                          freeVarFormula L a)))) 
+                       (v0, s))
+                      (makeTrace a (v, var (newVar (v0 :: freeVarTerm L s 
+                                                      ++ freeVarFormula L a))))
+                      (cPair (newVar (v0 :: freeVarTerm L s ++ 
+                                        freeVarFormula L a))
+                         (codeFormula
+                            (substituteFormula L
+                               (substituteFormula L a v
+                                  (fol.var L
+                                     (newVar (v0 :: freeVarTerm L s ++ 
+                                                freeVarFormula L a)))) v0 s)))
+                      (cTriple v0 (codeTerm s) 
+                         (cPair 3 (cPair v (codeFormula a)))).
+                   intros n n0 n1 n2.
+                   apply Nat.le_lt_trans with (cPair n0 n).
+                   apply cPairLe1.
+                   unfold cTriple in |- *.
+                   apply Nat.lt_le_trans with (cPair 3 (cPair n0 n)).
+                   apply cPairLt2.
+                   apply Nat.le_trans with (cPair (cPair 3 n1) (cPair n0 n)).
+                   apply cPairLe3.
+                   apply cPairLe1.
+                   apply le_n.
+                   apply cPairLe2.
+            ++ unfold codeTerm; rewrite codeFreeVarTermCorrect.
+               rewrite codeInCorrect.
+               induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a1 | b0].
+               **   reflexivity.
+               ** elim b0; assumption.
+            ++   simpl; rewrite nat_eqb_false.
+                 ** reflexivity.
+                 ** congruence. 
+         --   simpl; unfold A at 1;
+                repeat first
+                  [ rewrite cTripleProj1
+                  | rewrite cTripleProj2
+                  | rewrite cTripleProj3
+                  | rewrite cPairProjections1
+                  | rewrite cPairProjections2 ].
+              replace (charFunction 2 Nat.eqb v0 v) with 0.
+              ++ replace (codeIn v (codeFreeVarTerm (codeTerm s))) with 0.
+                 **  rewrite evalStrongRecHelp1 with 
+                       (m := makeTrace a (v0, s)).
+                     simpl; repeat rewrite makeTrace1.
+                     repeat rewrite makeTrace2.
+                     repeat rewrite Nat.eqb_refl.
+                     repeat rewrite H.
+                     reflexivity.
+                     apply depthForall.
+                     generalize 
+                       (makeTrace a (v0, s))
+                         (cPair v (codeFormula (substituteFormula L a v0 s)))
+                         (cTriple v0 (codeTerm s) 
+                            (cPair 3 
+                               (cPair v (codeFormula a)))).
+                     intros n n0 n1.
+                     unfold cTriple; apply Nat.lt_le_trans with (cPair 3 n).
+                     apply cPairLt2.
+                     apply Nat.le_trans with (cPair (cPair 3 n0) n).
+                     apply cPairLe3.
+                     apply cPairLe1.
+                     apply le_n.
+                     apply cPairLe2.
+                 **  unfold codeTerm in |- *.
+                     rewrite codeFreeVarTermCorrect.
+                     rewrite codeInCorrect.
+                     destruct (In_dec eq_nat_dec v (freeVarTerm L s)) 
+                       as [a0 | b1].
+                     elim b0; assumption.
+                     reflexivity.
+              ++  simpl; rewrite nat_eqb_false.
+                  ** reflexivity.
+                  ** congruence.
+  + unfold makeTrace;
+      rewrite
+        (Formula_depth_rec2_forall L)
+      with
+      (Q := 
+         fun _ : fol.Formula L =>
+           (nat * fol.Term L)%type)
+      (P := fun _ : fol.Formula L => nat).
+    * unfold makeTraceForall at 1; reflexivity.
+    * apply makeTraceImpNice.
+    * apply makeTraceNotNice.
+    * apply makeTraceForallNice.
 Qed.
 
 Lemma checkTraceCorrect :
@@ -793,549 +772,519 @@ Lemma checkTraceCorrect :
  checkSubFormulaTrace (cTriple (cTriple v (codeTerm s) (codeFormula f)) n m) <>
  0 -> codeFormula (substituteFormula L f v s) = n.
 Proof.
-assert (mult_lemma1 : forall a b : nat, a * b <> 0 -> a <> 0 /\ b <> 0).
-assert (forall a b : nat, a = 0 \/ b = 0 -> a * b = 0).
-intros.
-induction H as [H| H].
-rewrite H.
-simpl in |- *.
-reflexivity.
-rewrite Nat.mul_comm.
-rewrite H.
-reflexivity.
-intros.
-split.
-unfold not in |- *; intros.
-elim H0.
-apply H.
-auto.
-unfold not in |- *; intros.
-elim H0.
-apply H.
-auto.
-intro.
-unfold checkSubFormulaTrace in |- *.
-set
- (A :=
-  fun trace recs : nat =>
-  switchPR (car (cTriplePi3 (cTriplePi1 trace)))
-    (switchPR (pred (car (cTriplePi3 (cTriplePi1 trace))))
-       (switchPR (pred (pred (car (cTriplePi3 (cTriplePi1 trace)))))
-          (switchPR
-             (pred (pred (pred (car (cTriplePi3 (cTriplePi1 trace))))))
-             (charFunction 2 Nat.eqb (cTriplePi2 trace)
-                (cPair (car (cTriplePi3 (cTriplePi1 trace)))
-                   (codeSubTerms (cdr (cTriplePi3 (cTriplePi1 trace)))
-                      (cTriplePi1 (cTriplePi1 trace))
-                      (cTriplePi2 (cTriplePi1 trace)))))
-             (switchPR
-                (charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
-                   (car (cdr (cTriplePi3 (cTriplePi1 trace)))))
-                (charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
-                   (cTriplePi2 trace))
-                (switchPR
-                   (codeIn
-                      (car (cdr (cTriplePi3 (cTriplePi1 trace))))
-                      (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
-                   (charFunction 0
-                      (Nat.eqb (cTriplePi2 trace)
-                         (cPair 3
-                            (cPair
-                               (codeNewVar
-                                  (S
-                                     (cPair (cTriplePi1 (cTriplePi1 trace))
-                                        (codeApp
-                                           (codeFreeVarTerm
-                                              (cTriplePi2 (cTriplePi1 trace)))
-                                           (codeFreeVarFormula
-                                              (cdr
-                                                 (cdr
-                                                  (cTriplePi3
-                                                  (cTriplePi1 trace)))))))))
-                               (cTriplePi2 (cdr (cTriplePi3 trace))))) &&
-                       (Nat.eqb
-                          (cTriple (cTriplePi1 (cTriplePi1 trace))
-                             (cTriplePi2 (cTriplePi1 trace))
-                             (cTriplePi2 (car (cTriplePi3 trace))))
-                          (cTriplePi1 (cdr (cTriplePi3 trace))) &&
-                        Nat.eqb
-                          (cTriple
-                             (car
-                                (cdr (cTriplePi3 (cTriplePi1 trace))))
-                             (cPair 0
-                                (codeNewVar
-                                   (S
-                                      (cPair (cTriplePi1 (cTriplePi1 trace))
-                                         (codeApp
-                                            (codeFreeVarTerm
-                                               (cTriplePi2 (cTriplePi1 trace)))
-                                            (codeFreeVarFormula
-                                               (cdr
-                                                  (cdr
-                                                  (cTriplePi3
-                                                  (cTriplePi1 trace))))))))))
-                             (cdr
-                                (cdr (cTriplePi3 (cTriplePi1 trace)))))
-                          (cTriplePi1 (car (cTriplePi3 trace))))) *
-                    (codeNth (trace - S (car (cTriplePi3 trace))) recs *
-                     codeNth (trace - S (cdr (cTriplePi3 trace))) recs))
-                   (charFunction 0
-                      (Nat.eqb (cTriplePi2 trace)
-                         (cPair 3
-                            (cPair
-                               (car
-                                  (cdr (cTriplePi3 (cTriplePi1 trace))))
-                               (cTriplePi2 (cTriplePi3 trace)))) &&
+  assert (mult_lemma1 : forall a b : nat, a * b <> 0 -> a <> 0 /\ b <> 0)
+    by (intros a b; rewrite Nat.eq_mul_0; tauto).
+  intro f; unfold checkSubFormulaTrace.
+  set
+    (A :=
+       fun trace recs : nat =>
+         switchPR (car (cTriplePi3 (cTriplePi1 trace)))
+           (switchPR (pred (car (cTriplePi3 (cTriplePi1 trace))))
+              (switchPR (pred (pred (car (cTriplePi3 (cTriplePi1 trace)))))
+                 (switchPR
+                    (pred (pred (pred (car (cTriplePi3 (cTriplePi1 trace))))))
+                    (charFunction 2 Nat.eqb (cTriplePi2 trace)
+                       (cPair (car (cTriplePi3 (cTriplePi1 trace)))
+                          (codeSubTerms (cdr (cTriplePi3 (cTriplePi1 trace)))
+                             (cTriplePi1 (cTriplePi1 trace))
+                             (cTriplePi2 (cTriplePi1 trace)))))
+                    (switchPR
+                       (charFunction 2 Nat.eqb (cTriplePi1 (cTriplePi1 trace))
+                          (car (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                       (charFunction 2 Nat.eqb (cTriplePi3 (cTriplePi1 trace))
+                          (cTriplePi2 trace))
+                       (switchPR
+                          (codeIn
+                             (car (cdr (cTriplePi3 (cTriplePi1 trace))))
+                             (codeFreeVarTerm (cTriplePi2 (cTriplePi1 trace))))
+                          (charFunction 0
+                             (Nat.eqb (cTriplePi2 trace)
+                                (cPair 3
+                                   (cPair
+                                      (codeNewVar
+                                         (S
+                                            (cPair (cTriplePi1 (cTriplePi1 trace))
+                                               (codeApp
+                                                  (codeFreeVarTerm
+                                                     (cTriplePi2 (cTriplePi1 trace)))
+                                                  (codeFreeVarFormula
+                                                     (cdr
+                                                        (cdr
+                                                           (cTriplePi3
+                                                              (cTriplePi1 trace)))))))))
+                                      (cTriplePi2 (cdr (cTriplePi3 trace))))) &&
+                                (Nat.eqb
+                                   (cTriple (cTriplePi1 (cTriplePi1 trace))
+                                      (cTriplePi2 (cTriplePi1 trace))
+                                      (cTriplePi2 (car (cTriplePi3 trace))))
+                                   (cTriplePi1 (cdr (cTriplePi3 trace))) &&
+                                   Nat.eqb
+                                     (cTriple
+                                        (car
+                                           (cdr (cTriplePi3 (cTriplePi1 trace))))
+                                        (cPair 0
+                                           (codeNewVar
+                                              (S
+                                                 (cPair (cTriplePi1 (cTriplePi1 trace))
+                                                    (codeApp
+                                                       (codeFreeVarTerm
+                                                          (cTriplePi2 (cTriplePi1 trace)))
+                                                       (codeFreeVarFormula
+                                                          (cdr
+                                                             (cdr
+                                                                (cTriplePi3
+                                                                   (cTriplePi1 trace))))))))))
+                                        (cdr
+                                           (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                                     (cTriplePi1 (car (cTriplePi3 trace))))) *
+                             (codeNth (trace - S (car (cTriplePi3 trace))) recs *
+                                codeNth (trace - S (cdr (cTriplePi3 trace))) recs))
+                          (charFunction 0
+                             (Nat.eqb (cTriplePi2 trace)
+                                (cPair 3
+                                   (cPair
+                                      (car
+                                         (cdr (cTriplePi3 (cTriplePi1 trace))))
+                                      (cTriplePi2 (cTriplePi3 trace)))) &&
+                                Nat.eqb
+                                  (cTriple (cTriplePi1 (cTriplePi1 trace))
+                                     (cTriplePi2 (cTriplePi1 trace))
+                                     (cdr
+                                        (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                                  (cTriplePi1 (cTriplePi3 trace))) *
+                             codeNth (trace - S (cTriplePi3 trace)) recs))))
+                 (charFunction 0
+                    (Nat.eqb (cTriplePi2 trace)
+                       (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
                        Nat.eqb
                          (cTriple (cTriplePi1 (cTriplePi1 trace))
                             (cTriplePi2 (cTriplePi1 trace))
-                            (cdr
-                               (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                            (cdr (cTriplePi3 (cTriplePi1 trace))))
                          (cTriplePi1 (cTriplePi3 trace))) *
-                    codeNth (trace - S (cTriplePi3 trace)) recs))))
-          (charFunction 0
-             (Nat.eqb (cTriplePi2 trace)
-                (cPair 2 (cTriplePi2 (cTriplePi3 trace))) &&
-              Nat.eqb
-                (cTriple (cTriplePi1 (cTriplePi1 trace))
-                   (cTriplePi2 (cTriplePi1 trace))
-                   (cdr (cTriplePi3 (cTriplePi1 trace))))
-                (cTriplePi1 (cTriplePi3 trace))) *
-           codeNth (trace - S (cTriplePi3 trace)) recs))
-       (charFunction 0
-          (Nat.eqb (cTriplePi2 trace)
-             (cPair 1
-                (cPair (cTriplePi2 (car (cTriplePi3 trace)))
-                   (cTriplePi2 (cdr (cTriplePi3 trace))))) &&
-           (Nat.eqb
-              (cTriple (cTriplePi1 (cTriplePi1 trace))
-                 (cTriplePi2 (cTriplePi1 trace))
-                 (car (cdr (cTriplePi3 (cTriplePi1 trace)))))
-              (cTriplePi1 (car (cTriplePi3 trace))) &&
-            Nat.eqb
-              (cTriple (cTriplePi1 (cTriplePi1 trace))
-                 (cTriplePi2 (cTriplePi1 trace))
-                 (cdr (cdr (cTriplePi3 (cTriplePi1 trace)))))
-              (cTriplePi1 (cdr (cTriplePi3 trace))))) *
-        (codeNth (trace - S (car (cTriplePi3 trace))) recs *
-         codeNth (trace - S (cdr (cTriplePi3 trace))) recs)))
-    (charFunction 2 Nat.eqb (cTriplePi2 trace)
+                    codeNth (trace - S (cTriplePi3 trace)) recs))
+              (charFunction 0
+                 (Nat.eqb (cTriplePi2 trace)
+                    (cPair 1
+                       (cPair (cTriplePi2 (car (cTriplePi3 trace)))
+                          (cTriplePi2 (cdr (cTriplePi3 trace))))) &&
+                    (Nat.eqb
+                       (cTriple (cTriplePi1 (cTriplePi1 trace))
+                          (cTriplePi2 (cTriplePi1 trace))
+                          (car (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                       (cTriplePi1 (car (cTriplePi3 trace))) &&
+                       Nat.eqb
+                         (cTriple (cTriplePi1 (cTriplePi1 trace))
+                            (cTriplePi2 (cTriplePi1 trace))
+                            (cdr (cdr (cTriplePi3 (cTriplePi1 trace)))))
+                         (cTriplePi1 (cdr (cTriplePi3 trace))))) *
+                 (codeNth (trace - S (car (cTriplePi3 trace))) recs *
+                    codeNth (trace - S (cdr (cTriplePi3 trace))) recs)))
+           (charFunction 2 Nat.eqb (cTriplePi2 trace)
+              (cPair 0
+                 (cPair
+                    (codeSubTerm
+                       (car (cdr (cTriplePi3 (cTriplePi1 trace))))
+                       (cTriplePi1 (cTriplePi1 trace))
+                       (cTriplePi2 (cTriplePi1 trace)))
+                    (codeSubTerm
+                       (cdr (cdr (cTriplePi3 (cTriplePi1 trace))))
+                       (cTriplePi1 (cTriplePi1 trace))
+                       (cTriplePi2 (cTriplePi1 trace))))))) 
+    in *.
+elim f using Formula_depth_ind2. 
+- intros t t0 v s n m H; unfold evalStrongRec in H.
+  unfold evalComposeFunc, evalOneParamList, evalList in H.
+  rewrite computeEvalStrongRecHelp in H.
+  unfold compose2 in H.
+  unfold evalComposeFunc, evalOneParamList, evalList in H.
+  simpl in H.
+  rewrite cPairProjections1 in H.
+  unfold A at 1 in H;
+    repeat first
+      [ rewrite cTripleProj1 in H
+      | rewrite cTripleProj2 in H
+      | rewrite cTripleProj3 in H
+      | rewrite cPairProjections1 in H
+      | rewrite cPairProjections2 in H ].
+  simpl in H.
+  unfold codeTerm in H.
+  repeat rewrite codeSubTermCorrect in H.
+  induction
+    (eq_nat_dec n
        (cPair 0
-          (cPair
-             (codeSubTerm
-                (car (cdr (cTriplePi3 (cTriplePi1 trace))))
-                (cTriplePi1 (cTriplePi1 trace))
-                (cTriplePi2 (cTriplePi1 trace)))
-             (codeSubTerm
-                (cdr (cdr (cTriplePi3 (cTriplePi1 trace))))
-                (cTriplePi1 (cTriplePi1 trace))
-                (cTriplePi2 (cTriplePi1 trace))))))) 
- in *.
-elim f using Formula_depth_ind2; intros.
-unfold evalStrongRec in H.
-unfold evalComposeFunc, evalOneParamList, evalList in H.
-rewrite computeEvalStrongRecHelp in H.
-unfold compose2 in H.
-unfold evalComposeFunc, evalOneParamList, evalList in H.
-simpl in H.
-rewrite cPairProjections1 in H.
-unfold A at 1 in H;
- repeat first
-  [ rewrite cTripleProj1 in H
-  | rewrite cTripleProj2 in H
-  | rewrite cTripleProj3 in H
-  | rewrite cPairProjections1 in H
-  | rewrite cPairProjections2 in H ].
-simpl in H.
-unfold codeTerm in H.
-repeat rewrite codeSubTermCorrect in H.
-induction
- (eq_nat_dec n
-    (cPair 0
-       (cPair (code.codeTerm L codeF (substituteTerm L t v s))
-          (code.codeTerm L codeF (substituteTerm L t0 v s))))).
-rewrite a.
-reflexivity.
-rewrite nat_eqb_false in H.
-elim H; reflexivity.
-assumption.
-unfold evalStrongRec in H.
-unfold evalComposeFunc, evalOneParamList, evalList in H.
-rewrite computeEvalStrongRecHelp in H.
-unfold compose2 in H.
-unfold evalComposeFunc, evalOneParamList, evalList in H.
-simpl in H.
-rewrite cPairProjections1 in H.
-unfold A at 1 in H;
- repeat first
-  [ rewrite cTripleProj1 in H
-  | rewrite cTripleProj2 in H
-  | rewrite cTripleProj3 in H
-  | rewrite cPairProjections1 in H
-  | rewrite cPairProjections2 in H ].
-simpl in H.
-unfold codeTerm in H.
-repeat rewrite codeSubTermsCorrect in H.
-induction
- (eq_nat_dec n
-    (cPair (S (S (S (S (codeR r)))))
-       (codeTerms L codeF (arity L (inl (Functions L) r))
-          (substituteTerms L (arity L (inl (Functions L) r)) t v s)))).
-rewrite a.
-reflexivity.
-rewrite nat_eqb_false in H.
-elim H; reflexivity.
-assumption.
-unfold evalStrongRec in H1.
-unfold evalComposeFunc, evalOneParamList, evalList in H1.
-rewrite computeEvalStrongRecHelp in H1.
-unfold compose2 in H1.
-unfold evalComposeFunc, evalOneParamList, evalList in H1.
-simpl in H1.
-rewrite cPairProjections1 in H1.
-unfold A at 1 in H1;
- repeat first
-  [ rewrite cTripleProj1 in H1
-  | rewrite cTripleProj2 in H1
-  | rewrite cTripleProj3 in H1
-  | rewrite cPairProjections1 in H1
-  | rewrite cPairProjections2 in H1 ].
-rewrite evalStrongRecHelp1 with (m := car m) in H1.
-rewrite evalStrongRecHelp1 with (m := cdr m) in H1.
-simpl in H1.
-induction
- (eq_nat_dec n
-    (cPair 1 (cPair (cTriplePi2 (car m)) (cTriplePi2 (cdr m))))).
-rewrite <- a in H1.
-rewrite Nat.eqb_refl in H1.
-induction
- (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0))
-    (cTriplePi1 (car m))).
-rewrite <- a0 in H1.
-rewrite Nat.eqb_refl in H1.
-induction
- (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f1))
-    (cTriplePi1 (cdr m))).
-rewrite <- a1 in H1.
-rewrite Nat.eqb_refl in H1.
-simpl in H1.
-rewrite Nat.add_comm in H1; simpl in H1.
-decompose record (mult_lemma1 _ _ H1).
-rewrite <- (cTripleProj (car m)) in H2.
-rewrite <- (cTripleProj (cdr m)) in H3.
-rewrite <- a0 in H2; clear a0.
-rewrite <- a1 in H3; clear a1.
-rewrite <- (H _ _ _ _ H2) in a.
-rewrite <- (H0 _ _ _ _ H3) in a.
-rewrite subFormulaImp.
-rewrite a; reflexivity.
-rewrite nat_eqb_false in H1.
-elim H1; reflexivity.
-assumption.
-rewrite nat_eqb_false in H1.
-elim H1; reflexivity.
-assumption.
-rewrite nat_eqb_false in H1.
-elim H1; reflexivity.
-assumption.
-apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
-apply cPairLe2.
-rewrite cPairProjections.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 1 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 1 (cPair (codeFormula f0) (codeFormula f1))).
-apply cPairLe1.
-apply
- Nat.le_trans
-  with
-    (cPair (codeTerm s) (cPair 1 (cPair (codeFormula f0) (codeFormula f1)))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
-apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
-apply cPairLe1.
-rewrite cPairProjections.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 1 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 1 (cPair (codeFormula f0) (codeFormula f1))).
-apply cPairLe1.
-apply
- Nat.le_trans
-  with
-    (cPair (codeTerm s) (cPair 1 (cPair (codeFormula f0) (codeFormula f1)))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
-unfold evalStrongRec in H0.
-unfold evalComposeFunc, evalOneParamList, evalList in H0.
-rewrite computeEvalStrongRecHelp in H0.
-unfold compose2 in H0.
-unfold evalComposeFunc, evalOneParamList, evalList in H0.
-simpl in H0.
-rewrite cPairProjections1 in H0.
-unfold A at 1 in H0;
- repeat first
-  [ rewrite cTripleProj1 in H0
-  | rewrite cTripleProj2 in H0
-  | rewrite cTripleProj3 in H0
-  | rewrite cPairProjections1 in H0
-  | rewrite cPairProjections2 in H0 ].
-rewrite evalStrongRecHelp1 with (m := m) in H0.
-simpl in H0.
-induction (eq_nat_dec n (cPair 2 (cTriplePi2 m))).
-rewrite <- a in H0.
-rewrite Nat.eqb_refl in H0.
-induction
- (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0)) (cTriplePi1 m)).
-rewrite <- a0 in H0.
-rewrite Nat.eqb_refl in H0.
-simpl in H0.
-rewrite Nat.add_comm in H0; simpl in H0.
-rewrite <- (cTripleProj m) in H0.
-rewrite <- a0 in H0; clear a0.
-rewrite <- (H _ _ _ _ H0) in a.
-rewrite subFormulaNot.
-rewrite a; reflexivity.
-rewrite nat_eqb_false in H0.
-elim H0; reflexivity.
-assumption.
-rewrite nat_eqb_false in H0.
-elim H0; reflexivity.
-assumption.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 2 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 2 (codeFormula f0)).
-apply cPairLe1.
-apply Nat.le_trans with (cPair (codeTerm s) (cPair 2 (codeFormula f0))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
-rewrite subFormulaForall.
-unfold evalStrongRec in H0.
-unfold evalComposeFunc, evalOneParamList, evalList in H0.
-rewrite computeEvalStrongRecHelp in H0.
-unfold compose2 in H0.
-unfold evalComposeFunc, evalOneParamList, evalList in H0.
-simpl in H0.
-rewrite cPairProjections1 in H0.
-unfold A at 1 in H0;
- repeat first
-  [ rewrite cTripleProj1 in H0
-  | rewrite cTripleProj2 in H0
-  | rewrite cTripleProj3 in H0
-  | rewrite cPairProjections1 in H0
-  | rewrite cPairProjections2 in H0 ].
-induction (eq_nat_dec v v0).
-rewrite a0 in H0.
-assert (charFunction 2 Nat.eqb v0 v0 = 1).
-simpl in |- *.
-rewrite Nat.eqb_refl. 
-reflexivity.
-rewrite H1 in H0.
-induction (eq_nat_dec (codeFormula (forallH L v a)) n).
-assumption.
-assert (charFunction 2 Nat.eqb (cPair 3 (cPair v0 (codeFormula a))) n = 0).
-unfold charFunction in |- *.
-rewrite nat_eqb_false.
-reflexivity.
-rewrite <- a0.
-apply b.
-rewrite H2 in H0.
-simpl in H0.
-elim H0; reflexivity.
-assert (charFunction 2 Nat.eqb v0 v = 0).
-simpl in |- *.
-rewrite nat_eqb_false.
-reflexivity.
-auto.
-rewrite H1 in H0; clear H1.
-unfold codeTerm in H0.
-rewrite codeFreeVarTermCorrect in H0.
-rewrite codeInCorrect in H0.
-induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-rewrite evalStrongRecHelp1 with (m := car m) in H0.
-rewrite evalStrongRecHelp1 with (m := cdr m) in H0.
-simpl in H0.
-induction
- (eq_nat_dec n
-    (cPair 3
-       (cPair
-          (codeNewVar
-             (S
-                (cPair v0
-                   (codeApp (codeList (freeVarTerm L s))
-                      (codeFreeVarFormula (codeFormula a))))))
-          (cTriplePi2 (cdr m))))).
-rewrite <- a1 in H0.
-rewrite Nat.eqb_refl in H0.
-induction
- (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (cTriplePi2 (car m)))
-    (cTriplePi1 (cdr m))).
-rewrite a2 in H0.
-rewrite Nat.eqb_refl in H0.
-induction
- (eq_nat_dec
-    (cTriple v
-       (cPair 0
-          (codeNewVar
-             (S
-                (cPair v0
-                   (codeApp (codeList (freeVarTerm L s))
-                      (codeFreeVarFormula (codeFormula a)))))))
-       (codeFormula a)) (cTriplePi1 (car m))).
-rewrite a3 in H0.
-rewrite Nat.eqb_refl in H0.
-simpl in H0.
-rewrite Nat.add_comm in H0.
-simpl in H0.
-decompose record (mult_lemma1 _ _ H0).
-rewrite <- (cTripleProj (car m)) in H1.
-rewrite <- (cTripleProj (cdr m)) in H2.
-rewrite <- a2 in H2; clear a2.
-rewrite <- a3 in H1; clear a3.
-assert (lt_depth L a (forallH L v a)).
-apply depthForall.
-assert
- (cPair 0
-    (codeNewVar
-       (S
-          (cPair v0
-             (codeApp (codeList (freeVarTerm L s))
-                (codeFreeVarFormula (codeFormula a)))))) =
-  codeTerm
-    (var
-       (codeNewVar
-          (S
-             (cPair v0
-                (codeApp (codeList (freeVarTerm L s))
-                   (codeFreeVarFormula (codeFormula a)))))))).
-reflexivity.
-rewrite H4 in H1.
-rewrite <- (H _ H3 _ _ _ _ H1) in H2.
-assert
- (lt_depth L
-    (substituteFormula L a v
-       (var
-          (codeNewVar
-             (S
-                (cPair v0
-                   (codeApp (codeList (freeVarTerm L s))
-                      (codeFreeVarFormula (codeFormula a))))))))
-    (forallH L v a)).
-eapply eqDepth.
-symmetry  in |- *.
-apply subFormulaDepth.
-apply depthForall.
-rewrite <- (H _ H5 _ _ _ _ H2) in a1.
-rewrite a1.
-unfold codeFormula at 2 4 in |- *.
-rewrite codeFreeVarFormulaCorrect.
-rewrite codeAppCorrect.
-replace (S (cPair v0 (codeList (freeVarTerm L s ++ freeVarFormula L a))))
- with (codeList (v0 :: freeVarTerm L s ++ freeVarFormula L a));
- [ idtac | reflexivity ].
-rewrite codeNewVarCorrect.
-reflexivity.
-rewrite nat_eqb_false in H0.
-elim H0.
-reflexivity.
-assumption.
-rewrite nat_eqb_false in H0.
-elim H0.
-reflexivity.
-assumption.
-rewrite nat_eqb_false in H0.
-elim H0.
-reflexivity.
-assumption.
-apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
-apply cPairLe2.
-rewrite cPairProjections.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
-apply cPairLe1.
-apply
- Nat.le_trans
-  with (cPair (code.codeTerm L codeF s) (cPair 3 (cPair v (codeFormula a)))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
-apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
-apply cPairLe1.
-rewrite cPairProjections.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
-apply cPairLe1.
-apply
- Nat.le_trans
-  with (cPair (code.codeTerm L codeF s) (cPair 3 (cPair v (codeFormula a)))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
-rewrite evalStrongRecHelp1 with (m := m) in H0.
-simpl in H0.
-induction (eq_nat_dec n (cPair 3 (cPair v (cTriplePi2 m)))).
-rewrite <- a0 in H0.
-rewrite Nat.eqb_refl in H0.
-induction
- (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (codeFormula a))
-    (cTriplePi1 m)).
-rewrite <- a1 in H0.
-rewrite Nat.eqb_refl in H0.
-simpl in H0.
-rewrite Nat.add_comm in H0.
-simpl in H0.
-assert (lt_depth L a (forallH L v a)).
-apply depthForall.
-rewrite <- (cTripleProj m) in H0.
-rewrite <- a1 in H0; clear a1.
-rewrite <- (H _ H1 _ _ _ _ H0) in a0.
-rewrite a0.
-reflexivity.
-rewrite nat_eqb_false in H0.
-elim H0.
-reflexivity.
-assumption.
-rewrite nat_eqb_false in H0.
-elim H0.
-reflexivity.
-assumption.
-unfold cTriple in |- *.
-apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
-apply Nat.le_lt_trans with (cPair n m).
-apply cPairLe2.
-apply cPairLt2.
-apply cPairLe3.
-apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
-apply cPairLe1.
-apply
- Nat.le_trans
-  with (cPair (code.codeTerm L codeF s) (cPair 3 (cPair v (codeFormula a)))).
-apply cPairLe2.
-apply cPairLe2.
-apply le_n.
+          (cPair (code.codeTerm L codeF (substituteTerm L t v s))
+             (code.codeTerm L codeF (substituteTerm L t0 v s))))) as [a | b].
+  + rewrite a; reflexivity.
+  + rewrite nat_eqb_false in H.
+    * elim H; reflexivity.
+    * assumption.
+- intros r t v s n m H; unfold evalStrongRec in H.
+  unfold evalComposeFunc, evalOneParamList, evalList in H.
+  rewrite computeEvalStrongRecHelp in H.
+  unfold compose2 in H.
+  unfold evalComposeFunc, evalOneParamList, evalList in H.
+  simpl in H; rewrite cPairProjections1 in H.
+  unfold A at 1 in H;
+    repeat first
+      [ rewrite cTripleProj1 in H
+      | rewrite cTripleProj2 in H
+      | rewrite cTripleProj3 in H
+      | rewrite cPairProjections1 in H
+      | rewrite cPairProjections2 in H ].
+  simpl in H; unfold codeTerm in H.
+  repeat rewrite codeSubTermsCorrect in H.
+  destruct  (eq_nat_dec n
+               (cPair (S (S (S (S (codeR r)))))
+                  (codeTerms L codeF (arity L (inl (Functions L) r))
+                     (substituteTerms L (arity L (inl (Functions L) r)) t v s)))) 
+    as [a | b].
+  + rewrite a; reflexivity.
+  + rewrite nat_eqb_false in H.  
+    * now elim H.  
+    * assumption.
+- intros  f0 H f1 H0 v s n m H1; unfold evalStrongRec in H1.
+  unfold evalComposeFunc, evalOneParamList, evalList in H1.
+  rewrite computeEvalStrongRecHelp in H1.
+  unfold compose2 in H1.
+  unfold evalComposeFunc, evalOneParamList, evalList in H1.
+  simpl in H1.
+  rewrite cPairProjections1 in H1.
+  unfold A at 1 in H1;
+    repeat first
+      [ rewrite cTripleProj1 in H1
+      | rewrite cTripleProj2 in H1
+      | rewrite cTripleProj3 in H1
+      | rewrite cPairProjections1 in H1
+      | rewrite cPairProjections2 in H1 ].
+  rewrite evalStrongRecHelp1 with (m := car m) in H1.
+  rewrite evalStrongRecHelp1 with (m := cdr m) in H1.
+  simpl in H1.
+  destruct
+    (eq_nat_dec n
+       (cPair 1 (cPair (cTriplePi2 (car m)) (cTriplePi2 (cdr m))))) as [a | b].
+  + rewrite <- a in H1.
+    rewrite Nat.eqb_refl in H1.
+    destruct
+      (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0))
+         (cTriplePi1 (car m))) as [a0 | b].
+    * rewrite <- a0 in H1.
+      rewrite Nat.eqb_refl in H1.
+      destruct
+        (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f1))
+           (cTriplePi1 (cdr m))) as [a1 | b].
+      -- rewrite <- a1 in H1.
+         rewrite Nat.eqb_refl in H1.
+         simpl in H1.
+         rewrite Nat.add_comm in H1; simpl in H1.
+         decompose record (mult_lemma1 _ _ H1).
+         rewrite <- (cTripleProj (car m)) in H2.
+         rewrite <- (cTripleProj (cdr m)) in H3.
+         rewrite <- a0 in H2; clear a0.
+         rewrite <- a1 in H3; clear a1.
+         rewrite <- (H _ _ _ _ H2) in a.
+         rewrite <- (H0 _ _ _ _ H3) in a.
+         rewrite subFormulaImp.
+         rewrite a; reflexivity.
+      -- rewrite nat_eqb_false in H1.
+         ++ elim H1; reflexivity.
+         ++ assumption.
+    * rewrite nat_eqb_false in H1.
+      -- elim H1; reflexivity.
+      -- assumption.
+  + rewrite nat_eqb_false in H1.
+    * elim H1; reflexivity.
+    * assumption.
+  + apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
+    * apply cPairLe2.
+    * rewrite cPairProjections.
+      unfold cTriple in |- *.
+      apply Nat.lt_le_trans with (cPair 1 (cPair n m)).
+      -- apply Nat.le_lt_trans with (cPair n m).
+         ++ apply cPairLe2.
+         ++ apply cPairLt2.
+      -- apply cPairLe3.
+         ++ apply Nat.le_trans with (cPair 1 (cPair (codeFormula f0) (codeFormula f1))).
+            ** apply cPairLe1.
+            ** apply Nat.le_trans with
+                 (cPair (codeTerm s) (cPair 1 (cPair (codeFormula f0) (codeFormula f1)))).
+               apply cPairLe2.
+               apply cPairLe2.
+         ++ apply le_n.
+  + apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
+    * apply cPairLe1.
+    * rewrite cPairProjections.
+      unfold cTriple in |- *.
+      apply Nat.lt_le_trans with (cPair 1 (cPair n m)).
+      -- apply Nat.le_lt_trans with (cPair n m).
+         ++ apply cPairLe2.
+         ++ apply cPairLt2.
+      -- apply cPairLe3.
+         ++ apply Nat.le_trans with (cPair 1 (cPair (codeFormula f0) (codeFormula f1))).
+            ** apply cPairLe1.
+            ** apply Nat.le_trans with
+                 (cPair (codeTerm s) (cPair 1 (cPair (codeFormula f0) (codeFormula f1)))).
+               apply cPairLe2.
+               apply cPairLe2.
+         ++ apply le_n.
+- intros f0 H v s n m H0; unfold evalStrongRec in H0.
+  unfold evalComposeFunc, evalOneParamList, evalList in H0.
+  rewrite computeEvalStrongRecHelp in H0.
+  unfold compose2 in H0.
+  unfold evalComposeFunc, evalOneParamList, evalList in H0.
+  simpl in H0.
+  rewrite cPairProjections1 in H0.
+  unfold A at 1 in H0;
+    repeat first
+      [ rewrite cTripleProj1 in H0
+      | rewrite cTripleProj2 in H0
+      | rewrite cTripleProj3 in H0
+      | rewrite cPairProjections1 in H0
+      | rewrite cPairProjections2 in H0 ].
+  rewrite evalStrongRecHelp1 with (m := m) in H0.
+  + simpl in H0.
+    induction (eq_nat_dec n (cPair 2 (cTriplePi2 m))) as [a | b].
+    * rewrite <- a, Nat.eqb_refl in H0.
+      induction
+        (eq_nat_dec (cTriple v (codeTerm s) (codeFormula f0)) (cTriplePi1 m)) as [a0 | b].
+      -- rewrite <- a0 in H0.
+         rewrite Nat.eqb_refl in H0.
+         simpl in H0.
+         rewrite Nat.add_comm in H0; simpl in H0.
+         rewrite <- (cTripleProj m) in H0.
+         rewrite <- a0 in H0; clear a0.
+         rewrite <- (H _ _ _ _ H0) in a.
+         rewrite subFormulaNot.
+         rewrite a; reflexivity.
+      -- rewrite nat_eqb_false in H0.
+         elim H0; reflexivity.
+         assumption.
+    * rewrite nat_eqb_false in H0.
+      -- elim H0; reflexivity.
+      -- assumption.
+  + unfold cTriple in |- *.
+    apply Nat.lt_le_trans with (cPair 2 (cPair n m)).
+    * apply Nat.le_lt_trans with (cPair n m).
+      -- apply cPairLe2.
+      -- apply cPairLt2.
+    * apply cPairLe3.
+      apply Nat.le_trans with (cPair 2 (codeFormula f0)).
+      -- apply cPairLe1.
+      -- apply Nat.le_trans with (cPair (codeTerm s) (cPair 2 (codeFormula f0))).
+         ++ apply cPairLe2.
+         ++ apply cPairLe2.
+      -- apply le_n.
+- intros v a H v0 s n m H0; rewrite subFormulaForall.
+  unfold evalStrongRec in H0.
+  unfold evalComposeFunc, evalOneParamList, evalList in H0.
+  rewrite computeEvalStrongRecHelp in H0.
+  unfold compose2 in H0.
+  unfold evalComposeFunc, evalOneParamList, evalList in H0.
+  simpl in H0.
+  rewrite cPairProjections1 in H0.
+  unfold A at 1 in H0;
+    repeat first
+      [ rewrite cTripleProj1 in H0
+      | rewrite cTripleProj2 in H0
+      | rewrite cTripleProj3 in H0
+      | rewrite cPairProjections1 in H0
+      | rewrite cPairProjections2 in H0 ].
+  induction (eq_nat_dec v v0) as [a0 | b].
+  + rewrite a0 in H0.
+    assert (H1: charFunction 2 Nat.eqb v0 v0 = 1) by (simpl; now rewrite Nat.eqb_refl).
+    rewrite H1 in H0.
+    induction (eq_nat_dec (codeFormula (forallH L v a)) n) as [a1 | b].
+    * assumption.
+    * assert (H2: charFunction 2 Nat.eqb (cPair 3 (cPair v0 (codeFormula a))) n = 0).
+      { unfold charFunction; rewrite nat_eqb_false.
+        reflexivity.
+        rewrite <- a0.
+        apply b.
+      }
+      rewrite H2 in H0.
+      simpl in H0.
+      elim H0; reflexivity.
+  + assert (H1: charFunction 2 Nat.eqb v0 v = 0).
+    { simpl; rewrite nat_eqb_false.
+      reflexivity.
+      auto.
+    } 
+    rewrite H1 in H0; clear H1.
+    unfold codeTerm in H0; rewrite codeFreeVarTermCorrect in H0.
+    rewrite codeInCorrect in H0.
+    induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | ?].
+    * rewrite evalStrongRecHelp1 with (m := car m) in H0.
+      -- rewrite evalStrongRecHelp1 with (m := cdr m) in H0.
+         ++ simpl in H0.
+            induction
+              (eq_nat_dec n
+                 (cPair 3
+                    (cPair
+                       (codeNewVar
+                          (S
+                             (cPair v0
+                                (codeApp (codeList (freeVarTerm L s))
+                                   (codeFreeVarFormula (codeFormula a))))))
+                       (cTriplePi2 (cdr m))))) as [a1 | ?].
+            ** rewrite <- a1 in H0.
+               rewrite Nat.eqb_refl in H0.
+               induction
+                 (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (cTriplePi2 (car m)))
+                    (cTriplePi1 (cdr m))) as [a2 | ?].
+               --- rewrite a2 in H0.
+                   rewrite Nat.eqb_refl in H0.
+                   induction
+                     (eq_nat_dec
+                        (cTriple v
+                           (cPair 0
+                              (codeNewVar
+                                 (S
+                                    (cPair v0
+                                       (codeApp (codeList (freeVarTerm L s))
+                                          (codeFreeVarFormula (codeFormula a)))))))
+                           (codeFormula a)) (cTriplePi1 (car m))) as [a3 | ?].
+                   +++ rewrite a3 in H0.
+                       rewrite Nat.eqb_refl in H0.
+                       simpl in H0.
+                       rewrite Nat.add_comm in H0.
+                       simpl in H0.
+                       decompose record (mult_lemma1 _ _ H0).
+                       rewrite <- (cTripleProj (car m)) in H1.
+                       rewrite <- (cTripleProj (cdr m)) in H2.
+                       rewrite <- a2 in H2; clear a2.
+                       rewrite <- a3 in H1; clear a3.
+                       assert (lt_depth L a (forallH L v a)) by 
+                         apply depthForall.
+                       assert
+                         (H4: cPair 0
+                                (codeNewVar
+                                   (S
+                                      (cPair v0
+                                         (codeApp (codeList (freeVarTerm L s))
+                                            (codeFreeVarFormula (codeFormula a)))))) =
+                                codeTerm
+                                  (var
+                                     (codeNewVar
+                                        (S
+                                           (cPair v0
+                                              (codeApp (codeList (freeVarTerm L s))
+                                                 (codeFreeVarFormula 
+                                                    (codeFormula a)))))))) by reflexivity.
+                       rewrite H4 in H1.
+                       rewrite <- (H _ H3 _ _ _ _ H1) in H2.
+                       assert
+                         (H5: lt_depth L
+                                (substituteFormula L a v
+                                   (var
+                                      (codeNewVar
+                                         (S
+                                            (cPair v0
+                                               (codeApp (codeList (freeVarTerm L s))
+                                                  (codeFreeVarFormula (codeFormula a))))))))
+                                (forallH L v a)).
+                   ***  eapply eqDepth.
+                        symmetry  in |- *.
+                        apply subFormulaDepth.
+                        apply depthForall.
+                   *** rewrite <- (H _ H5 _ _ _ _ H2) in a1.
+                       rewrite a1.
+                       unfold codeFormula at 2 4 in |- *.
+                       rewrite codeFreeVarFormulaCorrect.
+                       rewrite codeAppCorrect.
+                       replace (S (cPair v0 (codeList 
+                                               (freeVarTerm L s ++ freeVarFormula L a))))
+                         with (codeList (v0 :: freeVarTerm L s ++ freeVarFormula L a));
+                         [ idtac | reflexivity ].
+                       rewrite codeNewVarCorrect.
+                       reflexivity.
+                   +++ rewrite nat_eqb_false in H0.
+                       elim H0.
+                       reflexivity.
+                       assumption.
+               --- rewrite nat_eqb_false in H0.
+                   elim H0.
+                   reflexivity.
+                   assumption.
+            ** rewrite nat_eqb_false in H0.
+               elim H0.
+               reflexivity.
+               assumption.
+         ++ apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
+            apply cPairLe2.
+            rewrite cPairProjections.
+            unfold cTriple in |- *.
+            apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
+            ** apply Nat.le_lt_trans with (cPair n m).
+               --- apply cPairLe2.
+               --- apply cPairLt2.
+            ** apply cPairLe3.
+               --- apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
+                   +++ apply cPairLe1.
+                   +++ apply
+                       Nat.le_trans
+                       with (cPair (code.codeTerm L codeF s) 
+                               (cPair 3 (cPair v (codeFormula a)))).
+                       *** apply cPairLe2.
+                       *** apply cPairLe2.
+               --- apply le_n.
+      -- apply Nat.le_lt_trans with (cPair (car m) (cdr m)).
+         ++ apply cPairLe1.
+         ++ rewrite cPairProjections.
+            unfold cTriple in |- *.
+            apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
+            ** apply Nat.le_lt_trans with (cPair n m).
+               --- apply cPairLe2.
+               --- apply cPairLt2.
+            ** apply cPairLe3.
+               apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
+               --- apply cPairLe1.
+               --- apply Nat.le_trans with 
+                     (cPair (code.codeTerm L codeF s) 
+                        (cPair 3 (cPair v (codeFormula a)))).
+                   +++ apply cPairLe2.
+                   +++ apply cPairLe2.
+               --- apply le_n.
+    * rewrite evalStrongRecHelp1 with (m := m) in H0.
+      -- simpl in H0.
+         induction (eq_nat_dec n (cPair 3 (cPair v (cTriplePi2 m)))) as [a0 | ?].
+         ++ rewrite <- a0 in H0.
+            rewrite Nat.eqb_refl in H0.
+            induction
+              (eq_nat_dec (cTriple v0 (code.codeTerm L codeF s) (codeFormula a))
+                 (cTriplePi1 m)) as [a1| ?].
+            ** rewrite <- a1 in H0.
+               rewrite Nat.eqb_refl in H0.
+               simpl in H0.
+               rewrite Nat.add_comm in H0.
+               simpl in H0.
+               assert (H1: lt_depth L a (forallH L v a))
+                 by apply depthForall.
+               rewrite <- (cTripleProj m) in H0.
+               rewrite <- a1 in H0; clear a1.
+               rewrite <- (H _ H1 _ _ _ _ H0) in a0.
+               rewrite a0.
+               reflexivity.
+            ** rewrite nat_eqb_false in H0.
+               --- elim H0.
+                   reflexivity.
+               --- assumption.
+         ++ rewrite nat_eqb_false in H0.
+            elim H0.
+            reflexivity.
+            assumption.
+      -- unfold cTriple in |- *.
+         apply Nat.lt_le_trans with (cPair 3 (cPair n m)).
+         ++ apply Nat.le_lt_trans with (cPair n m).
+            ** apply cPairLe2.
+            ** apply cPairLt2.
+         ++ apply cPairLe3.
+            ** apply Nat.le_trans with (cPair 3 (cPair v (codeFormula a))).
+               --- apply cPairLe1.
+               --- apply Nat.le_trans with 
+                     (cPair (code.codeTerm L codeF s) 
+                        (cPair 3 (cPair v (codeFormula a)))).
+                   +++ apply cPairLe2.
+                   +++ apply cPairLe2.
+            ** apply le_n.
 Qed.
 
 Lemma switch5IsPR :
