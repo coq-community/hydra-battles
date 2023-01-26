@@ -30,866 +30,573 @@ Let existH := existH L.
 Let iffH := iffH L.
 Let SysPrf := SysPrf L.
 
-Lemma freeVarSubTerm1 :
- forall (t : Term) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerm L t) ->
- v <> x -> In x (freeVarTerm L (substituteTerm L t v s)).
+Lemma freeVarSubTerm1 (t : Term):
+  forall  (v : nat) (s : Term) (x : nat),
+    In x (freeVarTerm L t) ->
+    v <> x -> In x (freeVarTerm L (substituteTerm L t v s)).
 Proof.
-intro.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           forall (v : nat) (s : Term) (x : nat),
-           In x (freeVarTerms L n ts) ->
-           v <> x -> In x (freeVarTerms L n (substituteTerms L n ts v s))).
-intros.
-simpl in |- *.
-induction (eq_nat_dec v n).
-elim H0.
-simpl in H.
-induction H as [H| H].
-transitivity n; auto.
-contradiction.
-assumption.
-intros.
-simpl in |- *.
-unfold freeVarTerm in |- *.
-apply H; auto.
-intros.
-auto.
-intros.
-unfold freeVarTerms in H1.
-induction (in_app_or _ _ _ H1).
-unfold freeVarTerms in |- *.
-simpl in |- *.
-apply in_or_app.
-auto.
-unfold freeVarTerms in |- *.
-simpl in |- *.
-apply in_or_app.
-auto.
+             forall (v : nat) (s : Term) (x : nat),
+               In x (freeVarTerms L n ts) ->
+               v <> x -> In x (freeVarTerms L n (substituteTerms L n ts v s))).
+  -  intros n v s x H H0; simpl.
+     induction (eq_nat_dec v n) as [? | ?].
+     + destruct H0; simpl in H; induction H as [H| H].
+       * congruence.
+       * contradiction.
+     + assumption.
+  - intros f t0 H v s x H0 H1; simpl in |- *.
+    unfold freeVarTerm; apply H; auto.
+  - intros; auto.
+  - intros n t0 H t1 H0 v s x H1 H2; unfold freeVarTerms in H1.
+    induction (in_app_or _ _ _ H1);
+      unfold freeVarTerms; simpl; apply in_or_app; auto.
 Qed.
 
-Lemma freeVarSubTerms1 :
- forall (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerms L n ts) ->
- v <> x -> In x (freeVarTerms L n (substituteTerms L n ts v s)).
+Lemma freeVarSubTerms1 (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat):
+  In x (freeVarTerms L n ts) ->
+  v <> x -> In x (freeVarTerms L n (substituteTerms L n ts v s)).
 Proof.
-intros.
-induction ts as [| n t ts Hrects].
-auto.
-unfold freeVarTerms in H.
-fold (freeVarTerm L t) in H.
-fold (freeVarTerms L _ ts) in H.
-unfold freeVarTerms in |- *.
-simpl in |- *.
-fold (freeVarTerm L (substituteTerm L t v s)) in |- *.
-fold (freeVarTerms L n (substituteTerms L n ts v s)) in |- *.
-apply in_or_app.
-induction (in_app_or _ _ _ H).
-left.
-apply freeVarSubTerm1.
-auto.
-auto.
-auto.
+  intros H H0; induction ts as [| n t ts Hrects].
+  - auto.
+  - unfold freeVarTerms in H; fold (freeVarTerm L t) in H.
+    fold (freeVarTerms L _ ts) in H.
+    unfold freeVarTerms; simpl;
+      fold (freeVarTerm L (substituteTerm L t v s));
+      fold (freeVarTerms L n (substituteTerms L n ts v s));
+      apply in_or_app.
+    induction (in_app_or _ _ _ H).
+    + left; apply freeVarSubTerm1; auto.
+    + auto.
 Qed.
 
-Lemma freeVarSubFormula1 :
- forall (f : Formula) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubFormula1 (f : Formula):
+ forall  (v : nat) (s : Term) (x : nat),
  v <> x ->
  In x (freeVarFormula L f) ->
  In x (freeVarFormula L (substituteFormula L f v s)).
 Proof.
-intro f.
-elim f using Formula_depth_ind2; intros.
-rewrite subFormulaEqual.
-simpl in |- *.
-simpl in H0.
-induction (in_app_or _ _ _ H0).
-apply in_or_app.
-left.
-apply freeVarSubTerm1; auto.
-apply in_or_app.
-right.
-apply freeVarSubTerm1; auto.
-simpl in H0.
-rewrite subFormulaRelation.
-simpl in |- *.
-apply freeVarSubTerms1; auto.
-rewrite subFormulaImp.
-simpl in |- *.
-simpl in H2.
-induction (in_app_or _ _ _ H2).
-apply in_or_app.
-auto.
-apply in_or_app.
-auto.
-rewrite subFormulaNot.
-simpl in |- *.
-apply H; auto.
-rewrite subFormulaForall.
-induction (eq_nat_dec v v0).
-auto.
-induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-simpl in |- *.
-apply In_list_remove3.
-apply H.
-unfold lt_depth in |- *.
-rewrite subFormulaDepth.
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
-auto.
-apply H.
-unfold lt_depth in |- *.
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
-unfold not in |- *; intros.
-simpl in H1.
-elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
-auto.
-eapply In_list_remove1.
-apply H1.
-unfold not in |- *; intros.
-elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
-fold nv in |- *.
-simpl in |- *.
-right.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-rewrite <- H2.
-apply H1.
-simpl in |- *.
-apply In_list_remove3.
-apply H; auto.
-unfold lt_depth in |- *.
-simpl in |- *.
-apply Nat.lt_succ_diag_r .
-eapply In_list_remove1.
-apply H1.
-unfold not in |- *; intros.
-elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
-auto.
+  elim f using Formula_depth_ind2. 
+  - intros t t0 v s x H H0; rewrite subFormulaEqual.
+    simpl in H0 |- *; induction (in_app_or _ _ _ H0) as [H1 | ?].
+    + apply in_or_app; left; apply freeVarSubTerm1; auto.
+    + apply in_or_app; right; apply freeVarSubTerm1; auto.
+  - intros r t  v s x H H0; simpl in H0; rewrite subFormulaRelation.
+    simpl; apply freeVarSubTerms1; auto.
+  - intros f0 H f1 H0 v s x H1 H2; rewrite subFormulaImp.
+    simpl in H2 |- *; destruct (in_app_or _ _ _ H2);  apply in_or_app; auto.
+    - intros f0 H v s x H0 H1; rewrite subFormulaNot.
+      simpl; apply H; auto.
+    - intros v a H v0 s x H0 H1; rewrite subFormulaForall; 
+        induction (eq_nat_dec v v0) as [? | b].
+      + auto.
+      + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | ?].
+        * set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+          simpl; apply In_list_remove3.
+          -- apply H.
+             ++ unfold lt_depth; rewrite subFormulaDepth.
+                simpl; apply Nat.lt_succ_diag_r .
+             ++ auto.
+             ++ apply H.
+                ** unfold lt_depth; simpl; apply Nat.lt_succ_diag_r .
+                ** intro H2; simpl in H1.
+                   elim (In_list_remove2 _ eq_nat_dec _ _ _ H1); auto.
+                ** eapply In_list_remove1; apply H1.
+          --  intro H2; elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+              fold nv; simpl; right; apply in_or_app; right; eapply In_list_remove1.
+              rewrite <- H2; apply H1.
+        * simpl; apply In_list_remove3.
+          -- apply H; auto.
+             ++ unfold lt_depth; simpl; apply Nat.lt_succ_diag_r .
+             ++ eapply In_list_remove1; apply H1.
+          -- intro H2; now elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
 Qed.
 
-Lemma freeVarSubTerm2 :
- forall (t : Term) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerm L s) ->
- In v (freeVarTerm L t) -> In x (freeVarTerm L (substituteTerm L t v s)).
+Lemma freeVarSubTerm2 (t : Term) :
+  forall  (v : nat) (s : Term) (x : nat),
+    In x (freeVarTerm L s) ->
+    In v (freeVarTerm L t) -> In x (freeVarTerm L (substituteTerm L t v s)).
 Proof.
-intro.
-elim t using
- Term_Terms_ind
-  with
+  elim t using Term_Terms_ind 
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           forall (v : nat) (s : Term) (x : nat),
-           In x (freeVarTerm L s) ->
-           In v (freeVarTerms L n ts) ->
-           In x (freeVarTerms L n (substituteTerms L n ts v s))).
-intros.
-simpl in |- *.
-induction (eq_nat_dec v n).
-assumption.
-elim b.
-induction H0 as [H0| H0].
-auto.
-contradiction.
-intros.
-simpl in |- *.
-unfold freeVarTerm in |- *.
-fold
- (freeVarTerms L _ (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))
- in |- *.
-apply H; auto.
-auto.
-intros.
-simpl in |- *.
-unfold freeVarTerms in H2.
-fold (freeVarTerm L t0) in H2.
-fold (freeVarTerms L n t1) in H2.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L (substituteTerm L t0 v s)) in |- *.
-fold (freeVarTerms L n (substituteTerms L n t1 v s)) in |- *.
-apply in_or_app.
-induction (in_app_or _ _ _ H2).
-left.
-apply H; auto.
-right.
-apply H0; auto.
+             forall (v : nat) (s : Term) (x : nat),
+               In x (freeVarTerm L s) ->
+               In v (freeVarTerms L n ts) ->
+               In x (freeVarTerms L n (substituteTerms L n ts v s))).
+  - intros n v s x H H0; simpl; induction (eq_nat_dec v n) as [? | b].
+    + assumption.
+    +  elim b; induction H0 as [H0| H0].
+          * auto.
+          * contradiction.
+  - intros f t0 H v s x H0 H1; simpl; unfold freeVarTerm;
+      fold
+        (freeVarTerms L _ (substituteTerms L (arity L (inr (Relations L) f)) t0 v s)).
+    apply H; auto.
+  - intros v s x H H0; auto.
+  - intros n t0 H t1 H0 v s x H1 H2; simpl; unfold freeVarTerms in H2;
+    fold (freeVarTerm L t0) in H2; fold (freeVarTerms L n t1) in H2.
+    unfold freeVarTerms; fold (freeVarTerm L (substituteTerm L t0 v s));
+      fold (freeVarTerms L n (substituteTerms L n t1 v s));
+      apply in_or_app.
+    induction (in_app_or _ _ _ H2).
+    + left; apply H; auto.
+    + right; apply H0; auto.
 Qed.
 
-Lemma freeVarSubTerms2 :
- forall (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubTerms2 (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat):
  In x (freeVarTerm L s) ->
  In v (freeVarTerms L n ts) ->
  In x (freeVarTerms L n (substituteTerms L n ts v s)).
 Proof.
-intros.
-induction ts as [| n t ts Hrects].
-auto.
-simpl in |- *.
-unfold freeVarTerms in H0.
-fold (freeVarTerm L t) in H0.
-fold (freeVarTerms L n ts) in H0.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L (substituteTerm L t v s)) in |- *.
-fold (freeVarTerms L n (substituteTerms L n ts v s)) in |- *.
-apply in_or_app.
-induction (in_app_or _ _ _ H0).
-left.
-apply freeVarSubTerm2; auto.
-right.
-apply Hrects; auto.
+  intros H H0; induction ts as [| n t ts Hrects].
+  - contradiction H0. 
+  - simpl; unfold freeVarTerms in H0; fold (freeVarTerm L t) in H0.
+    fold (freeVarTerms L n ts) in H0; unfold freeVarTerms.
+    fold (freeVarTerm L (substituteTerm L t v s));
+      fold (freeVarTerms L n (substituteTerms L n ts v s));
+      apply in_or_app.
+    destruct (in_app_or _ _ _ H0).
+    + left; apply freeVarSubTerm2; auto.
+    + right; apply Hrects; auto.
 Qed.
 
-Lemma freeVarSubFormula2 :
- forall (f : Formula) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerm L s) ->
- In v (freeVarFormula L f) ->
- In x (freeVarFormula L (substituteFormula L f v s)).
+Lemma freeVarSubFormula2 (f : Formula):
+  forall  (v : nat) (s : Term) (x : nat),
+    In x (freeVarTerm L s) ->
+    In v (freeVarFormula L f) ->
+    In x (freeVarFormula L (substituteFormula L f v s)).
 Proof.
-intro.
-elim f using Formula_depth_ind2; intros.
-rewrite subFormulaEqual.
-simpl in |- *.
-simpl in H0.
-apply in_or_app.
-induction (in_app_or _ _ _ H0).
-left.
-apply freeVarSubTerm2; auto.
-right.
-apply freeVarSubTerm2; auto.
-rewrite subFormulaRelation.
-simpl in |- *.
-simpl in H0.
-apply freeVarSubTerms2; auto.
-rewrite subFormulaImp.
-simpl in |- *.
-simpl in H2.
-apply in_or_app.
-induction (in_app_or _ _ _ H2).
-left.
-apply H; auto.
-right.
-apply H0; auto.
-rewrite subFormulaNot.
-simpl in |- *.
-apply H; auto.
-rewrite subFormulaForall.
-induction (eq_nat_dec v v0).
-simpl in H1.
-elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
-auto.
-induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-simpl in |- *.
-apply In_list_remove3.
-apply H.
-unfold lt_depth in |- *.
-rewrite subFormulaDepth.
-simpl in |- *.
-apply Nat.lt_succ_diag_r.
-assumption.
-apply freeVarSubFormula1.
-assumption.
-simpl in H1.
-eapply In_list_remove1.
-apply H1.
-unfold not in |- *; intros.
-elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
-fold nv in |- *.
-simpl in |- *.
-right.
-apply in_or_app.
-rewrite <- H2.
-auto.
-simpl in |- *.
-eapply In_list_remove3.
-apply H.
-apply depthForall.
-auto.
-eapply In_list_remove1.
-simpl in H1.
-apply H1.
-unfold not in |- *; intros; elim b0.
-rewrite H2 in H0.
-auto.
+  elim f using Formula_depth_ind2.  
+  - intros t t0 v s x H H0; rewrite subFormulaEqual.
+    simpl in H0 |- *; apply in_or_app.
+    induction (in_app_or _ _ _ H0) as [? | ?].
+    + left; apply freeVarSubTerm2; auto.
+    + right; apply freeVarSubTerm2; auto.
+  - intros r t v s x H H0; rewrite subFormulaRelation; simpl in H0 |- *.
+    apply freeVarSubTerms2; auto.
+  - intros f0 H f1 H0 v s x H1 H2; rewrite subFormulaImp.
+    simpl in H2 |- *; apply in_or_app.
+    induction (in_app_or _ _ _ H2).
+    + left; apply H; auto.
+    + right; apply H0; auto.
+  - intros f0 H v s x H0 H1; rewrite subFormulaNot; simpl; apply H; auto.
+  - intros v a H v0 s x H0 H1; rewrite subFormulaForall.
+    induction (eq_nat_dec v v0).
+    + simpl in H1; elim (In_list_remove2 _ eq_nat_dec _ _ _ H1); auto. 
+    + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | b0].
+      * set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+        simpl; apply In_list_remove3.
+        -- apply H.
+           ++ unfold lt_depth; rewrite subFormulaDepth; simpl;
+                apply Nat.lt_succ_diag_r.
+           ++ assumption.
+           ++ apply freeVarSubFormula1. 
+              ** assumption.
+              ** simpl in H1; eapply In_list_remove1.
+                 apply H1.
+        -- intro H2; 
+             elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+           fold nv; simpl; right.
+           apply in_or_app.
+           rewrite <- H2; auto.
+      * simpl; eapply In_list_remove3.
+        -- apply H.
+           apply depthForall; auto.
+           auto. 
+           eapply In_list_remove1.
+           simpl in H1; apply H1.
+        -- unfold not in |- *; intros.  
+           elim b0; now rewrite H2 in H0.
 Qed.
 
-Lemma freeVarSubTerm3 :
- forall (t : Term) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerm L (substituteTerm L t v s)) ->
- In x (list_remove _ eq_nat_dec v (freeVarTerm L t)) \/
- In x (freeVarTerm L s).
+Lemma freeVarSubTerm3  (t : Term):
+  forall (v : nat) (s : Term) (x : nat),
+    In x (freeVarTerm L (substituteTerm L t v s)) ->
+    In x (list_remove _ eq_nat_dec v (freeVarTerm L t)) \/
+      In x (freeVarTerm L s).
 Proof.
-intro.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           forall (v : nat) (s : Term) (x : nat),
-           In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
-           In x (list_remove _ eq_nat_dec v (freeVarTerms L n ts)) \/
-           In x (freeVarTerm L s)); intros.
-simpl in H.
-induction (eq_nat_dec v n).
-auto.
-left.
-apply In_list_remove3.
-assumption.
-unfold not in |- *; intros; elim b.
-rewrite H0 in H.
-induction H as [H| H].
-auto.
-contradiction.
-simpl in H0.
-induction (H _ _ _ H0); auto.
-auto.
-simpl in H1.
-unfold freeVarTerms in H1.
-fold (freeVarTerm L (substituteTerm L t0 v s)) in H1.
-fold (freeVarTerms L n (substituteTerms L n t1 v s)) in H1.
-induction (in_app_or _ _ _ H1).
-induction (H _ _ _ H2).
-left.
-apply In_list_remove3.
-unfold freeVarTerms in |- *.
-apply in_or_app.
-left.
-eapply In_list_remove1.
-apply H3.
-eapply In_list_remove2.
-apply H3.
-auto.
-induction (H0 _ _ _ H2).
-left.
-apply In_list_remove3.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t0) in |- *.
-fold (freeVarTerms L n t1) in |- *.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-apply H3.
-eapply In_list_remove2.
-apply H3.
-auto.
+             forall (v : nat) (s : Term) (x : nat),
+               In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
+               In x (list_remove _ eq_nat_dec v (freeVarTerms L n ts)) \/
+                 In x (freeVarTerm L s)). 
+  - intros n v s x H; simpl in H.
+    induction (eq_nat_dec v n) as [a | b].
+    + now right.
+    + left; apply In_list_remove3.
+      * assumption.
+      *  intro H0; rewrite H0 in H; destruct H as [H| H].
+         -- congruence.
+         -- contradiction H.
+  - intros f t0 H v s x H0; simpl in H0; induction (H _ _ _ H0); auto.
+  - auto.
+  - intros n t0 H t1 H0 v s x H1; simpl in H1;
+      unfold freeVarTerms in H1;
+      fold (freeVarTerm L (substituteTerm L t0 v s)) in H1;
+      fold (freeVarTerms L n (substituteTerms L n t1 v s)) in H1.
+    destruct (in_app_or _ _ _ H1) as [H2 | H2].
+    + induction (H _ _ _ H2) as [H3 | H3].
+      * left; apply In_list_remove3.
+        -- unfold freeVarTerms; apply in_or_app; left.
+           eapply In_list_remove1; apply H3.
+        --  eapply In_list_remove2; apply H3.
+      *  auto.
+    + induction (H0 _ _ _ H2) as [H3 | H3].
+      * left; apply In_list_remove3.
+        -- unfold freeVarTerms; fold (freeVarTerm L t0);
+             fold (freeVarTerms L n t1); apply in_or_app.
+           right; eapply In_list_remove1; apply H3.
+        -- eapply In_list_remove2; apply H3.
+      * auto.
 Qed.
 
-Lemma freeVarSubTerms3 :
- forall (n : nat) (ts : fol.Terms L n) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubTerms3 (n : nat) (ts : fol.Terms L n) (v : nat) (s : Term) 
+  (x : nat):
  In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
  In x (list_remove _ eq_nat_dec v (freeVarTerms L n ts)) \/
  In x (freeVarTerm L s).
 Proof.
-intros.
-induction ts as [| n t ts Hrects].
-auto.
-simpl in H.
-unfold freeVarTerms in H.
-fold (freeVarTerm L (substituteTerm L t v s)) in H.
-fold (freeVarTerms L n (substituteTerms L n ts v s)) in H.
-induction (in_app_or _ _ _ H).
-induction (freeVarSubTerm3 _ _ _ _ H0).
-left.
-apply In_list_remove3.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t) in |- *.
-fold (freeVarTerms L n ts) in |- *.
-apply in_or_app.
-left.
-eapply In_list_remove1.
-apply H1.
-eapply In_list_remove2.
-apply H1.
-auto.
-induction (Hrects H0).
-left.
-apply In_list_remove3.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t) in |- *.
-fold (freeVarTerms L n ts) in |- *.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-apply H1.
-eapply In_list_remove2.
-apply H1.
-auto.
+  intros H; induction ts as [| n t ts Hrects].
+  - left; apply H. 
+  - simpl in H; unfold freeVarTerms in H;
+      fold (freeVarTerm L (substituteTerm L t v s)) in H;
+      fold (freeVarTerms L n (substituteTerms L n ts v s)) in H;
+      induction (in_app_or _ _ _ H) as [H0 | H0].
+    + induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
+      * left.
+        apply In_list_remove3.
+        -- unfold freeVarTerms; fold (freeVarTerm L t);
+             fold (freeVarTerms L n ts); apply in_or_app.
+           left; eapply In_list_remove1; apply H1.
+        -- eapply In_list_remove2; apply H1.
+      * now right.
+    + induction (Hrects H0) as [H1 | H1].
+      * left; apply In_list_remove3.
+        -- unfold freeVarTerms; fold (freeVarTerm L t);
+             fold (freeVarTerms L n ts); apply in_or_app; right.
+           eapply In_list_remove1; apply H1.
+        -- eapply In_list_remove2; apply H1.
+      * now right.
 Qed.
 
-Lemma freeVarSubFormula3 :
- forall (f : Formula) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubFormula3  (f : Formula):
+ forall (v : nat) (s : Term) (x : nat),
  In x (freeVarFormula L (substituteFormula L f v s)) ->
  In x (list_remove _ eq_nat_dec v (freeVarFormula L f)) \/
  In x (freeVarTerm L s).
 Proof.
-intro.
-elim f using Formula_depth_ind2; intros.
-rewrite subFormulaEqual in H.
-simpl in H.
-induction (in_app_or _ _ _ H).
-simpl in |- *.
-induction (freeVarSubTerm3 _ _ _ _ H0).
-left.
-apply In_list_remove3.
-apply in_or_app.
-left.
-eapply In_list_remove1.
-apply H1.
-eapply In_list_remove2.
-apply H1.
-auto.
-simpl in |- *.
-induction (freeVarSubTerm3 _ _ _ _ H0).
-left.
-apply In_list_remove3.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-apply H1.
-eapply In_list_remove2.
-apply H1.
-auto.
-rewrite subFormulaRelation in H.
-simpl in H.
-simpl in |- *.
-eapply freeVarSubTerms3.
-apply H.
-rewrite subFormulaImp in H1.
-simpl in H1.
-simpl in |- *.
-induction (in_app_or _ _ _ H1).
-induction (H _ _ _ H2).
-left.
-apply In_list_remove3.
-apply in_or_app.
-left.
-eapply In_list_remove1.
-apply H3.
-eapply In_list_remove2.
-apply H3.
-auto.
-induction (H0 _ _ _ H2).
-left.
-apply In_list_remove3.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-apply H3.
-eapply In_list_remove2.
-apply H3.
-auto.
-rewrite subFormulaNot in H0.
-eapply H.
-apply H0.
-rewrite subFormulaForall in H0.
-induction (eq_nat_dec v v0).
-left.
-apply In_list_remove3.
-apply H0.
-eapply In_list_remove2.
-rewrite <- a0.
-apply H0.
-induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-induction (eq_nat_dec x v).
-rewrite a1.
-auto.
-assert
- (lt_depth L (substituteFormula L a v (fol.var L nv)) (fol.forallH L v a)).
-unfold lt_depth in |- *.
-rewrite subFormulaDepth.
-apply depthForall.
-assert
- (In x
-    (freeVarFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L nv)) v0 s))).
-eapply In_list_remove1.
-apply H0.
-assert (x <> nv).
-eapply In_list_remove2.
-apply H0.
-clear H0.
-induction (H _ H1 _ _ _ H2).
-assert (lt_depth L a (fol.forallH L v a)).
-apply depthForall.
-assert (In x (freeVarFormula L (substituteFormula L a v (fol.var L nv)))).
-eapply In_list_remove1.
-apply H0.
-assert (x <> v0).
-eapply In_list_remove2.
-apply H0.
-clear H0.
-induction (H _ H4 _ _ _ H5).
-left.
-apply In_list_remove3.
-apply H0.
-assumption.
-elim H3.
-simpl in H0.
-induction H0 as [H0| H0].
-auto.
-contradiction.
-auto.
-assert (lt_depth L a (fol.forallH L v a)).
-apply depthForall.
-simpl in H0.
-assert (In x (freeVarFormula L (substituteFormula L a v0 s))).
-eapply In_list_remove1.
-apply H0.
-induction (H _ H1 _ _ _ H2).
-left.
-apply In_list_remove3.
-simpl in |- *.
-apply In_list_remove3.
-eapply In_list_remove1.
-apply H3.
-eapply In_list_remove2.
-apply H0.
-eapply In_list_remove2.
-apply H3.
-auto.
+  elim f using Formula_depth_ind2. 
+  - intros t t0 v s x H; rewrite subFormulaEqual in H.
+    simpl in H; induction (in_app_or _ _ _ H) as [H0 | H0].
+    + simpl;induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
+      * left; apply In_list_remove3.
+        -- apply in_or_app; left; eapply In_list_remove1; apply H1.
+        -- eapply In_list_remove2; apply H1.
+      * now right.
+    + simpl; induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
+      * left; apply In_list_remove3.
+        -- apply in_or_app; right; eapply In_list_remove1, H1.
+        -- eapply In_list_remove2, H1.
+      * now right. 
+  - intros r t v s x H; rewrite subFormulaRelation in H; simpl in H |- *.
+    eapply freeVarSubTerms3, H.
+  - intros f0 H f1 H0 v s x H1;  rewrite subFormulaImp in H1.
+    simpl in H1 |- *; induction (in_app_or _ _ _ H1) as [H2 | H2].
+    + induction (H _ _ _ H2) as [H3 | H3]. 
+      * left; apply In_list_remove3.
+        -- apply in_or_app; left; eapply In_list_remove1, H3.
+        -- eapply In_list_remove2, H3. 
+      * now right.
+    + induction (H0 _ _ _ H2) as [H3 | H3].
+      * left; apply In_list_remove3.
+        -- apply in_or_app; right; eapply In_list_remove1, H3.
+        -- eapply In_list_remove2, H3. 
+      * now right.
+  - intros f0 H v s x H0; rewrite subFormulaNot in H0.
+    eapply H, H0.
+  - intros  v a H v0 s x H0; rewrite subFormulaForall in H0.
+    induction (eq_nat_dec v v0) as [a0 | ?].
+    + left; apply In_list_remove3.
+      * apply H0.
+      * eapply In_list_remove2; rewrite <- a0; apply H0.
+    + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | ?].
+      * set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+        induction (eq_nat_dec x v) as [a1 | ?].
+        -- rewrite a1;  now right.
+        -- assert
+            (H1: lt_depth L (substituteFormula L a v (fol.var L nv))
+                   (fol.forallH L v a)).
+           { unfold lt_depth; rewrite subFormulaDepth.
+             apply depthForall.
+           }
+           assert
+             (H2: In x
+                    (freeVarFormula L
+                       (substituteFormula L 
+                          (substituteFormula L a v (fol.var L nv)) v0 s))).
+           { eapply In_list_remove1; apply H0. }
+           assert (H3: x <> nv).
+           { eapply In_list_remove2; apply H0. }
+           clear H0.
+           induction (H _ H1 _ _ _ H2) as [H0 | H0].
+           ++ assert (H4: lt_depth L a (fol.forallH L v a)) by
+              apply depthForall.
+              assert (H5: In x (freeVarFormula L
+                              (substituteFormula L a v (fol.var L nv)))).
+              { eapply In_list_remove1; apply H0. }
+              assert (H6: x <> v0).
+              { eapply In_list_remove2, H0. }
+              clear H0.
+              induction (H _ H4 _ _ _ H5).
+              ** left; apply In_list_remove3.
+                 apply H0.
+                 assumption.
+              ** elim H3; simpl in H0; induction H0 as [H0| H0].
+                 auto.
+                 contradiction.
+           ++ now right.
+      * assert (H1: lt_depth L a (fol.forallH L v a)) 
+          by apply depthForall.
+        simpl in H0.
+        assert (H2: In x (freeVarFormula L (substituteFormula L a v0 s))).
+        { eapply In_list_remove1, H0. }
+        induction (H _ H1 _ _ _ H2) as [H3 | H3].
+        -- left; apply In_list_remove3.
+           simpl; apply In_list_remove3.  
+           ++ eapply In_list_remove1, H3.
+           ++ eapply In_list_remove2, H0.
+           ++ eapply In_list_remove2, H3.
+        -- now right.
 Qed.
 
-Lemma freeVarSubTerm4 :
- forall (t : Term) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubTerm4 (t : Term) :
+ forall  (v : nat) (s : Term) (x : nat),
  In x (freeVarTerm L (substituteTerm L t v s)) ->
  ~ In v (freeVarTerm L t) -> In x (freeVarTerm L t).
 Proof.
-intro.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           forall (v : nat) (s : Term) (x : nat),
-           In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
-           ~ In v (freeVarTerms L n ts) -> In x (freeVarTerms L n ts));
- intros.
-simpl in |- *.
-simpl in H.
-induction (eq_nat_dec v n).
-elim H0.
-rewrite a.
-simpl in |- *.
-auto.
-apply H.
-simpl in H0.
-eapply H.
-apply H0.
-apply H1.
-auto.
-simpl in H1.
-unfold freeVarTerms in H1.
-fold (freeVarTerm L (substituteTerm L t0 v s)) in H1.
-fold (freeVarTerms L n (substituteTerms L n t1 v s)) in H1.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t0) in |- *.
-fold (freeVarTerms L n t1) in |- *.
-induction (in_app_or _ _ _ H1).
-apply in_or_app.
-left.
-eapply H.
-apply H3.
-unfold not in |- *; intros; elim H2.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t0) in |- *.
-fold (freeVarTerms L n t1) in |- *.
-apply in_or_app.
-auto.
-apply in_or_app.
-right.
-eapply H0.
-apply H3.
-unfold not in |- *; intros; elim H2.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t0) in |- *.
-fold (freeVarTerms L n t1) in |- *.
-apply in_or_app.
-auto.
+             forall (v : nat) (s : Term) (x : nat),
+               In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
+               ~ In v (freeVarTerms L n ts) -> In x (freeVarTerms L n ts)).
+  - intros n v s x H H0; simpl in H |- *.
+    induction (eq_nat_dec v n) as [a | ?].
+    + elim H0; rewrite a; simpl; now left. 
+    + apply H.
+  - intros f t0 H v s x  H0 H1; simpl in H0; eapply H.
+    + apply H0.
+    + apply H1.
+  - intros; assumption.
+  - intros n t0 H t1 H0 v s x H1 H2; simpl in H1.
+    unfold freeVarTerms in H1;
+    fold (freeVarTerm L (substituteTerm L t0 v s)) in H1;
+    fold (freeVarTerms L n (substituteTerms L n t1 v s)) in H1;
+    unfold freeVarTerms ;
+      fold (freeVarTerm L t0); fold (freeVarTerms L n t1).
+    induction (in_app_or _ _ _ H1) as [H3 | H3].
+    + apply in_or_app; left; eapply H.
+      * apply H3.
+      * intro H4; elim H2.
+        unfold freeVarTerms; fold (freeVarTerm L t0);
+          fold (freeVarTerms L n t1); apply in_or_app.
+        now left. 
+    + apply in_or_app; right; eapply H0.
+      * apply H3.
+      *  intro H4; elim H2.
+         unfold freeVarTerms; fold (freeVarTerm L t0); 
+           fold (freeVarTerms L n t1); apply in_or_app; now right.
 Qed.
 
-Lemma freeVarSubTerms4 :
- forall (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat),
- In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
- ~ In v (freeVarTerms L n ts) -> In x (freeVarTerms L n ts).
+Lemma freeVarSubTerms4 (n : nat) (ts : Terms n) (v : nat)
+  (s : Term) (x : nat):
+  In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
+  ~ In v (freeVarTerms L n ts) -> In x (freeVarTerms L n ts).
 Proof.
-intros.
-induction ts as [| n t ts Hrects].
-auto.
-simpl in H.
-unfold freeVarTerms in H.
-fold (freeVarTerm L (substituteTerm L t v s)) in H.
-fold (freeVarTerms L n (substituteTerms L n ts v s)) in H.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t) in |- *.
-fold (freeVarTerms L n ts) in |- *.
-induction (in_app_or _ _ _ H).
-apply in_or_app.
-left.
-eapply freeVarSubTerm4.
-apply H1.
-unfold not in |- *; intros; elim H0.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t) in |- *.
-fold (freeVarTerms L n ts) in |- *.
-apply in_or_app.
-auto.
-apply in_or_app.
-right.
-eapply Hrects.
-apply H1.
-unfold not in |- *; intros; elim H0.
-unfold freeVarTerms in |- *.
-fold (freeVarTerm L t) in |- *.
-fold (freeVarTerms L n ts) in |- *.
-apply in_or_app.
-auto.
+  intros H H0; induction ts as [| n t ts Hrects].
+  - auto.
+  - simpl in H; unfold freeVarTerms in H;
+      fold (freeVarTerm L (substituteTerm L t v s)) in H;
+      fold (freeVarTerms L n (substituteTerms L n ts v s)) in H.
+    unfold freeVarTerms; fold (freeVarTerm L t); fold (freeVarTerms L n ts).
+    induction (in_app_or _ _ _ H) as [H1 | H1].
+    + apply in_or_app; left; eapply freeVarSubTerm4.
+      * apply H1.
+      * intro H2; elim H0.
+        unfold freeVarTerms; fold (freeVarTerm L t);
+          fold (freeVarTerms L n ts); apply in_or_app; now left.
+    + apply in_or_app; right; eapply Hrects. 
+      * apply H1.
+      * intro H2; elim H0; unfold freeVarTerms;
+          fold (freeVarTerm L t); fold (freeVarTerms L n ts).
+        apply in_or_app; now right.
 Qed.
 
-Lemma freeVarSubFormula4 :
- forall (f : Formula) (v : nat) (s : Term) (x : nat),
+Lemma freeVarSubFormula4  (f : Formula) :
+ forall (v : nat) (s : Term) (x : nat),
  In x (freeVarFormula L (substituteFormula L f v s)) ->
  ~ In v (freeVarFormula L f) -> In x (freeVarFormula L f).
 Proof.
-intro.
-elim f using Formula_depth_ind2; intros.
-rewrite subFormulaEqual in H.
-simpl in H.
-simpl in |- *.
-simpl in H0.
-apply in_or_app.
-induction (in_app_or _ _ _ H).
-left.
-eapply freeVarSubTerm4.
-apply H1.
-unfold not in |- *; intros; elim H0.
-apply in_or_app.
-auto.
-right.
-eapply freeVarSubTerm4.
-apply H1.
-unfold not in |- *; intros; elim H0.
-apply in_or_app.
-auto.
-rewrite subFormulaRelation in H.
-simpl in H.
-simpl in |- *.
-eapply freeVarSubTerms4.
-apply H.
-assumption.
-rewrite subFormulaImp in H1.
-simpl in H2.
-simpl in H1.
-simpl in |- *.
-apply in_or_app.
-induction (in_app_or _ _ _ H1).
-left.
-eapply H.
-apply H3.
-unfold not in |- *; intros; elim H2.
-apply in_or_app.
-auto.
-right.
-eapply H0.
-apply H3.
-unfold not in |- *; intros; elim H2.
-apply in_or_app.
-auto.
-rewrite subFormulaNot in H0.
-simpl in |- *.
-eapply H.
-apply H0.
-apply H1.
-simpl in |- *.
-simpl in H1.
-rewrite subFormulaForall in H0.
-induction (eq_nat_dec v v0).
-apply H0.
-induction (In_dec eq_nat_dec v (freeVarTerm L s)).
-set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-simpl in H0.
-assert
- (In x
-    (freeVarFormula L
-       (substituteFormula L (substituteFormula L a v (fol.var L nv)) v0 s))).
-eapply In_list_remove1.
-apply H0.
-assert (In x (freeVarFormula L (substituteFormula L a v (fol.var L nv)))).
-eapply H.
-unfold lt_depth in |- *.
-rewrite subFormulaDepth.
-apply depthForall.
-apply H2.
-unfold not in |- *; intros.
-induction (freeVarSubFormula3 _ _ _ _ H3).
-auto.
-elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
-fold nv in |- *.
-induction H4 as [H4| H4].
-rewrite H4.
-simpl in |- *.
-auto.
-elim H4.
-induction (freeVarSubFormula3 _ _ _ _ H3).
-auto.
-induction H4 as [H4| H4].
-elim (In_list_remove2 _ _ _ _ _ H0).
-auto.
-elim H4.
-simpl in H0.
-apply In_list_remove3.
-eapply H.
-apply depthForall.
-eapply In_list_remove1.
-apply H0.
-unfold not in |- *; intros; elim H1.
-apply In_list_remove3.
-auto.
-auto.
-eapply In_list_remove2.
-apply H0.
+  elim f using Formula_depth_ind2.
+  - intros t t0 v s x H H0; rewrite subFormulaEqual in H.
+    simpl in H, H0 |- *; apply in_or_app.
+    induction (in_app_or _ _ _ H) as [H1 | H1].
+    + left; eapply freeVarSubTerm4.
+      * apply H1.
+      * intro H2; elim H0.
+        apply in_or_app; now left. 
+    + right; eapply freeVarSubTerm4.
+      * apply H1; intro H2; elim H0; apply in_or_app; now right.
+      *   intro H2; apply H0; apply in_or_app; now right. 
+  - intros r t v s x H H0; rewrite subFormulaRelation in H.
+    simpl in H |- *; eapply freeVarSubTerms4; [apply H | assumption].
+  -  intros f0 H f1 H0 v s  x H1 H2; rewrite subFormulaImp in H1;
+       simpl in H2, H1  |- *;  apply in_or_app.
+     induction (in_app_or _ _ _ H1) as [H3 | H3].
+     + left; eapply H. 
+       * apply H3.
+       * intro H4; elim H2; apply in_or_app; now left. 
+     + right; eapply H0.  
+       * apply H3.
+       * intro H4; elim H2; apply in_or_app; now right.
+  - intros f0 H v s x H0 H1; rewrite subFormulaNot in H0.
+    simpl; eapply H.
+    + apply H0.
+    + apply H1.
+  - intros v a H v0 s x H0 H1; simpl in |- *.
+    simpl in H1; rewrite subFormulaForall in H0.
+    induction (eq_nat_dec v v0) as [a0 | ?]. 
+    + apply H0.
+    + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | ?].
+      * set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+        simpl in H0.
+        assert
+          (H2: In x
+             (freeVarFormula L
+                (substituteFormula L (substituteFormula L a v (fol.var L nv)) v0 s))).
+        { eapply In_list_remove1; apply H0. } 
+        assert (H3: In x (freeVarFormula L (substituteFormula L a v (fol.var L nv)))).
+        { eapply H.
+          - unfold lt_depth; rewrite subFormulaDepth.
+            apply depthForall.
+          - apply H2.
+          - intros H3; induction (freeVarSubFormula3 _ _ _ _ H3).
+            + auto.
+            + elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+              fold nv; induction H4 as [H4| H4].
+              * rewrite H4; simpl; now left.  
+              * elim H4.
+        } 
+        induction (freeVarSubFormula3 _ _ _ _ H3). 
+       -- assumption. 
+       -- induction H4 as [H4| H4].
+          ++ elim (In_list_remove2 _ _ _ _ _ H0); now subst nv.
+          ++ elim H4.
+      * simpl in H0; apply In_list_remove3.
+        -- eapply H.
+           ++ apply depthForall.
+           ++ eapply In_list_remove1, H0.
+           ++ intro H2; elim H1.
+               ** apply In_list_remove3; auto.
+        -- eapply In_list_remove2, H0.
 Qed.
 
-Lemma subTermNil :
- forall (t : Term) (v : nat) (s : Term),
+Lemma subTermNil (t : Term) (v : nat) (s : Term):
  ~ In v (freeVarTerm L t) -> substituteTerm L t v s = t.
 Proof.
-intros t v s.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           ~ In v (freeVarTerms L n ts) -> substituteTerms L n ts v s = ts).
-intros.
-simpl in H.
-rewrite subTermVar2.
-reflexivity.
-unfold not in |- *; intros; elim H.
-auto.
-intros.
-simpl in |- *.
-rewrite H.
-reflexivity.
-apply H0.
-auto.
-intros.
-simpl in |- *.
-unfold freeVarTerms in H1.
-rewrite H0.
-rewrite H.
-reflexivity.
-unfold not in |- *; intros; elim H1.
-apply in_or_app.
-auto.
-unfold not in |- *; intros; elim H1.
-apply in_or_app.
-auto.
+             ~ In v (freeVarTerms L n ts) -> substituteTerms L n ts v s = ts).
+  - intros n H; simpl in H; rewrite subTermVar2.
+    + reflexivity.
+    + intro H0; apply H; left; auto. 
+  - intros f t0 H H0; simpl; rewrite H.
+    + reflexivity.
+    + apply H0.
+  - reflexivity. 
+  - intros n t0 H t1 H0 H1; simpl; unfold freeVarTerms in H1.
+    rewrite H0.
+    + rewrite H.
+      * reflexivity.
+      *  intros H2; elim H1; apply in_or_app. auto. 
+    +  intro H2; elim H1; apply in_or_app; now right. 
 Qed.
-
-Lemma subTermTrans :
- forall (t : Term) (v1 v2 : nat) (s : Term),
+ 
+Lemma subTermTrans  (t : Term) (v1 v2 : nat) (s : Term):
  ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerm L t)) ->
  substituteTerm L (substituteTerm L t v1 (var v2)) v2 s =
  substituteTerm L t v1 s.
 Proof.
-intros t v1 v2 s.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerms L n ts)) ->
-           substituteTerms L n (substituteTerms L n ts v1 (var v2)) v2 s =
-           substituteTerms L n ts v1 s).
-intros.
-simpl in |- *.
-induction (eq_nat_dec v1 n).
-rewrite (subTermVar1 L).
-reflexivity.
-rewrite (subTermVar2 L).
-reflexivity.
-simpl in H.
-induction (eq_nat_dec n v1).
-elim b; auto.
-unfold not in |- *; intros; elim H.
-simpl in |- *.
-auto.
-intros.
-simpl in |- *.
-rewrite H.
-reflexivity.
-apply H0.
-auto.
-intros.
-simpl in |- *.
-unfold freeVarTerms in H1.
-rewrite H0.
-rewrite H.
-reflexivity.
-unfold not in |- *; intros; elim H1.
-apply In_list_remove3.
-apply in_or_app.
-left.
-eapply In_list_remove1.
-apply H2.
-eapply In_list_remove2.
-apply H2.
-unfold not in |- *; intros; elim H1.
-apply In_list_remove3.
-apply in_or_app.
-right.
-eapply In_list_remove1.
-apply H2.
-eapply In_list_remove2.
-apply H2.
+             ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerms L n ts)) ->
+             substituteTerms L n (substituteTerms L n ts v1 (var v2)) v2 s =
+               substituteTerms L n ts v1 s).
+  - intros n H; simpl; induction (eq_nat_dec v1 n) as [? | b].
+    + now rewrite (subTermVar1 L).
+    + rewrite (subTermVar2 L).
+      * reflexivity.
+      * simpl in H; induction (eq_nat_dec n v1).
+        -- elim b; auto.
+        -- intro H0; elim H. simpl; auto. 
+  - intros f t0 H H0; simpl; rewrite H.
+    + reflexivity.
+    + apply H0.
+  - auto.
+  - intros n t0 H t1 H0 H1; simpl; unfold freeVarTerms in H1.
+    rewrite H0.
+    * rewrite H. 
+      -- reflexivity.
+      --  intros H2; elim H1; apply In_list_remove3.
+          ++ apply in_or_app; left.
+             eapply In_list_remove1, H2.
+          ++ eapply In_list_remove2, H2. 
+    * intro H2; elim H1; apply In_list_remove3.
+      -- apply in_or_app; right; eapply In_list_remove1, H2.
+      -- eapply In_list_remove2, H2.
 Qed.
 
-Lemma subTermExch :
- forall (t : Term) (v1 v2 : nat) (s1 s2 : Term),
+Lemma subTermExch  (t : Term) (v1 v2 : nat) (s1 s2 : Term):
  v1 <> v2 ->
  ~ In v2 (freeVarTerm L s1) ->
  ~ In v1 (freeVarTerm L s2) ->
  substituteTerm L (substituteTerm L t v1 s1) v2 s2 =
  substituteTerm L (substituteTerm L t v2 s2) v1 s1.
 Proof.
-intros t v1 v2 s1 s2.
-elim t using
- Term_Terms_ind
-  with
+  elim t using
+    Term_Terms_ind
+    with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           v1 <> v2 ->
-           ~ In v2 (freeVarTerm L s1) ->
-           ~ In v1 (freeVarTerm L s2) ->
-           substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-           substituteTerms L n (substituteTerms L n ts v2 s2) v1 s1).
-intros.
-simpl in |- *.
-induction (eq_nat_dec v1 n).
-induction (eq_nat_dec v2 n).
-elim H.
-transitivity n; auto.
-rewrite a.
-rewrite subTermVar1.
-rewrite subTermNil; auto.
-induction (eq_nat_dec v2 n).
-rewrite a.
-rewrite subTermVar1.
-rewrite subTermNil; auto.
-rewrite subTermVar2.
-rewrite subTermVar2.
-reflexivity.
-assumption.
-assumption.
-intros.
-simpl in |- *.
-rewrite H; auto.
-reflexivity.
-intros.
-simpl in |- *.
-rewrite H; auto.
-rewrite H0; auto.
+             v1 <> v2 ->
+             ~ In v2 (freeVarTerm L s1) ->
+             ~ In v1 (freeVarTerm L s2) ->
+             substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
+               substituteTerms L n (substituteTerms L n ts v2 s2) v1 s1).
+ - intros n H H0 H1; simpl; induction (eq_nat_dec v1 n) as [a | ?].
+   + induction (eq_nat_dec v2 n).
+     * elim H; congruence. 
+     * rewrite a; rewrite subTermVar1.
+       rewrite subTermNil; auto.
+   + induction (eq_nat_dec v2 n) as [a| ?].
+     * rewrite a; rewrite subTermVar1.
+       rewrite subTermNil; auto.
+     * now repeat rewrite subTermVar2.
+ -  intros f t0 H H0 H1 H2; simpl; rewrite H; auto.
+ - reflexivity.
+ - intros n t0 H t1 H0 H1 H2 H3; simpl; rewrite H; auto.
+   now rewrite H0.
 Qed.
 
 Lemma subTermsNil :
