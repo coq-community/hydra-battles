@@ -1797,724 +1797,737 @@ Proof.
                                 (substituteFormula L 
                                    (substituteFormula L a v (fol.var L x)) v1 s1))).
                    { eapply In_list_remove1, H15. }
-    assert (In x0 (freeVarFormula L (substituteFormula L a v (fol.var L x)))).
-    eapply freeVarSubFormula4.
-    apply H16.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H17).
-    rewrite <- a1 in H18.
-    auto.
-    induction H18 as [H18| H18]; auto.
-    induction (freeVarSubFormula3 _ _ _ _ H17).
-    auto.
-    rewrite a1 in H18.
-    induction H18 as [H18| H18]; auto.
-    ++ apply impE with (substituteFormula L a v (fol.var L x0)).
-    apply sysWeaken.
-    apply (iffE2 L).
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L x0)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H16; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    rewrite <- a0 in H17.
-    auto.
-    induction H17 as [H17| H17]; auto.
-    rewrite <- (subFormulaId L (substituteFormula L a v (fol.var L x0)) x0).
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
-            (var x)) x (fol.var L x0)).
-    apply sysWeaken.
-    apply (iffE1 L).
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L x0)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    assert (In x (freeVarFormula L (substituteFormula L a v (fol.var L x0)))).
-    eapply In_list_remove1.
-    apply H16.
-    induction (freeVarSubFormula3 _ _ _ _ H17).
-    auto.
-    rewrite a1 in H18.
-    induction H18 as [H18| H18]; auto.
-    apply
-      impE
-      with
-      (substituteFormula L (substituteFormula L a v (var x)) x (fol.var L x0)).
-    apply sysWeaken.
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply (impE L) with (substituteFormula L a v (var x)).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply forallE.
-    apply
-      impE
-      with
-      (fol.forallH L x
-         (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1)).
-    apply sysWeaken.
-    apply (iffE1 L).
-    apply (reduceForall L).
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16; simple induction H16.
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L x)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H16; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    rewrite <- a1 in H17.
-    auto.
-    induction H17 as [H17| H17]; auto.
-    apply Axm; right; constructor.
-    -- apply (impI L).
-    apply forallI.
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
-    assert
-      (In x2
-         (freeVarFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1))).
-    eapply In_list_remove1.
-    apply H15.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    assert (In x2 (freeVarFormula L (substituteFormula L a v (fol.var L x)))).
-    eapply In_list_remove1.
-    apply H17.
-    induction (freeVarSubFormula3 _ _ _ _ H18).
-    elim H14.
-    apply In_list_remove3.
-    apply freeVarSubFormula1.
-    rewrite <- a0.
-    unfold not in |- *; intros.
-    apply (In_list_remove2 _ _ _ _ _ H15).
-    auto.
-    apply freeVarSubFormula1.
-    unfold not in |- *; intros.
-    apply (In_list_remove2 _ _ _ _ _ H19).
-    auto.
-    eapply In_list_remove1.
-    apply H19.
-    unfold not in |- *; intros.
-    rewrite H20 in H19.
-    auto.
-    induction H19 as [H19| H19].
-    elim (In_list_remove2 _ _ _ _ _ H15).
-    auto.
-    contradiction.
-    auto.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
-            (fol.var L x2)) v1 s1).
-    apply sysWeaken.
-    apply (impI L).
-    repeat apply subFormulaNTEHelp.
-    apply (impE L) with (substituteFormula L a v (fol.var L x0)).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L x0)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H16; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    rewrite <- a0 in H17.
-    auto.
-    induction H17 as [H17| H17]; auto.
-    apply Axm; right; constructor.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (var x)) x
-            (fol.var L x2)) v1 s1).
-    apply sysWeaken.
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply (impE L) with (substituteFormula L a v (var x2)).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply
-      impE
-      with
-      (substituteFormula L (substituteFormula L a v (var x)) x (fol.var L x2)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (var x)) v1 s1) x
-         (fol.var L x2)).
-    apply sysWeaken.
-    apply (iffE1 L).
-    assert (lt_depth L (substituteFormula L a v (var x)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
-    apply forallE.
-    apply Axm; right; constructor.
-    -- decompose record
-      (subFormulaForall2 L
-         (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2) x0
-         v1 s1).
-    rewrite H16; clear H16.
-    induction (eq_nat_dec x0 v1).
-    apply (impI L).
-    apply forallI.
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
-    assert
-      (In x0
-         (freeVarFormula L
-            (substituteFormula L
-               (substituteFormula L
-                  (substituteFormula L (substituteFormula L a v (fol.var L x)) v1
-                     s1) x (fol.var L x1)) v2 s2))).
-    eapply In_list_remove1.
-    apply H15.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    assert
-      (In x0
-         (freeVarFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1)
-               x (fol.var L x1)))).
-    eapply In_list_remove1.
-    apply H17.
-    induction (freeVarSubFormula3 _ _ _ _ H18).
-    assert
-      (In x0
-         (freeVarFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1))).
-    eapply In_list_remove1.
-    apply H19.
-    assert (In x0 (freeVarFormula L (substituteFormula L a v (fol.var L x)))).
-    eapply freeVarSubFormula4.
-    apply H20.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H21).
-    rewrite <- a0 in H22.
-    elim H9; assumption.
-    rewrite <- a0 in H22.
-    induction H22 as [H22| H22].
-    elim (In_list_remove2 _ _ _ _ _ H19).
-    symmetry  in |- *; assumption.
-    contradiction.
-    induction (freeVarSubFormula3 _ _ _ _ H21).
-    elim H9; assumption.
-    rewrite a0 in H22.
-    induction H22 as [H22| H22].
-    elim H3; assumption.
-    contradiction.
-    induction H19 as [H19| H19].
-    elim (In_list_remove2 _ _ _ _ _ H15).
-    symmetry  in |- *; assumption.
-    contradiction.
-    elim H8; assumption.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1)
-            x (fol.var L x0)) v2 s2).
-    apply sysWeaken.
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L (substituteFormula L a v (fol.var L x)) x
-         (fol.var L x0)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L x)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H16; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    rewrite <- a0 in H17.
-    auto.
-    induction H17 as [H17| H17]; auto.
-    apply Axm; right; constructor.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x)) v1
-                  s1) x (fol.var L x1)) v2 s2) x1 (var x0)).
-    apply sysWeaken.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x)) v1
-                  s1) x (fol.var L x1)) x1 (var x0)) v2 s2).
-    apply (iffE1 L).
-    assert
-      (lt_depth L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1) x
-            (fol.var L x1)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    rewrite a0.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1)
-            x (fol.var L x1)) x1 (var x0)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert
-      (lt_depth L
-         (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1)
-         (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply forallE.
-    apply Axm; right; constructor.
-    apply (impI L).
-    set
-      (z1 :=
-         newVar
-           (v2
-              :: v1
-              :: freeVarFormula L
-              (fol.forallH L x2
-                 (substituteFormula L
-                    (substituteFormula L
+                   assert (H17: In x0 (freeVarFormula L 
+                                         (substituteFormula L a v (fol.var L x)))).
+                   { eapply freeVarSubFormula4. 
+                     - apply H16.
+                     -  intros H17; induction (freeVarSubFormula3 _ _ _ _ H17)
+                          as [H18 | H18].
+                        + rewrite <- a1 in H18;  auto.
+                        + induction H18 as [H18| H18]; auto.
+                   }
+                   induction (freeVarSubFormula3 _ _ _ _ H17) as  [H18 | H18].
+                   ** auto.
+                   ** rewrite a1 in H18.
+                      induction H18 as [H18| H18]; auto.
+               ++ apply impE with (substituteFormula L a v (fol.var L x0)).
+                  ** apply sysWeaken.
+                     apply (iffE2 L).
+                     assert
+                       (H15: lt_depth L (substituteFormula L a v (fol.var L x0)) 
+                               (fol.forallH L v a)).
+                     { unfold lt_depth in |- *.
+                       repeat rewrite subFormulaDepth.
+                       apply depthForall. }
+                     decompose record (H _ H15 (Empty_set _)).
+                     apply H16; clear H16 H18 H19; auto.
+                     intros H16; induction (freeVarSubFormula3 _ _ _ _ H16) 
+                       as [H17 | H17].
+                  --- rewrite <- a0 in H17; auto.
+                  --- induction H17 as [H17| H17]; auto.
+                  ** rewrite <- (subFormulaId L 
+                                   (substituteFormula L a v (fol.var L x0)) x0).
+                     apply impE with
                        (substituteFormula L
-                          (substituteFormula L a v (fol.var L x0)) v2 s2) x0
-                       (fol.var L x2)) v1 s1)) ++
-              freeVarFormula L
-              (fol.forallH L x1
-                 (substituteFormula L
+                          (substituteFormula L 
+                             (substituteFormula L a v (fol.var L x0)) x0
+                             (var x)) x (fol.var L x0)).
+                     --- apply sysWeaken.
+                         apply (iffE1 L).
+                         assert
+                           (H15: lt_depth L (substituteFormula L a v (fol.var L x0))
+                                   (fol.forallH L v a)).
+                         { unfold lt_depth; repeat rewrite subFormulaDepth.
+                           apply depthForall. }
+                         decompose record (H _ H15 (Empty_set _)).
+                         apply H18; clear H16 H18 H19; auto.
+                         intros H16.
+                         assert (H17: In x (freeVarFormula L 
+                                              (substituteFormula L a v (fol.var L x0)))).
+                         { eapply In_list_remove1, H16. }
+                         induction (freeVarSubFormula3 _ _ _ _ H17) as [H18 | H18].
+                         +++ auto.
+                         +++ rewrite a1 in H18; induction H18 as [H18| H18]; auto.
+                     --- apply impE with
+                           (substituteFormula L 
+                              (substituteFormula L a v (var x)) x (fol.var L x0)).
+                         +++ apply sysWeaken.
+                             apply (impI L).
+                             apply subFormulaNTEHelp.
+                             apply (impE L) with (substituteFormula L a v (var x)).
+                             *** apply (sysWeaken L).
+                                 apply (iffE2 L).
+                                 assert (lt_depth L a (fol.forallH L v a)).
+                                 apply depthForall.
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                             *** apply Axm; right; constructor.
+                         +++  apply forallE.
+                              apply impE with
+                                (fol.forallH L x
+                                   (substituteFormula L 
+                                      (substituteFormula L a v (fol.var L x)) v1 s1)).
+                              *** apply sysWeaken.
+                                  apply (iffE1 L).
+                                  apply (reduceForall L).
+                                   intros [x3 [H15 H16]];
+                                     induction H16; simple induction H16.
+                                   assert
+                                     (H15: lt_depth L 
+                                             (substituteFormula L a v (fol.var L x))
+                                             (fol.forallH L v a)).
+                                   { unfold lt_depth; repeat rewrite subFormulaDepth.
+                                     apply depthForall.
+                                   }    
+                                   decompose record (H _ H15 (Empty_set _)).
+                                   apply H16; clear H16 H18 H19; auto.
+                                   intros H16;  
+                                     induction (freeVarSubFormula3 _ _ _ _ H16) 
+                                     as [H17 | H17].
+                                   rewrite <- a1 in H17.
+                                   auto.
+                                   induction H17 as [H17| H17]; auto.
+                              *** apply Axm; right; constructor.
+            -- apply (impI L).
+               apply forallI.
+               intros [x3 [H15 H16]]; 
+                 induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
+               assert
+                 (H16: In x2
+                         (freeVarFormula L
+                            (substituteFormula L 
+                               (substituteFormula L a v (fol.var L x)) v1 s1)))
+               by eapply In_list_remove1, H15. 
+               ++ induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
+                  ** assert (H18: In x2 (freeVarFormula L 
+                                           (substituteFormula L a v (fol.var L x))))
+                       by eapply In_list_remove1, H17.
+                     induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
+                     --- elim H14.
+                         +++ apply In_list_remove3.
+                             *** apply freeVarSubFormula1.
+                                 rewrite <- a0.
+                                  intros H20; apply (In_list_remove2 _ _ _ _ _ H15).
+                                  auto.
+                                  apply freeVarSubFormula1.
+                                  intros H20;   apply (In_list_remove2 _ _ _ _ _ H19).
+                                  auto.
+                                  eapply In_list_remove1.
+                                  apply H19.
+                             ***  intros H20;  rewrite H20 in H19; auto.
+                     --- induction H19 as [H19| H19].
+                         +++ elim (In_list_remove2 _ _ _ _ _ H15); auto.
+                         +++ contradiction.
+                  ** auto.
+               ++ apply impE with
                     (substituteFormula L
+                       (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
+                          (fol.var L x2)) v1 s1).
+                  ** apply sysWeaken.
+                     apply (impI L).
+                     repeat apply subFormulaNTEHelp.
+                     apply (impE L) with (substituteFormula L a v (fol.var L x0)).
+                     --- apply (sysWeaken L).
+                         apply (iffE2 L).
+                         assert
+                           (H15: lt_depth L (substituteFormula L a v (fol.var L x0))
+                                   (fol.forallH L v a)).
+                         { unfold lt_depth; repeat rewrite subFormulaDepth.
+                           apply depthForall.
+                         }     
+                         decompose record (H _ H15 (Empty_set _)).
+                         apply H16; clear H16 H18 H19; auto.
+                         intros H16;  induction (freeVarSubFormula3 _ _ _ _ H16) 
+                           as [H17 | H17].
+                         +++ rewrite <- a0 in H17; auto.
+                         +++ induction H17 as [H17| H17]; auto.
+                     ---  apply Axm; right; constructor.
+                  ** apply impE with
                        (substituteFormula L
-                          (substituteFormula L a v (fol.var L x)) v1 s1) x
-                       (fol.var L x1)) v2 s2)))) in *.
-    assert
-      (z1prop :
-        ~
-          In z1
-          (v2
-             :: v1
-             :: freeVarFormula L
-             (fol.forallH L x2
-                (substituteFormula L
-                   (substituteFormula L
-                      (substituteFormula L
-                         (substituteFormula L a v (fol.var L x0)) v2 s2) x0
-                      (fol.var L x2)) v1 s1)) ++
-             freeVarFormula L
-             (fol.forallH L x1
-                (substituteFormula L
-                   (substituteFormula L
-                      (substituteFormula L
-                         (substituteFormula L a v (fol.var L x)) v1 s1) x
-                      (fol.var L x1)) v2 s2)))).
-    unfold z1 in |- *; apply newVar1.
-    unfold In in z1prop.
-    fold
-      (In z1
-         (freeVarFormula L
-            (fol.forallH L x2
-               (substituteFormula L
-                  (substituteFormula L
-                     (substituteFormula L (substituteFormula L a v (fol.var L x0))
-                        v2 s2) x0 (fol.var L x2)) v1 s1)) ++
-            freeVarFormula L
-            (fol.forallH L x1
-               (substituteFormula L
-                  (substituteFormula L
-                     (substituteFormula L (substituteFormula L a v (fol.var L x))
-                        v1 s1) x (fol.var L x1)) v2 s2)))) 
-      in z1prop.
-    apply
-      impE
-      with
-      (forallH z1
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L
-                  (substituteFormula L (substituteFormula L a v (fol.var L x))
-                     v1 s1) x (fol.var L x1)) v2 s2) x1 
-            (var z1))).
-    apply sysWeaken.
-    apply
-      (impTrans L)
-      with
-      (forallH z1
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L
-                  (substituteFormula L (substituteFormula L a v (fol.var L x0))
-                     v2 s2) x0 (fol.var L x2)) v1 s1) x2 
-            (var z1))).
-    apply (impI L).
-    apply (forallI L).
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
-    elim (In_list_remove2 _ _ _ _ _ H15).
-    reflexivity.
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x)) v1
-                  s1) x (fol.var L x1)) v2 s2) x1 (var z1)).
-    apply sysWeaken.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (fol.var L z1)) v1 s1)
-         v2 s2).
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (var x)) x
-               (fol.var L z1)) v1 s1) v2 s2).
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (var x)) v1 s1) x
-            (fol.var L z1)) v2 s2).
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (var x)) v1 s1) x
-               (var x1)) x1 (fol.var L z1)) v2 s2).
-    apply (iffE1 L).
-    assert
-      (lt_depth L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x)) v1 s1) x
-            (fol.var L x1)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
+                          (substituteFormula L (substituteFormula L a v (var x)) x
+                             (fol.var L x2)) v1 s1).
+                     --- apply sysWeaken.
+                         apply (impI L).
+                         apply subFormulaNTEHelp.
+                         apply (impE L) with (substituteFormula L a v (var x2)).
+                         +++ apply (sysWeaken L).
+                             apply (iffE2 L).
+                             assert (H15: lt_depth L a (fol.forallH L v a)) by
+                             apply depthForall.
+                             decompose record (H _ H15 (Empty_set _)).
+                             apply H18; clear H16 H18 H19; auto.
+                         +++ apply impE with
+                               (substituteFormula L 
+                                  (substituteFormula L a v (var x)) x (fol.var L x2)).
+                             *** apply (sysWeaken L).
+                                 apply (iffE1 L).
+                                 assert (H15: lt_depth L a (fol.forallH L v a)) 
+                                   by apply depthForall.
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                             *** apply Axm; right; constructor.
+                     --- apply impE with
+                           (substituteFormula L
+                              (substituteFormula L 
+                                 (substituteFormula L a v (var x)) v1 s1) x
+                              (fol.var L x2)).
+                         +++ apply sysWeaken.
+                             apply (iffE1 L).
+                             assert (H15: lt_depth L 
+                                            (substituteFormula L a v (var x)) 
+                                            (fol.forallH L v a)).
+                             { unfold lt_depth; repeat rewrite subFormulaDepth.
+                               apply depthForall. }
+                             decompose record (H _ H15 (Empty_set _)).
+                             apply H19; clear H16 H18 H19; auto.
+                             intros [H16| H16]; auto.
+                         +++  apply forallE.
+                              apply Axm; right; constructor.
+            -- decompose record
+                 (subFormulaForall2 L
+                    (substituteFormula L 
+                       (substituteFormula L a v (fol.var L x0)) v2 s2) x0
+                    v1 s1).
+               rewrite H16; clear H16.
+               induction (eq_nat_dec x0 v1) as [a0 | ?].
+               ++ apply (impI L).
+                  apply forallI.
+                  intros [x3 [H15 H16]].
+                  induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
+                  --- assert
+                      (H16: In x0
+                              (freeVarFormula L
+                                 (substituteFormula L
+                                    (substituteFormula L
+                                       (substituteFormula L 
+                                          (substituteFormula L a v (fol.var L x)) v1
+                                          s1) x (fol.var L x1)) v2 s2))).
+                      { eapply In_list_remove1, H15. }
+                      induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
+                      +++ assert
+                          (H18: In x0
+                                  (freeVarFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L
+                                           (substituteFormula L a v (fol.var L x)) v1 s1)
+                                        x (fol.var L x1)))).
+                          { eapply In_list_remove1, H17. }
+                          induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
+                          *** assert
+                              (H20: In x0
+                                      (freeVarFormula L
+                                         (substituteFormula L 
+                                            (substituteFormula L a v (fol.var L x))
+                                            v1 s1))).
+                              { eapply In_list_remove1, H19. }
+                              assert (H21: In x0 (freeVarFormula L 
+                                                    (substituteFormula L a v 
+                                                       (fol.var L x)))).
+                              { eapply freeVarSubFormula4.
+                                apply H20.
+                                intros H21; induction (freeVarSubFormula3 _ _ _ _ H21)
+                                                      as [H22 | H22].
+                                - rewrite <- a0 in H22.
+                                  elim H9; assumption.
+                                - rewrite <- a0 in H22.
+                                  induction H22 as [H22| H22].
+                                  +  elim (In_list_remove2 _ _ _ _ _ H19).
+                                     symmetry  in |- *; assumption.
+                                  + contradiction.
+                              }     
+                              induction (freeVarSubFormula3 _ _ _ _ H21) as [H22 | H22].
+                              elim H9; assumption.
+                              rewrite a0 in H22.
+                              induction H22 as [H22| H22].
+                              elim H3; assumption.
+                              contradiction.
+                          *** induction H19 as [H19| H19].
+                              elim (In_list_remove2 _ _ _ _ _ H15).
+                              symmetry  in |- *; assumption.
+                              contradiction.
 
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (var x)) v1 s1) x
-            (var x1)) x1 (fol.var L z1)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert
-      (lt_depth L (substituteFormula L (substituteFormula L a v (var x)) v1 s1)
-         (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (var x)) v1 s1) x
-         (fol.var L z1)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert (lt_depth L (substituteFormula L a v (var x)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
-    apply Axm; right; constructor.
-    apply (impI L).
-    repeat apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L (substituteFormula L a v (var x)) x (fol.var L z1)).
-    apply (sysWeaken L).
-    apply (iffE1 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (fol.var L z1)) v2 s2)
-         v1 s1).
-    apply (iffE1 L).
-    assert
-      (lt_depth L (substituteFormula L a v (fol.var L z1)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (var x0)) x0
-               (fol.var L z1)) v2 s2) v1 s1).
-    apply (impI L).
-    repeat apply subFormulaNTEHelp.
-    apply (impE L) with (substituteFormula L a v (fol.var L z1)).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert (lt_depth L a (fol.forallH L v a)).
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (var x0)) v2 s2) x0
-            (fol.var L z1)) v1 s1).
-    apply (impI L).
-    apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (var x0)) x0
-            (fol.var L z1)) v2 s2).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert (lt_depth L (substituteFormula L a v (var x0)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
-    apply Axm; right; constructor.
-    apply
-      (impTrans L)
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2
-                  s2) x0 (fol.var L x2)) x2 (var z1)) v1 s1).
-    apply (impI L).
-    repeat apply subFormulaNTEHelp.
-    apply
-      (impE L)
-      with
-      (substituteFormula L
-         (substituteFormula L (substituteFormula L a v (var x0)) v2 s2) x0
-         (fol.var L z1)).
-    apply (sysWeaken L).
-    apply (iffE2 L).
-    assert
-      (lt_depth L
-         (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2)
-         (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19; auto.
-    apply Axm; right; constructor.
-    apply (iffE1 L).
-    assert
-      (lt_depth L
-         (substituteFormula L
-            (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2)
-            x0 (fol.var L x2)) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H19; clear H16 H18 H19; auto.
-    unfold not in |- *; intros.
-    induction H16 as [H16| H16]; auto.
-    eapply forallSimp.
-    apply Axm; right; constructor.
-    apply (impI L).
-    apply forallI.
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
-    assert
-      (In x2
-         (freeVarFormula L
-            (substituteFormula L
-               (substituteFormula L
-                  (substituteFormula L
-                     (substituteFormula L (substituteFormula L a v (fol.var L x0))
-                        v2 s2) x0 (fol.var L x2)) v1 s1) x2 
-               (var z1)))).
-    eapply In_list_remove1.
-    apply H15.
-    induction (freeVarSubFormula3 _ _ _ _ H16).
-    elim (In_list_remove2 _ _ _ _ _ H17).
-    reflexivity.
-    induction H17 as [H17| H17].
-    elim (In_list_remove2 _ _ _ _ _ H15).
-    symmetry  in |- *; assumption.
-    contradiction.
-    set
-      (A1 :=
-         forallH z1
-           (substituteFormula L
-              (substituteFormula L
-                 (substituteFormula L
-                    (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2
-                       s2) x0 (fol.var L x2)) v1 s1) x2 (var z1))) 
-      in *.
-    rewrite <-
-      (subFormulaId L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2)
-               x0 (fol.var L x2)) v1 s1) x2).
-    apply
-      impE
-      with
-      (substituteFormula L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L
-                  (substituteFormula L (substituteFormula L a v (fol.var L x0))
-                     v2 s2) x0 (fol.var L x2)) v1 s1) x2 
-            (var z1)) z1 (fol.var L x2)).
-    apply sysWeaken.
-    apply (iffE1 L).
-    assert
-      (lt_depth L
-         (substituteFormula L
-            (substituteFormula L
-               (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2)
-               x0 (fol.var L x2)) v1 s1) (fol.forallH L v a)).
-    unfold lt_depth in |- *.
-    repeat rewrite subFormulaDepth.
-    apply depthForall.
-    decompose record (H _ H15 (Empty_set _)).
-    apply H18; clear H16 H18 H19.
-    unfold not in |- *; intros; elim z1prop.
-    do 2 right.
-    apply in_or_app.
-    tauto.
-    apply forallE.
-    unfold A1 in |- *.
-    apply Axm; right; constructor.
-    apply (forallI L).
-    unfold not in |- *; intros.
-    induction H15 as (x3, H15); induction H15 as (H15, H16).
-    induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
-    elim z1prop.
-    do 2 right.
-    apply in_or_app.
-    tauto.
-    apply forallE.
-    apply Axm; right; constructor.
-    } apply (iffI L).
+                      +++ elim H8; assumption.
+                  --- apply impE with
+                        (substituteFormula L
+                           (substituteFormula L
+                              (substituteFormula L 
+                                 (substituteFormula L a v (fol.var L x)) v1 s1)
+                              x (fol.var L x0)) v2 s2).
+                      +++ apply sysWeaken.
+                          apply (impI L).
+                          apply subFormulaNTEHelp.
+                          apply (impE L) with
+                            (substituteFormula L 
+                               (substituteFormula L a v (fol.var L x)) x
+                               (fol.var L x0)).
+                          *** apply (sysWeaken L).
+                              apply (iffE1 L).
+                              assert (lt_depth L a (fol.forallH L v a)).
+                              apply depthForall.
+                              decompose record (H _ H15 (Empty_set _)).
+                              apply H18; clear H16 H18 H19; auto.
+                          *** apply subFormulaNTEHelp.
+                              apply
+                                (impE L)
+                                with (substituteFormula L 
+                                        (substituteFormula L a v (fol.var L x)) v1 s1).
+                              apply (sysWeaken L).
+                              apply (iffE1 L).
+                              assert
+                                (H15: lt_depth L (substituteFormula L a v (fol.var L x))
+                                        (fol.forallH L v a)).
+                              { unfold lt_depth in |- *.
+                                repeat rewrite subFormulaDepth.
+                                apply depthForall. }
+                              decompose record (H _ H15 (Empty_set _)).
+                              apply H16; clear H16 H18 H19; auto.
+                              intros H16; 
+                                induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
+                              rewrite <- a0 in H17.
+                              auto.
+                              induction H17 as [H17| H17]; auto.
+                              apply Axm; right; constructor.
+                      +++ apply impE with
+                            (substituteFormula L
+                               (substituteFormula L
+                                  (substituteFormula L
+                                     (substituteFormula L 
+                                        (substituteFormula L a v (fol.var L x)) v1
+                                        s1) x (fol.var L x1)) v2 s2) x1 (var x0)).
+                          *** apply sysWeaken.
+                              apply
+                                (impTrans L)
+                                with
+                                (substituteFormula L
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L 
+                                            (substituteFormula L a v (fol.var L x)) v1
+                                            s1) x (fol.var L x1)) x1 (var x0)) v2 s2).
+                              apply (iffE1 L).
+                              assert
+                                (H15: lt_depth L
+                                        (substituteFormula L
+                                           (substituteFormula L 
+                                              (substituteFormula L a v (fol.var L x)) 
+                                              v1 s1) x
+                                           (fol.var L x1)) (fol.forallH L v a)).
+                              { unfold lt_depth; repeat rewrite subFormulaDepth.
+                                apply depthForall. }
+                              decompose record (H _ H15 (Empty_set _)).
+                              apply H19; clear H16 H18 H19; auto.
+                              rewrite a0.
+                              intros [H16| H16]; auto.
+                              apply (impI L).
+                              apply subFormulaNTEHelp.
+                              apply (impE L) with
+                                (substituteFormula L
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (fol.var L x)) v1 s1)
+                                      x (fol.var L x1)) x1 (var x0)).
+                              apply (sysWeaken L).
+                              apply (iffE1 L).
+                              assert
+                                (H15: lt_depth L
+                                        (substituteFormula L 
+                                           (substituteFormula L a v (fol.var L x)) v1 s1)
+                                        (fol.forallH L v a)).
+                              { unfold lt_depth; repeat rewrite subFormulaDepth; 
+                                  apply depthForall. }
+                              decompose record (H _ H15 (Empty_set _)).
+                              apply H18; clear H16 H18 H19; auto.
+                              apply Axm; right; constructor.
+                          *** apply forallE.
+                              apply Axm; right; constructor.
+               ++ apply (impI L).
+                  set
+                    (z1 :=
+                       newVar
+                         (v2
+                            :: v1
+                            :: freeVarFormula L
+                            (fol.forallH L x2
+                               (substituteFormula L
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L a v (fol.var L x0)) v2 s2) 
+                                     x0
+                                     (fol.var L x2)) v1 s1)) ++
+                            freeVarFormula L
+                            (fol.forallH L x1
+                               (substituteFormula L
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L a v (fol.var L x)) v1 s1) x
+                                     (fol.var L x1)) v2 s2)))).
+                  assert
+                    (z1prop :
+                      ~
+                        In z1
+                        (v2
+                           :: v1
+                           :: freeVarFormula L
+                           (fol.forallH L x2
+                              (substituteFormula L
+                                 (substituteFormula L
+                                    (substituteFormula L
+                                       (substituteFormula L a v (fol.var L x0)) v2 s2) 
+                                    x0
+                                    (fol.var L x2)) v1 s1)) ++
+                           freeVarFormula L
+                           (fol.forallH L x1
+                              (substituteFormula L
+                                 (substituteFormula L
+                                    (substituteFormula L
+                                       (substituteFormula L a v (fol.var L x)) v1 s1)
+                                    x
+                                    (fol.var L x1)) v2 s2)))).
+                  { unfold z1 in |- *; apply newVar1. }
+                  unfold In in z1prop.
+                  fold
+                    (In z1
+                       (freeVarFormula L
+                          (fol.forallH L x2
+                             (substituteFormula L
+                                (substituteFormula L
+                                   (substituteFormula L 
+                                      (substituteFormula L a v (fol.var L x0))
+                                      v2 s2) x0 (fol.var L x2)) v1 s1)) ++
+                          freeVarFormula L
+                          (fol.forallH L x1
+                             (substituteFormula L
+                                (substituteFormula L
+                                   (substituteFormula L 
+                                      (substituteFormula L a v (fol.var L x))
+                                      v1 s1) x (fol.var L x1)) v2 s2)))) 
+                    in z1prop.
+                  apply
+                    impE
+                    with
+                    (forallH z1
+                       (substituteFormula L
+                          (substituteFormula L
+                             (substituteFormula L
+                                (substituteFormula L 
+                                   (substituteFormula L a v (fol.var L x))
+                                   v1 s1) x (fol.var L x1)) v2 s2) x1 
+                          (var z1))).
+                  ** apply sysWeaken.
+                     apply
+                       (impTrans L)
+                       with
+                       (forallH z1
+                          (substituteFormula L
+                             (substituteFormula L
+                                (substituteFormula L
+                                   (substituteFormula L
+                                      (substituteFormula L a v (fol.var L x0))
+                                      v2 s2) x0 (fol.var L x2)) v1 s1) x2 
+                             (var z1))).
+                     --- apply (impI L).
+                         apply (forallI L).
+                         +++  intros [x3 [H15 H16]].
+                              induction H16 as [x3 H16| x3 H16]; 
+                                [ induction H16 | induction H16 ].
+                              elim (In_list_remove2 _ _ _ _ _ H15).
+                              reflexivity.
+                         +++ apply impE with
+                               (substituteFormula L
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L (substituteFormula L a v 
+                                                                (fol.var L x)) v1
+                                           s1) x (fol.var L x1)) v2 s2) x1 (var z1)).
+                             *** apply sysWeaken.
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (fol.var L z1)) v1 s1)
+                                      v2 s2).
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L 
+                                            (substituteFormula L a v (var x)) x
+                                            (fol.var L z1)) v1 s1) v2 s2).
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L
+                                            (substituteFormula L a v (var x)) v1 s1) x
+                                         (fol.var L z1)) v2 s2).
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L
+                                            (substituteFormula L 
+                                               (substituteFormula L a v (var x)) v1 s1) 
+                                            x
+                                            (var x1)) x1 (fol.var L z1)) v2 s2).
+                                 apply (iffE1 L).
+                                 assert
+                                   (H15: lt_depth L
+                                           (substituteFormula L
+                                              (substituteFormula L 
+                                                 (substituteFormula L a v 
+                                                    (fol.var L x)) v1 s1) x
+                                              (fol.var L x1)) (fol.forallH L v a)).
+                                 { unfold lt_depth; repeat rewrite subFormulaDepth.
+                                   apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H19; clear H16 H18 H19; auto.
+                                 intros [H16| H16]; auto.
+                                 apply (impI L).
+                                 apply subFormulaNTEHelp.
+                                 apply (impE L) with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L 
+                                            (substituteFormula L a v (var x)) v1 s1) x
+                                         (var x1)) x1 (fol.var L z1)).
+                                 apply (sysWeaken L).
+                                 apply (iffE1 L).
+                                 assert
+                                   (H15: lt_depth L 
+                                           (substituteFormula L
+                                              (substituteFormula L a v (var x)) v1 s1)
+                                           (fol.forallH L v a)).
+                                 { unfold lt_depth; repeat rewrite subFormulaDepth.
+                                   apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                                 apply Axm; right; constructor.
+                                 apply (impI L).
+                                 apply subFormulaNTEHelp.
+                                 apply  (impE L)  with
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (var x)) v1 s1) x
+                                      (fol.var L z1)).
+                                 apply (sysWeaken L).
+                                 apply (iffE1 L).
+                                 assert (H15: lt_depth L 
+                                                (substituteFormula L a v (var x)) 
+                                                (fol.forallH L v a)).
+                                 { unfold lt_depth; repeat rewrite subFormulaDepth.
+                                   apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H19; clear H16 H18 H19; auto.
+                                 intros [H16| H16]; auto.
+                                 apply Axm; right; constructor.
+                                 apply (impI L).
+                                 repeat apply subFormulaNTEHelp.
+                                 apply
+                                   (impE L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L a v (var x)) x 
+                                      (fol.var L z1)).
+                                 apply (sysWeaken L).
+                                 apply (iffE1 L).
+                                 assert (H15: lt_depth L a (fol.forallH L v a)) by
+                                   apply depthForall.
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                                 apply Axm; right; constructor.
+                                 apply (impTrans L) with
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (fol.var L z1)) v2 s2)
+                                      v1 s1).
+                                 apply (iffE1 L).
+                                 assert
+                                   (H15: lt_depth L 
+                                           (substituteFormula L a v (fol.var L z1)) 
+                                           (fol.forallH L v a)).
+                                 { unfold lt_depth; 
+                                     repeat rewrite subFormulaDepth; apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H19; clear H16 H18 H19; auto.
+                                 apply  (impTrans L) with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L 
+                                            (substituteFormula L a v (var x0)) x0
+                                            (fol.var L z1)) v2 s2) v1 s1).
+                                 apply (impI L).
+                                 repeat apply subFormulaNTEHelp.
+                                 apply (impE L) with 
+                                   (substituteFormula L a v (fol.var L z1)).
+                                 apply (sysWeaken L).
+                                 apply (iffE2 L).
+                                 assert (H15: lt_depth L a (fol.forallH L v a)) 
+                                   by  apply depthForall.
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                                 apply Axm; right; constructor.
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L
+                                            (substituteFormula L a v (var x0)) v2 s2) 
+                                         x0
+                                         (fol.var L z1)) v1 s1).
+                                 apply (impI L).
+                                 apply subFormulaNTEHelp.
+                                 apply
+                                   (impE L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (var x0)) x0
+                                         (fol.var L z1)) v2 s2).
+                                 apply (sysWeaken L).
+                                 apply (iffE2 L).
+                                 assert (H15: lt_depth L 
+                                                (substituteFormula L a v (var x0)) 
+                                                (fol.forallH L v a)).
+                                 { unfold lt_depth;  repeat rewrite subFormulaDepth.
+                                   apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H19; clear H16 H18 H19; auto.
+                                 intros [H16| H16]; auto.
+                                 apply Axm; right; constructor.
+                                 apply
+                                   (impTrans L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L
+                                            (substituteFormula L 
+                                               (substituteFormula L a v (fol.var L x0)) 
+                                               v2
+                                               s2) x0 (fol.var L x2)) x2 (var z1)) v1 s1).
+                                 apply (impI L).
+                                 repeat apply subFormulaNTEHelp.
+                                 apply
+                                   (impE L)
+                                   with
+                                   (substituteFormula L
+                                      (substituteFormula L 
+                                         (substituteFormula L a v (var x0)) v2 s2) x0
+                                      (fol.var L z1)).
+                                 apply (sysWeaken L).
+                                 apply (iffE2 L).
+                                 assert  (H15: lt_depth L
+                                                 (substituteFormula L 
+                                                    (substituteFormula L a v (fol.var L x0)) 
+                                                    v2 s2)
+                                                 (fol.forallH L v a)).
+                                 { unfold lt_depth in |- *.
+                                   repeat rewrite subFormulaDepth.
+                                   apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19; auto.
+                                 apply Axm; right; constructor.
+                                 apply (iffE1 L).
+                                 assert
+                                   (H15: lt_depth L
+                                           (substituteFormula L
+                                              (substituteFormula L 
+                                                 (substituteFormula L a v 
+                                                    (fol.var L x0)) v2 s2)
+                                              x0 (fol.var L x2)) (fol.forallH L v a)).
+                                 { unfold lt_depth;
+                                 repeat rewrite subFormulaDepth; 
+                                 apply depthForall. }
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H19; clear H16 H18 H19; auto.
+                                  intros [H16| H16]; auto.
+                             *** eapply forallSimp.
+                                 apply Axm; right; constructor.
+                     --- apply (impI L).
+                         apply forallI.
+                         intros [x3 [H15 H16]].
+                         induction H16 as [x3 H16| x3 H16];
+                           [ induction H16 | induction H16 ].
+                         assert
+                           (H16: In x2
+                                   (freeVarFormula L
+                                      (substituteFormula L
+                                         (substituteFormula L
+                                            (substituteFormula L
+                                               (substituteFormula L 
+                                                  (substituteFormula L a v 
+                                                     (fol.var L x0))
+                                                  v2 s2) x0 (fol.var L x2)) v1 s1) x2 
+                                         (var z1)))) by
+                           eapply In_list_remove1, H15.
+                         induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
+                         +++ elim (In_list_remove2 _ _ _ _ _ H17).
+                             reflexivity.
+                         +++ induction H17 as [H17| H17].
+                             *** elim (In_list_remove2 _ _ _ _ _ H15).
+                                 symmetry  in |- *; assumption.
+                             *** contradiction.
+                         +++ set
+                             (A1 :=
+                                forallH z1
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L
+                                           (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2
+                                              s2) x0 (fol.var L x2)) v1 s1) x2 (var z1))). 
+                             rewrite <-
+                               (subFormulaId L
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L (substituteFormula L a v (fol.var L x0)) v2 s2)
+                                        x0 (fol.var L x2)) v1 s1) x2).
+                             apply
+                               impE
+                               with
+                               (substituteFormula L
+                                  (substituteFormula L
+                                     (substituteFormula L
+                                        (substituteFormula L
+                                           (substituteFormula L (substituteFormula L a v (fol.var L x0))
+                                              v2 s2) x0 (fol.var L x2)) v1 s1) x2 
+                                     (var z1)) z1 (fol.var L x2)).
+                             *** apply sysWeaken.
+                                 apply (iffE1 L).
+                                 assert
+                                   (H15: lt_depth L
+                                           (substituteFormula L
+                                              (substituteFormula L
+                                                 (substituteFormula L 
+                                                    (substituteFormula L a v 
+                                                       (fol.var L x0)) v2 s2)
+                                                 x0 (fol.var L x2)) v1 s1) 
+                                           (fol.forallH L v a)).
+                                 { unfold lt_depth in |- *.
+                                   repeat rewrite subFormulaDepth.
+                                   apply depthForall.
+                                 }    
+                                 decompose record (H _ H15 (Empty_set _)).
+                                 apply H18; clear H16 H18 H19.
+                                 intros H16; elim z1prop.
+                                 do 2 right.
+                                 apply in_or_app.
+                                 tauto.
+                             *** apply forallE.
+                                 unfold A1 in |- *.
+                                 apply Axm; right; constructor.
+                  **  apply (forallI L).
+                      intros [x3 [H15 H16]];
+                        induction H16 as [x3 H16| x3 H16]; 
+                        [ induction H16 | induction H16 ].
+                      elim z1prop; do 2 right; apply in_or_app; tauto.
+                      apply forallE.
+                      apply Axm; right; constructor.
+    } 
+    apply (iffI L).
     apply H3; auto.
     apply H3; auto.
 Qed.
@@ -2523,9 +2536,7 @@ Lemma subFormulaNil :
   forall (f : Formula) (T : System) (v : nat) (s : Term),
     ~ In v (freeVarFormula L f) -> SysPrf T (iffH (substituteFormula L f v s) f).
 Proof.
-  intros f T.
-  eapply proj1.
-  apply subFormulaNTE.
+  intros f T; eapply proj1;  apply subFormulaNTE.
 Qed.
 
 Lemma subFormulaTrans :
@@ -2535,10 +2546,7 @@ Lemma subFormulaTrans :
       (iffH (substituteFormula L (substituteFormula L f v1 (var v2)) v2 s)
          (substituteFormula L f v1 s)).
 Proof.
-  intros f T.
-  eapply proj1.
-  eapply proj2.
-  apply subFormulaNTE.
+  intros f T; eapply proj1,  proj2; apply subFormulaNTE.
 Qed.
 
 Lemma subFormulaExch :
@@ -2550,9 +2558,7 @@ Lemma subFormulaExch :
    (iffH (substituteFormula L (substituteFormula L f v1 s1) v2 s2)
       (substituteFormula L (substituteFormula L f v2 s2) v1 s1)).
 Proof.
-intros f T.
-eapply proj2.
-eapply proj2.
+intros f T; eapply proj2, proj2.
 apply subFormulaNTE.
 Qed.
 
