@@ -16,6 +16,9 @@ Require Import LNT.
 Require Import Max.
 Require Import codeNatToTerm.
 
+From LibHyps Require Import LibHyps.
+Require Import MoreLibHyps.
+
 Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
   match t with
   | fol.var v => var v
@@ -150,7 +153,8 @@ Proof.
     fold (freeVarTerm LNN) in |- *.
     rewrite <- app_nil_end.
     split.
-    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H).
+    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r. 
+      intros H x H1 H2. 
       destruct H1 as [H0| H0].
       * rewrite <- H0 in H2.
         simpl in H2.
@@ -305,10 +309,11 @@ Proof.
       simpl; rewrite (subFormulaNot LNT).
       apply (reduceNot LNT).
       apply H.
-    + simpl; decompose record (subFormulaForall2 LNN a v v0 s).
+    + simpl; decompose record (subFormulaForall2 LNN a v v0 s) /r; intros  x H1 H0 H2 H4.
       rewrite H4; clear H4.
       decompose record
-        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)).
+        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)) /r;
+        intros x0 H4 H3 H5 H7. 
       unfold forallH in |- *.
       rewrite H7; clear H7.
       destruct (eq_nat_dec v v0) as [e | ].
@@ -705,9 +710,7 @@ Proof.
                decompose sum H0.
                discriminate H1.
                discriminate H2.
-            -- simpl in H0; decompose sum H0.
-               discriminate H1.
-               discriminate H2.
+            -- simpl in H0;  decompose sum H0 /r; discriminate 1.
             -- repeat rewrite (subFormulaEqual LNT); simpl.
                apply iffI.
                ++ apply impI.

@@ -7,6 +7,9 @@ Require Import folLogic3.
 Require Export Languages.
 Require Export LNT.
 
+From LibHyps Require Import LibHyps.
+Require Import MoreLibHyps.
+
 Section PA.
 
 Definition PA1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
@@ -140,26 +143,24 @@ Proof.
                  exists n0.
                  reflexivity.
                  right; unfold not in |- *; intros; 
-                   apply b; decompose record H.
-                 inversion H1.
+                   apply b.   decompose record H /r; intros x0 x1 H1; inversion H1.
                  auto.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
-                 inversion H1.
+                 right; unfold not in |- *; intros; apply b.
+                   decompose record H /r; intros x0 x1 H1; inversion H1.
                  reflexivity.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
+                 right; unfold not in |- *; intros; apply b.
+                   decompose record H /r; intros x0 x1 H1.
                  inversion H1.
                  auto.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
+                 right; unfold not in |- *; intros; apply b.
+                   decompose record H /r;  intros x0 x1 H1.
                  inversion H1.
                  auto.
                  induction (formula_dec LNT LNT_dec x (close LNT (open x))).
                  induction (H (open x)).
                  left.
                  unfold In, InductionSchema, PA7 in |- *.
-                 decompose record H0.
+                 decompose record H0 /r; intros x0 x1 H2.
                  exists x0.
                  exists x1.
                  rewrite H2.
@@ -167,7 +168,7 @@ Proof.
                  right.
                  unfold not in |- *; intros; apply H0.
                  unfold In, InductionSchema, PA7 in H1.
-                 decompose record H1.
+                 decompose record H1 /r; intros  x0 x1 H3.
                  exists x0.
                  exists x1.
                  rewrite H3.
@@ -188,7 +189,7 @@ Proof.
                  right.
                  intros H0; apply b.
                  unfold In, InductionSchema, PA7 in H0.
-                 decompose record H0.
+                 decompose record H0 /r; intros x0 x1 H2.
                  rewrite H2.
                  replace
                    (open

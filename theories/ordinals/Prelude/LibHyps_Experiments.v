@@ -16,9 +16,9 @@ induction 1  /n.
 Qed.
 
 Goal forall n p , n <= p -> forall q, p <= q -> n <= q.
-  intros * H; elim H.
+  intros * H; destruct H /dr.
   - intros /n.  assumption.
-  - intros /n.  apply h_all_le_n_; transitivity (S m); auto.
+  - intros /n.  transitivity (S m); auto.
 Qed.
 
 Require Import Arith. 

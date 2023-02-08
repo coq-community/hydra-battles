@@ -21,6 +21,9 @@ From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
 From hydras Require Import Compat815.
 
+From LibHyps Require Import LibHyps.
+Require Import MoreLibHyps.
+
 Ltac SimplFreeVar :=
   repeat
    match goal with
@@ -897,7 +900,7 @@ apply closedNatToTerm.
 apply iffRefl.
 unfold n in |- *.
 rewrite checkPrfCorrect1.
-decompose record H.
+decompose record H /r; intros x H5 H6.
 apply
  impE
   with
@@ -1513,17 +1516,19 @@ apply nn1.
 decompose record
  (checkPrfCorrect2 L codeF codeR codeArityF codeArityR codeArityFIsCorrect1
     codeArityFIsCorrect2 codeArityRIsCorrect1 codeArityRIsCorrect2 codeFInj
-    codeRInj (codeFormula L codeF codeR f) n b).
-assert (x = f).
-eapply codeFormulaInj.
-apply codeFInj.
-apply codeRInj.
-assumption.
-rewrite <- H6 in H.
-elim (H x0 x1).
-symmetry  in |- *.
-assumption.
-apply closedNatToTerm.
+    codeRInj (codeFormula L codeF codeR f) n b) /r.
+    intros x H7 x0 x1 H8.
+    assert (H6: x = f). {
+      eapply codeFormulaInj.
+      apply codeFInj.
+      apply codeRInj.
+      assumption.
+    }
+    rewrite <- H6 in H.
+    elim (H x0 x1).
+    symmetry  in |- *.
+    assumption.
+    apply closedNatToTerm.
 Qed.
 
 Lemma freeVarCodeSysPrf :

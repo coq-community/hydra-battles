@@ -19,6 +19,9 @@ From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
 From hydras Require Import Compat815.
 
+From LibHyps Require Import LibHyps.
+Require Import MoreLibHyps.
+
 Section Rosser's_Incompleteness.
 
   Definition codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
@@ -282,7 +285,7 @@ Proof.
     intros B q H0; elim (Nat.nlt_0_r _ H0).
   - induction IHn as [H0| H0].
     + left.
-      decompose record H0.
+      decompose record H0 /r; intros x x0 H1 H3.
       exists x, x0; auto.
     + induction
         (eq_nat_dec
@@ -301,7 +304,7 @@ Proof.
           (checkPrfCorrect2 LNT codeLNTFunction codeLNTRelation codeArityLNTF
              codeArityLNTR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
              codeArityLNTRIsCorrect1 codeArityLNTRIsCorrect2 codeLNTFunctionInj
-             codeLNTRelationInj _ _ b0).
+             codeLNTRelationInj _ _ b0) /r ; intros  x H2 x0 x1 H3.
         assert (H1: x = b).
         { eapply codeFormulaInj.
           - apply codeLNTFunctionInj.
@@ -599,7 +602,7 @@ Proof.
     + intros f; elim H.
       intros x0 H2; induction H2 as [x1 H2].
       induction (searchProof decide _ (notH x) _ x1).
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- assumption.
         -- exists x2, x3; assumption.
@@ -1057,7 +1060,8 @@ Proof.
                                codeArityLNTFIsCorrect2
                                codeArityLNTRIsCorrect1 codeArityLNTRIsCorrect2 
                                codeLNTFunctionInj
-                               codeLNTRelationInj _ _ b).
+                               codeLNTRelationInj _ _ b) /r; 
+                            intros  x2 H5 x3 x4 H6.
                           rewrite <- H6.
                           assert (H4: x2 = notH x).
                           { eapply codeFormulaInj.
@@ -1081,7 +1085,7 @@ Proof.
                       apply H4.
     + unfold Inconsistent; intros f; elim H.
       intros x0 [x1 H2]; induction (searchProof decide _ x _ x1).
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- exists x2, x3; assumption.
         -- assumption.
@@ -1563,7 +1567,8 @@ Proof.
                                    codeArityLNTFIsCorrect2
                                    codeArityLNTRIsCorrect1 
                                    codeArityLNTRIsCorrect2 codeLNTFunctionInj
-                                   codeLNTRelationInj _ _ b).
+                                   codeLNTRelationInj _ _ b) /r; 
+                                intros x2 H5 x3 x4 H6.
                               rewrite <- H6.
                               assert (H4: x2 = x). 
                               {
@@ -1692,7 +1697,7 @@ Proof.
           now rewrite H0 in H2.
     - apply PAdec.
   }  
-  clear H H0; decompose record H1.
+  clear H H0; decompose record H1 /dr; intros x H0 H2.
   exists x; split.
   - assumption.
   - intro H; unfold Inconsistent in H2.
