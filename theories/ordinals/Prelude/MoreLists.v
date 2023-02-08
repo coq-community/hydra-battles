@@ -633,9 +633,9 @@ Proof.
   -    subst; auto. 
   -  destruct (lt_eq_lt_dec x y) as [[H1 | H2] | H3].
    +  rewrite   sorted_ge_iff in H0;  destruct H0.
-     rewrite Forall_forall in H2;  specialize (H2 x H);  elimtype False.
-     abstract lia.
-   +   subst; auto. 
+     rewrite Forall_forall in H2;  specialize (H2 x H). 
+    cut False; [contradiction | abstract lia ]. 
+   +  subst; auto. 
    +  auto. 
 Qed. 
 

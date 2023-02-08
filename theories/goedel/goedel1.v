@@ -151,9 +151,9 @@ Proof.
   induction (H _ _ H3) as [x0 H4].
   - unfold y in H4.
     destruct 
- (eq_nat_dec
-    (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
-       (codeFormula x) x0) 0) as [e |n ].
+      (eq_nat_dec
+         (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
+            (codeFormula x) x0) 0) as [e |n ].
     + apply H4.
       rewrite (subFormulaNot LNN).
       unfold codeSysPrf, codeX in |- *.
@@ -274,13 +274,12 @@ Theorem Goedel'sIncompleteness1st :
    ~ SysPrf T f /\
    ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarFormula LNN f)).
 Proof.
-  intros H; exists G.
-  pose freeVarG.
+  intros H; exists G; pose freeVarG.
   pose FirstIncompletenessA.
   pose FirstIncompletenessB.
   assert (H0: ~Inconsistent LNN T).
-  {intro H0; destruct (wCon2Con T H) as [x H1]. 
-   apply H1; apply H0.
+  { intro H0; destruct (wCon2Con T H) as [x H1]. 
+    apply H1; apply H0.
   }
   tauto.
 Qed.

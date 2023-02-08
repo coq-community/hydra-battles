@@ -930,11 +930,12 @@ Proof.
       auto.
 Qed.
 
-(** abbrviations a la Lisp (to improve) *)
+(** abbreviations a la Lisp (to improve) *)
 
 Module LispAbbreviations.
   #[global] Notation car n := (cPairPi1 n). 
   #[global] Notation caar n := (cPairPi1 (cPairPi1 n)). 
+  #[global] Notation cadr n := (cPairPi1 (cPairPi2 n)). 
 
   #[global] Notation cdr n := (cPairPi2 n). 
   #[global] Notation cddr n := (cPairPi2 (cPairPi2 n)). 
@@ -962,3 +963,65 @@ Qed.
 
  *)
 
+(** ** Triples 
+   (moved from codeSubFormula.v)
+*)
+
+(* To move to cPair ??? *)
+
+Definition cTriple (a b c : nat) : nat := cPair a (cPair b c).
+
+Definition cTriplePi1 (n : nat) : nat := cPairPi1 n.
+
+Definition cTriplePi2 (n : nat) : nat := cPairPi1  (cPairPi2 n).
+
+Definition cTriplePi3 (n : nat) : nat := cPairPi2 (cPairPi2 n).
+
+Lemma cTripleIsPR : isPR 3 cTriple.
+Proof.
+  unfold cTriple; apply compose3_2IsPR with
+    (g := cPair)
+    (f1 := fun a b c : nat => a)
+    (f2 := fun a b c : nat => cPair b c).
+  - apply pi1_3IsPR. 
+  - apply filter011IsPR with (g := fun b c : nat => cPair b c).
+    apply cPairIsPR.
+  - apply cPairIsPR.
+Qed.
+
+Lemma cTriplePi1IsPR : isPR 1 cTriplePi1.
+Proof. apply cPairPi1IsPR. Qed.
+
+Lemma cTriplePi2IsPR : isPR 1 cTriplePi2.
+Proof.
+  unfold cTriplePi2; apply compose1_1IsPR.
+  - apply cPairPi2IsPR.
+  - apply cPairPi1IsPR.
+Qed.
+
+Lemma cTriplePi3IsPR : isPR 1 cTriplePi3.
+Proof.
+  unfold cTriplePi3; apply compose1_1IsPR; apply cPairPi2IsPR.
+Qed.
+
+Lemma cTripleProj1 (a b c : nat) :  cTriplePi1 (cTriple a b c) = a.
+Proof.  unfold cTriplePi1, cTriple; apply cPairProjections1. Qed.
+
+Lemma cTripleProj2 (a b c : nat) : cTriplePi2 (cTriple a b c) = b.
+Proof. 
+  unfold cTriplePi2, cTriple; rewrite cPairProjections2; 
+    apply cPairProjections1.
+Qed.
+
+Lemma cTripleProj3 (a b c : nat) : cTriplePi3 (cTriple a b c) = c.
+Proof. 
+  unfold cTriplePi3, cTriple; rewrite cPairProjections2.
+  apply cPairProjections2.
+Qed.
+
+Lemma cTripleProj (a: nat) :
+ cTriple (cTriplePi1 a) (cTriplePi2 a) (cTriplePi3 a) = a.
+Proof.
+unfold cTriple, cTriplePi1, cTriplePi2, cTriplePi3; 
+  repeat rewrite cPairProjections; reflexivity.
+Qed.

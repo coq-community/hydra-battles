@@ -6,12 +6,13 @@ Require Import FunInd Recdef Wf_nat Lia.
 Function zero (n:nat)  {wf lt n} : nat :=
   match n with
     0 => 0
-  | p => zero (Nat.div2 p)
+  | S n' as p => zero (Nat.div2 p)
   end.
 Proof.
   intros; apply PeanoNat.Nat.lt_div2; auto with arith.
   apply lt_wf.
 Defined.
+
 
 Compute zero 677.
 

@@ -115,8 +115,8 @@ license:
   identifier: MIT
 
 supported_coq_versions:
-  text: 8.13 or later
-  opam: '{(>= "8.13" & < "8.17~") | (= "dev")}'
+  text: 8.14 or later
+  opam: '{(>= "8.14" & < "8.18~") | (= "dev")}'
 
 tested_coq_opam_versions:
 - version: 'coq-dev'
@@ -126,8 +126,6 @@ tested_coq_opam_versions:
 - version: '1.14.0-coq-8.15'
   repo: 'mathcomp/mathcomp'
 - version: '1.13.0-coq-8.14'
-  repo: 'mathcomp/mathcomp'
-- version: '1.13.0-coq-8.13'
   repo: 'mathcomp/mathcomp'
 
 dependencies:

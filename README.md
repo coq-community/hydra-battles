@@ -61,7 +61,7 @@ the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
 - Coq-community maintainer(s):
   - Pierre Castéran ([**@Casteran**](https://github.com/Casteran))
 - License: [MIT License](LICENSE)
-- Compatible Coq versions: 8.13 or later
+- Compatible Coq versions: 8.14 or later
 - Additional dependencies:
   - [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
   - [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later

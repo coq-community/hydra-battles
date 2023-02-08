@@ -60,7 +60,7 @@ Qed.
 (** TODO : move to more generic libraries *)
 
 Lemma iterate_compat3 f x n :
-  Iterates.iterate f n x = nat_rec (fun _ : nat => nat) x (fun _ y : nat => f y) n.
+  iterate f n x = nat_rec (fun _ : nat => nat) x (fun _ y : nat => f y) n.
 Proof.
   induction n;cbn; auto.
 Qed.
@@ -652,7 +652,7 @@ Corollary iterate_gt_diag' :
               {j:nat | i<= j /\ dominates_from j (iterate f n) id}.
 Proof.
   destruct n.
-  -  intro H1;  elimtype False; lia.
+  -  intro H1;  cut False; [contradiction | lia].
   - intros _; apply dominates_iterate; auto.
 Defined.
 
