@@ -10,6 +10,9 @@ Require Import NN.
 Require Import LNN2LNT.
 Require Export PA.
 
+From LibHyps Require Import LibHyps.
+Require Import MoreLibHyps.
+
 Lemma paZeroOrSucc (t : Term):
  SysPrf PA
    (orH (equal t Zero)
@@ -138,9 +141,7 @@ Proof.
                 ** elim closedPA with 0.
                    exists x; auto.
                 ** induction H0; simpl in H.
-                   decompose sum H.
-                   discriminate H0.
-                   discriminate H1.
+                   decompose sum H /r; discriminate 1.
              ++ apply eqTrans with (Succ (Plus (var 0) (var 1))).
                 ** apply sysWeaken.
                    apply pa4 with (a := var 0) (b := var 1).
@@ -514,12 +515,10 @@ Proof.
                                   auto.
                                   induction H0.
                                   simpl in H.
-                                  decompose sum H; 
-                                    discriminate H0 || discriminate H1.
+                                  decompose sum H /r;  discriminate 1.
                                   simpl in |- *.
                                   unfold not in |- *; intros.
-                                  decompose sum H; 
-                                    discriminate H0 || discriminate H1.
+                                  decompose sum H /r; discriminate 1.
                                   apply existI with (var 4).
                                   rewrite (subFormulaEqual LNT); simpl in |- *.
                                   apply eqTrans with

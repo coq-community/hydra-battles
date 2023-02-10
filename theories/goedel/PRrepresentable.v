@@ -18,7 +18,7 @@ From hydras.Ackermann Require Import cPair.
 From Coq Require Import Decidable.
 From Coq Require Import Lia.
 From hydras Require Import Compat815.
-
+(* From hydras Require Import LNN_notations.  *)
 From LibHyps Require Import LibHyps.
 Require Import MoreLibHyps.
 
@@ -56,19 +56,53 @@ Definition betaFormula : Formula :=
                         (Succ (Times (var 3) (Succ (var 1))))))
                   (var 4))))))))).
 
+
+(* Import LNN_notations. Compute betaFormula.
+Locate andH. 
+*)
+
+Section ProofofBetaRepresentable.
+
+Let _f1 a a0:=
+      (iffH
+         (existH 3
+            (andH (LT (var 3) (natToTerm (S a)))
+               (existH 4
+                  (andH (LT (var 4) (natToTerm (S a)))
+                     (andH
+                        (equal
+                           (Plus
+                              (Times (Plus (var 3) (var 4))
+                                 (Succ (Plus (var 3) (var 4))))
+                              (Times (natToTerm 2) (var 3)))
+                           (Times (natToTerm 2) (natToTerm a)))
+                        (andH
+                           (LT (var 0)
+                              (Succ (Times (var 3) (Succ (natToTerm a0)))))
+                           (existH 5
+                              (andH (LT (var 5) (Succ (var 4)))
+                                 (equal
+                                    (Plus (var 0)
+                                       (Times (var 5)
+                                          (Succ
+                                             (Times (var 3)
+                                                (Succ (natToTerm a0))))))
+                                    (var 4))))))))))
+         (equal (var 0) (natToTerm (beta a a0)))). 
+
 Lemma betaRepresentable : Representable 2 beta betaFormula.
 Proof.
  assert (cPairLemma1 :
           forall a b : nat, (a + b) * S (a + b) + 2 * a = 2 * cPair a b).
- { intros a b. unfold cPair in |- *.
-   assert (2 * sumToN (a + b) = (a + b) * S (a + b)) by
-     (induction (a + b); simpl in |- *; lia).
+ { intros a b; unfold cPair;
+   assert (H: 2 * sumToN (a + b) = (a + b) * S (a + b)) by
+     (induction (a + b); simpl; lia).
     lia. }
- unfold Representable in |- *; split.
- + intros v H. simpl in H. lia.
- + simpl in |- *. intros a a0. unfold betaFormula in |- *.
+ unfold Representable; split.
+ -  intros v H; simpl in H; lia.
+ - simpl; intros a a0; unfold betaFormula.
    assert
-      (forall (A : Formula) (v x a : nat),
+      (H: forall (A : Formula) (v x a : nat),
        v <> x ->
        substituteFormula LNN (existH v A) x (natToTerm a) =
        existH v (substituteFormula LNN A x (natToTerm a))).
@@ -78,51 +112,26 @@ Proof.
         as [i | i]; try reflexivity.
      elim (closedNatToTerm _ _ i). }
     assert
-      (forall (t1 t2 : Term) (v a : nat),
+      (H0: forall (t1 t2 : Term) (v a : nat),
        substituteFormula LNN (LT t1 t2) v (natToTerm a) =
        LT (substituteTerm LNN t1 v (natToTerm a))
           (substituteTerm LNN t2 v (natToTerm a))).
-    { intros. unfold LT at 1 in |- *. now rewrite (subFormulaRelation LNN). }
+    { intros t1 t2 v a1; unfold LT at 1; now rewrite (subFormulaRelation LNN). }
     repeat first
     [ rewrite H; [| discriminate ]
     | rewrite H0
     | rewrite (subFormulaAnd LNN)
     | rewrite (subFormulaEqual LNN) ].
     simpl in |- *; repeat rewrite (subTermNil LNN).
- - assert
-       (SysPrf NN
-          (iffH
-             (existH 3
-                (andH (LT (var 3) (natToTerm (S a)))
-                   (existH 4
-                      (andH (LT (var 4) (natToTerm (S a)))
-                         (andH
-                            (equal
-                               (Plus
-                                  (Times (Plus (var 3) (var 4))
-                                     (Succ (Plus (var 3) (var 4))))
-                                  (Times (natToTerm 2) (var 3)))
-                               (Times (natToTerm 2) (natToTerm a)))
-                            (andH
-                               (LT (var 0)
-                                  (Succ (Times (var 3) (Succ (natToTerm a0)))))
-                               (existH 5
-                                  (andH (LT (var 5) (Succ (var 4)))
-                                     (equal
-                                        (Plus (var 0)
-                                           (Times (var 5)
-                                              (Succ
-                                                 (Times (var 3)
-                                                    (Succ (natToTerm a0))))))
-                                        (var 4))))))))))
-             (equal (var 0) (natToTerm (beta a a0))))); auto.
-   apply iffI.
-   * apply impI. apply existSys.
-     ++ apply closedNN.
-     ++ intros [H1 | H1]; try lia. 
+   +  assert
+       (SysPrf NN (_f1 a a0)).  
+   { unfold _f1; apply iffI.
+   - apply impI. apply existSys.
+     + apply closedNN.
+     + intros [H1 | H1]; try lia. 
         simpl in H1; elim (closedNatToTerm _ _ H1).
-     ++ apply impE with (LT (var 3) (natToTerm (S a))).
-     -- apply impE with
+     + apply impE with (LT (var 3) (natToTerm (S a))).
+     *  apply impE with
           (existH 4
              (andH (LT (var 4) (natToTerm (S a)))
                 (andH
@@ -142,9 +151,9 @@ Proof.
                                      (Succ (Times (var 3) 
                                               (Succ (natToTerm a0))))))
                                (var 4)))))))).
-        ** apply sysWeaken. apply impI. apply existSys.
-           +++ apply closedNN.
-           +++ replace
+        -- apply sysWeaken. apply impI. apply existSys.
+           ++ apply closedNN.
+           ++ replace
                (freeVarFormula LNN
                   (impH (LT (var 3) (natToTerm (S a)))
                      (equal (var 0) (natToTerm (beta a a0))))) 
@@ -156,30 +165,30 @@ Proof.
                by (rewrite <- freeVarLT; reflexivity).
                intros [H1 | H1]; try lia.
                destruct (in_app_or _ _ _ H1) as [H2 | H2].
-           --- elim (closedNatToTerm _ _ H2).
-           --- destruct H2 as [H2| H2]; try lia. 
+           **  elim (closedNatToTerm _ _ H2).
+           ** destruct H2 as [H2| H2]; try lia. 
                elim (closedNatToTerm _ _ H2).
-                +++ apply impTrans with
+           ++  apply impTrans with
                       (andH (equal (var 3) (natToTerm (cPairPi1 a)))
                          (equal (var 4) (natToTerm (cPairPi2 a)))).
-           --- apply impI.
+           ** apply impI.
                apply impE with
                  (equal
                     (Plus (Times (Plus (var 3) (var 4)) 
                              (Succ (Plus (var 3) (var 4))))
                        (Times (natToTerm 2) (var 3)))
                     (Times (natToTerm 2) (natToTerm a))).
-               *** apply impE with (LT (var 4) (natToTerm (S a))).
-                   ++++ apply impE with 
+               --- apply impE with (LT (var 4) (natToTerm (S a))).
+                   +++ apply impE with 
                           (LT (var 3) (natToTerm (S a))).
-                   ---- do 2 apply sysWeaken.
-                        apply boundedLT; intros n H1.
+                   *** do 2 apply sysWeaken.
+                       apply boundedLT; intros n H1.
                         rewrite (subFormulaImp LNN).
                         unfold LT at 1 in |- *.
                         rewrite (subFormulaRelation LNN).
                         simpl in |- *.
                         rewrite subTermNil.
-                        **** fold (var 4) in |- *.
+                        ---- fold (var 4) in |- *.
                              replace 
                                (apply LNN Languages.Succ 
                                   (Tcons LNN 0 (natToTerm a)
@@ -192,7 +201,7 @@ Proof.
                              repeat rewrite (subFormulaAnd LNN).
                              repeat rewrite (subFormulaEqual LNN).
                              assert 
-                               ((substituteTerm LNN
+                               (H3: (substituteTerm LNN
                                    (substituteTerm LNN
                                       (Plus (Times (Plus (var 3) (var 4)) 
                                                (Succ (Plus (var 3) (var 4))))
@@ -204,7 +213,7 @@ Proof.
                                         (Succ (Plus (natToTerm n) 
                                                  (natToTerm n0))))
                                      (Times (Succ (Succ Zero))
-                                        (natToTerm n)))) as H3.
+                                        (natToTerm n)))) .
                              { simpl in |- *.
                                repeat (rewrite (subTermNil LNN (natToTerm n)));
                                  [| apply closedNatToTerm].
@@ -233,23 +242,23 @@ Proof.
                                 (natToTerm ((n + n0) * S (n + n0) + 2 * n)) 
                                 (natToTerm (2 * a))).
                              { apply impI. eapply eqTrans.
-                               + apply sysWeaken; apply eqSym; apply natPlus.
-                               + eapply eqTrans.
-                               - apply eqPlus. eapply eqTrans.
+                               - apply sysWeaken; apply eqSym; apply natPlus.
+                               - eapply eqTrans.
+                               +  apply eqPlus. eapply eqTrans.
                                  * apply sysWeaken; apply eqSym, natTimes.
                                  * eapply eqTrans.
-                                   ++ apply eqTimes.
-                                   -- apply sysWeaken; apply eqSym. 
+                                   -- apply eqTimes.
+                                   ++ apply sysWeaken; apply eqSym. 
                                       apply natPlus.
-                                   -- eapply eqTrans.
+                                   ++ eapply eqTrans.
                                       ** apply sysWeaken; apply eqSym.
                                          simpl in |- *. apply eqSucc. 
                                          apply natPlus.
                                       ** apply eqRefl.
-                                      ++ apply eqRefl.
+                                     -- apply eqRefl.
                                  * apply sysWeaken; apply eqSym. 
                                    apply natTimes.
-                               - eapply eqTrans.
+                               + eapply eqTrans.
                                  * apply Axm; right; constructor.
                                  * apply sysWeaken.
                                    replace
@@ -265,22 +274,22 @@ Proof.
                                    apply natTimes. }
                              { rewrite cPairLemma1.
                                destruct (eq_nat_dec a (cPair n n0)) as [e | e].
-                               + rewrite e, cPairProjections1, 
+                               - rewrite e, cPairProjections1, 
                                    cPairProjections2.
-                                               apply impI. 
-                                               apply andI; apply eqRefl.
-                               + apply impI.
+                                 apply impI. 
+                                 apply andI; apply eqRefl.
+                               - apply impI.
                                  apply contradiction with
                                    (equal (natToTerm (2 * cPair n n0)) 
                                       (natToTerm (2 * a))).
-                               - apply Axm; right; constructor.
-                               - apply sysWeaken. apply natNE. lia. }
-                        **** apply closedNatToTerm.
-                   ---- apply Axm; right; constructor.
-                        ++++ eapply andE1. apply Axm; left; right; constructor.
-                        *** eapply andE1. eapply andE2.
+                               +  apply Axm; right; constructor.
+                               + apply sysWeaken. apply natNE. lia. }
+                         ---- apply closedNatToTerm.
+                   ***  apply Axm; right; constructor.
+                   +++ eapply andE1. apply Axm; left; right; constructor.
+                        --- eapply andE1. eapply andE2.
                             apply Axm; left; right; constructor.
-                    --- repeat apply impI.
+                    ** repeat apply impI.
                         apply impE with
                          (existH 5
                            (andH (LT (var 5) (Succ (var 4)))
@@ -290,10 +299,10 @@ Proof.
                                      (Succ (Times (var 3) 
                                               (Succ (natToTerm a0))))))
                                      (var 4)))).
-                        *** apply impE with (LT (var 0) 
+                        --- apply impE with (LT (var 0) 
                                              (Succ (Times (var 3)
                                                       (Succ (natToTerm a0))))).
-                            ++++ 
+                            +++
                               rewrite <-
                                 (subFormulaId LNN
                                    (impH (LT (var 0) 
@@ -328,10 +337,10 @@ Proof.
                                          (equal (var 0) 
                                             (natToTerm (beta a a0))))) 3
                                    (natToTerm (cPairPi1 a))).
-                            ---- apply (subWithEquals LNN). 
+                            *** apply (subWithEquals LNN). 
                                  apply eqSym. eapply andE1.
                                  apply Axm; right; constructor.
-                            ---- rewrite <-
+                            *** rewrite <-
                                    (subFormulaId LNN
                                       (substituteFormula LNN
                                          (impH
@@ -348,12 +357,14 @@ Proof.
                                                         (Plus (var 0)
                                                            (Times (var 5)
                                                               (Succ 
-                                                                 (Times (   var 3) (Succ (natToTerm a0))))))
-                                                        (var 4)))) (equal (var 0) (natToTerm (beta a a0))))) 3
+                                                                 (Times (var 3) 
+                                                                    (Succ 
+                                                                       (natToTerm a0))))))
+                                                        (var 4))))
+                                               (equal (var 0) (natToTerm (beta a a0))))) 
+                                         3
                                          (natToTerm (cPairPi1 a))) 4).
-                                 apply
-                                   impE
-                                   with
+                                 apply impE with
                                    (substituteFormula LNN
                                       (substituteFormula LNN
                                          (impH (LT (var 0) 
@@ -365,13 +376,19 @@ Proof.
                                                      (equal
                                                         (Plus (var 0)
                                                            (Times (var 5)
-                                                              (Succ (Times (var 3) (Succ (natToTerm a0))))))
-                                                        (var 4)))) (equal (var 0) (natToTerm (beta a a0)))))
-                                         3 (natToTerm (cPairPi1 a))) 4 (natToTerm (cPairPi2 a))).
+                                                              (Succ 
+                                                                 (Times (var 3) 
+                                                                    (Succ 
+                                                                       (natToTerm a0))))))
+                                                        (var 4)))) 
+                                               (equal (var 0) (natToTerm (beta a a0)))))
+                                         3 (natToTerm (cPairPi1 a))) 4 
+                                      (natToTerm (cPairPi2 a))).
                                  
-                                 ***** apply (subWithEquals LNN). apply eqSym. eapply andE2.
+                                 ---- apply (subWithEquals LNN). 
+                                      apply eqSym. eapply andE2.
                                  apply Axm; right; constructor.
-                                 ***** do 2 apply sysWeaken.
+                                 ----  do 2 apply sysWeaken.
                                  repeat first
                                    [ rewrite H; [| discriminate ]
                                    | rewrite H0
@@ -379,29 +396,38 @@ Proof.
                                    | rewrite (subFormulaAnd LNN)
                                    | rewrite (subFormulaEqual LNN) ].
                                  simpl in |- *.
-                                 repeat (rewrite (subTermNil LNN); [| apply closedNatToTerm ]).
-                                 repeat (rewrite (subTermNil LNN (natToTerm a0)); [| apply closedNatToTerm ]).
-                                 repeat (rewrite (subTermNil LNN (natToTerm (beta a a0))); [| apply closedNatToTerm ]).
-                                 apply impTrans with (LT (var 0) (natToTerm (S (cPairPi1 a * S a0)))).
+                                 repeat (rewrite (subTermNil LNN);
+                                         [| apply closedNatToTerm ]).
+                                 repeat (rewrite (subTermNil LNN (natToTerm a0));
+                                         [| apply closedNatToTerm ]).
+                                 repeat (rewrite (subTermNil LNN 
+                                                    (natToTerm (beta a a0)));
+                                         [| apply closedNatToTerm ]).
+                                 apply impTrans with 
+                                   (LT (var 0) (natToTerm (S (cPairPi1 a * S a0)))).
                                  { apply impI.
                                    apply
                                      impE
                                      with
                                      (substituteFormula LNN (LT (var 0) (var 1)) 1
                                         (natToTerm (S (cPairPi1 a * S a0)))).
-                                   + unfold LT at 2 in |- *.
+                                   - unfold LT at 2 in |- *.
                                      rewrite (subFormulaRelation LNN).
                                      apply impRefl.
-                                   + apply
+                                   - apply
                                        impE
                                        with
                                        (substituteFormula LNN (LT (var 0) (var 1)) 1
-                                          (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0))))).
-                                   - apply (subWithEquals LNN). apply sysWeaken. simpl in |- *.
+                                          (Succ (Times (natToTerm (cPairPi1 a)) 
+                                                   (Succ (natToTerm a0))))).
+                                     + apply (subWithEquals LNN). 
+                                       apply sysWeaken. simpl in |- *.
                                      apply eqSucc.
-                                                  replace (Succ (natToTerm a0)) with (natToTerm (S a0)) by reflexivity.
+                                                  replace (Succ (natToTerm a0)) 
+                                                    with (natToTerm (S a0)) 
+                                                    by reflexivity.
                                                   apply natTimes.
-                                                - unfold LT at 2 in |- *.
+                                                + unfold LT at 2 in |- *.
                                                   rewrite (subFormulaRelation LNN).
                                                   apply Axm; right; constructor. }
                                             { apply boundedLT. intros n H1.
@@ -412,12 +438,15 @@ Proof.
                                               | rewrite (subFormulaAnd LNN)
                                               | rewrite (subFormulaEqual LNN) ].
                                               simpl in |- *.
-                                              repeat (rewrite (subTermNil LNN); [| apply closedNatToTerm ]).
+                                              repeat (rewrite (subTermNil LNN);
+                                                      [| apply closedNatToTerm ]).
                                               apply impI. apply existSys.
-                                              + apply closedNN.
-                                              + simpl in |- *. intro H2.
-                                                destruct (in_app_or _ _ _ H2) as [H3 | H3]; elim (closedNatToTerm _ _ H3).
-                                              + apply
+                                              - apply closedNN.
+                                              - simpl in |- *. intro H2.
+                                                destruct (in_app_or _ _ _ H2) 
+                                                  as [H3 | H3]; 
+                                                  elim (closedNatToTerm _ _ H3).
+                                              - apply
                                                  impE
                                                   with
                                                     (fol.equal LNN
@@ -425,7 +454,8 @@ Proof.
                                                           (Tcons LNN 1 (natToTerm n)
                                                              (Tcons LNN 0
                                                                 (apply LNN Languages.Times
-                                                                   (Tcons LNN 1 (fol.var LNN 5)
+                                                                   (Tcons LNN 1 
+                                                                      (fol.var LNN 5)
                                                                       (Tcons LNN 0
                                                                          (apply LNN Languages.Succ
                                                                             (Tcons LNN 0
@@ -439,7 +469,7 @@ Proof.
                                                                                         (Tnil LNN)))) 
                                                                                (Tnil LNN))) (Tnil LNN)))) 
                                                                 (Tnil LNN)))) (natToTerm (cPairPi2 a))).
-                                                - apply impE with (LT (var 5) (natToTerm (S (cPairPi2 a)))).
+                                                +  apply impE with (LT (var 5) (natToTerm (S (cPairPi2 a)))).
                                                   apply sysWeaken.
                                                   * apply boundedLT. intros n0 H2.
                                                     repeat first
@@ -451,13 +481,13 @@ Proof.
                                                     simpl in |- *.
                                                     repeat (rewrite (subTermNil LNN); [| apply closedNatToTerm ]).
                                                     apply impI. destruct (eq_nat_dec n (beta a a0)) as [e | e].
-                                                    ++ rewrite <- e. apply eqRefl.
-                                                    ++ apply
+                                                    -- rewrite <- e. apply eqRefl.
+                                                    -- apply
                                                         contradiction
                                                          with
                                                            (equal (natToTerm (n + n0 * S (cPairPi1 a * S a0)))
                                                               (natToTerm (cPairPi2 a))).
-                                                       -- eapply eqTrans; [| apply Axm; right; constructor ].
+                                                       ++ eapply eqTrans; [| apply Axm; right; constructor ].
                                                           apply sysWeaken. eapply eqTrans.
                                                           ** apply eqSym. apply natPlus.
                                                           ** replace
@@ -481,14 +511,14 @@ Proof.
                                                                     (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0))))))
                                                               by reflexivity.
                                                               apply eqPlus.
-                                                              +++ apply eqRefl.
-                                                              +++ eapply eqTrans.
-                                                                  --- apply eqSym. apply natTimes.
-                                                                  --- apply eqTimes. apply eqRefl.
+                                                              --- apply eqRefl.
+                                                              --- eapply eqTrans.
+                                                                  +++ apply eqSym. apply natTimes.
+                                                                  +++ apply eqTimes. apply eqRefl.
                                                                       simpl in |- *. apply eqSucc.
                                                                       replace (Succ (natToTerm a0)) with (natToTerm (S a0)) by reflexivity.
                                                                       apply eqSym. apply natTimes.
-                                                       -- apply sysWeaken. apply natNE.
+                                                       ++ apply sysWeaken. apply natNE.
                                                           intro; elim e. unfold beta in |- *.
                                                           destruct
                                                             (div_eucl (coPrimeBeta a0 (cPairPi1 a)) (gtBeta a0 (cPairPi1 a)) (cPairPi2 a)) as [[a1 b0] H4].
@@ -501,32 +531,35 @@ Proof.
                                                           ** exists n0; split; [symmetry |]; eauto.
                                                           ** exists a1; split; eauto.
                                                   * eapply andE1. apply Axm; right; constructor.
-                                                - eapply andE2. apply Axm; right; constructor. }
-                            ++++ eapply andE1. eapply andE2. eapply andE2. apply Axm; left; right; constructor.
-                        *** eapply andE2. eapply andE2. eapply andE2. apply Axm; left; right; constructor.
-             ** eapply andE2. apply Axm; right; constructor.
-          -- eapply andE1. apply Axm; right; constructor.
-      * apply impI. unfold beta in |- *.
+                                                + eapply andE2. apply Axm; right; constructor. }
+                            +++ eapply andE1. eapply andE2. eapply andE2. apply Axm; left; right; constructor.
+                        --- eapply andE2. eapply andE2. eapply andE2. apply Axm; left; right; constructor.
+             --  eapply andE2. apply Axm; right; constructor.
+          * eapply andE1. apply Axm; right; constructor.
+      -  apply impI. unfold beta in |- *.
         destruct (div_eucl (coPrimeBeta a0 (cPairPi1 a)) (gtBeta a0 (cPairPi1 a)) (cPairPi2 a)) as [x H1].
         induction x as (a1, b). simpl in |- *. simpl in H1. destruct H1 as (H1, H2).
         apply existI with (natToTerm (cPairPi1 a)). rewrite (subFormulaAnd LNN). apply andI.
-        ++ apply sysWeaken. rewrite H0. simpl in |- *. rewrite subTermNil.
-           -- replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
-              apply natLT. apply Nat.lt_succ_r. apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
+        + apply sysWeaken. rewrite H0. simpl in |- *. rewrite subTermNil.
+           * replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) 
+               with (natToTerm (S a)) by reflexivity.
+              apply natLT. apply Nat.lt_succ_r. 
+              apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
               apply cPairLe1. rewrite cPairProjections. apply le_n.
-           -- apply closedNatToTerm.
-        ++ rewrite H; try lia.
-           -- apply existI with (natToTerm (cPairPi2 a)). repeat rewrite (subFormulaAnd LNN). apply andI.
-              ** apply sysWeaken. repeat rewrite H0. simpl in |- *.
+           *  apply closedNatToTerm.
+        + rewrite H; try lia.
+           *  apply existI with (natToTerm (cPairPi2 a)). 
+              repeat rewrite (subFormulaAnd LNN). apply andI.
+              --  apply sysWeaken. repeat rewrite H0. simpl in |- *.
                  repeat rewrite (subTermNil LNN (natToTerm a)).
-                 +++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
+                 ++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
                      apply natLT. apply Nat.lt_succ_r. apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
-                     --- apply cPairLe2.
-                     --- rewrite cPairProjections. apply le_n.
-                 +++ apply closedNatToTerm.
-                 +++ apply closedNatToTerm.
-              ** apply andI.
-                 +++ repeat rewrite (subFormulaEqual LNN). simpl in |- *.
+                     ** apply cPairLe2.
+                     ** rewrite cPairProjections. apply le_n.
+                 ++ apply closedNatToTerm.
+                 ++ apply closedNatToTerm.
+              -- apply andI.
+                 ++ repeat rewrite (subFormulaEqual LNN). simpl in |- *.
                      repeat
                       (rewrite (subTermNil LNN (natToTerm (cPairPi1 a)));
                         [| apply closedNatToTerm ]).
@@ -580,18 +613,18 @@ Proof.
                          (natToTerm
                             ((cPairPi1 a + cPairPi2 a) * S (cPairPi1 a + cPairPi2 a) +
                              2 * cPairPi1 a)).
-                     --- apply sysWeaken. apply eqSym. eapply eqTrans.
-                         *** apply eqSym. apply natPlus.
-                         *** apply eqPlus.
-                             ++++ eapply eqTrans.
-                                  ---- apply eqSym. apply natTimes.
-                                  ---- apply eqTimes.
-                                       **** apply eqSym. apply natPlus.
-                                       **** simpl in |- *. apply eqSucc. apply eqSym. apply natPlus.
-                             ++++ apply eqSym. apply natTimes.
-                     --- rewrite cPairLemma1. apply eqSym. rewrite cPairProjections. apply sysWeaken. apply natTimes.
-                 +++ apply andI.
-                     --- rewrite <-
+                     ** apply sysWeaken. apply eqSym. eapply eqTrans.
+                         --- apply eqSym. apply natPlus.
+                         ---  apply eqPlus.
+                             +++ eapply eqTrans.
+                                  *** apply eqSym. apply natTimes.
+                                  *** apply eqTimes.
+                                      ---- apply eqSym. apply natPlus.
+                                      ---- simpl in |- *. apply eqSucc. apply eqSym. apply natPlus.
+                             +++ apply eqSym. apply natTimes.
+                     ** rewrite cPairLemma1. apply eqSym. rewrite cPairProjections. apply sysWeaken. apply natTimes.
+                 ++ apply andI.
+                     ** rewrite <-
                           (subFormulaId LNN
                              (substituteFormula LNN
                                 (substituteFormula LNN
@@ -606,8 +639,8 @@ Proof.
                                       (LT (var 0) (Succ (Times (var 3) (Succ (natToTerm a0))))) 3
                                       (natToTerm (cPairPi1 a))) 4 (natToTerm (cPairPi2 a))) 0
                                 (natToTerm b)).
-                         *** apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
-                         *** apply sysWeaken. repeat rewrite H0. simpl in |- *.
+                         --- apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
+                         --- apply sysWeaken. repeat rewrite H0. simpl in |- *.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm (cPairPi1 a)));
                                 [| apply closedNatToTerm ]).
@@ -618,23 +651,23 @@ Proof.
                                with
                                  (substituteFormula LNN (LT (natToTerm b) (var 0)) 0
                                     (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0))))).
-                             ++++ unfold LT at 1 in |- *. rewrite (subFormulaRelation LNN).
+                             +++ unfold LT at 1 in |- *. rewrite (subFormulaRelation LNN).
                                   simpl in |- *.
                                   repeat
                                    (rewrite (subTermNil LNN (natToTerm b)); [| apply closedNatToTerm ]).
                                   apply impRefl.
-                             ++++ apply
+                             +++ apply
                                    impE
                                     with
                                       (substituteFormula LNN (LT (natToTerm b) (var 0)) 0
                                          (natToTerm (S (cPairPi1 a * S a0)))).
-                                  ---- apply (subWithEquals LNN). simpl in |- *. apply eqSucc.
+                                  *** apply (subWithEquals LNN). simpl in |- *. apply eqSucc.
                                        replace (Succ (natToTerm a0)) with (natToTerm (S a0)) by reflexivity.
                                        apply eqSym. apply natTimes.
-                                  ---- rewrite H0.
+                                  *** rewrite H0.
                                        repeat (rewrite (subTermNil LNN (natToTerm b)); [| apply closedNatToTerm ]).
                                        rewrite (subTermVar1 LNN). apply natLT. apply H2.
-                     --- repeat (rewrite H; [| discriminate ]).
+                     ** repeat (rewrite H; [| discriminate ]).
                          apply existI with (natToTerm a1).
                          rewrite <-
                           (subFormulaId LNN
@@ -663,8 +696,8 @@ Proof.
                                                (var 4))) 3 (natToTerm (cPairPi1 a))) 4
                                       (natToTerm (cPairPi2 a))) 5 (natToTerm a1)) 0 
                                 (natToTerm b)).
-                         *** apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
-                         *** apply sysWeaken.
+                         --- apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
+                         --- apply sysWeaken.
                              repeat first
                               [ rewrite H; [| discriminate ]
                               | rewrite H0
@@ -683,9 +716,9 @@ Proof.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm a1)); [| apply closedNatToTerm ]).
                              apply andI.
-                             ++++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm (cPairPi2 a)) (Tnil LNN))) with (natToTerm (S (cPairPi2 a))) by reflexivity.
+                             +++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm (cPairPi2 a)) (Tnil LNN))) with (natToTerm (S (cPairPi2 a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
-                             ++++ replace
+                             +++ replace
                                    (apply LNN Languages.Plus
                                       (Tcons LNN 1 (natToTerm b)
                                          (Tcons LNN 0
@@ -705,21 +738,25 @@ Proof.
                                       (Times (natToTerm a1)
                                          (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0)))))) by reflexivity.
                                   apply eqTrans with (natToTerm (a1 *  coPrimeBeta a0 (cPairPi1 a) + b)).
-                                  ---- rewrite Nat.add_comm. apply eqSym. eapply eqTrans.
-                                       **** apply eqSym. apply natPlus.
-                                       **** apply eqPlus.
+                                   *** rewrite Nat.add_comm. apply eqSym. eapply eqTrans.
+                                       ---- apply eqSym. apply natPlus.
+                                       ---- apply eqPlus.
                                             +++++ apply eqRefl.
                                             +++++ eapply eqTrans.
-                                                  ----- apply eqSym. apply natTimes.
-                                                  ----- apply eqTimes.
-                                                        ***** apply eqRefl.
-                                                        ***** unfold coPrimeBeta in |- *. simpl in |- *.
+                                                  **** apply eqSym. apply natTimes.
+                                                  **** apply eqTimes.
+                                                         apply eqRefl.
+                                                         unfold coPrimeBeta in |- *. simpl in |- *.
                                                               apply eqSucc.
                                                               replace (Succ (natToTerm a0)) with (natToTerm (S a0)) by reflexivity.
                                                               apply eqSym. apply natTimes.
-                                  ---- rewrite <- H1. apply eqRefl.
-    - apply closedNatToTerm.
+                                  *** rewrite <- H1. apply eqRefl.
+    }  auto. 
+ +  apply closedNatToTerm.
 Qed.
+
+End ProofofBetaRepresentable.
+
 
 Fixpoint addExists (m n : nat) (f : Formula) {struct n} : Formula :=
   match n with
@@ -731,9 +768,9 @@ Lemma freeVarAddExists1 :
  forall (n m v : nat) (A : Formula),
  In v (freeVarFormula LNN (addExists m n A)) -> In v (freeVarFormula LNN A).
 Proof.
-  intros n m v A H. induction n as [| n Hrecn].
-  + simpl in H. exact H.
-  + simpl in H. apply Hrecn. eapply In_list_remove1. exact H.
+  intros n m v A H; induction n as [| n Hrecn].
+  + simpl in H;  exact H.
+  + simpl in H;  apply Hrecn; eapply In_list_remove1; exact H.
 Qed.
 
 Lemma freeVarAddExists2 :
@@ -741,34 +778,33 @@ Lemma freeVarAddExists2 :
  In v (freeVarFormula LNN (addExists m n A)) -> n + m <= v \/ v < m.
 Proof.
   intros n m v A H. induction n as [| n Hrecn]; try lia.
-  simpl in H. simpl in |- *.
+  simpl in H |- *.
   assert (In v (freeVarFormula LNN (addExists m n A))) as H1.
-  { eapply In_list_remove1. exact H. }
+  { eapply In_list_remove1; exact H. }
   pose proof (In_list_remove2 _ _ _ _ _ H).
-  pose proof (Hrecn H1). lia.
+  pose proof (Hrecn H1); lia.
 Qed.
 
 Lemma reduceAddExistsOneWay :
  forall (n m : nat) (A B : Formula),
  SysPrf NN (impH A B) -> SysPrf NN (impH (addExists m n A) (addExists m n B)).
 Proof.
-  intros n m A B H. apply impI. induction n as [| n Hrecn].
-  + apply impE with A.
-    - apply sysWeaken. apply H.
-    - apply Axm; right; constructor.
-  + simpl in |- *. apply existSys.
-    - apply closedNN.
-    - simpl in |- *; intro H0.
-      pose proof (In_list_remove2 _ _ _ _ _ H0). congruence.
-    - apply existSimp. exact Hrecn.
+  intros n m A B H; apply impI; induction n as [| n Hrecn].
+  - apply impE with A.
+    + apply sysWeaken, H.
+    + apply Axm; right; constructor.
+  - simpl; apply existSys.
+    + apply closedNN.
+    + simpl; intro H0; pose proof (In_list_remove2 _ _ _ _ _ H0); congruence.
+    + apply existSimp, Hrecn.
 Qed.
 
 Lemma reduceAddExists :
  forall (n m : nat) (A B : Formula),
  SysPrf NN (iffH A B) -> SysPrf NN (iffH (addExists m n A) (addExists m n B)).
 Proof.
-  intros n m A B H. induction n as [| n Hrecn]; simpl in |- *; auto.
-  apply (reduceExist LNN); auto. apply closedNN.
+  intros n m A B H; induction n as [| n Hrecn]; simpl; [assumption|]. 
+  apply (reduceExist LNN); [apply closedNN | assumption].
 Qed.
 
 Lemma subAddExistsNice :
@@ -778,15 +814,14 @@ Lemma subAddExistsNice :
  substituteFormula LNN (addExists m n A) v s =
  addExists m n (substituteFormula LNN A v s).
 Proof.
-  intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
-  rewrite (subFormulaExist LNN).
-  destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
+  intros n m A v s H H0. induction n as [| n Hrecn]; simpl; [trivial |].
+  rewrite (subFormulaExist LNN); destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
   destruct (in_dec Nat.eq_dec (n + m) (freeVarTerm LNN s)) as [e0 | e0].
-  + pose proof (H0 _ e0). lia.
-  + rewrite Hrecn.
-    - reflexivity.
-    - lia.
-    - intros v0 H1. pose proof (H0 _ H1). lia.
+  - pose proof (H0 _ e0); lia.
+  - rewrite Hrecn.
+    + reflexivity.
+    + lia.
+    + intros v0 H1; pose proof (H0 _ H1); lia.
 Qed.
 
 Fixpoint addForalls (m n : nat) (f : Formula) {struct n} : Formula :=
@@ -799,19 +834,19 @@ Lemma freeVarAddForalls1 :
  forall (n m v : nat) (A : Formula),
  In v (freeVarFormula LNN (addForalls m n A)) -> In v (freeVarFormula LNN A).
 Proof.
-  intros n m v A H. induction n as [| n Hrecn]; simpl in H; auto.
-  apply Hrecn. eapply In_list_remove1. exact H.
+  intros n m v A H; induction n as [| n Hrecn]; simpl in H; [auto | ].
+  apply Hrecn; eapply In_list_remove1, H.
 Qed.
 
 Lemma freeVarAddForalls2 :
  forall (n m v : nat) (A : Formula),
  In v (freeVarFormula LNN (addForalls m n A)) -> n + m <= v \/ v < m.
 Proof.
-  intros n m v A H. induction n as [| n Hrecn]; try lia.
-  simpl in H. simpl in |- *.
-  assert (In v (freeVarFormula LNN (addForalls m n A))).
-  { eapply In_list_remove1. exact H. }
-  pose proof (Hrecn H0). pose proof (In_list_remove2 _ _ _ _ _ H). lia.
+  intros n m v A H; induction n as [| n Hrecn]; try lia.
+  simpl in H |- *.
+  assert (H0: In v (freeVarFormula LNN (addForalls m n A))) by
+  (eapply In_list_remove1, H).
+  pose proof (Hrecn H0); pose proof (In_list_remove2 _ _ _ _ _ H); lia.
 Qed.
 
 Lemma reduceAddForalls :
@@ -819,8 +854,8 @@ Lemma reduceAddForalls :
  SysPrf NN (iffH A B) ->
  SysPrf NN (iffH (addForalls m n A) (addForalls m n B)).
 Proof.
-  intros n m A B H. induction n as [| n Hrecn]; simpl in |- *; auto.
-  apply (reduceForall LNN). apply closedNN. auto.
+  intros n m A B H; induction n as [| n Hrecn]; simpl; [assumption| ].
+  apply (reduceForall LNN); [apply closedNN | auto].
 Qed.
 
 Lemma subAddForallsNice :
@@ -830,14 +865,14 @@ Lemma subAddForallsNice :
  substituteFormula LNN (addForalls m n A) v s =
  addForalls m n (substituteFormula LNN A v s).
 Proof.
-  intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
-  rewrite (subFormulaForall LNN). destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
+  intros n m A v s H H0; induction n as [| n Hrecn]; simpl; [reflexivity| ].
+  rewrite (subFormulaForall LNN);  destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
   destruct (in_dec Nat.eq_dec (n + m) (freeVarTerm LNN s)) as [e0 | e0].
-  + pose proof (H0 _ e0). lia.
-  + rewrite Hrecn.
-    - reflexivity.
-    - lia.
-    - intros v0 H1. pose proof (H0 _ H1). lia.
+  - pose proof (H0 _ e0). lia.
+  - rewrite Hrecn.
+    + reflexivity.
+    + lia.
+    + intros v0 H1. pose proof (H0 _ H1). lia.
 Qed.
 
 Fixpoint FormulasToFormula (n w m : nat)
@@ -868,37 +903,33 @@ Definition succFormula : Formula := equal (var 0) (Succ (var 1)).
 
 Remark succRepresentable : Representable 1 S succFormula.
 Proof.
-  unfold Representable in |- *. split.
-  + simpl. lia.
-  + intros a. unfold succFormula in |- *.
-    rewrite (subFormulaEqual LNN). apply iffRefl.
+  unfold Representable; split.
+  - simpl; lia.
+  - intros a; unfold succFormula; rewrite (subFormulaEqual LNN); apply iffRefl.
 Qed.
 
 Definition zeroFormula : Formula := equal (var 0) Zero.
 
 Remark zeroRepresentable : Representable 0 0 zeroFormula.
 Proof.
-  unfold Representable in |- *. split.
-  + simpl. lia.
-  + apply iffRefl.
+  unfold Representable; split.
+  - simpl; lia.
+  - apply iffRefl.
 Qed.
 
 Definition projFormula (m : nat) : Formula := equal (var 0) (var (S m)).
-
 
 Remark projRepresentable :
  forall (n m : nat) (pr : m < n),
  Representable n (evalProjFunc n m pr) (projFormula m).
 Proof.
   intros n m pr; unfold Representable in |- *. split.
-  + simpl. lia.
-  + induction n as [| n Hrecn]; try lia.
-    simpl in |- *. intros a. destruct (Nat.eq_dec m n) as [e | e].
-    - rewrite e. clear e Hrecn pr m. induction n as [| n Hrecn].
-      * simpl in |- *. unfold projFormula in |- *.
-        rewrite (subFormulaEqual LNN). apply iffRefl.
-      * simpl in |- *. intros a0. unfold projFormula in |- *.
-        repeat rewrite (subFormulaEqual LNN). simpl in |- *.
+  - simpl; lia.
+  - induction n as [| n Hrecn]; try lia.
+    simpl; intros a; destruct (Nat.eq_dec m n) as [e | e].
+    + rewrite e; clear e Hrecn pr m; induction n as [| n Hrecn].
+      * simpl; unfold projFormula; rewrite (subFormulaEqual LNN); apply iffRefl.
+      * simpl; intros a0; unfold projFormula; repeat rewrite (subFormulaEqual LNN); simpl.
         destruct (Nat.eq_dec n n); try lia.
         replace
           (fol.equal LNN (fol.var LNN 0)
@@ -908,13 +939,13 @@ Proof.
           (substituteFormula LNN (equal (var 0)
                                   (var (S n))) (S n)
               (natToTerm a)).
-        ++ auto.
-        ++ rewrite (subFormulaEqual LNN); simpl in |- *.
+        -- auto.
+        -- rewrite (subFormulaEqual LNN); simpl in |- *.
            destruct (Nat.eq_dec n n); try lia.
            rewrite subTermNil; try reflexivity.
            apply closedNatToTerm.
-    - apply RepresentableAlternate with (equal (var 0) (var (S m))).
-      * apply iffSym. apply (subFormulaNil LNN). simpl in |- *. lia.
+    + apply RepresentableAlternate with (equal (var 0) (var (S m))).
+      * apply iffSym; apply (subFormulaNil LNN); simpl; lia.
       * auto.
 Qed.
 
@@ -944,7 +975,7 @@ Remark composeSigmaRepresentable :
    (composeSigmaFormula n w m A B).
 Proof.
   assert
-  (forall n w m : nat,
+  (H: forall n w m : nat,
    n <= w ->
    forall (A : Vector.t (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
    RepresentablesHelp n m A ->
@@ -956,10 +987,10 @@ Proof.
    Representable m g B ->
    RepresentableHelp n (evalComposeFunc n m (FormulasToFuncs n m A) g)
      (composeSigmaFormula n w m A B)).
-  { intro. induction n as [| n Hrecn]; simpl in |- *.
-    + intros w m H v.
-      induction v as [| a n v Hrecv]; simpl in |- *; intros B g H0 H1 H2.
-      - unfold composeSigmaFormula in |- *. simpl in |- *.
+  { intro n; induction n as [| n Hrecn]; simpl.
+    - intros w m H v.
+      induction v as [| a n v Hrecv]; simpl; intros B g H0 H1 H2.
+      + unfold composeSigmaFormula; simpl.
         replace
          (subAllFormula LNN B
             (fun x : nat => match x with
@@ -967,17 +998,17 @@ Proof.
                             | S x' => var (S (x' + w))
                             end)) with (subAllFormula LNN B (fun x : nat => var x)).
         * apply iffTrans with B.
-          ++ apply iffTrans with (subAllFormula LNN B (fun x : nat => var x)).
-             -- apply iffI; apply impI.
+          -- apply iffTrans with (subAllFormula LNN B (fun x : nat => var x)).
+             ++ apply iffI; apply impI.
                 ** eapply andE2. apply Axm; right; constructor.
                 ** apply andI.
                    +++ apply eqRefl.
                    +++ apply Axm; right; constructor.
-             -- apply (subAllFormulaId LNN).
-          ++ induction H2 as (H2, H3). auto.
+             ++ apply (subAllFormulaId LNN).
+          -- induction H2 as (H2, H3). auto.
         * apply subAllFormula_ext. intros m H3. destruct m as [| n]; auto.
           destruct H2 as (H2, H4). apply H2 in H3. lia.
-      - destruct H0 as (H0, H3). destruct H1 as (H1, H4). destruct H2 as (H2, H5).
+      + destruct H0 as (H0, H3). destruct H1 as (H1, H4). destruct H2 as (H2, H5).
         assert
          (forall a : nat,
           SysPrf NN
@@ -1289,7 +1320,7 @@ Proof.
                 ** lia.
                 ** intros v0 H6. elim (closedNatToTerm _ _ H6).
           ++ apply closedNatToTerm.
-    + intros. 
+    - intros. 
       set
        (v' :=
         Vector.t_rec (Formula * (nat -> naryFunc n))
@@ -1310,7 +1341,7 @@ Proof.
                     | O => var 0
                     | S x' => var (S (x' + w))
                     end))))).
-      - unfold composeSigmaFormula in Hrecn.
+      + unfold composeSigmaFormula in Hrecn.
         simpl in Hrecn. apply Hrecn.
         * lia.
         * clear B g H2.
@@ -1328,13 +1359,13 @@ Proof.
                 ** assert (v <= S n).
                    { apply H0. eapply In_list_remove1. exact H3. }
                    destruct (proj1 (Nat.lt_eq_cases v (S n))).
-                   +++ assumption. 
-                   +++ lia.
-                   +++ elim (In_list_remove2 _ _ _ _ _ H3). auto.
+                   --- assumption. 
+                   --- lia.
+                   --- elim (In_list_remove2 _ _ _ _ _ H3). auto.
                 ** elim (closedNatToTerm _ _ H3).
              -- apply HrecA. destruct H1 as (H0, H1). auto.
         * auto.
-      - unfold composeSigmaFormula in |- *. clear Hrecn.
+      + unfold composeSigmaFormula in |- *. clear Hrecn.
         apply
          RepresentableAlternate
           with
@@ -1347,40 +1378,40 @@ Proof.
                       | S x' => var (S (x' + w))
                       end)))).
         * rewrite subAddExistsNice.
-          ++ apply reduceAddExists. rewrite (subFormulaAnd LNN).
+          -- apply reduceAddExists. rewrite (subFormulaAnd LNN).
              apply (reduceAnd LNN).
-             -- clear H3 H2 H1 H0 g B. induction A as [| a0 n0 A HrecA].
+             ++ clear H3 H2 H1 H0 g B. induction A as [| a0 n0 A HrecA].
                 ** simpl in |- *. apply iffSym. apply (subFormulaNil LNN). simpl in |- *. lia.
                 ** simpl in |- *. rewrite (subFormulaAnd LNN).
                    apply (reduceAnd LNN); [| apply HrecA ].
                    apply (subFormulaExch LNN); try lia.
-                   +++ apply closedNatToTerm.
-                   +++ unfold not in |- *; intros. destruct H0 as [H0 | H0].
-                       --- lia.
-                       --- apply H0.
-             -- apply iffSym. apply (subFormulaNil LNN).
+                   --- apply closedNatToTerm.
+                   --- unfold not in |- *; intros. destruct H0 as [H0 | H0].
+                       +++ lia.
+                       +++ apply H0.
+             ++ apply iffSym. apply (subFormulaNil LNN).
                 intro H4; 
                   decompose record (freeVarSubAllFormula1 _ _ _ _ H4) /r.
                 intros  H4 x H6 H7. 
                 destruct x as [| n0].
                 ** destruct H7 as [H5 | H5]; try lia. elim H5.
                 ** destruct H7 as [H5| H5].
-                   +++ lia.
-                   +++ elim H5.
-          ++ lia.
-          ++ intros. elim (closedNatToTerm _ _ H4).
+                   --- lia.
+                   --- elim H5.
+          -- lia.
+          -- intros. elim (closedNatToTerm _ _ H4).
         * apply Representable_ext with (evalComposeFunc n m (FormulasToFuncs n m v') g).
           clear H3 H2 H1 H0 B.
-          ++ apply extEqualCompose.
-             -- unfold extEqualVector in |- *. clear g.
+          -- apply extEqualCompose.
+             ++ unfold extEqualVector in |- *. clear g.
                 induction A as [| a0 n0 A HrecA]; simpl in |- *; auto.
                 split.
                 ** apply extEqualRefl.
                 ** apply HrecA.
-             -- apply extEqualRefl.
-          ++ apply H3. }
+             ++ apply extEqualRefl.
+          -- apply H3. }
   intros n w m H0 A B g H1 H2 H3. split.
-  + intros v H4. unfold composeSigmaFormula in H4.
+  - intros v H4. unfold composeSigmaFormula in H4.
     assert
      (In v
         (freeVarFormula LNN
@@ -1393,32 +1424,32 @@ Proof.
                   end))))).
     { eapply freeVarAddExists1. apply H4. }
     simpl in H5. destruct (in_app_or _ _ _ H5).
-    - assert (m + S w <= v \/ v < S w).
+    + assert (m + S w <= v \/ v < S w).
       { eapply freeVarAddExists2. apply H4. }
       clear H5 H4 H3 H1 g B.
       induction A as [| a n0 A HrecA].
       * simpl in H6. lia.
       * simpl in H6. destruct (in_app_or _ _ _ H6).
-        ++ simpl in H2. destruct H2 as (H2, H3).
+        -- simpl in H2. destruct H2 as (H2, H3).
            destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H4 | H4].
-           -- apply H2. eapply In_list_remove1. exact H4.
-           -- destruct H4 as [H4 | H4].
+           ++ apply H2. eapply In_list_remove1. exact H4.
+           ++ destruct H4 as [H4 | H4].
               ** lia.
               ** elim H4.
-        ++ apply HrecA; auto.
-           -- simpl in H2. tauto.
-           -- lia.
-    - decompose record (freeVarSubAllFormula1 _ _ _ _ H6) /r.
+        -- apply HrecA; auto.
+           ++ simpl in H2. tauto.
+           ++ lia.
+    + decompose record (freeVarSubAllFormula1 _ _ _ _ H6) /r.
       intros x H8 H9;  destruct x as [| n0].
       * destruct H9 as [H7 | H7]; try lia. elim H7.
       * induction H9 as [H7 | H7].
-        ++ rewrite <- H7. destruct H3 as (H3, H9).
+        -- rewrite <- H7. destruct H3 as (H3, H9).
            assert (S n0 <= m). { apply H3. auto. }
            destruct (freeVarAddExists2 _ _ _ _ H4) as [H11 | H11].
-           -- lia.
-           -- lia.
-        ++ elim H7.
-  + apply H; auto.
+           ++ lia.
+           ++ lia.
+        -- elim H7.
+  - apply H; auto.
 Qed.
 
 
@@ -1429,14 +1460,14 @@ Remark boundedCheck :
  (forall d : nat, d < c -> ~ P d) \/ (exists d : nat, d < c /\ P d).
 Proof.
   intros P H c. induction c as [| c Hrecc].
-  + left; intros d H0. lia.
-  + destruct (H c) as [e | e].
-    - right. exists c. split; auto.
-    - destruct Hrecc as [H0 | H0].
+  - left; intros d H0. lia.
+  - destruct (H c) as [e | e].
+    + right; exists c; split; auto.
+    + destruct Hrecc as [H0 | H0].
       * left. intros d H1. assert (d < c \/ d = c) as H2 by lia. destruct H2.
-        ++ eauto.
-        ++ congruence.
-      * destruct H0 as (x, H0). right. exists x. split; try lia. tauto.
+        -- eauto.
+        -- congruence.
+      * destruct H0 as (x, H0); right; exists x; split; try lia; tauto.
 Qed.
 
 Remark smallestExists :
@@ -1446,23 +1477,23 @@ Remark smallestExists :
  P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b).
 Proof.
   assert
-   (forall P : nat -> Prop,
+   (H: forall P : nat -> Prop,
    (forall x : nat, decidable (P x)) ->
     forall d c : nat,
     c < d -> P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b)).
-  { intros P H d. induction d as [| d Hrecd].
-    + intros c H0 H1. lia.
-    + intros c H0 H1. assert (c < d \/ c = d) as H2 by lia. destruct H2.
-      - eauto.
-      - destruct (boundedCheck P H c).
-        * exists c. tauto.
-        * destruct H3 as (x, H3). apply (Hrecd x).
-          ++ lia.
-          ++ tauto. }
-  intros P H0 c H1. eapply H.
-  + exact H0.
-  + exact (Nat.lt_succ_diag_r c).
-  + exact H1.
+  { intros P H d; induction d as [| d Hrecd].
+    - intros c H0 H1; lia.
+    - intros c H0 H1; assert (c < d \/ c = d) as H2 by lia; destruct H2.
+      + eauto.
+      + destruct (boundedCheck P H c) as [H3 | H3].
+        * exists c; tauto.
+        * destruct H3 as (x, H3); apply (Hrecd x).
+          -- lia.
+          -- tauto. }
+  intros P H0 c H1; eapply H.
+  - exact H0.
+  - exact (Nat.lt_succ_diag_r c).
+  - exact H1.
 Qed.
 
 Definition minimize (A B : Formula) (v x : nat) : Formula :=
@@ -1471,126 +1502,124 @@ Definition minimize (A B : Formula) (v x : nat) : Formula :=
        (impH (LT (var x) (var v)) (notH (substituteFormula LNN B v (var x))))).
 
 Remark minimize1 :
- forall (A B : Formula) (v x : nat),
- v <> x ->
- ~ In x (freeVarFormula LNN B) ->
- forall a : nat,
- SysPrf NN (substituteFormula LNN A v (natToTerm a)) ->
- SysPrf NN (substituteFormula LNN B v (natToTerm a)) ->
- (forall b : nat,
-  b < a -> SysPrf NN (notH (substituteFormula LNN A v (natToTerm b)))) ->
- (forall b : nat,
-  b < a -> SysPrf NN (notH (substituteFormula LNN B v (natToTerm b)))) ->
- SysPrf NN (iffH (minimize A B v x) (equal (var v) (natToTerm a))).
+  forall (A B : Formula) (v x : nat),
+    v <> x ->
+    ~ In x (freeVarFormula LNN B) ->
+    forall a : nat,
+      SysPrf NN (substituteFormula LNN A v (natToTerm a)) ->
+      SysPrf NN (substituteFormula LNN B v (natToTerm a)) ->
+      (forall b : nat,
+          b < a -> SysPrf NN (notH (substituteFormula LNN A v (natToTerm b)))) ->
+      (forall b : nat,
+          b < a -> SysPrf NN (notH (substituteFormula LNN B v (natToTerm b)))) ->
+      SysPrf NN (iffH (minimize A B v x) (equal (var v) (natToTerm a))).
 Proof.
-  intros A B v x H H0 a H1 H2 H3 H4. apply iffI.
-  unfold minimize in |- *. apply impI.
-  apply
-   impE
-    with
-      (substituteFormula LNN
-         (impH (LT (var x) (var v)) (notH (substituteFormula LNN B v (var x))))
-         x (natToTerm a)).
-  + rewrite (subFormulaImp LNN). rewrite (subFormulaNot LNN).
-    apply
-     impTrans
-      with
+  intros A B v x H H0 a H1 H2 H3 H4; apply iffI.
+  unfold minimize; apply impI.
+  apply impE with
+    (substituteFormula LNN
+       (impH (LT (var x) (var v)) (notH (substituteFormula LNN B v (var x))))
+       x (natToTerm a)).
+  - rewrite (subFormulaImp LNN),  (subFormulaNot LNN).
+    apply impTrans with
         (impH (LT (natToTerm a) (var v))
            (notH (substituteFormula LNN B v (natToTerm a)))).
-    - apply iffE1. apply (reduceImp LNN).
-      * unfold LT at 2 in |- *. rewrite (subFormulaRelation LNN).
-        simpl in |- *. destruct (eq_nat_dec x x) as [e | e]; try lia.
+    + apply iffE1, (reduceImp LNN).
+      * unfold LT at 2; rewrite (subFormulaRelation LNN).
+        simpl; destruct (eq_nat_dec x x) as [e | e]; try lia.
         destruct (eq_nat_dec x v).
-        ++ elim H. auto.
-        ++ apply iffRefl.
-      * apply (reduceNot LNN). apply (subFormulaTrans LNN).
-        intro H5. elim H0. eapply In_list_remove1. exact H5.
-    - apply impTrans with (notH (LT (natToTerm a) (var v))).
-      * apply impI. apply impE with (notH (notH (substituteFormula LNN B v (natToTerm a)))).
+        -- elim H; auto.
+        -- apply iffRefl.
+      * apply (reduceNot LNN), (subFormulaTrans LNN).
+        intro H5; elim H0; eapply In_list_remove1; exact H5.
+    + apply impTrans with (notH (LT (natToTerm a) (var v))).
+      * apply impI; apply impE with 
+          (notH (notH (substituteFormula LNN B v (natToTerm a)))).
         apply cp2.
-        ++ apply Axm; right; constructor.
-        ++ apply nnI. do 2 apply sysWeaken. exact H2.
+        -- apply Axm; right; constructor.
+        -- apply nnI; do 2 apply sysWeaken; exact H2.
       * apply impE with (notH (LT (var v) (natToTerm a))).
-        apply
-         orE
-          with
+        apply orE with
             (LT (var v) (natToTerm a))
             (orH (equal (var v) (natToTerm a)) (LT (natToTerm a) (var v))).
-        ++ apply sysWeaken. apply nn9.
-        ++ repeat apply impI.
+        -- apply sysWeaken, nn9.
+        -- repeat apply impI.
            apply contradiction with (LT (var v) (natToTerm a)).
-           -- apply Axm; left; left; right; constructor.
-           -- apply Axm; left; right; constructor.
-        ++ apply impI. apply orSys; repeat apply impI.
-           -- apply Axm; left; left; right; constructor.
-           -- apply contradiction with (LT (natToTerm a) (var v)).
+           ++ apply Axm; left; left; right; constructor.
+           ++ apply Axm; left; right; constructor.
+        -- apply impI, orSys; repeat apply impI.
+           ++ apply Axm; left; left; right; constructor.
+           ++ apply contradiction with (LT (natToTerm a) (var v)).
               ** apply Axm; left; left; right; constructor.
               ** apply Axm; right; constructor.
-        ++ apply impE with (notH (notH A)). apply cp2.
-           -- apply sysWeaken. apply boundedLT. intros n H5.
-              rewrite (subFormulaNot LNN). auto.
-           -- apply nnI. eapply andE1. apply Axm; right; constructor.
-  + apply forallE. eapply andE2. apply Axm; right; constructor.
-  + apply impI. unfold minimize in |- *.
-    rewrite <-
-     (subFormulaId LNN
-        (andH A
-           (forallH x
-              (impH (LT (var x) (var v))
-                 (notH (substituteFormula LNN B v (var x)))))) v).
-    apply
-     impE
-      with
-        (substituteFormula LNN
+        -- apply impE with (notH (notH A)).  
+           apply cp2.
+           ++ apply sysWeaken, boundedLT; intros n H5.
+              rewrite (subFormulaNot LNN); auto.
+           ++ apply nnI; eapply andE1; apply Axm; right; constructor.
+  - apply forallE; eapply andE2, Axm; right; constructor.
+  - apply impI; unfold minimize; 
+      rewrite <-
+        (subFormulaId LNN
            (andH A
               (forallH x
                  (impH (LT (var x) (var v))
-                    (notH (substituteFormula LNN B v (var x)))))) v 
-           (natToTerm a)).
-    - apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
-    - apply sysWeaken. rewrite (subFormulaAnd LNN). apply andI.
+                    (notH (substituteFormula LNN B v (var x)))))) v).
+    apply impE with
+      (substituteFormula LNN
+         (andH A
+            (forallH x
+               (impH (LT (var x) (var v))
+                  (notH (substituteFormula LNN B v (var x)))))) v 
+         (natToTerm a)).
+    + apply (subWithEquals LNN), eqSym, Axm; right; constructor.
+    + apply sysWeaken; rewrite (subFormulaAnd LNN); apply andI.
       * auto.
-      * rewrite (subFormulaForall LNN). destruct (eq_nat_dec x v) as [e | e]; try congruence.
+      * rewrite (subFormulaForall LNN); destruct (eq_nat_dec x v) as [e | e]; 
+          try congruence.
         destruct (In_dec eq_nat_dec x (freeVarTerm LNN (natToTerm a))) as [e0 | e0].
-        ++ elim (closedNatToTerm _ _ e0).
-        ++ apply forallI. apply closedNN. rewrite (subFormulaImp LNN).
-           unfold LT in |- *. rewrite (subFormulaRelation LNN).
-           simpl in |- *. destruct (eq_nat_dec v v) as [e1 | e1]; try congruence.
-           -- induction (eq_nat_dec v x) as [e2 | e2]; try congruence.
-              apply impI. apply forallE. apply forallI. intro H5.
+        -- elim (closedNatToTerm _ _ e0).
+        -- apply forallI. 
+           apply closedNN. 
+           rewrite (subFormulaImp LNN).
+           unfold LT; rewrite (subFormulaRelation LNN).
+           simpl; destruct (eq_nat_dec v v) as [e1 | e1]; try congruence.
+           ++ induction (eq_nat_dec v x) as [e2 | e2]; try congruence.
+              apply impI. apply forallE.  apply forallI. 
+              intro H5.
               destruct H5 as (x0, H5); destruct H5 as (H5, H6).
               destruct H6 as [x0 H6 | x0 H6].
               ** elim closedNN with v. exists x0; auto.
-              ** destruct H6. destruct H5 as [H5 | H5]; try congruence.
-                 fold (freeVarTerm LNN (natToTerm a)) in H5. simpl in H5.
-                 rewrite <- app_nil_end in H5. elim (closedNatToTerm _ _ H5).
+              ** destruct H6 /r. destruct H5 as [H5 | H5]; try congruence.
+                 fold (freeVarTerm LNN (natToTerm a)) in H5; simpl in H5.
+                 rewrite <- app_nil_end in H5; elim (closedNatToTerm _ _ H5).
               ** apply impE with (LT (var x) (natToTerm a)).
-                 +++ apply sysWeaken. apply boundedLT. intros n H5.
+                 --- apply sysWeaken; apply boundedLT; intros n H5.
                      rewrite (subFormulaNot LNN).
                      apply impE with (notH (substituteFormula LNN B v (natToTerm n))).
-                     --- apply cp2. apply iffE1. apply (subFormulaTrans LNN).
-                         intro H6. elim H0. eapply In_list_remove1. exact H6.
-                     --- apply H4; auto.
-                 +++ apply Axm; right; constructor.
+                     +++ apply cp2; apply iffE1; apply (subFormulaTrans LNN).
+                         intro H6; elim H0; eapply In_list_remove1, H6.
+                     +++ apply H4; auto.
+                 --- apply Axm; right; constructor.
 Qed.
 
 Lemma subFormulaMinimize :
- forall (A B : Formula) (v x z : nat) (s : Term),
- ~ In x (freeVarTerm LNN s) ->
- ~ In v (freeVarTerm LNN s) ->
- x <> z ->
- v <> z ->
- SysPrf NN
-   (iffH (substituteFormula LNN (minimize A B v x) z s)
-      (minimize (substituteFormula LNN A z s) (substituteFormula LNN B z s) v
-         x)).
+  forall (A B : Formula) (v x z : nat) (s : Term),
+    ~ In x (freeVarTerm LNN s) ->
+    ~ In v (freeVarTerm LNN s) ->
+    x <> z ->
+    v <> z ->
+    SysPrf NN
+      (iffH (substituteFormula LNN (minimize A B v x) z s)
+         (minimize (substituteFormula LNN A z s) (substituteFormula LNN B z s) v
+            x)).
 Proof.
-  intros A B v x z s H H0 H1 H2. unfold minimize in |- *.
-  rewrite (subFormulaAnd LNN). rewrite (subFormulaForall LNN).
+  intros A B v x z s H H0 H1 H2; unfold minimize.
+  rewrite (subFormulaAnd LNN), (subFormulaForall LNN).
   destruct (eq_nat_dec x z) as [e | e]; try congruence.
   destruct (In_dec eq_nat_dec x (freeVarTerm LNN s)) as [e0 | e0]; try tauto.
-  rewrite (subFormulaImp LNN). unfold LT at 1 in |- *.
-  rewrite (subFormulaRelation LNN). simpl in |- *.
+  rewrite (subFormulaImp LNN); unfold LT at 1.
+  rewrite (subFormulaRelation LNN); simpl.
   destruct (eq_nat_dec z x); try congruence.
   destruct (eq_nat_dec z v); try congruence.
   rewrite (subFormulaNot LNN).
@@ -1601,9 +1630,9 @@ Proof.
    | apply (reduceNot LNN)
    | apply (reduceForall LNN); [ apply closedNN |] ].
   apply (subFormulaExch LNN).
-  + congruence. 
-  + simpl in |- *. intro H3. tauto.
-  + auto.
+  - congruence. 
+  - simpl; intros ?; tauto.
+  - apply H0.
 Qed.
 
 Definition primRecSigmaFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
