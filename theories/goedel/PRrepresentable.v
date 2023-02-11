@@ -1739,13 +1739,13 @@ Lemma freeVarPrimRecPiFormulaHelp1 :
  In v (freeVarFormula LNN A) \/
  In v (freeVarFormula LNN B) \/ v = S (S n) \/ v = S n.
 Proof.
-  intros n A B v H. unfold primRecPiFormulaHelp in H.
+  intros n A B v H; unfold primRecPiFormulaHelp in H.
   assert
-   (forall v : nat,
+   (H0: forall v : nat,
     In v (freeVarFormula LNN betaFormula) -> v = 0 \/ v = 1 \/ v = 2).
-  { intros v0 H0. assert (Representable 2 beta betaFormula).
-    apply betaRepresentable.
-    destruct H1 as (H1, H2). apply H1 in H0. lia. }
+  { intros v0 H0; assert (H1: Representable 2 beta betaFormula) by
+      apply betaRepresentable.
+    destruct H1 as (H1, H2); apply H1 in H0; lia. }
   repeat
    match goal with
    | H:(In v (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
@@ -1799,16 +1799,16 @@ Remark notBoundedForall :
  ~ (forall n : nat, n < b -> P n) -> exists n : nat, n < b /\ ~ P n.
 Proof.
   intros P b H H0. induction b as [| b Hrecb].
-  + elim H0. lia.
-  + destruct (H b) as [e | e].
-    - assert (~ (forall n : nat, n < b -> P n)).
+  - elim H0. lia.
+  - destruct (H b) as [e | e].
+    + assert (H1: ~ (forall n : nat, n < b -> P n)).
       { intro H1. elim H0. intros n H2.
         assert (n < b \/ n = b) as H3 by lia. destruct H3.
-        + auto.
-        + rewrite H3; auto. }
+        - auto.
+        - rewrite H3; auto. }
       decompose record (Hrecb H1) /r.
       intros x h3 H4; exists x; split; auto; lia.
-    - exists b; split; auto; lia.
+    + exists b; split; auto; lia.
 Qed.
 
 
@@ -1825,31 +1825,31 @@ Remark In_betaFormula_subst_1_2_0 :
  In v (freeVarTerm LNN a) \/
  In v (freeVarTerm LNN b) \/ In v (freeVarTerm LNN c).
 Proof.
-  intros a b c v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
-  + assert
-     (In v
+  intros a b c v H; destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
+  - assert
+     (H1: In v
         (freeVarFormula LNN
-           (substituteFormula LNN (substituteFormula LNN betaFormula 1 a) 2 b))).
-    { eapply In_list_remove1; apply H0. }
+           (substituteFormula LNN (substituteFormula LNN betaFormula 1 a) 2 b)))
+    by eapply In_list_remove1, H0.
     destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H2 | H2].
-    - assert (In v (freeVarFormula LNN (substituteFormula LNN betaFormula 1 a))).
-      { eapply In_list_remove1; apply H2. }
+    + assert (H3: In v (freeVarFormula LNN (substituteFormula LNN betaFormula 1 a)))
+      by eapply In_list_remove1, H2.
       destruct (freeVarSubFormula3 _ _ _ _ _ H3) as [H4 | H4].
       * destruct v as [| n].
-        ++ elim (In_list_remove2 _ _ _ _ _ H0). reflexivity.
-        ++ destruct n as [| n].
-           -- elim (In_list_remove2 _ _ _ _ _ H4); reflexivity.
-           -- destruct n as [| n].
+        -- elim (In_list_remove2 _ _ _ _ _ H0); reflexivity.
+        -- destruct n as [| n].
+           ++ elim (In_list_remove2 _ _ _ _ _ H4); reflexivity.
+           ++ destruct n as [| n].
               ** elim (In_list_remove2 _ _ _ _ _ H2). reflexivity.
               ** elim (proj1 (Nat.le_ngt  (S (S (S n))) 2)).
-                 +++ assert (Representable 2 beta betaFormula).
+                 --- assert (Representable 2 beta betaFormula).
                      { apply betaRepresentable. }
                      destruct H5 as (H5, H6). apply H5.
                      eapply In_list_remove1. exact H4.
-                 +++ lia.
+                 --- lia.
       * tauto.
-    - tauto.
-  + tauto.
+    + tauto.
+  - tauto.
 Qed.
 
 Remark In_betaFormula_subst_1_2 :
@@ -1860,8 +1860,8 @@ Remark In_betaFormula_subst_1_2 :
  In v (freeVarTerm LNN a) \/
  In v (freeVarTerm LNN b) \/ In v (freeVarTerm LNN (var 0)).
 Proof.
-  intros a b v H. apply In_betaFormula_subst_1_2_0.
-  rewrite (subFormulaId LNN). exact H.
+  intros a b v H; apply In_betaFormula_subst_1_2_0;
+  rewrite (subFormulaId LNN); exact H.
 Qed.
 
 Remark In_betaFormula_subst_1 :
@@ -1870,8 +1870,7 @@ Remark In_betaFormula_subst_1 :
  In v (freeVarTerm LNN a) \/
  In v (freeVarTerm LNN (var 2)) \/ In v (freeVarTerm LNN (var 0)).
 Proof.
-  intros a v H. apply In_betaFormula_subst_1_2.
-  rewrite (subFormulaId LNN). exact H.
+  intros a v H; apply In_betaFormula_subst_1_2; rewrite (subFormulaId LNN); exact H.
 Qed.
 
 Remark In_betaFormula :
@@ -1880,8 +1879,7 @@ Remark In_betaFormula :
  In v (freeVarTerm LNN (var 1)) \/
  In v (freeVarTerm LNN (var 2)) \/ In v (freeVarTerm LNN (var 0)).
 Proof.
-  intros v H. apply In_betaFormula_subst_1.
-  rewrite (subFormulaId LNN). exact H.
+  intros v H; apply In_betaFormula_subst_1; rewrite (subFormulaId LNN); exact H.
 Qed.
 
 Remark In_betaFormula_subst_2 :
@@ -1903,20 +1901,13 @@ Remark In_betaFormula_subst_2_1 :
  In v (freeVarTerm LNN b) \/ In v (freeVarTerm LNN (var 0)).
 Proof.
   intros a b v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
-  + assert (In v (freeVarFormula LNN (substituteFormula LNN betaFormula 2 a))).
-    { eapply In_list_remove1. apply H0. }
-    decompose sum (In_betaFormula_subst_2 _ _ H1); try tauto.
-    destruct H3 as [H2 | H2].
-    elim (In_list_remove2 _ _ _ _ _ H0).
-    symmetry  in |- *; assumption.
-    elim H2.
-  + tauto.
+  - assert (In v (freeVarFormula LNN (substituteFormula LNN betaFormula 2 a)))
+    by eapply In_list_remove1, H0.
+    decompose sum (In_betaFormula_subst_2 _ _ H1); try tauto /r.
+    intro H2; elim (In_list_remove2 _ _ _ _ _ H0); elim H2; auto. 
+     destruct 1.
+  - tauto.
 Qed.
-
-
-
-
-
 
 Ltac PRsolveFV A B n :=
   unfold existH, forallH, not in |- *; intros;
