@@ -23,7 +23,7 @@ From hydras Require Import Compat815.
 (* From hydras Require Import LNN_notations.  *)
 
 From LibHyps Require Import LibHyps.
-Require Import MoreLibHyps.
+From hydras Require Import MoreLibHyps.
 
 Section Primitive_Recursive_Representable.
 
