@@ -22,7 +22,7 @@ From hydras.Ackermann Require Import prLogic.
 From hydras Require Import Compat815.
 
 From LibHyps Require Import LibHyps.
-Require Import MoreLibHyps.
+From hydras Require Import MoreLibHyps.
 
 Ltac SimplFreeVar :=
   repeat

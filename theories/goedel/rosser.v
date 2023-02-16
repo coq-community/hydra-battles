@@ -18,7 +18,7 @@ From hydras.Ackermann Require Import codeNatToTerm.
 From hydras Require Import Compat815.
 
 From LibHyps Require Import LibHyps.
-Require Import MoreLibHyps.
+From hydras Require Import MoreLibHyps.
 
 Section Rosser's_Incompleteness.
 

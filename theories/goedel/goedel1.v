@@ -14,7 +14,7 @@ From hydras.Ackermann Require Import checkPrf.
 From hydras Require Import Compat815.
 
 From LibHyps Require Import LibHyps.
-Require Import MoreLibHyps.
+From hydras Require Import MoreLibHyps.
 
 Section Goedel's_1st_Incompleteness.
 
