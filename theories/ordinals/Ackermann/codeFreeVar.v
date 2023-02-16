@@ -8,7 +8,7 @@ Require Import folProp.
 Require Import code.
 Require Import Compat815.
 
-Import LispAbbreviations.
+Import CodeAbbreviations.
 Section Code_Free_Vars.
 
 Variable L : Language.
@@ -70,8 +70,7 @@ Proof.
    set
      (g := fun t1 recs : nat =>
              cPair
-               (switchPR (car t1) (cdr 
-                                          (codeNth (t1 - S (cdr t1)) recs))
+               (switchPR (car t1) (cdr (codeNth (t1 - S (cdr t1)) recs))
                   (S (cPair (cdr t1) 0)))
                (switchPR t1
                   (codeApp (car (codeNth 

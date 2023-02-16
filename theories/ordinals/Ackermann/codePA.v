@@ -12,7 +12,7 @@ Require Vector.
 Require Import prLogic.
 Require Import Compat815.
 From Coq Require Import Lia.
-Import LispAbbreviations. 
+Import CodeAbbreviations. 
 
 Section close.
 

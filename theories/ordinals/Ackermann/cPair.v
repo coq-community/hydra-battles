@@ -930,12 +930,16 @@ Proof.
       auto.
 Qed.
 
-(** abbreviations a la Lisp (to improve) *)
 
-Module LispAbbreviations.
+Module CodeAbbreviations.
+(** Attempt to shorten many formulas dealing with Goedel encoding *)
+
+(** Lisp-like pair selectors *)
+
   #[global] Notation car n := (cPairPi1 n). 
   #[global] Notation caar n := (cPairPi1 (cPairPi1 n)). 
   #[global] Notation cadr n := (cPairPi1 (cPairPi2 n)). 
+  #[global] Notation caddr n := (cPairPi1 (cPairPi2 (cPairPi2 n))). 
 
   #[global] Notation cdr n := (cPairPi2 n). 
   #[global] Notation cddr n := (cPairPi2 (cPairPi2 n)). 
@@ -943,7 +947,20 @@ Module LispAbbreviations.
   #[global] Notation cddddr n := 
     (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 n)))).
 
-End LispAbbreviations. 
+
+  #[global] Notation add2 n := (S (S n)).
+  #[global] Notation add3 n := (S (S (S n))).
+  #[global] Notation add4 n := (S (S (S (S n)))).
+  #[global] Notation add5 n := (S (S (S (S (S n))))).
+
+  #[global] Notation pred2 n := (pred (pred n)).
+  #[global] Notation pred3 n := (pred (pred (pred n))).
+  #[global] Notation pred4 n := (pred (pred (pred (pred n)))).
+  #[global] Notation pred5 n := (pred (pred (pred (pred (pred n))))).
+
+
+
+End CodeAbbreviations. 
 
 (* Fails with 8.13 *)
 

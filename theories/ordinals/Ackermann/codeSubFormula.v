@@ -9,7 +9,7 @@ Require Import codeSubTerm.
 Require Import codeFreeVar.
 Require Import Compat815.
 From Coq Require Import Lia.
-Import LispAbbreviations. 
+Import CodeAbbreviations. 
 
 Section Code_Substitute_Formula.
 

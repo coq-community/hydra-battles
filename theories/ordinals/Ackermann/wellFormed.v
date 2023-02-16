@@ -7,7 +7,7 @@ Require Import folProp.
 Require Import extEqualNat.
 Require Import codeList.
 Require Import Compat815.
-Import LispAbbreviations. 
+Import CodeAbbreviations. 
 Section Well_Formed_Term.
 
 Variable L : Language.

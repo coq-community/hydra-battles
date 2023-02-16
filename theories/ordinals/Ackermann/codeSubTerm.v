@@ -6,7 +6,7 @@ Require Import code.
 Require Import extEqualNat.
 Require Vector.
 Require Import Compat815.
-Import LispAbbreviations. 
+Import CodeAbbreviations. 
 
 
 Section Code_Substitute_Term.

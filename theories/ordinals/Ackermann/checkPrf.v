@@ -12,7 +12,7 @@ Require Import prLogic.
 Require Import Compat815.
 From Coq Require Import Lia.
 
-Import LispAbbreviations. 
+Import CodeAbbreviations. 
 
 (* begin snippet context1 *)
 Section Check_Proof.
@@ -306,14 +306,12 @@ Proof.
                (car p) *
                (codeNth (p - S (cdr (cdr (cdr p)))) recs *
                   (1 -
-                     codeIn (car (cdr (cdr p)))
+                     codeIn (caddr p)
                        (codeFreeVarListFormula
                           (pred
-                             (codeNth (p - S (cdr 
-                                                (cdr (cdr p))))
-                                recs))))))
+                             (codeNth (p - S (cdddr p)) recs))))))
     (f2 := fun p recs : nat =>
-             codeNth (p - S (cdr (cdr (cdr p)))) recs)
+             codeNth (p - S (cdddr p)) recs)
     (f3 := fun p recs : nat => 0).
   - apply compose2_2IsPR with
       (f := fun p recs : nat =>

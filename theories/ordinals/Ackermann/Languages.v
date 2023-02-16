@@ -3,6 +3,8 @@ Require Import Arith.
 Require Import fol.
 Require Import primRec.
 Require Import Coq.Lists.List.
+Require Import cPair.
+Import CodeAbbreviations.
 
 (* begin snippet LNTDef1 *)
 Inductive LNTFunction : Set :=
@@ -129,7 +131,7 @@ Proof.  destruct 1; easy. Qed.
 Definition codeArityLNTF (f : nat) :=
   switchPR f
     (switchPR (pred f)
-       (switchPR (pred (pred f)) (switchPR (pred (pred (pred f))) 0 1) 2) 3)
+       (switchPR (pred2 f) (switchPR (pred3 f) 0 1) 2) 3)
     3.
 
 Lemma codeArityLNTFIsPR : isPR 1 codeArityLNTF.
