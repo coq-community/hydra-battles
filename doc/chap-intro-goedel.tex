@@ -1,9 +1,44 @@
-\chapter{Introduction}
+\chapter{General presentation (draft)}
 
-This part contains comments, example  and exercises about Russel O'Connor's work on G\"{o}del's first incompleteness theorem.  This work is maintained by Coq community~\cite{CoqCommunity} volunteers: (projects Goedel~\cite{Goedel} and Hydra-battles~\cite{HydraBattles}).
+\section{Introduction}
+
+
+This part contains comments, examples  and exercises about Russel O'Connor's work on G\"{o}del's first incompleteness theorem  \cite{Godel1986-GDECW}.
+O'Connor's work was published in 2005~\cite{OConnor05}, and released as a user-contribution of the \coq proof assistant.
+This work is now maintained by Coq community~\cite{CoqCommunity} volunteers and split into two projects: Goedel~\cite{Goedel} and Hydra-battles~\cite{HydraBattles}.
+
 The main reference to this work is  Russel O'Connor's article~\cite{OConnor05}, which we strongly encourage the reader to 
-consult regularly.
+consult regularly. 
 
+
+% ici
+
+\section{The reason behind this work}
+
+
+  \begin{itemize}
+  \item Historical interest on G\"{o}del's proof
+  \item Many popularization publications, \emph{e.g.}
+    \cite{smullyan1992godel, Hofstadter1999Godel, GoedelCassou}, vs. technical complexity of the full proof .
+    
+    \begin{quote}
+      The purpose of a proof is \emph{understanding}.
+      Efim Zelmanov in~\cite{mathproof}.  
+          \end{quote}
+        \item O'Connor's proof was written at the end of \coq V7, rewritten at the beginning of \coq V8. Since then, \coq and its ecosystem evolved a lot (new styles, tactics, documentation tools).
+          We think this evolution should benefit
+          to the original proof-scripts and make their understanding easier.
+        \end{itemize}
+     
+
+
+\section{Historical context}
+Russel O'Connor's work is the first computer verified proof 
+the essential incompleteness of arithmetic.
+
+\begin{todo}
+Reference to previous/later implementations.
+\end{todo}
 
 
 Some changes are made to the aforementionned libraries, mainly because of the recent evolution of coq and its libraries. Nevertheless, the definitions, lemmas and theorems of the original contribution have been kept in this new release.
