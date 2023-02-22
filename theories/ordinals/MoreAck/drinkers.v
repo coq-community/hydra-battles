@@ -127,7 +127,7 @@ Proof.
   Theorem drinkers_thm : SysPrf L Empty_set f. 
   Proof with auto with sets.  
     pose (F := allH 1 (D (v_ 1))%fol).
-    unfold f; eapply orE with (notH _ F) F; [apply noMiddle | | ].
+    unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add Empty_set (~ F)%fol) 
                 (exH 1 (~ (D (v_ 1))))%fol).  

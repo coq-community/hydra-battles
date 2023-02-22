@@ -17,7 +17,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let notH := notH L.
 Let iffH := iffH L.
 Let forallH := forallH L.
 

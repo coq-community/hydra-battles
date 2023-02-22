@@ -483,7 +483,6 @@ Let Formula := Formula L.
 Let equal := equal L.
 Let atomic := atomic L.
 
-Let notH := notH L.
 Let forallH := forallH L.
 
 Definition wellFormedFormula : nat -> nat :=

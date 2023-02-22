@@ -63,7 +63,6 @@ Let apply := apply L.
 Let Formula := Formula L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let notH := notH L.
 Let forallH := forallH L.
 Let wellFormedTerm := wellFormedTerm codeArityF.
 Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.

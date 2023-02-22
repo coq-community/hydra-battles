@@ -2619,7 +2619,7 @@ Ltac PRsolveFV A B n :=
     | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
+    | H:(In ?X3 (freeVarFormula LNN (notH ?X1))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
     | H:(In _ (freeVarFormula LNN (primRecPiFormulaHelp _ _ _))) |- _ =>
         decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H); clear H
@@ -4583,8 +4583,7 @@ Proof.
                 assert (H15 := I). (* For hyps numbering compatibility *)
                 assert (H16 := I). (* For hyps numbering compatibility *)
 Opaque substituteFormula.
-                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH,
-                 notH in |- *;
+                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH;
                  repeat first
                   [ discriminate
                   | simple apply iffRefl
@@ -5363,7 +5362,7 @@ Opaque substituteFormula.
       destruct (proj1 (Nat.lt_eq_cases v0 (S (S n))) H7) as [H8 | H8].
       + now apply Nat.lt_succ_r. 
       + elim H6; assumption. }
-    unfold primRecSigmaFormula, minimize, existH, andH, forallH, notH in H4;
+    unfold primRecSigmaFormula, minimize, existH, andH, forallH in H4;
      repeat
       match goal with
       | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -5390,7 +5389,7 @@ Opaque substituteFormula.
       | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
-      | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
+      | H:(In ?X3 (freeVarFormula LNN (notH ?X1))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
       | H:(In _ (freeVarFormula LNN (primRecSigmaFormulaHelp _ _ _))) |- _ =>
           decompose sum (freeVarPrimRecSigmaFormulaHelp1 _ _ _ _ H); clear H

@@ -410,7 +410,7 @@ Proof.
                              rewrite (subFormulaNot LNN).
                              apply impE with
                                (impH E
-                                  (fol.notH LNN
+                                  (notH
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrfNot 0
                                            (natToTerm (codeFormula x))) 1 

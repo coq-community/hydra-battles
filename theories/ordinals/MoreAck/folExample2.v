@@ -125,7 +125,7 @@ Proof with auto with sets.
 (* end snippet PeirceProof *)
   unfold Peirce; apply impI. 
   
-  eapply orE with (notH _ A) A; [apply noMiddle | | apply impRefl].
+  eapply orE with (notH A) A; [apply noMiddle | | apply impRefl].
   
   apply impI; eapply impE with (A -> B)%fol.
 
@@ -180,7 +180,7 @@ Proof.
   Theorem drinkers_thm : SysPrf L (Empty_set _) f. 
   Proof with auto with sets.  
     pose (F := allH 1 (P (v_ 1))%fol).
-    unfold f; eapply orE with (notH _ F) F; [apply noMiddle | | ].
+    unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add (Empty_set _) (~ F)%fol) 
                 (exH 1 (~ (P (v_ 1))))%fol).  

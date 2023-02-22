@@ -44,7 +44,7 @@ Proof with auto with sets.
 (* end snippet step1 *)
 
 (* begin snippet step2 *)
-  eapply orE with (notH _ P) P%fol; 
+  eapply orE with (notH P) P%fol; 
        [apply noMiddle | | apply impRefl].
 (* end snippet step2 *)
 (* begin snippet step3 *)

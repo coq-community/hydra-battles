@@ -65,7 +65,7 @@ simple induction m.
   apply sysWeaken.
   replace (notH (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))) 
     with
-    (LNN2LNT_formula (fol.notH LNN (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))).
+    (LNN2LNT_formula (notH  (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))).
   + apply NN2PA.
     apply nn7.
   + reflexivity.

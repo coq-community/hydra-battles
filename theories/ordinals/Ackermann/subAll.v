@@ -26,7 +26,7 @@ Notation apply := (apply L) (only parsing).
 Notation equal := (equal L) (only parsing).
 Notation atomic := (atomic L) (only parsing).
 
-Notation notH := (notH L) (only parsing).
+(* Notation notH := (notH L) (only parsing). *)
 Notation forallH := (forallH L) (only parsing).
 Notation iffH := (iffH L) (only parsing).
 Notation SysPrf := (SysPrf L) (only parsing).

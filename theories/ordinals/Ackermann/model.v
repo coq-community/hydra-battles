@@ -428,12 +428,12 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   | equal t s => equal L t s
   | atomic r ts => atomic L r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
-  | notH A => notH L (nnHelp A)
-  | forallH v A => forallH L v (notH L (notH L (nnHelp A)))
+  | notH A => notH (nnHelp A)
+  | forallH v A => forallH L v (notH (notH (nnHelp A)))
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
-  notH L (notH L (nnHelp f)).
+  notH (notH (nnHelp f)).
 
 Lemma freeVarNNHelp (f : Formula L):  freeVarFormula L f = freeVarFormula L (nnHelp f).
 Proof.
@@ -716,10 +716,10 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH L (equal L (var  L 0) (var L 0))).
+  intros H; unfold Consistent; exists (notH (equal L (var  L 0) (var L 0))).
   intros H0; assert
                (H1: interpFormula value
-                      (nnTranslate (notH L (equal L (var L 0) (var L 0))))).
+                      (nnTranslate (notH  (equal L (var L 0) (var L 0))))).
   { apply preserveValue.
     assumption.
     auto.

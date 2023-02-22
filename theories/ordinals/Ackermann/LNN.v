@@ -17,7 +17,6 @@ Definition Term := Term LNN.
 Definition Terms := Terms LNN.
 Definition var := var LNN.
 Definition equal := equal LNN.
-Definition notH := notH LNN.
 Definition iffH := iffH LNN.
 Definition forallH := forallH LNN.
 Definition orH := orH LNN.

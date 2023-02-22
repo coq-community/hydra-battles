@@ -18,7 +18,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let notH := notH L.
 Let forallH := forallH L.
 Let orH := orH L.
 Let andH := andH L.
@@ -281,7 +280,7 @@ Lemma existE (T : System) (f g : Formula) (v : nat):
  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
 Proof.
   intros H H0 H1 H2. apply nnE. 
-  apply impE with (fol.notH L (fol.forallH L v (fol.notH L f))).
+  apply impE with (notH (fol.forallH L v (notH f))).
   - apply cp2, impI.
     apply impE with (forallH v (notH g)).
     + apply impE with (forallH v (impH (notH g) (notH f))).

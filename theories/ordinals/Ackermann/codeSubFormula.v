@@ -192,8 +192,8 @@ Definition makeTraceNot
   (p : nat * fol.Term L) : nat :=
   let v := fst p in
   let s := snd p in
-  cTriple (cTriple v (codeTerm s) (codeFormula (notH L f)))
-    (codeFormula (substituteFormula L (notH L f) v s)) 
+  cTriple (cTriple v (codeTerm s) (codeFormula (notH f)))
+    (codeFormula (substituteFormula L (notH f) v s)) 
     (frec p).
 
 Definition makeTraceForall (n : nat) (f : fol.Formula L)
@@ -530,9 +530,9 @@ elim f using Formula_depth_ind2.
     * apply makeTraceImpNice.
     * apply makeTraceNotNice.
     * apply makeTraceForallNice.
-- intros f0 H v s; replace (makeTrace (notH L f0) (v, s)) with
-    (cTriple (cTriple v (codeTerm s) (codeFormula (notH L f0)))
-       (codeFormula (substituteFormula L (notH L f0) v s)) 
+- intros f0 H v s; replace (makeTrace (notH f0) (v, s)) with
+    (cTriple (cTriple v (codeTerm s) (codeFormula (notH f0)))
+       (codeFormula (substituteFormula L (notH f0) v s)) 
        (makeTrace f0 (v, s))).
   + unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     rewrite computeEvalStrongRecHelp.
@@ -549,12 +549,12 @@ elim f using Formula_depth_ind2.
     * simpl; repeat rewrite makeTrace1; repeat rewrite makeTrace2.
       rewrite subFormulaNot, H; simpl; repeat rewrite Nat.eqb_refl; reflexivity.
     * apply Nat.le_lt_trans with
-         (cPair (codeFormula (substituteFormula L (notH L f0) v s))
+         (cPair (codeFormula (substituteFormula L (notH f0) v s))
             (makeTrace f0 (v, s))).
       -- apply cPairLe2.
       -- apply Nat.lt_le_trans with
            (cPair 2
-              (cPair (codeFormula (substituteFormula L (notH L f0) v s))
+              (cPair (codeFormula (substituteFormula L (notH f0) v s))
                  (makeTrace f0 (v, s)))).
          ++ apply cPairLt2.
          ++ unfold cTriple in |- *.
@@ -4818,8 +4818,8 @@ Proof.
     set
       (C :=
          Nat.max (codeTerm s)
-           (pow3 (depth L (notH L f0)) +
-              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (notH L f0)))). 
+           (pow3 (depth L (notH f0)) +
+              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (notH f0)))). 
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     repeat rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl. 
@@ -5302,10 +5302,10 @@ Proof.
       * apply makeTraceImpNice.
       * apply makeTraceNotNice.
       * apply makeTraceForallNice.
-  - intros f0 H1 v s C; simpl;  replace (makeTrace (notH L f0) (v, s)) 
+  - intros f0 H1 v s C; simpl;  replace (makeTrace (notH  f0) (v, s)) 
       with
-      (cTriple (cTriple v (codeTerm s) (codeFormula (notH L f0)))
-         (codeFormula (substituteFormula L (notH L f0) v s)) 
+      (cTriple (cTriple v (codeTerm s) (codeFormula (notH  f0)))
+         (codeFormula (substituteFormula L (notH  f0) v s)) 
          (makeTrace f0 (v, s))).
     + unfold cTriple in |- *.
       repeat apply cPairLe3.
@@ -5315,8 +5315,8 @@ Proof.
              (fold_right Nat.max 0 (freeVarTerm L s ++ varFormula f0)) 
              (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
-      * apply (H0 (notH L f0) v s).
-      * apply (E (notH L f0) v s).
+      * apply (H0 (notH f0) v s).
+      * apply (E (notH f0) v s).
       * eapply Nat.le_trans.
         -- apply H1.
 -- assert

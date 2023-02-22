@@ -171,14 +171,14 @@ Lemma expressT'2 :
   forall f : Formula,
     ~ mem _ T f ->
     folProof.SysPrf LNN T'
-      (fol.notH LNN
+      (notH
          (substituteFormula LNN (LNT2LNN_formula repT) v0
             (natToTermLNN (codeFormula f)))).
 Proof.
   intros f H; rewrite <- (LNT2LNN_natToTerm (codeFormula f)).
   rewrite <- LNT2LNN_subFormula.
   replace
-    (fol.notH LNN
+    (notH 
        (LNT2LNN_formula
           (substituteFormula LNT repT v0 (natToTerm (codeFormula f))))) 
     with
@@ -868,7 +868,7 @@ Proof.
                      (LNT2LNN_formula (equal Zero Zero))
                      (fun (n : nat) rec =>
                         fol.andH LNN
-                          (fol.notH LNN
+                          (notH
                              (substituteFormula LNN
                                 (substituteFormula LNN codeSysPrfNot 0
                                    (natToTermLNN (codeFormula x))) 1 
@@ -885,7 +885,7 @@ Proof.
                        | S n0 =>
                            (fun (n1 : nat) (rec : fol.Formula LNN) =>
                               fol.andH LNN
-                                (fol.notH LNN
+                                (notH
                                    (substituteFormula LNN
                                       (substituteFormula LNN codeSysPrfNot 0
                                          (natToTermLNN (codeFormula x))) 1 
@@ -895,7 +895,7 @@ Proof.
                  (H4: In x2
                         (freeVarFormula LNN
                            (fol.andH LNN
-                              (fol.notH LNN
+                              (notH
                                  (substituteFormula LNN
                                     (substituteFormula LNN codeSysPrfNot 0
                                        (natToTermLNN (codeFormula x))) 1 
@@ -942,7 +942,7 @@ Proof.
                                rewrite (subFormulaNot LNT).
                                apply impE with
                                  (impH E
-                                    (fol.notH LNT
+                                    (notH
                                        (substituteFormula LNT
                                           (substituteFormula LNT 
                                              (LNN2LNT_formula codeSysPrfNot) 0
@@ -974,7 +974,7 @@ Proof.
                                        | S n2 =>
                                            (fun (n3 : nat) (rec : fol.Formula LNN) =>
                                               fol.andH LNN
-                                                (fol.notH LNN
+                                                (notH
                                                    (substituteFormula LNN
                                                       (substituteFormula LNN 
                                                          codeSysPrfNot 0
@@ -995,7 +995,7 @@ Proof.
                                rewrite H3.
                                apply impE with
                                  (LNN2LNT_formula
-                                    (fol.notH LNN
+                                    (notH
                                        (substituteFormula LNN
                                           (substituteFormula LNN codeSysPrfNot 0
                                              (natToTermLNN (codeFormula x))) 1 
@@ -1124,7 +1124,7 @@ Proof.
                         (LNT2LNN_formula (equal Zero Zero))
                         (fun (n : nat) rec =>
                            fol.andH LNN
-                             (fol.notH LNN
+                             (notH
                                 (substituteFormula LNN
                                    (substituteFormula LNN codeSysPrf 0
                                       (natToTermLNN (codeFormula x))) 1 
@@ -1138,7 +1138,7 @@ Proof.
                   (In x2
                      (freeVarFormula LNN
                         (fol.andH LNN
-                           (fol.notH LNN
+                           (notH
                               (substituteFormula LNN
                                  (substituteFormula LNN codeSysPrf 0
                                     (natToTermLNN (codeFormula x))) 1 
@@ -1149,7 +1149,7 @@ Proof.
               | S n0 =>
                   (fun (n1 : nat) (rec : fol.Formula LNN) =>
                    fol.andH LNN
-                     (fol.notH LNN
+                     (notH 
                         (substituteFormula LNN
                            (substituteFormula LNN codeSysPrf 0
                               (natToTermLNN (codeFormula x))) 1
@@ -1179,7 +1179,7 @@ Proof.
                                        (LNT2LNN_formula (equal Zero Zero))
                                        (fun (n : nat) (rec : fol.Formula LNN) =>
                                           fol.andH LNN
-                                            (fol.notH LNN
+                                            (notH
                                                (substituteFormula LNN
                                                   (substituteFormula LNN codeSysPrf 0
                                                      (natToTermLNN (codeFormula x))) 
@@ -1333,7 +1333,7 @@ Proof.
                              (LNT2LNN_formula (equal Zero Zero))
                              (fun (n1 : nat) (rec : fol.Formula LNN) =>
                                 fol.andH LNN
-                                  (fol.notH LNN
+                                  (notH
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrf 0
                                            (natToTermLNN (codeFormula x))) 1 
@@ -1351,7 +1351,7 @@ Proof.
                        impE
                        with
                        (LNN2LNT_formula
-                          (fol.notH LNN
+                          (notH
                              (substituteFormula LNN
                                 (substituteFormula LNN codeSysPrf 0
                                    (natToTermLNN (codeFormula x))) 1 
@@ -1648,7 +1648,7 @@ Proof.
                          (LNN.Succ LNN.Zero)) 1 (LNN.natToTerm (codeFormula f)))
                else
                  LNN.SysPrf NN
-                   (LNN.notH
+                   (notH
                       (substituteFormula LNN
                          (substituteFormula LNN (primRecFormula 1 
                                                    (proj1_sig codePAIsPR)) 0
@@ -1660,7 +1660,7 @@ Proof.
     - intros f H1; rewrite <- LNN2LNT_natToTerm.
       eapply impE with
         (LNN2LNT_formula
-           (LNN.notH
+           (notH
               (substituteFormula LNN
                  (substituteFormula LNN
                     (primRecFormula 1 (proj1_sig codePAIsPR)) 0
@@ -1679,7 +1679,7 @@ Proof.
                          (LNN.Succ LNN.Zero)) 1 (LNN.natToTerm (codeFormula f)))
                else
                  LNN.SysPrf NN
-                   (LNN.notH
+                   (notH
                       (substituteFormula LNN
                          (substituteFormula LNN 
                             (primRecFormula 1 (proj1_sig codePAIsPR)) 0
