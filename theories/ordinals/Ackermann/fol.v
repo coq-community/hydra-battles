@@ -711,5 +711,8 @@ Arguments Terms_Term_rec L P P0 : rename.
 Arguments Term_Terms_rec_full L P P0 : rename.
 Arguments Terms_Term_rec_full L P P0 : rename.
 
+(** experiments by PC *)
+
+Arguments impH {L} _ _.
 
 

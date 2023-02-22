@@ -2616,7 +2616,7 @@ Ltac PRsolveFV A B n :=
     | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
+    | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
     | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
@@ -3243,7 +3243,7 @@ Proof.
                                                                ++++ apply closedNatToTerm.
                                                 + rewrite <-
                                                    (subFormulaId LNN
-                                                      (fol.impH LNN
+                                                      (fol.impH 
                                                          (substituteFormula LNN
                                                             (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
                                                                (natToTerm x)) 3 (natToTerm n))
@@ -3256,7 +3256,7 @@ Proof.
                                                    impE
                                                     with
                                                       (substituteFormula LNN
-                                                         (fol.impH LNN
+                                                         (impH 
                                                             (substituteFormula LNN
                                                                (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
                                                                   (natToTerm x)) 3 (natToTerm n))
@@ -3466,7 +3466,7 @@ Proof.
                                         impE
                                          with
                                            (forallH 3
-                                              (fol.impH LNN
+                                              (fol.impH 
                                                  (substituteFormula LNN
                                                     (substituteFormula LNN (LT (var 3) (var 1)) 1 (natToTerm a)) 2
                                                     (natToTerm b))
@@ -3493,7 +3493,7 @@ Proof.
                                         impTrans
                                          with
                                            (substituteFormula LNN
-                                              (fol.impH LNN
+                                              (impH 
                                                  (substituteFormula LNN
                                                     (substituteFormula LNN (LT (var 3) (var 1)) 1 (natToTerm a)) 2
                                                     (natToTerm b))
@@ -3789,7 +3789,7 @@ Proof.
                                    impE
                                     with
                                       (forallH 0
-                                         (fol.impH LNN
+                                         (impH 
                                             (substituteFormula LNN (substituteFormula LNN A 1 (natToTerm a)) 2
                                                (natToTerm b))
                                             (substituteFormula LNN
@@ -3802,7 +3802,7 @@ Proof.
                                         impTrans
                                          with
                                            (substituteFormula LNN
-                                              (fol.impH LNN
+                                              (impH 
                                                  (substituteFormula LNN (substituteFormula LNN A 1 (natToTerm a)) 2
                                                     (natToTerm b))
                                                  (substituteFormula LNN
@@ -3886,19 +3886,19 @@ Proof.
                                         impE
                                          with
                                            (forallH 3
-                                              (fol.impH LNN
+                                              (impH 
                                                  (substituteFormula LNN
                                                     (substituteFormula LNN (LT (var 3) (var 1)) 1 (natToTerm a)) 2
                                                     (natToTerm b))
                                                  (forallH 0
                                                     (forallH 1
-                                                       (fol.impH LNN
+                                                       (impH 
                                                           (substituteFormula LNN
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
                                                                    (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                    (var 2)) 0 (var 1)) 2 (natToTerm b))
-                                                          (fol.impH LNN
+                                                          (impH 
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN B 2 (var 3)) 2
                                                                 (natToTerm b))
@@ -3913,19 +3913,19 @@ Proof.
                                         impTrans
                                          with
                                            (substituteFormula LNN
-                                              (fol.impH LNN
+                                              (impH 
                                                  (substituteFormula LNN
                                                     (substituteFormula LNN (LT (var 3) (var 1)) 1 (natToTerm a)) 2
                                                     (natToTerm b))
                                                  (forallH 0
                                                     (forallH 1
-                                                       (fol.impH LNN
+                                                       (impH
                                                           (substituteFormula LNN
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
                                                                    (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                    (var 2)) 0 (var 1)) 2 (natToTerm b))
-                                                          (fol.impH LNN
+                                                          (impH 
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN B 2 (var 3)) 2
                                                                 (natToTerm b))
@@ -3945,7 +3945,7 @@ Proof.
                                               with
                                                 (forallH 0
                                                    (forallH 1
-                                                      (fol.impH LNN
+                                                      (impH 
                                                          (substituteFormula LNN
                                                             (substituteFormula LNN
                                                                (substituteFormula LNN
@@ -3953,7 +3953,7 @@ Proof.
                                                                      (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                      (var 2)) 0 (var 1)) 2 (natToTerm b)) 3
                                                             (natToTerm x0))
-                                                         (fol.impH LNN
+                                                         (impH 
                                                             (substituteFormula LNN
                                                                (substituteFormula LNN (substituteFormula LNN B 2 (var 3))
                                                                   2 (natToTerm b)) 3 (natToTerm x0))
@@ -3980,7 +3980,7 @@ Proof.
                                                 with
                                                   (substituteFormula LNN
                                                      (forallH 1
-                                                        (fol.impH LNN
+                                                        (impH 
                                                            (substituteFormula LNN
                                                               (substituteFormula LNN
                                                                  (substituteFormula LNN
@@ -3988,7 +3988,7 @@ Proof.
                                                                        (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                        (var 2)) 0 (var 1)) 2 (natToTerm b)) 3
                                                               (natToTerm x0))
-                                                           (fol.impH LNN
+                                                           (impH
                                                               (substituteFormula LNN
                                                                  (substituteFormula LNN (substituteFormula LNN B 2 (var 3))
                                                                     2 (natToTerm b)) 3 (natToTerm x0))
@@ -4008,7 +4008,7 @@ Proof.
                                                  impTrans
                                                   with
                                                     (substituteFormula LNN
-                                                       (fol.impH LNN
+                                                       (impH
                                                           (substituteFormula LNN
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
@@ -4017,7 +4017,7 @@ Proof.
                                                                          (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                          (var 2)) 0 (var 1)) 2 (natToTerm b)) 3
                                                                 (natToTerm x0)) 0 (natToTerm (f (S x0))))
-                                                          (fol.impH LNN
+                                                          (impH
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
                                                                    (substituteFormula LNN (substituteFormula LNN B 2 (var 3))
@@ -4583,7 +4583,7 @@ Proof.
                 assert (H15 := I). (* For hyps numbering compatibility *)
                 assert (H16 := I). (* For hyps numbering compatibility *)
 Opaque substituteFormula.
-                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH, impH,
+                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH,
                  notH in |- *;
                  repeat first
                   [ discriminate
@@ -4893,7 +4893,7 @@ Opaque substituteFormula.
                                               repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                               apply (subFormulaNil LNN); PRsolveFV A B n.
                                          **** reflexivity.
-                ** apply
+                **  apply
                     iffTrans
                      with
                        (substituteFormula LNN
@@ -5363,7 +5363,7 @@ Opaque substituteFormula.
       destruct (proj1 (Nat.lt_eq_cases v0 (S (S n))) H7) as [H8 | H8].
       + now apply Nat.lt_succ_r. 
       + elim H6; assumption. }
-    unfold primRecSigmaFormula, minimize, existH, andH, forallH, impH, notH in H4;
+    unfold primRecSigmaFormula, minimize, existH, andH, forallH, notH in H4;
      repeat
       match goal with
       | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -5387,7 +5387,7 @@ Opaque substituteFormula.
       | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
-      | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
+      | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
       | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>

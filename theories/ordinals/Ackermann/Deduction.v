@@ -16,7 +16,6 @@ Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
 Let var := var L.
-Let impH := impH L.
 Let notH := notH L.
 Let forallH := forallH L.
 Let Prf := Prf L.

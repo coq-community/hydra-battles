@@ -79,7 +79,7 @@ Check (f a)%fol.
 
 
 
-Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (impH L f g) ->
+Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (impH f g) ->
                         Prf L H2 f ->  Prf L H g.
 Proof. 
   intros; subst; eapply MP; eauto. 

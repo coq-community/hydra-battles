@@ -25,7 +25,7 @@ Notation var := (var L) (only parsing).
 Notation apply := (apply L) (only parsing).
 Notation equal := (equal L) (only parsing).
 Notation atomic := (atomic L) (only parsing).
-Notation impH := (impH L) (only parsing).
+
 Notation notH := (notH L) (only parsing).
 Notation forallH := (forallH L) (only parsing).
 Notation iffH := (iffH L) (only parsing).
@@ -119,7 +119,7 @@ Fixpoint subAllFormula (f : Formula) (m : (nat -> Term)) {struct f} : Formula :=
   match f with
   | fol.equal t s => equal (subAllTerm t m) (subAllTerm s m)
   | fol.atomic r ts => atomic r (subAllTerms _ ts m)
-  | fol.impH f g =>
+  | impH f g =>
       impH (subAllFormula f m) (subAllFormula g m)
   | fol.notH f => notH (subAllFormula f m)
   | fol.forallH n f =>
@@ -1047,7 +1047,7 @@ Proof.
            ++ apply sysWeaken; clear H1 H T Hrecn.
               cut
                 (folProof.SysPrf L (Empty_set (fol.Formula L))
-                   (fol.impH L
+                   (impH 
                       (substituteFormula L
                          (subAllFormula f
                             (fun x : nat =>
@@ -1134,7 +1134,7 @@ Proof.
                  m < s ->
                  s + r <= p ->
                  folProof.SysPrf L (Empty_set (fol.Formula L))
-                   (fol.impH L (substituteFormula L (closeFrom s r f) m (fol.var L p))
+                   (impH  (substituteFormula L (closeFrom s r f) m (fol.var L p))
                       (closeFrom s r (substituteFormula L f m (fol.var L p))))).
                { clear H0 H H1 m T f n Hrecn.
                  intros f s n.
@@ -1461,15 +1461,15 @@ Proof.
         (forall v : nat, ~ In_freeVarSys L v T) ->
         folProof.SysPrf L T (fol.iffH L A B) ->
         folProof.SysPrf L T
-          (fol.impH L (subAllFormula A map) (subAllFormula B map))).
+          (impH  (subAllFormula A map) (subAllFormula B map))).
   { intros T map A B H H0;
-      replace (fol.impH L (subAllFormula A map) (subAllFormula B map)) 
+      replace (impH  (subAllFormula A map) (subAllFormula B map)) 
       with
-      (subAllFormula (fol.impH L A B) map).
-    - set (n := newVar (freeVarFormula L (fol.impH L A B))).
-      replace (subAllFormula (fol.impH L A B) map) 
+      (subAllFormula (impH  A B) map).
+    - set (n := newVar (freeVarFormula L (impH A B))).
+      replace (subAllFormula (impH A B) map) 
         with
-        (subAllFormula (fol.impH L A B)
+        (subAllFormula (impH A B)
            (fun x : nat =>
               match le_lt_dec n x with
               | left _ => fol.var L x

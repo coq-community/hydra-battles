@@ -62,7 +62,7 @@ Ltac SimplFreeVar :=
    | H:(In ?X3 (freeVarFormula ?X9 (impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.impH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (fol.impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (notH ?X1))) |- _ =>
@@ -1532,7 +1532,7 @@ Proof.
 intros.
 unfold codeSysPrf in H.
 set (nv := newVar (2 :: 1 :: 0 :: v0 :: nil)) in *.
-unfold existH, andH, forallH, impH, orH in H.
+unfold existH, andH, forallH, orH in H.
 repeat
  match goal with
  | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -1556,7 +1556,7 @@ repeat
  | H:(In ?X3 (freeVarFormula LNN (fol.orH LNN ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
  | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>

@@ -482,7 +482,7 @@ Hypothesis
 Let Formula := Formula L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let impH := impH L.
+
 Let notH := notH L.
 Let forallH := forallH L.
 

@@ -303,7 +303,7 @@ Proof.
                              replace
                                (forallH 1
                                   (substituteFormula LNN
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
                                            (fol.andH LNN (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
@@ -312,7 +312,7 @@ Proof.
                                with
                                (substituteFormula LNN
                                   (forallH 1
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
                                            (fol.andH LNN (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
@@ -409,7 +409,7 @@ Proof.
                              intros n H5; rewrite (subFormulaImp LNN).
                              rewrite (subFormulaNot LNN).
                              apply impE with
-                               (fol.impH LNN E
+                               (impH E
                                   (fol.notH LNN
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrfNot 0

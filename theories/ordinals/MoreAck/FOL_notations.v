@@ -8,7 +8,7 @@ Delimit Scope fol_scope with fol.
 Infix "=" := (fol.equal _): fol_scope.
 Infix "\/" := (fol.orH _): fol_scope.
 Infix "/\" := (fol.andH _):fol_scope.
-Infix "->" := (fol.impH _): fol_scope.
+Infix "->" := (fol.impH): fol_scope.
 Notation "~ A" := (@fol.notH _ A): fol_scope. 
 Notation atH := (fol.atomic _).
 Notation k_ t := (fol.apply _ (t:Functions _)  (fol.Tnil _)).

@@ -26,7 +26,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let impH := impH L.
 Let notH := notH L.
 Let forallH := forallH L.
 Let orH := orH L.
@@ -275,7 +274,7 @@ Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
         (subAllFormula L
            (nat_rec (fun _ : nat => fol.Formula L) f0
               (fun (n : nat) (Hrecn : fol.Formula L) =>
-                 fol.impH L
+                 impH 
                    (fol.equal L (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
               n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.

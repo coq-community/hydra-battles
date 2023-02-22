@@ -427,7 +427,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   match f with
   | equal t s => equal L t s
   | atomic r ts => atomic L r ts
-  | impH A B => impH L (nnHelp A) (nnHelp B)
+  | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH L (nnHelp A)
   | forallH v A => forallH L v (notH L (notH L (nnHelp A)))
   end.
@@ -510,7 +510,7 @@ Proof.
       auto with datatypes.
     + assert (H0: interpFormula value (nnTranslate A))
       by auto with datatypes.
-      assert (H1: interpFormula value (nnTranslate (impH L A B)))
+      assert (H1: interpFormula value (nnTranslate (impH A B)))
         by auto with datatypes.
       clear Hrecx0_1 Hrecx0_0.
       simpl in H0, H1. 
@@ -616,7 +616,7 @@ Proof.
                          (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
                          (nVars L (arity L (inl (Functions L) R))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
                       (arity L (inl (Functions L) R))))).
         { generalize (arity L (inl (Functions L) R)).
           simple induction n.
@@ -676,7 +676,7 @@ Proof.
                          (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
                          (nVars L (arity L (inr (Relations L) f))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
                       (arity L (inr (Relations L) f))))).
         { generalize (arity L (inr (Relations L) f)).
           simple induction n.

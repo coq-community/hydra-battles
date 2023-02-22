@@ -24,7 +24,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let impH := impH L.
 Let notH := notH L.
 Let forallH := forallH L.
 Let orH := orH L.
@@ -470,7 +469,7 @@ Proof.
   eapply Hrecp0 with A0 p2.
   do 3 eapply cPairInj2.
   apply H.
-  eapply Hrecp1 with (fol.impH L A0 B0) p.
+  eapply Hrecp1 with (fol.impH  A0 B0) p.
   eapply cPairInj2.
   eapply cPairInj1.
   eapply cPairInj2.

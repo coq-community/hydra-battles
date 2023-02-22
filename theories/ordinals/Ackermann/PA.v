@@ -116,7 +116,7 @@ Proof.
                  destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
                    try (right; unfold not in |- *; intros; 
                         decompose record H; discriminate H1).
-                 do 4 fold impH in |- *.
+               (*   do 4 fold impH  in |- *. *)
                  do 4 fold forallH in |- *.
                  induction (formula_dec LNT LNT_dec
                               (substituteFormula LNT f1 n0 Zero) f).

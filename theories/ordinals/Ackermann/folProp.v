@@ -19,7 +19,7 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let impH := impH L.
+
 Let notH := notH L.
 Let forallH := forallH L.
 Let lt_depth := lt_depth L.

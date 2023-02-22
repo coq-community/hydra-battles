@@ -428,7 +428,7 @@ Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   | fol.equal t1 t2 => fol.equal LNN (LNT2LNN_term t1) (LNT2LNN_term t2)
   | atomic r ts => match r with
                    end
-  | fol.impH A B => fol.impH LNN (LNT2LNN_formula A) (LNT2LNN_formula B)
+  | fol.impH A B => impH (LNT2LNN_formula A) (LNT2LNN_formula B)
   | fol.notH A => fol.notH LNN (LNT2LNN_formula A)
   | fol.forallH v A => fol.forallH LNN v (LNT2LNN_formula A)
   end.
@@ -623,7 +623,7 @@ Proof.
     * contradiction.
   - assert (H0: SysPrf (Empty_set _)
                   (LNN2LNT_formula 
-                     (fol.impH LNN (fol.forallH LNN v A) 
+                     (impH (fol.forallH LNN v A) 
                         (substituteFormula LNN A v t)))).
     { simpl in |- *.
       apply impE with
@@ -670,7 +670,7 @@ Proof.
     + contradiction.
   - assert (H0: SysPrf (Empty_set _) (LNN2LNT_formula (AxmEq4 LNN R))).
     { induction R; simpl; repeat apply impI.
-      unfold notH, impH ; apply impE
+      unfold notH ; apply impE
         with
         (iffH
            (translateLT

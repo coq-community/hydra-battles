@@ -183,8 +183,8 @@ Definition makeTraceImp (f1 : fol.Formula L)
   (f2rec : nat * fol.Term L -> nat) (p : nat * fol.Term L) : nat :=
   let v := fst p in
   let s := snd p in
-  cTriple (cTriple v (codeTerm s) (codeFormula (impH L f1 f2)))
-    (codeFormula (substituteFormula L (impH L f1 f2) v s))
+  cTriple (cTriple v (codeTerm s) (codeFormula (impH f1 f2)))
+    (codeFormula (substituteFormula L (impH f1 f2) v s))
     (cPair (f1rec p) (f2rec p)).
 
 Definition makeTraceNot 
@@ -454,9 +454,9 @@ elim f using Formula_depth_ind2.
       | rewrite cPairProjections2 ].
   unfold codeTerm; rewrite codeSubTermsCorrect; simpl.
   now rewrite Nat.eqb_refl.
-- intros f0 H f1 H0 v s. replace (makeTrace (impH L f0 f1) (v, s)) with
-    (cTriple (cTriple v (codeTerm s) (codeFormula (impH L f0 f1)))
-       (codeFormula (substituteFormula L (impH L f0 f1) v s))
+- intros f0 H f1 H0 v s. replace (makeTrace (impH f0 f1) (v, s)) with
+    (cTriple (cTriple v (codeTerm s) (codeFormula (impH f0 f1)))
+       (codeFormula (substituteFormula L (impH f0 f1) v s))
        (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
   + unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     rewrite computeEvalStrongRecHelp.
@@ -479,12 +479,12 @@ elim f using Formula_depth_ind2.
           ++ apply cPairLe2.
           ++  unfold cTriple; apply Nat.le_lt_trans
                 with
-                (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
+                (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
                    (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
               apply cPairLe2.
               apply Nat.lt_le_trans  with
                 (cPair 1
-                   (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
+                   (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
                       (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))))).
               ** apply cPairLt2.
               ** apply cPairLe3.
@@ -501,12 +501,12 @@ elim f using Formula_depth_ind2.
         (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
       --  apply cPairLe1.
       --   unfold cTriple;  apply Nat.le_lt_trans with
-             (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
+             (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
                 (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
            ++ apply cPairLe2.
            ++ apply Nat.lt_le_trans with
                 (cPair 1
-                   (cPair (codeFormula (substituteFormula L (impH L f0 f1) v s))
+                   (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
                       (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))))).
               **  apply cPairLt2.
               **  apply cPairLe3.
@@ -4761,8 +4761,8 @@ Proof.
     set
       (C :=
          Nat.max (codeTerm s)
-           (pow3 (depth L (impH L f0 f1)) +
-              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (impH L f0 f1)))).
+           (pow3 (depth L (impH f0 f1)) +
+              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (impH  f0 f1)))).
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     repeat rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList.
@@ -5163,9 +5163,9 @@ Proof.
     + apply (E (atomic L r t) v s).
     + apply le_n.
   - intros f0 H1 f1 H2 v s C; simpl; 
-      replace (makeTrace (impH L f0 f1) (v, s)) with
-      (cTriple (cTriple v (codeTerm s) (codeFormula (impH L f0 f1)))
-         (codeFormula (substituteFormula L (impH L f0 f1) v s))
+      replace (makeTrace (impH f0 f1) (v, s)) with
+      (cTriple (cTriple v (codeTerm s) (codeFormula (impH f0 f1)))
+         (codeFormula (substituteFormula L (impH f0 f1) v s))
          (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
     + unfold cTriple; repeat apply cPairLe3.
       * unfold C; simpl.
@@ -5177,8 +5177,8 @@ Proof.
              (fold_right Nat.max 0 (freeVarTerm L s ++ varFormula f0 ++ varFormula f1))
              (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
-      * apply (H0 (impH L f0 f1) v s).
-      * apply (E (impH L f0 f1) v s).
+      * apply (H0 (impH f0 f1) v s).
+      * apply (E (impH f0 f1) v s).
       * eapply Nat.le_trans.
         -- apply H1.
         -- assert

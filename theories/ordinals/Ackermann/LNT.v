@@ -16,7 +16,6 @@ Definition Term := Term LNT.
 Definition Terms := Terms LNT.
 Definition var := var LNT.
 Definition equal := equal LNT.
-Definition impH := impH LNT.
 Definition notH := notH LNT.
 Definition iffH := iffH LNT.
 Definition forallH := forallH LNT.
