@@ -5,7 +5,7 @@ Require Import LNN_notations.
 Section bare_syntax. 
 (* begin snippet uglyF0 *)
 Definition  f0 : Formula LNN :=
-      forallH _ 0 
+      forallH 0 
         (orH _ 
            (equal _ (var _ 0) 
               (apply LNN Languages.Zero (Tnil _)))

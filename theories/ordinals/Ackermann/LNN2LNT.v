@@ -309,7 +309,6 @@ Proof.
       rewrite H4; clear H4.
       decompose record
         (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)).
-      unfold forallH in |- *.
       rewrite H7; clear H7.
       destruct (eq_nat_dec v v0) as [e | ].
       * simpl; apply iffRefl.
@@ -430,7 +429,7 @@ Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
                    end
   | fol.impH A B => impH (LNT2LNN_formula A) (LNT2LNN_formula B)
   | fol.notH A => notH  (LNT2LNN_formula A)
-  | fol.forallH v A => fol.forallH LNN v (LNT2LNN_formula A)
+  | fol.forallH v A => forallH v (LNT2LNN_formula A)
   end.
 
 Lemma LNT2LNT_term (t : Term): LNN2LNT_term (LNT2LNN_term t) = t.
@@ -623,7 +622,7 @@ Proof.
     * contradiction.
   - assert (H0: SysPrf (Empty_set _)
                   (LNN2LNT_formula 
-                     (impH (fol.forallH LNN v A) 
+                     (impH (forallH v A) 
                         (substituteFormula LNN A v t)))).
     { simpl in |- *.
       apply impE with

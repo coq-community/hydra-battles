@@ -21,7 +21,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let forallH := forallH L.
 Let orH := orH L.
 Let andH := andH L.
 Let existH := existH L.
@@ -330,7 +329,7 @@ Proof.
         -- rewrite a1;  now right.
         -- assert
             (H1: lt_depth L (substituteFormula L a v (fol.var L nv))
-                   (fol.forallH L v a)).
+                   (forallH v a)).
            { unfold lt_depth; rewrite subFormulaDepth.
              apply depthForall.
            }
@@ -344,7 +343,7 @@ Proof.
            { eapply In_list_remove2; apply H0. }
            clear H0.
            induction (H _ H1 _ _ _ H2) as [H0 | H0].
-           ++ assert (H4: lt_depth L a (fol.forallH L v a)) by
+           ++ assert (H4: lt_depth L a (forallH v a)) by
               apply depthForall.
               assert (H5: In x (freeVarFormula L
                               (substituteFormula L a v (fol.var L nv)))).
@@ -360,7 +359,7 @@ Proof.
                  auto.
                  contradiction.
            ++ now right.
-      * assert (H1: lt_depth L a (fol.forallH L v a)) 
+      * assert (H1: lt_depth L a (forallH v a)) 
           by apply depthForall.
         simpl in H0.
         assert (H2: In x (freeVarFormula L (substituteFormula L a v0 s))).
@@ -766,7 +765,7 @@ Proof.
         -- induction H7 as [H7| H7].
            ++ elim (In_list_remove2 _ _ _ _ _ H4); auto.
            ++ auto.
-      * assert (H4: lt_depth L a (fol.forallH L v a))
+      * assert (H4: lt_depth L a (forallH v a))
           by apply depthForall.
         decompose record (H _ H4 (Empty_set Formula)).
         set (A1 := substituteFormula L a v (fol.var L x)).
@@ -785,7 +784,7 @@ Proof.
              (substituteFormula L (substituteFormula L A1 x (var v)) v0 s).
            ++ apply sysWeaken,  (iffE1 L).
               assert 
-                (H6: lt_depth L (substituteFormula L A1 x (var v)) (fol.forallH L v a)).
+                (H6: lt_depth L (substituteFormula L A1 x (var v)) (forallH v a)).
               { unfold lt_depth, A1 in |- *.
                 repeat rewrite subFormulaDepth.
                 apply depthForall.
@@ -803,7 +802,7 @@ Proof.
               ** induction H13 as [H13| H13].
                  --- auto.
                  --- contradiction.
-           ++ assert (H6: lt_depth L A1 (fol.forallH L v a)).
+           ++ assert (H6: lt_depth L A1 (forallH v a)).
               { unfold lt_depth, A1 in |- *.
                 repeat rewrite subFormulaDepth.
                 apply depthForall.
@@ -831,7 +830,7 @@ Proof.
               apply sysWeaken.
               assert
                 (H4: lt_depth L (substituteFormula L a v (fol.var L x)) 
-                       (fol.forallH L v a)).
+                       (forallH v a)).
               { unfold lt_depth; rewrite subFormulaDepth; apply depthForall.
               }
               decompose record (H _ H4 (Empty_set Formula)).
@@ -896,7 +895,7 @@ Proof.
                          *** unfold A1; rewrite a1.
                              repeat rewrite (subFormulaId L).
                              apply (iffRefl L).
-                         *** assert (H10: lt_depth L a (fol.forallH L v a))
+                         *** assert (H10: lt_depth L a (forallH v a))
                                by  apply depthForall.
                              decompose record (H _ H10 (Empty_set Formula)).
                              unfold A1; apply H13.
@@ -908,7 +907,7 @@ Proof.
                              apply (iffE1 L).
                              assert (H10: lt_depth L 
                                             (substituteFormula L A1 x1 (var v)) 
-                                            (fol.forallH L v a)).
+                                            (forallH v a)).
                              { unfold lt_depth, A1 in |- *.
                                repeat rewrite subFormulaDepth.
                                apply depthForall.
@@ -929,7 +928,7 @@ Proof.
                                   (substituteFormula L A1 v2 s) x1 (var v)).
                              apply sysWeaken.
                              apply (iffE1 L).
-                             assert (H10: lt_depth L A1 (fol.forallH L v a)).
+                             assert (H10: lt_depth L A1 (forallH v a)).
                              { unfold lt_depth, A1; repeat rewrite subFormulaDepth; 
                                  apply depthForall. 
                              }
@@ -951,7 +950,7 @@ Proof.
                          assert
                            (H10: lt_depth L 
                                    (substituteFormula L a v (fol.var L x1)) 
-                                   (fol.forallH L v a)).
+                                   (forallH v a)).
                          { unfold lt_depth in |- *.
                            repeat rewrite subFormulaDepth.
                            apply depthForall.
@@ -1040,7 +1039,7 @@ Proof.
                   ---  elim H2; assumption.
               ** set (A1 := substituteFormula L 
                               (substituteFormula L a v (fol.var L x)) v1 s).
-                 assert (H10: lt_depth L A1 (fol.forallH L v a)).
+                 assert (H10: lt_depth L A1 (forallH v a)).
                  { unfold lt_depth, A1; repeat rewrite subFormulaDepth;
                      apply depthForall. }
                  set
@@ -1097,7 +1096,7 @@ Proof.
                                (H11: lt_depth L
                                        (substituteFormula L a v 
                                           (fol.var L x))
-                                       (fol.forallH L v a)).
+                                       (forallH v a)).
                              { unfold lt_depth in |- *.
                                repeat rewrite subFormulaDepth.
                                apply depthForall.
@@ -1117,7 +1116,7 @@ Proof.
                                (H11: lt_depth L
                                   (substituteFormula L 
                                      (substituteFormula L a v (fol.var L x)) x (var x2))
-                                  (fol.forallH L v a)).
+                                  (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                  apply depthForall.
                              }
@@ -1168,7 +1167,7 @@ Proof.
                              apply (impE L) with (substituteFormula L a v (fol.var L x2)).
                              apply (sysWeaken L).
                              apply (iffE2 L).
-                             assert (H11: lt_depth L a (fol.forallH L v a))
+                             assert (H11: lt_depth L a (forallH v a))
                              by apply depthForall. 
                              decompose record (H _ H11 (Empty_set _)).
                              apply H14; clear H12 H14 H15.
@@ -1179,7 +1178,7 @@ Proof.
                                   (substituteFormula L a v (fol.var L x0)) x0 (var x2)).
                              apply (iffE1 L).
                              apply (sysWeaken L).
-                             assert (H11 : lt_depth L a (fol.forallH L v a))
+                             assert (H11 : lt_depth L a (forallH v a))
                              by apply depthForall.
                              decompose record (H _ H11 (Empty_set _)).
                              apply H14; clear H12 H14 H15.
@@ -1195,7 +1194,7 @@ Proof.
                              apply (iffE1 L).
                              assert
                                (H11: lt_depth L (substituteFormula L a v 
-                                              (fol.var L x0)) (fol.forallH L v a)).
+                                              (fol.var L x0)) (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                  apply depthForall.
                              }
@@ -1215,7 +1214,7 @@ Proof.
                                        (substituteFormula L 
                                           (substituteFormula L a v (fol.var L x0))
                                           v1 (var v2))
-                                       (fol.forallH L v a)).
+                                       (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth;
                                  apply depthForall. }
                              decompose record (H _ H11 (Empty_set _)).
@@ -1241,7 +1240,7 @@ Proof.
                                          (substituteFormula L 
                                             (substituteFormula L a v (fol.var L x0)) v1
                                             (var v2)) x0 (fol.var L x1)) 
-                                      (fol.forallH L v a)).
+                                      (forallH v a)).
                             { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                 apply depthForall. }
                             decompose record (H _ H11 (Empty_set _)).
@@ -1258,7 +1257,7 @@ Proof.
                           (var x)).
                      +++ apply (sysWeaken L).
                          apply (iffE2 L).
-                         assert (H11: lt_depth L A2 (fol.forallH L v a)).
+                         assert (H11: lt_depth L A2 (forallH v a)).
                          { unfold lt_depth, A2 in |- *.
                            repeat rewrite subFormulaDepth.
                            apply depthForall. }
@@ -1336,7 +1335,7 @@ Proof.
                        (substituteFormula L 
                           (substituteFormula L A1 x1 (var x2)) x2 (var x1)).
                          *** apply sysWeaken, (iffE1 L).
-                             assert (H10: lt_depth L A1 (fol.forallH L v a)).
+                             assert (H10: lt_depth L A1 (forallH v a)).
                              { unfold lt_depth, A1 in |- *.
                                repeat rewrite subFormulaDepth.
                                apply depthForall. }
@@ -1365,7 +1364,7 @@ Proof.
                           (substituteFormula L
                              (substituteFormula L 
                                 (substituteFormula L a v (fol.var L x0)) v1
-                                (var v2)) x0 (fol.var L x1)) (fol.forallH L v a)).
+                                (var v2)) x0 (fol.var L x1)) (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
                      decompose record (H _ H10 (Empty_set _)).
@@ -1391,7 +1390,7 @@ Proof.
                        (H10: lt_depth L
                                (substituteFormula L 
                                   (substituteFormula L a v (fol.var L x0)) v1 (var v2))
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth in |- *.
                        repeat rewrite subFormulaDepth.
                        apply depthForall.
@@ -1418,7 +1417,7 @@ Proof.
                      assert
                        (H10: lt_depth L 
                                (substituteFormula L a v (fol.var L x0))
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth in |- *; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
                      decompose record (H _ H10 (Empty_set _)).
@@ -1436,7 +1435,7 @@ Proof.
                        (H10: lt_depth L
                                (substituteFormula L 
                                   (substituteFormula L a v (fol.var L x0)) x0 (var x2))
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
                      decompose record (H _ H10 (Empty_set _)).
@@ -1462,7 +1461,7 @@ Proof.
                      apply (impE L) with (substituteFormula L a v (var x2)).
                      apply (sysWeaken L).
                      apply (iffE2 L).
-                     assert (H10: lt_depth L a (fol.forallH L v a)) by
+                     assert (H10: lt_depth L a (forallH v a)) by
                        apply depthForall.
                      decompose record (H _ H10 (Empty_set _)).
                      apply H13; clear H11 H13 H14; auto.
@@ -1480,7 +1479,7 @@ Proof.
                           (substituteFormula L a v (fol.var L x)) x (var x2)).
                      apply (sysWeaken L).
                      apply (iffE1 L).
-                     assert (H10: lt_depth L a (fol.forallH L v a)) by
+                     assert (H10: lt_depth L a (forallH v a)) by
                        apply depthForall.
                      decompose record (H _ H10 (Empty_set _)).
                      apply H13; clear H11 H13 H14; auto.
@@ -1495,7 +1494,7 @@ Proof.
                      assert
                        (H10: lt_depth L 
                                (substituteFormula L a v (fol.var L x)) 
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth;
                          apply depthForall. }
                      decompose record (H _ H10 (Empty_set _)).
@@ -1513,7 +1512,7 @@ Proof.
                        (H10: lt_depth L
                           (substituteFormula L
                              (substituteFormula L a v (fol.var L x)) v1 s)
-                          (fol.forallH L v a)).
+                          (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth;
                          apply depthForall. }
                      decompose record (H _ H10 (Empty_set _)).
@@ -1531,9 +1530,9 @@ Proof.
             ~ In v1 (freeVarTerm L s2) ->
             SysPrf T
               (impH
-                 (substituteFormula L (substituteFormula L (fol.forallH L v a) v1 s1)
+                 (substituteFormula L (substituteFormula L (forallH v a) v1 s1)
                     v2 s2)
-                 (substituteFormula L (substituteFormula L (fol.forallH L v a) v2 s2)
+                 (substituteFormula L (substituteFormula L (forallH v a) v2 s2)
                     v1 s1))).
     { clear H2 H1 H0 s2 s1 v2 v1; intros v1 v2 s1 s2 H0 H1 H2;
       eapply (sysExtend L) with (Empty_set Formula).
@@ -1571,7 +1570,7 @@ Proof.
                                  (substituteFormula L
                                     (substituteFormula L 
                                        (substituteFormula L a v (fol.var L x0)) v2 s2)
-                                    x0 (fol.var L x1)) (fol.forallH L v a)).
+                                    x0 (fol.var L x1)) (forallH v a)).
                        { unfold lt_depth;  repeat rewrite subFormulaDepth.
                          apply depthForall. }
                        decompose record (H _ H12 (Empty_set _)).
@@ -1682,7 +1681,7 @@ Proof.
                        (H12: lt_depth L
                                (substituteFormula L 
                                   (substituteFormula L a v (fol.var L x)) v1 s1)
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
                      decompose record (H _ H12 (Empty_set _)).
@@ -1703,7 +1702,7 @@ Proof.
                                          (substituteFormula L 
                                             (substituteFormula L a v (fol.var L x)) v1 s1)
                                          x (var x1)) x1 (fol.var L x))
-                                   (fol.forallH L v a)).
+                                   (forallH v a)).
                          { unfold lt_depth; repeat rewrite subFormulaDepth; 
                              apply depthForall. }
                          decompose record (H _ H12 (Empty_set _)).
@@ -1761,7 +1760,7 @@ Proof.
                                            (substituteFormula L 
                                               (substituteFormula L a v (fol.var L x)) 
                                               v1 s1) x
-                                           (var x1)) (fol.forallH L v a)).
+                                           (var x1)) (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                   apply depthForall. }
                               decompose record (H _ H12 (Empty_set _)).
@@ -1813,7 +1812,7 @@ Proof.
                      apply (iffE2 L).
                      assert
                        (H15: lt_depth L (substituteFormula L a v (fol.var L x0)) 
-                               (fol.forallH L v a)).
+                               (forallH v a)).
                      { unfold lt_depth in |- *.
                        repeat rewrite subFormulaDepth.
                        apply depthForall. }
@@ -1834,7 +1833,7 @@ Proof.
                          apply (iffE1 L).
                          assert
                            (H15: lt_depth L (substituteFormula L a v (fol.var L x0))
-                                   (fol.forallH L v a)).
+                                   (forallH v a)).
                          { unfold lt_depth; repeat rewrite subFormulaDepth.
                            apply depthForall. }
                          decompose record (H _ H15 (Empty_set _)).
@@ -1855,14 +1854,14 @@ Proof.
                              apply (impE L) with (substituteFormula L a v (var x)).
                              *** apply (sysWeaken L).
                                  apply (iffE2 L).
-                                 assert (lt_depth L a (fol.forallH L v a)).
+                                 assert (lt_depth L a (forallH v a)).
                                  apply depthForall.
                                  decompose record (H _ H15 (Empty_set _)).
                                  apply H18; clear H16 H18 H19; auto.
                              *** apply Axm; right; constructor.
                          +++  apply forallE.
                               apply impE with
-                                (fol.forallH L x
+                                (forallH x
                                    (substituteFormula L 
                                       (substituteFormula L a v (fol.var L x)) v1 s1)).
                               *** apply sysWeaken.
@@ -1873,7 +1872,7 @@ Proof.
                                    assert
                                      (H15: lt_depth L 
                                              (substituteFormula L a v (fol.var L x))
-                                             (fol.forallH L v a)).
+                                             (forallH v a)).
                                    { unfold lt_depth; repeat rewrite subFormulaDepth.
                                      apply depthForall.
                                    }    
@@ -1929,7 +1928,7 @@ Proof.
                          apply (iffE2 L).
                          assert
                            (H15: lt_depth L (substituteFormula L a v (fol.var L x0))
-                                   (fol.forallH L v a)).
+                                   (forallH v a)).
                          { unfold lt_depth; repeat rewrite subFormulaDepth.
                            apply depthForall.
                          }     
@@ -1950,7 +1949,7 @@ Proof.
                          apply (impE L) with (substituteFormula L a v (var x2)).
                          +++ apply (sysWeaken L).
                              apply (iffE2 L).
-                             assert (H15: lt_depth L a (fol.forallH L v a)) by
+                             assert (H15: lt_depth L a (forallH v a)) by
                              apply depthForall.
                              decompose record (H _ H15 (Empty_set _)).
                              apply H18; clear H16 H18 H19; auto.
@@ -1959,7 +1958,7 @@ Proof.
                                   (substituteFormula L a v (var x)) x (fol.var L x2)).
                              *** apply (sysWeaken L).
                                  apply (iffE1 L).
-                                 assert (H15: lt_depth L a (fol.forallH L v a)) 
+                                 assert (H15: lt_depth L a (forallH v a)) 
                                    by apply depthForall.
                                  decompose record (H _ H15 (Empty_set _)).
                                  apply H18; clear H16 H18 H19; auto.
@@ -1973,7 +1972,7 @@ Proof.
                              apply (iffE1 L).
                              assert (H15: lt_depth L 
                                             (substituteFormula L a v (var x)) 
-                                            (fol.forallH L v a)).
+                                            (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth.
                                apply depthForall. }
                              decompose record (H _ H15 (Empty_set _)).
@@ -2060,7 +2059,7 @@ Proof.
                                (fol.var L x0)).
                           *** apply (sysWeaken L).
                               apply (iffE1 L).
-                              assert (lt_depth L a (fol.forallH L v a)).
+                              assert (lt_depth L a (forallH v a)).
                               apply depthForall.
                               decompose record (H _ H15 (Empty_set _)).
                               apply H18; clear H16 H18 H19; auto.
@@ -2072,8 +2071,9 @@ Proof.
                               apply (sysWeaken L).
                               apply (iffE1 L).
                               assert
-                                (H15: lt_depth L (substituteFormula L a v (fol.var L x))
-                                        (fol.forallH L v a)).
+                                (H15: lt_depth L (substituteFormula L a v 
+                                                    (fol.var L x))
+                                        (forallH v a)).
                               { unfold lt_depth in |- *.
                                 repeat rewrite subFormulaDepth.
                                 apply depthForall. }
@@ -2109,7 +2109,7 @@ Proof.
                                            (substituteFormula L 
                                               (substituteFormula L a v (fol.var L x)) 
                                               v1 s1) x
-                                           (fol.var L x1)) (fol.forallH L v a)).
+                                           (fol.var L x1)) (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth.
                                 apply depthForall. }
                               decompose record (H _ H15 (Empty_set _)).
@@ -2130,7 +2130,7 @@ Proof.
                                 (H15: lt_depth L
                                         (substituteFormula L 
                                            (substituteFormula L a v (fol.var L x)) v1 s1)
-                                        (fol.forallH L v a)).
+                                        (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                   apply depthForall. }
                               decompose record (H _ H15 (Empty_set _)).
@@ -2145,7 +2145,7 @@ Proof.
                          (v2
                             :: v1
                             :: freeVarFormula L
-                            (fol.forallH L x2
+                            (forallH x2
                                (substituteFormula L
                                   (substituteFormula L
                                      (substituteFormula L
@@ -2153,7 +2153,7 @@ Proof.
                                      x0
                                      (fol.var L x2)) v1 s1)) ++
                             freeVarFormula L
-                            (fol.forallH L x1
+                            (forallH x1
                                (substituteFormula L
                                   (substituteFormula L
                                      (substituteFormula L
@@ -2166,7 +2166,7 @@ Proof.
                         (v2
                            :: v1
                            :: freeVarFormula L
-                           (fol.forallH L x2
+                           (forallH x2
                               (substituteFormula L
                                  (substituteFormula L
                                     (substituteFormula L
@@ -2174,7 +2174,7 @@ Proof.
                                     x0
                                     (fol.var L x2)) v1 s1)) ++
                            freeVarFormula L
-                           (fol.forallH L x1
+                           (forallH x1
                               (substituteFormula L
                                  (substituteFormula L
                                     (substituteFormula L
@@ -2186,14 +2186,14 @@ Proof.
                   fold
                     (In z1
                        (freeVarFormula L
-                          (fol.forallH L x2
+                          (forallH x2
                              (substituteFormula L
                                 (substituteFormula L
                                    (substituteFormula L 
                                       (substituteFormula L a v (fol.var L x0))
                                       v2 s2) x0 (fol.var L x2)) v1 s1)) ++
                           freeVarFormula L
-                          (fol.forallH L x1
+                          (forallH x1
                              (substituteFormula L
                                 (substituteFormula L
                                    (substituteFormula L 
@@ -2278,7 +2278,7 @@ Proof.
                                               (substituteFormula L 
                                                  (substituteFormula L a v 
                                                     (fol.var L x)) v1 s1) x
-                                              (fol.var L x1)) (fol.forallH L v a)).
+                                              (fol.var L x1)) (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
                                  decompose record (H _ H15 (Empty_set _)).
@@ -2298,7 +2298,7 @@ Proof.
                                    (H15: lt_depth L 
                                            (substituteFormula L
                                               (substituteFormula L a v (var x)) v1 s1)
-                                           (fol.forallH L v a)).
+                                           (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
                                  decompose record (H _ H15 (Empty_set _)).
@@ -2315,7 +2315,7 @@ Proof.
                                  apply (iffE1 L).
                                  assert (H15: lt_depth L 
                                                 (substituteFormula L a v (var x)) 
-                                                (fol.forallH L v a)).
+                                                (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
                                  decompose record (H _ H15 (Empty_set _)).
@@ -2332,7 +2332,7 @@ Proof.
                                       (fol.var L z1)).
                                  apply (sysWeaken L).
                                  apply (iffE1 L).
-                                 assert (H15: lt_depth L a (fol.forallH L v a)) by
+                                 assert (H15: lt_depth L a (forallH v a)) by
                                    apply depthForall.
                                  decompose record (H _ H15 (Empty_set _)).
                                  apply H18; clear H16 H18 H19; auto.
@@ -2346,7 +2346,7 @@ Proof.
                                  assert
                                    (H15: lt_depth L 
                                            (substituteFormula L a v (fol.var L z1)) 
-                                           (fol.forallH L v a)).
+                                           (forallH v a)).
                                  { unfold lt_depth; 
                                      repeat rewrite subFormulaDepth; apply depthForall. }
                                  decompose record (H _ H15 (Empty_set _)).
@@ -2363,7 +2363,7 @@ Proof.
                                    (substituteFormula L a v (fol.var L z1)).
                                  apply (sysWeaken L).
                                  apply (iffE2 L).
-                                 assert (H15: lt_depth L a (fol.forallH L v a)) 
+                                 assert (H15: lt_depth L a (forallH v a)) 
                                    by  apply depthForall.
                                  decompose record (H _ H15 (Empty_set _)).
                                  apply H18; clear H16 H18 H19; auto.
@@ -2390,7 +2390,7 @@ Proof.
                                  apply (iffE2 L).
                                  assert (H15: lt_depth L 
                                                 (substituteFormula L a v (var x0)) 
-                                                (fol.forallH L v a)).
+                                                (forallH v a)).
                                  { unfold lt_depth;  repeat rewrite subFormulaDepth.
                                    apply depthForall. }
                                  decompose record (H _ H15 (Empty_set _)).
@@ -2422,7 +2422,7 @@ Proof.
                                                  (substituteFormula L 
                                                     (substituteFormula L a v (fol.var L x0)) 
                                                     v2 s2)
-                                                 (fol.forallH L v a)).
+                                                 (forallH  v a)).
                                  { unfold lt_depth in |- *.
                                    repeat rewrite subFormulaDepth.
                                    apply depthForall. }
@@ -2436,7 +2436,7 @@ Proof.
                                               (substituteFormula L 
                                                  (substituteFormula L a v 
                                                     (fol.var L x0)) v2 s2)
-                                              x0 (fol.var L x2)) (fol.forallH L v a)).
+                                              x0 (fol.var L x2)) (forallH v a)).
                                  { unfold lt_depth;
                                  repeat rewrite subFormulaDepth; 
                                  apply depthForall. }
@@ -2503,7 +2503,7 @@ Proof.
                                                     (substituteFormula L a v 
                                                        (fol.var L x0)) v2 s2)
                                                  x0 (fol.var L x2)) v1 s1) 
-                                           (fol.forallH L v a)).
+                                           (forallH v a)).
                                  { unfold lt_depth in |- *.
                                    repeat rewrite subFormulaDepth.
                                    apply depthForall.

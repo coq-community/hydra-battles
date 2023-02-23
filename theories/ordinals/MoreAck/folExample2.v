@@ -134,8 +134,8 @@ Proof with auto with sets.
 Qed. 
   
 (* begin snippet boundVars *)
-Goal forallH L 1 (equal _ (var _ 1) (var _ 1)) <>
-       forallH L 2 (equal _ (var _ 2) (var _ 2)). 
+Goal forallH (L:= L) 1 (equal _ (var _ 1) (var _ 1)) <>
+       forallH  2 (equal _ (var _ 2) (var _ 2)). 
   discriminate. 
 Qed. 
 (* end snippet boundVars *)

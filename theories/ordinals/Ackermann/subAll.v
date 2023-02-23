@@ -27,7 +27,7 @@ Notation equal := (equal L) (only parsing).
 Notation atomic := (atomic L) (only parsing).
 
 (* Notation notH := (notH L) (only parsing). *)
-Notation forallH := (forallH L) (only parsing).
+(* Notation forallH := (forallH L) (only parsing). *)
 Notation iffH := (iffH L) (only parsing).
 Notation SysPrf := (SysPrf L) (only parsing).
 
@@ -459,7 +459,7 @@ Proof.
       induction (eq_nat_dec nv1 v0) as [a0 | ?].
       * assert
           (H3: forall n : nat,
-              In n (freeVarFormula L (fol.forallH L v a)) ->
+              In n (freeVarFormula L (forallH  v a)) ->
               substituteTerm L (m n) v0 s = m n).
         { intros n H3;  apply subTermNil.
            intros H4.
@@ -499,7 +499,7 @@ Proof.
             ++ reflexivity.
             ++ apply H3; simpl; apply In_list_remove3; auto.
       *  apply (iffTrans L) with
-           (fol.forallH L x
+           (forallH x
               (substituteFormula L
                  (subAllFormula a
                     (fun v1 : nat =>
@@ -564,7 +564,7 @@ Proof.
                                  apply In_list_remove3; auto.
          -- apply (iffTrans L)
               with
-              (fol.forallH L x
+              (forallH x
                  (subAllFormula a
                     (fun v1 : nat =>
                        match eq_nat_dec v1 v with
@@ -604,7 +604,7 @@ Proof.
                                      simpl; tauto.
                                 *** reflexivity.
             ++ apply (iffTrans L) with
-                 (fol.forallH L nv2
+                 (forallH nv2
                     (substituteFormula L
                        (subAllFormula a
                           (fun v1 : nat =>
@@ -733,9 +733,9 @@ Proof.
                 (fun x : nat => fol.var L x))).
       apply
         (iffTrans L)
-        with (fol.forallH L n (subAllFormula f (fun x : nat => fol.var L x))).
+        with (forallH n (subAllFormula f (fun x : nat => fol.var L x))).
       * apply (iffTrans L) with
-          (fol.forallH L nv
+          (forallH nv
              (substituteFormula L (subAllFormula f (fun x : nat => fol.var L x)) n
                 (fol.var L nv))).
         -- replace
@@ -859,7 +859,7 @@ Proof.
     apply
       (iffTrans L)
       with
-      (fol.forallH L (newVar nv3)
+      (forallH (newVar nv3)
          (substituteFormula L
             (subAllFormula f
                (fun v : nat =>
@@ -968,7 +968,7 @@ Fixpoint closeFrom (a n : nat) (f : fol.Formula L) {struct n} :
  fol.Formula L :=
   match n with
   | O => f
-  | S m => fol.forallH L (a + m) (closeFrom a m f)
+  | S m => forallH (a + m) (closeFrom a m f)
   end.
 
 Opaque le_lt_dec.
@@ -1004,7 +1004,7 @@ Proof.
       * reflexivity.
       * elim (Nat.nlt_0_r _ b).
   - intros f T m H H0 H1; 
-      apply (impE L) with (fol.forallH L n (closeFrom 0 n f)).
+      apply (impE L) with (forallH n (closeFrom 0 n f)).
     + apply sysExtend with (Empty_set (fol.Formula L)).
       * intros x H2; contradiction H2. 
       * apply (impI L);  apply (forallI L).
@@ -1014,7 +1014,7 @@ Proof.
              (H3:forall q : nat,
                  n <= q ->
                  m <= q -> 
-                 ~ In q (freeVarFormula L (fol.forallH L n (closeFrom 0 n f)))).
+                 ~ In q (freeVarFormula L (forallH n (closeFrom 0 n f)))).
            { clear H2 H1 T Hrecn.
              induction n as [| n Hrecn]; simpl in |- *.
            - intros q H1 H2 H3; assert (H': q < m). 
@@ -1177,7 +1177,7 @@ Proof.
            --- apply H0;  auto.
            --- auto.
                ** apply (forallE L).
-                  apply (impE L) with (fol.forallH L n (closeFrom 0 n f)).
+                  apply (impE L) with (forallH n (closeFrom 0 n f)).
                   --- apply sysExtend with (Empty_set (fol.Formula L)).
                       +++ intros x H3; destruct H3.
                       +++ apply (impI L), (forallI L).
@@ -1312,7 +1312,7 @@ Proof.
             intro H2; rewrite <- H2 in b; elim (Compat815.lt_not_le _ _ b).
             apply Nat.le_add_r.
     + apply (forallE L).
-      apply (impE L) with (fol.forallH L (m + n) (closeFrom m n f)).
+      apply (impE L) with (forallH (m + n) (closeFrom m n f)).
       * apply sysExtend with (Empty_set (fol.Formula L)).
         -- intros x H1; induction H1.
         -- apply (impI L), (forallI L).

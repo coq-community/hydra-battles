@@ -22,7 +22,7 @@ Notation app2 f arg1 arg2 :=
 
 Notation "t = u" := (@fol.equal _ t u): fol_scope.
 
-Notation allH := (fol.forallH _).
+Notation allH v A := (fol.forallH v A).
 Notation exH := (fol.existH _).
 Notation v_ := (fol.var _).
 End FOL_notations.
@@ -45,7 +45,7 @@ Notation " A /\ B" :=
 Notation exH v A := 
   (@fol.notH _ (@fol.forallH _ v (@fol.notH _ A))).
 
-Notation allH := (fol.forallH _).
+Notation allH v A:= (fol.forallH v A).
 
 Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
 

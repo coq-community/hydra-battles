@@ -24,7 +24,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let forallH := forallH L.
 Let orH := orH L.
 Let andH := andH L.
 Let existH := existH L.

@@ -1532,7 +1532,7 @@ Proof.
 intros.
 unfold codeSysPrf in H.
 set (nv := newVar (2 :: 1 :: 0 :: v0 :: nil)) in *.
-unfold existH, andH, forallH, orH in H.
+unfold existH, andH, orH in H.
 repeat
  match goal with
  | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -1542,7 +1542,7 @@ repeat
  | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
      assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.forallH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (fol.forallH ?X1 ?X2))) |- _ =>
      assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
       [ apply H | clear H ]
  | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _

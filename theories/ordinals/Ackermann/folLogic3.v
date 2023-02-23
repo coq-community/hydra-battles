@@ -26,7 +26,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let forallH := forallH L.
 Let orH := orH L.
 Let andH := andH L.
 Let existH := existH L.
@@ -555,7 +554,7 @@ Proof.
              :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
              freeVarTerm L a0 ++ freeVarTerm L b) in *.
       apply  (impTrans L) with
-        (fol.forallH L (newVar nv)
+        (forallH (newVar nv)
            (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
               v0 a0)).
       * apply sysExtend with (Empty_set (fol.Formula L)).
@@ -563,7 +562,7 @@ Proof.
         apply
           (impTrans L)
           with
-          (fol.forallH L (newVar nv)
+          (forallH (newVar nv)
              (substituteFormula L
                 (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)
                 x (var (newVar nv)))).
@@ -615,7 +614,7 @@ Proof.
       * apply
           (impTrans L)
           with
-          (fol.forallH L (newVar nv)
+          (forallH (newVar nv)
              (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
                 v0 b)).
         -- apply impE with (equal a0 b).
@@ -651,7 +650,7 @@ Proof.
         -- apply sysExtend with (Empty_set (fol.Formula L)).
            intros g H7; induction H7.
            apply (iffE2 L); apply (iffTrans L) with
-             (fol.forallH L (newVar nv)
+             (forallH (newVar nv)
                 (substituteFormula L
                    (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)
                    x0 (var (newVar nv)))).

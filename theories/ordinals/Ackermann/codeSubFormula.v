@@ -198,32 +198,32 @@ Definition makeTraceNot
 
 Definition makeTraceForall (n : nat) (f : fol.Formula L)
   (rec : forall b : fol.Formula L,
-      lt_depth L b (forallH L n f) -> nat * fol.Term L -> nat)
+      lt_depth L b (forallH n f) -> nat * fol.Term L -> nat)
   (p : nat * fol.Term L) : nat.
 Proof. 
   set (v := fst p); set (s := snd p).
   destruct (eq_nat_dec n v) as [a | b].
   - exact
-      (cTriple (cTriple v (codeTerm s) (codeFormula (forallH L n f)))
-         (codeFormula (substituteFormula L (forallH L n f) v s)) 0).
-  - assert (H: lt_depth L f (forallH L v f)) by apply depthForall.
+      (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
+         (codeFormula (substituteFormula L (forallH n f) v s)) 0).
+  - assert (H: lt_depth L f (forallH v f)) by apply depthForall.
     destruct (In_dec eq_nat_dec n (freeVarTerm L s)) as [a | b0].
     + set (nv := newVar (v :: freeVarTerm L s ++ freeVarFormula L f)).
       assert (H0: lt_depth L (substituteFormula L f n (var nv)) 
-                    (forallH L v f)).
+                    (forallH v f)).
       { apply eqDepth with f.
         symmetry  in |- *.
         apply subFormulaDepth.
         apply H.
       }
       exact
-        (cTriple (cTriple v (codeTerm s) (codeFormula (forallH L n f)))
-           (codeFormula (substituteFormula L (forallH L n f) v s))
+        (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
+           (codeFormula (substituteFormula L (forallH n f) v s))
            (cPair (rec f H (n, var nv))
               (rec (substituteFormula L f n (var nv)) H0 p))).
     + exact
-        (cTriple (cTriple v (codeTerm s) (codeFormula (forallH L n f)))
-           (codeFormula (substituteFormula L (forallH L n f) v s)) 
+        (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
+           (codeFormula (substituteFormula L (forallH n f) v s)) 
            (rec f H p)).
 Defined.
 
@@ -266,8 +266,8 @@ Qed.
 Lemma makeTraceForallNice 
   (v0 : nat) (a : fol.Formula L)
   (z1 z2 : forall b : fol.Formula L,
-      lt_depth L b (forallH L v0 a) -> nat * fol.Term L -> nat):
-  (forall (b : fol.Formula L) (q : lt_depth L b (forallH L v0 a))
+      lt_depth L b (forallH v0 a) -> nat * fol.Term L -> nat):
+  (forall (b : fol.Formula L) (q : lt_depth L b (forallH v0 a))
           (r : nat * fol.Term L), z1 b q r = z2 b q r) ->
   forall q : nat * fol.Term L,
     makeTraceForall v0 a z1 q = makeTraceForall v0 a z2 q.
@@ -575,7 +575,7 @@ elim f using Formula_depth_ind2.
      *  apply makeTraceImpNice.
      *  apply makeTraceNotNice.
      *  apply makeTraceForallNice.
-- intros v a H v0 s; replace (makeTrace (forallH L v a) (v0, s)) 
+- intros v a H v0 s; replace (makeTrace (forallH v a) (v0, s)) 
     with
     (makeTraceForall v a (fun (b : fol.Formula L) _ => makeTrace b) (v0, s)).
   +  unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
@@ -1092,7 +1092,7 @@ elim f using Formula_depth_ind2.
   + rewrite a0 in H0.
     assert (H1: charFunction 2 Nat.eqb v0 v0 = 1) by (simpl; now rewrite Nat.eqb_refl).
     rewrite H1 in H0.
-    induction (eq_nat_dec (codeFormula (forallH L v a)) n) as [a1 | b].
+    induction (eq_nat_dec (codeFormula (forallH v a)) n) as [a1 | b].
     * assumption.
     * assert (H2: charFunction 2 Nat.eqb (cPair 3 (cPair v0 (codeFormula a))) n = 0).
       { unfold charFunction; rewrite nat_eqb_false.
@@ -1152,7 +1152,7 @@ elim f using Formula_depth_ind2.
                        rewrite <- (cTripleProj (cdr m)) in H2.
                        rewrite <- a2 in H2; clear a2.
                        rewrite <- a3 in H1; clear a3.
-                       assert (lt_depth L a (forallH L v a)) by 
+                       assert (lt_depth L a (forallH v a)) by 
                          apply depthForall.
                        assert
                          (H4: cPair 0
@@ -1180,7 +1180,7 @@ elim f using Formula_depth_ind2.
                                             (cPair v0
                                                (codeApp (codeList (freeVarTerm L s))
                                                   (codeFreeVarFormula (codeFormula a))))))))
-                                (forallH L v a)).
+                                (forallH v a)).
                    ***  eapply eqDepth.
                         symmetry  in |- *.
                         apply subFormulaDepth.
@@ -1256,7 +1256,7 @@ elim f using Formula_depth_ind2.
                simpl in H0.
                rewrite Nat.add_comm in H0.
                simpl in H0.
-               assert (H1: lt_depth L a (forallH L v a))
+               assert (H1: lt_depth L a (forallH v a))
                  by apply depthForall.
                rewrite <- (cTripleProj m) in H0.
                rewrite <- a1 in H0; clear a1.
@@ -4846,10 +4846,10 @@ Proof.
   - intros v a H0 v0 s; set
                           (C :=
                              Nat.max (codeTerm s)
-                               (pow3 (depth L (forallH L v a)) +
+                               (pow3 (depth L (forallH v a)) +
                                   fold_right Nat.max 0 
                                     (v0 :: freeVarTerm L s ++ 
-                                       varFormula (forallH L v a)))).
+                                       varFormula (forallH v a)))).
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;
       repeat rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList.
@@ -5371,7 +5371,7 @@ Proof.
       * apply makeTraceImpNice.
       * apply makeTraceNotNice.
       * apply makeTraceForallNice.
-  - intros v a H1 v0 s C; replace (makeTrace (forallH L v a) (v0, s)) 
+  - intros v a H1 v0 s C; replace (makeTrace (forallH v a) (v0, s)) 
       with
       (makeTraceForall v a (fun (b : fol.Formula L) _ => makeTrace b) (v0, s)).
     unfold makeTraceForall; simpl.  
@@ -5383,8 +5383,8 @@ Proof.
                (fold_right Nat.max 0 (freeVarTerm L s ++ v :: varFormula a)) 
                (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
-      * apply (H0 (forallH L v a) v0 s).
-      * apply (E (forallH L v a) v0 s).
+      * apply (H0 (forallH v a) v0 s).
+      * apply (E (forallH v a) v0 s).
       * apply Nat.le_0_l.
     + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | b1]; simpl in |- *.
       * unfold cTriple; repeat apply cPairLe3.
@@ -5394,8 +5394,8 @@ Proof.
                 (fold_right Nat.max 0 (freeVarTerm L s ++ v :: varFormula a)) 
                 (codeTerm s)).
         -- unfold C; simpl; apply Nat.le_max_l.
-        -- apply (H0 (forallH L v a) v0 s).
-        -- apply (E (forallH L v a) v0 s).
+        -- apply (H0 (forallH v a) v0 s).
+        -- apply (E (forallH v a) v0 s).
         -- eapply Nat.le_trans.
            ++ apply H1.
               apply depthForall.
@@ -5414,7 +5414,7 @@ Proof.
                   (H2: newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a) <=
                          pow3 (depth L a) +
                            fold_right Nat.max 0 (v0 :: freeVarTerm L s ++ 
-                                                   varFormula (forallH L v a))).
+                                                   varFormula (forallH v a))).
                 { apply Nat.le_trans with
                     (1 +
                        fold_right Nat.max 0
@@ -5608,8 +5608,8 @@ Proof.
              (codeTerm s)).
         -- unfold C in |- *; simpl in |- *. 
            apply Nat.le_max_l.
-        -- apply (H0 (forallH L v a) v0 s).
-        -- apply (E (forallH L v a) v0 s).
+        -- apply (H0 (forallH v a) v0 s).
+        -- apply (E (forallH v a) v0 s).
         -- eapply Nat.le_trans.
            ++ apply H1.
               apply depthForall.

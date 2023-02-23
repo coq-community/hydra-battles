@@ -483,8 +483,6 @@ Let Formula := Formula L.
 Let equal := equal L.
 Let atomic := atomic L.
 
-Let forallH := forallH L.
-
 Definition wellFormedFormula : nat -> nat :=
   evalStrongRec 0
     (fun f recs : nat =>

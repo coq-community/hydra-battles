@@ -566,7 +566,7 @@ Proof.
   intros decide;
     set
       (A :=
-         fol.forallH LNN 1
+         fol.forallH  1
            (impH codeSysPrf
               (fol.existH LNN 2
                  (fol.andH LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
@@ -1091,7 +1091,7 @@ Proof.
                 (code.codeFormula LNT codeLNTFunction codeLNTRelation x))).
         -- unfold A; replace
                        (LNN2LNT_formula
-                          (fol.forallH LNN 1
+                          (forallH  1
                              (impH codeSysPrf
                                 (fol.existH LNN 2
                                    (fol.andH LNN 

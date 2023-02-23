@@ -286,7 +286,7 @@ Proof.
     { split.
       - assert
           (H2: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
                 interpFormula value (substituteFormula L b v s)).
@@ -303,7 +303,7 @@ Proof.
       - intros H2 x.
         assert
           (H3: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula value (substituteFormula L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
@@ -379,7 +379,7 @@ Proof.
         --  intros H1 x;
         assert
           (H2: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
                 interpFormula value (substituteFormula L b v s)).
@@ -392,7 +392,7 @@ Proof.
            ** apply H1.
     -- assert
         (forall b : Formula L,
-            lt_depth L b (forallH L v a) ->
+            lt_depth L b (forallH v a) ->
             forall (value : nat -> U M) (v : nat) (s : Term L),
               interpFormula value (substituteFormula L b v s) ->
               interpFormula (updateValue value v (interpTerm value s)) b).
@@ -429,7 +429,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   | atomic r ts => atomic L r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
-  | forallH v A => forallH L v (notH (notH (nnHelp A)))
+  | forallH v A => forallH v (notH (notH (nnHelp A)))
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
