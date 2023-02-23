@@ -23,7 +23,6 @@ Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
 Notation var := (var L) (only parsing).
 Notation apply := (apply L) (only parsing).
-Notation equal := (equal L) (only parsing).
 Notation atomic := (atomic L) (only parsing).
 
 (* Notation notH := (notH L) (only parsing). *)

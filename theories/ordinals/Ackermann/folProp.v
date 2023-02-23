@@ -17,7 +17,6 @@ Notation Terms := (Terms L) (only parsing).
   
 Let var := var L.
 Let apply := apply L.
-Let equal := equal L.
 Let atomic := atomic L.
 Let lt_depth := lt_depth L.
 
@@ -423,13 +422,13 @@ Proof.
          (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
+                 {y : fol.Formula L | depth L y = depth L (equal  t t0)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L => 
-                      depth L y = depth L (fol.equal L t t0))
+                      depth L y = depth L (equal t t0))
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
-                   (refl_equal (depth L (fol.equal L t t0)))) H)
+                   (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
               (t : fol.Terms L (arity L (inl (Functions L) r)))
               (H : nat * fol.Term L) =>
@@ -453,13 +452,13 @@ Proof.
          (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
+                 {y : fol.Formula L | depth L y = depth L (equal t t0)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L => 
-                      depth L y = depth L (fol.equal L t t0))
+                      depth L y = depth L (equal t t0))
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
-                   (refl_equal (depth L (fol.equal L t t0)))) H)
+                   (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
               (t : fol.Terms L (arity L (inl (Functions L) r)))
               (H : nat * fol.Term L) =>
@@ -500,13 +499,13 @@ Proof.
          (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.equal L t t0)})
+                 {y : fol.Formula L | depth L y = depth L (equal t t0)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L => depth L y = 
-                                               depth L (fol.equal L t t0))
+                                               depth L (equal t t0))
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
-                   (refl_equal (depth L (fol.equal L t t0)))) H)
+                   (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
               (t : fol.Terms L (arity L (inl (Functions L) r)))
               (H : nat * fol.Term L) =>

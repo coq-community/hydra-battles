@@ -7,9 +7,9 @@ Section bare_syntax.
 Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
-           (equal _ (var _ 0) 
+           (equal  (var _ 0) 
               (apply LNN Languages.Zero (Tnil _)))
-           (existH _ 1 (equal _ (var _ 0)
+           (existH _ 1 (equal (var _ 0)
                           (apply LNN Languages.Succ 
                              (Tcons _ 0 (var _ 1) (Tnil _)))))).
 (* end snippet uglyF0 *)

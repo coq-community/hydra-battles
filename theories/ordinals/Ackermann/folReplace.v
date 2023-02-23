@@ -17,7 +17,6 @@ Let Term := Term L.
 Let Terms := Terms L.
 Let var := var L.
 Let apply := apply L.
-Let equal := equal L.
 Let atomic := atomic L.
 Let existH := existH L.
 Let ifThenElseH := ifThenElseH L.

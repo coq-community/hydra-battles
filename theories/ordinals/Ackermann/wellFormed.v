@@ -480,7 +480,6 @@ Hypothesis
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.
 
 Let Formula := Formula L.
-Let equal := equal L.
 Let atomic := atomic L.
 
 Definition wellFormedFormula : nat -> nat :=

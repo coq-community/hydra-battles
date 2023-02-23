@@ -995,7 +995,7 @@ apply eqSym.
 apply
  impE
   with
-    (fol.equal LNN (Succ (var nv))
+    (equal (Succ (var nv))
        (natToTerm (S (codeList (map (codeFormula L codeF codeR) A))))).
 apply sysWeaken.
 fold var in |- *.

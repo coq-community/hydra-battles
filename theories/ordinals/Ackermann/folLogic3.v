@@ -24,7 +24,6 @@ Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
 Let var := var L.
 Let apply := apply L.
-Let equal := equal L.
 Let atomic := atomic L.
 Let existH := existH L.
 Let ifThenElseH := ifThenElseH L.
@@ -270,7 +269,7 @@ Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
            (nat_rec (fun _ : nat => fol.Formula L) f0
               (fun (n : nat) (Hrecn : fol.Formula L) =>
                  impH 
-                   (fol.equal L (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
+                   (equal (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
               n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.
   intros H.
@@ -297,7 +296,7 @@ Proof.
         simpl in |- *.
         repeat apply Nat.lt_lt_succ_r.
         auto.
-    + apply (impE L) with (fol.equal L (m0 (n + n)) (m0 (S (n + n)))).
+    + apply (impE L) with (equal (m0 (n + n)) (m0 (S (n + n)))).
       * apply H2.
       * rewrite Nat.add_succ_r in H1.
         repeat rewrite H1.
@@ -402,7 +401,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            fol.equal L (fol.apply L f a) (fol.apply L f b)) 
+            equal (fol.apply L f a) (fol.apply L f b)) 
          (nVars L n)) 
       with
       (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).

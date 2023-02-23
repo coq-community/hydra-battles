@@ -405,7 +405,7 @@ Proof.
                                               + apply
                                                  impE
                                                   with
-                                                    (fol.equal LNN
+                                                    (fol.equal 
                                                        (apply LNN Languages.Plus
                                                           (Tcons LNN 1 (natToTerm n)
                                                              (Tcons LNN 0
@@ -518,7 +518,7 @@ Proof.
                      repeat
                       (rewrite (subTermNil LNN (natToTerm a)); [| apply closedNatToTerm ]).
                      replace
-                      (fol.equal LNN
+                      (fol.equal 
                          (apply LNN Languages.Plus
                             (Tcons LNN 1
                                (apply LNN Languages.Times
@@ -886,7 +886,7 @@ Proof.
         repeat rewrite (subFormulaEqual LNN). simpl in |- *.
         destruct (Nat.eq_dec n n); try lia.
         replace
-          (fol.equal LNN (fol.var LNN 0)
+          (fol.equal  (fol.var LNN 0)
             (substituteTerm LNN (natToTerm a) (S n)
               (natToTerm a0)))
           with
@@ -1020,7 +1020,7 @@ Proof.
            iffTrans
              with
               (existH (n + S w)
-                 (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                 (andH (fol.equal (var (S (n + w))) (natToTerm (snd a)))
                     (addExists (S w) n
                        (andH (FormulasToFormula 0 w n v)
                           (subAllFormula LNN B
@@ -1037,17 +1037,17 @@ Proof.
                     (SysPrf
                        (Ensembles.Add (fol.Formula LNN) NN
                           (andH
-                             (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                             (andH (fol.equal  (var (S (n + w))) (natToTerm (snd a)))
                                 (FormulasToFormula 0 w n v))
                              (subAllFormula LNN B
                                 (fun x : nat =>
                                  match x with
                                  | O => var 0
                                  | S x' => var (S (x' + w))
-                                 end)))) (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))).
+                                 end)))) (fol.equal (var (S (n + w))) (natToTerm (snd a)))).
                    +++ generalize
                         (andH
-                           (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                           (andH (fol.equal (var (S (n + w))) (natToTerm (snd a)))
                               (FormulasToFormula 0 w n v))
                            (subAllFormula LNN B
                               (fun x : nat =>
@@ -1073,7 +1073,7 @@ Proof.
                          with
                            (addExists (S w) n
                               (andH
-                                 (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                                 (andH (fol.equal (var (S (n + w))) (natToTerm (snd a)))
                                     (FormulasToFormula 0 w n v))
                                  (subAllFormula LNN B
                                     (fun x : nat =>
@@ -1101,12 +1101,12 @@ Proof.
                                  | O => var 0
                                  | S x' => var (S (x' + w))
                                  end)))).
-                   +++ apply impE with (fol.equal LNN (var (S (n + w))) (natToTerm (snd a))).
+                   +++ apply impE with (fol.equal (var (S (n + w))) (natToTerm (snd a))).
                        --- apply sysWeaken. apply impI.
                            cut
                             (SysPrf
                                (Ensembles.Add (fol.Formula LNN) NN
-                                  (fol.equal LNN (var (S (n + w))) (natToTerm (snd a))))
+                                  (fol.equal (var (S (n + w))) (natToTerm (snd a))))
                                (impH
                                   (andH (FormulasToFormula 0 w n v)
                                      (subAllFormula LNN B
@@ -1116,7 +1116,7 @@ Proof.
                                          | S x' => var (S (x' + w))
                                          end)))
                                   (andH
-                                     (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                                     (andH (fol.equal (var (S (n + w))) (natToTerm (snd a)))
                                         (FormulasToFormula 0 w n v))
                                      (subAllFormula LNN B
                                         (fun x : nat =>
@@ -1133,7 +1133,7 @@ Proof.
                                        | S x' => var (S (x' + w))
                                        end)))
                                 (andH
-                                   (andH (fol.equal LNN (var (S (n + w))) (natToTerm (snd a)))
+                                   (andH (fol.equal (var (S (n + w))) (natToTerm (snd a)))
                                       (FormulasToFormula 0 w n v))
                                    (subAllFormula LNN B
                                       (fun x : nat =>

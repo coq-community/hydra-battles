@@ -242,7 +242,6 @@ Proof.
   - repeat rewrite translateLT1; simpl.
     unfold newVar; simpl; fold var; fold (Succ (var 3)).
     fold (Succ (var 1)); fold (Plus (var 0) (Succ (var 3))).
-    fold equal.
     fold (fol.existH LNT 3 (equal (Plus (var 0) (Succ (var 3))) 
                               (Succ (var 1)))).
     fold (fol.existH LNT 3 (equal (Plus (var 0)
@@ -329,7 +328,6 @@ Proof.
   fold (Succ (var 3)) in |- *.
   fold (Plus (var 0) (Succ (var 3))) in |- *.
   fold (Plus (var 1) (Succ (var 3))) in |- *.
-  fold equal in |- *.
   fold (fol.existH LNT 3 (equal (Plus (var 0) (Succ (var 3))) (var 1))) in |- *.
   fold (fol.existH LNT 3 (equal (Plus (var 1) (Succ (var 3))) (var 0))) in |- *.
   fold existH in |- *.

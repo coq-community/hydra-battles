@@ -15,7 +15,6 @@ Let Term := Term L.
 Let Terms := Terms L.
 Let var := var L.
 Let apply := apply L.
-Let equal := equal L.
 Let atomic := atomic L.
 
 Fixpoint nVars (n: nat) : Terms n * Terms n:=

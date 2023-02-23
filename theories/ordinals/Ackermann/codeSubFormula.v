@@ -232,8 +232,8 @@ Definition makeTrace : fol.Formula L -> nat * fol.Term L -> nat :=
     (fun (t t0 : fol.Term L) (p : nat * fol.Term L) =>
      let v := fst p in
      let s := snd p in
-     cTriple (cTriple v (codeTerm s) (codeFormula (equal L t t0)))
-       (codeFormula (substituteFormula L (equal L t t0) v s)) 0)
+     cTriple (cTriple v (codeTerm s) (codeFormula (equal t t0)))
+       (codeFormula (substituteFormula L (equal t t0) v s)) 0)
     (fun (r : Relations L) t (p : nat * fol.Term L) =>
      let v := fst p in
      let s := snd p in
@@ -4704,8 +4704,8 @@ Proof.
     set
       (C :=
          Nat.max (codeTerm s)
-           (pow3 (depth L (equal L t t0)) +
-              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (equal L t t0)))).
+           (pow3 (depth L (equal t t0)) +
+              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (equal t t0)))).
     simpl; repeat rewrite cPairProjections1.
     unfold A at 1; 
       repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -5146,8 +5146,8 @@ Proof.
                    (freeVarTerm L s ++ freeVarTerm L t ++ freeVarTerm L t0)) 
                 (codeTerm s)).
     + apply Nat.le_max_l.
-    + apply (H0 (equal L t t0) v s).
-    + apply (E (equal L t t0) v s).
+    + apply (H0 (equal t t0) v s).
+    + apply (E (equal t t0) v s).
     + apply le_n.
   - intros r t v s C; simpl; unfold makeTrace in |- *.
     unfold Formula_depth_rec2, Formula_depth_rec; simpl.

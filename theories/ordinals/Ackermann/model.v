@@ -425,7 +425,7 @@ Qed.
 
 Fixpoint nnHelp (f : Formula L) : Formula L :=
   match f with
-  | equal t s => equal L t s
+  | equal t s => equal t s
   | atomic r ts => atomic L r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
@@ -616,7 +616,7 @@ Proof.
                          (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
                          (nVars L (arity L (inl (Functions L) R))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var L (n + n)) (var L (S (n + n)))) Hrecn)
                       (arity L (inl (Functions L) R))))).
         { generalize (arity L (inl (Functions L) R)).
           simple induction n.
@@ -658,7 +658,7 @@ Proof.
       cut
         (forall a b : Terms L (arity L (inr (Relations L) f)),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (equal L (apply L f a) (apply L f b)))).
+            interpFormula value (nnHelp (equal (apply L f a) (apply L f b)))).
       * assert
           (H: forall A,
               (forall a b : Terms L (arity L (inr (Relations L) f)),
@@ -676,7 +676,7 @@ Proof.
                          (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
                          (nVars L (arity L (inr (Relations L) f))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var L (n + n)) (var L (S (n + n)))) Hrecn)
                       (arity L (inr (Relations L) f))))).
         { generalize (arity L (inr (Relations L) f)).
           simple induction n.
@@ -693,7 +693,7 @@ Proof.
             simpl; rewrite H1.
             now rewrite H2.
         }
-        apply (H (fun a b => equal L (apply L f a) (apply L f b))).
+        apply (H (fun a b => equal (apply L f a) (apply L f b))).
       * simpl; generalize (func M f).
         generalize (arity L (inr (Relations L) f)).
         intros n n0 a b H.
@@ -716,10 +716,10 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH (equal L (var  L 0) (var L 0))).
+  intros H; unfold Consistent; exists (notH (equal (var  L 0) (var L 0))).
   intros H0; assert
                (H1: interpFormula value
-                      (nnTranslate (notH  (equal L (var L 0) (var L 0))))).
+                      (nnTranslate (notH  (equal (var L 0) (var L 0))))).
   { apply preserveValue.
     assumption.
     auto.

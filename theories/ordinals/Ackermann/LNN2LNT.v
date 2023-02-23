@@ -424,7 +424,7 @@ Qed.
 
 Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   match f with
-  | fol.equal t1 t2 => fol.equal LNN (LNT2LNN_term t1) (LNT2LNN_term t2)
+  | fol.equal t1 t2 => fol.equal (LNT2LNN_term t1) (LNT2LNN_term t2)
   | atomic r ts => match r with
                    end
   | fol.impH A B => impH (LNT2LNN_formula A) (LNT2LNN_formula B)
