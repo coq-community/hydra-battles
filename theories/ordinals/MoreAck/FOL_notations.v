@@ -6,7 +6,7 @@ Declare Scope fol_scope.
 Delimit Scope fol_scope with fol.
 
 Infix "=" := (fol.equal _): fol_scope.
-Infix "\/" := (fol.orH _): fol_scope.
+Infix "\/" := (fol.orH): fol_scope.
 Infix "/\" := (fol.andH _):fol_scope.
 Infix "->" := (fol.impH): fol_scope.
 Notation "~ A" := (@fol.notH _ A): fol_scope. 

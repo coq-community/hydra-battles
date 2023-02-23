@@ -1261,7 +1261,7 @@ Proof.
                      apply iffRefl.
                      apply orE with
                        (LNN2LNT_formula
-                          (fol.orH LNN
+                          (orH 
                              (LNN.LT (fol.var LNN 1) 
                                 (natToTermLNN (codePrf x0 (notH x) x1)))
                              (LNT2LNN_formula
@@ -1275,10 +1275,10 @@ Proof.
                        impE
                        with
                        (LNN2LNT_formula
-                          (fol.orH LNN
+                          (orH 
                              (LNN.LT (fol.var LNN 1) 
                                 (natToTermLNN (codePrf x0 (notH x) x1)))
-                             (fol.orH LNN
+                             (orH
                                 (LNT2LNN_formula
                                    (equal (var 1) 
                                       (natToTerm (codePrf x0 (notH x) x1))))
@@ -1389,7 +1389,7 @@ Proof.
                      apply Axm; left; right; constructor.
                      apply impE with
                        (LNN2LNT_formula
-                          (fol.orH LNN
+                          (orH
                              (LNN.LT (fol.var LNN 1) 
                                 (natToTermLNN (codePrf x0 (notH x) x1)))
                              (LNT2LNN_formula
@@ -1399,7 +1399,7 @@ Proof.
                      replace
                        (impH
                           (LNN2LNT_formula
-                             (fol.orH LNN
+                             (orH
                                 (LNN.LT (fol.var LNN 1) 
                                    (natToTermLNN (codePrf x0 (notH x) x1)))
                                 (LNT2LNN_formula
@@ -1411,7 +1411,7 @@ Proof.
                        with
                        (LNN2LNT_formula
                           (impH 
-                             (fol.orH LNN
+                             (orH 
                                 (LNN.LT (fol.var LNN 1) 
                                    (natToTermLNN (codePrf x0 (notH x) x1)))
                                 (LNT2LNN_formula

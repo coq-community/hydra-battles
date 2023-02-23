@@ -6,7 +6,7 @@ Section bare_syntax.
 (* begin snippet uglyF0 *)
 Definition  f0 : Formula LNN :=
       forallH 0 
-        (orH _ 
+        (orH  
            (equal _ (var _ 0) 
               (apply LNN Languages.Zero (Tnil _)))
            (existH _ 1 (equal _ (var _ 0)

@@ -78,7 +78,7 @@ simple induction m.
         (H1: SysPrf PA
                (LNN2LNT_formula
                   (impH (LNN.LT (fol.var LNN x) (LNN.Succ (LNN.natToTerm n)))
-                     (LNN.orH (LNN.LT (fol.var LNN x) (LNN.natToTerm n))
+                     (orH (LNN.LT (fol.var LNN x) (LNN.natToTerm n))
                         (LNN.equal (fol.var LNN x) (LNN.natToTerm n))))))
       by (apply NN2PA, nn8). 
       simpl in H1; simpl. 

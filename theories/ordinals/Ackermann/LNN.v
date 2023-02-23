@@ -18,7 +18,6 @@ Definition Terms := Terms LNN.
 Definition var := var LNN.
 Definition equal := equal LNN.
 Definition iffH := iffH LNN.
-Definition orH := orH LNN.
 Definition andH := andH LNN.
 Definition existH := existH LNN.
 Definition ifThenElseH := ifThenElseH LNN.

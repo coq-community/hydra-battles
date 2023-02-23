@@ -716,5 +716,5 @@ Arguments Terms_Term_rec_full L P P0 : rename.
 Arguments impH {L} _ _.
 Arguments notH {L} _.
 Arguments forallH {L} _ _.
-
+Arguments orH {L} _ _.
 

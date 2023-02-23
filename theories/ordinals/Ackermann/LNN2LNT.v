@@ -88,7 +88,7 @@ Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   end.
 
 Lemma LNN2LNT_or (a b : fol.Formula LNN):
-  LNN2LNT_formula (fol.orH LNN a b) =
+  LNN2LNT_formula (orH a b) =
     orH (LNN2LNT_formula a) (LNN2LNT_formula b).
 Proof. reflexivity. Qed.
 

@@ -944,7 +944,7 @@ apply forallI.
 apply H7.
 apply nAnd.
 unfold orH at 1 in |- *.
-unfold fol.orH in |- *.
+(* unfold fol.orH in |- *. *)
 apply
  impTrans
   with
@@ -954,6 +954,8 @@ apply impI.
 apply nnE.
 apply Axm; right; constructor.
 apply impI.
+
+
 rewrite <-
  (subFormulaId LNN
     (notH
@@ -1532,7 +1534,7 @@ Proof.
 intros.
 unfold codeSysPrf in H.
 set (nv := newVar (2 :: 1 :: 0 :: v0 :: nil)) in *.
-unfold existH, andH, orH in H.
+unfold existH, andH in H.
 repeat
  match goal with
  | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -1553,7 +1555,7 @@ repeat
  | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.orH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (fol.orH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
  | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
