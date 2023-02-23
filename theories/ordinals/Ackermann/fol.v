@@ -717,4 +717,7 @@ Arguments impH {L} _ _.
 Arguments notH {L} _.
 Arguments forallH {L} _ _.
 Arguments orH {L} _ _.
+Arguments andH {L} _ _.
+
+
 

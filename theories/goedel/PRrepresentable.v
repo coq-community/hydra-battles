@@ -2613,7 +2613,7 @@ Ltac PRsolveFV A B n :=
         assert (In X3 (freeVarFormula LNN X2));
          [ eapply In_list_remove1; apply H
          | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+    | H:(In ?X3 (freeVarFormula LNN (fol.andH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
     | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
@@ -2678,7 +2678,7 @@ Proof.
          iffTrans
           with
             (fol.existH LNN 2
-               (fol.andH LNN
+               (andH
                   (minimize
                      (substituteFormula LNN (primRecSigmaFormulaHelp 0 A B) 1
                         (natToTerm a))
@@ -2707,7 +2707,7 @@ Proof.
               iffTrans
                with
                  (fol.existH LNN 2
-                    (fol.andH LNN (equal (var 2) (natToTerm x))
+                    (andH (equal (var 2) (natToTerm x))
                        (substituteFormula LNN betaFormula 1 (natToTerm a)))).
              -- apply (reduceExist LNN).
                 ** apply closedNN.
@@ -3399,7 +3399,7 @@ Proof.
                                    impE
                                     with
                                       (existH 0
-                                         (fol.andH LNN
+                                         (andH
                                             (substituteFormula LNN (substituteFormula LNN A 1 (natToTerm a)) 2
                                                (natToTerm b))
                                             (substituteFormula LNN
@@ -3472,13 +3472,13 @@ Proof.
                                                     (natToTerm b))
                                                  (existH 0
                                                     (existH 1
-                                                       (fol.andH LNN
+                                                       (andH
                                                           (substituteFormula LNN
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
                                                                    (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                    (var 2)) 0 (var 1)) 2 (natToTerm b))
-                                                          (fol.andH LNN
+                                                          (andH 
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN B 2 (var 3)) 2
                                                                 (natToTerm b))
@@ -3499,13 +3499,13 @@ Proof.
                                                     (natToTerm b))
                                                  (existH 0
                                                     (existH 1
-                                                       (fol.andH LNN
+                                                       (andH 
                                                           (substituteFormula LNN
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN
                                                                    (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                    (var 2)) 0 (var 1)) 2 (natToTerm b))
-                                                          (fol.andH LNN
+                                                          (andH
                                                              (substituteFormula LNN
                                                                 (substituteFormula LNN B 2 (var 3)) 2
                                                                 (natToTerm b))
@@ -3525,7 +3525,7 @@ Proof.
                                               with
                                                 (existH 0
                                                    (existH 1
-                                                      (fol.andH LNN
+                                                      (andH
                                                          (substituteFormula LNN
                                                             (substituteFormula LNN
                                                                (substituteFormula LNN
@@ -3533,7 +3533,7 @@ Proof.
                                                                      (substituteFormula LNN betaFormula 1 (var 3)) 2
                                                                      (var 2)) 0 (var 1)) 2 (natToTerm b)) 3
                                                             (natToTerm x0))
-                                                         (fol.andH LNN
+                                                         (andH
                                                             (substituteFormula LNN
                                                                (substituteFormula LNN (substituteFormula LNN B 2 (var 3))
                                                                   2 (natToTerm b)) 3 (natToTerm x0))
@@ -4583,7 +4583,7 @@ Proof.
                 assert (H15 := I). (* For hyps numbering compatibility *)
                 assert (H16 := I). (* For hyps numbering compatibility *)
 Opaque substituteFormula.
-                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp, andH;
+                unfold minimize, primRecSigmaFormulaHelp, primRecPiFormulaHelp;
                  repeat first
                   [ discriminate
                   | simple apply iffRefl
@@ -5362,7 +5362,7 @@ Opaque substituteFormula.
       destruct (proj1 (Nat.lt_eq_cases v0 (S (S n))) H7) as [H8 | H8].
       + now apply Nat.lt_succ_r. 
       + elim H6; assumption. }
-    unfold primRecSigmaFormula, minimize, existH, andH in H4;
+    unfold primRecSigmaFormula, minimize, existH in H4;
      repeat
       match goal with
       | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -5383,7 +5383,7 @@ Opaque substituteFormula.
           assert (In X3 (freeVarFormula LNN X2));
            [ eapply In_list_remove1; apply H
            | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-      | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+      | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
       | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>

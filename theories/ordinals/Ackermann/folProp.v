@@ -653,7 +653,6 @@ Qed.
 
 Section Extensions.
 
-Let andH := andH L.
 Let existH := existH L.
 Let iffH := iffH L.
 Let ifThenElseH := ifThenElseH L.

@@ -7,7 +7,7 @@ Delimit Scope fol_scope with fol.
 
 Infix "=" := (fol.equal _): fol_scope.
 Infix "\/" := (fol.orH): fol_scope.
-Infix "/\" := (fol.andH _):fol_scope.
+Infix "/\" := (fol.andH):fol_scope.
 Infix "->" := (fol.impH): fol_scope.
 Notation "~ A" := (@fol.notH _ A): fol_scope. 
 Notation atH := (fol.atomic _).
@@ -65,7 +65,7 @@ Notation v_ := (fol.var _).
   Goal forall L A B, @orH L A B = (A \/ B)%cfol. 
    reflexivity. Qed. 
   
-  Goal forall L A B, andH  L A B = (A /\ B)%cfol. 
+  Goal forall L A B, andH (L:=L) A B = (A /\ B)%cfol. 
     reflexivity. Qed.  
   
 

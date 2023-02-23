@@ -219,7 +219,7 @@ Proof.
                      +++ unfold N; apply closedNatToTerm.
               ** apply Axm; right; constructor.
   - intro x; split.
-    + intro H4; unfold Theta at 1 in H4; unfold existH, andH in H4.
+    + intro H4; unfold Theta at 1 in H4; unfold existH in H4.
       induction represent as (H5, H6).
       repeat
         match goal with
@@ -238,7 +238,7 @@ Proof.
             assert (In X3 (freeVarFormula LNN X2));
             [ eapply In_list_remove1; apply H
             | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-        | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
             [ apply H | clear H ]
         | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
@@ -554,7 +554,7 @@ Proof.
               ** apply Axm; right; constructor.
   - intro x; split.
     + intro H4; unfold Theta at 1 in H4.
-      unfold existH, andH in H4.
+      unfold existH in H4.
       induction represent as (H5, H6).
       repeat
         match goal with
@@ -573,7 +573,7 @@ Proof.
             assert (In X3 (freeVarFormula LNT X2));
             [ eapply In_list_remove1; apply H
             | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-        | H:(In ?X3 (freeVarFormula LNT (fol.andH LNT ?X1 ?X2))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNT (andH  ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNT X1 ++ freeVarFormula LNT X2));
             [ apply H | clear H ]
         | H:(In ?X3 (freeVarFormula LNT (fol.impH LNT ?X1 ?X2))) |- _ =>

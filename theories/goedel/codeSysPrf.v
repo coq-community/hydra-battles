@@ -793,7 +793,7 @@ apply
   with
     (forallH nv
        (notH
-          (fol.andH LNN
+          (andH 
              (equal (Succ (var nv))
                 (natToTerm
                    (checkPrf L codeF codeR codeArityF codeArityR
@@ -1534,7 +1534,7 @@ Proof.
 intros.
 unfold codeSysPrf in H.
 set (nv := newVar (2 :: 1 :: 0 :: v0 :: nil)) in *.
-unfold existH, andH in H.
+unfold existH in H.
 repeat
  match goal with
  | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
@@ -1552,7 +1552,7 @@ repeat
      assert (In X3 (freeVarFormula LNN X2));
       [ eapply In_list_remove1; apply H
       | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
- | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
  | H:(In ?X3 (freeVarFormula LNN (fol.orH ?X1 ?X2))) |- _ =>

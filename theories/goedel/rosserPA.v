@@ -569,7 +569,7 @@ Proof.
          fol.forallH  1
            (impH codeSysPrf
               (fol.existH LNN 2
-                 (fol.andH LNN (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
+                 (andH (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
                     (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))). 
   destruct (FixPointLNT (LNN2LNT_formula A) 0) as [x [H0 H1]].
   exists x; split.
@@ -664,7 +664,7 @@ Proof.
                      apply  impE  with
                        (existH 2
                           (substituteFormula LNT
-                             (fol.andH LNT
+                             (andH 
                                 (LNN2LNT_formula (LNN.LT (fol.var LNN 2) 
                                                     (fol.var LNN 1)))
                                 (substituteFormula LNT
@@ -694,7 +694,7 @@ Proof.
                          *** apply impE with
                                (existH 2
                                   (substituteFormula LNT
-                                     (fol.andH LNT
+                                     (andH
                                         (substituteFormula LNT
                                            (LNN2LNT_formula 
                                               (LNN.LT (fol.var LNN 2) 
@@ -727,7 +727,7 @@ Proof.
                                (existH 2
                                   (substituteFormula LNT
                                      (substituteFormula LNT
-                                        (fol.andH LNT
+                                        (andH
                                            (LNN2LNT_formula 
                                               (LNN.LT (fol.var LNN 2) (fol.var LNN 1)))
                                            (LNN2LNT_formula
@@ -739,7 +739,7 @@ Proof.
                                (substituteFormula LNT
                                   (existH 2
                                      (substituteFormula LNT
-                                        (fol.andH LNT
+                                        (andH
                                            (LNN2LNT_formula 
                                               (LNN.LT (fol.var LNN 2) 
                                                  (fol.var LNN 1)))
@@ -751,7 +751,7 @@ Proof.
                              replace
                                (existH 2
                                   (substituteFormula LNT
-                                     (fol.andH LNT (LNN2LNT_formula
+                                     (andH (LNN2LNT_formula
                                                       (LNN.LT (fol.var LNN 2) 
                                                          (fol.var LNN 1)))
                                         (LNN2LNT_formula
@@ -760,7 +760,7 @@ Proof.
                                      (natToTerm (codeFormula x)))) with
                                (substituteFormula LNT
                                   (existH 2
-                                     (fol.andH LNT (LNN2LNT_formula
+                                     (andH (LNN2LNT_formula
                                                       (LNN.LT (fol.var LNN 2) 
                                                          (fol.var LNN 1)))
                                         (LNN2LNT_formula
@@ -782,7 +782,7 @@ Proof.
                                   (substituteFormula LNT
                                      (impH (LNN2LNT_formula codeSysPrf)
                                         (existH 2
-                                           (fol.andH LNT
+                                           (andH
                                               (LNN2LNT_formula 
                                                  (LNN.LT (fol.var LNN 2) 
                                                     (fol.var LNN 1)))
@@ -796,7 +796,7 @@ Proof.
                                   (forallH 1
                                      (impH (LNN2LNT_formula codeSysPrf)
                                         (existH 2
-                                           (fol.andH LNT
+                                           (andH
                                               (LNN2LNT_formula 
                                                  (LNN.LT (fol.var LNN 2) 
                                                     (fol.var LNN 1)))
@@ -867,7 +867,7 @@ Proof.
                   (nat_rec (fun _ => fol.Formula LNN) 
                      (LNT2LNN_formula (equal Zero Zero))
                      (fun (n : nat) rec =>
-                        fol.andH LNN
+                        andH
                           (notH
                              (substituteFormula LNN
                                 (substituteFormula LNN codeSysPrfNot 0
@@ -884,7 +884,7 @@ Proof.
                        | O => LNT2LNN_formula (equal Zero Zero)
                        | S n0 =>
                            (fun (n1 : nat) (rec : fol.Formula LNN) =>
-                              fol.andH LNN
+                             andH 
                                 (notH
                                    (substituteFormula LNN
                                       (substituteFormula LNN codeSysPrfNot 0
@@ -894,7 +894,7 @@ Proof.
                assert
                  (H4: In x2
                         (freeVarFormula LNN
-                           (fol.andH LNN
+                           (andH
                               (notH
                                  (substituteFormula LNN
                                     (substituteFormula LNN codeSysPrfNot 0
@@ -973,7 +973,7 @@ Proof.
                                        | O => LNT2LNN_formula (equal Zero Zero)
                                        | S n2 =>
                                            (fun (n3 : nat) (rec : fol.Formula LNN) =>
-                                              fol.andH LNN
+                                              andH
                                                 (notH
                                                    (substituteFormula LNN
                                                       (substituteFormula LNN 
@@ -1094,7 +1094,7 @@ Proof.
                           (forallH  1
                              (impH codeSysPrf
                                 (fol.existH LNN 2
-                                   (fol.andH LNN 
+                                   (andH
                                       (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
                                       (substituteFormula LNN codeSysPrfNot 1
                                          (fol.var LNN 2)))))))
@@ -1123,7 +1123,7 @@ Proof.
                      (nat_rec (fun _ => fol.Formula LNN) 
                         (LNT2LNN_formula (equal Zero Zero))
                         (fun (n : nat) rec =>
-                           fol.andH LNN
+                           andH 
                              (notH
                                 (substituteFormula LNN
                                    (substituteFormula LNN codeSysPrf 0
@@ -1137,7 +1137,7 @@ Proof.
                 cut
                   (In x2
                      (freeVarFormula LNN
-                        (fol.andH LNN
+                        (andH 
                            (notH
                               (substituteFormula LNN
                                  (substituteFormula LNN codeSysPrf 0
@@ -1148,7 +1148,7 @@ Proof.
               | O => LNT2LNN_formula (equal Zero Zero)
               | S n0 =>
                   (fun (n1 : nat) (rec : fol.Formula LNN) =>
-                   fol.andH LNN
+                   andH
                      (notH 
                         (substituteFormula LNN
                            (substituteFormula LNN codeSysPrf 0
@@ -1178,7 +1178,7 @@ Proof.
                                     (nat_rec (fun _ : nat => fol.Formula LNN)
                                        (LNT2LNN_formula (equal Zero Zero))
                                        (fun (n : nat) (rec : fol.Formula LNN) =>
-                                          fol.andH LNN
+                                          andH
                                             (notH
                                                (substituteFormula LNN
                                                   (substituteFormula LNN codeSysPrf 0
@@ -1229,7 +1229,7 @@ Proof.
                                 (code.codeFormula LNT codeLNTFunction 
                                    codeLNTRelation x)))
                           (fol.existH LNT 2
-                             (fol.andH LNT
+                             (andH
                                 (LNN2LNT_formula (LNN.LT (fol.var LNN 2) 
                                                     (fol.var LNN 1)))
                                 (substituteFormula LNT
@@ -1332,7 +1332,7 @@ Proof.
                           (nat_rec (fun _ : nat => fol.Formula LNN)
                              (LNT2LNN_formula (equal Zero Zero))
                              (fun (n1 : nat) (rec : fol.Formula LNN) =>
-                                fol.andH LNN
+                                andH 
                                   (notH
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrf 0
