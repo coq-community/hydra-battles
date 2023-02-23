@@ -28,7 +28,6 @@ Notation atomic := (atomic L) (only parsing).
 
 (* Notation notH := (notH L) (only parsing). *)
 (* Notation forallH := (forallH L) (only parsing). *)
-Notation iffH := (iffH L) (only parsing).
 Notation SysPrf := (SysPrf L) (only parsing).
 
 Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
@@ -416,7 +415,7 @@ Lemma subSubAllFormula :
   forall (T : fol.System L) (f : fol.Formula L) (m : nat -> fol.Term L)
          (v : nat) (s : fol.Term L),
     folProof.SysPrf L T
-      (fol.iffH L (substituteFormula L (subAllFormula f m) v s)
+      (iffH (substituteFormula L (subAllFormula f m) v s)
          (subAllFormula f (fun n : nat => substituteTerm L (m n) v s))).
 Proof.
   intros T f.  revert T. 
@@ -519,7 +518,7 @@ Proof.
                             | left _ => fol.var L nv1
                             | right _ => m v1
                             end nv1 (fol.var L x))).
-                  ---  fold (folProof.SysPrf L); fold (fol.iffH L).
+                  ---  fold (folProof.SysPrf L); 
                        apply
                          H
                          with
@@ -712,7 +711,7 @@ Qed.
 
 Lemma subAllFormulaId (T : fol.System L) (f : fol.Formula L):
  folProof.SysPrf L T
-   (fol.iffH L (subAllFormula f (fun x : nat => fol.var L x)) f).
+   (iffH (subAllFormula f (fun x : nat => fol.var L x)) f).
 Proof.
   apply (sysExtend L) with (Empty_set (fol.Formula L)).
   - intros x H; contradiction H.
@@ -815,7 +814,7 @@ Qed.
 Lemma subAllSubAllFormula (T : fol.System L) (f : fol.Formula L):
  forall  (m1 m2 : nat -> fol.Term L),
  folProof.SysPrf L T
-   (fol.iffH L (subAllFormula (subAllFormula f m1) m2)
+   (iffH (subAllFormula (subAllFormula f m1) m2)
       (subAllFormula f (fun n : nat => subAllTerm (m1 n) m2))).
 Proof.
   revert T.
@@ -1453,13 +1452,13 @@ Qed.
 Lemma reduceSubAll :
   forall (T : fol.System L) (map : nat -> fol.Term L) (A B : fol.Formula L),
     (forall v : nat, ~ In_freeVarSys L v T) ->
-    folProof.SysPrf L T (fol.iffH L A B) ->
-    folProof.SysPrf L T (fol.iffH L (subAllFormula A map) (subAllFormula B map)).
+    folProof.SysPrf L T (iffH A B) ->
+    folProof.SysPrf L T (iffH (subAllFormula A map) (subAllFormula B map)).
 Proof.
   assert
     (H: forall (T : fol.System L) (map : nat -> fol.Term L) (A B : fol.Formula L),
         (forall v : nat, ~ In_freeVarSys L v T) ->
-        folProof.SysPrf L T (fol.iffH L A B) ->
+        folProof.SysPrf L T (iffH  A B) ->
         folProof.SysPrf L T
           (impH  (subAllFormula A map) (subAllFormula B map))).
   { intros T map A B H H0;
@@ -1498,7 +1497,7 @@ End subAllCloseFrom.
 
 Lemma subToSubAll (T : fol.System L) (A : fol.Formula L) (v : nat) (s : fol.Term L):
  folProof.SysPrf L T
-   (fol.iffH L (substituteFormula L A v s)
+   (iffH (substituteFormula L A v s)
       (subAllFormula A
          (fun x : nat =>
           match eq_nat_dec v x with
@@ -1533,7 +1532,7 @@ Lemma subAllSubFormula :
   forall (T : fol.System L) (A : fol.Formula L) (v : nat) 
          (s : fol.Term L) (map : nat -> fol.Term L),
     folProof.SysPrf L T
-      (fol.iffH L (subAllFormula (substituteFormula L A v s) map)
+      (iffH (subAllFormula (substituteFormula L A v s) map)
          (subAllFormula A
             (fun x : nat =>
                match eq_nat_dec v x with

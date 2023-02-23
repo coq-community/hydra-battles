@@ -2215,7 +2215,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
             (codeTerms L codeF (arity L (inl (Functions L) R)) b)))
         with
         (codeFormula L codeF codeR 
-           (iffH L (fol.atomic L R a) (fol.atomic L R b))).
+           (iffH (fol.atomic L R a) (fol.atomic L R b))).
     + generalize (arity L (inl (Functions L) R)).
       intros n; induction n as [| n Hrecn].
       * reflexivity.
@@ -3409,13 +3409,13 @@ Simpl in H0.
                         ((if Nat.eqb
                                (codeAxmEqHelp (arity L (inl (Functions L) x0))
                                   (codeFormula L codeF codeR 
-                                     (iffH L (atomic x0 a) (atomic x0 b))))
+                                     (iffH (atomic x0 a) (atomic x0 b))))
                                (codeFormula L codeF codeR x)
                           then 1
                           else 0) + 0 <> 0).
                       { 
                         fold atomic in |- *.
-                        generalize (iffH L (atomic x0 a) (atomic x0 b)).
+                        generalize (iffH (atomic x0 a) (atomic x0 b)).
                         intros f H5.
                         clear H0.
                         clear a b.

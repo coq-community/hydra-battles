@@ -654,7 +654,6 @@ Qed.
 Section Extensions.
 
 Let existH := existH L.
-Let iffH := iffH L.
 Let ifThenElseH := ifThenElseH L.
 
 Lemma subFormulaOr :

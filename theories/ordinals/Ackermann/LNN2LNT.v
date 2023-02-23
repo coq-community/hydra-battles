@@ -98,7 +98,7 @@ Lemma LNN2LNT_and (a b : fol.Formula LNN):
 Proof. reflexivity. Qed.
 
 Lemma LNN2LNT_iff (a b : fol.Formula LNN):
- LNN2LNT_formula (fol.iffH LNN a b) =
+ LNN2LNT_formula (iffH a b) =
    iffH (LNN2LNT_formula a) (LNN2LNT_formula b).
 Proof. reflexivity. Qed.
 

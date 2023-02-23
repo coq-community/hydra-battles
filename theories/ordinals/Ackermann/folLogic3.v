@@ -27,7 +27,6 @@ Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
 Let existH := existH L.
-Let iffH := iffH L.
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
@@ -333,7 +332,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            fol.iffH L (fol.atomic L r a) (fol.atomic L r b)) 
+            iffH (fol.atomic L r a) (fol.atomic L r b)) 
          (nVars L n)) with
       (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
    + generalize (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).

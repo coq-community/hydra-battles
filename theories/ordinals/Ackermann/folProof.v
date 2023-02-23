@@ -17,7 +17,6 @@ Let var := var L.
 Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
-Let iffH := iffH L.
 
 Fixpoint nVars (n: nat) : Terms n * Terms n:=
   match n with 

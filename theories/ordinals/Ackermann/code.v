@@ -25,7 +25,6 @@ Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
 Let existH := existH L.
-Let iffH := iffH L.
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.

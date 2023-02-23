@@ -16,7 +16,6 @@ Definition Term := Term LNT.
 Definition Terms := Terms LNT.
 Definition var := var LNT.
 Definition equal := equal LNT.
-Definition iffH := iffH LNT.
 Definition existH := existH LNT.
 Definition ifThenElseH := ifThenElseH LNT.
 Definition SysPrf := SysPrf LNT.

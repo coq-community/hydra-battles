@@ -4595,7 +4595,7 @@ Opaque substituteFormula.
                   | match goal with
                     |  |-
                     (folProof.SysPrf LNN NN
-                       (fol.iffH LNN
+                       (iffH 
                           (substituteFormula LNN
                              (substituteFormula LNN (existH (S (S n)) ?X1) ?X2
                                 (var (S (S n)))) ?X3 ?X4) _)) =>
@@ -4612,7 +4612,7 @@ Opaque substituteFormula.
                          |]
                     |  |-
                     (folProof.SysPrf LNN NN
-                       (fol.iffH LNN
+                       (iffH 
                           (substituteFormula LNN
                              (substituteFormula LNN
                                 (substituteFormula LNN (forallH (S (S n)) ?X1) ?X2
@@ -4631,7 +4631,7 @@ Opaque substituteFormula.
                          |]
                     |  |-
                     (folProof.SysPrf LNN NN
-                       (fol.iffH LNN
+                       (iffH 
                           (substituteFormula LNN (forallH (S ?X6) ?X1) ?X2 (var (S ?X6))) _))
                     =>
                         apply
@@ -4643,11 +4643,11 @@ Opaque substituteFormula.
                          [ repeat (apply (reduceSub LNN); [ apply closedNN |]);
                             apply (rebindForall LNN)
                          |]
-                    |  |- (folProof.SysPrf LNN NN (fol.iffH LNN (existH (S ?X1) ?X2) ?X3)) =>
+                    |  |- (folProof.SysPrf LNN NN (iffH (existH (S ?X1) ?X2) ?X3)) =>
                         apply
                          iffTrans with (existH X1 (substituteFormula LNN X2 (S X1) (var X1)));
                          [ apply (rebindExist LNN) |]
-                    |  |- (folProof.SysPrf LNN NN (fol.iffH LNN (forallH (S ?X1) ?X2) ?X3))
+                    |  |- (folProof.SysPrf LNN NN (iffH (forallH (S ?X1) ?X2) ?X3))
                     =>
                         apply
                          iffTrans

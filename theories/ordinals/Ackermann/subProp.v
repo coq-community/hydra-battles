@@ -22,7 +22,6 @@ Let apply := apply L.
 Let equal := equal L.
 Let atomic := atomic L.
 Let existH := existH L.
-Let iffH := iffH L.
 Let SysPrf := SysPrf L.
 
 Lemma freeVarSubTerm1 (t : Term):

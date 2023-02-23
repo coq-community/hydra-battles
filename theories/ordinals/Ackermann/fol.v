@@ -718,6 +718,7 @@ Arguments notH {L} _.
 Arguments forallH {L} _ _.
 Arguments orH {L} _ _.
 Arguments andH {L} _ _.
-
+(* To compile *)
+Arguments iffH {L} _ _.
 
 
