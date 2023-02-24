@@ -22,7 +22,6 @@ Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
-Let apply := apply L.
 Let codeFormula := codeFormula L codeF codeR.
 Let codeTerm := codeTerm L codeF.
 
@@ -3103,7 +3102,7 @@ Proof.
       * eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
         apply Nat.le_max_l.
   - unfold A; repeat rewrite cPairProjections1.
-    replace (codeTerm (fol.apply L f t0)) with
+    replace (codeTerm (apply f t0)) with
       (cPair (S (codeF f)) (codeTerms L codeF _ t0)); [ idtac | reflexivity ].
     repeat rewrite cPairProjections1.
     rewrite H with
@@ -3113,7 +3112,7 @@ Proof.
               (codeTerms L codeF (arity L (inr (Relations L) f)) t0))).
     + simpl; replace
                (codeTerm
-                  (fol.apply L f 
+                  (apply f 
                      (substituteTerms L (arity L (inr (Relations L) f)) t0 v s)))
         with
         (cPair (S (codeF f))
@@ -3329,7 +3328,7 @@ Proof.
     + reflexivity.
   - replace
       (codeTerm
-         (fol.apply L f
+         (apply f
             (substituteTerms L (arity L (inr (Relations L) f)) t0 v (var w))))
       with
       (cPair (S (codeF f))
@@ -3338,7 +3337,7 @@ Proof.
       [ idtac | reflexivity ].
     unfold A at 3 1 in |- *.
     repeat rewrite cPairProjections1.
-    replace (codeTerm (fol.apply L f t0)) with
+    replace (codeTerm (apply f t0)) with
       (cPair (S (codeF f)) (codeTerms L codeF _ t0)); [ idtac | reflexivity ].
     repeat rewrite H.
     + repeat rewrite cPairProjections1.

@@ -158,7 +158,7 @@ Proof.
                    { 
                      fold
                        (Succ
-                          (apply LNT Languages.Plus
+                          (@apply LNT Languages.Plus
                              (Tcons LNT 1 (var 1) 
                                 (Tcons LNT 0 Zero (Tnil LNT))))) 
                        in |- *.
@@ -176,7 +176,7 @@ Proof.
                    {
                      fold
                        (Succ
-                          (apply LNT Languages.Plus
+                          (@apply LNT Languages.Plus
                              (Tcons LNT 1 (var 1)
                                 (Tcons LNT 0 (Succ (var 0)) (Tnil LNT)))))
                        in |- *.

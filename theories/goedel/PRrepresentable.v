@@ -178,7 +178,7 @@ Proof.
                         rewrite subTermNil.
                         **** (* fold (var 4) in |- *. *)
                              replace 
-                               (apply LNN Languages.Succ 
+                               (@apply LNN Languages.Succ 
                                   (Tcons LNN 0 (natToTerm a)
                                      (Tnil LNN)))
                                with (natToTerm (S a)); 
@@ -250,11 +250,11 @@ Proof.
                                  * apply Axm; right; constructor.
                                  * apply sysWeaken.
                                    replace
-                                     (apply LNN Languages.Succ
+                                     (@apply LNN Languages.Succ
                                         (Tcons LNN 0
-                                           (apply LNN Languages.Succ
+                                           (@apply LNN Languages.Succ
                                               (Tcons LNN 0
-                                                 (apply LNN Languages.Zero
+                                                 (@apply LNN Languages.Zero
                                                     (Tnil LNN))
                                                  (Tnil LNN)))
                                            (Tnil LNN)))
@@ -406,18 +406,18 @@ Proof.
                                                  impE
                                                   with
                                                     (fol.equal 
-                                                       (apply LNN Languages.Plus
+                                                       (@apply LNN Languages.Plus
                                                           (Tcons LNN 1 (natToTerm n)
                                                              (Tcons LNN 0
-                                                                (apply LNN Languages.Times
+                                                                (@apply LNN Languages.Times
                                                                    (Tcons LNN 1 (var  5)
                                                                       (Tcons LNN 0
-                                                                         (apply LNN Languages.Succ
+                                                                         (@apply LNN Languages.Succ
                                                                             (Tcons LNN 0
-                                                                               (apply LNN Languages.Times
+                                                                               (@apply LNN Languages.Times
                                                                                   (Tcons LNN 1 (natToTerm (cPairPi1 a))
                                                                                      (Tcons LNN 0
-                                                                                        (apply LNN Languages.Succ
+                                                                                        (@apply LNN Languages.Succ
                                                                                            (Tcons LNN 0 
                                                                                               (natToTerm a0) 
                                                                                               (Tnil LNN))) 
@@ -446,18 +446,18 @@ Proof.
                                                           apply sysWeaken. eapply eqTrans.
                                                           ** apply eqSym. apply natPlus.
                                                           ** replace
-                                                              (apply LNN Languages.Plus
+                                                              (@apply LNN Languages.Plus
                                                                  (Tcons LNN 1 (natToTerm n)
                                                                     (Tcons LNN 0
-                                                                       (apply LNN Languages.Times
+                                                                       (@apply LNN Languages.Times
                                                                           (Tcons LNN 1 (natToTerm n0)
                                                                              (Tcons LNN 0
-                                                                                (apply LNN Languages.Succ
+                                                                                (@apply LNN Languages.Succ
                                                                                    (Tcons LNN 0
-                                                                                      (apply LNN Languages.Times
+                                                                                      (@apply LNN Languages.Times
                                                                                          (Tcons LNN 1 (natToTerm (cPairPi1 a))
                                                                                             (Tcons LNN 0
-                                                                                               (apply LNN Languages.Succ
+                                                                                               (@apply LNN Languages.Succ
                                                                                                   (Tcons LNN 0 (natToTerm a0) (Tnil LNN)))
                                                                                                (Tnil LNN)))) (Tnil LNN))) 
                                                                                 (Tnil LNN)))) (Tnil LNN)))) with
@@ -496,7 +496,7 @@ Proof.
         induction x as (a1, b). simpl in |- *. simpl in H1. destruct H1 as (H1, H2).
         apply existI with (natToTerm (cPairPi1 a)). rewrite (subFormulaAnd LNN). apply andI.
         ++ apply sysWeaken. rewrite H0. simpl in |- *. rewrite subTermNil.
-           -- replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
+           -- replace (@apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
               apply natLT. apply Nat.lt_succ_r. apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
               apply cPairLe1. rewrite cPairProjections. apply le_n.
            -- apply closedNatToTerm.
@@ -504,7 +504,7 @@ Proof.
            -- apply existI with (natToTerm (cPairPi2 a)). repeat rewrite (subFormulaAnd LNN). apply andI.
               ** apply sysWeaken. repeat rewrite H0. simpl in |- *.
                  repeat rewrite (subTermNil LNN (natToTerm a)).
-                 +++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
+                 +++ replace (@apply LNN Languages.Succ (Tcons LNN 0 (natToTerm a) (Tnil LNN))) with (natToTerm (S a)) by reflexivity.
                      apply natLT. apply Nat.lt_succ_r. apply Nat.le_trans with (cPair (cPairPi1 a) (cPairPi2 a)).
                      --- apply cPairLe2.
                      --- rewrite cPairProjections. apply le_n.
@@ -519,38 +519,38 @@ Proof.
                       (rewrite (subTermNil LNN (natToTerm a)); [| apply closedNatToTerm ]).
                      replace
                       (fol.equal 
-                         (apply LNN Languages.Plus
+                         (@apply LNN Languages.Plus
                             (Tcons LNN 1
-                               (apply LNN Languages.Times
+                               (@apply LNN Languages.Times
                                   (Tcons LNN 1
-                                     (apply LNN Languages.Plus
+                                     (@apply LNN Languages.Plus
                                         (Tcons LNN 1 (natToTerm (cPairPi1 a))
                                            (Tcons LNN 0 (natToTerm (cPairPi2 a)) (Tnil LNN))))
                                      (Tcons LNN 0
-                                        (apply LNN Languages.Succ
+                                        (@apply LNN Languages.Succ
                                            (Tcons LNN 0
-                                              (apply LNN Languages.Plus
+                                              (@apply LNN Languages.Plus
                                                  (Tcons LNN 1 (natToTerm (cPairPi1 a))
                                                     (Tcons LNN 0 (natToTerm (cPairPi2 a))
                                                        (Tnil LNN)))) (Tnil LNN)))
                                         (Tnil LNN))))
                                (Tcons LNN 0
-                                  (apply LNN Languages.Times
+                                  (@apply LNN Languages.Times
                                      (Tcons LNN 1
-                                        (apply LNN Languages.Succ
+                                        (@apply LNN Languages.Succ
                                            (Tcons LNN 0
-                                              (apply LNN Languages.Succ
+                                              (@apply LNN Languages.Succ
                                                  (Tcons LNN 0
-                                                    (apply LNN Languages.Zero (Tnil LNN))
+                                                    (@apply LNN Languages.Zero (Tnil LNN))
                                                     (Tnil LNN))) (Tnil LNN)))
                                         (Tcons LNN 0 (natToTerm (cPairPi1 a)) (Tnil LNN))))
                                   (Tnil LNN))))
-                         (apply LNN Languages.Times
+                         (@apply LNN Languages.Times
                             (Tcons LNN 1
-                               (apply LNN Languages.Succ
+                               (@apply LNN Languages.Succ
                                   (Tcons LNN 0
-                                     (apply LNN Languages.Succ
-                                        (Tcons LNN 0 (apply LNN Languages.Zero (Tnil LNN))
+                                     (@apply LNN Languages.Succ
+                                        (Tcons LNN 0 (@apply LNN Languages.Zero (Tnil LNN))
                                            (Tnil LNN))) (Tnil LNN)))
                                (Tcons LNN 0 (natToTerm a) (Tnil LNN))))) with
                       (equal
@@ -668,21 +668,21 @@ Proof.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm a1)); [| apply closedNatToTerm ]).
                              apply andI.
-                             ++++ replace (apply LNN Languages.Succ (Tcons LNN 0 (natToTerm (cPairPi2 a)) (Tnil LNN))) with (natToTerm (S (cPairPi2 a))) by reflexivity.
+                             ++++ replace (@apply LNN Languages.Succ (Tcons LNN 0 (natToTerm (cPairPi2 a)) (Tnil LNN))) with (natToTerm (S (cPairPi2 a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
                              ++++ replace
-                                   (apply LNN Languages.Plus
+                                   (@apply LNN Languages.Plus
                                       (Tcons LNN 1 (natToTerm b)
                                          (Tcons LNN 0
-                                            (apply LNN Languages.Times
+                                            (@apply LNN Languages.Times
                                                (Tcons LNN 1 (natToTerm a1)
                                                   (Tcons LNN 0
-                                                     (apply LNN Languages.Succ
+                                                     (@apply LNN Languages.Succ
                                                         (Tcons LNN 0
-                                                           (apply LNN Languages.Times
+                                                           (@apply LNN Languages.Times
                                                               (Tcons LNN 1 (natToTerm (cPairPi1 a))
                                                                  (Tcons LNN 0
-                                                                    (apply LNN Languages.Succ
+                                                                    (@apply LNN Languages.Succ
                                                                        (Tcons LNN 0 (natToTerm a0) (Tnil LNN)))
                                                                     (Tnil LNN)))) (Tnil LNN))) 
                                                      (Tnil LNN)))) (Tnil LNN)))) with

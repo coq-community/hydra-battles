@@ -58,7 +58,6 @@ Hypothesis codeRInj :
 
 Let Term := Term L.
 Let Terms := Terms L.
-Let apply := apply L.
 Let Formula := Formula L.
 Let wellFormedTerm := wellFormedTerm codeArityF.
 Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.
@@ -2256,7 +2255,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
                           (arity L (inr (Relations L) f)) b)))) 
         with
  (codeFormula L codeF codeR 
-    (equal (fol.apply L f a) (fol.apply L f b))).
+    (equal (apply f a) (apply f b))).
       * generalize (arity L (inr (Relations L) f)).
         intros n;induction n as [| n Hrecn].
         -- reflexivity.
@@ -3559,7 +3558,6 @@ Simpl in H0.
                                      (equal (apply x0 a) (apply x0 b))))
                                (codeFormula L codeF codeR x)
                           then 1 else 0) + 0 <> 0).
-                      fold apply  in |- *.
                       generalize (equal (apply x0 a) (apply x0 b)).
                       intros.
                       clear H0.

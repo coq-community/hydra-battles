@@ -52,21 +52,21 @@ Module Toy.
   Notation R t1 t2 :=
     (@fol.atomic L _R (Tcons _ _ t1 (Tcons _ _ t2 (Tnil _)))).
 
-  Notation a := (fol.apply L _a (Tnil _)).
-  Notation b := (fol.apply L _b (Tnil _)).
-  Notation f t := (fol.apply L _f (Tcons _ _ t (Tnil _))).
+  Notation a := (@fol.apply L _a (Tnil _)).
+  Notation b := (@fol.apply L _b (Tnil _)).
+  Notation f t := (@fol.apply L _f (Tcons _ _ t (Tnil _))).
 (* end snippet toyNotation *)
 
 (* begin snippet smallTerms *)
 (** a **)              
-Check (apply L _a (Tnil _)).
+Check (@apply L _a (Tnil _)).
 
 (** f a **)
-Check (apply L _f  (Tcons _ _ (apply L _a (Tnil _)) (Tnil _))).
+Check (@apply L _f  (Tcons _ _ (@apply L _a (Tnil _)) (Tnil _))).
 
 (** f (f v1) **)
-Check (apply L _f 
-         (Tcons _ _ (apply L _f  
+Check (@apply L _f 
+         (Tcons _ _ (@apply L _f  
                        (Tcons _ _ (var 1) (Tnil _)))
             (Tnil _))).
 

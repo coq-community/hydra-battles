@@ -21,13 +21,12 @@ Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
-Notation apply := (apply L) (only parsing).
 Notation SysPrf := (SysPrf L) (only parsing).
 
 Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
   match t return ((nat -> fol.Term L) -> fol.Term L) with
   | var x => fun m => m x
-  | fol.apply f ts => fun m => fol.apply L f (subAllTerms _ ts m)
+  | fol.apply f ts => fun m => apply f (subAllTerms _ ts m)
   end
  
  with subAllTerms (n : nat) (ts : fol.Terms L n) {struct ts} :

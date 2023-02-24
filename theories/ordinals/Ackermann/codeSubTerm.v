@@ -19,7 +19,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let apply := apply L.
 
 Definition codeSubTermTerms : nat -> nat -> nat -> nat :=
   evalStrongRec 2
@@ -76,7 +75,7 @@ Proof.
              (codeTerms L codeF (arity L (inr (Relations L) f))
                 (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))).
       + rewrite <- H; 
-          replace (codeTerm L codeF (fol.apply L f t0)) 
+          replace (codeTerm L codeF (apply f t0)) 
           with
           (cPair (S (codeF f)) 
              (codeTerms L codeF (arity L (inr (Relations L) f)) t0)).

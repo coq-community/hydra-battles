@@ -19,7 +19,7 @@ Require Import codeNatToTerm.
 Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
   match t with
   | fol.var v => var v
-  | apply f ts => apply LNT f (LNN2LNT_terms _ ts)
+  | apply f ts => @apply LNT f (LNN2LNT_terms _ ts)
   end
  
  with LNN2LNT_terms (n : nat) (ts : fol.Terms LNN n) {struct ts} : 
@@ -404,7 +404,7 @@ Qed.
 Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
   match t with
   | fol.var v => var v
-  | apply f ts => apply LNN f (LNT2LNN_terms _ ts)
+  | apply f ts => @apply LNN f (LNT2LNN_terms _ ts)
   end
  
  with LNT2LNN_terms (n : nat) (ts : Terms n) {struct ts} : 

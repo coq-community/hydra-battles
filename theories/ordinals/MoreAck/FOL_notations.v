@@ -11,13 +11,13 @@ Infix "/\" := (fol.andH):fol_scope.
 Infix "->" := (fol.impH): fol_scope.
 Notation "~ A" := (@fol.notH _ A): fol_scope. 
 Notation atH := (fol.atomic _).
-Notation k_ t := (fol.apply _ (t:Functions _)  (fol.Tnil _)).
+Notation k_ t := (fol.apply  (t:Functions _)  (fol.Tnil _)).
 
 Notation app1 f arg := 
-  (fol.apply _ (f: Functions _)  (fol.Tcons _ _ arg (fol.Tnil _))).
+  (fol.apply  (f: Functions _)  (fol.Tcons _ _ arg (fol.Tnil _))).
 
 Notation app2 f arg1 arg2 := 
-  (fol.apply  _ (f: Functions _) 
+  (fol.apply   (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
 Notation "t = u" := (@fol.equal _ t u): fol_scope.
@@ -52,11 +52,11 @@ Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
 Notation "t = u" := (@fol.equal _ t u): cfol_scope.
 
 Notation app1 f arg := 
-  (fol.apply _ (f: Functions _) 
+  (fol.apply  (f: Functions _) 
      (fol.Tcons _ _ arg (fol.Tnil _))).
 
 Notation app2 f arg1 arg2 := 
-  (fol.apply  _ (f: Functions _) 
+  (fol.apply   (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
 Notation v_ := (fol.var).

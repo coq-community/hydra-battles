@@ -18,15 +18,15 @@ Definition ifThenElseH := ifThenElseH LNT.
 Definition SysPrf := SysPrf LNT.
 
 Definition Plus (x y : Term) : Term :=
-  apply LNT Plus (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
+  @apply LNT Plus (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
 
 Definition Times (x y : Term) : Term :=
-  apply LNT Times (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
+  @apply LNT Times (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNT Succ (Tcons LNT 0 x (Tnil LNT)).
+  @apply LNT Succ (Tcons LNT 0 x (Tnil LNT)).
 
-Definition Zero : Term := apply LNT Zero (Tnil LNT).
+Definition Zero : Term := @apply LNT Zero (Tnil LNT).
 
 Lemma LNT_dec : language_decidable LNT.
 Proof. split; decide equality. Qed.

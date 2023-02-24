@@ -658,7 +658,7 @@ Proof.
       cut
         (forall a b : Terms L (arity L (inr (Relations L) f)),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (equal (apply L f a) (apply L f b)))).
+            interpFormula value (nnHelp (equal (apply f a) (apply f b)))).
       * assert
           (H: forall A,
               (forall a b : Terms L (arity L (inr (Relations L) f)),
@@ -693,7 +693,7 @@ Proof.
             simpl; rewrite H1.
             now rewrite H2.
         }
-        apply (H (fun a b => equal (apply L f a) (apply L f b))).
+        apply (H (fun a b => equal (apply f a) (apply f b))).
       * simpl; generalize (func M f).
         generalize (arity L (inr (Relations L) f)).
         intros n n0 a b H.

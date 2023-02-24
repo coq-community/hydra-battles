@@ -15,15 +15,15 @@ Infix "<->" := (fol.iffH LNN): lnn_scope.
 Notation "~" := (fol.notH LNN): lnn_scope. 
 
 
-Notation zero := LNN.Zero.
+Notation zero := (@fol.apply LNN (Zero: Functions LNN) (fol.Tnil _)).
 
 
 Notation app1 f arg := 
-  (fol.apply LNN (f: Functions _) 
+  (@fol.apply LNN (f: Functions _) 
      (fol.Tcons _ _ arg (fol.Tnil _))).
 
 Notation app2 f arg1 arg2 := 
-  (fol.apply  LNN (f: Functions _) 
+  (@fol.apply  LNN (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
 Notation allH := (fol.forallH LNN).
@@ -101,7 +101,8 @@ Notation "t1 < t2" :=
 
 Print Zero.
 Locate Zero. 
-Notation zero := (fol.apply LNN Languages.Zero (fol.Tnil _)).
+Definition  zero := (fol.apply (Languages.Zero: Functions LNN)
+ (fol.Tnil _)).
 
  Section Consistance. 
   Goal forall A B, orH  A B = (A \/ B)%cnn. 

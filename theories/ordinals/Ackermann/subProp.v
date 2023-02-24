@@ -17,7 +17,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let apply := apply L.
 Let SysPrf := SysPrf L.
 
 Lemma freeVarSubTerm1 (t : Term):

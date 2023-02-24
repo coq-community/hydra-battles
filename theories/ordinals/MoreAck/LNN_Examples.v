@@ -8,9 +8,10 @@ Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
            (equal  (var  0) 
-              (apply LNN Languages.Zero (Tnil _)))
+              (@fol.apply LNN Languages.Zero (Tnil _)))
            (existH 1 (equal (var 0)
-                          (apply LNN Languages.Succ 
+                          (apply  
+                             (Languages.Succ : Functions LNN)
                              (Tcons _ 0 (var 1) (Tnil _)))))).
 (* end snippet uglyF0 *)
 
@@ -27,7 +28,7 @@ Compute f0.
 (* end snippet CNNF0 *)
 
 
-Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
+ Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
 Check t1_0. 
 Goal t1_0 = LNN.Plus (var 1) Zero. 
 reflexivity. 

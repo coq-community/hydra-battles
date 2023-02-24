@@ -13,7 +13,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let apply := apply L.
 
 Fixpoint nVars (n: nat) : Terms n * Terms n:=
   match n with 

@@ -22,7 +22,7 @@ Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
-Let apply := apply L.
+
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
@@ -398,7 +398,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            equal (fol.apply L f a) (fol.apply L f b)) 
+            equal (fol.apply f a) (apply f b)) 
          (nVars L n)) 
       with
       (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).

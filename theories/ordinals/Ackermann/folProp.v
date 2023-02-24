@@ -15,7 +15,6 @@ Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
   
-Let apply := apply L.
 Let lt_depth := lt_depth L.
 
 Section Free_Variables.

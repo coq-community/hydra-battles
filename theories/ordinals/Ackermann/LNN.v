@@ -19,18 +19,16 @@ Definition ifThenElseH := ifThenElseH LNN.
 Definition SysPrf := SysPrf LNN.
 
 Definition Plus (x y : Term) : Term :=
-  apply LNN Plus (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
+  @apply LNN Plus (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
 
 Definition Times (x y : Term) : Term :=
-  apply LNN Times (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
+  @apply LNN Times (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNN Succ (Tcons LNN 0 x (Tnil LNN)).
+  @apply LNN Succ (Tcons LNN 0 x (Tnil LNN)).
 
-Definition Zero : Term := apply LNN Zero (Tnil LNN).
-Search Relations. 
-Check LT. 
-Print LNNRelation. 
+Definition Zero : Term := @apply LNN Zero (Tnil LNN).
+
 Definition LT (x y : Term) : Formula :=
   @atomic LNN LT (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))). 
 (* end snippet Instantiations *)

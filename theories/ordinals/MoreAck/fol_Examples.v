@@ -45,7 +45,7 @@ Compute nVars L 3.
 
 Compute AxmEq4 L _S.
 
-Check f (v_ 1).
+ Check f (v_ 1).
 Check a. 
 Check f a. 
 Check (allH 1 (v_ 1 = a))%fol. 
@@ -54,7 +54,7 @@ Check (R (v_ 1) (v_ 2))%fol.
 Compute arity (inr _f).
 Compute arity (inl _S).
 Print app2.
-Check apply L _h (Tcons _ _ (var 1) (Tcons _ _ (var  0) (Tnil _))).
+Check @apply L _h (Tcons _ _ (var 1) (Tcons _ _ (var  0) (Tnil _))).
 
 
 
@@ -164,9 +164,9 @@ Section Examples.
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
- apply LNN Plus 
+ @apply LNN Plus 
    (Tcons LNN _ (var 1)
-     (Tcons LNN _ (apply LNN Zero (Tnil _)) (Tnil _))). 
+     (Tcons LNN _ (@apply LNN Zero (Tnil _)) (Tnil _))). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
@@ -174,18 +174,18 @@ Print t1_0.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
       forallH 0 
-        (orH  (equal  (var 0) (apply LNN Zero (Tnil _)))
+        (orH  (equal  (var 0) (@apply LNN Zero (Tnil _)))
            (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (@apply LNN Succ 
                              (Tcons _ _ (var 1) (Tnil _)))))).
 
 Let f2 : Formula LNN :=
 (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (@apply LNN Succ 
                              (Tcons _ _ (var 1) (Tnil _))))).
 
-Let f3 := (orH  (equal  (var 0) (apply LNN Zero (Tnil _)))
-             (existH 1 (equal  (var 0) (apply LNN Succ 
+Let f3 := (orH  (equal  (var 0) (@apply LNN Zero (Tnil _)))
+             (existH 1 (equal  (var 0) (@apply LNN Succ 
                              (Tcons _ _ (var 1) (Tnil _)))))).
 (* end snippet f1Example *)
 
@@ -217,7 +217,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil _)) . 
+Compute substituteFormula LNN f3 0 (@apply LNN Zero (Tnil _)) . 
 (* end snippet freeVarExamples *)
 
 Check Sentence. 
