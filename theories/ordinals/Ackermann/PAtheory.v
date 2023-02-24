@@ -242,11 +242,11 @@ Proof.
   - repeat rewrite translateLT1; simpl.
     unfold newVar; simpl; fold var; fold (Succ (var 3)).
     fold (Succ (var 1)); fold (Plus (var 0) (Succ (var 3))).
-    fold (fol.existH LNT 3 (equal (Plus (var 0) (Succ (var 3))) 
+    fold (existH 3 (equal (Plus (var 0) (Succ (var 3))) 
                               (Succ (var 1)))).
-    fold (fol.existH LNT 3 (equal (Plus (var 0)
+    fold (existH 3 (equal (Plus (var 0)
                                      (Succ (var 3))) (var 1))).
-    fold existH; apply forallI.
+    apply forallI.
     + apply closedPA.
     + apply forallI.
      * apply closedPA.
@@ -328,10 +328,9 @@ Proof.
   fold (Succ (var 3)) in |- *.
   fold (Plus (var 0) (Succ (var 3))) in |- *.
   fold (Plus (var 1) (Succ (var 3))) in |- *.
-  fold (fol.existH LNT 3 (equal (Plus (var 0) (Succ (var 3))) (var 1))) in |- *.
-  fold (fol.existH LNT 3 (equal (Plus (var 1) (Succ (var 3))) (var 0))) in |- *.
-  fold existH in |- *.
-  apply induct.
+  fold (existH 3 (equal (Plus (var 0) (Succ (var 3))) (var 1))) in |- *.
+  fold (existH 3 (equal (Plus (var 1) (Succ (var 3))) (var 0))) in |- *.
+    apply induct.
   - rewrite (subFormulaForall LNT).
     induction (eq_nat_dec 0 1).
     + discriminate a.

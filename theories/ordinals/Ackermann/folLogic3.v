@@ -25,7 +25,6 @@ Notation Terms := (Terms L) (only parsing).
 Let var := var L.
 Let apply := apply L.
 Let atomic := atomic L.
-Let existH := existH L.
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.

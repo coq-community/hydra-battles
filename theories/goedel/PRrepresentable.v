@@ -2546,13 +2546,8 @@ Proof.
   + tauto.
 Qed.
 
-
-
-
-
-
 Ltac PRsolveFV A B n :=
-  unfold existH, not in |- *; intros;
+  unfold  not in |- *; intros;
    repeat
     match goal with
     | H:(_ = _) |- _ => discriminate H
@@ -2596,7 +2591,7 @@ Ltac PRsolveFV A B n :=
           (*
           Match Context With
           *)
-    | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
+    | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
         assert
          (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
          [ apply H | clear H ]
@@ -2677,7 +2672,7 @@ Proof.
         apply
          iffTrans
           with
-            (fol.existH LNN 2
+            (existH 2
                (andH
                   (minimize
                      (substituteFormula LNN (primRecSigmaFormulaHelp 0 A B) 1
@@ -2706,7 +2701,7 @@ Proof.
              apply
               iffTrans
                with
-                 (fol.existH LNN 2
+                 (existH 2
                     (andH (equal (var 2) (natToTerm x))
                        (substituteFormula LNN betaFormula 1 (natToTerm a)))).
              -- apply (reduceExist LNN).
@@ -5372,7 +5367,7 @@ Opaque substituteFormula.
       | H:(v = ?X1) |- _ => rewrite H; clear H
       | H:(?X1 = v) |- _ =>
           rewrite <- H; clear H
-      | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
+      | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
           assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
            [ apply H | clear H ]
       | H:(In ?X3 (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>

@@ -720,5 +720,5 @@ Arguments orH {L} _ _.
 Arguments andH {L} _ _.
 Arguments iffH {L} _ _.
 Arguments equal {L} _ _.
-
+Arguments existH {L} _ _.
 

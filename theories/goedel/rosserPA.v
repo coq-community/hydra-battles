@@ -568,7 +568,7 @@ Proof.
       (A :=
          fol.forallH  1
            (impH codeSysPrf
-              (fol.existH LNN 2
+              (existH 2
                  (andH (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
                     (substituteFormula LNN codeSysPrfNot 1 (fol.var LNN 2)))))). 
   destruct (FixPointLNT (LNN2LNT_formula A) 0) as [x [H0 H1]].
@@ -1093,7 +1093,7 @@ Proof.
                        (LNN2LNT_formula
                           (forallH  1
                              (impH codeSysPrf
-                                (fol.existH LNN 2
+                                (existH 2
                                    (andH
                                       (LNN.LT (fol.var LNN 2) (fol.var LNN 1))
                                       (substituteFormula LNN codeSysPrfNot 1
@@ -1228,7 +1228,7 @@ Proof.
                              (natToTermLNT
                                 (code.codeFormula LNT codeLNTFunction 
                                    codeLNTRelation x)))
-                          (fol.existH LNT 2
+                          (existH 2
                              (andH
                                 (LNN2LNT_formula (LNN.LT (fol.var LNN 2) 
                                                     (fol.var LNN 1)))

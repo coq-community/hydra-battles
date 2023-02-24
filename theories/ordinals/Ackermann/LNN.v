@@ -16,7 +16,6 @@ Definition Sentence := Sentence LNN.
 Definition Term := Term LNN.
 Definition Terms := Terms LNN.
 Definition var := var LNN.
-Definition existH := existH LNN.
 Definition ifThenElseH := ifThenElseH LNN.
 Definition SysPrf := SysPrf LNN.
 

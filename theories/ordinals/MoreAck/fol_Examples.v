@@ -175,17 +175,17 @@ Print t1_0.
 Let f1 : Formula LNN :=
       forallH 0 
         (orH  (equal  (var _ 0) (apply LNN Zero (Tnil _)))
-           (existH _ 1 (equal  (var _ 0)
+           (existH 1 (equal  (var _ 0)
                           (apply LNN Succ 
                              (Tcons _ _ (var _ 1) (Tnil _)))))).
 
 Let f2 : Formula LNN :=
-(existH _ 1 (equal  (var _ 0)
+(existH 1 (equal  (var _ 0)
                           (apply LNN Succ 
                              (Tcons _ _ (var _ 1) (Tnil _))))).
 
 Let f3 := (orH  (equal  (var _ 0) (apply LNN Zero (Tnil _)))
-             (existH _ 1 (equal  (var _ 0) (apply LNN Succ 
+             (existH 1 (equal  (var _ 0) (apply LNN Succ 
                              (Tcons _ _ (var _ 1) (Tnil _)))))).
 (* end snippet f1Example *)
 

@@ -20,7 +20,6 @@ Let Terms := Terms L.
 Let var := var L.
 Let apply := apply L.
 Let atomic := atomic L.
-Let existH := existH L.
 Let SysPrf := SysPrf L.
 
 Lemma freeVarSubTerm1 (t : Term):

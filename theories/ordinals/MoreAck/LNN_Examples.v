@@ -9,7 +9,7 @@ Definition  f0 : Formula LNN :=
         (orH  
            (equal  (var _ 0) 
               (apply LNN Languages.Zero (Tnil _)))
-           (existH _ 1 (equal (var _ 0)
+           (existH 1 (equal (var _ 0)
                           (apply LNN Languages.Succ 
                              (Tcons _ 0 (var _ 1) (Tnil _)))))).
 (* end snippet uglyF0 *)

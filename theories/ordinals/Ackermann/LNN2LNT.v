@@ -103,7 +103,7 @@ Lemma LNN2LNT_iff (a b : fol.Formula LNN):
 Proof. reflexivity. Qed.
 
 Lemma LNN2LNT_exist (v : nat) (a : fol.Formula LNN) :
- LNN2LNT_formula (fol.existH LNN v a) = existH v (LNN2LNT_formula a).
+ LNN2LNT_formula (existH  v a) = existH v (LNN2LNT_formula a).
 Proof. reflexivity. Qed.
 
 Lemma LNN2LNT_freeVarTerm (t : fol.Term LNN):

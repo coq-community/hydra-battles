@@ -23,7 +23,7 @@ Notation app2 f arg1 arg2 :=
 Notation "t = u" := (@fol.equal _ t u): fol_scope.
 
 Notation allH v A := (fol.forallH v A).
-Notation exH := (fol.existH _).
+Notation exH := (fol.existH).
 Notation v_ := (fol.var _).
 End FOL_notations.
 

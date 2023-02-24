@@ -652,7 +652,6 @@ Qed.
 
 Section Extensions.
 
-Let existH := existH L.
 Let ifThenElseH := ifThenElseH L.
 
 Lemma subFormulaOr :
@@ -812,7 +811,6 @@ Proof.
       * now rewrite subFormulaId.
 Qed.
 
-Let existH := existH L.
 
 Lemma subFormulaExist2 :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
