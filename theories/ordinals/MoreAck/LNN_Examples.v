@@ -4,15 +4,16 @@ Require Import LNN_notations.
 
 Section bare_syntax. 
 (* begin snippet uglyF0 *)
+
 Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
            (equal  (var  0) 
-              (@fol.apply LNN Languages.Zero (Tnil _)))
+              (@fol.apply LNN Languages.Zero (@Tnil LNN)))
            (existH 1 (equal (var 0)
                           (apply  
                              (Languages.Succ : Functions LNN)
-                             (Tcons _ 0 (var 1) (Tnil _)))))).
+                             (Tcons _ 0 (var 1) (@Tnil _)))))).
 (* end snippet uglyF0 *)
 
 
@@ -27,6 +28,7 @@ Print  f0.
 Compute f0. 
 (* end snippet CNNF0 *)
 
+Locate zero.
 
  Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
 Check t1_0. 

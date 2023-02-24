@@ -229,7 +229,7 @@ Proof.
             ++ apply closedT.
             ++ apply H.
           -- rewrite (subFormulaEqual LNN); simpl in |- *.
-             replace (@apply LNN Languages.Zero (Tnil LNN)) with
+             replace (@apply LNN Languages.Zero (Tnil)) with
               (natToTerm 0) by reflexivity. 
             replace (Succ Zero) with (natToTerm 1) by reflexivity.
             simpl; apply nn1.

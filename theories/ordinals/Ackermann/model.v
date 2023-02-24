@@ -637,7 +637,7 @@ Proof.
         generalize (arity L (inl (Functions L) R)).
         intros n n0 a b H H0.
         induction a as [| n t a Hreca].
-        -- assert (H1: b = Tnil L) by (symmetry; apply nilTerms).
+        -- assert (H1: b = Tnil) by (symmetry; apply nilTerms).
            rewrite H1 in H0; auto.
         -- induction (consTerms L n b) as [x p].
            induction x as (a0, b0).
@@ -698,7 +698,7 @@ Proof.
         generalize (arity L (inr (Relations L) f)).
         intros n n0 a b H.
         induction a as [| n t a Hreca].
-        -- assert (H0: b = Tnil L) by ( symmetry; apply nilTerms). 
+        -- assert (H0: b = Tnil) by ( symmetry; apply nilTerms). 
            now rewrite H0.
         -- induction (consTerms L n b) as [x p];
            induction x as (a0, b0).

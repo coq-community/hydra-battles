@@ -14,17 +14,19 @@ Infix "->" := (@fol.impH LNN): lnn_scope.
 Infix "<->" := (fol.iffH LNN): lnn_scope.
 Notation "~" := (fol.notH LNN): lnn_scope. 
 
-
-Notation zero := (@fol.apply LNN (Zero: Functions LNN) (fol.Tnil _)).
-
+Set Printing Implicits. 
+Check Zero. 
+Locate Zero. 
+Notation zero := (@fol.apply LNN (Languages.Zero: Functions LNN) (fol.Tnil)).
+Check zero.
 
 Notation app1 f arg := 
   (@fol.apply LNN (f: Functions _) 
-     (fol.Tcons _ _ arg (fol.Tnil _))).
+     (fol.Tcons _ _ arg (fol.Tnil))).
 
 Notation app2 f arg1 arg2 := 
   (@fol.apply  LNN (f: Functions _) 
-     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
+     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil)))).
 
 Notation allH := (fol.forallH LNN).
 Notation exH := (fol.existH LNN).
@@ -32,12 +34,12 @@ Notation v_ := (@fol.var LNN).
 
 Notation "t1 + t2" := 
   (fol.apply  LNN Languages.Plus 
-     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil _)))): 
+     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil)))): 
     lnn_scope.
 
 Notation "t1 * t2" := (fol.apply  LNN Languages.Times 
      (fol.Tcons _ _ t1 
-        (fol.Tcons _ _ t2 (fol.Tnil _)))): lnn_scope.
+        (fol.Tcons _ _ t2 (fol.Tnil)))): lnn_scope.
 
 Notation S_ t  := (Succ t).
    
@@ -45,7 +47,7 @@ Notation S_ t  := (Succ t).
 Notation "t1 < t2" := 
  (atomic  Languages.LT
     (fol.Tcons _ _ t1 
-       (fol.Tcons _ _ t2 (fol.Tnil _)))): lnn_scope.      
+       (fol.Tcons _ _ t2 (fol.Tnil)))): lnn_scope.      
  
 End LNN_notations.
 
@@ -77,32 +79,31 @@ Notation v_ := (@fol.var LNN).
 
 Notation app1 f arg := 
   (fol.apply LNN (f: Functions _) 
-     (fol.Tcons _ _ arg (fol.Tnil _))).
+     (fol.Tcons _ _ arg (fol.Tnil))).
 
 Notation app2 f arg1 arg2 := 
   (fol.apply  LNN (f: Functions _) 
-     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
+     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil)))).
 
 Notation "t1 + t2" := (@fol.apply  LNN Languages.Plus 
-     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil _)))): cnn_scope.
+     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil)))): cnn_scope.
 
 Notation "t1 * t2" := (@fol.apply  LNN Languages.Times 
-     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil _)))): cnn_scope.
+     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil)))): cnn_scope.
 
 Notation S_ t  := 
    (@fol.apply  LNN Languages.Succ 
-     (fol.Tcons _ _ t (fol.Tnil _))).
+     (fol.Tcons _ _ t (fol.Tnil))).
 
 About fol.atomic. 
 Notation "t1 < t2" := 
  (@fol.atomic LNN Languages.LT
     (fol.Tcons _ _ t1 
-       (fol.Tcons _ _ t2 (fol.Tnil _))))(*only printing*): cnn_scope.      
+       (fol.Tcons _ _ t2 (fol.Tnil))))(*only printing*): cnn_scope.      
 
 Print Zero.
 Locate Zero. 
-Definition  zero := (fol.apply (Languages.Zero: Functions LNN)
- (fol.Tnil _)).
+Definition  zero := (fol.apply (Languages.Zero: Functions LNN) Tnil).
 
  Section Consistance. 
   Goal forall A B, orH  A B = (A \/ B)%cnn. 

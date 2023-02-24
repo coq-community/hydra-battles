@@ -162,7 +162,7 @@ Fixpoint substituteTerm (s : fol.Term L) (x : nat)
 with substituteTerms (n : nat) (ss : fol.Terms L n) 
        (x : nat) (t : fol.Term L) {struct ss} : fol.Terms L n :=
        match ss in (fol.Terms _ n0) return (fol.Terms L n0) with
-       | Tnil => Tnil L
+       | Tnil => Tnil
        | Tcons m s ts =>
            Tcons L m (substituteTerm s x t) (substituteTerms m ts x t)
        end.

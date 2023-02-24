@@ -34,7 +34,7 @@ Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
   match
     ts in (fol.Terms _ n) return ((nat -> fol.Term L) -> fol.Terms L n)
   with
-  | Tnil => fun _ => Tnil L
+  | Tnil => fun _ => Tnil
   | Tcons n' t ss =>
       fun m => Tcons L n' (subAllTerm t m) (subAllTerms _ ss m)
   end.

@@ -84,7 +84,7 @@ Module Drinkers.
   Definition L := language Rel Fun arity.
 
   Notation D t := 
-    (atomic  (_D: Relations L) (Tcons _ _ t (Tnil _))). 
+    (atomic  (_D: Relations L) (Tcons _ _ t (Tnil))). 
 
   Arguments Empty_set {U}. 
   Arguments Add {U} _ _. 

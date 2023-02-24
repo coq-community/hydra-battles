@@ -25,7 +25,7 @@ Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
  with LNN2LNT_terms (n : nat) (ts : fol.Terms LNN n) {struct ts} : 
  Terms n :=
   match ts in (fol.Terms _ n0) return (Terms n0) with
-  | Tnil => Tnil LNT
+  | Tnil => @Tnil LNT
   | Tcons m s ss => Tcons LNT m (LNN2LNT_term s) (LNN2LNT_terms m ss)
   end. 
 
@@ -264,10 +264,10 @@ Proof.
       * apply (subSubAllFormula LNT).
       * rewrite <- (nilTerms _ b0).
         replace
-          (substituteTerms LNN 2 (Tcons _ 1 a (Tcons _ 0 a0 (Tnil _))) v s) 
+          (substituteTerms LNN 2 (Tcons _ 1 a (Tcons _ 0 a0 (Tnil))) v s) 
           with
           (Tcons LNN 1 (substituteTerm _ a v s)
-             (Tcons _ 0 (substituteTerm _ a0 v s) (Tnil _))).
+             (Tcons _ 0 (substituteTerm _ a0 v s) (Tnil))).
         rewrite translateLT1.
         rewrite
           (subAllFormula_ext LNT LTFormula
@@ -410,7 +410,7 @@ Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
  with LNT2LNN_terms (n : nat) (ts : Terms n) {struct ts} : 
  fol.Terms LNN n :=
   match ts in (fol.Terms _ n0) return (fol.Terms LNN n0) with
-  | Tnil => Tnil LNN
+  | Tnil => @Tnil LNN
   | Tcons m s ss => Tcons LNN m (LNT2LNN_term s) (LNT2LNN_terms m ss)
   end.
 
@@ -674,10 +674,10 @@ Proof.
         (iffH
            (translateLT
               (Tcons LNN 1 (var 2)
-                 (Tcons LNN 0 (var 0) (Tnil LNN))))
+                 (Tcons LNN 0 (var 0) (Tnil))))
            (translateLT
               (Tcons LNN 1 (var 3)
-                 (Tcons LNN 0 (var 1) (Tnil LNN))))).
+                 (Tcons LNN 0 (var 1) (Tnil))))).
       - apply impRefl.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 

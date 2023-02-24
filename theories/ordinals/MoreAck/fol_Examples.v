@@ -32,12 +32,14 @@ Notation h  x y := (app2 (_h: Functions L) x y)%fol.
 Notation a := (k_ (_a : Functions L))%fol.
 Notation b := (k_ (_b : Functions L))%fol.
 
-Notation P t := (atomic  (_P: Relations L) (Tcons _ _ t (Tnil _))).
+Check a. 
+
+Notation P t := (atomic  (_P: Relations L) (Tcons _ _ t (Tnil))).
 Notation R t1 t2 :=
-  (atomic (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+  (atomic (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil)))).
 
 #[local] Notation S t1 t2 :=
-  (@fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+  (@fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil )))).
 
 
 
@@ -54,7 +56,7 @@ Check (R (v_ 1) (v_ 2))%fol.
 Compute arity (inr _f).
 Compute arity (inl _S).
 Print app2.
-Check @apply L _h (Tcons _ _ (var 1) (Tcons _ _ (var  0) (Tnil _))).
+Check @apply L _h (Tcons _ _ (var 1) (Tcons _ _ (var  0) (Tnil))).
 
 
 
@@ -157,7 +159,7 @@ Fail Compute arity LNT (inl Languages.LT).
 Check var 1: Term LNN.
 
 
-Check  @apply LNT Languages.Zero (Tnil _) : fol.Term LNT. 
+Check  @apply LNT Languages.Zero Tnil : fol.Term LNT. 
 
 Section Examples. 
 
@@ -166,7 +168,7 @@ Section Examples.
 Example t1_0: Term LNN := 
  @apply LNN Plus 
    (Tcons LNN _ (var 1)
-     (Tcons LNN _ (@apply LNN Zero (Tnil _)) (Tnil _))). 
+     (Tcons LNN _ (@apply LNN Zero Tnil) Tnil )). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
@@ -174,19 +176,19 @@ Print t1_0.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
       forallH 0 
-        (orH  (equal  (var 0) (@apply LNN Zero (Tnil _)))
+        (orH  (equal  (var 0) (@apply LNN Zero Tnil ))
            (existH 1 (equal  (var 0)
                           (@apply LNN Succ 
-                             (Tcons _ _ (var 1) (Tnil _)))))).
+                             (Tcons _ _ (var 1) Tnil))))).
 
 Let f2 : Formula LNN :=
 (existH 1 (equal  (var 0)
                           (@apply LNN Succ 
-                             (Tcons _ _ (var 1) (Tnil _))))).
+                             (Tcons _ _ (var 1) Tnil )))).
 
-Let f3 := (orH  (equal  (var 0) (@apply LNN Zero (Tnil _)))
+Let f3 := (orH  (equal  (var 0) (@apply LNN Zero Tnil))
              (existH 1 (equal  (var 0) (@apply LNN Succ 
-                             (Tcons _ _ (var 1) (Tnil _)))))).
+                             (Tcons _ _ (var 1) Tnil))))).
 (* end snippet f1Example *)
 
 Print f3.
@@ -217,7 +219,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (@apply LNN Zero (Tnil _)) . 
+Compute substituteFormula LNN f3 0 (@apply LNN Zero (Tnil)) . 
 (* end snippet freeVarExamples *)
 
 Check Sentence. 

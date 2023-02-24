@@ -267,7 +267,7 @@ Proof.
                 ** rewrite H1; apply le_n.
         * unfold A at 1; rewrite cPairProjections2; destruct n.
           -- simpl; intros H1; exists 0.
-             exists (Tnil L); easy.
+             exists (Tnil); easy.
           -- repeat rewrite evalStrongRecHelp1.
              ++ simpl; intros H1; assert (H2: cPairPi1 n < m).
                 { rewrite <- H0; apply Nat.lt_succ_r. 

@@ -45,30 +45,30 @@ Module Toy.
 
 (* begin snippet toyNotation *)
   (** Abreviations for the toy language L *)
-  Notation A := (@fol.atomic L  _A (Tnil _)).
-  Notation B := (@fol.atomic L _B (Tnil _)). 
-  Notation C := (@fol.atomic L _C (Tnil _)). 
-  Notation P t := (@fol.atomic L _P (Tcons _ _ t (Tnil _))).
+  Notation A := (@fol.atomic L  _A Tnil).
+  Notation B := (@fol.atomic L _B Tnil). 
+  Notation C := (@fol.atomic L _C Tnil). 
+  Notation P t := (@fol.atomic L _P (Tcons _ _ t Tnil)).
   Notation R t1 t2 :=
-    (@fol.atomic L _R (Tcons _ _ t1 (Tcons _ _ t2 (Tnil _)))).
+    (@fol.atomic L _R (Tcons _ _ t1 (Tcons _ _ t2 Tnil))).
 
-  Notation a := (@fol.apply L _a (Tnil _)).
-  Notation b := (@fol.apply L _b (Tnil _)).
-  Notation f t := (@fol.apply L _f (Tcons _ _ t (Tnil _))).
+  Notation a := (@fol.apply L _a Tnil).
+  Notation b := (@fol.apply L _b Tnil).
+  Notation f t := (@fol.apply L _f (Tcons _ _ t Tnil)).
 (* end snippet toyNotation *)
 
 (* begin snippet smallTerms *)
 (** a **)              
-Check (@apply L _a (Tnil _)).
+Check (@apply L _a Tnil).
 
 (** f a **)
-Check (@apply L _f  (Tcons _ _ (@apply L _a (Tnil _)) (Tnil _))).
+Check (@apply L _f  (Tcons _ _ (@apply L _a Tnil) Tnil)).
 
 (** f (f v1) **)
 Check (@apply L _f 
          (Tcons _ _ (@apply L _f  
-                       (Tcons _ _ (var 1) (Tnil _)))
-            (Tnil _))).
+                       (Tcons _ _ (var 1) Tnil))
+            Tnil )).
 
 Check (f (f (v_ 1)))%fol. 
 (* end snippet smallTerms *)

@@ -160,7 +160,7 @@ Proof.
                        (Succ
                           (@apply LNT Languages.Plus
                              (Tcons LNT 1 (var 1) 
-                                (Tcons LNT 0 Zero (Tnil LNT))))) 
+                                (Tcons LNT 0 Zero (Tnil))))) 
                        in |- *.
                      apply eqSucc.
                      apply pa3 with (a := var 1).
@@ -178,7 +178,7 @@ Proof.
                        (Succ
                           (@apply LNT Languages.Plus
                              (Tcons LNT 1 (var 1)
-                                (Tcons LNT 0 (Succ (var 0)) (Tnil LNT)))))
+                                (Tcons LNT 0 (Succ (var 0)) (Tnil)))))
                        in |- *.
                      apply eqSucc.
                      apply eqTrans with (Succ (Plus (var 1) (var 0))).
