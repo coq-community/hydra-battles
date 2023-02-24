@@ -54,11 +54,11 @@ Check (R (v_ 1) (v_ 2))%fol.
 Compute arity (inr _f).
 Compute arity (inl _S).
 Print app2.
-Check apply L _h (Tcons _ _ (var _ 1) (Tcons _ _ (var _ 0) (Tnil _))).
+Check apply L _h (Tcons _ _ (var 1) (Tcons _ _ (var  0) (Tnil _))).
 
 
 
-Check (app2  (_h: Functions L)  (var _ 1) (var _ 2))%fol: Term L.
+Check (app2  (_h: Functions L)  (var 1) (var 2))%fol: Term L.
 Check (h (v_ 1) (v_ 2))%fol.
 
 
@@ -154,7 +154,7 @@ Compute arity LNN (inl Languages.LT).
 Fail Compute arity LNT (inl Languages.LT).
 (* end snippet arityTest *)
 
-Check var _ 1: Term LNN.
+Check var 1: Term LNN.
 
 
 Check  @apply LNT Languages.Zero (Tnil _) : fol.Term LNT. 
@@ -165,7 +165,7 @@ Section Examples.
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
  apply LNN Plus 
-   (Tcons LNN _ (var LNN  1)
+   (Tcons LNN _ (var 1)
      (Tcons LNN _ (apply LNN Zero (Tnil _)) (Tnil _))). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
@@ -174,19 +174,19 @@ Print t1_0.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
       forallH 0 
-        (orH  (equal  (var _ 0) (apply LNN Zero (Tnil _)))
-           (existH 1 (equal  (var _ 0)
+        (orH  (equal  (var 0) (apply LNN Zero (Tnil _)))
+           (existH 1 (equal  (var 0)
                           (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _)))))).
+                             (Tcons _ _ (var 1) (Tnil _)))))).
 
 Let f2 : Formula LNN :=
-(existH 1 (equal  (var _ 0)
+(existH 1 (equal  (var 0)
                           (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _))))).
+                             (Tcons _ _ (var 1) (Tnil _))))).
 
-Let f3 := (orH  (equal  (var _ 0) (apply LNN Zero (Tnil _)))
-             (existH 1 (equal  (var _ 0) (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _)))))).
+Let f3 := (orH  (equal  (var 0) (apply LNN Zero (Tnil _)))
+             (existH 1 (equal  (var 0) (apply LNN Succ 
+                             (Tcons _ _ (var 1) (Tnil _)))))).
 (* end snippet f1Example *)
 
 Print f3.

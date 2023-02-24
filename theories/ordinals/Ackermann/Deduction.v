@@ -15,7 +15,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 

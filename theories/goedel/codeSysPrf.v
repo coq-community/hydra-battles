@@ -86,8 +86,8 @@ Ltac SimplFreeVar :=
        rewrite freeVarSucc in H
    | H:(In _ (freeVarTerm ?X9 (var _))) |- _ =>
        simpl in H; decompose sum H; clear H
-   | H:(In _ (freeVarTerm ?X9 (LNT.var _))) |- _ =>
-       simpl in H; decompose sum H; clear H
+  (* | H:(In _ (freeVarTerm ?X9 (var _))) |- _ =>
+       simpl in H; decompose sum H; clear H *)
    | H:(In _ (freeVarTerm ?X9 (fol.var ?X9 _))) |- _ =>
        simpl in H; decompose sum H; clear H
    end.
@@ -998,7 +998,6 @@ apply
     (equal (Succ (var nv))
        (natToTerm (S (codeList (map (codeFormula L codeF codeR) A))))).
 apply sysWeaken.
-fold var in |- *.
 simpl in |- *.
 apply sysWeaken.
 apply nn2.

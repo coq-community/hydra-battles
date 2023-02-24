@@ -21,7 +21,6 @@ Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
-Notation var := (var L) (only parsing).
 Notation apply := (apply L) (only parsing).
 Notation atomic := (atomic L) (only parsing).
 
@@ -31,7 +30,7 @@ Notation SysPrf := (SysPrf L) (only parsing).
 
 Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
   match t return ((nat -> fol.Term L) -> fol.Term L) with
-  | fol.var x => fun m => m x
+  | var x => fun m => m x
   | fol.apply f ts => fun m => fol.apply L f (subAllTerms _ ts m)
   end
  
@@ -169,7 +168,7 @@ Proof.
            fun v : nat =>
              match eq_nat_dec v n with
              | left _ =>
-                 fol.var L
+                 var 
                    (newVar
                       (freeVarFormula L f ++
                          freeVarMap (list_remove nat eq_nat_dec n 
@@ -181,7 +180,7 @@ Proof.
            fun v : nat =>
              match eq_nat_dec v n with
              | left _ =>
-                 fol.var L
+                 var 
                    (newVar
                       (freeVarFormula L f ++
                          freeVarMap (list_remove nat eq_nat_dec n 
@@ -318,7 +317,7 @@ Proof.
                (subAllFormula f
                   (fun v : nat =>
                      match eq_nat_dec v n with
-                     | left _ => fol.var L nv
+                     | left _ => var nv
                      | right _ => m v
                      end)))) by ( eapply In_list_remove1; apply H). 
    destruct  (Hrecf _ _ H0) as [x [H2 H3]].
@@ -450,7 +449,7 @@ Proof.
            (subAllFormula a
               (fun v1 : nat =>
                  match eq_nat_dec v1 v with
-                 | left _ => fol.var L nv1
+                 | left _ => var nv1
                  | right _ => m v1
                  end)) nv1 v0 s).
       rewrite H4; clear H4.
@@ -484,12 +483,12 @@ Proof.
           (subAllFormula_ext a
              (fun v1 : nat =>
                 match eq_nat_dec v1 v with
-                | left _ => fol.var L nv2
+                | left _ => var nv2
                 | right _ => substituteTerm L (m v1) v0 s
                 end)
              (fun v1 : nat =>
                 match eq_nat_dec v1 v with
-                | left _ => fol.var L nv2
+                | left _ => var nv2
                 | right _ => m v1
                 end)).
       -- apply (iffRefl L).
@@ -502,7 +501,7 @@ Proof.
                  (subAllFormula a
                     (fun v1 : nat =>
                        match eq_nat_dec v1 v with
-                       | left _ => fol.var L x
+                       | left _ => var x
                        | right _ => m v1
                        end)) v0 s)).
          -- apply (reduceForall L).
@@ -514,19 +513,19 @@ Proof.
                        (fun v1 : nat =>
                           substituteTerm L
                             match eq_nat_dec v1 v with
-                            | left _ => fol.var L nv1
+                            | left _ => var nv1
                             | right _ => m v1
-                            end nv1 (fol.var L x))).
+                            end nv1 (var x))).
                   ---  fold (folProof.SysPrf L); 
                        apply
                          H
                          with
                          (b := a)
                          (v := nv1)
-                         (s := fol.var L x)
+                         (s := var x)
                          (m := fun v1 : nat =>
                                  match eq_nat_dec v1 v with
-                                 | left _ => fol.var L nv1
+                                 | left _ => var nv1
                                  | right _ => m v1
                                  end).
                        apply depthForall.
@@ -534,15 +533,15 @@ Proof.
                       (subAllFormula_ext a
                          (fun v1 : nat =>
                             match eq_nat_dec v1 v with
-                            | left _ => fol.var L x
+                            | left _ => var x
                             | right _ => m v1
                             end)
                          (fun v1 : nat =>
                             substituteTerm L
                               match eq_nat_dec v1 v with
-                              | left _ => fol.var L nv1
+                              | left _ => var nv1
                               | right _ => m v1
-                              end nv1 (fol.var L x))).
+                              end nv1 (var x))).
                       +++ apply (iffRefl L).
                       +++    intros m0 H3. 
                              induction (eq_nat_dec m0 v).
@@ -566,7 +565,7 @@ Proof.
                  (subAllFormula a
                     (fun v1 : nat =>
                        match eq_nat_dec v1 v with
-                       | left _ => fol.var L x
+                       | left _ => var x
                        | right _ => substituteTerm L (m v1) v0 s
                        end))).
             ++ apply (reduceForall L).
@@ -578,7 +577,7 @@ Proof.
                         (s := s)
                         (m := fun v1 : nat =>
                                 match eq_nat_dec v1 v with
-                                | left _ => fol.var L x
+                                | left _ => var x
                                 | right _ => m v1
                                 end).
                       apply depthForall.
@@ -586,13 +585,13 @@ Proof.
                       (subAllFormula_ext a
                          (fun v1 : nat =>
                             match eq_nat_dec v1 v with
-                            | left _ => fol.var L x
+                            | left _ => var x
                             | right _ => substituteTerm L (m v1) v0 s
                             end)
                          (fun n : nat =>
                             substituteTerm L
                               match eq_nat_dec n v with
-                              | left _ => fol.var L x
+                              | left _ => var x
                               | right _ => m n
                               end v0 s)).
                          +++ apply (iffRefl L).
@@ -607,9 +606,9 @@ Proof.
                        (subAllFormula a
                           (fun v1 : nat =>
                              match eq_nat_dec v1 v with
-                             | left _ => fol.var L x
+                             | left _ => var x
                              | right _ => substituteTerm L (m v1) v0 s
-                             end)) x (fol.var L nv2))).
+                             end)) x (var nv2))).
                ** apply (rebindForall L).
                   intros H3; simpl in H3.
                   assert
@@ -618,7 +617,7 @@ Proof.
                               (subAllFormula a
                                  (fun v1 : nat =>
                                     match eq_nat_dec v1 v with
-                                    | left _ => fol.var L x
+                                    | left _ => var x
                                     | right _ => substituteTerm L (m v1) v0 s
                                     end)))) 
                   by (eapply In_list_remove1; apply H3). 
@@ -647,15 +646,15 @@ Proof.
                               (subAllFormula_ext a
                                  (fun v1 : nat =>
                                     match eq_nat_dec v1 v with
-                                    | left _ => fol.var L nv2
+                                    | left _ => var nv2
                                     | right _ => substituteTerm L (m v1) v0 s
                                     end)
                                  (fun n : nat =>
                                     substituteTerm L
                                       match eq_nat_dec n v with
-                                      | left _ => fol.var L x
+                                      | left _ => var x
                                       | right _ => substituteTerm L (m n) v0 s
-                                      end x (fol.var L nv2))).
+                                      end x (var nv2))).
                           *** apply (iffRefl L).
                           *** intros m0 H3; induction (eq_nat_dec m0 v).
                               rewrite (subTermVar1 L).
@@ -687,12 +686,12 @@ Proof.
 Qed.
 
 Lemma subAllTermId (t : fol.Term L):
-  subAllTerm t (fun x : nat => fol.var L x) = t.
+  subAllTerm t (fun x : nat => var x) = t.
 Proof.
   elim t using  Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             subAllTerms n ts (fun x : nat => fol.var L x) = ts); 
+             subAllTerms n ts (fun x : nat => var x) = ts); 
     simpl. 
   - reflexivity.
   - intros f t0 H; now rewrite H.
@@ -701,7 +700,7 @@ Proof.
 Qed.
 
 Lemma subAllTermsId  (n : nat) (ts : fol.Terms L n):
-  subAllTerms n ts (fun x : nat => fol.var L x) = ts.
+  subAllTerms n ts (fun x : nat => var x) = ts.
 Proof.
   induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -710,7 +709,7 @@ Qed.
 
 Lemma subAllFormulaId (T : fol.System L) (f : fol.Formula L):
  folProof.SysPrf L T
-   (iffH (subAllFormula f (fun x : nat => fol.var L x)) f).
+   (iffH (subAllFormula f (fun x : nat => var x)) f).
 Proof.
   apply (sysExtend L) with (Empty_set (fol.Formula L)).
   - intros x H; contradiction H.
@@ -728,28 +727,28 @@ Proof.
            newVar
              (freeVarFormula L f ++
                 freeVarMap (list_remove nat eq_nat_dec n (freeVarFormula L f))
-                (fun x : nat => fol.var L x))).
+                (fun x : nat => var x))).
       apply
         (iffTrans L)
-        with (forallH n (subAllFormula f (fun x : nat => fol.var L x))).
+        with (forallH n (subAllFormula f (fun x : nat => var x))).
       * apply (iffTrans L) with
           (forallH nv
-             (substituteFormula L (subAllFormula f (fun x : nat => fol.var L x)) n
-                (fol.var L nv))).
+             (substituteFormula L (subAllFormula f (fun x : nat => var x)) n
+                (var nv))).
         -- replace
             (subAllFormula f
                (fun v : nat =>
                   match eq_nat_dec v n with
-                  | left _ => fol.var L nv
-                  | right _ => fol.var L v
+                  | left _ => var nv
+                  | right _ => var v
                   end)) 
             with
             (subAllFormula f
-               (fun x : nat => substituteTerm L (fol.var L x) n (fol.var L nv))).
+               (fun x : nat => substituteTerm L (var x) n (var nv))).
            ++ apply (reduceForall L).
               ** apply (notInFreeVarSys L).
               ** apply (iffSym L).
-                 apply subSubAllFormula with (m := fun x : nat => fol.var L x).
+                 apply subSubAllFormula with (m := fun x : nat => var x).
            ++ apply subAllFormula_ext.
               intros m H; simpl.
               induction (eq_nat_dec n m); induction (eq_nat_dec m n);
@@ -759,14 +758,14 @@ Proof.
            intro H;
              assert
                (H0: In nv (freeVarFormula L (subAllFormula f 
-                                               (fun x : nat => fol.var L x))))
+                                               (fun x : nat => var x))))
            by (eapply In_list_remove1; apply H). 
            decompose record (freeVarSubAllFormula1 _ _ _ H0).
            elim
              (newVar1
                 (freeVarFormula L f ++
                    freeVarMap (list_remove nat eq_nat_dec n (freeVarFormula L f))
-                   (fun x : nat => fol.var L x))).
+                   (fun x : nat => var x))).
            fold nv; apply in_or_app; right.
            eapply freeVarMap1.
            ++ apply H3.
@@ -842,7 +841,7 @@ Proof.
            (subAllFormula f
               (fun v : nat =>
                  match eq_nat_dec v n with
-                 | left _ => fol.var L (newVar nv1)
+                 | left _ => var (newVar nv1)
                  | right _ => m1 v
                  end)) ++
            freeVarMap
@@ -851,7 +850,7 @@ Proof.
                  (subAllFormula f
                     (fun v : nat =>
                        match eq_nat_dec v n with
-                       | left _ => fol.var L (newVar nv1)
+                       | left _ => var (newVar nv1)
                        | right _ => m1 v
                        end)))) m2).
     apply
@@ -862,9 +861,9 @@ Proof.
             (subAllFormula f
                (fun v : nat =>
                   match eq_nat_dec v n with
-                  | left _ => fol.var L (newVar nv2)
+                  | left _ => var (newVar nv2)
                   | right _ => subAllTerm (m1 v) m2
-                  end)) (newVar nv2) (fol.var L (newVar nv3)))).
+                  end)) (newVar nv2) (var (newVar nv3)))).
     + eapply (sysExtend L) with (Empty_set (fol.Formula L)).
       * intros x H; contradiction  H.
       * apply (reduceForall L).
@@ -875,7 +874,7 @@ Proof.
                (a1 :=
                   fun v : nat =>
                     match eq_nat_dec v n with
-                    | left _ => fol.var L (newVar nv2)
+                    | left _ => var (newVar nv2)
                     | right _ => subAllTerm (m1 v) m2
                     end).
               simpl; set
@@ -883,18 +882,18 @@ Proof.
                           fun n0 : nat =>
                             subAllTerm
                               match eq_nat_dec n0 n with
-                              | left _ => fol.var L (newVar nv1)
+                              | left _ => var (newVar nv1)
                               | right _ => m1 n0
                               end
                               (fun v : nat =>
                                  match eq_nat_dec v (newVar nv1) with
-                                 | left _ => fol.var L (newVar nv3)
+                                 | left _ => var (newVar nv3)
                                  | right _ => m2 v
                                  end)).
               replace (subAllFormula f a2) with
                 (subAllFormula f
                    (fun x : nat =>
-                      substituteTerm L (a1 x) (newVar nv2) (fol.var L (newVar nv3)))).
+                      substituteTerm L (a1 x) (newVar nv2) (var (newVar nv3)))).
            ** apply (iffSym L).
               apply subSubAllFormula.
            ** apply subAllFormula_ext.
@@ -932,7 +931,7 @@ Proof.
                    (subAllFormula f
                       (fun v : nat =>
                          match eq_nat_dec v n with
-                         | left _ => fol.var L (newVar nv2)
+                         | left _ => var (newVar nv2)
                          | right _ => subAllTerm (m1 v) m2
                          end))))
         by (eapply In_list_remove1; apply H). 
@@ -981,8 +980,8 @@ Lemma liftCloseFrom  (n : nat) :
       (subAllFormula f
          (fun x : nat =>
           match le_lt_dec n x with
-          | left _ => fol.var L x
-          | right _ => fol.var L (m + x)
+          | left _ => var x
+          | right _ => var (m + x)
           end))).
 Proof.
   induction n as [| n Hrecn]; simpl.
@@ -990,9 +989,9 @@ Proof.
               (subAllFormula f
                  (fun x : nat =>
                     match le_lt_dec 0 x with
-                    | left _ => fol.var L x
-                    | right _ => fol.var L (m + x)
-                    end)) with (subAllFormula f (fun x : nat => fol.var L x)).
+                    | left _ => var x
+                    | right _ => var (m + x)
+                    end)) with (subAllFormula f (fun x : nat => var x)).
     + apply (impE L) with f.
       * apply (iffE2 L).
         apply subAllFormulaId.
@@ -1039,9 +1038,9 @@ Proof.
                    (subAllFormula f
                       (fun x : nat =>
                          match le_lt_dec n x with
-                         | left _ => fol.var L x
-                         | right _ => fol.var L (m + x)
-                         end)) n (fol.var L (m + n)))).
+                         | left _ => var x
+                         | right _ => var (m + x)
+                         end)) n (var (m + n)))).
            ++ apply sysWeaken; clear H1 H T Hrecn.
               cut
                 (folProof.SysPrf L (Empty_set (fol.Formula L))
@@ -1050,29 +1049,29 @@ Proof.
                          (subAllFormula f
                             (fun x : nat =>
                                match le_lt_dec n x with
-                               | left _ => fol.var L x
-                               | right _ => fol.var L (m + x)
-                               end)) n (fol.var L (m + n)))
+                               | left _ => var x
+                               | right _ => var (m + x)
+                               end)) n (var (m + n)))
                       (subAllFormula f
                          (fun x : nat =>
                             match le_lt_dec (S n) x with
-                            | left _ => fol.var L x
-                            | right _ => fol.var L (m + x)
+                            | left _ => var x
+                            | right _ => var (m + x)
                             end)))).
               ** generalize
                   (substituteFormula L
                      (subAllFormula f
                         (fun x : nat =>
                            match le_lt_dec n x with
-                           | left _ => fol.var L x
-                           | right _ => fol.var L (m + x)
-                           end)) n (fol.var L (m + n))).
+                           | left _ => var x
+                           | right _ => var (m + x)
+                           end)) n (var (m + n))).
                  generalize
                    (subAllFormula f
                       (fun x : nat =>
                          match le_lt_dec (S n) x with
-                         | left _ => fol.var L x
-                         | right _ => fol.var L (m + x)
+                         | left _ => var x
+                         | right _ => var (m + x)
                          end)).
            clear f H0; intros f f0 H.
            induction n as [| n Hrecn]; simpl.
@@ -1091,25 +1090,25 @@ Proof.
                   (subAllFormula f
                      (fun x : nat =>
                         match le_lt_dec (S n) x with
-                        | left _ => fol.var L x
-                        | right _ => fol.var L (m + x)
+                        | left _ => var x
+                        | right _ => var (m + x)
                         end)) 
                   with
                   (subAllFormula f
                      (fun x : nat =>
                         substituteTerm L
                           match le_lt_dec n x with
-                          | left _ => fol.var L x
-                          | right _ => fol.var L (m + x)
-                          end n (fol.var L (m + n)))).
+                          | left _ => var x
+                          | right _ => var (m + x)
+                          end n (var (m + n)))).
                  --- apply (iffE1 L).
                      apply
                        subSubAllFormula
                        with
                        (m := fun x : nat =>
                                match le_lt_dec n x with
-                               | left _ => fol.var L x
-                               | right _ => fol.var L (m + x)
+                               | left _ => var x
+                               | right _ => var (m + x)
                                end).
                  --- apply subAllFormula_ext.
                      intros m0 H1; induction (le_lt_dec n m0) as [a | ?].
@@ -1132,8 +1131,8 @@ Proof.
                  m < s ->
                  s + r <= p ->
                  folProof.SysPrf L (Empty_set (fol.Formula L))
-                   (impH  (substituteFormula L (closeFrom s r f) m (fol.var L p))
-                      (closeFrom s r (substituteFormula L f m (fol.var L p))))).
+                   (impH  (substituteFormula L (closeFrom s r f) m (var p))
+                      (closeFrom s r (substituteFormula L f m (var p))))).
                { clear H0 H H1 m T f n Hrecn.
                  intros f s n.
                  induction n as [| n Hrecn]; simpl.  
@@ -1141,7 +1140,7 @@ Proof.
                  - intros m p H H0; rewrite (subFormulaForall L).
                    induction (eq_nat_dec (s + n) m) as [a | b].
                    + rewrite <- a in H; lia.
-                   + induction (In_dec eq_nat_dec (s + n) (freeVarTerm L (fol.var L p)))
+                   + induction (In_dec eq_nat_dec (s + n) (freeVarTerm L (var p)))
                        as [a | ?].
                      * induction a as [H1| H1].
                        -- rewrite Nat.add_succ_r in H0; simpl in H0.
@@ -1153,7 +1152,7 @@ Proof.
                          induction H2 as [x H2| x H2]; [ induction H2 | induction H2 ].
                        -- now elim (In_list_remove2 _ _ _ _ _ H1).
                        -- apply impE 
-                            with (substituteFormula L (closeFrom s n f) m (fol.var L p)).
+                            with (substituteFormula L (closeFrom s n f) m (var p)).
                           ++ apply sysWeaken.
                              ** apply Hrecn.
                                 --- auto.
@@ -1168,9 +1167,9 @@ Proof.
                        (subAllFormula f
                           (fun x : nat =>
                              match le_lt_dec n x with
-                             | left _ => fol.var L x
-                             | right _ => fol.var L (m + x)
-                             end))) n (fol.var L (m + n))).
+                             | left _ => var x
+                             | right _ => var (m + x)
+                             end))) n (var (m + n))).
                ** apply sysWeaken, H2. 
            --- apply H0;  auto.
            --- auto.
@@ -1206,10 +1205,10 @@ Lemma subAllCloseFrom1 :
             match le_lt_dec m x with
             | left _ =>
                 match le_lt_dec (m + n) x with
-                | left _ => fol.var L x
+                | left _ => var x
                 | right _ => map x
                 end
-            | right _ => fol.var L x
+            | right _ => var x
             end)).
 Proof.
   intro n; induction n as [| n Hrecn]; simpl.
@@ -1219,12 +1218,12 @@ Proof.
             match le_lt_dec m x with
             | left _ =>
                 match le_lt_dec (m + 0) x with
-                | left _ => fol.var L x
+                | left _ => var x
                 | right _ => map x
                 end
-            | right _ => fol.var L x
+            | right _ => var x
             end)) 
-      with (subAllFormula f (fun x : nat => fol.var L x)).
+      with (subAllFormula f (fun x : nat => var x)).
     + apply (impE L) with f.
       * apply (iffE2 L); apply subAllFormulaId.
       * apply H0.
@@ -1238,10 +1237,10 @@ Proof.
                match le_lt_dec m x with
                | left _ =>
                    match le_lt_dec (m + n) x with
-                   | left _ => fol.var L x
+                   | left _ => var x
                    | right _ => map x
                    end
-               | right _ => fol.var L x
+               | right _ => var x
                end)) (m + n) (map (m + n))).
     + replace
         (subAllFormula f
@@ -1249,10 +1248,10 @@ Proof.
               match le_lt_dec m x with
               | left _ =>
                   match le_lt_dec (m + S n) x with
-                  | left _ => fol.var L x
+                  | left _ => var x
                   | right _ => map x
                   end
-              | right _ => fol.var L x
+              | right _ => var x
               end)) 
         with
         (subAllFormula f
@@ -1261,10 +1260,10 @@ Proof.
                 match le_lt_dec m x with
                 | left _ =>
                     match le_lt_dec (m + n) x with
-                    | left _ => fol.var L x
+                    | left _ => var x
                     | right _ => map x
                     end
-                | right _ => fol.var L x
+                | right _ => var x
                 end (m + n) (map (m + n)))).
       * apply (iffE1 L); 
           apply subSubAllFormula with
@@ -1272,10 +1271,10 @@ Proof.
                   match le_lt_dec m x with
                   | left _ =>
                       match le_lt_dec (m + n) x with
-                      | left _ => fol.var L x
+                      | left _ => var x
                       | right _ => map x
                       end
-                  | right _ => fol.var L x
+                  | right _ => var x
                   end).
       * apply subAllFormula_ext.
         intros m0 H1; induction (le_lt_dec m m0) as [a | ?].
@@ -1332,7 +1331,7 @@ Lemma subAllCloseFrom :
       (subAllFormula f
          (fun x : nat =>
             match le_lt_dec n x with
-            | left _ => fol.var L x
+            | left _ => var x
             | right _ => m x
             end)).
 Proof.
@@ -1357,8 +1356,8 @@ Proof.
        subAllFormula f
          (fun x : nat =>
             match le_lt_dec n x with
-            | left _ => fol.var L x
-            | right _ => fol.var L (r + x)
+            | left _ => var x
+            | right _ => var (r + x)
             end)).
   set (m' := fun x : nat => m (x - r)).
   apply
@@ -1369,16 +1368,16 @@ Proof.
           match le_lt_dec r x with
           | left _ =>
               match le_lt_dec (r + n) x with
-              | left _ => fol.var L x
+              | left _ => var x
               | right _ => m' x
               end
-          | right _ => fol.var L x
+          | right _ => var x
           end)).
   - replace
       (subAllFormula f
          (fun x0 : nat =>
             match le_lt_dec n x0 with
-            | left _ => fol.var L x0
+            | left _ => var x0
             | right _ => m x0
             end)) 
       with
@@ -1386,33 +1385,33 @@ Proof.
          (fun x : nat =>
             subAllTerm
               match le_lt_dec n x with
-              | left _ => fol.var L x
-              | right _ => fol.var L (r + x)
+              | left _ => var x
+              | right _ => var (r + x)
               end
               (fun x0 : nat =>
                  match le_lt_dec r x0 with
                  | left _ =>
                      match le_lt_dec (r + n) x0 with
-                     | left _ => fol.var L x0
+                     | left _ => var x0
                      | right _ => m' x0
                      end
-                 | right _ => fol.var L x0
+                 | right _ => var x0
                  end))).
     + apply (iffE1 L).
       unfold f'; apply subAllSubAllFormula with
         (m1 := fun x0 : nat =>
                  match le_lt_dec n x0 with
-                 | left _ => fol.var L x0
-                 | right _ => fol.var L (r + x0)
+                 | left _ => var x0
+                 | right _ => var (r + x0)
                  end)
         (m2 := fun x0 : nat =>
                  match le_lt_dec r x0 with
                  | left _ =>
                      match le_lt_dec (r + n) x0 with
-                     | left _ => fol.var L x0
+                     | left _ => var x0
                      | right _ => m' x0
                      end
-                 | right _ => fol.var L x0
+                 | right _ => var x0
                  end).
     + unfold m'; apply subAllFormula_ext; intros m0 H1.
       induction (le_lt_dec n m0) as [a | ?].
@@ -1470,7 +1469,7 @@ Proof.
         (subAllFormula (impH A B)
            (fun x : nat =>
               match le_lt_dec n x with
-              | left _ => fol.var L x
+              | left _ => var x
               | right _ => map x
               end)).
       + apply subAllCloseFrom.
@@ -1501,11 +1500,11 @@ Lemma subToSubAll (T : fol.System L) (A : fol.Formula L) (v : nat) (s : fol.Term
          (fun x : nat =>
           match eq_nat_dec v x with
           | left _ => s
-          | right _ => fol.var L x
+          | right _ => var x
           end))).
 Proof.
   apply (iffTrans L) with
-    (substituteFormula L (subAllFormula A (fun x : nat => fol.var L x)) v s).
+    (substituteFormula L (subAllFormula A (fun x : nat => var x)) v s).
   apply sysExtend with (Empty_set (fol.Formula L)).
   - intros x H; contradiction H.
   - apply (reduceSub L).
@@ -1518,11 +1517,11 @@ Proof.
            (fun x : nat =>
               match eq_nat_dec v x with
               | left _ => s
-              | right _ => fol.var L x
+              | right _ => var x
               end)) 
         with
         (subAllFormula A
-           (fun n : nat => substituteTerm L ((fun x : nat => fol.var L x) n) v s)).
+           (fun n : nat => substituteTerm L ((fun x : nat => var x) n) v s)).
       * apply (iffRefl L).
       * apply subAllFormula_ext; intros m H; now simpl.
 Qed.
@@ -1561,7 +1560,7 @@ Proof.
                   ((fun x : nat =>
                       match eq_nat_dec v x with
                       | left _ => s
-                      | right _ => fol.var L x
+                      | right _ => var x
                       end) n) map)).
         -- apply (iffRefl L).
         -- apply subAllFormula_ext.

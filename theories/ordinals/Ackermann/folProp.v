@@ -15,7 +15,6 @@ Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
   
-Let var := var L.
 Let apply := apply L.
 Let atomic := atomic L.
 Let lt_depth := lt_depth L.
@@ -173,7 +172,7 @@ with substituteTerms (n : nat) (ss : fol.Terms L n)
 Lemma subTermVar1 :
   forall (v : nat) (s : fol.Term L), substituteTerm (var v) v s = s.
 Proof.
-  intros v s; unfold var, substituteTerm in |- *.
+  intros v s;  unfold substituteTerm in |- *.
   destruct  (eq_nat_dec v v) as [e | b].
   - reflexivity.
   - now destruct b.
@@ -183,7 +182,7 @@ Lemma subTermVar2 :
   forall (v x : nat) (s : fol.Term L),
     v <> x -> substituteTerm (var x) v s = var x.
 Proof.
-  intros v x s H; unfold var, substituteTerm in |- *.
+  intros v x s H; unfold substituteTerm in |- *.
   destruct (eq_nat_dec v x).
   - contradiction. 
   - reflexivity.

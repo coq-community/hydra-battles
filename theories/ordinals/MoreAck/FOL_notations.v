@@ -24,7 +24,7 @@ Notation "t = u" := (@fol.equal _ t u): fol_scope.
 
 Notation allH v A := (fol.forallH v A).
 Notation exH := (fol.existH).
-Notation v_ := (fol.var _).
+Notation v_ := var.
 End FOL_notations.
 
 
@@ -59,7 +59,7 @@ Notation app2 f arg1 arg2 :=
   (fol.apply  _ (f: Functions _) 
      (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil _)))).
 
-Notation v_ := (fol.var _).
+Notation v_ := (fol.var).
 
  Section Consistance. 
   Goal forall L A B, @orH L A B = (A \/ B)%cfol. 
@@ -77,7 +77,7 @@ End CFOL_notations.
 Import FOL_notations. 
 Section JustTry.
 Variable L: Language.
-Check (var L 1 = var _ 2)%fol.
+Check (@var L 1 = var 2)%fol.
 Check (v_ 1 = v_ 2)%fol: Formula L.
 Check (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 

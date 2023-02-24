@@ -67,7 +67,7 @@ Check (apply L _f  (Tcons _ _ (apply L _a (Tnil _)) (Tnil _))).
 (** f (f v1) **)
 Check (apply L _f 
          (Tcons _ _ (apply L _f  
-                       (Tcons _ _ (var _ 1) (Tnil _)))
+                       (Tcons _ _ (var 1) (Tnil _)))
             (Tnil _))).
 
 Check (f (f (v_ 1)))%fol. 
@@ -134,8 +134,8 @@ Proof with auto with sets.
 Qed. 
   
 (* begin snippet boundVars *)
-Goal forallH (L:= L) 1 (equal (var _ 1) (var _ 1)) <>
-       forallH  2 (equal (var _ 2) (var _ 2)). 
+Goal forallH (L:= L) 1 (equal (var 1) (var 1)) <>
+       forallH  2 (equal (var 2) (var 2)). 
   discriminate. 
 Qed. 
 (* end snippet boundVars *)

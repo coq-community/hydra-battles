@@ -7,11 +7,11 @@ Section bare_syntax.
 Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
-           (equal  (var _ 0) 
+           (equal  (var  0) 
               (apply LNN Languages.Zero (Tnil _)))
-           (existH 1 (equal (var _ 0)
+           (existH 1 (equal (var 0)
                           (apply LNN Languages.Succ 
-                             (Tcons _ 0 (var _ 1) (Tnil _)))))).
+                             (Tcons _ 0 (var 1) (Tnil _)))))).
 (* end snippet uglyF0 *)
 
 
@@ -29,7 +29,7 @@ Compute f0.
 
 Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
 Check t1_0. 
-Goal t1_0 = LNN.Plus (var _ 1) Zero. 
+Goal t1_0 = LNN.Plus (var 1) Zero. 
 reflexivity. 
 Qed. 
 
@@ -41,7 +41,7 @@ Set Printing Notations.
 Section Examples.
 
 (* begin snippet v1Plus01 *)
-Let t1: Term LNN := Plus (var _ 1) Zero. 
+Let t1: Term LNN := Plus (var 1) Zero. 
 (* end snippet v1Plus01 *)
 
 Compute t1. 

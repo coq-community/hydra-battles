@@ -23,7 +23,6 @@ Hypothesis
 
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
 Let apply := apply L.
 
 Definition wellFormedTermTerms : nat -> nat :=

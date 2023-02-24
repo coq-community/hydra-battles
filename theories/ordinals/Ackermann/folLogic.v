@@ -14,7 +14,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
 Let apply := apply L.
 Let atomic := atomic L.
 Let ifThenElseH := ifThenElseH L.

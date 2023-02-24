@@ -15,7 +15,6 @@ Definition System := System LNN.
 Definition Sentence := Sentence LNN.
 Definition Term := Term LNN.
 Definition Terms := Terms LNN.
-Definition var := var LNN.
 Definition ifThenElseH := ifThenElseH LNN.
 Definition SysPrf := SysPrf LNN.
 

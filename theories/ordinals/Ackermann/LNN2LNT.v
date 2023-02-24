@@ -317,7 +317,7 @@ Proof.
              (substituteFormula LNT
                 (LNN2LNT_formula
                    (substituteFormula LNN
-                      (substituteFormula LNN a v (fol.var LNN x)) v0 s)) x 
+                      (substituteFormula LNN a v (var x)) v0 s)) x 
                 (var x0))).
         apply (rebindForall LNT).
         intros H6. 
@@ -326,20 +326,20 @@ Proof.
              (freeVarFormula LNT
                 (LNN2LNT_formula
                    (substituteFormula LNN
-                      (substituteFormula LNN a v (fol.var LNN x))
+                      (substituteFormula LNN a v (var x))
                       v0 s))))
           by (eapply In_list_remove1; apply H6). 
         assert
           (H8: In x0
                  (freeVarFormula LNN
                     (substituteFormula LNN (substituteFormula LNN a v 
-                                              (fol.var LNN x)) v0
+                                              (var x)) v0
                        s)))
           by (apply LNN2LNT_freeVarFormula1; assumption).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         assert
           (H10: In x0 (freeVarFormula LNN 
-                         (substituteFormula LNN a v (fol.var LNN x)))) 
+                         (substituteFormula LNN a v (var x)))) 
           by (eapply In_list_remove1; apply H9).
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
         elim H5.
@@ -364,7 +364,7 @@ Proof.
              (substituteFormula LNT
                 (substituteFormula LNT
                    (substituteFormula LNT (LNN2LNT_formula a) v 
-                      (fol.var LNT x)) v0
+                      (var x)) v0
                    (LNN2LNT_term s)) x (var x0)).
            apply (reduceSub LNT).
            apply (notInFreeVarSys LNT).
@@ -403,7 +403,7 @@ Qed.
 
 Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
   match t with
-  | fol.var v => fol.var LNN v
+  | fol.var v => var v
   | apply f ts => apply LNN f (LNT2LNN_terms _ ts)
   end
  
@@ -673,11 +673,11 @@ Proof.
         with
         (iffH
            (translateLT
-              (Tcons LNN 1 (fol.var LNN 2)
-                 (Tcons LNN 0 (fol.var LNN 0) (Tnil LNN))))
+              (Tcons LNN 1 (var 2)
+                 (Tcons LNN 0 (var 0) (Tnil LNN))))
            (translateLT
-              (Tcons LNN 1 (fol.var LNN 3)
-                 (Tcons LNN 0 (fol.var LNN 1) (Tnil LNN))))).
+              (Tcons LNN 1 (var 3)
+                 (Tcons LNN 0 (var 1) (Tnil LNN))))).
       - apply impRefl.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 
@@ -727,7 +727,7 @@ Proof.
                   apply eqTrans with (var 1).
                   **  apply eqTrans with (Plus (var 3) (Succ (var 4))).
                       fold (Succ (var 4)) in |- *.
-                      fold (Plus (fol.var LNT 2) (Succ (var 4))) in |- *.
+                      fold (Plus (var 2) (Succ (var 4))) in |- *.
                       apply eqPlus.
                       apply Axm.
                       left.

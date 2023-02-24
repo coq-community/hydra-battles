@@ -19,7 +19,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
 Let apply := apply L.
 
 Definition codeSubTermTerms : nat -> nat -> nat -> nat :=
@@ -62,7 +61,7 @@ Proof.
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              codeSubTerms (codeTerms L codeF n ts) v (codeTerm L codeF s) =
                codeTerms L codeF n (substituteTerms L n ts v s)).
-    - intro n; simpl; replace (codeTerm L codeF (fol.var L n)) with (cPair 0 n).
+    - intro n; simpl; replace (codeTerm L codeF (var n)) with (cPair 0 n).
       + unfold codeSubTerm, codeSubTermTerms, evalStrongRec; simpl.
         repeat rewrite cPairProjections1 || rewrite cPairProjections2.
         simpl; induction (eq_nat_dec v n) as [a | b].

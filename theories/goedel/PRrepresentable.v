@@ -176,7 +176,7 @@ Proof.
                         rewrite (subFormulaRelation LNN).
                         simpl in |- *.
                         rewrite subTermNil.
-                        **** fold (var 4) in |- *.
+                        **** (* fold (var 4) in |- *. *)
                              replace 
                                (apply LNN Languages.Succ 
                                   (Tcons LNN 0 (natToTerm a)
@@ -410,7 +410,7 @@ Proof.
                                                           (Tcons LNN 1 (natToTerm n)
                                                              (Tcons LNN 0
                                                                 (apply LNN Languages.Times
-                                                                   (Tcons LNN 1 (fol.var LNN 5)
+                                                                   (Tcons LNN 1 (var  5)
                                                                       (Tcons LNN 0
                                                                          (apply LNN Languages.Succ
                                                                             (Tcons LNN 0
@@ -886,7 +886,7 @@ Proof.
         repeat rewrite (subFormulaEqual LNN). simpl in |- *.
         destruct (Nat.eq_dec n n); try lia.
         replace
-          (fol.equal  (fol.var LNN 0)
+          (fol.equal  (var 0)
             (substituteTerm LNN (natToTerm a) (S n)
               (natToTerm a0)))
           with
@@ -2645,7 +2645,7 @@ Ltac PRsolveFV A B n :=
         rewrite freeVarSucc in H
     | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
         simpl in H; decompose sum H; clear H
-    | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
+    | H:(In _ (freeVarTerm LNN (var  _))) |- _ =>
         simpl in H; decompose sum H; clear H
     end.
 
@@ -5408,7 +5408,7 @@ Opaque substituteFormula.
           rewrite freeVarSucc in H
       | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
           simpl in H; decompose sum H; clear H
-      | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
+      | H:(In _ (freeVarTerm LNN (var  _))) |- _ =>
           simpl in H; decompose sum H; clear H
       end; try first [ assumption | apply le_n ].
       assert (v <= 2) by auto. lia.

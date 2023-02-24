@@ -245,7 +245,7 @@ Proof.
                       (interpTerm
                          (updateValue (updateValue value nv x) v0
                             (interpTerm (updateValue value nv x) s)) 
-                         (var L nv)) x0).
+                         (var nv)) x0).
     { intros x x0 H1; unfold updateValue in |- *; simpl in |- *.
       induction (eq_nat_dec v x0) as [a1 | ?].
       - induction (eq_nat_dec v0 nv) as [a2 | b0].
@@ -279,10 +279,10 @@ Proof.
                 (interpTerm
                    (updateValue (updateValue value nv x) v0
                       (interpTerm (updateValue value nv x) s)) 
-                   (var L nv))) a) <->
+                   (var nv))) a) <->
          (forall x : U M,
              interpFormula (updateValue value nv x)
-               (substituteFormula L (substituteFormula L a v (var L nv)) v0 s))).
+               (substituteFormula L (substituteFormula L a v (var nv)) v0 s))).
     { split.
       - assert
           (H2: forall b : Formula L,
@@ -328,7 +328,7 @@ Proof.
                   (interpTerm
                      (updateValue (updateValue value nv x) v0
                         (interpTerm (updateValue value nv x) s)) 
-                     (var L nv))) a)).
+                     (var nv))) a)).
     { split.
       - intros H3 x;
         apply
@@ -346,7 +346,7 @@ Proof.
              (interpTerm
                 (updateValue (updateValue value nv x) v0
                    (interpTerm (updateValue value nv x) s)) 
-                (var L nv))).
+                (var nv))).
         + intros x0 H4;
           symmetry  in |- *.
           auto.
@@ -616,7 +616,7 @@ Proof.
                          (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
                          (nVars L (arity L (inl (Functions L) R))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
                       (arity L (inl (Functions L) R))))).
         { generalize (arity L (inl (Functions L) R)).
           simple induction n.
@@ -626,8 +626,8 @@ Proof.
             intro H1; apply
                         (H
                            (fun x y : Terms L n0 =>
-                              A (Tcons L n0 (var L (n0 + n0)) x) 
-                                (Tcons L n0 (var L (S (n0 + n0))) y))).
+                              A (Tcons L n0 (var (n0 + n0)) x) 
+                                (Tcons L n0 (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.
@@ -676,7 +676,7 @@ Proof.
                          (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
                          (nVars L (arity L (inr (Relations L) f))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
                       (arity L (inr (Relations L) f))))).
         { generalize (arity L (inr (Relations L) f)).
           simple induction n.
@@ -687,8 +687,8 @@ Proof.
             intros H1; 
               apply  (H
                         (fun x y : Terms L n0 =>
-                           A (Tcons L n0 (var L (n0 + n0)) x) 
-                             (Tcons L n0 (var L (S (n0 + n0))) y))).
+                           A (Tcons L n0 (var (n0 + n0)) x) 
+                             (Tcons L n0 (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.
@@ -716,10 +716,10 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH (equal (var  L 0) (var L 0))).
+  intros H; unfold Consistent; exists (notH (equal (var 0) (var 0))).
   intros H0; assert
                (H1: interpFormula value
-                      (nnTranslate (notH  (equal (var L 0) (var L 0))))).
+                      (nnTranslate (notH  (equal (var 0) (var 0))))).
   { apply preserveValue.
     assumption.
     auto.

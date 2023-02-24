@@ -17,7 +17,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
 Let apply := apply L.
 Let atomic := atomic L.
 Let ifThenElseH := ifThenElseH L.
@@ -53,7 +52,7 @@ Proof.
        rewrite <- (subFormulaId L f a).
        apply (impE L) with
          (substituteFormula L (substituteFormula L f a (var b)) b 
-            (fol.var L a)).
+            (var a)).
        -- apply (iffE1 L).
           apply (subFormulaTrans L); apply H.
        -- apply forallE, Axm; right; constructor.

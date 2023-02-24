@@ -451,7 +451,7 @@ Proof.
                                                    (codeFormula Theta)))) 
                                with
                                (LNN2LNT_formula
-                                  (equal (LNN.var 0)
+                                  (equal (var 0)
                                      (LNN.natToTerm (subStar (codeFormula Theta) nv 
                                                        (codeFormula Theta))))).
                              apply iffTrans  with
@@ -511,7 +511,7 @@ Proof.
                                                    (codeFormula Theta)))) 
                                with
                                (LNN2LNT_formula
-                                  (equal (LNN.var 0)
+                                  (equal (var 0)
                                      (LNN.natToTerm 
                                         (subStar (codeFormula Theta) nv 
                                            (codeFormula Theta))))).
