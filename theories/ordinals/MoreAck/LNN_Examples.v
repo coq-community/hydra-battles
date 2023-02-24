@@ -13,7 +13,7 @@ Definition  f0 : Formula LNN :=
            (existH 1 (equal (var 0)
                           (apply  
                              (Languages.Succ : Functions LNN)
-                             (Tcons _ 0 (var 1) (@Tnil _)))))).
+                             (Tcons  0 (var 1) (@Tnil _)))))).
 (* end snippet uglyF0 *)
 
 
@@ -29,7 +29,7 @@ Compute f0.
 (* end snippet CNNF0 *)
 
 Locate zero.
-
+Locate "_ + _".
  Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
 Check t1_0. 
 Goal t1_0 = LNN.Plus (var 1) Zero. 

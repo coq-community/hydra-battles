@@ -726,3 +726,4 @@ Arguments atomic {L} _ _.
 Arguments apply {L} _ _.
 Arguments ifThenElseH {L} _ _ _.
 Arguments Tnil {L}.
+Arguments Tcons {L} _ _ _.

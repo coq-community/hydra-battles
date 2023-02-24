@@ -626,8 +626,8 @@ Proof.
             intro H1; apply
                         (H
                            (fun x y : Terms L n0 =>
-                              A (Tcons L n0 (var (n0 + n0)) x) 
-                                (Tcons L n0 (var (S (n0 + n0))) y))).
+                              A (Tcons n0 (var (n0 + n0)) x) 
+                                (Tcons n0 (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.
@@ -687,8 +687,8 @@ Proof.
             intros H1; 
               apply  (H
                         (fun x y : Terms L n0 =>
-                           A (Tcons L n0 (var (n0 + n0)) x) 
-                             (Tcons L n0 (var (S (n0 + n0))) y))).
+                           A (Tcons n0 (var (n0 + n0)) x) 
+                             (Tcons n0 (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.

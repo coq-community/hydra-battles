@@ -14,11 +14,11 @@ Notation "~ A" := (@fol.notH _ A): fol_scope.
 Notation k_ t := (fol.apply  (t:Functions _)  (fol.Tnil)).
 
 Notation app1 f arg := 
-  (fol.apply  (f: Functions _)  (fol.Tcons _ _ arg (fol.Tnil))).
+  (fol.apply  (f: Functions _)  (Tcons arg (fol.Tnil))).
 About Tnil.
 Notation app2 f arg1 arg2 := 
   (fol.apply   (f: Functions _) 
-     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil)))).
+     (Tcons  arg1 (Tcons  arg2 (fol.Tnil)))).
 
 Notation "t = u" := (@fol.equal _ t u): fol_scope.
 
@@ -50,14 +50,15 @@ Notation allH v A:= (fol.forallH v A).
 Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
 
 Notation "t = u" := (@fol.equal _ t u): cfol_scope.
+About fol.apply. 
 
 Notation app1 f arg := 
   (fol.apply  (f: Functions _) 
-     (fol.Tcons _ _ arg (fol.Tnil))).
+     (fol.Tcons  0 arg fol.Tnil)).
 
 Notation app2 f arg1 arg2 := 
   (fol.apply   (f: Functions _) 
-     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil)))).
+     (fol.Tcons 1 arg1 (fol.Tcons 0 arg2 fol.Tnil))).
 
 Notation v_ := (fol.var).
 

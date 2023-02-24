@@ -79,27 +79,27 @@ Notation v_ := (@fol.var LNN).
 
 Notation app1 f arg := 
   (fol.apply LNN (f: Functions _) 
-     (fol.Tcons _ _ arg (fol.Tnil))).
+     (fol.Tcons _ arg (fol.Tnil))).
 
 Notation app2 f arg1 arg2 := 
   (fol.apply  LNN (f: Functions _) 
-     (fol.Tcons _ _ arg1 (fol.Tcons _ _ arg2 (fol.Tnil)))).
+     (fol.Tcons _  arg1 (fol.Tcons _  arg2 (fol.Tnil)))).
 
 Notation "t1 + t2" := (@fol.apply  LNN Languages.Plus 
-     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil)))): cnn_scope.
+     (fol.Tcons _ t1 (fol.Tcons  _ t2 (fol.Tnil)))): cnn_scope.
 
 Notation "t1 * t2" := (@fol.apply  LNN Languages.Times 
-     (fol.Tcons _ _ t1 (fol.Tcons _ _ t2 (fol.Tnil)))): cnn_scope.
+     (fol.Tcons  _ t1 (fol.Tcons  _ t2 (fol.Tnil)))): cnn_scope.
 
 Notation S_ t  := 
    (@fol.apply  LNN Languages.Succ 
-     (fol.Tcons _ _ t (fol.Tnil))).
+     (fol.Tcons  _ t (fol.Tnil))).
 
 About fol.atomic. 
 Notation "t1 < t2" := 
  (@fol.atomic LNN Languages.LT
-    (fol.Tcons _ _ t1 
-       (fol.Tcons _ _ t2 (fol.Tnil))))(*only printing*): cnn_scope.      
+    (fol.Tcons  _ t1 
+       (fol.Tcons  _ t2 (fol.Tnil))))(*only printing*): cnn_scope.      
 
 Print Zero.
 Locate Zero. 

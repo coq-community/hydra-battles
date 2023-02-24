@@ -26,7 +26,7 @@ Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
  Terms n :=
   match ts in (fol.Terms _ n0) return (Terms n0) with
   | Tnil => @Tnil LNT
-  | Tcons m s ss => Tcons LNT m (LNN2LNT_term s) (LNN2LNT_terms m ss)
+  | Tcons m s ss => Tcons m (LNN2LNT_term s) (LNN2LNT_terms m ss)
   end. 
 
 Definition LTFormula :=
@@ -56,7 +56,7 @@ Qed.
 
 Lemma translateLT1 :
  forall a a0 b0,
- translateLT (Tcons LNN 1 a (Tcons LNN 0 a0 b0)) =
+ translateLT (Tcons 1 a (Tcons 0 a0 b0)) =
  subAllFormula LNT LTFormula
    (fun H : nat =>
     nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
@@ -65,10 +65,10 @@ Lemma translateLT1 :
          (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H).
 Proof.
   intros a a0 b0; unfold translateLT.  
-  destruct (consTerms LNN 1 (Tcons LNN 1 a (Tcons LNN 0 a0 b0))) as [(a1, b) p].
+  destruct (consTerms LNN 1 (Tcons 1 a (Tcons 0 a0 b0))) as [(a1, b) p].
   simpl; destruct (consTerms LNN 0 b) as [(a2, b1) p0].
   simpl in p; inversion p.
-  assert (b = Tcons LNN 0 a0 b0)
+  assert (b = Tcons 0 a0 b0)
     by refine (inj_right_pair2 _ eq_nat_dec _ _ _ _ H1).
   rewrite H in p0; simpl in p0; inversion p0; reflexivity.
 Qed.
@@ -264,10 +264,10 @@ Proof.
       * apply (subSubAllFormula LNT).
       * rewrite <- (nilTerms _ b0).
         replace
-          (substituteTerms LNN 2 (Tcons _ 1 a (Tcons _ 0 a0 (Tnil))) v s) 
+          (substituteTerms LNN 2 (Tcons 1 a (Tcons 0 a0 (Tnil))) v s) 
           with
-          (Tcons LNN 1 (substituteTerm _ a v s)
-             (Tcons _ 0 (substituteTerm _ a0 v s) (Tnil))).
+          (Tcons 1 (substituteTerm _ a v s)
+             (Tcons 0 (substituteTerm _ a0 v s) (Tnil))).
         rewrite translateLT1.
         rewrite
           (subAllFormula_ext LNT LTFormula
@@ -411,7 +411,7 @@ Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
  fol.Terms LNN n :=
   match ts in (fol.Terms _ n0) return (fol.Terms LNN n0) with
   | Tnil => @Tnil LNN
-  | Tcons m s ss => Tcons LNN m (LNT2LNN_term s) (LNT2LNN_terms m ss)
+  | Tcons m s ss => Tcons m (LNT2LNN_term s) (LNT2LNN_terms m ss)
   end.
 
 Lemma LNT2LNN_natToTerm (n:  nat) :
@@ -673,11 +673,11 @@ Proof.
         with
         (iffH
            (translateLT
-              (Tcons LNN 1 (var 2)
-                 (Tcons LNN 0 (var 0) (Tnil))))
+              (Tcons 1 (var 2)
+                 (Tcons 0 (var 0) (Tnil))))
            (translateLT
-              (Tcons LNN 1 (var 3)
-                 (Tcons LNN 0 (var 1) (Tnil))))).
+              (Tcons 1 (var 3)
+                 (Tcons 0 (var 1) (Tnil))))).
       - apply impRefl.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 

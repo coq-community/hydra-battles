@@ -19,8 +19,8 @@ Fixpoint nVars (n: nat) : Terms n * Terms n:=
     0 => (Tnil, Tnil)
   | S n0 => 
       (let (a,b) := nVars n0 in
-       (Tcons L n0 (var (n0 + n0)) a, 
-         Tcons L n0 (var (S (n0 + n0))) b))
+       (Tcons  n0 (var (n0 + n0)) a, 
+         Tcons  n0 (var (S (n0 + n0))) b))
   end.
 
 
