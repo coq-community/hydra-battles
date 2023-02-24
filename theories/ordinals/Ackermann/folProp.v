@@ -649,7 +649,6 @@ Qed.
 
 Section Extensions.
 
-Let ifThenElseH := ifThenElseH L.
 
 Lemma subFormulaOr :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),

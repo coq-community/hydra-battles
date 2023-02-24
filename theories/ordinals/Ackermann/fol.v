@@ -724,3 +724,4 @@ Arguments existH {L} _ _.
 Arguments var {L} _.
 Arguments atomic {L} _ _.
 Arguments apply {L} _ _.
+Arguments ifThenElseH {L} _ _ _.

@@ -14,7 +14,6 @@ Definition System := System LNT.
 Definition Sentence := Sentence LNT.
 Definition Term := Term LNT.
 Definition Terms := Terms LNT.
-Definition ifThenElseH := ifThenElseH LNT.
 Definition SysPrf := SysPrf LNT.
 
 Definition Plus (x y : Term) : Term :=
