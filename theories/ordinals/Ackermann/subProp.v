@@ -18,7 +18,6 @@ Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
 Let apply := apply L.
-Let atomic := atomic L.
 Let SysPrf := SysPrf L.
 
 Lemma freeVarSubTerm1 (t : Term):

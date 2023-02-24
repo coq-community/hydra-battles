@@ -722,4 +722,4 @@ Arguments iffH {L} _ _.
 Arguments equal {L} _ _.
 Arguments existH {L} _ _.
 Arguments var {L} _.
-
+Arguments atomic {L} _ _.

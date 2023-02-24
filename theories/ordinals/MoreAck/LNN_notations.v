@@ -43,7 +43,7 @@ Notation S_ t  := (Succ t).
    
 
 Notation "t1 < t2" := 
- (fol.atomic LNN Languages.LT
+ (atomic  Languages.LT
     (fol.Tcons _ _ t1 
        (fol.Tcons _ _ t2 (fol.Tnil _)))): lnn_scope.      
  
@@ -95,7 +95,7 @@ Notation S_ t  :=
 
 About fol.atomic. 
 Notation "t1 < t2" := 
- (fol.atomic LNN Languages.LT
+ (@fol.atomic LNN Languages.LT
     (fol.Tcons _ _ t1 
        (fol.Tcons _ _ t2 (fol.Tnil _))))(*only printing*): cnn_scope.      
 

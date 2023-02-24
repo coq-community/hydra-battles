@@ -426,7 +426,7 @@ Qed.
 Fixpoint nnHelp (f : Formula L) : Formula L :=
   match f with
   | equal t s => equal t s
-  | atomic r ts => atomic L r ts
+  | atomic r ts => atomic r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
   | forallH v A => forallH v (notH (notH (nnHelp A)))
@@ -598,7 +598,7 @@ Proof.
       cut
         (forall a b : Terms L (arity L (inl (Functions L) R)),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (iffH (atomic L R a) (atomic L R b)))).
+            interpFormula value (nnHelp (iffH (atomic R a) (atomic R b)))).
       * assert
           (H: forall A,
               (forall a b : Terms L (arity L (inl (Functions L) R)),
@@ -632,7 +632,7 @@ Proof.
             simpl; rewrite H1.
             now rewrite H2.
         } 
-        apply (H (fun a b => iffH (atomic L R a) (atomic L R b))).
+        apply (H (fun a b => iffH (atomic R a) (atomic R b))).
       * simpl; generalize (rel M R).
         generalize (arity L (inl (Functions L) R)).
         intros n n0 a b H H0.

@@ -22,10 +22,6 @@ Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
 Notation apply := (apply L) (only parsing).
-Notation atomic := (atomic L) (only parsing).
-
-(* Notation notH := (notH L) (only parsing). *)
-(* Notation forallH := (forallH L) (only parsing). *)
 Notation SysPrf := (SysPrf L) (only parsing).
 
 Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=

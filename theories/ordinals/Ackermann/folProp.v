@@ -16,7 +16,6 @@ Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
   
 Let apply := apply L.
-Let atomic := atomic L.
 Let lt_depth := lt_depth L.
 
 Section Free_Variables.
@@ -433,14 +432,14 @@ Proof.
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
+                 {y : fol.Formula L | depth L y = depth L (atomic r t)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L => depth L y = 
-                                               depth L (fol.atomic L r t))
+                                               depth L (atomic r t))
                    (atomic r (substituteTerms (arity L (inl (Functions L) r)) 
                                 t a b))
-                   (refl_equal (depth L (fol.atomic L r t)))) H)
+                   (refl_equal (depth L (atomic r t)))) H)
          substituteFormulaImp
          substituteFormulaNot substituteFormulaForall f1 
          (v, s)).
@@ -463,14 +462,14 @@ Proof.
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
+                 {y : fol.Formula L | depth L y = depth L (atomic r t)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L => 
-                      depth L y = depth L (fol.atomic L r t))
+                      depth L y = depth L (atomic r t))
                    (atomic r (substituteTerms (arity L (inl (Functions L) r)) 
                                 t a b))
-                   (refl_equal (depth L (fol.atomic L r t)))) H) 
+                   (refl_equal (depth L (atomic r t)))) H) 
          substituteFormulaImp
          substituteFormulaNot substituteFormulaForall f2 
          (v, s)).
@@ -510,14 +509,14 @@ Proof.
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
-                 {y : fol.Formula L | depth L y = depth L (fol.atomic L r t)})
+                 {y : fol.Formula L | depth L y = depth L (atomic r t)})
               (fun (a : nat) (b : fol.Term L) =>
                  exist
                    (fun y : fol.Formula L =>
-                      depth L y = depth L (fol.atomic L r t))
+                      depth L y = depth L (atomic r t))
                    (atomic r
                       (substituteTerms (arity L (inl (Functions L) r)) t a b))
-                   (refl_equal (depth L (fol.atomic L r t)))) H)
+                   (refl_equal (depth L (atomic r t)))) H)
          substituteFormulaImp
          substituteFormulaNot substituteFormulaForall f 
          (v, s)); reflexivity.

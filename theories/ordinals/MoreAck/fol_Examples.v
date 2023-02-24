@@ -32,9 +32,9 @@ Notation h  x y := (app2 (_h: Functions L) x y)%fol.
 Notation a := (k_ (_a : Functions L))%fol.
 Notation b := (k_ (_b : Functions L))%fol.
 
-Notation P t := (fol.atomic L (_P: Relations L) (Tcons _ _ t (Tnil _))).
+Notation P t := (atomic  (_P: Relations L) (Tcons _ _ t (Tnil _))).
 Notation R t1 t2 :=
-  (fol.atomic L (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+  (atomic (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
 
 #[local] Notation S t1 t2 :=
   (@fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).

@@ -21,7 +21,6 @@ Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
 Let apply := apply L.
-Let atomic := atomic L.
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.

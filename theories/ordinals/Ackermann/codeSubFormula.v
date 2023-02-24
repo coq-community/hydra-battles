@@ -236,8 +236,8 @@ Definition makeTrace : fol.Formula L -> nat * fol.Term L -> nat :=
     (fun (r : Relations L) t (p : nat * fol.Term L) =>
      let v := fst p in
      let s := snd p in
-     cTriple (cTriple v (codeTerm s) (codeFormula (atomic L r t)))
-       (codeFormula (substituteFormula L (atomic L r t) v s)) 0) 
+     cTriple (cTriple v (codeTerm s) (codeFormula (atomic r t)))
+       (codeFormula (substituteFormula L (atomic r t) v s)) 0) 
     makeTraceImp
     makeTraceNot makeTraceForall.
 
@@ -4739,8 +4739,8 @@ Proof.
     set
       (C :=
          Nat.max (codeTerm s)
-           (pow3 (depth L (atomic L r t)) +
-              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (atomic L r t)))).
+           (pow3 (depth L (atomic r t)) +
+              fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula (atomic r t)))).
     simpl; repeat rewrite cPairProjections1.
     unfold A at 1; 
       repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -5158,8 +5158,8 @@ Proof.
               (freeVarTerm L s ++ freeVarTerms L (arity L (inl (Functions L) r)) t))
            (codeTerm s)).
     + apply Nat.le_max_l.
-    + apply (H0 (atomic L r t) v s).
-    + apply (E (atomic L r t) v s).
+    + apply (H0 (atomic r t) v s).
+    + apply (E (atomic r t) v s).
     + apply le_n.
   - intros f0 H1 f1 H2 v s C; simpl; 
       replace (makeTrace (impH f0 f1) (v, s)) with

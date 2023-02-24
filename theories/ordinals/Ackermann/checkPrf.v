@@ -60,7 +60,6 @@ Let Term := Term L.
 Let Terms := Terms L.
 Let apply := apply L.
 Let Formula := Formula L.
-Let atomic := atomic L.
 Let wellFormedTerm := wellFormedTerm codeArityF.
 Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.
 Let Prf := Prf L.
@@ -2213,7 +2212,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
             (codeTerms L codeF (arity L (inl (Functions L) R)) b)))
         with
         (codeFormula L codeF codeR 
-           (iffH (fol.atomic L R a) (fol.atomic L R b))).
+           (iffH (atomic R a) (atomic R b))).
     + generalize (arity L (inl (Functions L) R)).
       intros n; induction n as [| n Hrecn].
       * reflexivity.
@@ -3412,7 +3411,6 @@ Simpl in H0.
                           then 1
                           else 0) + 0 <> 0).
                       { 
-                        fold atomic in |- *.
                         generalize (iffH (atomic x0 a) (atomic x0 b)).
                         intros f H5.
                         clear H0.

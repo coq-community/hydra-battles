@@ -28,9 +28,11 @@ Definition Succ (x : Term) : Term :=
   apply LNN Succ (Tcons LNN 0 x (Tnil LNN)).
 
 Definition Zero : Term := apply LNN Zero (Tnil LNN).
-
+Search Relations. 
+Check LT. 
+Print LNNRelation. 
 Definition LT (x y : Term) : Formula :=
-  atomic LNN LT (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))). 
+  @atomic LNN LT (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))). 
 (* end snippet Instantiations *)
 
 Lemma LNN_dec : language_decidable LNN.

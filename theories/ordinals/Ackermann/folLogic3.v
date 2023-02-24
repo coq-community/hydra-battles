@@ -23,7 +23,6 @@ Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
 Let apply := apply L.
-Let atomic := atomic L.
 Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
@@ -329,7 +328,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            iffH (fol.atomic L r a) (fol.atomic L r b)) 
+            iffH (atomic r a) (atomic r b)) 
          (nVars L n)) with
       (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
    + generalize (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
