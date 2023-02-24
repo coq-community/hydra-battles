@@ -36,7 +36,7 @@ Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
   with
   | Tnil => fun _ => Tnil
   | Tcons n' t ss =>
-      fun m => Tcons n' (subAllTerm t m) (subAllTerms _ ss m)
+      fun m => Tcons (subAllTerm t m) (subAllTerms _ ss m)
   end.
 
 Lemma subAllTerm_ext (t : fol.Term L) :

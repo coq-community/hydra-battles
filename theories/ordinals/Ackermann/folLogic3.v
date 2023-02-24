@@ -463,11 +463,11 @@ Proof.
     - intros.  
       destruct
         (consTerms L n
-           (Tcons n (substituteTerm L t0 v a) (substituteTerms L n t1 v a))). 
+           (Tcons (substituteTerm L t0 v a) (substituteTerms L n t1 v a))). 
       destruct x as [a0 b0].
       destruct
         (consTerms L n
-           (Tcons n (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).  
+           (Tcons (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).  
       destruct x as [a1 b1]. 
       simpl in |- *.  simpl in e0; simpl in e.
       inversion e0.
@@ -487,10 +487,10 @@ Proof.
   - auto.
   - destruct
       (consTerms L n
-         (Tcons n (substituteTerm L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
+         (Tcons (substituteTerm L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
     destruct
       (consTerms L n
-         (Tcons n (substituteTerm L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
+         (Tcons (substituteTerm L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
     simpl in |- *; simpl in p,  e.
     inversion p.
     inversion e.

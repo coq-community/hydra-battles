@@ -54,11 +54,11 @@ About fol.apply.
 
 Notation app1 f arg := 
   (fol.apply  (f: Functions _) 
-     (fol.Tcons  0 arg fol.Tnil)).
+     (fol.Tcons  arg fol.Tnil)).
 
 Notation app2 f arg1 arg2 := 
   (fol.apply   (f: Functions _) 
-     (fol.Tcons 1 arg1 (fol.Tcons 0 arg2 fol.Tnil))).
+     (fol.Tcons arg1 (fol.Tcons arg2 fol.Tnil))).
 
 Notation v_ := (fol.var).
 

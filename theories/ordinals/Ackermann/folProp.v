@@ -164,7 +164,8 @@ with substituteTerms (n : nat) (ss : fol.Terms L n)
        match ss in (fol.Terms _ n0) return (fol.Terms L n0) with
        | Tnil => Tnil
        | Tcons m s ts =>
-           Tcons m (substituteTerm s x t) (substituteTerms m ts x t)
+           Tcons  (substituteTerm s x t) 
+             (substituteTerms m ts x t)
        end.
 
 Lemma subTermVar1 :

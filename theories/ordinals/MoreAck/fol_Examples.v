@@ -34,12 +34,12 @@ Notation b := (k_ (_b : Functions L))%fol.
 
 Check a. 
 
-Notation P t := (atomic  (_P: Relations L) (Tcons  _ t (Tnil))).
+Notation P t := (atomic  (_P: Relations L) (Tcons  t (Tnil))).
 Notation R t1 t2 :=
-  (atomic (_R: Relations L) (Tcons  _ t1 (Tcons  _ t2  (Tnil)))).
+  (atomic (_R: Relations L) (Tcons  t1 (Tcons  t2  (Tnil)))).
 
 #[local] Notation S t1 t2 :=
-  (@fol.atomic L (_S: Relations L) (Tcons _ t1 (Tcons _ t2  (Tnil )))).
+  (@fol.atomic L (_S: Relations L) (Tcons t1 (Tcons t2  (Tnil )))).
 
 
 
@@ -59,7 +59,7 @@ Compute arity (inr _f).
 Compute arity (inl _S).
 Print app2.
 
-Check @apply L _h (Tcons  1 (var 1) (Tcons 0 (var  0) (Tnil))).
+Check @apply L _h (Tcons  (var 1) (Tcons (var  0) (Tnil))).
 
 
 
@@ -170,8 +170,8 @@ Section Examples.
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
  @apply LNN Plus 
-   (Tcons _ (var 1)
-     (Tcons  _ (@apply LNN Zero Tnil) Tnil )). 
+   (Tcons  (var 1)
+     (Tcons  (@apply LNN Zero Tnil) Tnil )). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
@@ -182,16 +182,16 @@ Let f1 : Formula LNN :=
         (orH  (equal  (var 0) (@apply LNN Zero Tnil ))
            (existH 1 (equal  (var 0)
                           (@apply LNN Succ 
-                             (Tcons _  (var 1) Tnil))))).
+                             (Tcons  (var 1) Tnil))))).
 
 Let f2 : Formula LNN :=
 (existH 1 (equal  (var 0)
                           (@apply LNN Succ 
-                             (Tcons _ (var 1) Tnil )))).
+                             (Tcons (var 1) Tnil )))).
 
 Let f3 := (orH  (equal  (var 0) (@apply LNN Zero Tnil))
              (existH 1 (equal  (var 0) (@apply LNN Succ 
-                             (Tcons _ (var 1) Tnil))))).
+                             (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
 Print f3.

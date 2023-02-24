@@ -13,7 +13,7 @@ Definition  f0 : Formula LNN :=
            (existH 1 (equal (var 0)
                           (apply  
                              (Languages.Succ : Functions LNN)
-                             (Tcons  0 (var 1) (@Tnil _)))))).
+                             (Tcons  (var 1) (@Tnil _)))))).
 (* end snippet uglyF0 *)
 
 

@@ -46,7 +46,7 @@ Lemma lengthTerms :
 Proof.
   intros n ts; induction ts as [| n t ts Hrects].
   - reflexivity.
-  - replace (codeTerms L codeF (S n) (Tcons n t ts)) with
+  - replace (codeTerms L codeF (S n) (Tcons t ts)) with
       (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)));
       [ idtac | reflexivity ].
     unfold codeLength, evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
@@ -114,7 +114,7 @@ Proof.
     rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
       unfold A at 1; rewrite cPairProjections1; rewrite cPairProjections2.
-    replace (codeTerms L codeF (S n) (Tcons n t0 t1)) with
+    replace (codeTerms L codeF (S n) (Tcons t0 t1)) with
       (S (cPair (codeTerm L codeF t0) (codeTerms L codeF n t1)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.
@@ -157,7 +157,7 @@ Proof.
       rewrite computeEvalStrongRecHelp;
       unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl.
     unfold A at 1; rewrite cPairProjections1,  cPairProjections2.
-    replace (codeTerms L codeF (S n) (Tcons n t ts)) with
+    replace (codeTerms L codeF (S n) (Tcons t ts)) with
       (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.  
@@ -291,7 +291,7 @@ Proof.
                 induction (H4 H7) as [x H9].
                 induction (H6 H8) as [x0 H10].
                 induction H10 as (x1, H10).
-                exists (S x0), (Tcons x0 x x1).
+                exists (S x0), (Tcons  x x1).
                 rewrite <- (cPairProjections n).
                 now rewrite <- H9, <- H10.
              ++ simpl; apply Nat.lt_succ_r.

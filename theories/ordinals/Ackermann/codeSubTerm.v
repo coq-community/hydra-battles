@@ -111,7 +111,7 @@ Proof.
         (S (cPair (codeTerm L codeF (substituteTerm L t0 v s))
               (codeTerms L codeF n (substituteTerms L n t1 v s)))).
       + rewrite <- H, <-  H0.
-        replace (codeTerms L codeF (S n) (Tcons n t0 t1)) 
+        replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
           with
           (S (cPair (codeTerm L codeF t0) (codeTerms L codeF n t1))).
         * generalize (codeTerm L codeF t0) (codeTerms L codeF n t1).
@@ -179,7 +179,7 @@ Proof.
              (S (cPair (codeTerm L codeF (substituteTerm L t v s))
                    (codeTerms L codeF n (substituteTerms L n ts v s)))).
     + rewrite <- Hrects, <- codeSubTermCorrect.
-      replace (codeTerms L codeF (S n) (Tcons n t ts)) with
+      replace (codeTerms L codeF (S n) (Tcons t ts)) with
         (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts))).
       * generalize (codeTerm L codeF t) (codeTerms L codeF n ts).
         clear Hrects ts t n; intros n n0.

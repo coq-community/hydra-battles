@@ -3129,7 +3129,8 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (codeTerms L codeF (S n)
-         (Tcons n (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) with
+         (Tcons (substituteTerm L t0 v s) 
+            (substituteTerms L n t1 v s))) with
       (S
          (cPair (codeTerm (substituteTerm L t0 v s))
             (codeTerms L codeF n (substituteTerms L n t1 v s))));
@@ -3147,7 +3148,7 @@ Proof.
     unfold A at 1 in |- *.
     repeat rewrite cPairProjections2.
     repeat rewrite H.
-    * replace (codeTerms L codeF (S n) (Tcons n t0 t1)) with
+    * replace (codeTerms L codeF (S n) (Tcons t0 t1)) with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
       -- simpl; repeat rewrite cPairProjections1.
@@ -3159,10 +3160,10 @@ Proof.
                 (ReplaceTermTermMonotone (codeTerm t0)
                    (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTerm L t0)))
                    (Nat.max (codeTerm s)
-                      (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons n t0 t1))))).
+                      (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons t0 t1))))).
                apply maxLemma.
                apply le_n.
-               replace (freeVarTerms L (S n) (Tcons n t0 t1)) with
+               replace (freeVarTerms L (S n) (Tcons t0 t1)) with
                  (freeVarTerm L t0 ++ freeVarTerms L n t1); [ idtac | reflexivity ].
                apply maxLemma2.
          ++ eapply Nat.le_trans.
@@ -3172,19 +3173,19 @@ Proof.
                  (ReplaceTermsTermMonotone (codeTerms L codeF n t1)
                     (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTerms L n t1)))
                     (Nat.max (codeTerm s)
-                       (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons n t0 t1))))).
+                       (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons t0 t1))))).
                apply maxLemma.
                apply le_n.
-               replace (freeVarTerms L (S n) (Tcons n t0 t1)) with
+               replace (freeVarTerms L (S n) (Tcons t0 t1)) with
                  (freeVarTerm L t0 ++ freeVarTerms L n t1); [ idtac | reflexivity ].
                apply maxLemma3.
-    * replace (codeTerms L codeF (S n) (Tcons n t0 t1)) with
+    * replace (codeTerms L codeF (S n) (Tcons t0 t1)) with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
       simpl; repeat rewrite cPairProjections2.
       apply Nat.lt_succ_r. 
       apply cPairLe2.
-    * replace (codeTerms L codeF (S n) (Tcons n t0 t1)) with
+    * replace (codeTerms L codeF (S n) (Tcons t0 t1)) with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
     simpl; repeat rewrite cPairProjections1.
@@ -3225,7 +3226,7 @@ Proof.
   - intros v s; 
       replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t v s) (substituteTerms L n ts v s))) with
+           (Tcons (substituteTerm L t v s) (substituteTerms L n ts v s))) with
       (S
          (cPair (codeTerm (substituteTerm L t v s))
             (codeTerms L codeF n (substituteTerms L n ts v s))));
@@ -3235,7 +3236,7 @@ Proof.
       unfold evalComposeFunc, evalOneParamList, evalList;
       simpl in |- *; repeat rewrite cPairProjections1.
     unfold A at 1; repeat rewrite cPairProjections2; repeat rewrite H.
-    + replace (codeTerms L codeF (S n) (Tcons n t ts)) with
+    + replace (codeTerms L codeF (S n) (Tcons t ts)) with
         (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
       simpl; repeat rewrite cPairProjections1.
@@ -3246,10 +3247,10 @@ Proof.
             (ReplaceTermTermMonotone (codeTerm t)
                (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTerm L t)))
                (Nat.max (codeTerm s)
-                  (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons n t ts))))).
+                  (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons t ts))))).
            apply maxLemma.
            ++ apply le_n.
-           ++ replace (freeVarTerms L (S n) (Tcons n t ts)) 
+           ++ replace (freeVarTerms L (S n) (Tcons t ts)) 
                 with
                 (freeVarTerm L t ++ freeVarTerms L n ts); [ idtac | reflexivity ].
               apply maxLemma2.
@@ -3260,20 +3261,20 @@ Proof.
              (ReplaceTermsTermMonotone (codeTerms L codeF n ts)
                 (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTerms L n ts)))
                 (Nat.max (codeTerm s)
-                   (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons n t ts))))).
+                   (fold_right Nat.max 0 (freeVarTerms L (S n) (Tcons t ts))))).
            apply maxLemma.
            ++ apply le_n.
-           ++ replace (freeVarTerms L (S n) (Tcons n t ts)) 
+           ++ replace (freeVarTerms L (S n) (Tcons t ts)) 
                 with  (freeVarTerm L t ++ freeVarTerms L n ts); 
                 [ idtac | reflexivity ].
               apply maxLemma3.
-    + replace (codeTerms L codeF (S n) (Tcons n t ts)) 
+    + replace (codeTerms L codeF (S n) (Tcons t ts)) 
         with  (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
       simpl; repeat rewrite cPairProjections2.
       apply Nat.lt_succ_r.
       apply cPairLe2.
-    + replace (codeTerms L codeF (S n) (Tcons n t ts)) 
+    + replace (codeTerms L codeF (S n) (Tcons t ts)) 
         with  (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
       simpl; repeat rewrite cPairProjections1.
@@ -3369,14 +3370,14 @@ Proof.
     unfold A at 3 1; repeat rewrite cPairProjections2; repeat rewrite H.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t0 v (var w))
+           (Tcons (substituteTerm L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
            (cPair (codeTerm (substituteTerm L t0 v (var w)))
               (codeTerms L codeF n (substituteTerms L n t1 v (var w)))));
         [ idtac | reflexivity ].
-      replace (codeTerms L codeF (S n) (Tcons n t0 t1)) 
+      replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
         with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
@@ -3401,14 +3402,14 @@ Proof.
         -- apply (H1 v w s2).
       * repeat rewrite cPairProjections1.
         apply (H0 v w s2).
-    + replace (codeTerms L codeF (S n) (Tcons n t0 t1)) 
+    + replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
         with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections2.
       apply Nat.lt_succ_r.
       apply cPairLe2.
-    + replace (codeTerms L codeF (S n) (Tcons n t0 t1)) 
+    + replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
         with
         (S (cPair (codeTerm t0) (codeTerms L codeF n t1))); 
         [ idtac | reflexivity ].
@@ -3416,7 +3417,7 @@ Proof.
       apply cPairLe1.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t0 v (var w))
+           (Tcons (substituteTerm L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
@@ -3427,7 +3428,7 @@ Proof.
       apply cPairLe2.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t0 v (var w))
+           (Tcons (substituteTerm L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
@@ -3472,14 +3473,14 @@ Proof.
     unfold A at 3 1; repeat rewrite cPairProjections2; repeat rewrite H.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t v (var w))
+           (Tcons (substituteTerm L t v (var w))
               (substituteTerms L n ts v (var w)))) 
         with
         (S
            (cPair (codeTerm (substituteTerm L t v (var w)))
               (codeTerms L codeF n (substituteTerms L n ts v (var w)))));
         [ idtac | reflexivity ].
-      replace (codeTerms L codeF (S n) (Tcons n t ts)) 
+      replace (codeTerms L codeF (S n) (Tcons t ts)) 
         with
         (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
@@ -3503,20 +3504,20 @@ Proof.
         -- apply (Hrects v w s2).
       * repeat rewrite cPairProjections1.
         apply (ReplaceTermTermSub t v w s2).
-    + replace (codeTerms L codeF (S n) (Tcons n t ts)) 
+    + replace (codeTerms L codeF (S n) (Tcons t ts)) 
         with
         (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections2.
       apply Nat.lt_succ_r, cPairLe2.
-    + replace (codeTerms L codeF (S n) (Tcons n t ts)) 
+    + replace (codeTerms L codeF (S n) (Tcons t ts)) 
         with
         (S (cPair (codeTerm t) (codeTerms L codeF n ts))); 
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections1; apply Nat.lt_succ_r, cPairLe1.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t v (var w))
+           (Tcons (substituteTerm L t v (var w))
               (substituteTerms L n ts v (var w)))) with
         (S
            (cPair (codeTerm (substituteTerm L t v (var w)))
@@ -3525,7 +3526,7 @@ Proof.
       simpl; rewrite cPairProjections2; apply Nat.lt_succ_r, cPairLe2.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons n (substituteTerm L t v (var w))
+           (Tcons (substituteTerm L t v (var w))
               (substituteTerms L n ts v (var w)))) 
         with
         (S
@@ -4092,10 +4093,10 @@ Proof.
     + assumption.
     + unfold codeTerm,  code.codeTerm; apply cPairLe2.
   - apply Nat.le_0_l. 
-  - intros n t H t0 H0; replace (freeVarTerms L (S n) (Tcons n t t0)) 
+  - intros n t H t0 H0; replace (freeVarTerms L (S n) (Tcons t t0)) 
       with
       (freeVarTerm L t ++ freeVarTerms L n t0); [ idtac | reflexivity ].
-    replace (codeTerms L codeF (S n) (Tcons n t t0))
+    replace (codeTerms L codeF (S n) (Tcons t t0))
       with
       (S (cPair (codeTerm t) (codeTerms L codeF n t0))); 
       [ idtac | reflexivity ].
@@ -4167,11 +4168,11 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (freeVarTerms L (S n)
-         (Tcons n (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) 
+         (Tcons (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) 
       with
       (freeVarTerm L (substituteTerm L t0 v s) ++
          freeVarTerms L n (substituteTerms L n t1 v s)).
-    + replace (freeVarTerms L (S n) (Tcons n t0 t1)) 
+    + replace (freeVarTerms L (S n) (Tcons t0 t1)) 
         with
         (freeVarTerm L t0 ++ freeVarTerms L n t1).
       * induction
@@ -4210,11 +4211,11 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (freeVarTerms L (S n)
-         (Tcons n (substituteTerm L t v s) (substituteTerms L n ts v s))) 
+         (Tcons (substituteTerm L t v s) (substituteTerms L n ts v s))) 
       with
       (freeVarTerm L (substituteTerm L t v s) ++
          freeVarTerms L n (substituteTerms L n ts v s)).
-    + replace (freeVarTerms L (S n) (Tcons n t ts)) 
+    + replace (freeVarTerms L (S n) (Tcons t ts)) 
         with
         (freeVarTerm L t ++ freeVarTerms L n ts).
       * induction
@@ -5824,11 +5825,11 @@ Proof.
                                induction t as [| n t t0 Hrect].
                                +++ simpl in |- *.
                                    apply Nat.le_0_l.
-                               +++ replace (freeVarTerms L (S n) (Tcons n t t0)) 
+                               +++ replace (freeVarTerms L (S n) (Tcons t t0)) 
                                      with
                                      (freeVarTerm L t ++ freeVarTerms L n t0);
                                      [ idtac | reflexivity ].
-                                   replace (codeTerms L codeF (S n) (Tcons n t t0)) 
+                                   replace (codeTerms L codeF (S n) (Tcons t t0)) 
                                      with
                                      (S (cPair (codeTerm t) (codeTerms L codeF n t0))); 
                                      [ idtac | reflexivity ].
