@@ -1,4 +1,5 @@
-(******************************************************************************)
+(** TO DO: Define abbreviations and re-indent !!! 
+**)
 From Coq Require Import Arith.
 From hydras.Ackermann Require Import extEqualNat.
 From hydras.Ackermann Require Import subAll.
@@ -4813,18 +4814,28 @@ Opaque substituteFormula.
                                (substituteFormula LNN
                                   (substituteFormula LNN
                                      (substituteFormula LNN
-                                        (substituteFormula LNN B (S n) (natToTerm a0)) 
-                                        (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S (S n))))))
+                                        (substituteFormula LNN B (S n) 
+                                           (natToTerm a0)) 
+                                        (S (S n)) (var (S n))) 
+                                     (S (S (S n))) (var (S (S (S (S n))))))
                                   (S (S (S (S n)))) (var (S (S (S n))))).
-                           *** repeat (apply (reduceSub LNN); [ apply closedNN |]). apply (subFormulaNil LNN); PRsolveFV A B n.
+                           *** repeat (apply (reduceSub LNN);
+                                       [ apply closedNN |]). 
+                               apply (subFormulaNil LNN); PRsolveFV A B n.
                            *** apply
                                 iffTrans
                                  with
                                    (substituteFormula LNN
-                                      (substituteFormula LNN (substituteFormula LNN B (S n) (natToTerm a0))
-                                         (S (S n)) (var (S n))) (S (S (S n))) (var (S (S (S n))))).
-                               ++++ apply (subFormulaTrans LNN); PRsolveFV A B n.
-                               ++++ apply iffSym. apply (subFormulaTrans LNN); PRsolveFV A B n.
+                                      (substituteFormula LNN 
+                                         (substituteFormula LNN B (S n)
+                                            (natToTerm a0))
+                                         (S (S n)) (var (S n))) (S (S (S n)))
+                                      (var (S (S (S n))))).
+                               ++++ apply (subFormulaTrans LNN); 
+                                      PRsolveFV A B n.
+                               ++++ apply iffSym. 
+                                    apply (subFormulaTrans LNN);
+                                      PRsolveFV A B n.
                 ** apply
                     iffTrans
                      with

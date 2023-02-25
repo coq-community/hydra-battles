@@ -15,6 +15,7 @@ Definition PA2 :=
   forallH 1
     (forallH 0
        (impH (equal (Succ (var 0)) (Succ (var 1))) (equal (var 0) (var 1)))).
+
 Definition PA3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
 Definition PA4 :=

@@ -1,8 +1,7 @@
 (** * FOL's deduction Lemma *)
 
-
-Require Import Ensembles.
-Require Import Coq.Lists.List.
+From Coq Require Import Ensembles.
+From Coq Require Import Lists.List.
 
 Require Import folProof.
 Require Import folProp.
@@ -22,8 +21,7 @@ Theorem DeductionTheorem :
   forall (T : System) (f g : Formula) (prf : SysPrf (Ensembles.Add _ T g) f),
     SysPrf T (impH g f).
 Proof.
-  intros T;
-  assert
+  intros T; assert
     (EasyCase :
        forall (g z : Formula),
          Prf nil z ->

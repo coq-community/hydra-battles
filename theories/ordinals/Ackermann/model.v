@@ -673,7 +673,8 @@ Proof.
                              _ : Terms L (arity L (inr (Relations L) f)) *
                                    Terms L (arity L (inr (Relations L) f)) => 
                              Formula L)
-                         (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
+                         (fun a b : Terms L (arity L (inr (Relations L) f)) =>
+                            A a b)
                          (nVars L (arity L (inr (Relations L) f))))
                       (fun (n : nat) (Hrecn : Formula L) =>
                          impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)

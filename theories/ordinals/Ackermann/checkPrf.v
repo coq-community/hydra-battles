@@ -1004,7 +1004,7 @@ Proof.
                           (cPair 1
                              (cPair (car (cdr (cdr p)))
                                 (car (cdr 
-                                             (cdr (cdr p))))))))
+                                        (cdr (cdr p))))))))
                     (cPair 1
                        (cPair
                           (cPair 3
@@ -1015,7 +1015,7 @@ Proof.
                              (cPair
                                 (cdr (cdr (cdr (cdr p))))
                                 (car (cdr (cdr 
-                                                       (cdr p))))))))))
+                                             (cdr p))))))))))
               (car p)).
   assert (H: isPR 1 (fun p : nat => car (cdr (cdr p)))).
   { 
@@ -1500,12 +1500,12 @@ Qed.
 Definition checkPrfEQ5 (p recs : nat) :=
   let f := cdr (cdr p) in
   notZero (codeArityF f) *
-  charFunction 2 Nat.eqb
-    (codeAxmEqHelp (pred (codeArityF f))
-       (cPair 0
-          (cPair (cPair (S f) (codeNVars1 (pred (codeArityF f))))
-             (cPair (S f) (codeNVars2 (pred (codeArityF f))))))) 
-    (car p).
+    charFunction 2 Nat.eqb
+      (codeAxmEqHelp (pred (codeArityF f))
+         (cPair 0
+            (cPair (cPair (S f) (codeNVars1 (pred (codeArityF f))))
+               (cPair (S f) (codeNVars2 (pred (codeArityF f))))))) 
+      (car p).
 
 Lemma checkPrfEQ5IsPR : isPR 2 checkPrfEQ5.
 Proof.
@@ -1877,7 +1877,9 @@ Proof.
                                                      (pred
                                                         (pred
                                                            (pred
-                                                              (pred (pred (pred type))))))))))
+                                                              (pred (pred 
+                                                                       (pred 
+                                                                          type))))))))))
                                          (switchPR
                                             (pred
                                                (pred
@@ -3662,14 +3664,10 @@ Simpl in H0.
     assumption.
   } 
   decompose record H1.
-  exists x.
-  split.
-  eapply cPairInj1.
-  apply H2.
-  exists x0.
-  exists x1.
-  eapply cPairInj2.
-  apply H2.
+  exists x; split.
+  -  eapply cPairInj1.
+     apply H2.
+  - exists x0, x1; eapply cPairInj2; apply H2.
 Qed.
 
 End Check_Proof.

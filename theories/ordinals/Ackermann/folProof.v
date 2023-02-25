@@ -23,7 +23,6 @@ Fixpoint nVars (n: nat) : Terms n * Terms n:=
          Tcons  (var (S (n0 + n0))) b))
   end.
 
-
 Definition AxmEq4 (R : Relations L) : Formula.
 Proof. 
   assert (X: forall (f : Formula) (n : nat), Formula).

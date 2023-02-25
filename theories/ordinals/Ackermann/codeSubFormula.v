@@ -1243,7 +1243,8 @@ elim f using Formula_depth_ind2.
                --- apply le_n.
     * rewrite evalStrongRecHelp1 with (m := m) in H0.
       -- simpl in H0.
-         induction (eq_nat_dec n (cPair 3 (cPair v (cTriplePi2 m)))) as [a0 | ?].
+         induction (eq_nat_dec n (cPair 3 (cPair v (cTriplePi2 m)))) 
+           as [a0 | ?].
          ++ rewrite <- a0 in H0.
             rewrite Nat.eqb_refl in H0.
             induction
@@ -2178,7 +2179,10 @@ Proof.
                                  (cTriplePi2 (cTriplePi1 trace))
                                  (cdr (cdr (cTriplePi3 (cTriplePi1 trace)))))
                               (cTriplePi1 (cTriplePi3 trace))))
-               (g := fun trace recs : nat => codeNth (trace - S (cTriplePi3 trace)) recs).
+               (g := fun trace recs : nat => codeNth 
+                                               (trace - 
+                                                  S 
+                                                    (cTriplePi3 trace)) recs).
               apply
                 filter10IsPR
                 with
@@ -2234,9 +2238,12 @@ Proof.
                 (f' := fun trace : nat => cTriplePi2 (cTriplePi3 trace)).
               apply
                 compose1_1IsPR
-                with (f := fun trace : nat => cdr (cTriplePi3 (cTriplePi1 trace))).
+                with (f := fun trace : nat => cdr 
+                                                (cTriplePi3
+                                                   (cTriplePi1 trace))).
               apply
-                compose1_1IsPR with (f := fun trace : nat => cTriplePi3 (cTriplePi1 trace)).
+                compose1_1IsPR with (f := fun trace : nat => 
+                                            cTriplePi3 (cTriplePi1 trace)).
               assumption.
               apply cPairPi2IsPR.
               apply cPairPi1IsPR.
@@ -2687,10 +2694,12 @@ Proof.
           with
           (f := fun trace : nat =>
                   codeSubTerm (car (cdr (cTriplePi3 (cTriplePi1 trace))))
-                    (cTriplePi1 (cTriplePi1 trace)) (cTriplePi2 (cTriplePi1 trace)))
+                    (cTriplePi1 (cTriplePi1 trace)) 
+                    (cTriplePi2 (cTriplePi1 trace)))
           (f' := fun trace : nat =>
                    codeSubTerm (cdr (cdr (cTriplePi3 (cTriplePi1 trace))))
-                     (cTriplePi1 (cTriplePi1 trace)) (cTriplePi2 (cTriplePi1 trace))).
+                     (cTriplePi1 (cTriplePi1 trace)) 
+                     (cTriplePi2 (cTriplePi1 trace))).
         apply
           compose1_3IsPR
           with
@@ -2702,7 +2711,8 @@ Proof.
           compose1_1IsPR
           with (f := fun trace : nat => cdr (cTriplePi3 (cTriplePi1 trace))).
         apply
-          compose1_1IsPR with (f := fun trace : nat => cTriplePi3 (cTriplePi1 trace)).
+          compose1_1IsPR with (f := fun trace : nat => cTriplePi3 
+                                                         (cTriplePi1 trace)).
         assumption.
         apply cPairPi2IsPR.
         apply cPairPi1IsPR.
@@ -4083,7 +4093,8 @@ Proof.
               Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             fold_right Nat.max 0 (freeVarTerms L n ts) <= codeTerms L codeF n ts);
+             fold_right Nat.max 0 (freeVarTerms L n ts) <= 
+               codeTerms L codeF n ts);
     simpl.
   - intros n; apply Nat.max_case.
     + unfold codeTerm, code.codeTerm; apply cPairLe2.
@@ -4180,23 +4191,27 @@ Proof.
              (freeVarTerms L n (substituteTerms L n t1 v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply H.
-           ++ induction (maxApp (freeVarTerm L s) (freeVarTerm L t0)) as [a0 | b].
+           ++ induction (maxApp (freeVarTerm L s) (freeVarTerm L t0)) 
+                as [a0 | b].
               ** rewrite a0.
                  apply maxLemma2.
               ** rewrite b; 
                    apply Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarTerm L t0 ++ freeVarTerms L n t1)).
+                   (fold_right Nat.max 0 (freeVarTerm L t0 ++ 
+                                            freeVarTerms L n t1)).
                  apply maxLemma2.
                  apply maxLemma3.
         -- rewrite b.
            eapply Nat.le_trans.
            ++ apply H0.
-           ++ induction (maxApp (freeVarTerm L s) (freeVarTerms L n t1)) as [a | b0].
+           ++ induction (maxApp (freeVarTerm L s) (freeVarTerms L n t1)) 
+                as [a | b0].
               ** rewrite a.
                  apply maxLemma2.
               ** rewrite b0.
                  apply Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarTerm L t0 ++ freeVarTerms L n t1)).
+                   (fold_right Nat.max 0 (freeVarTerm L t0 ++ 
+                                            freeVarTerms L n t1)).
                  apply maxLemma3.
                  apply maxLemma3.
       * reflexivity.
@@ -4223,18 +4238,22 @@ Proof.
              (freeVarTerms L n (substituteTerms L n ts v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply maxSubTerm.
-           ++ induction (maxApp (freeVarTerm L s) (freeVarTerm L t)) as [a0 | b].
+           ++ induction (maxApp (freeVarTerm L s) (freeVarTerm L t)) 
+                as [a0 | b].
               ** rewrite a0; apply maxLemma2.
               ** rewrite b; apply Nat.le_trans 
-                   with (fold_right Nat.max 0 (freeVarTerm L t ++ freeVarTerms L n ts)).
+                   with (fold_right Nat.max 0 (freeVarTerm L t ++ 
+                                                 freeVarTerms L n ts)).
                  apply maxLemma2.
                  apply maxLemma3.
         -- rewrite b; eapply Nat.le_trans.
            ++ apply Hrects.
-           ++ induction (maxApp (freeVarTerm L s) (freeVarTerms L n ts)) as [a | b0].
+           ++ induction (maxApp (freeVarTerm L s) (freeVarTerms L n ts)) 
+                as [a | b0].
               ** rewrite a; apply maxLemma2.
               ** rewrite b0; apply  Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarTerm L t ++ freeVarTerms L n ts)).
+                   (fold_right Nat.max 0 (freeVarTerm L t ++ 
+                                            freeVarTerms L n ts)).
                  apply maxLemma3.
                  apply maxLemma3.
       * reflexivity.
@@ -4369,7 +4388,8 @@ Proof.
      + simpl; apply le_S.
        apply
          (Nat.max_case nv
-            (fold_right max 0 (freeVarTerms L (arity L (inl (Functions L) r)) t))).
+            (fold_right max 0 
+               (freeVarTerms L (arity L (inl (Functions L) r)) t))).
        * eapply Nat.le_trans.
          -- apply (boundSubFormulaHelp2 a v0 s).
          -- apply le_n_S.
@@ -4433,7 +4453,8 @@ Proof.
       * simpl; apply (Nat.max_case
                         (newVar
                            (v1
-                              :: newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a0)
+                              :: newVar (v0 :: freeVarTerm L s ++
+                                           freeVarFormula L a0)
                               :: freeVarFormula L a))
                         (fold_right Nat.max 0
                            (varFormula
@@ -4530,7 +4551,8 @@ Proof.
                                       (newVar
                                          (v1
                                             :: newVar
-                                            (v0 :: freeVarTerm L s ++ freeVarFormula L a0)
+                                            (v0 :: freeVarTerm L s 
+                                               ++ freeVarFormula L a0)
                                             :: freeVarFormula L a))))))
                           (fold_right Nat.max 0 (varFormula a0))))).
                eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].

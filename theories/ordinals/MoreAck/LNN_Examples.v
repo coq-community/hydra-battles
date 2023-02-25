@@ -1,3 +1,5 @@
+(** Experimental *)
+
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
 Require Import LNN_notations. 

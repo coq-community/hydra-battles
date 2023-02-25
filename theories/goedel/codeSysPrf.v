@@ -1,3 +1,7 @@
+(** TO DO: Define abbreviations and re-indent !!! 
+**)
+
+
 From Coq Require Import Ensembles.
 From Coq Require Import List.
 From hydras.Ackermann Require Import checkPrf.

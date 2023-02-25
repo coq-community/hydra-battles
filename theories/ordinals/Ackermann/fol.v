@@ -1,7 +1,8 @@
 (******************************************************************************)
 
-(* Author: Russell O'Connor *)
+(* Original author: Russell O'Connor *)
 (* This file is Public Domain *)
+
 
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
   Arith Compare_dec.
@@ -59,7 +60,8 @@ Definition mem := Ensembles.In.
 Definition orH (A B : Formula) := impH (notH A) B.
 Definition andH (A B : Formula) := notH (orH (notH A) (notH B)).
 Definition iffH (A B : Formula) := andH (impH A B) (impH B A).
-Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
+Definition existH (x : nat) (A : Formula) := 
+  notH (forallH x (notH A)).
 
 (* end snippet FolFull *)
 
@@ -711,8 +713,9 @@ Arguments Terms_Term_rec L P P0 : rename.
 Arguments Term_Terms_rec_full L P P0 : rename.
 Arguments Terms_Term_rec_full L P P0 : rename.
 
-(** experiments by PC *)
+(** Changes by PC *)
 
+(* begin snippet implicitArguments *)
 Arguments impH {L} _ _.
 Arguments notH {L} _.
 Arguments forallH {L} _ _.
@@ -727,3 +730,4 @@ Arguments apply {L} _ _.
 Arguments ifThenElseH {L} _ _ _.
 Arguments Tnil {L}.
 Arguments Tcons {L} {n} _ _.
+(* end snippet implicitArguments *)

@@ -159,9 +159,9 @@ Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
 Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
- ~ In_freeVarSys LNT v T ->
- ~ In v (freeVarFormula LNT g) ->
- SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
+  ~ In_freeVarSys LNT v T ->
+  ~ In v (freeVarFormula LNT g) ->
+  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
 Proof. apply (existE LNT). Qed.
 
 Lemma existSimp (T : System) (f : Formula) (v : nat):

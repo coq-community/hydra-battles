@@ -447,25 +447,23 @@ Proof.
            elimtype False; cut (X1 = X3);
            [ discriminate | eapply cPairInj1; apply h ]
        end); try reflexivity.
-  replace A0 with A.
-  reflexivity.
-  apply codeFormulaInj.
-  eapply cPairInj2.
-  apply H.
-  replace Axm0 with Axm1.
-  replace Axm3 with Axm2.
-  reflexivity.
-  eapply Hrecp0 with A0 p2.
-  do 3 eapply cPairInj2.
-  apply H.
-  eapply Hrecp1 with (fol.impH  A0 B0) p.
-  eapply cPairInj2.
-  eapply cPairInj1.
-  eapply cPairInj2.
-  apply H.
-  eapply Hrecp with A0 p0.
-  do 3 eapply cPairInj2.
-  apply H.
+  - replace A0 with A.
+    + reflexivity.
+    + apply codeFormulaInj; eapply cPairInj2, H.
+  - replace Axm0 with Axm1.
+    + replace Axm3 with Axm2.
+      * reflexivity.
+      * eapply Hrecp0 with A0 p2.
+        do 3 eapply cPairInj2.
+        apply H.
+    + eapply Hrecp1 with (fol.impH  A0 B0) p.
+      eapply cPairInj2.
+      eapply cPairInj1.
+      eapply cPairInj2.
+      apply H.
+  - eapply Hrecp with A0 p0.
+    do 3 eapply cPairInj2.
+    apply H.
 Qed.
 
 Definition codeImp (a b : nat) := cPair 1 (cPair a b).

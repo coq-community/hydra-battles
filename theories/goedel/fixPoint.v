@@ -602,7 +602,8 @@ Proof.
         --  lia. 
       * apply In_list_remove3; auto.
     + intro H4; 
-        assert (H5: In x (freeVarFormula LNT A)) by (eapply In_list_remove1, H4);
+        assert (H5: In x (freeVarFormula LNT A)) 
+        by (eapply In_list_remove1, H4);
         assert (H6: x <> v) by (eapply In_list_remove2, H4);  clear H4.
       apply freeVarSubFormula1.
       * intros H4; rewrite <- H4 in H5.
@@ -615,7 +616,8 @@ Proof.
                   (substituteFormula LNT
                      (substituteFormula LNT
                         (substituteFormula LNT
-                           (substituteFormula LNT (LNN2LNT_formula subStarFormula) 3
+                           (substituteFormula LNT 
+                              (LNN2LNT_formula subStarFormula) 3
                               (var nv)) 2 (natToTerm nv)) 1 (var nv)) 0 
                      (var v)) ++ freeVarFormula LNT A)).
         -- apply in_or_app; now right. 

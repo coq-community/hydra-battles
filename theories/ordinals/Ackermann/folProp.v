@@ -2,7 +2,6 @@
 From Coq Require Import Wf_nat Arith Lists.List Peano_dec. 
 
 Require Import ListExt. (* todo: use stdlib? *)
-
 Require Export fol.
 
 Section Fol_Properties.
@@ -595,10 +594,12 @@ Proof.
                 {y : fol.Formula L | depth L y = depth L x1})
              (fun (t t0 : fol.Term L) (H : nat * fol.Term L) =>
                 prod_rec
-                  (fun _ : nat * fol.Term L => {y : fol.Formula L | depth L y = 0})
+                  (fun _ : nat * fol.Term L => 
+                     {y : fol.Formula L | depth L y = 0})
                   (fun (a0 : nat) (b0 : fol.Term L) =>
                      exist (fun y : fol.Formula L => depth L y = 0)
-                       (equal (substituteTerm t a0 b0) (substituteTerm t0 a0 b0))
+                       (equal (substituteTerm t a0 b0) 
+                          (substituteTerm t0 a0 b0))
                        (refl_equal 0)) H)
              (fun (r : Relations L) 
                   (t : fol.Terms L (arity L (inl (Functions L) r)))
