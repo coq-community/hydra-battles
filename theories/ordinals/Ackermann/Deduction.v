@@ -1,7 +1,7 @@
 (** * FOL's deduction Lemma *)
 
 From Coq Require Import Ensembles.
-From Coq Require Import Lists.List.
+From Coq Require Import List.
 
 Require Import folProof.
 Require Import folProp.
