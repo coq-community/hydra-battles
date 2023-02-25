@@ -1190,7 +1190,7 @@ Definition checkPrfEQ2 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
       (codeFormula L codeF codeR
-         (fol.impH (equal (var 0) (var 1))
+         (impH (equal (var 0) (var 1))
             (equal (var 1) (var 0)))) 
       (car p).
 
@@ -1203,8 +1203,8 @@ Definition checkPrfEQ3 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
       (codeFormula L codeF codeR
-         (fol.impH (equal (var 0) (var 1))
-            (fol.impH (equal (var 1) (var 2))
+         (impH (equal (var 0) (var 1))
+            (impH (equal (var 1) (var 2))
                (equal (var 0) (var 2))))) 
       (car p).
 
@@ -1958,7 +1958,7 @@ Proof.
                 (cPair 1
                    (cPair (codeFormula L codeF codeR A0)
                       (codeFormula L codeF codeR B)))
-                (codePrf L codeF codeR Axm1 (fol.impH  A0 B) p1))
+                (codePrf L codeF codeR Axm1 (impH  A0 B) p1))
              (cPair (codeFormula L codeF codeR A0) 
                 (codePrf L codeF codeR Axm2 A0 p0)))
       in *.
@@ -2160,8 +2160,8 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
       unfold checkPrfEQ3 in |- *.
       replace
         (codeFormula L codeF codeR
-           (fol.impH (equal (var 0) (var 1))
-              (fol.impH (equal (var 1) (var 2))
+           (impH (equal (var 0) (var 1))
+              (impH (equal (var 1) (var 2))
                  (equal (var 0) (var 2))))) 
         with C; [ idtac | reflexivity ].
       generalize C; intros.
@@ -3255,7 +3255,7 @@ Proof.
                       induction
                         (eq_nat_dec
                            (codeFormula L codeF codeR
-                              (fol.impH (equal (var 0) 
+                              (impH (equal (var 0) 
                                              (var 1))
                                  (equal (var 1) (var 0))))
                            (codeFormula L codeF codeR x)).
@@ -3282,7 +3282,7 @@ Proof.
                       rewrite
                         (nat_eqb_false
                            (codeFormula L codeF codeR
-                              (fol.impH (equal (var 0) (var 1))
+                              (impH (equal (var 0) (var 1))
                                  (equal (var 1) (var 0))))).
                       
                       rewrite Nat.mul_comm.
@@ -3315,7 +3315,7 @@ Simpl in H0.
                       rewrite H3.
                       replace x with
                         (@impH L (equal (var 0) (var 1))
-                           (fol.impH (equal (var 1) (var 2))
+                           (impH (equal (var 1) (var 2))
                               (equal (var 0) (var 2)))).
                       exists (EQ3 L).
                       simpl in |- *.
@@ -3337,9 +3337,9 @@ Simpl in H0.
                       rewrite
                         (nat_eqb_false
                            (codeFormula L codeF codeR
-                              (fol.impH (equal (var 0) 
+                              (impH (equal (var 0) 
                                              (var 1))
-                                 (fol.impH (equal (var 1) 
+                                 (impH (equal (var 1) 
                                                 (var 2))
                                     (equal (var 0) 
                                        (var 2))))))

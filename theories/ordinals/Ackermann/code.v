@@ -25,8 +25,8 @@ Let SysPrf := SysPrf L.
 
 Fixpoint codeTerm (t : Term) : nat :=
   match t with
-  | fol.var n => cPair 0 n
-  | fol.apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
+  | var n => cPair 0 n
+  | apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
   end
  
  with codeTerms (n : nat) (ts : Terms n) {struct ts} : nat :=
@@ -95,11 +95,11 @@ Qed.
 
 Fixpoint codeFormula (f : Formula) : nat :=
   match f with
-  | fol.equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
-  | fol.impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
-  | fol.notH f1 => cPair 2 (codeFormula f1)
-  | fol.forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | fol.atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
+  | equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
+  | impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
+  | notH f1 => cPair 2 (codeFormula f1)
+  | forallH n f1 => cPair 3 (cPair n (codeFormula f1))
+  | atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
   end.
 
 
@@ -456,7 +456,7 @@ Proof.
       * eapply Hrecp0 with A0 p2.
         do 3 eapply cPairInj2.
         apply H.
-    + eapply Hrecp1 with (fol.impH  A0 B0) p.
+    + eapply Hrecp1 with (impH  A0 B0) p.
       eapply cPairInj2.
       eapply cPairInj1.
       eapply cPairInj2.

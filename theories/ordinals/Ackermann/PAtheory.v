@@ -10,6 +10,8 @@ Require Import NN.
 Require Import LNN2LNT.
 Require Export PA.
 
+#[local] Arguments apply _ _ _ : clear implicits.
+
 Lemma paZeroOrSucc (t : Term):
  SysPrf PA
    (orH (equal t Zero)
@@ -158,7 +160,7 @@ Proof.
                    { 
                      fold
                        (Succ
-                          (@apply LNT Languages.Plus
+                          (apply LNT Languages.Plus
                              (Tcons (var 1) 
                                 (Tcons Zero (Tnil))))) 
                        in |- *.
@@ -176,7 +178,7 @@ Proof.
                    {
                      fold
                        (Succ
-                          (@apply LNT Languages.Plus
+                          (apply LNT Languages.Plus
                              (Tcons (var 1)
                                 (Tcons (Succ (var 0)) (Tnil)))))
                        in |- *.

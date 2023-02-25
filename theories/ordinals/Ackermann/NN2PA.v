@@ -82,7 +82,7 @@ simple induction m.
                         (equal (var x) (LNN.natToTerm n))))))
       by (apply NN2PA, nn8). 
       simpl in H1; simpl. 
-      unfold orH, fol.orH; apply H1.
+      unfold orH; apply H1.
     * apply Axm; right; constructor.
   + apply sysWeaken.
     simpl in H; apply H; auto. 

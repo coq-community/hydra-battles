@@ -15,17 +15,18 @@ Definition Sentence := Sentence LNT.
 Definition Term := Term LNT.
 Definition Terms := Terms LNT.
 Definition SysPrf := SysPrf LNT.
+#[local] Arguments apply _ _ _ : clear implicits.
 
 Definition Plus (x y : Term) : Term :=
-  @apply LNT Plus (Tcons x (Tcons y (Tnil))).
+  apply LNT Plus (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
-  @apply LNT Times (Tcons x (Tcons y (Tnil))).
+  apply LNT Times (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  @apply LNT Succ (Tcons x (Tnil)).
+  apply LNT Succ (Tcons x (Tnil)).
 
-Definition Zero : Term := @apply LNT Zero (Tnil).
+Definition Zero : Term := apply LNT Zero (Tnil).
 
 Lemma LNT_dec : language_decidable LNT.
 Proof. split; decide equality. Qed.

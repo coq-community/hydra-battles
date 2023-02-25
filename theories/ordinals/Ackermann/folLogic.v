@@ -129,7 +129,7 @@ Qed.
 Lemma orI1 (T : System) (f g : Formula):
   SysPrf T f -> SysPrf T (orH f g).
 Proof.
-  intros H; unfold orH, fol.orH in |- *.
+  intros H; unfold orH in |- *.
   apply impI.
   apply contradiction with f.
   apply sysWeaken; assumption.
@@ -139,7 +139,7 @@ Qed.
 Lemma orI2 (T : System) (f g : Formula):
   SysPrf T g -> SysPrf T (orH f g).
 Proof.
-  intros h; unfold orH, fol.orH in |- *.
+  intros h; unfold orH in |- *.
   apply impI, sysWeaken; assumption.
 Qed.
 
@@ -183,7 +183,7 @@ Qed.
 Lemma andI (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T g -> SysPrf T (andH f g).
 Proof.
-  intros H H0; unfold andH, fol.andH in |- *.
+  intros H H0; unfold andH in |- *.
   apply orE with (notH (orH (notH f) (notH g))) (orH (notH f) (notH g)).
   - apply noMiddle.
   - apply impI, Axm; right; constructor.
@@ -200,7 +200,7 @@ Lemma andE1 (T : System) (f g : Formula):
 Proof.
   intros H; apply nnE.
   apply impE with (andH f g).
-  unfold andH, fol.andH in |- *; apply cp2.
+  unfold andH in |- *; apply cp2.
   apply impI, orI1. 
   apply Axm; right; constructor.
   assumption.

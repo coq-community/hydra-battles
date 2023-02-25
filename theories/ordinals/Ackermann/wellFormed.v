@@ -91,7 +91,7 @@ Proof.
      rewrite computeEvalStrongRecHelp.
      unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
        unfold A at 1;  repeat rewrite cPairProjections1; simpl; reflexivity.
-  - intros f t0 H; replace (codeTerm L codeF (fol.apply f t0)) with
+  - intros f t0 H; replace (codeTerm L codeF (apply f t0)) with
       (cPair (S (codeF f)) (codeTerms L codeF _ t0)); [ idtac | reflexivity ].
     unfold wellFormedTerm, wellFormedTermTerms; fold A.
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;

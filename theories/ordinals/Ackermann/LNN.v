@@ -17,17 +17,19 @@ Definition Term := Term LNN.
 Definition Terms := Terms LNN.
 Definition SysPrf := SysPrf LNN.
 
+#[local] Arguments apply _ _ _ : clear implicits.
+
 Definition Plus (x y : Term) : Term :=
-  @apply LNN Plus (Tcons x (Tcons y (Tnil))).
+  apply LNN Plus (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
-  @apply LNN Times (Tcons x (Tcons y (Tnil))).
+  apply LNN Times (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  @apply LNN Succ (Tcons x (Tnil)).
+  apply LNN Succ (Tcons x (Tnil)).
 
 
-Definition Zero : Term := @apply LNN Zero (Tnil).
+Definition Zero : Term := apply LNN Zero (Tnil).
 
 Definition LT (x y : Term) : Formula :=
   @atomic LNN LT (Tcons x (Tcons y (Tnil))). 

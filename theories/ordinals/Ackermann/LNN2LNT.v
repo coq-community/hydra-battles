@@ -16,10 +16,12 @@ Require Import LNT.
 Require Import Max.
 Require Import codeNatToTerm.
 
+#[local] Arguments apply _ _ _ : clear implicits.
+
 Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
   match t with
   | fol.var v => var v
-  | apply f ts => @apply LNT f (LNN2LNT_terms _ ts)
+  | apply f ts => apply LNT f (LNN2LNT_terms _ ts)
   end
  
  with LNN2LNT_terms (n : nat) (ts : fol.Terms LNN n) {struct ts} : 
@@ -82,9 +84,9 @@ Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
       with
       | LT => fun t0 : fol.Terms LNN (arity LNN (inl _ LT)) => translateLT t0
       end ts
-  | fol.impH A B => impH (LNN2LNT_formula A) (LNN2LNT_formula B)
-  | fol.notH A => notH (LNN2LNT_formula A)
-  | fol.forallH v A => forallH v (LNN2LNT_formula A)
+  | impH A B => impH (LNN2LNT_formula A) (LNN2LNT_formula B)
+  | notH A => notH (LNN2LNT_formula A)
+  | forallH v A => forallH v (LNN2LNT_formula A)
   end.
 
 Lemma LNN2LNT_or (a b : fol.Formula LNN):
@@ -403,8 +405,8 @@ Qed.
 
 Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
   match t with
-  | fol.var v => var v
-  | apply f ts => @apply LNN f (LNT2LNN_terms _ ts)
+  | var v => var v
+  | apply f ts => apply LNN f (LNT2LNN_terms _ ts)
   end
  
  with LNT2LNN_terms (n : nat) (ts : Terms n) {struct ts} : 
@@ -424,12 +426,12 @@ Qed.
 
 Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   match f with
-  | fol.equal t1 t2 => fol.equal (LNT2LNN_term t1) (LNT2LNN_term t2)
+  | equal t1 t2 => equal (LNT2LNN_term t1) (LNT2LNN_term t2)
   | atomic r ts => match r with
                    end
-  | fol.impH A B => impH (LNT2LNN_formula A) (LNT2LNN_formula B)
-  | fol.notH A => notH  (LNT2LNN_formula A)
-  | fol.forallH v A => forallH v (LNT2LNN_formula A)
+  | impH A B => impH (LNT2LNN_formula A) (LNT2LNN_formula B)
+  | notH A => notH  (LNT2LNN_formula A)
+  | forallH v A => forallH v (LNT2LNN_formula A)
   end.
 
 Lemma LNT2LNT_term (t : Term): LNN2LNT_term (LNT2LNN_term t) = t.
