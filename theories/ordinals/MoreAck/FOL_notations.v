@@ -52,7 +52,6 @@ Notation allH v A:= (fol.forallH v A).
 Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
 
 Notation "t = u" := (@fol.equal _ t u): cfol_scope.
-About fol.apply. 
 
 Notation app1 f arg := 
   (fol.apply  (f: Functions _) 
