@@ -254,10 +254,9 @@ Corollary iterate_gt_diag' :
               {j:nat | i<= j /\ f_gt_from j (iterate f n)}.
 Proof.
   intros.
-  destruct n.
-  elimtype False.
-  inversion H1.
-  apply dominates_iterate; auto.
+  destruct n. 
+  - lia. 
+  - apply dominates_iterate; auto.
 Defined.
 
 Corollary iterate_ge_diag' :

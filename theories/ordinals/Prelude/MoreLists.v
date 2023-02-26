@@ -670,8 +670,7 @@ Proof.
   destruct H1.
   right;auto.
   subst.
-  elimtype False.
-  abstract lia.
+  assert (F: False) by abstract lia; elim F. 
   auto.
 Qed.
 
