@@ -84,7 +84,7 @@ Module Drinkers.
   Definition L := language Rel Fun arity.
 
   Notation D t := 
-    (fol.atomic L (_D: Relations L) (Tcons _ _ t (Tnil _))). 
+    (atomic  (_D: Relations L) (Tcons t (Tnil))). 
 
   Arguments Empty_set {U}. 
   Arguments Add {U} _ _. 
@@ -127,7 +127,7 @@ Proof.
   Theorem drinkers_thm : SysPrf L Empty_set f. 
   Proof with auto with sets.  
     pose (F := allH 1 (D (v_ 1))%fol).
-    unfold f; eapply orE with (notH _ F) F; [apply noMiddle | | ].
+    unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add Empty_set (~ F)%fol) 
                 (exH 1 (~ (D (v_ 1))))%fol).  

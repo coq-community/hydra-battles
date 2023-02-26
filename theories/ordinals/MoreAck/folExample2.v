@@ -1,4 +1,6 @@
 
+(** Experimental *)
+
 From Coq Require Import Arith Lists.List.
 
 Require Import fol folProp folProof  Languages folLogic.
@@ -45,30 +47,30 @@ Module Toy.
 
 (* begin snippet toyNotation *)
   (** Abreviations for the toy language L *)
-  Notation A := (fol.atomic L _A (Tnil _)).
-  Notation B := (fol.atomic L _B (Tnil _)). 
-  Notation C := (fol.atomic L _C (Tnil _)). 
-  Notation P t := (fol.atomic L _P (Tcons _ _ t (Tnil _))).
+  Notation A := (@atomic L  _A Tnil).
+  Notation B := (@atomic L _B Tnil). 
+  Notation C := (@atomic L _C Tnil). 
+  Notation P t := (@atomic L _P (Tcons t Tnil)).
   Notation R t1 t2 :=
-    (fol.atomic L _R (Tcons _ _ t1 (Tcons _ _ t2 (Tnil _)))).
+    (@atomic L _R (Tcons t1 (Tcons t2 Tnil))).
 
-  Notation a := (fol.apply L _a (Tnil _)).
-  Notation b := (fol.apply L _b (Tnil _)).
-  Notation f t := (fol.apply L _f (Tcons _ _ t (Tnil _))).
+  Notation a := (@apply L _a Tnil).
+  Notation b := (@apply L _b Tnil).
+  Notation f t := (@apply L _f (Tcons t Tnil)).
 (* end snippet toyNotation *)
 
 (* begin snippet smallTerms *)
 (** a **)              
-Check (apply L _a (Tnil _)).
+Check (@apply L _a Tnil).
 
 (** f a **)
-Check (apply L _f  (Tcons _ _ (apply L _a (Tnil _)) (Tnil _))).
+Check (@apply L _f  (Tcons  (@apply L _a Tnil) Tnil)).
 
 (** f (f v1) **)
-Check (apply L _f 
-         (Tcons _ _ (apply L _f  
-                       (Tcons _ _ (var _ 1) (Tnil _)))
-            (Tnil _))).
+Check (@apply L _f 
+         (Tcons (@apply L _f  
+                       (Tcons (var 1) Tnil))
+            Tnil )).
 
 Check (f (f (v_ 1)))%fol. 
 (* end snippet smallTerms *)
@@ -79,7 +81,7 @@ Check (f a)%fol.
 
 
 
-Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (impH L f g) ->
+Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (impH f g) ->
                         Prf L H2 f ->  Prf L H g.
 Proof. 
   intros; subst; eapply MP; eauto. 
@@ -125,7 +127,7 @@ Proof with auto with sets.
 (* end snippet PeirceProof *)
   unfold Peirce; apply impI. 
   
-  eapply orE with (notH _ A) A; [apply noMiddle | | apply impRefl].
+  eapply orE with (notH A) A; [apply noMiddle | | apply impRefl].
   
   apply impI; eapply impE with (A -> B)%fol.
 
@@ -134,8 +136,8 @@ Proof with auto with sets.
 Qed. 
   
 (* begin snippet boundVars *)
-Goal forallH L 1 (equal _ (var _ 1) (var _ 1)) <>
-       forallH L 2 (equal _ (var _ 2) (var _ 2)). 
+Goal forallH (L:= L) 1 (equal (var 1) (var 1)) <>
+       forallH  2 (equal (var 2) (var 2)). 
   discriminate. 
 Qed. 
 (* end snippet boundVars *)
@@ -180,7 +182,7 @@ Proof.
   Theorem drinkers_thm : SysPrf L (Empty_set _) f. 
   Proof with auto with sets.  
     pose (F := allH 1 (P (v_ 1))%fol).
-    unfold f; eapply orE with (notH _ F) F; [apply noMiddle | | ].
+    unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add (Empty_set _) (~ F)%fol) 
                 (exH 1 (~ (P (v_ 1))))%fol).  

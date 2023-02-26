@@ -17,18 +17,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
@@ -61,7 +49,7 @@ Proof.
        rewrite <- (subFormulaId L f a).
        apply (impE L) with
          (substituteFormula L (substituteFormula L f a (var b)) b 
-            (fol.var L a)).
+            (var a)).
        -- apply (iffE1 L).
           apply (subFormulaTrans L); apply H.
        -- apply forallE, Axm; right; constructor.
@@ -71,7 +59,7 @@ Lemma rebindExist (T : System) (a b : nat) (f : Formula):
   ~ In b (freeVarFormula L (existH a f)) ->
   SysPrf T (iffH (existH a f) (existH b (substituteFormula L f a (var b)))).
 Proof.
-  intro H; unfold existH, fol.existH.  
+  intro H; unfold existH.  
   apply (reduceNot L); eapply (iffTrans L).
   - apply (rebindForall T a b (notH f)), H. 
   - rewrite (subFormulaNot L); apply (iffRefl L).
@@ -149,7 +137,7 @@ Proof.
              newVar
                (v1
                   :: v2
-                  :: freeVarFormula L (fol.forallH L v a) ++
+                  :: freeVarFormula L (forallH v a) ++
                   freeVarTerm L s1 ++ freeVarTerm L s2)) in *.
       assert (H2: v' <> v1).
       { intro H2;
@@ -157,7 +145,7 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarFormula L (fol.forallH L v a) ++
+                :: freeVarFormula L (forallH v a) ++
                 freeVarTerm L s1 ++ freeVarTerm L s2)).
         fold v' ; simpl; auto.
       } 
@@ -167,17 +155,17 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarFormula L (fol.forallH L v a) ++
+                :: freeVarFormula L (forallH v a) ++
                 freeVarTerm L s1 ++ freeVarTerm L s2)).
         fold v'; simpl; auto.
       } 
-      assert (H4: ~ In v' (freeVarFormula L (fol.forallH L v a))).
+      assert (H4: ~ In v' (freeVarFormula L (forallH v a))).
       { intro H4; 
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarFormula L (fol.forallH L v a) ++
+                :: freeVarFormula L (forallH v a) ++
                 freeVarTerm L s1 ++ freeVarTerm L s2)).
         fold v' ;simpl; auto with datatypes.
       } 
@@ -187,7 +175,7 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarFormula L (fol.forallH L v a) ++
+                :: freeVarFormula L (forallH v a) ++
                 freeVarTerm L s1 ++ freeVarTerm L s2)).
         fold v' ;  simpl; repeat right; auto with datatypes.
       } 
@@ -197,7 +185,7 @@ Proof.
             (newVar1
                (v1
                   :: v2
-                  :: freeVarFormula L (fol.forallH L v a) ++
+                  :: freeVarFormula L (forallH v a) ++
                   freeVarTerm L s1 ++ freeVarTerm L s2)).
        fold v' ; simpl;  repeat right; auto with datatypes.
      }
@@ -205,17 +193,17 @@ Proof.
        (iffH
           (substituteFormula L
              (substituteFormula L
-                (fol.forallH L v' (substituteFormula L a v (var v'))) v1 s1) v2
+                (forallH v' (substituteFormula L a v (var v'))) v1 s1) v2
              s2)
           (substituteFormula L
              (substituteFormula L
-                (fol.forallH L v' (substituteFormula L a v (var v'))) v2 s2) v1
+                (forallH v' (substituteFormula L a v (var v'))) v2 s2) v1
              (substituteTerm L s1 v2 s2))).
      apply (iffE2 L).
       * assert
           (H7: folProof.SysPrf L (Empty_set Formula)
-                 (iffH (fol.forallH L v a)
-                    (fol.forallH L v' (substituteFormula L a v (var v')))))
+                 (iffH (forallH v a)
+                    (forallH v' (substituteFormula L a v (var v')))))
           by (apply rebindForall; auto).
        repeat first
        [ apply (reduceIff L)

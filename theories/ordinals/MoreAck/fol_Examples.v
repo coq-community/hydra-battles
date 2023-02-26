@@ -1,3 +1,5 @@
+(** Experimental *)
+
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp folProof  Languages.
 Require Import primRec.
@@ -32,20 +34,24 @@ Notation h  x y := (app2 (_h: Functions L) x y)%fol.
 Notation a := (k_ (_a : Functions L))%fol.
 Notation b := (k_ (_b : Functions L))%fol.
 
-Notation P t := (fol.atomic L (_P: Relations L) (Tcons _ _ t (Tnil _))).
+Check a. 
+
+Notation P t := (atomic  (_P: Relations L) (Tcons  t (Tnil))).
 Notation R t1 t2 :=
-  (fol.atomic L (_R: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+  (atomic (_R: Relations L) (Tcons  t1 (Tcons  t2  (Tnil)))).
 
 #[local] Notation S t1 t2 :=
-  (@fol.atomic L (_S: Relations L) (Tcons _ _ t1 (Tcons _ _ t2  (Tnil _)))).
+  (@fol.atomic L (_S: Relations L) (Tcons t1 (Tcons t2  (Tnil )))).
 
 
 
 Compute nVars L 3.
 
 Compute AxmEq4 L _S.
+Print app1. 
+Print FOL_notations.app1.
 
-Check f (v_ 1).
+ Check f (v_ 1).
 Check a. 
 Check f a. 
 Check (allH 1 (v_ 1 = a))%fol. 
@@ -54,11 +60,12 @@ Check (R (v_ 1) (v_ 2))%fol.
 Compute arity (inr _f).
 Compute arity (inl _S).
 Print app2.
-Check apply L _h (Tcons _ _ (var _ 1) (Tcons _ _ (var _ 0) (Tnil _))).
+
+Check @apply L _h (Tcons  (var 1) (Tcons (var  0) (Tnil))).
 
 
 
-Check (app2  (_h: Functions L)  (var _ 1) (var _ 2))%fol: Term L.
+Check (app2  (_h: Functions L)  (var 1) (var 2))%fol: Term L.
 Check (h (v_ 1) (v_ 2))%fol.
 
 
@@ -154,39 +161,39 @@ Compute arity LNN (inl Languages.LT).
 Fail Compute arity LNT (inl Languages.LT).
 (* end snippet arityTest *)
 
-Check var _ 1: Term LNN.
+Check var 1: Term LNN.
 
 
-Check  @apply LNT Languages.Zero (Tnil _) : fol.Term LNT. 
+Check  @apply LNT Languages.Zero Tnil : fol.Term LNT. 
 
 Section Examples. 
 
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
- apply LNN Plus 
-   (Tcons LNN _ (var LNN  1)
-     (Tcons LNN _ (apply LNN Zero (Tnil _)) (Tnil _))). 
+ @apply LNN Plus 
+   (Tcons  (var 1)
+     (Tcons  (@apply LNN Zero Tnil) Tnil )). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
-      forallH LNN 0 
-        (orH _ (equal _ (var _ 0) (apply LNN Zero (Tnil _)))
-           (existH _ 1 (equal _ (var _ 0)
-                          (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _)))))).
+      forallH 0 
+        (orH  (equal  (var 0) (@apply LNN Zero Tnil ))
+           (existH 1 (equal  (var 0)
+                          (@apply LNN Succ 
+                             (Tcons  (var 1) Tnil))))).
 
 Let f2 : Formula LNN :=
-(existH _ 1 (equal _ (var _ 0)
-                          (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _))))).
+(existH 1 (equal  (var 0)
+                          (@apply LNN Succ 
+                             (Tcons (var 1) Tnil )))).
 
-Let f3 := (orH LNN (equal _ (var _ 0) (apply LNN Zero (Tnil _)))
-             (existH _ 1 (equal _ (var _ 0) (apply LNN Succ 
-                             (Tcons _ _ (var _ 1) (Tnil _)))))).
+Let f3 := (orH  (equal  (var 0) (@apply LNN Zero Tnil))
+             (existH 1 (equal  (var 0) (@apply LNN Succ 
+                             (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
 Print f3.
@@ -217,7 +224,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil _)) . 
+Compute substituteFormula LNN f3 0 (@apply LNN Zero (Tnil)) . 
 (* end snippet freeVarExamples *)
 
 Check Sentence. 

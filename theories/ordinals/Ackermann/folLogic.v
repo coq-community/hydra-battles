@@ -14,18 +14,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
@@ -99,7 +87,7 @@ Qed.
 Lemma noMiddle  (T : System) (f : Formula):
   SysPrf T (orH (notH f) f).
 Proof.
-  unfold orH, fol.orH in |- *.
+  unfold orH in |- *.
   apply impI, nnE, Axm; right; constructor.
 Qed.
 
@@ -141,7 +129,7 @@ Qed.
 Lemma orI1 (T : System) (f g : Formula):
   SysPrf T f -> SysPrf T (orH f g).
 Proof.
-  intros H; unfold orH, fol.orH in |- *.
+  intros H; unfold orH in |- *.
   apply impI.
   apply contradiction with f.
   apply sysWeaken; assumption.
@@ -151,7 +139,7 @@ Qed.
 Lemma orI2 (T : System) (f g : Formula):
   SysPrf T g -> SysPrf T (orH f g).
 Proof.
-  intros h; unfold orH, fol.orH in |- *.
+  intros h; unfold orH in |- *.
   apply impI, sysWeaken; assumption.
 Qed.
 
@@ -159,7 +147,7 @@ Lemma orE (T : System) (f g h : Formula):
  SysPrf T (orH f g) ->
  SysPrf T (impH f h) -> SysPrf T (impH g h) -> SysPrf T h.
 Proof.
-  intros H H0 H1; unfold orH, fol.orH in H.
+  intros H H0 H1; unfold orH in H.
   apply impE with (impH h h).
   - apply cp1.
     apply impE with (impH (notH h) h).
@@ -195,7 +183,7 @@ Qed.
 Lemma andI (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T g -> SysPrf T (andH f g).
 Proof.
-  intros H H0; unfold andH, fol.andH in |- *.
+  intros H H0; unfold andH in |- *.
   apply orE with (notH (orH (notH f) (notH g))) (orH (notH f) (notH g)).
   - apply noMiddle.
   - apply impI, Axm; right; constructor.
@@ -212,7 +200,7 @@ Lemma andE1 (T : System) (f g : Formula):
 Proof.
   intros H; apply nnE.
   apply impE with (andH f g).
-  unfold andH, fol.andH in |- *; apply cp2.
+  unfold andH in |- *; apply cp2.
   apply impI, orI1. 
   apply Axm; right; constructor.
   assumption.
@@ -282,7 +270,7 @@ Lemma existE (T : System) (f g : Formula) (v : nat):
  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
 Proof.
   intros H H0 H1 H2. apply nnE. 
-  apply impE with (fol.notH L (fol.forallH L v (fol.notH L f))).
+  apply impE with (notH (forallH v (notH f))).
   - apply cp2, impI.
     apply impE with (forallH v (notH g)).
     + apply impE with (forallH v (impH (notH g) (notH f))).
@@ -367,7 +355,7 @@ Qed.
 Lemma nAnd (T : System) (f g : Formula):
  SysPrf T (orH (notH f) (notH g)) -> SysPrf T (notH (andH f g)).
 Proof.
-  intros H; unfold andH, fol.andH; apply nnI, H. 
+  intros H; unfold andH; apply nnI, H. 
 Qed.
 
 Lemma nForall  (T : System) (f : Formula) (v : nat) :

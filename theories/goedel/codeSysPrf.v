@@ -1,3 +1,7 @@
+(** TO DO: Define abbreviations and re-indent !!! 
+**)
+
+
 From Coq Require Import Ensembles.
 From Coq Require Import List.
 From hydras.Ackermann Require Import checkPrf.
@@ -33,13 +37,13 @@ Ltac SimplFreeVar :=
    | H:(In ?X3 (freeVarFormula ?X9 (existH ?X1 ?X2))) |- _ =>
        assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula X9 X2)));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.existH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (existH ?X1 ?X2))) |- _ =>
        assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula X9 X2)));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (forallH ?X1 ?X2))) |- _ =>
        assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula X9 X2)));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.forallH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (forallH ?X9 ?X1 ?X2))) |- _ =>
        assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula X9 X2)));
         [ apply H | clear H ]
    | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula ?X9 ?X2))) |-
@@ -50,24 +54,24 @@ Ltac SimplFreeVar :=
    | H:(In ?X3 (freeVarFormula ?X9 (andH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.andH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (andH ?X9 ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (orH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.orH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (orH ?X9 ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.impH ?X9 ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (notH ?X1))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1)); [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.notH ?X9 ?X1))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (notH ?X9 ?X1))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1)); [ apply H | clear H ]
    | H:(In _ (_ ++ _)) |- _ =>
        induction (in_app_or _ _ _ H); clear H
@@ -86,9 +90,9 @@ Ltac SimplFreeVar :=
        rewrite freeVarSucc in H
    | H:(In _ (freeVarTerm ?X9 (var _))) |- _ =>
        simpl in H; decompose sum H; clear H
-   | H:(In _ (freeVarTerm ?X9 (LNT.var _))) |- _ =>
-       simpl in H; decompose sum H; clear H
-   | H:(In _ (freeVarTerm ?X9 (fol.var ?X9 _))) |- _ =>
+  (* | H:(In _ (freeVarTerm ?X9 (var _))) |- _ =>
+       simpl in H; decompose sum H; clear H *)
+   | H:(In _ (freeVarTerm ?X9 (var ?X9 _))) |- _ =>
        simpl in H; decompose sum H; clear H
    end.
 
@@ -793,7 +797,7 @@ apply
   with
     (forallH nv
        (notH
-          (fol.andH LNN
+          (andH 
              (equal (Succ (var nv))
                 (natToTerm
                    (checkPrf L codeF codeR codeArityF codeArityR
@@ -944,7 +948,6 @@ apply forallI.
 apply H7.
 apply nAnd.
 unfold orH at 1 in |- *.
-unfold fol.orH in |- *.
 apply
  impTrans
   with
@@ -954,6 +957,8 @@ apply impI.
 apply nnE.
 apply Axm; right; constructor.
 apply impI.
+
+
 rewrite <-
  (subFormulaId LNN
     (notH
@@ -993,10 +998,9 @@ apply eqSym.
 apply
  impE
   with
-    (fol.equal LNN (Succ (var nv))
+    (equal (Succ (var nv))
        (natToTerm (S (codeList (map (codeFormula L codeF codeR) A))))).
 apply sysWeaken.
-fold var in |- *.
 simpl in |- *.
 apply sysWeaken.
 apply nn2.
@@ -1532,17 +1536,17 @@ Proof.
 intros.
 unfold codeSysPrf in H.
 set (nv := newVar (2 :: 1 :: 0 :: v0 :: nil)) in *.
-unfold existH, andH, forallH, impH, orH in H.
+(* unfold existH in H. *)
 repeat
  match goal with
  | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
      elim H2; apply H1
  | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
      elim H2; symmetry  in |- *; apply H1
- | H:(In ?X3 (freeVarFormula LNN (fol.existH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
      assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.forallH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>
      assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
       [ apply H | clear H ]
  | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
@@ -1550,16 +1554,16 @@ repeat
      assert (In X3 (freeVarFormula LNN X2));
       [ eapply In_list_remove1; apply H
       | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
- | H:(In ?X3 (freeVarFormula LNN (fol.andH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.orH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (orH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.impH LNN ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (impH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (notH LNN ?X1))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
  | H:(In _ (_ ++ _)) |- _ =>
      induction (in_app_or _ _ _ H); clear H
@@ -1575,7 +1579,7 @@ repeat
      rewrite freeVarSucc in H
  | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
      simpl in H; decompose sum H; clear H
- | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
+ | H:(In _ (freeVarTerm LNN (var LNN _))) |- _ =>
      simpl in H; decompose sum H; clear H
  end.
 assert
@@ -1674,13 +1678,13 @@ apply Nat.le_0_l.
 Qed.
 
 Lemma codeSysPrfNCorrect1 :
- forall (f : fol.Formula L) (A : fol.Formulas L) (p : Prf L A (fol.notH L f)),
+ forall (f : fol.Formula L) (A : fol.Formulas L) (p : Prf L A (notH f)),
  (forall g : fol.Formula L, In g A -> mem _ U g) ->
  SysPrf T
    (substituteFormula LNN
       (substituteFormula LNN codeSysPrfNot 0
          (natToTerm (codeFormula L codeF codeR f))) 1
-      (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+      (natToTerm (codePrf L codeF codeR A (notH f) p))).
 Proof.
 intros.
 unfold codeSysPrfNot in |- *.
@@ -1697,10 +1701,10 @@ induction (eq_nat_dec 2 1).
 discriminate a.
 induction
  (In_dec eq_nat_dec 2
-    (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))).
+    (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
 elim (closedNatToTerm _ _ a).
 clear b b0.
-apply existI with (natToTerm (codeFormula L codeF codeR (fol.notH L f))).
+apply existI with (natToTerm (codeFormula L codeF codeR (notH f))).
 repeat rewrite (subFormulaAnd LNN).
 apply andI.
 apply
@@ -1708,8 +1712,8 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN codeSysPrf 0
-          (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
-       (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+          (natToTerm (codeFormula L codeF codeR (notH f)))) 1
+       (natToTerm (codePrf L codeF codeR A (notH f) p))).
 apply sysExtend with NN.
 apply TextendsNN.
 apply iffE2.
@@ -1718,8 +1722,8 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+          (natToTerm (codePrf L codeF codeR A (notH f) p))) 2
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaNil LNN).
 unfold not in |- *; intros.
@@ -1734,8 +1738,8 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 2
-          (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
-       (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+          (natToTerm (codeFormula L codeF codeR (notH f)))) 1
+       (natToTerm (codePrf L codeF codeR A (notH  f) p))).
 apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
@@ -1761,7 +1765,7 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN B 1 (natToTerm (codeFormula L codeF codeR f)))
-       0 (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+       0 (natToTerm (codeFormula L codeF codeR (notH f)))).
 apply iffE2.
 apply
  iffTrans
@@ -1770,8 +1774,8 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN (substituteFormula LNN B 0 (var 2)) 1
              (natToTerm (codeFormula L codeF codeR f))) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+          (natToTerm (codePrf L codeF codeR A (notH f) p))) 2
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros.
@@ -1790,7 +1794,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN B 0 (var 2)) 1
           (natToTerm (codeFormula L codeF codeR f))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaNil LNN).
 unfold not in |- *; intros.
@@ -1805,7 +1809,7 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN B 1
              (natToTerm (codeFormula L codeF codeR f))) 0 
-          (var 2)) 2 (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+          (var 2)) 2 (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaExch LNN).
 discriminate.
@@ -1838,7 +1842,7 @@ apply
   with
     (substituteFormula LNN
        (equal (var 0) (natToTerm (codeNot (codeFormula L codeF codeR f)))) 0
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 apply iffE2.
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply H1.
@@ -1853,13 +1857,13 @@ Qed.
 Lemma codeSysPrfNCorrect2 :
  forall (f : fol.Formula L) (A : fol.Formulas L),
  (exists g : fol.Formula L, In g A /\ ~ mem _ U g) ->
- forall p : Prf L A (fol.notH L f),
+ forall p : Prf L A (notH f),
  SysPrf T
    (notH
       (substituteFormula LNN
          (substituteFormula LNN codeSysPrfNot 0
             (natToTerm (codeFormula L codeF codeR f))) 1
-         (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))). 
+         (natToTerm (codePrf L codeF codeR A (notH f) p)))). 
 Proof.
 intros.
 unfold codeSysPrfNot in |- *.
@@ -1876,18 +1880,18 @@ induction (eq_nat_dec 2 1).
 discriminate a.
 induction
  (In_dec eq_nat_dec 2
-    (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))).
+    (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
 elim (closedNatToTerm _ _ a).
 clear b b0.
 apply nExist.
 apply
  impE
   with
-    (fol.notH LNN
+    (notH
        (substituteFormula LNN
           (substituteFormula LNN codeSysPrf 0
-             (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))).
+             (natToTerm (codeFormula L codeF codeR (notH f)))) 1
+          (natToTerm (codePrf L codeF codeR A (notH f) p)))).
 apply sysExtend with NN.
 apply TextendsNN.
 apply impI.
@@ -1908,7 +1912,7 @@ apply Nat.lt_succ_diag_r.
 repeat rewrite (subFormulaAnd LNN).
 apply nAnd.
 apply orSym.
-unfold orH, fol.orH in |- *.
+unfold orH.
 apply
  impTrans
   with
@@ -1927,7 +1931,7 @@ apply
                 (primRecFormula 1 (proj1_sig codeNotIsPR)) 0 
                 (var 2)) 1 (var 0)) 0
           (natToTerm (codeFormula L codeF codeR f))) 1
-       (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+       (natToTerm (codePrf L codeF codeR A (notH f) p))).
 apply impI.
 apply nnE.
 apply Axm; right; constructor.
@@ -1939,7 +1943,7 @@ apply
        (substituteFormula LNN
           (substituteFormula LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
              (var 2)) 1 (natToTerm (codeFormula L codeF codeR f))) 1
-       (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+       (natToTerm (codePrf L codeF codeR A (notH f) p))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaTrans LNN).
 unfold not in |- *; intros; SimplFreeVar.
@@ -1983,7 +1987,7 @@ rewrite <-
        (substituteFormula LNN
           (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2))
              0 (natToTerm (codeFormula L codeF codeR f))) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))) 2)
+          (natToTerm (codePrf L codeF codeR A (notH f) p)))) 2)
  .
 apply
  impE
@@ -1994,8 +1998,8 @@ apply
              (substituteFormula LNN
                 (substituteFormula LNN codeSysPrf 0 (var 2)) 0
                 (natToTerm (codeFormula L codeF codeR f))) 1
-             (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+             (natToTerm (codePrf L codeF codeR A (notH f) p)))) 2
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 eapply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
@@ -2004,11 +2008,11 @@ rewrite (subFormulaNot LNN).
 apply
  impE
   with
-    (fol.notH LNN
+    (notH 
        (substituteFormula LNN
           (substituteFormula LNN codeSysPrf 0
-             (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p)))).
+             (natToTerm (codeFormula L codeF codeR (notH f)))) 1
+          (natToTerm (codePrf L codeF codeR A (notH f) p)))).
 apply cp2.
 apply sysWeaken.
 apply iffE1.
@@ -2017,8 +2021,8 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 1
-          (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+          (natToTerm (codePrf L codeF codeR A (notH f) p))) 2
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaNil LNN).
 unfold not in |- *; intros; SimplFreeVar.
@@ -2028,8 +2032,8 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 2
-          (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
-       (natToTerm (codePrf L codeF codeR A (fol.notH L f) p))).
+          (natToTerm (codeFormula L codeF codeR (notH f)))) 1
+       (natToTerm (codePrf L codeF codeR A (notH f) p))).
 apply (subFormulaExch LNN).
 discriminate.
 apply closedNatToTerm.
@@ -2048,8 +2052,8 @@ Qed.
 
 Lemma codeSysPrfNCorrect3 :
  forall (f : fol.Formula L) (n : nat),
- (forall (A : fol.Formulas L) (p : Prf L A (fol.notH L f)),
-  n <> codePrf L codeF codeR A (fol.notH L f) p) ->
+ (forall (A : fol.Formulas L) (p : Prf L A (notH f)),
+  n <> codePrf L codeF codeR A (notH f) p) ->
  SysPrf T
    (notH
       (substituteFormula LNN
@@ -2077,10 +2081,10 @@ apply nExist.
 apply
  impE
   with
-    (fol.notH LNN
+    (notH
        (substituteFormula LNN
           (substituteFormula LNN codeSysPrf 0
-             (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
+             (natToTerm (codeFormula L codeF codeR (notH f)))) 1
           (natToTerm n))).
 apply sysExtend with NN.
 apply TextendsNN.
@@ -2093,7 +2097,6 @@ apply (closedNN 2).
 exists x.
 auto.
 induction H1.
-fold notH in H0.
 SimplFreeVar.
 elim (Compat815.le_not_lt 2 1).
 apply freeVarCodeSysPrf.
@@ -2101,7 +2104,7 @@ apply H1. auto with arith.
 repeat rewrite (subFormulaAnd LNN).
 apply nAnd.
 apply orSym.
-unfold orH, fol.orH in |- *.
+unfold orH in |- *.
 apply
  impTrans
   with
@@ -2187,7 +2190,7 @@ apply
                 (substituteFormula LNN codeSysPrf 0 (var 2)) 0
                 (natToTerm (codeFormula L codeF codeR f))) 1 
              (natToTerm n))) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 eapply (subWithEquals LNN).
 apply eqSym.
 apply Axm; right; constructor.
@@ -2196,10 +2199,10 @@ rewrite (subFormulaNot LNN).
 apply
  impE
   with
-    (fol.notH LNN
+    (notH 
        (substituteFormula LNN
           (substituteFormula LNN codeSysPrf 0
-             (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
+             (natToTerm (codeFormula L codeF codeR (notH f)))) 1
           (natToTerm n))).
 apply cp2.
 apply sysWeaken.
@@ -2210,7 +2213,7 @@ apply
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 1
           (natToTerm n)) 2
-       (natToTerm (codeFormula L codeF codeR (fol.notH L f)))).
+       (natToTerm (codeFormula L codeF codeR (notH f)))).
 repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
 apply (subFormulaNil LNN).
 unfold not in |- *; intros; SimplFreeVar.
@@ -2220,7 +2223,7 @@ apply
   with
     (substituteFormula LNN
        (substituteFormula LNN (substituteFormula LNN codeSysPrf 0 (var 2)) 2
-          (natToTerm (codeFormula L codeF codeR (fol.notH L f)))) 1
+          (natToTerm (codeFormula L codeF codeR (notH f)))) 1
        (natToTerm n)).
 apply (subFormulaExch LNN).
 discriminate.
@@ -2234,7 +2237,6 @@ apply freeVarCodeSysPrf.
 apply H3. auto with arith. 
 apply Axm; right; constructor.
 apply closedNatToTerm.
-fold notH in |- *.
 apply codeSysPrfCorrect3.
 assumption.
 Qed.

@@ -242,7 +242,7 @@ Proof.
                  apply impE with
                    (existH 2
                       (substituteFormula LNN
-                         (fol.andH LNN (LT (var 2) (var 1))
+                         (andH  (LT (var 2) (var 1))
                             (substituteFormula LNN
                                (substituteFormula LNN codeSysPrfNot 1 (var 2)) 0
                                (natToTerm (codeFormula x)))) 1 
@@ -270,7 +270,7 @@ Proof.
                          (existH 2
                             (substituteFormula LNN
                                (substituteFormula LNN
-                                  (fol.andH LNN (LT (var 2) (var 1))
+                                  (andH  (LT (var 2) (var 1))
                                      (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                   (natToTerm (codeFormula x))) 1 
                                (natToTerm (codePrf x0 x x1)))) 
@@ -278,19 +278,19 @@ Proof.
                          (substituteFormula LNN
                             (existH 2
                                (substituteFormula LNN
-                                  (fol.andH LNN (LT (var 2) (var 1))
+                                  (andH (LT (var 2) (var 1))
                                      (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                   (natToTerm (codeFormula x)))) 1 
                             (natToTerm (codePrf x0 x x1))).
                          *** replace
                              (existH 2
                                 (substituteFormula LNN
-                                   (fol.andH LNN (LT (var 2) (var 1))
+                                   (andH (LT (var 2) (var 1))
                                       (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                    (natToTerm (codeFormula x)))) with
                              (substituteFormula LNN
                                 (existH 2
-                                   (fol.andH LNN (LT (var 2) (var 1))
+                                   (andH (LT (var 2) (var 1))
                                       (substituteFormula LNN codeSysPrfNot 1 (var 2)))) 0
                                 (natToTerm (codeFormula x))).
                              apply impE with
@@ -303,18 +303,18 @@ Proof.
                              replace
                                (forallH 1
                                   (substituteFormula LNN
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
-                                           (fol.andH LNN (LT (var 2) (var 1))
+                                           (andH (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
                                                  (var 2))))) 0
                                      (natToTerm (codeFormula x)))) 
                                with
                                (substituteFormula LNN
                                   (forallH 1
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
-                                           (fol.andH LNN (LT (var 2) (var 1))
+                                           (andH (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
                                                  (var 2)))))) 0
                                   (natToTerm (codeFormula x))).
@@ -398,7 +398,7 @@ Proof.
                   induction H6 as [x2 H6| x2 H6].
                   --- apply (closedNN 2); exists x2; auto.
                   --- induction H6; now apply (H4 2).
-              ** apply nAnd; unfold orH, fol.orH;
+              ** apply nAnd; unfold orH;
                    apply impTrans with (LT (var 2) (natToTerm (codePrf x0 x x1))).
                  --- apply impI, nnE.
                      apply Axm; right; constructor.
@@ -409,8 +409,8 @@ Proof.
                              intros n H5; rewrite (subFormulaImp LNN).
                              rewrite (subFormulaNot LNN).
                              apply impE with
-                               (fol.impH LNN E
-                                  (fol.notH LNN
+                               (impH E
+                                  (notH
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrfNot 0
                                            (natToTerm (codeFormula x))) 1 
