@@ -21,7 +21,8 @@ Proof.
         In x (freeVarFormula LNN (notH (equal (var 0) (var 0)))) -> 0 = x)
     by (intros x H1; simpl in H1; repeat induction H1; auto).
   destruct  (H _ _ H1 H0) as [x H2]; 
-    now exists (substituteFormula LNN (notH (equal (var 0) (var 0))) 0 (natToTerm x)).
+    now exists (substituteFormula LNN (notH (equal (var 0) (var 0))) 0
+                  (natToTerm x)).
 Qed.
 
 Definition wInconsistent (T : System) :=

@@ -245,7 +245,7 @@ Proof.
                       (interpTerm
                          (updateValue (updateValue value nv x) v0
                             (interpTerm (updateValue value nv x) s)) 
-                         (var L nv)) x0).
+                         (var nv)) x0).
     { intros x x0 H1; unfold updateValue in |- *; simpl in |- *.
       induction (eq_nat_dec v x0) as [a1 | ?].
       - induction (eq_nat_dec v0 nv) as [a2 | b0].
@@ -279,14 +279,14 @@ Proof.
                 (interpTerm
                    (updateValue (updateValue value nv x) v0
                       (interpTerm (updateValue value nv x) s)) 
-                   (var L nv))) a) <->
+                   (var nv))) a) <->
          (forall x : U M,
              interpFormula (updateValue value nv x)
-               (substituteFormula L (substituteFormula L a v (var L nv)) v0 s))).
+               (substituteFormula L (substituteFormula L a v (var nv)) v0 s))).
     { split.
       - assert
           (H2: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
                 interpFormula value (substituteFormula L b v s)).
@@ -303,7 +303,7 @@ Proof.
       - intros H2 x.
         assert
           (H3: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula value (substituteFormula L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
@@ -328,7 +328,7 @@ Proof.
                   (interpTerm
                      (updateValue (updateValue value nv x) v0
                         (interpTerm (updateValue value nv x) s)) 
-                     (var L nv))) a)).
+                     (var nv))) a)).
     { split.
       - intros H3 x;
         apply
@@ -346,7 +346,7 @@ Proof.
              (interpTerm
                 (updateValue (updateValue value nv x) v0
                    (interpTerm (updateValue value nv x) s)) 
-                (var L nv))).
+                (var nv))).
         + intros x0 H4;
           symmetry  in |- *.
           auto.
@@ -379,7 +379,7 @@ Proof.
         --  intros H1 x;
         assert
           (H2: forall b : Formula L,
-              lt_depth L b (forallH L v a) ->
+              lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
                 interpFormula value (substituteFormula L b v s)).
@@ -392,7 +392,7 @@ Proof.
            ** apply H1.
     -- assert
         (forall b : Formula L,
-            lt_depth L b (forallH L v a) ->
+            lt_depth L b (forallH v a) ->
             forall (value : nat -> U M) (v : nat) (s : Term L),
               interpFormula value (substituteFormula L b v s) ->
               interpFormula (updateValue value v (interpTerm value s)) b).
@@ -425,15 +425,15 @@ Qed.
 
 Fixpoint nnHelp (f : Formula L) : Formula L :=
   match f with
-  | equal t s => equal L t s
-  | atomic r ts => atomic L r ts
-  | impH A B => impH L (nnHelp A) (nnHelp B)
-  | notH A => notH L (nnHelp A)
-  | forallH v A => forallH L v (notH L (notH L (nnHelp A)))
+  | equal t s => equal t s
+  | atomic r ts => atomic r ts
+  | impH A B => impH (nnHelp A) (nnHelp B)
+  | notH A => notH (nnHelp A)
+  | forallH v A => forallH v (notH (notH (nnHelp A)))
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
-  notH L (notH L (nnHelp f)).
+  notH (notH (nnHelp f)).
 
 Lemma freeVarNNHelp (f : Formula L):  freeVarFormula L f = freeVarFormula L (nnHelp f).
 Proof.
@@ -510,7 +510,7 @@ Proof.
       auto with datatypes.
     + assert (H0: interpFormula value (nnTranslate A))
       by auto with datatypes.
-      assert (H1: interpFormula value (nnTranslate (impH L A B)))
+      assert (H1: interpFormula value (nnTranslate (impH A B)))
         by auto with datatypes.
       clear Hrecx0_1 Hrecx0_0.
       simpl in H0, H1. 
@@ -598,7 +598,7 @@ Proof.
       cut
         (forall a b : Terms L (arity L (inl (Functions L) R)),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (iffH L (atomic L R a) (atomic L R b)))).
+            interpFormula value (nnHelp (iffH (atomic R a) (atomic R b)))).
       * assert
           (H: forall A,
               (forall a b : Terms L (arity L (inl (Functions L) R)),
@@ -616,7 +616,7 @@ Proof.
                          (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
                          (nVars L (arity L (inl (Functions L) R))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
                       (arity L (inl (Functions L) R))))).
         { generalize (arity L (inl (Functions L) R)).
           simple induction n.
@@ -626,18 +626,18 @@ Proof.
             intro H1; apply
                         (H
                            (fun x y : Terms L n0 =>
-                              A (Tcons L n0 (var L (n0 + n0)) x) 
-                                (Tcons L n0 (var L (S (n0 + n0))) y))).
+                              A (Tcons (var (n0 + n0)) x) 
+                                (Tcons (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.
         } 
-        apply (H (fun a b => iffH L (atomic L R a) (atomic L R b))).
+        apply (H (fun a b => iffH (atomic R a) (atomic R b))).
       * simpl; generalize (rel M R).
         generalize (arity L (inl (Functions L) R)).
         intros n n0 a b H H0.
         induction a as [| n t a Hreca].
-        -- assert (H1: b = Tnil L) by (symmetry; apply nilTerms).
+        -- assert (H1: b = Tnil) by (symmetry; apply nilTerms).
            rewrite H1 in H0; auto.
         -- induction (consTerms L n b) as [x p].
            induction x as (a0, b0).
@@ -658,7 +658,7 @@ Proof.
       cut
         (forall a b : Terms L (arity L (inr (Relations L) f)),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (equal L (apply L f a) (apply L f b)))).
+            interpFormula value (nnHelp (equal (apply f a) (apply f b)))).
       * assert
           (H: forall A,
               (forall a b : Terms L (arity L (inr (Relations L) f)),
@@ -673,10 +673,11 @@ Proof.
                              _ : Terms L (arity L (inr (Relations L) f)) *
                                    Terms L (arity L (inr (Relations L) f)) => 
                              Formula L)
-                         (fun a b : Terms L (arity L (inr (Relations L) f)) => A a b)
+                         (fun a b : Terms L (arity L (inr (Relations L) f)) =>
+                            A a b)
                          (nVars L (arity L (inr (Relations L) f))))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH L (equal L (var L (n + n)) (var L (S (n + n)))) Hrecn)
+                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
                       (arity L (inr (Relations L) f))))).
         { generalize (arity L (inr (Relations L) f)).
           simple induction n.
@@ -687,18 +688,18 @@ Proof.
             intros H1; 
               apply  (H
                         (fun x y : Terms L n0 =>
-                           A (Tcons L n0 (var L (n0 + n0)) x) 
-                             (Tcons L n0 (var L (S (n0 + n0))) y))).
+                           A (Tcons (var (n0 + n0)) x) 
+                             (Tcons (var (S (n0 + n0))) y))).
             intros a0 b0 H2; apply H0.
             simpl; rewrite H1.
             now rewrite H2.
         }
-        apply (H (fun a b => equal L (apply L f a) (apply L f b))).
+        apply (H (fun a b => equal (apply f a) (apply f b))).
       * simpl; generalize (func M f).
         generalize (arity L (inr (Relations L) f)).
         intros n n0 a b H.
         induction a as [| n t a Hreca].
-        -- assert (H0: b = Tnil L) by ( symmetry; apply nilTerms). 
+        -- assert (H0: b = Tnil) by ( symmetry; apply nilTerms). 
            now rewrite H0.
         -- induction (consTerms L n b) as [x p];
            induction x as (a0, b0).
@@ -716,10 +717,10 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH L (equal L (var  L 0) (var L 0))).
+  intros H; unfold Consistent; exists (notH (equal (var 0) (var 0))).
   intros H0; assert
                (H1: interpFormula value
-                      (nnTranslate (notH L (equal L (var L 0) (var L 0))))).
+                      (nnTranslate (notH  (equal (var 0) (var 0))))).
   { apply preserveValue.
     assumption.
     auto.

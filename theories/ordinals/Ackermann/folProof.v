@@ -13,24 +13,15 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let iffH := iffH L.
-Let forallH := forallH L.
 
 Fixpoint nVars (n: nat) : Terms n * Terms n:=
   match n with 
-    0 => (Tnil L, Tnil L)
+    0 => (Tnil, Tnil)
   | S n0 => 
       (let (a,b) := nVars n0 in
-       (Tcons L n0 (var (n0 + n0)) a, 
-         Tcons L n0 (var (S (n0 + n0))) b))
+       (Tcons (var (n0 + n0)) a, 
+         Tcons  (var (S (n0 + n0))) b))
   end.
-
 
 Definition AxmEq4 (R : Relations L) : Formula.
 Proof. 

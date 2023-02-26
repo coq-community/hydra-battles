@@ -20,18 +20,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 
 Definition codeFreeVarTermTerms : nat -> nat :=
   evalStrongRec 0
@@ -71,12 +59,12 @@ Proof.
      (g := fun t1 recs : nat =>
              cPair
                (switchPR (car t1) (cdr 
-                                          (codeNth (t1 - S (cdr t1)) recs))
+                                     (codeNth (t1 - S (cdr t1)) recs))
                   (S (cPair (cdr t1) 0)))
                (switchPR t1
                   (codeApp (car (codeNth 
-                                        (t1 - S (car (pred t1))) recs))
-                     (cdr (codeNth (t1 - S (cdr (pred t1))) recs))) 0))      in *.
+                                   (t1 - S (car (pred t1))) recs))
+                     (cdr (codeNth (t1 - S (cdr (pred t1))) recs))) 0)).    
    unfold evalStrongRec, evalComposeFunc, evalOneParamList.
    rewrite computeEvalStrongRecHelp.
    unfold compose2 in |- *.

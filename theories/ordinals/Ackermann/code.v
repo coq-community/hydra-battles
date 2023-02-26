@@ -20,25 +20,13 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Fixpoint codeTerm (t : Term) : nat :=
   match t with
-  | fol.var n => cPair 0 n
-  | fol.apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
+  | var n => cPair 0 n
+  | apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
   end
  
  with codeTerms (n : nat) (ts : Terms n) {struct ts} : nat :=
@@ -107,11 +95,11 @@ Qed.
 
 Fixpoint codeFormula (f : Formula) : nat :=
   match f with
-  | fol.equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
-  | fol.impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
-  | fol.notH f1 => cPair 2 (codeFormula f1)
-  | fol.forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | fol.atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
+  | equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
+  | impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
+  | notH f1 => cPair 2 (codeFormula f1)
+  | forallH n f1 => cPair 3 (cPair n (codeFormula f1))
+  | atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
   end.
 
 
@@ -459,25 +447,23 @@ Proof.
            elimtype False; cut (X1 = X3);
            [ discriminate | eapply cPairInj1; apply h ]
        end); try reflexivity.
-  replace A0 with A.
-  reflexivity.
-  apply codeFormulaInj.
-  eapply cPairInj2.
-  apply H.
-  replace Axm0 with Axm1.
-  replace Axm3 with Axm2.
-  reflexivity.
-  eapply Hrecp0 with A0 p2.
-  do 3 eapply cPairInj2.
-  apply H.
-  eapply Hrecp1 with (fol.impH L A0 B0) p.
-  eapply cPairInj2.
-  eapply cPairInj1.
-  eapply cPairInj2.
-  apply H.
-  eapply Hrecp with A0 p0.
-  do 3 eapply cPairInj2.
-  apply H.
+  - replace A0 with A.
+    + reflexivity.
+    + apply codeFormulaInj; eapply cPairInj2, H.
+  - replace Axm0 with Axm1.
+    + replace Axm3 with Axm2.
+      * reflexivity.
+      * eapply Hrecp0 with A0 p2.
+        do 3 eapply cPairInj2.
+        apply H.
+    + eapply Hrecp1 with (impH  A0 B0) p.
+      eapply cPairInj2.
+      eapply cPairInj1.
+      eapply cPairInj2.
+      apply H.
+  - eapply Hrecp with A0 p0.
+    do 3 eapply cPairInj2.
+    apply H.
 Qed.
 
 Definition codeImp (a b : nat) := cPair 1 (cPair a b).

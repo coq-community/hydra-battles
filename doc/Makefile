@@ -8,6 +8,7 @@ DEP_FILES = hydras.tex          \
 	    schutte-chapter.tex \
 	    Gamma0-chapter.tex  \
 	    chapter-powers.tex  \
+	    chap-intro-goedel.tex \
 	    chapter-primrec.tex \
 	    chapter-encoding.tex \
 	    chapter-fol.tex \

@@ -14,28 +14,19 @@ Definition System := System LNT.
 Definition Sentence := Sentence LNT.
 Definition Term := Term LNT.
 Definition Terms := Terms LNT.
-Definition var := var LNT.
-Definition equal := equal LNT.
-Definition impH := impH LNT.
-Definition notH := notH LNT.
-Definition iffH := iffH LNT.
-Definition forallH := forallH LNT.
-Definition orH := orH LNT.
-Definition andH := andH LNT.
-Definition existH := existH LNT.
-Definition ifThenElseH := ifThenElseH LNT.
 Definition SysPrf := SysPrf LNT.
+#[local] Arguments apply _ _ _ : clear implicits.
 
 Definition Plus (x y : Term) : Term :=
-  apply LNT Plus (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
+  apply LNT Plus (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
-  apply LNT Times (Tcons LNT 1 x (Tcons LNT 0 y (Tnil LNT))).
+  apply LNT Times (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNT Succ (Tcons LNT 0 x (Tnil LNT)).
+  apply LNT Succ (Tcons x (Tnil)).
 
-Definition Zero : Term := apply LNT Zero (Tnil LNT).
+Definition Zero : Term := apply LNT Zero (Tnil).
 
 Lemma LNT_dec : language_decidable LNT.
 Proof. split; decide equality. Qed.
@@ -169,9 +160,9 @@ Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
 Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
- ~ In_freeVarSys LNT v T ->
- ~ In v (freeVarFormula LNT g) ->
- SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
+  ~ In_freeVarSys LNT v T ->
+  ~ In v (freeVarFormula LNT g) ->
+  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
 Proof. apply (existE LNT). Qed.
 
 Lemma existSimp (T : System) (f : Formula) (v : nat):
@@ -253,8 +244,8 @@ Proof.
   intros H H0; unfold Plus.
   apply (equalFunction LNT).
   simpl in |- *.
-  destruct (consTerms LNT 1 (Tcons LNT 1 a (Tcons LNT 0 c (Tnil LNT))))as [(a0,b0) p].
-  simpl; destruct (consTerms LNT 1 (Tcons _ 1 b (Tcons _ 0 d (Tnil _)))) 
+  destruct (consTerms LNT 1 (Tcons a (Tcons c (Tnil))))as [(a0,b0) p].
+  simpl; destruct (consTerms LNT 1 (Tcons b (Tcons d (Tnil)))) 
     as [(a1,b1) p0]. 
   simpl in |- *.
   destruct (consTerms LNT 0 b0) as [(a2,b2) p1]. 
@@ -284,9 +275,9 @@ Lemma eqTimes  (T : System) (a b c d : Term):
 Proof.
   intros H H0; unfold Times in |- *.
   apply (equalFunction LNT); simpl in |- *.
-  destruct (consTerms LNT 1 (Tcons LNT 1 a (Tcons LNT 0 c (Tnil LNT))))as [(a0,b0) p].
+  destruct (consTerms LNT 1 (Tcons a (Tcons c (Tnil))))as [(a0,b0) p].
   simpl in |- *.
-  destruct (consTerms LNT 1 (Tcons LNT 1 b (Tcons LNT 0 d (Tnil LNT)))) as [(a1,b1) p0].
+  destruct (consTerms LNT 1 (Tcons b (Tcons d (Tnil)))) as [(a1,b1) p0].
   simpl; destruct (consTerms LNT 0 b0) as [(a2,b2) p1].
   simpl ; destruct (consTerms LNT 0 b1) as [(a3,b3) p2].
   simpl in |- *; repeat split.
@@ -312,9 +303,9 @@ Lemma eqSucc (T : System) (a b : Term):
 Proof.
   intros H; unfold Succ in |- *; apply (equalFunction LNT).
   simpl in |- *.
-  destruct (consTerms LNT 0 (Tcons LNT 0 a (Tnil LNT))) as [(a0,b0) p].
+  destruct (consTerms LNT 0 (Tcons a (Tnil))) as [(a0,b0) p].
   simpl in |- *;
-destruct (consTerms LNT 0 (Tcons LNT 0 b (Tnil LNT))) as [(a1,b1) p0].
+destruct (consTerms LNT 0 (Tcons b (Tnil))) as [(a1,b1) p0].
   simpl in |- *; repeat split.
   - simpl in p.
     inversion p.

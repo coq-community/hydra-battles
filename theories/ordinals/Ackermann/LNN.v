@@ -15,31 +15,25 @@ Definition System := System LNN.
 Definition Sentence := Sentence LNN.
 Definition Term := Term LNN.
 Definition Terms := Terms LNN.
-Definition var := var LNN.
-Definition equal := equal LNN.
-Definition impH := impH LNN.
-Definition notH := notH LNN.
-Definition iffH := iffH LNN.
-Definition forallH := forallH LNN.
-Definition orH := orH LNN.
-Definition andH := andH LNN.
-Definition existH := existH LNN.
-Definition ifThenElseH := ifThenElseH LNN.
 Definition SysPrf := SysPrf LNN.
 
+#[local] Arguments apply _ _ _ : clear implicits.
+#[local] Arguments atomic _ _ _ : clear implicits.
+
 Definition Plus (x y : Term) : Term :=
-  apply LNN Plus (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
+  apply LNN Plus (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
-  apply LNN Times (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))).
+  apply LNN Times (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNN Succ (Tcons LNN 0 x (Tnil LNN)).
+  apply LNN Succ (Tcons x (Tnil)).
 
-Definition Zero : Term := apply LNN Zero (Tnil LNN).
+
+Definition Zero : Term := apply LNN Zero (Tnil).
 
 Definition LT (x y : Term) : Formula :=
-  atomic LNN LT (Tcons LNN 1 x (Tcons LNN 0 y (Tnil LNN))). 
+  atomic LNN LT (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
 
 Lemma LNN_dec : language_decidable LNN.
@@ -257,10 +251,10 @@ Lemma eqPlus (T : System) (a b c d : Term):
  SysPrf T (equal c d) -> SysPrf T (equal (Plus a c) (Plus b d)).
 Proof.
   intros H H0; unfold Plus; apply (equalFunction); simpl.  
-  destruct (consTerms LNN 1 (Tcons _ 1 a (Tcons _ 0 c (Tnil _))))
+  destruct (consTerms LNN 1 (Tcons a (Tcons c (Tnil))))
     as [(a0, b0) p]. 
   simpl; 
-    destruct  (consTerms LNN 1 (Tcons _ 1 b (Tcons _ 0 d (Tnil _))))
+    destruct  (consTerms LNN 1 (Tcons b (Tcons d (Tnil))))
     as [(a1, b1) p0].
   simpl; destruct  (consTerms LNN 0 b0) as [(a2, b2) p1].
   simpl; destruct  (consTerms LNN 0 b1) as [(a3,b3) p2].
@@ -283,9 +277,9 @@ Lemma eqTimes (T : System) (a b c d : Term):
 Proof.
   intros H H0; unfold Times; apply (equalFunction LNN).
   simpl; 
-    destruct (consTerms LNN 1 (Tcons _ 1 a (Tcons _ 0 c (Tnil _))))
+    destruct (consTerms LNN 1 (Tcons a (Tcons c (Tnil))))
     as [(a0, b0) p].
-  simpl; destruct (consTerms LNN 1 (Tcons _ 1 b (Tcons _ 0 d (Tnil _))))
+  simpl; destruct (consTerms LNN 1 (Tcons b (Tcons d (Tnil))))
     as [(a1, b1) p0].
   simpl; destruct  (consTerms LNN 0 b0) as [(a2, b2) p1].
   simpl; induction (consTerms LNN 0 b1) as [(a3,b3) p2].
@@ -311,9 +305,9 @@ Lemma eqSucc (T : System) (a b : Term):
   SysPrf T (equal a b) -> SysPrf T (equal (Succ a) (Succ b)).
 Proof.
   intro H; unfold Succ; apply (equalFunction LNN).
-  simpl; destruct (consTerms LNN 0 (Tcons _ 0 a (Tnil _)))
+  simpl; destruct (consTerms LNN 0 (Tcons a (Tnil)))
     as [(a0, b0) p].
-  simpl; destruct  (consTerms LNN 0 (Tcons LNN 0 b (Tnil LNN)))
+  simpl; destruct  (consTerms LNN 0 (Tcons b (Tnil)))
     as [(a1, b1) p0].
   simpl; repeat split.
   simpl in p.
@@ -328,9 +322,9 @@ Lemma eqLT (T : System) (a b c d : Term):
   SysPrf T (equal c d) -> SysPrf T (iffH (LT a c) (LT b d)).
 Proof.
   intros H H0; unfold LT; apply (equalRelation LNN).
-  simpl;  destruct  (consTerms LNN 1 (Tcons _ 1 a (Tcons _ 0 c (Tnil _))))
+  simpl;  destruct  (consTerms LNN 1 (Tcons a (Tcons c (Tnil))))
     as [(a0, b0) p].
-  simpl; destruct (consTerms LNN 1 (Tcons _ 1 b (Tcons _ 0 d (Tnil _))))
+  simpl; destruct (consTerms LNN 1 (Tcons b (Tcons d (Tnil))))
     as [(a1, b1) p0].
   simpl; destruct (consTerms LNN 0 b0) as [(a2, b2) p1]. 
 

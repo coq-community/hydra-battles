@@ -15,6 +15,7 @@ Definition PA2 :=
   forallH 1
     (forallH 0
        (impH (equal (Succ (var 0)) (Succ (var 1))) (equal (var 0) (var 1)))).
+
 Definition PA3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
 Definition PA4 :=
@@ -53,7 +54,7 @@ Definition open :=
   Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => equal t t0)
     (fun (r : Relations LNT) 
          (ts : Terms (arity LNT (inl (Functions LNT) r))) =>
-       atomic LNT r ts) 
+       atomic r ts) 
     (fun (f : Formula) _ (f0 : Formula) _ => impH f f0)
     (fun (f : Formula) _ => notH f)
     (fun (n : nat) _ (recf : Formula) => recf).
@@ -116,8 +117,7 @@ Proof.
                  destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
                    try (right; unfold not in |- *; intros; 
                         decompose record H; discriminate H1).
-                 do 4 fold impH in |- *.
-                 do 4 fold forallH in |- *.
+               (*   do 4 fold impH  in |- *. *)
                  induction (formula_dec LNT LNT_dec
                               (substituteFormula LNT f1 n0 Zero) f).
                  rewrite <- a.
