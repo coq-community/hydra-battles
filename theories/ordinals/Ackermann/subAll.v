@@ -26,7 +26,7 @@ Notation SysPrf := (SysPrf L) (only parsing).
 Fixpoint subAllTerm (t : fol.Term L) : (nat -> fol.Term L) -> fol.Term L :=
   match t return ((nat -> fol.Term L) -> fol.Term L) with
   | var x => fun m => m x
-  | fol.apply f ts => fun m => apply f (subAllTerms _ ts m)
+  | apply f ts => fun m => apply f (subAllTerms _ ts m)
   end
  
  with subAllTerms (n : nat) (ts : fol.Terms L n) {struct ts} :
@@ -109,8 +109,8 @@ Qed.
 
 Fixpoint subAllFormula (f : Formula) (m : (nat -> Term)) {struct f} : Formula :=
   match f with
-  | fol.equal t s => equal (subAllTerm t m) (subAllTerm s m)
-  | fol.atomic r ts => atomic r (subAllTerms _ ts m)
+  | equal t s => equal (subAllTerm t m) (subAllTerm s m)
+  | atomic r ts => atomic r (subAllTerms _ ts m)
   | impH f g =>
       impH (subAllFormula f m) (subAllFormula g m)
   | fol.notH f => notH (subAllFormula f m)

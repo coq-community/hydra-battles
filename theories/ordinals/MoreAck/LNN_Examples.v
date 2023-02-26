@@ -11,7 +11,7 @@ Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
            (equal  (var  0) 
-              (@fol.apply LNN Languages.Zero (@Tnil LNN)))
+              (@apply LNN Languages.Zero (@Tnil LNN)))
            (existH 1 (equal (var 0)
                           (apply  
                              (Languages.Succ : Functions LNN)

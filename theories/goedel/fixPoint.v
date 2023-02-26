@@ -230,7 +230,7 @@ Proof.
         | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
             assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNN (fol.forallH LNN ?X1 ?X2))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNN (forallH LNN ?X1 ?X2))) |- _ =>
             assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
             [ apply H | clear H ]
         | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
@@ -244,7 +244,7 @@ Proof.
         | H:(In ?X3 (freeVarFormula LNN (impH LNN ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNN (notH LNN ?X1))) |- _ =>
             assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
@@ -258,7 +258,7 @@ Proof.
             rewrite freeVarSucc in H
         | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
             simpl in H; decompose sum H; clear H
-        | H:(In _ (freeVarTerm LNN (fol.var LNN _))) |- _ =>
+        | H:(In _ (freeVarTerm LNN (var LNN _))) |- _ =>
             simpl in H; decompose sum H; clear H
         end.
       elim (Compat815.le_not_lt _ _ (H5 _ H4)); lia. 
@@ -565,7 +565,7 @@ Proof.
         | H:(In ?X3 (freeVarFormula LNT (existH ?X1 ?X2))) |- _ =>
             assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNT X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNT (fol.forallH LNT ?X1 ?X2))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNT (forallH LNT ?X1 ?X2))) |- _ =>
             assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNT X2)));
             [ apply H | clear H ]
         | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNT ?X2))) |- _
@@ -579,7 +579,7 @@ Proof.
         | H:(In ?X3 (freeVarFormula LNT (impH LNT ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNT X1 ++ freeVarFormula LNT X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNT (fol.notH LNT ?X1))) |- _ =>
+        | H:(In ?X3 (freeVarFormula LNT (notH LNT ?X1))) |- _ =>
             assert (In X3 (freeVarFormula LNT X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
@@ -593,7 +593,7 @@ Proof.
             rewrite freeVarSucc in H
         | H:(In _ (freeVarTerm LNT (var _))) |- _ =>
             simpl in H; decompose sum H; clear H
-        | H:(In _ (freeVarTerm LNT (fol.var LNT _))) |- _ =>
+        | H:(In _ (freeVarTerm LNT (var LNT _))) |- _ =>
             simpl in H; decompose sum H; clear H
         end.
       * elim (Compat815.le_not_lt x 3).

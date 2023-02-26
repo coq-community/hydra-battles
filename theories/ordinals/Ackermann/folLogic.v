@@ -87,7 +87,7 @@ Qed.
 Lemma noMiddle  (T : System) (f : Formula):
   SysPrf T (orH (notH f) f).
 Proof.
-  unfold orH, fol.orH in |- *.
+  unfold orH in |- *.
   apply impI, nnE, Axm; right; constructor.
 Qed.
 
@@ -147,7 +147,7 @@ Lemma orE (T : System) (f g h : Formula):
  SysPrf T (orH f g) ->
  SysPrf T (impH f h) -> SysPrf T (impH g h) -> SysPrf T h.
 Proof.
-  intros H H0 H1; unfold orH, fol.orH in H.
+  intros H H0 H1; unfold orH in H.
   apply impE with (impH h h).
   - apply cp1.
     apply impE with (impH (notH h) h).
@@ -355,7 +355,7 @@ Qed.
 Lemma nAnd (T : System) (f g : Formula):
  SysPrf T (orH (notH f) (notH g)) -> SysPrf T (notH (andH f g)).
 Proof.
-  intros H; unfold andH, fol.andH; apply nnI, H. 
+  intros H; unfold andH; apply nnI, H. 
 Qed.
 
 Lemma nForall  (T : System) (f : Formula) (v : nat) :

@@ -397,7 +397,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            equal (fol.apply f a) (apply f b)) 
+            equal (apply f a) (apply f b)) 
          (nVars L n)) 
       with
       (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).

@@ -20,8 +20,8 @@ Section Free_Variables.
 
 Fixpoint freeVarTerm (s : fol.Term L) : list nat :=
   match s with
-  | fol.var v => v :: nil
-  | fol.apply f ts => freeVarTerms (arity L (inr _ f)) ts
+  | var v => v :: nil
+  | apply f ts => freeVarTerms (arity L (inr _ f)) ts
   end
 with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : list nat :=
        match ss with
@@ -657,7 +657,7 @@ Lemma subFormulaOr :
     substituteFormula (orH f1 f2) v s =
       orH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
-  intros f1 f2 v s; unfold orH, fol.orH; 
+  intros f1 f2 v s; unfold orH;
     now rewrite subFormulaImp, subFormulaNot.
 Qed.
 
@@ -666,7 +666,7 @@ Lemma subFormulaAnd :
     substituteFormula (andH f1 f2) v s =
       andH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
-  intros ? ? ? ?; unfold andH, fol.andH in |- *.
+  intros ? ? ? ?; unfold andH in |- *.
   rewrite subFormulaNot, subFormulaOr; now repeat rewrite subFormulaNot.
 Qed.
 
@@ -685,7 +685,7 @@ Lemma subFormulaExist :
           end
       end.
 Proof.
-  intros ? ? ? ? nv; unfold existH, fol.existH in |- *.
+  intros ? ? ? ? nv; unfold existH.
   rewrite subFormulaNot, subFormulaForall.
   destruct (eq_nat_dec x v).
   - reflexivity.
@@ -698,7 +698,7 @@ Lemma subFormulaIff :
     substituteFormula (iffH f1 f2) v s =
       iffH (substituteFormula f1 v s) (substituteFormula f2 v s).
 Proof.
-  intros ? ? v s; unfold iffH, fol.iffH in |- *.
+  intros ? ? v s; unfold iffH in |- *.
   rewrite subFormulaAnd; now repeat rewrite subFormulaImp.
 Qed.
 
@@ -708,7 +708,7 @@ Lemma subFormulaIfThenElse :
       ifThenElseH (substituteFormula f1 v s) (substituteFormula f2 v s)
         (substituteFormula f3 v s).
 Proof.
-  intros ? ? ? ? ?; unfold ifThenElseH, fol.ifThenElseH in |- *.
+  intros ? ? ? ? ?; unfold ifThenElseH.
   now rewrite subFormulaAnd, !subFormulaImp,  subFormulaNot.
 Qed.
 

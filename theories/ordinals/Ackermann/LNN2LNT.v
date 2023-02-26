@@ -20,7 +20,7 @@ Require Import codeNatToTerm.
 
 Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
   match t with
-  | fol.var v => var v
+  | var v => var v
   | apply f ts => apply LNT f (LNN2LNT_terms _ ts)
   end
  
@@ -77,7 +77,7 @@ Qed.
 
 Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   match f with
-  | fol.equal t1 t2 => equal (LNN2LNT_term t1) (LNN2LNT_term t2)
+  | equal t1 t2 => equal (LNN2LNT_term t1) (LNN2LNT_term t2)
   | atomic r ts =>
       match
         r as l return (fol.Terms LNN (arity LNN (inl _ l)) -> Formula)

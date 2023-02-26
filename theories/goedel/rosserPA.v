@@ -566,7 +566,7 @@ Proof.
   intros decide;
     set
       (A :=
-         fol.forallH  1
+         forallH  1
            (impH codeSysPrf
               (existH 2
                  (andH (LNN.LT (var 2) (var 1))
@@ -926,7 +926,7 @@ Proof.
                            exists x2; auto.
                        *** induction H6.
                            apply (H4 2); assumption.
-                  +++ apply nAnd; unfold orH, fol.orH;
+                  +++ apply nAnd; unfold orH;
                         apply impTrans with
                         (LNN2LNT_formula (LNN.LT (var 2) 
                                             (natToTermLNN (codePrf x0 x x1)))).

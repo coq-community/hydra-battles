@@ -398,7 +398,7 @@ Proof.
                   induction H6 as [x2 H6| x2 H6].
                   --- apply (closedNN 2); exists x2; auto.
                   --- induction H6; now apply (H4 2).
-              ** apply nAnd; unfold orH, fol.orH;
+              ** apply nAnd; unfold orH;
                    apply impTrans with (LT (var 2) (natToTerm (codePrf x0 x x1))).
                  --- apply impI, nnE.
                      apply Axm; right; constructor.

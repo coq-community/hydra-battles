@@ -47,16 +47,16 @@ Module Toy.
 
 (* begin snippet toyNotation *)
   (** Abreviations for the toy language L *)
-  Notation A := (@fol.atomic L  _A Tnil).
-  Notation B := (@fol.atomic L _B Tnil). 
-  Notation C := (@fol.atomic L _C Tnil). 
-  Notation P t := (@fol.atomic L _P (Tcons t Tnil)).
+  Notation A := (@atomic L  _A Tnil).
+  Notation B := (@atomic L _B Tnil). 
+  Notation C := (@atomic L _C Tnil). 
+  Notation P t := (@atomic L _P (Tcons t Tnil)).
   Notation R t1 t2 :=
-    (@fol.atomic L _R (Tcons t1 (Tcons t2 Tnil))).
+    (@atomic L _R (Tcons t1 (Tcons t2 Tnil))).
 
-  Notation a := (@fol.apply L _a Tnil).
-  Notation b := (@fol.apply L _b Tnil).
-  Notation f t := (@fol.apply L _f (Tcons t Tnil)).
+  Notation a := (@apply L _a Tnil).
+  Notation b := (@apply L _b Tnil).
+  Notation f t := (@apply L _f (Tcons t Tnil)).
 (* end snippet toyNotation *)
 
 (* begin snippet smallTerms *)
