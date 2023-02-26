@@ -2614,7 +2614,7 @@ Ltac PRsolveFV A B n :=
     | H:(In ?X3 (freeVarFormula LNN (fol.andH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
-    | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
+    | H:(In ?X3 (freeVarFormula LNN (impH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
          [ apply H | clear H ]
     | H:(In ?X3 (freeVarFormula LNN (notH ?X1))) |- _ =>
@@ -3241,7 +3241,7 @@ Proof.
                                                                ++++ apply closedNatToTerm.
                                                 + rewrite <-
                                                    (subFormulaId LNN
-                                                      (fol.impH 
+                                                      (impH 
                                                          (substituteFormula LNN
                                                             (substituteFormula LNN (substituteFormula LNN B 2 (var 3)) 2
                                                                (natToTerm x)) 3 (natToTerm n))
@@ -3464,7 +3464,7 @@ Proof.
                                         impE
                                          with
                                            (forallH 3
-                                              (fol.impH 
+                                              (impH 
                                                  (substituteFormula LNN
                                                     (substituteFormula LNN (LT (var 3) (var 1)) 1 (natToTerm a)) 2
                                                     (natToTerm b))
@@ -5394,7 +5394,7 @@ Opaque substituteFormula.
       | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
-      | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
+      | H:(In ?X3 (freeVarFormula LNN (impH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
            [ apply H | clear H ]
       | H:(In ?X3 (freeVarFormula LNN (notH ?X1))) |- _ =>

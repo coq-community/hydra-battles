@@ -2,30 +2,32 @@
 
 Require Import fol.
 
+#[local] Arguments notH _ _ : clear implicits.
+
 
 Module FOL_notations.
 Declare Scope fol_scope.
 Delimit Scope fol_scope with fol.
 
-Infix "=" := (fol.equal _): fol_scope.
-Infix "\/" := (fol.orH): fol_scope.
-Infix "/\" := (fol.andH):fol_scope.
-Infix "->" := (fol.impH): fol_scope.
-Notation "~ A" := (@fol.notH _ A): fol_scope. 
+Infix "=" := (equal _): fol_scope.
+Infix "\/" := (orH): fol_scope.
+Infix "/\" := (andH):fol_scope.
+Infix "->" := (impH): fol_scope.
+Notation "~ A" := (@notH _ A): fol_scope. 
 
-Notation k_ t := (fol.apply  (t:Functions _)  (fol.Tnil)).
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
 
 Notation app1 f arg := 
-  (fol.apply  (f: Functions _)  (Tcons arg (fol.Tnil))).
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
 About Tnil.
 Notation app2 f arg1 arg2 := 
-  (fol.apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (fol.Tnil)))).
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
 
-Notation "t = u" := (@fol.equal _ t u): fol_scope.
+Notation "t = u" := (@equal _ t u): fol_scope.
 
-Notation allH v A := (fol.forallH v A).
-Notation exH := (fol.existH).
+Notation allH v A := (forallH v A).
+Notation exH := (existH).
 Notation v_ := var.
 End FOL_notations.
 
@@ -36,32 +38,32 @@ Delimit Scope cfol_scope with cfol.
 
 Module CFOL_notations.
 
-Notation "~ A" := (@fol.notH _ A): cfol_scope.
+Notation "~ A" := (@notH _ A): cfol_scope.
 
-Notation " A -> B" := (@fol.impH _ A B) : cfol_scope.
-Notation " A \/ B" := ((@fol.notH _  A) -> B)%cfol : cfol_scope.
+Notation " A -> B" := (@impH _ A B) : cfol_scope.
+Notation " A \/ B" := ((@notH _  A) -> B)%cfol : cfol_scope.
 Notation " A /\ B" := 
-     (@fol.notH _ (@fol.notH _  A \/ @fol.notH _ B))%cfol 
+     (@notH _ (@notH _  A \/ @notH _ B))%cfol 
  : cfol_scope.
 
 Notation exH v A := 
-  (@fol.notH _ (@fol.forallH _ v (@fol.notH _ A))).
+  (@notH _ (@forallH _ v (@notH _ A))).
 
-Notation allH v A:= (fol.forallH v A).
+Notation allH v A:= (forallH v A).
 
 Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
 
-Notation "t = u" := (@fol.equal _ t u): cfol_scope.
+Notation "t = u" := (@equal _ t u): cfol_scope.
 
 Notation app1 f arg := 
-  (fol.apply  (f: Functions _) 
-     (fol.Tcons  arg fol.Tnil)).
+  (apply  (f: Functions _) 
+     (Tcons  arg Tnil)).
 
 Notation app2 f arg1 arg2 := 
-  (fol.apply   (f: Functions _) 
-     (fol.Tcons arg1 (fol.Tcons arg2 fol.Tnil))).
+  (apply   (f: Functions _) 
+     (Tcons arg1 (Tcons arg2 Tnil))).
 
-Notation v_ := (fol.var).
+Notation v_ := (var).
 
  Section Consistance. 
   Goal forall L A B, @orH L A B = (A \/ B)%cfol. 

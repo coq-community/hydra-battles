@@ -36,11 +36,11 @@ Proof. reflexivity. Qed.
 
 Fixpoint freeVarFormula (A : fol.Formula L) : list nat :=
   match A with
-  | fol.equal t s => freeVarTerm t ++ freeVarTerm s
-  | fol.atomic r ts => freeVarTerms _ ts
-  | fol.impH A B => freeVarFormula A ++ freeVarFormula B
-  | fol.notH A => freeVarFormula A
-  | fol.forallH v A => list_remove _ eq_nat_dec v (freeVarFormula A)
+  | equal t s => freeVarTerm t ++ freeVarTerm s
+  | atomic r ts => freeVarTerms _ ts
+  | impH A B => freeVarFormula A ++ freeVarFormula B
+  | notH A => freeVarFormula A
+  | forallH v A => list_remove _ eq_nat_dec v (freeVarFormula A)
   end.
 
 Definition ClosedSystem (T : fol.System L) :=
@@ -151,12 +151,12 @@ Section Substitution.
 Fixpoint substituteTerm (s : fol.Term L) (x : nat) 
   (t : fol.Term L) {struct s} : fol.Term L :=
   match s with
-  | fol.var v =>
+  | var v =>
       match eq_nat_dec x v with
       | left _ => t
       | right _ => var v
       end
-  | fol.apply f ts => apply f (substituteTerms _ ts x t)
+  | apply f ts => apply f (substituteTerms _ ts x t)
   end
 with substituteTerms (n : nat) (ss : fol.Terms L n) 
        (x : nat) (t : fol.Term L) {struct ss} : fol.Terms L n :=

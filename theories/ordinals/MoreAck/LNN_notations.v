@@ -10,7 +10,7 @@ Delimit Scope lnn_scope with lnn.
 Infix "=" := (fol.equal LNN): lnn_scope.
 Infix "\/" := (fol.orH LNN): lnn_scope.
 Infix "/\" := (fol.andH LNN):lnn_scope.
-Infix "->" := (@fol.impH LNN): lnn_scope.
+Infix "->" := (impH LNN): lnn_scope.
 Infix "<->" := (fol.iffH LNN): lnn_scope.
 Notation "~" := (fol.notH LNN): lnn_scope. 
 
@@ -60,7 +60,7 @@ Module CLNN_notations.
 
 Notation "~ A" := (@fol.notH LNN A): cnn_scope.
 
-Notation " A -> B" := (@fol.impH LNN A B) : cnn_scope.
+Notation " A -> B" := (@impH LNN A B) : cnn_scope.
 Notation " A \/ B" := ((@fol.notH LNN  A) -> B)%cnn : cnn_scope.
 Notation " A /\ B" := 
      (@fol.notH LNN (@fol.notH LNN  A \/ @fol.notH _ B))%cnn 

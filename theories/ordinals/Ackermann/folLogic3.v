@@ -628,8 +628,8 @@ Proof.
                  elim (In_list_remove2 _ _ _ _ _ H7).
                  reflexivity.
                  apply impE with
-                   (substituteFormula L (substituteFormula L a v (var (newVar nv))) v0
-                      a0).
+                   (substituteFormula L (substituteFormula L a v 
+                                           (var (newVar nv))) v0 a0).
                  apply H.
                  eapply eqDepth.
                  symmetry  in |- *.
@@ -652,7 +652,8 @@ Proof.
            assert
              (H8: In (newVar nv)
                     (freeVarFormula L
-                       (substituteFormula L (substituteFormula L a v (var x0)) v0 b)))
+                       (substituteFormula L 
+                          (substituteFormula L a v (var x0)) v0 b)))
              by (eapply In_list_remove1; apply H7).
            induction (freeVarSubFormula3 _ _ _ _ _ H8).
            assert

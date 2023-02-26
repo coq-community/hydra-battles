@@ -59,7 +59,7 @@ Lemma rebindExist (T : System) (a b : nat) (f : Formula):
   ~ In b (freeVarFormula L (existH a f)) ->
   SysPrf T (iffH (existH a f) (existH b (substituteFormula L f a (var b)))).
 Proof.
-  intro H; unfold existH, fol.existH.  
+  intro H; unfold existH.  
   apply (reduceNot L); eapply (iffTrans L).
   - apply (rebindForall T a b (notH f)), H. 
   - rewrite (subFormulaNot L); apply (iffRefl L).

@@ -18,6 +18,7 @@ Definition Terms := Terms LNN.
 Definition SysPrf := SysPrf LNN.
 
 #[local] Arguments apply _ _ _ : clear implicits.
+#[local] Arguments atomic _ _ _ : clear implicits.
 
 Definition Plus (x y : Term) : Term :=
   apply LNN Plus (Tcons x (Tcons y (Tnil))).
@@ -32,7 +33,7 @@ Definition Succ (x : Term) : Term :=
 Definition Zero : Term := apply LNN Zero (Tnil).
 
 Definition LT (x y : Term) : Formula :=
-  @atomic LNN LT (Tcons x (Tcons y (Tnil))). 
+  atomic LNN LT (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
 
 Lemma LNN_dec : language_decidable LNN.

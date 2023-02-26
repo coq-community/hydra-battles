@@ -66,7 +66,7 @@ Ltac SimplFreeVar :=
    | H:(In ?X3 (freeVarFormula ?X9 (impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
-   | H:(In ?X3 (freeVarFormula ?X9 (fol.impH ?X1 ?X2))) |- _ =>
+   | H:(In ?X3 (freeVarFormula ?X9 (impH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
    | H:(In ?X3 (freeVarFormula ?X9 (notH ?X1))) |- _ =>
@@ -1561,7 +1561,7 @@ repeat
  | H:(In ?X3 (freeVarFormula LNN (fol.orH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
- | H:(In ?X3 (freeVarFormula LNN (fol.impH ?X1 ?X2))) |- _ =>
+ | H:(In ?X3 (freeVarFormula LNN (impH ?X1 ?X2))) |- _ =>
      assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
       [ apply H | clear H ]
  | H:(In ?X3 (freeVarFormula LNN (fol.notH LNN ?X1))) |- _ =>
