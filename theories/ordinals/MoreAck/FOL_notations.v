@@ -2,10 +2,7 @@
 
 Require Import fol.
 
-#[local] Arguments notH _ _ : clear implicits.
-
-
-Module FOL_notations.
+Module FolNotations.
 Declare Scope fol_scope.
 Delimit Scope fol_scope with fol.
 
@@ -14,6 +11,8 @@ Infix "\/" := (orH): fol_scope.
 Infix "/\" := (andH):fol_scope.
 Infix "->" := (impH): fol_scope.
 Notation "~ A" := (@notH _ A): fol_scope. 
+Notation "A <-> B" := (@iffH _ A B): fol_scope.
+
 
 Notation k_ t := (apply  (t:Functions _)  (Tnil)).
 
@@ -26,32 +25,45 @@ Notation app2 f arg1 arg2 :=
 
 Notation "t = u" := (@equal _ t u): fol_scope.
 
-Notation allH v A := (forallH v A).
+
+
 Notation exH := (existH).
 Notation v_ := var.
-End FOL_notations.
 
+End FolNotations.
 
+Import FolNotations. 
 
-Declare Scope cfol_scope. 
-Delimit Scope cfol_scope with cfol. 
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
 
-Module CFOL_notations.
+Notation "x \/' y" := (~ x -> y)%fol : fol_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
 
-Notation "~ A" := (@notH _ A): cfol_scope.
+Section LExamples. 
+Variable L: Language. 
+Variables P Q : Formula L. 
 
-Notation " A -> B" := (@impH _ A B) : cfol_scope.
-Notation " A \/ B" := ((@notH _  A) -> B)%cfol : cfol_scope.
-Notation " A /\ B" := 
-     (@notH _ (@notH _  A \/ @notH _ B))%cfol 
- : cfol_scope.
+Let ex1 : Formula L :=  (P /\ Q)%fol. 
+About impH.
+Let ex2 : Formula L := (~ (~~P -> ~Q))%fol. 
+Print ex2. 
+Let ex3 : Formula L:= (~(~P \/ ~Q))%fol. 
+Print ex3. 
+Compute ex3. 
+Print ex1. 
+Compute ex1. 
 
-Notation exH v A := 
-  (@notH _ (@forallH _ v (@notH _ A))).
+Check (forallH 5 (v_ 5 = v_ 5) -> forallH 0 (v_ 0 = v_ 0))%fol.
 
-Notation allH v A:= (forallH v A).
+End LExamples.
 
-Notation "A <-> B" := (( A -> B) /\ (B -> A))%cfol:  cfol_scope.
+(*
+
 
 Notation "t = u" := (@equal _ t u): cfol_scope.
 
@@ -76,9 +88,10 @@ Notation v_ := (var).
  End Consistance. 
 
 End CFOL_notations.
+*)
 
 
-Import FOL_notations. 
+
 Section JustTry.
 Variable L: Language.
 Check (@var L 1 = var 2)%fol.
@@ -86,19 +99,17 @@ Check (v_ 1 = v_ 2)%fol: Formula L.
 Check (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
- Import CFOL_notations. 
-Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
-Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
-Import FOL_notations. 
-Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
-Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
-Open Scope fol_scope.
 
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
-Open Scope cfol_scope.
 
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
+
+Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
+Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
+
+Check (v_ 1 = v_ 1 <-> v_ 2 = v_ 2)%fol: Formula L. 
+Compute (v_ 1 = v_ 1 <-> v_ 2 = v_ 2)%fol: Formula L.
 
 End JustTry.

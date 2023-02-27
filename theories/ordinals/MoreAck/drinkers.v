@@ -8,7 +8,7 @@ Require Import fol folProp folProof  Languages folLogic.
 Require Import primRec.
 
 Require Import FOL_notations.
-Import FOL_notations. 
+Import FolNotations. 
 
 #[local] Arguments Ensembles.In {_} .
 #[local] Arguments Ensembles.Add {_} .
@@ -36,7 +36,7 @@ Proof.
  inversion 1.  
 Qed. 
 
-Remark R1 i : SysPrf L (Empty_set _) (allH i (v_ 0 = v_ 0))%fol.
+Remark R1 i : SysPrf L (Empty_set _) (forallH i (v_ 0 = v_ 0))%fol.
   apply forallI.
   - red; inversion 1.
     destruct H0 as [_ H1]; inversion H1. 
@@ -93,7 +93,7 @@ Section Drinkers_theorem.
 
  Lemma D0 : forall i, 
       SysPrf _ Empty_set 
-        ( ~ allH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
+        ( ~ forallH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
 Proof.
     intro i; apply cp2, impI, forallI. 
     - intros [f [H H0]]; inversion H0. 
@@ -114,7 +114,7 @@ Proof.
   Qed. 
   
   Lemma D01 T i : SysPrf _ T
-                    ( ~ allH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
+                    ( ~ forallH i (D (v_ i)) -> exH i (~ (D (v_ i))))%fol. 
   Proof. 
     apply sysExtend with Empty_set. 
     - red; destruct 1.   
@@ -122,17 +122,17 @@ Proof.
   Qed. 
 
   Let f : Formula L :=
-        (exH 0 (D (v_ 0) -> allH 1 (D (v_ 1))))%fol. 
+        (exH 0 (D (v_ 0) -> forallH 1 (D (v_ 1))))%fol. 
 
   Theorem drinkers_thm : SysPrf L Empty_set f. 
   Proof with auto with sets.  
-    pose (F := allH 1 (D (v_ 1))%fol).
+    pose (F := forallH 1 (D (v_ 1))%fol).
     unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add Empty_set (~ F)%fol) 
                 (exH 1 (~ (D (v_ 1))))%fol).  
       { replace (exH 1 (~ (D (v_ 1))))%fol  
-          with (~ (allH 1 (~ (~  (D (v_ 1))))))%fol. 
+          with (~ (forallH 1 (~ (~  (D (v_ 1))))))%fol. 
         - unfold F; eapply impE. 
           + eapply D01. 
           + apply Axm; right; split. 
@@ -160,7 +160,7 @@ Proof.
 
 End Drinkers_theorem. 
 
-Import CFOL_notations. 
+
 About drinkers_thm.
 
 End Drinkers. 

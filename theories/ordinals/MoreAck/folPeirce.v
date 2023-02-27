@@ -7,7 +7,7 @@ Require Import fol folProp folProof  Languages folLogic.
 Require Import primRec.
 
 Require Import FOL_notations.
-Import FOL_notations. 
+Import FolNotations. 
 
 #[local] Arguments Ensembles.In {_} .
 #[local] Arguments Ensembles.Add {_} .

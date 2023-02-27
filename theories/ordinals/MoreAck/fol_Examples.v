@@ -7,9 +7,7 @@ Require Import primRec.
 
 
 Require Import FOL_notations.
-Import FOL_notations. 
-
-Import CFOL_notations.
+Import FolNotations. 
 
 Module Toy.
 
@@ -49,12 +47,12 @@ Compute nVars L 3.
 
 Compute AxmEq4 L _S.
 Print app1. 
-Print FOL_notations.app1.
+Print FolNotations.app1.
 
  Check f (v_ 1).
 Check a. 
 Check f a. 
-Check (allH 1 (v_ 1 = a))%fol. 
+Check (forallH 1 (v_ 1 = a))%fol. 
 Check (R (v_ 1) (v_ 2))%fol. 
 
 Compute arity (inr _f).
@@ -69,16 +67,16 @@ Check (app2  (_h: Functions L)  (var 1) (var 2))%fol: Term L.
 Check (h (v_ 1) (v_ 2))%fol.
 
 
-Goal Sentence L (allH  1 (v_ 1 = v_ 1))%fol. 
+Goal Sentence L (forallH  1 (v_ 1 = v_ 1))%fol. 
 intro v; cbn ; tauto. 
 Qed. 
 
-Goal ~ Sentence L (allH  0 (v_ 1 = v_ 1))%fol. 
+Goal ~ Sentence L (forallH  0 (v_ 1 = v_ 1))%fol. 
 intro H. specialize (H 1). cbn in H; tauto. 
 Qed. 
 
 Example f1 : Formula L :=
-      (allH 0 (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1))))%fol.
+      (forallH 0 (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1))))%fol.
 
 Example f2 : Formula L :=
       (exH  1 (v_ 0 = f (v_ 1)))%fol. 
@@ -121,7 +119,7 @@ Lemma eq_refl : forall L (t:Term L), Prf L nil (t = t)%fol.
 (* end snippet eqRefl *)
 Proof. 
   intros L t.
-  assert (H: Prf L nil (allH 0 (v_ 0 = v_ 0))%fol). 
+  assert (H: Prf L nil (forallH 0 (v_ 0 = v_ 0))%fol). 
   {
     apply GEN.
     - cbn; auto. 
@@ -232,7 +230,6 @@ Check Sentence.
 
 Compute nVars LNN 3.
 
-Import CFOL_notations. 
 Compute AxmEq4 LNN LT. 
 
 Compute nVars LNN 3.

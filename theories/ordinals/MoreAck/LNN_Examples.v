@@ -2,7 +2,8 @@
 
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
-Require Import LNN_notations. 
+Require Import FOL_notations LNN_notations.
+Import FolNotations. 
 
 Section bare_syntax. 
 (* begin snippet uglyF0 *)
@@ -24,19 +25,17 @@ Compute f0.
 (* end snippet uglyF0a *)
 End bare_syntax.
  
+Import  LNN_notations. 
 (* begin snippet CNNF0 *)
-Import  CLNN_notations. 
 Print  f0. 
 Compute f0. 
 (* end snippet CNNF0 *)
 
 Locate zero.
 Locate "_ + _".
- Example t1_0 : Term LNN := (v_ 1 + zero)%cnn. 
-Check t1_0. 
-Goal t1_0 = LNN.Plus (var 1) Zero. 
-reflexivity. 
-Qed. 
+ Example t1_0 : Term _ := LNN.Plus (var 1) Zero.  
+Print t1_0. 
+
 
 Print t1_0.
 Unset Printing Notations.  
@@ -56,9 +55,9 @@ Compute t1.
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
-  (allH 0 
+  (forallH 0 
     (v_ 0 = zero \/
-          exH 1 (v_ 0 = S_ (v_ 1))))%cnn.
+          exH 1 (v_ 0 = S_ (v_ 1))))%fol.
 (* end snippet f1Example *)
 
 Locate orH. 
@@ -66,20 +65,22 @@ Locate orH.
 
 Compute f0. 
 
+Print Relations. 
 
-
-Import  CLNN_notations. 
-Print f0. 
-Compute f0. 
 
 (* begin snippet f2Example *)
 Let f2 : Formula LNN :=
-   (exH 2 (zero < v_ 2 /\ natToTerm 4 = v_ 2 + v_ 2))%cnn.
+   (exH 2 (LT zero (v_ 2) /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
 
-Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = S_ (v_ 1)))%cnn.
+Let f2' : Formula LNN :=
+   (exH 2 (zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
 
 
-Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%cnn.
+
+Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = S_ (v_ 1)))%fol.
+
+
+Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%fol.
 (* end snippet f2Example *)
 
 Compute f4. 
@@ -106,8 +107,8 @@ Locate LT.
 
 End Examples.
 
-Require Import FOL_notations. 
-Import CFOL_notations. 
+
+
 Compute AxmEq4 LNN Languages.LT. 
 
 Compute AxmEq5 LNN Languages.Plus. 
@@ -117,19 +118,19 @@ Compute AxmEq5 LNN Languages.Succ.
 Compute EQ3 LNN. 
 
 
-Check GEN LNN nil (v_ 0 = v_ 0)%cnn 1. 
+Check GEN LNN nil (v_ 0 = v_ 0)%fol 1. 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn. 
-Import CLNN_notations. 
+Compute FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol. 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn. 
 
-Compute substituteFormula LNN (v_ 0 = v_ 0)%cnn 0 zero.
+Compute FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol. 
+
+Compute substituteFormula LNN (v_ 0 = v_ 0)%fol 0 zero.
 
 Goal Prf LNN nil
-         (allH 0 (v_ 0 = v_ 0))%cnn  -> 
-       Prf LNN nil (zero = zero)%cnn.
-intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%cnn 0 zero%cnn). 
+         (forallH 0 (v_ 0 = v_ 0))%fol  -> 
+       Prf LNN nil (zero = zero)%fol.
+intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol). 
 intro H0.
 unfold substituteFormula in H0. simpl in H0.    
 generalize (MP LNN nil nil _ _ H0). 
