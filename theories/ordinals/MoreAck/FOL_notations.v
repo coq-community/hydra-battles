@@ -26,14 +26,6 @@ Notation app2 f arg1 arg2 :=
 Notation "t = u" := (@equal _ t u): fol_scope.
 
 
-
-Notation exH := (existH).
-Notation v_ := var.
-
-End FolNotations.
-
-Import FolNotations. 
-
 Reserved Notation "x '\/'' y" (at level 85, right associativity).
 Reserved Notation "x '/\'' y" (at level 80, right associativity).
 Reserved Notation "x '<->'' y" (at level 95, no associativity).
@@ -43,6 +35,14 @@ Notation "x \/' y" := (~ x -> y)%fol : fol_scope.
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
+
+Notation exH := (existH).
+Notation v_ := var.
+
+End FolNotations.
+
+Export FolNotations. 
+
 
 Section LExamples. 
 Variable L: Language. 
@@ -90,7 +90,19 @@ Notation v_ := (var).
 End CFOL_notations.
 *)
 
+Section Correctness. 
+ Variable L: Language.
+ Variables P Q R : Formula L. 
 
+ Goal (P \/ Q)%fol = (P \/' Q)%fol.
+ reflexivity. 
+ Qed. 
+
+Goal (P /\ Q)%fol = (P /\' Q)%fol.
+Proof. reflexivity. Qed. 
+
+
+End Correctness.
 
 Section JustTry.
 Variable L: Language.

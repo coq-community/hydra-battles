@@ -2,7 +2,7 @@
 
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
-Require Import FOL_notations LNN_notations.
+Require Import FOL_notations. 
 Import FolNotations. 
 
 Section bare_syntax. 
@@ -57,7 +57,7 @@ Compute t1.
 Let f1 : Formula LNN :=
   (forallH 0 
     (v_ 0 = zero \/
-          exH 1 (v_ 0 = S_ (v_ 1))))%fol.
+          exH 1 (v_ 0 = Succ (v_ 1))))%fol.
 (* end snippet f1Example *)
 
 Locate orH. 
@@ -77,7 +77,7 @@ Let f2' : Formula LNN :=
 
 
 
-Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = S_ (v_ 1)))%fol.
+Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = Succ (v_ 1)))%fol.
 
 
 Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%fol.

@@ -38,26 +38,15 @@ Definition beta (a z : nat) : nat :=
           (cPairPi2 a))).
 
 Definition betaFormula : Formula :=
- existH 3
-  (andH (LT (var 3) (Succ (var 2)))
-    (existH 4
-      (andH (LT (var 4) (Succ (var 2)))
-        (andH
-          (equal
-            (Plus
-              (Times (Plus (var 3) (var 4))
-                (Succ (Plus (var 3) (var 4))))
-              (Times (natToTerm 2) (var 3)))
-            (Times (natToTerm 2) (var 2)))
-          (andH (LT (var 0) (Succ (Times (var 3) (Succ (var 1)))))
-           (existH 5
-            (andH (LT (var 5) (Succ (var 4)))
-               (equal
-                  (Plus (var 0)
-                     (Times (var 5)
-                        (Succ (Times (var 3) (Succ (var 1))))))
-                  (var 4))))))))).
-
+exH 3
+  (v_ 3 < S_ (v_ 2) /\
+   exH 4
+     (v_ 4 < S_ (v_ 2) /\
+      (v_ 3 + v_ 4) * S_ (v_ 3 + v_ 4) + natToTerm 2 * v_ 3 =
+      natToTerm 2 * v_ 2 /\
+      v_ 0 < S_ (v_ 3 * S_ (v_ 1)) /\
+      exH 5 (v_ 5 < S_ (v_ 4) /\ v_ 0 + v_ 5 * S_ (v_ 3 * S_ (v_ 1)) = v_ 4)))%fol.
+ 
 Lemma betaRepresentable : Representable 2 beta betaFormula.
 Proof.
  assert (cPairLemma1 :

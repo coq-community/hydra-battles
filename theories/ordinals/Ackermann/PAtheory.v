@@ -14,14 +14,14 @@ Require Export PA.
 
 Lemma paZeroOrSucc (t : Term):
  SysPrf PA
-   (orH (equal t Zero)
-      (existH (newVar (0 :: freeVarTerm LNT t))
-         (equal t (Succ (var (newVar (0 :: freeVarTerm LNT t))))))).
-Proof.
-  set (nv := newVar (0 :: freeVarTerm LNT t)) in *.
+ (t = Zero \/
+     exH (newVar (0 :: freeVarTerm LNT t))
+       (t = Succ (v_ (newVar (0 :: freeVarTerm LNT t)))))%fol.
+  Proof.
+    set (nv := newVar (0 :: freeVarTerm LNT t)) in *.
   apply impE with
     (substituteFormula LNT
-       (orH (equal (var 0) Zero) (existH nv (equal (var 0) (Succ (var nv)))))
+       (v_ 0 = Zero \/ exH nv (v_ 0 = Succ (v_ nv)))%fol
        0 t).
   - rewrite (subFormulaOr LNT), (subFormulaEqual LNT); simpl.
     apply iffE1, (reduceOr LNT).
@@ -31,7 +31,8 @@ Proof.
       * elim (newVar1 (0 :: freeVarTerm LNT t)).
         fold nv in |- *.
         rewrite a; simpl; auto.
-      * destruct (In_dec eq_nat_dec nv (freeVarTerm LNT t)) as [a | b0].
+      * destruct (In_dec eq_nat_dec nv (freeVarTerm LNT t)) 
+          as [a | b0].
         -- elim (newVar1 (0 :: freeVarTerm LNT t)).
            fold nv in |- *; simpl in |- *; auto.
         -- rewrite (subFormulaEqual LNT).
@@ -88,7 +89,8 @@ Proof.
              now destruct n1.
 Qed.
 
-Lemma paPlusSym : forall a b : Term, SysPrf PA (equal (Plus a b) (Plus b a)).
+Lemma paPlusSym : forall a b : Term, 
+    SysPrf PA (LNT.Plus a b = Plus b a)%fol. 
 Proof.
   assert
     (SysPrf PA

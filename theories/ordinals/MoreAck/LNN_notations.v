@@ -1,6 +1,6 @@
-Require Import fol Languages PAtheory LNN.
+Require Import fol Languages PAtheory .
 Require Import FOL_notations. 
-Import FOL_notations. 
+Import FolNotations. 
 (*** Expermimental ***)
 
 
@@ -35,11 +35,14 @@ Infix "+" := LNN.Plus : fol_scope.
 Infix "*" := LNN.Times: fol_scope. 
 
 Reserved Notation "x <' y" (at level 70, no associativity).
-Notation "t1 <' t2" := (@atomic Languages.LT (Tcons t1 (Tcons t2 Tnil))): fol_scope.
+Notation "t1 <' t2" := (atomic Languages.LT (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
 
 End LNN_notations.
 
-
+About LNN.LT. 
+Export LNN_notations. 
+Compute (forallH 1 (v_ 1 < v_ 1))%fol. 
+Check (forallH 1 (v_ 1 < v_ 1))%fol. 
 
 
 

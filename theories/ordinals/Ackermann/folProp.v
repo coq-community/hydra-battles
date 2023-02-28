@@ -3,6 +3,7 @@ From Coq Require Import Wf_nat Arith Lists.List Peano_dec.
 
 Require Import ListExt. (* todo: use stdlib? *)
 Require Export fol.
+Require Export FOL_notations.
 
 Section Fol_Properties.
 

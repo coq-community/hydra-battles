@@ -13,6 +13,7 @@ Require Import misc.
 From Coq Require Import Lia.
 
 Require Import Compat815.
+Require Import FOL_notations.
 
 Section Equality_Logic_Rules.
 
@@ -26,9 +27,11 @@ Notation Terms := (Terms L) (only parsing).
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
-Lemma eqRefl (T : fol.System L) (a : fol.Term L): SysPrf T (equal a a).
+Lemma eqRefl (T : fol.System L) (a : fol.Term L): 
+  SysPrf T (a = a)%fol.
 Proof.
-  replace (equal a a) with (substituteFormula L (equal (var 0) (var 0)) 0 a).
+  replace (a = a)%fol with 
+    (substituteFormula L (v_ 0 = v_ 0)%fol 0 a).
   apply (forallE L).
   - apply sysExtend with (Empty_set (fol.Formula L)).
     + intros f H; destruct H.
@@ -40,7 +43,7 @@ Proof.
 Qed.
 
 Lemma eqSym (T : fol.System L) (a b : fol.Term L):
-  SysPrf T (equal a b) -> SysPrf T (equal b a).
+  SysPrf T (a = b)%fol -> SysPrf T (b = a)%fol.
 Proof.
   intros H;apply (impE L) with (equal a b); [ | easy].
   set (m := fun x : nat => match x with
@@ -48,7 +51,7 @@ Proof.
                          | S _ => b
                          end) in *.
   apply (impE L) with
-    (subAllFormula L (impH (equal (var 0) (var 1)) (equal (var 1) (var 0)))
+    (subAllFormula L (v_ 0 = v_ 1 -> v_ 1 = v_ 0)%fol
        (fun x : nat =>
         match le_lt_dec 2 x with
         | left _ => var x
@@ -71,15 +74,15 @@ Proof.
 Qed.
 
 Lemma eqTrans  (T : fol.System L) (a b c : fol.Term L):
- SysPrf T (equal a b) -> SysPrf T (equal b c) -> SysPrf T (equal a c).
+ SysPrf T (a = b)%fol -> SysPrf T (b = c)%fol -> 
+ SysPrf T (a = c)%fol.
 Proof.
   intros H H0; apply (impE L) with (equal b c); [ | easy].
   apply (impE L) with (equal a b);  [ | easy];  clear H0 H.
   set (m x:= match x with | O => a | 1 => b  | _ => c  end) in *.
   apply (impE L) with
     (subAllFormula L
-       (impH (equal (var 0) (var 1))
-          (impH (equal (var 1) (var 2)) (equal (var 0) (var 2))))
+       (v_ 0 = v_ 1 -> v_ 1 = v_ 2 -> v_ 0 = v_ 2)%fol
        (fun x : nat =>
         match le_lt_dec 3 x with
         | left _ => var x
@@ -264,8 +267,8 @@ Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
         (subAllFormula L
            (nat_rec (fun _ : nat => fol.Formula L) f0
               (fun (n : nat) (Hrecn : fol.Formula L) =>
-                 impH 
-                   (equal (var (n + n)) (var (S (n + n)))) Hrecn)
+                 (v_ (n + n) = v_ (S (n + n)) -> Hrecn)%fol
+                 )
               n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.
   intros H.
@@ -292,7 +295,7 @@ Proof.
         simpl in |- *.
         repeat apply Nat.lt_lt_succ_r.
         auto.
-    + apply (impE L) with (equal (m0 (n + n)) (m0 (S (n + n)))).
+    + apply (impE L) with (m0 (n + n) = m0 (S (n + n)))%fol.
       * apply H2.
       * rewrite Nat.add_succ_r in H1.
         repeat rewrite H1.
@@ -377,7 +380,7 @@ Proof.
 Qed.
 
 Lemma equalFunction (T : fol.System L) (f : Functions L) (ts ss : fol.Terms L _):
- PairwiseEqual T _ ts ss -> SysPrf T (equal (apply f ts) (apply f ss)).
+ PairwiseEqual T _ ts ss -> SysPrf T (apply f ts =  apply f ss)%fol.
 Proof.
   intros H.
   set (n := arity L (inr (Relations L) f)) in *.
@@ -448,9 +451,10 @@ Proof.
       * reflexivity.
 Qed.
 
-Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) (T : fol.System L):
- SysPrf T (equal a b) ->
- SysPrf T (equal (substituteTerm L t v a) (substituteTerm L t v b)).
+Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) 
+  (T : fol.System L):
+ SysPrf T (a = b)%fol ->
+ SysPrf T (substituteTerm L t v a =  substituteTerm L t v b)%fol.
 Proof.
   intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
@@ -481,7 +485,8 @@ Qed.
 Lemma subWithEqualsTerms (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
   (v : nat) (T : fol.System L):
   SysPrf T (equal a b) ->
-  PairwiseEqual T _ (substituteTerms L _ ts v a) (substituteTerms L _ ts v b).
+  PairwiseEqual T _ (substituteTerms L _ ts v a) 
+    (substituteTerms L _ ts v b).
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
   - auto.
@@ -502,8 +507,9 @@ Qed.
 
 Lemma subWithEquals :
   forall (f : fol.Formula L) (v : nat) (a b : fol.Term L) (T : fol.System L),
-    SysPrf T (equal a b) ->
-    SysPrf T (impH (substituteFormula L f v a) (substituteFormula L f v b)).
+    SysPrf T (a = b)%fol ->
+    SysPrf T 
+      (substituteFormula L f v a -> substituteFormula L f v b)%fol.
 Proof.
   intro f; elim f using Formula_depth_ind2; intros.
   - repeat rewrite subFormulaEqual.
@@ -672,7 +678,8 @@ Proof.
              ** apply (notInFreeVarSys L).
              ** apply (iffTrans L) with
                   (substituteFormula L
-                     (substituteFormula L (substituteFormula L a v (var  x0)) x0
+                     (substituteFormula L 
+                        (substituteFormula L a v (var  x0)) x0
                         (var (newVar nv))) v0 b).
                 apply (subFormulaExch L); auto.
                 intros H7. 

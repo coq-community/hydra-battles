@@ -48,10 +48,8 @@ Definition NN9 :=
           (orH (equal (var 0) (var 1)) (LT (var 1) (var 0))))).
 
 Definition NNStar :=
-  forallH 1
-    (forallH 0
-       (impH (orH (LT (var 0) (var 1)) (equal (var 0) (var 1)))
-          (LT (var 0) (Succ (var 1))))).
+(forallH 1 (forallH 0
+              (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 -> v_ 0 < S_ (v_ 1))))%fol.
 
 Definition NN :=
   Ensembles.Add _
@@ -116,20 +114,20 @@ Proof.
 Qed.
 
 Lemma nn4 (a b : Term) :
- SysPrf NN (equal (Plus a (Succ b)) (Succ (Plus a b))).
+ SysPrf NN (a + S_ b = S_ (a + b))%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
-                           end) in *.
-  replace (equal (Plus a (Succ b)) (Succ (Plus a b))) with
-    (subAllFormula LNN
-       (equal (Plus (var 0) (Succ (var 1))) (Succ (Plus (var 0) (var 1))))
-       (fun x : nat =>
-          match le_lt_dec 2 x with
-          | left _ => var x
-          | right _ => m x
-          end)).
+                           end).
+  replace  (a + S_ b = S_ (a + b))%fol
+    with (subAllFormula LNN
+            (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%fol
+            (fun x : nat =>
+               match le_lt_dec 2 x with
+               | left _ => var x
+               | right _ => m x
+               end)).
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
   - destruct  (le_lt_dec 2 0).
@@ -208,10 +206,10 @@ Proof.
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (orH (LT a b) (orH (equal a b) (LT b a))) with
+  replace (a < b \/ a = b \/ b < a)%fol 
+    with 
     (subAllFormula LNN
-       (orH (LT (var 0) (var 1))
-          (orH (equal (var 0) (var 1)) (LT (var 1) (var 0))))
+       (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%fol
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x

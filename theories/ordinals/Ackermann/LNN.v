@@ -8,6 +8,8 @@ Require Import folProof.
 Require Import folProp.
 Require Import folLogic3.
 
+
+
 (* begin snippet Instantiations *)
 Definition Formula := Formula LNN.
 Definition Formulas := Formulas LNN.
@@ -35,6 +37,48 @@ Definition Zero : Term := apply LNN Zero (Tnil).
 Definition LT (x y : Term) : Formula :=
   atomic LNN LT (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
+
+Module LNN_notations.
+
+Set Printing Implicits. 
+Check Zero. 
+Locate Zero. 
+Notation zero := (@apply _ (Languages.Zero: Functions LNN) (fol.Tnil)).
+Check zero.
+
+
+Notation "t1 + t2" := 
+  (apply  _ Languages.Plus 
+     (Tcons t1 (Tcons t2 (Tnil)))): 
+    fol_scope.
+
+
+Notation "t1 * t2" := (apply  _ Languages.Times 
+     (Tcons  t1 
+        (Tcons  t2 (Tnil)))): fol_scope.
+
+Notation S_ t  := (Succ t).
+   
+About atomic. 
+
+Locate Times.
+Locate LT. 
+Print LT. 
+Infix "<" := LNN.LT : fol_scope. 
+Infix "+" := LNN.Plus : fol_scope.
+Infix "*" := LNN.Times: fol_scope. 
+
+Reserved Notation "x <' y" (at level 70, no associativity).
+Notation "t1 <' t2" := (atomic Languages.LT (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
+
+End LNN_notations.
+
+About LNN.LT. 
+Export LNN_notations. 
+Compute (forallH 1 (v_ 1 < v_ 1))%fol. 
+Check (forallH 1 (v_ 1 < v_ 1))%fol. 
+
+
 
 Lemma LNN_dec : language_decidable LNN.
 Proof. split; decide equality. Qed.
