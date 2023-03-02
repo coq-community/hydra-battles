@@ -46,12 +46,13 @@ Locate Zero.
 Notation zero := (@apply _ (Languages.Zero: Functions LNN) (fol.Tnil)).
 Check zero.
 
-
+(* hidden by the next infixes ??? *)
 Notation "t1 + t2" := 
   (apply  _ Languages.Plus 
      (Tcons t1 (Tcons t2 (Tnil)))): 
     fol_scope.
 
+Notation "'Plus'' x  y" := (apply _ Languages.Plus (Tcons x (Tcons y (Tnil))))  (at level 50, x at level 0, left associativity): fol_scope.
 
 Notation "t1 * t2" := (apply  _ Languages.Times 
      (Tcons  t1 
@@ -65,6 +66,7 @@ Locate Times.
 Locate LT. 
 Print LT. 
 Infix "<" := LNN.LT : fol_scope. 
+
 Infix "+" := LNN.Plus : fol_scope.
 Infix "*" := LNN.Times: fol_scope. 
 

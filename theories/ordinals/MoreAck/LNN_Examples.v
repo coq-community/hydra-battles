@@ -4,7 +4,7 @@ From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
 Require Import FOL_notations. 
 Import FolNotations. 
-
+Import LNN_notations. 
 Section bare_syntax. 
 (* begin snippet uglyF0 *)
 
@@ -35,7 +35,8 @@ Locate zero.
 Locate "_ + _".
  Example t1_0 : Term _ := LNN.Plus (var 1) Zero.  
 Print t1_0. 
-
+Check S_ Zero. 
+Compute t1_0. 
 
 Print t1_0.
 Unset Printing Notations.  
@@ -59,9 +60,15 @@ Let f1 : Formula LNN :=
     (v_ 0 = zero \/
           exH 1 (v_ 0 = Succ (v_ 1))))%fol.
 (* end snippet f1Example *)
+Compute f1. 
 
-Locate orH. 
-
+(* To redefine (deleted by error) 
+Goal f1 = f1. 
+compute. 
+rewrite  exHfold at 1. 
+reflexivity. 
+Qed. 
+*)
 
 Compute f0. 
 
@@ -85,7 +92,9 @@ Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%fol.
 
 Compute f4. 
 Print f4.
-
+Import LNN_notations. 
+Check (Plus Zero  Zero)%fol. 
+Compute (Plus Zero  Zero)%fol. 
 (* begin snippet depthCompute *)
 Compute (depth _ f1, depth _ f2).
 (* end snippet depthCompute *)

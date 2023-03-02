@@ -15,23 +15,17 @@ Section NN.
 Definition NN1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
 
 Definition NN2 :=
-  forallH 1 (forallH 0
-       (impH (equal (Succ (var 0)) (Succ (var 1))) 
-          (equal (var 0) (var 1)))).
+(forallH 1 (forallH 0 (S_ (v_ 0) = S_ (v_ 1) -> v_ 0 = v_ 1)))%fol.
 
 Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
 Definition NN4 :=
-  forallH 1 (forallH 0
-       (equal (Plus (var 0) (Succ (var 1))) (Succ (Plus (var 0) (var 1))))).
+forallH 1 (forallH 0 (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%fol).
 
-Definition NN5 := forallH 0 (equal (Times (var 0) Zero) Zero).
+Definition NN5 := forallH 0 (v_ 0 * Zero = Zero)%fol.
 
 Definition NN6 :=
-  forallH 1
-    (forallH 0
-       (equal (Times (var 0) (Succ (var 1)))
-          (Plus (Times (var 0) (var 1)) (var 0)))).
+forallH 1 (forallH 0 (v_ 0 * S_ (v_ 1) = v_ 0 * v_ 1 + v_ 0)%fol).
 
 Definition NN7 := forallH 0 (notH (LT (var 0) Zero)).
 

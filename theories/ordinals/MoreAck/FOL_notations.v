@@ -38,6 +38,7 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
 
 Notation exH := (existH).
 Notation v_ := var.
+Notation exH' v A := (~ (forallH v (~ A)))%fol.
 
 End FolNotations.
 
@@ -109,6 +110,9 @@ Variable L: Language.
 Check (@var L 1 = var 2)%fol.
 Check (v_ 1 = v_ 2)%fol: Formula L.
 Check (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
+Compute (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
+
+
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
 

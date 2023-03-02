@@ -19,11 +19,11 @@ From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import expressible.
 From hydras Require Import Compat815.
 
-Definition subStar (a v n : nat) := codeSubFormula a v (codeNatToTerm n).
+Definition subStar (a v n : nat) : nat := codeSubFormula a v (codeNatToTerm n).
 
 Lemma subStarIsPR : isPR 3 subStar.
 Proof.
-  unfold subStar; apply  compose3_3IsPR  with
+  unfold subStar; apply compose3_3IsPR  with
     (f1 := fun a v n : nat => a)
     (f2 := fun a v n : nat => v)
     (f3 := fun a v n : nat => codeNatToTerm n).
@@ -41,7 +41,7 @@ Lemma FixPointLNN :
  forall (A : Formula) (v : nat),
  {B : Formula |
    SysPrf NN
-     (iffH B (substituteFormula LNN A v (natToTermLNN (codeFormula B)))) /\
+     (B <-> substituteFormula LNN A v (natToTermLNN (codeFormula B)))%fol /\
    (forall x : nat,
     In x (freeVarFormula LNN B) <->
     In x (list_remove _ eq_nat_dec v (freeVarFormula LNN A)))}.
@@ -87,8 +87,8 @@ Proof.
     + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
       fold nv; simpl; auto.
     + induction
-        (In_dec eq_nat_dec v (freeVarTerm LNN (natToTerm (codeFormula Theta)))) as 
-        [a | b0].
+        (In_dec eq_nat_dec v (freeVarTerm LNN (natToTerm (codeFormula Theta)))) 
+        as [a | b0].
       * elim (closedNatToTerm _ _ a).
       * clear b b0.
         rewrite (subFormulaAnd LNN).
