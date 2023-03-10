@@ -479,7 +479,7 @@ Proof.
     repeat rewrite evalStrongRecHelp1; unfold pred in |- *.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     + rewrite Hrecl; rewrite codeInCorrect.
-      destruct (In_dec eq_nat_dec a (List.nodup Nat.eq_dec l)). 
+      destruct (In_dec Nat.eq_dec a (List.nodup Nat.eq_dec l)). 
       destruct (in_dec Nat.eq_dec a l). 
       * reflexivity.
       *     rewrite nodup_In in i; contradiction.
@@ -551,3 +551,4 @@ Proof.
     apply const1_NIsPR.
   - apply switchIsPR.
 Qed.
+

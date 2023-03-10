@@ -51,7 +51,8 @@ Qed.
 
 
 Lemma In_list_remove3 :
-  forall (a b : A) (l : list A), In a l -> a <> b -> In a (list_remove b l).
+  forall (a b : A) (l : list A), 
+    In a l -> a <> b -> In a (list_remove b l).
   Proof. 
     intros; rewrite list_remove_compat; now apply in_in_remove. 
 Qed. 

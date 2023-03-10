@@ -3002,6 +3002,7 @@ Proof.
   intros; eapply proj1; now apply ReplaceTermTermsTermMonotone.
 Qed.
 
+
 Lemma ReplaceTermsTermMonotone :
  forall a s1 s2 : nat,
  s1 <= s2 -> ReplaceTermsTerm a s1 <= ReplaceTermsTerm a s2.
