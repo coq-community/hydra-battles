@@ -92,7 +92,7 @@ Proof.
   destruct (In_dec eq_nat_dec v (List.nodup eq_nat_dec (freeVarFormula x)))
     as [i | n]. 
   - apply freeVarClosedList1; assumption.
-  - intro H; elim n; apply no_dup1.
+  - intro H; elim n. rewrite nodup_In.  
     eapply freeVarClosedList2; apply H.
 Qed.
 

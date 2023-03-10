@@ -3009,7 +3009,6 @@ Proof.
   intros; eapply proj2; now apply ReplaceTermTermsTermMonotone.
 Qed.
 
-Search Nat.max. 
 Remark maxLemma :
  forall a b c d : nat, a <= b -> c <= d -> Nat.max a c <= Nat.max b d.
 Proof. lia. Qed. 
