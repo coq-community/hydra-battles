@@ -348,9 +348,9 @@ Proof.
     + simpl in |- *.
       repeat rewrite cPairProjections1 || rewrite cPairProjections2.
       reflexivity.
-  - unfold close;
+  - unfold close.
       induction
-        (ListExt.no_dup nat eq_nat_dec
+        (List.nodup Nat.eq_dec
            (freeVarFormula LNT
               (impH (substituteFormula LNT x x0 Zero)
                  (impH

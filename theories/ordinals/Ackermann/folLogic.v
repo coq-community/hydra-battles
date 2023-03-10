@@ -449,7 +449,7 @@ Lemma openClosed (T : System) (f : Formula):
  SysPrf T (close L f) -> SysPrf T f.
 Proof.
 unfold close;
-  generalize (no_dup nat Peano_dec.eq_nat_dec 
+  generalize (List.nodup Peano_dec.eq_nat_dec 
                 (freeVarFormula L f)); intros l H; 
   induction l as [| a l Hrecl].
   - apply H.

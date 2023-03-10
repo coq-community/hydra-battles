@@ -101,7 +101,7 @@ Compute (depth _ f1, depth _ f2).
 (* begin snippet freeVarExamples *)
 Compute  freeVarFormula _ f3.
 
-Compute ListExt.no_dup _ Nat.eq_dec (freeVarFormula _ f3).
+Compute List.nodup Nat.eq_dec (freeVarFormula _ f3).
 
 Compute close _ f3.
 

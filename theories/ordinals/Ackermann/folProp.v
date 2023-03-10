@@ -57,7 +57,7 @@ end.
 (* Todo : use stdlib's nodup *)
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
-  closeList (no_dup _ eq_nat_dec (freeVarFormula x)) x.
+  closeList (List.nodup eq_nat_dec (freeVarFormula x)) x.
 
 Lemma freeVarClosedList1 :
   forall (l : list nat) (v : nat) (x : fol.Formula L),
@@ -89,7 +89,7 @@ Lemma freeVarClosed :
   forall (x : fol.Formula L) (v : nat), ~ In v (freeVarFormula (close x)).
 Proof.
   intros x v; unfold close;
-  destruct (In_dec eq_nat_dec v (no_dup _ eq_nat_dec (freeVarFormula x)))
+  destruct (In_dec eq_nat_dec v (List.nodup eq_nat_dec (freeVarFormula x)))
     as [i | n]. 
   - apply freeVarClosedList1; assumption.
   - intro H; elim n; apply no_dup1.

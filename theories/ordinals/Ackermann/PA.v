@@ -7,6 +7,7 @@ Require Import folLogic3.
 Require Export Languages.
 Require Export LNT.
 
+
 Section PA.
 
 Definition PA1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
@@ -173,7 +174,7 @@ Proof.
                  rewrite H3.
                  unfold close in |- *.
                  induction
-                   (ListExt.no_dup nat eq_nat_dec
+                   (List.nodup eq_nat_dec
                       (freeVarFormula LNT
                          (impH (substituteFormula LNT x0 x1 Zero)
                             (impH
@@ -209,7 +210,7 @@ Proof.
                  reflexivity.
                  unfold close in |- *.
                  induction
-                   (ListExt.no_dup nat eq_nat_dec
+                   (List.nodup eq_nat_dec
                       (freeVarFormula LNT
                          (impH (substituteFormula LNT x0 x1 Zero)
                             (impH

@@ -453,7 +453,7 @@ Definition codeNoDup : nat -> nat :=
                   (codeNth (l - S (cPairPi2 (pred l))) recs)))) 0).
 
 Lemma codeNoDupCorrect (l : list nat) :
- codeNoDup (codeList l) = codeList (no_dup _ eq_nat_dec l).
+ codeNoDup (codeList l) = codeList (List.nodup eq_nat_dec l).
 Proof.
   unfold codeNoDup;
     set
@@ -479,7 +479,13 @@ Proof.
     repeat rewrite evalStrongRecHelp1; unfold pred in |- *.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     + rewrite Hrecl; rewrite codeInCorrect.
-      destruct (In_dec eq_nat_dec a (no_dup nat eq_nat_dec l)); reflexivity.
+      destruct (In_dec eq_nat_dec a (List.nodup Nat.eq_dec l)). 
+      destruct (in_dec Nat.eq_dec a l). 
+      * reflexivity.
+      *     rewrite nodup_In in i; contradiction.
+      * destruct (in_dec Nat.eq_dec a l). 
+     -- rewrite  nodup_In in n. contradiction.
+     -- reflexivity.
     + simpl; apply Compat815.le_lt_n_Sm.
       apply cPairLe2A.
 Qed.

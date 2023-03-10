@@ -26,7 +26,7 @@ Proof.
     intros H; apply H; clear H.
     generalize n; clear n.
     induction
-      (ListExt.no_dup nat eq_nat_dec
+      (List.nodup  eq_nat_dec
          (List.app (freeVarFormula LNT (substituteFormula LNT x0 x1 Zero))
             (List.app
                (ListExt.list_remove nat eq_nat_dec x1

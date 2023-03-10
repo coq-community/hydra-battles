@@ -88,21 +88,22 @@ Proof.
 Qed. 
 
 Lemma no_dup1 : forall (a : A) (l : list A),
-    In a l -> In a (no_dup l).
+    In a l -> In a (nodup Aeq_dec l).
 Proof.
- intros a l H; rewrite nodup_compat; now rewrite  nodup_In.
+ intros;  now rewrite  nodup_In.
 Qed. 
 
-Lemma no_dup2 : forall (a : A) (l : list A), In a (no_dup l) -> In a l.
+Lemma no_dup2 : forall (a : A) (l : list A), In a (nodup Aeq_dec l) 
+                                             -> In a l.
 Proof.
-intros a l H; now rewrite nodup_compat, nodup_In in H.
+intros a l H; now rewrite  nodup_In in H.
 Qed.
 
 
 Lemma no_dup3 :
-  forall (k l : list A) (a : A), no_dup k = a :: l -> ~ In a l.
+  forall (k l : list A) (a : A), nodup Aeq_dec k = a :: l -> ~ In a l.
 Proof.
- intros k l a H. rewrite nodup_compat in H; apply (nodup_inv _ _ H). 
+ intros k l a H H0; now apply (nodup_inv _ _ H). 
 Qed. 
 
 
