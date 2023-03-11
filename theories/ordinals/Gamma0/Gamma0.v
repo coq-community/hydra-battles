@@ -213,8 +213,7 @@ Lemma tricho_aux (l: nat) : forall t t': T2,
 (*| .. coq:: none |*)
 Proof.
   induction l.
-  - intros; elimtype False. 
-    inversion H.
+  - intros; assert False by inversion H; contradiction.
   -  intros t t'; case t;case t'.
      + left;right;auto with T2.
      + left;left;constructor.

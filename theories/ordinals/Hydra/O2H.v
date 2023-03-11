@@ -282,7 +282,7 @@ Section DS_iota.
     right;  specialize (Hrec lambda nz (head_LT_cons  Halpha)).
     (* unfold T1.phi0; *) rewrite iota_rw1; trivial.
     right; left;  destruct (Hrec (canonS lambda i)); auto.
-    elimtype False;  eapply limit_no_R1; eauto.
+    assert False by (eapply limit_no_R1; eauto); contradiction.
   Qed.
 
   Lemma DS_iota_3 : forall  gamma,   nf gamma ->
@@ -322,8 +322,7 @@ Section DS_iota.
       specialize (Hrec (T1limit_not_zero Hlambda Hlim)
                        H  (canonS lambda i) (refl_equal _)).
       destruct Hrec; [| trivial];
-        elimtype False;
-        eapply limit_no_R1; eauto.
+        assert False by (eapply limit_no_R1; eauto); contradiction.
     Qed.
 
   End Proof_case_4.

@@ -95,10 +95,11 @@ Proof.
   inversion_clear H.
   assert (H2 : (j = S i \/ S i < j)%nat)  by lia.
   destruct H2; trivial.
-  elimtype False. {
+  assert False. {
     assert (H2: inl i o< inl (S i)) by (constructor; auto).
     assert (H3: inl (S i) o< inl j) by (constructor; auto).
     apply (H0 (inl (S i)) H2 H3). }
+  contradiction.
 Qed.
 
 Lemma Successor_inv2 : forall i j, Successor (inr j) (inr i) -> j = S i. 
@@ -392,7 +393,7 @@ Lemma Omega_as_lub  :
          *  subst; constructor.
    - rewrite (lt_omega alpha) in H; destruct H as [n Hn]; subst; split.
      +  intro H; generalize (H n).
-        intro; elimtype False. { inversion H0. lia. }
+        intro; assert False by (inversion H0; lia); contradiction.
      + inversion 1; inversion H0.
  Qed.
 

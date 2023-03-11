@@ -768,8 +768,7 @@ Proof.
                intro; subst; discriminate.
              }
              auto.
-        *  elimtype False.
-           destruct (not_LT_zero H4).
+        *  assert False by destruct (not_LT_zero H4); contradiction.
       }
       destruct a ;  assert (lambda2 <> zero). {
         intro; subst; discriminate.  } 

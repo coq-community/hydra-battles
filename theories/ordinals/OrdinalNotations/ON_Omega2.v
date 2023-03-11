@@ -505,8 +505,7 @@ Qed.
 Lemma ap_cases alpha : ap alpha -> alpha = 1 \/ alpha = omega.
 Proof.
   destruct (zero_limit_succ_dec alpha) as [[Hzero |  Hlim] | Hsucc].
-  - subst alpha; intro H; elimtype False.
-    destruct H as [H _]; auto.
+  - subst alpha; intro H; assert False by (destruct H as [H _]; auto); contradiction.
   - destruct alpha; unfold ap.
     destruct n, n0; try discriminate.
     intros [_ H1]; destruct n.

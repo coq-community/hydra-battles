@@ -390,8 +390,8 @@ Proof.
         try
           match goal with
           | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-              elimtype False; cut (X1 = X3);
-              [ discriminate | eapply cPairInj1; apply h ]
+              assert False by (cut (X1 = X3);
+              [ discriminate | eapply cPairInj1; apply h]) ; contradiction
           end.
         assert (H0: codeSubFormula g n (codeTerm Zero) = codeFormula f0).
         { eapply cPairInj1, cPairInj2; apply a. }
@@ -411,8 +411,10 @@ Proof.
           try
             match goal with
             | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-                elimtype False; cut (X1 = X3);
-                [ discriminate | eapply cPairInj1; apply h ]
+                assert False by
+                (cut (X1 = X3);
+                [ discriminate | eapply cPairInj1; apply h ]); 
+                 contradiction
             end.
         assert
           (H2: codeForall n (codeImp g 
@@ -428,8 +430,9 @@ Proof.
           try
             match goal with
             | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-                elimtype False; cut (X1 = X3);
-                [ discriminate | eapply cPairInj1; apply h ]
+                assert False by (cut (X1 = X3);
+                [ discriminate | eapply cPairInj1; apply h ]); 
+                contradiction
             end.
         simpl in (value of n).
         simpl in (value of g).

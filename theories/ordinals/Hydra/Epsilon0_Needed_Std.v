@@ -56,8 +56,8 @@ Section Impossibility_Proof.
     induction 2.  
     -  apply Lvar with i; auto. 
     -  destruct (h_eq_dec h'' head).
-       + rewrite e in H1;  elimtype False.
-          eapply standard_battle_head; eauto.  
+       + rewrite e in H1;  assert False by
+          (eapply standard_battle_head; eauto); contradiction.
        + apply LT_trans with (m h'');auto.
          apply Lvar with i; auto.
   Qed.

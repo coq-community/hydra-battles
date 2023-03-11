@@ -747,7 +747,7 @@ Proof.
            ++ apply subAllFormula_ext.
               intros m H; simpl.
               induction (eq_nat_dec n m); induction (eq_nat_dec m n);
-                reflexivity || (elimtype False; auto).
+                reflexivity || (assert False by auto; contradiction).
         -- apply (iffSym L).
            apply (rebindForall L).
            intro H;
@@ -1111,8 +1111,7 @@ Proof.
                           *** apply (subTermVar2 L); lia.
                           *** rewrite Nat.lt_eq_cases in a.
                               destruct a. 
-                              elimtype False.  
-                              lia.
+                              assert False by lia; contradiction.
                               rewrite H; apply (subTermVar1 L).
                      +++  induction (le_lt_dec (S n) m0). 
                           lia. 
