@@ -117,8 +117,9 @@ Proof.
      try
        match goal with
        | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-           elimtype False; cut (X1 = X3);
-           [ discriminate | eapply cPairInj1; apply h ]
+           assert  False by ( cut (X1 = X3);
+           [ discriminate | eapply cPairInj1; apply h ]); 
+           contradiction
        end).
   - (* equality between terms *) 
     rewrite (codeTermInj t t1).

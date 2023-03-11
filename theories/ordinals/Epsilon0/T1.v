@@ -847,7 +847,7 @@ Definition get_decomposition : forall c:T1, lt zero c ->
                            {a:T1 & {n:nat & {b:T1 | c = cons a n b}}}.
 Proof.
  intro c; case c.
- - intro H; elimtype False; inversion H.
+ - intro H; assert (FF: False) by inversion H; elim FF.
  - intros c0 n c1; exists c0, n, c1; auto.
 Defined.
 
