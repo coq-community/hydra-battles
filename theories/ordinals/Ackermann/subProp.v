@@ -205,7 +205,7 @@ Qed.
 Lemma freeVarSubTerm3  (t : Term):
   forall (v : nat) (s : Term) (x : nat),
     In x (freeVarTerm L (substituteTerm L t v s)) ->
-    In x (list_remove _ eq_nat_dec v (freeVarTerm L t)) \/
+    In x (List.remove eq_nat_dec v (freeVarTerm L t)) \/
       In x (freeVarTerm L s).
 Proof.
   elim t using
@@ -214,7 +214,7 @@ Proof.
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              forall (v : nat) (s : Term) (x : nat),
                In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
-               In x (list_remove _ eq_nat_dec v (freeVarTerms L n ts)) \/
+               In x (List.remove eq_nat_dec v (freeVarTerms L n ts)) \/
                  In x (freeVarTerm L s)). 
   - intros n v s x H; simpl in H.
     induction (eq_nat_dec v n) as [a | b].
@@ -249,7 +249,7 @@ Qed.
 Lemma freeVarSubTerms3 (n : nat) (ts : fol.Terms L n) (v : nat) (s : Term) 
   (x : nat):
  In x (freeVarTerms L n (substituteTerms L n ts v s)) ->
- In x (list_remove _ eq_nat_dec v (freeVarTerms L n ts)) \/
+ In x (List.remove  eq_nat_dec v (freeVarTerms L n ts)) \/
  In x (freeVarTerm L s).
 Proof.
   intros H; induction ts as [| n t ts Hrects].
@@ -278,7 +278,7 @@ Qed.
 Lemma freeVarSubFormula3  (f : Formula):
  forall (v : nat) (s : Term) (x : nat),
  In x (freeVarFormula L (substituteFormula L f v s)) ->
- In x (list_remove _ eq_nat_dec v (freeVarFormula L f)) \/
+ In x (List.remove  eq_nat_dec v (freeVarFormula L f)) \/
  In x (freeVarTerm L s).
 Proof.
   elim f using Formula_depth_ind2. 
@@ -522,7 +522,7 @@ Proof.
 Qed.
  
 Lemma subTermTrans  (t : Term) (v1 v2 : nat) (s : Term):
- ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerm L t)) ->
+ ~ In v2 (List.remove  eq_nat_dec v1 (freeVarTerm L t)) ->
  substituteTerm L (substituteTerm L t v1 (var v2)) v2 s =
  substituteTerm L t v1 s.
 Proof.
@@ -530,14 +530,14 @@ Proof.
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerms L n ts)) ->
+             ~ In v2 (List.remove eq_nat_dec v1 (freeVarTerms L n ts)) ->
              substituteTerms L n (substituteTerms L n ts v1 (var v2)) v2 s =
                substituteTerms L n ts v1 s).
   - intros n H; simpl; induction (eq_nat_dec v1 n) as [? | b].
     + now rewrite (subTermVar1 L).
     + rewrite (subTermVar2 L).
       * reflexivity.
-      * simpl in H; induction (eq_nat_dec n v1).
+      * simpl in H; destruct (Nat.eq_dec v1 n).
         -- elim b; auto.
         -- intro H0; elim H. simpl; auto. 
   - intros f t0 H H0; simpl; rewrite H.
@@ -601,7 +601,7 @@ Proof.
 Qed.
 
 Lemma subTermsTrans (n : nat) (ts : Terms n) (v1 v2 : nat) (s : Term):
- ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarTerms L n ts)) ->
+ ~ In v2 (List.remove  eq_nat_dec v1 (freeVarTerms L n ts)) ->
  substituteTerms L n (substituteTerms L n ts v1 (var v2)) v2 s =
  substituteTerms L n ts v1 s.
 Proof.
@@ -652,7 +652,7 @@ Remark subFormulaNTE  (f : Formula):
         ~ In v (freeVarFormula L f) ->
         SysPrf T (iffH (substituteFormula L f v s) f)) /\
       (forall (v1 v2 : nat) (s : Term),
-          ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarFormula L f)) ->
+          ~ In v2 (List.remove  eq_nat_dec v1 (freeVarFormula L f)) ->
           SysPrf T
             (iffH (substituteFormula L (substituteFormula L f v1 (var v2)) v2 s)
                (substituteFormula L f v1 s))) /\
@@ -2531,7 +2531,7 @@ Qed.
 
 Lemma subFormulaTrans :
   forall (f : Formula) (T : System) (v1 v2 : nat) (s : Term),
-    ~ In v2 (list_remove _ eq_nat_dec v1 (freeVarFormula L f)) ->
+    ~ In v2 (List.remove  eq_nat_dec v1 (freeVarFormula L f)) ->
     SysPrf T
       (iffH (substituteFormula L (substituteFormula L f v1 (var v2)) v2 s)
          (substituteFormula L f v1 s)).

@@ -44,7 +44,7 @@ Lemma FixPointLNN :
      (B <-> substituteFormula LNN A v (natToTermLNN (codeFormula B)))%fol /\
    (forall x : nat,
     In x (freeVarFormula LNN B) <->
-    In x (list_remove _ eq_nat_dec v (freeVarFormula LNN A)))}.
+    In x (List.remove eq_nat_dec v (freeVarFormula LNN A)))}.
 Proof.
   intros A v;
     set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)).
@@ -228,12 +228,12 @@ Proof.
         | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
             elim H2; symmetry  in |- *; apply H1
         | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
-            assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
             [ apply H | clear H ]
         | H:(In ?X3 (freeVarFormula LNN (forallH LNN ?X1 ?X2))) |- _ =>
-            assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
           =>
             assert (In X3 (freeVarFormula LNN X2));
             [ eapply In_list_remove1; apply H
@@ -299,7 +299,7 @@ Lemma FixPointLNT  (A : Formula) (v : nat):
       (iffH B (substituteFormula LNT A v (natToTermLNT (codeFormula B)))) /\
       (forall x : nat,
           In x (freeVarFormula LNT B) <->
-            In x (list_remove _ eq_nat_dec v (freeVarFormula LNT A)))}.
+            In x (List.remove eq_nat_dec v (freeVarFormula LNT A)))}.
 Proof.
   set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)).
   assert (represent : Representable NN 3 subStar subStarFormula)
@@ -563,12 +563,12 @@ Proof.
         | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
             elim H2; symmetry  in |- *; apply H1
         | H:(In ?X3 (freeVarFormula LNT (existH ?X1 ?X2))) |- _ =>
-            assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNT X2)));
+            assert (In X3 (List.remove eq_nat_dec X1 (freeVarFormula LNT X2)));
             [ apply H | clear H ]
         | H:(In ?X3 (freeVarFormula LNT (forallH LNT ?X1 ?X2))) |- _ =>
-            assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNT X2)));
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNT X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNT ?X2))) |- _
+        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNT ?X2))) |- _
           =>
             assert (In X3 (freeVarFormula LNT X2));
             [ eapply In_list_remove1; apply H

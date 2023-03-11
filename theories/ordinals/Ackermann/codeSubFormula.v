@@ -4150,7 +4150,7 @@ Proof.
       * simpl in |- *.
         apply Nat.le_0_l.
       * simpl in |- *.
-        induction (eq_nat_dec a n).
+        induction (eq_nat_dec n a).
         -- eapply Nat.le_trans.
            ++ apply IHl.
            ++ apply Nat.le_max_r.

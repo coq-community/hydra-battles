@@ -576,9 +576,9 @@ Proof.
   -  intros v H; induction (H1 v) as [H2 H3].
      assert
        (H4: In v
-              (list_remove nat eq_nat_dec 0 (freeVarFormula LNT (LNN2LNT_formula A))))
+              (List.remove  eq_nat_dec 0 (freeVarFormula LNT (LNN2LNT_formula A))))
        by (apply H2; assumption).
-     cut (In v (list_remove nat eq_nat_dec 0 (freeVarFormula LNN A))).
+     cut (In v (List.remove eq_nat_dec 0 (freeVarFormula LNN A))).
      + clear H4.
        intros H4; unfold A in H4; SimplFreeVar. (* introduces H5 H6 H7 ? *)
        assert (H4: v <= 1).

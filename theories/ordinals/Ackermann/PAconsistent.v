@@ -29,11 +29,11 @@ Proof.
       (List.nodup  eq_nat_dec
          (List.app (freeVarFormula LNT (substituteFormula LNT x0 x1 Zero))
             (List.app
-               (ListExt.list_remove nat eq_nat_dec x1
+               (List.remove  eq_nat_dec x1
                   (List.app (freeVarFormula LNT x0)
                      (freeVarFormula LNT
                         (substituteFormula LNT x0 x1 (Succ (var x1))))))
-               (ListExt.list_remove nat eq_nat_dec x1 
+               (List.remove eq_nat_dec x1 
                   (freeVarFormula LNT x0)))));
       intros n.
     + simpl; intros H H0 x2 H1. 

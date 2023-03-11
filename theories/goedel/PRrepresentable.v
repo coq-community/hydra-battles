@@ -1660,7 +1660,7 @@ Proof.
        assert (In v (freeVarFormula LNN X2));
         [ eapply In_list_remove1; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-   | H:(In v (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
+   | H:(In v (List.remove _ ?X1 (freeVarFormula LNN ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
         [ eapply In_list_remove1; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
@@ -1710,7 +1710,7 @@ Proof.
        assert (In v (freeVarFormula LNN X2));
         [ eapply In_list_remove1; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
-   | H:(In v (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
+   | H:(In v (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
         [ eapply In_list_remove1; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
@@ -1916,17 +1916,17 @@ Ltac PRsolveFV A B n :=
           *)
     | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
         assert
-         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+         (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
          [ apply H | clear H ]
     | H:(In ?X3 (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>
         assert
-         (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+         (In X3 (List.remove eq_nat_dec X1 (freeVarFormula LNN X2)));
          [ apply H | clear H ]
     | 
     (*
     .
     *)
-    H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+    H:(In ?X3 (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
     =>
         assert (In X3 (freeVarFormula LNN X2));
          [ eapply In_list_remove1; apply H
@@ -3672,7 +3672,7 @@ Proof.
             - intros v H3.
               repeat
                match goal with
-               | H:(In v (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
+               | H:(In v (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
                    assert (In v (freeVarFormula LNN X2));
                     [ eapply In_list_remove1; apply H
                     | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
@@ -3711,10 +3711,10 @@ Proof.
                    apply (subFormulaTrans LNN). intro H3.
                    repeat
                     match goal with
-                    | H:(In ?X1 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+                    | H:(In ?X1 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                     =>
                         elim (In_list_remove2 _ _ _ _ _ H); reflexivity
-                    | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+                    | H:(In ?X3 (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                     =>
                         assert (In X3 (freeVarFormula LNN X2));
                          [ eapply In_list_remove1; apply H
@@ -3749,10 +3749,10 @@ Proof.
                           apply (subFormulaTrans LNN). intro H3.
                           repeat
                            match goal with
-                           | H:(In ?X1 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+                           | H:(In ?X1 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                            =>
                                elim (In_list_remove2 _ _ _ _ _ H); reflexivity
-                           | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+                           | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                            =>
                                assert (In X3 (freeVarFormula LNN X2));
                                 [ eapply In_list_remove1; apply H
@@ -4701,12 +4701,12 @@ Opaque substituteFormula.
       | H:(?X1 = v) |- _ =>
           rewrite <- H; clear H
       | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
-          assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+          assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
            [ apply H | clear H ]
       | H:(In ?X3 (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>
-          assert (In X3 (list_remove nat eq_nat_dec X1 (freeVarFormula LNN X2)));
+          assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
            [ apply H | clear H ]
-      | H:(In ?X3 (list_remove nat eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+      | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
       =>
           assert (In X3 (freeVarFormula LNN X2));
            [ eapply In_list_remove1; apply H

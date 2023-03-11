@@ -41,7 +41,7 @@ Fixpoint freeVarFormula (A : fol.Formula L) : list nat :=
   | atomic r ts => freeVarTerms _ ts
   | impH A B => freeVarFormula A ++ freeVarFormula B
   | notH A => freeVarFormula A
-  | forallH v A => list_remove _ eq_nat_dec v (freeVarFormula A)
+  | forallH v A => List.remove  eq_nat_dec v (freeVarFormula A)
   end.
 
 Definition ClosedSystem (T : fol.System L) :=
@@ -774,7 +774,7 @@ Lemma subFormulaForall2 :
   exists nv : nat,
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
-      ~ In nv (list_remove _ eq_nat_dec x (freeVarFormula f)) /\
+      ~ In nv (List.remove  eq_nat_dec x (freeVarFormula f)) /\
       substituteFormula (forallH x f) v s =
         match eq_nat_dec x v with
         | left _ => forallH x f
@@ -786,7 +786,7 @@ Proof.
   induction (eq_nat_dec x v) as [a | b].
   - set
       (A1 :=
-         v :: freeVarTerm s ++ list_remove nat eq_nat_dec x (freeVarFormula f)) 
+         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarFormula f)) 
       in *.
     exists (newVar A1); repeat split.
     + unfold not in |- *; intros; elim (newVar1 A1).
@@ -816,7 +816,7 @@ Lemma subFormulaExist2 :
   exists nv : nat,
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
-      ~ In nv (list_remove _ eq_nat_dec x (freeVarFormula f)) /\
+      ~ In nv (List.remove eq_nat_dec x (freeVarFormula f)) /\
       substituteFormula (existH x f) v s =
         match eq_nat_dec x v with
         | left _ => existH x f
@@ -828,7 +828,7 @@ Proof.
   induction (eq_nat_dec x v) as [a | b].
   - set
       (A1 :=
-         v :: freeVarTerm s ++ list_remove nat eq_nat_dec x (freeVarFormula f)) 
+         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarFormula f)) 
       in *.
     exists (newVar A1); repeat split.
     + unfold not in |- *; intros; elim (newVar1 A1).

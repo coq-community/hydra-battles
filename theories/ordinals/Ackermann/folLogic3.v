@@ -549,7 +549,7 @@ Proof.
     + set
         (nv :=
            v0
-             :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
+             :: List.remove eq_nat_dec v (freeVarFormula L a) ++
              freeVarTerm L a0 ++ freeVarTerm L b) in *.
       apply  (impTrans L) with
         (forallH (newVar nv)

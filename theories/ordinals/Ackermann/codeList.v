@@ -189,7 +189,7 @@ Definition codeListRemove (a l : nat) : nat :=
 
 Lemma codeListRemoveCorrect (a : nat) (l : list nat):
  codeListRemove a (codeList l) = 
-   codeList (list_remove nat eq_nat_dec a l).
+   codeList (List.remove  eq_nat_dec a l).
 Proof.
   unfold codeListRemove;
     set
@@ -225,13 +225,21 @@ Proof.
       apply cPairLe2.
     } 
     simpl in H.
-    induction (eq_nat_dec a0 a) as [a1 | b].
+    induction (Nat.eq_dec a0 a) as [a1 | b].
     + rewrite a1, Nat.eqb_refl; simpl; unfold A.
       rewrite H; rewrite cPairProjections2; auto. 
+      destruct (Nat.eq_dec a a). 
+        * auto. 
+        * congruence.
     + rewrite nat_eqb_false; simpl. 
-      replace (codeList (list_remove nat eq_nat_dec a l)) with
+      replace (codeList (List.remove eq_nat_dec a l)) with
         (codeNth A (evalStrongRecHelp 1 f n a)).
-      * reflexivity.
+      * destruct  (Nat.eq_dec a a0). 
+        -- congruence. 
+        -- simpl. f_equal. f_equal. Search evalStrongRecHelp codeNth. rewrite <- Hrecl. 
+           rewrite cPairProjections2 in H. 
+           rewrite <- H. unfold A. 
+           simpl. now rewrite cPairProjections2. 
       * unfold A; rewrite H; simpl; rewrite cPairProjections2; auto.
       * auto.
 Qed.

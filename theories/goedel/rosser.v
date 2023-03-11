@@ -189,7 +189,7 @@ Proof.
   destruct (FixPointLNN A 0) as [x [H0 H1]].
   exists x; split.
   -  intros v H; induction (H1 v) as [H2 H3]. 
-     assert (H4: In v (list_remove nat eq_nat_dec 0 (freeVarFormula LNN A)))
+     assert (H4: In v (List.remove eq_nat_dec 0 (freeVarFormula LNN A)))
      by apply H2, H.
      unfold A in H4; SimplFreeVar.
      + assert (H4: v <= 1).
