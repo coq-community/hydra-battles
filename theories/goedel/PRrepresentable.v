@@ -939,9 +939,9 @@ Proof.
    RepresentableHelp n (evalComposeFunc n m (FormulasToFuncs n m A) g)
      (composeSigmaFormula n w m A B)).
   { intro. induction n as [| n Hrecn]; simpl in |- *.
-    + intros w m H v.
+    - intros w m H v.
       induction v as [| a n v Hrecv]; simpl in |- *; intros B g H0 H1 H2.
-      - unfold composeSigmaFormula in |- *. simpl in |- *.
+      + unfold composeSigmaFormula in |- *. simpl in |- *.
         replace
          (subAllFormula LNN B
             (fun x : nat => match x with
@@ -949,17 +949,17 @@ Proof.
                             | S x' => var (S (x' + w))
                             end)) with (subAllFormula LNN B (fun x : nat => var x)).
         * apply iffTrans with B.
-          ++ apply iffTrans with (subAllFormula LNN B (fun x : nat => var x)).
-             -- apply iffI; apply impI.
+          -- apply iffTrans with (subAllFormula LNN B (fun x : nat => var x)).
+             ++ apply iffI; apply impI.
                 ** eapply andE2. apply Axm; right; constructor.
                 ** apply andI.
-                   +++ apply eqRefl.
-                   +++ apply Axm; right; constructor.
-             -- apply (subAllFormulaId LNN).
-          ++ induction H2 as (H2, H3). auto.
+                   --- apply eqRefl.
+                   --- apply Axm; right; constructor.
+             ++ apply (subAllFormulaId LNN).
+          -- induction H2 as (H2, H3). auto.
         * apply subAllFormula_ext. intros m H3. destruct m as [| n]; auto.
           destruct H2 as (H2, H4). apply H2 in H3. lia.
-      - destruct H0 as (H0, H3). destruct H1 as (H1, H4). destruct H2 as (H2, H5).
+      + destruct H0 as (H0, H3). destruct H1 as (H1, H4). destruct H2 as (H2, H5).
         assert
          (forall a : nat,
           SysPrf NN
@@ -968,13 +968,13 @@ Proof.
                   (substituteFormula LNN B (S n) (natToTerm a)))
                (equal (var 0) (natToTerm (evalList n (FormulasToFuncs 0 n v) (g a)))))).
         { intros a0. apply Hrecv; auto. split.
-          + intros v0 H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
-            - assert (In v0 (freeVarFormula LNN B)).
+          - intros v0 H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
+            + assert (In v0 (freeVarFormula LNN B)).
               { eapply In_list_remove1. exact H7. }
               pose proof (In_list_remove2 _ _ _ _ _ H7).
               pose proof (H2 _ H8). lia.
-            - elim (closedNatToTerm _ _ H7).
-          + apply H5. }
+            + elim (closedNatToTerm _ _ H7).
+          - apply H5. }
         clear Hrecv. unfold composeSigmaFormula in |- *.
         unfold composeSigmaFormula in H6. simpl in |- *.
         apply
@@ -1006,8 +1006,8 @@ Proof.
                          | S x' => var (S (x' + w))
                          end))))).
         * apply (reduceExist LNN).
-          ++ apply closedNN.
-          ++ apply reduceAddExists.
+          -- apply closedNN.
+          -- apply reduceAddExists.
              repeat apply (reduceAnd LNN); try apply iffRefl.
              apply (reduceSub LNN); auto.
              apply closedNN.
@@ -1026,9 +1026,9 @@ Proof.
                               | O => var 0
                               | S x' => var (S (x' + w))
                               end)))))).
-          ++ apply (reduceExist LNN).
-             -- apply closedNN.
-             -- apply iffI.
+          -- apply (reduceExist LNN).
+             ++ apply closedNN.
+             ++ apply iffI.
                 ** apply impI. apply andI.
                    cut
                     (SysPrf
@@ -1042,7 +1042,7 @@ Proof.
                                  | O => var 0
                                  | S x' => var (S (x' + w))
                                  end)))) (equal (var (S (n + w))) (natToTerm (snd a)))).
-                   +++ generalize
+                   --- generalize
                         (andH
                            (andH (equal (var (S (n + w))) (natToTerm (snd a)))
                               (FormulasToFormula 0 w n v))
@@ -1053,19 +1053,19 @@ Proof.
                                | S x' => var (S (x' + w))
                                end))).
                        cut (n + w < S (n + w)); try lia.
-                       --- generalize (S (n + w)).
+                       +++ generalize (S (n + w)).
                            intros n0 H6 f H7.
                            clear H5 H2 H4 H1 H3 H0 g B v.
                            induction n as [| n Hrecn].
                            *** simpl in |- *. auto.
                            *** simpl in |- *. apply existSys.
-                               ++++ apply closedNN.
-                               ++++ simpl in |- *; intro.
+                               ---- apply closedNN.
+                               ---- simpl in |- *; intro.
                                     destruct H0 as [H0 | H0]; try lia.
                                     elim (closedNatToTerm _ _ H0).
-                               ++++ apply Hrecn. lia.
-                   +++ eapply andE1. eapply andE1. apply Axm; right; constructor.
-                   +++ apply
+                               ---- apply Hrecn. lia.
+                   --- eapply andE1. eapply andE1. apply Axm; right; constructor.
+                   --- apply
                         impE
                          with
                            (addExists (S w) n
@@ -1078,14 +1078,14 @@ Proof.
                                      | O => var 0
                                      | S x' => var (S (x' + w))
                                      end)))).
-                       --- apply sysWeaken.
+                       +++ apply sysWeaken.
                            apply reduceAddExistsOneWay.
                            apply impI. apply andI.
                            *** eapply andE2. eapply andE1.
                                apply Axm; right; constructor.
                            *** eapply andE2.
                                apply Axm; right; constructor.
-                       --- apply Axm; right; constructor.
+                       +++ apply Axm; right; constructor.
                 ** apply impI.
                    apply
                     impE
@@ -1098,8 +1098,8 @@ Proof.
                                  | O => var 0
                                  | S x' => var (S (x' + w))
                                  end)))).
-                   +++ apply impE with (equal (var (S (n + w))) (natToTerm (snd a))).
-                       --- apply sysWeaken. apply impI.
+                   --- apply impE with (equal (var (S (n + w))) (natToTerm (snd a))).
+                       +++ apply sysWeaken. apply impI.
                            cut
                             (SysPrf
                                (Ensembles.Add (fol.Formula LNN) NN
@@ -1144,26 +1144,26 @@ Proof.
                                induction n as [| n Hrecn]; auto.
                                simpl in |- *. intros n0 H0 f f0 H1.
                                apply impI. apply existSys.
-                               ++++ intro. destruct H2 as (x, H2).
+                               ---- intro. destruct H2 as (x, H2).
                                     destruct H2 as (H2, H3).
                                     destruct H3 as [x H3 | x H3].
-                                    ---- elim (closedNN (n + S w)). 
+                                    ++++ elim (closedNN (n + S w)). 
                                          exists x. auto.
-                                    ---- destruct H3. simpl in H2.
+                                    ++++ destruct H3. simpl in H2.
                                          destruct H2 as [H2 | H2]; try lia.
                                          elim (closedNatToTerm _ _ H2).
-                               ++++ simpl in |- *. intro H2.
+                               ---- simpl in |- *. intro H2.
                                     elim (In_list_remove2 _ _ _ _ _ H2). auto.
-                               ++++ apply existSimp. apply impE with (addExists (S w) n f).
-                                    ---- apply sysWeaken. apply Hrecn; auto. lia.
-                                    ---- apply Axm; right; constructor.
+                               ---- apply existSimp. apply impE with (addExists (S w) n f).
+                                    ++++ apply sysWeaken. apply Hrecn; auto. lia.
+                                    ++++ apply Axm; right; constructor.
                            *** apply impI. repeat apply andI.
-                               ++++ apply Axm; left; right; constructor.
-                               ++++ eapply andE1. apply Axm; right; constructor.
-                               ++++ eapply andE2. apply Axm; right; constructor.
-                       --- eapply andE1. apply Axm; right; constructor.
-                   +++ eapply andE2. apply Axm; right; constructor.
-          ++ apply
+                               ---- apply Axm; left; right; constructor.
+                               ---- eapply andE1. apply Axm; right; constructor.
+                               ---- eapply andE2. apply Axm; right; constructor.
+                       +++ eapply andE1. apply Axm; right; constructor.
+                   --- eapply andE2. apply Axm; right; constructor.
+          -- apply
               iffTrans
                with
                  (substituteFormula LNN
@@ -1175,13 +1175,13 @@ Proof.
                               | O => var 0
                               | S x' => var (S (x' + w))
                               end)))) (S n + w) (natToTerm (snd a))).
-             -- apply iffI.
+             ++ apply iffI.
                 ** apply impI. apply existSys.
-                   +++ apply closedNN.
-                   +++ intro H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
-                       ---- elim (In_list_remove2 _ _ _ _ _ H7). lia.
-                       ---- elim (closedNatToTerm _ _ H7).
-                   +++ apply
+                   --- apply closedNN.
+                   --- intro H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
+                       +++ elim (In_list_remove2 _ _ _ _ _ H7). lia.
+                       +++ elim (closedNatToTerm _ _ H7).
+                   --- apply
                         impE
                          with
                            (substituteFormula LNN
@@ -1193,44 +1193,44 @@ Proof.
                                         | O => var 0
                                         | S x' => var (S (x' + w))
                                         end)))) (S n + w) (var (S n + w))).
-                       --- apply (subWithEquals LNN). eapply andE1.
+                       +++ apply (subWithEquals LNN). eapply andE1.
                            apply Axm; right; constructor.
-                       --- rewrite (subFormulaId LNN). eapply andE2.
+                       +++ rewrite (subFormulaId LNN). eapply andE2.
                            apply Axm; right; constructor.
                 ** apply impI. apply existI with (natToTerm (snd a)).
                    rewrite (subFormulaAnd LNN). rewrite Nat.add_succ_r.
                    apply andI.
-                   +++ rewrite subFormulaEqual. rewrite (subTermVar1 LNN).
+                   --- rewrite subFormulaEqual. rewrite (subTermVar1 LNN).
                        rewrite (subTermNil LNN).
-                       --- apply eqRefl.
-                       --- apply closedNatToTerm.
-                   +++ apply Axm; right; constructor.
-             -- rewrite subAddExistsNice.
+                       +++ apply eqRefl.
+                       +++ apply closedNatToTerm.
+                   --- apply Axm; right; constructor.
+             ++ rewrite subAddExistsNice.
                 ** apply reduceAddExists. rewrite (subFormulaAnd LNN).
                    apply (reduceAnd LNN).
-                   +++ apply (subFormulaNil LNN).
+                   --- apply (subFormulaNil LNN).
                        cut (n + w < S n + w); try lia.
                        generalize (S n + w). clear H5 H3 g H2.
                        induction v as [| a0 n v Hrecv]; unfold not in |- *; intros n0 H2 H3.
-                       --- simpl in H3. lia.
-                       --- simpl in H3. destruct (in_app_or _ _ _ H3) as [H5 | H5].
+                       +++ simpl in H3. lia.
+                       +++ simpl in H3. destruct (in_app_or _ _ _ H3) as [H5 | H5].
                            *** simpl in H4.
                                induction (freeVarSubFormula3 _ _ _ _ _ H5) as [H6 | H6].
                              elim (proj1 (Nat.le_ngt n0 0)).
-                               ++++ decompose record H4. apply H7.
+                               ---- decompose record H4. apply H7.
                                     eapply In_list_remove1. apply H6.
-                               ++++ lia.
-                               ++++ destruct H6 as [H6 | H6].
-                                    ---- lia.
-                                    ---- elim H6.
+                               ---- lia.
+                               ---- destruct H6 as [H6 | H6].
+                                    ++++ lia.
+                                    ++++ elim H6.
                            *** lazymatch goal with _ : In ?n _ |- _ => elim Hrecv with n end.
-                               ++++ simpl in H4. tauto.
-                               ++++ lia.
-                               ++++ auto.
-                   +++ eapply iffTrans. apply (subSubAllFormula LNN).
+                               ---- simpl in H4. tauto.
+                               ---- lia.
+                               ---- auto.
+                   --- eapply iffTrans. apply (subSubAllFormula LNN).
                        apply iffSym. eapply iffTrans.
-                       --- apply (subAllSubFormula LNN).
-                       --- replace
+                       +++ apply (subAllSubFormula LNN).
+                       +++ replace
                             (subAllFormula LNN B
                                (fun n1 : nat =>
                                 substituteTerm LNN
@@ -1258,19 +1258,19 @@ Proof.
                            *** apply iffRefl.
                            *** apply subAllFormula_ext. intros m H6.
                                destruct (eq_nat_dec (S n) m) as [e | e].
-                               ++++ rewrite <- e. rewrite (subTermVar1 LNN).
+                               ---- rewrite <- e. rewrite (subTermVar1 LNN).
                                     clear H0. induction (snd a).
-                                    ---- simpl in |- *. reflexivity.
-                                    ---- simpl in |- *. rewrite IHn0. reflexivity.
-                               ++++ destruct m as [| n0].
-                                    ---- simpl in |- *. reflexivity.
-                                    ---- rewrite (subTermVar2 LNN).
+                                    ++++ simpl in |- *. reflexivity.
+                                    ++++ simpl in |- *. rewrite IHn0. reflexivity.
+                               ---- destruct m as [| n0].
+                                    ++++ simpl in |- *. reflexivity.
+                                    ++++ rewrite (subTermVar2 LNN).
                                          **** reflexivity.
                                          **** lia.
                 ** lia.
                 ** intros v0 H6. elim (closedNatToTerm _ _ H6).
-          ++ apply closedNatToTerm.
-    + intros. 
+          -- apply closedNatToTerm.
+    - intros. 
       set
        (v' :=
         Vector.t_rec (Formula * (nat -> naryFunc n))
@@ -1291,31 +1291,31 @@ Proof.
                     | O => var 0
                     | S x' => var (S (x' + w))
                     end))))).
-      - unfold composeSigmaFormula in Hrecn.
+      + unfold composeSigmaFormula in Hrecn.
         simpl in Hrecn. apply Hrecn.
         * lia.
         * clear B g H2.
           induction A as [| a0 n0 A HrecA]; simpl in (value of v'); simpl in |- *; auto.
           split.
-          ++ simpl in H0. destruct H0 as (H0, H2). apply H0.
-          ++ apply HrecA.
-             -- destruct H0 as (H0, H2). auto.
-             -- simpl in H1. destruct H1 as (H1, H2). auto.
+          -- simpl in H0. destruct H0 as (H0, H2). apply H0.
+          -- apply HrecA.
+             ++ destruct H0 as (H0, H2). auto.
+             ++ simpl in H1. destruct H1 as (H1, H2). auto.
         * simpl in H1. clear H2 H0 g B. induction A as [| a0 n0 A HrecA].
-          ++ simpl in |- *. auto.
-          ++ simpl in |- *. split.
-             -- simpl in H1. destruct H1 as (H0, H1). intros v H2.
+          -- simpl in |- *. auto.
+          -- simpl in |- *. split.
+             ++ simpl in H1. destruct H1 as (H0, H1). intros v H2.
                 destruct (freeVarSubFormula3 _ _ _ _ _ H2).
                 ** assert (v <= S n).
                    { apply H0. eapply In_list_remove1. exact H3. }
                    destruct (proj1 (Nat.lt_eq_cases v (S n))).
-                   +++ assumption. 
-                   +++ lia.
-                   +++ elim (In_list_remove2 _ _ _ _ _ H3). auto.
+                   --- assumption. 
+                   --- lia.
+                   --- elim (In_list_remove2 _ _ _ _ _ H3). auto.
                 ** elim (closedNatToTerm _ _ H3).
-             -- apply HrecA. destruct H1 as (H0, H1). auto.
+             ++ apply HrecA. destruct H1 as (H0, H1). auto.
         * auto.
-      - unfold composeSigmaFormula in |- *. clear Hrecn.
+      + unfold composeSigmaFormula in |- *. clear Hrecn.
         apply
          RepresentableAlternate
           with
@@ -1328,38 +1328,38 @@ Proof.
                       | S x' => var (S (x' + w))
                       end)))).
         * rewrite subAddExistsNice.
-          ++ apply reduceAddExists. rewrite (subFormulaAnd LNN).
+          -- apply reduceAddExists. rewrite (subFormulaAnd LNN).
              apply (reduceAnd LNN).
-             -- clear H3 H2 H1 H0 g B. induction A as [| a0 n0 A HrecA].
+             ++ clear H3 H2 H1 H0 g B. induction A as [| a0 n0 A HrecA].
                 ** simpl in |- *. apply iffSym. apply (subFormulaNil LNN). simpl in |- *. lia.
                 ** simpl in |- *. rewrite (subFormulaAnd LNN).
                    apply (reduceAnd LNN); [| apply HrecA ].
                    apply (subFormulaExch LNN); try lia.
-                   +++ apply closedNatToTerm.
-                   +++ unfold not in |- *; intros. destruct H0 as [H0 | H0].
-                       --- lia.
-                       --- apply H0.
-             -- apply iffSym. apply (subFormulaNil LNN).
+                   --- apply closedNatToTerm.
+                   --- unfold not in |- *; intros. destruct H0 as [H0 | H0].
+                       +++ lia.
+                       +++ apply H0.
+             ++ apply iffSym. apply (subFormulaNil LNN).
                 intro H4. decompose record (freeVarSubAllFormula1 _ _ _ _ H4).
                 destruct x as [| n0].
                 ** destruct H7 as [H5 | H5]; try lia. elim H5.
                 ** destruct H7 as [H5| H5].
-                   +++ lia.
-                   +++ elim H5.
-          ++ lia.
-          ++ intros. elim (closedNatToTerm _ _ H4).
+                   --- lia.
+                   --- elim H5.
+          -- lia.
+          -- intros. elim (closedNatToTerm _ _ H4).
         * apply Representable_ext with (evalComposeFunc n m (FormulasToFuncs n m v') g).
           clear H3 H2 H1 H0 B.
-          ++ apply extEqualCompose.
-             -- unfold extEqualVector in |- *. clear g.
+          -- apply extEqualCompose.
+             ++ unfold extEqualVector in |- *. clear g.
                 induction A as [| a0 n0 A HrecA]; simpl in |- *; auto.
                 split.
                 ** apply extEqualRefl.
                 ** apply HrecA.
-             -- apply extEqualRefl.
-          ++ apply H3. }
+             ++ apply extEqualRefl.
+          -- apply H3. }
   intros n w m H0 A B g H1 H2 H3. split.
-  + intros v H4. unfold composeSigmaFormula in H4.
+  - intros v H4. unfold composeSigmaFormula in H4.
     assert
      (In v
         (freeVarFormula LNN
@@ -1372,32 +1372,32 @@ Proof.
                   end))))).
     { eapply freeVarAddExists1. apply H4. }
     simpl in H5. destruct (in_app_or _ _ _ H5).
-    - assert (m + S w <= v \/ v < S w).
+    + assert (m + S w <= v \/ v < S w).
       { eapply freeVarAddExists2. apply H4. }
       clear H5 H4 H3 H1 g B.
       induction A as [| a n0 A HrecA].
       * simpl in H6. lia.
       * simpl in H6. destruct (in_app_or _ _ _ H6).
-        ++ simpl in H2. destruct H2 as (H2, H3).
+        -- simpl in H2. destruct H2 as (H2, H3).
            destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H4 | H4].
-           -- apply H2. eapply In_list_remove1. exact H4.
-           -- destruct H4 as [H4 | H4].
+           ++ apply H2. eapply In_list_remove1. exact H4.
+           ++ destruct H4 as [H4 | H4].
               ** lia.
               ** elim H4.
-        ++ apply HrecA; auto.
-           -- simpl in H2. tauto.
-           -- lia.
-    - decompose record (freeVarSubAllFormula1 _ _ _ _ H6).
+        -- apply HrecA; auto.
+           ++ simpl in H2. tauto.
+           ++ lia.
+    + decompose record (freeVarSubAllFormula1 _ _ _ _ H6).
       destruct x as [| n0].
       * destruct H9 as [H7 | H7]; try lia. elim H7.
       * induction H9 as [H7 | H7].
-        ++ rewrite <- H7. destruct H3 as (H3, H9).
+        -- rewrite <- H7. destruct H3 as (H3, H9).
            assert (S n0 <= m). { apply H3. auto. }
            destruct (freeVarAddExists2 _ _ _ _ H4) as [H11 | H11].
-           -- lia.
-           -- lia.
-        ++ elim H7.
-  + apply H; auto.
+           ++ lia.
+           ++ lia.
+        -- elim H7.
+  - apply H; auto.
 Qed.
 
 
