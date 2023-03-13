@@ -713,8 +713,8 @@ Lemma freeVarAddExists1 :
  In v (freeVarFormula LNN (addExists m n A)) -> In v (freeVarFormula LNN A).
 Proof.
   intros n m v A H. induction n as [| n Hrecn].
-  + simpl in H. exact H.
-  + simpl in H. apply Hrecn. eapply In_list_remove1. exact H.
+  - simpl in H. exact H.
+  - simpl in H. apply Hrecn. eapply In_list_remove1. exact H.
 Qed.
 
 Lemma freeVarAddExists2 :
@@ -734,14 +734,14 @@ Lemma reduceAddExistsOneWay :
  SysPrf NN (impH A B) -> SysPrf NN (impH (addExists m n A) (addExists m n B)).
 Proof.
   intros n m A B H. apply impI. induction n as [| n Hrecn].
-  + apply impE with A.
-    - apply sysWeaken. apply H.
-    - apply Axm; right; constructor.
-  + simpl in |- *. apply existSys.
-    - apply closedNN.
-    - simpl in |- *; intro H0.
+  - apply impE with A.
+    + apply sysWeaken. apply H.
+    + apply Axm; right; constructor.
+  - simpl in |- *. apply existSys.
+    + apply closedNN.
+    + simpl in |- *; intro H0.
       pose proof (In_list_remove2 _ _ _ _ _ H0). congruence.
-    - apply existSimp. exact Hrecn.
+    + apply existSimp. exact Hrecn.
 Qed.
 
 Lemma reduceAddExists :
@@ -763,11 +763,11 @@ Proof.
   rewrite (subFormulaExist LNN).
   destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
   destruct (in_dec Nat.eq_dec (n + m) (freeVarTerm LNN s)) as [e0 | e0].
-  + pose proof (H0 _ e0). lia.
-  + rewrite Hrecn.
-    - reflexivity.
-    - lia.
-    - intros v0 H1. pose proof (H0 _ H1). lia.
+  - pose proof (H0 _ e0). lia.
+  - rewrite Hrecn.
+    + reflexivity.
+    + lia.
+    + intros v0 H1. pose proof (H0 _ H1). lia.
 Qed.
 
 Fixpoint addForalls (m n : nat) (f : Formula) {struct n} : Formula :=
@@ -814,11 +814,11 @@ Proof.
   intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
   rewrite (subFormulaForall LNN). destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
   destruct (in_dec Nat.eq_dec (n + m) (freeVarTerm LNN s)) as [e0 | e0].
-  + pose proof (H0 _ e0). lia.
-  + rewrite Hrecn.
-    - reflexivity.
-    - lia.
-    - intros v0 H1. pose proof (H0 _ H1). lia.
+  - pose proof (H0 _ e0). lia.
+  - rewrite Hrecn.
+    + reflexivity.
+    + lia.
+    + intros v0 H1. pose proof (H0 _ H1). lia.
 Qed.
 
 Fixpoint FormulasToFormula (n w m : nat)
@@ -850,8 +850,8 @@ Definition succFormula : Formula := equal (var 0) (Succ (var 1)).
 Remark succRepresentable : Representable 1 S succFormula.
 Proof.
   unfold Representable in |- *. split.
-  + simpl. lia.
-  + intros a. unfold succFormula in |- *.
+  - simpl. lia.
+  - intros a. unfold succFormula in |- *.
     rewrite (subFormulaEqual LNN). apply iffRefl.
 Qed.
 
@@ -860,8 +860,8 @@ Definition zeroFormula : Formula := equal (var 0) Zero.
 Remark zeroRepresentable : Representable 0 0 zeroFormula.
 Proof.
   unfold Representable in |- *. split.
-  + simpl. lia.
-  + apply iffRefl.
+  - simpl. lia.
+  - apply iffRefl.
 Qed.
 
 Definition projFormula (m : nat) : Formula := equal (var 0) (var (S m)).
@@ -872,10 +872,10 @@ Remark projRepresentable :
  Representable n (evalProjFunc n m pr) (projFormula m).
 Proof.
   intros n m pr; unfold Representable in |- *. split.
-  + simpl. lia.
-  + induction n as [| n Hrecn]; try lia.
+  - simpl. lia.
+  - induction n as [| n Hrecn]; try lia.
     simpl in |- *. intros a. destruct (Nat.eq_dec m n) as [e | e].
-    - rewrite e. clear e Hrecn pr m. induction n as [| n Hrecn].
+    + rewrite e. clear e Hrecn pr m. induction n as [| n Hrecn].
       * simpl in |- *. unfold projFormula in |- *.
         rewrite (subFormulaEqual LNN). apply iffRefl.
       * simpl in |- *. intros a0. unfold projFormula in |- *.
@@ -889,12 +889,12 @@ Proof.
           (substituteFormula LNN (equal (var 0)
                                   (var (S n))) (S n)
               (natToTerm a)).
-        ++ auto.
-        ++ rewrite (subFormulaEqual LNN); simpl in |- *.
+        -- auto.
+        -- rewrite (subFormulaEqual LNN); simpl in |- *.
            destruct (Nat.eq_dec n n); try lia.
            rewrite subTermNil; try reflexivity.
            apply closedNatToTerm.
-    - apply RepresentableAlternate with (equal (var 0) (var (S m))).
+    + apply RepresentableAlternate with (equal (var 0) (var (S m))).
       * apply iffSym. apply (subFormulaNil LNN). simpl in |- *. lia.
       * auto.
 Qed.
@@ -910,6 +910,7 @@ Definition composeSigmaFormula (n w m : nat) (A : Vector.t (Formula * naryFunc n
            | O => var 0
            | S x' => var (S x' + w)
            end))).
+
 
 Remark composeSigmaRepresentable :
  forall n w m : nat,
