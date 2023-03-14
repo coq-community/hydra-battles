@@ -1283,7 +1283,7 @@ Proof.
              (substituteFormula LNN (fst pair) (S n) (natToTerm a), snd pair a) m
              rec) _ A) in *.
       assert
-       (RepresentableHelp n (evalComposeFunc n m (FormulasToFuncs n m v') g)
+       (H3:RepresentableHelp n (evalComposeFunc n m (FormulasToFuncs n m v') g)
           (addExists (S w) m
              (andH (FormulasToFormula n w m v')
                 (subAllFormula LNN B
@@ -1296,7 +1296,8 @@ Proof.
         simpl in Hrecn. apply Hrecn.
         * lia.
         * clear B g H2.
-          induction A as [| a0 n0 A HrecA]; simpl in (value of v'); simpl in |- *; auto.
+          induction A as [| a0 n0 A HrecA]; 
+            simpl in (value of v'); simpl in |- *; auto.
           split.
           -- simpl in H0. destruct H0 as (H0, H2). apply H0.
           -- apply HrecA.
@@ -1307,7 +1308,7 @@ Proof.
           -- simpl in |- *. split.
              ++ simpl in H1. destruct H1 as (H0, H1). intros v H2.
                 destruct (freeVarSubFormula3 _ _ _ _ _ H2).
-                ** assert (v <= S n).
+                ** assert (H4: v <= S n).
                    { apply H0. eapply In_list_remove1. exact H3. }
                    destruct (proj1 (Nat.lt_eq_cases v (S n))).
                    --- assumption. 
@@ -1362,7 +1363,7 @@ Proof.
   intros n w m H0 A B g H1 H2 H3. split.
   - intros v H4. unfold composeSigmaFormula in H4.
     assert
-     (In v
+     (H5: In v
         (freeVarFormula LNN
            (andH (FormulasToFormula n w m A)
               (subAllFormula LNN B
@@ -1373,7 +1374,7 @@ Proof.
                   end))))).
     { eapply freeVarAddExists1. apply H4. }
     simpl in H5. destruct (in_app_or _ _ _ H5).
-    + assert (m + S w <= v \/ v < S w).
+    + assert (H7: m + S w <= v \/ v < S w).
       { eapply freeVarAddExists2. apply H4. }
       clear H5 H4 H3 H1 g B.
       induction A as [| a n0 A HrecA].
@@ -1393,7 +1394,7 @@ Proof.
       * destruct H9 as [H7 | H7]; try lia. elim H7.
       * induction H9 as [H7 | H7].
         -- rewrite <- H7. destruct H3 as (H3, H9).
-           assert (S n0 <= m). { apply H3. auto. }
+           assert (H10: S n0 <= m). { apply H3. auto. }
            destruct (freeVarAddExists2 _ _ _ _ H4) as [H11 | H11].
            ++ lia.
            ++ lia.
@@ -1425,13 +1426,14 @@ Remark smallestExists :
  P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b).
 Proof.
   assert
-   (forall P : nat -> Prop,
+   (H: forall P : nat -> Prop,
    (forall x : nat, decidable (P x)) ->
     forall d c : nat,
     c < d -> P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b)).
   { intros P H d. induction d as [| d Hrecd].
     - intros c H0 H1. lia.
-    - intros c H0 H1. assert (c < d \/ c = d) as H2 by lia. destruct H2.
+    - intros c H0 H1. assert (H2: c < d \/ c = d)  by lia. 
+      destruct H2.
       + eauto.
       + destruct (boundedCheck P H c).
         * exists c. tauto.
@@ -1643,9 +1645,9 @@ Lemma freeVarPrimRecSigmaFormulaHelp1 :
 Proof.
   intros n A B v H. unfold primRecSigmaFormulaHelp in H.
   assert
-   (forall v : nat,
+   (H0: forall v : nat,
     In v (freeVarFormula LNN betaFormula) -> v = 0 \/ v = 1 \/ v = 2).
-  { intros v0 H0. assert (Representable 2 beta betaFormula).
+  { intros v0 H0. assert (H1: Representable 2 beta betaFormula).
     apply betaRepresentable. destruct H1 as (H1, H2).
     apply H1 in H0. lia. }
   repeat
@@ -1693,7 +1695,7 @@ Lemma freeVarPrimRecPiFormulaHelp1 :
 Proof.
   intros n A B v H. unfold primRecPiFormulaHelp in H.
   assert
-   (forall v : nat,
+   (H0: forall v : nat,
     In v (freeVarFormula LNN betaFormula) -> v = 0 \/ v = 1 \/ v = 2).
   { intros v0 H0. assert (Representable 2 beta betaFormula).
     apply betaRepresentable.
@@ -1753,7 +1755,7 @@ Proof.
   intros P b H H0; induction b as [| b Hrecb].
   - elim H0. lia.
   - destruct (H b) as [e | e].
-    + assert (~ (forall n : nat, n < b -> P n)).
+    + assert (H1: ~ (forall n : nat, n < b -> P n)).
       { intro H1. elim H0. intros n H2.
         assert (n < b \/ n = b) as H3 by lia. destruct H3.
         - auto.
@@ -1779,12 +1781,12 @@ Remark In_betaFormula_subst_1_2_0 :
 Proof.
   intros a b c v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
   - assert
-     (In v
+     (H1: In v
         (freeVarFormula LNN
            (substituteFormula LNN (substituteFormula LNN betaFormula 1 a) 2 b))).
     { eapply In_list_remove1; apply H0. }
     destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H2 | H2].
-    + assert (In v (freeVarFormula LNN (substituteFormula LNN betaFormula 1 a))).
+    + assert (H3: In v (freeVarFormula LNN (substituteFormula LNN betaFormula 1 a))).
       { eapply In_list_remove1; apply H2. }
       destruct (freeVarSubFormula3 _ _ _ _ _ H3) as [H4 | H4].
       * destruct v as [| n].
@@ -1794,7 +1796,7 @@ Proof.
            ++ destruct n as [| n].
               ** elim (In_list_remove2 _ _ _ _ _ H2). reflexivity.
               ** elim (proj1 (Nat.le_ngt  (S (S (S n))) 2)).
-                 --- assert (Representable 2 beta betaFormula).
+                 --- assert (H5: Representable 2 beta betaFormula).
                      { apply betaRepresentable. }
                      destruct H5 as (H5, H6). apply H5.
                      eapply In_list_remove1. exact H4.
@@ -1855,7 +1857,7 @@ Remark In_betaFormula_subst_2_1 :
  In v (freeVarTerm LNN b) \/ In v (freeVarTerm LNN (var 0)).
 Proof.
   intros a b v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
-  - assert (In v (freeVarFormula LNN (substituteFormula LNN betaFormula 2 a))).
+  - assert (H1: In v (freeVarFormula LNN (substituteFormula LNN betaFormula 2 a))).
     { eapply In_list_remove1. apply H0. }
     decompose sum (In_betaFormula_subst_2 _ _ H1); try tauto.
     destruct H3 as [H2 | H2].
@@ -1978,7 +1980,7 @@ Remark primRecSigmaRepresentable :
  Representable (S n) (evalPrimRecFunc n g h) (primRecSigmaFormula n A B).
 Proof.
   assert
-   (forall (n : nat) (A : Formula) (g : naryFunc n),
+   (H: forall (n : nat) (A : Formula) (g : naryFunc n),
     Representable n g A ->
     forall (B : Formula) (h : naryFunc (S (S n))),
     Representable (S (S n)) h B ->
@@ -2011,10 +2013,10 @@ Proof.
           destruct (betaTheorem1 (S a) f) as [x p]. 
           destruct x as (a0, b). simpl in p.
           set (P := fun c : nat => forall z : nat, z < S a -> f z = beta c z) in *.
-          assert (forall c : nat, decidable (P c)).
+          assert (H1: forall c : nat, decidable (P c)).
           { intros c. unfold decidable, P. 
             set (Q := fun z : nat => f z <> beta c z) in *.
-            assert (forall z : nat, decidable (Q z)).
+            assert (H1: forall z : nat, decidable (Q z)).
             { intros. unfold decidable, Q. 
               destruct (eq_nat_dec (f z) (beta c z)); auto. }
             destruct (boundedCheck Q H1 (S a)) as [H2 | H2].
@@ -2066,7 +2068,7 @@ Proof.
                        +++ discriminate.
                        +++ intro H1. 
                            destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H4 | H4].
-                           *** assert (In 4 (freeVarFormula LNN 
+                           *** assert (H5: In 4 (freeVarFormula LNN 
                                                (primRecPiFormulaHelp 0 A B))).
                                { eapply In_list_remove1. apply H4. }
                                decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H5).
@@ -2274,7 +2276,7 @@ Proof.
                                                       -- apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                          apply (subFormulaTrans LNN). intro H6.
                                                          assert
-                                                          (In 3
+                                                          (H7: In 3
                                                              (freeVarFormula LNN (substituteFormula LNN betaFormula 2 (natToTerm x)))).
                                                          { eapply In_list_remove1. apply H6. }
                                                          destruct (freeVarSubFormula3 _ _ _ _ _ H7) as [H8 | H8].
@@ -2566,7 +2568,7 @@ Proof.
                                                          ++ apply iffE1. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                             apply (subFormulaTrans LNN). intro H6.
                                                             assert
-                                                             (In 3
+                                                             (H7: In 3
                                                                 (freeVarFormula LNN (substituteFormula LNN betaFormula 2 (natToTerm x)))).
                                                             { eapply In_list_remove1. apply H6. }
                                                             destruct (freeVarSubFormula3 _ _ _ _ _ H7) as [H8 | H8].
@@ -2721,7 +2723,7 @@ Proof.
                                                                        rewrite H2.
                                                                        *** apply eqRefl.
                                                                        *** repeat rewrite <-  Nat.succ_lt_mono. apply H1. }
-                     +++ intros b H1. assert (forall z : nat, decidable (f z = beta b z)).
+                     +++ intros b H1. assert (H4: forall z : nat, decidable (f z = beta b z)).
                          { unfold decidable. intros z. destruct (eq_nat_dec (f z) (beta b z)); auto. }
                          decompose record
                           (notBoundedForall (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1)).
@@ -2902,7 +2904,7 @@ Proof.
                                                 fold (LT (natToTerm x0) (natToTerm a)). apply natLT. now rewrite Nat.succ_lt_mono.   }
                                             { apply impI.
                                               assert
-                                               (forall n : nat,
+                                               (H1:forall n : nat,
                                                 ~
                                                 In n
                                                   (freeVarFormula LNN
@@ -3096,8 +3098,8 @@ Proof.
                                                                                 (natToTerm x0)).
                                                                          ---- repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                               apply (subFormulaTrans LNN). intro H4.
-                                                                              assert
-                                                                               (In 3
+        assert
+                                                                               (H5: In 3
                                                                                   (freeVarFormula LNN (substituteFormula LNN betaFormula 2 (natToTerm b)))).
                                                                               { eapply In_list_remove1. apply H4. }
                                                                               destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H7 | H7].
@@ -3112,7 +3114,8 @@ Proof.
                                                     -- eapply andE1. apply Axm; right; constructor. }
                                   ++++ apply Nat.lt_lt_succ_r. now rewrite Nat.succ_lt_mono. 
                          *** apply natNE. auto.
-                     +++ intros b H1. assert (forall z : nat, decidable (f z = beta b z)).
+                     +++ intros b H1. 
+                         assert (H4: forall z : nat, decidable (f z = beta b z)).
                          { unfold decidable. intros z. destruct (eq_nat_dec (f z) (beta b z)); auto. }
                          decompose record
                           (notBoundedForall (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1)).
@@ -3544,7 +3547,7 @@ Proof.
                                                                                         { repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                                           apply (subFormulaTrans LNN). intro H4.
                                                                                           assert
-                                                                                           (In 3
+                                                                                           (H5: In 3
                                                                                               (freeVarFormula LNN (substituteFormula LNN betaFormula 2 (natToTerm b)))).
                                                                                           { eapply In_list_remove1. apply H4. }
                                                                                           destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H7 | H7].
@@ -3674,7 +3677,7 @@ Proof.
           -- apply extEqualRefl.
       + destruct H as (H, H1). destruct H0 as (H0, H2). simpl in H1. simpl in H2.
         assert
-         (RepresentableHelp n
+         (H3: RepresentableHelp n
             (evalPrimRecFunc n (g a0) (fun x y : nat => h x y a0) a)
             (substituteFormula LNN
                (primRecSigmaFormula n (substituteFormula LNN A (S n) (natToTerm a0))
@@ -3686,7 +3689,7 @@ Proof.
         { apply Hrecn.
           - split.
             + intros v H3. induction (freeVarSubFormula3 _ _ _ _ _ H3).
-              * assert (v <= S n).
+              * assert (H5: v <= S n).
                 { apply H. eapply In_list_remove1. apply H4. }
                 destruct (proj1 (Nat.lt_eq_cases v (S n)) H5) as [H6 | H6].
                 -- now apply Nat.lt_succ_r. 
@@ -3839,7 +3842,7 @@ Proof.
                     (S n) (natToTerm a)).
              ++ apply iffSym. apply (subFormulaTrans LNN). intro H3.
                 assert
-                 (In (S n)
+                 (H4: In (S n)
                     (freeVarFormula LNN
                        (substituteFormula LNN (primRecSigmaFormula (S n) A B) 
                           (S n) (natToTerm a0)))).
@@ -3872,7 +3875,7 @@ Proof.
                   - destruct (In_dec eq_nat_dec b (freeVarTerm LNN (natToTerm a1))) as [e0 | e0].
                     + elim (closedNatToTerm _ _ e0).
                     + reflexivity. }
-                assert (forall a b : nat, a <> b -> b <> a) by auto.
+                assert (H5: forall a b : nat, a <> b -> b <> a) by auto.
                 assert
                  (subExistSpecial2 :
                   forall (F : Formula) (a b c : nat),
@@ -3905,18 +3908,18 @@ Proof.
                 assert (H6 := I). (* For hyps numbering compatibility *)
                 assert (H7 := I). (* For hyps numbering compatibility *)
                 assert
-                 (forall (a b : Term) (v : nat) (s : Term),
+                 (H8: forall (a b : Term) (v : nat) (s : Term),
                   substituteFormula LNN (LT a b) v s =
                   LT (substituteTerm LNN a v s) (substituteTerm LNN b v s)).
                 { intros a1 b v s. unfold LT. rewrite (subFormulaRelation LNN). reflexivity. }
                 assert
-                 (forall (f : Formula) (a : nat) (s : Term),
+                 (H9: forall (f : Formula) (a : nat) (s : Term),
                   substituteFormula LNN (existH a f) a s = existH a f).
                 { intros f a1 s. rewrite (subFormulaExist LNN). destruct (eq_nat_dec a1 a1) as [e | e].
                   - reflexivity.
                   - elim e; auto. }
                 assert
-                 (forall (f : Formula) (a : nat) (s : Term),
+                 (H10: forall (f : Formula) (a : nat) (s : Term),
                   substituteFormula LNN (forallH a f) a s = forallH a f).
                 { intros f a1 s. rewrite (subFormulaForall LNN). destruct (eq_nat_dec a1 a1) as [e | e].
                   - reflexivity.
@@ -4711,9 +4714,9 @@ Opaque substituteFormula.
         * apply H3. }
   intros n A g H0 B h H1. split.
   - destruct H0 as (H0, H2). destruct H1 as (H1, H3). intros v H4.
-    assert (forall v : nat, In v (freeVarFormula LNN betaFormula) -> v <= 2).
+    assert (H5: forall v : nat, In v (freeVarFormula LNN betaFormula) -> v <= 2).
     { eapply proj1. apply betaRepresentable. }
-    assert (forall v : nat, v <> S (S n) -> v <= S (S n) -> v <= S n).
+    assert (H6: forall v : nat, v <> S (S n) -> v <= S (S n) -> v <= S n).
     { intros v0 H6 H7. 
       destruct (proj1 (Nat.lt_eq_cases v0 (S (S n))) H7) as [H8 | H8].
       - now apply Nat.lt_succ_r. 
@@ -4772,7 +4775,7 @@ Opaque substituteFormula.
       | H:(In _ (freeVarTerm LNN (var  _))) |- _ =>
           simpl in H; decompose sum H; clear H
       end; try first [ assumption | apply le_n ].
-      assert (v <= 2) by auto. lia.
+      assert (H7: v <= 2) by auto. lia.
    - apply H; auto.
 Qed.
 (* end *)
@@ -4819,8 +4822,9 @@ Proof.
   - intros n0 m l. simpl in |- *. apply projRepresentable.
   - simpl in |- *; intros n0 m g H h H0. decompose record H.
     assert
-     (Representable n0
-        (evalComposeFunc n0 m (FormulasToFuncs n0 m (primRecsFormula n0 m g))
+     (H2: Representable n0
+        (evalComposeFunc n0 m (FormulasToFuncs n0 m 
+                                 (primRecsFormula n0 m g))
            (evalPrimRec m h))
         (composeSigmaFormula n0 n0 m (primRecsFormula n0 m g)
            (primRecFormula m h))).
@@ -4853,7 +4857,7 @@ Lemma primRecRepresentable :
 Proof.
   intros n f p.
   assert
-   (Representable n (evalPrimRec n (proj1_sig p))
+   (H: Representable n (evalPrimRec n (proj1_sig p))
       (primRecFormula n (proj1_sig p))).
   { apply primRecRepresentable1. }
   induction H as (H, H0). split.
