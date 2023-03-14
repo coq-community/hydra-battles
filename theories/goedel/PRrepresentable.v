@@ -59,7 +59,7 @@ Proof.
  - intros v H. simpl in H. lia.
  - simpl in |- *. intros a a0. unfold betaFormula in |- *.
    assert
-      (forall (A : Formula) (v x a : nat),
+      (H: forall (A : Formula) (v x a : nat),
        v <> x ->
        substituteFormula LNN (existH v A) x (natToTerm a) =
        existH v (substituteFormula LNN A x (natToTerm a))).
@@ -69,7 +69,7 @@ Proof.
         as [i | i]; try reflexivity.
      elim (closedNatToTerm _ _ i). }
     assert
-      (forall (t1 t2 : Term) (v a : nat),
+      (H0: forall (t1 t2 : Term) (v a : nat),
        substituteFormula LNN (LT t1 t2) v (natToTerm a) =
        LT (substituteTerm LNN t1 v (natToTerm a))
           (substituteTerm LNN t2 v (natToTerm a))).
@@ -81,7 +81,7 @@ Proof.
     | rewrite (subFormulaEqual LNN) ].
     simpl in |- *; repeat rewrite (subTermNil LNN).
    + assert
-       (SysPrf NN
+       (H1: SysPrf NN
           (iffH
              (existH 3
                 (andH (LT (var 3) (natToTerm (S a)))
@@ -183,7 +183,7 @@ Proof.
                              repeat rewrite (subFormulaAnd LNN).
                              repeat rewrite (subFormulaEqual LNN).
                              assert 
-                               ((substituteTerm LNN
+                               (H3: (substituteTerm LNN
                                    (substituteTerm LNN
                                       (Plus (Times (Plus (var 3) (var 4)) 
                                                (Succ (Plus (var 3) (var 4))))
@@ -195,14 +195,14 @@ Proof.
                                         (Succ (Plus (natToTerm n) 
                                                  (natToTerm n0))))
                                      (Times (Succ (Succ Zero))
-                                        (natToTerm n)))) as H3.
+                                        (natToTerm n)))) .
                              { simpl in |- *.
                                repeat (rewrite (subTermNil LNN (natToTerm n)));
                                  [| apply closedNatToTerm].
                                reflexivity. }
                              rewrite H3; clear H3.
                              assert
-                               ((substituteTerm LNN
+                               (H3: (substituteTerm LNN
                                    (substituteTerm LNN 
                                       (Times (Succ (Succ Zero)) (natToTerm a)) 
                                       3  (natToTerm n)) 4 (natToTerm n0)) =
@@ -790,9 +790,10 @@ Lemma freeVarAddForalls2 :
 Proof.
   intros n m v A H. induction n as [| n Hrecn]; try lia.
   simpl in H. simpl in |- *.
-  assert (In v (freeVarFormula LNN (addForalls m n A))).
+  assert (H0: In v (freeVarFormula LNN (addForalls m n A))).
   { eapply In_list_remove1. exact H. }
-  pose proof (Hrecn H0). pose proof (In_list_remove2 _ _ _ _ _ H). lia.
+  pose proof (Hrecn H0). pose proof (In_list_remove2 _ _ _ _ _ H). 
+  lia.
 Qed.
 
 Lemma reduceAddForalls :
@@ -926,7 +927,7 @@ Remark composeSigmaRepresentable :
    (composeSigmaFormula n w m A B).
 Proof.
   assert
-  (forall n w m : nat,
+  (H: forall n w m : nat,
    n <= w ->
    forall (A : Vector.t (Formula * naryFunc n) m) (B : Formula) (g : naryFunc m),
    RepresentablesHelp n m A ->
@@ -961,7 +962,7 @@ Proof.
           destruct H2 as (H2, H4). apply H2 in H3. lia.
       + destruct H0 as (H0, H3). destruct H1 as (H1, H4). destruct H2 as (H2, H5).
         assert
-         (forall a : nat,
+         (H6: forall a : nat,
           SysPrf NN
             (iffH
                (composeSigmaFormula 0 w n v
@@ -969,7 +970,7 @@ Proof.
                (equal (var 0) (natToTerm (evalList n (FormulasToFuncs 0 n v) (g a)))))).
         { intros a0. apply Hrecv; auto. split.
           - intros v0 H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
-            + assert (In v0 (freeVarFormula LNN B)).
+            + assert (H8: In v0 (freeVarFormula LNN B)).
               { eapply In_list_remove1. exact H7. }
               pose proof (In_list_remove2 _ _ _ _ _ H7).
               pose proof (H2 _ H8). lia.
