@@ -438,19 +438,17 @@ Proof.
                                         induction (In_dec eq_nat_dec n
                                                      (map (codeFormula L codeF codeR) A)).
                                         apply orI2.
-                                        apply impE with (substituteFormula LNN fU v0 (natToTerm n)).
+                                        apply impE with (substituteFormula LNN fU v0 
+                                                           (natToTerm n)).
                                         apply iffE2.
                                         apply sysWeaken.
                                         assert
                                           (H10: forall v : nat,
-                                              ~ In v (List.remove eq_nat_dec v0 (freeVarFormula LNN fU))).
-                                        { unfold not in |- *; intros.
-                                          absurd (v = v0).
-                                          - eapply In_list_remove2.
-                                            apply H10.
-                                          - apply freeVarfU.
-                                            eapply In_list_remove1.
-                                            apply H10.
+                                              ~ In v (List.remove eq_nat_dec v0 
+                                                        (freeVarFormula LNN fU))).
+                                        {  intros v H10; absurd (v = v0).
+                                          - eapply In_list_remove2, H10.
+                                          - apply freeVarfU; eapply In_list_remove1, H10.
                                         }
                                         apply
                                           iffTrans
