@@ -20,6 +20,10 @@ From Coq Require Import Decidable.
 From Coq Require Import Lia.
 From hydras Require Import Compat815.
 
+From LibHyps Require Export LibHyps.
+Require Export MoreLibHyps. 
+
+
 #[local] Arguments apply _ _ _ : clear implicits.
 
 Import LispAbbreviations. 
@@ -1218,7 +1222,7 @@ Proof.
                            *** simpl in H4.
                                induction (freeVarSubFormula3 _ _ _ _ _ H5) as [H6 | H6].
                              elim (proj1 (Nat.le_ngt n0 0)).
-                               ---- decompose record H4. apply H7.
+                               ---- decompose record H4 /r. intros H7 H8; apply H7.
                                     eapply In_list_remove1. apply H6.
                                ---- lia.
                                ---- destruct H6 as [H6 | H6].
@@ -1342,7 +1346,8 @@ Proof.
                        +++ lia.
                        +++ apply H0.
              ++ apply iffSym. apply (subFormulaNil LNN).
-                intro H4. decompose record (freeVarSubAllFormula1 _ _ _ _ H4).
+                intro H4. decompose record (freeVarSubAllFormula1 _ _ _ _ H4) /r; 
+                  intros x H6 H7.
                 destruct x as [| n0].
                 ** destruct H7 as [H5 | H5]; try lia. elim H5.
                 ** destruct H7 as [H5| H5].
@@ -1389,7 +1394,7 @@ Proof.
         -- apply HrecA; auto.
            ++ simpl in H2. tauto.
            ++ lia.
-    + decompose record (freeVarSubAllFormula1 _ _ _ _ H6).
+    + decompose record (freeVarSubAllFormula1 _ _ _ _ H6) /r; intros x H8 H9.
       destruct x as [| n0].
       * destruct H9 as [H7 | H7]; try lia. elim H7.
       * induction H9 as [H7 | H7].
@@ -1760,7 +1765,7 @@ Proof.
         assert (n < b \/ n = b) as H3 by lia. destruct H3.
         - auto.
         - rewrite H3; auto. }
-      decompose record (Hrecb H1).
+      decompose record (Hrecb H1) /r; intros x H3 H4.
       exists x. split; auto; lia.
     + exists b. split; auto; lia.
 Qed.
@@ -2071,16 +2076,17 @@ Proof.
                            *** assert (H5: In 4 (freeVarFormula LNN 
                                                (primRecPiFormulaHelp 0 A B))).
                                { eapply In_list_remove1. apply H4. }
-                               decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H5).
-                               ---- destruct H as (H, H7). 
+                               decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H5) /r.
+                               ---- intro H6; destruct H as (H, H7). 
                                     elim (proj1 (Nat.le_ngt 4 0)).
                                     ++++ apply H. apply H6.
                                     ++++ repeat constructor.
-                               ---- destruct H0 as (H0, H6). elim (proj1 (Nat.le_ngt 4 2)).
+                               ---- intro H7;  destruct H0 as (H0, H6). 
+                                    elim (proj1 (Nat.le_ngt 4 2)).
                                     ++++ apply H0. apply H7.
                                     ++++ repeat constructor.
-                               ---- discriminate H6.
-                               ---- discriminate H6.
+                               ---- discriminate 1.
+                               ---- discriminate 1.
                            *** elim (closedNatToTerm _ _ H4).
                        +++ unfold primRecSigmaFormulaHelp.
                            repeat first
@@ -2726,8 +2732,11 @@ Proof.
                      +++ intros b H1. assert (H4: forall z : nat, decidable (f z = beta b z)).
                          { unfold decidable. intros z. destruct (eq_nat_dec (f z) (beta b z)); auto. }
                          decompose record
-                          (notBoundedForall (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1)).
-                         apply impE with (notH (equal (natToTerm (f x0)) (natToTerm (beta b x0)))).
+                          (notBoundedForall 
+                             (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1))  /r;
+                           intros x0 H6 H7.
+                         apply impE with 
+                           (notH (equal (natToTerm (f x0)) (natToTerm (beta b x0)))).
                          *** apply cp2. unfold primRecSigmaFormulaHelp.
                              repeat first
                               [ rewrite subExistSpecial; [| discriminate ]
@@ -3118,8 +3127,11 @@ Proof.
                          assert (H4: forall z : nat, decidable (f z = beta b z)).
                          { unfold decidable. intros z. destruct (eq_nat_dec (f z) (beta b z)); auto. }
                          decompose record
-                          (notBoundedForall (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1)).
-                         apply impE with (notH (equal (natToTerm (f x0)) (natToTerm (beta b x0)))).
+                          (notBoundedForall
+                             (fun z : nat => f z = beta b z) (S a) H4 (H3 b H1)) /r;
+                           intros x0 H6 H7.
+                         apply impE with 
+                           (notH (equal (natToTerm (f x0)) (natToTerm (beta b x0)))).
                          *** apply cp2. unfold primRecPiFormulaHelp.
                              repeat first
                               [ rewrite subExistSpecial; [| discriminate ]
@@ -4820,7 +4832,7 @@ Proof.
   - apply succRepresentable.
   - apply zeroRepresentable.
   - intros n0 m l. simpl in |- *. apply projRepresentable.
-  - simpl in |- *; intros n0 m g H h H0. decompose record H.
+  - simpl in |- *; intros n0 m g H h H0. decompose record H /r; intros H1 H3 H4.
     assert
      (H2: Representable n0
         (evalComposeFunc n0 m (FormulasToFuncs n0 m 
@@ -4844,7 +4856,7 @@ Proof.
     apply primRecSigmaRepresentable; auto.
   - simpl in |- *. tauto.
   - simpl in |- *; intros n0 m p H p0 H0.
-    decompose record H0. clear H0.
+    decompose record H0 /r; intros H1 H3 H4; clear H0.
     repeat split; auto.
     + induction H as (H, H0); auto.
     + apply extEqualRefl.
