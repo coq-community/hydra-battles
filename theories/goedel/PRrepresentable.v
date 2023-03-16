@@ -21,7 +21,7 @@ From Coq Require Import Lia.
 From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
-Require Export MoreLibHyps. 
+From hydras.Ackermann Require Export MoreLibHyps. 
 
 
 #[local] Arguments apply _ _ _ : clear implicits.
