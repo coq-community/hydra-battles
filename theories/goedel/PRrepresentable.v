@@ -21,7 +21,7 @@ From Coq Require Import Lia.
 From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
-From hydras.Ackermann Require Export MoreLibHyps. 
+From hydras Require Export MoreLibHyps. 
 
 
 #[local] Arguments apply _ _ _ : clear implicits.
@@ -4879,3 +4879,4 @@ Proof.
 Qed.
 
 End Primitive_Recursive_Representable.
+ 
