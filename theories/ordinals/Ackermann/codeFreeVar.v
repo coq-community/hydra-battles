@@ -50,10 +50,10 @@ Proof.
      evalStrongRec in |- *.
    simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    simpl; reflexivity.
- - unfold freeVarTerm; fold (freeVarTerms L (arity L (inr (Relations L) f)) t0).
+ - unfold freeVarTerm; fold (freeVarTerms L (arityF L f) t0).
    rewrite <- H; clear H.
-   unfold codeTerm; fold (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
-   generalize (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
+   unfold codeTerm; fold (codeTerms L codeF (arityF L f) t0).
+   generalize (codeTerms L codeF (arityF L f) t0).
    intros n; unfold codeFreeVarTerm, codeFreeVarTermTerms.
    set
      (g := fun t1 recs : nat =>
@@ -330,7 +330,7 @@ Proof.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     simpl; reflexivity.
   - simpl; rewrite <- codeFreeVarTermsCorrect.
-    generalize (codeTerms L codeF (arity L (inl (Functions L) r)) t).
+    generalize (codeTerms L codeF (arityR L r) t).
     clear t.
     intros n; unfold codeFreeVarFormula, evalStrongRec.
     unfold evalStrongRecHelp, evalComposeFunc, evalOneParamList, 

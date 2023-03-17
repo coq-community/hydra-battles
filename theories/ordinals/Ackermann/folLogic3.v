@@ -315,7 +315,7 @@ Lemma equalRelation (T : fol.System L) (r : Relations L) (ts ss : fol.Terms L _)
  PairwiseEqual T _ ts ss -> SysPrf T (iffH (atomic r ts) (atomic r ss)).
 Proof.
   intros H.
-  set (n := arity L (inl (Functions L) r)) in *.
+  set (n := arityR L r) in *.
   set (m := termsMap n ts ss) in *.
   rewrite (subAllnVars1 _ ts ss).
   fold m in |- *; rewrite (subAllnVars2 _ ts ss); fold m in |- *.
@@ -383,7 +383,7 @@ Lemma equalFunction (T : fol.System L) (f : Functions L) (ts ss : fol.Terms L _)
  PairwiseEqual T _ ts ss -> SysPrf T (apply f ts =  apply f ss)%fol.
 Proof.
   intros H.
-  set (n := arity L (inr (Relations L) f)) in *.
+  set (n := arityF L f) in *.
   set (m := termsMap n ts ss) in *.
   rewrite (subAllnVars1 _ ts ss).
   fold m in |- *.

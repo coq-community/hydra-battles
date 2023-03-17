@@ -933,8 +933,8 @@ elim f using Formula_depth_ind2.
   repeat rewrite codeSubTermsCorrect in H.
   destruct  (eq_nat_dec n
                (cPair (S (S (S (S (codeR r)))))
-                  (codeTerms L codeF (arity L (inl (Functions L) r))
-                     (substituteTerms L (arity L (inl (Functions L) r)) t v s)))) 
+                  (codeTerms L codeF (arityR L r)
+                     (substituteTerms L (arityR L r) t v s)))) 
     as [a | b].
   + rewrite a; reflexivity.
   + rewrite nat_eqb_false in H.  
@@ -3119,15 +3119,15 @@ Proof.
       (m := 
          cdr
            (cPair (S (codeF f))
-              (codeTerms L codeF (arity L (inr (Relations L) f)) t0))).
+              (codeTerms L codeF (arityF L f) t0))).
     + simpl; replace
                (codeTerm
                   (apply f 
-                     (substituteTerms L (arity L (inr (Relations L) f)) t0 v s)))
+                     (substituteTerms L (arityF L f) t0 v s)))
         with
         (cPair (S (codeF f))
            (codeTerms L codeF _
-              (substituteTerms L (arity L (inr (Relations L) f)) t0 v s)));
+              (substituteTerms L (arityF L f) t0 v s)));
         [ idtac | reflexivity ].
       apply cPairLe3.
       apply le_n.
@@ -3340,11 +3340,11 @@ Proof.
   - replace
       (codeTerm
          (apply f
-            (substituteTerms L (arity L (inr (Relations L) f)) t0 v (var w))))
+            (substituteTerms L (arityF L f) t0 v (var w))))
       with
       (cPair (S (codeF f))
          (codeTerms L codeF _
-            (substituteTerms L (arity L (inr (Relations L) f)) t0 v (var w))));
+            (substituteTerms L (arityF L f) t0 v (var w))));
       [ idtac | reflexivity ].
     unfold A at 3 1 in |- *.
     repeat rewrite cPairProjections1.
@@ -3356,11 +3356,11 @@ Proof.
       replace
         (cdr
            (evalStrongRec 1 A
-              (codeTerms L codeF (arity L (inr (Relations L) f))
-                 (substituteTerms L (arity L (inr (Relations L) f)) t0 v (var w)))
+              (codeTerms L codeF (arityF L f)
+                 (substituteTerms L (arityF L f) t0 v (var w)))
               s2)) with
         (cdr
-           (evalStrongRec 1 A (codeTerms L codeF (arity L (inr (Relations L) f)) t0)
+           (evalStrongRec 1 A (codeTerms L codeF (arityF L f) t0)
               s2)); [reflexivity | ].
       symmetry; apply (H0 v w s2).
       + repeat rewrite cPairProjections2.
@@ -4100,7 +4100,7 @@ Proof.
     + unfold codeTerm, code.codeTerm; apply cPairLe2.
     + apply Nat.le_0_l.
   - intros f t H; apply Nat.le_trans with 
-      (codeTerms L codeF (arity L (inr (Relations L) f)) t).
+      (codeTerms L codeF (arityF L f) t).
     + assumption.
     + unfold codeTerm,  code.codeTerm; apply cPairLe2.
   - apply Nat.le_0_l. 
@@ -4389,7 +4389,7 @@ Proof.
        apply
          (Nat.max_case nv
             (fold_right max 0 
-               (freeVarTerms L (arity L (inl (Functions L) r)) t))).
+               (freeVarTerms L (arityR L r) t))).
        * eapply Nat.le_trans.
          -- apply (boundSubFormulaHelp2 a v0 s).
          -- apply le_n_S.
@@ -5177,7 +5177,7 @@ Proof.
     + apply
         (H 1 v
            (fold_right Nat.max 0
-              (freeVarTerm L s ++ freeVarTerms L (arity L (inl (Functions L) r)) t))
+              (freeVarTerm L s ++ freeVarTerms L (arityR L r) t))
            (codeTerm s)).
     + apply Nat.le_max_l.
     + apply (H0 (atomic r t) v s).

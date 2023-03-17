@@ -104,14 +104,14 @@ Variable codeArityR : nat -> nat.
 Hypothesis codeArityFIsPR : isPR 1 codeArityF.
 Hypothesis
   codeArityFIsCorrect1 :
-    forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
+    forall f : Functions L, codeArityF (codeF f) = S (arityF L f).
 Hypothesis
   codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> exists f : Functions L, codeF f = n.
 Hypothesis codeArityRIsPR : isPR 1 codeArityR.
 Hypothesis
   codeArityRIsCorrect1 :
-    forall r : Relations L, codeArityR (codeR r) = S (arity L (inl _ r)).
+    forall r : Relations L, codeArityR (codeR r) = S (arityR L r).
 Hypothesis
   codeArityRIsCorrect2 :
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.

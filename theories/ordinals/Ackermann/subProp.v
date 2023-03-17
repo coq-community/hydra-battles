@@ -123,7 +123,7 @@ Proof.
           * contradiction.
   - intros f t0 H v s x H0 H1; simpl; unfold freeVarTerm;
       fold
-        (freeVarTerms L _ (substituteTerms L (arity L (inr (Relations L) f)) t0 v s)).
+        (freeVarTerms L _ (substituteTerms L (arityF L f) t0 v s)).
     apply H; auto.
   - intros v s x H H0; auto.
   - intros n t0 H t1 H0 v s x H1 H2; simpl; unfold freeVarTerms in H2;

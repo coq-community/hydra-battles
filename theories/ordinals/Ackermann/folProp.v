@@ -22,7 +22,7 @@ Section Free_Variables.
 Fixpoint freeVarTerm (s : fol.Term L) : list nat :=
   match s with
   | var v => v :: nil
-  | apply f ts => freeVarTerms (arity L (inr _ f)) ts
+  | apply f ts => freeVarTerms (arityF L f) ts
   end
 with freeVarTerms (n : nat) (ss : fol.Terms L n) {struct ss} : list nat :=
        match ss with
@@ -188,7 +188,7 @@ Proof.
 Qed.
 
 Lemma subTermFunction :
-  forall (f : Functions L) (ts : fol.Terms L (arity L (inr _ f))) 
+  forall (f : Functions L) (ts : fol.Terms L (arityF L f)) 
          (v : nat) (s : fol.Term L),
     substituteTerm (apply f ts) v s = apply f (substituteTerms _ ts v s).
 Proof. reflexivity. Qed.
@@ -389,10 +389,10 @@ Lemma subFormulaEqual :
 Proof. reflexivity. Qed.
 
 Lemma subFormulaRelation :
-  forall (r : Relations L) (ts : fol.Terms L (arity L (inl _ r))) 
+  forall (r : Relations L) (ts : fol.Terms L (arityR L r)) 
          (v : nat) (s : fol.Term L),
     substituteFormula (atomic r ts) v s =
-      atomic r (substituteTerms (arity L (inl _ r)) ts v s).
+      atomic r (substituteTerms (arityR L r) ts v s).
 Proof. reflexivity. Qed.
 
 
@@ -428,7 +428,7 @@ Proof.
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
                    (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
-              (t : fol.Terms L (arity L (inl (Functions L) r)))
+              (t : fol.Terms L (arityR L r))
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
@@ -437,7 +437,7 @@ Proof.
                  exist
                    (fun y : fol.Formula L => depth L y = 
                                                depth L (atomic r t))
-                   (atomic r (substituteTerms (arity L (inl (Functions L) r)) 
+                   (atomic r (substituteTerms (arityR L r) 
                                 t a b))
                    (refl_equal (depth L (atomic r t)))) H)
          substituteFormulaImp
@@ -458,7 +458,7 @@ Proof.
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
                    (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
-              (t : fol.Terms L (arity L (inl (Functions L) r)))
+              (t : fol.Terms L (arityR L r))
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
@@ -467,7 +467,7 @@ Proof.
                  exist
                    (fun y : fol.Formula L => 
                       depth L y = depth L (atomic r t))
-                   (atomic r (substituteTerms (arity L (inl (Functions L) r)) 
+                   (atomic r (substituteTerms (arityR L r) 
                                 t a b))
                    (refl_equal (depth L (atomic r t)))) H) 
          substituteFormulaImp
@@ -505,7 +505,7 @@ Proof.
                    (equal (substituteTerm t a b) (substituteTerm t0 a b))
                    (refl_equal (depth L (equal t t0)))) H)
          (fun (r : Relations L) 
-              (t : fol.Terms L (arity L (inl (Functions L) r)))
+              (t : fol.Terms L (arityR L r))
               (H : nat * fol.Term L) =>
             prod_rec
               (fun _ : nat * fol.Term L =>
@@ -515,7 +515,7 @@ Proof.
                    (fun y : fol.Formula L =>
                       depth L y = depth L (atomic r t))
                    (atomic r
-                      (substituteTerms (arity L (inl (Functions L) r)) t a b))
+                      (substituteTerms (arityR L r) t a b))
                    (refl_equal (depth L (atomic r t)))) H)
          substituteFormulaImp
          substituteFormulaNot substituteFormulaForall f 
@@ -574,7 +574,7 @@ Proof.
                           (substituteTerm t0 a0 b0))
                        (refl_equal 0)) H)
              (fun (r : Relations L) 
-                  (t : fol.Terms L (arity L (inl (Functions L) r)))
+                  (t : fol.Terms L (arityR L r))
                   (H : nat * fol.Term L) =>
                 prod_rec
                   (fun _ : nat * fol.Term L => 
@@ -582,7 +582,7 @@ Proof.
                   (fun (a0 : nat) (b0 : fol.Term L) =>
                      exist (fun y : fol.Formula L => depth L y = 0)
                        (atomic r (substituteTerms
-                                    (arity L (inl (Functions L) r)) t a0 b0))
+                                    (arityR L r) t a0 b0))
                        (refl_equal 0)) H) substituteFormulaImp
              substituteFormulaNot
              substituteFormulaForall f (x, var nv)).
@@ -603,7 +603,7 @@ Proof.
                           (substituteTerm t0 a0 b0))
                        (refl_equal 0)) H)
              (fun (r : Relations L) 
-                  (t : fol.Terms L (arity L (inl (Functions L) r)))
+                  (t : fol.Terms L (arityR L r))
                   (H : nat * fol.Term L) =>
                 prod_rec
                   (fun _ : nat * fol.Term L => 
@@ -611,7 +611,7 @@ Proof.
                   (fun (a0 : nat) (b0 : fol.Term L) =>
                      exist (fun y : fol.Formula L => depth L y = 0)
                        (atomic r (substituteTerms 
-                                    (arity L (inl (Functions L) r)) t a0 b0))
+                                    (arityR L r) t a0 b0))
                        (refl_equal 0)) H) substituteFormulaImp 
              substituteFormulaNot
              substituteFormulaForall x0 (v, s)).
@@ -632,7 +632,7 @@ Proof.
                        (equal (substituteTerm t a b1) (substituteTerm t0 a b1))
                        (refl_equal 0)) H)
              (fun (r : Relations L) 
-                  (t : fol.Terms L (arity L (inl (Functions L) r)))
+                  (t : fol.Terms L (arityR L r))
                   (H : nat * fol.Term L) =>
                 prod_rec
                   (fun _ : nat * fol.Term L => 
@@ -640,7 +640,7 @@ Proof.
                   (fun (a : nat) (b1 : fol.Term L) =>
                      exist (fun y : fol.Formula L => depth L y = 0)
                        (atomic r (substituteTerms
-                                    (arity L (inl (Functions L) r)) t a b1))
+                                    (arityR L r) t a b1))
                        (refl_equal 0)) H) substituteFormulaImp
              substituteFormulaNot
              substituteFormulaForall f (v, s)).

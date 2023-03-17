@@ -72,15 +72,15 @@ Proof.
     - intros f t0 H; simpl;
         transitivity
           (cPair (S (codeF f))
-             (codeTerms L codeF (arity L (inr (Relations L) f))
-                (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))).
+             (codeTerms L codeF (arityF L f)
+                (substituteTerms L (arityF L f) t0 v s))).
       + rewrite <- H; 
           replace (codeTerm L codeF (apply f t0)) 
           with
           (cPair (S (codeF f)) 
-             (codeTerms L codeF (arity L (inr (Relations L) f)) t0)).
+             (codeTerms L codeF (arityF L f) t0)).
         * generalize (codeF f) 
-            (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
+            (codeTerms L codeF (arityF L f) t0).
           clear H t0 f; intros n n0; unfold codeSubTerm, codeSubTermTerms.
           fold g; unfold evalStrongRec, evalComposeFunc, evalOneParamList.
           unfold evalList; rewrite computeEvalStrongRecHelp.

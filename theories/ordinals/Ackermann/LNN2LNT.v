@@ -35,7 +35,7 @@ Definition LTFormula :=
   existH 2 (equal (Plus (var 0) (Succ (var 2))) (var 1)).
 
 
-Definition translateLT (ts : fol.Terms LNN (arity LNN (inl _ LT))) : Formula.
+Definition translateLT (ts : fol.Terms LNN (arityR LNN LT)) : Formula.
 Proof.
   simpl in ts; destruct  (consTerms _ _ ts) as [(a,b) p].
   destruct  (consTerms _ _ b) as [(a0,b0) p0].
@@ -80,9 +80,9 @@ Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   | equal t1 t2 => equal (LNN2LNT_term t1) (LNN2LNT_term t2)
   | atomic r ts =>
       match
-        r as l return (fol.Terms LNN (arity LNN (inl _ l)) -> Formula)
+        r as l return (fol.Terms LNN (arityR LNN l) -> Formula)
       with
-      | LT => fun t0 : fol.Terms LNN (arity LNN (inl _ LT)) => translateLT t0
+      | LT => fun t0 : fol.Terms LNN (arityR LNN LT) => translateLT t0
       end ts
   | impH A B => impH (LNN2LNT_formula A) (LNN2LNT_formula B)
   | notH A => notH (LNN2LNT_formula A)

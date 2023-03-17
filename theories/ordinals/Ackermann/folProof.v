@@ -31,9 +31,9 @@ Proof.
     - exact (impH (equal (var (n + n)) (var (S (n + n)))) Hrecn).
   } 
   apply X.
-  - induction (nVars (arity L (inl _ R))).
+  - induction (nVars (arityR L R)).
     apply (iffH (atomic R a) (atomic R b)).
-  - apply (arity L (inl _ R)).
+  - apply (arityR L R).
 Defined.
 
 
@@ -45,9 +45,9 @@ Proof.
     - exact (impH (equal (var (n + n)) (var (S (n + n)))) Hrecn).
   } 
   apply X.
-  induction (nVars (arity L (inr _ f))) as [a b].
+  induction (nVars (arityF L f)) as [a b].
   - apply (equal (apply f a) (apply f b)).
-  - apply (arity L (inr _ f)).
+  - apply (arityF L f).
 Defined.
 
 Inductive Prf : Formulas -> Formula -> Set :=

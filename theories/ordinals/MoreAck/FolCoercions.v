@@ -294,10 +294,10 @@ End Toy.
 (* Examples with LNN *)
 
 (* begin snippet arityTest *)
-Compute arity LNT (inr Languages.Plus). 
-Compute arity LNN (inr Languages.Succ). 
-Compute arity LNN (inl Languages.LT). 
-Fail Compute arity LNT (inl Languages.LT).
+Compute arityF LNT Plus. 
+Compute arityF LNN Succ. 
+Compute arityR LNN LT. 
+Fail Compute arityF LNN LT.
 (* end snippet arityTest *)
 
  #[local] Arguments atomic _ _ _ : clear implicits. 

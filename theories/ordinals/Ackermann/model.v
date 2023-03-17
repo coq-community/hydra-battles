@@ -26,8 +26,8 @@ Fixpoint naryRel (A : Set) (n : nat) {struct n} : Type :=
 
 Record Model : Type := model
   {U : Set;
-   func : forall f : Functions L, naryFunc U (arity L (inr _ f));
-   rel : forall r : Relations L, naryRel U (arity L (inl _ r))}.
+   func : forall f : Functions L, naryFunc U (arityF L f);
+   rel : forall r : Relations L, naryRel U (arityR L r)}.
 
 Variable M : Model.
 
@@ -596,29 +596,31 @@ Proof.
       clear H H0.
       unfold AxmEq4 in |- *.
       cut
-        (forall a b : Terms L (arity L (inl (Functions L) R)),
-            interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (iffH (atomic R a) (atomic R b)))).
+        (forall a b : Terms L (arityR L R),
+            interpTermsVector value _ a = 
+              interpTermsVector value _ b ->
+            interpFormula value 
+              (nnHelp (iffH (atomic R a) (atomic R b)))).
       * assert
           (H: forall A,
-              (forall a b : Terms L (arity L (inl (Functions L) R)),
-                  interpTermsVector value (arity L (inl (Functions L) R)) a =
-                    interpTermsVector value (arity L (inl (Functions L) R)) b ->
+              (forall a b : Terms L (arityR L R),
+                  interpTermsVector value (arityR L R) a =
+                    interpTermsVector value (arityR L R) b ->
                   interpFormula value (nnHelp (A a b))) ->
               interpFormula value
                 (nnHelp
                    (nat_rec (fun _ : nat => Formula L)
                       (prod_rec
                          (fun
-                             _ : Terms L (arity L (inl (Functions L) R)) *
-                                   Terms L (arity L (inl (Functions L) R)) => 
+                             _ : Terms L (arityR L  R) *
+                                   Terms L (arityR L R) => 
                              Formula L)
-                         (fun a b : Terms L (arity L (inl (Functions L) R)) => A a b)
-                         (nVars L (arity L (inl (Functions L) R))))
+                         (fun a b : Terms L (arityR L R) => A a b)
+                         (nVars L (arityR L R)))
                       (fun (n : nat) (Hrecn : Formula L) =>
                          impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
-                      (arity L (inl (Functions L) R))))).
-        { generalize (arity L (inl (Functions L) R)).
+                      (arityR L R)))).
+        { generalize (arityR L R).
           simple induction n.
           - simpl; intros A H; now apply H.
           - intros n0 H A H0; simpl; induction (nVars L n0).
@@ -634,7 +636,7 @@ Proof.
         } 
         apply (H (fun a b => iffH (atomic R a) (atomic R b))).
       * simpl; generalize (rel M R).
-        generalize (arity L (inl (Functions L) R)).
+        generalize (arityR L R).
         intros n n0 a b H H0.
         induction a as [| n t a Hreca].
         -- assert (H1: b = Tnil) by (symmetry; apply nilTerms).
@@ -656,30 +658,30 @@ Proof.
       clear H H0.
       unfold AxmEq5 in |- *.
       cut
-        (forall a b : Terms L (arity L (inr (Relations L) f)),
+        (forall a b : Terms L (arityF L f),
             interpTermsVector value _ a = interpTermsVector value _ b ->
             interpFormula value (nnHelp (equal (apply f a) (apply f b)))).
       * assert
           (H: forall A,
-              (forall a b : Terms L (arity L (inr (Relations L) f)),
-                  interpTermsVector value (arity L (inr (Relations L) f)) a =
-                    interpTermsVector value (arity L (inr (Relations L) f)) b ->
+              (forall a b : Terms L (arityF L f),
+                  interpTermsVector value (arityF L f) a =
+                    interpTermsVector value (arityF L f) b ->
                   interpFormula value (nnHelp (A a b))) ->
               interpFormula value
                 (nnHelp
                    (nat_rec (fun _ : nat => Formula L)
                       (prod_rec
                          (fun
-                             _ : Terms L (arity L (inr (Relations L) f)) *
-                                   Terms L (arity L (inr (Relations L) f)) => 
+                             _ : Terms L (arityF L f) *
+                                   Terms L (arityF L f)  => 
                              Formula L)
-                         (fun a b : Terms L (arity L (inr (Relations L) f)) =>
+                         (fun a b : Terms L (arityF L f) =>
                             A a b)
-                         (nVars L (arity L (inr (Relations L) f))))
+                         (nVars L (arityF L f)))
                       (fun (n : nat) (Hrecn : Formula L) =>
                          impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
-                      (arity L (inr (Relations L) f))))).
-        { generalize (arity L (inr (Relations L) f)).
+                      (arityF L f)))).
+        { generalize (arityF L f).
           simple induction n.
           - simpl; intros A H; auto. 
           - intros n0 H A H0; simpl.
@@ -696,7 +698,7 @@ Proof.
         }
         apply (H (fun a b => equal (apply f a) (apply f b))).
       * simpl; generalize (func M f).
-        generalize (arity L (inr (Relations L) f)).
+        generalize (arityF L f).
         intros n n0 a b H.
         induction a as [| n t a Hreca].
         -- assert (H0: b = Tnil) by ( symmetry; apply nilTerms). 
