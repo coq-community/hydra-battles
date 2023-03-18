@@ -14,6 +14,8 @@ Inductive LNTFunction : Set :=
 Inductive LNNRelation : Set :=
     LT : LNNRelation.
 
+Inductive LNTRelation : Set :=.
+
 Definition LNTFunctionArity (x : LNTFunction) : nat :=
   match x with
   | Plus => 2
@@ -24,24 +26,21 @@ Definition LNTFunctionArity (x : LNTFunction) : nat :=
 (* end snippet LNTDef1 *)
 
 (* begin snippet LNTDef2 *)
-Definition LNTArity (x : Empty_set + LNTFunction) : nat :=
-  match x return nat with
-  | inl bot => Empty_set_rec (fun _ => nat) bot
-  | inr y => LNTFunctionArity y
-  end.
+Definition LNTRelationR (x :  LNTRelation) : nat :=
+  match x with bot => LNTRelation_rec (fun _ => nat) bot end.
 
 
-Definition LNNArity (x : LNNRelation + LNTFunction) : nat :=
-  match x return nat with
-  | inl y => match y with
-             | LT => 2
-             end
-  | inr y => LNTFunctionArity y
-  end.
+Definition LNNArityR (x : LNNRelation) : nat :=
+ match x with LT => 2 end.
 
-Definition LNT : Language := language Empty_set LNTFunction LNTArity.
+Definition LNNArityF (f : LNTFunction) :=
+     LNTFunctionArity f.
 
-Definition LNN : Language := language LNNRelation LNTFunction LNNArity.
+
+Definition LNT : Language := language LNTRelation  LNTFunction LNTRelationR LNTFunctionArity.
+
+Definition LNN : Language := language LNNRelation LNTFunction 
+                               LNNArityR LNNArityF.
 (* end snippet LNTDef2 *)
 
 
@@ -54,7 +53,7 @@ Definition codeLNTFunction (f : LNTFunction) : nat :=
   | Zero => 3
   end.
 
-Definition codeLNTRelation (R : Empty_set) : nat :=
+Definition codeLNTRelation (R : LNTRelation) : nat :=
   match R return nat with
   end.
 
@@ -67,7 +66,7 @@ Proof.
 Qed.
 
 Lemma codeLNTRelationInj :
- forall R S : Empty_set, codeLNTRelation R = codeLNTRelation S -> R = S.
+ forall R S : LNTRelation, codeLNTRelation R = codeLNTRelation S -> R = S.
 Proof.
   intros R S H;
     destruct R; destruct S; reflexivity || discriminate H.

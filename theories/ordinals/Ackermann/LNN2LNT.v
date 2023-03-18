@@ -443,7 +443,7 @@ Proof.
              LNN2LNT_terms n (LNT2LNN_terms n ts) = ts); 
     simpl in |- *.
   - reflexivity.
-  - intros f t0 H; now rewrite H.
+  - intros f t0 H.  unfold LNNArityF. now rewrite H.
   - reflexivity.
   - intros n t0 H t1 H0. now rewrite H, H0.
 Qed.

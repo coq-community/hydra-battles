@@ -77,16 +77,14 @@ Module Toy.
   Inductive Rel: Set := _A | _B | _C | _P | _R.
   Inductive Fun : Set := _a | _b | _f | _g.
  
-  Definition arity (x : Rel + Fun): nat := 
+  Definition arityR (x : Rel): nat := 
     match x with 
-      inl _P => 1
-    | inl _R => 2 
-    | inl _ => 0
-    | inr _f | inr _g => 1
-    | inr _ => 0
+       _P => 1 | _R => 2 | _ => 0
     end.
+ Definition arityF (x : Fun): nat := 
+    match x with  _f |  _g => 1 | _ => 0  end.
 
-  Definition L := language Rel Fun arity.
+  Definition L := language Rel Fun arityR arityF.
 (* end snippet ToyDef *)
 
 (* begin snippet toyNotation *)

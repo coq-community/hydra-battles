@@ -10,16 +10,18 @@ From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
 Require Import misc  Compat815 (* provisional *).
 
 (* begin snippet LanguageDef *)
+(* change suggested in the article by Russel O'Connor 
+   P. Casteran *)
+
 Record Language : Type := language
  { Relations : Set; 
    Functions : Set; 
-   arity : Relations + Functions -> nat}.
+   arityR : Relations -> nat;
+   arityF : Functions -> nat}.
+
 (* end snippet LanguageDef *)
 
-Notation arityR L r := 
-  (@arity L (inl (Functions L) (r: Relations L))).
-Notation arityF L f :=
-  (@arity L (inr (Relations L) (f: Functions L))).
+
 
 (* begin snippet TermDef *)
 Section First_Order_Logic.

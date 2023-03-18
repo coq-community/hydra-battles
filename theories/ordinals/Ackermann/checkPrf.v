@@ -2189,7 +2189,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
                                       
             (cPair (S (S (S (S (codeR R)))))
                (codeNVars2 
-                  (pred (S (arity L (inl (Functions L) R)))))))) 
+                  (pred (S (arityR L  R))))))) 
       with
       (codeFormula L codeF codeR (AxmEq4 L R)).
     unfold charFunction in |- *.
@@ -2202,7 +2202,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
     rewrite H.
     rewrite H0.
     clear H H0.
-    induction (nVars L (arity L (inl (Functions L) R))).
+    induction (nVars L (arityR L R)).
     simpl in |- *.
     replace
       (codeIff
