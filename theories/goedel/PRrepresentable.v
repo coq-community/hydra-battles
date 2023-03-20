@@ -404,7 +404,7 @@ Proof.
                                                  impE
                                                   with
                                                     (fol.equal 
-                                                       (apply LNN Languages.Plus
+                                                       (apply LNN Languages.Plus_
                                                           (Tcons (natToTerm n)
                                                              (Tcons                                                                 (apply LNN Languages.Times
                                                                    (Tcons (var  5)
@@ -443,7 +443,7 @@ Proof.
                                                           apply sysWeaken. eapply eqTrans.
                                                           ** apply eqSym. apply natPlus.
                                                           ** replace
-                                                              (apply LNN Languages.Plus
+                                                              (apply LNN Languages.Plus_
                                                                  (Tcons  (natToTerm n)
                                                                     (Tcons 
                                                                        (apply LNN Languages.Times
@@ -518,17 +518,17 @@ Proof.
                       (rewrite (subTermNil LNN (natToTerm a)); [| apply closedNatToTerm ]).
                      replace
                       (equal 
-                         (apply LNN Languages.Plus
+                         (apply LNN Languages.Plus_
                             (Tcons
                                (apply LNN Languages.Times
                                   (Tcons
-                                     (apply LNN Languages.Plus
+                                     (apply LNN Languages.Plus_
                                         (Tcons (natToTerm (cPairPi1 a))
                                            (Tcons (natToTerm (cPairPi2 a)) (Tnil ))))
                                      (Tcons
                                         (apply LNN Languages.Succ
                                            (Tcons
-                                              (apply LNN Languages.Plus
+                                              (apply LNN Languages.Plus_
                                                  (Tcons (natToTerm (cPairPi1 a))
                                                     (Tcons (natToTerm (cPairPi2 a))
                                                        (Tnil )))) (Tnil )))
@@ -671,7 +671,7 @@ Proof.
                                     with (natToTerm (S (cPairPi2 a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
                              ---- replace
-                                   (apply LNN Languages.Plus
+                                   (apply LNN Languages.Plus_
                                       (Tcons (natToTerm b)
                                          (Tcons
                                             (apply LNN Languages.Times

@@ -285,7 +285,7 @@ End Toy.
 (* Examples with LNN *)
 
 (* begin snippet arityTest *)
-Compute arityF LNT Plus. 
+Compute arityF LNT Plus_. 
 Compute arityF LNN Succ. 
 Compute arityR LNN LT. 
 Fail Compute arityF LNT LT.
@@ -294,7 +294,7 @@ Fail Compute arityF LNT LT.
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
- apply LNN Plus 
+ apply LNN Plus_ 
    (Tcons  (var 1)
      (Tcons  (apply LNN Zero Tnil) Tnil )). 
 (* end snippet v1Plus0 *)

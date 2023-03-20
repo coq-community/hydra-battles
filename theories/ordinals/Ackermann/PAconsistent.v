@@ -8,7 +8,7 @@ Definition natModel : Model LNT :=
   model LNT nat
     (fun f : Functions LNT =>
      match f return (naryFunc nat (arityF LNT f)) with
-     | Languages.Plus => fun x y : nat => y + x
+     | Languages.Plus_ => fun x y : nat => y + x
      | Languages.Times => fun x y : nat => y * x
      | Languages.Succ => S
      | Languages.Zero => 0

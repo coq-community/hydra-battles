@@ -6,7 +6,7 @@ Require Import Coq.Lists.List.
 
 (* begin snippet LNTDef1 *)
 Inductive LNTFunction : Set :=
-  | Plus : LNTFunction
+  | Plus_ : LNTFunction
   | Times : LNTFunction
   | Succ : LNTFunction
   | Zero : LNTFunction.
@@ -18,7 +18,7 @@ Inductive LNTRelation : Set :=.
 
 Definition LNTFunctionArity (x : LNTFunction) : nat :=
   match x with
-  | Plus => 2
+  | Plus_ => 2
   | Times => 2
   | Succ => 1
   | Zero => 0
@@ -47,7 +47,7 @@ Definition LNN : Language := language LNNRelation LNTFunction
 
 Definition codeLNTFunction (f : LNTFunction) : nat :=
   match f with
-  | Plus => 0
+  | Plus_ => 0
   | Times => 1
   | Succ => 2
   | Zero => 3
@@ -172,7 +172,7 @@ Lemma codeArityLNTFIsCorrect2 :
  exists f : Functions LNT, codeLNTFunction f = n.
 Proof.
   intros n H; destruct n as [| n].
-  - exists Plus; easy. 
+  - exists Plus_; easy. 
   - destruct n as [| n].
     + exists Times; easy.
     + destruct n as [| n].

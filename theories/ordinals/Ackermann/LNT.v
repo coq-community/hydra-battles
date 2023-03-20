@@ -18,7 +18,7 @@ Definition SysPrf := SysPrf LNT.
 #[local] Arguments apply _ _ _ : clear implicits.
 
 Definition Plus (x y : Term) : Term :=
-  apply LNT Plus (Tcons x (Tcons y (Tnil))).
+  apply LNT Plus_ (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
   apply LNT Times (Tcons x (Tcons y (Tnil))).
