@@ -22,24 +22,18 @@ Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 Definition NN4 :=
 forallH 1 (forallH 0 (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%fol).
 
-Definition NN5 := forallH 0 (v_ 0 * Zero = Zero)%fol.
+Definition NN5 := (forallH 0 (v_ 0 * Zero = Zero))%fol.
 
 Definition NN6 :=
-forallH 1 (forallH 0 (v_ 0 * S_ (v_ 1) = v_ 0 * v_ 1 + v_ 0)%fol).
+  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%fol.
 
-Definition NN7 := forallH 0 (notH (LT (var 0) Zero)).
+Definition NN7 := forallH 0 (~ v_ 0 < Zero)%fol.
 
 Definition NN8 :=
-  forallH 1
-    (forallH 0
-       (impH (LT (var 0) (Succ (var 1)))
-          (orH (LT (var 0) (var 1)) (equal (var 0) (var 1))))).
+  (forallH 1
+    (forallH 0 (v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)))%fol.
 
-Definition NN9 :=
-  forallH 1
-    (forallH 0
-       (orH (LT (var 0) (var 1))
-          (orH (equal (var 0) (var 1)) (LT (var 1) (var 0))))).
+Definition NN9 :=  (forallH 1 (forallH 0 (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)))%fol.
 
 Definition NNStar :=
 (forallH 1 (forallH 0

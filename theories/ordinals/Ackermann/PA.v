@@ -25,7 +25,9 @@ Definition PA1 := (forallH 0 (Succ v_ 0 <> Zero))%fol.
 
 Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%fol.
 
-Definition PA3 := forallH 0 (Plus v_ 0 Zero = v_ 0)%fol. (* Todo : infix Plus *)
+Print Plus.
+
+Definition PA3 := forallH 0 (Plus v_ 0  Zero = v_ 0)%fol. (* Todo : infix Plus *)
 
 Definition PA4 := forallH 1 (forallH 0 (Plus v_ 0 (Succ v_ 1) = Succ (Plus v_ 0 v_ 1))%fol).
 

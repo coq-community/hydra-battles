@@ -80,6 +80,8 @@ Export LNN_notations.
 Compute (forallH 1 (v_ 1 < v_ 1))%fol. 
 Check (forallH 1 (v_ 1 < v_ 1))%fol. 
 
+Check (forallH 1 (v_ 1 + v_ 1 < v_ 1))%fol. 
+
 
 
 Lemma LNN_dec : language_decidable LNN.
