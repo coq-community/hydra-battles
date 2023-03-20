@@ -272,7 +272,7 @@ Proof.
           eapply contradiction with (P (v_ 1))%fol.  
           -- apply Axm; red ...
           -- apply Axm; red ...   
-    - apply impI; apply existI with (v_ 0)%nat. 
+    - apply impI; apply existI with (v_ 0)%fol. 
       cbn;  apply impI. 
       apply Axm; red; auto with sets. 
   Qed. 

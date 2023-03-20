@@ -6,38 +6,38 @@ Require Import subAll.
 Require Import folLogic3.
 Require Export Languages.
 Require Export LNT.
+(*
 
+Require Import FOL_notations.
 
 Section PA.
 
-Definition PA1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
+Definition PA1 := (forallH 0 (~ Succ (v_ 0) = Zero))%fol. 
 
-Definition PA2 :=
-  forallH 1
-    (forallH 0
-       (impH (equal (Succ (var 0)) (Succ (var 1))) (equal (var 0) (var 1)))).
+Definition PA2 := (forallH 1 (forallH 0 (Succ (v_ 0) = Succ (v_ 1) -> v_ 0 = v_ 1)))%fol.
 
-Definition PA3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
-Definition PA4 :=
-  forallH 1
-    (forallH 0
-       (equal (Plus (var 0) (Succ (var 1)))
-          (Succ (Plus (var 0) (var 1))))).
+*)
 
-Definition PA5 := forallH 0 (equal (Times (var 0) Zero) Zero).
+Section PA.
 
-Definition PA6 :=
-  forallH 1
-    (forallH 0
-       (equal (Times (var 0) (Succ (var 1)))
-          (Plus (Times (var 0) (var 1)) (var 0)))).
+Definition PA1 := (forallH 0 (Succ v_ 0 <> Zero))%fol.
+
+Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%fol.
+
+Definition PA3 := forallH 0 (Plus v_ 0 Zero = v_ 0)%fol. (* Todo : infix Plus *)
+
+Definition PA4 := forallH 1 (forallH 0 (Plus v_ 0 (Succ v_ 1) = Succ (Plus v_ 0 v_ 1))%fol).
+
+Definition PA5 := forallH 0 (Times v_ 0 Zero = Zero)%fol. (* Todo : infix Times *)
+
+Definition PA6 := forallH 1 (forallH 0 (Times v_ 0 (Succ v_ 1) = Plus (Times v_ 0 v_ 1) v_ 0)%fol).
+
 
 Definition PA7 (f : Formula) (v : nat) : Formula :=
-  close LNT
-    (impH (substituteFormula LNT f v Zero)
-       (impH (forallH v (impH f (substituteFormula LNT f v (Succ (var v)))))
-          (forallH v f))).
+close LNT (substituteFormula LNT f v Zero -> 
+           forallH v (f -> substituteFormula LNT f v (Succ v_ v)) -> forallH v f)%fol.
+
 
 Definition InductionSchema (f : Formula) : Prop :=
   exists g : Formula, (exists v : nat, f = PA7 g v).

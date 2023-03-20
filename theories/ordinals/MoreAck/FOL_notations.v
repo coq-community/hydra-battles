@@ -24,12 +24,14 @@ Notation app2 f arg1 arg2 :=
      (Tcons  arg1 (Tcons  arg2 (Tnil)))).
 
 Notation "t = u" := (@equal _ t u): fol_scope.
-
+Notation "t <> u" := (~ t = u)%fol : fol_scope.
 
 Reserved Notation "x '\/'' y" (at level 85, right associativity).
 Reserved Notation "x '/\'' y" (at level 80, right associativity).
 Reserved Notation "x '<->'' y" (at level 95, no associativity).
 Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
 
 Notation "x \/' y" := (~ x -> y)%fol : fol_scope. 
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
@@ -37,7 +39,7 @@ Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
 
 Notation exH := (existH).
-Notation v_ := var.
+Notation "'v_' i" := (var i) (at level 3) : fol_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%fol.
 
 End FolNotations.
@@ -125,7 +127,7 @@ Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 
 Compute (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L.
 
-Check (v_ 1 = v_ 1 <-> v_ 2 = v_ 2)%fol: Formula L. 
-Compute (v_ 1 = v_ 1 <-> v_ 2 = v_ 2)%fol: Formula L.
+Check (v_ 1 = v_ 1 <-> ~ v_ 2 = v_ 2)%fol: Formula L. 
+Compute (v_ 1 = v_ 1 <-> ~ v_ 2 = v_ 2)%fol: Formula L.
 
 End JustTry.

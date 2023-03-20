@@ -12,10 +12,10 @@ From hydras Require Import Compat815.
 
 Section NN.
 
-Definition NN1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
+Definition NN1 := (forallH 0 (Succ v_ 0 <> Zero))%fol. 
 
-Definition NN2 :=
-(forallH 1 (forallH 0 (S_ (v_ 0) = S_ (v_ 1) -> v_ 0 = v_ 1)))%fol.
+Definition NN2 := 
+(forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%fol.
 
 Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
@@ -218,3 +218,5 @@ Qed.
 
 End NN.
 
+Locate Plus. 
+Locate "_ + _".
