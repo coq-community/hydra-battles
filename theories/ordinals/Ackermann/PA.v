@@ -29,7 +29,7 @@ Print Plus.
 
 Definition PA3 := forallH 0 (Plus v_ 0  Zero = v_ 0)%fol. (* Todo : infix Plus *)
 
-Definition PA4 := forallH 1 (forallH 0 (Plus v_ 0 (Succ v_ 1) = Succ (Plus v_ 0 v_ 1))%fol).
+Definition PA4 := (forallH 1 (forallH 0 (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))))%nt.
 
 Definition PA5 := forallH 0 (Times v_ 0 Zero = Zero)%fol. (* Todo : infix Times *)
 

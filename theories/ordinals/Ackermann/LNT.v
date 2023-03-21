@@ -17,8 +17,10 @@ Definition Terms := Terms LNT.
 Definition SysPrf := SysPrf LNT.
 #[local] Arguments apply _ _ _ : clear implicits.
 
+
 Definition Plus (x y : Term) : Term :=
   apply LNT Plus_ (Tcons x (Tcons y (Tnil))).
+
 
 Definition Times (x y : Term) : Term :=
   apply LNT Times (Tcons x (Tcons y (Tnil))).
@@ -329,3 +331,50 @@ Proof.
   - cbn; auto. 
   - simpl; now rewrite freeVarSucc.
 Qed.
+
+
+Declare Scope nt_scope.
+Delimit Scope nt_scope with nt. 
+
+Module NTnotations. 
+Infix "=" := (equal _): nt_scope.
+Infix "\/" := (orH): nt_scope.
+Infix "/\" := (andH):nt_scope.
+Infix "->" := (impH): nt_scope.
+Notation "~ A" := (@notH _ A): nt_scope. 
+Notation "A <-> B" := (@iffH _ A B): nt_scope.
+
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+About Tnil.
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): nt_scope.
+Notation "t <> u" := (~ t = u)%nt : nt_scope.
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
+
+Notation "x \/' y" := (~ x -> y)%nt : nt_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%nt : nt_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nt:  nt_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
+
+Notation exH := (existH).
+Notation "'v_' i" := (var i) (at level 3) : nt_scope.
+Notation exH' v A := (~ (forallH v (~ A)))%nt.
+
+Infix "+" := Plus :nt_scope.
+End NTnotations.
+
+Export NTnotations. 
+
