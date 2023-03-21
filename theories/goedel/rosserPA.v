@@ -148,7 +148,7 @@ Proof.
     + induction f; simpl. 
       * exists (EQ5 LNN Languages.Plus_).
         tauto.
-      * exists (EQ5 LNN Languages.Times).
+      * exists (EQ5 LNN Languages.Times_).
         tauto.
       * exists (EQ5 LNN Languages.Succ).
         tauto.

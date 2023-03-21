@@ -26,7 +26,7 @@ Definition Plus (x y : Term) : Term :=
   apply LNN Plus_ (Tcons x (Tcons y (Tnil))).
 
 Definition Times (x y : Term) : Term :=
-  apply LNN Times (Tcons x (Tcons y (Tnil))).
+  apply LNN Times_ (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
   apply LNN Succ (Tcons x (Tnil)).
@@ -55,7 +55,7 @@ Check zero.
 Notation "'Plus'' x  y" := (apply _ Languages.Plus_ (Tcons x (Tcons y (Tnil))))  (at level 50, x at level 0, left associativity): fol_scope.
 
 
-Notation "t1 * t2" := (apply  _ Languages.Times 
+Notation "t1 * t2" := (apply  _ Languages.Times_ 
      (Tcons  t1 
         (Tcons  t2 (Tnil)))): fol_scope.
 

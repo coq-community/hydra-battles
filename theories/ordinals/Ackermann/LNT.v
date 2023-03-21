@@ -23,7 +23,7 @@ Definition Plus (x y : Term) : Term :=
 
 
 Definition Times (x y : Term) : Term :=
-  apply LNT Times (Tcons x (Tcons y (Tnil))).
+  apply LNT Times_ (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
   apply LNT Succ (Tcons x (Tnil)).
@@ -332,11 +332,11 @@ Proof.
   - simpl; now rewrite freeVarSucc.
 Qed.
 
-
+(*
 Declare Scope nt_scope.
 Delimit Scope nt_scope with nt. 
 
-Module NTnotations. 
+
 Infix "=" := (equal _): nt_scope.
 Infix "\/" := (orH): nt_scope.
 Infix "/\" := (andH):nt_scope.
@@ -372,8 +372,9 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
 Notation exH := (existH).
 Notation "'v_' i" := (var i) (at level 3) : nt_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
-
-Infix "+" := Plus :nt_scope.
+*)
+Module NTnotations. 
+Infix "+" := Plus :fol_scope.
 End NTnotations.
 
 Export NTnotations. 

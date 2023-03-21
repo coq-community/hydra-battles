@@ -406,12 +406,12 @@ Proof.
                                                     (fol.equal 
                                                        (apply LNN Languages.Plus_
                                                           (Tcons (natToTerm n)
-                                                             (Tcons                                                                 (apply LNN Languages.Times
+                                                             (Tcons                                                                 (apply LNN Languages.Times_
                                                                    (Tcons (var  5)
                                                                       (Tcons 
                                                                          (apply LNN Languages.Succ
                                                                             (Tcons 
-                                                                               (apply LNN Languages.Times
+                                                                               (apply LNN Languages.Times_
                                                                                   (Tcons  (natToTerm (cPairPi1 a))
                                                                                      (Tcons 
                                                                                         (apply LNN Languages.Succ
@@ -446,12 +446,12 @@ Proof.
                                                               (apply LNN Languages.Plus_
                                                                  (Tcons  (natToTerm n)
                                                                     (Tcons 
-                                                                       (apply LNN Languages.Times
+                                                                       (apply LNN Languages.Times_
                                                                           (Tcons  (natToTerm n0)
                                                                              (Tcons 
                                                                                 (apply LNN Languages.Succ
                                                                                    (Tcons 
-                                                                                      (apply LNN Languages.Times
+                                                                                      (apply LNN Languages.Times_
                                                                                          (Tcons  (natToTerm (cPairPi1 a))
                                                                                             (Tcons 
                                                                                                (apply LNN Languages.Succ
@@ -520,7 +520,7 @@ Proof.
                       (equal 
                          (apply LNN Languages.Plus_
                             (Tcons
-                               (apply LNN Languages.Times
+                               (apply LNN Languages.Times_
                                   (Tcons
                                      (apply LNN Languages.Plus_
                                         (Tcons (natToTerm (cPairPi1 a))
@@ -534,7 +534,7 @@ Proof.
                                                        (Tnil )))) (Tnil )))
                                         (Tnil))))
                                (Tcons
-                                  (apply LNN Languages.Times
+                                  (apply LNN Languages.Times_
                                      (Tcons
                                         (apply LNN Languages.Succ
                                            (Tcons
@@ -544,7 +544,7 @@ Proof.
                                                     (Tnil ))) (Tnil )))
                                         (Tcons (natToTerm (cPairPi1 a)) (Tnil ))))
                                   (Tnil ))))
-                         (apply LNN Languages.Times
+                         (apply LNN Languages.Times_
                             (Tcons
                                (apply LNN Languages.Succ
                                   (Tcons
@@ -674,12 +674,12 @@ Proof.
                                    (apply LNN Languages.Plus_
                                       (Tcons (natToTerm b)
                                          (Tcons
-                                            (apply LNN Languages.Times
+                                            (apply LNN Languages.Times_
                                                (Tcons (natToTerm a1)
                                                   (Tcons
                                                      (apply LNN Languages.Succ
                                                         (Tcons
-                                                           (apply LNN Languages.Times
+                                                           (apply LNN Languages.Times_
                                                               (Tcons (natToTerm (cPairPi1 a))
                                                                  (Tcons
                                                                     (apply LNN Languages.Succ
