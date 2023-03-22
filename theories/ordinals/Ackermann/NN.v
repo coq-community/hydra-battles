@@ -20,12 +20,12 @@ Definition NN2 :=
 Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
 Definition NN4 :=
-forallH 1 (forallH 0 (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%fol).
+forallH 1 (forallH 0 (v_ 0 +' S_ (v_ 1) = S_ (v_ 0 +' v_ 1))%fol).
 
-Definition NN5 := (forallH 0 (v_ 0 * Zero = Zero))%fol.
+Definition NN5 := (forallH 0 (v_ 0 *' Zero = Zero))%fol.
 
 Definition NN6 :=
-  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%fol.
+  (forallH 1 (forallH 0 (v_ 0 *' Succ v_ 1 = v_ 0 *' v_ 1 +' v_ 0)))%fol.
 
 Definition NN7 := forallH 0 (~ v_ 0 < Zero)%fol.
 
@@ -102,15 +102,15 @@ Proof.
 Qed.
 
 Lemma nn4 (a b : Term) :
- SysPrf NN (a + S_ b = S_ (a + b))%fol.
+ SysPrf NN (a +' S_ b = S_ (a +' b))%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end).
-  replace  (a + S_ b = S_ (a + b))%fol
+  replace  (a +' S_ b = S_ (a +' b))%fol
     with (subAllFormula LNN
-            (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%fol
+            (v_ 0 +' S_ (v_ 1) = S_ (v_ 0 +' v_ 1))%fol
             (fun x : nat =>
                match le_lt_dec 2 x with
                | left _ => var x
