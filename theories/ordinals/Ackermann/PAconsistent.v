@@ -10,8 +10,8 @@ Definition natModel : Model LNT :=
      match f return (naryFunc nat (arityF LNT f)) with
      | Languages.Plus_ => fun x y : nat => y + x
      | Languages.Times_ => fun x y : nat => y * x
-     | Languages.Succ => S
-     | Languages.Zero => 0
+     | Languages.Succ_ => S
+     | Languages.Zero_ => 0
      end) 
     (fun r : Relations LNT => match r with end).
 

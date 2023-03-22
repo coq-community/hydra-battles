@@ -26,9 +26,9 @@ Definition Times (x y : Term) : Term :=
   apply LNT Times_ (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNT Succ (Tcons x (Tnil)).
+  apply LNT Succ_ (Tcons x (Tnil)).
 
-Definition Zero : Term := apply LNT Zero (Tnil).
+Definition Zero : Term := apply LNT Zero_ (Tnil).
 
 Lemma LNT_dec : language_decidable LNT.
 Proof. split; decide equality. Qed.
@@ -375,6 +375,7 @@ Notation exH' v A := (~ (forallH v (~ A)))%nt.
 *)
 Module NTnotations. 
 Infix "+" := Plus :fol_scope.
+Infix "*" := Times :fol_scope.
 End NTnotations.
 
 Export NTnotations. 

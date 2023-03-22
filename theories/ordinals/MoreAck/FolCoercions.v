@@ -292,8 +292,8 @@ End Toy.
 
 (* begin snippet arityTest *)
 Compute arityF LNT Plus_. 
-Compute arityF LNN Succ. 
-Compute arityR LNN LT. 
+Compute arityF LNN Succ_. 
+Compute arityR LNN LT_. 
 Fail Compute arityF LNN LT.
 (* end snippet arityTest *)
 
@@ -305,7 +305,7 @@ Fail Compute arityF LNN LT.
 Example t1_0: Term LNN := 
  apply LNN Plus_ 
    (Tcons  (var 1)
-     (Tcons  (apply LNN Zero Tnil) Tnil )). 
+     (Tcons  (apply LNN Zero_ Tnil) Tnil )). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
@@ -313,18 +313,18 @@ Print t1_0.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
       forallH 0 
-        (orH  (equal  (var 0) (apply LNN Zero Tnil ))
+        (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
            (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (apply LNN Succ_ 
                              (Tcons  (var 1) Tnil))))).
 
 Let f2 : Formula LNN :=
 (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (apply LNN Succ_
                              (Tcons (var 1) Tnil )))).
 
-Let f3 := (orH  (equal  (var 0) (apply LNN Zero Tnil))
-             (existH 1 (equal  (var 0) (apply LNN Succ 
+Let f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
+             (existH 1 (equal  (var 0) (apply LNN Succ_ 
                              (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
@@ -355,7 +355,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil)) . 
+Compute substituteFormula LNN f3 0 (apply LNN Zero_ (Tnil)) . 
 (* end snippet freeVarExamples *)
 
 Section depth_rec_demo. 

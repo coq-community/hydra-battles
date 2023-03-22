@@ -150,9 +150,9 @@ Proof.
         tauto.
       * exists (EQ5 LNN Languages.Times_).
         tauto.
-      * exists (EQ5 LNN Languages.Succ).
+      * exists (EQ5 LNN Languages.Succ_).
         tauto.
-      * exists (EQ5 LNN Languages.Zero).
+      * exists (EQ5 LNN Languages.Zero_).
         tauto.
 Qed.
 

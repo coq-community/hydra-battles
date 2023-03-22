@@ -29,13 +29,13 @@ Definition Times (x y : Term) : Term :=
   apply LNN Times_ (Tcons x (Tcons y (Tnil))).
 
 Definition Succ (x : Term) : Term :=
-  apply LNN Succ (Tcons x (Tnil)).
+  apply LNN Succ_ (Tcons x (Tnil)).
 
 
-Definition Zero : Term := apply LNN Zero (Tnil).
+Definition Zero : Term := apply LNN Zero_ (Tnil).
 
 Definition LT (x y : Term) : Formula :=
-  atomic LNN LT (Tcons x (Tcons y (Tnil))). 
+  atomic LNN LT_ (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
 
 Module LNN_notations.
@@ -43,7 +43,7 @@ Module LNN_notations.
 Set Printing Implicits. 
 Check Zero. 
 Locate Zero. 
-Notation zero := (@apply _ (Languages.Zero: Functions LNN) (fol.Tnil)).
+Notation zero := (@apply _ (Languages.Zero_: Functions LNN) (fol.Tnil)).
 Check zero.
 
 (* hidden by the next infixes ??? *)
@@ -72,7 +72,7 @@ Infix "+" := LNN.Plus : fol_scope.
 Infix "*" := LNN.Times: fol_scope. 
 
 Reserved Notation "x <' y" (at level 70, no associativity).
-Notation "t1 <' t2" := (atomic Languages.LT (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
+Notation "t1 <' t2" := (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
 
 End LNN_notations.
 

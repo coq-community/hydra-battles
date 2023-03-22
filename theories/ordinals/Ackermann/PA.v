@@ -27,14 +27,14 @@ Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))
 
 Print Plus.
 
-Definition PA3 := forallH 0 (Plus v_ 0  Zero = v_ 0)%fol. (* Todo : infix Plus *)
+Definition PA3 := forallH 0 (v_ 0 + Zero = v_ 0)%fol. 
 
 Definition PA4 := (forallH 1 (forallH 0 (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))))%fol.
 
-Definition PA5 := forallH 0 (Times v_ 0 Zero = Zero)%fol. (* Todo : infix Times *)
+Definition PA5 := forallH 0 (v_ 0 * Zero = Zero)%fol. 
 
-Definition PA6 := forallH 1 (forallH 0 (Times v_ 0 (Succ v_ 1) = Plus (Times v_ 0 v_ 1) v_ 0)%fol).
-
+Definition PA6 := 
+  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%fol.
 
 Definition PA7 (f : Formula) (v : nat) : Formula :=
 close LNT (substituteFormula LNT f v Zero -> 

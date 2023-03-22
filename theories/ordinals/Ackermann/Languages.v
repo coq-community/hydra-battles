@@ -8,11 +8,11 @@ Require Import Coq.Lists.List.
 Inductive LNTFunction : Set :=
   | Plus_ : LNTFunction
   | Times_ : LNTFunction
-  | Succ : LNTFunction
-  | Zero : LNTFunction.
+  | Succ_ : LNTFunction
+  | Zero_ : LNTFunction.
 
 Inductive LNNRelation : Set :=
-    LT : LNNRelation.
+    LT_ : LNNRelation.
 
 Inductive LNTRelation : Set :=.
 
@@ -20,8 +20,8 @@ Definition LNTFunctionArity (x : LNTFunction) : nat :=
   match x with
   | Plus_ => 2
   | Times_ => 2
-  | Succ => 1
-  | Zero => 0
+  | Succ_ => 1
+  | Zero_ => 0
   end.
 (* end snippet LNTDef1 *)
 
@@ -31,7 +31,7 @@ Definition LNTRelationR (x :  LNTRelation) : nat :=
 
 
 Definition LNNArityR (x : LNNRelation) : nat :=
- match x with LT => 2 end.
+ match x with LT_ => 2 end.
 
 Definition LNNArityF (f : LNTFunction) :=
      LNTFunctionArity f.
@@ -49,7 +49,7 @@ Definition codeLNTFunction (f : LNTFunction) : nat :=
   match f with
   | Plus_ => 0
   | Times_ => 1
-  | Succ => 2
+  | Succ_ => 2
   | Zero => 3
   end.
 
@@ -104,7 +104,7 @@ Lemma codeArityLNNRIsCorrect2 :
  codeArityLNNR n <> 0 -> exists r : Relations LNN, codeLNNRelation r = n.
 Proof.
   intros n H; destruct n.
-  - exists LT; reflexivity.
+  - exists LT_; reflexivity.
   - now destruct H.
 Qed.
 
@@ -176,9 +176,9 @@ Proof.
   - destruct n as [| n].
     + exists Times_; easy.
     + destruct n as [| n].
-      * exists Succ; easy.
+      * exists Succ_; easy.
       * destruct n as [| n].
-        -- exists Zero; easy.
+        -- exists Zero_; easy.
         -- destruct H; reflexivity.
 Qed.
 
