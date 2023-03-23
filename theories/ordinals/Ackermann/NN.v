@@ -12,32 +12,32 @@ From hydras Require Import Compat815.
 
 Section NN.
 
-Definition NN1 := (forallH 0 (Succ v_ 0 <> Zero))%fol. 
+Definition NN1 := (forallH 0 (Succ v_ 0 <> Zero))%nn. 
 
 Definition NN2 := 
-(forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%fol.
+(forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%nn.
 
 Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
 
 Definition NN4 :=
-forallH 1 (forallH 0 (v_ 0 +' S_ (v_ 1) = S_ (v_ 0 +' v_ 1))%fol).
+forallH 1 (forallH 0 (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%nn).
 
-Definition NN5 := (forallH 0 (v_ 0 *' Zero = Zero))%fol.
+Definition NN5 := (forallH 0 (v_ 0 * Zero = Zero))%nn.
 
 Definition NN6 :=
-  (forallH 1 (forallH 0 (v_ 0 *' Succ v_ 1 = v_ 0 *' v_ 1 +' v_ 0)))%fol.
+  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%nn.
 
-Definition NN7 := forallH 0 (~ v_ 0 < Zero)%fol.
+Definition NN7 := forallH 0 (~ v_ 0 < Zero)%nn.
 
 Definition NN8 :=
   (forallH 1
-    (forallH 0 (v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)))%fol.
+    (forallH 0 (v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)))%nn.
 
-Definition NN9 :=  (forallH 1 (forallH 0 (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)))%fol.
+Definition NN9 :=  (forallH 1 (forallH 0 (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)))%nn.
 
 Definition NNStar :=
 (forallH 1 (forallH 0
-              (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 -> v_ 0 < S_ (v_ 1))))%fol.
+              (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 -> v_ 0 < S_ (v_ 1))))%nn.
 
 Definition NN :=
   Ensembles.Add _
@@ -102,15 +102,15 @@ Proof.
 Qed.
 
 Lemma nn4 (a b : Term) :
- SysPrf NN (a +' S_ b = S_ (a +' b))%fol.
+ SysPrf NN (a + S_ b = S_ (a + b))%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end).
-  replace  (a +' S_ b = S_ (a +' b))%fol
+  replace  (a + S_ b = S_ (a + b))%nn
     with (subAllFormula LNN
-            (v_ 0 +' S_ (v_ 1) = S_ (v_ 0 +' v_ 1))%fol
+            (v_ 0 + S_ (v_ 1) = S_ (v_ 0 + v_ 1))%nn
             (fun x : nat =>
                match le_lt_dec 2 x with
                | left _ => var x
@@ -194,10 +194,10 @@ Proof.
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (a < b \/ a = b \/ b < a)%fol 
+  replace (a < b \/ a = b \/ b < a)%nn 
     with 
     (subAllFormula LNN
-       (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%fol
+       (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x

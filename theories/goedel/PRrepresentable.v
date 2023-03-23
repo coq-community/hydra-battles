@@ -46,10 +46,11 @@ exH 3
   (v_ 3 < S_ (v_ 2) /\
    exH 4
      (v_ 4 < S_ (v_ 2) /\
-      (v_ 3 +' v_ 4) *' S_ (v_ 3 +' v_ 4) +' natToTerm 2 *' v_ 3 =
-      natToTerm 2 *' v_ 2 /\
-      v_ 0 < S_ (v_ 3 *' S_ (v_ 1)) /\
-      exH 5 (v_ 5 < S_ (v_ 4) /\ v_ 0 +' v_ 5 *' S_ (v_ 3 *' S_ (v_ 1)) = v_ 4)))%fol.
+      (v_ 3 + v_ 4) * S_ (v_ 3 + v_ 4) + natToTerm 2 * v_ 3 =
+      natToTerm 2 * v_ 2 /\
+      v_ 0 < S_ (v_ 3 * S_ (v_ 1)) /\
+      exH 5 (v_ 5 < S_ (v_ 4) /\ v_ 0 +  
+                                   v_ 5 * S_ (v_ 3 * S_ (v_ 1)) = v_ 4)))%nn.
  
 Lemma betaRepresentable : Representable 2 beta betaFormula.
 Proof.

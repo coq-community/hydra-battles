@@ -332,7 +332,7 @@ Proof.
   - simpl; now rewrite freeVarSucc.
 Qed.
 
-(*
+
 Declare Scope nt_scope.
 Delimit Scope nt_scope with nt. 
 
@@ -372,10 +372,11 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
 Notation exH := (existH).
 Notation "'v_' i" := (var i) (at level 3) : nt_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
-*)
+
+
 Module NTnotations. 
-Infix "+" := Plus :fol_scope.
-Infix "*" := Times :fol_scope.
+Infix "+" := Plus :nt_scope.
+Infix "*" := Times :nt_scope.
 End NTnotations.
 
 Export NTnotations. 

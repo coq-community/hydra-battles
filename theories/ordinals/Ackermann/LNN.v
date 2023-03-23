@@ -40,7 +40,49 @@ Definition LT (x y : Term) : Formula :=
 
 Module LNN_notations.
 
-Set Printing Implicits. 
+Declare Scope nn_scope.
+Delimit Scope nn_scope with nn. 
+
+
+Infix "=" := (equal _): nn_scope.
+Infix "\/" := (orH): nn_scope.
+Infix "/\" := (andH):nn_scope.
+Infix "->" := (impH): nn_scope.
+Notation "~ A" := (@notH _ A): nn_scope. 
+Notation "A <-> B" := (@iffH _ A B): nn_scope.
+
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+About Tnil.
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): nn_scope.
+Notation "t <> u" := (~ t = u)%nn : nn_scope.
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
+
+Notation "x \/' y" := (~ x -> y)%nn : nn_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
+
+Notation exH := (existH).
+Notation "'v_' i" := (var i) (at level 3) : nn_scope.
+Notation exH' v A := (~ (forallH v (~ A)))%nn.
+
+Infix "+" := Plus :nn_scope.
+Infix "*" := Times :nn_scope.
+
 Check Zero. 
 Locate Zero. 
 Notation zero := (@apply _ (Languages.Zero_: Functions LNN) (fol.Tnil)).
@@ -66,10 +108,10 @@ About atomic.
 Locate Times.
 Locate LT. 
 Print LT. 
-Infix "<" := LNN.LT : fol_scope. 
+Infix "<" := LNN.LT : nn_scope. 
 Print LNN.Plus.
-Infix "+'" := LNN.Plus (at level 50, left associativity): fol_scope.
-Infix "*'" := LNN.Times (at level 40, left associativity): fol_scope. 
+Infix "+" := LNN.Plus (at level 50, left associativity): nn_scope.
+Infix "'" := LNN.Times (at level 40, left associativity): nn_scope. 
 
 Reserved Notation "x <' y" (at level 70, no associativity).
 Notation "t1 <' t2" := (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
@@ -77,10 +119,10 @@ Notation "t1 <' t2" := (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): fol_
 End LNN_notations.
 
 Export LNN_notations. 
-Compute (forallH 1 (v_ 1 < v_ 1))%fol. 
-Check (forallH 1 (v_ 1 < v_ 1))%fol. 
+Compute (forallH 1 (v_ 1 < v_ 1))%nn. 
+Check (forallH 1 (v_ 1 < v_ 1))%nn. 
 
-Check (forallH 1 (v_ 1 +' v_ 1 < v_ 1))%fol. 
+Check (forallH 1 (v_ 1 + v_ 1 < v_ 1))%nn. 
 
 
 

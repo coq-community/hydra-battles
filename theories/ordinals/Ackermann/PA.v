@@ -21,24 +21,24 @@ Definition PA2 := (forallH 1 (forallH 0 (Succ (v_ 0) = Succ (v_ 1) -> v_ 0 = v_ 
 
 Section PA.
 
-Definition PA1 := (forallH 0 (Succ v_ 0 <> Zero))%fol.
+Definition PA1 := (forallH 0 (Succ v_ 0 <> Zero))%nt.
 
-Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%fol.
+Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%nt.
 
 Print Plus.
 
-Definition PA3 := forallH 0 (v_ 0 + Zero = v_ 0)%fol. 
+Definition PA3 := forallH 0 (v_ 0 + Zero = v_ 0)%nt. 
 
-Definition PA4 := (forallH 1 (forallH 0 (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))))%fol.
+Definition PA4 := (forallH 1 (forallH 0 (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))))%nt.
 
-Definition PA5 := forallH 0 (v_ 0 * Zero = Zero)%fol. 
+Definition PA5 := forallH 0 (v_ 0 * Zero = Zero)%nt. 
 
 Definition PA6 := 
-  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%fol.
+  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%nt.
 
 Definition PA7 (f : Formula) (v : nat) : Formula :=
 close LNT (substituteFormula LNT f v Zero -> 
-           forallH v (f -> substituteFormula LNT f v (Succ v_ v)) -> forallH v f)%fol.
+           forallH v (f -> substituteFormula LNT f v (Succ v_ v)) -> forallH v f)%nt.
 
 
 Definition InductionSchema (f : Formula) : Prop :=
