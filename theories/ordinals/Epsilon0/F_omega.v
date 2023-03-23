@@ -1,7 +1,8 @@
 (**  About [F_ omega] *)
 
 
-From hydras Require Import Iterates F_alpha E0 Ack AckNotPR.
+From hydras Require Import Iterates F_alpha E0.
+From Ackermann Require Import Ack AckNotPR.
 From Coq Require Import ArithRing Lia   Arith.
 Import Exp2.
 Open Scope nat_scope.

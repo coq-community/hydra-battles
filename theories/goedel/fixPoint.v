@@ -1,22 +1,22 @@
-From hydras.Ackermann Require Import primRec.
-From hydras.Ackermann Require Import cPair.
+From Ackermann Require Import primRec.
+From Ackermann Require Import cPair.
 From Coq Require Import Arith Lia.
-From hydras.Ackermann Require Import code.
-From hydras.Ackermann Require Import codeSubFormula.
-From hydras.Ackermann Require Import folProp.
-From hydras.Ackermann Require Import folProof.
-From hydras.Ackermann Require Import Languages.
-From hydras.Ackermann Require Import subAll.
-From hydras.Ackermann Require Import subProp.
-From hydras.Ackermann Require Import folLogic3.
-From hydras.Ackermann Require Import folReplace.
-From hydras.Ackermann Require Import LNN.
-From hydras.Ackermann Require Import codeNatToTerm.
+From Ackermann Require Import code.
+From Ackermann Require Import codeSubFormula.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import Languages.
+From Ackermann Require Import subAll.
+From Ackermann Require Import subProp.
+From Ackermann Require Import folLogic3.
+From Ackermann Require Import folReplace.
+From Ackermann Require Import LNN.
+From Ackermann Require Import codeNatToTerm.
 From Goedel Require Import PRrepresentable.
-From hydras.Ackermann Require Import ListExt.
+From Ackermann Require Import ListExt.
 From Coq Require Import List.
-From hydras.Ackermann Require Import NN.
-From hydras.Ackermann Require Import expressible.
+From Ackermann Require Import NN.
+From Ackermann Require Import expressible.
 From hydras Require Import Compat815.
 
 Definition subStar (a v n : nat) : nat := codeSubFormula a v (codeNatToTerm n).
@@ -286,8 +286,8 @@ Qed.
 
 End LNN_FixPoint.
 
-From hydras.Ackermann Require Import PA.
-From hydras.Ackermann Require Import NN2PA.
+From Ackermann Require Import PA.
+From Ackermann Require Import NN2PA.
 
 Section LNT_FixPoint.
 

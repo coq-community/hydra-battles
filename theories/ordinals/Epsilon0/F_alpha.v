@@ -18,7 +18,7 @@ From hydras Require Import primRec.
 
 (** For masking primRec's iterate *)
 
-Import Prelude.Iterates.
+(* Import Prelude.Iterates. *)
 
 
 
@@ -139,7 +139,7 @@ Proof.
 Qed.
 
 Lemma F_star_iterate : forall alpha n i,
-    F_star (alpha, n) i =  iterate (F_ alpha) n i.
+    F_star (alpha, n) i =  Iterates.iterate (F_ alpha) n i.
 Proof.
   induction n; intro i; simpl.
   - now rewrite F_star_zero_eqn. 
@@ -176,7 +176,7 @@ Qed.
 (*||*)
 
 Lemma F_succ_eqn : forall alpha i,
-    F_ (E0succ alpha) i = iterate (F_ alpha) (S i) i. (* .no-out *)
+    F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) (S i) i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with E0.
   intros;rewrite F_eq2,  F_star_iterate ...
@@ -223,7 +223,7 @@ Qed.
 
 Corollary LF2' : forall i,  1 <= i -> exp2 i < F_ 2 i.
 Proof.
-  intros;  apply Nat.le_lt_trans with (exp2 i * i).
+  intros;  apply Nat.le_lt_trans with (exp2 i * i)%nat.
   - destruct (Compat815.mult_O_le (exp2 i) i).
     + lia.
     + now rewrite Nat.mul_comm.
@@ -319,7 +319,7 @@ Section Properties.
         
         rewrite (iterate_S_eqn (F_ beta) (S n)).
         apply Nat.lt_le_trans with (F_ beta
-                                      (iterate (F_ beta) (S n) n)).
+                                      (Iterates.iterate (F_ beta) (S n) n)).
         auto. 
         apply mono_weak; auto.
         
@@ -329,9 +329,9 @@ Section Properties.
         apply Lt_Succ.
         
         
-        transitivity (iterate (F_ beta) (S m) m);auto.
+        transitivity (Iterates.iterate (F_ beta) (S m) m);auto.
         rewrite (iterate_S_eqn (F_ beta) (S m)).
-        apply Nat.lt_le_trans with (F_ beta (iterate (F_ beta) (S m) m)).
+        apply Nat.lt_le_trans with (F_ beta (Iterates.iterate (F_ beta) (S m) m)).
         auto.
         apply mono_weak; auto.
         apply Nat.lt_le_incl.
@@ -345,7 +345,7 @@ Section Properties.
         rewrite F_succ_eqn.
         destruct (Halpha beta).
         apply Lt_Succ.
-        change n with (iterate (F_ beta) 0 n) at 1.
+        change n with (Iterates.iterate (F_ beta) 0 n) at 1.
         apply iterate_lt;auto with arith.
       Qed.
       
@@ -363,7 +363,7 @@ Section Properties.
         apply RB'.
         rewrite iterate_S_eqn2.
         change (F_ (E0succ beta) (F_ (E0succ beta) n)) with
-            (iterate (F_ (E0succ beta)) 1 (F_ (E0succ beta) n)).
+            (Iterates.iterate (F_ (E0succ beta)) 1 (F_ (E0succ beta) n)).
         apply iterate_le.
 
         generalize R1; intro R1'.
@@ -484,7 +484,7 @@ Section Properties.
         intro n; destruct n.
         - repeat rewrite F_alpha_0_eq; auto with arith.
         -  apply Nat.lt_le_incl;  rewrite F_succ_eqn.
-           change (F_ alpha (S n)) with (iterate (F_ alpha) 1 (S n)).
+           change (F_ alpha (S n)) with (Iterates.iterate (F_ alpha) 1 (S n)).
            apply iterate_lt. 
            +  apply RAlim.
            +  red;intros; apply RBlim.
@@ -494,7 +494,7 @@ Section Properties.
       Remark RDlim : dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
       Proof.
         red;intros; rewrite F_succ_eqn.
-        change (F_ alpha p) with (iterate (F_ alpha) 1 p);
+        change (F_ alpha p) with (Iterates.iterate (F_ alpha) 1 p);
           apply iterate_lt. 
         -   apply RAlim.
         -   red;intros; apply RBlim.
@@ -594,13 +594,13 @@ Proof. now  destruct (TH_packed alpha). Qed.
 
  
 
-Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i).
+Lemma LF2_0 : dominates_from 0 (F_ 2) (fun i => exp2 i * i)%nat.
 Proof.
   red. intros ; apply LF2 ; auto.  
 Qed.
 
 
-Lemma LF3_2  : dominates_from 2  (F_ 3) (fun  n => iterate exp2 (S n) n).
+Lemma LF3_2  : dominates_from 2  (F_ 3) (fun  n => Iterates.iterate exp2 (S n) n).
 Proof.  
   intros p H; assert (H0:= LF2_0).
   ochange (E0fin 3) (E0succ 2); rewrite F_succ_eqn.
@@ -883,7 +883,7 @@ Proof.
 Qed.
 
 Lemma f_star_iterate : forall alpha n i,
-    f_star (alpha, n) i =  iterate (f_ alpha) n i.
+    f_star (alpha, n) i =  Iterates.iterate (f_ alpha) n i.
 Proof.
   induction n; intro i; simpl.
   - now rewrite f_star_zero_eqn. 
@@ -916,7 +916,7 @@ Qed.
 
 
 Lemma f_succ_eqn : forall alpha i,
-    f_ (E0succ alpha) i = iterate (f_ alpha) i i.
+    f_ (E0succ alpha) i = Iterates.iterate (f_ alpha) i i.
 Proof with auto with E0.
   intros;rewrite f_eq2,  f_star_iterate ...
   -  now rewrite E0pred_of_Succ.
@@ -935,7 +935,7 @@ Proof.
    - destruct Hsucc as [beta Hbeta]; subst; intro i; rewrite f_succ_eqn. 
      generalize i at 1 3; induction i. 
      + intros; cbn; auto with arith.  
-     + intros; cbn; transitivity (iterate (f_ beta) i i0); auto. 
+     + intros; cbn; transitivity (Iterates.iterate (f_ beta) i i0); auto. 
      apply (IHalpha beta (Lt_Succ beta)). 
 Qed.
 
@@ -961,8 +961,8 @@ Section The_induction.
   Lemma QD0 : dominates_from 2 (f_ (E0succ E0zero)) (f_ E0zero).
   Proof. 
     intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
-    apply Nat.lt_le_trans with (iterate S p p).
-    - replace (iterate S p p) with (p + p).
+    apply Nat.lt_le_trans with (Iterates.iterate S p p).
+    - replace (Iterates.iterate S p p) with (p + p)%nat.
       + lia.
       + clear Hp; generalize p at 2 4; induction p. 
         * cbn; reflexivity.

@@ -1,12 +1,7 @@
-Require Import primRec.
-Require Import cPair.
+ Require Import primRec code folProp folProof Languages LNN LNT
+  cPair.
 Require Import Arith.
-Require Import code.
-Require Import folProp.
-Require Import folProof.
-Require Import Languages.
-Require LNN. 
-Require LNT.
+
 
 Definition natToTermLNN := LNN.natToTerm.
 
@@ -52,7 +47,7 @@ Proof.
         (f' := fun _ : nat => 0).
       * apply idIsPR.
       * apply const1_NIsPR.
-      * apply cPairIsPR.
+      * Locate isPR. Locate cPairIsPR. About cPairIsPR. apply cPairIsPR.
     + apply succIsPR.
   - apply cPairIsPR.
 Qed.

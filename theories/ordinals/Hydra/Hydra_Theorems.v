@@ -1,7 +1,8 @@
   (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
 From hydras Require Import Hydra_Lemmas  Epsilon0_Needed_Free
-     Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length Ack.
+     Epsilon0_Needed_Std  Hydra_Termination L_alpha Battle_length.
+From Ackermann Require Import Ack.
 Import E0 Large_Sets Hprime Paths MoreLists  O2H Hydra_Definitions Iterates.
 Export Hydra_Definitions.
 
@@ -108,8 +109,10 @@ Print Assumptions battle_length_std.
 
 (** ** Battle length is not PR *)
 
-Require Import primRec F_alpha  AckNotPR PrimRecExamples.
-Require Import F_omega.
+From Ackermann Require Import primRec AckNotPR PrimRecExamples.
+Locate extEqualNat.
+From hydras Require Import F_omega F_alpha.
+Locate extEqualNat. 
 Import E0.
 
 (* begin snippet battleLengthNotPRa *)

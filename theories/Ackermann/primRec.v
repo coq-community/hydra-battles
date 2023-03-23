@@ -6,7 +6,8 @@ Require Import Peano_dec.
 Require Import Compare_dec.
 Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
-From hydras Require Import extEqualNat misc Compat815.
+Require Import extEqualNat misc.
+From hydras Require Import Compat815.
 Require Vector.
 
 Require Export Bool.

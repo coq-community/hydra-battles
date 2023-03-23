@@ -9,7 +9,7 @@ and
 Set Apply With Renaming.
 
 Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
-Require Import Compare_dec.
+Require Import Compare_dec Iterates.
 Import extEqualNat  VectorNotations.
 
 

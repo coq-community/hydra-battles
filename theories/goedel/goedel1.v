@@ -1,16 +1,16 @@
 From Coq Require Import Ensembles.
 From Coq Require Import List.
 From Coq Require Import Arith.
-From hydras.Ackermann Require Import folProp.
-From hydras.Ackermann Require Import folProof.
-From hydras.Ackermann Require Import subProp.
-From hydras.Ackermann Require Import ListExt.
+From Ackermann Require Import folProp.
+From Ackermann Require Import folProof.
+From Ackermann Require Import subProp.
+From Ackermann Require Import ListExt.
 From Goedel Require Import fixPoint.
 From Goedel Require Import codeSysPrf.
-From hydras.Ackermann Require Import wConsistent.
-From hydras.Ackermann Require Import NN.
-From hydras.Ackermann Require Import code.
-From hydras.Ackermann Require Import checkPrf.
+From Ackermann Require Import wConsistent.
+From Ackermann Require Import NN.
+From Ackermann Require Import code.
+From Ackermann Require Import checkPrf.
 From hydras Require Import Compat815.
 
 Section Goedel's_1st_Incompleteness.

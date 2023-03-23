@@ -6,7 +6,9 @@ From hydras Require Import T1 E0 Hessenberg Hydra_Theorems Hydra_Definitions
      Hydra_Termination Battle_length Hydra_Examples
      Epsilon0_Needed_Free  Epsilon0_Needed_Std.
 From gaia Require Export ssete9.
+Locate cPair.
 Require Import T1Bridge GHessenberg GL_alpha GPrelude.
+Locate cPair.
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.

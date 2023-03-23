@@ -3,7 +3,7 @@
 
 
 Require Import Arith Coq.Lists.List .
-From hydras Require Import extEqualNat primRec.
+Require Import extEqualNat primRec.
 From hydras Require Import Compat815.
 Import Nat.
 
