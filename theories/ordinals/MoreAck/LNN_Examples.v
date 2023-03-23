@@ -12,10 +12,10 @@ Definition  f0 : Formula LNN :=
       forallH 0 
         (orH  
            (equal  (var  0) 
-              (@apply LNN Languages.Zero (@Tnil LNN)))
+              (@apply LNN Languages.Zero_ (@Tnil LNN)))
            (existH 1 (equal (var 0)
                           (apply  
-                             (Languages.Succ : Functions LNN)
+                             (Languages.Succ_ : Functions LNN)
                              (Tcons  (var 1) (@Tnil _)))))).
 (* end snippet uglyF0 *)
 
@@ -80,14 +80,12 @@ Let f2 : Formula LNN :=
    (exH 2 (LT zero (v_ 2) /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
 
 Let f2' : Formula LNN :=
-   (exH 2 (zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
+   (exH 2 (Zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%nn.
+
+Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = Succ (v_ 1)))%nn.
 
 
-
-Let f3 := (v_ 0 = zero \/ exH 1 (v_ 0 = Succ (v_ 1)))%fol.
-
-
-Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%fol.
+Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%nn.
 (* end snippet f2Example *)
 
 Compute f4. 
@@ -118,28 +116,28 @@ End Examples.
 
 
 
-Compute AxmEq4 LNN Languages.LT. 
+Compute AxmEq4 LNN Languages.LT_. 
 
-Compute AxmEq5 LNN Languages.Plus. 
+Compute AxmEq5 LNN Languages.Plus_. 
 
-Compute AxmEq5 LNN Languages.Succ. 
+Compute AxmEq5 LNN Languages.Succ_. 
 
 Compute EQ3 LNN. 
 
 
-Check GEN LNN nil (v_ 0 = v_ 0)%fol 1. 
+Check GEN LNN nil (v_ 0 = v_ 0)%nn 1. 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol. 
+Compute FA1 LNN  (v_ 0 = v_ 0)%nn 0 zero%nn. 
 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol. 
+Compute FA1 LNN  (v_ 0 = v_ 0)%nn 0 zero%nn. 
 
-Compute substituteFormula LNN (v_ 0 = v_ 0)%fol 0 zero.
+Compute substituteFormula LNN (v_ 0 = v_ 0)%nn 0 zero.
 
 Goal Prf LNN nil
-         (forallH 0 (v_ 0 = v_ 0))%fol  -> 
-       Prf LNN nil (zero = zero)%fol.
-intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%fol 0 zero%fol). 
+         (forallH 0 (v_ 0 = v_ 0))%nn  -> 
+       Prf LNN nil (zero = zero)%nn.
+intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%nn 0 zero%nn). 
 intro H0.
 unfold substituteFormula in H0. simpl in H0.    
 generalize (MP LNN nil nil _ _ H0). 
