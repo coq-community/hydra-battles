@@ -1,4 +1,4 @@
--R theories/Ackermann Ackermann
+-R theories/ackermann Ackermann
 -R theories/ordinals hydras
 -R theories/additions additions
 -R theories/gaia gaia_hydras
