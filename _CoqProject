@@ -137,7 +137,6 @@ theories/ordinals/MoreAck/FolExamples.v
 theories/ordinals/MoreAck/FolCoercions.v
 theories/ordinals/MoreAck/Iterate_compat.v
 theories/ordinals/MoreAck/PrimRecExamples.v
-theories/ordinals/MoreAck/FOL_notations.v
 theories/ordinals/MoreAck/LNN_Examples.v
 
 

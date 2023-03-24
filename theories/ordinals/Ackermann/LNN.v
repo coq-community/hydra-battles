@@ -38,97 +38,6 @@ Definition LT (x y : Term) : Formula :=
   atomic LNN LT_ (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
 
-Module LNN_notations.
-
-Declare Scope nn_scope.
-Delimit Scope nn_scope with nn. 
-
-
-Infix "=" := (equal _): nn_scope.
-Infix "\/" := (orH): nn_scope.
-Infix "/\" := (andH):nn_scope.
-Infix "->" := (impH): nn_scope.
-Notation "~ A" := (@notH _ A): nn_scope. 
-Notation "A <-> B" := (@iffH _ A B): nn_scope.
-
-
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-About Tnil.
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
-
-Notation "t = u" := (@equal _ t u): nn_scope.
-Notation "t <> u" := (~ t = u)%nn : nn_scope.
-
-Reserved Notation "x '\/'' y" (at level 85, right associativity).
-Reserved Notation "x '/\'' y" (at level 80, right associativity).
-Reserved Notation "x '<->'' y" (at level 95, no associativity).
-Reserved Notation "x '<->''' y" (at level 95, no associativity).
-
-
-
-Notation "x \/' y" := (~ x -> y)%nn : nn_scope. 
-Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
-Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
-Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
-
-Notation exH := (existH).
-Notation "'v_' i" := (var i) (at level 3) : nn_scope.
-Notation exH' v A := (~ (forallH v (~ A)))%nn.
-
-Infix "+" := Plus :nn_scope.
-Infix "*" := Times :nn_scope.
-
-Check Zero. 
-Locate Zero. 
-Notation zero := (@apply _ (Languages.Zero_: Functions LNN) (fol.Tnil)).
-Check zero.
-
-(* hidden by the next infixes ??? *)
- Notation "t1 + t2" := 
-  (apply  _ Languages.Plus_ 
-     (Tcons t1 (Tcons t2 (Tnil)))): 
-    nn_scope.
-
-Notation "'Plus'' x  y" := 
-(apply _ Languages.Plus_ (Tcons x (Tcons y (Tnil)))) 
-  (at level 50, x at level 0, y at level 0, left associativity): nn_scope.
-
-(*
-Notation "t1 * t2" := (apply  _ Languages.Times_ 
-     (Tcons  t1 
-        (Tcons  t2 (Tnil)))): nn_scope.
-*)
-
-Notation S_ t  := (Succ t).
-Notation S_' t := 
-  (@apply _ (Languages.Succ_: Functions LNN)
-     (fol.Tcons t (fol.Tnil))).
-About atomic. 
-
-Locate Times.
-Locate LT. 
-Print LT. 
-Infix "<" := LNN.LT : nn_scope. 
-Infix "+" := LNN.Plus (at level 50, left associativity): nn_scope.
-Infix "'" := LNN.Times (at level 40, left associativity): nn_scope. 
-
-Reserved Notation "x <' y" (at level 70, no associativity).
-Notation "t1 <' t2" := 
-  (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): nn_scope.
-
-End LNN_notations.
-
-Export LNN_notations. 
-Compute (forallH 1 (v_ 1 < v_ 1))%nn. 
-Check (forallH 1 (v_ 1 < v_ 1))%nn. 
-
-Check (forallH 1 (v_ 1 + v_ 1 < v_ 1))%nn. 
-
 
 
 Lemma LNN_dec : language_decidable LNN.
@@ -457,3 +366,56 @@ intros a v; induction a as [| a Hreca].
  - simpl; auto. 
   - simpl; now rewrite freeVarSucc.
 Qed.
+
+
+(** Experimental and unstable *)
+
+Declare Scope nn_scope.
+Delimit Scope nn_scope with nn. 
+
+
+Infix "=" := (equal _): nn_scope.
+Infix "\/" := (orH): nn_scope.
+Infix "/\" := (andH):nn_scope.
+Infix "->" := (impH): nn_scope.
+Notation "~ A" := (@notH _ A): nn_scope. 
+Notation "A <-> B" := (@iffH _ A B): nn_scope.
+
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+About Tnil.
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): nn_scope.
+Notation "t <> u" := (~ t = u)%nn : nn_scope.
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
+
+Notation "x \/' y" := (~ x -> y)%nn : nn_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
+
+Notation exH := (existH).
+Notation "'v_' i" := (var i) (at level 3) : nn_scope.
+Notation exH' v A := (~ (forallH v (~ A)))%nn.
+
+Notation S_ := Succ.
+Module NNnotations. 
+Infix "+" := Plus :nn_scope.
+Infix "*" := Times :nn_scope.
+Infix "<" := LT: nn_scope.
+End NNnotations.
+
+Export NNnotations. 
+

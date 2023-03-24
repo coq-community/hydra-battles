@@ -333,6 +333,9 @@ Proof.
 Qed.
 
 
+
+(** Experimental and unstable *)
+
 Declare Scope nt_scope.
 Delimit Scope nt_scope with nt. 
 

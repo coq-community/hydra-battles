@@ -13,7 +13,6 @@ Require Import misc.
 From Coq Require Import Lia.
 
 Require Import Compat815.
-Require Import FOL_notations.
 
 Section Equality_Logic_Rules.
 

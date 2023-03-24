@@ -5,7 +5,6 @@ From Coq Require Import Arith Lists.List.
 Require Import fol folProp folProof  Languages folLogic.
 Require Import primRec.
 Import ListNotations. 
-Require Import FOL_notations.
 Import FolNotations. 
 
 (** ** Preliminary lemmas *)
