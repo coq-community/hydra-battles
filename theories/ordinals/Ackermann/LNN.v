@@ -92,29 +92,34 @@ Check zero.
  Notation "t1 + t2" := 
   (apply  _ Languages.Plus_ 
      (Tcons t1 (Tcons t2 (Tnil)))): 
-    fol_scope.
+    nn_scope.
 
-Notation "'Plus'' x  y" := (apply _ Languages.Plus_ (Tcons x (Tcons y (Tnil))))  (at level 50, x at level 0, left associativity): fol_scope.
+Notation "'Plus'' x  y" := 
+(apply _ Languages.Plus_ (Tcons x (Tcons y (Tnil)))) 
+  (at level 50, x at level 0, y at level 0, left associativity): nn_scope.
 
-
+(*
 Notation "t1 * t2" := (apply  _ Languages.Times_ 
      (Tcons  t1 
-        (Tcons  t2 (Tnil)))): fol_scope.
+        (Tcons  t2 (Tnil)))): nn_scope.
+*)
 
 Notation S_ t  := (Succ t).
-   
+Notation S_' t := 
+  (@apply _ (Languages.Succ_: Functions LNN)
+     (fol.Tcons t (fol.Tnil))).
 About atomic. 
 
 Locate Times.
 Locate LT. 
 Print LT. 
 Infix "<" := LNN.LT : nn_scope. 
-Print LNN.Plus.
 Infix "+" := LNN.Plus (at level 50, left associativity): nn_scope.
 Infix "'" := LNN.Times (at level 40, left associativity): nn_scope. 
 
 Reserved Notation "x <' y" (at level 70, no associativity).
-Notation "t1 <' t2" := (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): fol_scope.
+Notation "t1 <' t2" := 
+  (atomic Languages.LT_ (Tcons  t1 (Tcons  t2 Tnil))): nn_scope.
 
 End LNN_notations.
 

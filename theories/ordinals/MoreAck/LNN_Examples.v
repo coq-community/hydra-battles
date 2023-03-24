@@ -20,6 +20,8 @@ Definition  f0 : Formula LNN :=
 (* end snippet uglyF0 *)
 
 
+
+
 (* begin snippet uglyF0a *)
 Compute f0. 
 (* end snippet uglyF0a *)
@@ -33,7 +35,7 @@ Compute f0.
 
 Locate zero.
 Locate "_ + _".
- Example t1_0 : Term _ := LNN.Plus (var 1) Zero.  
+ Example t1_0 : Term _ := LNN.Plus (S_ (var 1))%nn Zero.  
 Print t1_0. 
 Check S_ Zero. 
 Compute t1_0. 
@@ -61,6 +63,7 @@ Let f1 : Formula LNN :=
           exH 1 (v_ 0 = Succ (v_ 1))))%fol.
 (* end snippet f1Example *)
 Compute f1. 
+Print f1. 
 
 (* To redefine (deleted by error) 
 Goal f1 = f1. 
