@@ -62,7 +62,7 @@ Compute t1.
 Let f1 : Formula LNN :=
   (forallH 0 
     (v_ 0 = Zero \/
-          exH 1 (v_ 0 = Succ (v_ 1))))%fol.
+          existH 1 (v_ 0 = Succ (v_ 1))))%fol.
 (* end snippet f1Example *)
 Compute f1. 
 Print f1. 
@@ -82,12 +82,12 @@ Print Relations.
 
 (* begin snippet f2Example *)
 Let f2 : Formula LNN :=
-   (exH 2 (LT Zero (v_ 2) /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
+   (existH 2 (LT Zero (v_ 2) /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
 
 Let f2' : Formula LNN :=
-   (exH 2 (Zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%nn.
+   (existH 2 (Zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%nn.
 
-Let f3 := (v_ 0 = Zero \/ exH 1 (v_ 0 = Succ (v_ 1)))%nn.
+Let f3 := (v_ 0 = Zero \/ existH 1 (v_ 0 = Succ (v_ 1)))%nn.
 
 
 Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%nn.

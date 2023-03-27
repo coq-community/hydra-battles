@@ -372,9 +372,15 @@ Notation "x /\' y" := (~ (~ x \/'  ~ y))%nt : nt_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nt:  nt_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
 
-Notation exH := (existH).
+(* Notation exH := (existH). *)
 Notation "'v_' i" := (var i) (at level 3) : nt_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
 
 
 Module NTnotations. 
@@ -383,4 +389,8 @@ Infix "*" := Times :nt_scope.
 End NTnotations.
 
 Export NTnotations. 
+Variable f : Formula. 
+Check (allH 0 1 ,  (f -> v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
+
+Check (exH 0 1 ,  (v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
 

@@ -1,57 +1,40 @@
-From Coq Require Import Arith Lia.
-From Coq Require Import Ensembles.
+(**  PA : Peano Arithmetic 
 
-Require Import folProp.
-Require Import subAll.
-Require Import folLogic3.
-Require Export Languages.
-Require Export LNT.
-(*
-
-Require Import FOL_notations.
-
-Section PA.
-
-Definition PA1 := (forallH 0 (~ Succ (v_ 0) = Zero))%fol. 
-
-Definition PA2 := (forallH 1 (forallH 0 (Succ (v_ 0) = Succ (v_ 1) -> v_ 0 = v_ 1)))%fol.
-
-
+       Original development by Russel O'Connor 
+       Bullets and abbreviations by Pierre Casteran 
 *)
 
+From Coq Require Import Arith Lia Ensembles Decidable.
+Require Import folProp subAll folLogic3.
+Require Export Languages LNT.
+Require Import NewNotations.
+
+
+
 Section PA.
 
-Definition PA1 := (forallH 0 (Succ v_ 0 <> Zero))%nt.
+Definition PA1 := (allH 0, Succ v_ 0 <> Zero)%nt.
 
-Definition PA2 := (forallH 1 (forallH 0 (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)))%nt.
+Definition PA2 := (allH 1 0, Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)%nt.
 
-Print Plus.
+Definition PA3 := (allH 0, v_ 0 + Zero = v_ 0)%nt. 
 
-Definition PA3 := forallH 0 (v_ 0 + Zero = v_ 0)%nt. 
+Definition PA4 := (allH 1 0, v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))%nt.
 
-Definition PA4 := (forallH 1 (forallH 0 (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))))%nt.
+Definition PA5 := (allH 0, v_ 0 * Zero = Zero)%nt. 
 
-Definition PA5 := forallH 0 (v_ 0 * Zero = Zero)%nt. 
+Definition PA6 := (allH 1 0, v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nt.
 
-Definition PA6 := 
-  (forallH 1 (forallH 0 (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)))%nt.
 
 Definition PA7 (f : Formula) (v : nat) : Formula :=
-close LNT (substituteFormula LNT f v Zero -> 
-           forallH v (f -> substituteFormula LNT f v (Succ v_ v)) -> forallH v f)%nt.
-
+   let f_0 := substF LNT f v Zero%nt in
+   let f_Sv := substF LNT f v (Succ v_ v)%nt in
+   close _  (f_0 -> (allH v, f -> f_Sv) -> allH v, f)%nt.
 
 Definition InductionSchema (f : Formula) : Prop :=
   exists g : Formula, (exists v : nat, f = PA7 g v).
 
-Definition PA :=
-  Ensembles.Add _
-    (Ensembles.Add _ 
-       (Ensembles.Add _ 
-          (Ensembles.Add _ 
-             (Ensembles.Add _ 
-                (Ensembles.Add _ InductionSchema PA1) PA2) PA3) PA4)
-       PA5) PA6.
+Definition PA := SetAddn InductionSchema PA1 PA2 PA3 PA4 PA5 PA6.
 
 Definition open :=
   Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => equal t t0)
@@ -61,7 +44,7 @@ Definition open :=
     (fun (f : Formula) _ => notH f)
     (fun (n : nat) _ (recf : Formula) => recf).
 
-Lemma PAdec : forall x : Formula, In _ PA x \/ ~ In _ PA x.
+Lemma PAdec : forall x : Formula, decidable (In _ PA x).
 Proof.
   intros x.
   unfold PA in |- *.
@@ -86,143 +69,106 @@ Proof.
                  } 
                  clear b b0 b1 b2 b3 b4.
                  assert
-                   (forall y : Formula,
-                       (exists f : Formula,
-                           (exists v : nat,
-                               impH (substituteFormula LNT f v Zero)
-                                 (impH
-                                    (forallH v
-                                       (impH f 
-                                          (substituteFormula LNT f v
-                                             (Succ (var v)))))
-                                    (forallH v f)) = y)) \/
-                         ~
-                           (exists f : Formula,
-                               (exists v : nat,
-                                   impH (substituteFormula LNT f v Zero)
-                                     (impH
-                                        (forallH v 
-                                           (impH f 
-                                              (substituteFormula LNT f v 
-                                                 (Succ (var v)))))
-                                        (forallH v f)) = y))).
-                 intros y;
+                   (H: forall y : Formula,
+                       (decidable 
+                          (exists (f : Formula) (v : nat),
+                              (substF LNT f v Zero ->
+                               (allH v, f -> substF LNT f v (Succ v_ v)) -> 
+                               allH v, f)%nt 
+                              = y))).
+                 { intros y;
                    destruct y as [t t0| r t| f f0| f| n f];
                    try (right; unfold not in |- *; 
                         intros; decompose record H; discriminate H1).
-                 destruct f0 as [t t0| r t| f0 f1| f0| n f0];
-                   try (right; unfold not in |- *; intros; 
-                        decompose record H; discriminate H1).
-                 destruct f0 as [t t0| r t| f0 f2| f0| n f0];
-                   try (right; unfold not in |- *; intros; 
-                        decompose record H; discriminate H1).
-                 destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
-                   try (right; unfold not in |- *; intros; 
-                        decompose record H; discriminate H1).
-               (*   do 4 fold impH  in |- *. *)
-                 induction (formula_dec LNT LNT_dec
-                              (substituteFormula LNT f1 n0 Zero) f).
-                 rewrite <- a.
-                 clear a f.
-                 destruct f0 as [t t0| r t| f f0| f| n1 f];
-                   try (right; unfold not in |- *; intros; 
-                        decompose record H; discriminate H1).
-                 induction (formula_dec LNT LNT_dec f1 f).
-                 rewrite <- a.
-                 clear a f.
-                 induction
-                   (formula_dec LNT LNT_dec
-                      (substituteFormula LNT f1 n0 (Succ (var n0))) f0).
-                 rewrite <- a.
-                 clear a f0.
-                 induction (eq_nat_dec n n0).
-                 rewrite a.
-                 left.
-                 exists f1.
-                 exists n0.
-                 reflexivity.
-                 right; unfold not in |- *; intros; 
-                   apply b; decompose record H.
-                 inversion H1.
-                 auto.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
-                 inversion H1.
-                 reflexivity.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
-                 inversion H1.
-                 auto.
-                 right; unfold not in |- *; intros; apply b; 
-                   decompose record H.
-                 inversion H1.
-                 auto.
-                 induction (formula_dec LNT LNT_dec x (close LNT (open x))).
-                 induction (H (open x)).
-                 left.
-                 unfold In, InductionSchema, PA7 in |- *.
-                 decompose record H0.
-                 exists x0.
-                 exists x1.
-                 rewrite H2.
-                 assumption.
-                 right.
-                 unfold not in |- *; intros; apply H0.
-                 unfold In, InductionSchema, PA7 in H1.
-                 decompose record H1.
-                 exists x0.
-                 exists x1.
-                 rewrite H3.
-                 unfold close in |- *.
+                   destruct f0 as [t t0| r t| f0 f1| f0| n f0];
+                     try (right; unfold not in |- *; intros; 
+                          decompose record H; discriminate H1).
+                   destruct f0 as [t t0| r t| f0 f2| f0| n f0];
+                     try (right; unfold not in |- *; intros; 
+                          decompose record H; discriminate H1).
+                   destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
+                     try (right; unfold not in |- *; intros; 
+                          decompose record H; discriminate H1).
+                   destruct (formula_dec LNT LNT_dec (substF LNT f1 n0 Zero) f) 
+                     as [a | b].
+                   - rewrite <- a; clear a f.
+                     destruct f0 as [t t0| r t| f f0| f| n1 f];
+                       try (right; unfold not in |- *; intros; 
+                            decompose record H; discriminate H1).
+                     induction (formula_dec LNT LNT_dec f1 f) as [a | b].
+                     + rewrite <- a; clear a f.
+                       induction
+                         (formula_dec LNT LNT_dec
+                            (substF LNT f1 n0 (Succ (v_ n0))%nt) f0).
+                       * rewrite <- a; clear a f0.
+                         induction (eq_nat_dec n n0) as [a | b].
+                         -- rewrite a; left.
+                            exists f1.
+                            exists n0.
+                            reflexivity.
+                         -- right; unfold not in |- *; intros; 
+                              apply b; decompose record H.
+                            inversion H1.
+                            auto.
+                       *  right; unfold not in |- *; intros; apply b; 
+                            decompose record H.
+                          inversion H1.
+                          reflexivity.
+                     + right; unfold not in |- *; intros; apply b; 
+                         decompose record H.
+                       inversion H1.
+                       auto.
+                   -  right; unfold not in |- *; intros; apply b; 
+                        decompose record H.
+                      inversion H1.
+                      auto.
+                 }                 
+                 induction (formula_dec LNT LNT_dec x (close LNT (open x))) as [a | b].
+                 --- induction (H (open x)).
+                     left.
+                     unfold In, InductionSchema, PA7 in |- *.
+                     decompose record H0.
+                     exists x0, x1; now rewrite H2.
+                     right.
+                     intros H1; apply H0.
+                     unfold In, InductionSchema, PA7 in H1.
+                     decompose record H1.
+                     exists x0, x1; rewrite H3.
+                     unfold close.  
                  induction
                    (List.nodup eq_nat_dec
                       (freeVarFormula LNT
-                         (impH (substituteFormula LNT x0 x1 Zero)
-                            (impH
-                               (forallH x1
-                                  (impH x0 (substituteFormula LNT x0 x1
-                                              (Succ (var x1)))))
-                               (forallH x1 x0))))).
-                 simpl in |- *.
-                 reflexivity.
-                 simpl in |- *.
-                 assumption.
-                 right.
-                 intros H0; apply b.
-                 unfold In, InductionSchema, PA7 in H0.
-                 decompose record H0.
-                 rewrite H2.
-                 replace
-                   (open
-                      (close LNT
-                         (impH (substituteFormula LNT x0 x1 Zero)
-                            (impH
-                               (forallH x1
-                                  (impH x0 (substituteFormula LNT x0 x1
-                                              (Succ (var x1)))))
-                               (forallH x1 x0))))) 
-                   with
-                   (impH (substituteFormula LNT x0 x1 Zero)
-                      (impH
-                         (forallH x1 (impH x0
-                                        (substituteFormula LNT x0 x1
-                                           (Succ (var x1)))))
-                         (forallH x1 x0))).
-                 reflexivity.
-                 unfold close in |- *.
-                 induction
-                   (List.nodup eq_nat_dec
-                      (freeVarFormula LNT
-                         (impH (substituteFormula LNT x0 x1 Zero)
-                            (impH
-                               (forallH x1
-                                  (impH x0 (substituteFormula LNT x0 x1 
-                                              (Succ (var x1)))))
-                               (forallH x1 x0))))).
-                 simpl in |- *.
-                 reflexivity.
-                 simpl in |- *.
-                 auto.
+                        (substF LNT x0 x1 Zero ->
+                          (allH x1, x0 -> substF LNT x0 x1 (Succ (v_ x1))) ->
+                          allH x1, x0)%nt)).
+                  simpl; reflexivity.
+                 simpl; assumption.
+                 --- right; intros H0; apply b.
+                     unfold In, InductionSchema, PA7 in H0.
+                     decompose record H0.
+                     rewrite H2.
+                     replace
+                       (open
+                          (close LNT
+                             (substF LNT x0 x1 Zero ->
+                              (allH x1, x0 -> 
+                                        substF LNT x0 x1 (Succ v_ x1)) -> 
+                              allH x1, x0)%nt))
+                       with
+                       (substF LNT x0 x1 Zero ->
+                        (allH x1, x0 -> 
+                                  substF LNT x0 x1 (Succ v_ x1)) -> 
+                        allH x1, x0)%nt;
+                       [reflexivity |]. 
+                     unfold close in |- *.
+                     induction
+                       (List.nodup eq_nat_dec
+                          (freeVarFormula LNT
+                             (substF LNT x0 x1 Zero ->
+                              (allH x1, x0 -> substF LNT x0 x1 (Succ (v_ x1))) ->
+                              (allH x1, x0)))%nt).
+                     simpl; reflexivity.
+                     simpl; auto.
 Qed.
 
 Lemma closedPA1 : ClosedSystem LNT PA.
@@ -254,26 +200,22 @@ Proof.
  destruct H as [x H]; elim closedPA1 with v x; tauto.
 Qed.
 
-Lemma pa1 : forall a : Term, SysPrf PA (notH (equal (Succ a) Zero)).
+Lemma pa1 (a : Term):  SysPrf PA (Succ a <> Zero)%nt.
 Proof.
-  intros a;
-    replace (notH (equal (Succ a) Zero)) with
-    (substituteFormula LNT (notH (equal (Succ (var 0)) Zero)) 0 a).
-  - apply forallE.
-    apply Axm; repeat (try right; constructor) || left.
+  replace (Succ a <> Zero)%nt with  (substF LNT (Succ v_ 0 <> Zero)%nt 0 a).
+  - apply forallE, Axm; repeat (try right; constructor) || left.
   - reflexivity.
 Qed.
 
-Lemma pa2 (a b : Term):
-  SysPrf PA (impH (equal (Succ a) (Succ b)) (equal a b)).
+Lemma pa2 (a b : Term):  SysPrf PA (Succ a = Succ b ->  a = b)%nt.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (impH (equal (Succ a) (Succ b)) (equal a b)) with
+  replace (Succ a = Succ b ->  a = b)%nt with
     (subAllFormula LNT
-       (impH (equal (Succ (var 0)) (Succ (var 1))) (equal (var 0) (var 1)))
+       (Succ v_ 0 = Succ v_ 1 ->  v_ 0 = v_ 1)%nt
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -283,29 +225,27 @@ Proof.
     simpl; apply Axm; repeat (try right; constructor) || left.
   - simpl; induction (le_lt_dec 2 0). 
     + lia. 
-    + induction (le_lt_dec 2 1).
+    + destruct (le_lt_dec 2 1).
       * lia.
       * reflexivity.
 Qed.
 
-Lemma pa3 (a : Term): SysPrf PA (equal (Plus a Zero) a).
+Lemma pa3 (a : Term): SysPrf PA (a + Zero = a)%nt.
 Proof.
-replace (equal (Plus a Zero) a) with
- (substituteFormula LNT (equal (Plus (var 0) Zero) (var 0)) 0 a).
-- apply forallE; apply Axm; repeat (try right; constructor) || left.
-- reflexivity.
+  replace (a + Zero = a)%nt with  (substF LNT (v_ 0 + Zero = v_ 0)%nt 0 a).
+  - apply forallE, Axm; repeat (try right; constructor) || left.
+  - reflexivity.
 Qed.
 
-Lemma pa4 ( a b : Term) :
-  SysPrf PA (equal (Plus a (Succ b)) (Succ (Plus a b))).
+Lemma pa4 ( a b : Term) :  SysPrf PA (a + Succ b = Succ (a + b))%nt.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (equal (Plus a (Succ b)) (Succ (Plus a b))) with
+  replace (a + Succ b = Succ (a + b))%nt with
     (subAllFormula LNT
-       (equal (Plus (var 0) (Succ (var 1))) (Succ (Plus (var 0) (var 1))))
+       (v_ 0 + Succ v_ 1 = Succ (v_ 0  + v_ 1))%nt
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -322,26 +262,24 @@ Proof.
       * reflexivity.
 Qed.
 
-Lemma pa5 (a : Term): SysPrf PA (equal (Times a Zero) Zero).
+Lemma pa5 (a : Term): SysPrf PA (a * Zero = Zero)%nt.
 Proof.
-  replace (equal (Times a Zero) Zero) with
-    (substituteFormula LNT (equal (Times (var 0) Zero) Zero) 0 a).
+  replace (a * Zero = Zero)%nt with
+    (substF LNT (v_ 0 * Zero = Zero)%nt 0 a).
   - apply forallE.
     apply Axm; repeat (try right; constructor) || left.
   - reflexivity.
 Qed.
 
-Lemma pa6 (a b : Term) :
- SysPrf PA (equal (Times a (Succ b)) (Plus (Times a b) a)).
+Lemma pa6 (a b : Term) :  SysPrf PA (a * Succ b = a * b + a)%nt.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (equal (Times a (Succ b)) (Plus (Times a b) a)) with
+  replace (a * Succ b = a * b + a)%nt with 
     (subAllFormula LNT
-       (equal (Times (var 0) (Succ (var 1)))
-          (Plus (Times (var 0) (var 1)) (var 0)))
+       (v_ 0 * Succ (v_ 1) = v_ 0 * v_ 1 + v_ 0)%nt
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -359,12 +297,13 @@ Proof.
 Qed.
 
 Lemma induct (f : Formula) (v : nat):
- SysPrf PA (substituteFormula LNT f v Zero) ->
- SysPrf PA (forallH v (impH f (substituteFormula LNT f v (Succ (var v)))))
- ->
- SysPrf PA (forallH v f).
-Proof.
-  intros H H0; eapply impE.
+  let f_0 := substF LNT f v Zero
+  in let f_Sv := substF LNT f v (Succ (v_ v))%nt
+     in  SysPrf PA f_0 ->
+         SysPrf PA (allH v, f -> f_Sv)%nt
+         -> SysPrf PA (allH v, f)%nt.
+Proof. 
+  intros ? ? H H0; eapply impE.
   - eapply impE.
     + apply (openClosed LNT).
       apply Axm; repeat left.
@@ -377,3 +316,5 @@ Proof.
 Qed.
 
 End PA.
+
+

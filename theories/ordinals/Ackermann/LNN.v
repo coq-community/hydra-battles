@@ -370,6 +370,8 @@ Qed.
 
 (** Experimental and unstable *)
 
+Module NNnotations. 
+
 Declare Scope nn_scope.
 Delimit Scope nn_scope with nn. 
 
@@ -386,7 +388,7 @@ Notation k_ t := (apply  (t:Functions _)  (Tnil)).
 
 Notation app1 f arg := 
   (apply  (f: Functions _)  (Tcons arg (Tnil))).
-About Tnil.
+
 Notation app2 f arg1 arg2 := 
   (apply   (f: Functions _) 
      (Tcons  arg1 (Tcons  arg2 (Tnil)))).
@@ -406,12 +408,22 @@ Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
 
-Notation exH := (existH).
+(* Notation exH := (existH). *)
+
+
 Notation "'v_' i" := (var i) (at level 3) : nn_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nn.
 
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
+
 Notation S_ := Succ.
-Module NNnotations. 
+
+
 Infix "+" := Plus :nn_scope.
 Infix "*" := Times :nn_scope.
 Infix "<" := LT: nn_scope.
