@@ -429,7 +429,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   | atomic r ts => atomic r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
-  | forallH v A => forallH v (notH (notH (nnHelp A)))
+  | forallH v A => (allH v, ~~ nnHelp A)%fol
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
@@ -510,7 +510,7 @@ Proof.
       auto with datatypes.
     + assert (H0: interpFormula value (nnTranslate A))
       by auto with datatypes.
-      assert (H1: interpFormula value (nnTranslate (impH A B)))
+      assert (H1: interpFormula value (nnTranslate (A -> B)%fol))
         by auto with datatypes.
       clear Hrecx0_1 Hrecx0_0.
       simpl in H0, H1. 
@@ -618,7 +618,8 @@ Proof.
                          (fun a b : Terms L (arityR L R) => A a b)
                          (nVars L (arityR L R)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
+                         (v_ (n + n)%nat = v_ (S (n+n))%nat -> Hrecn)%fol)
+                         
                       (arityR L R)))).
         { generalize (arityR L R).
           simple induction n.
@@ -719,10 +720,8 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH (equal (var 0) (var 0))).
-  intros H0; assert
-               (H1: interpFormula value
-                      (nnTranslate (notH  (equal (var 0) (var 0))))).
+  intros H; unfold Consistent; exists (v_ O <> v_ 0)%fol.
+  intros H0; assert (H1: interpFormula value (nnTranslate (v_ O <> v_ 0)%fol)).
   { apply preserveValue.
     assumption.
     auto.

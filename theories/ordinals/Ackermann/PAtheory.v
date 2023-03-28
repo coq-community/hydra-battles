@@ -302,7 +302,7 @@ Proof.
   replace (LNN2LNT_formula NN9) with
 (allH 1 0,
      LNN2LNT_formula ((v_ 0)%nt < (v_ 1)%nt)%nn \/
-     v_ 0 = v_ 1 \/ LNN2LNT_formula ((v_ 1)%nt < (v_ 0)%nt)%nn)%nt;
+     v_ 0 = v_ 1 \/ LNN2LNT_formula (v_ 1 < v_ 0)%nn)%nt;
     [ idtac | reflexivity ].
   simpl in |- *.
   repeat rewrite translateLT1.

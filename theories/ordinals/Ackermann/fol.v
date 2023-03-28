@@ -786,9 +786,16 @@ Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
 
-Notation exH := (existH).
-Notation "'v_' i" := (var i) (at level 3) : fol_scope.
+
 Notation exH' v A := (~ (forallH v (~ A)))%fol.
+
+Notation "'v_' i" := (var i) (at level 3) : fol_scope.
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
 
 End FolNotations.
 
@@ -859,8 +866,8 @@ Section JustTry.
 Variable L: Language.
 Check (@var L 1 = var 2)%fol.
 Check (v_ 1 = v_ 2)%fol: Formula L.
-Check (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
-Compute (exH 1 (v_ 1 = v_ 1))%fol : Formula L.
+Check (exH 1, (v_ 1 = v_ 1))%fol : Formula L.
+Compute (exH 1, (v_ 1 = v_ 1))%fol : Formula L.
 
 
 Check (v_ 1 = v_ 1 \/ v_ 2 = v_ 2)%fol: Formula L. 

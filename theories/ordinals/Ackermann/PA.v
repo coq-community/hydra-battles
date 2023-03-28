@@ -25,7 +25,6 @@ Definition PA5 := (allH 0, v_ 0 * Zero = Zero)%nt.
 
 Definition PA6 := (allH 1 0, v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nt.
 
-
 Definition PA7 (f : Formula) (v : nat) : Formula :=
    let f_0 := substF LNT f v Zero%nt in
    let f_Sv := substF LNT f v (Succ v_ v)%nt in

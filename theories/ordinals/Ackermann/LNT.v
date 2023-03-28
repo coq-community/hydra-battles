@@ -374,6 +374,7 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
 
 (* Notation exH := (existH). *)
 Notation "'v_' i" := (var i) (at level 3) : nt_scope.
+
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
