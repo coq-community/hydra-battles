@@ -593,7 +593,7 @@ Proof.
          lia.
      + eapply In_list_remove3.
        * apply LNN2LNT_freeVarFormula1.
-         eapply In_list_remove1, H4. 
+         eapply in_remove, H4. 
        * eapply In_list_remove2, H4.
   - intros [H| H]; unfold Inconsistent.  
     + intros f; elim H.

@@ -49,7 +49,7 @@ Ltac SimplFreeVar :=
    | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula ?X9 ?X2))) |-
    _ =>
        assert (In X3 (freeVarFormula X9 X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In ?X3 (freeVarFormula ?X9 (andH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
@@ -229,7 +229,7 @@ Proof.
                  intros H4;
                  assert
                    (H5: In 0 (freeVarFormula LNN (substituteFormula LNN B 0 (Succ (var nv)))))
-                  by eapply In_list_remove1, H4.
+                  by eapply in_remove, H4.
                  induction (freeVarSubFormula3 _ _ _ _ _ H5).
                  +++ elim (In_list_remove2 _ _ _ _ _ H6); reflexivity.
                  +++ simpl in H6; decompose sum H6; auto.
@@ -392,7 +392,7 @@ Proof.
                                           eapply In_list_remove2.
                                           apply H9.
                                           apply freeVarfU.
-                                          eapply In_list_remove1.
+                                          eapply in_remove.
                                           apply H9.
                                           elim (closedNatToTerm _ _ H9).
                                           auto.
@@ -448,7 +448,7 @@ Proof.
                                                         (freeVarFormula LNN fU))).
                                         {  intros v H10; absurd (v = v0).
                                           - eapply In_list_remove2, H10.
-                                          - apply freeVarfU; eapply In_list_remove1, H10.
+                                          - apply freeVarfU; eapply in_remove, H10.
                                         }
                                         apply
                                           iffTrans
@@ -516,7 +516,7 @@ Proof.
                                         }
 
                                         apply freeVarfU.
-                                        eapply In_list_remove1.
+                                        eapply in_remove.
                                         apply H11.
                                         clear H9 H8 H7 H p.
                                         induction A as [| a0 A HrecA].
@@ -605,7 +605,7 @@ Proof.
                                                 (substituteFormula LNN 
                                                    (substituteFormula LNN J 2 (var (S nv))) 1
                                                    (var nv))))
-                                        by eapply In_list_remove1, H13.
+                                        by eapply in_remove, H13.
                                         induction (freeVarSubFormula3 _ _ _ _ _ H14).
                                         elim (In_list_remove2 _ _ _ _ _ H15).
                                         reflexivity.
@@ -642,12 +642,12 @@ Proof.
                                         assert (H13: In nv (freeVarFormula LNN 
                                                          (substituteFormula LNN J 2
                                                             (var (S nv)))))
-                                        by eapply In_list_remove1, H12.
+                                        by eapply in_remove, H12.
 
                                         induction (freeVarSubFormula3 _ _ _ _ _ H13).
                                         apply (Compat815.le_not_lt nv 2).
                                         apply H10.
-                                        eapply In_list_remove1.
+                                        eapply in_remove.
                                         apply H14.
                                         destruct nv as [| n0].
                                         elim H0; reflexivity.
@@ -690,7 +690,7 @@ Proof.
                                         unfold not in |- *; intros.
                                         apply (Compat815.le_not_lt (S nv) 2).
                                         apply H10.
-                                        eapply In_list_remove1.
+                                        eapply in_remove.
                                         apply H12.
                                         apply Compat815.le_lt_n_Sm.
                                         destruct nv as [| n0].
@@ -860,7 +860,7 @@ Proof.
   unfold not in |- *; intros.
   assert
     (H5 : In 0 (freeVarFormula LNN (substituteFormula LNN F 0 (Succ (var nv)))))
-   by eapply In_list_remove1, H4.
+   by eapply in_remove, H4.
   induction (freeVarSubFormula3 _ _ _ _ _ H5).
   elim (In_list_remove2 _ _ _ _ _ H6).
   reflexivity.
@@ -940,7 +940,7 @@ Proof.
     eapply In_list_remove2.
     apply H7.
     apply freeVarfU.
-    eapply In_list_remove1.
+    eapply in_remove.
     apply H7.
     apply (closedNatToTerm _ _ H7).
   }
@@ -1204,11 +1204,11 @@ Proof.
   apply (subFormulaTrans LNN).
   unfold not in |- *; intros.
   assert (H14: In nv (freeVarFormula LNN (substituteFormula LNN J 2 (var (S nv)))))
-    by eapply In_list_remove1, H13.
+    by eapply in_remove, H13.
   induction (freeVarSubFormula3 _ _ _ _ _ H14).
   apply (Compat815.le_not_lt nv 2).
   apply H11.
-  eapply In_list_remove1.
+  eapply in_remove.
   apply H15.
   destruct nv as [| n0].
   elim H0; reflexivity.
@@ -1251,7 +1251,7 @@ Proof.
   unfold not in |- *; intros.
   apply (Compat815.le_not_lt (S nv) 2).
   apply H11.
-  eapply In_list_remove1.
+  eapply in_remove.
   apply H13.
   destruct nv as [| n0].
   elim H8; reflexivity.
@@ -1314,7 +1314,7 @@ Proof.
      eapply In_list_remove2.
      apply H11.
      apply freeVarfU.
-     eapply In_list_remove1.
+     eapply in_remove.
      apply H11.
   }
   apply
@@ -1460,7 +1460,7 @@ Proof.
       intros H4.
       assert
         (H5: In 0 (freeVarFormula LNN (substituteFormula LNN F 0 (Succ (var nv)))))
-        by (eapply In_list_remove1, H4).
+        by (eapply in_remove, H4).
       induction (freeVarSubFormula3 _ _ _ _ _ H5).
       elim (In_list_remove2 _ _ _ _ _ H6).
       reflexivity.
@@ -1560,7 +1560,7 @@ Proof.
     | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
       =>
         assert (In X3 (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
     | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
@@ -1626,7 +1626,7 @@ Proof.
     + reflexivity.
     + elim (Compat815.le_not_lt (S (S n)) 1).
       * apply freeVarCodeSysPrf.
-        eapply In_list_remove1, H.
+        eapply in_remove, H.
       * apply Compat815.lt_n_S,  Nat.lt_0_succ.
 Qed.
 
@@ -1736,7 +1736,7 @@ Proof.
            unfold not in |- *; intros.
            elim (Compat815.le_not_lt 2 1).
            apply freeVarCodeSysPrf.
-           eapply In_list_remove1.
+           eapply in_remove.
            apply H0.
            eapply Compat815.lt_n_S.
            apply Nat.lt_0_succ.
@@ -1767,7 +1767,7 @@ Proof.
            apply (subFormulaTrans LNN).
            unfold not in |- *; intros.
            assert (H1: In 0 (freeVarFormula LNN (substituteFormula LNN B 0 (var 2))))
-             by eapply In_list_remove1, H0.
+             by eapply in_remove, H0.
            induction (freeVarSubFormula3 _ _ _ _ _ H1).
            elim (In_list_remove2 _ _ _ _ _ H2).
            reflexivity.
@@ -1810,12 +1810,12 @@ Proof.
              (H1: In 2
                     (freeVarFormula LNN
                        (substituteFormula LNN B 1 (natToTerm (codeFormula L codeF codeR f))))) 
-             by eapply In_list_remove1, H0.
+             by eapply in_remove, H0.
            induction (freeVarSubFormula3 _ _ _ _ _ H1).
            induction rep as (H3, H4).
            apply (Compat815.le_not_lt 2 1).
            apply H3.
-           eapply In_list_remove1.
+           eapply in_remove.
            apply H2.
            apply Compat815.lt_n_S.
            apply Nat.lt_0_succ.

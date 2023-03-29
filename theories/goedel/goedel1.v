@@ -80,7 +80,7 @@ Proof.
                 In v (freeVarFormula LNN (notH f)) ->
                 In v (freeVarFormula LNN f))).
       { intros f H5; apply H5. }
-      apply H5; eapply In_list_remove1.
+      apply H5; eapply in_remove.
       unfold codeSysPf in H3; apply H3; assumption.
 Qed.
 
@@ -143,7 +143,7 @@ Proof.
         * reflexivity.
         * elim (Compat815.le_not_lt (S (S n)) 1).
           assert (H6: In (S (S n)) (freeVarFormula LNN codeSysPrf)).
-          { eapply In_list_remove1; apply H5. }
+          { eapply in_remove; apply H5. }
           apply (freeVarCodeSysPrf _ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
     - elim (closedNatToTerm _ _ H5).

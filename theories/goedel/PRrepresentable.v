@@ -715,7 +715,7 @@ Lemma freeVarAddExists1 :
 Proof.
   intros n m v A H. induction n as [| n Hrecn].
   - simpl in H. exact H.
-  - simpl in H. apply Hrecn. eapply In_list_remove1. exact H.
+  - simpl in H. apply Hrecn. eapply in_remove. exact H.
 Qed.
 
 Lemma freeVarAddExists2 :
@@ -725,8 +725,8 @@ Proof.
   intros n m v A H. induction n as [| n Hrecn]; try lia.
   simpl in H. simpl in |- *.
   assert (In v (freeVarFormula LNN (addExists m n A))) as H1.
-  { eapply In_list_remove1. exact H. }
-  pose proof (In_list_remove2 _ _ _ _ _ H).
+  { eapply in_remove. exact H. }
+  pose proof (in_remove  _ _ _ _ H).
   pose proof (Hrecn H1). lia.
 Qed.
 
@@ -741,7 +741,7 @@ Proof.
   - simpl in |- *. apply existSys.
     + apply closedNN.
     + simpl in |- *; intro H0.
-      pose proof (In_list_remove2 _ _ _ _ _ H0). congruence.
+      destruct (in_remove  _ _ _ _ H0). congruence.
     + apply existSimp. exact Hrecn.
 Qed.
 
@@ -782,7 +782,7 @@ Lemma freeVarAddForalls1 :
  In v (freeVarFormula LNN (addForalls m n A)) -> In v (freeVarFormula LNN A).
 Proof.
   intros n m v A H. induction n as [| n Hrecn]; simpl in H; auto.
-  apply Hrecn. eapply In_list_remove1. exact H.
+  apply Hrecn. eapply in_remove. exact H.
 Qed.
 
 Lemma freeVarAddForalls2 :
@@ -792,9 +792,8 @@ Proof.
   intros n m v A H. induction n as [| n Hrecn]; try lia.
   simpl in H. simpl in |- *.
   assert (H0: In v (freeVarFormula LNN (addForalls m n A))).
-  { eapply In_list_remove1. exact H. }
-  pose proof (Hrecn H0). pose proof (In_list_remove2 _ _ _ _ _ H). 
-  lia.
+  { eapply in_remove. exact H. }
+  pose proof (Hrecn H0). destruct (in_remove _ _ _ _ H); lia.
 Qed.
 
 Lemma reduceAddForalls :
@@ -972,8 +971,8 @@ Proof.
         { intros a0. apply Hrecv; auto. split.
           - intros v0 H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
             + assert (H8: In v0 (freeVarFormula LNN B)).
-              { eapply In_list_remove1. exact H7. }
-              pose proof (In_list_remove2 _ _ _ _ _ H7).
+              { eapply in_remove. exact H7. }
+              destruct (in_remove _ _ _ _ H7).
               pose proof (H2 _ H8). lia.
             + elim (closedNatToTerm _ _ H7).
           - apply H5. }
@@ -1155,8 +1154,9 @@ Proof.
                                          destruct H2 as [H2 | H2]; try lia.
                                          elim (closedNatToTerm _ _ H2).
                                ---- simpl in |- *. intro H2.
-                                    elim (In_list_remove2 _ _ _ _ _ H2). auto.
-                               ---- apply existSimp. apply impE with (addExists (S w) n f).
+                                    elim (in_remove _ _ _ _ H2). auto.
+                               ---- apply existSimp. 
+                                    apply impE with (addExists (S w) n f).
                                     ++++ apply sysWeaken. apply Hrecn; auto. lia.
                                     ++++ apply Axm; right; constructor.
                            *** apply impI. repeat apply andI.
@@ -1181,7 +1181,7 @@ Proof.
                 ** apply impI. apply existSys.
                    --- apply closedNN.
                    --- intro H6. destruct (freeVarSubFormula3 _ _ _ _ _ H6).
-                       +++ elim (In_list_remove2 _ _ _ _ _ H7). lia.
+                       +++ elim (in_remove _ _ _ _ H7). lia.
                        +++ elim (closedNatToTerm _ _ H7).
                    --- apply
                         impE
@@ -1220,7 +1220,7 @@ Proof.
                                induction (freeVarSubFormula3 _ _ _ _ _ H5) as [H6 | H6].
                              elim (proj1 (Nat.le_ngt n0 0)).
                                ---- decompose record H4 /r. intros H7 H8; apply H7.
-                                    eapply In_list_remove1. apply H6.
+                                    eapply in_remove. apply H6.
                                ---- lia.
                                ---- destruct H6 as [H6 | H6].
                                     ++++ lia.
@@ -1310,7 +1310,7 @@ Proof.
              ++ simpl in H1. destruct H1 as (H0, H1). intros v H2.
                 destruct (freeVarSubFormula3 _ _ _ _ _ H2).
                 ** assert (H4: v <= S n).
-                   { apply H0. eapply In_list_remove1. exact H3. }
+                   { apply H0. eapply in_remove. exact H3. }
                    destruct (proj1 (Nat.lt_eq_cases v (S n))).
                    --- assumption. 
                    --- lia.
@@ -1384,7 +1384,7 @@ Proof.
       * simpl in H6. destruct (in_app_or _ _ _ H6).
         -- simpl in H2. destruct H2 as (H2, H3).
            destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H4 | H4].
-           ++ apply H2. eapply In_list_remove1. exact H4.
+           ++ apply H2. eapply in_remove. exact H4.
            ++ destruct H4 as [H4 | H4].
               ** lia.
               ** elim H4.
@@ -1487,7 +1487,7 @@ Proof.
         -- elim H. auto.
         -- apply iffRefl.
       * apply (reduceNot LNN). apply (subFormulaTrans LNN).
-        intro H5. elim H0. eapply In_list_remove1. exact H5.
+        intro H5. elim H0. eapply in_remove. exact H5.
     + apply impTrans with (notH (LT (natToTerm a) (var v))).
       * apply impI. 
         apply impE with (notH (notH (substF LNN B v (natToTerm a)))).
@@ -1554,7 +1554,7 @@ Proof.
                      rewrite (subFormulaNot LNN).
                      apply impE with (notH (substF LNN B v (natToTerm n))).
                      +++ apply cp2. apply iffE1. apply (subFormulaTrans LNN).
-                         intro H6. elim H0. eapply In_list_remove1. exact H6.
+                         intro H6. elim H0. eapply in_remove. exact H6.
                      +++ apply H4; auto.
                  --- apply Axm; right; constructor.
 Qed.
@@ -1656,15 +1656,15 @@ Proof.
    match goal with
    | H:(In v (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (List.remove _ ?X1 (freeVarFormula LNN ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
@@ -1706,15 +1706,15 @@ Proof.
    match goal with
    | H:(In v (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (freeVarFormula LNN (forallH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X2));
-        [ eapply In_list_remove1; apply H
+        [ eapply in_remove; apply H
         | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
    | H:(In v (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
        assert (In v (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
@@ -1786,10 +1786,10 @@ Proof.
      (H1: In v
         (freeVarFormula LNN
            (substF LNN (substF LNN betaFormula 1 a) 2 b))).
-    { eapply In_list_remove1; apply H0. }
+    { eapply in_remove; apply H0. }
     destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H2 | H2].
     + assert (H3: In v (freeVarFormula LNN (substF LNN betaFormula 1 a))).
-      { eapply In_list_remove1; apply H2. }
+      { eapply in_remove; apply H2. }
       destruct (freeVarSubFormula3 _ _ _ _ _ H3) as [H4 | H4].
       * destruct v as [| n].
         -- elim (In_list_remove2 _ _ _ _ _ H0). reflexivity.
@@ -1801,7 +1801,7 @@ Proof.
                  --- assert (H5: Representable 2 beta betaFormula).
                      { apply betaRepresentable. }
                      destruct H5 as (H5, H6). apply H5.
-                     eapply In_list_remove1. exact H4.
+                     eapply in_remove. exact H4.
                  --- lia.
       * tauto.
     + tauto.
@@ -1860,7 +1860,7 @@ Remark In_betaFormula_subst_2_1 :
 Proof.
   intros a b v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
   - assert (H1: In v (freeVarFormula LNN (substF LNN betaFormula 2 a))).
-    { eapply In_list_remove1. apply H0. }
+    { eapply in_remove. apply H0. }
     decompose sum (In_betaFormula_subst_2 _ _ H1); try tauto.
     destruct H3 as [H2 | H2].
     elim (In_list_remove2 _ _ _ _ _ H0).
@@ -1929,7 +1929,7 @@ Ltac PRsolveFV A B n :=
     H:(In ?X3 (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
     =>
         assert (In X3 (freeVarFormula LNN X2));
-         [ eapply In_list_remove1; apply H
+         [ eapply in_remove; apply H
          | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
     | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
@@ -2072,7 +2072,7 @@ Proof.
                            destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H4 | H4].
                            *** assert (H5: In 4 (freeVarFormula LNN 
                                                (primRecPiFormulaHelp 0 A B))).
-                               { eapply In_list_remove1. apply H4. }
+                               { eapply in_remove. apply H4. }
                                decompose sum (freeVarPrimRecPiFormulaHelp1 _ _ _ _ H5) /r.
                                ---- intro H6; destruct H as (H, H7). 
                                     elim (proj1 (Nat.le_ngt 4 0)).
@@ -2281,10 +2281,10 @@ Proof.
                                                          assert
                                                           (H7: In 3
                                                              (freeVarFormula LNN (substF LNN betaFormula 2 (natToTerm x)))).
-                                                         { eapply In_list_remove1. apply H6. }
+                                                         { eapply in_remove. apply H6. }
                                                          destruct (freeVarSubFormula3 _ _ _ _ _ H7) as [H8 | H8].
                                                          ++ elim (proj1 (Nat.le_ngt 3 2)).
-                                                            ** apply H4. eapply In_list_remove1. apply H8.
+                                                            ** apply H4. eapply in_remove. apply H8.
                                                             ** repeat constructor.
                                                          ++ elim (closedNatToTerm _ _ H8).
                                                       -- apply
@@ -2324,7 +2324,7 @@ Proof.
                                                             (natToTerm (f (S n)))) 1 (natToTerm (f n))).
                                                   + apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                     apply (subFormulaTrans LNN). intro H5. elim (proj1 (Nat.le_ngt 3 2)).
-                                                    * apply H0. eapply In_list_remove1. apply H5.
+                                                    * apply H0. eapply in_remove. apply H5.
                                                     * repeat constructor.
                                                   + apply
                                                      impE
@@ -2393,7 +2393,7 @@ Proof.
                                                       apply (subFormulaNil LNN). intro H6.
                                                       destruct (freeVarSubFormula3 _ _ _ _ _ H6) as [H7 | H7].
                                                       -- elim (proj1 (Nat.le_ngt  3 2)).
-                                                         ++ apply H4. eapply In_list_remove1. apply H7.
+                                                         ++ apply H4. eapply in_remove. apply H7.
                                                          ++ repeat constructor.
                                                       -- elim (closedNatToTerm _ _ H7).
                                                     * simpl in H5.
@@ -2573,9 +2573,9 @@ Proof.
                                                             assert
                                                              (H7: In 3
                                                                 (freeVarFormula LNN (substF LNN betaFormula 2 (natToTerm x)))).
-                                                            { eapply In_list_remove1. apply H6. }
+                                                            { eapply in_remove. apply H6. }
                                                             destruct (freeVarSubFormula3 _ _ _ _ _ H7) as [H8 | H8].
-                                                            ** elim (proj1 (Nat.le_ngt 3 2)). apply H4. eapply In_list_remove1.
+                                                            ** elim (proj1 (Nat.le_ngt 3 2)). apply H4. eapply in_remove.
                                                                --- apply H8.
                                                                --- repeat constructor.
                                                             ** elim (closedNatToTerm _ _ H8).
@@ -2638,7 +2638,7 @@ Proof.
                                                                 (natToTerm (f n))).
                                                          ++ apply iffE1. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                             apply (subFormulaTrans LNN). intro H5. elim (proj1 (Nat.le_ngt 3 2)).
-                                                            ** apply H0. eapply In_list_remove1. apply H5.
+                                                            ** apply H0. eapply in_remove. apply H5.
                                                             ** repeat constructor.
                                                          ++ unfold f. simpl. apply iffE1. apply H4.
                                                     * rewrite <-
@@ -2707,7 +2707,7 @@ Proof.
                                                                    apply (subFormulaNil LNN). intro H6.
                                                                    destruct (freeVarSubFormula3 _ _ _ _ _ H6) as [H7 | H7].
                                                                    +++ elim (proj1 (Nat.le_ngt 3 2)).
-                                                                       *** apply H4. eapply In_list_remove1. apply H7.
+                                                                       *** apply H4. eapply in_remove. apply H7.
                                                                        *** repeat constructor.
                                                                    +++ elim (closedNatToTerm _ _ H7).
                                                                --- simpl in H5.
@@ -2989,7 +2989,7 @@ Proof.
                                                                               apply (subFormulaNil LNN).
                                                                               intro H4. destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
                                                                               ++++ elim (proj1 (Nat.le_ngt 3 2)).
-                                                                                   **** apply H2. eapply In_list_remove1. apply H5.
+                                                                                   **** apply H2. eapply in_remove. apply H5.
                                                                                    **** repeat constructor.
                                                                               ++++ elim (closedNatToTerm _ _ H5).
                                                                          ---- apply iffRefl.
@@ -3023,7 +3023,7 @@ Proof.
                                                                       *** apply H4.
                                                               --- repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                   apply (subFormulaTrans LNN). intro H3. elim (proj1 (Nat.le_ngt 3 2)).
-                                                                  +++ apply H0. eapply In_list_remove1. apply H3.
+                                                                  +++ apply H0. eapply in_remove. apply H3.
                                                                   +++ repeat constructor.
                                                            ** apply H2.
                                                         ++ apply
@@ -3109,10 +3109,10 @@ Proof.
         assert
                                                                                (H5: In 3
                                                                                   (freeVarFormula LNN (substF LNN betaFormula 2 (natToTerm b)))).
-                                                                              { eapply In_list_remove1. apply H4. }
+                                                                              { eapply in_remove. apply H4. }
                                                                               destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H7 | H7].
                                                                               ++++ elim (proj1 (Nat.le_ngt 3 2)).
-                                                                                   **** apply H2. eapply In_list_remove1. apply H7.
+                                                                                   **** apply H2. eapply in_remove. apply H7.
                                                                                    **** repeat constructor.
                                                                               ++++ elim (closedNatToTerm _ _ H7).
                                                                          ---- apply H3.
@@ -3484,7 +3484,7 @@ Proof.
                                                                               apply (subFormulaNil LNN). intro H4.
                                                                               destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
                                                                               { elim (proj1 (Nat.le_ngt  3 2)).
-                                                                                - apply H2. eapply In_list_remove1. apply H5.
+                                                                                - apply H2. eapply in_remove. apply H5.
                                                                                 - repeat constructor. }
                                                                               { elim (closedNatToTerm _ _ H5). }
                                                                          ---- apply (subFormulaNil LNN). intro H4.
@@ -3560,10 +3560,10 @@ Proof.
                                                                                           assert
                                                                                            (H5: In 3
                                                                                               (freeVarFormula LNN (substF LNN betaFormula 2 (natToTerm b)))).
-                                                                                          { eapply In_list_remove1. apply H4. }
+                                                                                          { eapply in_remove. apply H4. }
                                                                                           destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H7 | H7].
                                                                                           - elim (proj1 (Nat.le_ngt 3 2)).
-                                                                                            + apply H2. eapply In_list_remove1. apply H7.
+                                                                                            + apply H2. eapply in_remove. apply H7.
                                                                                             + repeat constructor.
                                                                                           - elim (closedNatToTerm _ _ H7). }
                                                                                         { apply H3. }
@@ -3627,7 +3627,7 @@ Proof.
                                                                               ++++ repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                                    apply (subFormulaTrans LNN). intro H2.
                                                                                    elim (proj1 (Nat.le_ngt 3 2)).
-                                                                                   **** apply H0. eapply In_list_remove1. apply H2.
+                                                                                   **** apply H0. eapply in_remove. apply H2.
                                                                                    **** repeat constructor.
                                                                          ---- unfold f. simpl. apply H1.
                                                                  +++ rewrite (subFormulaEqual LNN). simpl.
@@ -3701,7 +3701,7 @@ Proof.
           - split.
             + intros v H3. induction (freeVarSubFormula3 _ _ _ _ _ H3).
               * assert (H5: v <= S n).
-                { apply H. eapply In_list_remove1. apply H4. }
+                { apply H. eapply in_remove. apply H4. }
                 destruct (proj1 (Nat.lt_eq_cases v (S n)) H5) as [H6 | H6].
                 -- now apply Nat.lt_succ_r. 
                 -- elim (In_list_remove2 _ _ _ _ _ H4). auto.
@@ -3713,7 +3713,7 @@ Proof.
                match goal with
                | H:(In v (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _ =>
                    assert (In v (freeVarFormula LNN X2));
-                    [ eapply In_list_remove1; apply H
+                    [ eapply in_remove; apply H
                     | assert (v <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
                | H:(In v (freeVarFormula LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
                    induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
@@ -3756,7 +3756,7 @@ Proof.
                     | H:(In ?X3 (List.remove  eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                     =>
                         assert (In X3 (freeVarFormula LNN X2));
-                         [ eapply In_list_remove1; apply H
+                         [ eapply in_remove; apply H
                          | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
                     | H:(In ?X4 (freeVarFormula LNN (substF LNN ?X1 ?X2 ?X3))) |- _
                     =>
@@ -3795,7 +3795,7 @@ Proof.
                            | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
                            =>
                                assert (In X3 (freeVarFormula LNN X2));
-                                [ eapply In_list_remove1; apply H
+                                [ eapply in_remove; apply H
                                 | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
                            | H:(In ?X4 (freeVarFormula LNN (substF LNN ?X1 ?X2 ?X3))) |- _
                            =>
@@ -3857,7 +3857,7 @@ Proof.
                     (freeVarFormula LNN
                        (substF LNN (primRecSigmaFormula (S n) A B) 
                           (S n) (natToTerm a0)))).
-                 { eapply In_list_remove1. apply H3. }
+                 { eapply in_remove. apply H3. }
                 destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
                 ** elim (In_list_remove2 _ _ _ _ _ H5). reflexivity.
                 ** elim (closedNatToTerm _ _ H5).
@@ -4751,7 +4751,7 @@ Opaque substF.
       | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
       =>
           assert (In X3 (freeVarFormula LNN X2));
-           [ eapply In_list_remove1; apply H
+           [ eapply in_remove; apply H
            | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
       | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
           assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));

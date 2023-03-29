@@ -93,14 +93,14 @@ Proof.
                 ** unfold lt_depth; simpl; apply Nat.lt_succ_diag_r .
                 ** intro H2; simpl in H1.
                    elim (In_list_remove2 _ eq_nat_dec _ _ _ H1); auto.
-                ** eapply In_list_remove1; apply H1.
+                ** eapply in_remove; apply H1.
           --  intro H2; elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
-              fold nv; simpl; right; apply in_or_app; right; eapply In_list_remove1.
+              fold nv; simpl; right; apply in_or_app; right; eapply in_remove.
               rewrite <- H2; apply H1.
         * simpl; apply In_list_remove3.
           -- apply H; auto.
              ++ unfold lt_depth; simpl; apply Nat.lt_succ_diag_r .
-             ++ eapply In_list_remove1; apply H1.
+             ++ eapply in_remove; apply H1.
           -- intro H2; now elim (In_list_remove2 _ eq_nat_dec _ _ _ H1).
 Qed.
 
@@ -185,7 +185,7 @@ Proof.
            ++ assumption.
            ++ apply freeVarSubFormula1. 
               ** assumption.
-              ** simpl in H1; eapply In_list_remove1.
+              ** simpl in H1; eapply in_remove.
                  apply H1.
         -- intro H2; 
              elim (newVar1 (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
@@ -196,7 +196,7 @@ Proof.
         -- apply H.
            apply depthForall; auto.
            auto. 
-           eapply In_list_remove1.
+           eapply in_remove.
            simpl in H1; apply H1.
         -- unfold not in |- *; intros.  
            elim b0; now rewrite H2 in H0.
@@ -234,14 +234,14 @@ Proof.
     + induction (H _ _ _ H2) as [H3 | H3].
       * left; apply In_list_remove3.
         -- unfold freeVarTerms; apply in_or_app; left.
-           eapply In_list_remove1; apply H3.
+           eapply in_remove; apply H3.
         --  eapply In_list_remove2; apply H3.
       *  auto.
     + induction (H0 _ _ _ H2) as [H3 | H3].
       * left; apply In_list_remove3.
         -- unfold freeVarTerms; fold (freeVarTerm L t0);
              fold (freeVarTerms L n t1); apply in_or_app.
-           right; eapply In_list_remove1; apply H3.
+           right; eapply in_remove; apply H3.
         -- eapply In_list_remove2; apply H3.
       * auto.
 Qed.
@@ -263,14 +263,14 @@ Proof.
         apply In_list_remove3.
         -- unfold freeVarTerms; fold (freeVarTerm L t);
              fold (freeVarTerms L n ts); apply in_or_app.
-           left; eapply In_list_remove1; apply H1.
+           left; eapply in_remove; apply H1.
         -- eapply In_list_remove2; apply H1.
       * now right.
     + induction (Hrects H0) as [H1 | H1].
       * left; apply In_list_remove3.
         -- unfold freeVarTerms; fold (freeVarTerm L t);
              fold (freeVarTerms L n ts); apply in_or_app; right.
-           eapply In_list_remove1; apply H1.
+           eapply in_remove; apply H1.
         -- eapply In_list_remove2; apply H1.
       * now right.
 Qed.
@@ -286,12 +286,12 @@ Proof.
     simpl in H; induction (in_app_or _ _ _ H) as [H0 | H0].
     + simpl;induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
       * left; apply In_list_remove3.
-        -- apply in_or_app; left; eapply In_list_remove1; apply H1.
+        -- apply in_or_app; left; eapply in_remove; apply H1.
         -- eapply In_list_remove2; apply H1.
       * now right.
     + simpl; induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
       * left; apply In_list_remove3.
-        -- apply in_or_app; right; eapply In_list_remove1, H1.
+        -- apply in_or_app; right; eapply in_remove, H1.
         -- eapply In_list_remove2, H1.
       * now right. 
   - intros r t v s x H; rewrite subFormulaRelation in H; simpl in H |- *.
@@ -300,12 +300,12 @@ Proof.
     simpl in H1 |- *; induction (in_app_or _ _ _ H1) as [H2 | H2].
     + induction (H _ _ _ H2) as [H3 | H3]. 
       * left; apply In_list_remove3.
-        -- apply in_or_app; left; eapply In_list_remove1, H3.
+        -- apply in_or_app; left; eapply in_remove, H3.
         -- eapply In_list_remove2, H3. 
       * now right.
     + induction (H0 _ _ _ H2) as [H3 | H3].
       * left; apply In_list_remove3.
-        -- apply in_or_app; right; eapply In_list_remove1, H3.
+        -- apply in_or_app; right; eapply in_remove, H3.
         -- eapply In_list_remove2, H3. 
       * now right.
   - intros f0 H v s x H0; rewrite subFormulaNot in H0.
@@ -330,7 +330,7 @@ Proof.
                     (freeVarFormula L
                        (substituteFormula L 
                           (substituteFormula L a v (var nv)) v0 s))).
-           { eapply In_list_remove1; apply H0. }
+           { eapply in_remove; apply H0. }
            assert (H3: x <> nv).
            { eapply In_list_remove2; apply H0. }
            clear H0.
@@ -339,7 +339,7 @@ Proof.
               apply depthForall.
               assert (H5: In x (freeVarFormula L
                               (substituteFormula L a v (var nv)))).
-              { eapply In_list_remove1; apply H0. }
+              { eapply in_remove; apply H0. }
               assert (H6: x <> v0).
               { eapply In_list_remove2, H0. }
               clear H0.
@@ -355,11 +355,11 @@ Proof.
           by apply depthForall.
         simpl in H0.
         assert (H2: In x (freeVarFormula L (substituteFormula L a v0 s))).
-        { eapply In_list_remove1, H0. }
+        { eapply in_remove, H0. }
         induction (H _ H1 _ _ _ H2) as [H3 | H3].
         -- left; apply In_list_remove3.
            simpl; apply In_list_remove3.  
-           ++ eapply In_list_remove1, H3.
+           ++ eapply in_remove, H3.
            ++ eapply In_list_remove2, H0.
            ++ eapply In_list_remove2, H3.
         -- now right.
@@ -471,7 +471,7 @@ Proof.
           (H2: In x
              (freeVarFormula L
                 (substituteFormula L (substituteFormula L a v (var nv)) v0 s))).
-        { eapply In_list_remove1; apply H0. } 
+        { eapply in_remove; apply H0. } 
         assert (H3: In x (freeVarFormula L (substituteFormula L a v (var nv)))).
         { eapply H.
           - unfold lt_depth; rewrite subFormulaDepth.
@@ -492,7 +492,7 @@ Proof.
       * simpl in H0; apply In_list_remove3.
         -- eapply H.
            ++ apply depthForall.
-           ++ eapply In_list_remove1, H0.
+           ++ eapply in_remove, H0.
            ++ intro H2; elim H1.
                ** apply In_list_remove3; auto.
         -- eapply In_list_remove2, H0.
@@ -550,10 +550,10 @@ Proof.
       -- reflexivity.
       --  intros H2; elim H1; apply In_list_remove3.
           ++ apply in_or_app; left.
-             eapply In_list_remove1, H2.
+             eapply in_remove, H2.
           ++ eapply In_list_remove2, H2. 
     * intro H2; elim H1; apply In_list_remove3.
-      -- apply in_or_app; right; eapply In_list_remove1, H2.
+      -- apply in_or_app; right; eapply in_remove, H2.
       -- eapply In_list_remove2, H2.
 Qed.
 
@@ -611,10 +611,10 @@ Proof.
     + rewrite subTermTrans.
       * reflexivity.
       * intro H0; elim H; apply In_list_remove3.
-        -- apply in_or_app; left; eapply In_list_remove1, H0.
+        -- apply in_or_app; left; eapply in_remove, H0.
         -- eapply In_list_remove2, H0.
     + intro H0; elim H; apply In_list_remove3.
-      * apply in_or_app; right; eapply In_list_remove1, H0. 
+      * apply in_or_app; right; eapply in_remove, H0. 
       * eapply In_list_remove2, H0.
 Qed.
 
@@ -673,10 +673,10 @@ Proof.
     repeat rewrite subTermTrans.
     + apply (iffRefl L).
     +  intro H0; elim H; apply In_list_remove3.
-       * apply in_or_app; right; eapply In_list_remove1, H0.
+       * apply in_or_app; right; eapply in_remove, H0.
        * eapply In_list_remove2, H0. 
     + intro H0; elim H; apply In_list_remove3.
-      * apply in_or_app; left; eapply In_list_remove1, H0.
+      * apply in_or_app; left; eapply in_remove, H0.
       * eapply In_list_remove2, H0.
   - intros v1 v2 s1 s2 H H0 H1; repeat rewrite (subFormulaEqual L).
     rewrite (subTermExch t); auto.
@@ -704,12 +704,12 @@ Proof.
     apply (reduceImp L).
     + apply H4.
       intros H6; elim H1; apply In_list_remove3.
-      * apply in_or_app; left; eapply In_list_remove1.
+      * apply in_or_app; left; eapply in_remove.
         apply H6.
       * eapply In_list_remove2, H6.
     + apply H7.
        intros H6; elim H1; apply In_list_remove3.
-      * apply in_or_app; right; eapply In_list_remove1, H6.
+      * apply in_or_app; right; eapply in_remove, H6.
       * eapply In_list_remove2, H6.
   - intros v1 v2 s1 s2 H1 H2 H3; decompose record (H T). 
     decompose record (H0 T).
@@ -741,7 +741,7 @@ Proof.
           (H5: In v
              (freeVarFormula L
                 (substituteFormula L (substituteFormula L a v (var x)) v0 s))).
-        { eapply In_list_remove1.
+        { eapply in_remove.
           apply H4.
         } 
         assert (H6: In v (freeVarFormula L (substituteFormula L a v (var x)))).
@@ -785,7 +785,7 @@ Proof.
               apply H9.
               intro H10; induction (freeVarSubFormula3 _ _ _ _ H10) as [H13 | H13].
               ** assert (H14: In v0 (freeVarFormula L A1))
-                 by (eapply In_list_remove1, H13).
+                 by (eapply in_remove, H13).
                  induction (freeVarSubFormula3 _ _ _ _ H14) as [H15 | H15].
                  --- elim H0; apply H15.
                  --- induction H15 as [H15| H15].
@@ -861,7 +861,7 @@ Proof.
                                (freeVarFormula L
                                   (substituteFormula L 
                                      (substituteFormula L a v (var x1)) v2 s)))
-                     by (eapply In_list_remove1, H10). 
+                     by (eapply in_remove, H10). 
                      assert (H12: In v (freeVarFormula L 
                                      (substituteFormula L a v (var x1)))).
                      { eapply freeVarSubFormula4.
@@ -908,7 +908,7 @@ Proof.
                              apply H11; clear H11 H13 H14.
                              intros H11; induction (freeVarSubFormula3 _ _ _ _ H11).
                              assert (H13: In v2 (freeVarFormula L A1)).
-                             { eapply In_list_remove1; apply H12. }
+                             { eapply in_remove; apply H12. }
                              unfold A1 in H13; 
                                induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14]. 
                              elim H0.
@@ -981,7 +981,7 @@ Proof.
                                          (var x0)) v1
                                       (var v2)) x0 (var x1)) 
                                 v2 s))).
-              { eapply In_list_remove1, H10. }
+              { eapply in_remove, H10. }
               induction (freeVarSubFormula3 _ _ _ _ H11) 
                 as [H12 | H12].
                   --- assert
@@ -992,7 +992,7 @@ Proof.
                                        (substituteFormula L a v 
                                           (var x0)) v1
                                        (var v2)) x0 (var x1)))).
-                      { eapply In_list_remove1; apply H12. }
+                      { eapply in_remove; apply H12. }
                       induction (freeVarSubFormula3 _ _ _ _ H13) 
                         as [H14 | H14].
                       +++ assert
@@ -1003,14 +1003,14 @@ Proof.
                                            (var x0)) 
                                         v1 (var v2)))) 
                           by
-                          (eapply In_list_remove1; apply H14). 
+                          (eapply in_remove; apply H14). 
                           induction (freeVarSubFormula3 _ _ _ _ H15)
                             as [H16 | H16].
                           *** assert (H17 :
                                    In x (freeVarFormula L 
                                            (substituteFormula L a v
                                               (var x0)))).
-                              { eapply In_list_remove1; apply H16. }
+                              { eapply in_remove; apply H16. }
                               induction (freeVarSubFormula3 _ _ _ _ H17)
                                           as [H18 | H18].
                               apply H3.
@@ -1075,7 +1075,7 @@ Proof.
                          apply H13; clear H11 H13 H14.
                          intros H11; apply x2prop; repeat right.
                          apply in_or_app; left.
-                         eapply In_list_remove1, H11. 
+                         eapply in_remove, H11. 
                      +++ apply subFormulaNTEHelp; unfold A1;
                            apply (impE L) with
                            (substituteFormula L
@@ -1122,11 +1122,11 @@ Proof.
                                                (substituteFormula L a v (var x)) 
                                                x
                                                (var x2)))).
-                             { eapply In_list_remove1; apply H12. } 
+                             { eapply in_remove; apply H12. } 
                              induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14].
                              assert (H15: In v2 (freeVarFormula L
                                               (substituteFormula L a v  (var x))))
-                             by (eapply In_list_remove1; apply H14).
+                             by (eapply in_remove; apply H14).
                              induction (freeVarSubFormula3 _ _ _ _ H15) as [? | H16].
                              auto.
                              elim H0; apply In_list_remove3; auto.
@@ -1256,7 +1256,7 @@ Proof.
                          decompose record (H _ H11 (Empty_set _)).
                          apply H14; clear H12 H14 H15.
                          intros H12; elim x2prop; repeat right; apply in_or_app.
-                         right; eapply In_list_remove1, H12.
+                         right; eapply in_remove, H12.
                      +++ fold A2; apply (forallE L), Axm; right; constructor.
               ** apply (impI L), forallI. 
                  --- intros [x2 [H10 H11]].
@@ -1267,12 +1267,12 @@ Proof.
                                (freeVarFormula L
                                   (substituteFormula L 
                                      (substituteFormula L a v (var x)) v1 s))) by
-                       ( eapply In_list_remove1, H10).
+                       ( eapply in_remove, H10).
                      induction (freeVarSubFormula3 _ _ _ _ H11) as [H12 | H12].
                      +++ assert (H13: In x1 
                                         (freeVarFormula L 
                                            (substituteFormula L a v (var x)))) by
-                           (eapply In_list_remove1, H12).
+                           (eapply in_remove, H12).
                          induction (freeVarSubFormula3 _ _ _ _ H13).
                          *** elim H9.
                              apply In_list_remove3.
@@ -1284,7 +1284,7 @@ Proof.
                              unfold not in |- *; intros.
                              elim (In_list_remove2 _ _ _ _ _ H14).
                              auto.
-                             eapply In_list_remove1.
+                             eapply in_remove.
                              apply H14.
                              unfold not in |- *; intros.
                              rewrite H15 in H14.
@@ -1334,7 +1334,7 @@ Proof.
                              decompose record (H _ H10 (Empty_set _)).
                              apply H13; clear H11 H13 H14.
                       intros H11; elim x2prop; do 2 right.
-                      apply in_or_app; left; eapply In_list_remove1, H11. 
+                      apply in_or_app; left; eapply in_remove, H11. 
 
                      *** apply subFormulaNTEHelp.
                          apply (impE L) with 
@@ -1439,11 +1439,11 @@ Proof.
                                      (substituteFormula L
                                         (substituteFormula L a v (var x0)) x0
                                         (var x2)))).
-                      { eapply In_list_remove1; apply H11. }
+                      { eapply in_remove; apply H11. }
                      induction (freeVarSubFormula3 _ _ _ _ H12) as [H13 | H13].
                      assert (H14: In v2 (freeVarFormula L 
                                            (substituteFormula L a v (var x0)))).
-                     { eapply In_list_remove1; apply H13. }
+                     { eapply in_remove; apply H13. }
                      induction (freeVarSubFormula3 _ _ _ _ H14) as [H15 | H15].
                      elim H0.
                      apply In_list_remove3; auto.
@@ -1511,7 +1511,7 @@ Proof.
                      apply H13; clear H11 H13 H14; auto.
                      fold A2; intros H11;  elim x2prop.
                      do 2 right;  apply in_or_app;  right.
-                     eapply In_list_remove1.
+                     eapply in_remove.
                      apply H11.
                      *** apply forallE, Axm; right; constructor.
   - intros v1 v2 s1 s2 H0 H1 H2; 
@@ -1574,12 +1574,12 @@ Proof.
                                    (freeVarFormula L
                                       (substituteFormula L 
                                          (substituteFormula L a v (var x0)) v2 s2)))
-                           by  eapply In_list_remove1, H14.
+                           by  eapply in_remove, H14.
                            induction (freeVarSubFormula3 _ _ _ _ H15) as [H16 | H16].
                            assert (H17: In v1 (freeVarFormula L
                                                  (substituteFormula L a v 
                                                     (var x0))))
-                           by eapply In_list_remove1, H16.
+                           by eapply in_remove, H16.
                            induction (freeVarSubFormula3 _ _ _ _ H17) as [H18 | H18].
                            elim (In_list_remove2 _ _ _ _ _ H18).
                            auto.
@@ -1610,7 +1610,7 @@ Proof.
                                      (substituteFormula L 
                                         (substituteFormula L a v (var x)) v1
                                         s1) x (var x1)) v2 s2)))
-                   by eapply In_list_remove1, H12. 
+                   by eapply in_remove, H12. 
                   assert
                     (H14: In x
                             (freeVarFormula L
@@ -1627,12 +1627,12 @@ Proof.
                                    (freeVarFormula L
                                       (substituteFormula L 
                                          (substituteFormula L a v (var x)) v1 s1)))
-                         by eapply In_list_remove1, H15.
+                         by eapply in_remove, H15.
                          induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                          ---  assert 
                              (H18: In v2 (freeVarFormula L 
                                             (substituteFormula L a v (var x))))
-                              by eapply In_list_remove1, H17. 
+                              by eapply in_remove, H17. 
                               induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
                               +++ elim (In_list_remove2 _ _ _ _ _ H19).
                                   symmetry  in |- *; assumption.
@@ -1708,7 +1708,7 @@ Proof.
                                       (substituteFormula L 
                                          (substituteFormula L a v (var x)) v1 s1)
                                       x (var x1)))) by
-                             eapply In_list_remove1, H14.
+                             eapply in_remove, H14.
                              induction (freeVarSubFormula3 _ _ _ _ H15) as [H16 | H16].
                              *** assert
                                  (H17: In v2
@@ -1716,13 +1716,13 @@ Proof.
                                             (substituteFormula L 
                                                (substituteFormula L a v (var x)) 
                                                v1 s1))).
-                                 { eapply In_list_remove1, H16. }
+                                 { eapply in_remove, H16. }
                                  induction (freeVarSubFormula3 _ _ _ _ H17) as 
                                    [H18 | H18].
                                  assert (H19: In v2 (freeVarFormula L 
                                                        (substituteFormula L a v 
                                                           (var x)))).
-                                 { eapply In_list_remove1, H18. }
+                                 { eapply in_remove, H18. }
                                  induction (freeVarSubFormula3 _ _ _ _ H19) 
                                    as [H20 | H20].
                                  elim (In_list_remove2 _ _ _ _ _ H20).
@@ -1785,7 +1785,7 @@ Proof.
                              (freeVarFormula L
                                 (substituteFormula L 
                                    (substituteFormula L a v (var x)) v1 s1))).
-                   { eapply In_list_remove1, H15. }
+                   { eapply in_remove, H15. }
                    assert (H17: In x0 (freeVarFormula L 
                                          (substituteFormula L a v (var x)))).
                    { eapply freeVarSubFormula4. 
@@ -1833,7 +1833,7 @@ Proof.
                          intros H16.
                          assert (H17: In x (freeVarFormula L 
                                               (substituteFormula L a v (var x0)))).
-                         { eapply In_list_remove1, H16. }
+                         { eapply in_remove, H16. }
                          induction (freeVarSubFormula3 _ _ _ _ H17) as [H18 | H18].
                          +++ auto.
                          +++ rewrite a1 in H18; induction H18 as [H18| H18]; auto.
@@ -1886,11 +1886,11 @@ Proof.
                          (freeVarFormula L
                             (substituteFormula L 
                                (substituteFormula L a v (var x)) v1 s1)))
-               by eapply In_list_remove1, H15. 
+               by eapply in_remove, H15. 
                ++ induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                   ** assert (H18: In x2 (freeVarFormula L 
                                            (substituteFormula L a v (var x))))
-                       by eapply In_list_remove1, H17.
+                       by eapply in_remove, H17.
                      induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
                      --- elim H14.
                          +++ apply In_list_remove3.
@@ -1901,7 +1901,7 @@ Proof.
                                   apply freeVarSubFormula1.
                                   intros H20;   apply (In_list_remove2 _ _ _ _ _ H19).
                                   auto.
-                                  eapply In_list_remove1.
+                                  eapply in_remove.
                                   apply H19.
                              ***  intros H20;  rewrite H20 in H19; auto.
                      --- induction H19 as [H19| H19].
@@ -1991,7 +1991,7 @@ Proof.
                                        (substituteFormula L 
                                           (substituteFormula L a v (var x)) v1
                                           s1) x (var x1)) v2 s2))).
-                      { eapply In_list_remove1, H15. }
+                      { eapply in_remove, H15. }
                       induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                       +++ assert
                           (H18: In x0
@@ -2000,7 +2000,7 @@ Proof.
                                         (substituteFormula L
                                            (substituteFormula L a v (var x)) v1 s1)
                                         x (var x1)))).
-                          { eapply In_list_remove1, H17. }
+                          { eapply in_remove, H17. }
                           induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
                           *** assert
                               (H20: In x0
@@ -2008,7 +2008,7 @@ Proof.
                                          (substituteFormula L 
                                             (substituteFormula L a v (var x))
                                             v1 s1))).
-                              { eapply In_list_remove1, H19. }
+                              { eapply in_remove, H19. }
                               assert (H21: In x0 (freeVarFormula L 
                                                     (substituteFormula L a v 
                                                        (var x)))).
@@ -2453,7 +2453,7 @@ Proof.
                                                      (var x0))
                                                   v2 s2) x0 (var x2)) v1 s1) x2 
                                          (var z1)))) by
-                           eapply In_list_remove1, H15.
+                           eapply in_remove, H15.
                          induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                          +++ elim (In_list_remove2 _ _ _ _ _ H17).
                              reflexivity.

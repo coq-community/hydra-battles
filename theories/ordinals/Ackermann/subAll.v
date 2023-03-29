@@ -317,7 +317,7 @@ Proof.
                      match eq_nat_dec v n with
                      | left _ => var nv
                      | right _ => m v
-                     end)))) by ( eapply In_list_remove1; apply H). 
+                     end)))) by ( eapply in_remove; apply H). 
    destruct  (Hrecf _ _ H0) as [x [H2 H3]].
    induction (eq_nat_dec x n) as [a | ?].
    + elim (In_list_remove2 _ _ _ _ _ H).
@@ -361,7 +361,7 @@ Proof.
     + apply H0.
   - intros m v n0 H H0; apply In_list_remove3.
     + eapply Hrecf.
-      * eapply In_list_remove1; apply H.
+      * eapply in_remove; apply H.
       * induction (eq_nat_dec n0 n) as [a | b].
         -- now elim (In_list_remove2 _ _ _ _ _ H).
         -- auto.
@@ -618,7 +618,7 @@ Proof.
                                     | left _ => var x
                                     | right _ => substituteTerm L (m v1) v0 s
                                     end)))) 
-                  by (eapply In_list_remove1; apply H3). 
+                  by (eapply in_remove; apply H3). 
                   decompose record (freeVarSubAllFormula1 _ _ _ H4) /r; intros x0 H6 H7.
                   induction (eq_nat_dec x0 v) as [a0 | ?].
                   --- induction H7 as [H5| H5].
@@ -666,7 +666,7 @@ Proof.
                               apply H3.
                               induction (eq_nat_dec m0 v).
                               elim b0; auto.
-                              eapply In_list_remove1.
+                              eapply in_remove.
                               apply H5.
                               intros H6;
                                 elim
@@ -677,7 +677,7 @@ Proof.
                               fold nv1; rewrite <- H6.
                               apply in_or_app.
                               right; eapply freeVarMap1.
-                              eapply In_list_remove1.
+                              eapply in_remove.
                               apply H5.
                               apply In_list_remove3; auto.
                               auto.
@@ -757,7 +757,7 @@ Proof.
              assert
                (H0: In nv (freeVarFormula L (subAllFormula f 
                                                (fun x : nat => var x))))
-           by (eapply In_list_remove1; apply H). 
+           by (eapply in_remove; apply H). 
            decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
            elim
              (newVar1
@@ -932,7 +932,7 @@ Proof.
                          | left _ => var (newVar nv2)
                          | right _ => subAllTerm (m1 v) m2
                          end))))
-        by (eapply In_list_remove1; apply H). 
+        by (eapply in_remove; apply H). 
       decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
       induction (eq_nat_dec x n).
       * induction H3 as [H1| H1].
@@ -1013,7 +1013,7 @@ Proof.
            { clear H2 H1 T Hrecn.
              induction n as [| n Hrecn]; simpl in |- *.
            - intros q H1 H2 H3; assert (H': q < m). 
-             { apply H; eapply In_list_remove1; apply H3; lia. }
+             { apply H; eapply in_remove; apply H3; lia. }
              lia. 
            - intros q H1 H2 H3; elim Hrecn with (q := q).
              + apply le_S_n.
@@ -1023,7 +1023,7 @@ Proof.
                apply le_S.
                auto.
              + auto.
-             + simpl; eapply In_list_remove1.
+             + simpl; eapply in_remove.
                apply H3.
            }            
            apply H3 with (q := m + n).

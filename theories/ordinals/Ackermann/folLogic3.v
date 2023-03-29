@@ -576,11 +576,11 @@ Proof.
           (H8: In (newVar nv)
                  (freeVarFormula L
                     (substituteFormula L (substituteFormula L a v (var x)) v0 a0)))
-          by (eapply In_list_remove1; apply H7).
+          by (eapply in_remove; apply H7).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         -- assert
           (In (newVar nv) (freeVarFormula L (substituteFormula L a v (var x)))) by
-          (eapply In_list_remove1; apply H9). 
+          (eapply in_remove; apply H9). 
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
            ++ right.
               apply in_or_app.
@@ -663,12 +663,12 @@ Proof.
                     (freeVarFormula L
                        (substituteFormula L 
                           (substituteFormula L a v (var x0)) v0 b)))
-             by (eapply In_list_remove1; apply H7).
+             by (eapply in_remove; apply H7).
            induction (freeVarSubFormula3 _ _ _ _ _ H8).
            assert
              ( H10:In (newVar nv) 
                      (freeVarFormula L (substituteFormula L a v (var x0)))) by
-             (eapply In_list_remove1; apply H9).
+             (eapply in_remove; apply H9).
            induction (freeVarSubFormula3 _ _ _ _ _ H10).
            right; apply in_or_app.
            now left. 

@@ -37,7 +37,7 @@ Proof.
       intros [x [H0 H1]] ; destruct H1 as [x H1| x H1]; 
         [induction H1 | induction H1].
      * assert (H1: In a (freeVarFormula L (substituteFormula L f a (var b))))
-       by (eapply In_list_remove1; apply H0).
+       by (eapply in_remove; apply H0).
        induction (freeVarSubFormula3 _ _ _ _ _ H1).
        elim (In_list_remove2 _ _ _ _ _ H2).
        -- auto.
@@ -231,7 +231,7 @@ Proof.
          apply subFormulaDepth.
          apply depthForall.
      --  intro H8; induction (freeVarSubTerm3 _ _ _ _ _ H8).
-         elim H5; eapply In_list_remove1.
+         elim H5; eapply in_remove.
          apply H9.
          now apply H6. 
 Qed.

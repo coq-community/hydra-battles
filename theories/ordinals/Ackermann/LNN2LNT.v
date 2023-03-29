@@ -192,13 +192,13 @@ Proof.
   - simpl in |- *.
     induction Hrecf as (H, H0).
     split.
-    + intros H1; apply In_list_remove3.  
-      * apply H; eapply In_list_remove1; apply H1.
-      * eapply In_list_remove2; apply H1.
     + intros H1; apply In_list_remove3.
-      * apply H0.
-        eapply In_list_remove1, H1.
+      * apply H; eapply List.in_remove; apply H1.
+      * eapply In_list_remove2; apply H1.
+    + intros H1; apply in_in_remove.
       * eapply In_list_remove2, H1.
+      * apply H0.
+        eapply in_remove, H1.
 Qed.
 
 Lemma LNN2LNT_freeVarFormula1 (f : fol.Formula LNN) (v : nat):
@@ -330,7 +330,7 @@ Proof.
                    (substituteFormula LNN
                       (substituteFormula LNN a v (var x))
                       v0 s))))
-          by (eapply In_list_remove1; apply H6). 
+          by (eapply List.in_remove; apply H6). 
         assert
           (H8: In x0
                  (freeVarFormula LNN
@@ -342,15 +342,16 @@ Proof.
         assert
           (H10: In x0 (freeVarFormula LNN 
                          (substituteFormula LNN a v (var x)))) 
-          by (eapply In_list_remove1; apply H9).
+          by (eapply in_remove; apply H9).
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
         elim H5.
-        eapply In_list_remove3.
-        apply LNN2LNT_freeVarFormula2.
-        eapply In_list_remove1.
-        apply H11.
-        eapply In_list_remove2.
-        apply H11.
+        eapply in_in_remove.
+        { eapply In_list_remove2, H11. }
+        { apply LNN2LNT_freeVarFormula2.
+          eapply in_remove.
+          apply H11.
+        } 
+
         elim (In_list_remove2 _ _ _ _ _ H6).
         destruct H11 as [H11| H11].
         -- auto.
@@ -395,12 +396,13 @@ Proof.
            apply (notInFreeVarSys LNT).
            apply (subFormulaTrans LNT).
            unfold not in |- *; intros; elim H2.
-           apply In_list_remove3.
-           apply LNN2LNT_freeVarFormula1.
-           eapply In_list_remove1.
-           apply H6.
-           eapply In_list_remove2.
-           apply H6.
+           apply  in_in_remove.
+           { eapply In_list_remove2, H6. }
+           { apply LNN2LNT_freeVarFormula1.
+             eapply in_remove.
+             apply H6.
+           }            
+           
 Qed.
 
 Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=

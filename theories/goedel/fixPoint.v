@@ -133,7 +133,7 @@ Proof.
                              apply (subFormulaTrans LNN).
                              intros H4;
                                assert (H5: In nv (freeVarFormula LNN subStarFormula)) 
-                             by (eapply In_list_remove1, H4).
+                             by (eapply in_remove, H4).
                              induction represent as [H6 H7].
                              elim (Compat815.lt_not_le _ _ H3).
                              auto.
@@ -236,7 +236,7 @@ Proof.
         | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
           =>
             assert (In X3 (freeVarFormula LNN X2));
-            [ eapply In_list_remove1; apply H
+            [ eapply in_remove; apply H
             | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
         | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
@@ -264,7 +264,7 @@ Proof.
       elim (Compat815.le_not_lt _ _ (H5 _ H4)); lia. 
       apply In_list_remove3; auto.
     + intro H4; assert (H5:  In x (freeVarFormula LNN A))
-        by (eapply In_list_remove1, H4).
+        by (eapply in_remove, H4).
       assert (H6: x <> v) by (  eapply In_list_remove2, H4 ). 
       clear H4; apply freeVarSubFormula1.
       * intro H4; rewrite <- H4 in H5.
@@ -397,7 +397,7 @@ Proof.
                              assert (H5: 
                                       In nv (freeVarFormula LNT 
                                                (LNN2LNT_formula subStarFormula)))
-                             by  eapply In_list_remove1,  H4.
+                             by  eapply in_remove,  H4.
                              destruct represent as (H6, H7).
                              elim (Compat815.lt_not_le _ _ H3).
                              apply H6.
@@ -571,7 +571,7 @@ Proof.
         | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNT ?X2))) |- _
           =>
             assert (In X3 (freeVarFormula LNT X2));
-            [ eapply In_list_remove1; apply H
+            [ eapply in_remove; apply H
             | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
         | H:(In ?X3 (freeVarFormula LNT (andH  ?X1 ?X2))) |- _ =>
             assert (In X3 (freeVarFormula LNT X1 ++ freeVarFormula LNT X2));
@@ -603,7 +603,7 @@ Proof.
       * apply In_list_remove3; auto.
     + intro H4; 
         assert (H5: In x (freeVarFormula LNT A)) 
-        by (eapply In_list_remove1, H4);
+        by (eapply in_remove, H4);
         assert (H6: x <> v) by (eapply In_list_remove2, H4);  clear H4.
       apply freeVarSubFormula1.
       * intros H4; rewrite <- H4 in H5.

@@ -196,7 +196,7 @@ Proof.
   - intros v H1; induction (freeVarSubFormula3 _ _ _ _ _ H1).
     split.
    + apply H.
-     eapply In_list_remove1.
+     eapply in_remove.
      apply H2.
    + eapply In_list_remove2.
      apply H2.

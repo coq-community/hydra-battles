@@ -70,7 +70,7 @@ Proof.
         elim (In_list_remove2 _ _ _ _ _ H0); reflexivity.
     + simpl in |- *.  intro H0. 
       assert (H1: In v (freeVarFormula (closeList l x))).
-      { eapply In_list_remove1.   apply H0. }
+      { eapply in_remove.   apply H0. }
       apply (Hrecl _ _ H H1).
 Qed.
 
@@ -81,7 +81,7 @@ Lemma freeVarClosedList2 :
 Proof.
   intro l; induction l as [| a l Hrecl].
   - simpl; intros v x H; apply H.
-  - simpl; intros v x H; apply Hrecl; eapply In_list_remove1;  apply H.
+  - simpl; intros v x H; apply Hrecl; eapply in_remove;  apply H.
 Qed.
 
 Lemma freeVarClosed :
@@ -802,7 +802,7 @@ Proof.
         apply in_or_app; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
-        right; eapply In_list_remove1; apply H.
+        right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
       intro H; eapply (In_list_remove2 _ _ _ _ _ H).
       * reflexivity.
@@ -841,7 +841,7 @@ Proof.
       * unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
-        right; eapply In_list_remove1; apply H.
+        right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
       intros H; eapply (In_list_remove2 _ _ _ _ _ H).
       * reflexivity.
