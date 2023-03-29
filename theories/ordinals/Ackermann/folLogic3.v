@@ -13,6 +13,8 @@ Require Import misc.
 From Coq Require Import Lia.
 
 Require Import Compat815.
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps. 
 
 Section Equality_Logic_Rules.
 
@@ -539,10 +541,12 @@ Proof.
         -- apply (Axm L); right; constructor.
   - repeat rewrite subFormulaNot.
     apply (cp2 L), H; now apply eqSym.
-  - decompose record (subFormulaForall2 L a v v0 a0).
+  - decompose record (subFormulaForall2 L a v v0 a0) /r;
+      intros x H2 H1 H3 H5.
+
     rewrite H5; clear H5.
-    decompose record (subFormulaForall2 L a v v0 b).
-    rewrite H8; clear H8.
+    decompose record (subFormulaForall2 L a v v0 b) /r; 
+      intros x0 H5 H4 H6 H8;  rewrite H8; clear H8.
     destruct  (eq_nat_dec v v0) as [e | n].
     + apply (impRefl L).
     + set

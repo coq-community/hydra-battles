@@ -38,6 +38,68 @@ Definition LT (x y : Term) : Formula :=
   atomic LNN LT_ (Tcons x (Tcons y (Tnil))). 
 (* end snippet Instantiations *)
 
+(** Experimental and unstable *)
+
+Module NNnotations. 
+
+Declare Scope nn_scope.
+Delimit Scope nn_scope with nn. 
+
+
+Infix "=" := (equal _): nn_scope.
+Infix "\/" := (orH): nn_scope.
+Infix "/\" := (andH):nn_scope.
+Infix "->" := (impH): nn_scope.
+Notation "~ A" := (@notH _ A): nn_scope. 
+Notation "A <-> B" := (@iffH _ A B): nn_scope.
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): nn_scope.
+Notation "t <> u" := (~ t = u)%nn : nn_scope.
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
+
+Notation "x \/' y" := (~ x -> y)%nn : nn_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
+
+(* Notation exH := (existH). *)
+
+
+Notation "'v_' i" := (var i) (at level 3) : nn_scope.
+Notation exH' v A := (~ (forallH v (~ A)))%nn.
+
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
+
+Notation S_ := Succ.
+
+
+Infix "+" := Plus: nn_scope.
+Infix "*" := Times: nn_scope.
+Infix "<" := LT: nn_scope.
+End NNnotations.
+
+Export NNnotations. 
+
 
 
 Lemma LNN_dec : language_decidable LNN.
@@ -96,14 +158,14 @@ Lemma contradiction (T : System) (f g : Formula):
 Proof. apply (contradiction LNN). Qed.
 
 Lemma nnE (T : System) (f : Formula):
-  SysPrf T (notH (notH f)) -> SysPrf T f.
+  SysPrf T (~~ f)%fol -> SysPrf T f.
 Proof. apply (nnE LNN). Qed.
 
 Lemma noMiddle (T : System) (f : Formula): SysPrf T (orH (notH f) f).
 Proof. apply (noMiddle LNN). Qed.
 
 Lemma nnI  (T : System) (f : Formula):
-  SysPrf T f -> SysPrf T (notH (notH f)).
+  SysPrf T f -> SysPrf T (~ ~ f)%fol.
 Proof. apply (nnI LNN). Qed.
 
 Lemma cp1 (T : System) (f g : Formula) :
@@ -114,10 +176,12 @@ Lemma cp2 (T : System) (f g : Formula):
  SysPrf T (impH g f) -> SysPrf T (impH (notH f) (notH g)).
 Proof. apply (cp2 LNN). Qed.
 
-Lemma orI1 (T : System) (f g : Formula): SysPrf T f -> SysPrf T (orH f g).
+Lemma orI1 (T : System) (f g : Formula): 
+  SysPrf T f -> SysPrf T (orH f g).
 Proof. apply (orI1 LNN). Qed.
 
-Lemma orI2  (T : System) (f g : Formula): SysPrf T g -> SysPrf T (orH f g).
+Lemma orI2  (T : System) (f g : Formula): 
+  SysPrf T g -> SysPrf T (orH f g).
 Proof. apply (orI2 LNN). Qed.
 
 Lemma orE (T : System) (f g h : Formula):
@@ -367,67 +431,4 @@ intros a v; induction a as [| a Hreca].
   - simpl; now rewrite freeVarSucc.
 Qed.
 
-
-(** Experimental and unstable *)
-
-Module NNnotations. 
-
-Declare Scope nn_scope.
-Delimit Scope nn_scope with nn. 
-
-
-Infix "=" := (equal _): nn_scope.
-Infix "\/" := (orH): nn_scope.
-Infix "/\" := (andH):nn_scope.
-Infix "->" := (impH): nn_scope.
-Notation "~ A" := (@notH _ A): nn_scope. 
-Notation "A <-> B" := (@iffH _ A B): nn_scope.
-
-
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
-
-Notation "t = u" := (@equal _ t u): nn_scope.
-Notation "t <> u" := (~ t = u)%nn : nn_scope.
-
-Reserved Notation "x '\/'' y" (at level 85, right associativity).
-Reserved Notation "x '/\'' y" (at level 80, right associativity).
-Reserved Notation "x '<->'' y" (at level 95, no associativity).
-Reserved Notation "x '<->''' y" (at level 95, no associativity).
-
-
-
-Notation "x \/' y" := (~ x -> y)%nn : nn_scope. 
-Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
-Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
-Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
-
-(* Notation exH := (existH). *)
-
-
-Notation "'v_' i" := (var i) (at level 3) : nn_scope.
-Notation exH' v A := (~ (forallH v (~ A)))%nn.
-
-
-Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
-
-Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
-
-Notation S_ := Succ.
-
-
-Infix "+" := Plus :nn_scope.
-Infix "*" := Times :nn_scope.
-Infix "<" := LT: nn_scope.
-End NNnotations.
-
-Export NNnotations. 
 

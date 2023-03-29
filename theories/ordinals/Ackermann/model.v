@@ -303,7 +303,7 @@ Proof.
       - intros H2 x.
         assert
           (H3: forall b : Formula L,
-              lt_depth L b (forallH v a) ->
+              lt_depth L b (allH v, a)%fol ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula value (substituteFormula L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
@@ -429,7 +429,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   | atomic r ts => atomic r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
-  | forallH v A => (allH v, ~~ nnHelp A)%fol
+  | forallH v A => (allH v, ~ ~ nnHelp A)%fol
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
@@ -661,7 +661,7 @@ Proof.
       cut
         (forall a b : Terms L (arityF L f),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (equal (apply f a) (apply f b)))).
+            interpFormula value (nnHelp (apply f a = apply f b)%fol)).
       * assert
           (H: forall A,
               (forall a b : Terms L (arityF L f),
@@ -672,16 +672,12 @@ Proof.
                 (nnHelp
                    (nat_rec (fun _ : nat => Formula L)
                       (prod_rec
-                         (fun
-                             _ : Terms L (arityF L f) *
-                                   Terms L (arityF L f)  => 
-                             Formula L)
-                         (fun a b : Terms L (arityF L f) =>
-                            A a b)
+                         (fun _ : Terms L (arityF L f) * Terms L (arityF L f)  => Formula L)
+                         (fun a b : Terms L (arityF L f) => A a b)
                          (nVars L (arityF L f)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
-                      (arityF L f)))).
+                         (v_ (n + n)%nat = v_ (S (n + n))%nat -> Hrecn)%fol)
+                           (arityF L f)))).
         { generalize (arityF L f).
           simple induction n.
           - simpl; intros A H; auto. 

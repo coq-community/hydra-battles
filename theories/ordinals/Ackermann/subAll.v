@@ -13,6 +13,9 @@ Require Import subProp.
 Require Import Compat815.
 From Coq Require Import Lia.
 
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps. 
+
 Section SubAllVars.
 
 Variable L : Language.
@@ -446,7 +449,7 @@ Proof.
                  match eq_nat_dec v1 v with
                  | left _ => var nv1
                  | right _ => m v1
-                 end)) nv1 v0 s).
+                 end)) nv1 v0 s) /r; intros x H1  H0 H2 H4.
       rewrite H4; clear H4.
       induction (eq_nat_dec nv1 v0) as [a0 | ?].
       * assert
@@ -616,7 +619,7 @@ Proof.
                                     | right _ => substituteTerm L (m v1) v0 s
                                     end)))) 
                   by (eapply In_list_remove1; apply H3). 
-                  decompose record (freeVarSubAllFormula1 _ _ _ H4).
+                  decompose record (freeVarSubAllFormula1 _ _ _ H4) /r; intros x0 H6 H7.
                   induction (eq_nat_dec x0 v) as [a0 | ?].
                   --- induction H7 as [H5| H5].
                       +++ elim (In_list_remove2 _ _ _ _ _ H3); auto.
@@ -755,7 +758,7 @@ Proof.
                (H0: In nv (freeVarFormula L (subAllFormula f 
                                                (fun x : nat => var x))))
            by (eapply In_list_remove1; apply H). 
-           decompose record (freeVarSubAllFormula1 _ _ _ H0).
+           decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
            elim
              (newVar1
                 (freeVarFormula L f ++
@@ -930,13 +933,13 @@ Proof.
                          | right _ => subAllTerm (m1 v) m2
                          end))))
         by (eapply In_list_remove1; apply H). 
-      decompose record (freeVarSubAllFormula1 _ _ _ H0).
+      decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
       induction (eq_nat_dec x n).
       * induction H3 as [H1| H1].
         -- elim (In_list_remove2 _ _ _ _ _ H).
            ++ auto.
         -- contradiction.
-      * decompose record (freeVarSubAllTerm1 _ _ _ H3).
+      * decompose record (freeVarSubAllTerm1 _ _ _ H3) /r; intros x0 H4 H5.
         elim (newVar1 nv3).
         unfold nv3 at 2; apply in_or_app.
         right; eapply freeVarMap1.

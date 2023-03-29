@@ -30,6 +30,71 @@ Definition Succ (x : Term) : Term :=
 
 Definition Zero : Term := apply LNT Zero_ (Tnil).
 
+
+(** Notations for LNT formulas: experimental and unstable *)
+
+Declare Scope nt_scope.
+Delimit Scope nt_scope with nt. 
+
+
+Infix "=" := (equal _): nt_scope.
+Infix "\/" := (orH): nt_scope.
+Infix "/\" := (andH):nt_scope.
+Infix "->" := (impH): nt_scope.
+Notation "~ A" := (@notH _ A): nt_scope. 
+Notation "A <-> B" := (@iffH _ A B): nt_scope.
+
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+About Tnil.
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): nt_scope.
+Notation "t <> u" := (~ t = u)%nt : nt_scope.
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+
+
+Notation "x \/' y" := (~ x -> y)%nt : nt_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%nt : nt_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nt:  nt_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
+
+(* Notation exH := (existH). *)
+Notation "'v_' i" := (var i) (at level 3) : nt_scope.
+
+Notation exH' v A := (~ (forallH v (~ A)))%nt.
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
+
+
+Module NTnotations. 
+Infix "+" := Plus :nt_scope.
+Infix "*" := Times :nt_scope.
+End NTnotations.
+
+Export NTnotations. 
+
+Section Examples.
+Variable f : Formula. 
+Check (allH 0 1 ,  (f -> v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
+
+Check (exH 0 1 ,  (v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
+End Examples.
+
 Lemma LNT_dec : language_decidable LNT.
 Proof. split; decide equality. Qed.
 
@@ -301,13 +366,13 @@ Proof.
 Qed.
 
 Lemma eqSucc (T : System) (a b : Term):
- SysPrf T (equal a b) -> SysPrf T (equal (Succ a) (Succ b)).
+ SysPrf T (a = b)%nt -> SysPrf T (Succ a = Succ b)%nt.
 Proof.
   intros H; unfold Succ in |- *; apply (equalFunction LNT).
   simpl in |- *.
   destruct (consTerms LNT 0 (Tcons a (Tnil))) as [(a0,b0) p].
   simpl in |- *;
-destruct (consTerms LNT 0 (Tcons b (Tnil))) as [(a1,b1) p0].
+    destruct (consTerms LNT 0 (Tcons b (Tnil))) as [(a1,b1) p0].
   simpl in |- *; repeat split.
   - simpl in p.
     inversion p.
@@ -334,64 +399,5 @@ Qed.
 
 
 
-(** Experimental and unstable *)
 
-Declare Scope nt_scope.
-Delimit Scope nt_scope with nt. 
-
-
-Infix "=" := (equal _): nt_scope.
-Infix "\/" := (orH): nt_scope.
-Infix "/\" := (andH):nt_scope.
-Infix "->" := (impH): nt_scope.
-Notation "~ A" := (@notH _ A): nt_scope. 
-Notation "A <-> B" := (@iffH _ A B): nt_scope.
-
-
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-About Tnil.
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
-
-Notation "t = u" := (@equal _ t u): nt_scope.
-Notation "t <> u" := (~ t = u)%nt : nt_scope.
-
-Reserved Notation "x '\/'' y" (at level 85, right associativity).
-Reserved Notation "x '/\'' y" (at level 80, right associativity).
-Reserved Notation "x '<->'' y" (at level 95, no associativity).
-Reserved Notation "x '<->''' y" (at level 95, no associativity).
-
-
-
-Notation "x \/' y" := (~ x -> y)%nt : nt_scope. 
-Notation "x /\' y" := (~ (~ x \/'  ~ y))%nt : nt_scope.
-Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nt:  nt_scope.
-Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
-
-(* Notation exH := (existH). *)
-Notation "'v_' i" := (var i) (at level 3) : nt_scope.
-
-Notation exH' v A := (~ (forallH v (~ A)))%nt.
-
-Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
-
-Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
-
-
-Module NTnotations. 
-Infix "+" := Plus :nt_scope.
-Infix "*" := Times :nt_scope.
-End NTnotations.
-
-Export NTnotations. 
-Variable f : Formula. 
-Check (allH 0 1 ,  (f -> v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
-
-Check (exH 0 1 ,  (v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
 
