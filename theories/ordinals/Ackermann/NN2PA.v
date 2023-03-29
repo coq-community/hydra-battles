@@ -50,15 +50,13 @@ Proof.
 Qed.
 
 Lemma PAboundedLT :
- forall (m : nat) (a : Formula) (x : nat),
- (forall n : nat,
-     n < m -> SysPrf PA (substituteFormula LNT a x (natToTerm n))) ->
- SysPrf PA (impH (LNN2LNT_formula (LNN.LT (var x) 
-                                     (LNN.natToTerm m))) 
-              a).
+  forall (m : nat) (F : Formula) (x : nat),
+    (forall n : nat,
+        n < m -> SysPrf PA (substituteFormula LNT F x (natToTerm n))) ->
+    SysPrf PA (LNN2LNT_formula ((v_ x)%nt < LNN.natToTerm m)%nn -> F)%nt.
 Proof.
 simple induction m. 
-- intros a x H; apply impI.
+- intros F x H; apply impI.
   apply contradiction with 
     (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm 0))).
   apply Axm; right; constructor.
@@ -74,12 +72,10 @@ simple induction m.
   + apply impE with 
       (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm (S n)))).
     * apply sysWeaken.
-      assert
-        (H1: SysPrf PA
-               (LNN2LNT_formula
-                  (impH (LNN.LT (var x) (LNN.Succ (LNN.natToTerm n)))
-                     (orH (LNN.LT (var x) (LNN.natToTerm n))
-                        (equal (var x) (LNN.natToTerm n))))))
+      assert (H1: SysPrf PA (LNN2LNT_formula
+                     ((v_ x < S_ (LNN.natToTerm n))%nn ->
+                      (v_ x < LNN.natToTerm n)%nn \/ 
+                        v_ x = LNN.natToTerm n)%nt)%nt)
       by (apply NN2PA, nn8). 
       simpl in H1; simpl. 
       unfold orH; apply H1.

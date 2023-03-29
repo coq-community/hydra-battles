@@ -9,7 +9,6 @@ Section List_Remove.
 Variable A : Set.
 Hypothesis Aeq_dec : forall a b : A, {a = b} + {a <> b}.
 
-
 (* to deprecate *)
 Lemma In_list_remove1 :
  forall (a b : A) (l : list A), In a (List.remove Aeq_dec b l) -> In a l.

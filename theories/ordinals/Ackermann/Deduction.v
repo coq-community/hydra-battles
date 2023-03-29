@@ -18,15 +18,17 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Theorem DeductionTheorem :
-  forall (T : System) (f g : Formula) (prf : SysPrf (Ensembles.Add _ T g) f),
-    SysPrf T (impH g f).
+  forall (T : System) (f g : Formula) 
+         (prf : SysPrf (Ensembles.Add _ T g) f),
+    SysPrf T (g -> f)%fol.
 Proof.
   intros T; assert
     (EasyCase :
        forall (g z : Formula),
          Prf nil z ->
-         SysPrf (fun x : fol.Formula L => In x nil /\ mem (fol.Formula L) T x)
-                (impH g z)).
+         SysPrf (fun x : fol.Formula L => In x nil /\ 
+                                            mem (fol.Formula L) T x)
+                (g -> z)%fol).
   { intros g z H.
     set (A1 := IMP1 L z g) in *.
     set (A2 := MP L _ _ _ _ A1 H) in *.
@@ -35,7 +37,7 @@ Proof.
     intros g0 H0; elim H0.
   }
   intros f g [F [H HF]].
-  assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (impH g f)).
+  assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (g -> f)%fol).
   { induction  H
       as
         [A
@@ -82,7 +84,7 @@ Proof.
           simpl in |- *.
           clear - H H2.
           intros g H0; split.
-          -- change (In g (Axm1++Axm2)); apply in_or_app.
+          -- change (In g (Axm1 ++ Axm2)); apply in_or_app.
              destruct (in_app_or _ _ _ H0); firstorder.
           -- destruct (in_app_or _ _ _ H0); firstorder.
         * firstorder auto with datatypes.
@@ -167,8 +169,7 @@ Proof.
     - apply EasyCase, (EQ4 L).
     - apply EasyCase, (EQ5 L).
   }
-  destruct  H0 as [x [x0 H0]].
-  exists x, x0; firstorder.
+  destruct  H0 as [x [x0 H0]]; exists x, x0; firstorder.
 Qed.
 
 End Deduction_Theorem.

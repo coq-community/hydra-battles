@@ -5,6 +5,7 @@ Require Import folProp.
 Require Import subProp.
 Require Import extEqualNat.
 Require Import LNN.
+Require Import NewNotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 
@@ -23,24 +24,24 @@ Fixpoint RepresentableHalf1 (n : nat) :
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (impH A (equal (var 0) (natToTerm f)))
+      SysPrf T (A -> v_ 0 = natToTerm f)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHalf1 m (f a)
-        (substituteFormula LNN A (S m) (natToTerm a))
+        (substF LNN A (S m) (natToTerm a))
   end.
 
 Fixpoint RepresentableHalf2 (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (impH (equal (var 0) (natToTerm f)) A)
+      SysPrf T (v_ 0 = natToTerm f -> A)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHalf2 m (f a)
-        (substituteFormula LNN A (S m) (natToTerm a))
+        (substF LNN A (S m) (natToTerm a))
   end.
 
 Lemma RepresentableHalf1Alternate :
@@ -53,7 +54,7 @@ Proof.
      now apply impTrans with B.
   - simpl in H0 |- *.
     intros a; 
-      apply Hrecn with (substituteFormula LNN B (S n) (natToTerm a)).
+      apply Hrecn with (substF LNN B (S n) (natToTerm a)).
     + rewrite <- (subFormulaImp LNN).
       apply forallE, forallI. 
       * apply closedT.
@@ -70,7 +71,7 @@ Proof.
   - simpl in H0 |- *.
     apply impTrans with A; [assumption| apply H].
    - simpl in H0 |- *; intro a. 
-     apply Hrecn with (substituteFormula LNN A (S n) (natToTerm a)).
+     apply Hrecn with (substF LNN A (S n) (natToTerm a)).
      + rewrite <- (subFormulaImp LNN); apply forallE.
        apply forallI.  
        * apply closedT.
@@ -82,12 +83,12 @@ Fixpoint RepresentableHelp (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (iffH A (equal (var 0) (natToTerm f)))
+      SysPrf T (A <-> v_ 0 = natToTerm f)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHelp m (f a) 
-        (substituteFormula LNN A (S m) (natToTerm a))
+        (substF LNN A (S m) (natToTerm a))
   end.
 
 Lemma RepresentableHalfHelp :
@@ -115,7 +116,7 @@ Proof.
     +  now apply iffSym.
     + auto.
   - simpl in H0 |- *; intro a.
-    apply Hrecn with (substituteFormula LNN A (S n) (natToTerm a)).
+    apply Hrecn with (substF LNN A (S n) (natToTerm a)).
     + rewrite <- (subFormulaIff LNN).
       apply forallE, forallI. 
       * apply closedT.
@@ -142,13 +143,13 @@ Fixpoint ExpressibleHelp (n : nat) : naryRel n -> Formula -> Prop :=
       fun (R : naryRel 0) (A : Formula) =>
       match R with
       | true => SysPrf T A
-      | false => SysPrf T (notH A)
+      | false => SysPrf T ( ~ A)%nn
       end
   | S m =>
       fun (R : naryRel (S m)) (A : Formula) =>
       forall a : nat,
       ExpressibleHelp m (R a)
-        (substituteFormula LNN A (S m) (natToTerm a))
+        (substF LNN A (S m) (natToTerm a))
   end.
 
 Definition Expressible (n : nat) (R : naryRel n) (A : Formula) : Prop :=
@@ -175,7 +176,7 @@ Proof.
   - simpl in H0 |- *. 
   intros a;
     apply (Hrecn (R a)) with 
-    (substituteFormula LNN A (S n) (natToTerm a)).
+    (substF LNN A (S n) (natToTerm a)).
   + rewrite <- (subFormulaIff LNN).
     apply forallE.
     apply forallI.
@@ -189,7 +190,7 @@ Hypothesis nn1:(SysPrf T (notH (equal (natToTerm 1) (natToTerm 0)))).
 Lemma Representable2Expressible :
  forall (n : nat) (R : naryRel n) (A : Formula),
  Representable n (charFunction n R) A ->
- Expressible n R (substituteFormula LNN A 0 (natToTerm 1)).
+ Expressible n R (substF LNN A 0 (natToTerm 1)).
 Proof.
   intros n R A [H H0]; split.
   - intros v H1; induction (freeVarSubFormula3 _ _ _ _ _ H1).
@@ -208,7 +209,7 @@ Proof.
         induction R.
         * simpl in H.
           apply impE with
-            (substituteFormula LNN (equal (var 0) (Succ Zero))
+            (substF LNN (equal (var 0) (Succ Zero))
                0 (Succ Zero)).
           -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
@@ -221,8 +222,7 @@ Proof.
              apply eqRefl.
         * simpl in H.
           apply  impE with
-            (notH (substituteFormula LNN (equal (var 0) Zero) 
-          0 (Succ Zero))).
+            (~ (substF LNN (v_ 0 = Zero) 0 (Succ Zero)))%nn.
           -- apply cp2.
              apply iffE1.
              rewrite <- (subFormulaIff LNN).
@@ -238,8 +238,8 @@ Proof.
       + simpl in H |- *.
         intros a; 
           apply expressibleAlternate with
-          (substituteFormula LNN 
-             (substituteFormula LNN A (S n) (natToTerm a)) 0
+          (substF LNN 
+             (substF LNN A (S n) (natToTerm a)) 0
              (Succ Zero)).
         * apply (subFormulaExch LNN).
           -- discriminate.
