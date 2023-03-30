@@ -232,7 +232,7 @@ Proof.
                      +++ apply iffRefl.
                      +++ apply (subFormulaNil LNN).
                          intro H4; induction (freeVarSubFormula3 _ _ _ _ _ H4).
-                         *** now apply (In_list_remove2 _ _ _ _ _ H5).
+                         *** now apply (in_remove_neq _ _ _ _ _ H5).
                          *** simpl in H5; decompose sum H5; discriminate H6.
            ++ replace (LT (var 2) (natToTerm (codePrf _ _ x1))) 
                 with

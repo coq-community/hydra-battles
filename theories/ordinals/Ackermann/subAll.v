@@ -190,7 +190,7 @@ Proof.
       * intros m H0; unfold m1', m2'; clear m1' m2'.
         induction (eq_nat_dec m n).
         -- reflexivity.
-        -- apply H; apply In_list_remove3; auto.
+        -- apply H; apply in_in_remove; auto.
     + intros m H0; apply H, H0. 
 Qed.
 
@@ -320,20 +320,21 @@ Proof.
                      end)))) by ( eapply in_remove; apply H). 
    destruct  (Hrecf _ _ H0) as [x [H2 H3]].
    induction (eq_nat_dec x n) as [a | ?].
-   + elim (In_list_remove2 _ _ _ _ _ H).
+   + elim (in_remove_neq _ _ _ _ _ H).
      induction H3 as [H1| H1].
      auto.
      contradiction.
    + exists x.
      split.
-     * apply In_list_remove3; auto.
+     * apply in_in_remove; auto.
      * auto.
 Qed.
 
 Lemma freeVarSubAllFormula2 :
  forall (f : fol.Formula L) (m : nat -> fol.Term L) (v n : nat),
  In n (freeVarFormula L f) ->
- In v (freeVarTerm L (m n)) -> In v (freeVarFormula L (subAllFormula f m)).
+ In v (freeVarTerm L (m n)) -> 
+ In v (freeVarFormula L (subAllFormula f m)).
 Proof.
   intro f; induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     simpl.
@@ -359,26 +360,28 @@ Proof.
   - intros m v n H H0; eapply Hrecf.
     + apply H.
     + apply H0.
-  - intros m v n0 H H0; apply In_list_remove3.
-    + eapply Hrecf.
-      * eapply in_remove; apply H.
-      * induction (eq_nat_dec n0 n) as [a | b].
-        -- now elim (In_list_remove2 _ _ _ _ _ H).
-        -- auto.
-    + intro H1; 
+  - intros m v n0 H H0; apply in_in_remove.
+     + intro H1; 
         eapply
           (newVar1
              (freeVarFormula L f ++
-                freeVarMap (List.remove eq_nat_dec n (freeVarFormula L f)) m)).
+                freeVarMap (List.remove eq_nat_dec n 
+                              (freeVarFormula L f)) m)).
       rewrite <-  H1; clear H1; apply in_or_app.
       right.
       clear Hrecf.
-      induction (List.remove eq_nat_dec n (freeVarFormula L f)); simpl in |- *.
+      induction (List.remove eq_nat_dec n (freeVarFormula L f)); 
+        simpl in |- *.
       * contradiction H.
       * apply in_or_app; simpl in H.
         destruct  H as [H | H].
         -- rewrite H; auto.
-        -- auto.
+        -- auto. 
+     + eapply Hrecf.
+       * eapply in_remove; apply H.
+       * induction (eq_nat_dec n0 n) as [a | b].
+         -- now elim (in_remove_neq _ _ _ _ _ H).
+         -- auto.
 Qed.
 
 Lemma subSubAllTerm (t : fol.Term L) (m : nat -> fol.Term L) (v : nat) (s : fol.Term L):
@@ -492,8 +495,8 @@ Proof.
       -- apply (iffRefl L).
       --    intros m0 H5; induction (eq_nat_dec m0 v).
             ++ reflexivity.
-            ++ apply H3; simpl; apply In_list_remove3; auto.
-      *  apply (iffTrans L) with
+            ++ apply H3; simpl; apply in_in_remove; auto.
+       *  apply (iffTrans L) with
            (forallH x
               (substituteFormula L
                  (subAllFormula a
@@ -556,7 +559,7 @@ Proof.
                                  right.
                                  eapply freeVarMap1.
                                  apply H4.
-                                 apply In_list_remove3; auto.
+                                 apply in_in_remove; auto.
          -- apply (iffTrans L)
               with
               (forallH x
@@ -622,7 +625,7 @@ Proof.
                   decompose record (freeVarSubAllFormula1 _ _ _ H4) /r; intros x0 H6 H7.
                   induction (eq_nat_dec x0 v) as [a0 | ?].
                   --- induction H7 as [H5| H5].
-                      +++ elim (In_list_remove2 _ _ _ _ _ H3); auto.
+                      +++ elim (in_remove_neq _ _ _ _ _ H3); auto.
                       +++    auto.
                   --- 
                     elim
@@ -633,7 +636,7 @@ Proof.
                     fold nv2; apply in_or_app.
                     right;  eapply freeVarMap1.
                     +++ apply H7.
-                    +++ apply In_list_remove3; auto.
+                    +++ apply in_in_remove; auto.
                ** apply (reduceForall L).
                   --- apply (notInFreeVarSys L).
                   --- eapply (iffTrans L).
@@ -661,14 +664,8 @@ Proof.
                               reflexivity.
                               intros H4; induction (freeVarSubTerm3 _ _ _ _ _ H4).
                               elim H2.
-                              apply In_list_remove3.
-                              eapply freeVarSubAllFormula2.
-                              apply H3.
-                              induction (eq_nat_dec m0 v).
-                              elim b0; auto.
-                              eapply in_remove.
-                              apply H5.
-                              intros H6;
+                              apply in_in_remove.
+                             intros H6;
                                 elim
                                   (newVar1
                                      (freeVarFormula L a ++
@@ -679,7 +676,13 @@ Proof.
                               right; eapply freeVarMap1.
                               eapply in_remove.
                               apply H5.
-                              apply In_list_remove3; auto.
+                              apply in_in_remove; auto.
+                              eapply freeVarSubAllFormula2.
+                              apply H3.
+                              induction (eq_nat_dec m0 v).
+                              elim b0; auto.
+                              eapply in_remove.
+                              apply H5. 
                               auto.
 Qed.
 
@@ -767,13 +770,13 @@ Proof.
            fold nv; apply in_or_app; right.
            eapply freeVarMap1.
            ++ apply H3.
-           ++ apply In_list_remove3.
-              ** apply H2.
+           ++ apply in_in_remove.
               ** destruct H3 as [H1| H1].
                  --- rewrite H1.
-                     eapply In_list_remove2.
+                     eapply in_remove_neq.
                      apply H.
                  --- contradiction.
+              ** apply H2.
       * apply (reduceForall L).
         -- apply (notInFreeVarSys L).
         -- apply Hrecf.
@@ -910,7 +913,7 @@ Proof.
                       unfold nv1; apply in_or_app; right.
                       eapply freeVarMap1.
                       *** apply H0.
-                      *** apply In_list_remove3; auto.
+                      *** apply in_in_remove; auto.
                   +++ apply (subTermNil L).
                       intro H1.
                       elim (newVar1 nv2).
@@ -919,7 +922,7 @@ Proof.
                       *** eapply freeVarSubAllTerm2.
                           apply H0.
                           apply H1.
-                      *** apply In_list_remove3; auto.
+                      *** apply in_in_remove; auto.
     + apply (iffSym L).
       apply (rebindForall L).
       intro H;
@@ -936,7 +939,7 @@ Proof.
       decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
       induction (eq_nat_dec x n).
       * induction H3 as [H1| H1].
-        -- elim (In_list_remove2 _ _ _ _ _ H).
+        -- elim (in_remove_neq _ _ _ _ _ H).
            ++ auto.
         -- contradiction.
       * decompose record (freeVarSubAllTerm1 _ _ _ H3) /r; intros x0 H4 H5.
@@ -944,17 +947,17 @@ Proof.
         unfold nv3 at 2; apply in_or_app.
         right; eapply freeVarMap1.
         -- apply H5.
-        -- apply In_list_remove3.
+        -- apply in_in_remove.
+           ++ intro H1; elim (newVar1 nv1).
+              rewrite <- H1; unfold nv1; apply in_or_app; right.
+              eapply freeVarMap1.
+              apply H4.
+              apply in_in_remove; auto.
            ++ eapply freeVarSubAllFormula2.
               ** apply H2.
               ** induction (eq_nat_dec x n) as [a | ?].
                  --- now elim b.
                  --- assumption. 
-           ++ intro H1; elim (newVar1 nv1).
-              rewrite <- H1; unfold nv1; apply in_or_app; right.
-              eapply freeVarMap1.
-              apply H4.
-              apply In_list_remove3; auto.
 Qed.
 
 Section subAllCloseFrom.
@@ -1078,7 +1081,7 @@ Proof.
                apply (forallI L).
                intros [x [H0 H1]];
                  induction H1 as [x H1| x H1]; [ induction H1 | induction H1 ].
-               +++ now elim (In_list_remove2 _ _ _ _ _ H0).
+               +++ now elim (in_remove_neq _ _ _ _ _ H0).
                +++ apply impE with (closeFrom m n f0).
                    *** apply sysWeaken.
                        apply Hrecn.
@@ -1147,7 +1150,7 @@ Proof.
                        apply (forallI L).
                        intros [x [H1 H2]];
                          induction H2 as [x H2| x H2]; [ induction H2 | induction H2 ].
-                       -- now elim (In_list_remove2 _ _ _ _ _ H1).
+                       -- now elim (in_remove_neq _ _ _ _ _ H1).
                        -- apply impE 
                             with (substituteFormula L (closeFrom s n f) m (var p)).
                           ++ apply sysWeaken.
@@ -1178,7 +1181,7 @@ Proof.
                           *** intros [x [H3 H4]];
                                 induction H4 as [x H4| x H4];
                                 [ induction H4 | induction H4 ].
-                              now elim (In_list_remove2 _ _ _ _ _ H3).
+                              now elim (in_remove_neq _ _ _ _ _ H3).
                           *** apply Hrecn.
                               apply H.
                               apply le_S_n.
@@ -1312,7 +1315,7 @@ Proof.
         -- apply (impI L), (forallI L).
            ++ intros [x [H1 H2]];
                 induction H2 as [x H2| x H2]; [ induction H2 | induction H2 ].
-              now elim (In_list_remove2 _ _ _ _ _ H1).
+              now elim (in_remove_neq _ _ _ _ _ H1).
            ++ apply Hrecn.
               ** intros v H1; eapply H; apply Nat.lt_lt_succ_r, H1. 
               ** eapply (forallSimp L).

@@ -192,11 +192,11 @@ Proof.
   - simpl in |- *.
     induction Hrecf as (H, H0).
     split.
-    + intros H1; apply In_list_remove3.
-      * apply H; eapply List.in_remove; apply H1.
-      * eapply In_list_remove2; apply H1.
     + intros H1; apply in_in_remove.
-      * eapply In_list_remove2, H1.
+      * eapply in_remove_neq; apply H1.
+      * apply H; eapply List.in_remove; apply H1.
+    + intros H1; apply in_in_remove.
+      * eapply in_remove_neq, H1.
       * apply H0.
         eapply in_remove, H1.
 Qed.
@@ -346,13 +346,12 @@ Proof.
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
         elim H5.
         eapply in_in_remove.
-        { eapply In_list_remove2, H11. }
+        { eapply in_remove_neq, H11. }
         { apply LNN2LNT_freeVarFormula2.
           eapply in_remove.
           apply H11.
         } 
-
-        elim (In_list_remove2 _ _ _ _ _ H6).
+        elim (in_remove_neq _ _ _ _ _ H6).
         destruct H11 as [H11| H11].
         -- auto.
         -- contradiction.
@@ -397,7 +396,7 @@ Proof.
            apply (subFormulaTrans LNT).
            unfold not in |- *; intros; elim H2.
            apply  in_in_remove.
-           { eapply In_list_remove2, H6. }
+           { eapply in_remove_neq, H6. }
            { apply LNN2LNT_freeVarFormula1.
              eapply in_remove.
              apply H6.

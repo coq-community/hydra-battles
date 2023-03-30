@@ -70,7 +70,7 @@ Proof.
   unfold not in |- *; intros.
   destruct (H2 v) as [H0 H3]; rename H3 into foo; rename H0 into H3.
   absurd (v = 0).
-  -  eapply In_list_remove2; apply H3; assumption.
+  -  eapply in_remove_neq; apply H3; assumption.
   - eapply
       (freeVarCodeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF
          codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR). 
@@ -137,7 +137,7 @@ Proof.
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
     - destruct x0 as [| n].
-      elim (In_list_remove2 _ _ _ _ _ H5).
+      elim (in_remove_neq _ _ _ _ _ H5).
       + reflexivity.
       + destruct n as [|n ].
         * reflexivity.
@@ -259,7 +259,7 @@ Proof.
               ** clear n; apply existSys.
                  { apply closedNN. }
                  { unfold not in |- *; intros H4.
-                   elim (In_list_remove2 _ _ _ _ _ H4).
+                   elim (in_remove_neq _ _ _ _ _ H4).
                    reflexivity. }
                  {apply existSimp; apply nnI.
                   apply Axm; right; constructor. }

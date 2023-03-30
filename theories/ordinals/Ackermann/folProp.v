@@ -67,7 +67,7 @@ Proof.
   - intros v x H; induction H as [H| H].
     + simpl in |- *; rewrite H.
       unfold not in |- *; intros H0;
-        elim (In_list_remove2 _ _ _ _ _ H0); reflexivity.
+        elim (in_remove_neq _ _ _ _ _ H0); reflexivity.
     + simpl in |- *.  intro H0. 
       assert (H1: In v (freeVarFormula (closeList l x))).
       { eapply in_remove.   apply H0. }
@@ -804,7 +804,7 @@ Proof.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
         right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
-      intro H; eapply (In_list_remove2 _ _ _ _ _ H).
+      intro H; eapply (in_remove_neq _ _ _ _ _ H).
       * reflexivity.
       * now rewrite subFormulaId.
 Qed.
@@ -843,7 +843,7 @@ Proof.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
         right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
-      intros H; eapply (In_list_remove2 _ _ _ _ _ H).
+      intros H; eapply (in_remove_neq _ _ _ _ _ H).
       * reflexivity.
       * rewrite subFormulaId; auto.
 Qed.

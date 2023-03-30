@@ -66,7 +66,7 @@ Proof.
   intros H H0; apply (impI L), (forallI L).
   - intros [x [H1 H2]]; destruct H2 as [x H2| x H2]; [ idtac | induction H2 ].
     + apply H; exists x; now split.
-    + apply (In_list_remove2 _ _ _ _ _ H1); easy. 
+    + apply (in_remove_neq _ _ _ _ _ H1); easy. 
   - apply impE with f1.
     + apply sysWeaken, H0. 
     + eapply forallSimp.

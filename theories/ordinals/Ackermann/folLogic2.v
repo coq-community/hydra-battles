@@ -39,9 +39,9 @@ Proof.
      * assert (H1: In a (freeVarFormula L (substituteFormula L f a (var b))))
        by (eapply in_remove; apply H0).
        induction (freeVarSubFormula3 _ _ _ _ _ H1).
-       elim (In_list_remove2 _ _ _ _ _ H2).
+       elim (in_remove_neq _ _ _ _ _ H2).
        -- auto.
-       -- elim (In_list_remove2 _ _ _ _ _ H0).
+       -- elim (in_remove_neq _ _ _ _ _ H0).
           destruct H2 as [H2| H2].
           auto.
           elim H2.

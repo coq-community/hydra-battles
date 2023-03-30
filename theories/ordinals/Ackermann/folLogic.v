@@ -309,7 +309,7 @@ Proof.
     + destruct H3 as [x H3| x H3].
       * assumption.
       * induction H3; simpl in H2; absurd (v = v).
-        -- eapply In_list_remove2.
+        -- eapply in_remove_neq.
            apply H2.
         -- reflexivity. 
   - assumption.
@@ -368,7 +368,7 @@ Proof.
     intros [x [H0 H1]]; destruct H1. 
     simpl in |- *; intro H0. 
     absurd (v = v).
-    + eapply In_list_remove2.
+    + eapply in_remove_neq.
       apply H0.
     + reflexivity.
     + apply impE with (notH f).

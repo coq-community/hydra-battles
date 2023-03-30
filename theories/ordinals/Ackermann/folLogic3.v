@@ -585,7 +585,7 @@ Proof.
            ++ right.
               apply in_or_app.
               auto.
-           ++ elim (In_list_remove2 _ _ _ _ _ H7).
+           ++ elim (in_remove_neq _ _ _ _ _ H7).
               induction H11 as [H11| H11].
               auto.
               contradiction.
@@ -634,7 +634,7 @@ Proof.
                  unfold nv at 2 in |- *.
                  right.
                  auto with datatypes.
-                 elim (In_list_remove2 _ _ _ _ _ H7).
+                 elim (in_remove_neq _ _ _ _ _ H7).
                  reflexivity.
                  apply impE with
                    (substituteFormula L (substituteFormula L a v 
@@ -672,7 +672,7 @@ Proof.
            induction (freeVarSubFormula3 _ _ _ _ _ H10).
            right; apply in_or_app.
            now left. 
-           elim (In_list_remove2 _ _ _ _ _ H7).
+           elim (in_remove_neq _ _ _ _ _ H7).
            induction H11 as [H11| H11].
            ++ auto.
            ++ contradiction.

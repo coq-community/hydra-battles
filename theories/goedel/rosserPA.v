@@ -591,10 +591,10 @@ Proof.
        * lia. 
        * assert (H4: v <= 1) by now apply freeVarCodeSysPrfN.
          lia.
-     + eapply In_list_remove3.
+     + eapply in_in_remove.
+       * eapply in_remove_neq, H4.
        * apply LNN2LNT_freeVarFormula1.
          eapply in_remove, H4. 
-       * eapply In_list_remove2, H4.
   - intros [H| H]; unfold Inconsistent.  
     + intros f; elim H.
       intros x0 H2; induction H2 as [x1 H2].
@@ -632,7 +632,7 @@ Proof.
                      +++ apply iffRefl.
                      +++ apply (subFormulaNil LNT).
                          intros H4; induction (freeVarSubFormula3 _ _ _ _ _ H4).
-                         *** now apply (In_list_remove2 _ _ _ _ _ H5).
+                         *** now apply (in_remove_neq _ _ _ _ _ H5).
                          *** simpl in H5; decompose sum H5.
                              discriminate H6.
            ++ replace (LNN.LT (var 2) (natToTermLNN (codePrf _ _ x1))) 

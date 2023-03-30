@@ -144,7 +144,7 @@ Proof.
     + intros x0 H1; unfold updateValue; induction (eq_nat_dec n x0).
       * reflexivity.
       * apply H.
-        apply In_list_remove3; auto.
+        apply in_in_remove; auto.
     + auto.
 Qed.
  

@@ -50,7 +50,7 @@ Ltac SimplFreeVar :=
    _ =>
        assert (In X3 (freeVarFormula X9 X2));
         [ eapply in_remove; apply H
-        | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
+        | assert (X3 <> X1); [ eapply in_remove_neq; apply H | clear H ] ]
    | H:(In ?X3 (freeVarFormula ?X9 (andH ?X1 ?X2))) |- _ =>
        assert (In X3 (freeVarFormula X9 X1 ++ freeVarFormula X9 X2));
         [ apply H | clear H ]
@@ -231,7 +231,7 @@ Proof.
                    (H5: In 0 (freeVarFormula LNN (substituteFormula LNN B 0 (Succ (var nv)))))
                   by eapply in_remove, H4.
                  induction (freeVarSubFormula3 _ _ _ _ _ H5).
-                 +++ elim (In_list_remove2 _ _ _ _ _ H6); reflexivity.
+                 +++ elim (in_remove_neq _ _ _ _ _ H6); reflexivity.
                  +++ simpl in H6; decompose sum H6; auto.
              --- apply impE with
                  (substituteFormula LNN
@@ -389,7 +389,7 @@ Proof.
                                           induction (in_app_or _ _ _ H7).
                                           induction (freeVarSubFormula3 _ _ _ _ _ H8).
                                           absurd (v = v0).
-                                          eapply In_list_remove2.
+                                          eapply in_remove_neq.
                                           apply H9.
                                           apply freeVarfU.
                                           eapply in_remove.
@@ -447,7 +447,7 @@ Proof.
                                               ~ In v (List.remove eq_nat_dec v0 
                                                         (freeVarFormula LNN fU))).
                                         {  intros v H10; absurd (v = v0).
-                                          - eapply In_list_remove2, H10.
+                                          - eapply in_remove_neq, H10.
                                           - apply freeVarfU; eapply in_remove, H10.
                                         }
                                         apply
@@ -582,7 +582,7 @@ Proof.
                                         apply (subFormulaNil LNN).
                                         unfold not in |- *; intros.
                                         induction (freeVarSubFormula3 _ _ _ _ _ H12).
-                                        elim (In_list_remove2 _ _ _ _ _ H13).
+                                        elim (in_remove_neq _ _ _ _ _ H13).
                                         reflexivity.
                                         apply H13.
                                         apply
@@ -607,7 +607,7 @@ Proof.
                                                    (var nv))))
                                         by eapply in_remove, H13.
                                         induction (freeVarSubFormula3 _ _ _ _ _ H14).
-                                        elim (In_list_remove2 _ _ _ _ _ H15).
+                                        elim (in_remove_neq _ _ _ _ _ H15).
                                         reflexivity.
                                         simpl in H15.
                                         decompose sum H15.
@@ -862,7 +862,7 @@ Proof.
     (H5 : In 0 (freeVarFormula LNN (substituteFormula LNN F 0 (Succ (var nv)))))
    by eapply in_remove, H4.
   induction (freeVarSubFormula3 _ _ _ _ _ H5).
-  elim (In_list_remove2 _ _ _ _ _ H6).
+  elim (in_remove_neq _ _ _ _ _ H6).
   reflexivity.
   simpl in H6.
   decompose sum H6.
@@ -937,7 +937,7 @@ Proof.
   { unfold not in |- *; intros.
     induction (freeVarSubFormula3 _ _ _ _ _ H4).
     absurd (v = v0).
-    eapply In_list_remove2.
+    eapply in_remove_neq.
     apply H7.
     apply freeVarfU.
     eapply in_remove.
@@ -1137,7 +1137,7 @@ Proof.
   apply (subFormulaNil LNN).
   unfold not in |- *; intros.
   induction (freeVarSubFormula3 _ _ _ _ _ H13).
-  elim (In_list_remove2 _ _ _ _ _ H14).
+  elim (in_remove_neq _ _ _ _ _ H14).
   reflexivity.
   apply H14.
   apply
@@ -1172,7 +1172,7 @@ Proof.
   apply (subFormulaNil LNN).
   unfold not in |- *; intros.
   induction (freeVarSubFormula3 _ _ _ _ _ H13).
-  elim (In_list_remove2 _ _ _ _ _ H14).
+  elim (in_remove_neq _ _ _ _ _ H14).
   reflexivity.
   simpl in H14.
   decompose sum H14.
@@ -1311,7 +1311,7 @@ Proof.
         ~ In v (List.remove  eq_nat_dec v0 (freeVarFormula LNN fU))).
   {  unfold not in |- *; intros.
      absurd (v = v0).
-     eapply In_list_remove2.
+     eapply in_remove_neq.
      apply H11.
      apply freeVarfU.
      eapply in_remove.
@@ -1462,7 +1462,7 @@ Proof.
         (H5: In 0 (freeVarFormula LNN (substituteFormula LNN F 0 (Succ (var nv)))))
         by (eapply in_remove, H4).
       induction (freeVarSubFormula3 _ _ _ _ _ H5).
-      elim (In_list_remove2 _ _ _ _ _ H6).
+      elim (in_remove_neq _ _ _ _ _ H6).
       reflexivity.
       simpl in H6.
       decompose sum H6.
@@ -1561,7 +1561,7 @@ Proof.
       =>
         assert (In X3 (freeVarFormula LNN X2));
         [ eapply in_remove; apply H
-        | assert (X3 <> X1); [ eapply In_list_remove2; apply H | clear H ] ]
+        | assert (X3 <> X1); [ eapply in_remove_neq; apply H | clear H ] ]
     | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
         assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
         [ apply H | clear H ]
@@ -1622,7 +1622,7 @@ Proof.
   destruct v as [| n].
   - reflexivity.
   - destruct n.
-    elim (In_list_remove2 _ _ _ _ _ H).
+    elim (in_remove_neq _ _ _ _ _ H).
     + reflexivity.
     + elim (Compat815.le_not_lt (S (S n)) 1).
       * apply freeVarCodeSysPrf.
@@ -1715,7 +1715,7 @@ Proof.
            apply (subFormulaNil LNN).
            unfold not in |- *; intros.
            induction (freeVarSubFormula3 _ _ _ _ _ H0).
-           apply (In_list_remove2 _ _ _ _ _ H1).
+           apply (in_remove_neq _ _ _ _ _ H1).
            reflexivity.
            simpl in H1.
            decompose sum H1.
@@ -1769,7 +1769,7 @@ Proof.
            assert (H1: In 0 (freeVarFormula LNN (substituteFormula LNN B 0 (var 2))))
              by eapply in_remove, H0.
            induction (freeVarSubFormula3 _ _ _ _ _ H1).
-           elim (In_list_remove2 _ _ _ _ _ H2).
+           elim (in_remove_neq _ _ _ _ _ H2).
            reflexivity.
            induction H2 as [H2| H2].
            discriminate H2.
@@ -1785,7 +1785,7 @@ Proof.
            apply (subFormulaNil LNN).
            unfold not in |- *; intros.
            induction (freeVarSubFormula3 _ _ _ _ _ H0).
-           elim (In_list_remove2 _ _ _ _ _ H1).
+           elim (in_remove_neq _ _ _ _ _ H1).
            reflexivity.
            elim (closedNatToTerm _ _ H1).
            apply

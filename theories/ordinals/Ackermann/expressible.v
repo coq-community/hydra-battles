@@ -198,7 +198,7 @@ Proof.
    + apply H.
      eapply in_remove.
      apply H2.
-   + eapply In_list_remove2.
+   + eapply in_remove_neq.
      apply H2.
    + elim H2.
   - clear H.
