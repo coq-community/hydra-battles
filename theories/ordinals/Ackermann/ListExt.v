@@ -15,5 +15,5 @@ Qed.
 
 End List_Remove.
 
-#[deprecated(note="use  ListExt.in_remove_neq instead")]
+#[deprecated(note="use ListExt.in_remove_neq instead")]
  Notation In_list_remove2 := in_remove_neq (only parsing).

@@ -9,6 +9,9 @@ Require Import folLogic.
 Require Import folProp.
 Require Import folReplace.
 
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
+
 Section Substitution_Properties.
 
 Variable L : Language.
@@ -694,13 +697,17 @@ Proof.
   - intros v1 v2 s1 s2 H H0 H1; repeat rewrite (subFormulaRelation L).
     rewrite subTermsExch; auto.
     apply (iffRefl L).
-  - intros  v s H1; decompose record (H T); decompose record (H0 T).
+  - intros  v s H1; decompose record (H T) /r. 
+    intros v s H1 H2 H4 H5.
+    decompose record (H0 T) /r.
+    intros H3 H7 H8.
     rewrite (subFormulaImp L); simpl in H1; apply (reduceImp L).
     + apply H2; intros H6; elim H1; apply in_or_app; now left. 
     + apply H3; intros H6; elim H1; apply in_or_app; now right.
-  - intros v1 v2 s H1; decompose record (H T). 
-    decompose record (H0 T).
-    repeat rewrite (subFormulaImp L).
+  - intros v1 v2 s H1; decompose record (H T) /r.
+    intros v1 v2 s H1 H2 H4 H5; decompose record (H0 T) /r.
+    intros v1 v2 s H1 H2 H4 H5 H3 H7 H8; 
+      repeat rewrite (subFormulaImp L).
     simpl in H1.
     apply (reduceImp L).
     + apply H4.
@@ -711,23 +718,28 @@ Proof.
        intros H6; elim H1; apply in_in_remove.
       * eapply in_remove_neq, H6.
       * apply in_or_app; right; eapply in_remove, H6.
-  - intros v1 v2 s1 s2 H1 H2 H3; decompose record (H T). 
-    decompose record (H0 T).
+  - intros v1 v2 s1 s2 H1 H2 H3; decompose record (H T) /r.
+    intros v1 v2 s1 s2 H1 H2 H3 H4 H6 H7; decompose record (H0 T) /r.
+    intros v1 v2 s1 s2 H1 H2 H3 H4 H6 H7 H5 H9 H10.
     repeat rewrite (subFormulaImp L).
     apply (reduceImp L).
     + apply H7; auto.
     + apply H10; auto.
-  - intros v s H0; decompose record (H T).
-    rewrite (subFormulaNot L); apply (reduceNot L).
+  - intros v s H0; decompose record (H T) /r.
+    intros v s H0 H1 H3 H4;
+      rewrite (subFormulaNot L); apply (reduceNot L).
     apply H1; auto.
-  - intros v1 v2 s H0; decompose record (H T).
+  - intros v1 v2 s H0; decompose record (H T) /r. 
+    intros v1 v2 s H0 H1 H3 H4.
     repeat rewrite (subFormulaNot L).
     apply (reduceNot L); apply H3; auto.
-  - intros v1 v2 s1 s2 H0 H1 H2; decompose record (H T).
-    repeat rewrite (subFormulaNot L).
+  - intros v1 v2 s1 s2 H0 H1 H2; decompose record (H T) /r.
+    intros v1 v2 s1 s2 H0 H1 H2 H3 H5 H6; 
+      repeat rewrite (subFormulaNot L).
     apply (reduceNot L); apply H6; auto.
-  - intros v0 s H0; decompose record (subFormulaForall2 L a v v0 s).
-    rewrite H5; clear H5.
+  - intros v0 s H0; 
+      decompose record (subFormulaForall2 L a v v0 s) /r.
+    intros v0 s H0 x H2 H1 H3 H5; rewrite H5; clear H5.
     induction (eq_nat_dec v v0) as [a0 | ?].
     + apply (iffRefl L).
     + eapply (sysExtend L) with (Empty_set Formula).
@@ -759,7 +771,8 @@ Proof.
            ++ auto.
       * assert (H4: lt_depth L a (forallH v a))
           by apply depthForall.
-        decompose record (H _ H4 (Empty_set Formula)).
+        decompose record (H _ H4 (Empty_set Formula)) /r.
+        intros H5 H7 H8;
         set (A1 := substituteFormula L a v (var x)).
         rewrite <- (subFormulaId _ a v).
         apply impE with
@@ -781,9 +794,11 @@ Proof.
                 repeat rewrite subFormulaDepth.
                 apply depthForall.
               }
-              decompose record (H _ H6 (Empty_set Formula)).
-              apply H9.
-              intro H10; induction (freeVarSubFormula3 _ _ _ _ H10) as [H13 | H13].
+              decompose record (H _ H6 (Empty_set Formula)) /r.
+              intros H9 H11 H12; apply H9.
+              intro H10; 
+                induction (freeVarSubFormula3 _ _ _ _ H10) 
+                as [H13 | H13].
               ** assert (H14: In v0 (freeVarFormula L A1))
                  by (eapply in_remove, H13).
                  induction (freeVarSubFormula3 _ _ _ _ H14) as [H15 | H15].
@@ -799,8 +814,10 @@ Proof.
                 repeat rewrite subFormulaDepth.
                 apply depthForall.
               }
-              decompose record (H _ H6 (Empty_set Formula)).
-              apply impE with (substituteFormula L (substituteFormula L A1 v0 s) x 
+              decompose record (H _ H6 (Empty_set Formula)) /r.
+              intros H9 H11 H12;
+              apply impE with 
+                (substituteFormula L (substituteFormula L A1 v0 s) x 
                                  (var v)).
               ** apply sysWeaken.
                  apply (iffE1 L).
@@ -823,10 +840,11 @@ Proof.
               assert
                 (H4: lt_depth L (substituteFormula L a v (var x)) 
                        (forallH v a)).
-              { unfold lt_depth; rewrite subFormulaDepth; apply depthForall.
+              { unfold lt_depth; rewrite subFormulaDepth; 
+                  apply depthForall.
               }
-              decompose record (H _ H4 (Empty_set Formula)).
-              apply H5.
+              decompose record (H _ H4 (Empty_set Formula)) /r.
+              intros H5 H7 H8; apply H5.
               intros H6; induction (freeVarSubFormula3 _ _ _ _ H6).
               ** auto.
               ** induction H9 as [H9| H9].
@@ -840,13 +858,13 @@ Proof.
       * rewrite a0.
         rewrite (subFormulaId L).
         apply (iffRefl L).
-      * decompose record (subFormulaForall2 L a v v1 s).
-        rewrite H5; clear H5.
-        decompose record (subFormulaForall2 L a v v1 (var v2)).
-        rewrite H8; clear H8.
+      * decompose record (subFormulaForall2 L a v v1 s) /r.
+        intros x H2 H1 H3 H5; rewrite H5; clear H5.
+        decompose record (subFormulaForall2 L a v v1 (var v2)) /r.
+        intros x0 H5 H4 H6 H8; rewrite H8; clear H8.
         induction (eq_nat_dec v v1).
-        -- decompose record (subFormulaForall2 L a v v2 s).
-           rewrite H11; clear H11.
+        -- decompose record (subFormulaForall2 L a v v2 s) /r.
+           intros x1 H8 H7 H9 H11; rewrite H11; clear H11.
            induction (eq_nat_dec v v2).
            ++ apply (iffRefl L).
            ++ apply (iffI L).
@@ -889,8 +907,9 @@ Proof.
                              apply (iffRefl L).
                          *** assert (H10: lt_depth L a (forallH v a))
                                by  apply depthForall.
-                             decompose record (H _ H10 (Empty_set Formula)).
-                             unfold A1; apply H13.
+                             decompose record
+                               (H _ H10 (Empty_set Formula)) /r.
+                             intros H11 H13 H14; unfold A1; apply H13.
                               intros H12; elim H9; assumption.
                      +++ apply  impE with
                            (substituteFormula L 
@@ -904,7 +923,8 @@ Proof.
                                repeat rewrite subFormulaDepth.
                                apply depthForall.
                              }
-                             decompose record (H _ H10 (Empty_set Formula)).
+                             decompose record (H _ H10 (Empty_set Formula)) /r.
+                             intros H11 H13 H14.
                              apply H11; clear H11 H13 H14.
                              intros H11; induction (freeVarSubFormula3 _ _ _ _ H11).
                              assert (H13: In v2 (freeVarFormula L A1)).
@@ -924,7 +944,8 @@ Proof.
                              { unfold lt_depth, A1; repeat rewrite subFormulaDepth; 
                                  apply depthForall. 
                              }
-                             decompose record (H _ H10 (Empty_set Formula)).
+                             decompose record (H _ H10 (Empty_set Formula)) /r.
+                             intros H11 H13 H14;
                              apply H14; clear H11 H13 H14; auto.
                              intros [H11| H11]; auto.
                              apply forallE.
@@ -947,7 +968,8 @@ Proof.
                            repeat rewrite subFormulaDepth.
                            apply depthForall.
                          }
-                         decompose record (H _ H10 (Empty_set _)).
+                         decompose record (H _ H10 (Empty_set _)) /r.
+                         intros H11 H13 H14; 
                          apply H11; clear H11 H13 H14.
                          intros H11; 
                            induction (freeVarSubFormula3 _ _ _ _ H11) as
@@ -961,8 +983,8 @@ Proof.
              (subFormulaForall2 L
                 (substituteFormula L 
                    (substituteFormula L a v (var x0)) v1 (var v2))
-                x0 v2 s).
-           rewrite H11; clear H11.
+                x0 v2 s) /r.
+           intros x1 H8 H7 H9 H11; rewrite H11; clear H11.
            induction (eq_nat_dec x0 v2) as [a0 | ?].
            ++ elim H5; rewrite a0; simpl; auto.
            ++ apply (iffI L).
@@ -1070,8 +1092,8 @@ Proof.
                        (substituteFormula L
                           (substituteFormula L A1 x (var x2)) x2 (var x)).
                      +++ apply sysWeaken.
-                         decompose record (H _ H10 (Empty_set Formula)).
-                         apply (iffE1 L).
+                         decompose record (H _ H10 (Empty_set Formula)) /r.
+                         intros H11 H13 H14; apply (iffE1 L).
                          apply H13; clear H11 H13 H14.
                          intros H11; apply x2prop; repeat right.
                          apply in_or_app; left.
@@ -1093,8 +1115,9 @@ Proof.
                                repeat rewrite subFormulaDepth.
                                apply depthForall.
                              } 
-                             decompose record (H _ H11 (Empty_set Formula)).
-                             apply H15; clear H12 H14 H15; auto.
+                             decompose record (H _ H11 (Empty_set Formula)) /r.
+                             intros H12 H14 H15; 
+                               apply H15; clear H12 H14 H15; auto.
                              intros [H12| H12]; auto.
                          *** apply impE with
                                (substituteFormula L
@@ -1112,8 +1135,9 @@ Proof.
                              { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                  apply depthForall.
                              }
-                             decompose record (H _ H11 (Empty_set Formula)).
-                             apply H14; clear H12 H14 H15; auto.
+                             decompose record (H _ H11 (Empty_set Formula)) /r.
+                             intros H12 H14 H15; apply H14; 
+                               clear H12 H14 H15; auto.
                              intros H12; 
                                assert
                                  (H13: In v2
@@ -1161,8 +1185,9 @@ Proof.
                              apply (iffE2 L).
                              assert (H11: lt_depth L a (forallH v a))
                              by apply depthForall. 
-                             decompose record (H _ H11 (Empty_set _)).
-                             apply H14; clear H12 H14 H15.
+                             decompose record (H _ H11 (Empty_set _)) /r.
+                             intros H12 H14 H15; 
+                               apply H14; clear H12 H14 H15.
                              intros H12; elim H3.
                              auto.
                              apply impE with
@@ -1172,8 +1197,9 @@ Proof.
                              apply (sysWeaken L).
                              assert (H11 : lt_depth L a (forallH v a))
                              by apply depthForall.
-                             decompose record (H _ H11 (Empty_set _)).
-                             apply H14; clear H12 H14 H15.
+                             decompose record (H _ H11 (Empty_set _)) /r.
+                             intros H12 H14 H15; 
+                               apply H14; clear H12 H14 H15.
                              intros H12; elim H6.
                              auto.
                              apply Axm; right; constructor.
@@ -1190,8 +1216,9 @@ Proof.
                              { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                  apply depthForall.
                              }
-                             decompose record (H _ H11 (Empty_set _)).
-                             apply H15; clear H12 H14 H15; auto.
+                             decompose record (H _ H11 (Empty_set _)) /r.
+                             intros H12 H14 H15; apply H15; 
+                               clear H12 H14 H15; auto.
                              intros [H12| H12]; auto.
                              apply impE with
                                (substituteFormula L
@@ -1209,7 +1236,8 @@ Proof.
                                        (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth;
                                  apply depthForall. }
-                             decompose record (H _ H11 (Empty_set _)).
+                             decompose record (H _ H11 (Empty_set _)) /r.
+                             intros H12 H14 H15;
                              apply H14; clear H12 H14 H15.
                             intros H12; elim H9.
                             auto.
@@ -1235,7 +1263,8 @@ Proof.
                                       (forallH v a)).
                             { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                 apply depthForall. }
-                            decompose record (H _ H11 (Empty_set _)).
+                            decompose record (H _ H11 (Empty_set _)) /r.
+                            intros H12 H14 H15; 
                             apply H15; clear H12 H14 H15; auto.
                             intros [H12| H12]; auto.
                             apply Axm; right; constructor.
@@ -1253,9 +1282,10 @@ Proof.
                          { unfold lt_depth, A2 in |- *.
                            repeat rewrite subFormulaDepth.
                            apply depthForall. }
-                         decompose record (H _ H11 (Empty_set _)).
-                         apply H14; clear H12 H14 H15.
-                         intros H12; elim x2prop; repeat right; apply in_or_app.
+                         decompose record (H _ H11 (Empty_set _)) /r.
+                         intros H12 H14 H15; apply H14; clear H12 H14 H15.
+                         intros H12; elim x2prop; repeat right; 
+                           apply in_or_app.
                          right; eapply in_remove, H12.
                      +++ fold A2; apply (forallE L), Axm; right; constructor.
               ** apply (impI L), forallI. 
@@ -1331,8 +1361,9 @@ Proof.
                              { unfold lt_depth, A1 in |- *.
                                repeat rewrite subFormulaDepth.
                                apply depthForall. }
-                             decompose record (H _ H10 (Empty_set _)).
-                             apply H13; clear H11 H13 H14.
+                             decompose record (H _ H10 (Empty_set _)) /r.
+                             intros H11 H13 H14; 
+                               apply H13; clear H11 H13 H14.
                       intros H11; elim x2prop; do 2 right.
                       apply in_or_app; left; eapply in_remove, H11. 
 
@@ -1359,8 +1390,9 @@ Proof.
                                 (var v2)) x0 (var x1)) (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
-                     decompose record (H _ H10 (Empty_set _)).
-                     apply H14; clear H11 H13 H14; auto.
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14; apply H14; 
+                       clear H11 H13 H14; auto.
                       intros [H11| H11]; auto.
                      apply impE with
                        (substituteFormula L
@@ -1387,7 +1419,8 @@ Proof.
                        repeat rewrite subFormulaDepth.
                        apply depthForall.
                      }                      
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14;
                      apply H13; clear H11 H13 H14; auto.
                      apply Axm; right; constructor.
                      apply impE with
@@ -1412,7 +1445,8 @@ Proof.
                                (forallH v a)).
                      { unfold lt_depth in |- *; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14.
                      apply H14; clear H11 H13 H14; auto.
                      intros [H11| H11]; auto.
                      apply Axm; right; constructor.
@@ -1430,7 +1464,8 @@ Proof.
                                (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14; 
                      apply H13; clear H11 H13 H14; auto.
                       intros H11;
                         assert
@@ -1455,7 +1490,8 @@ Proof.
                      apply (iffE2 L).
                      assert (H10: lt_depth L a (forallH v a)) by
                        apply depthForall.
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14; 
                      apply H13; clear H11 H13 H14; auto.
                      apply Axm; right; constructor.
                      apply impE with
@@ -1473,7 +1509,8 @@ Proof.
                      apply (iffE1 L).
                      assert (H10: lt_depth L a (forallH v a)) by
                        apply depthForall.
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14; 
                      apply H13; clear H11 H13 H14; auto.
                      apply Axm; right; constructor.
                      apply impE with
@@ -1489,8 +1526,9 @@ Proof.
                                (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth;
                          apply depthForall. }
-                     decompose record (H _ H10 (Empty_set _)).
-                     apply H14; clear H11 H13 H14; auto.
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14; apply H14; 
+                       clear H11 H13 H14; auto.
                      intros [H11| H11]; auto.
                      apply Axm; right; constructor.
                      +++ apply impE with
@@ -1507,7 +1545,8 @@ Proof.
                           (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth;
                          apply depthForall. }
-                     decompose record (H _ H10 (Empty_set _)).
+                     decompose record (H _ H10 (Empty_set _)) /r.
+                     intros H11 H13 H14.
                      apply H13; clear H11 H13 H14; auto.
                      fold A2; intros H11;  elim x2prop.
                      do 2 right;  apply in_or_app;  right.
@@ -1529,11 +1568,11 @@ Proof.
     { clear H2 H1 H0 s2 s1 v2 v1; intros v1 v2 s1 s2 H0 H1 H2;
       eapply (sysExtend L) with (Empty_set Formula).
       - intros x H3; destruct H3.
-      - decompose record (subFormulaForall2 L a v v1 s1).
-        rewrite H7.
+      - decompose record (subFormulaForall2 L a v v1 s1) /r.
+        intros x H4 H3 H5 H7; rewrite H7.
     induction (eq_nat_dec v v1)  as [a0 | ?].
-        +  decompose record (subFormulaForall2 L a v v2 s2).
-           rewrite H11; clear H11.
+        +  decompose record (subFormulaForall2 L a v v2 s2) /r.
+           intros x0 H8 H6 H9 H11; rewrite H11; clear H11.
     induction (eq_nat_dec v v2) as [a1 | ?].
            * rewrite H7; apply (impRefl L).
            * clear H7.
@@ -1541,8 +1580,8 @@ Proof.
                (subFormulaForall2 L
                   (substituteFormula L 
                      (substituteFormula L a v (var x0)) v2 s2) x0
-                  v1 s1).
-             rewrite H13; clear H13.
+                  v1 s1) /r.
+             intros x1 H10 H7 H11 H13; rewrite H13; clear H13.
              induction (eq_nat_dec x0 v1) as [a1 | ?].
              --  apply (impRefl L).
              --  apply (impI L).
@@ -1565,8 +1604,8 @@ Proof.
                                     x0 (var x1)) (forallH v a)).
                        { unfold lt_depth;  repeat rewrite subFormulaDepth.
                          apply depthForall. }
-                       decompose record (H _ H12 (Empty_set _)).
-                       apply H13; clear H13 H15 H16.
+                       decompose record (H _ H12 (Empty_set _)) /r.
+                       intros H13 H15 H16; apply H13; clear H13 H15 H16.
                        intros H13; 
                          induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14].
                        --- assert
@@ -1587,16 +1626,18 @@ Proof.
                            auto.
                        --- induction H14 as [H14| H14]; auto.
                     ** apply forallE, Axm; right; constructor.
-        + decompose record (subFormulaForall2 L a v v2 s2).
-          rewrite H11; clear H11.
+        + decompose record (subFormulaForall2 L a v v2 s2) /r.
+          intros x0 H8 H6 H9 H11; rewrite H11; clear H11.
           induction (eq_nat_dec v v2) as [a0 | ?].
           * rewrite H7; clear H7.
             decompose record
               (subFormulaForall2 L
                  (substituteFormula L (substituteFormula 
                                          L a v (var x)) v1 s1) x v2
-                 s2).
-    rewrite H13; clear H13 ; induction (eq_nat_dec x v2) as [a1 | ?].
+                 s2) /r.
+            intros x1 H10 H7 H11 H13;
+              rewrite H13; clear H13 ; 
+              induction (eq_nat_dec x v2) as [a1 | ?].
             -- apply (impRefl L).
             -- apply (impI L).
                apply forallI.
@@ -1676,9 +1717,9 @@ Proof.
                                (forallH v a)).
                      { unfold lt_depth; repeat rewrite subFormulaDepth; 
                          apply depthForall. }
-                     decompose record (H _ H12 (Empty_set _)).
-                     apply H15; clear H13 H15 H16.
-                     auto.
+                     decompose record (H _ H12 (Empty_set _)) /r.
+                     intros H13 H15 H16; apply H15; clear H13 H15 H16; 
+                       auto.
                   ** apply impE with
                        (substituteFormula L
                           (substituteFormula L
@@ -1697,9 +1738,10 @@ Proof.
                                    (forallH v a)).
                          { unfold lt_depth; repeat rewrite subFormulaDepth; 
                              apply depthForall. }
-                         decompose record (H _ H12 (Empty_set _)).
-                         apply H13; clear H13 H15 H16.
-                         intros H13; induction (freeVarSubFormula3 _ _ _ _ H13) as 
+                         decompose record (H _ H12 (Empty_set _)) /r.
+                         intros H13 H15 H16; apply H13; clear H13 H15 H16.
+                         intros H13; 
+                           induction (freeVarSubFormula3 _ _ _ _ H13) as 
                            [H14 | H14]. 
                          +++ assert
                              (In v2
@@ -1755,7 +1797,8 @@ Proof.
                                            (var x1)) (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                   apply depthForall. }
-                              decompose record (H _ H12 (Empty_set _)).
+                              decompose record (H _ H12 (Empty_set _)) /r.
+                              intros H13 H15 H16; 
                               apply H16; clear H13 H15 H16; auto.
                               intros [H13| H13]; auto.
                          +++    apply forallE.
@@ -1765,15 +1808,15 @@ Proof.
               (subFormulaForall2 L
                  (substituteFormula L
                     (substituteFormula L a v (var x)) v1 s1) x v2
-                 s2).
-            rewrite H13; clear H13.
+                 s2) /r. 
+            intros x1 H10 H7 H11 H13; rewrite H13; clear H13.
             induction (eq_nat_dec x v2) as [a0 | ?].
             decompose record
               (subFormulaForall2 L
                  (substituteFormula L 
                     (substituteFormula L a v (var x0)) v2 s2) x0
-                 v1 s1).
-            rewrite H16; clear H16.
+                 v1 s1) /r. 
+            intros x2 H13 H12 H14 H16; rewrite H16; clear H16.
             induction (eq_nat_dec x0 v1) as [a1 | ?].
             -- apply (impI L).
                apply forallI.
@@ -1808,8 +1851,8 @@ Proof.
                      { unfold lt_depth in |- *.
                        repeat rewrite subFormulaDepth.
                        apply depthForall. }
-                     decompose record (H _ H15 (Empty_set _)).
-                     apply H16; clear H16 H18 H19; auto.
+                     decompose record (H _ H15 (Empty_set _)) /r.
+                     intros H16 H18 H19; apply H16; clear H16 H18 H19; auto.
                      intros H16; induction (freeVarSubFormula3 _ _ _ _ H16) 
                        as [H17 | H17].
                   --- rewrite <- a0 in H17; auto.
@@ -1828,8 +1871,8 @@ Proof.
                                    (forallH v a)).
                          { unfold lt_depth; repeat rewrite subFormulaDepth.
                            apply depthForall. }
-                         decompose record (H _ H15 (Empty_set _)).
-                         apply H18; clear H16 H18 H19; auto.
+                         decompose record (H _ H15 (Empty_set _)) /r.
+                         intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                          intros H16.
                          assert (H17: In x (freeVarFormula L 
                                               (substituteFormula L a v (var x0)))).
@@ -1848,8 +1891,8 @@ Proof.
                                  apply (iffE2 L).
                                  assert (lt_depth L a (forallH v a)).
                                  apply depthForall.
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H18; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                              *** apply Axm; right; constructor.
                          +++  apply forallE.
                               apply impE with
@@ -1868,8 +1911,8 @@ Proof.
                                    { unfold lt_depth; repeat rewrite subFormulaDepth.
                                      apply depthForall.
                                    }    
-                                   decompose record (H _ H15 (Empty_set _)).
-                                   apply H16; clear H16 H18 H19; auto.
+                                   decompose record (H _ H15 (Empty_set _)) /r.
+                                   intros H16 H18 H19; apply H16; clear H16 H18 H19; auto.
                                    intros H16;  
                                      induction (freeVarSubFormula3 _ _ _ _ H16) 
                                      as [H17 | H17].
@@ -1925,7 +1968,7 @@ Proof.
                          { unfold lt_depth; repeat rewrite subFormulaDepth.
                            apply depthForall.
                          }     
-                         decompose record (H _ H15 (Empty_set _)).
+                         decompose record (H _ H15 (Empty_set _)) /r. intros H16 H18 H19.
                          apply H16; clear H16 H18 H19; auto.
                          intros H16;  induction (freeVarSubFormula3 _ _ _ _ H16) 
                            as [H17 | H17].
@@ -1944,7 +1987,8 @@ Proof.
                              apply (iffE2 L).
                              assert (H15: lt_depth L a (forallH v a)) by
                              apply depthForall.
-                             decompose record (H _ H15 (Empty_set _)).
+                             decompose record (H _ H15 (Empty_set _)) /r.
+                             intros H16 H18 H19.
                              apply H18; clear H16 H18 H19; auto.
                          +++ apply impE with
                                (substituteFormula L 
@@ -1953,7 +1997,8 @@ Proof.
                                  apply (iffE1 L).
                                  assert (H15: lt_depth L a (forallH v a)) 
                                    by apply depthForall.
-                                 decompose record (H _ H15 (Empty_set _)).
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19.
                                  apply H18; clear H16 H18 H19; auto.
                              *** apply Axm; right; constructor.
                      --- apply impE with
@@ -1968,7 +2013,7 @@ Proof.
                                             (forallH v a)).
                              { unfold lt_depth; repeat rewrite subFormulaDepth.
                                apply depthForall. }
-                             decompose record (H _ H15 (Empty_set _)).
+                             decompose record (H _ H15 (Empty_set _)) /r. intros H16 H18 H19.
                              apply H19; clear H16 H18 H19; auto.
                              intros [H16| H16]; auto.
                          +++  apply forallE.
@@ -1977,7 +2022,7 @@ Proof.
                  (subFormulaForall2 L
                     (substituteFormula L 
                        (substituteFormula L a v (var x0)) v2 s2) x0
-                    v1 s1).
+                    v1 s1) /r; intros x2 H13 H12 H14 H16.
                rewrite H16; clear H16.
                induction (eq_nat_dec x0 v1) as [a0 | ?].
                ++ apply (impI L).
@@ -2054,8 +2099,8 @@ Proof.
                               apply (iffE1 L).
                               assert (lt_depth L a (forallH v a)).
                               apply depthForall.
-                              decompose record (H _ H15 (Empty_set _)).
-                              apply H18; clear H16 H18 H19; auto.
+                              decompose record (H _ H15 (Empty_set _)) /r.
+                              intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                           *** apply subFormulaNTEHelp.
                               apply
                                 (impE L)
@@ -2070,8 +2115,8 @@ Proof.
                               { unfold lt_depth in |- *.
                                 repeat rewrite subFormulaDepth.
                                 apply depthForall. }
-                              decompose record (H _ H15 (Empty_set _)).
-                              apply H16; clear H16 H18 H19; auto.
+                              decompose record (H _ H15 (Empty_set _)) /r.
+                              intros H16 H18 H19; apply H16; clear H16 H18 H19; auto.
                               intros H16; 
                                 induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                               rewrite <- a0 in H17.
@@ -2105,7 +2150,8 @@ Proof.
                                            (var x1)) (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth.
                                 apply depthForall. }
-                              decompose record (H _ H15 (Empty_set _)).
+                              decompose record (H _ H15 (Empty_set _)) /r. 
+                              intros H16 H18 H19.
                               apply H19; clear H16 H18 H19; auto.
                               rewrite a0.
                               intros [H16| H16]; auto.
@@ -2126,7 +2172,8 @@ Proof.
                                         (forallH v a)).
                               { unfold lt_depth; repeat rewrite subFormulaDepth; 
                                   apply depthForall. }
-                              decompose record (H _ H15 (Empty_set _)).
+                              decompose record (H _ H15 (Empty_set _)) /r.
+                              intros H16 H18 H19.
                               apply H18; clear H16 H18 H19; auto.
                               apply Axm; right; constructor.
                           *** apply forallE.
@@ -2274,8 +2321,8 @@ Proof.
                                               (var x1)) (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H19; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H19; clear H16 H18 H19; auto.
                                  intros [H16| H16]; auto.
                                  apply (impI L).
                                  apply subFormulaNTEHelp.
@@ -2294,8 +2341,9 @@ Proof.
                                            (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H18; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; 
+                                   apply H18; clear H16 H18 H19; auto.
                                  apply Axm; right; constructor.
                                  apply (impI L).
                                  apply subFormulaNTEHelp.
@@ -2311,8 +2359,9 @@ Proof.
                                                 (forallH v a)).
                                  { unfold lt_depth; repeat rewrite subFormulaDepth.
                                    apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H19; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r. 
+                                 intros H16 H18 H19; 
+                                   apply H19; clear H16 H18 H19; auto.
                                  intros [H16| H16]; auto.
                                  apply Axm; right; constructor.
                                  apply (impI L).
@@ -2327,8 +2376,8 @@ Proof.
                                  apply (iffE1 L).
                                  assert (H15: lt_depth L a (forallH v a)) by
                                    apply depthForall.
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H18; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                                  apply Axm; right; constructor.
                                  apply (impTrans L) with
                                    (substituteFormula L
@@ -2342,8 +2391,8 @@ Proof.
                                            (forallH v a)).
                                  { unfold lt_depth; 
                                      repeat rewrite subFormulaDepth; apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H19; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H19; clear H16 H18 H19; auto.
                                  apply  (impTrans L) with
                                    (substituteFormula L
                                       (substituteFormula L
@@ -2358,8 +2407,8 @@ Proof.
                                  apply (iffE2 L).
                                  assert (H15: lt_depth L a (forallH v a)) 
                                    by  apply depthForall.
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H18; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                                  apply Axm; right; constructor.
                                  apply
                                    (impTrans L)
@@ -2386,8 +2435,8 @@ Proof.
                                                 (forallH v a)).
                                  { unfold lt_depth;  repeat rewrite subFormulaDepth.
                                    apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H19; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H19; clear H16 H18 H19; auto.
                                  intros [H16| H16]; auto.
                                  apply Axm; right; constructor.
                                  apply
@@ -2419,8 +2468,8 @@ Proof.
                                  { unfold lt_depth in |- *.
                                    repeat rewrite subFormulaDepth.
                                    apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H18; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                                  apply Axm; right; constructor.
                                  apply (iffE1 L).
                                  assert
@@ -2433,8 +2482,8 @@ Proof.
                                  { unfold lt_depth;
                                  repeat rewrite subFormulaDepth; 
                                  apply depthForall. }
-                                 decompose record (H _ H15 (Empty_set _)).
-                                 apply H19; clear H16 H18 H19; auto.
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19; apply H19; clear H16 H18 H19; auto.
                                   intros [H16| H16]; auto.
                              *** eapply forallSimp.
                                  apply Axm; right; constructor.
@@ -2501,7 +2550,8 @@ Proof.
                                    repeat rewrite subFormulaDepth.
                                    apply depthForall.
                                  }    
-                                 decompose record (H _ H15 (Empty_set _)).
+                                 decompose record (H _ H15 (Empty_set _)) /r.
+                                 intros H16 H18 H19.
                                  apply H18; clear H16 H18 H19.
                                  intros H16; elim z1prop.
                                  do 2 right.

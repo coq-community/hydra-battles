@@ -152,12 +152,11 @@ Proof.
     fold (freeVarTerm LNN) in |- *.
     rewrite <- app_nil_end.
     split.
-    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H).
-      destruct H1 as [H0| H0].
+    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r.
+      intros H x [H0| H0] H2.
       * rewrite <- H0 in H2.
         simpl in H2.
-        rewrite LNN2LNT_freeVarTerm in H2.
-        auto with datatypes.
+        rewrite LNN2LNT_freeVarTerm in H2; auto with datatypes.
       * destruct H0 as [H0| H0].
         -- rewrite <- H0 in H2.
            simpl in H2.
@@ -307,11 +306,11 @@ Proof.
       simpl; rewrite (subFormulaNot LNT).
       apply (reduceNot LNT).
       apply H.
-    + simpl; decompose record (subFormulaForall2 LNN a v v0 s).
-      rewrite H4; clear H4.
+    + simpl; decompose record (subFormulaForall2 LNN a v v0 s) /r.
+      intros x H1 H0 H2 H4; rewrite H4; clear H4.
       decompose record
-        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)).
-      rewrite H7; clear H7.
+        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)) /r. 
+      intros x0 H4 H3 H5 H7; rewrite H7; clear H7.
       destruct (eq_nat_dec v v0) as [e | ].
       * simpl; apply iffRefl.
       * simpl; apply iffTrans with

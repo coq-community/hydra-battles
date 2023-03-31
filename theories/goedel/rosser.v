@@ -126,7 +126,8 @@ Proof.
   induction (S (codePrf A a p)).
   - right; intros B q H0; lia. 
   - induction IHn as [H0| H0].
-    + left; decompose record H0; exists x, x0; auto.      
+    + left; decompose record H0 /r; intros x x0 H1 H3;
+        exists x, x0; auto.      
     + induction
         (eq_nat_dec
            (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -144,7 +145,8 @@ Proof.
           (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
              codeArityLNNR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
              codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 codeLNTFunctionInj
-             codeLNNRelationInj _ _ b0).
+             codeLNNRelationInj _ _ b0) /r; intros x H2 x0 x1 H3.
+
         assert (H1:  x = b).
         { eapply codeFormulaInj.
           - apply codeLNTFunctionInj.
@@ -204,7 +206,7 @@ Proof.
     + unfold Inconsistent in |- *.
       intro f; elim H; intros x0 [x1 H2]. 
       induction (searchProof decide _ (notH x) _ x1) as [H3 | H3].
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- assumption.
         -- now exists x2, x3.
@@ -485,7 +487,9 @@ Proof.
                           codeArityLNTFIsCorrect2
                           codeArityLNNRIsCorrect1 
                           codeArityLNNRIsCorrect2 codeLNTFunctionInj
-                          codeLNNRelationInj _ _ b).
+                          codeLNNRelationInj _ _ b) /r;
+                       intros x2 H5 x3 x4 H6.
+
                      rewrite <- H6.
                      assert (H4: x2 = notH x).
                      { eapply codeFormulaInj.
@@ -508,7 +512,7 @@ Proof.
     + unfold Inconsistent; intros f.
       elim H; intros x0 [x1 H2].
       induction (searchProof decide _ x _ x1) as [H3 | H3].
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- exists x2, x3; assumption.
         -- assumption.
@@ -750,7 +754,9 @@ Proof.
                                   codeArityLNTFIsCorrect2
                                   codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 
                                   codeLNTFunctionInj
-                                  codeLNNRelationInj _ _ b).
+                                  codeLNNRelationInj _ _ b) /r;
+                               intros x2 H5 x3 x4 H6.
+
                              rewrite <- H6.
                              assert (H4: x2 = x).
                              { eapply (codeFormulaInj LNN).

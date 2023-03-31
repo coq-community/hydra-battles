@@ -11,6 +11,9 @@ Require Import folProof.
 Require Import prLogic.
 Require Import Compat815.
 From Coq Require Import Lia.
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
+
 
 Import LispAbbreviations. 
 
@@ -3648,8 +3651,7 @@ Simpl in H0.
     rewrite cPairProjections2.
     assumption.
   } 
-  decompose record H1.
-  exists x; split.
+  decompose record H1 /r; intros x x0 x1 H2; exists x; split.
   -  eapply cPairInj1.
      apply H2.
   - exists x0, x1; eapply cPairInj2; apply H2.

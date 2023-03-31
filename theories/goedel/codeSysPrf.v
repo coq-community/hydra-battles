@@ -917,7 +917,7 @@ Proof.
   apply iffRefl.
   unfold n in |- *.
   rewrite checkPrfCorrect1.
-  decompose record H.
+  decompose record H /r; intros x H5 H6.
   apply
     impE
     with
@@ -1526,7 +1526,8 @@ Proof.
       decompose record
         (checkPrfCorrect2 L codeF codeR codeArityF codeArityR codeArityFIsCorrect1
            codeArityFIsCorrect2 codeArityRIsCorrect1 codeArityRIsCorrect2 codeFInj
-           codeRInj (codeFormula L codeF codeR f) n b).
+           codeRInj (codeFormula L codeF codeR f) n b) /r;
+        intros x H7 x0 x1 H8.
       assert (H6: x = f).
       { eapply codeFormulaInj.
         apply codeFInj.

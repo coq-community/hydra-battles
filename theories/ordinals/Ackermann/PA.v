@@ -78,22 +78,22 @@ Proof.
                  { intros y;
                    destruct y as [t t0| r t| f f0| f| n f];
                    try (right; unfold not in |- *; 
-                        intros; decompose record H; discriminate H1).
+                        intros; decompose record H; discriminate ).
                    destruct f0 as [t t0| r t| f0 f1| f0| n f0];
                      try (right; unfold not in |- *; intros; 
-                          decompose record H; discriminate H1).
+                          decompose record H; discriminate).
                    destruct f0 as [t t0| r t| f0 f2| f0| n f0];
                      try (right; unfold not in |- *; intros; 
-                          decompose record H; discriminate H1).
+                          decompose record H; discriminate).
                    destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
                      try (right; unfold not in |- *; intros; 
-                          decompose record H; discriminate H1).
+                          decompose record H; discriminate).
                    destruct (formula_dec LNT LNT_dec (substF LNT f1 n0 Zero) f) 
                      as [a | b].
                    - rewrite <- a; clear a f.
                      destruct f0 as [t t0| r t| f f0| f| n1 f];
                        try (right; unfold not in |- *; intros; 
-                            decompose record H; discriminate H1).
+                            decompose record H; discriminate).
                      induction (formula_dec LNT LNT_dec f1 f) as [a | b].
                      + rewrite <- a; clear a f.
                        induction
@@ -106,33 +106,30 @@ Proof.
                             exists n0.
                             reflexivity.
                          -- right; unfold not in |- *; intros; 
-                              apply b; decompose record H.
-                            inversion H1.
-                            auto.
+                              apply b; decompose record H /r.
+                            intros H x0 x1 H1; inversion H1; auto.
                        *  right; unfold not in |- *; intros; apply b; 
-                            decompose record H.
-                          inversion H1.
-                          reflexivity.
+                            decompose record H /r.
+                          intros H x0 x1 H1; inversion H1; 
+                            reflexivity.
                      + right; unfold not in |- *; intros; apply b; 
-                         decompose record H.
-                       inversion H1.
-                       auto.
+                         decompose record H /r. 
+                       intros H x0 x1 H1; inversion H1; auto.
                    -  right; unfold not in |- *; intros; apply b; 
-                        decompose record H.
-                      inversion H1.
-                      auto.
+                        decompose record H /r.
+                      intros H x0 x1 H1; inversion H1; auto.
                  }                 
                  induction (formula_dec LNT LNT_dec x (close LNT (open x))) as [a | b].
                  --- induction (H (open x)).
                      left.
                      unfold In, InductionSchema, PA7 in |- *.
-                     decompose record H0.
-                     exists x0, x1; now rewrite H2.
+                     decompose record H0 /r.
+                     intros x0 x1 H2; exists x0, x1; now rewrite H2.
                      right.
                      intros H1; apply H0.
                      unfold In, InductionSchema, PA7 in H1.
-                     decompose record H1.
-                     exists x0, x1; rewrite H3.
+                     decompose record H1 /r.
+                     intros x0 x1 H3; exists x0, x1; rewrite H3.
                      unfold close.  
                  induction
                    (List.nodup eq_nat_dec
@@ -144,8 +141,8 @@ Proof.
                  simpl; assumption.
                  --- right; intros H0; apply b.
                      unfold In, InductionSchema, PA7 in H0.
-                     decompose record H0.
-                     rewrite H2.
+                     decompose record H0 /r.
+                     intros x0 x1 H2; rewrite H2.
                      replace
                        (open
                           (close LNT

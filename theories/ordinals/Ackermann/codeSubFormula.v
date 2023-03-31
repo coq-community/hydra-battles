@@ -11,6 +11,9 @@ Require Import Compat815.
 From Coq Require Import Lia.
 Import LispAbbreviations. 
 
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
+
 Section Code_Substitute_Formula.
 
 Variable L : Language.
@@ -974,7 +977,7 @@ elim f using Formula_depth_ind2.
          rewrite Nat.eqb_refl in H1.
          simpl in H1.
          rewrite Nat.add_comm in H1; simpl in H1.
-         decompose record (mult_lemma1 _ _ H1).
+         decompose record (mult_lemma1 _ _ H1) /r; intros H2 H3.
          rewrite <- (cTripleProj (car m)) in H2.
          rewrite <- (cTripleProj (cdr m)) in H3.
          rewrite <- a0 in H2; clear a0.
@@ -1145,7 +1148,8 @@ elim f using Formula_depth_ind2.
                        simpl in H0.
                        rewrite Nat.add_comm in H0.
                        simpl in H0.
-                       decompose record (mult_lemma1 _ _ H0).
+                       decompose record (mult_lemma1 _ _ H0) /r.
+                       intros H1 H2;
                        rewrite <- (cTripleProj (car m)) in H1.
                        rewrite <- (cTripleProj (cdr m)) in H2.
                        rewrite <- a2 in H2; clear a2.

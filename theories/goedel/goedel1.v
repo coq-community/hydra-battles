@@ -13,6 +13,9 @@ From hydras.Ackermann Require Import code.
 From hydras.Ackermann Require Import checkPrf.
 From hydras Require Import Compat815.
 
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
+
 Section Goedel's_1st_Incompleteness.
 
 Definition codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
@@ -181,7 +184,9 @@ Proof.
         (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
            codeArityLNNR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
            codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 codeLNTFunctionInj
-           codeLNNRelationInj _ _ H5).
+           codeLNNRelationInj _ _ H5) /r;
+        intros x1 H7 x2 x3 H8.
+
       assert (H6: x1 = x).
       { eapply codeFormulaInj.
         - apply codeLNTFunctionInj.
