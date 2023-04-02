@@ -16,9 +16,10 @@ Require Import LNT.
 Require Import Max.
 Require Import codeNatToTerm.
 
+
 #[local] Arguments apply _ _ _ : clear implicits.
 
-Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
+Fixpoint LNN2LNT_term (t : fol.Term LNN) : fol.Term LNT:=
   match t with
   | var v => var v
   | apply f ts => apply LNT f (LNN2LNT_terms _ ts)
