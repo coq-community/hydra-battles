@@ -22,7 +22,7 @@ Check constructive_indefinite_description.
 (* begin snippet iotaDef *)
 Check iota_statement. 
 
-Check constructive_definite_description.
+Print iota. 
 
 Print iota_spec.
 (* end snippet iotaDef *)
