@@ -7,6 +7,7 @@ Require Vector.
 Require Import Peano_dec.
 Require Import misc.
 Require Import Arith.
+Require Import NewNotations.
 
 Section Model_Theory.
 
@@ -150,7 +151,7 @@ Qed.
  
 Lemma subInterpTerm (value : nat -> U M) (t : Term L) (v : nat) (s : Term L):
  interpTerm (updateValue value v (interpTerm value s)) t =
- interpTerm value (substituteTerm L t v s).
+ interpTerm value (substT L t v s).
 Proof.
   elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : Terms L n) =>

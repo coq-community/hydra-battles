@@ -455,7 +455,7 @@ Qed.
 Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) 
   (T : fol.System L):
  SysPrf T (a = b)%fol ->
- SysPrf T (substituteTerm L t v a =  substituteTerm L t v b)%fol.
+ SysPrf T (substT L t v a =  substT L t v b)%fol.
 Proof.
   intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
@@ -468,11 +468,11 @@ Proof.
     - intros.  
       destruct
         (consTerms L n
-           (Tcons (substituteTerm L t0 v a) (substituteTerms L n t1 v a))). 
+           (Tcons (substT L t0 v a) (substituteTerms L n t1 v a))). 
       destruct x as [a0 b0].
       destruct
         (consTerms L n
-           (Tcons (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).  
+           (Tcons (substT L t0 v b) (substituteTerms L n t1 v b))).  
       destruct x as [a1 b1]. 
       simpl in |- *.  simpl in e0; simpl in e.
       inversion e0.
@@ -493,10 +493,10 @@ Proof.
   - auto.
   - destruct
       (consTerms L n
-         (Tcons (substituteTerm L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
+         (Tcons (substT L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
     destruct
       (consTerms L n
-         (Tcons (substituteTerm L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
+         (Tcons (substT L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
     simpl in |- *; simpl in p,  e.
     inversion p.
     inversion e.
@@ -515,11 +515,11 @@ Proof.
   intro f; elim f using Formula_depth_ind2; intros.
   - repeat rewrite subFormulaEqual.
     apply (impI L).
-    apply eqTrans with (substituteTerm L t v a).
+    apply eqTrans with (substT L t v a).
     + apply subWithEqualsTerm.
       apply (sysWeaken L).
       now apply eqSym.
-    + apply eqTrans with (substituteTerm L t0 v a).
+    + apply eqTrans with (substT L t0 v a).
       * apply (Axm L); right; constructor.
       * apply subWithEqualsTerm.
         now apply (sysWeaken L).

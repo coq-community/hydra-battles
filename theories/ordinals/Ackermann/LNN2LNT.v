@@ -15,6 +15,8 @@ Require Import folReplace.
 Require Import LNT.
 Require Import Max.
 Require Import codeNatToTerm.
+Require Import NewNotations.
+
 
 
 #[local] Arguments apply _ _ _ : clear implicits.
@@ -216,8 +218,8 @@ intros ? ; destruct (LNN2LNT_freeVarFormula f v); auto.
 Qed.
 
 Lemma LNN2LNT_subTerm (t : fol.Term LNN) (v : nat) (s : fol.Term LNN):
- LNN2LNT_term (substituteTerm LNN t v s) =
- substituteTerm LNT (LNN2LNT_term t) v (LNN2LNT_term s).
+ LNN2LNT_term (substT LNN t v s) =
+ substT LNT (LNN2LNT_term t) v (LNN2LNT_term s).
 Proof.
   elim t using  Term_Terms_ind
     with
@@ -268,20 +270,20 @@ Proof.
         replace
           (substituteTerms LNN 2 (Tcons a (Tcons a0 (Tnil))) v s) 
           with
-          (Tcons (substituteTerm _ a v s)
-             (Tcons (substituteTerm _ a0 v s) (Tnil))).
+          (Tcons (substT _ a v s)
+             (Tcons (substT _ a0 v s) (Tnil))).
         rewrite translateLT1.
         rewrite
           (subAllFormula_ext LNT LTFormula
              (fun H : nat =>
                 nat_rec (fun _ : nat => fol.Term LNT)
-                  (LNN2LNT_term (substituteTerm LNN a v s))
+                  (LNN2LNT_term (substT LNN a v s))
                   (fun (H0 : nat) (_ : fol.Term LNT) =>
                      nat_rec (fun _ : nat => fol.Term LNT)
-                       (LNN2LNT_term (substituteTerm LNN a0 v s))
+                       (LNN2LNT_term (substT LNN a0 v s))
                        (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H)
              (fun n : nat =>
-                substituteTerm LNT
+                substT LNT
                   (nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
                      (fun (H0 : nat) (_ : fol.Term LNT) =>
                         nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a0)
@@ -462,8 +464,8 @@ Proof.
 Qed.
 
 Lemma LNT2LNN_subTerm  (t : Term) (v : nat) (s : Term):
-  LNT2LNN_term (substituteTerm LNT t v s) =
-    substituteTerm LNN (LNT2LNN_term t) v (LNT2LNN_term s).
+  LNT2LNN_term (substT LNT t v s) =
+    substT LNN (LNT2LNN_term t) v (LNT2LNN_term s).
 Proof.
   elim t using
     Term_Terms_ind

@@ -79,8 +79,8 @@ Proof.
     assert
       (H0: forall (t1 t2 : Term) (v a : nat),
        substF LNN (LT t1 t2) v (natToTerm a) =
-       LT (substituteTerm LNN t1 v (natToTerm a))
-          (substituteTerm LNN t2 v (natToTerm a))).
+       LT (substT LNN t1 v (natToTerm a))
+          (substT LNN t2 v (natToTerm a))).
     { intros. unfold LT at 1 in |- *. now rewrite (subFormulaRelation LNN). }
     repeat first
     [ rewrite H; [| discriminate ]
@@ -183,8 +183,8 @@ Proof.
                              repeat rewrite (subFormulaAnd LNN).
                              repeat rewrite (subFormulaEqual LNN).
                              assert 
-                               (H3: (substituteTerm LNN
-                                   (substituteTerm LNN
+                               (H3: (substT LNN
+                                   (substT LNN
                                       (Plus (Times (Plus (var 3) (var 4)) 
                                                (Succ (Plus (var 3) (var 4))))
                                          (Times (Succ (Succ Zero)) (var 3))) 
@@ -202,8 +202,8 @@ Proof.
                                reflexivity. }
                              rewrite H3; clear H3.
                              assert
-                               (H3: (substituteTerm LNN
-                                   (substituteTerm LNN 
+                               (H3: (substT LNN
+                                   (substT LNN 
                                       (Times (Succ (Succ Zero)) (natToTerm a)) 
                                       3  (natToTerm n)) 4 (natToTerm n0)) =
                                   (Times (natToTerm 2) (natToTerm a))).
@@ -214,7 +214,7 @@ Proof.
                              simpl in |- *.
                              assert
                                (forall (a b : nat) (s : Term),
-                                   substituteTerm LNN (natToTerm a) b s =
+                                   substT LNN (natToTerm a) b s =
                                      natToTerm a).
                              { intros; apply (subTermNil LNN).
                                apply closedNatToTerm. }
@@ -884,7 +884,7 @@ Proof.
         destruct (Nat.eq_dec n n); try lia.
         replace
           (equal  (var 0)
-            (substituteTerm LNN (natToTerm a) (S n)
+            (substT LNN (natToTerm a) (S n)
               (natToTerm a0)))
           with
           (substF LNN (equal (var 0)
@@ -1235,7 +1235,7 @@ Proof.
                        +++ replace
                             (subAllFormula LNN B
                                (fun n1 : nat =>
-                                substituteTerm LNN
+                                substT LNN
                                   match n1 with
                                   | O => var 0
                                   | S x' => var (S (x' + w))
@@ -2374,7 +2374,7 @@ Proof.
                                                             (natToTerm (f (S n)))) 1 (natToTerm (f n))).
                                                   + apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                     replace (natToTerm (S n)) with
-                                                     (substituteTerm LNN (Succ (var 3)) 3 (natToTerm n)).
+                                                     (substT LNN (Succ (var 3)) 3 (natToTerm n)).
                                                     * apply (subSubFormula LNN).
                                                       -- discriminate.
                                                       -- apply closedNatToTerm.
@@ -2688,7 +2688,7 @@ Proof.
                                                                       (natToTerm (f n))) 0 (natToTerm (f (S n)))).
                                                             ** apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                replace (natToTerm (S n)) with
-                                                                (substituteTerm LNN (Succ (var 3)) 3 (natToTerm n)).
+                                                                (substT LNN (Succ (var 3)) 3 (natToTerm n)).
                                                                --- apply (subSubFormula LNN).
                                                                    +++ discriminate.
                                                                    +++ apply closedNatToTerm.
@@ -2974,7 +2974,7 @@ Proof.
                                                                             (substF LNN
                                                                                (substF LNN betaFormula 2 (natToTerm b)) 3
                                                                                (natToTerm x0)) 1
-                                                                            (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))).
+                                                                            (substT LNN (Succ (var 3)) 3 (natToTerm x0))).
                                                                      *** apply (subSubFormula LNN).
                                                                          ---- discriminate.
                                                                          ---- apply closedNatToTerm.
@@ -2984,7 +2984,7 @@ Proof.
                                                                            with
                                                                              (substF LNN
                                                                                 (substF LNN betaFormula 2 (natToTerm b)) 1
-                                                                                (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))).
+                                                                                (substT LNN (Succ (var 3)) 3 (natToTerm x0))).
                                                                          ---- repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                               apply (subFormulaNil LNN).
                                                                               intro H4. destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
@@ -3465,7 +3465,7 @@ Proof.
                                                                                (substF LNN
                                                                                   (substF LNN betaFormula 2 (natToTerm b)) 3
                                                                                   (natToTerm x0)) 1
-                                                                               (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))) 1
+                                                                               (substT LNN (Succ (var 3)) 3 (natToTerm x0))) 1
                                                                             (natToTerm (beta b x0))).
                                                                      *** repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                          apply (subSubFormula LNN).
@@ -3478,7 +3478,7 @@ Proof.
                                                                              (substF LNN
                                                                                 (substF LNN
                                                                                    (substF LNN betaFormula 2 (natToTerm b)) 1
-                                                                                   (substituteTerm LNN (Succ (var 3)) 3 (natToTerm x0))) 1
+                                                                                   (substT LNN (Succ (var 3)) 3 (natToTerm x0))) 1
                                                                                 (natToTerm (beta b x0))).
                                                                          ---- repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                               apply (subFormulaNil LNN). intro H4.
@@ -3921,7 +3921,7 @@ Proof.
                 assert
                  (H8: forall (a b : Term) (v : nat) (s : Term),
                   substF LNN (LT a b) v s =
-                  LT (substituteTerm LNN a v s) (substituteTerm LNN b v s)).
+                  LT (substT LNN a v s) (substT LNN b v s)).
                 { intros a1 b v s. unfold LT. rewrite (subFormulaRelation LNN). reflexivity. }
                 assert
                  (H9: forall (f : Formula) (a : nat) (s : Term),
@@ -4249,14 +4249,14 @@ Opaque substF.
                                         (substF LNN
                                            (substF LNN betaFormula (S (S (S (S n))))
                                               (var (S (S (S n))))) 1
-                                           (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
+                                           (substT LNN (Succ (var (S (S (S (S n)))))) 
                                               (S (S (S (S n)))) (var (S (S (S n)))))).
                                     ++++ apply (subSubFormula LNN); PRsolveFV A B n.
                                     ++++ replace
-                                          (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
+                                          (substT LNN (Succ (var (S (S (S (S n)))))) 
                                              (S (S (S (S n)))) (var (S (S (S n))))) with
                                           (Succ
-                                             (substituteTerm LNN (var (S (S (S (S n))))) (S (S (S (S n))))
+                                             (substT LNN (var (S (S (S (S n))))) (S (S (S (S n))))
                                                 (var (S (S (S n)))))).
                                          **** rewrite (subTermVar1 LNN).
                                               repeat (apply (reduceSub LNN); [ apply closedNN |]).
@@ -4679,14 +4679,14 @@ Opaque substF.
                                                     (substF LNN
                                                        (substF LNN betaFormula (S (S (S (S n))))
                                                           (var (S (S (S n))))) 1
-                                                       (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
+                                                       (substT LNN (Succ (var (S (S (S (S n)))))) 
                                                           (S (S (S (S n)))) (var (S (S (S n)))))).
                                                 - apply (subSubFormula LNN); PRsolveFV A B n.
                                                 - replace
-                                                   (substituteTerm LNN (Succ (var (S (S (S (S n)))))) 
+                                                   (substT LNN (Succ (var (S (S (S (S n)))))) 
                                                       (S (S (S (S n)))) (var (S (S (S n))))) with
                                                    (Succ
-                                                      (substituteTerm LNN (var (S (S (S (S n))))) (S (S (S (S n))))
+                                                      (substT LNN (var (S (S (S (S n))))) (S (S (S (S n))))
                                                          (var (S (S (S n)))))).
                                                   + rewrite (subTermVar1 LNN).
                                                     repeat (apply (reduceSub LNN); [ apply closedNN |]).

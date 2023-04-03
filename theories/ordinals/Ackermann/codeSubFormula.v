@@ -913,8 +913,8 @@ elim f using Formula_depth_ind2.
   induction
     (eq_nat_dec n
        (cPair 0
-          (cPair (code.codeTerm L codeF (substituteTerm L t v s))
-             (code.codeTerm L codeF (substituteTerm L t0 v s))))) as [a | b].
+          (cPair (code.codeTerm L codeF (substT L t v s))
+             (code.codeTerm L codeF (substT L t0 v s))))) as [a | b].
   + rewrite a; reflexivity.
   + rewrite nat_eqb_false in H.
     * elim H; reflexivity.
@@ -3066,7 +3066,7 @@ Qed.
 
 Lemma boundSubTerm :
  forall (t : fol.Term L) (v : nat) (s : fol.Term L),
- codeTerm (substituteTerm L t v s) <=
+ codeTerm (substT L t v s) <=
  ReplaceTermTerm (codeTerm t)
    (fold_right Nat.max 0 (codeTerm s :: freeVarTerm L t)).
 Proof.
@@ -3143,10 +3143,10 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (codeTerms L codeF (S n)
-         (Tcons (substituteTerm L t0 v s) 
+         (Tcons (substT L t0 v s) 
             (substituteTerms L n t1 v s))) with
       (S
-         (cPair (codeTerm (substituteTerm L t0 v s))
+         (cPair (codeTerm (substT L t0 v s))
             (codeTerms L codeF n (substituteTerms L n t1 v s))));
       [ idtac | reflexivity ].
     unfold ReplaceTermsTerm in |- *.
@@ -3240,9 +3240,9 @@ Proof.
   - intros v s; 
       replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t v s) (substituteTerms L n ts v s))) with
+           (Tcons (substT L t v s) (substituteTerms L n ts v s))) with
       (S
-         (cPair (codeTerm (substituteTerm L t v s))
+         (cPair (codeTerm (substT L t v s))
             (codeTerms L codeF n (substituteTerms L n ts v s))));
       [ idtac | reflexivity ].
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;
@@ -3297,7 +3297,7 @@ Qed.
 
 Lemma ReplaceTermTermSub :
  forall (t : fol.Term L) (v w s2 : nat),
- ReplaceTermTerm (codeTerm (substituteTerm L t v (var w))) s2 =
+ ReplaceTermTerm (codeTerm (substT L t v (var w))) s2 =
  ReplaceTermTerm (codeTerm t) s2.
 Proof.
   intro t; 
@@ -3384,11 +3384,11 @@ Proof.
     unfold A at 3 1; repeat rewrite cPairProjections2; repeat rewrite H.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t0 v (var w))
+           (Tcons (substT L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
-           (cPair (codeTerm (substituteTerm L t0 v (var w)))
+           (cPair (codeTerm (substT L t0 v (var w)))
               (codeTerms L codeF n (substituteTerms L n t1 v (var w)))));
         [ idtac | reflexivity ].
       replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
@@ -3405,7 +3405,7 @@ Proof.
         (car
            (evalStrongRec 1 A
               (car
-                 (cPair (codeTerm (substituteTerm L t0 v (var w)))
+                 (cPair (codeTerm (substT L t0 v (var w)))
                     (codeTerms L codeF n (substituteTerms L n t1 v (var w))))) s2)).
       * replace (cdr (evalStrongRec 1 A (codeTerms L codeF n t1) s2)) 
           with
@@ -3431,22 +3431,22 @@ Proof.
       apply cPairLe1.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t0 v (var w))
+           (Tcons (substT L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
-           (cPair (codeTerm (substituteTerm L t0 v (var w)))
+           (cPair (codeTerm (substT L t0 v (var w)))
               (codeTerms L codeF n (substituteTerms L n t1 v (var w)))));
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections2; apply Nat.lt_succ_r.
       apply cPairLe2.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t0 v (var w))
+           (Tcons (substT L t0 v (var w))
               (substituteTerms L n t1 v (var w)))) 
         with
         (S
-           (cPair (codeTerm (substituteTerm L t0 v (var w)))
+           (cPair (codeTerm (substT L t0 v (var w)))
               (codeTerms L codeF n (substituteTerms L n t1 v (var w)))));
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections1; apply Nat.lt_succ_r, cPairLe1.
@@ -3487,11 +3487,11 @@ Proof.
     unfold A at 3 1; repeat rewrite cPairProjections2; repeat rewrite H.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t v (var w))
+           (Tcons (substT L t v (var w))
               (substituteTerms L n ts v (var w)))) 
         with
         (S
-           (cPair (codeTerm (substituteTerm L t v (var w)))
+           (cPair (codeTerm (substT L t v (var w)))
               (codeTerms L codeF n (substituteTerms L n ts v (var w)))));
         [ idtac | reflexivity ].
       replace (codeTerms L codeF (S n) (Tcons t ts)) 
@@ -3507,7 +3507,7 @@ Proof.
         (car
            (evalStrongRec 1 A
               (car
-                 (cPair (codeTerm (substituteTerm L t v (var w)))
+                 (cPair (codeTerm (substT L t v (var w)))
                     (codeTerms L codeF n (substituteTerms L n ts v (var w))))) s2)).
       * replace (cdr (evalStrongRec 1 A (codeTerms L codeF n ts) s2)) 
           with
@@ -3531,20 +3531,20 @@ Proof.
       simpl; rewrite cPairProjections1; apply Nat.lt_succ_r, cPairLe1.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t v (var w))
+           (Tcons (substT L t v (var w))
               (substituteTerms L n ts v (var w)))) with
         (S
-           (cPair (codeTerm (substituteTerm L t v (var w)))
+           (cPair (codeTerm (substT L t v (var w)))
               (codeTerms L codeF n (substituteTerms L n ts v (var w)))));
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections2; apply Nat.lt_succ_r, cPairLe2.
     + replace
         (codeTerms L codeF (S n)
-           (Tcons (substituteTerm L t v (var w))
+           (Tcons (substT L t v (var w))
               (substituteTerms L n ts v (var w)))) 
         with
         (S
-           (cPair (codeTerm (substituteTerm L t v (var w)))
+           (cPair (codeTerm (substT L t v (var w)))
               (codeTerms L codeF n (substituteTerms L n ts v (var w)))));
         [ idtac | reflexivity ].
       simpl; rewrite cPairProjections1; apply Nat.lt_succ_r, cPairLe1.
@@ -4168,7 +4168,7 @@ Proof.
 Qed.
 
 Remark maxSubTerm (t : fol.Term L) (v : nat) (s : fol.Term L):
-  fold_right Nat.max 0 (freeVarTerm L (substituteTerm L t v s)) <=
+  fold_right Nat.max 0 (freeVarTerm L (substT L t v s)) <=
     fold_right Nat.max 0 (freeVarTerm L s ++ freeVarTerm L t).
 Proof.
   elim t using Term_Terms_ind with
@@ -4183,15 +4183,15 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (freeVarTerms L (S n)
-         (Tcons (substituteTerm L t0 v s) (substituteTerms L n t1 v s))) 
+         (Tcons (substT L t0 v s) (substituteTerms L n t1 v s))) 
       with
-      (freeVarTerm L (substituteTerm L t0 v s) ++
+      (freeVarTerm L (substT L t0 v s) ++
          freeVarTerms L n (substituteTerms L n t1 v s)).
     + replace (freeVarTerms L (S n) (Tcons t0 t1)) 
         with
         (freeVarTerm L t0 ++ freeVarTerms L n t1).
       * induction
-          (maxApp (freeVarTerm L (substituteTerm L t0 v s))
+          (maxApp (freeVarTerm L (substT L t0 v s))
              (freeVarTerms L n (substituteTerms L n t1 v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply H.
@@ -4230,15 +4230,15 @@ Proof.
   - apply Nat.le_0_l.
   - replace
       (freeVarTerms L (S n)
-         (Tcons (substituteTerm L t v s) (substituteTerms L n ts v s))) 
+         (Tcons (substT L t v s) (substituteTerms L n ts v s))) 
       with
-      (freeVarTerm L (substituteTerm L t v s) ++
+      (freeVarTerm L (substT L t v s) ++
          freeVarTerms L n (substituteTerms L n ts v s)).
     + replace (freeVarTerms L (S n) (Tcons t ts)) 
         with
         (freeVarTerm L t ++ freeVarTerms L n ts).
       * induction
-          (maxApp (freeVarTerm L (substituteTerm L t v s))
+          (maxApp (freeVarTerm L (substT L t v s))
              (freeVarTerms L n (substituteTerms L n ts v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply maxSubTerm.
@@ -4357,8 +4357,8 @@ Proof.
       set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
     simpl; apply le_S.
      induction
-       (maxApp (freeVarTerm L (substituteTerm L t v (var nv)))
-          (freeVarTerm L (substituteTerm L t0 v (var nv)))) as [a0 | b0].
+       (maxApp (freeVarTerm L (substT L t v (var nv)))
+          (freeVarTerm L (substT L t0 v (var nv)))) as [a0 | b0].
     + rewrite a0; eapply Nat.le_trans.
       * apply maxSubTerm.
       * simpl; apply (Nat.max_case nv (fold_right Nat.max 0 (freeVarTerm L t))).

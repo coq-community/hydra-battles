@@ -304,7 +304,7 @@ Proof.
                          rewrite (subTermNil LNN).
                          rewrite (subFormulaEqual LNN).
                          replace
-                           (substituteTerm LNN (Succ (var nv)) nv
+                           (substT LNN (Succ (var nv)) nv
                               (natToTerm (codeList (map (codeFormula L codeF codeR) A)))) with
                            (natToTerm (S (codeList (map (codeFormula L codeF codeR) A)))).
                          ---- rewrite (subTermNil LNN).
@@ -737,8 +737,8 @@ Proof.
                                         assert
                                           (H7: forall (t1 t2 s : Term) (v : nat),
                                               substituteFormula LNN (LT t1 t2) v s =
-                                                LT (substituteTerm LNN t1 v s) 
-                                                  (substituteTerm LNN t2 v s)) 
+                                                LT (substT LNN t1 v s) 
+                                                  (substT LNN t2 v s)) 
                                         by reflexivity.
                                         repeat rewrite H7.
                                         repeat rewrite (subTermVar1 LNN) || rewrite (subTermVar2 LNN);
@@ -1073,7 +1073,7 @@ Proof.
   assert
     (H11: forall (t1 t2 s : Term) (v : nat),
         substituteFormula LNN (LT t1 t2) v s =
-          LT (substituteTerm LNN t1 v s) (substituteTerm LNN t2 v s)) by reflexivity.
+          LT (substT LNN t1 v s) (substT LNN t2 v s)) by reflexivity.
   repeat rewrite H11.
   repeat rewrite (subTermVar1 LNN) || rewrite (subTermVar2 LNN);
     try unfold not in |- *; intros.

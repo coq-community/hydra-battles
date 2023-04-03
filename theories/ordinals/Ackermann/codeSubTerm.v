@@ -7,7 +7,7 @@ Require Import extEqualNat.
 Require Vector.
 Require Import Compat815.
 Import LispAbbreviations. 
-
+Require Import NewNotations.
 
 Section Code_Substitute_Term.
 
@@ -41,7 +41,7 @@ Definition codeSubTerms (t s v : nat) : nat :=
 Lemma codeSubTermCorrect :
   forall (t : Term) (v : nat) (s : Term),
     codeSubTerm (codeTerm L codeF t) v (codeTerm L codeF s) =
-      codeTerm L codeF (substituteTerm L t v s).
+      codeTerm L codeF (substT L t v s).
 Proof.
   set
     (g :=
@@ -108,7 +108,7 @@ Proof.
       reflexivity.
     - intros n t0 H t1 H0 ; simpl.
       transitivity
-        (S (cPair (codeTerm L codeF (substituteTerm L t0 v s))
+        (S (cPair (codeTerm L codeF (substT L t0 v s))
               (codeTerms L codeF n (substituteTerms L n t1 v s)))).
       + rewrite <- H, <-  H0.
         replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
@@ -176,7 +176,7 @@ Proof.
     simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
   - simpl; transitivity
-             (S (cPair (codeTerm L codeF (substituteTerm L t v s))
+             (S (cPair (codeTerm L codeF (substT L t v s))
                    (codeTerms L codeF n (substituteTerms L n ts v s)))).
     + rewrite <- Hrects, <- codeSubTermCorrect.
       replace (codeTerms L codeF (S n) (Tcons t ts)) with
