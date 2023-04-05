@@ -7,3 +7,4 @@ Notation "'SetAddn' E0  x1 .. xn" :=
 
 Notation substF := substituteFormula.
 Notation substT := substituteTerm.
+Notation substTs := substituteTerms.

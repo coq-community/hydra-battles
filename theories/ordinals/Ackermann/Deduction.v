@@ -66,8 +66,8 @@ Proof.
           -- now subst.
           -- contradiction.
       + destruct H.
-        set (A1 := IMP2 L g (impH g g) g) in *.
-        set (A2 := IMP1 L g (impH g g)) in *.
+        set (A1 := IMP2 L g (g -> g)%fol g) in *.
+        set (A2 := IMP1 L g (g -> g)%fol) in *.
         set (A3 := MP L _ _ _ _ A1 A2) in *.
         set (A4 := IMP1 L g g) in *.
         set (A5 := MP L _ _ _ _ A3 A4) in *.
@@ -136,8 +136,8 @@ Proof.
         set (A2 := FA3 L g A v) in *.
         set (A3 := MP L _ _ _ _ A2 A1) in *.
         set (A4 := FA2 L g v H2) in *.
-        set (A5 := IMP2 L g (forallH v g) (forallH v A)) in *.
-        set (A6 := IMP1 L (impH (forallH v g) (forallH v A)) g) in *.
+        set (A5 := IMP2 L g (allH v, g)%fol (allH v, A)%fol) in *.
+        set (A6 := IMP1 L ((allH v, g) -> (allH v, A))%fol g) in *.
         set (A7 := MP L _ _ _ _ A6 A3) in *.
         set (A8 := MP L _ _ _ _ A5 A7) in *.
         set (A9 := MP L _ _ _ _ A8 A4) in *.
@@ -151,7 +151,7 @@ Proof.
         -- elim H4.
         *
           set (A1 := GEN L _ _ _ n H) in *.
-          set (A2 := IMP1 L (forallH v A) g) in *.
+          set (A2 := IMP1 L (allH v, A)%fol g) in *.
           set (A3 := MP L _ _ _ _ A2 A1) in *.
           exists (Axm).
           exists A3.

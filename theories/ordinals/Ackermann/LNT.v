@@ -337,32 +337,23 @@ Proof.
 Qed.
 
 Lemma eqTimes  (T : System) (a b c d : Term):
- SysPrf T (equal a b) ->
- SysPrf T (equal c d) -> SysPrf T (equal (Times a c) (Times b d)).
+ SysPrf T (a = b)%nt ->
+ SysPrf T (c = d)%nt -> SysPrf T (a * c = b * d)%nt.
 Proof.
   intros H H0; unfold Times in |- *.
   apply (equalFunction LNT); simpl in |- *.
   destruct (consTerms LNT 1 (Tcons a (Tcons c (Tnil))))as [(a0,b0) p].
-  simpl in |- *.
+  simpl;
   destruct (consTerms LNT 1 (Tcons b (Tcons d (Tnil)))) as [(a1,b1) p0].
   simpl; destruct (consTerms LNT 0 b0) as [(a2,b2) p1].
   simpl ; destruct (consTerms LNT 0 b1) as [(a3,b3) p2].
   simpl in |- *; repeat split.
-  - simpl in p.
-    inversion p.
-    simpl in p0.
-    inversion p0.
-    apply H.
-  - simpl in p.
-    inversion p.
-    rewrite <- p1 in H3.
-    simpl in H3.
-    inversion H3.
-    simpl in p0.
-    inversion p0.
-    rewrite <- p2 in H7.
-    inversion H7.
-    apply H0.
+  - simpl in p; inversion p /r; intros ? ?.
+    simpl in p0; inversion p0 /r; intros ? ?; apply H.
+  - simpl in p; inversion p /r ; intros H2 H3; rewrite <- p1 in H3.
+    simpl in H3; inversion H3 /r; intros H4 H5.
+    simpl in p0; inversion p0 /r. intros H6 H7; rewrite <- p2 in H7; 
+    inversion H7; apply H0.
 Qed.
 
 Lemma eqSucc (T : System) (a b : Term):
@@ -374,11 +365,8 @@ Proof.
   simpl in |- *;
     destruct (consTerms LNT 0 (Tcons b (Tnil))) as [(a1,b1) p0].
   simpl in |- *; repeat split.
-  - simpl in p.
-    inversion p.
-    simpl in p0.
-    inversion p0.
-    apply H.
+  - simpl in p; inversion p /r; intros ? ?.
+    simpl in p0; inversion p0; apply H.
 Qed.
 
 End Logic.

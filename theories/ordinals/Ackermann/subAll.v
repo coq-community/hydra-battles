@@ -392,7 +392,7 @@ Proof.
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             substituteTerms L n (subAllTerms n ts m) v s =
+             substTs L n (subAllTerms n ts m) v s =
                subAllTerms n ts (fun n : nat => substT L (m n) v s)). 
    - intro n; simpl; auto.
    - intros f t0 H; simpl; rewrite H; auto.
@@ -402,7 +402,7 @@ Qed.
 
 Lemma subSubAllTerms (n : nat) (ts : fol.Terms L n) (m : nat -> fol.Term L) 
   (v : nat) (s : fol.Term L) :
-  substituteTerms L n (subAllTerms n ts m) v s =
+  substTs L n (subAllTerms n ts m) v s =
     subAllTerms n ts (fun n : nat => substT L (m n) v s).
 Proof.
   induction ts as [| n t ts Hrects].

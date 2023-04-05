@@ -1072,8 +1072,8 @@ Proof.
   apply andI.
   assert
     (H11: forall (t1 t2 s : Term) (v : nat),
-        substituteFormula LNN (LT t1 t2) v s =
-          LT (substT LNN t1 v s) (substT LNN t2 v s)) by reflexivity.
+        substF LNN (t1 < t2)%nn v s = (substT LNN t1 v s < substT LNN t2 v s)%nn)
+        by reflexivity.
   repeat rewrite H11.
   repeat rewrite (subTermVar1 LNN) || rewrite (subTermVar2 LNN);
     try unfold not in |- *; intros.

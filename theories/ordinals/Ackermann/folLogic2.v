@@ -75,8 +75,8 @@ Proof.
   intros H H0. 
   elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-               substituteTerms L n (substituteTerms L n ts v2 s2) v1
+             substTs L n (substTs L n ts v1 s1) v2 s2 =
+               substTs L n (substTs L n ts v2 s2) v1
                  (substT L s1 v2 s2)); simpl in |- *.
   - intros n. 
     destruct (eq_nat_dec v1 n)  as [ e | n0].
@@ -98,8 +98,8 @@ Qed.
 Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v1 (freeVarTerm L s2) ->
-  substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-    substituteTerms L n (substituteTerms L n ts v2 s2) v1
+  substTs L n (substTs L n ts v1 s1) v2 s2 =
+    substTs L n (substTs L n ts v2 s2) v1
       (substT L s1 v2 s2).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].

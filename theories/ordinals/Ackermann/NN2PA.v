@@ -53,12 +53,12 @@ Lemma PAboundedLT :
   forall (m : nat) (F : Formula) (x : nat),
     (forall n : nat,
         n < m -> SysPrf PA (substituteFormula LNT F x (natToTerm n))) ->
-    SysPrf PA (LNN2LNT_formula ((v_ x)%nt < LNN.natToTerm m)%nn -> F)%nt.
+    SysPrf PA (LNN2LNT_formula (v_ x < LNN.natToTerm m)%nn -> F)%nt.
 Proof.
 simple induction m. 
 - intros F x H; apply impI.
   apply contradiction with 
-    (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm 0))).
+    (LNN2LNT_formula (v_ x < LNN.natToTerm 0)%nn).
   apply Axm; right; constructor.
   apply sysWeaken.
   replace (notH (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm 0)))) 
@@ -73,9 +73,9 @@ simple induction m.
       (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm (S n)))).
     * apply sysWeaken.
       assert (H1: SysPrf PA (LNN2LNT_formula
-                     ((v_ x < S_ (LNN.natToTerm n))%nn ->
-                      (v_ x < LNN.natToTerm n)%nn \/ 
-                        v_ x = LNN.natToTerm n)%nt)%nt)
+                     ((v_ x < S_ (LNN.natToTerm n)) ->
+                      (v_ x < LNN.natToTerm n) \/ 
+                        v_ x = LNN.natToTerm n))%nn)
       by (apply NN2PA, nn8). 
       simpl in H1; simpl. 
       unfold orH; apply H1.

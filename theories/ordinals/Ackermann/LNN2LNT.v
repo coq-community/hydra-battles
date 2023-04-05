@@ -224,8 +224,8 @@ Proof.
   elim t using  Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
-             LNN2LNT_terms n (substituteTerms LNN n ts v s) =
-               substituteTerms LNT n (LNN2LNT_terms n ts) v 
+             LNN2LNT_terms n (substTs LNN n ts v s) =
+               substTs LNT n (LNN2LNT_terms n ts) v 
                  (LNN2LNT_term s)).
   - intros n; simpl; destruct (eq_nat_dec v n); auto.
   - simpl in |- *; intros f t0 H; now rewrite H.
@@ -235,8 +235,8 @@ Qed.
 
 Lemma LNN2LNT_subTerms 
   (n : nat) (ts : fol.Terms LNN n) (v : nat) (s : fol.Term LNN):
-  LNN2LNT_terms n (substituteTerms LNN n ts v s) =
-    substituteTerms LNT n (LNN2LNT_terms n ts) v (LNN2LNT_term s).
+  LNN2LNT_terms n (substTs LNN n ts v s) =
+    substTs LNT n (LNN2LNT_terms n ts) v (LNN2LNT_term s).
 Proof.
   induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -268,7 +268,7 @@ Proof.
       * apply (subSubAllFormula LNT).
       * rewrite <- (nilTerms _ b0).
         replace
-          (substituteTerms LNN 2 (Tcons a (Tcons a0 (Tnil))) v s) 
+          (substTs LNN 2 (Tcons a (Tcons a0 (Tnil))) v s) 
           with
           (Tcons (substT _ a v s)
              (Tcons (substT _ a0 v s) (Tnil))).
@@ -471,8 +471,8 @@ Proof.
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             LNT2LNN_terms n (substituteTerms LNT n ts v s) =
-               substituteTerms LNN n (LNT2LNN_terms n ts) v 
+             LNT2LNN_terms n (substTs LNT n ts v s) =
+               substTs LNN n (LNT2LNN_terms n ts) v 
                  (LNT2LNN_term s)); simpl.
   - intro n; destruct (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H; reflexivity.

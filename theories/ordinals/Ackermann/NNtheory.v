@@ -53,7 +53,7 @@ Proof.
 Qed.
 
 Lemma natLT (a b : nat):
-  a < b -> SysPrf NN (LT (natToTerm a) (natToTerm b)).
+  a < b -> SysPrf NN (natToTerm a < natToTerm b)%nn.
 Proof.
   intros H; eapply orE.
   - apply nn9 with (a := natToTerm b) (b := natToTerm a).
@@ -61,7 +61,7 @@ Proof.
     + apply Axm; right; constructor.
     + now apply sysWeaken, natLE, Nat.lt_le_incl.
   - apply impI, orSys.
-    + apply contradiction with (equal (natToTerm b) (natToTerm a)).
+    + apply contradiction with (natToTerm b = natToTerm a)%nn.
       * apply Axm; right; constructor.
       * apply sysWeaken, natNE.
         unfold not in |- *; intros.
@@ -140,9 +140,9 @@ Proof.
         apply eqSym.
         apply Axm; right; constructor.
       * apply sysWeaken;
-          replace (substituteFormula LNN (LT (var 1) (Succ Zero)) 1 Zero) 
+          replace (substituteFormula LNN (v_ 1 < Succ Zero)%nn 1 Zero) 
           with
-          (LT (natToTerm 0) (natToTerm 1)).
+          (natToTerm 0 < natToTerm 1)%nn.
       -- apply natLT; auto.
       -- unfold LT; now rewrite (subFormulaRelation LNN).
   - cbn; apply impI, orSys.

@@ -1,7 +1,7 @@
 (******************************************************************************)
 From Coq Require Import Wf_nat Arith Lists.List Peano_dec. 
 
-Require Import ListExt. (* todo: use stdlib? *)
+Require Import ListExt. 
 Require Export fol.
 
 Section Fol_Properties.
@@ -148,6 +148,9 @@ End Free_Variables.
 
 Section Substitution.
 
+
+(* later abbreviated into substT and substTs *)
+
 Fixpoint substituteTerm (s : fol.Term L) (x : nat) 
   (t : fol.Term L) {struct s} : fol.Term L :=
   match s with
@@ -163,8 +166,7 @@ with substituteTerms (n : nat) (ss : fol.Terms L n)
        match ss in (fol.Terms _ n0) return (fol.Terms L n0) with
        | Tnil => Tnil
        | Tcons m s ts =>
-           Tcons  (substituteTerm s x t) 
-             (substituteTerms m ts x t)
+           Tcons  (substituteTerm s x t) (substituteTerms m ts x t)
        end.
 
 Lemma subTermVar1 :
@@ -181,12 +183,10 @@ Lemma subTermVar2 :
     v <> x -> substituteTerm (var x) v s = var x.
 Proof.
   intros v x s H; unfold substituteTerm in |- *.
-  destruct (eq_nat_dec v x).
-  - contradiction. 
-  - reflexivity.
+  destruct (eq_nat_dec v x); [contradiction | reflexivity].
 Qed.
 
-Lemma subTermFunction :
+Lemma subTermApply :
   forall (f : Functions L) (ts : fol.Terms L (arityF L f)) 
          (v : nat) (s : fol.Term L),
     substituteTerm (apply f ts) v s = apply f (substituteTerms _ ts v s).

@@ -459,8 +459,8 @@ Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat)
 Proof.
   intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             PairwiseEqual T _ (substituteTerms L _ ts v a)
-               (substituteTerms L _ ts v b)); simpl in |- *. 
+             PairwiseEqual T _ (substTs L _ ts v a)
+               (substTs L _ ts v b)); simpl in |- *. 
     - intros n; induction (eq_nat_dec v n); [easy | apply eqRefl].
     - intros f t0 H0; apply equalFunction.
       apply H0.
@@ -468,11 +468,11 @@ Proof.
     - intros.  
       destruct
         (consTerms L n
-           (Tcons (substT L t0 v a) (substituteTerms L n t1 v a))). 
+           (Tcons (substT L t0 v a) (substTs L n t1 v a))). 
       destruct x as [a0 b0].
       destruct
         (consTerms L n
-           (Tcons (substT L t0 v b) (substituteTerms L n t1 v b))).  
+           (Tcons (substT L t0 v b) (substTs L n t1 v b))).  
       destruct x as [a1 b1]. 
       simpl in |- *.  simpl in e0; simpl in e.
       inversion e0.
@@ -486,17 +486,17 @@ Qed.
 Lemma subWithEqualsTerms (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
   (v : nat) (T : fol.System L):
   SysPrf T (equal a b) ->
-  PairwiseEqual T _ (substituteTerms L _ ts v a) 
-    (substituteTerms L _ ts v b).
+  PairwiseEqual T _ (substTs L _ ts v a) 
+    (substTs L _ ts v b).
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
   - auto.
   - destruct
       (consTerms L n
-         (Tcons (substT L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
+         (Tcons (substT L t v a) (substTs L n ts v a))) as [[a0 b0] p].
     destruct
       (consTerms L n
-         (Tcons (substT L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
+         (Tcons (substT L t v b) (substTs L n ts v b))) as [[a1 b1] e].
     simpl in |- *; simpl in p,  e.
     inversion p.
     inversion e.

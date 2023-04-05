@@ -157,7 +157,7 @@ Proof.
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
                interpTerms n f (updateValue value v (interpTerm value s)) ts =
-                 interpTerms n f value (substituteTerms L n ts v s)); 
+                 interpTerms n f value (substTs L n ts v s)); 
     simpl.
   - intro n; unfold updateValue; induction (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H.
@@ -169,7 +169,7 @@ Qed.
 Lemma subInterpRel (value : nat -> U M) (n : nat) (ts : Terms L n) 
   (v : nat) (s : Term L) (r : naryRel (U M) n):
   interpRels n r (updateValue value v (interpTerm value s)) ts <->
-    interpRels n r value (substituteTerms L n ts v s).
+    interpRels n r value (substTs L n ts v s).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; tauto.

@@ -84,7 +84,7 @@ Definition language_decidable :=
   ((forall x y : Functions L, {x = y} + {x <> y}) *
    (forall x y : Relations L, {x = y} + {x <> y}))%type.
 
-Hypothesis language_dec : language_decidable.
+Hypothesis language_eqdec : language_decidable.
 (* end snippet formDec1 *)
 
 Let nilTermsHelp : forall n : nat, n = 0 -> Terms n.
@@ -102,9 +102,7 @@ Proof.
     - reflexivity.
     - discriminate p.
   }
-  replace Tnil with (nilTermsHelp 0 (refl_equal 0)).
-  - apply H.
-  - auto.
+  replace Tnil with (nilTermsHelp 0 (refl_equal 0)); [apply H | reflexivity].
 Qed.
 
 (** Decomposition Lemma for [Terms] *)
@@ -142,12 +140,12 @@ Qed.
 
 Arguments Term_Terms_rec_full P P0: rename.
 
-(* TODO --> term_eqdec *)
+
 (* begin snippet formDec2:: no-out *)
-Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
+Lemma term_eqdec : forall x y : Term, {x = y} + {x <> y}.
 (* end snippet formDec2 *)
 Proof.
-  destruct language_dec as [a b].
+  destruct language_eqdec as [a b].
   assert
     (H: forall (f g : Functions L) (p : f = g) 
                (ts : Terms (arityF L f))
@@ -242,7 +240,7 @@ Proof.
   - induction (consTerms _ y) as [(a,b) p].
     simpl in p.
     induction (Hrecx b) as [a0 | b0].
-    + induction (term_dec t a) as [a1| b0].
+    + induction (term_eqdec t a) as [a1| b0].
       * left; now rewrite a1, a0.
       * right. intro H; elim b0.
         rewrite <- p in H.
@@ -261,11 +259,11 @@ Qed.
 Lemma formula_dec : forall x y : Formula, {x = y} + {x <> y}.
 (* end snippet formDec4 *)
 Proof.
-  induction language_dec as [a b].
+  destruct language_eqdec as [a b].
   simple induction x; simple induction y;
     (right; discriminate) || intros.
-  - induction (term_dec t t1) as [a0 | b0].
-    + induction (term_dec t0 t2) as [a1 | b0].
+  - induction (term_eqdec t t1) as [a0 | b0].
+    + induction (term_eqdec t0 t2) as [a1 | b0].
       * left; now rewrite a0, a1.
       * right; unfold not in |- *. intros H. elim b0.
         inversion H; reflexivity.

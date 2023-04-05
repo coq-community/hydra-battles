@@ -64,7 +64,7 @@ Qed.
 
 Lemma RepresentableHalf2Alternate :
  forall (n : nat) (f : naryFunc n) (A B : Formula),
-   SysPrf T (impH A B) -> RepresentableHalf2 n f A -> 
+   SysPrf T (A -> B)%nn -> RepresentableHalf2 n f A -> 
    RepresentableHalf2 n f B.
 Proof.
   induction n as [| n Hrecn]; intros.
@@ -169,7 +169,7 @@ Proof.
       * apply iffE1, H.
       * apply H0. 
     + simpl in H0 |- *.
-      apply impE with (notH A).
+      apply impE with (~ A)%nn.
       * apply cp2.
         now apply iffE2.
       * apply H0. 
@@ -185,7 +185,7 @@ Proof.
   + apply H0.
 Qed.
 
-Hypothesis nn1:(SysPrf T (notH (equal (natToTerm 1) (natToTerm 0)))).
+Hypothesis nn1: SysPrf T (natToTerm 1 <> natToTerm 0)%nn.
 
 Lemma Representable2Expressible :
  forall (n : nat) (R : naryRel n) (A : Formula),
@@ -209,8 +209,7 @@ Proof.
         induction R.
         * simpl in H.
           apply impE with
-            (substF LNN (equal (var 0) (Succ Zero))
-               0 (Succ Zero)).
+            (substF LNN (v_ 0 = Succ Zero)%nn  0 (Succ Zero)).
           -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
             apply forallE.
