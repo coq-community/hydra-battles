@@ -303,8 +303,8 @@ Qed.
 Lemma LNN2LNT_subFormula 
  (T : System) (f : fol.Formula LNN) (v : nat) (s : fol.Term LNN):
  SysPrf T
-   (iffH (LNN2LNT_formula (substituteFormula LNN f v s))
-      (substituteFormula LNT (LNN2LNT_formula f) v (LNN2LNT_term s))).
+   (iffH (LNN2LNT_formula (substF LNN f v s))
+      (substF LNT (LNN2LNT_formula f) v (LNN2LNT_term s))).
 Proof.
   apply sysExtend with (Empty_set Formula).
   -  intros x H; destruct H.
@@ -373,10 +373,10 @@ Proof.
       * simpl; apply iffRefl.
       * simpl; apply iffTrans with
           (forallH x0
-             (substituteFormula LNT
+             (substF LNT
                 (LNN2LNT_formula
-                   (substituteFormula LNN
-                      (substituteFormula LNN a v (var x)) v0 s)) x 
+                   (substF LNN
+                      (substF LNN a v (var x)) v0 s)) x 
                 (var x0))).
         apply (rebindForall LNT).
         intros H6. 
@@ -384,21 +384,21 @@ Proof.
           (H7: In x0
              (freeVarFormula LNT
                 (LNN2LNT_formula
-                   (substituteFormula LNN
-                      (substituteFormula LNN a v (var x))
+                   (substF LNN
+                      (substF LNN a v (var x))
                       v0 s))))
           by (eapply List.in_remove; apply H6). 
         assert
           (H8: In x0
                  (freeVarFormula LNN
-                    (substituteFormula LNN (substituteFormula LNN a v 
+                    (substF LNN (substF LNN a v 
                                               (var x)) v0
                        s)))
           by (apply LNN2LNT_freeVarFormula1; assumption).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         assert
           (H10: In x0 (freeVarFormula LNN 
-                         (substituteFormula LNN a v (var x)))) 
+                         (substF LNN a v (var x)))) 
           by (eapply in_remove; apply H9).
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
         elim H5.
@@ -420,9 +420,9 @@ Proof.
            apply
              iffTrans
              with
-             (substituteFormula LNT
-                (substituteFormula LNT
-                   (substituteFormula LNT (LNN2LNT_formula a) v 
+             (substF LNT
+                (substF LNT
+                   (substF LNT (LNN2LNT_formula a) v 
                       (var x)) v0
                    (LNN2LNT_term s)) x (var x0)).
            apply (reduceSub LNT).
@@ -541,7 +541,7 @@ Qed.
 
 Lemma LNT2LNN_subFormula :
   forall (f : Formula) (v : nat) (s : Term),
-    LNT2LNN_formula (substituteFormula LNT f v s) =
+    LNT2LNN_formula (substF LNT f v s) =
       substF LNN (LNT2LNN_formula f) v (LNT2LNN_term s).
 Proof.
   intro f.
@@ -655,11 +655,11 @@ Proof.
   - assert (H0: SysPrf (Empty_set _)
                   (LNN2LNT_formula 
                      (impH (forallH v A) 
-                        (substituteFormula LNN A v t)))).
+                        (substF LNN A v t)))).
     { simpl in |- *.
       apply impE with
         (impH (forallH v (LNN2LNT_formula A))
-           (substituteFormula LNT (LNN2LNT_formula A) v 
+           (substF LNT (LNN2LNT_formula A) v 
               (LNN2LNT_term t))).
       apply iffE1.
       apply (reduceImp LNT).
@@ -828,3 +828,5 @@ Proof.
   destruct (translatePrf U V H2 f x x0 H1).
   exists x1; tauto.
 Qed.
+
+
