@@ -84,10 +84,10 @@ Notation "'v_' i" := (var i) (at level 3) : nn_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nn.
 
 
-Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+Notation "'exH' x .. y , p" := (@existH  _ x .. (@existH _ y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
 
-Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+Notation "'allH' x .. y , p" := (@forallH _  x .. (@forallH _ y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
 
 Notation S_ := Succ.
