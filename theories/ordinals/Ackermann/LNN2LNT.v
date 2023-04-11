@@ -194,7 +194,7 @@ Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
       end ts
   | (A -> B)%nn => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
   | (~ A)%nn =>  (~ LNN2LNT_formula A)%nt
-  | (allH v, A)%nn => (allH v, LNN2LNT_formula A)%nt
+  | (allH v, A)%fol => (allH v, LNN2LNT_formula A)%nt
   end.
 
 (** *** Helpful rewriting lemmas *)

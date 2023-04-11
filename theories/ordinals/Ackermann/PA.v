@@ -47,17 +47,17 @@ Lemma PAdec : forall x : Formula, decidable (In _ PA x).
 Proof.
   intros x.
   unfold PA in |- *.
-  induction (formula_dec LNT LNT_dec x PA6).
+  induction (formula_eqdec LNT LNT_dec x PA6).
   - rewrite a; left; right; constructor.
-  - induction (formula_dec LNT LNT_dec x PA5).
+  - induction (formula_eqdec LNT LNT_dec x PA5).
     + rewrite a; left; left; right; constructor.
-    + induction (formula_dec LNT LNT_dec x PA4).
+    + induction (formula_eqdec LNT LNT_dec x PA4).
       * rewrite a; left; do 2 left; right; constructor.
-      * induction (formula_dec LNT LNT_dec x PA3).
+      * induction (formula_eqdec LNT LNT_dec x PA3).
         -- rewrite a; left; do 3 left; right; constructor.
-        -- induction (formula_dec LNT LNT_dec x PA2).
+        -- induction (formula_eqdec LNT LNT_dec x PA2).
            ++ rewrite a; left; do 4 left; right; constructor.
-           ++ induction (formula_dec LNT LNT_dec x PA1).
+           ++ induction (formula_eqdec LNT LNT_dec x PA1).
               ** rewrite a; left; do 5 left; right; constructor.
               ** cut (In Formula InductionSchema x \/ 
                         ~ In Formula InductionSchema x).
@@ -88,16 +88,16 @@ Proof.
                    destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
                      try (right; unfold not in |- *; intros; 
                           decompose record H; discriminate).
-                   destruct (formula_dec LNT LNT_dec (substF LNT f1 n0 Zero) f) 
+                   destruct (formula_eqdec LNT LNT_dec (substF LNT f1 n0 Zero) f) 
                      as [a | b].
                    - rewrite <- a; clear a f.
                      destruct f0 as [t t0| r t| f f0| f| n1 f];
                        try (right; unfold not in |- *; intros; 
                             decompose record H; discriminate).
-                     induction (formula_dec LNT LNT_dec f1 f) as [a | b].
+                     induction (formula_eqdec LNT LNT_dec f1 f) as [a | b].
                      + rewrite <- a; clear a f.
                        induction
-                         (formula_dec LNT LNT_dec
+                         (formula_eqdec LNT LNT_dec
                             (substF LNT f1 n0 (Succ (v_ n0))%nt) f0).
                        * rewrite <- a; clear a f0.
                          induction (eq_nat_dec n n0) as [a | b].
@@ -119,7 +119,7 @@ Proof.
                         decompose record H /r.
                       intros H x0 x1 H1; inversion H1; auto.
                  }                 
-                 induction (formula_dec LNT LNT_dec x (close LNT (open x))) as [a | b].
+                 induction (formula_eqdec LNT LNT_dec x (close LNT (open x))) as [a | b].
                  --- induction (H (open x)).
                      left.
                      unfold In, InductionSchema, PA7 in |- *.

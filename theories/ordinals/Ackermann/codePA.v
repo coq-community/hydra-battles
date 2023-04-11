@@ -383,7 +383,7 @@ Proof.
        (codeFormula (open f))) as [a | b].
   - rewrite a in H; unfold codeFormula in H; 
       rewrite codeCloseCorrect in H;  fold codeFormula in H.
-    destruct (formula_dec LNT LNT_dec (close LNT (open f)) f) 
+    destruct (formula_eqdec LNT LNT_dec (close LNT (open f)) f) 
       as [a0 | b].
     + unfold codeImp at 1 in a.
       destruct (open f) as [t t0| r t| f0 f1| f0| n0 f0]; simpl in a;
