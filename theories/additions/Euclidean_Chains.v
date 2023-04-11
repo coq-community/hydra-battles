@@ -1529,7 +1529,7 @@ Int31.phi (N_bpow (snd (positive_to_int31 x)) n ).
 
 (** long computations ... *)
 
-Definition big_chain := ltac:(compute_chain  (make_chain dicho 6145319)).
+Definition big_chain := ltac:(compute_chain  (make_chain dicho 45319)).
 
 Print big_chain.
 
@@ -1636,15 +1636,6 @@ Compute chain_length (make_chain half 56789).
 
 Compute chain_length (make_chain dicho 56789).
 (* 21%nat *)
-
-Compute chain_length (make_chain two 3456789).
-(* 33%nat *)
-
- Compute chain_length (make_chain half 3456789).
-(* 33%nat *)
-
-Compute chain_length (make_chain dicho 3456789).
-(* 29%nat *)
 
 End Examples.
 
