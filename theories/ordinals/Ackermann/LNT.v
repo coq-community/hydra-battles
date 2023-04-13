@@ -229,105 +229,104 @@ Lemma iffE2 (T : System) (f g : Formula) :
 Proof. apply (iffE2 LNT). Qed.
 
 Lemma forallI (T : System) (f : Formula) (v : nat):
- ~ In_freeVarSys LNT v T -> SysPrf T f -> SysPrf T (forallH v f).
+ ~ In_freeVarSys LNT v T -> SysPrf T f -> SysPrf T (allH v, f)%nt.
 Proof. apply (forallI LNT). Qed.
 
 Lemma forallE (T : System) (f : Formula) (v : nat) (t : Term) :
- SysPrf T (forallH v f) -> SysPrf T (substituteFormula LNT f v t).
+ SysPrf T (allH v, f)%nt -> SysPrf T (substF LNT f v t).
 Proof. apply (forallE LNT). Qed.
 
 Lemma forallSimp (T : System) (f : Formula) (v : nat):
- SysPrf T (forallH v f) -> SysPrf T f.
+ SysPrf T (allH v, f)%nt -> SysPrf T f.
 Proof. apply (forallSimp LNT). Qed.
 
 Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
- SysPrf T (substituteFormula LNT f v t) -> SysPrf T (existH v f).
+ SysPrf T (substituteFormula LNT f v t) -> SysPrf T (exH v, f)%nt.
 Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNT v T ->
   ~ In v (freeVarFormula LNT g) ->
-  SysPrf T (existH v f) -> SysPrf T (impH f g) -> SysPrf T g.
+  SysPrf T (exH v, f)%nt -> SysPrf T (f -> g)%nt -> SysPrf T g.
 Proof. apply (existE LNT). Qed.
 
 Lemma existSimp (T : System) (f : Formula) (v : nat):
- SysPrf T f -> SysPrf T (existH v f).
+ SysPrf T f -> SysPrf T (exH v, f)%nt.
 Proof. apply (existSimp LNT). Qed.
 
 Lemma existSys (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNT v T ->
   ~ In v (freeVarFormula LNT g) ->
   SysPrf (Ensembles.Add _ T f) g -> 
-  SysPrf (Ensembles.Add _ T (existH v f)) g.
+  SysPrf (Ensembles.Add _ T (exH v, f)%nt) g.
 Proof. apply (existSys LNT). Qed.
 
 Lemma absurd1 (T : System) (f : Formula):
- SysPrf T (impH f (notH f)) -> SysPrf T (notH f).
+ SysPrf T (f -> ~ f)%nt -> SysPrf T (~ f)%nt.
 Proof. apply (absurd1 LNT). Qed.
 
 Lemma nImp (T : System) (f g : Formula):
- SysPrf T (andH f (notH g)) -> SysPrf T (notH (impH f g)).
+ SysPrf T (f /\ ~g)%nt  -> SysPrf T (~ (f -> g))%nt.
 Proof. apply (nImp LNT). Qed.
 
 Lemma nOr (T : System) (f g : Formula):
- SysPrf T (andH (notH f) (notH g)) -> SysPrf T (notH (orH f g)).
+ SysPrf T (~ f /\ ~g)%nt -> SysPrf T (~ (f \/ g))%nt.
 Proof. apply (nOr LNT). Qed.
 
 Lemma nAnd (T : System) (f g : Formula):
- SysPrf T (orH (notH f) (notH g)) -> SysPrf T (notH (andH f g)).
+ SysPrf T (~ f \/ ~ g)%nt -> SysPrf T (~ (f /\ g))%nt.
 Proof. apply (nAnd LNT). Qed. 
 
 Lemma nForall (T : System) (f : Formula) (v : nat) :
- SysPrf T (existH v (notH f)) -> SysPrf T (notH (forallH v f)).
+ SysPrf T (exH v, ~ f)%nt -> SysPrf T (~ (allH v, f))%nt. 
 Proof. apply (nForall LNT). Qed.
 
 Lemma nExist (T : System) (f : Formula) (v : nat):
- SysPrf T (forallH v (notH f)) -> SysPrf T (notH (existH v f)).
+ SysPrf T (allH v, ~ f)%nt -> SysPrf T (~ (exH v, f))%nt.
 Proof. apply (nExist LNT). Qed.
 
-Lemma impRefl (T : System) (f : Formula): SysPrf T (impH f f).
+Lemma impRefl (T : System) (f : Formula): SysPrf T (f -> f)%nt.
 Proof. apply (impRefl LNT). Qed.
 
 Lemma impTrans (T : System) (f g h : Formula):
- SysPrf T (impH f g) -> SysPrf T (impH g h) -> SysPrf T (impH f h).
+ SysPrf T (f -> g)%nt -> SysPrf T (g -> h)%nt -> SysPrf T (f -> h)%nt.
 Proof. apply (impTrans LNT). Qed.
 
 Lemma orSym (T : System) (f g : Formula):
- SysPrf T (orH f g) -> SysPrf T (orH g f).
+ SysPrf T (f \/ g)%nt -> SysPrf T (g \/ f)%nt.
 Proof. apply (orSym LNT). Qed.
 
 Lemma andSym (T : System) (f g : Formula) :
- SysPrf T (andH f g) -> SysPrf T (andH g f).
+ SysPrf T (f /\ g)%nt -> SysPrf T (g /\ f)%nt.
 Proof. apply (andSym LNT). Qed.
 
-Lemma iffRefl (T : System) (f : Formula) : SysPrf T (iffH f f).
+Lemma iffRefl (T : System) (f : Formula) : SysPrf T (f <-> f)%nt.
 Proof. apply (iffRefl LNT). Qed.
 
 Lemma iffSym (T : System) (f g : Formula):
- SysPrf T (iffH f g) -> SysPrf T (iffH g f).
+  SysPrf T (f <-> g)%nt -> SysPrf T (g <-> f)%nt.
 Proof. apply (iffSym LNT). Qed.
 
 Lemma iffTrans (T : System) (f g h : Formula):
- SysPrf T (iffH f g) -> SysPrf T (iffH g h) -> SysPrf T (iffH f h).
+ SysPrf T (f <-> g)%nt -> SysPrf T (g <-> h)%nt -> SysPrf T (f <-> h)%nt.
 Proof. apply (iffTrans LNT). Qed.
 
-Lemma eqRefl  (T : System) (a : Term): SysPrf T (equal a a).
+Lemma eqRefl  (T : System) (a : Term):  SysPrf T (a = a)%nt.
 Proof. apply (eqRefl LNT). Qed.
 
 Lemma eqSym (T : System) (a b : Term):
- SysPrf T (equal a b) -> SysPrf T (equal b a).
+ SysPrf T (a = b)%nt -> SysPrf T (b = a)%nt.
 Proof. apply (eqSym LNT). Qed.
 
 Lemma eqTrans (T : System) (a b c : Term):
- SysPrf T (equal a b) -> SysPrf T (equal b c) -> SysPrf T (equal a c).
+  SysPrf T (a = b)%nt -> SysPrf T (b = c)%nt -> SysPrf T (a = c)%nt.
 Proof. apply (eqTrans LNT). Qed.
 
 Lemma eqPlus (T : System) (a b c d : Term):
-  SysPrf T (equal a b) ->
-  SysPrf T (equal c d) -> SysPrf T (equal (Plus a c) (Plus b d)).
+  SysPrf T (a = b)%nt -> SysPrf T (c = d)%nt -> 
+  SysPrf T (a + c = b + d)%nt.
 Proof.
-  intros H H0; unfold Plus.
-  apply (equalFunction LNT).
+  intros H H0; unfold Plus; apply (equalFunction LNT).
   simpl in |- *.
   destruct (consTerms LNT 1 (Tcons a (Tcons c (Tnil))))as [(a0,b0) p].
   simpl; destruct (consTerms LNT 1 (Tcons b (Tcons d (Tnil)))) 
@@ -355,8 +354,8 @@ Proof.
 Qed.
 
 Lemma eqTimes  (T : System) (a b c d : Term):
- SysPrf T (a = b)%nt ->
- SysPrf T (c = d)%nt -> SysPrf T (a * c = b * d)%nt.
+  SysPrf T (a = b)%nt -> SysPrf T (c = d)%nt -> 
+  SysPrf T (a * c = b * d)%nt.
 Proof.
   intros H H0; unfold Times in |- *.
   apply (equalFunction LNT); simpl in |- *.
@@ -389,6 +388,7 @@ Qed.
 
 End Logic.
 
+(** Conversion from [nat] *)
 Fixpoint natToTerm (n : nat) : Term :=
   match n with
   | O => Zero

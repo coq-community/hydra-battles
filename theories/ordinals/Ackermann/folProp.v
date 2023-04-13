@@ -856,5 +856,8 @@ Definition Sentence (f:Formula) := (forall v : nat, ~ In v (freeVarFormula f)).
 
 End Fol_Properties.
 
+Notation substF := substituteFormula.
+Notation substT := substituteTerm.
+Notation substTs := substituteTerms.
 
 
