@@ -65,7 +65,13 @@ Notation app2 f arg1 arg2 :=
 
 Notation "t = u" := (@equal _ t u): nt_scope.
 Notation "t <> u" := (~ t = u)%nt : nt_scope.
+Notation "'v_' i" := (var i) (at level 3) : nt_scope.
 
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
 
 (** ** Notations for printing computed formulas/terms with derived connectives *)
 
@@ -76,23 +82,12 @@ Reserved Notation "x '/\'' y" (at level 80, right associativity).
 Reserved Notation "x '<->'' y" (at level 95, no associativity).
 Reserved Notation "x '<->''' y" (at level 95, no associativity).
 
-
-
 Notation "x \/' y" := (~ x -> y)%nt : nt_scope. 
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%nt : nt_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nt:  nt_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
-
-(* Notation exH := (existH). *)
-Notation "'v_' i" := (var i) (at level 3) : nt_scope.
-
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
 
-Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
-
-Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
 
 
 Module NTnotations. 
