@@ -67,11 +67,18 @@ Notation "t = u" := (@equal _ t u): nt_scope.
 Notation "t <> u" := (~ t = u)%nt : nt_scope.
 Notation "'v_' i" := (var i) (at level 3) : nt_scope.
 
+
+
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
 
 Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
+
+
+Infix "+" := Plus :nt_scope.
+Infix "*" := Times :nt_scope.
+
 
 (** ** Notations for printing computed formulas/terms with derived connectives *)
 
@@ -89,13 +96,7 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nt : nt_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%nt.
 
 
-
-Module NTnotations. 
-Infix "+" := Plus :nt_scope.
-Infix "*" := Times :nt_scope.
-End NTnotations.
-
-Export NTnotations. 
+(** ** Examples *)
 
 Section Examples.
 Variable f : Formula. 
@@ -104,8 +105,13 @@ Check (allH 0 1 ,  (f -> v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
 Check (exH 0 1 ,  (v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
 End Examples.
 
-Lemma LNT_dec : language_decidable LNT.
+(** * Basic properties 
+*)
+
+Lemma LNT_eqdec : language_decidable LNT.
 Proof. split; decide equality. Qed.
+
+(** ** List of free variables of a formula *)
 
 Section Free_Variables.
 
@@ -132,6 +138,8 @@ Proof. reflexivity. Qed.
 
 End Free_Variables.
 
+(** ** Basic and derived proof rules *)
+
 Section Logic.
 
 Lemma Axm  (T : System) (f : Formula) :  mem _ T f -> SysPrf T f.
@@ -146,77 +154,78 @@ Lemma sysWeaken (T : System) (f g : Formula):
 Proof. apply (sysWeaken LNT). Qed.
 
 Lemma impI (T : System) (f g : Formula):
-  SysPrf (Ensembles.Add _ T g) f -> SysPrf T (impH g f).
+  SysPrf (Ensembles.Add _ T g) f -> SysPrf T (g -> f)%nt.
 Proof. apply (impI LNT). Qed.
 
 Lemma impE (T : System) (f g : Formula):
- SysPrf T (impH g f) -> SysPrf T g -> SysPrf T f.
+ SysPrf T (g -> f)%nt -> SysPrf T g -> SysPrf T f.
 Proof. apply (impE LNT). Qed.
 
 Lemma contradiction (T : System) (f g : Formula):
- SysPrf T f -> SysPrf T (notH f) -> SysPrf T g.
+ SysPrf T f -> SysPrf T (~ f)%nt -> SysPrf T g.
 Proof. apply (contradiction LNT). Qed.
 
 Lemma nnE (T : System) (f : Formula):
-  SysPrf T (notH (notH f)) -> SysPrf T f.
+  SysPrf T (~ ~ f)%nt -> SysPrf T f.
 Proof. apply (nnE LNT). Qed.
 
-Lemma noMiddle (T : System) (f : Formula): SysPrf T (orH (notH f) f).
+Lemma noMiddle (T : System) (f : Formula): SysPrf T (~ f \/ f)%nt.
 Proof. apply (noMiddle LNT). Qed.
 
 Lemma nnI (T : System) (f : Formula):
-  SysPrf T f -> SysPrf T (notH (notH f)).
+  SysPrf T f -> SysPrf T (~ ~ f)%nt.
 Proof. apply (nnI LNT). Qed.
 
 Lemma cp1 (T : System) (f g : Formula):
- SysPrf T (impH (notH f) (notH g)) -> SysPrf T (impH g f).
+ SysPrf T (~ f -> ~ g)%nt -> SysPrf T (g -> f)%nt.
 Proof. apply (cp1 LNT). Qed.
 
 Lemma cp2 (T : System) (f g : Formula):
- SysPrf T (impH g f) -> SysPrf T (impH (notH f) (notH g)).
+ SysPrf T (g -> f)%nt -> SysPrf T (~ f -> ~ g)%nt.
 Proof. apply (cp2 LNT). Qed.
 
 Lemma orI1 (T : System) (f g : Formula): 
-  SysPrf T f -> SysPrf T (orH f g).
+  SysPrf T f -> SysPrf T (f \/ g)%nt.
 Proof. apply (orI1 LNT). Qed.
 
 Lemma orI2 (T : System) (f g : Formula):
-  SysPrf T g -> SysPrf T (orH f g).
+  SysPrf T g -> SysPrf T (f \/ g)%nt.
 Proof. apply (orI2 LNT). Qed.
 
 Lemma orE (T : System) (f g h : Formula):
- SysPrf T (orH f g) ->
- SysPrf T (impH f h) -> SysPrf T (impH g h) -> SysPrf T h.
+  SysPrf T (f \/ g)%nt -> 
+  SysPrf T (f -> h)%nt -> SysPrf T (g -> h)%nt -> 
+  SysPrf T h.
 Proof. apply (orE LNT). Qed.
 
 Lemma orSys (T : System) (f g h : Formula):
  SysPrf (Ensembles.Add _ T f) h -> 
  SysPrf (Ensembles.Add _ T g) h -> 
- SysPrf (Ensembles.Add _ T (orH f g)) h.
+ SysPrf (Ensembles.Add _ T (f \/ g)%nt) h.
 Proof. apply (orSys LNT). Qed.
 
 Lemma andI (T : System) (f g : Formula) :
- SysPrf T f -> SysPrf T g -> SysPrf T (andH f g).
+ SysPrf T f -> SysPrf T g -> SysPrf T (f /\ g)%nt.
 Proof. apply (andI LNT). Qed.
 
 Lemma andE1 (T : System) (f g : Formula) :
-  SysPrf T (andH f g) -> SysPrf T f.
+  SysPrf T (f /\ g)%nt -> SysPrf T f.
 Proof. apply (andE1 LNT). Qed.
 
 Lemma andE2 (T : System) (f g : Formula) :
-  SysPrf T (andH f g) -> SysPrf T g.
+  SysPrf T (f /\ g)%nt -> SysPrf T g.
 Proof. apply (andE2 LNT). Qed.
 
 Lemma iffI (T : System) (f g : Formula) :
- SysPrf T (impH f g) -> SysPrf T (impH g f) -> SysPrf T (iffH f g).
+ SysPrf T (f -> g)%nt -> SysPrf T (g -> f)%nt -> SysPrf T (f <-> g)%nt.
 Proof. apply (iffI LNT). Qed.
 
 Lemma iffE1 (T : System) (f g : Formula):
- SysPrf T (iffH f g) -> SysPrf T (impH f g).
+ SysPrf T (f <-> g)%nt -> SysPrf T (f -> g)%nt.
 Proof. apply (iffE1 LNT). Qed.
 
 Lemma iffE2 (T : System) (f g : Formula) :
- SysPrf T (iffH f g) -> SysPrf T (impH g f).
+ SysPrf T (f <-> g)%nt -> SysPrf T (g -> f)%nt.
 Proof. apply (iffE2 LNT). Qed.
 
 Lemma forallI (T : System) (f : Formula) (v : nat):
