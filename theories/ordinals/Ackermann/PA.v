@@ -33,7 +33,7 @@ Definition PA7 (f : Formula) (v : nat) : Formula :=
 Definition InductionSchema (f : Formula) : Prop :=
   exists g : Formula, (exists v : nat, f = PA7 g v).
 
-Definition PA := SetAddn InductionSchema PA1 PA2 PA3 PA4 PA5 PA6.
+Definition PA := SetAdds InductionSchema PA1 PA2 PA3 PA4 PA5 PA6.
 
 Definition open :=
   Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => equal t t0)

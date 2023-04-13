@@ -4,7 +4,7 @@ Require Import ListExt.
 Require Import folProp.
 Require Import subProp.
 Require Import extEqualNat.
-Require Import LNN.
+Require Import Languages LNN.
 Require Import NewNotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
