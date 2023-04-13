@@ -36,11 +36,11 @@ Definition InductionSchema (f : Formula) : Prop :=
 Definition PA := SetAdds InductionSchema PA1 PA2 PA3 PA4 PA5 PA6.
 
 Definition open :=
-  Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => equal t t0)
+  Formula_rec LNT (fun _ => Formula) (fun t t0 : Term => (t = t0)%nt)
     (fun (r : Relations LNT) 
          (ts : Terms (arityR LNT r)) =>  atomic r ts) 
-    (fun (f : Formula) _ (f0 : Formula) _ => impH f f0)
-    (fun (f : Formula) _ => notH f)
+    (fun (f : Formula) _ (f0 : Formula) _ => (f -> f0)%nt)
+    (fun (f : Formula) _ => (~ f)%nt)
     (fun (n : nat) _ (recf : Formula) => recf).
 
 Lemma PAdec : forall x : Formula, decidable (In _ PA x).
