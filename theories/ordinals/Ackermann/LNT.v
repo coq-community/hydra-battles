@@ -1,12 +1,21 @@
+(**  LNT.v : Language of Number Theory 
 
-Require Import Arith.
-Require Import Ensembles.
-Require Import Coq.Lists.List.
+Original version by Russel O'Connor
 
-Require Import Languages.
-Require Import folProof.
-Require Import folProp.
-Require Import folLogic3.
+*)
+
+
+From Coq Require Import Arith Ensembles List.
+
+Require Import Languages  folProof  folProp  folLogic3.
+
+(** * Instantiations of a few generic constructs 
+
+  _To do_ perhaps these redefinitions should be deprecated, because they cause some issues 
+  in statements which mix [LNN] and [LNT] terms and formulas 
+*)
+
+
 
 Definition Formula := Formula LNT.
 Definition Formulas := Formulas LNT.
@@ -31,7 +40,7 @@ Definition Succ (x : Term) : Term :=
 Definition Zero : Term := apply LNT Zero_ (Tnil).
 
 
-(** Notations for LNT formulas: experimental and unstable *)
+(** * Notations for LNT formulas: experimental and unstable *)
 
 Declare Scope nt_scope.
 Delimit Scope nt_scope with nt. 
@@ -56,6 +65,11 @@ Notation app2 f arg1 arg2 :=
 
 Notation "t = u" := (@equal _ t u): nt_scope.
 Notation "t <> u" := (~ t = u)%nt : nt_scope.
+
+
+(** ** Notations for printing computed formulas/terms with derived connectives *)
+
+
 
 Reserved Notation "x '\/'' y" (at level 85, right associativity).
 Reserved Notation "x '/\'' y" (at level 80, right associativity).
