@@ -1,7 +1,10 @@
-(** * FOL's deduction Lemma *)
+(**  FOL's deduction Lemma 
 
-From Coq Require Import Ensembles.
-From Coq Require Import List.
+  Original file by Russel O'Connor 
+
+*)
+
+From Coq Require Import Ensembles List.
 
 Require Import folProof.
 Require Import folProp.
@@ -52,7 +55,7 @@ Proof.
         | |  |
         |  R
         |  f].
-    - pose (HF _ (or_introl _ (refl_equal A))).
+    - pose (m := HF _ (or_introl _ (refl_equal A))).
       clearbody m.
       destruct m.
       + set (A1 := AXM L x) in *.

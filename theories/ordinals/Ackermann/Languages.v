@@ -1,8 +1,13 @@
+(** Languages :  Definitions of [LNT] and [LNN]
 
-Require Import Arith.
-Require Import fol.
-Require Import primRec.
-Require Import Coq.Lists.List.
+   Original development by Russel O'Connor *)
+
+(** TO do : reorganize Alectryon snippets *)
+
+From Coq Require Import Arith List.
+Require Import fol primRec.
+
+(**  * Language of Number Theory: [LNT] *)
 
 (* begin snippet LNTDef1 *)
 Inductive LNTFunction : Set :=
@@ -11,8 +16,6 @@ Inductive LNTFunction : Set :=
   | Succ_ : LNTFunction
   | Zero_ : LNTFunction.
 
-Inductive LNNRelation : Set :=
-    LT_ : LNNRelation.
 
 Inductive LNTRelation : Set :=.
 
@@ -26,9 +29,19 @@ Definition LNTFunctionArity (x : LNTFunction) : nat :=
 (* end snippet LNTDef1 *)
 
 (* begin snippet LNTDef2 *)
+
 Definition LNTRelationR (x :  LNTRelation) : nat :=
   match x with bot => LNTRelation_rec (fun _ => nat) bot end.
 
+Definition LNT : Language := language LNTRelation  LNTFunction LNTRelationR LNTFunctionArity.
+
+
+(** * Language of Natural Numbers: [LNN] 
+     Its functions are also [LNT]'s 
+*)
+
+Inductive LNNRelation : Set :=
+    LT_ : LNNRelation.
 
 Definition LNNArityR (x : LNNRelation) : nat :=
  match x with LT_ => 2 end.
@@ -36,14 +49,14 @@ Definition LNNArityR (x : LNNRelation) : nat :=
 Definition LNNArityF (f : LNTFunction) :=
      LNTFunctionArity f.
 
-
-Definition LNT : Language := language LNTRelation  LNTFunction LNTRelationR LNTFunctionArity.
-
 Definition LNN : Language := language LNNRelation LNTFunction 
                                LNNArityR LNNArityF.
 (* end snippet LNTDef2 *)
 
 
+(** * Goedel encoding for LNT *)
+
+(** This function is also used as encoding for [LNN]  *)
 
 Definition codeLNTFunction (f : LNTFunction) : nat :=
   match f with
@@ -57,55 +70,18 @@ Definition codeLNTRelation (R : LNTRelation) : nat :=
   match R return nat with
   end.
 
-Definition codeLNNRelation (R : LNNRelation) : nat := 0.
-
 Lemma codeLNTFunctionInj :
  forall f g : LNTFunction, codeLNTFunction f = codeLNTFunction g -> f = g.
 Proof.
   intros f g H; destruct f; destruct g; reflexivity || discriminate H.
 Qed.
 
+
 Lemma codeLNTRelationInj :
  forall R S : LNTRelation, codeLNTRelation R = codeLNTRelation S -> R = S.
 Proof.
   intros R S H;
     destruct R; destruct S; reflexivity || discriminate H.
-Qed.
-
-Lemma codeLNNRelationInj :
- forall R S : LNNRelation, codeLNNRelation R = codeLNNRelation S -> R = S.
-Proof.
-  intros R S H;
-    destruct R; destruct S; reflexivity || discriminate H.
-Qed.
-
-Definition codeArityLNNR (r : nat) := switchPR r 0 3.
-
-Lemma codeArityLNNRIsPR : isPR 1 codeArityLNNR.
-Proof.
-  unfold codeArityLNNR in |- *;
-    apply compose1_3IsPR with
-    (f1 := fun r : nat => r)
-    (f2 := fun r : nat => 0)
-    (f3 := fun r : nat => 3).
-  - apply idIsPR.
-  - apply const1_NIsPR.
-  - apply const1_NIsPR.
-  - apply switchIsPR.
-Qed.
-
-Lemma codeArityLNNRIsCorrect1 :
-  forall r : Relations LNN,
-    codeArityLNNR (codeLNNRelation r) = S (arityR LNN r).
-Proof. destruct r; reflexivity. Qed.
-
-Lemma codeArityLNNRIsCorrect2 :
- forall n : nat,
- codeArityLNNR n <> 0 -> exists r : Relations LNN, codeLNNRelation r = n.
-Proof.
-  intros n H; destruct n.
-  - exists LT_; reflexivity.
-  - now destruct H.
 Qed.
 
 Definition codeArityLNTR (r : nat) := 0.
@@ -180,6 +156,47 @@ Proof.
       * destruct n as [| n].
         -- exists Zero_; easy.
         -- destruct H; reflexivity.
+Qed.
+
+
+(** * Goedel encoding for LNN  *)
+
+Definition codeLNNRelation (R : LNNRelation) : nat := 0.
+
+Lemma codeLNNRelationInj :
+ forall R S : LNNRelation, codeLNNRelation R = codeLNNRelation S -> R = S.
+Proof.
+  intros R S H;
+    destruct R; destruct S; reflexivity || discriminate H.
+Qed.
+
+Definition codeArityLNNR (r : nat) := switchPR r 0 3.
+
+Lemma codeArityLNNRIsPR : isPR 1 codeArityLNNR.
+Proof.
+  unfold codeArityLNNR in |- *;
+    apply compose1_3IsPR with
+    (f1 := fun r : nat => r)
+    (f2 := fun r : nat => 0)
+    (f3 := fun r : nat => 3).
+  - apply idIsPR.
+  - apply const1_NIsPR.
+  - apply const1_NIsPR.
+  - apply switchIsPR.
+Qed.
+
+Lemma codeArityLNNRIsCorrect1 :
+  forall r : Relations LNN,
+    codeArityLNNR (codeLNNRelation r) = S (arityR LNN r).
+Proof. destruct r; reflexivity. Qed.
+
+Lemma codeArityLNNRIsCorrect2 :
+ forall n : nat,
+ codeArityLNNR n <> 0 -> exists r : Relations LNN, codeLNNRelation r = n.
+Proof.
+  intros n H; destruct n.
+  - exists LT_; reflexivity.
+  - now destruct H.
 Qed.
 
 Lemma codeArityLNNFIsCorrect2 :
