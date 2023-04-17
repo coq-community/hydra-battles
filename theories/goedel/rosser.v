@@ -7,6 +7,7 @@ From hydras.Ackermann Require Import folReplace.
 From hydras.Ackermann Require Import folLogic3.
 From hydras.Ackermann Require Import subProp.
 From hydras.Ackermann Require Import ListExt.
+From hydras.Ackermann Require Export Languages.
 From Goedel Require Import fixPoint.
 From Goedel Require Import codeSysPrf.
 From hydras.Ackermann Require Import NNtheory.
@@ -15,7 +16,9 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
+Import LNN NN.
 From hydras Require Import Compat815.
+
 
 Section Rosser's_Incompleteness.
 

@@ -1,18 +1,16 @@
+(**  NN2PA.v : 
 
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith.
+Original version by Russel O'Connor
 
-Require Import folProp.
-Require Import folProof.
-Require Import subProp.
-Require Import folLogic3.
-Require Import folReplace.
-Require Import NN.
-Require Import PAtheory.
+*)
+
+
+From Coq Require Import Ensembles List Arith.
+
+Require Import folProp  folProof  subProp  folLogic3  folReplace  NN
+  PAtheory.
 Require Export LNN2LNT.
-Require Import subAll.
-Require Import ListExt.
+Require Import subAll ListExt.
 
 Lemma NN2PA (f : fol.Formula LNN):
   folProof.SysPrf LNN NN f -> SysPrf PA (LNN2LNT_formula f). 
@@ -49,8 +47,15 @@ Proof.
   - apply H.
 Qed.
 
+
+(** If  [F[x\0]], [F[x\1]] ... [F[x\m-1]] are provable in PA,
+       then [ v_x <' m -> F] is also provable (where [a <' b] is the translation of [a < b] into PA).
+
+   More precisely: 
+
+*)
 Lemma PAboundedLT :
-  forall (m : nat) (F : Formula) (x : nat),
+  forall (m : nat) (F : LNT.Formula) (x : nat),
     (forall n : nat,
         n < m -> SysPrf PA (substituteFormula LNT F x (natToTerm n))) ->
     SysPrf PA (LNN2LNT_formula (v_ x < LNN.natToTerm m)%nn -> F)%nt.

@@ -23,7 +23,10 @@ From hydras.Ackermann Require Import ListExt.
 From hydras.Ackermann Require Import cPair.
 From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
+
 From hydras Require Import Compat815.
+Import LNN NN.
+
 
 Ltac SimplFreeVar :=
   repeat
