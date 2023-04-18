@@ -1,25 +1,22 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith Lia.
+(**  PAtheory.v   (Peano Arithmetic) 
 
-Require Import subAll.
-Require Import folReplace.
-Require Import folProp.
-Require Import folLogic3.
-Require Import NN.
-Require Import LNN2LNT.
+     Original file by Russel O'Connor 
+
+*)
+
+From Coq Require Import Ensembles List Arith Lia.
+
+Require Import subAll folReplace folProp folLogic3 NN LNN2LNT.
 Require Export PA.
 Require Import NewNotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 
 Lemma paZeroOrSucc (t : Term):
- SysPrf PA
- (t = Zero \/
-     exH (newVar (0 :: freeVarTerm LNT t)),
-       (t = Succ (v_ (newVar (0 :: freeVarTerm LNT t)))))%nt.
+ let nv := newVar (0 :: freeVarTerm LNT t) in
+ SysPrf PA (t = Zero \/ exH nv, t = Succ (v_ nv))%nt.
   Proof.
-    set (nv := newVar (0 :: freeVarTerm LNT t)) in *.
+     set (nv := newVar (0 :: freeVarTerm LNT t)) in *. 
   apply impE with
     (substituteFormula LNT
        (v_ 0 = Zero \/ exH nv, v_ 0 = Succ v_ nv)%nt

@@ -1,20 +1,15 @@
-Require Import primRec.
-Require Import codeFreeVar.
-Require Import codeSubFormula.
-Require Import cPair.
-From Coq Require Import Arith.
-Require Import code.
-Require Import folProp.
-Require Import extEqualNat.
-Require Import wellFormed.
-Require Import folProof.
-Require Import prLogic.
-Require Import Compat815.
-From Coq Require Import Lia.
+(** checkPrf.v
+
+    Original file by Russel O'Connor 
+
+*)
+
+From Coq Require Import Arith Lia. 
+Require Import primRec codeFreeVar codeSubFormula  cPair.
+Require Import code  folProp extEqualNat  wellFormed  folProof.
+Require Import prLogic  Compat815.
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
-
-
 Import LispAbbreviations. 
 
 (* begin snippet context1 *)
