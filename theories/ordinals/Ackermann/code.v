@@ -1,17 +1,21 @@
-(** * Encoding terms, formulas and proofs *)
+(** * Encoding terms, formulas and proofs
 
-Require Import Arith.
-Require Import fol.
-Require Import folProof.
-Require Import cPair.
+Original script by Russel O'Connor 
+
+ *)
+
+From Coq Require Import Arith.
+Require Import fol folProof cPair.
 
 Section Code_Term_Formula_Proof.
 
 Variable L : Language.
 Variable codeF : Functions L -> nat.
 Variable codeR : Relations L -> nat.
+
 Hypothesis codeFInj : 
   forall f g : Functions L, codeF f = codeF g -> f = g.
+
 Hypothesis codeRInj :
   forall R S : Relations L, codeR R = codeR S -> R = S.
 
@@ -63,7 +67,8 @@ Proof.
          -- eapply cPairInj2.
             apply H0.
        * apply H0.
-  - (* empty sequence *)  intros ss H; rewrite <- nilTerms; reflexivity.
+  - (* empty sequence *)  
+    intros ss H; rewrite <- nilTerms; reflexivity.
   - (* non-empty sequence *)
     intros n t0 H t1 H0 ss H1; induction (consTerms L n ss).
     destruct x as (a, b); simpl in p; rewrite <- p.
@@ -99,7 +104,7 @@ Fixpoint codeFormula (f : Formula) : nat :=
   | impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
   | notH f1 => cPair 2 (codeFormula f1)
   | forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
+  | atomic R ts => cPair (4 + codeR R) (codeTerms _ ts)
   end.
 
 
@@ -107,7 +112,8 @@ Lemma codeFormulaInj :
   forall f g : Formula, codeFormula f = codeFormula g -> f = g.
 Proof.
   intro f; 
-    induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
+    induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; 
+    intros;
     [ destruct g as [t1 t2| r t1| f f0| f| n f]
     | destruct g as [t0 t1| r0 t0| f f0| f| n f]
     | destruct g as [t t0| r t| f f2| f| n f]

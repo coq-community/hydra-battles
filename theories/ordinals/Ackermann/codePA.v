@@ -1,16 +1,9 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import folProp.
-Require Import code.
-Require Import codeList.
-Require Import codeFreeVar.
-Require Import extEqualNat.
-Require Vector.
-Require Import prLogic.
-Require Import Compat815.
+From Coq Require Import Ensembles List.
+Require Import primRec  cPair.
+From Coq Require Import Arith.
+Require Import folProp code  codeList  codeFreeVar  extEqualNat.
+From Coq Require Vector.
+Require Import prLogic  Compat815.
 From Coq Require Import Lia.
 Import LispAbbreviations. 
 

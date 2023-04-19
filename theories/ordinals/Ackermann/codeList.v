@@ -1,11 +1,14 @@
-Require Import primRec.
-Require Import cPair.
+(**  codeList.v
+
+     Original script by Russel O'Connor 
+*)
+
+Require Import primRec  cPair.
 Require Export Coq.Lists.List.
 Require Import ListExt.
-Require Import Arith.
+From Coq Require Import Arith.
 Require Vector.
-Require Import extEqualNat.
-Require Import Compat815.
+Require Import extEqualNat Compat815.
 
 Definition codeLength : nat -> nat :=
   evalStrongRec 0

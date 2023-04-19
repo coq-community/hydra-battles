@@ -60,14 +60,14 @@ Let wellFormedTerm := wellFormedTerm codeArityF.
 Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.
 Let Prf := Prf L.
 
-(*The wellFormedness requirement isn't really neccesary,
+(** The wellFormedness requirement isn't really neccesary,
 because and proof that used ``extra symbols'' could be
 turned into a proof that only used symbols from the
 axioms and the conclusion.
 
 However making this assumption makes the proof easier *)
 
-(* p is (cPair (formula) (proof of the Formula)) *)
+(**  p is (cPair (formula) (proof of the Formula)) *)
 
 Definition checkPrfAXM (p recs : nat) :=
   switchPR (charFunction 2 Nat.eqb (cddr p) (car p))
@@ -75,7 +75,7 @@ Definition checkPrfAXM (p recs : nat) :=
 
 Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
 Proof.
-  unfold checkPrfAXM.
+  unfold checkPrfAXM;
   apply
     filter10IsPR
     with
