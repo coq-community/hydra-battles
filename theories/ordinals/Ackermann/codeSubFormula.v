@@ -1,14 +1,16 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import folProp.
-Require Import code.
-Require Import extEqualNat.
-Require Vector.
-Require Import codeSubTerm.
-Require Import codeFreeVar.
-Require Import Compat815.
-From Coq Require Import Lia.
+(** codeSubFormula:
+
+    Original file by Russel O'Connor
+
+*)
+
+From Coq Require Import Arith Vector Lia.
+From  Coq Require Vector.
+
+Require Import primRec  cPair folProp code extEqualNat.
+
+Require Import codeSubTerm codeFreeVar Compat815.
+
 Import LispAbbreviations. 
 
 From LibHyps Require Export LibHyps.
@@ -29,8 +31,6 @@ Let codeFormula := codeFormula L codeF codeR.
 Let codeTerm := codeTerm L codeF.
 
 
-(*Trace has form
- ((v,s, formula_input), formula_output, [subTrace1], [subTrace2])*)
 
 Definition codeNewVar (l : nat) : nat :=
   evalStrongRec 0
@@ -112,6 +112,10 @@ Proof.
     apply const1_NIsPR.
   - apply switchIsPR.
 Qed.
+
+
+(*Trace has form
+ ((v,s, formula_input), formula_output, [subTrace1], [subTrace2])*)
 
 Definition checkSubFormulaTrace : nat -> nat :=
   evalStrongRec 0
@@ -5722,7 +5726,7 @@ Definition codeSubFormula (f v s : nat) : nat :=
 
 Lemma codeSubFormulaCorrect (f : Formula) (v : nat) (s : Term):
  codeSubFormula (codeFormula f) v (codeTerm s) =
- codeFormula (substituteFormula L f v s).
+ codeFormula (substF L f v s).
 Proof.
   unfold codeSubFormula; 
     set

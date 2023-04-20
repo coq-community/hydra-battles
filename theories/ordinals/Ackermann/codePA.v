@@ -1,10 +1,15 @@
-From Coq Require Import Ensembles List.
-Require Import primRec  cPair.
-From Coq Require Import Arith.
-Require Import folProp code  codeList  codeFreeVar  extEqualNat.
+(**  codePA.v
+
+    Original script by Russel O'Connor 
+*)
+
+
+From Coq Require Import Ensembles List Arith Lia.
 From Coq Require Vector.
-Require Import prLogic  Compat815.
-From Coq Require Import Lia.
+
+Require Import primRec  cPair folProp code  codeList  codeFreeVar  extEqualNat
+  prLogic  Compat815.
+
 Import LispAbbreviations. 
 
 Section close.

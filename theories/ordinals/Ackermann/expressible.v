@@ -1,10 +1,12 @@
-Require Import Arith.
-Require Import Coq.Lists.List.
-Require Import ListExt.
-Require Import folProp.
-Require Import subProp.
-Require Import extEqualNat.
-Require Import Languages LNN.
+(**  expressible.v 
+
+     Original file by Russel O'Connor
+*)
+
+
+From Coq Require Import Arith List.
+
+Require Import ListExt folProp subProp extEqualNat Languages LNN.
 Require Import NewNotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
