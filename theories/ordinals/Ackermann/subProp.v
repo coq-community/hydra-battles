@@ -249,11 +249,11 @@ Proof.
       * auto.
 Qed.
 
-Lemma freeVarSubTerms3 (n : nat) (ts : fol.Terms L n) (v : nat) (s : Term) 
-  (x : nat):
- In x (freeVarTerms L n (substTs L n ts v s)) ->
- In x (List.remove  eq_nat_dec v (freeVarTerms L n ts)) \/
- In x (freeVarTerm L s).
+Lemma freeVarSubTerms3 (n : nat) (ts : fol.Terms L n) (v : nat) 
+  (s : Term) (x : nat):
+  In x (freeVarTerms L n (substTs L n ts v s)) ->
+  In x (List.remove  eq_nat_dec v (freeVarTerms L n ts)) \/
+    In x (freeVarTerm L s).
 Proof.
   intros H; induction ts as [| n t ts Hrects].
   - left; apply H. 
@@ -380,7 +380,8 @@ Proof.
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              forall (v : nat) (s : Term) (x : nat),
                In x (freeVarTerms L n (substTs L n ts v s)) ->
-               ~ In v (freeVarTerms L n ts) -> In x (freeVarTerms L n ts)).
+               ~ In v (freeVarTerms L n ts) -> 
+               In x (freeVarTerms L n ts)).
   - intros n v s x H H0; simpl in H |- *.
     induction (eq_nat_dec v n) as [a | ?].
     + elim H0; rewrite a; simpl; now left. 
@@ -622,7 +623,8 @@ Proof.
       * apply in_or_app; right; eapply in_remove, H0. 
 Qed.
 
-Lemma subTermsExch  (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
+Lemma subTermsExch  (n : nat) (ts : Terms n) (v1 v2 : nat) 
+  (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v2 (freeVarTerm L s1) ->
   ~ In v1 (freeVarTerm L s2) ->
@@ -817,8 +819,7 @@ Proof.
               decompose record (H _ H6 (Empty_set Formula)) /r.
               intros H9 H11 H12;
               apply impE with 
-                (substF L (substF L A1 v0 s) x 
-                                 (var v)).
+                (substF L (substF L A1 v0 s) x (var v)).
               ** apply sysWeaken.
                  apply (iffE1 L).
                  apply H12.
@@ -871,7 +872,8 @@ Proof.
               ** apply (impI L).
                  apply forallI.
                  --- unfold not in |- *; intros.
-                     induction H10 as (x2, H10); induction H10 as (H10, H11).
+                     induction H10 as (x2, H10); 
+                       induction H10 as (H10, H11).
                      induction H11 as [x2 H11| x2 H11];
                        [ induction H11 | induction H11 ].
                      assert
@@ -884,14 +886,16 @@ Proof.
                                      (substF L a v (var x1)))).
                      { eapply freeVarSubFormula4.
                        - apply H11.
-                       - intros H12; induction (freeVarSubFormula3 _ _ _ _ H12) 
+                       - intros H12; 
+                           induction (freeVarSubFormula3 _ _ _ _ H12) 
                            as [? | H13]. 
                          + elim H0; apply in_in_remove; auto.
                          + induction H13.
                            * auto.
                            * contradiction.
                      }
-                     induction (freeVarSubFormula3 _ _ _ _ H12) as [H13 | H13].
+                     induction (freeVarSubFormula3 _ _ _ _ H12) as 
+                       [H13 | H13].
                      +++ now apply (in_remove_neq _ _ _ _ _ H13).
                      +++ induction H13 as [H13| H13].
                          *** elim (in_remove_neq _ _ _ _ _ H10); auto.
