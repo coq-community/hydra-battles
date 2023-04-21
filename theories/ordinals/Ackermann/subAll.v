@@ -6,7 +6,7 @@ Require Import Peano_dec.
 Require Import ListExt.
 
 Require Import folProof.
-Require Import folLogic2.
+Require Import folLogic folLogic2.
 Require Import folProp.
 Require Import folReplace.
 Require Import subProp.
