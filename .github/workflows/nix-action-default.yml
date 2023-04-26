@@ -389,5 +389,3 @@ name: Nix CI for bundle default
     - synchronize
     - reopened
   push:
-    branches:
-    - master
