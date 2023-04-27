@@ -780,7 +780,7 @@ Arguments Tnil {L}.
 Arguments Tcons {L} {n} _ _.
 (* end snippet implicitArguments *)
 
-
+(* begin snippet folScope:: no-out *)
 (** ** The [fol_scope] notation scope *)
 
 Module FolNotations.
@@ -832,6 +832,7 @@ Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
 End FolNotations.
 
 Export FolNotations. 
+(* end snippet folScope *)
 
 (** ** Examples *)
 

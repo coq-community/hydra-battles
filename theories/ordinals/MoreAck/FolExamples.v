@@ -73,50 +73,115 @@ Qed.
 
 (* begin snippet ToyDef *)
 Module Toy. 
-  Inductive Rel: Set := _A | _B | _C | _P | _R.
-  Inductive Fun : Set := _a | _b | _f | _g.
+  Inductive Rel: Set := A_ | B_ | C_ | P_ | R_.
+  Inductive Fun : Set := a_ | b_ | f_ | g_ | h_.
  
   Definition arityR (x : Rel): nat := 
     match x with 
-       _P => 1 | _R => 2 | _ => 0
+       P_ => 1 | R_ => 2 | _ => 0
     end.
+
  Definition arityF (x : Fun): nat := 
-    match x with  _f |  _g => 1 | _ => 0  end.
+    match x with  f_ |  g_ => 1 | h_ => 2 | _ => 0  end.
 
   Definition L := language Rel Fun arityR arityF.
 (* end snippet ToyDef *)
 
-(* begin snippet toyNotation *)
-  (** Abreviations for the toy language L *)
-  (*  (atomic _A Tnil) (causes later errors ) *)
-  Notation A := (atomic L  _A Tnil).
-  Notation B := (atomic L _B Tnil). 
-  Notation C := (atomic L _C Tnil). 
-  Notation P t := (atomic L _P (Tcons t Tnil)).
+(* begin snippet TermExamples1 *)
+Example t0 : Term L :=  apply L a_ Tnil.
+
+Example t1 : Term L := apply L f_ (Tcons t0 Tnil). 
+
+Example t2 : Term L := apply L h_ (Tcons t1 (Tcons t0 Tnil)).
+
+Fail Example t3 : Term L := apply L h_ (Tcons t0 Tnil). 
+
+(* end snippet TermExamples1 *)
+
+(* begin snippet beforeAbbreviations *)
+Compute t2. (* before introducing new notations *)
+(* end snippet beforeAbbreviations *)
+
+
+(* begin snippet termAbbreviations:: no-out *)
+Notation a := (apply L a_ Tnil).
+Notation b := (apply L b_ Tnil).
+Notation f t := (apply L f_ (Tcons t Tnil)).
+Notation g t := (apply L g_ (Tcons t Tnil)).
+Notation h t1 t2 := (apply L h_ (Tcons t1 (Tcons t2 Tnil))).
+
+Goal t0 = a. Proof. reflexivity. Qed. 
+Goal t1 = f a. Proof. reflexivity. Qed. 
+Goal t2 = h (f a) a. Proof. reflexivity. Qed. 
+(* end snippet termAbbreviations *)
+
+(* begin snippet NowItsBetter *)
+Compute t2. (* after introducing new notations *)
+(* end snippet NowItsBetter *)
+
+(* begin snippet FormExamples *)
+Example F1 : Formula L := atomic L R_ (Tcons a (Tcons b Tnil)).
+
+Example F2 : Formula L := forallH 0 
+                            (forallH 1 
+                               (impH 
+                                  (atomic L R_
+                                     (Tcons (var 0)
+                                        (Tcons (var 1) Tnil))) 
+                                  (atomic L R_ 
+                                     (Tcons (var 1)
+                                        (Tcons (var 0) Tnil))))).
+Example F3 : Formula L := 
+  forallH 0
+    (orH (equal (var 0) a)
+       (existH 1 (equal (var 0) (f (var 1))))).
+
+(* end snippet FormExamples *)
+
+(** Abreviations for the toy language L *)
+(*  (atomic _A Tnil) (causes further errors ) *)
+
+(* begin snippet toyNotationForm *)
+  Notation A := (atomic L A_ Tnil).
+  Notation B := (atomic L B_ Tnil). 
+  Notation C := (atomic L C_ Tnil). 
+  Notation P t := (atomic L P_ (Tcons t Tnil)).
   Notation R t1 t2 :=
-    (@atomic L _R (Tcons t1 (Tcons t2 Tnil))).
+    (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
+(* end snippet toyNotationForm *)
 
-  Notation a := (apply L _a Tnil).
-  Notation b := (apply L _b Tnil).
-  Notation f t := (apply L _f (Tcons t Tnil)).
-  Notation g t := (apply L _g (Tcons t Tnil)).
 
-(* end snippet toyNotation *)
+(* begin snippet toyNotationForm2 *)
+Print F2.
+
+ Goal F1 = (R a b)%fol. Proof refl_equal. 
+ Goal F2 = (allH 0 1, R v_ 0 v_ 1 -> R v_ 1 v_ 0)%fol. 
+ Proof refl_equal.
+ Goal F3 = (allH 0, v_ 0 = a \/ exH 1, v_ 0 = f v_ 1)%fol.  
+ Proof refl_equal.
+(* end snippet toyNotationForm2 *)
+
+(* begin snippet boundVars *)
+Goal (allH 1, v_ 1 = a)%fol <> (allH 0, v_ 0 = a)%fol.
+  discriminate. 
+Qed. 
+(* end snippet boundVars *)
+
 
 (* begin snippet smallTerms *)
 (** a **)              
-Goal apply L _a Tnil = a%fol.
+Goal apply L a_ Tnil = a.
 Proof. reflexivity. Qed. 
 
 (** f a **)
-Goal apply L _f  (Tcons  (apply L _a Tnil) Tnil) = (f a)%fol. 
+Goal apply L f_  (Tcons  (apply L a_ Tnil) Tnil) = (f a). 
 Proof. reflexivity. Qed. 
 
 (** f (f v1) **)
-Goal apply L _f 
-         (Tcons (apply L _f  
+Goal apply L f_ 
+         (Tcons (apply L f_  
                        (Tcons (var 1) Tnil))
-            Tnil ) = (f (f (v_ 1)))%fol.
+            Tnil ) = (f (f (var  1))).
 Proof. reflexivity. Qed. 
 
 (* end snippet smallTerms *)
@@ -124,6 +189,7 @@ Proof. reflexivity. Qed.
 
 
 Check (f a)%fol. 
+
 
 
 Example f3 := (v_ 0 = a \/ exH 1, (v_ 0 = f (v_ 1)))%fol.
@@ -198,12 +264,6 @@ Qed.
 (* end snippet step4 *)
 
   
-(* begin snippet boundVars *)
-Goal forallH (L:= L) 1 (equal (var 1) (var 1)) <>
-       forallH  2 (equal (var 2) (var 2)). 
-  discriminate. 
-Qed. 
-(* end snippet boundVars *)
 
 
   
