@@ -806,7 +806,9 @@ Notation app2 f arg1 arg2 :=
 Notation "t = u" := (@equal _ t u): fol_scope.
 Notation "t <> u" := (~ t = u)%fol : fol_scope.
 
-(** the following notations may be used if some computation expands a disjunction, conjuction, etc. in terms of implication and negation *)
+(** the following notations are used when  some computation 
+    expands a disjunction, conjuction, etc. 
+    in terms of implication and negation *)
 
 Reserved Notation "x '\/'' y" (at level 85, right associativity).
 Reserved Notation "x '/\'' y" (at level 80, right associativity).
@@ -849,6 +851,7 @@ Let ex3 : Formula L:= (~(~P \/ ~Q))%fol.
 Compute ex1. 
 
 Check (forallH 5 (v_ 5 = v_ 5) -> forallH 0 (v_ 0 = v_ 0))%fol.
+
 
 End LExamples.
 

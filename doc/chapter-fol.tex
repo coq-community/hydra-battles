@@ -89,16 +89,23 @@ Let us give a few examples of first-order formulas. on our toy language.
 
 \inputsnippets{FolExamples/FormExamples}
 
-If we define a few new notations, the notation scope \texttt{fol\_scope} allow us to parse and print formulas in a less clumsy way.
+In order to make the first order formulas more readable, we use a generic notation scope called \texttt{fol\_scope}, which uses mainly \coq's 
+notations for connectives and quantifiers. The \texttt{\%fol} delimiter 
+allows the user to distinguisf \texttt{FOL} connectives from their \coq equivalent.
 
 From href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 \inputsnippets{fol/folScope}
 
+In addition to \texttt{fol\_scope}, we introduce a few abbreviations specific to our toy language.
 
 \inputsnippets{FolExamples/toyNotationForm}
 
+The following interactions show how the formulas on $L$ may be 
+parsed or printed.
 
 \inputsnippets{FolExamples/toyNotationForm2}
+
+
 \begin{remark}[bound variables]
 \inputsnippets{FolExamples/boundVars}  
 \end{remark}

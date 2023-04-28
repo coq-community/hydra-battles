@@ -154,11 +154,25 @@ Example F3 : Formula L :=
 (* begin snippet toyNotationForm2 *)
 Print F2.
 
- Goal F1 = (R a b)%fol. Proof refl_equal. 
- Goal F2 = (allH 0 1, R v_ 0 v_ 1 -> R v_ 1 v_ 0)%fol. 
- Proof refl_equal.
- Goal F3 = (allH 0, v_ 0 = a \/ exH 1, v_ 0 = f v_ 1)%fol.  
- Proof refl_equal.
+Goal F1 = (R a b)%fol. Proof refl_equal. 
+
+Goal F2 = (allH 0 1, R v_ 0 v_ 1 -> R v_ 1 v_ 0)%fol. 
+Proof refl_equal.
+
+Goal F3 = (allH 0, v_ 0 = a \/ exH 1, v_ 0 = f v_ 1)%fol.  
+Proof refl_equal.
+
+(** The following computation expands some derived connectives and 
+    quantifiers. Within [fol_scope], we print them with a 
+    similar syntax (with primed symbols) *)
+
+Check (~ F3 \/ F1)%fol.
+
+Compute (F3 \/ F1)%fol.
+
+Goal (F3 \/ F1)%fol = (~ F3 -> F1)%fol.
+Proof.  reflexivity. Qed. 
+
 (* end snippet toyNotationForm2 *)
 
 (* begin snippet boundVars *)
