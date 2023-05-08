@@ -1,13 +1,18 @@
-(******************************************************************************)
+(** First Order Logic 
 
-(* Original author: Russell O'Connor *)
-(* This file is Public Domain *)
+ Original author: Russell O'Connor 
 
+This file is Public Domain 
 
+*)
+
+(* begin hide *)
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
   Arith Compare_dec.
-
 Require Import misc  Compat815 (* provisional *).
+(* end hide *)
+
+(** *  First Order Formulas over a language *)
 
 (* begin snippet LanguageDef *)
 (* change suggested in the article by Russel O'Connor 
@@ -20,8 +25,6 @@ Record Language : Type := language
    arityF : Functions -> nat}.
 
 (* end snippet LanguageDef *)
-
-
 
 (* begin snippet TermDef *)
 Section First_Order_Logic.
@@ -59,16 +62,17 @@ Inductive Formula : Set :=
 
 (* begin snippet SystemDef *)
 Definition Formulas := list Formula.
-Definition System := Ensemble Formula.
+Definition System := Ensemble Formula. 
 Definition mem := Ensembles.In.
 (* end snippet SystemDef *)
+
+(** ** Extensions of the basic language of formulas *)
 
 (* begin snippet FolFull *)
 Definition orH (A B : Formula) := impH (notH A) B.
 Definition andH (A B : Formula) := notH (orH (notH A) (notH B)).
 Definition iffH (A B : Formula) := andH (impH A B) (impH B A).
-Definition existH (x : nat) (A : Formula) := 
-  notH (forallH x (notH A)).
+Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
 
 (* end snippet FolFull *)
 
@@ -76,6 +80,7 @@ Definition existH (x : nat) (A : Formula) :=
 Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
 (* end snippet FolPlus *)
 
+(** ** Decidability of equality between terms, formulas, ... *)
 
 (* begin snippet formDec1:: no-out *)
 Section Formula_Decidability.
@@ -84,15 +89,17 @@ Definition language_decidable :=
   ((forall x y : Functions L, {x = y} + {x <> y}) *
    (forall x y : Relations L, {x = y} + {x <> y}))%type.
 
-Hypothesis language_dec : language_decidable.
+Hypothesis language_eqdec : language_decidable.
 (* end snippet formDec1 *)
 
+(* begin hide *)
 Let nilTermsHelp : forall n : nat, n = 0 -> Terms n.
 Proof. 
   intros n H; induction n as [| n Hrecn].
   - apply Tnil.
   - discriminate H.
 Defined.
+
 
 Lemma nilTerms : forall x : Terms 0, Tnil = x.
 Proof.
@@ -102,12 +109,11 @@ Proof.
     - reflexivity.
     - discriminate p.
   }
-  replace Tnil with (nilTermsHelp 0 (refl_equal 0)).
-  - apply H.
-  - auto.
+  replace Tnil with (nilTermsHelp 0 (refl_equal 0)); [apply H | reflexivity].
 Qed.
 
 (** Decomposition Lemma for [Terms] *)
+
 Let consTermsHelp : forall n : nat, Terms n -> Set.
 Proof. 
   intros n H; case n.
@@ -142,12 +148,13 @@ Qed.
 
 Arguments Term_Terms_rec_full P P0: rename.
 
-(* TODO --> term_eqdec *)
+(* end hide *)
+
 (* begin snippet formDec2:: no-out *)
-Lemma term_dec : forall x y : Term, {x = y} + {x <> y}.
+Lemma term_eqdec : forall x y : Term, {x = y} + {x <> y}.
 (* end snippet formDec2 *)
 Proof.
-  destruct language_dec as [a b].
+  destruct language_eqdec as [a b].
   assert
     (H: forall (f g : Functions L) (p : f = g) 
                (ts : Terms (arityF L f))
@@ -234,7 +241,7 @@ Qed.
 
 (* TODO -> terms_eqdec *)
 (* begin snippet formDec3:: no-out *)
-Lemma terms_dec n  (x y : Terms n): {x = y} + {x <> y}.
+Lemma terms_eqdec n  (x y : Terms n): {x = y} + {x <> y}.
 (* end snippet formDec3 *)
 Proof.
   induction x as [| n t x Hrecx].
@@ -242,7 +249,7 @@ Proof.
   - induction (consTerms _ y) as [(a,b) p].
     simpl in p.
     induction (Hrecx b) as [a0 | b0].
-    + induction (term_dec t a) as [a1| b0].
+    + induction (term_eqdec t a) as [a1| b0].
       * left; now rewrite a1, a0.
       * right. intro H; elim b0.
         rewrite <- p in H.
@@ -258,14 +265,14 @@ Qed.
 (*  -> formula_eqdec *)
 
 (* begin snippet formDec4:: no-out *)
-Lemma formula_dec : forall x y : Formula, {x = y} + {x <> y}.
+Lemma formula_eqdec : forall x y : Formula, {x = y} + {x <> y}.
 (* end snippet formDec4 *)
 Proof.
-  induction language_dec as [a b].
+  destruct language_eqdec as [a b].
   simple induction x; simple induction y;
     (right; discriminate) || intros.
-  - induction (term_dec t t1) as [a0 | b0].
-    + induction (term_dec t0 t2) as [a1 | b0].
+  - induction (term_eqdec t t1) as [a0 | b0].
+    + induction (term_eqdec t0 t2) as [a1 | b0].
       * left; now rewrite a0, a1.
       * right; unfold not in |- *. intros H. elim b0.
         inversion H; reflexivity.
@@ -283,7 +290,7 @@ Proof.
         (x := g)
         (P := 
            fun a =>
-             forall (ts : Terms (arityR L a))
+            forall (ts : Terms (arityR L a))
                     (ss : Terms (arityR L g))
                     (q : arityR L a = arityR L g),
                eq_rec _ (fun x => Terms x) ts _ q = ss <->
@@ -304,7 +311,7 @@ Proof.
     assert (H0: arityR L r = arityR L r0)
     by (rewrite a0; reflexivity). 
     induction
-      (terms_dec _
+      (terms_eqdec _
          (eq_rec (arityR L r) (fun x : nat => Terms x) t
             (arityR L r0) H0) t0) as [a1 | b1].
     + left; induction (H _ _ a0 t t0 H0); auto.
@@ -329,6 +336,11 @@ Qed.
 End Formula_Decidability.
 (* end snippet formDec5 *)
 
+(** * Depth Induction 
+
+  Many functions on term and formulas are not structurally recursive (e.g. because of substitution of variables with terms).
+  In which case, we may use some notion of depth as a measure. *)
+
 Section Formula_Depth_Induction.
 
 (* begin snippet depthDef *)
@@ -344,6 +356,7 @@ Fixpoint depth (A : Formula) : nat :=
 Definition lt_depth (A B : Formula) : Prop := depth A < depth B.
 (* end snippet depthDef *)
 
+(* begin hide *)
 Lemma depthImp1 : forall A B : Formula, lt_depth A (impH A B).
 Proof.
   intros A B; red; apply Nat.lt_succ_r, Nat.le_max_l.
@@ -660,6 +673,8 @@ Proof.
 Qed.
 
 (* Todo: use the Type version (when done)  *)
+(* end hide *)
+
 Definition Formula_depth_ind :
   forall P : Formula -> Prop,
   (forall a : Formula, (forall b : Formula, lt_depth b a -> P b) -> P a) ->
@@ -707,7 +722,9 @@ End Formula_Depth_Induction.
 
 End First_Order_Logic.
 
+(** * Implicit arguments and notations *)
 
+(* begin hide *)
 Arguments Term_Terms_ind  L P P0 : rename.
 Arguments Terms_Term_ind L P P0 : rename.
 
@@ -716,8 +733,35 @@ Arguments Terms_Term_rec L P P0 : rename.
 
 Arguments Term_Terms_rec_full L P P0 : rename.
 Arguments Terms_Term_rec_full L P P0 : rename.
+(* end hide *)
 
-(** Changes by PC *)
+(** 
+ In Russel O'Connor's work, the abstract syntax of first-order terms and formulas is available in three versions:
+
+ - A generic one (for any Language [L])
+ - An instantiation for the language of number theory [LNT]
+ - An instantiation for the language of natural numbers [LNN]
+
+In the current version, we propose to use three notation scopes: [fol_scope], [nt_scope] and  [nn_scope], in order to make clear the relationship between the three sets of formulas. 
+
+ [fol_scope] is defined in this file, [lnt_scope] in 
+#<a href="./hydras.Ackermann.LNT.html">LNT.v</a>#, and
+[lnn_scope] in 
+#<a href="./hydras.Ackermann.LNT.html">LNN.v</a>#,
+*)
+
+
+(** ** Implicit arguments 
+The original code of this library contains some redefinitions like 
+
+<<
+Definition Formula := Formula LNN.
+>>
+
+We plan to use systematically implicit arguments and avoid such redefinitions, which make more complex formula and term displaying, e.g. in goals or results of computation.
+*)
+
+
 
 (* begin snippet implicitArguments *)
 Arguments impH {L} _ _.
@@ -735,3 +779,95 @@ Arguments ifThenElseH {L} _ _ _.
 Arguments Tnil {L}.
 Arguments Tcons {L} {n} _ _.
 (* end snippet implicitArguments *)
+
+(* begin snippet folScope:: no-out *)
+(** ** The [fol_scope] notation scope *)
+
+Module FolNotations.
+Declare Scope fol_scope.
+Delimit Scope fol_scope with fol.
+
+Infix "=" := (equal _): fol_scope.
+Infix "\/" := (orH): fol_scope.
+Infix "/\" := (andH):fol_scope.
+Infix "->" := (impH): fol_scope.
+Notation "~ A" := (@notH _ A): fol_scope. 
+Notation "A <-> B" := (@iffH _ A B): fol_scope.
+
+Notation k_ t := (apply  (t:Functions _)  (Tnil)).
+
+Notation app1 f arg := 
+  (apply  (f: Functions _)  (Tcons arg (Tnil))).
+
+Notation app2 f arg1 arg2 := 
+  (apply   (f: Functions _) 
+     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
+
+Notation "t = u" := (@equal _ t u): fol_scope.
+Notation "t <> u" := (~ t = u)%fol : fol_scope.
+
+(** the following notations are used when  some computation 
+    expands a disjunction, conjuction, etc. 
+    in terms of implication and negation *)
+
+Reserved Notation "x '\/'' y" (at level 85, right associativity).
+Reserved Notation "x '/\'' y" (at level 80, right associativity).
+Reserved Notation "x '<->'' y" (at level 95, no associativity).
+Reserved Notation "x '<->''' y" (at level 95, no associativity).
+
+Notation "x \/' y" := (~ x -> y)%fol : fol_scope. 
+Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
+Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
+
+
+Notation exH' v A := (~ (forallH v (~ A)))%fol.
+
+Notation "'v_' i" := (var i) (at level 3) : fol_scope.
+
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
+
+End FolNotations.
+
+Export FolNotations. 
+(* end snippet folScope *)
+
+(** ** Examples *)
+
+Section LExamples. 
+Variable L: Language. 
+Variables P Q : Formula L. 
+
+Let ex1 : Formula L :=  (P /\ Q)%fol. 
+
+Let ex2 : Formula L := (~ (~~P -> ~Q))%fol. 
+
+Let ex3 : Formula L:= (~(~P \/ ~Q))%fol. 
+
+Compute ex1. 
+
+Check (forallH 5 (v_ 5 = v_ 5) -> forallH 0 (v_ 0 = v_ 0))%fol.
+
+
+End LExamples.
+
+
+
+Section Correctness. 
+ Variable L: Language.
+ Variables P Q R : Formula L. 
+
+ Goal (P \/ Q)%fol = (P \/' Q)%fol.
+ reflexivity. 
+ Qed. 
+
+Goal (P /\ Q)%fol = (P /\' Q)%fol.
+Proof. reflexivity. Qed. 
+
+
+End Correctness.
+

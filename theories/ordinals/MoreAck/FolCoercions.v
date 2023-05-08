@@ -5,7 +5,6 @@ From Coq Require Import Arith Lists.List.
 Require Import fol folProp folProof  Languages folLogic.
 Require Import primRec.
 Import ListNotations. 
-Require Import FOL_notations.
 Import FolNotations. 
 
 (** ** Preliminary lemmas *)
@@ -133,12 +132,12 @@ Proof. reflexivity. Qed.
 Check (f a)%fol. 
 
 
-Example f3 := (v_ 0 = a \/ exH 1 (v_ 0 = f (v_ 1)))%fol.
+Example f3 := (v_ 0 = a \/ exH 1, (v_ 0 = f (v_ 1)))%fol.
 
 Compute substituteFormula L f3 0 (g (v_ 1))%fol. 
 
 Goal substituteFormula L f3 0 (g (v_ 1))%fol =
-       (g (v_ 1) = a \/ exH 2 (g (v_ 1) = f (v_ 2)))%fol.
+       (g (v_ 1) = a \/ exH 2, (g (v_ 1) = f (v_ 2)))%fol.
 reflexivity. 
 Qed. 
 
@@ -218,7 +217,7 @@ Section Drinkers_theorem.
 
  Lemma D0 : forall i, 
       SysPrf _ (Empty_set _)
-        ( ~ forallH i (P (v_ i)) -> exH i (~ (P (v_ i))))%fol. 
+        ( ~ forallH i (P (v_ i)) -> exH i, (~ (P (v_ i))))%fol. 
 Proof.
     intro i; apply cp2, impI, forallI. 
     - intros [f [H H0]]; inversion H0. 
@@ -240,7 +239,7 @@ Proof.
   
   Lemma D01 T i : SysPrf _ T
                     (~ forallH i (P (v_ i)) -> 
-                      exH i (~ (P (v_ i))))%fol. 
+                      exH i, (~ (P (v_ i))))%fol. 
   Proof. 
     apply sysExtend with (Empty_set _).
     - red; destruct 1.   
@@ -248,7 +247,7 @@ Proof.
   Qed. 
 
   Let f : Formula L :=
-        (exH 0 (P (v_ 0) -> forallH 1 (P (v_ 1))))%fol. 
+        (exH 0, (P (v_ 0) -> forallH 1 (P (v_ 1))))%fol. 
 
   Theorem drinkers_thm : SysPrf L (Empty_set _) f. 
   Proof with auto with sets.  
@@ -256,8 +255,8 @@ Proof.
     unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add (Empty_set _) (~ F)%fol) 
-                (exH 1 (~ (P (v_ 1))))%fol).  
-      { replace (exH 1 (~ (P (v_ 1))))%fol  
+                (exH 1, (~ (P (v_ 1))))%fol).  
+      { replace (exH 1, (~ (P (v_ 1))))%fol  
           with (~ (forallH 1 (~ (~  (P (v_ 1))))))%fol. 
         - unfold F; eapply impE. 
           + eapply D01. 
@@ -278,7 +277,7 @@ Proof.
           eapply contradiction with (P (v_ 1))%fol.  
           -- apply Axm; red ...
           -- apply Axm; red ...   
-    - apply impI; apply existI with (v_ 0)%nat. 
+    - apply impI; apply existI with (v_ 0)%fol. 
       cbn;  apply impI. 
       apply Axm; red; auto with sets. 
   Qed. 
@@ -291,9 +290,9 @@ End Toy.
 (* Examples with LNN *)
 
 (* begin snippet arityTest *)
-Compute arityF LNT Plus. 
-Compute arityF LNN Succ. 
-Compute arityR LNN LT. 
+Compute arityF LNT Plus_. 
+Compute arityF LNN Succ_. 
+Compute arityR LNN LT_. 
 Fail Compute arityF LNN LT.
 (* end snippet arityTest *)
 
@@ -303,9 +302,9 @@ Fail Compute arityF LNN LT.
 (* begin snippet v1Plus0 *)
 (** v1 + 0 *)
 Example t1_0: Term LNN := 
- apply LNN Plus 
+ apply LNN Plus_ 
    (Tcons  (var 1)
-     (Tcons  (apply LNN Zero Tnil) Tnil )). 
+     (Tcons  (apply LNN Zero_ Tnil) Tnil )). 
 (* end snippet v1Plus0 *)
 Print t1_0. 
 
@@ -313,18 +312,18 @@ Print t1_0.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
       forallH 0 
-        (orH  (equal  (var 0) (apply LNN Zero Tnil ))
+        (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
            (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (apply LNN Succ_ 
                              (Tcons  (var 1) Tnil))))).
 
 Let f2 : Formula LNN :=
 (existH 1 (equal  (var 0)
-                          (apply LNN Succ 
+                          (apply LNN Succ_
                              (Tcons (var 1) Tnil )))).
 
-Let f3 := (orH  (equal  (var 0) (apply LNN Zero Tnil))
-             (existH 1 (equal  (var 0) (apply LNN Succ 
+Let f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
+             (existH 1 (equal  (var 0) (apply LNN Succ_ 
                              (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
@@ -355,7 +354,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (apply LNN Zero (Tnil)) . 
+Compute substituteFormula LNN f3 0 (apply LNN Zero_ (Tnil)) . 
 (* end snippet freeVarExamples *)
 
 Section depth_rec_demo. 

@@ -1,12 +1,17 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
+(** model.v :
+
+   Original script by Russel O'Connor
+*)
+
+
+From Coq Require Import Ensembles List Vector Arith.
+
 Require Import ListExt.
 Require Import folProof.
 Require Import folProp.
-Require Vector.
 Require Import Peano_dec.
 Require Import misc.
-Require Import Arith.
+Require Import NewNotations.
 
 Section Model_Theory.
 
@@ -71,13 +76,13 @@ Fixpoint interpFormula (value : nat -> U M) (f : Formula L) {struct f} :
   end.
 
 Lemma freeVarInterpTerm (v1 v2 : nat -> U M) (t : Term L):
- (forall x : nat, In x (freeVarTerm L t) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarTerm L t) -> v1 x = v2 x) ->
  interpTerm v1 t = interpTerm v2 t.
 Proof.
   elim t using  Term_Terms_ind with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
-               (forall x : nat, In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
+               (forall x : nat, List.In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
                interpTerms n f v1 ts = interpTerms n f v2 ts); 
     simpl.
   - intros n H; apply H; left; auto.
@@ -97,7 +102,7 @@ Qed.
 
 Lemma freeVarInterpRel (v1 v2 : nat -> U M) (n : nat) 
   (ts : Terms L n) (r : naryRel (U M) n): 
-  (forall x : nat, In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
+  (forall x : nat, List.In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
   interpRels n r v1 ts -> interpRels n r v2 ts.
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
@@ -111,7 +116,7 @@ Proof.
 Qed.
 
 Lemma freeVarInterpFormula (v1 v2 : nat -> U M) (g : Formula L):
- (forall x : nat, In x (freeVarFormula L g) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarFormula L g) -> v1 x = v2 x) ->
  interpFormula v1 g -> interpFormula v2 g.
 Proof.
   revert v1 v2.
@@ -144,19 +149,19 @@ Proof.
     + intros x0 H1; unfold updateValue; induction (eq_nat_dec n x0).
       * reflexivity.
       * apply H.
-        apply In_list_remove3; auto.
+        apply in_in_remove; auto.
     + auto.
 Qed.
  
 Lemma subInterpTerm (value : nat -> U M) (t : Term L) (v : nat) (s : Term L):
  interpTerm (updateValue value v (interpTerm value s)) t =
- interpTerm value (substituteTerm L t v s).
+ interpTerm value (substT L t v s).
 Proof.
   elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
                interpTerms n f (updateValue value v (interpTerm value s)) ts =
-                 interpTerms n f value (substituteTerms L n ts v s)); 
+                 interpTerms n f value (substTs L n ts v s)); 
     simpl.
   - intro n; unfold updateValue; induction (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H.
@@ -168,7 +173,7 @@ Qed.
 Lemma subInterpRel (value : nat -> U M) (n : nat) (ts : Terms L n) 
   (v : nat) (s : Term L) (r : naryRel (U M) n):
   interpRels n r (updateValue value v (interpTerm value s)) ts <->
-    interpRels n r value (substituteTerms L n ts v s).
+    interpRels n r value (substTs L n ts v s).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; tauto.
@@ -232,12 +237,12 @@ Proof.
     + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | b0].
       * simpl;
         set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-        assert (~ In nv (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+        assert (~ List.In nv (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
         { unfold nv in |- *.
           apply newVar1. }
         assert
               (forall (x : U M) (x0 : nat),
-                  In x0 (freeVarFormula L a) ->
+                  List.In x0 (freeVarFormula L a) ->
                   updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                     updateValue
                       (updateValue (updateValue value nv x) v0
@@ -303,7 +308,7 @@ Proof.
       - intros H2 x.
         assert
           (H3: forall b : Formula L,
-              lt_depth L b (forallH v a) ->
+              lt_depth L b (allH v, a)%fol ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula value (substituteFormula L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
@@ -356,7 +361,7 @@ Proof.
       * simpl in |- *.
         assert
           (forall (x : U M) (x0 : nat),
-              In x0 (freeVarFormula L a) ->
+              List.In x0 (freeVarFormula L a) ->
               updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                 updateValue (updateValue value v x) v0
                   (interpTerm (updateValue value v x) s) x0).
@@ -429,7 +434,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
   | atomic r ts => atomic r ts
   | impH A B => impH (nnHelp A) (nnHelp B)
   | notH A => notH (nnHelp A)
-  | forallH v A => forallH v (notH (notH (nnHelp A)))
+  | forallH v A => (allH v, ~ ~ nnHelp A)%fol
   end.
 
 Definition nnTranslate (f : Formula L) : Formula L :=
@@ -488,7 +493,7 @@ Proof.
   intros H g H0.
   induction H0 as (x, H0).
   induction H0 as (x0, H0).
-  cut (forall g : Formula L, In g x -> interpFormula value (nnTranslate g)).
+  cut (forall g : Formula L, List.In g x -> interpFormula value (nnTranslate g)).
   - clear H H0; revert value.
     induction x0
       as
@@ -510,7 +515,7 @@ Proof.
       auto with datatypes.
     + assert (H0: interpFormula value (nnTranslate A))
       by auto with datatypes.
-      assert (H1: interpFormula value (nnTranslate (impH A B)))
+      assert (H1: interpFormula value (nnTranslate (A -> B)%fol))
         by auto with datatypes.
       clear Hrecx0_1 Hrecx0_0.
       simpl in H0, H1. 
@@ -618,7 +623,8 @@ Proof.
                          (fun a b : Terms L (arityR L R) => A a b)
                          (nVars L (arityR L R)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
+                         (v_ (n + n)%nat = v_ (S (n+n))%nat -> Hrecn)%fol)
+                         
                       (arityR L R)))).
         { generalize (arityR L R).
           simple induction n.
@@ -660,7 +666,7 @@ Proof.
       cut
         (forall a b : Terms L (arityF L f),
             interpTermsVector value _ a = interpTermsVector value _ b ->
-            interpFormula value (nnHelp (equal (apply f a) (apply f b)))).
+            interpFormula value (nnHelp (apply f a = apply f b)%fol)).
       * assert
           (H: forall A,
               (forall a b : Terms L (arityF L f),
@@ -671,16 +677,12 @@ Proof.
                 (nnHelp
                    (nat_rec (fun _ : nat => Formula L)
                       (prod_rec
-                         (fun
-                             _ : Terms L (arityF L f) *
-                                   Terms L (arityF L f)  => 
-                             Formula L)
-                         (fun a b : Terms L (arityF L f) =>
-                            A a b)
+                         (fun _ : Terms L (arityF L f) * Terms L (arityF L f)  => Formula L)
+                         (fun a b : Terms L (arityF L f) => A a b)
                          (nVars L (arityF L f)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         impH (equal (var (n + n)) (var (S (n + n)))) Hrecn)
-                      (arityF L f)))).
+                         (v_ (n + n)%nat = v_ (S (n + n))%nat -> Hrecn)%fol)
+                           (arityF L f)))).
         { generalize (arityF L f).
           simple induction n.
           - simpl; intros A H; auto. 
@@ -719,10 +721,8 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (notH (equal (var 0) (var 0))).
-  intros H0; assert
-               (H1: interpFormula value
-                      (nnTranslate (notH  (equal (var 0) (var 0))))).
+  intros H; unfold Consistent; exists (v_ O <> v_ 0)%fol.
+  intros H0; assert (H1: interpFormula value (nnTranslate (v_ O <> v_ 0)%fol)).
   { apply preserveValue.
     assumption.
     auto.

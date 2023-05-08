@@ -1,17 +1,15 @@
-Require Import primRec.
-Require Import codeFreeVar.
-Require Import codeSubFormula.
-Require Import cPair.
-From Coq Require Import Arith.
-Require Import code.
-Require Import folProp.
-Require Import extEqualNat.
-Require Import wellFormed.
-Require Import folProof.
-Require Import prLogic.
-Require Import Compat815.
-From Coq Require Import Lia.
+(** checkPrf.v
 
+    Original file by Russel O'Connor 
+
+*)
+
+From Coq Require Import Arith Lia. 
+Require Import primRec codeFreeVar codeSubFormula  cPair.
+Require Import code  folProp extEqualNat  wellFormed  folProof.
+Require Import prLogic  Compat815.
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
 Import LispAbbreviations. 
 
 (* begin snippet context1 *)
@@ -62,14 +60,14 @@ Let wellFormedTerm := wellFormedTerm codeArityF.
 Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.
 Let Prf := Prf L.
 
-(*The wellFormedness requirement isn't really neccesary,
+(** The wellFormedness requirement isn't really neccesary,
 because and proof that used ``extra symbols'' could be
 turned into a proof that only used symbols from the
 axioms and the conclusion.
 
 However making this assumption makes the proof easier *)
 
-(* p is (cPair (formula) (proof of the Formula)) *)
+(**  p is (cPair (formula) (proof of the Formula)) *)
 
 Definition checkPrfAXM (p recs : nat) :=
   switchPR (charFunction 2 Nat.eqb (cddr p) (car p))
@@ -77,7 +75,7 @@ Definition checkPrfAXM (p recs : nat) :=
 
 Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
 Proof.
-  unfold checkPrfAXM.
+  unfold checkPrfAXM;
   apply
     filter10IsPR
     with
@@ -3648,8 +3646,7 @@ Simpl in H0.
     rewrite cPairProjections2.
     assumption.
   } 
-  decompose record H1.
-  exists x; split.
+  decompose record H1 /r; intros x x0 x1 H2; exists x; split.
   -  eapply cPairInj1.
      apply H2.
   - exists x0, x1; eapply cPairInj2; apply H2.

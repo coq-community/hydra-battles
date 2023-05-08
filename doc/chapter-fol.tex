@@ -7,45 +7,25 @@
 
 \subsection{Languages}
 
-A \emph{language} is a structure composed of relation and function symbols, each symbol is given an \emph{arity} (number of arguments).
+A \emph{language} is a structure composed of relation and function symbols, each symbol is given an \emph{arity} (number of arguments). As suggested by Russel O'Connor in~\cite{OConnor05}, we consider two arity functions instead of a function defined on the sum type \texttt{Relations + Functions}.
 
 From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 \inputsnippets{fol/LanguageDef} 
 
+
 \subsubsection{A toy language}
 In order to show a few simple examples of statements and proofs, we define a small language with very few symbols:
-two constant symbols: $a$ and $b$, a function symbol $f$ (of arity 1), three propositional symbols $A$, $B$ and $C$, a one-place predicate symbol $P$, and a binary relational symbol $R$.
+two constant symbols: $a$ and $b$, three function symbols $f$, $g$ and $h$  (of respective arity 1,1 and 2), three propositional symbols $A$, $B$ and $C$, a one-place predicate symbol $P$, and a binary relational symbol $R$. 
+ 
+From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}.
 
 \inputsnippets{FolExamples/ToyDef}
 
-\subsubsection{Languages for Arithmetic}
+\begin{remark}
+  The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to functions which build terms and formulas
+(please look at next sections).
 
-
-
-
-
-
-In ~\href{../theories/html/hydras.Ackermann.Languages.html}{Ackermann.Languages}, we can find two examples of languages built with the usual symbols of arithmetic.
-
-The first language, \texttt{LNT} (\emph{Language of Number Theory}) has just function symbols for $+$, $\times$, $0$ and successor.
-
-
-
-
-The second language, LNN, is the language of NN (\emph{Natural Numbers}) and has
-the same function symbols as LNT plus one relation symbol for less than, LT.
-
-First, we declare two ranked alphabets. 
-\inputsnippets{Languages/LNTDef1} 
-
-In a second time, we build \texttt{LNT} and \texttt{LNN} by filling \texttt{Language}'s \texttt{arity} field.
-
-\inputsnippets{Languages/LNTDef2} 
-
-
-Let us show a few examples (from ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}).
-
-\inputsnippets{FolExamples/arityTest} 
+\end{remark}
 
 
 \subsection{Terms}
@@ -53,9 +33,12 @@ Let us show a few examples (from ~\href{../theories/html/hydras.MoreAck.FolExamp
 Given a language $L$, we define the set of \emph{terms} and
 $n$-\emph{tuples} of terms. 
 
-
-
 \inputsnippets{fol/TermDef} 
+
+
+
+\inputsnippets{FolExamples/TermExamples1} 
+
 
 
 \begin{remark}[Variables]
@@ -64,33 +47,16 @@ In O'Connor's formalization of first-order logic, the variables are \gallina ter
 Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scipts which use this representation (please look at \cite{OConnor05} for a related discussion).
   
 \end{remark}
-\subsubsection{Examples}
 
-With our toy language, we can build the following terms, respectively written $a$, $f(a)$ and $f(f(v_1))$ in usual mathematical notation. 
-
-Writing these terms in bare \gallina syntax would result in quite clumsy scripts. Thus, we may use a still experimental notation scope which allows us to write/print terms and formulas in a 
-notation similar to \coq's.
+\begin{remark}
+ We can use \coq's \texttt{Notation} features to print and parse terms in a more readable form.
 
 
 
+\inputsnippets{FolExamples/beforeAbbreviations, FolExamples/termAbbreviations, FolExamples/NowItsBetter}
 
+\end{remark}
 
-We put both the associated \coq{} terms, in bare \gallina{} syntax, and with a still experimental and provisional notation, defined in
-~\href{../theories/html/hydras.MoreAck.FOL_notations.html}{MoreAck.FOL\_notations}).
-
-
-
-\inputsnippets{FolExamples/toyNotation}
-
-\inputsnippets{FolExamples/smallTerms}
-
-
-
-
-For instance the term $v_1+0$, where $v_1$ is a variable,
-is represented by a term of type (\texttt{Term LNN}).
-
-\inputsnippets{FolExamples/v1Plus0} 
 
 \subsection{Formulas}
 
@@ -111,21 +77,115 @@ with a few more notations. Note that we are studying \emph{classical} first-orde
 
 
 
-Let us give a few examples of first-order formulas.
+Let us give a few examples of first-order formulas. on our toy language.
 
 \label{fol:examplesf1f2f3}
 \begin{enumerate}
-\item $\forall\,v_0, v_0=0 \vee \exists\;v_1,\, v_0= S\;v_1$
-\item $\exists\,v_2,\, 0< v_2 \wedge 4=v_2+v_2$
-\item $ v_0=0 \vee \exists\;v_1,\, v_0= S\;v_1$
-\item $v_0= v_1 + v_1 \leftrightarrow v_0 = v_1 \times 2$
+\item $R\;a\;b$
+\item $\forall v_0 v_1, (R\;v_0\;v_1 \leftrightarrow R\;v_1\;v_0$
+\item $ \forall v_0, v_0=a \vee \exists\;v_1,\, v_0= f(v_1)$
 \end{enumerate}
-\inputsnippets{FolExamples/f1Example}
+
+
+\inputsnippets{FolExamples/FormExamples}
+
+In order to make the first order formulas more readable, we use a generic notation scope called \texttt{fol\_scope}, which uses mainly \coq's 
+notations for connectives and quantifiers. The \texttt{\%fol} delimiter 
+allows the user to distinguisf \texttt{FOL} connectives from their \coq equivalent.
+
+From href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+\inputsnippets{fol/folScope}
+
+In addition to \texttt{fol\_scope}, we introduce a few abbreviations specific to our toy language.
+
+\inputsnippets{FolExamples/toyNotationForm}
+
+The following interactions show how the formulas on $L$ may be 
+parsed or printed.
+
+\inputsnippets{FolExamples/toyNotationForm2}
 
 
 \begin{remark}[bound variables]
 \inputsnippets{FolExamples/boundVars}  
 \end{remark}
+
+
+
+
+\subsubsection{Languages for Arithmetic}
+
+
+
+
+
+
+In ~\href{../theories/html/hydras.Ackermann.Languages.html}{Ackermann.Languages}, we can find two examples of languages built with the usual symbols of arithmetic.
+
+The first language, \texttt{LNT} (\emph{Language of Number Theory}) has just function symbols for $+$, $\times$, $0$ and successor.
+
+
+
+
+The second language, LNN, is the language of NN (\emph{Natural Numbers}) and has
+the same function symbols as LNT plus one relation symbol for less than, LT.
+
+First, we declare two ranked alphabets.
+
+\begin{remark}
+  We depart a little from \cite{Goedel}'s notations, where the 
+function and relation symbols are called \texttt{Plus}, 
+\texttt{Mult}, \texttt{LT}, etc. In our version, these type constructors are called \texttt{Plus\_}, 
+\texttt{Mult\_}, \texttt{LT\_}, etc., while the names without final underscores are bound to term building functions (\emph{e.g.}
+the function which takes two terms and builds the term representing their sum).
+\end{remark}
+
+
+
+\inputsnippets{Languages/LNTDef1} 
+
+In a second time, we build \texttt{LNT} and \texttt{LNN} by filling \texttt{Language}'s \texttt{arity} field.
+
+\inputsnippets{Languages/LNTDef2} 
+
+
+Let us show a few examples (from ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}).
+
+\inputsnippets{FolExamples/arityTest} 
+
+
+
+\begin{todo}
+Start with toy Language , then LNT and LNN.
+\end{todo}
+
+
+% \subsubsection{Examples}
+
+% With our toy language, we can build the following terms, respectively written $a$, $f(a)$ and $f(f(v_1))$ in usual mathematical notation. 
+
+% Writing these terms in bare \gallina syntax would result in quite clumsy scripts. Thus, we may use a still experimental notation scope which allows us to write/print terms and formulas in a 
+% notation similar to \coq's.
+
+
+
+
+
+% We put both the associated \coq{} terms, in bare \gallina{} syntax, and with a still experimental and provisional notation, defined in
+% ~\href{../theories/html/hydras.Ackerm.FOL_notations.html}{MoreAck.FOL\_notations}).
+
+
+
+% \inputsnippets{FolExamples/toyNotation}
+
+% \inputsnippets{FolExamples/smallTerms}
+
+
+For instance the term $v_1+0$, where $v_1$ is a variable,
+is represented by the following \gallina term of type 
+(\texttt{fol.Term LNT}).
+
+\inputsnippets{FolExamples/v1Plus0} 
 
 
 \begin{todo}

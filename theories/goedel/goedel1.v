@@ -13,6 +13,9 @@ From hydras.Ackermann Require Import code.
 From hydras.Ackermann Require Import checkPrf.
 From hydras Require Import Compat815.
 
+From LibHyps Require Export LibHyps.
+From hydras Require Export MoreLibHyps NewNotations.
+
 Section Goedel's_1st_Incompleteness.
 
 Definition codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
@@ -70,7 +73,7 @@ Proof.
   unfold not in |- *; intros.
   destruct (H2 v) as [H0 H3]; rename H3 into foo; rename H0 into H3.
   absurd (v = 0).
-  -  eapply In_list_remove2; apply H3; assumption.
+  -  eapply in_remove_neq; apply H3; assumption.
   - eapply
       (freeVarCodeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF
          codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR). 
@@ -80,7 +83,7 @@ Proof.
                 In v (freeVarFormula LNN (notH f)) ->
                 In v (freeVarFormula LNN f))).
       { intros f H5; apply H5. }
-      apply H5; eapply In_list_remove1.
+      apply H5; eapply in_remove.
       unfold codeSysPf in H3; apply H3; assumption.
 Qed.
 
@@ -137,13 +140,13 @@ Proof.
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
     - destruct x0 as [| n].
-      elim (In_list_remove2 _ _ _ _ _ H5).
+      elim (in_remove_neq _ _ _ _ _ H5).
       + reflexivity.
       + destruct n as [|n ].
         * reflexivity.
         * elim (Compat815.le_not_lt (S (S n)) 1).
           assert (H6: In (S (S n)) (freeVarFormula LNN codeSysPrf)).
-          { eapply In_list_remove1; apply H5. }
+          { eapply in_remove; apply H5. }
           apply (freeVarCodeSysPrf _ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
     - elim (closedNatToTerm _ _ H5).
@@ -181,7 +184,9 @@ Proof.
         (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
            codeArityLNNR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
            codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 codeLNTFunctionInj
-           codeLNNRelationInj _ _ H5).
+           codeLNNRelationInj _ _ H5) /r;
+        intros x1 H7 x2 x3 H8.
+
       assert (H6: x1 = x).
       { eapply codeFormulaInj.
         - apply codeLNTFunctionInj.
@@ -259,7 +264,7 @@ Proof.
               ** clear n; apply existSys.
                  { apply closedNN. }
                  { unfold not in |- *; intros H4.
-                   elim (In_list_remove2 _ _ _ _ _ H4).
+                   elim (in_remove_neq _ _ _ _ _ H4).
                    reflexivity. }
                  {apply existSimp; apply nnI.
                   apply Axm; right; constructor. }

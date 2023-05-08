@@ -1,17 +1,18 @@
-Require Import Arith.
-Require Import folProof.
-Require Import folProp.
-Require Import PA.
-Require Import model.
+(** PAconsistent.v
+
+    Original file by Russel O' Connor *)
+
+From Coq Require Import Arith.
+Require Import folProof  folProp  PA model.
 
 Definition natModel : Model LNT :=
   model LNT nat
     (fun f : Functions LNT =>
      match f return (naryFunc nat (arityF LNT f)) with
-     | Languages.Plus => fun x y : nat => y + x
-     | Languages.Times => fun x y : nat => y * x
-     | Languages.Succ => S
-     | Languages.Zero => 0
+     | Languages.Plus_ => fun x y : nat => y + x
+     | Languages.Times_ => fun x y : nat => y * x
+     | Languages.Succ_ => S
+     | Languages.Zero_ => 0
      end) 
     (fun r : Relations LNT => match r with end).
 

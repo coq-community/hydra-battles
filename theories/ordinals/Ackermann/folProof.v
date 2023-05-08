@@ -1,3 +1,9 @@
+(** folProof.v
+
+    Original script by Russel O'Connor
+
+*)
+
 
 From Coq Require Import Ensembles Lists.List Arith. 
 
@@ -23,19 +29,24 @@ Fixpoint nVars (n: nat) : Terms n * Terms n:=
          Tcons  (var (S (n0 + n0))) b))
   end.
 
+Section Example.
+Compute nVars 3. 
+End Example. 
+
 Definition AxmEq4 (R : Relations L) : Formula.
 Proof. 
   assert (X: forall (f : Formula) (n : nat), Formula).
   { intros f n; induction n as [| n Hrecn].
     - exact f.
-    - exact (impH (equal (var (n + n)) (var (S (n + n)))) Hrecn).
+    - exact (v_ (n + n) = v_ (S (n + n)) -> Hrecn)%fol.
   } 
   apply X.
   - induction (nVars (arityR L R)).
-    apply (iffH (atomic R a) (atomic R b)).
+    apply (atomic R a <->  atomic R b)%fol.
   - apply (arityR L R).
 Defined.
 
+(** TODO : An example in PA *)
 
 Definition AxmEq5 (f : Functions L) : Formula.
 Proof. 
@@ -59,29 +70,28 @@ Inductive Prf : Formulas -> Formula -> Set :=
   forall (Axm : Formulas) (A : Formula) (v : nat),
     ~ In v (freeVarListFormula L Axm) -> Prf Axm A ->
     Prf Axm  (forallH v A)
-| IMP1 : forall A B : Formula, Prf nil (impH A (impH B A))
+| IMP1 : forall A B : Formula, Prf nil (A -> B -> A)%fol
 | IMP2 :
   forall A B C : Formula,
-    Prf nil (impH (impH A (impH B C)) (impH (impH A B) (impH A C)))
+    Prf nil ((A -> B -> C) -> (A -> B) -> A -> C)%fol
 | CP :
   forall A B : Formula,
-    Prf nil (impH (impH (notH A) (notH B)) (impH B A))
+    Prf nil ((~ A -> ~ B) -> B -> A)%fol
 | FA1 :
   forall (A : Formula) (v : nat) (t : Term),
-    Prf nil (impH (forallH v A) (substituteFormula L A v t))
+    Prf nil ((allH v, A) -> substF L A v t)%fol
 | FA2 :
   forall (A : Formula) (v : nat),
-    ~ In v (freeVarFormula L A) -> Prf nil (impH A (forallH v A))
+    ~ In v (freeVarFormula L A) -> Prf nil (A -> allH v, A)%fol
 | FA3 :
   forall (A B : Formula) (v : nat),
     Prf nil
-      (impH (forallH v (impH A B)) (impH (forallH v A) (forallH v B)))
-| EQ1 : Prf nil (equal (var 0) (var 0))
-| EQ2 : Prf nil (impH (equal (var 0) (var 1)) (equal (var 1) (var 0)))
+      ((allH v, A -> B) -> (allH v, A) -> allH v, B)%fol
+| EQ1 : Prf nil (v_ 0 = v_ 0)%fol
+| EQ2 : Prf nil (v_ 0 = v_ 1 -> v_ 1 = v_ 0)%fol
 | EQ3 :
   Prf nil
-    (impH (equal (var 0) (var 1))
-       (impH (equal (var 1) (var 2)) (equal (var 0) (var 2))))
+    (v_ 0 = v_ 1 -> v_ 1 = v_ 2 -> v_ 0 = v_ 2)%fol
 | EQ4 : forall R : Relations L, Prf nil (AxmEq4 R)
 | EQ5 : forall f : Functions L, Prf nil (AxmEq5 f).
 

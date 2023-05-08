@@ -131,13 +131,17 @@ theories/ordinals/Ackermann/model.v
 theories/ordinals/Ackermann/PAconsistent.v
 theories/ordinals/Ackermann/primRec.v
 theories/ordinals/Ackermann/wConsistent.v
+theories/ordinals/Ackermann/NewNotations.v
+
 theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
 theories/ordinals/MoreAck/FolExamples.v
 theories/ordinals/MoreAck/FolCoercions.v
 theories/ordinals/MoreAck/Iterate_compat.v
 theories/ordinals/MoreAck/PrimRecExamples.v
-theories/ordinals/MoreAck/FOL_notations.v
+theories/ordinals/MoreAck/LNN_Examples.v
+
+
 
 theories/ordinals/solutions_exercises/MinPR.v
 theories/ordinals/solutions_exercises/MinPR2.v

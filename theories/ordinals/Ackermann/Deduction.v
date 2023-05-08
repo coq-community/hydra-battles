@@ -1,7 +1,10 @@
-(** * FOL's deduction Lemma *)
+(**  FOL's deduction Lemma 
 
-From Coq Require Import Ensembles.
-From Coq Require Import List.
+  Original file by Russel O'Connor 
+
+*)
+
+From Coq Require Import Ensembles List.
 
 Require Import folProof.
 Require Import folProp.
@@ -18,15 +21,17 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Theorem DeductionTheorem :
-  forall (T : System) (f g : Formula) (prf : SysPrf (Ensembles.Add _ T g) f),
-    SysPrf T (impH g f).
+  forall (T : System) (f g : Formula) 
+         (prf : SysPrf (Ensembles.Add _ T g) f),
+    SysPrf T (g -> f)%fol.
 Proof.
   intros T; assert
     (EasyCase :
        forall (g z : Formula),
          Prf nil z ->
-         SysPrf (fun x : fol.Formula L => In x nil /\ mem (fol.Formula L) T x)
-                (impH g z)).
+         SysPrf (fun x : fol.Formula L => In x nil /\ 
+                                            mem (fol.Formula L) T x)
+                (g -> z)%fol).
   { intros g z H.
     set (A1 := IMP1 L z g) in *.
     set (A2 := MP L _ _ _ _ A1 H) in *.
@@ -35,7 +40,7 @@ Proof.
     intros g0 H0; elim H0.
   }
   intros f g [F [H HF]].
-  assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (impH g f)).
+  assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (g -> f)%fol).
   { induction  H
       as
         [A
@@ -50,7 +55,7 @@ Proof.
         | |  |
         |  R
         |  f].
-    - pose (HF _ (or_introl _ (refl_equal A))).
+    - pose (m := HF _ (or_introl _ (refl_equal A))).
       clearbody m.
       destruct m.
       + set (A1 := AXM L x) in *.
@@ -64,8 +69,8 @@ Proof.
           -- now subst.
           -- contradiction.
       + destruct H.
-        set (A1 := IMP2 L g (impH g g) g) in *.
-        set (A2 := IMP1 L g (impH g g)) in *.
+        set (A1 := IMP2 L g (g -> g)%fol g) in *.
+        set (A2 := IMP1 L g (g -> g)%fol) in *.
         set (A3 := MP L _ _ _ _ A1 A2) in *.
         set (A4 := IMP1 L g g) in *.
         set (A5 := MP L _ _ _ _ A3 A4) in *.
@@ -82,7 +87,7 @@ Proof.
           simpl in |- *.
           clear - H H2.
           intros g H0; split.
-          -- change (In g (Axm1++Axm2)); apply in_or_app.
+          -- change (In g (Axm1 ++ Axm2)); apply in_or_app.
              destruct (in_app_or _ _ _ H0); firstorder.
           -- destruct (in_app_or _ _ _ H0); firstorder.
         * firstorder auto with datatypes.
@@ -134,8 +139,8 @@ Proof.
         set (A2 := FA3 L g A v) in *.
         set (A3 := MP L _ _ _ _ A2 A1) in *.
         set (A4 := FA2 L g v H2) in *.
-        set (A5 := IMP2 L g (forallH v g) (forallH v A)) in *.
-        set (A6 := IMP1 L (impH (forallH v g) (forallH v A)) g) in *.
+        set (A5 := IMP2 L g (allH v, g)%fol (allH v, A)%fol) in *.
+        set (A6 := IMP1 L ((allH v, g) -> (allH v, A))%fol g) in *.
         set (A7 := MP L _ _ _ _ A6 A3) in *.
         set (A8 := MP L _ _ _ _ A5 A7) in *.
         set (A9 := MP L _ _ _ _ A8 A4) in *.
@@ -149,7 +154,7 @@ Proof.
         -- elim H4.
         *
           set (A1 := GEN L _ _ _ n H) in *.
-          set (A2 := IMP1 L (forallH v A) g) in *.
+          set (A2 := IMP1 L (allH v, A)%fol g) in *.
           set (A3 := MP L _ _ _ _ A2 A1) in *.
           exists (Axm).
           exists A3.
@@ -167,8 +172,7 @@ Proof.
     - apply EasyCase, (EQ4 L).
     - apply EasyCase, (EQ5 L).
   }
-  destruct  H0 as [x [x0 H0]].
-  exists x, x0; firstorder.
+  destruct  H0 as [x [x0 H0]]; exists x, x0; firstorder.
 Qed.
 
 End Deduction_Theorem.

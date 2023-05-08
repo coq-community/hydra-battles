@@ -146,13 +146,13 @@ Proof.
       tauto.
     + induction R.
     + induction f; simpl. 
-      * exists (EQ5 LNN Languages.Plus).
+      * exists (EQ5 LNN Languages.Plus_).
         tauto.
-      * exists (EQ5 LNN Languages.Times).
+      * exists (EQ5 LNN Languages.Times_).
         tauto.
-      * exists (EQ5 LNN Languages.Succ).
+      * exists (EQ5 LNN Languages.Succ_).
         tauto.
-      * exists (EQ5 LNN Languages.Zero).
+      * exists (EQ5 LNN Languages.Zero_).
         tauto.
 Qed.
 
@@ -282,8 +282,7 @@ Proof.
     intros B q H0; elim (Nat.nlt_0_r _ H0).
   - induction IHn as [H0| H0].
     + left.
-      decompose record H0.
-      exists x, x0; auto.
+      decompose record H0 /r; intros x x0 H1 H3; exists x, x0; auto.
     + induction
         (eq_nat_dec
            (checkPrf LNT codeLNTFunction codeLNTRelation codeArityLNTF codeArityLNTR
@@ -301,7 +300,7 @@ Proof.
           (checkPrfCorrect2 LNT codeLNTFunction codeLNTRelation codeArityLNTF
              codeArityLNTR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
              codeArityLNTRIsCorrect1 codeArityLNTRIsCorrect2 codeLNTFunctionInj
-             codeLNTRelationInj _ _ b0).
+             codeLNTRelationInj _ _ b0) /r; intros x H2 x0 x1 H3.
         assert (H1: x = b).
         { eapply codeFormulaInj.
           - apply codeLNTFunctionInj.
@@ -591,15 +590,15 @@ Proof.
        * lia. 
        * assert (H4: v <= 1) by now apply freeVarCodeSysPrfN.
          lia.
-     + eapply In_list_remove3.
+     + eapply in_in_remove.
+       * eapply in_remove_neq, H4.
        * apply LNN2LNT_freeVarFormula1.
-         eapply In_list_remove1, H4. 
-       * eapply In_list_remove2, H4.
+         eapply in_remove, H4. 
   - intros [H| H]; unfold Inconsistent.  
     + intros f; elim H.
       intros x0 H2; induction H2 as [x1 H2].
       induction (searchProof decide _ (notH x) _ x1).
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- assumption.
         -- exists x2, x3; assumption.
@@ -632,7 +631,7 @@ Proof.
                      +++ apply iffRefl.
                      +++ apply (subFormulaNil LNT).
                          intros H4; induction (freeVarSubFormula3 _ _ _ _ _ H4).
-                         *** now apply (In_list_remove2 _ _ _ _ _ H5).
+                         *** now apply (in_remove_neq _ _ _ _ _ H5).
                          *** simpl in H5; decompose sum H5.
                              discriminate H6.
            ++ replace (LNN.LT (var 2) (natToTermLNN (codePrf _ _ x1))) 
@@ -1057,7 +1056,8 @@ Proof.
                                codeArityLNTFIsCorrect2
                                codeArityLNTRIsCorrect1 codeArityLNTRIsCorrect2 
                                codeLNTFunctionInj
-                               codeLNTRelationInj _ _ b).
+                               codeLNTRelationInj _ _ b) /r;
+                          intros x2 H5 x3 x4 H6;
                           rewrite <- H6.
                           assert (H4: x2 = notH x).
                           { eapply codeFormulaInj.
@@ -1081,7 +1081,7 @@ Proof.
                       apply H4.
     + unfold Inconsistent; intros f; elim H.
       intros x0 [x1 H2]; induction (searchProof decide _ x _ x1).
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- exists x2, x3; assumption.
         -- assumption.
@@ -1563,8 +1563,8 @@ Proof.
                                    codeArityLNTFIsCorrect2
                                    codeArityLNTRIsCorrect1 
                                    codeArityLNTRIsCorrect2 codeLNTFunctionInj
-                                   codeLNTRelationInj _ _ b).
-                              rewrite <- H6.
+                                   codeLNTRelationInj _ _ b) /r.
+                              intros x2 H5 x3 x4 H6; rewrite <- H6.
                               assert (H4: x2 = x). 
                               {
                                 eapply (codeFormulaInj LNT).
@@ -1692,8 +1692,8 @@ Proof.
           now rewrite H0 in H2.
     - apply PAdec.
   }  
-  clear H H0; decompose record H1.
-  exists x; split.
+  clear H H0; decompose record H1 /dr; intros x H0 H2; 
+    exists x; split.
   - assumption.
   - intro H; unfold Inconsistent in H2.
     induction PAconsistent.

@@ -1,14 +1,16 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Coq.Lists.List.
-Require Import ListExt.
-Require Import Arith.
-Require Export codeList.
-Require Import folProp.
-Require Import code.
-Require Import Compat815.
+(**  codeFreeVar.v
 
+     Original content by Russel O'Connor *)
+
+
+
+Require Import primRec  cPair.
+From Coq Require Import List Arith.
+Require Import ListExt.
+Require Export codeList.
+Require Import folProp  code Compat815.
 Import LispAbbreviations.
+
 Section Code_Free_Vars.
 
 Variable L : Language.
@@ -37,11 +39,10 @@ Definition codeFreeVarTerm (t : nat) : nat :=
 Definition codeFreeVarTerms (t : nat) : nat :=
   cdr (codeFreeVarTermTerms t).
 
-Lemma codeFreeVarTermCorrect :
- forall t : Term,
+Lemma codeFreeVarTermCorrect (t: Term) :
  codeFreeVarTerm (codeTerm L codeF t) = codeList (freeVarTerm L t).
 Proof.
- intros t; elim t using  Term_Terms_ind
+ elim t using  Term_Terms_ind
   with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
            codeFreeVarTerms (codeTerms L codeF n ts) =

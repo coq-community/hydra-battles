@@ -1,9 +1,8 @@
 (******************************************************************************)
 From Coq Require Import Wf_nat Arith Lists.List Peano_dec. 
 
-Require Import ListExt. (* todo: use stdlib? *)
+Require Import ListExt. 
 Require Export fol.
-Require Export FOL_notations.
 
 Section Fol_Properties.
 
@@ -68,10 +67,10 @@ Proof.
   - intros v x H; induction H as [H| H].
     + simpl in |- *; rewrite H.
       unfold not in |- *; intros H0;
-        elim (In_list_remove2 _ _ _ _ _ H0); reflexivity.
+        elim (in_remove_neq _ _ _ _ _ H0); reflexivity.
     + simpl in |- *.  intro H0. 
       assert (H1: In v (freeVarFormula (closeList l x))).
-      { eapply In_list_remove1.   apply H0. }
+      { eapply in_remove.   apply H0. }
       apply (Hrecl _ _ H H1).
 Qed.
 
@@ -82,7 +81,7 @@ Lemma freeVarClosedList2 :
 Proof.
   intro l; induction l as [| a l Hrecl].
   - simpl; intros v x H; apply H.
-  - simpl; intros v x H; apply Hrecl; eapply In_list_remove1;  apply H.
+  - simpl; intros v x H; apply Hrecl; eapply in_remove;  apply H.
 Qed.
 
 Lemma freeVarClosed :
@@ -149,6 +148,9 @@ End Free_Variables.
 
 Section Substitution.
 
+
+(* later abbreviated into substT and substTs *)
+
 Fixpoint substituteTerm (s : fol.Term L) (x : nat) 
   (t : fol.Term L) {struct s} : fol.Term L :=
   match s with
@@ -164,8 +166,7 @@ with substituteTerms (n : nat) (ss : fol.Terms L n)
        match ss in (fol.Terms _ n0) return (fol.Terms L n0) with
        | Tnil => Tnil
        | Tcons m s ts =>
-           Tcons  (substituteTerm s x t) 
-             (substituteTerms m ts x t)
+           Tcons  (substituteTerm s x t) (substituteTerms m ts x t)
        end.
 
 Lemma subTermVar1 :
@@ -182,12 +183,10 @@ Lemma subTermVar2 :
     v <> x -> substituteTerm (var x) v s = var x.
 Proof.
   intros v x s H; unfold substituteTerm in |- *.
-  destruct (eq_nat_dec v x).
-  - contradiction. 
-  - reflexivity.
+  destruct (eq_nat_dec v x); [contradiction | reflexivity].
 Qed.
 
-Lemma subTermFunction :
+Lemma subTermApply :
   forall (f : Functions L) (ts : fol.Terms L (arityF L f)) 
          (v : nat) (s : fol.Term L),
     substituteTerm (apply f ts) v s = apply f (substituteTerms _ ts v s).
@@ -803,9 +802,9 @@ Proof.
         apply in_or_app; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
-        right; eapply In_list_remove1; apply H.
+        right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
-      intro H; eapply (In_list_remove2 _ _ _ _ _ H).
+      intro H; eapply (in_remove_neq _ _ _ _ _ H).
       * reflexivity.
       * now rewrite subFormulaId.
 Qed.
@@ -842,9 +841,9 @@ Proof.
       * unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); right;  apply in_or_app.
-        right; eapply In_list_remove1; apply H.
+        right; eapply in_remove; apply H.
     + exists x; repeat split; auto.
-      intros H; eapply (In_list_remove2 _ _ _ _ _ H).
+      intros H; eapply (in_remove_neq _ _ _ _ _ H).
       * reflexivity.
       * rewrite subFormulaId; auto.
 Qed.
@@ -857,5 +856,8 @@ Definition Sentence (f:Formula) := (forall v : nat, ~ In v (freeVarFormula f)).
 
 End Fol_Properties.
 
+Notation substF := substituteFormula.
+Notation substT := substituteTerm.
+Notation substTs := substituteTerms.
 
 

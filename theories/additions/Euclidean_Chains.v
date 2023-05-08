@@ -1527,63 +1527,20 @@ Definition binary_int31_power (x :positive)(n:N) : Z :=
 Int31.phi (N_bpow (snd (positive_to_int31 x)) n ).
 
 
-
-About make_chain.
-
 (** long computations ... *)
-(**
-Definition big_chain := ltac:(compute_chain  (make_chain dicho 6145319)).
+
+Definition big_chain := ltac:(compute_chain  (make_chain dicho 45319)).
 
 Print big_chain.
 
-(*
-big_chain = 
-fun (A : Type) (x : A) =>
-x0 <--- x times x;
-x1 <--- x0 times x0;
-x2 <--- x1 times x1;
-x3 <--- x2 times x1;
-x4 <--- x3 times x3;
-x5 <--- x4 times x;
-x6 <--- x5 times x5;
-x7 <--- x6 times x6;
-x8 <--- x7 times x1;
-x9 <--- x8 times x5;
-x10 <--- x9 times x8;
-x11 <--- x10 times x9;
-x12 <--- x11 times x11;
-x13 <--- x12 times x11;
-x14 <--- x13 times x10;
-x15 <--- x14 times x14;
-x16 <--- x15 times x11;
-x17 <--- x16 times x16;
-x18 <--- x17 times x17;
-x19 <--- x18 times x18;
-x20 <--- x19 times x19;
-x21 <--- x20 times x20;
-x22 <--- x21 times x21;
-x23 <--- x22 times x22;
-x24 <--- x23 times x23;
-x25 <--- x24 times x24;
-x26 <--- x25 times x25;
-x27 <--- x26 times x26; x28 <--- x27 times x14; Return x28
-     : forall A : Type, A -> computation
+Arguments big_chain _%type_scope.
 
-Arguments big_chain _%type_scope
- *)
-
-
-
-
-
-
-Remark RM : (1 < 56789)%N. Proof. reflexivity. Qed.
+Remark RM : (1 < 56789)%N. 
+Proof. reflexivity. Qed.
 
 Definition M := Nmod_Monoid _ RM.
 
 Definition exp56789 x := chain_apply big_chain (M:=M) x.
-
-
 
 Time Compute chain_apply big_chain (M:=M) 13%N.
 
@@ -1594,7 +1551,6 @@ Eval cbv iota  match delta [big_chain chain_apply computation_eval  ]  zeta beta
 Definition C87' := ltac:( compute_chain C87 ).
 
 
-Print big_chain.
 Time   Compute  Int31.phi
    (chain_apply big_chain (snd (positive_to_int31  67777))) .
 
@@ -1602,10 +1558,6 @@ Time   Compute  Int31.phi
 Compute  Int31.phi (chain_apply big_chain (snd (positive_to_int31  67777))) .
 
 Compute chain_length  big_chain.
-
-
-
-
 
 Goal parametric (make_chain dicho 45319).
 Time parametric_tac.
@@ -1656,22 +1608,6 @@ Compute make_chain dicho 87.
 
 Compute make_chain half 87.
 
-(*
-
-    = fun (A : Type) (x : A) =>
-       x0 <--- x times x; (* x ^ 2 *)
-       x1 <--- x0 times x0; (* x ^ 4 *)
-       x2 <--- x1 times x;  (* x ^ 5 *)
-       x3 <--- x2 times x2; (* x ^ 10 *)
-       x4 <--- x3 times x3; (* x ^ 20 *)
-       x5 <--- x4 times x;  (* x ^ 21 *)
-       x6 <--- x5 times x5; (* x ^42 *)
-       x7 <--- x6 times x; (* x ^ 43 *)
-       x8 <--- x7 times x7; (* x ^86 *)
-       x9 <--- x8 times x; (* x ^87 *) 
-  Return x9
-     : chain
- *)
 
 Compute make_chain two 87.
 
@@ -1691,7 +1627,7 @@ fun (A : Type) (x : A) =>
      : chain
 
  *)
-(** 
+
 Compute chain_length (make_chain two 56789).
 (* 25%nat *)
 
@@ -1701,17 +1637,6 @@ Compute chain_length (make_chain half 56789).
 Compute chain_length (make_chain dicho 56789).
 (* 21%nat *)
 
-Compute chain_length (make_chain two 3456789).
-(* 33%nat *)
-
- Compute chain_length (make_chain half 3456789).
-(* 33%nat *)
-*)
-Compute chain_length (make_chain dicho 3456789).
-(* 29%nat *)
-
-
-
 End Examples.
 
 Require Import Extraction.
@@ -1720,9 +1645,6 @@ Extraction Language OCaml.
 Extraction "bigmod" Examples.exp56789.
 
 
-*)
-
-End Examples.
 Recursive Extraction cpower.
 Recursive Extraction make_chain.
 

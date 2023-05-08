@@ -1,13 +1,13 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import ListExt.
+(** folLogic2.v
 
-Require Import folProp.
-Require Import folProof.
-Require Export folLogic.
-Require Import subProp.
-Require Import folReplace.
-Require Import Arith.
+    Original script by Russel O'Connor
+
+*)
+
+From Coq Require Import Ensembles List  Arith.
+
+Require Import ListExt folProp folProof folLogic subProp folReplace.
+
 
 Section More_Logic_Rules.
 
@@ -22,8 +22,8 @@ Let SysPrf := SysPrf L.
 
 Lemma rebindForall (T : System) (a b : nat) (f : Formula):
   ~ In b (freeVarFormula L (forallH a f)) ->
-  SysPrf T (iffH (forallH a f) 
-              (forallH b (substituteFormula L f a (var b)))).
+  SysPrf T ((allH a, f) <->
+              (allH b, (substF L f a (v_ b))))%fol.
 Proof.
   intros H; eapply (sysExtend L) with (Empty_set Formula).
   - intros x H0; destruct H0.
@@ -36,20 +36,19 @@ Proof.
     + apply (impI L), (forallI L).
       intros [x [H0 H1]] ; destruct H1 as [x H1| x H1]; 
         [induction H1 | induction H1].
-     * assert (H1: In a (freeVarFormula L (substituteFormula L f a (var b))))
-       by (eapply In_list_remove1; apply H0).
+     * assert (H1: In a (freeVarFormula L (substF L f a (var b))))
+       by (eapply in_remove; apply H0).
        induction (freeVarSubFormula3 _ _ _ _ _ H1).
-       elim (In_list_remove2 _ _ _ _ _ H2).
+       elim (in_remove_neq _ _ _ _ _ H2).
        -- auto.
-       -- elim (In_list_remove2 _ _ _ _ _ H0).
+       -- elim (in_remove_neq _ _ _ _ _ H0).
           destruct H2 as [H2| H2].
           auto.
           elim H2.
-     * set (A1 := forallH b (substituteFormula L f a (var b))) in *.
+     * set (A1 := forallH b (substF L f a (var b))) in *.
        rewrite <- (subFormulaId L f a).
        apply (impE L) with
-         (substituteFormula L (substituteFormula L f a (var b)) b 
-            (var a)).
+         (substF L (substF L f a (var b)) b (var a)).
        -- apply (iffE1 L).
           apply (subFormulaTrans L); apply H.
        -- apply forallE, Axm; right; constructor.
@@ -57,7 +56,7 @@ Qed.
 
 Lemma rebindExist (T : System) (a b : nat) (f : Formula):
   ~ In b (freeVarFormula L (existH a f)) ->
-  SysPrf T (iffH (existH a f) (existH b (substituteFormula L f a (var b)))).
+  SysPrf T (iffH (existH a f) (existH b (substF L f a (var b)))).
 Proof.
   intro H; unfold existH.  
   apply (reduceNot L); eapply (iffTrans L).
@@ -68,16 +67,16 @@ Qed.
 Lemma subSubTerm (t : Term) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v1 (freeVarTerm L s2) ->
-  substituteTerm L (substituteTerm L t v1 s1) v2 s2 =
-    substituteTerm L 
-      (substituteTerm L t v2 s2) v1 (substituteTerm L s1 v2 s2).
+  substT L (substT L t v1 s1) v2 s2 =
+    substT L 
+      (substT L t v2 s2) v1 (substT L s1 v2 s2).
 Proof.
   intros H H0. 
   elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-               substituteTerms L n (substituteTerms L n ts v2 s2) v1
-                 (substituteTerm L s1 v2 s2)); simpl in |- *.
+             substTs L n (substTs L n ts v1 s1) v2 s2 =
+               substTs L n (substTs L n ts v2 s2) v1
+                 (substT L s1 v2 s2)); simpl in |- *.
   - intros n. 
     destruct (eq_nat_dec v1 n)  as [ e | n0].
     + destruct (eq_nat_dec v2 n)  as [e0 | n0].
@@ -98,9 +97,9 @@ Qed.
 Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v1 (freeVarTerm L s2) ->
-  substituteTerms L n (substituteTerms L n ts v1 s1) v2 s2 =
-    substituteTerms L n (substituteTerms L n ts v2 s2) v1
-      (substituteTerm L s1 v2 s2).
+  substTs L n (substTs L n ts v1 s1) v2 s2 =
+    substTs L n (substTs L n ts v2 s2) v1
+      (substT L s1 v2 s2).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -115,9 +114,9 @@ Lemma subSubFormula (f : Formula) (v1 v2 : nat) (s1 s2 : Term):
  ~ In v1 (freeVarTerm L s2) ->
  forall T : System,
  SysPrf T
-   (iffH (substituteFormula L (substituteFormula L f v1 s1) v2 s2)
-      (substituteFormula L (substituteFormula L f v2 s2) v1
-         (substituteTerm L s1 v2 s2))).
+   (iffH (substF L (substF L f v1 s1) v2 s2)
+      (substF L (substF L f v2 s2) v1
+         (substT L s1 v2 s2))).
 Proof.
   intros H H0 T; apply (sysExtend L) with (Empty_set Formula).
   - intros x H1; destruct H1.
@@ -191,19 +190,19 @@ Proof.
      }
      apply impE with
        (iffH
-          (substituteFormula L
-             (substituteFormula L
-                (forallH v' (substituteFormula L a v (var v'))) v1 s1) v2
+          (substF L
+             (substF L
+                (forallH v' (substF L a v (var v'))) v1 s1) v2
              s2)
-          (substituteFormula L
-             (substituteFormula L
-                (forallH v' (substituteFormula L a v (var v'))) v2 s2) v1
-             (substituteTerm L s1 v2 s2))).
+          (substF L
+             (substF L
+                (forallH v' (substF L a v (var v'))) v2 s2) v1
+             (substT L s1 v2 s2))).
      apply (iffE2 L).
       * assert
           (H7: folProof.SysPrf L (Empty_set Formula)
                  (iffH (forallH v a)
-                    (forallH v' (substituteFormula L a v (var v')))))
+                    (forallH v' (substF L a v (var v')))))
           by (apply rebindForall; auto).
        repeat first
        [ apply (reduceIff L)
@@ -213,8 +212,8 @@ Proof.
                   forall (f : Formula) (x v : nat) (s : Term),
                     x <> v ->
                     ~ In x (freeVarTerm L s) ->
-                    substituteFormula L (forallH x f) v s =
-                      forallH x (substituteFormula L f v s)). 
+                    substF L (forallH x f) v s =
+                      forallH x (substF L f v s)). 
          { intros f0 x v0 s H7; rewrite (subFormulaForall L).
            destruct (eq_nat_dec x v0) as [e | n0].
            - elim H7; auto.
@@ -231,7 +230,7 @@ Proof.
          apply subFormulaDepth.
          apply depthForall.
      --  intro H8; induction (freeVarSubTerm3 _ _ _ _ _ H8).
-         elim H5; eapply In_list_remove1.
+         elim H5; eapply in_remove.
          apply H9.
          now apply H6. 
 Qed.
