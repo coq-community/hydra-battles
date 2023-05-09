@@ -22,9 +22,7 @@ From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples
 \inputsnippets{FolExamples/ToyDef}
 
 \begin{remark}
-  The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to functions which build terms and formulas
-(please look at next sections).
-
+  The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to functions which build terms and formulas (please look at Sect~\ref{sec:fol-term-notations} and \ref{sec:fol-atomic-notations}).
 \end{remark}
 
 
@@ -44,18 +42,20 @@ $n$-\emph{tuples} of terms.
 \begin{remark}[Variables]
 In O'Connor's formalization of first-order logic, the variables are \gallina terms of the form \texttt{var $L$ $i$}, where $L$ is
  a language and $i$ a natural number. 
-Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scipts which use this representation (please look at \cite{OConnor05} for a related discussion).
+Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scripts which use this representation (please look at \cite{OConnor05} for a related discussion).
   
 \end{remark}
 
-\begin{remark}
+\subsubsection{Simplified notations for terms}
+\label{sec:fol-term-notations}
+
  We can use \coq's \texttt{Notation} features to print and parse terms in a more readable form.
 
 
 
 \inputsnippets{FolExamples/beforeAbbreviations, FolExamples/termAbbreviations, FolExamples/NowItsBetter}
 
-\end{remark}
+
 
 
 \subsection{Formulas}
@@ -89,12 +89,21 @@ Let us give a few examples of first-order formulas. on our toy language.
 
 \inputsnippets{FolExamples/FormExamples}
 
+\subsection{Notations for first-order formulas}
+
 In order to make the first order formulas more readable, we use a generic notation scope called \texttt{fol\_scope}, which uses mainly \coq's 
 notations for connectives and quantifiers. The \texttt{\%fol} delimiter 
 allows the user to distinguisf \texttt{FOL} connectives from their \coq equivalent.
 
-From href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+
+\vspace{6pt}
+
+\noindent From \href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+
 \inputsnippets{fol/folScope}
+
+\subsubsection{Simplified notations for atomic formulas}
+\label{sec:fol-atomic-notations}
 
 In addition to \texttt{fol\_scope}, we introduce a few abbreviations specific to our toy language.
 
@@ -103,10 +112,21 @@ In addition to \texttt{fol\_scope}, we introduce a few abbreviations specific to
 The following interactions show how the formulas on $L$ may be 
 parsed or printed.
 
+\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+
+\vspace{6pt}
+
 \inputsnippets{FolExamples/toyNotationForm2}
 
 
 \begin{remark}[bound variables]
+
+  In~\cite{Goedel}, there is no De Bruijn encoding of bound variables (see also~\cite{OConnor05}). The following example shows two formulas which share the same structure, are logically equivalent, but are not Leibniz equal.
+
+\vspace{4pt}
+
+\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+  
 \inputsnippets{FolExamples/boundVars}  
 \end{remark}
 
