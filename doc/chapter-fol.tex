@@ -22,6 +22,7 @@ From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples
 \inputsnippets{FolExamples/ToyDef}
 
 \begin{remark}
+  \label{rem:underscores}
   The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to functions which build terms and formulas (please look at Sect~\ref{sec:fol-term-notations} and \ref{sec:fol-atomic-notations}).
 \end{remark}
 
@@ -33,7 +34,10 @@ $n$-\emph{tuples} of terms.
 
 \inputsnippets{fol/TermDef} 
 
+\subsubsection{Examples}
 
+Let us give the \gallina terms of opur toy language, corresponding to the terms $a$,
+$f(a)$, and $h(f(a),a)$. The ``term'' $h(a)$ is not well formed, since the arity of $h$ is not respected.
 
 \inputsnippets{FolExamples/TermExamples1} 
 
@@ -45,6 +49,8 @@ In O'Connor's formalization of first-order logic, the variables are \gallina ter
 Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scripts which use this representation (please look at \cite{OConnor05} for a related discussion).
   
 \end{remark}
+
+
 
 \subsubsection{Simplified notations for terms}
 \label{sec:fol-term-notations}
@@ -148,7 +154,7 @@ The first language, \texttt{LNT} (\emph{Language of Number Theory}) has just fun
 
 
 The second language, LNN, is the language of NN (\emph{Natural Numbers}) and has
-the same function symbols as LNT plus one relation symbol for less than, LT.
+the same function symbols as LNT plus one relation symbol for the strict inequality $<$ : \texttt{LT} (less than).
 
 First, we declare two ranked alphabets.
 
@@ -157,7 +163,7 @@ First, we declare two ranked alphabets.
 function and relation symbols are called \texttt{Plus}, 
 \texttt{Mult}, \texttt{LT}, etc. In our version, these type constructors are called \texttt{Plus\_}, 
 \texttt{Mult\_}, \texttt{LT\_}, etc., while the names without final underscores are bound to term building functions (\emph{e.g.}
-the function which takes two terms and builds the term representing their sum).
+the function which takes two terms and builds the term representing their sum) (see Remark~\ref{rem:underscores}).
 \end{remark}
 
 
@@ -208,13 +214,7 @@ is represented by the following \gallina term of type
 \inputsnippets{FolExamples/v1Plus0} 
 
 
-\begin{todo}
-Comment on the use of boths list and sets of formulas.
-(explained in Russel's paper, p.7).
 
-\inputsnippets{fol/SystemDef} 
-
-\end{todo}
 
 
 \subsection{Decidability of equality}

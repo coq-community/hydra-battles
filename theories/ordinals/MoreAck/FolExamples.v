@@ -84,7 +84,7 @@ Module Toy.
  Definition arityF (x : Fun): nat := 
     match x with  f_ |  g_ => 1 | h_ => 2 | _ => 0  end.
 
-  Definition L := language Rel Fun arityR arityF.
+ Definition L := language Rel Fun arityR arityF.
 (* end snippet ToyDef *)
 
 (* begin snippet TermExamples1 *)
