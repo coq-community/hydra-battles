@@ -116,7 +116,7 @@ Goal t2 = h (f a) a. Proof. reflexivity. Qed.
 (* end snippet termAbbreviations *)
 
 (* begin snippet NowItsBetter *)
-Compute t2. (* after introducing new notations *)
+Compute t2. 
 (* end snippet NowItsBetter *)
 
 (* begin snippet FormExamples *)
@@ -165,8 +165,6 @@ Proof refl_equal.
 (** The following computation expands some derived connectives and 
     quantifiers. Within [fol_scope], we print them with a 
     similar syntax (with primed symbols) *)
-
-Check (~ F3 \/ F1)%fol.
 
 Compute (F3 \/ F1)%fol.
 

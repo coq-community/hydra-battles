@@ -15,9 +15,6 @@ Require Import misc  Compat815 (* provisional *).
 (** *  First Order Formulas over a language *)
 
 (* begin snippet LanguageDef *)
-(* change suggested in the article by Russel O'Connor 
-   P. Casteran *)
-
 Record Language : Type := language
  { Relations : Set; 
    Functions : Set; 
@@ -780,7 +777,7 @@ Arguments Tnil {L}.
 Arguments Tcons {L} {n} _ _.
 (* end snippet implicitArguments *)
 
-(* begin snippet folScope:: no-out *)
+(* begin snippet folScope1:: no-out *)
 (** ** The [fol_scope] notation scope *)
 
 Module FolNotations.
@@ -793,6 +790,13 @@ Infix "/\" := (andH):fol_scope.
 Infix "->" := (impH): fol_scope.
 Notation "~ A" := (@notH _ A): fol_scope. 
 Notation "A <-> B" := (@iffH _ A B): fol_scope.
+Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
+
+Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
+  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
+
+
 
 Notation k_ t := (apply  (t:Functions _)  (Tnil)).
 
@@ -806,10 +810,13 @@ Notation app2 f arg1 arg2 :=
 Notation "t = u" := (@equal _ t u): fol_scope.
 Notation "t <> u" := (~ t = u)%fol : fol_scope.
 
+(* end snippet folScope1 *)
+
 (** the following notations are used when  some computation 
     expands a disjunction, conjuction, etc. 
     in terms of implication and negation *)
 
+(* begin snippet folScope2:: no-out *)
 Reserved Notation "x '\/'' y" (at level 85, right associativity).
 Reserved Notation "x '/\'' y" (at level 80, right associativity).
 Reserved Notation "x '<->'' y" (at level 95, no associativity).
@@ -825,16 +832,12 @@ Notation exH' v A := (~ (forallH v (~ A)))%fol.
 
 Notation "'v_' i" := (var i) (at level 3) : fol_scope.
 
-Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
 
-Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
-  (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
 
 End FolNotations.
 
 Export FolNotations. 
-(* end snippet folScope *)
+(* end snippet folScope2 *)
 
 (** ** Examples *)
 
