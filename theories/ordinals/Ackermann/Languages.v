@@ -34,11 +34,13 @@ Definition LNTRelationR (x :  LNTRelation) : nat :=
   match x with bot => LNTRelation_rec (fun _ => nat) bot end.
 
 Definition LNT : Language := language LNTRelation  LNTFunction LNTRelationR LNTFunctionArity.
-
+(* end snippet LNTDef2 *)
 
 (** * Language of Natural Numbers: [LNN] 
      Its functions are also [LNT]'s 
 *)
+
+(* begin snippet LNNDef *)
 
 Inductive LNNRelation : Set :=
     LT_ : LNNRelation.
@@ -51,8 +53,8 @@ Definition LNNArityF (f : LNTFunction) :=
 
 Definition LNN : Language := language LNNRelation LNTFunction 
                                LNNArityR LNNArityF.
-(* end snippet LNTDef2 *)
 
+(* end snippet LNNDef *)
 
 (** * Goedel encoding for LNT *)
 
