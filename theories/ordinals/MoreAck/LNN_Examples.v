@@ -2,7 +2,7 @@
 
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
-Import FolNotations. 
+
 Section bare_syntax. 
 (* begin snippet uglyF0 *)
 
@@ -16,6 +16,7 @@ Definition  f0 : Formula LNN :=
                              (Tcons  (var 1) (@Tnil _)))))).
 (* end snippet uglyF0 *)
 
+Import LNN.
 Print f0.
 Compute f0.
 Check Zero. 
@@ -33,6 +34,9 @@ End bare_syntax.
 (* begin snippet CNNF0 *)
 Print  f0. 
 Compute f0. 
+Goal f0 = (allH 0, v_ 0 = Zero \/ exH 1, v_ 0 = Succ v_ 1)%nn.
+reflexivity. 
+Qed. 
 (* end snippet CNNF0 *)
 
 Locate zero.

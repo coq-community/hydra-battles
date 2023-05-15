@@ -52,6 +52,29 @@ Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   
 This representation of terms uses mutually inductive data-types instead of list of terms. Please see also Remark~\ref{hydra:mutually-inductive-vs-lists}.
 \end{remark}
 
+
+\subsubsection{Bound variables}
+
+  In~\cite{Goedel}, there is no De Bruijn encoding of bound variables (see also~\cite{OConnor05}). The following example shows two formulas which share the same structure, are logically equivalent, but are not Leibniz equal.
+
+
+
+\vspace{4pt}
+
+\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+  
+\inputsnippets{FolExamples/boundVars}  
+
+  \begin{todo}
+   Link to the lemmas which attest the equivalence of these formulas (properties of substitution, logical equivalence).
+  \end{todo}
+
+
+  \index{ackermann}{Projects}
+  \begin{project}
+ Use a HOAS representation for FOL terms and formulas (without breaking proof scripts).   
+  \end{project}
+
 \subsubsection{Examples}
 \label{sect:folTermExamples}
 
@@ -157,30 +180,13 @@ parsed or printed.
 
 \section{Computing and reasoning on first-order formulas}
 
-\subsection{Bound variables}
-
-  In~\cite{Goedel}, there is no De Bruijn encoding of bound variables (see also~\cite{OConnor05}). The following example shows two formulas which share the same structure, are logically equivalent, but are not Leibniz equal.
-
-
-
-\vspace{4pt}
-
-\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
-  
-\inputsnippets{FolExamples/boundVars}  
-
-  \begin{todo}
-   Link to the lemmas which attest the equivalence of these formulas (properties of substitution, logical equivalence).
-  \end{todo}
-
-
 
 
 \subsection{Decidability of equality}
+Let $L$ be a language, and let us assume that equality 
+of function and relation symbols of $L$ are decidable.
+Under this assumption, equality of terms and formulas over $L$ is decidable too.
 
-Under the assumption that equality is decidable on 
-function and relation symbols of any language $L$,
-we get decidability of equality on terms and formulas.
 Because of dependent types, the proofs are quite long and technical. The reader may consult them in \href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 
 \begin{todo}
@@ -384,6 +390,10 @@ can be expanded in terms of  implication and negation (for instance when we use 
   Present the general issue about evaluation, and our provisional solution.
 \end{todo}
 
+
+\begin{todo}
+Fix the issue about the way formulas are printed (mix of different scopes).
+\end{todo}
 \inputsnippets{LNN_Examples/uglyF0a}
 
 
