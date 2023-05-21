@@ -34,7 +34,7 @@ End bare_syntax.
 (* begin snippet CNNF0 *)
 Print  f0. 
 Compute f0. 
-Goal f0 = (allH 0, v_ 0 = Zero \/ exH 1, v_ 0 = Succ v_ 1)%nn.
+Goal f0 = (allH 0, v#0 = Zero \/ exH 1, v#0 = Succ v#1)%nn.
 reflexivity. 
 Qed. 
 (* end snippet CNNF0 *)
@@ -65,8 +65,8 @@ Compute t1.
 (* begin snippet f1Example *)
 Let f1 : Formula LNN :=
   (forallH 0 
-    (v_ 0 = Zero \/
-          existH 1 (v_ 0 = Succ (v_ 1))))%fol.
+    (v#0 = Zero \/
+          existH 1 (v#0 = Succ (v#1))))%fol.
 (* end snippet f1Example *)
 Compute f1. 
 Print f1. 
@@ -86,15 +86,15 @@ Print Relations.
 
 (* begin snippet f2Example *)
 Let f2 : Formula LNN :=
-   (existH 2 (LT Zero (v_ 2) /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%fol.
+   (existH 2 (LT Zero (v#2) /\ natToTerm 4 = Plus (v#2) (v#2)))%fol.
 
 Let f2' : Formula LNN :=
-   (existH 2 (Zero < v_ 2 /\ natToTerm 4 = Plus (v_ 2) (v_ 2)))%nn.
+   (existH 2 (Zero < v#2 /\ natToTerm 4 = Plus (v#2) (v#2)))%nn.
 
-Let f3 := (v_ 0 = Zero \/ existH 1 (v_ 0 = Succ (v_ 1)))%nn.
+Let f3 := (v#0 = Zero \/ existH 1 (v#0 = Succ (v#1)))%nn.
 
 
-Let f4 := (v_ 0 = v_ 1 + v_ 1 <-> v_ 0 = v_ 1 * (natToTerm 2))%nn.
+Let f4 := (v#0 = v#1 + v#1 <-> v#0 = v#1 * (natToTerm 2))%nn.
 (* end snippet f2Example *)
 
 Compute f4. 
@@ -134,19 +134,19 @@ Compute AxmEq5 LNN Languages.Succ_.
 Compute EQ3 LNN. 
 
 
-Check GEN LNN nil (v_ 0 = v_ 0)%nn 1. 
+Check GEN LNN nil (v#0 = v#0)%nn 1. 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%nn 0 Zero%nn. 
+Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
 
 
-Compute FA1 LNN  (v_ 0 = v_ 0)%nn 0 Zero%nn. 
+Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
 
-Compute substituteFormula LNN (v_ 0 = v_ 0)%nn 0 Zero.
+Compute substituteFormula LNN (v#0 = v#0)%nn 0 Zero.
 
 Goal Prf LNN nil
-         (forallH 0 (v_ 0 = v_ 0))%nn  -> 
+         (forallH 0 (v#0 = v#0))%nn  -> 
        Prf LNN nil (Zero = Zero)%nn.
-intros; specialize (FA1 LNN  (v_ 0 = v_ 0)%nn 0 Zero%nn). 
+intros; specialize (FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn). 
 intro H0.
 unfold substituteFormula in H0. simpl in H0.    
 generalize (MP LNN nil nil _ _ H0). 

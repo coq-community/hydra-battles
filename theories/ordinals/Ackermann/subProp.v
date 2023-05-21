@@ -12,6 +12,8 @@ Require Import folReplace.
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
 
+
+
 Section Substitution_Properties.
 
 Variable L : Language.

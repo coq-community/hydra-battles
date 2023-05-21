@@ -65,9 +65,7 @@ Notation app2 f arg1 arg2 :=
 
 Notation "t = u" := (@equal _ t u): nt_scope.
 Notation "t <> u" := (~ t = u)%nt : nt_scope.
-Notation "'v_' i" := (var i) (at level 3) : nt_scope.
-
-
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : nt_scope. 
 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 
@@ -100,9 +98,9 @@ Notation exH' v A := (~ (forallH v (~ A)))%nt.
 
 Section Examples.
 Variable f : Formula. 
-Check (allH 0 1 ,  (f -> v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
+Check (allH 0 1 ,  (f -> v#0 = v#0 -> v#1 = v#1))%nt.
 
-Check (exH 0 1 ,  (v_ 0 = v_ 0 -> v_ 1 = v_ 1))%nt.
+Check (exH 0 1 ,  (v#0 = v#0 -> v#1 = v#1))%nt.
 End Examples.
 
 (** * Basic properties 

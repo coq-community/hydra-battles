@@ -85,7 +85,7 @@ Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
 
-Notation "'v_' i" := (var i) (at level 3) : nn_scope.
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : nn_scope. 
 Notation exH' v A := (~ (forallH v (~ A)))%nn.
 
 

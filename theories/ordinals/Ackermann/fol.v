@@ -9,6 +9,7 @@ This file is Public Domain
 (* begin hide *)
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
   Arith Compare_dec.
+
 Require Import misc  Compat815 (* provisional *).
 (* end hide *)
 
@@ -825,18 +826,27 @@ Reserved Notation "x '<->''' y" (at level 95, no associativity).
 Notation "x \/' y" := (~ x -> y)%fol : fol_scope. 
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
-Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~ (y -> x)))%fol : fol_scope.
 
 
 Notation exH' v A := (~ (forallH v (~ A)))%fol.
 
-Notation "'v_' i" := (var i) (at level 3) : fol_scope.
+
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : fol_scope. 
 
 
+Check (allH 5, v#5 = v#5 -> allH 0, v#0 = v#0)%fol.
+Check ((allH 5, v#5 = v#5) -> allH 0, v#0 = v#0)%fol.
 
 End FolNotations.
 
+
 Export FolNotations. 
+Check (v#5)%fol.
+
+
+
+
 (* end snippet folScope2 *)
 
 (** ** Examples *)
@@ -853,7 +863,8 @@ Let ex3 : Formula L:= (~(~P \/ ~Q))%fol.
 
 Compute ex1. 
 
-Check (forallH 5 (v_ 5 = v_ 5) -> forallH 0 (v_ 0 = v_ 0))%fol.
+
+
 
 
 End LExamples.

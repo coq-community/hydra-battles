@@ -23,7 +23,7 @@ Let SysPrf := SysPrf L.
 Lemma rebindForall (T : System) (a b : nat) (f : Formula):
   ~ In b (freeVarFormula L (forallH a f)) ->
   SysPrf T ((allH a, f) <->
-              (allH b, (substF L f a (v_ b))))%fol.
+              (allH b, (substF L f a v#b)))%fol.
 Proof.
   intros H; eapply (sysExtend L) with (Empty_set Formula).
   - intros x H0; destruct H0.

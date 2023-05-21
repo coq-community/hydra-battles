@@ -37,7 +37,7 @@ Lemma eq_refl : forall L (t:Term L), Prf L nil (t = t)%fol.
 (* end snippet eqRefl *)
 Proof. 
   intros L t.
-  assert (H: Prf L nil (forallH 0 (v_ 0 = v_ 0))%fol). 
+  assert (H: Prf L nil (forallH 0 (v#0 = v#0))%fol). 
   {
     apply GEN.
     - cbn; auto. 
@@ -46,7 +46,7 @@ Proof.
   change (nil:(list (Formula L))) with (nil++nil: list(Formula L)).
   eapply MP.
   2: apply H.
-  generalize (FA1 _ (v_ 0 = v_ 0)%fol 0 t).
+  generalize (FA1 _ (v#0 = v#0)%fol 0 t).
   intro; assumption.   
 Qed. 
 
@@ -122,7 +122,7 @@ Proof. reflexivity. Qed.
 Goal apply _f 
          (Tcons (apply _f  
                        (Tcons (var 1) Tnil))
-            Tnil ) = (f (f (v_ 1)))%fol.
+            Tnil ) = (f (f (v#1)))%fol.
 Proof. reflexivity. Qed. 
 
 (* end snippet smallTerms *)
@@ -132,12 +132,12 @@ Proof. reflexivity. Qed.
 Check (f a)%fol. 
 
 
-Example f3 := (v_ 0 = a \/ exH 1, (v_ 0 = f (v_ 1)))%fol.
+Example f3 := (v#0 = a \/ exH 1, (v#0 = f (v#1)))%fol.
 
-Compute substituteFormula L f3 0 (g (v_ 1))%fol. 
+Compute substituteFormula L f3 0 (g (v#1))%fol. 
 
-Goal substituteFormula L f3 0 (g (v_ 1))%fol =
-       (g (v_ 1) = a \/ exH 2, (g (v_ 1) = f (v_ 2)))%fol.
+Goal substituteFormula L f3 0 (g (v#1))%fol =
+       (g (v#1) = a \/ exH 2, (g (v#1) = f (v#2)))%fol.
 reflexivity. 
 Qed. 
 
@@ -217,7 +217,7 @@ Section Drinkers_theorem.
 
  Lemma D0 : forall i, 
       SysPrf _ (Empty_set _)
-        ( ~ forallH i (P (v_ i)) -> exH i, (~ (P (v_ i))))%fol. 
+        ( ~ forallH i (P (v#i)) -> exH i, (~ (P (v#i))))%fol. 
 Proof.
     intro i; apply cp2, impI, forallI. 
     - intros [f [H H0]]; inversion H0. 
@@ -227,8 +227,8 @@ Proof.
       + inversion H. 
       + now destruct n. 
     - apply nnE; 
-        assert (H:(~ ~ (P (v_ i)))%fol = (* clumsy *)
-                  (substituteFormula _ (~ ~ (P (v_ i))) i (v_ i))%fol). 
+        assert (H:(~ ~ (P (v#i)))%fol = (* clumsy *)
+                  (substituteFormula _ (~ ~ (P (v#i))) i (v#i))%fol). 
       { cbn; destruct (Nat.eq_dec i) as [_ | n].
         auto. 
         now destruct n. 
@@ -238,8 +238,8 @@ Proof.
   Qed. 
   
   Lemma D01 T i : SysPrf _ T
-                    (~ forallH i (P (v_ i)) -> 
-                      exH i, (~ (P (v_ i))))%fol. 
+                    (~ forallH i (P (v#i)) -> 
+                      exH i, (~ (P (v#i))))%fol. 
   Proof. 
     apply sysExtend with (Empty_set _).
     - red; destruct 1.   
@@ -247,17 +247,17 @@ Proof.
   Qed. 
 
   Let f : Formula L :=
-        (exH 0, (P (v_ 0) -> forallH 1 (P (v_ 1))))%fol. 
+        (exH 0, (P (v#0) -> forallH 1 (P (v#1))))%fol. 
 
   Theorem drinkers_thm : SysPrf L (Empty_set _) f. 
   Proof with auto with sets.  
-    pose (F := forallH 1 (P (v_ 1))%fol).
+    pose (F := forallH 1 (P (v#1))%fol).
     unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add (Empty_set _) (~ F)%fol) 
-                (exH 1, (~ (P (v_ 1))))%fol).  
-      { replace (exH 1, (~ (P (v_ 1))))%fol  
-          with (~ (forallH 1 (~ (~  (P (v_ 1))))))%fol. 
+                (exH 1, (~ (P (v#1))))%fol).  
+      { replace (exH 1, (~ (P (v#1))))%fol  
+          with (~ (forallH 1 (~ (~  (P (v#1))))))%fol. 
         - unfold F; eapply impE. 
           + eapply D01. 
           + apply Axm; right; split. 
@@ -272,12 +272,12 @@ Proof.
              subst; now simpl in H0. 
         * cbn; auto. 
         * eapply H. 
-        * apply impI; eapply existI with (v_ 1)%fol.
+        * apply impI; eapply existI with (v#1)%fol.
           cbn; apply impI. 
-          eapply contradiction with (P (v_ 1))%fol.  
+          eapply contradiction with (P v#1)%fol.  
           -- apply Axm; red ...
           -- apply Axm; red ...   
-    - apply impI; apply existI with (v_ 0)%fol. 
+    - apply impI; apply existI with (v#0)%fol. 
       cbn;  apply impI. 
       apply Axm; red; auto with sets. 
   Qed. 

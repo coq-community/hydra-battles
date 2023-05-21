@@ -29,7 +29,7 @@ Lemma eqRefl (T : fol.System L) (a : fol.Term L):
   SysPrf T (a = a)%fol.
 Proof.
   replace (a = a)%fol with 
-    (substituteFormula L (v_ 0 = v_ 0)%fol 0 a).
+    (substituteFormula L (v#0 = v#0)%fol 0 a).
   apply (forallE L).
   - apply sysExtend with (Empty_set (fol.Formula L)).
     + intros f H; destruct H.
@@ -49,7 +49,7 @@ Proof.
                          | S _ => b
                          end) in *.
   apply (impE L) with
-    (subAllFormula L (v_ 0 = v_ 1 -> v_ 1 = v_ 0)%fol
+    (subAllFormula L (v#0 = v#1 -> v#1 = v#0)%fol
        (fun x : nat =>
         match le_lt_dec 2 x with
         | left _ => var x
@@ -80,7 +80,7 @@ Proof.
   set (m x:= match x with | O => a | 1 => b  | _ => c  end) in *.
   apply (impE L) with
     (subAllFormula L
-       (v_ 0 = v_ 1 -> v_ 1 = v_ 2 -> v_ 0 = v_ 2)%fol
+       (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol
        (fun x : nat =>
         match le_lt_dec 3 x with
         | left _ => var x
@@ -264,7 +264,7 @@ Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
         (subAllFormula L
            (nat_rec (fun _ : nat => fol.Formula L) f0
               (fun (n : nat) (Hrecn : fol.Formula L) =>
-                 (v_ (n + n) = v_ (S (n + n)) -> Hrecn)%fol
+                 (v#(n + n) = v#(S (n + n)) -> Hrecn)%fol
                  )
               n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.

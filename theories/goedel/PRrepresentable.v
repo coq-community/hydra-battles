@@ -45,14 +45,14 @@ Definition beta (a z : nat) : nat :=
 
 Definition betaFormula : Formula :=
 (exH 3,
-  v_ 3 < Succ v_ 2 /\
+  v#3 < Succ v#2 /\
    exH 4,
-     (v_ 4 < Succ v_ 2 /\
-      (v_ 3 + v_ 4) * Succ (v_ 3 + v_ 4) + natToTerm 2 * v_ 3 =
-      natToTerm 2 * v_ 2 /\
-      v_ 0 < Succ (v_ 3 * Succ v_ 1) /\
-      exH 5, (v_ 5 < Succ v_ 4 /\ 
-                v_ 0 +  v_ 5 * Succ (v_ 3 * Succ v_ 1) = v_ 4))
+     (v#4 < Succ v#2 /\
+      (v#3 + v#4) * Succ (v#3 + v#4) + natToTerm 2 * v#3 =
+      natToTerm 2 * v#2 /\
+      v#0 < Succ (v#3 * Succ v#1) /\
+      exH 5, (v#5 < Succ v#4 /\ 
+                v#0 +  v#5 * Succ (v#3 * Succ v#1) = v#4))
 )%nn.
  
 Lemma betaRepresentable : Representable 2 beta betaFormula.
@@ -122,16 +122,16 @@ Proof.
         simpl in H1; elim (closedNatToTerm _ _ H1).
      -- apply impE with (LT (var 3) (natToTerm (S a))).
      ++ apply impE with
-        (exH 4, v_ 4 < natToTerm (S a) 
+        (exH 4, v#4 < natToTerm (S a) 
                 /\
-                (v_ 3 + v_ 4) * Succ (v_ 3 + v_ 4) + 
-                    natToTerm 2 * v_ 3 = natToTerm 2 * natToTerm a 
+                (v#3 + v#4) * Succ (v#3 + v#4) + 
+                    natToTerm 2 * v#3 = natToTerm 2 * natToTerm a 
                 /\
-                  v_ 0 < Succ (v_ 3 * Succ (natToTerm a0)) 
+                  v#0 < Succ (v#3 * Succ (natToTerm a0)) 
                 /\
-                  (exH 5, v_ 5 < Succ v_ 4 /\ 
-                            v_ 0 + v_ 5 * Succ (v_ 3 * Succ (natToTerm a0)) 
-                            = v_ 4))%nn.
+                  (exH 5, v#5 < Succ v#4 /\ 
+                            v#0 + v#5 * Succ (v#3 * Succ (natToTerm a0)) 
+                            = v#4))%nn.
  
         ** apply sysWeaken. apply impI. apply existSys.
            --- apply closedNN.

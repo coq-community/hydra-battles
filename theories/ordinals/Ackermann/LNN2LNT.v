@@ -133,9 +133,9 @@ Qed.
 
 (** * Translation of formulas *)
 
-(** ** Translation of [(v_ 0 < v_ 1)%nn] *)
+(** ** Translation of [(v#0 < v#1)%nn] *)
 
-Definition LTFormula := (exH 2, v_ 0 + Succ v_ 2 = v_ 1)%nt.
+Definition LTFormula := (exH 2, v#0 + Succ v#2 = v#1)%nt.
 
 (** ** Translation of [(t < t')%nn] *)
 
@@ -717,7 +717,7 @@ Proof.
         + apply impRefl.
         + eapply iffTrans with
             (exH 4,
-               (substF LNT (v_ 2 + Succ (v_ 3) = v_ 0)%nt 3 (v_ 4)))%nt.
+               (substF LNT (v#2 + Succ v#3 = v#0)%nt 3 (v#4)))%nt.
           * apply (rebindExist LNT).
             simpl in |- *. intro H0; decompose sum H0.
             -- discriminate H1.

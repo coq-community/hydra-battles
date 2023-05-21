@@ -623,7 +623,7 @@ Proof.
                          (fun a b : Terms L (arityR L R) => A a b)
                          (nVars L (arityR L R)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         (v_ (n + n)%nat = v_ (S (n+n))%nat -> Hrecn)%fol)
+                         (v#(n + n)%nat = v#(S (n+n))%nat -> Hrecn)%fol)
                          
                       (arityR L R)))).
         { generalize (arityR L R).
@@ -681,7 +681,7 @@ Proof.
                          (fun a b : Terms L (arityF L f) => A a b)
                          (nVars L (arityF L f)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         (v_ (n + n)%nat = v_ (S (n + n))%nat -> Hrecn)%fol)
+                         (v#(n + n)%nat = v#(S (n + n))%nat -> Hrecn)%fol)
                            (arityF L f)))).
         { generalize (arityF L f).
           simple induction n.
@@ -721,8 +721,8 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (v_ O <> v_ 0)%fol.
-  intros H0; assert (H1: interpFormula value (nnTranslate (v_ O <> v_ 0)%fol)).
+  intros H; unfold Consistent; exists (v#O <> v#0)%fol.
+  intros H0; assert (H1: interpFormula value (nnTranslate (v#O <> v#0)%fol)).
   { apply preserveValue.
     assumption.
     auto.

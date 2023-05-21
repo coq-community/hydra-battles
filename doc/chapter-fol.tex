@@ -100,7 +100,7 @@ with a few abbreviations\,\footnote{Technically, these abbreviations take the fo
 \inputsnippets{fol/FolFull, fol/folPlus}
 
 \subsection{Examples}
-\label{sect:folFormExamples}
+
 
 
 
@@ -113,6 +113,7 @@ Let us give a few examples of first-order formulas over $L$.
 \item $ \forall v_0, v_0=a \vee \exists\;v_1,\, v_0= f(v_1)$
 \end{enumerate}
 
+\label{sect:folFormExamples}
 
 \inputsnippets{FolExamples/FormExamples}
 
@@ -180,7 +181,11 @@ parsed or printed.
 
 \section{Computing and reasoning on first-order formulas}
 
+\subsection{On variables}
 
+\begin{todo}
+  Difference from HOAS. Free and bound occurrences.
+\end{todo}
 
 \subsection{Decidability of equality}
 Let $L$ be a language, and let us assume that equality 
@@ -198,6 +203,10 @@ Because of dependent types, the proofs are quite long and technical. The reader 
 fol/formDec3,fol/formDec4,fol/formDec5}
 
 \subsection{Induction principles on formula depth}
+
+
+\inputsnippets{FolExamples/substNotStructural}
+
 
 The purpose of this section is to present ways of proving 
 properties of any formula $a$ (or defining functions over the type of formulas).
@@ -269,6 +278,12 @@ Let us for instance have a look  at \texttt{Formula\_depth\_ind2}. Its applicati
 
 \subsection{Free variables and substitutions}
 
+\begin{todo}
+Link to folProp.v
+\end{todo}
+
+
+ 
 Section \texttt{Free\_Variables} 
 of~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} defines the list of free variables which occur in a term (respectively in a formula).
 
@@ -281,6 +296,11 @@ binds all the free variables of a formula with universal quantifiers.
 
 \inputsnippets{FolExamples/freeVarExamples}
 
+\subsection{Multiple substitutions}
+
+\begin{todo}
+Link to subAll.v
+\end{todo}
 
 \section{Languages for Arithmetic}
 

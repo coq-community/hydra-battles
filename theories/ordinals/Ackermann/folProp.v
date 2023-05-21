@@ -852,7 +852,8 @@ End Substitution_Properties.
 
 End Substitution.
   
-Definition Sentence (f:Formula) := (forall v : nat, ~ In v (freeVarFormula f)).
+Definition Sentence (f:Formula) := 
+   (forall v : nat, ~ In v (freeVarFormula f)).
 
 End Fol_Properties.
 
