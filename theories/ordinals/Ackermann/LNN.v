@@ -61,15 +61,6 @@ Infix "->" := (impH): nn_scope.
 Notation "~ A" := (@notH _ A): nn_scope. 
 Notation "A <-> B" := (@iffH _ A B): nn_scope.
 
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
-
 Notation "t = u" := (@equal _ t u): nn_scope.
 Notation "t <> u" := (~ t = u)%nn : nn_scope.
 
@@ -87,7 +78,6 @@ Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
 
 Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : nn_scope. 
 Notation exH' v A := (~ (forallH v (~ A)))%nn.
-
 
 Notation "'exH' x .. y , p" := (@existH  LNN x .. (@existH LNN y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 

@@ -31,11 +31,11 @@ Variable L : Language.
 
 Inductive Term : Set :=
   | var : nat -> Term
-  | apply : forall f : Functions L, Terms  (arityF L f) -> Term
+  | apply : forall f : Functions L, Terms (arityF L f) -> Term
 with Terms : nat -> Set :=
   | Tnil : Terms 0
   | Tcons : forall n : nat, Term -> Terms n -> Terms (S n).
- (* end snippet TermDef *)
+(* end snippet TermDef *)
 
 
 
@@ -51,8 +51,7 @@ Scheme Term_Terms_rec_full := Induction for Term  Sort Set
 (* begin snippet FormulaDef *)
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
-  | atomic : forall r : Relations L, 
-      Terms (arityR L r) -> Formula
+  | atomic : forall r : Relations L, Terms (arityR L r) -> Formula
   | impH : Formula -> Formula -> Formula
   | notH : Formula -> Formula
   | forallH : nat -> Formula -> Formula.
@@ -791,22 +790,12 @@ Infix "/\" := (andH):fol_scope.
 Infix "->" := (impH): fol_scope.
 Notation "~ A" := (@notH _ A): fol_scope. 
 Notation "A <-> B" := (@iffH _ A B): fol_scope.
+
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : fol_scope. 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
-
 Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
-
-
-
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
 
 Notation "t = u" := (@equal _ t u): fol_scope.
 Notation "t <> u" := (~ t = u)%fol : fol_scope.
@@ -827,27 +816,15 @@ Notation "x \/' y" := (~ x -> y)%fol : fol_scope.
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~ (y -> x)))%fol : fol_scope.
-
-
 Notation exH' v A := (~ (forallH v (~ A)))%fol.
 
 
-Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : fol_scope. 
-
-
-Check (allH 5, v#5 = v#5 -> allH 0, v#0 = v#0)%fol.
-Check ((allH 5, v#5 = v#5) -> allH 0, v#0 = v#0)%fol.
-
 End FolNotations.
-
+(* end snippet folScope2 *)
 
 Export FolNotations. 
 Check (v#5)%fol.
 
-
-
-
-(* end snippet folScope2 *)
 
 (** ** Examples *)
 

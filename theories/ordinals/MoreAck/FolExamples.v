@@ -87,20 +87,8 @@ Module Toy.
  Definition L := language Rel Fun arityR arityF.
 (* end snippet ToyDef *)
 
-(* begin snippet TermExamples1 *)
-Example t0 : Term L :=  apply L a_ Tnil.
 
-Example t1 : Term L := apply L f_ (Tcons t0 Tnil). 
 
-Example t2 : Term L := apply L h_ (Tcons t1 (Tcons t0 Tnil)).
-
-Fail Example t3 : Term L := apply L h_ (Tcons t0 Tnil). 
-
-(* end snippet TermExamples1 *)
-
-(* begin snippet beforeAbbreviations *)
-Compute t2. (* before introducing new notations *)
-(* end snippet beforeAbbreviations *)
 
 
 (* begin snippet termAbbreviations:: no-out *)
@@ -109,34 +97,31 @@ Notation b := (apply L b_ Tnil).
 Notation f t := (apply L f_ (Tcons t Tnil)).
 Notation g t := (apply L g_ (Tcons t Tnil)).
 Notation h t1 t2 := (apply L h_ (Tcons t1 (Tcons t2 Tnil))).
+(* end snippet termAbbreviations *)
+
+(* begin snippet TermExamples1 *)
+Example t0 : Term L :=  a.
+
+Example t1 : Term L := f t0.
+
+Example t2 : Term L := h t1 t0.
+
+Example t3 : Term L := h (f (var 0)) (g (var 1)).
+
+Fail Example t4 : Term L := h t0.
+(* end snippet TermExamples1 *)
+
 
 Goal t0 = a. Proof. reflexivity. Qed. 
 Goal t1 = f a. Proof. reflexivity. Qed. 
 Goal t2 = h (f a) a. Proof. reflexivity. Qed. 
-(* end snippet termAbbreviations *)
+
 
 (* begin snippet NowItsBetter *)
 Compute t2. 
 (* end snippet NowItsBetter *)
 
-(* begin snippet FormExamples *)
-Example F1 : Formula L := atomic L R_ (Tcons a (Tcons b Tnil)).
 
-Example F2 : Formula L := forallH 0 
-                            (forallH 1 
-                               (impH 
-                                  (atomic L R_
-                                     (Tcons (var 0)
-                                        (Tcons (var 1) Tnil))) 
-                                  (atomic L R_ 
-                                     (Tcons (var 1)
-                                        (Tcons (var 0) Tnil))))).
-Example F3 : Formula L := 
-  forallH 0
-    (orH (equal (var 0) a)
-       (existH 1 (equal (var 0) (f (var 1))))).
-
-(* end snippet FormExamples *)
 
 (** Abreviations for the toy language L *)
 (*  (atomic _A Tnil) (causes further errors ) *)
@@ -146,36 +131,63 @@ Example F3 : Formula L :=
   Notation B := (atomic L B_ Tnil). 
   Notation C := (atomic L C_ Tnil). 
   Notation P t := (atomic L P_ (Tcons t Tnil)).
-  Notation R t1 t2 :=
-    (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
-
-Example F4: Formula L := (v#0 = a \/ exH 1, v#0 = f v#1)%fol. 
-Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
+  Notation R t1 t2 := (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
 (* end snippet toyNotationForm *)
 
+(* begin snippet FormExamples *)
+Example F1 : Formula L :=  R a b.
+
+Example F2 : Formula L := 
+  forallH 0 (forallH 1 
+               (impH (R (var 0) (var 1)) (R (var 1) (var 0)))).
+
+Example F3 : Formula L := 
+  forallH 0 (orH (equal (var 0) a) 
+               (existH 1 (equal (var 0) (f (var 1))))).
+
+Example F4: Formula L :=
+  orH (forallH 1 (equal (var 0) (var 1)))
+    (existH 0 (existH 1 (notH (equal (var 0) (var 1))))).
+(* end snippet FormExamples *)
 
 (* begin snippet toyNotationForm2 *)
-Goal F1 = (R a b)%fol. Proof refl_equal. 
+Print F1.
 
-Goal F2 = (allH 0 1, R v#0 v#1 -> R v#1 v#0)%fol. 
-Proof refl_equal.
+Print F2. 
 
-Goal F3 = (allH 0, v#0 = a \/ exH 1, v#0 = f v#1)%fol.  
-Proof refl_equal.
+Print F3.
+
+Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
+(* end snippet toyNotationForm2 *)
 
 (** The following computation expands some derived connectives and 
     quantifiers. Within [fol_scope], we print them with a 
     similar syntax (with primed symbols) *)
 
-Compute (F3 \/ F1)%fol.
+(* begin snippet toyNotationForm3 *)
+Section PrimedSymbols. 
+
+Compute (F3 /\ F1)%fol.
 
 Goal (F3 \/ F1)%fol = (~ F3 -> F1)%fol.
-Proof.  reflexivity. Qed. 
+ reflexivity. 
+Qed. 
 
-(* end snippet toyNotationForm2 *)
+Definition F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
+Print F6. 
 
-(* begin snippet boundVars *)
-Goal (allH 1, v#1 = a)%fol <> (allH 0, v#0 = a)%fol.
+Compute F6. 
+
+#[local] Unset Printing Notations. 
+Print F6. 
+Compute F6. 
+
+End PrimedSymbols. 
+(* end snippet toyNotationForm3 *)
+
+
+(* begin snippet boundVars:: no-out *)
+Goal forallH 1 (equal (var 1) a)  <> forallH 0 (equal (var 0) a).
   discriminate. 
 Qed. 
 (* end snippet boundVars *)

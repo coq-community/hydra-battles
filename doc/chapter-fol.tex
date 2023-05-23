@@ -3,7 +3,17 @@
 
 \section{Introduction}
 
-This chapter is devoted to the presentation to  data structures for representing first order formulas over a ranked alphabet, and the basic functions and predicates over these types.
+This chapter is devoted to the presentation to  data structures for representing first order formulas over a ranked alphabet, and the basic functions and predicates over these types:
+
+\begin{itemize}
+\item Abstract syntax of terms and formulas over a ranked alphabet composed of function and relation symbols.
+\item Induction principles over terms and formulas.
+\item Definition and main properties of substitution of terms to variables.
+\end{itemize}
+
+
+
+
 Although all the following constructions come directly from~\cite{Goedel}, we introduced minor changes (mainly syntax) to
 take into account recent changes in \coq(new constructions, tactics, notations, etc.).
 
@@ -12,7 +22,7 @@ take into account recent changes in \coq(new constructions, tactics, notations, 
 
 \subsection{Languages}
 
-A \emph{language} is a structure composed of relation and function symbols, each symbol is given an \emph{arity} (number of arguments)\,\footnote{As suggested by Russel O'Connor in~\cite{OConnor05}, we consider two arity functions instead of a function defined on the sum type \texttt{Relations + Functions}}.
+A \emph{language} is a structure composed of relation and function symbols, each symbol is given an \emph{arity} (number of arguments)\,\footnote{As suggested by Russel O'Connor in~\cite{OConnor05}, we consider two arity functions instead of a single function defined on the sum type \texttt{Relations + Functions}.}.
 
 From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 \inputsnippets{fol/LanguageDef} 
@@ -39,18 +49,111 @@ $n$-\emph{tuples of terms} over $L$.
 
 \inputsnippets{fol/TermDef} 
 
-
-
-\begin{remark}[Variables]
-In O'Connor's formalization of first-order logic,  variables are \gallina terms of the form (\texttt{var $L$ $i$}), where $L$ is
- a language and $i$ a natural number. 
-Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we   respect this representation, in order not to break long proof scripts which use this representation (please look at \cite{OConnor05} for a related discussion).
-  
-\end{remark}
-
 \begin{remark}
 This representation of terms uses mutually inductive data-types instead of list of terms. Please see also Remark~\ref{hydra:mutually-inductive-vs-lists}.
 \end{remark}
+
+
+\begin{remark}[Variables]
+In O'Connor's formalization of first-order logic,  variables are 
+just natural numbers, and the \emph{coercion} from
+\texttt{nat} to \texttt{Term L} is the constructor (\texttt{@var $L$}).
+Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we still the data structures of~\cite{Goedel}, in order not to break long proof scripts which use this representation (please look at \cite{OConnor05} for a related discussion).
+  
+\end{remark}
+
+
+
+
+\subsubsection{Examples}
+\label{sect:folTermExamples}
+
+
+Let us define some \gallina terms over our toy language, respecively corresponding to the terms $a$,
+$f(a)$, and $h(f(a),a)$.
+
+First, in order to make terms on $L$ more readable, we introduce a few abbreviations.
+
+
+From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}.
+
+\inputsnippets{FolExamples/termAbbreviations}
+
+\inputsnippets{FolExamples/TermExamples1} 
+
+\begin{remark}
+The fourth ``term'' \texttt{t4} is not well formed, since the arity of $h$ is not respected\,\footnote{Strictly speaking, it's not a (well typed) term!}.
+\end{remark}
+
+\subsubsection{Other Languages}
+
+\begin{todo}
+Link to the chapter which presents \texttt{LNT} and \texttt{LNN}.
+\end{todo}
+
+\subsection{First-order formulas}
+
+
+
+The type of first order formulas over $L$ is defined 
+in~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} as an inductive data type.
+
+\inputsnippets{fol/FormulaDef}
+
+\begin{remark}
+The type \texttt{Formula} (over $L$) has only five constructors,
+respectively bound to term equalities $t_1=t_2$, atomic formulas of the form $(r\;t_1\;\dots\;t_n)$, implications $(F \arrow G)$, negations $({\sim}F)$, and universal quantifications $(\forall\,i, F)$.  
+
+In~\cite{Goedel}, no \emph{constructors} are associated with
+disjunction, conjonction, logical equivalence and existential quantifier. These constructs are formalized through \emph{definitions}\footnote{Please keep in mind that we are considering a classical logic.}.
+
+\inputsnippets{fol/FolFull, fol/folPlus}
+
+This convention allows the user to reduce to 5 (instead of 10) the number of cases in ''\texttt{match F with \dots}'' constructs. On the other hand, some computation may expand a connective like $\vee$ or
+$\wedge$, or an existential quantification into a ``basic'' formula (see Sect.\vref{sect:fol-issue}).
+\end{remark}
+
+\subsection{Examples}
+
+
+
+
+Let us give a few examples of first-order formulas over $L$.
+\label{fol:examplesf1f2f3}
+\begin{enumerate}
+\item $R\;a\;b$
+\item $\forall v_0\; v_1, R\;v_0\;v_1 \arrow R\;v_1\;v_0$
+\item $ \forall v_0, v_0=a \vee \exists\;v_1,\, v_0= f(v_1)$
+\item $(\forall v_1, v_0 = v_1) \vee \exists\,v_0\,v_1, v_0 \not= v_1$
+\end{enumerate}
+
+First, we define abbreviations for atomic formulas over $L$.
+
+\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+
+\inputsnippets{FolExamples/toyNotationForm}
+
+\label{sec:fol-atomic-notations}
+\label{sect:folFormExamples}
+
+\inputsnippets{FolExamples/FormExamples}
+
+
+% The following interactions show how the formulas 
+% of~\ref{sect:folFormExamples} may be 
+% parsed or printed. 
+
+% \noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+
+% \vspace{6pt}
+
+% \inputsnippets{FolExamples/toyNotationForm2}
+
+
+
+
+
+
 
 
 \subsubsection{Bound variables}
@@ -65,6 +168,8 @@ This representation of terms uses mutually inductive data-types instead of list 
   
 \inputsnippets{FolExamples/boundVars}  
 
+In the formula \texttt{F4} \vpageref[above]{sect:folFormExamples}, the  term \texttt{(var 0)} occurs freely and also inside the scope of a quantifier.
+
   \begin{todo}
    Link to the lemmas which attest the equivalence of these formulas (properties of substitution, logical equivalence).
   \end{todo}
@@ -75,106 +180,55 @@ This representation of terms uses mutually inductive data-types instead of list 
  Use a HOAS representation for FOL terms and formulas (without breaking proof scripts).   
   \end{project}
 
-\subsubsection{Examples}
-\label{sect:folTermExamples}
-
-Let us define some \gallina terms over our toy language, respecively corresponding to the terms $a$,
-$f(a)$, and $h(f(a),a)$. The fourth ``term'' is not well formed, since the arity of $h$ is not respected\,\footnote{Strictly speaking, it's not a (well typed) term!}.
-
-\inputsnippets{FolExamples/TermExamples1} 
 
 
-
-\subsection{Formulas}
-
-
-
-The type of first order formulas over $L$ is defined 
-in~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} as an inductive data type.
-
-\inputsnippets{fol/FormulaDef}
-
-The  abstract syntax of first-order formulas is completed 
-with a few abbreviations\,\footnote{Technically, these abbreviations take the form of \emph{global definitions}}. Note that we are studying \emph{classical} first-order logic, for instance the existential quantifier is derived from the universal one through negation. 
-
-\inputsnippets{fol/FolFull, fol/folPlus}
-
-\subsection{Examples}
-
-
-
-
-Let us give a few examples of first-order formulas over $L$.
-
-\label{fol:examplesf1f2f3}
-\begin{enumerate}
-\item $R\;a\;b$
-\item $\forall v_0\; v_1, R\;v_0\;v_1 \leftrightarrow R\;v_1\;v_0$
-\item $ \forall v_0, v_0=a \vee \exists\;v_1,\, v_0= f(v_1)$
-\end{enumerate}
-
-\label{sect:folFormExamples}
-
-\inputsnippets{FolExamples/FormExamples}
-
-
-\section{Simplified notations for terms and formulas}
+\section{A notation scope for first-order terms and formulas}
 \label{sect:fol-notations}
 
 
-
  We use \coq's \texttt{Notation} features to print and parse terms and formulas  in a more readable form.
+To this purpose, we build \texttt{fol\_scope}, a  notation scope
+where the main connectives and quantifiers get a syntax close to \coq's.  Additionnally, a term of the form \texttt{(var $i$)} is
+just written \texttt{v\#$i$}.
 
- \subsection{Parsing and printing terms}
- \label{sec:fol-term-notations}
-
-Let us consider the term $t_2$ of Sect\ref{sect:folTermExamples}~. Its normal form is quite hard to read:
-
-\inputsnippets{FolExamples/beforeAbbreviations}
-
-We may use \coq's abbreviation feature  to print and parse $L$-terms with a more natural concrete syntax.
-
-\inputsnippets{FolExamples/termAbbreviations, FolExamples/NowItsBetter}
+\inputsnippets{fol/folScope1}
 
 
-
-
-
-\subsection{Parsing and printing first-order formulas}
-
-In order to make the first order formulas more readable, we define  a  notation scope called \texttt{fol\_scope}, which contains 
-notations for connectives and quantifiers. The \texttt{\%fol} delimiter 
+The \texttt{\%fol} delimiter 
 allows the user to distinguish \texttt{FOL} connectives from their \coq equivalent.
+\emph{We discourage the reader from \emph{opening} \texttt{fol\_scope} and similar scopes : \texttt{nn\_scope}, \texttt{nt\_scope}, which would make disappear the \texttt{\%fol} suffix from the first-order formulas}.
 
 
 \vspace{6pt}
 
 \noindent From \href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 
-\inputsnippets{fol/folScope1}
+\inputsnippets{FolExamples/toyNotationForm2}
 
-The following notations are used (when printing) when  some computation 
-    expands a disjunction, conjuction, etc. 
-    in terms of implication and negation.
+
+\subsection{The issue with derived constructions}
+\label{sect:fol-issue}
+
+
+The connectives and quantifiers $\vee$, $\wedge$, $\exists$, etc. may raise an issue when printing computed formulas.
+For instance, a formula like $F \wedge G$ could be transformed into $\sim(\sim F \vee \sim G)$,  and even
+into $\sim(\sim\sim F \arrow \sim B)$, which would 
+cause serious problems of readability.
+
+In such a case, we propose to print such a formula as $F \wedge' G$, to make it syntactically distinct but very similar to $F \wedge G$.
 
 \inputsnippets{fol/folScope2}
 
-\subsubsection{Simplified notations for atomic formulas}
-\label{sec:fol-atomic-notations}
+The following examples show how the primed connectors 
+and quantifiers behave with respect to convertibility and 
+input/output.
 
-In addition to \texttt{fol\_scope}, we can introduce a few abbreviations specific to our toy language.
 
-\inputsnippets{FolExamples/toyNotationForm}
+\inputsnippets{FolExamples/toyNotationForm3}
 
-The following interactions show how the formulas 
-of~\ref{sect:folFormExamples} may be 
-parsed or printed. 
 
-\noindent From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
 
-\vspace{6pt}
 
-\inputsnippets{FolExamples/toyNotationForm2}
 
 
 
