@@ -3,6 +3,7 @@
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
 Import FolNotations.
+Import NNnotations. 
 
 Section bare_syntax. 
 (* begin snippet uglyF0 *)

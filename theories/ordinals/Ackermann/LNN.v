@@ -92,7 +92,7 @@ Infix "*" := Times: nn_scope.
 Infix "<" := LT: nn_scope.
 End NNnotations.
 
-Export NNnotations. 
+Import NNnotations. 
 
 
 

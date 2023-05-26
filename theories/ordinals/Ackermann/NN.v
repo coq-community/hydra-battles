@@ -12,7 +12,7 @@ From Coq Require Import Arith Lia  Ensembles List.
 Require Import folProp subAll  folLogic3 Languages.
 Require Export LNN.
 From hydras Require Import Compat815 NewNotations.
-
+Import NNnotations. 
 (** * Axioms of [NN] *)
 Section NN.
 

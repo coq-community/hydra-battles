@@ -11,6 +11,7 @@ Require Import folProp  folProof  subProp  folLogic3  folReplace  NN
   PAtheory.
 Require Export LNN2LNT.
 Require Import subAll ListExt.
+Import NNnotations.
 
 Lemma NN2PA (f : fol.Formula LNN):
   folProof.SysPrf LNN NN f -> SysPrf PA (LNN2LNT_formula f). 

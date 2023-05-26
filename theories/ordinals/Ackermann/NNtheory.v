@@ -5,6 +5,7 @@ Require Import folProp.
 Require Import subProp.
 Require Export NN.
 From hydras Require Import Compat815.
+Import NNnotations. 
 
 Lemma natNE (a b : nat) :
   a <> b -> SysPrf NN (natToTerm a <> natToTerm b)%nn.

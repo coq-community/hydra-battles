@@ -8,6 +8,7 @@ From Coq Require Import Arith List.
 
 Require Import ListExt folProp subProp extEqualNat Languages LNN.
 Require Import NewNotations.
+Import NNnotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 

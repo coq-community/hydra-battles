@@ -22,7 +22,7 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
-
+Import NNnotations. 
 
 #[local] Arguments apply _ _ _ : clear implicits.
 

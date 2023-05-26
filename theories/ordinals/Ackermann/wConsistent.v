@@ -3,6 +3,7 @@ Require Import Arith.
 Require Import folProp.
 Require Import LNN.
 Require Import Coq.Lists.List.
+Import NNnotations. 
 
 Definition wConsistent (T : System) :=
   forall (f : Formula) (v : nat),
