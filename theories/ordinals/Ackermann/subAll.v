@@ -8,6 +8,7 @@ From Coq Require Import Ensembles List Arith  Peano_dec.
 Require Import ListExt folProof folLogic folLogic2 folProp.
 Require Import folReplace  subProp Compat815.
 From Coq Require Import Lia.
+Import FolNotations.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps. 

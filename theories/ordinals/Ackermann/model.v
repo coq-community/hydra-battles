@@ -11,6 +11,7 @@ Require Import folProof.
 Require Import folProp.
 Require Import Peano_dec.
 Require Import misc.
+Import FolNotations.
 Require Import NewNotations.
 
 Section Model_Theory.

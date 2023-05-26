@@ -2,6 +2,7 @@
 
 From Coq Require Import Arith Lists.List.
 Require Import fol folProp Languages LNN folProof.
+Import FolNotations.
 
 Section bare_syntax. 
 (* begin snippet uglyF0 *)

@@ -12,6 +12,7 @@ Require Export folLogic folLogic2.
 Require Import subProp folReplace subAll misc.
 Require Import Compat815.
 Require Export MoreLibHyps. 
+Import FolNotations.
 
 Section Equality_Logic_Rules.
 

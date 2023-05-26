@@ -8,6 +8,7 @@ From Coq Require Import Ensembles List.
 
 Require Import folProof.
 Require Import folProp.
+Import FolNotations.
 
 Section Deduction_Theorem.
 

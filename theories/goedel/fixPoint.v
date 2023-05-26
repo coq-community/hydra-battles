@@ -18,6 +18,8 @@ From Coq Require Import List.
 From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import expressible.
 From hydras Require Import Compat815.
+Import FolNotations.
+
 
 Definition subStar (a v n : nat) : nat := codeSubFormula a v (codeNatToTerm n).
 

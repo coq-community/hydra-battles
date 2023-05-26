@@ -822,7 +822,7 @@ Notation exH' v A := (~ (forallH v (~ A)))%fol.
 End FolNotations.
 (* end snippet folScope2 *)
 
-Export FolNotations. 
+Import FolNotations. 
 Check (v#5)%fol.
 
 

@@ -7,7 +7,7 @@
 From Coq Require Import Ensembles List  Arith.
 
 Require Import ListExt folProp folProof folLogic subProp folReplace.
-
+Import FolNotations.
 
 Section More_Logic_Rules.
 

@@ -9,6 +9,7 @@ From Coq Require Import Ensembles Lists.List Arith.
 
 Require Export fol.
 Require Import folProp.
+Import FolNotations.
 
 Section ProofH.
 

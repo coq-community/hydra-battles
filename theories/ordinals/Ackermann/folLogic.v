@@ -6,6 +6,7 @@
 From Coq Require Import Ensembles List.
 
 Require Import ListExt folProof folProp Deduction.
+Import FolNotations.
 
 Section Logic_Rules.
 
