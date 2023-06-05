@@ -148,6 +148,10 @@ Example F3 : Formula L :=
 Example F4: Formula L :=
   orH (forallH 1 (equal (var 0) (var 1)))
     (existH 0 (existH 1 (notH (equal (var 0) (var 1))))).
+
+Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
+
+Example F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
 (* end snippet FormExamples *)
 
 (* begin snippet toyNotationForm2 *)
@@ -157,7 +161,6 @@ Print F2.
 
 Print F3.
 
-Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
 (* end snippet toyNotationForm2 *)
 
 (** The following computation expands some derived connectives and 
@@ -169,11 +172,12 @@ Section PrimedSymbols.
 
 Compute (F3 /\ F1)%fol.
 
-Goal (F3 \/ F1)%fol = (~ F3 -> F1)%fol.
+Goal (F3 /\ F1)%fol = (~(~ ~ F3 -> ~ F1))%fol.
  reflexivity. 
 Qed. 
+(* end snippet toyNotationForm3 *)
 
-Definition F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
+(* begin snippet toyNotationForm4 *)
 Print F6. 
 
 Compute F6. 
@@ -183,11 +187,11 @@ Print F6.
 Compute F6. 
 
 End PrimedSymbols. 
-(* end snippet toyNotationForm3 *)
+(* end snippet toyNotationForm4 *)
 
 
 (* begin snippet boundVars:: no-out *)
-Goal forallH 1 (equal (var 1) a)  <> forallH 0 (equal (var 0) a).
+Goal forallH 1 (equal (var 1) a) <> forallH 0 (equal (var 0) a).
   discriminate. 
 Qed. 
 (* end snippet boundVars *)
@@ -210,6 +214,18 @@ Goal apply L f_
 Proof. reflexivity. Qed. 
 
 (* end snippet smallTerms *)
+
+Definition Ldec : language_decidable L. 
+Proof.   
+  split; destruct x, y; 
+    ((left; reflexivity) || (right; discriminate)).  
+Defined.
+
+(** Formula_eqdec is opaque ! *)
+Compute match formula_eqdec L Ldec (~ (v#1 = v#0  \/ P v#1))%fol 
+                      (v#1 <> v#0 /\ ~ (P v#1))%fol
+        with left _ => true | _ => false end.
+
 
 
 
@@ -239,14 +255,26 @@ Compute substituteFormula L F5 0 (f a).
 Locate f. 
 
 
-(* begin snippet substNotStructural *)
+
 Section OnSubstF.
-  Let G : Formula L := (v#1 <> f v#2)%fol.
- Let F : Formula L := (exH 2, G)%fol.
- Compute substF L  F 1 (f v#2)%fol. 
- Compute (exH 2, substF L G 1 (f v#2))%fol.
+(* begin snippet substExample1 *)
+  Let F : Formula L := (exH 2, v#1 <> f v#2)%fol.
+  Let F' := substF L F 1 (f v#2)%fol. 
+  Compute F'.
+(* end snippet substExample1 *)
+(* begin snippet substExample2 *)
+  Let H : Formula L := (v#1 <> f v#2)%fol.
+  Goal F' <> (exH 2, substF L H 1 (f v#2) )%fol.
+  discriminate. 
+  Qed. 
+
+  Let G : Formula L := (v#1 <> f v#3)%fol.
+  Goal F' = (exH 3, substF L G 1 (f v#2) )%fol.
+    reflexivity.
+  Qed.
+(* end snippet substExample2 *)
 End OnSubstF.  
-(* end snippet substNotStructural *)
+
 
 Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (f -> g)%fol ->
                         Prf L H2 f ->  Prf L H g.
@@ -410,21 +438,22 @@ Print t1_0.
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
-Let f1 : Formula LNN :=
-      forallH 0 
-        (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
-           (existH 1 (equal  (var 0)
-                          (apply LNN Succ_ 
-                             (Tcons  (var 1) Tnil))))).
+Example f1 : Formula LNN :=
+  forallH 0 
+    (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
+       (existH 1 (equal  (var 0)
+                    (apply LNN Succ_ 
+                       (Tcons  (var 1) Tnil))))).
 
-Let f2 : Formula LNN :=
-(existH 1 (equal  (var 0)
-                          (apply LNN Succ_ 
-                             (Tcons (var 1) Tnil )))).
+Example f2 : Formula LNN :=
+  (existH 1 (equal  (var 0)
+               (apply LNN Succ_ 
+                  (Tcons (var 1) Tnil )))).
 
-Let f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
-             (existH 1 (equal  (var 0) (apply LNN Succ_ 
-                             (Tcons (var 1) Tnil))))).
+Example f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
+                 (existH 1 (equal  (var 0)
+                              (apply LNN Succ_ 
+                                 (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
 
