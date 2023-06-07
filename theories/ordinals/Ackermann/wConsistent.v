@@ -9,7 +9,7 @@ Definition wConsistent (T : System) :=
   forall (f : Formula) (v : nat),
   (forall x : nat, In x (freeVarFormula LNN f) -> v = x) ->
   SysPrf T (existH v (notH f)) ->
-  exists n : nat, ~ SysPrf T (substituteFormula LNN f v (natToTerm n)).
+  exists n : nat, ~ SysPrf T (substF LNN f v (natToTerm n)).
 
 Lemma wCon2Con : forall T : System, wConsistent T -> Consistent LNN T.
 Proof.
