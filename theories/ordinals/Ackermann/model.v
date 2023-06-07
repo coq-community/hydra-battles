@@ -184,7 +184,7 @@ Qed.
 Lemma subInterpFormula :
  forall (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L),
  interpFormula (updateValue value v (interpTerm value s)) f <->
- interpFormula value (substituteFormula L f v s).
+ interpFormula value (substF L f v s).
 Proof.
   intros value f; revert value.
   elim f using Formula_depth_ind2; simpl.
@@ -195,16 +195,16 @@ Proof.
     simpl;
     assert
       (H1: interpFormula (updateValue value v (interpTerm value s)) f1 <->
-         interpFormula value (substituteFormula L f1 v s)) by auto.
+         interpFormula value (substF L f1 v s)) by auto.
     assert
       (H2: interpFormula (updateValue value v (interpTerm value s)) f0 <->
-         interpFormula value (substituteFormula L f0 v s)) by auto.
+         interpFormula value (substF L f0 v s)) by auto.
     tauto.
   - intros f0 H value v s; rewrite (subFormulaNot L).
     simpl in |- *.
     assert
       (interpFormula (updateValue value v (interpTerm value s)) f0 <->
-         interpFormula value (substituteFormula L f0 v s)).
+         interpFormula value (substF L f0 v s)).
     auto.
     tauto.
   - intros v a H value v0 s; rewrite (subFormulaForall L).
@@ -288,14 +288,14 @@ Proof.
                    (var nv))) a) <->
          (forall x : U M,
              interpFormula (updateValue value nv x)
-               (substituteFormula L (substituteFormula L a v (var nv)) v0 s))).
+               (substF L (substF L a v (var nv)) v0 s))).
     { split.
       - assert
           (H2: forall b : Formula L,
               lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
-                interpFormula value (substituteFormula L b v s)).
+                interpFormula value (substF L b v s)).
         { intros b0 H2 value0 v1 s0 H3;
           induction (H b0 H2 value0 v1 s0); auto.
         }    
@@ -311,7 +311,7 @@ Proof.
           (H3: forall b : Formula L,
               lt_depth L b (allH v, a)%fol ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
-                interpFormula value (substituteFormula L b v s) ->
+                interpFormula value (substF L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
           by (intros; induction (H b0 H3 value0 v1 s0); auto).
         clear H; apply H3.
@@ -388,7 +388,7 @@ Proof.
               lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
-                interpFormula value (substituteFormula L b v s)).
+                interpFormula value (substF L b v s)).
         { intros b1 H2 value0 v1 s0 H3; induction (H b1 H2 value0 v1 s0); auto. }
         apply H2.
         ++ apply depthForall.
@@ -400,7 +400,7 @@ Proof.
         (forall b : Formula L,
             lt_depth L b (forallH v a) ->
             forall (value : nat -> U M) (v : nat) (s : Term L),
-              interpFormula value (substituteFormula L b v s) ->
+              interpFormula value (substF L b v s) ->
               interpFormula (updateValue value v (interpTerm value s)) b).
        { intros b1 H1 value0 v1 s0 H2; induction (H b1 H1 value0 v1 s0); auto. }
        intros H2 x; 
@@ -417,13 +417,13 @@ Qed.
 
 Lemma subInterpFormula1 (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L):
  interpFormula (updateValue value v (interpTerm value s)) f ->
- interpFormula value (substituteFormula L f v s).
+ interpFormula value (substF L f v s).
 Proof.
   induction (subInterpFormula value f v s); auto.
 Qed.
 
 Lemma subInterpFormula2 (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L):
-  interpFormula value (substituteFormula L f v s) ->
+  interpFormula value (substF L f v s) ->
   interpFormula (updateValue value v (interpTerm value s)) f.
 Proof.
   induction (subInterpFormula value f v s); auto.
@@ -452,7 +452,7 @@ Qed.
 
 Lemma subNNHelp :
  forall (f : Formula L) (v : nat) (s : Term L),
- substituteFormula L (nnHelp f) v s = nnHelp (substituteFormula L f v s).
+ substF L (nnHelp f) v s = nnHelp (substF L f v s).
 Proof.
   intro f; elim f using Formula_depth_ind2; intros; try reflexivity.
   - simpl; rewrite subFormulaImp, H, H0. 

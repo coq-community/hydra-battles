@@ -134,9 +134,9 @@ Check (f a)%fol.
 
 Example f3 := (v#0 = a \/ exH 1, (v#0 = f (v#1)))%fol.
 
-Compute substituteFormula L f3 0 (g (v#1))%fol. 
+Compute substF L f3 0 (g (v#1))%fol. 
 
-Goal substituteFormula L f3 0 (g (v#1))%fol =
+Goal substF L f3 0 (g (v#1))%fol =
        (g (v#1) = a \/ exH 2, (g (v#1) = f (v#2)))%fol.
 reflexivity. 
 Qed. 
@@ -228,7 +228,7 @@ Proof.
       + now destruct n. 
     - apply nnE; 
         assert (H:(~ ~ (P (v#i)))%fol = (* clumsy *)
-                  (substituteFormula _ (~ ~ (P (v#i))) i (v#i))%fol). 
+                  (substF _ (~ ~ (P (v#i))) i (v#i))%fol). 
       { cbn; destruct (Nat.eq_dec i) as [_ | n].
         auto. 
         now destruct n. 
@@ -354,7 +354,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f3).
 
-Compute substituteFormula LNN f3 0 (apply LNN Zero_ (Tnil)) . 
+Compute substF LNN f3 0 (apply LNN Zero_ (Tnil)) . 
 (* end snippet freeVarExamples *)
 
 Section depth_rec_demo. 

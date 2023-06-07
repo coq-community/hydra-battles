@@ -22,7 +22,7 @@ Proof.
         In x (freeVarFormula LNN (v#0 <> v#0)%nn) -> 0 = x)
     by (intros x H1; simpl in H1; repeat induction H1; auto).
   destruct  (H _ _ H1 H0) as [x H2]; 
-    now exists (substituteFormula LNN (v#0 <> v#0)%nn 0
+    now exists (substF LNN (v#0 <> v#0)%nn 0
                   (natToTerm x)).
 Qed.
 
@@ -31,7 +31,7 @@ Definition wInconsistent (T : System) :=
     (exists v : nat,
        (forall x : nat, In x (freeVarFormula LNN f) -> v = x) /\
        SysPrf T (existH v (notH f)) /\
-       (forall n : nat, SysPrf T (substituteFormula LNN f v (natToTerm n)))).
+       (forall n : nat, SysPrf T (substF LNN f v (natToTerm n)))).
 
 Lemma notCon2wNotCon :
  forall T : System, Inconsistent LNN T -> wInconsistent T.

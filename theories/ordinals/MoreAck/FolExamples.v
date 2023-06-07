@@ -232,7 +232,11 @@ Compute match formula_eqdec L Ldec (~ (v#1 = v#0  \/ P v#1))%fol
 Check (f a)%fol. 
 
 (* begin snippet DepthCompute *)
-
+Goal lt_depth L (v#0 = v#1 \/ exH 2, v#1 = f v#2)%fol
+                (v#0 = v#1 /\ exH 2, v#1 = f v#2)%fol. (* .no-out *)
+  red; simpl.
+  auto with arith.
+Qed. 
 (* end snippet DepthCompute *)
 
 (* begin snippet ltDepth1:: no-out *)
@@ -248,7 +252,7 @@ Compute List.nodup Nat.eq_dec (freeVarFormula _ F5).
 
 Compute freeVarFormula _ (close _ F5).
 
-Compute substituteFormula L F5 0 (f a).
+Compute substF L F5 0 (f a).
 (* end snippet freeVarExamples *)
 
 
@@ -357,7 +361,7 @@ Proof.
       + now destruct n. 
     - apply nnE; 
         assert (H:(~ ~ (P (v#i)))%fol = (* clumsy *)
-                  (substituteFormula _ (~ ~ (P (v#i))) i (v#i))%fol). 
+                  (substF _ (~ ~ (P (v#i))) i (v#i))%fol). 
       { cbn; destruct (Nat.eq_dec i) as [_ | n].
         auto. 
         now destruct n. 

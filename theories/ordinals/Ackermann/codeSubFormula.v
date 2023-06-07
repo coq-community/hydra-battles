@@ -189,7 +189,7 @@ Definition makeTraceImp (f1 : fol.Formula L)
   let v := fst p in
   let s := snd p in
   cTriple (cTriple v (codeTerm s) (codeFormula (impH f1 f2)))
-    (codeFormula (substituteFormula L (impH f1 f2) v s))
+    (codeFormula (substF L (impH f1 f2) v s))
     (cPair (f1rec p) (f2rec p)).
 
 Definition makeTraceNot 
@@ -198,7 +198,7 @@ Definition makeTraceNot
   let v := fst p in
   let s := snd p in
   cTriple (cTriple v (codeTerm s) (codeFormula (notH f)))
-    (codeFormula (substituteFormula L (notH f) v s)) 
+    (codeFormula (substF L (notH f) v s)) 
     (frec p).
 
 Definition makeTraceForall (n : nat) (f : fol.Formula L)
@@ -210,11 +210,11 @@ Proof.
   destruct (eq_nat_dec n v) as [a | b].
   - exact
       (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
-         (codeFormula (substituteFormula L (forallH n f) v s)) 0).
+         (codeFormula (substF L (forallH n f) v s)) 0).
   - assert (H: lt_depth L f (forallH v f)) by apply depthForall.
     destruct (In_dec eq_nat_dec n (freeVarTerm L s)) as [a | b0].
     + set (nv := newVar (v :: freeVarTerm L s ++ freeVarFormula L f)).
-      assert (H0: lt_depth L (substituteFormula L f n (var nv)) 
+      assert (H0: lt_depth L (substF L f n (var nv)) 
                     (forallH v f)).
       { apply eqDepth with f.
         symmetry  in |- *.
@@ -223,12 +223,12 @@ Proof.
       }
       exact
         (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
-           (codeFormula (substituteFormula L (forallH n f) v s))
+           (codeFormula (substF L (forallH n f) v s))
            (cPair (rec f H (n, var nv))
-              (rec (substituteFormula L f n (var nv)) H0 p))).
+              (rec (substF L f n (var nv)) H0 p))).
     + exact
         (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
-           (codeFormula (substituteFormula L (forallH n f) v s)) 
+           (codeFormula (substF L (forallH n f) v s)) 
            (rec f H p)).
 Defined.
 
@@ -238,12 +238,12 @@ Definition makeTrace : fol.Formula L -> nat * fol.Term L -> nat :=
      let v := fst p in
      let s := snd p in
      cTriple (cTriple v (codeTerm s) (codeFormula (equal t t0)))
-       (codeFormula (substituteFormula L (equal t t0) v s)) 0)
+       (codeFormula (substF L (equal t t0) v s)) 0)
     (fun (r : Relations L) t (p : nat * fol.Term L) =>
      let v := fst p in
      let s := snd p in
      cTriple (cTriple v (codeTerm s) (codeFormula (atomic r t)))
-       (codeFormula (substituteFormula L (atomic r t) v s)) 0) 
+       (codeFormula (substF L (atomic r t) v s)) 0) 
     makeTraceImp
     makeTraceNot makeTraceForall.
 
@@ -295,7 +295,7 @@ Proof.
 Qed.
 
 Remark makeTrace2 (f : fol.Formula L) (v : nat) (s : fol.Term L):
- cTriplePi2 (makeTrace f (v, s)) = codeFormula (substituteFormula L f v s).
+ cTriplePi2 (makeTrace f (v, s)) = codeFormula (substF L f v s).
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     unfold makeTrace, makeTraceImp, makeTraceNot, Formula_depth_rec2,
@@ -461,7 +461,7 @@ elim f using Formula_depth_ind2.
   now rewrite Nat.eqb_refl.
 - intros f0 H f1 H0 v s. replace (makeTrace (impH f0 f1) (v, s)) with
     (cTriple (cTriple v (codeTerm s) (codeFormula (impH f0 f1)))
-       (codeFormula (substituteFormula L (impH f0 f1) v s))
+       (codeFormula (substF L (impH f0 f1) v s))
        (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
   + unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     rewrite computeEvalStrongRecHelp.
@@ -484,12 +484,12 @@ elim f using Formula_depth_ind2.
           ++ apply cPairLe2.
           ++  unfold cTriple; apply Nat.le_lt_trans
                 with
-                (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
+                (cPair (codeFormula (substF L (impH f0 f1) v s))
                    (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
               apply cPairLe2.
               apply Nat.lt_le_trans  with
                 (cPair 1
-                   (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
+                   (cPair (codeFormula (substF L (impH f0 f1) v s))
                       (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))))).
               ** apply cPairLt2.
               ** apply cPairLe3.
@@ -506,12 +506,12 @@ elim f using Formula_depth_ind2.
         (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))).
       --  apply cPairLe1.
       --   unfold cTriple;  apply Nat.le_lt_trans with
-             (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
+             (cPair (codeFormula (substF L (impH f0 f1) v s))
                 (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
            ++ apply cPairLe2.
            ++ apply Nat.lt_le_trans with
                 (cPair 1
-                   (cPair (codeFormula (substituteFormula L (impH f0 f1) v s))
+                   (cPair (codeFormula (substF L (impH f0 f1) v s))
                       (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s))))).
               **  apply cPairLt2.
               **  apply cPairLe3.
@@ -537,7 +537,7 @@ elim f using Formula_depth_ind2.
     * apply makeTraceForallNice.
 - intros f0 H v s; replace (makeTrace (notH f0) (v, s)) with
     (cTriple (cTriple v (codeTerm s) (codeFormula (notH f0)))
-       (codeFormula (substituteFormula L (notH f0) v s)) 
+       (codeFormula (substF L (notH f0) v s)) 
        (makeTrace f0 (v, s))).
   + unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     rewrite computeEvalStrongRecHelp.
@@ -554,12 +554,12 @@ elim f using Formula_depth_ind2.
     * simpl; repeat rewrite makeTrace1; repeat rewrite makeTrace2.
       rewrite subFormulaNot, H; simpl; repeat rewrite Nat.eqb_refl; reflexivity.
     * apply Nat.le_lt_trans with
-         (cPair (codeFormula (substituteFormula L (notH f0) v s))
+         (cPair (codeFormula (substF L (notH f0) v s))
             (makeTrace f0 (v, s))).
       -- apply cPairLe2.
       -- apply Nat.lt_le_trans with
            (cPair 2
-              (cPair (codeFormula (substituteFormula L (notH f0) v s))
+              (cPair (codeFormula (substF L (notH f0) v s))
                  (makeTrace f0 (v, s)))).
          ++ apply cPairLt2.
          ++ unfold cTriple in |- *.
@@ -620,7 +620,7 @@ elim f using Formula_depth_ind2.
                 ** rewrite evalStrongRecHelp1 with
                      (m := 
                         makeTrace
-                          (substituteFormula L a v
+                          (substF L a v
                              (var
                                 (newVar
                                    (v0 :: freeVarTerm L s ++ 
@@ -652,7 +652,7 @@ elim f using Formula_depth_ind2.
                    reflexivity.
                    generalize
                      (makeTrace
-                        (substituteFormula L a v
+                        (substF L a v
                            (var (newVar (v0 :: freeVarTerm L s ++ 
                                            freeVarFormula L a)))) 
                         (v0, s))
@@ -662,8 +662,8 @@ elim f using Formula_depth_ind2.
                        (cPair (newVar (v0 :: freeVarTerm L s ++ 
                                          freeVarFormula L a))
                           (codeFormula
-                             (substituteFormula L
-                                (substituteFormula L a v
+                             (substF L
+                                (substF L a v
                                    (var
                                       (newVar (v0 :: freeVarTerm L s ++ 
                                                  freeVarFormula L a)))) v0 s)))
@@ -682,7 +682,7 @@ elim f using Formula_depth_ind2.
                    apply cPairLe2.
                 ** generalize
                     (makeTrace
-                       (substituteFormula L a v
+                       (substF L a v
                           (var (newVar (v0 :: freeVarTerm L s ++ 
                                           freeVarFormula L a)))) 
                        (v0, s))
@@ -691,8 +691,8 @@ elim f using Formula_depth_ind2.
                       (cPair (newVar (v0 :: freeVarTerm L s ++ 
                                         freeVarFormula L a))
                          (codeFormula
-                            (substituteFormula L
-                               (substituteFormula L a v
+                            (substF L
+                               (substF L a v
                                   (var
                                      (newVar (v0 :: freeVarTerm L s ++ 
                                                 freeVarFormula L a)))) v0 s)))
@@ -736,7 +736,7 @@ elim f using Formula_depth_ind2.
                      apply depthForall.
                      generalize 
                        (makeTrace a (v0, s))
-                         (cPair v (codeFormula (substituteFormula L a v0 s)))
+                         (cPair v (codeFormula (substF L a v0 s)))
                          (cTriple v0 (codeTerm s) 
                             (cPair 3 
                                (cPair v (codeFormula a)))).
@@ -775,7 +775,7 @@ Qed.
 Lemma checkTraceCorrect :
  forall (f : fol.Formula L) (v : nat) (s : fol.Term L) (n m : nat),
  checkSubFormulaTrace (cTriple (cTriple v (codeTerm s) (codeFormula f)) n m) <>
- 0 -> codeFormula (substituteFormula L f v s) = n.
+ 0 -> codeFormula (substF L f v s) = n.
 Proof.
   assert (mult_lemma1 : forall a b : nat, a * b <> 0 -> a <> 0 /\ b <> 0)
     by (intros a b; rewrite Nat.eq_mul_0; tauto).
@@ -1179,7 +1179,7 @@ elim f using Formula_depth_ind2.
                        rewrite <- (H _ H3 _ _ _ _ H1) in H2.
                        assert
                          (H5: lt_depth L
-                                (substituteFormula L a v
+                                (substF L a v
                                    (var
                                       (codeNewVar
                                          (S
@@ -3936,7 +3936,7 @@ Fixpoint varFormula (f : fol.Formula L) : list nat :=
 
 Lemma ReplaceFormulaTermSub :
   forall (f : fol.Formula L) (v w s2 : nat),
-    ReplaceFormulaTerm (codeFormula (substituteFormula L f v (var w))) s2 =
+    ReplaceFormulaTerm (codeFormula (substF L f v (var w))) s2 =
       ReplaceFormulaTerm (codeFormula f) s2.
 Proof.
   intro f; unfold ReplaceFormulaTerm;
@@ -3994,8 +3994,8 @@ Proof.
      repeat rewrite subFormulaImp.
      simpl; unfold A at 3 1.
      repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
-     rewrite H with (m := codeFormula (substituteFormula L f v (var w))).
-     + rewrite H with (m := codeFormula (substituteFormula L f0 v (var w))).
+     rewrite H with (m := codeFormula (substF L f v (var w))).
+     + rewrite H with (m := codeFormula (substF L f0 v (var w))).
        * rewrite H with (m := codeFormula f).
          -- rewrite H with (m := codeFormula f0).
             ++ simpl; rewrite H0.
@@ -4007,13 +4007,13 @@ Proof.
             ++ apply cPairLe1.
             ++ apply cPairLt2.
        * apply Nat.le_lt_trans with
-           (cPair (codeFormula (substituteFormula L f v (var w)))
-              (codeFormula (substituteFormula L f0 v (var w)))).
+           (cPair (codeFormula (substF L f v (var w)))
+              (codeFormula (substF L f0 v (var w)))).
          -- apply cPairLe2.
          -- apply cPairLt2.
      + apply Nat.le_lt_trans with
-         (cPair (codeFormula (substituteFormula L f v (var w)))
-            (codeFormula (substituteFormula L f0 v (var w)))).
+         (cPair (codeFormula (substF L f v (var w)))
+            (codeFormula (substF L f0 v (var w)))).
        * apply cPairLe1.
        * apply cPairLt2.
   - intros f H0 v w s2; simpl.
@@ -4024,7 +4024,7 @@ Proof.
     repeat rewrite subFormulaNot.
     simpl; unfold A at 3 1;
       repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
-    rewrite H with (m := codeFormula (substituteFormula L f v (var w))).
+    rewrite H with (m := codeFormula (substF L f v (var w))).
     rewrite H with (m := codeFormula f).
     simpl; rewrite H0.
     reflexivity.
@@ -4045,8 +4045,8 @@ Proof.
           with
           (m := 
              codeFormula
-               (substituteFormula L
-                  (substituteFormula L a v
+               (substF L
+                  (substF L a v
                      (var
                         (newVar (v0 :: freeVarTerm L (var w) ++ freeVarFormula L a))))
                   v0 (var w))).
@@ -4065,8 +4065,8 @@ Proof.
         -- apply Nat.le_lt_trans with
              (cPair (newVar (v0 :: freeVarTerm L (var w) ++ freeVarFormula L a))
                 (codeFormula
-                   (substituteFormula L
-                      (substituteFormula L a v
+                   (substF L
+                      (substF L a v
                          (var
                             (newVar
                                (v0 :: freeVarTerm L (var w) ++ freeVarFormula L a))))
@@ -4080,7 +4080,7 @@ Proof.
         simpl; repeat rewrite cPairProjections1.
         simpl; unfold A at 3 1;
           repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
-        rewrite H with (m := codeFormula (substituteFormula L a v0 (var w))).
+        rewrite H with (m := codeFormula (substF L a v0 (var w))).
         -- rewrite H with (m := codeFormula a).
            ++ simpl; rewrite H0. 
               ** reflexivity.
@@ -4089,7 +4089,7 @@ Proof.
               ** apply cPairLe2.
               ** apply cPairLt2.
         -- apply Nat.le_lt_trans with
-             (cPair v (codeFormula (substituteFormula L a v0 (var w)))).
+             (cPair v (codeFormula (substF L a v0 (var w)))).
            ++ apply cPairLe2.
            ++ apply cPairLt2.
 Qed.
@@ -4347,7 +4347,7 @@ Remark boundSubFormulaHelp1 :
   forall (b a : fol.Formula L) (v0 v : nat) (s : fol.Term L),
     fold_right Nat.max 0
       (varFormula
-         (substituteFormula L b v
+         (substF L b v
             (var (newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a))))) <=
       pow3 (depth L b) + pow3 (depth L b) +
         Nat.max v0
@@ -4412,8 +4412,8 @@ Proof.
       set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
     rewrite subFormulaImp; simpl. 
     induction
-      (maxApp (varFormula (substituteFormula L f v (var nv)))
-         (varFormula (substituteFormula L f0 v (var nv)))) as [a0 | b0].
+      (maxApp (varFormula (substF L f v (var nv)))
+         (varFormula (substF L f0 v (var nv)))) as [a0 | b0].
     + rewrite a0; eapply Nat.le_trans.
       * apply (H a v0 v s).
       * apply Nat.add_le_mono. 
@@ -4466,8 +4466,8 @@ Proof.
                               :: freeVarFormula L a))
                         (fold_right Nat.max 0
                            (varFormula
-                              (substituteFormula L
-                                 (substituteFormula L a v
+                              (substF L
+                                 (substF L a v
                                     (var
                                        (newVar
                                           (v1
@@ -4536,7 +4536,7 @@ Proof.
                          (Nat.max
                             (fold_right Nat.max 0
                                (varFormula
-                                  (substituteFormula L a v
+                                  (substF L a v
                                      (var
                                         (newVar
                                            (v1
@@ -4554,7 +4554,7 @@ Proof.
                        (Nat.max
                           (fold_right Nat.max 0
                              (varFormula
-                                (substituteFormula L a v
+                                (substF L a v
                                    (var
                                       (newVar
                                          (v1
@@ -4571,7 +4571,7 @@ Proof.
                     (Nat.max
                        (fold_right Nat.max 0
                           (varFormula
-                             (substituteFormula L a v
+                             (substF L a v
                                 (var
                                    (newVar
                                       (v1
@@ -4586,7 +4586,7 @@ Proof.
                  (Nat.max_case
                     (fold_right Nat.max 0
                        (varFormula
-                          (substituteFormula L a v
+                          (substF L a v
                              (var
                                 (newVar
                                    (v1
@@ -4673,7 +4673,7 @@ Proof.
             (Nat.max_case v
                (fold_right Nat.max 0
                   (varFormula
-                     (substituteFormula L a v1
+                     (substF L a v1
                         (var
                            (newVar (v0 :: freeVarTerm L s ++ 
                                       freeVarFormula L a0))))))).
@@ -4695,7 +4695,7 @@ Qed.
   
 Remark boundSubFormulaHelp :
  forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
- codeFormula (substituteFormula L f v s) <=
+ codeFormula (substF L f v s) <=
  ReplaceFormulaTerm (codeFormula f)
    (Nat.max (codeTerm s)
       (pow3 (depth L f) +
@@ -4895,7 +4895,7 @@ Proof.
               eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
               eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
               simpl; apply Nat.le_max_l.
-           ++ apply Nat.le_trans with (codeFormula (substituteFormula L a 0 (var 0))).
+           ++ apply Nat.le_trans with (codeFormula (substF L a 0 (var 0))).
               ** rewrite (subFormulaId L).
                  apply le_n.
               ** apply Nat.le_trans with
@@ -4940,7 +4940,7 @@ Proof.
                  eapply Nat.le_trans; [ idtac | apply Nat.le_add_r ].
                  apply pow3Min.
                  apply le_n.
-           ++ set (B := substituteFormula L a v (var nv)).
+           ++ set (B := substF L a v (var nv)).
               apply Nat.le_trans with
                 (evalStrongRec 1 A (codeFormula B)
                    (Nat.max (codeTerm s)
@@ -4961,12 +4961,12 @@ Proof.
                    (Nat.max_case v0
                       (fold_right Nat.max 0
                          (freeVarTerm L s ++
-                            varFormula (substituteFormula L a v (var nv))))).
+                            varFormula (substF L a v (var nv))))).
                  eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
                  apply Nat.le_max_l.
                  induction
                    (maxApp (freeVarTerm L s)
-                      (varFormula (substituteFormula L a v (var nv)))) as [a1 | b1].
+                      (varFormula (substF L a v (var nv)))) as [a1 | b1].
                  --- rewrite a1.
                      eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
                      eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
@@ -5115,7 +5115,7 @@ Proof.
   assert
     (E :
       forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
-        codeFormula (substituteFormula L f v s) <=
+        codeFormula (substF L f v s) <=
           ReplaceFormulaTerm (codeFormula f)
             (Nat.max (codeTerm s)
                (cPair 0
@@ -5152,7 +5152,7 @@ Proof.
                   (pow3 (depth L f) +
                      fold_right Nat.max 0 (v :: freeVarTerm L s ++ varFormula f))))).
   { intros f0 v s;
-      apply Nat.le_trans with (codeFormula (substituteFormula L f0 0 (var 0))).
+      apply Nat.le_trans with (codeFormula (substF L f0 0 (var 0))).
     - rewrite (subFormulaId L); apply le_n.
     - eapply Nat.le_trans.
       + apply E.
@@ -5194,7 +5194,7 @@ Proof.
   - intros f0 H1 f1 H2 v s C; simpl; 
       replace (makeTrace (impH f0 f1) (v, s)) with
       (cTriple (cTriple v (codeTerm s) (codeFormula (impH f0 f1)))
-         (codeFormula (substituteFormula L (impH f0 f1) v s))
+         (codeFormula (substF L (impH f0 f1) v s))
          (cPair (makeTrace f0 (v, s)) (makeTrace f1 (v, s)))).
     + unfold cTriple; repeat apply cPairLe3.
       * unfold C; simpl.
@@ -5334,7 +5334,7 @@ Proof.
   - intros f0 H1 v s C; simpl;  replace (makeTrace (notH  f0) (v, s)) 
       with
       (cTriple (cTriple v (codeTerm s) (codeFormula (notH  f0)))
-         (codeFormula (substituteFormula L (notH  f0) v s)) 
+         (codeFormula (substF L (notH  f0) v s)) 
          (makeTrace f0 (v, s))).
     + unfold cTriple in |- *.
       repeat apply cPairLe3.
@@ -5545,7 +5545,7 @@ Proof.
                                 (v0
                                    :: freeVarTerm L s ++
                                    varFormula
-                                   (substituteFormula L a v
+                                   (substF L a v
                                       (var
                                          (newVar (v0 :: freeVarTerm L s ++ 
                                                     freeVarFormula L a))))))) 
@@ -5564,7 +5564,7 @@ Proof.
                      * induction
                          (maxApp (freeVarTerm L s)
                             (varFormula
-                               (substituteFormula L a v
+                               (substF L a v
                                   (var (newVar (v0 :: freeVarTerm L s ++ 
                                                   freeVarFormula L a)))))) as [a1 | b1].
                        -- rewrite a1.
@@ -5588,7 +5588,7 @@ Proof.
                assert
                  (H3: ReplaceFormulaTerm
                         (codeFormula
-                           (substituteFormula L a v
+                           (substF L a v
                               (var (newVar (v0 :: freeVarTerm L s ++ 
                                               freeVarFormula L a)))))
                         (Nat.max (codeTerm s)
@@ -5598,7 +5598,7 @@ Proof.
                                    (v0
                                       :: freeVarTerm L s ++
                                       varFormula
-                                      (substituteFormula L a v
+                                      (substF L a v
                                          (var
                                             (newVar
                                                (v0 :: freeVarTerm L s ++ 

@@ -417,7 +417,7 @@ Lemma subSubAllFormula :
   forall (T : fol.System L) (f : fol.Formula L) (m : nat -> fol.Term L)
          (v : nat) (s : fol.Term L),
     folProof.SysPrf L T
-      (iffH (substituteFormula L (subAllFormula f m) v s)
+      (iffH (substF L (subAllFormula f m) v s)
          (subAllFormula f (fun n : nat => substT L (m n) v s))).
 Proof.
   intros T f.  revert T. 

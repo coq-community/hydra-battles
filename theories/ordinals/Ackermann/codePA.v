@@ -274,25 +274,25 @@ Proof.
     replace
       (open
          (close LNT
-            (impH (substituteFormula LNT x x0 Zero)
+            (impH (substF LNT x x0 Zero)
                (impH
                   (forallH x0
                      (impH x 
-                        (substituteFormula LNT x x0 (Succ (var x0)))))
+                        (substF LNT x x0 (Succ (var x0)))))
                   (forallH x0 x))))) 
     with
-    (impH (substituteFormula LNT x x0 Zero)
+    (impH (substF LNT x x0 Zero)
        (impH (forallH x0 
-                (impH x (substituteFormula LNT x x0 (Succ (var x0)))))
+                (impH x (substF LNT x x0 (Succ (var x0)))))
           (forallH x0 x))).
   - replace
       (cadr (cddddr
                (codeFormula
-                  (impH (substituteFormula LNT x x0 Zero)
+                  (impH (substF LNT x x0 Zero)
                      (impH
                         (forallH x0
                            (impH x
-                              (substituteFormula LNT x x0 
+                              (substF LNT x x0 
                                  (Succ (var x0)))))
                         (forallH x0 x)))))) 
       with x0.
@@ -300,11 +300,11 @@ Proof.
         (cddr
            (cddddr
               (codeFormula
-                 (impH (substituteFormula LNT x x0 Zero)
+                 (impH (substF LNT x x0 Zero)
                     (impH
                        (forallH x0
                           (impH x
-                             (substituteFormula LNT x x0 
+                             (substF LNT x x0 
                                 (Succ (var x0)))))
                        (forallH x0 x)))))) 
          with (codeFormula x).
@@ -331,10 +331,10 @@ Proof.
           with
           (codeClose
              (code.codeFormula LNT codeLNTFunction codeLNTRelation
-                (impH (substituteFormula LNT x x0 Zero)
+                (impH (substF LNT x x0 Zero)
                    (impH
                       (forallH x0
-                         (impH x (substituteFormula LNT x x0 
+                         (impH x (substF LNT x x0 
                                     (Succ (var x0)))))
                       (forallH x0 x))))).
       -- rewrite Nat.eqb_refl; reflexivity.
@@ -350,10 +350,10 @@ Proof.
       induction
         (List.nodup Nat.eq_dec
            (freeVarFormula LNT
-              (impH (substituteFormula LNT x x0 Zero)
+              (impH (substF LNT x x0 Zero)
                  (impH
                     (forallH x0
-                       (impH x (substituteFormula LNT x x0 
+                       (impH x (substF LNT x x0 
                                   (Succ (var x0)))))
              (forallH x0 x))))).
     + reflexivity.
@@ -436,9 +436,9 @@ Proof.
         simpl in (value of g).
         unfold InductionSchema in |- *.
         exists f2, n0.
-        unfold PA7; replace (substituteFormula LNT f2 n0 Zero) with f0.
+        unfold PA7; replace (substF LNT f2 n0 Zero) with f0.
       * replace (forallH n0 (impH f2 
-                               (substituteFormula LNT f2 n0 
+                               (substF LNT f2 n0 
                                   (Succ (var n0)))))
           with f1.
         -- symmetry; apply a0.

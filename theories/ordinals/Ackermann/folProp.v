@@ -378,30 +378,30 @@ Proof.
   - exact (v, s).
 Defined.
 
-Definition substituteFormula (f : fol.Formula L) (v : nat) (s : fol.Term L) :
+Definition substF (f : fol.Formula L) (v : nat) (s : fol.Term L) :
   fol.Formula L := proj1_sig (substituteFormulaHelp f v s).
 
 Lemma subFormulaEqual :
   forall (t1 t2 : fol.Term L) (v : nat) (s : fol.Term L),
-    substituteFormula (equal t1 t2) v s =
+    substF (equal t1 t2) v s =
       equal (substituteTerm t1 v s) (substituteTerm t2 v s).
 Proof. reflexivity. Qed.
 
 Lemma subFormulaRelation :
   forall (r : Relations L) (ts : fol.Terms L (arityR L r)) 
          (v : nat) (s : fol.Term L),
-    substituteFormula (atomic r ts) v s =
+    substF (atomic r ts) v s =
       atomic r (substituteTerms (arityR L r) ts v s).
 Proof. reflexivity. Qed.
 
 
 Lemma subFormulaImp :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (impH f1 f2) v s =
-      impH (substituteFormula f1 v s) (substituteFormula f2 v s).
+    substF (impH f1 f2) v s =
+      impH (substF f1 v s) (substF f2 v s).
 Proof.
   intros f1 f2 v s. 
-  unfold substituteFormula, substituteFormulaHelp in |- *.
+  unfold substF, substituteFormulaHelp in |- *.
   rewrite
     (Formula_depth_rec2_imp L)
     with
@@ -480,10 +480,10 @@ Qed.
 
 Lemma subFormulaNot :
   forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (notH f) v s = notH (substituteFormula f v s).
+    substF (notH f) v s = notH (substF f v s).
 Proof.
   intros f v s; 
-  unfold substituteFormula, substituteFormulaHelp.
+  unfold substF, substituteFormulaHelp.
   rewrite (Formula_depth_rec2_not L) with
     (Q := fun _ : fol.Formula L => (nat * fol.Term L)%type)
     (P := fun x : fol.Formula L =>
@@ -528,20 +528,20 @@ Qed.
 Lemma subFormulaForall :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
     let nv := newVar (v :: freeVarTerm s ++ freeVarFormula f) in
-    substituteFormula (forallH x f) v s =
+    substF (forallH x f) v s =
       match eq_nat_dec x v with
       | left _ => forallH x f
       | right _ =>
           match In_dec eq_nat_dec x (freeVarTerm s) with
-          | right _ => forallH x (substituteFormula f v s)
+          | right _ => forallH x (substF f v s)
           | left _ =>
-              forallH nv (substituteFormula 
-                            (substituteFormula f x (var nv)) v s)
+              forallH nv (substF 
+                            (substF f x (var nv)) v s)
           end
       end.
 Proof.
   intros f x v s nv.
-  unfold substituteFormula at 1 in |- *.
+  unfold substF at 1 in |- *.
   unfold substituteFormulaHelp in |- *.
   rewrite (Formula_depth_rec2_forall L)
     with
@@ -555,7 +555,7 @@ Proof.
     + reflexivity.
     + induction (In_dec eq_nat_dec x (freeVarTerm s)); simpl in |- *.
       fold nv in |- *.
-      unfold substituteFormula at 2 in |- *; 
+      unfold substF at 2 in |- *; 
         unfold substituteFormulaHelp in |- *;
         simpl in |- *.
       * induction
@@ -585,7 +585,7 @@ Proof.
                        (refl_equal 0)) H) substituteFormulaImp
              substituteFormulaNot
              substituteFormulaForall f (x, var nv)).
-        unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
+        unfold substF in |- *; unfold substituteFormulaHelp in |- *;
           simpl in |- *.
         induction
           (Formula_depth_rec2 L
@@ -615,7 +615,7 @@ Proof.
              substituteFormulaNot
              substituteFormulaForall x0 (v, s)).
         simpl in |- *; reflexivity.
-      * unfold substituteFormula in |- *; unfold substituteFormulaHelp in |- *;
+      * unfold substF in |- *; unfold substituteFormulaHelp in |- *;
           simpl in |- *.
         induction
           (Formula_depth_rec2 L
@@ -654,8 +654,8 @@ Section Extensions.
 
 Lemma subFormulaOr :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (orH f1 f2) v s =
-      orH (substituteFormula f1 v s) (substituteFormula f2 v s).
+    substF (orH f1 f2) v s =
+      orH (substF f1 v s) (substF f2 v s).
 Proof.
   intros f1 f2 v s; unfold orH;
     now rewrite subFormulaImp, subFormulaNot.
@@ -663,8 +663,8 @@ Qed.
 
 Lemma subFormulaAnd :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (andH f1 f2) v s =
-      andH (substituteFormula f1 v s) (substituteFormula f2 v s).
+    substF (andH f1 f2) v s =
+      andH (substF f1 v s) (substF f2 v s).
 Proof.
   intros ? ? ? ?; unfold andH in |- *.
   rewrite subFormulaNot, subFormulaOr; now repeat rewrite subFormulaNot.
@@ -673,15 +673,15 @@ Qed.
 Lemma subFormulaExist :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
     let nv := newVar (v :: freeVarTerm s ++ freeVarFormula f) in
-    substituteFormula (existH x f) v s =
+    substF (existH x f) v s =
       match eq_nat_dec x v with
       | left _ => existH x f
       | right _ =>
           match In_dec eq_nat_dec x (freeVarTerm s) with
-          | right _ => existH x (substituteFormula f v s)
+          | right _ => existH x (substF f v s)
           | left _ =>
-              existH nv (substituteFormula 
-                           (substituteFormula f x (var nv)) v s)
+              existH nv (substF 
+                           (substF f x (var nv)) v s)
           end
       end.
 Proof.
@@ -695,8 +695,8 @@ Qed.
 
 Lemma subFormulaIff :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (iffH f1 f2) v s =
-      iffH (substituteFormula f1 v s) (substituteFormula f2 v s).
+    substF (iffH f1 f2) v s =
+      iffH (substF f1 v s) (substF f2 v s).
 Proof.
   intros ? ? v s; unfold iffH in |- *.
   rewrite subFormulaAnd; now repeat rewrite subFormulaImp.
@@ -704,9 +704,9 @@ Qed.
 
 Lemma subFormulaIfThenElse :
   forall (f1 f2 f3 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substituteFormula (ifThenElseH f1 f2 f3) v s =
-      ifThenElseH (substituteFormula f1 v s) (substituteFormula f2 v s)
-        (substituteFormula f3 v s).
+    substF (ifThenElseH f1 f2 f3) v s =
+      ifThenElseH (substF f1 v s) (substF f2 v s)
+        (substF f3 v s).
 Proof.
   intros ? ? ? ? ?; unfold ifThenElseH.
   now rewrite subFormulaAnd, !subFormulaImp,  subFormulaNot.
@@ -716,9 +716,9 @@ End Extensions.
 
 Lemma subFormulaDepth :
   forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
-    depth L (substituteFormula f v s) = depth L f.
+    depth L (substF f v s) = depth L f.
 Proof.
-  intros f v s; unfold substituteFormula in |- *.
+  intros f v s; unfold substF in |- *.
   induction (substituteFormulaHelp f v s) as [x p]; now simpl. 
 Qed.
 
@@ -751,7 +751,7 @@ Proof.
 Qed.
 
 Lemma subFormulaId :
-  forall (f : fol.Formula L) (v : nat), substituteFormula f v (var v) = f.
+  forall (f : fol.Formula L) (v : nat), substF f v (var v) = f.
 Proof.
   intros f v.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf].
@@ -774,11 +774,11 @@ Lemma subFormulaForall2 :
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
       ~ In nv (List.remove  eq_nat_dec x (freeVarFormula f)) /\
-      substituteFormula (forallH x f) v s =
+      substF (forallH x f) v s =
         match eq_nat_dec x v with
         | left _ => forallH x f
         | right _ =>
-            forallH nv (substituteFormula (substituteFormula f x (var nv)) v s)
+            forallH nv (substF (substF f x (var nv)) v s)
         end.
 Proof.
   intros f x v s; rewrite subFormulaForall.
@@ -816,11 +816,11 @@ Lemma subFormulaExist2 :
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
       ~ In nv (List.remove eq_nat_dec x (freeVarFormula f)) /\
-      substituteFormula (existH x f) v s =
+      substF (existH x f) v s =
         match eq_nat_dec x v with
         | left _ => existH x f
         | right _ =>
-            existH nv (substituteFormula (substituteFormula f x (var nv)) v s)
+            existH nv (substF (substF f x (var nv)) v s)
         end.
 Proof.
   intros f x v s; rewrite subFormulaExist.
@@ -857,7 +857,9 @@ Definition Sentence (f:Formula) :=
 
 End Fol_Properties.
 
-Notation substF := substituteFormula.
+#[deprecated(note="use substF")]
+ Notation substituteFormula := substF (only parsing).
+(* to do *)
 Notation substT := substituteTerm.
 Notation substTs := substituteTerms.
 

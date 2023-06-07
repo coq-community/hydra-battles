@@ -43,7 +43,7 @@ Lemma FixPointLNN :
  forall (A : Formula) (v : nat),
  {B : Formula |
    SysPrf NN
-     (B <-> substituteFormula LNN A v (natToTermLNN (codeFormula B)))%fol /\
+     (B <-> substF LNN A v (natToTermLNN (codeFormula B)))%fol /\
    (forall x : nat,
     In x (freeVarFormula LNN B) <->
     In x (List.remove eq_nat_dec v (freeVarFormula LNN A)))}.
@@ -73,17 +73,17 @@ Proof.
      (Theta :=
         existH v
           (andH
-             (substituteFormula LNN
-                (substituteFormula LNN
-                   (substituteFormula LNN
-                      (substituteFormula LNN subStarFormula 3 (var nv)) 2
+             (substF LNN
+                (substF LNN
+                   (substF LNN
+                      (substF LNN subStarFormula 3 (var nv)) 2
                       (natToTerm nv)) 1 (var nv)) 0 (var v)) A)). 
-   exists (substituteFormula LNN Theta nv (natToTerm (codeFormula Theta))). 
+   exists (substF LNN Theta nv (natToTerm (codeFormula Theta))). 
    split.
   - set (N :=
            natToTermLNN
              (codeFormula
-                (substituteFormula LNN Theta nv (natToTerm (codeFormula Theta))))).
+                (substF LNN Theta nv (natToTerm (codeFormula Theta))))).
     unfold Theta at 1; rewrite (subFormulaExist LNN).
     induction (eq_nat_dec v nv) as [a | b].
     + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
@@ -97,10 +97,10 @@ Proof.
         apply iffTrans with
           (existH v
              (andH
-                (substituteFormula LNN
-                   (substituteFormula LNN
-                      (substituteFormula LNN
-                         (substituteFormula LNN subStarFormula 3
+                (substF LNN
+                   (substF LNN
+                      (substF LNN
+                         (substF LNN subStarFormula 3
                             (natToTerm (codeFormula Theta))) 2 
                          (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0
                    (var v)) A)).
@@ -150,13 +150,13 @@ Proof.
               ** intros H4; induction (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
                  --- now elim (in_remove_neq _ _ _ _ _ H5).
                  --- elim (closedNatToTerm _ _ H5).
-              ** apply impE with (substituteFormula LNN 
+              ** apply impE with (substF LNN 
                                     (equal (var 0) N) 0 (var v)).
                  --- rewrite (subFormulaEqual LNN).
                      rewrite (subTermVar1 LNN).
                      rewrite (subTermNil LNN).
                      +++ apply impI.
-                         apply impE with (substituteFormula LNN A v (var v)).
+                         apply impE with (substF LNN A v (var v)).
                          *** apply (subWithEquals LNN).
                              apply Axm; right; constructor.
                          *** rewrite (subFormulaId LNN).
@@ -164,10 +164,10 @@ Proof.
                              apply Axm; left; right; constructor.
                      +++ unfold N; apply closedNatToTerm.
                  --- apply impE with
-                       (substituteFormula LNN
-                          (substituteFormula LNN
-                             (substituteFormula LNN
-                                (substituteFormula LNN subStarFormula 3
+                       (substF LNN
+                          (substF LNN
+                             (substF LNN
+                                (substF LNN subStarFormula 3
                                    (natToTerm (codeFormula Theta))) 2 
                                 (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0 
                           (var v)).
@@ -179,7 +179,7 @@ Proof.
                              unfold N;
                                replace
                                  (codeFormula
-                                    (substituteFormula LNN Theta nv 
+                                    (substF LNN Theta nv 
                                        (natToTerm (codeFormula Theta)))) 
                                with
                                (subStar (codeFormula Theta) nv (codeFormula Theta)).
@@ -195,8 +195,8 @@ Proof.
                  eapply
                    impE
                    with
-                   (substituteFormula LNN
-                      (substituteFormula LNN (equal (var 0) N) 0 (var v)) v N).
+                   (substF LNN
+                      (substF LNN (equal (var 0) N) 0 (var v)) v N).
                  --- apply iffE2.
                      apply (reduceSub LNN).
                      +++ apply closedNN.
@@ -206,7 +206,7 @@ Proof.
                              simpl in H5; unfold N;
                                replace
                                  (codeFormula
-                                    (substituteFormula LNN Theta nv 
+                                    (substF LNN Theta nv 
                                        (natToTerm (codeFormula Theta)))) 
                                with
                                (subStar (codeFormula Theta) nv (codeFormula Theta)).
@@ -250,7 +250,7 @@ Proof.
             assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
-        | H:(In _ (freeVarFormula LNN (substituteFormula LNN ?X1 ?X2 ?X3))) |- _ =>
+        | H:(In _ (freeVarFormula LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
         | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
@@ -276,10 +276,10 @@ Proof.
           apply
             (@in_in_remove nat eq_nat_dec 
                (freeVarFormula LNN
-                  (substituteFormula LNN
-                     (substituteFormula LNN
-                        (substituteFormula LNN
-                           (substituteFormula LNN subStarFormula 3 (var nv)) 2
+                  (substF LNN
+                     (substF LNN
+                        (substF LNN
+                           (substF LNN subStarFormula 3 (var nv)) 2
                            (natToTerm nv)) 1 (var nv)) 0 (var v)) ++
                   freeVarFormula LNN A) x v).
         -- assumption.
@@ -298,7 +298,7 @@ Let codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
 Lemma FixPointLNT  (A : Formula) (v : nat):
   {B : Formula |
     SysPrf PA
-      (iffH B (substituteFormula LNT A v (natToTermLNT (codeFormula B)))) /\
+      (iffH B (substF LNT A v (natToTermLNT (codeFormula B)))) /\
       (forall x : nat,
           In x (freeVarFormula LNT B) <->
             In x (List.remove eq_nat_dec v (freeVarFormula LNT A)))}.
@@ -332,19 +332,19 @@ Proof.
   set  (Theta :=
           existH v
             (andH
-               (substituteFormula LNT
-                  (substituteFormula LNT
-                     (substituteFormula LNT
-                        (substituteFormula LNT (LNN2LNT_formula subStarFormula) 3
+               (substF LNT
+                  (substF LNT
+                     (substF LNT
+                        (substF LNT (LNN2LNT_formula subStarFormula) 3
                            (var nv)) 2 (natToTerm nv)) 1 (var nv)) 0 
                   (var v)) A)).
-  exists (substituteFormula LNT Theta nv (natToTerm (codeFormula Theta))).
+  exists (substF LNT Theta nv (natToTerm (codeFormula Theta))).
   split.
   - set
       (N :=
          natToTermLNT
            (codeFormula
-              (substituteFormula LNT Theta nv (natToTerm (codeFormula Theta))))).
+              (substF LNT Theta nv (natToTerm (codeFormula Theta))))).
     unfold Theta at 1; rewrite (subFormulaExist LNT).
     induction (eq_nat_dec v nv) as [a | b]. 
     + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
@@ -359,10 +359,10 @@ Proof.
           with
           (existH v
              (andH
-                (substituteFormula LNT
-                   (substituteFormula LNT
-                      (substituteFormula LNT
-                         (substituteFormula LNT (LNN2LNT_formula subStarFormula) 3
+                (substF LNT
+                   (substF LNT
+                      (substF LNT
+                         (substF LNT (LNN2LNT_formula subStarFormula) 3
                             (natToTerm (codeFormula Theta))) 2 
                          (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0
                    (var v)) A)).
@@ -414,12 +414,12 @@ Proof.
               **  intros H4; induction (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5].
                   --- now elim (in_remove_neq _ _ _ _ _ H5).
                   --- elim (closedNatToTerm _ _ H5).
-              ** apply impE with (substituteFormula LNT (equal (var 0) N) 0 (var v)).
+              ** apply impE with (substF LNT (equal (var 0) N) 0 (var v)).
                  --- rewrite (subFormulaEqual LNT).
                      rewrite (subTermVar1 LNT).
                      rewrite (subTermNil LNT).
                      +++ apply impI.
-                         apply impE with (substituteFormula LNT A v (var v)).
+                         apply impE with (substF LNT A v (var v)).
                          *** apply (subWithEquals LNT).
                              apply Axm; right; constructor.
                          *** rewrite (subFormulaId LNT).
@@ -427,10 +427,10 @@ Proof.
                              apply Axm; left; right; constructor.
                      +++ unfold N; apply closedNatToTerm.
                  --- apply impE with
-                       (substituteFormula LNT
-                          (substituteFormula LNT
-                             (substituteFormula LNT
-                                (substituteFormula LNT 
+                       (substF LNT
+                          (substF LNT
+                             (substF LNT
+                                (substF LNT 
                                    (LNN2LNT_formula subStarFormula) 3
                                    (natToTerm (codeFormula Theta))) 2 
                                 (natToTerm nv)) 1 (natToTerm (codeFormula Theta))) 0 
@@ -443,7 +443,7 @@ Proof.
                              simpl in H5; unfold N.
                              replace
                                (codeFormula
-                                  (substituteFormula LNT Theta nv 
+                                  (substF LNT Theta nv 
                                      (natToTerm (codeFormula Theta)))) 
                                with
                                (subStar (codeFormula Theta) nv (codeFormula Theta)).
@@ -458,9 +458,9 @@ Proof.
                                                        (codeFormula Theta))))).
                              apply iffTrans  with
                                (LNN2LNT_formula
-                                  (substituteFormula LNN
-                                     (substituteFormula LNN
-                                        (substituteFormula LNN subStarFormula 3
+                                  (substF LNN
+                                     (substF LNN
+                                        (substF LNN subStarFormula 3
                                            (LNN.natToTerm (codeFormula Theta))) 2 
                                         (LNN.natToTerm nv)) 1 
                                      (LNN.natToTerm (codeFormula Theta)))).
@@ -491,8 +491,8 @@ Proof.
               apply andI.
               apply sysWeaken.
               ** eapply impE with
-                   (substituteFormula LNT
-                      (substituteFormula LNT (equal (var 0) N) 0 (var v)) v N).
+                   (substF LNT
+                      (substF LNT (equal (var 0) N) 0 (var v)) v N).
                  --- apply iffE2.
                      apply (reduceSub LNT).
                      +++ apply closedPA.
@@ -503,7 +503,7 @@ Proof.
                              unfold N;
                                replace
                                  (codeFormula
-                                    (substituteFormula LNT Theta nv 
+                                    (substF LNT Theta nv 
                                        (natToTerm (codeFormula Theta)))) 
                                with
                                (subStar (codeFormula Theta) nv (codeFormula Theta)).
@@ -521,9 +521,9 @@ Proof.
                                iffTrans
                                with
                                (LNN2LNT_formula
-                                  (substituteFormula LNN
-                                     (substituteFormula LNN
-                                        (substituteFormula LNN subStarFormula 3
+                                  (substF LNN
+                                     (substF LNN
+                                        (substF LNN subStarFormula 3
                                            (LNN.natToTerm (codeFormula Theta))) 2 
                                         (LNN.natToTerm nv)) 1
                                      (LNN.natToTerm
@@ -585,7 +585,7 @@ Proof.
             assert (In X3 (freeVarFormula LNT X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
-        | H:(In _ (freeVarFormula LNT (substituteFormula LNT ?X1 ?X2 ?X3))) |- _ =>
+        | H:(In _ (freeVarFormula LNT (substF LNT ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
         | H:(In _ (freeVarTerm LNT (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
@@ -615,10 +615,10 @@ Proof.
           apply
             (@in_in_remove nat eq_nat_dec
                (freeVarFormula LNT
-                  (substituteFormula LNT
-                     (substituteFormula LNT
-                        (substituteFormula LNT
-                           (substituteFormula LNT 
+                  (substF LNT
+                     (substF LNT
+                        (substF LNT
+                           (substF LNT 
                               (LNN2LNT_formula subStarFormula) 3
                               (var nv)) 2 (natToTerm nv)) 1 (var nv)) 0 
                      (var v)) ++ freeVarFormula LNT A) x v).

@@ -179,15 +179,15 @@ Qed.
 Lemma reduceSub  (T : System) (v : nat) (s : Term) (f g : Formula):
  ~ In_freeVarSys L v T ->
  SysPrf T (iffH f g) ->
- SysPrf T (iffH (substituteFormula L f v s) (substituteFormula L g v s)).
+ SysPrf T (iffH (substF L f v s) (substF L g v s)).
 Proof.
   revert T v s f g;
   assert
     (H: forall (T : System) (v : nat) (s : Term) (f g : Formula),
         ~ In_freeVarSys L v T ->
         SysPrf T (iffH f g) ->
-        SysPrf T (impH (substituteFormula L f v s)
-                    (substituteFormula L g v s))).
+        SysPrf T (impH (substF L f v s)
+                    (substF L g v s))).
   { intros T v s f g H H0; rewrite <- (subFormulaImp  L).
     apply forallE; apply forallI. 
     - apply H. 

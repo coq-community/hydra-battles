@@ -19,7 +19,7 @@ Lemma paZeroOrSucc (t : Term):
   Proof.
      set (nv := newVar (0 :: freeVarTerm LNT t)) in *. 
   apply impE with
-    (substituteFormula LNT
+    (substF LNT
        (v#0 = Zero \/ exH nv, v#0 = Succ v#nv)%nt
        0 t).
   - rewrite (subFormulaOr LNT), (subFormulaEqual LNT); simpl.

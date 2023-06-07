@@ -134,7 +134,7 @@ Lemma nnPlusNotNeeded (n:nat) :
       * apply sysWeaken, nn7. 
     + rewrite <- (subFormulaId LNN (v#1 < Succ Zero)%nn 1).
       apply impE with 
-        (substituteFormula LNN (v#1 < Succ Zero)%nn 1 Zero).
+        (substF LNN (v#1 < Succ Zero)%nn 1 Zero).
       * apply (subWithEquals LNN).
         apply eqSym.
         apply Axm; right; constructor.

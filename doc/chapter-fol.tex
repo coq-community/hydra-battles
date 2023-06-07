@@ -312,11 +312,21 @@ The function \texttt{depth} computes the \emph{depth} of the
  skeleton of any formula, and allows us to define a well-founded strict order on 
 \texttt{Formula $L$}.
 
-\inputsnippets{fol/depthDef,  FolExamples/DepthCompute}
+\inputsnippets{fol/depthDef}
+
+\begin{remark}
+  The depth of a formula takes into account its abstract syntax tree \emph{with respect to the base connective and quantifiers : $\arrow$, $\sim$ and $\forall$}.
+    Formulas which contain $\vee$, $\wedge$, $\exists$, etc. are translated into
+    basic formulas before the computation of their depth. In the example below, 
+the conjunction is translated into a bigger term than the disjunction.
+
+
+\inputsnippets{FolExamples/DepthCompute}
+\end{remark}
 
 \subsubsection{Induction on depth}
 
-\inputsnippets{FolExamples/ltDepth1}
+
 
 
 \begin{todo}

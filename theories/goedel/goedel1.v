@@ -32,13 +32,13 @@ Hypothesis
   expressT1 :
     forall f : Formula,
     mem _ T f ->
-    SysPrf T (substituteFormula LNN repT v0 (natToTerm (codeFormula f))).
+    SysPrf T (substF LNN repT v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressT2 :
     forall f : Formula,
     ~ mem _ T f ->
     SysPrf T
-      (notH (substituteFormula LNN repT v0 (natToTerm (codeFormula f)))).
+      (notH (substF LNN repT v0 (natToTerm (codeFormula f)))).
 
 Definition codeSysPrf :=
   codeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -97,7 +97,7 @@ Proof.
   - apply impE
       with
       (notH
-         (substituteFormula LNN (notH codeSysPf) 0
+         (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN
                (code.codeFormula LNN codeLNTFunction codeLNNRelation x)))).
     + apply cp2.
@@ -129,14 +129,14 @@ Proof.
   unfold wConsistent in H.
   set (y := 
      notH
-       (substituteFormula LNN codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
+       (substF LNN codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
     in *.
   assert (forall x : nat, In x (freeVarFormula LNN y) -> 1 = x).
   { intros x0 H3; unfold y in H3.
     assert (H4:
       (In x0
          (freeVarFormula LNN
-            (substituteFormula LNN codeSysPrf 0
+            (substF LNN codeSysPrf 0
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
     - destruct x0 as [| n].
@@ -240,7 +240,7 @@ Proof.
   - apply impE
       with
       (notH
-         (substituteFormula LNN (notH codeSysPf) 0
+         (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN codeX))).
     + unfold codeSysPf, codeSysPrf.codeSysPf, y in |- *.
       fold codeSysPrf in |- *.
@@ -248,7 +248,7 @@ Proof.
       apply
         impTrans
         with
-        (substituteFormula LNN (existH 1 codeSysPrf) 0
+        (substF LNN (existH 1 codeSysPrf) 0
            (codeNatToTerm.natToTermLNN codeX)).
       * apply impI; apply nnE; apply Axm; right; constructor.
       * apply sysExtend with NN.

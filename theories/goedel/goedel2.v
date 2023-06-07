@@ -37,13 +37,13 @@ Section Goedel's_2nd_Incompleteness.
     expressT1 :
     forall f : Formula,
       mem _ T f ->
-      SysPrf T (substituteFormula LNT repT v0 (natToTerm (codeFormula f))).
+      SysPrf T (substF LNT repT v0 (natToTerm (codeFormula f))).
   Hypothesis
     expressT2 :
     forall f : Formula,
       ~ mem _ T f ->
       SysPrf T
-        (notH (substituteFormula LNT repT v0 (natToTerm (codeFormula f)))).
+        (notH (substF LNT repT v0 (natToTerm (codeFormula f)))).
 
   Definition codeSysPf := 
     (codeSysPf LNT codeLNTFunction codeLNTRelation codeArityLNTF codeArityLNTR
@@ -79,7 +79,7 @@ Section Goedel's_2nd_Incompleteness.
                     in a.
 
     Definition box (f:Formula) :=
-      (substituteFormula LNT (LNN2LNT_formula codeSysPf) 0
+      (substF LNT (LNN2LNT_formula codeSysPf) 0
          (natToTerm (codeFormula f))).
 
     Lemma GS : SysPrf T (iffH G (notH (box G))).
@@ -94,7 +94,7 @@ Section Goedel's_2nd_Incompleteness.
     Lemma HBL1 : forall f, SysPrf T f -> SysPrf T (box f).
     Proof.
       intros x H; unfold box.
-      apply impE with (LNN2LNT_formula (substituteFormula LNN codeSysPf 0 
+      apply impE with (LNN2LNT_formula (substF LNN codeSysPf 0 
                                           (LNN.natToTerm (codeFormula x)))).
       replace (natToTerm (codeFormula x)) with
         (LNN2LNT_term (LNN.natToTerm (codeFormula x))).
@@ -145,7 +145,7 @@ Section Goedel's_2nd_Incompleteness.
       }
       destruct (codeSysPfCorrect _ H) as [x0  [x1 H1]].
       destruct (translatePrf T' T H0 
-                  (substituteFormula LNN codeSysPf 0
+                  (substF LNN codeSysPf 0
                      (LNN.natToTerm (codeFormula x)))
                   x0 x1 H1) as [x2 H2].
       exists x2; destruct H2; assumption.
@@ -161,14 +161,14 @@ Section Goedel's_2nd_Incompleteness.
       - apply impE
         with
         (notH
-           (substituteFormula LNT (notH (LNN2LNT_formula codeSysPf)) 0
+           (substF LNT (notH (LNN2LNT_formula codeSysPf)) 0
               (natToTerm
                  (codeFormula x)))).
         + apply cp2; apply iffE1; apply sysExtend with PA.
          * assumption.
          * apply H1.
       + rewrite (subFormulaNot LNT); apply nnI.
-        change (substituteFormula LNT (LNN2LNT_formula codeSysPf) 0
+        change (substF LNT (LNN2LNT_formula codeSysPf) 0
                 (natToTerm (codeFormula x))) with (box x).
         apply HBL1; assumption.
     Qed.

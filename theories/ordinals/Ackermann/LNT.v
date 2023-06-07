@@ -229,7 +229,7 @@ Lemma forallSimp (T : System) (f : Formula) (v : nat):
 Proof. apply (forallSimp LNT). Qed.
 
 Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
- SysPrf T (substituteFormula LNT f v t) -> SysPrf T (exH v, f)%nt.
+ SysPrf T (substF LNT f v t) -> SysPrf T (exH v, f)%nt.
 Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):

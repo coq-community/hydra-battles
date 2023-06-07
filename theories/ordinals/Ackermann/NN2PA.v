@@ -58,7 +58,7 @@ Qed.
 Lemma PAboundedLT :
   forall (m : nat) (F : LNT.Formula) (x : nat),
     (forall n : nat,
-        n < m -> SysPrf PA (substituteFormula LNT F x (natToTerm n))) ->
+        n < m -> SysPrf PA (substF LNT F x (natToTerm n))) ->
     SysPrf PA (LNN2LNT_formula (v#x < LNN.natToTerm m)%nn -> F)%nt.
 Proof.
 simple induction m. 
@@ -91,7 +91,7 @@ simple induction m.
   + apply sysWeaken, impI.
     rewrite <- (subFormulaId LNT a x).
     rewrite LNN2LNT_natToTerm.
-    apply impE with (substituteFormula LNT a x (natToTerm n)).
+    apply impE with (substF LNT a x (natToTerm n)).
     * apply (subWithEquals LNT).
       apply eqSym.
       apply Axm; right; constructor.

@@ -118,7 +118,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f4).
 
-Compute substituteFormula LNN f4 0 (natToTerm 0).
+Compute substF LNN f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)
 
 Locate LT.
@@ -143,14 +143,14 @@ Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn.
 
 Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
 
-Compute substituteFormula LNN (v#0 = v#0)%nn 0 Zero.
+Compute substF LNN (v#0 = v#0)%nn 0 Zero.
 
 Goal Prf LNN nil
          (forallH 0 (v#0 = v#0))%nn  -> 
        Prf LNN nil (Zero = Zero)%nn.
 intros; specialize (FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn). 
 intro H0.
-unfold substituteFormula in H0. simpl in H0.    
+unfold substF in H0. simpl in H0.    
 generalize (MP LNN nil nil _ _ H0). 
 intro H1; apply H1. auto. 
 Qed.
