@@ -89,7 +89,7 @@ Proof.
     + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
       fold nv; simpl; auto.
     + induction
-        (In_dec eq_nat_dec v (freeVarTerm LNN (natToTerm (codeFormula Theta)))) 
+        (In_dec eq_nat_dec v (freeVarT LNN (natToTerm (codeFormula Theta)))) 
         as [a | b0].
       * elim (closedNatToTerm _ _ a).
       * clear b b0.
@@ -252,15 +252,15 @@ Proof.
             induction (in_app_or _ _ _ H); clear H
         | H:(In _ (freeVarF LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
-        | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
+        | H:(In _ (freeVarT LNN (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
-        | H:(In _ (freeVarTerm LNN Zero)) |- _ =>
+        | H:(In _ (freeVarT LNN Zero)) |- _ =>
             elim H
-        | H:(In _ (freeVarTerm LNN (Succ _))) |- _ =>
+        | H:(In _ (freeVarT LNN (Succ _))) |- _ =>
             rewrite freeVarSucc in H
-        | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
+        | H:(In _ (freeVarT LNN (var _))) |- _ =>
             simpl in H; decompose sum H; clear H
-        | H:(In _ (freeVarTerm LNN (var LNN _))) |- _ =>
+        | H:(In _ (freeVarT LNN (var LNN _))) |- _ =>
             simpl in H; decompose sum H; clear H
         end.
       elim (Compat815.le_not_lt _ _ (H5 _ H4)); lia. 
@@ -350,7 +350,7 @@ Proof.
     + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
       fold nv; simpl; now left.   
     + induction
-        (In_dec eq_nat_dec v (freeVarTerm LNT (natToTerm (codeFormula Theta)))) 
+        (In_dec eq_nat_dec v (freeVarT LNT (natToTerm (codeFormula Theta)))) 
         as [a | ?].
       * elim (closedNatToTerm _ _ a).
       * clear b b0; rewrite (subFormulaAnd LNT).
@@ -587,15 +587,15 @@ Proof.
             induction (in_app_or _ _ _ H); clear H
         | H:(In _ (freeVarF LNT (substF LNT ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
-        | H:(In _ (freeVarTerm LNT (natToTerm _))) |- _ =>
+        | H:(In _ (freeVarT LNT (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
-        | H:(In _ (freeVarTerm LNT Zero)) |- _ =>
+        | H:(In _ (freeVarT LNT Zero)) |- _ =>
             elim H
-        | H:(In _ (freeVarTerm LNT (Succ _))) |- _ =>
+        | H:(In _ (freeVarT LNT (Succ _))) |- _ =>
             rewrite freeVarSucc in H
-        | H:(In _ (freeVarTerm LNT (var _))) |- _ =>
+        | H:(In _ (freeVarT LNT (var _))) |- _ =>
             simpl in H; decompose sum H; clear H
-        | H:(In _ (freeVarTerm LNT (var LNT _))) |- _ =>
+        | H:(In _ (freeVarT LNT (var LNT _))) |- _ =>
             simpl in H; decompose sum H; clear H
         end.
       * elim (Compat815.le_not_lt x 3).

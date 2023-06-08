@@ -815,7 +815,7 @@ Proof.
                              ---- discriminate a.
                              ----induction 
                                  (In_dec eq_nat_dec 1 
-                                    (freeVarTerm LNT (natToTerm (codeFormula x)))) 
+                                    (freeVarT LNT (natToTerm (codeFormula x)))) 
                                  as [a | b0].
                                  ++++ elim (closedNatToTerm _ _ a).
                                  ++++ reflexivity.
@@ -842,7 +842,7 @@ Proof.
                                   induction (eq_nat_dec 2 0) as [a | b]. 
                                   discriminate a.
                                   induction (In_dec eq_nat_dec 2 
-                                               (freeVarTerm LNT 
+                                               (freeVarT LNT 
                                                   (natToTerm (codeFormula x)))).
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -851,7 +851,7 @@ Proof.
                                   discriminate a.
                                   induction
                                     (In_dec eq_nat_dec 2 
-                                       (freeVarTerm LNT 
+                                       (freeVarT LNT 
                                           (natToTerm (codePrf x0 x x1)))) as [a | b0].
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -906,10 +906,10 @@ Proof.
                     assumption.
                  ** lia. 
                ++ rewrite <- LNT2LNN_natToTerm in H4.
-                  rewrite LNT2LNN_freeVarTerm in H4.
+                  rewrite LNT2LNN_freeVarT in H4.
                   apply (closedNatToTerm _ _ H4).
                ++ rewrite <- LNT2LNN_natToTerm in H4.
-                  rewrite LNT2LNN_freeVarTerm in H4.
+                  rewrite LNT2LNN_freeVarT in H4.
                   apply (closedNatToTerm _ _ H4).
                ++ apply (IHn x2).
                   now apply LNN2LNT_freeVarF2.
@@ -1112,7 +1112,7 @@ Proof.
               ** discriminate a.
               ** induction 
                   (In_dec eq_nat_dec 1
-                     (freeVarTerm LNT
+                     (freeVarT LNT
                         (natToTermLNT (code.codeFormula LNT 
                                          codeLNTFunction codeLNTRelation x)))).
         --- elim (closedNatToTerm _ _ a).
@@ -1166,10 +1166,10 @@ Proof.
                           apply H4.
                       --- lia. 
                    ** rewrite <- LNT2LNN_natToTerm in H3.
-                      rewrite LNT2LNN_freeVarTerm in H3.
+                      rewrite LNT2LNN_freeVarT in H3.
                       apply (closedNatToTerm _ _ H3).
                    ** rewrite <- LNT2LNN_natToTerm in H3.
-                      rewrite LNT2LNN_freeVarTerm in H3.
+                      rewrite LNT2LNN_freeVarT in H3.
                       apply (closedNatToTerm _ _ H3).
                    ** assert
                        (H4: In x2
@@ -1216,7 +1216,7 @@ Proof.
                      discriminate a.
                      induction
                        (In_dec eq_nat_dec 2
-                          (freeVarTerm LNT
+                          (freeVarT LNT
                              (natToTermLNT (code.codeFormula LNT 
                                               codeLNTFunction codeLNTRelation x))))
                        as [a | b0].

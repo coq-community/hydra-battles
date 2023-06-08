@@ -247,11 +247,11 @@ rewrite LNN2LNT_exist.
 repeat rewrite (subFormulaExist LNT).
 destruct (eq_nat_dec 1 0).
 discriminate e.
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula g)))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula g)))).
 elim (closedNatToTerm _ _ i).
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula f)))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula f)))).
 elim (closedNatToTerm _ _ i).
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula (impH f g))))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula (impH f g))))).
 elim (closedNatToTerm _ _ i).
 clear n n0 n1 n2.
 apply impI.

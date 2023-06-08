@@ -83,17 +83,17 @@ Ltac SimplFreeVar :=
        induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
    | H:(In _ (freeVarF ?X9 (LT ?X1 ?X2))) |- _ =>
        rewrite freeVarLT in H
-   | H:(In _ (freeVarTerm ?X9 (LNT.natToTerm _))) |- _ =>
+   | H:(In _ (freeVarT ?X9 (LNT.natToTerm _))) |- _ =>
        elim (LNT.closedNatToTerm _ _ H)
-   | H:(In _ (freeVarTerm ?X9 (natToTerm _))) |- _ =>
+   | H:(In _ (freeVarT ?X9 (natToTerm _))) |- _ =>
        elim (closedNatToTerm _ _ H)
-   | H:(In _ (freeVarTerm ?X9 Zero)) |- _ =>
+   | H:(In _ (freeVarT ?X9 Zero)) |- _ =>
        elim H
-   | H:(In _ (freeVarTerm ?X9 (Succ _))) |- _ =>
+   | H:(In _ (freeVarT ?X9 (Succ _))) |- _ =>
        rewrite freeVarSucc in H
-   | H:(In _ (freeVarTerm ?X9 (var _))) |- _ =>
+   | H:(In _ (freeVarT ?X9 (var _))) |- _ =>
        simpl in H; decompose sum H; clear H
-   | H:(In _ (freeVarTerm ?X9 (var ?X9 _))) |- _ =>
+   | H:(In _ (freeVarT ?X9 (var ?X9 _))) |- _ =>
        simpl in H; decompose sum H; clear H
    end.
 
@@ -196,14 +196,14 @@ Proof.
   - elim H0; assumption.
   - induction
  (In_dec eq_nat_dec nv
-    (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
+    (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0; rewrite (subFormulaExist LNN).
       induction (eq_nat_dec nv 1) as [a | b].
       * elim H1; assumption.
       * induction
           (In_dec eq_nat_dec nv
-             (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A f p)))) as [a | b0].
+             (freeVarT LNN (natToTerm (codePrf L codeF codeR A f p)))) as [a | b0].
         -- elim (closedNatToTerm _ _ a).
         -- clear b b0.
            apply existI with (natToTerm (codeList (map (codeFormula L codeF codeR) A))).
@@ -333,7 +333,7 @@ Proof.
                  +++ discriminate a.
                  +++ induction
                      (In_dec eq_nat_dec (S nv)
-                        (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))).
+                        (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))).
                      *** elim (closedNatToTerm _ _ a).
                      *** clear b b0.
                          rewrite (subFormulaForall LNN).
@@ -341,7 +341,7 @@ Proof.
                          elim H4; assumption.
                          induction
                            (In_dec eq_nat_dec (S nv)
-                              (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A f p)))).
+                              (freeVarT LNN (natToTerm (codePrf L codeF codeR A f p)))).
                          ---- elim (closedNatToTerm _ _ a).
                          ---- clear b b0.
                               rewrite (subFormulaForall LNN).
@@ -349,7 +349,7 @@ Proof.
                               ++++ elim H6; assumption.
                               ++++ induction
                                   (In_dec eq_nat_dec (S nv)
-                                     (freeVarTerm LNN
+                                     (freeVarT LNN
                                         (natToTerm (codeList (map
                                                                 (codeFormula L codeF codeR) 
                                                                 A))))).
@@ -800,7 +800,7 @@ Proof.
   elim H0; assumption.
   induction
     (In_dec eq_nat_dec nv
-       (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))).
+       (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaExist LNN).
@@ -808,7 +808,7 @@ Proof.
   elim H1; assumption.
   induction
     (In_dec eq_nat_dec nv
-       (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A f p)))).
+       (freeVarT LNN (natToTerm (codePrf L codeF codeR A f p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   repeat rewrite (subFormulaAnd LNN).
@@ -1046,7 +1046,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))).
+       (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaForall LNN).
@@ -1054,7 +1054,7 @@ Proof.
   elim H8; assumption.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A f p)))).
+       (freeVarT LNN (natToTerm (codePrf L codeF codeR A f p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaNot LNN).
@@ -1063,7 +1063,7 @@ Proof.
   elim H10; assumption.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarTerm LNN
+       (freeVarT LNN
           (natToTerm (codeList (map (codeFormula L codeF codeR) A))))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
@@ -1423,13 +1423,13 @@ Proof.
   - elim H0; assumption.
   - induction
       (In_dec eq_nat_dec nv
-         (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
+         (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0.
       rewrite (subFormulaExist LNN).
       induction (eq_nat_dec nv 1).
       elim H1; assumption.
-      induction (In_dec eq_nat_dec nv (freeVarTerm LNN (natToTerm n))).
+      induction (In_dec eq_nat_dec nv (freeVarT LNN (natToTerm n))).
       elim (closedNatToTerm _ _ a).
       clear b b0.
       repeat rewrite (subFormulaAnd LNN).
@@ -1583,15 +1583,15 @@ Proof.
         induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
     | H:(In _ (freeVarF LNN (LT ?X1 ?X2))) |- _ =>
         rewrite freeVarLT in H
-    | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
+    | H:(In _ (freeVarT LNN (natToTerm _))) |- _ =>
         elim (closedNatToTerm _ _ H)
-    | H:(In _ (freeVarTerm LNN Zero)) |- _ =>
+    | H:(In _ (freeVarT LNN Zero)) |- _ =>
         elim H
-    | H:(In _ (freeVarTerm LNN (Succ _))) |- _ =>
+    | H:(In _ (freeVarT LNN (Succ _))) |- _ =>
         rewrite freeVarSucc in H
-    | H:(In _ (freeVarTerm LNN (var _))) |- _ =>
+    | H:(In _ (freeVarT LNN (var _))) |- _ =>
         simpl in H; decompose sum H; clear H
-    | H:(In _ (freeVarTerm LNN (var LNN _))) |- _ =>
+    | H:(In _ (freeVarT LNN (var LNN _))) |- _ =>
         simpl in H; decompose sum H; clear H
     end.
   - assert
@@ -1646,7 +1646,7 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 1
-         (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
+         (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + apply existI with (natToTerm (codePrf L codeF codeR _ _ x0)).
       now apply codeSysPrfCorrect1.
@@ -1685,14 +1685,14 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 2
-         (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))).
+         (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))).
     + elim (closedNatToTerm _ _ a).
     + clear b b0; rewrite (subFormulaExist LNN).
       induction (eq_nat_dec 2 1) as [a | ?].
       * discriminate a.
       * induction
           (In_dec eq_nat_dec 2
-             (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
+             (freeVarT LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
         -- elim (closedNatToTerm _ _ a).
         -- clear b b0.
            apply existI with (natToTerm (codeFormula L codeF codeR (notH f))).
@@ -1861,7 +1861,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec 2
-       (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))).
+       (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaExist LNN).
@@ -1869,7 +1869,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec 2
-       (freeVarTerm LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
+       (freeVarT LNN (natToTerm (codePrf L codeF codeR A (notH f) p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   apply nExist.
@@ -2056,13 +2056,13 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 2
-         (freeVarTerm LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
+         (freeVarT LNN (natToTerm (codeFormula L codeF codeR f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0.
       rewrite (subFormulaExist LNN).
       induction (eq_nat_dec 2 1) as [a | b0].
       * discriminate a.
-      * induction (In_dec eq_nat_dec 2 (freeVarTerm LNN (natToTerm n))) as [a | b1].
+      * induction (In_dec eq_nat_dec 2 (freeVarT LNN (natToTerm n))) as [a | b1].
         -- elim (closedNatToTerm _ _ a).
         -- clear b1 b0; apply nExist.
            apply

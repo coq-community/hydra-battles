@@ -257,7 +257,7 @@ Proof.
            destruct (eq_nat_dec 1 0) as [e|n].
            ++ discriminate e.
            ++ induction
-               (In_dec eq_nat_dec 1 (freeVarTerm LNN
+               (In_dec eq_nat_dec 1 (freeVarT LNN
                                        (codeNatToTerm.natToTermLNN codeX)))
                  as [a | _]. 
               ** elim (closedNatToTerm _ _ a).

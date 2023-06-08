@@ -14,10 +14,10 @@ Import NNnotations.
 #[local] Arguments apply _ _ _ : clear implicits.
 
 Lemma paZeroOrSucc (t : Term):
- let nv := newVar (0 :: freeVarTerm LNT t) in
+ let nv := newVar (0 :: freeVarT LNT t) in
  SysPrf PA (t = Zero \/ exH nv, t = Succ (v#nv))%nt.
   Proof.
-     set (nv := newVar (0 :: freeVarTerm LNT t)) in *. 
+     set (nv := newVar (0 :: freeVarT LNT t)) in *. 
   apply impE with
     (substF LNT
        (v#0 = Zero \/ exH nv, v#0 = Succ v#nv)%nt
@@ -27,12 +27,12 @@ Lemma paZeroOrSucc (t : Term):
     + apply iffRefl.
     + rewrite (subFormulaExist LNT).
       destruct (eq_nat_dec nv 0) as [a | b].
-      * elim (newVar1 (0 :: freeVarTerm LNT t)).
+      * elim (newVar1 (0 :: freeVarT LNT t)).
         fold nv in |- *.
         rewrite a; simpl; auto.
-      * destruct (In_dec eq_nat_dec nv (freeVarTerm LNT t)) 
+      * destruct (In_dec eq_nat_dec nv (freeVarT LNT t)) 
           as [a | b0].
-        -- elim (newVar1 (0 :: freeVarTerm LNT t)).
+        -- elim (newVar1 (0 :: freeVarT LNT t)).
            fold nv in |- *; simpl in |- *; auto.
         -- rewrite (subFormulaEqual LNT).
            Opaque eq_nat_dec.
@@ -49,11 +49,11 @@ Lemma paZeroOrSucc (t : Term):
       * apply impI; rewrite (subFormulaOr LNT); apply orI2.
         rewrite (subFormulaExist LNT).
         induction (eq_nat_dec nv 0).
-  -- elim (newVar1 (0 :: freeVarTerm LNT t)).
+  -- elim (newVar1 (0 :: freeVarT LNT t)).
      fold nv; simpl; auto.
-  -- induction (In_dec eq_nat_dec nv (freeVarTerm LNT (Succ (v#0))%nt)) 
+  -- induction (In_dec eq_nat_dec nv (freeVarT LNT (Succ (v#0))%nt)) 
        as [a | b0].
-     ++ elim (newVar1 (0 :: freeVarTerm LNT t)).
+     ++ elim (newVar1 (0 :: freeVarT LNT t)).
         fold nv in |- *.
         simpl in a.
         induction a as [H| H].
@@ -97,7 +97,7 @@ Proof.
     - rewrite (subFormulaForall LNT).
       induction (eq_nat_dec 0 1) as [a | b].
       + discriminate a.
-      + induction (In_dec eq_nat_dec 0 (freeVarTerm LNT Zero)) as [a | b0].
+      + induction (In_dec eq_nat_dec 0 (freeVarT LNT Zero)) as [a | b0].
         * elim a.
         * apply induct.
           -- repeat rewrite (subFormulaEqual LNT).
@@ -126,7 +126,7 @@ Proof.
         rewrite (subFormulaForall LNT).
         induction (eq_nat_dec 0 1) as [a | b].
         * discriminate a.
-        * induction (In_dec eq_nat_dec 0 (freeVarTerm LNT (Succ (v#1))%nt)).
+        * induction (In_dec eq_nat_dec 0 (freeVarT LNT (Succ (v#1))%nt)).
 
           -- simpl in a.
              induction a as [H| H].
@@ -316,7 +316,7 @@ Proof.
   - rewrite (subFormulaForall LNT).
     induction (eq_nat_dec 0 1).
     + discriminate a.
-    + induction (In_dec eq_nat_dec 0 (freeVarTerm LNT Zero)).
+    + induction (In_dec eq_nat_dec 0 (freeVarT LNT Zero)).
       * simpl in a.
         elim a.
       * rewrite (subFormulaOr LNT).
@@ -338,7 +338,7 @@ Proof.
            rewrite (subFormulaExist LNT).
            induction (eq_nat_dec 3 1).
            ++ discriminate a.
-           ++ induction (In_dec eq_nat_dec 3 (freeVarTerm LNT Zero)).
+           ++ induction (In_dec eq_nat_dec 3 (freeVarT LNT Zero)).
               ** elim a.
               ** apply impE with (exH 3, v#0 = Succ v#3)%nt.
                  { apply sysWeaken.
@@ -382,7 +382,7 @@ Proof.
       rewrite (subFormulaForall LNT).
       induction (eq_nat_dec 0 1).
       * discriminate a.
-      * induction (In_dec eq_nat_dec 0 (freeVarTerm LNT (Succ v#1)%nt)).
+      * induction (In_dec eq_nat_dec 0 (freeVarT LNT (Succ v#1)%nt)).
         -- simpl in a.
            induction a as [H| H].
            ++ discriminate H.
@@ -396,7 +396,7 @@ Proof.
               induction (eq_nat_dec 3 1).
               ** discriminate a.
               ** induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v#1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  { simpl in a.
                    induction a as [H| H].
                    - elim b1; auto.
@@ -405,7 +405,7 @@ Proof.
                  rewrite (subFormulaExist LNT).
                  induction (eq_nat_dec 3 0).
                  { discriminate a. }
-                 induction (In_dec eq_nat_dec 3 (freeVarTerm LNT Zero)).
+                 induction (In_dec eq_nat_dec 3 (freeVarT LNT Zero)).
                  { simpl in a; contradiction. }
                  apply existI with (v#1)%nt.
                  repeat rewrite (subFormulaEqual LNT).
@@ -420,7 +420,7 @@ Proof.
                    induction (eq_nat_dec 3 1).
                    - discriminate a.
                    - induction (In_dec eq_nat_dec 3 
-                                  (freeVarTerm LNT (Succ (v#1))%nt)).
+                                  (freeVarT LNT (Succ (v#1))%nt)).
                      + simpl in a.
                        induction a as [H| H].
                        * elim b1; auto.
@@ -430,7 +430,7 @@ Proof.
                        induction (eq_nat_dec 3 0).
                        * discriminate a.
                        * induction (In_dec eq_nat_dec 3
-                                      (freeVarTerm LNT (Succ (v#0))%nt)).
+                                      (freeVarT LNT (Succ (v#0))%nt)).
                          -- simpl in a.
                             induction a as [H| H].
                             ++ elim b3; auto.
@@ -439,14 +439,14 @@ Proof.
                             induction (eq_nat_dec 3 1).
                             ++ elim b1; auto.
                             ++ induction (In_dec eq_nat_dec 3 
-                                            (freeVarTerm LNT (Succ (v#1))%nt)).
+                                            (freeVarT LNT (Succ (v#1))%nt)).
                                ** elim b2; auto.
                                ** rewrite (subFormulaExist LNT).
                                   induction (eq_nat_dec 3 0).
                                   { elim b3; auto. }
                                   induction (In_dec eq_nat_dec 
                                                3 
-                                               (freeVarTerm LNT 
+                                               (freeVarT LNT 
                                                   (Succ (v#0))%nt)).
                                   { elim b4; auto. }
                                   repeat rewrite (subFormulaEqual LNT); 
@@ -528,7 +528,7 @@ Proof.
                  induction (eq_nat_dec 3 1).
                  { discriminate a. }
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v#1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  induction a as [H| H].
                  { elim b1; auto. }
                  contradiction.
@@ -536,7 +536,7 @@ Proof.
                  induction (eq_nat_dec 3 0).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3
-                              (freeVarTerm LNT (Succ v#0)%nt)).
+                              (freeVarT LNT (Succ v#0)%nt)).
                  induction a as [H| H].
                  elim b3; auto.
                  contradiction.
@@ -558,7 +558,7 @@ Proof.
                  induction (eq_nat_dec 3 1).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v#1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  induction a as [H| H].
                  elim b1; auto.
                  contradiction.
@@ -566,7 +566,7 @@ Proof.
                  induction (eq_nat_dec 3 0).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ (v#0))%nt)).
+                              (freeVarT LNT (Succ (v#0))%nt)).
                  induction a as [H| H].
                  elim b3; auto.
                  contradiction.
