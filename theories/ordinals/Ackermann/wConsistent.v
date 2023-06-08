@@ -7,7 +7,7 @@ Import NNnotations.
 
 Definition wConsistent (T : System) :=
   forall (f : Formula) (v : nat),
-  (forall x : nat, In x (freeVarFormula LNN f) -> v = x) ->
+  (forall x : nat, In x (freeVarF LNN f) -> v = x) ->
   SysPrf T (existH v (notH f)) ->
   exists n : nat, ~ SysPrf T (substF LNN f v (natToTerm n)).
 
@@ -19,7 +19,7 @@ Proof.
     by apply existSimp, nnI, eqRefl.
   assert
     (H1 : forall x : nat,
-        In x (freeVarFormula LNN (v#0 <> v#0)%nn) -> 0 = x)
+        In x (freeVarF LNN (v#0 <> v#0)%nn) -> 0 = x)
     by (intros x H1; simpl in H1; repeat induction H1; auto).
   destruct  (H _ _ H1 H0) as [x H2]; 
     now exists (substF LNN (v#0 <> v#0)%nn 0
@@ -29,7 +29,7 @@ Qed.
 Definition wInconsistent (T : System) :=
   exists f : Formula,
     (exists v : nat,
-       (forall x : nat, In x (freeVarFormula LNN f) -> v = x) /\
+       (forall x : nat, In x (freeVarF LNN f) -> v = x) /\
        SysPrf T (existH v (notH f)) /\
        (forall n : nat, SysPrf T (substF LNN f v (natToTerm n)))).
 

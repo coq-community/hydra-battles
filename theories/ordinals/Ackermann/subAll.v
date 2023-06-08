@@ -118,8 +118,8 @@ Fixpoint subAllFormula (f : Formula) (m : (nat -> Term)) {struct f} : Formula :=
   | (allH n, f)%fol =>
       let nv :=
         newVar
-          (freeVarFormula L f ++
-           freeVarMap (freeVarFormula L (allH n, f)%fol) m) in
+          (freeVarF L f ++
+           freeVarMap (freeVarF L (allH n, f)%fol) m) in
       (allH nv,
         (subAllFormula f
            (fun v : nat =>
@@ -132,7 +132,7 @@ Fixpoint subAllFormula (f : Formula) (m : (nat -> Term)) {struct f} : Formula :=
 
 Lemma subAllFormula_ext :
  forall (f : fol.Formula L) (m1 m2 : nat -> fol.Term L),
- (forall m : nat, In m (freeVarFormula L f) -> m1 m = m2 m) ->
+ (forall m : nat, In m (freeVarF L f) -> m1 m = m2 m) ->
  subAllFormula f m1 = subAllFormula f m2.
 Proof.
   intro f; induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
@@ -158,7 +158,7 @@ Proof.
     + reflexivity.
     + apply H.
   - intros m1 m2 H;  rewrite
-        (freeVarMap_ext (List.remove eq_nat_dec n (freeVarFormula L f)) m1 m2).
+        (freeVarMap_ext (List.remove eq_nat_dec n (freeVarF L f)) m1 m2).
     + set
         (m1' :=
            fun v : nat =>
@@ -166,9 +166,9 @@ Proof.
              | left _ =>
                  var 
                    (newVar
-                      (freeVarFormula L f ++
+                      (freeVarF L f ++
                          freeVarMap (List.remove  eq_nat_dec n 
-                                       (freeVarFormula L f)) m2))
+                                       (freeVarF L f)) m2))
              | right _ => m1 v
              end). 
       set
@@ -178,9 +178,9 @@ Proof.
              | left _ =>
                  var 
                    (newVar
-                      (freeVarFormula L f ++
+                      (freeVarF L f ++
                          freeVarMap (List.remove eq_nat_dec n 
-                                       (freeVarFormula L f)) m2))
+                                       (freeVarF L f)) m2))
              | right _ => m2 v
              end).
       rewrite (Hrecf m1' m2').
@@ -291,8 +291,8 @@ Qed.
 
 Lemma freeVarSubAllFormula1 :
  forall (f : fol.Formula L) (m : nat -> fol.Term L) (v : nat),
- In v (freeVarFormula L (subAllFormula f m)) ->
- exists n : nat, In n (freeVarFormula L f) /\ In v (freeVarTerm L (m n)).
+ In v (freeVarF L (subAllFormula f m)) ->
+ exists n : nat, In n (freeVarF L f) /\ In v (freeVarTerm L (m n)).
 Proof.
   intro f;
     induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; simpl.
@@ -308,12 +308,12 @@ Proof.
 -  intros m v H; set
     (nv :=
        newVar
-         (freeVarFormula L f ++
-            freeVarMap (List.remove eq_nat_dec n (freeVarFormula L f)) m)). 
+         (freeVarF L f ++
+            freeVarMap (List.remove eq_nat_dec n (freeVarF L f)) m)). 
  
    assert
      (H0: In v
-            (freeVarFormula L
+            (freeVarF L
                (subAllFormula f
                   (fun v : nat =>
                      match eq_nat_dec v n with
@@ -334,9 +334,9 @@ Qed.
 
 Lemma freeVarSubAllFormula2 :
  forall (f : fol.Formula L) (m : nat -> fol.Term L) (v n : nat),
- In n (freeVarFormula L f) ->
+ In n (freeVarF L f) ->
  In v (freeVarTerm L (m n)) -> 
- In v (freeVarFormula L (subAllFormula f m)).
+ In v (freeVarF L (subAllFormula f m)).
 Proof.
   intro f; induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     simpl.
@@ -366,13 +366,13 @@ Proof.
      + intro H1; 
         eapply
           (newVar1
-             (freeVarFormula L f ++
+             (freeVarF L f ++
                 freeVarMap (List.remove eq_nat_dec n 
-                              (freeVarFormula L f)) m)).
+                              (freeVarF L f)) m)).
       rewrite <-  H1; clear H1; apply in_or_app.
       right.
       clear Hrecf.
-      induction (List.remove eq_nat_dec n (freeVarFormula L f)); 
+      induction (List.remove eq_nat_dec n (freeVarF L f)); 
         simpl in |- *.
       * contradiction H.
       * apply in_or_app; simpl in H.
@@ -438,13 +438,13 @@ Proof.
       set
         (nv1 :=
            newVar
-             (freeVarFormula L a ++
-                freeVarMap (List.remove eq_nat_dec v (freeVarFormula L a)) m)). 
+             (freeVarF L a ++
+                freeVarMap (List.remove eq_nat_dec v (freeVarF L a)) m)). 
     set
       (nv2 :=
          newVar
-           (freeVarFormula L a ++
-              freeVarMap (List.remove eq_nat_dec v (freeVarFormula L a))
+           (freeVarF L a ++
+              freeVarMap (List.remove eq_nat_dec v (freeVarF L a))
               (fun n : nat => substT L (m n) v0 s))).
     apply (sysExtend L) with (Empty_set (fol.Formula L)).
     + unfold Included; intros x H0; destruct H0.
@@ -460,14 +460,14 @@ Proof.
       induction (eq_nat_dec nv1 v0) as [a0 | ?].
       * assert
           (H3: forall n : nat,
-              In n (freeVarFormula L (forallH  v a)) ->
+              In n (freeVarF L (forallH  v a)) ->
               substT L (m n) v0 s = m n).
         { intros n H3;  apply subTermNil.
            intros H4.
            elim
              (newVar1
-                (freeVarFormula L a ++
-                   freeVarMap (List.remove eq_nat_dec v (freeVarFormula L a)) m)).
+                (freeVarF L a ++
+                   freeVarMap (List.remove eq_nat_dec v (freeVarF L a)) m)).
            fold nv1; rewrite a0.
            apply in_or_app; right.
            eapply freeVarMap1.
@@ -477,7 +477,7 @@ Proof.
         assert (H4: nv1 = nv2).
         { unfold nv1, nv2; 
             rewrite
-              (freeVarMap_ext (List.remove eq_nat_dec v (freeVarFormula L a))
+              (freeVarMap_ext (List.remove eq_nat_dec v (freeVarF L a))
                  (fun n : nat => substT L (m n) v0 s) m).
           - reflexivity.
           - apply H3.
@@ -555,9 +555,9 @@ Proof.
                                  intro H4;
                                    elim
                                      (newVar1
-                                        (freeVarFormula L a ++
+                                        (freeVarF L a ++
                                            freeVarMap (List.remove eq_nat_dec v 
-                                                         (freeVarFormula L a)) m)).
+                                                         (freeVarF L a)) m)).
                                  fold nv1; apply in_or_app.
                                  right.
                                  eapply freeVarMap1.
@@ -617,7 +617,7 @@ Proof.
                   intros H3; simpl in H3.
                   assert
                     (H4: In nv2
-                           (freeVarFormula L
+                           (freeVarF L
                               (subAllFormula a
                                  (fun v1 : nat =>
                                     match eq_nat_dec v1 v with
@@ -633,8 +633,8 @@ Proof.
                   --- 
                     elim
                       (newVar1
-                         (freeVarFormula L a ++
-                            freeVarMap (List.remove  eq_nat_dec v (freeVarFormula L a))
+                         (freeVarF L a ++
+                            freeVarMap (List.remove  eq_nat_dec v (freeVarF L a))
                             (fun n : nat => substT L (m n) v0 s))).
                     fold nv2; apply in_or_app.
                     right;  eapply freeVarMap1.
@@ -671,9 +671,9 @@ Proof.
                              intros H6;
                                 elim
                                   (newVar1
-                                     (freeVarFormula L a ++
+                                     (freeVarF L a ++
                                         freeVarMap (List.remove  eq_nat_dec v 
-                                                      (freeVarFormula L a)) m)).
+                                                      (freeVarF L a)) m)).
                               fold nv1; rewrite <- H6.
                               apply in_or_app.
                               right; eapply freeVarMap1.
@@ -729,8 +729,8 @@ Proof.
     + set
         (nv :=
            newVar
-             (freeVarFormula L f ++
-                freeVarMap (List.remove  eq_nat_dec n (freeVarFormula L f))
+             (freeVarF L f ++
+                freeVarMap (List.remove  eq_nat_dec n (freeVarF L f))
                 (fun x : nat => var x))).
       apply
         (iffTrans L)
@@ -761,14 +761,14 @@ Proof.
            apply (rebindForall L).
            intro H;
              assert
-               (H0: In nv (freeVarFormula L (subAllFormula f 
+               (H0: In nv (freeVarF L (subAllFormula f 
                                                (fun x : nat => var x))))
            by (eapply in_remove; apply H). 
            decompose record (freeVarSubAllFormula1 _ _ _ H0) /r; intros x H2 H3.
            elim
              (newVar1
-                (freeVarFormula L f ++
-                   freeVarMap (List.remove eq_nat_dec n (freeVarFormula L f))
+                (freeVarF L f ++
+                   freeVarMap (List.remove eq_nat_dec n (freeVarF L f))
                    (fun x : nat => var x))).
            fold nv; apply in_or_app; right.
            eapply freeVarMap1.
@@ -832,16 +832,16 @@ Proof.
   - intros T m1 m2; simpl;
       set
         (nv1 :=
-           freeVarFormula L f ++
-             freeVarMap (List.remove eq_nat_dec n (freeVarFormula L f)) m1).
+           freeVarF L f ++
+             freeVarMap (List.remove eq_nat_dec n (freeVarF L f)) m1).
     set
       (nv2 :=
-         freeVarFormula L f ++
-           freeVarMap (List.remove eq_nat_dec n (freeVarFormula L f))
+         freeVarF L f ++
+           freeVarMap (List.remove eq_nat_dec n (freeVarF L f))
            (fun n0 : nat => subAllTerm (m1 n0) m2)).
     set
       (nv3 :=
-         freeVarFormula L
+         freeVarF L
            (subAllFormula f
               (fun v : nat =>
                  match eq_nat_dec v n with
@@ -850,7 +850,7 @@ Proof.
                  end)) ++
            freeVarMap
            (List.remove eq_nat_dec (newVar nv1)
-              (freeVarFormula L
+              (freeVarF L
                  (subAllFormula f
                     (fun v : nat =>
                        match eq_nat_dec v n with
@@ -931,7 +931,7 @@ Proof.
       intro H;
         assert
           (H0:In (newVar nv3)
-                (freeVarFormula L
+                (freeVarF L
                    (subAllFormula f
                       (fun v : nat =>
                          match eq_nat_dec v n with
@@ -976,7 +976,7 @@ Opaque le_lt_dec.
 
 Lemma liftCloseFrom  (n : nat) :
  forall(f : fol.Formula L) (T : fol.System L) (m : nat),
- (forall v : nat, In v (freeVarFormula L f) -> v < m) ->
+ (forall v : nat, In v (freeVarF L f) -> v < m) ->
  n <= m ->
  folProof.SysPrf L T (closeFrom 0 n f) ->
  folProof.SysPrf L T
@@ -1015,7 +1015,7 @@ Proof.
              (H3:forall q : nat,
                  n <= q ->
                  m <= q -> 
-                 ~ In q (freeVarFormula L (forallH n (closeFrom 0 n f)))).
+                 ~ In q (freeVarF L (forallH n (closeFrom 0 n f)))).
            { clear H2 H1 T Hrecn.
              induction n as [| n Hrecn]; simpl in |- *.
            - intros q H1 H2 H3; assert (H': q < m). 
@@ -1353,7 +1353,7 @@ Proof.
         * rewrite H2; apply Nat.le_max_l.
   } 
   destruct H0 as (x, H0).
-  set (r := max (max n (newVar (freeVarFormula L f))) x).
+  set (r := max (max n (newVar (freeVarF L f))) x).
   set
     (f' :=
        subAllFormula f
@@ -1420,7 +1420,7 @@ Proof.
       induction (le_lt_dec n m0) as [a | ?].
       * simpl; induction (le_lt_dec r m0) as [a0 | ?].
         -- rewrite  Nat.le_ngt in a0; destruct a0.
-           apply Nat.lt_le_trans with (newVar (freeVarFormula L f)).
+           apply Nat.lt_le_trans with (newVar (freeVarF L f)).
            ++ now apply newVar2.
            ++ unfold r; eapply Nat.le_trans.
               ** apply Nat.le_max_r.
@@ -1439,7 +1439,7 @@ Proof.
         -- now apply H0.
         -- unfold r; apply Nat.le_max_r.
     + unfold f'; clear f'; apply liftCloseFrom.
-      * intros v H1; apply Nat.lt_le_trans with (newVar (freeVarFormula L f)).
+      * intros v H1; apply Nat.lt_le_trans with (newVar (freeVarF L f)).
         -- now apply newVar2.
         -- unfold r; eapply Nat.le_trans.
            ++ apply Nat.le_max_r.
@@ -1466,7 +1466,7 @@ Proof.
       replace (impH  (subAllFormula A map) (subAllFormula B map)) 
       with
       (subAllFormula (impH  A B) map).
-    - set (n := newVar (freeVarFormula L (impH A B))).
+    - set (n := newVar (freeVarF L (impH A B))).
       replace (subAllFormula (impH A B) map) 
         with
         (subAllFormula (impH A B)

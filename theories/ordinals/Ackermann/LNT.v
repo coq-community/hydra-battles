@@ -234,7 +234,7 @@ Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNT v T ->
-  ~ In v (freeVarFormula LNT g) ->
+  ~ In v (freeVarF LNT g) ->
   SysPrf T (exH v, f)%nt -> SysPrf T (f -> g)%nt -> SysPrf T g.
 Proof. apply (existE LNT). Qed.
 
@@ -244,7 +244,7 @@ Proof. apply (existSimp LNT). Qed.
 
 Lemma existSys (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNT v T ->
-  ~ In v (freeVarFormula LNT g) ->
+  ~ In v (freeVarF LNT g) ->
   SysPrf (Ensembles.Add _ T f) g -> 
   SysPrf (Ensembles.Add _ T (exH v, f)%nt) g.
 Proof. apply (existSys LNT). Qed.

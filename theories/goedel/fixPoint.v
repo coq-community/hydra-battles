@@ -45,28 +45,28 @@ Lemma FixPointLNN :
    SysPrf NN
      (B <-> substF LNN A v (natToTermLNN (codeFormula B)))%fol /\
    (forall x : nat,
-    In x (freeVarFormula LNN B) <->
-    In x (List.remove eq_nat_dec v (freeVarFormula LNN A)))}.
+    In x (freeVarF LNN B) <->
+    In x (List.remove eq_nat_dec v (freeVarF LNN A)))}.
 Proof.
   intros A v;
     set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)).
   assert (represent : Representable NN 3 subStar subStarFormula).
   { unfold subStarFormula; apply primRecRepresentable. }
-  set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+  set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
   assert (H: 0 <> nv).
-   { intros H; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+   { intros H; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
      unfold nv in H; rewrite <- H; simpl; right; auto.
    } 
    assert (H0: 1 <> nv).
-   { intros H0; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+   { intros H0; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
      unfold nv in H0; rewrite <- H0; simpl; auto.
    } 
    assert (H1: 2 <> nv).
-   {  intros H1; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+   {  intros H1; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
       unfold nv in H1; rewrite <- H1; simpl; auto.
    } 
    assert (H2: 3 <> nv).
-   { intro H2; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+   { intro H2; elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
      unfold nv in H2; rewrite <- H2; simpl; auto.
    } assert (H3: 3 < nv) by lia. 
    set
@@ -86,7 +86,7 @@ Proof.
                 (substF LNN Theta nv (natToTerm (codeFormula Theta))))).
     unfold Theta at 1; rewrite (subFormulaExist LNN).
     induction (eq_nat_dec v nv) as [a | b].
-    + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+    + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
       fold nv; simpl; auto.
     + induction
         (In_dec eq_nat_dec v (freeVarTerm LNN (natToTerm (codeFormula Theta)))) 
@@ -112,7 +112,7 @@ Proof.
                      +++ assumption.
                      +++  intros [H4| H4].
                           *** elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: 
-                                               freeVarFormula LNN A)).
+                                               freeVarF LNN A)).
                               fold nv; rewrite <- H4; simpl; auto.
                           *** apply H4.
                      +++ apply closedNatToTerm.
@@ -134,14 +134,14 @@ Proof.
                              apply closedNN.
                              apply (subFormulaTrans LNN).
                              intros H4;
-                               assert (H5: In nv (freeVarFormula LNN subStarFormula)) 
+                               assert (H5: In nv (freeVarF LNN subStarFormula)) 
                              by (eapply in_remove, H4).
                              induction represent as [H6 H7].
                              elim (Compat815.lt_not_le _ _ H3).
                              auto.
               ** apply (subFormulaNil LNN).
                  intros H4;
-                 elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+                 elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
                  fold nv; simpl; repeat right; auto.
         -- apply iffI.
            ++ apply impI.
@@ -229,28 +229,28 @@ Proof.
             elim H2; apply H1
         | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
             elim H2; symmetry  in |- *; apply H1
-        | H:(In ?X3 (freeVarFormula LNN (existH ?X1 ?X2))) |- _ =>
-            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
+        | H:(In ?X3 (freeVarF LNN (existH ?X1 ?X2))) |- _ =>
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarF LNN X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNN (forallH LNN ?X1 ?X2))) |- _ =>
-            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNN X2)));
+        | H:(In ?X3 (freeVarF LNN (forallH LNN ?X1 ?X2))) |- _ =>
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarF LNN X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNN ?X2))) |- _
+        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarF LNN ?X2))) |- _
           =>
-            assert (In X3 (freeVarFormula LNN X2));
+            assert (In X3 (freeVarF LNN X2));
             [ eapply in_remove; apply H
             | assert (X3 <> X1); [ eapply in_remove_neq; apply H | clear H ] ]
-        | H:(In ?X3 (freeVarFormula LNN (andH ?X1 ?X2))) |- _ =>
-            assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
+        | H:(In ?X3 (freeVarF LNN (andH ?X1 ?X2))) |- _ =>
+            assert (In X3 (freeVarF LNN X1 ++ freeVarF LNN X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNN (impH LNN ?X1 ?X2))) |- _ =>
-            assert (In X3 (freeVarFormula LNN X1 ++ freeVarFormula LNN X2));
+        | H:(In ?X3 (freeVarF LNN (impH LNN ?X1 ?X2))) |- _ =>
+            assert (In X3 (freeVarF LNN X1 ++ freeVarF LNN X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNN (notH LNN ?X1))) |- _ =>
-            assert (In X3 (freeVarFormula LNN X1)); [ apply H | clear H ]
+        | H:(In ?X3 (freeVarF LNN (notH LNN ?X1))) |- _ =>
+            assert (In X3 (freeVarF LNN X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
-        | H:(In _ (freeVarFormula LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
+        | H:(In _ (freeVarF LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
         | H:(In _ (freeVarTerm LNN (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
@@ -265,23 +265,23 @@ Proof.
         end.
       elim (Compat815.le_not_lt _ _ (H5 _ H4)); lia. 
       apply in_in_remove; auto.
-    + intro H4; assert (H5:  In x (freeVarFormula LNN A))
+    + intro H4; assert (H5:  In x (freeVarF LNN A))
         by (eapply in_remove, H4).
       assert (H6: x <> v) by (  eapply in_remove_neq, H4 ). 
       clear H4; apply freeVarSubFormula1.
       * intro H4; rewrite <- H4 in H5.
-        elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNN A)).
+        elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNN A)).
         fold nv; simpl; now repeat right.
       * unfold Theta;
           apply
             (@in_in_remove nat eq_nat_dec 
-               (freeVarFormula LNN
+               (freeVarF LNN
                   (substF LNN
                      (substF LNN
                         (substF LNN
                            (substF LNN subStarFormula 3 (var nv)) 2
                            (natToTerm nv)) 1 (var nv)) 0 (var v)) ++
-                  freeVarFormula LNN A) x v).
+                  freeVarF LNN A) x v).
         -- assumption.
         -- apply in_or_app; now right.
 Qed.
@@ -300,32 +300,32 @@ Lemma FixPointLNT  (A : Formula) (v : nat):
     SysPrf PA
       (iffH B (substF LNT A v (natToTermLNT (codeFormula B)))) /\
       (forall x : nat,
-          In x (freeVarFormula LNT B) <->
-            In x (List.remove eq_nat_dec v (freeVarFormula LNT A)))}.
+          In x (freeVarF LNT B) <->
+            In x (List.remove eq_nat_dec v (freeVarF LNT A)))}.
 Proof.
   set (subStarFormula := primRecFormula _ (proj1_sig subStarIsPR)).
   assert (represent : Representable NN 3 subStar subStarFormula)
     by (unfold subStarFormula; apply primRecRepresentable).
-  set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+  set (nv := newVar (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
   assert (H: 0 <> nv).
   { intro H; 
-      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
     unfold nv in H; rewrite <- H.
     simpl; right; auto.
   } 
   assert (H0: 1 <> nv).
   { intro H0;
-      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
     unfold nv in H0; rewrite <- H0; simpl; auto.
   }
   assert (H1: 2 <> nv).
   { intro H1; 
-      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A));
+      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A));
       unfold nv in H1; rewrite <- H1; simpl; auto. 
   } 
   assert (H2: 3 <> nv).
   { intro H2;
-      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+      elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
     unfold nv in H2; rewrite <- H2; simpl; auto. 
   } 
   assert (H3: 3 < nv) by lia.
@@ -347,7 +347,7 @@ Proof.
               (substF LNT Theta nv (natToTerm (codeFormula Theta))))).
     unfold Theta at 1; rewrite (subFormulaExist LNT).
     induction (eq_nat_dec v nv) as [a | b]. 
-    + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+    + elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
       fold nv; simpl; now left.   
     + induction
         (In_dec eq_nat_dec v (freeVarTerm LNT (natToTerm (codeFormula Theta)))) 
@@ -374,7 +374,7 @@ Proof.
                     +++  assumption.
                     +++ intros [H4| H4].
                         *** elim
-                            (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+                            (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
                             fold nv; rewrite <- H4; simpl; auto.
                         *** apply H4.
                     +++ apply closedNatToTerm.
@@ -397,16 +397,16 @@ Proof.
                              apply (subFormulaTrans LNT).
                              intros H4.
                              assert (H5: 
-                                      In nv (freeVarFormula LNT 
+                                      In nv (freeVarF LNT 
                                                (LNN2LNT_formula subStarFormula)))
                              by  eapply in_remove,  H4.
                              destruct represent as (H6, H7).
                              elim (Compat815.lt_not_le _ _ H3).
                              apply H6.
-                             apply LNN2LNT_freeVarFormula1; assumption.
+                             apply LNN2LNT_freeVarF1; assumption.
               ** apply (subFormulaNil LNT).
                  intros H4;
-                   elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+                   elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
                  fold nv; simpl; now repeat right.
         -- apply iffI.
            ++ apply impI, existSys.
@@ -564,28 +564,28 @@ Proof.
             elim H2; apply H1
         | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
             elim H2; symmetry  in |- *; apply H1
-        | H:(In ?X3 (freeVarFormula LNT (existH ?X1 ?X2))) |- _ =>
-            assert (In X3 (List.remove eq_nat_dec X1 (freeVarFormula LNT X2)));
+        | H:(In ?X3 (freeVarF LNT (existH ?X1 ?X2))) |- _ =>
+            assert (In X3 (List.remove eq_nat_dec X1 (freeVarF LNT X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNT (forallH LNT ?X1 ?X2))) |- _ =>
-            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarFormula LNT X2)));
+        | H:(In ?X3 (freeVarF LNT (forallH LNT ?X1 ?X2))) |- _ =>
+            assert (In X3 (List.remove  eq_nat_dec X1 (freeVarF LNT X2)));
             [ apply H | clear H ]
-        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarFormula LNT ?X2))) |- _
+        | H:(In ?X3 (List.remove eq_nat_dec ?X1 (freeVarF LNT ?X2))) |- _
           =>
-            assert (In X3 (freeVarFormula LNT X2));
+            assert (In X3 (freeVarF LNT X2));
             [ eapply in_remove; apply H
             | assert (X3 <> X1); [ eapply in_remove_neq; apply H | clear H ] ]
-        | H:(In ?X3 (freeVarFormula LNT (andH  ?X1 ?X2))) |- _ =>
-            assert (In X3 (freeVarFormula LNT X1 ++ freeVarFormula LNT X2));
+        | H:(In ?X3 (freeVarF LNT (andH  ?X1 ?X2))) |- _ =>
+            assert (In X3 (freeVarF LNT X1 ++ freeVarF LNT X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNT (impH LNT ?X1 ?X2))) |- _ =>
-            assert (In X3 (freeVarFormula LNT X1 ++ freeVarFormula LNT X2));
+        | H:(In ?X3 (freeVarF LNT (impH LNT ?X1 ?X2))) |- _ =>
+            assert (In X3 (freeVarF LNT X1 ++ freeVarF LNT X2));
             [ apply H | clear H ]
-        | H:(In ?X3 (freeVarFormula LNT (notH LNT ?X1))) |- _ =>
-            assert (In X3 (freeVarFormula LNT X1)); [ apply H | clear H ]
+        | H:(In ?X3 (freeVarF LNT (notH LNT ?X1))) |- _ =>
+            assert (In X3 (freeVarF LNT X1)); [ apply H | clear H ]
         | H:(In _ (_ ++ _)) |- _ =>
             induction (in_app_or _ _ _ H); clear H
-        | H:(In _ (freeVarFormula LNT (substF LNT ?X1 ?X2 ?X3))) |- _ =>
+        | H:(In _ (freeVarF LNT (substF LNT ?X1 ?X2 ?X3))) |- _ =>
             induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
         | H:(In _ (freeVarTerm LNT (natToTerm _))) |- _ =>
             elim (closedNatToTerm _ _ H)
@@ -600,28 +600,28 @@ Proof.
         end.
       * elim (Compat815.le_not_lt x 3).
         -- apply H5.
-          now  apply LNN2LNT_freeVarFormula1.
+          now  apply LNN2LNT_freeVarF1.
         --  lia. 
       * apply in_in_remove; auto.
     + intro H4; 
-        assert (H5: In x (freeVarFormula LNT A)) 
+        assert (H5: In x (freeVarF LNT A)) 
         by (eapply in_remove, H4);
         assert (H6: x <> v) by (eapply in_remove_neq, H4);  clear H4.
       apply freeVarSubFormula1.
       * intros H4; rewrite <- H4 in H5.
-        elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarFormula LNT A)).
+        elim (newVar1 (v :: 1 :: 2 :: 3 :: 0 :: freeVarF LNT A)).
         fold nv; simpl; now repeat right.
       * unfold Theta;
           apply
             (@in_in_remove nat eq_nat_dec
-               (freeVarFormula LNT
+               (freeVarF LNT
                   (substF LNT
                      (substF LNT
                         (substF LNT
                            (substF LNT 
                               (LNN2LNT_formula subStarFormula) 3
                               (var nv)) 2 (natToTerm nv)) 1 (var nv)) 0 
-                     (var v)) ++ freeVarFormula LNT A) x v).
+                     (var v)) ++ freeVarF LNT A) x v).
         -- assumption.
         -- apply in_or_app; now right. 
 Qed.

@@ -253,7 +253,7 @@ Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
  ~ In_freeVarSys L v T ->
- ~ In v (freeVarFormula L g) ->
+ ~ In v (freeVarF L g) ->
  SysPrf T (exH v, f)%fol -> SysPrf T (f -> g)%fol -> SysPrf T g.
 Proof.
   intros H H0 H1 H2. apply nnE. 
@@ -283,7 +283,7 @@ Qed.
 
 Lemma existSys (T : System) (f g : Formula) (v : nat):
  ~ In_freeVarSys L v T ->
- ~ In v (freeVarFormula L g) ->
+ ~ In v (freeVarF L g) ->
  SysPrf (Ensembles.Add _ T f) g -> 
  SysPrf (Ensembles.Add _ T (exH v, f)%fol) g.
 Proof.
@@ -429,7 +429,7 @@ Lemma openClosed (T : System) (f : Formula):
 Proof.
 unfold close;
   generalize (List.nodup Peano_dec.eq_nat_dec 
-                (freeVarFormula L f)); intros l H; 
+                (freeVarF L f)); intros l H; 
   induction l as [| a l Hrecl].
   - apply H.
   - simpl in H; apply Hrecl; eapply forallSimp; apply H.

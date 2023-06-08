@@ -34,18 +34,18 @@ Lemma freeVarTermApply :
     freeVarTerm (apply f ts) = freeVarTerms _ ts.
 Proof. reflexivity. Qed.
 
-Fixpoint freeVarFormula (A : fol.Formula L) : list nat :=
+Fixpoint freeVarF (A : fol.Formula L) : list nat :=
   match A with
   | equal t s => freeVarTerm t ++ freeVarTerm s
   | atomic r ts => freeVarTerms _ ts
-  | impH A B => freeVarFormula A ++ freeVarFormula B
-  | notH A => freeVarFormula A
-  | forallH v A => List.remove  eq_nat_dec v (freeVarFormula A)
+  | impH A B => freeVarF A ++ freeVarF B
+  | notH A => freeVarF A
+  | forallH v A => List.remove  eq_nat_dec v (freeVarF A)
   end.
 
 Definition ClosedSystem (T : fol.System L) :=
   forall (v : nat) (f : fol.Formula L),
-    mem _ T f -> ~ In v (freeVarFormula f).
+    mem _ T f -> ~ In v (freeVarF f).
 
 Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
  match l with
@@ -56,11 +56,11 @@ end.
 (* Todo : use stdlib's nodup *)
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
-  closeList (List.nodup eq_nat_dec (freeVarFormula x)) x.
+  closeList (List.nodup eq_nat_dec (freeVarF x)) x.
 
 Lemma freeVarClosedList1 :
   forall (l : list nat) (v : nat) (x : fol.Formula L),
-    In v l -> ~ In v (freeVarFormula (closeList l x)).
+    In v l -> ~ In v (freeVarF (closeList l x)).
 Proof.
   intro l; induction l as [| a l Hrecl].
   - intros v x H; elim H.
@@ -69,15 +69,15 @@ Proof.
       unfold not in |- *; intros H0;
         elim (in_remove_neq _ _ _ _ _ H0); reflexivity.
     + simpl in |- *.  intro H0. 
-      assert (H1: In v (freeVarFormula (closeList l x))).
+      assert (H1: In v (freeVarF (closeList l x))).
       { eapply in_remove.   apply H0. }
       apply (Hrecl _ _ H H1).
 Qed.
 
 Lemma freeVarClosedList2 :
   forall (l : list nat) (v : nat) (x : fol.Formula L),
-    In v (freeVarFormula (closeList l x)) ->
-    In v (freeVarFormula x).
+    In v (freeVarF (closeList l x)) ->
+    In v (freeVarF x).
 Proof.
   intro l; induction l as [| a l Hrecl].
   - simpl; intros v x H; apply H.
@@ -85,10 +85,10 @@ Proof.
 Qed.
 
 Lemma freeVarClosed :
-  forall (x : fol.Formula L) (v : nat), ~ In v (freeVarFormula (close x)).
+  forall (x : fol.Formula L) (v : nat), ~ In v (freeVarF (close x)).
 Proof.
   intros x v; unfold close;
-  destruct (In_dec eq_nat_dec v (List.nodup eq_nat_dec (freeVarFormula x)))
+  destruct (In_dec eq_nat_dec v (List.nodup eq_nat_dec (freeVarF x)))
     as [i | n]. 
   - apply freeVarClosedList1; assumption.
   - intro H; elim n. rewrite nodup_In.  
@@ -98,7 +98,7 @@ Qed.
 Fixpoint freeVarListFormula (l : fol.Formulas L) : list nat :=
   match l with
   | nil => nil (A:=nat)
-  | f :: l => freeVarFormula f ++ freeVarListFormula l
+  | f :: l => freeVarF f ++ freeVarListFormula l
   end.
 
 Lemma freeVarListFormulaApp :
@@ -113,7 +113,7 @@ Qed.
 
 Lemma In_freeVarListFormula :
   forall (v : nat) (f : fol.Formula L) (F : fol.Formulas L),
-    In v (freeVarFormula f) -> In f F -> In v (freeVarListFormula F).
+    In v (freeVarF f) -> In f F -> In v (freeVarListFormula F).
 Proof.
   intros v f F H H0; induction F as [| a F HrecF].
   - elim H0.
@@ -125,7 +125,7 @@ Qed.
 Lemma In_freeVarListFormulaE :
   forall (v : nat) (F : fol.Formulas L),
     In v (freeVarListFormula F) ->
-    exists f : fol.Formula L, In v (freeVarFormula f) /\ In f F.
+    exists f : fol.Formula L, In v (freeVarF f) /\ In f F.
 Proof.
   intros v F H; induction F as [| a F HrecF].
   - destruct H.
@@ -135,7 +135,7 @@ Proof.
 Qed.
 
 Definition In_freeVarSys (v : nat) (T : fol.System L) :=
-  exists f : fol.Formula L, List.In v (freeVarFormula f) /\ mem _ T f.
+  exists f : fol.Formula L, List.In v (freeVarF f) /\ mem _ T f.
 
 Lemma notInFreeVarSys :
   forall x, ~ In_freeVarSys x (Ensembles.Empty_set (fol.Formula L)).
@@ -309,7 +309,7 @@ Definition substituteFormulaForall (n : nat) (f : fol.Formula L)
       | right _ =>
           match In_dec eq_nat_dec n (freeVarTerm s) with
           | left _ =>
-              let nv := newVar (v :: freeVarTerm s ++ freeVarFormula f) in
+              let nv := newVar (v :: freeVarTerm s ++ freeVarF f) in
               match frec f (depthForall L f n) (n, var nv) with
               | exist f' prf1 =>
                   match
@@ -356,7 +356,7 @@ Proof.
         destruct
           (z2 a (depthForall L a v)
              (v, var (newVar
-                        (a0 :: freeVarTerm b ++ freeVarFormula a)))). 
+                        (a0 :: freeVarTerm b ++ freeVarF a)))). 
          now rewrite H.  
     + now rewrite H.
 Qed.
@@ -527,7 +527,7 @@ Qed.
 
 Lemma subFormulaForall :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
-    let nv := newVar (v :: freeVarTerm s ++ freeVarFormula f) in
+    let nv := newVar (v :: freeVarTerm s ++ freeVarF f) in
     substF (forallH x f) v s =
       match eq_nat_dec x v with
       | left _ => forallH x f
@@ -649,6 +649,7 @@ Proof.
   - apply substituteFormulaForallNice.
 Qed.
 
+
 Section Extensions.
 
 
@@ -672,7 +673,7 @@ Qed.
 
 Lemma subFormulaExist :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
-    let nv := newVar (v :: freeVarTerm s ++ freeVarFormula f) in
+    let nv := newVar (v :: freeVarTerm s ++ freeVarF f) in
     substF (existH x f) v s =
       match eq_nat_dec x v with
       | left _ => existH x f
@@ -773,7 +774,7 @@ Lemma subFormulaForall2 :
   exists nv : nat,
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
-      ~ In nv (List.remove  eq_nat_dec x (freeVarFormula f)) /\
+      ~ In nv (List.remove  eq_nat_dec x (freeVarF f)) /\
       substF (forallH x f) v s =
         match eq_nat_dec x v with
         | left _ => forallH x f
@@ -785,7 +786,7 @@ Proof.
   induction (eq_nat_dec x v) as [a | b].
   - set
       (A1 :=
-         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarFormula f)) 
+         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarF f)) 
       in *.
     exists (newVar A1); repeat split.
     + unfold not in |- *; intros; elim (newVar1 A1).
@@ -796,7 +797,7 @@ Proof.
     + unfold not in |- *; intros; elim (newVar1 A1).
       right; apply in_or_app; auto.
   - induction (In_dec eq_nat_dec x (freeVarTerm s)) as [a | b0].
-    + set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
+    + set (A1 := v :: freeVarTerm s ++ freeVarF f) in *.
       exists (newVar A1); repeat split.
       * unfold not in |- *; intros; elim (newVar1 A1); right.
         apply in_or_app; auto.
@@ -815,7 +816,7 @@ Lemma subFormulaExist2 :
   exists nv : nat,
     ~ In nv (freeVarTerm s) /\
       nv <> v /\
-      ~ In nv (List.remove eq_nat_dec x (freeVarFormula f)) /\
+      ~ In nv (List.remove eq_nat_dec x (freeVarF f)) /\
       substF (existH x f) v s =
         match eq_nat_dec x v with
         | left _ => existH x f
@@ -827,7 +828,7 @@ Proof.
   induction (eq_nat_dec x v) as [a | b].
   - set
       (A1 :=
-         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarFormula f)) 
+         v :: freeVarTerm s ++ List.remove eq_nat_dec x (freeVarF f)) 
       in *.
     exists (newVar A1); repeat split.
     + unfold not in |- *; intros; elim (newVar1 A1).
@@ -836,7 +837,7 @@ Proof.
     + unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; 
         auto.
   - induction (In_dec eq_nat_dec x (freeVarTerm s)) as [a | b0].
-    + set (A1 := v :: freeVarTerm s ++ freeVarFormula f) in *.
+    + set (A1 := v :: freeVarTerm s ++ freeVarF f) in *.
       exists (newVar A1);  repeat split.
       * unfold not in |- *; intros; elim (newVar1 A1); right; apply in_or_app; auto.
       * unfold not in |- *; intros; elim (newVar1 A1); rewrite H; left; auto.
@@ -853,7 +854,7 @@ End Substitution_Properties.
 End Substitution.
   
 Definition Sentence (f:Formula) := 
-   (forall v : nat, ~ In v (freeVarFormula f)).
+   (forall v : nat, ~ In v (freeVarF f)).
 
 End Fol_Properties.
 
@@ -867,4 +868,9 @@ End Fol_Properties.
 #[deprecated(note="use substTs")]
  Notation substituteTerms := substTs (only parsing).
 
-
+#[deprecated(note="use freeVarF")]
+ Notation freeVarFormula := freeVarF (only parsing).
+(* begin snippet substLemmas *)
+About substF.
+Search substF.
+(* end snippet substLemmas *)

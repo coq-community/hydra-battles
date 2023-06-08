@@ -549,7 +549,7 @@ Proof.
     + set
         (nv :=
            v0
-             :: List.remove eq_nat_dec v (freeVarFormula L a) ++
+             :: List.remove eq_nat_dec v (freeVarF L a) ++
              freeVarTerm L a0 ++ freeVarTerm L b) in *.
       apply  (impTrans L) with
         (forallH (newVar nv)
@@ -571,12 +571,12 @@ Proof.
         unfold nv at 2 in |- *.
         assert
           (H8: In (newVar nv)
-                 (freeVarFormula L
+                 (freeVarF L
                     (substF L (substF L a v (var x)) v0 a0)))
           by (eapply in_remove; apply H7).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         -- assert
-          (In (newVar nv) (freeVarFormula L (substF L a v (var x)))) by
+          (In (newVar nv) (freeVarF L (substF L a v (var x)))) by
           (eapply in_remove; apply H9). 
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
            ++ right.
@@ -657,14 +657,14 @@ Proof.
            unfold nv at 2 in |- *.
            assert
              (H8: In (newVar nv)
-                    (freeVarFormula L
+                    (freeVarF L
                        (substF L 
                           (substF L a v (var x0)) v0 b)))
              by (eapply in_remove; apply H7).
            induction (freeVarSubFormula3 _ _ _ _ _ H8).
            assert
              ( H10:In (newVar nv) 
-                     (freeVarFormula L (substF L a v (var x0)))) by
+                     (freeVarF L (substF L a v (var x0)))) by
              (eapply in_remove; apply H9).
            induction (freeVarSubFormula3 _ _ _ _ _ H10).
            right; apply in_or_app.

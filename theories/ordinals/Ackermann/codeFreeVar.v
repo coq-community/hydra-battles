@@ -305,7 +305,7 @@ Definition codeFreeVarFormula : nat -> nat :=
 
 Lemma codeFreeVarFormulaCorrect (f : Formula) :
   codeFreeVarFormula (codeFormula L codeF codeR f) =
-    codeList (freeVarFormula L f).
+    codeList (freeVarF L f).
 Proof.
   set
     (g :=

@@ -119,7 +119,7 @@ Lemma freeVarZero : freeVarTerm LNN Zero = nil.
 Proof. reflexivity. Qed.
 
 Lemma freeVarLT (x y : Term) :
- freeVarFormula LNN (LT x y) = freeVarTerm LNN x ++ freeVarTerm LNN y.
+ freeVarF LNN (LT x y) = freeVarTerm LNN x ++ freeVarTerm LNN y.
 Proof.
   now rewrite (app_nil_end (freeVarTerm LNN y)).
 Qed.
@@ -232,7 +232,7 @@ Proof. apply (existI LNN). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNN v T ->
-  ~ In v (freeVarFormula LNN g) ->
+  ~ In v (freeVarF LNN g) ->
   SysPrf T (exH v, f)%nn -> SysPrf T (f -> g)%nn -> 
   SysPrf T g.
 Proof. apply (existE LNN). Qed.
@@ -243,7 +243,7 @@ Proof. apply (existSimp LNN). Qed.
 
 Lemma existSys (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNN v T ->
-  ~ In v (freeVarFormula LNN g) ->
+  ~ In v (freeVarF LNN g) ->
   SysPrf (SetAdds T f) g -> 
   SysPrf (SetAdds T (exH v, f)%nn) g.
 Proof. apply (existSys LNN). Qed.

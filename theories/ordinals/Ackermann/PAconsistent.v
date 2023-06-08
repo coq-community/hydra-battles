@@ -28,14 +28,14 @@ Proof.
     generalize n; clear n.
     induction
       (List.nodup  eq_nat_dec
-         (List.app (freeVarFormula LNT (substF LNT x0 x1 Zero))
+         (List.app (freeVarF LNT (substF LNT x0 x1 Zero))
             (List.app
                (List.remove  eq_nat_dec x1
-                  (List.app (freeVarFormula LNT x0)
-                     (freeVarFormula LNT
+                  (List.app (freeVarF LNT x0)
+                     (freeVarF LNT
                         (substF LNT x0 x1 (Succ (var x1))))))
                (List.remove eq_nat_dec x1 
-                  (freeVarFormula LNT x0)))));
+                  (freeVarF LNT x0)))));
       intros n.
     + simpl; intros H H0 x2 H1. 
       induction x2 as [| x2 Hrecx2].
