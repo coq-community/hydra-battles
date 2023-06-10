@@ -74,7 +74,8 @@ Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
 (* end snippet FolFull *)
 
 (* begin snippet FolPlus *)
-Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
+Definition ifThenElseH (A B C : Formula) := 
+  andH (impH A B) (impH (notH A) C).
 (* end snippet FolPlus *)
 
 (** ** Decidability of equality between terms, formulas, ... *)
@@ -834,9 +835,9 @@ Variables P Q : Formula L.
 
 Let ex1 : Formula L :=  (P /\ Q)%fol. 
 
-Let ex2 : Formula L := (~ (~~P -> ~Q))%fol. 
+Let ex2 : Formula L := (~ (~ ~P -> ~Q))%fol. 
 
-Let ex3 : Formula L:= (~(~P \/ ~Q))%fol. 
+Let ex3 : Formula L:= (~ (~P \/ ~Q))%fol. 
 
 Compute ex1. 
 
