@@ -1,7 +1,10 @@
-Require Import primRec.
-Require Import code.
-Require Import Arith.
-Require Import cPair.
+(** prLogic.v
+
+    Original script by Russel O'Connor
+*)
+
+Require Import primRec code cPair.
+From Coq Require Import Arith.
 
 Lemma codeForallIsPR : isPR 2 (fun a b : nat => cPair 3 (cPair a b)).
 Proof.

@@ -1,17 +1,21 @@
-(** * Encoding terms, formulas and proofs *)
+(** * Encoding terms, formulas and proofs
 
-Require Import Arith.
-Require Import fol.
-Require Import folProof.
-Require Import cPair.
+Original script by Russel O'Connor 
+
+ *)
+
+From Coq Require Import Arith.
+Require Import fol folProof cPair.
 
 Section Code_Term_Formula_Proof.
 
 Variable L : Language.
 Variable codeF : Functions L -> nat.
 Variable codeR : Relations L -> nat.
+
 Hypothesis codeFInj : 
   forall f g : Functions L, codeF f = codeF g -> f = g.
+
 Hypothesis codeRInj :
   forall R S : Relations L, codeR R = codeR S -> R = S.
 
@@ -20,25 +24,13 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Fixpoint codeTerm (t : Term) : nat :=
   match t with
-  | fol.var n => cPair 0 n
-  | fol.apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
+  | var n => cPair 0 n
+  | apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
   end
  
  with codeTerms (n : nat) (ts : Terms n) {struct ts} : nat :=
@@ -66,16 +58,17 @@ Proof.
     + simpl in H0; assert (H1: f = f0). 
        { apply codeFInj, eq_add_S; eapply cPairInj1; apply H0. }
        cut
-         (cPair (S (codeF f)) (codeTerms (arity L (inr (Relations L) f)) t0) =
+         (cPair (S (codeF f)) (codeTerms (arityF L f) t0) =
             cPair (S (codeF f0)) 
-              (codeTerms (arity L (inr (Relations L) f0)) t1)).
+              (codeTerms (arityF L f0) t1)).
        * generalize t1; rewrite <- H1; clear H1 H0 t1.
          intros t1 H0; rewrite (H t1).
          -- reflexivity.
          -- eapply cPairInj2.
             apply H0.
        * apply H0.
-  - (* empty sequence *)  intros ss H; rewrite <- nilTerms; reflexivity.
+  - (* empty sequence *)  
+    intros ss H; rewrite <- nilTerms; reflexivity.
   - (* non-empty sequence *)
     intros n t0 H t1 H0 ss H1; induction (consTerms L n ss).
     destruct x as (a, b); simpl in p; rewrite <- p.
@@ -107,11 +100,11 @@ Qed.
 
 Fixpoint codeFormula (f : Formula) : nat :=
   match f with
-  | fol.equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
-  | fol.impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
-  | fol.notH f1 => cPair 2 (codeFormula f1)
-  | fol.forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | fol.atomic R ts => cPair (4+(codeR R)) (codeTerms _ ts)
+  | equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
+  | impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
+  | notH f1 => cPair 2 (codeFormula f1)
+  | forallH n f1 => cPair 3 (cPair n (codeFormula f1))
+  | atomic R ts => cPair (4 + codeR R) (codeTerms _ ts)
   end.
 
 
@@ -119,7 +112,8 @@ Lemma codeFormulaInj :
   forall f g : Formula, codeFormula f = codeFormula g -> f = g.
 Proof.
   intro f; 
-    induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
+    induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; 
+    intros;
     [ destruct g as [t1 t2| r t1| f f0| f| n f]
     | destruct g as [t0 t1| r0 t0| f f0| f| n f]
     | destruct g as [t t0| r t| f f2| f| n f]
@@ -129,8 +123,9 @@ Proof.
      try
        match goal with
        | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-           elimtype False; cut (X1 = X3);
-           [ discriminate | eapply cPairInj1; apply h ]
+           assert  False by ( cut (X1 = X3);
+           [ discriminate | eapply cPairInj1; apply h ]); 
+           contradiction
        end).
   - (* equality between terms *) 
     rewrite (codeTermInj t t1).
@@ -149,9 +144,9 @@ Proof.
       apply H.
     } 
     cut  (cPair (S (S (S (S (codeR r)))))
-            (codeTerms (arity L (inl (Functions L) r)) t) =
+            (codeTerms (arityR L r) t) =
             cPair (S (S (S (S (codeR r0)))))
-              (codeTerms (arity L (inl (Functions L) r0)) t0)).
+              (codeTerms (arityR L r0) t0)).
     + generalize t0; rewrite <- H0; clear H0 H t0.
       intros t0 H; rewrite (codeTermsInj _ t t0).
       * reflexivity.
@@ -456,28 +451,26 @@ Proof.
      try
        match goal with
        | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-           elimtype False; cut (X1 = X3);
-           [ discriminate | eapply cPairInj1; apply h ]
+           assert False by (cut (X1 = X3);
+           [ discriminate | eapply cPairInj1; apply h ]); contradiction
        end); try reflexivity.
-  replace A0 with A.
-  reflexivity.
-  apply codeFormulaInj.
-  eapply cPairInj2.
-  apply H.
-  replace Axm0 with Axm1.
-  replace Axm3 with Axm2.
-  reflexivity.
-  eapply Hrecp0 with A0 p2.
-  do 3 eapply cPairInj2.
-  apply H.
-  eapply Hrecp1 with (fol.impH L A0 B0) p.
-  eapply cPairInj2.
-  eapply cPairInj1.
-  eapply cPairInj2.
-  apply H.
-  eapply Hrecp with A0 p0.
-  do 3 eapply cPairInj2.
-  apply H.
+  - replace A0 with A.
+    + reflexivity.
+    + apply codeFormulaInj; eapply cPairInj2, H.
+  - replace Axm0 with Axm1.
+    + replace Axm3 with Axm2.
+      * reflexivity.
+      * eapply Hrecp0 with A0 p2.
+        do 3 eapply cPairInj2.
+        apply H.
+    + eapply Hrecp1 with (impH  A0 B0) p.
+      eapply cPairInj2.
+      eapply cPairInj1.
+      eapply cPairInj2.
+      apply H.
+  - eapply Hrecp with A0 p0.
+    do 3 eapply cPairInj2.
+    apply H.
 Qed.
 
 Definition codeImp (a b : nat) := cPair 1 (cPair a b).

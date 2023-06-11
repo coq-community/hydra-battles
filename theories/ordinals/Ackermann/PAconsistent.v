@@ -1,17 +1,18 @@
-Require Import Arith.
-Require Import folProof.
-Require Import folProp.
-Require Import PA.
-Require Import model.
+(** PAconsistent.v
+
+    Original file by Russel O' Connor *)
+
+From Coq Require Import Arith.
+Require Import folProof  folProp  PA model.
 
 Definition natModel : Model LNT :=
   model LNT nat
     (fun f : Functions LNT =>
-     match f return (naryFunc nat (arity LNT (inr (Relations LNT) f))) with
-     | Languages.Plus => fun x y : nat => y + x
-     | Languages.Times => fun x y : nat => y * x
-     | Languages.Succ => S
-     | Languages.Zero => 0
+     match f return (naryFunc nat (arityF LNT f)) with
+     | Languages.Plus_ => fun x y : nat => y + x
+     | Languages.Times_ => fun x y : nat => y * x
+     | Languages.Succ_ => S
+     | Languages.Zero_ => 0
      end) 
     (fun r : Relations LNT => match r with end).
 
@@ -26,14 +27,14 @@ Proof.
     intros H; apply H; clear H.
     generalize n; clear n.
     induction
-      (ListExt.no_dup nat eq_nat_dec
+      (List.nodup  eq_nat_dec
          (List.app (freeVarFormula LNT (substituteFormula LNT x0 x1 Zero))
             (List.app
-               (ListExt.list_remove nat eq_nat_dec x1
+               (List.remove  eq_nat_dec x1
                   (List.app (freeVarFormula LNT x0)
                      (freeVarFormula LNT
                         (substituteFormula LNT x0 x1 (Succ (var x1))))))
-               (ListExt.list_remove nat eq_nat_dec x1 
+               (List.remove eq_nat_dec x1 
                   (freeVarFormula LNT x0)))));
       intros n.
     + simpl; intros H H0 x2 H1. 

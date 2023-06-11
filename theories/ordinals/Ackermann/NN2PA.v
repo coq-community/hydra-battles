@@ -1,18 +1,16 @@
+(**  NN2PA.v : 
 
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith.
+Original version by Russel O'Connor
 
-Require Import folProp.
-Require Import folProof.
-Require Import subProp.
-Require Import folLogic3.
-Require Import folReplace.
-Require Import NN.
-Require Import PAtheory.
+*)
+
+
+From Coq Require Import Ensembles List Arith.
+
+Require Import folProp  folProof  subProp  folLogic3  folReplace  NN
+  PAtheory.
 Require Export LNN2LNT.
-Require Import subAll.
-Require Import ListExt.
+Require Import subAll ListExt.
 
 Lemma NN2PA (f : fol.Formula LNN):
   folProof.SysPrf LNN NN f -> SysPrf PA (LNN2LNT_formula f). 
@@ -49,40 +47,43 @@ Proof.
   - apply H.
 Qed.
 
+
+(** If  [F[x\0]], [F[x\1]] ... [F[x\m-1]] are provable in PA,
+       then [ v_x <' m -> F] is also provable (where [a <' b] is the translation of [a < b] into PA).
+
+   More precisely: 
+
+*)
 Lemma PAboundedLT :
- forall (m : nat) (a : Formula) (x : nat),
- (forall n : nat,
-     n < m -> SysPrf PA (substituteFormula LNT a x (natToTerm n))) ->
- SysPrf PA (impH (LNN2LNT_formula (LNN.LT (fol.var LNN x) 
-                                     (LNN.natToTerm m))) 
-              a).
+  forall (m : nat) (F : LNT.Formula) (x : nat),
+    (forall n : nat,
+        n < m -> SysPrf PA (substituteFormula LNT F x (natToTerm n))) ->
+    SysPrf PA (LNN2LNT_formula (v_ x < LNN.natToTerm m)%nn -> F)%nt.
 Proof.
 simple induction m. 
-- intros a x H; apply impI.
+- intros F x H; apply impI.
   apply contradiction with 
-    (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm 0))).
+    (LNN2LNT_formula (v_ x < LNN.natToTerm 0)%nn).
   apply Axm; right; constructor.
   apply sysWeaken.
-  replace (notH (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))) 
+  replace (notH (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm 0)))) 
     with
-    (LNN2LNT_formula (fol.notH LNN (LNN.LT (fol.var LNN x) (LNN.natToTerm 0)))).
+    (LNN2LNT_formula (notH  (LNN.LT (var x) (LNN.natToTerm 0)))).
   + apply NN2PA.
     apply nn7.
   + reflexivity.
 - intros n H a x H0; apply impI.
   eapply orE.
   + apply impE with 
-      (LNN2LNT_formula (LNN.LT (fol.var LNN x) (LNN.natToTerm (S n)))).
+      (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm (S n)))).
     * apply sysWeaken.
-      assert
-        (H1: SysPrf PA
-               (LNN2LNT_formula
-                  (LNN.impH (LNN.LT (fol.var LNN x) (LNN.Succ (LNN.natToTerm n)))
-                     (LNN.orH (LNN.LT (fol.var LNN x) (LNN.natToTerm n))
-                        (LNN.equal (fol.var LNN x) (LNN.natToTerm n))))))
+      assert (H1: SysPrf PA (LNN2LNT_formula
+                     ((v_ x < S_ (LNN.natToTerm n)) ->
+                      (v_ x < LNN.natToTerm n) \/ 
+                        v_ x = LNN.natToTerm n))%nn)
       by (apply NN2PA, nn8). 
       simpl in H1; simpl. 
-      unfold orH, fol.orH; apply H1.
+      unfold orH; apply H1.
     * apply Axm; right; constructor.
   + apply sysWeaken.
     simpl in H; apply H; auto. 

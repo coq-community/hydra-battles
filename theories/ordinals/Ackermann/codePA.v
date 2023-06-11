@@ -1,17 +1,15 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import folProp.
-Require Import code.
-Require Import codeList.
-Require Import codeFreeVar.
-Require Import extEqualNat.
-Require Vector.
-Require Import prLogic.
-Require Import Compat815.
-From Coq Require Import Lia.
+(**  codePA.v
+
+    Original script by Russel O'Connor 
+*)
+
+
+From Coq Require Import Ensembles List Arith Lia.
+From Coq Require Vector.
+
+Require Import primRec  cPair folProp code  codeList  codeFreeVar  extEqualNat
+  prLogic  Compat815.
+
 Import LispAbbreviations. 
 
 Section close.
@@ -348,9 +346,9 @@ Proof.
     + simpl in |- *.
       repeat rewrite cPairProjections1 || rewrite cPairProjections2.
       reflexivity.
-  - unfold close;
+  - unfold close.
       induction
-        (ListExt.no_dup nat eq_nat_dec
+        (List.nodup Nat.eq_dec
            (freeVarFormula LNT
               (impH (substituteFormula LNT x x0 Zero)
                  (impH
@@ -383,15 +381,15 @@ Proof.
        (codeFormula (open f))) as [a | b].
   - rewrite a in H; unfold codeFormula in H; 
       rewrite codeCloseCorrect in H;  fold codeFormula in H.
-    destruct (formula_dec LNT LNT_dec (close LNT (open f)) f) 
+    destruct (formula_eqdec LNT LNT_eqdec (close LNT (open f)) f) 
       as [a0 | b].
     + unfold codeImp at 1 in a.
       destruct (open f) as [t t0| r t| f0 f1| f0| n0 f0]; simpl in a;
         try
           match goal with
           | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-              elimtype False; cut (X1 = X3);
-              [ discriminate | eapply cPairInj1; apply h ]
+              assert False by (cut (X1 = X3);
+              [ discriminate | eapply cPairInj1; apply h]) ; contradiction
           end.
         assert (H0: codeSubFormula g n (codeTerm Zero) = codeFormula f0).
         { eapply cPairInj1, cPairInj2; apply a. }
@@ -411,8 +409,10 @@ Proof.
           try
             match goal with
             | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-                elimtype False; cut (X1 = X3);
-                [ discriminate | eapply cPairInj1; apply h ]
+                assert False by
+                (cut (X1 = X3);
+                [ discriminate | eapply cPairInj1; apply h ]); 
+                 contradiction
             end.
         assert
           (H2: codeForall n (codeImp g 
@@ -428,8 +428,9 @@ Proof.
           try
             match goal with
             | h:(cPair ?X1 ?X2 = cPair ?X3 ?X4) |- _ =>
-                elimtype False; cut (X1 = X3);
-                [ discriminate | eapply cPairInj1; apply h ]
+                assert False by (cut (X1 = X3);
+                [ discriminate | eapply cPairInj1; apply h ]); 
+                contradiction
             end.
         simpl in (value of n).
         simpl in (value of g).

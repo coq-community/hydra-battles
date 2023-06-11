@@ -15,18 +15,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 Let SysPrf := SysPrf L.
 
 Lemma reduceImp :
@@ -78,7 +66,7 @@ Proof.
   intros H H0; apply (impI L), (forallI L).
   - intros [x [H1 H2]]; destruct H2 as [x H2| x H2]; [ idtac | induction H2 ].
     + apply H; exists x; now split.
-    + apply (In_list_remove2 _ _ _ _ _ H1); easy. 
+    + apply (in_remove_neq _ _ _ _ _ H1); easy. 
   - apply impE with f1.
     + apply sysWeaken, H0. 
     + eapply forallSimp.

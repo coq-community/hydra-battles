@@ -760,8 +760,8 @@ Proof.
   - assert (H2 : omega_tower j <= alpha).
     {
       tricho  alpha (omega_tower j) H2.
-      -   specialize (H1 _ H2);  elimtype False.
-          destruct H1; abstract lia.
+      -   specialize (H1 _ H2);  assert False 
+          by (destruct H1; abstract lia); contradiction.
       -   left; auto.
       -   right;auto.
     }

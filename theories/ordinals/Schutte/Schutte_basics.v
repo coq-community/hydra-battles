@@ -252,7 +252,7 @@ Proof.
   [trivial|idtac].
   intro H; case (not_all_ex_not _ (fun a =>  P a) H).
   intros x Hx.  
-  elimtype False.
+  assert False.
   {  case (well_order  (fun z => ~ P z) _ Hx (WO := AX1)).
      intros x0 H0; assert (forall b,  b < x0 -> P b).
      {  intros.
@@ -267,6 +267,7 @@ Proof.
      assert (~ (P x0)) by (case H0; unfold In; tauto).
      apply H2; apply Hp;auto.
   }
+  contradiction.
 Qed.
 
 

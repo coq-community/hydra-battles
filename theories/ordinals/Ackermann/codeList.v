@@ -1,11 +1,14 @@
-Require Import primRec.
-Require Import cPair.
+(**  codeList.v
+
+     Original script by Russel O'Connor 
+*)
+
+Require Import primRec  cPair.
 Require Export Coq.Lists.List.
 Require Import ListExt.
-Require Import Arith.
+From Coq Require Import Arith.
 Require Vector.
-Require Import extEqualNat.
-Require Import Compat815.
+Require Import extEqualNat Compat815.
 
 Definition codeLength : nat -> nat :=
   evalStrongRec 0
@@ -189,7 +192,7 @@ Definition codeListRemove (a l : nat) : nat :=
 
 Lemma codeListRemoveCorrect (a : nat) (l : list nat):
  codeListRemove a (codeList l) = 
-   codeList (list_remove nat eq_nat_dec a l).
+   codeList (List.remove  eq_nat_dec a l).
 Proof.
   unfold codeListRemove;
     set
@@ -225,13 +228,21 @@ Proof.
       apply cPairLe2.
     } 
     simpl in H.
-    induction (eq_nat_dec a0 a) as [a1 | b].
+    induction (Nat.eq_dec a0 a) as [a1 | b].
     + rewrite a1, Nat.eqb_refl; simpl; unfold A.
       rewrite H; rewrite cPairProjections2; auto. 
+      destruct (Nat.eq_dec a a). 
+        * auto. 
+        * congruence.
     + rewrite nat_eqb_false; simpl. 
-      replace (codeList (list_remove nat eq_nat_dec a l)) with
+      replace (codeList (List.remove eq_nat_dec a l)) with
         (codeNth A (evalStrongRecHelp 1 f n a)).
-      * reflexivity.
+      * destruct  (Nat.eq_dec a a0). 
+        -- congruence. 
+        -- simpl. f_equal. f_equal. Search evalStrongRecHelp codeNth. rewrite <- Hrecl. 
+           rewrite cPairProjections2 in H. 
+           rewrite <- H. unfold A. 
+           simpl. now rewrite cPairProjections2. 
       * unfold A; rewrite H; simpl; rewrite cPairProjections2; auto.
       * auto.
 Qed.
@@ -453,7 +464,7 @@ Definition codeNoDup : nat -> nat :=
                   (codeNth (l - S (cPairPi2 (pred l))) recs)))) 0).
 
 Lemma codeNoDupCorrect (l : list nat) :
- codeNoDup (codeList l) = codeList (no_dup _ eq_nat_dec l).
+ codeNoDup (codeList l) = codeList (List.nodup eq_nat_dec l).
 Proof.
   unfold codeNoDup;
     set
@@ -479,7 +490,13 @@ Proof.
     repeat rewrite evalStrongRecHelp1; unfold pred in |- *.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     + rewrite Hrecl; rewrite codeInCorrect.
-      destruct (In_dec eq_nat_dec a (no_dup nat eq_nat_dec l)); reflexivity.
+      destruct (In_dec Nat.eq_dec a (List.nodup Nat.eq_dec l)). 
+      destruct (in_dec Nat.eq_dec a l). 
+      * reflexivity.
+      *     rewrite nodup_In in i; contradiction.
+      * destruct (in_dec Nat.eq_dec a l). 
+     -- rewrite  nodup_In in n. contradiction.
+     -- reflexivity.
     + simpl; apply Compat815.le_lt_n_Sm.
       apply cPairLe2A.
 Qed.
@@ -545,3 +562,4 @@ Proof.
     apply const1_NIsPR.
   - apply switchIsPR.
 Qed.
+

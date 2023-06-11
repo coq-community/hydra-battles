@@ -1,110 +1,44 @@
-(******************************************************************************)
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Arith.
-Require Import misc.
+(** LNN2LNT: 
 
-Require Import ListExt.
-Require Import folProp.
-Require Import folProof.
-Require Import Languages.
-Require Import subAll.
-Require Import subProp.
-Require Import folLogic3.
-Require Import folReplace.
-Require Import LNT.
-Require Import Max.
-Require Import codeNatToTerm.
+   Translation of [LNN]-formulas and proofs into [LNT] by replacement of 
+    [(t < t')%nn] subformulas with [(exists v, t + Succ v = t')%nt].
 
-Fixpoint LNN2LNT_term (t : fol.Term LNN) : Term :=
+   Original file by Russel O'Connor
+
+*)
+
+(* begin hide *)
+From Coq Require Import Ensembles List Arith.
+
+Require Import misc ListExt folProp folProof Languages  subAll  subProp.
+Require Import folLogic3  folReplace LNN LNT  codeNatToTerm  NewNotations.
+
+#[local] Arguments apply _ _ _ : clear implicits.
+(* end hide *)
+
+
+(** * Translation of terms *)
+
+Fixpoint LNN2LNT_term (t : fol.Term LNN) : fol.Term LNT:=
   match t with
-  | fol.var v => var v
+  | var v => var v
   | apply f ts => apply LNT f (LNN2LNT_terms _ ts)
   end
  
  with LNN2LNT_terms (n : nat) (ts : fol.Terms LNN n) {struct ts} : 
  Terms n :=
   match ts in (fol.Terms _ n0) return (Terms n0) with
-  | Tnil => Tnil LNT
-  | Tcons m s ss => Tcons LNT m (LNN2LNT_term s) (LNN2LNT_terms m ss)
+  | Tnil => @Tnil LNT
+  | Tcons m s ss => Tcons (LNN2LNT_term s) (LNN2LNT_terms m ss)
   end. 
 
-Definition LTFormula :=
-  existH 2 (equal (Plus (var 0) (Succ (var 2))) (var 1)).
-
-
-Definition translateLT (ts : fol.Terms LNN (arity LNN (inl _ LT))) : Formula.
-Proof.
-  simpl in ts; destruct  (consTerms _ _ ts) as [(a,b) p].
-  destruct  (consTerms _ _ b) as [(a0,b0) p0].
-  set (x := LNN2LNT_term a) in *.
-  set (y := LNN2LNT_term a0) in *.
-  apply (subAllFormula LNT LTFormula).
-  intro n; induction n as [| n Hrecn].
-  - exact x.
-  - induction n  as [| n0 HrecH0].
-    + exact y.
-    + exact (var n0).
-Defined.
-
+(* begin hide *)
 Lemma LNN2LNT_natToTerm (n:nat): LNN2LNT_term (natToTermLNN n) = natToTerm n.
 Proof.
   induction n as [| n Hrecn].
   - reflexivity.
   - simpl; now rewrite Hrecn.
 Qed.
-
-Lemma translateLT1 :
- forall a a0 b0,
- translateLT (Tcons LNN 1 a (Tcons LNN 0 a0 b0)) =
- subAllFormula LNT LTFormula
-   (fun H : nat =>
-    nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
-      (fun (H0 : nat) (_ : fol.Term LNT) =>
-       nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a0)
-         (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H).
-Proof.
-  intros a a0 b0; unfold translateLT.  
-  destruct (consTerms LNN 1 (Tcons LNN 1 a (Tcons LNN 0 a0 b0))) as [(a1, b) p].
-  simpl; destruct (consTerms LNN 0 b) as [(a2, b1) p0].
-  simpl in p; inversion p.
-  assert (b = Tcons LNN 0 a0 b0)
-    by refine (inj_right_pair2 _ eq_nat_dec _ _ _ _ H1).
-  rewrite H in p0; simpl in p0; inversion p0; reflexivity.
-Qed.
-
-Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
-  match f with
-  | fol.equal t1 t2 => equal (LNN2LNT_term t1) (LNN2LNT_term t2)
-  | atomic r ts =>
-      match
-        r as l return (fol.Terms LNN (arity LNN (inl _ l)) -> Formula)
-      with
-      | LT => fun t0 : fol.Terms LNN (arity LNN (inl _ LT)) => translateLT t0
-      end ts
-  | fol.impH A B => impH (LNN2LNT_formula A) (LNN2LNT_formula B)
-  | fol.notH A => notH (LNN2LNT_formula A)
-  | fol.forallH v A => forallH v (LNN2LNT_formula A)
-  end.
-
-Lemma LNN2LNT_or (a b : fol.Formula LNN):
-  LNN2LNT_formula (fol.orH LNN a b) =
-    orH (LNN2LNT_formula a) (LNN2LNT_formula b).
-Proof. reflexivity. Qed.
-
-Lemma LNN2LNT_and (a b : fol.Formula LNN):
- LNN2LNT_formula (fol.andH LNN a b) =
- andH (LNN2LNT_formula a) (LNN2LNT_formula b).
-Proof. reflexivity. Qed.
-
-Lemma LNN2LNT_iff (a b : fol.Formula LNN):
- LNN2LNT_formula (fol.iffH LNN a b) =
-   iffH (LNN2LNT_formula a) (LNN2LNT_formula b).
-Proof. reflexivity. Qed.
-
-Lemma LNN2LNT_exist (v : nat) (a : fol.Formula LNN) :
- LNN2LNT_formula (fol.existH LNN v a) = existH v (LNN2LNT_formula a).
-Proof. reflexivity. Qed.
 
 Lemma LNN2LNT_freeVarTerm (t : fol.Term LNN):
  freeVarTerm LNT (LNN2LNT_term t) = freeVarTerm LNN t.
@@ -132,6 +66,159 @@ Proof.
     + reflexivity.
 Qed.
 
+Lemma LNN2LNT_subTerm (t : fol.Term LNN) (v : nat) (s : fol.Term LNN):
+ LNN2LNT_term (substT LNN t v s) =
+ substT LNT (LNN2LNT_term t) v (LNN2LNT_term s).
+Proof.
+  elim t using  Term_Terms_ind
+    with
+    (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
+             LNN2LNT_terms n (substTs LNN n ts v s) =
+               substTs LNT n (LNN2LNT_terms n ts) v 
+                 (LNN2LNT_term s)).
+  - intros n; simpl; destruct (eq_nat_dec v n); auto.
+  - simpl in |- *; intros f t0 H; now rewrite H.
+  - reflexivity.
+  - intros n t0 H t1 H0; simpl; now rewrite H, H0. 
+Qed.
+
+Lemma LNN2LNT_subTerms 
+  (n : nat) (ts : fol.Terms LNN n) (v : nat) (s : fol.Term LNN):
+  LNN2LNT_terms n (substTs LNN n ts v s) =
+    substTs LNT n (LNN2LNT_terms n ts) v (LNN2LNT_term s).
+Proof.
+  induction ts as [| n t ts Hrects].
+  - reflexivity.
+  - simpl; now rewrite Hrects,  LNN2LNT_subTerm.
+Qed.
+
+(* end hide *)
+
+(** ** Inverse translation *)
+
+Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
+  match t with
+  | var v => var v
+  | apply f ts => apply LNN f (LNT2LNN_terms _ ts)
+  end
+ 
+ with LNT2LNN_terms (n : nat) (ts : Terms n) {struct ts} : 
+ fol.Terms LNN n :=
+  match ts in (fol.Terms _ n0) return (fol.Terms LNN n0) with
+  | Tnil => @Tnil LNN
+  | Tcons m s ss => Tcons (LNT2LNN_term s) (LNT2LNN_terms m ss)
+  end.
+
+Lemma LNT2LNN_natToTerm (n:  nat) :
+  LNT2LNN_term (natToTerm n) = natToTermLNN n.
+Proof.
+  induction n as [| n Hrecn].
+  - reflexivity.
+  - simpl; now rewrite Hrecn.
+Qed.
+
+Lemma LNT2LNT_term (t : Term): LNN2LNT_term (LNT2LNN_term t) = t.
+Proof.
+  elim t using
+    Term_Terms_ind
+    with
+    (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
+             LNN2LNT_terms n (LNT2LNN_terms n ts) = ts); 
+    simpl in |- *.
+  - reflexivity.
+  - intros f t0 H.  unfold LNNArityF. now rewrite H.
+  - reflexivity.
+  - intros n t0 H t1 H0. now rewrite H, H0.
+Qed.
+
+(** * Translation of formulas *)
+
+(** ** Translation of [(v_ 0 < v_ 1)%nn] *)
+
+Definition LTFormula := (exH 2, v_ 0 + Succ v_ 2 = v_ 1)%nt.
+
+(** ** Translation of [(t < t')%nn] *)
+
+(**  The function [translateLT] is defined by an interactive proof (omitted).
+     It is specified by the lemma [translateLT1] 
+*)
+
+Definition translateLT (ts : fol.Terms LNN (arityR LNN LT_)) : Formula.
+Proof.
+  simpl in ts; destruct  (consTerms _ _ ts) as [(a,b) p].
+  destruct  (consTerms _ _ b) as [(a0,b0) p0].
+  set (x := LNN2LNT_term a) in *.
+  set (y := LNN2LNT_term a0) in *.
+  apply (subAllFormula LNT LTFormula).
+  intro n; induction n as [| n Hrecn].
+  - exact x.
+  - induction n  as [| n0 HrecH0].
+    + exact y.
+    + exact (var n0).
+Defined.
+
+Lemma translateLT1 :
+ forall a a0 b0,
+ translateLT (Tcons a (Tcons a0 b0)) =
+ subAllFormula LNT LTFormula
+   (fun H : nat =>
+    nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
+      (fun (H0 : nat) (_ : fol.Term LNT) =>
+       nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a0)
+         (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H).
+Proof.
+  intros a a0 b0; unfold translateLT.  
+  destruct (consTerms LNN 1 (Tcons a (Tcons a0 b0))) as [(a1, b) p].
+  simpl; destruct (consTerms LNN 0 b) as [(a2, b1) p0].
+  simpl in p; inversion p.
+  assert (b = Tcons a0 b0)
+    by refine (inj_right_pair2 _ eq_nat_dec _ _ _ _ H1).
+  rewrite H in p0; simpl in p0; inversion p0; reflexivity.
+Qed.
+
+(** ** Translation of any [LNN]-formula 
+
+   The translation of any [LNN]-formula is straigthforward, except for 
+   the special case of [t_1 < t_2] (handled by [translateLT] )
+
+*)
+
+Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
+  match f with
+  | (t1 = t2)%nn => (LNN2LNT_term t1 = LNN2LNT_term t2)%nt
+  | atomic r ts =>
+      match
+        r as l return (fol.Terms LNN (arityR LNN l) -> Formula)
+      with
+      | LT_ => fun ts : fol.Terms LNN (arityR LNN LT_) => translateLT ts
+      end ts
+  | (A -> B)%nn => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
+  | (~ A)%nn =>  (~ LNN2LNT_formula A)%nt
+  | (allH v, A)%fol => (allH v, LNN2LNT_formula A)%nt
+  end.
+
+(** *** Helpful rewriting lemmas *)
+
+Lemma LNN2LNT_or (a b : fol.Formula LNN):
+  LNN2LNT_formula (orH a b) =
+    orH (LNN2LNT_formula a) (LNN2LNT_formula b).
+Proof. reflexivity. Qed.
+
+Lemma LNN2LNT_and (a b : fol.Formula LNN):
+ LNN2LNT_formula (andH a b) =
+ andH (LNN2LNT_formula a) (LNN2LNT_formula b).
+Proof. reflexivity. Qed.
+
+Lemma LNN2LNT_iff (a b : fol.Formula LNN):
+ LNN2LNT_formula (iffH a b) =
+   iffH (LNN2LNT_formula a) (LNN2LNT_formula b).
+Proof. reflexivity. Qed.
+
+Lemma LNN2LNT_exist (v : nat) (a : fol.Formula LNN) :
+ LNN2LNT_formula (existH  v a) = existH v (LNN2LNT_formula a).
+Proof. reflexivity. Qed.
+
+
 Lemma LNN2LNT_freeVarFormula (f : fol.Formula LNN) (v : nat):
   In v (freeVarFormula LNT (LNN2LNT_formula f)) <->
     In v (freeVarFormula LNN f).
@@ -150,12 +237,11 @@ Proof.
     fold (freeVarTerm LNN) in |- *.
     rewrite <- app_nil_end.
     split.
-    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H).
-      destruct H1 as [H0| H0].
+    + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r.
+      intros H x [H0| H0] H2.
       * rewrite <- H0 in H2.
         simpl in H2.
-        rewrite LNN2LNT_freeVarTerm in H2.
-        auto with datatypes.
+        rewrite LNN2LNT_freeVarTerm in H2; auto with datatypes.
       * destruct H0 as [H0| H0].
         -- rewrite <- H0 in H2.
            simpl in H2.
@@ -190,13 +276,13 @@ Proof.
   - simpl in |- *.
     induction Hrecf as (H, H0).
     split.
-    + intros H1; apply In_list_remove3.  
-      * apply H; eapply In_list_remove1; apply H1.
-      * eapply In_list_remove2; apply H1.
-    + intros H1; apply In_list_remove3.
+    + intros H1; apply in_in_remove.
+      * eapply in_remove_neq; apply H1.
+      * apply H; eapply List.in_remove; apply H1.
+    + intros H1; apply in_in_remove.
+      * eapply in_remove_neq, H1.
       * apply H0.
-        eapply In_list_remove1, H1.
-      * eapply In_list_remove2, H1.
+        eapply in_remove, H1.
 Qed.
 
 Lemma LNN2LNT_freeVarFormula1 (f : fol.Formula LNN) (v : nat):
@@ -213,39 +299,12 @@ Proof.
 intros ? ; destruct (LNN2LNT_freeVarFormula f v); auto.
 Qed.
 
-Lemma LNN2LNT_subTerm (t : fol.Term LNN) (v : nat) (s : fol.Term LNN):
- LNN2LNT_term (substituteTerm LNN t v s) =
- substituteTerm LNT (LNN2LNT_term t) v (LNN2LNT_term s).
-Proof.
-  elim t using  Term_Terms_ind
-    with
-    (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
-             LNN2LNT_terms n (substituteTerms LNN n ts v s) =
-               substituteTerms LNT n (LNN2LNT_terms n ts) v 
-                 (LNN2LNT_term s)).
-  - intros n; simpl; destruct (eq_nat_dec v n); auto.
-  - simpl in |- *; intros f t0 H; now rewrite H.
-  - reflexivity.
-  - intros n t0 H t1 H0; simpl; now rewrite H, H0. 
-Qed.
-
-Lemma LNN2LNT_subTerms 
-  (n : nat) (ts : fol.Terms LNN n) (v : nat) (s : fol.Term LNN):
-  LNN2LNT_terms n (substituteTerms LNN n ts v s) =
-    substituteTerms LNT n (LNN2LNT_terms n ts) v (LNN2LNT_term s).
-Proof.
-  induction ts as [| n t ts Hrects].
-  - reflexivity.
-  - simpl; now rewrite Hrects,  LNN2LNT_subTerm.
-Qed.
-
-(** still fragile proof. Use libhyps *)
 
 Lemma LNN2LNT_subFormula 
  (T : System) (f : fol.Formula LNN) (v : nat) (s : fol.Term LNN):
  SysPrf T
-   (iffH (LNN2LNT_formula (substituteFormula LNN f v s))
-      (substituteFormula LNT (LNN2LNT_formula f) v (LNN2LNT_term s))).
+   (iffH (LNN2LNT_formula (substF LNN f v s))
+      (substF LNT (LNN2LNT_formula f) v (LNN2LNT_term s))).
 Proof.
   apply sysExtend with (Empty_set Formula).
   -  intros x H; destruct H.
@@ -264,22 +323,22 @@ Proof.
       * apply (subSubAllFormula LNT).
       * rewrite <- (nilTerms _ b0).
         replace
-          (substituteTerms LNN 2 (Tcons _ 1 a (Tcons _ 0 a0 (Tnil _))) v s) 
+          (substTs LNN 2 (Tcons a (Tcons a0 (Tnil))) v s) 
           with
-          (Tcons LNN 1 (substituteTerm _ a v s)
-             (Tcons _ 0 (substituteTerm _ a0 v s) (Tnil _))).
+          (Tcons (substT _ a v s)
+             (Tcons (substT _ a0 v s) (Tnil))).
         rewrite translateLT1.
         rewrite
           (subAllFormula_ext LNT LTFormula
              (fun H : nat =>
                 nat_rec (fun _ : nat => fol.Term LNT)
-                  (LNN2LNT_term (substituteTerm LNN a v s))
+                  (LNN2LNT_term (substT LNN a v s))
                   (fun (H0 : nat) (_ : fol.Term LNT) =>
                      nat_rec (fun _ : nat => fol.Term LNT)
-                       (LNN2LNT_term (substituteTerm LNN a0 v s))
+                       (LNN2LNT_term (substT LNN a0 v s))
                        (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H)
              (fun n : nat =>
-                substituteTerm LNT
+                substT LNT
                   (nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
                      (fun (H0 : nat) (_ : fol.Term LNT) =>
                         nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a0)
@@ -305,20 +364,19 @@ Proof.
       simpl; rewrite (subFormulaNot LNT).
       apply (reduceNot LNT).
       apply H.
-    + simpl; decompose record (subFormulaForall2 LNN a v v0 s).
-      rewrite H4; clear H4.
+    + simpl; decompose record (subFormulaForall2 LNN a v v0 s) /r.
+      intros x H1 H0 H2 H4; rewrite H4; clear H4.
       decompose record
-        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)).
-      unfold forallH in |- *.
-      rewrite H7; clear H7.
+        (subFormulaForall2 LNT (LNN2LNT_formula a) v v0 (LNN2LNT_term s)) /r. 
+      intros x0 H4 H3 H5 H7; rewrite H7; clear H7.
       destruct (eq_nat_dec v v0) as [e | ].
       * simpl; apply iffRefl.
       * simpl; apply iffTrans with
           (forallH x0
-             (substituteFormula LNT
+             (substF LNT
                 (LNN2LNT_formula
-                   (substituteFormula LNN
-                      (substituteFormula LNN a v (fol.var LNN x)) v0 s)) x 
+                   (substF LNN
+                      (substF LNN a v (var x)) v0 s)) x 
                 (var x0))).
         apply (rebindForall LNT).
         intros H6. 
@@ -326,31 +384,31 @@ Proof.
           (H7: In x0
              (freeVarFormula LNT
                 (LNN2LNT_formula
-                   (substituteFormula LNN
-                      (substituteFormula LNN a v (fol.var LNN x))
+                   (substF LNN
+                      (substF LNN a v (var x))
                       v0 s))))
-          by (eapply In_list_remove1; apply H6). 
+          by (eapply List.in_remove; apply H6). 
         assert
           (H8: In x0
                  (freeVarFormula LNN
-                    (substituteFormula LNN (substituteFormula LNN a v 
-                                              (fol.var LNN x)) v0
+                    (substF LNN (substF LNN a v 
+                                              (var x)) v0
                        s)))
           by (apply LNN2LNT_freeVarFormula1; assumption).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         assert
           (H10: In x0 (freeVarFormula LNN 
-                         (substituteFormula LNN a v (fol.var LNN x)))) 
-          by (eapply In_list_remove1; apply H9).
+                         (substF LNN a v (var x)))) 
+          by (eapply in_remove; apply H9).
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
         elim H5.
-        eapply In_list_remove3.
-        apply LNN2LNT_freeVarFormula2.
-        eapply In_list_remove1.
-        apply H11.
-        eapply In_list_remove2.
-        apply H11.
-        elim (In_list_remove2 _ _ _ _ _ H6).
+        eapply in_in_remove.
+        { eapply in_remove_neq, H11. }
+        { apply LNN2LNT_freeVarFormula2.
+          eapply in_remove.
+          apply H11.
+        } 
+        elim (in_remove_neq _ _ _ _ _ H6).
         destruct H11 as [H11| H11].
         -- auto.
         -- contradiction.
@@ -362,10 +420,10 @@ Proof.
            apply
              iffTrans
              with
-             (substituteFormula LNT
-                (substituteFormula LNT
-                   (substituteFormula LNT (LNN2LNT_formula a) v 
-                      (fol.var LNT x)) v0
+             (substF LNT
+                (substF LNT
+                   (substF LNT (LNN2LNT_formula a) v 
+                      (var x)) v0
                    (LNN2LNT_term s)) x (var x0)).
            apply (reduceSub LNT).
            apply (notInFreeVarSys LNT).
@@ -394,58 +452,28 @@ Proof.
            apply (notInFreeVarSys LNT).
            apply (subFormulaTrans LNT).
            unfold not in |- *; intros; elim H2.
-           apply In_list_remove3.
-           apply LNN2LNT_freeVarFormula1.
-           eapply In_list_remove1.
-           apply H6.
-           eapply In_list_remove2.
-           apply H6.
+           apply  in_in_remove.
+           { eapply in_remove_neq, H6. }
+           { apply LNN2LNT_freeVarFormula1.
+             eapply in_remove.
+             apply H6.
+           }            
+           
 Qed.
 
-Fixpoint LNT2LNN_term (t : Term) : fol.Term LNN :=
-  match t with
-  | fol.var v => fol.var LNN v
-  | apply f ts => apply LNN f (LNT2LNN_terms _ ts)
-  end
- 
- with LNT2LNN_terms (n : nat) (ts : Terms n) {struct ts} : 
- fol.Terms LNN n :=
-  match ts in (fol.Terms _ n0) return (fol.Terms LNN n0) with
-  | Tnil => Tnil LNN
-  | Tcons m s ss => Tcons LNN m (LNT2LNN_term s) (LNT2LNN_terms m ss)
-  end.
-
-Lemma LNT2LNN_natToTerm (n:  nat) :
-  LNT2LNN_term (natToTerm n) = natToTermLNN n.
-Proof.
-  induction n as [| n Hrecn].
-  - reflexivity.
-  - simpl; now rewrite Hrecn.
-Qed.
+(** ** Inverse translation *)
 
 Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   match f with
-  | fol.equal t1 t2 => fol.equal LNN (LNT2LNN_term t1) (LNT2LNN_term t2)
+  | (t1 = t2)%nt => (LNT2LNN_term t1 = LNT2LNN_term t2)%nn
   | atomic r ts => match r with
                    end
-  | fol.impH A B => fol.impH LNN (LNT2LNN_formula A) (LNT2LNN_formula B)
-  | fol.notH A => fol.notH LNN (LNT2LNN_formula A)
-  | fol.forallH v A => fol.forallH LNN v (LNT2LNN_formula A)
+  | (A -> B)%nt => (LNT2LNN_formula A -> LNT2LNN_formula B)%nn
+  | (~  A)%nt =>   (~ LNT2LNN_formula A)%nn
+  | (allH v, A)%nt => (allH v, LNT2LNN_formula A)%nn
   end.
 
-Lemma LNT2LNT_term (t : Term): LNN2LNT_term (LNT2LNN_term t) = t.
-Proof.
-  elim t using
-    Term_Terms_ind
-    with
-    (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             LNN2LNT_terms n (LNT2LNN_terms n ts) = ts); 
-    simpl in |- *.
-  - reflexivity.
-  - intros f t0 H; now rewrite H.
-  - reflexivity.
-  - intros n t0 H t1 H0. now rewrite H, H0.
-Qed.
+(** *** Commutation lemmas *)
 
 Lemma LNT2LNT_formula (f : Formula): 
  LNN2LNT_formula (LNT2LNN_formula f) = f.
@@ -460,15 +488,15 @@ Proof.
 Qed.
 
 Lemma LNT2LNN_subTerm  (t : Term) (v : nat) (s : Term):
-  LNT2LNN_term (substituteTerm LNT t v s) =
-    substituteTerm LNN (LNT2LNN_term t) v (LNT2LNN_term s).
+  LNT2LNN_term (substT LNT t v s) =
+    substT LNN (LNT2LNN_term t) v (LNT2LNN_term s).
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             LNT2LNN_terms n (substituteTerms LNT n ts v s) =
-               substituteTerms LNN n (LNT2LNN_terms n ts) v 
+             LNT2LNN_terms n (substTs LNT n ts v s) =
+               substTs LNN n (LNT2LNN_terms n ts) v 
                  (LNT2LNN_term s)); simpl.
   - intro n; destruct (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H; reflexivity.
@@ -513,8 +541,8 @@ Qed.
 
 Lemma LNT2LNN_subFormula :
   forall (f : Formula) (v : nat) (s : Term),
-    LNT2LNN_formula (substituteFormula LNT f v s) =
-      substituteFormula LNN (LNT2LNN_formula f) v (LNT2LNN_term s).
+    LNT2LNN_formula (substF LNT f v s) =
+      substF LNN (LNT2LNN_formula f) v (LNT2LNN_term s).
 Proof.
   intro f.
   elim f using Formula_depth_ind2; simpl in |- *.
@@ -542,6 +570,9 @@ Proof.
         -- apply depthForall.
 Qed.
 
+(** * Proof translation *)
+
+(* begin hide *)
 Section Translate_Proof.
 
 Variable U : fol.System LNN.
@@ -557,7 +588,7 @@ Hypothesis
               (In v (freeVarFormula LNN f)).
 
 Lemma translatePrf f : 
- forall axm, Prf LNN axm f -> 
+ forall axm:fol.Formulas LNN, Prf LNN axm f -> 
   (forall g, In g axm -> mem _ U g) ->
   exists Axm : Formulas,
     (exists prf : Prf LNT Axm (LNN2LNT_formula f),
@@ -623,12 +654,12 @@ Proof.
     * contradiction.
   - assert (H0: SysPrf (Empty_set _)
                   (LNN2LNT_formula 
-                     (fol.impH LNN (fol.forallH LNN v A) 
-                        (substituteFormula LNN A v t)))).
+                     (impH (forallH v A) 
+                        (substF LNN A v t)))).
     { simpl in |- *.
       apply impE with
         (impH (forallH v (LNN2LNT_formula A))
-           (substituteFormula LNT (LNN2LNT_formula A) v 
+           (substF LNT (LNN2LNT_formula A) v 
               (LNN2LNT_term t))).
       apply iffE1.
       apply (reduceImp LNT).
@@ -648,11 +679,9 @@ Proof.
         -- assert (H2: In f (f::x)) by  auto with *.
            elim (H0 f H2).
   - exists (nil (A:=Formula)).
-    assert (H0: ~ In v (freeVarFormula LNT (LNN2LNT_formula A))).
-    { unfold not in |- *; intros; elim n.
-      apply LNN2LNT_freeVarFormula1.
-      auto.
-    } split.
+    assert (H0: ~ In v (freeVarFormula LNT (LNN2LNT_formula A)))
+    by (intro H0; elim n; now apply LNN2LNT_freeVarFormula1).
+    split.
     + exists (FA2 LNT (LNN2LNT_formula A) v H0); contradiction.
     + contradiction.
   - exists (nil (A:=Formula)); split.
@@ -670,15 +699,15 @@ Proof.
     + contradiction.
   - assert (H0: SysPrf (Empty_set _) (LNN2LNT_formula (AxmEq4 LNN R))).
     { induction R; simpl; repeat apply impI.
-      unfold notH, impH ; apply impE
+       apply impE
         with
         (iffH
            (translateLT
-              (Tcons LNN 1 (fol.var LNN 2)
-                 (Tcons LNN 0 (fol.var LNN 0) (Tnil LNN))))
+              (Tcons (var 2)
+                 (Tcons (var 0) (Tnil))))
            (translateLT
-              (Tcons LNN 1 (fol.var LNN 3)
-                 (Tcons LNN 0 (fol.var LNN 1) (Tnil LNN))))).
+              (Tcons (var 3)
+                 (Tcons (var 1) (Tnil))))).
       - apply impRefl.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 
@@ -687,10 +716,8 @@ Proof.
              (existH 4 (equal (Plus (var 3) (Succ (var 4))) (var 1)))).
         + apply impRefl.
         + eapply iffTrans with
-            (existH 4
-               (substituteFormula LNT
-                  (equal (Plus (var 2) (Succ (var 3))) (var 0)) 3 
-                  (var 4))).
+            (exH 4,
+               (substF LNT (v_ 2 + Succ (v_ 3) = v_ 0)%nt 3 (v_ 4)))%nt.
           * apply (rebindExist LNT).
             simpl in |- *. intro H0; decompose sum H0.
             -- discriminate H1.
@@ -728,7 +755,7 @@ Proof.
                   apply eqTrans with (var 1).
                   **  apply eqTrans with (Plus (var 3) (Succ (var 4))).
                       fold (Succ (var 4)) in |- *.
-                      fold (Plus (fol.var LNT 2) (Succ (var 4))) in |- *.
+                      fold (Plus (var 2) (Succ (var 4))) in |- *.
                       apply eqPlus.
                       apply Axm.
                       left.
@@ -756,6 +783,13 @@ Proof.
 Qed.
 
 End Translate_Proof.
+
+(* end hide *)
+
+(**   If the translation of every axiom of a [LNN]-system [U] is provable in a closed 
+      [LNT]-system [V], 
+      then the translation of any [LNN]-formula in [U] is provable in [V].
+*)
 
 Lemma translateProof (U : fol.System LNN) (V : System):
     ClosedSystem LNT V ->
@@ -794,3 +828,5 @@ Proof.
   destruct (translatePrf U V H2 f x x0 H1).
   exists x1; tauto.
 Qed.
+
+

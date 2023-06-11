@@ -52,7 +52,7 @@ Lemma compare_correct {n} (alpha beta : t n) :
 
 Proof.
   destruct n. 
-  - elimtype False;  now apply t0_empty.
+  - assert False by (now apply t0_empty); contradiction.
   - destruct alpha, beta; cbn;  case_eq (x ?= x0); unfold lt; cbn.
     + rewrite Nat.compare_eq_iff; intro; subst; f_equal. 
 (* begin snippet compareCorrectb:: no-in unfold *)

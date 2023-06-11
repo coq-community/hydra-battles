@@ -7,7 +7,7 @@ Require Import extEqualNat.
 Require Vector.
 Require Import Compat815.
 Import LispAbbreviations. 
-
+Require Import NewNotations.
 
 Section Code_Substitute_Term.
 
@@ -19,8 +19,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
 
 Definition codeSubTermTerms : nat -> nat -> nat -> nat :=
   evalStrongRec 2
@@ -43,7 +41,7 @@ Definition codeSubTerms (t s v : nat) : nat :=
 Lemma codeSubTermCorrect :
   forall (t : Term) (v : nat) (s : Term),
     codeSubTerm (codeTerm L codeF t) v (codeTerm L codeF s) =
-      codeTerm L codeF (substituteTerm L t v s).
+      codeTerm L codeF (substT L t v s).
 Proof.
   set
     (g :=
@@ -61,8 +59,8 @@ Proof.
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              codeSubTerms (codeTerms L codeF n ts) v (codeTerm L codeF s) =
-               codeTerms L codeF n (substituteTerms L n ts v s)).
-    - intro n; simpl; replace (codeTerm L codeF (fol.var L n)) with (cPair 0 n).
+               codeTerms L codeF n (substTs L n ts v s)).
+    - intro n; simpl; replace (codeTerm L codeF (var n)) with (cPair 0 n).
       + unfold codeSubTerm, codeSubTermTerms, evalStrongRec; simpl.
         repeat rewrite cPairProjections1 || rewrite cPairProjections2.
         simpl; induction (eq_nat_dec v n) as [a | b].
@@ -74,15 +72,15 @@ Proof.
     - intros f t0 H; simpl;
         transitivity
           (cPair (S (codeF f))
-             (codeTerms L codeF (arity L (inr (Relations L) f))
-                (substituteTerms L (arity L (inr (Relations L) f)) t0 v s))).
+             (codeTerms L codeF (arityF L f)
+                (substTs L (arityF L f) t0 v s))).
       + rewrite <- H; 
-          replace (codeTerm L codeF (fol.apply L f t0)) 
+          replace (codeTerm L codeF (apply f t0)) 
           with
           (cPair (S (codeF f)) 
-             (codeTerms L codeF (arity L (inr (Relations L) f)) t0)).
+             (codeTerms L codeF (arityF L f) t0)).
         * generalize (codeF f) 
-            (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
+            (codeTerms L codeF (arityF L f) t0).
           clear H t0 f; intros n n0; unfold codeSubTerm, codeSubTermTerms.
           fold g; unfold evalStrongRec, evalComposeFunc, evalOneParamList.
           unfold evalList; rewrite computeEvalStrongRecHelp.
@@ -110,10 +108,10 @@ Proof.
       reflexivity.
     - intros n t0 H t1 H0 ; simpl.
       transitivity
-        (S (cPair (codeTerm L codeF (substituteTerm L t0 v s))
-              (codeTerms L codeF n (substituteTerms L n t1 v s)))).
+        (S (cPair (codeTerm L codeF (substT L t0 v s))
+              (codeTerms L codeF n (substTs L n t1 v s)))).
       + rewrite <- H, <-  H0.
-        replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) 
+        replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
           with
           (S (cPair (codeTerm L codeF t0) (codeTerms L codeF n t1))).
         * generalize (codeTerm L codeF t0) (codeTerms L codeF n t1).
@@ -160,7 +158,7 @@ Qed.
 Lemma codeSubTermsCorrect :
   forall (n : nat) (ts : Terms n) (v : nat) (s : Term),
     codeSubTerms (codeTerms L codeF n ts) v (codeTerm L codeF s) =
-      codeTerms L codeF n (substituteTerms L n ts v s).
+      codeTerms L codeF n (substTs L n ts v s).
 Proof.
   set
     (g :=
@@ -178,10 +176,10 @@ Proof.
     simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
   - simpl; transitivity
-             (S (cPair (codeTerm L codeF (substituteTerm L t v s))
-                   (codeTerms L codeF n (substituteTerms L n ts v s)))).
+             (S (cPair (codeTerm L codeF (substT L t v s))
+                   (codeTerms L codeF n (substTs L n ts v s)))).
     + rewrite <- Hrects, <- codeSubTermCorrect.
-      replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
+      replace (codeTerms L codeF (S n) (Tcons t ts)) with
         (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts))).
       * generalize (codeTerm L codeF t) (codeTerms L codeF n ts).
         clear Hrects ts t n; intros n n0.

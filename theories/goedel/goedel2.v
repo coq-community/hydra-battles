@@ -175,7 +175,8 @@ Section Goedel's_2nd_Incompleteness.
 
   End Goedel1PA.
 
-  Definition F := (notH (forallH 0 (equal (var 0) (var 0)))).
+  Definition F : Formula := 
+    (notH (L:= LNT) (forallH 0 (equal (var 0) (var 0)))).
 
   (*Show Con is a sentence?*)
   (*Make Con say not all formulas are provable*)

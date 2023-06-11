@@ -7,6 +7,7 @@ From hydras.Ackermann Require Import folReplace.
 From hydras.Ackermann Require Import folLogic3.
 From hydras.Ackermann Require Import subProp.
 From hydras.Ackermann Require Import ListExt.
+From hydras.Ackermann Require Export Languages.
 From Goedel Require Import fixPoint.
 From Goedel Require Import codeSysPrf.
 From hydras.Ackermann Require Import NNtheory.
@@ -15,7 +16,9 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
+Import LNN NN.
 From hydras Require Import Compat815.
+
 
 Section Rosser's_Incompleteness.
 
@@ -126,7 +129,8 @@ Proof.
   induction (S (codePrf A a p)).
   - right; intros B q H0; lia. 
   - induction IHn as [H0| H0].
-    + left; decompose record H0; exists x, x0; auto.      
+    + left; decompose record H0 /r; intros x x0 H1 H3;
+        exists x, x0; auto.      
     + induction
         (eq_nat_dec
            (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -144,7 +148,8 @@ Proof.
           (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
              codeArityLNNR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
              codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 codeLNTFunctionInj
-             codeLNNRelationInj _ _ b0).
+             codeLNNRelationInj _ _ b0) /r; intros x H2 x0 x1 H3.
+
         assert (H1:  x = b).
         { eapply codeFormulaInj.
           - apply codeLNTFunctionInj.
@@ -189,7 +194,7 @@ Proof.
   destruct (FixPointLNN A 0) as [x [H0 H1]].
   exists x; split.
   -  intros v H; induction (H1 v) as [H2 H3]. 
-     assert (H4: In v (list_remove nat eq_nat_dec 0 (freeVarFormula LNN A)))
+     assert (H4: In v (List.remove eq_nat_dec 0 (freeVarFormula LNN A)))
      by apply H2, H.
      unfold A in H4; SimplFreeVar.
      + assert (H4: v <= 1).
@@ -204,7 +209,7 @@ Proof.
     + unfold Inconsistent in |- *.
       intro f; elim H; intros x0 [x1 H2]. 
       induction (searchProof decide _ (notH x) _ x1) as [H3 | H3].
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- assumption.
         -- now exists x2, x3.
@@ -232,7 +237,7 @@ Proof.
                      +++ apply iffRefl.
                      +++ apply (subFormulaNil LNN).
                          intro H4; induction (freeVarSubFormula3 _ _ _ _ _ H4).
-                         *** now apply (In_list_remove2 _ _ _ _ _ H5).
+                         *** now apply (in_remove_neq _ _ _ _ _ H5).
                          *** simpl in H5; decompose sum H5; discriminate H6.
            ++ replace (LT (var 2) (natToTerm (codePrf _ _ x1))) 
                 with
@@ -242,7 +247,7 @@ Proof.
                  apply impE with
                    (existH 2
                       (substituteFormula LNN
-                         (fol.andH LNN (LT (var 2) (var 1))
+                         (andH  (LT (var 2) (var 1))
                             (substituteFormula LNN
                                (substituteFormula LNN codeSysPrfNot 1 (var 2)) 0
                                (natToTerm (codeFormula x)))) 1 
@@ -270,7 +275,7 @@ Proof.
                          (existH 2
                             (substituteFormula LNN
                                (substituteFormula LNN
-                                  (fol.andH LNN (LT (var 2) (var 1))
+                                  (andH  (LT (var 2) (var 1))
                                      (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                   (natToTerm (codeFormula x))) 1 
                                (natToTerm (codePrf x0 x x1)))) 
@@ -278,19 +283,19 @@ Proof.
                          (substituteFormula LNN
                             (existH 2
                                (substituteFormula LNN
-                                  (fol.andH LNN (LT (var 2) (var 1))
+                                  (andH (LT (var 2) (var 1))
                                      (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                   (natToTerm (codeFormula x)))) 1 
                             (natToTerm (codePrf x0 x x1))).
                          *** replace
                              (existH 2
                                 (substituteFormula LNN
-                                   (fol.andH LNN (LT (var 2) (var 1))
+                                   (andH (LT (var 2) (var 1))
                                       (substituteFormula LNN codeSysPrfNot 1 (var 2))) 0
                                    (natToTerm (codeFormula x)))) with
                              (substituteFormula LNN
                                 (existH 2
-                                   (fol.andH LNN (LT (var 2) (var 1))
+                                   (andH (LT (var 2) (var 1))
                                       (substituteFormula LNN codeSysPrfNot 1 (var 2)))) 0
                                 (natToTerm (codeFormula x))).
                              apply impE with
@@ -303,18 +308,18 @@ Proof.
                              replace
                                (forallH 1
                                   (substituteFormula LNN
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
-                                           (fol.andH LNN (LT (var 2) (var 1))
+                                           (andH (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
                                                  (var 2))))) 0
                                      (natToTerm (codeFormula x)))) 
                                with
                                (substituteFormula LNN
                                   (forallH 1
-                                     (fol.impH LNN codeSysPrf
+                                     (impH codeSysPrf
                                         (existH 2
-                                           (fol.andH LNN (LT (var 2) (var 1))
+                                           (andH (LT (var 2) (var 1))
                                               (substituteFormula LNN codeSysPrfNot 1 
                                                  (var 2)))))) 0
                                   (natToTerm (codeFormula x))).
@@ -398,7 +403,7 @@ Proof.
                   induction H6 as [x2 H6| x2 H6].
                   --- apply (closedNN 2); exists x2; auto.
                   --- induction H6; now apply (H4 2).
-              ** apply nAnd; unfold orH, fol.orH;
+              ** apply nAnd; unfold orH;
                    apply impTrans with (LT (var 2) (natToTerm (codePrf x0 x x1))).
                  --- apply impI, nnE.
                      apply Axm; right; constructor.
@@ -409,8 +414,8 @@ Proof.
                              intros n H5; rewrite (subFormulaImp LNN).
                              rewrite (subFormulaNot LNN).
                              apply impE with
-                               (fol.impH LNN E
-                                  (fol.notH LNN
+                               (impH E
+                                  (notH
                                      (substituteFormula LNN
                                         (substituteFormula LNN codeSysPrfNot 0
                                            (natToTerm (codeFormula x))) 1 
@@ -485,7 +490,9 @@ Proof.
                           codeArityLNTFIsCorrect2
                           codeArityLNNRIsCorrect1 
                           codeArityLNNRIsCorrect2 codeLNTFunctionInj
-                          codeLNNRelationInj _ _ b).
+                          codeLNNRelationInj _ _ b) /r;
+                       intros x2 H5 x3 x4 H6.
+
                      rewrite <- H6.
                      assert (H4: x2 = notH x).
                      { eapply codeFormulaInj.
@@ -508,7 +515,7 @@ Proof.
     + unfold Inconsistent; intros f.
       elim H; intros x0 [x1 H2].
       induction (searchProof decide _ x _ x1) as [H3 | H3].
-      * decompose record H3.
+      * decompose record H3 /r; intros x2 x3 H4 H6.
         apply contradiction with x.
         -- exists x2, x3; assumption.
         -- assumption.
@@ -750,7 +757,9 @@ Proof.
                                   codeArityLNTFIsCorrect2
                                   codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 
                                   codeLNTFunctionInj
-                                  codeLNNRelationInj _ _ b).
+                                  codeLNNRelationInj _ _ b) /r;
+                               intros x2 H5 x3 x4 H6.
+
                              rewrite <- H6.
                              assert (H4: x2 = x).
                              { eapply (codeFormulaInj LNN).

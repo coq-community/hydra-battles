@@ -1,6 +1,10 @@
-(**  Replaced some proofs with Stdlib's 
-     Provisionally, we still export original names 
- *)
+(**  ListExt.v: 
+
+   The most part of the original contents by Russel have been 
+   replaced by lemmas from [Coq.List]. 
+   We decided to keep [in_remove_neq] (originally [In_list_remove2] 
+   since it appears in many composed tactics. 
+*)
 
 Require Import Coq.Lists.List.
 
@@ -9,101 +13,16 @@ Section List_Remove.
 Variable A : Set.
 Hypothesis Aeq_dec : forall a b : A, {a = b} + {a <> b}.
 
-Fixpoint list_remove (x : A) (l : list A) : list A :=
-  match l with
-    nil => l
-  | a::l => match Aeq_dec a x with
-            | left _ => list_remove x l
-            | right _ => a :: list_remove x l
-            end
-  end.
-
-Print List.remove. 
-
-Lemma list_remove_compat x l  :
-  list_remove x l = List.remove Aeq_dec x l.
+Lemma in_remove_neq:
+ forall (a b : A) (l : list A), In a (List.remove Aeq_dec b l) -> 
+                                a <> b.
 Proof.
-  induction l.
-  - reflexivity. 
-  -  simpl; case (Aeq_dec a x) ; simpl; intros; subst. 
-     + case (Aeq_dec x x) ; now rewrite IHl. 
-     + case (Aeq_dec x a).
-       * subst; congruence. 
-       * now rewrite IHl. 
-Qed. 
-
-
-Lemma In_list_remove1 :
- forall (a b : A) (l : list A), In a (list_remove b l) -> In a l.
-Proof.
-  intros a b l H; rewrite list_remove_compat in H.
-  now destruct (in_remove _ _ _ _ H).
+  intros a b l H; now destruct (in_remove _ _ _ _ H).
 Qed.
-
-Lemma In_list_remove2 :
- forall (a b : A) (l : list A), In a (list_remove b l) -> a <> b.
-Proof.
-  intros a b l H; rewrite list_remove_compat in H.
-  now destruct (in_remove _ _ _ _ H).
-Qed.
-
-
-
-
-Lemma In_list_remove3 :
-  forall (a b : A) (l : list A), In a l -> a <> b -> In a (list_remove b l).
-  Proof. 
-    intros; rewrite list_remove_compat; now apply in_in_remove. 
-Qed. 
 
 End List_Remove.
 
-Section No_Duplicate.
+(** Old name in Russel's development *)
 
-Variable A : Set.
-Hypothesis Aeq_dec : forall a b : A, {a = b} + {a <> b}.
-
-Definition  no_dup (l:list A) : list A:=
- list_rec (fun _ => list A) nil
-    (fun (a : A) _ (rec : list A) =>
-     match In_dec Aeq_dec a rec with
-     | left _ => rec
-     | right _ => a :: rec
-     end) l.
-
-Lemma nodup_compat (l: list A) : no_dup l = nodup Aeq_dec l.
-Proof. 
-  induction l. 
-  - reflexivity. 
-  - simpl; rewrite  IHl.
-    case (in_dec Aeq_dec a (nodup Aeq_dec l)) .
-    + destruct (nodup_In Aeq_dec l a) as [H H0].
-      intro i; apply H in i; case (in_dec Aeq_dec a l).
-        * auto. 
-        * intro; contradiction.       
-    + destruct (nodup_In Aeq_dec l a) as [H H0].
-      case (in_dec Aeq_dec a l).
-     * intro H1; apply H0 in H1; contradiction. 
-     * reflexivity.
-Qed. 
-
-Lemma no_dup1 : forall (a : A) (l : list A),
-    In a l -> In a (no_dup l).
-Proof.
- intros a l H; rewrite nodup_compat; now rewrite  nodup_In.
-Qed. 
-
-Lemma no_dup2 : forall (a : A) (l : list A), In a (no_dup l) -> In a l.
-Proof.
-intros a l H; now rewrite nodup_compat, nodup_In in H.
-Qed.
-
-
-Lemma no_dup3 :
-  forall (k l : list A) (a : A), no_dup k = a :: l -> ~ In a l.
-Proof.
- intros k l a H. rewrite nodup_compat in H; apply (nodup_inv _ _ H). 
-Qed. 
-
-
-End No_Duplicate.
+#[deprecated(note="use ListExt.in_remove_neq instead")]
+ Notation In_list_remove2 := in_remove_neq (only parsing).

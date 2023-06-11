@@ -1,14 +1,16 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Coq.Lists.List.
-Require Import ListExt.
-Require Import Arith.
-Require Export codeList.
-Require Import folProp.
-Require Import code.
-Require Import Compat815.
+(**  codeFreeVar.v
 
+     Original content by Russel O'Connor *)
+
+
+
+Require Import primRec  cPair.
+From Coq Require Import List Arith.
+Require Import ListExt.
+Require Export codeList.
+Require Import folProp  code Compat815.
 Import LispAbbreviations.
+
 Section Code_Free_Vars.
 
 Variable L : Language.
@@ -20,18 +22,6 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
 
 Definition codeFreeVarTermTerms : nat -> nat :=
   evalStrongRec 0
@@ -49,11 +39,10 @@ Definition codeFreeVarTerm (t : nat) : nat :=
 Definition codeFreeVarTerms (t : nat) : nat :=
   cdr (codeFreeVarTermTerms t).
 
-Lemma codeFreeVarTermCorrect :
- forall t : Term,
+Lemma codeFreeVarTermCorrect (t: Term) :
  codeFreeVarTerm (codeTerm L codeF t) = codeList (freeVarTerm L t).
 Proof.
- intros t; elim t using  Term_Terms_ind
+ elim t using  Term_Terms_ind
   with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
            codeFreeVarTerms (codeTerms L codeF n ts) =
@@ -62,21 +51,21 @@ Proof.
      evalStrongRec in |- *.
    simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    simpl; reflexivity.
- - unfold freeVarTerm; fold (freeVarTerms L (arity L (inr (Relations L) f)) t0).
+ - unfold freeVarTerm; fold (freeVarTerms L (arityF L f) t0).
    rewrite <- H; clear H.
-   unfold codeTerm; fold (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
-   generalize (codeTerms L codeF (arity L (inr (Relations L) f)) t0).
+   unfold codeTerm; fold (codeTerms L codeF (arityF L f) t0).
+   generalize (codeTerms L codeF (arityF L f) t0).
    intros n; unfold codeFreeVarTerm, codeFreeVarTermTerms.
    set
      (g := fun t1 recs : nat =>
              cPair
                (switchPR (car t1) (cdr 
-                                          (codeNth (t1 - S (cdr t1)) recs))
+                                     (codeNth (t1 - S (cdr t1)) recs))
                   (S (cPair (cdr t1) 0)))
                (switchPR t1
                   (codeApp (car (codeNth 
-                                        (t1 - S (car (pred t1))) recs))
-                     (cdr (codeNth (t1 - S (cdr (pred t1))) recs))) 0))      in *.
+                                   (t1 - S (car (pred t1))) recs))
+                     (cdr (codeNth (t1 - S (cdr (pred t1))) recs))) 0)).    
    unfold evalStrongRec, evalComposeFunc, evalOneParamList.
    rewrite computeEvalStrongRecHelp.
    unfold compose2 in |- *.
@@ -342,7 +331,7 @@ Proof.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     simpl; reflexivity.
   - simpl; rewrite <- codeFreeVarTermsCorrect.
-    generalize (codeTerms L codeF (arity L (inl (Functions L) r)) t).
+    generalize (codeTerms L codeF (arityR L r) t).
     clear t.
     intros n; unfold codeFreeVarFormula, evalStrongRec.
     unfold evalStrongRecHelp, evalComposeFunc, evalOneParamList, 

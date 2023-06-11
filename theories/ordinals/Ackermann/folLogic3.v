@@ -1,18 +1,17 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import ListExt.
+(** folLogic2.3
 
-Require Import folProp.
-Require Import folProof.
-Require Export folLogic2.
-Require Import subProp.
-Require Import folReplace.
-Require Import Arith.
-Require Import subAll.
-Require Import misc.
-From Coq Require Import Lia.
+    Original script by Russel O'Connor
 
+*)
+
+From Coq Require Import Ensembles List Arith Lia.
+From LibHyps Require Export LibHyps.
+
+Require Import ListExt folProp folProof.
+Require Export folLogic folLogic2.
+Require Import subProp folReplace subAll misc.
 Require Import Compat815.
+Require Export MoreLibHyps. 
 
 Section Equality_Logic_Rules.
 
@@ -22,24 +21,15 @@ Notation Formulas := (Formulas L) (only parsing).
 Notation System := (System L) (only parsing).
 Notation Term := (Term L) (only parsing).
 Notation Terms := (Terms L) (only parsing).
-Let var := var L.
-Let apply := apply L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
-Let orH := orH L.
-Let andH := andH L.
-Let existH := existH L.
-Let iffH := iffH L.
-Let ifThenElseH := ifThenElseH L.
+
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
-Lemma eqRefl (T : fol.System L) (a : fol.Term L): SysPrf T (equal a a).
+Lemma eqRefl (T : fol.System L) (a : fol.Term L): 
+  SysPrf T (a = a)%fol.
 Proof.
-  replace (equal a a) with (substituteFormula L (equal (var 0) (var 0)) 0 a).
+  replace (a = a)%fol with 
+    (substituteFormula L (v_ 0 = v_ 0)%fol 0 a).
   apply (forallE L).
   - apply sysExtend with (Empty_set (fol.Formula L)).
     + intros f H; destruct H.
@@ -51,7 +41,7 @@ Proof.
 Qed.
 
 Lemma eqSym (T : fol.System L) (a b : fol.Term L):
-  SysPrf T (equal a b) -> SysPrf T (equal b a).
+  SysPrf T (a = b)%fol -> SysPrf T (b = a)%fol.
 Proof.
   intros H;apply (impE L) with (equal a b); [ | easy].
   set (m := fun x : nat => match x with
@@ -59,7 +49,7 @@ Proof.
                          | S _ => b
                          end) in *.
   apply (impE L) with
-    (subAllFormula L (impH (equal (var 0) (var 1)) (equal (var 1) (var 0)))
+    (subAllFormula L (v_ 0 = v_ 1 -> v_ 1 = v_ 0)%fol
        (fun x : nat =>
         match le_lt_dec 2 x with
         | left _ => var x
@@ -82,15 +72,15 @@ Proof.
 Qed.
 
 Lemma eqTrans  (T : fol.System L) (a b c : fol.Term L):
- SysPrf T (equal a b) -> SysPrf T (equal b c) -> SysPrf T (equal a c).
+ SysPrf T (a = b)%fol -> SysPrf T (b = c)%fol -> 
+ SysPrf T (a = c)%fol.
 Proof.
   intros H H0; apply (impE L) with (equal b c); [ | easy].
   apply (impE L) with (equal a b);  [ | easy];  clear H0 H.
   set (m x:= match x with | O => a | 1 => b  | _ => c  end) in *.
   apply (impE L) with
     (subAllFormula L
-       (impH (equal (var 0) (var 1))
-          (impH (equal (var 1) (var 2)) (equal (var 0) (var 2))))
+       (v_ 0 = v_ 1 -> v_ 1 = v_ 2 -> v_ 0 = v_ 2)%fol
        (fun x : nat =>
         match le_lt_dec 3 x with
         | left _ => var x
@@ -119,10 +109,10 @@ Fixpoint PairwiseEqual (T : fol.System L) (n : nat) {struct n} :
       fun ts ss : fol.Terms L (S x) =>
       let (a, b) := proj1_sig (consTerms L x ts) in
       let (c, d) := proj1_sig (consTerms L x ss) in
-      SysPrf T (equal a c) /\ PairwiseEqual T x b d
+      SysPrf T (a = c)%fol /\ PairwiseEqual T x b d
   end.
 
-(* TODO : specify and document *)
+(** TODO : specify and document *)
 
 Let termsMap (m : nat) (ts ss : fol.Terms L m) : nat -> fol.Term L.
 Proof. 
@@ -153,8 +143,7 @@ Proof.
     {  intros v H; clear Hreca ss ts.
        induction a as [| a Hreca].
        - elim H.
-       - simpl in H.
-         induction (nVars L a).
+       - simpl in H; induction (nVars L a).
          simpl in H.
          induction H as [H| H].
          rewrite <- H.
@@ -275,8 +264,8 @@ Remark addPairwiseEquals (T : fol.System L) (n : nat) (ts ss : fol.Terms L n):
         (subAllFormula L
            (nat_rec (fun _ : nat => fol.Formula L) f0
               (fun (n : nat) (Hrecn : fol.Formula L) =>
-                 fol.impH L
-                   (fol.equal L (fol.var L (n + n)) (fol.var L (S (n + n)))) Hrecn)
+                 (v_ (n + n) = v_ (S (n + n)) -> Hrecn)%fol
+                 )
               n) m0) -> SysPrf T (subAllFormula L f0 m0).
 Proof.
   intros H.
@@ -303,7 +292,7 @@ Proof.
         simpl in |- *.
         repeat apply Nat.lt_lt_succ_r.
         auto.
-    + apply (impE L) with (fol.equal L (m0 (n + n)) (m0 (S (n + n)))).
+    + apply (impE L) with (m0 (n + n) = m0 (S (n + n)))%fol.
       * apply H2.
       * rewrite Nat.add_succ_r in H1.
         repeat rewrite H1.
@@ -320,10 +309,10 @@ Proof.
 Qed.
 
 Lemma equalRelation (T : fol.System L) (r : Relations L) (ts ss : fol.Terms L _):
- PairwiseEqual T _ ts ss -> SysPrf T (iffH (atomic r ts) (atomic r ss)).
+ PairwiseEqual T _ ts ss -> SysPrf T (atomic r ts <-> atomic r ss)%fol.
 Proof.
   intros H.
-  set (n := arity L (inl (Functions L) r)) in *.
+  set (n := arityR L r) in *.
   set (m := termsMap n ts ss) in *.
   rewrite (subAllnVars1 _ ts ss).
   fold m in |- *; rewrite (subAllnVars2 _ ts ss); fold m in |- *.
@@ -338,7 +327,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            fol.iffH L (fol.atomic L r a) (fol.atomic L r b)) 
+            iffH (atomic r a) (atomic r b)) 
          (nVars L n)) with
       (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
    + generalize (iffH (atomic r (fst (nVars L n))) (atomic r (snd (nVars L n)))).
@@ -352,7 +341,7 @@ Proof.
       (subAllFormula L (AxmEq4 L r)
          (fun x : nat =>
             match le_lt_dec (n + n) x with
-            | left _ => fol.var L x
+            | left _ => var x
             | right _ => m x
             end)).
     + apply (subAllCloseFrom L).
@@ -388,10 +377,10 @@ Proof.
 Qed.
 
 Lemma equalFunction (T : fol.System L) (f : Functions L) (ts ss : fol.Terms L _):
- PairwiseEqual T _ ts ss -> SysPrf T (equal (apply f ts) (apply f ss)).
+ PairwiseEqual T _ ts ss -> SysPrf T (apply f ts =  apply f ss)%fol.
 Proof.
   intros H.
-  set (n := arity L (inr (Relations L) f)) in *.
+  set (n := arityF L f) in *.
   set (m := termsMap n ts ss) in *.
   rewrite (subAllnVars1 _ ts ss).
   fold m in |- *.
@@ -408,7 +397,7 @@ Proof.
     replace
       (prod_rec (fun _ : fol.Terms L n * fol.Terms L n => fol.Formula L)
          (fun a b : fol.Terms L n =>
-            fol.equal L (fol.apply L f a) (fol.apply L f b)) 
+            equal (apply f a) (apply f b)) 
          (nVars L n)) 
       with
       (equal (apply f (fst (nVars L n))) (apply f (snd (nVars L n)))).
@@ -423,7 +412,7 @@ Proof.
       (subAllFormula L (AxmEq5 L f)
          (fun x : nat =>
             match le_lt_dec (n + n) x with
-            | left _ => fol.var L x
+            | left _ => var x
             | right _ => m x
             end)).
     + apply (subAllCloseFrom L).
@@ -459,14 +448,15 @@ Proof.
       * reflexivity.
 Qed.
 
-Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) (T : fol.System L):
- SysPrf T (equal a b) ->
- SysPrf T (equal (substituteTerm L t v a) (substituteTerm L t v b)).
+Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) 
+  (T : fol.System L):
+ SysPrf T (a = b)%fol ->
+ SysPrf T (substT L t v a =  substT L t v b)%fol.
 Proof.
   intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             PairwiseEqual T _ (substituteTerms L _ ts v a)
-               (substituteTerms L _ ts v b)); simpl in |- *. 
+             PairwiseEqual T _ (substTs L _ ts v a)
+               (substTs L _ ts v b)); simpl in |- *. 
     - intros n; induction (eq_nat_dec v n); [easy | apply eqRefl].
     - intros f t0 H0; apply equalFunction.
       apply H0.
@@ -474,11 +464,11 @@ Proof.
     - intros.  
       destruct
         (consTerms L n
-           (Tcons L n (substituteTerm L t0 v a) (substituteTerms L n t1 v a))). 
+           (Tcons (substT L t0 v a) (substTs L n t1 v a))). 
       destruct x as [a0 b0].
       destruct
         (consTerms L n
-           (Tcons L n (substituteTerm L t0 v b) (substituteTerms L n t1 v b))).  
+           (Tcons (substT L t0 v b) (substTs L n t1 v b))).  
       destruct x as [a1 b1]. 
       simpl in |- *.  simpl in e0; simpl in e.
       inversion e0.
@@ -491,17 +481,18 @@ Qed.
 
 Lemma subWithEqualsTerms (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
   (v : nat) (T : fol.System L):
-  SysPrf T (equal a b) ->
-  PairwiseEqual T _ (substituteTerms L _ ts v a) (substituteTerms L _ ts v b).
+  SysPrf T (a = b)%fol ->
+  PairwiseEqual T _ (substTs L _ ts v a) 
+    (substTs L _ ts v b).
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
   - auto.
   - destruct
       (consTerms L n
-         (Tcons L n (substituteTerm L t v a) (substituteTerms L n ts v a))) as [[a0 b0] p].
+         (Tcons (substT L t v a) (substTs L n ts v a))) as [[a0 b0] p].
     destruct
       (consTerms L n
-         (Tcons L n (substituteTerm L t v b) (substituteTerms L n ts v b))) as [[a1 b1] e].
+         (Tcons (substT L t v b) (substTs L n ts v b))) as [[a1 b1] e].
     simpl in |- *; simpl in p,  e.
     inversion p.
     inversion e.
@@ -513,17 +504,18 @@ Qed.
 
 Lemma subWithEquals :
   forall (f : fol.Formula L) (v : nat) (a b : fol.Term L) (T : fol.System L),
-    SysPrf T (equal a b) ->
-    SysPrf T (impH (substituteFormula L f v a) (substituteFormula L f v b)).
+    SysPrf T (a = b)%fol ->
+    SysPrf T 
+      (substituteFormula L f v a -> substituteFormula L f v b)%fol.
 Proof.
   intro f; elim f using Formula_depth_ind2; intros.
   - repeat rewrite subFormulaEqual.
     apply (impI L).
-    apply eqTrans with (substituteTerm L t v a).
+    apply eqTrans with (substT L t v a).
     + apply subWithEqualsTerm.
       apply (sysWeaken L).
       now apply eqSym.
-    + apply eqTrans with (substituteTerm L t0 v a).
+    + apply eqTrans with (substT L t0 v a).
       * apply (Axm L); right; constructor.
       * apply subWithEqualsTerm.
         now apply (sysWeaken L).
@@ -545,29 +537,31 @@ Proof.
         -- apply (Axm L); right; constructor.
   - repeat rewrite subFormulaNot.
     apply (cp2 L), H; now apply eqSym.
-  - decompose record (subFormulaForall2 L a v v0 a0).
+  - decompose record (subFormulaForall2 L a v v0 a0) /r;
+      intros x H2 H1 H3 H5.
+
     rewrite H5; clear H5.
-    decompose record (subFormulaForall2 L a v v0 b).
-    rewrite H8; clear H8.
+    decompose record (subFormulaForall2 L a v v0 b) /r; 
+      intros x0 H5 H4 H6 H8;  rewrite H8; clear H8.
     destruct  (eq_nat_dec v v0) as [e | n].
     + apply (impRefl L).
     + set
         (nv :=
            v0
-             :: list_remove nat eq_nat_dec v (freeVarFormula L a) ++
+             :: List.remove eq_nat_dec v (freeVarFormula L a) ++
              freeVarTerm L a0 ++ freeVarTerm L b) in *.
       apply  (impTrans L) with
-        (fol.forallH L (newVar nv)
-           (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
+        (forallH (newVar nv)
+           (substituteFormula L (substituteFormula L a v (var (newVar nv)))
               v0 a0)).
       * apply sysExtend with (Empty_set (fol.Formula L)).
         intros g H7; destruct H7. 
         apply
           (impTrans L)
           with
-          (fol.forallH L (newVar nv)
+          (forallH (newVar nv)
              (substituteFormula L
-                (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)
+                (substituteFormula L (substituteFormula L a v (var x)) v0 a0)
                 x (var (newVar nv)))).
         apply (iffE1 L).
         apply (rebindForall L).
@@ -577,17 +571,17 @@ Proof.
         assert
           (H8: In (newVar nv)
                  (freeVarFormula L
-                    (substituteFormula L (substituteFormula L a v (fol.var L x)) v0 a0)))
-          by (eapply In_list_remove1; apply H7).
+                    (substituteFormula L (substituteFormula L a v (var x)) v0 a0)))
+          by (eapply in_remove; apply H7).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         -- assert
-          (In (newVar nv) (freeVarFormula L (substituteFormula L a v (fol.var L x)))) by
-          (eapply In_list_remove1; apply H9). 
+          (In (newVar nv) (freeVarFormula L (substituteFormula L a v (var x)))) by
+          (eapply in_remove; apply H9). 
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
            ++ right.
               apply in_or_app.
               auto.
-           ++ elim (In_list_remove2 _ _ _ _ _ H7).
+           ++ elim (in_remove_neq _ _ _ _ _ H7).
               induction H11 as [H11| H11].
               auto.
               contradiction.
@@ -600,7 +594,7 @@ Proof.
              (iffTrans L)
              with
              (substituteFormula L
-                (substituteFormula L (substituteFormula L a v (fol.var L x)) x
+                (substituteFormula L (substituteFormula L a v (var x)) x
                    (var (newVar nv))) v0 a0).
            ++ apply (subFormulaExch L); auto.
               unfold not in |- *; intros.
@@ -617,8 +611,8 @@ Proof.
       * apply
           (impTrans L)
           with
-          (fol.forallH L (newVar nv)
-             (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv)))
+          (forallH (newVar nv)
+             (substituteFormula L (substituteFormula L a v (var (newVar nv)))
                 v0 b)).
         -- apply impE with (equal a0 b).
            ++ apply sysExtend with (Empty_set (fol.Formula L)).
@@ -636,11 +630,11 @@ Proof.
                  unfold nv at 2 in |- *.
                  right.
                  auto with datatypes.
-                 elim (In_list_remove2 _ _ _ _ _ H7).
+                 elim (in_remove_neq _ _ _ _ _ H7).
                  reflexivity.
                  apply impE with
-                   (substituteFormula L (substituteFormula L a v (fol.var L (newVar nv))) v0
-                      a0).
+                   (substF L (substituteFormula L a v 
+                                           (var (newVar nv))) v0 a0).
                  apply H.
                  eapply eqDepth.
                  symmetry  in |- *.
@@ -653,9 +647,9 @@ Proof.
         -- apply sysExtend with (Empty_set (fol.Formula L)).
            intros g H7; induction H7.
            apply (iffE2 L); apply (iffTrans L) with
-             (fol.forallH L (newVar nv)
-                (substituteFormula L
-                   (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)
+             (forallH (newVar nv)
+                (substF L
+                   (substF L (substF L a v (var x0)) v0 b)
                    x0 (var (newVar nv)))).
            apply (rebindForall L).
            intros H7; elim (newVar1 nv).
@@ -663,17 +657,18 @@ Proof.
            assert
              (H8: In (newVar nv)
                     (freeVarFormula L
-                       (substituteFormula L (substituteFormula L a v (fol.var L x0)) v0 b)))
-             by (eapply In_list_remove1; apply H7).
+                       (substF L 
+                          (substF L a v (var x0)) v0 b)))
+             by (eapply in_remove; apply H7).
            induction (freeVarSubFormula3 _ _ _ _ _ H8).
            assert
              ( H10:In (newVar nv) 
-                     (freeVarFormula L (substituteFormula L a v (fol.var L x0)))) by
-             (eapply In_list_remove1; apply H9).
+                     (freeVarFormula L (substF L a v (var x0)))) by
+             (eapply in_remove; apply H9).
            induction (freeVarSubFormula3 _ _ _ _ _ H10).
            right; apply in_or_app.
            now left. 
-           elim (In_list_remove2 _ _ _ _ _ H7).
+           elim (in_remove_neq _ _ _ _ _ H7).
            induction H11 as [H11| H11].
            ++ auto.
            ++ contradiction.
@@ -681,8 +676,9 @@ Proof.
            ++ apply (reduceForall L).  
              ** apply (notInFreeVarSys L).
              ** apply (iffTrans L) with
-                  (substituteFormula L
-                     (substituteFormula L (substituteFormula L a v (fol.var L x0)) x0
+                  (substF L
+                     (substF L 
+                        (substF L a v (var  x0)) x0
                         (var (newVar nv))) v0 b).
                 apply (subFormulaExch L); auto.
                 intros H7. 

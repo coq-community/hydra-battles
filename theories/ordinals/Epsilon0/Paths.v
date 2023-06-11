@@ -366,13 +366,14 @@ Lemma path_toS_appR     : forall u  gamma  alpha,
 Proof.
   induction 1.
   - intros.
-    elimtype False. {
+    assert False. {
       destruct s, t; auto.
       simpl in H2.      
       injection H2.
       intros.
       destruct s; try discriminate.
     }
+    contradiction.
   -  intros;  destruct s.
      + destruct s0.
        * now destruct H1.
@@ -1062,11 +1063,13 @@ Proof.
   - subst; destruct (LT_irrefl H0).
   - destruct (T1_eq_dec alpha zero).
     + now destruct H'. 
-    + subst gamma; elimtype False.
-      apply const_pathS_LE in H4.
-      destruct (@LT_irrefl beta).
-      eapply LE_LT_trans;eauto.
-      apply nf_canon;auto.
+    + subst gamma; assert False.
+      { apply const_pathS_LE in H4.
+        destruct (@LT_irrefl beta).
+        eapply LE_LT_trans;eauto.
+        apply nf_canon;auto.
+      }   
+      contradiction.
   - subst beta;  auto.
   - destruct (T1_eq_dec alpha zero).
     +  subst alpha.  destruct (const_pathS_zero H2). 
@@ -2720,8 +2723,7 @@ Section Constant_to_standard_Proof.
   Proof.
     intro H;  generalize (R16 H); intro H0.
     case_eq  (n + l)%nat.
-    -   intro H1;  elimtype False. 
-        abstract lia.
+    -   intro H1;  assert False by abstract lia; contradiction.
     -  intros n0 H1; rewrite H1 in *; apply Cor12_1 with n0;auto.
        apply Rem0.
   Qed. 
@@ -2729,7 +2731,7 @@ Section Constant_to_standard_Proof.
   Remark R18 : gamma <> zero -> (0 < l)%nat -> const_pathS (n+l) alpha gamma.
   Proof.
     intros Hg H; generalize (R15 Hg H); case_eq  (n + l)%nat.
-    -  intro;  elimtype False; abstract lia.
+    -  intro;  assert False by abstract lia; contradiction.
     -  intros n0 H1 H2;  apply Cor12_1 with n0;auto.
        apply const_pathS_LT with n0;auto;  apply Rem02.
   Qed.
@@ -2840,8 +2842,7 @@ Section Constant_to_standard_Proof.
   Remark R30 : gamma <> zero -> gamma = beta.
   Proof.
     case_eq l.
-    - intro; elimtype False.
-      apply R29;auto.
+    - intro; assert False by (apply R29;auto); contradiction.
     - intros n0 H H0; apply R27;auto.
       rewrite H;auto with arith. 
   Qed.

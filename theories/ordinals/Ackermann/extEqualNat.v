@@ -1,3 +1,10 @@
+(** extEqualNat:
+
+     Original script by Russel O'Connor 
+*)
+     
+
+
 Require Import Arith.
 
 (* begin snippet naryFunc *)
@@ -37,11 +44,11 @@ Fixpoint charFunction (n : nat) : naryRel n -> naryFunc n :=
   end.
 
 
-Lemma extEqualRefl : forall (n : nat) (a : naryFunc n), extEqual n a a.
+Lemma extEqualRefl n a: extEqual n a a.
 Proof.
-  induction n as [| n Hrecn].
+  revert a; induction n as [| n Hrecn].
   - reflexivity.
-  - simpl in |- *; intros; apply Hrecn.
+  - intros a c; apply Hrecn.
 Qed.
 
 Lemma extEqualSym :

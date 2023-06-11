@@ -1,68 +1,43 @@
 
-Require Import Arith Lia.
-Require Import Ensembles.
-Require Import Coq.Lists.List.
 
-Require Import folProp.
-Require Import subAll.
-Require Import folLogic3.
-Require Export Languages.
+(**  NN.v : Natural Numbers: Axioms and basic properties
+
+
+Original version by Russel O'Connor
+
+*)
+
+From Coq Require Import Arith Lia  Ensembles List.
+
+Require Import folProp subAll  folLogic3 Languages.
 Require Export LNN.
-From hydras Require Import Compat815.
+From hydras Require Import Compat815 NewNotations.
 
+(** * Axioms of [NN] *)
 Section NN.
 
-Definition NN1 := forallH 0 (notH (equal (Succ (var 0)) Zero)).
+Definition NN1 := (allH 0, Succ v_ 0 <> Zero)%nn. 
 
-Definition NN2 :=
-  forallH 1 (forallH 0
-       (impH (equal (Succ (var 0)) (Succ (var 1))) 
-          (equal (var 0) (var 1)))).
+Definition NN2 := (allH 1 0,  Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)%nn.
 
-Definition NN3 := forallH 0 (equal (Plus (var 0) Zero) (var 0)).
+Definition NN3 := (allH 0, v_ 0 + Zero = v_ 0)%nn.
 
-Definition NN4 :=
-  forallH 1 (forallH 0
-       (equal (Plus (var 0) (Succ (var 1))) (Succ (Plus (var 0) (var 1))))).
+Definition NN4 := (allH 1 0, v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))%nn.
 
-Definition NN5 := forallH 0 (equal (Times (var 0) Zero) Zero).
+Definition NN5 := (allH 0, v_ 0 * Zero = Zero)%nn.
 
-Definition NN6 :=
-  forallH 1
-    (forallH 0
-       (equal (Times (var 0) (Succ (var 1)))
-          (Plus (Times (var 0) (var 1)) (var 0)))).
+Definition NN6 := (allH 1 0, v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nn.
 
-Definition NN7 := forallH 0 (notH (LT (var 0) Zero)).
+Definition NN7 := (allH 0, ~ v_ 0 < Zero)%nn.
 
-Definition NN8 :=
-  forallH 1
-    (forallH 0
-       (impH (LT (var 0) (Succ (var 1)))
-          (orH (LT (var 0) (var 1)) (equal (var 0) (var 1))))).
+Definition NN8 := 
+ (allH 1 0, v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)%nn.
 
-Definition NN9 :=
-  forallH 1
-    (forallH 0
-       (orH (LT (var 0) (var 1))
-          (orH (equal (var 0) (var 1)) (LT (var 1) (var 0))))).
+Definition NN9 := (allH 1 0, v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%nn.
 
-Definition NNStar :=
-  forallH 1
-    (forallH 0
-       (impH (orH (LT (var 0) (var 1)) (equal (var 0) (var 1)))
-          (LT (var 0) (Succ (var 1))))).
-
-Definition NN :=
-  Ensembles.Add _
-    (Ensembles.Add _
-       (Ensembles.Add _
-          (Ensembles.Add _
-             (Ensembles.Add _ 
-                (Ensembles.Add _ 
-                   (Ensembles.Add _ 
-                      (Ensembles.Add _ (Singleton _ NN1) NN2) NN3) NN4) NN5)
-             NN6) NN7) NN8) NN9.
+Definition NN := SetEnum NN1 NN2 NN3 NN4 NN5 NN6 NN7 NN8 NN9.
+ 
+(** * Properties of the system [NN] *)
 
 Lemma closedNN1 : ClosedSystem LNN NN.
 Proof.
@@ -75,24 +50,24 @@ Proof.
   destruct closedNN1 with v x; tauto.
 Qed.
 
-Lemma nn1 (a : Term) : SysPrf NN (notH (equal (Succ a) Zero)).
+(** ** Generic instantiation of axioms *)
+
+Lemma nn1 (a : Term) : SysPrf NN (Succ a <> Zero)%nn.
 Proof.
-  replace (notH (equal (Succ a) Zero)) with
-    (substituteFormula LNN (notH (equal (Succ (var 0)) Zero)) 0 a).
+  change (Succ a <> Zero)%nn with
+    (substituteFormula LNN (Succ v_ 0 <> Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
-  - reflexivity.
 Qed.
 
-Lemma nn2 (a b : Term):
-  SysPrf NN (impH (equal (Succ a) (Succ b)) (equal a b)).
+Lemma nn2 (a b : Term):  SysPrf NN (Succ a = Succ b -> a = b)%nn. 
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (impH (equal (Succ a) (Succ b)) (equal a b)) with
+  change (Succ a = Succ b -> a = b)%nn with
     (subAllFormula LNN
-       (impH (equal (Succ (var 0)) (Succ (var 1))) (equal (var 0) (var 1)))
+       (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -100,64 +75,50 @@ Proof.
           end)).
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
-  - cbn; destruct (le_lt_dec 2 0) as [? | l].
-    + lia. 
-    + destruct (le_lt_dec 2 1).
-      * lia. 
-      * reflexivity. 
 Qed.
 
-Lemma nn3 (a : Term): SysPrf NN (equal (Plus a Zero) a).
+Lemma nn3 (a : Term): SysPrf NN (a + Zero = a)%nn.
 Proof.
-  replace (equal (Plus a Zero) a) with
-    (substituteFormula LNN (equal (Plus (var 0) Zero) (var 0)) 0 a).
+  change  (a + Zero = a)%nn with
+    (substituteFormula LNN (v_ 0 + Zero = v_ 0)%nn 0 a).
   - apply forallE; apply Axm; repeat (try right; constructor) || left.
-  - reflexivity.
 Qed.
 
-Lemma nn4 (a b : Term) :
- SysPrf NN (equal (Plus a (Succ b)) (Succ (Plus a b))).
+Lemma nn4 (a b : Term) : SysPrf NN (a + Succ b = Succ (a + b))%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
-                           end) in *.
-  replace (equal (Plus a (Succ b)) (Succ (Plus a b))) with
-    (subAllFormula LNN
-       (equal (Plus (var 0) (Succ (var 1))) (Succ (Plus (var 0) (var 1))))
-       (fun x : nat =>
-          match le_lt_dec 2 x with
-          | left _ => var x
-          | right _ => m x
-          end)).
+                           end).
+  change (a + Succ b = Succ (a + b))%nn
+    with (subAllFormula LNN
+            (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))%nn
+            (fun x : nat =>
+               match le_lt_dec 2 x with
+               | left _ => var x
+               | right _ => m x
+               end)).
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
-  - destruct  (le_lt_dec 2 0).
-    + lia.
-    + destruct (le_lt_dec 2 1).
-      * lia. 
-      * reflexivity. 
 Qed.
 
-Lemma nn5 ( a : Term) : SysPrf NN (equal (Times a Zero) Zero).
+Lemma nn5 ( a : Term) : SysPrf NN (a * Zero = Zero)%nn.
 Proof.
-  replace (equal (Times a Zero) Zero) with
-    (substituteFormula LNN (equal (Times (var 0) Zero) Zero) 0 a).
+  change (a * Zero = Zero)%nn with
+    (substituteFormula LNN (v_ 0 * Zero = Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
-  - reflexivity.
 Qed.
 
 Lemma nn6 (a b : Term):
-  SysPrf NN (equal (Times a (Succ b)) (Plus (Times a b) a)).
+  SysPrf NN (a * Succ b = a * b + a)%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (equal (Times a (Succ b)) (Plus (Times a b) a)) with
+  change (a * Succ b = a * b + a)%nn with 
     (subAllFormula LNN
-       (equal (Times (var 0) (Succ (var 1)))
-          (Plus (Times (var 0) (var 1)) (var 0)))
+       (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -165,53 +126,42 @@ Proof.
           end)).
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
-  - cbn; destruct (le_lt_dec 2 0).
-    + lia.
-    + induction (le_lt_dec 2 1); [lia | reflexivity].
 Qed.
 
-Lemma nn7 (a : Term): SysPrf NN (notH (LT a Zero)).
+Lemma nn7 (a : Term): SysPrf NN (~ (a <Zero))%nn.
 Proof.
-  replace (notH (LT a Zero)) with
-    (substituteFormula LNN (notH (LT (var 0) Zero)) 0 a).
+  change (~ (a <Zero))%nn with
+    (substituteFormula LNN (~ v_ 0 < Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
-  - reflexivity.
 Qed.
 
-Lemma nn8 (a b : Term) :
- SysPrf NN (impH (LT a (Succ b)) (orH (LT a b) (equal a b))).
+Lemma nn8 (a b : Term) : SysPrf NN (a < Succ b -> a < b \/ a = b)%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (impH (LT a (Succ b)) (orH (LT a b) (equal a b))) with
-    (subAllFormula LNN
-       (impH (LT (var 0) (Succ (var 1)))
-          (orH (LT (var 0) (var 1)) (equal (var 0) (var 1))))
-       (fun x : nat =>
+  change (a < Succ b -> a < b \/ a = b)%nn with 
+    (subAllFormula LNN (v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)%nn 
+              (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
           | right _ => m x
           end)).
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
-  - cbn; destruct (le_lt_dec 2 0).
-    + lia.
-    + induction (le_lt_dec 2 1); [lia | reflexivity]. 
 Qed.
 
-Lemma nn9 (a b : Term):
-  SysPrf NN (orH (LT a b) (orH (equal a b) (LT b a))).
+Lemma nn9 (a b : Term):  SysPrf NN (a < b \/ a = b \/ b < a)%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  replace (orH (LT a b) (orH (equal a b) (LT b a))) with
+  change (a < b \/ a = b \/ b < a)%nn 
+    with 
     (subAllFormula LNN
-       (orH (LT (var 0) (var 1))
-          (orH (equal (var 0) (var 1)) (LT (var 1) (var 0))))
+       (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -219,67 +169,7 @@ Proof.
           end)).
   - apply (subAllCloseFrom LNN); cbn;
       apply Axm; repeat (try right; constructor) || left.
-  - cbn; destruct (le_lt_dec 2 0).
-    + lia.
-    + induction (le_lt_dec 2 1); [lia | reflexivity].
 Qed.
 
 End NN.
 
-
-
-(*  Old stuff ?????  
-Definition NNPlus := (Add ? NN NNStar).
-
-Lemma nnStar : (a,b:Term)
- (SysPrf NNPlus (impH (orH (LT a b) (equal a b)) (LT a (Succ b)))).
-Proof.
-Intros.
-LetTac m := [x:nat]
-Cases x of 
-O => a
-|(S _) => b
-end.
-Replace (impH (orH (LT a b) (equal a b)) (LT a (Succ b)))
-with (subAllFormula LNN (impH (orH (LT (var (0)) (var (1))) (equal (var (0)) (var (1))))
-        (LT (var (0)) (Succ (var (1))))) [x:nat]Cases (le_lt_dec (2) x) of
-         (left _) => (var x)
-       | (right _) => (m x) end).
-Apply (subAllCloseFrom LNN).
-Simpl.
-Apply Axm; Repeat ((Try Right; Constructor) Orelse Left).
-Simpl.
-NewInduction (le_lt_dec (2) (0)).
-Elim (le_not_lt ? ? a0).
-Auto.
-NewInduction (le_lt_dec (2) (1)).
-Elim (le_not_lt ? ? a0).
-Auto.
-Reflexivity.
-Qed.
-
-Lemma NNPlusExtends : (Included ? NN NNPlus).
-Proof.
-Intros.
-Unfold Included NNPlus.
-Intros.
-Left.
-Assumption.
-Qed.
-
-Lemma closedNNPlus1 : (ClosedSystem LNN NNPlus).
-Proof.
-Unfold ClosedSystem.
-Unfold NNPlus.
-Intros.
-Repeat Induction H; Auto.
-Qed.
-
-Lemma closedNNPlus : (v:nat)~(In_freeVarSys LNN v NNPlus).
-Proof.
-Unfold not; Intros.
-Unfold In_freeVarSys in H.
-Induction H.
-Elim closedNNPlus1 with v x; Tauto.
-Qed.
-*)

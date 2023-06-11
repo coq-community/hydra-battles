@@ -16,15 +16,13 @@ Variable codeArityF : nat -> nat.
 Hypothesis codeArityFIsPR : isPR 1 codeArityF.
 Hypothesis
   codeArityFIsCorrect1 :
-    forall f : Functions L, codeArityF (codeF f) = S (arity L (inr _ f)).
+    forall f : Functions L, codeArityF (codeF f) = S (arityF L f).
 Hypothesis
   codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> exists f : Functions L, codeF f = n.
 
 Let Term := Term L.
 Let Terms := Terms L.
-Let var := var L.
-Let apply := apply L.
 
 Definition wellFormedTermTerms : nat -> nat :=
   evalStrongRec 0
@@ -48,7 +46,7 @@ Lemma lengthTerms :
 Proof.
   intros n ts; induction ts as [| n t ts Hrects].
   - reflexivity.
-  - replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
+  - replace (codeTerms L codeF (S n) (Tcons t ts)) with
       (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)));
       [ idtac | reflexivity ].
     unfold codeLength, evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
@@ -93,7 +91,7 @@ Proof.
      rewrite computeEvalStrongRecHelp.
      unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
        unfold A at 1;  repeat rewrite cPairProjections1; simpl; reflexivity.
-  - intros f t0 H; replace (codeTerm L codeF (fol.apply L f t0)) with
+  - intros f t0 H; replace (codeTerm L codeF (apply f t0)) with
       (cPair (S (codeF f)) (codeTerms L codeF _ t0)); [ idtac | reflexivity ].
     unfold wellFormedTerm, wellFormedTermTerms; fold A.
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;
@@ -116,7 +114,7 @@ Proof.
     rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
       unfold A at 1; rewrite cPairProjections1; rewrite cPairProjections2.
-    replace (codeTerms L codeF (S n) (Tcons L n t0 t1)) with
+    replace (codeTerms L codeF (S n) (Tcons t0 t1)) with
       (S (cPair (codeTerm L codeF t0) (codeTerms L codeF n t1)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.
@@ -159,7 +157,7 @@ Proof.
       rewrite computeEvalStrongRecHelp;
       unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl.
     unfold A at 1; rewrite cPairProjections1,  cPairProjections2.
-    replace (codeTerms L codeF (S n) (Tcons L n t ts)) with
+    replace (codeTerms L codeF (S n) (Tcons t ts)) with
       (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.  
@@ -269,7 +267,7 @@ Proof.
                 ** rewrite H1; apply le_n.
         * unfold A at 1; rewrite cPairProjections2; destruct n.
           -- simpl; intros H1; exists 0.
-             exists (Tnil L); easy.
+             exists (Tnil); easy.
           -- repeat rewrite evalStrongRecHelp1.
              ++ simpl; intros H1; assert (H2: cPairPi1 n < m).
                 { rewrite <- H0; apply Nat.lt_succ_r. 
@@ -293,7 +291,7 @@ Proof.
                 induction (H4 H7) as [x H9].
                 induction (H6 H8) as [x0 H10].
                 induction H10 as (x1, H10).
-                exists (S x0), (Tcons L x0 x x1).
+                exists (S x0), (Tcons  x x1).
                 rewrite <- (cPairProjections n).
                 now rewrite <- H9, <- H10.
              ++ simpl; apply Nat.lt_succ_r.
@@ -474,17 +472,12 @@ Variable codeArityR : nat -> nat.
 Hypothesis codeArityRIsPR : isPR 1 codeArityR.
 Hypothesis
   codeArityRIsCorrect1 :
-    forall r : Relations L, codeArityR (codeR r) = S (arity L (inl _ r)).
+    forall r : Relations L, codeArityR (codeR r) = S (arityR L r).
 Hypothesis
   codeArityRIsCorrect2 :
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, codeR r = n.
 
 Let Formula := Formula L.
-Let equal := equal L.
-Let atomic := atomic L.
-Let impH := impH L.
-Let notH := notH L.
-Let forallH := forallH L.
 
 Definition wellFormedFormula : nat -> nat :=
   evalStrongRec 0
