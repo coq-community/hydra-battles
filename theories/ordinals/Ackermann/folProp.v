@@ -17,7 +17,7 @@ Notation Terms := (Terms L) (only parsing).
 Let lt_depth := lt_depth L.
 
 Section Free_Variables.
-
+(* begin snippet freeVarT *)
 Fixpoint freeVarT (s : fol.Term L) : list nat :=
   match s with
   | var v => v :: nil
@@ -28,12 +28,14 @@ with freeVarTs (n : nat) (ss : fol.Terms L n) {struct ss} : list nat :=
        | Tnil => nil (A:=nat)
        | Tcons m t ts => freeVarT t ++ freeVarTs m ts
        end.
+(* end snippet freeVarT *)
 
 Lemma freeVarTApply :
   forall (f : Functions L) (ts : fol.Terms L _),
     freeVarT (apply f ts) = freeVarTs _ ts.
 Proof. reflexivity. Qed.
 
+(* begin snippet freeVarF *)
 Fixpoint freeVarF (A : fol.Formula L) : list nat :=
   match A with
   | equal t s => freeVarT t ++ freeVarT s
@@ -42,6 +44,7 @@ Fixpoint freeVarF (A : fol.Formula L) : list nat :=
   | notH A => freeVarF A
   | forallH v A => remove  eq_nat_dec v (freeVarF A)
   end.
+(* end snippet freeVarF *)
 
 Definition ClosedSystem (T : fol.System L) :=
   forall (v : nat) (f : fol.Formula L),
@@ -52,8 +55,6 @@ Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
    nil => a
 |  cons v l =>  (forallH v (closeList l a))
 end.
-
-(* Todo : use stdlib's nodup *)
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
   closeList (nodup eq_nat_dec (freeVarF x)) x.

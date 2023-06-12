@@ -185,7 +185,6 @@ The following example shows two formulas which share the same structure, are log
   
 \inputsnippets{FolExamples/boundVars}  
 
-I
 
   \begin{todo}
    Link to the lemmas which attest the equivalence of these formulas (properties of substitution, logical equivalence).
@@ -258,6 +257,23 @@ input/output.
 \section{Computing and reasoning on first-order formulas}
 
 
+\subsection{Structural recursion on formulas}
+
+\subsubsection{Free variables}
+The functions \texttt{freeVarT} [resp. \texttt{freeVarTs},  and
+\texttt{freeVarF}] compute the multiset (as a list with possible repetitions) of the free occurrences of variables in a term [resp. a vector of terms, a formula].
+
+\inputsnippets{folProp/freeVarT}
+
+\inputsnippets{folProp/freeVarF, FolExamples/freeVarEx}
+
+
+
+Note that \texttt{freeVarF} is defined by cases over the basic connectives. In the following example, the connective \texttt{<->} is expanded into a conjunction of two implications, thus the 
+list returned by \texttt{freeVarF} may contain redundancies.
+
+
+\inputsnippets{FolExamples/freeVarDup}
 
 \subsection{Decidability of equality}
 % Deciding whether two formulas are equal is a part of the verification of a proof (for instance in the implementation of the \emph{assumption} rule).
@@ -285,6 +301,7 @@ The function \texttt{formula\_dec} is mainly used in
 \end{todo}
 
 \end{remark}
+
 
 \subsection{Variables and substitutions}
 
@@ -362,23 +379,7 @@ Let us for instance have a look  at \texttt{Formula\_depth\_ind2}. Its applicati
 
 \subsection{Free variables and substitutions}
 
-\begin{todo}
-Link to folProp.v
-\end{todo}
 
-
- 
-Section \texttt{Free\_Variables} 
-of~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} defines the list of free variables which occur in a term (respectively in a formula).
-
-We advise the reader to look at these functions, and limit ourselves to give a few examples.
-
-Let us consider again the formulas \texttt{f3} and \texttt{f4} of page~\pageref{fol:examplesf1f2f3}.
-
-The list of free variable occurrences of a formula is given by the function \texttt{freeVarF}. The function \texttt{close}
-binds all the free variables of a formula with universal quantifiers.
-
-\inputsnippets{FolExamples/freeVarExamples}
 
 \subsection{Multiple substitutions}
 

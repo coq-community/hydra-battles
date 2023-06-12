@@ -152,7 +152,19 @@ Example F4: Formula L :=
 Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
 
 Example F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
+
 (* end snippet FormExamples *)
+
+(* begin snippet freeVarEx *)
+Compute freeVarF L (allH 0, v#0 = v#1)%fol.
+Compute freeVarF L (v#0 = v#1 \/ allH 0, v#0 = v#1)%fol.
+(* end snippet freeVarEx *)
+
+(* begin snippet freeVarDup *)
+Compute freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol. 
+Compute nodup Nat.eq_dec (freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol). 
+(* end snippet freeVarDup *)
+
 
 (* begin snippet toyNotationForm2 *)
 Print F1.
@@ -245,15 +257,9 @@ cbn. red.  compute; auto with arith.
 Qed.
 (* end snippet ltDepth1 *)
 
-(* begin snippet freeVarExamples *)
-Compute  freeVarFormula _ F5.
-
-Compute List.nodup Nat.eq_dec (freeVarFormula _ F5).
-
-Compute freeVarFormula _ (close _ F5).
 
 Compute substF L F5 0 (f a).
-(* end snippet freeVarExamples *)
+
 
 
 Locate f. 
