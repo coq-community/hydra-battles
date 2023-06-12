@@ -6,7 +6,7 @@ Import ListNotations.
 
 
 Tactic Notation (at level 4) tactic4(Tac) "/" "dr" := Tac ; {< fun h
-=> try revert dependent h }.
+=> try generalize dependent h }.
 Tactic Notation (at level 4) tactic4(Tac) "/" "r?" :=
   Tac ; {< fun h  => try revert h }.
 
