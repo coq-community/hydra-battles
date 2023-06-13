@@ -18,8 +18,8 @@ depends: [
   "dune" {>= "2.5"}
   "coq" {(>= "8.14" & < "8.18~") | (= "dev")}
   "coq-hydra-battles" {= version}
-  "coq-mathcomp-ssreflect" {(>= "1.13.0" & < "1.16~") | (= "dev")}
-  "coq-mathcomp-zify"
+  "coq-mathcomp-ssreflect" {(>= "1.13.0" & < "1.16~")}
+  "coq-mathcomp-zify" {< "2"}
   "coq-gaia-schutte" {(>= "1.14" & < "1.16~") | (= "dev")}
 ]
 
