@@ -11,6 +11,7 @@ Require Import folProof.
 Require Import folProp.
 Require Import Peano_dec.
 Require Import misc.
+Import FolNotations.
 Require Import NewNotations.
 
 Section Model_Theory.
@@ -76,13 +77,13 @@ Fixpoint interpFormula (value : nat -> U M) (f : Formula L) {struct f} :
   end.
 
 Lemma freeVarInterpTerm (v1 v2 : nat -> U M) (t : Term L):
- (forall x : nat, List.In x (freeVarTerm L t) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarT L t) -> v1 x = v2 x) ->
  interpTerm v1 t = interpTerm v2 t.
 Proof.
   elim t using  Term_Terms_ind with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
-               (forall x : nat, List.In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
+               (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
                interpTerms n f v1 ts = interpTerms n f v2 ts); 
     simpl.
   - intros n H; apply H; left; auto.
@@ -93,16 +94,16 @@ Proof.
     rewrite H.  
     apply H0.
     intros x H2; apply H1.
-    + unfold freeVarTerms; apply in_or_app.
+    + unfold freeVarTs; apply in_or_app.
       right; apply H2.
     + intros x H2; apply H1.
-      unfold freeVarTerms; apply in_or_app; left.
+      unfold freeVarTs; apply in_or_app; left.
       apply H2.
 Qed.
 
 Lemma freeVarInterpRel (v1 v2 : nat -> U M) (n : nat) 
   (ts : Terms L n) (r : naryRel (U M) n): 
-  (forall x : nat, List.In x (freeVarTerms L n ts) -> v1 x = v2 x) ->
+  (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
   interpRels n r v1 ts -> interpRels n r v2 ts.
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
@@ -110,13 +111,13 @@ Proof.
   - rewrite (freeVarInterpTerm v1 v2).
     + apply Hrects.
       intros x H0; apply H.
-      unfold freeVarTerms; apply in_or_app; right; apply H0.
+      unfold freeVarTs; apply in_or_app; right; apply H0.
     + intros x H0; apply H.
-      unfold freeVarTerms; apply in_or_app; left; apply H0.
+      unfold freeVarTs; apply in_or_app; left; apply H0.
 Qed.
 
 Lemma freeVarInterpFormula (v1 v2 : nat -> U M) (g : Formula L):
- (forall x : nat, List.In x (freeVarFormula L g) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarF L g) -> v1 x = v2 x) ->
  interpFormula v1 g -> interpFormula v2 g.
 Proof.
   revert v1 v2.
@@ -183,7 +184,7 @@ Qed.
 Lemma subInterpFormula :
  forall (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L),
  interpFormula (updateValue value v (interpTerm value s)) f <->
- interpFormula value (substituteFormula L f v s).
+ interpFormula value (substF L f v s).
 Proof.
   intros value f; revert value.
   elim f using Formula_depth_ind2; simpl.
@@ -194,16 +195,16 @@ Proof.
     simpl;
     assert
       (H1: interpFormula (updateValue value v (interpTerm value s)) f1 <->
-         interpFormula value (substituteFormula L f1 v s)) by auto.
+         interpFormula value (substF L f1 v s)) by auto.
     assert
       (H2: interpFormula (updateValue value v (interpTerm value s)) f0 <->
-         interpFormula value (substituteFormula L f0 v s)) by auto.
+         interpFormula value (substF L f0 v s)) by auto.
     tauto.
   - intros f0 H value v s; rewrite (subFormulaNot L).
     simpl in |- *.
     assert
       (interpFormula (updateValue value v (interpTerm value s)) f0 <->
-         interpFormula value (substituteFormula L f0 v s)).
+         interpFormula value (substF L f0 v s)).
     auto.
     tauto.
   - intros v a H value v0 s; rewrite (subFormulaForall L).
@@ -234,15 +235,15 @@ Proof.
              end).
         -- intros x0 H1; induction (eq_nat_dec v0 x0); reflexivity.
         --  auto.
-    + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [a0 | b0].
+    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
       * simpl;
-        set (nv := newVar (v0 :: freeVarTerm L s ++ freeVarFormula L a)) in *.
-        assert (~ List.In nv (v0 :: freeVarTerm L s ++ freeVarFormula L a)).
+        set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)) in *.
+        assert (~ List.In nv (v0 :: freeVarT L s ++ freeVarF L a)).
         { unfold nv in |- *.
           apply newVar1. }
         assert
               (forall (x : U M) (x0 : nat),
-                  List.In x0 (freeVarFormula L a) ->
+                  List.In x0 (freeVarF L a) ->
                   updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                     updateValue
                       (updateValue (updateValue value nv x) v0
@@ -287,14 +288,14 @@ Proof.
                    (var nv))) a) <->
          (forall x : U M,
              interpFormula (updateValue value nv x)
-               (substituteFormula L (substituteFormula L a v (var nv)) v0 s))).
+               (substF L (substF L a v (var nv)) v0 s))).
     { split.
       - assert
           (H2: forall b : Formula L,
               lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
-                interpFormula value (substituteFormula L b v s)).
+                interpFormula value (substF L b v s)).
         { intros b0 H2 value0 v1 s0 H3;
           induction (H b0 H2 value0 v1 s0); auto.
         }    
@@ -310,7 +311,7 @@ Proof.
           (H3: forall b : Formula L,
               lt_depth L b (allH v, a)%fol ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
-                interpFormula value (substituteFormula L b v s) ->
+                interpFormula value (substF L b v s) ->
                 interpFormula (updateValue value v (interpTerm value s)) b) 
           by (intros; induction (H b0 H3 value0 v1 s0); auto).
         clear H; apply H3.
@@ -361,7 +362,7 @@ Proof.
       * simpl in |- *.
         assert
           (forall (x : U M) (x0 : nat),
-              List.In x0 (freeVarFormula L a) ->
+              List.In x0 (freeVarF L a) ->
               updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                 updateValue (updateValue value v x) v0
                   (interpTerm (updateValue value v x) s) x0).
@@ -387,7 +388,7 @@ Proof.
               lt_depth L b (forallH v a) ->
               forall (value : nat -> U M) (v : nat) (s : Term L),
                 interpFormula (updateValue value v (interpTerm value s)) b ->
-                interpFormula value (substituteFormula L b v s)).
+                interpFormula value (substF L b v s)).
         { intros b1 H2 value0 v1 s0 H3; induction (H b1 H2 value0 v1 s0); auto. }
         apply H2.
         ++ apply depthForall.
@@ -399,7 +400,7 @@ Proof.
         (forall b : Formula L,
             lt_depth L b (forallH v a) ->
             forall (value : nat -> U M) (v : nat) (s : Term L),
-              interpFormula value (substituteFormula L b v s) ->
+              interpFormula value (substF L b v s) ->
               interpFormula (updateValue value v (interpTerm value s)) b).
        { intros b1 H1 value0 v1 s0 H2; induction (H b1 H1 value0 v1 s0); auto. }
        intros H2 x; 
@@ -416,13 +417,13 @@ Qed.
 
 Lemma subInterpFormula1 (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L):
  interpFormula (updateValue value v (interpTerm value s)) f ->
- interpFormula value (substituteFormula L f v s).
+ interpFormula value (substF L f v s).
 Proof.
   induction (subInterpFormula value f v s); auto.
 Qed.
 
 Lemma subInterpFormula2 (value : nat -> U M) (f : Formula L) (v : nat) (s : Term L):
-  interpFormula value (substituteFormula L f v s) ->
+  interpFormula value (substF L f v s) ->
   interpFormula (updateValue value v (interpTerm value s)) f.
 Proof.
   induction (subInterpFormula value f v s); auto.
@@ -440,7 +441,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
 Definition nnTranslate (f : Formula L) : Formula L :=
   notH (notH (nnHelp f)).
 
-Lemma freeVarNNHelp (f : Formula L):  freeVarFormula L f = freeVarFormula L (nnHelp f).
+Lemma freeVarNNHelp (f : Formula L):  freeVarF L f = freeVarF L (nnHelp f).
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     try reflexivity.
@@ -451,7 +452,7 @@ Qed.
 
 Lemma subNNHelp :
  forall (f : Formula L) (v : nat) (s : Term L),
- substituteFormula L (nnHelp f) v s = nnHelp (substituteFormula L f v s).
+ substF L (nnHelp f) v s = nnHelp (substF L f v s).
 Proof.
   intro f; elim f using Formula_depth_ind2; intros; try reflexivity.
   - simpl; rewrite subFormulaImp, H, H0. 
@@ -460,7 +461,7 @@ Proof.
   - simpl; do 2 rewrite subFormulaForall.
     simpl; induction (eq_nat_dec v v0).
     + simpl; reflexivity.
-    + induction (In_dec eq_nat_dec v (freeVarTerm L s)) as [? | ?].
+    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [? | ?].
       * simpl; repeat rewrite subFormulaNot; repeat rewrite H.
         -- now rewrite <- freeVarNNHelp.
         -- eapply eqDepth.
@@ -623,7 +624,7 @@ Proof.
                          (fun a b : Terms L (arityR L R) => A a b)
                          (nVars L (arityR L R)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         (v_ (n + n)%nat = v_ (S (n+n))%nat -> Hrecn)%fol)
+                         (v#(n + n)%nat = v#(S (n+n))%nat -> Hrecn)%fol)
                          
                       (arityR L R)))).
         { generalize (arityR L R).
@@ -681,7 +682,7 @@ Proof.
                          (fun a b : Terms L (arityF L f) => A a b)
                          (nVars L (arityF L f)))
                       (fun (n : nat) (Hrecn : Formula L) =>
-                         (v_ (n + n)%nat = v_ (S (n + n))%nat -> Hrecn)%fol)
+                         (v#(n + n)%nat = v#(S (n + n))%nat -> Hrecn)%fol)
                            (arityF L f)))).
         { generalize (arityF L f).
           simple induction n.
@@ -721,8 +722,8 @@ Lemma ModelConsistent (value : nat -> U M):
       mem _ T f -> interpFormula value (nnTranslate f)) ->
   Consistent L T. 
 Proof.
-  intros H; unfold Consistent; exists (v_ O <> v_ 0)%fol.
-  intros H0; assert (H1: interpFormula value (nnTranslate (v_ O <> v_ 0)%fol)).
+  intros H; unfold Consistent; exists (v#O <> v#0)%fol.
+  intros H0; assert (H1: interpFormula value (nnTranslate (v#O <> v#0)%fol)).
   { apply preserveValue.
     assumption.
     auto.

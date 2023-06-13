@@ -9,29 +9,30 @@ From Coq Require Import Ensembles List Arith Lia.
 Require Import subAll folReplace folProp folLogic3 NN LNN2LNT.
 Require Export PA.
 Require Import NewNotations.
+Import NNnotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 
 Lemma paZeroOrSucc (t : Term):
- let nv := newVar (0 :: freeVarTerm LNT t) in
- SysPrf PA (t = Zero \/ exH nv, t = Succ (v_ nv))%nt.
+ let nv := newVar (0 :: freeVarT LNT t) in
+ SysPrf PA (t = Zero \/ exH nv, t = Succ (v#nv))%nt.
   Proof.
-     set (nv := newVar (0 :: freeVarTerm LNT t)) in *. 
+     set (nv := newVar (0 :: freeVarT LNT t)) in *. 
   apply impE with
-    (substituteFormula LNT
-       (v_ 0 = Zero \/ exH nv, v_ 0 = Succ v_ nv)%nt
+    (substF LNT
+       (v#0 = Zero \/ exH nv, v#0 = Succ v#nv)%nt
        0 t).
   - rewrite (subFormulaOr LNT), (subFormulaEqual LNT); simpl.
     apply iffE1, (reduceOr LNT).
     + apply iffRefl.
     + rewrite (subFormulaExist LNT).
       destruct (eq_nat_dec nv 0) as [a | b].
-      * elim (newVar1 (0 :: freeVarTerm LNT t)).
+      * elim (newVar1 (0 :: freeVarT LNT t)).
         fold nv in |- *.
         rewrite a; simpl; auto.
-      * destruct (In_dec eq_nat_dec nv (freeVarTerm LNT t)) 
+      * destruct (In_dec eq_nat_dec nv (freeVarT LNT t)) 
           as [a | b0].
-        -- elim (newVar1 (0 :: freeVarTerm LNT t)).
+        -- elim (newVar1 (0 :: freeVarT LNT t)).
            fold nv in |- *; simpl in |- *; auto.
         -- rewrite (subFormulaEqual LNT).
            Opaque eq_nat_dec.
@@ -48,11 +49,11 @@ Lemma paZeroOrSucc (t : Term):
       * apply impI; rewrite (subFormulaOr LNT); apply orI2.
         rewrite (subFormulaExist LNT).
         induction (eq_nat_dec nv 0).
-  -- elim (newVar1 (0 :: freeVarTerm LNT t)).
+  -- elim (newVar1 (0 :: freeVarT LNT t)).
      fold nv; simpl; auto.
-  -- induction (In_dec eq_nat_dec nv (freeVarTerm LNT (Succ (v_ 0))%nt)) 
+  -- induction (In_dec eq_nat_dec nv (freeVarT LNT (Succ (v#0))%nt)) 
        as [a | b0].
-     ++ elim (newVar1 (0 :: freeVarTerm LNT t)).
+     ++ elim (newVar1 (0 :: freeVarT LNT t)).
         fold nv in |- *.
         simpl in a.
         induction a as [H| H].
@@ -91,12 +92,12 @@ Lemma paPlusSym : forall a b : Term,
     SysPrf PA (a + b = b + a)%nt. 
 Proof.
   assert
-    (H: SysPrf PA (allH 1 0, v_ 0 + v_ 1 = v_ 1 + v_ 0)%nt).
+    (H: SysPrf PA (allH 1 0, v#0 + v#1 = v#1 + v#0)%nt).
   { apply induct.
     - rewrite (subFormulaForall LNT).
       induction (eq_nat_dec 0 1) as [a | b].
       + discriminate a.
-      + induction (In_dec eq_nat_dec 0 (freeVarTerm LNT Zero)) as [a | b0].
+      + induction (In_dec eq_nat_dec 0 (freeVarT LNT Zero)) as [a | b0].
         * elim a.
         * apply induct.
           -- repeat rewrite (subFormulaEqual LNT).
@@ -105,12 +106,12 @@ Proof.
              ++ apply closedPA.
              ++ repeat rewrite (subFormulaEqual LNT).
                 simpl; apply impI.
-                apply eqTrans with (Succ (v_ 0))%nt.
+                apply eqTrans with (Succ (v#0))%nt.
                 ** apply sysWeaken.
                    apply pa3 with (a := (Succ (var 0))%nt).
-                ** apply eqTrans with (Succ (Zero + v_ 0))%nt.
+                ** apply eqTrans with (Succ (Zero + v#0))%nt.
                    { apply eqSucc.
-                     apply eqTrans with (v_ 0 + Zero)%nt.
+                     apply eqTrans with (v#0 + Zero)%nt.
                      - apply sysWeaken.
                        apply eqSym.
                        apply pa3.
@@ -118,14 +119,14 @@ Proof.
                    } 
                    apply eqSym.
                    apply sysWeaken.
-                   apply pa4 with (a := Zero%nt) (b := (v_ 0)%nt).
+                   apply pa4 with (a := Zero%nt) (b := (v#0)%nt).
     - apply forallI.
       + apply closedPA.
       + apply impI.
         rewrite (subFormulaForall LNT).
         induction (eq_nat_dec 0 1) as [a | b].
         * discriminate a.
-        * induction (In_dec eq_nat_dec 0 (freeVarTerm LNT (Succ (v_ 1))%nt)).
+        * induction (In_dec eq_nat_dec 0 (freeVarT LNT (Succ (v#1))%nt)).
 
           -- simpl in a.
              induction a as [H| H].
@@ -141,10 +142,10 @@ Proof.
                    decompose sum H.
                    discriminate H0.
                    discriminate H1.
-             ++ apply eqTrans with (Succ (v_ 0 + v_ 1))%nt.
+             ++ apply eqTrans with (Succ (v#0 + v#1))%nt.
                 ** apply sysWeaken.
                    apply pa4 with (a := var 0) (b := var 1).
-                ** apply eqTrans with (Succ (v_ 1 + v_ 0))%nt.
+                ** apply eqTrans with (Succ (v#1 + v#0))%nt.
                    { apply eqSucc.
                      apply forallSimp with 0.
                      apply Axm; right; constructor.
@@ -154,32 +155,32 @@ Proof.
                    apply induct.
                    rewrite (subFormulaEqual LNT).
                    simpl in |- *.
-                   apply eqTrans with (Succ (v_ 1))%nt.
+                   apply eqTrans with (Succ (v#1))%nt.
                    { 
                      fold
-                       (Succ (v_ 1 + Zero))%nt.
+                       (Succ (v#1 + Zero))%nt.
                      apply eqSucc.
-                     apply pa3 with (a := (v_ 1)%nt).
+                     apply pa3 with (a := (v#1)%nt).
                    }
                    apply eqSym.
-                   apply pa3 with (a := (Succ v_ 1)%nt).
+                   apply pa3 with (a := (Succ v#1)%nt).
                    apply forallI.
                    apply closedPA.
                    apply impI.
                    rewrite (subFormulaEqual LNT).
                    simpl in |- *.
-                   apply eqTrans with  (Succ (Succ v_ 1 + v_ 0))%nt.
+                   apply eqTrans with  (Succ (Succ v#1 + v#0))%nt.
                    {
-                     fold (Succ (v_ 1 + Succ v_ 0))%nt.
+                     fold (Succ (v#1 + Succ v#0))%nt.
                      apply eqSucc.
-                     apply eqTrans with (Succ (v_ 1 + v_ 0))%nt. 
+                     apply eqTrans with (Succ (v#1 + v#0))%nt. 
                      apply sysWeaken.
-                     apply pa4 with (a := (v_  1)%nt) (b := (v_ 0)%nt).
+                     apply pa4 with (a := (v# 1)%nt) (b := (v#0)%nt).
                      apply Axm; right; constructor.
                    } 
                    apply sysWeaken.
                    apply eqSym.
-                   apply pa4 with (a := Succ (v_ 1)%nt) (b := (v_ 0)%nt).
+                   apply pa4 with (a := Succ (v#1)%nt) (b := (v#0)%nt).
   } 
   intros a b;
   set (m := fun x : nat => match x with
@@ -187,7 +188,7 @@ Proof.
                          | S _ => b
                          end) in *.
   replace (a + b = b + a)%nt with
-    (subAllFormula LNT (v_ 0 + v_ 1 = v_ 1 + v_ 0)%nt
+    (subAllFormula LNT (v#0 + v#1 = v#1 + v#0)%nt
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -208,11 +209,11 @@ Proof.
   - apply closedPA.
   - rewrite translateLT1.
     set (nv := newVar (0 :: 2 :: 1 :: 0 :: nil)) in *.
-     fold Zero%nt; fold (Succ (v_ nv))%nt; fold (v_ 0 +  (Succ v_ nv))%nt.
+     fold Zero%nt; fold (Succ (v#nv))%nt; fold (v#0 +  (Succ v#nv))%nt.
     apply nnI, forallI.
     + apply closedPA.
-    + apply impE with (Succ (v_ 0 + v_ nv) <> Zero)%nt.
-      * apply cp2, impI; apply eqTrans with (v_ 0 + Succ (v_ nv))%nt.
+    + apply impE with (Succ (v#0 + v#nv) <> Zero)%nt.
+      * apply cp2, impI; apply eqTrans with (v#0 + Succ (v#nv))%nt.
         -- apply sysWeaken, eqSym, pa4.
         -- apply Axm; right; constructor.
       * apply pa1.
@@ -222,14 +223,14 @@ Lemma NN82PA : SysPrf PA (LNN2LNT_formula NN8).
 Proof.
   replace (LNN2LNT_formula NN8) with
     (allH 1 0,
-      translateLT (Tcons v_ 0 (Tcons (S_ v_ 1) Tnil)) ->
-      translateLT (Tcons v_ 0 (Tcons v_ 1 Tnil)) \/ v_ 0 = v_ 1)%nt; simpl. 
+      translateLT (Tcons v#0 (Tcons (S_ v#1) Tnil)) ->
+      translateLT (Tcons v#0 (Tcons v#1 Tnil)) \/ v#0 = v#1)%nt; simpl. 
   
   - repeat rewrite translateLT1; simpl.
-    unfold newVar; simpl; fold (Succ (v_ 3))%nt.
-    fold (Succ (v_ 1))%nt; fold (v_ 0 + Succ v_ 3)%nt.
-    fold (exH 3, v_ 0 + Succ v_ 3 = Succ v_ 1)%nt.  
-    fold (exH 3, v_ 0 + Succ  v_ 3 = v_ 1)%nt.
+    unfold newVar; simpl; fold (Succ (v#3))%nt.
+    fold (Succ (v#1))%nt; fold (v#0 + Succ v#3)%nt.
+    fold (exH 3, v#0 + Succ v#3 = Succ v#1)%nt.  
+    fold (exH 3, v#0 + Succ  v#3 = v#1)%nt.
     apply forallI.
     + apply closedPA.
     + apply forallI.
@@ -243,13 +244,13 @@ Proof.
           ++ apply sysWeaken.
              apply paZeroOrSucc.
           ++ apply impI; apply orI2.
-             apply impE with (Succ v_ 0 = Succ v_ 1)%nt.
+             apply impE with (Succ v#0 = Succ v#1)%nt.
              ** repeat simple apply sysWeaken.
                 apply pa2.
-             ** apply eqTrans with (v_ 0 + Succ v_ 3)%nt.
-                apply eqTrans with (Succ (v_ 0 + v_ 3))%nt.
+             ** apply eqTrans with (v#0 + Succ v#3)%nt.
+                apply eqTrans with (Succ (v#0 + v#3))%nt.
                 apply eqSucc.
-                apply eqTrans with (v_ 0 + Zero)%nt.
+                apply eqTrans with (v#0 + Zero)%nt.
                 apply eqSym.
                 repeat simple apply sysWeaken.
                 apply pa3.
@@ -277,11 +278,11 @@ Proof.
              apply existI with (var 4).
              rewrite (subFormulaEqual LNT).
              simpl; apply impE with 
-               (Succ (v_ 0 + Succ v_ 4) = Succ v_ 1)%nt.
+               (Succ (v#0 + Succ v#4) = Succ v#1)%nt.
              repeat simple apply sysWeaken.
              apply pa2.
-             apply eqTrans with (v_ 0 + Succ v_ 3)%nt.
-             apply eqTrans with (v_ 0 + Succ (Succ  v_ 4))%nt.
+             apply eqTrans with (v#0 + Succ v#3)%nt.
+             apply eqTrans with (v#0 + Succ (Succ  v#4))%nt.
              repeat simple apply sysWeaken.
              apply eqSym.
              apply pa4.
@@ -298,24 +299,24 @@ Lemma NN92PA : SysPrf PA (LNN2LNT_formula NN9).
 Proof.
   replace (LNN2LNT_formula NN9) with
 (allH 1 0,
-     LNN2LNT_formula ((v_ 0)%nt < (v_ 1)%nt)%nn \/
-     v_ 0 = v_ 1 \/ LNN2LNT_formula (v_ 1 < v_ 0)%nn)%nt;
+     LNN2LNT_formula ((v#0)%nt < (v#1)%nt)%nn \/
+     v#0 = v#1 \/ LNN2LNT_formula (v#1 < v#0)%nn)%nt;
     [ idtac | reflexivity ].
   simpl in |- *.
   repeat rewrite translateLT1.
   simpl in |- *.
   unfold newVar in |- *.
   simpl in |- *.
-  fold (Succ v_ 3)%nt in |- *.
-  fold (v_ 0 + Succ v_ 3)%nt.
-  fold (v_ 1 + Succ v_ 3)%nt.
-  fold (exH 3, v_ 0 + Succ v_ 3 = v_ 1)%nt.
-  fold (exH 3, v_ 1 + Succ v_ 3 = v_ 0)%nt.
+  fold (Succ v#3)%nt in |- *.
+  fold (v#0 + Succ v#3)%nt.
+  fold (v#1 + Succ v#3)%nt.
+  fold (exH 3, v#0 + Succ v#3 = v#1)%nt.
+  fold (exH 3, v#1 + Succ v#3 = v#0)%nt.
     apply induct.
   - rewrite (subFormulaForall LNT).
     induction (eq_nat_dec 0 1).
     + discriminate a.
-    + induction (In_dec eq_nat_dec 0 (freeVarTerm LNT Zero)).
+    + induction (In_dec eq_nat_dec 0 (freeVarT LNT Zero)).
       * simpl in a.
         elim a.
       * rewrite (subFormulaOr LNT).
@@ -326,7 +327,7 @@ Proof.
         rewrite (subFormulaEqual LNT).
         simpl in |- *.
         eapply orE.
-        -- apply paZeroOrSucc with (t := (v_ 0)%nt).
+        -- apply paZeroOrSucc with (t := (v#0)%nt).
         -- apply impI.
            apply orI1.
            apply Axm; right; constructor.
@@ -337,9 +338,9 @@ Proof.
            rewrite (subFormulaExist LNT).
            induction (eq_nat_dec 3 1).
            ++ discriminate a.
-           ++ induction (In_dec eq_nat_dec 3 (freeVarTerm LNT Zero)).
+           ++ induction (In_dec eq_nat_dec 3 (freeVarT LNT Zero)).
               ** elim a.
-              ** apply impE with (exH 3, v_ 0 = Succ v_ 3)%nt.
+              ** apply impE with (exH 3, v#0 = Succ v#3)%nt.
                  { apply sysWeaken.
                    apply impI.
                    apply existSys.
@@ -349,21 +350,21 @@ Proof.
                      induction H as [H| H].
                      + discriminate H.
                      + contradiction.
-                   - apply existI with (v_ 3)%nt.
+                   - apply existI with (v#3)%nt.
                      repeat rewrite (subFormulaEqual LNT).
                      simpl in |- *.
-                     apply eqTrans with (Succ v_ 3)%nt.
+                     apply eqTrans with (Succ v#3)%nt.
                      + apply sysWeaken.
-                       apply eqTrans with (Succ v_ 3 + Zero)%nt.
-                       * apply paPlusSym with (a := Zero) (b := (Succ v_ 3)%nt).
+                       apply eqTrans with (Succ v#3 + Zero)%nt.
+                       * apply paPlusSym with (a := Zero) (b := (Succ v#3)%nt).
                        * apply pa3.
                      + apply eqSym.
                        apply Axm; right; constructor.
                  } 
-                 apply impE with (exH 1, v_ 0 = Succ v_ 1)%nt.
+                 apply impE with (exH 1, v#0 = Succ v#1)%nt.
                  {
-                   replace (v_ 0 = Succ v_ 3)%nt with
-                     (substF LNT (v_ 0 = Succ v_ 1)%nt 1 (v_ 3)%nt).
+                   replace (v#0 = Succ v#3)%nt with
+                     (substF LNT (v#0 = Succ v#1)%nt 1 (v#3)%nt).
                    - apply iffE1.
                      apply (rebindExist LNT).
                      simpl in |- *.
@@ -381,7 +382,7 @@ Proof.
       rewrite (subFormulaForall LNT).
       induction (eq_nat_dec 0 1).
       * discriminate a.
-      * induction (In_dec eq_nat_dec 0 (freeVarTerm LNT (Succ v_ 1)%nt)).
+      * induction (In_dec eq_nat_dec 0 (freeVarT LNT (Succ v#1)%nt)).
         -- simpl in a.
            induction a as [H| H].
            ++ discriminate H.
@@ -395,7 +396,7 @@ Proof.
               induction (eq_nat_dec 3 1).
               ** discriminate a.
               ** induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v_ 1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  { simpl in a.
                    induction a as [H| H].
                    - elim b1; auto.
@@ -404,13 +405,13 @@ Proof.
                  rewrite (subFormulaExist LNT).
                  induction (eq_nat_dec 3 0).
                  { discriminate a. }
-                 induction (In_dec eq_nat_dec 3 (freeVarTerm LNT Zero)).
+                 induction (In_dec eq_nat_dec 3 (freeVarT LNT Zero)).
                  { simpl in a; contradiction. }
-                 apply existI with (v_ 1)%nt.
+                 apply existI with (v#1)%nt.
                  repeat rewrite (subFormulaEqual LNT).
                  simpl in |- *.
-                 apply eqTrans with (Succ v_ 1 + Zero)%nt.
-                 { apply paPlusSym with (a := Zero) (b := (Succ v_ 1)%nt). }
+                 apply eqTrans with (Succ v#1 + Zero)%nt.
+                 { apply paPlusSym with (a := Zero) (b := (Succ v#1)%nt). }
                  apply pa3.
            ++ apply forallI.
               ** apply closedPA.
@@ -419,7 +420,7 @@ Proof.
                    induction (eq_nat_dec 3 1).
                    - discriminate a.
                    - induction (In_dec eq_nat_dec 3 
-                                  (freeVarTerm LNT (Succ (v_ 1))%nt)).
+                                  (freeVarT LNT (Succ (v#1))%nt)).
                      + simpl in a.
                        induction a as [H| H].
                        * elim b1; auto.
@@ -429,7 +430,7 @@ Proof.
                        induction (eq_nat_dec 3 0).
                        * discriminate a.
                        * induction (In_dec eq_nat_dec 3
-                                      (freeVarTerm LNT (Succ (v_ 0))%nt)).
+                                      (freeVarT LNT (Succ (v#0))%nt)).
                          -- simpl in a.
                             induction a as [H| H].
                             ++ elim b3; auto.
@@ -438,15 +439,15 @@ Proof.
                             induction (eq_nat_dec 3 1).
                             ++ elim b1; auto.
                             ++ induction (In_dec eq_nat_dec 3 
-                                            (freeVarTerm LNT (Succ (v_ 1))%nt)).
+                                            (freeVarT LNT (Succ (v#1))%nt)).
                                ** elim b2; auto.
                                ** rewrite (subFormulaExist LNT).
                                   induction (eq_nat_dec 3 0).
                                   { elim b3; auto. }
                                   induction (In_dec eq_nat_dec 
                                                3 
-                                               (freeVarTerm LNT 
-                                                  (Succ (v_ 0))%nt)).
+                                               (freeVarT LNT 
+                                                  (Succ (v#0))%nt)).
                                   { elim b4; auto. }
                                   repeat rewrite (subFormulaEqual LNT); 
                                     simpl in |- *.
@@ -457,14 +458,14 @@ Proof.
                                   decompose sum H; auto.
                                   eapply orE.
                                   apply sysWeaken.
-                                  apply paZeroOrSucc with (t := (v_ 3)%nt).
+                                  apply paZeroOrSucc with (t := (v#3)%nt).
                                   apply impI.
                                   apply orI2.
                                   apply orI1.
-                                  apply eqTrans with (v_ 0 + Succ v_ 3)%nt.
-                                  apply eqTrans with (Succ (v_ 0 + v_ 3))%nt.
+                                  apply eqTrans with (v#0 + Succ v#3)%nt.
+                                  apply eqTrans with (Succ (v#0 + v#3))%nt.
                                   apply eqSucc.
-                                  apply eqTrans with (v_ 0 + Zero)%nt.
+                                  apply eqTrans with (v#0 + Zero)%nt.
                                   apply eqSym.
                                   repeat simple apply sysWeaken.
                                   apply pa3.
@@ -497,13 +498,13 @@ Proof.
                                     discriminate H0 || discriminate H1.
                                   apply existI with (var 4).
                                   rewrite (subFormulaEqual LNT); simpl in |- *.
-                                  apply eqTrans with (v_ 0 + Succ v_ 3)%nt.
-                                  apply eqTrans with (v_ 0 + Succ (Succ v_ 4))%nt.
-                                  apply eqTrans with (Succ (v_ 0 + Succ v_ 4))%nt.
-                                  apply eqTrans with (Succ v_ 4 + Succ v_ 0)%nt.
+                                  apply eqTrans with (v#0 + Succ v#3)%nt.
+                                  apply eqTrans with (v#0 + Succ (Succ v#4))%nt.
+                                  apply eqTrans with (Succ (v#0 + Succ v#4))%nt.
+                                  apply eqTrans with (Succ v#4 + Succ v#0)%nt.
                                   repeat simple apply sysWeaken.
                                   apply paPlusSym with 
-                                    (a := (Succ v_ 0)%nt) (b := (Succ v_ 4)%nt).
+                                    (a := (Succ v#0)%nt) (b := (Succ v#4)%nt).
                                   repeat simple apply sysWeaken.
                                   eapply eqTrans.
                                   apply pa4.
@@ -527,7 +528,7 @@ Proof.
                  induction (eq_nat_dec 3 1).
                  { discriminate a. }
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v_ 1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  induction a as [H| H].
                  { elim b1; auto. }
                  contradiction.
@@ -535,21 +536,21 @@ Proof.
                  induction (eq_nat_dec 3 0).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3
-                              (freeVarTerm LNT (Succ v_ 0)%nt)).
+                              (freeVarT LNT (Succ v#0)%nt)).
                  induction a as [H| H].
                  elim b3; auto.
                  contradiction.
                  apply existI with Zero.
                  repeat rewrite (subFormulaEqual LNT).
                  simpl in |- *.
-                 apply eqTrans with  (Succ (Succ v_ 1 + Zero))%nt.
+                 apply eqTrans with  (Succ (Succ v#1 + Zero))%nt.
                  apply sysWeaken.
-                 apply pa4 with (a := (Succ v_ 1)%nt) (b := Zero).
-                 apply eqTrans with (Succ (Succ v_ 1))%nt.
+                 apply pa4 with (a := (Succ v#1)%nt) (b := Zero).
+                 apply eqTrans with (Succ (Succ v#1))%nt.
                  apply eqSucc.
                  apply sysWeaken.
                  apply pa3.
-                 fold (Succ (v_ 0))%nt.
+                 fold (Succ (v#0))%nt.
                  apply eqSucc.
                  apply eqSym.
                  apply Axm; right; constructor.
@@ -557,7 +558,7 @@ Proof.
                  induction (eq_nat_dec 3 1).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ v_ 1)%nt)).
+                              (freeVarT LNT (Succ v#1)%nt)).
                  induction a as [H| H].
                  elim b1; auto.
                  contradiction.
@@ -565,7 +566,7 @@ Proof.
                  induction (eq_nat_dec 3 0).
                  discriminate a.
                  induction (In_dec eq_nat_dec 3 
-                              (freeVarTerm LNT (Succ (v_ 0))%nt)).
+                              (freeVarT LNT (Succ (v#0))%nt)).
                  induction a as [H| H].
                  elim b3; auto.
                  contradiction.
@@ -576,13 +577,13 @@ Proof.
                  simpl in |- *.
                  unfold not in |- *; intros.
                  decompose sum H; auto.
-                 apply existI with (Succ v_ 3)%nt.
+                 apply existI with (Succ v#3)%nt.
                  repeat rewrite (subFormulaEqual LNT).
                  simpl in |- *.
-                 apply eqTrans with  (Succ (Succ v_ 1 + Succ v_ 3))%nt.
+                 apply eqTrans with  (Succ (Succ v#1 + Succ v#3))%nt.
                  apply sysWeaken.
-                 apply pa4 with (a := (Succ v_ 1)%nt) (b := (Succ v_ 3)%nt).
-                 fold (Succ v_ 0)%nt in |- *.
+                 apply pa4 with (a := (Succ v#1)%nt) (b := (Succ v#3)%nt).
+                 fold (Succ v#0)%nt in |- *.
                  apply eqSucc.
                  apply Axm; right; constructor.
 Qed.

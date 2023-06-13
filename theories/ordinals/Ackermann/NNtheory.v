@@ -5,6 +5,7 @@ Require Import folProp.
 Require Import subProp.
 Require Export NN.
 From hydras Require Import Compat815.
+Import NNnotations. 
 
 Lemma natNE (a b : nat) :
   a <> b -> SysPrf NN (natToTerm a <> natToTerm b)%nn.
@@ -97,15 +98,15 @@ Qed.
 Lemma boundedLT  (m : nat) (a : Formula) (x : nat):
   (forall n : nat,
       n < m -> SysPrf NN (substF LNN a x (natToTerm n))) ->
-  SysPrf NN (v_ x < natToTerm m -> a)%nn.
+  SysPrf NN (v#x < natToTerm m -> a)%nn.
 Proof.
   revert m a x; simple induction m; intros.
   apply impI.
-  apply contradiction with (v_  x < natToTerm 0)%nn.
+  apply contradiction with (v# x < natToTerm 0)%nn.
   - apply Axm; right; constructor.
   - apply sysWeaken, nn7.
   - apply impI; eapply orE.
-    + apply impE with (v_ x < natToTerm (S n))%nn.
+    + apply impE with (v#x < natToTerm (S n))%nn.
       * apply sysWeaken; cbn; apply nn8.
       * apply Axm; right; constructor.
     + apply sysWeaken, H.
@@ -123,36 +124,36 @@ Qed.
 
 Lemma nnPlusNotNeeded (n:nat) :
  SysPrf NN
- (v_ 1 < natToTerm n \/ v_ 1 = natToTerm n ->
-  v_ 1 < S_ (natToTerm n))%nn.
+ (v#1 < natToTerm n \/ v#1 = natToTerm n ->
+  v#1 < S_ (natToTerm n))%nn.
  Proof.
   induction n as [| n Hrecn].
   - cbn; apply impI, orSys. 
-    + apply contradiction with (v_ 1 < Zero)%nn.
+    + apply contradiction with (v#1 < Zero)%nn.
       * apply Axm; right; constructor.
       * apply sysWeaken, nn7. 
-    + rewrite <- (subFormulaId LNN (v_ 1 < Succ Zero)%nn 1).
+    + rewrite <- (subFormulaId LNN (v#1 < Succ Zero)%nn 1).
       apply impE with 
-        (substituteFormula LNN (v_ 1 < Succ Zero)%nn 1 Zero).
+        (substF LNN (v#1 < Succ Zero)%nn 1 Zero).
       * apply (subWithEquals LNN).
         apply eqSym.
         apply Axm; right; constructor.
       * apply sysWeaken;
-          replace (substF LNN (v_ 1 < Succ Zero)%nn 1 Zero) 
+          replace (substF LNN (v#1 < Succ Zero)%nn 1 Zero) 
           with
           (natToTerm 0 < natToTerm 1)%nn.
       -- apply natLT; auto.
       -- unfold LT; now rewrite (subFormulaRelation LNN).
   - cbn; apply impI, orSys.
     + apply impE with 
-        (v_ 1 < natToTerm n \/ v_ 1 = natToTerm n)%nn.
+        (v#1 < natToTerm n \/ v#1 = natToTerm n)%nn.
       * apply sysWeaken;
-          apply impTrans with (v_ 1 < natToTerm (S n))%nn.
+          apply impTrans with (v#1 < natToTerm (S n))%nn.
         -- apply Hrecn.
         -- apply boundedLT.
            intros n0 H. 
            replace
-             (substF LNN (v_ 1 < (Succ (Succ (natToTerm n))))%nn
+             (substF LNN (v#1 < (Succ (Succ (natToTerm n))))%nn
                 1 (natToTerm n0)) 
              with (natToTerm n0 < natToTerm (S (S n)))%nn.
            { apply natLT; now apply Nat.lt_lt_succ_r. }
@@ -160,20 +161,20 @@ Lemma nnPlusNotNeeded (n:nat) :
            cbn; rewrite (subTermNil LNN).
            ++ reflexivity.
            ++ apply closedNatToTerm.
-      * apply impE with (v_ 1 < Succ (natToTerm n))%nn.
+      * apply impE with (v#1 < Succ (natToTerm n))%nn.
         -- apply sysWeaken, nn8.
         -- apply Axm; right; constructor.
     + rewrite <- 
         (subFormulaId LNN 
-           (v_ 1 <  (Succ (Succ (natToTerm n))))%nn 1).
+           (v#1 <  (Succ (Succ (natToTerm n))))%nn 1).
       apply impE with
-        (substF LNN (v_ 1 < Succ (Succ (natToTerm n)))%nn 1
+        (substF LNN (v#1 < Succ (Succ (natToTerm n)))%nn 1
            (Succ (natToTerm n))).
       * apply (subWithEquals LNN), eqSym, Axm; right; constructor. 
       * apply sysWeaken.
         replace
           (substF LNN 
-             (v_  1 < Succ (Succ (natToTerm n)))%nn 1
+             (v# 1 < Succ (Succ (natToTerm n)))%nn 1
              (Succ (natToTerm n))) 
           with (natToTerm (S n) <  natToTerm (S (S n)))%nn.
         { apply natLT, Nat.lt_succ_diag_r. }

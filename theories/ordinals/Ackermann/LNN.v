@@ -61,15 +61,6 @@ Infix "->" := (impH): nn_scope.
 Notation "~ A" := (@notH _ A): nn_scope. 
 Notation "A <-> B" := (@iffH _ A B): nn_scope.
 
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
-
 Notation "t = u" := (@equal _ t u): nn_scope.
 Notation "t <> u" := (~ t = u)%nn : nn_scope.
 
@@ -85,9 +76,8 @@ Notation "x /\' y" := (~ (~ x \/'  ~ y))%nn : nn_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%nn:  nn_scope.
 Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%nn : nn_scope.
 
-Notation "'v_' i" := (var i) (at level 3) : nn_scope.
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : nn_scope. 
 Notation exH' v A := (~ (forallH v (~ A)))%nn.
-
 
 Notation "'exH' x .. y , p" := (@existH  LNN x .. (@existH LNN y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
@@ -102,7 +92,7 @@ Infix "*" := Times: nn_scope.
 Infix "<" := LT: nn_scope.
 End NNnotations.
 
-Export NNnotations. 
+Import NNnotations. 
 
 
 
@@ -112,26 +102,26 @@ Proof. split; decide equality. Qed.
 Section Free_Variables.
 
 Lemma freeVarPlus (x y : Term) :
- freeVarTerm LNN (Plus x y) = freeVarTerm LNN x ++ freeVarTerm LNN y.
-Proof. now rewrite (app_nil_end (freeVarTerm LNN y)). Qed.
+ freeVarT LNN (Plus x y) = freeVarT LNN x ++ freeVarT LNN y.
+Proof. now rewrite (app_nil_end (freeVarT LNN y)). Qed.
 
 Lemma freeVarTimes (x y : Term):
- freeVarTerm LNN (Times x y) = freeVarTerm LNN x ++ freeVarTerm LNN y.
-Proof. now rewrite (app_nil_end (freeVarTerm LNN y)). Qed.
+ freeVarT LNN (Times x y) = freeVarT LNN x ++ freeVarT LNN y.
+Proof. now rewrite (app_nil_end (freeVarT LNN y)). Qed.
 
 Lemma freeVarSucc (x : Term): 
-  freeVarTerm LNN (Succ x) = freeVarTerm LNN x.
+  freeVarT LNN (Succ x) = freeVarT LNN x.
 Proof.
-  now rewrite (app_nil_end (freeVarTerm LNN x)).
+  now rewrite (app_nil_end (freeVarT LNN x)).
 Qed.
 
-Lemma freeVarZero : freeVarTerm LNN Zero = nil.
+Lemma freeVarZero : freeVarT LNN Zero = nil.
 Proof. reflexivity. Qed.
 
 Lemma freeVarLT (x y : Term) :
- freeVarFormula LNN (LT x y) = freeVarTerm LNN x ++ freeVarTerm LNN y.
+ freeVarF LNN (LT x y) = freeVarT LNN x ++ freeVarT LNN y.
 Proof.
-  now rewrite (app_nil_end (freeVarTerm LNN y)).
+  now rewrite (app_nil_end (freeVarT LNN y)).
 Qed.
 
 End Free_Variables.
@@ -242,7 +232,7 @@ Proof. apply (existI LNN). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNN v T ->
-  ~ In v (freeVarFormula LNN g) ->
+  ~ In v (freeVarF LNN g) ->
   SysPrf T (exH v, f)%nn -> SysPrf T (f -> g)%nn -> 
   SysPrf T g.
 Proof. apply (existE LNN). Qed.
@@ -253,7 +243,7 @@ Proof. apply (existSimp LNN). Qed.
 
 Lemma existSys (T : System) (f g : Formula) (v : nat):
   ~ In_freeVarSys LNN v T ->
-  ~ In v (freeVarFormula LNN g) ->
+  ~ In v (freeVarF LNN g) ->
   SysPrf (SetAdds T f) g -> 
   SysPrf (SetAdds T (exH v, f)%nn) g.
 Proof. apply (existSys LNN). Qed.
@@ -413,7 +403,7 @@ Fixpoint natToTerm (n : nat) : Term :=
   end.
 
 Lemma closedNatToTerm :
- forall a v : nat, ~ In v (freeVarTerm LNN (natToTerm a)).
+ forall a v : nat, ~ In v (freeVarT LNN (natToTerm a)).
 Proof.
 intros a v; induction a as [| a Hreca].
  - simpl; auto. 

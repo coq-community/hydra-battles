@@ -12,28 +12,28 @@ From Coq Require Import Arith Lia  Ensembles List.
 Require Import folProp subAll  folLogic3 Languages.
 Require Export LNN.
 From hydras Require Import Compat815 NewNotations.
-
+Import NNnotations. 
 (** * Axioms of [NN] *)
 Section NN.
 
-Definition NN1 := (allH 0, Succ v_ 0 <> Zero)%nn. 
+Definition NN1 := (allH 0, Succ (v#0) <> Zero)%nn. 
 
-Definition NN2 := (allH 1 0,  Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)%nn.
+Definition NN2 := (allH 1 0,  Succ(v#0) = Succ(v#1) -> v#0 = v#1)%nn.
 
-Definition NN3 := (allH 0, v_ 0 + Zero = v_ 0)%nn.
+Definition NN3 := (allH 0, v#0 + Zero = v#0)%nn.
 
-Definition NN4 := (allH 1 0, v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))%nn.
+Definition NN4 := (allH 1 0, v#0 + Succ(v#1) = Succ (v#0 + v#1))%nn.
 
-Definition NN5 := (allH 0, v_ 0 * Zero = Zero)%nn.
+Definition NN5 := (allH 0, v#0 * Zero = Zero)%nn.
 
-Definition NN6 := (allH 1 0, v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nn.
+Definition NN6 := (allH 1 0, v#0 * Succ(v#1) = v#0 * v#1 + v#0)%nn.
 
-Definition NN7 := (allH 0, ~ v_ 0 < Zero)%nn.
+Definition NN7 := (allH 0, ~ v#0 < Zero)%nn.
 
 Definition NN8 := 
- (allH 1 0, v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)%nn.
+ (allH 1 0, v#0 < Succ(v#1) -> v#0 < v#1 \/ v#0 = v#1)%nn.
 
-Definition NN9 := (allH 1 0, v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%nn.
+Definition NN9 := (allH 1 0, v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%nn.
 
 Definition NN := SetEnum NN1 NN2 NN3 NN4 NN5 NN6 NN7 NN8 NN9.
  
@@ -55,7 +55,7 @@ Qed.
 Lemma nn1 (a : Term) : SysPrf NN (Succ a <> Zero)%nn.
 Proof.
   change (Succ a <> Zero)%nn with
-    (substituteFormula LNN (Succ v_ 0 <> Zero)%nn 0 a).
+    (substF LNN (Succ(v#0) <> Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -67,7 +67,7 @@ Proof.
                            end) in *.
   change (Succ a = Succ b -> a = b)%nn with
     (subAllFormula LNN
-       (Succ v_ 0 = Succ v_ 1 -> v_ 0 = v_ 1)%nn
+       (Succ(v#0) = Succ(v#1) -> v#0 = v#1)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -80,7 +80,7 @@ Qed.
 Lemma nn3 (a : Term): SysPrf NN (a + Zero = a)%nn.
 Proof.
   change  (a + Zero = a)%nn with
-    (substituteFormula LNN (v_ 0 + Zero = v_ 0)%nn 0 a).
+    (substF LNN (v#0 + Zero = v#0)%nn 0 a).
   - apply forallE; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -92,7 +92,7 @@ Proof.
                            end).
   change (a + Succ b = Succ (a + b))%nn
     with (subAllFormula LNN
-            (v_ 0 + Succ v_ 1 = Succ (v_ 0 + v_ 1))%nn
+            (v#0 + Succ(v#1) = Succ(v#0 + v#1))%nn
             (fun x : nat =>
                match le_lt_dec 2 x with
                | left _ => var x
@@ -105,7 +105,7 @@ Qed.
 Lemma nn5 ( a : Term) : SysPrf NN (a * Zero = Zero)%nn.
 Proof.
   change (a * Zero = Zero)%nn with
-    (substituteFormula LNN (v_ 0 * Zero = Zero)%nn 0 a).
+    (substF LNN (v#0 * Zero = Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -118,12 +118,13 @@ Proof.
                            end) in *.
   change (a * Succ b = a * b + a)%nn with 
     (subAllFormula LNN
-       (v_ 0 * Succ v_ 1 = v_ 0 * v_ 1 + v_ 0)%nn
+       (v#0 * Succ( v#1) = v#0 * v#1 + v#0)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
           | right _ => m x
           end)).
+
   - apply (subAllCloseFrom LNN).
     cbn; apply Axm; repeat (try right; constructor) || left.
 Qed.
@@ -131,7 +132,7 @@ Qed.
 Lemma nn7 (a : Term): SysPrf NN (~ (a <Zero))%nn.
 Proof.
   change (~ (a <Zero))%nn with
-    (substituteFormula LNN (~ v_ 0 < Zero)%nn 0 a).
+    (substF LNN (~ v#0 < Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -142,7 +143,7 @@ Proof.
                            | S _ => b
                            end) in *.
   change (a < Succ b -> a < b \/ a = b)%nn with 
-    (subAllFormula LNN (v_ 0 < Succ v_ 1 -> v_ 0 < v_ 1 \/ v_ 0 = v_ 1)%nn 
+    (subAllFormula LNN (v#0 < Succ v#1 -> v#0 < v#1 \/ v#0 = v#1)%nn 
               (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -161,7 +162,7 @@ Proof.
   change (a < b \/ a = b \/ b < a)%nn 
     with 
     (subAllFormula LNN
-       (v_ 0 < v_ 1 \/ v_ 0 = v_ 1 \/ v_ 1 < v_ 0)%nn
+       (v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x

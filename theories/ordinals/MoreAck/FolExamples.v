@@ -38,7 +38,7 @@ Lemma eq_refl : forall L (t:Term L), Prf L nil (t = t)%fol.
 (* end snippet eqRefl *)
 Proof. 
   intros L t.
-  assert (H: Prf L nil (forallH 0 (v_ 0 = v_ 0))%fol). 
+  assert (H: Prf L nil (forallH 0 (v#0 = v#0))%fol). 
   {
     apply GEN.
     - cbn; auto. 
@@ -47,7 +47,7 @@ Proof.
   change (nil:(list (Formula L))) with (nil++nil: list(Formula L)).
   eapply MP.
   2: apply H.
-  generalize (FA1 _ (v_ 0 = v_ 0)%fol 0 t).
+  generalize (FA1 _ (v#0 = v#0)%fol 0 t).
   intro; assumption.   
 Qed. 
 
@@ -87,20 +87,8 @@ Module Toy.
  Definition L := language Rel Fun arityR arityF.
 (* end snippet ToyDef *)
 
-(* begin snippet TermExamples1 *)
-Example t0 : Term L :=  apply L a_ Tnil.
 
-Example t1 : Term L := apply L f_ (Tcons t0 Tnil). 
 
-Example t2 : Term L := apply L h_ (Tcons t1 (Tcons t0 Tnil)).
-
-Fail Example t3 : Term L := apply L h_ (Tcons t0 Tnil). 
-
-(* end snippet TermExamples1 *)
-
-(* begin snippet beforeAbbreviations *)
-Compute t2. (* before introducing new notations *)
-(* end snippet beforeAbbreviations *)
 
 
 (* begin snippet termAbbreviations:: no-out *)
@@ -109,34 +97,31 @@ Notation b := (apply L b_ Tnil).
 Notation f t := (apply L f_ (Tcons t Tnil)).
 Notation g t := (apply L g_ (Tcons t Tnil)).
 Notation h t1 t2 := (apply L h_ (Tcons t1 (Tcons t2 Tnil))).
+(* end snippet termAbbreviations *)
+
+(* begin snippet TermExamples1 *)
+Example t0 : Term L :=  a.
+
+Example t1 : Term L := f t0.
+
+Example t2 : Term L := h t1 t0.
+
+Example t3 : Term L := h (f (var 0)) (g (var 1)).
+
+Fail Example t4 : Term L := h t0.
+(* end snippet TermExamples1 *)
+
 
 Goal t0 = a. Proof. reflexivity. Qed. 
 Goal t1 = f a. Proof. reflexivity. Qed. 
 Goal t2 = h (f a) a. Proof. reflexivity. Qed. 
-(* end snippet termAbbreviations *)
+
 
 (* begin snippet NowItsBetter *)
 Compute t2. 
 (* end snippet NowItsBetter *)
 
-(* begin snippet FormExamples *)
-Example F1 : Formula L := atomic L R_ (Tcons a (Tcons b Tnil)).
 
-Example F2 : Formula L := forallH 0 
-                            (forallH 1 
-                               (impH 
-                                  (atomic L R_
-                                     (Tcons (var 0)
-                                        (Tcons (var 1) Tnil))) 
-                                  (atomic L R_ 
-                                     (Tcons (var 1)
-                                        (Tcons (var 0) Tnil))))).
-Example F3 : Formula L := 
-  forallH 0
-    (orH (equal (var 0) a)
-       (existH 1 (equal (var 0) (f (var 1))))).
-
-(* end snippet FormExamples *)
 
 (** Abreviations for the toy language L *)
 (*  (atomic _A Tnil) (causes further errors ) *)
@@ -146,35 +131,79 @@ Example F3 : Formula L :=
   Notation B := (atomic L B_ Tnil). 
   Notation C := (atomic L C_ Tnil). 
   Notation P t := (atomic L P_ (Tcons t Tnil)).
-  Notation R t1 t2 :=
-    (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
+  Notation R t1 t2 := (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
 (* end snippet toyNotationForm *)
+
+(* begin snippet FormExamples *)
+Example F1 : Formula L :=  R a b.
+
+Example F2 : Formula L := 
+  forallH 0 (forallH 1 
+               (impH (R (var 0) (var 1)) (R (var 1) (var 0)))).
+
+Example F3 : Formula L := 
+  forallH 0 (orH (equal (var 0) a) 
+               (existH 1 (equal (var 0) (f (var 1))))).
+
+Example F4: Formula L :=
+  orH (forallH 1 (equal (var 0) (var 1)))
+    (existH 0 (existH 1 (notH (equal (var 0) (var 1))))).
+
+Example F5: Formula L := (v#0 = a \/ v#0 = f v#1)%fol. 
+
+Example F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
+
+(* end snippet FormExamples *)
+
+(* begin snippet freeVarEx *)
+Compute freeVarF L (allH 0, v#0 = v#1)%fol.
+Compute freeVarF L (v#0 = v#1 \/ allH 0, v#0 = v#1)%fol.
+(* end snippet freeVarEx *)
+
+(* begin snippet freeVarDup *)
+Compute freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol. 
+Compute nodup Nat.eq_dec (freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol). 
+(* end snippet freeVarDup *)
 
 
 (* begin snippet toyNotationForm2 *)
-Print F2.
+Print F1.
 
-Goal F1 = (R a b)%fol. Proof refl_equal. 
+Print F2. 
 
-Goal F2 = (allH 0 1, R v_ 0 v_ 1 -> R v_ 1 v_ 0)%fol. 
-Proof refl_equal.
+Print F3.
 
-Goal F3 = (allH 0, v_ 0 = a \/ exH 1, v_ 0 = f v_ 1)%fol.  
-Proof refl_equal.
+(* end snippet toyNotationForm2 *)
 
 (** The following computation expands some derived connectives and 
     quantifiers. Within [fol_scope], we print them with a 
     similar syntax (with primed symbols) *)
 
-Compute (F3 \/ F1)%fol.
+(* begin snippet toyNotationForm3 *)
+Section PrimedSymbols. 
 
-Goal (F3 \/ F1)%fol = (~ F3 -> F1)%fol.
-Proof.  reflexivity. Qed. 
+Compute (F3 /\ F1)%fol.
 
-(* end snippet toyNotationForm2 *)
+Goal (F3 /\ F1)%fol = (~(~ ~ F3 -> ~ F1))%fol.
+ reflexivity. 
+Qed. 
+(* end snippet toyNotationForm3 *)
 
-(* begin snippet boundVars *)
-Goal (allH 1, v_ 1 = a)%fol <> (allH 0, v_ 0 = a)%fol.
+(* begin snippet toyNotationForm4 *)
+Print F6. 
+
+Compute F6. 
+
+#[local] Unset Printing Notations. 
+Print F6. 
+Compute F6. 
+
+End PrimedSymbols. 
+(* end snippet toyNotationForm4 *)
+
+
+(* begin snippet boundVars:: no-out *)
+Goal forallH 1 (equal (var 1) a) <> forallH 0 (equal (var 0) a).
   discriminate. 
 Qed. 
 (* end snippet boundVars *)
@@ -186,7 +215,7 @@ Goal apply L a_ Tnil = a.
 Proof. reflexivity. Qed. 
 
 (** f a **)
-Goal apply L f_  (Tcons  (apply L a_ Tnil) Tnil) = (f a). 
+Goal apply L f_  (Tcons  (apply L a_ Tnil) Tnil) = f a. 
 Proof. reflexivity. Qed. 
 
 (** f (f v1) **)
@@ -198,20 +227,64 @@ Proof. reflexivity. Qed.
 
 (* end snippet smallTerms *)
 
+Definition Ldec : language_decidable L. 
+Proof.   
+  split; destruct x, y; 
+    ((left; reflexivity) || (right; discriminate)).  
+Defined.
+
+(** Formula_eqdec is opaque ! *)
+Compute match formula_eqdec L Ldec (~ (v#1 = v#0  \/ P v#1))%fol 
+                      (v#1 <> v#0 /\ ~ (P v#1))%fol
+        with left _ => true | _ => false end.
+
+
 
 
 Check (f a)%fol. 
 
-
-
-Example f3 := (v_ 0 = a \/ exH 1, (v_ 0 = f (v_ 1)))%fol.
-
-Compute substituteFormula L f3 0 (g (v_ 1))%fol. 
-
-Goal substituteFormula L f3 0 (g (v_ 1))%fol =
-       (g (v_ 1) = a \/ exH 2, (g (v_ 1) = f (v_ 2)))%fol.
-reflexivity. 
+(* begin snippet DepthCompute *)
+Goal lt_depth L (v#0 = v#1 \/ exH 2, v#1 = f v#2)%fol
+                (v#0 = v#1 /\ exH 2, v#1 = f v#2)%fol. (* .no-out *)
+  red; simpl.
+  auto with arith.
 Qed. 
+(* end snippet DepthCompute *)
+
+(* begin snippet ltDepth1:: no-out *)
+Goal lt_depth _ F1 F2. 
+cbn. red.  compute; auto with arith. 
+Qed.
+(* end snippet ltDepth1 *)
+
+
+Compute substF L F5 0 (f a).
+
+
+
+Locate f. 
+
+
+
+Section OnSubstF.
+(* begin snippet substExample1 *)
+  Let F : Formula L := (exH 2, v#1 <> f v#2)%fol.
+  Let F' := substF L F 1 (f v#2)%fol. 
+  Compute F'.
+(* end snippet substExample1 *)
+(* begin snippet substExample2 *)
+  Let H : Formula L := (v#1 <> f v#2)%fol.
+  Goal F' <> (exH 2, substF L H 1 (f v#2) )%fol.
+  discriminate. 
+  Qed. 
+
+  Let G : Formula L := (v#1 <> f v#3)%fol.
+  Goal F' = (exH 3, substF L G 1 (f v#2) )%fol.
+    reflexivity.
+  Qed.
+(* end snippet substExample2 *)
+End OnSubstF.  
+
 
 Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (f -> g)%fol ->
                         Prf L H2 f ->  Prf L H g.
@@ -283,7 +356,7 @@ Section Drinkers_theorem.
 
  Lemma D0 : forall i, 
       SysPrf _ (Empty_set _)
-        ( ~ forallH i (P (v_ i)) -> exH i, (~ (P (v_ i))))%fol. 
+        ( ~ forallH i (P (v#i)) -> exH i, (~ (P (v#i))))%fol. 
 Proof.
     intro i; apply cp2, impI, forallI. 
     - intros [f [H H0]]; inversion H0. 
@@ -293,8 +366,8 @@ Proof.
       + inversion H. 
       + now destruct n. 
     - apply nnE; 
-        assert (H:(~ ~ (P (v_ i)))%fol = (* clumsy *)
-                  (substituteFormula _ (~ ~ (P (v_ i))) i (v_ i))%fol). 
+        assert (H:(~ ~ (P (v#i)))%fol = (* clumsy *)
+                  (substF _ (~ ~ (P (v#i))) i (v#i))%fol). 
       { cbn; destruct (Nat.eq_dec i) as [_ | n].
         auto. 
         now destruct n. 
@@ -304,8 +377,8 @@ Proof.
   Qed. 
   
   Lemma D01 T i : SysPrf _ T
-                    (~ forallH i (P (v_ i)) -> 
-                      exH i, (~ (P (v_ i))))%fol. 
+                    (~ forallH i (P (v#i)) -> 
+                      exH i, (~ (P (v#i))))%fol. 
   Proof. 
     apply sysExtend with (Empty_set _).
     - red; destruct 1.   
@@ -313,17 +386,17 @@ Proof.
   Qed. 
 
   Let f : Formula L :=
-        (exH 0, (P (v_ 0) -> forallH 1 (P (v_ 1))))%fol. 
+        (exH 0, (P (v#0) -> forallH 1 (P (v#1))))%fol. 
 
   Theorem drinkers_thm : SysPrf L (Empty_set _) f. 
   Proof with auto with sets.  
-    pose (F := forallH 1 (P (v_ 1))%fol).
+    pose (F := forallH 1 (P (v#1))%fol).
     unfold f; eapply orE with (notH F) F; [apply noMiddle | | ].
     - apply impI;
       assert (SysPrf L (Add (Empty_set _) (~ F)%fol) 
-                (exH 1, (~ (P (v_ 1))))%fol).  
-      { replace (exH 1, (~ (P (v_ 1))))%fol  
-          with (~ (forallH 1 (~ (~  (P (v_ 1))))))%fol. 
+                (exH 1, (~ (P (v#1))))%fol).  
+      { replace (exH 1, (~ (P (v#1))))%fol  
+          with (~ (forallH 1 (~ (~  (P (v#1))))))%fol. 
         - unfold F; eapply impE. 
           + eapply D01. 
           + apply Axm; right; split. 
@@ -338,18 +411,20 @@ Proof.
              subst; now simpl in H0. 
         * cbn; auto. 
         * eapply H. 
-        * apply impI; eapply existI with (v_ 1)%fol.
+        * apply impI; eapply existI with (v#1)%fol.
           cbn; apply impI. 
-          eapply contradiction with (P (v_ 1))%fol.  
+          eapply contradiction with (P (v#1))%fol.  
           -- apply Axm; red ...
           -- apply Axm; red ...   
-    - apply impI; apply existI with (v_ 0)%fol. 
+    - apply impI; apply existI with (v#0)%fol. 
       cbn;  apply impI. 
       apply Axm; red; auto with sets. 
   Qed. 
 
 
 End Drinkers_theorem. 
+
+
 
 End Toy.
 
@@ -373,21 +448,22 @@ Print t1_0.
 
 (** forall v0, v0 = 0 \/ exists v1,  v0 = S v1 *)
 (* begin snippet f1Example *)
-Let f1 : Formula LNN :=
-      forallH 0 
-        (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
-           (existH 1 (equal  (var 0)
-                          (apply LNN Succ_ 
-                             (Tcons  (var 1) Tnil))))).
+Example f1 : Formula LNN :=
+  forallH 0 
+    (orH  (equal  (var 0) (apply LNN Zero_ Tnil ))
+       (existH 1 (equal  (var 0)
+                    (apply LNN Succ_ 
+                       (Tcons  (var 1) Tnil))))).
 
-Let f2 : Formula LNN :=
-(existH 1 (equal  (var 0)
-                          (apply LNN Succ_ 
-                             (Tcons (var 1) Tnil )))).
+Example f2 : Formula LNN :=
+  (existH 1 (equal  (var 0)
+               (apply LNN Succ_ 
+                  (Tcons (var 1) Tnil )))).
 
-Let f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
-             (existH 1 (equal  (var 0) (apply LNN Succ_ 
-                             (Tcons (var 1) Tnil))))).
+Example f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
+                 (existH 1 (equal  (var 0)
+                              (apply LNN Succ_ 
+                                 (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
 
 
@@ -396,29 +472,6 @@ About Formula_rect.
 (* end snippet FormulaRect *)
 
 (** depth-order vs structural order *)
-(* begin snippet DepthCompute *)
-Compute depth _ f1.
-(* end snippet DepthCompute *)
-
-(* begin snippet ltDepth1:: no-out *)
-Goal lt_depth _ f2 f1. 
-cbn. red; auto with arith. 
-Qed.
-(* end snippet ltDepth1 *)
-
-(* begin snippet freeVarExamples *)
-Compute  freeVarFormula _ f2.
-
-Compute List.nodup Nat.eq_dec (freeVarFormula _ f3).
-
-Compute close _ f3.
-
-Compute freeVarFormula _ f3.
-
-Compute freeVarFormula _ (close _ f3).
-
-Compute substituteFormula LNN f3 0 (apply LNN Zero_ (Tnil)) . 
-(* end snippet freeVarExamples *)
 
 Section depth_rec_demo. 
 Variable L: Language.

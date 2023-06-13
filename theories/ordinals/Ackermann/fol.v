@@ -9,6 +9,7 @@ This file is Public Domain
 (* begin hide *)
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
   Arith Compare_dec.
+
 Require Import misc  Compat815 (* provisional *).
 (* end hide *)
 
@@ -30,11 +31,11 @@ Variable L : Language.
 
 Inductive Term : Set :=
   | var : nat -> Term
-  | apply : forall f : Functions L, Terms  (arityF L f) -> Term
+  | apply : forall f : Functions L, Terms (arityF L f) -> Term
 with Terms : nat -> Set :=
   | Tnil : Terms 0
   | Tcons : forall n : nat, Term -> Terms n -> Terms (S n).
- (* end snippet TermDef *)
+(* end snippet TermDef *)
 
 
 
@@ -50,8 +51,7 @@ Scheme Term_Terms_rec_full := Induction for Term  Sort Set
 (* begin snippet FormulaDef *)
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula
-  | atomic : forall r : Relations L, 
-      Terms (arityR L r) -> Formula
+  | atomic : forall r : Relations L, Terms (arityR L r) -> Formula
   | impH : Formula -> Formula -> Formula
   | notH : Formula -> Formula
   | forallH : nat -> Formula -> Formula.
@@ -74,7 +74,8 @@ Definition existH (x : nat) (A : Formula) := notH (forallH x (notH A)).
 (* end snippet FolFull *)
 
 (* begin snippet FolPlus *)
-Definition ifThenElseH (A B C : Formula) := andH (impH A B) (impH (notH A) C).
+Definition ifThenElseH (A B C : Formula) := 
+  andH (impH A B) (impH (notH A) C).
 (* end snippet FolPlus *)
 
 (** ** Decidability of equality between terms, formulas, ... *)
@@ -790,22 +791,12 @@ Infix "/\" := (andH):fol_scope.
 Infix "->" := (impH): fol_scope.
 Notation "~ A" := (@notH _ A): fol_scope. 
 Notation "A <-> B" := (@iffH _ A B): fol_scope.
+
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : fol_scope. 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
-
 Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
-
-
-
-Notation k_ t := (apply  (t:Functions _)  (Tnil)).
-
-Notation app1 f arg := 
-  (apply  (f: Functions _)  (Tcons arg (Tnil))).
-
-Notation app2 f arg1 arg2 := 
-  (apply   (f: Functions _) 
-     (Tcons  arg1 (Tcons  arg2 (Tnil)))).
 
 Notation "t = u" := (@equal _ t u): fol_scope.
 Notation "t <> u" := (~ t = u)%fol : fol_scope.
@@ -825,19 +816,16 @@ Reserved Notation "x '<->''' y" (at level 95, no associativity).
 Notation "x \/' y" := (~ x -> y)%fol : fol_scope. 
 Notation "x /\' y" := (~ (~ x \/'  ~ y))%fol : fol_scope.
 Notation "x <->'' y" := ((x -> y) /\ (y -> x))%fol:  fol_scope.
-Notation "x <->' y" := (~ (~ (x -> y) \/' ~(y -> x)))%fol : fol_scope.
-
-
+Notation "x <->' y" := (~ (~ (x -> y) \/' ~ (y -> x)))%fol : fol_scope.
 Notation exH' v A := (~ (forallH v (~ A)))%fol.
-
-Notation "'v_' i" := (var i) (at level 3) : fol_scope.
-
 
 
 End FolNotations.
-
-Export FolNotations. 
 (* end snippet folScope2 *)
+
+Import FolNotations. 
+Check (v#5)%fol.
+
 
 (** ** Examples *)
 
@@ -847,13 +835,14 @@ Variables P Q : Formula L.
 
 Let ex1 : Formula L :=  (P /\ Q)%fol. 
 
-Let ex2 : Formula L := (~ (~~P -> ~Q))%fol. 
+Let ex2 : Formula L := (~ (~ ~P -> ~Q))%fol. 
 
-Let ex3 : Formula L:= (~(~P \/ ~Q))%fol. 
+Let ex3 : Formula L:= (~ (~P \/ ~Q))%fol. 
 
 Compute ex1. 
 
-Check (forallH 5 (v_ 5 = v_ 5) -> forallH 0 (v_ 0 = v_ 0))%fol.
+
+
 
 
 End LExamples.

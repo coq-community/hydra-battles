@@ -9,6 +9,7 @@ From Coq Require Import Ensembles Lists.List Arith.
 
 Require Export fol.
 Require Import folProp.
+Import FolNotations.
 
 Section ProofH.
 
@@ -38,7 +39,7 @@ Proof.
   assert (X: forall (f : Formula) (n : nat), Formula).
   { intros f n; induction n as [| n Hrecn].
     - exact f.
-    - exact (v_ (n + n) = v_ (S (n + n)) -> Hrecn)%fol.
+    - exact (v#(n + n) = v#(S (n + n)) -> Hrecn)%fol.
   } 
   apply X.
   - induction (nVars (arityR L R)).
@@ -82,16 +83,16 @@ Inductive Prf : Formulas -> Formula -> Set :=
     Prf nil ((allH v, A) -> substF L A v t)%fol
 | FA2 :
   forall (A : Formula) (v : nat),
-    ~ In v (freeVarFormula L A) -> Prf nil (A -> allH v, A)%fol
+    ~ In v (freeVarF L A) -> Prf nil (A -> allH v, A)%fol
 | FA3 :
   forall (A B : Formula) (v : nat),
     Prf nil
       ((allH v, A -> B) -> (allH v, A) -> allH v, B)%fol
-| EQ1 : Prf nil (v_ 0 = v_ 0)%fol
-| EQ2 : Prf nil (v_ 0 = v_ 1 -> v_ 1 = v_ 0)%fol
+| EQ1 : Prf nil (v#0 = v#0)%fol
+| EQ2 : Prf nil (v#0 = v#1 -> v#1 = v#0)%fol
 | EQ3 :
   Prf nil
-    (v_ 0 = v_ 1 -> v_ 1 = v_ 2 -> v_ 0 = v_ 2)%fol
+    (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol
 | EQ4 : forall R : Relations L, Prf nil (AxmEq4 R)
 | EQ5 : forall f : Functions L, Prf nil (AxmEq5 f).
 

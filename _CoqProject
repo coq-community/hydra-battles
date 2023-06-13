@@ -136,7 +136,6 @@ theories/ordinals/Ackermann/NewNotations.v
 theories/ordinals/MoreAck/Ack.v
 theories/ordinals/MoreAck/AckNotPR.v
 theories/ordinals/MoreAck/FolExamples.v
-theories/ordinals/MoreAck/FolCoercions.v
 theories/ordinals/MoreAck/Iterate_compat.v
 theories/ordinals/MoreAck/PrimRecExamples.v
 theories/ordinals/MoreAck/LNN_Examples.v

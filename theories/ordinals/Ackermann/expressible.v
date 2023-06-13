@@ -8,6 +8,7 @@ From Coq Require Import Arith List.
 
 Require Import ListExt folProp subProp extEqualNat Languages LNN.
 Require Import NewNotations.
+Import NNnotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 
@@ -26,7 +27,7 @@ Fixpoint RepresentableHalf1 (n : nat) :
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (A -> v_ 0 = natToTerm f)%nn
+      SysPrf T (A -> v#0 = natToTerm f)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -38,7 +39,7 @@ Fixpoint RepresentableHalf2 (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (v_ 0 = natToTerm f -> A)%nn
+      SysPrf T (v#0 = natToTerm f -> A)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -85,7 +86,7 @@ Fixpoint RepresentableHelp (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (A <-> v_ 0 = natToTerm f)%nn
+      SysPrf T (A <-> v#0 = natToTerm f)%nn
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -105,7 +106,7 @@ Qed.
 
 Definition Representable (n : nat) (f : naryFunc n) 
   (A : Formula) : Prop :=
-  (forall v : nat, In v (freeVarFormula LNN A) -> v <= n) /\
+  (forall v : nat, In v (freeVarF LNN A) -> v <= n) /\
   RepresentableHelp n f A.
 
 Lemma RepresentableAlternate :
@@ -155,7 +156,7 @@ Fixpoint ExpressibleHelp (n : nat) : naryRel n -> Formula -> Prop :=
   end.
 
 Definition Expressible (n : nat) (R : naryRel n) (A : Formula) : Prop :=
-  (forall v : nat, In v (freeVarFormula LNN A) -> 
+  (forall v : nat, In v (freeVarF LNN A) -> 
                    v <= n /\ v <> 0) /\
   ExpressibleHelp n R A.
 
@@ -211,7 +212,7 @@ Proof.
         induction R.
         * simpl in H.
           apply impE with
-            (substF LNN (v_ 0 = Succ Zero)%nn  0 (Succ Zero)).
+            (substF LNN (v#0 = Succ Zero)%nn  0 (Succ Zero)).
           -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
             apply forallE.
@@ -223,7 +224,7 @@ Proof.
              apply eqRefl.
         * simpl in H.
           apply  impE with
-            (~ (substF LNN (v_ 0 = Zero) 0 (Succ Zero)))%nn.
+            (~ (substF LNN (v#0 = Zero) 0 (Succ Zero)))%nn.
           -- apply cp2.
              apply iffE1.
              rewrite <- (subFormulaIff LNN).

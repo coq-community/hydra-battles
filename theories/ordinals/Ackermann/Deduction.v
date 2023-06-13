@@ -8,6 +8,7 @@ From Coq Require Import Ensembles List.
 
 Require Import folProof.
 Require Import folProp.
+Import FolNotations.
 
 Section Deduction_Theorem.
 
@@ -129,7 +130,7 @@ Proof.
                 apply H0.
                 firstorder.
               * assumption.
-        } assert (H2: ~ In v (freeVarFormula L g)).
+        } assert (H2: ~ In v (freeVarF L g)).
         { unfold not in |- *; intros; elim n.
           eapply In_freeVarListFormula.
           apply H2.

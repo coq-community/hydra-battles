@@ -2063,7 +2063,7 @@ Proof.
     repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
     rewrite codeFreeVarFormulaCorrect.
     rewrite codeInCorrect.
-    induction (In_dec eq_nat_dec v (freeVarFormula L A0)).
+    induction (In_dec eq_nat_dec v (freeVarF L A0)).
     + elim n; assumption.
     + unfold charFunction in |- *; rewrite Nat.eqb_refl.
       reflexivity.
@@ -3029,7 +3029,7 @@ Proof.
                            codeArityFIsCorrect2 _ H4).
                       rewrite <- H8 in H5.
                       rewrite codeSubFormulaCorrect in H5.
-                      replace f2 with (substituteFormula L f1 n1 x).
+                      replace f2 with (substF L f1 n1 x).
                       exists (FA1 L f1 n1 x).
                       simpl in |- *.
                       rewrite <- H7.
@@ -3098,7 +3098,7 @@ Proof.
                       rewrite H4 in H0.
                       rewrite codeFreeVarFormulaCorrect in H0.
                       rewrite codeInCorrect in H0.
-                      induction (In_dec eq_nat_dec n1 (freeVarFormula L f1)).
+                      induction (In_dec eq_nat_dec n1 (freeVarF L f1)).
                       elim H0.
                       reflexivity.
                       exists (FA2 L f1 n1 b).

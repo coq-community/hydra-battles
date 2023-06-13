@@ -32,18 +32,18 @@ Section Goedel's_2nd_Incompleteness.
   Variable repT : Formula.
   Variable v0 : nat.
   Hypothesis
-    freeVarRepT : forall v : nat, In v (freeVarFormula LNT repT) -> v = v0.
+    freeVarRepT : forall v : nat, In v (freeVarF LNT repT) -> v = v0.
   Hypothesis
     expressT1 :
     forall f : Formula,
       mem _ T f ->
-      SysPrf T (substituteFormula LNT repT v0 (natToTerm (codeFormula f))).
+      SysPrf T (substF LNT repT v0 (natToTerm (codeFormula f))).
   Hypothesis
     expressT2 :
     forall f : Formula,
       ~ mem _ T f ->
       SysPrf T
-        (notH (substituteFormula LNT repT v0 (natToTerm (codeFormula f)))).
+        (notH (substF LNT repT v0 (natToTerm (codeFormula f)))).
 
   Definition codeSysPf := 
     (codeSysPf LNT codeLNTFunction codeLNTRelation codeArityLNTF codeArityLNTR
@@ -79,7 +79,7 @@ Section Goedel's_2nd_Incompleteness.
                     in a.
 
     Definition box (f:Formula) :=
-      (substituteFormula LNT (LNN2LNT_formula codeSysPf) 0
+      (substF LNT (LNN2LNT_formula codeSysPf) 0
          (natToTerm (codeFormula f))).
 
     Lemma GS : SysPrf T (iffH G (notH (box G))).
@@ -94,7 +94,7 @@ Section Goedel's_2nd_Incompleteness.
     Lemma HBL1 : forall f, SysPrf T f -> SysPrf T (box f).
     Proof.
       intros x H; unfold box.
-      apply impE with (LNN2LNT_formula (substituteFormula LNN codeSysPf 0 
+      apply impE with (LNN2LNT_formula (substF LNN codeSysPf 0 
                                           (LNN.natToTerm (codeFormula x)))).
       replace (natToTerm (codeFormula x)) with
         (LNN2LNT_term (LNN.natToTerm (codeFormula x))).
@@ -111,7 +111,7 @@ Section Goedel's_2nd_Incompleteness.
                             In g Axm -> mem (fol.Formula LNT) T g) /\
                      (forall v : nat,
                          In v (freeVarListFormula LNT Axm) ->
-                         In v (freeVarFormula LNN f))).
+                         In v (freeVarF LNN f))).
       { intros f H0; destruct H0 as [x0 H0|].
         - assert (H1: SysPrf PA (LNN2LNT_formula x0)).
           { apply NN2PA.
@@ -139,13 +139,13 @@ Section Goedel's_2nd_Incompleteness.
           destruct H2 as [H2 H3].
           * destruct H3.
             -- rewrite <- H3 in H2.
-               apply LNN2LNT_freeVarFormula1.
+               apply LNN2LNT_freeVarF1.
                assumption.
             --  contradiction.
       }
       destruct (codeSysPfCorrect _ H) as [x0  [x1 H1]].
       destruct (translatePrf T' T H0 
-                  (substituteFormula LNN codeSysPf 0
+                  (substF LNN codeSysPf 0
                      (LNN.natToTerm (codeFormula x)))
                   x0 x1 H1) as [x2 H2].
       exists x2; destruct H2; assumption.
@@ -161,14 +161,14 @@ Section Goedel's_2nd_Incompleteness.
       - apply impE
         with
         (notH
-           (substituteFormula LNT (notH (LNN2LNT_formula codeSysPf)) 0
+           (substF LNT (notH (LNN2LNT_formula codeSysPf)) 0
               (natToTerm
                  (codeFormula x)))).
         + apply cp2; apply iffE1; apply sysExtend with PA.
          * assumption.
          * apply H1.
       + rewrite (subFormulaNot LNT); apply nnI.
-        change (substituteFormula LNT (LNN2LNT_formula codeSysPf) 0
+        change (substF LNT (LNN2LNT_formula codeSysPf) 0
                 (natToTerm (codeFormula x))) with (box x).
         apply HBL1; assumption.
     Qed.
@@ -247,11 +247,11 @@ rewrite LNN2LNT_exist.
 repeat rewrite (subFormulaExist LNT).
 destruct (eq_nat_dec 1 0).
 discriminate e.
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula g)))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula g)))).
 elim (closedNatToTerm _ _ i).
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula f)))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula f)))).
 elim (closedNatToTerm _ _ i).
-destruct (In_dec eq_nat_dec 1 (freeVarTerm LNT (natToTerm (codeFormula (impH f g))))).
+destruct (In_dec eq_nat_dec 1 (freeVarT LNT (natToTerm (codeFormula (impH f g))))).
 elim (closedNatToTerm _ _ i).
 clear n n0 n1 n2.
 apply impI.

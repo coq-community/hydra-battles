@@ -40,18 +40,18 @@ Definition codeFreeVarTerms (t : nat) : nat :=
   cdr (codeFreeVarTermTerms t).
 
 Lemma codeFreeVarTermCorrect (t: Term) :
- codeFreeVarTerm (codeTerm L codeF t) = codeList (freeVarTerm L t).
+ codeFreeVarTerm (codeTerm L codeF t) = codeList (freeVarT L t).
 Proof.
  elim t using  Term_Terms_ind
   with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
            codeFreeVarTerms (codeTerms L codeF n ts) =
-           codeList (freeVarTerms L n ts)); intros.
+           codeList (freeVarTs L n ts)); intros.
  - simpl; unfold codeTerm, codeFreeVarTerm, codeFreeVarTermTerms,
      evalStrongRec in |- *.
    simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    simpl; reflexivity.
- - unfold freeVarTerm; fold (freeVarTerms L (arityF L f) t0).
+ - unfold freeVarT; fold (freeVarTs L (arityF L f) t0).
    rewrite <- H; clear H.
    unfold codeTerm; fold (codeTerms L codeF (arityF L f) t0).
    generalize (codeTerms L codeF (arityF L f) t0).
@@ -81,8 +81,8 @@ Proof.
    unfold evalStrongRec; simpl; 
      repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    reflexivity.
- - unfold freeVarTerms; fold (freeVarTerm L t0);
-     fold (freeVarTerms L n t1); rewrite <- codeAppCorrect.
+ - unfold freeVarTs; fold (freeVarT L t0);
+     fold (freeVarTs L n t1); rewrite <- codeAppCorrect.
    rewrite <- H; rewrite <- H0; clear H H0.
    unfold codeTerms.
    fold (codeTerm L codeF t0); fold (codeTerms L codeF n t1).
@@ -122,14 +122,14 @@ Proof.
 Qed.
 
 Lemma codeFreeVarTermsCorrect (n : nat) (ts : Terms n):
- codeFreeVarTerms (codeTerms L codeF n ts) = codeList (freeVarTerms L n ts).
+ codeFreeVarTerms (codeTerms L codeF n ts) = codeList (freeVarTs L n ts).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; unfold codeTerms, codeFreeVarTerms, codeFreeVarTermTerms.
     unfold evalStrongRec; simpl.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
-  - unfold freeVarTerms; fold (freeVarTerm L t); fold (freeVarTerms L n ts).
+  - unfold freeVarTs; fold (freeVarT L t); fold (freeVarTs L n ts).
     rewrite <- codeAppCorrect.
     rewrite <- Hrects.
     rewrite <- codeFreeVarTermCorrect; clear Hrects.
@@ -305,7 +305,7 @@ Definition codeFreeVarFormula : nat -> nat :=
 
 Lemma codeFreeVarFormulaCorrect (f : Formula) :
   codeFreeVarFormula (codeFormula L codeF codeR f) =
-    codeList (freeVarFormula L f).
+    codeList (freeVarF L f).
 Proof.
   set
     (g :=

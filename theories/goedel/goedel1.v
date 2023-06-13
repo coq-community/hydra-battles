@@ -27,18 +27,18 @@ Hypothesis extendsNN : Included _ NN T.
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
-  freeVarRepT : forall v : nat, In v (freeVarFormula LNN repT) -> v = v0.
+  freeVarRepT : forall v : nat, In v (freeVarF LNN repT) -> v = v0.
 Hypothesis
   expressT1 :
     forall f : Formula,
     mem _ T f ->
-    SysPrf T (substituteFormula LNN repT v0 (natToTerm (codeFormula f))).
+    SysPrf T (substF LNN repT v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressT2 :
     forall f : Formula,
     ~ mem _ T f ->
     SysPrf T
-      (notH (substituteFormula LNN repT v0 (natToTerm (codeFormula f)))).
+      (notH (substF LNN repT v0 (natToTerm (codeFormula f)))).
 
 Definition codeSysPrf :=
   codeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -66,7 +66,7 @@ Definition codeSysPrfCorrect3 :=
  
 Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
 
-Lemma freeVarG : forall v : nat, ~ In v (freeVarFormula LNN G).
+Lemma freeVarG : forall v : nat, ~ In v (freeVarF LNN G).
 Proof.
   unfold G.
   destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
@@ -80,8 +80,8 @@ Proof.
     + apply freeVarRepT.
     + assert
         (H5:(forall f : Formula,
-                In v (freeVarFormula LNN (notH f)) ->
-                In v (freeVarFormula LNN f))).
+                In v (freeVarF LNN (notH f)) ->
+                In v (freeVarF LNN f))).
       { intros f H5; apply H5. }
       apply H5; eapply in_remove.
       unfold codeSysPf in H3; apply H3; assumption.
@@ -97,7 +97,7 @@ Proof.
   - apply impE
       with
       (notH
-         (substituteFormula LNN (notH codeSysPf) 0
+         (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN
                (code.codeFormula LNN codeLNTFunction codeLNNRelation x)))).
     + apply cp2.
@@ -129,14 +129,14 @@ Proof.
   unfold wConsistent in H.
   set (y := 
      notH
-       (substituteFormula LNN codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
+       (substF LNN codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
     in *.
-  assert (forall x : nat, In x (freeVarFormula LNN y) -> 1 = x).
+  assert (forall x : nat, In x (freeVarF LNN y) -> 1 = x).
   { intros x0 H3; unfold y in H3.
     assert (H4:
       (In x0
-         (freeVarFormula LNN
-            (substituteFormula LNN codeSysPrf 0
+         (freeVarF LNN
+            (substF LNN codeSysPrf 0
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
     - destruct x0 as [| n].
@@ -145,7 +145,7 @@ Proof.
       + destruct n as [|n ].
         * reflexivity.
         * elim (Compat815.le_not_lt (S (S n)) 1).
-          assert (H6: In (S (S n)) (freeVarFormula LNN codeSysPrf)).
+          assert (H6: In (S (S n)) (freeVarF LNN codeSysPrf)).
           { eapply in_remove; apply H5. }
           apply (freeVarCodeSysPrf _ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
@@ -240,7 +240,7 @@ Proof.
   - apply impE
       with
       (notH
-         (substituteFormula LNN (notH codeSysPf) 0
+         (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN codeX))).
     + unfold codeSysPf, codeSysPrf.codeSysPf, y in |- *.
       fold codeSysPrf in |- *.
@@ -248,7 +248,7 @@ Proof.
       apply
         impTrans
         with
-        (substituteFormula LNN (existH 1 codeSysPrf) 0
+        (substF LNN (existH 1 codeSysPrf) 0
            (codeNatToTerm.natToTermLNN codeX)).
       * apply impI; apply nnE; apply Axm; right; constructor.
       * apply sysExtend with NN.
@@ -257,7 +257,7 @@ Proof.
            destruct (eq_nat_dec 1 0) as [e|n].
            ++ discriminate e.
            ++ induction
-               (In_dec eq_nat_dec 1 (freeVarTerm LNN
+               (In_dec eq_nat_dec 1 (freeVarT LNN
                                        (codeNatToTerm.natToTermLNN codeX)))
                  as [a | _]. 
               ** elim (closedNatToTerm _ _ a).
@@ -277,7 +277,7 @@ Theorem Goedel'sIncompleteness1st :
  wConsistent T ->
  exists f : Formula,
    ~ SysPrf T f /\
-   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarFormula LNN f)).
+   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarF LNN f)).
 Proof.
   intros H; exists G; pose freeVarG.
   pose FirstIncompletenessA.
