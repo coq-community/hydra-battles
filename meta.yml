@@ -119,7 +119,7 @@ supported_coq_versions:
   opam: '{(>= "8.14" & < "8.18~") | (= "dev")}'
 
 tested_coq_opam_versions:
-- version: 'dev'
+#- version: 'dev'
 - version: '1.15.0-coq-8.16'
   repo: 'mathcomp/mathcomp'
 - version: '1.14.0-coq-8.15'
@@ -140,7 +140,7 @@ dependencies:
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.13.0" & < "1.16~") | (= "dev")}'
+    version: '{(>= "1.13.0" & < "1.16~")}'
   description: |-
     [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.13 or later
 - opam:
@@ -154,6 +154,7 @@ dependencies:
     [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
 - opam:
     name: coq-mathcomp-zify
+    version: '{(< "2~")}'
   description: |-
     [Mczify](https://github.com/math-comp/mczify)
 - opam:
