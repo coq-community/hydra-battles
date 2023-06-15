@@ -3,15 +3,13 @@
 
 \section{Introduction}
 
-This chapter is devoted to the presentation to  data structures for representing first order formulas over a ranked alphabet, and the basic functions and predicates over these types:
+This chapter is devoted to the presentation of  data structures for representing terms and first order formulas over a ranked alphabet, and the basic functions and predicates over these types, more precisely:
 
 \begin{itemize}
 \item Abstract syntax of terms and formulas over a ranked alphabet composed of function and relation symbols.
 \item Induction principles over terms and formulas.
 \item Definition and main properties of substitution of terms to variables.
 \end{itemize}
-
-
 
 
 Although all the following constructions come directly from~\cite{Goedel}, we introduced minor changes (mainly syntax) to
@@ -28,7 +26,7 @@ From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 \inputsnippets{fol/LanguageDef} 
 
 
-\subsubsection{Example: a toy language}
+\subsubsection{Example: $L$, a toy language}
 In order to show a few simple examples of statements and proofs, we define a small language with very few symbols:
 two constant symbols: $a$ and $b$, three function symbols $f$, $g$ and $h$  (of respective arity 1, 1 and 2), three propositional symbols $A$, $B$ and $C$, a one-place predicate symbol $P$, and a binary relational symbol $R$. 
  
@@ -38,7 +36,7 @@ From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples
 
 \begin{remark}
   \label{rem:underscores}
-  The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to functions which build terms and formulas (please look at Sect~\ref{sec:fol-term-notations} and \ref{sec:fol-atomic-notations}).
+  The constructors of types \texttt{Rel} and \texttt{Fun} are suffixed by an underscore, in order to reserve the names \texttt{a}, \texttt{f}, \texttt{h}, \texttt{R}, etc. to the functions which build terms and formulas (please look at Sect~\ref{sec:fol-term-notations} and \ref{sec:fol-atomic-notations}).
 \end{remark}
 
 
@@ -50,7 +48,7 @@ $n$-\emph{tuples of terms} over $L$.
 \inputsnippets{fol/TermDef} 
 
 \begin{remark}
-This representation of terms uses mutually inductive data-types instead of list of terms. Please see also Remark~\ref{hydra:mutually-inductive-vs-lists}.
+This representation of terms uses mutually inductive data-types instead of lists or vectors of terms. Please see also Remark~\ref{hydra:mutually-inductive-vs-lists}.
 \end{remark}
 
 
@@ -58,7 +56,7 @@ This representation of terms uses mutually inductive data-types instead of list 
 In O'Connor's formalization of first-order logic,  variables are 
 just natural numbers, and the \emph{coercion} from
 \texttt{nat} to \texttt{Term L} is the constructor (\texttt{@var $L$}).
-Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we still the data structures of~\cite{Goedel}, in order not to break long proof scripts which use this representation (please look at \cite{OConnor05} for a related discussion).
+Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we still the data structures of~\cite{Goedel}, in order not to break long proof scripts which use this representation (please look at Section 2 of~\cite{OConnor05} for a related discussion).
   
 \end{remark}
 
@@ -67,10 +65,11 @@ Although other choices may be considered : PHOAS, de Bruijn indices, etc,  we st
 
 \subsubsection{Examples}
 \label{sect:folTermExamples}
+\label{sec:fol-term-notations}
 
-
-Let us define some \gallina terms over our toy language, respecively corresponding to the terms $a$,
-$f(a)$, and $h(f(a),a)$.
+Let us build a few \gallina terms over our toy language, 
+respectively corresponding to the terms $a$,
+$f(a)$, $h(f(a),a)$, and $h(f(v_0),g(v_1))$.
 
 First, in order to make terms on $L$ more readable, we introduce a few abbreviations.
 
@@ -81,9 +80,10 @@ From~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples
 
 \inputsnippets{FolExamples/TermExamples1} 
 
-\begin{remark}
-The fourth ``term'' \texttt{t4} is not well formed, since the arity of $h$ is not respected\,\footnote{Strictly speaking, it's not a (well typed) term!}.
-\end{remark}
+
+The following ``term'' \texttt{t4} is not well formed, since the arity of $h$ is not respected\,\footnote{Strictly speaking, it's not a (well typed) term!}.
+
+\inputsnippets{FolExamples/TermExamplesFail} 
 
 \subsubsection{Other Languages}
 
@@ -96,7 +96,16 @@ Link to the chapter which presents \texttt{LNT} and \texttt{LNN}.
 
 
 The type of first order formulas over $L$ is defined 
-in~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} as an inductive data type.
+in~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} as an inductive data type, with a limited set of basic constructions:
+\emph{term equalities} $t_1=t_2$,
+\emph{atomic propositions} $R\;t_1\;\dots\;t_n$, where $R$ is a relation symbol of arity $n$,
+\emph{implications} $A \rightarrow B$,
+\emph{negations} $\sim\,A$,
+and \emph{universal quantifications} $\forall\,i,\;A$.
+
+\vspace{6pt}
+
+\noindent From~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
 
 \inputsnippets{fol/FormulaDef}
 
@@ -107,8 +116,6 @@ Structural induction/recursion principles are generated by
 \inputsnippets{FolExamples/FormulaRect}
 
 \begin{remark}
-The type \texttt{Formula} (over $L$) has only five constructors,
-respectively associated with term equalities $t_1=t_2$, atomic formulas of the form $(r\;t_1\;\dots\;t_n)$, implications $(F \arrow G)$, negations $({\sim}F)$, and universal quantifications $(\forall\,i, F)$.  
 
 In~\cite{Goedel}, no \emph{constructors} of type \texttt{(Formula L)} are associated with
 disjunction, conjonction, logical equivalence and existential quantifier. These constructs are formalized through \emph{definitions}\footnote{Please keep in mind that we are considering a classical logic.}.
@@ -171,7 +178,7 @@ First, we define abbreviations for atomic formulas over $L$.
 
 In~\cite{Goedel}, there is no De Bruijn encoding of bound variables (see also~\cite{OConnor05}).
 
-For instance, the the  term \texttt{(var 0)}
+For instance, the term \texttt{(var 0)}
 occurs freely and also inside the scope of a quantifier in the
 formula \texttt{F4} \vpageref[above]{sect:folFormExamples}.
 

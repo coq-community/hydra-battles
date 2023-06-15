@@ -107,9 +107,11 @@ Example t1 : Term L := f t0.
 Example t2 : Term L := h t1 t0.
 
 Example t3 : Term L := h (f (var 0)) (g (var 1)).
-
-Fail Example t4 : Term L := h t0.
 (* end snippet TermExamples1 *)
+
+(* begin snippet TermExamplesFail *) 
+Fail Example t4 : Term L := h t0.
+(* end snippet TermExamplesFail *) 
 
 
 Goal t0 = a. Proof. reflexivity. Qed. 
