@@ -50,6 +50,7 @@ Definition ClosedSystem (T : fol.System L) :=
   forall (v : nat) (f : fol.Formula L),
     mem _ T f -> ~ In v (freeVarF f).
 
+(* begin snippet closeDef *)
 Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
  match l with
    nil => a
@@ -58,6 +59,7 @@ end.
 
 Definition close (x : fol.Formula L) : fol.Formula L :=
   closeList (nodup eq_nat_dec (freeVarF x)) x.
+(* end snippet closeDef *)
 
 Lemma freeVarClosedList1 :
   forall (l : list nat) (v : nat) (x : fol.Formula L),
@@ -193,7 +195,8 @@ Lemma subTermApply :
     substT (apply f ts) v s = apply f (substTs _ ts v s).
 Proof. reflexivity. Qed.
 
-Definition newVar (l : list nat) : nat := fold_right Nat.max 0 (map S l).
+Definition newVar (l : list nat) : nat := 
+  fold_right Nat.max 0 (map S l).
 
 Lemma newVar2 : forall (l : list nat) (n : nat), In n l -> n < newVar l.
 Proof.
