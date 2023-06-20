@@ -333,6 +333,19 @@ The function \texttt{formula\_dec} is mainly used in
 
 Since free and bound occurrences of a variable $i$ are represented the same way, much care should be taken in programming the substitution of a term to a variable in order to avoid \emph{variable capture}.
 
+\begin{todo}
+  Present \texttt{substT} and \texttt{substTs} as structurally recursive functions. Then show \texttt{BadSubst.v} and motivate
+ depth induction.
+\end{todo}
+
+
+\inputsnippets{folProp/subsTdef}
+
+\inputsnippets{BadSubst/BadSubstFdef}
+
+\inputsnippets{BadSubst/BadSubstFexample}
+
+
 For instance let $F$ be the formula 
 $\exists v_2, v_1 \not= f(v_2)$. The result of the substitution 
 of the term $f(v_2)$ to the (free) occurrences of $v_1$ in $F$

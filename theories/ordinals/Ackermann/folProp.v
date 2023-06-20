@@ -154,6 +154,7 @@ Section Substitution.
 
 (* later abbreviated into substT and substTs *)
 
+(* begin snippet subsTdef *)
 Fixpoint substT (s : fol.Term L) (x : nat) 
   (t : fol.Term L) {struct s} : fol.Term L :=
   match s with
@@ -171,6 +172,7 @@ with substTs (n : nat) (ss : fol.Terms L n)
        | Tcons m s ts =>
            Tcons  (substT s x t) (substTs m ts x t)
        end.
+(* end snippet subsTdef *)
 
 Lemma subTermVar1 :
   forall (v : nat) (s : fol.Term L), substT (var v) v s = s.
