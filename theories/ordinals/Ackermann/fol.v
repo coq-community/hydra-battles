@@ -44,10 +44,10 @@ Scheme Term_Terms_ind := Induction for Term Sort Prop
 
 Scheme Term_Terms_rec := Minimality for Term Sort Set
   with Terms_Term_rec := Minimality for Terms Sort Set.
-
+(* begin snippet TermSchemes *)
 Scheme Term_Terms_rec_full := Induction for Term  Sort Set
   with Terms_Term_rec_full := Induction for Terms Sort Set.
-
+(* end snippet TermSchemes *)
 (* begin snippet FormulaDef *)
 Inductive Formula : Set :=
   | equal : Term -> Term -> Formula

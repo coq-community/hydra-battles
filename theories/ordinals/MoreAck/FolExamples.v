@@ -477,6 +477,7 @@ Example f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
 
 
 (* begin snippet FormulaRect *)
+About Term_Terms_rec_full.
 About Formula_rect.
 (* end snippet FormulaRect *)
 
