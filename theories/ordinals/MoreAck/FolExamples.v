@@ -163,6 +163,7 @@ Compute close L F5.
 
 (* begin snippet freeVarEx *)
 Compute freeVarF L (allH 0, v#0 = v#1)%fol.
+Compute freeVarF L (allH 0, v#0 = v#0)%fol.
 Compute freeVarF L (v#0 = v#1 \/ allH 0, v#0 = v#1)%fol.
 (* end snippet freeVarEx *)
 
@@ -271,6 +272,9 @@ Compute substF L F5 0 (f a).
 Locate f. 
 
 
+(* begin snippet substTExample *)
+Compute substT L (h v#1 (h (f v#1) (f v#2)))%fol 1 (h a b)%fol.
+(* end snippet substTExample *)
 
 Section OnSubstF.
 (* begin snippet substExample1 *)

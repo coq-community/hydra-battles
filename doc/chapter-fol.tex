@@ -284,6 +284,9 @@ whith the help of \texttt{List} library function \texttt{remove}.
 \texttt{freevarF}, and the 
 list returned by \texttt{freeVarF} may contain redundancies.
 
+If we want to get the \emph{set} of variables wich occur freely 
+in a formula $F$, we may use the function \texttt{List.nodup}.
+
 
 \inputsnippets{FolExamples/freeVarDup}
 
@@ -301,6 +304,11 @@ the  function \texttt{close}, which  universally quantifies  all the free variab
 
 \inputsnippets{FolExamples/closeExample}
 
+\begin{remark}
+  The function \texttt{close} applies \texttt{freeVarF} and
+  \texttt{List.nodup}  in order to add a sequence of universal
+  quantifications \texttt{allH $i_1$ \dots $i_k$}, in an order determined by the implementation of these functions. It may be interesting to check whether the proof of properties of \texttt{close} depend or not from this implementation.
+\end{remark}
 % \subsubsection{Computing a fresh variable}
 
 % It is easy to get a new variable, which 
@@ -326,6 +334,7 @@ Please note that \texttt{term\_dec}, \texttt{terms\_dec} and
 
 The function \texttt{formula\_dec} is mainly used in
 \href{../theories/html/hydras.Ackermann.PA.html}{Ackermann.PA}, in order to check whether a given formula belongs to the axioms of Peano arithmetic.
+
 \begin{todo}
   Look for the use of \texttt{open}  (in codePA)
 \end{todo}
@@ -335,26 +344,50 @@ The function \texttt{formula\_dec} is mainly used in
 
 \subsection{Variables and substitutions}
 
+The substitution of a term to the free occurrences of a given variable $v$ is at the heart of the implementation of universal
+quantifier elimination. 
+
 Since free and bound occurrences of a variable $i$ are represented the same way, much care should be taken in programming the substitution of a term to a variable in order to avoid \emph{variable capture}.
 
-\begin{todo}
-  Present \texttt{substT} and \texttt{substTs} as structurally recursive functions. Then show \texttt{BadSubst.v} and motivate
- depth induction.
-\end{todo}
+Substitution of a term $t$ to all the occurrences of a variable $x$ in a term or a vector of terms is easy to define as a pair of mutually structurally recursive functions.
+
+
 
 
 \inputsnippets{folProp/subsTdef}
+\inputsnippets{FolExamples/substTExample}
 
+
+Concerning formulas, it could be tempting to define substitution the same way.
 \inputsnippets{BadSubst/BadSubstFdef}
+
+Let us consider for instance the formula $F = \forall\,v_1, \,\exists\,v_2,\,v_1\not=f(v_2)$ (satisfiable if we take for instance $f$ to be interpreted as the successor function).
+
+If we eliminate the universal quantifier by substituting in
+the sub-formula $F_1=  \exists\,v_2,\,v_1\not=f(v_2)$ the free
+occurrences of $v_1$ with $f(v_2)$, our naive implementation of
+\texttt{substF} returns the absurd proposition $\exists\,v_2,\,f(v_2)\not=f(v_2)$. We  say that the free occurrence of $v_2$ in the term $f(v_2)$ has been \emph{captured} by the binding $\exists\,v_2,\dots$.
 
 \inputsnippets{BadSubst/BadSubstFexample}
 
+In our example, we can obtain a correct result, if
+\begin{enumerate}
+\item We consider a \emph{fresh} variable, \emph{i.e.}  different from $v_1$ and $v_2$, say for instance $v_3$,
+\item we substitute $v_3$ to $v_2$ in $F_1$ which results in
+   $F_2= \exists\,v_3,\,v_1\not=f(v_3)$
+\item we substitute the term $f(v_2)$ to $v_1$ in $F_2$, which gives us 
+  $\exists\,v_3,\,f(v_2)\not=f(v_3)$.
+\end{enumerate}
 
-For instance let $F$ be the formula 
-$\exists v_2, v_1 \not= f(v_2)$. The result of the substitution 
-of the term $f(v_2)$ to the (free) occurrences of $v_1$ in $F$
- \emph{is not} $\exists v_2, f(v_2) \not= f(v_2)$, but, for instance $\exists v_3, f(v_2) \not= f(v_3)$, where $v_3$ is a ``fresh'' variable.
+The notion of fresh variable is implemented through a function
+\texttt{newvar (l: list nat) : nat} which returns a number which doesn't belong to $l$.
 
+But the following attempt fails, because the renaming of a  variable in a 
+sub-formula of a formula $F$ is not structurally smaller than $F$.
+
+\inputsnippets{BadSubst/BadSubstF2}
+
+%ICI
 
 \inputsnippets{FolExamples/substExample1}
 
