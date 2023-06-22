@@ -6,9 +6,9 @@
 From Coq Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         Wellfounded.Inverse_Image Wellfounded.Inclusion
         RelationClasses.
-From hydras Require Import ON_Generic.
+Require Import ON_Generic.
 
-Require Wf_nat.
+From Coq Require Wf_nat.
 
 
 

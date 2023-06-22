@@ -3,7 +3,7 @@
 
 
 From Coq Require Import Arith Compare_dec Lia.
-From hydras Require Import Comparable Simple_LexProd ON_Generic
+Require Import Comparable Simple_LexProd ON_Generic
         ON_plus ON_Omega Compat815.
 
 Import Relations.

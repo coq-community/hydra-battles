@@ -6,7 +6,7 @@
  
 From Coq Require Import Arith Compare_dec Lia 
      Relation_Operators RelationClasses Disjoint_Union.
-From hydras Require Import  ON_Generic MoreOrders.
+Require Import  ON_Generic MoreOrders.
 
 Import Relations.
 Generalizable All Variables.

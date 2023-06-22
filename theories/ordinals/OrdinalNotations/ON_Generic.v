@@ -5,10 +5,10 @@
 
 
 From Coq Require Import RelationClasses Relation_Operators Ensembles.
-From hydras Require Import  OrdNotations Schutte_basics.
 From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Import Relation_Definitions.
-From hydras Require Export MoreOrders.
+Require Import  OrdNotations Schutte_basics.
+Require Export MoreOrders.
 Require Export Comparable.
   
 Generalizable All Variables.

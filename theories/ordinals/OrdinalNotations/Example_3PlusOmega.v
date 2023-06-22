@@ -2,7 +2,7 @@
 
 (** Pierre Castéran, Univ. Bordeaux and LaBRI *)
 
-From hydras Require Import ON_plus ON_Finite ON_Omega.
+Require Import ON_plus ON_Finite ON_Omega.
 Import ON_Generic.
 From Coq Require Import Compare_dec Lia Logic.Eqdep_dec.
 
