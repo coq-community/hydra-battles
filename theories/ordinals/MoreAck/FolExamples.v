@@ -485,6 +485,10 @@ About Term_Terms_rec_full.
 About Formula_rect.
 (* end snippet FormulaRect *)
 
+(* begin snippet DepthRec:: unfold no-in *)
+About Formula_depth_rec.
+(* end snippet DepthRec *)
+
 (** depth-order vs structural order *)
 
 Section depth_rec_demo. 

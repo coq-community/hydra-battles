@@ -389,24 +389,24 @@ sub-formula of a formula $F$ is not structurally smaller than $F$.
 
 %ICI
 
-\inputsnippets{FolExamples/substExample1}
+%\inputsnippets{FolExamples/substExample1}
 
-Thus, the function (\texttt{fun f => substF L f i t}) doesn't commute with all \texttt{Formula}'s constructors.
+% Thus, the function (\texttt{fun f => substF L f i t}) doesn't commute with all \texttt{Formula}'s constructors.
 
-\inputsnippets{FolExamples/substExample2}
+% \inputsnippets{FolExamples/substExample2}
 
-From this little example, we can guess that the function
-\texttt{substF} which is assumed to compute the substitution in a formula $F$ the substitution of a term $t$ to the free occurrences of a variable $v$ will not be implemented as a direct structural recursive function. For instance, the formula $G$, obtained through a variable renaming, is not a strict subterm of $F$.
+% From this little example, we can guess that the function
+% \texttt{substF} which is assumed to compute the substitution in a formula $F$ the substitution of a term $t$ to the free occurrences of a variable $v$ will not be implemented as a direct structural recursive function. For instance, the formula $G$, obtained through a variable renaming, is not a strict subterm of $F$.
 
-Thus, we cannot expect do define simply this operation by 
-structural recursion over formulas. 
-In~\cite{Goedel}, the approach is to define a \emph{measure}
-which maps every formula to a natural number, then define substitution in such a way that the substitution of a term to a free variable in a strict sub-formula  of a formula $F$ is smaller
-(w.r.t. this measure) than $F$. 
-Then substitution could be defined by well-founded recursion.
+% Thus, we cannot expect do define simply this operation by 
+% structural recursion over formulas. 
+% In~\cite{Goedel}, the approach is to define a \emph{measure}
+% which maps every formula to a natural number, then define substitution in such a way that the substitution of a term to a free variable in a strict sub-formula  of a formula $F$ is smaller
+% (w.r.t. this measure) than $F$. 
+% Then substitution could be defined by well-founded recursion.
 
-Fortunately, such a measure : the \emph{depth} of a formula,
-can be easily defined by structural recursion.
+
+Fortunately, \coq allows us to define functions by well-founded recursion, and in particular with the help of a \emph{measure} mapping every formula to an already known well-founded type.
 
 
 % To fix this issue, we can associate  a measure (\emph{e.g.} a natural number) to each formula, such that the renaming of a strict subformula $F$ is strictly smaller that $F$. 
@@ -415,9 +415,10 @@ can be easily defined by structural recursion.
 
 \subsubsection{Depth of a formula}
 
-The function \texttt{depth} computes the \emph{depth} of the 
- skeleton of any formula, and allows us to define a well-founded strict order on 
-\texttt{Formula $L$}.
+The function \texttt{depth} computes the \emph{depth} of  any formula, \emph{i.e} the height of the sub-tree made
+by erasing all nodes but those nodes labelled with
+\texttt{allH}, \texttt{impH} and \texttt{notH}.
+
 
 \inputsnippets{fol/depthDef}
 
@@ -433,8 +434,10 @@ the conjunction is translated into a bigger term than the disjunction.
 
 \subsubsection{Induction on depth}
 
+Lemma \texttt{fol.Formula\_depth\_rec} is the basic
+induction principle based on depth.
 
-
+\inputsnippets{FolExamples/depthRec}
 
 % \begin{todo}
 % Motivate the induction principles based on depth. Compatible with term substitution and universal quantifier elimination.
@@ -449,7 +452,7 @@ the conjunction is translated into a bigger term than the disjunction.
  Maybe skip the helpers (unused in other files)
 \end{todo}
 
-The library~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} contains several induction principles, applied 
+The library~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} contains several derived induction principles, applied 
 throughout \texttt{Ackermann} and \texttt{Goedel} projects.
 
 
