@@ -41,7 +41,7 @@
 
     ## You can override Coq and other Coq coqPackages
     ## through the following attribute
-    coqPackages.coq.override.version = "8.14";
+    coqPackages.coq.override.version = "8.15";
     coqPackages.gaia-hydras.override.version = ../.;
     coqPackages.goedel.override.version = ../.;
     coqPackages.coqprime.override.version = "master";
