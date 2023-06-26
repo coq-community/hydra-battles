@@ -307,7 +307,7 @@ the  function \texttt{close}, which  universally quantifies  all the free variab
 \begin{remark}
   The function \texttt{close} applies \texttt{freeVarF} and
   \texttt{List.nodup}  in order to add a sequence of universal
-  quantifications \texttt{allH $i_1$ \dots $i_k$}, in an order determined by the implementation of these functions. It may be interesting to check whether the proof of properties of \texttt{close} depend or not from this implementation.
+  quantifications \texttt{allH $i_1\, \dots\, i_k$}, in an order determined by the implementation of these functions. It may be interesting to check whether the proof of properties of \texttt{close} depend or not from this implementation.
 \end{remark}
 % \subsubsection{Computing a fresh variable}
 
@@ -456,13 +456,14 @@ The library~\href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol} con
 throughout \texttt{Ackermann} and \texttt{Goedel} projects.
 
 
-Let us for instance have a look  at \texttt{Formula\_depth\_ind2}. Its application in order to prove $P\;a$ generates 5 sub-goals. 
+Let us for instance have a look  at \texttt{Formula\_depth\_ind2} which helps  to prove a goal $(P\;a)$ by generating five sub-goals.
 
 \inputsnippets{FolExamples/depthRecDemo2}
 
 \begin{itemize}
-\item Goals $1$ to $4$ correspond to  usual proofs by structural induction.
-\item Goal $5$ is associated with a universal quantification $f=\forall\,v,a$. In this case, we have to prove that $P\;b$ holds for any formula $b$ which has a depth strictly less than $f$. Such a $b$ may for instance the result of replacing the free occurrences of $v$ in $a$ with any term $t$.
+\item Goals $1$ to $4$ correspond to  usual proofs by structural induction (without refering to \texttt{depth}).
+\item Goal $5$ is associated with a universal quantification $f=\forall\,v,a$. In this case, we have to prove that $P\;b$ holds for any formula $b$ which has a depth strictly less than $f$. Such a $b$ may for instance be the result of replacing the free occurrences of $v$ in $a$ with any term $t$.
+  
   \begin{todo}
    Make a link to an appropriate example.
   \end{todo}
@@ -470,7 +471,39 @@ Let us for instance have a look  at \texttt{Formula\_depth\_ind2}. Its applicati
 
 
 
-\subsection{Free variables and substitutions}
+\subsection{A correct definition of substF}
+
+Substitution of a term to (free- occurrences of a variable 
+in a formula is defined in a section of \href{../theories/html/hydras.Ackermann.folProp.html}{Ackermann.folProp}.
+The definition itself takes 200 lines of \coq code, so we will only comment the \emph{structure} of this definition.
+
+Fortunately, the reader may skip a few complex definitions 
+(often because of dependent pattern matching), whose purpose
+is twofold:
+\begin{itemize}
+\item Ensure that the substitution in a formula $F$ of a term $t$ to a variable $x$ returns a formula of the same depth as $F$,
+  which allows to define a function by well-founded recursion on depth.
+  \inputsnippets{folProp/substFHelp, folProp/substFDef}
+\item Prove a few \emph{equations} which will be used in firther proofs on substitutions.
+
+\inputsnippets{folProp/subFormulaEqual}
+\inputsnippets{folProp/subFormulaRelation}
+\inputsnippets{folProp/subFormulaImp}
+\inputsnippets{folProp/subFormulaNot}
+\inputsnippets{folProp/subFormulaForall}
+
+\item Similar equations are also proved for derived connectors and quantifiers, for instance:
+
+\inputsnippets{folProp/subFormulaAnd}
+\inputsnippets{folProp/subFormulaExist}
+
+\end{itemize}
+
+
+\begin{project}
+  Is it possible to get a more readable definition of \texttt{substF} using the \emph{Equations} plug-in~\cite{sozeau:hal-01671777} ? 
+\end{project}
+
 
 
 

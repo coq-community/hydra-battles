@@ -3,6 +3,7 @@ From Coq Require Import Wf_nat Arith Lists.List Peano_dec.
 
 Require Import ListExt. 
 Require Export fol.
+Import FolNotations.
 
 Section Fol_Properties.
 
@@ -366,9 +367,11 @@ Proof.
          now rewrite H.  
     + now rewrite H.
 Qed.
-
+(* begin snippet substFHelp:: no-out *)
 Definition substituteFormulaHelp (f : fol.Formula L) 
-  (v : nat) (s : fol.Term L) : {y : fol.Formula L | depth L y = depth L f}.
+  (v : nat) (s : fol.Term L) : 
+  {y : fol.Formula L | depth L y = depth L f}.
+(* end snippet substFHelp *)
 Proof.
   apply
     (Formula_depth_rec2 L
@@ -384,28 +387,36 @@ Proof.
   - exact (v, s).
 Defined.
 
+(* begin snippet substFDef:: no-out *)
 Definition substF (f : fol.Formula L) (v : nat) (s : fol.Term L) :
   fol.Formula L := proj1_sig (substituteFormulaHelp f v s).
+(* end snippet substFDef:: no-out *)
 
+(* begin snippet subFormulaEqual:: no-out *)
 Lemma subFormulaEqual :
   forall (t1 t2 : fol.Term L) (v : nat) (s : fol.Term L),
-    substF (equal t1 t2) v s =
-      equal (substT t1 v s) (substT t2 v s).
+    substF (t1 = t2)%fol v s =
+      (substT t1 v s = substT t2 v s)%fol.
 Proof. reflexivity. Qed.
+(* end snippet subFormulaEqual *)
 
+(* begin snippet subFormulaRelation:: no-out *)
 Lemma subFormulaRelation :
   forall (r : Relations L) (ts : fol.Terms L (arityR L r)) 
          (v : nat) (s : fol.Term L),
     substF (atomic r ts) v s =
       atomic r (substTs (arityR L r) ts v s).
 Proof. reflexivity. Qed.
+(* end snippet subFormulaRelation *)
 
-
+(* begin snippet subFormulaImp:: no-out *)
 Lemma subFormulaImp :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substF (impH f1 f2) v s =
-      impH (substF f1 v s) (substF f2 v s).
+    substF (f1 -> f2)%fol v s =
+      (substF f1 v s -> substF f2 v s)%fol.
 Proof.
+(* ... *)
+(* end snippet subFormulaImp *)
   intros f1 f2 v s. 
   unfold substF, substituteFormulaHelp in |- *.
   rewrite
@@ -484,9 +495,11 @@ Proof.
   - apply substituteFormulaForallNice.
 Qed.
 
+(* begin snippet subFormulaNot:: no-out *)
 Lemma subFormulaNot :
   forall (f : fol.Formula L) (v : nat) (s : fol.Term L),
-    substF (notH f) v s = notH (substF f v s).
+    substF (~ f)%fol v s = (~ substF f v s)%fol.
+(* end snippet subFormulaNot *)
 Proof.
   intros f v s; 
   unfold substF, substituteFormulaHelp.
@@ -530,21 +543,21 @@ Proof.
   - apply substituteFormulaForallNice.
 Qed.
     
-
+(* begin snippet subFormulaForall:: no-out *)
 Lemma subFormulaForall :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
     let nv := newVar (v :: freeVarT s ++ freeVarF f) in
-    substF (forallH x f) v s =
+    substF (allH x, f)%fol v s =
       match eq_nat_dec x v with
       | left _ => forallH x f
       | right _ =>
           match In_dec eq_nat_dec x (freeVarT s) with
-          | right _ => forallH x (substF f v s)
-          | left _ =>
-              forallH nv (substF 
-                            (substF f x (var nv)) v s)
+          | right _ => (allH x, substF f v s)%fol
+          | left _ => (allH nv, substF (substF f x (v# nv) ) v s)%fol
+
           end
       end.
+(* end snippet subFormulaForall *)
 Proof.
   intros f x v s nv.
   unfold substF at 1 in |- *.
@@ -661,22 +674,26 @@ Section Extensions.
 
 Lemma subFormulaOr :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substF (orH f1 f2) v s =
-      orH (substF f1 v s) (substF f2 v s).
+    substF (f1 \/ f2)%fol v s =
+      (substF f1 v s \/ substF f2 v s)%fol.
 Proof.
   intros f1 f2 v s; unfold orH;
     now rewrite subFormulaImp, subFormulaNot.
 Qed.
 
+(* begin snippet subFormulaAnd:: no-out *)
 Lemma subFormulaAnd :
   forall (f1 f2 : fol.Formula L) (v : nat) (s : fol.Term L),
-    substF (andH f1 f2) v s =
-      andH (substF f1 v s) (substF f2 v s).
+    substF (f1 /\ f2)%fol v s =
+      (substF f1 v s /\ substF f2 v s)%fol.
 Proof.
   intros ? ? ? ?; unfold andH in |- *.
-  rewrite subFormulaNot, subFormulaOr; now repeat rewrite subFormulaNot.
+  rewrite subFormulaNot, subFormulaOr; 
+    now repeat rewrite subFormulaNot.
 Qed.
+(* end snippet subFormulaAnd:: no-out *)
 
+(* begin snippet subFormulaExist:: no-out *)
 Lemma subFormulaExist :
   forall (f : fol.Formula L) (x v : nat) (s : fol.Term L),
     let nv := newVar (v :: freeVarT s ++ freeVarF f) in
@@ -691,6 +708,7 @@ Lemma subFormulaExist :
                            (substF f x (var nv)) v s)
           end
       end.
+(* end snippet subFormulaExist:: no-out *)
 Proof.
   intros ? ? ? ? nv; unfold existH.
   rewrite subFormulaNot, subFormulaForall.

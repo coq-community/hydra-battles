@@ -42,7 +42,7 @@ Fail Fixpoint substF L (F : Formula L) v (t: Term L) :=
        in let H := (substF L G w (var  nv))
           in forallH nv (substF L H v t)
   end.
-(* end snippet BadSubstF2 *)
+(* end snippet BadSubstF2  *)
 
 End BadSubstF2.
 
