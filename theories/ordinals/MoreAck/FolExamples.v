@@ -158,7 +158,7 @@ Example F6: Formula L:= (allH 0, exH 1, v#0 = f v#1 /\ v#0 <> v#1)%fol.
 (* end snippet FormExamples *)
 
 (* begin snippet closeExample *)
-Compute close L F5. 
+Compute close L (v#0 = a \/ v#0 = f v#1)%fol.
 (* end snippet closeExample *)
 
 (* begin snippet freeVarEx *)
@@ -279,23 +279,11 @@ Compute substT L (h v#1 (h (f v#1) (f v#2)))%fol 1 (h a b)%fol.
 Section OnSubstF.
 (* begin snippet substExample1 *)
   Let F : Formula L := (exH 2, v#1 <> f v#2)%fol.
-  Let F' := substF L F 1 (f v#2)%fol. 
-  Compute F'.
+  Compute substF L F 1 (f v#2)%fol. 
   
-  Goal F' <> (exH 2, f v#2 <> f v#2)%fol.
-    discriminate. 
-  Qed. 
+  Compute substF L (close L F -> F)%fol 1 (h v#2 v#3)%fol.
 (* end snippet substExample1 *)
 
-(* begin snippet substExample2 *)
-  Goal F' <> (exH 2, substF L (v#1 <> f v#2)%fol 1 (f v#2))%fol.
-    discriminate. 
-  Qed. 
-
-  Goal F' = (exH 3, substF L (v#1 <> f v#3)%fol 1 (f v#2) )%fol.
-    reflexivity.
-  Qed.
-(* end snippet substExample2 *)
 End OnSubstF.  
 
 
