@@ -6,11 +6,14 @@
 
 
 From Coq Require Import Ensembles Lists.List Arith. 
+Import ListNotations. 
 
 Require Export fol.
 Require Import folProp.
 Import FolNotations.
 
+
+(* begin snippet prelude *) 
 Section ProofH.
 
 Variable L : Language.
@@ -20,6 +23,8 @@ Let Formulas := Formulas L.
 Let System := System L.
 Let Term := Term L.
 Let Terms := Terms L.
+(* end snippet prelude *) 
+
 
 Fixpoint nVars (n: nat) : Terms n * Terms n:=
   match n with 
@@ -62,8 +67,9 @@ Proof.
   - apply (arityF L f).
 Defined.
 
+(* begin snippet PrfDef *)
 Inductive Prf : Formulas -> Formula -> Set :=
-| AXM : forall A : Formula, Prf (A :: nil) A
+| AXM : forall A : Formula, Prf [A] A
 | MP :
   forall (Axm1 Axm2 : Formulas) (A B : Formula),
     Prf Axm1 (impH A B) -> Prf Axm2 A -> Prf (Axm1 ++ Axm2) B
@@ -71,30 +77,45 @@ Inductive Prf : Formulas -> Formula -> Set :=
   forall (Axm : Formulas) (A : Formula) (v : nat),
     ~ In v (freeVarListFormula L Axm) -> Prf Axm A ->
     Prf Axm  (forallH v A)
-| IMP1 : forall A B : Formula, Prf nil (A -> B -> A)%fol
+| IMP1 : forall A B : Formula, Prf [] (A -> B -> A)%fol
 | IMP2 :
   forall A B C : Formula,
-    Prf nil ((A -> B -> C) -> (A -> B) -> A -> C)%fol
+    Prf [] ((A -> B -> C) -> (A -> B) -> A -> C)%fol
 | CP :
   forall A B : Formula,
-    Prf nil ((~ A -> ~ B) -> B -> A)%fol
+    Prf [] ((~ A -> ~ B) -> B -> A)%fol
 | FA1 :
   forall (A : Formula) (v : nat) (t : Term),
-    Prf nil ((allH v, A) -> substF L A v t)%fol
+    Prf [] ((allH v, A) -> substF L A v t)%fol
 | FA2 :
   forall (A : Formula) (v : nat),
-    ~ In v (freeVarF L A) -> Prf nil (A -> allH v, A)%fol
+    ~ In v (freeVarF L A) -> Prf [] (A -> allH v, A)%fol
 | FA3 :
   forall (A B : Formula) (v : nat),
-    Prf nil
+    Prf []
       ((allH v, A -> B) -> (allH v, A) -> allH v, B)%fol
-| EQ1 : Prf nil (v#0 = v#0)%fol
-| EQ2 : Prf nil (v#0 = v#1 -> v#1 = v#0)%fol
-| EQ3 :
-  Prf nil
-    (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol
-| EQ4 : forall R : Relations L, Prf nil (AxmEq4 R)
-| EQ5 : forall f : Functions L, Prf nil (AxmEq5 f).
+| EQ1 : Prf [] (v#0 = v#0)%fol
+| EQ2 : Prf [] (v#0 = v#1 -> v#1 = v#0)%fol
+| EQ3 : Prf [] (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol
+| EQ4 : forall R : Relations L, Prf [] (AxmEq4 R)
+| EQ5 : forall f : Functions L, Prf [] (AxmEq5 f).
+(* end snippet PrfDef *)
+
+(* Strictly for Alectryon *)
+
+(* begin snippet PrfAbout:: no-in unfold *)
+Check Prf.
+(* end snippet PrfAbout *)
+
+(* begin snippet AXM:: no-in unfold *)
+Check AXM.
+(* end snippet AXM *)
+
+(* begin snippet MP:: no-in unfold *)
+Check MP.
+(* end snippet MP *)
+
+(* End Alectryon specific *)
 
 Definition SysPrf (T : System) (f : Formula) :=
   exists Axm : Formulas,

@@ -510,9 +510,130 @@ is twofold:
 
 \subsection{Multiple substitutions}
 
+The function \texttt{subFormula} defined in
+\href{../theories/html/hydras.Ackermann.subAll.html}{Ackermann.subAll} allows to substitute a term $t_i$ to ecah free occurrence of the variable $v_i$ in a formula $F$. The dependance of $t-i$ from $v_i$ is given through a function from \texttt{nat} to
+(\texttt{Term L}).
+
+\inputsnippets{FolExamples/subAllExample1}
+
+
+
+\section{Proofs}
+
+\subsection{Proof trees}
+
+Proof trees in first-order logic are the inhabitants of the \texttt{Prf $L$} 
+inductive type, defined in \href{../theories/html/hydras.Ackermann.folProof.html}{Ackermann.folProof}. Since this type has 14 constructors, we present
+them one by one, after quoting its full definition.
+
+Please note that the following constructions are parametrized with an
+arbitrary language $L$, decared in the \texttt{ProofH} section. 
+
+\inputsnippets{folProof/prelude}
+ 
+\inputsnippets{folProof/PrfDef}
+
+\subsubsection{\texttt{Prf}'s type}
+
+We want to define a data type  \texttt{Prf $l$ $F$}  of ``proof trees of the formula $F$, where $l$ is the list of assumptions used in the proof, enumerated left-to-right (\emph{i.e.} the fringe of the proof tree)''. 
+Please note that this representation 
+
+\inputsnippets{folProof/PrfAbout}
+
+
+
+\subsubsection{The axiom rule}
+
+Let $A$ be a formula on $L$.  The \texttt{AXM} rule builds a proof-tree
+of $A$ which uses \emph{exactly} the singleton list \texttt{[$\,A\,$]}.
+
+\inputsnippets{folProof/AXM}
+
+\noindent From \href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+
+\inputsnippets{FolExamples/PrfEx1} 
+
+\subsubsection{Modus Ponens}
+
+\inputsnippets{folProof/MP}
+
+\inputsnippets{FolExamples/PrfEx2} 
+
+\inputsnippets{FolExamples/eat} 
+
 \begin{todo}
-Link to subAll.v
+Give examples in a toy language.
+
+Give an example which motivates \texttt{SysPrf}:
+
+$P,P , P\arrow P \arrow Q, \vdash Q$ ?
 \end{todo}
+
+\begin{exercise}
+
+Prove the following lemma:
+\inputsnippets{FolExamples/eqRefl}
+
+\end{exercise}
+
+\subsection{Contexts as sets}
+
+\begin{exercise}
+
+Prove the following lemma:
+\inputsnippets{FolExamples/MPdiag}
+
+\end{exercise}
+
+
+\section{Derived rules and natural deduction}
+
+
+ The library 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+\subsection{Example}
+
+For instance, let us prove Peirce's rule.
+ (in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples} ).
+
+\subsubsection{Prelude}
+
+%\inputsnippets{folPeirce/prelude}
+
+
+\subsection{Proof of Peirce's law}
+
+
+\inputsnippets{FolExamples/PeirceProof}
+
+Let us try to do an implication introduction.
+
+\inputsnippets{FolExamples/step1}
+
+Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+
+\inputsnippets{FolExamples/step2}
+
+The rest of the proof is composed of basic proof steps, 
+and bookkeeping steps (about \texttt{Ensembles.In}).
+
+\inputsnippets{FolExamples/step3, FolExamples/step4}
+
+\index{ackermann}{Exercises}
+\begin{exercise}
+Prove, using the rules described in 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic}, the famous \emph{drinkers theorem}:
+
+$$\exists\,x,\; (D(x)\Longrightarrow \forall\,y,\; D(y))$$
+\end{exercise}
+
+where $D$ (for ``drinks'') is some predicate symbol of arity $1$.
+
+
+
+
+
 
 
 \section{Languages for Arithmetic}
@@ -628,81 +749,5 @@ can be expanded in terms of  implication and negation (for instance when we use 
 
 \inputsnippets{LNN_Examples/CNNF0}
 
-
-
-
-\section{Proofs}
-
-\subsection{Contexts as lists}
-\begin{todo}
-Describe the \texttt{Prf} type (from \texttt{folProof.v}).
-
-Give examples in a toy language.
-
-Give an example which motivates \texttt{SysPrf}:
-
-$P,P , P\arrow P \arrow Q, \vdash Q$ ?
-\end{todo}
-
-\begin{exercise}
-
-Prove the following lemma:
-\inputsnippets{FolExamples/eqRefl}
-
-\end{exercise}
-
-\subsection{Contexts as sets}
-
-\begin{exercise}
-
-Prove the following lemma:
-\inputsnippets{FolExamples/MPdiag}
-
-\end{exercise}
-
-
-\section{Derived rules and natural deduction}
-
-
- The library 
- \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
-
-\subsection{Example}
-
-For instance, let us prove Peirce's rule.
- (in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples} ).
-
-\subsubsection{Prelude}
-
-%\inputsnippets{folPeirce/prelude}
-
-
-\subsection{Proof of Peirce's law}
-
-
-\inputsnippets{FolExamples/PeirceProof}
-
-Let us try to do an implication introduction.
-
-\inputsnippets{FolExamples/step1}
-
-Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
-
-\inputsnippets{FolExamples/step2}
-
-The rest of the proof is composed of basic proof steps, 
-and bookkeeping steps (about \texttt{Ensembles.In}).
-
-\inputsnippets{FolExamples/step3, FolExamples/step4}
-
-\index{ackermann}{Exercises}
-\begin{exercise}
-Prove, using the rules described in 
- \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic}, the famous \emph{drinkers theorem}:
-
-$$\exists\,x,\; (D(x)\Longrightarrow \forall\,y,\; D(y))$$
-\end{exercise}
-
-where $D$ (for ``drinks'') is some predicate symbol of arity $1$.
 
 

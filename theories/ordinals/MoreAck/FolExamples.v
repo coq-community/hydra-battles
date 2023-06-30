@@ -267,9 +267,21 @@ Qed.
 
 Compute substF L F5 0 (f a).
 
+Require Import subAll. 
 
+(* begin snippet subAllExample1 *)
+Check subAllFormula.
 
-Locate f. 
+Compute subAllFormula L 
+  (allH 2, P (h v#1 (h v#2 (h v#1 v#3))))%fol
+  (fun x => let phi  := fix phi (n: nat) :=
+                          match n with
+                          | 0 => a%fol
+                          | S p => (f (phi p))%fol 
+                          end 
+        in phi x). 
+(* end snippet subAllExample1 *)
+
 
 
 (* begin snippet substTExample *)
@@ -287,6 +299,30 @@ Section OnSubstF.
 End OnSubstF.  
 
 
+
+
+(* begin snippet PrfEx1:: no-out  *)
+Example PrfEx1: Prf  L [ (A -> B -> C)%fol] (A -> B -> C)%fol.
+Proof. constructor. Qed. 
+(* end snippet PrfEx1 *)
+
+(* begin snippet PrfEx2:: no-out  *)
+Lemma PrfEx2:  Prf L [A -> B -> C; A; A -> B; A]%fol C. 
+Proof.
+  change (Prf L ([A -> B -> C; A] ++ [A -> B; A])%fol C); eapply MP.
+  - change [(A -> B -> C)%fol; A] with ([A -> B -> C] ++ [A])%fol;
+      eapply MP. 
+    + eapply AXM. 
+    + eapply AXM. 
+  - change [(A -> B); A]%fol with ([A -> B] ++ [A])%fol; eapply MP. 
+    + eapply AXM. 
+    + eapply AXM. 
+Qed. 
+(* end snippet PrfEx2 *)
+
+Print PrfEx2. 
+
+(* begin snippet eat:: no-out *)
 Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (f -> g)%fol ->
                         Prf L H2 f ->  Prf L H g.
 Proof. 
@@ -298,16 +334,14 @@ Ltac eat G :=
  |- Prf ?L ?H  ?F =>  eapply MP' with (H1 := G); 
 [simpl; reflexivity | try apply AXM | try apply AXM ] end. 
 
-
-
-Lemma Pf1:  Prf L [A -> B -> C; A; A -> B; A]%fol C. 
+Lemma PrfEx21:  Prf L [A -> B -> C; A; A -> B; A]%fol C. 
 Proof.
-  eat  [A -> B -> C; A]%fol.
-  eat  [A -> B -> C]%fol. 
-  eat [(A -> B)%fol].
+  eat [A -> B -> C; A]%fol.
+  eat [A -> B -> C]%fol. 
+  eat [(A -> B)]%fol.
 Qed. 
+(* end snippet eat *)
 
-Print Pf1. 
 
 #[local] Arguments Ensembles.In {_} .
 #[local] Arguments Ensembles.Add {_} .
