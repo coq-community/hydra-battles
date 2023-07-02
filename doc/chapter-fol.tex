@@ -527,25 +527,35 @@ inductive type, defined in \href{../theories/html/hydras.Ackermann.folProof.html
 them one by one, after quoting its full definition.
 
 Please note that the following constructions are parametrized with an
-arbitrary language $L$, decared in the \texttt{ProofH} section. 
+arbitrary language $L$, declared in the \texttt{ProofH} section. 
 
 \inputsnippets{folProof/prelude}
  
 \inputsnippets{folProof/PrfDef}
 
+
 \subsubsection{\texttt{Prf}'s type}
 
 We want to define a data type  \texttt{Prf $l$ $F$}  of ``proof trees of the formula $F$, where $l$ is the list of assumptions used in the proof, enumerated left-to-right (\emph{i.e.} the fringe of the proof tree)''. 
-Please note that this representation 
+
 
 \inputsnippets{folProof/PrfAbout}
 
+\subsubsection{Warning}
 
+We won't respect the order in which \texttt{Prf}'s constructor 
+are enumerated in \texttt{folProof.v}. We preferred to present 
+these constructors in an order inspired by a sequence
+ of simple examples. On the other hand, we didn't change this order in 
+\texttt{folProof.v}, in order not to break complex proofs by pattern-matching.
+
+See \href{https://en.wikipedia.org/wiki/List_of_Hilbert_systems}.
 
 \subsubsection{The axiom rule}
 
 Let $A$ be a formula on $L$.  The \texttt{AXM} rule builds a proof-tree
 of $A$ which uses \emph{exactly} the singleton list \texttt{[$\,A\,$]}.
+
 
 \inputsnippets{folProof/AXM}
 
@@ -555,16 +565,75 @@ of $A$ which uses \emph{exactly} the singleton list \texttt{[$\,A\,$]}.
 
 \subsubsection{Modus Ponens}
 
+Let $A$ and $B$ be two formulas on $L$, $\textit{Axm1}$
+ and $\textit{Axm2}$ two sequences of formulas.
+If we have 
+two proof trees of respective types \texttt{Prf Axm1 $A\arrow B$} and  \texttt{Prf Axm2 $B$}, then we build a proof tree
+for $B$ whose fringe is the concatenation of $s_{AB}$ and $s_A$.
+
 \inputsnippets{folProof/MP}
+
+The following proof script is a quite naive application of 
+\texttt{AXM} and \texttt{MP}.
 
 \inputsnippets{FolExamples/PrfEx2} 
 
-\inputsnippets{FolExamples/eat} 
+We can make this proof script shorter, using existential variables.
+
+\inputsnippets{FolExamples/cutMP}
+
+\inputsnippets{FolExamples/cutMP2}  
+
+\subsubsection{Hilbert's axioms for implication}
+
+\inputsnippets{folProof/IMP12}
+
+\inputsnippets{FolExamples/PrfEx3}  
+
+\begin{remark}
+\label{sec:remark-on-hilbert-systems}
+One may think that this proof 
+is quite clumsy. \emph{Right}.
+But we must recall that \texttt{Prf} is a basic Hilbert-like
+proof system, which will make it easier to study.
+In the next chapter, we will consider a derived proof system 
+where the \emph{deduction theorem} will allow us to consider shorter and more natural proofs.
+\end{remark}
+
+\begin{exercise}[**]
+  Is it possible to build a term of type
+\texttt{Prf L [A] B -> Prf L [] (A->B)\%fol} ?
+\end{exercise}
+
+\subsubsection{The rule of contraposition}
+
+The only rule about the \texttt{notH} connective is
+the \emph{contraposition rule}.
+
+\inputsnippets{folProof/CP}
+
+The following script shows that \texttt{CP} entails the 
+derived rule of \emph{proof by contradiction}.
+
+\inputsnippets{FolExamples/PrfEx4}
+
+\begin{remark}
+Same remark as~\ref{sec:remark-on-hilbert-systems}.
+\end{remark}
+
+\begin{exercise}
+  Replay this proof with pen and paper!
+\end{exercise}
+
+
+
+
+
 
 \begin{todo}
-Give examples in a toy language.
-
-Give an example which motivates \texttt{SysPrf}:
+To do propositional connectives before FO (in the doc, but not 
+ in the vernacular file)
+To do : EQ1 before GEN 
 
 $P,P , P\arrow P \arrow Q, \vdash Q$ ?
 \end{todo}
@@ -576,6 +645,8 @@ Prove the following lemma:
 
 \end{exercise}
 
+
+%%%%%%%%%%%%%% New chapter 
 \subsection{Contexts as sets}
 
 \begin{exercise}
@@ -635,6 +706,7 @@ where $D$ (for ``drinks'') is some predicate symbol of arity $1$.
 
 
 
+%%%%%%%%%%%%%%% New chapter!
 
 \section{Languages for Arithmetic}
 

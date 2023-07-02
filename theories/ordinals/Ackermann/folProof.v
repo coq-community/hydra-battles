@@ -71,12 +71,12 @@ Defined.
 Inductive Prf : Formulas -> Formula -> Set :=
 | AXM : forall A : Formula, Prf [A] A
 | MP :
-  forall (Axm1 Axm2 : Formulas) (A B : Formula),
-    Prf Axm1 (impH A B) -> Prf Axm2 A -> Prf (Axm1 ++ Axm2) B
+  forall (Hyp1 Hyp2 : Formulas) (A B : Formula),
+    Prf Hyp1 (A -> B)%fol -> Prf Hyp2 A -> Prf (Hyp1 ++ Hyp2) B
 | GEN :
-  forall (Axm : Formulas) (A : Formula) (v : nat),
-    ~ In v (freeVarListFormula L Axm) -> Prf Axm A ->
-    Prf Axm  (forallH v A)
+  forall (Hyp : Formulas) (A : Formula) (v : nat),
+    ~ In v (freeVarListFormula L Hyp) -> Prf Hyp A ->
+    Prf Hyp  (forallH v A)
 | IMP1 : forall A B : Formula, Prf [] (A -> B -> A)%fol
 | IMP2 :
   forall A B C : Formula,
@@ -115,12 +115,22 @@ Check AXM.
 Check MP.
 (* end snippet MP *)
 
+(* begin snippet IMP12:: no-in unfold *)
+Check IMP1.
+Check IMP2.
+(* end snippet IMP12 *)
+
+(* begin snippet CP:: no-out *)
+Check  CP : forall A B , Prf [] ((~ A -> ~ B) -> B -> A)%fol. 
+(* end snippet CP *)
+
+
 (* End Alectryon specific *)
 
 Definition SysPrf (T : System) (f : Formula) :=
-  exists Axm : Formulas,
-    (exists prf : Prf Axm f,
-       (forall g : Formula, In g Axm -> mem _ T g)).
+  exists Hyp : Formulas,
+    (exists prf : Prf Hyp f,
+       (forall g : Formula, In g Hyp -> mem _ T g)).
 
 Definition Inconsistent (T : System) := forall f : Formula, SysPrf T f.
 

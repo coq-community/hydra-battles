@@ -2,7 +2,7 @@
 
 From Coq Require Import Arith Lists.List.
 
-Require Import fol folProp folProof  Languages folLogic.
+Require Import fol folProp folProof  Languages folLogic subAll Deduction.
 Require Import primRec.
 Import ListNotations. 
 Import FolNotations. 
@@ -267,7 +267,7 @@ Qed.
 
 Compute substF L F5 0 (f a).
 
-Require Import subAll. 
+
 
 (* begin snippet subAllExample1 *)
 Check subAllFormula.
@@ -322,38 +322,112 @@ Qed.
 
 Print PrfEx2. 
 
-(* begin snippet eat:: no-out *)
+(* begin snippet cutMP:: no-out *)
 Lemma MP' f g H1 H2 H: H = H1 ++ H2 -> Prf L H1 (f -> g)%fol ->
                         Prf L H2 f ->  Prf L H g.
 Proof. 
   intros; subst; eapply MP; eauto. 
 Qed. 
 
-Ltac eat G :=
+(** Cuts the current list of hypotheses as (G++?H), then applies MP *)
+Ltac cutMP G :=
   match goal with 
  |- Prf ?L ?H  ?F =>  eapply MP' with (H1 := G); 
 [simpl; reflexivity | try apply AXM | try apply AXM ] end. 
+(* end snippet cutMP *)
 
-Lemma PrfEx21:  Prf L [A -> B -> C; A; A -> B; A]%fol C. 
-Proof.
-  eat [A -> B -> C; A]%fol.
-  eat [A -> B -> C]%fol. 
-  eat [(A -> B)]%fol.
+(* begin snippet cutMP2 *)
+Example PrfEx2':  Prf L [A -> B -> C; A; A -> B; A]%fol C. (* .no-out *)
+Proof. (* .no-out *)
+  cutMP [A -> B -> C; A]%fol.
+  - cutMP [A -> B -> C]%fol. 
+  - cutMP [(A -> B)]%fol.
 Qed. 
-(* end snippet eat *)
+(* end snippet cutMP2 *)
+Section ProofOfEx3.
 
+(* begin snippet PrfEx3 *)
+#[local]  Arguments MP {L Hyp1 Hyp2 A B} _ _.
+
+Example PrfEx3 : Prf L [] (A -> A)%fol. (* .no-out *)
+Proof. (* .no-out *)
+  pose (pf1 := IMP2 L A (A -> A)%fol A).
+  pose (pf2 := IMP1 L A A). 
+  pose (pf3 := IMP1 L A (A -> A)%fol).  
+  pose (pf4 := MP pf1 pf3).
+  exact  (MP pf4 pf2). 
+Qed. 
+(* end snippet PrfEx3 *)     
+
+Print PrfEx3.
+
+End ProofOfEx3. 
+
+(** Rule of contradiction *)
+
+(* begin snippet PrfEx4:: no-out *)
+Example PrfEx4 (A B: Formula L): Prf L [] (~B -> B -> A)%fol.
+Proof. 
+  assert (pf1 : Prf L nil (~B -> ~A -> ~B)%fol) by apply IMP1. 
+  assert (pf2 : Prf L nil ((~A -> ~B) -> (B -> A))%fol) by apply CP. 
+  pose (pf3 := IMP2 L (~B)%fol (~A -> ~B)%fol (B -> A)%fol).
+  assert (pf4: Prf L nil (~B -> (~A -> ~B) -> B -> A)%fol).
+  { assert (pf5 : Prf L nil (((~A -> ~B) -> B -> A) -> ~B ->
+                             (~A -> ~B) -> B -> A)%fol)
+    by  eapply IMP1. 
+    apply(MP L _ _ _ _ pf5 pf2).
+  }    
+  pose (pf6 :=  MP L _ _ _ _ pf3 pf4).
+  exact (MP L _ _ _ _ pf6 pf1). 
+Defined.
+(* end snippet PrfEx4 *)
+
+Unset Printing Notations.
+Compute PrfEx4. 
+Set Printing Notations.
+
+
+
+
+About PrfEx4. 
+
+
+
+About Empty_set. 
+
+(* A weak version of ProofEx3 using the deduction principle *)
+
+Lemma ded1:  forall (A: Formula L), (SysPrf L (Empty_set _) A) -> 
+                            exists pf : Prf L (nil) A, True.
+
+  intros.
+  inversion H.  
+  destruct H0. 
+  destruct x. 
+  exists x0. 
+  auto. 
+  specialize (H0 f). 
+  specialize (H0 (in_eq f x)).
+  destruct H0. 
+Qed. 
+
+Lemma ded2:  SysPrf L (Empty_set _) (A -> A)%fol.
+apply DeductionTheorem. 
+Search SysPrf.
+apply Axm. 
+Search  Add. 
+apply In_add1. 
+Qed. 
+
+Lemma ded3 : exists pf : Prf L (nil) (A -> A)%fol , True.
+apply ded1. 
+apply ded2. 
+Qed. 
 
 #[local] Arguments Ensembles.In {_} .
 #[local] Arguments Ensembles.Add {_} .
 Import Ensembles. 
 
-Lemma In_add1 {T:Type}(a:T)(S: Ensemble T):
-  In (Add  S a) a.
-Proof.  right; auto with sets. Qed.
-
-Lemma In_add2 {T:Type}(a b:T)(S : Ensemble T):
-  In S a -> In (Add  S b) a.
-Proof.  left; auto with sets. Qed.
 
 #[local] Hint Unfold mem: sets. 
 
