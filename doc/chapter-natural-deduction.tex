@@ -1,0 +1,59 @@
+\chapter{Natural Deduction (in construction)}
+
+
+%%%%%%%%%%%%%% New chapter 
+\subsection{Contexts as sets}
+
+\begin{exercise}
+
+Prove the following lemma:
+\inputsnippets{FolExamples/MPdiag}
+
+\end{exercise}
+
+
+\section{Derived rules and natural deduction}
+
+
+ The library 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+\subsection{Example}
+
+For instance, let us prove Peirce's rule.
+ (in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples} ).
+
+\subsubsection{Prelude}
+
+%\inputsnippets{folPeirce/prelude}
+
+
+\subsection{Proof of Peirce's law}
+
+
+\inputsnippets{FolExamples/PeirceProof}
+
+Let us try to do an implication introduction.
+
+\inputsnippets{FolExamples/step1}
+
+Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+
+\inputsnippets{FolExamples/step2}
+
+The rest of the proof is composed of basic proof steps, 
+and bookkeeping steps (about \texttt{Ensembles.In}).
+
+\inputsnippets{FolExamples/step3, FolExamples/step4}
+
+\index{ackermann}{Exercises}
+\begin{exercise}
+Prove, using the rules described in 
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic}, the famous \emph{drinkers theorem}:
+
+$$\exists\,x,\; (D(x)\Longrightarrow \forall\,y,\; D(y))$$
+\end{exercise}
+
+where $D$ (for ``drinks'') is some predicate symbol of arity $1$.
+
+

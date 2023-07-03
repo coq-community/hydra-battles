@@ -76,7 +76,7 @@ Inductive Prf : Formulas -> Formula -> Set :=
 | GEN :
   forall (Hyp : Formulas) (A : Formula) (v : nat),
     ~ In v (freeVarListFormula L Hyp) -> Prf Hyp A ->
-    Prf Hyp  (forallH v A)
+    Prf Hyp  (allH v, A)%fol
 | IMP1 : forall A B : Formula, Prf [] (A -> B -> A)%fol
 | IMP2 :
   forall A B C : Formula,
@@ -101,31 +101,7 @@ Inductive Prf : Formulas -> Formula -> Set :=
 | EQ5 : forall f : Functions L, Prf [] (AxmEq5 f).
 (* end snippet PrfDef *)
 
-(* Strictly for Alectryon *)
 
-(* begin snippet PrfAbout:: no-in unfold *)
-Check Prf.
-(* end snippet PrfAbout *)
-
-(* begin snippet AXM:: no-in unfold *)
-Check AXM.
-(* end snippet AXM *)
-
-(* begin snippet MP:: no-in unfold *)
-Check MP.
-(* end snippet MP *)
-
-(* begin snippet IMP12:: no-in unfold *)
-Check IMP1.
-Check IMP2.
-(* end snippet IMP12 *)
-
-(* begin snippet CP:: no-out *)
-Check  CP : forall A B , Prf [] ((~ A -> ~ B) -> B -> A)%fol. 
-(* end snippet CP *)
-
-
-(* End Alectryon specific *)
 
 Definition SysPrf (T : System) (f : Formula) :=
   exists Hyp : Formulas,

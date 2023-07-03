@@ -33,23 +33,6 @@ Proof.  left; auto with sets. Qed.
 Remark R1 L (t: Term L): (equal t t) = (t = t)%fol. 
 Proof. trivial. Qed. 
 
-(* begin snippet eqRefl:: no-out *)
-Lemma eq_refl : forall L (t:Term L), Prf L nil (t = t)%fol.
-(* end snippet eqRefl *)
-Proof. 
-  intros L t.
-  assert (H: Prf L nil (forallH 0 (v#0 = v#0))%fol). 
-  {
-    apply GEN.
-    - cbn; auto. 
-    - apply EQ1.
-  }
-  change (nil:(list (Formula L))) with (nil++nil: list(Formula L)).
-  eapply MP.
-  2: apply H.
-  generalize (FA1 _ (v#0 = v#0)%fol 0 t).
-  intro; assumption.   
-Qed. 
 
 (** A small variation on MP (without appending contexts) *)
 
@@ -73,12 +56,12 @@ Qed.
 
 (* begin snippet ToyDef *)
 Module Toy. 
-  Inductive Rel: Set := A_ | B_ | C_ | P_ | R_.
+  Inductive Rel: Set := A_ | B_ | C_ | P_ | Q_ | R_.
   Inductive Fun : Set := a_ | b_ | f_ | g_ | h_.
  
   Definition arityR (x : Rel): nat := 
     match x with 
-       P_ => 1 | R_ => 2 | _ => 0
+       P_ | Q_ => 1 | R_ => 2 | _ => 0
     end.
 
  Definition arityF (x : Fun): nat := 
@@ -133,6 +116,7 @@ Compute t2.
   Notation B := (atomic L B_ Tnil). 
   Notation C := (atomic L C_ Tnil). 
   Notation P t := (atomic L P_ (Tcons t Tnil)).
+  Notation Q t := (atomic L Q_ (Tcons t Tnil)).
   Notation R t1 t2 := (@atomic L R_ (Tcons t1 (Tcons t2 Tnil))).
 (* end snippet toyNotationForm *)
 
@@ -386,15 +370,97 @@ Unset Printing Notations.
 Compute PrfEx4. 
 Set Printing Notations.
 
-
-
-
 About PrfEx4. 
 
+(** ** Universal quantifier *)
 
+(* begin snippet PrfEx5:: no-out *)
+Example PrfEx5 : Prf L [] ((allH 1 2, R v#1 v#2) -> allH 2, R a v#2)%fol. 
+Proof. 
+  change (allH 2, R a v#2)%fol with (substF L (allH 2, R v#1 v#2)%fol 1 a).
+  eapply FA1. 
+Qed. 
+(* end snippet PrfEx5 *)
 
-About Empty_set. 
+(* begin snippet PrfEx6:: no-out *)
+Example PrfEx6 : Prf L [] (R v#1 v#1 -> allH 0, R v#1 v#1)%fol. 
+Proof. 
+  apply FA2; simpl; intuition. 
+Qed. 
+(* end snippet PrfEx6 *)
 
+(* begin snippet PrfContrex7 *)
+Example PrfContrex7 : 
+  Prf L [] (R v#1 v#1 -> allH 1, R v#1 v#1)%fol. (* .no-out *)
+Proof.  (* .no-out *)
+  apply FA2; simpl. 
+Abort.
+(* end snippet PrfContrex7 *)
+
+(* begin snippet PrfEx8:: no-out *)
+Example PrfEx8 : Prf L [] ((allH 0, P v#0 -> Q v#0) ->
+                 (allH 0, P v#0) -> 
+                 (allH 0, Q v#0))%fol. 
+Proof. apply FA3. Qed. 
+(* end snippet PrfEx8 *)
+
+(* TO do : keep the local L *)
+
+(* begin snippet eqRefl:: no-out *)
+Lemma eq_refl (t:Term L): Prf L nil (t = t)%fol.
+Proof. 
+  assert (H: Prf L nil (allH 0, v#0 = v#0)%fol). 
+  {
+    apply GEN.
+    - cbn; auto. 
+    - apply EQ1.
+  }
+  change (nil:(list (Formula L))) with (nil++nil: list(Formula L)).
+  eapply MP.
+  2: apply H.
+  apply (FA1 _ (v#0 = v#0)%fol 0 t).
+Defined. 
+(* end snippet eqRefl *)
+
+About EQ4. 
+Compute AxmEq4 L R_. 
+Check @EQ4 L (R_). 
+
+(* begin snippet PrfEx910 *)
+Compute AxmEq4 L P_. 
+
+Example PrfEx9: Prf L [] (v#0 = v#1 -> P v#0 <-> P v#1)%fol. (* .no-out *)
+Proof. (* .no-out *)
+  apply (EQ4 L P_). 
+Qed. 
+
+Compute AxmEq4 L R_. 
+
+Example PrfEx10: 
+  Prf L [] (v#2 = v#3 -> v#0 = v#1 -> R v#2 v#0 <-> R v#3 v#1)%fol. (* .no-out *)
+Proof. (* .no-out *) 
+ apply (EQ4 L R_). 
+Qed. 
+
+(* end snippet PrfEx910 *)
+
+(* begin snippet PrfContrex9 *)
+Example PrfContrex9: Prf L [] (v#1 = v#0 -> P v#1 <-> P v#0)%fol. (* .no-out *)
+Proof. 
+  Fail apply (EQ4 L P_). 
+Abort.
+(* end snippet PrfContrex9 *)
+
+(* begin snippet PrfEx11 *)
+Compute AxmEq5 L h_. 
+
+Example PrfEx11: 
+  Prf L [] (v#2 = v#3 -> v#0 = v#1 -> h v#2 v#0 = h v#3 v#1)%fol. (* .no-out *)
+Proof. (* .no-out *)
+  apply (EQ5 L h_). 
+Qed. 
+
+(* end snippet PrfEx11 *)
 (* A weak version of ProofEx3 using the deduction principle *)
 
 Lemma ded1:  forall (A: Formula L), (SysPrf L (Empty_set _) A) -> 

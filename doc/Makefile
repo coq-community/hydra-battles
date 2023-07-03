@@ -12,6 +12,8 @@ DEP_FILES = hydras.tex          \
 	    chapter-primrec.tex \
 	    chapter-encoding.tex \
 	    chapter-fol.tex \
+	    chapter-natural-deduction.tex \
+	    chapter-lnn-lnt.tex \
 	    gaia-chapter.tex    \
 	    thebib.bib          \
 	    coqmacros.tex       \
@@ -38,4 +40,4 @@ hydras.pdf: ${DEP_FILES}
 .PHONY:clean
 clean:
 	@+${MAKE} -C movies clean
-	@${RM} hydras.pdf *.aux *.ind *.idx *.idl *.ilg *.bbl *.log *.toc *.out
+	@${RM} hydras.pdf *.aux *.ind *.idx *.idl *.ilg *.bbl *.log *.toc *.out 

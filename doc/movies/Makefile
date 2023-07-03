@@ -17,4 +17,5 @@ all: $(targets)
 	@$(PYTHON) ./driver.py --frontend coq --backend assets --output-directory $(assets_root) -
 
 clean:
-	rm -fr $(snippets_root)
+	rm -fr $(snippets_root) 
+	rm -f targets.mk
