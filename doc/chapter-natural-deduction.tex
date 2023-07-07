@@ -2,14 +2,77 @@
 
 
 %%%%%%%%%%%%%% New chapter 
-\subsection{Contexts as sets}
+\section{Contexts as sets}
+
+Let us look again at the proof scripts shown in~\vref{proof:PrfEx2} and \vref{proof:PrfEx3}.
+\begin{itemize}
+\item The statement of \texttt{PrfEx2} contains a sequence
+of hypotheses with two occurrences of \texttt{A}. Moreover, the order in which the 4 hypotheses are listed is determined by the type of the constructor \texttt{MP}  (please look at
+Figure~\vref{fig:prf-def}). It would be better to replace this
+precise list of hypotheses with ``any list whose elements
+belong to the set $\{A, A \arrow B; A \arrow B \arrow C\}$''.
+
+\item In the proof of \texttt{PrfEx3} the \coq user would certainly ask ``How do we apply implication's introduction rule?''.
+\end{itemize}
+
+The answer to both questions in~\cite{Goedel}  is the definition of a proof system, derived from \texttt{Prf}, which considers
+\emph{sets of hypotheses} (called \emph{systems} in ~\cite{Goedel}) instead of
+\emph{list of hypotheses}, thus making abstraction of
+repetition and order of appearance of hypotheses in the context.
+
+The new system is simply defined as below:
+\inputsnippets{folProof/SysPrfDef}
+
+
+\subsubsection{Notations}
+
+
+\begin{itemize}
+\item  $\Gamma \sdash A$ for
+  (\texttt{SysPrf $L$ $\Gamma$ $A$}).
+\item $\Gamma, \Delta$ for $\Gamma\cup\Delta$
+\item $\Gamma, A,\dots B$ for $\Gamma\cup\{A \dots B\}$
+\end{itemize}
+
+\subsubsection{Examples}
+
+
+In the following script, we use \texttt{PrfEx2}
+as a witness for proving a set-based version of the 
+original proof term.
+
+
+
+$$A \sststile{\mathrm{S}}{} A$$
+
+
+
+\inputsnippets{folExamples/SysPrfEx2}
+
 
 \begin{exercise}
 
 Prove the following lemma:
-\inputsnippets{FolExamples/MPdiag}
+\inputsnippets{FolExamples/MPSys}
 
 \end{exercise}
+
+\subsection{Using properties of sets}
+
+The following three lemmas, from 
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} are direct consequences of \texttt{SysPrf}'s definition. 
+
+\inputsnippets{folLogic/Axm}
+
+\inputsnippets{folLogic/SysExtend}
+
+
+
+
+\section{The deduction theorem}
+
+\inputsnippets{Deduction/deductionThm}
+
 
 
 \section{Derived rules and natural deduction}
