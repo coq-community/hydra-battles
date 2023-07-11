@@ -102,11 +102,12 @@ Inductive Prf : Formulas -> Formula -> Set :=
 (* end snippet PrfDef *)
 
 
-
+(* begin snippet SysPrfDef *)
 Definition SysPrf (T : System) (f : Formula) :=
   exists Hyp : Formulas,
     (exists prf : Prf Hyp f,
        (forall g : Formula, In g Hyp -> mem _ T g)).
+(* end snippet SysPrfDef *)
 
 Definition Inconsistent (T : System) := forall f : Formula, SysPrf T f.
 

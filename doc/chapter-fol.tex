@@ -554,7 +554,10 @@ arbitrary language $L$, declared in the \texttt{ProofH} section.
 
 \subsubsection{\texttt{Prf}'s type}
 
-The type  \texttt{Prf $l$ $F$}  is the type of ``proof trees of the formula $F$, where $l$ is the list of assumptions used in the proof, enumerated left-to-right (\emph{i.e.} the fringe of the proof tree)''. 
+The type  \texttt{Prf $l$ $F$}  is the type of ``proof trees of the formula $F$, where $l$ is the list of assumptions used in the proof, enumerated left-to-right (\emph{i.e.} the fringe of the proof tree)''.
+
+We will also use (in the text) the notation $l \hdash{} F$ for the type \texttt{Prf $l$ $F$}.
+
 
 In the rest of this section, we comment  every one of 
 \texttt{Prf}'s 14 constructors,
@@ -573,6 +576,11 @@ these constructors in an order inspired by a sequence
 For more information on Hilbert proof system, you may consult
 \url{https://en.wikipedia.org/wiki/List_of_Hilbert_systems}.
 
+
+\subsubsection{Notation}
+
+
+  
 \subsubsection{The axiom rule: \texttt{AXM}}
 
 Let $A$ be a formula on $L$.  The \texttt{AXM} rule builds a proof-tree

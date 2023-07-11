@@ -19,27 +19,29 @@ Let Terms := Terms L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
+(* begin snippet Axm:: no-out *)
 Lemma Axm T f: mem _ T f -> SysPrf T f.
 Proof.
-  exists (f :: nil); exists (AXM L f).
-  intros g [H0 | H0].
-  - rewrite H0 in H; assumption.
-  - elim H0.
+  exists (f :: nil), (AXM L f).
+  intros g [ | []]; now subst.
 Qed.
+(* end snippet Axm *)
 
+(* begin snippet sysExtend:: no-out *)
 Lemma sysExtend  (T U : System) (f : Formula): 
  Included _ T U -> SysPrf T f -> SysPrf U f.
 Proof.
   intros H [x [p H0]]; exists x, p.
-  intros g H1.
-  apply H, H0, H1. 
+  intros g H1; apply H, H0, H1. 
 Qed.
 
 Lemma sysWeaken  (T : System) (f g : Formula):
   SysPrf T f -> SysPrf (Ensembles.Add _ T g) f.
+  (* ... *)
+(* end snippet sysExtend:: no-out *)
 Proof.
   intros H; apply sysExtend with T.
-  - intros f0 Hf0;  now left. 
+  - intros f0 Hf0; now left. 
   - assumption.
 Qed.
 

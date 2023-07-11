@@ -18,20 +18,32 @@ belong to the set $\{A, A \arrow B; A \arrow B \arrow C\}$''.
 The answer to both questions in~\cite{Goedel}  is the definition of a proof system, derived from \texttt{Prf}, which considers
 \emph{sets of hypotheses} (called \emph{systems} in ~\cite{Goedel}) instead of
 \emph{list of hypotheses}, thus making abstraction of
-repetition and order of appearance of hypotheses in the context.
+the repetition and order of appearance of hypotheses in the context.
 
-The new system is simply defined as below:
+The new system is simply defined as below (for  a given language $L$)\,\footnote{In some shown snippets, arguments like $L$ may be or not be implicit (depending on the section they are extracted from). Please look at the \coq source.}.
+
+
 \inputsnippets{folProof/SysPrfDef}
 
 
 \subsubsection{Notations}
 
+In the text, we may use the abbreviation $\Gamma \sdash A$ for
+(\texttt{SysPrf $L$ $\Gamma$ $A$}) and
+$\sdash A$ for
+(\texttt{SysPrf $L$ Empty\_set $A$}) 
+
+
+
+We may also omit obvious braces in some set expressions:
+
 
 \begin{itemize}
-\item  $\Gamma \sdash A$ for
-  (\texttt{SysPrf $L$ $\Gamma$ $A$}).
-\item $\Gamma, \Delta$ for $\Gamma\cup\Delta$
+
+\item $\Gamma, \Delta$ for $\Gamma\cup\Delta$,
+\item $A, B, C$ for $\{A, B, C\}$,
 \item $\Gamma, A,\dots B$ for $\Gamma\cup\{A \dots B\}$
+\item \emph{etc.}
 \end{itemize}
 
 \subsubsection{Examples}
@@ -39,11 +51,7 @@ The new system is simply defined as below:
 
 In the following script, we use \texttt{PrfEx2}
 as a witness for proving a set-based version of the 
-original proof term.
-
-
-
-$$A \sststile{\mathrm{S}}{} A$$
+original proof term, namely $A; A \arrow B; A \arrow B \arrow C \sdash C$.
 
 
 
@@ -52,7 +60,9 @@ $$A \sststile{\mathrm{S}}{} A$$
 
 \begin{exercise}
 
-Prove the following lemma:
+Prove the following lemma (without the handy lemmas from
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} and their corollaries!).
+
 \inputsnippets{FolExamples/MPSys}
 
 \end{exercise}
@@ -69,9 +79,38 @@ The following three lemmas, from
 
 
 
-\section{The deduction theorem}
+\section{The Deduction theorem}
+
+The deduction theorem (proved in \href{../theories/html/hydras.Ackermann.Deduction.html}{Ackermann.Deduction} is a handy 
+tool for proving a proposition $A\arrow B$ by pushing 
+the hypothesis $A$ into the context (it corresponds to 
+implication introduction in \coq).
+
 
 \inputsnippets{Deduction/deductionThm}
+
+\subsection{sketch of proof}
+
+We advise the reader to replay this proof on h.er.is computer
+ in order to better understand its structure. 
+
+Let us give only a few comments.
+
+
+Let us assume the hypothesis \texttt{H: $T, g \sdash f$},
+meaning that there exists some list $F$ whose elements 
+belong to $T \cup \{g\}$, and a proof-tree $t$ of type
+$F \vdash h$.
+
+The heart of the proof is an induction on $t$ proving 
+$F \cap T \sdash (g\arrow f)$ \footnote{Please forgive the implicit coercion from lists to sets!}. 
+
+Please note that the case $S=\texttt{nil}$ is common to 
+many constructors of \texttt{Prf}, thus the proof script starts
+with a study of this particular case, simply applied 11 times in the rest of the proof. 
+
+
+
 
 
 
@@ -81,26 +120,22 @@ The following three lemmas, from
  The library 
  \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
 
-\subsection{Example}
+\subsection{Example: proof of Peirce's law}
 
-For instance, let us prove Peirce's rule.
- (in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples} ).
+For instance, let us prove Peirce's rule, \emph{i.e.}
+$\sdash ((A \arrow B) \arrow A) \arrow A$ for any formulas $A$ and $B$.
 
-\subsubsection{Prelude}
-
-%\inputsnippets{folPeirce/prelude}
-
-
-\subsection{Proof of Peirce's law}
-
+ The proof in \coq is available in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}.
 
 \inputsnippets{FolExamples/PeirceProof}
 
-Let us try to do an implication introduction.
+Let us start with  an implication introduction.
 
 \inputsnippets{FolExamples/step1}
 
-Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+Now, we may eliminate the disjunction 
+in the instance $\sim A \vee A$ of the law of excluded middle.
+The only non-trivial case is about $\sim A$.
 
 \inputsnippets{FolExamples/step2}
 
