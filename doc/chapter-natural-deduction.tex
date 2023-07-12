@@ -92,10 +92,7 @@ implication introduction in \coq).
 \subsection{sketch of proof}
 
 We advise the reader to replay this proof on h.er.is computer
- in order to better understand its structure. 
-
-Let us give only a few comments.
-
+ in order to better understand its structure, which we will only comment briefly.
 
 Let us assume the hypothesis \texttt{H: $T, g \sdash f$},
 meaning that there exists some list $F$ whose elements 
@@ -109,7 +106,15 @@ Please note that the case $S=\texttt{nil}$ is common to
 many constructors of \texttt{Prf}, thus the proof script starts
 with a study of this particular case, simply applied 11 times in the rest of the proof. 
 
+ \index{ackermann}{Projects}
 
+\begin{project}[**]
+  The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
+extracting the underlying proof tree and its fringe from an hypothesis 
+of the form $X\sdash f$. 
+It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the the proof-tree built
+by the proof of the deduction lemma. 
+\end{project}
 
 
 
