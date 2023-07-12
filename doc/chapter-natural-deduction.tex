@@ -89,7 +89,7 @@ implication introduction in \coq).
 
 \inputsnippets{Deduction/deductionThm}
 
-\subsection{sketch of proof}
+\subsection{Sketch of proof}
 
 We advise the reader to replay this proof on h.er.is computer
  in order to better understand its structure, which we will only comment briefly.
@@ -112,8 +112,10 @@ with a study of this particular case, simply applied 11 times in the rest of the
   The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
 extracting the underlying proof tree and its fringe from an hypothesis 
 of the form $X\sdash f$. 
-It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the the proof-tree built
+It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the  proof-tree built
 by the proof of the deduction lemma. 
+On a fresh branch of the project, please change the definition of
+\texttt{SysPrf} and fix the errors this change could cause in the rest of the files. 
 \end{project}
 
 
