@@ -142,7 +142,35 @@ The \emph{rule of implication introduction} is a trivial application of the dedu
 
 \inputsnippets{folLogic/impI}
 
+The following lemma (corresponding to the \texttt{CP} constructor of type \texttt{Prf}) is proven with the help of \texttt{impE}, \texttt{impI}, 
+\texttt{sysWeaken} and \texttt{CP}.  
 
+\inputsnippets{folLogic/contradiction}
+
+We let the reader consult the proof of the following lemmas, or, much better, re-prove them as exercises.
+
+\inputsnippets{folLogic/nnE}
+
+\inputsnippets{ folLogic/nnI}
+
+\inputsnippets{folLogic/cp1}
+
+\inputsnippets{folLogic/cp2}
+
+\subsection{Rules for derived connectives and quantifiers}
+
+Let us keep in mind that the derived connectives: \texttt{orH}, \texttt{andH}, etc. and the existential quantifier \texttt{existH}  are defined
+in terms of \texttt{impH}, \texttt{notH}, \texttt{forallH}.
+By unfolding these definitions, we prove easily a few natural deduction rules for the derived symbols. 
+For instance, the law of excluded middle for $f$: $ T\sdash \sim f \vee f$
+for any $T$,  is just an abbreviation of $T \sdash \sim\sim f \arrow f$.
+
+\inputsnippets{folLogic/noMiddle}
+
+
+\inputsnippets{folLogic/orI1}
+
+\inputsnippets{folLogic/orI2}
 
 
 \subsection{Example: proof of Peirce's law}

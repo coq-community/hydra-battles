@@ -18,6 +18,7 @@ Let Term := Term L.
 Let Terms := Terms L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
+Arguments Ensembles.Add {U} _ _.
 
 (* begin snippet Axm:: no-out *)
 Lemma Axm T f: mem _ T f -> SysPrf T f.
@@ -36,7 +37,7 @@ Proof.
 Qed.
 
 Lemma sysWeaken  (T : System) (f g : Formula):
-  SysPrf T f -> SysPrf (Ensembles.Add _ T g) f.
+  SysPrf T f -> SysPrf (Ensembles.Add  T g) f.
   (* ... *)
 (* end snippet sysExtend:: no-out *)
 Proof.
@@ -47,7 +48,7 @@ Qed.
 
 (* begin snippet impI:: no-out *)
 Lemma impI (T : System) (f g : Formula):
- SysPrf (Ensembles.Add _ T g) f -> SysPrf T (g -> f)%fol.
+ SysPrf (Ensembles.Add  T g) f -> SysPrf T (g -> f)%fol.
 Proof. intros ?; now apply (DeductionTheorem L). Qed.
 (* end snippet impI *)
 
@@ -62,6 +63,7 @@ Proof.
   intros g0 H; case (in_app_or  _ _ _ H); auto.
 Qed.
 
+(* begin snippet contradiction:: no-out *)
 Lemma contradiction (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T (~ f)%fol -> SysPrf T g.
 Proof.
@@ -72,9 +74,11 @@ Proof.
     + apply impI; now apply sysWeaken.
   - assumption.
 Qed.
+(* end snippet contradiction *)
 
-Lemma nnE (T : System) (f : Formula):
-  SysPrf T (~ ~ f)%fol -> SysPrf T f.
+(* begin snippet nnE:: no-out *)
+Lemma nnE (T : System) (f : Formula): SysPrf T (~ ~ f)%fol -> SysPrf T f.
+(* end snippet nnE *)
 Proof.
   intros H; apply impE with (~ ~ f)%fol.
   - apply impE with (~ f -> ~ ~ ~ f)%fol.
@@ -88,12 +92,9 @@ Proof.
   - assumption.
 Qed.
 
-Lemma noMiddle  (T : System) (f : Formula):  SysPrf T (~ f \/ f)%fol.
-Proof.
-  unfold orH; apply impI, nnE, Axm; right; constructor.
-Qed.
-
+(* begin snippet nnI:: no-out *)
 Lemma nnI (T : System) (f : Formula): SysPrf T f -> SysPrf T (~ ~ f)%fol.
+(* end snippet nnI *)
 Proof.
   intros H; apply impE with f; [ | apply H].
   apply impE with (~ ~ ~ f -> ~ f)%fol.
@@ -106,8 +107,10 @@ Qed.
 
 (**  contraposition *)
 
+(* begin snippet cp1:: no-out *)
 Lemma cp1 (T : System) (f g : Formula) :
  SysPrf T (~ f -> ~ g)%fol -> SysPrf T (g -> f)%fol.
+(* end snippet cp1 *)
 Proof.
   intros H; apply impE with (~ f -> ~g)%fol.
   - exists (nil (A:=Formula)).
@@ -115,8 +118,10 @@ Proof.
   - assumption.
 Qed.
 
+(* begin snippet cp2:: no-out *)
 Lemma cp2 (T : System) (f g : Formula):
  SysPrf T (g -> f)%fol -> SysPrf T (~f -> ~g)%fol.
+(* end snippet cp2 *)
 Proof.
   intros H; apply impE with (~ ~ g -> ~ ~ f)%fol.
   - exists (nil (A:=Formula)).
@@ -126,18 +131,31 @@ Proof.
     + apply nnE, Axm; right; constructor.
 Qed.
 
+(* begin snippet orI1 *)
 Lemma orI1 (T : System) (f g : Formula): SysPrf T f -> SysPrf T (f \/ g)%fol.
-Proof.
-  intros H; unfold orH; apply impI.
-  apply contradiction with f.
-  apply sysWeaken; assumption.
-  apply Axm; right; constructor.
+      (* .no-out *)
+Proof.  (* .no-out *)
+  intros H; apply impI; apply contradiction with f. (* -.h#* .h#H *)
+  (* ... *)  
+(* end snippet orI1 *)
+  - apply sysWeaken; assumption.
+  - apply Axm; right; constructor.
 Qed.
 
+(* begin snippet orI2:: no-out *)
 Lemma orI2 (T : System) (f g : Formula): SysPrf T g -> SysPrf T (f \/ g)%fol.
+(* end snippet orI2 *)
 Proof.
   intros h; unfold orH; apply impI, sysWeaken; assumption.
 Qed.
+
+(* begin snippet noMiddle:: no-out *)
+Lemma noMiddle  (T : System) (f : Formula):  SysPrf T (~ f \/ f)%fol.
+Proof.
+   apply impI, nnE, Axm; right; constructor.
+Qed.
+(* end snippet noMiddle *)
+
 
 Lemma orE (T : System) (f g h : Formula):
  SysPrf T (f \/ g)%fol ->
@@ -165,8 +183,8 @@ Proof.
 Qed.
 
 Lemma orSys (T : System) (f g h : Formula):
- SysPrf (Ensembles.Add _ T f) h -> SysPrf (Ensembles.Add _ T g) h -> 
- SysPrf (Ensembles.Add _ T (f \/ g)%fol) h.
+ SysPrf (Ensembles.Add  T f) h -> SysPrf (Ensembles.Add T g) h -> 
+ SysPrf (Ensembles.Add  T (f \/ g)%fol) h.
 Proof.
   intros H H0; eapply orE.
    - apply Axm; right; constructor.
@@ -291,8 +309,8 @@ Qed.
 Lemma existSys (T : System) (f g : Formula) (v : nat):
  ~ In_freeVarSys L v T ->
  ~ In v (freeVarF L g) ->
- SysPrf (Ensembles.Add _ T f) g -> 
- SysPrf (Ensembles.Add _ T (exH v, f)%fol) g.
+ SysPrf (Ensembles.Add T f) g -> 
+ SysPrf (Ensembles.Add  T (exH v, f)%fol) g.
 Proof.
   intros H H0 H1; eapply existE.
   - intros [x H2]; destruct H.
