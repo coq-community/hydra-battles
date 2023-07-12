@@ -45,16 +45,21 @@ Proof.
   - assumption.
 Qed.
 
+(* begin snippet impI:: no-out *)
 Lemma impI (T : System) (f g : Formula):
  SysPrf (Ensembles.Add _ T g) f -> SysPrf T (g -> f)%fol.
 Proof. intros ?; now apply (DeductionTheorem L). Qed.
+(* end snippet impI *)
 
+(* begin snippet impE:: no-out *)
 Lemma impE (T : System) (f g : Formula):
  SysPrf T (g -> f)%fol -> SysPrf T g -> SysPrf T f.
 Proof. 
-  intros (x, (px, Hx)) (x1, (px1, Hx1)).
+  intros [x [px Hx]] [x1 [px1 Hx1]].
   set (A1 := MP L _ _ _ _ px px1); exists (x ++ x1), A1.
-  intros g0 H; case (in_app_or _ _ _ H); auto.
+  (* ... *)
+(* end snippet impE *)
+  intros g0 H; case (in_app_or  _ _ _ H); auto.
 Qed.
 
 Lemma contradiction (T : System) (f g : Formula):

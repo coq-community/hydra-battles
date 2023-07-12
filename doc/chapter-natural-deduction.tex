@@ -76,8 +76,12 @@ The following three lemmas, from
 
 \inputsnippets{folLogic/SysExtend}
 
+The \emph{rule of implication elimination} is derived from \texttt{Prf}'s 
+\emph{modus ponens} \texttt{MP}.  Since all elements of the fringe 
+\texttt{x} [resp. \texttt{x1}] of the proof tree \texttt{px} [resp. \texttt{px1}] belong to T, so are the elements of the fringe \texttt{x++x1} of
+(\texttt{MP \dots{}  px px1}).
 
-
+\inputsnippets{folLogic/impE}
 
 \section{The Deduction theorem}
 
@@ -116,6 +120,11 @@ It would be nice (\emph{e.g.} for a better understanding of the proof of the ded
 by the proof of the deduction lemma. 
 On a fresh branch of the project, please change the definition of
 \texttt{SysPrf} and fix the errors this change could cause in the rest of the files. 
+\emph{If ensuring compatibility with all the \texttt{Goedel} project is too long and/or difficult, you may just make the changes in separate modules with an ``informative'' \texttt{SysPrf} and limit the compatibility study  to the contents of basic modules like
+\texttt{Deduction}, \texttt{folLogic}, etc.
+Perhaps you will have to consider other implementation of finite sets of formulas (\emph{e.g.} lists).
+}
+
 \end{project}
 
 
@@ -126,6 +135,15 @@ On a fresh branch of the project, please change the definition of
 
  The library 
  \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+%\subsection{Applications of the Deduction Theorem}
+
+The \emph{rule of implication introduction} is a trivial application of the deduction theorem.
+
+\inputsnippets{folLogic/impI}
+
+
+
 
 \subsection{Example: proof of Peirce's law}
 
