@@ -608,6 +608,28 @@ The following proof script is a quite naive application of
 \label{proof:PrfEx2}
 \inputsnippets{FolExamples/PrfEx2} 
 
+\begin{figure}[h]
+  \centering
+  \[
+  \infer{C}{ 
+    \infer{B \arrow C}
+    {\infer{ A \arrow B \arrow C}
+      { A \arrow B \arrow C}
+      &
+      \infer{A}{A}}
+    & \infer{B}{
+      \infer{A\arrow B}{A\arrow B} &
+      \infer{A}{A}}
+                     }
+\]
+  \caption{The proof tree of \texttt{PrfEx2}}
+  \label{fig:PrfEx2}
+\end{figure}
+
+Figure~\ref{fig:PrfEx2} shows the tree-like structure of 
+\texttt{PrfEx2}. The list of used hypotheses is the fringe of the tree. The unary nodes are applications of \texttt{AXM} and the binary nodes are associated with \texttt{MP}.
+
+
 We can make this proof script shorter, using existential variables.
 
 \inputsnippets{FolExamples/cutMP}

@@ -163,15 +163,30 @@ Let us keep in mind that the derived connectives: \texttt{orH}, \texttt{andH}, e
 in terms of \texttt{impH}, \texttt{notH}, \texttt{forallH}.
 By unfolding these definitions, we prove easily a few natural deduction rules for the derived symbols. 
 For instance, the law of excluded middle for $f$: $ T\sdash \sim f \vee f$
-for any $T$,  is just an abbreviation of $T \sdash \sim\sim f \arrow f$.
+for any $T$,  is just an abbreviation of $T \sdash \sim\sim{}f \arrow f$.
+
 
 \inputsnippets{folLogic/noMiddle}
+
+\begin{remark}
+  The lines marked ``optional'' are just here in order to
+temporarily deactivate the notation which print any formula 
+of the form $\sim{}\!A \arrow B$ as \texttt{$A$ \disj' $B$}.
+ These three lines can be safely removed.
+\end{remark}
+
+
+Let us go on \dots. We leave the completion of the proofs as an exercise. We encourage the reader to write h.er.is own proofs, then compare them with the scripts of \href{../theories/html/hydras.Ackermann.folLogic.html}{folLogic}.
+
 
 
 \inputsnippets{folLogic/orI1}
 
 \inputsnippets{folLogic/orI2}
 
+\inputsnippets{folLogic/orE}
+
+\inputsnippets{folLogic/orSys}
 
 \subsection{Example: proof of Peirce's law}
 
