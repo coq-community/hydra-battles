@@ -491,6 +491,11 @@ Proof. (* .no-out *)
 Qed. 
 
 (* end snippet PrfEx11 *)
+
+(* begin snippet SearchSysPrf *)
+Search SysPrf (exH ?v, _)%fol (allH ?v, _)%fol.
+(* end snippet SearchSysPrf *)
+
 (* A weak version of ProofEx3 using the deduction principle *)
 
 Lemma ded1:  forall (A: Formula L), (SysPrf L (Empty_set _) A) -> 
@@ -692,6 +697,5 @@ Example f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
                               (apply LNN Succ_ 
                                  (Tcons (var 1) Tnil))))).
 (* end snippet f1Example *)
-
 
 

@@ -156,7 +156,7 @@ Proof. (* .no-out *)
    unfold orH. (* .no-out *) (* optional*)
    Unset Printing Notations. (* -.h#* .h#T .h#f *) (* optional*)
    apply impI, nnE, Axm; right; constructor. 
-   Unset Printing Notations. (* .no-out *) (* optional *)
+   Set Printing Notations. (* .no-out *) (* optional *)
 Qed.
 (* end snippet noMiddle *)
 
@@ -198,12 +198,15 @@ Proof.
    - apply sysWeaken, impI; assumption. 
 Qed.
 
+(* begin snippet andI:: no-out  *)
 Lemma andI (T : System) (f g : Formula):
  SysPrf T f -> SysPrf T g -> SysPrf T (f /\ g)%fol.
 Proof.
   intros H H0; unfold andH;
-  apply orE with (~ (~f \/ ~g))%fol (~ f \/ ~g)%fol.
+  apply orE with (~ (~f \/ ~g))%fol (~ f \/ ~g)%fol. 
   - apply noMiddle.
+  (* ... *)
+(* end snippet andI *)
   - apply impI, Axm; right; constructor.
   - apply impI; apply orE with (~ f)%fol (~ g)%fol.
     + apply Axm; right; constructor.
@@ -213,8 +216,10 @@ Proof.
       repeat apply sysWeaken; assumption.
 Qed.
 
+(* begin snippet andE1:: no-out  *)
 Lemma andE1 (T : System) (f g : Formula):
   SysPrf T (f /\ g)%fol -> SysPrf T f.
+(* end snippet andE1 *)
 Proof.
   intros H; apply nnE.
   apply impE with ( f /\ g)%fol.
@@ -224,8 +229,10 @@ Proof.
   assumption.
 Qed.
 
+(* begin snippet andE2:: no-out  *)
 Lemma andE2  (T : System) (f g : Formula):
   SysPrf T (f /\ g)%fol -> SysPrf T g.
+(* end snippet andE2 *)
 Proof.
   intros H; apply nnE.
   apply impE with (f /\ g)%fol.
@@ -467,3 +474,4 @@ unfold close;
 Qed.
 
 End Logic_Rules.
+
