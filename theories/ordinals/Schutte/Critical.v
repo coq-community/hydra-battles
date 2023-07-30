@@ -320,7 +320,7 @@ Section Proof_of_Lemma5.
                                        (members alpha)
                                        (fun x =>  phi x (gamma_ n))).
           intros H;
-            apply countable_inclusion with
+            apply CountableTypes.countable_downward_closed with
                 (image (members alpha)
                        (fun x =>  phi x  (gamma_ n))).
           apply H.

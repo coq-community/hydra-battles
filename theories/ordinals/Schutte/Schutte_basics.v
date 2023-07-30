@@ -395,7 +395,7 @@ Proof.
   }
   pose (X:= Add X0 alpha).
   assert (countable X).
-  {  unfold X; unfold Add; apply countable_union.
+  {  apply CountableTypes.countable_union2.
      auto.
      apply countable_singleton.
   }
@@ -837,7 +837,7 @@ Qed.
 
 
 Lemma seq_mono_inj (s : nat -> Ord) :
-  seq_mono s -> injective _ _ s.
+  seq_mono s -> injective s.
 Proof.
   unfold injective;intros  H i j H0.
   case (lt_eq_lt_dec i j).

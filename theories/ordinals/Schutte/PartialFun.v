@@ -8,8 +8,10 @@
    functions : relational presentation, and with the  [iota] description operator *)
 
 
-From Coq Require Import Ensembles  ClassicalDescription .
-From ZornsLemma Require Import EnsemblesImplicit.
+From Coq Require Import ClassicalDescription Ensembles Image
+  ProofIrrelevance.
+Import ProofIrrelevanceFacts.
+From ZornsLemma Require Import EnsemblesImplicit FunctionProperties ImageImplicit.
 From hydras Require Import MoreEpsilonIota.
 
 Set Implicit Arguments.
@@ -223,13 +225,51 @@ Qed.
 
 End inversion_of_bijection.
 
+Lemma image_as_Im {A B : Type} (U : Ensemble A) (f : A -> B) :
+  image U f = Im U f.
+Proof.
+  apply Extensionality_Ensembles; split; intros y Hy.
+  - destruct Hy as [x [Hx Hy]].
+    subst. exists x; auto.
+  - inversion Hy; subst; clear Hy.
+    exists x; auto.
+Qed.
 
+(** convert a [fun_bijection] to a [bijection] in the sense of the
+   [ZornsLemma] library. *)
+Definition fun_restr {U V : Type} (f : U -> V)
+  {A : Ensemble U} {B : Ensemble V}
+  (Hf : fun_codomain A B f) :
+  { x : U | In A x } -> { y : V | In B y } :=
+  fun p : { x : U | In A x } =>
+    exist (fun y : V => In B y)
+      (f (proj1_sig p))
+      (Hf (proj1_sig p) (proj2_sig p)).
 
+Lemma fun_bijection_codomain
+  {U V : Type} {A : Ensemble U} {B : Ensemble V}
+  (g : U -> V) (g_bij : fun_bijection A B g) :
+  fun_codomain A B g.
+Proof.
+  destruct g_bij; assumption.
+Defined.
 
-
-
-
-
-
-
-
+Lemma fun_bijection_is_ZL_bijection
+  {U V : Type} {A : Ensemble U} {B : Ensemble V}
+  (g : U -> V) (g_bij : fun_bijection A B g) :
+  FunctionProperties.bijective
+    (fun_restr (fun_bijection_codomain g_bij)).
+Proof.
+  destruct g_bij as [H0 H1 H2].
+  split.
+  - intros [x0 Hx0] [x1 Hx1] Hx.
+    apply subset_eq_compat.
+    inversion Hx; subst; clear Hx.
+    apply H2; auto.
+  - intros [y Hy].
+    simpl.
+    specialize (H1 y Hy) as [x [Hx0 Hx1]].
+    subst. exists (exist _ x Hx0).
+    apply subset_eq_compat.
+    reflexivity.
+Qed.
