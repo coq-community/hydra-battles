@@ -46,6 +46,33 @@ We may also omit obvious braces in some set expressions:
 \item \emph{etc.}
 \end{itemize}
 
+
+
+
+\begin{remark}
+  The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
+extracting the underlying proof tree and its fringe from a proof of $X\sdash f$. We only know that such a proof exists, but cannot get it automatically through a \coq function.
+\end{remark}
+
+
+\index{ackermann}{Projects}
+
+\begin{project}
+It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the  proof-tree built
+by the proof of the deduction lemma. 
+On a fresh branch of the project, please change the definition of
+\texttt{SysPrf} and fix the errors this change could cause in the rest of the files. 
+\emph{If ensuring compatibility with all the \texttt{Goedel} project is too long and/or difficult, you may just make the changes in separate modules with an ``informative'' \texttt{SysPrf} and limit the compatibility study  to the contents of basic modules like
+\texttt{Deduction}, \texttt{folLogic}, etc.
+Perhaps you will have to consider other implementation of finite sets of formulas (\emph{e.g.} lists).
+}
+
+\end{project}
+
+
+
+
+
 \subsubsection{Examples}
 
 
@@ -86,9 +113,9 @@ The \emph{rule of implication elimination} is derived from \texttt{Prf}'s
 \section{The Deduction theorem}
 
 The deduction theorem (proved in \href{../theories/html/hydras.Ackermann.Deduction.html}{Ackermann.Deduction} is a handy 
-tool for proving a proposition $A\arrow B$ by pushing 
-the hypothesis $A$ into the context (it corresponds to 
-implication introduction in \coq).
+tool for proving a proposition $f\arrow g$ by pushing 
+the hypothesis $f$ into the context (it corresponds roughly to 
+the implication introduction rule in \coq).
 
 
 \inputsnippets{Deduction/deductionThm}
@@ -110,26 +137,7 @@ Please note that the case $S=\texttt{nil}$ is common to
 many constructors of \texttt{Prf}, thus the proof script starts
 with a study of this particular case, simply applied 11 times in the rest of the proof. 
 
- \index{ackermann}{Projects}
-
-\begin{project}[**]
-  The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
-extracting the underlying proof tree and its fringe from an hypothesis 
-of the form $X\sdash f$. 
-It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the  proof-tree built
-by the proof of the deduction lemma. 
-On a fresh branch of the project, please change the definition of
-\texttt{SysPrf} and fix the errors this change could cause in the rest of the files. 
-\emph{If ensuring compatibility with all the \texttt{Goedel} project is too long and/or difficult, you may just make the changes in separate modules with an ``informative'' \texttt{SysPrf} and limit the compatibility study  to the contents of basic modules like
-\texttt{Deduction}, \texttt{folLogic}, etc.
-Perhaps you will have to consider other implementation of finite sets of formulas (\emph{e.g.} lists).
-}
-
-\end{project}
-
-
-
-
+ 
 \section{Derived rules and natural deduction}
 
 
@@ -205,7 +213,7 @@ $\sdash ((A \arrow B) \arrow A) \arrow A$ for any formulas $A$ and $B$.
 
 \inputsnippets{FolExamples/PeirceProof}
 
-Let us start with  an implication introduction.
+Let us start with  an implication introduction. The judgement to prove becomes  $(A \arrow B) \arrow A \sdash A$.
 
 \inputsnippets{FolExamples/step1}
 
@@ -213,10 +221,17 @@ Now, we may eliminate the disjunction
 in the instance $\sim A \vee A$ of the law of excluded middle.
 The only non-trivial case is about $\sim A$.
 
+\vspace{4pt}
+
+Next goal is $(A \arrow B) \arrow A \sdash \sim\!A \arrow A$.
+Please keep in mind  that our current notation system interprets
+$\sim\!A \arrow A$ as a disjunction!
+
+
 \inputsnippets{FolExamples/step2}
 
-The rest of the proof is composed of basic proof steps, 
-and bookkeeping steps (about \texttt{Ensembles.In}).
+The rest of the proof is composed of basic proof steps.
+
 
 \inputsnippets{FolExamples/step3, FolExamples/step4}
 

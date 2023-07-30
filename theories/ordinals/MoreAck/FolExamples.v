@@ -555,11 +555,14 @@ Proof.  (* .no-out *)
    inversion H3. 
  Qed. 
 
-
 (* begin snippet PeirceProof:: no-out *)
+Section PeirceProof.
+Arguments Add {U}.
+Arguments Empty_set {U}.
+
 Definition Peirce : Formula L := (((A -> B) -> A) -> A)%fol.
 
-Lemma peirce : SysPrf  L (Empty_set _)  Peirce. 
+Lemma peirce : SysPrf  L Empty_set Peirce. 
 Proof with auto with sets. 
 (* end snippet PeirceProof *)
 
@@ -568,21 +571,18 @@ Proof with auto with sets.
 (* end snippet step1 *)
 
 (* begin snippet step2 *)
-  eapply orE with (notH A) A%fol;
+  eapply orE with (~A)%fol A%fol;
        [apply noMiddle | | apply impRefl].
 (* end snippet step2 *)
 (* begin snippet step3 *)
-   apply impI; eapply impE with (A -> B)%fol. 
+   apply impI; eapply impE with (A -> B)%fol.
 (* end snippet step3 *)
 (* begin snippet step4:: no-out *)
-    - apply Axm ...
-    - apply impI; apply contradiction with A; apply Axm ...
+  - apply Axm ... 
+  - apply impI; apply contradiction with A; apply Axm ...
 Qed.
+End PeirceProof.
 (* end snippet step4 *)
-
-  
-
-
   
 Section Drinkers_theorem. 
 
