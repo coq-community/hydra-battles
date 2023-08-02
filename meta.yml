@@ -140,7 +140,7 @@ dependencies:
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.13.0" & < "1.16~")}'
+    version: '{(>= "1.13.0" & < "1.18~")}'
   description: |-
     [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.13 or later
 - opam:
@@ -149,7 +149,7 @@ dependencies:
     [MathComp Algebra](https://github.com/math-comp/math-comp)
 - opam:
     name: coq-gaia-schutte
-    version: '{(>= "1.14" & < "1.16~") | (= "dev")}'
+    version: '{(>= "1.14" & < "1.18~") | (= "dev")}'
   description: |-
     [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
 - opam:
