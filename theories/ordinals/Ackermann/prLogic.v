@@ -1,7 +1,10 @@
 (** prLogic.v
 
     Original script by Russel O'Connor
-*)
+
+     Although this module doesn't depend on FOL, the following lemmas 
+     are JUST  helpers to prove that the encoding of basic FOL connectives are PR *)
+
 
 Require Import primRec code cPair.
 From Coq Require Import Arith.

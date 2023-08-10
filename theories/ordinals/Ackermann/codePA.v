@@ -7,8 +7,8 @@
 From Coq Require Import Ensembles List Arith Lia.
 From Coq Require Vector.
 
-Require Import primRec  cPair folProp code  codeList  codeFreeVar  extEqualNat
-  prLogic  Compat815.
+Require Import primRec  cPair folProp code  codeList  codeFreeVar  
+extEqualNat prLogic  Compat815.
 
 Import LispAbbreviations. 
 

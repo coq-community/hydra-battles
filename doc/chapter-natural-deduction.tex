@@ -25,11 +25,14 @@ The new system is simply defined as below (for  a given language $L$)\,\footnote
 
 \inputsnippets{folProof/SysPrfDef}
 
+In a few words, proving a statement \texttt{SysPrf \_ $T$ $A$} 
+is proving the existence of a proof-tree of type \texttt{Prf \textit{Hyp}  $A$}, where \textit{Hyp} is a list of hypotheses all elements of which belong to $T$.
+
 
 \subsubsection{Notations}
 
-In the text, we may use the abbreviation $\Gamma \sdash A$ for
-(\texttt{SysPrf $L$ $\Gamma$ $A$}) and
+In the text, we may use the abbreviation $T \sdash A$ for
+(\texttt{SysPrf $L$ $T$ $A$}) and
 $\sdash A$ for
 (\texttt{SysPrf $L$ Empty\_set $A$}) 
 
@@ -40,9 +43,9 @@ We may also omit obvious braces in some set expressions:
 
 \begin{itemize}
 
-\item $\Gamma, \Delta$ for $\Gamma\cup\Delta$,
+\item $T,U$ for $T \cup U$,
 \item $A, B, C$ for $\{A, B, C\}$,
-\item $\Gamma, A,\dots B$ for $\Gamma\cup\{A \dots B\}$
+\item $T, A,\dots B$ for $T \cup\{A \dots B\}$
 \item \emph{etc.}
 \end{itemize}
 
@@ -51,7 +54,7 @@ We may also omit obvious braces in some set expressions:
 
 \begin{remark}
   The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
-extracting the underlying proof tree and its fringe from a proof of $X\sdash f$. We only know that such a proof exists, but cannot get it automatically through a \coq function.
+extracting the underlying proof tree and its fringe from a proof of $T\sdash f$. We only know that such a proof exists, but cannot get it automatically through a \coq function.
 \end{remark}
 
 
@@ -73,7 +76,7 @@ Perhaps you will have to consider other implementation of finite sets of formula
 
 
 
-\subsubsection{Examples}
+\subsubsection{Example}
 
 
 In the following script, we use \texttt{PrfEx2}
@@ -142,7 +145,13 @@ with a study of this particular case, simply applied 11 times in the rest of the
 
 
  The library 
- \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic},
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic2} and
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic3} contain many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+
+We present here only a few examples of these rules, the reader
+may consult these libraries with \texttt{Search} or by looking 
+at the \texttt{coqdoc} generated files. A meta-exercise would be to re-prove a few of these lemmas and/or build an example of application.
 
 %\subsection{Applications of the Deduction Theorem}
 
@@ -183,14 +192,7 @@ of the form $\sim{}\!A \arrow B$ as \texttt{$A$ \disj' $B$}.
  These three lines can be safely removed.
 \end{remark}
 
-
-Let us go on \dots. We leave the completion of the proofs as an exercise. We encourage the reader to write h.er.is own proofs, then compare them with the scripts of \href{../theories/html/hydras.Ackermann.folLogic.html}{folLogic}.
-
-
-
 \inputsnippets{folLogic/orI1}
-
-\inputsnippets{folLogic/orI2}
 
 \inputsnippets{folLogic/orE}
 
@@ -198,7 +200,9 @@ Let us go on \dots. We leave the completion of the proofs as an exercise. We enc
 
 \inputsnippets{folLogic/andI}
 
-\inputsnippets{folLogic/andE1, folLogic/andE2}
+%\inputsnippets{folLogic/andE1, folLogic/andE2}
+
+Here are a few examples of looking for rules using \coq's \texttt{Search} command:
 
 \inputsnippets{FolExamples/SearchSysPrf}
 

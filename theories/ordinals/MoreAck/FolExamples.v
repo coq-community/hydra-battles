@@ -2,7 +2,8 @@
 
 From Coq Require Import Arith Lists.List.
 
-Require Import fol folProp folProof  Languages folLogic subAll Deduction.
+Require Import fol folProp folProof  Languages folLogic 
+  folLogic2 folLogic3 subAll Deduction.
 Require Import primRec.
 Import ListNotations. 
 Import FolNotations. 
@@ -492,9 +493,7 @@ Qed.
 
 (* end snippet PrfEx11 *)
 
-(* begin snippet SearchSysPrf *)
-Search SysPrf (exH ?v, _)%fol (allH ?v, _)%fol.
-(* end snippet SearchSysPrf *)
+
 
 (* A weak version of ProofEx3 using the deduction principle *)
 
@@ -554,6 +553,20 @@ Proof.  (* .no-out *)
    inversion H2; subst; [red; eauto with datatypes| ]. 
    inversion H3. 
  Qed. 
+
+(* begin snippet SearchSysPrf *)
+
+Search SysPrf (?A /\ ?B)%fol notH.
+
+Search (SysPrf ?L ?T (?A /\ ?B)%fol -> SysPrf ?L ?T ?B).
+
+Search (SysPrf _ _ (~ ~ _)%fol).
+
+Search SysPrf (?a = ?b )%fol substF.
+
+Search SysPrf (exH ?v, _)%fol (allH ?v, _)%fol.
+(* end snippet SearchSysPrf *)
+
 
 (* begin snippet PeirceProof:: no-out *)
 Section PeirceProof.
