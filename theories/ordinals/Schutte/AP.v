@@ -700,13 +700,8 @@ Lemma epsilon0_fxp : phi0 epsilon0 = epsilon0.
 Proof.
   unfold epsilon0, omega_limit; rewrite phi0_sup.
   assert (D1: countable (image (seq_range omega_tower) phi0)).
-  { exists (fun alpha i =>  alpha = omega_tower i).
-    split.
-    -  red; destruct 1 as [x [H H0]].
-       destruct H as [i [_ H]];   exists (S i);
-         cbn; rewrite H; auto.
-    - red;  destruct 1;  destruct H;  split. 
-    -  red; intros; congruence.
+  { apply countable_image.
+    apply seq_range_countable.
   }
   assert (D2: countable (seq_range omega_tower)).
   { apply Countable.seq_range_countable. }
