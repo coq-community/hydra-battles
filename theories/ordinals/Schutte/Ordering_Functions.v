@@ -121,7 +121,7 @@ Lemma countable_segment_proper : forall A : Ensemble Ord,
            segment A -> countable A -> proper_segment A.
 Proof.
  intros A H H0; split;[auto|idtac].
- intro H1; generalize (Extensionality_Ensembles _ _ _ H1).
+ intro H1; generalize (Extensionality_Ensembles _ _ H1).
  intros; subst A ; now case Non_denum.
 Qed.
 
@@ -591,7 +591,7 @@ Proof with eauto with schutte.
  generalize (g_lemma H);intro.
  generalize (ordering_function_unicity B5 H2).
  destruct 1.
- generalize (Extensionality_Ensembles _ _ _ H3).
+ generalize (Extensionality_Ensembles _ _ H3).
  intros;  generalize (members_eq   H5).
  intro; subst alpha;auto.
 Qed.
@@ -651,7 +651,7 @@ Proof.
      generalize (g_lemma (beta:=beta0));intros.
      case H9;intros H7 H8.   generalize (H0 H7).
      intros H12; generalize (ordering_function_unicity B5 H12).
-     destruct 1;  generalize (Extensionality_Ensembles _ _ _ H11).
+     destruct 1;  generalize (Extensionality_Ensembles _ _ H11).
      intros H14; generalize (members_eq (alpha:=alpha)(beta:=g beta0)   H14 ).
      exists beta0;split;auto.
 Qed.
@@ -838,7 +838,7 @@ Section Th13_5.
  Section M_fixed.
  Variable M : Ensemble Ord.
  Hypothesis inc : Included M B.
- Hypothesis ne : Inhabited _ M.
+ Hypothesis ne : Inhabited M.
  Hypothesis den : countable M.
 
  Let U := fun u => In A u /\ In M ( f u).
@@ -872,7 +872,7 @@ Qed.
  Qed.
 
 
- Remark inh_U : Inhabited _ U.
+ Remark inh_U : Inhabited U.
  Proof.
    case ne;intros.
    exists (inv_fun inh_Ord A B f x).
@@ -944,7 +944,7 @@ Section verso.
 
  Section U_fixed.
  Variable U : Ensemble Ord.
- Hypothesis U_non_empty : Inhabited _ U.
+ Hypothesis U_non_empty : Inhabited U.
  Hypothesis U_den : countable U.
  Hypothesis U_inc_A : Included U A.
 

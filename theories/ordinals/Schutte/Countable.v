@@ -18,7 +18,6 @@ Section Countable.
   Section Definitions.
     Variable U : Type.
     Variable A : Ensemble U.
-    Let Dnat : Ensemble nat := Full_set nat.
 
     (** Predicate for relations which number the elements of A.
 
@@ -28,10 +27,10 @@ Section Countable.
 
 
 
-    Definition rel_numbers (R: GRelation U nat) := rel_injection A Dnat R.
+    Definition rel_numbers (R: GRelation U nat) := rel_injection A Full_set R.
 
     (** Predicate for relations which enumerate A. *)
-    Definition rel_enumerates (R : GRelation nat U) := rel_surjection Dnat A R.
+    Definition rel_enumerates (R : GRelation nat U) := rel_surjection Full_set A R.
 
      (** A is countable if there exists an injection from [A] to
         [Full_set nat]. *)
@@ -45,10 +44,10 @@ Section Countable.
       Proof.
         split.
         - intros   (R, R_enum).
-          exists (rel_inv A Dnat R).
+          exists (rel_inv A Full_set R).
           red; apply R_inv_surj; trivial.
         - destruct 1 as [R R_surj].
-        exists (rel_inv Dnat A R); red;  apply R_inv_inj; trivial.
+        exists (rel_inv Full_set A R); red;  apply R_inv_inj; trivial.
       Qed.
     End Equivalence_with_surjection.
 
@@ -72,7 +71,7 @@ Section Countable.
         from_E : forall n : nat, In E x -> RE x n -> R_union x (double n)
       | from_F : forall n : nat, In F x -> RF x n -> R_union x (S (double n)).
 
-      Lemma R_union_domain : rel_domain (Union U E F) R_union.
+      Lemma R_union_domain : rel_domain (Union E F) R_union.
       Proof.
         intros a aInUnion.
         induction aInUnion.
@@ -86,7 +85,7 @@ Section Countable.
       Qed.
 
       Lemma R_union_codomain :
-        rel_codomain (Union U E F) (Full_set nat) R_union.
+        rel_codomain (Union E F) Full_set R_union.
       Proof.
         split.
       Qed.
@@ -110,7 +109,7 @@ Section Countable.
          + apply double_inj; assumption.
       Qed.
 
-      Lemma R_union_inj : rel_inj (Union U E F) R_union.
+      Lemma R_union_inj : rel_inj (Union E F) R_union.
       Proof.
         intros a a' b a_In_Union a'_In_Union a_R_b a'_R_b.
         inversion a_R_b as [na a_In_E a_RE_na dna_b |
@@ -139,7 +138,7 @@ Section Countable.
             injection sdna'_b; trivial.
       Qed.
 
-      Lemma R_union_enumerates : rel_numbers (Union U E F) R_union.
+      Lemma R_union_enumerates : rel_numbers (Union E F) R_union.
       Proof.
         split.
         - apply R_union_domain.
@@ -150,7 +149,7 @@ Section Countable.
     End Countable_union_lemmas.
 
     Theorem countable_union (E : Ensemble U) (F : Ensemble U) :
-      countable E -> countable F -> countable (Union U E F).
+      countable E -> countable F -> countable (Union E F).
     Proof.
       intros E_den F_den;  destruct E_den as (RE, RE_enum);
        destruct F_den as (RF, RF_enum).
@@ -167,7 +166,7 @@ Section Countable.
 
       Variable RE : U -> nat -> Prop.
       Hypothesis RE_enum : rel_numbers E RE.
-      Hypothesis F_in_E : Included _ F E.
+      Hypothesis F_in_E : Included F E.
 
       Lemma R_inclusion_domain : rel_domain F RE.
       Proof.
@@ -175,7 +174,7 @@ Section Countable.
         apply RE_domain, F_in_E; assumption.
       Qed.
 
-      Lemma R_inclusion_codomain : rel_codomain F (Full_set nat) RE.
+      Lemma R_inclusion_codomain : rel_codomain F Full_set RE.
       Proof.
         split.
       Qed.
@@ -198,7 +197,7 @@ Section Countable.
     End Countable_inclusion_lemmas.
 
     Theorem countable_inclusion :
-      countable E -> Included _ F E -> countable F.
+      countable E -> Included F E -> countable F.
     Proof.
       intros E_denum F_in_E; destruct E_denum as (RE, RE_enum).
       exists RE; apply R_inclusion_enumerates; assumption.
@@ -451,7 +450,7 @@ Section Countable.
       Qed.
 
       Lemma R_union_qcq_codomain :
-        rel_codomain Infinite_union (Full_set nat) R_union_qcq.
+        rel_codomain Infinite_union Full_set R_union_qcq.
       Proof.
         split.
       Qed.
@@ -505,7 +504,7 @@ Section Countable.
 
 
       Remark inh_U_sets : inhabited (Ensemble U).
-      Proof inhabits  (Empty_set U).
+      Proof inhabits  Empty_set.
 
 
       Let b_n (n : nat) :=
@@ -601,7 +600,7 @@ Section Countable.
   Section Countable_empty.
 
     Lemma countable_empty :
-      countable (Empty_set U).
+      countable (@Empty_set U).
     Proof.
       (* Any relation would fit here... *)
       pose (R := fun (_ : U) (_ : nat) => False).
@@ -618,7 +617,7 @@ Section Countable.
     Variable x : U.
 
     Lemma countable_singleton :
-      countable (Singleton _ x).
+      countable (Singleton x).
     Proof.
       pose (R := fun (y : U) (n : nat) => y = x).
       exists R; split.
@@ -639,7 +638,7 @@ Section Countable.
 
 
     Definition seq_range (f : nat -> U) : Ensemble U :=
-      image (Full_set nat) f.
+      image Full_set f.
 
     Lemma seq_range_countable :
       forall f, countable (seq_range f).
@@ -756,4 +755,3 @@ Proof.
      intro;subst y.
      transitivity (f x);auto.
 Qed.
-

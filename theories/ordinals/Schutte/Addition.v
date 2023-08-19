@@ -254,7 +254,7 @@ Qed.
 
 
 Lemma alpha_plus_sup (alpha : Ord) (A : Ensemble Ord) :
-    Inhabited _ A ->
+    Inhabited A ->
     countable A ->
     alpha + |_| A = |_| (image A (plus alpha)).
 Proof.
@@ -523,10 +523,3 @@ Proof with auto with schutte.
  - simpl; apply plus_mono_weak_l.
    apply lt_le; apply  mult_Sn_mono2 ...
 Qed.
-
-
-
-
-
-
-

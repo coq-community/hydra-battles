@@ -354,7 +354,7 @@ Qed.
 Section AP_closed.
   Variable M : Ensemble Ord.
   Hypothesis OM : Included M AP.
-  Hypothesis inhM : Inhabited _ M.
+  Hypothesis inhM : Inhabited M.
   Hypothesis denM : countable M.
 
   Remark supM_gt0 : zero < |_| M.
@@ -556,7 +556,7 @@ Qed.
 
 
 Lemma phi0_sup : forall U: Ensemble Ord,
-    Inhabited _ U ->
+    Inhabited U ->
     countable U ->
     phi0 (|_| U) = |_| (image U phi0). (* .no-out *)
 (*| .. coq:: none |*)

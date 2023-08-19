@@ -51,7 +51,7 @@ Section the_context.
 
     Lemma  Lt_connect : forall a b,  Lt a b \/ a = b \/ Lt b a.
     Proof.
-      intros a b ; generalize (well_order  (Couple _ a b) a ).
+      intros a b ; generalize (well_order  (Couple a b) a ).
       destruct 1 as [ c H1].
       - left.
       -  destruct H1  as [H2 H3].
@@ -162,7 +162,7 @@ Definition the_least {M: Type} {Lt}
 
 Lemma  the_least_unicity {M: Type} {Lt}
        {inh : InH M} {WO: WO Lt} (X: Ensemble M)
-       (HX: Inhabited _ X )
+       (HX: Inhabited X)
   : exists! l , least_member   Lt X l.
 Proof.
   destruct HX as [x Hx].
@@ -197,5 +197,3 @@ split.
        }
        destruct (H x0 H6 H4);  exists x1;  auto.
 Qed.
-
-

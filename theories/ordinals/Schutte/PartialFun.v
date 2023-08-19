@@ -9,10 +9,10 @@
 
 
 From Coq Require Import Ensembles  ClassicalDescription .
+From ZornsLemma Require Import EnsemblesImplicit.
 From hydras Require Import MoreEpsilonIota.
 
 Set Implicit Arguments.
-Arguments In {U} _ _.
 
 Section AB_given.
   Variables (A B : Type)

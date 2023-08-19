@@ -441,7 +441,7 @@ Section Proof_of_Lemma5.
 
     Section closedness.
       Variable M : Ensemble Ord.
-      Hypothesis HM : Inhabited _ M.
+      Hypothesis HM : Inhabited M.
       Hypothesis CM : countable M.
       Hypothesis IM : Included  M (Cr alpha).
 
@@ -554,5 +554,3 @@ Proof.
   - intros; apply Lemma5.
   - auto with schutte.
 Qed.
-
-
