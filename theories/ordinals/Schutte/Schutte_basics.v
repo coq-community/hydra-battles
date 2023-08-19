@@ -9,6 +9,7 @@
 
 
 From Coq Require Import Relations  Classical   Classical_sets.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Import  Well_Orders Lub Countable.
 
 Import   Compare_dec  Coq.Sets.Image  PartialFun MoreEpsilonIota.
@@ -395,7 +396,7 @@ Proof.
   }
   pose (X:= Add X0 alpha).
   assert (countable X).
-  {  apply CountableTypes.countable_union2.
+  {  apply countable_union2.
      auto.
      apply countable_singleton.
   }

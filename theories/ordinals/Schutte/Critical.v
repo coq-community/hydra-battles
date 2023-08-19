@@ -13,6 +13,7 @@
 
 
 From Coq Require Import Arith Logic.Epsilon  Ensembles Classical.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics  Ordering_Functions
      Countable  Schutte.Addition AP CNF Well_Orders MoreEpsilonIota.
 
@@ -320,7 +321,7 @@ Section Proof_of_Lemma5.
                                        (members alpha)
                                        (fun x =>  phi x (gamma_ n))).
           intros H;
-            apply CountableTypes.countable_downward_closed with
+            apply countable_downward_closed with
                 (image (members alpha)
                        (fun x =>  phi x  (gamma_ n))).
           apply H.
