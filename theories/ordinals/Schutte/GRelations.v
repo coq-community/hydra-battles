@@ -161,3 +161,6 @@ Section General_Relations.
   End elagage.
 
 End General_Relations.
+
+Arguments rel_injection {A B}.
+Arguments rel_surjection {A B}.

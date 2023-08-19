@@ -13,9 +13,6 @@ Import Nat.
 
 Set Implicit Arguments.
 
-Arguments rel_injection {A B}.
-Arguments rel_surjection {A B}.
-
 Section Countable.
 
   Section Definitions.
