@@ -2,7 +2,7 @@
 
   Complements to Coq.Logic.Epsilon
 
-              
+
   Pierre Casteran,
   LaBRI, University of Bordeaux
 *)
@@ -20,9 +20,9 @@ Check constructive_indefinite_description.
 (* end snippet epsilonDef *)
 
 (* begin snippet iotaDef *)
-Check iota_statement. 
+Check iota_statement.
 
-Print iota. 
+Print iota.
 
 Print iota_spec.
 (* end snippet iotaDef *)
@@ -48,7 +48,7 @@ Proof.
 Qed.
 
 Ltac epsilon_elim_aux :=
-  match goal with [ |- (?P (epsilon (A:=?X) ?a ?Q))] => 
+  match goal with [ |- (?P (epsilon (A:=?X) ?a ?Q))] =>
            apply epsilon_ind; auto
   end.
 
@@ -70,7 +70,7 @@ Section On_Iota.
   Variables (A:Type)(P: A -> Prop).
   Hypothesis  inhA : inhabited A.
   Hypothesis unique_P : exists ! x, P x.
- 
+
   Lemma iota_spec_1 : unique P (iota inhA P).
   Proof.
     generalize  (iota_spec inhA P unique_P).
@@ -92,7 +92,7 @@ Section On_Iota.
   Proof.
     intro H;apply H; now apply iota_spec_1.
   Qed.
-  
+
 End On_Iota.
 
 Ltac iota_elim :=

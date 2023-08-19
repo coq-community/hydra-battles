@@ -7,7 +7,7 @@
 From Coq Require Import Ensembles Classical  Lia Arith.
 From hydras Require Import PartialFun.
 
-      
+
 Section General_Relations.
 
   Section Definitions.
@@ -26,15 +26,15 @@ Section General_Relations.
     Variable R : GRelation.
 
     Inductive rel_injection : Prop :=
-     rel_inj_i : rel_domain DA R -> 
-          rel_codomain DA DB R -> 
-          rel_inj DA R -> 
+     rel_inj_i : rel_domain DA R ->
+          rel_codomain DA DB R ->
+          rel_inj DA R ->
           rel_injection.
 
     Inductive  rel_surjection : Prop :=
-     rel_surj_i : rel_codomain DA DB R -> 
+     rel_surj_i : rel_codomain DA DB R ->
           rel_functional DA R ->
-          rel_onto DA DB R -> 
+          rel_onto DA DB R ->
           rel_surjection.
   End Definitions.
 
@@ -97,7 +97,7 @@ Section General_Relations.
 
     intros b b' a b_in_DB b'_in_DB b_Ri_a b'_Ri_a.
     destruct R_surj as (_, R_fun, _).
-    red in R_fun.    
+    red in R_fun.
     apply R_fun with a.
     destruct b_Ri_a as [a_In_DA _]; assumption.
     destruct b_Ri_a as [_ [_  a_R_b]]; assumption.
@@ -129,7 +129,7 @@ Section General_Relations.
         forall y n, R y n -> exists p, R_nat_elaguee y p.
       Proof.
         (* on pourrait faire une induction bien fondée, mais bon ... *)
-        assert (forall (n : nat) (y : A), (exists q:nat, q <= n /\ R y q) -> 
+        assert (forall (n : nat) (y : A), (exists q:nat, q <= n /\ R y q) ->
                  exists p : nat, R_nat_elaguee y p).
         induction n.
         intros y (q,(H1,H2)).

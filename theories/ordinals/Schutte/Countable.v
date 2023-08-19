@@ -26,16 +26,16 @@ Section Countable.
   are not required to be functional (injectivity is only needed to ensure that
   A is countable). *)
 
-   
-    
+
+
     Definition rel_numbers (R: GRelation U nat) := rel_injection A Dnat R.
 
     (** Predicate for relations which enumerate A. *)
     Definition rel_enumerates (R : GRelation nat U) := rel_surjection Dnat A R.
 
-     (** A is countable if there exists an injection from [A] to 
+     (** A is countable if there exists an injection from [A] to
         [Full_set nat]. *)
-    
+
     Definition countable : Prop := exists R, rel_numbers R.
 
     Section Equivalence_with_surjection.
@@ -57,7 +57,7 @@ Section Countable.
   Variable U : Type.
 
   (** [Union _ A B] is countable if [A] and [B] are countable. *)
-  
+
   Section Countable_union.
 
     Section Countable_union_lemmas.
@@ -149,7 +149,7 @@ Section Countable.
 
     End Countable_union_lemmas.
 
-    Theorem countable_union (E : Ensemble U) (F : Ensemble U) : 
+    Theorem countable_union (E : Ensemble U) (F : Ensemble U) :
       countable E -> countable F -> countable (Union U E F).
     Proof.
       intros E_den F_den;  destruct E_den as (RE, RE_enum);
@@ -247,7 +247,7 @@ Section Countable.
         fun cpl =>
           let (p, q) := cpl in
           existT (fun _ : nat => nat) (p + q) q.
-      
+
       Let R_K :=
         (fun x y => (lexprod _ (fun _ => nat) lt (fun _ => lt)) (f x) (f y)).
 
@@ -257,7 +257,7 @@ Section Countable.
         unfold R_K;
         apply wf_inverse_image with
             (R := lexprod _ (fun _ => nat) lt (fun _ => lt)).
-        apply wf_lexprod; intros; apply Wf_nat.lt_wf.  
+        apply wf_lexprod; intros; apply Wf_nat.lt_wf.
       Qed.
 
       Lemma K_rel_wf :  well_founded K_rel.
@@ -282,9 +282,9 @@ Section Countable.
         intros p q; unfold K_1. (* Here *)
 
         rewrite double_plus.  f_equal.
-        rewrite div2_of_Even; trivial. 
-        apply even_prod. 
-      Qed. 
+        rewrite div2_of_Even; trivial.
+        apply even_prod.
+      Qed.
 
       Lemma K_bij :
         forall p q, K (K_1 (p, q)) = (p, q).
@@ -347,7 +347,7 @@ Section Countable.
           intros Hlt; repeat right; split; [symmetry |]; assumption.
           intros Heqp; left; right; apply injective_projections; compute.
           assumption.
-          erewrite <- (Nat.add_cancel_l _ _ p').  
+          erewrite <- (Nat.add_cancel_l _ _ p').
           rewrite Heqp in Heq; assumption.
           intros Hlt; left; left; right; split; assumption.
 
@@ -436,7 +436,7 @@ Section Countable.
           now apply R_domain.
         }
         elim ex_p; intros p b_R_p.
-        
+
         assert (ex_q : exists q, R_n p a q).  {
           destruct (R_n_enums b_In_A b_R_p) as (R_n_domain, _, _).
           apply R_n_domain.
@@ -503,7 +503,7 @@ Section Countable.
       Hypothesis all_b_denum : forall b : Ensemble U, In A b -> countable b.
 
 
-      
+
       Remark inh_U_sets : inhabited (Ensemble U).
       Proof inhabits  (Empty_set U).
 
@@ -526,7 +526,7 @@ Section Countable.
 
       Remark Rb_numbers_b :
         forall b, In A b -> rel_numbers b (R_b b).
-      Proof. 
+      Proof.
         intros b b_In_A;
         pattern (R_b b);  epsilon_elim.
         apply all_b_denum.
@@ -551,7 +551,7 @@ Section Countable.
           destruct (Rb_numbers_b bn_In_A) as (_, _, Rb_inj).
           apply Rb_inj with m; assumption.
       Qed.
-      
+
 
       Let b_p (b : Ensemble U) :=
         epsilon (inhabits 0) (fun p => b = b_n p).
@@ -647,7 +647,7 @@ Section Countable.
       intros f; pose (R := fun (x : U) (n : nat) => f n = x).
       exists R; split.
       - intros x; destruct 1.
-        exists x0; unfold R. tauto. 
+        exists x0; unfold R. tauto.
       - split.
       -  intros x x' n x_In_sr x'_In_sr x_R_n x'_R_n.
          unfold R in x_R_n.

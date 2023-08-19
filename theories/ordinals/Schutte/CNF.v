@@ -13,12 +13,12 @@ Require Export  Classical.
 
 Set Implicit Arguments.
 
-(** A Cantor normal form for a countable ordinal [alpha] is just a sorted 
+(** A Cantor normal form for a countable ordinal [alpha] is just a sorted
 list [l] (in decreasing order) such that  [alpha]  is equal to the sum of the terms [phi0 beta], for every term [beta] in [l].
 
 
-Note that, if [alpha] is greater or equal than [epsilon0], the members of [l] 
-are less _or equal_ than [alpha]. 
+Note that, if [alpha] is greater or equal than [epsilon0], the members of [l]
+are less _or equal_ than [alpha].
 
 For instance, the Cantor Normal Form of [epsilon0] is just [epsilon0 :: nil].
 
@@ -67,12 +67,12 @@ Proof.
    + apply phi0_mono;auto.
 Qed.
 
-  
+
 Lemma sorted_tail  alpha l:
   sorted (cons alpha l) -> sorted l.
 Proof.  inversion 1; auto with schutte. Qed.
 
-Lemma nf_bounded : forall beta  l alpha, 
+Lemma nf_bounded : forall beta  l alpha,
                         alpha <= phi0 beta  ->
                         is_cnf_of alpha l -> exponents_le beta l.
 Proof.
@@ -101,7 +101,7 @@ Proof.
  intros H0 H1 H2 H3; destruct (H2 alpha H) as [x [Hx Ex]].
  subst alpha;  exists (cons  x nil); split.
  - constructor.
- - simpl; now  rewrite alpha_plus_zero. 
+ - simpl; now  rewrite alpha_plus_zero.
 Qed.
 
 
@@ -126,15 +126,15 @@ Qed.
 
 
  Lemma sorted_lt_lt_2 l alpha :
-   sorted (cons alpha l) -> 
+   sorted (cons alpha l) ->
    eval (cons alpha l) < phi0 (succ alpha).
 Proof.
  intros;apply (sorted_lt_lt H).
- inversion H;intros;eauto with schutte. 
+ inversion H;intros;eauto with schutte.
 Qed.
 
 
-Lemma cnf_head_eq alpha beta ol ol': 
+Lemma cnf_head_eq alpha beta ol ol':
                          sorted (cons alpha ol) ->
                          sorted (cons beta ol') ->
                          eval (cons alpha ol) = eval (cons beta ol') ->
@@ -151,7 +151,7 @@ Proof.
     + rewrite <- H1; simpl;  apply le_plus_l.
 Qed.
 
-Lemma cnf_eq  alpha beta ol ol': 
+Lemma cnf_eq  alpha beta ol ol':
   sorted (cons alpha ol) ->
   sorted (cons beta ol') ->
   eval (cons alpha ol) = eval (cons beta ol') ->
@@ -164,11 +164,11 @@ Qed.
 
 
 Lemma cnf_plus1 (ol : cnf_t) :
- sorted ol ->  forall alpha, 
+ sorted ol ->  forall alpha,
     exists ol',  is_cnf_of (phi0 alpha + eval ol) ol'.
 Proof.
  induction ol.
- -  inversion_clear  1 . 
+ -  inversion_clear  1 .
     intros alpha;  simpl;  exists  (cons alpha nil).
     split.
     + constructor.
@@ -185,10 +185,10 @@ Proof.
       * now simpl.
 Qed.
 
- 
+
 Lemma cnf_plus2 : forall ol, sorted ol ->
                     forall ol', sorted ol' ->
-                     exists ol'', is_cnf_of (eval ol + eval ol') ol''. 
+                     exists ol'', is_cnf_of (eval ol + eval ol') ol''.
 Proof.
  induction ol.
  - simpl; intros; rewrite zero_plus_alpha;auto.
@@ -196,7 +196,7 @@ Proof.
  -  intros; simpl; assert (sorted ol).
     {  inversion H;auto with schutte. }
    destruct  (IHol H1 _ H0) as [x [H3 H4]].
-   destruct  (@cnf_plus1 _ H3 a) as [x0 H5]. 
+   destruct  (@cnf_plus1 _ H3 a) as [x0 H5].
    exists x0; rewrite <- H4 in H5; now  rewrite <- plus_assoc.
 Qed.
 
@@ -212,7 +212,7 @@ Qed.
 
 (* begin hide *)
 
-Lemma not_AP_inv_0 : forall alpha, 
+Lemma not_AP_inv_0 : forall alpha,
                     zero < alpha ->
                     ~ (AP alpha) ->
                     exists beta,zero < beta /\
@@ -225,13 +225,13 @@ Proof with eauto with schutte.
   - case (@lt_irrefl alpha).
     apply le_lt_trans with (beta+alpha) ...
     apply le_plus_r ...
-  -  case H1; exists beta; split ; auto. 
+  -  case H1; exists beta; split ; auto.
      tricho zero beta H4; auto with schutte.
      +  subst beta; rewrite zero_plus_alpha in H3;
           case (@lt_irrefl alpha);auto.
-     +   now   case (@not_lt_zero beta).     
+     +   now   case (@not_lt_zero beta).
 Qed.
- 
+
 Lemma not_AP_inv2 : forall alpha, zero < alpha -> ~AP alpha ->
                                exists beta, exists gamma,
                                      zero < beta /\ zero < gamma /\
@@ -245,7 +245,7 @@ Proof with eauto with schutte.
   - intros eta  H2; exists eta; split ; auto.
     split;auto.
     + tricho zero eta H3; trivial.
-      *  subst eta; rewrite alpha_plus_zero in H2; trivial. 
+      *  subst eta; rewrite alpha_plus_zero in H2; trivial.
          decompose [and] H'khi; subst alpha; case (@lt_irrefl khi);auto.
       *  case (@not_lt_zero eta) ...
     +  decompose [and] H'khi; split;auto.
@@ -282,11 +282,11 @@ Proof.
     intros a H0 H1; case (classic (AP a)).
     + intros H2;  apply cnf_of_ap; auto.
     +  intros H2; case (not_AP_inv2 H1 H2).
-       intros x H3; destruct H3 as [z [H4' [H5' H6]]]. 
+       intros x H3; destruct H3 as [z [H4' [H5' H6]]].
        case (H0 x).
        * case H6;auto.
        * auto.
-       * intros x0 H; case (H0 z). 
+       * intros x0 H; case (H0 z).
         --  tauto.
         --  auto.
         --  intros x1 H4;  decompose [and] H6;  subst a.
@@ -310,7 +310,7 @@ Qed.
 
 
 
-(** *** Unicity of cnf 
+(** *** Unicity of cnf
 
 (Proof by induction on lists)
 
@@ -349,7 +349,7 @@ Proof.
           split;auto.
           inversion H3; auto with schutte.
           rewrite H6;split;auto with schutte.
-          inversion H1; auto with schutte. 
+          inversion H1; auto with schutte.
 Qed.
 (*||*)
 (* end snippet cnfUnicity *)
@@ -361,7 +361,7 @@ Qed.
 
 (*| .. coq:: no-out |*)
 Theorem cnf_exists_unique (alpha:Ord) :
-  exists! l: cnf_t, is_cnf_of alpha l. 
+  exists! l: cnf_t, is_cnf_of alpha l.
 Proof.
     destruct (cnf_exists alpha) as [l Hl]; exists l; split; auto.
     now apply cnf_unicity.
@@ -383,11 +383,11 @@ Proof.
   induction l.
   - constructor.
   - unfold is_cnf_of.
-    destruct 1 as [H e]. 
+    destruct 1 as [H e].
     intro H0; simpl.
-    assert (Hlt : a < phi0 a).   
+    assert (Hlt : a < phi0 a).
     {
-      apply lt_phi0;  simpl in e;  subst alpha; 
+      apply lt_phi0;  simpl in e;  subst alpha;
        apply le_lt_trans with (phi0 a); auto with schutte.
       - apply le_phi0.
       - apply le_lt_trans with (2 := H0);  apply le_plus_l.
@@ -408,7 +408,7 @@ Qed.
 
 (* end snippet cnfLtEpsilon0 *)
 
-(** The normal form of [epsilon0] is just [phi0 epsilon0] 
+(** The normal form of [epsilon0] is just [phi0 epsilon0]
  *)
 
 (* begin snippet cnfOfEpsilon0 *)
@@ -418,7 +418,7 @@ Qed.
 Lemma cnf_of_epsilon0 : is_cnf_of epsilon0 (epsilon0 :: nil).
 Proof.
   split.
-  - constructor.  
+  - constructor.
   - simpl; now rewrite alpha_plus_zero, epsilon0_fxp.
 Qed.
 (*||*)
