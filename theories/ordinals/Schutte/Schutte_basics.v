@@ -855,11 +855,7 @@ Qed.
 
 #[global] Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
 
-
-Lemma In_full {A:Type} (a:A) : In (Full_set A ) a.
-Proof. split. Qed.
-
-#[global] Hint Resolve In_full: core.
+#[global] Hint Constructors Full_set: core.
 
 Lemma lt_omega_limit (s : nat -> Ord) :
   seq_mono s -> forall i, s i <  omega_limit s.
